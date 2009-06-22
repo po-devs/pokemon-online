@@ -1,0 +1,93 @@
+*** PROTOCOLE NETBATTLE ***
+
+Les "-" comptent comme rien, même pas un espace.
+Les "##" sont à remplacer par le nombre de lettres que le champs suivant contient,
+et le nombre de "#" indique le nombre de chiffres à utiliser pour donner ce nombre, 
+pas moins, pas plus.
+Les [] sont des commentaires.
+
+=== CLIENT -> SERVEUR ===
+== IDENTIFICATION ==
+CLIENT ENVOIE:
+	N-##NOM-TEAM
+SERVEUR ENVOIE:
+	N-LISTE_JOUEURS
+OU
+	E-#[NUMERO_DE_L'ERREUR]
+
+== RECHERCHES INFOS ==
+CLIENT ENVOIE:
+	I-###[NUMERO_DU_JOUEUR]
+SERVEUR ENVOIE:
+	I-###[NUMERO DU JOUEUR]-INFOS
+OU
+	E-#
+
+== DECONNECTION ==
+CLIENT ENVOIE:
+	D
+
+== CHALLENGE ==
+CLIENT ENVOIE:
+	C-###[NUMERO_DU_JOUEUR]
+SERVEUR ENVOIE:
+	C-S-###
+OU
+	E-#
+
+== CANCEL_CHALLENGE ==
+CLIENT ENVOIE:
+	CC-###[NUMERO_DU_JOUEUR]
+SERVEUR ENVOIE:
+	CC-###
+OU
+	E-#
+
+== ACCEPT_CHALLENGE ==
+C:
+	CA-###
+S:
+	CA-###
+OU
+	E-#
+
+== AWAY ==
+C:
+	A1
+S:
+	A1
+OU
+	E-#
+
+== UNAWAY ==
+C:
+	A0
+S:
+	A0
+OU
+	E-#
+
+== CHAT ==
+C:
+	M-MESSAGE
+
+== PING ==
+C:
+	P
+S:
+	P
+
+	
+=== SERVEUR -> CLIENT ===
+
+== ANNONCE SUR UN JOUEUR ==
+S:
+	J-...
+
+== NOUVEAU MESSAGE ==
+S:
+	M-MESSAGE
+	
+== ANNONCE EN GENERAL ==
+S:
+	V-...

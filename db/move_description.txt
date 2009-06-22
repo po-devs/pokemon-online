@@ -1,0 +1,467 @@
+An attack that absorbs half the damage inflicted.
+Sprays a hide-melting acid. May lower DEFENSE.
+Liquifies the user's body to sharply raise DEFENSE.
+Randomly raises user's one stat two stages
+An extremely speedy and unavoidable attack.
+Launches a vacuumed blast. High critical-hit ratio.
+Relaxes the body to sharply boost SPEED.
+Hacks with razorlike wind. High critical-hit ratio.
+May cause opponent to flinch
+Forgets about something and sharply raises SP. DEF.
+An attack that may raise all stats.
+Always strikes first
+Restores HP every turn
+No Added Effect
+Straight-arm punches that strike the foe 2 to 5 times.
+Heals all status problems with a soothing scent.
+Attacks randomly with one of the partner's moves.
+Power doubles if foe already receives damage that turn
+An attack that may shock the foe into flinching.
+High critical hit ratio
+Makes the opposite gender less likely to attack.
+Cannot miss
+Fires a rainbow-colored beam that may lower ATTACK.
+Power doubles if user receives damage first
+Hurls round objects at the foe 2 to 5 times.
+Creates a barrier that sharply raises DEFENSE.
+Switches out the user while keeping effects in play.
+Summons party POKÉMON to join in the attack.
+Maximizes ATTACK while sacrificing HP.
+Endures attack for 2 turns to retaliate double.
+Binds and squeezes the foe for 2 to 5 turns.
+Bites with vicious fangs. May cause flinching.
+Powerful, but leaves the user immobile the next turn.
+A kick with a high critical- hit ratio. May cause a burn.
+Hits the foe with an icy storm that may freeze it.
+Blocks the foe's way to prevent escape.
+A full-body slam that may cause paralysis.
+Clubs the foe with a bone. May cause flinching.
+Strikes the foe with a bone in hand 2 to 5 times.
+Throws a bone boomerang that strikes twice.
+Bounces up, then down the next turn. May paralyze.
+User takes recoil damage
+Destroys barriers such as REFLECT and causes damage.
+Power doubles if foe's HP is less than half
+An attack using bubbles. May lower the foe's SPEED.
+Forcefully sprays bubbles that may lower SPEED.
+Receives effect from foe's held berry
+May lower opponent's SP.DEF one stage
+Bulks up the body to boost both ATTACK and DEFENSE.
+Always strikes first
+Shoots 2 to 5 seeds in a row to strike the foe.
+Raises SP. ATK and SP. DEF by focusing the mind.
+Alters the POKÉMON's type depending on the location.
+Lowers opposite gender foe's SP.ATT two stages
+Charges power to boost the electric move used next.
+High chance of raising user's SP.ATT one stage
+Charms the foe and sharply reduces its ATTACK.
+Confuses foe
+Traps and squeezes the foe for 2 to 5 turns.
+Lowers user's DEFENSE and SP.DEF
+Repeatedly punches the foe 2 to 5 times.
+A sinister ray that confuses the foe.
+A psychic attack that may cause confusion.
+Constricts to inflict pain. May lower SPEED.
+Changes the user's type into an own move's type.
+Makes the user resistant to the last attack's type.
+Copies foe's last move
+Raises DEFENSE and SP. DEF with a mystic power.
+Spores cling to the foe, sharply reducing SPEED.
+Retaliates any physical hit with double the power.
+Cutely begs to obtain an item held by the foe.
+Hammers with a pincer. Has a high critical-hit ratio.
+A double-chopping attack. High critical-hit ratio.
+High chance of critical hit, may poison foe
+Crunches with sharp fangs. May lower DEF.
+Tears at the foe with sharp claws. May lower DEFENSE.
+Power depends on foe's remaining HP
+A move that functions differently for GHOSTS.
+Cuts the foe with sharp scythes, claws, etc.
+May cause foe to flinch
+Induces sleep to both opponents
+Curls up to conceal weak spots and raise DEFENSE.
+Raises user's DEFENSE and SP.DEF one stage
+Lowers foe's evasiveness
+If the user faints, the foe is also made to faint.
+Evades attack, but may fail if used in succession.
+Digs underground the first turn and strikes next turn.
+Psychically disables one of the foe's moves.
+May induce paralysis
+Dives underwater the first turn and strikes next turn.
+A rhythmic punch that may confuse the foe.
+Summons strong sunlight to attack 2 turns later.
+Strikes twice
+A double-kicking attack that strikes the foe twice.
+Creates illusory copies to raise evasiveness.
+A life-risking tackle that also hurts the user.
+Repeatedly slaps the foe 2 to 5 times.
+Lowers users SP.ATT two stages
+Slashes the foe with sharp claws.
+A mystical dance that ups ATTACK and SPEED.
+No Added Effect
+Launches shock waves that always inflict 40 HP damage.
+May cause foe to flinch
+Strikes the foe with an incredible blast of breath.
+User recovers half the damage inflicted
+Takes one half the damage inflicted on a sleeping foe.
+A corkscrewing attack with the beak acting as a drill.
+Powerful and sure to cause confusion, but inaccurate.
+May lower foe's SP.DEF one stage
+A powerful quake, but has no effect on flying foes.
+An egg is forcibly hurled at the foe.
+Foe is unable to use held items
+A weak fire attack that may inflict a burn.
+Makes the foe repeat its last move over 2 to 6 turns.
+Gains power if the user's HP is lower than the foe's HP.
+Endures any attack for 1 turn, leaving at least 1HP.
+May lower foe's SP.DEF one stage
+The higher the user's HP, the more damage caused.
+Inflicts severe damage but makes the user faint.
+Attacks with a peculiar power. May cause flinching.
+An extremely fast and powerful attack.
+Boosts ATTACK when burned, paralyzed, or poisoned.
+Draws the foe close, then strikes without fail.
+A 1st-turn, 1st-strike move that causes flinching.
+Feigns crying to sharply lower the foe's SP. DEF.
+An attack that leaves the foe with at least 1 HP.
+Envelops the foe with down to sharply reduce ATTACK.
+Only works when foe uses Protect or Detect
+A fiery blast that scorches all. May cause a burn.
+Has a chance of burning and flinching the foe
+A fiery punch that may burn the foe.
+Traps the foe in a ring of fire for 2 to 5 turns.
+A one-hit KO move that drops the foe in a fissure.
+Inflicts more damage when the user's HP is down.
+A fiery charge attack that may inflict a burn.
+A powerful fire attack that may inflict a burn.
+User takes recoil damage
+Looses a powerful blast of light that cuts accuracy.
+May lower foe's SP.ATT one stage
+Confuses the foe, but raises its SP. ATK.
+Hurls out held item, power depends on held item
+Flies up on the first turn, then strikes the next turn.
+May lower foe's SP.DEF one stage
+Focuses power to raise the critical-hit ratio.
+A powerful loyalty attack. The user flinches if hit.
+Draws attention to make foes attack only the user.
+May induce paralysis
+Negates the foe's efforts to heighten evasiveness.
+Powerful, but leaves the user immobile the next turn.
+An attack that is stronger if the TRAINER is disliked.
+Jabs the foe 2 to 5 times with sharp horns, etc.
+An attack that intensifies on each successive hit.
+Rakes the foe with sharp claws, etc., 2 to 5 times.
+Heightens inner power to strike 2 turns later.
+Cancels effect of foe's ability
+An attack that steals half the damage inflicted.
+User cannot attack next turn
+Intimidates and frightens the foe into paralysis.
+Power increases if foe is heavy
+Lulls the foe into sleep with a pleasant melody.
+Disables moves that fly or levitate in 5 turns
+Growls cutely to reduce the foe's ATTACK.
+Forces the body to grow and heightens SP. ATK.
+If the user faints, deletes the PP of the final move.
+Swarps DEFENSE and SP.DEF with target
+A powerful pincer attack that may cause fainting.
+May poison foe
+Strikes the foe with a gust of wind whipped up by wings.
+Power depends on foe's SPEED
+Summons a hailstorm that strikes every turn.
+Lowers users SPEED one stage
+Stiffens the body's muscles to raise DEFENSE.
+Creates a black haze that eliminates all stat changes.
+User takes recoil damage
+A ramming attack that may cause flinching.
+Chimes soothingly to heal all status abnormalities.
+Foe is unable to restore HP in 5 turns
+Recovers half of max HP
+If user faints, recovers HP and removes status effects of next Pokémon
+Swaps altered stats with foe
+Exhales a hot breath on the foe. May inflict a burn.
+Boosts the power of the recipient's moves.
+A jumping knee kick. If it misses, the user is hurt.
+The effectiveness varies with the user.
+Jabs the foe with sharp horns.
+A one-hit KO attack that uses a horn like a drill.
+Howls to raise the spirit and boosts ATTACK.
+Powerful, but leaves the user immobile the next turn.
+Blasts water at high power to strike the foe.
+Powerful, but leaves the user immobile the next turn.
+Attacks with sharp fangs. May cause flinching.
+A loud attack that uses sound waves to injure.
+A hypnotizing move that may induce sleep.
+A 5-turn attack that gains power on successive hits.
+Blasts the foe with an icy beam that may freeze it.
+Has a chance of freezing and flinching the foe
+An icy punch that may freeze the foe.
+Always strikes first
+Attacks the foe by firing 2 to 5 icicles in a row.
+A chilling attack that lowers the foe's SPEED.
+Prevents foes from using moves known by the user.
+Lays roots that restore HP. The user can't switch out.
+Hardens the body's surface to sharply raise DEFENSE.
+May cause opponent to flinch
+Attacks with a rock-hard tail. May lower DEFENSE.
+Type changes depending on plate held
+A strong jumping kick. May miss and hurt the kicker.
+A chopping attack with a high critical-hit ratio.
+Distracts the foe. May lower accuracy.
+Knocks down the foe's held item to prevent its use.
+Only usable when all other attacks have been used
+May induce burn
+Slashes with a sharp leaf. High critical-hit ratio.
+Lowers users SP.ATT two stages
+An attack that steals half the damage inflicted.
+Plants a seed on the foe to steal HP on every turn.
+Frightens the foe with a leer to lower DEFENSE.
+Licks with a long tongue to injure. May also paralyze.
+Creates a wall of light that lowers SP. ATK damage.
+Locks on to the foe to ensure the next move hits.
+Demands a kiss with a scary face that induces sleep.
+A kick that inflicts more damage on heavier foes.
+Foe cannot have critical hits for 5 turns
+User Faints. Completely Heals Next Released Pokémon
+Attacks with a burst of light. May lower SP. DEF.
+A punch is thrown at wicked speed to strike first.
+Reflects special effects back to the attacker.
+Attacks with a strange leaf that cannot be evaded.
+Traps foe
+Cannot miss
+Changes own ability to levitate
+A ground-shaking attack of random intensity.
+Strikes first with foe's attack at 1.5 power
+Fixes the foe with a mean look that prevents escape.
+Meditates in a peaceful fashion to raise ATTACK.
+An attack that absorbs half the damage inflicted.
+An extremely powerful kick with intense force.
+A strong punch thrown with incredible power.
+A brutal ramming attack using out-thrust horns.
+The user faints and lowers the foe's abilities.
+Returns double damage done by foe
+A claw attack that may raise the user's ATTACK.
+Emits a horrible screech that sharply lowers SP. DEF.
+Fires a meteor-like punch. May raise ATTACK.
+Waggles a finger to use any POK&#233;MON move at random.
+Recovers up to half the user's maximum HP.
+Copies a move used by the foe during one battle.
+Senses the foe's action to ensure the next move's hit.
+Minimizes the user's size to raise evasiveness.
+Removes dark type's psychic immunity and resets foe's evasiveness
+Counters the foe's special attack at double the power.
+Counters the foe's attack with the same move.
+May lower opponent's accuracy one stage
+Creates a mist that stops reduction of abilities.
+Attacks with a flurry of down. May lower SP. ATK.
+Restores HP. The amount varies with the weather.
+Restores HP. The amount varies with the weather.
+May lower foe's accuracy one stage
+Hurls mud at the foe and reduces SPEED.
+Covers the user in mud to raise electrical resistance.
+Hurls mud in the foe's face to reduce its accuracy.
+Attacks with muddy water. May lower accuracy.
+Raises SP.ATT two stages
+Power and type of move depends on the held berry
+The type of attack varies depending on the location.
+Attacks with thorny arms. May cause flinching.
+Inflicts damage identical to the user's level.
+High critical hit ratio
+Inflicts 1/4 damage on a sleeping foe every turn.
+Fires a lump of ink to damage and cut accuracy.
+Negates the foe's efforts to heighten evasiveness.
+May raise all user's stats one stage
+A rampage of 2 to 3 turns that confuses the user.
+Allows a full-power attack, but sharply lowers SP. ATK.
+Adds the user and foe's HP, then shares them equally.
+Throws coins at the foe. Money is recovered after.
+Power doubles if user receives damage first
+Attacks the foe with a jabbing beak, etc.
+Any POK&#233;MON hearing this song faints in 3 turns.
+A rampage of 2 to 3 turns that confuses the user.
+Sharp pins are fired to strike 2 to 5 times.
+Power doubles if foe is holding a berry
+A sharp-fanged attack. May badly poison the foe.
+Envelops the foe in a toxic gas that may poison.
+May poison foe
+A toxic attack with barbs, etc., that may poison.
+Has a high critical-hit ratio. May also poison.
+Scatters a toxic powder that may poison the foe.
+Pounds the foe with forelegs or tail.
+Blasts the foe with a snowy gust. May cause freezing.
+No Added Effect
+Swaps ATTACK and SP.ATT with target
+Swaps user's own ATTACK and DEFENSE
+No Added Effect
+A gift in the form of a bomb. May restore HP.
+Evades attack, but may fail if used in succession.
+Fires a peculiar ray that may confuse the foe.
+Copies the foe's effect(s) and gives to the user.
+A powerful psychic attack that may lower SP. DEF.
+Allows a full-power attack, but sharply lowers SP. ATK.
+high critical hit ratio
+Shifts status effect to target
+Attacks with a psychic wave of varying intensity.
+Power depends on foe's stat
+Inflicts bad damage if used on a foe switching out.
+An extremely fast attack that always strikes first.
+Raises the user's ATTACK every time it is hit.
+Boosts the power of WATER- type moves for 5 turns.
+Spins the body at high speed to strike the foe.
+Cuts the enemy with leaves. High critical-hit ratio.
+A 2-turn move that strikes the foe on the 2nd turn.
+Recovers up to half the user's maximum HP.
+Recycles a used item for one more use.
+Creates a wall of light that weakens physical attacks.
+Heals poisoning, paralysis, or a burn.
+The user sleeps for 2 turns, restoring HP and status.
+An attack that increases in power with friendship.
+An attack that gains power if injured by the foe.
+Inflicts more damage when the user's HP is down.
+Makes the foe flee to end the battle.
+User is unable to attack the next turn
+Hurls boulders at the foe 2 to 5 times in a row.
+May induce confusion
+Raises users SPEED two stages
+Large boulders are hurled. May cause flinching.
+A rock-crushing attack that may lower DEFENSE.
+Throws small rocks to strike the foe.
+Stops the foe from moving with rocks and cuts SPEED.
+User cannot attack next turn
+Mimics the target and copies its special ability.
+A fast kick delivered from a rapid spin.
+An attack lasting 5 turns with rising intensity.
+Restores half of max HP
+A mystical fire attack that may inflict a burn.
+A mystical force prevents all status problems.
+Traps and hurts the foe in quicksand for 2 to 5 turns.
+Reduces the foe's accuracy by hurling sand in its face.
+Causes a sandstorm that rages for several turns.
+Frightens with a scary face to sharply reduce SPEED.
+Scratches the foe with sharp claws.
+Emits a screech to sharply reduce the foe's DEFENSE.
+An attack with effects that vary by location.
+No Added Effect
+Lowers foe's SP.DEF
+Inflicts damage identical to the user's level.
+Inflicts severe damage but makes the user faint.
+Hurls a black blob that may lower the foe's SP. DEF.
+High critical hit ratio
+Disappears the first turn and attacks the second, foe cannot protect
+An unavoidable punch that is thrown from shadows.
+Always strikes first
+Reduces the polygon count and raises ATTACK.
+A chilling attack that causes fainting if it hits.
+A fast and unavoidable electric attack.
+A strange beam attack that may confuse the foe.
+A powdery attack that may raise abilities.
+A soothing song lulls the foe into a deep slumber.
+Copies the foe's last move permanently.
+The user swaps special abilities with the target.
+Tucks in the head, then attacks on the next turn.
+Searches out weak spots, then strikes the next turn.
+An uppercut thrown as if leaping into the sky.
+Slacks off and restores half the maximum HP.
+Slams the foe with a long tail, vine, etc.
+Slashes with claws, etc. Has a high critical-hit ratio.
+Scatters a powder that may cause the foe to sleep.
+Uses an own move randomly while asleep.
+Sludge is hurled to inflict damage. May also poison.
+Sludge is hurled to inflict damage. May also poison.
+Powerful against paralyzed foes, but also heals them.
+An exhaust-gas attack that may also poison.
+Lowers the foe's accuracy using smoke, ink, etc.
+Steals the effects of the move the foe uses next.
+A loud attack that can be used only while asleep.
+Recovers up to half the user's maximum HP.
+Absorbs light in one turn, then attacks next turn.
+Launches shock waves that always inflict 20 HP damage.
+High critical hit ratio
+An electrified tackle that may paralyze the foe.
+Ensnares the foe to stop it from fleeing or switching.
+Launches sharp spikes that strike 2 to 5 times.
+Sets spikes that hurt a foe switching out.
+Releases stockpiled power (the more the better).
+Spitefully cuts the PP of the foe's last move.
+It's just a splash... Has no effect whatsoever.
+Scatters a cloud of spores that always induce sleep.
+Causes damage when foe switches Pokémon
+Strikes the foe with hard wings spread wide.
+Charges up power for up to 3 turns.
+Stomps the enemy with a big foot. May cause flinching.
+High critical hit ratio
+Builds enormous power, then slams the foe.
+Binds the foe with string to reduce its SPEED.
+Used only if all PP are gone. Also hurts the user a little.
+Scatters a powder that may paralyze the foe.
+A reckless body slam that also hurts the user.
+Creates a decoy using 1/4 of the user's maximum HP.
+Always strikes first, but fails if foe is not using attacking move
+Boosts the power of FIRE- type moves for 5 turns.
+Attacks with sharp fangs and cuts half the foe's HP.
+Boosts strength sharply, but lowers abilities.
+Emits bizarre sound waves that may confuse the foe.
+Creates a huge wave, then crashes it down on the foe.
+Confuses the foe, but also sharply raises ATTACK.
+Absorbs stockpiled power and restores HP.
+Demands a kiss with a cute look. May cause confusion.
+Allures the foe to reduce evasiveness.
+Sprays star-shaped rays that never miss.
+Exchanges held item with foe
+A fighting dance that sharply raises ATTACK.
+Restores HP. The amount varies with the weather.
+Charges the foe with a full- body tackle.
+Flashes a light that sharply raises SP. ATK.
+Wags the tail to lower the foe's DEFENSE.
+User's team raises SPEED for 5 turns
+A reckless charge attack that also hurts the user.
+Taunts the foe into only using attack moves.
+Confuses all POK&#233;MON on the scene.
+A psychic move for fleeing from battle instantly.
+While attacking, it may steal the foe's held item.
+A rampage of 2 to 3 turns that confuses the user.
+A lightning attack that may cause paralysis.
+Has a chance of paralyzing and flinching the foe
+A weak jolt of electricity that paralyzes the foe.
+A strong electrical attack that may paralyze the foe.
+An electrified punch that may paralyze the foe.
+An electrical attack that may paralyze the foe.
+Makes the foe laugh to lower ATTACK and DEFENSE.
+Torments the foe and stops successive use of a move.
+Poisons the foe with an intensifying toxin.
+Causes damage when opponent switches Pokémon
+Alters the user's cells to become a copy of the foe.
+Fires three types of beams at the same time.
+Tricks the foe into trading held items.
+Slower Pokémon attacks first in 5 turns
+Kicks the foe 3 times in a row with rising intensity.
+Power increases when PP drops
+Stingers on the forelegs jab the foe twice.
+Whips up a vicious twister to tear at the foe.
+User switches out automatically after attack
+Causes an uproar for 2 to 5 turns and prevents sleep.
+Always strikes first
+Grips the foe with large and powerful pincers.
+Strikes the foe with slender, whiplike vines.
+Makes the user's move last, but it never misses.
+A life-risking tackle that slightly hurts the user.
+Power doubles if foe is asleep, cures sleep status
+Squirts water to attack the foe.
+Attacks with ultrasonic waves. May confuse the foe
+The user becomes soaked to raise resistance to fire.
+Inflicts more damage if the user's HP is high.
+Charges the foe with speed to climb waterfalls.
+The move's type and power change with the weather.
+Traps and hurts the foe in a whirlpool for 2 to 5 turns.
+Blows away the foe with wind and ends the battle.
+Inflicts a burn on the foe with intense fire.
+Strikes the foe with wings spread wide.
+A wish that restores HP. It takes time to work.
+Withdraws the body into its hard shell to raise DEFENSE.
+User takes recoil damage
+Changes the ability of foe to insomnia
+Wraps and squeezes the foe 2 to 5 times with vines, etc.
+Power depends on foe's remaining HP
+No Added Effect
+Lulls the foe into yawning, then sleeping next turn.
+Powerful and sure to cause paralysis, but inaccurate.
+May cause foe to flinch

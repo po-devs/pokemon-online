@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="teambuilder" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="teambuilder" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="-DMF_TEXT_ACCENTUE" />
+					<Add option="-DMF_RETOUR_LIGNE" />
+					<Add option="-Dprivate=public" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add library="SDL_ttf" />
+					<Add library="SDL_image" />
+					<Add library="SDL_rotozoom" />
+					<Add library="SDL_net" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-DSFML_DYNAMIC" />
+			<Add directory="C:\Program Files\CodeBlocks\MinGW\SDL\include" />
+		</Compiler>
+		<Linker>
+			<Add library="mingw32" />
+			<Add library="SDLmain" />
+			<Add library="SDL.dll" />
+			<Add library="user32" />
+			<Add library="gdi32" />
+			<Add library="winmm" />
+			<Add library="dxguid" />
+			<Add directory="C:\Program Files\CodeBlocks\MinGW\SDL\lib" />
+		</Linker>
+		<Unit filename="MF.cpp" />
+		<Unit filename="MF.hh" />
+		<Unit filename="MF_applet.cpp" />
+		<Unit filename="MF_applet.hh" />
+		<Unit filename="MF_form.cpp" />
+		<Unit filename="MF_form.hh" />
+		<Unit filename="MF_text.cpp" />
+		<Unit filename="MF_text.hh" />
+		<Unit filename="SDL_gfx.cpp" />
+		<Unit filename="SDL_gfx.h" />
+		<Unit filename="Team_Struct.cpp" />
+		<Unit filename="Team_Struct.h" />
+		<Unit filename="TheInternet.cpp" />
+		<Unit filename="TheInternet.h" />
+		<Unit filename="big_boss.cpp" />
+		<Unit filename="big_boss.h" />
+		<Unit filename="client-server.h" />
+		<Unit filename="credits.cpp" />
+		<Unit filename="credits.h" />
+		<Unit filename="exception.hpp" />
+		<Unit filename="image_manager.cpp" />
+		<Unit filename="image_manager.hpp" />
+		<Unit filename="interfont.cpp" />
+		<Unit filename="interfont.hpp" />
+		<Unit filename="intergfx.cpp" />
+		<Unit filename="intergfx.hpp" />
+		<Unit filename="intervideo.cpp" />
+		<Unit filename="intervideo.hpp" />
+		<Unit filename="main.cpp" />
+		<Unit filename="menu.h" />
+		<Unit filename="start_menu.cpp" />
+		<Unit filename="start_menu.h" />
+		<Unit filename="teambuilder.cpp" />
+		<Unit filename="teambuilder.h" />
+		<Unit filename="utilities.cpp" />
+		<Unit filename="utilities.hh" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

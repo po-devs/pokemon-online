@@ -1,0 +1,1 @@
+g++ -Wall -lmingw32 -lSDLmain -lSDL -lSDL_ttf -lSDL_image "main.cpp" "teambuilder.cpp" "MF.cpp" "MF_text.cpp" "SDL_gfx.cpp" "MF_applet.cpp" "MF_form.cpp"

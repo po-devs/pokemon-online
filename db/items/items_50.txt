@@ -1,0 +1,22 @@
+<table border=1 cellspacing=2 cellpadding=0 width="100%" >
+	<tr>
+		<td width="32"><b><font size="1">Picture</b></td>
+		<td ><b><font size="1">Name</b></td>
+		<td ><b><font size="1">Effect</b></td>
+		<td ><b><font size="1">Location</b></td>
+	</tr>
+
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/eerie-patch.png"></td>
+		<td ><font size="1">Dubious Disc</font></td>
+		<td ><font size="1">Evolves Porygon2 into Porygon-Z when equipped and traded</font></td>
+		<td ><font size="1">Route 225</td>
+	</tr>
+	<tr>
+
+		<td  align="center"><font size="1"><img src="/diamondpearl/items/sharp-beak.gif"></td>
+		<td ><font size="1">Sharp Beak</td>
+		<td ><font size="1">Any Flying-type move's power is increased by 10%</td>
+		<td ><font size="1">Wild Fearow and Doduo (Post-National Dex)</td>
+	</tr>
+
