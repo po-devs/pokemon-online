@@ -1,0 +1,64 @@
+It may be used or held by a Pokémon to recover from paralysis. 
+It may be used or held by a Pokémon to recover from sleep. 
+It may be used or held by a Pokémon to recover from poison. 
+It may be used or held by a Pokémon to recover from a burn. 
+It may be used or held by a Pokémon to defrost it.  
+It may be used or held by a Pokémon to restore a move's PP by 10. 
+It may be used or held by a Pokémon to heal the user by just 10 HP. 
+It may be used or held by a Pokémon to recover from confusion. 
+It may be used or held by a Pokémon to recover from any status problem. 
+It may be used or held by a Pokémon to heal the user's HP a little. 
+If held by a Pokémon, it restores the user's HP in a pinch, but may also cause confusion. 
+If held by a Pokémon, it restores the user's HP in a pinch, but may also cause confusion. 
+If held by a Pokémon, it restores the user's HP in a pinch, but may also cause confusion. 
+If held by a Pokémon, it restores the user's HP in a pinch, but may also cause confusion. 
+If held by a Pokémon, it restores the user's HP in a pinch, but may also cause confusion. 
+Bury it in soft soil to grow a Razz Plant. 
+Bury it in soft soil to grow a Bluk Plant. 
+Bury it in soft soil to grow a Nanab Plant. 
+Bury it in soft soil to grow a Wepear Plant. 
+Bury it in soft soil to grow a Pinap Plant. 
+Using it on a Pokémon makes it more friendly, but it also lowers its base HP. 
+Using it on a Pokémon makes it more friendly, but it also lowers its base Attack stat. 
+Using it on a Pokémon makes it more friendly, but it also lowers its base Defense stat. 
+Using it on a Pokémon makes it more friendly, but it also lowers its base Sp. Atk stat. 
+Using it on a Pokémon makes it more friendly, but it also lowers its base Sp. Def stat. 
+Using it on a Pokémon makes it more friendly, but it also lowers its base Speed stat. 
+Bury it in soft soil to grow a Cornn Plant. 
+Bury it in soft soil to grow a Magost Plant. 
+Bury it in soft soil to grow a Rabuta Plant. 
+Bury it in soft soil to grow a Nomel Plant. 
+Bury it in soft soil to grow a Spelon Plant. 
+Bury it in soft soil to grow a Pamtre Plant. 
+Bury it in soft soil to grow a Watmel Plant. 
+Bury it in soft soil to grow a Durin Plant. 
+Bury it in soft soil to grow a Belue Plant. 
+If held by a Pokémon, it weakens a foe's supereffective Fire-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Water-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Electric-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Grass-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Ice-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Fighting-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Poison-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Ground-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Flying-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Psychic-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Bug-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Rock-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Ghost-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Dragon-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Dark-type attack. 
+If held by a Pokémon, it weakens a foe's supereffective Steel-type attack. 
+If held by a Pokémon, it weakens a foe's Normal-type attack. 
+If held by a Pokémon, it raises its Attack stat in a pinch. 
+If held by a Pokémon, it raises its Defense stat in a pinch. 
+If held by a Pokémon, it raises its Speed stat in a pinch. 
+If held by a Pokémon, it raises its Sp. Atk stat in a pinch. 
+If held by a Pokémon, it raises its Sp. Def stat in a pinch. 
+If held by a Pokémon, it raises its critical-hit ratio in a pinch. 
+If held by a Pokémon, it sharply raises one of its stats in a pinch. 
+If held by a Pokémon, it restores its HP if it is hit by a foe's supereffective attack. 
+If held by a Pokémon, it raises the accuracy of a move just once in a pinch. 
+If held by a Pokémon, it gets to move first just once in a pinch. 
+If held by a Pokémon, and if a foe's physical attack lands, the foe also takes damage. 
+If held by a Pokémon, and if a foe's special attack lands, the foe also takes damage. 

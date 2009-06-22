@@ -1,0 +1,7 @@
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/black-steel-orb.png"></td>
+		<td ><font size="1">Iron Ball</font></td>
+		<td ><font size="1">Lowers speed of holder, also makes Flying-types and Levitate Ability using Pokémon vulnerable to Ground moves when equipped to them</font></td>
+		<td ><font size="1">Iron Island<br>
+		The Underground</td>
+	</tr>

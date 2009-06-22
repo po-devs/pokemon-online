@@ -1,0 +1,66 @@
+<table border=1 cellspacing=2 cellpadding=0 width="100%" >
+	<tr>
+		<td width="32"><b><font size="1">Picture</b></td>
+		<td ><b><font size="1">Name</b></td>
+		<td ><b><font size="1">Effect</b></td>
+		<td ><b><font size="1">Location</b></td>
+	</tr>
+
+	<tr>
+		<td  align="center">
+		<font size="1"><img src="/diamondpearl/items/dragon-fang.gif"></td>
+		<td ><font size="1">Dragon Fang</td>
+		<td ><font size="1">Any Dragon-type move's power is increased by 10%</td>
+		<td ><font size="1">Wild Bagon</td>
+	</tr>
+
+	<tr>
+		<td  align="center"><font size="1"><img src="/diamondpearl/items/poison-barb.gif"></td>
+		<td ><font size="1">Poison Barb</td>
+		<td ><font size="1">Any Poison-type move's power is increased by 10%</td>
+		<td ><font size="1">Route 206<br>
+		Wild Tentacool, Tentacruel, Roselia, Budew, Skorupi and Drapion<br>
+		Wild Qwilfish (Post-National Dex)</td>
+
+	</tr>
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/power-ankle.png"></td>
+		<td ><font size="1">Power Anklet </font></td>
+		<td ><font size="1">Lowers Speed, increases EV for Speed</font></td>
+		<td ><font size="1">Battle Park (16 Battle Points)</td>
+	</tr>
+
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/power-band.png"></td>
+		<td ><font size="1">Power Band </font></td>
+		<td ><font size="1">Lowers Speed, increases EV for Sp.Defense</font></td>
+		<td ><font size="1">Battle Park (16 Battle Points)</td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/power-belt.png"></td>
+		<td ><font size="1">Power Belt </font></td>
+		<td ><font size="1">Lowers Speed, increases EV for Defense</font></td>
+		<td ><font size="1">Battle Park (16 Battle Points)</td>
+	</tr>
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/power-wrist.png"></td>
+
+		<td ><font size="1">Power Bracer</font></td>
+		<td ><font size="1">Lowers Speed, increases EV for Attack</font></td>
+		<td ><font size="1">Battle Park (16 Battle Points)</td>
+	</tr>
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/power-lens.png"></td>
+		<td ><font size="1">Power Lens </font></td>
+
+		<td ><font size="1">Lowers Speed, increases EV for Sp.Attack</font></td>
+		<td ><font size="1">Battle Park (16 Battle Points)</td>
+	</tr>
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/power-waist.png"></td>
+		<td ><font size="1">Power Weight </font></td>
+		<td ><font size="1">Lowers Speed, increases EV for HP</font></td>
+
+		<td ><font size="1">Battle Park (16 Battle Points)</td>
+	</tr>

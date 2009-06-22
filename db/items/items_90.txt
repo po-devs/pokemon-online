@@ -1,0 +1,159 @@
+<table border=1 cellspacing=2 cellpadding=0 width="100%" >
+	<tr>
+		<td width="32"><b><font size="1">Picture</b></td>
+		<td ><b><font size="1">Name</b></td>
+		<td ><b><font size="1">Effect</b></td>
+		<td ><b><font size="1">Location</b></td>
+	</tr>
+
+	<tr>
+		<td  align="center"><font size="1"><img src="/diamondpearl/items/deepseatooth.gif"></td>
+		<td ><font size="1">Deepseatooth</td>
+		<td ><font size="1">Evolves Clamperl to Huntail when equipped and traded</td>
+		<td ><font size="1">Wild Carvanha and Sharpedo (Post-National Dex)</td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/dragon-plate.png"></td>
+		<td ><font size="1">Draco Plate</font></td>
+		<td ><font size="1">Raises power of Dragon moves</font></td>
+		<td ><font size="1">The Underground<br>
+		Using Dowsing Machine Pokétch App.</td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/long-face-plate.png"></td>
+		<td ><font size="1">Dread Plate </font></td>
+		<td ><font size="1">Raises power of Dark moves</font></td>
+		<td ><font size="1">Old Chateau<br>
+		The Underground</td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/great-land-plate.png"></td>
+		<td ><font size="1">Earth Plate </font></td>
+		<td ><font size="1">Raises power of Ground moves</font></td>
+		<td ><font size="1">Oreburgh Gate<br>
+		The Underground</td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/fist-plate.png"></td>
+		<td ><font size="1">Fist Plate </font></td>
+		<td ><font size="1">Raises power of Fighting moves</font></td>
+		<td ><font size="1">Route 215<br>
+		The Underground</font></td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/fire-plate.png"></td>
+		<td ><font size="1">Flame Plate </font></td>
+		<td ><font size="1">Raises power of Fire moves</font></td>
+		<td ><font size="1">The Underground<br>
+		Using Dowsing Machine Pokétch App.</td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/scythe-claw.png"></td>
+		<td ><font size="1">Grip Claw </font></td>
+		<td ><font size="1">Prolongs number of turns of trapping attacks</font></td>
+		<td ><font size="1">Wayward Cave<br>
+		Wild Sneasel</td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/icicle-plate.png"></td>
+		<td ><font size="1">Icicle Plate </font></td>
+		<td ><font size="1">Raises power of Ice moves</font></td>
+		<td ><font size="1">Route 217<br>
+		The Underground</td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/larva-plate.png"></td>
+		<td ><font size="1">Insect Plate </font></td>
+		<td ><font size="1">Raises power of Bug moves</font></td>
+		<td ><font size="1">The Underground<br>
+		Using Dowsing Machine Pokétch App.</td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/iron-plate.png"></td>
+		<td ><font size="1">Iron Plate </font></td>
+		<td ><font size="1">Raises power of Steel moves</font></td>
+		<td ><font size="1">The Underground<br>
+		Using Dowsing Machine Pokétch App.</td>
+
+	</tr>
+
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/green-plate.png"></td>
+		<td ><font size="1">Meadow Plate </font></td>
+		<td ><font size="1">Raises power of Grass moves</font></td>
+		<td ><font size="1">The Underground<br>
+		Using Dowsing Machine Pokétch App.</td>
+	</tr>
+
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/mysterious-plate.png"></td>
+		<td ><font size="1">Mind Plate </font></td>
+		<td ><font size="1">Raises power of Psychic moves</font></td>
+		<td ><font size="1">Solaceon Ruins<br>
+		The Underground</td>
+	</tr>
+
+	<tr>
+		<td align="center"><img src="/diamondpearl/items/blue-sky-plate.png"></td>
+		<td ><font size="1">Sky Plate </font></td>
+		<td ><font size="1">Raises power of Flying moves</font></td>
+		<td ><font size="1">Pokémon League<br>
+		The Underground</td>
+	</tr>
+
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/water-drop-plate.png"></td>
+		<td ><font size="1">Splash Plate </font></td>
+		<td ><font size="1">Raises power of Water moves</font></td>
+		<td ><font size="1">Route 219<br>
+		The Underground</td>
+	</tr>
+
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/spirit-plate.png"></td>
+		<td ><font size="1">Spooky Plate </font></td>
+		<td ><font size="1">Raises power of Ghost moves</font></td>
+		<td ><font size="1">Amity Square<br>
+		The Underground</td>
+	</tr>
+
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/boulder-plate.png"></td>
+		<td ><font size="1">Stone Plate </font></td>
+		<td ><font size="1">Raises power of Rock moves</font></td>
+		<td ><font size="1">The Underground<br>
+		Using Dowsing Machine Pokétch App.</td>
+	</tr>
+
+	<tr>
+		<td  align="center"><font size="1"><img src="/diamondpearl/items/thick-club.gif"></td>
+		<td ><font size="1">Thick Club</td>
+		<td ><font size="1">If attached to Cubone or Marowak, their Attack rises by x2</td>
+		<td ><font size="1">Wild Cubone</td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/poisonooze-plate.png"></td>
+		<td ><font size="1">Toxic Plate </font></td>
+		<td ><font size="1">Raises power of Poison moves</font></td>
+		<td ><font size="1">Great Marsh<br>
+            The Underground</td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/thunder-plate.png"></td>
+		<td ><font size="1">Zap Plate </font></td>
+		<td ><font size="1">Raises power of Electric moves</font></td>
+		<td ><font size="1">The Underground<br>
+		Using Dowsing Machine Pokétch App.</td>
+	</tr>
+

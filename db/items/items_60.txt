@@ -1,0 +1,52 @@
+<table border=1 cellspacing=2 cellpadding=0 width="100%" >
+	<tr>
+		<td width="32"><b><font size="1">Picture</b></td>
+		<td ><b><font size="1">Name</b></td>
+		<td ><b><font size="1">Effect</b></td>
+		<td ><b><font size="1">Location</b></td>
+	</tr>
+
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/diamond-orb.png"></td>
+		<td ><font size="1">Adamant Orb</font></td>
+		<td ><font size="1">Raises the Steel and Dragon-type moves of Dialga</font></td>
+		<td ><font size="1">Spear Pillar (Diamond Only)</font></td>
+	</tr>
+	<tr >
+
+		<td align="center"><img src="/diamondpearl/items/wet-rock.png"></td>
+		<td ><font size="1">Damp Rock </font></td>
+		<td ><font size="1">Prolongs number of turns of Rain Dance</font></td>
+		<td ><font size="1">The Underground</td>
+	</tr>
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/hot-rock.png"></td>
+
+		<td ><font size="1">Heat Rock </font></td>
+		<td ><font size="1">Prolongs number of turns of Sunny Day</font></td>
+		<td ><font size="1">The Underground (fewer found in Pearl post-National Dex)</td>
+	</tr>
+	<tr >
+		<td align="center"><img src="/diamondpearl/items/pearl-orb.png"></td>
+		<td ><font size="1">Lustrous Orb</font></td>
+
+		<td ><font size="1">Raises the Water and Dragon-type moves of Palkia</font></td>
+		<td ><font size="1">Spearl Pillar (Pearl Only)</td>
+	</tr>
+	<tr>
+		<td  align="center">
+		<font size="1"><img src="/diamondpearl/items/macho-brace.gif"></td>
+		<td ><font size="1">Macho Brace</td>
+
+		<td ><font size="1">Cuts Speed in half but increases Effort Values</td>
+		<td ><font size="1">Pastoria City (show three variations of Burmy)</td>
+
+	</tr>
+	<tr>
+		<td  align="center"><font size="1"><img src="/diamondpearl/items/stick.gif"></td>
+		<td ><font size="1">Stick</td>
+		<td ><font size="1">If attached to Farfetch'd, Critical Hit ratio rises</td>
+
+		<td ><font size="1">Wild Farfetch'd (Post-National Dex)<br>
+	</tr>
+
