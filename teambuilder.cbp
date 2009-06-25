@@ -42,6 +42,7 @@
 			<Add library="dxguid" />
 			<Add directory="C:\Program Files\CodeBlocks\MinGW\SDL\lib" />
 		</Linker>
+		<Unit filename="508socket.h" />
 		<Unit filename="MF.cpp" />
 		<Unit filename="MF.hh" />
 		<Unit filename="MF_applet.cpp" />
@@ -62,8 +63,6 @@
 		<Unit filename="credits.cpp" />
 		<Unit filename="credits.h" />
 		<Unit filename="exception.hpp" />
-		<Unit filename="image_manager.cpp" />
-		<Unit filename="image_manager.hpp" />
 		<Unit filename="interfont.cpp" />
 		<Unit filename="interfont.hpp" />
 		<Unit filename="intergfx.cpp" />
@@ -72,6 +71,8 @@
 		<Unit filename="intervideo.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="menu.h" />
+		<Unit filename="ressource_manager.cpp" />
+		<Unit filename="ressource_manager.hpp" />
 		<Unit filename="start_menu.cpp" />
 		<Unit filename="start_menu.h" />
 		<Unit filename="teambuilder.cpp" />
