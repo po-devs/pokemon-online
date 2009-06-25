@@ -1,6 +1,7 @@
 #include "TheInternet.h"
 #include <iostream>
 #include <string>
+/** WILL replace it with SFML's Network module **/
 #include "508socket.h"
 #include "utilities.hh"
 

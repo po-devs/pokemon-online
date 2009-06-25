@@ -55,9 +55,9 @@ using namespace interface;
  * a plusieurs niveaux peuvent se construire. D'ailleurs ce qui sera au final utilisé
  * ne sera probablement que des aggregations de fenetres basiques qui donnent
  * ensemble un look sympa (une pour afficher le texte, une pour le bouton oui, une
- * pour le non, et voila une fenetre alert ;) */
+ * pour le non, et voila une fenetre alert ;)) */
 
-/* Pour éviter de charger deux fois des BMPs, ... */
+/* Pour éviter de charger deux fois des BMPs, polices ... */
 static ImageManager ImageMan("db/");
 static FontManager FontMan("db/");
 
