@@ -1,3 +1,7 @@
+/**THIS FILE WILL NOT BE USED ANYMORE IN THIS PROJECT,
+instead I'm going to use SFML's Network module **/
+
+
 #ifndef _508SOCKET_H_INCLUDED
 #define _508SOCKET_H_INCLUDED
 
