@@ -9,7 +9,7 @@ MF_Applet::MF_Applet(Uint16 w, Uint16 h, const Color &rgb, Sint16 x, Sint16 y)
 }
 
 //pour imprimer du texte
-void MF_Applet::drawString(Font &police, const char *texte, Sint16 x, Sint16 y, const Color &color)
+void MF_Applet::drawString(const Font &police, const char *texte, Sint16 x, Sint16 y, const Color &color)
 {
     //on découpe le texte par les \n
     Uint16 FLS = police.line_skip();
@@ -25,12 +25,11 @@ void MF_Applet::drawString(Font &police, const char *texte, Sint16 x, Sint16 y, 
 
         Rect r (x, y);
         tmp_surf.blitTo(surface, 0, r);
-
-        set_updated();
     }
+    set_updated();
 }
 
-void MF_Applet::drawStyledString(Font &police, const char *texte, Sint16 x, Sint16 y, const FontStyle &flags, const Color &rgb)
+void MF_Applet::drawStyledString(const Font &police, const char *texte, Sint16 x, Sint16 y, const FontStyle &flags, const Color &rgb)
 {
         FontStyle oldstyle = police.get_style();
         police.style(flags);
@@ -52,10 +51,10 @@ void MF_Applet::BlitImage(Sint16 x, Sint16 y, const char *filename, bool colorke
 
     if (colorkeyOn)
     {
-        img = Man.LoadRessource(filename, *colorkey, true);
+        img = ImageMan.LoadRessource(filename, *colorkey, true);
     } else
     {
-        img = Man.LoadRessource(filename, true);
+        img = ImageMan.LoadRessource(filename, true);
     }
 
     Rect r (x, y);
@@ -216,7 +215,7 @@ bool MF_HoverMenu::gereEvenement(const SDL_Event &event)
 }
 
 MF_ImHLApplet::MF_ImHLApplet(const char *path, Sint16 x, Sint16 y, const Color &hl)
-              :MF_Base(x, y), HLColor(hl), surface(Man.LoadRessource(path))
+              :MF_Base(x, y), HLColor(hl), surface(ImageMan.LoadRessource(path))
 {
     dims.w = surface.w();
     dims.h = surface.h();
@@ -305,8 +304,8 @@ bool MF_Button::gereEvenement(const SDL_Event &event)
 }
 
 MF_Button::MF_Button (const char* img_path_1, const char *img_path_2)
-    : clicOn(false), image_1(Man.LoadRessource(img_path_1,true)),
-        image_2(Man.LoadRessource(img_path_2,true))
+    : clicOn(false), image_1(ImageMan.LoadRessource(img_path_1,true)),
+        image_2(ImageMan.LoadRessource(img_path_2,true))
 {
     ;
 }

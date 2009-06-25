@@ -13,13 +13,13 @@
 class Poke_Zone : public MF_BApplet
 {
     public:
-        Poke_Zone(Font &police, const char *nickname, const char *item, const char *move1, const char *move2, const char *move3, const char *move4, Surface &avatar = Surface(), Sint16 x = 0, Sint16 y = 0);
+        Poke_Zone(const Font &police, const char *nickname, const char *item, const char *move1, const char *move2, const char *move3, const char *move4, Surface &avatar = Surface(), Sint16 x = 0, Sint16 y = 0);
         ~Poke_Zone(){
             ;
         }
 
         //pour redessiner tout
-        void reset(Font &police, const char *nickname, const char *item, const char *move1, const char *move2, const char *move3, const char *move4, Surface &avatar);
+        void reset(const Font &police, const char *nickname, const char *item, const char *move1, const char *move2, const char *move3, const char *move4, Surface &avatar);
 };
 
 class TeamBuilder;

@@ -20,8 +20,8 @@ class MF_Applet : virtual public MF_Surf
     //Nouvelle fonction pour afficher
     virtual void affiche(Surface &surface);
     //pour imprimer du texte
-    virtual void drawString(Font &police, const char *texte, Sint16 x, Sint16 y, const Color &rgb = Color());
-    virtual void drawStyledString(Font &police, const char *texte, Sint16 x, Sint16 y, const FontStyle &flags, const Color &rgb = Color());
+    virtual void drawString(const Font &police, const char *texte, Sint16 x, Sint16 y, const Color &rgb = Color());
+    virtual void drawStyledString(const Font &police, const char *texte, Sint16 x, Sint16 y, const FontStyle &flags, const Color &rgb = Color());
     //Pour copier une image sur la surface
     virtual void BlitImage(Sint16 x, Sint16 y, const char *filename, bool colorkeyon=false, Color *colorkey = NULL);
     virtual void BlitSurface(Surface &src, const Rect &src, Sint16 x_dest, Sint16 y_dest);

@@ -16,30 +16,26 @@ int TeamInfo::Pokes::load_image(int num, bool shinyness, bool gender, int gender
         mini_avatar.free();
         return 0;
     }
-    try {
-        string path = padd(3, num) + "DP";
 
-        if (gender == 0 && gender_t != 2)
-        {
-            path += "m";
-        } else
-        {
-            path += "f";
-        }
-        if (shinyness)
-            path += 's';
-        path += ".png";
+    string path = padd(3, num) + "DP";
 
-        smart_ptr< fast_array<char> > rw_data = OpenFile("db/poke_img.db", path.c_str());
-
-        avatar.load(SDL_RWFromMem(*rw_data, rw_data->size), true);
-
-        mini_avatar = Surface(zoomSurface(avatar.s, 0.5, 0.5, 1));
-        mini_avatar.colorkey(Color(0xFF, 0xFF, 0xFF));
-    } catch (string &ex)
+    if (gender == 0 && gender_t != 2)
     {
-        cout << ex << endl;
+        path += "m";
+    } else
+    {
+        path += "f";
     }
+    if (shinyness)
+        path += 's';
+    path += ".png";
+
+    smart_ptr< fast_array<char> > rw_data = OpenFile("db/poke_img.db", path.c_str());
+
+    avatar.load(SDL_RWFromMem(*rw_data, rw_data->size), true);
+
+    mini_avatar = Surface(zoomSurface(avatar.s, 0.5, 0.5, 1));
+    mini_avatar.colorkey(Color(0xFF, 0xFF, 0xFF));
 
 	return 0;
 }
@@ -497,13 +493,17 @@ Team::Team()
     Trainer_Lose[0] = '\0';
 }
 
-Poke_Zone::Poke_Zone(Font &police, const char *nickname, const char *item, const char *move1, const char *move2, const char *move3, const char *move4, Surface &avatar, Sint16 x, Sint16 y)
-          :MF_BApplet(153, 143, Color(0xAA, 0xAA, 0xFF), x, y)
+Poke_Zone::Poke_Zone(const Font &police, const char *nickname, const char *item, const char *move1, const char *move2, const char *move3, const char *move4, Surface &avatar, Sint16 x, Sint16 y)
+    try   :MF_BApplet(153, 143, Color(0xAA, 0xAA, 0xFF), x, y)
 {
     reset(police, nickname, item, move1, move2, move3, move4, avatar);
+} catch (const MF_Exception &ex)
+{
+    cout << "Poke_Zone constructor : " << ex.what() << endl;
+    cout << SDL_GetError() << endl;
 }
 
-void Poke_Zone::reset(Font &police, const char *nickname, const char *item, const char *move1, const char *move2, const char *move3, const char *move4, Surface &avatar)
+void Poke_Zone::reset(const Font &police, const char *nickname, const char *item, const char *move1, const char *move2, const char *move3, const char *move4, Surface &avatar)
 {
     set_updated();
     setColor(Color(0xAA, 0xAA, 0xFF));
@@ -531,7 +531,7 @@ const char* TeamBuilder::nature_name[25] = {"Hardy", "Lonely", "Brave", "Adamant
 TeamBuilder::TeamBuilder(Team &equipe)
             :MF_Applet(SDL_GetVideoSurface()->w /*around 650 */, SDL_GetVideoSurface()->h /*around 610 */, Color(249, 196, 70)), verdana(NULL), equipe(equipe), Mode(Pokemons)
 {
-    verdana.load("verdana.ttf", 11);
+    verdana = FontMan.LoadRessource("verdana.ttf", 11);
 
     //initialisation du tableau
     for (int i = 0; i <= POKE_COUNT; i++)
@@ -623,18 +623,16 @@ TeamBuilder::TeamBuilder(Team &equipe)
 
     for(int i = 0; i < 18; i ++)
     {
-        string path = "db/";
-        path += type_name[i];
-        path += ".gif";
-        move_jpg[i].load(path.c_str(), Color(0));
+        string path = string(type_name[i]) + ".gif";
+
+        move_jpg[i] = ImageMan.LoadRessource(path.c_str(), Color(0));
     }
 
     for(int i = 0; i < 3; i ++)
     {
-        string path = "db/";
-        path += category_name[i];
-        path += ".bmp";
-        cat_jpg[i].load(path.c_str(), Color(0));
+        string path = string(category_name[i]) + ".bmp";
+
+        cat_jpg[i] = ImageMan.LoadRessource(path.c_str(), Color(0));
     }
 
     PokemonField->add_set<MF_SmallASet>();
