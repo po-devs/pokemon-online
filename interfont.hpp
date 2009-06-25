@@ -34,7 +34,7 @@ namespace interface
 
             //get / set font style
             FontStyle get_style() const;
-            void style(const FontStyle &stylist);
+            void style(const FontStyle &stylist) const;
 
             //render text
             Surface render_shaded(const char *text, const Color &textcolor, const Color &bgColor) const;
@@ -45,6 +45,9 @@ namespace interface
 
             //en etat d'écrire
             operator bool () const;
+
+            //renvoie le nombre de références
+            size_t refcount() const;
     };
 } // namespace interface
 

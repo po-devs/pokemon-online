@@ -14,10 +14,10 @@ MF_ArrowSet::~MF_ArrowSet()
 
 MF_SmallASet::MF_SmallASet()
 {
-    flechehaut = Man.LoadRessource("ffhaut.bmp");
-    flechebas = Man.LoadRessource("ffbas.bmp");
-    flechegauche = Man.LoadRessource("ffgauche.bmp");
-    flechedroite = Man.LoadRessource("ffdroite.bmp");
+    flechehaut = ImageMan.LoadRessource("ffhaut.bmp");
+    flechebas = ImageMan.LoadRessource("ffbas.bmp");
+    flechegauche = ImageMan.LoadRessource("ffgauche.bmp");
+    flechedroite = ImageMan.LoadRessource("ffdroite.bmp");
     dim_fleches = flechehaut.h();
     bgColor = Color(0xDD, 0xFF, 0xDD);
     fillingColor = Color(0xEE, 0xEE, 0xEE);
@@ -27,8 +27,8 @@ MF_SmallASet::MF_SmallASet()
 
 MF_BigASet::MF_BigASet()
 {
-    flechehaut = Man.LoadRessource("Arrow2.png");
-    flechebas = Man.LoadRessource("Arrow.png");
+    flechehaut = ImageMan.LoadRessource("Arrow2.png");
+    flechebas = ImageMan.LoadRessource("Arrow.png");
     dim_fleches = flechehaut.h();
     bgColor = Color(240, 208, 130);
     fillingColor = Color(65, 172, 205);
@@ -1154,7 +1154,7 @@ void MF_BarManager::shareFont(Font &font)
 
 void MF_BarManager::loadFont(const char* font_path, Uint8 ptsize)
 {
-    police.load(font_path, ptsize);
+    police = FontMan.LoadRessource(font_path, ptsize);
 }
 
 MF_DataLine::MF_DataLine(vector<MF_Base_Type *>&cont)
@@ -1319,7 +1319,7 @@ MF_TrayBar :: MF_TrayBar(Sint16 x, Sint16 y, Uint16 w, Uint16 numvals, const Col
         : pos_icon(min_val), num_vals(numvals), pas(step), min_val(min_val), void_color(0xFF,0xFF,0xFF), lastval(min_val), clicOn (false), clicAble(clicAble)
 {
     MF_TrayBar::colorkey = Color(252, 3, 65);
-    MF_Tray_Icon = Man.LoadRessource("pos_icon.bmp", MF_TrayBar::colorkey, true);
+    MF_Tray_Icon = ImageMan.LoadRessource("pos_icon.bmp", MF_TrayBar::colorkey, true);
 
     bgColor = colorkey;
     setRect(x, y, w, height);

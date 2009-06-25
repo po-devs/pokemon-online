@@ -13,7 +13,7 @@
 #include <cstring>
 
 #include "intervideo.hpp"
-#include "image_manager.hpp"
+#include "ressource_manager.hpp"
 
 using namespace interface;
 
@@ -58,7 +58,8 @@ using namespace interface;
  * pour le non, et voila une fenetre alert ;) */
 
 /* Pour éviter de charger deux fois des BMPs, ... */
-static ImageManager Man("db/");
+static ImageManager ImageMan("db/");
+static FontManager FontMan("db/");
 
 /* La classe qui gere des sous-fenetres */
 class MF_Boss;

@@ -17,7 +17,7 @@ void MF_Ligne::setTextColor(const Color &c)
 /* Met une police */
 void MF_Ligne::setFont(const char *fichier, Uint16 ptsize)
 {
-    police.load(fichier, ptsize);
+    police = FontMan.LoadRessource(fichier, ptsize);
 }
 
 void MF_Ligne::shareFont(Font &font)
@@ -523,9 +523,9 @@ MF_MLigne::MF_MLigne()
         :capacity(1), ncurrentligne(0), barreOn(false), barre_clicOn(false), timer_wasinit(false)
 {
     if (!flechebas)
-        flechebas = Man.LoadRessource("Arrow.png", true);
+        flechebas = ImageMan.LoadRessource("Arrow.png", true);
     if (!flechehaut)
-        flechehaut = Man.LoadRessource("Arrow2.png", true);
+        flechehaut = ImageMan.LoadRessource("Arrow2.png", true);
 
     //on fait la premiere ligne, ses pos (tout simplement 0,0).
     xy pos(0,0);

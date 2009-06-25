@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include "intervideo.hpp"
+#include "interfont.hpp"
 
 //ImageManager. Note that the fact that Surface are already shared with a refcount when copying
 //makes it really easy to make
@@ -36,5 +37,30 @@ public:
     void clear();
 };
 
+class FontManager
+{
+public:
+    //All fonts will be loaded relatively to this directory,
+    std::string directory;
+    //I believe it's explicit enough, that and that it should be private as well
+    std::map <std::string, interface::Font> ressources;
+
+    //rep = that directory
+    FontManager(const char *rep = "");
+
+    //pass "." as an argument for getting the current dir, otherwise changes the dir
+    //But it's dangerous to do runtime directories changes
+    const std::string &SetDirectory(const char *rep = ".");
+
+    //load the wanted ressource with those settings
+    //note that the settings only work if the image is not already loaded
+    interface::Font LoadRessource (const char *filename, Uint16 ptsize);
+
+    //Destroy the non-used images (garbage collector lol!)
+    void clean_up();
+
+    //Destroy everything
+    void clear();
+};
 
 #endif // IMAGE_MANAGER_H_INCLUDED

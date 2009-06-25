@@ -33,12 +33,10 @@ smart_ptr< fast_array<char> > Team::convertToBits() const
         {
             bits.push_l(pok.moves[j], 9);
         }
-        cout << bits.slave.bits->size << endl;
         bits.mega_push( "$4#9#7#8#8#8#8#8#8#5#5#5#5#5#5#5#1#1#1", &(pok.nick), pok.item, pok.level, pok.hp_ev,
                         pok.att_ev, pok.def_ev, pok.satt_ev, pok.sdef_ev, pok.speed_ev, pok.nature, pok.hp_dv,
                         pok.att_dv, pok.def_dv, pok.satt_dv, pok.sdef_dv, pok.speed_dv, pok.gender, pok.shiney,
                         pok.ability);
-        cout << bits.slave.bits->size << endl;
     };
 
     //5 au cas où on veut agrandir Trainer_Name jusqu'à 32 caractère par la suite

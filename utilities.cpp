@@ -232,7 +232,6 @@ void MegaDeserializer::mega_pop(const char *scheme, ...)
 
     while( *scheme != 0 )
     {
-        clog << "popping " << scheme[0] << scheme[1] << " (" << slave.remaining_bitlen/8 << ") " << endl;
         uint8_t n = scheme[1]-'0';
         if (*scheme == '#')
         {
