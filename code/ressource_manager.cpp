@@ -84,14 +84,11 @@ void ImageManager::clear()
 }
 
 
+/***
 
+    FONT MANAGER!
 
-
-
-
-
-
-
+***/
 
 
 

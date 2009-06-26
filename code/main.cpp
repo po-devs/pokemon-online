@@ -58,16 +58,24 @@ int main(int argc, char **argv) try
     SDL_Quit();
 
 	exit(0);
-}  catch (exception &ex)
+}  catch (const exception &ex)
 {
     cout << "Exception: " << ex.what();
     return 0;
-} catch (int &i)
+} catch (const int &i)
 {
     cout << "Exception int: " << i << endl;
     return 0;
+} catch (const string &s)
+{
+    cout << "Exception string: " << s << endl;
+    return 0;
+} catch (const char *a)
+{
+    cout << "Exception char*: " << a << endl;
+    return 0;
 } catch (...)
 {
-    cout << "Exception recue!" << endl;
-    return -1;
+    cout << "Exception inconnue!" << endl;
+    return 0;
 }

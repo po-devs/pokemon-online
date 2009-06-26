@@ -1,148 +1,280 @@
 #include "TheInternet.h"
 #include <iostream>
 #include <string>
-/** WILL replace it with SFML's Network module **/
-#include "508socket.h"
+#include <SFML/Network.hpp>
 #include "utilities.hh"
 
 using namespace std;
-using namespace _508::sock;
+using sf::Socket::Error;
+using sf::Socket::Disconnected;
+using sf::Socket::NotReady;
+using sf::Socket::Done;
+using sf::Socket::Status;
+
+
+/*  Receive a message from &sock and append it to recv, stopping if finished is true.
+    sock should be set to NonBlocking beforehand.
+
+    Return:
+        - sf::Socket::NotReady if was interrupted by finished
+        - sf::Socket::Error or sf::Socket::Disconnected if such was the error
+        - sf::Socket::Done if everything went well
+*/
+sf::Socket::Status recv_body(sf::SocketTCP &sock, string &recv, const bool &finished)
+{
+    /* three steps: getting the length of the length of the message,
+       then the length of the message,
+       then the message
+    */
+
+    char buffer[500];
+
+    size_t received;
+
+    //Step one : length of length
+    while (1)
+    {
+        if (finished)
+            return NotReady;
+
+        Status s = sock.Receive(buffer, 1, received);
+
+        if (s == Error || s == Disconnected)
+            return s;
+
+        if (s == Done)
+            break;
+
+        SDL_Delay(10);
+    }
+
+    if (received != 1)
+        return Error;
+
+    //length of length :)
+    Uint8 l_l = buffer[0];
+
+    // cursor, where are we located in the buffer
+    int i=0;
+
+    if (l_l >= sizeof(buffer))
+            return Error;
+
+    //Step two : length
+    while (1)
+    {
+        if (finished)
+            return NotReady;
+
+        Status s = sock.Receive(buffer+i, l_l - i, received);
+
+        if (s == Error || s == Disconnected)
+            return s;
+
+        if (s == Done)
+        {
+            i += received; //moving cursor
+            if (i == l_l)
+                break;
+            else
+                continue;
+        }
+
+        SDL_Delay(10);
+    }
+
+    //length of the message
+    size_t length = ConnectToRegistry::calc_length(recv.data(), l_l);
+
+    //Step three: Yata!
+    while (1)
+    {
+        if (finished)
+            return NotReady;
+
+        Status s = sock.Receive(buffer, min(sizeof(buffer), length), received);
+
+        if (s == Error || s == Disconnected)
+            return s;
+
+        if (s == Done)
+        {
+            recv.append(buffer, received);
+            length -= received; //remaining length to go
+
+            if (length == 0)
+                break;
+            else
+                continue;
+        }
+
+        SDL_Delay(10);
+    }
+
+    return Done;
+}
+
+
+
+
 
 ConnectToRegistry::ConnectToRegistry()
-                  : super(NULL)
+                  :thread(&ConnectToRegistry::the_real_thing, this)
 {
     ;
 }
 
 ConnectToRegistry::~ConnectToRegistry()
 {
-    if (super)
-    {
-        finish_off = true;
-        SDL_WaitThread(super, NULL);
-    }
+    finish_off = true;
+    thread.Wait();
 }
 
 void ConnectToRegistry::start_everything()
 {
-    super = SDL_CreateThread(the_real_thing, this);
+    thread.Launch();
 }
 
-int ConnectToRegistry::the_real_thing(void *data)
+///Doesn't work for some reason (not my fault though)
+//void ConnectToRegistry::the_real_thing(void *data)
+//{
+//    //classe de base
+//    ConnectToRegistry &base = *(static_cast<ConnectToRegistry*>(data));
+//    sf::SocketTCP Client;
+//
+//    try
+//    {
+//        //on prend l'addresse de la registry
+//        string regip = *find_line("db/registry.txt", 0);
+//
+//        Client.SetBlocking(false);
+//
+//        if (Client.Connect(50508, regip.c_str()) != sf::Socket::Done)
+//            throw "error: Error while connecting to registry (" + regip + ").";
+//
+//        if (base.finish_off)
+//            goto end;
+//
+//        string msg = "__servlist";
+//        msg[0] = 1;
+//        msg[1] = msg.length()-2;
+//
+//        while (1)
+//        {
+//            if (base.finish_off)
+//                goto end;
+//
+//            Status s = Client.Send(msg.c_str(), msg.length());
+//
+//            if (s == Disconnected || s == Error)
+//                throw "error: Error when asking registry for server list.";
+//
+//            if (s == Done)
+//                break;
+//
+//            SDL_Delay(10);
+//        }
+//
+//        //getting registry's answer
+//        string recv;
+//
+//        Status s = recv_body(Client, recv, base.finish_off);
+//
+//        if (s == NotReady)
+//            goto end;
+//
+//        if (s == Error || s == Disconnected)
+//            throw "error: Error when receiving server list";
+//
+//        //Now everything is in the right string!
+//        //time for heavy weaponry
+//        MegaDeserializer pile(recv);
+//
+//        //TODO: deserialize the data ;)
+//    } catch (const string &ex)
+//    {
+//        cout << "gotcha" << endl;
+//        base.envoieMessage(ex.c_str());
+//    } catch (const char *a)
+//    {
+//        cout << "gotcha" << endl;
+//        base.envoieMessage(a);
+//    }
+//
+//    end:
+//    Client.Close();
+//    return;
+//}
+
+void ConnectToRegistry::the_real_thing(void *data)
 {
     //classe de base
     ConnectToRegistry &base = *(static_cast<ConnectToRegistry*>(data));
+    sf::SocketTCP Client;
+    string ex; //exception
 
     //on prend l'addresse de la registry
-    ifstream in("db/registry.txt");
+    string regip = *find_line("db/registry.txt", 0);
 
-    string regip;
-    getline(in, regip);
-    in.close();
+    Client.SetBlocking(false);
 
-    sockboss nosy(1);
-    socket thesock;
+    string msg,recv;
+    Status s;
+    MegaDeserializer pile;
 
-    if (!nosy.getsock(nosy.createsocket(regip.c_str(), 6508), thesock))
-    {
-        base.envoieMessage("error: Error -- give the programmer the code C01 for help");
-        return 1;
-    }
-
-    if (!(*thesock))
-    {
-        base.envoieMessage(("error: Impossible to connect to the registry(" + regip +"):\n \n"+nosy.error).c_str());
-        return 1;
+    if (Client.Connect(50508, regip.c_str()) != sf::Socket::Done) {
+        ex = "error: Error while connecting to registry (" + regip + ").";
+        goto ex;
     }
 
     if (base.finish_off)
-    {
-        return 0;
-    }
+        goto end;
 
-    string msg = "__servlist";
+    msg = "__servlist";
     msg[0] = 1;
     msg[1] = msg.length()-2;
 
-    thesock->send(msg);
-
-    if (base.finish_off)
+    while (1)
     {
-        return 0;
-    }
+        if (base.finish_off)
+            goto end;
 
-    string recv;
+        s = Client.Send(msg.c_str(), msg.length());
 
-    while (!base.finish_off && *thesock)
-    {
-        nosy.checksockets();
-        if (thesock->ready())
-        {
-            //First we need to know the length of the length of the message
-            thesock->recv(recv, 1);
-            break;
-        } else
-        {
-            SDL_Delay(10);
+        if (s == Disconnected || s == Error) {
+            ex = "error: Error when asking registry for server list.";
+            goto ex;
         }
-    }
 
-    if (base.finish_off || !*thesock)
-    {
-        return 0;
-    }
-
-    // Now we need to know the length of the message
-    Uint8 l_l = recv[0];
-    recv = "";
-
-    while (!base.finish_off && recv.length() < l_l && *thesock)
-    {
-        nosy.checksockets();
-        if (thesock->ready())
-        {
-            //First we need to know the length of the length of the message
-            thesock->recv(recv, recv.length()-l_l);
+        if (s == Done)
             break;
-        } else
-        {
-            SDL_Delay(10);
-        }
+
+        SDL_Delay(10);
     }
 
-    if (base.finish_off || !*thesock)
-    {
-        return 0;
-    }
+    //receives the body of the answer from registry
+    s = recv_body(Client, recv, base.finish_off);
 
-    //And now we need the whole message
-    size_t l = calc_length(recv.data(), l_l);
-    //And now, download time :D
+    if (s == NotReady)
+        goto end;
 
-    recv= "";
-    while (!base.finish_off && recv.length() < l && *thesock)
-    {
-        nosy.checksockets();
-        if (thesock->ready())
-        {
-            //First we need to know the length of the length of the message
-            thesock->recv(recv, recv.length()-l);
-            break;
-        } else
-        {
-            SDL_Delay(10);
-        }
-    }
-
-    if (base.finish_off || !*thesock)
-    {
-        return 0;
+    if (s == Error || s == Disconnected) {
+        ex = "error: Error when receiving server list";
+        goto ex;
     }
 
     //Now everything is in the right string!
     //time for heavy weaponry
-    MegaDeserializer pile(recv);
-    return 0;
+    pile.init(recv);
+
+    //TODO: deserialize the data ;)
+end:
+    Client.Close();
+    return;
+ex:
+    Client.Close();
+    base.envoieMessage(ex.c_str());
+    return;
 }
 
 size_t ConnectToRegistry::calc_length(const char *data, Uint8 l_l)

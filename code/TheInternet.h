@@ -1,18 +1,27 @@
-#include "MF_applet.hh"
-
 #ifndef THEINTERNET_H_INCLUDED
 #define THEINTERNET_H_INCLUDED
+
+#include "MF_applet.hh"
+#include <SFML/System.hpp>
 
 class ConnectToRegistry : public MF_Base
 {
     public: /* private */
-        static int the_real_thing(void *data);
+        /** @name  the_real_thig
+            @brief la fonction threadée
+        **/
+        static void the_real_thing(void *data);
+        /** @name  calc_length
+            @brief calcule la longueur du message à recevoir
+            @param data  le début du message
+            @param l_l  la longueur en nombre de caractères de la longueur du message
+        **/
         static size_t calc_length(const char *data, Uint8 l_l);
 
     public:
-        //a flag to kill
+        /* Si mis à true, on doit arrêter ce qu'on fait */
         bool finish_off;
-        SDL_Thread *super;
+        sf::Thread thread;
 
         ConnectToRegistry();
         ~ConnectToRegistry();

@@ -12,18 +12,21 @@
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-pg" />
-					<Add option="-g" />
+					<Add option="-Os" />
+					<Add option="-O3" />
+					<Add option="-mthreads" />
 					<Add option="-DMF_TEXT_ACCENTUE" />
 					<Add option="-DMF_RETOUR_LIGNE" />
 					<Add option="-Dprivate=public" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg -lgmon" />
+					<Add option="-s" />
 					<Add library="SDL_ttf" />
 					<Add library="SDL_image" />
 					<Add library="SDL_rotozoom" />
 					<Add library="SDL_net" />
+					<Add library="sfml-network" />
+					<Add library="sfml-system" />
 				</Linker>
 			</Target>
 		</Build>
@@ -42,7 +45,6 @@
 			<Add library="dxguid" />
 			<Add directory="C:\Program Files\CodeBlocks\MinGW\SDL\lib" />
 		</Linker>
-		<Unit filename="code\508socket.h" />
 		<Unit filename="code\MF.cpp" />
 		<Unit filename="code\MF.hh" />
 		<Unit filename="code\MF_applet.cpp" />
