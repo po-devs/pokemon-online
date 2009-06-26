@@ -43,7 +43,7 @@ int main(int argc, char **argv) try
             }
         }
 
-        //if(SDL_GetAppState() & SDL_APPACTIVE)
+        if(SDL_GetAppState() & SDL_APPACTIVE)
         {
             tb->affiche(screen);
         }
