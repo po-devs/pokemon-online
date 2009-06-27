@@ -114,6 +114,11 @@ struct Team
     void save(const char *file_name);
 };
 
+void serialize(MegaSerializer &bits, const Team &t);
+void serialize(MegaSerializer &bits, const Team::Pokes &pok);
+void deserialize(MegaDeserializer &bits, Team &t);
+void deserialize(MegaDeserializer &bits, Team::Pokes &pok);
+
 struct TeamInfo
 {
     //les infos des pokes
