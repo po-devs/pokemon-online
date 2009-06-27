@@ -92,7 +92,7 @@ class MF_TextBox : virtual public MF_Directions
         //Si = 0, il faudra faire shift+enter ou shift+tab pour en faire, sinon le message tab ou enter est envoyé à pSup
         bool enter;
         bool tab;
-        MF_MWLigne champ_texte;
+        MF_MWLine champ_texte;
 
         MF_TextBox(Font &police, Uint16 w, Uint16 h, int capacity = 1, const char* texte="", Sint16 x = 0, Sint16 y =0, int offsetx = 2, int offsety = 2, bool enter = true, bool tab = false);
         ~MF_TextBox(){
@@ -106,13 +106,13 @@ class MF_TextBox : virtual public MF_Directions
             champ_texte.police = font;
         }
 
-        virtual bool gereEvenement(const SDL_Event &event);
-        virtual void affiche(Surface &ecran);
+        virtual bool deal_w_Event(const SDL_Event &event);
+        virtual void display(Surface &ecran);
         virtual std::string &get_content() {
             return champ_texte.texte;
         }
-        virtual void actualiser() {
-            champ_texte.actualiser();
+        virtual void refresh() {
+            champ_texte.refresh();
         }
         virtual void setPos(bool prems)
         {
@@ -121,13 +121,13 @@ class MF_TextBox : virtual public MF_Directions
             if (!champ_texte.updated || !champ_texte.second_update) set_updated();
         }
         virtual void clear() {
-            champ_texte.effacer(0,-1);
+            champ_texte.erase(0,-1);
         }
-        virtual void ecrire(std::string texte) {
-            champ_texte.ecrire(texte);
+        virtual void write(std::string texte) {
+            champ_texte.write(texte);
         }
-        virtual void ecrire(const char *texte) {
-            champ_texte.ecrire(texte);
+        virtual void write(const char *texte) {
+            champ_texte.write(texte);
         }
         virtual void move(Sint16 x, Sint16 y)
         {
@@ -152,16 +152,16 @@ class MF_TButton : public MF_Applet, virtual public MF_Directions
         }
 
         //Affichage
-        virtual void affiche(Surface &surface);
+        virtual void display(Surface &surface);
         //pour les clics
-        virtual bool gereEvenement(const SDL_Event &event);
+        virtual bool deal_w_Event(const SDL_Event &event);
 };
 
-//Pour afficher des bordures
+//Pour displayr des bordures
 void MF_Box_DrawBorders(const Rect &dims, Surface &ecran, bool inverted = false);
 
 //Une sorte de champ texte,
-//il contient une liste de mots, qui s'affiche en surligné pour compléter les mots déjà existant
+//il contient une liste de mots, qui s'display en surligné pour compléter les mots déjà existant
 class MF_TextList : public MF_TextBox, virtual public MF_Directions
 {
     struct MF_TextList_Data
@@ -193,13 +193,13 @@ class MF_TextList : public MF_TextBox, virtual public MF_Directions
         //retourne 1 si l'évènement est viable, 0 sinon
         virtual bool EventFilter(const SDL_Event &event);
         //après avoir écrit, on appelle cette fonction pour fouiller dans le set de mots
-        //et afficher le mot correspondant
+        //et displayr le mot correspondant
         void post_event(const SDL_Event &event);
         //On redéfinit les fonctions pour y inclure les deux fonctions ci-dessus
-        virtual bool gereEvenement(const SDL_Event &event)
+        virtual bool deal_w_Event(const SDL_Event &event)
         {
             if (EventFilter(event) == 0) return true;
-            bool result = MF_TextBox::gereEvenement(event);
+            bool result = MF_TextBox::deal_w_Event(event);
             post_event(event);
             return result;
         }
@@ -213,19 +213,19 @@ class MF_TextList : public MF_TextBox, virtual public MF_Directions
         }
         //trouver un mot par rapport au champ de texte
         const char * find_word();
-        //ecrire
+        //write
         template <class T>
-        void ecrire(T data){
-            champ_texte.ecrire(data);
+        void write(T data){
+            champ_texte.write(data);
             find_word();
         }
-        virtual void affiche(Surface &ecran)
+        virtual void display(Surface &ecran)
         {
             if (!updated) {
-                actualiser();
+                refresh();
                 updated = true;
             }
-            MF_TextBox::affiche(ecran);
+            MF_TextBox::display(ecran);
         }
         virtual void set_updated()
         {
@@ -245,10 +245,10 @@ class MF_DataBar : virtual public MF_Base
     public:
         virtual MF_DataBar * init(Uint16 w, Uint16 h, void *param) {
             resize(w, h);
-            return dynamic_cast<MF_DataBar *> (pApres);
+            return dynamic_cast<MF_DataBar *> (pNext);
         };
-        virtual void affiche(MF_BarManager *boss, Rect &pos_barre);
-        virtual void affiche_next(MF_BarManager *boss, Rect &pos_barre);
+        virtual void display(MF_BarManager *boss, Rect &pos_barre);
+        virtual void display_next(MF_BarManager *boss, Rect &pos_barre);
         virtual int compare(MF_DataBar *member2) {
             return 0;
         }
@@ -259,7 +259,7 @@ class MF_DataLine : virtual public MF_Boss
     public:
         MF_DataLine(vector<MF_Base_Type *> &cont);
         Uint16 bar_id;
-        virtual void affiche(MF_BarManager *boss, Rect &pos_barre);
+        virtual void display(MF_BarManager *boss, Rect &pos_barre);
         virtual void setPos(bool prems)
         {
             MF_Base::setPos(prems);
@@ -345,13 +345,13 @@ class MF_BarManager : virtual public MF_Boss, virtual public MF_Surf, virtual pu
         virtual unsigned int maxlargeur(){
             return (dims.w-4-aff_data->dim_fleches*barre_v_on);
         }
-        virtual void actualiser();
-        virtual bool gereEvenement(const SDL_Event &event);
-        virtual bool gereTouche(const SDL_KeyboardEvent &event);
-        virtual bool gereClic(const SDL_MouseButtonEvent &event);
-        virtual bool gereMotion(const SDL_MouseMotionEvent &event);
+        virtual void refresh();
+        virtual bool deal_w_Event(const SDL_Event &event);
+        virtual bool deal_w_key(const SDL_KeyboardEvent &event);
+        virtual bool deal_w_click(const SDL_MouseButtonEvent &event);
+        virtual bool deal_w_motion(const SDL_MouseMotionEvent &event);
         virtual void update_barre();
-        virtual void affiche_barre();
+        virtual void display_barre();
         virtual int descendcurseur(int crans);
         virtual int montecurseur(int crans);
         virtual int montebarre_crans(int crans);
@@ -365,7 +365,7 @@ class MF_BarManager : virtual public MF_Boss, virtual public MF_Surf, virtual pu
         virtual bool repos_barre();
         virtual void reset_pos() {
             posx = pos_affichage_v = 0;
-            MF_pos = MF_pos_affichage = dynamic_cast<MF_DataLine*>(pFin);
+            MF_pos = MF_pos_affichage = dynamic_cast<MF_DataLine*>(pEnd);
             set_updated();
         }
         virtual int get_barre_v_h();
@@ -373,7 +373,7 @@ class MF_BarManager : virtual public MF_Boss, virtual public MF_Surf, virtual pu
         virtual int get_barre_h_w();
         virtual int get_barre_h_pos();
         virtual int get_pos_of(Uint16 id);
-        virtual void affiche(Surface &ecran);
+        virtual void display(Surface &ecran);
         virtual void setPos(bool prems);
         virtual int move_pos_x(int steps);
         virtual int move_pos_affichage(int steps);
@@ -421,7 +421,7 @@ class MF_TextBar : virtual public MF_DataBar
             texte = (const char*)param;
             return MF_DataBar::init(w, h, param);
         }
-        virtual void affiche(MF_BarManager *boss, Rect &pos_barre);
+        virtual void display(MF_BarManager *boss, Rect &pos_barre);
         virtual int compare(MF_DataBar *member2)
         {
             MF_TextBar *it = dynamic_cast<MF_TextBar*>(member2);
@@ -443,7 +443,7 @@ class MF_ImageBar: virtual public MF_DataBar
             image = *((Surface *)param);
             return MF_DataBar::init(w, h, param);
         }
-        virtual void affiche(MF_BarManager *boss, Rect &pos_barre);
+        virtual void display(MF_BarManager *boss, Rect &pos_barre);
         virtual int compare(MF_DataBar *member2)
         {
             MF_ImageBar *it = dynamic_cast<MF_ImageBar*>(member2);
@@ -469,13 +469,13 @@ class MF_Alert : virtual public MF_MoveAbleBoss, virtual public MF_Prio
         MF_Alert(MF_Boss *src, Font &police, const char *texte, const Color &bgcolor = Color(0xDD,0xDD,0xDD));
         ~MF_Alert();
 
-        virtual void affiche(Surface &surface);
-        virtual bool recoitMessage(const char *message, MF_Base *fenetre);
+        virtual void display(Surface &surface);
+        virtual bool RecvFromSub(const char *message, MF_Base *fenetre);
         virtual void move(Sint16 x, Sint16 y)
         {
-            allouer(inside);
+            allocate(inside);
             MF_Boss::move(x, y);
-            desallouer(inside);
+            desallocate(inside);
         }
 };
 
@@ -499,9 +499,9 @@ class MF_TrayBar : virtual public MF_Directions, virtual public MF_Surf
         MF_TrayBar(Sint16 x, Sint16 y, Uint16 w, Uint16 numvals, const Color &fcolor = Color(0,0,0), Uint16 step = 1, Sint16 min_val = 0, bool clicAble = true);
         ~MF_TrayBar();
 
-        virtual void actualiser();
-        virtual void affiche(Surface &surface);
-        virtual bool gereEvenement(const SDL_Event &event);
+        virtual void refresh();
+        virtual void display(Surface &surface);
+        virtual bool deal_w_Event(const SDL_Event &event);
         virtual Sint16 get_posx() {
             return ((pos_icon-min_val)*(dims.w-MF_Tray_Icon.w()+1))/num_vals;
         }
@@ -521,9 +521,9 @@ class MF_ListeDeroulante : public MF_BarManager
         MF_ListeDeroulante(Uint16 w, Uint16 sh, Uint16 bh, Sint16 x, Sint16 y, Font &font);
         MF_ListeDeroulante(Uint16 w, Uint16 sh, Uint16 bh, Sint16 x, Sint16 y, const char *font_path, Uint8 ptsize);
 
-        virtual bool gereClic(const SDL_MouseButtonEvent &bevent);
-        virtual bool gereTouche(const SDL_KeyboardEvent &kevent);
-        virtual bool dedans(int x, int y) const;
+        virtual bool deal_w_click(const SDL_MouseButtonEvent &bevent);
+        virtual bool deal_w_key(const SDL_KeyboardEvent &kevent);
+        virtual bool isIn(int x, int y) const;
         bool change_deroulee(bool deroul);
         virtual void setPos(bool prems)
         {
@@ -543,10 +543,10 @@ class MF_Radio : public MF_Applet
         MF_Radio(Font &police, const char *texte, bool selected, Sint16 x, Sint16 y, const Color &colorkey = Color(222,39,208));
         virtual void setPos(bool prems){
             MF_Base::setPos(prems);
-            envoieMessage("select");
+            sendToBoss("select");
             set_updated();
         }
-        virtual void affiche(Surface &surf);
+        virtual void display(Surface &surf);
         virtual bool check_updated() {
             return selected == isFirst;
         }
@@ -557,10 +557,10 @@ class MF_Radio : public MF_Applet
 class MF_BRadio : public MF_Boss
 {
     public:
-        /* ATTENTION!! Les autres méthodes (allouer, ...)
+        /* ATTENTION!! Les autres méthodes (allocate, ...)
            peuvent être considérées comme private, faites très gaffe! */
         virtual MF_Base *add_option(Font &police, const char *texte, Uint16 role);
-        virtual bool recoitMessage(const char *message, MF_Base *fenetre);
+        virtual bool RecvFromSub(const char *message, MF_Base *fenetre);
 };
 
 class MF_CheckBox : public MF_Applet
@@ -570,7 +570,7 @@ class MF_CheckBox : public MF_Applet
         bool updated;
 
         MF_CheckBox(Font &police, const char *texte, bool checked, Sint16 x, Sint16 y, const Color &colorkey = Color(222,39,208));
-        virtual void affiche(Surface &surf);
+        virtual void display(Surface &surf);
         virtual bool check_updated() {
             return updated;
         }
@@ -578,6 +578,6 @@ class MF_CheckBox : public MF_Applet
         virtual void set_updated();
         /* PRIVATE */
         virtual int drawCross();
-        virtual bool gereEvenement(const SDL_Event &event);
+        virtual bool deal_w_Event(const SDL_Event &event);
 };
 #endif

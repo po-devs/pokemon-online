@@ -34,16 +34,16 @@ class ServerList : public MF_BDirections, public MF_Applet
     public:
         MF_Button *a,*b,*start, *up, *right, *left, *down;
         MF_BarManager *servers; //35,28,387,300
-        MF_MLigne *description;
+        MF_MLine *description;
         ConnectToRegistry c;
         Font police;
 
         ServerList();
 
-        void affiche(Surface &ecran);
-        void self_affiche(Surface &ecran);
+        void display(Surface &ecran);
+        void self_display(Surface &ecran);
 
-        bool recoitMessage(const char *message, MF_Base *fenetre);
+        bool RecvFromSub(const char *message, MF_Base *fenetre);
 };
 
 

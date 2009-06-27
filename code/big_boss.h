@@ -11,12 +11,12 @@
 class BigBoss : public MF_Boss
 {
     public:
-        Team equipe;
+        Team team;
 
         BigBoss();
 
-        bool recoitMessage(const char *message, MF_Base *fenetre);
-        void affiche(Window &ecran);
+        bool RecvFromSub(const char *message, MF_Base *fenetre);
+        void display(Window &ecran);
 };
 
 #endif // BIG_BOSS_H_INCLUDED

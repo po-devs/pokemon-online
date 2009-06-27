@@ -1,43 +1,43 @@
 #include "start_menu.h"
 #include "MF_applet.hh"
 
-StartMenu::StartMenu(Team &equipe) :equipe(equipe)
+StartMenu::StartMenu(Team &team) :team(team)
 {
-    allouer (teambuilder = new MF_ImHLApplet("teambuilder.png", 140, 130));
-    allouer (battle = new MF_ImHLApplet("battle online.png", 140, 220));
-    allouer (credits = new MF_ImHLApplet("credits.png", 230, 310));
-    allouer (exit = new MF_ImHLApplet("exit.png", 250, 400));
+    allocate (teambuilder = new MF_ImHLApplet("teambuilder.png", 140, 130));
+    allocate (battle = new MF_ImHLApplet("battle online.png", 140, 220));
+    allocate (credits = new MF_ImHLApplet("credits.png", 230, 310));
+    allocate (exit = new MF_ImHLApplet("exit.png", 250, 400));
 }
 
-void StartMenu::affiche(Surface &s)
+void StartMenu::display(Surface &s)
 {
     updated = true;
     s.fill(0, Color(0xFF, 0xFF, 0xFF));
-    afficheMF(s);
+    displayMF(s);
 }
 
-bool StartMenu::recoitMessage(const char *message, MF_Base *fenetre)
+bool StartMenu::RecvFromSub(const char *message, MF_Base *fenetre)
 {
     if (strcmp(message, "clic") == 0)
     {
         if (fenetre == teambuilder)
         {
-            envoieMessage("teambuilder");
+            sendToBoss("teambuilder");
             return true;
         }
         if (fenetre == exit)
         {
-            envoieMessage("exit");
+            sendToBoss("exit");
             return true;
         }
         if (fenetre == credits)
         {
-            envoieMessage("credits");
+            sendToBoss("credits");
             return true;
         }
         if (fenetre == battle)
         {
-            envoieMessage("battle online");
+            sendToBoss("battle online");
             return true;
         }
     }

@@ -17,8 +17,8 @@ class MF_Applet : virtual public MF_Surf
     MF_Applet(Uint16 w, Uint16 h, const Color &rgb, Sint16 x = 0, Sint16 y = 0);
     ~MF_Applet(){}
 
-    //Nouvelle fonction pour afficher
-    virtual void affiche(Surface &surface);
+    //Nouvelle fonction pour displayr
+    virtual void display(Surface &surface);
     //pour imprimer du texte
     virtual void drawString(const Font &police, const char *texte, Sint16 x, Sint16 y, const Color &rgb = Color());
     virtual void drawStyledString(const Font &police, const char *texte, Sint16 x, Sint16 y, const FontStyle &flags, const Color &rgb = Color());
@@ -39,8 +39,8 @@ class MF_HLApplet : public MF_Applet
     MF_HLApplet(Uint16 w, Uint16 h, const Color &rgb, Sint16 x = 0, Sint16 y = 0, const Color &hl = Color(0x22, 0xFF, 0xAA));
     ~MF_HLApplet(){;}
 
-    //une autre fonction pour afficher
-    virtual void affiche(Surface &ecran);
+    //une autre fonction pour displayr
+    virtual void display(Surface &ecran);
     virtual int set_hover_state(int enable);
     //Mettre la couleur de highlight
     Color Set_HLColor(Uint8 r, Uint8 g, Uint8 b){
@@ -69,8 +69,8 @@ class MF_ImHLApplet : virtual public MF_Base
         if (hovered) set_updated();
         return HLColor;
     }
-    virtual void affiche(Surface &surf);
-    virtual bool gereEvenement(const SDL_Event &event);
+    virtual void display(Surface &surf);
+    virtual bool deal_w_Event(const SDL_Event &event);
 };
 
 //bouton - applet
@@ -83,9 +83,9 @@ class MF_BApplet : public MF_HLApplet, virtual public MF_Directions
     ~MF_BApplet(){;}
 
     //pour les clics
-    virtual bool gereEvenement(const SDL_Event &event);
-    //encore une nouvelle fonction pour afficher!
-    virtual void affiche(Surface &ecran);
+    virtual bool deal_w_Event(const SDL_Event &event);
+    //encore une nouvelle fonction pour displayr!
+    virtual void display(Surface &ecran);
 };
 
 //truc avec deux images
@@ -101,8 +101,8 @@ class MF_HoverMenu : virtual public MF_Base, virtual public MF_Directions
         ~MF_HoverMenu();
 
         virtual bool check_updated() { return image_displayed == hovered; }
-        virtual void affiche(Surface &ecran);
-        virtual bool gereEvenement(const SDL_Event &event);
+        virtual void display(Surface &ecran);
+        virtual bool deal_w_Event(const SDL_Event &event);
 };
 
 //Même chose mais en bouton
@@ -116,8 +116,8 @@ class MF_Button : virtual public MF_Base, virtual public MF_Directions
         MF_Button (const char* img_path_1, const char *img_path_2);
         ~MF_Button();
 
-        virtual void affiche(Surface &ecran);
-        virtual bool gereEvenement(const SDL_Event &event);
+        virtual void display(Surface &ecran);
+        virtual bool deal_w_Event(const SDL_Event &event);
 };
 #include "MF_form.hh"
 

@@ -114,7 +114,7 @@ Team_Av::Team_Av(TeamBuilder *team) :MF_Applet(400, 500, Color(249, 196, 70), 10
     sdef_dv = new MF_ListeDeroulante(60, 20, 170, hp_dv->dims.x, dims.y + 164, team->verdana);
 
     MF_ListeDeroulante * tab[] = {hp_dv, att_dv, def_dv, speed_dv, satt_dv, sdef_dv};
-    Team::Pokes &poke = team->equipe.pokes[team->current_zone];
+    Team::Pokes &poke = team->team.pokes[team->current_zone];
     int tab2[] = {poke.hp_dv, poke.att_dv, poke.def_dv, poke.speed_dv, poke.satt_dv, poke.sdef_dv};
     int i = 0;
     for (MF_ListeDeroulante *it = tab[0];  ; it=tab[++i])
@@ -168,24 +168,24 @@ Team_Av::Team_Av(TeamBuilder *team) :MF_Applet(400, 500, Color(249, 196, 70), 10
     load_gender();
     /* Fin genre */
     /* Shineyttude */
-    shinyness = new MF_CheckBox(team->verdana, "Shiny", team->equipe.pokes[team->current_zone].shiney, dims.x +260, dims.y+130, bgColor);
+    shinyness = new MF_CheckBox(team->verdana, "Shiny", team->team.pokes[team->current_zone].shiney, dims.x +260, dims.y+130, bgColor);
     /* Fin Shineyttude */
 
-    allouer(ok);
-    allouer(reset);
-    allouer(hp_dv);
-    allouer(att_dv);
-    allouer(def_dv);
-    allouer(speed_dv);
-    allouer(satt_dv);
-    allouer(sdef_dv);
-    allouer(hidden_power);
-    allouer(HP_det);
-    allouer(shinyness);
+    allocate(ok);
+    allocate(reset);
+    allocate(hp_dv);
+    allocate(att_dv);
+    allocate(def_dv);
+    allocate(speed_dv);
+    allocate(satt_dv);
+    allocate(sdef_dv);
+    allocate(hidden_power);
+    allocate(HP_det);
+    allocate(shinyness);
     display_stats();
 }
 
-bool Team_Av::recoitMessage(const char *message, MF_Base * fenetre)
+bool Team_Av::RecvFromSub(const char *message, MF_Base * fenetre)
 {
     //le tab
     if (strcmp(message, "tab") == 0 || strcmp(message, "right") == 0 || strcmp(message, "left") == 0 || strcmp(message, "up") == 0 || strcmp(message, "down") == 0)
@@ -200,7 +200,7 @@ bool Team_Av::recoitMessage(const char *message, MF_Base * fenetre)
             if (button == ok)
             {
                 team->display_stats();
-                pSup->detruireMF(this);
+                pSup->destroyMF(this);
                 return true;
             }
             if (button == reset)
@@ -212,8 +212,8 @@ bool Team_Av::recoitMessage(const char *message, MF_Base * fenetre)
                 sdef_dv->reset_pos();
                 speed_dv->reset_pos();
                 hidden_power->reset_pos();
-                if (ab_choice->pDebut->role == 1) ab_choice->polepos(ab_choice->pFin);
-                if (gen_choice->pDebut->role == 1) gen_choice->polepos(gen_choice->pFin);
+                if (ab_choice->pStart->role == 1) ab_choice->polepos(ab_choice->pEnd);
+                if (gen_choice->pStart->role == 1) gen_choice->polepos(gen_choice->pEnd);
                 shinyness->set_check(false);
             }
         }
@@ -247,9 +247,9 @@ bool Team_Av::recoitMessage(const char *message, MF_Base * fenetre)
     {
         message += 8;
         if (fenetre == ab_choice)
-            team->equipe.pokes[team->current_zone].ability = atoi(message);
+            team->team.pokes[team->current_zone].ability = atoi(message);
         else if (fenetre == gen_choice){
-            team->equipe.pokes[team->current_zone].gender = atoi(message);
+            team->team.pokes[team->current_zone].gender = atoi(message);
             team->display_gender();
             team->charge_image(team->current_zone);
             team->change_poke_image(team->current_zone);
@@ -261,7 +261,7 @@ bool Team_Av::recoitMessage(const char *message, MF_Base * fenetre)
     {
         if (fenetre == shinyness)
         {
-            team->equipe.pokes[team->current_zone].shiney = shinyness->checked;
+            team->team.pokes[team->current_zone].shiney = shinyness->checked;
             team->charge_image(team->current_zone);
             team->change_poke_image(team->current_zone);
             team->actualise_zone(team->current_zone);
@@ -274,30 +274,30 @@ bool Team_Av::recoitMessage(const char *message, MF_Base * fenetre)
 
 void Team_Av::remet_DVs()
 {
-    if (hp_dv->MF_pos->bar_id != team->equipe.pokes[team->current_zone].hp_dv) {
-        team->equipe.pokes[team->current_zone].hp_dv = hp_dv->MF_pos->bar_id;
+    if (hp_dv->MF_pos->bar_id != team->team.pokes[team->current_zone].hp_dv) {
+        team->team.pokes[team->current_zone].hp_dv = hp_dv->MF_pos->bar_id;
         display_HP();
-    } if (att_dv->MF_pos->bar_id != team->equipe.pokes[team->current_zone].att_dv) {
-        team->equipe.pokes[team->current_zone].att_dv = att_dv->MF_pos->bar_id;
+    } if (att_dv->MF_pos->bar_id != team->team.pokes[team->current_zone].att_dv) {
+        team->team.pokes[team->current_zone].att_dv = att_dv->MF_pos->bar_id;
         display_Att();
-    } if (def_dv->MF_pos->bar_id != team->equipe.pokes[team->current_zone].def_dv) {
-        team->equipe.pokes[team->current_zone].def_dv = def_dv->MF_pos->bar_id;
+    } if (def_dv->MF_pos->bar_id != team->team.pokes[team->current_zone].def_dv) {
+        team->team.pokes[team->current_zone].def_dv = def_dv->MF_pos->bar_id;
         display_Def();
-    } if (speed_dv->MF_pos->bar_id != team->equipe.pokes[team->current_zone].speed_dv) {
-        team->equipe.pokes[team->current_zone].speed_dv = speed_dv->MF_pos->bar_id;
+    } if (speed_dv->MF_pos->bar_id != team->team.pokes[team->current_zone].speed_dv) {
+        team->team.pokes[team->current_zone].speed_dv = speed_dv->MF_pos->bar_id;
         display_Speed();
-    } if (satt_dv->MF_pos->bar_id != team->equipe.pokes[team->current_zone].satt_dv) {
-        team->equipe.pokes[team->current_zone].satt_dv = satt_dv->MF_pos->bar_id;
+    } if (satt_dv->MF_pos->bar_id != team->team.pokes[team->current_zone].satt_dv) {
+        team->team.pokes[team->current_zone].satt_dv = satt_dv->MF_pos->bar_id;
         display_SpDef();
-    } if (sdef_dv->MF_pos->bar_id != team->equipe.pokes[team->current_zone].sdef_dv) {
-        team->equipe.pokes[team->current_zone].sdef_dv = sdef_dv->MF_pos->bar_id;
+    } if (sdef_dv->MF_pos->bar_id != team->team.pokes[team->current_zone].sdef_dv) {
+        team->team.pokes[team->current_zone].sdef_dv = sdef_dv->MF_pos->bar_id;
         display_SpAtt();
     }
 }
 
 void Team_Av::update_hidden_power()
 {
-    Team::Pokes &poke = team->equipe.pokes[team->current_zone];
+    Team::Pokes &poke = team->team.pokes[team->current_zone];
     int chosen_power = (((poke.hp_dv%2) + (poke.att_dv%2)*2 + (poke.def_dv%2)*4 + (poke.speed_dv%2)*8 + (poke.satt_dv%2)*16 + (poke.sdef_dv%2)*32)*15)/63 + 1;
 
     hidden_power->move_pos_x(-chosen_power + hidden_power->MF_pos->bar_id);
@@ -401,7 +401,7 @@ void Team_Av::display_base(Uint16 base, Sint8 boost, Sint16 posy)
 
 void Team_Av::disp_hp_power()
 {
-    Team::Pokes &poke = team->equipe.pokes[team->current_zone];
+    Team::Pokes &poke = team->team.pokes[team->current_zone];
     Uint8 pow = (((poke.hp_dv%4>1) + (poke.att_dv%4>1)*2 + (poke.def_dv%4>1)*4 + (poke.speed_dv%4>1)*8 + (poke.satt_dv%4>1)*16 + (poke.sdef_dv%4>1)*32)*40)/63 + 30;
 
     Rect dst (146, 234, 25, 20);
@@ -412,7 +412,7 @@ void Team_Av::disp_hp_power()
 
 void Team_Av::load_abilities()
 {
-    int num = team->equipe.pokes[team->current_zone].num;
+    int num = team->team.pokes[team->current_zone].num;
 
     abilities[0] = atoi(find_line("db/poke_ability.txt", num)->c_str());
     abilities[1] = atoi(find_line("db/poke_ability2.txt", num)->c_str());
@@ -430,19 +430,19 @@ void Team_Av::load_abilities()
     if (abilities[1] != (Uint16)-1)
     {
         ab_choice->add_option(team->verdana, ability_names[1].c_str(), 1);
-        if (!team->equipe.pokes[team->current_zone].ability)
-            ab_choice->polepos(ab_choice->pFin);
+        if (!team->team.pokes[team->current_zone].ability)
+            ab_choice->polepos(ab_choice->pEnd);
     }
 
     ab_choice->move(dims.x + 260, dims.y + 20);
-    allouer(ab_choice);
+    allocate(ab_choice);
 }
 
 void Team_Av::load_gender()
 {
     gen_choice = new MF_BRadio();
     gen_choice->bgColor = bgColor;
-    switch (team->equipe2.pokes[team->current_zone].gender_t)
+    switch (team->team2.pokes[team->current_zone].gender_t)
     {
         case 0:
             gen_choice->add_option(team->verdana, "Neutral", 0);
@@ -456,13 +456,13 @@ void Team_Av::load_gender()
         case 3:
             gen_choice->add_option(team->verdana, "Male", 0);
             gen_choice->add_option(team->verdana, "Female", 1);
-            if (team->equipe.pokes[team->current_zone].gender == 0)
-                gen_choice->polepos(gen_choice->pFin);
+            if (team->team.pokes[team->current_zone].gender == 0)
+                gen_choice->polepos(gen_choice->pEnd);
         default:
             break;
     }
     gen_choice->move(dims.x + 260, dims.y + 80);
-    allouer(gen_choice);
+    allocate(gen_choice);
 }
 
 inline void Team_Av::resize(Uint16 w, Uint16 h)
@@ -470,12 +470,12 @@ inline void Team_Av::resize(Uint16 w, Uint16 h)
     MF_Applet::resize(w, h);
 }
 
-inline void Team_Av::affiche(Surface &ecran)
+inline void Team_Av::display(Surface &ecran)
 {
     updated = true;
 
-    MF_Applet::affiche(ecran);
-    afficheMF(ecran);
+    MF_Applet::display(ecran);
+    displayMF(ecran);
 }
 
 void Team_Av::display_HP(){display_base(team->calc_HP(team->current_zone), 0, 14);}
@@ -528,8 +528,8 @@ const char* TeamBuilder::type_name[18] = {"Normal", "Fighting", "Flying", "Poiso
 const char* TeamBuilder::category_name[3] = {"physical", "special", "other"};
 const char* TeamBuilder::nature_name[25] = {"Hardy", "Lonely", "Brave", "Adamant", "Naughty", "Bold", "Docile", "Relaxed", "Impish", "Lax", "Timid", "Hasty", "Serious", "Jolly", "Naive", "Modest", "Mild", "Quiet", "Bashful", "Rash", "Calm", "Gentle", "Sassy", "Careful", "Quirky"};
 
-TeamBuilder::TeamBuilder(Team &equipe)
-            :MF_Applet(SDL_GetVideoSurface()->w /*around 650 */, SDL_GetVideoSurface()->h /*around 610 */, Color(249, 196, 70)), verdana(NULL), equipe(equipe), Mode(Pokemons)
+TeamBuilder::TeamBuilder(Team &team)
+            :MF_Applet(SDL_GetVideoSurface()->w /*around 650 */, SDL_GetVideoSurface()->h /*around 610 */, Color(249, 196, 70)), verdana(NULL), team(team), Mode(Pokemons)
 {
     verdana = FontMan.LoadRessource("verdana.ttf", 11);
 
@@ -546,13 +546,13 @@ TeamBuilder::TeamBuilder(Team &equipe)
 
     Surface s;
 
-    allouer (poke_z[0] = new Poke_Zone(verdana, "", "", "", "", "", "", s, 14, 12));
-    allouer (poke_z[1] = new Poke_Zone(verdana, "", "", "", "", "", "", s, 5+poke_z[0]->dims.x+poke_z[0]->dims.w, 12));
-    allouer (poke_z[2] = new Poke_Zone(verdana, "", "", "", "", "", "", s, 5+poke_z[1]->dims.x+poke_z[1]->dims.w, 12));
-    allouer (trainer_z = new MF_BApplet(153, 143, Color(0xFF,0x33,0x33), 5+poke_z[2]->dims.x+poke_z[2]->dims.w, 12));
-    allouer (poke_z[3] = new Poke_Zone(verdana, "", "", "", "", "", "", s, trainer_z->dims.x, 5 + trainer_z->dims.y + trainer_z->dims.h));
-    allouer (poke_z[4] = new Poke_Zone(verdana, "", "", "", "", "", "", s, poke_z[3]->dims.x, 5 + poke_z[3]->dims.y + poke_z[3]->dims.h));
-    allouer (poke_z[5] = new Poke_Zone(verdana, "", "", "", "", "", "", s, poke_z[4]->dims.x, 5 + poke_z[4]->dims.y + poke_z[4]->dims.h));
+    allocate (poke_z[0] = new Poke_Zone(verdana, "", "", "", "", "", "", s, 14, 12));
+    allocate (poke_z[1] = new Poke_Zone(verdana, "", "", "", "", "", "", s, 5+poke_z[0]->dims.x+poke_z[0]->dims.w, 12));
+    allocate (poke_z[2] = new Poke_Zone(verdana, "", "", "", "", "", "", s, 5+poke_z[1]->dims.x+poke_z[1]->dims.w, 12));
+    allocate (trainer_z = new MF_BApplet(153, 143, Color(0xFF,0x33,0x33), 5+poke_z[2]->dims.x+poke_z[2]->dims.w, 12));
+    allocate (poke_z[3] = new Poke_Zone(verdana, "", "", "", "", "", "", s, trainer_z->dims.x, 5 + trainer_z->dims.y + trainer_z->dims.h));
+    allocate (poke_z[4] = new Poke_Zone(verdana, "", "", "", "", "", "", s, poke_z[3]->dims.x, 5 + poke_z[3]->dims.y + poke_z[3]->dims.h));
+    allocate (poke_z[5] = new Poke_Zone(verdana, "", "", "", "", "", "", s, poke_z[4]->dims.x, 5 + poke_z[4]->dims.y + poke_z[4]->dims.h));
 
     PokemonField = new MF_BarManager(141, 84, poke_z[0]->dims.x + 12, poke_z[0]->dims.y + poke_z[0]->dims.h + 25, verdana);
     nickname = new MF_TextBox(verdana, 141, 21, 1, "", PokemonField->dims.x, PokemonField->dims.h+PokemonField->dims.y+20, 2, 1, false);
@@ -679,35 +679,35 @@ TeamBuilder::TeamBuilder(Team &equipe)
 
 TeamBuilder::~TeamBuilder()
 {
-    //allouer pour mieux détruire!
+    //allocate pour mieux détruire!
     if (Mode == Trainer)
     {
-        allouer(PokemonField);
-        allouer(nickname);
-        allouer(item);
-        allouer(nature);
-        allouer(advanced);
-        allouer(movepool);
-        allouer(move[0]);
-        allouer(move[1]);
-        allouer(move[2]);
-        allouer(move[3]);
-        allouer(hp_bar);
-        allouer(att_bar);
-        allouer(def_bar);
-        allouer(speed_bar);
-        allouer(satt_bar);
-        allouer(sdef_bar);
-        allouer(ev_bar);
+        allocate(PokemonField);
+        allocate(nickname);
+        allocate(item);
+        allocate(nature);
+        allocate(advanced);
+        allocate(movepool);
+        allocate(move[0]);
+        allocate(move[1]);
+        allocate(move[2]);
+        allocate(move[3]);
+        allocate(hp_bar);
+        allocate(att_bar);
+        allocate(def_bar);
+        allocate(speed_bar);
+        allocate(satt_bar);
+        allocate(sdef_bar);
+        allocate(ev_bar);
     } else
     {
-        allouer(trNick);
-        allouer(trInfo);
-        allouer(trWin);
-        allouer(trLose);
-        allouer(save);
-        allouer(load);
-        allouer(exit);
+        allocate(trNick);
+        allocate(trInfo);
+        allocate(trWin);
+        allocate(trLose);
+        allocate(save);
+        allocate(load);
+        allocate(exit);
     }
 }
 
@@ -728,14 +728,14 @@ void TeamBuilder::load_items()
 
 void TeamBuilder::load_team()
 {
-    equipe.load("team/team.pcb");
+    team.load("team/team.pcb");
 
     set_team();
 }
 
 void TeamBuilder::load_gender(int i)
 {
-    equipe2.pokes[i].gender_t = atoi(find_line("db/poke_gender.txt", equipe.pokes[i].num)->c_str());
+    team2.pokes[i].gender_t = atoi(find_line("db/poke_gender.txt", team.pokes[i].num)->c_str());
 }
 
 void TeamBuilder::SwitchTo(Switch wanted)
@@ -748,31 +748,31 @@ void TeamBuilder::SwitchTo(Switch wanted)
     switch (wanted)
     {
         case Pokemons:
-            desallouer(trNick);
-            desallouer(trInfo);
-            desallouer(trWin);
-            desallouer(save);
-            desallouer(load);
-            desallouer(trLose);
-            desallouer(exit);
+            desallocate(trNick);
+            desallocate(trInfo);
+            desallocate(trWin);
+            desallocate(save);
+            desallocate(load);
+            desallocate(trLose);
+            desallocate(exit);
 
-            allouer(PokemonField);
-            allouer(nickname);
-            allouer(item);
-            allouer(nature);
-            allouer(advanced);
-            allouer(movepool);
-            allouer(move[0]);
-            allouer(move[1]);
-            allouer(move[2]);
-            allouer(move[3]);
-            allouer(hp_bar);
-            allouer(att_bar);
-            allouer(def_bar);
-            allouer(speed_bar);
-            allouer(satt_bar);
-            allouer(sdef_bar);
-            allouer(ev_bar);
+            allocate(PokemonField);
+            allocate(nickname);
+            allocate(item);
+            allocate(nature);
+            allocate(advanced);
+            allocate(movepool);
+            allocate(move[0]);
+            allocate(move[1]);
+            allocate(move[2]);
+            allocate(move[3]);
+            allocate(hp_bar);
+            allocate(att_bar);
+            allocate(def_bar);
+            allocate(speed_bar);
+            allocate(satt_bar);
+            allocate(sdef_bar);
+            allocate(ev_bar);
 
             drawString(verdana, "Pokémon", PokemonField->dims.x, poke_z[0]->dims.y + poke_z[0]->dims.h + 10);
             drawString(verdana, "Nickname", PokemonField->dims.x, PokemonField->dims.h+PokemonField->dims.y+4);
@@ -807,44 +807,44 @@ void TeamBuilder::SwitchTo(Switch wanted)
             insert_trWin();
             break;
         case Trainer:
-            desallouer(PokemonField);
-            desallouer(nickname);
-            desallouer(item);
-            desallouer(nature);
-            desallouer(advanced);
-            desallouer(movepool);
-            desallouer(move[0]);
-            desallouer(move[1]);
-            desallouer(move[2]);
-            desallouer(move[3]);
-            desallouer(hp_bar);
-            desallouer(att_bar);
-            desallouer(def_bar);
-            desallouer(satt_bar);
-            desallouer(sdef_bar);
-            desallouer(speed_bar);
-            desallouer(ev_bar);
+            desallocate(PokemonField);
+            desallocate(nickname);
+            desallocate(item);
+            desallocate(nature);
+            desallocate(advanced);
+            desallocate(movepool);
+            desallocate(move[0]);
+            desallocate(move[1]);
+            desallocate(move[2]);
+            desallocate(move[3]);
+            desallocate(hp_bar);
+            desallocate(att_bar);
+            desallocate(def_bar);
+            desallocate(satt_bar);
+            desallocate(sdef_bar);
+            desallocate(speed_bar);
+            desallocate(ev_bar);
 
-            allouer(trNick);
-            allouer(trInfo);
-            allouer(trWin);
-            allouer(trLose);
-            allouer(save);
-            allouer(load);
-            allouer(exit);
+            allocate(trNick);
+            allocate(trInfo);
+            allocate(trWin);
+            allocate(trLose);
+            allocate(save);
+            allocate(load);
+            allocate(exit);
 
             drawString(verdana, "Trainer Name", PokemonField->dims.x, poke_z[0]->dims.y + poke_z[0]->dims.h + 15);
             drawString(verdana, "Player Info", trInfo->dims.x, trInfo->dims.y - 16);
             drawString(verdana, "Winning Message", trWin->dims.x, trWin->dims.y - 16);
             drawString(verdana, "Losing Message", trLose->dims.x, trLose->dims.y - 16);
             trNick->clear();
-            trNick->ecrire(equipe.Trainer_Name);
+            trNick->write(team.Trainer_Name);
             polepos(trainer_z);
             break;
     }
 }
 
-bool TeamBuilder::recoitMessage(const char *message, MF_Base *fenetre)
+bool TeamBuilder::RecvFromSub(const char *message, MF_Base *fenetre)
 {
     //le tab
     if (strcmp(message, "tab") == 0)
@@ -855,7 +855,7 @@ bool TeamBuilder::recoitMessage(const char *message, MF_Base *fenetre)
     {
         if (gereDirection(message, fenetre))
         {
-            fenetre = pDebut;
+            fenetre = pStart;
             goto clic;
         }
 
@@ -888,26 +888,26 @@ bool TeamBuilder::recoitMessage(const char *message, MF_Base *fenetre)
             if (button == save)
             {
                 save_team();
-                allouer(new MF_Alert(this, verdana, "Team saved!", (this->bgColor)));
+                allocate(new MF_Alert(this, verdana, "Team saved!", (this->bgColor)));
                 return true;
             }
             if (button == load)
             {
                 load_team();
-                allouer(new MF_Alert(this, verdana, "Team loaded!", (this->bgColor)));
+                allocate(new MF_Alert(this, verdana, "Team loaded!", (this->bgColor)));
                 return true;
             }
             if (button == advanced)
             {
-                if (equipe.pokes[current_zone].num == 0)
+                if (team.pokes[current_zone].num == 0)
                     return false;
-                allouer(new Team_Av(this));
+                allocate(new Team_Av(this));
                 return true;
             }
             if (button == exit)
             {
                 insert_current();
-                envoieMessage("menu");
+                sendToBoss("menu");
                 return true;
             }
         }
@@ -948,7 +948,7 @@ bool TeamBuilder::recoitMessage(const char *message, MF_Base *fenetre)
                     current_zone = i;
                     SwitchTo(Pokemons);
                     reset_move();
-                    load_pokemoves(equipe.pokes[i].num);
+                    load_pokemoves(team.pokes[i].num);
                     actualise_moves(i);
                     rewrite_nick(i);
                     move[3]->setDirections(sender);
@@ -992,27 +992,27 @@ bool TeamBuilder::recoitMessage(const char *message, MF_Base *fenetre)
     		    //on regarde si le move est pas déjà pris
     		    for (i = 0; i < 4; i++)
     		    {
-    		        if (equipe.pokes[current_zone].moves[i] == movenum)
+    		        if (team.pokes[current_zone].moves[i] == movenum)
     		        {
-    		            string msg = poke_names[equipe.pokes[current_zone].num] + " already has the move " + moves[movenum] + "!";
-    		            allouer (new MF_Alert(this, verdana, msg.c_str(), bgColor));
+    		            string msg = poke_names[team.pokes[current_zone].num] + " already has the move " + moves[movenum] + "!";
+    		            allocate (new MF_Alert(this, verdana, msg.c_str(), bgColor));
     		            return true;
     		        }
     		    }
     		    //on cherche les moves de libre
     		    for (i = 0; i < 4; i++)
     		    {
-    		        if (equipe.pokes[current_zone].moves[i] == 0) break;
+    		        if (team.pokes[current_zone].moves[i] == 0) break;
     		    }
     		    if (i == 4)
     		    {
-    		        string msg = poke_names[equipe.pokes[current_zone].num] + " already got 4 moves!";
-    		        allouer (new MF_Alert(this, verdana, msg.c_str(), bgColor));
+    		        string msg = poke_names[team.pokes[current_zone].num] + " already got 4 moves!";
+    		        allocate (new MF_Alert(this, verdana, msg.c_str(), bgColor));
     		        return true;
     		    }
-                equipe.pokes[current_zone].moves[i] = movenum;
+                team.pokes[current_zone].moves[i] = movenum;
                 move[i]->clear();
-                move[i]->ecrire(moves[movenum]);
+                move[i]->write(moves[movenum]);
                 actualise_zone(current_zone);
 
     		    return true;
@@ -1020,10 +1020,10 @@ bool TeamBuilder::recoitMessage(const char *message, MF_Base *fenetre)
     		if (sender == nature)
     		{
     		    unsigned int natnum = atoi(message+13);
-    		    if (equipe.pokes[current_zone].nature == natnum)
+    		    if (team.pokes[current_zone].nature == natnum)
                     return true;
 
-                equipe.pokes[current_zone].nature = natnum;
+                team.pokes[current_zone].nature = natnum;
                 display_stats();
 
                 return true;
@@ -1031,10 +1031,10 @@ bool TeamBuilder::recoitMessage(const char *message, MF_Base *fenetre)
     		if (sender == item)
     		{
     		    unsigned int itemnum = atoi(message+13);
-    		    if (equipe.pokes[current_zone].item == itemnum)
+    		    if (team.pokes[current_zone].item == itemnum)
                     return true;
 
-                equipe.pokes[current_zone].item = itemnum;
+                team.pokes[current_zone].item = itemnum;
                 actualise_zone(current_zone);
 
                 return true;
@@ -1056,16 +1056,16 @@ bool TeamBuilder::recoitMessage(const char *message, MF_Base *fenetre)
 	    			    int movenum = sender->IDselected+1;
 	        		    for (int j = 0; j < 4; j++)
                         {
-                            if (equipe.pokes[current_zone].moves[j] == movenum)
+                            if (team.pokes[current_zone].moves[j] == movenum)
                             {
-                                string msg = poke_names[equipe.pokes[current_zone].num] + " already has the move " + moves[movenum] + "!";
+                                string msg = poke_names[team.pokes[current_zone].num] + " already has the move " + moves[movenum] + "!";
                                 sender->clear();
-                                sender->ecrire("(None)");
-                                allouer (new MF_Alert(this, verdana, msg.c_str(), bgColor));
+                                sender->write("(None)");
+                                allocate (new MF_Alert(this, verdana, msg.c_str(), bgColor));
                                 return false;
                             }
                         }
-	    				equipe.pokes[current_zone].moves[i] = sender->IDselected+1;
+	    				team.pokes[current_zone].moves[i] = sender->IDselected+1;
 	    				actualise_zone(current_zone);
 	    				return true;
 	    			}
@@ -1108,22 +1108,22 @@ bool TeamBuilder::recoitMessage(const char *message, MF_Base *fenetre)
             else
                 ev_bar->pos_icon = n;
             if(sender == hp_bar) {
-                equipe.pokes[current_zone].hp_ev = hp_bar->pos_icon;
+                team.pokes[current_zone].hp_ev = hp_bar->pos_icon;
                 display_HP();
             } else if (sender == att_bar) {
-                equipe.pokes[current_zone].att_ev = att_bar->pos_icon;
+                team.pokes[current_zone].att_ev = att_bar->pos_icon;
                 display_Att();
             } else if (sender == def_bar) {
-                equipe.pokes[current_zone].def_ev = def_bar->pos_icon;
+                team.pokes[current_zone].def_ev = def_bar->pos_icon;
                 display_Def();
             } else if (sender == satt_bar) {
-                equipe.pokes[current_zone].satt_ev = satt_bar->pos_icon;
+                team.pokes[current_zone].satt_ev = satt_bar->pos_icon;
                 display_SpAtt();
             } else if (sender == sdef_bar) {
-                equipe.pokes[current_zone].sdef_ev = sdef_bar->pos_icon;
+                team.pokes[current_zone].sdef_ev = sdef_bar->pos_icon;
                 display_SpDef();
             } else if (sender == speed_bar) {
-                equipe.pokes[current_zone].speed_ev = speed_bar->pos_icon;
+                team.pokes[current_zone].speed_ev = speed_bar->pos_icon;
                 display_Speed();
             } else
                     return false;
@@ -1137,16 +1137,16 @@ bool TeamBuilder::recoitMessage(const char *message, MF_Base *fenetre)
     return false;
 }
 
-void TeamBuilder::affiche(Surface &ecran)
+void TeamBuilder::display(Surface &ecran)
 {
     if (!updated)
     {
         updated = true;
-        MF_Applet::affiche(ecran);
-        afficheMF(ecran);
-    } else if (pDebut->check_updated() == false)
+        MF_Applet::display(ecran);
+        displayMF(ecran);
+    } else if (pStart->check_updated() == false)
     {
-        pDebut->affiche(ecran);
+        pStart->display(ecran);
     }
 }
 
@@ -1271,21 +1271,21 @@ bool TeamBuilder::reset_poke(unsigned char zone, unsigned int pokenum)
 {
 	assert(zone < 6);
 
-	if (equipe.pokes[current_zone].num == pokenum)
+	if (team.pokes[current_zone].num == pokenum)
 		return false;
 
-	equipe.pokes[current_zone].reset();
-	equipe.pokes[current_zone].num = pokenum;
-	equipe.pokes[current_zone].level = 100;
-	equipe.pokes[current_zone].att_dv = 31;
-	equipe.pokes[current_zone].hp_dv = 31;
-	equipe.pokes[current_zone].def_dv = 31;
-	equipe.pokes[current_zone].satt_dv = 31;
-	equipe.pokes[current_zone].sdef_dv = 31;
-	equipe.pokes[current_zone].speed_dv = 31;
-	equipe.pokes[current_zone].item = 0;
+	team.pokes[current_zone].reset();
+	team.pokes[current_zone].num = pokenum;
+	team.pokes[current_zone].level = 100;
+	team.pokes[current_zone].att_dv = 31;
+	team.pokes[current_zone].hp_dv = 31;
+	team.pokes[current_zone].def_dv = 31;
+	team.pokes[current_zone].satt_dv = 31;
+	team.pokes[current_zone].sdef_dv = 31;
+	team.pokes[current_zone].speed_dv = 31;
+	team.pokes[current_zone].item = 0;
 
-	equipe2.pokes[current_zone].load_stats(pokenum);
+	team2.pokes[current_zone].load_stats(pokenum);
     //Le genre
     load_gender(zone);
 	//on recharge les moves
@@ -1309,10 +1309,10 @@ void TeamBuilder::insert_in(MF_TextBox *box, unsigned length, string &dest)
 }
 void TeamBuilder::actualise_zone(unsigned char zone)
 {
-    unsigned short *mv = equipe.pokes[zone].moves;
-    unsigned short num = equipe.pokes[zone].num;
+    unsigned short *mv = team.pokes[zone].moves;
+    unsigned short num = team.pokes[zone].num;
 
-    poke_z[zone]->reset(verdana, poke_names[num].c_str(), item_names[equipe.pokes[zone].item].c_str(), moves[mv[0]].c_str(), moves[mv[1]].c_str(), moves[mv[2]].c_str(), moves[mv[3]].c_str(), equipe2.pokes[zone].mini_avatar);
+    poke_z[zone]->reset(verdana, poke_names[num].c_str(), item_names[team.pokes[zone].item].c_str(), moves[mv[0]].c_str(), moves[mv[1]].c_str(), moves[mv[2]].c_str(), moves[mv[3]].c_str(), team2.pokes[zone].mini_avatar);
 
     return;
 }
@@ -1322,24 +1322,24 @@ void TeamBuilder::actualise_moves(unsigned char zone)
 {
 	assert(zone < 6);
 
-	unsigned short *mv = equipe.pokes[zone].moves;
+	unsigned short *mv = team.pokes[zone].moves;
 	for (int i = 0; i < 4; i++)
-		move[i]->ecrire(moves[mv[i]].c_str());
+		move[i]->write(moves[mv[i]].c_str());
 	nickname->clear();
-	nickname->ecrire(equipe.pokes[zone].nick);
+	nickname->write(team.pokes[zone].nick);
 	//les barres :s
-	hp_bar->pos_icon = equipe.pokes[zone].hp_ev;
-	att_bar->pos_icon = equipe.pokes[zone].att_ev;
-	def_bar->pos_icon = equipe.pokes[zone].def_ev;
-	satt_bar->pos_icon = equipe.pokes[zone].satt_ev;
-	sdef_bar->pos_icon = equipe.pokes[zone].sdef_ev;
-	speed_bar->pos_icon = equipe.pokes[zone].speed_ev;
+	hp_bar->pos_icon = team.pokes[zone].hp_ev;
+	att_bar->pos_icon = team.pokes[zone].att_ev;
+	def_bar->pos_icon = team.pokes[zone].def_ev;
+	satt_bar->pos_icon = team.pokes[zone].satt_ev;
+	sdef_bar->pos_icon = team.pokes[zone].sdef_ev;
+	speed_bar->pos_icon = team.pokes[zone].speed_ev;
 	ev_bar->pos_icon = sum_evs();
 	//la nature
-    nature->move_pos_affichage(equipe.pokes[current_zone].nature - nature->pos_affichage_v);
+    nature->move_pos_affichage(team.pokes[current_zone].nature - nature->pos_affichage_v);
     nature->move_pos_x(nature->pos_affichage_v-nature->posx);
     //l'objet
-    item->move_pos_affichage(item->get_pos_of(equipe.pokes[current_zone].item) - item->pos_affichage_v);
+    item->move_pos_affichage(item->get_pos_of(team.pokes[current_zone].item) - item->pos_affichage_v);
     item->move_pos_x(item->pos_affichage_v-item->posx);
 
 	change_poke_image(zone);
@@ -1349,7 +1349,7 @@ void TeamBuilder::actualise_moves(unsigned char zone)
 
 void TeamBuilder::change_poke_image(Uint8 zone)
 {
-    Surface &surf = equipe2.pokes[zone].avatar;
+    Surface &surf = team2.pokes[zone].avatar;
 	Rect r (poke_z[1]->dims.x + 11, poke_z[1]->dims.y + poke_z[1]->dims.h + 10, 82, 82);
 
     FillRect(r, Color(0xFF, 0xFF, 0xFF));
@@ -1422,13 +1422,13 @@ void TeamBuilder::display_gender()
 
     surface.fill(rect, bgColor);
 
-    if (equipe2.pokes[current_zone].gender_t == 0)
+    if (team2.pokes[current_zone].gender_t == 0)
         return;
-    if (equipe2.pokes[current_zone].gender_t == 1)
+    if (team2.pokes[current_zone].gender_t == 1)
         BlitImage(rect.x, rect.y, "Male.png");
-    else if (equipe2.pokes[current_zone].gender_t == 2)
+    else if (team2.pokes[current_zone].gender_t == 2)
         BlitImage(rect.x, rect.y, "Female.png");
-    else if (equipe2.pokes[current_zone].gender_t == 3 && equipe.pokes[current_zone].gender == 0)
+    else if (team2.pokes[current_zone].gender_t == 3 && team.pokes[current_zone].gender == 0)
         BlitImage(rect.x, rect.y, "Male.png");
     else
         BlitImage(rect.x, rect.y, "Female.png");
@@ -1436,25 +1436,25 @@ void TeamBuilder::display_gender()
 
 void TeamBuilder::charge_image(int zone)
 {
-    equipe2.pokes[zone].load_image(equipe.pokes[zone].num, equipe.pokes[zone].shiney, equipe.pokes[zone].gender, equipe2.pokes[zone].gender_t);
+    team2.pokes[zone].load_image(team.pokes[zone].num, team.pokes[zone].shiney, team.pokes[zone].gender, team2.pokes[zone].gender_t);
 }
 
 void TeamBuilder::set_team()
 {
     trNick->clear();
-    trNick->ecrire(equipe.Trainer_Name);
+    trNick->write(team.Trainer_Name);
     trInfo->clear();
-    trInfo->ecrire(equipe.Trainer_Info);
+    trInfo->write(team.Trainer_Info);
     trLose->clear();
-    trLose->ecrire(equipe.Trainer_Lose);
+    trLose->write(team.Trainer_Lose);
     trWin->clear();
-    trWin->ecrire(equipe.Trainer_Win);
+    trWin->write(team.Trainer_Win);
 
     for (int i = 0; i < 6; i++)
     {
         load_gender(i);
         charge_image(i);
-        equipe2.pokes[i].load_stats(equipe.pokes[i].num);
+        team2.pokes[i].load_stats(team.pokes[i].num);
         actualise_zone(i);
     }
 }
@@ -1462,6 +1462,6 @@ void TeamBuilder::set_team()
 void TeamBuilder::rewrite_nick(Uint8 zone)
 {
     nickname->clear();
-    nickname->ecrire(equipe.pokes[zone].nick);
+    nickname->write(team.pokes[zone].nick);
 }
 

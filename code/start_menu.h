@@ -10,13 +10,13 @@ class MF_ImHLApplet;
 class StartMenu : public MF_BDirections, public MF_Prio
 {
     public:
-        Team &equipe;
-        StartMenu(Team &equipe);
+        Team &team;
+        StartMenu(Team &team);
 
         MF_ImHLApplet *teambuilder, *battle, *credits, *exit;
 
-        bool recoitMessage(const char * message, MF_Base *fenetre);
-        void affiche(Surface &s);
+        bool RecvFromSub(const char * message, MF_Base *fenetre);
+        void display(Surface &s);
 };
 
 #endif // START_MENU_H_INCLUDED

@@ -38,14 +38,14 @@ int main(int argc, char **argv) try
                         goto end;
                     }
                 default:
-                    tb->gereEvenement(event);
+                    tb->deal_w_Event(event);
                     break;
             }
         }
 
         if(SDL_GetAppState() & SDL_APPACTIVE)
         {
-            tb->affiche(screen);
+            tb->display(screen);
         }
         SDL_Delay(1);
     }

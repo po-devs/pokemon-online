@@ -8,8 +8,8 @@ class Credits : public MF_Boss, public MF_Prio
     public:
         Credits();
 
-        bool recoitMessage(const char *message, MF_Base *fenetre);
-        void affiche(Surface &ecran);
+        bool RecvFromSub(const char *message, MF_Base *fenetre);
+        void display(Surface &ecran);
 };
 
 #endif // CREDITS_HH_INCLUDED

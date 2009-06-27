@@ -3,30 +3,30 @@
 
 using namespace std;
 
-MF_Ligne::~MF_Ligne()
+MF_Line::~MF_Line()
 {
 }
 
 /* Met une couleur de texte*/
-void MF_Ligne::setTextColor(const Color &c)
+void MF_Line::setTextColor(const Color &c)
 {
     set_updated();
     textColor = c;
 }
 
 /* Met une police */
-void MF_Ligne::setFont(const char *fichier, Uint16 ptsize)
+void MF_Line::setFont(const char *fichier, Uint16 ptsize)
 {
     police = FontMan.LoadRessource(fichier, ptsize);
 }
 
-void MF_Ligne::shareFont(Font &font)
+void MF_Line::shareFont(Font &font)
 {
     police = font;
 }
 
 /* Pour balancer du texte */
-void MF_Ligne::ecrire(const string &texte, int pos)
+void MF_Line::write(const string &texte, int pos)
 {
     /* si on tombe sur un \n ou \r on prend que la suite */
     unsigned int n;
@@ -47,8 +47,8 @@ void MF_Ligne::ecrire(const string &texte, int pos)
     set_updated();;
 }
 
-/* Pour actualiser la surface en mémoire */
-void MF_Ligne::actualiser()
+/* Pour refresh la surface en mémoire */
+void MF_Line::refresh()
 {
     updated = true;
 
@@ -60,7 +60,7 @@ void MF_Ligne::actualiser()
     tmp.blitTo(surface);
 }
 
-int MF_Ligne::toLen(int maxlen) const
+int MF_Line::toLen(int maxlen) const
 {
 #ifndef MF_TEXT_ACCENTUE
     int curlen (0);
@@ -124,24 +124,24 @@ int MF_Ligne::toLen(int maxlen) const
 }
 
 /* Gere clic, motion et touche */
-bool MF_WLigne::gereEvenement(const SDL_Event &event)
+bool MF_WLine::deal_w_Event(const SDL_Event &event)
 {
     switch (event.type)
     {
         case SDL_KEYUP:
         case SDL_KEYDOWN:
-            return gereTouche(event.key);
+            return deal_w_key(event.key);
         case SDL_MOUSEBUTTONUP:
         case SDL_MOUSEBUTTONDOWN:
-            return gereClic(event.button);
+            return deal_w_click(event.button);
         case SDL_MOUSEMOTION:
-            return gereMotion(event.motion);
+            return deal_w_motion(event.motion);
         default:
             return 0;
     }
 }
 
-void MF_WLigne::setPos(bool prems)
+void MF_WLine::setPos(bool prems)
 {
     MF_Base::setPos(prems);
 
@@ -152,7 +152,7 @@ void MF_WLigne::setPos(bool prems)
             curseurOn = true;
             curseurDisp = true;
             second_update = false;
-            lastCurseur = SDL_GetTicks();
+            lastCursor = SDL_GetTicks();
         }
     }
     else //if prems == false
@@ -170,7 +170,7 @@ void MF_WLigne::setPos(bool prems)
     }
 }
 
-bool MF_WLigne::gereTouche(const SDL_KeyboardEvent &keyevent)
+bool MF_WLine::deal_w_key(const SDL_KeyboardEvent &keyevent)
 {
     if (keyevent.type == SDL_KEYUP)
         return 0;
@@ -199,22 +199,22 @@ bool MF_WLigne::gereTouche(const SDL_KeyboardEvent &keyevent)
             }
             else if (curseury > 0)
             {
-                MF_Ligne::effacer(curseury-1, 1);
+                MF_Line::erase(curseury-1, 1);
                 --curseury;
             }
             refresh = 1;
             break;
         case SDLK_RETURN:
             texte.insert(0, "t");
-            envoieMessage (texte.c_str());
-            effacer(0);
+            sendToBoss (texte.c_str());
+            erase(0);
             curseury = 0;
             refresh = 1;
             break;
         case SDLK_TAB:
             if (surligneOn)
                 clearHighlight();
-            ecrire("    ");
+            write("    ");
             refresh = 1;
             break;
         case SDLK_DELETE:
@@ -222,7 +222,7 @@ bool MF_WLigne::gereTouche(const SDL_KeyboardEvent &keyevent)
                 clearHighlight();
             }
             else if (texte[curseury] != 0) {
-                effacer(curseury, 1);
+                erase(curseury, 1);
             }
             refresh = 1;
             break;
@@ -289,11 +289,11 @@ bool MF_WLigne::gereTouche(const SDL_KeyboardEvent &keyevent)
            on actualise et on remet le timer du
            curseur à 0
            --
-           Ca veut dire que le curseur s'affiche
+           Ca veut dire que le curseur s'display
            obligatoirement, et pendant 500 ms au
            moins */
         second_update = false;
-        lastCurseur = SDL_GetTicks();
+        lastCursor = SDL_GetTicks();
         curseurDisp = true;
         return refresh;
     }
@@ -316,12 +316,12 @@ bool MF_WLigne::gereTouche(const SDL_KeyboardEvent &keyevent)
     /* C'est une touche ASCII */
     clearHighlight();
     char ch = keyevent.keysym.unicode;
-    ecrire(ch);
+    write(ch);
     refresh = 1;
 
     if (refresh)
     {
-        lastCurseur = SDL_GetTicks();
+        lastCursor = SDL_GetTicks();
         curseurDisp = true;
         return refresh;
     }
@@ -329,7 +329,7 @@ bool MF_WLigne::gereTouche(const SDL_KeyboardEvent &keyevent)
     return 0;
 }
 
-bool MF_WLigne::gereClic(const SDL_MouseButtonEvent &buttonevent)
+bool MF_WLine::deal_w_click(const SDL_MouseButtonEvent &buttonevent)
 {
     /* Que les clics gauche */
     if (buttonevent.button != SDL_BUTTON_LEFT)
@@ -353,7 +353,7 @@ bool MF_WLigne::gereClic(const SDL_MouseButtonEvent &buttonevent)
     return 1;
 }
 
-bool MF_WLigne::gereMotion(const SDL_MouseMotionEvent &motionevent)
+bool MF_WLine::deal_w_motion(const SDL_MouseMotionEvent &motionevent)
 {
     /* Le souci c'est la gestion du highlight */
 
@@ -370,8 +370,8 @@ bool MF_WLigne::gereMotion(const SDL_MouseMotionEvent &motionevent)
     return 1;
 }
 
-/* Pour ecrire du texte */
-void MF_WLigne::ecrire(const std::string &texte, int pos)
+/* Pour write du texte */
+void MF_WLine::write(const std::string &texte, int pos)
 {
     this->texte.insert(pos, texte);
     curseury = pos + texte.length();
@@ -381,8 +381,8 @@ void MF_WLigne::ecrire(const std::string &texte, int pos)
         set_updated();;
 }
 
-/* effacer là ou c'est surligné */
-bool MF_WLigne::clearHighlight()
+/* erase là ou c'est surligné */
+bool MF_WLine::clearHighlight()
 {
     if (surligneOn == false)
         return false;
@@ -398,7 +398,7 @@ bool MF_WLigne::clearHighlight()
     }
 
     /* On efface là ou c'est highlighted */
-    effacer (min, max - min);
+    erase (min, max - min);
 
     /* et on remet le curseur au début du highlight */
     curseury = min;
@@ -406,7 +406,7 @@ bool MF_WLigne::clearHighlight()
 }
 
 /* commencer si possible le higlight */
-void MF_WLigne::startHighlight()
+void MF_WLine::startHighlight()
 {
     if (surligneOn == true)
         return;
@@ -416,7 +416,7 @@ void MF_WLigne::startHighlight()
 }
 
 /* voir si on doit enlever le highlight, ... */
-bool MF_WLigne::updateHighlight()
+bool MF_WLine::updateHighlight()
 {
     //si on doit le mettre
     if (surligneOn == false && (clicOn == true or SHIFT_ON == true)) {
@@ -431,26 +431,26 @@ bool MF_WLigne::updateHighlight()
     return false;
 }
 
-/* afficher et actualiser */
-void MF_WLigne::affiche(Surface &ecran)
+/* displayr et refresh */
+void MF_WLine::display(Surface &ecran)
 {
     second_update = true;
 
-    MF_Ligne::affiche(ecran);
+    MF_Line::display(ecran);
 
     /* la seule diff c'est le curseur , le reste est géré par actualise */
     if (!curseurOn || !isFirst)
         return;
 
-    /* Si on est à plus de 500ms sec de lastCurseur on change d'état */
+    /* Si on est à plus de 500ms sec de lastCursor on change d'état */
     Uint32 curTime = SDL_GetTicks();
-    if (curTime - lastCurseur > 500)
+    if (curTime - lastCursor > 500)
     {
         curseurDisp = !curseurDisp;
-        lastCurseur = SDL_GetTicks();
+        lastCursor = SDL_GetTicks();
     }
 
-    /* Si besoin d' afficher le curseur */
+    /* Si besoin d' displayr le curseur */
     if (curseurDisp)
     {
         Rect cursRect;
@@ -471,11 +471,11 @@ void MF_WLigne::affiche(Surface &ecran)
     }
 }
 
-void MF_WLigne::actualiser()
+void MF_WLine::refresh()
 {
     if (!surligneOn)
     {
-        MF_Ligne::actualiser();
+        MF_Line::refresh();
         return;
     }
 
@@ -519,7 +519,7 @@ void MF_WLigne::actualiser()
     tmp.blitTo(surface);
 }
 
-MF_MLigne::MF_MLigne()
+MF_MLine::MF_MLine()
         :capacity(1), ncurrentligne(0), barreOn(false), barre_clicOn(false), timer_wasinit(false)
 {
     if (!flechebas)
@@ -533,7 +533,7 @@ MF_MLigne::MF_MLigne()
     poslignes[0] = pos;
 }
 
-MF_MLigne::~MF_MLigne()
+MF_MLine::~MF_MLine()
 {
     //on libère le timer
     if (timer_wasinit == true)
@@ -543,7 +543,7 @@ MF_MLigne::~MF_MLigne()
     }
 }
 
-void MF_MLigne::update_capacity()
+void MF_MLine::update_capacity()
 {
     assert(capacity > 0);
     /* on regarde le nombre de lignes en trop */
@@ -570,9 +570,9 @@ void MF_MLigne::update_capacity()
 }
 
 //voir les SDL_Timer :) Ca a pas été sans erreurs
-Uint32 MF_MLigne_fonction_timer(Uint32 interval, void *param)
+Uint32 MF_MLine_fonction_timer(Uint32 interval, void *param)
 {
-    MF_MLigne *item = (MF_MLigne*)param;
+    MF_MLine *item = (MF_MLine*)param;
 
     //si la classe n'est plus la première de son MF_Boss, on retourne
     //ou si la souris n'est plus enfoncée
@@ -597,7 +597,7 @@ Uint32 MF_MLigne_fonction_timer(Uint32 interval, void *param)
     return SDL_DEFAULT_REPEAT_INTERVAL;
 }
 
-void MF_MLigne::ecrire (const std::string &texte, unsigned int posx, int posy)
+void MF_MLine::write (const std::string &texte, unsigned int posx, int posy)
 {
     assert(posx < get_nblignes());
     assert(poslignes[posx].y <= posy);
@@ -624,14 +624,14 @@ void MF_MLigne::ecrire (const std::string &texte, unsigned int posx, int posy)
     set_updated();;
 }
 
-void MF_MLigne::actualiser()
+void MF_MLine::refresh()
 {
     updated = true;
 
     /* remplissage */
     surface.fill(0, bgColor);
 
-    /* on doit maintenant ecrire le texte
+    /* on doit maintenant write le texte
        je vous jure que c'est simple */
     int hauteur = police.line_skip();
     Rect postext(0,0,0,0);
@@ -648,11 +648,11 @@ void MF_MLigne::actualiser()
     {
         int barreh = getbarreh();
         int barrey = getbarrey(barreh);
-        affichebarre(barrey, barreh);
+        displaybarre(barrey, barreh);
     }
 }
 
-void MF_MLigne::update_barre()
+void MF_MLine::update_barre()
 {
     /* pour savoir si on doit mettre ou enlever la barre? */
     unsigned int maxlines = maxlignes();
@@ -680,26 +680,26 @@ void MF_MLigne::update_barre()
     ncurrentligne = 0;
 }
 
-bool MF_MLigne::gereEvenement(const SDL_Event &event)
+bool MF_MLine::deal_w_Event(const SDL_Event &event)
 {
     /* juste une redirection .*/
     switch (event.type)
     {
         case SDL_KEYDOWN:
         case SDL_KEYUP:
-            return gereTouche(event.key);
+            return deal_w_key(event.key);
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
-            return gereClic(event.button);
+            return deal_w_click(event.button);
         case SDL_MOUSEMOTION:
-            return gereMotion(event.motion);
+            return deal_w_motion(event.motion);
         default:
             return 0;
     }
 }
 
 //Pour faire défiler le texte
-bool MF_MLigne::gereTouche(const SDL_KeyboardEvent &event)
+bool MF_MLine::deal_w_key(const SDL_KeyboardEvent &event)
 {
     if (event.type == SDL_KEYUP || barreOn == false) return 0;
 
@@ -722,7 +722,7 @@ bool MF_MLigne::gereTouche(const SDL_KeyboardEvent &event)
     return 0;
 }
 
-bool MF_MLigne::gereClic(const SDL_MouseButtonEvent &buttonevent)
+bool MF_MLine::deal_w_click(const SDL_MouseButtonEvent &buttonevent)
 {
     if (!barreOn) return 0;
 
@@ -730,13 +730,13 @@ bool MF_MLigne::gereClic(const SDL_MouseButtonEvent &buttonevent)
     if (buttonevent.button == SDL_BUTTON_WHEELDOWN)
     {
         if (descendbarre(1)) set_updated();
-        else affichebarre(getbarrey(getbarreh()), getbarreh());
+        else displaybarre(getbarrey(getbarreh()), getbarreh());
         return 1;
     }
     if (buttonevent.button == SDL_BUTTON_WHEELUP)
     {
         if (montebarre(1)) set_updated();
-        else affichebarre(getbarrey(getbarreh()), getbarreh());
+        else displaybarre(getbarrey(getbarreh()), getbarreh());
         return 1;
     }
 
@@ -761,7 +761,7 @@ bool MF_MLigne::gereClic(const SDL_MouseButtonEvent &buttonevent)
                 //on ajoute le timer
                 if (timer_wasinit == false)
                 {
-                    timer_ID = SDL_AddTimer(SDL_DEFAULT_REPEAT_DELAY, MF_MLigne_fonction_timer, (void*)(this));
+                    timer_ID = SDL_AddTimer(SDL_DEFAULT_REPEAT_DELAY, MF_MLine_fonction_timer, (void*)(this));
                     timer_wasinit = true;
                 }
             }
@@ -777,7 +777,7 @@ bool MF_MLigne::gereClic(const SDL_MouseButtonEvent &buttonevent)
                 //on ajoute le timer
                 if (timer_wasinit == false)
                 {
-                    timer_ID = SDL_AddTimer(SDL_DEFAULT_REPEAT_DELAY, MF_MLigne_fonction_timer, (void*)(this));
+                    timer_ID = SDL_AddTimer(SDL_DEFAULT_REPEAT_DELAY, MF_MLine_fonction_timer, (void*)(this));
                     timer_wasinit = true;
                 }
             }
@@ -811,7 +811,7 @@ bool MF_MLigne::gereClic(const SDL_MouseButtonEvent &buttonevent)
             //on ajoute le timer
             if (timer_wasinit == false)
             {
-                timer_ID = SDL_AddTimer(SDL_DEFAULT_REPEAT_DELAY, MF_MLigne_fonction_timer, (void*)(this));
+                timer_ID = SDL_AddTimer(SDL_DEFAULT_REPEAT_DELAY, MF_MLine_fonction_timer, (void*)(this));
                 timer_wasinit = true;
             }
 
@@ -826,7 +826,7 @@ bool MF_MLigne::gereClic(const SDL_MouseButtonEvent &buttonevent)
         //on ajoute le timer
         if (timer_wasinit == false)
         {
-            timer_ID = SDL_AddTimer(SDL_DEFAULT_REPEAT_DELAY, MF_MLigne_fonction_timer, (void*)(this));
+            timer_ID = SDL_AddTimer(SDL_DEFAULT_REPEAT_DELAY, MF_MLine_fonction_timer, (void*)(this));
             timer_wasinit = true;
         }
 
@@ -849,7 +849,7 @@ bool MF_MLigne::gereClic(const SDL_MouseButtonEvent &buttonevent)
     return 1;
 }
 
-bool MF_MLigne::gereMotion(const SDL_MouseMotionEvent &motion)
+bool MF_MLine::deal_w_motion(const SDL_MouseMotionEvent &motion)
 {
     /* là le deal est de savoir si on a cliqué la barre */
     if (!barre_clicOn) return 0;
@@ -857,7 +857,7 @@ bool MF_MLigne::gereMotion(const SDL_MouseMotionEvent &motion)
     // pos relative
     int posy = motion.y - dims.y;
 
-    /* donc on doit reafficher la barre avec les changements. on calcule
+    /* donc on doit redisplayr la barre avec les changements. on calcule
       d'abord la pos normale de la barre */
     int maxlines = maxlignes();
     int difference = get_nblignes()-maxlines;
@@ -906,11 +906,11 @@ bool MF_MLigne::gereMotion(const SDL_MouseMotionEvent &motion)
     barreOn = true;
 
     /* réaffichage de la barre */
-    affichebarre(barrey, barreh);
+    displaybarre(barrey, barreh);
     return 1;
 }
 
-int MF_MLigne::toLen(int noligne, int maxlen) const
+int MF_MLine::toLen(int noligne, int maxlen) const
 {
 #ifndef MF_TEXT_ACCENTUE
     int curlen (0);
@@ -998,7 +998,7 @@ int MF_MLigne::toLen(int noligne, int maxlen) const
 #endif
 }
 
-bool MF_MLigne::montebarre(int crans)
+bool MF_MLine::montebarre(int crans)
 {
     assert(crans >= 0);
     if (crans == 0 || ncurrentligne == 0) return 0;
@@ -1006,7 +1006,7 @@ bool MF_MLigne::montebarre(int crans)
     return 1;
 }
 
-bool MF_MLigne::descendbarre(int crans)
+bool MF_MLine::descendbarre(int crans)
 {
     assert(crans >= 0);
     int maxlines = maxlignes();
@@ -1017,7 +1017,7 @@ bool MF_MLigne::descendbarre(int crans)
     return (i!=crans);
 }
 
-void MF_MLigne::affichebarre(int barrey, int barreh)
+void MF_MLine::displaybarre(int barrey, int barreh)
 {
     /* fleche haut et bas */
     Rect r (dims.w-16, 0, 16,16);
@@ -1039,9 +1039,9 @@ void MF_MLigne::affichebarre(int barrey, int barreh)
     surface.fill(r, Color(65, 172, 205));
 }
 
-void MF_MLigne::update_largeur(unsigned int noligne, bool suivantes)
+void MF_MLine::update_largeur(unsigned int noligne, bool suivantes)
 {
-    int maxlen = get_largeurmax();
+    int maxlen = maxwidth();
     bool capacity_change (false);
 
     for (bool next = true; noligne < get_nblignes() && next == true; noligne++)
@@ -1103,7 +1103,7 @@ void MF_MLigne::update_largeur(unsigned int noligne, bool suivantes)
 }
 
 /* récupérer la pos d'un caractère à partir de son offset */
-xy MF_MLigne::get_abspos(int offset)
+xy MF_MLine::get_abspos(int offset)
 {
     assert (offset >= 0);
 
@@ -1116,7 +1116,7 @@ xy MF_MLigne::get_abspos(int offset)
     return xy(i, (MIN((unsigned)offset, texte.length()))-((*it).x) );
 }
 
-void MF_MLigne::effacer(int depart, int nombre)
+void MF_MLine::erase(int depart, int nombre)
 {
     if (nombre == -1)
     {
@@ -1144,23 +1144,23 @@ bool operator < (xy &a, xy &b)
 }
 
 //affichage. On se contente de rajouter le curseur si besoin
-void MF_MWLigne::affiche(Surface &ecran)
+void MF_MWLine::display(Surface &ecran)
 {
     second_update = true;
-    MF_Ligne::affiche(ecran);
+    MF_Line::display(ecran);
 
     /* la seule diff c'est le curseur , le reste est géré par actualise */
     if (!curseurOn || !isFirst)
         return;
 
-    /* Si on est à plus de 500 ms de lastCurseur on le change d'état */
+    /* Si on est à plus de 500 ms de lastCursor on le change d'état */
     Uint32 curTime = SDL_GetTicks();
-    if (curTime - lastCurseur > 500)
+    if (curTime - lastCursor > 500)
     {
-        lastCurseur = curTime;
+        lastCursor = curTime;
         curseurDisp = !curseurDisp;
     }
-    /* Si besoin d'afficher le curseur */
+    /* Si besoin d'displayr le curseur */
     if (curseurDisp)
     {
         Rect cursRect;
@@ -1184,12 +1184,12 @@ void MF_MWLigne::affiche(Surface &ecran)
 }
 
 /* actualise la surface en mémoire */
-void MF_MWLigne::actualiser()
+void MF_MWLine::refresh()
 {
-    /* si pas de highlight on fait juste comme MF_MLigne */
+    /* si pas de highlight on fait juste comme MF_MLine */
     if (!surligneOn)
     {
-        MF_MLigne::actualiser();
+        MF_MLine::refresh();
         return;
     }
 
@@ -1243,7 +1243,7 @@ void MF_MWLigne::actualiser()
             surface.fill(lightRect, Color(153, 202, 242));
         }
     }
-    /* on doit maintenant ecrire le texte
+    /* on doit maintenant write le texte
        je vous jure que c'est simple */
     int hauteur = police.line_skip();
     Rect postext(0,0,0,0);
@@ -1263,13 +1263,13 @@ void MF_MWLigne::actualiser()
     {
         int barreh = getbarreh();
         int barrey = getbarrey(barreh);
-        affichebarre(barrey, barreh);
+        displaybarre(barrey, barreh);
     }
 }
 
 /* nouvelles fonctions pour écrire */
 /* elles updatent aussi le curseur :) */
-void MF_MWLigne::ecrire (const std::string &texte, unsigned int posx, unsigned int posy)
+void MF_MWLine::write (const std::string &texte, unsigned int posx, unsigned int posy)
 {
     assert(posx < get_nblignes());
     assert((unsigned)poslignes[posx].y >= posy);
@@ -1304,12 +1304,12 @@ void MF_MWLigne::ecrire (const std::string &texte, unsigned int posx, unsigned i
 }
 
 /* gestion évènements pour faire defiler texte et écrire */
-bool MF_MWLigne::gereMotion(const SDL_MouseMotionEvent &motionevent)
+bool MF_MWLine::deal_w_motion(const SDL_MouseMotionEvent &motionevent)
 {
     // si c'est la barre
     if (barre_clicOn)
     {
-        return MF_MLigne::gereMotion(motionevent);
+        return MF_MLine::deal_w_motion(motionevent);
     }
     //si c'est pas cliqué on quitte
     if (!clicOn) return 0;
@@ -1330,7 +1330,7 @@ bool MF_MWLigne::gereMotion(const SDL_MouseMotionEvent &motionevent)
     return 1;
 }
 
-bool MF_MWLigne::gereTouche(const SDL_KeyboardEvent &keyevent)
+bool MF_MWLine::deal_w_key(const SDL_KeyboardEvent &keyevent)
 {
     if (keyevent.type == SDL_KEYUP)
         return 0;
@@ -1358,21 +1358,21 @@ bool MF_MWLigne::gereTouche(const SDL_KeyboardEvent &keyevent)
                 clearHighlight();
             else if (get_offset_curseur() > 0)
             {
-                effacer(get_offset_curseur()-1, 1);
+                erase(get_offset_curseur()-1, 1);
             }
             refresh = 1;
             break;
         case SDLK_RETURN:
             if (surligneOn)
                 clearHighlight();
-            ecrire("\n");
+            write("\n");
             set_updated();
             refresh = 1;
             break;
         case SDLK_TAB:
             if (surligneOn)
                 clearHighlight();
-            ecrire("    ");
+            write("    ");
             set_updated();
             refresh = 1;
             break;
@@ -1380,7 +1380,7 @@ bool MF_MWLigne::gereTouche(const SDL_KeyboardEvent &keyevent)
             if (surligneOn)
                 clearHighlight();
             else if (get_offset_curseur() != get_offset())
-                effacer(get_offset_curseur(), 1);
+                erase(get_offset_curseur(), 1);
             refresh = 1;
             break;
         case SDLK_PAGEUP:
@@ -1478,11 +1478,11 @@ bool MF_MWLigne::gereTouche(const SDL_KeyboardEvent &keyevent)
            on actualise et on remet le timer du
            curseur à 0
            --
-           Ca veut dire que le curseur s'affiche
+           Ca veut dire que le curseur s'display
            obligatoirement, et pendant 500 ms au
            moins */
         second_update = false;
-        lastCurseur = SDL_GetTicks();
+        lastCursor = SDL_GetTicks();
         curseurDisp = true;
         return refresh;
     }
@@ -1505,16 +1505,16 @@ bool MF_MWLigne::gereTouche(const SDL_KeyboardEvent &keyevent)
     /* C'est une touche ASCII */
     clearHighlight();
     char ch = keyevent.keysym.unicode;
-    ecrire(ch);
+    write(ch);
     set_updated();
-    lastCurseur = SDL_GetTicks();
+    lastCursor = SDL_GetTicks();
     curseurDisp = true;
     return 1;
 }
 
-bool MF_MWLigne::gereClic(const SDL_MouseButtonEvent &buttonevent)
+bool MF_MWLine::deal_w_click(const SDL_MouseButtonEvent &buttonevent)
 {
-    if (MF_MLigne::gereClic(buttonevent)) return 1;
+    if (MF_MLine::deal_w_click(buttonevent)) return 1;
 
     if (buttonevent.button != SDL_BUTTON_LEFT)
     {
@@ -1555,7 +1555,7 @@ bool MF_MWLigne::gereClic(const SDL_MouseButtonEvent &buttonevent)
     return 1;
 }
 
-void MF_MWLigne::montecurseur(int crans)
+void MF_MWLine::montecurseur(int crans)
 {
     assert (crans >= 0);
     curseurx = MAX((int)curseurx - (int)crans, 0);
@@ -1565,7 +1565,7 @@ void MF_MWLigne::montecurseur(int crans)
     rebarre();
 }
 
-void MF_MWLigne::descendcurseur(int crans)
+void MF_MWLine::descendcurseur(int crans)
 {
     assert (crans >= 0);
     curseurx = MIN(curseurx + crans, get_nblignes()-1);
@@ -1575,7 +1575,7 @@ void MF_MWLigne::descendcurseur(int crans)
     rebarre();
 }
 
-void MF_MWLigne::rebarre()
+void MF_MWLine::rebarre()
 {
     if (barreOn == false) return;
     //SI BARRE TROP BASSE
@@ -1599,7 +1599,7 @@ void MF_MWLigne::rebarre()
     }
 }
 
-void MF_MWLigne::update_capacity()
+void MF_MWLine::update_capacity()
 {
     assert(capacity > 0);
     /* on regarde le nombre de lignes en trop */
@@ -1619,7 +1619,7 @@ void MF_MWLigne::update_capacity()
     update_barre();
 }
 
-void MF_MWLigne::printstatut()
+void MF_MWLine::printstatut()
 {
     cout << "Statut:";
     cout << "\n\tnblignes: " << get_nblignes();
@@ -1630,14 +1630,14 @@ void MF_MWLigne::printstatut()
 }
 
 
-void MF_MWLigne::updatebarre()
+void MF_MWLine::updatebarre()
 {
     int pos = get_offset_curseur();
-    MF_MLigne::update_barre();
+    MF_MLine::update_barre();
     set_abspos_curseur(pos);
 }
 
-void MF_MWLigne::startHighlight()
+void MF_MWLine::startHighlight()
 {
     if (surligneOn == true)
         return;
@@ -1647,7 +1647,7 @@ void MF_MWLigne::startHighlight()
     curseurxDeb = curseurx;
 }
 
-bool MF_MWLigne::clearHighlight()
+bool MF_MWLine::clearHighlight()
 {
     if (surligneOn == false)
         return false;
@@ -1666,14 +1666,14 @@ bool MF_MWLigne::clearHighlight()
     }
 
     /* On efface là ou c'est highlighted */
-    effacer (min, max - min);
+    erase (min, max - min);
 
     /* et on remet le curseur au début du highlight */
     set_abspos_curseur(min);
     return true;
 }
 
-void MF_MWLigne::effacer(int depart, int nombre)
+void MF_MWLine::erase(int depart, int nombre)
 {
     int pos = get_offset_curseur();
     if (nombre == -1)

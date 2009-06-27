@@ -6,17 +6,17 @@
 
 BigBoss::BigBoss()
 {
-    allouer(new StartMenu(equipe));
+    allocate(new StartMenu(team));
 }
 
-bool BigBoss::recoitMessage(const char *message, MF_Base *fenetre)
+bool BigBoss::RecvFromSub(const char *message, MF_Base *fenetre)
 {
     if (strcmp(message, "teambuilder") == 0) {
-        allouer(new TeamBuilder(equipe));
+        allocate(new TeamBuilder(team));
         goto changed;
     }
     if (strcmp(message, "menu") == 0) {
-        allouer(new StartMenu(equipe));
+        allocate(new StartMenu(team));
         goto changed;
     }
     if (strcmp(message, "exit") == 0) {
@@ -27,12 +27,12 @@ bool BigBoss::recoitMessage(const char *message, MF_Base *fenetre)
     }
     if (strcmp(message, "credits") == 0)
     {
-        allouer(new Credits());
+        allocate(new Credits());
         goto changed;
     }
     if (strcmp(message, "battle online") == 0)
     {
-        allouer(new ServerList());
+        allocate(new ServerList());
         goto changed;
     }
     //more will be added
@@ -40,19 +40,19 @@ bool BigBoss::recoitMessage(const char *message, MF_Base *fenetre)
     return false;
 
 changed:
-    detruireMF(fenetre);
+    destroyMF(fenetre);
     return true;
 }
 
-void BigBoss::affiche(Window &ecran)
+void BigBoss::display(Window &ecran)
 {
     if (!updated)
     {
         updated = true;
-        afficheMF(ecran);
-    } else if (pDebut->check_updated() == false)
+        displayMF(ecran);
+    } else if (pStart->check_updated() == false)
     {
-        pDebut->affiche(ecran);
+        pStart->display(ecran);
     } else
     {
         return ;

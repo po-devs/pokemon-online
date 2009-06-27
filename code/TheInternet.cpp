@@ -57,6 +57,8 @@ sf::Socket::Status recv_body(sf::SocketTCP &sock, string &recv, const bool &fini
     // cursor, where are we located in the buffer
     int i=0;
 
+    /* I know about the warning, but if someone changes the size of the buffer to
+        something less than 255, it won't be useless anymore */
     if (l_l >= sizeof(buffer))
             return Error;
 
@@ -85,6 +87,7 @@ sf::Socket::Status recv_body(sf::SocketTCP &sock, string &recv, const bool &fini
 
     //length of the message
     size_t length = ConnectToRegistry::calc_length(recv.data(), l_l);
+    recv.reserve(recv.length()+length);
 
     //Step three: Yata!
     while (1)
@@ -194,11 +197,11 @@ void ConnectToRegistry::start_everything()
 //    } catch (const string &ex)
 //    {
 //        cout << "gotcha" << endl;
-//        base.envoieMessage(ex.c_str());
+//        base.sendToBoss(ex.c_str());
 //    } catch (const char *a)
 //    {
 //        cout << "gotcha" << endl;
-//        base.envoieMessage(a);
+//        base.sendToBoss(a);
 //    }
 //
 //    end:
@@ -273,7 +276,7 @@ end:
     return;
 ex:
     Client.Close();
-    base.envoieMessage(ex.c_str());
+    base.sendToBoss(ex.c_str());
     return;
 }
 
@@ -293,14 +296,14 @@ size_t ConnectToRegistry::calc_length(const char *data, Uint8 l_l)
 ServerList::ServerList()
            :MF_Applet(462, 521, Color(84, 109, 142))
 {
-    allouer(a = new MF_Button("a2.png", "a_pressed.png"));
-    allouer(b = new MF_Button("b.png", "b_pressed.png"));
-    allouer(start = new MF_Button("start.png", "start_pressed.png"));
-    allouer(left = new MF_Button("left.png", "left_pressed.png"));
-    allouer(right = new MF_Button("right.png", "right_pressed.png"));
-    allouer(down = new MF_Button("down.png", "down_pressed.png"));
-    allouer(up = new MF_Button("up.png", "up_pressed.png"));
-    allouer(servers = new MF_BarManager(387,300,35,28,"verdana.ttf",11));
+    allocate(a = new MF_Button("a2.png", "a_pressed.png"));
+    allocate(b = new MF_Button("b.png", "b_pressed.png"));
+    allocate(start = new MF_Button("start.png", "start_pressed.png"));
+    allocate(left = new MF_Button("left.png", "left_pressed.png"));
+    allocate(right = new MF_Button("right.png", "right_pressed.png"));
+    allocate(down = new MF_Button("down.png", "down_pressed.png"));
+    allocate(up = new MF_Button("up.png", "up_pressed.png"));
+    allocate(servers = new MF_BarManager(387,300,35,28,"verdana.ttf",11));
 
     //POSITIONNEMENT
     a->move(259,377);
@@ -327,30 +330,30 @@ ServerList::ServerList()
     c.start_everything();
 }
 
-void ServerList::affiche(Surface &ecran)
+void ServerList::display(Surface &ecran)
 {
     if (!updated)
     {
         updated = true;
-        self_affiche(ecran);
-        afficheMF(ecran);
-    } else if (pDebut->check_updated() == false)
+        self_display(ecran);
+        displayMF(ecran);
+    } else if (pStart->check_updated() == false)
     {
-        pDebut->affiche(ecran);
+        pStart->display(ecran);
     }
 }
 
-void ServerList::self_affiche(Surface &ecran)
+void ServerList::self_display(Surface &ecran)
 {
     ecran.fill(0, Color(255,255,255));
-    MF_Applet::affiche(ecran);
+    MF_Applet::display(ecran);
 }
 
-bool ServerList::recoitMessage(const char *message, MF_Base *fenetre)
+bool ServerList::RecvFromSub(const char *message, MF_Base *fenetre)
 {
     if (fenetre == b and strcmp(message, "release") == 0)
     {
-        envoieMessage("menu");
+        sendToBoss("menu");
         return true;
     }
 
@@ -358,7 +361,7 @@ bool ServerList::recoitMessage(const char *message, MF_Base *fenetre)
     {
         if (strncmp(message, "error: ", strlen("error: ")) == 0)
         {
-            allouer ( new MF_Alert(this, police, message + strlen("error: "), bgColor) );
+            allocate ( new MF_Alert(this, police, message + strlen("error: "), bgColor) );
             return true;
         }
     }
