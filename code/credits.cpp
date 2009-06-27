@@ -19,8 +19,8 @@ Credits::Credits()
     smart_ptr<string> nom = find_line(f, (rand() % MagicNumber) + 2);
 
     /** TITRE **/
-    MF_Ligne *title = new MF_Ligne();
-    allouer(title);
+    MF_Line *title = new MF_Line();
+    allocate(title);
 
     title->setColor(0xFF);
     title->setTextColor(Color(0xFF, 0X44, 0x66));
@@ -33,11 +33,11 @@ Credits::Credits()
     SDL_Surface *ecran = SDL_GetVideoSurface();
 
     title->setRect((ecran->w-w)/2, 40, w, h);
-    title->ecrire(*nom);
+    title->write(*nom);
 
     /** DESCRIPTION **/
-    MF_MLigne *desc = new MF_MLigne();
-    allouer(desc);
+    MF_MLine *desc = new MF_MLine();
+    allocate(desc);
 
     desc->setColor(0xFF);
     desc->setTextColor(0);
@@ -46,25 +46,25 @@ Credits::Credits()
     desc->setcapacity(11);
 
     smart_ptr< fast_array<char> > it = get_file_content(("db/" + *nom + ".txt").c_str(), true);
-    desc->ecrire(*it);
+    desc->write(*it);
 
     /** BOUTON "BACK" **/
-    allouer (new MF_ImHLApplet("back.png", 250, 460));
+    allocate (new MF_ImHLApplet("back.png", 250, 460));
 }
 
-bool Credits::recoitMessage(const char *message, MF_Base *fenetre)
+bool Credits::RecvFromSub(const char *message, MF_Base *fenetre)
 {
     if (strcmp(message, "clic") == 0)
     {
-        envoieMessage("menu");
+        sendToBoss("menu");
         return true;
     }
     return false;
 }
 
-void Credits::affiche(Surface &s)
+void Credits::display(Surface &s)
 {
     updated = true;
     s.fill(0, Color(0xFF, 0xFF, 0xFF));
-    afficheMF(s);
+    displayMF(s);
 }

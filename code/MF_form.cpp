@@ -46,20 +46,20 @@ MF_TextBox::MF_TextBox(Font &police, Uint16 w, Uint16 h, int capacity, const cha
     champ_texte.setRect(x+2+offsetx, y+2+offsety, w-4-offsetx, h-4-offsety);
     champ_texte.setcapacity(capacity);
     dims = Rect(x,y,w,h);
-    if (police) champ_texte.ecrire(texte);
+    if (police) champ_texte.write(texte);
 }
 
-void MF_TextBox::affiche(Surface &ecran)
+void MF_TextBox::display(Surface &ecran)
 {
     ecran.fill(dims, Color(0xFF,0xFF,0xFF));
 
-    champ_texte.affiche(ecran);
+    champ_texte.display(ecran);
 
     //Bordures
     MF_Box_DrawBorders(dims, ecran);
 }
 
-bool MF_TextBox::gereEvenement(const SDL_Event &event)
+bool MF_TextBox::deal_w_Event(const SDL_Event &event)
 {
     if (event.type == SDL_KEYDOWN && !(SHIFT_ON))
     {
@@ -68,18 +68,18 @@ bool MF_TextBox::gereEvenement(const SDL_Event &event)
             case SDLK_RETURN:
                 if (enter == true)
                     break;
-                envoieMessage("enter");
+                sendToBoss("enter");
                 return 1;
             case SDLK_TAB:
                 if (tab == true)
                     break;
-                envoieMessage("tab");
+                sendToBoss("tab");
                 return 1;
             default:
                 break;
         }
     }
-    return champ_texte.gereEvenement(event);
+    return champ_texte.deal_w_Event(event);
 }
 
 void MF_Box_DrawBorders(const Rect &dims, Surface &ecran, bool inverted)
@@ -142,19 +142,19 @@ MF_TButton::MF_TButton(Uint16 w, Uint16 h, Font &font, const char *texte, Sint16
 }
 
 //pour les clics
-bool MF_TButton::gereEvenement(const SDL_Event &event)
+bool MF_TButton::deal_w_Event(const SDL_Event &event)
 {
     switch (event.type)
     {
         case SDL_MOUSEBUTTONDOWN:
-            if (event.button.button == SDL_BUTTON_LEFT && dedans(event.button.x, event.button.y))
+            if (event.button.button == SDL_BUTTON_LEFT && isIn(event.button.x, event.button.y))
             {
                 if (!clicOn)
                 {
                     clicOn = true;
                     set_updated();
                 }
-                envoieMessage("clic");
+                sendToBoss("clic");
                 return 1;
             }
             return 0;
@@ -166,11 +166,11 @@ bool MF_TButton::gereEvenement(const SDL_Event &event)
                     clicOn = false;
                     set_updated();
                 }
-                if (dedans(event.button.x, event.button.y))
-                    envoieMessage("release");
+                if (isIn(event.button.x, event.button.y))
+                    sendToBoss("release");
                 else
                 {
-                    envoieMessage("false-release");
+                    sendToBoss("false-release");
                 }
                 return 1;
             }
@@ -178,18 +178,18 @@ bool MF_TButton::gereEvenement(const SDL_Event &event)
         case SDL_KEYDOWN:
             if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_SPACE)
             {
-                envoieMessage("clic");
-                envoieMessage("release");
+                sendToBoss("clic");
+                sendToBoss("release");
                 return 1;
             }
-            return MF_Directions::gereTouche(event.key);
+            return MF_Directions::deal_w_key(event.key);
         default:
-            return MF_Directions::gereEvenement(event);
+            return MF_Directions::deal_w_Event(event);
     }
 }
 
-//encore une nouvelle fonction pour afficher!
-void MF_TButton::affiche(Surface &ecran)
+//encore une nouvelle fonction pour displayr!
+void MF_TButton::display(Surface &ecran)
 {
     //Fond
     ecran.fill(dims, bgColor);
@@ -223,25 +223,25 @@ bool MF_TextList::EventFilter(const SDL_Event &event)
     switch (event.key.keysym.sym)
     {
         case SDLK_UP:
-            envoieMessage("up");
+            sendToBoss("up");
             champ_texte.surligneOn = false;
             set_updated();
             return 0;
         case SDLK_DOWN:
-            envoieMessage("down");
+            sendToBoss("down");
             champ_texte.surligneOn = false;
             set_updated();
             return 0;
         case SDLK_TAB:
             find_word();
-            envoieMessage("tab");
+            sendToBoss("tab");
             champ_texte.surligneOn = false;
             set_updated();
             return 0;
         case SDLK_RETURN:
             find_word();
-            if (envoieMessage("enter"))
-                envoieMessage("tab");
+            if (sendToBoss("enter"))
+                sendToBoss("tab");
             champ_texte.surligneOn = false;
             set_updated();
             return 0;
@@ -261,8 +261,8 @@ void MF_TextList::post_event(const SDL_Event &event)
     int len = champ_texte.texte.length();
 
     //on ajoute la fin du mot
-    champ_texte.effacer(0);
-    champ_texte.ecrire( mot );
+    champ_texte.erase(0);
+    champ_texte.write( mot );
     //et on met le highlight
     champ_texte.curseury = len;
     champ_texte.startHighlight();
@@ -343,7 +343,7 @@ MF_BarManager::~MF_BarManager()
     del_types();
 }
 
-void MF_BarManager::actualiser()
+void MF_BarManager::refresh()
 {
     updated = true;
 
@@ -358,12 +358,12 @@ void MF_BarManager::actualiser()
         Rect pos_barre (3,2,dims.w,dims.h);
 
         //la c'est les objets de la liste chainée qui vont gérer l'affichage comme des grands
-        MF_pos_affichage->affiche(this, pos_barre);
+        MF_pos_affichage->display(this, pos_barre);
 
         /* et la barre!! */
         if (barre_v_on || barre_h_on)
         {
-            affiche_barre();
+            display_barre();
         }
     }
 
@@ -373,7 +373,7 @@ void MF_BarManager::actualiser()
 }
 
 //gérer fleche haut et bas et clic
-bool MF_BarManager::gereTouche(const SDL_KeyboardEvent &keyevent)
+bool MF_BarManager::deal_w_key(const SDL_KeyboardEvent &keyevent)
 {
     if (keyevent.type == SDL_KEYUP) return 0;
     //si flèche haut ou bas
@@ -390,13 +390,13 @@ bool MF_BarManager::gereTouche(const SDL_KeyboardEvent &keyevent)
     if (keyevent.keysym.sym == SDLK_RETURN)
     {
         string msg = "enter: " + toString(MF_pos->bar_id);
-        envoieMessage(msg.c_str());
+        sendToBoss(msg.c_str());
         return 1;
     }
-    return MF_Directions::gereTouche(keyevent);
+    return MF_Directions::deal_w_key(keyevent);
 }
 
-bool MF_BarManager::gereClic(const SDL_MouseButtonEvent &bevent)
+bool MF_BarManager::deal_w_click(const SDL_MouseButtonEvent &bevent)
 {
     //release
     if (bevent.state == SDL_RELEASED)
@@ -461,7 +461,7 @@ bool MF_BarManager::gereClic(const SDL_MouseButtonEvent &bevent)
                 start_timer();
                 return 1;
             }
-            //fleche basactualiser
+            //fleche basrefresh
             if (pos.y >= dims.h-aff_data->dim_fleches)
             {
                 descendcurseur(1);
@@ -546,12 +546,12 @@ bool MF_BarManager::gereClic(const SDL_MouseButtonEvent &bevent)
     if (SDL_GetTicks() - last_clic < 400)
     {
         string msg = "double-clic: " + toString(MF_pos->bar_id);
-        envoieMessage(msg.c_str());
+        sendToBoss(msg.c_str());
         last_clic = SDL_GetTicks() - 400;
     } else
     {
         string msg = "clic: " + toString(MF_pos->bar_id);
-        envoieMessage(msg.c_str());
+        sendToBoss(msg.c_str());
         last_clic = SDL_GetTicks();
     }
 
@@ -561,7 +561,7 @@ bool MF_BarManager::gereClic(const SDL_MouseButtonEvent &bevent)
 }
 
 //les mouvements
-bool MF_BarManager::gereMotion(const SDL_MouseMotionEvent &mevent)
+bool MF_BarManager::deal_w_motion(const SDL_MouseMotionEvent &mevent)
 {
     stop_timer();
     last_clic = SDL_GetTicks() - 400;
@@ -601,29 +601,29 @@ bool MF_BarManager::gereMotion(const SDL_MouseMotionEvent &mevent)
     return 0;
 }
 
-bool MF_BarManager::gereEvenement(const SDL_Event &event)
+bool MF_BarManager::deal_w_Event(const SDL_Event &event)
 {
     switch (event.type)
     {
         case SDL_KEYUP:
         case SDL_KEYDOWN:
-            return gereTouche(event.key);
+            return deal_w_key(event.key);
         case SDL_MOUSEBUTTONUP:
         case SDL_MOUSEBUTTONDOWN:
-            return gereClic(event.button);
+            return deal_w_click(event.button);
         case SDL_MOUSEMOTION:
-            return gereMotion(event.motion);
+            return deal_w_motion(event.motion);
         default:
-            return MF_Directions::gereEvenement(event);
+            return MF_Directions::deal_w_Event(event);
     }
 }
 
 void MF_BarManager::sort_options(int field)
 {
     MF_DataLine *tab[nbMF];
-    MF_Base *it = pDebut;
+    MF_Base *it = pStart;
 
-    for (int i = 0; i < nbMF; i++, it = it->pApres)
+    for (int i = 0; i < nbMF; i++, it = it->pNext)
     {
 #ifdef DEBUG_ON
         assert(it != NULL);
@@ -651,14 +651,14 @@ void MF_BarManager::sort_options(int field)
     }
 
     //Puis on arrange les divers paramètres
-    pDebut = tab[0];
-    pFin = tab[nbMF - 1];
-    pDebut->pAvant = NULL;
-    pFin->pApres = NULL;
+    pStart = tab[0];
+    pEnd = tab[nbMF - 1];
+    pStart->pPrev = NULL;
+    pEnd->pNext = NULL;
     for (int i = 0; i < nbMF - 1; i++)
     {
-        tab[i]->pApres = tab[i+1];
-        tab[i+1]->pAvant = tab[i];
+        tab[i]->pNext = tab[i+1];
+        tab[i+1]->pPrev = tab[i];
     }
     MF_pos = dynamic_cast<MF_DataLine*>(get_member(nbMF - posx - 1));
     MF_pos_affichage = dynamic_cast<MF_DataLine*>(get_member(nbMF - pos_affichage_v - 1));
@@ -682,9 +682,9 @@ void MF_BarManager::stop_timer()
 
 void MF_BarManager::clear_options()
 {
-    delete pDebut;
-    pDebut = NULL;
-    pFin = NULL;
+    delete pStart;
+    pStart = NULL;
+    pEnd = NULL;
     MF_pos = NULL;
     MF_pos_affichage = NULL;
     pos_affichage_v = 0;
@@ -719,7 +719,7 @@ void MF_BarManager::update_barre()
     set_updated();
 }
 
-void MF_BarManager::affiche_barre()
+void MF_BarManager::display_barre()
 {
     Rect dims (2, 2, this->dims.w-4, this->dims.h-4);
     Rect r;
@@ -861,7 +861,7 @@ Uint32 MF_BarManager_Timer(unsigned int time, void *param)
 
     //si la classe n'est plus la première de son MF_Boss, on retourne
     //ou si la souris n'est plus enfoncée
-    if ((item->isFirst == false) || !BUTTON_LEFT_ON || !item->dedans(item->posclic.x, item->posclic.y)) {
+    if ((item->isFirst == false) || !BUTTON_LEFT_ON || !item->isIn(item->posclic.x, item->posclic.y)) {
         //on enlève le timer
         item->stop_timer();
         return 0;
@@ -900,7 +900,7 @@ int MF_BarManager::montebarre(int px)
         move_pos_affichage(newpos-pos_affichage_v);
     } else
     {
-        affiche_barre();
+        display_barre();
         if (pSup != NULL)
             pSup->updated = false;
     }
@@ -909,14 +909,14 @@ int MF_BarManager::montebarre(int px)
 
 int MF_BarManager::get_pos_of(Uint16 id)
 {
-    MF_DataLine *it = dynamic_cast<MF_DataLine *>(pFin);
+    MF_DataLine *it = dynamic_cast<MF_DataLine *>(pEnd);
     for (int i = 0; it != NULL; i++)
     {
         if (it->bar_id == id)
         {
             return i;
         }
-        it = dynamic_cast<MF_DataLine *>(it->pAvant);
+        it = dynamic_cast<MF_DataLine *>(it->pPrev);
     }
     return -1;
 }
@@ -941,7 +941,7 @@ int MF_BarManager::descendbarre(int px)
         move_pos_affichage(newpos-pos_affichage_v);
     } else
     {
-        affiche_barre();
+        display_barre();
         if (pSup != NULL)
             pSup->updated = false;
     }
@@ -968,7 +968,7 @@ int MF_BarManager::gauchebarre(int px)
         pos_affichage_l = newpos;
     } else
     {
-        affiche_barre();
+        display_barre();
     }
     return true_px;
 }
@@ -992,7 +992,7 @@ int MF_BarManager::droitebarre(int px)
         pos_affichage_l = newpos;
     } else
     {
-        affiche_barre();
+        display_barre();
     }
     return true_px;
 }
@@ -1029,9 +1029,9 @@ int MF_BarManager::get_barre_h_pos()
     return dims.x+aff_data->dim_fleches+ (dims.w-dims.x-aff_data->dim_fleches*(2+barre_v_on)-barre_h_w)*pos_affichage_l/(plus_grande_largeur-maxlargeur());
 }
 
-void MF_BarManager::affiche(Surface &ecran)
+void MF_BarManager::display(Surface &ecran)
 {
-    if (!updated) actualiser();
+    if (!updated) refresh();
     surface.blitTo(ecran, 0, dims);
 }
 
@@ -1041,10 +1041,10 @@ bool MF_BarManager::add_option(int id_of_the_bar, ...)
     va_start(da_list, id_of_the_bar);
 
     MF_DataLine *my_point = new MF_DataLine(type_cont);
-    allouer(my_point);
+    allocate(my_point);
     my_point->bar_id = id_of_the_bar;
 
-    MF_DataBar *it = dynamic_cast<MF_DataBar *>(my_point->pDebut);
+    MF_DataBar *it = dynamic_cast<MF_DataBar *>(my_point->pStart);
     vector<MF_Base_Type*>::iterator it2 = type_cont.begin();
 
     while (it != NULL)
@@ -1082,16 +1082,16 @@ int MF_BarManager::move_pos_x(int steps)
     {
         for (i=0; i < steps; i ++)
         {
-            if (item->pAvant == NULL) break;
-            item = item->pAvant;
+            if (item->pPrev == NULL) break;
+            item = item->pPrev;
         }
         posx += i;
     } else
     {
         for (i=0; i > steps; i --)
         {
-            if (item->pApres == NULL) break;
-            item = item->pApres;
+            if (item->pNext == NULL) break;
+            item = item->pNext;
         }
         posx += i;
     }
@@ -1114,16 +1114,16 @@ int MF_BarManager::move_pos_affichage(int steps)
     {
         for (i=0; i < steps; i ++)
         {
-            if (item->pAvant == NULL) break;
-            item = item->pAvant;
+            if (item->pPrev == NULL) break;
+            item = item->pPrev;
         }
         pos_affichage_v += i;
     } else
     {
         for (i=0; i > steps; i --)
         {
-            if (item->pApres == NULL) break;
-            item = item->pApres;
+            if (item->pNext == NULL) break;
+            item = item->pNext;
         }
         pos_affichage_v += i;
     }
@@ -1162,12 +1162,12 @@ MF_DataLine::MF_DataLine(vector<MF_Base_Type *>&cont)
     //On crée les DataBar en fct des types
     for (int i = cont.size()-1; i >= 0; i--)
     {
-        allouer( cont[i]->create() );
-        pDebut->role = i;
+        allocate( cont[i]->create() );
+        pStart->role = i;
     }
 }
 
-void MF_DataLine::affiche(MF_BarManager *boss, Rect &posbarre)
+void MF_DataLine::display(MF_BarManager *boss, Rect &posbarre)
 {
     //si on est highlighté
     if (boss->MF_pos == this)
@@ -1184,46 +1184,46 @@ void MF_DataLine::affiche(MF_BarManager *boss, Rect &posbarre)
     }
 
     Uint16 base_x = posbarre.x;
-    MF_DataBar *prems = dynamic_cast<MF_DataBar *> (pDebut);
+    MF_DataBar *prems = dynamic_cast<MF_DataBar *> (pStart);
 #ifdef DEBUG_ON
     assert(prems != NULL);
 #endif
-    prems->affiche(boss, posbarre);
+    prems->display(boss, posbarre);
     posbarre.x = base_x;
     posbarre.y += boss->option_h;
 
-    if (pAvant == NULL || posbarre.y > posbarre.h) return;
-    MF_DataLine *avant = dynamic_cast<MF_DataLine*>(pAvant);
+    if (pPrev == NULL || posbarre.y > posbarre.h) return;
+    MF_DataLine *avant = dynamic_cast<MF_DataLine*>(pPrev);
 #ifdef DEBUG_ON
     assert(avant != NULL);
 #endif
 
-    avant->affiche(boss, posbarre);
+    avant->display(boss, posbarre);
 }
 
-void MF_DataBar::affiche_next(MF_BarManager *boss, Rect &pos_barre)
+void MF_DataBar::display_next(MF_BarManager *boss, Rect &pos_barre)
 {
     pos_barre.x += boss->type_cont[role]->w;
-    if (pos_barre.x >= pos_barre.w || pApres == NULL)
+    if (pos_barre.x >= pos_barre.w || pNext == NULL)
         return;
 
-    MF_DataBar *suivant = dynamic_cast<MF_DataBar*> (pApres);
+    MF_DataBar *suivant = dynamic_cast<MF_DataBar*> (pNext);
     if (suivant == NULL)
     {
-        throw MF_Exception ("MF_Databar :: affiche_next --> pApres pas databar!!");
+        throw MF_Exception ("MF_Databar :: display_next --> pNext pas databar!!");
     }
-    suivant->affiche(boss, pos_barre);
+    suivant->display(boss, pos_barre);
 }
 
-void MF_DataBar::affiche(MF_BarManager *boss, Rect &pos_barre)
+void MF_DataBar::display(MF_BarManager *boss, Rect &pos_barre)
 {
-    throw(MF_Exception("MF_Databar::affiche -- classe non dérivée!"));
+    throw(MF_Exception("MF_Databar::display -- classe non dérivée!"));
 }
 
-void MF_TextBar::affiche(MF_BarManager *boss, Rect &pos_barre)
+void MF_TextBar::display(MF_BarManager *boss, Rect &pos_barre)
 {
     if (texte == NULL || texte[0] == 0)
-        return affiche_next(boss, pos_barre);
+        return display_next(boss, pos_barre);
 
     /* Voici l'affichage */
     //pos_barre est passé par réf, donc surtout pas le repasser à SDL_BlitSurface qui va le modifier
@@ -1236,10 +1236,10 @@ void MF_TextBar::affiche(MF_BarManager *boss, Rect &pos_barre)
 
     tmp.blitTo(boss->surface, src, dest);
 
-    affiche_next(boss, pos_barre);
+    display_next(boss, pos_barre);
 }
 
-void MF_ImageBar::affiche(MF_BarManager *boss, Rect &pos_barre)
+void MF_ImageBar::display(MF_BarManager *boss, Rect &pos_barre)
 {
     /* Voici l'affichage */
     //pos_barre est passé par réf, donc surtout pas le repasser à SDL_BlitSurface qui va le modifier
@@ -1248,7 +1248,7 @@ void MF_ImageBar::affiche(MF_BarManager *boss, Rect &pos_barre)
 
     image.blitTo(boss->surface, src, dest);
 
-    affiche_next(boss, pos_barre);
+    display_next(boss, pos_barre);
 }
 
 MF_Alert::MF_Alert(MF_Boss *src, Font &police, const char *texte, const Color &color)
@@ -1292,7 +1292,7 @@ MF_Alert::MF_Alert(MF_Boss *src, Font &police, const char *texte, const Color &c
     inside->dims.x = dims.x;
     inside->dims.y = dims.y;
 
-    allouer(ok);
+    allocate(ok);
 }
 
 MF_Alert::~MF_Alert()
@@ -1300,17 +1300,17 @@ MF_Alert::~MF_Alert()
     delete inside;
 }
 
-void MF_Alert::affiche(Surface &surface)
+void MF_Alert::display(Surface &surface)
 {
-    inside->affiche(surface);
+    inside->display(surface);
 
-    ok->affiche(surface);
+    ok->display(surface);
 }
 
-bool MF_Alert::recoitMessage(const char *message, MF_Base* fenetre)
+bool MF_Alert::RecvFromSub(const char *message, MF_Base* fenetre)
 {
     if (strcmp(message, "release") == 0)
-        pSup->detruireMF(this);
+        pSup->destroyMF(this);
 
     return true;
 }
@@ -1344,24 +1344,24 @@ MF_TrayBar :: MF_TrayBar(Sint16 x, Sint16 y, Uint16 w, Uint16 numvals, const Col
 }
 
 
-void MF_TrayBar::affiche(Surface &surface)
+void MF_TrayBar::display(Surface &surface)
 {
     //fond
     if (pos_icon != lastval)
-        actualiser();
-    MF_Surf::affiche(surface);
+        refresh();
+    MF_Surf::display(surface);
     //icone
     Rect r (get_posx() + dims.x, dims.y, 0, 0);
     MF_Tray_Icon.blitTo(surface, 0, r);
 }
 
-bool MF_TrayBar::gereEvenement(const SDL_Event &event)
+bool MF_TrayBar::deal_w_Event(const SDL_Event &event)
 {
     if (!clicAble)
     {
         if (event.type != SDL_KEYDOWN)
             return false;
-        return gereTouche(event.key);
+        return deal_w_key(event.key);
     }
     switch (event.type)
     {
@@ -1403,7 +1403,7 @@ bool MF_TrayBar::gereEvenement(const SDL_Event &event)
                     {
                         pos_icon = pos_icon - ((pos_icon-min_val) % pas);
                     }
-                envoieMessage("moved");
+                sendToBoss("moved");
                 return true;
             }
             return false;
@@ -1417,13 +1417,13 @@ bool MF_TrayBar::gereEvenement(const SDL_Event &event)
                 pos_icon -= pas;
                 goto motion;
             }
-            return gereTouche(event.key);
+            return deal_w_key(event.key);
         default:
             return false;
     }
 }
 
-void MF_TrayBar::actualiser()
+void MF_TrayBar::refresh()
 {
     Rect r (0, 1, 0, dims.h-2);
 
@@ -1461,37 +1461,37 @@ MF_ListeDeroulante::MF_ListeDeroulante(Uint16 w, Uint16 sh, Uint16 bh, Sint16 x,
 
 }
 
-bool MF_ListeDeroulante::dedans(int x, int y) const
+bool MF_ListeDeroulante::isIn(int x, int y) const
 {
-    return (deroulee?MF_BarManager::dedans(x, y):dims.x <= x && dims.y <= y && dims.w + dims.x > x && dims.y + small_height > y);
+    return (deroulee?MF_BarManager::isIn(x, y):dims.x <= x && dims.y <= y && dims.w + dims.x > x && dims.y + small_height > y);
 }
 
-bool MF_ListeDeroulante::gereClic(const SDL_MouseButtonEvent &bevent)
+bool MF_ListeDeroulante::deal_w_click(const SDL_MouseButtonEvent &bevent)
 {
     if (bevent.type != SDL_MOUSEBUTTONDOWN || bevent.button != SDL_BUTTON_LEFT)
     {
-        return MF_BarManager::gereClic(bevent);
+        return MF_BarManager::deal_w_click(bevent);
     }
 
-    if (!dedans(bevent.x, bevent.y))
+    if (!isIn(bevent.x, bevent.y))
         return change_deroulee(false);
 
     if (bevent.x < dims.x+dims.w-2-aff_data->dim_fleches)
     {
-        int status = MF_BarManager::gereClic(bevent);
+        int status = MF_BarManager::deal_w_click(bevent);
         return change_deroulee(false) ||status;
     }
 
     //Le clic est sur le côté flèches
     if (deroulee)
-        return MF_BarManager::gereClic(bevent);
+        return MF_BarManager::deal_w_click(bevent);
     else
         return change_deroulee(true);
 }
 
-bool MF_ListeDeroulante::gereTouche(const SDL_KeyboardEvent &kevent)
+bool MF_ListeDeroulante::deal_w_key(const SDL_KeyboardEvent &kevent)
 {
-    int status = MF_BarManager::gereTouche(kevent);
+    int status = MF_BarManager::deal_w_key(kevent);
     if (kevent.keysym.sym == SDLK_RETURN)
     {
         change_deroulee(false);
@@ -1537,7 +1537,7 @@ MF_Radio::MF_Radio(Font &police, const char *texte, bool selected, Sint16 x, Sin
     drawString(police, texte, 34, 0);
 }
 
-void MF_Radio::affiche(Surface &ecran)
+void MF_Radio::display(Surface &ecran)
 {
     if (selected != isFirst)
     {
@@ -1559,19 +1559,19 @@ int MF_Radio::drawRadio()
 
 MF_Base * MF_BRadio::add_option(Font &police, const char *texte, Uint16 role)
 {
-    allouer(new MF_Radio(police, texte, true, dims.x, dims.h, bgColor));
-    dims.h += pDebut->dims.h;
-    dims.w = max(dims.w, pDebut->dims.w);
-    pDebut->role = role;
+    allocate(new MF_Radio(police, texte, true, dims.x, dims.h, bgColor));
+    dims.h += pStart->dims.h;
+    dims.w = max(dims.w, pStart->dims.w);
+    pStart->role = role;
 
-    return pDebut;
+    return pStart;
 }
 
-bool MF_BRadio::recoitMessage(const char *message, MF_Base *fenetre)
+bool MF_BRadio::RecvFromSub(const char *message, MF_Base *fenetre)
 {
     if (strcmp(message, "select") == 0)
     {
-        return envoieMessage(("select: " + toString(fenetre->role)).c_str());
+        return sendToBoss(("select: " + toString(fenetre->role)).c_str());
     }
     return false;
 }
@@ -1585,7 +1585,7 @@ MF_CheckBox::MF_CheckBox(Font &police, const char *texte, bool checked, Sint16 x
     drawString(police, texte, 34, 0);
 }
 
-void MF_CheckBox::affiche(Surface &ecran)
+void MF_CheckBox::display(Surface &ecran)
 {
     if (!updated)
     {
@@ -1606,7 +1606,7 @@ int MF_CheckBox::drawCross()
     return 0;
 }
 
-bool MF_CheckBox::gereEvenement(const SDL_Event &event)
+bool MF_CheckBox::deal_w_Event(const SDL_Event &event)
 {
     if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
         return false;
@@ -1618,9 +1618,9 @@ bool MF_CheckBox::gereEvenement(const SDL_Event &event)
     checked = !checked;
 
     if (checked)
-        envoieMessage("checked");
+        sendToBoss("checked");
     else
-        envoieMessage("unchecked");
+        sendToBoss("unchecked");
 
     set_updated();
 

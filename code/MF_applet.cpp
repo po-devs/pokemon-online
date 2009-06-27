@@ -37,7 +37,7 @@ void MF_Applet::drawStyledString(const Font &police, const char *texte, Sint16 x
         police.style(oldstyle);
 }
 
-void MF_Applet::affiche(Surface &surface)
+void MF_Applet::display(Surface &surface)
 {
     this->surface.blitTo(surface, 0, dims);
 
@@ -81,7 +81,7 @@ MF_HLApplet::MF_HLApplet(Uint16 w, Uint16 h, const Color &rgb, Sint16 x, Sint16 
 {
 }
 
-void MF_HLApplet::affiche(Surface &ecran)
+void MF_HLApplet::display(Surface &ecran)
 {
     surface.blitTo(ecran, 0, dims);
 
@@ -113,7 +113,7 @@ MF_BApplet::MF_BApplet(Uint16 w, Uint16 h, const Color &rgb, Sint16 x, Sint16 y,
 {}
 
 //pour les clics
-bool MF_BApplet::gereEvenement(const SDL_Event &event)
+bool MF_BApplet::deal_w_Event(const SDL_Event &event)
 {
     switch(event.type)
     {
@@ -125,7 +125,7 @@ bool MF_BApplet::gereEvenement(const SDL_Event &event)
                     clicOn = true;
                     set_updated();
                 }
-                envoieMessage("clic");
+                sendToBoss("clic");
                 return 1;
             }
             return 0;
@@ -136,27 +136,27 @@ bool MF_BApplet::gereEvenement(const SDL_Event &event)
                 set_updated();
 
                 if (hovered)
-                    envoieMessage("release");
+                    sendToBoss("release");
                 else
-                	envoieMessage("false-release");
+                	sendToBoss("false-release");
                 return 1;
             }
             return 0;
         case SDL_KEYDOWN:
             if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_SPACE)
             {
-                envoieMessage("clic");
-                envoieMessage("release");
+                sendToBoss("clic");
+                sendToBoss("release");
                 return 1;
             }
-            return MF_Directions::gereTouche(event.key);
+            return MF_Directions::deal_w_key(event.key);
         default:
-            return MF_Base::gereEvenement(event);
+            return MF_Base::deal_w_Event(event);
     }
 }
 
-//encore une nouvelle fonction pour afficher!
-void MF_BApplet::affiche(Surface &ecran)
+//encore une nouvelle fonction pour displayr!
+void MF_BApplet::display(Surface &ecran)
 {
     //Fond
     ecran.fill(dims, bgColor);
@@ -188,7 +188,7 @@ MF_HoverMenu::~MF_HoverMenu()
 {
 }
 
-void MF_HoverMenu::affiche(Surface &surface)
+void MF_HoverMenu::display(Surface &surface)
 {
     //C'est bien un '=', et non pas un '=='
     if (image_displayed = hovered)
@@ -200,16 +200,16 @@ void MF_HoverMenu::affiche(Surface &surface)
     }
 }
 
-bool MF_HoverMenu::gereEvenement(const SDL_Event &event)
+bool MF_HoverMenu::deal_w_Event(const SDL_Event &event)
 {
     if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
     {
-        envoieMessage("clic");
+        sendToBoss("clic");
         return true;
     }
     if (event.type == SDL_KEYDOWN)
     {
-        return gereTouche(event.key);
+        return deal_w_key(event.key);
     }
     return false;
 }
@@ -232,7 +232,7 @@ int MF_ImHLApplet::set_hover_state(int enable)
     return false;
 }
 
-void MF_ImHLApplet::affiche(Surface &ecran)
+void MF_ImHLApplet::display(Surface &ecran)
 {
     surface.blitTo(ecran, 0, dims);
 
@@ -248,13 +248,13 @@ void MF_ImHLApplet::affiche(Surface &ecran)
     tmp.blitTo(ecran, 0, dims);
 }
 
-bool MF_ImHLApplet::gereEvenement(const SDL_Event &event)
+bool MF_ImHLApplet::deal_w_Event(const SDL_Event &event)
 {
-    if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT || !dedans(event.button.x, event.button.y))
+    if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT || !isIn(event.button.x, event.button.y))
     {
         return false;
     }
-    envoieMessage("clic");
+    sendToBoss("clic");
     return true;
 }
 
@@ -262,7 +262,7 @@ MF_Button::~MF_Button()
 {
 }
 
-void MF_Button::affiche(Surface &surface)
+void MF_Button::display(Surface &surface)
 {
     if (!clicOn)
     {
@@ -273,13 +273,13 @@ void MF_Button::affiche(Surface &surface)
     }
 }
 
-bool MF_Button::gereEvenement(const SDL_Event &event)
+bool MF_Button::deal_w_Event(const SDL_Event &event)
 {
     if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
     {
         if (hovered)
         {
-            envoieMessage("clic");
+            sendToBoss("clic");
             clicOn = true;
             set_updated();
             return true;
@@ -291,14 +291,14 @@ bool MF_Button::gereEvenement(const SDL_Event &event)
         set_updated();
 
         if (hovered)
-            envoieMessage("release");
+            sendToBoss("release");
         else
-            envoieMessage("false-release");
+            sendToBoss("false-release");
         return true;
     }
     if (event.type == SDL_KEYDOWN)
     {
-        return gereTouche(event.key);
+        return deal_w_key(event.key);
     }
     return false;
 }

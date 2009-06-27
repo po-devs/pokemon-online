@@ -42,13 +42,13 @@ class Team_Av :  public MF_BDirections, public MF_Applet, public MF_MoveAbleBoss
 
         Team_Av(TeamBuilder *team);
 
-        bool recoitMessage(const char *message, MF_Base *fenetre);
+        bool RecvFromSub(const char *message, MF_Base *fenetre);
         void load_abilities();
         void load_gender();
         void resize(Uint16 w, Uint16 h);
 
-        void affiche(Surface &ecran);
-        bool gereEvenement (const SDL_Event &event){return MF_MoveAbleBoss::gereEvenement(event);}
+        void display(Surface &ecran);
+        bool deal_w_Event (const SDL_Event &event){return MF_MoveAbleBoss::deal_w_Event(event);}
         void display_stats();
         void display_base(Uint16 base, Sint8 boost, Sint16 posy);
         void display_HP();
@@ -104,9 +104,9 @@ class TeamBuilder : public MF_BDirections, public MF_Applet
         static const char * nature_name[25];
         //police utilisée
         Font verdana;
-        //equipe (toutes les infos)
-        Team &equipe;
-        TeamInfo equipe2;
+        //team (toutes les infos)
+        Team &team;
+        TeamInfo team2;
         Uint8 current_zone;
         //Un tableau contenant 001, 002, 003 ...
         char tableau_nums[POKE_COUNT][4];
@@ -117,7 +117,7 @@ class TeamBuilder : public MF_BDirections, public MF_Applet
         Switch Mode;
 
     public:
-        TeamBuilder(Team &equipe); //création des champs de texte
+        TeamBuilder(Team &team); //création des champs de texte
         ~TeamBuilder(); //libération de tout
 
         //charge les noms de pokes dans poke_names^^
@@ -131,8 +131,8 @@ class TeamBuilder : public MF_BDirections, public MF_Applet
         //les genres
         void load_gender(int zone);
 
-        void affiche(Surface &ecran);
-        virtual bool recoitMessage(const char *message, MF_Base *fenetre);
+        void display(Surface &ecran);
+        virtual bool RecvFromSub(const char *message, MF_Base *fenetre);
         virtual void resize(Uint16 w, Uint16 h)
         {
             MF_Applet::resize(w, h);
@@ -153,37 +153,37 @@ class TeamBuilder : public MF_BDirections, public MF_Applet
         }
         void rewrite_nick(uint8_t zone);
         void insert_in(MF_TextBox *box, unsigned length, string &dest);
-        void insert_nickname() {insert_in(nickname, 12, equipe.pokes[current_zone].nick);}
-        void insert_trNick() {insert_in(trNick, 15, equipe.Trainer_Name);}
-        void insert_trInfo() {insert_in(trInfo, 200, equipe.Trainer_Info);}
-        void insert_trWin() {insert_in(trWin, 300, equipe.Trainer_Win);}
-        void insert_trLose() {insert_in(trLose, 300, equipe.Trainer_Lose);}
+        void insert_nickname() {insert_in(nickname, 12, team.pokes[current_zone].nick);}
+        void insert_trNick() {insert_in(trNick, 15, team.Trainer_Name);}
+        void insert_trInfo() {insert_in(trInfo, 200, team.Trainer_Info);}
+        void insert_trWin() {insert_in(trWin, 300, team.Trainer_Win);}
+        void insert_trLose() {insert_in(trLose, 300, team.Trainer_Lose);}
         void insert_trainer() {insert_trNick();insert_trInfo();insert_trLose();insert_trWin();}
         void insert_current() {if (current_zone < 6) insert_nickname(); else insert_trainer();}
         Uint16 calculate_base(Uint8 base_stat, Uint8 level, Uint8 dv, Uint8 ev);
-        Sint8 get_boost(Uint8 stat) { return -(equipe.pokes[current_zone].nature%5 == stat) + (equipe.pokes[current_zone].nature/5 == stat);}
-        Uint16 calc_HP(Uint8 zone) { return calculate_base(equipe2.pokes[zone].base_HP, equipe.pokes[zone].level, equipe.pokes[zone].hp_dv, equipe.pokes[zone].hp_ev) + equipe.pokes[zone].level + 5; }
-        Uint16 calc_Att(Uint8 zone) { return (calculate_base(equipe2.pokes[zone].base_att, equipe.pokes[zone].level, equipe.pokes[zone].att_dv, equipe.pokes[zone].att_ev))*(10+get_boost(0))/10; }
-        Uint16 calc_Def(Uint8 zone) { return (calculate_base(equipe2.pokes[zone].base_def, equipe.pokes[zone].level, equipe.pokes[zone].def_dv, equipe.pokes[zone].def_ev))*(10+get_boost(1))/10; }
-        Uint16 calc_Speed(Uint8 zone) { return (calculate_base(equipe2.pokes[zone].base_spd, equipe.pokes[zone].level, equipe.pokes[zone].speed_dv, equipe.pokes[zone].speed_ev))*(10+get_boost(2))/10; }
-        Uint16 calc_SpAtt(Uint8 zone) { return (calculate_base(equipe2.pokes[zone].base_satt, equipe.pokes[zone].level, equipe.pokes[zone].satt_dv, equipe.pokes[zone].satt_ev))*(10+get_boost(3))/10; }
-        Uint16 calc_SpDef(Uint8 zone) { return (calculate_base(equipe2.pokes[zone].base_sdef, equipe.pokes[zone].level, equipe.pokes[zone].sdef_dv, equipe.pokes[zone].sdef_ev))*(10+get_boost(4))/10; }
+        Sint8 get_boost(Uint8 stat) { return -(team.pokes[current_zone].nature%5 == stat) + (team.pokes[current_zone].nature/5 == stat);}
+        Uint16 calc_HP(Uint8 zone) { return calculate_base(team2.pokes[zone].base_HP, team.pokes[zone].level, team.pokes[zone].hp_dv, team.pokes[zone].hp_ev) + team.pokes[zone].level + 5; }
+        Uint16 calc_Att(Uint8 zone) { return (calculate_base(team2.pokes[zone].base_att, team.pokes[zone].level, team.pokes[zone].att_dv, team.pokes[zone].att_ev))*(10+get_boost(0))/10; }
+        Uint16 calc_Def(Uint8 zone) { return (calculate_base(team2.pokes[zone].base_def, team.pokes[zone].level, team.pokes[zone].def_dv, team.pokes[zone].def_ev))*(10+get_boost(1))/10; }
+        Uint16 calc_Speed(Uint8 zone) { return (calculate_base(team2.pokes[zone].base_spd, team.pokes[zone].level, team.pokes[zone].speed_dv, team.pokes[zone].speed_ev))*(10+get_boost(2))/10; }
+        Uint16 calc_SpAtt(Uint8 zone) { return (calculate_base(team2.pokes[zone].base_satt, team.pokes[zone].level, team.pokes[zone].satt_dv, team.pokes[zone].satt_ev))*(10+get_boost(3))/10; }
+        Uint16 calc_SpDef(Uint8 zone) { return (calculate_base(team2.pokes[zone].base_sdef, team.pokes[zone].level, team.pokes[zone].sdef_dv, team.pokes[zone].sdef_ev))*(10+get_boost(4))/10; }
 
         void display_stats();
         void display_base(Uint16 base, Uint8 ev, Sint8 boost, Sint16 posy);
-        void display_HP(){display_base(calc_HP(current_zone), equipe.pokes[current_zone].hp_ev, 0, 165);}
-        void display_Att(){display_base(calc_Att(current_zone), equipe.pokes[current_zone].att_ev, get_boost(0), 195);}
-        void display_Def(){display_base(calc_Def(current_zone), equipe.pokes[current_zone].def_ev, get_boost(1), 225);}
-        void display_Speed(){display_base(calc_Speed(current_zone), equipe.pokes[current_zone].speed_ev, get_boost(2), 255);}
-        void display_SpAtt(){display_base(calc_SpAtt(current_zone), equipe.pokes[current_zone].satt_ev, get_boost(3), 285);}
-        void display_SpDef(){display_base(calc_SpDef(current_zone), equipe.pokes[current_zone].sdef_ev, get_boost(4), 315);}
+        void display_HP(){display_base(calc_HP(current_zone), team.pokes[current_zone].hp_ev, 0, 165);}
+        void display_Att(){display_base(calc_Att(current_zone), team.pokes[current_zone].att_ev, get_boost(0), 195);}
+        void display_Def(){display_base(calc_Def(current_zone), team.pokes[current_zone].def_ev, get_boost(1), 225);}
+        void display_Speed(){display_base(calc_Speed(current_zone), team.pokes[current_zone].speed_ev, get_boost(2), 255);}
+        void display_SpAtt(){display_base(calc_SpAtt(current_zone), team.pokes[current_zone].satt_ev, get_boost(3), 285);}
+        void display_SpDef(){display_base(calc_SpDef(current_zone), team.pokes[current_zone].sdef_ev, get_boost(4), 315);}
         void display_Evs();
         Uint16 sum_evs(){ return hp_bar->pos_icon+att_bar->pos_icon+def_bar->pos_icon+satt_bar->pos_icon+sdef_bar->pos_icon+speed_bar->pos_icon;}
         void SwitchTo(Switch wanted);
         void charge_image(int zone);
         void display_gender();
 
-        void save_team() {insert_current(); equipe.save("team/team.pcb");}
+        void save_team() {insert_current(); team.save("team/team.pcb");}
         void load_team();
         void set_team();
 };

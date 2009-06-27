@@ -52,7 +52,7 @@ Uint16 MF_Boss::getfreeID() const
     bool IDtable[nbMF];
 
     /* On remplit le tableau en parcourant tout */
-    for (MF_Base *tmp = pDebut; tmp != NULL; tmp = tmp->pApres)
+    for (MF_Base *tmp = pStart; tmp != NULL; tmp = tmp->pNext)
     {
         if (tmp->ID < nbMF)
             IDtable[tmp->ID] = true;
@@ -74,7 +74,7 @@ Uint16 MF_Boss::getfreeID() const
 
 /* gestion de fenetres */
 /* on donne un place et met en premier une nouvelle fenetre donnée */
-MF_Base * MF_Boss::allouer(MF_Base *fenetre)
+MF_Base * MF_Boss::allocate(MF_Base *fenetre)
 {
     if (fenetre->pSup != false)
     {
@@ -88,17 +88,17 @@ MF_Base * MF_Boss::allouer(MF_Base *fenetre)
     fenetre->ID = getfreeID();
 
     /* et on l'intègre en première position de la liste chainée */
-    if (pDebut != NULL)
+    if (pStart != NULL)
     {
-        pDebut->pAvant = fenetre;
-        pDebut->setPos(false);
+        pStart->pPrev = fenetre;
+        pStart->setPos(false);
     }
-    fenetre->pApres = pDebut;
-    pDebut = fenetre;
+    fenetre->pNext = pStart;
+    pStart = fenetre;
     fenetre->setPos(true);
-    if (pFin == NULL)
-        pFin = fenetre;
-    fenetre->pAvant = NULL;
+    if (pEnd == NULL)
+        pEnd = fenetre;
+    fenetre->pPrev = NULL;
     fenetre->pSup = this;
 
     set_updated();
@@ -109,7 +109,7 @@ MF_Base * MF_Boss::allouer(MF_Base *fenetre)
 /* désalloue en sorte que lors de la destruction
    de fenetre celles d'après ne soient pas entrainée
    par la liste chainée */
-MF_Base * MF_Boss::desallouer(MF_Base *fenetre)
+MF_Base * MF_Boss::desallocate(MF_Base *fenetre)
 {
     //Si c'est pas la notre, ca peut entrainer des bugs, difficiles à localiser
     if (fenetre->pSup != this)
@@ -118,22 +118,22 @@ MF_Base * MF_Boss::desallouer(MF_Base *fenetre)
     --nbMF;
 
     /* reconstruction de la chaîne */
-    if (pDebut == fenetre)
+    if (pStart == fenetre)
     {
-        pDebut = fenetre->pApres;
-        if (pDebut != NULL)
-            pDebut->setPos(true);
+        pStart = fenetre->pNext;
+        if (pStart != NULL)
+            pStart->setPos(true);
     }
-    else if (fenetre->pAvant != NULL)
-        fenetre->pAvant->pApres = fenetre->pApres;
-    if (pFin == fenetre)
-        pFin = fenetre->pAvant;
-    else if (fenetre->pApres != NULL)
-        fenetre->pApres->pAvant = fenetre->pAvant;
+    else if (fenetre->pPrev != NULL)
+        fenetre->pPrev->pNext = fenetre->pNext;
+    if (pEnd == fenetre)
+        pEnd = fenetre->pPrev;
+    else if (fenetre->pNext != NULL)
+        fenetre->pNext->pPrev = fenetre->pPrev;
 
     /* oubli des autres membres d'avant et d'après de la fenetre */
-    fenetre->pAvant = NULL;
-    fenetre->pApres = NULL;
+    fenetre->pPrev = NULL;
+    fenetre->pNext = NULL;
     fenetre->pSup = NULL;
 
     set_updated();
@@ -145,37 +145,37 @@ MF_Base * MF_Boss::desallouer(MF_Base *fenetre)
 void MF_Boss::polepos(MF_Base *fenetre)
 {
     /* si déjà prems */
-    if (pDebut == fenetre)
+    if (pStart == fenetre)
         return;
 
     /* arrachement... */
-    if (fenetre->pApres != NULL){
-        fenetre->pApres->pAvant = fenetre->pAvant;
+    if (fenetre->pNext != NULL){
+        fenetre->pNext->pPrev = fenetre->pPrev;
     }
 
-    if (fenetre->pAvant != NULL)
+    if (fenetre->pPrev != NULL)
     {
-        fenetre->pAvant->pApres = fenetre->pApres;
-        if (fenetre == pFin)
-            pFin = fenetre->pAvant;
+        fenetre->pPrev->pNext = fenetre->pNext;
+        if (fenetre == pEnd)
+            pEnd = fenetre->pPrev;
     }
 
     /* puis replacement */
-    fenetre->pAvant = NULL;
-    fenetre->pApres = pDebut;
-    pDebut->setPos(false);
-    fenetre->pApres->pAvant = fenetre;
-    pDebut = fenetre;
-    pDebut->setPos(true);
+    fenetre->pPrev = NULL;
+    fenetre->pNext = pStart;
+    pStart->setPos(false);
+    fenetre->pNext->pPrev = fenetre;
+    pStart = fenetre;
+    pStart->setPos(true);
 }
 /* Avoir le n-ième membre */
 MF_Base* MF_Boss::get_member(int index)
 {
-    MF_Base *it = pDebut;
+    MF_Base *it = pStart;
 
-    while (index > 0 && it->pApres != NULL)
+    while (index > 0 && it->pNext != NULL)
     {
-        it = it->pApres;
+        it = it->pNext;
         index --;
     }
 
@@ -194,7 +194,7 @@ void MF_Boss::move(Sint16 x, Sint16 y)
     Sint16 old_y = dims.y;
 
     MF_Base::move(x, y);
-    for (MF_Base *tmp = pDebut; tmp != NULL; tmp=tmp->pApres)
+    for (MF_Base *tmp = pStart; tmp != NULL; tmp=tmp->pNext)
     {
         tmp->move(dims.x-old_x+tmp->dims.x, dims.y-old_y+tmp->dims.y);
     }
@@ -203,39 +203,39 @@ void MF_Boss::move(Sint16 x, Sint16 y)
 }
 
 /* affichage */
-void MF_Boss::affiche(Surface &surface)
+void MF_Boss::display(Surface &surface)
 {
     updated = true;
 
-    /* On affiche d'abord soi-même */
-    MF_Base::affiche(surface);
+    /* On display d'abord soi-même */
+    MF_Base::display(surface);
 
     /* Puis les petites fenêtres */
-    afficheMF(surface);
+    displayMF(surface);
 }
 
-/* affiche seulement les sous-fenêtres
+/* display seulement les sous-fenêtres
    ainsi lors de l'héritage cette fonction sera constante,
    ce qui évite de coller le morceau de code dans la fonction
-   affiche à chaque fois en faisant un simple appel de fonction. */
-int MF_Boss::afficheMF(Surface &surface)
+   display à chaque fois en faisant un simple appel de fonction. */
+int MF_Boss::displayMF(Surface &surface)
 {
     /* boucle classique */
     /* Apres si vous voulez vous pouvez vous compliquer la
-       vie pour n'afficher que ce qui est nécessaire (pas
+       vie pour n'displayr que ce qui est nécessaire (pas
        ce qui est caché) mais zzzzzzzzzzzzzzzzzzzzzzzz   */
-    for (MF_Base *tmp = pFin; tmp!=NULL; tmp=tmp->pAvant)
+    for (MF_Base *tmp = pEnd; tmp!=NULL; tmp=tmp->pPrev)
     {
-        tmp->affiche(surface);
+        tmp->display(surface);
     }
     return 0;
 }
 
 /* gestion d'évènements */
-bool MF_Boss::gereEvenement(const SDL_Event &event)
+bool MF_Boss::deal_w_Event(const SDL_Event &event)
 {
     /* Si pas de fenêtres */
-    if (pDebut == NULL)
+    if (pStart == NULL)
     {
         return evntPerso(event);
     }
@@ -249,9 +249,9 @@ bool MF_Boss::gereEvenement(const SDL_Event &event)
         //on fait le hover
         {
             bool finished = false;
-            for (MF_Base *tmp = pDebut; tmp != NULL; tmp = tmp->pApres)
+            for (MF_Base *tmp = pStart; tmp != NULL; tmp = tmp->pNext)
             {
-                if (!finished && tmp->dedans(event.motion.x, event.motion.y))
+                if (!finished && tmp->isIn(event.motion.x, event.motion.y))
                 {
                     changed |= tmp->set_hover_state(true);
                     finished = true;
@@ -264,28 +264,28 @@ bool MF_Boss::gereEvenement(const SDL_Event &event)
         case SDL_MOUSEBUTTONUP:
         case SDL_KEYDOWN:
         case SDL_KEYUP:
-            return pDebut->gereEvenement(event) | changed;
+            return pStart->deal_w_Event(event) | changed;
         /* Pour le clic on cherche dans quelle fenêtre on a cliqué! */
         case SDL_MOUSEBUTTONDOWN:
-        if (event.button.button != SDL_BUTTON_LEFT && event.button.button != SDL_BUTTON_RIGHT && event.button.button != SDL_BUTTON_MIDDLE) return pDebut->gereEvenement(event);
-        for (MF_Base *tmp = pDebut; tmp != NULL; tmp = tmp->pApres)
+        if (event.button.button != SDL_BUTTON_LEFT && event.button.button != SDL_BUTTON_RIGHT && event.button.button != SDL_BUTTON_MIDDLE) return pStart->deal_w_Event(event);
+        for (MF_Base *tmp = pStart; tmp != NULL; tmp = tmp->pNext)
         {
-            /* si dedans, on place la fenetre en pos 1 */
-            if (tmp->dedans(event.button.x, event.button.y))
+            /* si isIn, on place la fenetre en pos 1 */
+            if (tmp->isIn(event.button.x, event.button.y))
             {
-                if (tmp == pDebut)
-                    return tmp->gereEvenement(event);
+                if (tmp == pStart)
+                    return tmp->deal_w_Event(event);
                 else
                 {
                     polepos(tmp);
-                    tmp->gereEvenement(event);
+                    tmp->deal_w_Event(event);
                     return true;
                 }
             }
         }
         /* Si aucune fenetre */
         changed = evntPerso(event);
-        return pDebut->gereEvenement(event) | changed;
+        return pStart->deal_w_Event(event) | changed;
         default:
         return false;
     }
@@ -300,27 +300,27 @@ void MF_Directions::setDirections(MF_Base *tab, MF_Base *up, MF_Base *down, MF_B
     this->down = down;
 }
 
-bool MF_Directions::gereTouche(const SDL_KeyboardEvent &event)
+bool MF_Directions::deal_w_key(const SDL_KeyboardEvent &event)
 {
     switch (event.keysym.sym)
     {
         case SDLK_TAB:
-            envoieMessage("tab");
+            sendToBoss("tab");
             return 1;
         case SDLK_LEFT:
-            envoieMessage("left");
+            sendToBoss("left");
             return 1;
         case SDLK_RIGHT:
-            envoieMessage("right");
+            sendToBoss("right");
             return 1;
         case SDLK_UP:
-            envoieMessage("up");
+            sendToBoss("up");
             return 1;
         case SDLK_DOWN:
-            envoieMessage("down");
+            sendToBoss("down");
             return 1;
         case SDLK_RETURN:
-            envoieMessage("enter");
+            sendToBoss("enter");
             return 1;
         default:
             return 0;
@@ -370,7 +370,7 @@ MF_Surf::~MF_Surf()
 {
 }
 
-void MF_Surf::affiche(Surface &surface)
+void MF_Surf::display(Surface &surface)
 {
     this->surface.blitTo(surface, 0, dims);
 }
@@ -400,13 +400,13 @@ void MF_Surf::resize(Uint16 w, Uint16 h)
     surface.fill(0, bgColor);
 }
 
-bool MF_MoveAbleBoss::gereEvenement(const SDL_Event &event)
+bool MF_MoveAbleBoss::deal_w_Event(const SDL_Event &event)
 {
     //On recherche les evenements quand on est cliqué,
     //ou les clics sur nous, ce qui nous retombera dessus
-    //avec le gereEvenement
+    //avec le deal_w_Event
     clicOn &= BUTTON_LEFT_ON;
-    if (!clicOn) return MF_Boss::gereEvenement(event);
+    if (!clicOn) return MF_Boss::deal_w_Event(event);
     return evntPerso(event);
 }
 
@@ -419,7 +419,7 @@ int MF_MoveAbleBoss::evntPerso(const SDL_Event &event)
         pos_clic_y = event.button.y - dims.y;
         clicOn = true;
 
-        pDebut->gereEvenement(event);
+        pStart->deal_w_Event(event);
         return true;
     }
 

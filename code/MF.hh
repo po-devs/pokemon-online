@@ -54,7 +54,7 @@ using namespace interface;
 /* Toutes les fenetres passent par une fenetres qui les gerent, et une architecture
  * a plusieurs niveaux peuvent se construire. D'ailleurs ce qui sera au final utilisé
  * ne sera probablement que des aggregations de fenetres basiques qui donnent
- * ensemble un look sympa (une pour afficher le texte, une pour le bouton oui, une
+ * ensemble un look sympa (une pour displayr le texte, une pour le bouton oui, une
  * pour le non, et voila une fenetre alert ;)) */
 
 /* Pour éviter de charger deux fois des BMPs, polices ... */
@@ -69,8 +69,8 @@ class MF_Base
 {
     public:
         /* Pointeurs de la liste chainée */
-        MF_Base *pAvant;
-        MF_Base *pApres;
+        MF_Base *pPrev;
+        MF_Base *pNext;
         /* Vers la classe SUP */
         MF_Boss *pSup;
         /* ID et role, utilisés par la classe SUP */
@@ -130,31 +130,31 @@ class MF_Base
             @param  b  teneur en bleu
             */
         void setColor(const Color &c);
-        /** @name   affiche
-            @brief  Affiche sur la surface passée en paramètre
-            @param  surface  La surface sur laquelle on affiche
+        /** @name   display
+            @brief  display sur la surface passée en paramètre
+            @param  surface  La surface sur laquelle on display
             @return  le code d'erreur de SDL (0: ca va, -1 et -2: ca craint) */
-        virtual void affiche(Surface &surface){;};
-        /** @name   gereEvenement
+        virtual void display(Surface &surface){;};
+        /** @name   deal_w_Event
             @brief  Gère un évènement SDL
             @param  event  L'évènement en question
             @return  false si l'évènement n'est pas géré, true s'il l'est totalement
 
             Active une fonction virtuelle lorsque la souris bouge, pour dire si
             elle survole la fenêtre */
-        virtual bool gereEvenement(const SDL_Event &event){
+        virtual bool deal_w_Event(const SDL_Event &event){
             return false;
         }
-        /** @name   envoieMessage
+        /** @name   sendToBoss
             @brief  envoie le message donné à la fenêtre qui gère tout
             @param  message  le message à envoyer */
-        bool envoieMessage(const char *message);
-        /** @name   dedans
+        bool sendToBoss(const char *message);
+        /** @name   isIn
             @brief  vérifie si les coordonnées sont dans la fenêtre
             @param  x  abscisse
             @param  y  ordonnée
             @return  true ou false, si les coordonnées appartiennent à la fenêtre */
-        virtual bool dedans(int x, int y) const;
+        virtual bool isIn(int x, int y) const;
         /** @name   set_hover_state
             @brief  change @c hover
             @param  enable  -1: @c hover inchangé, 0: @c hover passe à true, 1: @c hover pass à false
@@ -178,11 +178,11 @@ class MF_Base
             @return true si besoin, false sinon
 
             Sert essentiellement pour les gestionnaires avancés. Si tous les updated sont true alors pas
-            besoin d'afficher! Les gestionnaires avancés ne vérifient que celui de la première fenêtre cependant,
+            besoin d'displayr! Les gestionnaires avancés ne vérifient que celui de la première fenêtre cependant,
             pour forcer un réaffichage c'est set_updated() */
         virtual bool check_updated() { return true;}
         /** @name   set_updated
-            @brief  méthode bourrin pour tout réafficher */
+            @brief  méthode bourrin pour tout rédisplayr */
         virtual void set_updated();
 };
 
@@ -192,8 +192,8 @@ class MF_Boss : virtual public MF_Base
 {
     public:
         /* Sous-fenetre */
-        MF_Base *pDebut;
-        MF_Base *pFin;
+        MF_Base *pStart;
+        MF_Base *pEnd;
         /* nombre de sous-fenetres */
         Uint16 nbMF;
         /* updated -- non nécessaire mais permet un gain de CPU énorme */
@@ -210,29 +210,29 @@ class MF_Boss : virtual public MF_Base
             @return  L'ID en question */
         Uint16 getfreeID() const;
         /* gestion de fenetres */
-        /** @name   allouer
+        /** @name   allocate
             @brief  Integre la MF_Base donnée en première position dans la liste chainée
             @return La MF_Base en question */
-        virtual MF_Base * allouer(MF_Base *fenetre);
-        /** @name   reallouer
+        virtual MF_Base * allocate(MF_Base *fenetre);
+        /** @name   reallocate
             @brief  Integre la MF_Base donnée en première position dans la liste chainée
             @return La MF_Base en question
 
-            Contrairement à allouer(), cettre fonction délie la MF_Base donnée de son précédent propriétaire*/
-        virtual MF_Base * reallouer(MF_Base *fenetre);
-        /** @name   desallouer
+            Contrairement à allocate(), cettre fonction délie la MF_Base donnée de son précédent propriétaire*/
+        virtual MF_Base * reallocate(MF_Base *fenetre);
+        /** @name   desallocate
             @brief  Retire la MF_Base donnée de la liste chainée, et coupe tout ses liens avec la liste
             @return La MF_Base passée en paramètre */
-        virtual MF_Base * desallouer(MF_Base *fenetre);
+        virtual MF_Base * desallocate(MF_Base *fenetre);
         /* Creation+allocation / deallocation+Destruction */
         /** @name   creerMF
             @brief  Créer (constructeur par défaut) et alloue une MF_Base du type donné
             @return La MF_Base passée en paramètre */
         template<class T>
         MF_Base *creerMF();
-        /** @name   detruireMF
+        /** @name   destroyMF
             @brief  désalloue et détruit la MF_Base passée en paramètre */
-        void detruireMF(MF_Base *fenetre);
+        void destroyMF(MF_Base *fenetre);
         /* pour en mettre une en premier (pole position)*/
         /** @name   polepos
             @brief  Met la MF_base passée en paramètre en première position dans la liste */
@@ -248,34 +248,34 @@ class MF_Boss : virtual public MF_Base
         virtual void move(Sint16 x, Sint16 y);
 
         /* affichage */
-        /** @name   afficheMF
-            @brief  declenche l'affichage des sous-MF sur surface, en partant de pFin
+        /** @name   displayMF
+            @brief  declenche l'affichage des sous-MF sur surface, en partant de pEnd
             @return 0 si aucun problème, un nombre négatif autrement
 
             Cette fonction existe pour faciliter l'héritage, en effet pour les classes héritant de
-            MF_Boss et d'une autre classe MF_Lambda, la fonction affiche finale sera le plus souvent:
+            MF_Boss et d'une autre classe MF_Lambda, la fonction display finale sera le plus souvent:
 
-            X::affiche(SDL_Surface *surface)
+            X::display(SDL_Surface *surface)
             {
-                int status = MF_Lambda::affiche(surface);
+                int status = MF_Lambda::display(surface);
                 if (status != 0) {
                     return status;
                 }
-                return afficheMF(surface)
+                return displayMF(surface)
             }
             */
-        int afficheMF(Surface &surface);
-        /** @name   affiche
-            @brief  Appelle MF_Base::affiche et afficheMF. */
-        virtual void affiche(Surface &surface);
+        int displayMF(Surface &surface);
+        /** @name   display
+            @brief  Appelle MF_Base::display et displayMF. */
+        virtual void display(Surface &surface);
         /* gestion d'évènements, appelle la bonne fonction pour
            gérer l'évènement */
-        virtual bool gereEvenement(const SDL_Event &event);
+        virtual bool deal_w_Event(const SDL_Event &event);
         /* gestion d'évènement si l'évènement concerne CETTE fenêtre,
            et pas une sous fenêtre */
         virtual int evntPerso(const SDL_Event &event);
         /* reception de messages */
-        /** @name   recoitMessage
+        /** @name   RecvFromSub
             @brief  gere un message envoyé par une fenêtre
             @param  message  Le message envoyé
             @param  fenetre  La fenetre qui envoie @c message
@@ -283,7 +283,7 @@ class MF_Boss : virtual public MF_Base
 
             Au lieu de pointeurs de fonctions, etc.. j'ai choisi d'utiliser des messages pour
             communiquer de la fenêtre de base vers son gérant. Ainsi, vu que SDL a une programmation
-            évènementielle, le corps du programme sera dans les fonctions recoitMessage de vos classes
+            évènementielle, le corps du programme sera dans les fonctions RecvFromSub de vos classes
             que vous hériterez de MF_Boss, indirectement ou pas
 
             L'utilité du booléen de retour? La fenetre qui envoie le message voit ce booléen,
@@ -291,10 +291,10 @@ class MF_Boss : virtual public MF_Base
             donc T envoie le message 'enter', puis le message 'tab'. Dans certains cas, (par exemple contenu invalide),
             on ne veut pas changer de fenetre (et donc ne pas recevoir le message 'tab'),
 
-            Il suffit alors à recoitMessage de retourner false. La textbox n'enverra pas le message 'tab'*/
-        virtual bool recoitMessage(const char *message, MF_Base *fenetre){return false;}
+            Il suffit alors à RecvFromSub de retourner false. La textbox n'enverra pas le message 'tab'*/
+        virtual bool RecvFromSub(const char *message, MF_Base *fenetre){return false;}
         /* check_updated  -- on utilise la variable updated */
-        virtual bool check_updated() { return updated && pDebut->check_updated();}
+        virtual bool check_updated() { return updated && pStart->check_updated();}
         /* cette fois on considère aussi la variable updated */
         virtual void set_updated()
         {
@@ -315,8 +315,8 @@ class MF_Directions : virtual public MF_Base
 
     /* On gère les touches différement (gauche, droite, tab, ...)
         On envoie le message correspondant (left, right, tab, up..) au gérant */
-    virtual bool gereEvenement(const SDL_Event &event);
-    virtual bool gereTouche(const SDL_KeyboardEvent &event);
+    virtual bool deal_w_Event(const SDL_Event &event);
+    virtual bool deal_w_key(const SDL_KeyboardEvent &event);
     /* Pour régler les fenetres liées à celle-ci */
     virtual void setDirections(MF_Base *tab = NULL, MF_Base *up = NULL, MF_Base *down = NULL, MF_Base *left = NULL, MF_Base *right = NULL);
 };
@@ -328,13 +328,13 @@ class MF_BDirections : virtual public MF_Boss
     MF_BDirections():MF_Boss(){}
     ~MF_BDirections(){}
 
-    /** @name   recoitMessage
-        @brief  Cette fonction change de pDebut en fonction du message reçu(tab, up, ...)
+    /** @name   RecvFromSub
+        @brief  Cette fonction change de pStart en fonction du message reçu(tab, up, ...)
         @return true si la direction est effectivement changée, false sinon
 
         Par exemple, si elle recoit le message 'down', que fenetre est de classe dérivée de MF_Direction,
         et que fenetre->down != NULL, alors la fonction fait un polePos sur fenetre->down */
-    virtual bool recoitMessage(const char* message, MF_Base *fenetre);
+    virtual bool RecvFromSub(const char* message, MF_Base *fenetre);
     /* en fait, tout ce qui est décrit ci-dessus, c'est cette fonction qui le gère. */
     virtual bool gereDirection(const char *message, MF_Base *fenetre);
 };
@@ -352,8 +352,8 @@ class MF_Surf : virtual public MF_Base
     //nouvelles fonctions setRect et resize, en gérant la surface
     virtual void resize(Uint16 w, Uint16 h);
     virtual void setRect(Sint16 x, Sint16 y, Uint16 w, Uint16 h);
-    //fonction pour afficher
-    virtual void affiche(Surface &surface);
+    //fonction pour displayr
+    virtual void display(Surface &surface);
 };
 
 //Pour les fenêtres pouvant se déplacer
@@ -369,7 +369,7 @@ class MF_MoveAbleBoss : virtual public MF_Boss
         ~MF_MoveAbleBoss() {}
 
         //Une nouvelle fonction pour gérer les évènements
-        virtual bool gereEvenement(const SDL_Event &event);
+        virtual bool deal_w_Event(const SDL_Event &event);
         virtual int evntPerso(const SDL_Event &event);
 };
 
@@ -378,7 +378,7 @@ class MF_Prio : virtual public MF_Base
 {
     public:
         //La prio est toujours en premier
-        virtual bool dedans(int x, int y) const {return true;}
+        virtual bool isIn(int x, int y) const {return true;}
 };
 
 template<class T>
@@ -388,12 +388,12 @@ MF_Base *MF_Boss::creerMF()
     MF_Base* fenetre = static_cast<MF_Base*>(new T);
 
     /* et finalement allocation ^^ */
-    return allouer(fenetre);
+    return allocate(fenetre);
 }
 
 /* Constructeur !! */
 inline MF_Base::MF_Base(Sint16 x, Sint16 y, Uint16 w, Uint16 h, const Color &c)
-        : pAvant(NULL), pApres(NULL), pSup(NULL), hovered(false), bgColor(c)
+        : pPrev(NULL), pNext(NULL), pSup(NULL), hovered(false), bgColor(c)
 {
     setRect(x,y,w,h);
 }
@@ -402,17 +402,17 @@ inline MF_Base::MF_Base(Sint16 x, Sint16 y, Uint16 w, Uint16 h, const Color &c)
 inline MF_Base::~MF_Base()
 {
     /* on détruit le maillon suivant ^^ */
-    delete pApres;
+    delete pNext;
 }
 
 /* envoie un message à la classe SUP */
-inline bool MF_Base::envoieMessage(const char *message)
+inline bool MF_Base::sendToBoss(const char *message)
 {
-    if (pSup != NULL)  return pSup->recoitMessage(message, this);
+    if (pSup != NULL)  return pSup->RecvFromSub(message, this);
     return false;
 }
 
-inline bool MF_Base::dedans(int x, int y) const
+inline bool MF_Base::isIn(int x, int y) const
 {
     return (x>=dims.x && y>=dims.y && x<dims.w+dims.x && y<dims.y+dims.h);
 }
@@ -424,23 +424,23 @@ inline void MF_Base::set_updated()
 
 /* On se contente du constructeur de MF_Base */
 inline MF_Boss::MF_Boss()
-        :pDebut(NULL), pFin(NULL), nbMF(0), updated(false)
+        :pStart(NULL), pEnd(NULL), nbMF(0), updated(false)
 {
 }
 
 inline MF_Boss::~MF_Boss()
 {
     /* Ac la liste chainée, on détruit tout ^^ */
-    delete pDebut;
+    delete pStart;
 }
 
 /* On considère que la fenêtre appartient à une autre
    classe donc on la desalloue et l'alloue normalement */
-/* C'est *légèrement* plus rapide que desallouer puis allouer */
-inline MF_Base * MF_Boss::reallouer(MF_Base *fenetre)
+/* C'est *légèrement* plus rapide que desallocate puis allocate */
+inline MF_Base * MF_Boss::reallocate(MF_Base *fenetre)
 {
-    fenetre->pSup->desallouer(fenetre);
-    return allouer(fenetre);
+    fenetre->pSup->desallocate(fenetre);
+    return allocate(fenetre);
 }
 
 /* gestion d'évènement si l'évènement concerne CETTE fenêtre,
@@ -451,23 +451,23 @@ inline int MF_Boss::evntPerso(const SDL_Event &event)
 }
 
 /* Trop simmple ^^ */
-inline void MF_Boss::detruireMF(MF_Base *fenetre)
+inline void MF_Boss::destroyMF(MF_Base *fenetre)
 {
-    desallouer(fenetre);
+    desallocate(fenetre);
     delete fenetre;
 }
 
-inline bool MF_Directions::gereEvenement(const SDL_Event &event)
+inline bool MF_Directions::deal_w_Event(const SDL_Event &event)
 {
-    if (event.type != SDL_KEYDOWN) return MF_Base::gereEvenement(event);
-    return this->gereTouche(event.key);
+    if (event.type != SDL_KEYDOWN) return MF_Base::deal_w_Event(event);
+    return this->deal_w_key(event.key);
 }
 
 inline MF_Surf::MF_Surf()
 {
 }
 
-inline bool MF_BDirections::recoitMessage(const char *message, MF_Base *fenetre)
+inline bool MF_BDirections::RecvFromSub(const char *message, MF_Base *fenetre)
 {
     return gereDirection(message, fenetre);
 }
