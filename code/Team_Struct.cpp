@@ -3,44 +3,65 @@
 
 using namespace std;
 
+void serialize(MegaSerializer &bits, const Team &t)
+{
+    for (int i = 0; i < 6; i++)
+    {
+        serialize(bits, t.pokes[i]);
+    };
+
+    //5 au cas où on veut agrandir Trainer_Name jusqu'à 32 caractère par la suite
+    bits.mega_push("$5$8$8$8", &t.Trainer_Name, &t.Trainer_Info, &t.Trainer_Lose, &t.Trainer_Win);
+}
+
+void serialize(MegaSerializer &bits, const Team::Pokes &pok)
+{
+    bits.push_l(pok.num, 9);
+    for (int j = 0; j < 4; j++)
+    {
+        bits.push_l(pok.moves[j], 9);
+    }
+    bits.mega_push( "$4#9#7#8#8#8#8#8#8#5#5#5#5#5#5#5#1#1#1", &(pok.nick), pok.item, pok.level, pok.hp_ev,
+                    pok.att_ev, pok.def_ev, pok.satt_ev, pok.sdef_ev, pok.speed_ev, pok.nature, pok.hp_dv,
+                    pok.att_dv, pok.def_dv, pok.satt_dv, pok.sdef_dv, pok.speed_dv, pok.gender, pok.shiney,
+                    pok.ability);
+}
+
+void deserialize(MegaDeserializer &bits, Team &t)
+{
+    for (int i = 0; i < 6; i++)
+    {
+        deserialize(bits, t.pokes[i]);
+    };
+    bits.mega_pop("$5$8$8$8", &t.Trainer_Name, &t.Trainer_Info, &t.Trainer_Lose, &t.Trainer_Win);
+}
+
+void deserialize(MegaDeserializer &bits, Team::Pokes &pok)
+{
+    pok.num = bits.pop_l(9);
+    for (int j = 0; j < 4; j++)
+    {
+        pok.moves[j] = bits.pop_l(9);
+    }
+    bits.mega_pop("$4#9#7#8#8#8#8#8#8#5#5#5#5#5#5#5#1#1#1", &pok.nick, &pok.item, &pok.level, &pok.hp_ev, &pok.att_ev, &pok.def_ev,
+                    &pok.satt_ev, &pok.sdef_ev, &pok.speed_ev, &pok.nature, &pok.hp_dv, &pok.att_dv, &pok.def_dv, &pok.satt_dv, &pok.sdef_dv,
+                    &pok.speed_dv, &pok.gender, &pok.shiney, &pok.ability);
+}
+
+
+
 void Team::convertFromBits(const char *bitss, Uint32 rem)
 {
     MegaDeserializer bits(bitss,rem);
 
-    for (int i = 0; i < 6; i++)
-    {
-        Team::Pokes &pok = pokes[i];
-        pok.num = bits.pop_l(9);
-        for (int j = 0; j < 4; j++)
-        {
-            pok.moves[j] = bits.pop_l(9);
-        }
-        bits.mega_pop("$4#9#7#8#8#8#8#8#8#5#5#5#5#5#5#5#1#1#1", &pok.nick, &pok.item, &pok.level, &pok.hp_ev, &pok.att_ev, &pok.def_ev,
-                        &pok.satt_ev, &pok.sdef_ev, &pok.speed_ev, &pok.nature, &pok.hp_dv, &pok.att_dv, &pok.def_dv, &pok.satt_dv, &pok.sdef_dv,
-                        &pok.speed_dv, &pok.gender, &pok.shiney, &pok.ability);
-    };
-    bits.mega_pop("$5$8$8$8", &Trainer_Name, &Trainer_Info, &Trainer_Lose, &Trainer_Win);
+    deserialize(bits, *this);
 }
 
 smart_ptr< fast_array<char> > Team::convertToBits() const
 {
     MegaSerializer bits;
-    for (int i = 0; i < 6; i++)
-    {
-        const Team::Pokes &pok = pokes[i];
-        bits.push_l(pok.num, 9);
-        for (int j = 0; j < 4; j++)
-        {
-            bits.push_l(pok.moves[j], 9);
-        }
-        bits.mega_push( "$4#9#7#8#8#8#8#8#8#5#5#5#5#5#5#5#1#1#1", &(pok.nick), pok.item, pok.level, pok.hp_ev,
-                        pok.att_ev, pok.def_ev, pok.satt_ev, pok.sdef_ev, pok.speed_ev, pok.nature, pok.hp_dv,
-                        pok.att_dv, pok.def_dv, pok.satt_dv, pok.sdef_dv, pok.speed_dv, pok.gender, pok.shiney,
-                        pok.ability);
-    };
 
-    //5 au cas où on veut agrandir Trainer_Name jusqu'à 32 caractère par la suite
-    bits.mega_push("$5$8$8$8", &Trainer_Name, &Trainer_Info, &Trainer_Lose, &Trainer_Win);
+    serialize(bits, *this);
 
     return bits.get_strdata();
 }
