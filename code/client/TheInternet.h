@@ -1,27 +1,31 @@
 #ifndef THEINTERNET_H_INCLUDED
 #define THEINTERNET_H_INCLUDED
 
-#include "MF_applet.hh"
-#include <SFML/System.hpp>
+#include "../generic/MF_applet.hh"
+#include "../generic/interthread.hpp"
+#include <vector>
+
+/* The data of a server is like this */
+struct ServerData
+{
+    uint32_t refip;
+    uint16_t num_players; //10 bits
+    std::string name; //len: 5bits
+    std::string description; //len: 9 bits
+};
 
 class ConnectToRegistry : public MF_Base
 {
     public: /* private */
-        /** @name  the_real_thig
+        /** @name  the_real_thing
             @brief la fonction threadée
         **/
-        static void the_real_thing(void *data);
-        /** @name  calc_length
-            @brief calcule la longueur du message à recevoir
-            @param data  le début du message
-            @param l_l  la longueur en nombre de caractères de la longueur du message
-        **/
-        static size_t calc_length(const char *data, Uint8 l_l);
+        static int the_real_thing(void *data);
 
     public:
         /* Si mis à true, on doit arrêter ce qu'on fait */
         bool finish_off;
-        sf::Thread thread;
+        interface::Thread thread;
 
         ConnectToRegistry();
         ~ConnectToRegistry();
@@ -42,6 +46,8 @@ class ServerList : public MF_BDirections, public MF_Applet
 
         void display(Surface &ecran);
         void self_display(Surface &ecran);
+
+        void set_serverlist(const std::vector<ServerData> &list);
 
         bool RecvFromSub(const char *message, MF_Base *fenetre);
 };

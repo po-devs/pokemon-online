@@ -270,8 +270,12 @@ void Window::create(Uint16 bpp, Uint16 w, Uint16 h, Sint32 flags)
 {
     free();
     s = SDL_SetVideoMode(w,h,bpp,flags);
+
     if (s == NULL)
         throw InterfaceException("Window::create() -- Error with SDL_SetVideoMode");
+
+    //little hack because actually its SDL that should free the surface
+    s->refcount++;
 }
 
 //Retourne l'écran ;)

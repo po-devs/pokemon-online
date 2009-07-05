@@ -12,15 +12,14 @@
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-Os" />
-					<Add option="-O3" />
+					<Add option="-pg" />
+					<Add option="-g" />
 					<Add option="-mthreads" />
 					<Add option="-DMF_TEXT_ACCENTUE" />
 					<Add option="-DMF_RETOUR_LIGNE" />
-					<Add option="-Dprivate=public" />
 				</Compiler>
 				<Linker>
-					<Add option="-s" />
+					<Add option="-pg -lgmon" />
 					<Add library="SDL_ttf" />
 					<Add library="SDL_image" />
 					<Add library="SDL_rotozoom" />
@@ -45,42 +44,50 @@
 			<Add library="dxguid" />
 			<Add directory="C:\Program Files\CodeBlocks\MinGW\SDL\lib" />
 		</Linker>
-		<Unit filename="code\MF.cpp" />
-		<Unit filename="code\MF.hh" />
-		<Unit filename="code\MF_applet.cpp" />
-		<Unit filename="code\MF_applet.hh" />
-		<Unit filename="code\MF_form.cpp" />
-		<Unit filename="code\MF_form.hh" />
-		<Unit filename="code\MF_text.cpp" />
-		<Unit filename="code\MF_text.hh" />
-		<Unit filename="code\SDL_gfx.cpp" />
-		<Unit filename="code\SDL_gfx.h" />
-		<Unit filename="code\Team_Struct.cpp" />
-		<Unit filename="code\Team_Struct.h" />
-		<Unit filename="code\TheInternet.cpp" />
-		<Unit filename="code\TheInternet.h" />
-		<Unit filename="code\big_boss.cpp" />
-		<Unit filename="code\big_boss.h" />
-		<Unit filename="code\client-server.h" />
-		<Unit filename="code\credits.cpp" />
-		<Unit filename="code\credits.h" />
-		<Unit filename="code\exception.hpp" />
-		<Unit filename="code\interfont.cpp" />
-		<Unit filename="code\interfont.hpp" />
-		<Unit filename="code\intergfx.cpp" />
-		<Unit filename="code\intergfx.hpp" />
-		<Unit filename="code\intervideo.cpp" />
-		<Unit filename="code\intervideo.hpp" />
-		<Unit filename="code\main.cpp" />
-		<Unit filename="code\menu.h" />
-		<Unit filename="code\ressource_manager.cpp" />
-		<Unit filename="code\ressource_manager.hpp" />
-		<Unit filename="code\start_menu.cpp" />
-		<Unit filename="code\start_menu.h" />
-		<Unit filename="code\teambuilder.cpp" />
-		<Unit filename="code\teambuilder.h" />
-		<Unit filename="code\utilities.cpp" />
-		<Unit filename="code\utilities.hh" />
+		<Unit filename="code\client\Team_Struct.cpp" />
+		<Unit filename="code\client\Team_Struct.h" />
+		<Unit filename="code\client\TheInternet.cpp" />
+		<Unit filename="code\client\TheInternet.h" />
+		<Unit filename="code\client\big_boss.cpp" />
+		<Unit filename="code\client\big_boss.h" />
+		<Unit filename="code\client\client-server.h" />
+		<Unit filename="code\client\credits.cpp" />
+		<Unit filename="code\client\credits.h" />
+		<Unit filename="code\client\main.cpp" />
+		<Unit filename="code\client\menu.h" />
+		<Unit filename="code\client\start_menu.cpp" />
+		<Unit filename="code\client\start_menu.h" />
+		<Unit filename="code\client\teambuilder.cpp" />
+		<Unit filename="code\client\teambuilder.h" />
+		<Unit filename="code\generic\MF.cpp" />
+		<Unit filename="code\generic\MF.hh" />
+		<Unit filename="code\generic\MF_applet.cpp" />
+		<Unit filename="code\generic\MF_applet.hh" />
+		<Unit filename="code\generic\MF_form.cpp" />
+		<Unit filename="code\generic\MF_form.hh" />
+		<Unit filename="code\generic\MF_text.cpp" />
+		<Unit filename="code\generic\MF_text.hh" />
+		<Unit filename="code\generic\SDL_gfx.cpp" />
+		<Unit filename="code\generic\SDL_gfx.h" />
+		<Unit filename="code\generic\exception.hpp" />
+		<Unit filename="code\generic\interfont.cpp" />
+		<Unit filename="code\generic\interfont.hpp" />
+		<Unit filename="code\generic\intergfx.cpp" />
+		<Unit filename="code\generic\intergfx.hpp" />
+		<Unit filename="code\generic\intermutex.cpp" />
+		<Unit filename="code\generic\intermutex.hpp" />
+		<Unit filename="code\generic\internet_utilities.cpp" />
+		<Unit filename="code\generic\internet_utilities.hh" />
+		<Unit filename="code\generic\intersock.cpp" />
+		<Unit filename="code\generic\intersock.hpp" />
+		<Unit filename="code\generic\interthread.cpp" />
+		<Unit filename="code\generic\interthread.hpp" />
+		<Unit filename="code\generic\intervideo.cpp" />
+		<Unit filename="code\generic\intervideo.hpp" />
+		<Unit filename="code\generic\ressource_manager.cpp" />
+		<Unit filename="code\generic\ressource_manager.hpp" />
+		<Unit filename="code\generic\utilities.cpp" />
+		<Unit filename="code\generic\utilities.hh" />
 		<Extensions>
 			<code_completion />
 			<debugger />

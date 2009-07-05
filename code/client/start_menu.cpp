@@ -1,5 +1,5 @@
 #include "start_menu.h"
-#include "MF_applet.hh"
+#include "../generic/MF_applet.hh"
 
 StartMenu::StartMenu(Team &team) :team(team)
 {

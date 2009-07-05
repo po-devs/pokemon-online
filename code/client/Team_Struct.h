@@ -3,8 +3,8 @@
 
 #include <SDL/SDL.h>
 #include <string>
-#include "utilities.hh"
-#include "intervideo.hpp"
+#include "../generic/utilities.hh"
+#include "../generic/intervideo.hpp"
 
 using namespace interface;
 
@@ -109,15 +109,15 @@ struct Team
 
     Team();
     smart_ptr< fast_array<char> > convertToBits() const;
-    void convertFromBits(const char* bits, Uint32 size);
-    void load(const char *file_name);
+    bool convertFromBits(const char* bits, Uint32 size);
+    bool load(const char *file_name);
     void save(const char *file_name);
 };
 
 void serialize(MegaSerializer &bits, const Team &t);
 void serialize(MegaSerializer &bits, const Team::Pokes &pok);
-void deserialize(MegaDeserializer &bits, Team &t);
-void deserialize(MegaDeserializer &bits, Team::Pokes &pok);
+bool deserialize(MegaDeserializer &bits, Team &t);
+bool deserialize(MegaDeserializer &bits, Team::Pokes &pok);
 
 struct TeamInfo
 {

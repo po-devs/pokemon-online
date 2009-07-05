@@ -1,7 +1,7 @@
 #ifndef CREDITS_HH_INCLUDED
 #define CREDITS_HH_INCLUDED
 
-#include "MF.hh"
+#include "../generic/MF.hh"
 
 class Credits : public MF_Boss, public MF_Prio
 {

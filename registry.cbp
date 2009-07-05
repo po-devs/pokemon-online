@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="registry" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="registry" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-pg" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add library="mingw32" />
+					<Add library="SDLmain" />
+					<Add library="SDL.dll" />
+					<Add library="SDL_net" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="code\generic\exception.hpp" />
+		<Unit filename="code\generic\intermutex.cpp" />
+		<Unit filename="code\generic\intermutex.hpp" />
+		<Unit filename="code\generic\internet_utilities.cpp" />
+		<Unit filename="code\generic\internet_utilities.hh" />
+		<Unit filename="code\generic\intersock.cpp" />
+		<Unit filename="code\generic\intersock.hpp" />
+		<Unit filename="code\generic\interthread.cpp" />
+		<Unit filename="code\generic\interthread.hpp" />
+		<Unit filename="code\generic\utilities.cpp" />
+		<Unit filename="code\generic\utilities.hh" />
+		<Unit filename="code\registry\main.cpp" />
+		<Unit filename="code\registry\serverdata.cpp" />
+		<Unit filename="code\registry\serverdata.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
