@@ -41,14 +41,6 @@ class MF_BigASet : public MF_ArrowSet
         MF_BigASet();
 };
 
-template <class T>
-string toString(T param)
-{
-    ostringstream out;
-    out << param;
-    return out.str();
-}
-
 struct MF_Base_Type {
     virtual MF_Base* create ( void ) const {
         throw;
@@ -335,7 +327,8 @@ class MF_BarManager : virtual public MF_Boss, virtual public MF_Surf, virtual pu
         void shareFont(Font &font);
         void loadFont(const char *font_path, Uint8 ptsize);
         virtual void clear_options();
-        virtual bool add_option(int no_use, ...);
+        virtual bool add_option(int id_of_the_bar, ...); /* id is the id you want to give to the bar
+                        it is useful when bars send messages, you know which sent it */
         virtual void start_timer();
         virtual void sort_options(int field);
         virtual void stop_timer(void);
@@ -415,7 +408,7 @@ void MF_BarManager::add_set()
 class MF_TextBar : virtual public MF_DataBar
 {
     public:
-        const char *texte;
+        std::string texte;
         virtual MF_DataBar* init(Uint16 w, Uint16 h, void *param)
         {
             texte = (const char*)param;
@@ -428,7 +421,7 @@ class MF_TextBar : virtual public MF_DataBar
 #ifdef DEBUG_ON
             assert(it != NULL);
 #endif
-            return strcmp(texte, it->texte);
+            return strcmp(texte.data(), it->texte.data());
         }
         MF_TextBar(){};
         ~MF_TextBar(){};

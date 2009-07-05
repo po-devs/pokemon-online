@@ -1,6 +1,7 @@
 #include "MF_applet.hh"
 #include <string.h>
 #include "exception.hpp"
+#include "utilities.hh"
 
 using namespace std;
 
@@ -1047,6 +1048,8 @@ bool MF_BarManager::add_option(int id_of_the_bar, ...)
     MF_DataBar *it = dynamic_cast<MF_DataBar *>(my_point->pStart);
     vector<MF_Base_Type*>::iterator it2 = type_cont.begin();
 
+    /* my point is a line, which contains several elements of MF_DataBar
+        which you can init with a void* arg */
     while (it != NULL)
     {
         it = it->init((*it2)->w, (*it2)->h, va_arg(da_list, void*));
@@ -1222,7 +1225,7 @@ void MF_DataBar::display(MF_BarManager *boss, Rect &pos_barre)
 
 void MF_TextBar::display(MF_BarManager *boss, Rect &pos_barre)
 {
-    if (texte == NULL || texte[0] == 0)
+    if (texte[0] == 0)
         return display_next(boss, pos_barre);
 
     /* Voici l'affichage */
@@ -1232,7 +1235,7 @@ void MF_TextBar::display(MF_BarManager *boss, Rect &pos_barre)
 
     Color textColor (0, 0, 0);
 
-    Surface tmp = boss->police.render_blended(texte, textColor);
+    Surface tmp = boss->police.render_blended(texte.c_str(), textColor);
 
     tmp.blitTo(boss->surface, src, dest);
 
@@ -1287,7 +1290,7 @@ MF_Alert::MF_Alert(MF_Boss *src, Font &police, const char *texte, const Color &c
     inside->drawString(police, texte, (dims.w - max_size)/2, 16);
     //le bouton
     ok->dims.x = (dims.w-ok->dims.w)/2+dims.x;
-    ok->dims.y = (dims.h-ok->dims.h)/2+dims.y+12;
+    ok->dims.y = (dims.h-ok->dims.h) - 17 + dims.y;
     //le inside
     inside->dims.x = dims.x;
     inside->dims.y = dims.y;

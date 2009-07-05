@@ -10,7 +10,11 @@
 #include <cstdarg>
 
 #ifndef TRACE
- #define TRACE(ARG) cout << #ARG << endl; ARG
+ #ifdef DEBUG
+  #define TRACE(ARG) cout << #ARG << endl; ARG
+ #else
+  #define TRACE(ARG) ARG
+ #endif
 #endif
 #ifndef MIN
  #define MIN(a, b) (a < b ? a : b)
@@ -138,13 +142,13 @@ class smart_ptr
           { if (count && !(--(*count))) delete count, delete data, count = NULL; }
 
         T *data;
-        int *count;
+        size_t *count;
 
         /* public */
         smart_ptr() : count(NULL)
           { ; }
 
-        smart_ptr(T* item) : data(item), count(new int(1))
+        smart_ptr(T* item) : data(item), count(new size_t(1))
           { ; }
 
         smart_ptr(const smart_ptr<T> &item)
@@ -153,8 +157,17 @@ class smart_ptr
         ~smart_ptr()
           { destroy(); }
 
+        bool occupied () const
+          { return count!=NULL; }
+
+        size_t refcount() const
+            { if (!count) return 0; else return *count; }
+
         operator T*() const
           { return data; }
+
+        operator bool () const
+          { return occupied(); }
 
         const T& operator * () const
           { return *data; }
@@ -171,8 +184,11 @@ class smart_ptr
         T* operator+(const T * const &item) const
           { return data + item.data; }
 
+        const smart_ptr<T> & operator=(T *item)
+          { destroy(); count = new size_t(1); data = item; return *this;}
+
         const smart_ptr<T> & operator=(const smart_ptr<T> &item)
-          { if (item.count == count) return *this; destroy(); data = item.data, count = item.count, ++(*count); return (*this); }
+          { if (item.count == count) return *this; destroy(); if (item.count) data = item.data, count = item.count, ++(*count); return (*this); }
 
         /* Attention, les smart_ptr ne gèrent pas les tableaux, surtout au niveau de la libération */
         const T& operator [] (int i) const
@@ -180,10 +196,44 @@ class smart_ptr
 
         T& operator [] (int i)
           { return *(data+i); }
+
+        bool operator == (const smart_ptr<T> &other) const
+          { return count == other.count; }
+
+        bool operator < (const smart_ptr<T> &other) const
+          { return count < other.count; }
+
+        bool operator != (const smart_ptr<T> &other) const
+          { return count != other.count; }
 };
 
+//if you want to wrap some class in a smart ptr...
 template <class T>
-std::string to_string(T item)
+class wrapper : public smart_ptr<T>
+{
+public:
+    wrapper () : smart_ptr<T> (new T()) {;}
+    template <class U>
+    wrapper (const U &init) : smart_ptr<T> (new T(init)) {;}
+
+    template <class U>
+    operator U () const { return U(**this); }
+
+    template <class U>
+    operator U () { return U(**this); }
+};
+
+class NonCopyable
+{
+private:
+    NonCopyable(const NonCopyable &other){;}
+public:
+    NonCopyable() {;}
+};
+
+
+template <class T>
+std::string toString(T item)
 {
     std::stringstream temp;
     temp << item;
@@ -195,7 +245,7 @@ std::string padd(int num, T item)
 {
     std::string z;
     z.assign(num, '0');
-    z+= to_string(item);
+    z+= toString(item);
     return z.substr(z.length()-num);
 }
 
@@ -249,13 +299,15 @@ inline size_t ConvertTo(char const * const & item)
     return atol(item);
 }
 
+/* Sérialise au bit près, pour économiser de l'espace sur de petits morceaux.
+   Pour de grands morceaux, autant compresser */
 class BitsSerializer
 {
     public:
         /** private **/
         /* consider it private or don't complain */
         smart_ptr< fast_array<char> > bits;
-        unsigned long count;
+        size_t count;
 
         /* Ces fonctions n'agrandissent pas la string (optimisation), et donc
            risque de SEGFAULT!!!*/
@@ -268,17 +320,17 @@ class BitsSerializer
         void reset() {count = 0; bits->clear();}
 
         /* Fonctions sécurisées */
-        void push_cc(const char* item, unsigned long char_len);
+        void push_cc(const char* item, size_t char_len);
         void push_str(const std::string &item);
         void push_l(long item, unsigned char bits_len);
 
-        unsigned long get_blen() const {return count;}
-        unsigned long get_clen() const {return bits->size;}
+        size_t get_blen() const {return count;}
+        size_t get_clen() const {return bits->size;}
 
         /* A la fin du serialize */
-        void get_cdata (char *data, unsigned long *bits_len=NULL) const {memcpy(data, *bits, get_clen()); if (bits_len) *bits_len = count;}
-        const char * get_ccdata(unsigned long *bits_len=NULL) const {if (bits_len) *bits_len = count; return *bits;}
-        smart_ptr< fast_array<char> > get_strdata (unsigned long *bits_len=NULL) const {if (bits_len) *bits_len = count; return bits;}
+        void get_cdata (char *data, size_t *bits_len=NULL) const {memcpy(data, *bits, get_clen()); if (bits_len) *bits_len = count;}
+        const char * get_ccdata(size_t *bits_len=NULL) const {if (bits_len) *bits_len = count; return *bits;}
+        smart_ptr< fast_array<char> > get_strdata (size_t *bits_len=NULL) const {if (bits_len) *bits_len = count; return bits;}
 };
 
 /* attention
@@ -289,21 +341,22 @@ class BitsDeserializer
         /** private **/
         const char * bits;
         char count;
-        mutable unsigned long remaining_bitlen;
+        mutable size_t remaining_bitlen;
         char pop_ch();
         bool pop_bit();
-        void check_bitlen(unsigned long bitlen) const;
+        bool check_bitlen(size_t bitlen) const;
 
         /** public **/
         BitsDeserializer() : count(0), remaining_bitlen(0){}
-        BitsDeserializer(const char* item, unsigned long remaining_bitlen) {init (item, remaining_bitlen);}
+        BitsDeserializer(const char* item, size_t remaining_bitlen) {init (item, remaining_bitlen);}
         BitsDeserializer(const std::string &item) {init(item);}
-        void init(const char * item, unsigned long remaining_bitlen) {bits = item; count = 0; this->remaining_bitlen = remaining_bitlen;}
+        void init(const char * item, size_t remaining_bitlen) {bits = item; count = 0; this->remaining_bitlen = remaining_bitlen;}
         void init(const std::string &item) {bits = item.data(); count=0; this->remaining_bitlen = item.size()*8;}
 
-        void pop_c(char *item, unsigned long char_len);
-        long pop_l(unsigned char bits_len);
-        void pop_str(std::string &str, unsigned long char_len);
+        bool pop_c(char *item, size_t char_len);
+        template <class long_int>
+        bool pop_l(long_int &l, unsigned char bits_len);
+        bool pop_str(std::string &str, size_t char_len);
 };
 
 //Encapsule un Serializer pour le rendre plus pratique
@@ -313,15 +366,15 @@ class MegaSerializer
         std::string scheme;
         BitsSerializer slave;
 
-        void push_cc(const char* item, unsigned long char_len, unsigned char bbl);
+        void push_cc(const char* item, size_t char_len, unsigned char bbl);
         void push_str(const std::string &item, unsigned char bbl);
         void push_l(long item, unsigned char bits_len);
         void mega_push(const char *scheme, ...);
 
         /* A la fin du serialize */
-        void get_cdata (char *data, unsigned long *bits_len=NULL) const { slave.get_cdata(data, bits_len); }
-        const char * get_ccdata(unsigned long *bits_len=NULL) const { return slave.get_ccdata(bits_len); }
-        smart_ptr< fast_array<char> > get_strdata (unsigned long *bits_len=NULL) const { return slave.get_strdata(bits_len); }
+        void get_cdata (char *data, size_t *bits_len=NULL) const { slave.get_cdata(data, bits_len); }
+        const char * get_ccdata(size_t *bits_len=NULL) const { return slave.get_ccdata(bits_len); }
+        smart_ptr< fast_array<char> > get_strdata (size_t *bits_len=NULL) const { return slave.get_strdata(bits_len); }
 };
 
 class MegaDeserializer
@@ -330,15 +383,16 @@ class MegaDeserializer
         BitsDeserializer slave;
 
         MegaDeserializer() {};
-        MegaDeserializer(const char* item, unsigned long remaining_bitlen) : slave (item, remaining_bitlen) {}
+        MegaDeserializer(const char* item, size_t remaining_bitlen) : slave (item, remaining_bitlen) {}
         MegaDeserializer(const std::string &item) :slave(item) {}
-        void init(const char * item, unsigned long remaining_bitlen) { slave.init(item, remaining_bitlen); }
+        void init(const char * item, size_t remaining_bitlen) { slave.init(item, remaining_bitlen); }
         void init(const std::string &item) { slave.init(item); }
 
-        void pop_c(char *item, unsigned char bbl);
-        long pop_l(unsigned char bbl);
-        void pop_str(std::string &str, unsigned char bbl);
-        void mega_pop(const char *scheme, ...);
+        bool pop_c(char *item, unsigned char bbl);
+        template <class long_int>
+        bool pop_l(long_int &l, unsigned char bbl);
+        bool pop_str(std::string &str, unsigned char bbl);
+        bool mega_pop(const char *scheme, ...);
 };
 
 /* Pour mettre +sieurs fichiers dans un seul */
@@ -370,18 +424,88 @@ class FileArchiver
 /* lance un string en exception en cas de pb */
 smart_ptr< fast_array<char> > OpenFile(const char *archive, const char *path);
 
+
+/////////////////////////////////////////////////////////////////
+///                 TPP et INL                                ///
+/////////////////////////////////////////////////////////////////
+
+template <class long_int>
+bool BitsDeserializer::pop_l(long_int &l, unsigned char bits_len)
+{
+    if(!check_bitlen(bits_len))
+        return false;
+
+    long result = 0;
+
+    if (bits_len % 8 == 0 && count == 0)
+    {
+        for (bits_len = bits_len - 8; bits_len > 0; bits_len -= 8)
+        {
+            result |= (*bits) << bits_len;
+            bits++;
+        }
+        result |= (*bits) << bits_len;
+        bits++;
+    } else
+    {
+        for (bits_len = bits_len - 1; bits_len > 0; bits_len--)
+        {
+            result |= pop_bit() << bits_len;
+        }
+        result |= pop_bit() << bits_len;
+    }
+
+    l = result;
+
+    return true;
+}
+
+inline bool BitsDeserializer::pop_bit()
+{
+    bool res =  *bits & (1 << ((count)%8));
+    count = (count + 1)%8;
+    if (count == 0)
+        bits++;
+    return res;
+}
+
+inline char BitsDeserializer::pop_ch()
+{
+    //nous ne faisons pas l'optimisation count == 0, elle est déjà faite dans pop_c
+    char ch = 0;
+    for (int i = 7; i >= 0; i--)
+    {
+        //il doit surement y avoir une manière plus simple!
+        ch |= ((bits[(count+7-i)/8] & (1 << ((count + 7 - i)%8)))!=0) << i;
+    }
+    bits++;
+
+    return ch;
+}
+
+inline bool BitsDeserializer::check_bitlen(size_t bitlen) const
+{
+    if (remaining_bitlen < bitlen) {
+        return false;
+    }
+
+    remaining_bitlen -= bitlen;
+
+    return true;
+}
+
 inline void BitsSerializer::push_str(const std::string &item)
 {
     push_cc(item.data(), item.length());
 }
 
-inline void BitsDeserializer::pop_str(std::string &str, unsigned long ch_len)
+inline bool BitsDeserializer::pop_str(std::string &str, size_t ch_len)
 {
     str.resize(ch_len);
-    pop_c(const_cast<char*>(str.data()), ch_len);
+    return pop_c(const_cast<char*>(str.data()), ch_len);
 }
 
-inline void MegaSerializer::push_cc(const char *item, unsigned long char_len, unsigned char bbl)
+inline void MegaSerializer::push_cc(const char *item, size_t char_len, unsigned char bbl)
 {
     slave.push_l(char_len, bbl);
     slave.push_cc(item, char_len);
@@ -404,19 +528,24 @@ inline void MegaSerializer::push_l(long item, unsigned char bbl)
     scheme += bbl;
 }
 
-inline void MegaDeserializer::pop_c(char *item, unsigned char bbl)
+inline bool MegaDeserializer::pop_c(char *item, unsigned char bbl)
 {
-    slave.pop_c(item, pop_l(bbl));
+    long l;
+    if (!pop_l(l, bbl)) return false;
+    return slave.pop_c(item, l);
 }
 
-inline long MegaDeserializer::pop_l(unsigned char bbl)
+template <class long_int>
+inline bool MegaDeserializer::pop_l(long_int &l, unsigned char bbl)
 {
-    return slave.pop_l(bbl);
+    return slave.pop_l(l,bbl);
 }
 
-inline void MegaDeserializer::pop_str(std::string &item, unsigned char bbl)
+inline bool MegaDeserializer::pop_str(std::string &item, unsigned char bbl)
 {
-    slave.pop_str(item, pop_l(bbl));
+    long l;
+    if (!pop_l(l, bbl)) return false;
+    return slave.pop_str(item, l);
 }
 
 //# = 35, % = 37

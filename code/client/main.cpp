@@ -1,18 +1,19 @@
 #include <SDL/SDL_ttf.h>
+#include <SDL/SDL_net.h>
 #include "big_boss.h"
-#include "MF_text.hh"
 
 using namespace std;
 
 int main(int argc, char **argv) try
 {
     SDL_Init(SDL_INIT_EVERYTHING);
+    SDLNet_Init();
     TTF_Init();
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
     srand(time(NULL));
 
-    //freopen("CON", "w", stdout);
+    freopen("client_stdout.txt", "w", stdout);
 
     SDL_WM_SetCaption("TeamBuilder", NULL);
     SDL_WM_SetIcon(SDL_LoadBMP("db/icon.bmp"), NULL);
@@ -53,11 +54,14 @@ int main(int argc, char **argv) try
     end:
 
     delete tb;
+    delete &FontMan;
+    delete &ImageMan;
 
     TTF_Quit();
+    SDLNet_Quit();
     SDL_Quit();
 
-	exit(0);
+	return(0);
 }  catch (const exception &ex)
 {
     cout << "Exception: " << ex.what();

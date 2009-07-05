@@ -1,9 +1,16 @@
-#include "credits.h"
-#include "MF_applet.hh"
-#include "MF_text.hh"
-#include "utilities.hh"
-#include "SDL_gfx.h"
 #include <fstream>
+
+#include "../generic/utilities.hh"
+#include "../generic/SDL_gfx.h"
+
+#include "../generic/MF_applet.hh"
+#include "../generic/MF_text.hh"
+
+#include "credits.h"
+
+
+
+
 
 using namespace std;
 

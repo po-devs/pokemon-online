@@ -2,7 +2,7 @@
 #define START_MENU_H_INCLUDED
 
 #include "Team_Struct.h"
-#include "MF.hh"
+#include "../generic/MF.hh"
 
 class MF_ImHLApplet;
 

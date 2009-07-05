@@ -1,5 +1,5 @@
 #include "teambuilder.h"
-#include "exception.hpp"
+#include "../generic/exception.hpp"
 
 using namespace std;
 
@@ -726,11 +726,13 @@ void TeamBuilder::load_items()
     }
 }
 
-void TeamBuilder::load_team()
+bool TeamBuilder::load_team()
 {
-    team.load("team/team.pcb");
+    bool res = team.load("team/team.pcb");
 
     set_team();
+
+    return res;
 }
 
 void TeamBuilder::load_gender(int i)
@@ -893,8 +895,10 @@ bool TeamBuilder::RecvFromSub(const char *message, MF_Base *fenetre)
             }
             if (button == load)
             {
-                load_team();
-                allocate(new MF_Alert(this, verdana, "Team loaded!", (this->bgColor)));
+                if (load_team())
+                    allocate(new MF_Alert(this, verdana, "Team loaded!", (this->bgColor)));
+                else
+                    allocate(new MF_Alert(this, verdana, "Loading failed!", (this->bgColor)));
                 return true;
             }
             if (button == advanced)

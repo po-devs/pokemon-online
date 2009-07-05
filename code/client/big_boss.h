@@ -1,7 +1,7 @@
 #ifndef BIG_BOSS_H_INCLUDED
 #define BIG_BOSS_H_INCLUDED
 
-#include "MF.hh"
+#include "../generic/MF.hh"
 #include "Team_Struct.h"
 
 /* La seule classe toujours présente!

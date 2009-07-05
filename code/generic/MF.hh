@@ -58,8 +58,8 @@ using namespace interface;
  * pour le non, et voila une fenetre alert ;)) */
 
 /* Pour éviter de charger deux fois des BMPs, polices ... */
-static ImageManager ImageMan("db/");
-static FontManager FontMan("db/");
+static ImageManager &ImageMan = *(new ImageManager("db/"));//To free when you quit the program
+static FontManager &FontMan = *(new FontManager("db/")); //To free when you quit the program
 
 /* La classe qui gere des sous-fenetres */
 class MF_Boss;

@@ -10,9 +10,10 @@ smart_ptr<string> find_line(const char *file_path, int count, bool binary)
         file.open(file_path, ios::binary);
     else
         file.open(file_path);
-    #ifdef DEBUG_ON
-    assert ( file );
-    #endif
+
+    if (!file)
+        throw MF_Exception(string("Error while opening file ") + file_path);
+
     return find_line(file, count);
 }
 
@@ -72,7 +73,7 @@ inline void BitsSerializer::push_ch(char item)
     }
 }
 
-void BitsSerializer::push_cc(const char *item, long unsigned len)
+void BitsSerializer::push_cc(const char *item, size_t len)
 {
     bits->resize(get_clen() + len);
 
@@ -117,83 +118,25 @@ void BitsSerializer::push_l(long item, unsigned char bits_len)
     push_bit(item & (1 << bits_len));
 }
 
-inline bool BitsDeserializer::pop_bit()
+bool BitsDeserializer::pop_c(char *item, size_t char_len)
 {
-    bool res =  *bits & (1 << ((count)%8));
-    count = (count + 1)%8;
-    if (count == 0)
-        bits++;
-    return res;
-}
-
-inline char BitsDeserializer::pop_ch()
-{
-    //nous ne faisons pas l'optimisation count == 0, elle est déjà faite dans pop_c
-    char ch = 0;
-    for (int i = 7; i >= 0; i--)
-    {
-        //il doit surement y avoir une manière plus simple!
-        ch |= ((bits[(count+7-i)/8] & (1 << ((count + 7 - i)%8)))!=0) << i;
-    }
-    bits++;
-
-    return ch;
-}
-
-inline void BitsDeserializer::check_bitlen(unsigned long bitlen) const
-{
-    if (remaining_bitlen < bitlen)
-    {
-        throw MF_Exception("Erreur dans BitsDeserializer -- ckeck_bitlen: limite du buffer atteinte");
-    }
-    remaining_bitlen -= bitlen;
-}
-
-void BitsDeserializer::pop_c(char *item, unsigned long char_len)
-{
-    check_bitlen(char_len * 8);
+    if (!check_bitlen(char_len * 8))
+        return false;
 
     if (count == 0)
     {
         memcpy(item, bits, char_len);
         bits += char_len;
-
-        return;
-    }
-
-    while (char_len > 0)
-    {
-        *item = pop_ch();
-        item ++;
-        char_len --;
-    }
-}
-
-long BitsDeserializer::pop_l(unsigned char bits_len)
-{
-    check_bitlen(bits_len);
-
-    long result = 0;
-
-    if (bits_len % 8 == 0 && count == 0)
-    {
-        for (bits_len = bits_len - 8; bits_len > 0; bits_len -= 8)
+    } else {
+        while (char_len > 0)
         {
-            result |= (*bits) << bits_len;
-            bits++;
+            *item = pop_ch();
+            item ++;
+            char_len --;
         }
-        result |= (*bits) << bits_len;
-        bits++;
-    } else
-    {
-        for (bits_len = bits_len - 1; bits_len > 0; bits_len--)
-        {
-            result |= pop_bit() << bits_len;
-        }
-        result |= pop_bit() << bits_len;
     }
 
-    return result;
+    return true;
 }
 
 void MegaSerializer::mega_push(const char * scheme, ...)
@@ -215,8 +158,7 @@ void MegaSerializer::mega_push(const char * scheme, ...)
                 push_str(*((const string*)va_arg(args, const string*)), n);
             } else //scheme == %
             {
-                exit(500);
-                push_cc((const char*)va_arg(args, const char*), (unsigned long)va_arg(args, unsigned long), n);
+                push_cc((const char*)va_arg(args, const char*), (size_t)va_arg(args, size_t), n);
             }
         }
         scheme += 2;
@@ -225,7 +167,7 @@ void MegaSerializer::mega_push(const char * scheme, ...)
     va_end(args);
 }
 
-void MegaDeserializer::mega_pop(const char *scheme, ...)
+bool MegaDeserializer::mega_pop(const char *scheme, ...)
 {
     va_list args;
     va_start(args, scheme);
@@ -236,7 +178,9 @@ void MegaDeserializer::mega_pop(const char *scheme, ...)
         if (*scheme == '#')
         {
             void *ptr = va_arg(args, void*);
-            long val = pop_l(n);
+            long val;
+            if (!pop_l(val, n))
+                goto error;
             if (n <= 8)
             {
                 *((char*)ptr) =  val;
@@ -252,10 +196,12 @@ void MegaDeserializer::mega_pop(const char *scheme, ...)
             }
         } else if (*scheme == '$')
         {
-            pop_str(*((string*)va_arg(args, string*)), n);
+            if (!pop_str(*((string*)va_arg(args, string*)), n))
+                goto error;
         } else if (*scheme == '%')
         {
-            pop_c((char*)va_arg(args, char*), n);
+            if (pop_c((char*)va_arg(args, char*), n))
+                goto error;
         } else
         {
             exit(1003);
@@ -264,6 +210,13 @@ void MegaDeserializer::mega_pop(const char *scheme, ...)
     }
 
     va_end(args);
+    return true;
+
+error:
+    va_end(args);
+
+    cout << "Erreur lors de la désérialisation des données" << endl;
+    return false;
 }
 
 FileArchiver::FileArchiver(const char *path) :out(path, ios::binary), entetes(), cur_pos(0)
@@ -276,7 +229,7 @@ FileArchiver::FileArchiver(const char *path) :out(path, ios::binary), entetes(),
 
 void FileArchiver::add_file(const char *path)
 {
-    unsigned long long size;
+    size_t long size;
 
     ifstream in(path, ios::binary);
 

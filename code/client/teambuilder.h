@@ -6,8 +6,8 @@
 #include <string>
 #include <sstream>
 #include "Team_Struct.h"
-#include "MF_applet.hh"
-#include "utilities.hh"
+#include "../generic/MF_applet.hh"
+#include "../generic/utilities.hh"
 
 //Hérite de l'applet
 class Poke_Zone : public MF_BApplet
@@ -184,7 +184,7 @@ class TeamBuilder : public MF_BDirections, public MF_Applet
         void display_gender();
 
         void save_team() {insert_current(); team.save("team/team.pcb");}
-        void load_team();
+        bool load_team();
         void set_team();
 };
 
