@@ -102,7 +102,7 @@ public:
 class PokeGeneral
 {
 protected:
-    quint8 m_BaseStats[6];
+    PokeBaseStats m_stats;
     QStringList m_moves;
     QList<int> m_abilities;
     int m_types[2];
