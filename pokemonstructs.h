@@ -116,7 +116,7 @@ public:
 };
 
 /* Data that is unique to a pokémon */
-class PokePersonnal
+class PokePersonal
 {
 protected:
     QString m_nickname;
