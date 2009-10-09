@@ -30,6 +30,16 @@ private:
     QWidget *m_trainerBody;
     TB_PokemonBody *m_pbody[6];
 
+    /* makes the signal/slots connections */
+    void connectAll();
+    /* returns the current zone (0 = trainer, 1-6 = according pokémon) */
+    int currentZone() const;
+    /* returns the button associated to that zone */
+    QPushButton *at(int i);
+
+private slots:
+    void changeBody(int i);
+
 public:
     TeamBuilder(QWidget *parent = 0);
     ~TeamBuilder();
@@ -56,6 +66,7 @@ class TB_PokemonBody : public QWidget
 private:
     QCompactTable *pokechoice;
     QComboBox *itemchoice;
+    QLabel *pokeimage;
 
     void loadPokemons();
     void loadItems();
