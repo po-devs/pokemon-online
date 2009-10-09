@@ -9,4 +9,4 @@ HEADERS += teambuilder.h \
     ../pokemonstructs.h \
     ../pokemoninfo.h
 FORMS += 
-LIBS += -L"/home/coyotte508/Code/Pokémon Thingie/Teambuilder" -lPokemonInfo -lzzip -lPokemonStructs
+LIBS += -L"/home/coyotte508/Code/Pokémon Thingie/pogeymon-online/Teambuilder" -lPokemonInfo -lzzip -lPokemonStructs

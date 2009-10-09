@@ -4,8 +4,10 @@
 #include <QtGui>
 #include "../pokemoninfo.h"
 
-/* The static almighty PokemonInfo class, initialized in .cpp */
+/* The static almighty PokemonInfo class, which provides any info we need on Pokemons */
 static PokemonInfo *PkInfo;
+/* Same for Items */
+static ItemInfo *ItInfo;
 
 class TB_PokemonBody;
 
@@ -53,7 +55,10 @@ class TB_PokemonBody : public QWidget
     Q_OBJECT
 private:
     QCompactTable *pokechoice;
-    void load_pokemons();
+    QComboBox *itemchoice;
+
+    void loadPokemons();
+    void loadItems();
 public:
     TB_PokemonBody();
 };

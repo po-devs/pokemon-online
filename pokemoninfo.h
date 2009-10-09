@@ -8,9 +8,7 @@
 class PokemonInfo
 {
 private:
-    static const int m_NumOfPokemons = 493;
-
-    QString m_Names[m_NumOfPokemons+1];
+    QStringList m_Names;
     QString m_Directory;
 
     void loadNames();
@@ -25,15 +23,15 @@ public:
     QString Name(int pokenum) const;
     int Number(const QString &pokename) const;
     Pokemon::GenderAvail Gender(int pokenum) const;
-    QPixmap Picture(int pokenum, Pokemon::Gender gender = Pokemon::Male, bool shiney = false) const;
+    QPixmap Picture(int pokenum, Pokemon::Gender gender = Pokemon::Male, bool shiney = false);
     QLinkedList<int> Moves(int pokenum) const;
     QLinkedList<int> EggMoves(int pokenum) const;
     QLinkedList<int> LevelMoves(int pokenum) const;
     QLinkedList<int> TutorMoves(int pokenum) const;
     QLinkedList<int> TMMoves(int pokenum) const;
     QLinkedList<int> SpecialMoves(int pokenum) const;
-    PokeBaseStats BaseStats(int pokenum);
-    QList<int> Abilities(int pokenum);
+    PokeBaseStats BaseStats(int pokenum) const;
+    QList<int> Abilities(int pokenum) const;
 };
 
 struct Move
@@ -80,10 +78,30 @@ public:
     MoveInfo(const QString &dir="./");
 
     /* Self-explainable functions */
-    QString Name(int movenum);
-    QString Number(const QString &movename);
-    QString Description(int movenum);
-    int Power(int movenum);
+    QString Name(int movenum) const;
+    QString Number(const QString &movename) const;
+    QString Description(int movenum) const;
+    int Power(int movenum) const;
+};
+
+class ItemInfo
+{
+private:
+    QList<QString> m_Names;
+    QString m_Directory;
+
+    void loadNames();
+public:
+    /* directory where all the data is */
+    ItemInfo(const QString &dir="./");
+
+    /* Self-explainable functions */
+    int NumberOfItems() const;
+    QString Name(int itemnum) const;
+    QStringList Names() const;
+    QString Number(const QString &itemname) const;
+    QString Description(int itemnum) const;
+    int Power(int itemnum) const;
 };
 
 #endif // POKEMONINFO_H

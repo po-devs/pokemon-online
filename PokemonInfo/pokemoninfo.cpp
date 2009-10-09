@@ -28,7 +28,7 @@ PokemonInfo::PokemonInfo(const QString &dir)
 
 int PokemonInfo::NumberOfPokemons() const
 {
-    return m_NumOfPokemons;
+    return m_Names.size();
 }
 
 QString PokemonInfo::Name(int pokenum) const
@@ -38,7 +38,7 @@ QString PokemonInfo::Name(int pokenum) const
 
 int PokemonInfo::Number(const QString &pokename) const
 {
-    return (qFind(m_Names, m_Names+NumberOfPokemons()+1, pokename)-m_Names) % (NumberOfPokemons()+1);
+    return (qFind(m_Names.begin(), m_Names.end(), pokename)-m_Names.begin()) % (NumberOfPokemons());
 }
 
 Pokemon::GenderAvail PokemonInfo::Gender(int pokenum) const
@@ -46,7 +46,7 @@ Pokemon::GenderAvail PokemonInfo::Gender(int pokenum) const
     return Pokemon::GenderAvail(__get_line(m_Directory + "poke_gender.txt", pokenum).toInt());
 }
 
-QPixmap PokemonInfo::Picture(int pokenum, Pokemon::Gender gender, bool shiney) const
+QPixmap PokemonInfo::Picture(int pokenum, Pokemon::Gender gender, bool shiney)
 {
     QString path = QString("%1poke_img/%2/DP%3%4.png").arg(m_Directory).arg(pokenum).arg((gender==Pokemon::Female)?"f":"m", shiney?"s":"");
     ZZIP_FILE *file = zzip_open(path.toAscii(), 0);
@@ -117,7 +117,7 @@ QLinkedList<int> PokemonInfo::SpecialMoves(int pokenum) const
     return getMoves("pokes_DP_specialmoves.txt", pokenum);
 }
 
-QList<int> PokemonInfo::Abilities(int pokenum)
+QList<int> PokemonInfo::Abilities(int pokenum) const
 {
     QList<int> ret;
     ret << __get_line("poke_ability.txt", pokenum).toInt() << __get_line("poke_ability2.txt", pokenum).toInt();
@@ -125,7 +125,7 @@ QList<int> PokemonInfo::Abilities(int pokenum)
     return ret;
 }
 
-PokeBaseStats PokemonInfo::BaseStats(int pokenum)
+PokeBaseStats PokemonInfo::BaseStats(int pokenum) const
 {
     QString stats = __get_line(m_Directory + "poke_stats.txt", pokenum);
     QTextStream statsstream(&stats, QIODevice::ReadOnly);
@@ -137,9 +137,6 @@ PokeBaseStats PokemonInfo::BaseStats(int pokenum)
     return PokeBaseStats(hp, att, def, spd, satt, sdef);
 }
 
-
-
-/** Private **/
 void PokemonInfo::loadNames()
 {
     QFile pokenames(m_Directory + "pokemons_en.txt");
@@ -149,9 +146,9 @@ void PokemonInfo::loadNames()
 
     QTextStream namestream(&pokenames);
 
-    for (int i = 0; i <= NumberOfPokemons(); i++)
+    while(!namestream.atEnd())
     {
-	m_Names[i] = namestream.readLine();
+	m_Names << namestream.readLine();
     }
 }
 
@@ -169,4 +166,56 @@ QLinkedList<int> PokemonInfo::getMoves(const QString &filename, int pokenum) con
     }
 
     return return_value;
+}
+
+
+ItemInfo::ItemInfo(const QString &dir)
+	:m_Directory(dir)
+{
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    loadNames();
+}
+
+void ItemInfo::loadNames()
+{
+    QFile itemnames(m_Directory + "items_en.txt");
+
+    //TODO: exception
+    itemnames.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream namestream(&itemnames);
+
+    while (!namestream.atEnd())
+    {
+	m_Names << namestream.readLine();
+    }
+
+    itemnames.close();
+    itemnames.setFileName(m_Directory + "berries_en.txt");
+
+    itemnames.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    namestream.setDevice(&itemnames);
+
+    while (!namestream.atEnd())
+    {
+	m_Names << namestream.readLine();
+    }
+}
+
+int ItemInfo::NumberOfItems() const
+{
+    return m_Names.size();
+}
+
+QString ItemInfo::Name(int itemnum) const
+{
+    return m_Names[itemnum];
+}
+
+QStringList ItemInfo::Names() const
+{
+    return m_Names;
 }
