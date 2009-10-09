@@ -207,7 +207,7 @@ public:
     QPixmap picture(int gender, bool shininess); /* loads a new picture if necessary, anyway gives the right picture */
 };
 
-class POKEMONSTRUCTSSHARED_EXPORT PokeTeam : virtual public PokeGeneral, virtual public PokePersonnal, virtual public PokeGraphics
+class POKEMONSTRUCTSSHARED_EXPORT PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtual public PokeGraphics
 {
 public:
     PokeTeam();

@@ -135,7 +135,7 @@ protected:
     quint8 m_EVs[6];
 
 public:
-    PokePersonnal(int pokenum);
+    PokePersonal(int pokenum);
 
     QString nickname() const;
     int num() const;
@@ -204,7 +204,7 @@ public:
     QPixmap picture(int gender, bool shininess); /* loads a new picture if necessary, anyway gives the right picture */
 };
 
-class PokeTeam : virtual public PokeGeneral, virtual public PokePersonnal, virtual public PokeGraphics
+class PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtual public PokeGraphics
 {
 public:
     PokeTeam();

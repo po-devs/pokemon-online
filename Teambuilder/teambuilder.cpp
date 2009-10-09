@@ -16,7 +16,11 @@ TeamBuilder::TeamBuilder(QWidget *parent)
 {
     resize(600, 600);
 
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
     PkInfo = new PokemonInfo("db/");
+    ItInfo = new ItemInfo("db/");
 
     QGridLayout *layout = new QGridLayout(this);
 
@@ -49,6 +53,7 @@ TeamBuilder::TeamBuilder(QWidget *parent)
 TeamBuilder::~TeamBuilder()
 {
     delete PkInfo;
+    delete ItInfo;
 }
 
 QEntitled::QEntitled(const QString &title, QWidget *widget)
@@ -85,7 +90,7 @@ TB_PokemonBody::TB_PokemonBody()
     /* The layout of the whole body */
     QGridLayout *layout = new QGridLayout(this);
 
-    load_pokemons();
+    loadPokemons();
 
     /* first column, in the upper part */
     QVBoxLayout *first_column = new QVBoxLayout();
@@ -94,13 +99,7 @@ TB_PokemonBody::TB_PokemonBody()
     first_column->addWidget(new QEntitled("Pokemon", pokechoice));
     first_column->addWidget(new QEntitled("Nickname", new QLineEdit()));
 
-    QString items[9] = {"Big Root" ,"Blue Scarf","Bright Powder","Choice Band","Choice Scarf" ,"Choice Specs" ,"Destiny Knot","Expert Belt","Focus Band"};
-
-    QComboBox *itemchoice = new QComboBox();
-    for (int i = 0; i < 9; i++)
-    {
-	itemchoice->addItem(items[i]);
-    }
+    loadItems();
 
     first_column->addWidget(new QEntitled("Item", itemchoice));
 
@@ -164,7 +163,7 @@ TB_PokemonBody::TB_PokemonBody()
     movechoice->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
-void TB_PokemonBody::load_pokemons()
+void TB_PokemonBody::loadPokemons()
 {
     pokechoice = new QCompactTable(PkInfo->NumberOfPokemons(),2);
     pokechoice->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -176,7 +175,7 @@ void TB_PokemonBody::load_pokemons()
     pokechoice->resizeRowsToContents();
 
     /* Adding the poke names */
-    for (int i = 0; i <= PkInfo->NumberOfPokemons(); i++)
+    for (int i = 0; i < PkInfo->NumberOfPokemons(); i++)
     {
 	QTableWidgetItem *item = new QTableWidgetItem(QString::number(i));
 	item->setFlags(item->flags() ^ Qt::ItemIsEditable);
@@ -186,6 +185,16 @@ void TB_PokemonBody::load_pokemons()
 	item->setFlags(item->flags() ^ Qt::ItemIsEditable);
 	pokechoice->setItem(i, 1, item);
     }
+}
+
+void TB_PokemonBody::loadItems()
+{
+    itemchoice = new QComboBox();
+
+    QStringList itemList = ItInfo->Names();
+    qSort(itemList);
+
+    itemchoice->addItems(itemList);
 }
 
 void TB_EVBar::add_bar(const QString &desc, int num, quint8 evs)
