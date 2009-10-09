@@ -119,7 +119,7 @@ public:
 };
 
 /* Data that is unique to a pokémon */
-class POKEMONSTRUCTSSHARED_EXPORT PokePersonnal
+class POKEMONSTRUCTSSHARED_EXPORT PokePersonal
 {
 protected:
     QString m_nickname;
@@ -138,7 +138,7 @@ protected:
     quint8 m_EVs[6];
 
 public:
-    PokePersonnal(int pokenum);
+    PokePersonal(int pokenum);
 
     QString nickname() const;
     int num() const;
