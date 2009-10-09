@@ -26,12 +26,15 @@ TeamBuilder::TeamBuilder(QWidget *parent)
 
     m_trainer = new QPushButton("&Trainer", this);
     m_trainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_trainer->setCheckable(true);
+    m_trainer->setChecked(true);
 
     layout->addWidget(m_trainer, 0, 0, 2, 1);
 
     for (int i = 0; i < 6; i++)
     {
 	m_pokemon[i] = new QPushButton(QString("Pokémon &%1").arg(i+1));
+	m_pokemon[i]->setCheckable(true);
 	layout->addWidget(m_pokemon[i], int(i>=3), (i%3)+1);
     }
 
@@ -40,13 +43,52 @@ TeamBuilder::TeamBuilder(QWidget *parent)
     layout->addWidget(m_body,2,0,1,4);
 
     m_trainerBody = new QWidget();
-    //m_body->addWidget(m_trainerBody);
-
+    m_body->addWidget(m_trainerBody);
 
     for (int i = 0; i < 6; i++)
     {
 	m_pbody[i] = new TB_PokemonBody();
 	m_body->addWidget(m_pbody[i]);
+    }
+
+    connectAll();
+}
+
+void TeamBuilder::connectAll()
+{
+    /* Connecting trainer/poke buttons and their associated zone */
+    QSignalMapper *mapper = new QSignalMapper(this);
+
+    for (int i = 0; i < 7; i++)
+    {
+	mapper->setMapping(at(i), i);
+	connect(at(i), SIGNAL(pressed()), mapper, SLOT(map()));
+    }
+
+    connect(mapper, SIGNAL(mapped(int)), SLOT(changeBody(int)));
+}
+
+int TeamBuilder::currentZone() const
+{
+    return m_body->currentIndex();
+}
+
+QPushButton* TeamBuilder::at(int i)
+{
+    if (i == 0)
+	return m_trainer;
+    else
+	return m_pokemon[i-1];
+}
+
+void TeamBuilder::changeBody(int i)
+{
+    if (i != currentZone())
+    {
+	/* Uncheck the previously checked button */
+	at(currentZone())->setChecked(false);
+	/* change the body to the one requested */
+	m_body->setCurrentIndex(i);
     }
 }
 
@@ -107,10 +149,10 @@ TB_PokemonBody::TB_PokemonBody()
     QVBoxLayout *second_column = new QVBoxLayout();
     layout->addLayout(second_column,0,1);
 
-    QLabel *poke_image = new QLabel();
-    poke_image->setPixmap(QPixmap("DPf.png"));
+    pokeimage = new QLabel();
+    pokeimage->setPixmap(QPixmap("DPf.png"));
 
-    second_column->addWidget(poke_image,0,Qt::AlignBottom|Qt::AlignHCenter);
+    second_column->addWidget(pokeimage,0,Qt::AlignBottom|Qt::AlignHCenter);
 
     QHBoxLayout *gender_level = new QHBoxLayout;
     second_column->addLayout(gender_level);
