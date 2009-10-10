@@ -4,11 +4,6 @@
 #include <QtGui>
 #include "../pokemoninfo.h"
 
-/* The static almighty PokemonInfo class, which provides any info we need on Pokemons */
-static PokemonInfo *PkInfo;
-/* Same for Items */
-static ItemInfo *ItInfo;
-
 class TB_PokemonBody;
 
 class QCompactTable : public QTableWidget
@@ -66,6 +61,18 @@ public:
 class TB_PokemonBody : public QWidget
 {
     Q_OBJECT
+
+    enum Column
+    {
+	Type,
+	Name,
+	Learning,
+	PP,
+	Pow,
+	Acc,
+	Category,
+	LastColumn
+    };
 private:
     QCompactTable *pokechoice;
     QComboBox *itemchoice;
@@ -78,8 +85,13 @@ private:
     void initMoves();
     void initItems();
 
+    void configureMoves();
+    void updateImage();
+
     /* getting the pokemon of the team corresponding to the body */
     PokeTeam *poke();
+public slots:
+    void setNum(int pokeNum);
 public:
     TB_PokemonBody();
 

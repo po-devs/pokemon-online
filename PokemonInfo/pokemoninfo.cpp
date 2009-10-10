@@ -1,6 +1,20 @@
 #include "pokemoninfo.h"
 #include <zzip/lib.h>
 
+/*initialising static variables */
+QString PokemonInfo::m_Directory;
+QStringList PokemonInfo::m_Names;
+
+QString MoveInfo::m_Directory;
+QStringList MoveInfo::m_Names;
+
+QString ItemInfo::m_Directory;
+QStringList ItemInfo::m_Names;
+
+QStringList TypeInfo::m_Names;
+QList<QPixmap> TypeInfo::m_Pixmaps;
+QString TypeInfo::m_Directory;
+
 QString __get_line(QString filename, int linenum)
 {
     QFile file(filename);
@@ -18,35 +32,41 @@ QString __get_line(QString filename, int linenum)
     return filestream.readLine();
 }
 
-PokemonInfo::PokemonInfo(const QString &dir)
-	    : m_Directory(dir)
+void PokemonInfo::init(const QString &dir)
 {
+    /* makes sure it isn't already initialized */
+    if (NumberOfPokemons() != 0)
+	return;
+
+    m_Directory = dir;
+
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
     loadNames();
 }
 
-int PokemonInfo::NumberOfPokemons() const
+int PokemonInfo::NumberOfPokemons()
 {
     return m_Names.size();
 }
 
-QString PokemonInfo::Name(int pokenum) const
+QString PokemonInfo::Name(int pokenum)
 {
     return m_Names[pokenum];
 }
 
-int PokemonInfo::Number(const QString &pokename) const
+int PokemonInfo::Number(const QString &pokename)
 {
     return (qFind(m_Names.begin(), m_Names.end(), pokename)-m_Names.begin()) % (NumberOfPokemons());
 }
 
-Pokemon::GenderAvail PokemonInfo::Gender(int pokenum) const
+int PokemonInfo::Gender(int pokenum)
 {
     return Pokemon::GenderAvail(__get_line(m_Directory + "poke_gender.txt", pokenum).toInt());
 }
 
-QPixmap PokemonInfo::Picture(int pokenum, Pokemon::Gender gender, bool shiney)
+QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney)
 {
     QString path = QString("%1poke_img/%2/DP%3%4.png").arg(m_Directory).arg(pokenum).arg((gender==Pokemon::Female)?"f":"m", shiney?"s":"");
     ZZIP_FILE *file = zzip_open(path.toAscii(), 0);
@@ -87,37 +107,37 @@ QPixmap PokemonInfo::Picture(int pokenum, Pokemon::Gender gender, bool shiney)
     return ret;
 }
 
-QLinkedList<int> PokemonInfo::Moves(int pokenum) const
+QList<int> PokemonInfo::Moves(int pokenum)
 {
-    return EggMoves(pokenum) << LevelMoves(pokenum) << TutorMoves(pokenum) << TMMoves(pokenum) << SpecialMoves(pokenum);
+    return LevelMoves(pokenum) << EggMoves(pokenum) << TutorMoves(pokenum) << TMMoves(pokenum) << SpecialMoves(pokenum);
 }
 
-QLinkedList<int> PokemonInfo::EggMoves(int pokenum) const
+QList<int> PokemonInfo::EggMoves(int pokenum)
 {
     return getMoves("pokes_DP_eggmoves.txt", pokenum);
 }
 
-QLinkedList<int> PokemonInfo::LevelMoves(int pokenum) const
+QList<int> PokemonInfo::LevelMoves(int pokenum)
 {
     return getMoves("pokes_DP_lvmoves.txt", pokenum);
 }
 
-QLinkedList<int> PokemonInfo::TutorMoves(int pokenum) const
+QList<int> PokemonInfo::TutorMoves(int pokenum)
 {
     return getMoves("pokes_DP_MTmoves.txt", pokenum);
 }
 
-QLinkedList<int> PokemonInfo::TMMoves(int pokenum) const
+QList<int> PokemonInfo::TMMoves(int pokenum)
 {
     return getMoves("pokes_DP_TMmoves.txt", pokenum);
 }
 
-QLinkedList<int> PokemonInfo::SpecialMoves(int pokenum) const
+QList<int> PokemonInfo::SpecialMoves(int pokenum)
 {
     return getMoves("pokes_DP_specialmoves.txt", pokenum);
 }
 
-QList<int> PokemonInfo::Abilities(int pokenum) const
+QList<int> PokemonInfo::Abilities(int pokenum)
 {
     QList<int> ret;
     ret << __get_line("poke_ability.txt", pokenum).toInt() << __get_line("poke_ability2.txt", pokenum).toInt();
@@ -125,7 +145,7 @@ QList<int> PokemonInfo::Abilities(int pokenum) const
     return ret;
 }
 
-PokeBaseStats PokemonInfo::BaseStats(int pokenum) const
+PokeBaseStats PokemonInfo::BaseStats(int pokenum)
 {
     QString stats = __get_line(m_Directory + "poke_stats.txt", pokenum);
     QTextStream statsstream(&stats, QIODevice::ReadOnly);
@@ -152,15 +172,15 @@ void PokemonInfo::loadNames()
     }
 }
 
-QLinkedList<int> PokemonInfo::getMoves(const QString &filename, int pokenum) const
+QList<int> PokemonInfo::getMoves(const QString &filename, int pokenum)
 {
-    QLinkedList<int> return_value;
+    QList<int> return_value;
 
     /* getting the line we want */
     QString interesting_line = __get_line(m_Directory + filename, pokenum);
 
     /* extracting the moves */
-    for (int i = 0; i + 3 <= interesting_line.length(); i++)
+    for (int i = 0; i + 3 <= interesting_line.length(); i+=3)
     {
 	return_value << interesting_line.mid(i,3).toUInt();
     }
@@ -168,10 +188,78 @@ QLinkedList<int> PokemonInfo::getMoves(const QString &filename, int pokenum) con
     return return_value;
 }
 
-
-ItemInfo::ItemInfo(const QString &dir)
-	:m_Directory(dir)
+void MoveInfo::init(const QString &dir)
 {
+    /* makes sure it isn't already initialized */
+    if (NumberOfMoves() != 0)
+	return;
+
+    m_Directory = dir;
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    loadNames();
+}
+
+int MoveInfo::NumberOfMoves()
+{
+    return m_Names.size();
+}
+
+void MoveInfo::loadNames()
+{
+    QFile movenames(m_Directory + "moves_en.txt");
+
+    //TODO: exception
+    movenames.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream namestream(&movenames);
+
+    while (!namestream.atEnd())
+    {
+	m_Names << namestream.readLine();
+    }
+}
+
+QString MoveInfo::Name(int movenum)
+{
+    return m_Names[movenum];
+}
+
+int MoveInfo::Power(int movenum)
+{
+    return __get_line(m_Directory+"move_power.txt", movenum).toInt();
+}
+
+int MoveInfo::Type(int movenum)
+{
+    return __get_line(m_Directory+"move_type.txt", movenum).toInt();
+}
+
+int MoveInfo::PP(int movenum)
+{
+    return __get_line(m_Directory+"move_pp.txt", movenum).toInt();
+}
+
+QString MoveInfo::AccS(int movenum)
+{
+    return __get_line(m_Directory+"move_accuracy.txt", movenum);
+}
+
+QString MoveInfo::PowerS(int movenum)
+{
+    return __get_line(m_Directory+"move_power.txt", movenum);
+}
+
+void ItemInfo::init(const QString &dir)
+{
+    /* makes sure it isn't already initialized */
+    if (NumberOfItems() != 0)
+	return;
+
+    m_Directory = dir;
+
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
@@ -205,17 +293,69 @@ void ItemInfo::loadNames()
     }
 }
 
-int ItemInfo::NumberOfItems() const
+int ItemInfo::NumberOfItems()
 {
     return m_Names.size();
 }
 
-QString ItemInfo::Name(int itemnum) const
+QString ItemInfo::Name(int itemnum)
 {
     return m_Names[itemnum];
 }
 
-QStringList ItemInfo::Names() const
+QStringList ItemInfo::Names()
 {
     return m_Names;
+}
+
+void TypeInfo::loadNames()
+{
+    QFile typenames(m_Directory + "types_en.txt");
+
+    //TODO: exception
+    typenames.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream namestream(&typenames);
+
+    while (!namestream.atEnd())
+    {
+	m_Names << namestream.readLine();
+    }
+}
+
+void TypeInfo::loadPixmaps()
+{
+    for (int i = 0; i < NumberOfTypes(); i++)
+    {
+	m_Pixmaps << QPixmap(m_Directory + Name(i) + ".gif");
+    }
+}
+
+void TypeInfo::init(const QString &dir)
+{
+    if (NumberOfTypes() != 0)
+	return;
+
+    m_Directory = dir;
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    loadNames();
+    loadPixmaps();
+}
+
+QString TypeInfo::Name(int typenum)
+{
+    return m_Names[typenum];
+}
+
+QPixmap TypeInfo::Picture(int typenum)
+{
+    return m_Pixmaps[typenum];
+}
+
+int TypeInfo::NumberOfTypes()
+{
+    return m_Names.size();
 }
