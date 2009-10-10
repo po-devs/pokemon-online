@@ -48,6 +48,7 @@ TeamBuilder::TeamBuilder(QWidget *parent)
     for (int i = 0; i < 6; i++)
     {
 	m_pbody[i] = new TB_PokemonBody();
+	m_pbody[i]->setPokeTeam(&team()->poke(i));
 	m_body->addWidget(m_pbody[i]);
     }
 
@@ -79,6 +80,11 @@ QPushButton* TeamBuilder::at(int i)
 	return m_trainer;
     else
 	return m_pokemon[i-1];
+}
+
+Team* TeamBuilder::team()
+{
+    return &m_team;
 }
 
 void TeamBuilder::changeBody(int i)
@@ -132,7 +138,7 @@ TB_PokemonBody::TB_PokemonBody()
     /* The layout of the whole body */
     QGridLayout *layout = new QGridLayout(this);
 
-    loadPokemons();
+    initPokemons();
 
     /* first column, in the upper part */
     QVBoxLayout *first_column = new QVBoxLayout();
@@ -141,7 +147,7 @@ TB_PokemonBody::TB_PokemonBody()
     first_column->addWidget(new QEntitled("Pokemon", pokechoice));
     first_column->addWidget(new QEntitled("Nickname", new QLineEdit()));
 
-    loadItems();
+    initItems();
 
     first_column->addWidget(new QEntitled("Item", itemchoice));
 
@@ -189,23 +195,14 @@ TB_PokemonBody::TB_PokemonBody()
     third_column->addLayout(evbar);
     third_column->addWidget(new QSlider(Qt::Horizontal));
 
-    /* now the grand move list */
-    QCompactTable *movechoice = new QCompactTable(5,7);
-    movechoice->setSelectionBehavior(QAbstractItemView::SelectRows);
-    movechoice->setSelectionMode(QAbstractItemView::SingleSelection);
-    movechoice->setShowGrid(false);
-    movechoice->verticalHeader()->hide();
-    QStringList move_headers;
-    move_headers << "Type" << "Name" << "Learning" << "PP" << "Pow" << "Acc" << "Category";
-    movechoice->setHorizontalHeaderLabels(move_headers);
-    movechoice->resizeRowsToContents();
+    initMoves();
 
     layout->addWidget(new QEntitled("Moves", movechoice), 1, 0, 1, 3);
     
     movechoice->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
-void TB_PokemonBody::loadPokemons()
+void TB_PokemonBody::initPokemons()
 {
     pokechoice = new QCompactTable(PkInfo->NumberOfPokemons(),2);
     pokechoice->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -229,7 +226,21 @@ void TB_PokemonBody::loadPokemons()
     }
 }
 
-void TB_PokemonBody::loadItems()
+void TB_PokemonBody::initMoves()
+{
+    /* now the grand move list */
+    movechoice = new QCompactTable(0,7);
+    movechoice->setSelectionBehavior(QAbstractItemView::SelectRows);
+    movechoice->setSelectionMode(QAbstractItemView::SingleSelection);
+    movechoice->setShowGrid(false);
+    movechoice->verticalHeader()->hide();
+    QStringList move_headers;
+    move_headers << "Type" << "Name" << "Learning" << "PP" << "Pow" << "Acc" << "Category";
+    movechoice->setHorizontalHeaderLabels(move_headers);
+    movechoice->resizeRowsToContents();
+}
+
+void TB_PokemonBody::initItems()
 {
     itemchoice = new QComboBox();
 
@@ -237,6 +248,16 @@ void TB_PokemonBody::loadItems()
     qSort(itemList);
 
     itemchoice->addItems(itemList);
+}
+
+PokeTeam * TB_PokemonBody::poke()
+{
+    return m_poke;
+}
+
+void TB_PokemonBody::setPokeTeam(PokeTeam *new_poke)
+{
+    m_poke = new_poke;
 }
 
 void TB_EVBar::add_bar(const QString &desc, int num, quint8 evs)

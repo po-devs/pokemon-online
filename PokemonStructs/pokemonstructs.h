@@ -112,10 +112,13 @@ protected:
     int m_num;
 
 public:
-    PokeGeneral(int pokenum);
+    PokeGeneral();
 
     void setBaseStats(const PokeBaseStats &stats);
     const PokeBaseStats & baseStats() const;
+
+    void num();
+    void setNum(int new_num);
 };
 
 /* Data that is unique to a pokémon */
@@ -138,7 +141,7 @@ protected:
     quint8 m_EVs[6];
 
 public:
-    PokePersonal(int pokenum);
+    PokePersonal();
 
     QString nickname() const;
     int num() const;
@@ -201,10 +204,14 @@ protected:
     bool m_storedshininess;
     bool m_uptodate;
 
+    void setUpToDate(bool uptodate);
+
 public:
-    PokeGraphics(int pokenum);
+    PokeGraphics();
     QPixmap picture(); /* just gives the already loaded picture */
     QPixmap picture(int gender, bool shininess); /* loads a new picture if necessary, anyway gives the right picture */
+
+    void setNum(int num);
 };
 
 class POKEMONSTRUCTSSHARED_EXPORT PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtual public PokeGraphics
@@ -213,15 +220,13 @@ public:
     PokeTeam();
 
     int num() const;
-    void setNum() const;
+    void setNum(int num);
 };
 
 class POKEMONSTRUCTSSHARED_EXPORT Team
 {
 protected:
     PokeTeam m_pokes[6];
-    /* if a wrong index is given, put a good one instead */
-    void check_index(int &index);
 
 public:
     Team();

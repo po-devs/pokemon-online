@@ -29,6 +29,8 @@ private:
     QStackedWidget *m_body;
     QWidget *m_trainerBody;
     TB_PokemonBody *m_pbody[6];
+    /* the Team of the trainer */
+    Team m_team;
 
     /* makes the signal/slots connections */
     void connectAll();
@@ -36,6 +38,7 @@ private:
     int currentZone() const;
     /* returns the button associated to that zone */
     QPushButton *at(int i);
+    Team *team();
 
 private slots:
     void changeBody(int i);
@@ -67,11 +70,20 @@ private:
     QCompactTable *pokechoice;
     QComboBox *itemchoice;
     QLabel *pokeimage;
+    QCompactTable *movechoice;
+    /* the pokemon of the team corresponding to the body */
+    PokeTeam *m_poke;
 
-    void loadPokemons();
-    void loadItems();
+    void initPokemons();
+    void initMoves();
+    void initItems();
+
+    /* getting the pokemon of the team corresponding to the body */
+    PokeTeam *poke();
 public:
     TB_PokemonBody();
+
+    void setPokeTeam(PokeTeam *new_poke);
 };
 
 class TB_EVBar : public QGridLayout
