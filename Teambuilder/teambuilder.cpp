@@ -282,6 +282,8 @@ void TB_PokemonBody::updateImage()
 void TB_PokemonBody::configureMoves()
 {
     QList<int> moves = poke()->moves();
+    /* removes duplicates */
+    moves = moves.toSet().toList();
 
     movechoice->setRowCount(moves.size());
 
@@ -312,6 +314,7 @@ void TB_PokemonBody::configureMoves()
 	movechoice->setItem(i, Pow, witem);
     }
 
+    movechoice->sortItems(Name);
     movechoice->resizeRowsToContents();
 }
 
