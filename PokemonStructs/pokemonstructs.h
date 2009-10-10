@@ -106,19 +106,28 @@ class POKEMONSTRUCTSSHARED_EXPORT PokeGeneral
 {
 protected:
     PokeBaseStats m_stats;
-    QStringList m_moves;
+    QList<int> m_moves;
     QList<int> m_abilities;
     int m_types[2];
     int m_num;
 
+    void loadBaseStats();
+    void loadMoves();
+    void loadTypes();
+    void loadAbilities();
 public:
     PokeGeneral();
 
     void setBaseStats(const PokeBaseStats &stats);
     const PokeBaseStats & baseStats() const;
 
-    void num();
+    int num() const;
     void setNum(int new_num);
+
+    const QList<int>& moves() const;
+
+    /* loads using num() */
+    void load();
 };
 
 /* Data that is unique to a pokémon */
@@ -155,13 +164,13 @@ public:
 
     void setNickname(QString) const;
     void setNum(int num);
-    void setItem(int) const;
-    void setAbility(int) const;
-    void setNature(int) const;
-    void setGender(int) const;
-    void setShininess(int) const;
-    void setHappiness(int) const;
-    void setLevel(int) const;
+    void setItem(int);
+    void setAbility(int);
+    void setNature(int);
+    void setGender(int);
+    void setShininess(int);
+    void setHappiness(int);
+    void setLevel(int);
 
     quint8 hpDV() const;
     quint8 attackDV() const;
@@ -198,20 +207,22 @@ class POKEMONSTRUCTSSHARED_EXPORT PokeGraphics
 protected:
     /* This is the current implementation, but an implemenation where more than one
        image is stored can do to */
-    QPixmap Pic;
+    QPixmap m_picture;
     int m_num;
     int m_storedgender;
     bool m_storedshininess;
     bool m_uptodate;
 
     void setUpToDate(bool uptodate);
-
+    bool upToDate();
 public:
     PokeGraphics();
     QPixmap picture(); /* just gives the already loaded picture */
-    QPixmap picture(int gender, bool shininess); /* loads a new picture if necessary, anyway gives the right picture */
+    QPixmap picture(int gender, bool shiny); /* loads a new picture if necessary, anyway gives the right picture */
 
     void setNum(int num);
+    int num() const;
+    void load(int gender, bool shiny);
 };
 
 class POKEMONSTRUCTSSHARED_EXPORT PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtual public PokeGraphics
@@ -221,6 +232,9 @@ public:
 
     int num() const;
     void setNum(int num);
+
+    /* load various data from the pokenum */
+    void load();
 };
 
 class POKEMONSTRUCTSSHARED_EXPORT Team

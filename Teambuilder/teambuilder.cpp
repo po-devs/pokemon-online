@@ -19,8 +19,10 @@ TeamBuilder::TeamBuilder(QWidget *parent)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    PkInfo = new PokemonInfo("db/");
-    ItInfo = new ItemInfo("db/");
+    PokemonInfo::init("db/");
+    ItemInfo::init("db/");
+    MoveInfo::init("db/");
+    TypeInfo::init("db/");
 
     QGridLayout *layout = new QGridLayout(this);
 
@@ -100,8 +102,6 @@ void TeamBuilder::changeBody(int i)
 
 TeamBuilder::~TeamBuilder()
 {
-    delete PkInfo;
-    delete ItInfo;
 }
 
 QEntitled::QEntitled(const QString &title, QWidget *widget)
@@ -156,7 +156,6 @@ TB_PokemonBody::TB_PokemonBody()
     layout->addLayout(second_column,0,1);
 
     pokeimage = new QLabel();
-    pokeimage->setPixmap(QPixmap("DPf.png"));
 
     second_column->addWidget(pokeimage,0,Qt::AlignBottom|Qt::AlignHCenter);
 
@@ -198,13 +197,13 @@ TB_PokemonBody::TB_PokemonBody()
     initMoves();
 
     layout->addWidget(new QEntitled("Moves", movechoice), 1, 0, 1, 3);
-    
-    movechoice->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+
+    connect(pokechoice, SIGNAL(cellDoubleClicked(int,int)), SLOT(setNum(int)));
 }
 
 void TB_PokemonBody::initPokemons()
 {
-    pokechoice = new QCompactTable(PkInfo->NumberOfPokemons(),2);
+    pokechoice = new QCompactTable(PokemonInfo::NumberOfPokemons(),2);
     pokechoice->setSelectionBehavior(QAbstractItemView::SelectRows);
     pokechoice->setSelectionMode(QAbstractItemView::SingleSelection);
     pokechoice->setShowGrid(false);
@@ -214,13 +213,13 @@ void TB_PokemonBody::initPokemons()
     pokechoice->resizeRowsToContents();
 
     /* Adding the poke names */
-    for (int i = 0; i < PkInfo->NumberOfPokemons(); i++)
+    for (int i = 0; i < PokemonInfo::NumberOfPokemons(); i++)
     {
 	QTableWidgetItem *item = new QTableWidgetItem(QString::number(i));
 	item->setFlags(item->flags() ^ Qt::ItemIsEditable);
 	pokechoice->setItem(i, 0, item);
 
-	item = new QTableWidgetItem(PkInfo->Name(i));
+	item = new QTableWidgetItem(PokemonInfo::Name(i));
 	item->setFlags(item->flags() ^ Qt::ItemIsEditable);
 	pokechoice->setItem(i, 1, item);
     }
@@ -238,13 +237,14 @@ void TB_PokemonBody::initMoves()
     move_headers << "Type" << "Name" << "Learning" << "PP" << "Pow" << "Acc" << "Category";
     movechoice->setHorizontalHeaderLabels(move_headers);
     movechoice->resizeRowsToContents();
+    movechoice->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
 }
 
 void TB_PokemonBody::initItems()
 {
     itemchoice = new QComboBox();
 
-    QStringList itemList = ItInfo->Names();
+    QStringList itemList = ItemInfo::Names();
     qSort(itemList);
 
     itemchoice->addItems(itemList);
@@ -258,6 +258,61 @@ PokeTeam * TB_PokemonBody::poke()
 void TB_PokemonBody::setPokeTeam(PokeTeam *new_poke)
 {
     m_poke = new_poke;
+}
+
+void TB_PokemonBody::setNum(int pokenum)
+{
+    if (pokenum == poke()->num())
+	return;
+
+    poke()->setNum(pokenum);
+    poke()->load();
+
+    /* changes the move list */
+    configureMoves();
+    /* updates the pic */
+    updateImage();
+}
+
+void TB_PokemonBody::updateImage()
+{
+    pokeimage->setPixmap(poke()->picture());
+}
+
+void TB_PokemonBody::configureMoves()
+{
+    QList<int> moves = poke()->moves();
+
+    movechoice->setRowCount(moves.size());
+
+    for (int i = 0; i < moves.size(); i++)
+    {
+	QIcon myicon(TypeInfo::Picture(MoveInfo::Type(i)));
+
+	QTableWidgetItem *witem;
+
+	witem = new QTableWidgetItem(myicon, "");
+	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+	movechoice->setItem(i, Type, witem);
+
+	witem = new QTableWidgetItem(MoveInfo::Name(moves[i]));
+	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+	movechoice->setItem(i, Name, witem);
+
+	witem = new QTableWidgetItem(QString::number(MoveInfo::PP(moves[i])));
+	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+	movechoice->setItem(i, PP, witem);
+
+	witem = new QTableWidgetItem(MoveInfo::AccS(moves[i]));
+	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+	movechoice->setItem(i, Acc, witem);
+
+	witem = new QTableWidgetItem(MoveInfo::PowerS(moves[i]));
+	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+	movechoice->setItem(i, Pow, witem);
+    }
+
+    movechoice->resizeRowsToContents();
 }
 
 void TB_EVBar::add_bar(const QString &desc, int num, quint8 evs)

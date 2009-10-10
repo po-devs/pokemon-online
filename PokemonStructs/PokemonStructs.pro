@@ -6,4 +6,5 @@ TEMPLATE = lib
 DEFINES += POKEMONSTRUCTS_LIBRARY
 SOURCES += pokemonstructs.cpp
 HEADERS += pokemonstructs.h \
-    PokemonStructs_global.h
+    PokemonStructs_global.h \
+    ../pokemoninfo.h
