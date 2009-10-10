@@ -71,3 +71,66 @@ void PokeBaseStats::setBaseSpDefense(quint8 spDef)
 {
     m_BaseStats[5] = spDef;
 }
+
+PokeGeneral::PokeGeneral()
+	: m_num(0)
+{
+}
+
+void PokeGeneral::setNum(int num)
+{
+    m_num = num;
+}
+
+PokePersonal::PokePersonal()
+	: m_num(0)
+{
+}
+
+void PokePersonal::setNum(int num)
+{
+    m_num = num;
+}
+
+PokeGraphics::PokeGraphics()
+	: m_num(0), m_uptodate(false)
+{
+}
+
+void PokeGraphics::setNum(int num)
+{
+    m_num = num;
+    setUpToDate(false);
+}
+
+void PokeGraphics::setUpToDate(bool uptodate)
+{
+    m_uptodate = uptodate;
+}
+
+PokeTeam::PokeTeam()
+{
+    setNum(0);
+}
+
+void PokeTeam::setNum(int num)
+{
+    PokeGeneral::setNum(num);
+    PokePersonal::setNum(num);
+    PokeGraphics::setNum(num);
+}
+
+
+Team::Team()
+{
+}
+
+const PokeTeam & Team::poke(int index) const
+{
+    return m_pokes[index];
+}
+
+PokeTeam & Team::poke(int index)
+{
+    return m_pokes[index];
+}

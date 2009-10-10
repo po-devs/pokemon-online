@@ -6,11 +6,11 @@
  </data>
  <data>
   <variable>RunConfiguration0-Executable</variable>
-  <value type="QString" ></value>
+  <value type="QString" >/home/coyotte508/Code/Pokémon Thingie/pogeymon-online/Teambuilder/Teambuilder</value>
  </data>
  <data>
   <variable>RunConfiguration0-RunConfiguration.name</variable>
-  <value type="QString" >Custom Executable</value>
+  <value type="QString" >Run /home/coyotte508/Code/Pokémon Thingie/pogeymon-online/Teambuilder/Teambuilder</value>
  </data>
  <data>
   <variable>RunConfiguration0-UseTerminal</variable>
@@ -50,6 +50,7 @@
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <value key="QtVersionId" type="int" >0</value>
    <value key="addQDumper" type="" ></value>
+   <value key="buildDirectory" type="QString" >/home/coyotte508/Code/Pokémon Thingie/pogeymon-online/PokemonInfo</value>
   </valuemap>
  </data>
  <data>
@@ -65,7 +66,7 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-63mIoopBeN,guid=3618049c27a8be2da607124a4abfab76</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-Lv3FHyc07w,guid=0e4c1e95b2b756b3ab517f004ace193d</value>
     <value type="QString" >DESKTOP_SESSION=default.desktop</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
     <value type="QString" >DISPLAY=:0.0</value>
@@ -73,8 +74,8 @@
     <value type="QString" >GDM_LANG=fr_FR.UTF-8</value>
     <value type="QString" >GDM_XSERVER_LOCATION=local</value>
     <value type="QString" >GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-cMxM4a/socket</value>
-    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-WnBPoK/S.gpg-agent:3146:1</value>
+    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-vN4qon/socket</value>
+    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-nSfyLQ/S.gpg-agent:3099:1</value>
     <value type="QString" >GTK_MODULES=canberra-gtk-module</value>
     <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/coyotte508/.gtkrc-1.2-gnome2</value>
     <value type="QString" >HOME=/home/coyotte508</value>
@@ -85,19 +86,19 @@
     <value type="QString" >PATH=/home/coyotte508/qtsdk-2009.03/qt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
     <value type="QString" >PWD=/home/coyotte508</value>
     <value type="QString" >QTDIR=/home/coyotte508/qtsdk-2009.03/qt</value>
-    <value type="QString" >SESSION_MANAGER=local/Dreambeliever:/tmp/.ICE-unix/3067</value>
+    <value type="QString" >SESSION_MANAGER=local/Dreambeliever:/tmp/.ICE-unix/3018</value>
     <value type="QString" >SHELL=/bin/bash</value>
-    <value type="QString" >SSH_AGENT_PID=3122</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-cMxM4a/socket.ssh</value>
+    <value type="QString" >SSH_AGENT_PID=3073</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-vN4qon/socket.ssh</value>
     <value type="QString" >USER=coyotte508</value>
     <value type="QString" >USERNAME=coyotte508</value>
     <value type="QString" >WINDOWPATH=7</value>
     <value type="QString" >XAUTHORITY=/home/coyotte508/.Xauthority</value>
     <value type="QString" >XDG_DATA_DIRS=/usr/local/share/:/usr/share/:/usr/share/gdm/</value>
-    <value type="QString" >XDG_SESSION_COOKIE=afc986a56c72dd96ebeb9f194ab80db7-1254075252.920568-323119671</value>
+    <value type="QString" >XDG_SESSION_COOKIE=afc986a56c72dd96ebeb9f194ab80db7-1255020860.196382-668987930</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
-    <value type="QString" >/home/coyotte508/Code/PokemonInfo/PokemonInfo.pro</value>
+    <value type="QString" >/home/coyotte508/Code/Pokémon Thingie/pogeymon-online/PokemonInfo/PokemonInfo.pro</value>
     <value type="QString" >-spec</value>
     <value type="QString" >linux-g++</value>
     <value type="QString" >-r</value>
@@ -105,7 +106,7 @@
    </valuelist>
    <value key="abstractProcess.command" type="QString" >/home/coyotte508/qtsdk-2009.03/qt/bin/qmake</value>
    <value key="abstractProcess.enabled" type="bool" >false</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >/home/coyotte508/Code/PokemonInfo</value>
+   <value key="abstractProcess.workingDirectory" type="QString" >/home/coyotte508/Code/Pokémon Thingie/pogeymon-online/PokemonInfo</value>
    <value key="buildConfiguration" type="int" >2</value>
   </valuemap>
  </data>
@@ -114,7 +115,7 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-63mIoopBeN,guid=3618049c27a8be2da607124a4abfab76</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-Lv3FHyc07w,guid=0e4c1e95b2b756b3ab517f004ace193d</value>
     <value type="QString" >DESKTOP_SESSION=default.desktop</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
     <value type="QString" >DISPLAY=:0.0</value>
@@ -122,8 +123,8 @@
     <value type="QString" >GDM_LANG=fr_FR.UTF-8</value>
     <value type="QString" >GDM_XSERVER_LOCATION=local</value>
     <value type="QString" >GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-cMxM4a/socket</value>
-    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-WnBPoK/S.gpg-agent:3146:1</value>
+    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-vN4qon/socket</value>
+    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-nSfyLQ/S.gpg-agent:3099:1</value>
     <value type="QString" >GTK_MODULES=canberra-gtk-module</value>
     <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/coyotte508/.gtkrc-1.2-gnome2</value>
     <value type="QString" >HOME=/home/coyotte508</value>
@@ -134,23 +135,23 @@
     <value type="QString" >PATH=/home/coyotte508/qtsdk-2009.03/qt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
     <value type="QString" >PWD=/home/coyotte508</value>
     <value type="QString" >QTDIR=/home/coyotte508/qtsdk-2009.03/qt</value>
-    <value type="QString" >SESSION_MANAGER=local/Dreambeliever:/tmp/.ICE-unix/3067</value>
+    <value type="QString" >SESSION_MANAGER=local/Dreambeliever:/tmp/.ICE-unix/3018</value>
     <value type="QString" >SHELL=/bin/bash</value>
-    <value type="QString" >SSH_AGENT_PID=3122</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-cMxM4a/socket.ssh</value>
+    <value type="QString" >SSH_AGENT_PID=3073</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-vN4qon/socket.ssh</value>
     <value type="QString" >USER=coyotte508</value>
     <value type="QString" >USERNAME=coyotte508</value>
     <value type="QString" >WINDOWPATH=7</value>
     <value type="QString" >XAUTHORITY=/home/coyotte508/.Xauthority</value>
     <value type="QString" >XDG_DATA_DIRS=/usr/local/share/:/usr/share/:/usr/share/gdm/</value>
-    <value type="QString" >XDG_SESSION_COOKIE=afc986a56c72dd96ebeb9f194ab80db7-1254075252.920568-323119671</value>
+    <value type="QString" >XDG_SESSION_COOKIE=afc986a56c72dd96ebeb9f194ab80db7-1255020860.196382-668987930</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
     <value type="QString" >-w</value>
    </valuelist>
    <value key="abstractProcess.command" type="QString" >/usr/bin/make</value>
    <value key="abstractProcess.enabled" type="bool" >true</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >/home/coyotte508/Code/PokemonInfo</value>
+   <value key="abstractProcess.workingDirectory" type="QString" >/home/coyotte508/Code/Pokémon Thingie/pogeymon-online/PokemonInfo</value>
   </valuemap>
  </data>
  <data>
@@ -158,7 +159,7 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-63mIoopBeN,guid=3618049c27a8be2da607124a4abfab76</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-Lv3FHyc07w,guid=0e4c1e95b2b756b3ab517f004ace193d</value>
     <value type="QString" >DESKTOP_SESSION=default.desktop</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
     <value type="QString" >DISPLAY=:0.0</value>
@@ -166,8 +167,8 @@
     <value type="QString" >GDM_LANG=fr_FR.UTF-8</value>
     <value type="QString" >GDM_XSERVER_LOCATION=local</value>
     <value type="QString" >GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-cMxM4a/socket</value>
-    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-WnBPoK/S.gpg-agent:3146:1</value>
+    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-vN4qon/socket</value>
+    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-nSfyLQ/S.gpg-agent:3099:1</value>
     <value type="QString" >GTK_MODULES=canberra-gtk-module</value>
     <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/coyotte508/.gtkrc-1.2-gnome2</value>
     <value type="QString" >HOME=/home/coyotte508</value>
@@ -178,16 +179,16 @@
     <value type="QString" >PATH=/home/coyotte508/qtsdk-2009.03/qt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
     <value type="QString" >PWD=/home/coyotte508</value>
     <value type="QString" >QTDIR=/home/coyotte508/qtsdk-2009.03/qt</value>
-    <value type="QString" >SESSION_MANAGER=local/Dreambeliever:/tmp/.ICE-unix/3067</value>
+    <value type="QString" >SESSION_MANAGER=local/Dreambeliever:/tmp/.ICE-unix/3018</value>
     <value type="QString" >SHELL=/bin/bash</value>
-    <value type="QString" >SSH_AGENT_PID=3122</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-cMxM4a/socket.ssh</value>
+    <value type="QString" >SSH_AGENT_PID=3073</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-vN4qon/socket.ssh</value>
     <value type="QString" >USER=coyotte508</value>
     <value type="QString" >USERNAME=coyotte508</value>
     <value type="QString" >WINDOWPATH=7</value>
     <value type="QString" >XAUTHORITY=/home/coyotte508/.Xauthority</value>
     <value type="QString" >XDG_DATA_DIRS=/usr/local/share/:/usr/share/:/usr/share/gdm/</value>
-    <value type="QString" >XDG_SESSION_COOKIE=afc986a56c72dd96ebeb9f194ab80db7-1254075252.920568-323119671</value>
+    <value type="QString" >XDG_SESSION_COOKIE=afc986a56c72dd96ebeb9f194ab80db7-1255020860.196382-668987930</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
     <value type="QString" >clean</value>
@@ -195,7 +196,7 @@
    </valuelist>
    <value key="abstractProcess.command" type="QString" >/usr/bin/make</value>
    <value key="abstractProcess.enabled" type="bool" >true</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >/home/coyotte508/Code/PokemonInfo</value>
+   <value key="abstractProcess.workingDirectory" type="QString" >/home/coyotte508/Code/Pokémon Thingie/pogeymon-online/PokemonInfo</value>
   </valuemap>
  </data>
  <data>
