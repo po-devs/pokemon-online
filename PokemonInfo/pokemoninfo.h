@@ -117,18 +117,18 @@ class POKEMONINFOSHARED_EXPORT TypeInfo
 {
 private:
     static QStringList m_Names;
-    static QList<QPixmap> m_Pixmaps;
     static QString m_Directory;
+    static QList<QColor> m_Colors;
 
     static void loadNames();
-    static void loadPixmaps();
+    static void loadColors();
 public:
     /* directory where all the data is */
     static void init(const QString &dir="./");
 
     /* Self-explainable functions */
     static QString Name(int typenum);
-    static QPixmap Picture(int typenum);
+    static QColor Color(int typenum);
     static int NumberOfTypes();
 };
 
