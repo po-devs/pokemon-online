@@ -1,5 +1,5 @@
 #include "pokemonstructs.h"
-#include "../pokemoninfo.h"
+#include "../PokemonInfo/pokemoninfo.h"
 
 PokeBaseStats::PokeBaseStats(quint8 base_hp, quint8 base_att, quint8 base_def, quint8 base_spd, quint8 base_spAtt, quint8 base_spDef)
 {
