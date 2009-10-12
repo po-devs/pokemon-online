@@ -2,7 +2,7 @@
 #define TEAMBUILDER_H
 
 #include <QtGui>
-#include "../pokemoninfo.h"
+#include "../PokemonInfo/pokemoninfo.h"
 
 class TB_PokemonBody;
 

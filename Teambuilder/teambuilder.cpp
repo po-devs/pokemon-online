@@ -282,20 +282,17 @@ void TB_PokemonBody::updateImage()
 void TB_PokemonBody::configureMoves()
 {
     QList<int> moves = poke()->moves();
-    /* removes duplicates */
-    moves = moves.toSet().toList();
 
     movechoice->setRowCount(moves.size());
 
     for (int i = 0; i < moves.size(); i++)
     {
-	QIcon myicon(TypeInfo::Picture(MoveInfo::Type(i)));
-
 	QTableWidgetItem *witem;
 
-	witem = new QTableWidgetItem(myicon, "");
+	witem = new QTableWidgetItem(tr("<strong>%1</strong>").arg(TypeInfo::Name(MoveInfo::Type(moves[i]))));
+	witem->setForeground(QColor("white"));
+	witem->setBackground(QColor(TypeInfo::Color(MoveInfo::Type(moves[i]))));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-	movechoice->setItem(i, Type, witem);
 
 	witem = new QTableWidgetItem(MoveInfo::Name(moves[i]));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);

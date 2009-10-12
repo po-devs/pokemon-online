@@ -12,7 +12,7 @@ QString ItemInfo::m_Directory;
 QStringList ItemInfo::m_Names;
 
 QStringList TypeInfo::m_Names;
-QList<QPixmap> TypeInfo::m_Pixmaps;
+QList<QColor> TypeInfo::m_Colors;
 QString TypeInfo::m_Directory;
 
 QString __get_line(QString filename, int linenum)
@@ -323,11 +323,18 @@ void TypeInfo::loadNames()
     }
 }
 
-void TypeInfo::loadPixmaps()
+void TypeInfo::loadColors()
 {
-    for (int i = 0; i < NumberOfTypes(); i++)
+    QFile typecolors(m_Directory + "type_colors.txt");
+
+    //TODO: exception
+    typecolors.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream namestream(&typecolors);
+
+    while (!namestream.atEnd())
     {
-	m_Pixmaps << QPixmap(m_Directory + Name(i) + ".gif");
+	m_Colors << QColor(namestream.readLine());
     }
 }
 
@@ -342,7 +349,7 @@ void TypeInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
-    loadPixmaps();
+    loadColors();
 }
 
 QString TypeInfo::Name(int typenum)
@@ -350,9 +357,9 @@ QString TypeInfo::Name(int typenum)
     return m_Names[typenum];
 }
 
-QPixmap TypeInfo::Picture(int typenum)
+QColor TypeInfo::Color(int typenum)
 {
-    return m_Pixmaps[typenum];
+    return m_Colors[typenum];
 }
 
 int TypeInfo::NumberOfTypes()
