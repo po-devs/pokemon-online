@@ -2,7 +2,7 @@
 #define POKEMONINFO_H
 
 #include "PokemonInfo_global.h"
-#include "../pokemonstructs.h"
+#include "../PokemonStructs/pokemonstructs.h"
 #include <QtGui>
 
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
