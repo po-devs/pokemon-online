@@ -125,13 +125,147 @@ void PokeGeneral::setBaseStats(const PokeBaseStats &stats)
 }
 
 PokePersonal::PokePersonal()
-	: m_num(0)
 {
+    reset();
+}
+
+void PokePersonal::setNickname(const QString &nick)
+{
+    m_nickname = nick;
+}
+
+void PokePersonal::setItem(int item)
+{
+    m_item = item;
+}
+
+void PokePersonal::setAbility(int ability)
+{
+    m_ability = ability;
+}
+
+void PokePersonal::setNature(int nature)
+{
+    m_nature = nature;
+}
+
+void PokePersonal::setGender(int gender)
+{
+    m_gender = gender;
+}
+
+void PokePersonal::setShininess(bool shiny)
+{
+    m_shininess = shiny;
+}
+
+void PokePersonal::setHappiness(quint8 happiness)
+{
+    m_happiness = happiness;
+}
+
+void PokePersonal::setLevel(int level)
+{
+    m_level = level;
+}
+
+void PokePersonal::setMove(int moveNum, int moveSlot)
+{
+    m_moves[moveSlot] = moveNum;
 }
 
 void PokePersonal::setNum(int num)
 {
     m_num = num;
+}
+
+void PokePersonal:: setHpDV(quint8 val)
+{
+    m_DVs[0] = val;
+}
+
+void PokePersonal:: setAttackDV(quint8 val)
+{
+    m_DVs[1] = val;
+}
+
+void PokePersonal:: setDefenseDV(quint8 val)
+{
+    m_DVs[2] = val;
+}
+
+void PokePersonal:: setSpeedDV(quint8 val)
+{
+    m_DVs[3] = val;
+}
+
+void PokePersonal:: setSpAttackDV(quint8 val)
+{
+    m_DVs[4] = val;
+}
+
+void PokePersonal:: setSpDefenseDV(quint8 val)
+{
+    m_DVs[5] = val;
+}
+
+void PokePersonal:: setHpEV(quint8 val)
+{
+    m_EVs[0] = val;
+}
+
+void PokePersonal:: setAttackEV(quint8 val)
+{
+    m_EVs[1] = val;
+}
+
+void PokePersonal:: setDefenseEV(quint8 val)
+{
+    m_EVs[2] = val;
+}
+
+void PokePersonal:: setSpeedEV(quint8 val)
+{
+    m_EVs[3] = val;
+}
+
+void PokePersonal:: setSpAttackEV(quint8 val)
+{
+    m_EVs[4] = val;
+}
+
+void PokePersonal:: setSpDefenseEV(quint8 val)
+{
+    m_EVs[5] = val;
+}
+
+void PokePersonal::reset()
+{
+    setNum(0);
+    setLevel(100);
+    for (int i = 0; i < 4; i++)
+	setMove(0,i);
+    setHappiness(255);
+    setShininess(false);
+    setGender(0);
+    setAbility(0);
+    setNickname("");
+    setNature(0);
+    setItem(0);
+
+    setHpDV(31);
+    setAttackDV(31);
+    setDefenseDV(31);
+    setSpeedDV(31);
+    setSpAttackDV(31);
+    setSpDefenseDV(31);
+
+    setHpEV(255);
+    setAttackEV(255);
+    setDefenseEV(255);
+    setSpeedEV(255);
+    setSpAttackEV(255);
+    setSpDefenseEV(255);
 }
 
 PokeGraphics::PokeGraphics()
