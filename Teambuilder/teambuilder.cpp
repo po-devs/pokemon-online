@@ -196,7 +196,14 @@ TB_PokemonBody::TB_PokemonBody()
 
     initMoves();
 
-    layout->addWidget(new QEntitled("Moves", movechoice), 1, 0, 1, 3);
+    QGridLayout *mlayout = new QGridLayout();
+    layout->addLayout(mlayout, 1,0,1,3);
+    mlayout->addWidget(new QEntitled("Moves", movechoice), 0, 0, 1, 4);
+
+    for (int i = 0; i < 4; i++)
+    {
+	mlayout->addWidget(m_moves[i],1,i);
+    }
 
     connect(pokechoice, SIGNAL(cellDoubleClicked(int,int)), SLOT(setNum(int)));
 }
@@ -238,6 +245,19 @@ void TB_PokemonBody::initMoves()
     movechoice->setHorizontalHeaderLabels(move_headers);
     movechoice->resizeRowsToContents();
     movechoice->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+
+    /* the four move choice items */
+    for (int i = 0; i < 4; i++)
+    {
+	m_moves[i] = new QLineEdit();
+	QCompleter *completer = new QCompleter(m_moves[i]);
+	completer->setModel(movechoice->model());
+	completer->setCompletionColumn(Name);
+	completer->setCaseSensitivity(Qt::CaseInsensitive);
+	completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+	completer->setCompletionMode(QCompleter::InlineCompletion);
+	m_moves[i]->setCompleter(completer);
+    }
 }
 
 void TB_PokemonBody::initItems()

@@ -78,6 +78,8 @@ private:
     QComboBox *itemchoice;
     QLabel *pokeimage;
     QCompactTable *movechoice;
+    QLineEdit *m_moves[4];
+
     /* the pokemon of the team corresponding to the body */
     PokeTeam *m_poke;
 
