@@ -288,11 +288,12 @@ void TB_PokemonBody::configureMoves()
     for (int i = 0; i < moves.size(); i++)
     {
 	QTableWidgetItem *witem;
-
-	witem = new QTableWidgetItem(tr("<strong>%1</strong>").arg(TypeInfo::Name(MoveInfo::Type(moves[i]))));
+	
+	witem = new QTableWidgetItem(TypeInfo::Name(MoveInfo::Type(moves[i])));
 	witem->setForeground(QColor("white"));
 	witem->setBackground(QColor(TypeInfo::Color(MoveInfo::Type(moves[i]))));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+	movechoice->setItem(i, Type, witem);
 
 	witem = new QTableWidgetItem(MoveInfo::Name(moves[i]));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
