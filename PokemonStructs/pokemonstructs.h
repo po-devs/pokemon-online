@@ -140,7 +140,7 @@ protected:
     int m_ability;
     int m_nature;
     int m_gender;
-    int m_shininess;
+    bool m_shininess;
     int m_happiness;
     int m_level;
 
@@ -148,7 +148,6 @@ protected:
 
     quint8 m_DVs[6];
     quint8 m_EVs[6];
-
 public:
     PokePersonal();
 
@@ -161,16 +160,19 @@ public:
     int shininess() const;
     int happiness() const;
     int level() const;
+    /* resets everything to default values */
+    void reset();
 
-    void setNickname(QString) const;
+    void setNickname(const QString &);
     void setNum(int num);
-    void setItem(int);
-    void setAbility(int);
-    void setNature(int);
-    void setGender(int);
-    void setShininess(int);
-    void setHappiness(int);
-    void setLevel(int);
+    void setItem(int item);
+    void setAbility(int ability);
+    void setNature(int nature);
+    void setGender(int gender);
+    void setShininess(bool shiny);
+    void setHappiness(quint8 happiness);
+    void setLevel(int level);
+    void setMove(int moveNum, int moveSlot);
 
     quint8 hpDV() const;
     quint8 attackDV() const;

@@ -1,5 +1,5 @@
 #include "pokemoninfo.h"
-#include <zzip/lib.h>
+//#include <zzip/lib.h>
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
@@ -68,43 +68,51 @@ int PokemonInfo::Gender(int pokenum)
 
 QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney)
 {
-    QString path = QString("%1poke_img/%2/DP%3%4.png").arg(m_Directory).arg(pokenum).arg((gender==Pokemon::Female)?"f":"m", shiney?"s":"");
-    ZZIP_FILE *file = zzip_open(path.toAscii(), 0);
+    (void) pokenum;
+    (void) gender;
+    (void) shiney;
 
-    if (file == NULL)
-    {
-	/* We change the gender/shininess to try to find a valid file */
-	if (shiney)
-	{
-	    path = QString("%1poke_img/%2/DP%3.png").arg(m_Directory).arg(pokenum).arg((gender==Pokemon::Female)?"f":"m");
-	    file = zzip_open(path.toAscii(), 0);
-	}
-	if (file == NULL)
-	{
-	    path = QString("%1poke_img/%2/DP%3.png").arg(m_Directory).arg(pokenum).arg((gender==Pokemon::Female)?"m":"f");
-	    file = zzip_open(path.toAscii(), 0);
-	}
-	if (file == NULL)
-	    return QPixmap();
-    }
+    return QPixmap();
+    /* We don't use zziplib anymore because of windows.
+       Will use something else */
 
-    /* Using C style manipulations to get the file */
-    zzip_seek(file, 0, SEEK_END);
-    zzip_off_t filesize = zzip_tell(file);
-    zzip_seek(file, 0, SEEK_SET);
+//    QString path = QString("%1poke_img/%2/DP%3%4.png").arg(m_Directory).arg(pokenum).arg((gender==Pokemon::Female)?"f":"m", shiney?"s":"");
+//    ZZIP_FILE *file = zzip_open(path.toAscii(), 0);
+//
+//    if (file == NULL)
+//    {
+//	/* We change the gender/shininess to try to find a valid file */
+//	if (shiney)
+//	{
+//	    path = QString("%1poke_img/%2/DP%3.png").arg(m_Directory).arg(pokenum).arg((gender==Pokemon::Female)?"f":"m");
+//	    file = zzip_open(path.toAscii(), 0);
+//	}
+//	if (file == NULL)
+//	{
+//	    path = QString("%1poke_img/%2/DP%3.png").arg(m_Directory).arg(pokenum).arg((gender==Pokemon::Female)?"m":"f");
+//	    file = zzip_open(path.toAscii(), 0);
+//	}
+//	if (file == NULL)
+//	    return QPixmap();
+//    }
+//
+//    /* Using C style manipulations to get the file */
+//    zzip_seek(file, 0, SEEK_END);
+//    zzip_off_t filesize = zzip_tell(file);
+//    zzip_seek(file, 0, SEEK_SET);
+//
+//    QByteArray buffer;
+//    buffer.reserve(filesize);
+//
+//    zzip_ssize_t read_size = zzip_read(file, buffer.data(), filesize);
+//
+//    if (read_size < 0 || read_size < filesize)
+//	return QPixmap();
+//
+//    QPixmap ret;
+//    ret.loadFromData(reinterpret_cast<uchar*>(buffer.data()), filesize, "png");
 
-    QByteArray buffer;
-    buffer.reserve(filesize);
-
-    zzip_ssize_t read_size = zzip_read(file, buffer.data(), filesize);
-
-    if (read_size < 0 || read_size < filesize)
-	return QPixmap();
-
-    QPixmap ret;
-    ret.loadFromData(reinterpret_cast<uchar*>(buffer.data()), filesize, "png");
-
-    return ret;
+//    return ret;
 }
 
 QList<int> PokemonInfo::Moves(int pokenum)

@@ -336,6 +336,7 @@ void TB_PokemonBody::configureMoves()
     movechoice->resizeRowsToContents();
 }
 
+
 void TB_EVBar::add_bar(const QString &desc, int num, quint8 evs)
 {
     int rowcount = rowCount();
