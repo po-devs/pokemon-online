@@ -140,7 +140,7 @@ protected:
     int m_nature;
     int m_gender;
     bool m_shininess;
-    int m_happiness;
+    quint8 m_happiness;
     int m_level;
 
     int m_moves[4];
@@ -156,9 +156,10 @@ public:
     int ability() const;
     int nature() const;
     int gender() const;
-    int shininess() const;
-    int happiness() const;
+    bool shininess() const;
+    quint8 happiness() const;
     int level() const;
+    int move(int moveSlot) const;
     /* resets everything to default values */
     void reset();
 
@@ -172,6 +173,9 @@ public:
     void setHappiness(quint8 happiness);
     void setLevel(int level);
     void setMove(int moveNum, int moveSlot);
+    int addMove(int moveNum);
+
+    bool hasMove(int moveNum);
 
     quint8 hpDV() const;
     quint8 attackDV() const;
@@ -327,7 +331,7 @@ public:
     /* Self-explainable functions */
     static QString Name(int movenum);
     static int Type(int movenum);
-    static QString Number(const QString &movename);
+    static int Number(const QString &movename);
     static int NumberOfMoves();
     static QString Description(int movenum);
     static int Power(int movenum);

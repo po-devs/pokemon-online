@@ -246,10 +246,16 @@ void TB_PokemonBody::initMoves()
     movechoice->resizeRowsToContents();
     movechoice->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
 
+    connect(movechoice, SIGNAL(entered(QModelIndex)), SLOT(moveEntered(const QModelIndex&)));
+    connect(movechoice, SIGNAL(doubleClicked(QModelIndex)), SLOT(moveEntered(const QModelIndex&)));
+    connect(this, SIGNAL(moveChosen(int)), SLOT(setMove(int)));
+
+    QSignalMapper *mapper = new QSignalMapper(this);
+
     /* the four move choice items */
     for (int i = 0; i < 4; i++)
     {
-	m_moves[i] = new QLineEdit();
+	m_moves[i] = new QDefaultLineEdit();
 	QCompleter *completer = new QCompleter(m_moves[i]);
 	completer->setModel(movechoice->model());
 	completer->setCompletionColumn(Name);
@@ -257,7 +263,22 @@ void TB_PokemonBody::initMoves()
 	completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer->setCompletionMode(QCompleter::InlineCompletion);
 	m_moves[i]->setCompleter(completer);
+
+	connect(m_moves[i], SIGNAL(customContextMenuRequested(QPoint)), m_moves[i], SLOT(selectAll()));
+
+	mapper->setMapping(completer, i);
+	mapper->setMapping(m_moves[i], i);
+	connect(completer, SIGNAL(activated(QString)), mapper, SLOT(map()));
+	connect(m_moves[i], SIGNAL(editingFinished()), mapper, SLOT(map()));
     }
+
+    connect(mapper, SIGNAL(mapped(int)), SLOT(moveCellActivated(int)));
+}
+
+void TB_PokemonBody::moveCellActivated(int cell)
+{
+    int movenum = MoveInfo::Number(m_moves[cell]->text());
+    setMove(movenum, cell);
 }
 
 void TB_PokemonBody::initItems()
@@ -280,11 +301,41 @@ void TB_PokemonBody::setPokeTeam(PokeTeam *new_poke)
     m_poke = new_poke;
 }
 
+void TB_PokemonBody::setMove(int movenum, int moveslot)
+{
+    try {
+	poke()->setMove(movenum, moveslot);
+    }
+    catch (QString &expr)
+    {
+	QMessageBox::critical(this, tr("Error"), expr);
+	/* Restoring previous move */
+	m_moves[moveslot]->setText(MoveInfo::Name(poke()->move(moveslot)));
+    }
+}
+
+void TB_PokemonBody::setMove(int movenum)
+{
+    try {
+	int slot = poke()->addMove(movenum);
+	m_moves[slot]->setText(MoveInfo::Name(movenum));
+    } catch (QString &expr)
+    {
+	QMessageBox::critical(this, tr("Error"), expr);
+    }
+}
+
+void TB_PokemonBody::moveEntered(const QModelIndex &index)
+{
+    emit moveChosen(MoveInfo::Number(movechoice->item(index.row(), Name)->text()));
+}
+
 void TB_PokemonBody::setNum(int pokenum)
 {
     if (pokenum == poke()->num())
 	return;
 
+    poke()->reset();
     poke()->setNum(pokenum);
     poke()->load();
 
@@ -330,6 +381,11 @@ void TB_PokemonBody::configureMoves()
 	witem = new QTableWidgetItem(MoveInfo::PowerS(moves[i]));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Pow, witem);
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+	m_moves[i]->setText(MoveInfo::Name(poke()->move(i)));
     }
 
     movechoice->sortItems(Name);
