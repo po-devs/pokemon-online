@@ -6,11 +6,8 @@ TEMPLATE = app
 SOURCES += main.cpp \
     teambuilder.cpp
 HEADERS += teambuilder.h \
-    ../PokemonStructs/pokemonstructs.h\
     ../PokemonInfo/pokemoninfo.h
 FORMS += 
 LIBS += -L../PokemonInfo \
     -lPokemonInfo \
-    -L../PokemonStructs \
-    -lPokemonStructs \
     -lzip
