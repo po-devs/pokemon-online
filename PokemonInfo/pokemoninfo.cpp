@@ -248,7 +248,30 @@ void PokePersonal::setLevel(int level)
 
 void PokePersonal::setMove(int moveNum, int moveSlot)
 {
+    if (moveNum == move(moveSlot))
+	return;
+    if (moveNum != 0 && hasMove(moveNum))
+	throw QObject::tr("%1 already has move %2.").arg(PokemonInfo::Name(num()), MoveInfo::Name(moveNum));
+
     m_moves[moveSlot] = moveNum;
+}
+
+int PokePersonal::addMove(int moveNum)
+{
+    for (int i = 0; i < 4; i++)
+	if (move(i) == 0) {
+	    setMove(moveNum, i);
+	    return i;
+	}
+    throw QObject::tr("No free move available!");
+}
+
+bool PokePersonal::hasMove(int moveNum)
+{
+    for (int i = 0; i < 4; i++)
+	if (move(i) == moveNum)
+	    return true;
+    return false;
 }
 
 void PokePersonal::setNum(int num)
@@ -314,6 +337,56 @@ void PokePersonal:: setSpAttackEV(quint8 val)
 void PokePersonal:: setSpDefenseEV(quint8 val)
 {
     m_EVs[5] = val;
+}
+
+QString PokePersonal::nickname() const
+{
+    return m_nickname;
+}
+
+int PokePersonal::num() const
+{
+    return m_num;
+}
+
+int PokePersonal::item() const
+{
+    return m_item;
+}
+
+int PokePersonal::ability() const
+{
+    return m_ability;
+}
+
+int PokePersonal::nature() const
+{
+    return m_nature;
+}
+
+int PokePersonal::gender() const
+{
+    return m_gender;
+}
+
+bool PokePersonal::shininess() const
+{
+    return m_shininess;
+}
+
+quint8 PokePersonal::happiness() const
+{
+    return m_happiness;
+}
+
+int PokePersonal::level() const
+{
+    return m_level;
+}
+
+int PokePersonal::move(int moveSlot) const
+{
+    return m_moves[moveSlot];
 }
 
 void PokePersonal::reset()
@@ -590,6 +663,11 @@ void MoveInfo::init(const QString &dir)
 int MoveInfo::NumberOfMoves()
 {
     return m_Names.size();
+}
+
+int MoveInfo::Number(const QString &movename)
+{
+    return (qFind(m_Names.begin(), m_Names.end(), movename)-m_Names.begin()) % (NumberOfMoves());
 }
 
 void MoveInfo::loadNames()

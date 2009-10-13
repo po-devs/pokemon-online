@@ -15,6 +15,21 @@ public:
     QCompactTable(int row, int column);
 };
 
+/* a widget that allows giving a title to another widget */
+class QEntitled : public QWidget
+{
+    Q_OBJECT
+private:
+    QLabel *m_title;
+    QWidget *m_widget;
+    QVBoxLayout *m_layout;
+
+public:
+    QEntitled(const QString &title = "Title", QWidget *widget = 0);
+    void setTitle(const QString &title);
+    void setWidget(QWidget *widget);
+};
+
 class TeamBuilder : public QWidget
 {
     Q_OBJECT
@@ -43,29 +58,14 @@ public:
     ~TeamBuilder();
 };
 
-/* a widget that allows giving a title to another widget */
-class QEntitled : public QWidget
-{
-    Q_OBJECT
-private:
-    QLabel *m_title;
-    QWidget *m_widget;
-    QVBoxLayout *m_layout;
-
-public:
-    QEntitled(const QString &title = "Title", QWidget *widget = 0);
-    void setTitle(const QString &title);
-    void setWidget(QWidget *widget);
-};
-
 class TB_PokemonBody : public QWidget
 {
     Q_OBJECT
 
     enum Column
     {
-	Type,
-	Name,
+	Type=0,
+	Name=1,
 	Learning,
 	PP,
 	Pow,
@@ -78,7 +78,7 @@ private:
     QComboBox *itemchoice;
     QLabel *pokeimage;
     QCompactTable *movechoice;
-    QLineEdit *m_moves[4];
+    QDefaultLineEdit *m_moves[4];
 
     /* the pokemon of the team corresponding to the body */
     PokeTeam *m_poke;
@@ -92,6 +92,13 @@ private:
 
     /* getting the pokemon of the team corresponding to the body */
     PokeTeam *poke();
+private slots:
+    void setMove(int moveNum, int moveSlot);
+    void setMove(int movenum);
+    void moveCellActivated(int cell);
+    void moveEntered(const QModelIndex &index);
+signals:
+    void moveChosen(int movenum);
 public slots:
     void setNum(int pokeNum);
 public:
