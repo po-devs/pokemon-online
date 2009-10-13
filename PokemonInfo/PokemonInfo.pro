@@ -7,5 +7,4 @@ DEFINES += POKEMONINFO_LIBRARY
 SOURCES += pokemoninfo.cpp
 HEADERS += pokemoninfo.h \
     PokemonInfo_global.h \
-    PokemonStructs_global.h \
-    pokemonstructs.h
+    ../PokemonStructs/pokemonstructs.h
