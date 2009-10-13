@@ -1,5 +1,5 @@
 #include "pokemoninfo.h"
-//#include <zzip/lib.h>
+#include <zip.h>
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
@@ -66,53 +66,79 @@ int PokemonInfo::Gender(int pokenum)
     return Pokemon::GenderAvail(__get_line(m_Directory + "poke_gender.txt", pokenum).toInt());
 }
 
+QByteArray readZipFile(const char *archiveName, const char *fileName)
+{
+    int error = 0;
+    zip *archive;
+    zip_file *file;
+    char buffer[1024];
+    int readsize = 0;
+    QByteArray ret;
+
+    archive = zip_open(archiveName, 0, &error);
+
+    if (!archive)
+    {
+	qDebug() << "Error when opening archive";
+	return ret;
+    }
+
+    file = zip_fopen(archive, fileName, 0);
+
+    if (!file)
+    {
+	qDebug() << "Error when opening file in archive: " << zip_strerror(archive);
+	zip_close(archive);
+	return ret;
+    }
+
+    do
+    {
+	ret.append(buffer, readsize);
+
+	readsize = zip_fread(file, buffer, 1024);
+    } while (readsize > 0) ;
+
+    if (readsize < 0)
+    {
+	qDebug() << "Error when reading file in archive: " << zip_file_strerror(file);
+    }
+
+    zip_fclose(file);
+    zip_close(archive);
+
+    return ret;
+}
+
 QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney)
 {
-    (void) pokenum;
-    (void) gender;
-    (void) shiney;
+    QString archive = m_Directory + "poke_img.zip";
 
-    return QPixmap();
-    /* We don't use zziplib anymore because of windows.
-       Will use something else */
+    QString file = QString("%2/DP%3%4.png").arg(pokenum).arg((gender==Pokemon::Female)?"f":"m", shiney?"s":"");
 
-//    QString path = QString("%1poke_img/%2/DP%3%4.png").arg(m_Directory).arg(pokenum).arg((gender==Pokemon::Female)?"f":"m", shiney?"s":"");
-//    ZZIP_FILE *file = zzip_open(path.toAscii(), 0);
-//
-//    if (file == NULL)
-//    {
-//	/* We change the gender/shininess to try to find a valid file */
-//	if (shiney)
-//	{
-//	    path = QString("%1poke_img/%2/DP%3.png").arg(m_Directory).arg(pokenum).arg((gender==Pokemon::Female)?"f":"m");
-//	    file = zzip_open(path.toAscii(), 0);
-//	}
-//	if (file == NULL)
-//	{
-//	    path = QString("%1poke_img/%2/DP%3.png").arg(m_Directory).arg(pokenum).arg((gender==Pokemon::Female)?"m":"f");
-//	    file = zzip_open(path.toAscii(), 0);
-//	}
-//	if (file == NULL)
-//	    return QPixmap();
-//    }
-//
-//    /* Using C style manipulations to get the file */
-//    zzip_seek(file, 0, SEEK_END);
-//    zzip_off_t filesize = zzip_tell(file);
-//    zzip_seek(file, 0, SEEK_SET);
-//
-//    QByteArray buffer;
-//    buffer.reserve(filesize);
-//
-//    zzip_ssize_t read_size = zzip_read(file, buffer.data(), filesize);
-//
-//    if (read_size < 0 || read_size < filesize)
-//	return QPixmap();
-//
-//    QPixmap ret;
-//    ret.loadFromData(reinterpret_cast<uchar*>(buffer.data()), filesize, "png");
+    QByteArray data = readZipFile(archive.toLocal8Bit(), file.toLocal8Bit());
 
-//    return ret;
+    if (data.length()==0)
+    {
+	/* We change the gender/shininess to try to find a valid file */
+	if (shiney)
+	{
+	    file = QString("%2/DP%3.png").arg(pokenum).arg((gender==Pokemon::Female)?"f":"m");
+	    data = readZipFile(archive.toLocal8Bit(), file.toLocal8Bit());
+	}
+	if (data.length()==0)
+	{
+	    file = QString("%2/DP%3.png").arg(pokenum).arg((gender==Pokemon::Female)?"m":"f");
+	    data = readZipFile(archive.toLocal8Bit(), file.toLocal8Bit());
+	}
+	if (data.length()==0)
+	    return QPixmap();
+    }
+
+    QPixmap ret;
+    ret.loadFromData(data, "png");
+
+    return ret;
 }
 
 QList<int> PokemonInfo::Moves(int pokenum)
