@@ -12,3 +12,4 @@ LIBS += -L../PokemonInfo \
     -lPokemonInfo \
     -L../PokemonStructs \
     -lPokemonStructs \
+    -lzip
