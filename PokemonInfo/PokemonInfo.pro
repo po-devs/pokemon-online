@@ -5,6 +5,6 @@ TARGET = PokemonInfo
 TEMPLATE = lib
 DEFINES += POKEMONINFO_LIBRARY
 SOURCES += pokemoninfo.cpp
+LIBS += -lzip
 HEADERS += pokemoninfo.h \
     PokemonInfo_global.h \
-    ../PokemonStructs/pokemonstructs.h
