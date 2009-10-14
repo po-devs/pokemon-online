@@ -15,6 +15,8 @@ QStringList TypeInfo::m_Names;
 QList<QColor> TypeInfo::m_Colors;
 QString TypeInfo::m_Directory;
 
+QStringList NatureInfo::m_Names;
+QString NatureInfo::m_Directory;
 
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
@@ -60,7 +62,7 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
     return ret;
 }
 
-QString __get_line(QString filename, int linenum)
+QString get_line(const QString & filename, int linenum)
 {
     QFile file(filename);
 
@@ -77,6 +79,21 @@ QString __get_line(QString filename, int linenum)
     return filestream.readLine();
 }
 
+template <class T>
+void fill_container_with_file(T &container, const QString & filename)
+{
+    QFile file(filename);
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream filestream(&file);
+
+    /* discarding all the uninteresting lines, should find a more effective way */
+    while (!filestream.atEnd())
+    {
+	container << filestream.readLine();
+    }
+}
 
 PokeBaseStats::PokeBaseStats(quint8 base_hp, quint8 base_att, quint8 base_def, quint8 base_spd, quint8 base_spAtt, quint8 base_spDef)
 {
@@ -88,64 +105,74 @@ PokeBaseStats::PokeBaseStats(quint8 base_hp, quint8 base_att, quint8 base_def, q
     setBaseSpDefense(base_spDef);
 }
 
+quint8 PokeBaseStats::baseStat(int stat) const
+{
+    return m_BaseStats[stat];
+}
+
 quint8 PokeBaseStats::baseHp() const
 {
-    return m_BaseStats[0];
+    return baseStat(Hp);
 }
 
 quint8 PokeBaseStats::baseAttack() const
 {
-    return m_BaseStats[1];
+    return baseStat(Attack);
 }
 
 quint8 PokeBaseStats::baseDefense() const
 {
-    return m_BaseStats[2];
+    return baseStat(Defense);
 }
 
 quint8 PokeBaseStats::baseSpeed() const
 {
-    return m_BaseStats[3];
+    return baseStat(Speed);
 }
 
 quint8 PokeBaseStats::baseSpAttack() const
 {
-    return m_BaseStats[4];
+    return baseStat(SpAttack);
 }
 
 quint8 PokeBaseStats::baseSpDefense() const
 {
-    return m_BaseStats[5];
+    return baseStat(SpDefense);
 }
 
 void PokeBaseStats::setBaseHp(quint8 hp)
 {
-    m_BaseStats[0] = hp;
+    setBaseStat(Hp, hp);
 }
 
 void PokeBaseStats::setBaseAttack(quint8 att)
 {
-    m_BaseStats[1] = att;
+    setBaseStat(Attack, att);
 }
 
 void PokeBaseStats::setBaseDefense(quint8 def)
 {
-    m_BaseStats[2] = def;
+    setBaseStat(Defense, def);
 }
 
 void PokeBaseStats::setBaseSpeed(quint8 speed)
 {
-    m_BaseStats[3] = speed;
+    setBaseStat(Speed, speed);
 }
 
 void PokeBaseStats::setBaseSpAttack(quint8 spAtt)
 {
-    m_BaseStats[4] = spAtt;
+    setBaseStat(SpAttack, spAtt);
 }
 
 void PokeBaseStats::setBaseSpDefense(quint8 spDef)
 {
-    m_BaseStats[5] = spDef;
+    setBaseStat(SpDefense, spDef);
+}
+
+void PokeBaseStats::setBaseStat(int stat, quint8 base)
+{
+    m_BaseStats[stat] = base;
 }
 
 PokeGeneral::PokeGeneral()
@@ -199,6 +226,11 @@ const QList<int> &PokeGeneral::moves() const
 void PokeGeneral::setBaseStats(const PokeBaseStats &stats)
 {
     m_stats = stats;
+}
+
+const PokeBaseStats & PokeGeneral::baseStats() const
+{
+    return m_stats;
 }
 
 PokePersonal::PokePersonal()
@@ -279,64 +311,159 @@ void PokePersonal::setNum(int num)
     m_num = num;
 }
 
-void PokePersonal:: setHpDV(quint8 val)
+void PokePersonal::setDV(int stat, quint8 val)
 {
-    m_DVs[0] = val;
+    m_DVs[stat] = val;
 }
 
-void PokePersonal:: setAttackDV(quint8 val)
+void PokePersonal::setHpDV(quint8 val)
 {
-    m_DVs[1] = val;
+    setDV(Hp, val);
 }
 
-void PokePersonal:: setDefenseDV(quint8 val)
+void PokePersonal::setAttackDV(quint8 val)
 {
-    m_DVs[2] = val;
+    setDV(Attack, val);
 }
 
-void PokePersonal:: setSpeedDV(quint8 val)
+void PokePersonal::setDefenseDV(quint8 val)
 {
-    m_DVs[3] = val;
+    setDV(Defense, val);
 }
 
-void PokePersonal:: setSpAttackDV(quint8 val)
+void PokePersonal::setSpeedDV(quint8 val)
 {
-    m_DVs[4] = val;
+    setDV(Speed, val);
 }
 
-void PokePersonal:: setSpDefenseDV(quint8 val)
+void PokePersonal::setSpAttackDV(quint8 val)
 {
-    m_DVs[5] = val;
+    setDV(SpAttack, val);
 }
 
-void PokePersonal:: setHpEV(quint8 val)
+void PokePersonal::setSpDefenseDV(quint8 val)
 {
-    m_EVs[0] = val;
+    setDV(SpDefense, val);
 }
 
-void PokePersonal:: setAttackEV(quint8 val)
+void PokePersonal::controlEVs(int stat)
 {
-    m_EVs[1] = val;
+    int sum = EVSum();
+
+    //if overflow we set it back to the limit
+    if (sum > 510)
+	m_EVs[stat] -= sum - 510;
 }
 
-void PokePersonal:: setDefenseEV(quint8 val)
+void PokePersonal::setEV(int stat, quint8 val)
 {
-    m_EVs[2] = val;
+    m_EVs[stat] = val;
+    controlEVs(stat);
 }
 
-void PokePersonal:: setSpeedEV(quint8 val)
+void PokePersonal::setHpEV(quint8 val)
 {
-    m_EVs[3] = val;
+    setEV(Hp, val);
 }
 
-void PokePersonal:: setSpAttackEV(quint8 val)
+void PokePersonal::setAttackEV(quint8 val)
 {
-    m_EVs[4] = val;
+    setEV(Attack, val);
 }
 
-void PokePersonal:: setSpDefenseEV(quint8 val)
+void PokePersonal::setDefenseEV(quint8 val)
 {
-    m_EVs[5] = val;
+    setEV(Defense, val);
+}
+
+void PokePersonal::setSpeedEV(quint8 val)
+{
+    setEV(Speed, val);
+}
+
+void PokePersonal::setSpAttackEV(quint8 val)
+{
+    setEV(SpAttack, val);
+}
+
+void PokePersonal::setSpDefenseEV(quint8 val)
+{
+    setEV(SpDefense, val);
+}
+
+quint8 PokePersonal::DV(int stat) const
+{
+    return m_DVs[stat];
+}
+
+quint8 PokePersonal::hpDV() const
+{
+    return DV(Hp);
+}
+
+quint8 PokePersonal::attackDV() const
+{
+    return DV(Attack);
+}
+
+quint8 PokePersonal::defenseDV() const
+{
+    return DV(Defense);
+}
+
+quint8 PokePersonal::speedDV() const
+{
+    return DV(Speed);
+}
+
+quint8 PokePersonal::spAttackDV() const
+{
+    return DV(SpAttack);
+}
+
+quint8 PokePersonal::spDefenseDV() const
+{
+    return DV(SpDefense);
+}
+
+int PokePersonal::EVSum() const
+{
+    return hpEV() + attackEV() + defenseEV() + speedEV() + spAttackEV() + spDefenseEV();
+}
+
+quint8 PokePersonal::EV(int stat) const
+{
+    return m_EVs[stat];
+}
+
+quint8 PokePersonal::hpEV() const
+{
+    return EV(Hp);
+}
+
+quint8 PokePersonal::attackEV() const
+{
+    return EV(Attack);
+}
+
+quint8 PokePersonal::defenseEV() const
+{
+    return EV(Defense);
+}
+
+quint8 PokePersonal::speedEV() const
+{
+    return EV(Speed);
+}
+
+quint8 PokePersonal::spAttackEV() const
+{
+    return EV(SpAttack);
+}
+
+quint8 PokePersonal::spDefenseEV() const
+{
+    return EV(SpDefense);
 }
 
 QString PokePersonal::nickname() const
@@ -389,6 +516,11 @@ int PokePersonal::move(int moveSlot) const
     return m_moves[moveSlot];
 }
 
+int PokePersonal::nature_boost(int stat) const
+{
+    return -(nature()%5 == stat-1) + (nature()/5 == stat-1);
+}
+
 void PokePersonal::reset()
 {
     setNum(0);
@@ -410,12 +542,12 @@ void PokePersonal::reset()
     setSpAttackDV(31);
     setSpDefenseDV(31);
 
-    setHpEV(255);
-    setAttackEV(255);
-    setDefenseEV(255);
-    setSpeedEV(255);
-    setSpAttackEV(255);
-    setSpDefenseEV(255);
+    setHpEV(0);
+    setAttackEV(0);
+    setDefenseEV(0);
+    setSpeedEV(0);
+    setSpAttackEV(0);
+    setSpDefenseEV(0);
 }
 
 PokeGraphics::PokeGraphics()
@@ -434,7 +566,7 @@ void PokeGraphics::setUpToDate(bool uptodate)
     m_uptodate = uptodate;
 }
 
-bool PokeGraphics::upToDate()
+bool PokeGraphics::upToDate() const
 {
     return m_uptodate;
 }
@@ -483,7 +615,53 @@ void PokeTeam::load()
     PokeGraphics::load(0, 0);
 }
 
+int PokeTeam::calc_stat(quint8 basestat, int level, quint8 ev, quint8 dv) const
+{
+    return ((2*basestat + dv+ ev/4)*level)/100 + 5;
+}
 
+int PokeTeam::calc_stat_F(int stat) const
+{
+    return calc_stat(baseStats().baseStat(stat), level(), EV(stat), DV(stat)) * (10+nature_boost(stat))/10;
+}
+
+int PokeTeam::stat(int statno) const
+{
+    if (statno == Hp)
+	return hp();
+    else
+	return calc_stat_F(statno);
+}
+
+int PokeTeam::hp() const
+{
+    return calc_stat(baseStats().baseHp(), level(), hpEV(), hpDV()) + level() + 5;
+}
+
+int PokeTeam::attack() const
+{
+    return calc_stat_F(Attack);
+}
+
+int PokeTeam::defense() const
+{
+    return calc_stat_F(Defense);
+}
+
+int PokeTeam::speed() const
+{
+    return calc_stat_F(Speed);
+}
+
+int PokeTeam::spAttack() const
+{
+    return calc_stat_F(SpAttack);
+}
+
+int PokeTeam::spDefense() const
+{
+    return calc_stat_F(SpDefense);
+}
 
 Team::Team()
 {
@@ -531,12 +709,12 @@ int PokemonInfo::Number(const QString &pokename)
 
 int PokemonInfo::Gender(int pokenum)
 {
-    return Pokemon::GenderAvail(__get_line(m_Directory + "poke_gender.txt", pokenum).toInt());
+    return Pokemon::GenderAvail(get_line(path("poke_gender.txt"), pokenum).toInt());
 }
 
 QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney)
 {
-    QString archive = m_Directory + "poke_img.zip";
+    QString archive = path("poke_img.zip");
 
     QString file = QString("%2/DP%3%4.png").arg(pokenum).arg((gender==Pokemon::Female)?"f":"m", shiney?"s":"");
 
@@ -598,14 +776,14 @@ QList<int> PokemonInfo::SpecialMoves(int pokenum)
 QList<int> PokemonInfo::Abilities(int pokenum)
 {
     QList<int> ret;
-    ret << __get_line("poke_ability.txt", pokenum).toInt() << __get_line("poke_ability2.txt", pokenum).toInt();
+    ret << get_line(path("poke_ability.txt"), pokenum).toInt() << get_line(path("poke_ability2.txt"), pokenum).toInt();
 
     return ret;
 }
 
 PokeBaseStats PokemonInfo::BaseStats(int pokenum)
 {
-    QString stats = __get_line(m_Directory + "poke_stats.txt", pokenum);
+    QString stats = get_line(path("poke_stats.txt"), pokenum);
     QTextStream statsstream(&stats, QIODevice::ReadOnly);
 
     int hp, att, def, spd, satt, sdef;
@@ -617,17 +795,12 @@ PokeBaseStats PokemonInfo::BaseStats(int pokenum)
 
 void PokemonInfo::loadNames()
 {
-    QFile pokenames(m_Directory + "pokemons_en.txt");
+    fill_container_with_file(m_Names, path("pokemons_en.txt"));
+}
 
-    //TODO: exception
-    pokenames.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream namestream(&pokenames);
-
-    while(!namestream.atEnd())
-    {
-	m_Names << namestream.readLine();
-    }
+QString PokemonInfo::path(const QString &filename)
+{
+    return m_Directory + filename;
 }
 
 QList<int> PokemonInfo::getMoves(const QString &filename, int pokenum)
@@ -635,7 +808,7 @@ QList<int> PokemonInfo::getMoves(const QString &filename, int pokenum)
     QList<int> return_value;
 
     /* getting the line we want */
-    QString interesting_line = __get_line(m_Directory + filename, pokenum);
+    QString interesting_line = get_line(path(filename), pokenum);
 
     /* extracting the moves */
     for (int i = 0; i + 3 <= interesting_line.length(); i+=3)
@@ -670,19 +843,15 @@ int MoveInfo::Number(const QString &movename)
     return (qFind(m_Names.begin(), m_Names.end(), movename)-m_Names.begin()) % (NumberOfMoves());
 }
 
+
 void MoveInfo::loadNames()
 {
-    QFile movenames(m_Directory + "moves_en.txt");
+    fill_container_with_file(m_Names, path("moves_en.txt"));
+}
 
-    //TODO: exception
-    movenames.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream namestream(&movenames);
-
-    while (!namestream.atEnd())
-    {
-	m_Names << namestream.readLine();
-    }
+QString MoveInfo::path(const QString &file)
+{
+    return m_Directory+file;
 }
 
 QString MoveInfo::Name(int movenum)
@@ -692,27 +861,27 @@ QString MoveInfo::Name(int movenum)
 
 int MoveInfo::Power(int movenum)
 {
-    return __get_line(m_Directory+"move_power.txt", movenum).toInt();
+    return get_line(path("move_power.txt"), movenum).toInt();
 }
 
 int MoveInfo::Type(int movenum)
 {
-    return __get_line(m_Directory+"move_type.txt", movenum).toInt();
+    return get_line(path("move_type.txt"), movenum).toInt();
 }
 
 int MoveInfo::PP(int movenum)
 {
-    return __get_line(m_Directory+"move_pp.txt", movenum).toInt();
+    return get_line(path("move_pp.txt"), movenum).toInt();
 }
 
 QString MoveInfo::AccS(int movenum)
 {
-    return __get_line(m_Directory+"move_accuracy.txt", movenum);
+    return get_line(path("move_accuracy.txt"), movenum);
 }
 
 QString MoveInfo::PowerS(int movenum)
 {
-    return __get_line(m_Directory+"move_power.txt", movenum);
+    return get_line(path("move_power.txt"), movenum);
 }
 
 void ItemInfo::init(const QString &dir)
@@ -731,29 +900,13 @@ void ItemInfo::init(const QString &dir)
 
 void ItemInfo::loadNames()
 {
-    QFile itemnames(m_Directory + "items_en.txt");
+    fill_container_with_file(m_Names, path("items_en.txt"));
+    fill_container_with_file(m_Names, path("berries_en.txt"));
+}
 
-    //TODO: exception
-    itemnames.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream namestream(&itemnames);
-
-    while (!namestream.atEnd())
-    {
-	m_Names << namestream.readLine();
-    }
-
-    itemnames.close();
-    itemnames.setFileName(m_Directory + "berries_en.txt");
-
-    itemnames.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    namestream.setDevice(&itemnames);
-
-    while (!namestream.atEnd())
-    {
-	m_Names << namestream.readLine();
-    }
+QString ItemInfo::path(const QString &file)
+{
+    return m_Directory + file;
 }
 
 int ItemInfo::NumberOfItems()
@@ -773,32 +926,17 @@ QStringList ItemInfo::Names()
 
 void TypeInfo::loadNames()
 {
-    QFile typenames(m_Directory + "types_en.txt");
+    fill_container_with_file(m_Names, path("types_en.txt"));
+}
 
-    //TODO: exception
-    typenames.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream namestream(&typenames);
-
-    while (!namestream.atEnd())
-    {
-	m_Names << namestream.readLine();
-    }
+QString TypeInfo::path(const QString& file)
+{
+    return m_Directory+file;
 }
 
 void TypeInfo::loadColors()
 {
-    QFile typecolors(m_Directory + "type_colors.txt");
-
-    //TODO: exception
-    typecolors.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream namestream(&typecolors);
-
-    while (!namestream.atEnd())
-    {
-	m_Colors << QColor(namestream.readLine());
-    }
+    fill_container_with_file(m_Colors, path("type_colors.txt"));
 }
 
 void TypeInfo::init(const QString &dir)
@@ -826,6 +964,39 @@ QColor TypeInfo::Color(int typenum)
 }
 
 int TypeInfo::NumberOfTypes()
+{
+    return m_Names.size();
+}
+
+void NatureInfo::loadNames()
+{
+    fill_container_with_file(m_Names, path("nature_en.txt"));
+}
+
+QString NatureInfo::path(const QString &filename)
+{
+    return m_Directory + filename;
+}
+
+void NatureInfo::init(const QString &dir)
+{
+    if (NumberOfNatures() != 0)
+	return;
+
+    m_Directory = dir;
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    loadNames();
+}
+
+QString NatureInfo::Name(int naturenum)
+{
+    return m_Names[naturenum];
+}
+
+int NatureInfo::NumberOfNatures()
 {
     return m_Names.size();
 }

@@ -5,6 +5,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 
 class TB_PokemonBody;
+class TB_EVManager;
 
 class QCompactTable : public QTableWidget
 {
@@ -76,9 +77,11 @@ class TB_PokemonBody : public QWidget
 private:
     QCompactTable *pokechoice;
     QComboBox *itemchoice;
+    QComboBox *naturechoice;
     QLabel *pokeimage;
     QCompactTable *movechoice;
     QLineEdit *m_moves[4];
+    TB_EVManager *evchoice;
 
     /* the pokemon of the team corresponding to the body */
     PokeTeam *m_poke;
@@ -102,16 +105,34 @@ signals:
 public slots:
     void setNum(int pokeNum);
 public:
-    TB_PokemonBody();
-
-    void setPokeTeam(PokeTeam *new_poke);
+    TB_PokemonBody(PokeTeam *poke);
 };
 
-class TB_EVBar : public QGridLayout
+class TB_EVManager : public QGridLayout
 {
     Q_OBJECT
+private:
+    QSlider *m_sliders[6];
+    QLabel *m_stats[6];
+    QLabel *m_evs[6];
+    QSlider *m_mainSlider;
+    PokeTeam *m_poke;
+
+    PokeTeam *poke();
+    QSlider *slider(int stat);
+    const QSlider *slider(int stat) const;
+    QLabel *evLabel(int stat);
+    QLabel *statLabel(int stat);
+    /* the reverse of slider(int) */
+    int stat(QObject *sender) const;
 public:
-    void add_bar(const QString &desc, int num=213, quint8 evs=0);
+    TB_EVManager(PokeTeam *poke);
+
+    void updateEVs();
+    void updateEV(int stat);
+    void updateMain();
+public slots:
+    void EVChanged(int newvalue);
 };
 
 #endif // TEAMBUILDER_H

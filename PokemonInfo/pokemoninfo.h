@@ -78,6 +78,16 @@ struct Pokemon
     };
 };
 
+enum Stat
+{
+    Hp = 0,
+    Attack,
+    Defense,
+    Speed,
+    SpAttack,
+    SpDefense = 5
+};
+
 class POKEMONINFOSHARED_EXPORT PokeBaseStats
 {
 private:
@@ -98,6 +108,9 @@ public:
     void setBaseSpeed(quint8);
     void setBaseSpAttack(quint8);
     void setBaseSpDefense(quint8);
+
+    quint8 baseStat(int stat) const;
+    void setBaseStat(int stat, quint8 base);
 };
 
 /* Data that every pokémon of the same specy share. */
@@ -147,6 +160,11 @@ protected:
 
     quint8 m_DVs[6];
     quint8 m_EVs[6];
+
+    /* -1 if the nature is hindering, 0 if neutral and 1 if it boosts that stat */
+    int nature_boost(int stat) const;
+    /* checks if the sum of the EVs isn't too high and reduces EVs in all stats but *stat* in order to keep that true */
+    void controlEVs(int stat);
 public:
     PokePersonal();
 
@@ -177,6 +195,7 @@ public:
 
     bool hasMove(int moveNum);
 
+    quint8 DV(int stat) const;
     quint8 hpDV() const;
     quint8 attackDV() const;
     quint8 defenseDV() const;
@@ -184,6 +203,7 @@ public:
     quint8 spAttackDV() const;
     quint8 spDefenseDV() const;
 
+    void setDV(int stat, quint8 DV);
     void setHpDV(quint8);
     void setAttackDV(quint8);
     void setDefenseDV(quint8);
@@ -191,13 +211,16 @@ public:
     void setSpAttackDV(quint8);
     void setSpDefenseDV(quint8);
 
+    quint8 EV(int stat) const;
     quint8 hpEV() const;
     quint8 attackEV() const;
     quint8 defenseEV() const;
     quint8 speedEV() const;
     quint8 spAttackEV() const;
     quint8 spDefenseEV() const;
+    int EVSum() const;
 
+    void setEV(int stat, quint8 EV);
     void setHpEV(quint8);
     void setAttackEV(quint8);
     void setDefenseEV(quint8);
@@ -219,7 +242,7 @@ protected:
     bool m_uptodate;
 
     void setUpToDate(bool uptodate);
-    bool upToDate();
+    bool upToDate() const;
 public:
     PokeGraphics();
     QPixmap picture(); /* just gives the already loaded picture */
@@ -232,11 +255,23 @@ public:
 
 class POKEMONINFOSHARED_EXPORT PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtual public PokeGraphics
 {
+protected:
+    /* Calculates actual stats based on the pokemon's characteristics */
+    int calc_stat(quint8 basestat, int level, quint8 ev, quint8 dv) const;
+    int calc_stat_F(int stat) const;
 public:
     PokeTeam();
 
     int num() const;
     void setNum(int num);
+
+    int stat(int statno) const;
+    int hp() const;
+    int attack() const;
+    int defense() const;
+    int speed() const;
+    int spAttack() const;
+    int spDefense() const;
 
     /* load various data from the pokenum */
     void load();
@@ -263,7 +298,7 @@ private:
 
     static void loadNames();
     static QList<int> getMoves(const QString &filename, int Pokenum);
-
+    static QString path(const QString &filename);
 public:
 
     /* directory where all the data is */
@@ -324,6 +359,7 @@ private:
     static QString m_Directory;
 
     static void loadNames();
+    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="./");
@@ -349,6 +385,7 @@ private:
     static QString m_Directory;
 
     static void loadNames();
+    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="./");
@@ -371,6 +408,7 @@ private:
 
     static void loadNames();
     static void loadColors();
+    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="./");
@@ -379,6 +417,22 @@ public:
     static QString Name(int typenum);
     static QColor Color(int typenum);
     static int NumberOfTypes();
+};
+
+class POKEMONINFOSHARED_EXPORT NatureInfo
+{
+private:
+    static QStringList m_Names;
+    static QString m_Directory;
+    static void loadNames();
+    static QString path(const QString &filename);
+public:
+    /* directory where all the data is */
+    static void init(const QString &dir="./");
+
+    /* Self-explainable functions */
+    static QString Name(int naturenum);
+    static int NumberOfNatures();
 };
 
 #endif // POKEMONINFO_H

@@ -23,6 +23,7 @@ TeamBuilder::TeamBuilder(QWidget *parent)
     ItemInfo::init("db/");
     MoveInfo::init("db/");
     TypeInfo::init("db/");
+    NatureInfo::init("db/");
 
     QGridLayout *layout = new QGridLayout(this);
 
@@ -49,8 +50,7 @@ TeamBuilder::TeamBuilder(QWidget *parent)
 
     for (int i = 0; i < 6; i++)
     {
-	m_pbody[i] = new TB_PokemonBody();
-	m_pbody[i]->setPokeTeam(&team()->poke(i));
+	m_pbody[i] = new TB_PokemonBody(&team()->poke(i));
 	m_body->addWidget(m_pbody[i]);
     }
 
@@ -133,8 +133,10 @@ void QEntitled::setTitle(const QString &title)
     m_title->setText(title);
 }
 
-TB_PokemonBody::TB_PokemonBody()
+TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
 {
+    m_poke = _poke;
+
     /* The layout of the whole body */
     QGridLayout *layout = new QGridLayout(this);
 
@@ -169,12 +171,10 @@ TB_PokemonBody::TB_PokemonBody()
     gender_level->addWidget(gender_icon, 0, Qt::AlignLeft | Qt::AlignTop);
     gender_level->addWidget(level, 0, Qt::AlignRight | Qt::AlignTop);
 
-    QString nature[4] = {"Hardy","Lonely","Brave","Adamant"};
-
-    QComboBox *naturechoice = new QComboBox();
-    for (int i = 0; i < 4; i++)
+    naturechoice = new QComboBox();
+    for (int i = 0; i < NatureInfo::NumberOfNatures(); i++)
     {
-	naturechoice->addItem(nature[i]);
+	naturechoice->addItem(NatureInfo::Name(i));
     }
 
     second_column->addWidget(new QEntitled(tr("Nature"), naturechoice));
@@ -184,15 +184,9 @@ TB_PokemonBody::TB_PokemonBody()
     QVBoxLayout *third_column = new QVBoxLayout();
     layout->addLayout(third_column,0,2);
 
-    QString hadsss[] = {"Hp:", "Att:", "Def:", "Speed:", "SpAtt:", "SpDef:"};
-    TB_EVBar *evbar = new TB_EVBar();
+    evchoice = new TB_EVManager(poke());
 
-    for (int i = 0; i < 6; i++)
-    {
-	evbar->add_bar(hadsss[i]);
-    }
-    third_column->addLayout(evbar);
-    third_column->addWidget(new QSlider(Qt::Horizontal));
+    third_column->addLayout(evchoice);
 
     initMoves();
 
@@ -296,11 +290,6 @@ PokeTeam * TB_PokemonBody::poke()
     return m_poke;
 }
 
-void TB_PokemonBody::setPokeTeam(PokeTeam *new_poke)
-{
-    m_poke = new_poke;
-}
-
 void TB_PokemonBody::setMove(int movenum, int moveslot)
 {
     try {
@@ -338,6 +327,7 @@ void TB_PokemonBody::setNum(int pokenum)
     poke()->reset();
     poke()->setNum(pokenum);
     poke()->load();
+    evchoice->updateEVs();
 
     /* changes the move list */
     configureMoves();
@@ -392,13 +382,88 @@ void TB_PokemonBody::configureMoves()
     movechoice->resizeRowsToContents();
 }
 
-
-void TB_EVBar::add_bar(const QString &desc, int num, quint8 evs)
+TB_EVManager::TB_EVManager(PokeTeam *_poke)
 {
-    int rowcount = rowCount();
+    m_poke = _poke;
 
-    addWidget(new QLabel(desc), rowcount, 0, Qt::AlignLeft);
-    addWidget(new QLabel(QString::number(num)), rowcount, 1, Qt::AlignLeft);
-    addWidget(new QSlider(Qt::Horizontal), rowcount, 2);
-    addWidget(new QLabel(QString::number(evs)), rowcount, 3, Qt::AlignLeft);
+    QString labels[6] = {"HP:", "Att:", "Def:", "Speed:", "SpDef:", "SpAtt:"};
+
+    for (int i = 0; i < 6; i++)
+    {
+	addWidget(new QLabel(labels[i]), i, 0, Qt::AlignLeft);
+	addWidget(m_stats[i] = new QLabel(QString::number(poke()->stat(i))), i, 1, Qt::AlignLeft);
+	addWidget(m_sliders[i] = new QSlider(Qt::Horizontal), i, 2);
+	addWidget(m_evs[i] = new QLabel(QString::number(poke()->EV(i))), i, 3, Qt::AlignLeft);
+
+	slider(i)->setTracking(true);
+	slider(i)->setRange(0,255);
+	connect(slider(i),SIGNAL(valueChanged(int)),SLOT(EVChanged(int)));
+    }
+
+    addWidget(m_mainSlider = new QSlider(Qt::Horizontal), 6, 0, 1, 4);
+    m_mainSlider->setEnabled(false);
+    m_mainSlider->setRange(0,510);
+}
+
+PokeTeam * TB_EVManager::poke()
+{
+    return m_poke;
+}
+
+QSlider * TB_EVManager::slider(int stat)
+{
+    return m_sliders[stat];
+}
+
+const QSlider * TB_EVManager::slider(int stat) const
+{
+    return m_sliders[stat];
+}
+
+QLabel * TB_EVManager::evLabel(int stat)
+{
+    return m_evs[stat];
+}
+
+QLabel * TB_EVManager::statLabel(int stat)
+{
+    return m_stats[stat];
+}
+
+/* the reverse of slider(int) */
+int TB_EVManager::stat(QObject *sender) const
+{
+    for (int i = 0; i < 6; i++)
+	if (sender == slider(i))
+	    return i;
+    throw QString("Fatal Error in TB_EVManager, alert the developers");
+}
+
+void TB_EVManager::updateEVs()
+{
+    for (int i = 0; i < 6; i++)
+	updateEV(i);
+
+    updateMain();
+}
+
+void TB_EVManager::EVChanged(int newvalue)
+{
+    int mstat = stat(sender());
+    poke()->setEV(mstat, newvalue);
+
+    updateEV(mstat);
+    updateMain();
+}
+
+void TB_EVManager::updateEV(int stat)
+{
+    slider(stat)->setValue(poke()->EV(stat));
+    evLabel(stat)->setText(QString::number(poke()->EV(stat)));
+    statLabel(stat)->setText(QString::number(poke()->stat(stat)));
+}
+
+void TB_EVManager::updateMain()
+{
+    m_mainSlider->setValue(poke()->EVSum());
 }
