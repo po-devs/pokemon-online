@@ -255,7 +255,7 @@ void TB_PokemonBody::initMoves()
     /* the four move choice items */
     for (int i = 0; i < 4; i++)
     {
-	m_moves[i] = new QDefaultLineEdit();
+	m_moves[i] = new QLineEdit();
 	QCompleter *completer = new QCompleter(m_moves[i]);
 	completer->setModel(movechoice->model());
 	completer->setCompletionColumn(Name);
