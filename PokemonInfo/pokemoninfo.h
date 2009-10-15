@@ -161,12 +161,13 @@ protected:
     quint8 m_DVs[6];
     quint8 m_EVs[6];
 
-    /* -1 if the nature is hindering, 0 if neutral and 1 if it boosts that stat */
-    int nature_boost(int stat) const;
     /* checks if the sum of the EVs isn't too high and reduces EVs in all stats but *stat* in order to keep that true */
     void controlEVs(int stat);
 public:
     PokePersonal();
+
+    /* -1 if the nature is hindering, 0 if neutral and 1 if it boosts that stat */
+    int natureBoost(int stat) const;
 
     QString nickname() const;
     int num() const;
@@ -394,7 +395,7 @@ public:
     static int NumberOfItems();
     static QString Name(int itemnum);
     static QStringList Names();
-    static QString Number(const QString &itemname);
+    static int Number(const QString &itemname);
     static QString Description(int itemnum);
     static int Power(int itemnum);
 };
