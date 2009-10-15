@@ -198,8 +198,6 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     {
 	mlayout->addWidget(m_moves[i],1,i);
     }
-
-    connect(pokechoice, SIGNAL(cellDoubleClicked(int,int)), SLOT(setNum(int)));
 }
 
 void TB_PokemonBody::initPokemons()
@@ -224,6 +222,9 @@ void TB_PokemonBody::initPokemons()
 	item->setFlags(item->flags() ^ Qt::ItemIsEditable);
 	pokechoice->setItem(i, 1, item);
     }
+
+    connect(pokechoice, SIGNAL(cellDoubleClicked(int,int)), SLOT(setNum(int)));
+    connect(pokechoice, SIGNAL(cellActivated(int,int)), SLOT(setNum(int)));
 }
 
 void TB_PokemonBody::initMoves()
@@ -240,8 +241,8 @@ void TB_PokemonBody::initMoves()
     movechoice->resizeRowsToContents();
     movechoice->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
 
-    connect(movechoice, SIGNAL(entered(QModelIndex)), SLOT(moveEntered(const QModelIndex&)));
-    connect(movechoice, SIGNAL(doubleClicked(QModelIndex)), SLOT(moveEntered(const QModelIndex&)));
+    connect(movechoice, SIGNAL(cellDoubleClicked(int,int)), SLOT(moveEntered(int)));
+    connect(movechoice, SIGNAL(cellActivated(int,int)), SLOT(moveEntered(int)));
     connect(this, SIGNAL(moveChosen(int)), SLOT(setMove(int)));
 
     QSignalMapper *mapper = new QSignalMapper(this);
@@ -314,9 +315,9 @@ void TB_PokemonBody::setMove(int movenum)
     }
 }
 
-void TB_PokemonBody::moveEntered(const QModelIndex &index)
+void TB_PokemonBody::moveEntered(int row)
 {
-    emit moveChosen(MoveInfo::Number(movechoice->item(index.row(), Name)->text()));
+    emit moveChosen(MoveInfo::Number(movechoice->item(row, Name)->text()));
 }
 
 void TB_PokemonBody::setNum(int pokenum)
@@ -360,6 +361,10 @@ void TB_PokemonBody::configureMoves()
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Name, witem);
 
+	witem = new QTableWidgetItem("");
+	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+	movechoice->setItem(i, Learning, witem);
+
 	witem = new QTableWidgetItem(QString::number(MoveInfo::PP(moves[i])));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, PP, witem);
@@ -371,6 +376,10 @@ void TB_PokemonBody::configureMoves()
 	witem = new QTableWidgetItem(MoveInfo::PowerS(moves[i]));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Pow, witem);
+
+	witem = new QTableWidgetItem("");
+	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+	movechoice->setItem(i, Category, witem);
     }
 
     for (int i = 0; i < 4; i++)
