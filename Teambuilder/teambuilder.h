@@ -99,7 +99,7 @@ private slots:
     void setMove(int moveNum, int moveSlot);
     void setMove(int movenum);
     void moveCellActivated(int cell);
-    void moveEntered(const QModelIndex &index);
+    void moveEntered(int row);
 signals:
     void moveChosen(int movenum);
 public slots:
