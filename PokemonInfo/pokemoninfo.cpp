@@ -352,7 +352,14 @@ void PokePersonal::controlEVs(int stat)
 
     //if overflow we set it back to the limit
     if (sum > 510)
-	m_EVs[stat] -= sum - 510;
+    {
+	/* why do something so complicated? in case it's way over the limit and not simply because of stat ,
+	    we don't want something nasty induced by negative overflow */
+	if (sum - 510 > m_EVs[stat])
+	    m_EVs[stat] = 0;
+	else
+	    m_EVs[stat] -=  sum - 510;
+    }
 }
 
 void PokePersonal::setEV(int stat, quint8 val)
@@ -516,7 +523,7 @@ int PokePersonal::move(int moveSlot) const
     return m_moves[moveSlot];
 }
 
-int PokePersonal::nature_boost(int stat) const
+int PokePersonal::natureBoost(int stat) const
 {
     return -(nature()%5 == stat-1) + (nature()/5 == stat-1);
 }
@@ -622,7 +629,7 @@ int PokeTeam::calc_stat(quint8 basestat, int level, quint8 ev, quint8 dv) const
 
 int PokeTeam::calc_stat_F(int stat) const
 {
-    return calc_stat(baseStats().baseStat(stat), level(), EV(stat), DV(stat)) * (10+nature_boost(stat))/10;
+    return calc_stat(baseStats().baseStat(stat), level(), EV(stat), DV(stat)) * (10+natureBoost(stat))/10;
 }
 
 int PokeTeam::stat(int statno) const
@@ -917,6 +924,11 @@ int ItemInfo::NumberOfItems()
 QString ItemInfo::Name(int itemnum)
 {
     return m_Names[itemnum];
+}
+
+int ItemInfo::Number(const QString &itemname)
+{
+    return (qFind(m_Names.begin(), m_Names.end(), itemname)-m_Names.begin()) % (NumberOfItems());
 }
 
 QStringList ItemInfo::Names()

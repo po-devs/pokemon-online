@@ -100,6 +100,8 @@ private slots:
     void setMove(int movenum);
     void moveCellActivated(int cell);
     void moveEntered(int row);
+    void setItem(const QString &item);
+    void setNature(int nature);
 signals:
     void moveChosen(int movenum);
 public slots:
@@ -115,6 +117,7 @@ private:
     QSlider *m_sliders[6];
     QLabel *m_stats[6];
     QLabel *m_evs[6];
+    QLabel *m_desc[6];
     QSlider *m_mainSlider;
     PokeTeam *m_poke;
 
@@ -123,6 +126,7 @@ private:
     const QSlider *slider(int stat) const;
     QLabel *evLabel(int stat);
     QLabel *statLabel(int stat);
+    QLabel *desc(int stat);
     /* the reverse of slider(int) */
     int stat(QObject *sender) const;
 public:

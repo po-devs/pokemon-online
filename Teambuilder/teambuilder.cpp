@@ -176,6 +176,7 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     {
 	naturechoice->addItem(NatureInfo::Name(i));
     }
+    connect(naturechoice, SIGNAL(activated(int)), SLOT(setNature(int)));
 
     second_column->addWidget(new QEntitled(tr("Nature"), naturechoice));
     second_column->addWidget(new QPushButton(tr("Advanced")));
@@ -223,7 +224,6 @@ void TB_PokemonBody::initPokemons()
 	pokechoice->setItem(i, 1, item);
     }
 
-    connect(pokechoice, SIGNAL(cellDoubleClicked(int,int)), SLOT(setNum(int)));
     connect(pokechoice, SIGNAL(cellActivated(int,int)), SLOT(setNum(int)));
 }
 
@@ -241,7 +241,6 @@ void TB_PokemonBody::initMoves()
     movechoice->resizeRowsToContents();
     movechoice->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
 
-    connect(movechoice, SIGNAL(cellDoubleClicked(int,int)), SLOT(moveEntered(int)));
     connect(movechoice, SIGNAL(cellActivated(int,int)), SLOT(moveEntered(int)));
     connect(this, SIGNAL(moveChosen(int)), SLOT(setMove(int)));
 
@@ -284,6 +283,8 @@ void TB_PokemonBody::initItems()
     qSort(itemList);
 
     itemchoice->addItems(itemList);
+
+    connect(itemchoice, SIGNAL(activated(QString)), SLOT(setItem(const QString &)));
 }
 
 PokeTeam * TB_PokemonBody::poke()
@@ -391,6 +392,18 @@ void TB_PokemonBody::configureMoves()
     movechoice->resizeRowsToContents();
 }
 
+void TB_PokemonBody::setItem(const QString &item)
+{
+    poke()->setItem(ItemInfo::Number(item));
+}
+
+void TB_PokemonBody::setNature(int nature)
+{
+    poke()->setNature(nature);
+    /* As the nature has an influence over the stats, we update them */
+    evchoice->updateEVs();
+}
+
 TB_EVManager::TB_EVManager(PokeTeam *_poke)
 {
     m_poke = _poke;
@@ -399,10 +412,10 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
 
     for (int i = 0; i < 6; i++)
     {
-	addWidget(new QLabel(labels[i]), i, 0, Qt::AlignLeft);
-	addWidget(m_stats[i] = new QLabel(QString::number(poke()->stat(i))), i, 1, Qt::AlignLeft);
+	addWidget(m_desc[i] = new QLabel(labels[i]), i, 0, Qt::AlignLeft);
+	addWidget(m_stats[i] = new QLabel(), i, 1, Qt::AlignLeft);
 	addWidget(m_sliders[i] = new QSlider(Qt::Horizontal), i, 2);
-	addWidget(m_evs[i] = new QLabel(QString::number(poke()->EV(i))), i, 3, Qt::AlignLeft);
+	addWidget(m_evs[i] = new QLabel(), i, 3, Qt::AlignLeft);
 
 	slider(i)->setTracking(true);
 	slider(i)->setRange(0,255);
@@ -412,6 +425,9 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
     addWidget(m_mainSlider = new QSlider(Qt::Horizontal), 6, 0, 1, 4);
     m_mainSlider->setEnabled(false);
     m_mainSlider->setRange(0,510);
+
+    /*Setting the vals */
+    updateEVs();
 }
 
 PokeTeam * TB_EVManager::poke()
@@ -465,10 +481,27 @@ void TB_EVManager::EVChanged(int newvalue)
     updateMain();
 }
 
+QLabel * TB_EVManager::desc(int stat)
+{
+    return m_desc[stat];
+}
+
 void TB_EVManager::updateEV(int stat)
 {
+    /* first the color : red if the stat is hindered by the nature, black if normal, blue if the stat is enhanced */
+    QColor colors[3] = {Qt::darkBlue, Qt::black, Qt::red};
+    QColor mycol = colors[poke()->natureBoost(stat)+1];
+
+    QPalette pal = desc(stat)->palette();
+    pal.setColor(QPalette::WindowText, mycol);
+    desc(stat)->setPalette(pal);
+
     slider(stat)->setValue(poke()->EV(stat));
+
+    evLabel(stat)->setPalette(pal);
     evLabel(stat)->setText(QString::number(poke()->EV(stat)));
+
+    statLabel(stat)->setPalette(pal);
     statLabel(stat)->setText(QString::number(poke()->stat(stat)));
 }
 
