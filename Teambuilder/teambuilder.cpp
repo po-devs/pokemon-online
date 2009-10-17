@@ -252,6 +252,8 @@ void TB_PokemonBody::initMoves()
     movechoice->setHorizontalHeaderLabels(move_headers);
     movechoice->resizeRowsToContents();
     movechoice->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+    movechoice->setMinimumHeight(200);
+    movechoice->setMidLineWidth(0);
 
     connect(movechoice, SIGNAL(cellActivated(int,int)), SLOT(moveEntered(int)));
     connect(this, SIGNAL(moveChosen(int)), SLOT(setMove(int)));
@@ -427,7 +429,7 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
 {
     m_poke = _poke;
 
-    QString labels[6] = {"HP:", "Att:", "Def:", "Speed:", "SpDef:", "SpAtt:"};
+    QString labels[6] = {"HP:", "Att:", "Def:", "Speed:", "Spatt:", "SpDef:"};
 
     for (int i = 0; i < 6; i++)
     {
@@ -438,6 +440,7 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
 
 	slider(i)->setTracking(true);
 	slider(i)->setRange(0,255);
+	slider(i)->setMinimumWidth(150);
 	connect(slider(i),SIGNAL(valueChanged(int)),SLOT(EVChanged(int)));
     }
 
