@@ -78,6 +78,39 @@ struct Pokemon
     };
 };
 
+
+struct POKEMONINFOSHARED_EXPORT Move
+{
+    enum Category
+    {
+	Physical,
+	Special,
+	Other
+    };
+
+    enum Type
+    {
+	Normal = 0,
+	Fighting,
+	Flying,
+	Poison,
+	Ground,
+	Rock,
+	Bug,
+	Ghost,
+	Steel,
+	Fire,
+	Water,
+	Grass,
+	Electric,
+	Psychic,
+	Ice,
+	Dragon,
+	Dark,
+	Curse = 17
+    };
+};
+
 enum Stat
 {
     Hp = 0,
@@ -321,38 +354,6 @@ public:
     static QList<int> Abilities(int pokenum);
 };
 
-struct POKEMONINFOSHARED_EXPORT Move
-{
-    enum Category
-    {
-	Physical,
-	Special,
-	Other
-    };
-
-    enum Type
-    {
-	Normal = 0,
-	Fighting,
-	Flying,
-	Poison,
-	Ground,
-	Rock,
-	Bug,
-	Ghost,
-	Steel,
-	Fire,
-	Water,
-	Grass,
-	Electric,
-	Psychic,
-	Ice,
-	Dragon,
-	Dark,
-	Curse = 17
-    };
-};
-
 class POKEMONINFOSHARED_EXPORT MoveInfo
 {
 private:
@@ -368,6 +369,7 @@ public:
     /* Self-explainable functions */
     static QString Name(int movenum);
     static int Type(int movenum);
+    static int Category(int movenum);
     static int Number(const QString &movename);
     static int NumberOfMoves();
     static QString Description(int movenum);
@@ -434,6 +436,29 @@ public:
     /* Self-explainable functions */
     static QString Name(int naturenum);
     static int NumberOfNatures();
+
+    /* -1 if the nature is hindering, 0 if neutral and 1 if it boosts that stat */
+    static int Boost(int nature, int stat);
+};
+
+class POKEMONINFOSHARED_EXPORT CategoryInfo
+{
+private:
+    static QStringList m_Names;
+    static QString m_Directory;
+    static QList<QColor> m_Colors;
+
+    static void loadNames();
+    static void loadColors();
+    static QString path(const QString &filename);
+public:
+    /* directory where all the data is */
+    static void init(const QString &dir="./");
+
+    /* Self-explainable functions */
+    static QString Name(int catnum);
+    static QColor Color(int catnum);
+    static int NumberOfCategories();
 };
 
 #endif // POKEMONINFO_H

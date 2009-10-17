@@ -18,6 +18,10 @@ QString TypeInfo::m_Directory;
 QStringList NatureInfo::m_Names;
 QString NatureInfo::m_Directory;
 
+QStringList CategoryInfo::m_Names;
+QList<QColor> CategoryInfo::m_Colors;
+QString CategoryInfo::m_Directory;
+
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
     int error = 0;
@@ -525,7 +529,7 @@ int PokePersonal::move(int moveSlot) const
 
 int PokePersonal::natureBoost(int stat) const
 {
-    return -(nature()%5 == stat-1) + (nature()/5 == stat-1);
+    return NatureInfo::Boost(nature(), stat);
 }
 
 void PokePersonal::reset()
@@ -876,6 +880,11 @@ int MoveInfo::Type(int movenum)
     return get_line(path("move_type.txt"), movenum).toInt();
 }
 
+int MoveInfo::Category(int movenum)
+{
+    return get_line(path("move_category.txt"), movenum).toInt();
+}
+
 int MoveInfo::PP(int movenum)
 {
     return get_line(path("move_pp.txt"), movenum).toInt();
@@ -1009,6 +1018,56 @@ QString NatureInfo::Name(int naturenum)
 }
 
 int NatureInfo::NumberOfNatures()
+{
+    return m_Names.size();
+}
+
+int NatureInfo::Boost(int nature, int stat)
+{
+    return -(nature%5 == stat-1) + (nature/5 == stat-1);
+}
+
+
+void CategoryInfo::loadNames()
+{
+    fill_container_with_file(m_Names, path("categories_en.txt"));
+}
+
+QString CategoryInfo::path(const QString& file)
+{
+    return m_Directory+file;
+}
+
+void CategoryInfo::loadColors()
+{
+    fill_container_with_file(m_Colors, path("category_colors.txt"));
+}
+
+void CategoryInfo::init(const QString &dir)
+{
+    if (NumberOfCategories() != 0)
+	return;
+
+    m_Directory = dir;
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    loadNames();
+    loadColors();
+}
+
+QString CategoryInfo::Name(int catnum)
+{
+    return m_Names[catnum];
+}
+
+QColor CategoryInfo::Color(int catnum)
+{
+    return m_Colors[catnum];
+}
+
+int CategoryInfo::NumberOfCategories()
 {
     return m_Names.size();
 }
