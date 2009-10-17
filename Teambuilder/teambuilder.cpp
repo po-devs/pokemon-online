@@ -1,5 +1,16 @@
 #include "teambuilder.h"
 
+template <class T, class U>
+QList<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
+{
+    QList<QPair<typename T::value_type, U> > ret;
+
+    foreach(typename T::value_type val, container)
+	ret << (QPair<typename T::value_type, U>(val, value));
+
+    return ret;
+}
+
 QCompactTable::QCompactTable(int row, int column)
 	: QTableWidget(row, column)
 {
@@ -24,6 +35,7 @@ TeamBuilder::TeamBuilder(QWidget *parent)
     MoveInfo::init("db/");
     TypeInfo::init("db/");
     NatureInfo::init("db/");
+    CategoryInfo::init("db/");
 
     QGridLayout *layout = new QGridLayout(this);
 
@@ -344,41 +356,48 @@ void TB_PokemonBody::updateImage()
 
 void TB_PokemonBody::configureMoves()
 {
-    QList<int> moves = poke()->moves();
+    QList<QPair<int, QString> > moves;
+    int num = poke()->num();
+
+    moves << map_container_with_value(PokemonInfo::LevelMoves(num), tr("Level")) << map_container_with_value(PokemonInfo::EggMoves(num), tr("Breeding"))
+	    << map_container_with_value(PokemonInfo::TMMoves(num), tr("TM/HM")) << map_container_with_value(PokemonInfo::TutorMoves(num), tr("Tutor"))
+	    << map_container_with_value(PokemonInfo::SpecialMoves(num), tr("Special"));
 
     movechoice->setRowCount(moves.size());
 
     for (int i = 0; i < moves.size(); i++)
     {
 	QTableWidgetItem *witem;
+	int movenum = moves[i].first;
 	
-	witem = new QTableWidgetItem(TypeInfo::Name(MoveInfo::Type(moves[i])));
+	witem = new QTableWidgetItem(TypeInfo::Name(MoveInfo::Type(movenum)));
 	witem->setForeground(QColor("white"));
-	witem->setBackground(QColor(TypeInfo::Color(MoveInfo::Type(moves[i]))));
+	witem->setBackground(QColor(TypeInfo::Color(MoveInfo::Type(movenum))));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Type, witem);
 
-	witem = new QTableWidgetItem(MoveInfo::Name(moves[i]));
+	witem = new QTableWidgetItem(MoveInfo::Name(movenum));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Name, witem);
 
-	witem = new QTableWidgetItem("");
+	witem = new QTableWidgetItem(moves[i].second);
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Learning, witem);
 
-	witem = new QTableWidgetItem(QString::number(MoveInfo::PP(moves[i])));
+	witem = new QTableWidgetItem(QString::number(MoveInfo::PP(movenum)));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, PP, witem);
 
-	witem = new QTableWidgetItem(MoveInfo::AccS(moves[i]));
+	witem = new QTableWidgetItem(MoveInfo::AccS(movenum));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Acc, witem);
 
-	witem = new QTableWidgetItem(MoveInfo::PowerS(moves[i]));
+	witem = new QTableWidgetItem(MoveInfo::PowerS(movenum));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Pow, witem);
 
-	witem = new QTableWidgetItem("");
+	witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(movenum)));
+	witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(movenum))));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Category, witem);
     }
