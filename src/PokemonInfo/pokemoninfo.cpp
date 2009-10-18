@@ -22,6 +22,9 @@ QStringList CategoryInfo::m_Names;
 QList<QColor> CategoryInfo::m_Colors;
 QString CategoryInfo::m_Directory;
 
+QStringList AbilityInfo::m_Names;
+QString AbilityInfo::m_Directory;
+
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
     int error = 0;
@@ -214,17 +217,33 @@ void PokeGeneral::loadAbilities()
     m_abilities = PokemonInfo::Abilities(num());
 }
 
+void PokeGeneral::loadGenderAvail()
+{
+    m_genderAvail = PokemonInfo::Gender(num());
+}
+
 void PokeGeneral::load()
 {
     loadBaseStats();
     loadMoves();
     loadTypes();
     loadAbilities();
+    loadGenderAvail();
 }
 
 const QList<int> &PokeGeneral::moves() const
 {
     return m_moves;
+}
+
+const QList<int> &PokeGeneral::abilities() const
+{
+    return m_abilities;
+}
+
+int PokeGeneral::genderAvail() const
+{
+    return m_genderAvail;
 }
 
 void PokeGeneral::setBaseStats(const PokeBaseStats &stats)
@@ -623,7 +642,16 @@ int PokeTeam::num() const
 void PokeTeam::load()
 {
     PokeGeneral::load();
-    PokeGraphics::load(0, 0);
+    /*set the default gender & ability */
+    if (genderAvail() == Pokemon::NeutralAvail) {
+	setGender(Pokemon::Neutral);
+    } else if (genderAvail() == Pokemon::FemaleAvail) {
+	setGender(Pokemon::Female);
+    } else {
+	setGender(Pokemon::Male);
+    }
+    setAbility(abilities()[0]);
+    PokeGraphics::load(gender(), false);
 }
 
 int PokeTeam::calc_stat(quint8 basestat, int level, quint8 ev, quint8 dv) const
@@ -1068,6 +1096,39 @@ QColor CategoryInfo::Color(int catnum)
 }
 
 int CategoryInfo::NumberOfCategories()
+{
+    return m_Names.size();
+}
+
+void AbilityInfo::loadNames()
+{
+    fill_container_with_file(m_Names, path("abilities_en.txt"));
+}
+
+QString AbilityInfo::path(const QString &filename)
+{
+    return m_Directory + filename;
+}
+
+void AbilityInfo::init(const QString &dir)
+{
+    if (NumberOfAbilities() != 0)
+	return;
+
+    m_Directory = dir;
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    loadNames();
+}
+
+QString AbilityInfo::Name(int abnum)
+{
+    return m_Names[abnum];
+}
+
+int AbilityInfo::NumberOfAbilities()
 {
     return m_Names.size();
 }

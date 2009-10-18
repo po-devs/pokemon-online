@@ -102,6 +102,7 @@ private slots:
     void moveEntered(int row);
     void setItem(const QString &item);
     void setNature(int nature);
+    void goToAdvanced();
 signals:
     void moveChosen(int movenum);
 public slots:
