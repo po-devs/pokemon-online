@@ -5,9 +5,11 @@ TARGET = Teambuilder
 DESTDIR = ../../bin
 TEMPLATE = app
 SOURCES += main.cpp \
-    teambuilder.cpp
+    teambuilder.cpp \
+    advanced.cpp
 HEADERS += teambuilder.h \
-    ../PokemonInfo/pokemoninfo.h
+    ../PokemonInfo/pokemoninfo.h \
+    advanced.h
 FORMS += 
 LIBS += -L../../bin \
     -lPokemonInfo \
