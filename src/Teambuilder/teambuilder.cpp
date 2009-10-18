@@ -251,7 +251,7 @@ void TB_PokemonBody::initMoves()
     move_headers << "Type" << "Name" << "Learning" << "PP" << "Pow" << "Acc" << "Category";
     movechoice->setHorizontalHeaderLabels(move_headers);
     movechoice->resizeRowsToContents();
-    movechoice->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+    movechoice->horizontalHeader()->setResizeMode(0, QHeaderView::ResizeToContents);
     movechoice->setMinimumHeight(200);
     movechoice->setMidLineWidth(0);
 
@@ -441,6 +441,7 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
 	slider(i)->setTracking(true);
 	slider(i)->setRange(0,255);
 	slider(i)->setMinimumWidth(150);
+	m_evs[i]->setMinimumWidth(24);
 	connect(slider(i),SIGNAL(valueChanged(int)),SLOT(EVChanged(int)));
     }
 
