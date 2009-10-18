@@ -1,4 +1,5 @@
 #include "teambuilder.h"
+#include "advanced.h"
 
 template <class T, class U>
 QList<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
@@ -36,6 +37,7 @@ TeamBuilder::TeamBuilder(QWidget *parent)
     TypeInfo::init("db/");
     NatureInfo::init("db/");
     CategoryInfo::init("db/");
+    AbilityInfo::init("db/");
 
     QGridLayout *layout = new QGridLayout(this);
 
@@ -191,7 +193,10 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     connect(naturechoice, SIGNAL(activated(int)), SLOT(setNature(int)));
 
     second_column->addWidget(new QEntitled(tr("Nature"), naturechoice));
-    second_column->addWidget(new QPushButton(tr("Advanced")));
+
+    QPushButton *advanced = new QPushButton(tr("Advanced"));
+    second_column->addWidget(advanced);
+    connect(advanced, SIGNAL(pressed()), SLOT(goToAdvanced()));
 
     /* third and last column of the upper body */
     QVBoxLayout *third_column = new QVBoxLayout();
@@ -287,6 +292,14 @@ void TB_PokemonBody::moveCellActivated(int cell)
 {
     int movenum = MoveInfo::Number(m_moves[cell]->text());
     setMove(movenum, cell);
+}
+
+void TB_PokemonBody::goToAdvanced()
+{
+    if (poke()->num() != 0) {
+	TB_Advanced *adv = new TB_Advanced(poke());
+	adv->show();
+    }
 }
 
 void TB_PokemonBody::initItems()

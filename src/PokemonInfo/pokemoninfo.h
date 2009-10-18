@@ -155,16 +155,21 @@ protected:
     QList<int> m_abilities;
     int m_types[2];
     int m_num;
+    int m_genderAvail;
 
     void loadBaseStats();
     void loadMoves();
     void loadTypes();
     void loadAbilities();
+    void loadGenderAvail();
 public:
     PokeGeneral();
 
     void setBaseStats(const PokeBaseStats &stats);
     const PokeBaseStats & baseStats() const;
+
+    const QList<int>& abilities() const;
+    int genderAvail() const;
 
     int num() const;
     void setNum(int new_num);
@@ -459,6 +464,23 @@ public:
     static QString Name(int catnum);
     static QColor Color(int catnum);
     static int NumberOfCategories();
+};
+
+class POKEMONINFOSHARED_EXPORT AbilityInfo
+{
+private:
+    static QStringList m_Names;
+    static QString m_Directory;
+
+    static void loadNames();
+    static QString path(const QString &filename);
+public:
+    /* directory where all the data is */
+    static void init(const QString &dir="./");
+
+    /* Self-explainable functions */
+    static QString Name(int abnum);
+    static int NumberOfAbilities();
 };
 
 #endif // POKEMONINFO_H
