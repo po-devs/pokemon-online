@@ -7,7 +7,7 @@
 /* This file contains the code for the "Advanced" window you
    can access in the Teambuilder on a pokemon */
 
-class TB_Advanced : public QMainWindow
+class TB_Advanced : public QWidget
 {
     Q_OBJECT
 private:
@@ -32,6 +32,7 @@ private:
 private slots:
     void changeAbility();
     void changeShininess();
+    void updatePokeImage();
 public:
     TB_Advanced(PokeTeam *poke);
 };

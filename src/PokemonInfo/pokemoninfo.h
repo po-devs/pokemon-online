@@ -213,7 +213,7 @@ public:
     int ability() const;
     int nature() const;
     int gender() const;
-    bool shininess() const;
+    bool shiny() const;
     quint8 happiness() const;
     int level() const;
     int move(int moveSlot) const;
@@ -314,6 +314,8 @@ public:
 
     /* load various data from the pokenum */
     void load();
+    /* display automatically the right picture */
+    QPixmap picture();
 };
 
 class POKEMONINFOSHARED_EXPORT Team
