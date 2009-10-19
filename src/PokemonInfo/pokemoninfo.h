@@ -485,4 +485,24 @@ public:
     static int NumberOfAbilities();
 };
 
+class POKEMONINFOSHARED_EXPORT GenderInfo
+{
+private:
+    static QStringList m_Names;
+    static QString m_Directory;
+    static QList<QPixmap> m_Pictures;
+
+    static void loadNames();
+    static void loadPixmaps();
+    static QString path(const QString &filename);
+public:
+    /* directory where all the data is */
+    static void init(const QString &dir="./");
+
+    /* Self-explainable functions */
+    static QString Name(int gender);
+    static int NumberOfGenders();
+    static QPixmap Picture(int gender);
+};
+
 #endif // POKEMONINFO_H

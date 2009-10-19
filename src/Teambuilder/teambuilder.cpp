@@ -38,6 +38,7 @@ TeamBuilder::TeamBuilder(QWidget *parent)
     NatureInfo::init("db/");
     CategoryInfo::init("db/");
     AbilityInfo::init("db/");
+    GenderInfo::init("db/");
 
     QGridLayout *layout = new QGridLayout(this);
 
@@ -148,6 +149,7 @@ void QEntitled::setTitle(const QString &title)
 }
 
 TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
+	: m_adv(NULL)
 {
     m_poke = _poke;
 
@@ -172,19 +174,21 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     QVBoxLayout *second_column = new QVBoxLayout();
     layout->addLayout(second_column,0,1);
 
-    pokeimage = new QLabel();
-
-    second_column->addWidget(pokeimage,0,Qt::AlignBottom|Qt::AlignHCenter);
+    pokeImage = new QLabel();
+    second_column->addWidget(pokeImage,0,Qt::AlignBottom|Qt::AlignHCenter);
+    updateImage();
 
     QHBoxLayout *gender_level = new QHBoxLayout;
     second_column->addLayout(gender_level);
 
-    QLabel *gender_icon = new QLabel();
-    gender_icon->setPixmap(QPixmap("Male.png"));
+    genderIcon = new QLabel();
+    gender_level->addWidget(genderIcon, 0, Qt::AlignCenter | Qt::AlignTop);
+    updateGender();
+
     QLabel *level = new QLabel(tr("Lv. 100"));
 
-    gender_level->addWidget(gender_icon, 0, Qt::AlignLeft | Qt::AlignTop);
-    gender_level->addWidget(level, 0, Qt::AlignRight | Qt::AlignTop);
+
+    gender_level->addWidget(level, 0, Qt::AlignLeft | Qt::AlignTop);
 
     naturechoice = new QComboBox();
     for (int i = 0; i < NatureInfo::NumberOfNatures(); i++)
@@ -301,9 +305,52 @@ void TB_PokemonBody::moveCellActivated(int cell)
 void TB_PokemonBody::goToAdvanced()
 {
     if (poke()->num() != 0) {
-	TB_Advanced *adv = new TB_Advanced(poke());
-	adv->show();
+	if (advancedOpen()) {
+	    /* we show the user where the advanced window is */
+	    advanced()->activateWindow();
+	    advanced()->raise();
+	    return;
+	}
+
+	m_adv = new TB_Advanced(poke());
+	advanced()->show();
+	advanced()->setAttribute(Qt::WA_DeleteOnClose, true);
+
+	connect(this, SIGNAL(pokeChanged(int)), advanced(), SLOT(close()));
+	connect(this, SIGNAL(destroyed()), advanced(), SLOT(close()));
+	connect(advanced(), SIGNAL(destroyed()), SLOT(updateAdvanced()));
+	connect(advanced(), SIGNAL(destroyed()), SLOT(setAdvancedOpenToFalse()));
     }
+}
+
+void TB_PokemonBody::setAdvancedOpenToFalse()
+{
+    m_adv=NULL;
+}
+
+bool TB_PokemonBody::advancedOpen()
+{
+    return m_adv != NULL;
+}
+
+TB_Advanced * TB_PokemonBody::advanced()
+{
+    return m_adv;
+}
+
+void TB_PokemonBody::updateAdvanced()
+{
+    //in case DVs are changed
+    evchoice->updateMain();
+    //in case shiny is changed;
+    updateImage();
+    //in case the gender is changed
+    updateGender();
+}
+
+void TB_PokemonBody::updateGender()
+{
+    genderIcon->setPixmap(GenderInfo::Picture(poke()->gender()));
 }
 
 void TB_PokemonBody::initItems()
@@ -366,11 +413,14 @@ void TB_PokemonBody::setNum(int pokenum)
     configureMoves();
     /* updates the pic */
     updateImage();
+    updateGender();
+
+    emit pokeChanged(pokenum);
 }
 
 void TB_PokemonBody::updateImage()
 {
-    pokeimage->setPixmap(poke()->picture());
+    pokeImage->setPixmap(poke()->picture());
 }
 
 void TB_PokemonBody::configureMoves()
@@ -450,7 +500,7 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
 
     for (int i = 0; i < 6; i++)
     {
-	addWidget(m_desc[i] = new QLabel(labels[i]), i, 0, Qt::AlignLeft);
+	addWidget(new QLabel(labels[i]), i, 0, Qt::AlignLeft);
 	addWidget(m_stats[i] = new QLabel(), i, 1, Qt::AlignLeft);
 	addWidget(m_sliders[i] = new QSlider(Qt::Horizontal), i, 2);
 	addWidget(m_evs[i] = new QLabel(), i, 3, Qt::AlignLeft);
@@ -521,22 +571,15 @@ void TB_EVManager::EVChanged(int newvalue)
     updateMain();
 }
 
-QLabel * TB_EVManager::desc(int stat)
-{
-    return m_desc[stat];
-}
-
 void TB_EVManager::updateEV(int stat)
 {
+    slider(stat)->setValue(poke()->EV(stat));
+
     /* first the color : red if the stat is hindered by the nature, black if normal, blue if the stat is enhanced */
     QColor colors[3] = {Qt::darkBlue, Qt::black, Qt::red};
     QColor mycol = colors[poke()->natureBoost(stat)+1];
-
-    QPalette pal = desc(stat)->palette();
+    QPalette pal = evLabel(stat)->palette();
     pal.setColor(QPalette::WindowText, mycol);
-    desc(stat)->setPalette(pal);
-
-    slider(stat)->setValue(poke()->EV(stat));
 
     evLabel(stat)->setPalette(pal);
     evLabel(stat)->setText(QString::number(poke()->EV(stat)));

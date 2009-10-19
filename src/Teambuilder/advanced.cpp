@@ -46,7 +46,6 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 	    dvchoice[i]->addItem(QString::number(j));
 	}
 
-
 	QColor colors[3] = {Qt::darkBlue, Qt::black, Qt::red};
 	QColor mycol = colors[poke()->natureBoost(i)+1];
 
@@ -64,6 +63,10 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     hpanddvchoice->setHorizontalHeaderLabels(stats_l);
 
     secondColumn->addWidget(pokeImage=new QLabel());
+//    pokeImage->setBackgroundRole(QPalette::Base);
+//    pokeImage->setAutoFillBackground(true);
+//    pokeImage->setFrameShape(QFrame::StyledPanel);
+//    pokeImage->setFrameShadow(QFrame::Sunken);
     updatePokeImage();
 
     QHBoxLayout *levellayout = new QHBoxLayout();
@@ -80,44 +83,82 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     QVBoxLayout *genderLayout = new QVBoxLayout(gender);
     secondColumn->addWidget(gender);
 
-    switch(poke()->genderAvail())
+    if (poke()->genderAvail() == Pokemon::MaleAndFemaleAvail)
     {
-	case Pokemon::NeutralAvail:
-	    genderLayout->addWidget(new QRadioButton("Neutral"));
-	    break;
-	case Pokemon::FemaleAvail:
-	    genderLayout->addWidget(new QRadioButton("Female"));
-	    break;
-	case Pokemon::MaleAvail:
-	    genderLayout->addWidget(new QRadioButton("Male"));
-	    break;
-	default:
-	    genderLayout->addWidget(gender1 = new QRadioButton("Male"));
-	    genderLayout->addWidget(gender2 = new QRadioButton("Female"));
-	    break;
+	genderLayout->addWidget(gender1 = new QRadioButton(tr("Male")));
+	genderLayout->addWidget(gender2 = new QRadioButton(tr("Female")));
+	connect(gender1, SIGNAL(toggled(bool)), SLOT(changeGender(bool)));
+	updateGender();
+    } else {
+	genderLayout->addWidget(gender1 = new QRadioButton( poke()->gender() == Pokemon::Neutral ? tr("Neutral") : (poke()->gender() == Pokemon::Female ? tr("Female") : tr("Male"))));
+	gender1->setChecked(true);
+	gender1->setEnabled(false);
     }
-
 
     QGroupBox *ability = new QGroupBox(tr("Ability"));
     secondColumn->addWidget(ability);
-    QVBoxLayout *abilityLayout = new QVBoxLayout();
+    QVBoxLayout *abilityLayout = new QVBoxLayout(ability);
 
     abilityLayout->addWidget(ability1=new QRadioButton(AbilityInfo::Name(poke()->abilities()[0])));
-    if (poke()->abilities()[1] != 0)
+    if (poke()->abilities()[1] != 0) {
 	abilityLayout->addWidget(ability2=new QRadioButton(AbilityInfo::Name(poke()->abilities()[1])));
+	connect(ability1, SIGNAL(toggled(bool)), SLOT(changeAbility(bool)));
+	updateAbility();
+    } else {
+	ability1->setChecked(true);
+	ability1->setEnabled(false);
+    }
 
     secondColumn->addWidget(shiny = new QCheckBox(tr("Shiny")));
+    if (poke()->shiny()) {
+	shiny->setChecked(true);
+    }
+    connect(shiny, SIGNAL(toggled(bool)), SLOT(changeShininess(bool)));
 }
 
-void TB_Advanced::changeAbility()
-{}
+void TB_Advanced::changeAbility(bool ab1)
+{
+    poke()->setAbility(ab1? poke()->abilities()[0] : poke()->abilities()[1]);
+}
 
-void TB_Advanced::changeShininess()
-{}
+void TB_Advanced::changeShininess(bool shine)
+{
+    poke()->setShininess(shine);
+    updatePokeImage();
+}
+
+void TB_Advanced::changeGender(bool gend1)
+{
+    poke()->setGender(gend1 ? Pokemon::Male : Pokemon::Female);
+    updatePokeImage();
+}
 
 void TB_Advanced::updatePokeImage()
 {
     pokeImage->setPixmap(poke()->picture());
+}
+
+void TB_Advanced::updateAbility()
+{
+    if (poke()->ability() == poke()->abilities()[0])
+    {
+	ability1->setChecked(true);
+    } else {
+	ability2->setChecked(true);
+    }
+}
+
+void TB_Advanced::updateGender()
+{
+    if (poke()->genderAvail()== Pokemon::MaleAndFemaleAvail)
+    {
+	if (poke()->gender() == Pokemon::Male)
+	{
+	    gender1->setChecked(true);
+	} else {
+	    gender2->setChecked(true);
+	}
+    }
 }
 
 PokeTeam *TB_Advanced::poke()

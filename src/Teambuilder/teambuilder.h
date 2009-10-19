@@ -6,6 +6,7 @@
 
 class TB_PokemonBody;
 class TB_EVManager;
+class TB_Advanced;
 
 class QCompactTable : public QTableWidget
 {
@@ -78,10 +79,11 @@ private:
     QCompactTable *pokechoice;
     QComboBox *itemchoice;
     QComboBox *naturechoice;
-    QLabel *pokeimage;
+    QLabel *pokeImage, *genderIcon;
     QCompactTable *movechoice;
     QLineEdit *m_moves[4];
     TB_EVManager *evchoice;
+    TB_Advanced *m_adv;
 
     /* the pokemon of the team corresponding to the body */
     PokeTeam *m_poke;
@@ -92,6 +94,10 @@ private:
 
     void configureMoves();
     void updateImage();
+    void updateGender();
+
+    bool advancedOpen();
+    TB_Advanced *advanced();
 
     /* getting the pokemon of the team corresponding to the body */
     PokeTeam *poke();
@@ -103,8 +109,11 @@ private slots:
     void setItem(const QString &item);
     void setNature(int nature);
     void goToAdvanced();
+    void updateAdvanced();
+    void setAdvancedOpenToFalse();
 signals:
     void moveChosen(int movenum);
+    void pokeChanged(int pokenum);
 public slots:
     void setNum(int pokeNum);
 public:
@@ -118,7 +127,6 @@ private:
     QSlider *m_sliders[6];
     QLabel *m_stats[6];
     QLabel *m_evs[6];
-    QLabel *m_desc[6];
     QSlider *m_mainSlider;
     PokeTeam *m_poke;
 
@@ -127,7 +135,6 @@ private:
     const QSlider *slider(int stat) const;
     QLabel *evLabel(int stat);
     QLabel *statLabel(int stat);
-    QLabel *desc(int stat);
     /* the reverse of slider(int) */
     int stat(QObject *sender) const;
 public:
