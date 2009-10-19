@@ -29,10 +29,13 @@ private:
 
     void updateStat(int stat);
     void updateStats();
-private slots:
-    void changeAbility();
-    void changeShininess();
     void updatePokeImage();
+    void updateGender();
+    void updateAbility();
+private slots:
+    void changeAbility(bool);
+    void changeShininess(bool);
+    void changeGender(bool);
 public:
     TB_Advanced(PokeTeam *poke);
 };

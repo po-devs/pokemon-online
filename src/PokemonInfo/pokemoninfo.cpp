@@ -25,6 +25,10 @@ QString CategoryInfo::m_Directory;
 QStringList AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
 
+QStringList GenderInfo::m_Names;
+QList<QPixmap> GenderInfo::m_Pictures;
+QString GenderInfo::m_Directory;
+
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
     int error = 0;
@@ -1140,6 +1144,53 @@ QString AbilityInfo::Name(int abnum)
 }
 
 int AbilityInfo::NumberOfAbilities()
+{
+    return m_Names.size();
+}
+
+
+void GenderInfo::loadNames()
+{
+    fill_container_with_file(m_Names, path("genders_en.txt"));
+}
+
+void GenderInfo::loadPixmaps()
+{
+    for (int i = 0; i < NumberOfGenders(); i++) {
+	m_Pictures << QPixmap(path(QString("gender%1.png").arg(i)));
+    }
+}
+
+QString GenderInfo::path(const QString &filename)
+{
+    return m_Directory + filename;
+}
+
+void GenderInfo::init(const QString &dir)
+{
+    if (NumberOfGenders() != 0)
+	return;
+
+    m_Directory = dir;
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    loadNames();
+    loadPixmaps();
+}
+
+QString GenderInfo::Name(int abnum)
+{
+    return m_Names[abnum];
+}
+
+QPixmap GenderInfo::Picture(int gender)
+{
+    return m_Pictures[gender];
+}
+
+int GenderInfo::NumberOfGenders()
 {
     return m_Names.size();
 }
