@@ -526,7 +526,7 @@ int PokePersonal::gender() const
     return m_gender;
 }
 
-bool PokePersonal::shininess() const
+bool PokePersonal::shiny() const
 {
     return m_shininess;
 }
@@ -617,6 +617,12 @@ QPixmap PokeGraphics::picture()
     return m_picture;
 }
 
+QPixmap PokeGraphics::picture(int gender, bool shiny)
+{
+    load(gender, shiny);
+    return picture();
+}
+
 int PokeGraphics::num() const
 {
     return m_num;
@@ -657,6 +663,11 @@ void PokeTeam::load()
 int PokeTeam::calc_stat(quint8 basestat, int level, quint8 ev, quint8 dv) const
 {
     return ((2*basestat + dv+ ev/4)*level)/100 + 5;
+}
+
+QPixmap PokeTeam::picture()
+{
+    return PokeGraphics::picture(gender(), shiny());
 }
 
 int PokeTeam::calc_stat_F(int stat) const

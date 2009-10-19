@@ -41,6 +41,12 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 	dvlayout->addWidget(new QLabel(stats_l[i]), i, 0);
 	dvlayout->addWidget((dvchoice[i]= new QComboBox()), i, 1);
 
+	for (int j = 31; j >= 0; j--)
+	{
+	    dvchoice[i]->addItem(QString::number(j));
+	}
+
+
 	QColor colors[3] = {Qt::darkBlue, Qt::black, Qt::red};
 	QColor mycol = colors[poke()->natureBoost(i)+1];
 
@@ -58,11 +64,17 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     hpanddvchoice->setHorizontalHeaderLabels(stats_l);
 
     secondColumn->addWidget(pokeImage=new QLabel());
+    updatePokeImage();
 
     QHBoxLayout *levellayout = new QHBoxLayout();
     secondColumn->addLayout(levellayout);
     levellayout->addWidget(new QLabel(tr("Level")));
     levellayout->addWidget(level = new QComboBox());
+
+    for (int i = 100; i >= 2; i--)
+    {
+	level->addItem(QString::number(i));
+    }
 
     QGroupBox *gender = new QGroupBox(tr("Gender"));
     QVBoxLayout *genderLayout = new QVBoxLayout(gender);
@@ -102,6 +114,11 @@ void TB_Advanced::changeAbility()
 
 void TB_Advanced::changeShininess()
 {}
+
+void TB_Advanced::updatePokeImage()
+{
+    pokeImage->setPixmap(poke()->picture());
+}
 
 PokeTeam *TB_Advanced::poke()
 {
