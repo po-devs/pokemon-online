@@ -505,4 +505,23 @@ public:
     static QPixmap Picture(int gender);
 };
 
+
+class POKEMONINFOSHARED_EXPORT HiddenPowerInfo
+{
+private:
+    static QString m_Directory;
+
+    static QString path(const QString &filename);
+public:
+    /* directory where all the data is */
+    static void init(const QString &dir="./");
+
+    /* The type of the hidden power depending on the dvs */
+    static int Type(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
+    /* The power of the hidden power depending on the dvs */
+    static int Power(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
+    /* the different set of dvs (which are chosen within 30-31) that give an hidden power of that type */
+    static QList<QStringList> PossibilitiesForType(int type);
+};
+
 #endif // POKEMONINFO_H

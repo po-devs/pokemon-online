@@ -39,6 +39,7 @@ TeamBuilder::TeamBuilder(QWidget *parent)
     CategoryInfo::init("db/");
     AbilityInfo::init("db/");
     GenderInfo::init("db/");
+    HiddenPowerInfo::init("db/");
 
     QGridLayout *layout = new QGridLayout(this);
 
@@ -232,7 +233,6 @@ void TB_PokemonBody::initPokemons()
     pokechoice->verticalHeader()->hide();
     pokechoice->horizontalHeader()->hide();
     pokechoice->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
-    pokechoice->resizeRowsToContents();
 
     /* Adding the poke names */
     for (int i = 0; i < PokemonInfo::NumberOfPokemons(); i++)
@@ -245,6 +245,8 @@ void TB_PokemonBody::initPokemons()
 	item->setFlags(item->flags() ^ Qt::ItemIsEditable);
 	pokechoice->setItem(i, 1, item);
     }
+
+    pokechoice->resizeRowsToContents();
 
     connect(pokechoice, SIGNAL(cellActivated(int,int)), SLOT(setNum(int)));
 }

@@ -26,6 +26,7 @@ private:
     QSpinBox *level;
 
     PokeTeam *poke();
+    const PokeTeam *poke() const;
 
     //Called by updateDVs
     void updateStat(int stat);
@@ -34,9 +35,13 @@ private:
     void updatePokeImage();
     void updateGender();
     void updateAbility();
-    void updateDV(int stats);
+    int currentHiddenPower() const;
+    int calculateHiddenPowerPower() const;
+    int calculateHiddenPowerType() const;
+    void updateDV(int stat);
     void updateDVs();
     void updateHiddenPower();
+    void updateHpAndDvChoice();
     void changeDV(int stat, int newval);
     // Gives the num of the stat corresponding to that ptr
     int stat(QObject *dvchoiceptr);
@@ -44,7 +49,9 @@ private slots:
     void changeAbility(bool);
     void changeShininess(bool);
     void changeGender(bool);
+    void changeDVsAccordingToHP(int row);
     void changeLevel(int);
+    void changeHiddenPower(int);
     /* Do not use directly */
     void changeDV(int newval);
 public:
