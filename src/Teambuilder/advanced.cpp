@@ -39,12 +39,11 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     for (int i = 0; i < 6; i++)
     {
 	dvlayout->addWidget(new QLabel(stats_l[i]), i, 0);
-	dvlayout->addWidget((dvchoice[i]= new QComboBox()), i, 1);
+	dvlayout->addWidget((dvchoice[i]= new QSpinBox()), i, 1);
 
-	for (int j = 31; j >= 0; j--)
-	{
-	    dvchoice[i]->addItem(QString::number(j));
-	}
+	dvchoice[i]->setRange(0,31);
+	dvchoice[i]->setAccelerated(true);
+	connect(dvchoice[i], SIGNAL(valueChanged(int)), SLOT(changeDV(int)));
 
 	QColor colors[3] = {Qt::darkBlue, Qt::black, Qt::red};
 	QColor mycol = colors[poke()->natureBoost(i)+1];
@@ -55,6 +54,8 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 	pal.setColor(QPalette::WindowText, mycol);
 	stats[i]->setPalette(pal);
     }
+    updateDVs();
+
     stats_l.clear();
     stats_l << "HP" << "Attack" << "Defense" << "Speed" << "SpAttack" << "SpDefense";
 
@@ -63,21 +64,16 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     hpanddvchoice->setHorizontalHeaderLabels(stats_l);
 
     secondColumn->addWidget(pokeImage=new QLabel());
-//    pokeImage->setBackgroundRole(QPalette::Base);
-//    pokeImage->setAutoFillBackground(true);
-//    pokeImage->setFrameShape(QFrame::StyledPanel);
-//    pokeImage->setFrameShadow(QFrame::Sunken);
     updatePokeImage();
 
     QHBoxLayout *levellayout = new QHBoxLayout();
     secondColumn->addLayout(levellayout);
     levellayout->addWidget(new QLabel(tr("Level")));
-    levellayout->addWidget(level = new QComboBox());
-
-    for (int i = 100; i >= 2; i--)
-    {
-	level->addItem(QString::number(i));
-    }
+    levellayout->addWidget(level = new QSpinBox());
+    level->setRange(2,100);
+    level->setValue(poke()->level());
+    level->setAccelerated(true);
+    connect(level, SIGNAL(valueChanged(int)), SLOT(changeLevel(int)));
 
     QGroupBox *gender = new QGroupBox(tr("Gender"));
     QVBoxLayout *genderLayout = new QVBoxLayout(gender);
@@ -159,6 +155,63 @@ void TB_Advanced::updateGender()
 	    gender2->setChecked(true);
 	}
     }
+}
+
+void TB_Advanced::changeDV(int stat, int newval)
+{
+    poke()->setDV(stat, newval);
+    updateDV(stat);
+    updateHiddenPower();
+}
+
+int TB_Advanced::stat(QObject *dvchoiceptr)
+{
+    for (int i = 0; i < 6; i++) {
+	if (dvchoice[i] == dvchoiceptr)
+	    return i;
+    }
+
+    throw tr("Fatal error in TB_Advanced::stat(QObject *) : the pointer provided does not correspond to any dvchoice");
+}
+
+void TB_Advanced::changeDV(int newval)
+{
+    changeDV(stat(sender()), newval);
+}
+
+void TB_Advanced::updateDVs()
+{
+    for (int i = 0; i < 6; i++)
+    {
+	updateDV(i);
+    }
+}
+
+void TB_Advanced::updateDV(int stat)
+{
+    dvchoice[stat]->setValue(poke()->DV(stat));
+    updateStat(stat);
+}
+
+void TB_Advanced::changeLevel(int level)
+{
+    poke()->setLevel(level);
+    updateStats();
+}
+
+void TB_Advanced::updateHiddenPower()
+{
+}
+
+void TB_Advanced::updateStats()
+{
+    for (int i = 0; i < 6; i++)
+	updateStat(i);
+}
+
+void TB_Advanced::updateStat(int stat)
+{
+    stats[stat]->setText(QString::number(poke()->stat(stat)));
 }
 
 PokeTeam *TB_Advanced::poke()

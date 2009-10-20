@@ -185,8 +185,8 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     gender_level->addWidget(genderIcon, 0, Qt::AlignCenter | Qt::AlignTop);
     updateGender();
 
-    QLabel *level = new QLabel(tr("Lv. 100"));
-
+    level = new QLabel();
+    updateLevel();
 
     gender_level->addWidget(level, 0, Qt::AlignLeft | Qt::AlignTop);
 
@@ -323,6 +323,11 @@ void TB_PokemonBody::goToAdvanced()
     }
 }
 
+void TB_PokemonBody::updateLevel()
+{
+    level->setText(tr("Lv. %1").arg(poke()->level()));
+}
+
 void TB_PokemonBody::setAdvancedOpenToFalse()
 {
     m_adv=NULL;
@@ -341,11 +346,13 @@ TB_Advanced * TB_PokemonBody::advanced()
 void TB_PokemonBody::updateAdvanced()
 {
     //in case DVs are changed
-    evchoice->updateMain();
+    evchoice->updateEVs();
     //in case shiny is changed;
     updateImage();
     //in case the gender is changed
     updateGender();
+    //in case the level is changed
+    updateLevel();
 }
 
 void TB_PokemonBody::updateGender()
@@ -433,6 +440,7 @@ void TB_PokemonBody::configureMoves()
 	    << map_container_with_value(PokemonInfo::SpecialMoves(num), tr("Special"));
 
     movechoice->setRowCount(moves.size());
+    movechoice->setSortingEnabled(false);
 
     for (int i = 0; i < moves.size(); i++)
     {
@@ -477,6 +485,7 @@ void TB_PokemonBody::configureMoves()
     }
 
     movechoice->sortItems(Name);
+    movechoice->setSortingEnabled(true);
     movechoice->resizeRowsToContents();
 }
 
