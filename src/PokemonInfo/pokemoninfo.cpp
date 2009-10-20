@@ -29,6 +29,8 @@ QStringList GenderInfo::m_Names;
 QList<QPixmap> GenderInfo::m_Pictures;
 QString GenderInfo::m_Directory;
 
+QString HiddenPowerInfo::m_Directory;
+
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
     int error = 0;
@@ -1193,4 +1195,38 @@ QPixmap GenderInfo::Picture(int gender)
 int GenderInfo::NumberOfGenders()
 {
     return m_Names.size();
+}
+
+void HiddenPowerInfo::init(const QString &dir)
+{
+    m_Directory = dir;
+}
+
+QString HiddenPowerInfo::path(const QString &filename)
+{
+    return m_Directory + filename;
+}
+
+int HiddenPowerInfo::Type(quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 speed_dv, quint8 satt_dv, quint8 sdef_dv)
+{
+    return (((hp_dv%2) + (att_dv%2)*2 + (def_dv%2)*4 + (speed_dv%2)*8 + (satt_dv%2)*16 + (sdef_dv%2)*32)*15)/63 + 1;
+}
+
+int HiddenPowerInfo::Power(quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 speed_dv, quint8 satt_dv, quint8 sdef_dv)
+{
+    return (((hp_dv%4>1) + (att_dv%4>1)*2 + (def_dv%4>1)*4 + (speed_dv%4>1)*8 + (satt_dv%4>1)*16 + (sdef_dv%4>1)*32)*40)/63 + 30;
+}
+
+QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type)
+{
+    QList<QString> fileLines;
+
+    fill_container_with_file(fileLines, path(QString("type%1_hp.txt").arg(type)));
+
+    QList<QStringList> ret;
+
+    foreach (QString line, fileLines)
+	ret.push_back(line.split(' '));
+
+    return ret;
 }

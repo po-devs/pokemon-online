@@ -1,10 +1,8 @@
 /* Sous windows ouvrir avec le wordpad ou autre, mais pas le bloc-note :s !! */
 -Menu du Trainer (Pour qu'il choisisse son pseudo (15 lettres max, que des caractères "normaux"), sa description, Son message en cas de victoire, défaite, match nul, un bouton pour revenir au menu supérieur (qu'on n'a pas encore fait), un bouton pour sauvegarder l'équipe (idem), un autre pour charger l'équipe
+----------->Pris par coyotte508
 
 -Faire deux fonctions membres de PokeTeam pour mettre l'équipe sous forme d'un DataStream / la charger à partir d'un DataStream, et deux pour Sauvegarder / Charger l'équipe dans un fichier .team qui utilisent les deux fonctions précédentes (simple, il faut voir les QDataStream dans la doc et juste empiler / dépiler les données dedans ^^)
-
--Faire le menu dans le bouton "Advanced" (Hidden Power, DV, Ability, Shiny, Genre)
-----> Pris par Coyotte508
 
 -Faire un menu (pour voir un modèle hyper basique voir le screenshot sur sourceforge), qui permette au moins d'accéder au Teambuilder, et de quitter, et d'autres possibilités que vous voulez (juste les boutons pour y accéder, pas les fonctionnalités en elle même -- Vous pouvez personnaliser comme vous le voulez :p) dans un fichier menu.cpp
 
@@ -12,3 +10,7 @@
 
 -Changer la fonction setNum de TB_PokemonBody pour que les icones s'affichent à sur les boutons des Pokemons (il faudra sûrement rajouter un pointeur de la classe Teambuilder dans les classes TB_PokemonBody, ainsi qu'une fonction dans Teambuilder: int Teambuilder::num(TB_PokemonBody *) pour savoir à quel poké un TB_PokemonBody * correspond.
 Les icones sont dans db/icons.zip, il faut rajouter une fonction dans PokemonInfo pour récupérer l'icône. On pourra réutiliser la fonction readZipFile de PokemonInfo.cpp :p
+
+-Dans la partie Pokémon du teambuilder, essayer de virer en partie l'espace vide vertical entre Pokemon-Nickname et entre NickName-Iteam. (de sorte que le tableau moves puisse prendre plus de place) Ensuite mieux espacer les lignes d'EV pour qu'elle soient répartie uniformément (cf capture d'écran de mon projet sous SDL dans le topic sur le sdz)
+
+-Changer la classe perso QEntitled pour que le deuxième widget soit le "buddy" du titre, le QLabel. Ensuite changer les titres pour rajouter les raccourcis dans la partie Pokemon du teambuilder (Pokemon = P, Item = I, Moves = M, Nickname = k, Nature = N). Ajouter aussi un raccourci pour le bouton advanced.
