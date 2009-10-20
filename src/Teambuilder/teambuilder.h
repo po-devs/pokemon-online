@@ -79,7 +79,7 @@ private:
     QCompactTable *pokechoice;
     QComboBox *itemchoice;
     QComboBox *naturechoice;
-    QLabel *pokeImage, *genderIcon;
+    QLabel *pokeImage, *genderIcon, *level;
     QCompactTable *movechoice;
     QLineEdit *m_moves[4];
     TB_EVManager *evchoice;
@@ -95,6 +95,7 @@ private:
     void configureMoves();
     void updateImage();
     void updateGender();
+    void updateLevel();
 
     bool advancedOpen();
     TB_Advanced *advanced();
