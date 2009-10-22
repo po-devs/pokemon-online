@@ -23,6 +23,70 @@ int QCompactTable::sizeHintForRow(int row) const
     return 0;
 }
 
+QNickValidator::QNickValidator(QWidget *parent)
+	: QValidator(parent)
+{}
+
+bool QNickValidator::isBegEndChar(QChar ch) const
+{
+    return ch.isLetterOrNumber() || ch.isPunct();
+}
+
+void QNickValidator::fixup(QString &input) const
+{
+    /* The only real case when you need to fix a string that's intermediate
+       is to remove the trailing space at the end. */
+    if (input.length() > 0 && input[input.length()-1] == ' ') {
+	input.resize(input.length()-1);
+    }
+}
+
+QValidator::State QNickValidator::validate(QString &input, int& pos) const
+{
+    (void) pos;
+
+    if (input.length() == 0)
+	return QValidator::Intermediate;
+
+    if (!isBegEndChar(input[0])) {
+	return QValidator::Invalid;
+    }
+
+    bool spaced = false;
+    bool punct = false;
+
+    for (int i = 0; i < input.length(); i++) {
+	if (input[i].isPunct()) {
+	    if (punct == true) {
+		//Error: two punctuations are not separated by a letter/number
+		return QValidator::Invalid;
+	    }
+	    punct = true;
+	    spaced = false;
+	} else if (input[i] == ' ') {
+	    if (spaced == true) {
+		//Error: two spaces are following
+		return QValidator::Invalid;
+	    }
+	    spaced = true;
+	} else if (input[i].isLetterOrNumber()) {
+	    //we allow another punct & space
+	    punct = false;
+	    spaced = false;
+	}
+    }
+
+    //let's check if there is at least a letter/number & no whitespace at the end
+    if (input.length() == 1 && input[0].isPunct()) {
+	return QValidator::Intermediate;
+    }
+    if (!isBegEndChar(input[input.length()-1])) {
+	return QValidator::Intermediate;
+    }
+
+    return QValidator::Acceptable;
+}
+
 TeamBuilder::TeamBuilder(QWidget *parent)
     : QWidget(parent)
 {
@@ -61,7 +125,7 @@ TeamBuilder::TeamBuilder(QWidget *parent)
 
     layout->addWidget(m_body,2,0,1,4);
 
-    m_trainerBody = new QWidget();
+    m_trainerBody = new TB_TrainerBody();
     m_body->addWidget(m_trainerBody);
 
     for (int i = 0; i < 6; i++)
@@ -147,6 +211,57 @@ void QEntitled::setWidget(QWidget *widget)
 void QEntitled::setTitle(const QString &title)
 {
     m_title->setText(title);
+}
+
+TB_TrainerBody::TB_TrainerBody()
+{
+    //main layout
+    QVBoxLayout *mlayout = new QVBoxLayout(this);
+
+    QEntitled * trainernick = new QEntitled(tr("Trainer"), m_nick = new QLineEdit());
+    m_nick->setMaximumWidth(100);
+    m_nick->setMaxLength(15);
+    /* A non-whitespace word caracter followed by any number of white characters and not ended by a space, or just nothing */
+    m_nick->setValidator(new QNickValidator(this));
+    mlayout->addWidget(trainernick);
+
+    QEntitled * minfo = new QEntitled(tr("Player Info"), m_trainerInfo=new QTextEdit());
+    mlayout->addWidget(minfo);
+
+    QEntitled * mwin = new QEntitled(tr("Winning Message"), m_winMessage=new QTextEdit());
+    mlayout->addWidget(mwin);
+
+//    QEntitled * mdraw = new QEntitled(tr("Draw Message"), m_drawMessage=new QTextEdit());
+//    mlayout->addWidget(mdraw);
+
+    QEntitled * mlose = new QEntitled(tr("Losing Message"), m_loseMessage=new QTextEdit());
+    mlayout->addWidget(mlose);
+
+    QHBoxLayout *buttonsLayout = new QHBoxLayout();
+    mlayout->addLayout(buttonsLayout);
+
+    QPushButton *saveb, *loadb, *doneb;
+
+    buttonsLayout->addWidget(saveb = new QPushButton(tr("&Save")));
+    buttonsLayout->addWidget(loadb = new QPushButton(tr("&Load")));
+    buttonsLayout->addWidget(doneb = new QPushButton(tr("&Done")));
+
+    connect(saveb, SIGNAL(clicked()), SLOT(save()));
+    connect(loadb, SIGNAL(clicked()), SLOT(load()));
+    connect(doneb, SIGNAL(clicked()), SLOT(done()));
+}
+
+void TB_TrainerBody::save()
+{
+}
+
+void TB_TrainerBody::load()
+{
+}
+
+void TB_TrainerBody::done()
+{
+    qApp->quit();
 }
 
 TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
