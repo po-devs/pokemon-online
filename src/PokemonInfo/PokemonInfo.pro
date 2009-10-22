@@ -7,6 +7,6 @@ DESTDIR = ../../bin
 TEMPLATE = lib
 DEFINES += POKEMONINFO_LIBRARY
 SOURCES += pokemoninfo.cpp
-LIBS += -lzip
+LIBS += -L../../bin -lzip
 HEADERS += pokemoninfo.h \
     PokemonInfo_global.h \
