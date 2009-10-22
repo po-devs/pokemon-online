@@ -79,7 +79,7 @@ struct Pokemon
 };
 
 
-struct POKEMONINFOSHARED_EXPORT Move
+struct Move
 {
     enum Category
     {
