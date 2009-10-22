@@ -3,7 +3,7 @@
 
 #include "teambuilder.h"
 //for Team struct
-#include "../PokemonInfo.h"
+#include "../PokemonInfo/pokemoninfo.h"
 // :)
 #include <QtGui>
 
