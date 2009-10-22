@@ -6,10 +6,12 @@ DESTDIR = ../../bin
 TEMPLATE = app
 SOURCES += main.cpp \
     teambuilder.cpp \
-    advanced.cpp
+    advanced.cpp \
+    menu.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
-    advanced.h
+    advanced.h \
+    menu.h
 FORMS += 
 LIBS += -L../../bin \
     -lPokemonInfo \
