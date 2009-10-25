@@ -3,9 +3,9 @@
 
 #include <QtGui>
 #include "../PokemonInfo/pokemoninfo.h"
+#include <QMenuBar>
 
 class TB_PokemonBody;
-class TB_TrainerBody;
 class TB_EVManager;
 class TB_Advanced;
 
@@ -33,18 +33,8 @@ public:
     void setWidget(QWidget *widget);
 };
 
-/* validator for the nicks */
-class QNickValidator : public QValidator
-{
-    Q_OBJECT
-public:
-    QNickValidator(QWidget *parent);
-
-    bool isBegEndChar(QChar ch) const;
-    void fixup(QString &input) const;
-    State validate(QString &input, int &pos) const;
-};
-
+class QMenu;
+class QAction;
 class TeamBuilder : public QWidget
 {
     Q_OBJECT
@@ -52,7 +42,7 @@ private:
     QPushButton *m_pokemon[6];
     QPushButton *m_trainer;
     QStackedWidget *m_body;
-    TB_TrainerBody *m_trainerBody;
+    QWidget *m_trainerBody;
     TB_PokemonBody *m_pbody[6];
     /* the Team of the trainer */
     Team m_team;
@@ -65,26 +55,18 @@ private:
     QPushButton *at(int i);
     Team *team();
 
+    QMenuBar menuBar;
+    QMenu * menuFichier;
+    QAction * actionQuitter;
+    QAction * actionSave;
+
 private slots:
     void changeBody(int i);
+    void saveTeam();
 
 public:
     TeamBuilder(QWidget *parent = 0);
     ~TeamBuilder();
-};
-
-class TB_TrainerBody : public QWidget
-{
-    Q_OBJECT
-private:
-    QLineEdit *m_nick;
-    QTextEdit *m_winMessage, *m_loseMessage, /* *m_drawMessage, */ *m_trainerInfo;
-public:
-    TB_TrainerBody();
-public slots:
-    void save();
-    void load();
-    void done();
 };
 
 class TB_PokemonBody : public QWidget
