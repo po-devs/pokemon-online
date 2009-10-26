@@ -1,5 +1,5 @@
 #include "pokemoninfo.h"
-#include <zip.h>
+#include "zip.h"
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
@@ -44,7 +44,7 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
 
     if (!archive)
     {
-	qDebug() << "Error when opening archive";
+        qDebug() << "Error when opening archive" << archiveName;
 	return ret;
     }
 
@@ -52,7 +52,7 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
 
     if (!file)
     {
-	qDebug() << "Error when opening file in archive: " << zip_strerror(archive);
+        qDebug() << "Error when opening file "<< fileName <<" in archive: " << archiveName <<" : " << zip_strerror(archive);
 	zip_close(archive);
 	return ret;
     }
@@ -66,7 +66,7 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
 
     if (readsize < 0)
     {
-	qDebug() << "Error when reading file in archive: " << zip_file_strerror(file);
+        qDebug() << "Error when reading file "<< fileName <<" in archive: " << archiveName <<" : " << zip_file_strerror(file);
     }
 
     zip_fclose(file);
@@ -188,8 +188,7 @@ void PokeBaseStats::setBaseStat(int stat, quint8 base)
     m_BaseStats[stat] = base;
 }
 
-PokeGeneral::PokeGeneral()
-	: m_num(0)
+PokeGeneral::PokeGeneral(): m_num(0)
 {
 }
 
@@ -215,7 +214,6 @@ void PokeGeneral::loadMoves()
 
 void PokeGeneral::loadTypes()
 {
-    ;
 }
 
 void PokeGeneral::loadAbilities()
@@ -655,11 +653,16 @@ void PokeTeam::load()
 {
     PokeGeneral::load();
     /*set the default gender & ability */
-    if (genderAvail() == Pokemon::NeutralAvail) {
+    if (genderAvail() == Pokemon::NeutralAvail)
+    {
 	setGender(Pokemon::Neutral);
-    } else if (genderAvail() == Pokemon::FemaleAvail) {
+    }
+    else if (genderAvail() == Pokemon::FemaleAvail)
+    {
 	setGender(Pokemon::Female);
-    } else {
+    }
+    else
+    {
 	setGender(Pokemon::Male);
     }
     setAbility(abilities()[0]);
@@ -1229,4 +1232,99 @@ QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type)
 	ret.push_back(line.split(' '));
 
     return ret;
+}
+
+
+//fonctions globales de sauvegarde de la team
+QDataStream & operator << (QDataStream & out, const Team & team)
+{
+    qDebug() << "sauvegarde de la Team";
+    for(int index = 0;index<6;index++)
+    {
+        const PokeTeam & poke = team.poke(index);
+        out << index;
+        out << poke;
+    }
+    return out;
+}
+
+QDataStream & operator << (QDataStream & out, const PokeTeam & Pokemon)
+{
+    qDebug() << "sauvegarde du pokemon";
+    out << Pokemon.num();
+    out << Pokemon.nickname();
+    out << Pokemon.item();
+    out << Pokemon.ability();
+    out << Pokemon.nature();
+    out << Pokemon.gender();
+    out << Pokemon.shiny();
+    out << Pokemon.happiness();
+    out << Pokemon.level();
+    int i;
+    for(i=0;i<4;i++)
+    {
+        out << Pokemon.move(i);
+    }
+    for(i=0;i<6;i++)
+    {
+        out << Pokemon.DV(i);
+    }
+    for(i=0;i<6;i++)
+    {
+        out << Pokemon.EV(i);
+    }
+    return out;
+}
+
+QDataStream & operator >> (QDataStream & in,const Team & team)
+{
+    int countIndex;
+    for(countIndex=0;countIndex<6;countIndex++)
+    {
+        int index;
+        in >> index;
+        if(index == countIndex)
+        {
+             ;
+            in >> team.poke(index);
+        }
+    }
+    return in;
+}
+
+QDataStream & operator >> (QDataStream & in,const PokeTeam & Pokemon)
+{
+    QString nickname;
+    int num,item,ability,nature,gender,level,i;
+    bool shininess;
+    quint8 happiness;
+    in >> num >> nickname >> item >> ability >> nature >> gender >> shininess >> happiness >> level;
+    Pokemon.setNum(num);
+    Pokemon.setNickname(nickname);
+    Pokemon.setItem(item);
+    Pokemon.setAbility(ability);
+    Pokemon.setNature(nature);
+    Pokemon.setGender(gender);
+    Pokemon.setShininess(shininess);
+    Pokemon.setHappiness(happiness);
+    Pokemon.setLevel(level);
+    for(i=0;i<4;i++)
+    {
+        int moveNum;
+        in >> moveNum;
+        Pokemon.setMove(i,moveNum);
+    }
+    for(i=0;i<6;i++)
+    {
+        quint8 DV;
+        in >> DV;
+        Pokemon.setDV(i,DV);
+    }
+    for(i=0;i<6;i++)
+    {
+        quint8 EV;
+        in >> EV;
+        Pokemon.setEV(i,EV);
+    }
+    return in;
 }
