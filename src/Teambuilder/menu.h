@@ -11,7 +11,9 @@ class TB_Menu : public QWidget
 {
 	Q_OBJECT
 private:
-    Team myteam;
+    Team m_Team;
+
+    Team * team();
 
 public:
     TB_Menu();

@@ -528,7 +528,7 @@ public:
 QDataStream & operator << (QDataStream & out,const Team & team);
 QDataStream & operator << (QDataStream & out,const PokeTeam & Pokemon);
 
-QDataStream & operator >>(QDataStream & in,const Team & team);
+QDataStream & operator >>(QDataStream & in,Team & team);
 QDataStream & operator >>(QDataStream & in,PokeTeam & Pokemon);
 #endif // POKEMONINFO_H
 

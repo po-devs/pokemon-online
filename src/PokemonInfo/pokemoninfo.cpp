@@ -1276,7 +1276,7 @@ QDataStream & operator << (QDataStream & out, const PokeTeam & Pokemon)
     return out;
 }
 
-QDataStream & operator >> (QDataStream & in,const Team & team)
+QDataStream & operator >> (QDataStream & in, Team & team)
 {
     int countIndex;
     for(countIndex=0;countIndex<6;countIndex++)
@@ -1285,14 +1285,13 @@ QDataStream & operator >> (QDataStream & in,const Team & team)
         in >> index;
         if(index == countIndex)
         {
-             ;
             in >> team.poke(index);
         }
     }
     return in;
 }
 
-QDataStream & operator >> (QDataStream & in,const PokeTeam & Pokemon)
+QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
 {
     QString nickname;
     int num,item,ability,nature,gender,level,i;

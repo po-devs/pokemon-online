@@ -2,6 +2,9 @@
 
 TB_Menu::TB_Menu()
 {
+    resize(200,200);
+    setWindowTitle(tr("Menu"));
+
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     QPushButton *teambuilder, *online, *credits, *exit;
@@ -14,7 +17,7 @@ TB_Menu::TB_Menu()
     connect (teambuilder, SIGNAL(clicked()), SLOT(launchTeambuilder()));
     connect (online, SIGNAL(clicked()), SLOT(goOnline()));
     connect (credits, SIGNAL(clicked()), SLOT(launchCredits()));
-    connect (exit, SIGNAL(clicked()), SLOT(deleteLater()));
+    connect (exit, SIGNAL(clicked()), qApp, SLOT(quit()));
 }
 
 void TB_Menu::launchCredits()
@@ -23,12 +26,17 @@ void TB_Menu::launchCredits()
 
 void TB_Menu::launchTeambuilder()
 {
-    TeamBuilder *teambuilder = new TeamBuilder();
+    TeamBuilder *teambuilder = new TeamBuilder(team());
     teambuilder->show();
 
     hide();
 
     connect(teambuilder, SIGNAL(destroyed()), SLOT(show()));
+}
+
+Team * TB_Menu::team()
+{
+    return &m_Team;
 }
 
 void TB_Menu::goOnline()
