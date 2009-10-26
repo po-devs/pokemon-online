@@ -4,35 +4,12 @@
 #include <QtGui>
 #include "../PokemonInfo/pokemoninfo.h"
 #include <QMenuBar>
+#include "otherwidgets.h"
 
 class TB_PokemonBody;
 class TB_TrainerBody;
 class TB_EVManager;
 class TB_Advanced;
-
-class QCompactTable : public QTableWidget
-{
-    Q_OBJECT
-protected:
-    int sizeHintForRow ( int row ) const;
-public:
-    QCompactTable(int row, int column);
-};
-
-/* a widget that allows giving a title to another widget */
-class QEntitled : public QWidget
-{
-    Q_OBJECT
-private:
-    QLabel *m_title;
-    QWidget *m_widget;
-    QVBoxLayout *m_layout;
-
-public:
-    QEntitled(const QString &title = "Title", QWidget *widget = 0);
-    void setTitle(const QString &title);
-    void setWidget(QWidget *widget);
-};
 
 /* validator for the nicks */
 class QNickValidator : public QValidator
@@ -46,7 +23,7 @@ public:
     State validate(QString &input, int &pos) const;
 };
 
-class TeamBuilder : public QWidget
+class TeamBuilder : public QCenteredWidget
 {
     Q_OBJECT
 private:

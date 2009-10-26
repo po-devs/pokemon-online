@@ -7,11 +7,13 @@ TEMPLATE = app
 SOURCES += main.cpp \
     teambuilder.cpp \
     advanced.cpp \
-    menu.cpp
+    menu.cpp \
+    otherwidgets.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
-    menu.h
+    menu.h \
+    otherwidgets.h
 FORMS += 
 LIBS += -L../../bin \
     -lPokemonInfo \
