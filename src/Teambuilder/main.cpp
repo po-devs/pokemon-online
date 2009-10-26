@@ -1,10 +1,10 @@
-#include "teambuilder.h"
+#include "menu.h"
 #include <QMainWindow>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     QApplication::setStyle("plastique");
-    TeamBuilder w;
+    TB_Menu w;
 
     w.show();
     return a.exec();
