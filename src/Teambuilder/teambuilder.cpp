@@ -79,23 +79,10 @@ QValidator::State QNickValidator::validate(QString &input, int& pos) const
 }
 
 
-TeamBuilder::TeamBuilder(Team *pub_team) : m_team(pub_team)
+TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
 {
     resize(600, 600);
     setAttribute(Qt::WA_DeleteOnClose, true);
-
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-
-    PokemonInfo::init("db/");
-    ItemInfo::init("db/");
-    MoveInfo::init("db/");
-    TypeInfo::init("db/");
-    NatureInfo::init("db/");
-    CategoryInfo::init("db/");
-    AbilityInfo::init("db/");
-    GenderInfo::init("db/");
-    HiddenPowerInfo::init("db/");
 
     QGridLayout *layout = new QGridLayout(this);
 
@@ -172,6 +159,11 @@ QPushButton* TeamBuilder::at(int i)
 
 Team* TeamBuilder::team()
 {
+    return & m_team->team();
+}
+
+TrainerTeam * TeamBuilder::trainerTeam()
+{
     return m_team;
 }
 
@@ -202,7 +194,7 @@ void TeamBuilder::saveTeam()
         return;
     }
     QDataStream out(&file);
-    out << (*(this->team()));
+    out << (*trainerTeam());
 }
 
 void TeamBuilder::loadTeam()
@@ -220,12 +212,42 @@ void TeamBuilder::loadTeam()
         return;
     }
     QDataStream in(&file);
-    in >> (*(this->team()));
+    in >> (*trainerTeam());
+
+    updateTeam();
 }
 
 void TeamBuilder::done()
 {
     this->close();
+}
+
+void TeamBuilder::updateTeam()
+{
+    for (int i = 0; i < 6; i++) {
+        updatePokemon(i);
+    }
+    updateTrainer();
+}
+
+void TeamBuilder::updatePokemon(int index)
+{
+    pokebody(index)->updateNum();
+}
+
+void TeamBuilder::updateTrainer()
+{
+    trainerbody()->updateTrainer();
+}
+
+TB_PokemonBody * TeamBuilder::pokebody(int index)
+{
+    return m_pbody[index];
+}
+
+TB_TrainerBody * TeamBuilder::trainerbody()
+{
+    return m_trainerBody;
 }
 
 TeamBuilder::~TeamBuilder()
@@ -268,6 +290,11 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder)
     connect(saveb, SIGNAL(clicked()), teambuilder, SLOT(saveTeam()));
     connect(loadb, SIGNAL(clicked()), teambuilder, SLOT(loadTeam()));
     connect(doneb, SIGNAL(clicked()), teambuilder, SLOT(done()));
+}
+
+void TB_TrainerBody::updateTrainer()
+{
+
 }
 
 TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
@@ -446,11 +473,6 @@ void TB_PokemonBody::goToAdvanced()
     }
 }
 
-void TB_PokemonBody::updateLevel()
-{
-    level->setText(tr("Lv. %1").arg(poke()->level()));
-}
-
 void TB_PokemonBody::setAdvancedOpenToFalse()
 {
     m_adv=NULL;
@@ -464,6 +486,45 @@ bool TB_PokemonBody::advancedOpen()
 TB_Advanced * TB_PokemonBody::advanced()
 {
     return m_adv;
+}
+
+void TB_PokemonBody::setNum(int pokenum)
+{
+    if (pokenum == poke()->num())
+        return;
+
+    poke()->reset();
+    poke()->setNum(pokenum);
+    poke()->load();
+
+    updateNum();
+}
+
+void TB_PokemonBody::updateLevel()
+{
+    level->setText(tr("Lv. %1").arg(poke()->level()));
+}
+
+void TB_PokemonBody::updateNum()
+{
+    configureMoves();
+    updateMoves();
+    updateLevel();
+    updateImage();
+    updateEVs();
+    updateGender();
+
+    emit pokeChanged(poke()->num());
+}
+
+void TB_PokemonBody::updateEVs()
+{
+    evchoice->updateEVs();
+}
+
+void TB_PokemonBody::updateImage()
+{
+    pokeImage->setPixmap(poke()->picture());
 }
 
 void TB_PokemonBody::updateAdvanced()
@@ -481,6 +542,14 @@ void TB_PokemonBody::updateAdvanced()
 void TB_PokemonBody::updateGender()
 {
     genderIcon->setPixmap(GenderInfo::Picture(poke()->gender()));
+}
+
+void TB_PokemonBody::updateMoves()
+{
+    for (int i = 0; i < 4; i++)
+    {
+        m_moves[i]->setText(MoveInfo::Name(poke()->move(i)));
+    }
 }
 
 void TB_PokemonBody::initItems()
@@ -529,29 +598,6 @@ void TB_PokemonBody::moveEntered(int row)
     emit moveChosen(MoveInfo::Number(movechoice->item(row, Name)->text()));
 }
 
-void TB_PokemonBody::setNum(int pokenum)
-{
-    if (pokenum == poke()->num())
-	return;
-
-    poke()->reset();
-    poke()->setNum(pokenum);
-    poke()->load();
-    evchoice->updateEVs();
-
-    /* changes the move list */
-    configureMoves();
-    /* updates the pic */
-    updateImage();
-    updateGender();
-
-    emit pokeChanged(pokenum);
-}
-
-void TB_PokemonBody::updateImage()
-{
-    pokeImage->setPixmap(poke()->picture());
-}
 
 void TB_PokemonBody::configureMoves()
 {
@@ -600,11 +646,6 @@ void TB_PokemonBody::configureMoves()
 	witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(movenum))));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Category, witem);
-    }
-
-    for (int i = 0; i < 4; i++)
-    {
-	m_moves[i]->setText(MoveInfo::Name(poke()->move(i)));
     }
 
     movechoice->sortItems(Name);

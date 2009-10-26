@@ -33,24 +33,34 @@ private:
     TB_TrainerBody *m_trainerBody;
     TB_PokemonBody *m_pbody[6];
     /* the Team of the trainer */
-    Team *m_team;
+    TrainerTeam *m_team;
 
+    /* returns the button associated to that zone */
+    QPushButton *at(int i);
+    Team *team();
+    TrainerTeam *trainerTeam();
+
+    void updatePokemon(int index);
+    void updateTrainer();
     /* makes the signal/slots connections */
     void connectAll();
     /* returns the current zone (0 = trainer, 1-6 = according pokémon) */
     int currentZone() const;
-    /* returns the button associated to that zone */
-    QPushButton *at(int i);
-    Team *team();
+    /*...*/
+    TB_PokemonBody *pokebody(int index);
+    TB_TrainerBody *trainerbody();
 
 private slots:
     void changeBody(int i);
+
+public slots:
     void saveTeam();
     void loadTeam();
     void done();
+    void updateTeam();
 
 public:
-    TeamBuilder(Team *team);
+    TeamBuilder(TrainerTeam *team);
     ~TeamBuilder();
 };
 
@@ -62,6 +72,8 @@ private:
     QTextEdit *m_winMessage, *m_loseMessage, /* *m_drawMessage, */ *m_trainerInfo;
 public:
     TB_TrainerBody(TeamBuilder *parent);
+
+    void updateTrainer();
 };
 
 class TB_PokemonBody : public QWidget
@@ -88,6 +100,7 @@ private:
     QLineEdit *m_moves[4];
     TB_EVManager *evchoice;
     TB_Advanced *m_adv;
+    int m_index;
 
     /* the pokemon of the team corresponding to the body */
     PokeTeam *m_poke;
@@ -100,6 +113,8 @@ private:
     void updateImage();
     void updateGender();
     void updateLevel();
+    void updateMoves();
+    void updateEVs();
 
     bool advancedOpen();
     TB_Advanced *advanced();
@@ -123,6 +138,8 @@ public slots:
     void setNum(int pokeNum);
 public:
     TB_PokemonBody(PokeTeam *poke);
+
+    void updateNum();
 };
 
 class TB_EVManager : public QGridLayout

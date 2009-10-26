@@ -2,6 +2,19 @@
 
 TB_Menu::TB_Menu()
 {
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    PokemonInfo::init("db/");
+    ItemInfo::init("db/");
+    MoveInfo::init("db/");
+    TypeInfo::init("db/");
+    NatureInfo::init("db/");
+    CategoryInfo::init("db/");
+    AbilityInfo::init("db/");
+    GenderInfo::init("db/");
+    HiddenPowerInfo::init("db/");
+
     resize(200,200);
     setWindowTitle(tr("Menu"));
 
@@ -26,7 +39,7 @@ void TB_Menu::launchCredits()
 
 void TB_Menu::launchTeambuilder()
 {
-    TeamBuilder *teambuilder = new TeamBuilder(team());
+    TeamBuilder *teambuilder = new TeamBuilder(trainerTeam());
     teambuilder->show();
 
     hide();
@@ -36,7 +49,12 @@ void TB_Menu::launchTeambuilder()
 
 Team * TB_Menu::team()
 {
-    return &m_Team;
+    return & m_Team.team();
+}
+
+TrainerTeam * TB_Menu::trainerTeam()
+{
+    return & m_Team;
 }
 
 void TB_Menu::goOnline()

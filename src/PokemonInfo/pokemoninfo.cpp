@@ -1276,6 +1276,35 @@ QDataStream & operator << (QDataStream & out, const PokeTeam & Pokemon)
     return out;
 }
 
+QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
+{
+    out << trainerTeam.trainerNick();
+    out << trainerTeam.trainerInfo();
+    out << trainerTeam.trainerLose();
+    out << trainerTeam.trainerWin();
+    out << trainerTeam.team();
+
+    return out;
+}
+
+QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
+{
+    QString nick, info, lose, win;
+
+    in >> nick;
+    in >> info;
+    in >> lose;
+    in >> win;
+    in >> trainerTeam.team();
+
+    trainerTeam.setTrainerNick(nick);
+    trainerTeam.setTrainerInfo(info);
+    trainerTeam.setTrainerWin(win);
+    trainerTeam.setTrainerLose(lose);
+
+    return in;
+}
+
 QDataStream & operator >> (QDataStream & in, Team & team)
 {
     int countIndex;
@@ -1299,6 +1328,7 @@ QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
     quint8 happiness;
     in >> num >> nickname >> item >> ability >> nature >> gender >> shininess >> happiness >> level;
     Pokemon.setNum(num);
+    Pokemon.load();
     Pokemon.setNickname(nickname);
     Pokemon.setItem(item);
     Pokemon.setAbility(ability);
@@ -1326,4 +1356,59 @@ QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
         Pokemon.setEV(i,EV);
     }
     return in;
+}
+
+TrainerTeam::TrainerTeam()
+{
+}
+
+QString TrainerTeam::trainerInfo() const
+{
+    return m_trainerInfo;
+}
+
+QString TrainerTeam::trainerLose() const
+{
+    return m_trainerLose;
+}
+
+QString TrainerTeam::trainerWin() const
+{
+    return m_trainerWin;
+}
+
+QString TrainerTeam::trainerNick() const
+{
+    return m_trainerNick;
+}
+
+
+void TrainerTeam::setTrainerInfo(const QString &newinfo)
+{
+    m_trainerInfo = newinfo;
+}
+
+void TrainerTeam::setTrainerWin(const QString &newwin)
+{
+    m_trainerWin = newwin;
+}
+
+void TrainerTeam::setTrainerLose(const QString &newlose)
+{
+    m_trainerLose = newlose;
+}
+
+void TrainerTeam::setTrainerNick(const QString &newnick)
+{
+    m_trainerNick = newnick;
+}
+
+const Team & TrainerTeam::team() const
+{
+    return m_team;
+}
+
+Team & TrainerTeam::team()
+{
+    return m_team;
 }

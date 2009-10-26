@@ -331,6 +331,43 @@ public:
     PokeTeam & poke(int index);
 };
 
+class POKEMONINFOSHARED_EXPORT TrainerTeam
+{
+protected:
+    Team m_team;
+    QString m_trainerNick;
+    QString m_trainerInfo;
+    QString m_trainerWin;
+    QString m_trainerLose;
+
+public:
+    TrainerTeam();
+
+    const Team & team() const;
+    Team & team();
+
+    void setTrainerInfo(const QString &newinfo);
+    void setTrainerWin(const QString &newwin);
+    void setTrainerLose(const QString &newlose);
+    void setTrainerNick(const QString &newnick);
+
+    QString trainerInfo() const;
+    QString trainerWin() const;
+    QString trainerLose() const;
+    QString trainerNick() const;
+};
+
+
+QDataStream & operator << (QDataStream & out,const Team & team);
+QDataStream & operator << (QDataStream & out,const PokeTeam & Pokemon);
+QDataStream & operator << (QDataStream & out,const TrainerTeam & trainerTeam);
+
+QDataStream & operator >>(QDataStream & in,Team & team);
+QDataStream & operator >>(QDataStream & in,PokeTeam & Pokemon);
+QDataStream & operator >>(QDataStream & in,TrainerTeam & trainerTeam);
+
+
+
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
 class POKEMONINFOSHARED_EXPORT PokemonInfo
 {
@@ -525,10 +562,5 @@ public:
     static QList<QStringList> PossibilitiesForType(int type);
 };
 
-QDataStream & operator << (QDataStream & out,const Team & team);
-QDataStream & operator << (QDataStream & out,const PokeTeam & Pokemon);
-
-QDataStream & operator >>(QDataStream & in,Team & team);
-QDataStream & operator >>(QDataStream & in,PokeTeam & Pokemon);
 #endif // POKEMONINFO_H
 

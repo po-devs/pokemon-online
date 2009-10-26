@@ -12,9 +12,10 @@ class TB_Menu : public QCenteredWidget
 {
 	Q_OBJECT
 private:
-    Team m_Team;
+    TrainerTeam m_Team;
 
     Team * team();
+    TrainerTeam * trainerTeam();
 
 public:
     TB_Menu();
