@@ -5,6 +5,12 @@ TB_Menu::TB_Menu()
     resize(200,200);
     setWindowTitle(tr("Menu"));
 
+    QDesktopWidget desktop;
+    QRect deskrect = desktop.screenGeometry();
+    int x = deskrect.width()/2 - width()/2;
+    int y = deskrect.height()/2 - height()/2;
+    move(x,y);
+
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     QPushButton *teambuilder, *online, *credits, *exit;
