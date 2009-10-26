@@ -254,7 +254,7 @@ TeamBuilder::~TeamBuilder()
 {
 }
 
-TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder)
+TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->trainerTeam())
 {
     //main layout
     QVBoxLayout *mlayout = new QVBoxLayout(this);
@@ -278,6 +278,15 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder)
     QEntitled * mlose = new QEntitled(tr("Losing Message"), m_loseMessage=new QTextEdit());
     mlayout->addWidget(mlose);
 
+    m_winMessage->setTabChangesFocus(true);
+    m_loseMessage->setTabChangesFocus(true);
+    m_trainerInfo->setTabChangesFocus(true);
+
+    connect (m_nick, SIGNAL(textEdited(QString)), SLOT(setTrainerNick(QString)));
+    connect (m_winMessage, SIGNAL(textChanged()), SLOT(changeTrainerWin()));
+    connect (m_loseMessage, SIGNAL(textChanged()), SLOT(changeTrainerLose()));
+    connect (m_trainerInfo, SIGNAL(textChanged()), SLOT(changeTrainerInfo()));
+
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     mlayout->addLayout(buttonsLayout);
 
@@ -292,9 +301,37 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder)
     connect(doneb, SIGNAL(clicked()), teambuilder, SLOT(done()));
 }
 
+TrainerTeam * TB_TrainerBody::trainerTeam()
+{
+    return m_team;
+}
+
 void TB_TrainerBody::updateTrainer()
 {
+    m_trainerInfo->setText(trainerTeam()->trainerInfo());
+    m_nick->setText(trainerTeam()->trainerNick());
+    m_winMessage->setText(trainerTeam()->trainerWin());
+    m_loseMessage->setText(trainerTeam()->trainerLose());
+}
 
+void TB_TrainerBody::changeTrainerInfo()
+{
+    trainerTeam()->setTrainerInfo(m_trainerInfo->toPlainText());
+}
+
+void TB_TrainerBody::setTrainerNick(const QString &newnick)
+{
+    trainerTeam()->setTrainerNick(newnick);
+}
+
+void TB_TrainerBody::changeTrainerWin()
+{
+    trainerTeam()->setTrainerWin(m_winMessage->toPlainText());
+}
+
+void TB_TrainerBody::changeTrainerLose()
+{
+    trainerTeam()->setTrainerLose(m_loseMessage->toPlainText());
 }
 
 TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
@@ -313,7 +350,9 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     layout->addLayout(first_column,0,0);
 
     first_column->addWidget(new QEntitled("&Pokemon", pokechoice));
-    first_column->addWidget(new QEntitled("&Nickname", new QLineEdit()));
+    first_column->addWidget(new QEntitled("&Nickname", m_nick = new QLineEdit()));
+
+    connect(m_nick, SIGNAL(textEdited(QString)), SLOT(setNick(QString)));
 
     initItems();
 
@@ -513,6 +552,9 @@ void TB_PokemonBody::updateNum()
     updateImage();
     updateEVs();
     updateGender();
+    updateNature();
+    updateItem();
+    updateNickname();
 
     emit pokeChanged(poke()->num());
 }
@@ -552,12 +594,26 @@ void TB_PokemonBody::updateMoves()
     }
 }
 
+void TB_PokemonBody::updateNickname()
+{
+    m_nick->setText(poke()->nickname());
+}
+
+void TB_PokemonBody::updateItem()
+{
+    itemchoice->setCurrentIndex(ItemInfo::SortedNumber(ItemInfo::Name(poke()->item())));
+}
+
+void TB_PokemonBody::updateNature()
+{
+    naturechoice->setCurrentIndex(poke()->nature());
+}
+
 void TB_PokemonBody::initItems()
 {
     itemchoice = new QComboBox();
 
-    QStringList itemList = ItemInfo::Names();
-    qSort(itemList);
+    QStringList itemList = ItemInfo::SortedNames();
 
     itemchoice->addItems(itemList);
 
@@ -663,6 +719,11 @@ void TB_PokemonBody::setNature(int nature)
     poke()->setNature(nature);
     /* As the nature has an influence over the stats, we update them */
     evchoice->updateEVs();
+}
+
+void TB_PokemonBody::setNick(const QString &nick)
+{
+    poke()->setNickname(nick);
 }
 
 TB_EVManager::TB_EVManager(PokeTeam *_poke)

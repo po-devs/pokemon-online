@@ -10,6 +10,7 @@ QStringList MoveInfo::m_Names;
 
 QString ItemInfo::m_Directory;
 QStringList ItemInfo::m_Names;
+QStringList ItemInfo::m_SortedNames;
 
 QStringList TypeInfo::m_Names;
 QList<QColor> TypeInfo::m_Colors;
@@ -666,6 +667,7 @@ void PokeTeam::load()
 	setGender(Pokemon::Male);
     }
     setAbility(abilities()[0]);
+    setNickname(PokemonInfo::Name(num()));
     PokeGraphics::load(gender(), false);
 }
 
@@ -966,6 +968,9 @@ void ItemInfo::loadNames()
 {
     fill_container_with_file(m_Names, path("items_en.txt"));
     fill_container_with_file(m_Names, path("berries_en.txt"));
+
+    m_SortedNames = m_Names;
+    qSort(m_SortedNames);
 }
 
 QString ItemInfo::path(const QString &file)
@@ -988,9 +993,19 @@ int ItemInfo::Number(const QString &itemname)
     return (qFind(m_Names.begin(), m_Names.end(), itemname)-m_Names.begin()) % (NumberOfItems());
 }
 
+int ItemInfo::SortedNumber(const QString &itemname)
+{
+    return (qFind(m_SortedNames.begin(), m_SortedNames.end(), itemname)-m_SortedNames.begin()) % (NumberOfItems());
+}
+
 QStringList ItemInfo::Names()
 {
     return m_Names;
+}
+
+QStringList ItemInfo::SortedNames()
+{
+    return m_SortedNames;
 }
 
 void TypeInfo::loadNames()
@@ -1341,7 +1356,7 @@ QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
     {
         int moveNum;
         in >> moveNum;
-        Pokemon.setMove(i,moveNum);
+        Pokemon.setMove(moveNum,i);
     }
     for(i=0;i<6;i++)
     {

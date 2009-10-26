@@ -35,6 +35,7 @@ void QEntitled::setWidget(QWidget *widget)
     m_layout->removeWidget(m_widget);
     m_widget = widget;
     m_layout->addWidget(m_widget, 0, Qt::AlignTop);
+    m_title->setBuddy(m_widget);
 }
 
 void QEntitled::setTitle(const QString &title)
