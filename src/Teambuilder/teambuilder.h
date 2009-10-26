@@ -46,8 +46,6 @@ public:
     State validate(QString &input, int &pos) const;
 };
 
-class QMenu;
-class QAction;
 class TeamBuilder : public QWidget
 {
     Q_OBJECT
