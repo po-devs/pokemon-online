@@ -259,23 +259,23 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->t
     //main layout
     QVBoxLayout *mlayout = new QVBoxLayout(this);
 
-    QEntitled * trainernick = new QEntitled(tr("Trainer"), m_nick = new QLineEdit());
+    QEntitled * trainernick = new QEntitled(tr("T&rainer"), m_nick = new QLineEdit());
     m_nick->setMaximumWidth(100);
     m_nick->setMaxLength(15);
     /* A non-whitespace word caracter followed by any number of white characters and not ended by a space, or just nothing */
     m_nick->setValidator(new QNickValidator(this));
     mlayout->addWidget(trainernick);
 
-    QEntitled * minfo = new QEntitled(tr("Player Info"), m_trainerInfo=new QTextEdit());
+    QEntitled * minfo = new QEntitled(tr("&Player Info"), m_trainerInfo=new QTextEdit());
     mlayout->addWidget(minfo);
 
-    QEntitled * mwin = new QEntitled(tr("Winning Message"), m_winMessage=new QTextEdit());
+    QEntitled * mwin = new QEntitled(tr("&Winning Message"), m_winMessage=new QTextEdit());
     mlayout->addWidget(mwin);
 
-//    QEntitled * mdraw = new QEntitled(tr("Draw Message"), m_drawMessage=new QTextEdit());
+//    QEntitled * mdraw = new QEntitled(tr("Draw &Message"), m_drawMessage=new QTextEdit());
 //    mlayout->addWidget(mdraw);
 
-    QEntitled * mlose = new QEntitled(tr("Losing Message"), m_loseMessage=new QTextEdit());
+    QEntitled * mlose = new QEntitled(tr("&Losing Message"), m_loseMessage=new QTextEdit());
     mlayout->addWidget(mlose);
 
     m_winMessage->setTabChangesFocus(true);
