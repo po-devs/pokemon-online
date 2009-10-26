@@ -3,6 +3,7 @@
 
 #include "PokemonInfo_global.h"
 #include <QtGui>
+#include <QDataStream>
 
 struct Pokemon
 {
@@ -79,7 +80,7 @@ struct Pokemon
 };
 
 
-struct Move
+struct POKEMONINFOSHARED_EXPORT Move
 {
     enum Category
     {
@@ -524,4 +525,10 @@ public:
     static QList<QStringList> PossibilitiesForType(int type);
 };
 
+QDataStream & operator << (QDataStream & out,const Team & team);
+QDataStream & operator << (QDataStream & out,const PokeTeam & Pokemon);
+
+QDataStream & operator >>(QDataStream & in,const Team & team);
+QDataStream & operator >>(QDataStream & in,PokeTeam & Pokemon);
 #endif // POKEMONINFO_H
+
