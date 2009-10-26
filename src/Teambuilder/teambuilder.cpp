@@ -25,9 +25,77 @@ int QCompactTable::sizeHintForRow(int row) const
     return 0;
 }
 
-TeamBuilder::TeamBuilder(QWidget *parent):QWidget(parent),menuBar(this)
+
+
+QNickValidator::QNickValidator(QWidget *parent)
+	: QValidator(parent)
+{}
+
+bool QNickValidator::isBegEndChar(QChar ch) const
+{
+    return ch.isLetterOrNumber() || ch.isPunct();
+}
+
+void QNickValidator::fixup(QString &input) const
+{
+    /* The only real case when you need to fix a string that's intermediate
+       is to remove the trailing space at the end. */
+    if (input.length() > 0 && input[input.length()-1] == ' ') {
+	input.resize(input.length()-1);
+    }
+}
+
+QValidator::State QNickValidator::validate(QString &input, int& pos) const
+{
+    (void) pos;
+
+    if (input.length() == 0)
+	return QValidator::Intermediate;
+
+    if (!isBegEndChar(input[0])) {
+	return QValidator::Invalid;
+    }
+
+    bool spaced = false;
+    bool punct = false;
+
+    for (int i = 0; i < input.length(); i++) {
+	if (input[i].isPunct()) {
+	    if (punct == true) {
+		//Error: two punctuations are not separated by a letter/number
+		return QValidator::Invalid;
+	    }
+	    punct = true;
+	    spaced = false;
+	} else if (input[i] == ' ') {
+	    if (spaced == true) {
+		//Error: two spaces are following
+		return QValidator::Invalid;
+	    }
+	    spaced = true;
+	} else if (input[i].isLetterOrNumber()) {
+	    //we allow another punct & space
+	    punct = false;
+	    spaced = false;
+	}
+    }
+
+    //let's check if there is at least a letter/number & no whitespace at the end
+    if (input.length() == 1 && input[0].isPunct()) {
+	return QValidator::Intermediate;
+    }
+    if (!isBegEndChar(input[input.length()-1])) {
+	return QValidator::Intermediate;
+    }
+
+    return QValidator::Acceptable;
+}
+
+
+TeamBuilder::TeamBuilder(Team *pub_team) : m_team(pub_team)
 {
     resize(600, 600);
+    setAttribute(Qt::WA_DeleteOnClose, true);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
@@ -44,12 +112,12 @@ TeamBuilder::TeamBuilder(QWidget *parent):QWidget(parent),menuBar(this)
 
     QGridLayout *layout = new QGridLayout(this);
 
-    //creation des menus
-    menuFichier = menuBar.addMenu("&Fichier");
-    actionCharger = menuFichier->addAction(tr("Charger une Team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_C);
-    actionSave = menuFichier->addAction(tr("Sauvegarder la Team"),this,SLOT(saveTeam()),Qt::CTRL+Qt::Key_S);
-    actionQuitter = menuFichier->addAction("Quitter",qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
-    layout->addWidget(&menuBar,0,0,Qt::AlignTop);
+    //Creating menus
+    QMenuBar *menuBar = new QMenuBar();
+    QMenu *menuFichier = menuBar->addMenu("&File");
+    menuFichier->addAction(tr("&Save Team"),this,SLOT(saveTeam()),Qt::CTRL+Qt::Key_S);
+    menuFichier->addAction("&Quit",qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
+    layout->addWidget(menuBar,0,0,Qt::AlignTop);
 
     m_trainer = new QPushButton("&Trainer", this);
     m_trainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -76,7 +144,7 @@ TeamBuilder::TeamBuilder(QWidget *parent):QWidget(parent),menuBar(this)
 
     layout->addWidget(m_body,3,0,1,4);
 
-    m_trainerBody = new QWidget();
+    m_trainerBody = new TB_TrainerBody(this);
     m_body->addWidget(m_trainerBody);
 
     for (int i = 0; i < 6; i++)
@@ -117,7 +185,7 @@ QPushButton* TeamBuilder::at(int i)
 
 Team* TeamBuilder::team()
 {
-    return &m_team;
+    return m_team;
 }
 
 //slot private
@@ -134,47 +202,45 @@ void TeamBuilder::changeBody(int i)
 
 void TeamBuilder::saveTeam()
 {
-    QString emplacement = QFileDialog::getSaveFileName(0,tr("Sauvegarde de la Team"),tr("../../bin/Team"));
-    if(emplacement.isEmpty())
+    QString location = QFileDialog::getSaveFileName(0,tr("Saving the Team"),tr("Team/trainer.tp"), tr("Team(*tp)"));
+    if(location.isEmpty())
     {
-        emplacement = qApp->applicationDirPath()+"/"+tr("Team");
-    }
-    if(emplacement == qApp->applicationDirPath()+"/Team")
-    {
-        QDir dossier(emplacement);
-        if(!dossier.exists())
-        {
-            if(!dossier.mkdir(emplacement))
-            {
-                QMessageBox::warning(0,tr("Erreur Creation dossier Team"),tr("Impossible de creer le Dossier ")+dossier.path());
-                return;
-            }
-        }
-        emplacement+="/dresseur.tp";
-    }
-    QFile fichier(emplacement);
-    if(!fichier.open(QIODevice::WriteOnly))
-    {
-        QMessageBox::warning(0, tr("Erreur Creation fichier Team"),tr("Impossible de creer le fichier ")+fichier.fileName());
+        //Maybe the user hit "Cancel"
         return;
     }
-    QDataStream out(&fichier);
-    out << this->team();
+    QFile file(location);
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::warning(0, tr("Error while saving the team"),tr("Can't create file ")+file.fileName());
+        return;
+    }
+    QDataStream out(&file);
+    out << (*(this->team()));
 }
 
 void TeamBuilder::loadTeam()
 {
-    QString emplacementTeam = QFileDialog::getOpenFileName(0,tr("Charger une Team"),tr("../../bin/Team"),tr("Team(*tp)"));
-    QFile fichier(emplacementTeam);
-    if(!fichier.open(QIODevice::ReadOnly))
+    QString location = QFileDialog::getOpenFileName(0,tr("Saving the Team"),tr("Team/trainer.tp"), tr("Team(*tp)"));
+    if(location.isEmpty())
     {
-        QMessageBox::warning(0,tr("Erreur chargement Team"),tr("Impossible de charger la team ")+fichier.fileName());
+        //Maybe the user hit "Cancel"
         return;
     }
-    QDataStream in(&fichier);
-
-    in >> (*team());
+    QFile file(location);
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        QMessageBox::warning(0, tr("Error while loading the team"),tr("Can't open file ")+file.fileName());
+        return;
+    }
+    QDataStream in(&file);
+    in >> (*(this->team()));
 }
+
+void TeamBuilder::done()
+{
+    this->close();
+}
+
 TeamBuilder::~TeamBuilder()
 {
 }
@@ -207,6 +273,45 @@ void QEntitled::setWidget(QWidget *widget)
 void QEntitled::setTitle(const QString &title)
 {
     m_title->setText(title);
+}
+
+
+TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder)
+{
+    //main layout
+    QVBoxLayout *mlayout = new QVBoxLayout(this);
+
+    QEntitled * trainernick = new QEntitled(tr("Trainer"), m_nick = new QLineEdit());
+    m_nick->setMaximumWidth(100);
+    m_nick->setMaxLength(15);
+    /* A non-whitespace word caracter followed by any number of white characters and not ended by a space, or just nothing */
+    m_nick->setValidator(new QNickValidator(this));
+    mlayout->addWidget(trainernick);
+
+    QEntitled * minfo = new QEntitled(tr("Player Info"), m_trainerInfo=new QTextEdit());
+    mlayout->addWidget(minfo);
+
+    QEntitled * mwin = new QEntitled(tr("Winning Message"), m_winMessage=new QTextEdit());
+    mlayout->addWidget(mwin);
+
+//    QEntitled * mdraw = new QEntitled(tr("Draw Message"), m_drawMessage=new QTextEdit());
+//    mlayout->addWidget(mdraw);
+
+    QEntitled * mlose = new QEntitled(tr("Losing Message"), m_loseMessage=new QTextEdit());
+    mlayout->addWidget(mlose);
+
+    QHBoxLayout *buttonsLayout = new QHBoxLayout();
+    mlayout->addLayout(buttonsLayout);
+
+    QPushButton *saveb, *loadb, *doneb;
+
+    buttonsLayout->addWidget(saveb = new QPushButton(tr("&Save")));
+    buttonsLayout->addWidget(loadb = new QPushButton(tr("&Load")));
+    buttonsLayout->addWidget(doneb = new QPushButton(tr("&Done")));
+
+    connect(saveb, SIGNAL(clicked()), teambuilder, SLOT(saveTeam()));
+    connect(loadb, SIGNAL(clicked()), teambuilder, SLOT(loadTeam()));
+    connect(doneb, SIGNAL(clicked()), teambuilder, SLOT(done()));
 }
 
 TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
@@ -261,7 +366,6 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     second_column->addWidget(new QEntitled(tr("&Nature"), naturechoice));
 
     QPushButton *advanced = new QPushButton(tr("&Advanced"));
-    advanced->setShortcut(Qt::Key_A);
     second_column->addWidget(advanced);
     connect(advanced, SIGNAL(pressed()), SLOT(goToAdvanced()));
 
@@ -367,10 +471,8 @@ void TB_PokemonBody::moveCellActivated(int cell)
 
 void TB_PokemonBody::goToAdvanced()
 {
-    if (poke()->num() != 0)
-    {
-        if (advancedOpen())
-        {
+    if (poke()->num() != 0) {
+	if (advancedOpen()) {
 	    /* we show the user where the advanced window is */
 	    advanced()->activateWindow();
 	    advanced()->raise();
@@ -570,7 +672,7 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
 {
     m_poke = _poke;
 
-    QString labels[6] = {"HP:", "Att:", "Def:", "Speed:", "Spatt:", "SpDef:"};
+    QString labels[6] = {"HP:", "Att:", "Def:", "Speed:", "SpAtt:", "SpDef:"};
 
     for (int i = 0; i < 6; i++)
     {
@@ -582,6 +684,7 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
 	slider(i)->setTracking(true);
 	slider(i)->setRange(0,255);
 	slider(i)->setMinimumWidth(150);
+        slider(i)->setSingleStep(4);
 	m_evs[i]->setMinimumWidth(24);
 	connect(slider(i),SIGNAL(valueChanged(int)),SLOT(EVChanged(int)));
     }

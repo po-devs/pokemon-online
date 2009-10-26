@@ -45,7 +45,7 @@ private:
     QWidget *m_trainerBody;
     TB_PokemonBody *m_pbody[6];
     /* the Team of the trainer */
-    Team m_team;
+    Team *m_team;
 
     /* makes the signal/slots connections */
     void connectAll();
@@ -67,7 +67,7 @@ private slots:
     void loadTeam();
 
 public:
-    TeamBuilder(QWidget *parent = 0);
+    TeamBuilder(Team *team);
     ~TeamBuilder();
 };
 
