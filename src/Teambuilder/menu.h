@@ -2,12 +2,13 @@
 #define TEAMBUILDER_MENU_H
 
 #include "teambuilder.h"
+#include "otherwidgets.h"
 //for Team struct
 #include "../PokemonInfo/pokemoninfo.h"
 // :)
 #include <QtGui>
 
-class TB_Menu : public QWidget
+class TB_Menu : public QCenteredWidget
 {
 	Q_OBJECT
 private:
