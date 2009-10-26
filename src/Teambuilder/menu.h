@@ -12,7 +12,14 @@ class TB_Menu : public QWidget
 	Q_OBJECT
 private:
     Team myteam;
+
 public:
+    TB_Menu();
+
+public slots:
+    void launchTeambuilder();
+    void launchCredits();
+    void goOnline();
 };
 
 #endif
