@@ -31,6 +31,8 @@ TB_Menu::TB_Menu()
     connect (online, SIGNAL(clicked()), SLOT(goOnline()));
     connect (credits, SIGNAL(clicked()), SLOT(launchCredits()));
     connect (exit, SIGNAL(clicked()), qApp, SLOT(quit()));
+
+    connect (this, SIGNAL(destroyed()), qApp, SLOT(quit()));
 }
 
 void TB_Menu::launchCredits()

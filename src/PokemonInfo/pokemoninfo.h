@@ -430,6 +430,7 @@ class POKEMONINFOSHARED_EXPORT ItemInfo
 {
 private:
     static QStringList m_Names;
+    static QStringList m_SortedNames;
     static QString m_Directory;
 
     static void loadNames();
@@ -442,7 +443,10 @@ public:
     static int NumberOfItems();
     static QString Name(int itemnum);
     static QStringList Names();
+    static QStringList SortedNames();
     static int Number(const QString &itemname);
+    /* returns the number corresponding to the name, but with the sortedNames as a ref */
+    static int SortedNumber(const QString &itemname);
     static QString Description(int itemnum);
     static int Power(int itemnum);
 };
