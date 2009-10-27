@@ -8,7 +8,6 @@
 Les icones sont dans db/icons.zip, il faut rajouter une fonction dans PokemonInfo pour récupérer l'icône. On pourra réutiliser la fonction readZipFile de PokemonInfo.cpp :p
 ------->pris par mephistos
 
--Dans la partie Pokémon du teambuilder, essayer de virer en partie l'espace vide vertical entre Pokemon-Nickname et entre NickName-Iteam. (de sorte que le tableau moves puisse prendre plus de place) Ensuite mieux espacer les lignes d'EV pour qu'elle soient répartie uniformément (cf capture d'écran de mon projet sous SDL dans le topic sur le sdz)
 
 ---- A NE PAS OUBLIER PLUS TARD  ------
 -Dans le menu trainer, proposer plusieurs customizations (dont choix d'une icone, choix de la version d'affichage des sprites, réorganiser les Pokémons)
