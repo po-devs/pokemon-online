@@ -389,10 +389,8 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
 
     genderIcon = new QLabel();
     gender_level->addWidget(genderIcon, 0, Qt::AlignCenter | Qt::AlignTop);
-    updateGender();
 
     level = new QLabel();
-    updateLevel();
 
     gender_level->addWidget(level, 0, Qt::AlignLeft | Qt::AlignTop);
 
@@ -427,6 +425,8 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     {
 	mlayout->addWidget(m_moves[i],1,i);
     }
+
+    updateNum();
 }
 
 void TB_PokemonBody::initPokemons()
