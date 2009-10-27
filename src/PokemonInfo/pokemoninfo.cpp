@@ -10,6 +10,7 @@ QStringList MoveInfo::m_Names;
 
 QString ItemInfo::m_Directory;
 QStringList ItemInfo::m_Names;
+QStringList ItemInfo::m_SortedNames;
 
 QStringList TypeInfo::m_Names;
 QList<QColor> TypeInfo::m_Colors;
@@ -45,7 +46,7 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
     if (!archive)
     {
         qDebug() << "Error when opening archive" << archiveName;
-	return ret;
+        return ret;
     }
 
     file = zip_fopen(archive, fileName, 0);
@@ -53,15 +54,15 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
     if (!file)
     {
         qDebug() << "Error when opening file "<< fileName <<" in archive: " << archiveName <<" : " << zip_strerror(archive);
-	zip_close(archive);
-	return ret;
+        zip_close(archive);
+        return ret;
     }
 
     do
     {
-	ret.append(buffer, readsize);
+        ret.append(buffer, readsize);
 
-	readsize = zip_fread(file, buffer, 1024);
+        readsize = zip_fread(file, buffer, 1024);
     } while (readsize > 0) ;
 
     if (readsize < 0)
@@ -86,7 +87,7 @@ QString get_line(const QString & filename, int linenum)
     /* discarding all the uninteresting lines, should find a more effective way */
     for (int i = 0; i < linenum; i++)
     {
-	filestream.readLine();
+        filestream.readLine();
     }
 
     return filestream.readLine();
@@ -104,7 +105,7 @@ void fill_container_with_file(T &container, const QString & filename)
     /* discarding all the uninteresting lines, should find a more effective way */
     while (!filestream.atEnd())
     {
-	container << filestream.readLine();
+        container << filestream.readLine();
     }
 }
 
@@ -308,9 +309,9 @@ void PokePersonal::setLevel(int level)
 void PokePersonal::setMove(int moveNum, int moveSlot)
 {
     if (moveNum == move(moveSlot))
-	return;
+        return;
     if (moveNum != 0 && hasMove(moveNum))
-	throw QObject::tr("%1 already has move %2.").arg(PokemonInfo::Name(num()), MoveInfo::Name(moveNum));
+        throw QObject::tr("%1 already has move %2.").arg(PokemonInfo::Name(num()), MoveInfo::Name(moveNum));
 
     m_moves[moveSlot] = moveNum;
 }
@@ -318,18 +319,18 @@ void PokePersonal::setMove(int moveNum, int moveSlot)
 int PokePersonal::addMove(int moveNum)
 {
     for (int i = 0; i < 4; i++)
-	if (move(i) == 0) {
-	    setMove(moveNum, i);
-	    return i;
-	}
+        if (move(i) == 0) {
+            setMove(moveNum, i);
+            return i;
+        }
     throw QObject::tr("No free move available!");
 }
 
 bool PokePersonal::hasMove(int moveNum)
 {
     for (int i = 0; i < 4; i++)
-	if (move(i) == moveNum)
-	    return true;
+        if (move(i) == moveNum)
+            return true;
     return false;
 }
 
@@ -380,12 +381,12 @@ void PokePersonal::controlEVs(int stat)
     //if overflow we set it back to the limit
     if (sum > 510)
     {
-	/* why do something so complicated? in case it's way over the limit and not simply because of stat ,
-	    we don't want something nasty induced by negative overflow */
-	if (sum - 510 > m_EVs[stat])
-	    m_EVs[stat] = 0;
-	else
-	    m_EVs[stat] -=  sum - 510;
+        /* why do something so complicated? in case it's way over the limit and not simply because of stat ,
+            we don't want something nasty induced by negative overflow */
+        if (sum - 510 > m_EVs[stat])
+            m_EVs[stat] = 0;
+        else
+            m_EVs[stat] -=  sum - 510;
     }
 }
 
@@ -560,7 +561,7 @@ void PokePersonal::reset()
     setNum(0);
     setLevel(100);
     for (int i = 0; i < 4; i++)
-	setMove(0,i);
+        setMove(0,i);
     setHappiness(255);
     setShininess(false);
     setGender(0);
@@ -585,7 +586,7 @@ void PokePersonal::reset()
 }
 
 PokeGraphics::PokeGraphics()
-	: m_num(0), m_uptodate(false)
+        : m_num(0), m_uptodate(false)
 {
 }
 
@@ -608,7 +609,7 @@ bool PokeGraphics::upToDate() const
 void PokeGraphics::load(int gender, bool shiny)
 {
     if (upToDate() && gender==m_storedgender && shiny == m_storedshininess)
-	return;
+        return;
 
     m_storedgender = gender;
     m_storedshininess = shiny;
@@ -655,17 +656,18 @@ void PokeTeam::load()
     /*set the default gender & ability */
     if (genderAvail() == Pokemon::NeutralAvail)
     {
-	setGender(Pokemon::Neutral);
+        setGender(Pokemon::Neutral);
     }
     else if (genderAvail() == Pokemon::FemaleAvail)
     {
-	setGender(Pokemon::Female);
+        setGender(Pokemon::Female);
     }
     else
     {
-	setGender(Pokemon::Male);
+        setGender(Pokemon::Male);
     }
     setAbility(abilities()[0]);
+    setNickname(PokemonInfo::Name(num()));
     PokeGraphics::load(gender(), false);
 }
 
@@ -687,9 +689,9 @@ int PokeTeam::calc_stat_F(int stat) const
 int PokeTeam::stat(int statno) const
 {
     if (statno == Hp)
-	return hp();
+        return hp();
     else
-	return calc_stat_F(statno);
+        return calc_stat_F(statno);
 }
 
 int PokeTeam::hp() const
@@ -741,7 +743,7 @@ void PokemonInfo::init(const QString &dir)
 {
     /* makes sure it isn't already initialized */
     if (NumberOfPokemons() != 0)
-	return;
+        return;
 
     m_Directory = dir;
 
@@ -781,19 +783,19 @@ QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney)
 
     if (data.length()==0)
     {
-	/* We change the gender/shininess to try to find a valid file */
-	if (shiney)
-	{
-	    file = QString("%2/DP%3.png").arg(pokenum).arg((gender==Pokemon::Female)?"f":"m");
-	    data = readZipFile(archive.toLocal8Bit(), file.toLocal8Bit());
-	}
-	if (data.length()==0)
-	{
-	    file = QString("%2/DP%3.png").arg(pokenum).arg((gender==Pokemon::Female)?"m":"f");
-	    data = readZipFile(archive.toLocal8Bit(), file.toLocal8Bit());
-	}
-	if (data.length()==0)
-	    return QPixmap();
+        /* We change the gender/shininess to try to find a valid file */
+        if (shiney)
+        {
+            file = QString("%2/DP%3.png").arg(pokenum).arg((gender==Pokemon::Female)?"f":"m");
+            data = readZipFile(archive.toLocal8Bit(), file.toLocal8Bit());
+        }
+        if (data.length()==0)
+        {
+            file = QString("%2/DP%3.png").arg(pokenum).arg((gender==Pokemon::Female)?"m":"f");
+            data = readZipFile(archive.toLocal8Bit(), file.toLocal8Bit());
+        }
+        if (data.length()==0)
+            return QPixmap();
     }
 
     QPixmap ret;
@@ -872,7 +874,7 @@ QList<int> PokemonInfo::getMoves(const QString &filename, int pokenum)
     /* extracting the moves */
     for (int i = 0; i + 3 <= interesting_line.length(); i+=3)
     {
-	return_value << interesting_line.mid(i,3).toUInt();
+        return_value << interesting_line.mid(i,3).toUInt();
     }
 
     return return_value;
@@ -882,7 +884,7 @@ void MoveInfo::init(const QString &dir)
 {
     /* makes sure it isn't already initialized */
     if (NumberOfMoves() != 0)
-	return;
+        return;
 
     m_Directory = dir;
 
@@ -952,7 +954,7 @@ void ItemInfo::init(const QString &dir)
 {
     /* makes sure it isn't already initialized */
     if (NumberOfItems() != 0)
-	return;
+        return;
 
     m_Directory = dir;
 
@@ -966,6 +968,9 @@ void ItemInfo::loadNames()
 {
     fill_container_with_file(m_Names, path("items_en.txt"));
     fill_container_with_file(m_Names, path("berries_en.txt"));
+
+    m_SortedNames = m_Names;
+    qSort(m_SortedNames);
 }
 
 QString ItemInfo::path(const QString &file)
@@ -988,9 +993,19 @@ int ItemInfo::Number(const QString &itemname)
     return (qFind(m_Names.begin(), m_Names.end(), itemname)-m_Names.begin()) % (NumberOfItems());
 }
 
+int ItemInfo::SortedNumber(const QString &itemname)
+{
+    return (qFind(m_SortedNames.begin(), m_SortedNames.end(), itemname)-m_SortedNames.begin()) % (NumberOfItems());
+}
+
 QStringList ItemInfo::Names()
 {
     return m_Names;
+}
+
+QStringList ItemInfo::SortedNames()
+{
+    return m_SortedNames;
 }
 
 void TypeInfo::loadNames()
@@ -1011,7 +1026,7 @@ void TypeInfo::loadColors()
 void TypeInfo::init(const QString &dir)
 {
     if (NumberOfTypes() != 0)
-	return;
+        return;
 
     m_Directory = dir;
 
@@ -1050,7 +1065,7 @@ QString NatureInfo::path(const QString &filename)
 void NatureInfo::init(const QString &dir)
 {
     if (NumberOfNatures() != 0)
-	return;
+        return;
 
     m_Directory = dir;
 
@@ -1094,7 +1109,7 @@ void CategoryInfo::loadColors()
 void CategoryInfo::init(const QString &dir)
 {
     if (NumberOfCategories() != 0)
-	return;
+        return;
 
     m_Directory = dir;
 
@@ -1133,7 +1148,7 @@ QString AbilityInfo::path(const QString &filename)
 void AbilityInfo::init(const QString &dir)
 {
     if (NumberOfAbilities() != 0)
-	return;
+        return;
 
     m_Directory = dir;
 
@@ -1162,7 +1177,7 @@ void GenderInfo::loadNames()
 void GenderInfo::loadPixmaps()
 {
     for (int i = 0; i < NumberOfGenders(); i++) {
-	m_Pictures << QPixmap(path(QString("gender%1.png").arg(i)));
+        m_Pictures << QPixmap(path(QString("gender%1.png").arg(i)));
     }
 }
 
@@ -1174,7 +1189,7 @@ QString GenderInfo::path(const QString &filename)
 void GenderInfo::init(const QString &dir)
 {
     if (NumberOfGenders() != 0)
-	return;
+        return;
 
     m_Directory = dir;
 
@@ -1229,134 +1244,10 @@ QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type)
     QList<QStringList> ret;
 
     foreach (QString line, fileLines)
-	ret.push_back(line.split(' '));
+        ret.push_back(line.split(' '));
 
     return ret;
 }
-
-
-//fonctions globales de sauvegarde de la team
-/*QDataStream & operator << (QDataStream & out, const Team & team)
-{
-    qDebug() << "sauvegarde de la Team";
-    for(int index = 0;index<6;index++)
-    {
-        const PokeTeam & poke = team.poke(index);
-        out << index;
-        out << poke;
-    }
-    return out;
-}
-
-QDataStream & operator << (QDataStream & out, const PokeTeam & Pokemon)
-{
-    qDebug() << "sauvegarde du pokemon";
-    out << Pokemon.num();
-    out << Pokemon.nickname();
-    out << Pokemon.item();
-    out << Pokemon.ability();
-    out << Pokemon.nature();
-    out << Pokemon.gender();
-    out << Pokemon.shiny();
-    out << Pokemon.happiness();
-    out << Pokemon.level();
-    int i;
-    for(i=0;i<4;i++)
-    {
-        out << Pokemon.move(i);
-    }
-    for(i=0;i<6;i++)
-    {
-        out << Pokemon.DV(i);
-    }
-    for(i=0;i<6;i++)
-    {
-        out << Pokemon.EV(i);
-    }
-    return out;
-}
-
-QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
-{
-    out << trainerTeam.trainerNick();
-    out << trainerTeam.trainerInfo();
-    out << trainerTeam.trainerLose();
-    out << trainerTeam.trainerWin();
-    out << trainerTeam.team();
-
-    return out;
-}
-
-QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
-{
-    QString nick, info, lose, win;
-
-    in >> nick;
-    in >> info;
-    in >> lose;
-    in >> win;
-    in >> trainerTeam.team();
-
-    trainerTeam.setTrainerNick(nick);
-    trainerTeam.setTrainerInfo(info);
-    trainerTeam.setTrainerWin(win);
-    trainerTeam.setTrainerLose(lose);
-
-    return in;
-}
-
-QDataStream & operator >> (QDataStream & in, Team & team)
-{
-    int countIndex;
-    for(countIndex=0;countIndex<6;countIndex++)
-    {
-        int index;
-        in >> index;
-        if(index == countIndex)
-        {
-            in >> team.poke(index);
-        }
-    }
-    return in;
-}
-
-QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
-{
-    QString nickname;
-    int num,item,ability,nature,gender,level,i;
-    bool shininess;
-    quint8 happiness;
-    in >> num >> nickname >> item >> ability >> nature >> gender >> shininess >> happiness >> level;
-    Pokemon.setNum(num);
-    Pokemon.load();
-    Pokemon.setNickname(nickname);
-    Pokemon.setItem(item);
-    Pokemon.setAbility(ability);
-    Pokemon.setNature(nature);
-    Pokemon.setGender(gender);
-    Pokemon.setShininess(shininess);
-    Pokemon.setHappiness(happiness);
-    Pokemon.setLevel(level);
-    for(i=0;i<4;i++)
-    {
-        int moveNum;
-        in >> moveNum;
-        Pokemon.setMove(i,moveNum);
-    }
-    for(i=0;i<6;i++)
-    {
-        quint8 DV;
-        in >> DV;
-        Pokemon.setDV(i,DV);
-    }
-    for(i=0;i<6;i++)
-    {
-        quint8 EV;
-        in >> EV;
-        Pokemon.setEV(i,EV);
-    }
-    return in;
-}*/
 
 TrainerTeam::TrainerTeam()
 {
