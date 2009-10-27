@@ -82,49 +82,50 @@ QValidator::State QNickValidator::validate(QString &input, int& pos) const
 TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
 {
     resize(600, 600);
-    setAttribute(Qt::WA_DeleteOnClose, true);
+    setWindowTitle(tr("Teambuilder"));
 
     QGridLayout *layout = new QGridLayout(this);
 
     //Creating menus
-    QMenuBar *menuBar = new QMenuBar();
+    /* Should find a way to put it in QMainWindow */
+/*    QMenuBar *menuBar = new QMenuBar();
     QMenu *menuFichier = menuBar->addMenu("&File");
     menuFichier->addAction(tr("&Save Team"),this,SLOT(saveTeam()),Qt::CTRL+Qt::Key_S);
     menuFichier->addAction("&Quit",qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
-    layout->addWidget(menuBar,0,0,Qt::AlignTop);
+    layout->addWidget(menuBar,0,0,Qt::AlignTop); */
 
     m_trainer = new QPushButton("&Trainer", this);
     m_trainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_trainer->setCheckable(true);
     m_trainer->setChecked(true);
 
-    layout->addWidget(m_trainer, 1, 0, 2, 1);
+    layout->addWidget(m_trainer, 0, 0, 2, 1);
 
     for (int i = 0; i < 6; i++)
     {
-	m_pokemon[i] = new QPushButton(QString("Pokémon &%1").arg(i+1));
-	m_pokemon[i]->setCheckable(true);
+        m_pokemon[i] = new QPushButton(QString("Pokémon &%1").arg(i+1));
+        m_pokemon[i]->setCheckable(true);
         if(i<3)
         {
-            layout->addWidget(m_pokemon[i],1,(i%3)+1);
+            layout->addWidget(m_pokemon[i],0,(i%3)+1);
         }
         else
         {
-            layout->addWidget(m_pokemon[i],2,(i%3)+1);
+            layout->addWidget(m_pokemon[i],1,(i%3)+1);
         }
     }
 
     m_body = new QStackedWidget(this);
 
-    layout->addWidget(m_body,3,0,1,4);
+    layout->addWidget(m_body,2,0,1,4);
 
     m_trainerBody = new TB_TrainerBody(this);
     m_body->addWidget(m_trainerBody);
 
     for (int i = 0; i < 6; i++)
     {
-	m_pbody[i] = new TB_PokemonBody(&team()->poke(i));
-	m_body->addWidget(m_pbody[i]);
+        m_pbody[i] = new TB_PokemonBody(&team()->poke(i));
+        m_body->addWidget(m_pbody[i]);
     }
 
     connectAll();
@@ -217,9 +218,9 @@ void TeamBuilder::loadTeam()
     updateTeam();
 }
 
-void TeamBuilder::done()
+void TeamBuilder::clickOnDone()
 {
-    this->close();
+    emit done();
 }
 
 void TeamBuilder::updateTeam()
@@ -298,7 +299,7 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->t
 
     connect(saveb, SIGNAL(clicked()), teambuilder, SLOT(saveTeam()));
     connect(loadb, SIGNAL(clicked()), teambuilder, SLOT(loadTeam()));
-    connect(doneb, SIGNAL(clicked()), teambuilder, SLOT(done()));
+    connect(doneb, SIGNAL(clicked()), teambuilder, SLOT(clickOnDone()));
 }
 
 TrainerTeam * TB_TrainerBody::trainerTeam()
@@ -473,8 +474,6 @@ void TB_PokemonBody::initMoves()
 	completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer->setCompletionMode(QCompleter::InlineCompletion);
 	m_moves[i]->setCompleter(completer);
-
-	connect(m_moves[i], SIGNAL(customContextMenuRequested(QPoint)), m_moves[i], SLOT(selectAll()));
 
 	mapper->setMapping(completer, i);
 	mapper->setMapping(m_moves[i], i);

@@ -8,12 +8,14 @@ SOURCES += main.cpp \
     teambuilder.cpp \
     advanced.cpp \
     menu.cpp \
-    otherwidgets.cpp
+    otherwidgets.cpp \
+    mainwindow.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
     menu.h \
-    otherwidgets.h
+    otherwidgets.h \
+    mainwindow.h
 FORMS += 
 LIBS += -L../../bin \
     -lPokemonInfo \
