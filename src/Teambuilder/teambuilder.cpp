@@ -358,8 +358,7 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     m_poke = _poke;
 
     /* The layout of the whole body */
-    QGridLayout *layout = new QGridLayout();
-    setLayout(layout);
+    QGridLayout *layout = new QGridLayout(this);
 
     initPokemons();
 
@@ -475,7 +474,7 @@ void TB_PokemonBody::initMoves()
     movechoice->horizontalHeader()->setResizeMode(PP, QHeaderView::ResizeToContents);
     movechoice->horizontalHeader()->setResizeMode(Pow, QHeaderView::ResizeToContents);
     movechoice->horizontalHeader()->setResizeMode(Acc, QHeaderView::ResizeToContents);
-    movechoice->setMinimumHeight(200);
+    movechoice->setMinimumHeight(230);
     movechoice->setMidLineWidth(0);
 
     connect(movechoice, SIGNAL(cellActivated(int,int)), SLOT(moveEntered(int)));
