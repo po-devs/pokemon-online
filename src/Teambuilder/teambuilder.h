@@ -23,7 +23,7 @@ public:
     State validate(QString &input, int &pos) const;
 };
 
-class TeamBuilder : public QCenteredWidget
+class TeamBuilder : public QWidget
 {
     Q_OBJECT
 private:
@@ -55,8 +55,10 @@ private slots:
 public slots:
     void saveTeam();
     void loadTeam();
-    void done();
+    void clickOnDone();
     void updateTeam();
+signals:
+    void done();
 
 public:
     TeamBuilder(TrainerTeam *team);

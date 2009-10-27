@@ -1,22 +1,11 @@
 #ifndef TEAMBUILDER_MENU_H
 #define TEAMBUILDER_MENU_H
 
-#include "teambuilder.h"
-#include "otherwidgets.h"
-//for Team struct
-#include "../PokemonInfo/pokemoninfo.h"
-// :)
 #include <QtGui>
 
-class TB_Menu : public QCenteredWidget
+class TB_Menu : public QWidget
 {
-	Q_OBJECT
-private:
-    TrainerTeam m_Team;
-
-    Team * team();
-    TrainerTeam * trainerTeam();
-
+        Q_OBJECT
 public:
     TB_Menu();
 
@@ -24,6 +13,12 @@ public slots:
     void launchTeambuilder();
     void launchCredits();
     void goOnline();
+    void exit();
+signals:
+    void goToTeambuilder();
+    void goToOnline();
+    void goToCredits();
+    void goToExit();
 };
 
 #endif
