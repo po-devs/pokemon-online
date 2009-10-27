@@ -23,7 +23,7 @@ public:
     State validate(QString &input, int &pos) const;
 };
 
-class TeamBuilder : public QWidget
+class TeamBuilder : public QCenteredWidget
 {
     Q_OBJECT
 private:
@@ -38,6 +38,7 @@ private:
     /* returns the button associated to that zone */
     QPushButton *at(int i);
     Team *team();
+    TrainerTeam *trainerTeam();
 
     void updatePokemon(int index);
     void updateTrainer();
@@ -51,20 +52,17 @@ private:
 
 private slots:
     void changeBody(int i);
+    void setIconForPokeButton(int num);
 
 public slots:
     void saveTeam();
     void loadTeam();
-    void clickOnDone();
-    void updateTeam();
-signals:
     void done();
+    void updateTeam();
 
 public:
     TeamBuilder(TrainerTeam *team);
     ~TeamBuilder();
-
-    TrainerTeam *trainerTeam();
 };
 
 class TB_TrainerBody : public QWidget
@@ -73,14 +71,6 @@ class TB_TrainerBody : public QWidget
 private:
     QLineEdit *m_nick;
     QTextEdit *m_winMessage, *m_loseMessage, /* *m_drawMessage, */ *m_trainerInfo;
-    TrainerTeam *m_team;
-
-    TrainerTeam* trainerTeam();
-private slots:
-    void changeTrainerInfo();
-    void setTrainerNick(const QString &);
-    void changeTrainerWin();
-    void changeTrainerLose();
 public:
     TB_TrainerBody(TeamBuilder *parent);
 
@@ -109,7 +99,6 @@ private:
     QLabel *pokeImage, *genderIcon, *level;
     QCompactTable *movechoice;
     QLineEdit *m_moves[4];
-    QLineEdit *m_nick;
     TB_EVManager *evchoice;
     TB_Advanced *m_adv;
     int m_index;
@@ -127,19 +116,13 @@ private:
     void updateLevel();
     void updateMoves();
     void updateEVs();
-    void updateNickname();
-    void updateItem();
-    void updateNature();
 
     bool advancedOpen();
     TB_Advanced *advanced();
 
-    /* getting the pokemon of the team corresponding to the body */
-    PokeTeam *poke();
 private slots:
     void setMove(int moveNum, int moveSlot);
     void setMove(int movenum);
-    void setNick(const QString &nick);
     void moveCellActivated(int cell);
     void moveEntered(int row);
     void setItem(const QString &item);
@@ -150,12 +133,16 @@ private slots:
 signals:
     void moveChosen(int movenum);
     void pokeChanged(int pokenum);
+    void changeIconForPokeButton(int num);
 public slots:
     void setNum(int pokeNum);
 public:
     TB_PokemonBody(PokeTeam *poke);
 
     void updateNum();
+    /* getting the pokemon of the team corresponding to the body */
+    PokeTeam *poke();
+
 };
 
 class TB_EVManager : public QGridLayout
@@ -184,5 +171,13 @@ public:
 public slots:
     void EVChanged(int newvalue);
 };
+
+QDataStream & operator << (QDataStream & out,const Team & team);
+QDataStream & operator << (QDataStream & out,const PokeTeam & Pokemon);
+QDataStream & operator << (QDataStream & out,const TrainerTeam & trainerTeam);
+
+QDataStream & operator >>(QDataStream & in,Team & team);
+QDataStream & operator >>(QDataStream & in,PokeTeam & Pokemon);
+QDataStream & operator >>(QDataStream & in,TrainerTeam & trainerTeam);
 
 #endif // TEAMBUILDER_H

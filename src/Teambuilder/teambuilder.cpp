@@ -82,50 +82,51 @@ QValidator::State QNickValidator::validate(QString &input, int& pos) const
 TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
 {
     resize(600, 600);
-    setWindowTitle(tr("Teambuilder"));
+    setAttribute(Qt::WA_DeleteOnClose, true);
 
     QGridLayout *layout = new QGridLayout(this);
 
     //Creating menus
-    /* Should find a way to put it in QMainWindow */
-/*    QMenuBar *menuBar = new QMenuBar();
+    QMenuBar *menuBar = new QMenuBar();
     QMenu *menuFichier = menuBar->addMenu("&File");
     menuFichier->addAction(tr("&Save Team"),this,SLOT(saveTeam()),Qt::CTRL+Qt::Key_S);
     menuFichier->addAction("&Quit",qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
-    layout->addWidget(menuBar,0,0,Qt::AlignTop); */
+    layout->addWidget(menuBar,0,0,Qt::AlignTop);
 
     m_trainer = new QPushButton("&Trainer", this);
     m_trainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_trainer->setCheckable(true);
     m_trainer->setChecked(true);
 
-    layout->addWidget(m_trainer, 0, 0, 2, 1);
+    layout->addWidget(m_trainer, 1, 0, 2, 1);
 
     for (int i = 0; i < 6; i++)
     {
-        m_pokemon[i] = new QPushButton(QString("Pokémon &%1").arg(i+1));
-        m_pokemon[i]->setCheckable(true);
+	m_pokemon[i] = new QPushButton(QString("Pokémon &%1").arg(i+1));
+	m_pokemon[i]->setCheckable(true);
         if(i<3)
         {
-            layout->addWidget(m_pokemon[i],0,(i%3)+1);
+            layout->addWidget(m_pokemon[i],1,(i%3)+1);
         }
         else
         {
-            layout->addWidget(m_pokemon[i],1,(i%3)+1);
+            layout->addWidget(m_pokemon[i],2,(i%3)+1);
         }
     }
 
     m_body = new QStackedWidget(this);
 
-    layout->addWidget(m_body,2,0,1,4);
+    layout->addWidget(m_body,3,0,1,4);
 
     m_trainerBody = new TB_TrainerBody(this);
     m_body->addWidget(m_trainerBody);
 
     for (int i = 0; i < 6; i++)
     {
-        m_pbody[i] = new TB_PokemonBody(&team()->poke(i));
-        m_body->addWidget(m_pbody[i]);
+	m_pbody[i] = new TB_PokemonBody(&team()->poke(i));
+        m_pbody[i]->setObjectName(tr("Poke%1").arg(i));
+        connect(m_pbody[i],SIGNAL(changeIconForPokeButton(int)),this,SLOT(setIconForPokeButton(int)));
+	m_body->addWidget(m_pbody[i]);
     }
 
     connectAll();
@@ -180,9 +181,23 @@ void TeamBuilder::changeBody(int i)
     }
 }
 
+void TeamBuilder::setIconForPokeButton(int num)
+{
+    QString name = sender()->objectName();
+    if(!name.contains("Poke"))
+    {
+        return;
+    }
+    TB_PokemonBody * body = qobject_cast<TB_PokemonBody *>(sender());
+    int index = name.remove("Poke",Qt::CaseSensitive).toInt(new bool,10);
+    m_pokemon[index]->setIcon(QIcon(body->poke()->picture()));
+    m_pokemon[index]->setIconSize(QSize(40,40));
+
+}
+
 void TeamBuilder::saveTeam()
 {
-    QString location = QFileDialog::getSaveFileName(0,tr("Saving the Team"),tr("Team/trainer.tp"), tr("Team(*tp)"));
+    QString location = QFileDialog::getSaveFileName(0,tr("Saving the Team"),tr("Team/trainer.tp"), tr("Team(*.tp)"));
     if(location.isEmpty())
     {
         //Maybe the user hit "Cancel"
@@ -195,12 +210,13 @@ void TeamBuilder::saveTeam()
         return;
     }
     QDataStream out(&file);
+    out.setVersion(QDataStream::Qt_4_5);
     out << (*trainerTeam());
 }
 
 void TeamBuilder::loadTeam()
 {
-    QString location = QFileDialog::getOpenFileName(0,tr("Saving the Team"),tr("Team/trainer.tp"), tr("Team(*tp)"));
+    QString location = QFileDialog::getOpenFileName(0,tr("Saving the Team"),tr("Team/"), tr("Team(*.tp)"));
     if(location.isEmpty())
     {
         //Maybe the user hit "Cancel"
@@ -213,14 +229,15 @@ void TeamBuilder::loadTeam()
         return;
     }
     QDataStream in(&file);
+    in.setVersion(QDataStream::Qt_4_5);
     in >> (*trainerTeam());
 
     updateTeam();
 }
 
-void TeamBuilder::clickOnDone()
+void TeamBuilder::done()
 {
-    emit done();
+    this->close();
 }
 
 void TeamBuilder::updateTeam()
@@ -255,38 +272,29 @@ TeamBuilder::~TeamBuilder()
 {
 }
 
-TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->trainerTeam())
+TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder)
 {
     //main layout
     QVBoxLayout *mlayout = new QVBoxLayout(this);
 
-    QEntitled * trainernick = new QEntitled(tr("T&rainer"), m_nick = new QLineEdit());
-    m_nick->setMaximumWidth(100);
+    QEntitled * trainernick = new QEntitled(tr("Trainer"), m_nick = new QLineEdit());
+    m_nick->setMaximumWidth(150);
     m_nick->setMaxLength(15);
     /* A non-whitespace word caracter followed by any number of white characters and not ended by a space, or just nothing */
     m_nick->setValidator(new QNickValidator(this));
     mlayout->addWidget(trainernick);
 
-    QEntitled * minfo = new QEntitled(tr("&Player Info"), m_trainerInfo=new QTextEdit());
+    QEntitled * minfo = new QEntitled(tr("Player Info"), m_trainerInfo=new QTextEdit());
     mlayout->addWidget(minfo);
 
-    QEntitled * mwin = new QEntitled(tr("&Winning Message"), m_winMessage=new QTextEdit());
+    QEntitled * mwin = new QEntitled(tr("Winning Message"), m_winMessage=new QTextEdit());
     mlayout->addWidget(mwin);
 
-//    QEntitled * mdraw = new QEntitled(tr("Draw &Message"), m_drawMessage=new QTextEdit());
+//    QEntitled * mdraw = new QEntitled(tr("Draw Message"), m_drawMessage=new QTextEdit());
 //    mlayout->addWidget(mdraw);
 
-    QEntitled * mlose = new QEntitled(tr("&Losing Message"), m_loseMessage=new QTextEdit());
+    QEntitled * mlose = new QEntitled(tr("Losing Message"), m_loseMessage=new QTextEdit());
     mlayout->addWidget(mlose);
-
-    m_winMessage->setTabChangesFocus(true);
-    m_loseMessage->setTabChangesFocus(true);
-    m_trainerInfo->setTabChangesFocus(true);
-
-    connect (m_nick, SIGNAL(textEdited(QString)), SLOT(setTrainerNick(QString)));
-    connect (m_winMessage, SIGNAL(textChanged()), SLOT(changeTrainerWin()));
-    connect (m_loseMessage, SIGNAL(textChanged()), SLOT(changeTrainerLose()));
-    connect (m_trainerInfo, SIGNAL(textChanged()), SLOT(changeTrainerInfo()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     mlayout->addLayout(buttonsLayout);
@@ -299,40 +307,12 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->t
 
     connect(saveb, SIGNAL(clicked()), teambuilder, SLOT(saveTeam()));
     connect(loadb, SIGNAL(clicked()), teambuilder, SLOT(loadTeam()));
-    connect(doneb, SIGNAL(clicked()), teambuilder, SLOT(clickOnDone()));
-}
-
-TrainerTeam * TB_TrainerBody::trainerTeam()
-{
-    return m_team;
+    connect(doneb, SIGNAL(clicked()), teambuilder, SLOT(done()));
 }
 
 void TB_TrainerBody::updateTrainer()
 {
-    m_trainerInfo->setText(trainerTeam()->trainerInfo());
-    m_nick->setText(trainerTeam()->trainerNick());
-    m_winMessage->setText(trainerTeam()->trainerWin());
-    m_loseMessage->setText(trainerTeam()->trainerLose());
-}
 
-void TB_TrainerBody::changeTrainerInfo()
-{
-    trainerTeam()->setTrainerInfo(m_trainerInfo->toPlainText());
-}
-
-void TB_TrainerBody::setTrainerNick(const QString &newnick)
-{
-    trainerTeam()->setTrainerNick(newnick);
-}
-
-void TB_TrainerBody::changeTrainerWin()
-{
-    trainerTeam()->setTrainerWin(m_winMessage->toPlainText());
-}
-
-void TB_TrainerBody::changeTrainerLose()
-{
-    trainerTeam()->setTrainerLose(m_loseMessage->toPlainText());
 }
 
 TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
@@ -351,9 +331,7 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     layout->addLayout(first_column,0,0);
 
     first_column->addWidget(new QEntitled("&Pokemon", pokechoice));
-    first_column->addWidget(new QEntitled("&Nickname", m_nick = new QLineEdit()));
-
-    connect(m_nick, SIGNAL(textEdited(QString)), SLOT(setNick(QString)));
+    first_column->addWidget(new QEntitled("&Nickname", new QLineEdit()));
 
     initItems();
 
@@ -475,6 +453,8 @@ void TB_PokemonBody::initMoves()
 	completer->setCompletionMode(QCompleter::InlineCompletion);
 	m_moves[i]->setCompleter(completer);
 
+	connect(m_moves[i], SIGNAL(customContextMenuRequested(QPoint)), m_moves[i], SLOT(selectAll()));
+
 	mapper->setMapping(completer, i);
 	mapper->setMapping(m_moves[i], i);
 	connect(completer, SIGNAL(activated(QString)), mapper, SLOT(map()));
@@ -536,6 +516,7 @@ void TB_PokemonBody::setNum(int pokenum)
     poke()->load();
 
     updateNum();
+    emit changeIconForPokeButton(pokenum);
 }
 
 void TB_PokemonBody::updateLevel()
@@ -551,9 +532,6 @@ void TB_PokemonBody::updateNum()
     updateImage();
     updateEVs();
     updateGender();
-    updateNature();
-    updateItem();
-    updateNickname();
 
     emit pokeChanged(poke()->num());
 }
@@ -593,26 +571,12 @@ void TB_PokemonBody::updateMoves()
     }
 }
 
-void TB_PokemonBody::updateNickname()
-{
-    m_nick->setText(poke()->nickname());
-}
-
-void TB_PokemonBody::updateItem()
-{
-    itemchoice->setCurrentIndex(ItemInfo::SortedNumber(ItemInfo::Name(poke()->item())));
-}
-
-void TB_PokemonBody::updateNature()
-{
-    naturechoice->setCurrentIndex(poke()->nature());
-}
-
 void TB_PokemonBody::initItems()
 {
     itemchoice = new QComboBox();
 
-    QStringList itemList = ItemInfo::SortedNames();
+    QStringList itemList = ItemInfo::Names();
+    qSort(itemList);
 
     itemchoice->addItems(itemList);
 
@@ -720,11 +684,6 @@ void TB_PokemonBody::setNature(int nature)
     evchoice->updateEVs();
 }
 
-void TB_PokemonBody::setNick(const QString &nick)
-{
-    poke()->setNickname(nick);
-}
-
 TB_EVManager::TB_EVManager(PokeTeam *_poke)
 {
     m_poke = _poke;
@@ -825,4 +784,126 @@ void TB_EVManager::updateEV(int stat)
 void TB_EVManager::updateMain()
 {
     m_mainSlider->setValue(poke()->EVSum());
+}
+
+QDataStream & operator << (QDataStream & out, const Team & team)
+{
+    qDebug() << "sauvegarde de la Team";
+    for(int index = 0;index<6;index++)
+    {
+        const PokeTeam & poke = team.poke(index);
+        out << index;
+        out << poke;
+    }
+    return out;
+}
+
+QDataStream & operator << (QDataStream & out, const PokeTeam & Pokemon)
+{
+    qDebug() << "sauvegarde du pokemon";
+    out << Pokemon.num();
+    out << Pokemon.nickname();
+    out << Pokemon.item();
+    out << Pokemon.ability();
+    out << Pokemon.nature();
+    out << Pokemon.gender();
+    out << Pokemon.shiny();
+    out << Pokemon.happiness();
+    out << Pokemon.level();
+    int i;
+    for(i=0;i<4;i++)
+    {
+        out << Pokemon.move(i);
+    }
+    for(i=0;i<6;i++)
+    {
+        out << Pokemon.DV(i);
+    }
+    for(i=0;i<6;i++)
+    {
+        out << Pokemon.EV(i);
+    }
+    return out;
+}
+
+QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
+{
+    out << trainerTeam.trainerNick();
+    out << trainerTeam.trainerInfo();
+    out << trainerTeam.trainerLose();
+    out << trainerTeam.trainerWin();
+    out << trainerTeam.team();
+
+    return out;
+}
+
+QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
+{
+    QString nick, info, lose, win;
+
+    in >> nick;
+    in >> info;
+    in >> lose;
+    in >> win;
+    in >> trainerTeam.team();
+
+    trainerTeam.setTrainerNick(nick);
+    trainerTeam.setTrainerInfo(info);
+    trainerTeam.setTrainerWin(win);
+    trainerTeam.setTrainerLose(lose);
+
+    return in;
+}
+
+QDataStream & operator >> (QDataStream & in, Team & team)
+{
+    int countIndex;
+    for(countIndex=0;countIndex<6;countIndex++)
+    {
+        int index;
+        in >> index;
+        if(index == countIndex)
+        {
+            in >> team.poke(index);
+        }
+    }
+    return in;
+}
+
+QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
+{
+    QString nickname;
+    int num,item,ability,nature,gender,level,i;
+    bool shininess;
+    quint8 happiness;
+    in >> num >> nickname >> item >> ability >> nature >> gender >> shininess >> happiness >> level;
+    Pokemon.setNum(num);
+    Pokemon.load();
+    Pokemon.setNickname(nickname);
+    Pokemon.setItem(item);
+    Pokemon.setAbility(ability);
+    Pokemon.setNature(nature);
+    Pokemon.setGender(gender);
+    Pokemon.setShininess(shininess);
+    Pokemon.setHappiness(happiness);
+    Pokemon.setLevel(level);
+    for(i=0;i<4;i++)
+    {
+        int moveNum;
+        in >> moveNum;
+        Pokemon.setMove(i,moveNum);
+    }
+    for(i=0;i<6;i++)
+    {
+        quint8 DV;
+        in >> DV;
+        Pokemon.setDV(i,DV);
+    }
+    for(i=0;i<6;i++)
+    {
+        quint8 EV;
+        in >> EV;
+        Pokemon.setEV(i,EV);
+    }
+    return in;
 }
