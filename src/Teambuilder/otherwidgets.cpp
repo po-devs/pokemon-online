@@ -30,6 +30,7 @@ QEntitled::QEntitled(const QString &title, QWidget *widget)
 
     /* Makes the title/items stick together */
     m_layout->setSpacing(0);
+    m_layout->setMargin(0);
 }
 
 void QEntitled::setWidget(QWidget *widget)
