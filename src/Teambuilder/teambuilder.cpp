@@ -1,7 +1,6 @@
 #include "teambuilder.h"
 #include "advanced.h"
-#include <QMenu>
-#include <QAction>
+#include "otherwidgets.h"
 
 template <class T, class U>
 QList<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
@@ -848,7 +847,6 @@ void TB_EVManager::updateMain()
 
 QDataStream & operator << (QDataStream & out, const Team & team)
 {
-    qDebug() << "sauvegarde de la Team";
     for(int index = 0;index<6;index++)
     {
         const PokeTeam & poke = team.poke(index);
@@ -860,7 +858,6 @@ QDataStream & operator << (QDataStream & out, const Team & team)
 
 QDataStream & operator << (QDataStream & out, const PokeTeam & Pokemon)
 {
-    qDebug() << "sauvegarde du pokemon";
     out << Pokemon.num();
     out << Pokemon.nickname();
     out << Pokemon.item();
@@ -951,7 +948,7 @@ QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
     {
         int moveNum;
         in >> moveNum;
-        Pokemon.setMove(i,moveNum);
+        Pokemon.setMove(moveNum,i);
     }
     for(i=0;i<6;i++)
     {

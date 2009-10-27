@@ -739,6 +739,61 @@ PokeTeam & Team::poke(int index)
 }
 
 
+TrainerTeam::TrainerTeam()
+{
+}
+
+QString TrainerTeam::trainerInfo() const
+{
+    return m_trainerInfo;
+}
+
+QString TrainerTeam::trainerLose() const
+{
+    return m_trainerLose;
+}
+
+QString TrainerTeam::trainerWin() const
+{
+    return m_trainerWin;
+}
+
+QString TrainerTeam::trainerNick() const
+{
+    return m_trainerNick;
+}
+
+
+void TrainerTeam::setTrainerInfo(const QString &newinfo)
+{
+    m_trainerInfo = newinfo;
+}
+
+void TrainerTeam::setTrainerWin(const QString &newwin)
+{
+    m_trainerWin = newwin;
+}
+
+void TrainerTeam::setTrainerLose(const QString &newlose)
+{
+    m_trainerLose = newlose;
+}
+
+void TrainerTeam::setTrainerNick(const QString &newnick)
+{
+    m_trainerNick = newnick;
+}
+
+const Team & TrainerTeam::team() const
+{
+    return m_team;
+}
+
+Team & TrainerTeam::team()
+{
+    return m_team;
+}
+
 void PokemonInfo::init(const QString &dir)
 {
     /* makes sure it isn't already initialized */
@@ -1249,57 +1304,3 @@ QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type)
     return ret;
 }
 
-TrainerTeam::TrainerTeam()
-{
-}
-
-QString TrainerTeam::trainerInfo() const
-{
-    return m_trainerInfo;
-}
-
-QString TrainerTeam::trainerLose() const
-{
-    return m_trainerLose;
-}
-
-QString TrainerTeam::trainerWin() const
-{
-    return m_trainerWin;
-}
-
-QString TrainerTeam::trainerNick() const
-{
-    return m_trainerNick;
-}
-
-
-void TrainerTeam::setTrainerInfo(const QString &newinfo)
-{
-    m_trainerInfo = newinfo;
-}
-
-void TrainerTeam::setTrainerWin(const QString &newwin)
-{
-    m_trainerWin = newwin;
-}
-
-void TrainerTeam::setTrainerLose(const QString &newlose)
-{
-    m_trainerLose = newlose;
-}
-
-void TrainerTeam::setTrainerNick(const QString &newnick)
-{
-    m_trainerNick = newnick;
-}
-
-const Team & TrainerTeam::team() const
-{
-    return m_team;
-}
-
-Team & TrainerTeam::team()
-{
-    return m_team;
-}

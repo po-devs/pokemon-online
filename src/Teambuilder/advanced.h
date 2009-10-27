@@ -2,10 +2,12 @@
 #define TB_ADVANCED_H
 
 #include <QtGui>
-#include "teambuilder.h"
 
 /* This file contains the code for the "Advanced" window you
    can access in the Teambuilder on a pokemon */
+
+class PokeTeam;
+class QCompactTable;
 
 class TB_Advanced : public QWidget
 {

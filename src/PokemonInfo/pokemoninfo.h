@@ -357,17 +357,6 @@ public:
     QString trainerNick() const;
 };
 
-
-//QDataStream & operator << (QDataStream & out,const Team & team);
-//QDataStream & operator << (QDataStream & out,const PokeTeam & Pokemon);
-//QDataStream & operator << (QDataStream & out,const TrainerTeam & trainerTeam);
-//
-//QDataStream & operator >>(QDataStream & in,Team & team);
-//QDataStream & operator >>(QDataStream & in,PokeTeam & Pokemon);
-//QDataStream & operator >>(QDataStream & in,TrainerTeam & trainerTeam);
-
-
-
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
 class POKEMONINFOSHARED_EXPORT PokemonInfo
 {
