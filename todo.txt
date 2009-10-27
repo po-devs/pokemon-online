@@ -1,10 +1,4 @@
-/* Sous windows ouvrir avec le wordpad ou autre, mais pas le bloc-note :s !! */
--Agrandir un peu le champ du nom du trainer
----------->pris par Mephistos
-
--Rajouter des raccourcis dans le menu Advanced du teambuilder
--------->pris par Mephistos
-
+/* Sous windows ouvrir avec le wordpad ou autre, mais pas le bloc-note :s !! */
 
 -Faire une classe avec des fonctions statiques (voir le modèle des classe PokemonInfo, TypeInfo, ...) qui permette de charger des stylesheet à partir des feuilles CSS, pour les widgets, dans un fichier stylist.cpp. On peut aussi créer un dossier styles dans bin et rajouter des styles pour des widgets (je prends l'exemple des sliders sous XP qui sont moches) personnalisés (n'hésitez pas à voir les exemple de la doc de Qt ^^). Il y aurait un fichier default.qss, qui contient le style par défaut de l'application, des fichiers .qss qui contiendront des personnalisations pour certains widgets, et sinon des dossiers qui contiendraient d'autres styles.
 
@@ -15,6 +9,7 @@ Les icones sont dans db/icons.zip, il faut rajouter une fonction dans PokemonInf
 ------->pris par mephistos
 
 -Dans la partie Pokémon du teambuilder, essayer de virer en partie l'espace vide vertical entre Pokemon-Nickname et entre NickName-Iteam. (de sorte que le tableau moves puisse prendre plus de place) Ensuite mieux espacer les lignes d'EV pour qu'elle soient répartie uniformément (cf capture d'écran de mon projet sous SDL dans le topic sur le sdz)
+
 ---- A NE PAS OUBLIER PLUS TARD  ------
 -Dans le menu trainer, proposer plusieurs customizations (dont choix d'une icone, choix de la version d'affichage des sprites, réorganiser les Pokémons)
 
@@ -24,4 +19,4 @@ Les icones sont dans db/icons.zip, il faut rajouter une fonction dans PokemonInf
 
 -faire un pokedex, movedex, etc.
 
-
+-faire un QPixmapCache pour optimiser
