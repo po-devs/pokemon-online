@@ -17,13 +17,15 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     uplayout->addLayout(firstColumn,1);
     uplayout->addLayout(secondColumn,0);
 
-    QGroupBox *hiddenpower = new QGroupBox(tr("Hidden Power"));
+    QGroupBox *hiddenpower = new QGroupBox(tr("Hidden Po&wer"));
     firstColumn->addWidget(hiddenpower);
     QGridLayout *hidpower = new QGridLayout(hiddenpower);
 
+    QLabel * l_type = new QLabel("T&ype:");
     hpchoice = new QComboBox();
+    l_type->setBuddy(hpchoice);
     hpower = new QLabel();
-    hidpower->addWidget(new QLabel("Type:"), 0, 0);
+    hidpower->addWidget(l_type, 0, 0);
     hidpower->addWidget(hpchoice, 0, 1);
     hidpower->addWidget(new QLabel("Power:"), 1,0);
     hidpower->addWidget(hpower,1,1);
@@ -35,16 +37,20 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 
     connect(hpchoice, SIGNAL(activated(int)), SLOT(changeHiddenPower(int)));
 
-    QGroupBox *dvs = new QGroupBox("DVs");
+    QGroupBox *dvs = new QGroupBox("&DVs");
     firstColumn->addWidget(dvs);
     QGridLayout *dvlayout = new QGridLayout(dvs);
     QStringList stats_l;
-    stats_l << "Hit Points" << "Attack" << "Defense" << "Speed" << "Special attack" << "Special defense";
+    stats_l << "&Hit Points" << "A&ttack" << "De&fense" << "S&peed" << "Special &attack" << "Special &defense";
 
     for (int i = 0; i < 6; i++)
     {
-	dvlayout->addWidget(new QLabel(stats_l[i]), i, 0);
-	dvlayout->addWidget((dvchoice[i]= new QSpinBox()), i, 1);
+        QLabel * l = new QLabel(stats_l[i]);
+        QSpinBox * s = new QSpinBox();
+        dvchoice[i] = s;
+        l->setBuddy(s);
+        dvlayout->addWidget(l, i, 0);
+        dvlayout->addWidget(s, i, 1);
 
 	dvchoice[i]->setRange(0,31);
 	dvchoice[i]->setAccelerated(true);
@@ -65,14 +71,16 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 
     QHBoxLayout *levellayout = new QHBoxLayout();
     secondColumn->addLayout(levellayout);
-    levellayout->addWidget(new QLabel(tr("Level")));
+    QLabel * l_lvl = new QLabel(tr("Le&vel"));
+    levellayout->addWidget(l_lvl);
     levellayout->addWidget(level = new QSpinBox());
+    l_lvl->setBuddy(level);
     level->setRange(2,100);
     level->setValue(poke()->level());
     level->setAccelerated(true);
     connect(level, SIGNAL(valueChanged(int)), SLOT(changeLevel(int)));
 
-    QGroupBox *gender = new QGroupBox(tr("Gender"));
+    QGroupBox *gender = new QGroupBox(tr("&Gender"));
     QVBoxLayout *genderLayout = new QVBoxLayout(gender);
     secondColumn->addWidget(gender);
 
