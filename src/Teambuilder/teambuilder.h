@@ -23,7 +23,7 @@ public:
     State validate(QString &input, int &pos) const;
 };
 
-class TeamBuilder : public QCenteredWidget
+class TeamBuilder : public QWidget
 {
     Q_OBJECT
 private:
@@ -38,7 +38,6 @@ private:
     /* returns the button associated to that zone */
     QPushButton *at(int i);
     Team *team();
-    TrainerTeam *trainerTeam();
 
     void updatePokemon(int index);
     void updateTrainer();
@@ -52,17 +51,22 @@ private:
 
 private slots:
     void changeBody(int i);
-    void setIconForPokeButton(int num);
+    void setIconForPokeButton();
 
 public slots:
     void saveTeam();
     void loadTeam();
-    void done();
+    void clickOnDone();
     void updateTeam();
+
+signals:
+    void done();
 
 public:
     TeamBuilder(TrainerTeam *team);
     ~TeamBuilder();
+
+    TrainerTeam *trainerTeam();
 };
 
 class TB_TrainerBody : public QWidget
@@ -71,6 +75,14 @@ class TB_TrainerBody : public QWidget
 private:
     QLineEdit *m_nick;
     QTextEdit *m_winMessage, *m_loseMessage, /* *m_drawMessage, */ *m_trainerInfo;
+
+     TrainerTeam *m_team;
+     TrainerTeam* trainerTeam();
+ private slots:
+     void changeTrainerInfo();
+     void setTrainerNick(const QString &);
+     void changeTrainerWin();
+     void changeTrainerLose();
 public:
     TB_TrainerBody(TeamBuilder *parent);
 
@@ -99,6 +111,7 @@ private:
     QLabel *pokeImage, *genderIcon, *level;
     QCompactTable *movechoice;
     QLineEdit *m_moves[4];
+    QLineEdit *m_nick;
     TB_EVManager *evchoice;
     TB_Advanced *m_adv;
     int m_index;
@@ -116,6 +129,9 @@ private:
     void updateLevel();
     void updateMoves();
     void updateEVs();
+    void updateNickname();
+    void updateItem();
+    void updateNature();
 
     bool advancedOpen();
     TB_Advanced *advanced();
@@ -130,10 +146,10 @@ private slots:
     void goToAdvanced();
     void updateAdvanced();
     void setAdvancedOpenToFalse();
+    void setNick(const QString &nick);
 signals:
     void moveChosen(int movenum);
     void pokeChanged(int pokenum);
-    void changeIconForPokeButton(int num);
 public slots:
     void setNum(int pokeNum);
 public:

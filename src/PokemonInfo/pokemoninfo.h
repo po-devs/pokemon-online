@@ -9,9 +9,9 @@ struct Pokemon
 {
     enum Gender
     {
-	Neutral,
-	Male,
-	Female
+        Neutral,
+        Male,
+        Female
     };
 
     /* For simplicity issues we keep the same order as in Gender. You can assume it'll stay
@@ -21,61 +21,61 @@ struct Pokemon
 
     enum GenderAvail
     {
-	NeutralAvail,
-	MaleAvail,
-	FemaleAvail,
-	MaleAndFemaleAvail
+        NeutralAvail,
+        MaleAvail,
+        FemaleAvail,
+        MaleAndFemaleAvail
     };
 
     enum Type
     {
-	Normal = 0,
-	Fighting,
-	Flying,
-	Poison,
-	Ground,
-	Rock,
-	Bug,
-	Ghost,
-	Steel,
-	Fire,
-	Water,
-	Grass,
-	Electric,
-	Psychic,
-	Ice,
-	Dragon,
-	Dark,
-	Curse = 17
+        Normal = 0,
+        Fighting,
+        Flying,
+        Poison,
+        Ground,
+        Rock,
+        Bug,
+        Ghost,
+        Steel,
+        Fire,
+        Water,
+        Grass,
+        Electric,
+        Psychic,
+        Ice,
+        Dragon,
+        Dark,
+        Curse = 17
     };
 
     enum Nature
     {
-	Hardy = 0,
-	Lonely,
-	Brave,
-	Adamant,
-	Naughty,
-	Bold,
-	Docile,
-	Relaxed,
-	Impish,
-	Lax,
-	Timid,
-	Hasty,
-	Serious,
-	Jolly,
-	Naive,
-	Modest,
-	Mild,
-	Quiet,
-	Bashful,
-	Rash,
-	Calm,
-	Gentle,
-	Sassy,
-	Careful,
-	Quirky = 24
+        Hardy = 0,
+        Lonely,
+        Brave,
+        Adamant,
+        Naughty,
+        Bold,
+        Docile,
+        Relaxed,
+        Impish,
+        Lax,
+        Timid,
+        Hasty,
+        Serious,
+        Jolly,
+        Naive,
+        Modest,
+        Mild,
+        Quiet,
+        Bashful,
+        Rash,
+        Calm,
+        Gentle,
+        Sassy,
+        Careful,
+        Quirky = 24
     };
 };
 
@@ -84,31 +84,31 @@ struct POKEMONINFOSHARED_EXPORT Move
 {
     enum Category
     {
-	Physical,
-	Special,
-	Other
+        Physical,
+        Special,
+        Other
     };
 
     enum Type
     {
-	Normal = 0,
-	Fighting,
-	Flying,
-	Poison,
-	Ground,
-	Rock,
-	Bug,
-	Ghost,
-	Steel,
-	Fire,
-	Water,
-	Grass,
-	Electric,
-	Psychic,
-	Ice,
-	Dragon,
-	Dark,
-	Curse = 17
+        Normal = 0,
+        Fighting,
+        Flying,
+        Poison,
+        Ground,
+        Rock,
+        Bug,
+        Ghost,
+        Steel,
+        Fire,
+        Water,
+        Grass,
+        Electric,
+        Psychic,
+        Ice,
+        Dragon,
+        Dark,
+        Curse = 17
     };
 };
 
@@ -358,13 +358,13 @@ public:
 };
 
 
-/*QDataStream & operator << (QDataStream & out,const Team & team);
-QDataStream & operator << (QDataStream & out,const PokeTeam & Pokemon);
-QDataStream & operator << (QDataStream & out,const TrainerTeam & trainerTeam);
-
-QDataStream & operator >>(QDataStream & in,Team & team);
-QDataStream & operator >>(QDataStream & in,PokeTeam & Pokemon);
-QDataStream & operator >>(QDataStream & in,TrainerTeam & trainerTeam);*/
+//QDataStream & operator << (QDataStream & out,const Team & team);
+//QDataStream & operator << (QDataStream & out,const PokeTeam & Pokemon);
+//QDataStream & operator << (QDataStream & out,const TrainerTeam & trainerTeam);
+//
+//QDataStream & operator >>(QDataStream & in,Team & team);
+//QDataStream & operator >>(QDataStream & in,PokeTeam & Pokemon);
+//QDataStream & operator >>(QDataStream & in,TrainerTeam & trainerTeam);
 
 
 
@@ -430,6 +430,7 @@ class POKEMONINFOSHARED_EXPORT ItemInfo
 {
 private:
     static QStringList m_Names;
+    static QStringList m_SortedNames;
     static QString m_Directory;
 
     static void loadNames();
@@ -442,7 +443,10 @@ public:
     static int NumberOfItems();
     static QString Name(int itemnum);
     static QStringList Names();
+    static QStringList SortedNames();
     static int Number(const QString &itemname);
+    /* returns the number corresponding to the name, but with the sortedNames as a ref */
+    static int SortedNumber(const QString &itemname);
     static QString Description(int itemnum);
     static int Power(int itemnum);
 };
