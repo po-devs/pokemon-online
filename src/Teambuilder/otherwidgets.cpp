@@ -18,6 +18,8 @@ QEntitled::QEntitled(const QString &title, QWidget *widget)
 
     /* The space is there for correct alignment of the title */
     m_title = new QLabel( title);
+    m_title->setMaximumHeight(17);
+
     m_layout->addWidget(m_title, 0, Qt::AlignBottom);
     if (widget)
         m_widget = widget;

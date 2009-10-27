@@ -379,19 +379,26 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     QVBoxLayout *second_column = new QVBoxLayout();
     layout->addLayout(second_column,0,1);
 
-    pokeImage = new QLabel();
-    second_column->addWidget(pokeImage,0,Qt::AlignBottom|Qt::AlignHCenter);
-    updateImage();
+    //hack to restrain the size of it all
+    QWidget *restrainer = new QWidget();
+    second_column->addWidget(restrainer);
 
-    QHBoxLayout *gender_level = new QHBoxLayout;
-    second_column->addLayout(gender_level);
+    restrainer->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+    QGridLayout *restrainer_layout = new QGridLayout(restrainer);
+
+    pokeImage = new QLabel();
+    restrainer_layout->addWidget(pokeImage,0,0,1,2,Qt::AlignBottom|Qt::AlignHCenter);
 
     genderIcon = new QLabel();
-    gender_level->addWidget(genderIcon, 0, Qt::AlignCenter | Qt::AlignTop);
+    genderIcon->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+
+    restrainer_layout->addWidget(genderIcon, 1,0, Qt::AlignCenter | Qt::AlignTop);
 
     level = new QLabel();
+    level->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 
-    gender_level->addWidget(level, 0, Qt::AlignLeft | Qt::AlignTop);
+    restrainer_layout->addWidget(level, 1,1, Qt::AlignLeft | Qt::AlignTop);
 
     naturechoice = new QComboBox();
     for (int i = 0; i < NatureInfo::NumberOfNatures(); i++)
@@ -407,12 +414,9 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     connect(advanced, SIGNAL(pressed()), SLOT(goToAdvanced()));
 
     /* third and last column of the upper body */
-    QVBoxLayout *third_column = new QVBoxLayout();
-    layout->addLayout(third_column,0,2);
-
     evchoice = new TB_EVManager(poke());
 
-    third_column->addLayout(evchoice);
+    layout->addLayout(evchoice,0,2);
 
     initMoves();
 
