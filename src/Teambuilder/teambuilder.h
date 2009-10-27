@@ -3,13 +3,13 @@
 
 #include <QtGui>
 #include "../PokemonInfo/pokemoninfo.h"
-#include <QMenuBar>
-#include "otherwidgets.h"
 
 class TB_PokemonBody;
 class TB_TrainerBody;
 class TB_EVManager;
 class TB_Advanced;
+
+class QCompactTable;
 
 /* validator for the nicks */
 class QNickValidator : public QValidator
