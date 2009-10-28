@@ -98,7 +98,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 	gender1->setEnabled(false);
     }
 
-    QGroupBox *ability = new QGroupBox(tr("Ability"));
+    QGroupBox *ability = new QGroupBox(tr("A&bility"));
     secondColumn->addWidget(ability);
     QVBoxLayout *abilityLayout = new QVBoxLayout(ability);
 
@@ -112,7 +112,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 	ability1->setEnabled(false);
     }
 
-    secondColumn->addWidget(shiny = new QCheckBox(tr("Shiny")));
+    secondColumn->addWidget(shiny = new QCheckBox(tr("Sh&iny")));
     if (poke()->shiny()) {
 	shiny->setChecked(true);
     }
