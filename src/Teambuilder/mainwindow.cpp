@@ -35,8 +35,10 @@ void MainWindow::launchMenu()
     m_menu = new TB_Menu();
 
     /* We want to have space around the menu, so we put it in another widget ... */
+
     setCentralWidget(m_menu);
-    this->resize(m_menu->size());
+    this->setFixedSize(m_menu->size());
+
 
     connect(m_menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
     connect(m_menu, SIGNAL(goToExit()), SLOT(close()));
@@ -52,7 +54,9 @@ void MainWindow::launchTeamBuilder()
 {
     m_TB = new TeamBuilder(trainerTeam());
 
+
     setCentralWidget(m_TB);
+    this->setFixedSize(m_TB->size());
 
     connect(m_TB, SIGNAL(done()), SLOT(launchMenu()));
 }
