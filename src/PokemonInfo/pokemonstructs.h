@@ -360,9 +360,9 @@ public:
 };
 
 /* Dialog for loading/saving team */
-
-bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath = QObject::tr("Team/trainer.tp"));
-bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath = QObject::tr("Team/"));
+/* The third argument, if non null, gives the path the user chose */
+bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath = QObject::tr("Team/trainer.tp"), QString *chosenPath=0);
+bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath = QObject::tr("Team/"), QString *chosenPath=0);
 
 QDataStream & operator << (QDataStream & out,const Team & team);
 QDataStream & operator << (QDataStream & out,const PokeTeam & Pokemon);

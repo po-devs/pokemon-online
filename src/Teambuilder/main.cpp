@@ -4,7 +4,10 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    QApplication::setStyle("cleanlooks");
+
+    /* Names to use later for QSettings */
+    QCoreApplication::setApplicationName("Pogeymon-Online");
+    QCoreApplication::setOrganizationName("Dreambelievers");
 
     MainWindow w;
 
