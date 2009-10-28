@@ -7,6 +7,7 @@ MainWindow::MainWindow() : m_menu(0), m_TB(0)
 {
     resize (650, 680);
     setWindowTitle(tr("Pogeymon-Online"));
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
@@ -21,6 +22,7 @@ MainWindow::MainWindow() : m_menu(0), m_TB(0)
     GenderInfo::init("db/");
     HiddenPowerInfo::init("db/");
 
+    loadTeam(tr("Team/trainer.tp"));
     launchMenu();
 }
 
@@ -36,8 +38,7 @@ void MainWindow::launchMenu()
     /* We want to have space around the menu, so we put it in another widget ... */
 
     setCentralWidget(m_menu);
-    this->setFixedSize(m_menu->size());
-    setMenuBar(m_menu->createMenuBar());
+    setMenuBar(m_menu->createMenuBar(this));
 
     connect(m_menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
     connect(m_menu, SIGNAL(goToExit()), SLOT(close()));
@@ -55,12 +56,21 @@ void MainWindow::launchTeamBuilder()
 
 
     setCentralWidget(m_TB);
-    this->setFixedSize(m_TB->size());
-    setMenuBar(m_menu->createMenuBar());
+    setMenuBar(m_TB->createMenuBar(this));
 
     connect(m_TB, SIGNAL(done()), SLOT(launchMenu()));
 }
 
 void MainWindow::goOnline()
 {
+}
+
+void MainWindow::loadTeam(const QString &path)
+{
+    trainerTeam()->loadFromFile(path);
+}
+
+void MainWindow::loadTeamDialog()
+{
+    loadTTeamDialog(*trainerTeam());
 }

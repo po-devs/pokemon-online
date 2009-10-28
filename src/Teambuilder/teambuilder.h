@@ -11,6 +11,7 @@ class TB_Advanced;
 class TrainerTeam;
 class Team;
 class PokeTeam;
+class MainWindow;
 
 class QCompactTable;
 
@@ -72,7 +73,7 @@ public:
     TrainerTeam *trainerTeam();
 
     /* Create a menu bar to give to the main window */
-    QMenuBar *createMenuBar();
+    QMenuBar *createMenuBar(MainWindow *w);
 };
 
 class TB_TrainerBody : public QWidget

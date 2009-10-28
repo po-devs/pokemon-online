@@ -21,11 +21,15 @@ private:
 public:
     MainWindow();
 
+    void loadTeam(const QString &path);
 public slots:
     void launchMenu();
     void launchCredits();
     void launchTeamBuilder();
     void goOnline();
+
+    /* slots called by subwindows */
+    void loadTeamDialog();
 };
 
 #endif // MAINWINDOW_H

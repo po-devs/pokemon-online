@@ -3,13 +3,15 @@
 
 #include <QtGui>
 
+class MainWindow;
+
 class TB_Menu : public QWidget
 {
         Q_OBJECT
 public:
     TB_Menu();
     /* Creates a menu bar to give to the main window */
-    QMenuBar *createMenuBar();
+    QMenuBar *createMenuBar(MainWindow *w);
 
 public slots:
     void launchTeambuilder();
