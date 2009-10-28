@@ -32,15 +32,11 @@ TrainerTeam * MainWindow::trainerTeam()
 
 void MainWindow::launchMenu()
 {
-    QWidget *dummyCentral = new QWidget;
-    QVBoxLayout *dummyLayout = new QVBoxLayout(dummyCentral);
-
     m_menu = new TB_Menu();
 
-    dummyLayout->addWidget(m_menu,0, Qt::AlignCenter);
-
     /* We want to have space around the menu, so we put it in another widget ... */
-    setCentralWidget(dummyCentral);
+    setCentralWidget(m_menu);
+    this->resize(m_menu->size());
 
     connect(m_menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
     connect(m_menu, SIGNAL(goToExit()), SLOT(close()));
