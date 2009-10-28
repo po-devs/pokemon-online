@@ -9,9 +9,6 @@ MainWindow::MainWindow() : m_menu(0), m_TB(0)
     resize (650, 680);
     setWindowTitle(tr("Pogeymon-Online"));
 
-    centralZone = new QMdiArea;
-    setCentralWidget(centralZone);
-
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
@@ -35,24 +32,20 @@ TrainerTeam * MainWindow::trainerTeam()
 
 void MainWindow::launchMenu()
 {
+    QWidget *dummyCentral = new QWidget;
+    QVBoxLayout *dummyLayout = new QVBoxLayout(dummyCentral);
+
     m_menu = new TB_Menu();
 
-    menuSubWindow = centralZone->addSubWindow(m_menu);
-    
-    connect(menuSubWindow, SIGNAL(destroyed()), SLOT(windowDestroyed()));
+    dummyLayout->addWidget(m_menu,0, Qt::AlignCenter);
 
-    menuSubWindow->show();
-
-    menuSubWindow->move((width() - menuSubWindow->width())/2, (height() - menuSubWindow->height())/2);
+    /* We want to have space around the menu, so we put it in another widget ... */
+    setCentralWidget(dummyCentral);
 
     connect(m_menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
     connect(m_menu, SIGNAL(goToExit()), SLOT(close()));
     connect(m_menu, SIGNAL(goToOnline()), SLOT(goOnline()));
     connect(m_menu, SIGNAL(goToCredits()), SLOT(launchCredits()));
-
-    if (m_TB && sender() == m_TB) {
-        delete TBSubWindow, m_TB=NULL;
-    }
 }
 
 void MainWindow::launchCredits()
@@ -63,34 +56,9 @@ void MainWindow::launchTeamBuilder()
 {
     m_TB = new TeamBuilder(trainerTeam());
 
-    TBSubWindow = centralZone->addSubWindow(m_TB);
-
-    connect(TBSubWindow, SIGNAL(destroyed()), SLOT(windowDestroyed()));
-    
-    m_TB->show();
+    setCentralWidget(m_TB);
 
     connect(m_TB, SIGNAL(done()), SLOT(launchMenu()));
-
-    if (m_menu && sender() == m_menu) {
-        delete menuSubWindow, m_menu = NULL;
-    }
-}
-
-void MainWindow::windowDestroyed()
-{
-    if (sender() == TBSubWindow) {
-        m_TB=NULL;
-
-        if (centralZone->subWindowList().isEmpty()) {
-            launchMenu();
-        }
-    } else if (sender() == menuSubWindow) {
-        m_menu = NULL;
-
-        if (centralZone->subWindowList().isEmpty()) {
-            close();
-        }
-    }
 }
 
 void MainWindow::goOnline()
