@@ -361,7 +361,7 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     QWidget *restrainer = new QWidget();
     second_column->addWidget(restrainer);
 
-    restrainer->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    restrainer->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
     QGridLayout *restrainer_layout = new QGridLayout(restrainer);
 
@@ -369,12 +369,10 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     restrainer_layout->addWidget(pokeImage,0,0,1,2,Qt::AlignBottom|Qt::AlignHCenter);
 
     genderIcon = new QLabel();
-    genderIcon->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 
     restrainer_layout->addWidget(genderIcon, 1,0, Qt::AlignCenter | Qt::AlignTop);
 
     level = new QLabel();
-    level->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 
     restrainer_layout->addWidget(level, 1,1, Qt::AlignLeft | Qt::AlignTop);
 
