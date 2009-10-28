@@ -199,41 +199,12 @@ void TeamBuilder::setIconForPokeButton()
 
 void TeamBuilder::saveTeam()
 {
-    QString location = QFileDialog::getSaveFileName(0,tr("Saving the Team"),tr("Team/trainer.tp"), tr("Team(*.tp)"));
-    if(location.isEmpty())
-    {
-        //Maybe the user hit "Cancel"
-        return;
-    }
-    QFile file(location);
-    if(!file.open(QIODevice::WriteOnly))
-    {
-        QMessageBox::warning(0, tr("Error while saving the team"),tr("Can't create file ")+file.fileName());
-        return;
-    }
-    QDataStream out(&file);
-    out.setVersion(QDataStream::Qt_4_5);
-    out << (*trainerTeam());
+    saveTTeamDialog(*trainerTeam());
 }
 
 void TeamBuilder::loadTeam()
 {
-    QString location = QFileDialog::getOpenFileName(0,tr("Saving the Team"),tr("Team/"), tr("Team(*.tp)"));
-    if(location.isEmpty())
-    {
-        //Maybe the user hit "Cancel"
-        return;
-    }
-    QFile file(location);
-    if(!file.open(QIODevice::ReadOnly))
-    {
-        QMessageBox::warning(0, tr("Error while loading the team"),tr("Can't open file ")+file.fileName());
-        return;
-    }
-    QDataStream in(&file);
-    in.setVersion(QDataStream::Qt_4_5);
-    in >> (*trainerTeam());
-
+    loadTTeamDialog(*trainerTeam());
     updateTeam();
 }
 
