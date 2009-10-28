@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
 TB_Menu::TB_Menu()
@@ -21,9 +22,14 @@ TB_Menu::TB_Menu()
     connect (exit, SIGNAL(clicked()), SLOT(exit()));
 }
 
-QMenuBar * TB_Menu::createMenuBar()
+QMenuBar * TB_Menu::createMenuBar(MainWindow *w)
 {
-    return new QMenuBar();
+    QMenuBar *menuBar = new QMenuBar();
+    QMenu *menuFichier = menuBar->addMenu("&File");
+    menuFichier->addAction(tr("&Load Team"),w,SLOT(loadTeamDialog()),Qt::CTRL+Qt::Key_L);
+    menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
+
+    return menuBar;
 }
 
 void TB_Menu::launchCredits()

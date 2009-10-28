@@ -1,5 +1,6 @@
 #include "teambuilder.h"
 #include "advanced.h"
+#include "mainwindow.h"
 #include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/pokemonstructs.h"
@@ -82,18 +83,10 @@ QValidator::State QNickValidator::validate(QString &input, int& pos) const
 
 TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
 {
-    resize(600, 600);
+    setFixedSize(600, 650);
     setWindowTitle(tr("Teambuilder"));
 
     QGridLayout *layout = new QGridLayout(this);
-
-    /* Should find a way to put it in the main window
-    //Creating menus
-    QMenuBar *menuBar = new QMenuBar();
-    QMenu *menuFichier = menuBar->addMenu("&File");
-    menuFichier->addAction(tr("&Save Team"),this,SLOT(saveTeam()),Qt::CTRL+Qt::Key_S);
-    menuFichier->addAction("&Quit",qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
-    layout->addWidget(menuBar,0,0,Qt::AlignTop); */
 
     m_trainer = new QPushButton("&Trainer", this);
     m_trainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -132,6 +125,8 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
     }
 
     connectAll();
+
+    updateTeam();
 }
 
 void TeamBuilder::connectAll()
@@ -231,9 +226,15 @@ void TeamBuilder::updateTrainer()
     trainerbody()->updateTrainer();
 }
 
-QMenuBar * TeamBuilder::createMenuBar()
+QMenuBar * TeamBuilder::createMenuBar(MainWindow *w)
 {
-    return new QMenuBar();
+    QMenuBar *menuBar = new QMenuBar();
+    QMenu *menuFichier = menuBar->addMenu("&File");
+    menuFichier->addAction(tr("&Save Team"),this,SLOT(saveTeam()),Qt::CTRL+Qt::Key_S);
+    menuFichier->addAction(tr("&Load Team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
+    menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
+
+    return menuBar;
 }
 
 TB_PokemonBody * TeamBuilder::pokebody(int index)
@@ -405,8 +406,6 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     {
 	mlayout->addWidget(m_moves[i],1,i);
     }
-
-    updateNum();
 }
 
 void TB_PokemonBody::initPokemons()
