@@ -1,7 +1,6 @@
 #ifndef POKEMONINFO_H
 #define POKEMONINFO_H
 
-#include "PokemonInfo_global.h"
 #include <QtGui>
 #include <QDataStream>
 
@@ -80,7 +79,7 @@ struct Pokemon
 };
 
 
-struct POKEMONINFOSHARED_EXPORT Move
+struct Move
 {
     enum Category
     {
@@ -122,7 +121,7 @@ enum Stat
     SpDefense = 5
 };
 
-class POKEMONINFOSHARED_EXPORT PokeBaseStats
+class PokeBaseStats
 {
 private:
     quint8 m_BaseStats[6];
@@ -148,7 +147,7 @@ public:
 };
 
 /* Data that every pokémon of the same specy share. */
-class POKEMONINFOSHARED_EXPORT PokeGeneral
+class PokeGeneral
 {
 protected:
     PokeBaseStats m_stats;
@@ -182,7 +181,7 @@ public:
 };
 
 /* Data that is unique to a pokémon */
-class POKEMONINFOSHARED_EXPORT PokePersonal
+class PokePersonal
 {
 protected:
     QString m_nickname;
@@ -270,7 +269,7 @@ public:
 };
 
 /* Contains / loads the graphics of a pokemon */
-class POKEMONINFOSHARED_EXPORT PokeGraphics
+class PokeGraphics
 {
 protected:
     /* This is the current implementation, but an implemenation where more than one
@@ -293,7 +292,7 @@ public:
     void load(int gender, bool shiny);
 };
 
-class POKEMONINFOSHARED_EXPORT PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtual public PokeGraphics
+class PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtual public PokeGraphics
 {
 protected:
     /* Calculates actual stats based on the pokemon's characteristics */
@@ -319,7 +318,7 @@ public:
     QPixmap picture();
 };
 
-class POKEMONINFOSHARED_EXPORT Team
+class Team
 {
 protected:
     PokeTeam m_pokes[6];
@@ -331,7 +330,7 @@ public:
     PokeTeam & poke(int index);
 };
 
-class POKEMONINFOSHARED_EXPORT TrainerTeam
+class TrainerTeam
 {
 protected:
     Team m_team;
@@ -357,8 +356,16 @@ public:
     QString trainerNick() const;
 };
 
+QDataStream & operator << (QDataStream & out,const Team & team);
+QDataStream & operator << (QDataStream & out,const PokeTeam & Pokemon);
+QDataStream & operator << (QDataStream & out,const TrainerTeam & trainerTeam);
+
+QDataStream & operator >>(QDataStream & in,Team & team);
+QDataStream & operator >>(QDataStream & in,PokeTeam & Pokemon);
+QDataStream & operator >>(QDataStream & in,TrainerTeam & trainerTeam);
+
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
-class POKEMONINFOSHARED_EXPORT PokemonInfo
+class PokemonInfo
 {
 private:
     static QStringList m_Names;
@@ -388,7 +395,7 @@ public:
     static QList<int> Abilities(int pokenum);
 };
 
-class POKEMONINFOSHARED_EXPORT MoveInfo
+class MoveInfo
 {
 private:
     static QStringList m_Names;
@@ -415,7 +422,7 @@ public:
     static QString AccS(int movenum);
 };
 
-class POKEMONINFOSHARED_EXPORT ItemInfo
+class ItemInfo
 {
 private:
     static QStringList m_Names;
@@ -440,7 +447,7 @@ public:
     static int Power(int itemnum);
 };
 
-class POKEMONINFOSHARED_EXPORT TypeInfo
+class TypeInfo
 {
 private:
     static QStringList m_Names;
@@ -460,7 +467,7 @@ public:
     static int NumberOfTypes();
 };
 
-class POKEMONINFOSHARED_EXPORT NatureInfo
+class NatureInfo
 {
 private:
     static QStringList m_Names;
@@ -479,7 +486,7 @@ public:
     static int Boost(int nature, int stat);
 };
 
-class POKEMONINFOSHARED_EXPORT CategoryInfo
+class CategoryInfo
 {
 private:
     static QStringList m_Names;
@@ -499,7 +506,7 @@ public:
     static int NumberOfCategories();
 };
 
-class POKEMONINFOSHARED_EXPORT AbilityInfo
+class AbilityInfo
 {
 private:
     static QStringList m_Names;
@@ -516,7 +523,7 @@ public:
     static int NumberOfAbilities();
 };
 
-class POKEMONINFOSHARED_EXPORT GenderInfo
+class GenderInfo
 {
 private:
     static QStringList m_Names;
@@ -537,7 +544,7 @@ public:
 };
 
 
-class POKEMONINFOSHARED_EXPORT HiddenPowerInfo
+class HiddenPowerInfo
 {
 private:
     static QString m_Directory;
