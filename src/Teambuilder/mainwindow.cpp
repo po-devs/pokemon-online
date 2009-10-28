@@ -22,7 +22,18 @@ MainWindow::MainWindow() : m_menu(0), m_TB(0)
     GenderInfo::init("db/");
     HiddenPowerInfo::init("db/");
 
-    loadTeam(tr("Team/trainer.tp"));
+    QSettings settings;
+    /* initializing the default init values if not there */
+    if (settings.value("team_location").isNull()) {
+        settings.setValue("team_location", "Team/trainer.tp");
+    }
+    if (settings.value("application_style").isNull()) {
+        settings.setValue("application_style", "cleanlooks");
+    }
+    /* Loading the values */
+    QApplication::setStyle("cleanlooks");
+    loadTeam(settings.value("team_location").toString());
+    /* launching the first window */
     launchMenu();
 }
 
@@ -72,5 +83,10 @@ void MainWindow::loadTeam(const QString &path)
 
 void MainWindow::loadTeamDialog()
 {
-    loadTTeamDialog(*trainerTeam());
+    QSettings settings;
+    QString newLocation;
+
+    if (loadTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
+        settings.setValue("team_location", newLocation);
+    }
 }

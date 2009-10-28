@@ -712,7 +712,7 @@ void TrainerTeam::saveToFile(const QString &path)
     }
 }
 
-bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath)
+bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath, QString *chosenPath)
 {
     QString location = QFileDialog::getSaveFileName(0,QObject::tr("Saving the Team"),defaultPath, QObject::tr("Team(*.tp)"));
     if(location.isEmpty())
@@ -730,10 +730,15 @@ bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath)
     out.setVersion(QDataStream::Qt_4_5);
     out << team;
 
+    if (chosenPath)
+    {
+        *chosenPath = location;
+    }
+
     return true;
 }
 
-bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath)
+bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *chosenPath)
 {
     QString location = QFileDialog::getOpenFileName(0,QObject::tr("Loading the Team"),defaultPath, QObject::tr("Team(*.tp)"));
     if(location.isEmpty())
@@ -750,6 +755,11 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath)
     QDataStream in(&file);
     in.setVersion(QDataStream::Qt_4_5);
     in >> team;
+
+    if (chosenPath)
+    {
+        *chosenPath = location;
+    }
 
     return true;
 }

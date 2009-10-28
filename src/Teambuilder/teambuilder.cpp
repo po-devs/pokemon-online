@@ -194,13 +194,23 @@ void TeamBuilder::setIconForPokeButton()
 
 void TeamBuilder::saveTeam()
 {
-    saveTTeamDialog(*trainerTeam());
+    QSettings settings;
+    QString newLocation;
+
+    if (saveTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
+        settings.setValue("team_location", newLocation);
+    }
 }
 
 void TeamBuilder::loadTeam()
 {
-    loadTTeamDialog(*trainerTeam());
-    updateTeam();
+    QSettings settings;
+    QString newLocation;
+
+    if (loadTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
+        settings.setValue("team_location", newLocation);
+        updateTeam();
+    }
 }
 
 void TeamBuilder::clickOnDone()
