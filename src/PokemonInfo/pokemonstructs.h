@@ -354,7 +354,15 @@ public:
     QString trainerWin() const;
     QString trainerLose() const;
     QString trainerNick() const;
+
+    void loadFromFile(const QString &path);
+    void saveToFile(const QString &path);
 };
+
+/* Dialog for loading/saving team */
+
+bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath = QObject::tr("Team/trainer.tp"));
+bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath = QObject::tr("Team/"));
 
 QDataStream & operator << (QDataStream & out,const Team & team);
 QDataStream & operator << (QDataStream & out,const PokeTeam & Pokemon);

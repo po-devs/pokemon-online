@@ -686,6 +686,73 @@ Team & TrainerTeam::team()
     return m_team;
 }
 
+void TrainerTeam::loadFromFile(const QString &path)
+{
+    QFile file(path);
+    if (file.open(QFile::ReadOnly))
+    {
+        QDataStream in(&file);
+
+        in.setVersion(QDataStream::Qt_4_5);
+
+        in >> *this;
+    }
+}
+
+void TrainerTeam::saveToFile(const QString &path)
+{
+    QFile file(path);
+    if (file.open(QFile::WriteOnly))
+    {
+        QDataStream out(&file);
+
+        out.setVersion(QDataStream::Qt_4_5);
+
+        out >> *this;
+    }
+}
+
+bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath)
+{
+    QString location = QFileDialog::getSaveFileName(0,QObject::tr("Saving the Team"),defaultPath, QObject::tr("Team(*.tp)"));
+    if(location.isEmpty())
+    {
+        //Maybe the user hit "Cancel"
+        return false;
+    }
+    QFile file(location);
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::warning(0, QObject::tr("Error while saving the team"),QObject::tr("Can't create file ")+file.fileName());
+        return false;
+    }
+    QDataStream out(&file);
+    out.setVersion(QDataStream::Qt_4_5);
+    out << team;
+
+    return true;
+}
+
+bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath)
+{
+    QString location = QFileDialog::getOpenFileName(0,QObject::tr("Loading the Team"),defaultPath, QObject::tr("Team(*.tp)"));
+    if(location.isEmpty())
+    {
+        //Maybe the user hit "Cancel"
+        return false;
+    }
+    QFile file(location);
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        QMessageBox::warning(0, QObject::tr("Error while loading the team"),QObject::tr("Can't open file ")+file.fileName());
+        return false;
+    }
+    QDataStream in(&file);
+    in.setVersion(QDataStream::Qt_4_5);
+    in >> team;
+
+    return true;
+}
 
 QDataStream & operator << (QDataStream & out, const Team & team)
 {

@@ -22,5 +22,4 @@ HEADERS += teambuilder.h \
     ../Utilities/otherwidgets.h
 FORMS += 
 LIBS += -L../../bin \
-    -lPokemonInfo \
     -lzip
