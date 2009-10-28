@@ -1,6 +1,5 @@
 #include "advanced.h"
-#include <QtGui>
-#include "otherwidgets.h"
+#include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
 TB_Advanced::TB_Advanced(PokeTeam *_poke)

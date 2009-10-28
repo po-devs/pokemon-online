@@ -2,12 +2,15 @@
 #define TEAMBUILDER_H
 
 #include <QtGui>
-#include "../PokemonInfo/pokemoninfo.h"
 
 class TB_PokemonBody;
 class TB_TrainerBody;
 class TB_EVManager;
 class TB_Advanced;
+
+class TrainerTeam;
+class Team;
+class PokeTeam;
 
 class QCompactTable;
 
