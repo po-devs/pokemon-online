@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-
 #include "../PokemonInfo/pokemoninfo.h"
 #include "menu.h"
 #include "teambuilder.h"
@@ -38,7 +37,7 @@ void MainWindow::launchMenu()
 
     setCentralWidget(m_menu);
     this->setFixedSize(m_menu->size());
-
+    setMenuBar(m_menu->createMenuBar());
 
     connect(m_menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
     connect(m_menu, SIGNAL(goToExit()), SLOT(close()));
@@ -57,6 +56,7 @@ void MainWindow::launchTeamBuilder()
 
     setCentralWidget(m_TB);
     this->setFixedSize(m_TB->size());
+    setMenuBar(m_menu->createMenuBar());
 
     connect(m_TB, SIGNAL(done()), SLOT(launchMenu()));
 }

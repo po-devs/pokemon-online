@@ -1,6 +1,8 @@
 #include "teambuilder.h"
 #include "advanced.h"
-#include "otherwidgets.h"
+#include "../Utilities/otherwidgets.h"
+#include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/pokemonstructs.h"
 
 template <class T, class U>
 QList<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
@@ -256,6 +258,11 @@ void TeamBuilder::updatePokemon(int index)
 void TeamBuilder::updateTrainer()
 {
     trainerbody()->updateTrainer();
+}
+
+QMenuBar * TeamBuilder::createMenuBar()
+{
+    return new QMenuBar();
 }
 
 TB_PokemonBody * TeamBuilder::pokebody(int index)

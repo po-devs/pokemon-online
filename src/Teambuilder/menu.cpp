@@ -21,6 +21,11 @@ TB_Menu::TB_Menu()
     connect (exit, SIGNAL(clicked()), SLOT(exit()));
 }
 
+QMenuBar * TB_Menu::createMenuBar()
+{
+    return new QMenuBar();
+}
+
 void TB_Menu::launchCredits()
 {
     emit goToCredits();
