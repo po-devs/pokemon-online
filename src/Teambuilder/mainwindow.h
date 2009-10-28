@@ -12,12 +12,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 private:
     TrainerTeam m_team;
-    QMdiArea *centralZone;
 
     TB_Menu *m_menu;
     TeamBuilder *m_TB;
-
-    QMdiSubWindow *menuSubWindow, *TBSubWindow;
 
     TrainerTeam *trainerTeam();
 
@@ -29,7 +26,6 @@ public slots:
     void launchCredits();
     void launchTeamBuilder();
     void goOnline();
-    void windowDestroyed();
 };
 
 #endif // MAINWINDOW_H

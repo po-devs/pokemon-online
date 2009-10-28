@@ -4,7 +4,7 @@
 TB_Menu::TB_Menu()
 {
     setWindowTitle(tr("Menu"));
-    resize(200,200);
+    setFixedSize(200,200);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
