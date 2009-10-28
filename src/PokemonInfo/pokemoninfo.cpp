@@ -794,6 +794,128 @@ Team & TrainerTeam::team()
     return m_team;
 }
 
+
+QDataStream & operator << (QDataStream & out, const Team & team)
+{
+    for(int index = 0;index<6;index++)
+    {
+        const PokeTeam & poke = team.poke(index);
+        out << index;
+        out << poke;
+    }
+    return out;
+}
+
+QDataStream & operator << (QDataStream & out, const PokeTeam & Pokemon)
+{
+    out << Pokemon.num();
+    out << Pokemon.nickname();
+    out << Pokemon.item();
+    out << Pokemon.ability();
+    out << Pokemon.nature();
+    out << Pokemon.gender();
+    out << Pokemon.shiny();
+    out << Pokemon.happiness();
+    out << Pokemon.level();
+    int i;
+    for(i=0;i<4;i++)
+    {
+        out << Pokemon.move(i);
+    }
+    for(i=0;i<6;i++)
+    {
+        out << Pokemon.DV(i);
+    }
+    for(i=0;i<6;i++)
+    {
+        out << Pokemon.EV(i);
+    }
+    return out;
+}
+
+QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
+{
+    out << trainerTeam.trainerNick();
+    out << trainerTeam.trainerInfo();
+    out << trainerTeam.trainerLose();
+    out << trainerTeam.trainerWin();
+    out << trainerTeam.team();
+
+    return out;
+}
+
+QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
+{
+    QString nick, info, lose, win;
+
+    in >> nick;
+    in >> info;
+    in >> lose;
+    in >> win;
+    in >> trainerTeam.team();
+
+    trainerTeam.setTrainerNick(nick);
+    trainerTeam.setTrainerInfo(info);
+    trainerTeam.setTrainerWin(win);
+    trainerTeam.setTrainerLose(lose);
+
+    return in;
+}
+
+QDataStream & operator >> (QDataStream & in, Team & team)
+{
+    int countIndex;
+    for(countIndex=0;countIndex<6;countIndex++)
+    {
+        int index;
+        in >> index;
+        if(index == countIndex)
+        {
+            in >> team.poke(index);
+        }
+    }
+    return in;
+}
+
+QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
+{
+    QString nickname;
+    int num,item,ability,nature,gender,level,i;
+    bool shininess;
+    quint8 happiness;
+    in >> num >> nickname >> item >> ability >> nature >> gender >> shininess >> happiness >> level;
+    Pokemon.setNum(num);
+    Pokemon.load();
+    Pokemon.setNickname(nickname);
+    Pokemon.setItem(item);
+    Pokemon.setAbility(ability);
+    Pokemon.setNature(nature);
+    Pokemon.setGender(gender);
+    Pokemon.setShininess(shininess);
+    Pokemon.setHappiness(happiness);
+    Pokemon.setLevel(level);
+    for(i=0;i<4;i++)
+    {
+        int moveNum;
+        in >> moveNum;
+        Pokemon.setMove(moveNum,i);
+    }
+    for(i=0;i<6;i++)
+    {
+        quint8 DV;
+        in >> DV;
+        Pokemon.setDV(i,DV);
+    }
+    for(i=0;i<6;i++)
+    {
+        quint8 EV;
+        in >> EV;
+        Pokemon.setEV(i,EV);
+    }
+    return in;
+}
+
+
 void PokemonInfo::init(const QString &dir)
 {
     /* makes sure it isn't already initialized */

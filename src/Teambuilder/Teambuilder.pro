@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     advanced.cpp \
     menu.cpp \
     otherwidgets.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    ../PokemonInfo/pokemoninfo.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \

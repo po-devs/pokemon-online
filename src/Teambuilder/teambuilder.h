@@ -67,6 +67,9 @@ public:
     ~TeamBuilder();
 
     TrainerTeam *trainerTeam();
+
+    /* Create a menu bar to give to the main window */
+    QMenuBar *createMenuBar();
 };
 
 class TB_TrainerBody : public QWidget
@@ -187,13 +190,5 @@ public:
 public slots:
     void EVChanged(int newvalue);
 };
-
-QDataStream & operator << (QDataStream & out,const Team & team);
-QDataStream & operator << (QDataStream & out,const PokeTeam & Pokemon);
-QDataStream & operator << (QDataStream & out,const TrainerTeam & trainerTeam);
-
-QDataStream & operator >>(QDataStream & in,Team & team);
-QDataStream & operator >>(QDataStream & in,PokeTeam & Pokemon);
-QDataStream & operator >>(QDataStream & in,TrainerTeam & trainerTeam);
 
 #endif // TEAMBUILDER_H
