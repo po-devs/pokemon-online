@@ -18,11 +18,11 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     uplayout->addLayout(firstColumn,1);
     uplayout->addLayout(secondColumn,0);
 
-    QGroupBox *hiddenpower = new QGroupBox(tr("Hidden Po&wer"));
+    QGroupBox *hiddenpower = new QGroupBox(tr("&Hidden Power"));
     firstColumn->addWidget(hiddenpower);
     QGridLayout *hidpower = new QGridLayout(hiddenpower);
 
-    QLabel * l_type = new QLabel("T&ype:");
+    QLabel * l_type = new QLabel("&Type:");
     hpchoice = new QComboBox();
     l_type->setBuddy(hpchoice);
     hpower = new QLabel();
@@ -42,7 +42,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     firstColumn->addWidget(dvs);
     QGridLayout *dvlayout = new QGridLayout(dvs);
     QStringList stats_l;
-    stats_l << "&Hit Points" << "A&ttack" << "De&fense" << "S&peed" << "Special &attack" << "Special &defense";
+    stats_l << "Hit Points" << "Attack" << "Defense" << "Speed" << "Special attack" << "Special defense";
 
     for (int i = 0; i < 6; i++)
     {
@@ -72,7 +72,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 
     QHBoxLayout *levellayout = new QHBoxLayout();
     secondColumn->addLayout(levellayout);
-    QLabel * l_lvl = new QLabel(tr("Le&vel"));
+    QLabel * l_lvl = new QLabel(tr("&Level"));
     levellayout->addWidget(l_lvl);
     levellayout->addWidget(level = new QSpinBox());
     l_lvl->setBuddy(level);
@@ -97,7 +97,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 	gender1->setEnabled(false);
     }
 
-    QGroupBox *ability = new QGroupBox(tr("A&bility"));
+    QGroupBox *ability = new QGroupBox(tr("&Ability"));
     secondColumn->addWidget(ability);
     QVBoxLayout *abilityLayout = new QVBoxLayout(ability);
 
@@ -111,7 +111,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 	ability1->setEnabled(false);
     }
 
-    secondColumn->addWidget(shiny = new QCheckBox(tr("Sh&iny")));
+    secondColumn->addWidget(shiny = new QCheckBox(tr("&Shiny")));
     if (poke()->shiny()) {
 	shiny->setChecked(true);
     }
