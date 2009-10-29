@@ -1,6 +1,6 @@
 #include "pokemoninfo.h"
 #include "pokemonstructs.h"
-#include <zip.h>
+#include "../../SpecialIncludes/zip.h"
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
@@ -175,6 +175,23 @@ QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney)
     ret.loadFromData(data, "png");
 
     return ret;
+}
+
+QIcon PokemonInfo::Icon(int index)
+{
+    QString archive = path("icons.zip");
+    QString file = QString("gifs/%1.gif").arg(index);
+    qDebug() << "file" << file;
+    QByteArray data = readZipFile(archive.toLocal8Bit(),file.toLocal8Bit());
+    if(data.length() == 0)
+    {
+        qDebug() << "erreur chargement fichier icon";
+        return QIcon();
+    }
+    QPixmap p;
+    p.loadFromData(data,"gif");
+    QIcon ico(p);
+    return ico;
 }
 
 QList<int> PokemonInfo::Moves(int pokenum)

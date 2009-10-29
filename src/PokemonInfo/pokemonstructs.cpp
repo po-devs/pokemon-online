@@ -509,6 +509,11 @@ void PokeGraphics::load(int gender, bool shiny)
     setUpToDate(true);
 }
 
+void PokeGraphics::loadIcon(int index)
+{
+    m_icon = PokemonInfo::Icon(index);
+}
+
 QPixmap PokeGraphics::picture()
 {
     return m_picture;
@@ -518,6 +523,17 @@ QPixmap PokeGraphics::picture(int gender, bool shiny)
 {
     load(gender, shiny);
     return picture();
+}
+
+QIcon PokeGraphics::icon()
+{
+    return m_icon;
+}
+
+QIcon PokeGraphics::icon(int index)
+{
+    loadIcon(index);
+    return icon();
 }
 
 int PokeGraphics::num() const
@@ -561,6 +577,7 @@ void PokeTeam::load()
     setAbility(abilities()[0]);
     setNickname(PokemonInfo::Name(num()));
     PokeGraphics::load(gender(), false);
+    PokeGraphics::loadIcon(num());
 }
 
 int PokeTeam::calc_stat(quint8 basestat, int level, quint8 ev, quint8 dv) const
@@ -571,6 +588,11 @@ int PokeTeam::calc_stat(quint8 basestat, int level, quint8 ev, quint8 dv) const
 QPixmap PokeTeam::picture()
 {
     return PokeGraphics::picture(gender(), shiny());
+}
+
+QIcon PokeTeam::icon()
+{
+    return PokeGraphics::icon();
 }
 
 int PokeTeam::calc_stat_F(int stat) const
