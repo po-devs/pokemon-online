@@ -1,6 +1,4 @@
-# -------------------------------------------------
-# Project created by QtCreator 2009-10-06T21:30:23
-# -------------------------------------------------
+QT += network
 TARGET = Teambuilder
 DESTDIR = ../../bin
 TEMPLATE = app
@@ -11,15 +9,18 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     ../PokemonInfo/pokemoninfo.cpp \
     ../PokemonInfo/pokemonstructs.cpp \
-    ../Utilities/otherwidgets.cpp
+    ../Utilities/otherwidgets.cpp \
+    network.cpp \
+    analyzer.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
     menu.h \
-    otherwidgets.h \
     mainwindow.h \
     ../PokemonInfo/pokemonstructs.h \
-    ../Utilities/otherwidgets.h
+    ../Utilities/otherwidgets.h \
+    network.h \
+    analyzer.h
 FORMS += 
 LIBS += -L../../bin \
     -lzip
