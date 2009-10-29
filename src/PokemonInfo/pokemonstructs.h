@@ -275,6 +275,7 @@ protected:
     /* This is the current implementation, but an implemenation where more than one
        image is stored can do to */
     QPixmap m_picture;
+    QIcon m_icon;
     int m_num;
     int m_storedgender;
     bool m_storedshininess;
@@ -286,10 +287,13 @@ public:
     PokeGraphics();
     QPixmap picture(); /* just gives the already loaded picture */
     QPixmap picture(int gender, bool shiny); /* loads a new picture if necessary, anyway gives the right picture */
+    QIcon icon();
+    QIcon icon(int index);
 
     void setNum(int num);
     int num() const;
     void load(int gender, bool shiny);
+    void loadIcon(int index);
 };
 
 class PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtual public PokeGraphics
@@ -316,6 +320,7 @@ public:
     void load();
     /* display automatically the right picture */
     QPixmap picture();
+    QIcon icon();
 };
 
 class Team

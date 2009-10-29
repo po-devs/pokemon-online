@@ -187,8 +187,8 @@ void TeamBuilder::setIconForPokeButton()
     }
     TB_PokemonBody * body = qobject_cast<TB_PokemonBody *>(sender());
     int index = name.remove("Poke",Qt::CaseSensitive).toInt(new bool,10);
-    m_pokemon[index]->setIcon(QIcon(body->poke()->picture()));
-    m_pokemon[index]->setIconSize(QSize(40,40));
+    m_pokemon[index]->setIcon(body->poke()->icon());
+    //m_pokemon[index]->setIconSize(QSize(40,40));
 
 }
 
