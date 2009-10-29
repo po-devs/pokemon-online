@@ -31,7 +31,7 @@ MainWindow::MainWindow() : m_menu(0), m_TB(0)
         settings.setValue("application_style", "cleanlooks");
     }
     /* Loading the values */
-    QApplication::setStyle("cleanlooks");
+    QApplication::setStyle(settings.value("application_style").toString());
     loadTeam(settings.value("team_location").toString());
     /* launching the first window */
     launchMenu();
