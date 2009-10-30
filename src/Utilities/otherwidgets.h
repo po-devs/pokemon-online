@@ -27,11 +27,32 @@ public:
     void setWidget(QWidget *widget);
 };
 
-class QCenteredWidget : public QWidget
+class QImageButton : public QAbstractButton
 {
     Q_OBJECT
- public:
-    QCenteredWidget(QWidget* parent=0);
+public:
+    QImageButton(const QString &normal, const QString &hovered);
+    QSize sizeHint() const;
+    QSize minimumSizeHint() const;
+    QSize maximumSize() const;
+protected:
+    void paintEvent(QPaintEvent *e);
+private:
+    QPixmap myPic, myHoveredPic;
+};
+
+class QImageBackground : public QWidget
+{
+    Q_OBJECT
+public:
+    QImageBackground(const QString &imagePath);
+    QSize sizeHint() const;
+    QSize minimumSizeHint() const;
+    QSize maximumSize() const;
+protected:
+    void paintEvent(QPaintEvent *e);
+private:
+    QPixmap myBackground;
 };
 
 #endif // OTHERWIDGETS_H

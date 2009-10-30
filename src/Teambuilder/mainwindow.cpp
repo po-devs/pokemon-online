@@ -30,8 +30,14 @@ MainWindow::MainWindow() : m_menu(0), m_TB(0)
     if (settings.value("application_style").isNull()) {
         settings.setValue("application_style", "cleanlooks");
     }
+    if (settings.value("stylesheet").isNull()) {
+        settings.setValue("stylesheet", "db/default.qss");
+    }
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());
+    QFile stylesheet(settings.value("stylesheet").toString());
+    stylesheet.open(QIODevice::ReadOnly);
+    qApp->setStyleSheet(stylesheet.readAll());
     loadTeam(settings.value("team_location").toString());
     /* launching the first window */
     launchMenu();

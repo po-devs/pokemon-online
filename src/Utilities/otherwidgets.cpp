@@ -46,12 +46,62 @@ void QEntitled::setTitle(const QString &title)
     m_title->setText(title);
 }
 
-QCenteredWidget::QCenteredWidget(QWidget *parent)
-        : QWidget(parent)
+QImageButton::QImageButton(const QString &normal, const QString &hovered)
+            : myPic(normal), myHoveredPic(hovered)
 {
-    QDesktopWidget desktop;
-    QRect deskrect = desktop.screenGeometry();
-    int x = deskrect.width()/2 - width()/2;
-    int y = deskrect.height()/2 - height()/2;
-    move(x,y);
-};
+    setFixedSize(myPic.size());
+}
+
+QSize QImageButton::sizeHint() const
+{
+    return myPic.size();
+}
+
+QSize QImageButton::minimumSizeHint() const
+{
+    return sizeHint();
+}
+
+QSize QImageButton::maximumSize() const
+{
+    return sizeHint();
+}
+
+void QImageButton::paintEvent(QPaintEvent *e)
+{
+    QPainter painter(this);
+
+    if (!underMouse())
+        painter.drawPixmap(e->rect(), myPic, e->rect());
+    else
+        painter.drawPixmap(e->rect(), myHoveredPic, e->rect());
+}
+
+QImageBackground::QImageBackground(const QString &imagePath)
+        : myBackground(imagePath)
+{
+    if (!myBackground.isNull())
+        setFixedSize(myBackground.size());
+}
+
+QSize QImageBackground::sizeHint() const
+{
+    return myBackground.size();
+}
+
+QSize QImageBackground::minimumSizeHint() const
+{
+    return sizeHint();
+}
+
+QSize QImageBackground::maximumSize() const
+{
+    return sizeHint();
+}
+
+void QImageBackground::paintEvent(QPaintEvent *e)
+{
+    QPainter painter(this);
+
+    painter.drawPixmap(e->rect(), myBackground, e->rect());
+}
