@@ -8,6 +8,7 @@ namespace NetworkCli
 
 class Network : public QTcpSocket
 {
+    Q_OBJECT
 public:
     Network(const QString &host="", quint16 port=0);
     /* Useful inherited functions: connectToHost */
