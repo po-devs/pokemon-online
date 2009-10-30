@@ -9,14 +9,16 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     ../PokemonInfo/pokemoninfo.cpp \
     ../PokemonInfo/pokemonstructs.cpp \
-    ../Utilities/otherwidgets.cpp
+    ../Utilities/otherwidgets.cpp \
+    network.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
     menu.h \
     mainwindow.h \
     ../PokemonInfo/pokemonstructs.h \
-    ../Utilities/otherwidgets.h
+    ../Utilities/otherwidgets.h \
+    network.h
 FORMS += 
 LIBS += -L../../bin \
     -lzip
