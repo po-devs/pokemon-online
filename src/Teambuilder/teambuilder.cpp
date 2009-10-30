@@ -121,6 +121,7 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
 	m_pbody[i] = new TB_PokemonBody(&team()->poke(i));
         m_pbody[i]->setObjectName(tr("Poke%1").arg(i));
         connect(m_pbody[i],SIGNAL(pokeChanged(int)),this,SLOT(setIconForPokeButton()));
+        connect(m_pbody[i],SIGNAL(nicknameChanged(QString)),this,SLOT(setNicknameIntoButton(QString)));
 	m_body->addWidget(m_pbody[i]);
     }
 
@@ -188,8 +189,30 @@ void TeamBuilder::setIconForPokeButton()
     TB_PokemonBody * body = qobject_cast<TB_PokemonBody *>(sender());
     int index = name.remove("Poke",Qt::CaseSensitive).toInt(new bool,10);
     m_pokemon[index]->setIcon(body->poke()->icon());
-    //m_pokemon[index]->setIconSize(QSize(40,40));
+}
 
+void TeamBuilder::setNicknameIntoButton(QString nickname)
+{
+    QString nameBody = sender()->objectName();
+    if(!nameBody.contains("Poke"))
+    {
+        return;
+    }
+    int index = nameBody.remove("Poke",Qt::CaseSensitive).toInt(new bool,10);
+    QString textButton = m_pokemon[index]->text();
+    TB_PokemonBody * body = qobject_cast<TB_PokemonBody *>(sender());
+    if(body->poke()->num() != 0 /*&& textButton == QString("Pokémon &%1").arg(index+1)*/)
+    {
+        QString newText(nickname);
+        newText.append("\n(").append(QString("&%1").arg(index+1)).append(")");
+        m_pokemon[index]->setText(newText);
+        return;
+    }
+    else
+    {
+        m_pokemon[index]->setText(QString("Pokémon &%1").arg(index+1));
+        return;
+    }
 }
 
 void TeamBuilder::saveTeam()
@@ -358,6 +381,7 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     first_column->addWidget(new QEntitled("&Pokemon", pokechoice));
     first_column->addWidget(new QEntitled("&Nickname", m_nick = new QLineEdit()));
     connect(m_nick, SIGNAL(textEdited(QString)), SLOT(setNick(QString)));
+    connect(m_nick, SIGNAL(textChanged(QString)),this,SLOT(setNick(QString)));
 
     initItems();
 
@@ -498,7 +522,8 @@ void TB_PokemonBody::moveCellActivated(int cell)
 
 void TB_PokemonBody::goToAdvanced()
 {
-    if (poke()->num() != 0) {
+    if (poke()->num() != 0)
+    {
 	if (advancedOpen()) {
 	    /* we show the user where the advanced window is */
 	    advanced()->activateWindow();
@@ -633,6 +658,7 @@ PokeTeam * TB_PokemonBody::poke()
 void TB_PokemonBody::setNick(const QString &nick)
 {
     poke()->setNickname(nick);
+    emit nicknameChanged(nick);
 }
 
 void TB_PokemonBody::setMove(int movenum, int moveslot)

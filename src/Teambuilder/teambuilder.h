@@ -56,6 +56,7 @@ private:
 private slots:
     void changeBody(int i);
     void setIconForPokeButton();
+    void setNicknameIntoButton(QString nickname);
 
 public slots:
     void saveTeam();
@@ -157,6 +158,7 @@ private slots:
 signals:
     void moveChosen(int movenum);
     void pokeChanged(int pokenum);
+    void nicknameChanged(QString nickname);
 public slots:
     void setNum(int pokeNum);
 public:
