@@ -181,7 +181,7 @@ QIcon PokemonInfo::Icon(int index)
 {
     QString archive = path("icons.zip");
     QString file = QString("gifs/%1.gif").arg(index);
-    qDebug() << "file" << file;
+
     QByteArray data = readZipFile(archive.toLocal8Bit(),file.toLocal8Bit());
     if(data.length() == 0)
     {
