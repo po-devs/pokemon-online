@@ -2,10 +2,11 @@
 #define TEAMBUILDER_MENU_H
 
 #include <QtGui>
+#include "../Utilities/otherwidgets.h"
 
 class MainWindow;
 
-class TB_Menu : public QWidget
+class TB_Menu : public QImageBackground
 {
         Q_OBJECT
 public:
