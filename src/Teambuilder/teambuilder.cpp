@@ -203,15 +203,12 @@ void TeamBuilder::setNicknameIntoButton(QString nickname)
     TB_PokemonBody * body = qobject_cast<TB_PokemonBody *>(sender());
     if(body->poke()->num() != 0 /*&& textButton == QString("Pokémon &%1").arg(index+1)*/)
     {
-        QString newText(nickname);
-        newText.append("\n(").append(QString("&%1").arg(index+1)).append(")");
+        QString newText = (nickname + "\n(&%1)").arg(index+1);
         m_pokemon[index]->setText(newText);
-        return;
     }
     else
     {
         m_pokemon[index]->setText(QString("Pokémon &%1").arg(index+1));
-        return;
     }
 }
 
