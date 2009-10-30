@@ -6,7 +6,7 @@
 MainWindow::MainWindow() : m_menu(0), m_TB(0)
 {
     resize (650, 680);
-    setWindowTitle(tr("Pogeymon-Online"));
+    setWindowTitle(tr("Pokemon Online"));
     layout()->setSizeConstraint(QLayout::SetFixedSize);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
