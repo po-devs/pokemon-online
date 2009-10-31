@@ -20,6 +20,11 @@ TB_Menu::TB_Menu()
     layout->addWidget(credits = new QImageButton("db/Credits0.png", "db/Credits1.png"), 0, Qt::AlignCenter);
     layout->addWidget(exit = new QImageButton("db/Quit0.png", "db/Quit1.png"), 0, Qt::AlignCenter);
 
+    teambuilder->setShortcut(Qt::Key_T);
+    online->setShortcut(Qt::Key_O);
+    credits->setShortcut(Qt::Key_C);
+    exit->setShortcut(Qt::Key_Q);
+
     connect (teambuilder, SIGNAL(clicked()), SLOT(launchTeambuilder()));
     connect (online, SIGNAL(clicked()), SLOT(goOnline()));
     connect (credits, SIGNAL(clicked()), SLOT(launchCredits()));
