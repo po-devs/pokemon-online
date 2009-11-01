@@ -1,9 +1,9 @@
 #include "dockinterface.h"
 #include "../Teambuilder/teambuilder.h"
 #include <QStackedWidget>
-#include "../Pokemoninfo/pokemonstructs.h"
+#include "../PokemonInfo/pokemonstructs.h"
 #include "../Teambuilder/advanced.h"
-#include "../TeamBuilder/mainwindow.h"
+#include "../Teambuilder/mainwindow.h"
 
 //class dockAdvanced
 dockAdvanced::dockAdvanced(TeamBuilder * builder,QWidget * parent):
