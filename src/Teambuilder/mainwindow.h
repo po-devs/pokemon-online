@@ -30,6 +30,9 @@ public slots:
 
     /* slots called by subwindows */
     void loadTeamDialog();
+
+    void setDock(Qt::DockWidgetArea area,QDockWidget * dock,Qt::Orientation orient);
+    void removeDock(QDockWidget * dock);
 };
 
 #endif // MAINWINDOW_H

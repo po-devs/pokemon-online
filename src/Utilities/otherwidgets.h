@@ -1,7 +1,11 @@
 #ifndef OTHERWIDGETS_H
 #define OTHERWIDGETS_H
 
-#include <QtGui>
+#include <QWidget>
+#include <QTableWidget>
+#include <QAbstractButton>
+#include <QPixmap>
+#include <QDockWidget>
 
 class QCompactTable : public QTableWidget
 {
@@ -13,6 +17,8 @@ public:
 };
 
 /* a widget that allows giving a title to another widget */
+class QLabel;
+class QVBoxLayout;
 class QEntitled : public QWidget
 {
     Q_OBJECT

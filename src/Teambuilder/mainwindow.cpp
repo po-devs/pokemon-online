@@ -5,6 +5,7 @@
 
 MainWindow::MainWindow() : m_menu(0), m_TB(0)
 {
+    this->setObjectName("MainWindow");
     resize (650, 680);
     setWindowTitle(tr("Pokemon Online"));
     layout()->setSizeConstraint(QLayout::SetFixedSize);
@@ -69,13 +70,14 @@ void MainWindow::launchCredits()
 
 void MainWindow::launchTeamBuilder()
 {
-    m_TB = new TeamBuilder(trainerTeam());
-
+    m_TB = new TeamBuilder(trainerTeam(),this);
+    connect(m_TB,SIGNAL(showDockAdvanced(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)),
+            this,SLOT(setDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
+    connect(m_TB, SIGNAL(done()), SLOT(launchMenu()));
 
     setCentralWidget(m_TB);
     setMenuBar(m_TB->createMenuBar(this));
-
-    connect(m_TB, SIGNAL(done()), SLOT(launchMenu()));
+    m_TB->createDockAdvanced();
 }
 
 void MainWindow::goOnline()
@@ -95,4 +97,14 @@ void MainWindow::loadTeamDialog()
     if (loadTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
         settings.setValue("team_location", newLocation);
     }
+}
+
+void MainWindow::setDock(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation orient)
+{
+    this->addDockWidget(areas,dock,orient);
+}
+
+void MainWindow::removeDock(QDockWidget * dock)
+{
+    this->removeDockWidget(dock);
 }

@@ -4,6 +4,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/pokemonstructs.h"
+#include "../Utilities/dockinterface.h"
 
 template <class T, class U>
 QList<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
@@ -81,7 +82,7 @@ QValidator::State QNickValidator::validate(QString &input, int& pos) const
 }
 
 
-TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
+TeamBuilder::TeamBuilder(TrainerTeam *pub_team,QWidget * parent) :QWidget(parent), m_team(pub_team),m_dockAdvanced(0)
 {
     setFixedSize(600, 650);
     setWindowTitle(tr("Teambuilder"));
@@ -122,6 +123,8 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
         m_pbody[i]->setObjectName(tr("Poke%1").arg(i));
         connect(m_pbody[i],SIGNAL(pokeChanged(int)),this,SLOT(setIconForPokeButton()));
         connect(m_pbody[i],SIGNAL(nicknameChanged(QString)),this,SLOT(setNicknameIntoButton(QString)));
+        connect(m_pbody[i],SIGNAL(advanced(int)),this,SLOT(advancedClicked(int)));
+        connect(m_pbody[i],SIGNAL(pokeChanged(int)),this,SLOT(indexNumPokemonChangedForAdvanced(int)));
 	m_body->addWidget(m_pbody[i]);
     }
 
@@ -162,6 +165,11 @@ Team* TeamBuilder::team()
     return & m_team->team();
 }
 
+Team* TeamBuilder::getTeam()const
+{
+    return & m_team->team();
+}
+
 TrainerTeam * TeamBuilder::trainerTeam()
 {
     return m_team;
@@ -176,6 +184,18 @@ void TeamBuilder::changeBody(int i)
 	at(currentZone())->setChecked(false);
 	/* change the body to the one requested */
 	m_body->setCurrentIndex(i);
+        //partie a changer
+        if(i>0)
+        {
+            if(m_dockAdvanced->isVisible()==true)
+            {
+                m_dockAdvanced->setCurrentPokemon(i-1);
+            }
+        }
+        else
+        {
+            m_dockAdvanced->close();
+        }
     }
 }
 
@@ -210,6 +230,21 @@ void TeamBuilder::setNicknameIntoButton(QString nickname)
     {
         m_pokemon[index]->setText(QString("Pokémon &%1").arg(index+1));
     }
+}
+
+void TeamBuilder::advancedClicked(int index)
+{
+    if(m_dockAdvanced ==0)
+    {
+        qDebug() << "dock non creer";
+        return;
+    }
+    bool v = m_dockAdvanced->isVisible();
+    if(v == false)
+    {
+        m_dockAdvanced->setVisible(true);
+    }
+    m_dockAdvanced->setCurrentPokemon(index);
 }
 
 void TeamBuilder::saveTeam()
@@ -267,6 +302,38 @@ QMenuBar * TeamBuilder::createMenuBar(MainWindow *w)
     return menuBar;
 }
 
+//creation du dockAdvanced
+void TeamBuilder::createDockAdvanced()
+{
+    if(this->parent()->objectName()!="MainWindow")
+    {
+        return;
+    }
+    MainWindow * main = qobject_cast<MainWindow * >(this->parent());
+    if(!main)
+    {
+        return;
+    }
+    m_dockAdvanced = new dockAdvanced(this,main);
+    connect(m_dockAdvanced,SIGNAL(visibilityChanged(bool)),this,SLOT(dockAdvancedStateChanged(bool)));
+    emit this->showDockAdvanced(Qt::RightDockWidgetArea,m_dockAdvanced,Qt::Vertical);
+    m_dockAdvanced->setVisible(false);
+}
+
+void TeamBuilder::indexNumPokemonChangedForAdvanced(int pokeNum)
+{
+    if(m_dockAdvanced!=0)
+    {
+        int index = QString(sender()->objectName()).remove("Poke").toInt(new bool(),10);
+        m_dockAdvanced->setPokemonNum(index,pokeNum);
+    }
+}
+
+void TeamBuilder::updateDataBody(int stackIndex)
+{
+    m_pbody[stackIndex+1]->updateAdvanced();
+}
+
 TB_PokemonBody * TeamBuilder::pokebody(int index)
 {
     return m_pbody[index];
@@ -275,6 +342,14 @@ TB_PokemonBody * TeamBuilder::pokebody(int index)
 TB_TrainerBody * TeamBuilder::trainerbody()
 {
     return m_trainerBody;
+}
+
+void TeamBuilder::dockAdvancedStateChanged(bool visible)
+{
+    if(visible == false)
+    {
+        m_dockAdvanced->update();
+    }
 }
 
 TeamBuilder::~TeamBuilder()
@@ -519,10 +594,10 @@ void TB_PokemonBody::moveCellActivated(int cell)
 
 void TB_PokemonBody::goToAdvanced()
 {
-    if (poke()->num() != 0)
+    /*if (poke()->num() != 0)
     {
 	if (advancedOpen()) {
-	    /* we show the user where the advanced window is */
+            // we show the user where the advanced window is
 	    advanced()->activateWindow();
 	    advanced()->raise();
 	    return;
@@ -536,7 +611,9 @@ void TB_PokemonBody::goToAdvanced()
 	connect(this, SIGNAL(destroyed()), advanced(), SLOT(close()));
 	connect(advanced(), SIGNAL(destroyed()), SLOT(updateAdvanced()));
 	connect(advanced(), SIGNAL(destroyed()), SLOT(setAdvancedOpenToFalse()));
-    }
+    }*/
+    int index = QString(this->objectName()).remove("Poke").toInt(new bool(), 10);
+    emit advanced(index);
 }
 
 void TB_PokemonBody::setAdvancedOpenToFalse()

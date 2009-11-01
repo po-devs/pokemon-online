@@ -27,6 +27,7 @@ public:
     State validate(QString &input, int &pos) const;
 };
 
+class dockAdvanced;
 class TeamBuilder : public QWidget
 {
     Q_OBJECT
@@ -53,10 +54,17 @@ private:
     TB_PokemonBody *pokebody(int index);
     TB_TrainerBody *trainerbody();
 
+    //dockAdvanced
+    dockAdvanced * m_dockAdvanced;
+
 private slots:
     void changeBody(int i);
     void setIconForPokeButton();
     void setNicknameIntoButton(QString nickname);
+    void advancedClicked(int index);
+    void dockAdvancedStateChanged(bool visible);
+    void indexNumPokemonChangedForAdvanced(int pokeNum);
+    void updateDataBody(int indexStacked);
 
 public slots:
     void saveTeam();
@@ -66,15 +74,18 @@ public slots:
 
 signals:
     void done();
+    void showDockAdvanced(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
 
 public:
-    TeamBuilder(TrainerTeam *team);
+    TeamBuilder(TrainerTeam *team,QWidget * parent);
     ~TeamBuilder();
 
     TrainerTeam *trainerTeam();
+    Team * getTeam()const;
 
     /* Create a menu bar to give to the main window */
     QMenuBar *createMenuBar(MainWindow *w);
+    void createDockAdvanced();
 };
 
 class TB_TrainerBody : public QWidget
@@ -151,16 +162,17 @@ private slots:
     void moveEntered(int row);
     void setItem(const QString &item);
     void setNature(int nature);
-    void goToAdvanced();
-    void updateAdvanced();
+    void goToAdvanced(); 
     void setAdvancedOpenToFalse();
     void setNick(const QString &nick);
 signals:
     void moveChosen(int movenum);
     void pokeChanged(int pokenum);
     void nicknameChanged(QString nickname);
+    void advanced(int index);
 public slots:
     void setNum(int pokeNum);
+    void updateAdvanced();
 public:
     TB_PokemonBody(PokeTeam *poke);
 

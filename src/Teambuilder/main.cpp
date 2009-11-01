@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
     /* Names to use later for QSettings */
     QCoreApplication::setApplicationName("Pogeymon-Online");
     QCoreApplication::setOrganizationName("Dreambelievers");
+    a.setWindowIcon(QIcon("db/icon.png"));
 
     MainWindow w;
 
