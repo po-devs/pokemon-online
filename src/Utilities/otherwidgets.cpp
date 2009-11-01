@@ -4,10 +4,6 @@
 #include <QTabWidget>
 #include <QPainter>
 #include <QPaintEvent>
-#include "../teamBuilder/advanced.h"
-#include "../TeamBuilder/mainwindow.h"
-#include "../TeamBuilder/teambuilder.h"
-#include "../PokemonInfo/pokemonstructs.h"
 
 QCompactTable::QCompactTable(int row, int column)
         : QTableWidget(row, column)
