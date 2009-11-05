@@ -2,6 +2,7 @@
 #define CLIENT_H
 
 #include <QtGui>
+#include "analyze.h"
 
 class TrainerTeam;
 class MainWindow;
@@ -16,6 +17,9 @@ public:
 
     TrainerTeam *team();
     QMenuBar *createMenuBar(MainWindow *w);
+public slots:
+    void errorFromNetwork(int errno, const QString &error);
+
 signals:
     void done();
 
@@ -28,7 +32,13 @@ private:
     /* Where players are displayed */
     QListWidget *myplayers;
     /* Button to exit */
-    QPushButton *exit;
+    QPushButton *myexit;
+    /* Network Relay */
+    Analyzer myrelay;
+
+    Analyzer & relay();
+
+    void initRelay();
 };
 
 #endif // CLIENT_H

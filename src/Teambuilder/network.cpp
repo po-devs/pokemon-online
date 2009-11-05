@@ -1,8 +1,5 @@
 #include "network.h"
 
-namespace NetworkCli
-{
-
 Network::Network(const QString &host, quint16 port) : commandStarted(false)
 {
     if (port == 0) {
@@ -39,6 +36,4 @@ void Network::onReceipt()
             onReceipt();
         }
     }
-}
-
 }

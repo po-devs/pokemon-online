@@ -3,9 +3,6 @@
 
 #include <QtNetwork>
 
-namespace NetworkCli
-{
-
 class Network : public QTcpSocket
 {
     Q_OBJECT
@@ -27,7 +24,5 @@ private:
     bool commandStarted;
     quint16 remainingLength;
 };
-
-}
 
 #endif // NETWORK_H
