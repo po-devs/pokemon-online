@@ -7,6 +7,16 @@ DESTDIR = ../../bin
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
-    network.cpp
+    network.cpp \
+    analyze.cpp \
+    server.cpp \
+    ../PokemonInfo/pokemoninfo.cpp \
+    ../PokemonInfo/pokemonstructs.cpp
 HEADERS += mainwindow.h \
-    network.h
+    network.h \
+    analyze.h \
+    server.h \
+    ../PokemonInfo/pokemoninfo.h \
+    ../PokemonInfo/pokemonstructs.h
+LIBS += -L../../bin \
+	-lzip

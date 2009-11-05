@@ -1,16 +1,9 @@
 #include "network.h"
 
-#include "network.h"
 
-Network::Network(const QString &host, quint16 port) : commandStarted(false)
+Network::Network(QTcpSocket *sock) : mysocket(sock), commandStarted(false)
 {
-    if (port == 0) {
-	//Default argument, not worth going further
-    } else {
-	connectToHost(host, port);
-    }
-
-    connect(this, SIGNAL(readyRead()), SLOT(onReceipt()));
+    connect(socket(), SIGNAL(readyRead()), this, SLOT(onReceipt()));
 }
 
 void Network::onReceipt()
@@ -18,21 +11,21 @@ void Network::onReceipt()
     if (commandStarted == false) {
 	/* There it's a new message we are receiving.
 	   To start receiving it we must know its length, i.e. the 2 first bytes */
-	if (this->bytesAvailable() < 2) {
+	if (socket()->bytesAvailable() < 2) {
 	    return;
 	}
 	/* Ok now we can start */
 	commandStarted=true;
 	/* getting the length of the message */
 	char c1, c2;
-	this->getChar(&c1), this->getChar(&c2);
+	socket()->getChar(&c1), socket()->getChar(&c2);
 	remainingLength=c1*256+c2;
 	/* Recursive call to write less code =) */
 	onReceipt();
     } else {
 	/* Checking if the command is complete! */
-	if (this->bytesAvailable() >= remainingLength) {
-	    emit isFull(read(remainingLength));
+	if (socket()->bytesAvailable() >= remainingLength) {
+	    emit isFull(socket()->read(remainingLength));
 	    commandStarted = false;
 	    /* Recursive call to spare code =), there may be still data pending */
 	    onReceipt();
@@ -40,7 +33,29 @@ void Network::onReceipt()
     }
 }
 
+int Network::error() const
+{
+    return socket()->error();
+}
+
+QString Network::errorString() const
+{
+    return socket()->errorString();
+}
+
 void Network::send(const QByteArray &message)
 {
-    *this << uchar(message.length()/256) << uchar(message.length()%256) << message;
+    socket()->putChar(message.length()/256);
+    socket()->putChar(message.length()%256);
+    socket()->write(message);
+}
+
+QTcpSocket * Network::socket()
+{
+    return mysocket;
+}
+
+const QTcpSocket * Network::socket() const
+{
+    return mysocket;
 }
