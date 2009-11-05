@@ -25,6 +25,5 @@ HEADERS += teambuilder.h \
     ../Utilities/dockinterface.h \
     client.h \
     analyze.h
-FORMS += 
 LIBS += -L../../bin \
     -lzip
