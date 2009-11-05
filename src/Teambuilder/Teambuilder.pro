@@ -12,7 +12,8 @@ SOURCES += main.cpp \
     ../Utilities/otherwidgets.cpp \
     network.cpp \
     ../Utilities/dockinterface.cpp \
-    client.cpp
+    client.cpp \
+    analyze.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -22,7 +23,8 @@ HEADERS += teambuilder.h \
     ../Utilities/otherwidgets.h \
     network.h \
     ../Utilities/dockinterface.h \
-    client.h
+    client.h \
+    analyze.h
 FORMS += 
 LIBS += -L../../bin \
     -lzip
