@@ -2,6 +2,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "menu.h"
 #include "teambuilder.h"
+#include "client.h"
 
 MainWindow::MainWindow() : m_menu(0), m_TB(0)
 {
@@ -26,13 +27,13 @@ MainWindow::MainWindow() : m_menu(0), m_TB(0)
     QSettings settings;
     /* initializing the default init values if not there */
     if (settings.value("team_location").isNull()) {
-        settings.setValue("team_location", "Team/trainer.tp");
+	settings.setValue("team_location", "Team/trainer.tp");
     }
     if (settings.value("application_style").isNull()) {
-        settings.setValue("application_style", "cleanlooks");
+	settings.setValue("application_style", "cleanlooks");
     }
     if (settings.value("stylesheet").isNull()) {
-        settings.setValue("stylesheet", "db/default.qss");
+	settings.setValue("stylesheet", "db/default.qss");
     }
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());
@@ -82,6 +83,11 @@ void MainWindow::launchTeamBuilder()
 
 void MainWindow::goOnline()
 {
+    m_client = new Client(trainerTeam());
+    setCentralWidget(m_client);
+    setMenuBar(m_client->createMenuBar(this));
+
+    connect(m_client, SIGNAL(done()), SLOT(launchMenu()));
 }
 
 void MainWindow::loadTeam(const QString &path)
