@@ -4,10 +4,10 @@
 #include <QtCore>
 #include "network.h"
 
-class Client;
+class Player;
 
 /* Commands to dialog with the server */
-namespace NetworkCli
+namespace NetworkServ
 {
     enum Command
     {
@@ -30,12 +30,10 @@ class Analyzer : public QObject
 {
     Q_OBJECT
 public:
-    Analyzer(Client *client);
+    Analyzer(Player *p, QTcpSocket *sock);
 
     /* functions called by the client */
-    void login(const QString &name, const QString &pass);
     void sendMessage(const QString &message);
-    void connectTo(const QString &host, quint16 port);
     bool isConnected() const;
 
 signals:
@@ -54,7 +52,7 @@ private:
     Network &socket();
 
     Network mysocket;
-    Client *myClient;
+    Player *myplayer;
 };
 
 #endif // ANALYZE_H

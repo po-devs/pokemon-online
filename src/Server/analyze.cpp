@@ -1,23 +1,13 @@
 #include "analyze.h"
 #include "network.h"
-#include "client.h"
+#include "server.h"
 
-using namespace NetworkCli;
+using namespace NetworkServ;
 
-Analyzer::Analyzer(Client *client) : myClient(client)
+Analyzer::Analyzer(Player *play, QTcpSocket *sock) : mysocket(sock), myplayer(play)
 {
-    connect(&socket(), SIGNAL(connected()), client, SLOT(connected()));
-    connect(&socket(), SIGNAL(closed()), client, SLOT(disconnected()));
-}
-
-void Analyzer::login(const QString &name, const QString &pass)
-{
-    QByteArray tosend;
-    QDataStream in(&tosend, QIODevice::WriteOnly);
-
-    in << uchar(Login) << name << pass;
-
-    emit sendCommand(tosend);
+    connect(&socket(), SIGNAL(connected()), play, SLOT(connected()));
+    connect(&socket(), SIGNAL(disconnected()), play, SLOT(disconnected()));
 }
 
 void Analyzer::sendMessage(const QString &message)
@@ -28,11 +18,6 @@ void Analyzer::sendMessage(const QString &message)
     out << uchar(SendMessage) << message;
 
     emit sendCommand(tosend);
-}
-
-void Analyzer::connectTo(const QString &host, quint16 port)
-{
-    mysocket.connectToHost(host, port);
 }
 
 void Analyzer::error()
