@@ -6,6 +6,8 @@ using namespace NetworkCli;
 
 Analyzer::Analyzer(Client *client) : myClient(client)
 {
+    connect(&socket(), SIGNAL(connected()), client, SLOT(connected()));
+    connect(&socket(), SIGNAL(disconnected()), client, SLOT(disconnected()));
 }
 
 void Analyzer::login(const QString &name, const QString &pass)
@@ -35,6 +37,7 @@ void Analyzer::connectTo(const QString &host, quint16 port)
 
 void Analyzer::error()
 {
+    emit connectionError(socket().error(), socket().errorString());
 }
 
 void Analyzer::commandReceived(const QByteArray &commandline)

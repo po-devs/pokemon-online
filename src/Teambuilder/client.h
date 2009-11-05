@@ -17,9 +17,12 @@ public:
 
     TrainerTeam *team();
     QMenuBar *createMenuBar(MainWindow *w);
+
+    void printLine(const QString &line);
 public slots:
     void errorFromNetwork(int errno, const QString &error);
-
+    void connected();
+    void disconnected();
 signals:
     void done();
 
@@ -36,6 +39,7 @@ private:
     /* Network Relay */
     Analyzer myrelay;
 
+    QTextEdit *mainChat();
     Analyzer & relay();
 
     void initRelay();

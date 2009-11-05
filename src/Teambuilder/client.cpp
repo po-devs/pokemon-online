@@ -20,6 +20,8 @@ Client::Client(TrainerTeam *t) : myteam(t), myrelay(this)
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
 
     initRelay();
+
+    relay().connectTo("localhost", 5080);
 }
 
 QMenuBar * Client::createMenuBar(MainWindow *w)
@@ -36,11 +38,32 @@ void Client::initRelay()
 
 void Client::errorFromNetwork(int errno, const QString &errorDesc)
 {
-    (void) errno;
-    (void) errorDesc;
+    QMessageBox::Critical(tr("Error while connected to server"), tr("Received error n°%1: %2").arg(errno).arg(errorDesc));
+}
+
+void Client::connected()
+{
+    printLine(tr("Connected to Server!"));
+
+    relay().login(team()->trainerNick(), team()->trainerNick());
+}
+
+void Client::disconnected()
+{
+    printLine(tr("Disconnected from Server!"));
 }
 
 Analyzer &Client::relay()
 {
     return myrelay;
+}
+
+QTextEdit *mainChat()
+{
+    return mychat;
+}
+
+void Client::printLine(const QString &line)
+{
+    mainChat()->insertHtml(line + "\n");
 }

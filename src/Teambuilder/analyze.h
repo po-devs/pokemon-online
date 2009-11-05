@@ -36,6 +36,7 @@ public:
     void login(const QString &name, const QString &pass);
     void sendMessage(const QString &message);
     void connectTo(const QString &host, quint16 port);
+    bool isValid() const;
 
 signals:
     /* to send to the network */
@@ -50,7 +51,6 @@ public slots:
     void commandReceived (const QByteArray &command);
 
 private:
-    bool isValid() const;
     Network &socket();
 
     Network mysocket;
