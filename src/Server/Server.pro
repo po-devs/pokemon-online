@@ -3,6 +3,7 @@
 # -------------------------------------------------
 QT += network
 TARGET = Server
+DESTDIR = ../../bin
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \

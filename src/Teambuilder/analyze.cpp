@@ -52,3 +52,8 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit protocolError(UnknowCommand, tr("Protocol error: unknown command received"));
     }
 }
+
+Network & Analyzer::socket()
+{
+    return mysocket;
+}

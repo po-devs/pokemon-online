@@ -40,5 +40,7 @@ void Network::onReceipt()
 
 void Network::send(const QByteArray &message)
 {
-    *this << uchar(message.length()/256) << uchar(message.length()%256) << message;
+    this->putChar(message.length()/256);
+    this->putChar(message.length()%256);
+    this->write(message);
 }

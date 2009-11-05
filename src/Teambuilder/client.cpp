@@ -38,7 +38,7 @@ void Client::initRelay()
 
 void Client::errorFromNetwork(int errno, const QString &errorDesc)
 {
-    QMessageBox::Critical(tr("Error while connected to server"), tr("Received error n°%1: %2").arg(errno).arg(errorDesc));
+    QMessageBox::critical(this, tr("Error while connected to server"), tr("Received error n°%1: %2").arg(errno).arg(errorDesc));
 }
 
 void Client::connected()
@@ -53,12 +53,17 @@ void Client::disconnected()
     printLine(tr("Disconnected from Server!"));
 }
 
+TrainerTeam* Client::team()
+{
+    return myteam;
+}
+
 Analyzer &Client::relay()
 {
     return myrelay;
 }
 
-QTextEdit *mainChat()
+QTextEdit *Client::mainChat()
 {
     return mychat;
 }
