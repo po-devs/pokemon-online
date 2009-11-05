@@ -6,6 +6,7 @@
 
 class TB_Menu;
 class TeamBuilder;
+class Client;
 
 class MainWindow : public QMainWindow
 {
@@ -15,6 +16,7 @@ private:
 
     TB_Menu *m_menu;
     TeamBuilder *m_TB;
+    Client *m_client;
 
     TrainerTeam *trainerTeam();
 
