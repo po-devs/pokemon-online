@@ -16,13 +16,12 @@ namespace NetworkCli
 	Login,
 	Logout,
 	SendMessage,
-	RecvMessage,
 	PlayersList
     };
 
     enum ProtocolError
     {
-	UnknowCommand = 0
+	UnknownCommand = 0
     };
 }
 
