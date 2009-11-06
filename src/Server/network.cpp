@@ -6,6 +6,11 @@ Network::Network(QTcpSocket *sock) : mysocket(sock), commandStarted(false)
     connect(socket(), SIGNAL(readyRead()), this, SLOT(onReceipt()));
 }
 
+Network::~Network()
+{
+    delete socket();
+}
+
 void Network::onReceipt()
 {
     if (commandStarted == false) {

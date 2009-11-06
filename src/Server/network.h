@@ -8,6 +8,7 @@ class Network : public QObject
     Q_OBJECT
 public:
     Network(QTcpSocket *sock);
+    ~Network();
     /* Functions to reimplement:
 	   isValid: returns whether the socket is valid or not!
 	   close: closes the socket after writing the pending data

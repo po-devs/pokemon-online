@@ -16,13 +16,12 @@ namespace NetworkServ
 	Login,
 	Logout,
 	SendMessage,
-	RecvMessage,
 	PlayersList
     };
 
     enum ProtocolError
     {
-	UnknowCommand = 0
+	UnknownCommand = 0
     };
 }
 
@@ -34,6 +33,7 @@ public:
 
     /* functions called by the client */
     void sendMessage(const QString &message);
+    void requestLogIn();
     bool isConnected() const;
 
 signals:
@@ -42,6 +42,8 @@ signals:
     /* to send to the client */
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
+    void loggedIn(const QString &mess);
+    void messageReceived(const QString &mess);
 
 public slots:
     /* slots called by the network */

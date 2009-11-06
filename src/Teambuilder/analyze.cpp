@@ -49,7 +49,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 
     switch (command) {
 	default:
-	    emit protocolError(UnknowCommand, tr("Protocol error: unknown command received"));
+	    emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
     }
 }
 

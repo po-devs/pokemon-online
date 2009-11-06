@@ -33,8 +33,23 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     in >> command;
 
     switch (command) {
+	case Login:
+	{
+	    QString name;
+	    in >> name;
+	    emit loggedIn(name);
+	    break;
+	}
+	case SendMessage:
+	{
+	    QString mess;
+	    in >> mess;
+	    emit messageReceived(mess);
+	    break;
+	}
 	default:
-	    emit protocolError(UnknowCommand, tr("Protocol error: unknown command received"));
+	    emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
+	    break;
     }
 }
 
