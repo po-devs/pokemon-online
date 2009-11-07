@@ -20,7 +20,8 @@ public slots:
     void send(const QByteArray &message);
 signals:
     void isFull(QByteArray command);
-    /* Signals to reimplement: error, disconnected */
+    void disconnected();
+    void _error();
 private:
     /* internal socket */
     QTcpSocket *mysocket;

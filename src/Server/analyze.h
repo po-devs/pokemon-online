@@ -4,8 +4,6 @@
 #include <QtCore>
 #include "network.h"
 
-class Player;
-
 /* Commands to dialog with the server */
 namespace NetworkServ
 {
@@ -29,7 +27,7 @@ class Analyzer : public QObject
 {
     Q_OBJECT
 public:
-    Analyzer(Player *p, QTcpSocket *sock);
+    Analyzer(QTcpSocket *sock);
 
     /* functions called by the client */
     void sendMessage(const QString &message);
@@ -44,7 +42,7 @@ signals:
     void protocolError(int errorNum, const QString &errorDesc);
     void loggedIn(const QString &mess);
     void messageReceived(const QString &mess);
-
+    void disconnected();
 public slots:
     /* slots called by the network */
     void error();
@@ -54,7 +52,6 @@ private:
     Network &socket();
 
     Network mysocket;
-    Player *myplayer;
 };
 
 #endif // ANALYZE_H

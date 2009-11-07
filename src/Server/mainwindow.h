@@ -3,6 +3,8 @@
 
 #include <QtGui>
 
+class Server;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -10,6 +12,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+private:
+    Server * myserver;
 };
 
 #endif // MAINWINDOW_H

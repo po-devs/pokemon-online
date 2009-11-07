@@ -4,10 +4,13 @@
 
 using namespace NetworkCli;
 
-Analyzer::Analyzer(Client *client) : myClient(client)
+Analyzer::Analyzer()
 {
-    connect(&socket(), SIGNAL(connected()), client, SLOT(connected()));
-    connect(&socket(), SIGNAL(closed()), client, SLOT(disconnected()));
+    connect(&socket(), SIGNAL(connected()), SIGNAL(connected()));
+    connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
+    connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
+    connect(&socket(), SIGNAL(isFull(QByteArray)), SLOT(commandReceived(QByteArray)));
+    connect(&socket(), SIGNAL(error()), SLOT(error()));
 }
 
 void Analyzer::login(const QString &name, const QString &pass)
@@ -48,6 +51,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     in >> command;
 
     switch (command) {
+	case SendMessage:
+	{
+	    QString mess;
+	    in >> mess;
+	    emit messageReceived(mess);
+	    break;
+	}
 	default:
 	    emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
     }

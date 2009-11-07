@@ -29,7 +29,7 @@ class Analyzer : public QObject
 {
     Q_OBJECT
 public:
-    Analyzer(Client *client);
+    Analyzer();
 
     /* functions called by the client */
     void login(const QString &name, const QString &pass);
@@ -43,6 +43,9 @@ signals:
     /* to send to the client */
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
+    void connected();
+    void disconnected();
+    void messageReceived(const QString &mess);
 
 public slots:
     /* slots called by the network */
@@ -53,7 +56,6 @@ private:
     Network &socket();
 
     Network mysocket;
-    Client *myClient;
 };
 
 #endif // ANALYZE_H
