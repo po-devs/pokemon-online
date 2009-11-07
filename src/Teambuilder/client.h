@@ -23,6 +23,10 @@ public slots:
     void errorFromNetwork(int errno, const QString &error);
     void connected();
     void disconnected();
+    /* message received from the server */
+    void messageReceived(const QString & mess);
+    /* sends what's in the line edit */
+    void sendText();
 signals:
     void done();
 
@@ -36,6 +40,8 @@ private:
     QListWidget *myplayers;
     /* Button to exit */
     QPushButton *myexit;
+    /* Button to send text */
+    QPushButton *mysender;
     /* Network Relay */
     Analyzer myrelay;
 

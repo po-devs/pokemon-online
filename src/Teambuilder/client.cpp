@@ -3,25 +3,34 @@
 
 #include "../PokemonInfo/pokemonstructs.h"
 
-Client::Client(TrainerTeam *t) : myteam(t), myrelay(this)
+Client::Client(TrainerTeam *t) : myteam(t), myrelay()
 {
-    setFixedSize(800, 600);
+    setFixedSize(700, 600);
 
     QGridLayout *layout = new QGridLayout(this);
 
     layout->addWidget(myplayers = new QListWidget(), 0, 0, 3, 1);
-    layout->addWidget(mychat = new QTextEdit(), 0, 1);
-    layout->addWidget(myline = new QLineEdit(), 1, 1);
-    layout->addWidget(myexit = new QPushButton(tr("Exit")), 2, 1);
+    layout->addWidget(mychat = new QTextEdit(), 0, 1, 1, 2);
+    layout->addWidget(myline = new QLineEdit(), 1, 1, 1, 2);
+    layout->addWidget(myexit = new QPushButton(tr("&Exit")), 2, 1);
+    layout->addWidget(mysender = new QPushButton(tr("&Send")), 2, 2);
 
     myplayers->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     mychat->setReadOnly(true);
 
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
+    connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
+    connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
 
     initRelay();
 
     relay().connectTo("localhost", 5080);
+}
+
+void Client::sendText()
+{
+    relay().sendMessage(myline->text());
+    myline->clear();
 }
 
 QMenuBar * Client::createMenuBar(MainWindow *w)
@@ -34,6 +43,14 @@ void Client::initRelay()
 {
     connect(&relay(), SIGNAL(connectionError(int, QString)), SLOT(errorFromNetwork(int, QString)));
     connect(&relay(), SIGNAL(protocolError(int, QString)), SLOT(errorFromNetwork(int, QString)));
+    connect(&relay(), SIGNAL(connected()), SLOT(connected()));
+    connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
+    connect(&relay(), SIGNAL(messageReceived(QString)), SLOT(messageReceived(QString)));
+}
+
+void Client::messageReceived(const QString &mess)
+{
+    printLine(mess);
 }
 
 void Client::errorFromNetwork(int errno, const QString &errorDesc)
@@ -70,5 +87,5 @@ QTextEdit *Client::mainChat()
 
 void Client::printLine(const QString &line)
 {
-    mainChat()->insertHtml(line + "\n");
+    mainChat()->insertPlainText(line + "\n");
 }

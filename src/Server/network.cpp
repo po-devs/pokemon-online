@@ -4,6 +4,8 @@
 Network::Network(QTcpSocket *sock) : mysocket(sock), commandStarted(false)
 {
     connect(socket(), SIGNAL(readyRead()), this, SLOT(onReceipt()));
+    connect(socket(), SIGNAL(disconnected()), this, SIGNAL(disconnected()));
+    connect(socket(), SIGNAL(error(QAbstractSocket::SocketError)), this, SIGNAL(_error()));
 }
 
 Network::~Network()

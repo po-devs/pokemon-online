@@ -4,10 +4,12 @@
 
 using namespace NetworkServ;
 
-Analyzer::Analyzer(Player *play, QTcpSocket *sock) : mysocket(sock), myplayer(play)
+Analyzer::Analyzer(QTcpSocket *sock) : mysocket(sock)
 {
-    connect(&socket(), SIGNAL(connected()), play, SLOT(connected()));
-    connect(&socket(), SIGNAL(disconnected()), play, SLOT(disconnected()));
+    connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
+    connect(&socket(), SIGNAL(isFull(QByteArray)), this, SLOT(commandReceived(QByteArray)));
+    connect(&socket(), SIGNAL(_error()), this, SLOT(error()));
+    connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
 }
 
 void Analyzer::sendMessage(const QString &message)
