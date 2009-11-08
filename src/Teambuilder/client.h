@@ -37,7 +37,9 @@ public slots:
     void messageReceived(const QString & mess);
     /* sends what's in the line edit */
     void sendText();
-    void playerLogIn(const Player &p);
+    void playerLogin(const Player &p);
+    void playerReceived(const Player &p);
+    void playerLogout(int);
 signals:
     void done();
 
@@ -49,6 +51,7 @@ private:
     QLineEdit *myline;
     /* Where players are displayed */
     QListWidget *myplayers;
+    QMap<int, QListWidgetItem *> myplayersitems;
     /* Button to exit */
     QPushButton *myexit;
     /* Button to send text */
@@ -57,7 +60,6 @@ private:
     Analyzer myrelay;
 
     QMap<int, TeamInfo> myplayersinfo;
-
     QTextEdit *mainChat();
     Analyzer & relay();
 

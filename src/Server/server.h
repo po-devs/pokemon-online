@@ -10,6 +10,7 @@ class Player : public QObject
     Q_OBJECT
 public:
     Player(QTcpSocket *sock);
+    ~Player();
 
     TeamInfo &team();
     const TeamInfo &team() const;
@@ -51,6 +52,9 @@ public:
     void sendAll(const QString &message);
     void sendMessage(int id, const QString &message);
     void sendPlayersList(int id);
+    /* Sends the login of the player to everybody but the player */
+    void sendLogin(int id);
+    void sendLogout(int id);
 public slots:
     /* means a new connection is about to start from the TCP server */
     void incomingConnection();

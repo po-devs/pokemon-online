@@ -50,7 +50,11 @@ signals:
     void connected();
     void disconnected();
     void messageReceived(const QString &mess);
+    /* player from the players list */
     void playerReceived(const Player &p);
+    /* login of a player */
+    void playerLogin(const Player &p);
+    void playerLogout(int id);
 
 public slots:
     /* slots called by the network */

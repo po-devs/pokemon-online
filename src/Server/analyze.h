@@ -36,6 +36,8 @@ public:
     void sendMessage(const QString &message);
     void requestLogIn();
     void sendPlayer(int num, const TeamInfo &team);
+    void sendLogin(int num, const TeamInfo &team);
+    void sendLogout(int num);
     bool isConnected() const;
 
 signals:

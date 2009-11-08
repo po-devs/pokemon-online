@@ -76,6 +76,20 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit playerReceived(p);
 	    break;
 	}
+	case Login:
+	{
+	    Player p;
+	    in >> p;
+	    emit playerLogin(p);
+	    break;
+	}
+	case Logout:
+	{
+	    int id;
+	    in >> id;
+	    emit playerLogout(id);
+	    break;
+	}
 	default:
 	    emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
     }
