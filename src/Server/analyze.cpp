@@ -33,6 +33,26 @@ void Analyzer::sendPlayer(int num, const TeamInfo &team)
     emit sendCommand(tosend);
 }
 
+void Analyzer::sendLogin(int num, const TeamInfo &team)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+
+    out << uchar(Login) << num << team;
+
+    emit sendCommand(tosend);
+}
+
+void Analyzer::sendLogout(int num)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+
+    out << uchar(Logout) << num;
+
+    emit sendCommand(tosend);
+}
+
 void Analyzer::error()
 {
     emit connectionError(socket().error(), socket().errorString());

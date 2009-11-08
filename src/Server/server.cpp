@@ -8,6 +8,10 @@ Player::Player(QTcpSocket *sock) : myrelay(sock)
     connect(&relay(), SIGNAL(teamReceived(TeamInfo)), this, SLOT(recvTeam(TeamInfo)));
 }
 
+Player::~Player()
+{
+}
+
 void Player::disconnected()
 {
     emit disconnected(id());
@@ -99,6 +103,7 @@ void Server::loggedIn(int id, const QString &name)
     printLine(tr("Player %1 logged in as %2").arg(id).arg(name));
 
     sendPlayersList(id);
+    sendLogin(id);
 
     sendMessage(id, tr("Welcome to our server, %1").arg(name));
 }
@@ -145,6 +150,23 @@ void Server::sendPlayersList(int id)
     }
 }
 
+void Server::sendLogin(int id)
+{
+    foreach(Player *p, myplayers)
+    {
+	if (p->id() != id)
+	    p->relay().sendLogin(id, player(id)->team());
+    }
+}
+
+void Server::sendLogout(int id)
+{
+    foreach(Player *p, myplayers)
+    {
+	p->relay().sendLogout(id);
+    }
+}
+
 void Server::recvTeam(int id)
 {
     printLine(tr("%1 changed their team.").arg(name(id)));
@@ -158,6 +180,8 @@ void Server::disconnected(int id)
 
 void Server::removePlayer(int id)
 {
+    sendLogout(id);
+
     QString playerName = name(id);
     printLine(tr("Removed player %1").arg(playerName));
 

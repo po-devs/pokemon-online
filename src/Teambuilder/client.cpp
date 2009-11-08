@@ -47,7 +47,9 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(connected()), SLOT(connected()));
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(messageReceived(QString)), SLOT(messageReceived(QString)));
-    connect(&relay(), SIGNAL(playerReceived(Player)), SLOT(playerLogIn(Player)));
+    connect(&relay(), SIGNAL(playerReceived(Player)), SLOT(playerReceived(Player)));
+    connect(&relay(), SIGNAL(playerLogin(Player)), SLOT(playerLogin(Player)));
+    connect(&relay(), SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
 }
 
 void Client::messageReceived(const QString &mess)
@@ -88,12 +90,33 @@ QTextEdit *Client::mainChat()
     return mychat;
 }
 
-void Client::playerLogIn(const Player& p)
+void Client::playerLogin(const Player& p)
+{
+    playerReceived(p);
+    printLine(tr("%1 logged in.").arg(p.team.name));
+}
+
+void Client::playerLogout(int id)
+{
+    QString name = myplayersinfo[id].name;
+
+    printLine(tr("%1 logged out.").arg(name));
+
+    /* removes the item in the playerlist */
+    delete myplayers->takeItem(myplayers->row(myplayersitems[id]));
+
+    myplayersitems.remove(id);
+    myplayersinfo.remove(id);
+}
+
+void Client::playerReceived(const Player &p)
 {
     myplayersinfo.insert(p.id, p.team);
-    printLine(tr("%1 logged in.").arg(p.team.name));
 
-    myplayers->addItem(p.team.name);
+    QListWidgetItem *item = new QListWidgetItem(p.team.name);
+    myplayersitems.insert(p.id, item);
+
+    myplayers->addItem(item);
 }
 
 void Client::printLine(const QString &line)
