@@ -26,7 +26,7 @@ void Network::onReceipt()
 	/* getting the length of the message */
 	char c1, c2;
 	socket()->getChar(&c1), socket()->getChar(&c2);
-	remainingLength=c1*256+c2;
+	remainingLength=uchar(c1)*256+uchar(c2);
 	/* Recursive call to write less code =) */
 	onReceipt();
     } else {

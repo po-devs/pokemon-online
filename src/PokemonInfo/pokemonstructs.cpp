@@ -652,7 +652,6 @@ PokeTeam & Team::poke(int index)
     return m_pokes[index];
 }
 
-
 TrainerTeam::TrainerTeam()
 {
 }
@@ -797,7 +796,7 @@ QDataStream & operator << (QDataStream & out, const Team & team)
     return out;
 }
 
-QDataStream & operator << (QDataStream & out, const PokeTeam & Pokemon)
+QDataStream & operator << (QDataStream & out, const PokePersonal & Pokemon)
 {
     out << Pokemon.num();
     out << Pokemon.nickname();
@@ -835,6 +834,33 @@ QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
     return out;
 }
 
+QDataStream &operator << (QDataStream &out, const TeamInfo& team)
+{
+    out << team.name;
+    out << team.info;
+    out << team.lose;
+    out << team.win;
+    for (int i = 0; i < 6; i++)
+	out << team.pokemon(i);
+
+    return out;
+}
+
+QDataStream &operator >> (QDataStream &in, TeamInfo& team)
+{
+    QString nick, info, lose, win;
+
+    in >> team.name;
+    in >> team.info;
+    in >> team.lose;
+    in >> team.win;
+    for (int i = 0; i < 6; i++)
+	in >> team.pokemon(i);
+
+    return in;
+}
+
+
 QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
 {
     QString nick, info, lose, win;
@@ -865,10 +891,11 @@ QDataStream & operator >> (QDataStream & in, Team & team)
             in >> team.poke(index);
         }
     }
+
     return in;
 }
 
-QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
+QDataStream & operator >> (QDataStream & in, PokePersonal & Pokemon)
 {
     QString nickname;
     int num,item,ability,nature,gender,level,i;
@@ -876,7 +903,6 @@ QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
     quint8 happiness;
     in >> num >> nickname >> item >> ability >> nature >> gender >> shininess >> happiness >> level;
     Pokemon.setNum(num);
-    Pokemon.load();
     Pokemon.setNickname(nickname);
     Pokemon.setItem(item);
     Pokemon.setAbility(ability);
@@ -904,4 +930,54 @@ QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
         Pokemon.setEV(i,EV);
     }
     return in;
+}
+
+QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
+{
+    QString nickname;
+    int num,item,ability,nature,gender,level,i;
+    bool shininess;
+    quint8 happiness;
+    in >> num >> nickname >> item >> ability >> nature >> gender >> shininess >> happiness >> level;
+    Pokemon.setNum(num);
+    Pokemon.load();
+    Pokemon.setNickname(nickname);
+    Pokemon.setItem(item);
+    Pokemon.setAbility(ability);
+    Pokemon.setNature(nature);
+    Pokemon.setGender(gender);
+    Pokemon.setShininess(shininess);
+    Pokemon.setHappiness(happiness);
+    Pokemon.setLevel(level);
+    for(i=0;i<4;i++)
+    {
+	int moveNum;
+	in >> moveNum;
+	Pokemon.setMove(moveNum,i);
+    }
+    for(i=0;i<6;i++)
+    {
+	quint8 DV;
+	in >> DV;
+	Pokemon.setDV(i,DV);
+    }
+    for(i=0;i<6;i++)
+    {
+	quint8 EV;
+	in >> EV;
+	Pokemon.setEV(i,EV);
+    }
+    return in;
+}
+
+
+PokePersonal & TeamInfo::pokemon(int num)
+{
+    return m_pokes[num];
+}
+
+
+const PokePersonal & TeamInfo::pokemon(int num) const
+{
+    return m_pokes[num];
 }

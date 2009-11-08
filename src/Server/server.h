@@ -11,27 +11,29 @@ class Player : public QObject
 public:
     Player(QTcpSocket *sock);
 
-    TrainerTeam &team();
-    const TrainerTeam &team() const;
+    TeamInfo &team();
+    const TeamInfo &team() const;
     void sendMessage(const QString &mess);
 
     void setId(int id);
     int id() const;
     QString name() const;
+
+    Analyzer& relay();
 signals:
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, const QString &mess);
     void disconnected(int id);
+    void recvTeam(int id);
 public slots:
     void loggedIn(const QString &name);
     void recvMessage(const QString &mess);
+    void recvTeam(const TeamInfo &team);
     void disconnected();
 private:
-    TrainerTeam myteam;
+    TeamInfo myteam;
     Analyzer myrelay;
     int myid;
-
-    Analyzer& relay();
 };
 
 /* the server */
@@ -48,12 +50,14 @@ public:
     /* sends a message to all the players */
     void sendAll(const QString &message);
     void sendMessage(int id, const QString &message);
+    void sendPlayersList(int id);
 public slots:
     /* means a new connection is about to start from the TCP server */
     void incomingConnection();
     /* Signals received by players */
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, const QString &mess);
+    void recvTeam(int id);
     void disconnected(int id);
 private:
     QTcpServer myserver;

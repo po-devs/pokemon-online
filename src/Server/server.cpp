@@ -5,6 +5,7 @@ Player::Player(QTcpSocket *sock) : myrelay(sock)
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(QString)), this, SLOT(loggedIn(QString)));
     connect(&relay(), SIGNAL(messageReceived(QString)), this, SLOT(recvMessage(QString)));
+    connect(&relay(), SIGNAL(teamReceived(TeamInfo)), this, SLOT(recvTeam(TeamInfo)));
 }
 
 void Player::disconnected()
@@ -25,19 +26,26 @@ Analyzer & Player::relay()
 
 void Player::loggedIn(const QString &name)
 {
-    team().setTrainerNick(name);
+    team().name = name;
 
     emit loggedIn(id(), name);
 }
 
 QString Player::name() const
 {
-    return team().trainerNick();
+    return team().name;
 }
 
 void Player::setId(int id)
 {
     myid = id;
+}
+
+void Player::recvTeam(const TeamInfo &team)
+{
+    this->team() = team;
+
+    emit recvTeam(id());
 }
 
 int Player::id() const
@@ -50,12 +58,12 @@ void Player::sendMessage(const QString &mess)
     relay().sendMessage(mess);
 }
 
-TrainerTeam & Player::team()
+TeamInfo & Player::team()
 {
     return myteam;
 }
 
-const TrainerTeam& Player::team() const
+const TeamInfo & Player::team() const
 {
     return myteam;
 }
@@ -90,6 +98,8 @@ void Server::loggedIn(int id, const QString &name)
 {
     printLine(tr("Player %1 logged in as %2").arg(id).arg(name));
 
+    sendPlayersList(id);
+
     sendMessage(id, tr("Welcome to our server, %1").arg(name));
 }
 
@@ -120,7 +130,24 @@ void Server::incomingConnection()
 
     connect(player(id), SIGNAL(loggedIn(int, QString)), this, SLOT(loggedIn(int,QString)));
     connect(player(id), SIGNAL(recvMessage(int, QString)), this, SLOT(recvMessage(int,QString)));
+    connect(player(id), SIGNAL(recvTeam(int)), this, SLOT(recvTeam(int)));
     connect(player(id), SIGNAL(disconnected(int)), SLOT(disconnected(int)));
+}
+
+void Server::sendPlayersList(int id)
+{
+    Analyzer &relay = player(id)->relay();
+
+    /* getting what to send */
+    foreach(Player *p, myplayers)
+    {
+	relay.sendPlayer(p->id(), p->team());
+    }
+}
+
+void Server::recvTeam(int id)
+{
+    printLine(tr("%1 changed their team.").arg(name(id)));
 }
 
 void Server::disconnected(int id)

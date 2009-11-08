@@ -7,7 +7,7 @@
 MainWindow::MainWindow() : m_menu(0), m_TB(0)
 {
     this->setObjectName("MainWindow");
-    resize (650, 680);
+
     setWindowTitle(tr("Pokemon Online"));
     layout()->setSizeConstraint(QLayout::SetFixedSize);
 

@@ -5,7 +5,7 @@
 
 Client::Client(TrainerTeam *t) : myteam(t), myrelay()
 {
-    setFixedSize(700, 600);
+    setFixedSize(800, 600);
 
     QGridLayout *layout = new QGridLayout(this);
 
@@ -16,6 +16,7 @@ Client::Client(TrainerTeam *t) : myteam(t), myrelay()
     layout->addWidget(mysender = new QPushButton(tr("&Send")), 2, 2);
 
     myplayers->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    myplayers->setSortingEnabled(true);
     mychat->setReadOnly(true);
 
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
@@ -46,6 +47,7 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(connected()), SLOT(connected()));
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(messageReceived(QString)), SLOT(messageReceived(QString)));
+    connect(&relay(), SIGNAL(playerReceived(Player)), SLOT(playerLogIn(Player)));
 }
 
 void Client::messageReceived(const QString &mess)
@@ -63,6 +65,7 @@ void Client::connected()
     printLine(tr("Connected to Server!"));
 
     relay().login(team()->trainerNick(), team()->trainerNick());
+    relay().sendTeam(*team());
 }
 
 void Client::disconnected()
@@ -85,7 +88,31 @@ QTextEdit *Client::mainChat()
     return mychat;
 }
 
+void Client::playerLogIn(const Player& p)
+{
+    myplayersinfo.insert(p.id, p.team);
+    printLine(tr("%1 logged in.").arg(p.team.name));
+
+    myplayers->addItem(p.team.name);
+}
+
 void Client::printLine(const QString &line)
 {
     mainChat()->insertPlainText(line + "\n");
+}
+
+QDataStream & operator >> (QDataStream &in, Player &p)
+{
+    in >> p.id;
+    in >> p.team;
+
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const Player &p)
+{
+    out << p.id;
+    out << p.team;
+
+    return out;
 }

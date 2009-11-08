@@ -24,7 +24,7 @@ void Network::onReceipt()
         /* getting the length of the message */
         char c1, c2;
         this->getChar(&c1), this->getChar(&c2);
-        remainingLength=c1*256+c2;
+	remainingLength= uchar(c1)*256+uchar(c2);
         /* Recursive call to write less code =) */
         onReceipt();
     } else {

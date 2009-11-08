@@ -5,6 +5,8 @@
 #include "network.h"
 
 class Client;
+class TrainerTeam;
+class Player;
 
 /* Commands to dialog with the server */
 namespace NetworkCli
@@ -16,7 +18,8 @@ namespace NetworkCli
 	Login,
 	Logout,
 	SendMessage,
-	PlayersList
+	PlayersList,
+	SendTeam
     };
 
     enum ProtocolError
@@ -35,6 +38,7 @@ public:
     void login(const QString &name, const QString &pass);
     void sendMessage(const QString &message);
     void connectTo(const QString &host, quint16 port);
+    void sendTeam(const TrainerTeam & team);
     bool isConnected() const;
 
 signals:
@@ -46,6 +50,7 @@ signals:
     void connected();
     void disconnected();
     void messageReceived(const QString &mess);
+    void playerReceived(const Player &p);
 
 public slots:
     /* slots called by the network */

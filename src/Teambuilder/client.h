@@ -3,9 +3,19 @@
 
 #include <QtGui>
 #include "analyze.h"
+#include "../PokemonInfo/pokemonstructs.h"
 
-class TrainerTeam;
 class MainWindow;
+
+class Player
+{
+public:
+    int id;
+    TeamInfo team;
+};
+
+QDataStream & operator >> (QDataStream &in, Player &p);
+QDataStream & operator << (QDataStream &out, const Player &p);
 
 /* The class for going online */
 
@@ -27,6 +37,7 @@ public slots:
     void messageReceived(const QString & mess);
     /* sends what's in the line edit */
     void sendText();
+    void playerLogIn(const Player &p);
 signals:
     void done();
 
@@ -44,6 +55,8 @@ private:
     QPushButton *mysender;
     /* Network Relay */
     Analyzer myrelay;
+
+    QMap<int, TeamInfo> myplayersinfo;
 
     QTextEdit *mainChat();
     Analyzer & relay();
