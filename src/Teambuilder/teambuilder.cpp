@@ -187,14 +187,14 @@ void TeamBuilder::changeBody(int i)
         //partie a changer
         if(i>0)
         {
-            if(m_dockAdvanced->isVisible()==true)
+	    if(dockAdvanced() != 0)
             {
-                m_dockAdvanced->setCurrentPokemon(i-1);
+		dockAdvanced()->setCurrentPokemon(i-1);
             }
         }
         else
         {
-            m_dockAdvanced->close();
+	    //m_dockAdvanced->close();
         }
     }
 }
@@ -207,7 +207,7 @@ void TeamBuilder::setIconForPokeButton()
         return;
     }
     TB_PokemonBody * body = qobject_cast<TB_PokemonBody *>(sender());
-    int index = name.remove("Poke",Qt::CaseSensitive).toInt(new bool,10);
+    int index = name.remove("Poke",Qt::CaseSensitive).toInt();
     m_pokemon[index]->setIcon(body->poke()->icon());
 }
 
@@ -218,7 +218,7 @@ void TeamBuilder::setNicknameIntoButton(QString nickname)
     {
         return;
     }
-    int index = nameBody.remove("Poke",Qt::CaseSensitive).toInt(new bool,10);
+    int index = nameBody.remove("Poke",Qt::CaseSensitive).toInt();
     QString textButton = m_pokemon[index]->text();
     TB_PokemonBody * body = qobject_cast<TB_PokemonBody *>(sender());
     if(body->poke()->num() != 0 /*&& textButton == QString("Pokémon &%1").arg(index+1)*/)
@@ -234,17 +234,16 @@ void TeamBuilder::setNicknameIntoButton(QString nickname)
 
 void TeamBuilder::advancedClicked(int index)
 {
-    if(m_dockAdvanced ==0)
+    if(dockAdvanced() == 0)
     {
-        qDebug() << "dock non creer";
-        return;
+	createDockAdvanced();
+	dockAdvanced()->setCurrentPokemon(index);
     }
-    bool v = m_dockAdvanced->isVisible();
-    if(v == false)
-    {
-        m_dockAdvanced->setVisible(true);
-    }
-    m_dockAdvanced->setCurrentPokemon(index);
+}
+
+void TeamBuilder::advancedDestroyed()
+{
+    m_dockAdvanced = 0;
 }
 
 void TeamBuilder::saveTeam()
@@ -305,28 +304,25 @@ QMenuBar * TeamBuilder::createMenuBar(MainWindow *w)
 //creation du dockAdvanced
 void TeamBuilder::createDockAdvanced()
 {
-    if(this->parent()->objectName()!="MainWindow")
-    {
-        return;
-    }
-    MainWindow * main = qobject_cast<MainWindow * >(this->parent());
-    if(!main)
-    {
-        return;
-    }
-    m_dockAdvanced = new dockAdvanced(this,main);
-    connect(m_dockAdvanced,SIGNAL(visibilityChanged(bool)),this,SLOT(dockAdvancedStateChanged(bool)));
+    m_dockAdvanced = new DockAdvanced(this);
+
+    connect(m_dockAdvanced, SIGNAL(destroyed()), SLOT(advancedDestroyed()));
+    
     emit this->showDockAdvanced(Qt::RightDockWidgetArea,m_dockAdvanced,Qt::Vertical);
-    m_dockAdvanced->setVisible(false);
 }
 
 void TeamBuilder::indexNumPokemonChangedForAdvanced(int pokeNum)
 {
-    if(m_dockAdvanced!=0)
+    if(dockAdvanced()!=0)
     {
-        int index = QString(sender()->objectName()).remove("Poke").toInt(new bool(),10);
+	int index = QString(sender()->objectName()).remove("Poke").toInt();
         m_dockAdvanced->setPokemonNum(index,pokeNum);
     }
+}
+
+DockAdvanced * TeamBuilder::dockAdvanced() const
+{
+    return m_dockAdvanced;
 }
 
 void TeamBuilder::updateDataBody(int stackIndex)
@@ -342,14 +338,6 @@ TB_PokemonBody * TeamBuilder::pokebody(int index)
 TB_TrainerBody * TeamBuilder::trainerbody()
 {
     return m_trainerBody;
-}
-
-void TeamBuilder::dockAdvancedStateChanged(bool visible)
-{
-    if(visible == false)
-    {
-        m_dockAdvanced->update();
-    }
 }
 
 TeamBuilder::~TeamBuilder()
@@ -612,7 +600,7 @@ void TB_PokemonBody::goToAdvanced()
 	connect(advanced(), SIGNAL(destroyed()), SLOT(updateAdvanced()));
 	connect(advanced(), SIGNAL(destroyed()), SLOT(setAdvancedOpenToFalse()));
     }*/
-    int index = QString(this->objectName()).remove("Poke").toInt(new bool(), 10);
+    int index = QString(this->objectName()).remove("Poke").toInt();
     emit advanced(index);
 }
 

@@ -83,6 +83,12 @@ void PokeBaseStats::setBaseStat(int stat, quint8 base)
 
 PokeGeneral::PokeGeneral(): m_num(0)
 {
+    //default for non-bugged programs
+    m_abilities.push_back(0);
+    m_abilities.push_back(0);
+    m_genderAvail = Pokemon::NeutralAvail;
+    m_types[0] = Pokemon::Curse;
+    m_types[1] = -1;
 }
 
 void PokeGeneral::setNum(int num)

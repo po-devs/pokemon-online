@@ -27,7 +27,7 @@ public:
     State validate(QString &input, int &pos) const;
 };
 
-class dockAdvanced;
+class DockAdvanced;
 class TeamBuilder : public QWidget
 {
     Q_OBJECT
@@ -55,14 +55,15 @@ private:
     TB_TrainerBody *trainerbody();
 
     //dockAdvanced
-    dockAdvanced * m_dockAdvanced;
+    DockAdvanced * m_dockAdvanced;
+    DockAdvanced * dockAdvanced() const;
 
 private slots:
     void changeBody(int i);
     void setIconForPokeButton();
     void setNicknameIntoButton(QString nickname);
     void advancedClicked(int index);
-    void dockAdvancedStateChanged(bool visible);
+    void advancedDestroyed();
     void indexNumPokemonChangedForAdvanced(int pokeNum);
     void updateDataBody(int indexStacked);
 
