@@ -46,7 +46,7 @@ signals:
     /* to send to the client */
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
-    void loggedIn(const QString &mess);
+    void loggedIn(const TeamInfo &team);
     void messageReceived(const QString &mess);
     void teamReceived(const TeamInfo &team);
     void disconnected();

@@ -20,6 +20,9 @@ public:
     int id() const;
     QString name() const;
 
+    bool isLoggedIn() const;
+    void setLoggedIn(bool logged);
+
     Analyzer& relay();
 signals:
     void loggedIn(int id, const QString &name);
@@ -27,7 +30,7 @@ signals:
     void disconnected(int id);
     void recvTeam(int id);
 public slots:
-    void loggedIn(const QString &name);
+    void loggedIn(const TeamInfo &team);
     void recvMessage(const QString &mess);
     void recvTeam(const TeamInfo &team);
     void disconnected();
@@ -35,6 +38,8 @@ private:
     TeamInfo myteam;
     Analyzer myrelay;
     int myid;
+
+    bool m_isLoggedIn;
 };
 
 /* the server */
