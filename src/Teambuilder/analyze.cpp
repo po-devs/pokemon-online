@@ -14,12 +14,12 @@ Analyzer::Analyzer()
     connect(&socket(), SIGNAL(error(QAbstractSocket::SocketError)), SLOT(error()));
 }
 
-void Analyzer::login(const QString &name, const QString &pass)
+void Analyzer::login(const TrainerTeam &team)
 {
     QByteArray tosend;
     QDataStream in(&tosend, QIODevice::WriteOnly);
 
-    in << uchar(Login) << name << pass;
+    in << uchar(Login) << team;
 
     emit sendCommand(tosend);
 }

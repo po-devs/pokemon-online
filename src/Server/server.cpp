@@ -2,14 +2,26 @@
 
 Player::Player(QTcpSocket *sock) : myrelay(sock)
 {
+    m_isLoggedIn = false;
+
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
-    connect(&relay(), SIGNAL(loggedIn(QString)), this, SLOT(loggedIn(QString)));
+    connect(&relay(), SIGNAL(loggedIn(TeamInfo)), this, SLOT(loggedIn(TeamInfo)));
     connect(&relay(), SIGNAL(messageReceived(QString)), this, SLOT(recvMessage(QString)));
     connect(&relay(), SIGNAL(teamReceived(TeamInfo)), this, SLOT(recvTeam(TeamInfo)));
 }
 
 Player::~Player()
 {
+}
+
+bool Player::isLoggedIn() const
+{
+    return m_isLoggedIn;
+}
+
+void Player::setLoggedIn(bool logged)
+{
+    m_isLoggedIn = logged;
 }
 
 void Player::disconnected()
@@ -28,11 +40,11 @@ Analyzer & Player::relay()
     return myrelay;
 }
 
-void Player::loggedIn(const QString &name)
+void Player::loggedIn(const TeamInfo &_team)
 {
-    team().name = name;
+    team() = _team;
 
-    emit loggedIn(id(), name);
+    emit loggedIn(id(), _team.name);
 }
 
 QString Player::name() const
@@ -102,6 +114,8 @@ void Server::loggedIn(int id, const QString &name)
 {
     printLine(tr("Player %1 logged in as %2").arg(id).arg(name));
 
+    player(id)->setLoggedIn(true);
+
     sendPlayersList(id);
     sendLogin(id);
 
@@ -133,7 +147,7 @@ void Server::incomingConnection()
 
     player(id)->setId(id);
 
-    connect(player(id), SIGNAL(loggedIn(int, QString)), this, SLOT(loggedIn(int,QString)));
+    connect(player(id), SIGNAL(loggedIn(int, QString)), this, SLOT(loggedIn(int, QString)));
     connect(player(id), SIGNAL(recvMessage(int, QString)), this, SLOT(recvMessage(int,QString)));
     connect(player(id), SIGNAL(recvTeam(int)), this, SLOT(recvTeam(int)));
     connect(player(id), SIGNAL(disconnected(int)), SLOT(disconnected(int)));
@@ -154,7 +168,7 @@ void Server::sendLogin(int id)
 {
     foreach(Player *p, myplayers)
     {
-	if (p->id() != id)
+	if (p->id() != id && p->isLoggedIn())
 	    p->relay().sendLogin(id, player(id)->team());
     }
 }
@@ -163,7 +177,8 @@ void Server::sendLogout(int id)
 {
     foreach(Player *p, myplayers)
     {
-	p->relay().sendLogout(id);
+	if (p->isLoggedIn())
+	    p->relay().sendLogout(id);
     }
 }
 
@@ -197,7 +212,8 @@ void Server::sendAll(const QString &message)
     printLine(message);
 
     foreach (Player *p, myplayers)
-	p->sendMessage(message);
+	if (p->isLoggedIn())
+	    p->sendMessage(message);
 }
 
 int Server::freeid() const

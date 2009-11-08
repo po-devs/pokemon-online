@@ -35,7 +35,7 @@ public:
     Analyzer();
 
     /* functions called by the client */
-    void login(const QString &name, const QString &pass);
+    void login(const TrainerTeam &team);
     void sendMessage(const QString &message);
     void connectTo(const QString &host, quint16 port);
     void sendTeam(const TrainerTeam & team);

@@ -66,8 +66,7 @@ void Client::connected()
 {
     printLine(tr("Connected to Server!"));
 
-    relay().login(team()->trainerNick(), team()->trainerNick());
-    relay().sendTeam(*team());
+    relay().login(*team());
 }
 
 void Client::disconnected()

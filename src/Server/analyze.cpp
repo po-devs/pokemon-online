@@ -68,9 +68,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     switch (command) {
 	case Login:
 	{
-	    QString name;
-	    in >> name;
-	    emit loggedIn(name);
+	    TeamInfo team;
+	    in >> team;
+	    emit loggedIn(team);
 	    break;
 	}
 	case SendMessage:
