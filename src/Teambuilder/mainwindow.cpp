@@ -78,7 +78,6 @@ void MainWindow::launchTeamBuilder()
 
     setCentralWidget(m_TB);
     setMenuBar(m_TB->createMenuBar(this));
-    m_TB->createDockAdvanced();
 }
 
 void MainWindow::goOnline()

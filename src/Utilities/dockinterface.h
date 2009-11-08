@@ -1,19 +1,19 @@
 #ifndef DOCKINTERFACE_H
 #define DOCKINTERFACE_H
 
-#include <QDockWidget>
+#include <QtGui>
 
 //class dockAdvanced
 
 class QStackedWidget;
 class TeamBuilder;
-class dockAdvanced : public QDockWidget
+class DockAdvanced : public QDockWidget
 {
     Q_OBJECT
 
  public:
-    dockAdvanced(TeamBuilder * builder,QWidget * parent);
-    ~dockAdvanced();
+    DockAdvanced(TeamBuilder * builder);
+    ~DockAdvanced();
 
  signals:
     void updateDataOfBody(int index);
@@ -23,7 +23,7 @@ class dockAdvanced : public QDockWidget
     void setPokemonNum(int indexStack,int pokeNum);
 
 private slots:
-    void stackAdvancedChanged(int stackIndex);
+    void stackAdvancedChanged();
 
  private:
     QStackedWidget * AdvancedPokemons_gestionnaire;

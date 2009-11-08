@@ -1,14 +1,14 @@
 #include "dockinterface.h"
 #include "../Teambuilder/teambuilder.h"
-#include <QStackedWidget>
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../Teambuilder/advanced.h"
 #include "../Teambuilder/mainwindow.h"
 
 //class dockAdvanced
-dockAdvanced::dockAdvanced(TeamBuilder * builder,QWidget * parent):
-        QDockWidget(tr("Advanced Pokemons"),parent),m_builder(builder),lastStackIndex(-1)
+DockAdvanced::DockAdvanced(TeamBuilder * builder):
+	QDockWidget(tr("Advanced Pokemons"),builder),m_builder(builder),lastStackIndex(-1)
 {
+    this->setAttribute(Qt::WA_DeleteOnClose);
     //parametre(s) interne(s)
     this->setObjectName("dockAdvanced");
     this->setWindowIcon(QIcon("db/icon.png"));
@@ -16,36 +16,29 @@ dockAdvanced::dockAdvanced(TeamBuilder * builder,QWidget * parent):
 
     //affichage des interfaces Advanced de chaque pokemon
     AdvancedPokemons_gestionnaire = new QStackedWidget(this);
-    connect(AdvancedPokemons_gestionnaire,SIGNAL(currentChanged(int)),this,SLOT(stackAdvancedChanged(int)));
-    MainWindow * m = qobject_cast<MainWindow *>(this->parent());
-    if(m!=0)
+    connect(AdvancedPokemons_gestionnaire,SIGNAL(currentChanged(int)),this,SLOT(stackAdvancedChanged()));
+
+    for(int i= 0; i<6;i++)
     {
-        for(int i= 0; i<6;i++)
-        {
-            PokeTeam * p = &m_builder->getTeam()->poke(i);
-            TB_Advanced * stack = new TB_Advanced(p);
-            AdvancedPokemons_gestionnaire->addWidget(stack);
-        }
-        //connect(this,SIGNAL(displayInterface(int)),AdvancedPokemons_gestionnaire,SLOT(setCurrentIndex(int)));
+	PokeTeam * p = &m_builder->getTeam()->poke(i);
+	TB_Advanced * stack = new TB_Advanced(p);
+	AdvancedPokemons_gestionnaire->addWidget(stack);
     }
-    else
-    {
-        QMessageBox::warning(0,tr("error dockAvanced"),tr("Can't create tabs for dockAdvanced"));
-    }
+
     this->setWidget(AdvancedPokemons_gestionnaire);
 }
 
-dockAdvanced::~dockAdvanced()
+DockAdvanced::~DockAdvanced()
 {
 }
 
-void dockAdvanced::setCurrentPokemon(int index)
+void DockAdvanced::setCurrentPokemon(int index)
 {
     lastStackIndex = AdvancedPokemons_gestionnaire->currentIndex();
     AdvancedPokemons_gestionnaire->setCurrentIndex(index);
 }
 
-void dockAdvanced::setPokemonNum(int indexStack,int pokeNum)
+void DockAdvanced::setPokemonNum(int indexStack,int pokeNum)
 {
     qDebug() <<"indexStack::"<<indexStack<<" pokeNum:"<<pokeNum;
     QWidget * w = AdvancedPokemons_gestionnaire->widget(indexStack);
@@ -60,7 +53,7 @@ void dockAdvanced::setPokemonNum(int indexStack,int pokeNum)
     AdvancedPokemons_gestionnaire->setCurrentIndex(indexStack);
 }
 
-void dockAdvanced::stackAdvancedChanged(int stackIndex)
+void DockAdvanced::stackAdvancedChanged()
 {
     emit updateDataOfBody(lastStackIndex);
 }
