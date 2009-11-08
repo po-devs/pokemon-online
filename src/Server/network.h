@@ -15,8 +15,11 @@ public:
 	   abort: abruptly closes the socket */
     int error() const;
     QString errorString() const;
+    bool isConnected() const;
 public slots:
     void onReceipt();
+    void onDisconnect();
+    void manageError(QAbstractSocket::SocketError);
     void send(const QByteArray &message);
 signals:
     void isFull(QByteArray command);
@@ -28,6 +31,9 @@ private:
     /* internal variables for the protocol */
     bool commandStarted;
     quint16 remainingLength;
+    /* errors stored when disconnected */
+    int myerror;
+    QString myerrorString;
 
     QTcpSocket *socket();
     const QTcpSocket *socket() const;

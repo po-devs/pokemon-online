@@ -17,6 +17,7 @@ void Analyzer::sendMessage(const QString &message)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(SendMessage) << message;
 
@@ -27,6 +28,7 @@ void Analyzer::sendPlayer(int num, const TeamInfo &team)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(PlayersList) << num << team;
 
@@ -37,6 +39,7 @@ void Analyzer::sendLogin(int num, const TeamInfo &team)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(Login) << num << team;
 
@@ -47,6 +50,7 @@ void Analyzer::sendLogout(int num)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(Logout) << num;
 
@@ -58,9 +62,17 @@ void Analyzer::error()
     emit connectionError(socket().error(), socket().errorString());
 }
 
+bool Analyzer::isConnected() const
+{
+    return socket().isConnected();
+}
+
+
+
 void Analyzer::commandReceived(const QByteArray &commandline)
 {
     QDataStream in (commandline);
+    in.setVersion(QDataStream::Qt_4_5);
     uchar command;
 
     in >> command;
@@ -97,3 +109,9 @@ Network & Analyzer::socket()
 {
     return mysocket;
 }
+
+const Network & Analyzer::socket() const
+{
+    return mysocket;
+}
+
