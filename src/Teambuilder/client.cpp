@@ -57,9 +57,9 @@ void Client::messageReceived(const QString &mess)
     printLine(mess);
 }
 
-void Client::errorFromNetwork(int errno, const QString &errorDesc)
+void Client::errorFromNetwork(int errnum, const QString &errorDesc)
 {
-    QMessageBox::critical(this, tr("Error while connected to server"), tr("Received error n°%1: %2").arg(errno).arg(errorDesc));
+    QMessageBox::critical(this, tr("Error while connected to server"), tr("Received error n°%1: %2").arg(errnum).arg(errorDesc));
 }
 
 void Client::connected()

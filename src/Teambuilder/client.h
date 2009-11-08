@@ -30,7 +30,7 @@ public:
 
     void printLine(const QString &line);
 public slots:
-    void errorFromNetwork(int errno, const QString &error);
+    void errorFromNetwork(int errnum, const QString &error);
     void connected();
     void disconnected();
     /* message received from the server */
