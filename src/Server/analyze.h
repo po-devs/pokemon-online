@@ -57,6 +57,7 @@ public slots:
 
 private:
     Network &socket();
+    const Network &socket() const;
 
     Network mysocket;
 };

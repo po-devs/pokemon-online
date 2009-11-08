@@ -14,6 +14,11 @@ Player::~Player()
 {
 }
 
+bool Player::connected() const
+{
+    return relay().isConnected();
+}
+
 bool Player::isLoggedIn() const
 {
     return m_isLoggedIn;
@@ -36,6 +41,11 @@ void Player::recvMessage(const QString &mess)
 }
 
 Analyzer & Player::relay()
+{
+    return myrelay;
+}
+
+const Analyzer & Player::relay() const
 {
     return myrelay;
 }
@@ -193,18 +203,26 @@ void Server::disconnected(int id)
     removePlayer(id);
 }
 
+bool Server::playerExist(int id) const
+{
+    return myplayers.contains(id);
+}
+
 void Server::removePlayer(int id)
 {
-    sendLogout(id);
+    if (playerExist(id))
+    {
+	Player *p = myplayers.take(id);
 
-    QString playerName = name(id);
-    printLine(tr("Removed player %1").arg(playerName));
+	p->setLoggedIn(false);
+    
+	QString playerName = p->name();
 
-    /* So there won't be infinite recursion with signal disconnected */
-    player(id)->blockSignals(true);
+	delete p;
 
-    delete player(id);
-    myplayers.remove(id);
+	printLine(tr("Removed player %1").arg(playerName));
+	sendLogout(id);
+    }
 }
 
 void Server::sendAll(const QString &message)

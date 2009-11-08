@@ -17,9 +17,10 @@ Analyzer::Analyzer()
 void Analyzer::login(const TrainerTeam &team)
 {
     QByteArray tosend;
-    QDataStream in(&tosend, QIODevice::WriteOnly);
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
 
-    in << uchar(Login) << team;
+    out << uchar(Login) << team;
 
     emit sendCommand(tosend);
 }
@@ -28,6 +29,7 @@ void Analyzer::sendMessage(const QString &message)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(SendMessage) << message;
 
@@ -38,6 +40,7 @@ void Analyzer::sendTeam(const TrainerTeam &team)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(SendTeam) << team;
 
@@ -57,6 +60,7 @@ void Analyzer::error()
 void Analyzer::commandReceived(const QByteArray &commandline)
 {
     QDataStream in (commandline);
+    in.setVersion(QDataStream::Qt_4_5);
     uchar command;
 
     in >> command;

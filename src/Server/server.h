@@ -23,7 +23,10 @@ public:
     bool isLoggedIn() const;
     void setLoggedIn(bool logged);
 
+    bool connected() const;
+
     Analyzer& relay();
+    const Analyzer& relay() const;
 signals:
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, const QString &mess);
@@ -60,6 +63,7 @@ public:
     /* Sends the login of the player to everybody but the player */
     void sendLogin(int id);
     void sendLogout(int id);
+    bool playerExist(int id) const;
 public slots:
     /* means a new connection is about to start from the TCP server */
     void incomingConnection();
@@ -68,6 +72,7 @@ public slots:
     void recvMessage(int id, const QString &mess);
     void recvTeam(int id);
     void disconnected(int id);
+
 private:
     QTcpServer myserver;
     /* storing players */
