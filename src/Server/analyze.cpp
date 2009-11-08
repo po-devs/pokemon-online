@@ -1,6 +1,7 @@
 #include "analyze.h"
 #include "network.h"
 #include "server.h"
+#include "../PokemonInfo/pokemonstructs.h"
 
 using namespace NetworkServ;
 
@@ -18,6 +19,16 @@ void Analyzer::sendMessage(const QString &message)
     QDataStream out(&tosend, QIODevice::WriteOnly);
 
     out << uchar(SendMessage) << message;
+
+    emit sendCommand(tosend);
+}
+
+void Analyzer::sendPlayer(int num, const TeamInfo &team)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+
+    out << uchar(PlayersList) << num << team;
 
     emit sendCommand(tosend);
 }
@@ -47,6 +58,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    QString mess;
 	    in >> mess;
 	    emit messageReceived(mess);
+	    break;
+	}
+	case SendTeam:
+	{
+	    TeamInfo team;
+	    in >> team;
+	    emit teamReceived(team);
 	    break;
 	}
 	default:

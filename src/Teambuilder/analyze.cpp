@@ -1,6 +1,7 @@
 #include "analyze.h"
 #include "network.h"
 #include "client.h"
+#include "../PokemonInfo/pokemonstructs.h"
 
 using namespace NetworkCli;
 
@@ -10,7 +11,7 @@ Analyzer::Analyzer()
     connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
     connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
     connect(&socket(), SIGNAL(isFull(QByteArray)), SLOT(commandReceived(QByteArray)));
-    connect(&socket(), SIGNAL(error()), SLOT(error()));
+    connect(&socket(), SIGNAL(error(QAbstractSocket::SocketError)), SLOT(error()));
 }
 
 void Analyzer::login(const QString &name, const QString &pass)
@@ -29,6 +30,16 @@ void Analyzer::sendMessage(const QString &message)
     QDataStream out(&tosend, QIODevice::WriteOnly);
 
     out << uchar(SendMessage) << message;
+
+    emit sendCommand(tosend);
+}
+
+void Analyzer::sendTeam(const TrainerTeam &team)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+
+    out << uchar(SendTeam) << team;
 
     emit sendCommand(tosend);
 }
@@ -56,6 +67,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    QString mess;
 	    in >> mess;
 	    emit messageReceived(mess);
+	    break;
+	}
+	case PlayersList:
+	{
+	    Player p;
+	    in >> p;
+	    emit playerReceived(p);
 	    break;
 	}
 	default:

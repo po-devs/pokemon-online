@@ -14,7 +14,8 @@ namespace NetworkServ
 	Login,
 	Logout,
 	SendMessage,
-	PlayersList
+	PlayersList,
+	SendTeam
     };
 
     enum ProtocolError
@@ -23,15 +24,18 @@ namespace NetworkServ
     };
 }
 
+class TeamInfo;
+
 class Analyzer : public QObject
 {
     Q_OBJECT
 public:
     Analyzer(QTcpSocket *sock);
 
-    /* functions called by the client */
+    /* functions called by the server */
     void sendMessage(const QString &message);
     void requestLogIn();
+    void sendPlayer(int num, const TeamInfo &team);
     bool isConnected() const;
 
 signals:
@@ -42,6 +46,7 @@ signals:
     void protocolError(int errorNum, const QString &errorDesc);
     void loggedIn(const QString &mess);
     void messageReceived(const QString &mess);
+    void teamReceived(const TeamInfo &team);
     void disconnected();
 public slots:
     /* slots called by the network */
