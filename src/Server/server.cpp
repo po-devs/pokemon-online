@@ -124,6 +124,14 @@ void Server::loggedIn(int id, const QString &name)
 {
     printLine(tr("Player %1 logged in as %2").arg(id).arg(name));
 
+    foreach(Player *p, myplayers)
+	if (p->isLoggedIn() && p->name().compare(name, Qt::CaseInsensitive) == 0) {
+	    printLine(tr("Name %1 already in use, disconnecting player %2").arg(name).arg(id));
+	    sendMessage(id, tr("Another with the name %1 is already logged in").arg(name));
+	    removePlayer(id);
+	    return;
+	}
+
     player(id)->setLoggedIn(true);
 
     sendPlayersList(id);
@@ -214,6 +222,10 @@ void Server::removePlayer(int id)
     {
 	Player *p = myplayers.take(id);
 
+	/* Sending the notice of logout to others only if the player is already logged in */
+	if (p->isLoggedIn())
+	    sendLogout(id);
+
 	p->setLoggedIn(false);
     
 	QString playerName = p->name();
@@ -221,7 +233,6 @@ void Server::removePlayer(int id)
 	delete p;
 
 	printLine(tr("Removed player %1").arg(playerName));
-	sendLogout(id);
     }
 }
 
