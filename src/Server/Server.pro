@@ -11,12 +11,16 @@ SOURCES += main.cpp \
     analyze.cpp \
     server.cpp \
     ../PokemonInfo/pokemoninfo.cpp \
-    ../PokemonInfo/pokemonstructs.cpp
+    ../PokemonInfo/pokemonstructs.cpp \
+    ../PokemonInfo/battlestructs.cpp \
+    ../PokemonInfo/networkstructs.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
     server.h \
     ../PokemonInfo/pokemoninfo.h \
-    ../PokemonInfo/pokemonstructs.h
+    ../PokemonInfo/pokemonstructs.h \
+    ../PokemonInfo/battlestructs.h \
+    ../PokemonInfo/networkstructs.h
 LIBS += -L../../bin \
-	-lzip
+    -lzip

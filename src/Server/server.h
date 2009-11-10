@@ -1,7 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "../PokemonInfo/pokemonstructs.h"
+#include "../PokemonInfo/networkstructs.h"
 #include "analyze.h"
 
 /* a single player */
@@ -12,8 +12,13 @@ public:
     Player(QTcpSocket *sock);
     ~Player();
 
+    /* returns all the regular info */
     TeamInfo &team();
     const TeamInfo &team() const;
+    /* Converts the content of the TeamInfo to a basicInfo and returns it */
+    BasicInfo basicInfo() const;
+
+    /* Sends a message to the player */
     void sendMessage(const QString &mess);
 
     void setId(int id);

@@ -4,7 +4,7 @@
 #include <QtGui>
 #include <QDataStream>
 
-struct Pokemon
+namespace Pokemon
 {
     enum Gender
     {
@@ -76,10 +76,10 @@ struct Pokemon
         Careful,
         Quirky = 24
     };
-};
+}
 
 
-struct Move
+namespace Move
 {
     enum Category
     {
@@ -109,7 +109,7 @@ struct Move
         Dark,
         Curse = 17
     };
-};
+}
 
 enum Stat
 {
@@ -364,16 +364,6 @@ public:
     void saveToFile(const QString &path);
 };
 
-/* Only the infos needed by the server */
-class TeamInfo
-{
-public:
-    PokePersonal m_pokes[6];
-    PokePersonal &pokemon(int num);
-    const PokePersonal &pokemon(int num) const;
-
-    QString name, info, win, lose;
-};
 
 /* Dialog for loading/saving team */
 /* The third argument, if non null, gives the path the user chose */
@@ -383,12 +373,10 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath = QObject::tr
 QDataStream & operator << (QDataStream & out,const Team & team);
 QDataStream & operator << (QDataStream & out,const PokePersonal & Pokemon);
 QDataStream & operator << (QDataStream & out,const TrainerTeam & trainerTeam);
-QDataStream & operator << (QDataStream & out,const TeamInfo & team);
 
 QDataStream & operator >> (QDataStream & in,Team & team);
 QDataStream & operator >> (QDataStream & in,PokePersonal & Pokemon);
 QDataStream & operator >> (QDataStream & in,PokeTeam & Pokemon);
 QDataStream & operator >> (QDataStream & in,TrainerTeam & trainerTeam);
-QDataStream & operator >> (QDataStream & in,TeamInfo & team);
 
 #endif // POKEMONSTRUCTS_H
