@@ -840,32 +840,6 @@ QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
     return out;
 }
 
-QDataStream &operator << (QDataStream &out, const TeamInfo& team)
-{
-    out << team.name;
-    out << team.info;
-    out << team.lose;
-    out << team.win;
-    for (int i = 0; i < 6; i++)
-	out << team.pokemon(i);
-
-    return out;
-}
-
-QDataStream &operator >> (QDataStream &in, TeamInfo& team)
-{
-    QString nick, info, lose, win;
-
-    in >> team.name;
-    in >> team.info;
-    in >> team.lose;
-    in >> team.win;
-    for (int i = 0; i < 6; i++)
-	in >> team.pokemon(i);
-
-    return in;
-}
-
 
 QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
 {
@@ -974,16 +948,4 @@ QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
 	Pokemon.setEV(i,EV);
     }
     return in;
-}
-
-
-PokePersonal & TeamInfo::pokemon(int num)
-{
-    return m_pokes[num];
-}
-
-
-const PokePersonal & TeamInfo::pokemon(int num) const
-{
-    return m_pokes[num];
 }

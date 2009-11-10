@@ -24,7 +24,7 @@ void Analyzer::sendMessage(const QString &message)
     emit sendCommand(tosend);
 }
 
-void Analyzer::sendPlayer(int num, const TeamInfo &team)
+void Analyzer::sendPlayer(int num, const BasicInfo &team)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
@@ -35,7 +35,7 @@ void Analyzer::sendPlayer(int num, const TeamInfo &team)
     emit sendCommand(tosend);
 }
 
-void Analyzer::sendLogin(int num, const TeamInfo &team)
+void Analyzer::sendLogin(int num, const BasicInfo &team)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);

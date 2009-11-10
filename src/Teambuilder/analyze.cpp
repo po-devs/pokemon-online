@@ -1,7 +1,7 @@
 #include "analyze.h"
 #include "network.h"
 #include "client.h"
-#include "../PokemonInfo/pokemonstructs.h"
+#include "../PokemonInfo/networkstructs.h"
 
 using namespace NetworkCli;
 

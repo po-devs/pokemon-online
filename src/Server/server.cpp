@@ -34,6 +34,12 @@ void Player::disconnected()
     emit disconnected(id());
 }
 
+BasicInfo Player::basicInfo() const
+{
+    BasicInfo ret = {team().name, team().info};
+    return ret;
+}
+
 void Player::recvMessage(const QString &mess)
 {
     /* for now we just emit the signal, but later we'll do more, such as flood count */
@@ -78,6 +84,8 @@ int Player::id() const
 {
     return myid;
 }
+
+
 
 void Player::sendMessage(const QString &mess)
 {
@@ -178,7 +186,8 @@ void Server::sendPlayersList(int id)
     /* getting what to send */
     foreach(Player *p, myplayers)
     {
-	relay.sendPlayer(p->id(), p->team());
+	if (p->isLoggedIn())
+	    relay.sendPlayer(p->id(), p->basicInfo());
     }
 }
 
@@ -187,7 +196,7 @@ void Server::sendLogin(int id)
     foreach(Player *p, myplayers)
     {
 	if (p->id() != id && p->isLoggedIn())
-	    p->relay().sendLogin(id, player(id)->team());
+	    p->relay().sendLogin(id, player(id)->basicInfo());
     }
 }
 

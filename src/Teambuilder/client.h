@@ -3,7 +3,7 @@
 
 #include <QtGui>
 #include "analyze.h"
-#include "../PokemonInfo/pokemonstructs.h"
+#include "../PokemonInfo/networkstructs.h"
 
 class MainWindow;
 
@@ -11,7 +11,7 @@ class Player
 {
 public:
     int id;
-    TeamInfo team;
+    BasicInfo team;
 };
 
 QDataStream & operator >> (QDataStream &in, Player &p);
@@ -59,7 +59,7 @@ private:
     /* Network Relay */
     Analyzer myrelay;
 
-    QMap<int, TeamInfo> myplayersinfo;
+    QMap<int, BasicInfo> myplayersinfo;
     QTextEdit *mainChat();
     Analyzer & relay();
 

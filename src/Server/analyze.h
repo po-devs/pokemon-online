@@ -4,6 +4,8 @@
 #include <QtCore>
 #include "network.h"
 
+class BasicInfo;
+
 /* Commands to dialog with the server */
 namespace NetworkServ
 {
@@ -35,8 +37,8 @@ public:
     /* functions called by the server */
     void sendMessage(const QString &message);
     void requestLogIn();
-    void sendPlayer(int num, const TeamInfo &team);
-    void sendLogin(int num, const TeamInfo &team);
+    void sendPlayer(int num, const BasicInfo &team);
+    void sendLogin(int num, const BasicInfo &team);
     void sendLogout(int num);
     bool isConnected() const;
 
