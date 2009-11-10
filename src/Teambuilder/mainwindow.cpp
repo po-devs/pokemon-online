@@ -3,6 +3,7 @@
 #include "menu.h"
 #include "teambuilder.h"
 #include "client.h"
+#include "serverchoice.h"
 
 MainWindow::MainWindow() : m_menu(0), m_TB(0)
 {
@@ -35,6 +36,9 @@ MainWindow::MainWindow() : m_menu(0), m_TB(0)
     if (settings.value("stylesheet").isNull()) {
 	settings.setValue("stylesheet", "db/default.qss");
     }
+    if (settings.value("default_server").isNull()) {
+	settings.setValue("default_server", "localhost");
+    }
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());
     QFile stylesheet(settings.value("stylesheet").toString());
@@ -61,7 +65,7 @@ void MainWindow::launchMenu()
 
     connect(m_menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
     connect(m_menu, SIGNAL(goToExit()), SLOT(close()));
-    connect(m_menu, SIGNAL(goToOnline()), SLOT(goOnline()));
+    connect(m_menu, SIGNAL(goToOnline()), SLOT(launchServerChoice()));
     connect(m_menu, SIGNAL(goToCredits()), SLOT(launchCredits()));
 }
 
@@ -71,7 +75,7 @@ void MainWindow::launchCredits()
 
 void MainWindow::launchTeamBuilder()
 {
-    m_TB = new TeamBuilder(trainerTeam(),this);
+    m_TB = new TeamBuilder(trainerTeam());
     connect(m_TB,SIGNAL(showDockAdvanced(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)),
             this,SLOT(setDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
     connect(m_TB, SIGNAL(done()), SLOT(launchMenu()));
@@ -80,9 +84,20 @@ void MainWindow::launchTeamBuilder()
     setMenuBar(m_TB->createMenuBar(this));
 }
 
-void MainWindow::goOnline()
+void MainWindow::launchServerChoice()
 {
-    m_client = new Client(trainerTeam());
+    m_choice = new ServerChoice();
+
+    connect(m_choice, SIGNAL(rejected()), SLOT(launchMenu()));
+    connect(m_choice, SIGNAL(textValueSelected(QString)), this, SLOT(goOnline(QString)));
+
+    setMenuBar(NULL);
+    setCentralWidget(m_choice);
+}
+
+void MainWindow::goOnline(const QString &url)
+{
+    m_client = new Client(trainerTeam(), url);
     setCentralWidget(m_client);
     setMenuBar(m_client->createMenuBar(this));
 

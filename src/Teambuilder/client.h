@@ -23,7 +23,7 @@ class Client : public QWidget
 {
     Q_OBJECT
 public:
-    Client(TrainerTeam *);
+    Client(TrainerTeam *, const QString &url);
 
     TrainerTeam *team();
     QMenuBar *createMenuBar(MainWindow *w);

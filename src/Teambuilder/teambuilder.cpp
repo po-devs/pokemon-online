@@ -82,7 +82,7 @@ QValidator::State QNickValidator::validate(QString &input, int& pos) const
 }
 
 
-TeamBuilder::TeamBuilder(TrainerTeam *pub_team,QWidget * parent) :QWidget(parent), m_team(pub_team),m_dockAdvanced(0)
+TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvanced(0)
 {
     setFixedSize(600, 650);
     setWindowTitle(tr("Teambuilder"));

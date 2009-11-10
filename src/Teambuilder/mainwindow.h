@@ -7,6 +7,7 @@
 class TB_Menu;
 class TeamBuilder;
 class Client;
+class ServerChoice;
 
 class MainWindow : public QMainWindow
 {
@@ -17,6 +18,7 @@ private:
     TB_Menu *m_menu;
     TeamBuilder *m_TB;
     Client *m_client;
+    ServerChoice *m_choice;
 
     TrainerTeam *trainerTeam();
 
@@ -28,7 +30,8 @@ public slots:
     void launchMenu();
     void launchCredits();
     void launchTeamBuilder();
-    void goOnline();
+    void goOnline(const QString &url);
+    void launchServerChoice();
 
     /* slots called by subwindows */
     void loadTeamDialog();
