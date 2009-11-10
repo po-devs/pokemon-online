@@ -78,7 +78,7 @@ signals:
     void showDockAdvanced(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
 
 public:
-    TeamBuilder(TrainerTeam *team,QWidget * parent);
+    TeamBuilder(TrainerTeam *team);
     ~TeamBuilder();
 
     TrainerTeam *trainerTeam();

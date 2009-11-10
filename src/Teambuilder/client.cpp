@@ -3,7 +3,7 @@
 
 #include "../PokemonInfo/pokemonstructs.h"
 
-Client::Client(TrainerTeam *t) : myteam(t), myrelay()
+Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
 {
     setFixedSize(800, 600);
 
@@ -25,7 +25,7 @@ Client::Client(TrainerTeam *t) : myteam(t), myrelay()
 
     initRelay();
 
-    relay().connectTo("localhost", 5080);
+    relay().connectTo(url, 5080);
 }
 
 void Client::sendText()
