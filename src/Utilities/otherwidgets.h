@@ -1,11 +1,7 @@
 #ifndef OTHERWIDGETS_H
 #define OTHERWIDGETS_H
 
-#include <QWidget>
-#include <QTableWidget>
-#include <QAbstractButton>
-#include <QPixmap>
-#include <QDockWidget>
+#include <QtGui>
 
 class QCompactTable : public QTableWidget
 {
@@ -59,6 +55,16 @@ protected:
     void paintEvent(QPaintEvent *e);
 private:
     QPixmap myBackground;
+};
+
+class QIdListWidgetItem : public QListWidgetItem
+{
+public:
+    QIdListWidgetItem(int id, const QString &text);
+
+    int id() const;
+private:
+    int myid;
 };
 
 #endif // OTHERWIDGETS_H

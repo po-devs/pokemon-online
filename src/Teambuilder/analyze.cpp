@@ -25,6 +25,17 @@ void Analyzer::login(const TrainerTeam &team)
     emit sendCommand(tosend);
 }
 
+void Analyzer::sendChallenge(int id)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(SendChallenge) << id;
+
+    emit sendCommand(tosend);
+}
+
 void Analyzer::sendMessage(const QString &message)
 {
     QByteArray tosend;

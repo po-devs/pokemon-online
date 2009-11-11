@@ -1,9 +1,5 @@
 #include "otherwidgets.h"
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QTabWidget>
-#include <QPainter>
-#include <QPaintEvent>
+#include <QtGui>
 
 QCompactTable::QCompactTable(int row, int column)
         : QTableWidget(row, column)
@@ -109,4 +105,14 @@ void QImageBackground::paintEvent(QPaintEvent *e)
     QPainter painter(this);
 
     painter.drawPixmap(e->rect(), myBackground, e->rect());
+}
+
+QIdListWidgetItem::QIdListWidgetItem(int id, const QString &text)
+	: QListWidgetItem(text), myid(id)
+{
+}
+
+int QIdListWidgetItem::id() const
+{
+    return myid;
 }

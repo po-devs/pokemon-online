@@ -16,7 +16,8 @@ SOURCES += main.cpp \
     analyze.cpp \
     serverchoice.cpp \
     ../PokemonInfo/battlestructs.cpp \
-    ../PokemonInfo/networkstructs.cpp
+    ../PokemonInfo/networkstructs.cpp \
+    challenge.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -30,6 +31,7 @@ HEADERS += teambuilder.h \
     analyze.h \
     serverchoice.h \
     ../PokemonInfo/battlestructs.h \
-    ../PokemonInfo/networkstructs.h
+    ../PokemonInfo/networkstructs.h \
+    challenge.h
 LIBS += -L../../bin \
     -lzip
