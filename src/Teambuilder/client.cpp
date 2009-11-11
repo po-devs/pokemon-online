@@ -42,10 +42,15 @@ void Client::showContextMenu(const QPoint &requested)
     {
 	QMenu *menu = new QMenu(this);
 
-	QAction *viewinfo = menu->addAction("See &Info", &mymapper, SLOT(map()));
-	mymapper.setMapping(viewinfo, item->id());
+	QSignalMapper *mymapper = new QSignalMapper(menu);
+	QAction *viewinfo = menu->addAction("See &Info", mymapper, SLOT(map()));
+	mymapper->setMapping(viewinfo, item->id());
+	QSignalMapper *mymapper2 = new QSignalMapper(menu);
+	QAction *challenge = menu->addAction("&Challenge", mymapper2, SLOT(map()));
+	mymapper2->setMapping(challenge, item->id());
 
-	connect(&mymapper, SIGNAL(mapped(int)), SLOT(seeInfo(int)));
+	connect(mymapper, SIGNAL(mapped(int)), SLOT(seeInfo(int)));
+	connect(mymapper2, SIGNAL(mapped(int)), SLOT(sendChallenge(int)));
 
 	menu->exec(mapToGlobal(requested));
     }

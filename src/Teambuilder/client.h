@@ -73,8 +73,6 @@ private:
     Analyzer myrelay;
     /* Challenge window */
     ChallengeWindow *mychallenge;
-    /* Utility */
-    QSignalMapper mymapper;
 
     QMap<int, BasicInfo> myplayersinfo;
     QTextEdit *mainChat();

@@ -53,6 +53,7 @@ signals:
     void messageReceived(const QString &mess);
     void teamReceived(const TeamInfo &team);
     void disconnected();
+    void challengeReceived(int id);
 public slots:
     /* slots called by the network */
     void error();

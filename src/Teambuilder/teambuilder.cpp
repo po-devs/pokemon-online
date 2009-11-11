@@ -50,6 +50,8 @@ QValidator::State QNickValidator::validate(QString &input, int& pos) const
     bool punct = false;
 
     for (int i = 0; i < input.length(); i++) {
+	if (input[i] == '%')
+	    return QValidator::Invalid;
 	if (input[i].isPunct()) {
 	    if (punct == true) {
 		//Error: two punctuations are not separated by a letter/number
@@ -440,6 +442,7 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
 
     first_column->addWidget(new QEntitled("&Pokemon", pokechoice));
     first_column->addWidget(new QEntitled("&Nickname", m_nick = new QLineEdit()));
+    m_nick->setValidator(new QNickValidator(this));
     connect(m_nick, SIGNAL(textEdited(QString)), SLOT(setNick(QString)));
     connect(m_nick, SIGNAL(textChanged(QString)),this,SLOT(setNick(QString)));
 

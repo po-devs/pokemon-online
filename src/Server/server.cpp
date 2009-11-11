@@ -8,6 +8,7 @@ Player::Player(QTcpSocket *sock) : myrelay(sock)
     connect(&relay(), SIGNAL(loggedIn(TeamInfo)), this, SLOT(loggedIn(TeamInfo)));
     connect(&relay(), SIGNAL(messageReceived(QString)), this, SLOT(recvMessage(QString)));
     connect(&relay(), SIGNAL(teamReceived(TeamInfo)), this, SLOT(recvTeam(TeamInfo)));
+    connect(&relay(), SIGNAL(challengeReceived(int)), this, SLOT(challengeReceived(int)));
 }
 
 Player::~Player()
@@ -85,6 +86,13 @@ int Player::id() const
     return myid;
 }
 
+void Player::challengeReceived(int id)
+{
+    if (!isLoggedIn() || id == this->id()) {
+	return;
+    }
+    emit challengeFromTo(this->id(), id);
+}
 
 
 void Player::sendMessage(const QString &mess)
@@ -177,7 +185,20 @@ void Server::incomingConnection()
     connect(player(id), SIGNAL(recvMessage(int, QString)), this, SLOT(recvMessage(int,QString)));
     connect(player(id), SIGNAL(recvTeam(int)), this, SLOT(recvTeam(int)));
     connect(player(id), SIGNAL(disconnected(int)), SLOT(disconnected(int)));
+    connect(player(id), SIGNAL(challengeFromTo(int,int)), SLOT(dealWithChallenge(int, int)));
 }
+
+void Server::dealWithChallenge(int from, int to)
+{
+    if (!playerExist(to) || !player(to)->isLoggedIn()) {
+	sendMessage(from, tr("That player is not online"));
+	return;
+    } else {
+	printLine(tr("Challenge issued from %1 to %2").arg(name(from)).arg(name(to)));
+	return;
+    }
+}
+
 
 void Server::sendPlayersList(int id)
 {
