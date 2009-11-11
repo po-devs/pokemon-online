@@ -1,10 +1,14 @@
 #include "client.h"
 #include "mainwindow.h"
+#include "challenge.h"
+#include "../Utilities/otherwidgets.h"
 
 #include "../PokemonInfo/pokemonstructs.h"
 
 Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
 {
+    mychallenge = NULL;
+
     setFixedSize(800, 600);
 
     QGridLayout *layout = new QGridLayout(this);
@@ -16,9 +20,11 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
     layout->addWidget(mysender = new QPushButton(tr("&Send")), 2, 2);
 
     myplayers->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
     myplayers->setSortingEnabled(true);
     mychat->setReadOnly(true);
 
+    connect(myplayers, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
@@ -26,6 +32,23 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
     initRelay();
 
     relay().connectTo(url, 5080);
+}
+
+void Client::showContextMenu(const QPoint &requested)
+{
+    QIdListWidgetItem *item = dynamic_cast<QIdListWidgetItem*>(myplayers->itemAt(requested));
+
+    if (item)
+    {
+	QMenu *menu = new QMenu(this);
+
+	QAction *viewinfo = menu->addAction("See &Info", &mymapper, SLOT(map()));
+	mymapper.setMapping(viewinfo, item->id());
+
+	connect(&mymapper, SIGNAL(mapped(int)), SLOT(seeInfo(int)));
+
+	menu->exec(mapToGlobal(requested));
+    }
 }
 
 void Client::sendText()
@@ -55,6 +78,48 @@ void Client::initRelay()
 void Client::messageReceived(const QString &mess)
 {
     printLine(mess);
+}
+
+bool Client::playerExist(int id) const
+{
+    return myplayersinfo.contains(id);
+}
+
+Player Client::player(int id) const
+{
+    Player ret = {id, info(id)};
+    return ret;
+}
+
+BasicInfo Client::info(int id) const
+{
+    return myplayersinfo[id];
+}
+
+void Client::seeInfo(int id)
+{
+    if (playerExist(id))
+    {
+	if (mychallenge != NULL) {
+	    mychallenge->raise();
+	    mychallenge->activateWindow();
+	} else {
+	    mychallenge = new ChallengeWindow(player(id));
+	    connect(mychallenge, SIGNAL(challenge(int)), SLOT(sendChallenge(int)));
+	    connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
+	    connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
+	}
+    }
+}
+
+void Client::sendChallenge(int id)
+{
+    relay().sendChallenge(id);
+}
+
+void Client::clearChallenge()
+{
+    mychallenge = NULL;
 }
 
 void Client::errorFromNetwork(int errnum, const QString &errorDesc)
@@ -112,7 +177,8 @@ void Client::playerReceived(const Player &p)
 {
     myplayersinfo.insert(p.id, p.team);
 
-    QListWidgetItem *item = new QListWidgetItem(p.team.name);
+    QIdListWidgetItem *item = new QIdListWidgetItem(p.id, p.team.name);
+
     myplayersitems.insert(p.id, item);
 
     myplayers->addItem(item);

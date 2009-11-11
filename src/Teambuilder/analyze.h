@@ -19,7 +19,8 @@ namespace NetworkCli
 	Logout,
 	SendMessage,
 	PlayersList,
-	SendTeam
+	SendTeam,
+	SendChallenge
     };
 
     enum ProtocolError
@@ -39,6 +40,7 @@ public:
     void sendMessage(const QString &message);
     void connectTo(const QString &host, quint16 port);
     void sendTeam(const TrainerTeam & team);
+    void sendChallenge(int id);
     bool isConnected() const;
 
 signals:

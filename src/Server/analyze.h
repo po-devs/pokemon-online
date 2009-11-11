@@ -17,7 +17,8 @@ namespace NetworkServ
 	Logout,
 	SendMessage,
 	PlayersList,
-	SendTeam
+	SendTeam,
+	SendChallenge
     };
 
     enum ProtocolError
