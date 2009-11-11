@@ -99,6 +99,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit teamReceived(team);
 	    break;
 	}
+	case SendChallenge:
+	{
+	    int id;
+	    in >> id;
+	    emit challengeReceived(id);
+	    break;
+	}
 	default:
 	    emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
 	    break;

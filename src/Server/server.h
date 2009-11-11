@@ -37,11 +37,13 @@ signals:
     void recvMessage(int id, const QString &mess);
     void disconnected(int id);
     void recvTeam(int id);
+    void challengeFromTo(int idfrom, int idto);
 public slots:
     void loggedIn(const TeamInfo &team);
     void recvMessage(const QString &mess);
     void recvTeam(const TeamInfo &team);
     void disconnected();
+    void challengeReceived(int id);
 private:
     TeamInfo myteam;
     Analyzer myrelay;
@@ -77,6 +79,7 @@ public slots:
     void recvMessage(int id, const QString &mess);
     void recvTeam(int id);
     void disconnected(int id);
+    void dealWithChallenge(int, int);
 
 private:
     QTcpServer myserver;
