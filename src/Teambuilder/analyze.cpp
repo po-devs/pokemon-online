@@ -36,6 +36,39 @@ void Analyzer::sendChallenge(int id)
     emit sendCommand(tosend);
 }
 
+void Analyzer::acceptChallenge(int id)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(AcceptChallenge) << id;
+
+    emit sendCommand(tosend);
+}
+
+void Analyzer::refuseChallenge(int id)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(RefuseChallenge) << id;
+
+    emit sendCommand(tosend);
+}
+
+void Analyzer::busyForChallenge(int id)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(BusyForChallenge) << id;
+
+    emit sendCommand(tosend);
+}
+
 void Analyzer::sendMessage(const QString &message)
 {
     QByteArray tosend;
@@ -103,6 +136,34 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    int id;
 	    in >> id;
 	    emit playerLogout(id);
+	    break;
+	}
+	case SendChallenge:
+	{
+	    int id;
+	    in >> id;
+	    emit challengeReceived(id);
+	    break;
+	}
+	case RefuseChallenge:
+	{
+	    int id;
+	    in >> id;
+	    emit challengeRefused(id);
+	    break;
+	}
+	case BusyForChallenge:
+	{
+	    int id;
+	    in >> id;
+	    emit challengeCanceled(id);
+	    break;
+	}
+	case EngageBattle:
+	{
+	    int id;
+	    in >> id;
+	    emit battleStarted(id);
 	    break;
 	}
 	default:

@@ -18,7 +18,11 @@ namespace NetworkServ
 	SendMessage,
 	PlayersList,
 	SendTeam,
-	SendChallenge
+	SendChallenge,
+	AcceptChallenge,
+	RefuseChallenge,
+	BusyForChallenge,
+	EngageBattle
     };
 
     enum ProtocolError
@@ -42,6 +46,10 @@ public:
     void sendLogin(int num, const BasicInfo &team);
     void sendLogout(int num);
     bool isConnected() const;
+    void sendChallenge(int id);
+    void sendBusyForChallenge(int id);
+    void sendRefuseChallenge(int id);
+    void sendAcceptChallenge(int id);
 
 signals:
     /* to send to the network */
@@ -54,6 +62,9 @@ signals:
     void teamReceived(const TeamInfo &team);
     void disconnected();
     void challengeReceived(int id);
+    void challengeAccepted(int id);
+    void challengeRefused(int id);
+    void busyForChallenge(int id);
 public slots:
     /* slots called by the network */
     void error();

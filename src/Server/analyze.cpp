@@ -57,6 +57,51 @@ void Analyzer::sendLogout(int num)
     emit sendCommand(tosend);
 }
 
+
+void Analyzer::sendChallenge(int num)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(SendChallenge) << num;
+
+    emit sendCommand(tosend);
+}
+
+void Analyzer::sendRefuseChallenge(int num)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(RefuseChallenge) << num;
+
+    emit sendCommand(tosend);
+}
+
+void Analyzer::sendBusyForChallenge(int num)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(BusyForChallenge) << num;
+
+    emit sendCommand(tosend);
+}
+
+void Analyzer::sendAcceptChallenge(int num)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(AcceptChallenge) << num;
+
+    emit sendCommand(tosend);
+}
+
 void Analyzer::error()
 {
     emit connectionError(socket().error(), socket().errorString());
@@ -66,7 +111,6 @@ bool Analyzer::isConnected() const
 {
     return socket().isConnected();
 }
-
 
 
 void Analyzer::commandReceived(const QByteArray &commandline)
@@ -104,6 +148,27 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    int id;
 	    in >> id;
 	    emit challengeReceived(id);
+	    break;
+	}
+	case AcceptChallenge:
+	{
+	    int id;
+	    in >> id;
+	    emit challengeAccepted(id);
+	    break;
+	}
+	case RefuseChallenge:
+	{
+	    int id;
+	    in >> id;
+	    emit challengeRefused(id);
+	    break;
+	}
+	case BusyForChallenge:
+	{
+	    int id;
+	    in >> id;
+	    emit busyForChallenge(id);
 	    break;
 	}
 	default:
