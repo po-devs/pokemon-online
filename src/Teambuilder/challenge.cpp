@@ -8,20 +8,23 @@ BaseChallengeWindow::BaseChallengeWindow(const Player &p, const QString &windowT
 {
     setWindowTitle(windowTitle.arg(p.team.name));
 
-    setAttribute(Qt::WA_DeleteOnClose);
+    setAttribute(Qt::WA_DeleteOnClose, true);
 
     QGridLayout *mylayout = new QGridLayout(this);
     QPushButton *challenge, *goback;
 
-    mylayout->addWidget( new QEntitled("Player Info: ", new QLabel(p.team.info)),0,0,1,2 );
+    QGroupBox *box = new QGroupBox(tr("Player Info"));
+    QVBoxLayout *boxlayout = new QVBoxLayout(box);
+    boxlayout->addWidget(new QLabel(p.team.info));
+
+    mylayout->addWidget( box ,0,0,1,2 );
     mylayout->addWidget( challenge = new QPushButton(buttonOk), 1,0);
     mylayout->addWidget( goback = new QPushButton(buttonNo), 1,1);
 
     connect(challenge, SIGNAL(clicked()), SLOT(onChallenge()));
     connect(goback, SIGNAL(clicked()), SLOT(onCancel()));
-    connect(this, SIGNAL(destroyed()), SLOT(onCancel()));
 
-    id = p.id;
+    myid = p.id;
 
     show();
 
@@ -30,20 +33,30 @@ BaseChallengeWindow::BaseChallengeWindow(const Player &p, const QString &windowT
     }
 }
 
+void BaseChallengeWindow::closeEvent(QCloseEvent *)
+{
+    onCancel();
+}
+
+int BaseChallengeWindow::id()
+{
+    return myid;
+}
+
 
 void BaseChallengeWindow::onChallenge()
 {
-    emit challenge(id);
-    id = -1;
+    emit challenge(id());
+    myid = -1;
     close();
 }
 
 void BaseChallengeWindow::onCancel()
 {
-    qDebug("arg");
-    if (id != -1) {
-	emit cancel(id);
+    if (id() != -1) {
+	emit cancel(id());
     }
+    close();
 }
 
 ChallengeWindow::ChallengeWindow(const Player &p, QWidget *parent)

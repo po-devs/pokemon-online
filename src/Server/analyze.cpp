@@ -1,6 +1,6 @@
 #include "analyze.h"
 #include "network.h"
-#include "server.h"
+#include "player.h"
 #include "../PokemonInfo/pokemonstructs.h"
 
 using namespace NetworkServ;
@@ -20,6 +20,17 @@ void Analyzer::sendMessage(const QString &message)
     out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(SendMessage) << message;
+
+    emit sendCommand(tosend);
+}
+
+void Analyzer::sendCancelChallenge(int id)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(CancelChallenge) << id;
 
     emit sendCommand(tosend);
 }

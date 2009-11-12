@@ -156,6 +156,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	{
 	    int id;
 	    in >> id;
+	    emit challengeBusied(id);
+	    break;
+	}
+	case CancelChallenge:
+	{
+	    int id;
+	    in >> id;
 	    emit challengeCanceled(id);
 	    break;
 	}
