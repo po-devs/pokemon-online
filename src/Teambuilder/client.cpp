@@ -78,6 +78,10 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(playerReceived(Player)), SLOT(playerReceived(Player)));
     connect(&relay(), SIGNAL(playerLogin(Player)), SLOT(playerLogin(Player)));
     connect(&relay(), SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
+    connect(&relay(), SIGNAL(challengeReceived(int)), SLOT(seeChallenge(int)));
+    connect(&relay(), SIGNAL(challengeRefused(int)), SLOT(challengeRefused(int)));
+    connect(&relay(), SIGNAL(challengeCanceled(int)), SLOT(challengeCanceled(int)));
+    connect(&relay(), SIGNAL(battleStarted(int)), SLOT(battleStarted(int)));
 }
 
 void Client::messageReceived(const QString &mess)
@@ -115,6 +119,71 @@ void Client::seeInfo(int id)
 	    connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
 	}
     }
+}
+
+void Client::seeChallenge(int id)
+{
+    if (playerExist(id))
+    {
+	if (busy()) {
+	    /* Warns the server that we are to busy to accept the challenge */
+	    relay().busyForChallenge(id);
+	    mychallenge->raise();
+	    mychallenge->activateWindow();
+	} else {
+	    mychallenge = new ChallengedWindow(player(id));
+	    connect(mychallenge, SIGNAL(challenge(int)), SLOT(acceptChallenge(int)));
+	    connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
+	    connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
+	    connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
+	}
+    }
+}
+
+QString Client::name(int id) const
+{
+    return info(id).name;
+}
+
+void Client::challengeRefused(int id)
+{
+    if (playerExist(id))
+    {
+	printLine(tr("%1 refused your challenge.").arg(name(id)));
+    }
+}
+
+void Client::challengeCanceled(int id)
+{
+    if (playerExist(id))
+    {
+	printLine(tr("%1 is busy.").arg(name(id)));
+    }
+}
+
+void Client::battleStarted(int id)
+{
+    printLine(tr("Yo! Fake Battle Started with that %1").arg(id));
+}
+
+bool Client::busy() const
+{
+    return challengeWindowOpen();
+}
+
+bool Client::challengeWindowOpen() const
+{
+    return mychallenge != 0;
+}
+
+void Client::acceptChallenge(int id)
+{
+    relay().acceptChallenge(id);
+}
+
+void Client::refuseChallenge(int id)
+{
+    relay().refuseChallenge(id);
 }
 
 void Client::sendChallenge(int id)

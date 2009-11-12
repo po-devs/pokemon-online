@@ -30,6 +30,17 @@ public:
 
     bool connected() const;
 
+    bool isChallenged() const;
+    bool hasChallenged() const;
+    int challengedBy() const;
+    int challenged() const;
+
+    /* Sends the challenge, returns false if can't even send the challenge */
+    bool challenge(int id);
+    void sendBusyForChallenge(int id);
+    void startBattle(int id);
+    void sendChallengeRefusal(int id);
+
     Analyzer& relay();
     const Analyzer& relay() const;
 signals:
@@ -38,16 +49,27 @@ signals:
     void disconnected(int id);
     void recvTeam(int id);
     void challengeFromTo(int idfrom, int idto);
+    void challengeAcc(int idfrom, int idto);
+    void challengeRef(int idfrom, int idto);
+    void busyForChallenge(int idfrom, int idto);
 public slots:
     void loggedIn(const TeamInfo &team);
     void recvMessage(const QString &mess);
     void recvTeam(const TeamInfo &team);
     void disconnected();
     void challengeReceived(int id);
+    void challengeRefused(int id);
+    void challengeAccepted(int id);
+    void busyForChallenge(int id);
 private:
     TeamInfo myteam;
     Analyzer myrelay;
     int myid;
+
+    int m_challenged;
+    int m_challengedby;
+    bool m_hasChallenged;
+    bool m_isChallenged;
 
     bool m_isLoggedIn;
 };
@@ -71,6 +93,7 @@ public:
     void sendLogin(int id);
     void sendLogout(int id);
     bool playerExist(int id) const;
+    void startBattle(int id);
 public slots:
     /* means a new connection is about to start from the TCP server */
     void incomingConnection();
@@ -80,6 +103,9 @@ public slots:
     void recvTeam(int id);
     void disconnected(int id);
     void dealWithChallenge(int, int);
+    void challengeAccepted(int, int);
+    void challengeRefused(int, int);
+    void busyForChallenge(int, int);
 
 private:
     QTcpServer myserver;

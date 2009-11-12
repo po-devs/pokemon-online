@@ -3,21 +3,48 @@
 Player::Player(QTcpSocket *sock) : myrelay(sock)
 {
     m_isLoggedIn = false;
+    m_isChallenged = false;
+    m_hasChallenged = false;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(TeamInfo)), this, SLOT(loggedIn(TeamInfo)));
     connect(&relay(), SIGNAL(messageReceived(QString)), this, SLOT(recvMessage(QString)));
     connect(&relay(), SIGNAL(teamReceived(TeamInfo)), this, SLOT(recvTeam(TeamInfo)));
     connect(&relay(), SIGNAL(challengeReceived(int)), this, SLOT(challengeReceived(int)));
+    connect(&relay(), SIGNAL(challengeRefused(int)), this, SLOT(challengeRefused(int)));
+    connect(&relay(), SIGNAL(challengeAccepted(int)), this, SLOT(challengeAccepted(int)));
+    connect(&relay(), SIGNAL(busyForChallenge(int)), this, SLOT(busyForChallenge(int)));
 }
 
 Player::~Player()
 {
 }
 
+
+
 bool Player::connected() const
 {
     return relay().isConnected();
+}
+
+bool Player::isChallenged() const
+{
+    return m_isChallenged;
+}
+
+bool Player::hasChallenged() const
+{
+    return m_hasChallenged;
+}
+
+int Player::challengedBy() const
+{
+    return m_challengedby;
+}
+
+int Player::challenged() const
+{
+    return m_challenged;
 }
 
 bool Player::isLoggedIn() const
@@ -91,13 +118,81 @@ void Player::challengeReceived(int id)
     if (!isLoggedIn() || id == this->id()) {
 	return;
     }
+
     emit challengeFromTo(this->id(), id);
 }
 
+bool Player::challenge(int idto)
+{
+    if (isChallenged())
+	return false;
+
+    relay().sendChallenge(idto);
+    m_isChallenged = true;
+    m_challengedby = idto;
+
+    return true;
+}
+
+void Player::busyForChallenge(int id)
+{
+    if (!isLoggedIn() || id == this->id() || !isChallenged() || challengedBy() != id) {
+	return;
+    }
+
+    emit busyForChallenge(this->id(), id);
+
+    m_isChallenged = false;
+}
+
+void Player::challengeAccepted(int id)
+{
+    if (!isLoggedIn() || id == this->id()) {
+	return;
+    }
+    if (!isChallenged()) {
+	sendMessage(tr("You are not challenged by anyone"));
+    }
+    if (challengedBy() != id) {
+	sendMessage(tr("You are not challenged by that player"));
+    }
+    emit challengeAcc(this->id(), id);
+}
+
+void Player::challengeRefused(int id)
+{
+    if (!isLoggedIn() || id == this->id() || !isChallenged() || challengedBy() != id) {
+	return;
+    }
+
+    emit challengeRef(this->id(), id);
+
+    m_isChallenged = false;
+}
+
+void Player::sendBusyForChallenge(int id)
+{
+    relay().sendBusyForChallenge(id);
+}
 
 void Player::sendMessage(const QString &mess)
 {
     relay().sendMessage(mess);
+}
+
+void Player::startBattle(int id)
+{
+    relay().sendMessage(tr("Fake battle started with player %1").arg(id));
+
+    if (isChallenged() && challengedBy() != id) {
+	emit busyForChallenge(this->id(), id);
+    }
+    m_isChallenged = false;
+}
+
+void Player::sendChallengeRefusal(int id)
+{
+    relay().sendRefuseChallenge(id);
 }
 
 TeamInfo & Player::team()
@@ -186,6 +281,9 @@ void Server::incomingConnection()
     connect(player(id), SIGNAL(recvTeam(int)), this, SLOT(recvTeam(int)));
     connect(player(id), SIGNAL(disconnected(int)), SLOT(disconnected(int)));
     connect(player(id), SIGNAL(challengeFromTo(int,int)), SLOT(dealWithChallenge(int, int)));
+    connect(player(id), SIGNAL(busyForChallenge(int,int)), this, SLOT(busyForChallenge(int,int)));
+    connect(player(id), SIGNAL(challengeAcc(int,int)), this, SLOT(challengeAccepted(int,int)));
+    connect(player(id), SIGNAL(challengeRef(int,int)), this, SLOT(challengeRefused(int,int)));
 }
 
 void Server::dealWithChallenge(int from, int to)
@@ -194,8 +292,43 @@ void Server::dealWithChallenge(int from, int to)
 	sendMessage(from, tr("That player is not online"));
 	return;
     } else {
-	printLine(tr("Challenge issued from %1 to %2").arg(name(from)).arg(name(to)));
+	if (player(to)->challenge(from)) {
+	    printLine(tr("Challenge issued from %1 to %2").arg(name(from)).arg(name(to)));
+	} else {
+	    player(from)->sendBusyForChallenge(to);
+	}
+    }
+}
+
+void Server::challengeAccepted(int from, int to)
+{
+    if (!playerExist(to) || !player(to)->isLoggedIn()) {
+	sendMessage(from, tr("That player is not online"));
 	return;
+    } else {
+	printLine(tr("Battle between %1 and %2 started").arg(name(from)).arg(name(to)));
+	player(from)->startBattle(to);
+	player(to)->startBattle(from);
+    }
+}
+
+void Server::challengeRefused(int from, int to)
+{
+    if (!playerExist(to) || !player(to)->isLoggedIn()) {
+	return;
+    } else {
+	printLine(tr("Player %1 refused challenge from %2").arg(name(from)).arg(name(to)));
+	player(to)->sendChallengeRefusal(from);
+    }
+}
+
+void Server::busyForChallenge(int from, int to)
+{
+    if (!playerExist(to) || !player(to)->isLoggedIn() || !player(to)->isChallenged() || player(to)->challengedBy() != from) {
+	return;
+    } else {
+	printLine(tr("Player %1 is busy so can't answer challenge from %2").arg(name(from)).arg(name(to)));
+	player(to)->sendBusyForChallenge(from);
     }
 }
 

@@ -14,7 +14,7 @@ public:
     BasicInfo team;
 };
 
-class ChallengeWindow;
+class BaseChallengeWindow;
 class QIdListWidgetItem;
 
 QDataStream & operator >> (QDataStream &in, Player &p);
@@ -33,6 +33,9 @@ public:
 
     void printLine(const QString &line);
     bool playerExist(int id) const;
+    QString name(int id) const;
+    bool busy() const;
+    bool challengeWindowOpen() const;
     Player player(int id) const;
     BasicInfo info(int id) const;
 public slots:
@@ -50,7 +53,16 @@ public slots:
     void sendChallenge(int id);
     /* removes the pointer to the challenge window when it is destroyed */
     void clearChallenge();
+    /* sends the server a "Accept Challenge" notice */
+    void acceptChallenge(int id);
+    void refuseChallenge(int id);
+    /* Display the info for that player */
     void seeInfo(int id);
+    /* Challenge info by the server */
+    void seeChallenge(int id);
+    void challengeRefused(int id);
+    void challengeCanceled(int id);
+    void battleStarted(int id);
     /* shows the context menu for that player */
     void showContextMenu(const QPoint&);
 signals:
@@ -71,8 +83,8 @@ private:
     QPushButton *mysender;
     /* Network Relay */
     Analyzer myrelay;
-    /* Challenge window */
-    ChallengeWindow *mychallenge;
+    /* Challenge window , to emit or to receive*/
+    BaseChallengeWindow *mychallenge;
 
     QMap<int, BasicInfo> myplayersinfo;
     QTextEdit *mainChat();
