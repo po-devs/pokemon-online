@@ -62,6 +62,7 @@ public slots:
     void seeChallenge(int id);
     void challengeRefused(int id);
     void challengeCanceled(int id);
+    void challengeBusied(int id);
     void battleStarted(int id);
     /* shows the context menu for that player */
     void showContextMenu(const QPoint&);

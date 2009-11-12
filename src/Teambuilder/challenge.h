@@ -10,6 +10,10 @@ class BaseChallengeWindow : public QWidget
     Q_OBJECT
 public:
     BaseChallengeWindow(const Player &p, const QString &windowTitle, const QString &buttonOk, const QString &buttonNo, QWidget *parent=0);
+
+    int id();
+    /* defined once again so we can make a distinction between user closure and programmed closure */
+    void closeEvent(QCloseEvent *event);
 signals:
     void challenge(int id);
     void cancel(int id);
@@ -17,7 +21,7 @@ public slots:
     void onChallenge();
     void onCancel();
 private:
-    int id;
+    int myid;
 };
 
 class ChallengeWindow : public BaseChallengeWindow

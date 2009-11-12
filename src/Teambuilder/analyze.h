@@ -24,6 +24,7 @@ namespace NetworkCli
 	AcceptChallenge,
 	RefuseChallenge,
 	BusyForChallenge,
+	CancelChallenge,
 	EngageBattle
     };
 
@@ -68,6 +69,7 @@ signals:
     void challengeReceived(int id);
     void challengeRefused(int id);
     void challengeCanceled(int id);
+    void challengeBusied(int id);
     void battleStarted(int id);
 
 public slots:

@@ -22,6 +22,7 @@ namespace NetworkServ
 	AcceptChallenge,
 	RefuseChallenge,
 	BusyForChallenge,
+	CancelChallenge,
 	EngageBattle
     };
 
@@ -50,6 +51,7 @@ public:
     void sendBusyForChallenge(int id);
     void sendRefuseChallenge(int id);
     void sendAcceptChallenge(int id);
+    void sendCancelChallenge(int id);
 
 signals:
     /* to send to the network */

@@ -80,6 +80,7 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(&relay(), SIGNAL(challengeReceived(int)), SLOT(seeChallenge(int)));
     connect(&relay(), SIGNAL(challengeRefused(int)), SLOT(challengeRefused(int)));
+    connect(&relay(), SIGNAL(challengeBusied(int)), SLOT(challengeBusied(int)));
     connect(&relay(), SIGNAL(challengeCanceled(int)), SLOT(challengeCanceled(int)));
     connect(&relay(), SIGNAL(battleStarted(int)), SLOT(battleStarted(int)));
 }
@@ -126,7 +127,7 @@ void Client::seeChallenge(int id)
     if (playerExist(id))
     {
 	if (busy()) {
-	    /* Warns the server that we are to busy to accept the challenge */
+	    /* Warns the server that we are too busy to accept the challenge */
 	    relay().busyForChallenge(id);
 	    mychallenge->raise();
 	    mychallenge->activateWindow();
@@ -153,11 +154,22 @@ void Client::challengeRefused(int id)
     }
 }
 
-void Client::challengeCanceled(int id)
+void Client::challengeBusied(int id)
 {
     if (playerExist(id))
     {
 	printLine(tr("%1 is busy.").arg(name(id)));
+    }
+}
+
+void Client::challengeCanceled(int id)
+{
+    if (playerExist(id))
+    {
+	printLine(tr("%1 canceled their challenge").arg(name(id)));
+	if (mychallenge->id() == id) {
+	    mychallenge->close();
+	}
     }
 }
 
