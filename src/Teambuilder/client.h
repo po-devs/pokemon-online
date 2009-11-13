@@ -34,7 +34,9 @@ public:
     void printLine(const QString &line);
     bool playerExist(int id) const;
     QString name(int id) const;
+    QString ownName() const;
     bool busy() const;
+    int id(const QString &name) const;
     bool challengeWindowOpen() const;
     Player player(int id) const;
     BasicInfo info(int id) const;
@@ -88,6 +90,7 @@ private:
     BaseChallengeWindow *mychallenge;
 
     QMap<int, BasicInfo> myplayersinfo;
+    QMap<QString, int> mynames;
     QTextEdit *mainChat();
     Analyzer & relay();
 

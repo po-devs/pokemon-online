@@ -2,7 +2,7 @@
 #include "mainwindow.h"
 #include "challenge.h"
 #include "../Utilities/otherwidgets.h"
-
+#include "../Utilities/functions.h"
 #include "../PokemonInfo/pokemonstructs.h"
 
 Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
@@ -256,7 +256,13 @@ void Client::playerLogout(int id)
     delete myplayers->takeItem(myplayers->row(myplayersitems[id]));
 
     myplayersitems.remove(id);
+    mynames.remove(name);
     myplayersinfo.remove(id);
+}
+
+QString Client::ownName() const
+{
+    return myteam->trainerNick();
 }
 
 void Client::playerReceived(const Player &p)
@@ -266,13 +272,37 @@ void Client::playerReceived(const Player &p)
     QIdListWidgetItem *item = new QIdListWidgetItem(p.id, p.team.name);
 
     myplayersitems.insert(p.id, item);
+    mynames.insert(name(p.id), p.id);
 
     myplayers->addItem(item);
 }
 
 void Client::printLine(const QString &line)
 {
-    mainChat()->insertPlainText(line + "\n");
+    /* Let's add colors */
+    int pos = line.indexOf(':');
+    if ( pos != -1 ) {
+	QString beg = line.left(pos);
+	QString end = line.right(line.length()-pos-1);
+	if (id(beg) == -1) {
+	    mainChat()->insertHtml("<span style='color:cyan'><b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+	} else if (beg == ownName()) {
+	    mainChat()->insertHtml("<span style='color:#5811b1'><b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+	 } else {
+	    mainChat()->insertHtml("<span style='color:green'><b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+	}
+    } else {
+	mainChat()->insertPlainText(line + "\n");
+    }
+}
+
+int Client::id(const QString &name) const
+{
+    if (mynames.contains(name)) {
+	return mynames[name];
+    } else {
+	return -1;
+    }
 }
 
 QDataStream & operator >> (QDataStream &in, Player &p)
