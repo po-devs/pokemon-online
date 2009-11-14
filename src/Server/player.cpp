@@ -4,6 +4,7 @@ Player::Player(QTcpSocket *sock) : myrelay(sock)
 {
     m_isLoggedIn = false;
     m_isChallenged = false;
+    m_isBattling = false;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(TeamInfo)), this, SLOT(loggedIn(TeamInfo)));
@@ -125,9 +126,19 @@ void Player::challengeIssued(int id)
     m_challenged.insert(id);
 }
 
+bool Player::battling() const
+{
+    return m_isBattling;
+}
+
+bool Player::busy() const
+{
+    return battling() || isChallenged();
+}
+
 bool Player::challenge(int idto)
 {
-    if (isChallenged())
+    if (busy())
 	return false;
 
     relay().sendChallenge(idto);
@@ -191,11 +202,14 @@ void Player::sendMessage(const QString &mess)
 
 void Player::startBattle(int id)
 {
-    relay().sendMessage(tr("Fake battle started with player %1").arg(id));
+    relay().engageBattle(id);
+
+    m_isBattling = true;
 
     if (isChallenged() && challengedBy() != id) {
 	emit busyForChallenge(this->id(), id);
     }
+
     m_isChallenged = false;
     cancelChallenges();
 }

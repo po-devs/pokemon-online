@@ -33,6 +33,8 @@ public:
     bool isChallenged() const;
     bool hasChallenged() const;
     int challengedBy() const;
+    bool battling() const;
+    bool busy() const;
 
     /* Sends the challenge, returns false if can't even send the challenge */
     bool challenge(int id);
@@ -74,6 +76,7 @@ private:
     QSet<int> m_challenged;
     int m_challengedby;
     bool m_isChallenged;
+    bool m_isBattling;
 
     bool m_isLoggedIn;
 

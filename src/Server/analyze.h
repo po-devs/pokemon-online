@@ -23,7 +23,10 @@ namespace NetworkServ
 	RefuseChallenge,
 	BusyForChallenge,
 	CancelChallenge,
-	EngageBattle
+	EngageBattle,
+	ForfeitBattle,
+	WinBattle,
+	LoseBattle
     };
 
     enum ProtocolError
@@ -52,6 +55,7 @@ public:
     void sendRefuseChallenge(int id);
     void sendAcceptChallenge(int id);
     void sendCancelChallenge(int id);
+    void engageBattle(int id);
 
 signals:
     /* to send to the network */
@@ -63,6 +67,7 @@ signals:
     void messageReceived(const QString &mess);
     void teamReceived(const TeamInfo &team);
     void disconnected();
+    void forfeitBattle();
     void challengeReceived(int id);
     void challengeAccepted(int id);
     void challengeRefused(int id);

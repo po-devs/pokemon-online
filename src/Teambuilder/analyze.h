@@ -25,7 +25,10 @@ namespace NetworkCli
 	RefuseChallenge,
 	BusyForChallenge,
 	CancelChallenge,
-	EngageBattle
+	EngageBattle,
+	ForfeitBattle,
+	WinBattle,
+	LoseBattle
     };
 
     enum ProtocolError
