@@ -6,6 +6,9 @@
 #include "../PokemonInfo/networkstructs.h"
 
 class MainWindow;
+class BaseChallengeWindow;
+class QIdListWidgetItem;
+class BattleWindow;
 
 class Player
 {
@@ -13,9 +16,6 @@ public:
     int id;
     BasicInfo team;
 };
-
-class BaseChallengeWindow;
-class QIdListWidgetItem;
 
 QDataStream & operator >> (QDataStream &in, Player &p);
 QDataStream & operator << (QDataStream &out, const Player &p);
@@ -35,6 +35,7 @@ public:
     bool playerExist(int id) const;
     QString name(int id) const;
     QString ownName() const;
+    bool battling() const;
     bool busy() const;
     int id(const QString &name) const;
     bool challengeWindowOpen() const;
@@ -55,6 +56,7 @@ public slots:
     void sendChallenge(int id);
     /* removes the pointer to the challenge window when it is destroyed */
     void clearChallenge();
+    void clearBattle();
     /* sends the server a "Accept Challenge" notice */
     void acceptChallenge(int id);
     void refuseChallenge(int id);
@@ -88,6 +90,7 @@ private:
     Analyzer myrelay;
     /* Challenge window , to emit or to receive*/
     BaseChallengeWindow *mychallenge;
+    BattleWindow *mybattle;
 
     QMap<int, BasicInfo> myplayersinfo;
     QMap<QString, int> mynames;

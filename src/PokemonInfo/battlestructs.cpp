@@ -74,3 +74,7 @@ void PokeBattle::resetStatMods()
 	setStatMod(i, 0);
     }
 }
+
+TeamBattle::TeamBattle()
+{
+}

@@ -1,6 +1,7 @@
 #include "client.h"
 #include "mainwindow.h"
 #include "challenge.h"
+#include "battlewindow.h"
 #include "../Utilities/otherwidgets.h"
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/pokemonstructs.h"
@@ -8,6 +9,7 @@
 Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
 {
     mychallenge = NULL;
+    mybattle = NULL;
 
     setFixedSize(800, 600);
 
@@ -85,6 +87,16 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(battleStarted(int)), SLOT(battleStarted(int)));
 }
 
+bool Client::battling() const
+{
+    return mybattle != NULL;
+}
+
+void Client::clearBattle()
+{
+    mybattle = NULL;
+}
+
 void Client::messageReceived(const QString &mess)
 {
     printLine(mess);
@@ -105,6 +117,7 @@ BasicInfo Client::info(int id) const
 {
     return myplayersinfo[id];
 }
+
 
 void Client::seeInfo(int id)
 {
@@ -175,12 +188,13 @@ void Client::challengeCanceled(int id)
 
 void Client::battleStarted(int id)
 {
-    printLine(tr("Yo! Fake Battle Started with that %1").arg(id));
+    mybattle = new BattleWindow(name(id));
+    connect(mybattle, SIGNAL(destroyed()), this, SLOT(clearBattle()));
 }
 
 bool Client::busy() const
 {
-    return challengeWindowOpen();
+    return challengeWindowOpen() || battling();
 }
 
 bool Client::challengeWindowOpen() const

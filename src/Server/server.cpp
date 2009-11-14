@@ -44,7 +44,7 @@ void Server::loggedIn(int id, const QString &name)
     sendPlayersList(id);
     sendLogin(id);
 
-    sendMessage(id, tr("Welcome to our server, %1").arg(name));
+    sendMessage(id, tr("Welcome Message: Welcome to our server, %1").arg(name));
 }
 
 void Server::sendMessage(int id, const QString &message)

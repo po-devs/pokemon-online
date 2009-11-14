@@ -35,6 +35,18 @@ void Analyzer::sendCancelChallenge(int id)
     emit sendCommand(tosend);
 }
 
+void Analyzer::engageBattle(int id)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(EngageBattle) << id;
+
+    emit sendCommand(tosend);
+}
+
+
 void Analyzer::sendPlayer(int num, const BasicInfo &team)
 {
     QByteArray tosend;
@@ -180,6 +192,11 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    int id;
 	    in >> id;
 	    emit busyForChallenge(id);
+	    break;
+	}
+	case ForfeitBattle:
+	{
+	    emit forfeitBattle();
 	    break;
 	}
 	default:

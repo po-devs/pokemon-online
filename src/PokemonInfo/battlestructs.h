@@ -67,6 +67,7 @@ private:
     qint8 stat_mods[5]; /* -6, -5, -4, ..., 0, 1, 2, ..., 6 */
     quint16 m_lifepoints;
     quint16 m_totalLifepoints;
+    QString m_nick;
 };
 
 class TeamBattle
