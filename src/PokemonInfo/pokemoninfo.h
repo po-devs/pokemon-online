@@ -16,6 +16,7 @@ private:
     static void loadNames();
     static QList<int> getMoves(const QString &filename, int Pokenum);
     static QString path(const QString &filename);
+    static int calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev);
 public:
 
     /* directory where all the data is */
@@ -36,6 +37,8 @@ public:
     static QList<int> SpecialMoves(int pokenum);
     static PokeBaseStats BaseStats(int pokenum);
     static QList<int> Abilities(int pokenum);
+    static int Stat(int stat, quint8 base_stat, int level, quint8 dv, quint8 ev);
+    static int FullStat(int nature, int stat, quint8 base_stat, int level, quint8 dv, quint8 ev);
 };
 
 class MoveInfo

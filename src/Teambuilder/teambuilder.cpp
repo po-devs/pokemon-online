@@ -89,6 +89,8 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvance
     setFixedSize(600, 650);
     setWindowTitle(tr("Teambuilder"));
 
+    //setStyleSheet("background: qradialgradient(cx:0, cy:0, radius: 1, fx:0.5, fy:0.5, stop:0 white, stop:1 blue)");
+
     QGridLayout *layout = new QGridLayout(this);
 
     m_trainer = new QPushButton("&Trainer", this);
