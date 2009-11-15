@@ -1,5 +1,6 @@
 #include "server.h"
 #include "player.h"
+#include "battle.h"
 
 Server::Server(quint16 port)
 {
@@ -109,10 +110,39 @@ void Server::challengeAccepted(int from, int to)
 	sendMessage(from, tr("That player is not online"));
 	return;
     } else {
-	printLine(tr("Battle between %1 and %2 started").arg(name(from)).arg(name(to)));
-	player(from)->startBattle(to);
-	player(to)->startBattle(from);
+	startBattle(from, to);
     }
+}
+
+void Server::startBattle(int id1, int id2)
+{
+    printLine(tr("Battle between %1 and %2 started").arg(name(id1)).arg(name(id2)));
+
+    BattleSituation *battle = new BattleSituation(*player(id1), *player(id2));
+
+    mybattles.insert(id1, battle);
+    mybattles.insert(id2, battle);
+
+    player(id1)->startBattle(id2, battle->pubteam(id1));
+    player(id2)->startBattle(id1, battle->pubteam(id2));
+}
+
+void Server::battleResult(int desc, int winner, int loser)
+{
+    if (desc == Forfeit) {
+	printLine( tr("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
+	player(winner)->battleResult(Win);
+	player(loser)->battleResult(Forfeit);
+
+	removeBattle(winner, loser);
+    }
+}
+
+void Server::removeBattle(int winner, int loser)
+{
+    delete mybattles[winner];
+    mybattles.remove(winner);
+    mybattles.remove(loser);
 }
 
 void Server::challengeRefused(int from, int to)

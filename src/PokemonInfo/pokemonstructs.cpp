@@ -796,7 +796,6 @@ QDataStream & operator << (QDataStream & out, const Team & team)
     for(int index = 0;index<6;index++)
     {
         const PokeTeam & poke = team.poke(index);
-        out << index;
         out << poke;
     }
     return out;
@@ -861,15 +860,9 @@ QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
 
 QDataStream & operator >> (QDataStream & in, Team & team)
 {
-    int countIndex;
-    for(countIndex=0;countIndex<6;countIndex++)
+    for(int i=0;i<6;i++)
     {
-        int index;
-        in >> index;
-        if(index == countIndex)
-        {
-            in >> team.poke(index);
-        }
+	in >> team.poke(i);
     }
 
     return in;

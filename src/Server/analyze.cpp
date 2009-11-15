@@ -2,6 +2,7 @@
 #include "network.h"
 #include "player.h"
 #include "../PokemonInfo/pokemonstructs.h"
+#include "../PokemonInfo/battlestructs.h"
 
 using namespace NetworkServ;
 
@@ -35,13 +36,13 @@ void Analyzer::sendCancelChallenge(int id)
     emit sendCommand(tosend);
 }
 
-void Analyzer::engageBattle(int id)
+void Analyzer::engageBattle(int id, const TeamBattle &team)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
 
-    out << uchar(EngageBattle) << id;
+    out << uchar(EngageBattle) << id << team;
 
     emit sendCommand(tosend);
 }
@@ -125,6 +126,17 @@ void Analyzer::sendAcceptChallenge(int num)
     emit sendCommand(tosend);
 }
 
+void Analyzer::sendBattleResult(int res)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(BattleFinished) << res;
+
+    emit sendCommand(tosend);
+}
+
 void Analyzer::error()
 {
     emit connectionError(socket().error(), socket().errorString());
@@ -194,7 +206,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit busyForChallenge(id);
 	    break;
 	}
-	case ForfeitBattle:
+	case BattleFinished:
 	{
 	    emit forfeitBattle();
 	    break;

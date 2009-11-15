@@ -21,6 +21,13 @@ namespace Pokemon
     };
 }
 
+enum BattleResult
+{
+    Forfeit,
+    Win,
+    Tie
+};
+
 class BattleMove
 {
 public:
@@ -95,6 +102,7 @@ public:
     TeamBattle();
     /* removes the invalid pokemons */
     TeamBattle(const TeamInfo &other);
+    void init(const TeamInfo &other);
 
     PokeBattle& poke(int i);
     const PokeBattle& poke(int i) const;

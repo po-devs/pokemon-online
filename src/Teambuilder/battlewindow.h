@@ -11,7 +11,7 @@ class BattleWindow : public QWidget
 {
     Q_OBJECT
 public:
-    BattleWindow(const QString &opponent);
+    BattleWindow(const QString &opponent, const TeamBattle &myteam);
 
     /* analyzes the command and calls the right function */
     void dealWithCommand(const QByteArray &);
@@ -24,6 +24,7 @@ public slots:
     void switchToPokeZone();
 signals:
     void battleCommand(const QByteArray &);
+    void forfeit();
 private:
     QStackedWidget *mystack;
     AttackZone *myazones[6];
@@ -41,7 +42,7 @@ class AttackZone : public QWidget
 {
     Q_OBJECT
 public:
-    AttackZone();
+    AttackZone(const PokeBattle &poke);
     int moves[4];
 private:
     QPushButton *attacks[4];
@@ -51,7 +52,7 @@ class PokeZone : public QWidget
 {
     Q_OBJECT
 public:
-    PokeZone();
+    PokeZone(const TeamBattle &team);
 signals:
     void switchTo(int poke);
 private:

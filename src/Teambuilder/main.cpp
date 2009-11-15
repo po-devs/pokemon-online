@@ -1,6 +1,17 @@
 #include "mainwindow.h"
 
+/* Ok guys here is the structs for the files:
+
+   - mainwindow.cpp: The mainwindow, which manages switching between different parts of the program (teambuilder, menu, client, ..)
+   - teambuilder.cpp: the teambuilder
+   - client.cpp: the client
+   - menu.cpp : the menu
+
+   Oh, also, pokemoninfo, pokemonstructs, networkstructs, battlestructs are general structs used here and there.
+*/
+
 #include <QMainWindow>
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -8,6 +19,7 @@ int main(int argc, char *argv[])
     /* Names to use later for QSettings */
     QCoreApplication::setApplicationName("Pogeymon-Online");
     QCoreApplication::setOrganizationName("Dreambelievers");
+    /* icon ;) */
     a.setWindowIcon(QIcon("db/icon.png"));
 
     MainWindow w;

@@ -1,4 +1,5 @@
 #include "player.h"
+#include "../PokemonInfo/battlestructs.h"
 
 Player::Player(QTcpSocket *sock) : myrelay(sock)
 {
@@ -14,11 +15,14 @@ Player::Player(QTcpSocket *sock) : myrelay(sock)
     connect(&relay(), SIGNAL(challengeRefused(int)), this, SLOT(challengeRefused(int)));
     connect(&relay(), SIGNAL(challengeAccepted(int)), this, SLOT(challengeAccepted(int)));
     connect(&relay(), SIGNAL(busyForChallenge(int)), this, SLOT(busyForChallenge(int)));
+    connect(&relay(), SIGNAL(forfeitBattle()), SLOT(battleForfeited()));
 }
 
 Player::~Player()
 {
     cancelChallenges();
+    if (battling())
+	battleForfeited();
 }
 
 bool Player::connected() const
@@ -118,6 +122,10 @@ void Player::challengeReceived(int id)
 	return;
     }
 
+    if (battling()) {
+	sendMessage("You are already battling!");
+    }
+
     emit challengeFromTo(this->id(), id);
 }
 
@@ -146,6 +154,26 @@ bool Player::challenge(int idto)
     m_challengedby = idto;
 
     return true;
+}
+
+void Player::battleForfeited()
+{
+    if (!battling()) {
+	return;
+    }
+
+    emit battleWon(Forfeit, opponent(), id());
+}
+
+void Player::battleResult(int result)
+{
+    relay().sendBattleResult(result);
+    m_isBattling = false;
+}
+
+int Player::opponent() const
+{
+    return m_opponent;
 }
 
 void Player::busyForChallenge(int id)
@@ -200,10 +228,11 @@ void Player::sendMessage(const QString &mess)
     relay().sendMessage(mess);
 }
 
-void Player::startBattle(int id)
+void Player::startBattle(int id, const TeamBattle &team)
 {
-    relay().engageBattle(id);
+    relay().engageBattle(id, team);
 
+    m_opponent = id;
     m_isBattling = true;
 
     if (isChallenged() && challengedBy() != id) {

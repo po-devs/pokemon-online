@@ -84,7 +84,7 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(challengeRefused(int)), SLOT(challengeRefused(int)));
     connect(&relay(), SIGNAL(challengeBusied(int)), SLOT(challengeBusied(int)));
     connect(&relay(), SIGNAL(challengeCanceled(int)), SLOT(challengeCanceled(int)));
-    connect(&relay(), SIGNAL(battleStarted(int)), SLOT(battleStarted(int)));
+    connect(&relay(), SIGNAL(battleStarted(int, TeamBattle)), SLOT(battleStarted(int, TeamBattle)));
 }
 
 bool Client::battling() const
@@ -154,6 +154,25 @@ void Client::seeChallenge(int id)
     }
 }
 
+void Client::battleStarted(int id, const TeamBattle &team)
+{
+    mybattle = new BattleWindow(name(id), team);
+    connect(mybattle, SIGNAL(destroyed()), this, SLOT(clearBattle()));
+    connect(mybattle, SIGNAL(forfeit()), SLOT(forfeitBattle()));
+    connect(this, SIGNAL(destroyed()), mychallenge, SLOT(close()));
+}
+
+void Client::forfeitBattle()
+{
+    relay().sendBattleResult(Forfeit);
+    removeBattleWindow();
+}
+
+void Client::removeBattleWindow()
+{
+    mybattle->close();
+}
+
 QString Client::name(int id) const
 {
     return info(id).name;
@@ -184,12 +203,6 @@ void Client::challengeCanceled(int id)
 	    mychallenge->close();
 	}
     }
-}
-
-void Client::battleStarted(int id)
-{
-    mybattle = new BattleWindow(name(id));
-    connect(mybattle, SIGNAL(destroyed()), this, SLOT(clearBattle()));
 }
 
 bool Client::busy() const

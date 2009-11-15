@@ -5,6 +5,7 @@
 #include "network.h"
 
 class BasicInfo;
+class TeamBattle;
 
 /* Commands to dialog with the server */
 namespace NetworkServ
@@ -24,9 +25,7 @@ namespace NetworkServ
 	BusyForChallenge,
 	CancelChallenge,
 	EngageBattle,
-	ForfeitBattle,
-	WinBattle,
-	LoseBattle
+	BattleFinished
     };
 
     enum ProtocolError
@@ -55,8 +54,8 @@ public:
     void sendRefuseChallenge(int id);
     void sendAcceptChallenge(int id);
     void sendCancelChallenge(int id);
-    void engageBattle(int id);
-
+    void engageBattle(int id, const TeamBattle &team);
+    void sendBattleResult(int id);
 signals:
     /* to send to the network */
     void sendCommand(const QByteArray &command);
