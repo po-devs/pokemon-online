@@ -3,6 +3,11 @@
 
 #include <QtGui>
 
+/*
+    Those are widgets that Qt lacks, and that are to use like Qt Widgets
+*/
+
+/* A table as compact as possible (i.e the rows' heights is the least possible) */
 class QCompactTable : public QTableWidget
 {
     Q_OBJECT
@@ -12,7 +17,8 @@ public:
     QCompactTable(int row, int column);
 };
 
-/* a widget that allows giving a title to another widget */
+/* A widget that allows giving a title to another widget
+   The title appears at the top of the widget */
 class QEntitled : public QWidget
 {
     Q_OBJECT
@@ -27,6 +33,9 @@ public:
     void setWidget(QWidget *widget);
 };
 
+/* A button which is actually an image. There are two params:
+    -The image that should be displayed when the button is normal
+    -The image that should be displayed when the button is hovered */
 class QImageButton : public QAbstractButton
 {
     Q_OBJECT
@@ -41,6 +50,8 @@ private:
     QPixmap myPic, myHoveredPic;
 };
 
+/* A widget that sets its size to the background given in parameter.
+   Actually it changes its background to the one given */
 class QImageBackground : public QWidget
 {
     Q_OBJECT
@@ -55,6 +66,7 @@ private:
     QPixmap myBackground;
 };
 
+/* A QListWidgetItem with an id, for convenience */
 class QIdListWidgetItem : public QListWidgetItem
 {
 public:

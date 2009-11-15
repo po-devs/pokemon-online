@@ -3,6 +3,24 @@
 
 #include <QtNetwork>
 
+/*
+    This is what is used to communicate with the outside.
+
+    You send data with send(), and the signal isFull() warns you when a message arrived.
+
+
+
+    Here are the details you don't need to know:
+
+    Actually the protocol is here: the first two bytes represent the length of the message (in a 256 numerical base), and then
+    there's the message.
+
+    The first byte is therefore length() / 256, and the second length() % 256.
+
+    The drawback to that mini-protocol is that you cannot send data longer than (256*256 - 1), but it's not really a drawback, its more like
+    a security.
+*/
+
 class Network : public QTcpSocket
 {
     Q_OBJECT

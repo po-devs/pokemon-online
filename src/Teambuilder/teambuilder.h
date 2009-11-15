@@ -28,6 +28,8 @@ public:
 };
 
 class DockAdvanced;
+
+/* The Teambuilder!! */
 class TeamBuilder : public QWidget
 {
     Q_OBJECT
@@ -89,6 +91,8 @@ public:
     void createDockAdvanced();
 };
 
+/* This is the widget displaying a trainer's info */
+
 class TB_TrainerBody : public QWidget
 {
     Q_OBJECT
@@ -109,6 +113,7 @@ public:
     void updateTrainer();
 };
 
+/* This is the widget displaying the pokemon's info, moves, item, ... */
 class TB_PokemonBody : public QWidget
 {
     Q_OBJECT
@@ -183,6 +188,7 @@ public:
 
 };
 
+/* Manages the EV bars, inside the TB_PokemonBody */
 class TB_EVManager : public QGridLayout
 {
     Q_OBJECT
