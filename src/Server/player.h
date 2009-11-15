@@ -28,6 +28,8 @@ public:
     bool isLoggedIn() const;
     void setLoggedIn(bool logged);
 
+    int opponent () const;
+
     bool connected() const;
 
     bool isChallenged() const;
@@ -42,10 +44,12 @@ public:
     /* Confirms the sending of a challenge */
     void challengeIssued(int id);
     void sendBusyForChallenge(int id);
-    void startBattle(int id);
+    void startBattle(int id, const TeamBattle &team);
     void sendChallengeRefusal(int id);
     void sendChallengeCancel(int id);
     void cancelChallenges();
+
+    void battleResult(int result);
 
     Analyzer& relay();
     const Analyzer& relay() const;
@@ -59,6 +63,7 @@ signals:
     void challengeRef(int idfrom, int idto);
     void challengeCanceled(int idfrom, int idto);
     void busyForChallenge(int idfrom, int idto);
+    void battleWon(int desc, int winner, int loser);
 public slots:
     void loggedIn(const TeamInfo &team);
     void recvMessage(const QString &mess);
@@ -68,6 +73,7 @@ public slots:
     void challengeRefused(int id);
     void challengeAccepted(int id);
     void busyForChallenge(int id);
+    void battleForfeited();
 private:
     TeamInfo myteam;
     Analyzer myrelay;
@@ -77,6 +83,7 @@ private:
     int m_challengedby;
     bool m_isChallenged;
     bool m_isBattling;
+    int m_opponent;
 
     bool m_isLoggedIn;
 

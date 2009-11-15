@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     ../PokemonInfo/pokemonstructs.cpp \
     ../PokemonInfo/battlestructs.cpp \
     ../PokemonInfo/networkstructs.cpp \
-    player.cpp
+    player.cpp \
+    battle.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -23,6 +24,7 @@ HEADERS += mainwindow.h \
     ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/battlestructs.h \
     ../PokemonInfo/networkstructs.h \
-    player.h
+    player.h \
+    battle.h
 LIBS += -L../../bin \
     -lzip

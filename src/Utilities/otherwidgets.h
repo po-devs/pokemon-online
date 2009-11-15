@@ -13,8 +13,6 @@ public:
 };
 
 /* a widget that allows giving a title to another widget */
-class QLabel;
-class QVBoxLayout;
 class QEntitled : public QWidget
 {
     Q_OBJECT

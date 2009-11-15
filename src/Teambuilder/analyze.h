@@ -7,6 +7,7 @@
 class Client;
 class TrainerTeam;
 class Player;
+class TeamBattle;
 
 /* Commands to dialog with the server */
 namespace NetworkCli
@@ -26,9 +27,7 @@ namespace NetworkCli
 	BusyForChallenge,
 	CancelChallenge,
 	EngageBattle,
-	ForfeitBattle,
-	WinBattle,
-	LoseBattle
+	BattleFinished
     };
 
     enum ProtocolError
@@ -36,6 +35,9 @@ namespace NetworkCli
 	UnknownCommand = 0
     };
 }
+
+/* Analyzes the messages received from the network and emits the corresponding signals.
+   Also allows you to send your own messages to the network */
 
 class Analyzer : public QObject
 {
@@ -52,6 +54,7 @@ public:
     void acceptChallenge(int id);
     void refuseChallenge(int id);
     void busyForChallenge(int id);
+    void sendBattleResult(int result);
     bool isConnected() const;
 
 signals:
@@ -73,7 +76,7 @@ signals:
     void challengeRefused(int id);
     void challengeCanceled(int id);
     void challengeBusied(int id);
-    void battleStarted(int id);
+    void battleStarted(int id, const TeamBattle &myteam);
 
 public slots:
     /* slots called by the network */

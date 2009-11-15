@@ -105,6 +105,11 @@ BattleMove & PokeBattle::move(int i)
     return m_moves[i];
 }
 
+QString PokeBattle::nick() const
+{
+    return m_nick;
+}
+
 quint16 PokeBattle::num() const
 {
     return m_num;
@@ -166,6 +171,8 @@ void PokeBattle::init(const PokePersonal &poke)
     PokeGeneral p;
     p.setNum(poke.num());
     p.load();
+
+    setNum(poke.num());
 
     for (int i = 0; i < 4; i++) {
 	move(i).setNum(poke.move(i));
@@ -242,7 +249,7 @@ const PokeBattle & TeamBattle::poke(int i) const
 
 QDataStream & operator >> (QDataStream &in, TeamBattle &te)
 {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 6; i++) {
 	in >> te.poke(i);
     }
 
@@ -251,7 +258,7 @@ QDataStream & operator >> (QDataStream &in, TeamBattle &te)
 
 QDataStream & operator << (QDataStream &out, const TeamBattle &te)
 {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 6; i++) {
 	out << te.poke(i);
     }
 

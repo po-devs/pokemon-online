@@ -7,6 +7,7 @@
 /* the server */
 
 class Player;
+class BattleSituation;
 
 class Server: public QWidget
 {
@@ -25,7 +26,8 @@ public:
     void sendLogin(int id);
     void sendLogout(int id);
     bool playerExist(int id) const;
-    void startBattle(int id);
+    void startBattle(int id1, int id2);
+    void removeBattle(int id1, int id2);
 public slots:
     /* means a new connection is about to start from the TCP server */
     void incomingConnection();
@@ -39,11 +41,13 @@ public slots:
     void challengeRefused(int, int);
     void cancelChallenge(int, int);
     void busyForChallenge(int, int);
+    void battleResult(int desc, int winner, int loser);
 
 private:
     QTcpServer myserver;
     /* storing players */
     QMap<int, Player*> myplayers;
+    QMap<int, BattleSituation*> mybattles;
 
     QTcpServer *server();
     Player * player(int i);

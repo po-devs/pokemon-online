@@ -2,6 +2,7 @@
 #include "network.h"
 #include "client.h"
 #include "../PokemonInfo/networkstructs.h"
+#include "../PokemonInfo/battlestructs.h"
 
 using namespace NetworkCli;
 
@@ -91,6 +92,11 @@ void Analyzer::sendTeam(const TrainerTeam &team)
     emit sendCommand(tosend);
 }
 
+void Analyzer::sendBattleResult(int result)
+{
+
+}
+
 void Analyzer::connectTo(const QString &host, quint16 port)
 {
     mysocket.connectToHost(host, port);
@@ -169,8 +175,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	case EngageBattle:
 	{
 	    int id;
-	    in >> id;
-	    emit battleStarted(id);
+	    TeamBattle team;
+	    in >> id >> team;
+	    emit battleStarted(id, team);
 	    break;
 	}
 	default:
