@@ -20,10 +20,10 @@ TB_Menu::TB_Menu()
     layout->addWidget(credits = new QImageButton("db/Credits0.png", "db/Credits1.png"), 0, Qt::AlignCenter);
     layout->addWidget(exit = new QImageButton("db/Quit0.png", "db/Quit1.png"), 0, Qt::AlignCenter);
 
-    connect (teambuilder, SIGNAL(clicked()), SLOT(launchTeambuilder()));
-    connect (online, SIGNAL(clicked()), SLOT(goOnline()));
-    connect (credits, SIGNAL(clicked()), SLOT(launchCredits()));
-    connect (exit, SIGNAL(clicked()), SLOT(exit()));
+    connect (teambuilder, SIGNAL(clicked()), SIGNAL(goToTeambuilder()));
+    connect (online, SIGNAL(clicked()), SIGNAL(goToOnline()));
+    connect (credits, SIGNAL(clicked()), SIGNAL(goToCredits()));
+    connect (exit, SIGNAL(clicked()), SIGNAL(goToExit()));
 }
 
 QMenuBar * TB_Menu::createMenuBar(MainWindow *w)
@@ -36,24 +36,4 @@ QMenuBar * TB_Menu::createMenuBar(MainWindow *w)
     return menuBar; */
     (void) w;
     return NULL;
-}
-
-void TB_Menu::launchCredits()
-{
-    emit goToCredits();
-}
-
-void TB_Menu::launchTeambuilder()
-{
-    emit goToTeambuilder();
-}
-
-void TB_Menu::goOnline()
-{
-    emit goToOnline();
-}
-
-void TB_Menu::exit()
-{
-    emit goToExit();
 }

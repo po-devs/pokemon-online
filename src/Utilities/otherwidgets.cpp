@@ -6,9 +6,8 @@ QCompactTable::QCompactTable(int row, int column)
 {
 }
 
-int QCompactTable::sizeHintForRow(int row) const
+int QCompactTable::sizeHintForRow(int) const
 {
-    (void) row;
     return 0;
 }
 

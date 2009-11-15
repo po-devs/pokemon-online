@@ -7,6 +7,8 @@
 class AttackZone;
 class PokeZone;
 
+/* The battle window called by the client, online */
+
 class BattleWindow : public QWidget
 {
     Q_OBJECT
@@ -38,6 +40,7 @@ private:
     int mycurrentpoke;
 };
 
+/* An attack zone is the zone where the attacks are displayed */
 class AttackZone : public QWidget
 {
     Q_OBJECT
@@ -48,6 +51,7 @@ private:
     QPushButton *attacks[4];
 };
 
+/* When you want to switch pokemons, that's what you see */
 class PokeZone : public QWidget
 {
     Q_OBJECT

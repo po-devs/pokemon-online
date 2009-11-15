@@ -37,7 +37,9 @@ namespace NetworkCli
 }
 
 /* Analyzes the messages received from the network and emits the corresponding signals.
-   Also allows you to send your own messages to the network */
+   Also allows you to send your own messages to the network
+
+    The client actually uses this widgets to send orders and receive commands from the outside. */
 
 class Analyzer : public QObject
 {
@@ -84,6 +86,7 @@ public slots:
     void commandReceived (const QByteArray &command);
 
 private:
+    /* The connection to the outside */
     Network &socket();
 
     Network mysocket;

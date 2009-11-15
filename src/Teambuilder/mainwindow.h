@@ -9,6 +9,11 @@ class TeamBuilder;
 class Client;
 class ServerChoice;
 
+/* The main window!
+
+   All the general initialization is done here, the persistent data (i.e the team) too.
+   The main window manages the sub-modules. */
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -33,7 +38,7 @@ public slots:
     void goOnline(const QString &url);
     void launchServerChoice();
 
-    /* slots called by subwindows */
+    /* slots called by subwindows when they need it */
     void loadTeamDialog();
 
     void setDock(Qt::DockWidgetArea area,QDockWidget * dock,Qt::Orientation orient);

@@ -94,7 +94,13 @@ void Analyzer::sendTeam(const TrainerTeam &team)
 
 void Analyzer::sendBattleResult(int result)
 {
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
 
+    out << uchar(BattleFinished) << result;
+
+    emit sendCommand(tosend);
 }
 
 void Analyzer::connectTo(const QString &host, quint16 port)

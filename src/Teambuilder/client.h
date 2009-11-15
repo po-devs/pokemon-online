@@ -10,6 +10,7 @@ class BaseChallengeWindow;
 class QIdListWidgetItem;
 class BattleWindow;
 
+/* Struct representing a player's data */
 class Player
 {
 public:
@@ -20,7 +21,9 @@ public:
 QDataStream & operator >> (QDataStream &in, Player &p);
 QDataStream & operator << (QDataStream &out, const Player &p);
 
-/* The class for going online */
+/* The class for going online.
+
+    It displays the mainchat, the players list, ... and also have the dialog engine in it*/
 
 class Client : public QWidget
 {
