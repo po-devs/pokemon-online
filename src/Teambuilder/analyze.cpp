@@ -26,46 +26,13 @@ void Analyzer::login(const TrainerTeam &team)
     emit sendCommand(tosend);
 }
 
-void Analyzer::sendChallenge(int id)
+void Analyzer::sendChallengeStuff(quint8 desc, int id)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
 
-    out << uchar(SendChallenge) << id;
-
-    emit sendCommand(tosend);
-}
-
-void Analyzer::acceptChallenge(int id)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(AcceptChallenge) << id;
-
-    emit sendCommand(tosend);
-}
-
-void Analyzer::refuseChallenge(int id)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(RefuseChallenge) << id;
-
-    emit sendCommand(tosend);
-}
-
-void Analyzer::busyForChallenge(int id)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(BusyForChallenge) << id;
+    out << uchar(ChallengeStuff) << desc << id;
 
     emit sendCommand(tosend);
 }
@@ -150,32 +117,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit playerLogout(id);
 	    break;
 	}
-	case SendChallenge:
+	case ChallengeStuff:
 	{
+	    quint8 stuff;
 	    int id;
-	    in >> id;
-	    emit challengeReceived(id);
-	    break;
-	}
-	case RefuseChallenge:
-	{
-	    int id;
-	    in >> id;
-	    emit challengeRefused(id);
-	    break;
-	}
-	case BusyForChallenge:
-	{
-	    int id;
-	    in >> id;
-	    emit challengeBusied(id);
-	    break;
-	}
-	case CancelChallenge:
-	{
-	    int id;
-	    in >> id;
-	    emit challengeCanceled(id);
+	    in >> stuff >> id;
+	    emit challengeStuff(stuff, id);
 	    break;
 	}
 	case EngageBattle:
@@ -184,6 +131,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    TeamBattle team;
 	    in >> id >> team;
 	    emit battleStarted(id, team);
+	    break;
+	}
+	case BattleFinished:
+	{
+	    quint8 desc;
+	    in >> desc;
+	    emit battleFinished(desc);
 	    break;
 	}
 	default:

@@ -36,11 +36,7 @@ public slots:
     void recvMessage(int id, const QString &mess);
     void recvTeam(int id);
     void disconnected(int id);
-    void dealWithChallenge(int, int);
-    void challengeAccepted(int, int);
-    void challengeRefused(int, int);
-    void cancelChallenge(int, int);
-    void busyForChallenge(int, int);
+    void dealWithChallenge(int desc, int from, int to);
     void battleResult(int desc, int winner, int loser);
 
 private:
