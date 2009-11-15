@@ -5,6 +5,18 @@
 
 class Player;
 
+namespace ChallengeStuff
+{
+    enum ChallengeDesc
+    {
+	Sent,
+	Accepted,
+	Canceled,
+	Busy,
+	Refused
+    };
+}
+
 class BaseChallengeWindow : public QWidget
 {
     Q_OBJECT

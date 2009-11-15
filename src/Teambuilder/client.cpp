@@ -80,12 +80,11 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(playerReceived(Player)), SLOT(playerReceived(Player)));
     connect(&relay(), SIGNAL(playerLogin(Player)), SLOT(playerLogin(Player)));
     connect(&relay(), SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
-    connect(&relay(), SIGNAL(challengeReceived(int)), SLOT(seeChallenge(int)));
-    connect(&relay(), SIGNAL(challengeRefused(int)), SLOT(challengeRefused(int)));
-    connect(&relay(), SIGNAL(challengeBusied(int)), SLOT(challengeBusied(int)));
-    connect(&relay(), SIGNAL(challengeCanceled(int)), SLOT(challengeCanceled(int)));
+    connect(&relay(), SIGNAL(challengeStuff(int,int)), SLOT(challengeStuff(int,int)));
     connect(&relay(), SIGNAL(battleStarted(int, TeamBattle)), SLOT(battleStarted(int, TeamBattle)));
+    connect(&relay(), SIGNAL(battleFinished(int)), SLOT(battleFinished(int)));
 }
+
 
 bool Client::battling() const
 {
@@ -141,7 +140,7 @@ void Client::seeChallenge(int id)
     {
 	if (busy()) {
 	    /* Warns the server that we are too busy to accept the challenge */
-	    relay().busyForChallenge(id);
+	    relay().sendChallengeStuff(ChallengeStuff::Busy, id);
 	    mychallenge->raise();
 	    mychallenge->activateWindow();
 	} else {
@@ -159,12 +158,18 @@ void Client::battleStarted(int id, const TeamBattle &team)
     mybattle = new BattleWindow(name(id), team);
     connect(mybattle, SIGNAL(destroyed()), this, SLOT(clearBattle()));
     connect(mybattle, SIGNAL(forfeit()), SLOT(forfeitBattle()));
-    connect(this, SIGNAL(destroyed()), mychallenge, SLOT(close()));
+    connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
 }
 
 void Client::forfeitBattle()
 {
     relay().sendBattleResult(Forfeit);
+    removeBattleWindow();
+}
+
+void Client::battleFinished(int)
+{
+    printLine(tr("The opponent forfeited"));
     removeBattleWindow();
 }
 
@@ -178,29 +183,22 @@ QString Client::name(int id) const
     return info(id).name;
 }
 
-void Client::challengeRefused(int id)
+void Client::challengeStuff(int desc, int id)
 {
-    if (playerExist(id))
-    {
-	printLine(tr("%1 refused your challenge.").arg(name(id)));
-    }
-}
-
-void Client::challengeBusied(int id)
-{
-    if (playerExist(id))
-    {
-	printLine(tr("%1 is busy.").arg(name(id)));
-    }
-}
-
-void Client::challengeCanceled(int id)
-{
-    if (playerExist(id))
-    {
-	printLine(tr("%1 canceled their challenge").arg(name(id)));
-	if (mychallenge->id() == id) {
-	    mychallenge->close();
+    if (desc == ChallengeStuff::Sent) {
+	seeChallenge(id);
+    } else {
+	if (playerExist(id)) {
+	    if (desc == ChallengeStuff::Refused) {
+		printLine(tr("%1 refused your challenge.").arg(name(id)));
+	    } else if (desc == ChallengeStuff::Busy) {
+		printLine(tr("%1 is busy.").arg(name(id)));
+	    } else if (desc == ChallengeStuff::Canceled) {
+		printLine(tr("%1 canceled their challenge").arg(name(id)));
+		if (challengeWindowOpen() && challengeWindowPlayer()== id) {
+		    closeChallengeWindow();
+		}
+	    }
 	}
     }
 }
@@ -217,17 +215,17 @@ bool Client::challengeWindowOpen() const
 
 void Client::acceptChallenge(int id)
 {
-    relay().acceptChallenge(id);
+    relay().sendChallengeStuff(ChallengeStuff::Accepted, id);
 }
 
 void Client::refuseChallenge(int id)
 {
-    relay().refuseChallenge(id);
+    relay().sendChallengeStuff(ChallengeStuff::Refused, id);
 }
 
 void Client::sendChallenge(int id)
 {
-    relay().sendChallenge(id);
+    relay().sendChallengeStuff(ChallengeStuff::Sent, id);
 }
 
 void Client::clearChallenge()
@@ -312,7 +310,7 @@ void Client::printLine(const QString &line)
 	QString beg = line.left(pos);
 	QString end = line.right(line.length()-pos-1);
 	if (id(beg) == -1) {
-	    mainChat()->insertHtml("<span style='color:cyan'><b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+	    mainChat()->insertHtml("<span style='color:blue'><b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
 	} else if (beg == ownName()) {
 	    mainChat()->insertHtml("<span style='color:#5811b1'><b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
 	 } else {
@@ -330,6 +328,16 @@ int Client::id(const QString &name) const
     } else {
 	return -1;
     }
+}
+
+int Client::challengeWindowPlayer() const
+{
+    return mychallenge->id();
+}
+
+void Client::closeChallengeWindow()
+{
+    mychallenge->close();
 }
 
 QDataStream & operator >> (QDataStream &in, Player &p)

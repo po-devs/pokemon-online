@@ -3,18 +3,13 @@
 
 Player::Player(QTcpSocket *sock) : myrelay(sock)
 {
-    m_isLoggedIn = false;
-    m_isChallenged = false;
-    m_isBattling = false;
+    m_state = NotLoggedIn;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(TeamInfo)), this, SLOT(loggedIn(TeamInfo)));
     connect(&relay(), SIGNAL(messageReceived(QString)), this, SLOT(recvMessage(QString)));
     connect(&relay(), SIGNAL(teamReceived(TeamInfo)), this, SLOT(recvTeam(TeamInfo)));
-    connect(&relay(), SIGNAL(challengeReceived(int)), this, SLOT(challengeReceived(int)));
-    connect(&relay(), SIGNAL(challengeRefused(int)), this, SLOT(challengeRefused(int)));
-    connect(&relay(), SIGNAL(challengeAccepted(int)), this, SLOT(challengeAccepted(int)));
-    connect(&relay(), SIGNAL(busyForChallenge(int)), this, SLOT(busyForChallenge(int)));
+    connect(&relay(), SIGNAL(challengeStuff(int,int)), this, SLOT(challengeStuff(int,int)));
     connect(&relay(), SIGNAL(forfeitBattle()), SLOT(battleForfeited()));
 }
 
@@ -25,34 +20,15 @@ Player::~Player()
 	battleForfeited();
 }
 
-bool Player::connected() const
+void Player::changeState(int newstate)
 {
-    return relay().isConnected();
-}
+    m_state = newstate;
 
-bool Player::isChallenged() const
-{
-    return m_isChallenged;
-}
-
-bool Player::hasChallenged() const
-{
-    return !m_challenged.empty();
-}
-
-int Player::challengedBy() const
-{
-    return m_challengedby;
-}
-
-bool Player::isLoggedIn() const
-{
-    return m_isLoggedIn;
-}
-
-void Player::setLoggedIn(bool logged)
-{
-    m_isLoggedIn = logged;
+    if (m_state == Battling)
+    {
+	removeChallenge(opponent());
+	cancelChallenges();
+    }
 }
 
 void Player::disconnected()
@@ -60,21 +36,139 @@ void Player::disconnected()
     emit disconnected(id());
 }
 
-void Player::sendChallengeCancel(int id)
-{
-    relay().sendCancelChallenge(id);
-}
-
-BasicInfo Player::basicInfo() const
-{
-    BasicInfo ret = {team().name, team().info};
-    return ret;
-}
-
 void Player::recvMessage(const QString &mess)
 {
     /* for now we just emit the signal, but later we'll do more, such as flood count */
     emit recvMessage(id(), mess);
+}
+
+bool Player::challenge(int idto)
+{
+    if (state() != LoggedIn)
+	return false;
+
+    relay().sendChallengeStuff(Sent, idto);
+
+    changeState(Challenged);
+    m_challengedby = idto;
+
+    return true;
+}
+
+void Player::battleForfeited()
+{
+    if (!battling()) {
+	return;
+    }
+
+    changeState(LoggedIn);
+
+    emit battleFinished(Forfeit, opponent(), id());
+}
+
+void Player::battleResult(int result)
+{
+    relay().sendBattleResult(result);
+    changeState(LoggedIn);
+}
+
+int Player::opponent() const
+{
+    return m_opponent;
+}
+
+void Player::challengeStuff(int desc, int id)
+{
+    if (!isLoggedIn() || id == this->id()) {
+	// INVALID BEHAVIOR
+	return;
+    }
+
+    if (desc != Sent && desc != Canceled)
+    {
+	if (!isChallenged()) {
+	    // INVALID BEHAVIOR
+	    return;
+	}
+	if (challengedBy() != id) {
+	    // INVALID BEHAVIOR
+	    return;
+	}
+    } else if (desc == Sent) {
+	if (battling()) {
+	    // INVALID BEHAVIOR
+	    return;
+	}
+    } else if (desc == Canceled) {
+	if (!hasChallenged(id)) {
+	    // INVALID BEHAVIOR
+	    return;
+	}
+    }
+
+    if (desc == Sent) {
+	addChallenge(id);
+    } else if (desc != Accepted) {
+	changeState(LoggedIn);
+    }
+
+    emit challengeStuff(desc, this->id(), id);
+}
+
+void Player::sendChallengeStuff(int stuff, int other)
+{
+    /* This is either Canceled, Refused, or Busied */
+    if (stuff == Canceled) {
+	changeState(LoggedIn);
+    } else {
+	removeChallenge(other);
+    }
+    relay().sendChallengeStuff(stuff, other);
+}
+
+void Player::startBattle(int id, const TeamBattle &team)
+{
+    relay().engageBattle(id, team);
+
+    m_opponent = id;
+
+    if (isChallenged() && challengedBy() != id) {
+	emit challengeStuff(Busy, this->id(), id);
+    }
+
+    changeState(Battling);
+}
+
+void Player::cancelChallenges()
+{
+    foreach(int id, m_challenged)
+	emit challengeStuff(Canceled, this->id(), id);
+    m_challenged.clear();
+}
+
+bool Player::hasChallenged(int id) const
+{
+    return m_challenged.contains(id);
+}
+
+void Player::addChallenge(int id)
+{
+    m_challenged.insert(id);
+}
+
+void Player::removeChallenge(int id)
+{
+    m_challenged.remove(id);
+}
+
+TeamInfo & Player::team()
+{
+    return myteam;
+}
+
+const TeamInfo & Player::team() const
+{
+    return myteam;
 }
 
 Analyzer & Player::relay()
@@ -85,6 +179,47 @@ Analyzer & Player::relay()
 const Analyzer & Player::relay() const
 {
     return myrelay;
+}
+
+bool Player::battling() const
+{
+    return state() == Battling;
+}
+
+int Player::state() const
+{
+    return m_state;
+}
+
+bool Player::connected() const
+{
+    return relay().isConnected();
+}
+
+bool Player::isChallenged() const
+{
+    return m_state == Challenged;
+}
+
+int Player::challengedBy() const
+{
+    return m_challengedby;
+}
+
+bool Player::isLoggedIn() const
+{
+    return m_state != NotLoggedIn;
+}
+
+int Player::id() const
+{
+    return myid;
+}
+
+BasicInfo Player::basicInfo() const
+{
+    BasicInfo ret = {team().name, team().info};
+    return ret;
 }
 
 void Player::loggedIn(const TeamInfo &_team)
@@ -111,158 +246,7 @@ void Player::recvTeam(const TeamInfo &team)
     emit recvTeam(id());
 }
 
-int Player::id() const
-{
-    return myid;
-}
-
-void Player::challengeReceived(int id)
-{
-    if (!isLoggedIn() || id == this->id()) {
-	return;
-    }
-
-    if (battling()) {
-	sendMessage("You are already battling!");
-    }
-
-    emit challengeFromTo(this->id(), id);
-}
-
-void Player::challengeIssued(int id)
-{
-    m_challenged.insert(id);
-}
-
-bool Player::battling() const
-{
-    return m_isBattling;
-}
-
-bool Player::busy() const
-{
-    return battling() || isChallenged();
-}
-
-bool Player::challenge(int idto)
-{
-    if (busy())
-	return false;
-
-    relay().sendChallenge(idto);
-    m_isChallenged = true;
-    m_challengedby = idto;
-
-    return true;
-}
-
-void Player::battleForfeited()
-{
-    if (!battling()) {
-	return;
-    }
-
-    emit battleWon(Forfeit, opponent(), id());
-}
-
-void Player::battleResult(int result)
-{
-    relay().sendBattleResult(result);
-    m_isBattling = false;
-}
-
-int Player::opponent() const
-{
-    return m_opponent;
-}
-
-void Player::busyForChallenge(int id)
-{
-    if (!isLoggedIn() || id == this->id() || !isChallenged() || challengedBy() != id) {
-	return;
-    }
-
-    emit busyForChallenge(this->id(), id);
-}
-
-void Player::challengeAccepted(int id)
-{
-    if (!isLoggedIn() || id == this->id()) {
-	return;
-    }
-    if (!isChallenged()) {
-	sendMessage(tr("You are not challenged by anyone"));
-    }
-    if (challengedBy() != id) {
-	sendMessage(tr("You are not challenged by that player"));
-    }
-    emit challengeAcc(this->id(), id);
-
-    m_isChallenged = false;
-}
-
-void Player::challengeRefused(int id)
-{
-    if (!isLoggedIn() || id == this->id() || !isChallenged() || challengedBy() != id) {
-	return;
-    }
-
-    emit challengeRef(this->id(), id);
-
-    m_isChallenged = false;
-}
-
-void Player::removeChallenge(int id)
-{
-    m_challenged.remove(id);
-}
-
-void Player::sendBusyForChallenge(int id)
-{
-    relay().sendBusyForChallenge(id);
-    removeChallenge(id);
-}
-
 void Player::sendMessage(const QString &mess)
 {
     relay().sendMessage(mess);
 }
-
-void Player::startBattle(int id, const TeamBattle &team)
-{
-    relay().engageBattle(id, team);
-
-    m_opponent = id;
-    m_isBattling = true;
-
-    if (isChallenged() && challengedBy() != id) {
-	emit busyForChallenge(this->id(), id);
-    }
-
-    m_isChallenged = false;
-    cancelChallenges();
-}
-
-void Player::cancelChallenges()
-{
-    foreach(int id, m_challenged)
-	emit challengeCanceled(this->id(), id);
-    m_challenged.clear();
-}
-
-void Player::sendChallengeRefusal(int id)
-{
-    relay().sendRefuseChallenge(id);
-    removeChallenge(id);
-}
-
-TeamInfo & Player::team()
-{
-    return myteam;
-}
-
-const TeamInfo & Player::team() const
-{
-    return myteam;
-}
-

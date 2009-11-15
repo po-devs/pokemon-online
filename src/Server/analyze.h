@@ -19,11 +19,7 @@ namespace NetworkServ
 	SendMessage,
 	PlayersList,
 	SendTeam,
-	SendChallenge,
-	AcceptChallenge,
-	RefuseChallenge,
-	BusyForChallenge,
-	CancelChallenge,
+	ChallengeStuff,
 	EngageBattle,
 	BattleFinished
     };
@@ -49,13 +45,9 @@ public:
     void sendLogin(int num, const BasicInfo &team);
     void sendLogout(int num);
     bool isConnected() const;
-    void sendChallenge(int id);
-    void sendBusyForChallenge(int id);
-    void sendRefuseChallenge(int id);
-    void sendAcceptChallenge(int id);
-    void sendCancelChallenge(int id);
+    void sendChallengeStuff(quint8 desc, int id);
     void engageBattle(int id, const TeamBattle &team);
-    void sendBattleResult(int id);
+    void sendBattleResult(quint8 res);
 signals:
     /* to send to the network */
     void sendCommand(const QByteArray &command);
@@ -67,10 +59,7 @@ signals:
     void teamReceived(const TeamInfo &team);
     void disconnected();
     void forfeitBattle();
-    void challengeReceived(int id);
-    void challengeAccepted(int id);
-    void challengeRefused(int id);
-    void busyForChallenge(int id);
+    void challengeStuff(int desc, int id);
 public slots:
     /* slots called by the network */
     void error();

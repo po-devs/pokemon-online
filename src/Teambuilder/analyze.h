@@ -21,11 +21,7 @@ namespace NetworkCli
 	SendMessage,
 	PlayersList,
 	SendTeam,
-	SendChallenge,
-	AcceptChallenge,
-	RefuseChallenge,
-	BusyForChallenge,
-	CancelChallenge,
+	ChallengeStuff,
 	EngageBattle,
 	BattleFinished
     };
@@ -52,10 +48,7 @@ public:
     void sendMessage(const QString &message);
     void connectTo(const QString &host, quint16 port);
     void sendTeam(const TrainerTeam & team);
-    void sendChallenge(int id);
-    void acceptChallenge(int id);
-    void refuseChallenge(int id);
-    void busyForChallenge(int id);
+    void sendChallengeStuff(quint8 desc, int id);
     void sendBattleResult(int result);
     bool isConnected() const;
 
@@ -74,11 +67,9 @@ signals:
     void playerLogin(const Player &p);
     void playerLogout(int id);
     /* challengerelated */
-    void challengeReceived(int id);
-    void challengeRefused(int id);
-    void challengeCanceled(int id);
-    void challengeBusied(int id);
+    void challengeStuff(int desc, int id);
     void battleStarted(int id, const TeamBattle &myteam);
+    void battleFinished(int res);
 
 public slots:
     /* slots called by the network */

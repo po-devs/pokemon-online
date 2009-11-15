@@ -9,6 +9,22 @@ class Player : public QObject
 {
     Q_OBJECT
 public:
+    enum State
+    {
+	NotLoggedIn,
+	LoggedIn,
+	Challenged,
+	Battling
+    };
+    enum ChallengeDesc
+    {
+	Sent,
+	Accepted,
+	Canceled,
+	Busy,
+	Refused
+    };
+
     Player(QTcpSocket *sock);
     ~Player();
 
@@ -25,31 +41,27 @@ public:
     int id() const;
     QString name() const;
 
+    bool connected() const;
     bool isLoggedIn() const;
-    void setLoggedIn(bool logged);
+    bool battling() const;
+    void changeState(int newstate);
+    int state() const;
 
     int opponent () const;
-
-    bool connected() const;
-
     bool isChallenged() const;
-    bool hasChallenged() const;
     int challengedBy() const;
-    bool battling() const;
-    bool busy() const;
+    bool hasChallenged(int id) const;
+
 
     /* Sends the challenge, returns false if can't even send the challenge */
     bool challenge(int id);
 
-    /* Confirms the sending of a challenge */
-    void challengeIssued(int id);
-    void sendBusyForChallenge(int id);
     void startBattle(int id, const TeamBattle &team);
-    void sendChallengeRefusal(int id);
-    void sendChallengeCancel(int id);
-    void cancelChallenges();
-
     void battleResult(int result);
+
+    void sendChallengeStuff(int stuff, int otherparty);
+    void addChallenge(int id);
+    void cancelChallenges();
 
     Analyzer& relay();
     const Analyzer& relay() const;
@@ -58,21 +70,16 @@ signals:
     void recvMessage(int id, const QString &mess);
     void disconnected(int id);
     void recvTeam(int id);
-    void challengeFromTo(int idfrom, int idto);
-    void challengeAcc(int idfrom, int idto);
-    void challengeRef(int idfrom, int idto);
-    void challengeCanceled(int idfrom, int idto);
-    void busyForChallenge(int idfrom, int idto);
-    void battleWon(int desc, int winner, int loser);
+
+    void challengeStuff(int desc, int idfrom, int idto);
+    void battleFinished(int desc, int winner, int loser);
+
 public slots:
     void loggedIn(const TeamInfo &team);
     void recvMessage(const QString &mess);
     void recvTeam(const TeamInfo &team);
     void disconnected();
-    void challengeReceived(int id);
-    void challengeRefused(int id);
-    void challengeAccepted(int id);
-    void busyForChallenge(int id);
+    void challengeStuff(int desc, int id);
     void battleForfeited();
 private:
     TeamInfo myteam;
@@ -81,11 +88,8 @@ private:
 
     QSet<int> m_challenged;
     int m_challengedby;
-    bool m_isChallenged;
-    bool m_isBattling;
     int m_opponent;
-
-    bool m_isLoggedIn;
+    int m_state;
 
     void removeChallenge(int id);
 };

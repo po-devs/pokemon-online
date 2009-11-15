@@ -25,17 +25,6 @@ void Analyzer::sendMessage(const QString &message)
     emit sendCommand(tosend);
 }
 
-void Analyzer::sendCancelChallenge(int id)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(CancelChallenge) << id;
-
-    emit sendCommand(tosend);
-}
-
 void Analyzer::engageBattle(int id, const TeamBattle &team)
 {
     QByteArray tosend;
@@ -82,51 +71,18 @@ void Analyzer::sendLogout(int num)
 }
 
 
-void Analyzer::sendChallenge(int num)
+void Analyzer::sendChallengeStuff(quint8 stuff, int num)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
 
-    out << uchar(SendChallenge) << num;
+    out << uchar(ChallengeStuff) << stuff << num;
 
     emit sendCommand(tosend);
 }
 
-void Analyzer::sendRefuseChallenge(int num)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(RefuseChallenge) << num;
-
-    emit sendCommand(tosend);
-}
-
-void Analyzer::sendBusyForChallenge(int num)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(BusyForChallenge) << num;
-
-    emit sendCommand(tosend);
-}
-
-void Analyzer::sendAcceptChallenge(int num)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(AcceptChallenge) << num;
-
-    emit sendCommand(tosend);
-}
-
-void Analyzer::sendBattleResult(int res)
+void Analyzer::sendBattleResult(quint8 res)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
@@ -178,39 +134,17 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit teamReceived(team);
 	    break;
 	}
-	case SendChallenge:
+	case ChallengeStuff:
 	{
+	    quint8 stuff;
 	    int id;
-	    in >> id;
-	    emit challengeReceived(id);
-	    break;
-	}
-	case AcceptChallenge:
-	{
-	    int id;
-	    in >> id;
-	    emit challengeAccepted(id);
-	    break;
-	}
-	case RefuseChallenge:
-	{
-	    int id;
-	    in >> id;
-	    emit challengeRefused(id);
-	    break;
-	}
-	case BusyForChallenge:
-	{
-	    int id;
-	    in >> id;
-	    emit busyForChallenge(id);
+	    in >> stuff >> id;
+	    emit challengeStuff(stuff, id);
 	    break;
 	}
 	case BattleFinished:
-	{
 	    emit forfeitBattle();
 	    break;
-	}
 	default:
 	    emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
 	    break;

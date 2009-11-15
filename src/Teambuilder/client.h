@@ -41,9 +41,15 @@ public:
     bool battling() const;
     bool busy() const;
     int id(const QString &name) const;
+
+    void seeChallenge(int id);
     bool challengeWindowOpen() const;
+    void closeChallengeWindow();
+    int  challengeWindowPlayer() const;
+
     Player player(int id) const;
     BasicInfo info(int id) const;
+
     void removeBattleWindow();
 public slots:
     void errorFromNetwork(int errnum, const QString &error);
@@ -67,12 +73,10 @@ public slots:
     /* Display the info for that player */
     void seeInfo(int id);
     /* Challenge info by the server */
-    void seeChallenge(int id);
-    void challengeRefused(int id);
-    void challengeCanceled(int id);
-    void challengeBusied(int id);
+    void challengeStuff(int desc, int id);
     /* battle... */
     void battleStarted(int id, const TeamBattle &team);
+    void battleFinished(int res);
     void forfeitBattle();
     /* shows the context menu for that player */
     void showContextMenu(const QPoint&);

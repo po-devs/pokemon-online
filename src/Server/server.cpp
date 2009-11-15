@@ -40,7 +40,7 @@ void Server::loggedIn(int id, const QString &name)
 	    return;
 	}
 
-    player(id)->setLoggedIn(true);
+    player(id)->changeState(Player::LoggedIn);
 
     sendPlayersList(id);
     sendLogin(id);
@@ -77,40 +77,28 @@ void Server::incomingConnection()
     connect(player(id), SIGNAL(recvMessage(int, QString)), this, SLOT(recvMessage(int,QString)));
     connect(player(id), SIGNAL(recvTeam(int)), this, SLOT(recvTeam(int)));
     connect(player(id), SIGNAL(disconnected(int)), SLOT(disconnected(int)));
-    connect(player(id), SIGNAL(challengeFromTo(int,int)), SLOT(dealWithChallenge(int, int)));
-    connect(player(id), SIGNAL(busyForChallenge(int,int)), this, SLOT(busyForChallenge(int,int)));
-    connect(player(id), SIGNAL(challengeAcc(int,int)), this, SLOT(challengeAccepted(int,int)));
-    connect(player(id), SIGNAL(challengeRef(int,int)), this, SLOT(challengeRefused(int,int)));
-    connect(player(id), SIGNAL(challengeCanceled(int,int)), this, SLOT(cancelChallenge(int,int)));
+    connect(player(id), SIGNAL(challengeStuff(int,int,int)), SLOT(dealWithChallenge(int,int,int)));
+    connect(player(id), SIGNAL(battleFinished(int,int,int)), SLOT(battleResult(int,int,int)));
 }
 
-void Server::cancelChallenge(int from, int to)
+void Server::dealWithChallenge(int desc, int from, int to)
 {
-    if (playerExist(to) && player(to)->isChallenged() && player(to)->challengedBy() == from)
-	player(to)->sendChallengeCancel(from);
-}
-
-void Server::dealWithChallenge(int from, int to)
-{
-    if (!playerExist(to) || !player(to)->isLoggedIn()) {
-	sendMessage(from, tr("That player is not online"));
-	return;
-    } else {
-	if (player(to)->challenge(from)) {
-	    printLine(tr("Challenge issued from %1 to %2").arg(name(from)).arg(name(to)));
-	} else {
-	    player(from)->sendBusyForChallenge(to);
+    if (desc == Player::Sent) {
+	if (!playerExist(to) || !player(to)->isLoggedIn()) {
+	    sendMessage(from, tr("That player is not online"));
+	    //INVALID BEHAVIOR
+	    return;
 	}
-    }
-}
-
-void Server::challengeAccepted(int from, int to)
-{
-    if (!playerExist(to) || !player(to)->isLoggedIn()) {
-	sendMessage(from, tr("That player is not online"));
-	return;
-    } else {
-	startBattle(from, to);
+	if (!player(to)->challenge(from)) {
+	    sendMessage(from, tr("%1 is busy.").arg(name(to)));
+	    return;
+	}
+    }  else {
+	if (desc == Player::Accepted) {
+	    startBattle(from, to);
+	} else {
+	    player(to)->sendChallengeStuff(desc, from);
+	}
     }
 }
 
@@ -132,10 +120,8 @@ void Server::battleResult(int desc, int winner, int loser)
     if (desc == Forfeit) {
 	printLine( tr("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
 	player(winner)->battleResult(Win);
-	player(loser)->battleResult(Forfeit);
-
-	removeBattle(winner, loser);
     }
+    removeBattle(winner, loser);
 }
 
 void Server::removeBattle(int winner, int loser)
@@ -144,27 +130,6 @@ void Server::removeBattle(int winner, int loser)
     mybattles.remove(winner);
     mybattles.remove(loser);
 }
-
-void Server::challengeRefused(int from, int to)
-{
-    if (!playerExist(to) || !player(to)->isLoggedIn()) {
-	return;
-    } else {
-	printLine(tr("Player %1 refused challenge from %2").arg(name(from)).arg(name(to)));
-	player(to)->sendChallengeRefusal(from);
-    }
-}
-
-void Server::busyForChallenge(int from, int to)
-{
-    if (!playerExist(to) || !player(to)->isLoggedIn()) {
-	return;
-    } else {
-	printLine(tr("Player %1 is busy so can't answer challenge from %2").arg(name(from)).arg(name(to)));
-	player(to)->sendBusyForChallenge(from);
-    }
-}
-
 
 void Server::sendPlayersList(int id)
 {
@@ -216,17 +181,18 @@ void Server::removePlayer(int id)
 {
     if (playerExist(id))
     {
-	Player *p = myplayers.take(id);
-
-	/* Sending the notice of logout to others only if the player is already logged in */
-	if (p->isLoggedIn())
-	    sendLogout(id);
-
-	p->setLoggedIn(false);
+	Player *p = player(id);
     
 	QString playerName = p->name();
+	bool loggedIn = p->isLoggedIn();
 
 	delete p;
+
+	myplayers.remove(id);
+
+	/* Sending the notice of logout to others only if the player is already logged in */
+	if (loggedIn)
+	    sendLogout(id);
 
 	printLine(tr("Removed player %1").arg(playerName));
     }
