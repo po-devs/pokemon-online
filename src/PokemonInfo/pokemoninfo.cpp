@@ -166,30 +166,16 @@ int PokemonInfo::Gender(int pokenum)
     return Pokemon::GenderAvail(get_line(path("poke_gender.txt"), pokenum).toInt());
 }
 
-QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney)
+QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney, bool back)
 {
     QString archive = path("poke_img.zip");
 
-    QString file = QString("%2/DP%3%4.png").arg(pokenum).arg((gender==Pokemon::Female)?"f":"m", shiney?"s":"");
+    QString file = QString("%2/DP%3%4%5.png").arg(pokenum).arg(back?"b":"",(gender==Pokemon::Female)?"f":"m", shiney?"s":"");
 
     QByteArray data = readZipFile(archive.toLocal8Bit(), file.toLocal8Bit());
 
     if (data.length()==0)
-    {
-        /* We change the gender/shininess to try to find a valid file */
-        if (shiney)
-        {
-            file = QString("%2/DP%3.png").arg(pokenum).arg((gender==Pokemon::Female)?"f":"m");
-            data = readZipFile(archive.toLocal8Bit(), file.toLocal8Bit());
-        }
-        if (data.length()==0)
-        {
-            file = QString("%2/DP%3.png").arg(pokenum).arg((gender==Pokemon::Female)?"m":"f");
-            data = readZipFile(archive.toLocal8Bit(), file.toLocal8Bit());
-        }
-        if (data.length()==0)
-            return QPixmap();
-    }
+	return QPixmap();
 
     QPixmap ret;
     ret.loadFromData(data, "png");

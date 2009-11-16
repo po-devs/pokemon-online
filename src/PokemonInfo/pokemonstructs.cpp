@@ -81,24 +81,15 @@ void PokeBaseStats::setBaseStat(int stat, quint8 base)
     m_BaseStats[stat] = base;
 }
 
-PokeGeneral::PokeGeneral(): m_num(0)
+PokeGeneral::PokeGeneral()
 {
+    num() = 0;
     //default for non-bugged programs
     m_abilities.push_back(0);
     m_abilities.push_back(0);
     m_genderAvail = Pokemon::NeutralAvail;
     m_types[0] = Pokemon::Curse;
     m_types[1] = -1;
-}
-
-void PokeGeneral::setNum(int num)
-{
-    m_num = num;
-}
-
-int PokeGeneral::num() const
-{
-    return m_num;
 }
 
 void PokeGeneral::loadBaseStats()
@@ -164,46 +155,6 @@ PokePersonal::PokePersonal()
     reset();
 }
 
-void PokePersonal::setNickname(const QString &nick)
-{
-    m_nickname = nick;
-}
-
-void PokePersonal::setItem(int item)
-{
-    m_item = item;
-}
-
-void PokePersonal::setAbility(int ability)
-{
-    m_ability = ability;
-}
-
-void PokePersonal::setNature(int nature)
-{
-    m_nature = nature;
-}
-
-void PokePersonal::setGender(int gender)
-{
-    m_gender = gender;
-}
-
-void PokePersonal::setShininess(bool shiny)
-{
-    m_shininess = shiny;
-}
-
-void PokePersonal::setHappiness(quint8 happiness)
-{
-    m_happiness = happiness;
-}
-
-void PokePersonal::setLevel(int level)
-{
-    m_level = level;
-}
-
 void PokePersonal::setMove(int moveNum, int moveSlot)
 {
     if (moveNum == move(moveSlot))
@@ -230,11 +181,6 @@ bool PokePersonal::hasMove(int moveNum)
         if (move(i) == moveNum)
             return true;
     return false;
-}
-
-void PokePersonal::setNum(int num)
-{
-    m_num = num;
 }
 
 void PokePersonal::setDV(int stat, quint8 val)
@@ -399,51 +345,6 @@ quint8 PokePersonal::spDefenseEV() const
     return EV(SpDefense);
 }
 
-QString PokePersonal::nickname() const
-{
-    return m_nickname;
-}
-
-int PokePersonal::num() const
-{
-    return m_num;
-}
-
-int PokePersonal::item() const
-{
-    return m_item;
-}
-
-int PokePersonal::ability() const
-{
-    return m_ability;
-}
-
-int PokePersonal::nature() const
-{
-    return m_nature;
-}
-
-int PokePersonal::gender() const
-{
-    return m_gender;
-}
-
-bool PokePersonal::shiny() const
-{
-    return m_shininess;
-}
-
-quint8 PokePersonal::happiness() const
-{
-    return m_happiness;
-}
-
-int PokePersonal::level() const
-{
-    return m_level;
-}
-
 int PokePersonal::move(int moveSlot) const
 {
     return m_moves[moveSlot];
@@ -456,31 +357,22 @@ int PokePersonal::natureBoost(int stat) const
 
 void PokePersonal::reset()
 {
-    setNum(0);
-    setLevel(100);
+    num() = 0;
+    level() = 0;
     for (int i = 0; i < 4; i++)
         setMove(0,i);
-    setHappiness(255);
-    setShininess(false);
-    setGender(0);
-    setAbility(0);
-    setNickname("");
-    setNature(0);
-    setItem(0);
+    happiness() = 0;
+    shiny() = false;
+    gender() = Pokemon::Neutral;
+    ability() = 0;
+    nickname() = "";
+    nature() = 0;
+    item() = 0;
 
-    setHpDV(31);
-    setAttackDV(31);
-    setDefenseDV(31);
-    setSpeedDV(31);
-    setSpAttackDV(31);
-    setSpDefenseDV(31);
-
-    setHpEV(0);
-    setAttackEV(0);
-    setDefenseEV(0);
-    setSpeedEV(0);
-    setSpAttackEV(0);
-    setSpDefenseEV(0);
+    for (int i = 0; i < 6; i ++) {
+	setDV(i,31);
+	setEV(i,0);
+    }
 }
 
 PokeGraphics::PokeGraphics()
@@ -552,14 +444,14 @@ PokeTeam::PokeTeam()
     setNum(0);
 }
 
-void PokeTeam::setNum(int num)
+void PokeTeam::setNum(quint16 num)
 {
-    PokeGeneral::setNum(num);
-    PokePersonal::setNum(num);
+    PokeGeneral::num() = num;
+    PokePersonal::num() = num;
     PokeGraphics::setNum(num);
 }
 
-int PokeTeam::num() const
+quint16 PokeTeam::num() const
 {
     return PokeGeneral::num();
 }
@@ -570,18 +462,18 @@ void PokeTeam::load()
     /*set the default gender & ability */
     if (genderAvail() == Pokemon::NeutralAvail)
     {
-        setGender(Pokemon::Neutral);
+	gender() = Pokemon::Neutral;
     }
     else if (genderAvail() == Pokemon::FemaleAvail)
     {
-        setGender(Pokemon::Female);
+	gender() = Pokemon::Female;
     }
     else
     {
-        setGender(Pokemon::Male);
+	gender() = Pokemon::Male;
     }
-    setAbility(abilities()[0]);
-    setNickname(PokemonInfo::Name(num()));
+    ability() = abilities()[0];
+    nickname() = PokemonInfo::Name(num());
     PokeGraphics::load(gender(), false);
     PokeGraphics::loadIcon(num());
 }
@@ -868,77 +760,59 @@ QDataStream & operator >> (QDataStream & in, Team & team)
     return in;
 }
 
-QDataStream & operator >> (QDataStream & in, PokePersonal & Pokemon)
+QDataStream & operator >> (QDataStream & in, PokePersonal & poke)
 {
-    QString nickname;
-    int num,item,ability,nature,gender,level,i;
-    bool shininess;
-    quint8 happiness;
-    in >> num >> nickname >> item >> ability >> nature >> gender >> shininess >> happiness >> level;
-    Pokemon.setNum(num);
-    Pokemon.setNickname(nickname);
-    Pokemon.setItem(item);
-    Pokemon.setAbility(ability);
-    Pokemon.setNature(nature);
-    Pokemon.setGender(gender);
-    Pokemon.setShininess(shininess);
-    Pokemon.setHappiness(happiness);
-    Pokemon.setLevel(level);
-    for(i=0;i<4;i++)
+    in >> poke.num() >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level();
+
+    for(int i=0;i<4;i++)
     {
         int moveNum;
         in >> moveNum;
-        Pokemon.setMove(moveNum,i);
+	poke.setMove(moveNum,i);
     }
-    for(i=0;i<6;i++)
+    for(int i=0;i<6;i++)
     {
         quint8 DV;
         in >> DV;
-        Pokemon.setDV(i,DV);
+	poke.setDV(i,DV);
     }
-    for(i=0;i<6;i++)
+    for(int i=0;i<6;i++)
     {
         quint8 EV;
         in >> EV;
-        Pokemon.setEV(i,EV);
+	poke.setEV(i,EV);
     }
     return in;
 }
 
-QDataStream & operator >> (QDataStream & in, PokeTeam & Pokemon)
+QDataStream & operator >> (QDataStream & in, PokeTeam & poke)
 {
-    QString nickname;
-    int num,item,ability,nature,gender,level,i;
-    bool shininess;
-    quint8 happiness;
-    in >> num >> nickname >> item >> ability >> nature >> gender >> shininess >> happiness >> level;
-    Pokemon.setNum(num);
-    Pokemon.load();
-    Pokemon.setNickname(nickname);
-    Pokemon.setItem(item);
-    Pokemon.setAbility(ability);
-    Pokemon.setNature(nature);
-    Pokemon.setGender(gender);
-    Pokemon.setShininess(shininess);
-    Pokemon.setHappiness(happiness);
-    Pokemon.setLevel(level);
-    for(i=0;i<4;i++)
+    quint16 num;
+    in >> num;
+
+    poke.setNum(num);
+
+    poke.load();
+
+    in >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level();
+
+    for(int i=0;i<4;i++)
     {
 	int moveNum;
 	in >> moveNum;
-	Pokemon.setMove(moveNum,i);
+	poke.setMove(moveNum,i);
     }
-    for(i=0;i<6;i++)
+    for(int i=0;i<6;i++)
     {
 	quint8 DV;
 	in >> DV;
-	Pokemon.setDV(i,DV);
+	poke.setDV(i,DV);
     }
-    for(i=0;i<6;i++)
+    for(int i=0;i<6;i++)
     {
 	quint8 EV;
 	in >> EV;
-	Pokemon.setEV(i,EV);
+	poke.setEV(i,EV);
     }
     return in;
 }
