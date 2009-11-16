@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include <QDataStream>
+#include "../Utilities/functions.h"
 
 namespace Pokemon
 {
@@ -149,12 +150,12 @@ public:
 /* Data that every pokémon of the same specy share. */
 class PokeGeneral
 {
+    PROPERTY(quint16, num);
 protected:
     PokeBaseStats m_stats;
     QList<int> m_moves;
     QList<int> m_abilities;
     int m_types[2];
-    int m_num;
     int m_genderAvail;
 
     void loadBaseStats();
@@ -171,9 +172,6 @@ public:
     const QList<int>& abilities() const;
     int genderAvail() const;
 
-    int num() const;
-    void setNum(int new_num);
-
     const QList<int>& moves() const;
 
     /* loads using num() */
@@ -183,17 +181,16 @@ public:
 /* Data that is unique to a pokémon */
 class PokePersonal
 {
+    PROPERTY(QString, nickname);
+    PROPERTY(quint16, num);
+    PROPERTY(quint16, item);
+    PROPERTY(quint16, ability);
+    PROPERTY(quint8, nature);
+    PROPERTY(quint8, gender);
+    PROPERTY(bool, shiny);
+    PROPERTY(quint8, happiness);
+    PROPERTY(quint8, level);
 protected:
-    QString m_nickname;
-    int m_num;
-    int m_item;
-    int m_ability;
-    int m_nature;
-    int m_gender;
-    bool m_shininess;
-    quint8 m_happiness;
-    int m_level;
-
     int m_moves[4];
 
     quint8 m_DVs[6];
@@ -206,29 +203,10 @@ public:
 
     /* -1 if the nature is hindering, 0 if neutral and 1 if it boosts that stat */
     int natureBoost(int stat) const;
-
-    QString nickname() const;
-    int num() const;
-    int item() const;
-    int ability() const;
-    int nature() const;
-    int gender() const;
-    bool shiny() const;
-    quint8 happiness() const;
-    int level() const;
     int move(int moveSlot) const;
     /* resets everything to default values */
     void reset();
 
-    void setNickname(const QString &);
-    void setNum(int num);
-    void setItem(int item);
-    void setAbility(int ability);
-    void setNature(int nature);
-    void setGender(int gender);
-    void setShininess(bool shiny);
-    void setHappiness(quint8 happiness);
-    void setLevel(int level);
     void setMove(int moveNum, int moveSlot);
     int addMove(int moveNum);
 
@@ -305,8 +283,8 @@ protected:
 public:
     PokeTeam();
 
-    int num() const;
-    void setNum(int num);
+    quint16 num() const;
+    void setNum(quint16 num);
 
     int stat(int statno) const;
     int hp() const;

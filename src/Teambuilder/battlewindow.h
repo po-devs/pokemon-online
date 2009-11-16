@@ -6,6 +6,7 @@
 
 class AttackZone;
 class PokeZone;
+class GraphicsZone;
 
 /* The battle window called by the client, online */
 
@@ -33,11 +34,31 @@ private:
     PokeZone *mypzone;
     QTextEdit *mychat;
     QLineEdit *myline;
-    QGraphicsView *myview;
+    GraphicsZone *myview;
     QPushButton *myswitch, *myattack, *myforfeit, *mysend;
     TeamBattle myteam;
 
     int mycurrentpoke;
+};
+
+/* The graphics zone, where both pokes are displayed */
+class GraphicsZone : public QGraphicsView
+{
+    Q_OBJECT
+public:
+    GraphicsZone();
+    /* displays that poke */
+    void switchTo(const PokeBattle &poke);
+
+    /* Loads a pixmap if not loaded otherwise go see graphics */
+    QPixmap loadPixmap(quint16 num, bool shiny, bool back, quint8 gender);
+    /* We are using a qmap to store the graphics already loaded. So the key of the pixmap
+	is a combination of 2 bools, 1 quin8; and one quint16 */
+    qint32 key(quint16 num, bool shiny, bool back, quint8 gender) const;
+    QMap<qint32, QPixmap> graphics;
+    /* Current pixmaps displayed */
+    QGraphicsPixmapItem *mine, *foe;
+    QGraphicsScene scene;
 };
 
 /* An attack zone is the zone where the attacks are displayed */

@@ -724,7 +724,7 @@ PokeTeam * TB_PokemonBody::poke()
 
 void TB_PokemonBody::setNick(const QString &nick)
 {
-    poke()->setNickname(nick);
+    poke()->nickname() = nick;
     emit nicknameChanged(nick);
 }
 
@@ -814,12 +814,12 @@ void TB_PokemonBody::configureMoves()
 
 void TB_PokemonBody::setItem(const QString &item)
 {
-    poke()->setItem(ItemInfo::Number(item));
+    poke()->item() = ItemInfo::Number(item);
 }
 
 void TB_PokemonBody::setNature(int nature)
 {
-    poke()->setNature(nature);
+    poke()->nature() = nature;
     /* As the nature has an influence over the stats, we update them */
     evchoice->updateEVs();
 }

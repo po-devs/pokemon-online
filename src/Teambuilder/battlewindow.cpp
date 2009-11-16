@@ -11,7 +11,7 @@ BattleWindow::BattleWindow(const QString &opp, const TeamBattle &team)
     setWindowTitle(tr("Battling against %1").arg(opp));
     QGridLayout *mylayout = new QGridLayout(this);
 
-    mylayout->addWidget(myview = new QGraphicsView(), 0, 0, 3, 1);
+    mylayout->addWidget(myview = new GraphicsZone(), 0, 0, 3, 1);
     mylayout->addWidget(mychat = new QTextEdit(), 0, 1, 1, 2);
     mylayout->addWidget(myline = new QLineEdit(), 1, 1, 1, 2);
     mylayout->addWidget(myforfeit = new QPushButton(tr("&Forfeit")), 2, 1);
@@ -33,10 +33,13 @@ BattleWindow::BattleWindow(const QString &opp, const TeamBattle &team)
     connect(myswitch, SIGNAL(clicked()), SLOT(switchToPokeZone()));
 
     show();
+
+    switchTo(0);
 }
 
 void BattleWindow::switchTo(int pokezone)
 {
+    myview->switchTo(myteam.poke(pokezone));
     mystack->setCurrentIndex(pokezone);
 }
 
@@ -84,4 +87,41 @@ PokeZone::PokeZone(const TeamBattle &team)
     }
 
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(switchTo(int)));
+}
+
+GraphicsZone::GraphicsZone()
+{
+    setScene(&scene);
+
+    setFixedSize(305,305);
+
+    scene.setSceneRect(0,0,300,300);
+
+    mine = new QGraphicsPixmapItem();
+    foe = new QGraphicsPixmapItem();
+
+    scene.addItem(mine);
+    mine->setPos(10, 300-63);
+
+    scene.addItem(foe);
+}
+
+void GraphicsZone::switchTo(const PokeBattle &poke)
+{
+    mine->setPixmap(loadPixmap(poke.num(), poke.shiny(), true, poke.gender()));
+}
+
+QPixmap GraphicsZone::loadPixmap(quint16 num, bool shiny, bool back, quint8 gender)
+{
+    qint32 key = this->key(num, shiny, back, gender);
+
+    if (!graphics.contains(key))
+	graphics.insert(key, PokemonInfo::Picture(num, gender, shiny, back));
+
+    return graphics[key];
+}
+
+qint32 GraphicsZone::key(quint16 num, bool shiny, bool back, quint8 gender) const
+{
+    return num + (gender << 16) + (back << 24) + (shiny<<25);
 }

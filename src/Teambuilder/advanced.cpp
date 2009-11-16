@@ -150,18 +150,18 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 
 void TB_Advanced::changeAbility(bool ab1)
 {
-    poke()->setAbility(ab1? poke()->abilities()[0] : poke()->abilities()[1]);
+    poke()->ability() = ab1? poke()->abilities()[0] : poke()->abilities()[1];
 }
 
 void TB_Advanced::changeShininess(bool shine)
 {
-    poke()->setShininess(shine);
+    poke()->shiny() = shine;
     updatePokeImage();
 }
 
 void TB_Advanced::changeGender(bool gend1)
 {
-    poke()->setGender(gend1 ? Pokemon::Male : Pokemon::Female);
+    poke()->gender() = gend1 ? Pokemon::Male : Pokemon::Female;
     updatePokeImage();
 }
 
@@ -234,7 +234,7 @@ void TB_Advanced::updateDV(int stat)
 
 void TB_Advanced::changeLevel(int level)
 {
-    poke()->setLevel(level);
+    poke()->level() =level;
     updateStats();
 }
 

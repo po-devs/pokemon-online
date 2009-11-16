@@ -4,72 +4,23 @@
 
 BattleMove::BattleMove()
 {
-    setNum(0);
-    setType(0);
-    setPower(0);
-    setPP(0);
-    setTotalPP(0);
-}
-
-quint16 BattleMove::num() const {
-    return m_num;
-}
-
-quint8 BattleMove::power() const {
-    return m_power;
-}
-
-quint8 BattleMove::PP() const {
-    return m_PP;
-}
-
-quint8 BattleMove::type() const {
-    return m_type;
-}
-
-quint8 BattleMove::totalPP() const {
-    return m_totalPP;
-}
-
-void BattleMove::setNum(quint16 num) {
-    m_num = num;
-}
-
-void BattleMove::setPower(quint8 power) {
-    m_power = power;
-}
-
-void BattleMove::setPP(quint8 pp) {
-    m_PP = pp;
-}
-
-void BattleMove::setType(quint8 type) {
-    m_type = type;
-}
-
-void BattleMove::setTotalPP(quint8 totalPP) {
-    m_totalPP = totalPP;
+    num() = 0;
+    type() = 0;
+    power() = 0;
+    PP() = 0;
+    totalPP() = 0;
 }
 
 void BattleMove::load() {
-    setPower(MoveInfo::Power(num()));
-    setPP(MoveInfo::PP(num()));
-    setTotalPP(PP());
-    setType(MoveInfo::Type(num()));
+    power() = MoveInfo::Power(num());
+    PP() = MoveInfo::PP(num());
+    totalPP() = PP();
+    type() = MoveInfo::Type(num());
 }
 
 QDataStream & operator >> (QDataStream &in, BattleMove &mo)
 {
-    quint16 num;
-    quint8 totalPP,PP,power,type;
-
-    in >> num >> PP >> totalPP >> power >> type;
-
-    mo.setNum(num);
-    mo.setTotalPP(totalPP);
-    mo.setPP(PP);
-    mo.setPower(power);
-    mo.setType(type);
+    in >> mo.num() >> mo.type() >> mo.power() >> mo.PP() >> mo.totalPP();
 
     return in;
 }
@@ -83,16 +34,13 @@ QDataStream & operator << (QDataStream &out, const BattleMove &mo)
 
 PokeBattle::PokeBattle()
 {
-    setNum(0);
-    resetStatMods();
-    setConfused(false);
-    setStatus(Pokemon::Fine);
-    setLifePoints(0);
-    setTotalLifePoints(0);
-}
+    num() =0;
+    confused() = false;
+    status() = Pokemon::Fine;
+    lifePoints() = 0;
+    totalLifePoints() = 0;
 
-void PokeBattle::setConfused(bool confused) {
-    m_confused = confused;
+    resetStatMods();
 }
 
 const BattleMove & PokeBattle::move(int i) const
@@ -103,16 +51,6 @@ const BattleMove & PokeBattle::move(int i) const
 BattleMove & PokeBattle::move(int i)
 {
     return m_moves[i];
-}
-
-QString PokeBattle::nick() const
-{
-    return m_nick;
-}
-
-quint16 PokeBattle::num() const
-{
-    return m_num;
 }
 
 quint16 PokeBattle::normalStat(int stat) const
@@ -130,25 +68,6 @@ void PokeBattle::setStatMod(int stat, qint8 mod)
     stat_mods[stat-1] = mod;
 }
 
-void PokeBattle::setLifePoints(quint16 lifePoints)
-{
-    m_lifepoints = lifePoints;
-}
-
-void PokeBattle::setTotalLifePoints(quint16 totalLifePoints)
-{
-    m_totalLifepoints = totalLifePoints;
-}
-
-void PokeBattle::setStatus(quint8 status)
-{
-    m_status = status;
-}
-
-void PokeBattle::setNum(quint16 num) {
-    m_num = num;
-}
-
 void PokeBattle::resetStatMods()
 {
     for (int i = Attack; i <= SpDefense; i++) {
@@ -156,32 +75,25 @@ void PokeBattle::resetStatMods()
     }
 }
 
-quint16 PokeBattle::lifePoints() const
-{
-    return m_lifepoints;
-}
-
-quint16 PokeBattle::totalLifePoints() const
-{
-    return m_totalLifepoints;
-}
 
 void PokeBattle::init(const PokePersonal &poke)
 {
     PokeGeneral p;
-    p.setNum(poke.num());
+    p.num() = poke.num();
     p.load();
 
-    setNum(poke.num());
+    num() = poke.num();
+    nick() = poke.nickname();
+    gender() = poke.gender();
+    shiny() = poke.shiny();
 
     for (int i = 0; i < 4; i++) {
-	move(i).setNum(poke.move(i));
+	move(i).num() = poke.move(i);
 	move(i).load();
     }
-    m_nick = poke.nickname();
 
-    setTotalLifePoints(PokemonInfo::FullStat(poke.nature(), Hp, p.baseStats().baseHp(), poke.level(), poke.hpDV(), poke.hpEV()));
-    setLifePoints(totalLifePoints());
+    totalLifePoints() = PokemonInfo::FullStat(poke.nature(), Hp, p.baseStats().baseHp(), poke.level(), poke.hpDV(), poke.hpEV());
+    lifePoints() = totalLifePoints();
 
     for (int i = 0; i < 5; i++) {
 	normal_stats[i] = PokemonInfo::FullStat(poke.nature(), i+1, p.baseStats().baseStat(i+1), poke.level(), poke.DV(i+1), poke.EV(i+1));
@@ -190,13 +102,7 @@ void PokeBattle::init(const PokePersonal &poke)
 
 QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 {
-    quint16 num,lifePoints;
-
-    in >> num >> lifePoints;
-
-    po.setNum(num);
-    po.setTotalLifePoints(lifePoints);
-    po.setLifePoints(lifePoints);
+    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny();
 
     for (int i = 0; i < 5; i++) {
 	quint16 st;
@@ -213,7 +119,7 @@ QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 
 QDataStream & operator << (QDataStream &out, const PokeBattle &po)
 {
-    out << po.num() << po.totalLifePoints();
+    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny();
 
     for (int i = 0; i < 5; i++) {
 	out << po.normalStat(i+1);

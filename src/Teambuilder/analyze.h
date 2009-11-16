@@ -23,7 +23,8 @@ namespace NetworkCli
 	SendTeam,
 	ChallengeStuff,
 	EngageBattle,
-	BattleFinished
+	BattleFinished,
+	BattleCommand
     };
 
     enum ProtocolError

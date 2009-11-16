@@ -21,7 +21,8 @@ namespace NetworkServ
 	SendTeam,
 	ChallengeStuff,
 	EngageBattle,
-	BattleFinished
+	BattleFinished,
+	BattleCommand
     };
 
     enum ProtocolError
