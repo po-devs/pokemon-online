@@ -6,6 +6,15 @@ BattleSituation::BattleSituation(Player &p1, Player &p2)
 {
     myid[0] = p1.id();
     myid[1] = p2.id();
+    mycurrentpoke[0] = -1;
+    mycurrentpoke[1] = -1;
+}
+
+void BattleSituation::start()
+{
+    /* Beginning of the battle! */
+    sendPoke(Player1, 0);
+    sendPoke(Player2, 0);
 }
 
 int BattleSituation::spot(int id) const
@@ -45,4 +54,29 @@ const TeamBattle &BattleSituation::team(int spot) const
 const TeamBattle& BattleSituation::pubteam(int id)
 {
     return team(spot(id));
+}
+
+int BattleSituation::rev(int p) const
+{
+    return 1 - p;
+}
+
+const PokeBattle & BattleSituation::poke(int player, int poke) const
+{
+    return team(player).poke(poke);
+}
+
+/* Battle functions! Yeah! */
+
+void BattleSituation::sendPoke(int player, int poke)
+{
+    changeCurrentPoke(player, poke);
+
+    notify(player, SendOut, You, ypoke(player, poke));
+    notify(rev(player), SendOut, Opp, opoke(player, poke));
+}
+
+void BattleSituation::changeCurrentPoke(int player, int poke)
+{
+    mycurrentpoke[player] = poke;
 }

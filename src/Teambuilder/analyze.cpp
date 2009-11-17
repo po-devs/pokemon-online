@@ -140,6 +140,17 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit battleFinished(desc);
 	    break;
 	}
+	case BattleMessage:
+	{
+	    /* Such a headache, it really looks like wasting ressources */
+	    char *buf;
+	    uint len;
+	    in.readBytes(buf, len);
+	    QByteArray command(buf, len);
+	    delete [] buf;
+	    emit battleMessage(command);
+	    break;
+	}
 	default:
 	    emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
     }

@@ -132,6 +132,39 @@ QDataStream & operator << (QDataStream &out, const PokeBattle &po)
     return out;
 }
 
+ShallowBattlePoke::ShallowBattlePoke()
+{
+}
+
+ShallowBattlePoke::ShallowBattlePoke(const PokeBattle &p)
+{
+    init(p);
+}
+
+void ShallowBattlePoke::init(const PokeBattle &poke)
+{
+    nick() = poke.nick();
+    status() = poke.status();
+    num() = poke.num();
+    shiny() = poke.shiny();
+    gender() = poke.gender();
+    lifePercent() = (poke.lifePoints() * 100) / poke.totalLifePoints();
+}
+
+QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po)
+{
+    in >> po.num() >> po.nick() >> po.lifePercent() >> po.status() >> po.gender() >> po.shiny();
+
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po)
+{
+    out << po.num() << po.nick() << po.lifePercent() << po.status() << po.gender() << po.shiny();
+
+    return out;
+}
+
 TeamBattle::TeamBattle()
 {
 }

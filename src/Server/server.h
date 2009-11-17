@@ -38,6 +38,7 @@ public slots:
     void disconnected(int id);
     void dealWithChallenge(int desc, int from, int to);
     void battleResult(int desc, int winner, int loser);
+    void sendBattleCommand(int id, const QByteArray &command);
 
 private:
     QTcpServer myserver;
