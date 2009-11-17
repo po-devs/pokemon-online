@@ -101,7 +101,7 @@ GraphicsZone::GraphicsZone()
     foe = new QGraphicsPixmapItem();
 
     scene.addItem(mine);
-    mine->setPos(10, 300-63);
+    mine->setPos(10, 300-79);
 
     scene.addItem(foe);
 }
