@@ -45,12 +45,46 @@ void BattleWindow::switchTo(int pokezone)
 
 void BattleWindow::switchToPokeZone()
 {
-    mystack->setCurrentIndex(6);
+    mystack->setCurrentIndex(ZoneOfPokes);
 }
 
 int BattleWindow::currentPoke() const
 {
     return mycurrentpoke;
+}
+
+void BattleWindow::receiveInfo(QByteArray info)
+{
+    QDataStream in (&info, QIODevice::ReadOnly);
+
+    uchar command;
+    bool self;
+
+    in >> command >> self;
+
+    switch (command)
+    {
+	case SendPoke:
+	{
+	    if (self) {
+		quint8 poke;
+		in >> poke;
+		switchTo(poke);
+	    } else {
+		ShallowBattlePoke poke;
+		in >> poke;
+		myview->switchTo(poke, false);
+	    }
+	    break;
+	}
+	default:
+	    break;
+    }
+}
+
+void BattleWindow::switchToNaught(bool self)
+{
+    myview->switchToNaught(self);
 }
 
 TeamBattle &BattleWindow::team()
@@ -104,11 +138,15 @@ GraphicsZone::GraphicsZone()
     mine->setPos(10, 300-79);
 
     scene.addItem(foe);
+    foe->setPos(200, 0);
 }
 
-void GraphicsZone::switchTo(const PokeBattle &poke)
+void GraphicsZone::switchToNaught(bool self)
 {
-    mine->setPixmap(loadPixmap(poke.num(), poke.shiny(), true, poke.gender()));
+    if (self)
+	mine->setPixmap(QPixmap());
+    else
+	foe->setPixmap(QPixmap());
 }
 
 QPixmap GraphicsZone::loadPixmap(quint16 num, bool shiny, bool back, quint8 gender)

@@ -22,7 +22,7 @@ namespace NetworkServ
 	ChallengeStuff,
 	EngageBattle,
 	BattleFinished,
-	BattleCommand
+	BattleMessage
     };
 
     enum ProtocolError
@@ -49,6 +49,7 @@ public:
     void sendChallengeStuff(quint8 desc, int id);
     void engageBattle(int id, const TeamBattle &team);
     void sendBattleResult(quint8 res);
+    void sendBattleCommand(const QByteArray &command);
 signals:
     /* to send to the network */
     void sendCommand(const QByteArray &command);

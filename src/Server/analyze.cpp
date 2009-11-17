@@ -93,6 +93,17 @@ void Analyzer::sendBattleResult(quint8 res)
     emit sendCommand(tosend);
 }
 
+void Analyzer::sendBattleCommand(const QByteArray & command)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(BattleMessage) << command;
+
+    emit sendCommand(tosend);
+}
+
 void Analyzer::error()
 {
     emit connectionError(socket().error(), socket().errorString());

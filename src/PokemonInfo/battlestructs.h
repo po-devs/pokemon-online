@@ -80,6 +80,25 @@ private:
 QDataStream & operator >> (QDataStream &in, PokeBattle &po);
 QDataStream & operator << (QDataStream &out, const PokeBattle &po);
 
+/* A pokemon as viewed by the opponent: nearly no info */
+class ShallowBattlePoke
+{
+    PROPERTY(QString, nick);
+    PROPERTY(quint8, status);
+    PROPERTY(quint16, num);
+    PROPERTY(bool, shiny);
+    PROPERTY(quint8, gender);
+    PROPERTY(quint8, lifePercent);
+public:
+    ShallowBattlePoke();
+    ShallowBattlePoke(const PokeBattle &poke);
+
+    void init(const PokeBattle &poke);
+};
+
+QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po);
+QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po);
+
 class TeamBattle
 {
 public:

@@ -22,7 +22,22 @@ public:
     const TeamBattle &team() const;
 
     int currentPoke() const;
+
+    enum BattleCommand
+    {
+	SendPoke
+    };
+    enum
+    {
+	ZoneOfPokes = 6,
+	ZoneOfNothing = 7
+    };
+
+    void doSwitch(int newzone);
+    void switchToNaught(bool self);
 public slots:
+    void receiveInfo(QByteArray);
+
     void switchTo(int pokezone);
     void switchToPokeZone();
 signals:
@@ -48,7 +63,10 @@ class GraphicsZone : public QGraphicsView
 public:
     GraphicsZone();
     /* displays that poke */
-    void switchTo(const PokeBattle &poke);
+    template <class T>
+    void switchTo(const T &poke, bool self=true);
+    /* Display blank */
+    void switchToNaught(bool self);
 
     /* Loads a pixmap if not loaded otherwise go see graphics */
     QPixmap loadPixmap(quint16 num, bool shiny, bool back, quint8 gender);
@@ -84,5 +102,16 @@ private:
     QPushButton *pokes[6];
     QSignalMapper *mymapper;
 };
+
+
+/* Yeepee, at last templates */
+template <class T>
+void GraphicsZone::switchTo(const T &poke, bool self)
+{
+    if (self)
+	mine->setPixmap(loadPixmap(poke.num(), poke.shiny(), true, poke.gender()));
+    else
+	foe->setPixmap(loadPixmap(poke.num(), poke.shiny(), false, poke.gender()));
+}
 
 #endif // BATTLEWINDOW_H

@@ -24,7 +24,7 @@ namespace NetworkCli
 	ChallengeStuff,
 	EngageBattle,
 	BattleFinished,
-	BattleCommand
+	BattleMessage
     };
 
     enum ProtocolError
@@ -71,6 +71,7 @@ signals:
     void challengeStuff(int desc, int id);
     void battleStarted(int id, const TeamBattle &myteam);
     void battleFinished(int res);
+    void battleMessage(const QByteArray &mess);
 
 public slots:
     /* slots called by the network */
