@@ -50,6 +50,7 @@ void Server::loggedIn(int id, const QString &name)
 
 void Server::sendBattleCommand(int id, const QByteArray &comm)
 {
+    printLine("command sent, god damn!");
     player(id)->relay().sendBattleCommand(comm);
 }
 
@@ -119,9 +120,8 @@ void Server::startBattle(int id1, int id2)
     player(id1)->startBattle(id2, battle->pubteam(id1));
     player(id2)->startBattle(id1, battle->pubteam(id2));
 
-    connect(battle, SIGNAL(battleInfo(int,QByteArray)), SLOT(sendBattleCommand(int, QByteArray)));
-
     battle->start();
+    connect(battle, SIGNAL(battleInfo(int,QByteArray)), SLOT(sendBattleCommand(int, QByteArray)));
 }
 
 void Server::battleResult(int desc, int winner, int loser)

@@ -40,7 +40,7 @@ public:
     int currentPoke(int player) const;
     void changeCurrentPoke(int player, int poke);
 
-    /* Starts the battle -- after signal / slots are connected */
+    /* Starts the battle -- use the time before to connect signals / slots */
     void start();
 
     /* Commands for the battle situation */
@@ -73,7 +73,8 @@ public:
     /* Send a message to the outworld */
     enum BattleCommand
     {
-	SendOut
+	SendOut,
+	OfferChoice
     };
 
     /* Here C++0x would make it so much better looking with variadic templates! */
@@ -87,6 +88,23 @@ private:
     int mycurrentpoke[2];
     int myid[2];
 };
+
+struct BattleChoice
+{
+    /* Sets everything to true */
+    BattleChoice();
+    void disableSwitch();
+    void disableAttack(int attack);
+    void disableAttacks();
+
+    bool switchAllowed;
+    bool attacksAllowed[4];
+
+    static BattleChoice SwitchOnly();
+};
+
+QDataStream & operator >> (QDataStream &in, BattleChoice &po);
+QDataStream & operator << (QDataStream &out, const BattleChoice &po);
 
 template<class T>
 void BattleSituation::notify(int player, int command, bool who, const T& param)
