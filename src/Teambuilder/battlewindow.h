@@ -25,7 +25,8 @@ public:
 
     enum BattleCommand
     {
-	SendPoke
+	SendPoke,
+	OfferChoice
     };
     enum
     {

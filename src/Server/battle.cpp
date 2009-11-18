@@ -80,3 +80,44 @@ void BattleSituation::changeCurrentPoke(int player, int poke)
 {
     mycurrentpoke[player] = poke;
 }
+
+BattleChoice::BattleChoice()
+{
+    switchAllowed = true;
+    std::fill(attacksAllowed, attacksAllowed+4, true);
+}
+
+void BattleChoice::disableSwitch()
+{
+    switchAllowed = false;
+}
+
+void BattleChoice::disableAttack(int attack)
+{
+    attacksAllowed[attack] = false;
+}
+
+void BattleChoice::disableAttacks()
+{
+    std::fill(attacksAllowed, attacksAllowed+4, false);
+}
+
+BattleChoice BattleChoice::SwitchOnly()
+{
+    BattleChoice ret;
+    ret.disableAttacks();
+
+    return ret;
+}
+
+QDataStream & operator >> (QDataStream &in, BattleChoice &po)
+{
+    in >> po.switchAllowed >> po.attacksAllowed[0] >> po.attacksAllowed[1] >> po.attacksAllowed[2] >> po.attacksAllowed[3];
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const BattleChoice &po)
+{
+    out << po.switchAllowed << po.attacksAllowed[0] << po.attacksAllowed[1] << po.attacksAllowed[2] << po.attacksAllowed[3];
+    return out;
+}
