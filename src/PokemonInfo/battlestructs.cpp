@@ -203,3 +203,89 @@ QDataStream & operator << (QDataStream &out, const TeamBattle &te)
 
     return out;
 }
+
+BattleChoices::BattleChoices()
+{
+    switchAllowed = true;
+    attacksAllowed = true;
+    std::fill(attackAllowed, attackAllowed+4, true);
+}
+
+void BattleChoices::disableSwitch()
+{
+    switchAllowed = false;
+}
+
+void BattleChoices::disableAttack(int attack)
+{
+    attackAllowed[attack] = false;
+}
+
+void BattleChoices::disableAttacks()
+{
+    std::fill(attackAllowed, attackAllowed+4, false);
+}
+
+BattleChoices BattleChoices::SwitchOnly()
+{
+    BattleChoices ret;
+    ret.disableAttacks();
+
+    return ret;
+}
+
+QDataStream & operator >> (QDataStream &in, BattleChoices &po)
+{
+    in >> po.switchAllowed >> po.attacksAllowed >> po.attackAllowed[0] >> po.attackAllowed[1] >> po.attackAllowed[2] >> po.attackAllowed[3];
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const BattleChoices &po)
+{
+    out << po.switchAllowed << po.attacksAllowed << po.attackAllowed[0] << po.attackAllowed[1] << po.attackAllowed[2] << po.attackAllowed[3];
+    return out;
+}
+
+bool BattleChoice::match(const BattleChoices &avail) const
+{
+    if (!avail.attacksAllowed && attack()) {
+	return false;
+    }
+    if (!avail.switchAllowed && poke()) {
+	return false;
+    }
+
+    if (attack()) {
+	if (avail.struggle() != (numSwitch == -1))
+	    return false;
+	if (!avail.struggle()) {
+	    if (numSwitch < 0 || numSwitch > 3) {
+		//Crash attempt!!
+		return false;
+	    }
+	    return avail.attackAllowed[numSwitch];
+	}
+	return true;
+    }
+    if (poke()) {
+	if (numSwitch < 0 || numSwitch > 5) {
+	    //Crash attempt!!
+	    return false;
+	}
+	return true;
+    }
+    //Never reached
+    return true; // but avoids warnings anyway
+}
+
+QDataStream & operator >> (QDataStream &in, BattleChoice &po)
+{
+    in >> po.pokeSwitch >> po.numSwitch;
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const BattleChoice &po)
+{
+    out << po.pokeSwitch << po.numSwitch;
+    return out;
+}

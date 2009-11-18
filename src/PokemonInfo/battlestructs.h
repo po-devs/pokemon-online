@@ -116,4 +116,38 @@ private:
 QDataStream & operator >> (QDataStream &in, TeamBattle &te);
 QDataStream & operator << (QDataStream &out, const TeamBattle &te);
 
+struct BattleChoices
+{
+    /* Sets everything to true */
+    BattleChoices();
+    void disableSwitch();
+    void disableAttack(int attack);
+    void disableAttacks();
+
+    bool switchAllowed;
+    bool attacksAllowed;
+    bool attackAllowed[4];
+
+    bool struggle() const { return qFind(attackAllowed, attackAllowed+4, true) == attackAllowed+4; }
+
+    static BattleChoices SwitchOnly();
+};
+
+QDataStream & operator >> (QDataStream &in, BattleChoices &po);
+QDataStream & operator << (QDataStream &out, const BattleChoices &po);
+
+struct BattleChoice
+{
+    bool pokeSwitch; /* True if poke switch, false if attack switch */
+    qint8 numSwitch; /* The num of the poke or the attack to use, -1 for Struggle */
+
+    /* returns true if the choice is valid */
+    bool match(const BattleChoices &avail) const;
+    bool attack() const { return !pokeSwitch; }
+    bool poke() const { return pokeSwitch; }
+};
+
+QDataStream & operator >> (QDataStream &in, BattleChoice &po);
+QDataStream & operator << (QDataStream &out, const BattleChoice &po);
+
 #endif // BATTLESTRUCTS_H

@@ -74,6 +74,8 @@ signals:
     void challengeStuff(int desc, int idfrom, int idto);
     void battleFinished(int desc, int winner, int loser);
 
+    void battleMessage(int id,const BattleChoice &b);
+
 public slots:
     void loggedIn(const TeamInfo &team);
     void recvMessage(const QString &mess);
@@ -81,6 +83,7 @@ public slots:
     void disconnected();
     void challengeStuff(int desc, int id);
     void battleForfeited();
+    void battleMessage(const BattleChoice &b);
 private:
     TeamInfo myteam;
     Analyzer myrelay;

@@ -6,6 +6,7 @@
 
 class BasicInfo;
 class TeamBattle;
+class BattleChoice;
 
 /* Commands to dialog with the server */
 namespace NetworkServ
@@ -62,6 +63,7 @@ signals:
     void disconnected();
     void forfeitBattle();
     void challengeStuff(int desc, int id);
+    void battleMessage(const BattleChoice &choice);
 public slots:
     /* slots called by the network */
     void error();

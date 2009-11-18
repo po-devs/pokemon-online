@@ -6,7 +6,7 @@
 
 class Player;
 
-class BattleSituation : public QObject
+class BattleSituation : public QThread
 {
     Q_OBJECT
 public:
@@ -18,6 +18,7 @@ public:
     static const bool Opp = false;
 
     BattleSituation(Player &p1, Player &p2);
+    ~BattleSituation();
 
     const TeamBattle &pubteam(int id);
     /* returns 0 or 1, or -1 if that player is not involved */
@@ -42,6 +43,11 @@ public:
 
     /* Starts the battle -- use the time before to connect signals / slots */
     void start();
+    /* The battle runs in a different thread -- easier to interrutpt the battle & co */
+    void run();
+    /* requests choice of action from the player */
+    void requestChoice(int player, bool acq = true /*private arg used by RequestChoices */);
+    void requestChoices(); /* request from both players */
 
     /* Commands for the battle situation */
     void beginTurn();
@@ -80,35 +86,37 @@ public:
     /* Here C++0x would make it so much better looking with variadic templates! */
     template<class T>
     void notify(int player, int command, bool who, const T& param);
+public slots:
+    void battleChoiceReceived(int id, const BattleChoice &b);
 signals:
     void battleInfo(int id, const QByteArray &info);
 private:
+    /* To interrupt the thread when needed */
+    QSemaphore sem;
+    /* To notify the thread to quit */
+    bool quit;
+    /* if quit==true, throws QuitException */
+    void testquit();
+
+    /* What choice we allow the players to have */
+    BattleChoices options[2];
+    BattleChoice choice[2];
+    bool haveChoice[2];
 
     TeamBattle team1, team2;
-    int mycurrentpoke[2];
+    int mycurrentpoke[2]; /* -1 for koed */
     int myid[2];
+public:
+    struct QuitException {};
 };
 
-struct BattleChoice
-{
-    /* Sets everything to true */
-    BattleChoice();
-    void disableSwitch();
-    void disableAttack(int attack);
-    void disableAttacks();
-
-    bool switchAllowed;
-    bool attacksAllowed[4];
-
-    static BattleChoice SwitchOnly();
-};
-
-QDataStream & operator >> (QDataStream &in, BattleChoice &po);
-QDataStream & operator << (QDataStream &out, const BattleChoice &po);
 
 template<class T>
 void BattleSituation::notify(int player, int command, bool who, const T& param)
 {
+    /* Doing that cuz we never know */
+    testquit();
+
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);

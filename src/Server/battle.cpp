@@ -10,11 +10,30 @@ BattleSituation::BattleSituation(Player &p1, Player &p2)
     mycurrentpoke[1] = -1;
 }
 
+BattleSituation::~BattleSituation()
+{
+    /* releases the thread */
+    {
+	/* So the thread will quit immediately after being released */
+	quit = true;
+	/* Should be enough lol */
+	sem.release(1000);
+	/* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
+	wait();
+    }
+}
+
 void BattleSituation::start()
 {
     /* Beginning of the battle! */
     sendPoke(Player1, 0);
     sendPoke(Player2, 0);
+
+    quit = false;
+    haveChoice[0] = false;
+    haveChoice[1] = false;
+
+    QThread::start();
 }
 
 int BattleSituation::spot(int id) const
@@ -66,6 +85,83 @@ const PokeBattle & BattleSituation::poke(int player, int poke) const
     return team(player).poke(poke);
 }
 
+/* The battle loop !! */
+void BattleSituation::run()
+{
+    try {
+	while (!quit)
+	{
+	    beginTurn();
+	    endTurn();
+	}
+    } catch(const QuitException &ex) {
+	; /* the exception is just there to get immediately out of the while , nothing more
+	   We could even have while (1) instead of while(!quit) (but we don't! ;) )*/
+    }
+}
+
+void BattleSituation::beginTurn()
+{
+    requestChoices();
+}
+
+void BattleSituation::endTurn()
+{
+}
+
+void BattleSituation::testquit()
+{
+    if (quit)
+	throw QuitException();
+}
+
+void BattleSituation::requestChoice(int player, bool acquire)
+{
+    haveChoice[player] = true;
+    options[player] = BattleChoices();
+
+    notify(player, OfferChoice, You, options[player]);
+
+    if (acquire)
+	sem.acquire(1);
+
+    //test to see if the quit was requested by system or if choice was received
+    testquit();
+
+    /* Now all the players gonna do is analyzeChoice(int player) */
+}
+
+void BattleSituation::requestChoices()
+{
+    requestChoice(Player1, false);
+    requestChoice(Player2, false);
+
+    /* Calling sem.acquire(1) twice wouldn't have the same effect */
+    sem.acquire(2);
+
+    //test to see if the quit was requested by system or if choice was received
+    testquit();
+
+    /* Now all the players gonna do is analyzeChoice(int player) */
+}
+
+void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
+{
+    int player = spot(id);
+
+    if (haveChoice[player] == false) {
+	//INVALID BEHAVIOR
+    } else {
+	if (!b.match(options[player])) {
+	    //INVALID BEHAVIOR
+	} else {
+	    /* One player has chosen their solution, so there's one less wait */
+	    choice[player] = b;
+	    sem.release(1);
+	}
+    }
+}
+
 /* Battle functions! Yeah! */
 
 void BattleSituation::sendPoke(int player, int poke)
@@ -79,45 +175,4 @@ void BattleSituation::sendPoke(int player, int poke)
 void BattleSituation::changeCurrentPoke(int player, int poke)
 {
     mycurrentpoke[player] = poke;
-}
-
-BattleChoice::BattleChoice()
-{
-    switchAllowed = true;
-    std::fill(attacksAllowed, attacksAllowed+4, true);
-}
-
-void BattleChoice::disableSwitch()
-{
-    switchAllowed = false;
-}
-
-void BattleChoice::disableAttack(int attack)
-{
-    attacksAllowed[attack] = false;
-}
-
-void BattleChoice::disableAttacks()
-{
-    std::fill(attacksAllowed, attacksAllowed+4, false);
-}
-
-BattleChoice BattleChoice::SwitchOnly()
-{
-    BattleChoice ret;
-    ret.disableAttacks();
-
-    return ret;
-}
-
-QDataStream & operator >> (QDataStream &in, BattleChoice &po)
-{
-    in >> po.switchAllowed >> po.attacksAllowed[0] >> po.attacksAllowed[1] >> po.attacksAllowed[2] >> po.attacksAllowed[3];
-    return in;
-}
-
-QDataStream & operator << (QDataStream &out, const BattleChoice &po)
-{
-    out << po.switchAllowed << po.attacksAllowed[0] << po.attacksAllowed[1] << po.attacksAllowed[2] << po.attacksAllowed[3];
-    return out;
 }
