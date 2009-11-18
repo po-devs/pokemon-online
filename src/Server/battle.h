@@ -80,7 +80,8 @@ public:
     enum BattleCommand
     {
 	SendOut,
-	OfferChoice
+	OfferChoice,
+	BeginTurn
     };
 
     /* Here C++0x would make it so much better looking with variadic templates! */
@@ -106,6 +107,7 @@ private:
     TeamBattle team1, team2;
     int mycurrentpoke[2]; /* -1 for koed */
     int myid[2];
+    int turn;
 public:
     struct QuitException {};
 };

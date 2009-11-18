@@ -158,6 +158,7 @@ void Client::battleStarted(int id, const TeamBattle &team)
     mybattle = new BattleWindow(name(id), team);
     connect(mybattle, SIGNAL(destroyed()), this, SLOT(clearBattle()));
     connect(mybattle, SIGNAL(forfeit()), SLOT(forfeitBattle()));
+    connect(mybattle, SIGNAL(battleCommand(BattleChoice)), &relay(), SLOT(battleCommand(BattleChoice)));
     connect(&relay(), SIGNAL(battleMessage(QByteArray)), mybattle, SLOT(receiveInfo(QByteArray)));
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
 }

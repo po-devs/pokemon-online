@@ -70,6 +70,17 @@ void Analyzer::sendBattleResult(int result)
     emit sendCommand(tosend);
 }
 
+void Analyzer::battleCommand(const BattleChoice &comm)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(BattleMessage) << comm;
+
+    emit sendCommand(tosend);
+}
+
 void Analyzer::connectTo(const QString &host, quint16 port)
 {
     mysocket.connectToHost(host, port);
