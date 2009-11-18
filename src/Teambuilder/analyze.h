@@ -7,6 +7,7 @@
 class Client;
 class TrainerTeam;
 class Player;
+class BattleChoice;
 class TeamBattle;
 
 /* Commands to dialog with the server */
@@ -77,6 +78,9 @@ public slots:
     /* slots called by the network */
     void error();
     void commandReceived (const QByteArray &command);
+
+    /* by the battle window */
+    void battleCommand(const BattleChoice &comm);
 
 private:
     /* The connection to the outside */

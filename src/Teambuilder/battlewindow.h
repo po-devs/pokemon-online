@@ -13,6 +13,8 @@ class GraphicsZone;
 class BattleWindow : public QWidget
 {
     Q_OBJECT
+
+    PROPERTY(int, currentPoke);
 public:
     BattleWindow(const QString &opponent, const TeamBattle &myteam);
 
@@ -21,12 +23,11 @@ public:
     TeamBattle &team();
     const TeamBattle &team() const;
 
-    int currentPoke() const;
-
     enum BattleCommand
     {
 	SendPoke,
-	OfferChoice
+	OfferChoice,
+	BeginTurn
     };
     enum
     {
@@ -34,15 +35,25 @@ public:
 	ZoneOfNothing = 7
     };
 
-    void doSwitch(int newzone);
     void switchToNaught(bool self);
+    void switchTo(int pokezone);
+
+    /* Disable / enable buttons */
+    void updatePossibilities();
+    /* sends the choice */
+    void sendChoice(const BattleChoice &b);
+
+    void printLine(const QString &str);
+
 public slots:
     void receiveInfo(QByteArray);
+    void switchClicked(int zone);
+    void attackClicked(int zone);
+    void attackButton();
 
-    void switchTo(int pokezone);
     void switchToPokeZone();
 signals:
-    void battleCommand(const QByteArray &);
+    void battleCommand(const BattleChoice &);
     void forfeit();
 private:
     QStackedWidget *mystack;
@@ -54,7 +65,9 @@ private:
     QPushButton *myswitch, *myattack, *myforfeit, *mysend;
     TeamBattle myteam;
 
-    int mycurrentpoke;
+    /* What can I do? */
+    bool possible;
+    BattleChoices possibilities;
 };
 
 /* The graphics zone, where both pokes are displayed */
@@ -87,8 +100,13 @@ class AttackZone : public QWidget
 public:
     AttackZone(const PokeBattle &poke);
     int moves[4];
-private:
+
     QPushButton *attacks[4];
+signals:
+    void clicked(int attack);
+
+private:
+    QSignalMapper *mymapper;
 };
 
 /* When you want to switch pokemons, that's what you see */
@@ -97,10 +115,12 @@ class PokeZone : public QWidget
     Q_OBJECT
 public:
     PokeZone(const TeamBattle &team);
+
+    QPushButton *pokes[6];
 signals:
     void switchTo(int poke);
+
 private:
-    QPushButton *pokes[6];
     QSignalMapper *mymapper;
 };
 

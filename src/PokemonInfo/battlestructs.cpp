@@ -246,6 +246,11 @@ QDataStream & operator << (QDataStream &out, const BattleChoices &po)
     return out;
 }
 
+BattleChoice::BattleChoice(bool pokeswitch, qint8 numswitch)
+	: pokeSwitch(pokeswitch), numSwitch(numswitch)
+{
+}
+
 bool BattleChoice::match(const BattleChoices &avail) const
 {
     if (!avail.attacksAllowed && attack()) {

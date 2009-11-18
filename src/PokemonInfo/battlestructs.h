@@ -138,6 +138,8 @@ QDataStream & operator << (QDataStream &out, const BattleChoices &po);
 
 struct BattleChoice
 {
+    BattleChoice(bool pokeSwitch = false, qint8 numSwitch = 0);
+
     bool pokeSwitch; /* True if poke switch, false if attack switch */
     qint8 numSwitch; /* The num of the poke or the attack to use, -1 for Struggle */
 

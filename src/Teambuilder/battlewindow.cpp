@@ -3,8 +3,9 @@
 
 BattleWindow::BattleWindow(const QString &opp, const TeamBattle &team)
 {
-    mycurrentpoke = 0;
+    currentPoke() = 0;
     myteam = team;
+    possible = false;
 
     setAttribute(Qt::WA_DeleteOnClose, true);
 
@@ -23,13 +24,16 @@ BattleWindow::BattleWindow(const QString &opp, const TeamBattle &team)
     for (int i = 0; i < 6; i++) {
 	myazones[i] = new AttackZone(team.poke(i));
 	mystack->addWidget(myazones[i]);
+
+	connect(myazones[i], SIGNAL(clicked(int)), SLOT(attackClicked(int)));
     }
 
     mypzone = new PokeZone(team);
     mystack->addWidget(mypzone);
 
     connect(myforfeit, SIGNAL(clicked()), SIGNAL(forfeit()));
-    connect(mypzone, SIGNAL(switchTo(int)), SLOT(switchTo(int)));
+    connect(mypzone, SIGNAL(switchTo(int)), SLOT(switchClicked(int)));
+    connect(myattack, SIGNAL(clicked()), SLOT(attackButton()));
     connect(myswitch, SIGNAL(clicked()), SLOT(switchToPokeZone()));
 
     show();
@@ -40,17 +44,69 @@ BattleWindow::BattleWindow(const QString &opp, const TeamBattle &team)
 void BattleWindow::switchTo(int pokezone)
 {
     myview->switchTo(myteam.poke(pokezone));
+    currentPoke() = pokezone;
     mystack->setCurrentIndex(pokezone);
 }
 
 void BattleWindow::switchToPokeZone()
 {
-    mystack->setCurrentIndex(ZoneOfPokes);
+    if (currentPoke() < 0 && currentPoke() > 5)
+	mystack->setCurrentIndex(ZoneOfPokes);
+    else {
+	// Go back to the attack zone if the window is on the switch zone
+	if (mystack->currentIndex() == ZoneOfPokes) {
+	    switchTo(currentPoke());
+	} else {
+	    mystack->setCurrentIndex(ZoneOfPokes);
+	}
+    }
 }
 
-int BattleWindow::currentPoke() const
+void BattleWindow::attackClicked(int zone)
 {
-    return mycurrentpoke;
+    if (possible)
+	sendChoice(BattleChoice(false, zone));
+}
+
+void BattleWindow::switchClicked(int zone)
+{
+    if (!possible)
+    {
+	switchToPokeZone();
+    } else {
+	if (zone == currentPoke()) {
+	    switchTo(currentPoke());
+	} else {
+	    switchTo(zone);
+	    /* DO MESSAGE */
+	    sendChoice(BattleChoice(true, zone));
+	}
+    }
+}
+
+void BattleWindow::attackButton()
+{
+    if (possible) {
+	//We go with the first attack, duh
+	if (possibilities.struggle()) {
+	    /* DO STRUGGLE */
+	    sendChoice(BattleChoice(false, -1));
+	} else {
+	    for (int i = 0; i < 4; i++) {
+		if (possibilities.attackAllowed[i]) {
+		    /* DO MESSAGE AND BREAK */
+		    sendChoice(BattleChoice(false, i));
+		    break;
+		}
+	    }
+	}
+    }
+}
+
+void BattleWindow::sendChoice(const BattleChoice &b)
+{
+    emit battleCommand(b);
+    possible = false;
 }
 
 void BattleWindow::receiveInfo(QByteArray info)
@@ -77,6 +133,20 @@ void BattleWindow::receiveInfo(QByteArray info)
 	    }
 	    break;
 	}
+	case OfferChoice:
+	{
+	    possible = true;
+	    in >> possibilities;
+	    updatePossibilities();
+	    break;
+	}
+	case BeginTurn:
+	{
+	    int turn;
+	    in >> turn;
+	    printLine(tr("Start of turn %i").arg(turn));
+	    break;
+	}
 	default:
 	    break;
     }
@@ -85,6 +155,43 @@ void BattleWindow::receiveInfo(QByteArray info)
 void BattleWindow::switchToNaught(bool self)
 {
     myview->switchToNaught(self);
+
+    if (self) {
+	switchToPokeZone();
+    }
+}
+
+void BattleWindow::printLine(const QString &str)
+{
+    mychat->insertPlainText(str + "\n");
+}
+
+void BattleWindow::updatePossibilities()
+{
+    /* moves first */
+    if (currentPoke() >= 0 && currentPoke() < 6)
+    {
+	if (possibilities.attacksAllowed == false) {
+	    myattack->setEnabled(false);
+	    for (int i = 0; i < 4; i ++) {
+		myazones[currentPoke()]->attacks[i]->setEnabled(false);
+	    }
+	} else {
+	    myattack->setEnabled(true);
+	    for (int i = 0; i < 4; i ++) {
+		myazones[currentPoke()]->attacks[i]->setEnabled(possibilities.attackAllowed[i]);
+	    }
+	}
+    }
+    /* Then pokemon */
+    if (possibilities.switchAllowed == false) {
+	myswitch->setEnabled(false);
+    } else {
+	myswitch->setEnabled(true);
+	for (int i = 0; i < 6; i++) {
+	    mypzone->pokes[i]->setEnabled(team().poke(i).num() != 0 && team().poke(i).lifePoints() > 0);
+	}
+    }
 }
 
 TeamBattle &BattleWindow::team()
@@ -100,11 +207,17 @@ const TeamBattle &BattleWindow::team() const
 AttackZone::AttackZone(const PokeBattle &poke)
 {
     QGridLayout *l = new QGridLayout(this);
+    mymapper = new QSignalMapper(this);
 
     for (int i = 0; i < 4; i++)
     {
 	l->addWidget(attacks[i] = new QPushButton(MoveInfo::Name(poke.move(i).num())), i >= 2, i % 2);
+
+	mymapper->setMapping(attacks[i], i);
+	connect(attacks[i], SIGNAL(clicked()), mymapper, SLOT(map()));
     }
+
+    connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }
 
 PokeZone::PokeZone(const TeamBattle &team)

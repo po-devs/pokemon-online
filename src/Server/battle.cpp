@@ -32,6 +32,7 @@ void BattleSituation::start()
     quit = false;
     haveChoice[0] = false;
     haveChoice[1] = false;
+    turn = 0;
 
     QThread::start();
 }
@@ -102,6 +103,9 @@ void BattleSituation::run()
 
 void BattleSituation::beginTurn()
 {
+    ++turn;
+    notify(Player1, BeginTurn, You, turn);
+    notify(Player2, BeginTurn, You, turn);
     requestChoices();
 }
 
