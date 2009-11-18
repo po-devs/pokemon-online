@@ -120,6 +120,9 @@ void Server::startBattle(int id1, int id2)
     player(id2)->startBattle(id1, battle->pubteam(id2));
 
     connect(battle, SIGNAL(battleInfo(int,QByteArray)), SLOT(sendBattleCommand(int, QByteArray)));
+    connect(player(id1), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
+    connect(player(id2), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
+
     battle->start();
 }
 

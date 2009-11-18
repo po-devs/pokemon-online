@@ -153,6 +153,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit challengeStuff(stuff, id);
 	    break;
 	}
+	case BattleMessage:
+	{
+	    BattleChoice ch;
+	    in >> ch;
+	    emit battleMessage(ch);
+	    break;
+	}
 	case BattleFinished:
 	    emit forfeitBattle();
 	    break;
