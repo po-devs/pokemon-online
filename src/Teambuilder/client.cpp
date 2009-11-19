@@ -177,7 +177,8 @@ void Client::battleFinished(int)
 
 void Client::removeBattleWindow()
 {
-    mybattle->close();
+    if (mybattle)
+	mybattle->close();
 }
 
 QString Client::name(int id) const
