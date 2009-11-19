@@ -39,6 +39,7 @@ PokeBattle::PokeBattle()
     status() = Pokemon::Fine;
     lifePoints() = 0;
     totalLifePoints() = 0;
+    level() = 100;
 
     resetStatMods();
 }
@@ -86,6 +87,7 @@ void PokeBattle::init(const PokePersonal &poke)
     nick() = poke.nickname();
     gender() = poke.gender();
     shiny() = poke.shiny();
+    level() = poke.level();
 
     for (int i = 0; i < 4; i++) {
 	move(i).num() = poke.move(i);
@@ -102,7 +104,7 @@ void PokeBattle::init(const PokePersonal &poke)
 
 QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 {
-    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny();
+    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level();
 
     for (int i = 0; i < 5; i++) {
 	quint16 st;
@@ -119,7 +121,7 @@ QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 
 QDataStream & operator << (QDataStream &out, const PokeBattle &po)
 {
-    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny();
+    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level();
 
     for (int i = 0; i < 5; i++) {
 	out << po.normalStat(i+1);
@@ -149,18 +151,19 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
     shiny() = poke.shiny();
     gender() = poke.gender();
     lifePercent() = (poke.lifePoints() * 100) / poke.totalLifePoints();
+    level() = poke.level();
 }
 
 QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po)
 {
-    in >> po.num() >> po.nick() >> po.lifePercent() >> po.status() >> po.gender() >> po.shiny();
+    in >> po.num() >> po.nick() >> po.lifePercent() >> po.status() >> po.gender() >> po.shiny() >> po.level();
 
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po)
 {
-    out << po.num() << po.nick() << po.lifePercent() << po.status() << po.gender() << po.shiny();
+    out << po.num() << po.nick() << po.lifePercent() << po.status() << po.gender() << po.shiny() << po.level();
 
     return out;
 }

@@ -290,10 +290,10 @@ void BattleDisplay::updatePoke(bool self)
 {
     if (self)
 	if (info.currentIndex != -1) {
-	    zone->switchTo(info.myteam.poke(info.currentIndex), self);
-	    nick[Myself]->setText(info.myteam.poke(info.currentIndex).nick());
-	    bars[Myself]->setRange(0,info.myteam.poke(info.currentIndex).totalLifePoints());
-	    bars[Myself]->setValue(info.myteam.poke(info.currentIndex).lifePoints());
+	    zone->switchTo(mypoke(), self);
+	    nick[Myself]->setText(tr("%1 (Lv. %2)").arg(mypoke().nick()).arg(mypoke().level()));
+	    bars[Myself]->setRange(0,mypoke().totalLifePoints());
+	    bars[Myself]->setValue(mypoke().lifePoints());
 	} else {
 	    zone->switchToNaught(self);
 	    nick[Myself]->setText("");
@@ -301,9 +301,9 @@ void BattleDisplay::updatePoke(bool self)
 	}
     else
 	if (info.opponentAlive) {
-	    zone->switchTo(info.opponent, self);
-	    nick[Opponent]->setText(info.opponent.nick());
-	    bars[Opponent]->setValue(info.opponent.lifePercent());
+	    zone->switchTo(foe(), self);
+	    nick[Opponent]->setText(tr("%1 (Lv. %2)").arg(foe().nick()).arg(foe().level()));
+	    bars[Opponent]->setValue(foe().lifePercent());
 	}  else {
 	    zone->switchToNaught(self);
 	    nick[Opponent]->setText("");

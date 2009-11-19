@@ -23,6 +23,13 @@ DockAdvanced::DockAdvanced(TeamBuilder * builder):
 	PokeTeam * p = &m_builder->getTeam()->poke(i);
 	TB_Advanced * stack = new TB_Advanced(p);
 	AdvancedPokemons_gestionnaire->addWidget(stack);
+	TB_PokemonBody *body = builder->pokebody(i);
+
+	connect(stack, SIGNAL(levelChanged()), body, SLOT(updateLevel()));
+	connect(stack, SIGNAL(imageChanged()), body, SLOT(updateImage()));
+	connect(stack, SIGNAL(genderChanged()), body, SLOT(updateGender()));
+	connect(stack, SIGNAL(genderChanged()), body, SLOT(updateImage()));
+	connect(stack, SIGNAL(statChanged()), body, SLOT(updateEVs()));
     }
 
     this->setWidget(AdvancedPokemons_gestionnaire);

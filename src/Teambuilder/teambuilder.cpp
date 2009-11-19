@@ -329,11 +329,6 @@ DockAdvanced * TeamBuilder::dockAdvanced() const
     return m_dockAdvanced;
 }
 
-void TeamBuilder::updateDataBody(int stackIndex)
-{
-    m_pbody[stackIndex+1]->updateAdvanced();
-}
-
 TB_PokemonBody * TeamBuilder::pokebody(int index)
 {
     return m_pbody[index];
@@ -429,7 +424,6 @@ void TB_TrainerBody::changeTrainerLose()
 }
 
 TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
-	: m_adv(NULL)
 {
     m_poke = _poke;
 
@@ -609,21 +603,6 @@ void TB_PokemonBody::goToAdvanced()
     emit advanced(index);
 }
 
-void TB_PokemonBody::setAdvancedOpenToFalse()
-{
-    m_adv=NULL;
-}
-
-bool TB_PokemonBody::advancedOpen()
-{
-    return m_adv != NULL;
-}
-
-TB_Advanced * TB_PokemonBody::advanced()
-{
-    return m_adv;
-}
-
 void TB_PokemonBody::setNum(int pokenum)
 {
     if (pokenum == poke()->num())
@@ -679,18 +658,6 @@ void TB_PokemonBody::updateEVs()
 void TB_PokemonBody::updateImage()
 {
     pokeImage->setPixmap(poke()->picture());
-}
-
-void TB_PokemonBody::updateAdvanced()
-{
-    //in case DVs are changed
-    evchoice->updateEVs();
-    //in case shiny is changed;
-    updateImage();
-    //in case the gender is changed
-    updateGender();
-    //in case the level is changed
-    updateLevel();
 }
 
 void TB_PokemonBody::updateGender()

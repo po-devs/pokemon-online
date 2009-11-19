@@ -6,7 +6,7 @@
 class TB_PokemonBody;
 class TB_TrainerBody;
 class TB_EVManager;
-class TB_Advanced;
+class DockAdvanced;
 
 class TrainerTeam;
 class Team;
@@ -27,12 +27,12 @@ public:
     State validate(QString &input, int &pos) const;
 };
 
-class DockAdvanced;
-
 /* The Teambuilder!! */
 class TeamBuilder : public QWidget
 {
     Q_OBJECT
+
+    friend class DockAdvanced;
 private:
     QPushButton *m_pokemon[6];
     QPushButton *m_trainer;
@@ -53,6 +53,7 @@ private:
     /* returns the current zone (0 = trainer, 1-6 = according pokémon) */
     int currentZone() const;
     /*...*/
+
     TB_PokemonBody *pokebody(int index);
     TB_TrainerBody *trainerbody();
 
@@ -67,7 +68,6 @@ private slots:
     void advancedClicked(int index);
     void advancedDestroyed();
     void indexNumPokemonChangedForAdvanced(int pokeNum);
-    void updateDataBody(int indexStacked);
 
 public slots:
     void saveTeam();
@@ -138,7 +138,7 @@ private:
     QLineEdit *m_moves[4];
     QLineEdit *m_nick;
     TB_EVManager *evchoice;
-    TB_Advanced *m_adv;
+
     int m_index;
 
     /* the pokemon of the team corresponding to the body */
@@ -149,17 +149,13 @@ private:
     void initItems();
 
     void configureMoves();
-    void updateImage();
-    void updateGender();
-    void updateLevel();
+private:
     void updateMoves();
-    void updateEVs();
     void updateNickname();
     void updateItem();
     void updateNature();
 
     bool advancedOpen();
-    TB_Advanced *advanced();
 
 private slots:
     void setMove(int moveNum, int moveSlot);
@@ -168,8 +164,7 @@ private slots:
     void moveEntered(int row);
     void setItem(const QString &item);
     void setNature(int nature);
-    void goToAdvanced(); 
-    void setAdvancedOpenToFalse();
+    void goToAdvanced();
     void setNick(const QString &nick);
 signals:
     void moveChosen(int movenum);
@@ -178,7 +173,11 @@ signals:
     void advanced(int index);
 public slots:
     void setNum(int pokeNum);
-    void updateAdvanced();
+    /* slots used by advanced */
+    void updateImage();
+    void updateGender();
+    void updateLevel();
+    void updateEVs();
 public:
     TB_PokemonBody(PokeTeam *poke);
 

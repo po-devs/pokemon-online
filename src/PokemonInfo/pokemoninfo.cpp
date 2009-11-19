@@ -126,10 +126,12 @@ int PokemonInfo::Stat(int stat, quint8 basestat, int level, quint8 dv, quint8 ev
 
 int PokemonInfo::FullStat(int nature, int stat, quint8 basestat, int level, quint8 dv, quint8 ev)
 {
-    if (stat == Hp)
+    if (stat == Hp) {
 	return Stat(stat, basestat, level, dv, ev);
-    else
+    }
+    else {
 	return Stat(stat, basestat, level, dv, ev) * (10+NatureInfo::Boost(nature, stat));
+    }
 }
 
 void PokemonInfo::init(const QString &dir)

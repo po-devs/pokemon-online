@@ -358,7 +358,7 @@ int PokePersonal::natureBoost(int stat) const
 void PokePersonal::reset()
 {
     num() = 0;
-    level() = 0;
+    level() = 100;
     for (int i = 0; i < 4; i++)
         setMove(0,i);
     happiness() = 0;

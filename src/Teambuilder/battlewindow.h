@@ -129,6 +129,9 @@ public:
     void updatePoke(bool self);
 
 protected:
+    const PokeBattle &mypoke() const {return info.myteam.poke(info.currentIndex); }
+    const ShallowBattlePoke &foe() const {return info.opponent; }
+
     GraphicsZone *zone;
     QLabel *nick[2];
     QProgressBar *bars[2];
