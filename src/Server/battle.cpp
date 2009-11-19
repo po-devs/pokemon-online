@@ -25,11 +25,12 @@ BattleSituation::~BattleSituation()
 
 void BattleSituation::start()
 {
+    quit = false; /* doin' that cuz if any battle command is called why quit is set to true disasters happen */
+
     /* Beginning of the battle! */
     sendPoke(Player1, 0);
     sendPoke(Player2, 0);
 
-    quit = false;
     haveChoice[0] = false;
     haveChoice[1] = false;
     turn = 0;

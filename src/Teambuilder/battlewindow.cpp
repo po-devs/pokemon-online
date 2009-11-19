@@ -144,7 +144,7 @@ void BattleWindow::receiveInfo(QByteArray info)
 	{
 	    int turn;
 	    in >> turn;
-	    printLine(tr("Start of turn %i").arg(turn));
+	    printLine(tr("\nStart of turn %1").arg(turn));
 	    break;
 	}
 	default:
