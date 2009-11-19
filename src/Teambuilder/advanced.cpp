@@ -137,20 +137,22 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 
     updateDVs();
     updateHiddenPower();
-    
-    /* This is to get the widgets to get to their actual widths */
-    show();
-
-    int width = hpanddvchoice->horizontalHeader()->width();
-    /* making 6 columns of the same width */
-    for (int i = 0; i < 6; i++) {
-	hpanddvchoice->setColumnWidth(i, width/6);
-    }
 }
 
 void TB_Advanced::changeAbility(bool ab1)
 {
     poke()->ability() = ab1? poke()->abilities()[0] : poke()->abilities()[1];
+}
+
+void TB_Advanced::resizeEvent(QResizeEvent*ev)
+{
+    int width = hpanddvchoice->horizontalHeader()->width();
+    /* making 6 columns of the same width */
+    for (int i = 0; i < 6; i++) {
+	hpanddvchoice->setColumnWidth(i, width/6);
+    }
+
+    QWidget::resizeEvent(ev);
 }
 
 void TB_Advanced::changeShininess(bool shine)
