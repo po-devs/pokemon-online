@@ -1,18 +1,21 @@
 #include "battlewindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
-BattleWindow::BattleWindow(const QString &opp, const TeamBattle &team)
+BattleWindow::BattleWindow(const QString & my, const QString &opp, const TeamBattle &team)
 {
-    currentPoke() = 0;
-    myteam = team;
-    possible = false;
+    info().currentIndex = -1;
+    info().myteam = team;
+    info().possible = false;
+    info().name[0] = my;
+    info().name[1] = opp;
+    info().opponentAlive = false;
 
     setAttribute(Qt::WA_DeleteOnClose, true);
 
     setWindowTitle(tr("Battling against %1").arg(opp));
     QGridLayout *mylayout = new QGridLayout(this);
 
-    mylayout->addWidget(myview = new GraphicsZone(), 0, 0, 3, 1);
+    mylayout->addWidget(mydisplay = new BattleDisplay(info()), 0, 0, 3, 1);
     mylayout->addWidget(mychat = new QTextEdit(), 0, 1, 1, 2);
     mylayout->addWidget(myline = new QLineEdit(), 1, 1, 1, 2);
     mylayout->addWidget(myforfeit = new QPushButton(tr("&Forfeit")), 2, 1);
@@ -41,21 +44,26 @@ BattleWindow::BattleWindow(const QString &opp, const TeamBattle &team)
     switchTo(0);
 }
 
+QString BattleWindow::name(bool self) const
+{
+    return info().name[!self];
+}
+
 void BattleWindow::switchTo(int pokezone)
 {
-    myview->switchTo(myteam.poke(pokezone));
-    currentPoke() = pokezone;
+    info().currentIndex = pokezone;
     mystack->setCurrentIndex(pokezone);
+    mydisplay->updatePoke(true);
 }
 
 void BattleWindow::switchToPokeZone()
 {
-    if (currentPoke() < 0 && currentPoke() > 5)
+    if (info().currentIndex < 0 && info().currentIndex > 5)
 	mystack->setCurrentIndex(ZoneOfPokes);
     else {
 	// Go back to the attack zone if the window is on the switch zone
 	if (mystack->currentIndex() == ZoneOfPokes) {
-	    switchTo(currentPoke());
+	    switchTo(info().currentIndex);
 	} else {
 	    mystack->setCurrentIndex(ZoneOfPokes);
 	}
@@ -64,18 +72,18 @@ void BattleWindow::switchToPokeZone()
 
 void BattleWindow::attackClicked(int zone)
 {
-    if (possible)
+    if (info().possible)
 	sendChoice(BattleChoice(false, zone));
 }
 
 void BattleWindow::switchClicked(int zone)
 {
-    if (!possible)
+    if (!info().possible)
     {
 	switchToPokeZone();
     } else {
-	if (zone == currentPoke()) {
-	    switchTo(currentPoke());
+	if (zone == info().currentIndex) {
+	    switchTo(info().currentIndex);
 	} else {
 	    switchTo(zone);
 	    /* DO MESSAGE */
@@ -86,14 +94,14 @@ void BattleWindow::switchClicked(int zone)
 
 void BattleWindow::attackButton()
 {
-    if (possible) {
+    if (info().possible) {
 	//We go with the first attack, duh
-	if (possibilities.struggle()) {
+	if (info().choices.struggle()) {
 	    /* DO STRUGGLE */
 	    sendChoice(BattleChoice(false, -1));
 	} else {
 	    for (int i = 0; i < 4; i++) {
-		if (possibilities.attackAllowed[i]) {
+		if (info().choices.attackAllowed[i]) {
 		    /* DO MESSAGE AND BREAK */
 		    sendChoice(BattleChoice(false, i));
 		    break;
@@ -106,12 +114,12 @@ void BattleWindow::attackButton()
 void BattleWindow::sendChoice(const BattleChoice &b)
 {
     emit battleCommand(b);
-    possible = false;
+    info().possible = false;
 }
 
-void BattleWindow::receiveInfo(QByteArray info)
+void BattleWindow::receiveInfo(QByteArray inf)
 {
-    QDataStream in (&info, QIODevice::ReadOnly);
+    QDataStream in (&inf, QIODevice::ReadOnly);
 
     uchar command;
     bool self;
@@ -120,24 +128,34 @@ void BattleWindow::receiveInfo(QByteArray info)
 
     switch (command)
     {
-	case SendPoke:
+	case SendOut:
 	{
 	    if (self) {
 		quint8 poke;
 		in >> poke;
 		switchTo(poke);
+
+		printLine(tr("%1 sent out %2!").arg(name(self), info().myteam.poke(poke).nick()));
 	    } else {
-		ShallowBattlePoke poke;
-		in >> poke;
-		myview->switchTo(poke, false);
+		in >> info().opponent;
+		info().opponentAlive = true;
+		mydisplay->updatePoke(false);
+
+		printLine(tr("%1 sent out %2!").arg(name(self), info().opponent.nick()));
 	    }
+
+	    break;
+	}
+	case RemovePoke:
+	{
+	    switchToNaught(self);
 	    break;
 	}
 	case OfferChoice:
 	{
-	    possible = true;
-	    in >> possibilities;
-	    updatePossibilities();
+	    info().possible = true;
+	    in >> info().choices;
+	    updateChoices();
 	    break;
 	}
 	case BeginTurn:
@@ -154,11 +172,14 @@ void BattleWindow::receiveInfo(QByteArray info)
 
 void BattleWindow::switchToNaught(bool self)
 {
-    myview->switchToNaught(self);
-
     if (self) {
+	info().currentIndex = -1;
 	switchToPokeZone();
+    } else {
+	info().opponentAlive = false;
     }
+
+    mydisplay->updatePoke(self);
 }
 
 void BattleWindow::printLine(const QString &str)
@@ -166,25 +187,25 @@ void BattleWindow::printLine(const QString &str)
     mychat->insertPlainText(str + "\n");
 }
 
-void BattleWindow::updatePossibilities()
+void BattleWindow::updateChoices()
 {
     /* moves first */
-    if (currentPoke() >= 0 && currentPoke() < 6)
+    if (info().currentIndex != -1)
     {
-	if (possibilities.attacksAllowed == false) {
+	if (info().choices.attacksAllowed == false) {
 	    myattack->setEnabled(false);
 	    for (int i = 0; i < 4; i ++) {
-		myazones[currentPoke()]->attacks[i]->setEnabled(false);
+		myazones[info().currentIndex]->attacks[i]->setEnabled(false);
 	    }
 	} else {
 	    myattack->setEnabled(true);
 	    for (int i = 0; i < 4; i ++) {
-		myazones[currentPoke()]->attacks[i]->setEnabled(possibilities.attackAllowed[i]);
+		myazones[info().currentIndex]->attacks[i]->setEnabled(info().choices.attackAllowed[i]);
 	    }
 	}
     }
     /* Then pokemon */
-    if (possibilities.switchAllowed == false) {
+    if (info().choices.switchAllowed == false) {
 	myswitch->setEnabled(false);
     } else {
 	myswitch->setEnabled(true);
@@ -196,12 +217,12 @@ void BattleWindow::updatePossibilities()
 
 TeamBattle &BattleWindow::team()
 {
-    return myteam;
+    return info().myteam;
 }
 
 const TeamBattle &BattleWindow::team() const
 {
-    return myteam;
+    return info().myteam;
 }
 
 AttackZone::AttackZone(const PokeBattle &poke)
@@ -236,22 +257,76 @@ PokeZone::PokeZone(const TeamBattle &team)
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(switchTo(int)));
 }
 
+BattleDisplay::BattleDisplay(const BattleInfo &i)
+	: info(i)
+{
+    QVBoxLayout *l=  new QVBoxLayout(this);
+
+    QStyleOptionProgressBar style;
+
+    nick[Opponent] = new QLabel(info.name[Opponent]);
+    l->addWidget(nick[Opponent]);
+
+    bars[Opponent] = new QProgressBar();
+    bars[Opponent]->setRange(0, 100);
+    l->addWidget(bars[Opponent]);
+
+    zone = new GraphicsZone();
+    l->addWidget(zone);
+
+    bars[Myself] = new QProgressBar();
+    bars[Myself]->setRange(0,100);
+    bars[Myself]->setFormat("%v / %m");
+    l->addWidget(bars[Myself]);
+
+    nick[Myself] = new QLabel(info.name[Myself]);
+    l->addWidget(nick[Myself]);
+
+    updatePoke(true);
+    updatePoke(false);
+}
+
+void BattleDisplay::updatePoke(bool self)
+{
+    if (self)
+	if (info.currentIndex != -1) {
+	    zone->switchTo(info.myteam.poke(info.currentIndex), self);
+	    nick[Myself]->setText(info.myteam.poke(info.currentIndex).nick());
+	    bars[Myself]->setRange(0,info.myteam.poke(info.currentIndex).totalLifePoints());
+	    bars[Myself]->setValue(info.myteam.poke(info.currentIndex).lifePoints());
+	} else {
+	    zone->switchToNaught(self);
+	    nick[Myself]->setText("");
+	    bars[Myself]->setValue(0);
+	}
+    else
+	if (info.opponentAlive) {
+	    zone->switchTo(info.opponent, self);
+	    nick[Opponent]->setText(info.opponent.nick());
+	    bars[Opponent]->setValue(info.opponent.lifePercent());
+	}  else {
+	    zone->switchToNaught(self);
+	    nick[Opponent]->setText("");
+	    bars[Opponent]->setValue(0);
+	}
+}
+
 GraphicsZone::GraphicsZone()
 {
     setScene(&scene);
 
-    setFixedSize(305,305);
+    setFixedSize(255,255);
 
-    scene.setSceneRect(0,0,300,300);
+    scene.setSceneRect(0,0,250,250);
 
     mine = new QGraphicsPixmapItem();
     foe = new QGraphicsPixmapItem();
 
     scene.addItem(mine);
-    mine->setPos(10, 300-79);
+    mine->setPos(10, 250-79);
 
     scene.addItem(foe);
-    foe->setPos(200, 0);
+    foe->setPos(250-100, 0);
 }
 
 void GraphicsZone::switchToNaught(bool self)

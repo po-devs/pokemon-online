@@ -6,7 +6,31 @@
 
 class AttackZone;
 class PokeZone;
-class GraphicsZone;
+class BattleDisplay;
+
+enum {
+    Myself,
+    Opponent
+};
+
+struct BattleInfo
+{
+    /* name [0] = mine, name[1] = other */
+    QString name[2];
+
+    /* Possible choices */
+    bool possible;
+    BattleChoices choices;
+
+    /* My team */
+    TeamBattle myteam;
+    /* Opponent pokemon */
+    ShallowBattlePoke opponent;
+    bool opponentAlive;
+
+    /* Current poke for ourself */
+    int currentIndex;
+};
 
 /* The battle window called by the client, online */
 
@@ -14,9 +38,9 @@ class BattleWindow : public QWidget
 {
     Q_OBJECT
 
-    PROPERTY(int, currentPoke);
+    PROPERTY(BattleInfo, info);
 public:
-    BattleWindow(const QString &opponent, const TeamBattle &myteam);
+    BattleWindow(const QString &me, const QString &opponent, const TeamBattle &myteam);
 
     /* analyzes the command and calls the right function */
     void dealWithCommand(const QByteArray &);
@@ -25,7 +49,9 @@ public:
 
     enum BattleCommand
     {
-	SendPoke,
+	SendOut,
+	RemovePoke,
+	UseAttack,
 	OfferChoice,
 	BeginTurn
     };
@@ -39,11 +65,12 @@ public:
     void switchTo(int pokezone);
 
     /* Disable / enable buttons */
-    void updatePossibilities();
+    void updateChoices();
     /* sends the choice */
     void sendChoice(const BattleChoice &b);
 
     void printLine(const QString &str);
+    QString name(bool self) const;
 
 public slots:
     void receiveInfo(QByteArray);
@@ -61,13 +88,11 @@ private:
     PokeZone *mypzone;
     QTextEdit *mychat;
     QLineEdit *myline;
-    GraphicsZone *myview;
+    BattleDisplay *mydisplay;
     QPushButton *myswitch, *myattack, *myforfeit, *mysend;
-    TeamBattle myteam;
 
     /* What can I do? */
-    bool possible;
-    BattleChoices possibilities;
+
 };
 
 /* The graphics zone, where both pokes are displayed */
@@ -91,6 +116,22 @@ public:
     /* Current pixmaps displayed */
     QGraphicsPixmapItem *mine, *foe;
     QGraphicsScene scene;
+};
+
+class BattleDisplay : public QWidget
+{
+    Q_OBJECT
+public:
+    const BattleInfo & info;
+
+    BattleDisplay(const BattleInfo &i);
+
+    void updatePoke(bool self);
+
+protected:
+    GraphicsZone *zone;
+    QLabel *nick[2];
+    QProgressBar *bars[2];
 };
 
 /* An attack zone is the zone where the attacks are displayed */

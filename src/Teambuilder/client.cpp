@@ -155,7 +155,7 @@ void Client::seeChallenge(int id)
 
 void Client::battleStarted(int id, const TeamBattle &team)
 {
-    mybattle = new BattleWindow(name(id), team);
+    mybattle = new BattleWindow(this->team()->trainerNick(),name(id), team);
     connect(mybattle, SIGNAL(destroyed()), this, SLOT(clearBattle()));
     connect(mybattle, SIGNAL(forfeit()), SLOT(forfeitBattle()));
     connect(mybattle, SIGNAL(battleCommand(BattleChoice)), &relay(), SLOT(battleCommand(BattleChoice)));

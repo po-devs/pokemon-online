@@ -80,6 +80,8 @@ public:
     enum BattleCommand
     {
 	SendOut,
+	RemovePoke,
+	UseAttack,
 	OfferChoice,
 	BeginTurn
     };

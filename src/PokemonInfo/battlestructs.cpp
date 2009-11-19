@@ -251,6 +251,7 @@ BattleChoice::BattleChoice(bool pokeswitch, qint8 numswitch)
 {
 }
 
+/* Tests if the attack chosen is allowed */
 bool BattleChoice::match(const BattleChoices &avail) const
 {
     if (!avail.attacksAllowed && attack()) {
