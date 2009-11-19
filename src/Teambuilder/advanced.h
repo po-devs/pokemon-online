@@ -47,6 +47,9 @@ private:
     void changeDV(int stat, int newval);
     // Gives the num of the stat corresponding to that ptr
     int stat(QObject *dvchoiceptr);
+protected:
+    /* So we can resize the table properly */
+    void resizeEvent(QResizeEvent*);
 private slots:
     void changeAbility(bool);
     void changeShininess(bool);

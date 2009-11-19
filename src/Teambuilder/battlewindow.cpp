@@ -268,6 +268,7 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
     l->addWidget(nick[Opponent]);
 
     bars[Opponent] = new QProgressBar();
+    bars[Opponent]->setObjectName("LifePoints"); /* for stylesheets */
     bars[Opponent]->setRange(0, 100);
     l->addWidget(bars[Opponent]);
 
@@ -275,6 +276,7 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
     l->addWidget(zone);
 
     bars[Myself] = new QProgressBar();
+    bars[Myself]->setObjectName("LifePoints"); /* for stylesheets */
     bars[Myself]->setRange(0,100);
     bars[Myself]->setFormat("%v / %m");
     l->addWidget(bars[Myself]);
