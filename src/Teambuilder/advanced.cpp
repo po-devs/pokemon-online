@@ -157,12 +157,14 @@ void TB_Advanced::changeShininess(bool shine)
 {
     poke()->shiny() = shine;
     updatePokeImage();
+    emit imageChanged();
 }
 
 void TB_Advanced::changeGender(bool gend1)
 {
     poke()->gender() = gend1 ? Pokemon::Male : Pokemon::Female;
     updatePokeImage();
+    emit genderChanged();
 }
 
 void TB_Advanced::updatePokeImage()
@@ -236,6 +238,7 @@ void TB_Advanced::changeLevel(int level)
 {
     poke()->level() =level;
     updateStats();
+    emit levelChanged();
 }
 
 void TB_Advanced::updateHiddenPower()
@@ -266,6 +269,8 @@ void TB_Advanced::updateHpAndDvChoice()
 	    hpanddvchoice->setCellWidget(i, j, l);
 	}
     }
+
+    emit statChanged();
 }
 
 int TB_Advanced::currentHiddenPower() const
@@ -327,6 +332,7 @@ void TB_Advanced::updateStats()
 {
     for (int i = 0; i < 6; i++)
 	updateStat(i);
+    emit statChanged();
 }
 
 void TB_Advanced::updateStat(int stat)

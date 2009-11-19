@@ -1,12 +1,26 @@
 #include "server.h"
 #include "player.h"
 #include "battle.h"
+#include "../PokemonInfo/pokemoninfo.h"
 
 Server::Server(quint16 port)
 {
     mymainchat = new QTextEdit(this);
     mainchat()->setFixedSize(500,500);
     mainchat()->setReadOnly(true);
+
+    printLine(tr("Starting loading pokemon database..."));
+
+    PokemonInfo::init("db/");
+    ItemInfo::init("db/");
+    MoveInfo::init("db/");
+    TypeInfo::init("db/");
+    NatureInfo::init("db/");
+    CategoryInfo::init("db/");
+    AbilityInfo::init("db/");
+    HiddenPowerInfo::init("db/");
+
+    printLine(tr("Pokémon database loaded"));
 
     if (!server()->listen(QHostAddress::Any, port))
     {

@@ -56,6 +56,11 @@ private slots:
     void changeHiddenPower(int);
     /* Do not use directly */
     void changeDV(int newval);
+signals:
+    void imageChanged();
+    void genderChanged();
+    void levelChanged();
+    void statChanged();
 public:
     TB_Advanced(PokeTeam *poke);
 };

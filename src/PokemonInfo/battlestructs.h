@@ -55,6 +55,7 @@ class PokeBattle
     PROPERTY(quint16, num);
     PROPERTY(bool, shiny);
     PROPERTY(quint8, gender);
+    PROPERTY(quint8, level);
 public:
     PokeBattle();
 
@@ -89,6 +90,7 @@ class ShallowBattlePoke
     PROPERTY(bool, shiny);
     PROPERTY(quint8, gender);
     PROPERTY(quint8, lifePercent);
+    PROPERTY(quint8, level);
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);
