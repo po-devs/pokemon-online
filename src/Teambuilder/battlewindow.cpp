@@ -49,6 +49,14 @@ QString BattleWindow::name(bool self) const
     return info().name[!self];
 }
 
+QString BattleWindow::nick(bool self) const
+{
+    if (self)
+	return info().myteam.poke(info().currentIndex).nick();
+    else
+	return info().opponent.nick();
+}
+
 void BattleWindow::switchTo(int pokezone)
 {
     info().currentIndex = pokezone;
@@ -85,7 +93,6 @@ void BattleWindow::switchClicked(int zone)
 	if (zone == info().currentIndex) {
 	    switchTo(info().currentIndex);
 	} else {
-	    switchTo(zone);
 	    /* DO MESSAGE */
 	    sendChoice(BattleChoice(true, zone));
 	}
@@ -134,22 +141,35 @@ void BattleWindow::receiveInfo(QByteArray inf)
 		quint8 poke;
 		in >> poke;
 		switchTo(poke);
-
-		printLine(tr("%1 sent out %2!").arg(name(self), info().myteam.poke(poke).nick()));
 	    } else {
 		in >> info().opponent;
 		info().opponentAlive = true;
 		mydisplay->updatePoke(false);
-
-		printLine(tr("%1 sent out %2!").arg(name(self), info().opponent.nick()));
 	    }
+
+	    printLine(tr("%1 sent %2 out!").arg(name(self), nick(self)));
 
 	    break;
 	}
-	case RemovePoke:
-	{
+	case SendBack:
+	    printLine(tr("%1 called %2 back!").arg(name(self), nick(self)));
 	    switchToNaught(self);
 	    break;
+	case UseAttack:
+	{
+	    qint16 attack;
+	    in >> attack;
+
+	    printLine(tr("%1 used %2!").arg(nick(self), MoveInfo::Name(attack)));
+	    break;
+	}
+	case ChangePP:
+	{
+	    quint8 move, PP;
+	    in  >> move >> PP;
+
+	    //Think to check for crash if currentIndex != -1, move > 3
+	    info().myteam.poke(info().currentIndex).move(move).PP() = PP;
 	}
 	case OfferChoice:
 	{
@@ -248,7 +268,7 @@ PokeZone::PokeZone(const TeamBattle &team)
 
     for (int i = 0; i < 6; i++)
     {
-	l->addWidget(pokes[i] = new QPushButton(PokemonInfo::Icon(team.poke(i).num()), PokemonInfo::Name(team.poke(i).num())), i >= 3, i % 3);
+	l->addWidget(pokes[i] = new QPushButton(PokemonInfo::Icon(team.poke(i).num()), team.poke(i).nick()), i >= 3, i % 3);
 
 	mymapper->setMapping(pokes[i], i);
 	connect(pokes[i], SIGNAL(clicked()), mymapper, SLOT(map()));
@@ -262,7 +282,9 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
 {
     QVBoxLayout *l=  new QVBoxLayout(this);
 
-    QStyleOptionProgressBar style;
+    /* As anyway the graphicsZone is a fixed size, it's useless to
+       resize that part, might as well let  the chat be resized */
+    l->setSizeConstraint(QLayout::SetFixedSize);
 
     nick[Opponent] = new QLabel(info.name[Opponent]);
     l->addWidget(nick[Opponent]);

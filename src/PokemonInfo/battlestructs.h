@@ -67,6 +67,7 @@ public:
     quint16 normalStat(int stat) const;
     quint8 statMod(int stat) const;
 
+    bool ko() const {return lifePoints() == 0;}
 
     void setStatMod(int, qint8);
     void setNormalStat(int, quint16);
