@@ -39,6 +39,7 @@ public:
     PokeBattle &poke(int player, int poke);
     const PokeBattle &poke(int player, int poke) const;
     int currentPoke(int player) const;
+    bool koed(int player) const { return currentPoke(player) == -1; }
     void changeCurrentPoke(int player, int poke);
 
     /* Starts the battle -- use the time before to connect signals / slots */
@@ -48,6 +49,11 @@ public:
     /* requests choice of action from the player */
     void requestChoice(int player, bool acq = true /*private arg used by RequestChoices */);
     void requestChoices(); /* request from both players */
+    /* Shows what attacks are allowed or not */
+    BattleChoices createChoice(int player) const;
+    /* called just after requestChoice(s) */
+    void analyzeChoice(int player);
+    void analyzeChoices(); 
 
     /* Commands for the battle situation */
     void beginTurn();
@@ -55,6 +61,8 @@ public:
     void sendPoke(int player, int poke);
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player);
+    /* Attack... */
+    void useAttack(int player, int attack);
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);
     void removePoke(int player);
@@ -71,6 +79,9 @@ public:
     void inflictStatus(int player, int Status);
     void inflictConfused(int player);
     void inflictDamage(int player, int damage);
+    /* Removes PP.. */
+    void changePP(int player, int move, int PP);
+    void losePP(int player, int move, int loss);
 
     /* conversion for sending a message */
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */
@@ -80,15 +91,19 @@ public:
     enum BattleCommand
     {
 	SendOut,
-	RemovePoke,
+	SendBack,
 	UseAttack,
 	OfferChoice,
-	BeginTurn
+	BeginTurn,
+	ChangePP
     };
 
     /* Here C++0x would make it so much better looking with variadic templates! */
+    void notify(int player, int command, bool who);
     template<class T>
     void notify(int player, int command, bool who, const T& param);
+    template<class T1, class T2>
+    void notify(int player, int command, bool who, const T1& param1, const T2& param2);
 public slots:
     void battleChoiceReceived(int id, const BattleChoice &b);
 signals:
@@ -114,6 +129,19 @@ public:
     struct QuitException {};
 };
 
+inline void BattleSituation::notify(int player, int command, bool who)
+{
+    /* Doing that cuz we never know */
+    testquit();
+
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(command) << who;
+
+    emit battleInfo(id(player), tosend);
+}
 
 template<class T>
 void BattleSituation::notify(int player, int command, bool who, const T& param)
@@ -126,6 +154,21 @@ void BattleSituation::notify(int player, int command, bool who, const T& param)
     out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(command) << who << param;
+
+    emit battleInfo(id(player), tosend);
+}
+
+template<class T1, class T2>
+void BattleSituation::notify(int player, int command, bool who, const T1& param1, const T2& param2)
+{
+    /* Doing that cuz we never know */
+    testquit();
+
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(command) << who << param1 << param2;
 
     emit battleInfo(id(player), tosend);
 }

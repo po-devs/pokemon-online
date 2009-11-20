@@ -87,6 +87,26 @@ const PokeBattle & BattleSituation::poke(int player, int poke) const
     return team(player).poke(poke);
 }
 
+PokeBattle & BattleSituation::poke(int player, int poke)
+{
+    return team(player).poke(poke);
+}
+
+const PokeBattle &BattleSituation::poke(int player) const
+{
+    return team(player).poke(currentPoke(player));
+}
+
+PokeBattle &BattleSituation::poke(int player)
+{
+    return team(player).poke(currentPoke(player));
+}
+
+int BattleSituation::currentPoke(int player) const
+{
+    return mycurrentpoke[player];
+}
+
 /* The battle loop !! */
 void BattleSituation::run()
 {
@@ -94,6 +114,7 @@ void BattleSituation::run()
 	while (!quit)
 	{
 	    beginTurn();
+
 	    endTurn();
 	}
     } catch(const QuitException &ex) {
@@ -108,6 +129,7 @@ void BattleSituation::beginTurn()
     notify(Player1, BeginTurn, You, turn);
     notify(Player2, BeginTurn, You, turn);
     requestChoices();
+    analyzeChoices();
 }
 
 void BattleSituation::endTurn()
@@ -123,12 +145,12 @@ void BattleSituation::testquit()
 void BattleSituation::requestChoice(int player, bool acquire)
 {
     haveChoice[player] = true;
-    options[player] = BattleChoices();
+    options[player] = createChoice(player);
 
     notify(player, OfferChoice, You, options[player]);
 
     if (acquire)
-	sem.acquire(1);
+	sem.acquire(1); /* Lock until a choice is received */
 
     //test to see if the quit was requested by system or if choice was received
     testquit();
@@ -141,13 +163,64 @@ void BattleSituation::requestChoices()
     requestChoice(Player1, false);
     requestChoice(Player2, false);
 
-    /* Calling sem.acquire(1) twice wouldn't have the same effect */
+    /* Lock until BOTH choices are received */
     sem.acquire(2);
 
     //test to see if the quit was requested by system or if choice was received
     testquit();
 
     /* Now all the players gonna do is analyzeChoice(int player) */
+}
+
+BattleChoices BattleSituation::createChoice(int player) const
+{
+    /* First let's see for attacks... */
+    if (koed(player)) {
+	return BattleChoices::SwitchOnly();
+    }
+
+    BattleChoices ret;
+
+    /* attacks ok, lets see which ones then */
+    for (int i = 0; i < 4; i++) {
+	if (poke(player).move(i).num() == 0 || poke(player).move(i).PP() == 0) {
+	    ret.attackAllowed[i] = false;
+	}
+    }
+
+    return ret;
+}
+
+void BattleSituation::analyzeChoice(int player)
+{
+    /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
+    if (choice[player].attack()) {
+	useAttack(player, choice[player].numSwitch);
+    } else {
+	sendBack(player);
+	sendPoke(player, choice[player].numSwitch);
+    }
+}
+
+void BattleSituation::analyzeChoices()
+{
+    if (choice[Player1].attack() && choice[Player2].attack()) {
+	if (poke(Player1).normalStat(Speed) > poke(Player2).normalStat(Speed)) {
+	    analyzeChoice(Player1);
+	    analyzeChoice(Player2);
+	} else {
+	    analyzeChoice(Player2);
+	    analyzeChoice(Player1);
+	}
+	return;
+    }
+    if (choice[Player1].attack()) {
+	analyzeChoice(Player2);
+	analyzeChoice(Player1);
+    } else {
+	analyzeChoice(Player1);
+	analyzeChoice(Player2);
+    }
 }
 
 void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
@@ -160,6 +233,13 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 	if (!b.match(options[player])) {
 	    //INVALID BEHAVIOR
 	} else {
+	    /* Routine checks */
+	    if (b.poke()) {
+		if (b.numSwitch == currentPoke(player) || poke(player, b.numSwitch).num() == 0 || poke(player, b.numSwitch).ko()) {
+		    // INVALID BEHAVIOR
+		    return;
+		}
+	    }
 	    /* One player has chosen their solution, so there's one less wait */
 	    choice[player] = b;
 	    sem.release(1);
@@ -177,7 +257,40 @@ void BattleSituation::sendPoke(int player, int poke)
     notify(rev(player), SendOut, Opp, opoke(player, poke));
 }
 
+void BattleSituation::sendBack(int player)
+{
+    changeCurrentPoke(player, -1);
+
+    notify(player, SendBack, You);
+    notify(rev(player), SendBack, Opp);
+}
+
+void BattleSituation::useAttack(int player, int move)
+{
+    int attack = poke(player).move(move).num();
+
+    notify(player, UseAttack, You, qint16(attack));
+    notify(rev(player), UseAttack, Opp, qint16(attack));
+
+    losePP(player, move, 1);
+}
+
 void BattleSituation::changeCurrentPoke(int player, int poke)
 {
     mycurrentpoke[player] = poke;
+}
+
+void BattleSituation::changePP(int player, int move, int PP)
+{
+    poke(player).move(move).PP() = PP;
+}
+
+void BattleSituation::losePP(int player, int move, int loss)
+{
+    int PP = poke(player).move(move).PP();
+
+    PP = std::max(PP-loss, 0);
+    changePP(player, move, PP);
+
+    notify(player, ChangePP, You, quint8(move), poke(player).move(move).PP());
 }

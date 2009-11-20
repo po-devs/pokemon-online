@@ -50,10 +50,11 @@ public:
     enum BattleCommand
     {
 	SendOut,
-	RemovePoke,
+	SendBack,
 	UseAttack,
 	OfferChoice,
-	BeginTurn
+	BeginTurn,
+	ChangePP
     };
     enum
     {
@@ -71,6 +72,7 @@ public:
 
     void printLine(const QString &str);
     QString name(bool self) const;
+    QString nick(bool self) const;
 
 public slots:
     void receiveInfo(QByteArray);

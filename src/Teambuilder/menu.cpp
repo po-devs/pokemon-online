@@ -28,12 +28,11 @@ TB_Menu::TB_Menu()
 
 QMenuBar * TB_Menu::createMenuBar(MainWindow *w)
 {
-/*    QMenuBar *menuBar = new QMenuBar();
+    /* Penser à styler cette menu bar pour la rendre + adaptée (notamment ajouter une touche de bleu au fond */
+    QMenuBar *menuBar = new QMenuBar();
     QMenu *menuFichier = menuBar->addMenu("&File");
     menuFichier->addAction(tr("&Load Team"),w,SLOT(loadTeamDialog()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
 
-    return menuBar; */
-    (void) w;
-    return NULL;
+    return menuBar;
 }
