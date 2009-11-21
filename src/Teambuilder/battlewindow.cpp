@@ -186,6 +186,23 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    printLine(tr("\nStart of turn %1").arg(turn));
 	    break;
 	}
+	case ChangeHp:
+	{
+	    quint16 newHp;
+	    in >> newHp;
+	    if (self) {
+		/* Think to check for crash */
+		info().currentPoke().lifePoints() = newHp;
+	    } else {
+		info().opponent.lifePercent() = newHp;
+	    }
+	    mydisplay->updatePoke(self);
+	    break;
+	}
+	case Ko:
+	    printLine(tr("%1 fainted!").arg(nick(self)));
+	    switchToNaught(self);
+	    break;
 	default:
 	    break;
     }

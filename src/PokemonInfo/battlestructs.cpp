@@ -40,8 +40,6 @@ PokeBattle::PokeBattle()
     lifePoints() = 0;
     totalLifePoints() = 0;
     level() = 100;
-
-    resetStatMods();
 }
 
 const BattleMove & PokeBattle::move(int i) const
@@ -63,19 +61,6 @@ void PokeBattle::setNormalStat(int stat, quint16 i)
 {
     normal_stats[stat-1] = i;
 }
-
-void PokeBattle::setStatMod(int stat, qint8 mod)
-{
-    stat_mods[stat-1] = mod;
-}
-
-void PokeBattle::resetStatMods()
-{
-    for (int i = Attack; i <= SpDefense; i++) {
-	setStatMod(i, 0);
-    }
-}
-
 
 void PokeBattle::init(const PokePersonal &poke)
 {

@@ -56,7 +56,9 @@ public:
 	UseAttack,
 	OfferChoice,
 	BeginTurn,
-	ChangePP
+	ChangePP,
+	ChangeHp,
+	Ko
     };
     enum
     {

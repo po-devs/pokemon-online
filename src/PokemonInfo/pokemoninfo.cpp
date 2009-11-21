@@ -111,6 +111,16 @@ void fill_container_with_file(T &container, const QString & filename)
     }
 }
 
+int PokemonInfo::Type1(int pokenum)
+{
+    return get_line(path("poke_type1.txt"), pokenum).toInt();
+}
+
+int PokemonInfo::Type2(int pokenum)
+{
+    return get_line(path("poke_type2.txt"), pokenum).toInt();
+}
+
 int PokemonInfo::calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev)
 {
     return ((2*basestat + dv+ ev/4)*level)/100 + 5;
@@ -130,7 +140,7 @@ int PokemonInfo::FullStat(int nature, int stat, quint8 basestat, int level, quin
 	return Stat(stat, basestat, level, dv, ev);
     }
     else {
-	return Stat(stat, basestat, level, dv, ev) * (10+NatureInfo::Boost(nature, stat));
+	return Stat(stat, basestat, level, dv, ev) * (10+NatureInfo::Boost(nature, stat)) / 10;
     }
 }
 

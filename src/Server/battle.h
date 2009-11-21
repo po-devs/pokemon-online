@@ -14,6 +14,7 @@ public:
 	Player1,
 	Player2
     };
+    typedef QVariantMap context;
     static const bool You = true;
     static const bool Opp = false;
 
@@ -58,14 +59,13 @@ public:
     /* Commands for the battle situation */
     void beginTurn();
     void endTurn();
-    void sendPoke(int player, int poke);
-    /* Sends a poke back to his pokeball (not koed) */
-    void sendBack(int player);
     /* Attack... */
     void useAttack(int player, int attack);
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);
-    void removePoke(int player);
+    /* Sends a poke back to his pokeball (not koed) */
+    void sendBack(int player);
+    void sendPoke(int player, int poke);
     void koPoke(int player);
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
@@ -83,6 +83,8 @@ public:
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
 
+    int calculateDamage(int power, int category, context &player, context &target);
+
     /* conversion for sending a message */
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */
     ShallowBattlePoke opoke(int play, int i) const { return ShallowBattlePoke(poke(play, i));} /* aka 'opp poke', or what you need to know if it's your opponent's poke */
@@ -95,7 +97,9 @@ public:
 	UseAttack,
 	OfferChoice,
 	BeginTurn,
-	ChangePP
+	ChangePP,
+	ChangeHp,
+	Ko
     };
 
     /* Here C++0x would make it so much better looking with variadic templates! */
@@ -125,6 +129,20 @@ private:
     int mycurrentpoke[2]; /* -1 for koed */
     int myid[2];
     int turn;
+
+    /**************************************/
+    /*** VIVs: very important variables ***/
+    /**************************************/
+    /* Those variable are used throughout the battle to describe the situation.
+       These are 'dynamic', in contrary to 'static'. For exemple when a pokemon
+       is switched in, its type and ability and moves are stored in there, taken
+       from their 'static' value that are in the TeamBattle struct. Then they
+       can be changed (like with ability swap) but when the poke is sent back then
+       back in the dynamic value is restored to the static one. */
+
+    /* Variables that are reset when the poke is switched out.
+	Like for exemple a Requiem one... */
+    context pokelong[2];
 public:
     struct QuitException {};
 };
