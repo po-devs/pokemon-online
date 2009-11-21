@@ -24,6 +24,8 @@ struct BattleInfo
 
     /* My team */
     TeamBattle myteam;
+    const PokeBattle &currentPoke() const;
+    PokeBattle &currentPoke();
     /* Opponent pokemon */
     ShallowBattlePoke opponent;
     bool opponentAlive;
@@ -131,7 +133,7 @@ public:
     void updatePoke(bool self);
 
 protected:
-    const PokeBattle &mypoke() const {return info.myteam.poke(info.currentIndex); }
+    const PokeBattle &mypoke() const {return info.currentPoke(); }
     const ShallowBattlePoke &foe() const {return info.opponent; }
 
     GraphicsZone *zone;
@@ -139,20 +141,32 @@ protected:
     QProgressBar *bars[2];
 };
 
+class AttackButton;
+
 /* An attack zone is the zone where the attacks are displayed */
 class AttackZone : public QWidget
 {
     Q_OBJECT
 public:
     AttackZone(const PokeBattle &poke);
-    int moves[4];
 
-    QPushButton *attacks[4];
+    AttackButton *attacks[4];
 signals:
     void clicked(int attack);
 
 private:
     QSignalMapper *mymapper;
+};
+
+class AttackButton: public QPushButton
+{
+    Q_OBJECT
+public:
+    AttackButton(const BattleMove& b);
+    void updateAttack(const BattleMove& b);
+
+    QLabel *name;
+    QLabel *pp;
 };
 
 /* When you want to switch pokemons, that's what you see */

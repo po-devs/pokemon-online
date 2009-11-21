@@ -27,7 +27,7 @@ QDataStream & operator >> (QDataStream &in, BattleMove &mo)
 
 QDataStream & operator << (QDataStream &out, const BattleMove &mo)
 {
-    out << mo.num() << mo.PP() << mo.totalPP() << mo.power() << mo.type();
+    out << mo.num() << mo.type() << mo.power() << mo.PP() << mo.totalPP();
 
     return out;
 }

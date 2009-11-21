@@ -52,7 +52,7 @@ QString BattleWindow::name(bool self) const
 QString BattleWindow::nick(bool self) const
 {
     if (self)
-	return info().myteam.poke(info().currentIndex).nick();
+	return info().currentPoke().nick();
     else
 	return info().opponent.nick();
 }
@@ -66,7 +66,7 @@ void BattleWindow::switchTo(int pokezone)
 
 void BattleWindow::switchToPokeZone()
 {
-    if (info().currentIndex < 0 && info().currentIndex > 5)
+    if (info().currentIndex < 0 || info().currentIndex > 5)
 	mystack->setCurrentIndex(ZoneOfPokes);
     else {
 	// Go back to the attack zone if the window is on the switch zone
@@ -169,7 +169,8 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    in  >> move >> PP;
 
 	    //Think to check for crash if currentIndex != -1, move > 3
-	    info().myteam.poke(info().currentIndex).move(move).PP() = PP;
+	    info().currentPoke().move(move).PP() = PP;
+	    myazones[info().currentIndex]->attacks[move]->updateAttack(info().currentPoke().move(move));
 	}
 	case OfferChoice:
 	{
@@ -252,13 +253,27 @@ AttackZone::AttackZone(const PokeBattle &poke)
 
     for (int i = 0; i < 4; i++)
     {
-	l->addWidget(attacks[i] = new QPushButton(MoveInfo::Name(poke.move(i).num())), i >= 2, i % 2);
+	l->addWidget(attacks[i] = new AttackButton(poke.move(i)), i >= 2, i % 2);
 
 	mymapper->setMapping(attacks[i], i);
 	connect(attacks[i], SIGNAL(clicked()), mymapper, SLOT(map()));
     }
 
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
+}
+
+AttackButton::AttackButton(const BattleMove &b)
+{
+    QHBoxLayout *l = new QHBoxLayout(this);
+
+    l->addWidget(name = new QLabel(MoveInfo::Name(b.num())));
+    l->addWidget(pp = new QLabel(tr("%1/%2").arg(b.PP()).arg(b.totalPP())), 0, Qt::AlignRight);
+}
+
+void AttackButton::updateAttack(const BattleMove &b)
+{
+    name->setText(MoveInfo::Name(b.num()));
+    pp->setText(tr("%1/%2").arg(b.PP()).arg(b.totalPP()));
 }
 
 PokeZone::PokeZone(const TeamBattle &team)
@@ -374,4 +389,14 @@ QPixmap GraphicsZone::loadPixmap(quint16 num, bool shiny, bool back, quint8 gend
 qint32 GraphicsZone::key(quint16 num, bool shiny, bool back, quint8 gender) const
 {
     return num + (gender << 16) + (back << 24) + (shiny<<25);
+}
+
+const PokeBattle & BattleInfo::currentPoke() const
+{
+    return myteam.poke(currentIndex);
+}
+
+PokeBattle & BattleInfo::currentPoke()
+{
+    return myteam.poke(currentIndex);
 }
