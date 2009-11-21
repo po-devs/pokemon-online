@@ -28,4 +28,3 @@ HEADERS += mainwindow.h \
     battle.h
 LIBS += -L../../bin \
     -lzip
-CONFIG():QMAKE_CXXFLAGS += -std=c++0x

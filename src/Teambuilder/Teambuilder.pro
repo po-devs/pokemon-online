@@ -39,4 +39,3 @@ HEADERS += teambuilder.h \
     ../Utilities/functions.h
 LIBS += -L../../bin \
     -lzip
-CONFIG():QMAKE_CXXFLAGS += -std=c++0x
