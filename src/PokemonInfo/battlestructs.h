@@ -69,13 +69,10 @@ public:
 
     bool ko() const {return lifePoints() == 0;}
 
-    void setStatMod(int, qint8);
     void setNormalStat(int, quint16);
-    void resetStatMods();
 private:
     BattleMove m_moves[4];
 
-    qint8 stat_mods[5]; /* -6, -5, -4, ..., 0, 1, 2, ..., 6 */
     quint16 normal_stats[5];
 };
 

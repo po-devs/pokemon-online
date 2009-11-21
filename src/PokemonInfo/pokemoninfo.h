@@ -27,6 +27,8 @@ public:
     static QString Name(int pokenum);
     static int Number(const QString &pokename);
     static int Gender(int pokenum);
+    static int Type1(int pokenum);
+    static int Type2(int pokenum);
     static QPixmap Picture(int pokenum, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QIcon Icon(int index);
     static QList<int> Moves(int pokenum);

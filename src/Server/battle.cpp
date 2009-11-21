@@ -1,5 +1,6 @@
 #include "battle.h"
 #include "player.h"
+#include "../PokemonInfo/pokemoninfo.h"
 
 BattleSituation::BattleSituation(Player &p1, Player &p2)
 	:team1(p1.team()), team2(p2.team())
@@ -197,7 +198,9 @@ void BattleSituation::analyzeChoice(int player)
     if (choice[player].attack()) {
 	useAttack(player, choice[player].numSwitch);
     } else {
-	sendBack(player);
+	if (currentPoke(player) != -1) { /* if the pokemon isn't ko, it IS sent back */
+	    sendBack(player);
+	}
 	sendPoke(player, choice[player].numSwitch);
     }
 }
@@ -249,12 +252,20 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 
 /* Battle functions! Yeah! */
 
-void BattleSituation::sendPoke(int player, int poke)
+void BattleSituation::sendPoke(int player, int pok)
 {
-    changeCurrentPoke(player, poke);
+    changeCurrentPoke(player, pok);
 
-    notify(player, SendOut, You, ypoke(player, poke));
-    notify(rev(player), SendOut, Opp, opoke(player, poke));
+    notify(player, SendOut, You, ypoke(player, pok));
+    notify(rev(player), SendOut, Opp, opoke(player, pok));
+
+    pokelong[player]["Type1"] = PokemonInfo::Type1(poke(player).num());
+    pokelong[player]["Type2"] = PokemonInfo::Type2(poke(player).num());
+    for (int i = 1; i <= 6; i++)
+	pokelong[player][tr("Stat%1").arg(i)] = poke(player).normalStat(i);
+    for (int i = 1; i <= 6; i++)
+	pokelong[player][tr("Boost%1").arg(i)] = 0; /* No boost when a poke switches in, right? */
+    pokelong[player][tr("Level")] = poke(player).level();
 }
 
 void BattleSituation::sendBack(int player)
@@ -273,6 +284,76 @@ void BattleSituation::useAttack(int player, int move)
     notify(rev(player), UseAttack, Opp, qint16(attack));
 
     losePP(player, move, 1);
+
+    int power = MoveInfo::Power(attack);
+    if (power > 0)
+    {
+	int target = rev(player);
+	int category = MoveInfo::Category(attack);
+
+	int damage = calculateDamage(power, category, pokelong[player], pokelong[target]);
+
+	inflictDamage(target, damage);
+    }
+}
+
+int BattleSituation::calculateDamage(int power, int category, context &player, context &target)
+{
+    int level = player["Level"].toInt();
+    int attack, def;
+
+    if (category == Move::Physical) {
+	attack = player["Stat1"].toInt();
+	def = target["Stat2"].toInt();
+    } else {
+	attack = player["Stat4"].toInt();
+	def = target["Stat5"].toInt();
+    }
+
+    int damage = (((((((level * 2 / 5) + 2) * power * attack / 50) / def) * /*Mod1*/ 1) + 2) * 1 /*CH*/ * 1 /*Mod2*/ * 100/*Rand(217,255)*100/255*/ / 100) * 1/*STAB*/ * 1 /* Type1 × Type2*/ * 1 /* Mod3 */;
+
+    /* The minimum damage is always 1... */
+    if (damage == 0) {
+	damage = 1;
+    }
+
+    return damage;
+}
+
+void BattleSituation::inflictDamage(int player, int damage)
+{
+    int hp  = poke(player).lifePoints() - damage;
+
+    if (hp <= 0) {
+	koPoke(player);
+    } else {
+	changeHp(player, hp);
+    }
+}
+
+void BattleSituation::changeHp(int player, int newHp)
+{
+    if (newHp == poke(player).lifePoints()) {
+	/* no change, so don't bother */
+	return;
+    }
+    poke(player).lifePoints() = newHp;
+
+    notify(player, ChangeHp, You, quint16(newHp));
+    notify(rev(player), ChangeHp, Opp, quint16(poke(player).lifePoints()*100/poke(player).totalLifePoints())); /* percentage calculus */
+}
+
+void BattleSituation::koPoke(int player)
+{
+    changeHp(player, 0);
+
+    notify(player, Ko, You);
+    notify(rev(player), Ko, Opp);
+
+    changeCurrentPoke(player, -1);
+
+    requestChoice(player); /* Asks the player to switch a poke in! */
+    analyzeChoice(player);
 }
 
 void BattleSituation::changeCurrentPoke(int player, int poke)
