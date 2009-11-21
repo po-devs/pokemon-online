@@ -266,14 +266,17 @@ AttackButton::AttackButton(const BattleMove &b)
 {
     QHBoxLayout *l = new QHBoxLayout(this);
 
-    l->addWidget(name = new QLabel(MoveInfo::Name(b.num())));
-    l->addWidget(pp = new QLabel(tr("%1/%2").arg(b.PP()).arg(b.totalPP())), 0, Qt::AlignRight);
+    l->addWidget(name = new QLabel());
+    l->addWidget(pp = new QLabel(), 0, Qt::AlignRight);
+
+    updateAttack(b);
 }
 
 void AttackButton::updateAttack(const BattleMove &b)
 {
     name->setText(MoveInfo::Name(b.num()));
     pp->setText(tr("%1/%2").arg(b.PP()).arg(b.totalPP()));
+    this->setStyleSheet("background: " + TypeInfo::Color(MoveInfo::Type(b.num())).name() + ";");
 }
 
 PokeZone::PokeZone(const TeamBattle &team)
