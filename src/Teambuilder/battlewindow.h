@@ -78,6 +78,7 @@ public:
     void sendChoice(const BattleChoice &b);
 
     void printLine(const QString &str);
+    void printHtml(const QString &str);
     QString name(bool self) const;
     QString nick(bool self) const;
 

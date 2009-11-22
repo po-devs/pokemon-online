@@ -160,7 +160,8 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    qint16 attack;
 	    in >> attack;
 
-	    printLine(tr("%1 used %2!").arg(nick(self), MoveInfo::Name(attack)));
+	    //Think to check for crash if attack is invalid
+	    printHtml(tr("%1 used <span style='color:%2'><b>%3</b></span>!").arg(escapeHtml(nick(self)), TypeInfo::Color(MoveInfo::Type(attack)).name(), MoveInfo::Name(attack)));
 	    break;
 	}
 	case ChangePP:
@@ -183,7 +184,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	{
 	    int turn;
 	    in >> turn;
-	    printLine(tr("\nStart of turn %1").arg(turn));
+	    printHtml("<br /><span style='color:blue'><b>" + tr("Start of turn %1").arg(turn) + "</b></span>");
 	    break;
 	}
 	case ChangeHp:
@@ -213,18 +214,18 @@ void BattleWindow::receiveInfo(QByteArray inf)
 		    break;
 		case 1:
 		case 2:
-		    printLine(tr("It's not very effective..."));
+		    printHtml("<span style='color:grey'>" + tr("It's not very effective...") + "</span>");
 		    break;
 		case 8:
 		case 16:
-		    printLine(tr("It's super effective!"));
+		    printHtml("<span style='color:blue'>" + tr("It's super effective!") + "</span>");
 		default:
 		    break;
 	    }
 	    break;
 	}
 	case CriticalHit:
-	    printLine(tr("It's a critical hit!"));
+	    printHtml(tr("<span style='color:red'>It's a critical hit!</span>"));
 	    break;
 	case Miss:
 	    printLine(tr("It missed!"));
@@ -249,6 +250,11 @@ void BattleWindow::switchToNaught(bool self)
 void BattleWindow::printLine(const QString &str)
 {
     mychat->insertPlainText(str + "\n");
+}
+
+void BattleWindow::printHtml(const QString &str)
+{
+    mychat->insertHtml(str + "<br />");
 }
 
 void BattleWindow::updateChoices()

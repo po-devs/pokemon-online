@@ -1,10 +1,12 @@
 #include "functions.h"
 
-QString escapeHtml(QString & toConvert)
+QString escapeHtml(const QString & toConvert)
 {
-    toConvert.replace("&", "&amp;");
-    toConvert.replace("<", "&lt;");
-    toConvert.replace(">", "&gt;");
+    QString ret = toConvert;
 
-    return toConvert;
+    ret.replace("&", "&amp;");
+    ret.replace("<", "&lt;");
+    ret.replace(">", "&gt;");
+
+    return ret;
 }

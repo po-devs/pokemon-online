@@ -10,7 +10,7 @@
 
     For example 'Hello <b>world</b> & Cie' is converted into 'Hello &lt;b&rt;world&lt;/b&rt; &amp; Cie'
  */
-QString escapeHtml(QString &toConvert);
+QString escapeHtml(const QString &toConvert);
 
 /* Macro to write less code */
 #define PROPERTY(type, name) \
