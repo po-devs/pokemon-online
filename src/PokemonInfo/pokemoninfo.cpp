@@ -8,6 +8,11 @@ QStringList PokemonInfo::m_Names;
 
 QString MoveInfo::m_Directory;
 QStringList MoveInfo::m_Names;
+QStringList MoveInfo::m_AccS;
+QStringList MoveInfo::m_PowerS;
+QList<char> MoveInfo::m_Type;
+QList<char> MoveInfo::m_PP;
+QList<char> MoveInfo::m_Category;
 
 QString ItemInfo::m_Directory;
 QStringList ItemInfo::m_Names;
@@ -301,6 +306,11 @@ void MoveInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
+    loadTypes();
+    loadPPs();
+    loadAccs();
+    loadPowers();
+    loadCategorys();
 }
 
 int MoveInfo::NumberOfMoves()
@@ -313,10 +323,46 @@ int MoveInfo::Number(const QString &movename)
     return (qFind(m_Names.begin(), m_Names.end(), movename)-m_Names.begin()) % (NumberOfMoves());
 }
 
-
 void MoveInfo::loadNames()
 {
     fill_container_with_file(m_Names, path("moves_en.txt"));
+}
+
+void MoveInfo::loadPPs()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_pp.txt"));
+    foreach(QString s, temp) {
+	m_PP.push_back(s.toInt());
+    }
+}
+
+void MoveInfo::loadTypes()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_type.txt"));
+    foreach(QString s, temp) {
+	m_Type.push_back(s.toInt());
+    }
+}
+
+void MoveInfo::loadCategorys()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_category.txt"));
+    foreach(QString s, temp) {
+	m_Category.push_back(s.toInt());
+    }
+}
+
+void MoveInfo::loadPowers()
+{
+    fill_container_with_file(m_PowerS, path("move_power.txt"));
+}
+
+void MoveInfo::loadAccs()
+{
+    fill_container_with_file(m_AccS, path("move_accuracy.txt"));
 }
 
 QString MoveInfo::path(const QString &file)
@@ -331,22 +377,22 @@ QString MoveInfo::Name(int movenum)
 
 int MoveInfo::Power(int movenum)
 {
-    return get_line(path("move_power.txt"), movenum).toInt();
+    return PowerS(movenum).toInt();
 }
 
 int MoveInfo::Type(int movenum)
 {
-    return get_line(path("move_type.txt"), movenum).toInt();
+    return m_Type[movenum];
 }
 
 int MoveInfo::Category(int movenum)
 {
-    return get_line(path("move_category.txt"), movenum).toInt();
+    return m_Category[movenum];
 }
 
 int MoveInfo::PP(int movenum)
 {
-    return get_line(path("move_pp.txt"), movenum).toInt();
+    return m_PP[movenum];
 }
 
 int MoveInfo::Acc(int movenum)
@@ -357,12 +403,12 @@ int MoveInfo::Acc(int movenum)
 
 QString MoveInfo::AccS(int movenum)
 {
-    return get_line(path("move_accuracy.txt"), movenum);
+    return m_AccS[movenum];
 }
 
 QString MoveInfo::PowerS(int movenum)
 {
-    return get_line(path("move_power.txt"), movenum);
+    return m_PowerS[movenum];
 }
 
 void ItemInfo::init(const QString &dir)

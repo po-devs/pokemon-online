@@ -13,12 +13,13 @@ namespace Pokemon
 {
     enum Status
     {
-	Fine,
-	Paralysed,
-	Burnt,
-	Asleep,
-	Poisoned,
-	DeeplyPoisoned
+	Fine=0,
+	Paralysed=1,
+	Burnt=2,
+	Frozen=3,
+	Asleep=4,
+	Poisoned=5,
+	DeeplyPoisoned=6
     };
 }
 

@@ -211,14 +211,13 @@ void BattleSituation::analyzeChoice(int player)
 void BattleSituation::analyzeChoices()
 {
     if (choice[Player1].attack() && choice[Player2].attack()) {
-	if (poke(Player1).normalStat(Speed) > poke(Player2).normalStat(Speed)) {
-	    analyzeChoice(Player1);
-	    if (turnlong[Player2]["CancelChoice"].toBool() == false)
-		analyzeChoice(Player2);
-	} else {
-	    analyzeChoice(Player2);
-	    analyzeChoice(Player1);
-	}
+	int first = poke(Player1).normalStat(Speed) > poke(Player2).normalStat(Speed) ? Player1 : Player2;
+	int second = rev(first);
+
+	analyzeChoice(first);
+	if (turnlong[second]["CancelChoice"].toBool() != true)
+	    analyzeChoice(second);
+
 	return;
     }
     if (choice[Player1].attack()) {

@@ -47,9 +47,19 @@ class MoveInfo
 {
 private:
     static QStringList m_Names;
+    static QStringList m_PowerS;
+    static QStringList m_AccS;
+    static QList<char> m_Type;
+    static QList<char> m_PP;
+    static QList<char> m_Category;
     static QString m_Directory;
 
     static void loadNames();
+    static void loadPPs();
+    static void loadTypes();
+    static void loadCategorys();
+    static void loadPowers();
+    static void loadAccs();
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
