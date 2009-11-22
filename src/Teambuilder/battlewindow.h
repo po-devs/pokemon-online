@@ -58,7 +58,10 @@ public:
 	BeginTurn,
 	ChangePP,
 	ChangeHp,
-	Ko
+	Ko,
+	Effective, /* to tell how a move is effective */
+	Miss,
+	CriticalHit
     };
     enum
     {

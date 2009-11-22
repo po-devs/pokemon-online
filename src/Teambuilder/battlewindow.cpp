@@ -203,6 +203,32 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    printLine(tr("%1 fainted!").arg(nick(self)));
 	    switchToNaught(self);
 	    break;
+	case Effective:
+	{
+	    quint8 eff;
+	    in >> eff;
+	    switch (eff) {
+		case 0:
+		    printLine(tr("It had no effect!"));
+		    break;
+		case 1:
+		case 2:
+		    printLine(tr("It's not very effective..."));
+		    break;
+		case 8:
+		case 16:
+		    printLine(tr("It's super effective!"));
+		default:
+		    break;
+	    }
+	    break;
+	}
+	case CriticalHit:
+	    printLine(tr("It's a critical hit!"));
+	    break;
+	case Miss:
+	    printLine(tr("It missed!"));
+	    break;
 	default:
 	    break;
     }

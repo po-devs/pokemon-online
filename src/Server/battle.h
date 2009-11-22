@@ -99,7 +99,10 @@ public:
 	BeginTurn,
 	ChangePP,
 	ChangeHp,
-	Ko
+	Ko,
+	Effective, /* to tell how a move is effective */
+	Miss,
+	CriticalHit
     };
 
     /* Here C++0x would make it so much better looking with variadic templates! */
@@ -143,6 +146,9 @@ private:
     /* Variables that are reset when the poke is switched out.
 	Like for exemple a Requiem one... */
     context pokelong[2];
+    /* Variables that are reset every turn right before everything else happens
+	at the very beginning of a turn */
+    context turnlong[2];
 public:
     struct QuitException {};
 };

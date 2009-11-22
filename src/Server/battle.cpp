@@ -127,6 +127,9 @@ void BattleSituation::run()
 void BattleSituation::beginTurn()
 {
     ++turn;
+    /* Resetting temporary variables */
+    turnlong[0].clear();
+    turnlong[1].clear();
     notify(Player1, BeginTurn, You, turn);
     notify(Player2, BeginTurn, You, turn);
     requestChoices();
@@ -210,7 +213,8 @@ void BattleSituation::analyzeChoices()
     if (choice[Player1].attack() && choice[Player2].attack()) {
 	if (poke(Player1).normalStat(Speed) > poke(Player2).normalStat(Speed)) {
 	    analyzeChoice(Player1);
-	    analyzeChoice(Player2);
+	    if (turnlong[Player2]["CancelChoice"].toBool() == false)
+		analyzeChoice(Player2);
 	} else {
 	    analyzeChoice(Player2);
 	    analyzeChoice(Player1);
@@ -245,6 +249,7 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 	    }
 	    /* One player has chosen their solution, so there's one less wait */
 	    choice[player] = b;
+	    haveChoice[player] = false;
 	    sem.release(1);
 	}
     }
@@ -259,6 +264,9 @@ void BattleSituation::sendPoke(int player, int pok)
     notify(player, SendOut, You, ypoke(player, pok));
     notify(rev(player), SendOut, Opp, opoke(player, pok));
 
+    /* reset temporary variables */
+    pokelong[player].clear();
+    /* Give new values to what needed */
     pokelong[player]["Type1"] = PokemonInfo::Type1(poke(player).num());
     pokelong[player]["Type2"] = PokemonInfo::Type2(poke(player).num());
     for (int i = 1; i <= 6; i++)
@@ -288,12 +296,49 @@ void BattleSituation::useAttack(int player, int move)
     int power = MoveInfo::Power(attack);
     if (power > 0)
     {
-	int target = rev(player);
-	int category = MoveInfo::Category(attack);
+	int acc = MoveInfo::Acc(attack);
 
-	int damage = calculateDamage(power, category, pokelong[player], pokelong[target]);
+	int randnum = rand() % 100 + 1;
+	if (randnum > acc)
+	{
+	    notify(Player1, Miss, You);
+	    notify(Player2, Miss, You);
+	} else
+	{
+	    int target = rev(player);
+	    int category = MoveInfo::Category(attack);
+	    int type = MoveInfo::Type(attack);
 
-	inflictDamage(target, damage);
+	    int typeadv[] = {pokelong[target]["Type1"].toInt(), pokelong[target]["Type2"].toInt()};
+	    int typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
+
+	    int typepok[] = {pokelong[player]["Type1"].toInt(), pokelong[player]["Type2"].toInt()};
+	    int stab = 2 + (type==typepok[0] || type==typepok[1]);
+
+	    pokelong[player]["Stab"] = stab;
+	    pokelong[player]["TypeMod"] = typemod;
+
+	    if (typemod == 0) {
+		/* If it's ineffective we just say it */
+		notify(Player1, Effective, You, quint8(typemod));
+		notify(Player2, Effective, You, quint8(typemod));
+	    } else {
+		int randnum = rand() % 16;
+
+		pokelong[player]["CriticalHit"] = (randnum==0);
+		if (randnum == 0) {
+		    notify(Player1, CriticalHit, You);
+		    notify(Player2, CriticalHit, You);
+		}
+
+		notify(Player1, Effective, You, quint8(typemod));
+		notify(Player2, Effective, You, quint8(typemod));
+
+		int damage = calculateDamage(power, category, pokelong[player], pokelong[target]);
+
+		inflictDamage(target, damage);
+	    }
+	}
     }
 }
 
@@ -310,7 +355,12 @@ int BattleSituation::calculateDamage(int power, int category, context &player, c
 	def = target["Stat5"].toInt();
     }
 
-    int damage = (((((((level * 2 / 5) + 2) * power * attack / 50) / def) * /*Mod1*/ 1) + 2) * 1 /*CH*/ * 1 /*Mod2*/ * 100/*Rand(217,255)*100/255*/ / 100) * 1/*STAB*/ * 1 /* Type1 × Type2*/ * 1 /* Mod3 */;
+    int stab = player["Stab"].toInt();
+    int typemod = player["TypeMod"].toInt();
+    int randnum = rand() % (255-217) + 217;
+    int ch = 1 + player["CriticalHit"].toBool();
+
+    int damage = (((((((level * 2 / 5) + 2) * power * attack / 50) / def) * /*Mod1*/ 1) + 2) * ch * 1 /*Mod2*/ * randnum * 100 / 255 / 100) * stab / 2 * typemod / 4 * 1 /* Mod3 */;
 
     /* The minimum damage is always 1... */
     if (damage == 0) {
@@ -354,6 +404,8 @@ void BattleSituation::koPoke(int player)
 
     requestChoice(player); /* Asks the player to switch a poke in! */
     analyzeChoice(player);
+
+    turnlong[player]["CancelChoice"] = true; /* the attack the poke should have is not anymore */
 }
 
 void BattleSituation::changeCurrentPoke(int player, int poke)

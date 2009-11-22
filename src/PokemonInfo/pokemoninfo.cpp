@@ -16,6 +16,7 @@ QStringList ItemInfo::m_SortedNames;
 QStringList TypeInfo::m_Names;
 QList<QColor> TypeInfo::m_Colors;
 QString TypeInfo::m_Directory;
+QList<int> TypeInfo::m_TypeVsType;
 
 QStringList NatureInfo::m_Names;
 QString NatureInfo::m_Directory;
@@ -348,6 +349,12 @@ int MoveInfo::PP(int movenum)
     return get_line(path("move_pp.txt"), movenum).toInt();
 }
 
+int MoveInfo::Acc(int movenum)
+{
+    int ret = AccS(movenum).toInt();
+    return ret == 0 ? 65535 : ret;
+}
+
 QString MoveInfo::AccS(int movenum)
 {
     return get_line(path("move_accuracy.txt"), movenum);
@@ -431,6 +438,20 @@ void TypeInfo::loadColors()
     fill_container_with_file(m_Colors, path("type_colors.txt"));
 }
 
+void TypeInfo::loadEff()
+{
+    QStringList temp;
+
+    fill_container_with_file(temp, path("typestable.txt"));
+
+    foreach (QString l, temp) {
+	QStringList l2 = l.split(' ');
+	foreach (QString l3, l2) {
+	    m_TypeVsType.push_back(l3.toInt());
+	}
+    }
+}
+
 void TypeInfo::init(const QString &dir)
 {
     if (NumberOfTypes() != 0)
@@ -443,6 +464,12 @@ void TypeInfo::init(const QString &dir)
 
     loadNames();
     loadColors();
+    loadEff();
+}
+
+int TypeInfo::Eff(int type_attack, int type_defend)
+{
+    return m_TypeVsType[type_attack * NumberOfTypes() + type_defend];
 }
 
 QString TypeInfo::Name(int typenum)
