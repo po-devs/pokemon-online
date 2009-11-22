@@ -9,6 +9,8 @@ Server::Server(quint16 port)
     mainchat()->setFixedSize(500,500);
     mainchat()->setReadOnly(true);
 
+    srand(time(NULL));
+
     printLine(tr("Starting loading pokemon database..."));
 
     PokemonInfo::init("db/");

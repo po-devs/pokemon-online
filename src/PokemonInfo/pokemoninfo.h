@@ -66,7 +66,8 @@ public:
     /* gives the power of a move in the form of a string */
     static QString PowerS(int movenum);
     static int PP(int movenum);
-    /* gives the power of a move in the form of a string */
+    static int Acc(int movenum);
+    /* gives the accuracy of a move in the form of a string */
     static QString AccS(int movenum);
 };
 
@@ -101,9 +102,11 @@ private:
     static QStringList m_Names;
     static QString m_Directory;
     static QList<QColor> m_Colors;
+    static QList<int> m_TypeVsType;
 
     static void loadNames();
     static void loadColors();
+    static void loadEff();
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
@@ -112,6 +115,7 @@ public:
     /* Self-explainable functions */
     static QString Name(int typenum);
     static QColor Color(int typenum);
+    static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
 };
 
