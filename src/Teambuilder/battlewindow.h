@@ -61,7 +61,10 @@ public:
 	Ko,
 	Effective, /* to tell how a move is effective */
 	Miss,
-	CriticalHit
+	CriticalHit,
+	Hit, /* for moves like fury double kick etc. */
+	StatChange,
+	StatusChange
     };
     enum
     {

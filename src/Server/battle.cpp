@@ -224,7 +224,7 @@ void BattleSituation::analyzeChoices()
 	} else if (turnlong[Player1]["SpeedPriority"].toInt() < turnlong[Player2]["SpeedPriority"].toInt()) {
 	    first = Player2;
 	} else {
-	    first = pokelong[Player1]["Stat3"].toInt() > pokelong[Player2]["Speed"].toInt() ? Player1 : Player2;
+	    first = pokelong[Player1]["Stat3"].toInt() > pokelong[Player2]["Stat3"].toInt() ? Player1 : Player2;
 	}
 
 	second = rev(first);
@@ -333,22 +333,34 @@ void BattleSituation::useAttack(int player, int move)
 		notify(Player1, Effective, You, quint8(typemod));
 		notify(Player2, Effective, You, quint8(typemod));
 	    } else {
-		int randnum = rand() % 16;
-		int minch = 1*(1+turnlong[player]["CriticalRaise"].toInt());
-
-		turnlong[player]["CriticalHit"] = (randnum<minch);
-
-		if (pokelong[player]["CriticalHit"].toBool()) {
-		    notify(Player1, CriticalHit, You);
-		    notify(Player2, CriticalHit, You);
-		}
+		int num = repeatNum(turnlong[player]);
+		bool hit = num > 1;
 
 		notify(Player1, Effective, You, quint8(typemod));
 		notify(Player2, Effective, You, quint8(typemod));
 
-		int damage = calculateDamage(turnlong[player], pokelong[player], pokelong[target]);
+		for (int i = 0; i < num; i++) {
+		    if (hit) {
+			notify(player, Hit, You);
+			notify(target, Hit, Opp);
+		    }
 
-		inflictDamage(target, damage);
+		    int randnum = rand() % 16;
+		    int minch = 1*(1+turnlong[player]["CriticalRaise"].toInt());
+
+		    turnlong[player]["CriticalHit"] = (randnum<minch);
+
+		    if (turnlong[player]["CriticalHit"].toBool()) {
+			notify(Player1, CriticalHit, You);
+			notify(Player2, CriticalHit, You);
+		    }
+
+		    int damage = calculateDamage(turnlong[player], pokelong[player], pokelong[target]);
+
+		    inflictDamage(target, damage);
+		    if (turnlong[target]["CancelChoice"].toBool())
+			break;
+		}
 	    }
 	}
     }
@@ -381,6 +393,18 @@ int BattleSituation::calculateDamage(context &move, context &player, context &ta
     }
 
     return damage;
+}
+
+int BattleSituation::repeatNum(context &move)
+{
+    int min = move["RepeatMin"].toInt();
+    int max = move["RepeatMax"].toInt();
+
+    if (min == max) {
+	return min;
+    } else {
+	return min + (rand() % (max-min));
+    }
 }
 
 void BattleSituation::inflictDamage(int player, int damage)
