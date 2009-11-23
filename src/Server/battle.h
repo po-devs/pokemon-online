@@ -83,7 +83,7 @@ public:
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
 
-    int calculateDamage(int power, int category, context &player, context &target);
+    int calculateDamage(context &move, context &player, context &target);
 
     /* conversion for sending a message */
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */

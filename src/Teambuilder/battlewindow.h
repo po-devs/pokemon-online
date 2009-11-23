@@ -142,6 +142,8 @@ protected:
     const PokeBattle &mypoke() const {return info.currentPoke(); }
     const ShallowBattlePoke &foe() const {return info.opponent; }
 
+    QString health(int lifePercent);
+
     GraphicsZone *zone;
     QLabel *nick[2];
     QProgressBar *bars[2];
