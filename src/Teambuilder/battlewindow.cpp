@@ -147,7 +147,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 		mydisplay->updatePoke(false);
 	    }
 
-	    printLine(tr("%1 sent %2 out!").arg(name(self), nick(self)));
+	    printLine(tr("%1 sent out %2!").arg(name(self), nick(self)));
 
 	    break;
 	}
@@ -385,6 +385,7 @@ void BattleDisplay::updatePoke(bool self)
 	    nick[Myself]->setText(tr("%1 (Lv. %2)").arg(mypoke().nick()).arg(mypoke().level()));
 	    bars[Myself]->setRange(0,mypoke().totalLifePoints());
 	    bars[Myself]->setValue(mypoke().lifePoints());
+	    bars[Myself]->setStyleSheet(health(mypoke().lifePoints()*100/mypoke().totalLifePoints()));
 	} else {
 	    zone->switchToNaught(self);
 	    nick[Myself]->setText("");
@@ -395,11 +396,17 @@ void BattleDisplay::updatePoke(bool self)
 	    zone->switchTo(foe(), self);
 	    nick[Opponent]->setText(tr("%1 (Lv. %2)").arg(foe().nick()).arg(foe().level()));
 	    bars[Opponent]->setValue(foe().lifePercent());
+	    bars[Opponent]->setStyleSheet(health(foe().lifePercent()));
 	}  else {
 	    zone->switchToNaught(self);
 	    nick[Opponent]->setText("");
 	    bars[Opponent]->setValue(0);
 	}
+}
+
+QString BattleDisplay::health(int lifePercent)
+{
+    return lifePercent > 50 ? "::chunk{background-color: #05B8CC;}" : (lifePercent >= 34 ? "::chunk{background-color: yellow;}" : "::chunk{background-color: red;}");
 }
 
 GraphicsZone::GraphicsZone()

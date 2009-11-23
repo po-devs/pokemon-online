@@ -13,6 +13,13 @@ QStringList MoveInfo::m_PowerS;
 QList<char> MoveInfo::m_Type;
 QList<char> MoveInfo::m_PP;
 QList<char> MoveInfo::m_Category;
+QStringList MoveInfo::m_Effects;
+QList<char> MoveInfo::m_Critical;
+QList<char> MoveInfo::m_EffectRate;
+QList<bool> MoveInfo::m_Physical;
+QList<bool> MoveInfo::m_KingRock;
+QList<char> MoveInfo::m_Speeds;
+QList<QPair<char, char> > MoveInfo::m_Repeat;
 
 QString ItemInfo::m_Directory;
 QStringList ItemInfo::m_Names;
@@ -294,6 +301,66 @@ QList<int> PokemonInfo::getMoves(const QString &filename, int pokenum)
     return return_value;
 }
 
+void MoveInfo::loadCritics()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_critical.txt"));
+
+    foreach(QString str, temp) {
+	m_Critical.push_back(str.toInt());
+    }
+}
+
+void MoveInfo::loadEffectRates()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_effect_rate.txt"));
+
+    foreach(QString str, temp) {
+	m_EffectRate.push_back(str.toInt());
+    }
+}
+
+void MoveInfo::loadPhysics()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_physical_contact.txt"));
+
+    foreach(QString str, temp) {
+	m_Physical.push_back(str.toInt());
+    }
+}
+
+void MoveInfo::loadKingRocks()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_kingrock.txt"));
+
+    foreach(QString str, temp) {
+	m_KingRock.push_back(str.toInt());
+    }
+}
+
+void MoveInfo::loadRepeats()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_repeat.txt"));
+
+    foreach(QString str, temp) {
+	m_Repeat.push_back(QPair<char, char>(str[0].toAscii()-'0', str[2].toAscii()-'0'));
+    }
+}
+
+void MoveInfo::loadSpeeds()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_speed_priority.txt"));
+
+    foreach(QString str, temp) {
+	m_Speeds.push_back(str.toInt());
+    }
+}
+
 void MoveInfo::init(const QString &dir)
 {
     /* makes sure it isn't already initialized */
@@ -311,6 +378,13 @@ void MoveInfo::init(const QString &dir)
     loadAccs();
     loadPowers();
     loadCategorys();
+    loadEffects();
+    loadRepeats();
+    loadCritics();
+    loadPhysics();
+    loadKingRocks();
+    loadEffectRates();
+    loadSpeeds();
 }
 
 int MoveInfo::NumberOfMoves()
@@ -409,6 +483,57 @@ QString MoveInfo::AccS(int movenum)
 QString MoveInfo::PowerS(int movenum)
 {
     return m_PowerS[movenum];
+}
+
+QString MoveInfo::Effect(int movenum)
+{
+    return m_Effects[movenum];
+}
+
+int MoveInfo::CriticalRaise(int num)
+{
+    return m_Critical[num];
+}
+
+int MoveInfo::EffectRate(int num)
+{
+    return m_EffectRate[num];
+}
+
+bool MoveInfo::PhysicalContact(int num)
+{
+    return m_Physical[num];
+}
+
+bool MoveInfo::KingRock(int num)
+{
+    return m_KingRock[num];
+}
+
+int MoveInfo::RepeatMin(int num)
+{
+    return m_Repeat[num].first;
+}
+
+int MoveInfo::RepeatMax(int num)
+{
+    return m_Repeat[num].second;
+}
+
+int MoveInfo::SpeedPriority(int num)
+{
+    return m_Speeds[num];
+}
+
+void MoveInfo::loadEffects()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("moveeffects.txt"));
+
+    /* Removing comments, aka anything starting from '#' */
+    foreach (QString eff, temp) {
+	m_Effects.push_back(eff.split('#').front());
+    }
 }
 
 void ItemInfo::init(const QString &dir)

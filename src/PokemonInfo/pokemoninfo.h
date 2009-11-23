@@ -49,9 +49,16 @@ private:
     static QStringList m_Names;
     static QStringList m_PowerS;
     static QStringList m_AccS;
+    static QStringList m_Effects;
     static QList<char> m_Type;
     static QList<char> m_PP;
     static QList<char> m_Category;
+    static QList<char> m_Critical;
+    static QList<char> m_EffectRate;
+    static QList<bool> m_Physical;
+    static QList<bool> m_KingRock;
+    static QList<char> m_Speeds;
+    static QList<QPair<char, char> > m_Repeat;
     static QString m_Directory;
 
     static void loadNames();
@@ -60,6 +67,13 @@ private:
     static void loadCategorys();
     static void loadPowers();
     static void loadAccs();
+    static void loadEffects();
+    static void loadCritics();
+    static void loadEffectRates();
+    static void loadPhysics();
+    static void loadKingRocks();
+    static void loadRepeats();
+    static void loadSpeeds();
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
@@ -79,6 +93,15 @@ public:
     static int Acc(int movenum);
     /* gives the accuracy of a move in the form of a string */
     static QString AccS(int movenum);
+    /* the status mod of a move*/
+    static QString Effect(int movenum);
+    static int CriticalRaise(int movenum);
+    static int RepeatMin(int movenum);
+    static int RepeatMax(int movenum);
+    static int SpeedPriority(int movenum);
+    static bool PhysicalContact(int movenum);
+    static bool KingRock(int movenum);
+    static int EffectRate(int movenum);
 };
 
 class ItemInfo

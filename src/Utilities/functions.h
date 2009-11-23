@@ -2,6 +2,7 @@
 #define FUNCTIONS_H
 
 #include <QString>
+#include <QMap>
 
 /* Changes a string so all what is inside is converted to html.
 
@@ -21,5 +22,14 @@ private: \
     type m_prop_##name;\
 public:
 
+/* merge maps -- the second one goes into the first one */
+template <class T, class U>
+void merge(QMap<T,U> &map1, const QMap<T,U> &map2)
+{
+    typename QMap<T, U>::const_iterator it;
 
+    for (it = map2.begin(); it != map2.end(); ++it) {
+	map1.insert(it.key(), it.value());
+    }
+}
 #endif // FUNCTIONS_H

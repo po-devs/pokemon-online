@@ -1,0 +1,8 @@
+life points
+attack
+defense
+speed
+special attack
+special defense
+evasiveness
+accuracy

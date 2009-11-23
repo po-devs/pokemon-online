@@ -1,6 +1,7 @@
 #include "battle.h"
 #include "player.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "moves.h"
 
 BattleSituation::BattleSituation(Player &p1, Player &p2)
 	:team1(p1.team()), team2(p2.team())
@@ -210,9 +211,23 @@ void BattleSituation::analyzeChoice(int player)
 
 void BattleSituation::analyzeChoices()
 {
+    if (choice[Player1].attack())
+	merge(turnlong[Player1], MoveEffect(poke(Player1).move(choice[Player1].numSwitch).num()));
+    if (choice[Player2].attack())
+	merge(turnlong[Player2], MoveEffect(poke(Player2).move(choice[Player2].numSwitch).num()));
+
     if (choice[Player1].attack() && choice[Player2].attack()) {
-	int first = poke(Player1).normalStat(Speed) > poke(Player2).normalStat(Speed) ? Player1 : Player2;
-	int second = rev(first);
+	int first, second;
+
+	if (turnlong[Player1]["SpeedPriority"].toInt() > turnlong[Player2]["SpeedPriority"].toInt()) {
+	    first = Player1;
+	} else if (turnlong[Player1]["SpeedPriority"].toInt() < turnlong[Player2]["SpeedPriority"].toInt()) {
+	    first = Player2;
+	} else {
+	    first = pokelong[Player1]["Stat3"].toInt() > pokelong[Player2]["Speed"].toInt() ? Player1 : Player2;
+	}
+
+	second = rev(first);
 
 	analyzeChoice(first);
 	if (turnlong[second]["CancelChoice"].toBool() != true)
@@ -292,30 +307,26 @@ void BattleSituation::useAttack(int player, int move)
 
     losePP(player, move, 1);
 
-    int power = MoveInfo::Power(attack);
-    if (power > 0)
+    if (turnlong[player]["Power"].toInt() > 0)
     {
-	int acc = MoveInfo::Acc(attack);
-
 	int randnum = rand() % 100 + 1;
-	if (randnum > acc)
+	if (randnum > turnlong[player]["Accuracy"].toInt())
 	{
 	    notify(Player1, Miss, You);
 	    notify(Player2, Miss, You);
 	} else
 	{
 	    int target = rev(player);
-	    int category = MoveInfo::Category(attack);
-	    int type = MoveInfo::Type(attack);
 
+	    int type = turnlong[player]["Type"].toInt(); /* move type */
 	    int typeadv[] = {pokelong[target]["Type1"].toInt(), pokelong[target]["Type2"].toInt()};
 	    int typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
 
 	    int typepok[] = {pokelong[player]["Type1"].toInt(), pokelong[player]["Type2"].toInt()};
 	    int stab = 2 + (type==typepok[0] || type==typepok[1]);
 
-	    pokelong[player]["Stab"] = stab;
-	    pokelong[player]["TypeMod"] = typemod;
+	    turnlong[player]["Stab"] = stab;
+	    turnlong[player]["TypeMod"] = typemod; /* is attack effective? or not? etc. */
 
 	    if (typemod == 0) {
 		/* If it's ineffective we just say it */
@@ -323,9 +334,11 @@ void BattleSituation::useAttack(int player, int move)
 		notify(Player2, Effective, You, quint8(typemod));
 	    } else {
 		int randnum = rand() % 16;
+		int minch = 1*(1+turnlong[player]["CriticalRaise"].toInt());
 
-		pokelong[player]["CriticalHit"] = (randnum==0);
-		if (randnum == 0) {
+		turnlong[player]["CriticalHit"] = (randnum<minch);
+
+		if (pokelong[player]["CriticalHit"].toBool()) {
 		    notify(Player1, CriticalHit, You);
 		    notify(Player2, CriticalHit, You);
 		}
@@ -333,7 +346,7 @@ void BattleSituation::useAttack(int player, int move)
 		notify(Player1, Effective, You, quint8(typemod));
 		notify(Player2, Effective, You, quint8(typemod));
 
-		int damage = calculateDamage(power, category, pokelong[player], pokelong[target]);
+		int damage = calculateDamage(turnlong[player], pokelong[player], pokelong[target]);
 
 		inflictDamage(target, damage);
 	    }
@@ -341,12 +354,12 @@ void BattleSituation::useAttack(int player, int move)
     }
 }
 
-int BattleSituation::calculateDamage(int power, int category, context &player, context &target)
+int BattleSituation::calculateDamage(context &move, context &player, context &target)
 {
     int level = player["Level"].toInt();
     int attack, def;
 
-    if (category == Move::Physical) {
+    if (move["Category"].toInt() == Move::Physical) {
 	attack = player["Stat1"].toInt();
 	def = target["Stat2"].toInt();
     } else {
@@ -354,10 +367,11 @@ int BattleSituation::calculateDamage(int power, int category, context &player, c
 	def = target["Stat5"].toInt();
     }
 
-    int stab = player["Stab"].toInt();
-    int typemod = player["TypeMod"].toInt();
+    int stab = move["Stab"].toInt();
+    int typemod = move["TypeMod"].toInt();
     int randnum = rand() % (255-217) + 217;
-    int ch = 1 + player["CriticalHit"].toBool();
+    int ch = 1 + move["CriticalHit"].toBool();
+    int power = move["Power"].toInt();
 
     int damage = (((((((level * 2 / 5) + 2) * power * attack / 50) / def) * /*Mod1*/ 1) + 2) * ch * 1 /*Mod2*/ * randnum * 100 / 255 / 100) * stab / 2 * typemod / 4 * 1 /* Mod3 */;
 
