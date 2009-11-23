@@ -84,6 +84,8 @@ public:
     void losePP(int player, int move, int loss);
 
     int calculateDamage(context &move, context &player, context &target);
+    void applyStatMods(context &move, context &player, context &target);
+    int repeatNum(context &move);
 
     /* conversion for sending a message */
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */
@@ -102,7 +104,10 @@ public:
 	Ko,
 	Effective, /* to tell how a move is effective */
 	Miss,
-	CriticalHit
+	CriticalHit,
+	Hit, /* for moves like fury double kick etc. */
+	StatChange,
+	StatusChange
     };
 
     /* Here C++0x would make it so much better looking with variadic templates! */
