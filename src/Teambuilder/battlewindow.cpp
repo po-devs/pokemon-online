@@ -237,7 +237,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    qint8 stat, boost;
 	    in >> stat >> boost;
 
-	    printLine(tr("%1's %2 %3%4!").arg(nick(self), boost > 0 ? tr("raised") : tr("decreased"), StatInfo::Stat(stat), abs(boost) > 1 ? tr(" sharply") : ""));
+	    printLine(tr("%1's %2 %3%4!").arg(nick(self), StatInfo::Stat(stat), abs(boost) > 1 ? tr("sharply ") : "", boost > 0 ? tr("rose") : tr("fell")));
 	    break;
 	case StatusChange:
 	    qint8 status;

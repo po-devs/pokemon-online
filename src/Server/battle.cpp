@@ -301,6 +301,7 @@ void BattleSituation::sendBack(int player)
 void BattleSituation::useAttack(int player, int move)
 {
     int attack = poke(player).move(move).num();
+    int target = rev(player);
 
     notify(player, UseAttack, You, qint16(attack));
     notify(rev(player), UseAttack, Opp, qint16(attack));
@@ -316,8 +317,6 @@ void BattleSituation::useAttack(int player, int move)
 	    notify(Player2, Miss, You);
 	} else
 	{
-	    int target = rev(player);
-
 	    int type = turnlong[player]["Type"].toInt(); /* move type */
 	    int typeadv[] = {pokelong[target]["Type1"].toInt(), pokelong[target]["Type2"].toInt()};
 	    int typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
@@ -368,29 +367,33 @@ void BattleSituation::useAttack(int player, int move)
 		applyMoveStatMods(player, target);
 	    }
 	}
+    } else if (turnlong[player]["Category"].toInt() == Move::Other) {
+	int accuracy = turnlong[player]["Accuracy"].toInt();
+	if (accuracy == 0 || rand() % 100 < accuracy) {
+	    applyMoveStatMods(player, target);
+	} else {
+    	    notify(Player1, Miss, You);
+	    notify(Player2, Miss, You);
+	}
     }
 }
 
 void BattleSituation::applyMoveStatMods(int player, int target)
 {
-    QString effect = turnlong[player]["StatEffect"].toString();
+    QString effect = turnlong[player]["StatEffect"].value<QString>();
 
     /* First we check if there's even an effect... */
     if (effect.length() == 0) {
 	return;
     }
 
-    qDebug("Effect!");
-
     /* Then we check if the effect hits */
     int randnum = rand() % 100;
-    int mintogo = turnlong[player]["StatEffect"].toInt();
+    int mintogo = turnlong[player]["EffectRate"].toInt();
 
-    if (mintogo != 0 && randnum >= mintogo) {
+    if (mintogo != 0 && randnum < mintogo) {
 	return;
     }
-
-    qDebug("Not Cancelled!");
 
     /* Splits effects between the opponent & self */
     QStringList effects = effect.split('|');
@@ -412,9 +415,9 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 	foreach (QString effect, changes)
 	{
 	    /* Now the kind of change itself */
-	    bool statusChange = effect.leftRef(3) == "[S]"; /* otherwise it's stat change */
+	    bool statusChange = effect.midRef(1,3) == "[S]"; /* otherwise it's stat change */
     
-	    QStringList possibilities = effect.mid(3).split('^');
+	    QStringList possibilities = effect.mid(4).split('^');
     
 	    /* Now we have a QStringLists that contains the different possibilities.
     
@@ -452,9 +455,9 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 			}
 		    } else {
 			if (heal) {
-			    healStatus(player, status);
+			    healStatus(targeted, status);
 			} else {
-			    inflictStatus(player, status);
+			    inflictStatus(targeted, status);
 			}
 		    }
 		} else /* StatMod change */
@@ -608,8 +611,8 @@ void BattleSituation::koPoke(int player, bool attacking)
     changeHp(player, 0);
 
     if (attacking) {
-	notify(player, Effective, You, qint8(turnlong[player]["TypeMod"].toInt()));
-	notify(rev(player), Effective, You, qint8(turnlong[player]["TypeMod"].toInt()));
+	notify(player, Effective, You, qint8(turnlong[rev(player)]["TypeMod"].toInt()));
+	notify(rev(player), Effective, You, qint8(turnlong[rev(player)]["TypeMod"].toInt()));
     }
 
     notify(player, Ko, You);
