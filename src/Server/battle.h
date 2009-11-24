@@ -66,26 +66,26 @@ public:
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player);
     void sendPoke(int player, int poke);
-    void koPoke(int player);
+    void koPoke(int player, bool attacking = true);
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
     void gainStatMod(int player, int stat, int bonus);
     void loseStatMod(int player, int stat, int malus);
     /* Does not do extra operations,just a setter */
-    void changeStatus(int player, int poke, int status);
-    void healStatus(int player, int poke);
+    void changeStatus(int player, int status);
+    void healStatus(int player, int status);
     void healConfused(int player);
     void healLife(int player, int healing);
     void inflictStatus(int player, int Status);
     void inflictConfused(int player);
-    void inflictDamage(int player, int damage);
+    void inflictDamage(int player, int damage, bool attacking=true);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
 
-    int calculateDamage(context &move, context &player, context &target);
-    void applyStatMods(context &move, context &player, context &target);
-    int repeatNum(context &move);
+    static int calculateDamage(context &move, context &player, context &target);
+    void applyMoveStatMods(int player, int target);
+    static int repeatNum(context &move);
 
     /* conversion for sending a message */
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */

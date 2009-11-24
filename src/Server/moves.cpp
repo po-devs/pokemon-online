@@ -17,4 +17,5 @@ MoveEffect::MoveEffect(int num)
     (*this)["Type"] = MoveInfo::Type(num);
     (*this)["Category"] = MoveInfo::Category(num);
     (*this)["EffectRate"] = MoveInfo::EffectRate(num);
+    (*this)["StatEffect"] = MoveInfo::Effect(num);
 }

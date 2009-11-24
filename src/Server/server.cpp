@@ -21,6 +21,7 @@ Server::Server(quint16 port)
     CategoryInfo::init("db/");
     AbilityInfo::init("db/");
     HiddenPowerInfo::init("db/");
+    StatInfo::init("db/");
 
     printLine(tr("Pokémon database loaded"));
 

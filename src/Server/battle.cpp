@@ -336,9 +336,6 @@ void BattleSituation::useAttack(int player, int move)
 		int num = repeatNum(turnlong[player]);
 		bool hit = num > 1;
 
-		notify(Player1, Effective, You, quint8(typemod));
-		notify(Player2, Effective, You, quint8(typemod));
-
 		for (int i = 0; i < num; i++) {
 		    if (hit) {
 			notify(player, Hit, You);
@@ -357,13 +354,189 @@ void BattleSituation::useAttack(int player, int move)
 
 		    int damage = calculateDamage(turnlong[player], pokelong[player], pokelong[target]);
 
-		    inflictDamage(target, damage);
-		    if (turnlong[target]["CancelChoice"].toBool())
+		    inflictDamage(target, damage, true);
+		    if (turnlong[target]["AttackKoed"].toBool())
 			break;
+		}
+
+		if (!turnlong[target]["AttackKoed"].toBool()) {
+		    notify(Player1, Effective, You, quint8(typemod));
+		    notify(Player2, Effective, You, quint8(typemod));
+		}
+
+		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
+		applyMoveStatMods(player, target);
+	    }
+	}
+    }
+}
+
+void BattleSituation::applyMoveStatMods(int player, int target)
+{
+    QString effect = turnlong[player]["StatEffect"].toString();
+
+    /* First we check if there's even an effect... */
+    if (effect.length() == 0) {
+	return;
+    }
+
+    qDebug("Effect!");
+
+    /* Then we check if the effect hits */
+    int randnum = rand() % 100;
+    int mintogo = turnlong[player]["StatEffect"].toInt();
+
+    if (mintogo != 0 && randnum >= mintogo) {
+	return;
+    }
+
+    qDebug("Not Cancelled!");
+
+    /* Splits effects between the opponent & self */
+    QStringList effects = effect.split('|');
+
+    foreach(QString effect, effects)
+    {
+	/* Now we parse the effect.. */
+	bool self = (effect[0] == 'S');
+	int targeted = self? player : target;
+
+	/* If the effect is on the opponent, and the opponent is Koed, we don't do nothing */
+	if (!self && turnlong[target]["AttackKoed"].toBool() == true) {
+	    return;
+	}
+
+	/* There maybe different type of changes, aka status & mod in move 'Flatter' */
+	QStringList changes = effect.split('/');
+	
+	foreach (QString effect, changes)
+	{
+	    /* Now the kind of change itself */
+	    bool statusChange = effect.leftRef(3) == "[S]"; /* otherwise it's stat change */
+    
+	    QStringList possibilities = effect.mid(3).split('^');
+    
+	    /* Now we have a QStringLists that contains the different possibilities.
+    
+	       To know what to do know: we first chose one of the possibility:
+		%code
+		    mypossibility = possibilities[rand(1, possibilities.size()) - 1];
+		%endcode
+    
+		Then inside that possibility is the list of actions to do
+		%code
+		    myposs = mypossibility.split('^');
+		    foreach (QString s, myposs)
+			analyze s
+			do action
+		    end for
+		%endcode
+	    */
+    
+	    QStringList mychoice = possibilities[rand()%possibilities.size()].split('&');
+    
+	    foreach (QString s, mychoice) {
+		std::string s2 = s.toStdString();
+		char *ptr = const_cast<char *>(s2.c_str());
+    
+		/* Analyze choice */
+		if (statusChange) {
+		    int status = strtol(ptr, &ptr, 10);
+		    bool heal = *ptr == '-';
+    
+		    if (status == -1) {
+			if (heal) {
+			    healConfused(targeted);
+			} else {
+			    inflictConfused(targeted);
+			}
+		    } else {
+			if (heal) {
+			    healStatus(player, status);
+			} else {
+			    inflictStatus(player, status);
+			}
+		    }
+		} else /* StatMod change */
+		{
+		    int stat = strtol(ptr, &ptr, 10);
+		    int mod = strtol(ptr+1, NULL, 10);
+		    char sep = *ptr;
+    
+		    if (sep == '+') {
+			gainStatMod(targeted, stat, mod);
+		    } else if (sep == '-') {
+			loseStatMod(targeted, stat, mod);
+		    } else {
+			changeStatMod(targeted, stat, mod);
+		    }
 		}
 	    }
 	}
     }
+}
+
+void BattleSituation::healConfused(int player)
+{
+    poke(player).confused() = false;
+}
+
+void BattleSituation::inflictConfused(int player)
+{
+    if (!poke(player).confused()) {
+	poke(player).confused() = true;
+	notify(player, StatusChange, You, qint8(-1));
+	notify(rev(player), StatusChange, Opp, qint8(-1));
+    }
+}
+
+void BattleSituation::healStatus(int player, int status)
+{
+    if (poke(player).status() == status) {
+	changeStatus(player, Pokemon::Fine);
+    }
+}
+
+void BattleSituation::inflictStatus(int player, int status)
+{
+    if (poke(player).status() == Pokemon::Fine) {
+	changeStatus(player, status);
+    }
+}
+
+void BattleSituation::changeStatus(int player, int status)
+{
+    notify(player, StatusChange, You, qint8(status));
+    notify(rev(player), StatusChange, Opp, qint8(status));
+    poke(player).status() = status;
+}
+
+void BattleSituation::gainStatMod(int player, int stat, int bonus)
+{
+    QString path = tr("Boost%1").arg(stat);
+    int boost = pokelong[player][path].toInt();
+    if (boost < 6) {
+	notify(player, StatChange, You, qint8(stat), qint8(bonus));
+	notify(rev(player), StatChange, Opp, qint8(stat), qint8(bonus));
+	changeStatMod(player, stat, std::min(boost+bonus, 6));
+    }
+}
+
+void BattleSituation::loseStatMod(int player, int stat, int malus)
+{
+    QString path = tr("Boost%1").arg(stat);
+    int boost = pokelong[player][path].toInt();
+    if (boost > -6) {
+	notify(player, StatChange, You, qint8(stat), qint8(-malus));
+	notify(rev(player), StatChange, Opp, qint8(stat), qint8(-malus));
+	changeStatMod(player, stat, std::max(boost-malus, -6));
+    }
+}
+
+void BattleSituation::changeStatMod(int player, int stat, int newstat)
+{
+    QString path = tr("Boost%1").arg(stat);
+    pokelong[player][path] = newstat;
 }
 
 int BattleSituation::calculateDamage(context &move, context &player, context &target)
@@ -407,12 +580,12 @@ int BattleSituation::repeatNum(context &move)
     }
 }
 
-void BattleSituation::inflictDamage(int player, int damage)
+void BattleSituation::inflictDamage(int player, int damage, bool attacking)
 {
     int hp  = poke(player).lifePoints() - damage;
 
     if (hp <= 0) {
-	koPoke(player);
+	koPoke(player, attacking);
     } else {
 	changeHp(player, hp);
     }
@@ -430,9 +603,14 @@ void BattleSituation::changeHp(int player, int newHp)
     notify(rev(player), ChangeHp, Opp, quint16(poke(player).lifePoints()*100/poke(player).totalLifePoints())); /* percentage calculus */
 }
 
-void BattleSituation::koPoke(int player)
+void BattleSituation::koPoke(int player, bool attacking)
 {
     changeHp(player, 0);
+
+    if (attacking) {
+	notify(player, Effective, You, qint8(turnlong[player]["TypeMod"].toInt()));
+	notify(rev(player), Effective, You, qint8(turnlong[player]["TypeMod"].toInt()));
+    }
 
     notify(player, Ko, You);
     notify(rev(player), Ko, Opp);
@@ -442,7 +620,10 @@ void BattleSituation::koPoke(int player)
     requestChoice(player); /* Asks the player to switch a poke in! */
     analyzeChoice(player);
 
-    turnlong[player]["CancelChoice"] = true; /* the attack the poke should have is not anymore */
+    if (attacking) {
+	turnlong[player]["AttackKoed"] = true; /* the attack the poke should have is not anymore */
+	turnlong[player]["CancelChoice"] = true; /* the attack the poke should have is not anymore */
+    }
 }
 
 void BattleSituation::changeCurrentPoke(int player, int poke)
