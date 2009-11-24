@@ -24,6 +24,7 @@ MainWindow::MainWindow() : m_menu(0), m_TB(0)
     AbilityInfo::init("db/");
     GenderInfo::init("db/");
     HiddenPowerInfo::init("db/");
+    StatInfo::init("db/");
 
     QSettings settings;
     /* initializing the default init values if not there */

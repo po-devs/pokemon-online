@@ -27,7 +27,7 @@ O[M]1-1
 S[M]2+2
 #baton pass
 #beat up
-E[X]|S[M]1&6
+S[M]1%6 #Belly Drum
 #bide
 #bind
 O[F]30
@@ -135,10 +135,10 @@ O[S]2+
 #Flail
 O[S]2+
 O[S]2+
-E[X]|O[S]2+#Recoil + Burn
+O[S]2+#Recoil + Burn
 O[M]7-
 O[M]5-
-O[S]-1+[M]1+2
+O[S]-1+/[M]1+2
 #Fling
 #Fly
 O[M]5-

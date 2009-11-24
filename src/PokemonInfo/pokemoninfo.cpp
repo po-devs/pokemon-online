@@ -46,6 +46,9 @@ QString GenderInfo::m_Directory;
 
 QString HiddenPowerInfo::m_Directory;
 
+QString StatInfo::m_Directory;
+QStringList StatInfo::m_stats;
+QStringList StatInfo::m_status;
 
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
@@ -855,3 +858,31 @@ QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type)
     return ret;
 }
 
+void StatInfo::init(const QString &dir)
+{
+    if (m_stats.size() != 0)
+	return;
+
+    m_Directory = dir;
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    fill_container_with_file(m_stats, path("stats_en.txt"));
+    fill_container_with_file(m_status, path("status_en.txt"));
+}
+
+QString StatInfo::Stat(int stat)
+{
+    return m_stats[stat];
+}
+
+QString StatInfo::Status(int stat)
+{
+    return m_status[stat+1];
+}
+
+QString StatInfo::path(const QString &filename)
+{
+    return m_Directory + filename;
+}
