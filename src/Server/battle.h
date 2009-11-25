@@ -11,12 +11,12 @@ class BattleSituation : public QThread
     Q_OBJECT
 public:
     enum {
+	AllButPlayer = -2,
+	All = -1,
 	Player1,
 	Player2
     };
     typedef QVariantMap context;
-    static const bool You = true;
-    static const bool Opp = false;
 
     BattleSituation(Player &p1, Player &p2);
     ~BattleSituation();
@@ -28,6 +28,8 @@ public:
     int rev(int spot) const;
     /* returns the id corresponding to that spot (spot is 0 or 1) */
     int id(int spot) const;
+    /* Return the configuration of the players (1 refer to that player, 0 to that one... */
+    BattleConfiguration configuration() const;
 
     /*
 	Below Player is either 1 or 0, aka the spot of the id.
@@ -59,6 +61,7 @@ public:
     /* Commands for the battle situation */
     void beginTurn();
     void endTurn();
+    void endTurnStatus();
     /* Attack... */
     void useAttack(int player, int attack);
     /* Does not do extra operations,just a setter */
@@ -66,7 +69,7 @@ public:
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player);
     void sendPoke(int player, int poke);
-    void koPoke(int player, bool attacking = true);
+    void koPoke(int player, int source);
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
     void gainStatMod(int player, int stat, int bonus);
@@ -78,15 +81,22 @@ public:
     void healLife(int player, int healing);
     void inflictStatus(int player, int Status);
     void inflictConfused(int player);
-    void inflictDamage(int player, int damage, bool attacking=true);
+    void inflictConfusedDamage(int player);
+    void inflictDamage(int player, int damage, int source);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
 
-    static int calculateDamage(context &move, context &player, context &target);
+    int calculateDamage(int player, int target);
+    PokeFraction getMod1(int player, int target);
     void applyMoveStatMods(int player, int target);
-    static int repeatNum(context &move);
-
+    bool testAccuracy(int player, int target);
+    void testCritical(int player, int target);
+    bool testStatus(int player);
+    bool hasType(int player, int type);
+    int repeatNum(context &move);
+    PokeFraction getStatBoost(int player, int stat);
+    int getStat(int player, int stat);
     /* conversion for sending a message */
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */
     ShallowBattlePoke opoke(int play, int i) const { return ShallowBattlePoke(poke(play, i));} /* aka 'opp poke', or what you need to know if it's your opponent's poke */
@@ -107,15 +117,30 @@ public:
 	CriticalHit,
 	Hit, /* for moves like fury double kick etc. */
 	StatChange,
-	StatusChange
+	StatusChange,
+	StatusMessage
+    };
+
+    enum StatusFeeling
+    {
+	FeelConfusion,
+	HurtConfusion,
+	FreeConfusion,
+	PrevParalysed,
+	PrevFrozen,
+	FreeFrozen,
+	FeelAsleep,
+	FreeAsleep,
+	HurtBurn,
+	HurtPoison
     };
 
     /* Here C++0x would make it so much better looking with variadic templates! */
-    void notify(int player, int command, bool who);
+    void notify(int player, int command, int who);
     template<class T>
-    void notify(int player, int command, bool who, const T& param);
+    void notify(int player, int command, int who, const T& param);
     template<class T1, class T2>
-    void notify(int player, int command, bool who, const T1& param1, const T2& param2);
+    void notify(int player, int command, int who, const T1& param1, const T2& param2);
 public slots:
     void battleChoiceReceived(int id, const BattleChoice &b);
 signals:
@@ -158,7 +183,7 @@ public:
     struct QuitException {};
 };
 
-inline void BattleSituation::notify(int player, int command, bool who)
+inline void BattleSituation::notify(int player, int command, int who)
 {
     /* Doing that cuz we never know */
     testquit();
@@ -167,13 +192,20 @@ inline void BattleSituation::notify(int player, int command, bool who)
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
 
-    out << uchar(command) << who;
+    out << uchar(command) << qint8(who);
 
-    emit battleInfo(id(player), tosend);
+    if (player == All) {
+	emit battleInfo(id(Player1), tosend);
+	emit battleInfo(id(Player2), tosend);
+    } else if (player == AllButPlayer) {
+	emit battleInfo(id(rev(who)), tosend);
+    } else {
+	emit battleInfo(id(player), tosend);
+    }
 }
 
 template<class T>
-void BattleSituation::notify(int player, int command, bool who, const T& param)
+void BattleSituation::notify(int player, int command, int who, const T& param)
 {
     /* Doing that cuz we never know */
     testquit();
@@ -182,13 +214,20 @@ void BattleSituation::notify(int player, int command, bool who, const T& param)
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
 
-    out << uchar(command) << who << param;
+    out << uchar(command) << qint8(who) << param;
 
-    emit battleInfo(id(player), tosend);
+    if (player == All) {
+	emit battleInfo(id(Player1), tosend);
+	emit battleInfo(id(Player2), tosend);
+    } else if (player == AllButPlayer) {
+	emit battleInfo(id(rev(who)), tosend);
+    } else {
+	emit battleInfo(id(player), tosend);
+    }
 }
 
 template<class T1, class T2>
-void BattleSituation::notify(int player, int command, bool who, const T1& param1, const T2& param2)
+void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2)
 {
     /* Doing that cuz we never know */
     testquit();
@@ -197,9 +236,16 @@ void BattleSituation::notify(int player, int command, bool who, const T1& param1
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
 
-    out << uchar(command) << who << param1 << param2;
+    out << uchar(command) << qint8(who) << param1 << param2;
 
-    emit battleInfo(id(player), tosend);
+    if (player == All) {
+	emit battleInfo(id(Player1), tosend);
+	emit battleInfo(id(Player2), tosend);
+    } else if (player == AllButPlayer) {
+	emit battleInfo(id(rev(who)), tosend);
+    } else {
+	emit battleInfo(id(player), tosend);
+    }
 }
 
 #endif // BATTLE_H

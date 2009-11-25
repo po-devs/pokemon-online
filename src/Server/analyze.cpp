@@ -25,13 +25,13 @@ void Analyzer::sendMessage(const QString &message)
     emit sendCommand(tosend);
 }
 
-void Analyzer::engageBattle(int id, const TeamBattle &team)
+void Analyzer::engageBattle(int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
 
-    out << uchar(EngageBattle) << id << team;
+    out << uchar(EngageBattle) << id << team << conf;
 
     emit sendCommand(tosend);
 }

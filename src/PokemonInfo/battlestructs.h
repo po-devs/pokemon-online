@@ -49,10 +49,10 @@ QDataStream & operator << (QDataStream &out, const BattleMove &mo);
 class PokeBattle
 {
     PROPERTY(QString, nick);
-    PROPERTY(bool, confused);
     PROPERTY(quint16, lifePoints);
     PROPERTY(quint16, totalLifePoints);
     PROPERTY(quint8, status);
+    PROPERTY(qint8, sleepCount);
     PROPERTY(quint16, num);
     PROPERTY(bool, shiny);
     PROPERTY(quint8, gender);
@@ -152,5 +152,24 @@ struct BattleChoice
 
 QDataStream & operator >> (QDataStream &in, BattleChoice &po);
 QDataStream & operator << (QDataStream &out, const BattleChoice &po);
+
+struct BattleConfiguration
+{
+    int ids[2];
+};
+
+inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)
+{
+    in >> c.ids[0] >> c.ids[1];
+
+    return in;
+}
+
+inline QDataStream & operator << (QDataStream &out, const BattleConfiguration &c)
+{
+    out << c.ids[0] << c.ids[1];
+
+    return out;
+}
 
 #endif // BATTLESTRUCTS_H

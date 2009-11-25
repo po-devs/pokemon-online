@@ -35,7 +35,6 @@ QDataStream & operator << (QDataStream &out, const BattleMove &mo)
 PokeBattle::PokeBattle()
 {
     num() =0;
-    confused() = false;
     status() = Pokemon::Fine;
     lifePoints() = 0;
     totalLifePoints() = 0;

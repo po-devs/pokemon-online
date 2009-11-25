@@ -132,9 +132,9 @@ void Player::sendChallengeStuff(int stuff, int other)
     relay().sendChallengeStuff(stuff, other);
 }
 
-void Player::startBattle(int id, const TeamBattle &team)
+void Player::startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    relay().engageBattle(id, team);
+    relay().engageBattle(id, team, conf);
 
     m_opponent = id;
 

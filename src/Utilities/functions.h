@@ -1,8 +1,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include <QString>
-#include <QMap>
+#include <QtCore>
 
 /* Changes a string so all what is inside is converted to html.
 
@@ -32,4 +31,22 @@ void merge(QMap<T,U> &map1, const QMap<T,U> &map2)
 	map1.insert(it.key(), it.value());
     }
 }
+
+inline void inc(QVariant &v, int change)
+{
+    v = v.toInt() + change;
+}
+
+struct PokeFraction
+{
+    int up, down;
+
+    PokeFraction (int up, int down) : up(up), down(down) {}
+};
+
+inline int operator *(int num, const PokeFraction &p)
+{
+    return num * p.up / p.down;
+}
+
 #endif // FUNCTIONS_H

@@ -14,16 +14,21 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    try
+    {
+	QApplication a(argc, argv);
 
-    /* Names to use later for QSettings */
-    QCoreApplication::setApplicationName("Pogeymon-Online");
-    QCoreApplication::setOrganizationName("Dreambelievers");
-    /* icon ;) */
-    a.setWindowIcon(QIcon("db/icon.png"));
+	/* Names to use later for QSettings */
+	QCoreApplication::setApplicationName("Pogeymon-Online");
+	QCoreApplication::setOrganizationName("Dreambelievers");
+	/* icon ;) */
+	a.setWindowIcon(QIcon("db/icon.png"));
 
-    MainWindow w;
+	MainWindow w;
 
-    w.show();
-    return a.exec();
+	w.show();
+	return a.exec();
+    } catch (const QString &e) {
+	qDebug() << "Exception: " << e;
+    }
 }

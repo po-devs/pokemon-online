@@ -140,8 +140,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	{
 	    int id;
 	    TeamBattle team;
-	    in >> id >> team;
-	    emit battleStarted(id, team);
+	    BattleConfiguration conf;
+	    in >> id >> team >> conf;
+	    emit battleStarted(id, team, conf);
 	    break;
 	}
 	case BattleFinished:
