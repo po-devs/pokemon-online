@@ -56,7 +56,7 @@ public:
     /* Sends the challenge, returns false if can't even send the challenge */
     bool challenge(int id);
 
-    void startBattle(int id, const TeamBattle &team);
+    void startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf);
     void battleResult(int result);
 
     void sendChallengeStuff(int stuff, int otherparty);

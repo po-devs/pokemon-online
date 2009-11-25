@@ -41,8 +41,11 @@ class BattleWindow : public QWidget
     Q_OBJECT
 
     PROPERTY(BattleInfo, info);
+    PROPERTY(BattleConfiguration, conf);
+    PROPERTY(int, idme);
+    PROPERTY(int, idopp);
 public:
-    BattleWindow(const QString &me, const QString &opponent, const TeamBattle &myteam);
+    BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &myteam, const BattleConfiguration &conf);
 
     /* analyzes the command and calls the right function */
     void dealWithCommand(const QByteArray &);
@@ -64,8 +67,24 @@ public:
 	CriticalHit,
 	Hit, /* for moves like fury double kick etc. */
 	StatChange,
-	StatusChange
+	StatusChange,
+	StatusMessage
     };
+
+    enum StatusFeeling
+    {
+	FeelConfusion,
+	HurtConfusion,
+	FreeConfusion,
+	PrevParalysed,
+	PrevFrozen,
+	FreeFrozen,
+	FeelAsleep,
+	FreeAsleep,
+	HurtBurn,
+	HurtPoison
+    };
+
     enum
     {
 	ZoneOfPokes = 6,

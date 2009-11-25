@@ -81,7 +81,7 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(playerLogin(Player)), SLOT(playerLogin(Player)));
     connect(&relay(), SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(&relay(), SIGNAL(challengeStuff(int,int)), SLOT(challengeStuff(int,int)));
-    connect(&relay(), SIGNAL(battleStarted(int, TeamBattle)), SLOT(battleStarted(int, TeamBattle)));
+    connect(&relay(), SIGNAL(battleStarted(int, TeamBattle, BattleConfiguration)), SLOT(battleStarted(int, TeamBattle, BattleConfiguration)));
     connect(&relay(), SIGNAL(battleFinished(int)), SLOT(battleFinished(int)));
 }
 
@@ -153,9 +153,9 @@ void Client::seeChallenge(int id)
     }
 }
 
-void Client::battleStarted(int id, const TeamBattle &team)
+void Client::battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    mybattle = new BattleWindow(this->team()->trainerNick(),name(id), team);
+    mybattle = new BattleWindow(this->team()->trainerNick(),name(id), this->id(ownName()), id, team, conf);
     connect(mybattle, SIGNAL(destroyed()), this, SLOT(clearBattle()));
     connect(mybattle, SIGNAL(forfeit()), SLOT(forfeitBattle()));
     connect(mybattle, SIGNAL(battleCommand(BattleChoice)), &relay(), SLOT(battleCommand(BattleChoice)));

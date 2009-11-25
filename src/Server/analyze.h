@@ -7,6 +7,7 @@
 class BasicInfo;
 class TeamBattle;
 class BattleChoice;
+class BattleConfiguration;
 
 /* Commands to dialog with the server */
 namespace NetworkServ
@@ -48,7 +49,7 @@ public:
     void sendLogout(int num);
     bool isConnected() const;
     void sendChallengeStuff(quint8 desc, int id);
-    void engageBattle(int id, const TeamBattle &team);
+    void engageBattle(int id, const TeamBattle &team, const BattleConfiguration &conf);
     void sendBattleResult(quint8 res);
     void sendBattleCommand(const QByteArray &command);
 signals:

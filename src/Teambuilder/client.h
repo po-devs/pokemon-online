@@ -75,7 +75,7 @@ public slots:
     /* Challenge info by the server */
     void challengeStuff(int desc, int id);
     /* battle... */
-    void battleStarted(int id, const TeamBattle &team);
+    void battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf);
     void battleFinished(int res);
     void forfeitBattle();
     /* shows the context menu for that player */

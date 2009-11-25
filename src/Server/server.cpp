@@ -133,8 +133,8 @@ void Server::startBattle(int id1, int id2)
     mybattles.insert(id1, battle);
     mybattles.insert(id2, battle);
 
-    player(id1)->startBattle(id2, battle->pubteam(id1));
-    player(id2)->startBattle(id1, battle->pubteam(id2));
+    player(id1)->startBattle(id2, battle->pubteam(id1), battle->configuration());
+    player(id2)->startBattle(id1, battle->pubteam(id2), battle->configuration());
 
     connect(battle, SIGNAL(battleInfo(int,QByteArray)), SLOT(sendBattleCommand(int, QByteArray)));
     connect(player(id1), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));

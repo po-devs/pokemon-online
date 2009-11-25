@@ -131,14 +131,39 @@ void BattleSituation::beginTurn()
     /* Resetting temporary variables */
     turnlong[0].clear();
     turnlong[1].clear();
-    notify(Player1, BeginTurn, You, turn);
-    notify(Player2, BeginTurn, You, turn);
+
+    notify(All, BeginTurn, All, turn);
+
     requestChoices();
     analyzeChoices();
 }
 
 void BattleSituation::endTurn()
 {
+    endTurnStatus();
+}
+
+void BattleSituation::endTurnStatus()
+{
+    for (int player = Player1; player <= Player2; player++)
+    {
+	switch(poke(player).status())
+	{
+	    case Pokemon::Burnt:
+		notify(All, StatusMessage, player, qint8(HurtBurn));
+		inflictDamage(player, poke(player).lifePoints()/8, player);
+		break;
+	    case Pokemon::DeeplyPoisoned:
+		notify(All, StatusMessage, player, qint8(HurtPoison));
+		inflictDamage(player, poke(player).lifePoints()*pokelong[player]["ToxicCount"].toInt()/16, player);
+		inc(pokelong[player]["ToxicCount"], 1);
+		break;
+	    case Pokemon::Poisoned:
+		notify(All, StatusMessage, player, qint8(HurtPoison));
+		inflictDamage(player, poke(player).lifePoints()/8, player);
+		break;
+	}
+    }
 }
 
 void BattleSituation::testquit()
@@ -152,7 +177,7 @@ void BattleSituation::requestChoice(int player, bool acquire)
     haveChoice[player] = true;
     options[player] = createChoice(player);
 
-    notify(player, OfferChoice, You, options[player]);
+    notify(player, OfferChoice, player, options[player]);
 
     if (acquire)
 	sem.acquire(1); /* Lock until a choice is received */
@@ -224,7 +249,7 @@ void BattleSituation::analyzeChoices()
 	} else if (turnlong[Player1]["SpeedPriority"].toInt() < turnlong[Player2]["SpeedPriority"].toInt()) {
 	    first = Player2;
 	} else {
-	    first = pokelong[Player1]["Stat3"].toInt() > pokelong[Player2]["Stat3"].toInt() ? Player1 : Player2;
+	    first = getStat(Player1, Speed) > getStat(Player2, Speed) ? Player1 : Player2;
 	}
 
 	second = rev(first);
@@ -275,8 +300,8 @@ void BattleSituation::sendPoke(int player, int pok)
 {
     changeCurrentPoke(player, pok);
 
-    notify(player, SendOut, You, ypoke(player, pok));
-    notify(rev(player), SendOut, Opp, opoke(player, pok));
+    notify(player, SendOut, player, ypoke(player, pok));
+    notify(AllButPlayer, SendOut, player, opoke(player, pok));
 
     /* reset temporary variables */
     pokelong[player].clear();
@@ -294,8 +319,98 @@ void BattleSituation::sendBack(int player)
 {
     changeCurrentPoke(player, -1);
 
-    notify(player, SendBack, You);
-    notify(rev(player), SendBack, Opp);
+    notify(All, SendBack, player);
+}
+
+bool BattleSituation::testAccuracy(int player, int)
+{
+    int acc = turnlong[player]["Accuracy"].toInt();
+
+    if (acc == 0 || acc > (rand()%100)) {
+	return true;
+    } else {
+	notify(All, Miss, player);
+	return false;
+    }
+}
+
+void BattleSituation::testCritical(int player, int)
+{
+    int randnum = rand() % 16;
+    int minch = 1*(1+turnlong[player]["CriticalRaise"].toInt());
+    bool critical = randnum<minch;
+
+    turnlong[player]["CriticalHit"] = critical;
+
+    if (critical) {
+	notify(All, CriticalHit, player, quint8(turnlong[player]["TypeMod"].toInt()));
+    }
+}
+
+bool BattleSituation::testStatus(int player)
+{
+    switch (poke(player).status()) {
+	case Pokemon::Asleep:
+	{
+	    if (poke(player).sleepCount() > 0) {
+		poke(player).sleepCount() -= 1;
+		notify(All, StatusMessage, player, qint8(FeelAsleep));
+		return false;
+	    }
+	    healStatus(player, Pokemon::Asleep);
+	    notify(All, StatusMessage, player, qint8(FreeAsleep));
+	    break;
+	}
+	case Pokemon::Paralysed:
+	{
+	    if (rand() % 4 == 0) {
+		notify(All, StatusMessage, player, qint8(PrevParalysed));
+		return false;
+	    }
+	    break;
+	}
+	case Pokemon::Frozen:
+	{
+	    if (rand() % 255 > 25)
+	    {
+		notify(All, StatusMessage, player, qint8(PrevFrozen));
+		return false;
+	    }
+	    healStatus(player, Pokemon::Frozen);
+	    notify(All, StatusMessage, player, qint8(FreeFrozen));
+	    break;
+	}
+
+	case Pokemon::Fine:
+	case Pokemon::Burnt:
+	case Pokemon::DeeplyPoisoned:
+	case Pokemon::Poisoned:
+	default:
+	    break;
+    }
+
+    if (pokelong[player]["Confused"].toBool()) {
+	if (pokelong[player]["ConfusedCount"].toInt() > 0) {
+	    inc(pokelong[player]["ConfusedCount"], -1);
+
+	    notify(All, StatusMessage, player, qint8(FeelConfusion));
+
+	    if (rand() % 2 == 0) {
+		inflictConfusedDamage(player);
+		return false;
+	    }
+	} else {
+	    healConfused(player);
+	    notify(All, StatusMessage, player, qint8(FreeConfusion));
+	}
+    }
+
+    return true;
+}
+
+void BattleSituation::inflictConfusedDamage(int player)
+{
+    notify(All, StatusMessage, player, qint8(HurtConfusion));
 }
 
 void BattleSituation::useAttack(int player, int move)
@@ -303,79 +418,59 @@ void BattleSituation::useAttack(int player, int move)
     int attack = poke(player).move(move).num();
     int target = rev(player);
 
-    notify(player, UseAttack, You, qint16(attack));
-    notify(rev(player), UseAttack, Opp, qint16(attack));
+    if (!testStatus(player)) {
+	return;
+    }
+
+    notify(All, UseAttack, player, qint16(attack));
 
     losePP(player, move, 1);
 
+    if (!testAccuracy(player, target)) {
+	return;
+    }
     if (turnlong[player]["Power"].toInt() > 0)
     {
-	int randnum = rand() % 100 + 1;
-	if (randnum > turnlong[player]["Accuracy"].toInt())
-	{
-	    notify(Player1, Miss, You);
-	    notify(Player2, Miss, You);
-	} else
-	{
-	    int type = turnlong[player]["Type"].toInt(); /* move type */
-	    int typeadv[] = {pokelong[target]["Type1"].toInt(), pokelong[target]["Type2"].toInt()};
-	    int typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
+	int type = turnlong[player]["Type"].toInt(); /* move type */
+	int typeadv[] = {pokelong[target]["Type1"].toInt(), pokelong[target]["Type2"].toInt()};
+	int typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
 
-	    int typepok[] = {pokelong[player]["Type1"].toInt(), pokelong[player]["Type2"].toInt()};
-	    int stab = 2 + (type==typepok[0] || type==typepok[1]);
+	int typepok[] = {pokelong[player]["Type1"].toInt(), pokelong[player]["Type2"].toInt()};
+	int stab = 2 + (type==typepok[0] || type==typepok[1]);
 
-	    turnlong[player]["Stab"] = stab;
-	    turnlong[player]["TypeMod"] = typemod; /* is attack effective? or not? etc. */
+	turnlong[player]["Stab"] = stab;
+	turnlong[player]["TypeMod"] = typemod; /* is attack effective? or not? etc. */
 
-	    if (typemod == 0) {
-		/* If it's ineffective we just say it */
-		notify(Player1, Effective, You, quint8(typemod));
-		notify(Player2, Effective, You, quint8(typemod));
-	    } else {
-		int num = repeatNum(turnlong[player]);
-		bool hit = num > 1;
-
-		for (int i = 0; i < num; i++) {
-		    if (hit) {
-			notify(player, Hit, You);
-			notify(target, Hit, Opp);
-		    }
-
-		    int randnum = rand() % 16;
-		    int minch = 1*(1+turnlong[player]["CriticalRaise"].toInt());
-
-		    turnlong[player]["CriticalHit"] = (randnum<minch);
-
-		    if (turnlong[player]["CriticalHit"].toBool()) {
-			notify(Player1, CriticalHit, You);
-			notify(Player2, CriticalHit, You);
-		    }
-
-		    int damage = calculateDamage(turnlong[player], pokelong[player], pokelong[target]);
-
-		    inflictDamage(target, damage, true);
-		    if (turnlong[target]["AttackKoed"].toBool())
-			break;
-		}
-
-		if (!turnlong[target]["AttackKoed"].toBool()) {
-		    notify(Player1, Effective, You, quint8(typemod));
-		    notify(Player2, Effective, You, quint8(typemod));
-		}
-
-		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
-		applyMoveStatMods(player, target);
-	    }
+	if (typemod == 0) {
+	    /* If it's ineffective we just say it */
+	    notify(All, Effective, target, quint8(typemod));
+	    return;
 	}
-    } else if (turnlong[player]["Category"].toInt() == Move::Other) {
-	int accuracy = turnlong[player]["Accuracy"].toInt();
-	if (accuracy == 0 || rand() % 100 < accuracy) {
-	    applyMoveStatMods(player, target);
-	} else {
-    	    notify(Player1, Miss, You);
-	    notify(Player2, Miss, You);
+
+	int num = repeatNum(turnlong[player]);
+	bool hit = num > 1;
+
+	for (int i = 0; i < num; i++) {
+	    if (hit) {
+		notify(All, Hit, target);
+	    }
+
+	    testCritical(player, target);
+
+	    int damage = calculateDamage(player, target);
+	    inflictDamage(target, damage, true);
+
+	    if (turnlong[target]["AttackKoed"].toBool())
+		break;
+	}
+
+	if (!turnlong[target]["AttackKoed"].toBool()) {
+	    notify(All, Effective, target, quint8(typemod));
 	}
     }
+
+    /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
+    applyMoveStatMods(player, target);
 }
 
 void BattleSituation::applyMoveStatMods(int player, int target)
@@ -389,9 +484,9 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
     /* Then we check if the effect hits */
     int randnum = rand() % 100;
-    int mintogo = turnlong[player]["EffectRate"].toInt();
+    int maxtogo = turnlong[player]["EffectRate"].toInt();
 
-    if (mintogo != 0 && randnum < mintogo) {
+    if (maxtogo != 0 && randnum > maxtogo) {
 	return;
     }
 
@@ -481,15 +576,15 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
 void BattleSituation::healConfused(int player)
 {
-    poke(player).confused() = false;
+    pokelong[player]["Confused"] = false;
 }
 
 void BattleSituation::inflictConfused(int player)
 {
-    if (!poke(player).confused()) {
-	poke(player).confused() = true;
-	notify(player, StatusChange, You, qint8(-1));
-	notify(rev(player), StatusChange, Opp, qint8(-1));
+    if (!pokelong[player]["Confused"].toBool()) {
+	pokelong[player]["Confused"] = true;
+	pokelong[player]["ConfusedCount"] = (rand() % 4) + 1;
+	notify(All, StatusChange, player, qint8(-1));
     }
 }
 
@@ -503,15 +598,39 @@ void BattleSituation::healStatus(int player, int status)
 void BattleSituation::inflictStatus(int player, int status)
 {
     if (poke(player).status() == Pokemon::Fine) {
-	changeStatus(player, status);
+	if (status == Pokemon::Poisoned || Pokemon::DeeplyPoisoned) {
+	    if (!hasType(player, Pokemon::Poison) && !hasType(player, Pokemon::Steel)) {
+		changeStatus(player, status);
+	    }
+	} else if (status == Pokemon::Burnt) {
+	    if (!hasType(player, Pokemon::Fire)) {
+		changeStatus(player, status);
+	    }
+	} else if (status == Pokemon::Frozen) {
+	    if (!hasType(player, Pokemon::Ice)) {
+		changeStatus(player, status);
+	    }
+	} else {
+	    changeStatus(player, status);
+	}
     }
+}
+
+bool BattleSituation::hasType(int player, int type)
+{
+    return pokelong[player]["Type1"].toInt() == type  || pokelong[player]["Type2"].toInt() == type;
 }
 
 void BattleSituation::changeStatus(int player, int status)
 {
-    notify(player, StatusChange, You, qint8(status));
-    notify(rev(player), StatusChange, Opp, qint8(status));
+    notify(All, StatusChange, player, qint8(status));
     poke(player).status() = status;
+    if (status == Pokemon::Asleep) {
+	poke(player).sleepCount() = (rand() % 5) +1;
+    }
+    if (status == Pokemon::DeeplyPoisoned) {
+	pokelong[player]["ToxicCount"] = 1;
+    }
 }
 
 void BattleSituation::gainStatMod(int player, int stat, int bonus)
@@ -519,8 +638,7 @@ void BattleSituation::gainStatMod(int player, int stat, int bonus)
     QString path = tr("Boost%1").arg(stat);
     int boost = pokelong[player][path].toInt();
     if (boost < 6) {
-	notify(player, StatChange, You, qint8(stat), qint8(bonus));
-	notify(rev(player), StatChange, Opp, qint8(stat), qint8(bonus));
+	notify(All, StatChange, player, qint8(stat), qint8(bonus));
 	changeStatMod(player, stat, std::min(boost+bonus, 6));
     }
 }
@@ -530,8 +648,7 @@ void BattleSituation::loseStatMod(int player, int stat, int malus)
     QString path = tr("Boost%1").arg(stat);
     int boost = pokelong[player][path].toInt();
     if (boost > -6) {
-	notify(player, StatChange, You, qint8(stat), qint8(-malus));
-	notify(rev(player), StatChange, Opp, qint8(stat), qint8(-malus));
+	notify(All, StatChange, player, qint8(stat), qint8(-malus));
 	changeStatMod(player, stat, std::max(boost-malus, -6));
     }
 }
@@ -542,17 +659,20 @@ void BattleSituation::changeStatMod(int player, int stat, int newstat)
     pokelong[player][path] = newstat;
 }
 
-int BattleSituation::calculateDamage(context &move, context &player, context &target)
+int BattleSituation::calculateDamage(int _player, int _target)
 {
+    context &player = pokelong[_player];
+    context &move = turnlong[_player];
+
     int level = player["Level"].toInt();
     int attack, def;
 
     if (move["Category"].toInt() == Move::Physical) {
-	attack = player["Stat1"].toInt();
-	def = target["Stat2"].toInt();
+	attack = getStat(_player, Attack);
+	def = getStat(_target, Defense);
     } else {
-	attack = player["Stat4"].toInt();
-	def = target["Stat5"].toInt();
+	attack = getStat(_player, SpAttack);
+	def = getStat(_target, SpDefense);
     }
 
     int stab = move["Stab"].toInt();
@@ -561,14 +681,20 @@ int BattleSituation::calculateDamage(context &move, context &player, context &ta
     int ch = 1 + move["CriticalHit"].toBool();
     int power = move["Power"].toInt();
 
-    int damage = (((((((level * 2 / 5) + 2) * power * attack / 50) / def) * /*Mod1*/ 1) + 2) * ch * 1 /*Mod2*/ * randnum * 100 / 255 / 100) * stab / 2 * typemod / 4 * 1 /* Mod3 */;
+    PokeFraction mod1 = getMod1(_player, _target);
 
-    /* The minimum damage is always 1... */
-    if (damage == 0) {
-	damage = 1;
-    }
+    int damage = (((((((level * 2 / 5) + 2) * power * attack / 50) / def) * mod1) + 2) * ch * 1 /*Mod2*/ * randnum * 100 / 255 / 100) * stab / 2 * typemod / 4 * 1 /* Mod3 */;
 
     return damage;
+}
+
+PokeFraction BattleSituation::getMod1(int player, int)
+{
+    if (poke(player).status() == Pokemon::Burnt && turnlong[player]["Category"].toInt() == Move::Physical) {
+	return PokeFraction(1, 2);
+    } else {
+	return PokeFraction(1, 1);
+    }
 }
 
 int BattleSituation::repeatNum(context &move)
@@ -583,12 +709,16 @@ int BattleSituation::repeatNum(context &move)
     }
 }
 
-void BattleSituation::inflictDamage(int player, int damage, bool attacking)
+void BattleSituation::inflictDamage(int player, int damage, int source)
 {
+    if (damage == 0) {
+	damage = 1;
+    }
+
     int hp  = poke(player).lifePoints() - damage;
 
     if (hp <= 0) {
-	koPoke(player, attacking);
+	koPoke(player, source);
     } else {
 	changeHp(player, hp);
     }
@@ -602,28 +732,26 @@ void BattleSituation::changeHp(int player, int newHp)
     }
     poke(player).lifePoints() = newHp;
 
-    notify(player, ChangeHp, You, quint16(newHp));
-    notify(rev(player), ChangeHp, Opp, quint16(poke(player).lifePoints()*100/poke(player).totalLifePoints())); /* percentage calculus */
+    notify(player, ChangeHp, player, quint16(newHp));
+    notify(AllButPlayer, ChangeHp, player, quint16(poke(player).lifePoints()*100/poke(player).totalLifePoints())); /* percentage calculus */
 }
 
-void BattleSituation::koPoke(int player, bool attacking)
+void BattleSituation::koPoke(int player, int source)
 {
     changeHp(player, 0);
 
-    if (attacking) {
-	notify(player, Effective, You, qint8(turnlong[rev(player)]["TypeMod"].toInt()));
-	notify(rev(player), Effective, You, qint8(turnlong[rev(player)]["TypeMod"].toInt()));
+    if (source != player) {
+	notify(All, Effective, player, qint8(turnlong[source]["TypeMod"].toInt()));
     }
 
-    notify(player, Ko, You);
-    notify(rev(player), Ko, Opp);
+    notify(All, Ko, player);
 
     changeCurrentPoke(player, -1);
 
     requestChoice(player); /* Asks the player to switch a poke in! */
     analyzeChoice(player);
 
-    if (attacking) {
+    if (source!=player) {
 	turnlong[player]["AttackKoed"] = true; /* the attack the poke should have is not anymore */
 	turnlong[player]["CancelChoice"] = true; /* the attack the poke should have is not anymore */
     }
@@ -646,5 +774,36 @@ void BattleSituation::losePP(int player, int move, int loss)
     PP = std::max(PP-loss, 0);
     changePP(player, move, PP);
 
-    notify(player, ChangePP, You, quint8(move), poke(player).move(move).PP());
+    notify(player, ChangePP, player, quint8(move), poke(player).move(move).PP());
+}
+
+int BattleSituation::getStat(int player, int stat)
+{
+    int ret = pokelong[player][tr("Stat%1").arg(stat)].toInt()*getStatBoost(player, stat);
+
+    if (stat == Speed && poke(player).status() == Pokemon::Paralysed) {
+	ret = ret * 3 / 4;
+    }
+
+    return ret;
+}
+
+PokeFraction BattleSituation::getStatBoost(int player, int stat)
+{
+    int boost = pokelong[player][tr("Boost%1").arg(stat)].toInt();
+
+    /* Boost is 1 if boost == 0,
+       (2+boost)/2 if boost > 0;
+       2/(2+boost) otherwise */
+    return PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
+}
+
+BattleConfiguration BattleSituation::configuration() const
+{
+    BattleConfiguration ret;
+
+    ret.ids[0] = id(0);
+    ret.ids[1] = id(1);
+
+    return ret;
 }

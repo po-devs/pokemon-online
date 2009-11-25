@@ -9,6 +9,7 @@ class TrainerTeam;
 class Player;
 class BattleChoice;
 class TeamBattle;
+class BattleConfiguration;
 
 /* Commands to dialog with the server */
 namespace NetworkCli
@@ -70,7 +71,7 @@ signals:
     void playerLogout(int id);
     /* challengerelated */
     void challengeStuff(int desc, int id);
-    void battleStarted(int id, const TeamBattle &myteam);
+    void battleStarted(int id, const TeamBattle &myteam, const BattleConfiguration &conf);
     void battleFinished(int res);
     void battleMessage(const QByteArray &mess);
 
