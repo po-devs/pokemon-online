@@ -31,4 +31,6 @@ int main(int argc, char *argv[])
     } catch (const QString &e) {
 	qDebug() << "Exception: " << e;
     }
+
+    return 0;
 }
