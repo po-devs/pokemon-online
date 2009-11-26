@@ -2,7 +2,7 @@
 #leech
 O[M]5-1
 S[M]2+2
-S[M]1+2^2+2^3+2^4+2^5+2
+S[M]1+2^2+2^3+2^4+2^5+2^6+2^7+2
 
 
 S[M]3+2
@@ -27,7 +27,7 @@ O[M]1-1
 S[M]2+2
 #baton pass
 #beat up
-S[M]1%6 #Belly Drum
+S[M]1+12 #Belly Drum
 #bide
 #bind
 O[F]30

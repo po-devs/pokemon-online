@@ -322,11 +322,11 @@ void BattleSituation::sendBack(int player)
     notify(All, SendBack, player);
 }
 
-bool BattleSituation::testAccuracy(int player, int)
+bool BattleSituation::testAccuracy(int player, int target)
 {
-    int acc = turnlong[player]["Accuracy"].toInt();
+    int acc = turnlong[player]["Accuracy"].toInt() * getStatBoost(player, 6) * getStatBoost(target, 7);
 
-    if (acc == 0 || acc > (rand()%100)) {
+    if (acc == 0 || rand() % 100 < acc) {
 	return true;
     } else {
 	notify(All, Miss, player);
@@ -795,7 +795,13 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     /* Boost is 1 if boost == 0,
        (2+boost)/2 if boost > 0;
        2/(2+boost) otherwise */
-    return PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
+    if (stat <= 5) {
+        return PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
+    } else if (stat == 6) {
+        return PokeFraction(std::max(3+boost, 3), std::max(3-boost, 3));
+    } else {
+        return PokeFraction(std::max(3-boost, 3), std::max(3+boost, 3));
+    }
 }
 
 BattleConfiguration BattleSituation::configuration() const
