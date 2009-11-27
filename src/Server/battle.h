@@ -42,7 +42,7 @@ public:
     PokeBattle &poke(int player, int poke);
     const PokeBattle &poke(int player, int poke) const;
     int currentPoke(int player) const;
-    bool koed(int player) const { return currentPoke(player) == -1; }
+    bool koed(int player) const;
     void changeCurrentPoke(int player, int poke);
 
     /* Starts the battle -- use the time before to connect signals / slots */
@@ -94,6 +94,7 @@ public:
     void testCritical(int player, int target);
     bool testStatus(int player);
     bool hasType(int player, int type);
+    void requestSwitchIns();
     int repeatNum(context &move);
     PokeFraction getStatBoost(int player, int stat);
     int getStat(int player, int stat);
@@ -161,6 +162,8 @@ private:
     TeamBattle team1, team2;
     int mycurrentpoke[2]; /* -1 for koed */
     int myid[2];
+    QSet<int> koedPokes;
+
     int turn;
 
     /**************************************/

@@ -7,7 +7,7 @@ S[M]1+2^2+2^3+2^4+2^5+2^6+2^7+2
 
 S[M]3+2
 
-O[F]30
+
 S[M]5+2
 S[M]1+1&2+1&3+1&4+1&5+1
 
@@ -17,7 +17,7 @@ S[M]1+1&2+1&3+1&4+1&5+1
 #aromatherapy
 #assist
 #assurance
-O[F]30
+
 
 O[A]100
 
@@ -30,13 +30,13 @@ S[M]2+2
 S[M]1+12 #Belly Drum
 #bide
 #bind
-O[F]30
+
 #blast burn
 O[S]2+
 O[S]3+
 #Block = MeanLook
 O[S]1+
-O[F]10
+
 
 
 #like fly
@@ -78,7 +78,7 @@ O[M]50>2-1
 #depends on foe HP
 S[M]1+1&2+1&3-1
 
-O[F]30
+
 S[S]4+|O[S]4+
 S[M]2+1
 S[M]2+1&3+1
@@ -101,7 +101,7 @@ S[M]6+1
 S[M]1+1&3+1
 #dragon pulse
 #dragon rage
-O[F]20
+
 O[S]1+
 #drain punch -- same as absorb
 #dream eater -- same as absorb
@@ -118,7 +118,7 @@ O[S]2+
 O[M]5-1
 #eruption
 #explosion
-O[F]10
+
 
 #façade
 
@@ -133,7 +133,7 @@ O[S]2+
 #bind
 #OHKO
 #Flail
-O[S]2+/[F]30
+O[S]2+
 O[S]2+
 O[S]2+#Recoil + Burn
 O[M]6-1
@@ -173,7 +173,7 @@ S[M]1-1
 S[M]2+1
 #haze
 #recoil
-O[F]30
+
 #heal bell
 #heal block
 #heal order
@@ -189,12 +189,12 @@ S[M]1+1
 #hydro cannon
 
 #hyper beam
-O[F]10
+
 
 O[M]4+
 #iceball
 O[S]3+
-O[S]3+/[F]30
+O[S]3+
 O[S]3+
 
 
@@ -202,7 +202,7 @@ O[M]3-1
 #imprison
 #ingrain
 S[M]2+2
-O[F]30
+
 O[M]2-1
 #judgment
 #jump kick
@@ -264,7 +264,7 @@ O[M]6-1
 S[M]4+2
 #natural gift
 #nature power
-O[F]30
+
 #night shade
 
 #nightmare
@@ -323,13 +323,13 @@ S[S]1-2-5-6-
 
 O[S]-1+
 S[M]3+2
-O[F]30
+
 O[M]2-1
 
 O[M]3-1
 #rock wrecker
 #role play
-O[F]30
+
 #rollout
 #roost
 O[S]2+
@@ -388,7 +388,7 @@ O[S]4+
 #stealth rock
 S[M]2+1
 #stock pile
-O[F]30
+
 
 O[M]3-1
 
@@ -421,7 +421,7 @@ O[S]-1+
 #thief
 #thrash
 O[S]1+
-O[S]1+/[F]10
+O[S]1+
 O[S]1+
 O[S]1+
 O[S]1+
@@ -437,7 +437,7 @@ O[S]2+^3+^1+
 #triple kick
 #trump card
 O[S]5+
-O[F]20
+
 #u-turn
 #uproar
 
@@ -450,7 +450,7 @@ O[S]1+#recoil
 O[S]-1+
 #water sport
 #water spout
-O[F]20
+
 #weather ball
 #whirlpool
 #whirlwind
@@ -465,4 +465,3 @@ S[M]2+1
 
 #yawn
 O[S]1+
-O[F]20
