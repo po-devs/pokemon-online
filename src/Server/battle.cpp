@@ -112,6 +112,16 @@ int BattleSituation::currentPoke(int player) const
 /* The battle loop !! */
 void BattleSituation::run()
 {
+#ifdef WIN32
+    /* Under windows you need to do that, as rand is per-thread. But on linux it'd screw up the random thing and
+        interfere with other battles */
+    srand(time(NULL));
+#else
+# ifdef WIN64
+    /* Under windows you need to do that, as rand is per-thread. But on linux it'd screw up the random thing */
+    srand(time(NULL));
+# endif
+#endif
     try {
 	while (!quit)
 	{
@@ -202,6 +212,11 @@ void BattleSituation::requestChoices()
     /* Now all the players gonna do is analyzeChoice(int player) */
 }
 
+bool BattleSituation::koed(int player) const
+{
+    return currentPoke(player) == -1 || poke(player).lifePoints() == 0;
+}
+
 BattleChoices BattleSituation::createChoice(int player) const
 {
     /* First let's see for attacks... */
@@ -227,7 +242,7 @@ void BattleSituation::analyzeChoice(int player)
     if (choice[player].attack()) {
 	useAttack(player, choice[player].numSwitch);
     } else {
-	if (currentPoke(player) != -1) { /* if the pokemon isn't ko, it IS sent back */
+        if (!koed(player)) { /* if the pokemon isn't ko, it IS sent back */
 	    sendBack(player);
 	}
 	sendPoke(player, choice[player].numSwitch);
@@ -255,7 +270,7 @@ void BattleSituation::analyzeChoices()
 	second = rev(first);
 
 	analyzeChoice(first);
-	if (turnlong[second]["CancelChoice"].toBool() != true)
+        if (turnlong[second]["CancelChoice"].toBool() != true && turnlong[second]["AttackKoed"].toBool() != true)
 	    analyzeChoice(second);
 
 	return;
@@ -458,19 +473,21 @@ void BattleSituation::useAttack(int player, int move)
 	    testCritical(player, target);
 
 	    int damage = calculateDamage(player, target);
-	    inflictDamage(target, damage, true);
+            inflictDamage(target, damage, player);
+
+            /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
+            applyMoveStatMods(player, target);
 
 	    if (turnlong[target]["AttackKoed"].toBool())
 		break;
 	}
 
-	if (!turnlong[target]["AttackKoed"].toBool()) {
-	    notify(All, Effective, target, quint8(typemod));
-	}
-    }
+        notify(All, Effective, target, quint8(typemod));
 
-    /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
-    applyMoveStatMods(player, target);
+        requestSwitchIns();
+    } else {
+        applyMoveStatMods(player, target);
+    }
 }
 
 void BattleSituation::applyMoveStatMods(int player, int target)
@@ -500,8 +517,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 	int targeted = self? player : target;
 
 	/* If the effect is on the opponent, and the opponent is Koed, we don't do nothing */
-	if (!self && turnlong[target]["AttackKoed"].toBool() == true) {
-	    return;
+        if (!self && koed(target) == true) {
+            continue;
 	}
 
 	/* There maybe different type of changes, aka status & mod in move 'Flatter' */
@@ -740,21 +757,34 @@ void BattleSituation::koPoke(int player, int source)
 {
     changeHp(player, 0);
 
-    if (source != player) {
-	notify(All, Effective, player, qint8(turnlong[source]["TypeMod"].toInt()));
-    }
-
     notify(All, Ko, player);
-
-    changeCurrentPoke(player, -1);
-
-    requestChoice(player); /* Asks the player to switch a poke in! */
-    analyzeChoice(player);
+    koedPokes.insert(player);
 
     if (source!=player) {
 	turnlong[player]["AttackKoed"] = true; /* the attack the poke should have is not anymore */
 	turnlong[player]["CancelChoice"] = true; /* the attack the poke should have is not anymore */
     }
+}
+
+void BattleSituation::requestSwitchIns()
+{
+    if (koedPokes.size() == 0) {
+        return;
+    }
+    foreach(int p, koedPokes) {
+        requestChoice(p, false);
+    }
+    int count = koedPokes.size();
+
+    sem.acquire(count);
+
+    testquit();
+
+    foreach(int p, koedPokes) {
+        analyzeChoice(p);
+    }
+
+    koedPokes.clear();
 }
 
 void BattleSituation::changeCurrentPoke(int player, int poke)

@@ -1,5 +1,6 @@
 #include "battlewindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include <iostream>
 
 BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &team, const BattleConfiguration &_conf)
 {
@@ -140,16 +141,21 @@ void BattleWindow::receiveInfo(QByteArray inf)
 
     bool self = conf().ids[player] == idme();
 
+    std::cout << "Command received! num #" << int(command) << std::endl;
+
     switch (command)
     {
 	case SendOut:
 	{
+            std::cout << "Poke sent out!" << std::endl;
 	    if (self) {
 		quint8 poke;
 		in >> poke;
+                std::cout << "Sent out " << int(poke) << std::endl;
 		switchTo(poke);
 	    } else {
 		in >> info().opponent;
+                std::cout << "Opp Sent out " << info().opponent.num() << std::endl;
 		info().opponentAlive = true;
 		mydisplay->updatePoke(false);
 	    }
@@ -159,11 +165,13 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    break;
 	}
 	case SendBack:
+            std::cout << "Poke sent back!" << std::endl;
 	    printLine(tr("%1 called %2 back!").arg(name(self), nick(self)));
 	    switchToNaught(self);
 	    break;
 	case UseAttack:
 	{
+            std::cout << "Attack used!" << std::endl;
 	    qint16 attack;
 	    in >> attack;
 
