@@ -95,7 +95,7 @@ O[S]-1+
 
 S[M]6+1
 #recoil
-R[2~2]
+
 #recoil
 
 S[M]1+1&3+1
@@ -133,15 +133,15 @@ O[S]2+
 #bind
 #OHKO
 #Flail
-O[S]2+
+O[S]2+/[F]30
 O[S]2+
 O[S]2+#Recoil + Burn
-O[M]7-
-O[M]5-
+O[M]6-1
+O[M]5-1
 O[S]-1+/[M]1+2
 #Fling
 #Fly
-O[M]5-
+O[M]5-1
 #Focus energy
 #Focus punch
 #Follow me
@@ -149,9 +149,9 @@ O[S]2+
 O[M]6%0
 #Rest 1 turn
 #Vary depending on happiness
-R[2~5]
+
 #Fury Cutter
-R[2~5]
+
 #Future sight
 #Gastro acid, cancels ability
 #Giga drain, leech
@@ -168,301 +168,301 @@ S[M]4+1
 O[S]5+
 
 #Gyro Ball
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#Hail
+S[M]1-1
+S[M]2+1
+#haze
+#recoil
+O[F]30
+#heal bell
+#heal block
+#heal order
+#healing wish
+#heart swap
+O[S]2+
+#helping hand
+#high jump kick
+#hidden power
+#
+#OHKO
+S[M]1+1
+#hydro cannon
+
+#hyper beam
+O[F]10
+
+O[M]4+
+#iceball
+O[S]3+
+O[S]3+/[F]30
+O[S]3+
+
+
+O[M]3-1
+#imprison
+#ingrain
+S[M]2+2
+O[F]30
+O[M]2-1
+#judgment
+#jump kick
+
+O[M]6-1
+#knock off
+#last resort
+O[S]2+
+
+S[M]4-2
+#absorb leech life
+#leech seed
+O[M]2-1
+O[S]1+
+#light screen
+#lock-on
+O[S]4+
+#low-kick
+#lucky chant
+#lunar dance
+O[M]5-1
+
+#magic coat
+
+#magma storm
+
+#magnet rise
+#magnitude
+#me first
+#mean look
+S[M]1+
+#absorb
+
+
+
+#memento
+#metal burst
+S[M]1+1
+O[M]5-2
+S[M]1+1
+#metronome
+#milk drink
+#mimic
+#mind reader
+S[M]7+1#minimize
+O[M]7%0#miracle eye
+#mirror coat
+#mirror move
+O[M]6-1
+#mist
+O[M]4-1
+#moonlight
+#morning sun
+O[M]6-1
+O[M]3-1
+#mud sport
+O[M]6-1
+O[M]6-1
+S[M]4+2
+#natural gift
+#nature power
+O[F]30
+#night shade
+
+#nightmare
+O[M]6-1
+O[M]7%0#odor sleuth
+S[M]1+1&2+1&3+1&4+1&5+1
+#outrage
+S[M]4-2
+#pain split
+#pay day
+#pay back
+
+#perish song
+#petal dance
+
+#pluck
+O[S]6+
+O[S]5+
+O[S]5+
+O[S]5+
+O[S]5+
+O[S]5+
+
+O[S]3+
+
+#power swap
+#power trick
+
+#present
+#protect
+O[S]-1+
+#psych up
+O[M]5-1
+S[M]4-2
+
+#psycho shift
+#psywave
+#punishment
+#pursuit
+
+#rage
+#rain dance
+#rapid spin
+
+#razor wind
+#recover
+#recycle
+#reflect
+S[S]1-2-5-6-
+#rest
+#return
+#revenge
+#reversal
+#roar
+#roar of time
+
+O[S]-1+
+S[M]3+2
+O[F]30
+O[M]2-1
+
+O[M]3-1
+#rock wrecker
+#role play
+O[F]30
+#rollout
+#roost
+O[S]2+
+#safeguard
+#sandtomb
+O[M]6-1
+#sandstorm
+O[M]3-2
+
+O[M]2-2
+#secret power
+
+O[M]5-2
+#seismic toss
+#self destruct
+O[M]5-1
+
+#shadow force
+
+
+S[M]1+1
+#ohko
+
+O[S]-1+
+S[M]1+1&2+1&3+1&4+1&5+1
+O[S]4+
+#sketch
+#skill swap
+#skull bash
+#sky attack
+#sky uppercut
+#slack off
+
+
+O[S]4+
+#sleep talk
+O[S]5+
+O[S]5+
+#smelling salt
+O[S]5+
+O[M]6-
+#Snatch
+#snore
+#softboiled
+#solarbeam
+#sonic boom
+
+O[S]1+
+#spider web
+
+#spikes
+#spit up
+#spite
+
+O[S]4+
+#stealth rock
+S[M]2+1
+#stock pile
+O[F]30
+
+O[M]3-1
+
+#struggle
+O[S]1+
+#submission
+#SUBSTITUTE
+#sucker punch
+#sunny day
+#super fang
+S[M]1-1&2-1
+O[S]-1+
+#surf
+O[S]-1+/[M]1+2
+#swallow
+O[S]-1+
+O[M]7-1
+
+#switcheroo
+S[M]1+2
+#synthesis
+
+S[M]4+2
+O[M]2-1
+#tailwind
+#take down, recoil
+#taunt
+O[S]-1+
+#teleport
+#thief
+#thrash
+O[S]1+
+O[S]1+/[F]10
+O[S]1+
+O[S]1+
+O[S]1+
+O[S]1+
+O[M]1-1&2-1
+#torment
+O[S]6+
+#toxic spikes
+#transform
+O[S]2+^3+^1+
+#trick
+#trick room
+#triple kick
+#trump card
+O[S]5+
+O[F]20
+#u-turn
+#uproar
+
+
+
+
+O[S]1+#recoil
+#wake-up slap
+
+O[S]-1+
+#water sport
+#water spout
+O[F]20
+#weather ball
+#whirlpool
+#whirlwind
+O[S]2+
+
+#wish
+S[M]2+1
+#recoil
+#worry seed
+#wrap
+#wring out
+
+#yawn
+O[S]1+
+O[F]20
