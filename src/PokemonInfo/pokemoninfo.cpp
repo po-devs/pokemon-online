@@ -19,6 +19,8 @@ QList<char> MoveInfo::m_EffectRate;
 QList<bool> MoveInfo::m_Physical;
 QList<bool> MoveInfo::m_KingRock;
 QList<char> MoveInfo::m_Speeds;
+QList<int> MoveInfo::m_Flinch;
+QList<int> MoveInfo::m_Recoil;
 QList<QPair<char, char> > MoveInfo::m_Repeat;
 
 QString ItemInfo::m_Directory;
@@ -364,6 +366,21 @@ void MoveInfo::loadSpeeds()
     }
 }
 
+void MoveInfo::loadRecoil()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_recoil.txt"));
+
+    foreach(QString str, temp) {
+        m_Recoil.push_back(str.toInt());
+    }
+}
+
+int MoveInfo::Recoil(int num)
+{
+    return m_Recoil[num];
+}
+
 void MoveInfo::init(const QString &dir)
 {
     /* makes sure it isn't already initialized */
@@ -388,6 +405,8 @@ void MoveInfo::init(const QString &dir)
     loadKingRocks();
     loadEffectRates();
     loadSpeeds();
+    loadFlinchs();
+    loadRecoil();
 }
 
 int MoveInfo::NumberOfMoves()
@@ -526,6 +545,21 @@ int MoveInfo::RepeatMax(int num)
 int MoveInfo::SpeedPriority(int num)
 {
     return m_Speeds[num];
+}
+
+int MoveInfo::FlinchRate(int num)
+{
+    return m_Flinch[num];
+}
+
+void MoveInfo::loadFlinchs()
+{
+    QList<QString> boogie;
+    fill_container_with_file(boogie, path("move_flinch.txt"));
+
+    foreach(QString str, boogie) {
+        m_Flinch.push_back(str.toInt());
+    }
 }
 
 void MoveInfo::loadEffects()

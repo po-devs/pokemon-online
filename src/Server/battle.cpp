@@ -270,7 +270,7 @@ void BattleSituation::analyzeChoices()
 	second = rev(first);
 
 	analyzeChoice(first);
-        if (turnlong[second]["CancelChoice"].toBool() != true && turnlong[second]["AttackKoed"].toBool() != true)
+        if (turnlong[second]["CancelAttack"].toBool() != true && turnlong[second]["AttackKoed"].toBool() != true)
 	    analyzeChoice(second);
 
 	return;
@@ -428,6 +428,15 @@ void BattleSituation::inflictConfusedDamage(int player)
     notify(All, StatusMessage, player, qint8(HurtConfusion));
 }
 
+void BattleSituation::testFlinch(int player, int target)
+{
+    int rate = turnlong[player]["FlinchRate"].toInt();
+
+    if (rand() % 100 < rate) {
+        turnlong[target]["CancelAttack"] = true;
+    }
+}
+
 void BattleSituation::useAttack(int player, int move)
 {
     int attack = poke(player).move(move).num();
@@ -478,8 +487,11 @@ void BattleSituation::useAttack(int player, int move)
             /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
             applyMoveStatMods(player, target);
 
-	    if (turnlong[target]["AttackKoed"].toBool())
+            if (koed(target) || koed(player))
 		break;
+
+            inflictRecoil(player, target);
+            testFlinch(player, target);
 	}
 
         notify(All, Effective, target, quint8(typemod));
@@ -488,6 +500,19 @@ void BattleSituation::useAttack(int player, int move)
     } else {
         applyMoveStatMods(player, target);
     }
+}
+
+void BattleSituation::inflictRecoil(int source, int target)
+{
+    if (koed(source))
+        return;
+
+    int recoil = turnlong[source]["Recoil"].toInt();
+
+    if (recoil == 0)
+        return;
+
+    inflictDamage(source, pokelong[target]["DamageTaken"].toInt()/recoil, source);
 }
 
 void BattleSituation::applyMoveStatMods(int player, int target)
@@ -732,6 +757,10 @@ void BattleSituation::inflictDamage(int player, int damage, int source)
 	damage = 1;
     }
 
+    if (source != player) {
+        pokelong[player]["DamageTaken"] = damage;
+    }
+
     int hp  = poke(player).lifePoints() - damage;
 
     if (hp <= 0) {
@@ -762,7 +791,7 @@ void BattleSituation::koPoke(int player, int source)
 
     if (source!=player) {
 	turnlong[player]["AttackKoed"] = true; /* the attack the poke should have is not anymore */
-	turnlong[player]["CancelChoice"] = true; /* the attack the poke should have is not anymore */
+        turnlong[player]["CancelAttack"] = true; /* the attack the poke should have is not anymore */
     }
 }
 

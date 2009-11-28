@@ -82,6 +82,7 @@ public:
     void inflictStatus(int player, int Status);
     void inflictConfused(int player);
     void inflictConfusedDamage(int player);
+    void inflictRecoil(int source, int target);
     void inflictDamage(int player, int damage, int source);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
@@ -92,6 +93,7 @@ public:
     void applyMoveStatMods(int player, int target);
     bool testAccuracy(int player, int target);
     void testCritical(int player, int target);
+    void testFlinch(int player, int target);
     bool testStatus(int player);
     bool hasType(int player, int type);
     void requestSwitchIns();
