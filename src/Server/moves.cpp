@@ -18,4 +18,6 @@ MoveEffect::MoveEffect(int num)
     (*this)["Category"] = MoveInfo::Category(num);
     (*this)["EffectRate"] = MoveInfo::EffectRate(num);
     (*this)["StatEffect"] = MoveInfo::Effect(num);
+    (*this)["FlinchRate"] = MoveInfo::FlinchRate(num);
+    (*this)["Recoil"] = MoveInfo::Recoil(num);
 }

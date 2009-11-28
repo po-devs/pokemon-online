@@ -58,6 +58,8 @@ private:
     static QList<bool> m_Physical;
     static QList<bool> m_KingRock;
     static QList<char> m_Speeds;
+    static QList<int> m_Flinch;
+    static QList<int> m_Recoil;
     static QList<QPair<char, char> > m_Repeat;
     static QString m_Directory;
 
@@ -74,6 +76,8 @@ private:
     static void loadKingRocks();
     static void loadRepeats();
     static void loadSpeeds();
+    static void loadFlinchs();
+    static void loadRecoil();
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
@@ -85,6 +89,8 @@ public:
     static int Category(int movenum);
     static int Number(const QString &movename);
     static int NumberOfMoves();
+    static int FlinchRate(int movenum);
+    static int Recoil(int movenum);
     static QString Description(int movenum);
     static int Power(int movenum);
     /* gives the power of a move in the form of a string */
