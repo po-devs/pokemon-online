@@ -486,11 +486,11 @@ void BattleSituation::useAttack(int player, int move)
 
             /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
             applyMoveStatMods(player, target);
+            inflictRecoil(player, target);
 
-            if (koed(target) || koed(player))
+            if (koed(target))
 		break;
 
-            inflictRecoil(player, target);
             testFlinch(player, target);
 	}
 
@@ -756,6 +756,8 @@ void BattleSituation::inflictDamage(int player, int damage, int source)
     if (damage == 0) {
 	damage = 1;
     }
+
+    damage = std::min(int(poke(player).lifePoints()), damage);
 
     if (source != player) {
         pokelong[player]["DamageTaken"] = damage;
