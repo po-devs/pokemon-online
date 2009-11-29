@@ -99,7 +99,7 @@ S[M]6+1
 S[M]4-2
 
 S[M]1+1&3+1
-#dragon pulse
+
 #dragon rage
 
 O[S]1+
@@ -146,7 +146,7 @@ O[M]5-1
 #Focus punch
 #Follow me
 O[S]2+
-O[M]6%0
+O[M]6%0#foresight
 #Rest 1 turn
 #Vary depending on happiness
 
@@ -171,7 +171,7 @@ O[S]5+
 #Hail
 S[M]1-1
 S[M]2+1
-#haze
+S[M]1%0&2%0&3%0&4%0&5%0&6%0&7%0|O[M]1%0&2%0&3%0&4%0&5%0&6%0&7%0
 
 
 #heal bell
@@ -183,7 +183,7 @@ O[S]2+
 #helping hand
 #high jump kick
 #hidden power
-#
+
 #OHKO
 S[M]1+1
 #hydro cannon
@@ -238,7 +238,7 @@ S[M]1+
 
 
 
-#memento
+O[M]2-2&4-2
 #metal burst
 S[M]1+1
 O[M]5-2
