@@ -1,0 +1,467 @@
+
+1#leech
+
+
+
+
+
+
+
+
+
+
+
+2#restore hp every turn
+
+
+3#aromatherapy
+4#assist
+5#assurance
+
+
+
+
+
+5#avalanche
+
+
+6#baton pass
+7#beat up
+8-50#belly drum
+9#bide
+10#bind-inflict damage every turn
+
+11#blast burn -- one turn slacking off
+
+
+12-1#block, aka mean look
+
+
+
+
+13-168*2_439*2_363_423#bounce
+
+14#brick break
+15#brine
+
+
+16#like pluck
+
+
+
+
+
+17#camouflage
+
+18#charge
+
+
+
+10
+
+
+
+
+
+19#conversion
+20#conversion2
+21#copycat
+
+
+22-0_2/1#counter: 0 is physical, 2/1 is the ratio
+23#covet
+
+
+
+
+
+24#crush grip
+25#curse
+
+
+
+
+
+
+26#destiny bond
+27#detect
+13-110*2_232*2
+28#disable
+
+13-403*2
+
+29#doom desire
+
+
+
+
+
+
+
+
+30-40#dragon rage
+
+
+
+1
+31|1#dream eater
+
+
+
+
+
+32#embargo
+
+33#encore
+34#endeavor
+35#endure
+
+36#eruption
+37|38#explosion 37 is losing hp, 38 is def reduction
+
+
+39#façade
+
+40#fake out
+
+41#false swipe
+
+42#only works when protect detect
+
+
+
+10
+43#OHKO
+44#flail
+
+
+
+
+
+
+45#fling
+13-168*2_439*2_363_423
+
+46#focus energy
+47#focus punch
+48#follow me
+
+84-7#7 is ghost
+11
+49-1#frustration
+
+50#fury cutter
+
+29
+51#gastro acid
+1
+11
+
+52#grass knot
+
+53#gravity
+
+
+54#grudge
+55-2_4#guard swap
+43
+
+
+56
+57-1#hail
+
+
+
+
+
+58#heal bell
+59#heal block
+60#heal order--healing
+37|61#healing wish
+55-1_2_3_4_5_6_7#heart swap -- reverses all stat with foe
+
+63#helping hand
+64#high jump kick
+65#hidden power
+
+43
+
+11
+
+11
+
+
+
+66#ice ball
+
+
+
+
+
+
+67#imprison
+12-0|68-0_-1|2#ingrain -- 12 is prevent from switching, 68 is ground immunity lost, 2 is 1/16 hp every turn
+
+
+
+69#judgment
+64
+
+
+70#knock off
+71#last resort
+
+
+
+1
+72#leech seed
+
+
+73-1#light screen
+74#lock on
+
+52
+75#lucky chant
+37|61
+
+
+76#magic coat
+
+10
+
+68-1-5#don't forget fail if ingrain
+78#magnitude
+79#me first
+12-1
+
+1
+
+
+
+37
+22-0&1_3/2
+
+
+
+80#metronome
+60#healing - milk drink
+81#mimic
+82#mind reader
+83#minimize
+84-16#16 is dark
+22-1_2/1
+85#mirror move
+
+86#mist
+
+87#moon light
+87#morning sung
+
+
+88-12
+
+
+
+89#natural gift
+90#nature power
+
+91#night shade
+
+92#nightmare
+
+84-7#odor sleuth
+
+93#outrage
+
+94#pain split
+
+5
+
+95
+93
+
+16
+
+
+
+
+
+
+
+
+
+55-1_4
+62#power trick
+
+96#present
+27
+
+97#psychup
+
+
+
+98#psycho shift
+99#psywave
+100#punishment
+101#pursuit
+
+102#rage
+57-2#rain dance
+103#rapid spin
+
+104#razor wind
+60#recover
+105#recycle
+73-0#reflect
+
+106#rest
+49-0#return
+5#revenge
+44#flail
+107#roar
+11#roar of time
+
+
+
+
+
+
+
+11#rock wrecker
+108#role play
+
+66#rollout
+60|68-0_0
+
+109#safeguard
+10#sand tomb
+
+
+
+
+
+110#secret power
+
+
+91#seismic toss
+37|38#self destruct
+
+
+13#shadow force
+
+
+
+43#fissure
+
+
+
+
+111#sketch
+112#skill swap
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
