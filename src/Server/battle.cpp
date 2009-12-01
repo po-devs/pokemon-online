@@ -2,6 +2,7 @@
 #include "player.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "moves.h"
+#include <ctime>
 
 BattleSituation::BattleSituation(Player &p1, Player &p2)
 	:team1(p1.team()), team2(p2.team())
