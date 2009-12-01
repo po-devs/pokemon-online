@@ -1,4 +1,5 @@
 #include "server.h"
+#include <ctime>
 #include "player.h"
 #include "battle.h"
 #include "../PokemonInfo/pokemoninfo.h"

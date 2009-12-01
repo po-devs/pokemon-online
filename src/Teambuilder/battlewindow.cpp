@@ -344,11 +344,21 @@ void BattleWindow::switchToNaught(bool self)
 void BattleWindow::printLine(const QString &str)
 {
     mychat->insertPlainText(str + "\n");
+    QScrollBar * b = mychat->verticalScrollBar();
+    if(b->isVisible()&&b->value()!= b->maximum())
+    {
+        b->setValue(b->maximum());
+    }
 }
 
 void BattleWindow::printHtml(const QString &str)
 {
     mychat->insertHtml(str + "<br />");
+    QScrollBar * b = mychat->verticalScrollBar();
+    if(b->isVisible()&&b->value()!= b->maximum())
+    {
+        b->setValue(b->maximum());
+    }
 }
 
 void BattleWindow::updateChoices()
