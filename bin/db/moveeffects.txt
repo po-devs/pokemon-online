@@ -360,7 +360,7 @@ O[S]4+
 #skill swap
 #skull bash
 #sky attack
-#sky uppercut
+
 #slack off
 
 
@@ -368,7 +368,7 @@ O[S]4+
 #sleep talk
 O[S]5+
 O[S]5+
-#smelling salt
+O[S]1-#smelling salt
 O[S]5+
 O[M]6-
 #Snatch
@@ -401,7 +401,7 @@ O[S]1+
 #super fang
 S[M]1-1&2-1
 O[S]-1+
-#surf
+
 O[S]-1+/[M]1+2
 #swallow
 O[S]-1+
@@ -417,7 +417,7 @@ O[M]2-1
 
 #taunt
 O[S]-1+
-#teleport
+
 #thief
 #thrash
 O[S]1+
@@ -445,7 +445,7 @@ O[S]5+
 
 
 O[S]1+
-#wake-up slap
+O[S]4-#wake-up slap
 
 O[S]-1+
 #water sport
@@ -465,3 +465,4 @@ S[M]2+1
 
 #yawn
 O[S]1+
+

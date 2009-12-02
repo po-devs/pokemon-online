@@ -50,6 +50,7 @@ private:
     static QStringList m_PowerS;
     static QStringList m_AccS;
     static QStringList m_Effects;
+    static QStringList m_SpecialEffects;
     static QList<char> m_Type;
     static QList<char> m_PP;
     static QList<char> m_Category;
@@ -78,6 +79,7 @@ private:
     static void loadSpeeds();
     static void loadFlinchs();
     static void loadRecoil();
+    static void loadSpecialEffects();
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */

@@ -10,6 +10,7 @@ QString MoveInfo::m_Directory;
 QStringList MoveInfo::m_Names;
 QStringList MoveInfo::m_AccS;
 QStringList MoveInfo::m_PowerS;
+QStringList MoveInfo::m_SpecialEffects;
 QList<char> MoveInfo::m_Type;
 QList<char> MoveInfo::m_PP;
 QList<char> MoveInfo::m_Category;
@@ -407,6 +408,7 @@ void MoveInfo::init(const QString &dir)
     loadSpeeds();
     loadFlinchs();
     loadRecoil();
+    loadSpecialEffects();
 }
 
 int MoveInfo::NumberOfMoves()
@@ -417,6 +419,11 @@ int MoveInfo::NumberOfMoves()
 int MoveInfo::Number(const QString &movename)
 {
     return (qFind(m_Names.begin(), m_Names.end(), movename)-m_Names.begin()) % (NumberOfMoves());
+}
+
+QString MoveInfo::SpecialEffect(int movenum)
+{
+    return m_SpecialEffects[movenum];
 }
 
 void MoveInfo::loadNames()
@@ -570,6 +577,17 @@ void MoveInfo::loadEffects()
     /* Removing comments, aka anything starting from '#' */
     foreach (QString eff, temp) {
 	m_Effects.push_back(eff.split('#').front());
+    }
+}
+
+void MoveInfo::loadSpecialEffects()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_special_effects.txt"));
+
+    /* Removing comments, aka anything starting from '#' */
+    foreach (QString eff, temp) {
+	m_SpeciallEffects.push_back(eff.split('#').front());
     }
 }
 

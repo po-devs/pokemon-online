@@ -258,7 +258,7 @@
 87#morning sung
 
 
-88-12
+88-12#mud sport
 
 
 
@@ -278,7 +278,7 @@
 5
 
 95
-93
+93#petal dance
 
 16
 
@@ -336,7 +336,7 @@
 109#safeguard
 10#sand tomb
 
-
+57-3#sandstorm
 
 
 
@@ -358,39 +358,68 @@
 
 111#sketch
 112#skill swap
+113#skull bash
+114#sky attack
 
+60#slack off
 
 
 
+115|116#115 = works only if asleep, 116 is sleep talk
 
 
+117-1#smelling salt
 
 
+118#snatch
+115#snore
+60#softboiled
+119#solar beam
+30-20#sonic boom
 
 
+12-1#spider web. 1 means it's the ennemy that is blocked (0 would be for ingrain)
 
+120-3|121#spikes, max number is 3
+122#spit up
+123#spite
 
 
+120-3|124#stealth rock
 
+125#stock pile
+126#stomp
 
 
 
+127#struggle
 
 
+128#SUBSTITUTE
+129#sucker punch
+57-4#sunny day
+130#super fang
 
 
 
 
+131#swallow
 
 
 
+132#switcheroo
 
+87#synthesis
 
 
 
+133#tailwind
 
+134#taunt
 
 
+23#thief
+93#thrash
 
 
 
@@ -398,70 +427,41 @@
 
 
 
+135#torment
 
+120-2|136#toxic spikes
+137#transform
 
+132#trick
+138#trick room
+139#triple kick
+71#trump card
 
 
+140#U-turn
+141#uproar
 
 
 
 
 
+117-4#wake up slap
 
 
+88-9#water sport
+36#water sport
 
+118#weather ball
+10#whirlpool
+107#whirlwind
 
 
+142#wish
 
 
+143#worry seed
+10#wrap
+144#wring out
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+145#yawn
 
