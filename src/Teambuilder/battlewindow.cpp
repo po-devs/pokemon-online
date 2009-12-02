@@ -30,8 +30,6 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
     mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 4, 1);
     mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémons")), 4, 2);
 
-    mychat->setReadOnly(true);
-
     for (int i = 0; i < 6; i++) {
 	myazones[i] = new AttackZone(team.poke(i));
 	mystack->addWidget(myazones[i]);
