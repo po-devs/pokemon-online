@@ -2,7 +2,7 @@
 #include "player.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "moves.h"
-#include <ctime>
+#include <ctime> /* for random numbers, time(NULL) needed */
 
 BattleSituation::BattleSituation(Player &p1, Player &p2)
 	:team1(p1.team()), team2(p2.team())
@@ -253,9 +253,9 @@ void BattleSituation::analyzeChoice(int player)
 void BattleSituation::analyzeChoices()
 {
     if (choice[Player1].attack())
-	merge(turnlong[Player1], MoveEffect(poke(Player1).move(choice[Player1].numSwitch).num()));
+	MoveEffect::setup(poke(Player1).move(choice[Player1].numSwitch), Player1, Player2, *this);
     if (choice[Player2].attack())
-	merge(turnlong[Player2], MoveEffect(poke(Player2).move(choice[Player2].numSwitch).num()));
+	MoveEffect::setup(poke(Player2).move(choice[Player2].numSwitch), Player2, Player1, *this);
 
     if (choice[Player1].attack() && choice[Player2].attack()) {
 	int first, second;
@@ -329,6 +329,21 @@ void BattleSituation::sendPoke(int player, int pok)
     for (int i = 1; i <= 6; i++)
 	pokelong[player][tr("Boost%1").arg(i)] = 0; /* No boost when a poke switches in, right? */
     pokelong[player][tr("Level")] = poke(player).level();
+}
+
+void BattleSituation::calleffects(int source, int target, const QString &name)
+{
+    if (turnlong[source].contains(name)) {
+	qDebug() << "Contains " << name;
+	QSet<QString> &effects = *turnlong[source][name].value<QSharedPointer<QSet<QString> > >();
+	qDebug() << "Length: " << effects.size();
+
+	foreach(QString effect, effects) {
+	    MoveMechanics::function f = turnlong[source][name + "_" + effect].value<MoveMechanics::function>();
+
+	    f(source, target, *this);
+	}
+    }
 }
 
 void BattleSituation::sendBack(int player)
@@ -454,6 +469,9 @@ void BattleSituation::useAttack(int player, int move)
     if (!testAccuracy(player, target)) {
 	return;
     }
+    qDebug() << "Accuracy test passed";
+    qDebug() << "Accuracy: " << turnlong[player]["Power"].toInt();
+    qDebug() << "Power: " << turnlong[player]["Power"].toInt();
     if (turnlong[player]["Power"].toInt() > 0)
     {
 	int type = turnlong[player]["Type"].toInt(); /* move type */
@@ -483,11 +501,10 @@ void BattleSituation::useAttack(int player, int move)
 	    testCritical(player, target);
 
 	    int damage = calculateDamage(player, target);
-            inflictDamage(target, damage, player);
+	    inflictDamage(target, damage, player, true);
 
             /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
             applyMoveStatMods(player, target);
-            inflictRecoil(player, target);
 
             if (koed(target))
 		break;
@@ -513,7 +530,7 @@ void BattleSituation::inflictRecoil(int source, int target)
     if (recoil == 0)
         return;
 
-    inflictDamage(source, pokelong[target]["DamageTaken"].toInt()/recoil, source);
+    inflictDamage(source, turnlong[target]["DamageTakenByAttack"].toInt()/recoil, source);
 }
 
 void BattleSituation::applyMoveStatMods(int player, int target)
@@ -752,17 +769,14 @@ int BattleSituation::repeatNum(context &move)
     }
 }
 
-void BattleSituation::inflictDamage(int player, int damage, int source)
+void BattleSituation::inflictDamage(int player, int damage, int source, bool straightattack)
 {
+    qDebug() << "Damage inflicted";
     if (damage == 0) {
 	damage = 1;
     }
 
     damage = std::min(int(poke(player).lifePoints()), damage);
-
-    if (source != player) {
-        pokelong[player]["DamageTaken"] = damage;
-    }
 
     int hp  = poke(player).lifePoints() - damage;
 
@@ -771,6 +785,23 @@ void BattleSituation::inflictDamage(int player, int damage, int source)
     } else {
 	changeHp(player, hp);
     }
+
+    if (straightattack) {
+	pokelong[player]["DamageTakenByAttack"] = damage;
+	turnlong[player]["DamageTakenByAttack"] = damage;
+	turnlong[source]["DamageInflicted"] = damage;
+
+	inflictRecoil(source, player);
+
+	calleffects(source, player, "UponDamageInflicted");
+    }
+}
+
+void BattleSituation::healLife(int player, int healing)
+{
+    healing = std::min(healing, poke(player).totalLifePoints() - poke(player).lifePoints());
+
+    changeHp(player, poke(player).lifePoints() + healing);
 }
 
 void BattleSituation::changeHp(int player, int newHp)

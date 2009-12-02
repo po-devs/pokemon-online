@@ -1,7 +1,8 @@
+#include <ctime> /* for random numbers, time(NULL) needed */
 #include "server.h"
-#include <ctime>
 #include "player.h"
 #include "battle.h"
+#include "moves.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
 Server::Server(quint16 port)
@@ -25,6 +26,10 @@ Server::Server(quint16 port)
     StatInfo::init("db/");
 
     printLine(tr("Pokémon database loaded"));
+
+    MoveEffect::init();
+
+    printLine(tr("Move special effects loaded"));
 
     if (!server()->listen(QHostAddress::Any, port))
     {
