@@ -587,7 +587,7 @@ void MoveInfo::loadSpecialEffects()
 
     /* Removing comments, aka anything starting from '#' */
     foreach (QString eff, temp) {
-	m_SpeciallEffects.push_back(eff.split('#').front());
+	m_SpecialEffects.push_back(eff.split('#').front());
     }
 }
 

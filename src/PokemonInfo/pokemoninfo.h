@@ -103,6 +103,7 @@ public:
     static QString AccS(int movenum);
     /* the status mod of a move*/
     static QString Effect(int movenum);
+    static QString SpecialEffect(int movenum);
     static int CriticalRaise(int movenum);
     static int RepeatMin(int movenum);
     static int RepeatMax(int movenum);
