@@ -39,6 +39,8 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
 	connect(myazones[i], SIGNAL(clicked(int)), SLOT(attackClicked(int)));
     }
 
+    mychat->setReadOnly(true);
+
     mypzone = new PokeZone(team);
     mystack->addWidget(mypzone);
 
