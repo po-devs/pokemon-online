@@ -41,6 +41,7 @@ public:
     BattleMove();
 
     void load();
+    operator int () {return num();}
 };
 
 QDataStream & operator >> (QDataStream &in, BattleMove &mo);

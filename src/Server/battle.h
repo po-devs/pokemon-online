@@ -83,7 +83,7 @@ public:
     void inflictConfused(int player);
     void inflictConfusedDamage(int player);
     void inflictRecoil(int source, int target);
-    void inflictDamage(int player, int damage, int source);
+    void inflictDamage(int player, int damage, int source, bool straightattack = false);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
@@ -168,6 +168,9 @@ private:
 
     int turn;
 
+    /* Calls the effects of source reacting to name */
+    void calleffects(int source, int target, const QString &name);
+public:
     /**************************************/
     /*** VIVs: very important variables ***/
     /**************************************/
@@ -184,7 +187,7 @@ private:
     /* Variables that are reset every turn right before everything else happens
 	at the very beginning of a turn */
     context turnlong[2];
-public:
+
     struct QuitException {};
 };
 
