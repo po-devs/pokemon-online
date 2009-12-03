@@ -36,7 +36,7 @@ void BattleSituation::start()
 
     haveChoice[0] = false;
     haveChoice[1] = false;
-    turn = 0;
+    turn() = 0;
 
     QThread::start();
 }
@@ -138,12 +138,15 @@ void BattleSituation::run()
 
 void BattleSituation::beginTurn()
 {
-    ++turn;
+    turn() += 1;
     /* Resetting temporary variables */
     turnlong[0].clear();
     turnlong[1].clear();
 
-    notify(All, BeginTurn, All, turn);
+    notify(All, BeginTurn, All, turn());
+
+    callpeffects(Player1, Player2, "TurnSettings");
+    callpeffects(Player2, Player1, "TurnSettings");
 
     requestChoices();
     analyzeChoices();
@@ -152,6 +155,8 @@ void BattleSituation::beginTurn()
 void BattleSituation::endTurn()
 {
     endTurnStatus();
+    callpeffects(Player1, Player2, "EndTurn");
+    callpeffects(Player2, Player1, "EndTurn");
 }
 
 void BattleSituation::endTurnStatus()
@@ -183,10 +188,15 @@ void BattleSituation::testquit()
 	throw QuitException();
 }
 
-void BattleSituation::requestChoice(int player, bool acquire)
+bool BattleSituation::requestChoice(int player, bool acquire, bool custom)
 {
+    if (turnlong[player].contains("NoChoice") && !koed(player)) {
+	return false;
+    }
+
     haveChoice[player] = true;
-    options[player] = createChoice(player);
+    if (!custom)
+	options[player] = createChoice(player);
 
     notify(player, OfferChoice, player, options[player]);
 
@@ -197,15 +207,16 @@ void BattleSituation::requestChoice(int player, bool acquire)
     testquit();
 
     /* Now all the players gonna do is analyzeChoice(int player) */
+    return true;
 }
 
 void BattleSituation::requestChoices()
 {
-    requestChoice(Player1, false);
-    requestChoice(Player2, false);
+    /* Gets the number of choices to be done */
+    int count = int(requestChoice(Player1, false)) + requestChoice(Player2, false);
 
     /* Lock until BOTH choices are received */
-    sem.acquire(2);
+    sem.acquire(count);
 
     //test to see if the quit was requested by system or if choice was received
     testquit();
@@ -252,10 +263,23 @@ void BattleSituation::analyzeChoice(int player)
 
 void BattleSituation::analyzeChoices()
 {
-    if (choice[Player1].attack())
+    if (!turnlong[Player1].contains("NoChoice") && choice[Player1].attack())
 	MoveEffect::setup(poke(Player1).move(choice[Player1].numSwitch), Player1, Player2, *this);
-    if (choice[Player2].attack())
+    if (!turnlong[Player2].contains("NoChoice") && choice[Player2].attack())
 	MoveEffect::setup(poke(Player2).move(choice[Player2].numSwitch), Player2, Player1, *this);
+
+    /* Just in case there's only one choice or zero */
+    if (turnlong[Player1].contains("NoChoice")) {
+	if (turnlong[Player2].contains("NoChoice")) {
+	    return;
+	} else {
+	    analyzeChoice(Player2);
+	    return;
+	}
+    } else if (turnlong[Player2].contains("NoChoice")) {
+	analyzeChoice(Player1);
+	return;
+    }
 
     if (choice[Player1].attack() && choice[Player2].attack()) {
 	int first, second;
@@ -340,6 +364,21 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 
 	foreach(QString effect, effects) {
 	    MoveMechanics::function f = turnlong[source][name + "_" + effect].value<MoveMechanics::function>();
+
+	    f(source, target, *this);
+	}
+    }
+}
+
+void BattleSituation::callpeffects(int source, int target, const QString &name)
+{
+    if (pokelong[source].contains(name)) {
+	qDebug() << "Contains " << name;
+	QSet<QString> &effects = *pokelong[source][name].value<QSharedPointer<QSet<QString> > >();
+	qDebug() << "Length: " << effects.size();
+
+	foreach(QString effect, effects) {
+	    MoveMechanics::function f = pokelong[source][name + "_" + effect].value<MoveMechanics::function>();
 
 	    f(source, target, *this);
 	}
@@ -500,6 +539,8 @@ void BattleSituation::useAttack(int player, int move)
 
 	    testCritical(player, target);
 
+	    calleffects(player, target, "BeforeCalculatingDamage");
+
 	    int damage = calculateDamage(player, target);
 	    inflictDamage(target, damage, player, true);
 
@@ -514,9 +555,12 @@ void BattleSituation::useAttack(int player, int move)
 
         notify(All, Effective, target, quint8(typemod));
 
+	calleffects(player, target, "AfterAttackSuccessful");
+
         requestSwitchIns();
     } else {
         applyMoveStatMods(player, target);
+	calleffects(player, target, "UponAttackSuccessful");
     }
 }
 
@@ -789,19 +833,24 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
     if (straightattack) {
 	pokelong[player]["DamageTakenByAttack"] = damage;
 	turnlong[player]["DamageTakenByAttack"] = damage;
+	turnlong[player]["DamageTakenBy"] = source;
 	turnlong[source]["DamageInflicted"] = damage;
 
 	inflictRecoil(source, player);
 
 	calleffects(source, player, "UponDamageInflicted");
     }
+
+    turnlong[player]["DamageTaken"] = damage;
 }
 
 void BattleSituation::healLife(int player, int healing)
 {
-    healing = std::min(healing, poke(player).totalLifePoints() - poke(player).lifePoints());
-
-    changeHp(player, poke(player).lifePoints() + healing);
+    if (!koed(player) && !poke(player).isFull())
+    {
+	healing = std::min(healing, poke(player).totalLifePoints() - poke(player).lifePoints());
+	changeHp(player, poke(player).lifePoints() + healing);
+    }
 }
 
 void BattleSituation::changeHp(int player, int newHp)
@@ -848,6 +897,30 @@ void BattleSituation::requestSwitchIns()
     }
 
     koedPokes.clear();
+}
+
+void BattleSituation::requestSwitch(int player)
+{
+    int pokealive = countAlive(player) - (!poke(player).ko());
+
+    if (pokealive == 0) {
+	return;
+    }
+
+    options[player] = BattleChoices::SwitchOnly();
+
+    requestChoice(player,true,true);
+}
+
+int BattleSituation::countAlive(int player) const
+{
+    int count = 0;
+    for (int i = 0; i < 6; i++) {
+	if (poke(player, i).num() != 0 && !poke(player, i).ko()) {
+	    count += 1;
+	}
+    }
+    return count;
 }
 
 void BattleSituation::changeCurrentPoke(int player, int poke)

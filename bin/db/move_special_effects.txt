@@ -22,7 +22,7 @@
 
 
 
-5#avalanche
+146#avalanche
 
 
 6#baton pass
@@ -316,7 +316,7 @@
 
 106#rest
 49-0#return
-5#revenge
+146#revenge
 44#flail
 107#roar
 11#roar of time
