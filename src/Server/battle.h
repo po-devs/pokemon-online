@@ -9,6 +9,8 @@ class Player;
 class BattleSituation : public QThread
 {
     Q_OBJECT
+
+    PROPERTY(int, turn)
 public:
     enum {
 	AllButPlayer = -2,
@@ -44,13 +46,14 @@ public:
     int currentPoke(int player) const;
     bool koed(int player) const;
     void changeCurrentPoke(int player, int poke);
+    int countAlive(int player) const;
 
     /* Starts the battle -- use the time before to connect signals / slots */
     void start();
     /* The battle runs in a different thread -- easier to interrutpt the battle & co */
     void run();
     /* requests choice of action from the player */
-    void requestChoice(int player, bool acq = true /*private arg used by RequestChoices */);
+    bool requestChoice(int player, bool acq = true /*private arg */, bool custom = false); /* return true if the pokemon has a choice to make (including switching & struggle)*/
     void requestChoices(); /* request from both players */
     /* Shows what attacks are allowed or not */
     BattleChoices createChoice(int player) const;
@@ -97,6 +100,7 @@ public:
     bool testStatus(int player);
     bool hasType(int player, int type);
     void requestSwitchIns();
+    void requestSwitch(int player);
     int repeatNum(context &move);
     PokeFraction getStatBoost(int player, int stat);
     int getStat(int player, int stat);
@@ -166,10 +170,10 @@ private:
     int myid[2];
     QSet<int> koedPokes;
 
-    int turn;
-
     /* Calls the effects of source reacting to name */
     void calleffects(int source, int target, const QString &name);
+    /* This time the pokelong effects */
+    void callpeffects(int source, int target, const QString &name);
 public:
     /**************************************/
     /*** VIVs: very important variables ***/

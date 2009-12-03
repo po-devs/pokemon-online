@@ -28,7 +28,8 @@ void merge(QMap<T,U> &map1, const QMap<T,U> &map2)
     typename QMap<T, U>::const_iterator it;
 
     for (it = map2.begin(); it != map2.end(); ++it) {
-	map1.insert(it.key(), it.value());
+	if (!map1.contains(it.key()))
+	    map1.insert(it.key(), it.value());
     }
 }
 

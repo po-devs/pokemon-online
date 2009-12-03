@@ -70,6 +70,8 @@ public:
     quint8 statMod(int stat) const;
 
     bool ko() const {return lifePoints() == 0;}
+    bool isFull() const { return lifePoints() == totalLifePoints(); }
+    int lifePercent() const { return lifePoints()*100/totalLifePoints();}
 
     void setNormalStat(int, quint16);
 private:
