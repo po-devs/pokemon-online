@@ -159,6 +159,14 @@ public:
     static QColor Color(int typenum);
     static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
+
+    enum Effectiveness
+    {
+	Ineffective = 0,
+	NotEffective = 1,
+	Effective = 2,
+	SuperEffective = 4
+    };
 };
 
 class NatureInfo

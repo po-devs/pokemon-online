@@ -461,7 +461,7 @@
 
 143#worry seed
 10#wrap
-144#wring out
+24#wring out
 
-145#yawn
+144#yawn
 
