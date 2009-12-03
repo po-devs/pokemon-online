@@ -35,6 +35,8 @@ MoveEffect::MoveEffect(int num)
     (*this)["StatEffect"] = MoveInfo::Effect(num);
     (*this)["FlinchRate"] = MoveInfo::FlinchRate(num);
     (*this)["Recoil"] = MoveInfo::Recoil(num);
+    (*this)["Attack"] = num;
+    (*this)["PossibleTargets"] = MoveInfo::Target(num);
 }
 
 /* There's gonna be tons of structures inheriting it,
@@ -188,6 +190,7 @@ struct MMBlastBurn : public MM
 	    ;
 	} else {
 	    turn(b, s)["NoChoice"] = true;
+	    turn(b, s)["PossibleTargets"] = Move::None;
 	}
     }
 };
@@ -295,7 +298,7 @@ struct MMConversion2 : public MM
 	/* Gets types available */
 	QList<int> poss;
 	for (int i = 0; i < TypeInfo::NumberOfTypes() - 1; i++) {
-	    if (!(poke(b,s)["Type1"].toInt() == i && poke(b,s)["Type2"].toInt() == Pokemon::Curse) && TypeInfo::Eff(attackType, i) < TypeInfo::Effective) {
+	    if (!(poke(b,s)["Type1"].toInt() == i && poke(b,s)["Type2"].toInt() == Pokemon::Curse) && TypeInfo::Eff(attackType, i) < Type::Effective) {
 		poss.push_back(i);
 	    }
 	}
@@ -321,7 +324,7 @@ struct MMCopycat : public MM
 
     static void daf(int s, int, BS &b) {
 	/* First check if there's even 1 move available */
-	if (!b.battlelong.contains("LastMoveSuccessfullyUsed") || b.battlelong["LastMoveSuccessfullyUsed"].toInt() == 68) {
+	if (!b.battlelong.contains("LastMoveSuccessfullyUsed") || b.battlelong["LastMoveSuccessfullyUsed"].toInt() == 67) {
 	    turn(b,s)["Failed"] = true;
 	} else {
 	    turn(b,s)["CopycatMove"] = b.battlelong["LastMoveSuccessfullyUsed"];
@@ -372,6 +375,66 @@ struct MMCurse : public MM
     }
 };
 
+struct MMDestinyBond : public MM
+{
+    MMDestinyBond() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	poke(b,s)["DestinyBondTurn"] = b.turn();
+	addFunction(poke(b,s), "AfterKoedByStraightAttack", "DestinyBond", &akbsa);
+    }
+
+    static void akbsa(int s, int t, BS &b) {
+	int trn = poke(b,s)["DestinyBondTurn"].toInt();
+
+	if (trn == b.turn() || (trn+1 == b.turn() && (!turn(b,s).contains("HasMoved") || turn(b,s)["HasMoved"].toBool() == false)))
+	    b.koPoke(t, s, false);
+    }
+};
+
+struct MMDetect : public MM
+{
+    MMDetect() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (poke(b,s).contains("ProtectingMoveTurn") && poke(b,s)["ProtectiveMoveTurn"].toInt() == b.turn() - 1) {
+	    if (rand()%2 == 0) {
+		turn(b,s)["Failed"] = true;
+	    } else {
+		poke(b,s)["ProtectiveMoveTurn"] = b.turn();
+	    }
+	} else {
+	    poke(b,s)["ProtectiveMoveTurn"] = b.turn();
+	}
+    }
+
+    static void uas(int s, int, BS &b) {
+	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Detect", &dgaf);
+	turn(b,s)["DetectUsed"] = true;
+    }
+
+    static void dgaf(int s, int t, BS &b) {
+	if (s == t) {
+	    return;
+	}
+	if (!turn(b,t)["DetectUsed"].toBool()) {
+	    return;
+	}
+	int attack = turn(b,s)["Attack"].toInt();
+	/* Curse, Feint, Psychup, Role Play, Transform */
+	if (attack == 78 || attack == 128 || attack == 298 || attack == 330 || attack == 432) {
+	    return;
+	}
+	/* All other moves fail */
+	turn(b,s)["Failed"] = true;
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = new MM##name; names[num] = #name;
 
 void MoveEffect::init()
@@ -392,6 +455,8 @@ void MoveEffect::init()
     REGISTER_MOVE(21, Copycat);
     REGISTER_MOVE(24, CrushGrip); /* Crush grip, Wring out */
     REGISTER_MOVE(25, Curse);
+    REGISTER_MOVE(26, DestinyBond);
+    REGISTER_MOVE(27, Detect); /* Protect, Detect */
     REGISTER_MOVE(146, Avalanche); /* avalanche, revenge */
 }
 

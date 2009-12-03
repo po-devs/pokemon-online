@@ -68,13 +68,13 @@ public:
     /* Attack... */
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
 	represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
-    void useAttack(int player, int attack, bool specialOccurence = false);
+    void useAttack(int player, int attack, bool specialOccurence = false, bool notify = true);
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player);
     void sendPoke(int player, int poke);
-    void koPoke(int player, int source);
+    void koPoke(int player, int source, bool straightattack = false);
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
     void gainStatMod(int player, int stat, int bonus);
@@ -100,6 +100,7 @@ public:
     void testCritical(int player, int target);
     void testFlinch(int player, int target);
     bool testStatus(int player);
+    bool testFail(int player);
     bool hasType(int player, int type);
     void requestSwitchIns();
     void requestSwitch(int player);
@@ -127,7 +128,8 @@ public:
 	Hit, /* for moves like fury double kick etc. */
 	StatChange,
 	StatusChange,
-	StatusMessage
+	StatusMessage,
+	Failed
     };
 
     enum StatusFeeling
@@ -176,6 +178,8 @@ private:
     void calleffects(int source, int target, const QString &name);
     /* This time the pokelong effects */
     void callpeffects(int source, int target, const QString &name);
+    /* this time the general battle effects (imprison, ..) */
+    void callbeffects(int source, int target, const QString &name);
 public:
     /**************************************/
     /*** VIVs: very important variables ***/

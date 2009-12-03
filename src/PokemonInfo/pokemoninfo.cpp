@@ -22,6 +22,7 @@ QList<bool> MoveInfo::m_KingRock;
 QList<char> MoveInfo::m_Speeds;
 QList<int> MoveInfo::m_Flinch;
 QList<int> MoveInfo::m_Recoil;
+QList<int> MoveInfo::m_Targets;
 QList<QPair<char, char> > MoveInfo::m_Repeat;
 
 QString ItemInfo::m_Directory;
@@ -317,6 +318,16 @@ void MoveInfo::loadCritics()
     }
 }
 
+void MoveInfo::loadTargets()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_target.txt"));
+
+    foreach(QString str, temp) {
+	m_Targets.push_back(str.toInt());
+    }
+}
+
 void MoveInfo::loadEffectRates()
 {
     QStringList temp;
@@ -401,6 +412,7 @@ void MoveInfo::init(const QString &dir)
     loadCategorys();
     loadEffects();
     loadRepeats();
+    loadTargets();
     loadCritics();
     loadPhysics();
     loadKingRocks();
@@ -424,6 +436,11 @@ int MoveInfo::Number(const QString &movename)
 QString MoveInfo::SpecialEffect(int movenum)
 {
     return m_SpecialEffects[movenum];
+}
+
+int MoveInfo::Target(int movenum)
+{
+    return m_Targets[movenum];
 }
 
 void MoveInfo::loadNames()

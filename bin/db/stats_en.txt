@@ -4,5 +4,5 @@ defense
 speed
 special attack
 special defense
-evasiveness
+evasion
 accuracy

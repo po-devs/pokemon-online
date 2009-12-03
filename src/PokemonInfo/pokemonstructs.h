@@ -110,6 +110,50 @@ namespace Move
         Dark,
         Curse = 17
     };
+
+    enum Target
+    {
+	None = -1,
+	User,
+	ChosenTarget,
+	RandomTarget,
+	Opponents,
+	All,
+	AllButSelf
+    };
+}
+
+namespace Type
+{
+    enum Effectiveness
+    {
+	Ineffective = 0,
+	NotEffective = 1,
+	Effective = 2,
+	SuperEffective = 4
+    };
+
+    enum Type
+    {
+	Normal = 0,
+	Fighting,
+	Flying,
+	Poison,
+	Ground,
+	Rock,
+	Bug,
+	Ghost,
+	Steel,
+	Fire,
+	Water,
+	Grass,
+	Electric,
+	Psychic,
+	Ice,
+	Dragon,
+	Dark,
+	Curse = 17
+    };
 }
 
 enum Stat

@@ -61,6 +61,7 @@ private:
     static QList<char> m_Speeds;
     static QList<int> m_Flinch;
     static QList<int> m_Recoil;
+    static QList<int> m_Targets;
     static QList<QPair<char, char> > m_Repeat;
     static QString m_Directory;
 
@@ -77,6 +78,7 @@ private:
     static void loadKingRocks();
     static void loadRepeats();
     static void loadSpeeds();
+    static void loadTargets();
     static void loadFlinchs();
     static void loadRecoil();
     static void loadSpecialEffects();
@@ -111,6 +113,7 @@ public:
     static bool PhysicalContact(int movenum);
     static bool KingRock(int movenum);
     static int EffectRate(int movenum);
+    static int Target(int movenum);
 };
 
 class ItemInfo
@@ -159,14 +162,6 @@ public:
     static QColor Color(int typenum);
     static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
-
-    enum Effectiveness
-    {
-	Ineffective = 0,
-	NotEffective = 1,
-	Effective = 2,
-	SuperEffective = 4
-    };
 };
 
 class NatureInfo

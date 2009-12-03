@@ -254,7 +254,10 @@ void BattleSituation::analyzeChoice(int player)
 {
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice[player].attack()) {
-	useAttack(player, choice[player].numSwitch);
+	if (turnlong[player].contains("NoChoice"))
+	    useAttack(player, choice[player].numSwitch, false, true);
+	else
+	    useAttack(player, choice[player].numSwitch);
     } else {
         if (!koed(player)) { /* if the pokemon isn't ko, it IS sent back */
 	    sendBack(player);
@@ -265,23 +268,11 @@ void BattleSituation::analyzeChoice(int player)
 
 void BattleSituation::analyzeChoices()
 {
+    /* If there's no choice then the effects are already taken care of */
     if (!turnlong[Player1].contains("NoChoice") && choice[Player1].attack())
 	MoveEffect::setup(poke(Player1).move(choice[Player1].numSwitch), Player1, Player2, *this);
     if (!turnlong[Player2].contains("NoChoice") && choice[Player2].attack())
 	MoveEffect::setup(poke(Player2).move(choice[Player2].numSwitch), Player2, Player1, *this);
-
-    /* Just in case there's only one choice or zero */
-    if (turnlong[Player1].contains("NoChoice")) {
-	if (turnlong[Player2].contains("NoChoice")) {
-	    return;
-	} else {
-	    analyzeChoice(Player2);
-	    return;
-	}
-    } else if (turnlong[Player2].contains("NoChoice")) {
-	analyzeChoice(Player1);
-	return;
-    }
 
     if (choice[Player1].attack() && choice[Player2].attack()) {
 	int first, second;
@@ -360,9 +351,7 @@ void BattleSituation::sendPoke(int player, int pok)
 void BattleSituation::calleffects(int source, int target, const QString &name)
 {
     if (turnlong[source].contains(name)) {
-	qDebug() << "Contains " << name;
 	QSet<QString> &effects = *turnlong[source][name].value<QSharedPointer<QSet<QString> > >();
-	qDebug() << "Length: " << effects.size();
 
 	foreach(QString effect, effects) {
 	    MoveMechanics::function f = turnlong[source][name + "_" + effect].value<MoveMechanics::function>();
@@ -375,12 +364,23 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 void BattleSituation::callpeffects(int source, int target, const QString &name)
 {
     if (pokelong[source].contains(name)) {
-	qDebug() << "Contains " << name;
 	QSet<QString> &effects = *pokelong[source][name].value<QSharedPointer<QSet<QString> > >();
-	qDebug() << "Length: " << effects.size();
 
 	foreach(QString effect, effects) {
 	    MoveMechanics::function f = pokelong[source][name + "_" + effect].value<MoveMechanics::function>();
+
+	    f(source, target, *this);
+	}
+    }
+}
+
+void BattleSituation::callbeffects(int source, int target, const QString &name)
+{
+    if (battlelong.contains(name)) {
+	QSet<QString> &effects = *battlelong[name].value<QSharedPointer<QSet<QString> > >();
+
+	foreach(QString effect, effects) {
+	    MoveMechanics::function f = battlelong[name + "_" + effect].value<MoveMechanics::function>();
 
 	    f(source, target, *this);
 	}
@@ -396,7 +396,7 @@ void BattleSituation::sendBack(int player)
 
 bool BattleSituation::testAccuracy(int player, int target)
 {
-    int acc = turnlong[player]["Accuracy"].toInt() * getStatBoost(player, 6) * getStatBoost(target, 7);
+    int acc = turnlong[player]["Accuracy"].toInt() * getStatBoost(player, 7) * getStatBoost(target, 6);
 
     if (acc == 0 || rand() % 100 < acc) {
 	return true;
@@ -494,7 +494,16 @@ void BattleSituation::testFlinch(int player, int target)
     }
 }
 
-void BattleSituation::useAttack(int player, int move, bool specialOccurence)
+bool BattleSituation::testFail(int player)
+{
+    if (turnlong[player].contains("Failed") && turnlong[player]["Failed"].toBool() == true) {
+	notify(All, Failed, player);
+	return true;
+    }
+    return false;
+}
+
+void BattleSituation::useAttack(int player, int move, bool specialOccurence, bool tellPlayers)
 {
     int attack;
     if (specialOccurence) {
@@ -503,15 +512,24 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence)
 	attack = poke(player).move(move).num();
     }
 
-    int target = rev(player);
+    int target;
+
+    switch(turnlong[player]["PossibleTargets"].toInt()) {
+	case Move::None: target = -1; break;
+	case Move::User: target = player; break;
+	default: target = rev(player);
+    }
+
+    turnlong[player]["HasMoved"] = true;
 
     if (!testStatus(player)) {
 	return;
     }
 
-    notify(All, UseAttack, player, qint16(attack));
+    if (tellPlayers)
+	notify(All, UseAttack, player, qint16(attack));
 
-    if (!specialOccurence)
+    if (!specialOccurence && tellPlayers)
 	losePP(player, move, 1);
 
     if (!testAccuracy(player, target)) {
@@ -537,6 +555,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence)
 	    notify(All, Effective, target, quint8(typemod));
 	    return;
 	}
+
+	callbeffects(player, target, "DetermineGeneralAttackFailure");
+	if (testFail(player))
+	    return;
+	calleffects(player, target, "DetermineFailure");
+	if (testFail(player))
+	    return;
 
 	int num = repeatNum(turnlong[player]);
 	bool hit = num > 1;
@@ -571,14 +596,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence)
 
         requestSwitchIns();
     } else {
+	callbeffects(player, target, "DetermineGeneralAttackFailure");
+	if (testFail(player))
+	    return;
 	calleffects(player, target, "DetermineAttackFailure");
-	if (turnlong[player]["Failed"].toBool() == false) {
-	    calleffects(player, target, "BeforeHitting");
-	    applyMoveStatMods(player, target);
-	    calleffects(player, target, "UponAttackSuccessful");
-	    /* put this after calleffects to avoid endless sleepTalk/copycat for example */
-	    battlelong["LastMoveSuccesfullyUsed"] = attack;
-	}
+	if (testFail(player))
+	    return;
+
+	calleffects(player, target, "BeforeHitting");
+	applyMoveStatMods(player, target);
+	calleffects(player, target, "UponAttackSuccessful");
+	/* this is put after calleffects to avoid endless sleepTalk/copycat for example */
+	battlelong["LastMoveSuccesfullyUsed"] = attack;
     }
 }
 
@@ -843,7 +872,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
     int hp  = poke(player).lifePoints() - damage;
 
     if (hp <= 0) {
-	koPoke(player, source);
+	koPoke(player, source, straightattack);
     } else {
 	changeHp(player, hp);
     }
@@ -886,16 +915,18 @@ void BattleSituation::changeHp(int player, int newHp)
     notify(AllButPlayer, ChangeHp, player, quint16(poke(player).lifePoints()*100/poke(player).totalLifePoints())); /* percentage calculus */
 }
 
-void BattleSituation::koPoke(int player, int source)
+void BattleSituation::koPoke(int player, int source, bool straightattack)
 {
     changeHp(player, 0);
 
     notify(All, Ko, player);
     koedPokes.insert(player);
 
-    if (source!=player) {
+    if (straightattack) {
 	turnlong[player]["AttackKoed"] = true; /* the attack the poke should have is not anymore */
         turnlong[player]["CancelAttack"] = true; /* the attack the poke should have is not anymore */
+
+	callpeffects(player, source, "AfterKoedByStraightAttack");
     }
 }
 
@@ -984,7 +1015,7 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
        2/(2+boost) otherwise */
     if (stat <= 5) {
         return PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
-    } else if (stat == 6) {
+    } else if (stat == 7) {
         return PokeFraction(std::max(3+boost, 3), std::max(3-boost, 3));
     } else {
         return PokeFraction(std::max(3-boost, 3), std::max(3+boost, 3));
