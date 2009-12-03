@@ -66,7 +66,9 @@ public:
     void endTurn();
     void endTurnStatus();
     /* Attack... */
-    void useAttack(int player, int attack);
+    /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
+	represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
+    void useAttack(int player, int attack, bool specialOccurence = false);
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);
     /* Sends a poke back to his pokeball (not koed) */
@@ -191,6 +193,8 @@ public:
     /* Variables that are reset every turn right before everything else happens
 	at the very beginning of a turn */
     context turnlong[2];
+    /* General things like last move ever used, etc. */
+    context battlelong;
 
     struct QuitException {};
 };

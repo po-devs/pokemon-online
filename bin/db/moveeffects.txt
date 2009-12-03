@@ -53,7 +53,7 @@ S[M]1+1&2+1
 S[M]4+1&5+1
 #change type depending on location
 O[M]4-2
-#charge
+S[M]5+1
 S[M]4+1
 O[M]1-1
 O[S]-1+

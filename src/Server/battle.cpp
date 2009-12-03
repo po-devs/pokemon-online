@@ -157,6 +157,8 @@ void BattleSituation::endTurn()
     endTurnStatus();
     callpeffects(Player1, Player2, "EndTurn");
     callpeffects(Player2, Player1, "EndTurn");
+
+    requestSwitchIns();
 }
 
 void BattleSituation::endTurnStatus()
@@ -349,10 +351,10 @@ void BattleSituation::sendPoke(int player, int pok)
     pokelong[player]["Type1"] = PokemonInfo::Type1(poke(player).num());
     pokelong[player]["Type2"] = PokemonInfo::Type2(poke(player).num());
     for (int i = 1; i <= 6; i++)
-	pokelong[player][tr("Stat%1").arg(i)] = poke(player).normalStat(i);
+	pokelong[player][QString("Stat%1").arg(i)] = poke(player).normalStat(i);
     for (int i = 1; i <= 6; i++)
-	pokelong[player][tr("Boost%1").arg(i)] = 0; /* No boost when a poke switches in, right? */
-    pokelong[player][tr("Level")] = poke(player).level();
+	pokelong[player][QString("Boost%1").arg(i)] = 0; /* No boost when a poke switches in, right? */
+    pokelong[player]["Level"] = poke(player).level();
 }
 
 void BattleSituation::calleffects(int source, int target, const QString &name)
@@ -492,9 +494,15 @@ void BattleSituation::testFlinch(int player, int target)
     }
 }
 
-void BattleSituation::useAttack(int player, int move)
+void BattleSituation::useAttack(int player, int move, bool specialOccurence)
 {
-    int attack = poke(player).move(move).num();
+    int attack;
+    if (specialOccurence) {
+	attack = move;
+    } else {
+	attack = poke(player).move(move).num();
+    }
+
     int target = rev(player);
 
     if (!testStatus(player)) {
@@ -503,7 +511,8 @@ void BattleSituation::useAttack(int player, int move)
 
     notify(All, UseAttack, player, qint16(attack));
 
-    losePP(player, move, 1);
+    if (!specialOccurence)
+	losePP(player, move, 1);
 
     if (!testAccuracy(player, target)) {
 	return;
@@ -543,9 +552,12 @@ void BattleSituation::useAttack(int player, int move)
 
 	    int damage = calculateDamage(player, target);
 	    inflictDamage(target, damage, player, true);
+	    pokelong[target]["LastAttackToHit"] = attack;
 
             /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
             applyMoveStatMods(player, target);
+
+	    battlelong["LastMoveSuccesfullyUsed"] = attack;
 
             if (koed(target))
 		break;
@@ -559,8 +571,14 @@ void BattleSituation::useAttack(int player, int move)
 
         requestSwitchIns();
     } else {
-        applyMoveStatMods(player, target);
-	calleffects(player, target, "UponAttackSuccessful");
+	calleffects(player, target, "DetermineAttackFailure");
+	if (turnlong[player]["Failed"].toBool() == false) {
+	    calleffects(player, target, "BeforeHitting");
+	    applyMoveStatMods(player, target);
+	    calleffects(player, target, "UponAttackSuccessful");
+	    /* put this after calleffects to avoid endless sleepTalk/copycat for example */
+	    battlelong["LastMoveSuccesfullyUsed"] = attack;
+	}
     }
 }
 
@@ -846,6 +864,9 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
 void BattleSituation::healLife(int player, int healing)
 {
+    if (healing == 0) {
+	healing = 1;
+    }
     if (!koed(player) && !poke(player).isFull())
     {
 	healing = std::min(healing, poke(player).totalLifePoints() - poke(player).lifePoints());
