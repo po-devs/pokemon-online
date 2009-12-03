@@ -218,7 +218,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    break;
 	}
 	case Ko:
-	    printLine(tr("%1 fainted!").arg(nick(self)));
+	    printHtml("<b>" + escapeHtml(tr("%1 fainted!").arg(nick(self))) + "</b>");
 	    switchToNaught(self);
 	    break;
 	case Hit:
@@ -324,6 +324,10 @@ void BattleWindow::receiveInfo(QByteArray inf)
 		    break;
 	    }
 	}
+	    break;
+	case Failed:
+	    printLine("It Failed");
+	    break;
 	default:
 	    break;
     }

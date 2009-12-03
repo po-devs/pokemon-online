@@ -68,7 +68,8 @@ public:
 	Hit, /* for moves like fury double kick etc. */
 	StatChange,
 	StatusChange,
-	StatusMessage
+	StatusMessage,
+	Failed
     };
 
     enum StatusFeeling
