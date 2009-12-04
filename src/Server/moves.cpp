@@ -486,6 +486,30 @@ struct MMDreamingTarget : public MM
     }
 };
 
+struct MMHiddenPower : public MM
+{
+    MMHiddenPower() {
+	functions["MoveSettings"] = &ms;
+    }
+
+    static void ms(int s, int, BS &b) {
+	QList<int> &dvs = b.poke(s).dvs();
+	turn(b,s)["Type"] = HiddenPowerInfo::Type(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+	turn(b,s)["Power"] = HiddenPowerInfo::Power(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+    }
+};
+
+struct MMFaintUser : public MM
+{
+    MMFaintUser() {
+	functions["AfterAttackSuccessful"] = &aas;
+    }
+
+    static void aas(int s, int, BS &b) {
+	b.koPoke(s, s);
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = new MM##name; names[num] = #name;
 
 void MoveEffect::init()
@@ -510,8 +534,10 @@ void MoveEffect::init()
     REGISTER_MOVE(27, Detect); /* Protect, Detect */
     REGISTER_MOVE(31, DreamingTarget); /* Part Dream eater, part Nightmare */
     REGISTER_MOVE(36, Eruption); /* Eruption, Water sprout */
+    REGISTER_MOVE(37, FaintUser); /* Memento, part explosion, selfdestruct, lunar dance, healing wish... */
     REGISTER_MOVE(39, Facade);
     REGISTER_MOVE(40, FakeOut);
+    REGISTER_MOVE(65, HiddenPower);
     REGISTER_MOVE(146, Avalanche); /* avalanche, revenge */
 }
 
