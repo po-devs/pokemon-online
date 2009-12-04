@@ -32,7 +32,7 @@ void merge(QMap<T,U> &map1, const QMap<T,U> &map2)
     }
 }
 
-inline void inc(QVariant &v, int change)
+inline void inc(QVariant &v, int change=1)
 {
     v = v.toInt() + change;
 }

@@ -143,7 +143,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 
     bool self = conf().ids[player] == idme();
 
-    std::cout << "Command received! num #" << int(command) << std::endl;
+    std::cout << "Command received! num #" << int(command) << " self is " << self << std::endl;
 
     switch (command)
     {
@@ -326,7 +326,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	}
 	    break;
 	case Failed:
-	    printLine("It Failed");
+	    printLine("It failed!");
 	    break;
 	default:
 	    break;
