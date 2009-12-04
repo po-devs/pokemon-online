@@ -67,26 +67,27 @@ void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
     /* first the basic info */
     merge(b.turnlong[source], e);
 
-    qDebug() << "B power: " << b.turnlong[source]["Power"].toInt();
-    qDebug() << "E power: " << e["Power"].toInt();
-
     /* then the hard info */
-    int specialEffect = MoveInfo::SpecialEffect(num).toInt();
+    QStringList specialEffects = MoveInfo::SpecialEffect(num).split('|');
 
-    qDebug() << "Effect: " << specialEffect;
+    foreach (QString specialEffectS, specialEffects) {
+	int specialEffect = specialEffectS.toInt();
 
-    /* if the effect is invalid or not yet implemented then no need to go further */
-    if (specialEffect < 0 || specialEffect >= MOVE_MECHANICS_SIZE || mechanics[specialEffect] == NULL) {
-	return;
-    }
+	qDebug() << "Effect: " << specialEffect;
 
-    MoveMechanics &m = *mechanics[specialEffect];
-    QString &n = names[specialEffect];
+	/* if the effect is invalid or not yet implemented then no need to go further */
+	if (specialEffect < 0 || specialEffect >= MOVE_MECHANICS_SIZE || mechanics[specialEffect] == NULL) {
+	    return;
+	}
 
-    QMap<QString, MoveMechanics::function>::iterator i;
+	MoveMechanics &m = *mechanics[specialEffect];
+	QString &n = names[specialEffect];
 
-    for(i = m.functions.begin(); i != m.functions.end(); ++i) {
-	addFunction(b.turnlong[source], i.key(), n, i.value());
+	QMap<QString, MoveMechanics::function>::iterator i;
+
+	for(i = m.functions.begin(); i != m.functions.end(); ++i) {
+	    addFunction(b.turnlong[source], i.key(), n, i.value());
+	}
     }
 
     (void) target;
@@ -435,6 +436,56 @@ struct MMDetect : public MM
     }
 };
 
+struct MMEruption : public MM
+{
+    MMEruption() {
+	functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int, BS &b) {
+	turn(b,s)["Power"] = turn(b,s)["Power"].toInt()*150*b.poke(s).lifePoints()/b.poke(s).totalLifePoints();
+    }
+};
+
+struct MMFacade : public MM
+{
+    MMFacade() {
+	functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int, BS &b) {
+	if (b.poke(s).status() != Pokemon::Fine) {
+	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt()*2;
+	}
+    }
+};
+
+struct MMFakeOut : public MM
+{
+    MMFakeOut() {
+	functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (poke(b,s)["MovesUsed"].toInt() != 1) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+};
+
+struct MMDreamingTarget : public MM
+{
+    MMDreamingTarget() {
+	functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (b.poke(t).status() != Pokemon::Asleep) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = new MM##name; names[num] = #name;
 
 void MoveEffect::init()
@@ -443,7 +494,7 @@ void MoveEffect::init()
 	mechanics[i] = NULL;
     }
 
-    REGISTER_MOVE(1, Leech); /* absorb, drain punch, giga drain, leech life, mega drain */
+    REGISTER_MOVE(1, Leech); /* absorb, drain punch, part dream eater, giga drain, leech life, mega drain */
     REGISTER_MOVE(2, AquaRing);
     REGISTER_MOVE(5, Assurance);
     REGISTER_MOVE(6, BatonPass);
@@ -457,6 +508,10 @@ void MoveEffect::init()
     REGISTER_MOVE(25, Curse);
     REGISTER_MOVE(26, DestinyBond);
     REGISTER_MOVE(27, Detect); /* Protect, Detect */
+    REGISTER_MOVE(31, DreamingTarget); /* Part Dream eater, part Nightmare */
+    REGISTER_MOVE(36, Eruption); /* Eruption, Water sprout */
+    REGISTER_MOVE(39, Facade);
+    REGISTER_MOVE(40, FakeOut);
     REGISTER_MOVE(146, Avalanche); /* avalanche, revenge */
 }
 

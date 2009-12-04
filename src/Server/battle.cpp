@@ -154,11 +154,13 @@ void BattleSituation::beginTurn()
 
 void BattleSituation::endTurn()
 {
+    qDebug() << "Debut de fin de tour";
     endTurnStatus();
     callpeffects(Player1, Player2, "EndTurn");
     callpeffects(Player2, Player1, "EndTurn");
 
     requestSwitchIns();
+    qDebug() << "Fin de tour";
 }
 
 void BattleSituation::endTurnStatus()
@@ -350,10 +352,13 @@ void BattleSituation::sendPoke(int player, int pok)
 
 void BattleSituation::calleffects(int source, int target, const QString &name)
 {
+
     if (turnlong[source].contains(name)) {
+	qDebug() << "Calling effects for " << name ;
 	QSet<QString> &effects = *turnlong[source][name].value<QSharedPointer<QSet<QString> > >();
 
 	foreach(QString effect, effects) {
+	    qDebug() << "Called by " << effect;
 	    MoveMechanics::function f = turnlong[source][name + "_" + effect].value<MoveMechanics::function>();
 
 	    f(source, target, *this);
@@ -364,9 +369,11 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 void BattleSituation::callpeffects(int source, int target, const QString &name)
 {
     if (pokelong[source].contains(name)) {
+	qDebug() << "Calling pokemon long effects for " << name;
 	QSet<QString> &effects = *pokelong[source][name].value<QSharedPointer<QSet<QString> > >();
 
 	foreach(QString effect, effects) {
+	    qDebug() << "Called by " << effect;
 	    MoveMechanics::function f = pokelong[source][name + "_" + effect].value<MoveMechanics::function>();
 
 	    f(source, target, *this);
@@ -396,9 +403,17 @@ void BattleSituation::sendBack(int player)
 
 bool BattleSituation::testAccuracy(int player, int target)
 {
-    int acc = turnlong[player]["Accuracy"].toInt() * getStatBoost(player, 7) * getStatBoost(target, 6);
+    int acc = turnlong[player]["Accuracy"].toInt();
 
-    if (acc == 0 || rand() % 100 < acc) {
+    if (acc == 0) {
+	return true;
+    }
+
+    /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
+	due to the ever rounding down to make an int */
+    acc = acc * getStatBoost(player, 7) * getStatBoost(target, 6);
+
+    if (rand() % 100 < acc) {
 	return true;
     } else {
 	notify(All, Miss, player);
@@ -526,11 +541,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	return;
     }
 
-    if (tellPlayers)
+    if (tellPlayers) {
 	notify(All, UseAttack, player, qint16(attack));
+	qDebug() << poke(player).nick() << " used " << MoveInfo::Name(attack);
+    }
 
     if (!specialOccurence && tellPlayers)
 	losePP(player, move, 1);
+
+    pokelong[player]["LastMoveUsed"] = attack;
+    inc(pokelong[player]["MovesUsed"]);
 
     if (!testAccuracy(player, target)) {
 	return;
@@ -559,7 +579,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	callbeffects(player, target, "DetermineGeneralAttackFailure");
 	if (testFail(player))
 	    return;
-	calleffects(player, target, "DetermineFailure");
+	calleffects(player, target, "DetermineAttackFailure");
 	if (testFail(player))
 	    return;
 
@@ -608,6 +628,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	calleffects(player, target, "UponAttackSuccessful");
 	/* this is put after calleffects to avoid endless sleepTalk/copycat for example */
 	battlelong["LastMoveSuccesfullyUsed"] = attack;
+
+	requestSwitchIns();
     }
 }
 
@@ -632,6 +654,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     if (effect.length() == 0) {
 	return;
     }
+
+    qDebug() << "Threre's an effect to apply";
 
     /* Then we check if the effect hits */
     int randnum = rand() % 100;
@@ -749,7 +773,7 @@ void BattleSituation::healStatus(int player, int status)
 void BattleSituation::inflictStatus(int player, int status)
 {
     if (poke(player).status() == Pokemon::Fine) {
-	if (status == Pokemon::Poisoned || Pokemon::DeeplyPoisoned) {
+	if (status == Pokemon::Poisoned || status == Pokemon::DeeplyPoisoned) {
 	    if (!hasType(player, Pokemon::Poison) && !hasType(player, Pokemon::Steel)) {
 		changeStatus(player, status);
 	    }
@@ -862,12 +886,18 @@ int BattleSituation::repeatNum(context &move)
 
 void BattleSituation::inflictDamage(int player, int damage, int source, bool straightattack)
 {
-    qDebug() << "Damage inflicted";
+    if (koed(player)) {
+	return;
+    }
+
+    qDebug() << "Damage inflicted (first v: " << damage << ") by " << source << " from " << player;
     if (damage == 0) {
 	damage = 1;
     }
 
     damage = std::min(int(poke(player).lifePoints()), damage);
+
+    qDebug() << "Second v: " << damage;
 
     int hp  = poke(player).lifePoints() - damage;
 
@@ -917,6 +947,7 @@ void BattleSituation::changeHp(int player, int newHp)
 
 void BattleSituation::koPoke(int player, int source, bool straightattack)
 {
+    qDebug() << "koPoke, player: " << player;
     changeHp(player, 0);
 
     notify(All, Ko, player);
@@ -932,13 +963,21 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 
 void BattleSituation::requestSwitchIns()
 {
-    if (koedPokes.size() == 0) {
+    qDebug() << "Requesting switchin";
+    int count = koedPokes.size();
+
+    /* Apparently my debugger said once it was -1, dun understand why
+	but since then this test is here and not the simple == :/ */
+    if (count <= 0) {
         return;
     }
+
+    qDebug() << "Before foreach loop (count is " << count << ")";
     foreach(int p, koedPokes) {
+	qDebug() << "p is " << p;
         requestChoice(p, false);
     }
-    int count = koedPokes.size();
+    qDebug() << "After foreach";
 
     sem.acquire(count);
 
