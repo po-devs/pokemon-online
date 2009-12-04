@@ -552,6 +552,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     pokelong[player]["LastMoveUsed"] = attack;
     inc(pokelong[player]["MovesUsed"]);
 
+    calleffects(player, target, "MoveSettings");
+
     if (!testAccuracy(player, target)) {
 	return;
     }
@@ -628,6 +630,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	calleffects(player, target, "UponAttackSuccessful");
 	/* this is put after calleffects to avoid endless sleepTalk/copycat for example */
 	battlelong["LastMoveSuccesfullyUsed"] = attack;
+	calleffects(player, target, "AfterAttackSuccessful");
 
 	requestSwitchIns();
     }
@@ -947,6 +950,10 @@ void BattleSituation::changeHp(int player, int newHp)
 
 void BattleSituation::koPoke(int player, int source, bool straightattack)
 {
+    if (poke(player).ko()) {
+	return;
+    }
+
     qDebug() << "koPoke, player: " << player;
     changeHp(player, 0);
 

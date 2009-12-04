@@ -78,6 +78,10 @@ void PokeBattle::init(const PokePersonal &poke)
 	move(i).load();
     }
 
+    for (int i = 0; i < 6; i++) {
+	dvs() << poke.DV(i);
+    }
+
     totalLifePoints() = PokemonInfo::FullStat(poke.nature(), Hp, p.baseStats().baseHp(), poke.level(), poke.hpDV(), poke.hpEV());
     lifePoints() = totalLifePoints();
 

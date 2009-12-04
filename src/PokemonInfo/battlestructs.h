@@ -58,6 +58,7 @@ class PokeBattle
     PROPERTY(bool, shiny);
     PROPERTY(quint8, gender);
     PROPERTY(quint8, level);
+    PROPERTY(QList<int>, dvs);
 public:
     PokeBattle();
 
