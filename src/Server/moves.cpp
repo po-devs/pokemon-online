@@ -403,7 +403,7 @@ struct MMDetect : public MM
     }
 
     static void daf(int s, int, BS &b) {
-	if (poke(b,s).contains("ProtectingMoveTurn") && poke(b,s)["ProtectiveMoveTurn"].toInt() == b.turn() - 1) {
+	if (poke(b,s).contains("ProtectiveMoveTurn") && poke(b,s)["ProtectiveMoveTurn"].toInt() == b.turn() - 1) {
 	    if (rand()%2 == 0) {
 		turn(b,s)["Failed"] = true;
 	    } else {
@@ -454,7 +454,8 @@ struct MMFacade : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-	if (b.poke(s).status() != Pokemon::Fine) {
+	int status = b.poke(s).status();
+	if (status == Pokemon::Burnt || status == Pokemon::Poisoned || status == Pokemon::Paralysed) {
 	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt()*2;
 	}
     }
@@ -510,6 +511,262 @@ struct MMFaintUser : public MM
     }
 };
 
+struct MMFeint : public MM
+{
+    MMFeint() {
+	functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (turn(b, t)["DetectUsed"].toBool() == true) {
+	    turn(b, t)["DetectUsed"] = false;
+	} else {
+	    turn(b, s)["Failed"] = true;
+	}
+    }
+};
+
+struct MM0HKO : public MM
+{
+    MM0HKO() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["MoveSettings"] = &ms;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	b.inflictDamage(t, b.poke(t).totalLifePoints(), s, true);
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (b.poke(s).level() < b.poke(t).level()) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void ms(int s, int, BS &b) {
+	/* Doing this so the damage calculation won't occur */
+	turn(b, s)["Power"] = 0;
+    }
+};
+
+struct MMFlail : public MM
+{
+    MMFlail() {
+	functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int, BS &b) {
+	int n = 64 * b.poke(s).lifePoints() / b.poke(s).totalLifePoints();
+	int mult = 20;
+	if (n <= 1) {
+	    mult = 200;
+	} else if (n <= 5) {
+	    mult = 150;
+	} else if (n <= 12) {
+	    mult = 100;
+	} else if (n <= 21) {
+	    mult = 80;
+	} else if (n <= 42) {
+	    mult = 40;
+	}
+
+	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * mult;
+    }
+};
+
+struct MMTrumpCard : public MM
+{
+    MMTrumpCard() {
+	functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int, BS &b)
+    {
+	int n = b.poke(s).move(turn(b,s)["MoveSlot"].toInt()).PP();
+	int mult;
+	switch(n) {
+	    case 0: mult = 200; break;
+	    case 1: mult = 80; break;
+	    case 2: mult = 60; break;
+	    case 3: mult = 50; break;
+	    default: mult = 40;
+	}
+	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * mult;
+    }
+};
+
+struct MMFrustration : public MM
+{
+    MMFrustration() {
+	functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int, BS &b) {
+	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 102;
+    }
+};
+
+struct MMSuperFang : public MM
+{
+    MMSuperFang() {
+	functions["MoveSettings"] = & ms;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void ms(int s, int , BS &b) {
+	turn(b,s)["Power"] = 0;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	b.inflictDamage(t, b.poke(t).lifePoints()/2, s, true);
+    }
+};
+
+struct MMPainSplit : public MM
+{
+    MMPainSplit() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	if (b.koed(t) || b.koed(s)) {
+	    return;
+	}
+	int sum = b.poke(s).lifePoints() + b.poke(t).lifePoints();
+	b.changeHp(s, sum/2);
+	b.changeHp(t, sum/2);
+    }
+};
+
+struct MMPerishSong : public MM
+{
+    MMPerishSong() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int, int, BS &b) {
+	for (int t = BS::Player1; t <= BS::Player2; t++) {
+	    if (poke(b,t).contains("PerishSongCount")) {
+		continue;
+	    }
+	    addFunction(poke(b,t), "EndTurn", "PerishSong", &et);
+	    poke(b, t)["PerishSongCount"] = 3;
+	}
+    }
+
+    static void et(int s, int, BS &b) {
+	int count = poke(b,s)["PerishSongCount"].toInt();
+	if (count > 0) {
+	    poke(b,s)["PerishSongCount"] = count - 1;
+	} else {
+	    b.koPoke(s,s,false);
+	}
+    }
+};
+
+struct MMHaze : public MM
+{
+    MMHaze() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int, int t, BS &b) {
+	for (int i = 1; i <= 7; i++) {
+	    poke(b,t)["Stat"+QString::number(i)] = 0;
+	}
+    }
+};
+
+struct MMLeechSeed : public MM
+{
+    MMLeechSeed() {
+	functions["DetermineFailure"] = &df;
+    }
+
+    static void df(int s, int t, BS &b) {
+	if (b.hasType(t, Pokemon::Grass) || (poke(b,t).contains("Seeded") && poke(b,t)["Seeded"].toBool() == true)) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int s, int t, BS &b) {
+	addFunction(poke(b,t), "EndTurn", "LeechSeed", &et);
+	poke(b,t)["SeedSource"] = s;
+    }
+
+    static void et(int s, int, BS &b) {
+	if (b.koed(s))
+	    return;
+	int damage = b.poke(s).totalLifePoints() / 8;
+	b.inflictDamage(s, damage, s, false);
+	int s2 = poke(b,s)["SeedSource"].toInt();
+	if (b.koed(s2))
+	    return;
+	b.healLife(s2, damage);
+    }
+};
+
+struct MMHealHalf : public MM
+{
+    MMHealHalf() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	b.healLife(s, b.poke(s).totalLifePoints()/2);
+    }
+};
+
+struct MMRoost : public MM
+{
+    MMRoost() {
+	functions["UponAttackSuccessul"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	int num = 0;
+	if (poke(b,s)["Type1"] == Pokemon::Flying) {
+	    num = 1;
+	} else if (poke(b,s)["Type2"] == Pokemon::Flying) {
+	    num = 2;
+	}
+
+	if (num != 0) {
+	    poke(b,s)["Type" + QString::number(num)] = Pokemon::Curse;
+	    turn(b,s)["RoostChange"] = num;
+	    addFunction(poke(b,s), "EndTurn", "Roost", &et);
+	}
+    }
+
+    static void et(int s, int, BS &b) {
+	if (!turn(b,s).contains("RoostChange")) {
+	    return;
+	}
+	turn(b,s)["Type" + QString::number(s)] = Pokemon::Flying;
+    }
+};
+
+struct MMRest : public MM
+{
+    MMRest() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (b.poke(s).status() == Pokemon::Asleep || b.poke(s).isFull()) {
+	    poke(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int s, int, BS &b) {
+	b.healLife(s, b.poke(s).totalLifePoints());
+	b.changeStatus(s, Pokemon::Asleep);
+	b.poke(s).sleepCount() = 2;
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = new MM##name; names[num] = #name;
 
 void MoveEffect::init()
@@ -537,7 +794,20 @@ void MoveEffect::init()
     REGISTER_MOVE(37, FaintUser); /* Memento, part explosion, selfdestruct, lunar dance, healing wish... */
     REGISTER_MOVE(39, Facade);
     REGISTER_MOVE(40, FakeOut);
+    REGISTER_MOVE(42, Feint);
+    REGISTER_MOVE(43, 0HKO); /* Fissure, Guillotine, Horn Drill, Sheer cold */
+    REGISTER_MOVE(44, Flail); /* Flail, Reversal */
+    REGISTER_MOVE(49, Frustration); /* Frustration, Return */
+    REGISTER_MOVE(60, HealHalf);
     REGISTER_MOVE(65, HiddenPower);
+    REGISTER_MOVE(72, LeechSeed);
+    REGISTER_MOVE(94, PainSplit);
+    REGISTER_MOVE(95, PerishSong);
+    REGISTER_MOVE(106, Rest);
+    REGISTER_MOVE(130, SuperFang);
     REGISTER_MOVE(146, Avalanche); /* avalanche, revenge */
+    REGISTER_MOVE(148, TrumpCard);
+    REGISTER_MOVE(149, Haze);
+    REGISTER_MOVE(150, Roost);
 }
 

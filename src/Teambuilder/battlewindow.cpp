@@ -425,6 +425,7 @@ AttackButton::AttackButton(const BattleMove &b)
 
     l->addWidget(name = new QLabel());
     l->addWidget(pp = new QLabel(), 0, Qt::AlignRight);
+    setMinimumHeight(22);
 
     updateAttack(b);
 }

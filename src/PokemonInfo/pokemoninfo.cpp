@@ -528,7 +528,11 @@ QString MoveInfo::AccS(int movenum)
 
 QString MoveInfo::PowerS(int movenum)
 {
-    return m_PowerS[movenum];
+    if (m_PowerS[movenum] == "1") {
+	return "???";
+    } else {
+	return m_PowerS[movenum];
+    }
 }
 
 QString MoveInfo::Effect(int movenum)
