@@ -171,16 +171,16 @@ void BattleSituation::endTurnStatus()
 	{
 	    case Pokemon::Burnt:
 		notify(All, StatusMessage, player, qint8(HurtBurn));
-		inflictDamage(player, poke(player).lifePoints()/8, player);
+		inflictDamage(player, poke(player).totalLifePoints()/8, player);
 		break;
 	    case Pokemon::DeeplyPoisoned:
 		notify(All, StatusMessage, player, qint8(HurtPoison));
-		inflictDamage(player, poke(player).lifePoints()*pokelong[player]["ToxicCount"].toInt()/16, player);
-		pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()*2, 8);
+		inflictDamage(player, poke(player).totalLifePoints()*(pokelong[player]["ToxicCount"].toInt()+1)/16, player);
+		pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()*2+1, 7);
 		break;
 	    case Pokemon::Poisoned:
 		notify(All, StatusMessage, player, qint8(HurtPoison));
-		inflictDamage(player, poke(player).lifePoints()/8, player);
+		inflictDamage(player, poke(player).totalLifePoints()/8, player);
 		break;
 	}
     }
@@ -813,7 +813,7 @@ void BattleSituation::changeStatus(int player, int status)
 	poke(player).sleepCount() = (rand() % 5) +1;
     }
     if (status == Pokemon::DeeplyPoisoned) {
-	pokelong[player]["ToxicCount"] = 1;
+	pokelong[player]["ToxicCount"] = 0;
     }
 }
 
