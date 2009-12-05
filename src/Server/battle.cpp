@@ -176,7 +176,7 @@ void BattleSituation::endTurnStatus()
 	    case Pokemon::DeeplyPoisoned:
 		notify(All, StatusMessage, player, qint8(HurtPoison));
 		inflictDamage(player, poke(player).lifePoints()*pokelong[player]["ToxicCount"].toInt()/16, player);
-		inc(pokelong[player]["ToxicCount"], 1);
+		pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()*2, 8);
 		break;
 	    case Pokemon::Poisoned:
 		notify(All, StatusMessage, player, qint8(HurtPoison));
@@ -523,16 +523,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     int attack;
     if (specialOccurence) {
 	attack = move;
+	turnlong[player]["MoveSlot"] = move;
     } else {
 	attack = poke(player).move(move).num();
-    }
-
-    int target;
-
-    switch(turnlong[player]["PossibleTargets"].toInt()) {
-	case Move::None: target = -1; break;
-	case Move::User: target = player; break;
-	default: target = rev(player);
     }
 
     turnlong[player]["HasMoved"] = true;
@@ -546,94 +539,107 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	qDebug() << poke(player).nick() << " used " << MoveInfo::Name(attack);
     }
 
-    if (!specialOccurence && tellPlayers)
-	losePP(player, move, 1);
-
     pokelong[player]["LastMoveUsed"] = attack;
     inc(pokelong[player]["MovesUsed"]);
 
-    calleffects(player, target, "MoveSettings");
+    calleffects(player, player, "MoveSettings");
 
-    if (!testAccuracy(player, target)) {
-	return;
+    if (!specialOccurence && tellPlayers)
+	losePP(player, move, 1);
+
+    QList<int> targetList;
+
+    switch(turnlong[player]["PossibleTargets"].toInt()) {
+	case Move::None: targetList.push_back(-1); break;
+	case Move::User: targetList.push_back(player); break;
+	case Move::All: targetList.push_back(player); targetList.push_back(rev(player)); break;
+	default: targetList.push_back(rev(player));
     }
-    qDebug() << "Accuracy test passed";
-    qDebug() << "Accuracy: " << turnlong[player]["Power"].toInt();
-    qDebug() << "Power: " << turnlong[player]["Power"].toInt();
-    if (turnlong[player]["Power"].toInt() > 0)
-    {
-	int type = turnlong[player]["Type"].toInt(); /* move type */
-	int typeadv[] = {pokelong[target]["Type1"].toInt(), pokelong[target]["Type2"].toInt()};
-	int typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
 
-	int typepok[] = {pokelong[player]["Type1"].toInt(), pokelong[player]["Type2"].toInt()};
-	int stab = 2 + (type==typepok[0] || type==typepok[1]);
 
-	turnlong[player]["Stab"] = stab;
-	turnlong[player]["TypeMod"] = typemod; /* is attack effective? or not? etc. */
-
-	if (typemod == 0) {
-	    /* If it's ineffective we just say it */
-	    notify(All, Effective, target, quint8(typemod));
-	    return;
+    foreach(int target, targetList) {
+	turnlong[player]["Failed"] = false;
+	if (target != -1 && koed(target)) {
+	    continue;
 	}
+	if (!testAccuracy(player, target)) {
+	    continue;
+	}
+	qDebug() << "Accuracy test passed";
+	qDebug() << "Accuracy: " << turnlong[player]["Power"].toInt();
+	qDebug() << "Power: " << turnlong[player]["Power"].toInt();
+	if (turnlong[player]["Power"].toInt() > 0)
+	{
+	    int type = turnlong[player]["Type"].toInt(); /* move type */
+	    int typeadv[] = {pokelong[target]["Type1"].toInt(), pokelong[target]["Type2"].toInt()};
+	    int typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
 
-	callbeffects(player, target, "DetermineGeneralAttackFailure");
-	if (testFail(player))
-	    return;
-	calleffects(player, target, "DetermineAttackFailure");
-	if (testFail(player))
-	    return;
+	    int typepok[] = {pokelong[player]["Type1"].toInt(), pokelong[player]["Type2"].toInt()};
+	    int stab = 2 + (type==typepok[0] || type==typepok[1]);
 
-	int num = repeatNum(turnlong[player]);
-	bool hit = num > 1;
+	    turnlong[player]["Stab"] = stab;
+	    turnlong[player]["TypeMod"] = typemod; /* is attack effective? or not? etc. */
 
-	for (int i = 0; i < num; i++) {
-	    if (hit) {
-		notify(All, Hit, target);
+	    if (typemod == 0) {
+		/* If it's ineffective we just say it */
+		notify(All, Effective, target, quint8(typemod));
+		continue;
 	    }
 
-	    testCritical(player, target);
+	    callbeffects(player, target, "DetermineGeneralAttackFailure");
+	    if (testFail(player))
+		continue;
+	    calleffects(player, target, "DetermineAttackFailure");
+	    if (testFail(player))
+		continue;
 
-	    calleffects(player, target, "BeforeCalculatingDamage");
+	    int num = repeatNum(turnlong[player]);
+	    bool hit = num > 1;
 
-	    int damage = calculateDamage(player, target);
-	    inflictDamage(target, damage, player, true);
-	    pokelong[target]["LastAttackToHit"] = attack;
+	    for (int i = 0; i < num; i++) {
+		if (hit) {
+		    notify(All, Hit, target);
+		}
 
-            /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
-            applyMoveStatMods(player, target);
+		testCritical(player, target);
 
+		calleffects(player, target, "BeforeCalculatingDamage");
+
+		int damage = calculateDamage(player, target);
+		inflictDamage(target, damage, player, true);
+		pokelong[target]["LastAttackToHit"] = attack;
+
+		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
+		applyMoveStatMods(player, target);
+
+		battlelong["LastMoveSuccesfullyUsed"] = attack;
+
+		if (koed(target))
+		    break;
+
+		testFlinch(player, target);
+	    }
+
+	    notify(All, Effective, target, quint8(typemod));
+
+	    calleffects(player, target, "AfterAttackSuccessful");
+	} else {
+	    callbeffects(player, target, "DetermineGeneralAttackFailure");
+	    if (testFail(player))
+		continue;
+	    calleffects(player, target, "DetermineAttackFailure");
+	    if (testFail(player))
+		continue;
+
+	    calleffects(player, target, "BeforeHitting");
+	    applyMoveStatMods(player, target);
+	    calleffects(player, target, "UponAttackSuccessful");
+	    /* this is put after calleffects to avoid endless sleepTalk/copycat for example */
 	    battlelong["LastMoveSuccesfullyUsed"] = attack;
-
-            if (koed(target))
-		break;
-
-            testFlinch(player, target);
+	    calleffects(player, target, "AfterAttackSuccessful");
 	}
-
-        notify(All, Effective, target, quint8(typemod));
-
-	calleffects(player, target, "AfterAttackSuccessful");
-
-        requestSwitchIns();
-    } else {
-	callbeffects(player, target, "DetermineGeneralAttackFailure");
-	if (testFail(player))
-	    return;
-	calleffects(player, target, "DetermineAttackFailure");
-	if (testFail(player))
-	    return;
-
-	calleffects(player, target, "BeforeHitting");
-	applyMoveStatMods(player, target);
-	calleffects(player, target, "UponAttackSuccessful");
-	/* this is put after calleffects to avoid endless sleepTalk/copycat for example */
-	battlelong["LastMoveSuccesfullyUsed"] = attack;
-	calleffects(player, target, "AfterAttackSuccessful");
-
-	requestSwitchIns();
     }
+    requestSwitchIns();
 }
 
 void BattleSituation::inflictRecoil(int source, int target)

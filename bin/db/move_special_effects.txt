@@ -56,7 +56,7 @@
 18#charge
 
 
-
+147#chatter
 10
 
 
@@ -171,7 +171,7 @@
 57-1#hail
 
 
-
+149#haze
 
 
 58#heal bell
@@ -248,7 +248,7 @@
 81#mimic
 82#mind reader
 83#minimize
-84-16#16 is dark
+84-16#16 is dark -- miracle eye
 22-1_2/1
 85#mirror move
 
@@ -277,7 +277,7 @@
 
 5
 
-95
+95#perish song
 93#petal dance
 
 16
@@ -331,7 +331,7 @@
 108#role play
 
 66#rollout
-60|68-0_0
+60|150#roost
 
 109#safeguard
 10#sand tomb
@@ -435,7 +435,7 @@
 132#trick
 138#trick room
 139#triple kick
-71#trump card
+148#trump card
 
 
 140#U-turn
