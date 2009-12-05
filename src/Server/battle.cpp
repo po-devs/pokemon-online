@@ -962,6 +962,7 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 
     qDebug() << "koPoke, player: " << player;
     changeHp(player, 0);
+    qDebug() << "Changed Hp to 0";
 
     notify(All, Ko, player);
     koedPokes.insert(player);

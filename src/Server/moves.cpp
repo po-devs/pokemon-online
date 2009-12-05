@@ -60,7 +60,7 @@ void addFunction(BattleSituation::context &c, const QString &effect, const QStri
     c.insert(effect + "_" + name,v);
 }
 
-void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
+void MoveEffect::setup(int num, int source, int , BattleSituation &b)
 {
     MoveEffect e(num);
 
@@ -71,9 +71,11 @@ void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
     QStringList specialEffects = MoveInfo::SpecialEffect(num).split('|');
 
     foreach (QString specialEffectS, specialEffects) {
-	int specialEffect = specialEffectS.toInt();
+	std::string s = specialEffectS.toStdString();
 
-	qDebug() << "Effect: " << specialEffect;
+	int specialEffect = atoi(s.c_str());
+
+	qDebug() << "Effect: " << specialEffect << "(" << specialEffectS << ")";
 
 	/* if the effect is invalid or not yet implemented then no need to go further */
 	if (specialEffect < 0 || specialEffect >= MOVE_MECHANICS_SIZE || mechanics[specialEffect] == NULL) {
@@ -85,12 +87,15 @@ void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
 
 	QMap<QString, MoveMechanics::function>::iterator i;
 
+	size_t pos = s.find('-');
+	if (pos != std::string::npos) {
+	    b.turnlong[source][n+"_Arg"] = specialEffectS.mid(pos);
+	}
+
 	for(i = m.functions.begin(); i != m.functions.end(); ++i) {
 	    addFunction(b.turnlong[source], i.key(), n, i.value());
 	}
     }
-
-    (void) target;
 }
 
 struct MMLeech : public MM
@@ -681,10 +686,11 @@ struct MMHaze : public MM
 struct MMLeechSeed : public MM
 {
     MMLeechSeed() {
-	functions["DetermineFailure"] = &df;
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void df(int s, int t, BS &b) {
+    static void daf(int s, int t, BS &b) {
 	if (b.hasType(t, Pokemon::Grass) || (poke(b,t).contains("Seeded") && poke(b,t)["Seeded"].toBool() == true)) {
 	    turn(b,s)["Failed"] = true;
 	}
@@ -756,7 +762,7 @@ struct MMRest : public MM
 
     static void daf(int s, int, BS &b) {
 	if (b.poke(s).status() == Pokemon::Asleep || b.poke(s).isFull()) {
-	    poke(b,s)["Failed"] = true;
+	    turn(b,s)["Failed"] = true;
 	}
     }
 
