@@ -497,7 +497,7 @@ QString MoveInfo::Name(int movenum)
 
 int MoveInfo::Power(int movenum)
 {
-    return PowerS(movenum).toInt();
+    return m_PowerS[movenum].toInt();
 }
 
 int MoveInfo::Type(int movenum)
