@@ -613,6 +613,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	qDebug() << "Power: " << turnlong[player]["Power"].toInt();
 	if (turnlong[player]["Power"].toInt() > 0)
 	{
+            qDebug() << "Going offensive";
 	    int type = turnlong[player]["Type"].toInt(); /* move type */
 	    int typeadv[] = {pokelong[target]["Type1"].toInt(), pokelong[target]["Type2"].toInt()};
 	    int typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
@@ -669,6 +670,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 	    calleffects(player, target, "AfterAttackSuccessful");
 	} else {
+            qDebug() << "Going tricky";
 	    callbeffects(player, target, "DetermineGeneralAttackFailure");
 	    if (testFail(player))
 		continue;
@@ -677,7 +679,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		continue;
 
 	    calleffects(player, target, "BeforeHitting");
-	    applyMoveStatMods(player, target, hasSubstitute(target));
+            applyMoveStatMods(player, target, hasSubstitute(target));
 	    calleffects(player, target, "UponAttackSuccessful");
 	    /* this is put after calleffects to avoid endless sleepTalk/copycat for example */
 	    battlelong["LastMoveSuccesfullyUsed"] = attack;

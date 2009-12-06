@@ -11,7 +11,7 @@ void myMessageOutput(QtMsgType type, const char *msg)
 	break;
     case QtWarningMsg:
 	fprintf(stderr, "Warning: %s\n", msg);
-	break;
+        break;
     case QtCriticalMsg:
 	fprintf(stderr, "Critical: %s\n", msg);
 	break;
