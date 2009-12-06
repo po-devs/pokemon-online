@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 	w.show();
 	return a.exec();
     } catch (const QString &e) {
-	std::cout << "Exception: " << e << std::endl;
+	qDebug() << "Exception: " << e;
     }
 
     return 0;
