@@ -582,6 +582,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (!testStatus(player)) {
 	return;
     }
+    callpeffects(player, player, "DetermineAttackPossible");
+    if (turnlong[player].contains("ImpossibleToMove") && turnlong[player]["ImpossibleToMove"].toBool() == true) {
+	return;
+    }
 
     if (!specialOccurence) {
 	callpeffects(player, player, "MovesPossible");
@@ -598,10 +602,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     pokelong[player]["LastMoveUsed"] = attack;
     inc(pokelong[player]["MovesUsed"]);
 
-    calleffects(player, player, "MoveSettings");
-
     if (!specialOccurence && tellPlayers)
 	losePP(player, move, 1);
+
+    calleffects(player, player, "MoveSettings");
 
     QList<int> targetList;
 

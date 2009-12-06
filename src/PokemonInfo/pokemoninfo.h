@@ -238,6 +238,8 @@ public:
     static QString Name(int gender);
     static int NumberOfGenders();
     static QPixmap Picture(int gender);
+    static int Default(int genderAvail);
+    static bool Possible(int gender, int genderAvail);
 };
 
 

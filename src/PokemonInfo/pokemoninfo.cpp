@@ -892,6 +892,27 @@ QPixmap GenderInfo::Picture(int gender)
     return m_Pictures[gender];
 }
 
+int GenderInfo::Default(int genderAvail) {
+    switch(genderAvail) {
+	case Pokemon::MaleAndFemaleAvail:
+	    return Pokemon::Male;
+	    break;
+	default:
+	    return genderAvail;
+    }
+}
+
+bool GenderInfo::Possible(int gender, int genderAvail) {
+    if (genderAvail == Pokemon::MaleAndFemaleAvail) {
+	if(gender == Pokemon::Neutral) {
+	    return false;
+	}
+    } else if (gender != genderAvail) {
+	return false;
+    }
+    return true;
+}
+
 int GenderInfo::NumberOfGenders()
 {
     return m_Names.size();
