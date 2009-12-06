@@ -143,8 +143,6 @@ void BattleSituation::beginTurn()
     turnlong[0].clear();
     turnlong[1].clear();
 
-    notify(All, BeginTurn, All, turn());
-
     callpeffects(Player1, Player2, "TurnSettings");
     callpeffects(Player2, Player1, "TurnSettings");
 
@@ -224,6 +222,8 @@ void BattleSituation::requestChoices()
 
     //test to see if the quit was requested by system or if choice was received
     testquit();
+
+    notify(All, BeginTurn, All, turn());
 
     /* Now all the players gonna do is analyzeChoice(int player) */
 }
