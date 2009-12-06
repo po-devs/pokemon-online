@@ -329,6 +329,12 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
     }
 }
 
+void BattleSituation::battleChat(int id, const QString &str)
+{
+    notify(Player1, BattleChat, spot(id), str);
+    notify(Player2, BattleChat, spot(id), str);
+}
+
 /* Battle functions! Yeah! */
 
 void BattleSituation::sendPoke(int player, int pok)
@@ -991,7 +997,9 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     qDebug() << "Changed Hp to 0";
 
     notify(All, Ko, player);
+    qDebug() << "Notified players";
     koedPokes.insert(player);
+    qDebug() << "Inserted it in the list";
 
     if (straightattack) {
 	turnlong[player]["AttackKoed"] = true; /* the attack the poke should have is not anymore */

@@ -12,6 +12,7 @@ Player::Player(QTcpSocket *sock) : myrelay(sock)
     connect(&relay(), SIGNAL(challengeStuff(int,int)), this, SLOT(challengeStuff(int,int)));
     connect(&relay(), SIGNAL(forfeitBattle()), SLOT(battleForfeited()));
     connect(&relay(), SIGNAL(battleMessage(BattleChoice)), SLOT(battleMessage(BattleChoice)));
+    connect(&relay(), SIGNAL(battleChat(QString)), SLOT(battleChat(QString)));
 }
 
 Player::~Player()
@@ -35,6 +36,11 @@ void Player::changeState(int newstate)
 void Player::disconnected()
 {
     emit disconnected(id());
+}
+
+void Player::battleChat(const QString &s)
+{
+    emit battleChat(id(), s);
 }
 
 void Player::battleMessage(const BattleChoice &b)

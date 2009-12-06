@@ -46,6 +46,8 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
     connect(mypzone, SIGNAL(switchTo(int)), SLOT(switchClicked(int)));
     connect(myattack, SIGNAL(clicked()), SLOT(attackButton()));
     connect(myswitch, SIGNAL(clicked()), SLOT(switchToPokeZone()));
+    connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
+    connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
 
     show();
 
@@ -131,6 +133,16 @@ void BattleWindow::sendChoice(const BattleChoice &b)
     emit battleCommand(b);
     info().possible = false;
     updateChoices();
+}
+
+void BattleWindow::sendMessage()
+{
+    QString message = myline->text();
+
+    if (message.size() != 0) {
+	emit battleMessage(message);
+	myline->clear();
+    }
 }
 
 void BattleWindow::receiveInfo(QByteArray inf)
@@ -329,6 +341,12 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	case Failed:
 	    printLine("It failed!");
 	    break;
+	case BattleChat:
+	{
+	    QString message;
+	    in >> message;
+	    printHtml(QString("<span style='color:") + (self?"#5811b1":"green") + "'><b>" + escapeHtml(name(self)) + ": </b></span>" + escapeHtml(message));
+	}
 	default:
 	    break;
     }
@@ -373,26 +391,31 @@ void BattleWindow::updateChoices()
     /* moves first */
     if (info().currentIndex != -1)
     {
-	if (info().choices.attacksAllowed == false && info().possible) {
+	if (info().choices.attacksAllowed == false) {
 	    myattack->setEnabled(false);
 	    for (int i = 0; i < 4; i ++) {
 		myazones[info().currentIndex]->attacks[i]->setEnabled(false);
 	    }
 	} else {
-	    myattack->setEnabled(info().possible);
+	    myattack->setEnabled(true);
 	    for (int i = 0; i < 4; i ++) {
 		myazones[info().currentIndex]->attacks[i]->setEnabled(info().choices.attackAllowed[i]);
 	    }
 	}
     }
     /* Then pokemon */
-    if (info().choices.switchAllowed == false || !info().possible) {
+    if (info().choices.switchAllowed == false) {
 	myswitch->setEnabled(false);
     } else {
 	myswitch->setEnabled(true);
 	for (int i = 0; i < 6; i++) {
 	    mypzone->pokes[i]->setEnabled(team().poke(i).num() != 0 && team().poke(i).lifePoints() > 0);
 	}
+    }
+    
+    if (!info().possible) {
+	myattack->setEnabled(false);
+	myswitch->setEnabled(false);
     }
 }
 

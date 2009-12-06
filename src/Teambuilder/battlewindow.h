@@ -69,7 +69,8 @@ public:
 	StatChange,
 	StatusChange,
 	StatusMessage,
-	Failed
+	Failed,
+	BattleChat
     };
 
     enum StatusFeeling
@@ -109,11 +110,13 @@ public slots:
     void receiveInfo(QByteArray);
     void switchClicked(int zone);
     void attackClicked(int zone);
+    void sendMessage();
     void attackButton();
 
     void switchToPokeZone();
 signals:
     void battleCommand(const BattleChoice &);
+    void battleMessage(const QString &str);
     void forfeit();
 private:
     QStackedWidget *mystack;

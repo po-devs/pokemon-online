@@ -26,7 +26,8 @@ namespace NetworkCli
 	ChallengeStuff,
 	EngageBattle,
 	BattleFinished,
-	BattleMessage
+	BattleMessage,
+	BattleChat
     };
 
     enum ProtocolError
@@ -82,6 +83,7 @@ public slots:
 
     /* by the battle window */
     void battleCommand(const BattleChoice &comm);
+    void battleMessage(const QString &mess);
 
 private:
     /* The connection to the outside */
