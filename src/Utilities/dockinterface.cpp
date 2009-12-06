@@ -47,7 +47,7 @@ void DockAdvanced::setCurrentPokemon(int index)
 
 void DockAdvanced::setPokemonNum(int indexStack,int pokeNum)
 {
-    qDebug() <<"indexStack::"<<indexStack<<" pokeNum:"<<pokeNum;
+    std::cout <<"indexStack::"<<indexStack<<" pokeNum:"<<pokeNum << std::endl;
     QWidget * w = AdvancedPokemons_gestionnaire->widget(indexStack);
     AdvancedPokemons_gestionnaire->removeWidget(w);
     delete w;

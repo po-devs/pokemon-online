@@ -154,13 +154,13 @@ void BattleSituation::beginTurn()
 
 void BattleSituation::endTurn()
 {
-    qDebug() << "Debut de fin de tour";
+    qDebug() << "Start of the end of the turn";
     endTurnStatus();
     callpeffects(Player1, Player2, "EndTurn");
     callpeffects(Player2, Player1, "EndTurn");
 
     requestSwitchIns();
-    qDebug() << "Fin de tour";
+    qDebug() << "End of the turn";
 }
 
 void BattleSituation::endTurnStatus()

@@ -49,6 +49,7 @@ QTcpServer * Server::server()
 void Server::printLine(const QString &line)
 {
     mainchat()->insertPlainText(line + "\n");
+    qDebug() << line;
 }
 
 void Server::loggedIn(int id, const QString &name)
