@@ -139,6 +139,9 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
     shiny() = poke.shiny();
     gender() = poke.gender();
     lifePercent() = (poke.lifePoints() * 100) / poke.totalLifePoints();
+    if (lifePercent() == 0 && poke.lifePoints() > 0) {
+	lifePercent() = 1;
+    }
     level() = poke.level();
 }
 

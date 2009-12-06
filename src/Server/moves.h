@@ -14,6 +14,7 @@ struct MoveMechanics
     /* Returns b.turnlong[player], used for convenience cuz shorter */
     static BattleSituation::context & turn(BattleSituation &b, int player);
     static BattleSituation::context & poke(BattleSituation &b, int player);
+    static BattleSituation::context & team(BattleSituation &b, int player);
 
     typedef void (*function) (int source, int target, BattleSituation &b);
 
