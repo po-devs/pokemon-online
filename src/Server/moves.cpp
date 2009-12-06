@@ -920,13 +920,14 @@ struct MMSpikes : public MM
 	functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void daf(int s, int t, BS &b) {
-	if (team(b,t)["Spikes"].toInt() >= 3) {
+    static void daf(int s, int, BS &b) {
+	if (team(b,b.rev(s))["Spikes"].toInt() >= 3) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
 
-    static void uas(int, int t, BS &b) {
+    static void uas(int s, int, BS &b) {
+	int t = b.rev(s);
 	team(b,t)["Spikes"] = std::max(3, team(b,t)["Spikes"].toInt()+1);
 	addFunction(team(b,t), "UponSwitchIn", "Spikes", &usi);
     }
@@ -948,13 +949,15 @@ struct MMStealthRock : public MM
 	functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void daf(int s, int t, BS &b) {
+    static void daf(int s, int, BS &b) {
+	int t = b.rev(s);
 	if (team(b,t)["StealthRock"].toBool() == true) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
 
-    static void uas(int, int t, BS &b) {
+    static void uas(int s, int, BS &b) {
+	int t = b.rev(s);
 	team(b,t)["StealthRock"] = true;
 	addFunction(team(b,t), "UponSwitchIn", "StealthRock", &usi);
     }
@@ -975,13 +978,15 @@ struct MMToxicSpikes : public MM
 	functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void daf(int s, int t, BS &b) {
+    static void daf(int s, int, BS &b) {
+	int t = b.rev(s);
 	if (team(b,t)["ToxicSpikes"].toInt() >= 2) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
 
-    static void uas(int, int t, BS &b) {
+    static void uas(int s, int, BS &b) {
+	int t = b.rev(s);
 	team(b,t)["ToxicSpikes"] = team(b,t)["ToxicSpikes"].toInt();
 	addFunction(team(b,t), "UponSwitchIn", "ToxicSpikes", &usi);
     }
