@@ -593,7 +593,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     QList<int> targetList;
 
     switch(turnlong[player]["PossibleTargets"].toInt()) {
-	case Move::None: targetList.push_back(-1); break;
+	case Move::None: targetList.push_back(player); break;
 	case Move::User: targetList.push_back(player); break;
 	case Move::All: targetList.push_back(player); targetList.push_back(rev(player)); break;
 	default: targetList.push_back(rev(player));
@@ -852,9 +852,14 @@ bool BattleSituation::hasType(int player, int type)
     return pokelong[player]["Type1"].toInt() == type  || pokelong[player]["Type2"].toInt() == type;
 }
 
+bool BattleSituation::isFlying(int player)
+{
+    return hasType(player, Pokemon::Flying);
+}
+
 bool BattleSituation::hasSubstitute(int player)
 {
-    return pokelong[player].contains("Substitute") && pokelong[player]["Substitute"].toBool() == true;
+    return player != -1 && pokelong[player].contains("Substitute") && pokelong[player]["Substitute"].toBool() == true;
 }
 
 void BattleSituation::changeStatus(int player, int status)
