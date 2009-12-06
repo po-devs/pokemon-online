@@ -448,7 +448,7 @@ struct MMDetect : public MM
     }
 
     static void dgaf(int s, int t, BS &b) {
-	if (s == t) {
+	if (s == t || t == -1) {
 	    return;
 	}
 	if (!turn(b,t)["DetectUsed"].toBool()) {
@@ -928,17 +928,17 @@ struct MMSpikes : public MM
 
     static void uas(int s, int, BS &b) {
 	int t = b.rev(s);
-	team(b,t)["Spikes"] = std::max(3, team(b,t)["Spikes"].toInt()+1);
+	team(b,t)["Spikes"] = std::min(3, team(b,t)["Spikes"].toInt()+1);
 	addFunction(team(b,t), "UponSwitchIn", "Spikes", &usi);
     }
 
     static void usi(int s, int, BS &b) {
 	int spikeslevel = team(b,s)["Spikes"].toInt();
-	if (spikeslevel <= 0) {
+	if (spikeslevel <= 0 || b.isFlying(s)) {
 	    return;
 	}
-	int n = (spikeslevel+1)*25;
-	b.inflictDamage(s, b.poke(s).totalLifePoints()*n/4, s);
+	int n = (spikeslevel+1);
+	b.inflictDamage(s, b.poke(s).totalLifePoints()*n/16, s);
     }
 };
 
@@ -996,7 +996,7 @@ struct MMToxicSpikes : public MM
 	    team(b,s)["ToxicSpikes"] = 0;
 	    return;
 	}
-	if (b.hasSubstitute(s)) {
+	if (b.hasSubstitute(s) || b.isFlying(s)) {
 	    return;
 	}
 	int spikeslevel = team(b,s)["ToxicSpikes"].toInt();
@@ -1064,7 +1064,7 @@ struct MMSubstitute : public MM
     }
 
     static void bte(int s, int t, BS &b) {
-	if (s == t) {
+	if (s == t || t==-1) {
 	    return;
 	}
 	if (!b.hasSubstitute(t)) {

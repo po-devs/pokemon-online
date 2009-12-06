@@ -104,6 +104,7 @@ public:
     bool testStatus(int player);
     bool testFail(int player);
     bool hasType(int player, int type);
+    bool isFlying(int player);
     bool hasSubstitute(int player);
     void requestSwitchIns();
     void requestSwitch(int player);
