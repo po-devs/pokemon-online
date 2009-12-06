@@ -57,6 +57,7 @@ public:
     void requestChoices(); /* request from both players */
     /* Shows what attacks are allowed or not */
     BattleChoices createChoice(int player) const;
+    void setChoice(int player, const BattleChoice &b);
     /* called just after requestChoice(s) */
     void analyzeChoice(int player);
     void analyzeChoices(); 
@@ -96,7 +97,7 @@ public:
 
     int calculateDamage(int player, int target);
     PokeFraction getMod1(int player, int target);
-    void applyMoveStatMods(int player, int target);
+    void applyMoveStatMods(int player, int target, bool sub = false);
     bool testAccuracy(int player, int target);
     void testCritical(int player, int target);
     void testFlinch(int player, int target);
@@ -184,6 +185,8 @@ private:
     void callpeffects(int source, int target, const QString &name);
     /* this time the general battle effects (imprison, ..) */
     void callbeffects(int source, int target, const QString &name);
+    /* The team zone effects */
+    void callzeffects(int source, int target, const QString &name);
 public:
     /**************************************/
     /*** VIVs: very important variables ***/
@@ -203,6 +206,8 @@ public:
     context turnlong[2];
     /* General things like last move ever used, etc. */
     context battlelong;
+    /* Moves that affect a team */
+    context teamzone[2];
 
     struct QuitException {};
 };

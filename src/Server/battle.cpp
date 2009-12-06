@@ -249,6 +249,17 @@ BattleChoices BattleSituation::createChoice(int player) const
 	}
     }
 
+    if (pokelong[player].contains("BlockedBy")) {
+	int b = pokelong[player]["BlockedBy"].toInt();
+	if (pokelong[b].contains("Blocked") && pokelong[b]["Blocked"].toInt() == player) {
+	    ret.switchAllowed = false;
+	}
+    }
+
+    if (pokelong[player].contains("Rooted")) {
+	ret.switchAllowed = false;
+    }
+
     return ret;
 }
 
@@ -351,9 +362,15 @@ void BattleSituation::sendPoke(int player, int pok)
     pokelong[player]["Type2"] = PokemonInfo::Type2(poke(player).num());
     for (int i = 1; i <= 6; i++)
 	pokelong[player][QString("Stat%1").arg(i)] = poke(player).normalStat(i);
-    for (int i = 1; i <= 6; i++)
-	pokelong[player][QString("Boost%1").arg(i)] = 0; /* No boost when a poke switches in, right? */
     pokelong[player]["Level"] = poke(player).level();
+
+    calleffects(player, player, "UponSwitchIn");
+    callzeffects(player, player, "UponSwitchIn");
+
+    if (koed(player)) {
+	requestChoice(player);
+	analyzeChoice(player);
+    }
 }
 
 void BattleSituation::calleffects(int source, int target, const QString &name)
@@ -365,6 +382,13 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 
 	foreach(QString effect, effects) {
 	    qDebug() << "Called by " << effect;
+	    turnlong[source]["EffectBlocked"] = false;
+	    turnlong[source]["EffectActivated"] = effect;
+	    callpeffects(source, target, "BlockTurnEffects");
+	    if (turnlong[source]["EffectBlocked"].toBool() == true) {
+		continue;
+	    }
+
 	    MoveMechanics::function f = turnlong[source][name + "_" + effect].value<MoveMechanics::function>();
 
 	    f(source, target, *this);
@@ -394,6 +418,19 @@ void BattleSituation::callbeffects(int source, int target, const QString &name)
 
 	foreach(QString effect, effects) {
 	    MoveMechanics::function f = battlelong[name + "_" + effect].value<MoveMechanics::function>();
+
+	    f(source, target, *this);
+	}
+    }
+}
+
+void BattleSituation::callzeffects(int source, int target, const QString &name)
+{
+    if (teamzone[source].contains(name)) {
+	QSet<QString> &effects = *teamzone[source][name].value<QSharedPointer<QSet<QString> > >();
+
+	foreach(QString effect, effects) {
+	    MoveMechanics::function f = teamzone[source][name + "_" + effect].value<MoveMechanics::function>();
 
 	    f(source, target, *this);
 	}
@@ -464,7 +501,7 @@ bool BattleSituation::testStatus(int player)
 	}
 	case Pokemon::Frozen:
 	{
-	    if (rand() % 255 > 25)
+	    if (rand() % 255 > 51)
 	    {
 		notify(All, StatusMessage, player, qint8(PrevFrozen));
 		return false;
@@ -611,19 +648,21 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 		calleffects(player, target, "BeforeCalculatingDamage");
 
+		bool sub = hasSubstitute(target);
 		int damage = calculateDamage(player, target);
 		inflictDamage(target, damage, player, true);
 		pokelong[target]["LastAttackToHit"] = attack;
 
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
-		applyMoveStatMods(player, target);
+		applyMoveStatMods(player, target, sub);
 
 		battlelong["LastMoveSuccesfullyUsed"] = attack;
 
 		if (koed(target))
 		    break;
 
-		testFlinch(player, target);
+		if (!sub)
+		    testFlinch(player, target);
 	    }
 
 	    notify(All, Effective, target, quint8(typemod));
@@ -638,7 +677,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		continue;
 
 	    calleffects(player, target, "BeforeHitting");
-	    applyMoveStatMods(player, target);
+	    applyMoveStatMods(player, target, hasSubstitute(target));
 	    calleffects(player, target, "UponAttackSuccessful");
 	    /* this is put after calleffects to avoid endless sleepTalk/copycat for example */
 	    battlelong["LastMoveSuccesfullyUsed"] = attack;
@@ -661,7 +700,7 @@ void BattleSituation::inflictRecoil(int source, int target)
     inflictDamage(source, turnlong[target]["DamageTakenByAttack"].toInt()/recoil, source);
 }
 
-void BattleSituation::applyMoveStatMods(int player, int target)
+void BattleSituation::applyMoveStatMods(int player, int target, bool sub)
 {
     QString effect = turnlong[player]["StatEffect"].value<QString>();
 
@@ -690,7 +729,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 	int targeted = self? player : target;
 
 	/* If the effect is on the opponent, and the opponent is Koed / subbed, we don't do nothing */
-	if (!self && (koed(target) == true || hasSubstitute(target))) {
+	if (!self && (koed(target) == true || sub)) {
             continue;
 	}
 
@@ -983,7 +1022,7 @@ void BattleSituation::changeHp(int player, int newHp)
     poke(player).lifePoints() = newHp;
 
     notify(player, ChangeHp, player, quint16(newHp));
-    notify(AllButPlayer, ChangeHp, player, quint16(poke(player).lifePoints()*100/poke(player).totalLifePoints())); /* percentage calculus */
+    notify(AllButPlayer, ChangeHp, player, newHp==0?quint16(0):quint16(std::max(1,poke(player).lifePoints()*100/poke(player).totalLifePoints()))); /* percentage calculus */
 }
 
 void BattleSituation::koPoke(int player, int source, bool straightattack)

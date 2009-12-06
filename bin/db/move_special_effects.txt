@@ -34,7 +34,7 @@
 11#blast burn -- one turn slacking off
 
 
-12-1#block, aka mean look
+12#block, aka mean look
 
 
 
@@ -200,7 +200,7 @@
 
 
 67#imprison
-12-0|68-0_-1|2#ingrain -- 12 is prevent from switching, 68 is ground immunity lost, 2 is 1/16 hp every turn
+151|68-0_-1#ingrain -- 151 is ingrain, 68 is ground immunity lost
 
 
 
@@ -232,7 +232,7 @@
 68-1-5#don't forget fail if ingrain
 78#magnitude
 79#me first
-12-1
+12#mean look
 
 1
 
@@ -378,14 +378,14 @@
 30-20#sonic boom
 
 
-12-1#spider web. 1 means it's the ennemy that is blocked (0 would be for ingrain)
+12#spider web.
 
-120-3|121#spikes, max number is 3
+121#spikes
 122#spit up
 123#spite
 
 
-120-3|124#stealth rock
+124#stealth rock
 
 125#stock pile
 126#stomp
@@ -429,7 +429,7 @@
 
 135#torment
 
-120-2|136#toxic spikes
+136#toxic spikes
 137#transform
 
 132#trick

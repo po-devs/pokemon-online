@@ -18,6 +18,11 @@ BattleSituation::context & MoveMechanics::poke(BattleSituation &b, int player)
 	return b.pokelong[player];
 }
 
+BattleSituation::context & MoveMechanics::team(BattleSituation &b, int player)
+{
+	return b.teamzone[player];
+}
+
 MoveEffect::MoveEffect(int num)
 {
     /* Different steps: critical raise, number of times, ... */
@@ -128,7 +133,7 @@ struct MMAquaRing : public MM
 
     static void et(int s, int, BS &b) {
 	if (!b.koed(s) && !b.poke(s).isFull()) {
-	    b.healLife(s, std::max(1, b.poke(s).totalLifePoints()/16));
+	    b.healLife(s, b.poke(s).totalLifePoints()/16);
 	}
     }
 };
@@ -162,14 +167,20 @@ struct MMAvalanche : public MM
 struct MMBatonPass : public MM
 { /*POSSIBLE GLITCH: if the poke switchs in and dies then maybe the next will inherit the changes */
     MMBatonPass() {
+	functions["DetermineAttackSuccessful"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (b.countAlive(s) <= 1) {
+	    turn(b,s)["Failed"] =true;
+	}
     }
 
     static void uas(int s, int, BS &b) {
 	/* first we copy the temp effects, then put them to the next poke */
 	BS::context c = poke(b, s);
-	b.requestSwitch(s);
-	c.remove("Type1");
+    	c.remove("Type1");
 	c.remove("Type2");
 	c.remove("Minimize");
 	c.remove("DefenseCurl");
@@ -177,7 +188,19 @@ struct MMBatonPass : public MM
 	    c.remove(QString("Stat%1").arg(i));
 	}
 	c.remove("Level");
-	merge(poke(b,s), c);
+	turn(b,s)["BatonPassData"] = c;
+	turn(b,s)["BatonPassed"] = true;
+
+	addFunction(turn(b,s), "UponSwitchIn", "BatonPass", &usi);
+	b.requestSwitch(s);
+    }
+
+    static void usi(int s, int, BS &b) {
+	if (turn(b,s)["BatonPassed"].toBool() == false) {
+	    return;
+	}
+	turn(b,s)["BatonPassed"] = false;
+	merge(poke(b,s), turn(b,s)["BatonPassData"].value<BS::context>());
     }
 };
 
@@ -790,25 +813,6 @@ struct MMBellyDrum : public MM
     }
 };
 
-struct MMSubstitute : public MM
-{
-    MMSubstitute() {
-	functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
-    }
-
-    static void daf(int s, int, BS &b) {
-	if (poke(b,s).contains("Substitute") && poke(b,s)["Substitute"].toBool() == true) {
-	    turn(b,s)["Failed"] = true;
-	}
-    }
-
-    static void uas(int s, int, BS &b) {
-	poke(b,s)["Substitute"] = true;
-	poke(b,s)["SubstituteLife"] = b.poke(s).totalLifePoints()/4;
-    }
-};
-
 struct MMWish : public MM
 {
     MMWish() {
@@ -817,7 +821,7 @@ struct MMWish : public MM
     }
 
     static void daf(int s, int, BS &b) {
-	if (poke(b,s).contains("WishCount") && poke(b,s)["WishCount"].toInt() >= 0) {
+	if (poke(b,s)["WishCount"].toInt() >= 0) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -842,6 +846,237 @@ struct MMWish : public MM
     }
 };
 
+struct MMBlock : public MM
+{
+    MMBlock() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas (int s, int t, BS &b) {
+	poke(b,s)["Blocked"] = t;
+	poke(b,t)["BlockedBy"] = s;
+    }
+};
+
+struct MMIngrain : public MM
+{
+    MMIngrain() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int , BS &b) {
+	if (poke(b,s)["Rooted"].toBool() == true) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int s, int, BS &b) {
+	poke(b,s)["Rooted"] = true;
+	addFunction(poke(b,s), "EndTurn", "Ingrain", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+	if (!b.koed(s) && !b.poke(s).isFull() && poke(b,s)["Rooted"].toBool() == true) {
+	    b.healLife(s, b.poke(s).totalLifePoints()/16);
+	}
+    }
+};
+
+struct MMRoar : public MM
+{
+    MMRoar() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (poke(b,t).contains("Rooted") && poke(b,t)["Rooted"].toBool() == true) {
+	    turn(b,s)["Failed"] = true;
+	} else {
+	    if (b.countAlive(s) <= 1) {
+		turn(b,s)["Failed"] = true;
+	    }
+	}
+    }
+
+    static void uas(int, int t, BS &b) {
+	int num = b.currentPoke(t);
+	b.sendBack(t);
+	QList<int> switches;
+	for (int i = 0; i < 6; i++) {
+	    if (i != num && !b.poke(t,i).ko()) {
+		switches.push_back(i);
+	    }
+	}
+	b.sendPoke(t, switches[rand()%switches.size()]);
+    }
+};
+
+struct MMSpikes : public MM
+{
+    MMSpikes() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (team(b,t)["Spikes"].toInt() >= 3) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int, int t, BS &b) {
+	team(b,t)["Spikes"] = std::max(3, team(b,t)["Spikes"].toInt()+1);
+	addFunction(team(b,t), "UponSwitchIn", "Spikes", &usi);
+    }
+
+    static void usi(int s, int, BS &b) {
+	int spikeslevel = team(b,s)["Spikes"].toInt();
+	if (spikeslevel <= 0) {
+	    return;
+	}
+	int n = (spikeslevel+1)*25;
+	b.inflictDamage(s, b.poke(s).totalLifePoints()*n/4, s);
+    }
+};
+
+struct MMStealthRock : public MM
+{
+    MMStealthRock() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (team(b,t)["StealthRock"].toBool() == true) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int, int t, BS &b) {
+	team(b,t)["StealthRock"] = true;
+	addFunction(team(b,t), "UponSwitchIn", "StealthRock", &usi);
+    }
+
+    static void usi(int s, int, BS &b) {
+	if (team(b,s)["StealthRock"].toBool() == true)
+	{
+	    int n = TypeInfo::Eff(Pokemon::Rock, poke(b,s)["Type1"].toInt()) * TypeInfo::Eff(Pokemon::Rock, poke(b,s)["Type2"].toInt());
+	    b.inflictDamage(s, b.poke(s).totalLifePoints()*n/32, s);
+	}
+    }
+};
+
+struct MMToxicSpikes : public MM
+{
+    MMToxicSpikes() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (team(b,t)["ToxicSpikes"].toInt() >= 2) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int, int t, BS &b) {
+	team(b,t)["ToxicSpikes"] = team(b,t)["ToxicSpikes"].toInt();
+	addFunction(team(b,t), "UponSwitchIn", "ToxicSpikes", &usi);
+    }
+
+    static void usi(int s, int, BS &b) {
+	if (b.hasType(s, Pokemon::Poison)) {
+	    team(b,s)["ToxicSpikes"] = 0;
+	    return;
+	}
+	if (b.hasSubstitute(s)) {
+	    return;
+	}
+	int spikeslevel = team(b,s)["ToxicSpikes"].toInt();
+	switch (spikeslevel) {
+	    case 0: return;
+	    case 1: b.inflictStatus(s, Pokemon::Poisoned); break;
+	    default: b.inflictStatus(s, Pokemon::DeeplyPoisoned); break;
+	}
+    }
+};
+
+struct MMRapidSpin : public MM
+{
+    MMRapidSpin() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	if (poke(b,s).contains("Seeded")) {
+	    poke(b,s)["Seeded"] = false;
+	}
+	if (team(b,s).contains("Spikes")) {
+	    team(b,s)["Spikes"] = 0;
+	}
+	if (team(b,s).contains("ToxicSpikes")) {
+	    team(b,s)["ToxicSpikes"] = 0;
+	}
+	if (team(b,s).contains("StealthRock")) {
+	    team(b,s)["StealthRock"] = false;
+	}
+    }
+};
+
+struct MMUTurn : public MM
+{
+    MMUTurn() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	if (b.countAlive(s) <= 1) {
+	    return;
+	}
+	b.requestSwitch(s);
+    }
+};
+
+struct MMSubstitute : public MM
+{
+    MMSubstitute() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (poke(b,s)["Substitute"].toBool() == true) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int s, int, BS &b) {
+	poke(b,s)["Substitute"] = true;
+	poke(b,s)["SubstituteLife"] = b.poke(s).totalLifePoints()/4;
+	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
+    }
+
+    static void bte(int s, int t, BS &b) {
+	if (s == t) {
+	    return;
+	}
+	if (!b.hasSubstitute(t)) {
+	    return;
+	}
+	QString effect = turn(b,s)["EffectActivated"].toString();
+
+	if (effect == "Block" || effect == "Curse" || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge" || effect == "HealBlock" || effect == "LeechSeed"
+	    || effect == "LockOn" || effect == "Mimic" || effect == "PainSplit" || effect == "PsychoShift" || effect == "Sketch" || effect == "Switcheroo"
+	    || effect == "WorrySeed" || effect == "Yawn")
+	{
+	    turn(b,s)["EffectBlocked"] = true;
+	    return;
+	}
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = new MM##name; names[num] = #name;
 
 void MoveEffect::init()
@@ -856,6 +1091,7 @@ void MoveEffect::init()
     REGISTER_MOVE(6, BatonPass);
     REGISTER_MOVE(8, BellyDrum);
     REGISTER_MOVE(11, BlastBurn); /* BlastBurn, Hyper beam, rock wrecker, giga impact, frenzy plant, hydro cannon, roar of time */
+    REGISTER_MOVE(12, Block);
     REGISTER_MOVE(15, Brine);
     REGISTER_MOVE(18, Charge);
     REGISTER_MOVE(19, Conversion);
@@ -879,13 +1115,20 @@ void MoveEffect::init()
     REGISTER_MOVE(72, LeechSeed);
     REGISTER_MOVE(94, PainSplit);
     REGISTER_MOVE(95, PerishSong);
+    REGISTER_MOVE(103, RapidSpin);
     REGISTER_MOVE(106, Rest);
+    REGISTER_MOVE(107, Roar);
+    REGISTER_MOVE(121, Spikes);
+    REGISTER_MOVE(124, StealthRock);
     REGISTER_MOVE(128, Substitute);
     REGISTER_MOVE(130, SuperFang);
+    REGISTER_MOVE(136, ToxicSpikes);
+    REGISTER_MOVE(140, UTurn);
     REGISTER_MOVE(142, Wish);
     REGISTER_MOVE(146, Avalanche); /* avalanche, revenge */
     REGISTER_MOVE(148, TrumpCard);
     REGISTER_MOVE(149, Haze);
     REGISTER_MOVE(150, Roost);
+    REGISTER_MOVE(151, Ingrain);
 }
 
