@@ -89,6 +89,7 @@ public:
     void inflictConfusedDamage(int player);
     void inflictRecoil(int source, int target);
     void inflictDamage(int player, int damage, int source, bool straightattack = false);
+    void inflictSubDamage(int player, int damage, int source);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
@@ -102,6 +103,7 @@ public:
     bool testStatus(int player);
     bool testFail(int player);
     bool hasType(int player, int type);
+    bool hasSubstitute(int player);
     void requestSwitchIns();
     void requestSwitch(int player);
     int repeatNum(context &move);

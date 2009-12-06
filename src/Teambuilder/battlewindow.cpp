@@ -130,6 +130,7 @@ void BattleWindow::sendChoice(const BattleChoice &b)
 {
     emit battleCommand(b);
     info().possible = false;
+    updateChoices();
 }
 
 void BattleWindow::receiveInfo(QByteArray inf)
@@ -347,6 +348,7 @@ void BattleWindow::switchToNaught(bool self)
 
 void BattleWindow::printLine(const QString &str)
 {
+    mychat->moveCursor(QTextCursor::End);
     mychat->insertPlainText(str + "\n");
     QScrollBar * b = mychat->verticalScrollBar();
     if(b->isVisible()&&b->value()!= b->maximum())
@@ -357,6 +359,7 @@ void BattleWindow::printLine(const QString &str)
 
 void BattleWindow::printHtml(const QString &str)
 {
+    mychat->moveCursor(QTextCursor::End);
     mychat->insertHtml(str + "<br />");
     QScrollBar * b = mychat->verticalScrollBar();
     if(b->isVisible()&&b->value()!= b->maximum())

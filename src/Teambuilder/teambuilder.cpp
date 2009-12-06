@@ -311,6 +311,7 @@ void TeamBuilder::createDockAdvanced()
     m_dockAdvanced = new DockAdvanced(this);
 
     connect(m_dockAdvanced, SIGNAL(destroyed()), SLOT(advancedDestroyed()));
+    connect(this, SIGNAL(destroyed()), m_dockAdvanced, SLOT(deleteLater()));
     
     emit this->showDockAdvanced(Qt::RightDockWidgetArea,m_dockAdvanced,Qt::Vertical);
 }
