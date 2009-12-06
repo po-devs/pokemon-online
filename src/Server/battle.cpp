@@ -534,7 +534,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	return;
     }
 
-    if (tellPlayers) {
+    if (tellPlayers && !specialOccurence) {
 	notify(All, UseAttack, player, qint16(attack));
 	qDebug() << poke(player).nick() << " used " << MoveInfo::Name(attack);
     }
@@ -683,8 +683,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 	bool self = (effect[0] == 'S');
 	int targeted = self? player : target;
 
-	/* If the effect is on the opponent, and the opponent is Koed, we don't do nothing */
-        if (!self && koed(target) == true) {
+	/* If the effect is on the opponent, and the opponent is Koed / subbed, we don't do nothing */
+	if (!self && (koed(target) == true || hasSubstitute(target))) {
             continue;
 	}
 
@@ -805,6 +805,11 @@ bool BattleSituation::hasType(int player, int type)
     return pokelong[player]["Type1"].toInt() == type  || pokelong[player]["Type2"].toInt() == type;
 }
 
+bool BattleSituation::hasSubstitute(int player)
+{
+    return pokelong[player].contains("Substitute") && pokelong[player]["Substitute"].toBool() == true;
+}
+
 void BattleSituation::changeStatus(int player, int status)
 {
     notify(All, StatusChange, player, qint8(status));
@@ -904,30 +909,51 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	damage = 1;
     }
 
-    damage = std::min(int(poke(player).lifePoints()), damage);
+    bool sub = hasSubstitute(player);
 
-    qDebug() << "Second v: " << damage;
-
-    int hp  = poke(player).lifePoints() - damage;
-
-    if (hp <= 0) {
-	koPoke(player, source, straightattack);
+    if (straightattack && sub) {
+	inflictSubDamage(player, damage, source);
     } else {
-	changeHp(player, hp);
+	damage = std::min(int(poke(player).lifePoints()), damage);
+
+	int hp  = poke(player).lifePoints() - damage;
+
+	if (hp <= 0) {
+	    koPoke(player, source, straightattack);
+	} else {
+	    changeHp(player, hp);
+	}
     }
 
+
     if (straightattack) {
-	pokelong[player]["DamageTakenByAttack"] = damage;
-	turnlong[player]["DamageTakenByAttack"] = damage;
-	turnlong[player]["DamageTakenBy"] = source;
-	turnlong[source]["DamageInflicted"] = damage;
+	if (!sub) {
+	    turnlong[source]["DamageInflicted"] = damage;
+	    pokelong[player]["DamageTakenByAttack"] = damage;
+	    turnlong[player]["DamageTakenByAttack"] = damage;
+	    turnlong[player]["DamageTakenBy"] = source;
+	}
 
 	inflictRecoil(source, player);
 
 	calleffects(source, player, "UponDamageInflicted");
     }
 
-    turnlong[player]["DamageTaken"] = damage;
+    if (!sub)
+	turnlong[player]["DamageTaken"] = damage;
+}
+
+void BattleSituation::inflictSubDamage(int player, int damage, int source)
+{
+    int life = pokelong[player]["SubstituteLife"].toInt();
+
+    if (life <= damage) {
+	pokelong[player]["Substitute"] = false;
+	turnlong[source]["DamageInflicted"] = life;
+    } else {
+	pokelong[player]["SubstituteLife"] = life-damage;
+	turnlong[source]["DamageInflicted"] = damage;
+    }
 }
 
 void BattleSituation::healLife(int player, int healing)

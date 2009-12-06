@@ -307,6 +307,7 @@ void Client::playerReceived(const Player &p)
 
 void Client::printLine(const QString &line)
 {
+    mainChat()->moveCursor(QTextCursor::End);
     /* Let's add colors */
     int pos = line.indexOf(':');
     if ( pos != -1 ) {

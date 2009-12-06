@@ -89,7 +89,7 @@ void MoveEffect::setup(int num, int source, int , BattleSituation &b)
 
 	size_t pos = s.find('-');
 	if (pos != std::string::npos) {
-	    b.turnlong[source][n+"_Arg"] = specialEffectS.mid(pos);
+	    b.turnlong[source][n+"_Arg"] = specialEffectS.mid(pos+1);
 	}
 
 	for(i = m.functions.begin(); i != m.functions.end(); ++i) {
@@ -508,10 +508,10 @@ struct MMHiddenPower : public MM
 struct MMFaintUser : public MM
 {
     MMFaintUser() {
-	functions["AfterAttackSuccessful"] = &aas;
+	functions["MoveSettings"] = &ms;
     }
 
-    static void aas(int s, int, BS &b) {
+    static void ms(int s, int, BS &b) {
 	b.koPoke(s, s);
     }
 };
@@ -732,9 +732,9 @@ struct MMRoost : public MM
 
     static void uas(int s, int, BS &b) {
 	int num = 0;
-	if (poke(b,s)["Type1"] == Pokemon::Flying) {
+	if (poke(b,s)["Type1"].toInt() == Pokemon::Flying) {
 	    num = 1;
-	} else if (poke(b,s)["Type2"] == Pokemon::Flying) {
+	} else if (poke(b,s)["Type2"].toInt() == Pokemon::Flying) {
 	    num = 2;
 	}
 
@@ -773,6 +773,42 @@ struct MMRest : public MM
     }
 };
 
+struct MMBellyDrum : public MM
+{
+    MMBellyDrum() {
+	functions["UponAttackSuccessful"] = &uas;
+	functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (b.poke(s).lifePoints() <= b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+    static void uas(int s, int, BS &b) {
+	b.inflictDamage(s, b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,s);
+    }
+};
+
+struct MMSubstitute : public MM
+{
+    MMSubstitute() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (poke(b,s).contains("Substitute") && poke(b,s)["Substitute"].toBool() == true) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int s, int, BS &b) {
+	poke(b,s)["Substitute"] = true;
+	poke(b,s)["SubstituteLife"] = b.poke(s).totalLifePoints()/4;
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = new MM##name; names[num] = #name;
 
 void MoveEffect::init()
@@ -785,6 +821,7 @@ void MoveEffect::init()
     REGISTER_MOVE(2, AquaRing);
     REGISTER_MOVE(5, Assurance);
     REGISTER_MOVE(6, BatonPass);
+    REGISTER_MOVE(8, BellyDrum);
     REGISTER_MOVE(11, BlastBurn); /* BlastBurn, Hyper beam, rock wrecker, giga impact, frenzy plant, hydro cannon, roar of time */
     REGISTER_MOVE(15, Brine);
     REGISTER_MOVE(18, Charge);
@@ -810,6 +847,7 @@ void MoveEffect::init()
     REGISTER_MOVE(94, PainSplit);
     REGISTER_MOVE(95, PerishSong);
     REGISTER_MOVE(106, Rest);
+    REGISTER_MOVE(128, Substitute);
     REGISTER_MOVE(130, SuperFang);
     REGISTER_MOVE(146, Avalanche); /* avalanche, revenge */
     REGISTER_MOVE(148, TrumpCard);

@@ -395,7 +395,7 @@
 127#struggle
 
 
-128#SUBSTITUTE
+8-25|128#SUBSTITUTE
 129#sucker punch
 57-4#sunny day
 130#super fang

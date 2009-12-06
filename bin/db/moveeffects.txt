@@ -191,7 +191,7 @@ S[M]1+1
 #hyper beam
 
 
-O[M]4+
+O[S]4+
 #iceball
 O[S]3+
 O[S]3+
