@@ -1127,7 +1127,7 @@ struct MMAttract : public MM
     static void uas (int s, int t, BS &b) {
 	poke(b,t)["AttractedTo"] = s;
 	poke(b,s)["Attracted"] = t;
-	addFunction(poke(b,t), "DetermineAttackFailure", "Attract", &pda);
+	addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
     }
 
     static void pda(int s, int, BS &b) {
@@ -1135,7 +1135,7 @@ struct MMAttract : public MM
 	    int seducer = poke(b,s)["AttractedTo"].toInt();
 	    if (poke(b,seducer).contains("Attracted") && poke(b,seducer)["Attracted"].toInt() == s) {
 		if (rand() % 2 == 0) {
-		    turn(b,s)["Failed"] = true;
+		    turn(b,s)["ImpossibleToMove"] = true;
 		}
 	    }
 	}

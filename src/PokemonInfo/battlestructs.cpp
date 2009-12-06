@@ -67,26 +67,59 @@ void PokeBattle::init(const PokePersonal &poke)
     p.num() = poke.num();
     p.load();
 
+    QSet<int> moves = p.moves().toSet();
+    QList<int> pokemoves;
+
     num() = poke.num();
     nick() = poke.nickname();
-    gender() = poke.gender();
+    if (GenderInfo::Possible(poke.gender(), p.genderAvail())) {
+	gender() = poke.gender();
+    } else {
+	gender() = GenderInfo::Default(p.genderAvail());
+    }
+
     shiny() = poke.shiny();
     level() = poke.level();
 
+    int curs = 0;
     for (int i = 0; i < 4; i++) {
-	move(i).num() = poke.move(i);
-	move(i).load();
+	if (moves.contains(poke.move(i))) {
+	    if (!pokemoves.contains(poke.move(i))) {
+		move(curs).num() = poke.move(i);
+		move(curs).load();
+		++curs;
+	    }
+	}
+    }
+
+    if (move(0).num() == 0) {
+	num() = 0;
+	return;
     }
 
     for (int i = 0; i < 6; i++) {
 	dvs() << poke.DV(i);
     }
 
-    totalLifePoints() = PokemonInfo::FullStat(poke.nature(), Hp, p.baseStats().baseHp(), poke.level(), poke.hpDV(), poke.hpEV());
+    QList<int> evs;
+    for (int i = 0; i < 6; i++) {
+	evs << poke.EV(i);
+    }
+
+    int sum = 0;
+    for (int i = 0; i < 6; i++) {
+	sum += evs[i];
+	if (sum > 510) {
+	    evs[i] -= (sum-510);
+	    sum = 510;
+	}
+    }
+
+    totalLifePoints() = PokemonInfo::FullStat(poke.nature(), Hp, p.baseStats().baseHp(), poke.level(), poke.hpDV(), evs[Hp]);
     lifePoints() = totalLifePoints();
 
     for (int i = 0; i < 5; i++) {
-	normal_stats[i] = PokemonInfo::FullStat(poke.nature(), i+1, p.baseStats().baseStat(i+1), poke.level(), poke.DV(i+1), poke.EV(i+1));
+	normal_stats[i] = PokemonInfo::FullStat(poke.nature(), i+1, p.baseStats().baseStat(i+1), poke.level(), poke.DV(i+1), evs[i+1]);
     }
 }
 
@@ -165,8 +198,12 @@ TeamBattle::TeamBattle()
 
 TeamBattle::TeamBattle(const TeamInfo &other)
 {
+    int curs = 0;
     for (int i = 0; i < 6; i++) {
-	poke(i).init(other.pokemon(i));
+	poke(curs).init(other.pokemon(i));
+	if (poke(curs).num() != 0) {
+	    ++curs;
+	}
     }
 }
 
