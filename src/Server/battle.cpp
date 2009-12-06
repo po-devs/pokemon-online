@@ -233,7 +233,7 @@ bool BattleSituation::koed(int player) const
     return currentPoke(player) == -1 || poke(player).lifePoints() == 0;
 }
 
-BattleChoices BattleSituation::createChoice(int player) const
+BattleChoices BattleSituation::createChoice(int player)
 {
     /* First let's see for attacks... */
     if (koed(player)) {
@@ -243,8 +243,9 @@ BattleChoices BattleSituation::createChoice(int player) const
     BattleChoices ret;
 
     /* attacks ok, lets see which ones then */
+    callpeffects(player, player, "MovesPossible");
     for (int i = 0; i < 4; i++) {
-	if (poke(player).move(i).num() == 0 || poke(player).move(i).PP() == 0) {
+	if (!isMovePossible(player,i)) {
 	    ret.attackAllowed[i] = false;
 	}
     }
@@ -261,6 +262,11 @@ BattleChoices BattleSituation::createChoice(int player) const
     }
 
     return ret;
+}
+
+bool BattleSituation::isMovePossible(int player, int move)
+{
+    return (poke(player).move(move).PP() > 0 && (turnlong[player]["Move" + QString::number(move) + "Blocked"].toBool() == false));
 }
 
 void BattleSituation::analyzeChoice(int player)
@@ -577,6 +583,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	return;
     }
 
+    if (!specialOccurence) {
+	callpeffects(player, player, "MovesPossible");
+	if (!isMovePossible(player, move)) {
+	    return;
+	}
+    }
+
     if (tellPlayers && !specialOccurence) {
 	notify(All, UseAttack, player, qint16(attack));
 	qDebug() << poke(player).nick() << " used " << MoveInfo::Name(attack);
@@ -630,6 +643,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		continue;
 	    }
 
+	    callpeffects(player, target, "DetermineAttackFailure");
+	    if (testFail(player))
+		continue;
 	    callbeffects(player, target, "DetermineGeneralAttackFailure");
 	    if (testFail(player))
 		continue;
@@ -650,10 +666,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		calleffects(player, target, "BeforeCalculatingDamage");
 
 		bool sub = hasSubstitute(target);
-		int damage = calculateDamage(player, target);
-		inflictDamage(target, damage, player, true);
-		pokelong[target]["LastAttackToHit"] = attack;
-
+		if (turnlong[player]["Power"].toInt() > 1) {
+		    int damage = calculateDamage(player, target);
+		    inflictDamage(target, damage, player, true);
+		}
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
 		applyMoveStatMods(player, target, sub);
 
@@ -671,6 +687,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    calleffects(player, target, "AfterAttackSuccessful");
 	} else {
             qDebug() << "Going tricky";
+	    callpeffects(player, target, "DetermineAttackFailure");
+	    if (testFail(player))
+		continue;
 	    callbeffects(player, target, "DetermineGeneralAttackFailure");
 	    if (testFail(player))
 		continue;
@@ -685,6 +704,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    battlelong["LastMoveSuccesfullyUsed"] = attack;
 	    calleffects(player, target, "AfterAttackSuccessful");
 	}
+	pokelong[target]["LastAttackToHit"] = attack;
     }
     requestSwitchIns();
 }
@@ -871,6 +891,15 @@ void BattleSituation::changeStatus(int player, int status)
     }
     if (status == Pokemon::DeeplyPoisoned) {
 	pokelong[player]["ToxicCount"] = 0;
+    }
+}
+
+void BattleSituation::changeStatus(int team, int poke, int status)
+{
+    if (poke == currentPoke(team)) {
+	changeStatus(team, status);
+    } else {
+	this->poke(team, poke).status() = status;
     }
 }
 

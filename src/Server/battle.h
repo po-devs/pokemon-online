@@ -56,8 +56,8 @@ public:
     bool requestChoice(int player, bool acq = true /*private arg */, bool custom = false); /* return true if the pokemon has a choice to make (including switching & struggle)*/
     void requestChoices(); /* request from both players */
     /* Shows what attacks are allowed or not */
-    BattleChoices createChoice(int player) const;
-    void setChoice(int player, const BattleChoice &b);
+    BattleChoices createChoice(int player);
+    bool isMovePossible(int player, int move);
     /* called just after requestChoice(s) */
     void analyzeChoice(int player);
     void analyzeChoices(); 
@@ -82,6 +82,7 @@ public:
     void loseStatMod(int player, int stat, int malus);
     /* Does not do extra operations,just a setter */
     void changeStatus(int player, int status);
+    void changeStatus(int team, int poke, int status);
     void healStatus(int player, int status);
     void healConfused(int player);
     void healLife(int player, int healing);

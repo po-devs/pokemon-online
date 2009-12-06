@@ -558,7 +558,6 @@ struct MM0HKO : public MM
 {
     MM0HKO() {
 	functions["DetermineAttackFailure"] = &daf;
-	functions["MoveSettings"] = &ms;
 	functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -570,11 +569,6 @@ struct MM0HKO : public MM
 	if (b.poke(s).level() < b.poke(t).level()) {
 	    turn(b,s)["Failed"] = true;
 	}
-    }
-
-    static void ms(int s, int, BS &b) {
-	/* Doing this so the damage calculation won't occur */
-	turn(b, s)["Power"] = 0;
     }
 };
 
@@ -638,12 +632,7 @@ struct MMFrustration : public MM
 struct MMSuperFang : public MM
 {
     MMSuperFang() {
-	functions["MoveSettings"] = & ms;
 	functions["UponAttackSuccessful"] = &uas;
-    }
-
-    static void ms(int s, int , BS &b) {
-	turn(b,s)["Power"] = 0;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -987,7 +976,7 @@ struct MMToxicSpikes : public MM
 
     static void uas(int s, int, BS &b) {
 	int t = b.rev(s);
-	team(b,t)["ToxicSpikes"] = team(b,t)["ToxicSpikes"].toInt();
+	team(b,t)["ToxicSpikes"] = team(b,t)["ToxicSpikes"].toInt()+1;
 	addFunction(team(b,t), "UponSwitchIn", "ToxicSpikes", &usi);
     }
 
@@ -1082,6 +1071,101 @@ struct MMSubstitute : public MM
     }
 };
 
+struct MMFocusPunch : public MM
+{
+    MMFocusPunch() {
+	functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int, BS &b)
+    {
+	if (turn(b,s).contains("DamageTakenByAttack")) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+};
+
+struct MMNightShade : public MM
+{
+    MMNightShade() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	b.inflictDamage(t, poke(b,s)["Level"].toInt(), s, true);
+    }
+};
+
+struct MMAromaTherapy : public MM
+{
+    MMAromaTherapy() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	for (int i = 0; i < 6; i++) {
+	    if (!b.poke(s,i).ko()) {
+		b.changeStatus(s,i,Pokemon::Fine);
+	    }
+	}
+    }
+};
+
+struct MMAttract : public MM
+{
+    MMAttract() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (b.poke(s).gender() == Pokemon::Neutral || b.poke(t).gender() == Pokemon::Neutral || b.poke(s).gender() == b.poke(t).gender()) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas (int s, int t, BS &b) {
+	poke(b,t)["AttractedTo"] = s;
+	poke(b,s)["Attracted"] = t;
+	addFunction(poke(b,t), "DetermineAttackFailure", "Attract", &pda);
+    }
+
+    static void pda(int s, int, BS &b) {
+	if (poke(b,s).contains("AttractedTo")) {
+	    int seducer = poke(b,s)["AttractedTo"].toInt();
+	    if (poke(b,seducer).contains("Attracted") && poke(b,seducer)["Attracted"].toInt() == s) {
+		if (rand() % 2 == 0) {
+		    turn(b,s)["Failed"] = true;
+		}
+	    }
+	}
+    }
+};
+
+struct MMTaunt : public MM
+{
+    MMTaunt() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas (int, int t, BS &b) {
+	poke(b,t)["TauntTurn"] = b.turn();
+	addFunction(poke(b,t), "MovesPossible", "Taunt", &mp);
+    }
+
+    static void mp(int s, int, BS &b) {
+	int tt = poke(b,s)["TauntTurn"].toInt();
+	if (tt != b.turn() && tt+1 != b.turn()) {
+	    return;
+	}
+	for (int i = 0; i < 4; i++) {
+	    if (MoveInfo::Power(b.poke(s).move(i)) == 0) {
+		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
+	    }
+	}
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = new MM##name; names[num] = #name;
 
 void MoveEffect::init()
@@ -1092,6 +1176,7 @@ void MoveEffect::init()
 
     REGISTER_MOVE(1, Leech); /* absorb, drain punch, part dream eater, giga drain, leech life, mega drain */
     REGISTER_MOVE(2, AquaRing);
+    REGISTER_MOVE(3, AromaTherapy);
     REGISTER_MOVE(5, Assurance);
     REGISTER_MOVE(6, BatonPass);
     REGISTER_MOVE(8, BellyDrum);
@@ -1114,10 +1199,13 @@ void MoveEffect::init()
     REGISTER_MOVE(42, Feint);
     REGISTER_MOVE(43, 0HKO); /* Fissure, Guillotine, Horn Drill, Sheer cold */
     REGISTER_MOVE(44, Flail); /* Flail, Reversal */
+    REGISTER_MOVE(47, FocusPunch);
     REGISTER_MOVE(49, Frustration); /* Frustration, Return */
+    REGISTER_MOVE(58, Attract);
     REGISTER_MOVE(60, HealHalf);
     REGISTER_MOVE(65, HiddenPower);
     REGISTER_MOVE(72, LeechSeed);
+    REGISTER_MOVE(91, NightShade);
     REGISTER_MOVE(94, PainSplit);
     REGISTER_MOVE(95, PerishSong);
     REGISTER_MOVE(103, RapidSpin);
@@ -1127,6 +1215,7 @@ void MoveEffect::init()
     REGISTER_MOVE(124, StealthRock);
     REGISTER_MOVE(128, Substitute);
     REGISTER_MOVE(130, SuperFang);
+    REGISTER_MOVE(134, Taunt);
     REGISTER_MOVE(136, ToxicSpikes);
     REGISTER_MOVE(140, UTurn);
     REGISTER_MOVE(142, Wish);
