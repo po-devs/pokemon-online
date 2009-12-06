@@ -1,4 +1,4 @@
-
+#120 & 152 are free
 1#leech
 
 
@@ -19,7 +19,7 @@
 5#assurance
 
 
-
+58#attract
 
 
 146#avalanche
@@ -174,7 +174,7 @@
 149#haze
 
 
-58#heal bell
+3#heal bell
 59#heal block
 60#heal order--healing
 37|61#healing wish
