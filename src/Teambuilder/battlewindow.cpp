@@ -373,20 +373,20 @@ void BattleWindow::updateChoices()
     /* moves first */
     if (info().currentIndex != -1)
     {
-	if (info().choices.attacksAllowed == false) {
+	if (info().choices.attacksAllowed == false && info().possible) {
 	    myattack->setEnabled(false);
 	    for (int i = 0; i < 4; i ++) {
 		myazones[info().currentIndex]->attacks[i]->setEnabled(false);
 	    }
 	} else {
-	    myattack->setEnabled(true);
+	    myattack->setEnabled(info().possible);
 	    for (int i = 0; i < 4; i ++) {
 		myazones[info().currentIndex]->attacks[i]->setEnabled(info().choices.attackAllowed[i]);
 	    }
 	}
     }
     /* Then pokemon */
-    if (info().choices.switchAllowed == false) {
+    if (info().choices.switchAllowed == false || !info().possible) {
 	myswitch->setEnabled(false);
     } else {
 	myswitch->setEnabled(true);
