@@ -160,6 +160,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit battleMessage(ch);
 	    break;
 	}
+	case BattleChat:
+	{
+	    QString s;
+	    in >> s;
+	    emit battleChat(s);
+	    break;
+	}
 	case BattleFinished:
 	    emit forfeitBattle();
 	    break;

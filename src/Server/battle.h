@@ -131,7 +131,8 @@ public:
 	StatChange,
 	StatusChange,
 	StatusMessage,
-	Failed
+	Failed,
+	BattleChat
     };
 
     enum StatusFeeling
@@ -156,6 +157,7 @@ public:
     void notify(int player, int command, int who, const T1& param1, const T2& param2);
 public slots:
     void battleChoiceReceived(int id, const BattleChoice &b);
+    void battleChat(int id, const QString &str);
 signals:
     void battleInfo(int id, const QByteArray &info);
 private:

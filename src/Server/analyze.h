@@ -24,7 +24,8 @@ namespace NetworkServ
 	ChallengeStuff,
 	EngageBattle,
 	BattleFinished,
-	BattleMessage
+	BattleMessage,
+	BattleChat
     };
 
     enum ProtocolError
@@ -65,6 +66,7 @@ signals:
     void forfeitBattle();
     void challengeStuff(int desc, int id);
     void battleMessage(const BattleChoice &choice);
+    void battleChat(const QString &chat);
 public slots:
     /* slots called by the network */
     void error();

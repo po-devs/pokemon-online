@@ -159,6 +159,7 @@ void Client::battleStarted(int id, const TeamBattle &team, const BattleConfigura
     connect(mybattle, SIGNAL(destroyed()), this, SLOT(clearBattle()));
     connect(mybattle, SIGNAL(forfeit()), SLOT(forfeitBattle()));
     connect(mybattle, SIGNAL(battleCommand(BattleChoice)), &relay(), SLOT(battleCommand(BattleChoice)));
+    connect(mybattle, SIGNAL(battleMessage(QString)), &relay(), SLOT(battleMessage(QString)));
     connect(&relay(), SIGNAL(battleMessage(QByteArray)), mybattle, SLOT(receiveInfo(QByteArray)));
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
 }

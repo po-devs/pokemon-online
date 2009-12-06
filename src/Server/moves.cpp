@@ -809,6 +809,39 @@ struct MMSubstitute : public MM
     }
 };
 
+struct MMWish : public MM
+{
+    MMWish() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (poke(b,s).contains("WishCount") && poke(b,s)["WishCount"].toInt() >= 0) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int s, int, BS &b) {
+	poke(b,s)["WishCount"] = 2;
+	addFunction(poke(b,s), "EndTurn", "Wish", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+	if (b.koed(s)) {
+	    return;
+	}
+	int count = poke(b,s)["WishCount"].toInt();
+	if (count < 0) {
+	    return;
+	}
+	if (count == 0) {
+	    b.healLife(s, b.poke(s).totalLifePoints()/2);
+	}
+	poke(b,s)["WishCount"] = count - 1;
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = new MM##name; names[num] = #name;
 
 void MoveEffect::init()
@@ -849,6 +882,7 @@ void MoveEffect::init()
     REGISTER_MOVE(106, Rest);
     REGISTER_MOVE(128, Substitute);
     REGISTER_MOVE(130, SuperFang);
+    REGISTER_MOVE(142, Wish);
     REGISTER_MOVE(146, Avalanche); /* avalanche, revenge */
     REGISTER_MOVE(148, TrumpCard);
     REGISTER_MOVE(149, Haze);
