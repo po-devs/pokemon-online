@@ -1044,6 +1044,7 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
     if (life <= damage) {
 	pokelong[player]["Substitute"] = false;
 	turnlong[source]["DamageInflicted"] = life;
+	sendMoveMessage(128, 1, player);
     } else {
 	pokelong[player]["SubstituteLife"] = life-damage;
 	turnlong[source]["DamageInflicted"] = damage;
