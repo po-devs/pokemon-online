@@ -217,6 +217,7 @@ struct MMBatonPass : public MM
 
 	addFunction(turn(b,s), "UponSwitchIn", "BatonPass", &usi);
 	b.requestSwitch(s);
+	b.analyzeChoice(s);
     }
 
     static void usi(int s, int, BS &b) {
@@ -856,7 +857,7 @@ struct MMWish : public MM
     }
 
     static void daf(int s, int, BS &b) {
-	if (poke(b,s)["WishCount"].toInt() >= 0) {
+	if (poke(b,s).contains("WishCount") && poke(b,s)["WishCount"].toInt() >= 0) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -935,7 +936,7 @@ struct MMRoar : public MM
 	if (poke(b,t).contains("Rooted") && poke(b,t)["Rooted"].toBool() == true) {
 	    turn(b,s)["Failed"] = true;
 	} else {
-	    if (b.countAlive(s) <= 1) {
+	    if (b.countAlive(t) <= 1) {
 		turn(b,s)["Failed"] = true;
 	    }
 	}
