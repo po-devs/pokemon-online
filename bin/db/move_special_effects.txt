@@ -331,7 +331,7 @@
 108#role play
 
 66#rollout
-60|150#roost
+150|60#roost
 
 109#safeguard
 10#sand tomb

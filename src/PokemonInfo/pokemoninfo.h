@@ -51,6 +51,7 @@ private:
     static QStringList m_AccS;
     static QStringList m_Effects;
     static QStringList m_SpecialEffects;
+    static QList<QStringList> m_MoveMessages;
     static QList<char> m_Type;
     static QList<char> m_PP;
     static QList<char> m_Category;
@@ -82,6 +83,7 @@ private:
     static void loadFlinchs();
     static void loadRecoil();
     static void loadSpecialEffects();
+    static void loadMoveMessages();
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
@@ -114,6 +116,7 @@ public:
     static bool KingRock(int movenum);
     static int EffectRate(int movenum);
     static int Target(int movenum);
+    static QString MoveMessage(int moveeffect, int part);
 };
 
 class ItemInfo

@@ -23,6 +23,7 @@ QList<char> MoveInfo::m_Speeds;
 QList<int> MoveInfo::m_Flinch;
 QList<int> MoveInfo::m_Recoil;
 QList<int> MoveInfo::m_Targets;
+QList<QStringList> MoveInfo::m_MoveMessages;
 QList<QPair<char, char> > MoveInfo::m_Repeat;
 
 QString ItemInfo::m_Directory;
@@ -368,6 +369,16 @@ void MoveInfo::loadRepeats()
     }
 }
 
+void MoveInfo::loadMoveMessages()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_message.txt"));
+
+    foreach(QString str, temp) {
+	m_MoveMessages.push_back(str.split('|'));
+    }
+}
+
 void MoveInfo::loadSpeeds()
 {
     QStringList temp;
@@ -419,6 +430,7 @@ void MoveInfo::init(const QString &dir)
     loadEffectRates();
     loadSpeeds();
     loadFlinchs();
+    loadMoveMessages();
     loadRecoil();
     loadSpecialEffects();
 }
@@ -426,6 +438,14 @@ void MoveInfo::init(const QString &dir)
 int MoveInfo::NumberOfMoves()
 {
     return m_Names.size();
+}
+
+QString MoveInfo::MoveMessage(int moveeffect, int part)
+{
+    if (moveeffect < 0 || moveeffect >= m_MoveMessages.size() || part < 0 || part >= m_MoveMessages[moveeffect].size()) {
+	return "";
+    }
+    return m_MoveMessages[moveeffect][part];
 }
 
 int MoveInfo::Number(const QString &movename)

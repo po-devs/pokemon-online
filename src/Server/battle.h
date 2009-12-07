@@ -104,6 +104,7 @@ public:
     void testFlinch(int player, int target);
     bool testStatus(int player);
     bool testFail(int player);
+    void fail(int player, int move, int part=0, int type=0);
     bool hasType(int player, int type);
     bool isFlying(int player);
     bool hasSubstitute(int player);
@@ -135,7 +136,8 @@ public:
 	StatusChange,
 	StatusMessage,
 	Failed,
-	BattleChat
+	BattleChat,
+	MoveMessage
     };
 
     enum StatusFeeling
@@ -152,12 +154,21 @@ public:
 	HurtPoison
     };
 
+    void sendMoveMessage(int move, int part=0, int src=0, int type=0, int foe=-1, int other=-1, const QString &q="");
     /* Here C++0x would make it so much better looking with variadic templates! */
     void notify(int player, int command, int who);
     template<class T>
     void notify(int player, int command, int who, const T& param);
     template<class T1, class T2>
     void notify(int player, int command, int who, const T1& param1, const T2& param2);
+    template<class T1, class T2, class T3>
+    void notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3);
+    template<class T1, class T2, class T3, class T4>
+    void notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4);
+    template<class T1, class T2, class T3, class T4, class T5>
+    void notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4, const T5 &param5);
+    template<class T1, class T2, class T3, class T4, class T5, class T6>
+    void notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4, const T5 &param5, const T6 &param6);
 public slots:
     void battleChoiceReceived(int id, const BattleChoice &b);
     void battleChat(int id, const QString &str);
@@ -268,6 +279,94 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
     out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(command) << qint8(who) << param1 << param2;
+
+    if (player == All) {
+	emit battleInfo(id(Player1), tosend);
+	emit battleInfo(id(Player2), tosend);
+    } else if (player == AllButPlayer) {
+	emit battleInfo(id(rev(who)), tosend);
+    } else {
+	emit battleInfo(id(player), tosend);
+    }
+}
+
+template<class T1, class T2, class T3>
+void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3)
+{
+    /* Doing that cuz we never know */
+    testquit();
+
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(command) << qint8(who) << param1 << param2 << param3;
+
+    if (player == All) {
+	emit battleInfo(id(Player1), tosend);
+	emit battleInfo(id(Player2), tosend);
+    } else if (player == AllButPlayer) {
+	emit battleInfo(id(rev(who)), tosend);
+    } else {
+	emit battleInfo(id(player), tosend);
+    }
+}
+
+template<class T1, class T2, class T3, class T4>
+void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4)
+{
+    /* Doing that cuz we never know */
+    testquit();
+
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4;
+
+    if (player == All) {
+	emit battleInfo(id(Player1), tosend);
+	emit battleInfo(id(Player2), tosend);
+    } else if (player == AllButPlayer) {
+	emit battleInfo(id(rev(who)), tosend);
+    } else {
+	emit battleInfo(id(player), tosend);
+    }
+}
+
+template<class T1, class T2, class T3, class T4, class T5>
+void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4, const T5 &param5)
+{
+    /* Doing that cuz we never know */
+    testquit();
+
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4 << param5;
+
+    if (player == All) {
+	emit battleInfo(id(Player1), tosend);
+	emit battleInfo(id(Player2), tosend);
+    } else if (player == AllButPlayer) {
+	emit battleInfo(id(rev(who)), tosend);
+    } else {
+	emit battleInfo(id(player), tosend);
+    }
+}
+
+template<class T1, class T2, class T3, class T4, class T5, class T6>
+void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4, const T5 &param5, const T6 &param6)
+{
+    /* Doing that cuz we never know */
+    testquit();
+
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4 << param5 << param6;
 
     if (player == All) {
 	emit battleInfo(id(Player1), tosend);

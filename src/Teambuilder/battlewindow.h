@@ -70,7 +70,8 @@ public:
 	StatusChange,
 	StatusMessage,
 	Failed,
-	BattleChat
+	BattleChat,
+	MoveMessage
     };
 
     enum StatusFeeling

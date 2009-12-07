@@ -1,0 +1,152 @@
+
+%s absorbed %f's life!|%s devoured %f's dreams!
+A ring of water surrounds %s|Aquaring recovered %s's hp a little.
+A sweet flagrance flowed through %ts's team.|A chime resounded around %ts's team.
+
+
+
+
+%s hasn't enough energy left!
+
+
+%s needs to rest for a turn.
+%f is trapped!
+
+
+
+
+
+%s stored up electricity!
+%s changed its type to %t!
+%s changed its type to %t!
+
+
+
+%s crushed %f!
+%s inflicted a curse on %f!|%s is afflicted by the curse.
+Destiny bond took away %f!
+%f protected itself!
+
+
+%f is awake!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%s lost its focus!
+
+
+
+
+
+
+
+
+
+
+%s is in love with %s!|%s seduced %f!|%f is too lovestruck to move.
+
+%s recovered half it's life!
+
+
+
+
+
+
+
+
+
+
+
+%f evaded the seed!|%f was seeded!|%s's health is saped by leech seed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%s balanced it's life with %f!
+A sorrowful melody could be heard by everyone on the field.|%s's perish count fell to %d.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Spikes were scattered around %tf's team!|%s is hurt by spikes!
+
+
+Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
+
+
+
+%s already has a substitute.|%s's subsitute faded!|%s's substitute blocked the side effects!
+
+
+
+
+
+%s couldn't use %m because of taunt!
+
+Poison spikes were scattered around %tf's team!|The poison spikes disappeared around %ts's feet!
+
+
+
+
+
+%s made a wish!|%q's wish came true!
+
+
+
+
+
+
+A black haze covered the battlefield!
+%s landed on the ground!
+%s planted roots on the ground! %'s roots absorbed nutrients.

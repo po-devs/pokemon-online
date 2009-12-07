@@ -347,6 +347,23 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    in >> message;
 	    printHtml(QString("<span style='color:") + (self?"#5811b1":"green") + "'><b>" + escapeHtml(name(self)) + ": </b></span>" + escapeHtml(message));
 	}
+	case MoveMessage:
+	{
+	    quint16 move=0;
+	    uchar part=0;
+	    qint8 type(0), foe(0);
+	    qint16 other(0);
+	    QString q;
+	    in >> move >> part >> type >> foe >> other >> q;
+	    QString mess = MoveInfo::MoveMessage(move,part);
+	    mess.replace("%s", nick(self));
+	    mess.replace("%t", TypeInfo::Name(type));
+	    mess.replace("%f", nick(!self));
+	    mess.replace("%m", MoveInfo::Name(other));
+	    mess.replace("%d", QString::number(other));
+	    mess.replace("%q", q);
+	    printHtml("<span style='color:" + TypeInfo::Color(type).name() + "'>" + escapeHtml(mess) + "</span>");
+	}
 	default:
 	    break;
     }
@@ -587,7 +604,12 @@ qint32 GraphicsZone::key(quint16 num, bool shiny, bool back, quint8 gender) cons
 
 const PokeBattle & BattleInfo::currentPoke() const
 {
-    return myteam.poke(currentIndex);
+    if (currentIndex == -1) {
+	qDebug() << "Error! Call for pokémon info while none on the field. Returning a safe value instead";
+	return myteam.poke(0);
+    } else {
+	return myteam.poke(currentIndex);
+    }
 }
 
 PokeBattle & BattleInfo::currentPoke()

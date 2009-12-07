@@ -15,13 +15,14 @@ struct MoveMechanics
     static BattleSituation::context & turn(BattleSituation &b, int player);
     static BattleSituation::context & poke(BattleSituation &b, int player);
     static BattleSituation::context & team(BattleSituation &b, int player);
+    static int num(const QString &name);
+    static int move(BattleSituation &b, int source);
+    static int type(BattleSituation &b, int source);
 
     typedef void (*function) (int source, int target, BattleSituation &b);
 
     QMap<QString, function> functions;
 };
-
-const int MOVE_MECHANICS_SIZE = 200;
 
 /* Used to tell us everything about a move */
 struct MoveEffect : public QVariantMap
@@ -30,8 +31,9 @@ struct MoveEffect : public QVariantMap
 
     static void setup(int movenum, int source, int target, BattleSituation &b);
 
-    static MoveMechanics *mechanics[MOVE_MECHANICS_SIZE];
-    static QString names[MOVE_MECHANICS_SIZE];
+    static QMap<int, MoveMechanics> mechanics;
+    static QMap<int, QString> names;
+    static QMap<QString, int> nums;
 
     static void init();
 };
