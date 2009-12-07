@@ -785,7 +785,7 @@ struct MMHealHalf : public MM
 struct MMRoost : public MM
 {
     MMRoost() {
-	functions["UponAttackSuccessul"] = &uas;
+	functions["UponAttackSuccessful"] = &uas;
     }
 
     static void uas(int s, int, BS &b) {
