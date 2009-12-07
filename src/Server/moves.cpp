@@ -753,14 +753,14 @@ struct MMLeechSeed : public MM
     static void uas(int s, int t, BS &b) {
 	addFunction(poke(b,t), "EndTurn", "LeechSeed", &et);
 	poke(b,t)["SeedSource"] = s;
-	b.sendMoveMessage(95, 1, s, Pokemon::Grass, t);
+	b.sendMoveMessage(72, 1, s, Pokemon::Grass, t);
     }
 
     static void et(int s, int, BS &b) {
 	if (b.koed(s))
 	    return;
 	int damage = b.poke(s).totalLifePoints() / 8;
-	b.sendMoveMessage(95, 2, s, Pokemon::Grass);
+	b.sendMoveMessage(72, 2, s, Pokemon::Grass);
 	b.inflictDamage(s, damage, s, false);
 	int s2 = poke(b,s)["SeedSource"].toInt();
 	if (b.koed(s2))
@@ -1108,7 +1108,6 @@ struct MMSubstitute : public MM
 	poke(b,s)["Substitute"] = true;
 	poke(b,s)["SubstituteLife"] = b.poke(s).totalLifePoints()/4;
 	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
-	b.sendMoveMessage(128, 1, s);
     }
 
     static void bte(int s, int t, BS &b) {
