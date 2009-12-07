@@ -346,6 +346,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    QString message;
 	    in >> message;
 	    printHtml(QString("<span style='color:") + (self?"#5811b1":"green") + "'><b>" + escapeHtml(name(self)) + ": </b></span>" + escapeHtml(message));
+	    break;
 	}
 	case MoveMessage:
 	{
@@ -357,8 +358,8 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    in >> move >> part >> type >> foe >> other >> q;
 	    QString mess = MoveInfo::MoveMessage(move,part);
 	    mess.replace("%s", nick(self));
-            mess.replace("%ts", nick(self));
-            mess.replace("%tf", nick(!self));
+	    mess.replace("%ts", name(self));
+	    mess.replace("%tf", name(!self));
 	    mess.replace("%t", TypeInfo::Name(type));
 	    mess.replace("%f", nick(!self));
 	    mess.replace("%m", MoveInfo::Name(other));
@@ -616,5 +617,10 @@ const PokeBattle & BattleInfo::currentPoke() const
 
 PokeBattle & BattleInfo::currentPoke()
 {
-    return myteam.poke(currentIndex);
+    if (currentIndex == -1) {
+	qDebug() << "Error! Call for pokémon info while none on the field. Returning a safe value instead";
+	return myteam.poke(0);
+    } else {
+	return myteam.poke(currentIndex);
+    }
 }
