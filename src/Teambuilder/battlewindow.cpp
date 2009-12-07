@@ -357,6 +357,8 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    in >> move >> part >> type >> foe >> other >> q;
 	    QString mess = MoveInfo::MoveMessage(move,part);
 	    mess.replace("%s", nick(self));
+            mess.replace("%ts", nick(self));
+            mess.replace("%tf", nick(!self));
 	    mess.replace("%t", TypeInfo::Name(type));
 	    mess.replace("%f", nick(!self));
 	    mess.replace("%m", MoveInfo::Name(other));
