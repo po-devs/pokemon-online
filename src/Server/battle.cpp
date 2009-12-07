@@ -560,8 +560,10 @@ void BattleSituation::testFlinch(int player, int target)
 
 bool BattleSituation::testFail(int player)
 {
-    if (turnlong[player].contains("Failed") && turnlong[player]["Failed"].toBool() == true) {
-	notify(All, Failed, player);
+    if (turnlong[player]["Failed"].toBool() == true) {
+	if (turnlong[player]["FailingMessage"].toBool() == true) {
+	    notify(All, Failed, player);
+	}
 	return true;
     }
     return false;
@@ -583,11 +585,17 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	return;
     }
     callpeffects(player, player, "DetermineAttackPossible");
-    if (turnlong[player].contains("ImpossibleToMove") && turnlong[player]["ImpossibleToMove"].toBool() == true) {
+    if (turnlong[player]["ImpossibleToMove"].toBool() == true) {
 	return;
     }
 
+    turnlong[player]["MoveChosen"] = attack;
+
     if (!specialOccurence) {
+	callpeffects(player, player, "MovePossible");
+	if (turnlong[player]["ImpossibleToMove"].toBool() == true) {
+	    return;
+	}
 	callpeffects(player, player, "MovesPossible");
 	if (!isMovePossible(player, move)) {
 	    return;
@@ -619,6 +627,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     foreach(int target, targetList) {
 	turnlong[player]["Failed"] = false;
+	turnlong[player]["FailingMessage"] = true;
 	if (target != -1 && koed(target)) {
 	    continue;
 	}
@@ -1170,6 +1179,26 @@ int BattleSituation::getStat(int player, int stat)
     }
 
     return ret;
+}
+
+void BattleSituation::sendMoveMessage(int move, int part, int src, int type, int foe, int other, const QString &q)
+{
+    if (foe == -1) {
+	notify(All, MoveMessage, src, quint16(move), uchar(part), qint8(type));
+    } else if (other == -1) {
+	notify(All, MoveMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe));
+    } else if (q == "") {
+	notify(All, MoveMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe), qint16(other));
+    } else {
+	notify(All, MoveMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe), qint16(other), q);
+    }
+}
+
+void BattleSituation::fail(int player, int move, int part, int type)
+{
+    turnlong[player]["FailingMessage"] = false;
+    turnlong[player]["Failed"] = true;
+    sendMoveMessage(move, part, player, type, rev(player));
 }
 
 PokeFraction BattleSituation::getStatBoost(int player, int stat)
