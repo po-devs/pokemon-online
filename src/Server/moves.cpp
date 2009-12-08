@@ -92,6 +92,9 @@ struct MMLeech : public MM
 		int recovered = std::max(1, damage/2);
 		int move = MM::move(b,s);
 		b.sendMoveMessage(1, move == 106 ? 1 :0, s, type(b,s), t);
+		if (b.poke(s).item() == 1) /* Big root */ {
+		    recovered = recovered * 13 / 10;
+		}
 		b.healLife(s, recovered);
 	    }
 	}
@@ -161,6 +164,7 @@ struct MMBatonPass : public MM
 	BS::context c = poke(b, s);
     	c.remove("Type1");
 	c.remove("Type2");
+	c.remove("Num");
 	c.remove("Minimize");
 	c.remove("DefenseCurl");
 	c.remove("ChoiceMemory"); /* choice band etc. would force the same move*
@@ -747,25 +751,13 @@ struct MMRoost : public MM
 
     static void uas(int s, int, BS &b) {
 	b.sendMoveMessage(150,0,s,Pokemon::Flying);
-	int num = 0;
-	if (poke(b,s)["Type1"].toInt() == Pokemon::Flying) {
-	    num = 1;
-	} else if (poke(b,s)["Type2"].toInt() == Pokemon::Flying) {
-	    num = 2;
-	}
 
-	if (num != 0) {
-	    poke(b,s)["Type" + QString::number(num)] = Pokemon::Curse;
-	    turn(b,s)["RoostChange"] = num;
-	    addFunction(poke(b,s), "EndTurn", "Roost", &et);
-	}
+	turn(b,s)["Roosted"] = true;
+	addFunction(poke(b,s), "EndTurn", "Roost", &et);
     }
 
     static void et(int s, int, BS &b) {
-	if (!turn(b,s).contains("RoostChange")) {
-	    return;
-	}
-	turn(b,s)["Type" + QString::number(s)] = Pokemon::Flying;
+	turn(b,s)["Roosted"] = false;
     }
 };
 
@@ -1148,6 +1140,10 @@ struct MMAttract : public MM
 	poke(b,s)["Attracted"] = t;
 	addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
 	b.sendMoveMessage(58,1,s,0,t);
+	if (b.poke(t).item() == 17) /* mental herb*/ {
+	    b.sendItemMessage(7,s);
+	    b.disposeItem(t);
+	}
     }
 
     static void pda(int s, int, BS &b) {
@@ -1171,14 +1167,14 @@ struct MMTaunt : public MM
     }
 
     static void uas (int, int t, BS &b) {
-	poke(b,t)["TauntTurn"] = b.turn();
+	poke(b,t)["TauntsUntil"] = b.turn() + 2 + (rand()%2);
 	addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
 	addFunction(poke(b,t), "MovePossible", "Taunt", &mp);
     }
 
     static void msp(int s, int, BS &b) {
-	int tt = poke(b,s)["TauntTurn"].toInt();
-	if (tt != b.turn() && tt+1 != b.turn()) {
+	int tt = poke(b,s)["TauntsUntil"].toInt();
+	if (tt > b.turn()) {
 	    return;
 	}
 	for (int i = 0; i < 4; i++) {
@@ -1189,8 +1185,8 @@ struct MMTaunt : public MM
     }
 
     static void mp(int s, int, BS &b) {
-	int tt = poke(b,s)["TauntTurn"].toInt();
-	if (tt != b.turn() && tt+1 != b.turn()) {
+	int tt = poke(b,s)["TauntsUntil"].toInt();
+	if (tt > b.turn()) {
 	    return;
 	}
 	int move = turn(b,s)["MoveChosen"].toInt();

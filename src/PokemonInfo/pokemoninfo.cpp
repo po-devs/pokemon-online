@@ -782,6 +782,11 @@ bool ItemInfo::isBerry(int itemnum)
     return itemnum >= 8000;
 }
 
+bool ItemInfo::isPlate(int itemnum)
+{
+    return (itemnum >= 185 && itemnum <= 202 && itemnum != 190 && itemnum != 200);
+}
+
 int ItemInfo::Number(const QString &itemname)
 {
     if (m_BerryNamesH.contains(itemname)) {

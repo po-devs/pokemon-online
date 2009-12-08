@@ -17,9 +17,9 @@
 %s's Black Sludge restored its HP a little!|%s was hurt by Black Sludge!
 
 
+%s's Flame Orb activated!|%s's Toxic Orb activated!
 
-
-%s is hurt by its life orb!
+%s is hurt by its Life Orb!
 
 
 %s's shell bell restored its HP a little!
@@ -27,5 +27,5 @@
 
 
 
-
+%s is hurt by its Sticky Barb!|%s is hurt by %f's sticky Barb!|The Sticky Barb is now attached to %s!
 

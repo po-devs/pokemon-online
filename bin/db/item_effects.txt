@@ -15,12 +15,12 @@
 1-1#lax incense
 12#Leftovers
 
-7#Mental Herb
+
 8_132_10_2_5#Metal Powder
 9-0#Muscle Band 
 10-13#Odd Incense 
 
-11#Power Herb 
+#11#Power Herb
 
 8_132_20_3#Quick Powder
 
@@ -28,7 +28,7 @@
 10-5#Rock Incense 
 10-11#Rose Incense 
 10-10#Sea Incense
-13#Shed Shell
+#13#Shed Shell
 10-0#Silk Scarf
 10-7#Silver Powder
 14-3#Smooth Rock 
@@ -39,7 +39,7 @@
 1-6_7#Wide Lens 
 9-1#Wise Glasses 
 
-15#Zoom Lens 
+15#Zoom Lens
 
 
 
@@ -85,7 +85,7 @@
 
 
 
-20#king's rock
+#20#king's rock
 
 
 
@@ -188,7 +188,7 @@
 29-4|10-4#Earth Plate 
 29-1|10-1#Fist Plate 
 29-9|10-9#Flame Plate 
-30#Grip Claw 
+30#Grip Claw
 29-14|10-14#Icicle Plate 
 29-6|10-6#Insect Plate 
 29-8|10-8#Iron Plate 
@@ -200,7 +200,7 @@
 29-5|10-5#Stone Plate 
 8_104/105_20_1#Thick Club
 29-3|10-3#Toxic Plate 
-29-12|10-12#Zap Plate 
+29-12|10-12#Zap Plate
 
 
 
