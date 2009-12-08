@@ -27,8 +27,15 @@ QList<QStringList> MoveInfo::m_MoveMessages;
 QList<QPair<char, char> > MoveInfo::m_Repeat;
 
 QString ItemInfo::m_Directory;
-QStringList ItemInfo::m_Names;
+QStringList ItemInfo::m_BerryNames;
+QStringList ItemInfo::m_RegItemNames;
+QHash<QString, int> ItemInfo::m_BerryNamesH;
+QHash<QString, int> ItemInfo::m_ItemNamesH;
 QStringList ItemInfo::m_SortedNames;
+QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects;
+QList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
+QList<QStringList> ItemInfo::m_RegMessages;
+QList<QStringList> ItemInfo::m_BerryMessages;
 
 QStringList TypeInfo::m_Names;
 QList<QColor> TypeInfo::m_Colors;
@@ -648,11 +655,99 @@ void ItemInfo::init(const QString &dir)
 
 void ItemInfo::loadNames()
 {
-    fill_container_with_file(m_Names, path("items_en.txt"));
-    fill_container_with_file(m_Names, path("berries_en.txt"));
+    fill_container_with_file(m_RegItemNames, path("items_en.txt"));
 
-    m_SortedNames = m_Names;
-    qSort(m_SortedNames);
+    m_ItemNamesH.reserve(m_RegItemNames.size());
+
+    QStringList::const_iterator it = m_RegItemNames.constBegin();
+    for (int i = 0; it != m_RegItemNames.constEnd(); i++, ++it) {
+	m_ItemNamesH.insert(*it, i);
+    }
+
+    fill_container_with_file(m_BerryNames, path("berries_en.txt"));
+    m_BerryNamesH.reserve(m_BerryNames.size());
+
+    QStringList::const_iterator it2 = m_BerryNames.constBegin();
+    for (int i = 0; it2 != m_BerryNames.constEnd(); i++, ++it2) {
+	m_BerryNamesH.insert(*it2, i+8000);
+    }
+
+    m_SortedNames << m_RegItemNames << m_BerryNames;
+    m_SortedNames.sort();
+
+    QStringList temp;
+    fill_container_with_file(temp, path("item_effects.txt"));
+
+    /* Removing comments, aka anything starting from '#' */
+    foreach (QString eff, temp) {
+	QStringList effects = eff.split('#').front().split('|');
+	QList<Effect> toPush;
+	foreach(QString eff, effects) {
+	    std::string s = eff.toStdString();
+	    size_t pos = s.find('-');
+	    if (pos != std::string::npos) {
+		toPush.push_back(Effect(atoi(s.c_str()), eff.mid(pos+1)));
+	    } else {
+		toPush.push_back(Effect(atoi(s.c_str())));
+	    }
+	}
+	m_RegEffects.push_back(toPush);
+    }
+
+    temp.clear();
+    fill_container_with_file(temp, path("berry_effects.txt"));
+    /* Removing comments, aka anything starting from '#' */
+    foreach (QString eff, temp) {
+	QStringList effects = eff.split('#').front().split('|');
+	QList<Effect> toPush;
+	foreach(QString eff, effects) {
+	    std::string s = eff.toStdString();
+	    size_t pos = s.find('-');
+	    if (pos != std::string::npos) {
+		toPush.push_back(Effect(atoi(s.c_str()), eff.mid(pos+1)));
+	    } else {
+		toPush.push_back(Effect(atoi(s.c_str())));
+	    }
+	}
+	m_BerryEffects.push_back(toPush);
+    }
+
+    temp.clear();
+    fill_container_with_file(temp, path("item_messages_en.txt"));
+    foreach (QString eff, temp) {
+	m_RegMessages.push_back(eff.split('|'));
+    }
+
+    temp.clear();
+    fill_container_with_file(temp, path("berry_messages_en.txt"));
+    foreach (QString eff, temp) {
+	m_BerryMessages.push_back(eff.split('|'));
+    }
+}
+
+QList<ItemInfo::Effect> ItemInfo::Effects(int item)
+{
+    if (!Exist(item)) {
+	return QList<ItemInfo::Effect>();
+    } else {
+	return isBerry(item) ? m_BerryEffects[item-8000] : m_RegEffects[item];
+    }
+}
+
+QString ItemInfo::Message(int effect, int part)
+{
+    if (effect < 8000) {
+	if (m_RegMessages.size() <= effect || m_RegMessages[effect].size() <= part) {
+	    return "";
+	}
+	return m_RegMessages[effect][part];
+    } else {
+	effect = effect-8000;
+	if (m_BerryMessages.size() <= effect || m_BerryMessages[effect].size() <= part) {
+	    return "";
+	}
+	return m_BerryMessages[effect][part];
+    }
 }
 
 QString ItemInfo::path(const QString &file)
@@ -662,27 +757,45 @@ QString ItemInfo::path(const QString &file)
 
 int ItemInfo::NumberOfItems()
 {
-    return m_Names.size();
+    return m_SortedNames.size();
 }
 
 QString ItemInfo::Name(int itemnum)
 {
-    return m_Names[itemnum];
+    if (!Exist(itemnum)) {
+	return 0;
+    }
+    if (itemnum < 8000) {
+	return m_RegItemNames[itemnum];
+    } else {
+	return m_BerryNames[itemnum-8000];
+    }
+}
+
+bool ItemInfo::Exist(int itemnum)
+{
+    return !(itemnum < 8000 && itemnum >= m_RegItemNames.size()) && !(itemnum >= 8000 + m_BerryNames.size());
+}
+
+bool ItemInfo::isBerry(int itemnum)
+{
+    return itemnum >= 8000;
 }
 
 int ItemInfo::Number(const QString &itemname)
 {
-    return (qFind(m_Names.begin(), m_Names.end(), itemname)-m_Names.begin()) % (NumberOfItems());
+    if (m_BerryNamesH.contains(itemname)) {
+	return m_BerryNamesH[itemname];
+    } else if (m_ItemNamesH.contains(itemname)) {
+	return m_ItemNamesH[itemname];
+    } else {
+	return 0;
+    }
 }
 
 int ItemInfo::SortedNumber(const QString &itemname)
 {
-    return (qFind(m_SortedNames.begin(), m_SortedNames.end(), itemname)-m_SortedNames.begin()) % (NumberOfItems());
-}
-
-QStringList ItemInfo::Names()
-{
-    return m_Names;
+    return (qLowerBound(m_SortedNames, itemname) - m_SortedNames.constBegin()) % (NumberOfItems());
 }
 
 QStringList ItemInfo::SortedNames()

@@ -18,7 +18,7 @@ public:
 	Player1,
 	Player2
     };
-    typedef QVariantMap context;
+    typedef QVariantHash context;
 
     BattleSituation(Player &p1, Player &p2);
     ~BattleSituation();
@@ -92,6 +92,7 @@ public:
     void inflictRecoil(int source, int target);
     void inflictDamage(int player, int damage, int source, bool straightattack = false);
     void inflictSubDamage(int player, int damage, int source);
+    void disposeItem(int player);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
@@ -137,7 +138,9 @@ public:
 	StatusMessage,
 	Failed,
 	BattleChat,
-	MoveMessage
+	MoveMessage,
+	ItemMessage,
+	NoOpponent
     };
 
     enum StatusFeeling
@@ -155,6 +158,7 @@ public:
     };
 
     void sendMoveMessage(int move, int part=0, int src=0, int type=0, int foe=-1, int other=-1, const QString &q="");
+    void sendItemMessage(int item, int src, int part = 0);
     /* Here C++0x would make it so much better looking with variadic templates! */
     void notify(int player, int command, int who);
     template<class T>
@@ -200,6 +204,8 @@ private:
     void callbeffects(int source, int target, const QString &name);
     /* The team zone effects */
     void callzeffects(int source, int target, const QString &name);
+    /* item effects */
+    void callieffects(int source, int target, const QString &name);
 public:
     /**************************************/
     /*** VIVs: very important variables ***/

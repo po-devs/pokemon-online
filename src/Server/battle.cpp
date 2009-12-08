@@ -2,6 +2,7 @@
 #include "player.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "moves.h"
+#include "items.h"
 #include <ctime> /* for random numbers, time(NULL) needed */
 
 BattleSituation::BattleSituation(Player &p1, Player &p2)
@@ -153,9 +154,16 @@ void BattleSituation::beginTurn()
 void BattleSituation::endTurn()
 {
     qDebug() << "Start of the end of the turn";
-    endTurnStatus();
+
+    if (!koed(Player1))
+	callieffects(Player1, Player1, "EndTurn");
+    if (!koed(Player2))
+	callieffects(Player2, Player2, "EndTurn");
+
     callpeffects(Player1, Player2, "EndTurn");
     callpeffects(Player2, Player1, "EndTurn");
+
+    endTurnStatus();
 
     requestSwitchIns();
     qDebug() << "End of the turn";
@@ -174,7 +182,7 @@ void BattleSituation::endTurnStatus()
 	    case Pokemon::DeeplyPoisoned:
 		notify(All, StatusMessage, player, qint8(HurtPoison));
 		inflictDamage(player, poke(player).totalLifePoints()*(pokelong[player]["ToxicCount"].toInt()+1)/16, player);
-		pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()*2+1, 7);
+		pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()+1, 14);
 		break;
 	    case Pokemon::Poisoned:
 		notify(All, StatusMessage, player, qint8(HurtPoison));
@@ -244,6 +252,7 @@ BattleChoices BattleSituation::createChoice(int player)
 
     /* attacks ok, lets see which ones then */
     callpeffects(player, player, "MovesPossible");
+    callieffects(player, player, "MovesPossible");
     for (int i = 0; i < 4; i++) {
 	if (!isMovePossible(player,i)) {
 	    ret.attackAllowed[i] = false;
@@ -370,6 +379,8 @@ void BattleSituation::sendPoke(int player, int pok)
 	pokelong[player][QString("Stat%1").arg(i)] = poke(player).normalStat(i);
     pokelong[player]["Level"] = poke(player).level();
 
+    ItemEffect::setup(poke(player).item(),player,*this);
+
     calleffects(player, player, "UponSwitchIn");
     callzeffects(player, player, "UponSwitchIn");
 
@@ -441,6 +452,11 @@ void BattleSituation::callzeffects(int source, int target, const QString &name)
 	    f(source, target, *this);
 	}
     }
+}
+
+void BattleSituation::callieffects(int source, int target, const QString &name)
+{
+    ItemEffect::activate(name, poke(source).item(), source, target, *this);
 }
 
 void BattleSituation::sendBack(int player)
@@ -572,9 +588,9 @@ bool BattleSituation::testFail(int player)
 void BattleSituation::useAttack(int player, int move, bool specialOccurence, bool tellPlayers)
 {
     int attack;
+    turnlong[player]["MoveSlot"] = move;
     if (specialOccurence) {
 	attack = move;
-	turnlong[player]["MoveSlot"] = move;
     } else {
 	attack = poke(player).move(move).num();
     }
@@ -600,6 +616,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	if (!isMovePossible(player, move)) {
 	    return;
 	}
+	callieffects(player,player, "RegMoveSettings");
     }
 
     if (tellPlayers && !specialOccurence) {
@@ -622,6 +639,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	case Move::User: targetList.push_back(player); break;
 	case Move::All: targetList.push_back(player); targetList.push_back(rev(player)); break;
 	default: targetList.push_back(rev(player));
+    }
+
+    if (targetList.size() == 1 && targetList[0] == rev(player) && koed(rev(player))) {
+	notify(All, NoOpponent, player);
+	return;
     }
 
 
@@ -719,7 +741,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	}
 	pokelong[target]["LastAttackToHit"] = attack;
     }
-    requestSwitchIns();
 }
 
 void BattleSituation::inflictRecoil(int source, int target)
@@ -942,20 +963,21 @@ void BattleSituation::changeStatMod(int player, int stat, int newstat)
     pokelong[player][path] = newstat;
 }
 
-int BattleSituation::calculateDamage(int _player, int _target)
+int BattleSituation::calculateDamage(int p, int t)
 {
-    context &player = pokelong[_player];
-    context &move = turnlong[_player];
+    context &player = pokelong[p];
+    context &move = turnlong[p];
+    PokeBattle &poke = this->poke(p);
 
     int level = player["Level"].toInt();
     int attack, def;
 
     if (move["Category"].toInt() == Move::Physical) {
-	attack = getStat(_player, Attack);
-	def = getStat(_target, Defense);
+	attack = getStat(p, Attack);
+	def = getStat(t, Defense);
     } else {
-	attack = getStat(_player, SpAttack);
-	def = getStat(_target, SpDefense);
+	attack = getStat(p, SpAttack);
+	def = getStat(t, SpDefense);
     }
 
     int stab = move["Stab"].toInt();
@@ -964,9 +986,11 @@ int BattleSituation::calculateDamage(int _player, int _target)
     int ch = 1 + move["CriticalHit"].toBool();
     int power = move["Power"].toInt();
 
-    PokeFraction mod1 = getMod1(_player, _target);
+    int damage = ((((level * 2 / 5) + 2) * power * attack / 50) / def);
+    damage = damage * ((poke.status() == Pokemon::Burnt && move["Category"].toInt() == Move::Physical) ? PokeFraction(1,2) : PokeFraction(1,1));
+    damage = (damage+2)*ch*1/*Mod2*/ *randnum*100/255/100*stab/2*typemod/4;
 
-    int damage = (((((((level * 2 / 5) + 2) * power * attack / 50) / def) * mod1) + 2) * ch * 1 /*Mod2*/ * randnum * 100 / 255 / 100) * stab / 2 * typemod / 4 * 1 /* Mod3 */;
+    damage = damage * ((poke.item() == 7 && typemod > 4)? 6 : 5)/5 /* mod3 */;
 
     return damage;
 }
@@ -998,6 +1022,9 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	return;
     }
 
+    if (straightattack)
+	callieffects(player, source, "BeforeTakingDamage");
+
     qDebug() << "Damage inflicted (first v: " << damage << ") by " << source << " from " << player;
     if (damage == 0) {
 	damage = 1;
@@ -1011,6 +1038,11 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	damage = std::min(int(poke(player).lifePoints()), damage);
 
 	int hp  = poke(player).lifePoints() - damage;
+
+	if (hp <= 0 && straightattack && turnlong[player].contains("CannotBeKoedBy") && turnlong[player]["CannotBeKoedBy"].toInt() == source) {
+	    damage = poke(player).lifePoints() - 1;
+	    hp = 1;
+	}
 
 	if (hp <= 0) {
 	    koPoke(player, source, straightattack);
@@ -1028,9 +1060,11 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	    turnlong[player]["DamageTakenBy"] = source;
 	}
 
-	inflictRecoil(source, player);
+	if (damage > 0)
+	    inflictRecoil(source, player);
 
 	calleffects(source, player, "UponDamageInflicted");
+	callieffects(player, source, "UponOffensiveDamageReceived");
     }
 
     if (!sub)
@@ -1049,6 +1083,10 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
 	pokelong[player]["SubstituteLife"] = life-damage;
 	turnlong[source]["DamageInflicted"] = damage;
     }
+}
+
+void BattleSituation::disposeItem(int  player) {
+    poke(player).item() = 0;
 }
 
 void BattleSituation::healLife(int player, int healing)
@@ -1173,7 +1211,9 @@ void BattleSituation::losePP(int player, int move, int loss)
 
 int BattleSituation::getStat(int player, int stat)
 {
-    int ret = pokelong[player][tr("Stat%1").arg(stat)].toInt()*getStatBoost(player, stat);
+    QString q = "Stat"+QString::number(stat);
+    callieffects(player, player, "StatModifier");
+    int ret = pokelong[player][q].toInt()*getStatBoost(player, stat)*(20+turnlong[player][q+"AbilityModifier"].toInt())/20*(20+turnlong[player][q+"ItemModifier"].toInt())/20;
 
     if (stat == Speed && poke(player).status() == Pokemon::Paralysed) {
 	ret = ret * 3 / 4;
@@ -1193,6 +1233,11 @@ void BattleSituation::sendMoveMessage(int move, int part, int src, int type, int
     } else {
 	notify(All, MoveMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe), qint16(other), q);
     }
+}
+
+void BattleSituation::sendItemMessage(int move, int src, int part)
+{
+    notify(All, ItemMessage, src, quint16(move), uchar(part));
 }
 
 void BattleSituation::fail(int player, int move, int part, int type)

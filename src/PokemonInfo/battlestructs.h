@@ -55,6 +55,8 @@ class PokeBattle
     PROPERTY(quint8, status);
     PROPERTY(qint8, sleepCount);
     PROPERTY(quint16, num);
+    PROPERTY(quint16, item);
+    PROPERTY(quint16, ability);
     PROPERTY(bool, shiny);
     PROPERTY(quint8, gender);
     PROPERTY(quint8, level);

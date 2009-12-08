@@ -339,7 +339,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	}
 	    break;
 	case Failed:
-	    printLine("It failed!");
+	    printLine(tr("It failed!"));
 	    break;
 	case BattleChat:
 	{
@@ -366,6 +366,20 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    mess.replace("%d", QString::number(other));
 	    mess.replace("%q", q);
 	    printHtml("<span style='color:" + TypeInfo::Color(type).name() + "'>" + escapeHtml(mess) + "</span>");
+	    break;
+	}
+	case NoOpponent:
+	    printLine(tr("There is no target pokémon!"));
+	    break;
+	case ItemMessage:
+	{
+	    quint16 item=0;
+	    uchar part=0;
+	    in >> item >> part;
+	    QString mess = ItemInfo::Message(item, part);
+	    mess.replace("%s", nick(self));
+	    printLine(mess);
+	    break;
 	}
 	default:
 	    break;

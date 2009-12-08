@@ -808,7 +808,6 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
 	slider(i)->setTracking(true);
 	slider(i)->setRange(0,255);
 	slider(i)->setMinimumWidth(150);
-        slider(i)->setSingleStep(4);
 	m_evs[i]->setMinimumWidth(24);
 	connect(slider(i),SIGNAL(valueChanged(int)),SLOT(EVChanged(int)));
     }

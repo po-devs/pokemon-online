@@ -71,7 +71,9 @@ public:
 	StatusMessage,
 	Failed,
 	BattleChat,
-	MoveMessage
+	MoveMessage,
+	ItemMessage,
+	NoOpponent
     };
 
     enum StatusFeeling
@@ -149,7 +151,7 @@ public:
     /* We are using a qmap to store the graphics already loaded. So the key of the pixmap
 	is a combination of 2 bools, 1 quin8; and one quint16 */
     qint32 key(quint16 num, bool shiny, bool back, quint8 gender) const;
-    QMap<qint32, QPixmap> graphics;
+    QHash<qint32, QPixmap> graphics;
     /* Current pixmaps displayed */
     QGraphicsPixmapItem *mine, *foe;
     QGraphicsScene scene;

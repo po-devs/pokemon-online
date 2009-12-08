@@ -121,10 +121,23 @@ public:
 
 class ItemInfo
 {
+public:
+    struct Effect {
+	int num;
+	QString args;
+	Effect(int i, const QString &q="") : num(i), args(q){}
+    };
 private:
-    static QStringList m_Names;
+    static QStringList m_BerryNames;
+    static QStringList m_RegItemNames;
+    static QHash<QString, int> m_BerryNamesH;
+    static QHash<QString, int> m_ItemNamesH;
     static QStringList m_SortedNames;
     static QString m_Directory;
+    static QList<QList<Effect> > m_RegEffects;
+    static QList<QList<Effect> > m_BerryEffects;
+    static QList<QStringList> m_RegMessages;
+    static QList<QStringList> m_BerryMessages;
 
     static void loadNames();
     static QString path(const QString &filename);
@@ -135,8 +148,11 @@ public:
     /* Self-explainable functions */
     static int NumberOfItems();
     static QString Name(int itemnum);
-    static QStringList Names();
+    static bool Exist(int itemnum);
+    static bool isBerry(int itemnum);
     static QStringList SortedNames();
+    static QList<Effect> Effects(int item);
+    static QString Message(int item, int part);
     static int Number(const QString &itemname);
     /* returns the number corresponding to the name, but with the sortedNames as a ref */
     static int SortedNumber(const QString &itemname);

@@ -3,6 +3,7 @@
 #include "player.h"
 #include "battle.h"
 #include "moves.h"
+#include "items.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
 Server::Server(quint16 port)
@@ -28,8 +29,9 @@ Server::Server(quint16 port)
     printLine(tr("Pokémon database loaded"));
 
     MoveEffect::init();
+    ItemEffect::init();
 
-    printLine(tr("Move special effects loaded"));
+    printLine(tr("Move & items special effects loaded"));
 
     if (!server()->listen(QHostAddress::Any, port))
     {
@@ -48,6 +50,7 @@ QTcpServer * Server::server()
 
 void Server::printLine(const QString &line)
 {
+    mainchat()->moveCursor(QTextCursor::End);
     mainchat()->insertPlainText(line + "\n");
     qDebug() << line;
 }
@@ -247,7 +250,7 @@ void Server::sendAll(const QString &message)
 int Server::freeid() const
 {
     int prev = 0;
-    for (QMap<int, Player*>::const_iterator it = myplayers.begin(); it != myplayers.end(); ++it)
+    for (QHash<int, Player*>::const_iterator it = myplayers.begin(); it != myplayers.end(); ++it)
     {
 	if ( it.key() != prev + 1 ) {
 	    return prev + 1;

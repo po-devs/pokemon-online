@@ -1,0 +1,31 @@
+(No Item)
+
+
+
+%s held on its focus band!
+%s held on its focus sash!
+
+%s used its mental herb to focus on the fight!
+
+
+
+%s used its power herb to attack immediately!
+%s's Leftovers restored its HP a little!
+
+
+
+%s's Black Sludge restored its HP a little!|%s was hurt by Black Sludge!
+
+
+
+
+%s is hurt by its life orb!
+
+
+%s's shell bell restored its HP a little!
+
+
+
+
+
+

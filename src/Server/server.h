@@ -43,8 +43,8 @@ public slots:
 private:
     QTcpServer myserver;
     /* storing players */
-    QMap<int, Player*> myplayers;
-    QMap<int, BattleSituation*> mybattles;
+    QHash<int, Player*> myplayers;
+    QHash<int, BattleSituation*> mybattles;
 
     QTcpServer *server();
     Player * player(int i);
