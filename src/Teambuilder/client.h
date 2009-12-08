@@ -91,7 +91,7 @@ private:
     QLineEdit *myline;
     /* Where players are displayed */
     QListWidget *myplayers;
-    QMap<int, QIdListWidgetItem *> myplayersitems;
+    QHash<int, QIdListWidgetItem *> myplayersitems;
     /* Button to exit */
     QPushButton *myexit;
     /* Button to send text */
@@ -102,8 +102,8 @@ private:
     BaseChallengeWindow *mychallenge;
     BattleWindow *mybattle;
 
-    QMap<int, BasicInfo> myplayersinfo;
-    QMap<QString, int> mynames;
+    QHash<int, BasicInfo> myplayersinfo;
+    QHash<QString, int> mynames;
     QTextEdit *mainChat();
     Analyzer & relay();
 

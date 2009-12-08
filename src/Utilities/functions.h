@@ -23,9 +23,9 @@ public:
 
 /* merge maps -- the second one goes into the first one */
 template <class T, class U>
-void merge(QMap<T,U> &map1, const QMap<T,U> &map2)
+void merge(QHash<T,U> &map1, const QHash<T,U> &map2)
 {
-    typename QMap<T, U>::const_iterator it;
+    typename QHash<T, U>::const_iterator it;
 
     for (it = map2.begin(); it != map2.end(); ++it) {
 	map1.insert(it.key(), it.value());

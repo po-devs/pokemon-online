@@ -17,7 +17,9 @@ SOURCES += main.cpp \
     player.cpp \
     battle.cpp \
     moves.cpp \
-    ../Utilities/functions.cpp
+    ../Utilities/functions.cpp \
+    items.cpp \
+    mechanics.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -29,6 +31,8 @@ HEADERS += mainwindow.h \
     player.h \
     battle.h \
     moves.h \
-    ../Utilities/functions.h
+    ../Utilities/functions.h \
+    mechanics.h \
+    items.h
 LIBS += -L../../bin \
     -lzip

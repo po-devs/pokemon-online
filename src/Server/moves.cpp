@@ -1,38 +1,9 @@
 #include "moves.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
-QMap<int, MoveMechanics> MoveEffect::mechanics;
-QMap<int, QString> MoveEffect::names;
-QMap<QString, int> MoveEffect::nums;
-
-MoveMechanics::MoveMechanics()
-{
-}
-
-BattleSituation::context & MoveMechanics::turn(BattleSituation &b, int player)
-{
-    return b.turnlong[player];
-}
-
-BattleSituation::context & MoveMechanics::poke(BattleSituation &b, int player)
-{
-    return b.pokelong[player];
-}
-
-BattleSituation::context & MoveMechanics::team(BattleSituation &b, int player)
-{
-    return b.teamzone[player];
-}
-
-int MoveMechanics::type(BattleSituation &b, int source)
-{
-    return turn(b,source)["Type"].toInt();
-}
-
-int MoveMechanics::move(BattleSituation &b, int source)
-{
-    return turn(b, source)["LastMoveUsed"].toInt();
-}
+QHash<int, MoveMechanics> MoveEffect::mechanics;
+QHash<int, QString> MoveEffect::names;
+QHash<QString, int> MoveEffect::nums;
 
 int MoveMechanics::num(const QString &name)
 {
@@ -69,22 +40,6 @@ MoveEffect::MoveEffect(int num)
 typedef MoveMechanics MM;
 typedef BattleSituation BS;
 
-void addFunction(BattleSituation::context &c, const QString &effect, const QString &name, MoveMechanics::function f)
-{
-    if (!c.contains(effect)) {
-	/* Those three steps are absolutely required, cuz of fucktard lack of QVariant template constuctor/ template operator =
-		and fucktard QSharedPointer implicit conversion */
-	QVariant v;
-	v.setValue(QSharedPointer<QSet<QString> >(new QSet<QString>()));
-	c.insert(effect, v);
-    }
-    c[effect].value<QSharedPointer<QSet<QString> > >()->insert(name);
-
-    QVariant v;
-    v.setValue(f);
-    c.insert(effect + "_" + name,v);
-}
-
 void MoveEffect::setup(int num, int source, int , BattleSituation &b)
 {
     MoveEffect e(num);
@@ -110,7 +65,7 @@ void MoveEffect::setup(int num, int source, int , BattleSituation &b)
 	MoveMechanics &m = mechanics[specialEffect];
 	QString &n = names[specialEffect];
 
-	QMap<QString, MoveMechanics::function>::iterator i;
+	QHash<QString, MoveMechanics::function>::iterator i;
 
 	size_t pos = s.find('-');
 	if (pos != std::string::npos) {
@@ -118,7 +73,7 @@ void MoveEffect::setup(int num, int source, int , BattleSituation &b)
 	}
 
 	for(i = m.functions.begin(); i != m.functions.end(); ++i) {
-	    addFunction(b.turnlong[source], i.key(), n, i.value());
+	    Mechanics::addFunction(b.turnlong[source], i.key(), n, i.value());
 	}
     }
 }
@@ -208,6 +163,8 @@ struct MMBatonPass : public MM
 	c.remove("Type2");
 	c.remove("Minimize");
 	c.remove("DefenseCurl");
+	c.remove("ChoiceMemory"); /* choice band etc. would force the same move*
+		if on both the passed & the passer */
 	for (int i = 1; i < 6; i++) {
 	    c.remove(QString("Stat%1").arg(i));
 	}
@@ -789,7 +746,7 @@ struct MMRoost : public MM
     }
 
     static void uas(int s, int, BS &b) {
-	b.sendMoveMessage(150,0,s);
+	b.sendMoveMessage(150,0,s,Pokemon::Flying);
 	int num = 0;
 	if (poke(b,s)["Type1"].toInt() == Pokemon::Flying) {
 	    num = 1;
@@ -863,7 +820,7 @@ struct MMWish : public MM
     }
 
     static void uas(int s, int, BS &b) {
-	poke(b,s)["WishCount"] = 2;
+	poke(b,s)["WishCount"] = 1;
 	poke(b,s)["Wisher"] = b.poke(s).nick();
 	b.sendMoveMessage(142, 0, s);
 	addFunction(poke(b,s), "EndTurn", "Wish", &et);
@@ -1244,6 +1201,19 @@ struct MMTaunt : public MM
     }
 };
 
+struct MMThunderWave : public MM
+{
+    MMThunderWave() {
+	functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (b.hasType(t, Pokemon::Ground)) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = MM##name(); names[num] = #name; nums[#name] = num;
 
 void MoveEffect::init()
@@ -1285,6 +1255,7 @@ void MoveEffect::init()
     REGISTER_MOVE(103, RapidSpin);
     REGISTER_MOVE(106, Rest);
     REGISTER_MOVE(107, Roar);
+    REGISTER_MOVE(120, ThunderWave);
     REGISTER_MOVE(121, Spikes);
     REGISTER_MOVE(124, StealthRock);
     REGISTER_MOVE(128, Substitute);

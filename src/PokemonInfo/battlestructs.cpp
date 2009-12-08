@@ -35,6 +35,9 @@ QDataStream & operator << (QDataStream &out, const BattleMove &mo)
 PokeBattle::PokeBattle()
 {
     num() =0;
+    ability() = 0;
+    item() = 0;
+    gender() = 0;
     status() = Pokemon::Fine;
     lifePoints() = 0;
     totalLifePoints() = 0;
@@ -76,6 +79,18 @@ void PokeBattle::init(const PokePersonal &poke)
 	gender() = poke.gender();
     } else {
 	gender() = GenderInfo::Default(p.genderAvail());
+    }
+
+    if (p.abilities().contains(poke.ability())) {
+	ability() = poke.ability();
+    } else {
+	ability() = p.abilities()[0];
+    }
+
+    if (ItemInfo::Exist(poke.item())) {
+	item() = poke.item();
+    } else {
+	item() = 0;
     }
 
     shiny() = poke.shiny();
@@ -125,7 +140,7 @@ void PokeBattle::init(const PokePersonal &poke)
 
 QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 {
-    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level();
+    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.item() >> po.ability();
 
     for (int i = 0; i < 5; i++) {
 	quint16 st;
@@ -142,7 +157,7 @@ QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 
 QDataStream & operator << (QDataStream &out, const PokeBattle &po)
 {
-    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level();
+    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.item() << po.ability();
 
     for (int i = 0; i < 5; i++) {
 	out << po.normalStat(i+1);

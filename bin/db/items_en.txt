@@ -1,17 +1,17 @@
 (No Item)
-Big Root 
+Big Root
 Blue Scarf
 Bright Powder
 Choice Band
-Choice Scarf 
-Choice Specs 
+Choice Scarf
+Choice Specs
 Destiny Knot
 Expert Belt
 Focus Band
 Focus Sash
-Full Incense 
+Full Incense
 Green Scarf
-Lagging Tail 
+Lagging Tail
 Lax Incense
 Leftovers
 Luck Incense 
@@ -87,11 +87,11 @@ Ice Heal
 Iron
 King's Rock
 Lava Cookie
-Leaf Stone 
+Leaf Stone
 Lemonade
-Life Orb 
+Life Orb
 Light Ball
-Light Clay 
+Light Clay
 Lucky Egg
 Magnet
 Max Elixir
@@ -100,10 +100,10 @@ Max Potion
 Max Repel
 Max Revive
 Metal Coat
-Metronome 
+Metronome
 Miracle Seed
 MooMoo Milk
-Moon Stone 
+Moon Stone
 Mystic Water
 Nevermelt Ice
 Nugget
