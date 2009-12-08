@@ -259,15 +259,18 @@ BattleChoices BattleSituation::createChoice(int player)
 	}
     }
 
-    if (pokelong[player].contains("BlockedBy")) {
-	int b = pokelong[player]["BlockedBy"].toInt();
-	if (pokelong[b].contains("Blocked") && pokelong[b]["Blocked"].toInt() == player) {
+    if (poke(player).item() != 30) /* Shed Shell */
+    {
+	if (pokelong[player].contains("BlockedBy")) {
+	    int b = pokelong[player]["BlockedBy"].toInt();
+	    if (pokelong[b].contains("Blocked") && pokelong[b]["Blocked"].toInt() == player) {
+		ret.switchAllowed = false;
+	    }
+	}
+
+	if (pokelong[player].contains("Rooted")) {
 	    ret.switchAllowed = false;
 	}
-    }
-
-    if (pokelong[player].contains("Rooted")) {
-	ret.switchAllowed = false;
     }
 
     return ret;
@@ -307,16 +310,26 @@ void BattleSituation::analyzeChoices()
 
 	if (turnlong[Player1]["SpeedPriority"].toInt() > turnlong[Player2]["SpeedPriority"].toInt()) {
 	    first = Player1;
-	} else if (turnlong[Player1]["SpeedPriority"].toInt() < turnlong[Player2]["SpeedPriority"].toInt()) {
+	    goto second;
+	}
+	if (turnlong[Player1]["SpeedPriority"].toInt() < turnlong[Player2]["SpeedPriority"].toInt()) {
 	    first = Player2;
-	} else {
-	    first = getStat(Player1, Speed) > getStat(Player2, Speed) ? Player1 : Player2;
+	    goto second;
+	}
+	callieffects(Player1,Player1, "TurnOrder");
+	callieffects(Player2,Player2, "TurnOrder");
+	if (turnlong[Player1]["TurnOrder"] != turnlong[Player2]["TurnOrder"]) {
+	    first = turnlong[Player1]["TurnOrder"].toInt() < turnlong[Player2]["TurnOrder"].toInt() ? Player2:Player1;
+	    goto second;
 	}
 
+	first = getStat(Player1, Speed) > getStat(Player2, Speed) ? Player1 : Player2;
+
+second:
 	second = rev(first);
 
 	analyzeChoice(first);
-        if (turnlong[second]["CancelAttack"].toBool() != true && turnlong[second]["AttackKoed"].toBool() != true)
+	if (!koed(second))
 	    analyzeChoice(second);
 
 	return;
@@ -373,6 +386,7 @@ void BattleSituation::sendPoke(int player, int pok)
     /* reset temporary variables */
     pokelong[player].clear();
     /* Give new values to what needed */
+    pokelong[player]["Num"] = poke(player).num();
     pokelong[player]["Type1"] = PokemonInfo::Type1(poke(player).num());
     pokelong[player]["Type2"] = PokemonInfo::Type2(poke(player).num());
     for (int i = 1; i <= 6; i++)
@@ -474,9 +488,13 @@ bool BattleSituation::testAccuracy(int player, int target)
 	return true;
     }
 
+    callieffects(player,target,"StatModifier");
+    callieffects(target,player,"StatModifier");
     /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
 	due to the ever rounding down to make an int */
-    acc = acc * getStatBoost(player, 7) * getStatBoost(target, 6);
+    acc = acc * getStatBoost(player, 7) * getStatBoost(target, 6)
+	    * (20+turnlong[player]["Stat7ItemModifier"].toInt())/20
+	    * (20-turnlong[target]["Stat6ItemModifier"].toInt())/20;
 
     if (rand() % 100 < acc) {
 	return true;
@@ -486,10 +504,20 @@ bool BattleSituation::testAccuracy(int player, int target)
     }
 }
 
-void BattleSituation::testCritical(int player, int)
+void BattleSituation::testCritical(int player, int target)
 {
-    int randnum = rand() % 16;
-    int minch = 1*(1+turnlong[player]["CriticalRaise"].toInt());
+    (void) target; /* will be used for ability & lucky chant */
+
+    int randnum = rand() % 48;
+    int minch;
+    switch(turnlong[player]["CriticalRaise"].toInt()) {
+	case 0: minch = 3; break;
+	case 1: minch = 6; break;
+	case 2: minch = 12; break;
+	case 3: minch = 16; break;
+	case 4: default: minch = 24; break;
+    }
+
     bool critical = randnum<minch;
 
     turnlong[player]["CriticalHit"] = critical;
@@ -540,7 +568,10 @@ bool BattleSituation::testStatus(int player)
 	default:
 	    break;
     }
-
+    if (turnlong[player]["Flinched"].toBool()) {
+	notify(All, Flinch, player);
+	return false;
+    }
     if (pokelong[player]["Confused"].toBool()) {
 	if (pokelong[player]["ConfusedCount"].toInt() > 0) {
 	    inc(pokelong[player]["ConfusedCount"], -1);
@@ -570,7 +601,14 @@ void BattleSituation::testFlinch(int player, int target)
     int rate = turnlong[player]["FlinchRate"].toInt();
 
     if (rand() % 100 < rate) {
-        turnlong[target]["CancelAttack"] = true;
+	turnlong[target]["Flinched"] = true;
+    }
+
+    if (poke(player).item() == 87 && turnlong[player]["KingRock"].toBool()) /* King's rock */
+    {
+	if (rand() % 100 < 10) {
+	    turnlong[target]["Flinched"] = true;
+	}
     }
 }
 
@@ -646,6 +684,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	return;
     }
 
+    callieffects(player, player, "BeforeTargetList");
 
     foreach(int target, targetList) {
 	turnlong[player]["Failed"] = false;
@@ -653,7 +692,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	if (target != -1 && koed(target)) {
 	    continue;
 	}
-	if (!testAccuracy(player, target)) {
+	if (target != player && !testAccuracy(player, target)) {
 	    continue;
 	}
 	qDebug() << "Accuracy test passed";
@@ -663,10 +702,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	{
             qDebug() << "Going offensive";
 	    int type = turnlong[player]["Type"].toInt(); /* move type */
-	    int typeadv[] = {pokelong[target]["Type1"].toInt(), pokelong[target]["Type2"].toInt()};
+	    int typeadv[] = {getType(target, 1), getType(target, 2)};
 	    int typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
 
-	    int typepok[] = {pokelong[player]["Type1"].toInt(), pokelong[player]["Type2"].toInt()};
+	    int typepok[] = {getType(player,1), getType(player,2)};
 	    int stab = 2 + (type==typepok[0] || type==typepok[1]);
 
 	    turnlong[player]["Stab"] = stab;
@@ -704,6 +743,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		if (turnlong[player]["Power"].toInt() > 1) {
 		    int damage = calculateDamage(player, target);
 		    inflictDamage(target, damage, player, true);
+		}
+
+		if (turnlong[player]["PhysicalContact"].toBool()) {
+		    if (!sub)
+			callieffects(target, player, "UponPhysicalAssault");
 		}
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
 		applyMoveStatMods(player, target, sub);
@@ -753,6 +797,7 @@ void BattleSituation::inflictRecoil(int source, int target)
     if (recoil == 0)
         return;
 
+    notify(All, Recoil, source);
     inflictDamage(source, turnlong[target]["DamageTakenByAttack"].toInt()/recoil, source);
 }
 
@@ -903,7 +948,27 @@ void BattleSituation::inflictStatus(int player, int status)
 
 bool BattleSituation::hasType(int player, int type)
 {
-    return pokelong[player]["Type1"].toInt() == type  || pokelong[player]["Type2"].toInt() == type;
+    return getType(player,1) == type  || getType(player,2) == type;
+}
+
+int BattleSituation::getType(int player, int slot)
+{
+    int types[] = {pokelong[player]["Type1"].toInt(),pokelong[player]["Type2"].toInt()};
+
+    if (ItemInfo::isPlate(poke(player).item())) {
+	if (types[1] != Pokemon::Curse) {
+	    types[0] = pokelong[player]["ItemArg"].toInt();
+	    types[1] = Pokemon::Curse;
+	}
+    }
+
+    if (types[slot-1] == Pokemon::Flying && turnlong[player].contains("Roosted")
+	    && turnlong[player]["Roosted"].toBool() == true)
+    {
+	return Pokemon::Curse;
+    }
+
+    return types[slot-1];
 }
 
 bool BattleSituation::isFlying(int player)
@@ -986,9 +1051,15 @@ int BattleSituation::calculateDamage(int p, int t)
     int ch = 1 + move["CriticalHit"].toBool();
     int power = move["Power"].toInt();
 
+    callieffects(p,t,"BasePowerModifier");
+    power = power * (10+move["BasePowerItemModifier"].toInt())/10;
+
     int damage = ((((level * 2 / 5) + 2) * power * attack / 50) / def);
     damage = damage * ((poke.status() == Pokemon::Burnt && move["Category"].toInt() == Move::Physical) ? PokeFraction(1,2) : PokeFraction(1,1));
-    damage = (damage+2)*ch*1/*Mod2*/ *randnum*100/255/100*stab/2*typemod/4;
+    damage = (damage+2)*ch;
+    callieffects(p,t,"Mod2Modifier");
+    damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
+    damage = damage *randnum*100/255/100*stab/2*typemod/4;
 
     damage = damage * ((poke.item() == 7 && typemod > 4)? 6 : 5)/5 /* mod3 */;
 
@@ -1053,18 +1124,19 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
 
     if (straightattack) {
+	turnlong[source]["DamageInflicted"] = damage;
 	if (!sub) {
-	    turnlong[source]["DamageInflicted"] = damage;
 	    pokelong[player]["DamageTakenByAttack"] = damage;
 	    turnlong[player]["DamageTakenByAttack"] = damage;
 	    turnlong[player]["DamageTakenBy"] = source;
 	}
 
-	if (damage > 0)
+	if (damage > 0) {
 	    inflictRecoil(source, player);
-
-	calleffects(source, player, "UponDamageInflicted");
-	callieffects(player, source, "UponOffensiveDamageReceived");
+	    callieffects(source,player, "UponDamageInflicted");
+	    calleffects(source, player, "UponDamageInflicted");
+	    callieffects(player, source, "UponOffensiveDamageReceived");
+	}
     }
 
     if (!sub)
@@ -1129,9 +1201,6 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     qDebug() << "Inserted it in the list";
 
     if (straightattack) {
-	turnlong[player]["AttackKoed"] = true; /* the attack the poke should have is not anymore */
-        turnlong[player]["CancelAttack"] = true; /* the attack the poke should have is not anymore */
-
 	callpeffects(player, source, "AfterKoedByStraightAttack");
     }
 }
@@ -1219,6 +1288,10 @@ int BattleSituation::getStat(int player, int stat)
 	ret = ret * 3 / 4;
     }
 
+    if (ret == 0) {
+	ret = 1;
+    }
+
     return ret;
 }
 
@@ -1235,9 +1308,12 @@ void BattleSituation::sendMoveMessage(int move, int part, int src, int type, int
     }
 }
 
-void BattleSituation::sendItemMessage(int move, int src, int part)
+void BattleSituation::sendItemMessage(int move, int src, int part, int foe)
 {
-    notify(All, ItemMessage, src, quint16(move), uchar(part));
+    if (foe ==-1)
+	notify(All, ItemMessage, src, quint16(move), uchar(part));
+    else
+	notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe));
 }
 
 void BattleSituation::fail(int player, int move, int part, int type)

@@ -375,12 +375,20 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	{
 	    quint16 item=0;
 	    uchar part=0;
-	    in >> item >> part;
+	    qint8 foe = 0;
+	    in >> item >> part >> foe;
 	    QString mess = ItemInfo::Message(item, part);
 	    mess.replace("%s", nick(self));
+	    mess.replace("%f", nick(!self));
 	    printLine(mess);
 	    break;
 	}
+	case Flinch:
+	    printLine(tr("%1 flinched!").arg(nick(self)));
+	    break;
+	case Recoil:
+	    printLine(tr("%1 is hurt by its recoil!").arg(nick(self)));
+	    break;
 	default:
 	    break;
     }

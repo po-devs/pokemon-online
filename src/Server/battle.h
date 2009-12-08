@@ -107,6 +107,7 @@ public:
     bool testFail(int player);
     void fail(int player, int move, int part=0, int type=0);
     bool hasType(int player, int type);
+    int getType(int player, int slot);
     bool isFlying(int player);
     bool hasSubstitute(int player);
     void requestSwitchIns();
@@ -140,7 +141,9 @@ public:
 	BattleChat,
 	MoveMessage,
 	ItemMessage,
-	NoOpponent
+	NoOpponent,
+	Flinch,
+	Recoil
     };
 
     enum StatusFeeling
@@ -158,7 +161,7 @@ public:
     };
 
     void sendMoveMessage(int move, int part=0, int src=0, int type=0, int foe=-1, int other=-1, const QString &q="");
-    void sendItemMessage(int item, int src, int part = 0);
+    void sendItemMessage(int item, int src, int part = 0, int foe = -1);
     /* Here C++0x would make it so much better looking with variadic templates! */
     void notify(int player, int command, int who);
     template<class T>

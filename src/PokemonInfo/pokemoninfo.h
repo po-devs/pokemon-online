@@ -150,6 +150,7 @@ public:
     static QString Name(int itemnum);
     static bool Exist(int itemnum);
     static bool isBerry(int itemnum);
+    static bool isPlate(int itemnum);
     static QStringList SortedNames();
     static QList<Effect> Effects(int item);
     static QString Message(int item, int part);

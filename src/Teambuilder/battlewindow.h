@@ -73,7 +73,9 @@ public:
 	BattleChat,
 	MoveMessage,
 	ItemMessage,
-	NoOpponent
+	NoOpponent,
+	Flinch,
+	Recoil
     };
 
     enum StatusFeeling
