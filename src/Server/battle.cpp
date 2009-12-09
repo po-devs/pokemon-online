@@ -401,6 +401,7 @@ void BattleSituation::sendPoke(int player, int pok)
     if (koed(player)) {
 	requestChoice(player);
 	analyzeChoice(player);
+	koedPokes.remove(player);
     }
 }
 
