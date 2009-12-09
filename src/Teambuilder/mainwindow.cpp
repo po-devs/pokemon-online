@@ -107,6 +107,7 @@ void MainWindow::changeStyle()
     QString style = a->text();
     qApp->setStyle(QStyleFactory::create(style));
     QSettings setting;
+    setting.setValue("application_style",style);
 }
 
 void MainWindow::goOnline(const QString &url)
