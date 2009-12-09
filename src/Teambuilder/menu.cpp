@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
+ #include <QStyleFactory>
 
 TB_Menu::TB_Menu()
         : QImageBackground("db/menu_background.png")
@@ -34,6 +35,11 @@ QMenuBar * TB_Menu::createMenuBar(MainWindow *w)
     QMenu *menuFichier = menuBar->addMenu("&File");
     menuFichier->addAction(tr("&Load Team"),w,SLOT(loadTeamDialog()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
-
+    QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
+    QStringList style = QStyleFactory::keys();
+    for(QStringList::iterator i = style.begin();i!=style.end();i++)
+    {
+        menuStyle->addAction(*i,w,SLOT(changeStyle()));
+    }
     return menuBar;
 }
