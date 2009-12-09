@@ -357,7 +357,7 @@ struct IMMetronome : public IM
 	functions["Mod2Modifier"] = &m2m;
     }
 
-    static void btl(int s, int t, BS &b) {
+    static void btl(int s, int, BS &b) {
 	if (turn(b,s).contains("NoChoice")) {
 	    /* multiple turn move */
 	    return;
@@ -380,8 +380,8 @@ struct IMMetronome : public IM
 	}
     }
 
-    static void m2m(int s, int t, BS &b) {
-	return poke(b,s)["IMMetroCount"].toInt();
+    static void m2m(int s, int, BS &b) {
+	 turn(b,s)["ItemMod2Modifier"] = poke(b,s)["IMMetroCount"];
     }
 };
 

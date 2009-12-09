@@ -831,8 +831,11 @@ void BattleSituation::applyMoveStatMods(int player, int target, bool sub)
 	int targeted = self? player : target;
 
 	/* If the effect is on the opponent, and the opponent is Koed / subbed, we don't do nothing */
-	if (!self && (koed(target) == true || sub)) {
+	if (koed(target)) {
             continue;
+	}
+	if (!self && sub) {
+	    sendMoveMessage(128, 2, player,0,target,turnlong[player]["Attack"].toInt());
 	}
 
 	/* There maybe different type of changes, aka status & mod in move 'Flatter' */
@@ -1104,7 +1107,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
     bool sub = hasSubstitute(player);
 
-    if (straightattack && sub) {
+    if (sub && player != source && straightattack) {
 	inflictSubDamage(player, damage, source);
     } else {
 	damage = std::min(int(poke(player).lifePoints()), damage);
