@@ -194,11 +194,13 @@ void Server::sendLogin(int id)
 
 void Server::sendLogout(int id)
 {
+    qDebug() << "Sending logout notice";
     foreach(Player *p, myplayers)
     {
 	if (p->isLoggedIn())
 	    p->relay().sendLogout(id);
     }
+    qDebug() << "End sending";
 }
 
 void Server::recvTeam(int id)
@@ -221,6 +223,7 @@ void Server::removePlayer(int id)
 {
     if (playerExist(id))
     {
+	qDebug() << "Removing player " << player(id)->name();
 	Player *p = player(id);
     
 	QString playerName = p->name();

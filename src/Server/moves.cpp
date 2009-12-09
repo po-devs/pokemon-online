@@ -1069,12 +1069,14 @@ struct MMSubstitute : public MM
 	}
 	QString effect = turn(b,s)["EffectActivated"].toString();
 
-	if (effect == "Block" || effect == "Curse" || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge" || effect == "HealBlock" || effect == "LeechSeed"
+	if (effect == "Block" || effect == "Covet" || effect == "Curse" || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge"
+	    || effect == "HealBlock" || effect == "KnockOff" || effect == "LeechSeed"
 	    || effect == "LockOn" || effect == "Mimic" || effect == "PsychoShift" || effect == "Sketch" || effect == "Switcheroo"
 	    || effect == "WorrySeed" || effect == "Yawn")
 	{
 	    turn(b,s)["EffectBlocked"] = true;
-	    b.sendMoveMessage(128, 2, s);
+	    if (turn(b,s)["Power"].toInt() == 0)
+		b.sendMoveMessage(128, 2, s,0,t,turn(b,s)["Attack"].toInt());
 	    return;
 	}
     }

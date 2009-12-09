@@ -45,7 +45,7 @@ Destiny bond took away %f!
 
 
 
-%s lost its focus!
+%s lost its focus! %s is tightening its focus!
 
 
 
@@ -126,7 +126,7 @@ Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 
 
 
-%s already has a substitute.|%s's subsitute faded!|%s's substitute blocked the side effects!
+%s already has a substitute.|%s's subsitute faded!|%f's substitute blocked %m!
 
 
 
