@@ -77,4 +77,14 @@ private:
     int myid;
 };
 
+/* A textedit that scrolls down automatically, unless not down, and that
+   always insert the text at the end */
+class QScrollDownTextEdit : public QTextEdit
+{
+    Q_OBJECT
+public:
+    void insertHtml(const QString &text);
+    void insertPlainText(const QString &text);
+};
+
 #endif // OTHERWIDGETS_H

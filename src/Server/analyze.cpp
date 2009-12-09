@@ -12,6 +12,10 @@ Analyzer::Analyzer(QTcpSocket *sock) : mysocket(sock)
     connect(&socket(), SIGNAL(isFull(QByteArray)), this, SLOT(commandReceived(QByteArray)));
     connect(&socket(), SIGNAL(_error()), this, SLOT(error()));
     connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
+
+    mytimer = new QTimer(this);
+    connect(mytimer, SIGNAL(timeout()), this, SLOT(keepAlive()));
+    mytimer->start(30000); //every 30 secs
 }
 
 void Analyzer::sendMessage(const QString &message)
@@ -70,6 +74,16 @@ void Analyzer::sendLogout(int num)
     emit sendCommand(tosend);
 }
 
+void Analyzer::keepAlive()
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(KeepAlive);
+
+    emit sendCommand(tosend);
+}
 
 void Analyzer::sendChallengeStuff(quint8 stuff, int num)
 {
@@ -169,6 +183,8 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	}
 	case BattleFinished:
 	    emit forfeitBattle();
+	    break;
+	case KeepAlive:
 	    break;
 	default:
 	    emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));

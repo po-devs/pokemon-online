@@ -7,6 +7,7 @@
 class AttackZone;
 class PokeZone;
 class BattleDisplay;
+class QScrollDownTextEdit;
 
 enum {
     Myself,
@@ -127,7 +128,7 @@ private:
     QStackedWidget *mystack;
     AttackZone *myazones[6];
     PokeZone *mypzone;
-    QTextEdit *mychat;
+    QScrollDownTextEdit *mychat;
     QLineEdit *myline;
     BattleDisplay *mydisplay;
     QPushButton *myswitch, *myattack, *myforfeit, *mysend;

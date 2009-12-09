@@ -27,7 +27,8 @@ namespace NetworkCli
 	EngageBattle,
 	BattleFinished,
 	BattleMessage,
-	BattleChat
+	BattleChat,
+	KeepAlive
     };
 
     enum ProtocolError

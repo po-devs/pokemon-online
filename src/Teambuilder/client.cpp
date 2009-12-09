@@ -16,7 +16,7 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
     QGridLayout *layout = new QGridLayout(this);
 
     layout->addWidget(myplayers = new QListWidget(), 0, 0, 3, 1);
-    layout->addWidget(mychat = new QTextEdit(), 0, 1, 1, 2);
+    layout->addWidget(mychat = new QScrollDownTextEdit(), 0, 1, 1, 2);
     layout->addWidget(myline = new QLineEdit(), 1, 1, 1, 2);
     layout->addWidget(myexit = new QPushButton(tr("&Exit")), 2, 1);
     layout->addWidget(mysender = new QPushButton(tr("&Send")), 2, 2);
@@ -249,7 +249,7 @@ void Client::clearChallenge()
 
 void Client::errorFromNetwork(int errnum, const QString &errorDesc)
 {
-    QMessageBox::critical(this, tr("Error while connected to server"), tr("Received error n°%1: %2").arg(errnum).arg(errorDesc));
+    printHtml("<i>"+tr("Error while connected to server -- Received error n°%1: %2").arg(errnum).arg(errorDesc) + "</i>");
 }
 
 void Client::connected()
@@ -274,7 +274,7 @@ Analyzer &Client::relay()
     return myrelay;
 }
 
-QTextEdit *Client::mainChat()
+QScrollDownTextEdit *Client::mainChat()
 {
     return mychat;
 }
@@ -318,7 +318,6 @@ void Client::playerReceived(const Player &p)
 
 void Client::printLine(const QString &line)
 {
-    mainChat()->moveCursor(QTextCursor::End);
     /* Let's add colors */
     int pos = line.indexOf(':');
     if ( pos != -1 ) {
@@ -334,6 +333,11 @@ void Client::printLine(const QString &line)
     } else {
 	mainChat()->insertPlainText(line + "\n");
     }
+}
+
+void Client::printHtml(const QString &line)
+{
+    mainChat()->insertHtml(line + "<br />");
 }
 
 int Client::id(const QString &name) const

@@ -174,8 +174,19 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit battleMessage(command);
 	    break;
 	}
+	case KeepAlive:
+	{
+	    QByteArray tosend;
+	    QDataStream out(&tosend, QIODevice::WriteOnly);
+	    out.setVersion(QDataStream::Qt_4_5);
+
+	    out << uchar(KeepAlive);
+
+	    emit sendCommand(tosend);
+	    break;
+	}
 	default:
-	    emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
+	    emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
     }
 }
 
