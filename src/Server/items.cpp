@@ -350,6 +350,41 @@ struct IMStickyBarb : public IM
     }
 };
 
+struct IMMetronome : public IM
+{
+    IMMetronome() {
+	functions["BeforeTargetList"] = &btl;
+	functions["Mod2Modifier"] = &m2m;
+    }
+
+    static void btl(int s, int t, BS &b) {
+	if (turn(b,s).contains("NoChoice")) {
+	    /* multiple turn move */
+	    return;
+	}
+	int count = poke(b,s)["IMMetroCount"].toInt();
+	int lslot = poke(b,s)["IMLastMoveSlot"].toInt();
+	int slot = poke(b,s)["MoveSlot"].toInt();
+	bool act = poke(b,s)["IMMetroActivating"].toBool();
+	poke(b,s)["IMLastMoveSlot"] = slot;
+	poke(b,s)["IMMetroActivating"] = true;
+	if (slot != lslot) {
+	    poke(b,s)["IMMetroCount"] = 0;
+	    return;
+	}
+	if (turn(b,s)["Power"].toInt() == 0) {
+	    return;
+	}
+	if (act) {
+	    poke(b,s)["IMMetroCount"] = std::min(10, count+1);
+	}
+    }
+
+    static void m2m(int s, int t, BS &b) {
+	return poke(b,s)["IMMetroCount"].toInt();
+    }
+};
+
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
 void ItemEffect::init()
@@ -367,6 +402,7 @@ void ItemEffect::init()
     REGISTER_ITEM(16, BlackSludge);
     REGISTER_ITEM(19, StatusOrb);
     REGISTER_ITEM(21, LifeOrb);
+    REGISTER_ITEM(22, Metronome);
     REGISTER_ITEM(23, ScopeLens);
     REGISTER_ITEM(26, CriticalPoke);
     REGISTER_ITEM(27, PokeTypeBoost);
