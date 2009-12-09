@@ -301,6 +301,12 @@ QMenuBar * TeamBuilder::createMenuBar(MainWindow *w)
     menuFichier->addAction(tr("&Save Team"),this,SLOT(saveTeam()),Qt::CTRL+Qt::Key_S);
     menuFichier->addAction(tr("&Load Team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
+    QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
+    QStringList style = QStyleFactory::keys();
+    for(QStringList::iterator i = style.begin();i!=style.end();i++)
+    {
+        menuStyle->addAction(*i,w,SLOT(changeStyle()));
+    }
 
     return menuBar;
 }

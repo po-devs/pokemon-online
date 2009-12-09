@@ -4,6 +4,7 @@
 #include "teambuilder.h"
 #include "client.h"
 #include "serverchoice.h"
+#include <QStyleFactory>
 
 MainWindow::MainWindow() : m_menu(0), m_TB(0)
 {
@@ -94,6 +95,18 @@ void MainWindow::launchServerChoice()
 
     setMenuBar(NULL);
     setCentralWidget(m_choice);
+}
+
+void MainWindow::changeStyle()
+{
+    QAction * a = qobject_cast<QAction *>(sender());
+    if(!a)
+    {
+        return;
+    }
+    QString style = a->text();
+    qApp->setStyle(QStyleFactory::create(style));
+    QSettings setting;
 }
 
 void MainWindow::goOnline(const QString &url)
