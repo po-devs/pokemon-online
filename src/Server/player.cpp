@@ -28,7 +28,6 @@ void Player::changeState(int newstate)
 
     if (m_state == Battling)
     {
-	removeChallenge(opponent());
 	cancelChallenges();
     }
 }
@@ -144,9 +143,8 @@ void Player::startBattle(int id, const TeamBattle &team, const BattleConfigurati
 
     m_opponent = id;
 
-    if (isChallenged() && challengedBy() != id) {
-	emit challengeStuff(Busy, this->id(), id);
-    }
+    removeChallenge(id);
+    cancelChallenges();
 
     changeState(Battling);
 }
@@ -156,6 +154,9 @@ void Player::cancelChallenges()
     foreach(int id, m_challenged)
 	emit challengeStuff(Canceled, this->id(), id);
     m_challenged.clear();
+    if (isChallenged()) {
+	emit challengeStuff(Busy, this->id(), opponent());
+    }
 }
 
 bool Player::hasChallenged(int id) const
@@ -253,6 +254,8 @@ void Player::setId(int id)
 
 void Player::recvTeam(const TeamInfo &team)
 {
+    cancelChallenges();
+
     this->team() = team;
 
     emit recvTeam(id());

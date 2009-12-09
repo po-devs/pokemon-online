@@ -115,3 +115,25 @@ int QIdListWidgetItem::id() const
 {
     return myid;
 }
+
+void QScrollDownTextEdit::insertHtml(const QString &text)
+{
+    moveCursor(QTextCursor::End);
+    insertHtml(text);
+    QScrollBar * b = verticalScrollBar();
+    if(b->isVisible()&&b->value()!= b->maximum())
+    {
+	b->setValue(b->maximum());
+    }
+}
+
+void QScrollDownTextEdit::insertPlainText(const QString &text)
+{
+    moveCursor(QTextCursor::End);
+    insertPlainText(text);
+    QScrollBar * b = verticalScrollBar();
+    if(b->isVisible()&&b->value()!= b->maximum())
+    {
+	b->setValue(b->maximum());
+    }
+}

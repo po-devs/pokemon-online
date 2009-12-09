@@ -9,6 +9,7 @@ class MainWindow;
 class BaseChallengeWindow;
 class QIdListWidgetItem;
 class BattleWindow;
+class QScrollDownTextEdit;
 
 /* Struct representing a player's data */
 class Player
@@ -35,6 +36,7 @@ public:
     QMenuBar *createMenuBar(MainWindow *w);
 
     void printLine(const QString &line);
+    void printHtml(const QString &html);
     bool playerExist(int id) const;
     QString name(int id) const;
     QString ownName() const;
@@ -86,7 +88,7 @@ signals:
 private:
     TrainerTeam *myteam;
     /* Main chat */
-    QTextEdit *mychat;
+    QScrollDownTextEdit *mychat;
     /* Line the user types in */
     QLineEdit *myline;
     /* Where players are displayed */
@@ -104,7 +106,7 @@ private:
 
     QHash<int, BasicInfo> myplayersinfo;
     QHash<QString, int> mynames;
-    QTextEdit *mainChat();
+    QScrollDownTextEdit *mainChat();
     Analyzer & relay();
 
     void initRelay();

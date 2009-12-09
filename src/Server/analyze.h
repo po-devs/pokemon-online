@@ -25,7 +25,8 @@ namespace NetworkServ
 	EngageBattle,
 	BattleFinished,
 	BattleMessage,
-	BattleChat
+	BattleChat,
+	KeepAlive
     };
 
     enum ProtocolError
@@ -71,12 +72,13 @@ public slots:
     /* slots called by the network */
     void error();
     void commandReceived (const QByteArray &command);
-
+    void keepAlive();
 private:
     Network &socket();
     const Network &socket() const;
 
     Network mysocket;
+    QTimer *mytimer;
 };
 
 #endif // ANALYZE_H

@@ -1,6 +1,7 @@
 #include "battlewindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include <iostream>
+#include "../Utilities/otherwidgets.h"
 
 BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &team, const BattleConfiguration &_conf)
 {
@@ -22,7 +23,7 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
     QGridLayout *mylayout = new QGridLayout(this);
 
     mylayout->addWidget(mydisplay = new BattleDisplay(info()), 0, 0, 3, 1);
-    mylayout->addWidget(mychat = new QTextEdit(), 0, 1, 1, 2);
+    mylayout->addWidget(mychat = new QScrollDownTextEdit(), 0, 1, 1, 2);
     mylayout->addWidget(myline = new QLineEdit(), 1, 1, 1, 2);
     mylayout->addWidget(myforfeit = new QPushButton(tr("&Forfeit")), 2, 1);
     mylayout->addWidget(mysend = new QPushButton(tr("&Send")), 2, 2);
@@ -408,24 +409,12 @@ void BattleWindow::switchToNaught(bool self)
 
 void BattleWindow::printLine(const QString &str)
 {
-    mychat->moveCursor(QTextCursor::End);
     mychat->insertPlainText(str + "\n");
-    QScrollBar * b = mychat->verticalScrollBar();
-    if(b->isVisible()&&b->value()!= b->maximum())
-    {
-        b->setValue(b->maximum());
-    }
 }
 
 void BattleWindow::printHtml(const QString &str)
 {
-    mychat->moveCursor(QTextCursor::End);
     mychat->insertHtml(str + "<br />");
-    QScrollBar * b = mychat->verticalScrollBar();
-    if(b->isVisible()&&b->value()!= b->maximum())
-    {
-        b->setValue(b->maximum());
-    }
 }
 
 void BattleWindow::updateChoices()
