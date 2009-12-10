@@ -1387,6 +1387,6 @@ void BattleSituation::emitCommand(int player, int players, const QByteArray &tos
     } else if (players == AllButPlayer) {
 	emit battleInfo(id(rev(player)), tosend);
     } else {
-	emit battleInfo(players, tosend);
+        emit battleInfo(id(players), tosend);
     }
 }
