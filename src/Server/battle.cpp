@@ -333,11 +333,13 @@ void BattleSituation::analyzeChoices()
     std::multimap<int, int, std::greater<int> >::const_iterator itEnd;
 
     for (it = priorities.begin(); it != priorities.end(); ) {
+	qDebug() << "a";
 	itEnd = priorities.upper_bound(it->first);
 
 	/* There's another priority system: Ability stall, and Item lagging tail */
 	std::map<int, int, std::greater<int> > secondPriorities;
 	for (; it != itEnd; ++it) {
+	    qDebug() << "b";
 	    int player = it->second;
 	    callieffects(player,player, "TurnOrder");
 	    secondPriorities.insert(std::pair<int,int>(turnlong[player]["TurnOrder"].toInt(), player));
@@ -347,21 +349,24 @@ void BattleSituation::analyzeChoices()
 	std::multimap<int, int, std::greater<int> >::const_iterator it2End;
 
 	for(it2 = secondPriorities.begin(); it2 != secondPriorities.end();) {
-	    it2End = secondPriorities.upper_bound(it->first);
+	    qDebug() << "c";
+	    it2End = secondPriorities.upper_bound(it2->first);
 
 	    /* At last the speed comparison... */
 	    std::map<int, int, std::greater<int> > speeds;
-	    for (; it2 != it2End; ++it) {
+	    for (; it2 != it2End; ++it2) {
+		qDebug() << "d";
 		speeds.insert(std::pair<int,int>(getStat(it2->second, Speed), it2->second));
 	    }
 
 	    std::multimap<int, int, std::greater<int> >::const_iterator it3;
 	    for(it3 = speeds.begin(); it3 != speeds.end();)
 	    {
-
-		std::multimap<int, int, std::greater<int> >::const_iterator it3End = speeds.upper_bound(it3->second);
+		qDebug() << "e";
+		std::multimap<int, int, std::greater<int> >::const_iterator it3End = speeds.upper_bound(it3->first);
 		std::vector<int> heap;
 		for (; it3 != it3End; ++it3) {
+		    qDebug() << "f";
 		    heap.push_back(it3->second);
 		}
 		std::random_shuffle(heap.begin(), heap.end());
