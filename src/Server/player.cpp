@@ -147,6 +147,7 @@ void Player::startBattle(int id, const TeamBattle &team, const BattleConfigurati
     if (isChallenged() && challengedBy() == id) {
 	m_challengedby = -1;
     }
+    m_challenged.remove(id);
 
     changeState(Battling);
 
