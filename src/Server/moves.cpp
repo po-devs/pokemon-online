@@ -1249,7 +1249,7 @@ struct MMSwitcheroo : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-	if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, 101) && b.poke(t).num() != 493 && b.poke(s).item() == 0) /* Sticky Hold, Arceus */
+	if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, 101) || b.poke(t).num() == 493 || b.poke(s).item() == 0) /* Sticky Hold, Arceus */
 	{
 	    turn(b,s)["Failed"] = true;
 	}

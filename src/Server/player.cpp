@@ -4,6 +4,7 @@
 Player::Player(QTcpSocket *sock) : myrelay(sock)
 {
     m_state = NotLoggedIn;
+    m_challengedby = -1;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(TeamInfo)), this, SLOT(loggedIn(TeamInfo)));
@@ -143,10 +144,13 @@ void Player::startBattle(int id, const TeamBattle &team, const BattleConfigurati
 
     m_opponent = id;
 
-    removeChallenge(id);
-    cancelChallenges();
+    if (isChallenged() && challengedBy() == id) {
+	m_challengedby = -1;
+    }
 
     changeState(Battling);
+
+    removeChallenge(id);
 }
 
 void Player::cancelChallenges()
