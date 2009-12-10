@@ -20,102 +20,47 @@ Analyzer::Analyzer(QTcpSocket *sock) : mysocket(sock)
 
 void Analyzer::sendMessage(const QString &message)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(SendMessage) << message;
-
-    emit sendCommand(tosend);
+    notify(SendMessage, message);
 }
 
 void Analyzer::engageBattle(int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(EngageBattle) << id << team << conf;
-
-    emit sendCommand(tosend);
+    notify(EngageBattle, id, team, conf);
 }
-
 
 void Analyzer::sendPlayer(int num, const BasicInfo &team)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(PlayersList) << num << team;
-
-    emit sendCommand(tosend);
+    notify(PlayersList, num, team);
 }
 
 void Analyzer::sendLogin(int num, const BasicInfo &team)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(Login) << num << team;
-
-    emit sendCommand(tosend);
+    notify(Login, num, team);
 }
 
 void Analyzer::sendLogout(int num)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(Logout) << num;
-
-    emit sendCommand(tosend);
+    notify(Logout, num);
 }
 
 void Analyzer::keepAlive()
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(KeepAlive);
-
-    emit sendCommand(tosend);
+    notify(KeepAlive);
 }
 
 void Analyzer::sendChallengeStuff(quint8 stuff, int num)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(ChallengeStuff) << stuff << num;
-
-    emit sendCommand(tosend);
+    notify(ChallengeStuff, stuff, num);
 }
 
 void Analyzer::sendBattleResult(quint8 res)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(BattleFinished) << res;
-
-    emit sendCommand(tosend);
+    notify(BattleFinished, res);
 }
 
 void Analyzer::sendBattleCommand(const QByteArray & command)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(BattleMessage) << command;
-
-    emit sendCommand(tosend);
+    notify(BattleMessage, command);
 }
 
 void Analyzer::error()
@@ -202,3 +147,13 @@ const Network & Analyzer::socket() const
     return mysocket;
 }
 
+void Analyzer::notify(int command)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(command);
+
+    emit sendCommand(tosend);
+}

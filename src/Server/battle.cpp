@@ -34,6 +34,8 @@ void BattleSituation::start()
     /* Beginning of the battle! */
     sendPoke(Player1, 0);
     sendPoke(Player2, 0);
+    callEntryEffects(Player1);
+    callEntryEffects(Player2);
 
     haveChoice[0] = false;
     haveChoice[1] = false;
@@ -378,6 +380,7 @@ void BattleSituation::battleChat(int id, const QString &str)
 
 void BattleSituation::sendPoke(int player, int pok)
 {
+    koedPokes.remove(player);
     changeCurrentPoke(player, pok);
 
     notify(player, SendOut, player, ypoke(player, pok));
@@ -394,15 +397,12 @@ void BattleSituation::sendPoke(int player, int pok)
     pokelong[player]["Level"] = poke(player).level();
 
     ItemEffect::setup(poke(player).item(),player,*this);
+}
 
+void BattleSituation::callEntryEffects(int player)
+{
     calleffects(player, player, "UponSwitchIn");
     callzeffects(player, player, "UponSwitchIn");
-
-    if (koed(player)) {
-	requestChoice(player);
-	analyzeChoice(player);
-	koedPokes.remove(player);
-    }
 }
 
 void BattleSituation::calleffects(int source, int target, const QString &name)
@@ -1214,9 +1214,7 @@ void BattleSituation::requestSwitchIns()
     qDebug() << "Requesting switchin";
     int count = koedPokes.size();
 
-    /* Apparently my debugger said once it was -1, dun understand why
-	but since then this test is here and not the simple == :/ */
-    if (count <= 0) {
+    if (count == 0) {
         return;
     }
 
@@ -1231,11 +1229,18 @@ void BattleSituation::requestSwitchIns()
 
     testquit();
 
-    foreach(int p, koedPokes) {
+    QSet<int> copy = koedPokes;
+
+    foreach(int p, copy) {
         analyzeChoice(p);
     }
 
-    koedPokes.clear();
+    foreach(int p, copy) {
+	callEntryEffects(p);
+    }
+
+    /* Recursive call */
+    requestSwitchIns();
 }
 
 void BattleSituation::requestSwitch(int player)
@@ -1249,6 +1254,8 @@ void BattleSituation::requestSwitch(int player)
     options[player] = BattleChoices::SwitchOnly();
 
     requestChoice(player,true,true);
+    analyzeChoice(player);
+    callEntryEffects(player);
 }
 
 int BattleSituation::countAlive(int player) const
@@ -1351,4 +1358,16 @@ BattleConfiguration BattleSituation::configuration() const
     ret.ids[1] = id(1);
 
     return ret;
+}
+
+void BattleSituation::emitCommand(int player, int players, const QByteArray &tosend)
+{
+    if (players == All) {
+	emit battleInfo(id(Player1), tosend);
+	emit battleInfo(id(Player2), tosend);
+    } else if (players == AllButPlayer) {
+	emit battleInfo(id(rev(player)), tosend);
+    } else {
+	emit battleInfo(id(player), tosend);
+    }
 }

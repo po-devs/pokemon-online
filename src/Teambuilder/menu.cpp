@@ -29,7 +29,6 @@ TB_Menu::TB_Menu()
 
 QMenuBar * TB_Menu::createMenuBar(MainWindow *w)
 {
-    /* Penser Ã  styler cette menu bar pour la rendre + adaptÃ©e (notamment ajouter une touche de bleu au fond */
     QMenuBar *menuBar = new QMenuBar();
     menuBar->setStyleSheet(tr("QMenuBar{background-image:url(db/menu_background.png);}"));/*tr("QMenuBar{background-color:rgb(30,30,100);}"));*/
     QMenu *menuFichier = menuBar->addMenu("&File");
