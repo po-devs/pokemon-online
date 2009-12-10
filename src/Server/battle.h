@@ -75,6 +75,7 @@ public:
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player);
     void sendPoke(int player, int poke);
+    void callEntryEffects(int player);
     void koPoke(int player, int source, bool straightattack = false);
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
@@ -209,6 +210,8 @@ private:
     void callzeffects(int source, int target, const QString &name);
     /* item effects */
     void callieffects(int source, int target, const QString &name);
+
+    void emitCommand(int player, int players, const QByteArray &data);
 public:
     /**************************************/
     /*** VIVs: very important variables ***/
@@ -245,14 +248,7 @@ inline void BattleSituation::notify(int player, int command, int who)
 
     out << uchar(command) << qint8(who);
 
-    if (player == All) {
-	emit battleInfo(id(Player1), tosend);
-	emit battleInfo(id(Player2), tosend);
-    } else if (player == AllButPlayer) {
-	emit battleInfo(id(rev(who)), tosend);
-    } else {
-	emit battleInfo(id(player), tosend);
-    }
+    emitCommand(who, player, tosend);
 }
 
 template<class T>
@@ -267,14 +263,7 @@ void BattleSituation::notify(int player, int command, int who, const T& param)
 
     out << uchar(command) << qint8(who) << param;
 
-    if (player == All) {
-	emit battleInfo(id(Player1), tosend);
-	emit battleInfo(id(Player2), tosend);
-    } else if (player == AllButPlayer) {
-	emit battleInfo(id(rev(who)), tosend);
-    } else {
-	emit battleInfo(id(player), tosend);
-    }
+    emitCommand(who, player, tosend);
 }
 
 template<class T1, class T2>
@@ -289,14 +278,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 
     out << uchar(command) << qint8(who) << param1 << param2;
 
-    if (player == All) {
-	emit battleInfo(id(Player1), tosend);
-	emit battleInfo(id(Player2), tosend);
-    } else if (player == AllButPlayer) {
-	emit battleInfo(id(rev(who)), tosend);
-    } else {
-	emit battleInfo(id(player), tosend);
-    }
+    emitCommand(who, player, tosend);
 }
 
 template<class T1, class T2, class T3>
@@ -311,14 +293,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 
     out << uchar(command) << qint8(who) << param1 << param2 << param3;
 
-    if (player == All) {
-	emit battleInfo(id(Player1), tosend);
-	emit battleInfo(id(Player2), tosend);
-    } else if (player == AllButPlayer) {
-	emit battleInfo(id(rev(who)), tosend);
-    } else {
-	emit battleInfo(id(player), tosend);
-    }
+    emitCommand(who, player, tosend);
 }
 
 template<class T1, class T2, class T3, class T4>
@@ -333,14 +308,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 
     out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4;
 
-    if (player == All) {
-	emit battleInfo(id(Player1), tosend);
-	emit battleInfo(id(Player2), tosend);
-    } else if (player == AllButPlayer) {
-	emit battleInfo(id(rev(who)), tosend);
-    } else {
-	emit battleInfo(id(player), tosend);
-    }
+    emitCommand(who, player, tosend);
 }
 
 template<class T1, class T2, class T3, class T4, class T5>
@@ -355,14 +323,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 
     out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4 << param5;
 
-    if (player == All) {
-	emit battleInfo(id(Player1), tosend);
-	emit battleInfo(id(Player2), tosend);
-    } else if (player == AllButPlayer) {
-	emit battleInfo(id(rev(who)), tosend);
-    } else {
-	emit battleInfo(id(player), tosend);
-    }
+    emitCommand(who, player, tosend);
 }
 
 template<class T1, class T2, class T3, class T4, class T5, class T6>
@@ -377,14 +338,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 
     out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4 << param5 << param6;
 
-    if (player == All) {
-	emit battleInfo(id(Player1), tosend);
-	emit battleInfo(id(Player2), tosend);
-    } else if (player == AllButPlayer) {
-	emit battleInfo(id(rev(who)), tosend);
-    } else {
-	emit battleInfo(id(player), tosend);
-    }
+    emitCommand(who, player, tosend);
 }
 
 #endif // BATTLE_H

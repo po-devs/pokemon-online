@@ -178,7 +178,6 @@ struct MMBatonPass : public MM
 
 	addFunction(turn(b,s), "UponSwitchIn", "BatonPass", &usi);
 	b.requestSwitch(s);
-	b.analyzeChoice(s);
     }
 
     static void usi(int s, int, BS &b) {

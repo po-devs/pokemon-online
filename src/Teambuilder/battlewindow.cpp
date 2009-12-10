@@ -579,8 +579,6 @@ GraphicsZone::GraphicsZone()
 {
     setScene(&scene);
 
-    setFixedSize(255,255);
-
     scene.setSceneRect(0,0,250,250);
 
     mine = new QGraphicsPixmapItem();

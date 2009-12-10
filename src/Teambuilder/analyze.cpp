@@ -17,79 +17,37 @@ Analyzer::Analyzer()
 
 void Analyzer::login(const TrainerTeam &team)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(Login) << team;
-
-    emit sendCommand(tosend);
+    notify(Login, team);
 }
 
 void Analyzer::sendChallengeStuff(quint8 desc, int id)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(ChallengeStuff) << desc << id;
-
-    emit sendCommand(tosend);
+    notify(ChallengeStuff, desc, id);
 }
 
 void Analyzer::sendMessage(const QString &message)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(SendMessage) << message;
-
-    emit sendCommand(tosend);
+    notify(SendMessage, message);
 }
 
 void Analyzer::sendTeam(const TrainerTeam &team)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(SendTeam) << team;
-
-    emit sendCommand(tosend);
+    notify(SendTeam, team);
 }
 
 void Analyzer::sendBattleResult(int result)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(BattleFinished) << result;
-
-    emit sendCommand(tosend);
+    notify(BattleFinished, result);
 }
 
 void Analyzer::battleCommand(const BattleChoice &comm)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(BattleMessage) << comm;
-
-    emit sendCommand(tosend);
+    notify(BattleMessage, comm);
 }
 
 void Analyzer::battleMessage(const QString &str)
 {
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(BattleChat) << str;
-
-    emit sendCommand(tosend);
+    notify(BattleChat, str);
 }
 
 void Analyzer::connectTo(const QString &host, quint16 port)
@@ -193,4 +151,15 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 Network & Analyzer::socket()
 {
     return mysocket;
+}
+
+void Analyzer::notify(int command)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(command);
+
+    emit sendCommand(tosend);
 }
