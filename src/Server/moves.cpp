@@ -1273,7 +1273,7 @@ struct MMDragonRage : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-	b.inflictDamage(t, turn(b,s)["DragonRage_Arg"].toInt());
+	b.inflictDamage(t, turn(b,s)["DragonRage_Arg"].toInt(), s, true);
     }
 };
 
