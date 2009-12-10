@@ -94,13 +94,14 @@ public:
     void inflictDamage(int player, int damage, int source, bool straightattack = false);
     void inflictSubDamage(int player, int damage, int source);
     void disposeItem(int player);
+    void acqItem(int player, int item);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
 
     int calculateDamage(int player, int target);
     PokeFraction getMod1(int player, int target);
-    void applyMoveStatMods(int player, int target, bool sub = false);
+    void applyMoveStatMods(int player, int target);
     bool testAccuracy(int player, int target);
     void testCritical(int player, int target);
     void testFlinch(int player, int target);
@@ -108,6 +109,7 @@ public:
     bool testFail(int player);
     void fail(int player, int move, int part=0, int type=0);
     bool hasType(int player, int type);
+    bool hasWorkingAbility(int play, int ability);
     int getType(int player, int slot);
     bool isFlying(int player);
     bool hasSubstitute(int player);
