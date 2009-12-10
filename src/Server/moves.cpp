@@ -1266,6 +1266,17 @@ struct MMSwitcheroo : public MM
     }
 };
 
+struct MMDragonRage : public MM
+{
+    MMDragonRage() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	b.inflictDamage(t, turn(b,s)["DragonRage_Arg"].toInt());
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = MM##name(); names[num] = #name; nums[#name] = num;
 
 void MoveEffect::init()
@@ -1288,6 +1299,7 @@ void MoveEffect::init()
     REGISTER_MOVE(25, Curse);
     REGISTER_MOVE(26, DestinyBond);
     REGISTER_MOVE(27, Detect); /* Protect, Detect */
+    REGISTER_MOVE(30, DragonRage);
     REGISTER_MOVE(31, DreamingTarget); /* Part Dream eater, part Nightmare */
     REGISTER_MOVE(36, Eruption); /* Eruption, Water sprout */
     REGISTER_MOVE(37, FaintUser); /* Memento, part explosion, selfdestruct, lunar dance, healing wish... */
