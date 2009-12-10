@@ -913,14 +913,14 @@ struct MMSpikes : public MM
     }
 
     static void daf(int s, int, BS &b) {
-	if (team(b,b.rev(s))["Spikes"].toInt() >= 3) {
+	if (team(b,b.rev(s)).value("Spikes").toInt() >= 3) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
 
     static void uas(int s, int, BS &b) {
 	int t = b.rev(s);
-	team(b,t)["Spikes"] = std::min(3, team(b,t)["Spikes"].toInt()+1);
+	team(b,t)["Spikes"] = std::min(3, team(b,t).value("Spikes").toInt()+1);
 	addFunction(team(b,t), "UponSwitchIn", "Spikes", &usi);
 	b.sendMoveMessage(121, 0, s, 0,b.rev(s));
     }

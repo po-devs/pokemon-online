@@ -4,6 +4,8 @@
 #include "moves.h"
 #include "items.h"
 #include <ctime> /* for random numbers, time(NULL) needed */
+#include <map>
+#include <algorithm>
 
 BattleSituation::BattleSituation(Player &p1, Player &p2)
 	:team1(p1.team()), team2(p2.team())
@@ -287,10 +289,12 @@ void BattleSituation::analyzeChoice(int player)
 {
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice[player].attack()) {
-	if (turnlong[player].contains("NoChoice"))
-	    useAttack(player, choice[player].numSwitch, false, true);
-	else
-	    useAttack(player, choice[player].numSwitch);
+	if (!koed(player)) {
+	    if (turnlong[player].contains("NoChoice"))
+		useAttack(player, choice[player].numSwitch, false, true);
+	    else
+		useAttack(player, choice[player].numSwitch);
+	}
     } else {
         if (!koed(player)) { /* if the pokemon isn't ko, it IS sent back */
 	    sendBack(player);
@@ -307,41 +311,65 @@ void BattleSituation::analyzeChoices()
     if (!turnlong[Player2].contains("NoChoice") && choice[Player2].attack())
 	MoveEffect::setup(poke(Player2).move(choice[Player2].numSwitch), Player2, Player1, *this);
 
-    if (choice[Player1].attack() && choice[Player2].attack()) {
-	int first, second;
+    std::multimap<int, int, std::greater<int> > priorities;
+    QSet<int> switches;
 
-	if (turnlong[Player1]["SpeedPriority"].toInt() > turnlong[Player2]["SpeedPriority"].toInt()) {
-	    first = Player1;
-	    goto second;
-	}
-	if (turnlong[Player1]["SpeedPriority"].toInt() < turnlong[Player2]["SpeedPriority"].toInt()) {
-	    first = Player2;
-	    goto second;
-	}
-	callieffects(Player1,Player1, "TurnOrder");
-	callieffects(Player2,Player2, "TurnOrder");
-	if (turnlong[Player1]["TurnOrder"] != turnlong[Player2]["TurnOrder"]) {
-	    first = turnlong[Player1]["TurnOrder"].toInt() < turnlong[Player2]["TurnOrder"].toInt() ? Player2:Player1;
-	    goto second;
-	}
-
-	first = getStat(Player1, Speed) > getStat(Player2, Speed) ? Player1 : Player2;
-
-second:
-	second = rev(first);
-
-	analyzeChoice(first);
-	if (!koed(second))
-	    analyzeChoice(second);
-
-	return;
+    for (int i = Player1; i <= Player2; i++) {
+	if (choice[i].poke())
+	    switches.insert(i);
+	else
+	    priorities.insert(std::pair<int, int>(turnlong[i]["SpeedPriority"].toInt(), i));
     }
-    if (choice[Player1].attack()) {
-	analyzeChoice(Player2);
-	analyzeChoice(Player1);
-    } else {
-	analyzeChoice(Player1);
-	analyzeChoice(Player2);
+
+    foreach(int player, switches) {
+	analyzeChoice(player);
+    }
+    foreach(int player, switches) {
+	callEntryEffects(player);
+    }
+    requestSwitchIns();
+
+    std::multimap<int, int, std::greater<int> >::const_iterator it;
+    std::multimap<int, int, std::greater<int> >::const_iterator itEnd;
+
+    for (it = priorities.begin(); it != priorities.end(); ) {
+	itEnd = priorities.upper_bound(it->first);
+
+	/* There's another priority system: Ability stall, and Item lagging tail */
+	std::map<int, int, std::greater<int> > secondPriorities;
+	for (; it != itEnd; ++it) {
+	    int player = it->second;
+	    callieffects(player,player, "TurnOrder");
+	    secondPriorities.insert(std::pair<int,int>(turnlong[player]["TurnOrder"].toInt(), player));
+	}
+
+	std::multimap<int, int, std::greater<int> >::const_iterator it2;
+	std::multimap<int, int, std::greater<int> >::const_iterator it2End;
+
+	for(it2 = secondPriorities.begin(); it2 != secondPriorities.end();) {
+	    it2End = secondPriorities.upper_bound(it->first);
+
+	    /* At last the speed comparison... */
+	    std::map<int, int, std::greater<int> > speeds;
+	    for (; it2 != it2End; ++it) {
+		speeds.insert(std::pair<int,int>(getStat(it2->second, Speed), it2->second));
+	    }
+
+	    std::multimap<int, int, std::greater<int> >::const_iterator it3;
+	    for(it3 = speeds.begin(); it3 != speeds.end();)
+	    {
+
+		std::multimap<int, int, std::greater<int> >::const_iterator it3End = speeds.upper_bound(it3->second);
+		std::vector<int> heap;
+		for (; it3 != it3End; ++it3) {
+		    heap.push_back(it3->second);
+		}
+		std::random_shuffle(heap.begin(), heap.end());
+		foreach(int player, heap) {
+		    analyzeChoice(player);
+		}
+	    }
+	}
     }
 }
 
@@ -846,7 +874,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 	int targeted = self? player : target;
 
 	/* If the effect is on the opponent, and the opponent is Koed / subbed, we don't do nothing */
-	if (koed(target)) {
+	if (koed(targeted)) {
             continue;
 	}
 	if (!self && sub) {
@@ -1387,6 +1415,6 @@ void BattleSituation::emitCommand(int player, int players, const QByteArray &tos
     } else if (players == AllButPlayer) {
 	emit battleInfo(id(rev(player)), tosend);
     } else {
-        emit battleInfo(id(players), tosend);
+	emit battleInfo(id(players), tosend);
     }
 }
