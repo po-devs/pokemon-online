@@ -415,7 +415,7 @@ struct MMDestinyBond : public MM
     static void akbsa(int s, int t, BS &b) {
 	int trn = poke(b,s)["DestinyBondTurn"].toInt();
 
-	if (trn == b.turn() || (trn+1 == b.turn() && (!turn(b,s).contains("HasMoved") || turn(b,s)["HasMoved"].toBool() == false))) {
+	if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool() )) {
 	    b.sendMoveMessage(26, 0, s, Pokemon::Ghost, t);
 	    b.koPoke(t, s, false);
 	}
@@ -631,7 +631,7 @@ struct MMFrustration : public MM
 struct MMSuperFang : public MM
 {
     MMSuperFang() {
-	functions["UponAttackSuccessful"] = &uas;
+	functions["CustomAttackingDamage"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -690,8 +690,10 @@ struct MMHaze : public MM
 	functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void uas(int, int t, BS &b) {
-	b.sendMoveMessage(149);
+    static void uas(int s, int t, BS &b) {
+	/* sending the message only once */
+	if (s == t)
+	    b.sendMoveMessage(149);
 	for (int i = 1; i <= 7; i++) {
 	    poke(b,t)["Stat"+QString::number(i)] = 0;
 	}
@@ -706,7 +708,7 @@ struct MMLeechSeed : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-	if (b.hasType(t, Pokemon::Grass) || (poke(b,t).contains("Seeded") && poke(b,t)["Seeded"].toBool() == true)) {
+	if (b.hasType(t, Pokemon::Grass) || (poke(b,t).value("Seeded").toBool() == true)) {
 	    b.fail(s, 72,0,Pokemon::Grass);
 	}
     }
@@ -881,7 +883,7 @@ struct MMRoar : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-	if (poke(b,t).contains("Rooted") && poke(b,t)["Rooted"].toBool() == true) {
+	if (poke(b,t).value("Rooted").toBool()) {
 	    turn(b,s)["Failed"] = true;
 	} else {
 	    if (b.countAlive(t) <= 1) {
@@ -943,7 +945,7 @@ struct MMStealthRock : public MM
 
     static void daf(int s, int, BS &b) {
 	int t = b.rev(s);
-	if (team(b,t)["StealthRock"].toBool() == true) {
+	if (team(b,t).value("StealthRock").toBool() == true) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -974,7 +976,7 @@ struct MMToxicSpikes : public MM
 
     static void daf(int s, int, BS &b) {
 	int t = b.rev(s);
-	if (team(b,t)["ToxicSpikes"].toInt() >= 2) {
+	if (team(b,t).value("ToxicSpikes").toInt() >= 2) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -1011,29 +1013,24 @@ struct MMRapidSpin : public MM
     }
 
     static void uas(int s, int, BS &b) {
-	if (poke(b,s).contains("Seeded")) {
-	    poke(b,s)["Seeded"] = false;
-	}
-	if (team(b,s).contains("Spikes")) {
-	    team(b,s)["Spikes"] = 0;
-	}
-	if (team(b,s).contains("ToxicSpikes")) {
-	    team(b,s)["ToxicSpikes"] = 0;
-	}
-	if (team(b,s).contains("StealthRock")) {
-	    team(b,s)["StealthRock"] = false;
-	}
+	team(b,s).remove("Spikes");
+	team(b,s).remove("ToxicSpikes");
+	team(b,s).remove("StealthRock");
+	team(b,s).remove("Seeded");
     }
 };
 
 struct MMUTurn : public MM
 {
     MMUTurn() {
-	functions["UponAttackSuccessful"] = &uas;
+	functions["AfterAttackSuccessful"] = &aas;
     }
 
-    static void uas(int s, int, BS &b) {
+    static void aas(int s, int, BS &b) {
 	if (b.countAlive(s) <= 1) {
+	    return;
+	}
+	if (b.koed(s)) {
 	    return;
 	}
 	b.requestSwitch(s);
@@ -1048,7 +1045,7 @@ struct MMSubstitute : public MM
     }
 
     static void daf(int s, int, BS &b) {
-	if (poke(b,s)["Substitute"].toBool() == true) {
+	if (poke(b,s).value("Substitute").toBool() == true) {
 	    b.fail(s, 128);
 	}
     }
@@ -1098,7 +1095,7 @@ struct MMFocusPunch : public MM
 struct MMNightShade : public MM
 {
     MMNightShade() {
-	functions["UponAttackSuccessful"] = &uas;
+	functions["CustomAttackingDamage"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -1211,6 +1208,64 @@ struct MMThunderWave : public MM
     }
 };
 
+struct MMKnockOff : public MM
+{
+    MMKnockOff() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s,int t,BS &b)
+    {
+	if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, 101) && b.poke(t).num() != 493) /* Sticky Hold, Arceus */
+	{
+	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
+	    b.disposeItem(t);
+	}
+    }
+};
+
+struct MMCovet : public MM
+{
+    MMCovet() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s,int t,BS &b)
+    {
+	if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, 101) && b.poke(t).num() != 493 && b.poke(s).item() == 0) /* Sticky Hold, Arceus */
+	{
+	    b.sendMoveMessage(23,(move(b,s)==71)?0:1,s,type(b,s),t,b.poke(t).item());
+	    b.acqItem(s, b.poke(t).item());
+	    b.disposeItem(t);
+	}
+    }
+};
+
+struct MMSwitcheroo : public MM
+{
+    MMSwitcheroo() {
+	functions["UponAttackSuccessful"] = &uas;
+	functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, 101) && b.poke(t).num() != 493 && b.poke(s).item() == 0) /* Sticky Hold, Arceus */
+	{
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int s, int t, BS &b)
+    {
+	b.sendMoveMessage(132,0,s,type(b,s),t);
+	int i1(b.poke(s).item()), i2(b.poke(t).item());
+	b.disposeItem(s);
+	b.disposeItem(t);
+	b.acqItem(s, i2);
+	b.acqItem(t, i1);
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = MM##name(); names[num] = #name; nums[#name] = num;
 
 void MoveEffect::init()
@@ -1228,6 +1283,7 @@ void MoveEffect::init()
     REGISTER_MOVE(19, Conversion);
     REGISTER_MOVE(20, Conversion2);
     REGISTER_MOVE(21, Copycat);
+    REGISTER_MOVE(23, Covet);
     REGISTER_MOVE(24, CrushGrip); /* Crush grip, Wring out */
     REGISTER_MOVE(25, Curse);
     REGISTER_MOVE(26, DestinyBond);
@@ -1245,6 +1301,7 @@ void MoveEffect::init()
     REGISTER_MOVE(58, Attract);
     REGISTER_MOVE(60, HealHalf);
     REGISTER_MOVE(65, HiddenPower);
+    REGISTER_MOVE(70, KnockOff);
     REGISTER_MOVE(72, LeechSeed);
     REGISTER_MOVE(91, NightShade);
     REGISTER_MOVE(94, PainSplit);
@@ -1257,6 +1314,7 @@ void MoveEffect::init()
     REGISTER_MOVE(124, StealthRock);
     REGISTER_MOVE(128, Substitute);
     REGISTER_MOVE(130, SuperFang);
+    REGISTER_MOVE(132, Switcheroo);
     REGISTER_MOVE(134, Taunt);
     REGISTER_MOVE(136, ToxicSpikes);
     REGISTER_MOVE(140, UTurn);

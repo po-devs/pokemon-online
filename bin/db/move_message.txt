@@ -1,36 +1,38 @@
-
 %s absorbed %f's life!|%s devoured %f's dreams!
 A ring of water surrounds %s|Aquaring recovered %s's hp a little.
 A sweet flagrance flowed through %ts's team.|A chime resounded around %ts's team.
 
 
 
-
+%q attacked!
 %s hasn't enough energy left!
-
-
+%s concentrates!|
+%s is hurt by the %m!
 %s needs to rest for a turn.
 %f is trapped!
+%s bounced high up in the sky!|%s went underground!|%s went underwater!|%s flew high up in the sky!
+%s shattered %m!
 
-
-
-
-
+%s ate %f's %i!
+%s changed its type to %t!
 %s stored up electricity!
 %s changed its type to %t!
 %s changed its type to %t!
 
 
-
+%s begged %f!\n%f gave its %i to %s|%s stole %f's %i!
 %s crushed %f!
 %s inflicted a curse on %f!|%s is afflicted by the curse.
 Destiny bond took away %f!
 %f protected itself!
-
-
+%f's %m is disabled!|%s can't use %m because of disable!|%s is no longer disabled!
+%q's %m hit %s!
 %f is awake!
 
 
+%s's Encore ended! %s can't use %m because of Encore!
+
+%s endured the hit!
 
 
 
@@ -40,84 +42,81 @@ Destiny bond took away %f!
 
 
 
-
-
-
-
-
+%s threw %i at %f!
+%s pumped itself!
 %s lost its focus! %s is tightening its focus!
 
 
 
+%f's %a is nullified!
+
+All the pokemons are stuck to the ground!|The gravity ended!
+%f's %m lost all its PP because of %s' Grudge!
+%s swapped its boosts with %f!
 
 
-
-
-
-
-
-%s is in love with %s!|%s seduced %f!|%f is too lovestruck to move.
-
+%s is in love with %s!|%s seduced %f!|%f is too lovestruck to move!
+%f can't heal!|%s can't use %m because of Heal Block!
 %s recovered half it's life!
 
+%s swapped its defense and attack!
+
+%s missed and crashed on the ground!
 
 
+%s can't use %m because of imprison!
 
 
-
-
-
-
-
+%s knocked off %f's %i!
 
 %f evaded the seed!|%f was seeded!|%s's health is saped by leech seed.
+%ts's reflect wore off!|%ts's light screen wore off!
+
+%ts's lucky chant wore off!
 
 
 
 
 
+%s copied %m!
 
 
 
 
+A mist surrounds %ts's team!|%ts's mist wore off!
+
+The battlefield is covered in mud!|The battlefield is covered with water!
 
 
 
-
-
-
-
-
-
-
-
-
+%s has a nightmare!
+%s calmed down!
 %s balanced it's life with %f!
 A sorrowful melody could be heard by everyone on the field.|%s's perish count fell to %d.
 
+%s copied %f's boosts!
+%s moved its status onto %f!
 
 
 
 
 
+%s prepared a tornado!
+%s recycled %i!
+
+
+%s copied %f's %a!
+
+
+
+%s and %f switched abilities!
+%s lowers its head!
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+%s snatched %f's %m!
+%s's solar beam is charging!
 
 Spikes were scattered around %tf's team!|%s is hurt by spikes!
 
@@ -130,19 +129,19 @@ Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 
 
 
-
-
+%s and %f switched items!
+%ts's team tailwind petered out!
 %s couldn't use %m because of taunt!
-
+%s can't use %m because of the torment!
 Poison spikes were scattered around %tf's team!|The poison spikes disappeared around %ts's feet!
+%s transformed into %p!
+Slower pokemons will attack first!|Trick room ended!
 
 
-
-
-
+%s caused an uproar!
 %s made a wish!|%q's wish came true!
-
-
+%f now has insomnia!
+%s yawns!
 
 
 

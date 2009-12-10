@@ -146,7 +146,7 @@
 47#focus punch
 48#follow me
 
-84-7#7 is ghost
+84-7#7 is ghost -- focus sight
 11
 49-1#frustration
 
@@ -255,7 +255,7 @@
 86#mist
 
 87#moon light
-87#morning sung
+87#morning sun
 
 
 88-12#mud sport
@@ -449,7 +449,7 @@
 
 
 88-9#water sport
-36#water sport
+36#water spout
 
 118#weather ball
 10#whirlpool

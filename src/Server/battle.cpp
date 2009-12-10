@@ -732,6 +732,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    bool hit = num > 1;
 
 	    for (int i = 0; i < num; i++) {
+
 		if (hit) {
 		    notify(All, Hit, target);
 		}
@@ -740,26 +741,33 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 		calleffects(player, target, "BeforeCalculatingDamage");
 
-		bool sub = hasSubstitute(target);
+		bool sub = hasSubstitute(player);
+		turnlong[player]["HadSubstitute"] = sub;
+
 		if (turnlong[player]["Power"].toInt() > 1) {
 		    int damage = calculateDamage(player, target);
 		    inflictDamage(target, damage, player, true);
+		} else {
+		    calleffects(player, target, "CustomAttackingDamage");
 		}
+		calleffects(player, target, "UponAttackSuccessful");
 
 		if (turnlong[player]["PhysicalContact"].toBool()) {
 		    if (!sub)
 			callieffects(target, player, "UponPhysicalAssault");
 		}
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
-		applyMoveStatMods(player, target, sub);
+		applyMoveStatMods(player, target);
 
 		battlelong["LastMoveSuccesfullyUsed"] = attack;
 
 		if (koed(target))
-		    break;
-
-		if (!sub)
-		    testFlinch(player, target);
+		    ;
+		else
+		    if (!sub)
+			testFlinch(player, target);
+		/* Removing substitute... */
+		turnlong[player]["HadSubstitute"] = false;
 	    }
 
 	    notify(All, Effective, target, quint8(typemod));
@@ -778,7 +786,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		continue;
 
 	    calleffects(player, target, "BeforeHitting");
-            applyMoveStatMods(player, target, hasSubstitute(target));
+	    applyMoveStatMods(player, target);
 	    calleffects(player, target, "UponAttackSuccessful");
 	    /* this is put after calleffects to avoid endless sleepTalk/copycat for example */
 	    battlelong["LastMoveSuccesfullyUsed"] = attack;
@@ -786,6 +794,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	}
 	pokelong[target]["LastAttackToHit"] = attack;
     }
+}
+
+bool BattleSituation::hasWorkingAbility(int player, int ab)
+{
+    return poke(player).ability() == ab;
 }
 
 void BattleSituation::inflictRecoil(int source, int target)
@@ -802,8 +815,10 @@ void BattleSituation::inflictRecoil(int source, int target)
     inflictDamage(source, turnlong[target]["DamageTakenByAttack"].toInt()/recoil, source);
 }
 
-void BattleSituation::applyMoveStatMods(int player, int target, bool sub)
+void BattleSituation::applyMoveStatMods(int player, int target)
 {
+    bool sub = hasSubstitute(player);
+
     QString effect = turnlong[player]["StatEffect"].value<QString>();
 
     /* First we check if there's even an effect... */
@@ -966,8 +981,7 @@ int BattleSituation::getType(int player, int slot)
 	}
     }
 
-    if (types[slot-1] == Pokemon::Flying && turnlong[player].contains("Roosted")
-	    && turnlong[player]["Roosted"].toBool() == true)
+    if (types[slot-1] == Pokemon::Flying && turnlong[player].value("Roosted").toBool())
     {
 	return Pokemon::Curse;
     }
@@ -982,7 +996,7 @@ bool BattleSituation::isFlying(int player)
 
 bool BattleSituation::hasSubstitute(int player)
 {
-    return player != -1 && pokelong[player].contains("Substitute") && pokelong[player]["Substitute"].toBool() == true;
+    return !koed(player) && (pokelong[player].value("Substitute").toBool() || pokelong[player].value("HadSubstitute").toBool());
 }
 
 void BattleSituation::changeStatus(int player, int status)
@@ -1163,6 +1177,11 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
 
 void BattleSituation::disposeItem(int  player) {
     poke(player).item() = 0;
+}
+
+void BattleSituation::acqItem(int player, int item) {
+    poke(player).item() = item;
+    ItemEffect::setup(poke(player).item(),player,*this);
 }
 
 void BattleSituation::healLife(int player, int healing)
