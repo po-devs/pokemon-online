@@ -165,7 +165,7 @@ struct IMLagging : public IM
 	functions["TurnOrder"] = &tu;
     }
     static void tu (int s, int, BS &b) {
-	inc(turn(b,s)["TurnOrder"], -2);
+	turn(b,s)["TurnOrder"] = -2;
     }
 };
 
