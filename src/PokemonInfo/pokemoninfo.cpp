@@ -193,7 +193,12 @@ int PokemonInfo::NumberOfPokemons()
 
 QString PokemonInfo::Name(int pokenum)
 {
-    return m_Names[pokenum];
+    return Exist(pokenum) ? m_Names[pokenum] : m_Names[0];
+}
+
+bool PokemonInfo::Exist(int n)
+{
+    return n < NumberOfPokemons() && n>=0;
 }
 
 int PokemonInfo::Number(const QString &pokename)
@@ -519,7 +524,12 @@ QString MoveInfo::path(const QString &file)
 
 QString MoveInfo::Name(int movenum)
 {
-    return m_Names[movenum];
+    return Exist(movenum) ? m_Names[movenum] : m_Names[0];
+}
+
+bool MoveInfo::Exist(int movenum)
+{
+    return movenum >= 0 && movenum < NumberOfMoves();
 }
 
 int MoveInfo::Power(int movenum)
@@ -980,7 +990,10 @@ void AbilityInfo::init(const QString &dir)
 
 QString AbilityInfo::Name(int abnum)
 {
-    return m_Names[abnum];
+    if (abnum >=0 && abnum < NumberOfAbilities())
+	return m_Names[abnum];
+    else
+	return 0;
 }
 
 int AbilityInfo::NumberOfAbilities()

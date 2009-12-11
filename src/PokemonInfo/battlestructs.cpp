@@ -66,6 +66,11 @@ void PokeBattle::setNormalStat(int stat, quint16 i)
 
 void PokeBattle::init(const PokePersonal &poke)
 {
+    if (!PokemonInfo::Exist(poke.num())) {
+	num() = 0;
+	return;
+    }
+
     PokeGeneral p;
     p.num() = poke.num();
     p.load();

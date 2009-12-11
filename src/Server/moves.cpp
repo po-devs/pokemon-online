@@ -5,6 +5,8 @@ QHash<int, MoveMechanics> MoveEffect::mechanics;
 QHash<int, QString> MoveEffect::names;
 QHash<QString, int> MoveEffect::nums;
 
+Q_DECLARE_METATYPE(QList<int>)
+
 int MoveMechanics::num(const QString &name)
 {
     if (!MoveEffect::nums.contains(name)) {
@@ -1044,7 +1046,7 @@ struct MMSubstitute : public MM
 	}
 	QString effect = turn(b,s)["EffectActivated"].toString();
 
-	if (effect == "Block" || effect == "Covet" || effect == "Curse" || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge"
+	if (effect == "Bind" || effect == "Block" || effect == "Covet" || effect == "Curse" || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge"
 	    || effect == "HealBlock" || effect == "KnockOff" || effect == "LeechSeed"
 	    || effect == "LockOn" || effect == "Mimic" || effect == "PsychoShift" || effect == "Sketch" || effect == "Switcheroo"
 	    || effect == "WorrySeed" || effect == "Yawn")
@@ -1422,6 +1424,104 @@ struct MMBide : public MM
     }
 };
 
+struct MMBind : public MM
+{
+    MMBind() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas (int s, int t, BS &b) {
+	poke(b,t)["TrappedBy"] = s;
+	poke(b,t)["TrappedCount"] = b.poke(s).item() == 190 ? 5 : (rand()%4) + 2; /* Grip claw = 5 turns */
+	poke(b,t)["TrappedMove"] = move(b,s);
+	poke(b,s)["Trapped"] = t;
+	addFunction(poke(b,t), "EndTurn", "Bind", &et);
+    }
+
+    static void et (int s, int, BS &b) {
+	int count = poke(b,s)["TrappedCount"].toInt() - 1;
+	int move = poke(b,s)["TrappedMove"].toInt();
+	if (count <= 0) {
+	    poke(b,s).remove("TrappedBy");
+	    removeFunction(poke(b,s),"EndTurn", "Bind");
+	    b.sendMoveMessage(10,1,s,MoveInfo::Type(move),s,move);
+	} else {
+	    poke(b,s)["TrappedCount"] = count;
+	    b.sendMoveMessage(10,0,s,MoveInfo::Type(move),s,move);
+	}
+    }
+};
+
+struct MMBounce : public MM
+{
+    MMBounce() {
+	functions["UponAttackSuccessful"] = &uas;
+	functions["OnSetup"] = &os;
+	functions["MoveSettings"] = &ms;
+    }
+
+    static void os(int s, int, BS &b) {
+	turn(b,s)["TellPlayers"] = false;
+    }
+
+    static void ms(int s, int, BS &b) {
+	addFunction(poke(b,s), "TurnSettings", "Bounce", &ts);
+	poke(b,s)["2TurnMove"] = turn(b,s)["Attack"];
+	turn(b,s)["Power"] = 0;
+	turn(b,s)["Accuracy"] = 0;
+	turn(b,s)["PossibleTarget"] = Move::None;
+    }
+
+    static void ts(int s, int, BS &b) {
+	turn(b,s)["NoChoice"] = true;
+	merge(turn(b,s), MoveEffect(poke(b,s)["2TurnMove"].toInt()));
+	addFunction(turn(b,s), "EvenWhenCantMove", "Bounce", &bes);
+	removeFunction(poke(b,s), "TurnSettings", "Bounce");
+    }
+
+    static void bes(int s, int, BS &b) {
+	poke(b,s)["Invulnerable"] = false;
+    }
+
+    static void uas(int s, int, BS &b) {
+	QStringList args = turn(b,s)["Bounce_Arg"].toString().split('_');
+	QList<int> vuln_moves, vuln_mult;
+	for (int i = 1; i < args.size(); i++)
+	{
+	    QStringList b = args[i].split('*');
+	    vuln_moves.push_back(b.front().toInt());
+	    vuln_mult.push_back(b.size() == 1 ? 1 : b.back().toInt());
+	}
+	poke(b,s)["Invulnerable"] = true;
+	poke(b,s)["VulnerableMoves"].setValue(vuln_moves);
+	poke(b,s)["VulnerableMults"].setValue(vuln_mult);
+	b.sendMoveMessage(13,args[0].toInt(),s,type(b,s));
+	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Bounce", &dgaf);
+    }
+
+    static void dgaf(int s, int t, BS &b) {
+	if (s == t || t == -1) {
+	    return;
+	}
+	if (!poke(b,t).value("Inlvunerable").toBool()) {
+	    return;
+	}
+	int attack = turn(b,s)["Attack"].toInt();
+	/* Lets see if the poke is vulnerable to that one attack */
+	QList<int> vuln_moves = poke(b,s)["VulnerableMoves"].value<QList<int> >();
+	QList<int> vuln_mults = poke(b,s)["VulnerableMults"].value<QList<int> >();
+
+	for (int i = 0; i < vuln_moves.size(); i++) {
+	    if (vuln_moves[i] == attack) {
+		turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * vuln_mults[i];
+		return;
+	    }
+	}
+	/* All other moves fail */
+	turn(b,s)["Failed"] = true;
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = MM##name(); names[num] = #name; nums[#name] = num;
 
 void MoveEffect::init()
@@ -1434,8 +1534,10 @@ void MoveEffect::init()
     REGISTER_MOVE(6, BatonPass);
     REGISTER_MOVE(8, BellyDrum);
     REGISTER_MOVE(9, Bide);
+    REGISTER_MOVE(10, Bind);
     REGISTER_MOVE(11, BlastBurn); /* BlastBurn, Hyper beam, rock wrecker, giga impact, frenzy plant, hydro cannon, roar of time */
     REGISTER_MOVE(12, Block);
+    REGISTER_MOVE(13, Bounce);
     REGISTER_MOVE(15, Brine);
     REGISTER_MOVE(18, Charge);
     REGISTER_MOVE(19, Conversion);
