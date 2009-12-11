@@ -8,7 +8,7 @@ A sweet flagrance flowed through %ts's team.|A chime resounded around %ts's team
 %q attacked!
 %s hasn't enough energy left!
 %s is storing its power!|%s unleashed its power!
-%s is hurt by the %m!
+%s is hurt by %m!|%s is freed from %m!
 %s needs to rest for a turn.
 %f is trapped!
 %s bounced high up in the sky!|%s went underground!|%s went underwater!|%s flew high up in the sky!

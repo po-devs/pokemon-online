@@ -275,6 +275,13 @@ BattleChoices BattleSituation::createChoice(int player)
 	if (pokelong[player].contains("Rooted")) {
 	    ret.switchAllowed = false;
 	}
+
+	if (pokelong[player].contains("TrappedBy")) {
+	    int b = pokelong[player]["TrappedBy"].toInt();
+	    if (pokelong[b].contains("Trapped") && pokelong[b]["Trapped"].toInt() == player) {
+		ret.switchAllowed = false;
+	    }
+	}
     }
 
     return ret;
@@ -664,6 +671,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     turnlong[player]["HasMoved"] = true;
 
+    calleffects(player,player,"EvenWhenCantMove");
+
     if (!testStatus(player)) {
 	return;
     }
@@ -772,7 +781,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		bool sub = hasSubstitute(player);
 		turnlong[player]["HadSubstitute"] = sub;
 
-		qDebug() << "Power"<< turnlong[player]["Power"].toInt();
 		if (turnlong[player]["Power"].toInt() > 1) {
 		    int damage = calculateDamage(player, target);
 		    inflictDamage(target, damage, player, true);

@@ -23,7 +23,7 @@ int Mechanics::type(BattleSituation &b, int source)
 
 int Mechanics::move(BattleSituation &b, int source)
 {
-    return turn(b, source)["LastMoveUsed"].toInt();
+    return turn(b, source)["Attack"].toInt();
 }
 
 void Mechanics::addFunction(BattleSituation::context &c, const QString &effect, const QString &name, Mechanics::function f)

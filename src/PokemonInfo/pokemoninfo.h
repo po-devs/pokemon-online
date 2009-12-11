@@ -38,6 +38,7 @@ public:
     static QList<int> TMMoves(int pokenum);
     static QList<int> SpecialMoves(int pokenum);
     static PokeBaseStats BaseStats(int pokenum);
+    static bool Exist(int pokenum);
     static QList<int> Abilities(int pokenum);
     static int Stat(int stat, quint8 base_stat, int level, quint8 dv, quint8 ev);
     static int FullStat(int nature, int stat, quint8 base_stat, int level, quint8 dv, quint8 ev);
@@ -114,6 +115,7 @@ public:
     static int SpeedPriority(int movenum);
     static bool PhysicalContact(int movenum);
     static bool KingRock(int movenum);
+    static bool Exist(int movenum);
     static int EffectRate(int movenum);
     static int Target(int movenum);
     static QString MoveMessage(int moveeffect, int part);
