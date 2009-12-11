@@ -333,13 +333,11 @@ void BattleSituation::analyzeChoices()
     std::multimap<int, int, std::greater<int> >::const_iterator itEnd;
 
     for (it = priorities.begin(); it != priorities.end(); ) {
-	qDebug() << "a";
 	itEnd = priorities.upper_bound(it->first);
 
 	/* There's another priority system: Ability stall, and Item lagging tail */
-	std::map<int, int, std::greater<int> > secondPriorities;
+	std::multimap<int, int, std::greater<int> > secondPriorities;
 	for (; it != itEnd; ++it) {
-	    qDebug() << "b";
 	    int player = it->second;
 	    callieffects(player,player, "TurnOrder");
 	    secondPriorities.insert(std::pair<int,int>(turnlong[player]["TurnOrder"].toInt(), player));
@@ -349,24 +347,20 @@ void BattleSituation::analyzeChoices()
 	std::multimap<int, int, std::greater<int> >::const_iterator it2End;
 
 	for(it2 = secondPriorities.begin(); it2 != secondPriorities.end();) {
-	    qDebug() << "c";
 	    it2End = secondPriorities.upper_bound(it2->first);
 
 	    /* At last the speed comparison... */
 	    std::map<int, int, std::greater<int> > speeds;
 	    for (; it2 != it2End; ++it2) {
-		qDebug() << "d";
 		speeds.insert(std::pair<int,int>(getStat(it2->second, Speed), it2->second));
 	    }
 
 	    std::multimap<int, int, std::greater<int> >::const_iterator it3;
 	    for(it3 = speeds.begin(); it3 != speeds.end();)
 	    {
-		qDebug() << "e";
 		std::multimap<int, int, std::greater<int> >::const_iterator it3End = speeds.upper_bound(it3->first);
 		std::vector<int> heap;
 		for (; it3 != it3End; ++it3) {
-		    qDebug() << "f";
 		    heap.push_back(it3->second);
 		}
 		std::random_shuffle(heap.begin(), heap.end());
@@ -660,11 +654,12 @@ bool BattleSituation::testFail(int player)
 void BattleSituation::useAttack(int player, int move, bool specialOccurence, bool tellPlayers)
 {
     int attack;
-    turnlong[player]["MoveSlot"] = move;
+
     if (specialOccurence) {
 	attack = move;
     } else {
 	attack = poke(player).move(move).num();
+	pokelong[player]["MoveSlot"] = move;
     }
 
     turnlong[player]["HasMoved"] = true;
@@ -691,7 +686,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	callieffects(player,player, "RegMoveSettings");
     }
 
-    if (tellPlayers && !specialOccurence) {
+    if (tellPlayers && !turnlong[player].contains("TellPlayers")) {
 	notify(All, UseAttack, player, qint16(attack));
 	qDebug() << poke(player).nick() << " used " << MoveInfo::Name(attack);
     }
@@ -699,7 +694,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     pokelong[player]["LastMoveUsed"] = attack;
     inc(pokelong[player]["MovesUsed"]);
 
-    if (!specialOccurence && tellPlayers)
+    if (!specialOccurence)
 	losePP(player, move, 1);
 
     calleffects(player, player, "MoveSettings");
@@ -777,10 +772,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		bool sub = hasSubstitute(player);
 		turnlong[player]["HadSubstitute"] = sub;
 
+		qDebug() << "Power"<< turnlong[player]["Power"].toInt();
 		if (turnlong[player]["Power"].toInt() > 1) {
 		    int damage = calculateDamage(player, target);
 		    inflictDamage(target, damage, player, true);
 		} else {
+		    qDebug() << "The other way";
 		    calleffects(player, target, "CustomAttackingDamage");
 		}
 		calleffects(player, target, "UponAttackSuccessful");
@@ -1128,8 +1125,8 @@ PokeFraction BattleSituation::getMod1(int player, int)
 
 int BattleSituation::repeatNum(context &move)
 {
-    int min = move["RepeatMin"].toInt();
-    int max = move["RepeatMax"].toInt();
+    int min = 1+move["RepeatMin"].toInt();
+    int max = 1+move["RepeatMax"].toInt();
 
     if (min == max) {
 	return min;
@@ -1186,7 +1183,10 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	    inflictRecoil(source, player);
 	    callieffects(source,player, "UponDamageInflicted");
 	    calleffects(source, player, "UponDamageInflicted");
-	    callieffects(player, source, "UponOffensiveDamageReceived");
+	    if (!sub) {
+		callieffects(player, source, "UponOffensiveDamageReceived");
+		calleffects(player, source, "UponOffensiveDamageReceived");
+	    }
 	}
     }
 

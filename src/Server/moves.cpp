@@ -40,7 +40,7 @@ MoveEffect::MoveEffect(int num)
 typedef MoveMechanics MM;
 typedef BattleSituation BS;
 
-void MoveEffect::setup(int num, int source, int , BattleSituation &b)
+void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
 {
     MoveEffect e(num);
 
@@ -54,8 +54,6 @@ void MoveEffect::setup(int num, int source, int , BattleSituation &b)
 	std::string s = specialEffectS.toStdString();
 
 	int specialEffect = atoi(s.c_str());
-
-	qDebug() << "Effect: " << specialEffect << "(" << specialEffectS << ")";
 
 	/* if the effect is invalid or not yet implemented then no need to go further */
 	if (!mechanics.contains(specialEffect)) {
@@ -73,7 +71,11 @@ void MoveEffect::setup(int num, int source, int , BattleSituation &b)
 	}
 
 	for(i = m.functions.begin(); i != m.functions.end(); ++i) {
-	    Mechanics::addFunction(b.turnlong[source], i.key(), n, i.value());
+	    if (i.key() == "OnSetup") {
+		i.value()(source,target,b);
+	    } else {
+		Mechanics::addFunction(b.turnlong[source], i.key(), n, i.value());
+	    }
 	}
     }
 }
@@ -338,29 +340,6 @@ struct MMConversion2 : public MM
     }
 };
 
-struct MMCopycat : public MM
-{
-    MMCopycat() {
-	functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
-    }
-
-    static void daf(int s, int, BS &b) {
-	/* First check if there's even 1 move available */
-	if (!b.battlelong.contains("LastMoveSuccessfullyUsed") || b.battlelong["LastMoveSuccessfullyUsed"].toInt() == 67) {
-	    turn(b,s)["Failed"] = true;
-	} else {
-	    turn(b,s)["CopycatMove"] = b.battlelong["LastMoveSuccessfullyUsed"];
-	}
-    }
-
-    static void uas(int s, int t, BS &b) {
-	int attack = turn(b,s)["CopycatMove"].toInt();
-	MoveEffect::setup(attack, s, t, b);
-	b.useAttack(s, turn(b,s)["CopycatMove"].toInt(), true);
-    }
-};
-
 struct MMCrushGrip : public MM
 {
     MMCrushGrip() {
@@ -604,7 +583,7 @@ struct MMTrumpCard : public MM
 
     static void bcd(int s, int, BS &b)
     {
-	int n = b.poke(s).move(turn(b,s)["MoveSlot"].toInt()).PP();
+	int n = b.poke(s).move(poke(b,s)["MoveSlot"].toInt()).PP();
 	int mult;
 	switch(n) {
 	    case 0: mult = 200; break;
@@ -1269,11 +1248,177 @@ struct MMSwitcheroo : public MM
 struct MMDragonRage : public MM
 {
     MMDragonRage() {
-	functions["UponAttackSuccessful"] = &uas;
+	functions["CustomAttackingDamage"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
 	b.inflictDamage(t, turn(b,s)["DragonRage_Arg"].toInt(), s, true);
+    }
+};
+
+
+struct MMCopycat : public MM
+{
+    MMCopycat() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+	/* First check if there's even 1 move available */
+	if (!b.battlelong.contains("LastMoveSuccessfullyUsed") || b.battlelong["LastMoveSuccessfullyUsed"].toInt() == 67) {
+	    turn(b,s)["Failed"] = true;
+	} else {
+	    turn(b,s)["CopycatMove"] = b.battlelong["LastMoveSuccessfullyUsed"];
+	}
+    }
+
+    static void uas(int s, int t, BS &b) {
+	removeFunction(turn(b,s), "UponAttackSuccessful", "CopyCat");
+	removeFunction(turn(b,s), "DetermineAttackFailure", "CopyCat");
+	int attack = turn(b,s)["CopycatMove"].toInt();
+	MoveEffect::setup(attack, s, t, b);
+	b.useAttack(s, turn(b,s)["CopycatMove"].toInt(), true);
+    }
+};
+
+struct MMAssist : public MM
+{
+    MMAssist() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    struct FM : public QSet<int>
+    {
+	FM() {
+	     /* * No Move
+		* Assist
+		* Chatter
+		* Copycat
+		* Counter
+		* Covet
+		* Destiny Bond
+		* Detect
+		* Endure
+		* Feint
+		* Focus Punch
+		* Follow Me
+		* Helping Hand
+		* Me First
+		* Metronome
+		* Mimic
+		* Mirror Coat
+		* Mirror Move
+		* Protect
+		* Sketch
+		* Sleep Talk
+		* Snatch
+		* Struggle
+		* Switcheroo
+		* Thief
+		* Trick */
+	    (*this) << 0 << 17 << 58 << 70 << 71 << 85 << 86 << 116 << 128 << 145 << 146 << 182 << 233 << 245 << 247 << 251 << 252 << 296 << 358 << 367 << 373 << 394
+		<< 409 << 420 << 434;
+	}
+    };
+    static FM forbidden_moves;
+
+    static void uas(int s, int t, BS &b)
+    {
+	removeFunction(turn(b,s), "UponAttackSuccessful", "Assist");
+	removeFunction(turn(b,s), "DetermineAttackFailure", "Assist");
+	int attack = turn(b,s)["AssistMove"].toInt();
+	MoveEffect::setup(attack, s, t, b);
+	b.useAttack(s, turn(b,s)["AssistMove"].toInt(), true);
+    }
+
+    static void daf(int s, int, BS &b)
+    {
+	QSet<int> possible_moves;
+	for (int i = 0; i < 6; i++) {
+	    if (i != b.currentPoke(s) && b.poke(s, i).num() != 0) {
+		PokeBattle &p = b.poke(s,i);
+		for(int j = 0; j < 4; j++) {
+		    int m = p.move(j);
+		    if (!forbidden_moves.contains(m))
+			possible_moves.insert(m);
+		}
+	    }
+	}
+	if (!possible_moves.empty()) {
+	    turn(b,s)["AssistMove"] = *(possible_moves.begin() + (rand() %possible_moves.size()));
+	} else {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+};
+
+MMAssist::FM MMAssist::forbidden_moves;
+
+struct MMBide : public MM
+{
+    MMBide() {
+	functions["OnSetup"] = &os;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int , BS &b) {
+	addFunction(poke(b,s), "TurnSettings", "Bide", &ts);
+	addFunction(turn(b,s), "UponOffensiveDamageReceived", "Bide", &udi);
+	poke(b,s)["BideDamageCount"] = 0;
+	poke(b,s)["BideTurn"] = b.turn();
+	b.sendMoveMessage(9,0,s,type(b,s));
+    }
+
+    static void udi(int s, int, BS &b) {
+	inc(poke(b,s)["BideDamageCount"],poke(b,s)["DamageTakenByAttack"].toInt());
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (poke(b,s)["BideDamageCount"].toInt() == 0) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void ms(int s, int, BS &b) {
+	b.sendMoveMessage(9,1,s,type(b,s));
+    }
+
+    static void uas2(int s, int, BS &b) {
+	b.sendMoveMessage(9,0,s,type(b,s));
+    }
+
+    static void os(int s, int, BS &b) {
+	turn(b,s)["Power"] = 0;
+    }
+
+    static void ts(int s, int, BS &b) {
+	int _turn = poke(b,s)["BideTurn"].toInt();
+	if (_turn + 2 < b.turn()) {
+	    return;
+	} else {
+	    addFunction(turn(b,s),"UponOffensiveDamageReceived", "Bide", &udi);
+	    turn(b,s)["SpeedPriority"] = 1;
+	    turn(b,s)["NoChoice"] = true;
+	    turn(b,s)["TellPlayers"] = false;
+	    if (_turn +1 == b.turn()) {
+		turn(b,s)["PossibleTargets"] = Move::None;
+		turn(b,s)["Power"] = 0;
+		addFunction(turn(b,s), "UponAttackSuccessful", "Bide", &uas2);
+	    } else {
+		turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
+		turn(b,s)["Power"] = 1;
+		turn(b,s)["Type"] = Pokemon::Curse;
+		addFunction(turn(b,s), "MoveSettings", "Bide", &ms);
+		addFunction(turn(b,s), "CustomAttackingDamage", "Bide", &ccd);
+		addFunction(turn(b,s), "DetermineAttackFailure", "Bide",&daf);
+	    }
+	}
+    }
+
+    static void ccd(int s, int t, BS &b) {
+	b.inflictDamage(t, 2*poke(b,s)["BideDamageCount"].toInt(),s,true);
     }
 };
 
@@ -1284,9 +1429,11 @@ void MoveEffect::init()
     REGISTER_MOVE(1, Leech); /* absorb, drain punch, part dream eater, giga drain, leech life, mega drain */
     REGISTER_MOVE(2, AquaRing);
     REGISTER_MOVE(3, AromaTherapy);
+    REGISTER_MOVE(4, Assist);
     REGISTER_MOVE(5, Assurance);
     REGISTER_MOVE(6, BatonPass);
     REGISTER_MOVE(8, BellyDrum);
+    REGISTER_MOVE(9, Bide);
     REGISTER_MOVE(11, BlastBurn); /* BlastBurn, Hyper beam, rock wrecker, giga impact, frenzy plant, hydro cannon, roar of time */
     REGISTER_MOVE(12, Block);
     REGISTER_MOVE(15, Brine);
