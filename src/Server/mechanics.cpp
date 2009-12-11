@@ -41,3 +41,12 @@ void Mechanics::addFunction(BattleSituation::context &c, const QString &effect, 
     v.setValue(f);
     c.insert(effect + "_" + name,v);
 }
+
+void Mechanics::removeFunction(BattleSituation::context &c, const QString &effect, const QString &name)
+{
+    if (!c.contains(effect)) {
+	return;
+    }
+    c[effect].value<QSharedPointer<QSet<QString> > >()->remove(name);
+    c.remove(effect + "_" + name);
+}

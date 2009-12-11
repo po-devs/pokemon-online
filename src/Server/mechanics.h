@@ -18,6 +18,7 @@ struct Mechanics
     QHash<QString, function> functions;
 
     static void addFunction(BattleSituation::context &c, const QString &effect, const QString &name, Mechanics::function f);
+    static void removeFunction(BattleSituation::context &c, const QString &effect, const QString &name);
 };
 
 /* For use with QVariants */
