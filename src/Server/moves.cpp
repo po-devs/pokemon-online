@@ -82,6 +82,31 @@ void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
     }
 }
 
+/* List of events:
+    *UponDamageInflicted -- turn: just after inflicting damage
+    *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
+    *DetermineGeneralAttackFailure -- battle: this is a battlefield effect, same as above
+    *EndTurn -- poke: Called at the end of the turn
+    *UponOffensiveDamageReceived -- turn: when the player received damage (not the substitute) from an attack
+    *OnSetup -- none: when the move is setup
+    *TurnSettings -- poke: Will be called at the beginning of the turn before even chosing moves.
+    *EvenWhenCantMove -- turn: Will be called before even status check, useful for attacks like fly etc
+    *BeforeTakingDamage -- turn: explicit
+    *UponSwitchIn -- turn: When a new poke is switched in, like for Baton Pass/U-turn
+    *MoveSettings -- turn: Just after losing PP, and before chosing the target
+    *BeforeTargetList -- turn: Before processing the attack for each target
+    *BeforeCalculatingDamage -- turn: The right moment to change the base power of the attack if needed
+    *CustomAttackingDamage -- turn: If the attack does a certain amount of damage, without regard to things like base power, inflict it here
+    *UponAttackSuccessful -- turn: after inflicting damage (and damage effects called) / just after succeeding the move if the move has 0 BP
+    *AfterAttackSuccessful -- turn: at the very end of the attack for that target
+    *BeforeHitting -- turn: for things that have 0 BP, this is called instead of BeforeCalculatingDamage & stuff
+    *DetermineAttackPossible -- poke: just say if the poke is supposed to be able to attack, regarless of the the move used (like attracted pokes won't attack)
+    *MovePossible -- turn: before attacking, say if the move is possible or not (like when a move just got blocked by encore, taunt,disable)
+    *MovesPossible -- poke: at the beginning of the turn, tells if each move is possible or not
+    *AfterKoedByStraightAttack -- poke: when koed by an attack
+    *BlockTurnEffects -- poke: Called before calling effects for a turn event, to see if it's blocked. Used by Substitute
+*/
+
 struct MMLeech : public MM
 {
     MMLeech() {
@@ -171,6 +196,8 @@ struct MMBatonPass : public MM
 	c.remove("Num");
 	c.remove("Minimize");
 	c.remove("DefenseCurl");
+	c.remove("Ability");
+	c.remove("Weight");
 	c.remove("ChoiceMemory"); /* choice band etc. would force the same move*
 		if on both the passed & the passer */
 	for (int i = 1; i < 6; i++) {
@@ -392,6 +419,7 @@ struct MMDestinyBond : public MM
     static void uas(int s, int, BS &b) {
 	poke(b,s)["DestinyBondTurn"] = b.turn();
 	addFunction(poke(b,s), "AfterKoedByStraightAttack", "DestinyBond", &akbsa);
+	b.sendMoveMessage(26, 0, s, Pokemon::Ghost);
     }
 
     static void akbsa(int s, int t, BS &b) {
@@ -690,7 +718,7 @@ struct MMLeechSeed : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-	if (b.hasType(t, Pokemon::Grass) || (poke(b,t).value("Seeded").toBool() == true)) {
+	if (b.hasType(t, Pokemon::Grass) || (poke(b,t).contains("SeedSource"))) {
 	    b.fail(s, 72,0,Pokemon::Grass);
 	}
     }
@@ -998,7 +1026,8 @@ struct MMRapidSpin : public MM
 	team(b,s).remove("Spikes");
 	team(b,s).remove("ToxicSpikes");
 	team(b,s).remove("StealthRock");
-	team(b,s).remove("Seeded");
+	poke(b,s).remove("SeedSource");
+	poke(b,s).remove("TrappedBy");
     }
 };
 
@@ -1166,7 +1195,7 @@ struct MMKnockOff : public MM
 
     static void uas(int s,int t,BS &b)
     {
-	if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, 101) && b.poke(t).num() != 493) /* Sticky Hold, Arceus */
+	if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, 101) && !b.hasWorkingAbility(t, 59)) /* Sticky Hold, MultiType */
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
 	    b.disposeItem(t);
@@ -1182,7 +1211,7 @@ struct MMCovet : public MM
 
     static void uas(int s,int t,BS &b)
     {
-	if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, 101) && b.poke(t).num() != 493 && b.poke(s).item() == 0) /* Sticky Hold, Arceus */
+	if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, 101) && !b.hasWorkingAbility(t, 59) && b.poke(s).item() == 0) /* Sticky Hold, MultiType */
 	{
 	    b.sendMoveMessage(23,(move(b,s)==71)?0:1,s,type(b,s),t,b.poke(t).item());
 	    b.acqItem(s, b.poke(t).item());
@@ -1199,7 +1228,7 @@ struct MMSwitcheroo : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-	if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, 101) || b.poke(t).num() == 493 || b.poke(s).item() == 0) /* Sticky Hold, Arceus */
+	if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, 101) || b.hasWorkingAbility(t, 59) ) /* Sticky Hold, MultiType */
 	{
 	    turn(b,s)["Failed"] = true;
 	}
@@ -1528,10 +1557,11 @@ struct MMTaunt : public MM
 	functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void uas (int, int t, BS &b) {
+    static void uas (int s, int t, BS &b) {
 	poke(b,t)["TauntsUntil"] = b.turn() + 2 + (rand()%3);
 	addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
-	addFunction(poke(b,t), "MovePossible", "Taunt", &mp);
+	addFunction(turn(b,t), "MovePossible", "Taunt", &mp);
+	b.sendMoveMessage(134,1,s,Pokemon::Dark,t);
     }
 
     static void msp(int s, int, BS &b) {
@@ -1588,7 +1618,7 @@ struct MMDisable : public MM
 	poke(b,t)["DisablesUntil"] = b.turn() + 3 + (rand()%4);
 	poke(b,t)["DisabledMove"] = poke(b,t)["MoveSlot"];
 	addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
-	addFunction(poke(b,t), "MovePossible", "Disable", &mp);
+	addFunction(turn(b,t), "MovePossible", "Disable", &mp);
 	addFunction(poke(b,t), "EndTurn", "Disable", &et);
 	b.sendMoveMessage(28,0,s,0,t,b.move(t,poke(b,t)["MoveSlot"].toInt()));
     }
@@ -1598,7 +1628,6 @@ struct MMDisable : public MM
 	int tt = poke(b,s)["DisablesUntil"].toInt();
 	if (tt <= b.turn()) {
 	    removeFunction(poke(b,s), "MovesPossible", "Disable");
-	    removeFunction(poke(b,s), "MovePossible", "Disable");
 	    b.sendMoveMessage(28,2,s);
 	}
     }
@@ -1651,7 +1680,7 @@ struct MMDoomDesire : public MM
 	    if (!b.koed(s)) {
 		int move = team(b,s)["DoomDesireMove"].toInt();
 		b.sendMoveMessage(29,0,s,MoveInfo::Type(move),s,move);
-		b.inflictDamage(s,team(b,s)["DoomDesireDamage"].toInt(), s, true);
+		b.inflictDamage(s,team(b,s)["DoomDesireDamage"].toInt(), s, false); /*false is weird, it's so endure doesn't work */
 	    }
 	    removeFunction(team(b,s), "EndTurn", "DoomDesire");
 	}
@@ -1732,17 +1761,26 @@ struct MMEncore : public MM
 	poke(b,t)["EncoresUntil"] = b.turn() + 3 + (rand()%5);
 	poke(b,t)["EncoresMove"] = poke(b,t)["LastMoveSuccessfullyUsed"];
 	addFunction(poke(b,t), "MovesPossible", "Encore", &msp);
-	addFunction(poke(b,t), "MovePossible", "Encore", &mp);
+	addFunction(turn(b,t), "MovePossible", "Encore", &mp);
 	addFunction(poke(b,t), "EndTurn", "Encore", &et);
 	b.sendMoveMessage(33,2,s,0,t,poke(b,t)["LastMoveSuccessfullyUsed"].toInt());
     }
 
     static void et (int s, int, BS &b)
     {
+    	for (int i = 0; i < 4; i++) {
+	    if (b.move(s,i) == poke(b,s)["EncoresMove"].toInt()) {
+		if (b.poke(s).move(i).PP() <= 0) {
+		    removeFunction(poke(b,s), "MovesPossible", "Encore");
+		    poke(b,s)["EncoresUntil"] = b.turn();
+		    b.sendMoveMessage(33,0,s);
+		}
+		break;
+	    }
+	}
 	int tt = poke(b,s)["EncoresUntil"].toInt();
 	if (tt <= b.turn()) {
 	    removeFunction(poke(b,s), "MovesPossible", "Encore");
-	    removeFunction(poke(b,s), "MovePossible", "Encore");
 	    b.sendMoveMessage(33,0,s);
 	}
     }
@@ -1762,7 +1800,281 @@ struct MMEncore : public MM
 	}
     }
 };
+
 MMEncore::FM MMEncore::forbidden_moves;
+
+struct MMEndeavor : public MM
+{
+    MMEndeavor() {
+	functions["CustomAttackingDamage"] = &cad;
+	functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (b.poke(s).lifePoints() >= b.poke(t).lifePoints()) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+    }
+
+    static void cad(int s, int t, BS &b) {
+	b.inflictDamage(t, b.poke(t).lifePoints()-b.poke(s).lifePoints(),s,true);
+    }
+};
+
+struct MMEndure : public MM
+{
+    MMEndure() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (poke(b,s).contains("ProtectiveMoveTurn") && poke(b,s)["ProtectiveMoveTurn"].toInt() == b.turn() - 1) {
+	    if (rand()%2 == 0) {
+		turn(b,s)["Failed"] = true;
+	    } else {
+		poke(b,s)["ProtectiveMoveTurn"] = b.turn();
+	    }
+	} else {
+	    poke(b,s)["ProtectiveMoveTurn"] = b.turn();
+	}
+    }
+
+    static void uas(int s, int, BS &b) {
+	turn(b,s)["CannotBeKoed"] = true;
+	addFunction(turn(b,s), "UponOffensiveDamageReceived", "Endure", &uodr);
+    }
+
+    static void uodr(int s, int, BS &b) {
+	if (b.poke(s).lifePoints() == 1) {
+	    b.sendMoveMessage(35,0,s);
+	}
+    }
+};
+
+struct MMFalseSwipe : public MM
+{
+    MMFalseSwipe() {
+	functions["BeforeCalculatingDamage"] = &bcd;
+    }
+    static void bcd(int s, int t, BS &b) {
+	turn(b,t)["CannotBeKoedBy"] = s;
+    }
+};
+
+struct MMFocusEnergy : public MM
+{
+    MMFocusEnergy() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+    static void uas(int s, int, BS &b) {
+	addFunction(poke(b,s), "TurnSettings", "FocusEnergy", &ts);
+	b.sendMoveMessage(46,0,s);
+    }
+    static void ts(int s, int, BS &b) {
+	addFunction(turn(b,s), "BeforeTargetList", "FocusEnergy", &btl);
+    }
+    static void btl(int s, int, BS &b) {
+	if (turn(b,s)["Power"].toInt() > 0) {
+	    inc(turn(b,s)["CriticalRaise"], 1);
+	}
+    }
+};
+
+struct MMFuryCutter : public MM
+{
+    MMFuryCutter() {
+	functions["MissAttack"] = &ma;
+	functions["BeforeCalculatingDamage"] = &bcd;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void ma(int s, int, BS &b) {
+	poke(b,s)["FuryCutterCount"] = 0;
+    }
+
+    static void uas(int s, int, BS &b) {
+	poke(b,s)["FuryCutterCount"] = std::min(poke(b,s)["FuryCutterCount"].toInt() * 2 + 1,15);
+    }
+
+    static void bcd(int s, int, BS &b) {
+	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * (poke(b,s)["FuryCutterCount"].toInt()+1);
+    }
+};
+
+struct MMGastroAcid : public MM
+{
+    MMGastroAcid() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	b.sendMoveMessage(51,0,s,type(b,s),t);
+	poke(b,t)["AbilityNullified"] = true;
+    }
+};
+
+struct MMGravity : public MM
+{
+    MMGravity() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	b.battlelong["Gravity"] = true;
+	b.battlelong["GavityCount"] = 5;
+	b.sendMoveMessage(53,0,s,type(b,s));
+	addFunction(b.battlelong, "EndTurn", "Gravity", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+	if (b.battlelong.value("Gravity").toBool()) {
+	    int count = b.battlelong["GavityCount"].toInt() - 1;
+	    if (count <= 0) {
+		b.sendMoveMessage(53,1,s,Pokemon::Psychic);
+		removeFunction(b.battlelong, "EndTurn", "Gravity");
+		b.battlelong["Gravity"] = false;
+	    }
+	}
+    }
+};
+
+struct MMGrassKnot : public MM
+{
+    MMGrassKnot() {
+	functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int t, BS &b) {
+	float weight = poke(b,t)["Weight"].toDouble();
+	int bp;
+	/* I had to make some hacks due to the floating point precision, so this is a '<' here and not
+	   a '<='. Will be fixed if someone wants to do it */
+	if (weight < 10.0f) {
+	    bp = 20;
+	} else if (weight < 25.0f) {
+	    bp = 40;
+	} else if (weight < 50.0f) {
+	    bp = 60;
+	} else if (weight < 100.0f) {
+	    bp = 80;
+	} else if (weight < 200.0f) {
+	    bp = 100;
+	} else {
+	    bp = 120;
+	}
+	turn(b,s)["BasePower"] = bp;
+    }
+};
+
+struct MMGrudge : public MM
+{
+    MMGrudge() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	poke(b,s)["GrudgeTurn"] = b.turn();
+	addFunction(poke(b,s), "AfterKoedByStraightAttack", "Grudge", &akbst);
+    }
+
+    static void akbst(int s, int t, BS &b) {
+    	int trn = poke(b,s)["DestinyBondTurn"].toInt();
+
+	if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool())) {
+	    if (!b.koed(t) && !b.hasSubstitute(t)) {
+		int slot = poke(b, t)["MoveSlot"].toInt();
+		b.sendMoveMessage(54,0,s,Pokemon::Ghost,t,b.move(t,slot));
+		b.losePP(t, slot, 48);
+	    }
+	}
+    }
+};
+
+struct MMBoostSwap : public MM
+{
+    MMBoostSwap() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	QStringList args = poke(b,s)["BoostSwap_Arg"].toString().split('_');
+	foreach(QString str, args) {
+	    std::swap(poke(b,s)["Boost"+str], poke(b,t)["Boost"+str]);
+	}
+	b.sendMoveMessage(55,0,s,type(b,s),t);
+    }
+};
+
+struct MMGyroBall : public MM
+{
+    MMGyroBall() {
+	functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd (int s, int t, BS &b) {
+	int bp = 1 + 25 * b.getStat(t,Speed) / b.getStat(s,Speed);
+	bp = std::max(2,std::min(bp,150));
+
+	turn(b,s)["Power"] = bp;
+    }
+};
+
+struct MMWeather : public MM
+{
+    MMWeather() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    struct WI : public QMap<int,int> {
+	WI() {
+	    insert(3,33); /* Soft Rock */
+	    insert(1,155); /* Icy Rock */
+	    insert(2,160); /* Damp Rock */
+	    insert(4, 161); /* Heat Rock */
+	}
+    };
+    static WI weather_items;
+
+    static void uas(int s, int, BS &b) {
+	int weather = turn(b,s)["Weather_Arg"].toInt();
+
+	if (weather_items.contains(weather) && b.hasWorkingItem(s,weather_items[weather])) {
+	    b.callForth(weather,8);
+	} else {
+	    b.callForth(weather,5);
+	}
+    }
+};
+
+MMWeather::WI MMWeather::weather_items;
+
+/* List of events:
+    *UponDamageInflicted -- turn: just after inflicting damage
+    *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
+    *DetermineGeneralAttackFailure -- battle: this is a battlefield effect, same as above
+    *EndTurn -- poke, battle: Called at the end of the turn
+    *UponOffensiveDamageReceived -- turn: when the player received damage (not the substitute) from an attack
+    *OnSetup -- none: when the move is setup
+    *TurnSettings -- poke: Will be called at the beginning of the turn before even chosing moves.
+    *EvenWhenCantMove -- turn: Will be called before even status check, useful for attacks like fly etc
+    *BeforeTakingDamage -- turn: explicit
+    *UponSwitchIn -- turn: When a new poke is switched in, like for Baton Pass/U-turn
+    *MoveSettings -- turn: Just after losing PP, and before chosing the target
+    *BeforeTargetList -- turn: Before processing the attack for each target
+    *BeforeCalculatingDamage -- turn: The right moment to change the base power of the attack if needed
+    *CustomAttackingDamage -- turn: If the attack does a certain amount of damage, without regard to things like base power, inflict it here
+    *UponAttackSuccessful -- turn: after inflicting damage (and damage effects called) / just after succeeding the move if the move has 0 BP
+    *AfterAttackSuccessful -- turn: at the very end of the attack for that target
+    *BeforeHitting -- turn: for things that have 0 BP, this is called instead of BeforeCalculatingDamage & stuff
+    *DetermineAttackPossible -- poke: just say if the poke is supposed to be able to attack, regarless of the the move used (like attracted pokes won't attack)
+    *MovePossible -- turn: before attacking, say if the move is possible or not (like when a move just got blocked by encore, taunt,disable)
+    *MovesPossible -- poke: at the beginning of the turn, tells if each move is possible or not
+    *AfterKoedByStraightAttack -- poke: when koed by an attack
+    *BlockTurnEffects -- poke: Called before calling effects for a turn event, to see if it's blocked. Used by Substitute
+    *MissAttack -- turn: When an attack misses, there may be things todo (Rollout, FuryCutter, High Jump Kick
+*/
 
 #define REGISTER_MOVE(num, name) mechanics[num] = MM##name(); names[num] = #name; nums[#name] = num;
 
@@ -1774,13 +2086,17 @@ void MoveEffect::init()
     REGISTER_MOVE(4, Assist);
     REGISTER_MOVE(5, Assurance);
     REGISTER_MOVE(6, BatonPass);
+    /* Beat up */
     REGISTER_MOVE(8, BellyDrum);
     REGISTER_MOVE(9, Bide);
     REGISTER_MOVE(10, Bind);
     REGISTER_MOVE(11, BlastBurn); /* BlastBurn, Hyper beam, rock wrecker, giga impact, frenzy plant, hydro cannon, roar of time */
     REGISTER_MOVE(12, Block);
     REGISTER_MOVE(13, Bounce);
+    /* Brick Break */
     REGISTER_MOVE(15, Brine);
+    /* Bug Bite */
+    /* Camouflage */
     REGISTER_MOVE(18, Charge);
     REGISTER_MOVE(19, Conversion);
     REGISTER_MOVE(20, Conversion2);
@@ -1797,15 +2113,30 @@ void MoveEffect::init()
     REGISTER_MOVE(31, DreamingTarget); /* Part Dream eater, part Nightmare */
     REGISTER_MOVE(32, Embargo);
     REGISTER_MOVE(33, Encore);
+    REGISTER_MOVE(34, Endeavor);
+    REGISTER_MOVE(35, Endure);
     REGISTER_MOVE(36, Eruption); /* Eruption, Water sprout */
     REGISTER_MOVE(37, FaintUser); /* Memento, part explosion, selfdestruct, lunar dance, healing wish... */
+    /* Free effect: 38 */
     REGISTER_MOVE(39, Facade);
     REGISTER_MOVE(40, FakeOut);
+    REGISTER_MOVE(41, FalseSwipe);
     REGISTER_MOVE(42, Feint);
     REGISTER_MOVE(43, 0HKO); /* Fissure, Guillotine, Horn Drill, Sheer cold */
     REGISTER_MOVE(44, Flail); /* Flail, Reversal */
+    /* Fling */
+    REGISTER_MOVE(46, FocusEnergy);
     REGISTER_MOVE(47, FocusPunch);
+    /* Follow Me -- does nothing in singles */
     REGISTER_MOVE(49, Frustration); /* Frustration, Return */
+    REGISTER_MOVE(50, FuryCutter);
+    REGISTER_MOVE(51, GastroAcid);
+    REGISTER_MOVE(52, GrassKnot);
+    REGISTER_MOVE(53, Gravity);
+    REGISTER_MOVE(54, Grudge);
+    REGISTER_MOVE(55, BoostSwap);
+    REGISTER_MOVE(56, GyroBall);
+    REGISTER_MOVE(57, Weather);
     REGISTER_MOVE(58, Attract);
     REGISTER_MOVE(60, HealHalf);
     REGISTER_MOVE(65, HiddenPower);

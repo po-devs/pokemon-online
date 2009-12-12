@@ -1,4 +1,4 @@
-#153 is free
+#37,153 are free
 1#leech
 
 
@@ -117,7 +117,7 @@
 35#endure
 
 36#eruption
-37|38#explosion 37 is losing hp, 38 is def reduction
+37#explosion 37 is losing hp, def reduction is hardencoded
 
 
 39#façade
@@ -167,7 +167,7 @@
 43
 
 
-56
+56#gyro ball
 57-1#hail
 
 
@@ -344,7 +344,7 @@
 
 
 91#seismic toss
-37|38#self destruct
+37#self destruct--def reduction is not in that file but in the program
 
 
 13#shadow force

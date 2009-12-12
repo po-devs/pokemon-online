@@ -66,6 +66,8 @@ public:
     void beginTurn();
     void endTurn();
     void endTurnStatus();
+    void endTurnWeather();
+    void callForth(int weather, int turns);
     /* Attack... */
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
 	represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
@@ -111,7 +113,9 @@ public:
     bool hasType(int player, int type);
     bool hasWorkingAbility(int play, int ability);
     bool hasWorkingItem(int player, int item);
+    bool isWeatherWorking(int weather);
     int move(int player, int slot);
+    int weather();
     int getType(int player, int slot);
     bool isFlying(int player);
     bool hasSubstitute(int player);
@@ -148,7 +152,25 @@ public:
 	ItemMessage,
 	NoOpponent,
 	Flinch,
-	Recoil
+	Recoil,
+	WeatherMessage
+    };
+
+    enum WeatherM
+    {
+	StartWeather,
+	ContinueWeather,
+	EndWeather,
+	HurtWeather
+    };
+
+    enum Weather
+    {
+	NormalWeather = 0,
+	Hail = 1,
+	Rain = 2,
+	SandStorm = 3,
+	Sunny = 4
     };
 
     enum StatusFeeling

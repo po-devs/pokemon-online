@@ -5,6 +5,7 @@
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
 QStringList PokemonInfo::m_Names;
+QList<float> PokemonInfo::m_Weights;
 
 QString MoveInfo::m_Directory;
 QStringList MoveInfo::m_Names;
@@ -123,6 +124,54 @@ QString get_line(const QString & filename, int linenum)
     return filestream.readLine();
 }
 
+
+void fill_container_with_file(QStringList &container, const QString & filename)
+{
+    QFile file(filename);
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream filestream(&file);
+
+    /* discarding all the uninteresting lines, should find a more effective way */
+    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+    {
+        container << filestream.readLine();
+    }
+}
+
+void fill_container_with_file(QList<QColor> &container, const QString &filename)
+{
+    QFile file(filename);
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream filestream(&file);
+
+    /* discarding all the uninteresting lines, should find a more effective way */
+    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+    {
+	container << filestream.readLine();
+    }
+}
+
+void fill_container_with_file(QList<bool> &container, const QString & filename)
+{
+    QFile file(filename);
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream filestream(&file);
+
+    /* discarding all the uninteresting lines, should find a more effective way */
+    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+    {
+	int var;
+	filestream >> var;
+	container << var;
+    }
+}
+
 template <class T>
 void fill_container_with_file(T &container, const QString & filename)
 {
@@ -133,9 +182,11 @@ void fill_container_with_file(T &container, const QString & filename)
     QTextStream filestream(&file);
 
     /* discarding all the uninteresting lines, should find a more effective way */
-    while (!filestream.atEnd())
+    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
     {
-        container << filestream.readLine();
+	typename T::value_type var;
+	filestream >> var;
+	container << var;
     }
 }
 
@@ -298,6 +349,7 @@ PokeBaseStats PokemonInfo::BaseStats(int pokenum)
 void PokemonInfo::loadNames()
 {
     fill_container_with_file(m_Names, path("pokemons_en.txt"));
+    fill_container_with_file(m_Weights, path("poke_weight.txt"));
 }
 
 QString PokemonInfo::path(const QString &filename)
@@ -323,52 +375,27 @@ QList<int> PokemonInfo::getMoves(const QString &filename, int pokenum)
 
 void MoveInfo::loadCritics()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("move_critical.txt"));
-
-    foreach(QString str, temp) {
-	m_Critical.push_back(str.toInt());
-    }
+    fill_container_with_file(m_Critical, path("move_critical.txt"));
 }
 
 void MoveInfo::loadTargets()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("move_target.txt"));
-
-    foreach(QString str, temp) {
-	m_Targets.push_back(str.toInt());
-    }
+    fill_container_with_file(m_Targets, path("move_target.txt"));
 }
 
 void MoveInfo::loadEffectRates()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("move_effect_rate.txt"));
-
-    foreach(QString str, temp) {
-	m_EffectRate.push_back(str.toInt());
-    }
+    fill_container_with_file(m_EffectRate, path("move_effect_rate.txt"));
 }
 
 void MoveInfo::loadPhysics()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("move_physical_contact.txt"));
-
-    foreach(QString str, temp) {
-	m_Physical.push_back(str.toInt());
-    }
+    fill_container_with_file(m_Physical, path("move_physical_contact.txt"));
 }
 
 void MoveInfo::loadKingRocks()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("move_kingrock.txt"));
-
-    foreach(QString str, temp) {
-	m_KingRock.push_back(str.toInt());
-    }
+    fill_container_with_file(m_KingRock, path("move_kingrock.txt"));
 }
 
 void MoveInfo::loadRepeats()
@@ -393,22 +420,12 @@ void MoveInfo::loadMoveMessages()
 
 void MoveInfo::loadSpeeds()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("move_speed_priority.txt"));
-
-    foreach(QString str, temp) {
-	m_Speeds.push_back(str.toInt());
-    }
+    fill_container_with_file(m_Speeds, path("move_speed_priority.txt"));
 }
 
 void MoveInfo::loadRecoil()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("move_recoil.txt"));
-
-    foreach(QString str, temp) {
-        m_Recoil.push_back(str.toInt());
-    }
+    fill_container_with_file(m_Recoil, path("move_recoil.txt"));
 }
 
 int MoveInfo::Recoil(int num)
@@ -482,29 +499,17 @@ void MoveInfo::loadNames()
 
 void MoveInfo::loadPPs()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("move_pp.txt"));
-    foreach(QString s, temp) {
-	m_PP.push_back(s.toInt());
-    }
+    fill_container_with_file(m_PP, path("move_pp.txt"));
 }
 
 void MoveInfo::loadTypes()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("move_type.txt"));
-    foreach(QString s, temp) {
-	m_Type.push_back(s.toInt());
-    }
+    fill_container_with_file(m_Type, path("move_type.txt"));
 }
 
 void MoveInfo::loadCategorys()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("move_category.txt"));
-    foreach(QString s, temp) {
-	m_Category.push_back(s.toInt());
-    }
+    fill_container_with_file(m_Category, path("move_category.txt"));
 }
 
 void MoveInfo::loadPowers()
@@ -619,12 +624,7 @@ int MoveInfo::FlinchRate(int num)
 
 void MoveInfo::loadFlinchs()
 {
-    QList<QString> boogie;
-    fill_container_with_file(boogie, path("move_flinch.txt"));
-
-    foreach(QString str, boogie) {
-        m_Flinch.push_back(str.toInt());
-    }
+    fill_container_with_file(m_Flinch, path("move_flinch.txt"));
 }
 
 void MoveInfo::loadEffects()
@@ -806,6 +806,10 @@ int ItemInfo::Number(const QString &itemname)
     } else {
 	return 0;
     }
+}
+
+float PokemonInfo::Weight(int pokenum) {
+    return (m_Weights[pokenum]-0.02f)/2.2f; /* the -0.02 is just a trick to compensate the poor precision of floats, for moves like grass knot */
 }
 
 int ItemInfo::SortedNumber(const QString &itemname)

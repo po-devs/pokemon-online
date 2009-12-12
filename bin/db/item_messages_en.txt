@@ -2,19 +2,19 @@
 
 
 
-%s held on its focus band!
-%s held on its focus sash!
+%s hung on thanks to its focus band!
+%s hung on using its focus sash!
 
 %s used its mental herb to focus on the fight!
 
 
 
 %s used its power herb to attack immediately!
-%s's Leftovers restored its HP a little!
+%s restored a little HP using its Leftovers!
 
 
 
-%s's Black Sludge restored its HP a little!|%s was hurt by Black Sludge!
+%s restored a little HP using its Black Slude!|%s was hurt by Black Sludge!
 
 
 %s's Flame Orb activated!|%s's Toxic Orb activated!
