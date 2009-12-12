@@ -208,6 +208,7 @@ struct MMBlastBurn : public MM
 	    ;
 	} else {
 	    turn(b, s)["NoChoice"] = true;
+	    turn(b, s)["TellPlayers"] = false;
 	    turn(b, s)["PossibleTargets"] = Move::None;
 	    addFunction(turn(b,s), "UponAttackSuccessful", "BlastBurn", &uas);
 	}
@@ -1063,6 +1064,7 @@ struct MMFocusPunch : public MM
 {
     MMFocusPunch() {
 	functions["DetermineAttackFailure"] = &daf;
+	functions["OnSetup"] = &os;
     }
 
     static void daf(int s, int, BS &b)
@@ -1070,6 +1072,10 @@ struct MMFocusPunch : public MM
 	if (turn(b,s).contains("DamageTakenByAttack")) {
 	    b.fail(s,47,0,Pokemon::Fighting);
 	}
+    }
+
+    static void os(int s, int, BS &b) {
+	b.sendMoveMessage(47,1,s,Pokemon::Fighting);
     }
 };
 
@@ -1135,43 +1141,6 @@ struct MMAttract : public MM
 		    b.sendMoveMessage(58, 2,s);
 		}
 	    }
-	}
-    }
-};
-
-struct MMTaunt : public MM
-{
-    MMTaunt() {
-	functions["UponAttackSuccessful"] = &uas;
-    }
-
-    static void uas (int, int t, BS &b) {
-	poke(b,t)["TauntsUntil"] = b.turn() + 2 + (rand()%2);
-	addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
-	addFunction(poke(b,t), "MovePossible", "Taunt", &mp);
-    }
-
-    static void msp(int s, int, BS &b) {
-	int tt = poke(b,s)["TauntsUntil"].toInt();
-	if (tt > b.turn()) {
-	    return;
-	}
-	for (int i = 0; i < 4; i++) {
-	    if (MoveInfo::Power(b.poke(s).move(i)) == 0) {
-		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
-	    }
-	}
-    }
-
-    static void mp(int s, int, BS &b) {
-	int tt = poke(b,s)["TauntsUntil"].toInt();
-	if (tt > b.turn()) {
-	    return;
-	}
-	int move = turn(b,s)["MoveChosen"].toInt();
-	if (MoveInfo::Power(move) == 0) {
-	    turn(b,s)["ImpossibleToMove"] = true;
-	    b.sendMoveMessage(134,0,s,Pokemon::Dark,s,move);
 	}
     }
 };
@@ -1503,13 +1472,13 @@ struct MMBounce : public MM
 	if (s == t || t == -1) {
 	    return;
 	}
-	if (!poke(b,t).value("Inlvunerable").toBool()) {
+	if (!poke(b,t).value("Invulnerable").toBool()) {
 	    return;
 	}
 	int attack = turn(b,s)["Attack"].toInt();
 	/* Lets see if the poke is vulnerable to that one attack */
-	QList<int> vuln_moves = poke(b,s)["VulnerableMoves"].value<QList<int> >();
-	QList<int> vuln_mults = poke(b,s)["VulnerableMults"].value<QList<int> >();
+	QList<int> vuln_moves = poke(b,t)["VulnerableMoves"].value<QList<int> >();
+	QList<int> vuln_mults = poke(b,t)["VulnerableMults"].value<QList<int> >();
 
 	for (int i = 0; i < vuln_moves.size(); i++) {
 	    if (vuln_moves[i] == attack) {
@@ -1517,8 +1486,180 @@ struct MMBounce : public MM
 		return;
 	    }
 	}
+
 	/* All other moves fail */
 	turn(b,s)["Failed"] = true;
+    }
+};
+
+struct MMCounter : public MM
+{
+    MMCounter() {
+	functions["MoveSettings"] = &ms;
+	functions["DetermineAttackFailure"] = &daf;
+	functions["CustomAttackingDamage"] = &cad;
+    }
+
+    static void ms (int s, int, BS &b) {
+	turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
+    }
+
+    static void daf (int s, int t, BS &b) {
+	int dam = turn(b,s).value("DamageTakenByAttack").toInt();
+	if (dam == 0) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	QStringList args = turn(b,s)["Counter_Arg"].toString().split('_');
+	if (args[0].length() == 1 && turn(b,t)["Category"].toInt() != args[0].toInt()) {
+	    turn(b,s)["Failed"] = true;
+	}
+	turn(b,s)["CounterDamage"] = dam * args[1].toInt() / 2;
+    }
+
+    static void cad(int s, int t, BS &b) {
+	b.inflictDamage(t, turn(b,s)["CounterDamage"].toInt(), s, true);
+    }
+};
+
+struct MMTaunt : public MM
+{
+    MMTaunt() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas (int, int t, BS &b) {
+	poke(b,t)["TauntsUntil"] = b.turn() + 2 + (rand()%3);
+	addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
+	addFunction(poke(b,t), "MovePossible", "Taunt", &mp);
+    }
+
+    static void msp(int s, int, BS &b) {
+	int tt = poke(b,s)["TauntsUntil"].toInt();
+	if (tt < b.turn()) {
+	    return;
+	}
+	for (int i = 0; i < 4; i++) {
+	    if (MoveInfo::Power(b.poke(s).move(i)) == 0) {
+		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
+	    }
+	}
+    }
+
+    static void mp(int s, int, BS &b) {
+	int tt = poke(b,s)["TauntsUntil"].toInt();
+	if (tt < b.turn()) {
+	    return;
+	}
+	int move = turn(b,s)["MoveChosen"].toInt();
+	if (MoveInfo::Power(move) == 0) {
+	    turn(b,s)["ImpossibleToMove"] = true;
+	    b.sendMoveMessage(134,0,s,Pokemon::Dark,s,move);
+	}
+    }
+};
+
+struct MMDisable : public MM
+{
+    MMDisable() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b)
+    {
+	if (poke(b,t).contains("DisablesUntil") && poke(b,t).value("DisablesUntil").toInt() >= b.turn())
+	{
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	if (!poke(b,t).contains("LastMoveSuccessfullyUsedTurn")) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	int tu = poke(b,t)["LastMoveSuccessfullyUsedTurn"].toInt();
+	if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMove").toBool())) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+    }
+
+    static void uas (int s, int t, BS &b) {
+	poke(b,t)["DisablesUntil"] = b.turn() + 3 + (rand()%4);
+	poke(b,t)["DisabledMove"] = poke(b,t)["MoveSlot"];
+	addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
+	addFunction(poke(b,t), "MovePossible", "Disable", &mp);
+	addFunction(poke(b,t), "EndTurn", "Disable", &et);
+	b.sendMoveMessage(28,0,s,0,t,b.poke(t).move(poke(b,t)["MoveSlot"].toInt()));
+    }
+
+    static void et (int s, int, BS &b)
+    {
+	int tt = poke(b,s)["DisablesUntil"].toInt();
+	if (tt <= b.turn()) {
+	    removeFunction(poke(b,s), "MovesPossible", "Disable");
+	    removeFunction(poke(b,s), "MovePossible", "Disable");
+	    b.sendMoveMessage(28,2,s);
+	}
+    }
+
+    static void msp(int s, int, BS &b) {
+	for (int i = 0; i < 4; i++) {
+	    if (MoveInfo::Power(b.poke(s).move(i)) == 0) {
+		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
+	    }
+	}
+    }
+
+    static void mp(int s, int, BS &b) {
+	if(poke(b,s)["MoveSlot"] == poke(b,s)["DisabledMove"]) {
+	    turn(b,s)["ImpossibleToMove"] = true;
+	    b.sendMoveMessage(28,1,s,0,s,b.poke(s).move(poke(b,s)["MoveSlot"].toInt()));
+	}
+    }
+};
+
+struct MMDoomDesire : public MM
+{
+    MMDoomDesire() {
+	functions["MoveSettings"] = &ms;
+	functions["DetermineAttackFailure"] = &daf;
+	functions["CustomAttackingDamage"] = &cad;
+    }
+
+    static void ms(int s, int, BS &b) {
+	turn(b,s)["Type"] = Pokemon::Curse;
+	turn(b,s)["Power"] = 1;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (team(b,t).contains("DoomDesireTurn") && team(b,s)["DoomDesireTurn"].toInt() >= b.turn()) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void cad(int s, int t, BS &b) {
+	int move = MM::move(b,s);
+	turn(b,s)["CriticalHit"] = false;
+	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * MoveInfo::Power(move);
+	team(b,t)["DoomDesireDamage"] = b.calculateDamage(s, t);
+	team(b,t)["DoomDesireTurn"] = b.turn() + 2;
+	team(b,t)["DoomDesireInit"] = b.poke(s).nick();
+	team(b,t)["DoomDesireMove"] = move;
+	addFunction(team(b,t), "EndTurn", "DoomDesire", &et);
+	b.sendMoveMessage(29, 1, s, type(b,s));
+    }
+
+    static void et (int s, int, BS &b) {
+	if (b.turn() == team(b,s).value("DoomDesireTurn"))
+	{
+	    if (!b.koed(s)) {
+		int move = team(b,s)["DoomDesireMove"].toInt();
+		b.sendMoveMessage(29,0,s,MoveInfo::Type(move),s,move,team(b,s)["DoomDesireInit"].toString());
+		b.inflictDamage(s,team(b,s)["DoomDesireDamage"].toInt(), s, true);
+	    }
+	    removeFunction(team(b,s), "EndTurn", "DoomDesire");
+	}
     }
 };
 
@@ -1543,11 +1684,14 @@ void MoveEffect::init()
     REGISTER_MOVE(19, Conversion);
     REGISTER_MOVE(20, Conversion2);
     REGISTER_MOVE(21, Copycat);
+    REGISTER_MOVE(22, Counter);
     REGISTER_MOVE(23, Covet);
     REGISTER_MOVE(24, CrushGrip); /* Crush grip, Wring out */
     REGISTER_MOVE(25, Curse);
     REGISTER_MOVE(26, DestinyBond);
     REGISTER_MOVE(27, Detect); /* Protect, Detect */
+    REGISTER_MOVE(28, Disable);
+    REGISTER_MOVE(29, DoomDesire);
     REGISTER_MOVE(30, DragonRage);
     REGISTER_MOVE(31, DreamingTarget); /* Part Dream eater, part Nightmare */
     REGISTER_MOVE(36, Eruption); /* Eruption, Water sprout */

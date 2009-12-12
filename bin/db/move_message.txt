@@ -27,7 +27,7 @@ A sweet flagrance flowed through %ts's team.|A chime resounded around %ts's team
 Destiny bond took away %f!
 %f protected itself!
 %f's %m is disabled!|%s can't use %m because of disable!|%s is no longer disabled!
-%q's %m hit %s!
+%q's %m hit %s!|%s is seeing in the future!
 %f is awake!
 
 
@@ -45,7 +45,7 @@ Destiny bond took away %f!
 
 %s threw %i at %f!
 %s pumped itself!
-%s lost its focus! %s is tightening its focus!
+%s lost its focus!|%s is tightening its focus!
 
 
 

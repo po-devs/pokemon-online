@@ -177,22 +177,23 @@ void BattleSituation::endTurnStatus()
 {
     for (int player = Player1; player <= Player2; player++)
     {
-	switch(poke(player).status())
-	{
-	    case Pokemon::Burnt:
-		notify(All, StatusMessage, player, qint8(HurtBurn));
-		inflictDamage(player, poke(player).totalLifePoints()/8, player);
-		break;
-	    case Pokemon::DeeplyPoisoned:
-		notify(All, StatusMessage, player, qint8(HurtPoison));
-		inflictDamage(player, poke(player).totalLifePoints()*(pokelong[player]["ToxicCount"].toInt()+1)/16, player);
-		pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()+1, 14);
-		break;
-	    case Pokemon::Poisoned:
-		notify(All, StatusMessage, player, qint8(HurtPoison));
-		inflictDamage(player, poke(player).totalLifePoints()/8, player);
-		break;
-	}
+	if (!koed(player))
+	    switch(poke(player).status())
+	    {
+		case Pokemon::Burnt:
+		    notify(All, StatusMessage, player, qint8(HurtBurn));
+		    inflictDamage(player, poke(player).totalLifePoints()/8, player);
+		    break;
+		case Pokemon::DeeplyPoisoned:
+		    notify(All, StatusMessage, player, qint8(HurtPoison));
+		    inflictDamage(player, poke(player).totalLifePoints()*(pokelong[player]["ToxicCount"].toInt()+1)/16, player);
+		    pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()+1, 14);
+		    break;
+		case Pokemon::Poisoned:
+		    notify(All, StatusMessage, player, qint8(HurtPoison));
+		    inflictDamage(player, poke(player).totalLifePoints()/8, player);
+		    break;
+	    }
     }
 }
 
@@ -798,6 +799,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		applyMoveStatMods(player, target);
 
 		battlelong["LastMoveSuccesfullyUsed"] = attack;
+		pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
 
 		if (koed(target))
 		    ;
@@ -808,7 +810,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		turnlong[player]["HadSubstitute"] = false;
 	    }
 
-	    notify(All, Effective, target, quint8(typemod));
+	    if (turnlong[player]["Power"].toInt() > 1)
+		notify(All, Effective, target, quint8(typemod));
 
 	    calleffects(player, target, "AfterAttackSuccessful");
 	} else {
