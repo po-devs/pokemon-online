@@ -259,10 +259,10 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    break;
 	}
 	case CriticalHit:
-	    printHtml(tr("<span style='color:red'>It's a critical hit!</span>"));
+	    printHtml(tr("<span style='color:red'>A critical hit!</span>"));
 	    break;
 	case Miss:
-	    printLine(tr("It missed!"));
+	    printLine(tr("The attack of %1 missed!").arg(nick(self)));
 	    break;
 	case StatChange:
 	    qint8 stat, boost;
@@ -340,7 +340,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	}
 	    break;
 	case Failed:
-	    printLine(tr("It failed!"));
+	    printLine(tr("But it failed!"));
 	    break;
 	case BattleChat:
 	{
@@ -373,7 +373,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    break;
 	}
 	case NoOpponent:
-	    printLine(tr("There is no target pokémon!"));
+	    printLine(tr("But there is no target pokémon!"));
 	    break;
 	case ItemMessage:
 	{

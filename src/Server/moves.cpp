@@ -96,7 +96,7 @@ struct MMLeech : public MM
 		int recovered = std::max(1, damage/2);
 		int move = MM::move(b,s);
 		b.sendMoveMessage(1, move == 106 ? 1 :0, s, type(b,s), t);
-		if (b.poke(s).item() == 1) /* Big root */ {
+		if (b.hasWorkingItem(s, 1)) /* Big root */ {
 		    recovered = recovered * 13 / 10;
 		}
 		b.healLife(s, recovered);
@@ -263,7 +263,7 @@ struct MMConversion : public MM
     static void daf(int s, int, BS &b) {
 	/* First check if there's even 1 move available */
 	for (int i = 0; i < 4; i++) {
-	    if (MoveInfo::Type(b.poke(s).move(i)) != Move::Curse) {
+	    if (MoveInfo::Type(b.move(s,i)) != Move::Curse) {
 		break;
 	    }
 	    if (i == 3) {
@@ -275,16 +275,16 @@ struct MMConversion : public MM
 	    /* It means the pokemon has two types, i.e. conversion always works */
 	    QList<int> poss;
 	    for (int i = 0; i < 4; i++) {
-		if (MoveInfo::Type(b.poke(s).move(i)) != Move::Curse) {
-		    poss.push_back(b.poke(s).move(i));
+		if (MoveInfo::Type(b.move(s,i)) != Move::Curse) {
+		    poss.push_back(b.move(s,i));
 		}
 	    }
 	    turn(b,s)["ConversionType"] = poss[rand()%poss.size()];
 	} else {
 	    QList<int> poss;
 	    for (int i = 0; i < 4; i++) {
-		if (MoveInfo::Type(b.poke(s).move(i)) != Move::Curse && MoveInfo::Type(b.poke(s).move(i)) != poke(b,s)["Type1"].toInt()) {
-		    poss.push_back(b.poke(s).move(i));
+		if (MoveInfo::Type(b.move(s,i)) != Move::Curse && MoveInfo::Type(b.move(s,i)) != poke(b,s)["Type1"].toInt()) {
+		    poss.push_back(b.move(s,i));
 		}
 	    }
 	    if (poss.size() == 0) {
@@ -1125,7 +1125,7 @@ struct MMAttract : public MM
 	poke(b,s)["Attracted"] = t;
 	addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
 	b.sendMoveMessage(58,1,s,0,t);
-	if (b.poke(t).item() == 17) /* mental herb*/ {
+	if (b.hasWorkingItem(s, 17)) /* mental herb*/ {
 	    b.sendItemMessage(7,s);
 	    b.disposeItem(t);
 	}
@@ -1540,7 +1540,7 @@ struct MMTaunt : public MM
 	    return;
 	}
 	for (int i = 0; i < 4; i++) {
-	    if (MoveInfo::Power(b.poke(s).move(i)) == 0) {
+	    if (MoveInfo::Power(b.move(s,i)) == 0) {
 		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
 	    }
 	}
@@ -1590,7 +1590,7 @@ struct MMDisable : public MM
 	addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
 	addFunction(poke(b,t), "MovePossible", "Disable", &mp);
 	addFunction(poke(b,t), "EndTurn", "Disable", &et);
-	b.sendMoveMessage(28,0,s,0,t,b.poke(t).move(poke(b,t)["MoveSlot"].toInt()));
+	b.sendMoveMessage(28,0,s,0,t,b.move(t,poke(b,t)["MoveSlot"].toInt()));
     }
 
     static void et (int s, int, BS &b)
@@ -1604,17 +1604,13 @@ struct MMDisable : public MM
     }
 
     static void msp(int s, int, BS &b) {
-	for (int i = 0; i < 4; i++) {
-	    if (MoveInfo::Power(b.poke(s).move(i)) == 0) {
-		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
-	    }
-	}
+	turn(b,s)["Move" + QString::number(poke(b,s)["DisabledMove"].toInt()) + "Blocked"] = true;
     }
 
     static void mp(int s, int, BS &b) {
 	if(poke(b,s)["MoveSlot"] == poke(b,s)["DisabledMove"]) {
 	    turn(b,s)["ImpossibleToMove"] = true;
-	    b.sendMoveMessage(28,1,s,0,s,b.poke(s).move(poke(b,s)["MoveSlot"].toInt()));
+	    b.sendMoveMessage(28,1,s,0,s,b.move(s,poke(b,s)["MoveSlot"].toInt()));
 	}
     }
 };
@@ -1644,7 +1640,6 @@ struct MMDoomDesire : public MM
 	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * MoveInfo::Power(move);
 	team(b,t)["DoomDesireDamage"] = b.calculateDamage(s, t);
 	team(b,t)["DoomDesireTurn"] = b.turn() + 2;
-	team(b,t)["DoomDesireInit"] = b.poke(s).nick();
 	team(b,t)["DoomDesireMove"] = move;
 	addFunction(team(b,t), "EndTurn", "DoomDesire", &et);
 	b.sendMoveMessage(29, 1, s, type(b,s));
@@ -1655,13 +1650,119 @@ struct MMDoomDesire : public MM
 	{
 	    if (!b.koed(s)) {
 		int move = team(b,s)["DoomDesireMove"].toInt();
-		b.sendMoveMessage(29,0,s,MoveInfo::Type(move),s,move,team(b,s)["DoomDesireInit"].toString());
+		b.sendMoveMessage(29,0,s,MoveInfo::Type(move),s,move);
 		b.inflictDamage(s,team(b,s)["DoomDesireDamage"].toInt(), s, true);
 	    }
 	    removeFunction(team(b,s), "EndTurn", "DoomDesire");
 	}
     }
 };
+
+struct MMEmbargo : public MM
+{
+    MMEmbargo() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	b.sendMoveMessage(32,0,s,type(b,s),t);
+	poke(b,t)["Embargoed"] = true;
+	poke(b,t)["EmbargoEnd"] = b.turn() + 4;
+	addFunction(poke(b,t), "EndTurn", "Embargo", &et);
+    }
+
+    static void et(int s, int , BS &b) {
+	if (poke(b,s).value("Embargoed").toBool() && poke(b,s)["EmbargoEnd"].toInt() <= b.turn()) {
+	    b.sendMoveMessage(32,1,s,0);
+	    removeFunction(poke(b,s), "EndTurn", "Embargo");
+	}
+    }
+};
+
+struct MMEncore : public MM
+{
+    MMEncore() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    struct FM : public QSet<int>
+    {
+	FM() {
+	    /* Encore , Mimic Mirror Move, Sketch,  Struggle Transform, ,  */
+	    (*this)  << 114 << 247 << 252 << 358 << 394 << 432;
+	}
+    };
+    static FM forbidden_moves;
+
+    static void daf(int s, int t, BS &b)
+    {
+	if (poke(b,t).contains("EncoresUntil") && poke(b,t).value("EncoresUntil").toInt() >= b.turn())
+	{
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	if (!poke(b,t).contains("LastMoveSuccessfullyUsedTurn")) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	int tu = poke(b,t)["LastMoveSuccessfullyUsedTurn"].toInt();
+	if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMove").toBool())) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	int move = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
+	if (forbidden_moves.contains(move)) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	int sl = -1;
+	for (int i = 0; i < 4; i++) {
+	    if (b.move(s, i) == move) {
+		sl = i;
+	    }
+	}
+	if (sl == -1 || b.poke(s).move(sl).PP() == 0 ) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+    }
+
+    static void uas (int s, int t, BS &b) {
+	poke(b,t)["EncoresUntil"] = b.turn() + 3 + (rand()%5);
+	poke(b,t)["EncoresMove"] = poke(b,t)["LastMoveSuccessfullyUsed"];
+	addFunction(poke(b,t), "MovesPossible", "Encore", &msp);
+	addFunction(poke(b,t), "MovePossible", "Encore", &mp);
+	addFunction(poke(b,t), "EndTurn", "Encore", &et);
+	b.sendMoveMessage(33,2,s,0,t,poke(b,t)["LastMoveSuccessfullyUsed"].toInt());
+    }
+
+    static void et (int s, int, BS &b)
+    {
+	int tt = poke(b,s)["EncoresUntil"].toInt();
+	if (tt <= b.turn()) {
+	    removeFunction(poke(b,s), "MovesPossible", "Encore");
+	    removeFunction(poke(b,s), "MovePossible", "Encore");
+	    b.sendMoveMessage(33,0,s);
+	}
+    }
+
+    static void msp(int s, int, BS &b) {
+	for (int i = 0; i < 4; i++) {
+	    if (b.move(s,i) != poke(b,s)["EncoresMove"].toInt()) {
+		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
+	    }
+	}
+    }
+
+    static void mp(int s, int, BS &b) {
+	if(b.move(s,poke(b,s)["MoveSlot"].toInt()) != poke(b,s)["DisabledMove"].toInt()) {
+	    turn(b,s)["ImpossibleToMove"] = true;
+	    b.sendMoveMessage(33,1,s,0,s,b.move(s, poke(b,s)["MoveSlot"].toInt()));
+	}
+    }
+};
+MMEncore::FM MMEncore::forbidden_moves;
 
 #define REGISTER_MOVE(num, name) mechanics[num] = MM##name(); names[num] = #name; nums[#name] = num;
 
@@ -1694,6 +1795,8 @@ void MoveEffect::init()
     REGISTER_MOVE(29, DoomDesire);
     REGISTER_MOVE(30, DragonRage);
     REGISTER_MOVE(31, DreamingTarget); /* Part Dream eater, part Nightmare */
+    REGISTER_MOVE(32, Embargo);
+    REGISTER_MOVE(33, Encore);
     REGISTER_MOVE(36, Eruption); /* Eruption, Water sprout */
     REGISTER_MOVE(37, FaintUser); /* Memento, part explosion, selfdestruct, lunar dance, healing wish... */
     REGISTER_MOVE(39, Facade);
