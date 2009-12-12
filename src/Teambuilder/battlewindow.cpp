@@ -400,7 +400,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	case Recoil:
 	    printLine(tr("%1 is hurt by its recoil!").arg(nick(self)));
 	    break;
-	case WeatherMessage:
+        case WeatherMessage: {
 	    qint8 wstatus, weather;
 	    in >> wstatus >> weather;
 	    if (weather == NormalWeather)
@@ -436,6 +436,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 			case Rain: printHtml(beg + tr("Rain continues to fall!") + end); break;
 		    } break;
 	    }
+        } break;
 	default:
 	    break;
     }

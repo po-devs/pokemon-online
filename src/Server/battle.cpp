@@ -748,6 +748,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    int type = turnlong[player]["Type"].toInt(); /* move type */
 	    int typeadv[] = {getType(target, 1), getType(target, 2)};
 	    int typemod;
+            typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
 	    if (type == Move::Ground)
 	    {
 		if (isFlying(target)) {
@@ -756,10 +757,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		    typemod = TypeInfo::Eff(Move::Ground, typeadv[1]);
 		} else if (typeadv[1] == Pokemon::Flying) {
 		    typemod = TypeInfo::Eff(Move::Ghost, typeadv[0]);
-		}
-	    } else {
-		typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
-	    }
+                }
+            }
 
 	    int typepok[] = {getType(player,1), getType(player,2)};
 	    int stab = 2 + (type==typepok[0] || type==typepok[1]);
