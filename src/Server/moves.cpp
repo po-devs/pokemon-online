@@ -1718,7 +1718,7 @@ struct MMEncore : public MM
 	}
 	int sl = -1;
 	for (int i = 0; i < 4; i++) {
-	    if (b.move(s, i) == move) {
+	    if (b.move(t, i) == move) {
 		sl = i;
 	    }
 	}

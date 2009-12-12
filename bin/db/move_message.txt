@@ -28,9 +28,9 @@ Destiny bond took away %f!
 %f protected itself!
 %f's %m is disabled!|%s can't use %m because of disable!|%s is no longer disabled!
 %s took the %m attack!|%s foresaw an attack!
-%f can't use items anymore!|%s can use items again!
-%f is awake!
 
+%f is awake!
+%f can't use items anymore!|%s can use items again!
 %s's Encore ended!|%s can't use %m because of Encore!|%f is forced to use %m!
 
 %s endured the hit!

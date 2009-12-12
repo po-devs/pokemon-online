@@ -357,7 +357,7 @@ void BattleSituation::analyzeChoices()
 	    it2End = secondPriorities.upper_bound(it2->first);
 
 	    /* At last the speed comparison... */
-	    std::map<int, int, std::greater<int> > speeds;
+	    std::multimap<int, int, std::greater<int> > speeds;
 	    for (; it2 != it2End; ++it2) {
 		speeds.insert(std::pair<int,int>(getStat(it2->second, Speed), it2->second));
 	    }
@@ -831,6 +831,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    calleffects(player, target, "UponAttackSuccessful");
 	    /* this is put after calleffects to avoid endless sleepTalk/copycat for example */
 	    battlelong["LastMoveSuccesfullyUsed"] = attack;
+	    pokelong[player]["LastMoveSuccessfullyUsed"] = attack;
+	    pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
 	    calleffects(player, target, "AfterAttackSuccessful");
 	}
 	pokelong[target]["LastAttackToHit"] = attack;
