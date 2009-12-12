@@ -264,7 +264,7 @@ BattleChoices BattleSituation::createChoice(int player)
 	}
     }
 
-    if (poke(player).item() != 30) /* Shed Shell */
+    if (!hasWorkingItem(player, 30)) /* Shed Shell */
     {
 	if (pokelong[player].contains("BlockedBy")) {
 	    int b = pokelong[player]["BlockedBy"].toInt();
@@ -335,7 +335,6 @@ void BattleSituation::analyzeChoices()
     foreach(int player, switches) {
 	callEntryEffects(player);
     }
-    requestSwitchIns();
 
     std::multimap<int, int, std::greater<int> >::const_iterator it;
     std::multimap<int, int, std::greater<int> >::const_iterator itEnd;
@@ -506,7 +505,8 @@ void BattleSituation::callzeffects(int source, int target, const QString &name)
 
 void BattleSituation::callieffects(int source, int target, const QString &name)
 {
-    ItemEffect::activate(name, poke(source).item(), source, target, *this);
+    if (!pokelong[source].value("Embargoed").toBool())
+	ItemEffect::activate(name, poke(source).item(), source, target, *this);
 }
 
 void BattleSituation::sendBack(int player)
@@ -640,7 +640,7 @@ void BattleSituation::testFlinch(int player, int target)
 	turnlong[target]["Flinched"] = true;
     }
 
-    if (poke(player).item() == 87 && turnlong[player]["KingRock"].toBool()) /* King's rock */
+    if (hasWorkingItem(player, 87) && turnlong[player]["KingRock"].toBool()) /* King's rock */
     {
 	if (rand() % 100 < 10) {
 	    turnlong[target]["Flinched"] = true;
@@ -775,14 +775,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		    notify(All, Hit, target);
 		}
 
-		testCritical(player, target);
-
 		calleffects(player, target, "BeforeCalculatingDamage");
 
 		bool sub = hasSubstitute(player);
 		turnlong[player]["HadSubstitute"] = sub;
 
 		if (turnlong[player]["Power"].toInt() > 1) {
+		    testCritical(player, target);
 		    int damage = calculateDamage(player, target);
 		    inflictDamage(target, damage, player, true);
 		} else {
@@ -799,6 +798,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		applyMoveStatMods(player, target);
 
 		battlelong["LastMoveSuccesfullyUsed"] = attack;
+		pokelong[player]["LastMoveSuccessfullyUsed"] = attack;
 		pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
 
 		if (koed(target))
@@ -840,6 +840,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
     return poke(player).ability() == ab;
+}
+
+bool BattleSituation::hasWorkingItem(int player, int it)
+{
+    return poke(player).item() == it && !pokelong[player].value("Embargoed").toBool();
+}
+
+int BattleSituation::move(int player, int slot)
+{
+    return poke(player).move(slot);
 }
 
 void BattleSituation::inflictRecoil(int source, int target)
@@ -1015,7 +1025,7 @@ int BattleSituation::getType(int player, int slot)
 {
     int types[] = {pokelong[player]["Type1"].toInt(),pokelong[player]["Type2"].toInt()};
 
-    if (ItemInfo::isPlate(poke(player).item())) {
+    if (!pokelong[player].value("Embargoed").toBool() && ItemInfo::isPlate(poke(player).item())) {
 	if (types[1] != Pokemon::Curse) {
 	    types[0] = pokelong[player]["ItemArg"].toInt();
 	    types[1] = Pokemon::Curse;
@@ -1120,7 +1130,7 @@ int BattleSituation::calculateDamage(int p, int t)
     damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
     damage = damage *randnum*100/255/100*stab/2*typemod/4;
 
-    damage = damage * ((poke.item() == 7 && typemod > 4)? 6 : 5)/5 /* mod3 */;
+    damage = damage * ((hasWorkingItem(p, 7) && typemod > 4)? 6 : 5)/5 /* mod3 */;
 
     return damage;
 }

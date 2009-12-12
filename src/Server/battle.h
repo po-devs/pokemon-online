@@ -110,6 +110,8 @@ public:
     void fail(int player, int move, int part=0, int type=0);
     bool hasType(int player, int type);
     bool hasWorkingAbility(int play, int ability);
+    bool hasWorkingItem(int player, int item);
+    int move(int player, int slot);
     int getType(int player, int slot);
     bool isFlying(int player);
     bool hasSubstitute(int player);

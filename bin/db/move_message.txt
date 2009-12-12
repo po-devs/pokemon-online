@@ -9,7 +9,7 @@ A sweet flagrance flowed through %ts's team.|A chime resounded around %ts's team
 %s hasn't enough energy left!
 %s is storing its power!|%s unleashed its power!
 %s is hurt by %m!|%s is freed from %m!
-%s needs to rest for a turn.
+%s must recharge!
 %f is trapped!
 %s bounced high up in the sky!|%s went underground!|%s went underwater!|%s flew high up in the sky!
 %s shattered %m!
@@ -27,11 +27,11 @@ A sweet flagrance flowed through %ts's team.|A chime resounded around %ts's team
 Destiny bond took away %f!
 %f protected itself!
 %f's %m is disabled!|%s can't use %m because of disable!|%s is no longer disabled!
-%q's %m hit %s!|%s is seeing in the future!
+%s took the %m attack!|%s foresaw an attack!
+%f can't use items anymore!|%s can use items again!
 %f is awake!
 
-
-%s's Encore ended! %s can't use %m because of Encore!
+%s's Encore ended!|%s can't use %m because of Encore!|%f is forced to use %m!
 
 %s endured the hit!
 

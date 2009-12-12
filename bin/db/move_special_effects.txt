@@ -1,4 +1,4 @@
-#152 is free
+#153 is free
 1#leech
 
 
@@ -82,7 +82,7 @@
 
 
 
-
+152#defog
 26#destiny bond
 27#detect
 13-1_110*2_232*2
