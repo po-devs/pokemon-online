@@ -11,6 +11,7 @@ class PokemonInfo
 {
 private:
     static QStringList m_Names;
+    static QList<float> m_Weights;
     static QString m_Directory;
 
     static void loadNames();
@@ -26,6 +27,7 @@ public:
     static int NumberOfPokemons();
     static QString Name(int pokenum);
     static int Number(const QString &pokename);
+    static float Weight(int pokenum);
     static int Gender(int pokenum);
     static int Type1(int pokenum);
     static int Type2(int pokenum);

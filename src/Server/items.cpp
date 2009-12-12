@@ -385,6 +385,19 @@ struct IMMetronome : public IM
     }
 };
 
+struct IMQuickClaw : public IM
+{
+    IMQuickClaw() {
+	functions["TurnOrder"] = &tu;
+    }
+    static void tu(int s, int, BS &b) {
+	if (rand() % 5 == 0) {
+	    turn(b,s)["TurnOrder"] = 2;
+	}
+    }
+};
+
+
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
 void ItemEffect::init()
@@ -400,6 +413,7 @@ void ItemEffect::init()
     REGISTER_ITEM(12, LeftOvers);
     REGISTER_ITEM(15, ZoomLens);
     REGISTER_ITEM(16, BlackSludge);
+    REGISTER_ITEM(17, QuickClaw);
     REGISTER_ITEM(19, StatusOrb);
     REGISTER_ITEM(21, LifeOrb);
     REGISTER_ITEM(22, Metronome);

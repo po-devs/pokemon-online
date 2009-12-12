@@ -24,7 +24,7 @@ A sweet flagrance flowed through %ts's team.|A chime resounded around %ts's team
 %s begged %f!\n%f gave its %i to %s|%s stole %f's %i!
 %s crushed %f!
 %s inflicted a curse on %f!|%s is afflicted by the curse.
-Destiny bond took away %f!
+%s took %f with it!|%s is trying to take it's foe with it!
 %f protected itself!
 %f's %m is disabled!|%s can't use %m because of disable!|%s is no longer disabled!
 %s took the %m attack!|%s foresaw an attack!
@@ -58,7 +58,7 @@ All the pokemons are stuck to the ground!|The gravity ended!
 
 %s is in love with %s!|%s seduced %f!|%f is too lovestruck to move!
 %f can't heal!|%s can't use %m because of Heal Block!
-%s recovered half it's life!
+%s regained health!
 
 %s swapped its defense and attack!
 
@@ -92,7 +92,7 @@ The battlefield is covered in mud!|The battlefield is covered with water!
 
 %s has a nightmare!
 %s calmed down!
-%s balanced it's life with %f!
+The battlers shared their pain!
 A sorrowful melody could be heard by everyone on the field.|%s's perish count fell to %d.
 
 %s copied %f's boosts!
@@ -132,11 +132,11 @@ Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 
 %s and %f switched items!
 %ts's team tailwind petered out!
-%s couldn't use %m because of taunt!
+%s couldn't use %m because of taunt!|%f fell for the taunt!
 %s can't use %m because of the torment!
 Poison spikes were scattered around %tf's team!|The poison spikes disappeared around %ts's feet!
 %s transformed into %p!
-Slower pokemons will attack first!|Trick room ended!
+%s twisted the dimensions!|The twisted dimensions returned to normal!
 
 
 %s caused an uproar!

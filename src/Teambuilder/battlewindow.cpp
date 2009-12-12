@@ -43,7 +43,7 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
     mypzone = new PokeZone(team);
     mystack->addWidget(mypzone);
 
-    connect(myforfeit, SIGNAL(clicked()), SIGNAL(forfeit()));
+    connect(myforfeit, SIGNAL(clicked()), SLOT(clickforfeit()));
     connect(mypzone, SIGNAL(switchTo(int)), SLOT(switchClicked(int)));
     connect(myattack, SIGNAL(clicked()), SLOT(attackButton()));
     connect(myswitch, SIGNAL(clicked()), SLOT(switchToPokeZone()));
@@ -73,6 +73,13 @@ void BattleWindow::switchTo(int pokezone)
     info().currentIndex = pokezone;
     mystack->setCurrentIndex(pokezone);
     mydisplay->updatePoke(true);
+}
+
+void BattleWindow::clickforfeit()
+{
+    if (QMessageBox::question(this, tr("Losing your battle"), tr("Do you mean to forfeit?"), QMessageBox::Yes | QMessageBox::No)
+	    == QMessageBox::Yes)
+	emit forfeit();
 }
 
 void BattleWindow::switchToPokeZone()
@@ -393,6 +400,42 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	case Recoil:
 	    printLine(tr("%1 is hurt by its recoil!").arg(nick(self)));
 	    break;
+	case WeatherMessage:
+	    qint8 wstatus, weather;
+	    in >> wstatus >> weather;
+	    if (weather == NormalWeather)
+		break;
+	    QString beg = "<span style='color:" + (weather == Hail ? TypeInfo::Color(Type::Ice) : (weather == Sunny ? TypeInfo::Color(Type::Fire) : (weather == SandStorm ? TypeInfo::Color(Type::Ground) : TypeInfo::Color(Type::Water)))).name()
+			  + "'>";
+	    QString end = "</span>";
+	    switch(wstatus) {
+		case EndWeather:
+		    switch(weather) {
+			case Hail: printHtml(beg + tr("The hail stopped!") + end); break;
+			case SandStorm: printHtml(beg + tr("The sandstorm stopped!") + end); break;
+			case Sunny: printHtml(beg + tr("The sunlight faded!") + end); break;
+			case Rain: printHtml(beg + tr("The rain stopped!") + end); break;
+		    } break;
+		case HurtWeather:
+		    switch(weather) {
+			case Hail: printHtml(beg + tr("%1 is buffeted by the hail!").arg(nick(self)) + end); break;
+			case SandStorm: printHtml(beg + tr("%1 is buffeted by the sandstorm!").arg(nick(self)) + end); break;
+		    } break;
+		case StartWeather:
+		    switch(weather) {
+			case Hail: printHtml(beg + tr("A hailstorm whipped up!") + end); break;
+			case SandStorm: printHtml(beg + tr("A sandstorm whipped up!") + end); break;
+			case Sunny: printHtml(beg + tr("The sunlight became harsh!") + end); break;
+			case Rain: printHtml(beg + tr("It's started to rain!") + end); break;
+		    } break;
+		case ContinueWeather:
+		    switch(weather) {
+			case Hail: printHtml(beg + tr("Hail continues to fall!") + end); break;
+			case SandStorm: printHtml(beg + tr("The sandstorm rages!") + end); break;
+			case Sunny: printHtml(beg + tr("The sunlight is strong!") + end); break;
+			case Rain: printHtml(beg + tr("Rain continues to fall!") + end); break;
+		    } break;
+	    }
 	default:
 	    break;
     }

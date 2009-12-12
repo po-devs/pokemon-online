@@ -31,7 +31,7 @@
 #13#Shed Shell
 10-0#Silk Scarf
 10-7#Silver Powder
-14-3#Smooth Rock 
+#14-3#Smooth Rock 
 10-4Soft Sand
 
 10-10#Wave Incense 
@@ -153,13 +153,13 @@
 
 
 
-14-1#Icy Rock
+#14-1#Icy Rock
 26-113#Lucky Punch
 
 10-2#Sharp Beak
 27-483_15_8#Adamant Orb
-14-2#Damp Rock 
-14-4#Heat Rock 
+#14-2#Damp Rock 
+#14-4#Heat Rock 
 27-484_15_10#Lustrous Orb
 1-3_-10#Macho Brace
 26-83#Stick

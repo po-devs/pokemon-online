@@ -76,7 +76,25 @@ public:
 	ItemMessage,
 	NoOpponent,
 	Flinch,
-	Recoil
+	Recoil,
+	WeatherMessage
+    };
+
+    enum WeatherM
+    {
+	StartWeather,
+	ContinueWeather,
+	EndWeather,
+	HurtWeather
+    };
+
+    enum Weather
+    {
+	NormalWeather = 0,
+	Hail = 1,
+	Rain = 2,
+	SandStorm = 3,
+	Sunny = 4
     };
 
     enum StatusFeeling
@@ -118,6 +136,7 @@ public slots:
     void attackClicked(int zone);
     void sendMessage();
     void attackButton();
+    void clickforfeit();
 
     void switchToPokeZone();
 signals:
