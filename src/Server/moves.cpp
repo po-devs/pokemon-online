@@ -199,8 +199,14 @@ struct MMBatonPass : public MM
 	c.remove("DefenseCurl");
 	c.remove("Ability");
 	c.remove("Weight");
-	c.remove("ChoiceMemory"); /* choice band etc. would force the same move*
+	/* removing last resort memory */
+	c.remove("Move0Used");
+	c.remove("Move1Used");
+	c.remove("Move2Used");
+	c.remove("Move3Used");
+	/* choice band etc. would force the same move
 		if on both the passed & the passer */
+	c.remove("ChoiceMemory");
 	for (int i = 1; i < 6; i++) {
 	    c.remove(QString("Stat%1").arg(i));
 	}
@@ -894,7 +900,8 @@ struct MMRoar : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-	if (poke(b,t).value("Rooted").toBool()) {
+	/* ingrain & suction cups */
+	if (poke(b,t).value("Rooted").toBool() || b.hasWorkingAbility(t,104)) {
 	    turn(b,s)["Failed"] = true;
 	} else {
 	    if (b.countAlive(t) <= 1) {
@@ -2297,7 +2304,7 @@ struct MMIceBall : public MM
 
     static void uas(int s, int, BS &b) {
 	int count = poke(b,s)["IceBallCount"].toInt();
-	if (count == 15) {
+	if (count >= 15) {
 	    poke(b,s)["IceBallCount"] = 0;
 	} else {
 	    poke(b,s)["IceBallCount"] = count*2+1;
@@ -2313,6 +2320,278 @@ struct MMIceBall : public MM
 	}
     }
 };
+
+struct MMImprison : public MM
+{
+    MMImprison() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+	/* let's just see if there are moves to imprison */
+	int foe = b.rev(s);
+
+	if (b.koed(foe)) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+
+	bool success = false;
+
+	for (int i = 0; i < 4; i++)
+	    if (b.move(s,i) != 0)
+		for (int j = 0; j < 4; j++)
+		    if (b.move(foe,j) == b.move(s,i))
+			success = true;
+
+	if (!success) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int s, int, BS &b) {
+	addFunction(b.battlelong, "MovePossible", "Imprison", &mp);
+	addFunction(b.battlelong, "MovesPossible", "Imprison", &msp);
+	poke(b,s)["Imprisoner"] = true;
+	b.sendMoveMessage(67,0,s,type(b,s));
+    }
+
+    static void mp(int s, int, BS &b) {
+	int foe = b.rev(s);
+
+	if (!poke(b,foe).value("Imprisoner").toBool()) {
+	    return;
+	}
+
+	int attack = move(b,s);
+
+	for (int i = 0; i < 4; i++) {
+	    if (b.move(foe,i) == attack) {
+		turn(b,s)["ImpossibleToMove"] = true;
+		b.sendMoveMessage(67,1,s,Pokemon::Psychic,foe,attack);
+		return;
+	    }
+	}
+    }
+
+    static void msp(int s, int, BS &b) {
+	/* let's just see if there are moves to imprison */
+	int foe = b.rev(s);
+
+	if (!poke(b,foe).value("Imprisoner").toBool()) {
+	    return;
+	}
+
+	for (int i = 0; i < 4; i++)
+	    if (b.move(s,i) != 0)
+		for (int j = 0; j < 4; j++)
+		    if (b.move(foe,j) == b.move(s,i))
+			turn(b,s)["Move"+QString::number(i) + "Blocked"] = true;
+
+    }
+};
+
+struct MMMagnetRise : public MM
+{
+    MMMagnetRise() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (b.hasWorkingAbility(s,48) /* levitate */ || poke(b,s).value("Rooted").toBool()) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int s, int, BS &b) {
+	b.sendMoveMessage(68,0,s,Pokemon::Electric);
+	poke(b,s)["MagnetRiseCount"] = 5;
+	addFunction(poke(b,s), "EndTurn", "MagnetRise", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+	inc(poke(b,s)["MagnetRiseCount"], -1);
+	int count = poke(b,s)["MagnetRiseCount"].toInt();
+
+	if (count == 0) {
+	    b.sendMoveMessage(68,1,s,Move::Electric);
+	    removeFunction(poke(b,s), "EndTurn", "MagnetRise");
+	}
+    }
+};
+
+struct MMJudgment : public MM
+{
+    MMJudgment() {
+	functions["MoveSettings"] = &ms;
+    }
+
+    static void ms (int s, int, BS &b) {
+	int item = b.poke(s).item();
+	if (ItemInfo::isPlate(item) && b.hasWorkingItem(s, item)) {
+	    turn(b,s)["Type"] = poke(b,s)["ItemArg"];
+	}
+    }
+};
+
+struct MMLastResort : public MM
+{
+    MMLastResort() {
+	functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (b.move(s, 1) == 0) {
+	    /* The user only has 1 move */
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	bool succ = true;
+	int slot = poke(b,s)["MoveSlot"].toInt();
+	for (int i = 0; i < 4; i++) {
+	    if (i != slot && b.move(s,i) != 0 && !poke(b,s).value(QString("Move%1Used").arg(i)).toBool()) {
+		succ= false;
+	    }
+	}
+	if (!succ) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+};
+
+struct MMTeamBarrier : public MM
+{
+    MMTeamBarrier() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	int nturn;
+	if (b.hasWorkingItem(s, 93)) { /* light clay */
+	    nturn = 8;
+	} else {
+	    nturn = 5;
+	}
+	int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
+
+	b.sendMoveMessage(73,cat,s,type(b,s));
+	team(b,s)["Barrier" + QString::number(cat) + "Count"] = nturn;
+
+	addFunction(team(b,s), "EndTurn", "TeamBarrier", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+	int counts[] = {team(b,s).value("Barrier0Count").toInt(), team(b,s).value("Barrier1Count").toInt()};
+
+	for (int i = 0; i < 2; i++) {
+	    if (counts[i] != 0) {
+		team(b,s)["Barrier" + QString::number(i) + "Count"] = counts[i] - 1;
+		if (counts[i] == 1) {
+		    b.sendMoveMessage(73, 2+i,s,Pokemon::Psychic);
+		}
+	    }
+	}
+    }
+};
+
+struct MMBrickBreak : public MM
+{
+    MMBrickBreak() {
+	functions["BeforeHitting"] = &bh;
+    }
+    static void bh(int s, int t, BS &b) {
+	if (team(b,t).value("Barrier0Count").toInt() > 0 || team(b,t).value("Barrier1Count").toInt() > 0) {
+	    b.sendMoveMessage(14,0,s,Pokemon::Fighting);
+	    team(b,t)["Barrier0Count"] = 0;
+	    team(b,t)["Barrier1Count"] = 0;
+	}
+    }
+};
+
+struct MMLockOn : public MM
+{
+    MMLockOn() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	poke(b,t)["LockedOnEnd"] = b.turn() + 2;
+	poke(b,s)["LockedOn"] = t;
+	b.sendMoveMessage(74,0,s,type(b,s),t);
+    }
+};
+
+struct MMLuckyChant : public MM
+{
+    MMLuckyChant() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	b.sendMoveMessage(75,0,s,type(b,s));
+	team(b,s)["LuckyChantCount"] = 5;
+	addFunction(team(b,s), "EndTurn", "LuckyChant", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+	inc(team(b,s)["LuckyChantCount"], -1);
+	int count = team(b,s)["LuckyChantCount"].toInt();
+
+	if (count == 0) {
+	    b.sendMoveMessage(75,1,s);
+	    removeFunction(team(b,s), "EndTurn", "LuckyChant");
+	}
+    }
+};
+
+struct MMMagicCoat : public MM
+{
+    MMMagicCoat() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas (int s, int, BS &b) {
+	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "MagicCoat", &dgaf);
+	turn(b,s)["MagicCoated"] = true;
+	b.sendMoveMessage(76,0,s,Pokemon::Psychic);
+    }
+
+    /*	# Attract
+	# Block
+	# Gastro Acid
+	# Leech Seed
+	# Mean Look
+	# Spider Web
+	# Worry Seed
+	# Yawn
+    */
+    struct BM : public QSet<int> {
+	BM() { (*this) << 21 << 36 << 155 << 216 << 234 << 461 << 465; }
+    };
+
+    static BM bounced_moves;
+
+    static void dgaf(int s, int t, BS &b) {
+	if (turn(b,t).value("MagicCoated").toBool()) {
+	    if (turn(b,s)["Power"].toInt() == 0 && turn(b,s)["PossibleTargets"].toInt() == Move::ChosenTarget) {
+		int move = MM::move(b,s);
+		/* Typically, the moves that are bounced back are moves that only induce status / boost mods and nothing else,
+		    therefore having no "SpecialEffect". Exceptions are stored in bounced_moves */
+		if (MoveInfo::SpecialEffect(move).size() == 0|| bounced_moves.contains(move)) {
+		    b.fail(s,76,1,Pokemon::Psychic);
+		    /* Now Bouncing back ... */
+		    removeFunction(turn(b,t), "UponAttackSuccessful", "MagicCoat");
+		    MoveEffect::setup(move,t,s,b);
+		    b.useAttack(t,move,true,false);
+		}
+	    }
+	}
+    }
+};
+
+MMMagicCoat::BM MMMagicCoat::bounced_moves;
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -2332,7 +2611,8 @@ struct MMIceBall : public MM
     *CustomAttackingDamage -- turn: If the attack does a certain amount of damage, without regard to things like base power, inflict it here
     *UponAttackSuccessful -- turn: after inflicting damage (and damage effects called) / just after succeeding the move if the move has 0 BP
     *AfterAttackSuccessful -- turn: at the very end of the attack for that target
-    *BeforeHitting -- turn: for things that have 0 BP, this is called instead of BeforeCalculatingDamage & stuff
+    *BeforeHitting -- turn: this is called instead when BeforeCalculatingDamage is not (like, brick break activates after BeforeCalculatingDamage, but before
+	calculating the damages lol because it won't activate if it fails but it's still attacking
     *DetermineAttackPossible -- poke: just say if the poke is supposed to be able to attack, regarless of the the move used (like attracted pokes won't attack)
     *MovePossible -- turn: before attacking, say if the move is possible or not (like when a move just got blocked by encore, taunt,disable)
     *MovesPossible -- poke: at the beginning of the turn, tells if each move is possible or not
@@ -2358,7 +2638,7 @@ void MoveEffect::init()
     REGISTER_MOVE(11, BlastBurn); /* BlastBurn, Hyper beam, rock wrecker, giga impact, frenzy plant, hydro cannon, roar of time */
     REGISTER_MOVE(12, Block);
     REGISTER_MOVE(13, Bounce);
-    /* Brick Break */
+    REGISTER_MOVE(14, BrickBreak);
     REGISTER_MOVE(15, Brine);
     /* Bug Bite */
     /* Camouflage */
@@ -2411,8 +2691,16 @@ void MoveEffect::init()
     REGISTER_MOVE(64, JumpKick);
     REGISTER_MOVE(65, HiddenPower);
     REGISTER_MOVE(66, IceBall);
+    REGISTER_MOVE(67, Imprison);
+    REGISTER_MOVE(68, MagnetRise);
+    REGISTER_MOVE(69, Judgment);
     REGISTER_MOVE(70, KnockOff);
+    REGISTER_MOVE(71, LastResort);
     REGISTER_MOVE(72, LeechSeed);
+    REGISTER_MOVE(73, TeamBarrier);
+    REGISTER_MOVE(74, LockOn);
+    REGISTER_MOVE(75, LuckyChant);
+    REGISTER_MOVE(76, MagicCoat);
     REGISTER_MOVE(91, NightShade);
     REGISTER_MOVE(94, PainSplit);
     REGISTER_MOVE(95, PerishSong);

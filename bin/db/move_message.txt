@@ -12,7 +12,7 @@ A sweet flagrance flowed through %ts's team.|A chime resounded around %ts's team
 %s must recharge!
 %f is trapped!
 %s bounced high up in the sky!|%s went underground!|%s went underwater!|%s flew high up in the sky!
-%s shattered %m!
+%s shattered %tf's team protections!
 
 %s ate %f's %i!
 %s changed its type to %t!
@@ -65,16 +65,16 @@ All the pokemons are stuck to the ground!|The gravity ended!
 %s crashed on the ground!
 
 
-%s can't use %m because of imprison!
-
+%s sealed the opponent's moves!|%s can't use %m because of imprison!
+%s floats on a magnetic field!|The magnet field %s was floating on canceled out!
 
 %s knocked off %f's %i!
 
 %f evaded the seed!|%f was seeded!|%s's health is saped by leech seed.
-%ts's reflect wore off!|%ts's light screen wore off!
-
-%ts's lucky chant wore off!
-
+Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|%ts's reflect wore off!|%ts's light screen wore off!
+%s took aim at %f!
+%ts's team is protected from critical hits!|%ts's lucky chant wore off!
+%s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!
 
 
 

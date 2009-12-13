@@ -35,6 +35,7 @@ void ItemEffect::setup(int num, int source, BattleSituation &b)
 
 	qDebug() << "Setup confirmed";
 
+	//dun remove the test
 	if (effect.args.size() > 0) {
 	    b.pokelong[source]["ItemArg"] = effect.args;
 	}
@@ -97,7 +98,7 @@ struct IMChoiceItem : public IM
     }
 
     static void rms(int s, int, BS &b) {
-	poke(b,s)["ChoiceMemory"] = turn(b,s)["MoveSlot"];
+	poke(b,s)["ChoiceMemory"] = poke(b,s)["MoveSlot"];
     }
 };
 

@@ -169,6 +169,7 @@ void BattleSituation::endTurn()
     callpeffects(Player1, Player2, "EndTurn");
     callpeffects(Player2, Player1, "EndTurn");
 
+    callzeffects(Player1, Player1, "EndTurn");
     callbeffects(Player1,Player1,"EndTurn");
 
     endTurnStatus();
@@ -537,6 +538,10 @@ bool BattleSituation::testAccuracy(int player, int target)
 	return true;
     }
 
+    if (pokelong[target].value("LockedOnEnd").toInt() >= turn() && pokelong[player].contains("LockedOn") && pokelong[player].value("LockedOn") == target) {
+	return true;
+    }
+
     callieffects(player,target,"StatModifier");
     callieffects(target,player,"StatModifier");
     /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
@@ -556,11 +561,20 @@ bool BattleSituation::testAccuracy(int player, int target)
 
 void BattleSituation::testCritical(int player, int target)
 {
-    (void) target; /* will be used for ability & lucky chant */
+    /* Shell armor, Battle Armor */
+    if (hasWorkingAbility(target, 8) || hasWorkingAbility(target, 85) || teamzone[target].value("LuckyChantCount").toInt() > 0) {
+	return;
+    }
 
     int randnum = rand() % 48;
     int minch;
-    switch(turnlong[player]["CriticalRaise"].toInt()) {
+    int craise = turnlong[player]["CriticalRaise"].toInt();
+
+    if (hasWorkingAbility(player, 105)) { /* Super Luck */
+	craise += 1;
+    }
+
+    switch(craise) {
 	case 0: minch = 3; break;
 	case 1: minch = 6; break;
 	case 2: minch = 12; break;
@@ -682,6 +696,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     } else {
 	attack = this->move(player,move);
 	pokelong[player]["MoveSlot"] = move;
+	pokelong[player][QString("Move%1Used").arg(move)] = true;
     }
 
     turnlong[player]["HasMoved"] = true;
@@ -805,6 +820,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		calleffects(player,target,"AttackSomehowFailed");
 		continue;
 	    }
+
+	    calleffects(player, target, "BeforeHitting");
 
 	    int num = repeatNum(turnlong[player]);
 	    bool hit = num > 1;
@@ -1153,8 +1170,9 @@ int BattleSituation::getType(int player, int slot)
 
 bool BattleSituation::isFlying(int player)
 {
-    /* Item 212 is iron ball */
-    return !battlelong.value("Gravity").toBool() && !hasWorkingItem(player, 212) && (hasWorkingAbility(player, 48) ||  hasType(player, Pokemon::Flying));
+    /* Item 212 is iron ball, ability is levitate */
+    return !battlelong.value("Gravity").toBool() && !hasWorkingItem(player, 212) && !pokelong[player].value("Rooted").toBool() &&
+	    (hasWorkingAbility(player, 48) ||  hasType(player, Pokemon::Flying || pokelong[player].value("MagnetRiseCount").toInt() > 0));
 }
 
 bool BattleSituation::hasSubstitute(int player)
@@ -1217,8 +1235,10 @@ int BattleSituation::calculateDamage(int p, int t)
 
     int level = player["Level"].toInt();
     int attack, def;
+    bool crit = move["CriticalHit"].toBool();
 
-    if (move["Category"].toInt() == Move::Physical) {
+    int cat = move["Category"].toInt();
+    if (cat == Move::Physical) {
 	attack = getStat(p, Attack);
 	def = getStat(t, Defense);
     } else {
@@ -1233,7 +1253,7 @@ int BattleSituation::calculateDamage(int p, int t)
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
     int randnum = rand() % (255-217) + 217;
-    int ch = 1 + move["CriticalHit"].toBool();
+    int ch = 1 + crit;
     int power = move["Power"].toInt();
     int type = move["Type"].toInt();
 
@@ -1242,6 +1262,10 @@ int BattleSituation::calculateDamage(int p, int t)
 
     int damage = ((((level * 2 / 5) + 2) * power * attack / 50) / def);
     damage = damage * ((poke.status() == Pokemon::Burnt && move["Category"].toInt() == Move::Physical) ? PokeFraction(1,2) : PokeFraction(1,1));
+    /* Light screen / Reflect */
+    if (!crit && teamzone[t].value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+	damage /= 2;
+    }
     if (isWeatherWorking(Sunny)) {
 	if (type == Move::Fire) {
 	    damage = damage * 3 /2;
@@ -1533,7 +1557,7 @@ void BattleSituation::fail(int player, int move, int part, int type)
 {
     turnlong[player]["FailingMessage"] = false;
     turnlong[player]["Failed"] = true;
-    sendMoveMessage(move, part, player, type, rev(player));
+    sendMoveMessage(move, part, player, type, rev(player),turnlong[player]["MoveChosen"].toInt());
 }
 
 PokeFraction BattleSituation::getStatBoost(int player, int stat)
@@ -1543,6 +1567,14 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     /* Boost is 1 if boost == 0,
        (2+boost)/2 if boost > 0;
        2/(2+boost) otherwise */
+    if (turnlong[player].value("CriticalHit").toBool()) {
+	if ((stat == Attack || stat == SpAttack) && boost < 0) {
+	    boost = 0;
+	} else if ((stat == Defense || stat == SpDefense) && boost > 0) {
+	    boost = 0;
+	}
+    }
+
     if (stat <= 5) {
         return PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
     } else if (stat == 7) {

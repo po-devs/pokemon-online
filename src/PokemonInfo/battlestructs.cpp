@@ -13,7 +13,7 @@ BattleMove::BattleMove()
 
 void BattleMove::load() {
     power() = MoveInfo::Power(num());
-    PP() = MoveInfo::PP(num());
+    PP() = MoveInfo::PP(num())*8/5; /* 3 PP-ups */
     totalPP() = PP();
     type() = MoveInfo::Type(num());
 }
