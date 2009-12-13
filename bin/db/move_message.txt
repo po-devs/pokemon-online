@@ -56,7 +56,7 @@ All the pokemons are stuck to the ground!|The gravity ended!
 %s swapped its boosts with %f!
 
 
-%s is in love with %s!|%s seduced %f!|%f is too lovestruck to move!
+%s is in love with %f!|%s seduced %f!|%s is too lovestruck to move!
 %f can't heal!|%s can't use %m because of Heal Block!|%s's heal block wore off!
 %s regained health!
 %s is healed!
