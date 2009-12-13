@@ -1,4 +1,4 @@
-#155 is free
+#156 is free
 1#leech
 
 
@@ -82,7 +82,7 @@
 
 154#defense curl
 
-152#defog
+155#defog
 26#destiny bond
 27#detect
 13-1_110*2_232*2
@@ -200,7 +200,7 @@
 
 
 67#imprison
-151|68-0_-1#ingrain -- 151 is ingrain, 68 is ground immunity lost
+151
 
 
 
@@ -229,7 +229,7 @@
 
 10
 
-68-1-5#don't forget fail if ingrain
+68#magnet rise
 78#magnitude
 79#me first
 12#mean look

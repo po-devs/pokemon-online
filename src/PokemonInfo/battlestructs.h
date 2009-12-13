@@ -71,7 +71,6 @@ public:
     const BattleMove& move(int i) const;
 
     quint16 normalStat(int stat) const;
-    quint8 statMod(int stat) const;
 
     bool ko() const {return lifePoints() == 0 || num() == 0;}
     bool isFull() const { return lifePoints() == totalLifePoints(); }

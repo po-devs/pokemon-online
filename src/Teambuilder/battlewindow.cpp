@@ -398,7 +398,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    printLine(tr("%1 flinched!").arg(nick(self)));
 	    break;
 	case Recoil:
-	    printLine(tr("%1 is hurt by its recoil!").arg(nick(self)));
+	    printLine(tr("%1 is hit with recoil!").arg(nick(self)));
 	    break;
         case WeatherMessage: {
 	    qint8 wstatus, weather;
