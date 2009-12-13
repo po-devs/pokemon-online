@@ -1773,8 +1773,10 @@ struct MMEncore : public MM
 	    if (b.move(s,i) == poke(b,s)["EncoresMove"].toInt()) {
 		if (b.poke(s).move(i).PP() <= 0) {
 		    removeFunction(poke(b,s), "MovesPossible", "Encore");
+		    removeFunction(poke(b,s), "EndTurn", "Encore");
 		    poke(b,s)["EncoresUntil"] = b.turn();
 		    b.sendMoveMessage(33,0,s);
+		    return;
 		}
 		break;
 	    }
@@ -1782,6 +1784,7 @@ struct MMEncore : public MM
 	int tt = poke(b,s)["EncoresUntil"].toInt();
 	if (tt <= b.turn()) {
 	    removeFunction(poke(b,s), "MovesPossible", "Encore");
+	    removeFunction(poke(b,s), "EndTurn", "Encore");
 	    b.sendMoveMessage(33,0,s);
 	}
     }
