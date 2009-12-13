@@ -262,6 +262,8 @@ BattleChoices BattleSituation::createChoice(int player)
     /* attacks ok, lets see which ones then */
     callpeffects(player, player, "MovesPossible");
     callieffects(player, player, "MovesPossible");
+    callbeffects(player,player,"MovesPossible");
+
     for (int i = 0; i < 4; i++) {
 	if (!isMovePossible(player,i)) {
 	    ret.attackAllowed[i] = false;
@@ -696,12 +698,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     turnlong[player]["MoveChosen"] = attack;
 
+    callbeffects(player,player,"MovePossible");
+    if (turnlong[player]["ImpossibleToMove"].toBool()) {
+	return;
+    }
+
     if (!specialOccurence) {
 	calleffects(player, player, "MovePossible");
-	if (turnlong[player]["ImpossibleToMove"].toBool() == true) {
+	if (turnlong[player]["ImpossibleToMove"].toBool()) {
 	    return;
 	}
-	//callpeffects(player, player, "MovesPossible");
 	if (!isMovePossible(player, move)) {
 	    return;
 	}
@@ -803,7 +809,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    int num = repeatNum(turnlong[player]);
 	    bool hit = num > 1;
 
-	    for (int i = 0; i < num; i++) {
+	    for (int i = 0; i < num && !koed(target); i++) {
 
 		if (hit) {
 		    notify(All, Hit, target);
@@ -834,11 +840,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		    pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
 		}
 
-		if (koed(target))
-		    ;
-		else
-		    if (!sub)
-			testFlinch(player, target);
+		if (!sub && !koed(target))
+		    testFlinch(player, target);
 		/* Removing substitute... */
 		turnlong[player]["HadSubstitute"] = false;
 	    }
