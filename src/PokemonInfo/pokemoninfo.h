@@ -142,6 +142,7 @@ private:
     static QList<QList<Effect> > m_BerryEffects;
     static QList<QStringList> m_RegMessages;
     static QList<QStringList> m_BerryMessages;
+    static QList<int> m_Powers;
 
     static void loadNames();
     static QString path(const QString &filename);

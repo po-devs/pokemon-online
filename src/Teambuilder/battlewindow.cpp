@@ -405,7 +405,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    in >> wstatus >> weather;
 	    if (weather == NormalWeather)
 		break;
-	    QString beg = "<span style='color:" + (weather == Hail ? TypeInfo::Color(Type::Ice) : (weather == Sunny ? TypeInfo::Color(Type::Fire) : (weather == SandStorm ? TypeInfo::Color(Type::Ground) : TypeInfo::Color(Type::Water)))).name()
+	    QString beg = "<span style='color:" + (weather == Hail ? TypeInfo::Color(Type::Ice) : (weather == Sunny ? TypeInfo::Color(Type::Fire) : (weather == SandStorm ? TypeInfo::Color(Type::Rock) : TypeInfo::Color(Type::Water)))).name()
 			  + "'>";
 	    QString end = "</span>";
 	    switch(wstatus) {

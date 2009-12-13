@@ -57,12 +57,12 @@ All the pokemons are stuck to the ground!|The gravity ended!
 
 
 %s is in love with %s!|%s seduced %f!|%f is too lovestruck to move!
-%f can't heal!|%s can't use %m because of Heal Block!
+%f can't heal!|%s can't use %m because of Heal Block!|%s's heal block wore off!
 %s regained health!
-
+%s is healed!
 %s swapped its defense and attack!
 
-%s missed and crashed on the ground!
+%s crashed on the ground!
 
 
 %s can't use %m because of imprison!

@@ -13,6 +13,7 @@ namespace Pokemon
 {
     enum Status
     {
+	Koed = -2,
 	Fine=0,
 	Paralysed=1,
 	Burnt=2,

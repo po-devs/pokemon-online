@@ -16,13 +16,13 @@
 12#Leftovers
 
 
-8_132_10_2_5#Metal Powder
+8-132_10_2_5#Metal Powder
 9-0#Muscle Band 
 10-13#Odd Incense 
 
 #11#Power Herb
 
-8_132_20_3#Quick Powder
+8-132_20_3#Quick Powder
 
 
 10-5#Rock Incense 
@@ -35,7 +35,7 @@
 10-4Soft Sand
 
 10-10#Wave Incense 
-
+3#white herb
 1-6_7#Wide Lens 
 9-1#Wise Glasses 
 
@@ -58,7 +58,7 @@
 10-9#charcoal
 
 
-8_366_20_5#deepseascale
+8-366_20_5#deepseascale
 
 10-15#Dragon Scale
 
@@ -90,7 +90,7 @@
 
 
 21#Life Orb
-8_25_20_1_4#Light Ball
+8-25_20_1_4#Light Ball
 
 
 10-12#Magnet
@@ -129,8 +129,8 @@
 
 
 
-8_380/381_10_1_2#Soul Dew
-10_7#Spell Tag
+8-380/381_10_1_2#Soul Dew
+10-7#Spell Tag
 
 
 
@@ -140,7 +140,7 @@
 
 
 19-6#Toxic Orb 
-8_13#Twistedspoon
+10-13#Twistedspoon
 
 
 
@@ -182,7 +182,7 @@
 23#Razor Claw 
 
 28#Sticky Barb
-8_366_20_4#Deepseatooth
+8-366_20_4#Deepseatooth
 29-15|10-15#Draco Plate
 29-16|10-16#Dread Plate 
 29-4|10-4#Earth Plate 
@@ -198,7 +198,7 @@
 29-10|10-10#Splash Plate 
 29-7|10-7#Spooky Plate 
 29-5|10-5#Stone Plate 
-8_104/105_20_1#Thick Club
+8-104/105_20_1#Thick Club
 29-3|10-3#Toxic Plate 
 29-12|10-12#Zap Plate
 

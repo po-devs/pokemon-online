@@ -159,6 +159,8 @@ void BattleSituation::endTurn()
 {
     qDebug() << "Start of the end of the turn";
 
+    endTurnWeather();
+
     if (!koed(Player1))
 	callieffects(Player1, Player1, "EndTurn");
     if (!koed(Player2))
@@ -441,6 +443,7 @@ void BattleSituation::callEntryEffects(int player)
 {
     calleffects(player, player, "UponSwitchIn");
     callzeffects(player, player, "UponSwitchIn");
+    calleffects(player, player, "AfterSwitchIn");
 }
 
 void BattleSituation::calleffects(int source, int target, const QString &name)
@@ -448,6 +451,7 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 
     if (turnlong[source].contains(name)) {
 	qDebug() << "Calling effects for " << name ;
+	turnlong[source]["TurnEffectCall"] = true;
 	QSet<QString> &effects = *turnlong[source][name].value<QSharedPointer<QSet<QString> > >();
 
 	foreach(QString effect, effects) {
@@ -463,12 +467,14 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 
 	    f(source, target, *this);
 	}
+	turnlong[source]["TurnEffectCall"] = false;
     }
 }
 
 void BattleSituation::callpeffects(int source, int target, const QString &name)
 {
     if (pokelong[source].contains(name)) {
+	turnlong[source]["PokeEffectCall"] = true;
 	qDebug() << "Calling pokemon long effects for " << name;
 	QSet<QString> &effects = *pokelong[source][name].value<QSharedPointer<QSet<QString> > >();
 
@@ -478,6 +484,7 @@ void BattleSituation::callpeffects(int source, int target, const QString &name)
 
 	    f(source, target, *this);
 	}
+	turnlong[source]["PokeEffectCall"] = false;
     }
 }
 
@@ -739,9 +746,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	if (target != player && !testAccuracy(player, target)) {
 	    continue;
 	}
-	qDebug() << "Accuracy test passed";
-	qDebug() << "Accuracy: " << turnlong[player]["Power"].toInt();
-	qDebug() << "Power: " << turnlong[player]["Power"].toInt();
 	if (turnlong[player]["Power"].toInt() > 0)
 	{
             qDebug() << "Going offensive";
@@ -766,21 +770,35 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    turnlong[player]["Stab"] = stab;
 	    turnlong[player]["TypeMod"] = typemod; /* is attack effective? or not? etc. */
 
+	    calleffects(player, target, "BeforeCalculatingDamage");
+
 	    if (typemod == 0) {
 		/* If it's ineffective we just say it */
 		notify(All, Effective, target, quint8(typemod));
+		calleffects(player,target,"AttackSomehowFailed");
 		continue;
 	    }
 
 	    callpeffects(player, target, "DetermineAttackFailure");
-	    if (testFail(player))
+	    if (testFail(player)) {
+		calleffects(player,target,"AttackSomehowFailed");
 		continue;
+	    }
 	    callbeffects(player, target, "DetermineGeneralAttackFailure");
-	    if (testFail(player))
+	    if (testFail(player)) {
+		calleffects(player,target,"AttackSomehowFailed");
 		continue;
+	    }
 	    calleffects(player, target, "DetermineAttackFailure");
-	    if (testFail(player))
+	    if (testFail(player)){
+		calleffects(player,target,"AttackSomehowFailed");
 		continue;
+	    }
+
+	    if (target != player && !testAccuracy(player, target)) {
+		calleffects(player,target,"AttackSomehowFailed");
+		continue;
+	    }
 
 	    int num = repeatNum(turnlong[player]);
 	    bool hit = num > 1;
@@ -791,8 +809,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		    notify(All, Hit, target);
 		}
 
-		calleffects(player, target, "BeforeCalculatingDamage");
-
 		bool sub = hasSubstitute(player);
 		turnlong[player]["HadSubstitute"] = sub;
 
@@ -801,7 +817,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		    int damage = calculateDamage(player, target);
 		    inflictDamage(target, damage, player, true);
 		} else {
-		    qDebug() << "The other way";
 		    calleffects(player, target, "CustomAttackingDamage");
 		}
 		calleffects(player, target, "UponAttackSuccessful");
@@ -854,6 +869,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		    pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
 	    }
 	    calleffects(player, target, "AfterAttackSuccessful");
+	}
+	if (turnlong[player]["Type"].toInt() == Move::Fire && poke(target).status() == Pokemon::Frozen) {
+	    notify(All, StatusMessage, target, qint8(FreeFrozen));
+	    healStatus(target, Pokemon::Frozen);
 	}
 	pokelong[target]["LastAttackToHit"] = attack;
     }
@@ -908,6 +927,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     if (maxtogo != 0 && randnum > maxtogo) {
 	return;
     }
+
+    bool statChanges[2] = {false};
 
     /* Splits effects between the opponent & self */
     QStringList effects = effect.split('|');
@@ -990,9 +1011,16 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 		    } else {
 			changeStatMod(targeted, stat, mod);
 		    }
+		    statChanges[self] = true;
 		}
 	    }
 	}
+    }
+    if (statChanges[0] == true && !koed(player)) {
+	callieffects(target,player,"AfterStatChange");
+    }
+    if (statChanges[1] == true && !koed(player)) {
+	callieffects(player,player,"AfterStatChange");
     }
 }
 
@@ -1029,7 +1057,7 @@ void BattleSituation::inflictStatus(int player, int status)
 		changeStatus(player, status);
 	    }
 	} else if (status == Pokemon::Frozen) {
-	    if (!hasType(player, Pokemon::Ice)) {
+	    if (!isWeatherWorking(Sunny) && !hasType(player, Pokemon::Ice)) {
 		changeStatus(player, status);
 	    }
 	} else {
@@ -1049,9 +1077,6 @@ void BattleSituation::callForth(int weather, int turns)
 	battlelong["WeatherCount"] = turns;
 	notify(All, WeatherMessage, Player1, qint8(ContinueWeather), qint8(weather));
     } else {
-	if (this->weather() != NormalWeather) {
-	    notify(All, WeatherMessage, Player1, qint8(EndWeather), qint8(this->weather()));
-	}
 	notify(All, WeatherMessage, Player1, qint8(StartWeather), qint8(weather));
 	battlelong["WeatherCount"] = turns;
 	battlelong["Weather"] = weather;
@@ -1068,9 +1093,10 @@ void BattleSituation::endTurnWeather()
 
     int count = battlelong["WeatherCount"].toInt() - 1;
     if (count == 0) {
+	notify(All, WeatherMessage, Player1, qint8(EndWeather), qint8(weather));
 	callForth(NormalWeather, -1);
     } else {
-	notify(All, WeatherMessage, Player1, qint8(ContinueWeather));
+	notify(All, WeatherMessage, Player1, qint8(ContinueWeather), qint8(weather));
 	/* And now the weather damage! */
 	if ((weather == Hail || weather == SandStorm) && isWeatherWorking(weather)) {
 	    QSet<int> immuneTypes;
@@ -1079,9 +1105,11 @@ void BattleSituation::endTurnWeather()
 	    } else {
 		immuneTypes << Pokemon::Rock << Pokemon::Ground << Pokemon::Steel;
 	    }
-	    for (int i = Player1; i < Player2; i++) {
+	    for (int i = Player1; i <= Player2; i++) {
+		if (koed(i))
+		    continue;
 		if (!immuneTypes.contains(getType(i,1)) && !immuneTypes.contains(getType(i,2))) {
-		    notify(All, WeatherMessage, i, qint8(HurtWeather),qint8(Hail));
+		    notify(All, WeatherMessage, i, qint8(HurtWeather),qint8(weather));
 		    inflictDamage(i, poke(i).totalLifePoints()/16, i, false);
 		}
 	    }
@@ -1204,12 +1232,26 @@ int BattleSituation::calculateDamage(int p, int t)
     int randnum = rand() % (255-217) + 217;
     int ch = 1 + move["CriticalHit"].toBool();
     int power = move["Power"].toInt();
+    int type = move["Type"].toInt();
 
     callieffects(p,t,"BasePowerModifier");
     power = power * (10+move["BasePowerItemModifier"].toInt())/10;
 
     int damage = ((((level * 2 / 5) + 2) * power * attack / 50) / def);
     damage = damage * ((poke.status() == Pokemon::Burnt && move["Category"].toInt() == Move::Physical) ? PokeFraction(1,2) : PokeFraction(1,1));
+    if (isWeatherWorking(Sunny)) {
+	if (type == Move::Fire) {
+	    damage = damage * 3 /2;
+	} else if (type == Move::Water) {
+	    damage /= 2;
+	}
+    } else if (isWeatherWorking(Move::Water)) {
+	if (type == Move::Water) {
+	    damage = damage * 3/2;
+	} else if (type == Move::Fire) {
+	    damage /= 2;
+	}
+    }
     damage = (damage+2)*ch;
     callieffects(p,t,"Mod2Modifier");
     damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
@@ -1218,15 +1260,6 @@ int BattleSituation::calculateDamage(int p, int t)
     damage = damage * ((hasWorkingItem(p, 7) && typemod > 4)? 6 : 5)/5 /* mod3 */;
 
     return damage;
-}
-
-PokeFraction BattleSituation::getMod1(int player, int)
-{
-    if (poke(player).status() == Pokemon::Burnt && turnlong[player]["Category"].toInt() == Move::Physical) {
-	return PokeFraction(1, 2);
-    } else {
-	return PokeFraction(1, 1);
-    }
 }
 
 int BattleSituation::repeatNum(context &move)
@@ -1322,10 +1355,13 @@ void BattleSituation::disposeItem(int  player) {
 void BattleSituation::acqItem(int player, int item) {
     poke(player).item() = item;
     ItemEffect::setup(poke(player).item(),player,*this);
+    callieffects(player,player,"AfterSetup");
 }
 
 void BattleSituation::healLife(int player, int healing)
 {
+    if ((pokelong[player].value("TurnEffectCall").toBool() || pokelong[player].value("PokeEffectCall").toBool()) && pokelong[player].value("HealBlockCount").toInt() > 0)
+	return;
     if (healing == 0) {
 	healing = 1;
     }
@@ -1356,6 +1392,7 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 
     qDebug() << "koPoke, player: " << player;
     changeHp(player, 0);
+    changeStatus(player,Pokemon::Koed);
     qDebug() << "Changed Hp to 0";
 
     notify(All, Ko, player);
@@ -1457,6 +1494,9 @@ int BattleSituation::getStat(int player, int stat)
     if (stat == Speed && poke(player).status() == Pokemon::Paralysed) {
 	ret /= 4;
     }
+
+    if (stat == SpDefense && isWeatherWorking(SandStorm) && hasType(player,Pokemon::Rock))
+	ret = ret * 3 / 2;
 
     if (ret == 0) {
 	ret = 1;

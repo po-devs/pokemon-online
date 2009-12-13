@@ -1,4 +1,4 @@
-#37,153 are free
+#155 is free
 1#leech
 
 
@@ -33,7 +33,7 @@
 
 11#blast burn -- one turn slacking off
 
-
+38#blizzard
 12#block, aka mean look
 
 
@@ -80,7 +80,7 @@
 
 
 
-
+154#defense curl
 
 152#defog
 26#destiny bond
@@ -133,7 +133,7 @@
 10
 43#OHKO
 44#flail
-
+153#flame wheel
 
 
 
@@ -205,7 +205,7 @@
 
 
 69#judgment
-64
+64#jump kick
 
 
 70#knock off
@@ -332,7 +332,7 @@
 
 66#rollout
 150|60#roost
-
+153#sacred fire
 109#safeguard
 10#sand tomb
 
@@ -420,7 +420,7 @@
 
 23#thief
 93#thrash
-
+152#Thunder
 
 120#thunder wave
 
