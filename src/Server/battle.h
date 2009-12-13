@@ -102,7 +102,6 @@ public:
     void losePP(int player, int move, int loss);
 
     int calculateDamage(int player, int target);
-    PokeFraction getMod1(int player, int target);
     void applyMoveStatMods(int player, int target);
     bool testAccuracy(int player, int target);
     void testCritical(int player, int target);

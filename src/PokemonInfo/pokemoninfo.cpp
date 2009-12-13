@@ -37,6 +37,7 @@ QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects;
 QList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
 QList<QStringList> ItemInfo::m_RegMessages;
 QList<QStringList> ItemInfo::m_BerryMessages;
+QList<int> ItemInfo::m_Powers;
 
 QStringList TypeInfo::m_Names;
 QList<QColor> TypeInfo::m_Colors;
@@ -156,6 +157,23 @@ void fill_container_with_file(QList<QColor> &container, const QString &filename)
 }
 
 void fill_container_with_file(QList<bool> &container, const QString & filename)
+{
+    QFile file(filename);
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream filestream(&file);
+
+    /* discarding all the uninteresting lines, should find a more effective way */
+    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+    {
+	int var;
+	filestream >> var;
+	container << var;
+    }
+}
+
+void fill_container_with_file(QList<char> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -375,7 +393,10 @@ QList<int> PokemonInfo::getMoves(const QString &filename, int pokenum)
 
 void MoveInfo::loadCritics()
 {
-    fill_container_with_file(m_Critical, path("move_critical.txt"));
+    QStringList temp;
+    fill_container_with_file(temp, path("move_critical.txt"));
+
+    foreach(QString str, temp) { m_Critical.push_back(str.toInt());}
 }
 
 void MoveInfo::loadTargets()
@@ -385,7 +406,10 @@ void MoveInfo::loadTargets()
 
 void MoveInfo::loadEffectRates()
 {
-    fill_container_with_file(m_EffectRate, path("move_effect_rate.txt"));
+    QStringList temp;
+    fill_container_with_file(temp, path("move_effect_rate.txt"));
+
+    foreach(QString str, temp) {m_EffectRate.push_back(str.toInt());}
 }
 
 void MoveInfo::loadPhysics()
@@ -425,7 +449,10 @@ void MoveInfo::loadSpeeds()
 
 void MoveInfo::loadRecoil()
 {
-    fill_container_with_file(m_Recoil, path("move_recoil.txt"));
+    QStringList temp;
+    fill_container_with_file(temp, path("move_recoil.txt"));
+
+    foreach(QString str, temp) {m_Recoil.push_back(str.toInt());}
 }
 
 int MoveInfo::Recoil(int num)
@@ -624,7 +651,12 @@ int MoveInfo::FlinchRate(int num)
 
 void MoveInfo::loadFlinchs()
 {
-    fill_container_with_file(m_Flinch, path("move_flinch.txt"));
+    QStringList temp;
+    fill_container_with_file(temp, path("move_flinch.txt"));
+
+    foreach(QString s, temp) {
+	m_Flinch.push_back(s.toInt());
+    }
 }
 
 void MoveInfo::loadEffects()
@@ -733,6 +765,8 @@ void ItemInfo::loadNames()
     foreach (QString eff, temp) {
 	m_BerryMessages.push_back(eff.split('|'));
     }
+
+    fill_container_with_file(m_Powers, path("item_pow.txt"));
 }
 
 QList<ItemInfo::Effect> ItemInfo::Effects(int item)
@@ -768,6 +802,14 @@ QString ItemInfo::path(const QString &file)
 int ItemInfo::NumberOfItems()
 {
     return m_SortedNames.size();
+}
+
+int ItemInfo::Power(int itemnum) {
+    if (isBerry(itemnum)) {
+	return 10;
+    } else if (Exist(itemnum)) {
+	return m_Powers[itemnum];
+    } else return 0;
 }
 
 QString ItemInfo::Name(int itemnum)
@@ -1095,7 +1137,7 @@ int HiddenPowerInfo::Power(quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 sp
 
 QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type)
 {
-    QList<QString> fileLines;
+    QStringList fileLines;
 
     fill_container_with_file(fileLines, path(QString("type%1_hp.txt").arg(type)));
 

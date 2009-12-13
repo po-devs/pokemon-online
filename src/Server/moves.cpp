@@ -1,5 +1,6 @@
 #include "moves.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "items.h"
 
 QHash<int, MoveMechanics> MoveEffect::mechanics;
 QHash<int, QString> MoveEffect::names;
@@ -1794,7 +1795,7 @@ struct MMEncore : public MM
     }
 
     static void mp(int s, int, BS &b) {
-	if(b.move(s,poke(b,s)["MoveSlot"].toInt()) != poke(b,s)["DisabledMove"].toInt()) {
+	if(b.move(s,poke(b,s)["MoveSlot"].toInt()) != poke(b,s)["EncoresMove"].toInt()) {
 	    turn(b,s)["ImpossibleToMove"] = true;
 	    b.sendMoveMessage(33,1,s,0,s,b.move(s, poke(b,s)["MoveSlot"].toInt()));
 	}
@@ -1885,7 +1886,7 @@ struct MMFocusEnergy : public MM
 struct MMFuryCutter : public MM
 {
     MMFuryCutter() {
-	functions["MissAttack"] = &ma;
+	functions["AttackSomehowFailed"] = &ma;
 	functions["BeforeCalculatingDamage"] = &bcd;
 	functions["UponAttackSuccessful"] = &uas;
     }
@@ -2050,6 +2051,266 @@ struct MMWeather : public MM
 
 MMWeather::WI MMWeather::weather_items;
 
+struct MMBlizzard : public MM
+{
+    MMBlizzard() {
+	functions["MoveSettings"] = &ms;
+    }
+
+    static void ms(int s, int, BS &b) {
+	if (b.isWeatherWorking(BattleSituation::Hail)) {
+	    turn(b,s)["Accuracy"] = turn(b,s)["Accuracy"].toInt() * 10 / 7;
+	}
+    }
+};
+
+struct MMThunder : public MM
+{
+    MMThunder() {
+	functions["MoveSettings"] = &ms;
+    }
+
+    static void ms(int s, int, BS &b) {
+	if (b.isWeatherWorking(BattleSituation::Rain)) {
+	    turn(b,s)["Accuracy"] = turn(b,s)["Accuracy"].toInt() * 10 / 7;
+	} else if (b.isWeatherWorking(BattleSituation::Sunny)) {
+	    turn(b,s)["Accuracy"] = turn(b,s)["Accuracy"].toInt() * 5 / 7;
+	}
+    }
+};
+
+struct MMUnThawing : public MM
+{
+    MMUnThawing() {
+	functions["EvenWhenCantMove"] = &ewcm;
+    }
+
+    static void ewcm(int s, int, BS &b) {
+	if (b.poke(s).status() == Pokemon::Frozen) {
+	    b.notify(BattleSituation::All, BattleSituation::StatusMessage, s, qint8(BattleSituation::FreeFrozen));
+	    b.healStatus(s, Pokemon::Frozen);
+	}
+    }
+};
+
+struct MMWeatherBall : public MM
+{
+    MMWeatherBall() {
+	functions["MoveSettings"] = &ms;
+    }
+
+    static void ms (int s, int, BS &b) {
+	int weather = b.weather();
+
+	if (weather != BattleSituation::NormalWeather && b.isWeatherWorking(weather)) {
+	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
+	    switch (weather) {
+		case BattleSituation::Hail: turn(b,s)["Type"] = Move::Ice; break;
+		case BattleSituation::SandStorm: turn(b,s)["Type"] = Move::Rock; break;
+		case BattleSituation::Sunny: turn(b,s)["Type"] = Move::Fire; break;
+		case BattleSituation::Rain: turn(b,s)["Type"] = Move::Water; break;
+	    }
+	}
+    }
+};
+
+struct MMHealingWish : public MM
+{
+    MMHealingWish() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	addFunction(turn(b,s), "AfterSwitchIn", "HealingWish", &asi);
+    }
+
+    static void asi(int s, int, BS &b) {
+	if (!b.koed(s)) {
+	    b.sendMoveMessage(61,0,s,type(b,s));
+	    b.healLife(s,b.poke(s).totalLifePoints());
+	    b.changeStatus(s, Pokemon::Fine);
+	}
+    }
+};
+
+struct MMPowerTrick : public MM
+{
+    MMPowerTrick() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	std::swap(poke(b,s)["Stat1"], poke(b,s)["Stat2"]);
+	b.sendMoveMessage(62,0,s,type(b,s));
+    }
+};
+
+/* Heal block:
+   For 5 turns, the target cannot select or execute any of the following moves:
+
+If Pokémon under the effect of Heal Block receives the effects of Wish, Wish will fail to heal. If a Pokemon uses Wish, is hit by Heal Block, and then switches out to another Pokemon, Wish will heal that Pokemon.
+
+Aqua Ring and Ingrain do not heal their user while under the effects of Heal Block.
+
+Leech Seed can be used and will still damage its target, but will not heal the user. Absorb, Drain Punch, Dream Eater, Giga Drain, Leech Life, and Mega Drain will also damage their target, but will not heal the user
+*/
+
+struct MMHealBlock: public MM
+{
+    MMHealBlock() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+    static void uas(int s, int t, BS &b) {
+	poke(b,t)["HealBlockCount"] = 5;
+	addFunction(poke(b,t), "EndTurn", "HealBlock", &et);
+	addFunction(turn(b,t), "MovePossible", "HealBlock", &mp);
+	addFunction(poke(b,t), "MovesPossible", "HealBlock", &msp);
+	b.sendMoveMessage(59,0,s,type(b,s),t);
+    }
+    static void et(int s, int , BS &b) {
+	inc(poke(b,s)["HealBlockCount"], -1);
+	int count = poke(b,s)["HealBlockCount"].toInt();
+
+	if (count == 0) {
+	    b.sendMoveMessage(59,2,s,Move::Psychic);
+	    removeFunction(poke(b,s), "EndTurn", "HealBlock");
+	    removeFunction(poke(b,s), "MovesPossible", "HealBlock");
+	}
+    }
+
+    struct FM : public QSet<int> {
+	FM() {
+	    /* Heal Order, Milk Drink, Moonlight, Morning Sun, Recover, Rest, Roost, Slack Off, Softboiled, Swallow, Synthesis, and Wish; */
+	    (*this) << 178 << 246 << 256 << 257 << 312 << 316 << 333 << 363 << 375 << 405 << 411 << 458;
+	}
+    };
+    static FM forbidden_moves;
+
+    static void msp(int s, int, BS &b) {
+	for (int i = 0; i < 4; i++) {
+	    if (forbidden_moves.contains(b.move(s,i))) {
+		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
+	    }
+	}
+    }
+
+    static void mp(int s, int, BS &b) {
+	if(forbidden_moves.contains(b.move(s,poke(b,s)["MoveSlot"].toInt()))) {
+	    turn(b,s)["ImpossibleToMove"] = true;
+	    b.sendMoveMessage(59,1,s,Move::Psychic,s,b.move(s, poke(b,s)["MoveSlot"].toInt()));
+	}
+    }
+};
+
+MMHealBlock::FM MMHealBlock::forbidden_moves;
+
+struct MMFling : public MM
+{
+    MMFling() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+	functions["BeforeTargetList"] = &btl;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (!turn(b,s).contains("FlingItem")) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void btl(int s, int, BS &b) {
+	if (b.poke(s).item() != 0 && b.hasWorkingItem(s, b.poke(s).item())) {
+	    turn(b,s)["FlingItem"] = b.poke(s).item();
+	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * ItemInfo::Power(b.poke(s).item());
+	    b.disposeItem(s);
+	}
+    }
+
+    static void uas (int s, int t, BS &b) {
+	int item = turn(b,s)["FlingItem"].toInt();
+	switch (item) {
+	    case 71: b.inflictStatus(t, Pokemon::Burnt); break; /*flame orb*/
+	    case 141: b.inflictStatus(t, Pokemon::DeeplyPoisoned); break; /*toxic orb*/
+	    case 87: case 118: turn(b,t)["Flinched"] = true; break; /* king rock, razor fang */
+	    case 92: b.inflictStatus(t, Pokemon::Paralysed); break; /* light ball */
+	    case 166: b.inflictStatus(t, Pokemon::Poisoned); break; /* poison barb */
+	    case 17: case 37: /* mental herb, white herb */
+		int oppitem = b.poke(t).item();
+		ItemEffect::activate("AfterSetup", item, t,s,b);
+		b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
+		break;
+	}
+    }
+};
+
+struct MMJumpKick : public MM
+{
+    MMJumpKick() {
+	functions["AttackSomehowFailed"] = &asf;
+    }
+
+    static void asf(int s, int t, BS &b) {
+	int typemod;
+	int typeadv[] = {b.getType(t, 1), b.getType(t, 2)};
+	int type = MM::type(b,s);
+	if (typeadv[0] == Pokemon::Ghost) {
+	    typemod = TypeInfo::Eff(type, typeadv[1]);
+	} else if (typeadv[1] == Pokemon::Ghost) {
+	    typemod = TypeInfo::Eff(type, typeadv[0]);
+	} else {
+	    typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
+	}
+	turn(b,s)["TypeMod"] = typemod;
+	int damage = std::min(b.calculateDamage(s,t), b.poke(t).totalLifePoints()/2);
+	b.sendMoveMessage(64,0,s,Move::Fighting);
+	b.inflictDamage(s, damage, s, true);
+    }
+};
+
+struct MMDefenseCurl : public MM
+{
+    MMDefenseCurl() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	poke(b,s)["DefenseCurl"] = true;
+    }
+};
+
+struct MMIceBall : public MM
+{
+    MMIceBall() {
+	functions["UponAttackSuccessful"] = &uas;
+	functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int, BS &b) {
+	if (poke(b,s).contains("DefenseCurl")) {
+	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
+	}
+	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * (1+poke(b,s)["IceBallCount"].toInt());
+    }
+
+    static void uas(int s, int, BS &b) {
+	int count = poke(b,s)["IceBallCount"].toInt();
+	if (count == 15) {
+	    poke(b,s)["IceBallCount"] = 0;
+	} else {
+	    poke(b,s)["IceBallCount"] = count*2+1;
+	}
+	poke(b,s)["LastBallTurn"] = b.turn();
+	addFunction(poke(b,s), "TurnSettings", "IceBall", &ts);
+    }
+
+    static void ts(int s, int t, BS &b) {
+	if (poke(b,s).contains("LastBallTurn") && poke(b,s)["LastBallTurn"].toInt() + 1 == b.turn() && poke(b,s)["IceBallCount"].toInt() > 0) {
+	    turn(b,s)["NoChoice"] = true;
+	    MoveEffect::setup(poke(b,s)["LastMoveUsed"].toInt(),s,t,b);
+	}
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -2061,6 +2322,7 @@ MMWeather::WI MMWeather::weather_items;
     *EvenWhenCantMove -- turn: Will be called before even status check, useful for attacks like fly etc
     *BeforeTakingDamage -- turn: explicit
     *UponSwitchIn -- turn: When a new poke is switched in, like for Baton Pass/U-turn
+    *AfterSwitchIn -- turn: after it's switched in, i.e after the entry effects are called
     *MoveSettings -- turn: Just after losing PP, and before chosing the target
     *BeforeTargetList -- turn: Before processing the attack for each target
     *BeforeCalculatingDamage -- turn: The right moment to change the base power of the attack if needed
@@ -2073,7 +2335,7 @@ MMWeather::WI MMWeather::weather_items;
     *MovesPossible -- poke: at the beginning of the turn, tells if each move is possible or not
     *AfterKoedByStraightAttack -- poke: when koed by an attack
     *BlockTurnEffects -- poke: Called before calling effects for a turn event, to see if it's blocked. Used by Substitute
-    *MissAttack -- turn: When an attack misses, there may be things todo (Rollout, FuryCutter, High Jump Kick
+    *AttackSomehowFailed -- turn, only offensive moves: When an attack fails, or misses, there may be something to do (jump kick, rollout,..)
 */
 
 #define REGISTER_MOVE(num, name) mechanics[num] = MM##name(); names[num] = #name; nums[#name] = num;
@@ -2117,14 +2379,14 @@ void MoveEffect::init()
     REGISTER_MOVE(35, Endure);
     REGISTER_MOVE(36, Eruption); /* Eruption, Water sprout */
     REGISTER_MOVE(37, FaintUser); /* Memento, part explosion, selfdestruct, lunar dance, healing wish... */
-    /* Free effect: 38 */
+    REGISTER_MOVE(38, Blizzard);
     REGISTER_MOVE(39, Facade);
     REGISTER_MOVE(40, FakeOut);
     REGISTER_MOVE(41, FalseSwipe);
     REGISTER_MOVE(42, Feint);
     REGISTER_MOVE(43, 0HKO); /* Fissure, Guillotine, Horn Drill, Sheer cold */
     REGISTER_MOVE(44, Flail); /* Flail, Reversal */
-    /* Fling */
+    REGISTER_MOVE(45, Fling);
     REGISTER_MOVE(46, FocusEnergy);
     REGISTER_MOVE(47, FocusPunch);
     /* Follow Me -- does nothing in singles */
@@ -2138,8 +2400,14 @@ void MoveEffect::init()
     REGISTER_MOVE(56, GyroBall);
     REGISTER_MOVE(57, Weather);
     REGISTER_MOVE(58, Attract);
+    REGISTER_MOVE(59, HealBlock);
     REGISTER_MOVE(60, HealHalf);
+    REGISTER_MOVE(61, HealingWish);
+    REGISTER_MOVE(62, PowerTrick);
+    /* Helping Hand does nothing in singles */
+    REGISTER_MOVE(64, JumpKick);
     REGISTER_MOVE(65, HiddenPower);
+    REGISTER_MOVE(66, IceBall);
     REGISTER_MOVE(70, KnockOff);
     REGISTER_MOVE(72, LeechSeed);
     REGISTER_MOVE(91, NightShade);
@@ -2148,6 +2416,7 @@ void MoveEffect::init()
     REGISTER_MOVE(103, RapidSpin);
     REGISTER_MOVE(106, Rest);
     REGISTER_MOVE(107, Roar);
+    REGISTER_MOVE(118, WeatherBall);
     REGISTER_MOVE(120, ThunderWave);
     REGISTER_MOVE(121, Spikes);
     REGISTER_MOVE(124, StealthRock);
@@ -2163,5 +2432,8 @@ void MoveEffect::init()
     REGISTER_MOVE(149, Haze);
     REGISTER_MOVE(150, Roost);
     REGISTER_MOVE(151, Ingrain);
+    REGISTER_MOVE(152, Thunder);
+    REGISTER_MOVE(153, UnThawing);
+    REGISTER_MOVE(154, DefenseCurl);
 }
 

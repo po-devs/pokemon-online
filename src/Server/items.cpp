@@ -397,6 +397,47 @@ struct IMQuickClaw : public IM
     }
 };
 
+struct IMMentalHerb : public IM
+{
+    IMMentalHerb() {
+	functions["AfterSetup"] = &as;
+    }
+
+    static void as(int s, int, BS &b) {
+	if (poke(b,s).contains("AttractedTo")) {
+	    int seducer = poke(b,s)["AttractedTo"].toInt();
+	    if (poke(b,seducer).contains("Attracted") && poke(b,seducer)["Attracted"].toInt() == s) {
+		b.sendItemMessage(7,s);
+		removeFunction(poke(b,s), "DetermineAttackPossible", "Attract");
+		poke(b,s).remove("AttractedTo");
+		b.disposeItem(s);
+	    }
+	}
+    }
+};
+
+struct IMWhiteHerb : public IM
+{
+    IMWhiteHerb() {
+	functions["AfterSetup"] = &as;
+	functions["AfterStatChange"] = &as;
+    }
+
+    static void as(int s, int, BS &b) {
+	bool act = false;
+	for (int i = 1; i <= 7; i++) {
+	    if (poke(b,s)["Boost" + QString::number(i)].toInt() < 0) {
+		act = true;
+		poke(b,s)["Boost"+ QString::number(i)] = 0;
+	    }
+	}
+	if (act) {
+	    b.sendItemMessage(3,s);
+	    b.disposeItem(s);
+	}
+    }
+};
+
 
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
@@ -404,9 +445,11 @@ void ItemEffect::init()
 {
     REGISTER_ITEM(1, StatModifier);
     REGISTER_ITEM(2, ChoiceItem);
+    REGISTER_ITEM(3, WhiteHerb);
     REGISTER_ITEM(4, FocusBand);
     REGISTER_ITEM(5, FocusSash);
     REGISTER_ITEM(6, Lagging);
+    REGISTER_ITEM(7, MentalHerb);
     REGISTER_ITEM(8, BoostPokeStat);
     REGISTER_ITEM(9, BoostCategory);
     REGISTER_ITEM(10,BoostType);
