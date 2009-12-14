@@ -1,4 +1,4 @@
-#156 is free
+#82,156 is free
 1#leech
 
 
@@ -82,7 +82,7 @@
 
 154#defense curl
 
-155#defog
+77#defog
 26#destiny bond
 27#detect
 13-1_110*2_232*2
@@ -146,7 +146,7 @@
 47#focus punch
 48#follow me
 
-84-7#7 is ghost -- focus sight
+84-7#7 is ghost -- fore sight
 11
 49-1#frustration
 
@@ -234,11 +234,11 @@
 79#me first
 12#mean look
 
-1
+1#mega drain
 
 
 
-37
+37#memento
 22-0&1_3#metal burst
 
 
@@ -246,7 +246,7 @@
 80#metronome
 60#healing - milk drink
 81#mimic
-82#mind reader
+
 83#minimize
 84-16#16 is dark -- miracle eye
 22-1_4#mirror coat

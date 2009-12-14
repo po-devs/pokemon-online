@@ -114,6 +114,7 @@ public:
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
     int move(int player, int slot);
+    bool hasMove(int player, int move);
     int weather();
     int getType(int player, int slot);
     bool isFlying(int player);

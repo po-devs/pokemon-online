@@ -26,4 +26,19 @@ struct MoveEffect : public QVariantHash
     static void init();
 };
 
+struct MirrorMoveAmn : public QSet<int>
+{
+    /*
+Mirror Move cannot replicate the following moves:
+Acupressure, Chatter, Counter, Curse, Encore, Doom Desire, Feint, Focus Punch, Future Sight, Helping Hand, Mimic, Mirror Coat, Role Play, Psych Up, Sketch, Spit Up, Struggle, and Transform
+
+Mirror Move cannot replicate moves that call other moves, nor the moves that are called.
+These moves include: Me First, Nature Power. These moves are not added to the Mirror Move user's 'memory'.
+*/
+    MirrorMoveAmn() {
+	(*this) << 4 << 58 <<  70 << 78 << 92 << 114 << 128 << 144 << 154 << 182 << 247 << 251 << 330 << 298 << 358 << 383 << 394 << 432;
+	(*this) << 233 << 265;
+    }
+};
+
 #endif // MOVES_H
