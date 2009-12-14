@@ -82,6 +82,7 @@ public slots:
     void forfeitBattle();
     /* shows the context menu for that player */
     void showContextMenu(const QPoint&);
+    void changeTeam();
 signals:
     void done();
 

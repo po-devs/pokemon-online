@@ -58,6 +58,18 @@ void Client::showContextMenu(const QPoint &requested)
     }
 }
 
+void Client::changeTeam()
+{
+    QSettings settings;
+    QString newLocation;
+
+    if (loadTTeamDialog(*myteam, settings.value("team_location").toString(), &newLocation))
+    {
+        settings.setValue("team_location", newLocation);
+        relay().sendTeam(*myteam);
+    }
+}
+
 void Client::sendText()
 {
     relay().sendMessage(myline->text());
@@ -68,7 +80,7 @@ QMenuBar * Client::createMenuBar(MainWindow *w)
 {
     QMenuBar *menuBar = new QMenuBar();
     QMenu *menuFichier = menuBar->addMenu("&File");
-    menuFichier->addAction(tr("&Load Team"));/*,this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);*/
+    menuFichier->addAction(tr("&Change Team"),this,SLOT(changeTeam()),Qt::CTRL+Qt::Key_C);
     //menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
     QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
     QStringList style = QStyleFactory::keys();
