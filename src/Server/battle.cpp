@@ -16,6 +16,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2)
     mycurrentpoke[1] = -1;
 }
 
+MirrorMoveAmn amn;
+
 BattleSituation::~BattleSituation()
 {
     /* releases the thread */
@@ -306,7 +308,7 @@ void BattleSituation::analyzeChoice(int player)
     if (choice[player].attack()) {
 	if (!koed(player)) {
 	    if (turnlong[player].contains("NoChoice"))
-		useAttack(player, choice[player].numSwitch, false, true);
+		useAttack(player, choice[player].numSwitch);
 	    else
 		useAttack(player, choice[player].numSwitch);
 	}
@@ -435,6 +437,10 @@ void BattleSituation::sendPoke(int player, int pok)
     pokelong[player]["Type1"] = PokemonInfo::Type1(poke(player).num());
     pokelong[player]["Type2"] = PokemonInfo::Type2(poke(player).num());
     pokelong[player]["Ability"] = poke(player).ability();
+    for (int i = 0; i < 4; i++) {
+	pokelong[player]["Move" + QString::number(i)] = poke(player).move(i).num();
+    }
+
     for (int i = 1; i <= 6; i++)
 	pokelong[player][QString("Stat%1").arg(i)] = poke(player).normalStat(i);
     pokelong[player]["Level"] = poke(player).level();
@@ -706,6 +712,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (!testStatus(player)) {
 	return;
     }
+
     callpeffects(player, player, "DetermineAttackPossible");
     if (turnlong[player]["ImpossibleToMove"].toBool() == true) {
 	return;
@@ -759,6 +766,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     callieffects(player, player, "BeforeTargetList");
 
     foreach(int target, targetList) {
+	if (player != target && !specialOccurence && !amn.contains(attack)) {
+	    pokelong[target]["MirrorMoveMemory"] = attack;
+	}
+
 	turnlong[player]["Failed"] = false;
 	turnlong[player]["FailingMessage"] = true;
 	if (target != -1 && koed(target)) {
@@ -772,20 +783,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             qDebug() << "Going offensive";
 	    int type = turnlong[player]["Type"].toInt(); /* move type */
 	    int typeadv[] = {getType(target, 1), getType(target, 2)};
-	    int typemod;
-            typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
-	    if (type == Move::Ground)
-	    {
-		if (isFlying(target)) {
-		    typemod = 0;
-		} else if (typeadv[0] == Pokemon::Flying) {
-		    typemod = TypeInfo::Eff(Move::Ground, typeadv[1]);
-		} else if (typeadv[1] == Pokemon::Flying) {
-		    typemod = TypeInfo::Eff(Move::Ghost, typeadv[0]);
-                }
-            }
+	    int typepok[] = {getType(player, 1), getType(player, 2)};
+	    int typeffs[] = {TypeInfo::Eff(type, typeadv[0]),TypeInfo::Eff(type, typeadv[1])};
+	    int typemod = 1;
+	    bool fly = type == Move::Ground && !isFlying(target);
 
-	    int typepok[] = {getType(player,1), getType(player,2)};
+	    for (int i = 0; i < 2; i++) {
+		if (typeffs[i] != 0 || ((!fly || typepok[i] != Pokemon::Flying) && !pokelong[target].value(QString::number(typeadv[i])+"Sleuthed").toBool()))
+		    typemod *= typeffs[i];
+	    }
+
 	    int stab = 2 + (type==typepok[0] || type==typepok[1]);
 
 	    turnlong[player]["Stab"] = stab;
@@ -851,8 +858,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
 		applyMoveStatMods(player, target);
 
-		if (!specialOccurence) {
-		    battlelong["LastMoveSuccesfullyUsed"] = attack;
+		battlelong["LastMoveSuccesfullyUsed"] = attack;
+			     /* Chatter Mimic Sketch Struggle  */
+		if (!specialOccurence && attack != 247 && attack != 358 && attack != 394 && attack != 432) {
 		    pokelong[player]["LastMoveSuccessfullyUsed"] = attack;
 		    pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
 		}
@@ -866,7 +874,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    if (turnlong[player]["Power"].toInt() > 1)
 		notify(All, Effective, target, quint8(typemod));
 
-	    calleffects(player, target, "AfterAttackSuccessful");
+	    if (!koed(player))
+		calleffects(player, target, "AfterAttackSuccessful");
 	} else {
             qDebug() << "Going tricky";
 	    callpeffects(player, target, "DetermineAttackFailure");
@@ -882,13 +891,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    calleffects(player, target, "BeforeHitting");
 	    applyMoveStatMods(player, target);
 	    calleffects(player, target, "UponAttackSuccessful");
+
+	    battlelong["LastMoveSuccesfullyUsed"] = attack;
+
 	    /* this is put after calleffects to avoid endless sleepTalk/copycat for example */
-	    if (!specialOccurence) {
-		    battlelong["LastMoveSuccesfullyUsed"] = attack;
+	    if (!specialOccurence && attack != 247 && attack != 358 && attack != 394 && attack != 432) {
 		    pokelong[player]["LastMoveSuccessfullyUsed"] = attack;
 		    pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
 	    }
-	    calleffects(player, target, "AfterAttackSuccessful");
+	    if (!koed(player))
+		calleffects(player, target, "AfterAttackSuccessful");
 	}
 	if (turnlong[player]["Type"].toInt() == Move::Fire && poke(target).status() == Pokemon::Frozen) {
 	    notify(All, StatusMessage, target, qint8(FreeFrozen));
@@ -896,6 +908,15 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	}
 	pokelong[target]["LastAttackToHit"] = attack;
     }
+}
+
+bool BattleSituation::hasMove(int player, int move) {
+    for (int i = 0; i < 4; i++) {
+	if (this->move(player, i) == move) {
+	    return true;
+	}
+    }
+    return false;
 }
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
@@ -910,7 +931,8 @@ bool BattleSituation::hasWorkingItem(int player, int it)
 
 int BattleSituation::move(int player, int slot)
 {
-    return poke(player).move(slot);
+    qDebug() << pokelong[player]["Move"+QString::number(slot)].toInt();
+    return pokelong[player]["Move"+QString::number(slot)].toInt();
 }
 
 void BattleSituation::inflictRecoil(int source, int target)
@@ -963,8 +985,14 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 	if (koed(targeted)) {
             continue;
 	}
+
+	if(!self && teamzone[targeted].value("MistCount").toInt() > 0) {
+	    sendMoveMessage(86, 2, player,Pokemon::Ice,target,turnlong[player]["Attack"].toInt());
+	    continue;
+	}
 	if (!self && sub) {
 	    sendMoveMessage(128, 2, player,0,target,turnlong[player]["Attack"].toInt());
+	    continue;
 	}
 
 	/* There maybe different type of changes, aka status & mod in move 'Flatter' */
@@ -1182,6 +1210,10 @@ bool BattleSituation::hasSubstitute(int player)
 
 void BattleSituation::changeStatus(int player, int status)
 {
+    if (poke(player).status() == status) {
+	return;
+    }
+
     notify(All, StatusChange, player, qint8(status));
     poke(player).status() = status;
     if (status == Pokemon::Asleep) {
@@ -1190,6 +1222,7 @@ void BattleSituation::changeStatus(int player, int status)
     if (status == Pokemon::DeeplyPoisoned) {
 	pokelong[player]["ToxicCount"] = 0;
     }
+    callpeffects(player, player,"AfterStatusChange");
 }
 
 void BattleSituation::changeStatus(int team, int poke, int status)
@@ -1259,6 +1292,11 @@ int BattleSituation::calculateDamage(int p, int t)
 
     callieffects(p,t,"BasePowerModifier");
     power = power * (10+move["BasePowerItemModifier"].toInt())/10;
+
+    QString sport = "Sported" + QString::number(type);
+    if (battlelong.contains(sport) && pokelong[battlelong[sport].toInt()].value(sport).toBool()) {
+	power /= 2;
+    }
 
     int damage = ((((level * 2 / 5) + 2) * power * attack / 50) / def);
     damage = damage * ((poke.status() == Pokemon::Burnt && move["Category"].toInt() == Move::Physical) ? PokeFraction(1,2) : PokeFraction(1,1));
@@ -1578,8 +1616,13 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     if (stat <= 5) {
         return PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
     } else if (stat == 7) {
+	/* Accuracy */
         return PokeFraction(std::max(3+boost, 3), std::max(3-boost, 3));
     } else {
+	/* Evasion */
+	if (pokelong[player].value("Sleuthed").toBool() && boost > 0) {
+	    boost = 0;
+	}
 	if (battlelong.value("Gravity").toBool()) {
 	    boost = std::max(boost-2,-6);
 	}

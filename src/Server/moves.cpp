@@ -204,6 +204,10 @@ struct MMBatonPass : public MM
 	c.remove("Move1Used");
 	c.remove("Move2Used");
 	c.remove("Move3Used");
+	c.remove("Move0");
+	c.remove("Move1");
+	c.remove("Move2");
+	c.remove("Move3");
 	/* choice band etc. would force the same move
 		if on both the passed & the passer */
 	c.remove("ChoiceMemory");
@@ -1616,7 +1620,18 @@ struct MMDisable : public MM
 	    return;
 	}
 	int tu = poke(b,t)["LastMoveSuccessfullyUsedTurn"].toInt();
-	if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMove").toBool())) {
+	if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	int move = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
+    	int sl = -1;
+	for (int i = 0; i < 4; i++) {
+	    if (b.move(t, i) == move) {
+		sl = i;
+	    }
+	}
+	if (sl == -1 || b.poke(s).move(sl).PP() == 0 ) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
@@ -1744,7 +1759,7 @@ struct MMEncore : public MM
 	    return;
 	}
 	int tu = poke(b,t)["LastMoveSuccessfullyUsedTurn"].toInt();
-	if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMove").toBool())) {
+	if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
@@ -2593,6 +2608,323 @@ struct MMMagicCoat : public MM
 
 MMMagicCoat::BM MMMagicCoat::bounced_moves;
 
+struct MMDefog : public MM
+{
+    MMDefog() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas (int s, int t, BS &b) {
+	team(b,t).remove("Barrier0Count");
+	team(b,t).remove("Barrier1Count");
+	team(b,t).remove("Spikes");
+	team(b,t).remove("ToxicSpikes");
+	team(b,t).remove("StealthRock");
+	team(b,t).remove("MistCount");
+	b.sendMoveMessage(move(b,s),0,s,type(b,s),t);
+    }
+};
+
+struct MMMagnitude: public MM
+{
+    MMMagnitude() {
+	functions["BeforeCalculatingDamage"] = &bcd;
+	functions["BeforeHitting"] = &bh;
+    }
+
+    static void bcd(int s, int, BS &b) {
+	int randnum = rand()%20;
+
+	int pow, magn;
+
+	switch (randnum) {
+	    case 0: magn = 4; pow = 10; break;
+	    case 1: case 2: magn = 5; pow = 30; break;
+	    case 3: case 4: case 5: case 6: magn = 6; pow = 50; break;
+	    case 7: case 8: case 9: case 10: case 11: case 12: magn = 7; pow = 70; break;
+	    case 13: case 14: case 15: case 16: magn = 8; pow = 90; break;
+	    case 17: case 18: magn = 9; pow = 110; break;
+	    case 19: default: magn = 10; pow = 150; break;
+	}
+
+	turn(b,s)["MagnitudeLevel"] = magn;
+	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * pow;
+    }
+
+    static void bh(int s, int t, BS &b) {
+	b.sendMoveMessage(move(b,s), 0, s, type(b,s), t, turn(b,s)["MagnitudeLevel"].toInt());
+    }
+};
+
+struct MMMeFirst : public MM
+{
+    MMMeFirst() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	/* if has moved or is using a multi-turn move */
+	if (b.koed(t) || turn(b,t).value("HasMoved").toBool() || turn(b,t).value("NoChoice").toBool()) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	int num = turn(b,t).value("Attack").toInt();
+	if (MoveInfo::Power(num) == 0) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	turn(b,s)["MeFirstAttack"] = num;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	removeFunction(turn(b,s), "DetermineAttackFailure", "MeFirst");
+	removeFunction(turn(b,s), "UponAttackSuccessful", "MeFirst");
+	int move = turn(b,s)["MeFirstAttack"].toInt();
+	MoveEffect::setup(move,s,t,b);
+	b.useAttack(s,move,true,true);
+    }
+};
+
+struct MMMetronome : public MM
+{
+    MMMetronome() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	removeFunction(turn(b,s), "UponAttackSuccessful", "Metronome");
+
+	while (1) {
+	    int move = rand() % MoveInfo::NumberOfMoves();
+
+	    if (!b.hasMove(s,move) && !MMAssist::forbidden_moves.contains(move)) {
+		MoveEffect::setup(move,s,t,b);
+		b.useAttack(s,move,true,true);
+		break;
+	    }
+	}
+    }
+};
+
+struct MMMimic : public MM
+{
+    MMMimic() {
+	functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (!poke(b,t).contains("LastMoveSuccessfullyUsedTurn")) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	int tu = poke(b,t)["LastMoveSuccessfullyUsedTurn"].toInt();
+	if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+	int move = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
+	if (b.hasMove(s,move) || move == 245 /*metronome*/) {
+	    turn(b,s)["Failed"] = true;
+	    return;
+	}
+    }
+
+    static void uas(int s, int t, BS &b) {
+	int move = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
+	poke(b,s)["Move" + QString::number(poke(b,s)["MoveSlot"].toInt())] = move;
+	b.changePP(s,move,5);
+	b.sendMoveMessage(81,0,s,type(b,s),t,move);
+    }
+};
+
+struct MMMinimize : public MM
+{
+    MMMinimize() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int , BS &b) {
+	poke(b,s)["Minimize"] = true;
+    }
+};
+
+struct MMMiracleEye : public MM
+{
+    MMMiracleEye() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	poke(b,t)[poke(b,s)["MiracleEye_Arg"].toString() + "Sleuthed"] = true;
+	poke(b,t)["Sleuthed"] = true;
+    }
+};
+
+struct MMMirrorMove : public MM
+{
+    MMMirrorMove() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int , BS &b) {
+	if(!poke(b,s).contains("MirrorMoveMemory")) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int s, int, BS &b) {
+	int t = b.rev(s);
+
+	removeFunction(turn(b,s), "DetermineAttackFailure", "MirrorMove");
+	removeFunction(turn(b,s), "UponAttackSuccessful", "MirrorMove");
+
+	int move = poke(b,s)["MirrorMoveMemory"].toInt();
+	MoveEffect::setup(move,s,t,b);
+	b.useAttack(s,move,true,true);
+    }
+};
+
+struct MMMist : public MM
+{
+    MMMist() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	b.sendMoveMessage(86,0,s,Pokemon::Ice);
+	turn(b,s)["MistCount"] = 5;
+	addFunction(team(b,s), "EndTurn", "Mist", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+	if (team(b,s).value("MistCount") == 0) {
+	    return;
+	}
+
+	inc(team(b,s)["MistCount"], -1);
+	int count = team(b,s)["MistCount"].toInt();
+	if (count == 0) {
+	    b.sendMoveMessage(86,1,s,Pokemon::Ice);
+	}
+    }
+};
+
+struct MMMoonlight : public MM
+{
+    MMMoonlight() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	int weather = b.weather();
+
+	if (weather == BattleSituation::NormalWeather || !b.isWeatherWorking(weather)) {
+	    b.sendMoveMessage(87,0,s,type(b,s));
+	    b.healLife(s, b.poke(s).totalLifePoints()/2);
+	} else if (b.isWeatherWorking(BattleSituation::Sunny)) {
+	    b.sendMoveMessage(87,0,s,type(b,s));
+	    b.healLife(s, b.poke(s).totalLifePoints()*2/3);
+	} else {
+	    b.sendMoveMessage(87,0,s,type(b,s));
+	    b.healLife(s, b.poke(s).totalLifePoints()/4);
+	}
+    }
+};
+
+struct MMMudSport : public MM
+{
+    MMMudSport() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	int move = MM::move(b,s);
+	b.sendMoveMessage(88, move == 260 ? 0 : 1, s, type(b,s));
+	int type = poke(b,s)["MudSport_Arg"].toInt();
+	poke(b,s)["Sported" + QString::number(type)] = true;
+	b.battlelong["Sported"+ QString::number(type)] = s;
+    }
+};
+
+struct MMNightMare : public MM
+{
+    MMNightMare() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int, int t, BS &b) {
+	b.sendMoveMessage(92, 0, t, Pokemon::Ghost);
+	poke(b,t)["HavingNightmares"] = true;
+	addFunction(poke(b,t),"AfterStatusChange", "NightMare", &asc);
+	addFunction(poke(b,t),"EndTurn", "NightMare", &et);
+    }
+
+    static void asc(int s, int, BS &b) {
+	removeFunction(poke(b,s),"AfterStatusChange", "NightMare");
+	removeFunction(poke(b,s),"EndTurn", "NightMare");
+    }
+
+    static void et(int s, int, BS &b) {
+	if (!b.koed(s) && b.poke(s).status() == Pokemon::Asleep) {
+	    b.sendMoveMessage(92,0,s,Pokemon::Ghost);
+	    b.inflictDamage(s, b.poke(s).totalLifePoints() / 4, s, false);
+	}
+    }
+};
+
+struct MMOutrage : public MM {
+    MMOutrage() {
+	functions["UponAttackSuccessful"] = &uas;
+	functions["AfterAttackSuccessful"] = &aas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	int count = poke(b,s)["OutrageCount"].toInt();
+	if (count == 0) {
+	    poke(b,s)["OutrageCount"] = 1 + (rand() % 2);
+	    addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
+	    poke(b,s)["OutrageMove"] = move(b,s);
+	} else {
+	    inc(poke(b,s)["OutrageCount"], -1);
+	}
+    }
+
+    static void aas(int s, int, BS &b) {
+	int count = poke(b,s)["OutrageCount"].toInt();
+	if (count == 0) {
+	    removeFunction(poke(b,s), "TurnSettings", "Outrage");
+	    b.sendMoveMessage(93,0,s,type(b,s));
+	    b.inflictConfused(s);
+	}
+    }
+
+    static void ts(int s, int, BS &b) {
+	int count = poke(b,s)["OutrageCount"].toInt();
+	if (count > 0) {
+	    turn(b,s)["NoChoice"] = true;
+	    MoveEffect::setup(poke(b,s)["OutrageMove"].toInt(),s,b.rev(s),b);
+	}
+    }
+};
+
+struct MMPresent : public MM {
+    MMPresent() {
+	functions["BeforeTargetList"] = &btl;
+	functions["CustomAttackingDamage"] = &uas;
+    }
+
+    static void btl(int s, int, BS &b) {
+	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 40 * (rand() % 4);
+    }
+
+    static void uas(int s, int t, BS &b) {
+	b.sendMoveMessage(96,0,s,type(b,s),t);
+	b.healLife(t, 80);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -2619,6 +2951,7 @@ MMMagicCoat::BM MMMagicCoat::bounced_moves;
     *AfterKoedByStraightAttack -- poke: when koed by an attack
     *BlockTurnEffects -- poke: Called before calling effects for a turn event, to see if it's blocked. Used by Substitute
     *AttackSomehowFailed -- turn, only offensive moves: When an attack fails, or misses, there may be something to do (jump kick, rollout,..)
+    *StatusChange -- poke
 */
 
 #define REGISTER_MOVE(num, name) mechanics[num] = MM##name(); names[num] = #name; nums[#name] = num;
@@ -2701,9 +3034,26 @@ void MoveEffect::init()
     REGISTER_MOVE(74, LockOn);
     REGISTER_MOVE(75, LuckyChant);
     REGISTER_MOVE(76, MagicCoat);
+    REGISTER_MOVE(77, Defog);
+    REGISTER_MOVE(78, Magnitude);
+    REGISTER_MOVE(79, MeFirst);
+    REGISTER_MOVE(80, Metronome);
+    REGISTER_MOVE(81, Mimic);
+    /* 82 is free */
+    REGISTER_MOVE(83, Minimize);
+    REGISTER_MOVE(84, MiracleEye);
+    REGISTER_MOVE(85, MirrorMove);
+    REGISTER_MOVE(86, Mist);
+    REGISTER_MOVE(87, Moonlight);
+    REGISTER_MOVE(88, MudSport);
+    /* Natural Gift */
+    /* Nature Power */
     REGISTER_MOVE(91, NightShade);
+    REGISTER_MOVE(92, NightMare);
+    REGISTER_MOVE(93, Outrage);
     REGISTER_MOVE(94, PainSplit);
     REGISTER_MOVE(95, PerishSong);
+    REGISTER_MOVE(96, Present);
     REGISTER_MOVE(103, RapidSpin);
     REGISTER_MOVE(106, Rest);
     REGISTER_MOVE(107, Roar);

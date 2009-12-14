@@ -341,7 +341,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ice).name() + "'>" + escapeHtml(tr("%1 is frozen solid!")).arg(nick(self)) + "</span>");
 		    break;
 		case FreeFrozen:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tr("%1 was defrosted!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tr("%1 thawed out!")).arg(nick(self)) + "</span>");
 		    break;
 	    }
 	}

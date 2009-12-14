@@ -75,8 +75,8 @@ Reflect raised %ts's team defense!|Light Screen raised %ts's team special defens
 %s took aim at %f!
 %ts's team is protected from critical hits!|%ts's lucky chant wore off!
 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!
-
-
+%s cleared the field around %tf's team!
+Magnitude level %d!
 
 
 %s copied %m!
@@ -84,9 +84,9 @@ Reflect raised %ts's team defense!|Light Screen raised %ts's team special defens
 
 
 
-A mist surrounds %ts's team!|%ts's mist wore off!
-
-The battlefield is covered in mud!|The battlefield is covered with water!
+A mist surrounds %ts's team!|%ts's mist wore off!|The mist prevents %f from having its stats lowered!
+%s regained health!|%s regained a lot of health!|%s regained little health!
+%s covered the battle field with mud!|%s covered the battle field with water!
 
 
 
@@ -94,7 +94,7 @@ The battlefield is covered in mud!|The battlefield is covered with water!
 %s calmed down!
 The battlers shared their pain!
 A sorrowful melody could be heard by everyone on the field.|%s's perish count fell to %d.
-
+%s's present healed %f 80 HP!
 %s copied %f's boosts!
 %s moved its status onto %f!
 
@@ -150,3 +150,7 @@ Poison spikes were scattered around %tf's team!|The poison spikes disappeared ar
 A black haze covered the battlefield!
 %s landed on the ground!
 %s planted roots on the ground! %'s roots absorbed nutrients.
+
+
+
+
