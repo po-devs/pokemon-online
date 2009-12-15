@@ -49,4 +49,22 @@ inline int operator *(int num, const PokeFraction &p)
     return num * p.up / p.down;
 }
 
+/* just a little convenience */
+inline QString tu(QString &in)
+{
+    if (!in[0].isUpper())
+	in[0] = in[0].toUpper();
+    return in;
+}
+
+inline QString tu(const QString &in) {
+    if (in[0].isUpper())
+	return in;
+    else {
+	QString str2 = in;
+	str2[0] = in[0].toUpper();
+	return str2;
+    }
+}
+
 #endif // FUNCTIONS_H
