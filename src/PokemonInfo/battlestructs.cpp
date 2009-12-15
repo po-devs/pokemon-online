@@ -229,12 +229,18 @@ TeamBattle::TeamBattle(const TeamInfo &other)
 
 PokeBattle & TeamBattle::poke(int i)
 {
-    return m_pokemons[i];
+    if (i >= 0 && i < 6)
+	return m_pokemons[i];
+    else
+	return m_pokemons[0];
 }
 
 const PokeBattle & TeamBattle::poke(int i) const
 {
-    return m_pokemons[i];
+    if (i >= 0 && i < 6)
+	return m_pokemons[i];
+    else
+	return m_pokemons[0];
 }
 
 QDataStream & operator >> (QDataStream &in, TeamBattle &te)

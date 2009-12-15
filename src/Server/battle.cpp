@@ -538,6 +538,10 @@ void BattleSituation::sendBack(int player)
     if (!koed(opp) && turnlong[opp].value("Attack").toInt() == 305 && !turnlong[opp]["HasMoved"].toBool()) {
 	turnlong[opp]["Power"] = turnlong[opp]["Power"].toInt() * 2;
 	analyzeChoice(opp);
+
+	if (koed(player)) {
+	    Mechanics::removeFunction(turnlong[player],"UponSwitchIn","BatonPass");
+	}
     }
 
     if (!koed(player))
