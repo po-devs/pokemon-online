@@ -2898,12 +2898,14 @@ struct MMOutrage : public MM
 	    removeFunction(poke(b,s), "TurnSettings", "Outrage");
 	    b.sendMoveMessage(93,0,s,type(b,s));
 	    b.inflictConfused(s);
+	} else {
+	    poke(b,s)["NextOutrageTurn"] = b.turn() + 1;
 	}
     }
 
     static void ts(int s, int, BS &b) {
 	int count = poke(b,s)["OutrageCount"].toInt();
-	if (count > 0) {
+	if (count > 0 && poke(b,s).value("NextOutrageTurn").toInt() == b.turn()) {
 	    turn(b,s)["NoChoice"] = true;
 	    MoveEffect::setup(poke(b,s)["OutrageMove"].toInt(),s,b.rev(s),b);
 	}
@@ -3032,6 +3034,157 @@ struct MMPunishment : public MM
     }
 };
 
+struct MMRage : public MM
+{
+    MMRage() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	poke(b,s)["RageTurn"] = b.turn();
+	addFunction(poke(b,s), "UponOffensiveDamageReceived", "Rage", &uodr);
+    }
+
+    static void uodr(int s, int, BS &b) {
+	int tt = poke(b,s)["RageTurn"].toInt();
+
+	if (!b.koed(s) && (tt = b.turn() || (tt +1 == b.turn() && !turn(b,s).value("HasMoved").toBool()))) {
+	    b.gainStatMod(s,Attack,1);
+	}
+    }
+};
+
+struct MMSafeGuard : public MM
+{
+    MMSafeGuard() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+	b.sendMoveMessage(109,0,s,type(b,s));
+	turn(b,s)["SafeGuardCount"] = 5;
+	addFunction(team(b,s), "EndTurn", "SafeGuard", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+	if (team(b,s).value("SafeGuardCount") == 0) {
+	    return;
+	}
+
+	inc(team(b,s)["SafeGuardCount"], -1);
+	int count = team(b,s)["SafeGuardCount"].toInt();
+	if (count == 0) {
+	    b.sendMoveMessage(109,1,s,Pokemon::Psychic);
+	}
+    }
+};
+
+struct MMSketch : public MM
+{
+    MMSketch() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	int move = poke(b,t)["LastMoveUsed"].toInt();
+	/* Struggle, chatter */
+	if (b.koed(t) || move == 394 || move == 146) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+
+    static void uas(int s, int t, BS &b) {
+	int mv = poke(b,t)["LastMoveUsed"].toInt();
+	b.sendMoveMessage(111,0,s,type(b,s),t,mv);
+	int slot = poke(b,s)["MoveSlot"].toInt();
+	b.poke(s).move(slot).num() = mv;
+	b.poke(s).move(slot).load();
+	b.changePP(s,slot,2);
+	b.changePP(s,slot,b.poke(s).move(slot).totalPP());
+    }
+};
+
+struct MMSleepingUser : public MM
+{
+    MMSleepingUser() {
+	functions["EvenWhenCantMove"] = &ewcm;
+	functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void ewcm(int s, int, BS &b) {
+	turn(b,s)["SleepingMove"] = true;
+    }
+
+    static void daf(int s, int, BS &b) {
+	if (b.poke(s).status() != Pokemon::Asleep) {
+	    turn(b,s)["Failed"] = true;
+	}
+    }
+};
+
+struct MMSleepTalk : public MM
+{
+    MMSleepTalk() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    struct FM : public QSet<int> {
+	FM() {
+	    /*
+       * Assist
+    * Bide
+    * Bounce
+    * Chatter
+    * Copycat
+    * Dig
+    * Dive
+    * Fly
+    * Focus Punch
+    * Me First
+    * Metronome
+    * Mirror Move
+    * Shadow Force
+    * Skull Bash
+    * Sky Attack
+    * Sleep Talk
+    * SolarBeam
+    * Razor Wind
+    * Uproar
+    * Any move the user cannot choose for use, including moves with zero PP
+*/
+	    (*this) << 17 << 30 << 41 << 58 << 67 << 87 << 90 << 142 << 145 << 233 << 245 << 252 << 349 << 360 << 361 << 367 << 376 << 311 << 441;
+	}
+    };
+
+    static FM forbidden_moves;
+
+    static void daf(int s, int, BS &b) {
+	b.callpeffects(s, s, "MovesPossible");
+	QList<int> mp;
+	for (int i = 0; i < 4; i++) {
+	    if (b.isMovePossible(s,i) && !forbidden_moves.contains(b.move(s,i))) {
+		mp.push_back(i);
+	    }
+	}
+	if (mp.size() == 0) {
+	    turn(b,s)["Failed"] = true;
+	} else {
+	    turn(b,s)["SleepTalkedMove"] = b.move(s, mp[rand()%mp.size()]);
+	}
+    }
+
+    static void uas(int s, int, BS &b) {
+	removeFunction(turn(b,s), "DetermineAttackFailure", "SleepTalk");
+	removeFunction(turn(b,s), "UponAttackSuccessful", "SleepTalk");
+	int mv = turn(b,s)["SleepTalkedMove"].toInt();
+	MoveEffect::setup(mv,s,b.rev(s),b);
+	b.useAttack(s, mv, true);
+    }
+};
+
+MMSleepTalk::FM MMSleepTalk::forbidden_moves;
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -3167,12 +3320,21 @@ void MoveEffect::init()
     REGISTER_MOVE(99, Psywave);
     REGISTER_MOVE(100, Punishment);
     /* 101 is free */
+    REGISTER_MOVE(102, Rage);
     REGISTER_MOVE(103, RapidSpin);
     REGISTER_MOVE(104, RazorWind);
+    /* Recycle */
     REGISTER_MOVE(106, Rest);
     REGISTER_MOVE(107, Roar);
+    /* Role play : remember, no multi-type/wonder guard */
+    REGISTER_MOVE(109, SafeGuard);
+    /* Secret Power */
+    REGISTER_MOVE(111, Sketch);
+    /* Skill swap : remember, no multi-type/wonder guard */
     /* 113 is free */
     /* 114 is free */
+    REGISTER_MOVE(115, SleepingUser);
+    REGISTER_MOVE(116, SleepTalk);
     REGISTER_MOVE(118, WeatherBall);
     REGISTER_MOVE(120, ThunderWave);
     REGISTER_MOVE(121, Spikes);

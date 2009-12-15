@@ -57,7 +57,7 @@ public:
     void requestChoices(); /* request from both players */
     /* Shows what attacks are allowed or not */
     BattleChoices createChoice(int player);
-    bool isMovePossible(int player, int move);
+    bool isMovePossible(int player, int slot);
     /* called just after requestChoice(s) */
     void analyzeChoice(int player);
     void analyzeChoices(); 
@@ -226,7 +226,7 @@ private:
     int mycurrentpoke[2]; /* -1 for koed */
     int myid[2];
     QSet<int> koedPokes;
-
+public:
     /* Calls the effects of source reacting to name */
     void calleffects(int source, int target, const QString &name);
     /* This time the pokelong effects */
