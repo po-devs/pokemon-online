@@ -810,6 +810,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		    typemod *= typeffs[i];
 	    }
 
+	    if (type == Move::Ground && isFlying(target)) {
+		typemod = 0;
+	    }
+
 	    int stab = 2 + (type==typepok[0] || type==typepok[1]);
 
 	    turnlong[player]["Stab"] = stab;
@@ -856,7 +860,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		    notify(All, Hit, target);
 		}
 
-		bool sub = hasSubstitute(player);
+		bool sub = hasSubstitute(target);
 		turnlong[player]["HadSubstitute"] = sub;
 
 		if (turnlong[player]["Power"].toInt() > 1) {
@@ -1223,7 +1227,7 @@ bool BattleSituation::isFlying(int player)
 {
     /* Item 212 is iron ball, ability is levitate */
     return !battlelong.value("Gravity").toBool() && !hasWorkingItem(player, 212) && !pokelong[player].value("Rooted").toBool() &&
-	    (hasWorkingAbility(player, 48) ||  hasType(player, Pokemon::Flying || pokelong[player].value("MagnetRiseCount").toInt() > 0));
+	    (hasWorkingAbility(player, 48) ||  hasType(player, Pokemon::Flying) || pokelong[player].value("MagnetRiseCount").toInt() > 0);
 }
 
 bool BattleSituation::hasSubstitute(int player)
