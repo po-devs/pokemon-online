@@ -77,7 +77,8 @@ public:
 	NoOpponent,
 	Flinch,
 	Recoil,
-	WeatherMessage
+	WeatherMessage,
+	StraightDamage
     };
 
     enum WeatherM
@@ -129,6 +130,7 @@ public:
     void printHtml(const QString &str);
     QString name(bool self) const;
     QString nick(bool self) const;
+    QString rnick(bool self) const;
 
 public slots:
     void receiveInfo(QByteArray);

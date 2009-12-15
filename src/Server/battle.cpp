@@ -306,7 +306,7 @@ void BattleSituation::analyzeChoice(int player)
 {
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice[player].attack()) {
-	if (!koed(player)) {
+	if (!koed(player) && !turnlong[player].value("HasMoved").toBool()) {
 	    if (turnlong[player].contains("NoChoice"))
 		useAttack(player, choice[player].numSwitch);
 	    else
@@ -531,9 +531,17 @@ void BattleSituation::callieffects(int source, int target, const QString &name)
 
 void BattleSituation::sendBack(int player)
 {
-    changeCurrentPoke(player, -1);
-
     notify(All, SendBack, player);
+
+    /* Just calling pursuit directly here, forgive me for this */
+    int opp = rev(player);
+    if (!koed(opp) && turnlong[opp].value("Attack").toInt() == 305 && !turnlong[opp]["HasMoved"].toBool()) {
+	turnlong[opp]["Power"] = turnlong[opp]["Power"].toInt() * 2;
+	analyzeChoice(opp);
+    }
+
+    if (!koed(player))
+	changeCurrentPoke(player, -1);
 }
 
 bool BattleSituation::testAccuracy(int player, int target)
@@ -736,18 +744,20 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	callieffects(player,player, "RegMoveSettings");
     }
 
+    pokelong[player]["LastMoveUsed"] = attack;
+    inc(pokelong[player]["MovesUsed"]);
+
+    calleffects(player, player, "MoveSettings");
+
     if (tellPlayers && !turnlong[player].contains("TellPlayers")) {
 	notify(All, UseAttack, player, qint16(attack));
 	qDebug() << poke(player).nick() << " used " << MoveInfo::Name(attack);
     }
 
-    pokelong[player]["LastMoveUsed"] = attack;
-    inc(pokelong[player]["MovesUsed"]);
-
     if (!specialOccurence)
 	losePP(player, move, 1);
 
-    calleffects(player, player, "MoveSettings");
+
 
     QList<int> targetList;
 
@@ -1366,6 +1376,11 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 											  || turnlong[player].value("CannotBeKoed").toBool())) {
 	    damage = poke(player).lifePoints() - 1;
 	    hp = 1;
+	}
+
+	if (straightattack) {
+	    notify(player, StraightDamage,player, qint16(damage));
+	    notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
 	}
 
 	if (hp <= 0) {

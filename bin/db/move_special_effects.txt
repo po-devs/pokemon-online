@@ -1,4 +1,4 @@
-#82,156 is free
+#82, 101, 113,114 & 156 are free
 1#leech
 
 
@@ -303,7 +303,7 @@
 98#psycho shift
 99#psywave
 100#punishment
-101#pursuit
+
 
 102#rage
 57-2#rain dance
@@ -358,8 +358,8 @@
 
 111#sketch
 112#skill swap
-113#skull bash
-114#sky attack
+104#skull bash
+104#sky attack
 
 60#slack off
 

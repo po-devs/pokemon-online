@@ -102,7 +102,7 @@ A sorrowful melody could be heard by everyone on the field.|%s's perish count fe
 
 
 
-%s prepared a tornado!
+%s prepared a gust of wind!|%s is glowing!|%s lowered its head!
 %s recycled %i!
 
 
@@ -111,13 +111,13 @@ A sorrowful melody could be heard by everyone on the field.|%s's perish count fe
 
 
 %s and %f switched abilities!
-%s lowers its head!
+
 
 
 
 
 %s snatched %f's %m!
-%s's solar beam is charging!
+%s is aborbing sunlight!
 
 Spikes were scattered around %tf's team!|%s is hurt by spikes!
 

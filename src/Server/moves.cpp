@@ -551,7 +551,7 @@ struct MMHiddenPower : public MM
 struct MMFaintUser : public MM
 {
     MMFaintUser() {
-	functions["MoveSettings"] = &ms;
+	functions["BeforeTargetList"] = &ms;
     }
 
     static void ms(int s, int, BS &b) {
@@ -791,7 +791,7 @@ struct MMRest : public MM
     }
 
     static void daf(int s, int, BS &b) {
-	if (b.poke(s).status() == Pokemon::Asleep || b.poke(s).isFull()) {
+	if (b.poke(s).status() == Pokemon::Asleep || b.poke(s).isFull() || b.hasWorkingAbility(s,42)) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -1422,7 +1422,7 @@ struct MMBide : public MM
 		turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
 		turn(b,s)["Power"] = 1;
 		turn(b,s)["Type"] = Pokemon::Curse;
-		addFunction(turn(b,s), "MoveSettings", "Bide", &ms);
+		addFunction(turn(b,s), "BeforeTargetList", "Bide", &ms);
 		addFunction(turn(b,s), "CustomAttackingDamage", "Bide", &ccd);
 		addFunction(turn(b,s), "DetermineAttackFailure", "Bide",&daf);
 	    }
@@ -1990,7 +1990,7 @@ struct MMGrassKnot : public MM
 	} else {
 	    bp = 120;
 	}
-	turn(b,s)["BasePower"] = bp;
+	turn(b,s)["Power"] = bp;
     }
 };
 
@@ -2621,7 +2621,7 @@ struct MMDefog : public MM
 	team(b,t).remove("ToxicSpikes");
 	team(b,t).remove("StealthRock");
 	team(b,t).remove("MistCount");
-	b.sendMoveMessage(move(b,s),0,s,type(b,s),t);
+	b.sendMoveMessage(77,0,s,type(b,s),t);
     }
 };
 
@@ -2652,7 +2652,7 @@ struct MMMagnitude: public MM
     }
 
     static void bh(int s, int t, BS &b) {
-	b.sendMoveMessage(move(b,s), 0, s, type(b,s), t, turn(b,s)["MagnitudeLevel"].toInt());
+	b.sendMoveMessage(78, 0, s, type(b,s), t, turn(b,s)["MagnitudeLevel"].toInt());
     }
 };
 
@@ -2874,7 +2874,8 @@ struct MMNightMare : public MM
     }
 };
 
-struct MMOutrage : public MM {
+struct MMOutrage : public MM
+{
     MMOutrage() {
 	functions["UponAttackSuccessful"] = &uas;
 	functions["AfterAttackSuccessful"] = &aas;
@@ -2909,7 +2910,8 @@ struct MMOutrage : public MM {
     }
 };
 
-struct MMPresent : public MM {
+struct MMPresent : public MM
+{
     MMPresent() {
 	functions["BeforeTargetList"] = &btl;
 	functions["CustomAttackingDamage"] = &uas;
@@ -2924,6 +2926,112 @@ struct MMPresent : public MM {
 	b.healLife(t, 80);
     }
 };
+
+struct MMPsychup : public MM
+{
+    MMPsychup() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas (int s, int t, BS &b ) {
+	b.sendMoveMessage(97,0,s,type(b,s),t);
+	for (int i = 1; i <= 7; i++) {
+	    QString boost = "Boost" + QString::number(i);
+	    poke(b,s)[boost] = poke(b,t)[boost];
+	}
+    }
+};
+
+struct MMPsychoShift : public MM
+{
+    MMPsychoShift() {
+	functions["DetermineAttackFailure"] = &daf;
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+	if (b.poke(s).status() == Pokemon::Fine || b.poke(t).status() != Pokemon::Fine)
+	    turn(b,s)["Failed"] = true;
+    }
+
+    static void uas(int s, int t, BS &b) {
+	b.sendMoveMessage(98,0,s,type(b,s),t);
+	b.inflictStatus(t, b.poke(s).status());
+	b.healStatus(s, b.poke(s).status());
+    }
+};
+
+struct MMPsywave : public MM
+{
+    MMPsywave() {
+	functions["CustomAttackingDamage"] = &cad;
+    }
+
+    static void cad (int s, int t, BS &b) {
+	b.inflictDamage(t, poke(b,s)["Level"].toInt() * (5 + (rand() % 11)) / 10,s,true);
+    }
+};
+
+struct MMRazorWind : public MM
+{
+    MMRazorWind() {
+	functions["MoveSettings"] = &ms;
+    }
+
+    static void ms(int s, int, BS &b) {
+	if (!poke(b,s).contains("ReleaseTurn") || poke(b,s)["ReleaseTurn"].toInt() != b.turn()) {
+	    if (b.hasWorkingItem(s, 22)) {
+		//Power Herb
+		b.sendItemMessage(11,s);
+		b.disposeItem(s);
+	    } else {
+		int mv = move(b,s);
+		/* razor wind, sky attack, skull bash */
+		b.sendMoveMessage(104, mv == 311 ? 0 : (mv == 361 ? 1 : 2), s, type(b,s));
+		/* Skull bash */
+		if (mv == 360) {
+		    b.gainStatMod(s,Defense,1);
+		}
+		poke(b,s)["ChargingMove"] = mv;
+		poke(b,s)["ReleaseTurn"] = b.turn() + 1;
+		turn(b,s)["TellPlayers"] = false;
+		turn(b,s)["Power"] = 0;
+		turn(b,s)["PossibleTargets"] = Move::None;
+		addFunction(poke(b,s), "TurnSettings", "RazorWind", &ts);
+	    }
+	}
+    }
+
+    static void ts(int s, int, BS &b) {
+	if (poke(b,s).value("ReleaseTurn").toInt() != b.turn()) {
+	    removeFunction(poke(b,s), "TurnSettings", "RazorWind");
+	    return;
+	}
+	turn(b,s)["NoChoice"] = true;
+	MoveEffect::setup(poke(b,s)["ChargingMove"].toInt(),s,b.rev(s),b);
+    }
+};
+
+struct MMPunishment : public MM
+{
+    MMPunishment() {
+	functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int t, BS &b) {
+	int boostsum = 0;
+
+	for (int i = 1; i <= 7; i++) {
+	    int temp = poke(b,t)["Boost" + QString::number(i)].toInt();
+	    if (temp > 0) {
+		boostsum += temp;
+	    }
+	}
+
+	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * std::min(60 + 20 * boostsum, 200);
+    }
+};
+
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -3054,9 +3162,17 @@ void MoveEffect::init()
     REGISTER_MOVE(94, PainSplit);
     REGISTER_MOVE(95, PerishSong);
     REGISTER_MOVE(96, Present);
+    REGISTER_MOVE(97, Psychup);
+    REGISTER_MOVE(98, PsychoShift);
+    REGISTER_MOVE(99, Psywave);
+    REGISTER_MOVE(100, Punishment);
+    /* 101 is free */
     REGISTER_MOVE(103, RapidSpin);
+    REGISTER_MOVE(104, RazorWind);
     REGISTER_MOVE(106, Rest);
     REGISTER_MOVE(107, Roar);
+    /* 113 is free */
+    /* 114 is free */
     REGISTER_MOVE(118, WeatherBall);
     REGISTER_MOVE(120, ThunderWave);
     REGISTER_MOVE(121, Spikes);

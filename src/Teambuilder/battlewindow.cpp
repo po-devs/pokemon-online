@@ -65,8 +65,17 @@ QString BattleWindow::nick(bool self) const
     if (self)
 	return info().currentPoke().nick();
     else
+	return "the foe's " + info().opponent.nick();
+}
+
+QString BattleWindow::rnick(bool self) const
+{
+    if (self)
+	return info().currentPoke().nick();
+    else
 	return info().opponent.nick();
 }
+
 
 void BattleWindow::switchTo(int pokezone)
 {
@@ -183,13 +192,13 @@ void BattleWindow::receiveInfo(QByteArray inf)
 		mydisplay->updatePoke(false);
 	    }
 
-	    printLine(tr("%1 sent out %2!").arg(name(self), nick(self)));
+	    printLine(tr("%1 sent out %2!").arg(name(self), rnick(self)));
 
 	    break;
 	}
 	case SendBack:
             std::cout << "Poke sent back!" << std::endl;
-	    printLine(tr("%1 called %2 back!").arg(name(self), nick(self)));
+	    printLine(tr("%1 called %2 back!").arg(name(self), rnick(self)));
 	    switchToNaught(self);
 	    break;
 	case UseAttack:
@@ -199,7 +208,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    in >> attack;
 
 	    //Think to check for crash if attack is invalid
-	    printHtml(tr("%1 used <span style='color:%2'><b>%3</b></span>!").arg(escapeHtml(nick(self)), TypeInfo::Color(MoveInfo::Type(attack)).name(), MoveInfo::Name(attack)));
+	    printHtml(tr("%1 used <span style='color:%2'><b>%3</b></span>!").arg(escapeHtml(tu(nick(self))), TypeInfo::Color(MoveInfo::Type(attack)).name(), MoveInfo::Name(attack)));
 	    break;
 	}
 	case ChangePP:
@@ -239,7 +248,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    break;
 	}
 	case Ko:
-	    printHtml("<b>" + escapeHtml(tr("%1 fainted!").arg(nick(self))) + "</b>");
+	    printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(self)))) + "</b>");
 	    switchToNaught(self);
 	    break;
 	case Hit:
@@ -275,7 +284,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    qint8 stat, boost;
 	    in >> stat >> boost;
 
-	    printLine(tr("%1's %2 %3%4!").arg(nick(self), StatInfo::Stat(stat), abs(boost) > 1 ? tr("sharply ") : "", boost > 0 ? tr("rose") : tr("fell")));
+	    printLine(tu(tr("%1's %2 %3%4!").arg(nick(self), StatInfo::Stat(stat), abs(boost) > 1 ? tr("sharply ") : "", boost > 0 ? tr("rose") : tr("fell"))));
 	    break;
 	case StatusChange:
 	{
@@ -284,25 +293,25 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    switch(status)
 	    {
 		case Pokemon::Asleep:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Psychic).name() + "'>" + escapeHtml(tr("%1 fell asleep!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Psychic).name() + "'>" + escapeHtml(tu(tr("%1 fell asleep!").arg(nick(self)))) + "</span>");
 		    break;
 		case Pokemon::Burnt:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Fire).name() + "'>" + escapeHtml(tr("%1 was burned!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Fire).name() + "'>" + escapeHtml(tu(tr("%1 was burned!").arg(nick(self)))) + "</span>");
 		    break;
 		case Pokemon::Paralysed:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Electric).name() + "'>" + escapeHtml(tr("%1 is paralyzed! It may be unable to move!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Electric).name() + "'>" + escapeHtml(tu(tr("%1 is paralyzed! It may be unable to move!").arg(nick(self)))) + "</span>");
 		    break;
 		case Pokemon::Poisoned:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Poison).name() + "'>" + escapeHtml(tr("%1 was poisoned!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Poison).name() + "'>" + escapeHtml(tu(tr("%1 was poisoned!").arg(nick(self)))) + "</span>");
 		    break;
 		case Pokemon::DeeplyPoisoned:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Poison).name() + "'>" + escapeHtml(tr("%1 was badly poisoned!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Poison).name() + "'>" + escapeHtml(tu(tr("%1 was badly poisoned!").arg(nick(self)))) + "</span>");
 		    break;
 		case Pokemon::Frozen:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ice).name() + "'>" + escapeHtml(tr("%1 was frozen solid!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ice).name() + "'>" + escapeHtml(tu(tr("%1 was frozen solid!").arg(nick(self)))) + "</span>");
 		    break;
 		case -1:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ghost).name() + "'>" + escapeHtml(tr("%1 became confused!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ghost).name() + "'>" + escapeHtml(tu(tr("%1 became confused!").arg(nick(self)))) + "</span>");
 		    break;
 	    }
 	    break;
@@ -314,34 +323,34 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    switch(status)
 	    {
 		case FeelConfusion:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ghost).name() + "'>" + escapeHtml(tr("%1 is confused!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ghost).name() + "'>" + escapeHtml(tu(tr("%1 is confused!").arg(nick(self)))) + "</span>");
 		    break;
 		case HurtConfusion:
 		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ghost).name() + "'>" + escapeHtml("It hurt itself in its confusion!") + "</span>");
 		    break;
 		case FreeConfusion:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tr("%1 snapped out of its confusion!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tu(tr("%1 snapped out of its confusion!").arg(nick(self)))) + "</span>");
 		    break;
 		case PrevParalysed:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Electric).name() + "'>" + escapeHtml(tr("%1 is paralyzed! It can't move!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Electric).name() + "'>" + escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(self)))) + "</span>");
 		    break;
 		case FeelAsleep:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Psychic).name() + "'>" + escapeHtml(tr("%1 is fast asleep!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Psychic).name() + "'>" + escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(self)))) + "</span>");
 		    break;
 		case FreeAsleep:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tr("%1 woke up!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tu(tr("%1 woke up!").arg(nick(self)))) + "</span>");
 		    break;
 		case HurtBurn:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Fire).name() + "'>" + escapeHtml(tr("%1 is hurt by its burn!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Fire).name() + "'>" + escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(self)))) + "</span>");
 		    break;
 		case HurtPoison:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Poison).name() + "'>" + escapeHtml(tr("%1 is hurt by poison!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Poison).name() + "'>" + escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(self)))) + "</span>");
 		    break;
 		case PrevFrozen:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ice).name() + "'>" + escapeHtml(tr("%1 is frozen solid!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ice).name() + "'>" + escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(self)))) + "</span>");
 		    break;
 		case FreeFrozen:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tr("%1 thawed out!")).arg(nick(self)) + "</span>");
+		    printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tu(tr("%1 thawed out!").arg(nick(self)))) + "</span>");
 		    break;
 	    }
 	}
@@ -376,7 +385,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    mess.replace("%i", ItemInfo::Name(other));
 	    mess.replace("%a", AbilityInfo::Name(other));
 	    mess.replace("%p", PokemonInfo::Name(other));
-	    printHtml("<span style='color:" + TypeInfo::Color(type).name() + "'>" + escapeHtml(mess) + "</span>");
+	    printHtml("<span style='color:" + TypeInfo::Color(type).name() + "'>" + escapeHtml(tu(mess)) + "</span>");
 	    break;
 	}
 	case NoOpponent:
@@ -391,14 +400,14 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    QString mess = ItemInfo::Message(item, part);
 	    mess.replace("%s", nick(self));
 	    mess.replace("%f", nick(!self));
-	    printLine(mess);
+	    printLine(tu(mess));
 	    break;
 	}
 	case Flinch:
-	    printLine(tr("%1 flinched!").arg(nick(self)));
+	    printLine(tu(tr("%1 flinched!").arg(nick(self))));
 	    break;
 	case Recoil:
-	    printLine(tr("%1 is hit with recoil!").arg(nick(self)));
+	    printLine(tu(tr("%1 is hit with recoil!").arg(nick(self))));
 	    break;
         case WeatherMessage: {
 	    qint8 wstatus, weather;
@@ -418,8 +427,8 @@ void BattleWindow::receiveInfo(QByteArray inf)
 		    } break;
 		case HurtWeather:
 		    switch(weather) {
-			case Hail: printHtml(beg + tr("%1 is buffeted by the hail!").arg(nick(self)) + end); break;
-			case SandStorm: printHtml(beg + tr("%1 is buffeted by the sandstorm!").arg(nick(self)) + end); break;
+			case Hail: printHtml(beg + tu(tr("%1 is buffeted by the hail!").arg(nick(self)) + end)); break;
+			case SandStorm: printHtml(beg + tu(tr("%1 is buffeted by the sandstorm!").arg(nick(self))) + end); break;
 		    } break;
 		case StartWeather:
 		    switch(weather) {
@@ -437,6 +446,17 @@ void BattleWindow::receiveInfo(QByteArray inf)
 		    } break;
 	    }
         } break;
+	case StraightDamage :
+	{
+	    qint16 damage;
+	    in >> damage;
+	    if (self) {
+		printLine(tr("%1 has lost %2 HP! (%3% of its health)").arg(nick(self)).arg(damage).arg(damage*100/info().currentPoke().totalLifePoints()));
+	    } else {
+		printLine(tu(tr("%1 has lost %2% of its health!").arg(nick(self)).arg(damage)));
+	    }
+	    break;
+	}
 	default:
 	    break;
     }

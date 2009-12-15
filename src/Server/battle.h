@@ -153,7 +153,8 @@ public:
 	NoOpponent,
 	Flinch,
 	Recoil,
-	WeatherMessage
+	WeatherMessage,
+	StraightDamage
     };
 
     enum WeatherM
