@@ -780,6 +780,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     callieffects(player, player, "BeforeTargetList");
+    calleffects(player, player, "BeforeTargetList");
 
     foreach(int target, targetList) {
 	if (player != target && !specialOccurence && !amn.contains(attack)) {
