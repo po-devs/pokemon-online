@@ -451,9 +451,9 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    qint16 damage;
 	    in >> damage;
 	    if (self) {
-		printLine(tr("%1 has lost %2 HP! (%3% of its health)").arg(nick(self)).arg(damage).arg(damage*100/info().currentPoke().totalLifePoints()));
+		printLine(tr("%1 lost %2 HP! (%3% of its health)").arg(nick(self)).arg(damage).arg(damage*100/info().currentPoke().totalLifePoints()));
 	    } else {
-		printLine(tu(tr("%1 has lost %2% of its health!").arg(nick(self)).arg(damage)));
+		printLine(tu(tr("%1 lost %2% of its health!").arg(nick(self)).arg(damage)));
 	    }
 	    break;
 	}
@@ -639,7 +639,7 @@ void BattleDisplay::updatePoke(bool self)
 
 QString BattleDisplay::health(int lifePercent)
 {
-    return lifePercent > 50 ? "::chunk{background-color: #05B8CC;}" : (lifePercent >= 34 ? "::chunk{background-color: yellow;}" : "::chunk{background-color: red;}");
+    return lifePercent > 50 ? "::chunk{background-color: #05B8CC;}" : (lifePercent >= 34 ? "::chunk{background-color: #F8DB17;}" : "::chunk{background-color: #D40202;}");
 }
 
 GraphicsZone::GraphicsZone()

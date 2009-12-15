@@ -613,10 +613,12 @@ bool BattleSituation::testStatus(int player)
 	    if (poke(player).sleepCount() > 0) {
 		poke(player).sleepCount() -= 1;
 		notify(All, StatusMessage, player, qint8(FeelAsleep));
-		return false;
+		if (!turnlong[player].value("SleepingMove").toBool())
+		    return false;
+	    } else {
+		healStatus(player, Pokemon::Asleep);
+		notify(All, StatusMessage, player, qint8(FreeAsleep));
 	    }
-	    healStatus(player, Pokemon::Asleep);
-	    notify(All, StatusMessage, player, qint8(FreeAsleep));
 	    break;
 	}
 	case Pokemon::Paralysed:
@@ -717,7 +719,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     calleffects(player,player,"EvenWhenCantMove");
 
-    if (!testStatus(player)) {
+    if (!specialOccurence && !testStatus(player)) {
 	return;
     }
 
@@ -996,10 +998,6 @@ void BattleSituation::applyMoveStatMods(int player, int target)
             continue;
 	}
 
-	if(!self && teamzone[targeted].value("MistCount").toInt() > 0) {
-	    sendMoveMessage(86, 2, player,Pokemon::Ice,target,turnlong[player]["Attack"].toInt());
-	    continue;
-	}
 	if (!self && sub) {
 	    sendMoveMessage(128, 2, player,0,target,turnlong[player]["Attack"].toInt());
 	    continue;
@@ -1012,6 +1010,16 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 	{
 	    /* Now the kind of change itself */
 	    bool statusChange = effect.midRef(1,3) == "[S]"; /* otherwise it's stat change */
+
+	    if(!self && !statusChange && teamzone[targeted].value("MistCount").toInt() > 0) {
+		sendMoveMessage(86, 2, player,Pokemon::Ice,target,turnlong[player]["Attack"].toInt());
+		continue;
+	    }
+
+	    if(!self && statusChange && teamzone[targeted].value("SafeGuardCount").toInt() > 0) {
+		sendMoveMessage(109, 2, player,Pokemon::Psychic,target,turnlong[player]["Attack"].toInt());
+		continue;
+	    }
     
 	    QStringList possibilities = effect.mid(4).split('^');
     
@@ -1406,6 +1414,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	    if (!sub) {
 		callieffects(player, source, "UponOffensiveDamageReceived");
 		calleffects(player, source, "UponOffensiveDamageReceived");
+		callpeffects(player, source, "UponOffensiveDamageReceived");
 	    }
 	}
     }

@@ -84,7 +84,7 @@ Magnitude level %d!
 
 
 
-A mist surrounds %ts's team!|%ts's mist wore off!|The mist prevents %f from having its stats lowered!
+%s shrouded itself in mist!|%ts's mist wore off!|The mist prevents %f from having its stats lowered!
 %s regained health!|%s regained a lot of health!|%s regained little health!
 %s covered the battle field with mud!|%s covered the battle field with water!
 
@@ -107,9 +107,9 @@ A sorrowful melody could be heard by everyone on the field.|%s's perish count fe
 
 
 %s copied %f's %a!
+%s is protected from status!|%ts's safeguard wore off!|The mist prevents %f from having being inflicted status!
 
-
-
+%s learned %m!
 %s and %f switched abilities!
 
 
