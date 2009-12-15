@@ -1019,6 +1019,9 @@ struct MMToxicSpikes : public MM
 	if (b.hasSubstitute(s) || b.isFlying(s)) {
 	    return;
 	}
+	if (team(b,s).value("SafeGuardCount").toInt() > 0) {
+	    return;
+	}
 	int spikeslevel = team(b,s)["ToxicSpikes"].toInt();
 	switch (spikeslevel) {
 	    case 0: return;
@@ -3186,6 +3189,26 @@ struct MMSleepTalk : public MM
 
 MMSleepTalk::FM MMSleepTalk::forbidden_moves;
 
+struct MMSmellingSalt : public MM
+{
+    MMSmellingSalt () {
+	functions["BeforeCalculatingDamage"] = &bcd;
+	functions["AfterAttackSuccessful"] = &aas;
+    }
+
+    static void bcd(int s, int t, BS &b) {
+	if (b.poke(t).status() == turn(b,s)["SmellingSalt_Arg"].toInt()) {
+	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt();
+	}
+    }
+
+    static void aas(int s, int t, BS &b) {
+	if (!b.koed(t)) {
+	    b.healStatus(t,turn(b,s)["SmellingSalt_Arg"].toInt());
+	}
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -3331,11 +3354,11 @@ void MoveEffect::init()
     /* Secret Power */
     REGISTER_MOVE(111, Sketch);
     /* Skill swap : remember, no multi-type/wonder guard */
-    /* 113 is free */
+    REGISTER_MOVE(113, WeatherBall);
     /* 114 is free */
     REGISTER_MOVE(115, SleepingUser);
     REGISTER_MOVE(116, SleepTalk);
-    REGISTER_MOVE(118, WeatherBall);
+    REGISTER_MOVE(117, SmellingSalt);
     REGISTER_MOVE(120, ThunderWave);
     REGISTER_MOVE(121, Spikes);
     REGISTER_MOVE(124, StealthRock);

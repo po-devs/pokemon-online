@@ -368,7 +368,7 @@ O[S]4+
 #sleep talk
 O[S]5+
 O[S]5+
-O[S]1-#smelling salt
+
 O[S]5+
 O[M]6-
 #Snatch
@@ -445,7 +445,7 @@ O[S]5+
 
 
 O[S]1+
-O[S]4-#wake-up slap
+
 
 O[S]-1+
 #water sport

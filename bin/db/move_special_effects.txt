@@ -1,4 +1,4 @@
-#82, 101, 113,114 & 156 are free
+#82, 101, 114 & 156 are free
 1#leech
 
 
@@ -451,7 +451,7 @@
 88-9#water sport
 36#water spout
 
-118#weather ball
+113#weather ball
 10#whirlpool
 107#whirlwind
 
