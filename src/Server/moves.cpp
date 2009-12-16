@@ -3209,6 +3209,128 @@ struct MMSmellingSalt : public MM
     }
 };
 
+struct MMSnatch : public MM
+{
+    MMSnatch() {
+	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas (int s, int, BS &b) {
+	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Snatch", &dgaf);
+	b.battlelong["Snatcher"] = s;
+	turn(b,s)["Snatcher"] = true;
+    }
+
+    /*	* All self-affecting stat ups (including Belly Drum and Defense Curl, but excluding Curse)
+
+    * Aromatherapy
+    * BellyDrum
+    * Camouflage
+    * Charge
+    * Defense Curl
+    * Heal Bell
+    * Heal Order
+    * Ingrain
+    * Light Screen
+    * Milk Drink
+    * Minimize
+    * Mist
+    * Moonlight
+    * Morning Sun
+    * Psych Up
+    * Recover
+    * Reflect
+    * Refresh
+    * Rest
+    * Roost
+    * Safeguard
+    * Slack Off
+    * Softboiled
+    * Stockpile
+    * Substitute
+    * Swallow
+    * Synthesis
+    * Tailwind
+    */
+    struct SM : public QSet<int> {
+	SM() { (*this) << 16 << 29 << 53 << 55 << 82 << 176 << 178 << 202 << 219 << 246 << 256 << 257 << 298 << 312 << 314 << 315 << 316 << 333 << 335 << 363 << 375 << 389 << 397 << 405 << 411 << 415; }
+    };
+
+    static SM snatched_moves;
+
+    static void dgaf(int s, int , BS &b) {
+	if (b.battlelong.contains("Snatcher")) {
+	    if (turn(b,s)["Power"].toInt() == 0) {
+		int move = MM::move(b,s);
+		/* Typically, the moves that are bounced back are moves that only induce status / boost mods and nothing else,
+		    therefore having no "SpecialEffect". Exceptions are stored in bounced_moves */
+		if (( turn(b,s)["PossibleTarget"].toInt() == Move::User && MoveInfo::SpecialEffect(move).size() == 0 )|| snatched_moves.contains(move)) {
+		    int snatcher = b.battlelong["Snatcher"].toInt();
+		    b.fail(s,118,0,type(b,snatcher));
+		    /* Now Snatching ... */
+		    removeFunction(turn(b,snatcher), "UponAttackSuccessful", "Snatch");
+		    turn(b,snatcher).remove("Snatcher");
+		    b.battlelong.remove("Snatcher");
+		    MoveEffect::setup(move,snatcher,s,b);
+		    b.useAttack(snatcher,move,true);
+		}
+	    }
+	}
+    }
+};
+
+MMSnatch::SM MMSnatch::snatched_moves;
+
+struct MMSolarBeam : public MM
+{
+    MMSolarBeam() {
+	functions["MoveSettings"] = &ms;
+    }
+
+    static void ms (int s, int, BS &b) {
+	int count = poke(b,s).value("BeamChargingCount").toInt();
+	if (count == 0) {
+	    int weather = b.weather();
+	    if (b.isWeatherWorking(weather) && weather != BattleSituation::NormalWeather) {
+		if (weather == BattleSituation::Sunny) {
+		    return;
+		}
+		poke(b,s)["BeamChargingCount"] = 2;
+	    } else {
+		poke(b,s)["BeamChargingCount"] = 1;
+	    }
+	    if (b.hasWorkingItem(s, 22)) {
+		//Power Herb
+		b.sendItemMessage(11,s);
+		b.disposeItem(s);
+		turn(b,s).remove("BeamChargingCount");
+	    } else {
+		turn(b,s)["TellPlayers"] = false;
+		poke(b,s)["ReleaseTurn"] = b.turn() + poke(b,s)["BeamChargingCount"].toInt();
+		turn(b,s)["Power"] = 0;
+		turn(b,s)["PossibleTargets"] = Move::None;
+		addFunction(poke(b,s), "TurnSettings", "SolarBeam", &ts);
+		b.sendMoveMessage(119,0,s,Pokemon::Grass);
+	    }
+	} else if (count > 1) {
+	    inc(poke(b,s)["BeamChargingCount"], -1);
+	}
+    }
+
+    static void ts (int s, int, BS &b) {
+	int count = poke(b,s).value("BeamChargingCount").toInt();
+	if (count > 0 &&
+		poke(b,s).value("ReleaseTurn").toInt() == b.turn() + count -1)
+	{
+	    turn(b,s)["NoChoice"] = true;
+	    MoveEffect::setup(376,s,b.rev(s),b);
+	} else {
+	    poke(b,s).remove("BeamChargingCount");
+	}
+    }
+};
+
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -3359,6 +3481,8 @@ void MoveEffect::init()
     REGISTER_MOVE(115, SleepingUser);
     REGISTER_MOVE(116, SleepTalk);
     REGISTER_MOVE(117, SmellingSalt);
+    REGISTER_MOVE(118, Snatch);
+    REGISTER_MOVE(119, SolarBeam);
     REGISTER_MOVE(120, ThunderWave);
     REGISTER_MOVE(121, Spikes);
     REGISTER_MOVE(124, StealthRock);

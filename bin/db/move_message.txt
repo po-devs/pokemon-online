@@ -116,7 +116,7 @@ A sorrowful melody could be heard by everyone on the field.|%s's perish count fe
 
 
 
-%s snatched %f's %m!
+%f snatched %s's %m!
 %s is aborbing sunlight!
 
 Spikes were scattered around %tf's team!|%s is hurt by spikes!
