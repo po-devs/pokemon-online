@@ -3445,7 +3445,7 @@ void MoveEffect::init()
     REGISTER_MOVE(79, MeFirst);
     REGISTER_MOVE(80, Metronome);
     REGISTER_MOVE(81, Mimic);
-    /* 82 is free */
+    /* 82 is not used */
     REGISTER_MOVE(83, Minimize);
     REGISTER_MOVE(84, MiracleEye);
     REGISTER_MOVE(85, MirrorMove);
