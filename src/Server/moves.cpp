@@ -3092,7 +3092,7 @@ struct MMSketch : public MM
     static void daf(int s, int t, BS &b) {
 	int move = poke(b,t)["LastMoveUsed"].toInt();
 	/* Struggle, chatter */
-	if (b.koed(t) || move == 394 || move == 146) {
+        if (b.koed(t) || move == 394 || move == 146 || move == 0) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -3330,6 +3330,36 @@ struct MMSolarBeam : public MM
     }
 };
 
+struct MMSpite : public MM
+{
+    MMSpite(){
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf (int s, int t, BS &b) {
+        if (!poke(b,t).contains("LastMoveSuccessfullyUsedTurn")) {
+            turn(b,s)["Failed"] = true;
+            return;
+        }
+        int tu = poke(b,t)["LastMoveSuccessfullyUsedTurn"].toInt();
+        if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
+            turn(b,s)["Failed"] = true;
+            return;
+        }
+        int slot = poke(b,t)["MoveSlot"].toInt();
+        if (b.poke(t).move(slot).PP() == 0) {
+            turn(b,s)["Failed"] = true;
+            return;
+        }
+    }
+    static void uas(int s, int t, BS &b)
+    {
+        int slot = poke(b,t)["MoveSlot"].toInt();
+        b.losePP(t,slot,4);
+        b.sendMoveMessage(123,0,s,Pokemon::Ghost,t,b.move(t,slot));
+    }
+};
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -3485,6 +3515,8 @@ void MoveEffect::init()
     REGISTER_MOVE(119, SolarBeam);
     REGISTER_MOVE(120, ThunderWave);
     REGISTER_MOVE(121, Spikes);
+    /* Spit up */
+    REGISTER_MOVE(123, Spite);
     REGISTER_MOVE(124, StealthRock);
     REGISTER_MOVE(128, Substitute);
     REGISTER_MOVE(130, SuperFang);

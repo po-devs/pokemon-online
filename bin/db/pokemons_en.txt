@@ -1,4 +1,4 @@
-(No Pokémon)
+﻿(No Pokémon)
 Bulbasaur
 Ivysaur
 Venusaur
