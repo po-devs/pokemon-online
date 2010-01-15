@@ -309,8 +309,14 @@ void BattleSituation::analyzeChoice(int player)
 	if (!koed(player) && !turnlong[player].value("HasMoved").toBool()) {
 	    if (turnlong[player].contains("NoChoice"))
 		useAttack(player, choice[player].numSwitch);
-	    else
-		useAttack(player, choice[player].numSwitch);
+            else {
+                if (options[player].struggle()) {
+                    MoveEffect::setup(394,player,rev(player),*this);
+                    useAttack(player, 394, true);
+                } else {
+                    useAttack(player, choice[player].numSwitch);
+                }
+            }
 	}
     } else {
         if (!koed(player)) { /* if the pokemon isn't ko, it IS sent back */
@@ -318,6 +324,32 @@ void BattleSituation::analyzeChoice(int player)
 	}
 	sendPoke(player, choice[player].numSwitch);
     }
+}
+
+std::vector<int> BattleSituation::sortedBySpeed() {
+    std::vector<int> ret;
+
+    if (getStat(Player1, Speed) < getStat(Player2, Speed)) {
+        ret.push_back(Player2);
+        ret.push_back(Player1);
+    } else if (getStat(Player1, Speed) < getStat(Player2, Speed)) {
+        ret.push_back(Player1);
+        ret.push_back(Player2);
+    } else {
+        if (rand() % 2 == 0) {
+            ret.push_back(Player1);
+            ret.push_back(Player2);
+        } else {
+            ret.push_back(Player2);
+            ret.push_back(Player1);
+        }
+    }
+
+    if (battlelong.value("TrickRoomCount").toInt() > 0) {
+        std::swap(ret[0], ret[1]);
+    }
+
+    return ret;
 }
 
 void BattleSituation::analyzeChoices()
@@ -329,11 +361,13 @@ void BattleSituation::analyzeChoices()
 	MoveEffect::setup(move(Player2,choice[Player2].numSwitch), Player2, Player1, *this);
 
     std::multimap<int, int, std::greater<int> > priorities;
-    QSet<int> switches;
+    std::vector<int> switches;
 
-    for (int i = Player1; i <= Player2; i++) {
+    std::vector<int> playersByOrder = sortedBySpeed();
+
+    foreach(int i, playersByOrder) {
 	if (choice[i].poke())
-	    switches.insert(i);
+            switches.push_back(i);
 	else
 	    priorities.insert(std::pair<int, int>(turnlong[i]["SpeedPriority"].toInt(), i));
     }
@@ -362,28 +396,8 @@ void BattleSituation::analyzeChoices()
 	std::multimap<int, int, std::greater<int> >::const_iterator it2;
 	std::multimap<int, int, std::greater<int> >::const_iterator it2End;
 
-	for(it2 = secondPriorities.begin(); it2 != secondPriorities.end();) {
-	    it2End = secondPriorities.upper_bound(it2->first);
-
-	    /* At last the speed comparison... */
-	    std::multimap<int, int, std::greater<int> > speeds;
-	    for (; it2 != it2End; ++it2) {
-		speeds.insert(std::pair<int,int>(getStat(it2->second, Speed), it2->second));
-	    }
-
-	    std::multimap<int, int, std::greater<int> >::const_iterator it3;
-	    for(it3 = speeds.begin(); it3 != speeds.end();)
-	    {
-		std::multimap<int, int, std::greater<int> >::const_iterator it3End = speeds.upper_bound(it3->first);
-		std::vector<int> heap;
-		for (; it3 != it3End; ++it3) {
-		    heap.push_back(it3->second);
-		}
-		std::random_shuffle(heap.begin(), heap.end());
-		foreach(int player, heap) {
-		    analyzeChoice(player);
-		}
-	    }
+        for(it2 = secondPriorities.begin(); it2 != secondPriorities.end(); ++it2) {
+            analyzeChoice(it2->second);
 	}
     }
 }
@@ -750,8 +764,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	callieffects(player,player, "RegMoveSettings");
     }
 
-    pokelong[player]["LastMoveUsed"] = attack;
-    inc(pokelong[player]["MovesUsed"]);
+    if (attack != 394) { //Struggle
+        pokelong[player]["LastMoveUsed"] = attack;
+        inc(pokelong[player]["MovesUsed"]);
+    }
 
     calleffects(player, player, "MoveSettings");
 
@@ -945,6 +961,10 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
     return pokelong[player].value("AbilityNullified").toBool() ? 0 : pokelong[player]["Ability"].toInt() == ab;
 }
 
+void BattleSituation::acquireAbility(int play, int ab) {
+    poke(play).ability() = ab;
+}
+
 bool BattleSituation::hasWorkingItem(int player, int it)
 {
     return poke(player).item() == it && !pokelong[player].value("Embargoed").toBool();
@@ -1135,9 +1155,14 @@ void BattleSituation::inflictStatus(int player, int status)
 	    if (!isWeatherWorking(Sunny) && !hasType(player, Pokemon::Ice)) {
 		changeStatus(player, status);
 	    }
-	} else {
-	    changeStatus(player, status);
-	}
+        } else if (status == Pokemon::Asleep){
+            /* Insomnia, Vital Spirit */
+            if (!hasWorkingAbility(player, 42) && !hasWorkingAbility(player, 118)) {
+                changeStatus(player, status);
+            }
+        } else {
+            changeStatus(player, status);
+        }
     }
 }
 
@@ -1588,6 +1613,10 @@ int BattleSituation::getStat(int player, int stat)
     QString q = "Stat"+QString::number(stat);
     callieffects(player, player, "StatModifier");
     int ret = pokelong[player][q].toInt()*getStatBoost(player, stat)*(20+turnlong[player][q+"AbilityModifier"].toInt())/20*(20+turnlong[player][q+"ItemModifier"].toInt())/20;
+
+    if (stat == Speed && teamzone[player].value("TailWindCount").toInt() > 0){
+        ret *= 2;
+    }
 
     if (stat == Speed && poke(player).status() == Pokemon::Paralysed) {
 	ret /= 4;

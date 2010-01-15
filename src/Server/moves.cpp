@@ -3361,6 +3361,205 @@ struct MMSpite : public MM
     }
 };
 
+struct MMSplash : public MM
+{
+    MMSplash(){
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int , BS & b) {
+        b.sendMoveMessage(82,0,s);
+    }
+};
+
+struct MMStomp : public MM
+{
+    MMStomp(){
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int t, BS &b) {
+        if (poke(b,t).value("Minimize").toBool()) {
+            turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
+        }
+    }
+};
+
+struct MMStruggle : public MM
+{
+    MMStruggle() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        if (!b.koed(s)) {
+            b.sendMoveMessage(127,0,s);
+            b.inflictDamage(s,b.poke(s).totalLifePoints()/4,s,false);
+        }
+    }
+};
+
+struct MMSuckerPunch : public MM
+{
+    MMSuckerPunch(){
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (turn(b,t).value("HasMoved").toBool() || turn(b,t).value("Power").toInt() == 0) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+};
+
+struct MMTailWind : public MM {
+    MMTailWind(){
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b){
+        b.sendMoveMessage(133,0,s,Pokemon::Flying);
+        team(b,s)["TailWindCount"] = 3;
+        addFunction(team(b,s), "EndTurn", "TailWind", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+        if (team(b,s)["TailWindCount"].toInt() == 1) {
+            removeFunction(team(b,s), "EndTurn", "TailWind");
+            team(b,s)["TailWindCount"] = 0;
+            b.sendMoveMessage(133,1,s,Pokemon::Flying);
+        }
+    }
+};
+
+struct MMTorment : public MM {
+    MMTorment() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas (int s, int t, BS &b) {
+        poke(b,t)["Tormented"] = true;
+        addFunction(poke(b,t), "MovesPossible", "Torment", &msp);
+        addFunction(turn(b,t), "MovePossible", "Torment", &mp);
+        b.sendMoveMessage(135,1,s,Pokemon::Dark,t);
+    }
+
+    static void msp(int s, int, BS &b) {
+        for (int i = 0; i < 4; i++) {
+            if (b.move(s,i) == poke(b,s)["LastMoveUsed"].toInt()) {
+                turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
+            }
+        }
+    }
+
+    static void mp(int s, int, BS &b) {
+        int move = turn(b,s)["MoveChosen"].toInt();
+        if (move == poke(b,s)["LastMoveUsed"].toInt()) {
+            turn(b,s)["ImpossibleToMove"] = true;
+            b.sendMoveMessage(135,0,s,Pokemon::Dark,s,move);
+        }
+    }
+};
+
+struct MMTrickRoom : public MM {
+    MMTrickRoom() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        if (b.battlelong.value("TrickRoomCount").toInt() > 0) {
+            b.sendMoveMessage(138,1,s,Pokemon::Psychic);
+            b.battlelong.remove("TrickRoomCount");
+            removeFunction(b.battlelong, "EndTurn", "TrickRoom");
+        } else {
+            b.sendMoveMessage(138,0,s,Pokemon::Psychic);
+            b.battlelong["TrickRoomCount"] = 5;
+            addFunction(b.battlelong, "EndTurn", "TrickRoom", &et);
+        }
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(b.battlelong["TrickRoomCount"], -1);
+        if (b.battlelong["TrickRoomCount"].toInt() == 0) {
+            b.sendMoveMessage(138,1,s,Pokemon::Psychic);
+            b.battlelong.remove("TrickRoomCount");
+        }
+    }
+};
+
+struct MMTripleKick : public MM {
+    MMTripleKick() {
+        functions["BeforeHitting"] = &bh;
+        functions["AfterAttackSuccessful"] = &aas;
+    }
+
+    static void bh(int s, int, BS &b) {
+        b.sendMoveMessage(139,0,s,Pokemon::Fighting);
+    }
+
+    static void aas(int s, int, BS &b) {
+        inc(turn(b,s)["TripleKickCount"], 1);
+        int tkc = turn(b,s)["TripleKickCount"].toInt();
+        if (tkc < 3) {
+            turn(b,s)["Power"] = (tkc+1)*10;
+            b.useAttack(s,move(b,s),true,false);
+        }
+    }
+};
+
+struct MMWorrySeed : public MM {
+    MMWorrySeed() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        /* Truant & multi-type */
+        if (b.poke(t).ability() == 59 || b.poke(t).ability() == 115) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas(int s, int t, BS &b) {
+        b.acquireAbility(t, 42); //Insomnia
+        b.sendMoveMessage(143,0,s,Pokemon::Grass,t);
+    }
+};
+
+struct MMYawn : public MM {
+    MMYawn() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.poke(t).status() != Pokemon::Fine || team(b,t).value("SafeGuardCount").toInt() > 0) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas(int s, int t, BS &b) {
+        if (poke(b,t).value("YawnCount").toInt() == 0) {
+            b.sendMoveMessage(147,1,s,Pokemon::Normal,t);
+            poke(b,t)["YawnCount"] = 2;
+            addFunction(poke(b,t), "EndTurn", "Yawn", &et);
+        }
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(poke(b,s)["YawnCount"], -1);
+        int count = poke(b,s)["YawnCount"].toInt();
+        if (count > 0) {
+            b.sendMoveMessage(147,0,s);
+        } else {
+            b.inflictStatus(s, Pokemon::Asleep);
+            removeFunction(poke(b,s),"EndTurn", "Yawn");
+            poke(b,s).remove("YawnCount");
+        }
+    }
+};
+
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -3475,7 +3674,7 @@ void MoveEffect::init()
     REGISTER_MOVE(79, MeFirst);
     REGISTER_MOVE(80, Metronome);
     REGISTER_MOVE(81, Mimic);
-    /* 82 is not used */
+    REGISTER_MOVE(82, Splash);
     REGISTER_MOVE(83, Minimize);
     REGISTER_MOVE(84, MiracleEye);
     REGISTER_MOVE(85, MirrorMove);
@@ -3518,14 +3717,29 @@ void MoveEffect::init()
     /* Spit up */
     REGISTER_MOVE(123, Spite);
     REGISTER_MOVE(124, StealthRock);
+    /* Stockpile */
+    REGISTER_MOVE(126, Stomp);
+    REGISTER_MOVE(127, Struggle);
     REGISTER_MOVE(128, Substitute);
+    REGISTER_MOVE(129, SuckerPunch);
     REGISTER_MOVE(130, SuperFang);
+    /* Swallow */
     REGISTER_MOVE(132, Switcheroo);
+    REGISTER_MOVE(133, TailWind)
     REGISTER_MOVE(134, Taunt);
+    REGISTER_MOVE(135, Torment);
     REGISTER_MOVE(136, ToxicSpikes);
+    //transform
+    REGISTER_MOVE(138, TrickRoom);
+    REGISTER_MOVE(139, TripleKick);
     REGISTER_MOVE(140, UTurn);
+    //Uproar
     REGISTER_MOVE(142, Wish);
+    REGISTER_MOVE(143, WorrySeed);
+    REGISTER_MOVE(144, Yawn);
+    //Free move
     REGISTER_MOVE(146, Avalanche); /* avalanche, revenge */
+    //Chatter
     REGISTER_MOVE(148, TrumpCard);
     REGISTER_MOVE(149, Haze);
     REGISTER_MOVE(150, Roost);

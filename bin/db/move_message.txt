@@ -80,7 +80,7 @@ Magnitude level %d!
 
 
 %s copied %m!
-
+%s splashed on the ground but it had no effect!
 
 
 
@@ -125,24 +125,24 @@ Spikes were scattered around %tf's team!|%s is hurt by spikes!
 Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 
 
-
+%s is hit with recoil!
 %s already has a substitute.|%s's subsitute faded!|%f's substitute blocked %m!
 
 
 
 %s and %f switched items!
-%ts's team tailwind petered out!
+A tailwind started blowing behind %ts's team!|%ts's team tailwind petered out!
 %s couldn't use %m because of taunt!|%f fell for the taunt!
-%s can't use %m because of the torment!
+%s can't use %m because of the torment!|%t is now tormented!
 Poison spikes were scattered around %tf's team!|The poison spikes disappeared around %ts's feet!
 %s transformed into %p!
 %s twisted the dimensions!|The twisted dimensions returned to normal!
-
+Hit!
 
 %s caused an uproar!
 %s made a wish!|%q's wish came true!
 %f now has insomnia!
-%s yawns!
+%f feels drowsy!|%s yawns!
 
 
 

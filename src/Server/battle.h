@@ -61,6 +61,7 @@ public:
     /* called just after requestChoice(s) */
     void analyzeChoice(int player);
     void analyzeChoices(); 
+    std::vector<int> sortedBySpeed();
 
     /* Commands for the battle situation */
     void beginTurn();
@@ -111,6 +112,7 @@ public:
     void fail(int player, int move, int part=0, int type=0);
     bool hasType(int player, int type);
     bool hasWorkingAbility(int play, int ability);
+    void acquireAbility(int play, int ability);
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
     int move(int player, int slot);
