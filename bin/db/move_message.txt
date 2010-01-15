@@ -121,7 +121,7 @@ A sorrowful melody could be heard by everyone on the field.|%s's perish count fe
 
 Spikes were scattered around %tf's team!|%s is hurt by spikes!
 
-
+%f's %m lost 4 PP!
 Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 
 
