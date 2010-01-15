@@ -1,4 +1,4 @@
-#82, 101, 114 & 156 are free
+#101, 114, 145 & 156 are free
 1#leech
 
 
@@ -383,7 +383,7 @@
 121#spikes
 122#spit up
 123#spite
-
+82#Splash
 
 124#stealth rock
 

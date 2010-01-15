@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     moves.cpp \
     ../Utilities/functions.cpp \
     items.cpp \
-    mechanics.cpp
+    mechanics.cpp \
+    abilities.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -33,6 +34,7 @@ HEADERS += mainwindow.h \
     moves.h \
     ../Utilities/functions.h \
     mechanics.h \
-    items.h
+    items.h \
+    abilities.h
 LIBS += -L../../bin \
     -lzip
