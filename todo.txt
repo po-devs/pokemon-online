@@ -1,12 +1,5 @@
 /* Sous windows ouvrir avec le wordpad ou autre, mais pas le bloc-note :s !! */
-
--Faire une classe avec des fonctions statiques (voir le modèle des classe PokemonInfo, TypeInfo, ...) qui permette de charger des stylesheet à partir des feuilles CSS, pour les widgets, dans un fichier stylist.cpp. On peut aussi créer un dossier styles dans bin et rajouter des styles pour des widgets (je prends l'exemple des sliders sous XP qui sont moches) personnalisés (n'hésitez pas à voir les exemple de la doc de Qt ^^). Il y aurait un fichier default.qss, qui contient le style par défaut de l'application, des fichiers .qss qui contiendront des personnalisations pour certains widgets, et sinon des dossiers qui contiendraient d'autres styles.
-
 -Faire une page de crédits. On pourra utiliser un/plusieurs fichiers pour faire une mini db de Credits (et rajouter une classe CreditInfo à PokemonInfo)
-
--Changer la fonction setNum de TB_PokemonBody pour que les icones s'affichent à sur les boutons des Pokemons (il faudra sûrement rajouter un pointeur de la classe Teambuilder dans les classes TB_PokemonBody, ainsi qu'une fonction dans Teambuilder: int Teambuilder::num(TB_PokemonBody *) pour savoir à quel poké un TB_PokemonBody * correspond.
-Les icones sont dans db/icons.zip, il faut rajouter une fonction dans PokemonInfo pour récupérer l'icône. On pourra réutiliser la fonction readZipFile de PokemonInfo.cpp :p
-------->pris par mephistos
 
 
 ---- A NE PAS OUBLIER PLUS TARD  ------

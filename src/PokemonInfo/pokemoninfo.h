@@ -118,6 +118,7 @@ public:
     static bool PhysicalContact(int movenum);
     static bool KingRock(int movenum);
     static bool Exist(int movenum);
+    static bool isOHKO(int movenum);
     static int EffectRate(int movenum);
     static int Target(int movenum);
     static QString MoveMessage(int moveeffect, int part);
@@ -230,11 +231,19 @@ public:
 
 class AbilityInfo
 {
+public:
+    struct Effect {
+        int num;
+        int arg;
+        Effect(int i, int q=0) : num(i), arg(q){}
+    };
 private:
     static QStringList m_Names;
     static QString m_Directory;
+    static QList<Effect> m_Effects;
 
     static void loadNames();
+    static void loadEffects();
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
@@ -242,6 +251,7 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int abnum);
+    static Effect Effects(int abnum);
     static int NumberOfAbilities();
 };
 

@@ -1,4 +1,4 @@
-#101, 114, 145 & 156 are free
+#114, 145 & 156 are free
 1#leech
 
 
@@ -52,7 +52,7 @@
 
 
 17#camouflage
-
+101#Captivate
 18#charge
 
 

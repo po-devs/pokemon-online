@@ -192,13 +192,25 @@ void BattleSituation::endTurnStatus()
 		    inflictDamage(player, poke(player).totalLifePoints()/8, player);
 		    break;
 		case Pokemon::DeeplyPoisoned:
-		    notify(All, StatusMessage, player, qint8(HurtPoison));
-		    inflictDamage(player, poke(player).totalLifePoints()*(pokelong[player]["ToxicCount"].toInt()+1)/16, player);
+                    //PoisonHeal
+                    if (hasWorkingAbility(player, 45)) {
+                        sendMoveMessage(45,0,player,Pokemon::Poison);
+                        healLife(player, poke(player).totalLifePoints()/8);
+                    } else {
+                        notify(All, StatusMessage, player, qint8(HurtPoison));
+                        inflictDamage(player, poke(player).totalLifePoints()*(pokelong[player]["ToxicCount"].toInt()+1)/16, player);
+                    }
 		    pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()+1, 14);
 		    break;
 		case Pokemon::Poisoned:
-		    notify(All, StatusMessage, player, qint8(HurtPoison));
-		    inflictDamage(player, poke(player).totalLifePoints()/8, player);
+                    //PoisonHeal
+                    if (hasWorkingAbility(player, 45)) {
+                        sendMoveMessage(45,0,player,Pokemon::Poison);
+                        healLife(player, poke(player).totalLifePoints()/8);
+                    } else {
+                        notify(All, StatusMessage, player, qint8(HurtPoison));
+                        inflictDamage(player, poke(player).totalLifePoints()/8, player);
+                    }
 		    break;
 	    }
     }
@@ -539,7 +551,8 @@ void BattleSituation::callzeffects(int source, int target, const QString &name)
 
 void BattleSituation::callieffects(int source, int target, const QString &name)
 {
-    if (!pokelong[source].value("Embargoed").toBool())
+    //Klutz
+    if (!pokelong[source].value("Embargoed").toBool() && !hasWorkingAbility(source, 46))
 	ItemEffect::activate(name, poke(source).item(), source, target, *this);
 }
 
@@ -572,6 +585,16 @@ bool BattleSituation::testAccuracy(int player, int target)
 
     if (pokelong[target].value("LockedOnEnd").toInt() >= turn() && pokelong[player].contains("LockedOn") && pokelong[player].value("LockedOn") == target) {
 	return true;
+    }
+
+    //OHKO
+    if (MoveInfo::isOHKO(turnlong[player]["MoveChosen"].toInt())) {
+        return rand() % 100 < 30;
+    }
+
+    //No Guard
+    if (hasWorkingAbility(player, 61) || hasWorkingAbility(target, 61)) {
+        return true;
     }
 
     callieffects(player,target,"StatModifier");
@@ -629,7 +652,8 @@ bool BattleSituation::testStatus(int player)
 	case Pokemon::Asleep:
 	{
 	    if (poke(player).sleepCount() > 0) {
-		poke(player).sleepCount() -= 1;
+                //Early bird
+                poke(player).sleepCount() -= 1 + hasWorkingAbility(player, 21);
 		notify(All, StatusMessage, player, qint8(FeelAsleep));
 		if (!turnlong[player].value("SleepingMove").toBool())
 		    return false;
@@ -641,7 +665,8 @@ bool BattleSituation::testStatus(int player)
 	}
 	case Pokemon::Paralysed:
 	{
-	    if (rand() % 4 == 0) {
+            //MagicGuard
+            if (!hasWorkingAbility(player, 52) && rand() % 4 == 0) {
 		notify(All, StatusMessage, player, qint8(PrevParalysed));
 		return false;
 	    }
@@ -696,6 +721,11 @@ void BattleSituation::inflictConfusedDamage(int player)
 
 void BattleSituation::testFlinch(int player, int target)
 {
+    //Inner focus
+    if (hasWorkingAbility(target, 41)) {
+        return;
+    }
+
     int rate = turnlong[player]["FlinchRate"].toInt();
 
     if (rand() % 100 < rate) {
@@ -822,7 +852,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    bool fly = type == Move::Ground && !isFlying(target);
 
 	    for (int i = 0; i < 2; i++) {
-		if (typeffs[i] != 0 || ((!fly || typepok[i] != Pokemon::Flying) && !pokelong[target].value(QString::number(typeadv[i])+"Sleuthed").toBool()))
+                if (typeffs[i] != 0 || ((!fly || typepok[i] != Pokemon::Flying) && !pokelong[target].value(QString::number(typeadv[i])+"Sleuthed").toBool()
+                    && (!hasType(target, Pokemon::Ghost) || !hasWorkingAbility(player,82)))) //Scrappy
 		    typemod *= typeffs[i];
 	    }
 
@@ -867,7 +898,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 	    calleffects(player, target, "BeforeHitting");
 
-	    int num = repeatNum(turnlong[player]);
+            int num = repeatNum(player, turnlong[player]);
 	    bool hit = num > 1;
 
 	    for (int i = 0; i < num && !koed(target); i++) {
@@ -967,7 +998,8 @@ void BattleSituation::acquireAbility(int play, int ab) {
 
 bool BattleSituation::hasWorkingItem(int player, int it)
 {
-    return poke(player).item() == it && !pokelong[player].value("Embargoed").toBool();
+    //Klutz
+    return poke(player).item() == it && !pokelong[player].value("Embargoed").toBool() && !hasWorkingAbility(player, 46);
 }
 
 int BattleSituation::move(int player, int slot)
@@ -978,7 +1010,8 @@ int BattleSituation::move(int player, int slot)
 
 void BattleSituation::inflictRecoil(int source, int target)
 {
-    if (koed(source))
+    //Rockhead
+    if (koed(source) || hasWorkingAbility(source,76))
         return;
 
     int recoil = turnlong[source]["Recoil"].toInt();
@@ -1031,6 +1064,11 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 	    sendMoveMessage(128, 2, player,0,target,turnlong[player]["Attack"].toInt());
 	    continue;
 	}
+
+        //Shield Dust
+        if (!self && hasWorkingAbility(targeted, 86)) {
+            continue;
+        }
 
 	/* There maybe different type of changes, aka status & mod in move 'Flatter' */
 	QStringList changes = effect.split('/');
@@ -1102,7 +1140,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 		    if (sep == '+') {
 			gainStatMod(targeted, stat, mod);
 		    } else if (sep == '-') {
-			loseStatMod(targeted, stat, mod);
+                        loseStatMod(targeted, stat, mod, self);
 		    } else {
 			changeStatMod(targeted, stat, mod);
 		    }
@@ -1126,7 +1164,8 @@ void BattleSituation::healConfused(int player)
 
 void BattleSituation::inflictConfused(int player)
 {
-    if (!pokelong[player]["Confused"].toBool()) {
+    //OwnTempo
+    if (!pokelong[player]["Confused"].toBool() && !hasWorkingAbility(player,65)) {
 	pokelong[player]["Confused"] = true;
 	pokelong[player]["ConfusedCount"] = (rand() % 4) + 1;
 	notify(All, StatusChange, player, qint8(-1));
@@ -1144,15 +1183,18 @@ void BattleSituation::inflictStatus(int player, int status)
 {
     if (poke(player).status() == Pokemon::Fine) {
 	if (status == Pokemon::Poisoned || status == Pokemon::DeeplyPoisoned) {
-	    if (!hasType(player, Pokemon::Poison) && !hasType(player, Pokemon::Steel)) {
+            //Immunity
+            if (!hasType(player, Pokemon::Poison) && !hasType(player, Pokemon::Steel) && !hasWorkingAbility(player, 40)) {
 		changeStatus(player, status);
 	    }
 	} else if (status == Pokemon::Burnt) {
-	    if (!hasType(player, Pokemon::Fire)) {
+            /* Water Veil */
+            if (!hasType(player, Pokemon::Fire) && !hasWorkingAbility(player, 121)) {
 		changeStatus(player, status);
 	    }
 	} else if (status == Pokemon::Frozen) {
-	    if (!isWeatherWorking(Sunny) && !hasType(player, Pokemon::Ice)) {
+            /* Magma Armor */
+            if (!isWeatherWorking(Sunny) && !hasType(player, Pokemon::Ice) && !hasWorkingAbility(player, 53)) {
 		changeStatus(player, status);
 	    }
         } else if (status == Pokemon::Asleep){
@@ -1160,8 +1202,11 @@ void BattleSituation::inflictStatus(int player, int status)
             if (!hasWorkingAbility(player, 42) && !hasWorkingAbility(player, 118)) {
                 changeStatus(player, status);
             }
-        } else {
-            changeStatus(player, status);
+        } else if (status == Pokemon::Paralysed){
+            /* Limber */
+            if (!hasWorkingAbility(player, 50)) {
+                changeStatus(player, status);
+            }
         }
     }
 }
@@ -1221,7 +1266,16 @@ void BattleSituation::endTurnWeather()
 }
 
 bool BattleSituation::isWeatherWorking(int weather) {
+    //Air lock & Cloud nine
+    if (hasWorkingAbility(Player1, 3) || hasWorkingAbility(Player1, 12) || hasWorkingAbility(Player2, 3) || hasWorkingAbility(Player2, 12)) {
+        return false;
+    }
     return this->weather() == weather;
+}
+
+bool BattleSituation::isSeductionPossible(int seductor, int naiveone) {
+    //Oblivious
+    return !hasWorkingAbility(naiveone,63) && poke(seductor).gender() != Pokemon::Neutral && poke(naiveone).gender() != Pokemon::Neutral && poke(seductor).gender() != poke(naiveone).gender();
 }
 
 bool BattleSituation::hasType(int player, int type)
@@ -1296,7 +1350,7 @@ void BattleSituation::gainStatMod(int player, int stat, int bonus)
     }
 }
 
-void BattleSituation::loseStatMod(int player, int stat, int malus)
+void BattleSituation::loseStatMod(int player, int stat, int malus, bool self)
 {
     QString path = tr("Boost%1").arg(stat);
     int boost = pokelong[player][path].toInt();
@@ -1338,7 +1392,7 @@ int BattleSituation::calculateDamage(int p, int t)
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
     int randnum = rand() % (255-217) + 217;
-    int ch = 1 + crit;
+    int ch = 1 + (crit * hasWorkingAbility(p,90)); //Sniper
     int power = move["Power"].toInt();
     int type = move["Type"].toInt();
 
@@ -1379,10 +1433,15 @@ int BattleSituation::calculateDamage(int p, int t)
     return damage;
 }
 
-int BattleSituation::repeatNum(context &move)
+int BattleSituation::repeatNum(int player, context &move)
 {
     int min = 1+move["RepeatMin"].toInt();
     int max = 1+move["RepeatMax"].toInt();
+
+    //Skill link
+    if (hasWorkingAbility(player, 88)) {
+        return max;
+    }
 
     if (min == max) {
 	return min;
@@ -1395,6 +1454,11 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 {
     if (koed(player)) {
 	return;
+    }
+
+    //Magic guard
+    if (hasWorkingAbility(player, 52) && !straightattack) {
+        return;
     }
 
     if (straightattack)
@@ -1663,6 +1727,11 @@ void BattleSituation::fail(int player, int move, int part, int type)
 PokeFraction BattleSituation::getStatBoost(int player, int stat)
 {
     int boost = pokelong[player][tr("Boost%1").arg(stat)].toInt();
+
+    //simple
+    if (hasWorkingAbility(player,87)) {
+        boost *= 2;
+    }
 
     /* Boost is 1 if boost == 0,
        (2+boost)/2 if boost > 0;

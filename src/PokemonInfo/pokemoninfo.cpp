@@ -53,6 +53,7 @@ QString CategoryInfo::m_Directory;
 
 QStringList AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
+QList<AbilityInfo::Effect> AbilityInfo::m_Effects;
 
 QStringList GenderInfo::m_Names;
 QList<QPixmap> GenderInfo::m_Pictures;
@@ -569,6 +570,12 @@ int MoveInfo::Power(int movenum)
     return m_PowerS[movenum].toInt();
 }
 
+bool MoveInfo::isOHKO(int movenum)
+{
+    //Fissure, Guillotine, Horndrill, Sheer Cold
+    return (movenum == 133 || movenum == 166 || movenum == 186 || movenum == 353);
+}
+
 int MoveInfo::Type(int movenum)
 {
     return m_Type[movenum];
@@ -1032,6 +1039,26 @@ void AbilityInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
+    loadEffects();
+}
+
+void AbilityInfo::loadEffects()
+{
+    QList<QString> m_temp;
+    fill_container_with_file(m_temp,path("ability_effects.txt"));
+
+    foreach(QString str, m_temp) {
+        QStringList content = str.split('#').front().split('-');
+        if (content.size() == 1) {
+            m_Effects.push_back(Effect(content[0].toInt()));
+        } else {
+            m_Effects.push_back(Effect(content[0].toInt(), content[1].toInt()));
+        }
+    }
+}
+
+AbilityInfo::Effect AbilityInfo::Effects(int abnum) {
+    return m_Effects[abnum];
 }
 
 QString AbilityInfo::Name(int abnum)

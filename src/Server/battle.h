@@ -83,7 +83,7 @@ public:
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
     void gainStatMod(int player, int stat, int bonus);
-    void loseStatMod(int player, int stat, int malus);
+    void loseStatMod(int player, int stat, int malus, bool self);
     /* Does not do extra operations,just a setter */
     void changeStatus(int player, int status);
     void changeStatus(int team, int poke, int status);
@@ -115,6 +115,7 @@ public:
     void acquireAbility(int play, int ability);
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
+    bool isSeductionPossible(int seductor, int naiveone);
     int move(int player, int slot);
     bool hasMove(int player, int move);
     int weather();
@@ -123,7 +124,7 @@ public:
     bool hasSubstitute(int player);
     void requestSwitchIns();
     void requestSwitch(int player);
-    int repeatNum(context &move);
+    int repeatNum(int player, context &move);
     PokeFraction getStatBoost(int player, int stat);
     int getStat(int player, int stat);
     /* conversion for sending a message */
