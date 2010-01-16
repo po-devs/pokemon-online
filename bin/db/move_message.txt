@@ -1,7 +1,7 @@
 
-%s absorbed %f's life!|%s devoured %f's dreams!
-A ring of water surrounds %s|Aquaring recovered %s's hp a little.
-A sweet flagrance flowed through %ts's team.|A chime resounded around %ts's team.
+%s absorbed %f's life!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
+A ring of water surrounds %s!|Aquaring recovered %s's hp a little.
+A sweet flagrance flowed through %ts's team!|A chime resounded around %ts's team!
 
 
 
@@ -41,7 +41,7 @@ A sweet flagrance flowed through %ts's team.|A chime resounded around %ts's team
 
 
 
-
+%f's Sturdy made the attack fail!
 
 %s threw %i at %f!
 %s pumped itself!

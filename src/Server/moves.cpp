@@ -125,7 +125,13 @@ struct MMLeech : public MM
 		if (b.hasWorkingItem(s, 1)) /* Big root */ {
 		    recovered = recovered * 13 / 10;
 		}
-		b.healLife(s, recovered);
+                //Liquid Ooze
+                if (!b.hasWorkingAbility(t, 51)) {
+                    b.healLife(s, recovered);
+                } else {
+                    b.sendMoveMessage(1,2,s,Pokemon::Poison,t);
+                    b.inflictDamage(s,recovered,s,false);
+                }
 	    }
 	}
     }
@@ -574,9 +580,9 @@ struct MMFeint : public MM
     }
 };
 
-struct MM0HKO : public MM
+struct MMOHKO : public MM
 {
-    MM0HKO() {
+    MMOHKO() {
 	functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
     }
@@ -588,7 +594,11 @@ struct MM0HKO : public MM
     static void daf(int s, int t, BS &b) {
 	if (b.poke(s).level() < b.poke(t).level()) {
 	    turn(b,s)["Failed"] = true;
+            return;
 	}
+        if (b.hasWorkingAbility(t, 103)) {
+            b.fail(s,43,0,type(b,s));
+        }
     }
 };
 
@@ -791,7 +801,8 @@ struct MMRest : public MM
     }
 
     static void daf(int s, int, BS &b) {
-	if (b.poke(s).status() == Pokemon::Asleep || b.poke(s).isFull() || b.hasWorkingAbility(s,42)) {
+        // Insomnia, Vital Spirit
+        if (b.poke(s).status() == Pokemon::Asleep || b.poke(s).isFull() || b.hasWorkingAbility(s,42) || b.hasWorkingAbility(s,118)) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -1159,7 +1170,7 @@ struct MMAttract : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-	if (b.poke(s).gender() == Pokemon::Neutral || b.poke(t).gender() == Pokemon::Neutral || b.poke(s).gender() == b.poke(t).gender()) {
+        if (!b.isSeductionPossible(s,t)) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -3394,7 +3405,7 @@ struct MMStruggle : public MM
     static void uas(int s, int, BS &b) {
         if (!b.koed(s)) {
             b.sendMoveMessage(127,0,s);
-            b.inflictDamage(s,b.poke(s).totalLifePoints()/4,s,false);
+            b.inflictDamage(s,b.poke(s).totalLifePoints()/4,s,true); //true cuz likely cuz magic guard doesn't prevent it
         }
     }
 };
@@ -3559,6 +3570,18 @@ struct MMYawn : public MM {
     }
 };
 
+struct MMCaptivate : public MM {
+    MMCaptivate() {
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (!b.isSeductionPossible(s,t)) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+};
+
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -3635,7 +3658,7 @@ void MoveEffect::init()
     REGISTER_MOVE(40, FakeOut);
     REGISTER_MOVE(41, FalseSwipe);
     REGISTER_MOVE(42, Feint);
-    REGISTER_MOVE(43, 0HKO); /* Fissure, Guillotine, Horn Drill, Sheer cold */
+    REGISTER_MOVE(43, OHKO); /* Fissure, Guillotine, Horn Drill, Sheer cold */
     REGISTER_MOVE(44, Flail); /* Flail, Reversal */
     REGISTER_MOVE(45, Fling);
     REGISTER_MOVE(46, FocusEnergy);
@@ -3693,7 +3716,7 @@ void MoveEffect::init()
     REGISTER_MOVE(98, PsychoShift);
     REGISTER_MOVE(99, Psywave);
     REGISTER_MOVE(100, Punishment);
-    /* 101 is free */
+    REGISTER_MOVE(101, Captivate);
     REGISTER_MOVE(102, Rage);
     REGISTER_MOVE(103, RapidSpin);
     REGISTER_MOVE(104, RazorWind);
