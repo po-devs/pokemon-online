@@ -114,6 +114,7 @@ public:
     bool hasType(int player, int type);
     bool hasWorkingAbility(int play, int ability);
     void acquireAbility(int play, int ability);
+    int ability(int player);
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
     bool isSeductionPossible(int seductor, int naiveone);

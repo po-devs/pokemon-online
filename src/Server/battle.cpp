@@ -305,6 +305,13 @@ BattleChoices BattleSituation::createChoice(int player)
 		ret.switchAllowed = false;
 	    }
 	}
+
+        if (!koed(rev(player))) {
+            callaeffects(rev(player),player, "IsItTrapped");
+            if (turnlong[player].value("Trapped").toBool()) {
+                ret.switchAllowed = false;
+            }
+        }
     }
 
     return ret;
@@ -559,8 +566,8 @@ void BattleSituation::callieffects(int source, int target, const QString &name)
 void BattleSituation::callaeffects(int source, int target, const QString &name)
 {
     qDebug() << "Calling abilitiy effects for " << name;
-    if (hasWorkingAbility(source, poke(source).ability()))
-        AbilityEffect::activate(name, poke(source).ability(), source, target, *this);
+    if (hasWorkingAbility(source, ability(source)))
+        AbilityEffect::activate(name, ability(source), source, target, *this);
 }
 
 void BattleSituation::sendBack(int player)
@@ -605,12 +612,14 @@ bool BattleSituation::testAccuracy(int player, int target)
     }
 
     callieffects(player,target,"StatModifier");
+    callaeffects(player,target,"StatModifier");
     callieffects(target,player,"StatModifier");
     /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
 	due to the ever rounding down to make an int */
     acc = acc * getStatBoost(player, 7) * getStatBoost(target, 6)
 	    * (20+turnlong[player]["Stat7ItemModifier"].toInt())/20
-	    * (20-turnlong[target]["Stat6ItemModifier"].toInt())/20;
+            * (20-turnlong[target]["Stat6ItemModifier"].toInt())/20
+            * (10+turnlong[player]["Stat7AbilityModifier"].toInt())/10;
 
     if (rand() % 100 < acc) {
 	return true;
@@ -816,8 +825,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (!specialOccurence)
 	losePP(player, move, 1);
 
-
-
     QList<int> targetList;
 
     switch(turnlong[player]["PossibleTargets"].toInt()) {
@@ -1001,8 +1008,12 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
 }
 
 void BattleSituation::acquireAbility(int play, int ab) {
-    poke(play).ability() = ab;
-    AbilityEffect::setup(poke(play).ability(),play,*this);
+    pokelong[play]["Ability"] = ab;
+    AbilityEffect::setup(ability(play),play,*this);
+}
+
+int BattleSituation::ability(int player) {
+    return pokelong[player]["Ability"].toInt();
 }
 
 bool BattleSituation::hasWorkingItem(int player, int it)
@@ -1414,6 +1425,9 @@ int BattleSituation::calculateDamage(int p, int t)
 	power /= 2;
     }
 
+    callaeffects(p,t,"BasePowerModifier");
+    power = power * (10+move["BasePowerAbilityModifier"].toInt())/10;
+
     int damage = ((((level * 2 / 5) + 2) * power * attack / 50) / def);
     damage = damage * ((poke.status() == Pokemon::Burnt && move["Category"].toInt() == Move::Physical) ? PokeFraction(1,2) : PokeFraction(1,1));
     /* Light screen / Reflect */
@@ -1525,6 +1539,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	    calleffects(source, player, "UponDamageInflicted");
 	    if (!sub) {
 		callieffects(player, source, "UponOffensiveDamageReceived");
+                callaeffects(player, source, "UponOffensiveDamageReceived");
 		calleffects(player, source, "UponOffensiveDamageReceived");
 		callpeffects(player, source, "UponOffensiveDamageReceived");
 	    }
@@ -1690,6 +1705,7 @@ int BattleSituation::getStat(int player, int stat)
 {
     QString q = "Stat"+QString::number(stat);
     callieffects(player, player, "StatModifier");
+    callaeffects(player, player, "StatModifier");
     int ret = pokelong[player][q].toInt()*getStatBoost(player, stat)*(20+turnlong[player][q+"AbilityModifier"].toInt())/20*(20+turnlong[player][q+"ItemModifier"].toInt())/20;
 
     if (stat == Speed && teamzone[player].value("TailWindCount").toInt() > 0){

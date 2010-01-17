@@ -1,14 +1,13 @@
 
 
 %s's Aftermath damages %f!
+%s is extremely pissed off!
+%s's Anticipation makes it shiver!
+
+%f has bad dreams!
 
 
-
-
-
-
-
-
+%s's Color Change changes its type to %t!
 
 
 

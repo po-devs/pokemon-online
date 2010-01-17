@@ -3526,7 +3526,7 @@ struct MMWorrySeed : public MM {
 
     static void daf(int s, int t, BS &b) {
         /* Truant & multi-type */
-        if (b.poke(t).ability() == 59 || b.poke(t).ability() == 115) {
+        if (b.ability(t) == 59 || b.ability(t) == 115) {
             turn(b,s)["Failed"] = true;
         }
     }
