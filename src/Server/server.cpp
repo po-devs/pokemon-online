@@ -4,6 +4,7 @@
 #include "battle.h"
 #include "moves.h"
 #include "items.h"
+#include "abilities.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
 Server::Server(quint16 port)
@@ -30,6 +31,7 @@ Server::Server(quint16 port)
 
     MoveEffect::init();
     ItemEffect::init();
+    AbilityEffect::init();
 
     printLine(tr("Move & items special effects loaded"));
 

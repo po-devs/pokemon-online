@@ -3,6 +3,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "moves.h"
 #include "items.h"
+#include "abilities.h"
 #include <ctime> /* for random numbers, time(NULL) needed */
 #include <map>
 #include <algorithm>
@@ -344,7 +345,7 @@ std::vector<int> BattleSituation::sortedBySpeed() {
     if (getStat(Player1, Speed) < getStat(Player2, Speed)) {
         ret.push_back(Player2);
         ret.push_back(Player1);
-    } else if (getStat(Player1, Speed) < getStat(Player2, Speed)) {
+    } else if (getStat(Player2, Speed) < getStat(Player1, Speed)) {
         ret.push_back(Player1);
         ret.push_back(Player2);
     } else {
@@ -372,16 +373,18 @@ void BattleSituation::analyzeChoices()
     if (!turnlong[Player2].contains("NoChoice") && choice[Player2].attack())
 	MoveEffect::setup(move(Player2,choice[Player2].numSwitch), Player2, Player1, *this);
 
-    std::multimap<int, int, std::greater<int> > priorities;
+    std::map<int, std::vector<int>, std::greater<int> > priorities;
     std::vector<int> switches;
 
     std::vector<int> playersByOrder = sortedBySpeed();
+
+    qDebug() << "First: " << PokemonInfo::Name(poke(playersByOrder[0]).num()) << ", Second: " << PokemonInfo::Name(poke(playersByOrder[1]).num());
 
     foreach(int i, playersByOrder) {
 	if (choice[i].poke())
             switches.push_back(i);
 	else
-	    priorities.insert(std::pair<int, int>(turnlong[i]["SpeedPriority"].toInt(), i));
+            priorities[turnlong[i]["SpeedPriority"].toInt()].push_back(i);
     }
 
     foreach(int player, switches) {
@@ -391,26 +394,23 @@ void BattleSituation::analyzeChoices()
 	callEntryEffects(player);
     }
 
-    std::multimap<int, int, std::greater<int> >::const_iterator it;
-    std::multimap<int, int, std::greater<int> >::const_iterator itEnd;
+    std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
 
-    for (it = priorities.begin(); it != priorities.end(); ) {
-	itEnd = priorities.upper_bound(it->first);
+    for (it = priorities.begin(); it != priorities.end(); ++it) {
 
 	/* There's another priority system: Ability stall, and Item lagging tail */
-	std::multimap<int, int, std::greater<int> > secondPriorities;
-	for (; it != itEnd; ++it) {
-	    int player = it->second;
+        std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
+
+        foreach (int player, it->second) {
 	    callieffects(player,player, "TurnOrder");
-	    secondPriorities.insert(std::pair<int,int>(turnlong[player]["TurnOrder"].toInt(), player));
+            secondPriorities[turnlong[player]["TurnOrder"].toInt()].push_back(player);
 	}
 
-	std::multimap<int, int, std::greater<int> >::const_iterator it2;
-	std::multimap<int, int, std::greater<int> >::const_iterator it2End;
-
-        for(it2 = secondPriorities.begin(); it2 != secondPriorities.end(); ++it2) {
-            analyzeChoice(it2->second);
-	}
+        for(std::map<int, std::vector<int> >::iterator it = secondPriorities.begin(); it != secondPriorities.end(); ++it) {
+            foreach(int p, it->second) {
+                analyzeChoice(p);
+            }
+        }
     }
 }
 
@@ -470,12 +470,12 @@ void BattleSituation::sendPoke(int player, int pok)
     for (int i = 1; i <= 6; i++)
 	pokelong[player][QString("Stat%1").arg(i)] = poke(player).normalStat(i);
     pokelong[player]["Level"] = poke(player).level();
-
-    ItemEffect::setup(poke(player).item(),player,*this);
 }
 
 void BattleSituation::callEntryEffects(int player)
 {
+    ItemEffect::setup(poke(player).item(),player,*this);
+    acquireAbility(player, poke(player).ability());
     calleffects(player, player, "UponSwitchIn");
     callzeffects(player, player, "UponSwitchIn");
     calleffects(player, player, "AfterSwitchIn");
@@ -554,6 +554,13 @@ void BattleSituation::callieffects(int source, int target, const QString &name)
     //Klutz
     if (!pokelong[source].value("Embargoed").toBool() && !hasWorkingAbility(source, 46))
 	ItemEffect::activate(name, poke(source).item(), source, target, *this);
+}
+
+void BattleSituation::callaeffects(int source, int target, const QString &name)
+{
+    qDebug() << "Calling abilitiy effects for " << name;
+    if (hasWorkingAbility(source, poke(source).ability()))
+        AbilityEffect::activate(name, poke(source).ability(), source, target, *this);
 }
 
 void BattleSituation::sendBack(int player)
@@ -922,6 +929,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		if (turnlong[player]["PhysicalContact"].toBool()) {
 		    if (!sub)
 			callieffects(target, player, "UponPhysicalAssault");
+                    callaeffects(target,player,"UponPhysicalAssault");
 		}
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
 		applyMoveStatMods(player, target);
@@ -994,6 +1002,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
 
 void BattleSituation::acquireAbility(int play, int ab) {
     poke(play).ability() = ab;
+    AbilityEffect::setup(poke(play).ability(),play,*this);
 }
 
 bool BattleSituation::hasWorkingItem(int player, int it)
@@ -1004,7 +1013,6 @@ bool BattleSituation::hasWorkingItem(int player, int it)
 
 int BattleSituation::move(int player, int slot)
 {
-    qDebug() << pokelong[player]["Move"+QString::number(slot)].toInt();
     return pokelong[player]["Move"+QString::number(slot)].toInt();
 }
 
@@ -1368,6 +1376,8 @@ void BattleSituation::changeStatMod(int player, int stat, int newstat)
 
 int BattleSituation::calculateDamage(int p, int t)
 {
+    callaeffects(p,t,"DamageFormulaStart");
+
     context &player = pokelong[p];
     context &move = turnlong[p];
     PokeBattle &poke = this->poke(p);
@@ -1448,6 +1458,10 @@ int BattleSituation::repeatNum(int player, context &move)
     } else {
 	return min + (rand() % (max-min));
     }
+}
+
+void BattleSituation::inflictPercentDamage(int player, int percent, int source, bool straightattack) {
+    inflictDamage(player,poke(player).totalLifePoints()*percent/100,source, straightattack);
 }
 
 void BattleSituation::inflictDamage(int player, int damage, int source, bool straightattack)
@@ -1708,6 +1722,19 @@ void BattleSituation::sendMoveMessage(int move, int part, int src, int type, int
 	notify(All, MoveMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe), qint16(other), q);
     }
 }
+
+void BattleSituation::sendAbMessage(int move, int part, int src, int foe, int type, int other)
+{
+    if (foe == -1) {
+        notify(All, AbilityMessage, src, quint16(move), uchar(part), qint8(type));
+    } else if (other == -1) {
+        notify(All, AbilityMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe));
+    } else {
+        notify(All, AbilityMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe), qint16(other));
+    }
+}
+
+
 
 void BattleSituation::sendItemMessage(int move, int src, int part, int foe)
 {

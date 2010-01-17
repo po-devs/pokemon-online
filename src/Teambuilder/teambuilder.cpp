@@ -566,7 +566,7 @@ void TB_PokemonBody::initMoves()
 	completer->setCompletionColumn(Name);
 	completer->setCaseSensitivity(Qt::CaseInsensitive);
 	completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
-	completer->setCompletionMode(QCompleter::InlineCompletion);
+        completer->setCompletionMode(QCompleter::PopupCompletion);
 	m_moves[i]->setCompleter(completer);
 
 	connect(m_moves[i], SIGNAL(customContextMenuRequested(QPoint)), m_moves[i], SLOT(selectAll()));
