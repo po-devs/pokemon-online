@@ -310,7 +310,6 @@ public:
     /* directory where all the data is */
     static void init(const QString &dir="./");
 
-    /* The type of the hidden power depending on the dvs */
     static QString Stat(int stat);
     static QString Status(int status);
 };

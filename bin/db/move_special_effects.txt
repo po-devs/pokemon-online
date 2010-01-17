@@ -1,4 +1,4 @@
-#114, 145 & 156 are free
+#145 & 156 are free
 1#leech
 
 
@@ -117,7 +117,7 @@
 35#endure
 
 36#eruption
-37#explosion 37 is losing hp, def reduction is hardencoded
+37|114#explosion 37 is losing hp, def reduction is hardencoded, 114 is damp
 
 
 39#façade
@@ -344,7 +344,7 @@
 
 
 91#seismic toss
-37#self destruct--def reduction is not in that file but in the program
+37|114#self destruct--def reduction is not in that file but in the program
 
 
 13#shadow force

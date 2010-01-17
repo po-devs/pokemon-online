@@ -9,13 +9,15 @@
 
 %s's Color Change changes its type to %t!
 
+%s's Cute Charm infatuated %f!
+%s's Download activates!
 
 
+%s's Dry Skin absorbs the attack!|%s's Dry Skin heals it!|%s's Dry Skin hurts it!
+%s's Effect Spore activates!
 
-
-
-
-
+%s's %a activates!
+%s's raises its flame intensity!
 
 
 

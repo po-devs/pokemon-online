@@ -112,7 +112,7 @@ A sorrowful melody could be heard by everyone on the field.|%s's perish count fe
 %s learned %m!
 %s and %f switched abilities!
 
-
+%s's Damp prevents it from working!
 
 
 
