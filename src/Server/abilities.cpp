@@ -182,6 +182,169 @@ struct AMCompoundEyes : public AM {
     }
 };
 
+
+struct AMCuteCharm : public AM {
+    AMCuteCharm() {
+        functions["UponPhysicalAssault"] = &upa;
+    }
+
+    static void upa(int s, int t, BS &b) {
+        if (!b.koed(t) && b.isSeductionPossible(s,t) && rand() % 100 < 30 && !poke(b,t).contains("AttractedTo")) {
+            poke(b,t)["AttractedTo"] = s;
+            poke(b,s)["Attracted"] = t;
+            addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
+            b.sendAbMessage(11,0,s,t);
+            if (b.hasWorkingItem(s, 17)) /* mental herb*/ {
+                b.sendItemMessage(7,s);
+                b.disposeItem(t);
+                poke(b,t).remove("Attracted");
+            }
+        }
+    }
+
+    static void pda(int s, int, BS &b) {
+        if (poke(b,s).contains("AttractedTo")) {
+            int seducer = poke(b,s)["AttractedTo"].toInt();
+            if (poke(b,seducer).contains("Attracted") && poke(b,seducer)["Attracted"].toInt() == s) {
+                b.sendMoveMessage(58,0,s,0,seducer);
+                if (rand() % 2 == 0) {
+                    turn(b,s)["ImpossibleToMove"] = true;
+                    b.sendMoveMessage(58, 2,s);
+                }
+            }
+        }
+    }
+};
+
+struct AMDownload : public AM {
+    AMDownload() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us(int s, int , BS &b) {
+        int t = b.rev(s);
+        b.sendAbMessage(12,0,s);
+        if (b.koed(t) || b.getStat(t, Defense) > b.getStat(t, SpDefense)) {
+            b.gainStatMod(s, SpAttack,1);
+        } else {
+            b.gainStatMod(s, Attack,1);
+        }
+    }
+};
+
+struct AMDrizzle : public AM {
+    AMDrizzle() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us (int s, int , BS &b) {
+        if(b.weather() != poke(b,s)["AbilityArg"].toInt()) {
+            b.callForth(poke(b,s)["AbilityArg"].toInt(), -1);
+        }
+    }
+};
+
+struct AMDrySkin : public AM {
+    AMDrySkin() {
+        functions["BasePowerFoeModifier"] = &bpfm;
+        functions["WeatherSpecial"] = &ws;
+        functions["OpponentBlock"] = &oa;
+    }
+
+    static void bpfm(int , int t, BS &b) {
+        if (type(b,t) == Pokemon::Fire) {
+            turn(b,t)["BasePowerFoeAbilityModifier"] = 5;
+        }
+    }
+
+    static void oa(int s, int t, BS &b) {
+        if (type(b,t) == Pokemon::Water) {
+            turn(b,s)[QString("Block%1").arg(t)] = true;
+            b.sendAbMessage(15,0,s,s,Pokemon::Water);
+            b.healLife(s, b.poke(s).totalLifePoints()/4);
+        }
+    }
+
+    static void ws (int s, int , BS &b) {
+        if (b.isWeatherWorking(BattleSituation::Rain)) {
+            b.sendAbMessage(15,1,s,s,Pokemon::Water);
+            b.healLife(s, b.poke(s).totalLifePoints()/8);
+        } else if (b.isWeatherWorking(BattleSituation::Rain)) {
+            b.sendAbMessage(15,2,s,s,Pokemon::Fire);
+            b.inflictDamage(s, b.poke(s).totalLifePoints()/8, s, false);
+        }
+    }
+};
+
+struct AMEffectSpore : public AM {
+    AMEffectSpore() {
+        functions["UponPhysicalAssault"] = &upa;
+    }
+
+    static void upa(int s, int t, BS &b) {
+        if (b.poke(t).status() == Pokemon::Fine && rand() % 100 < 30) {
+            if (rand() % 3 == 0) {
+                if (b.canGetStatus(t,Pokemon::Asleep)) {
+                    b.sendAbMessage(16,0,s,t,Pokemon::Grass);
+                    b.inflictStatus(t, Pokemon::Asleep);
+                }
+            } else if (rand() % 1 == 0) {
+                if (b.canGetStatus(t,Pokemon::Paralysed)) {
+                    b.sendAbMessage(16,0,s,t,Pokemon::Electric);
+                    b.inflictStatus(t, Pokemon::Paralysed);
+                }
+            } else {
+                if (b.canGetStatus(t,Pokemon::Poisoned)) {
+                    b.sendAbMessage(16,0,s,t,Pokemon::Poison);
+                    b.inflictStatus(t, Pokemon::Poisoned);
+                }
+            }
+        }
+    }
+};
+
+struct AMFlameBody : public AM {
+    AMFlameBody() {
+        functions["UponPhysicalAssault"] = &upa;
+    }
+
+    static void upa(int s, int t, BS &b) {
+        if (b.poke(t).status() == Pokemon::Fine && rand() % 100 < 30) {
+            if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
+                b.sendAbMessage(18,0,s,t,Pokemon::Curse,b.ability(s));
+                b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt());
+            }
+        }
+    }
+};
+
+struct AMFlashFire : public AM {
+    AMFlashFire() {
+        functions["OpponentBlock"] = &op;
+    }
+
+    static void op(int s, int t, BS &b) {
+        if (type(b,t) == Pokemon::Fire) {
+            turn(b,s)[QString("Block%1").arg(t)] = true;
+            b.sendAbMessage(19,0,s,s,Pokemon::Fire);
+            poke(b,s)["FlashFired"] = true;
+        }
+    }
+};
+
+struct AMFlowerGift : public AM {
+    AMFlowerGift() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm(int s, int, BS &b) {
+        if (b.isWeatherWorking(BattleSituation::Sunny)) {
+            turn(b,s)["Stat1AbilityModifier"] = 10;
+            turn(b,s)["Stat5AbilityModifier"] = 10;
+        }
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
@@ -190,7 +353,10 @@ struct AMCompoundEyes : public AM {
     IsItTrapped
     EndTurn
     BasePowerModifier
+    BasePowerFoeModifier
     StatModifier
+    WeatherSpecial
+    OpponentBlock
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
@@ -207,4 +373,12 @@ void AbilityEffect::init()
     REGISTER_AB(8, Chlorophyll);
     REGISTER_AB(9, ColorChange);
     REGISTER_AB(10, CompoundEyes);
+    REGISTER_AB(11, CuteCharm);
+    REGISTER_AB(13, Download);
+    REGISTER_AB(14, Drizzle);
+    REGISTER_AB(15, DrySkin);
+    REGISTER_AB(16, EffectSpore);
+    REGISTER_AB(18, FlameBody);
+    REGISTER_AB(19, FlashFire);
+    REGISTER_AB(20, FlowerGift);
 }

@@ -169,6 +169,9 @@ void BattleSituation::endTurn()
     if (!koed(Player2))
 	callieffects(Player2, Player2, "EndTurn");
 
+    callaeffects(Player1,Player2,"EndTurn");
+    callaeffects(Player2,Player1,"EndTurn");
+
     callpeffects(Player1, Player2, "EndTurn");
     callpeffects(Player2, Player1, "EndTurn");
 
@@ -855,6 +858,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	if (target != player && !testAccuracy(player, target)) {
 	    continue;
 	}
+        callaeffects(target,player,"OpponentBlock");
+        if (turnlong[target].contains(QString("Block%1").arg(player))) {
+            continue;
+        }
 	if (turnlong[player]["Power"].toInt() > 0)
 	{
             qDebug() << "Going offensive";
@@ -1198,35 +1205,23 @@ void BattleSituation::healStatus(int player, int status)
     }
 }
 
+bool BattleSituation::canGetStatus(int player, int status) {
+    switch (status) {
+    case Pokemon::Paralysed: return !hasWorkingAbility(player, 50);
+    case Pokemon::Asleep: return !hasWorkingAbility(player, 42) && !hasWorkingAbility(player, 118);
+    case Pokemon::Burnt: return !hasType(player, Pokemon::Fire) && !hasWorkingAbility(player, 121);
+    case Pokemon::DeeplyPoisoned:
+    case Pokemon::Poisoned: return !hasType(player, Pokemon::Poison) && !hasType(player, Pokemon::Steel) && !hasWorkingAbility(player, 40);
+    case Pokemon::Frozen: return !isWeatherWorking(Sunny) && !hasType(player, Pokemon::Ice) && !hasWorkingAbility(player, 53);
+    default:
+        return false;
+    }
+}
+
 void BattleSituation::inflictStatus(int player, int status)
 {
-    if (poke(player).status() == Pokemon::Fine) {
-	if (status == Pokemon::Poisoned || status == Pokemon::DeeplyPoisoned) {
-            //Immunity
-            if (!hasType(player, Pokemon::Poison) && !hasType(player, Pokemon::Steel) && !hasWorkingAbility(player, 40)) {
-		changeStatus(player, status);
-	    }
-	} else if (status == Pokemon::Burnt) {
-            /* Water Veil */
-            if (!hasType(player, Pokemon::Fire) && !hasWorkingAbility(player, 121)) {
-		changeStatus(player, status);
-	    }
-	} else if (status == Pokemon::Frozen) {
-            /* Magma Armor */
-            if (!isWeatherWorking(Sunny) && !hasType(player, Pokemon::Ice) && !hasWorkingAbility(player, 53)) {
-		changeStatus(player, status);
-	    }
-        } else if (status == Pokemon::Asleep){
-            /* Insomnia, Vital Spirit */
-            if (!hasWorkingAbility(player, 42) && !hasWorkingAbility(player, 118)) {
-                changeStatus(player, status);
-            }
-        } else if (status == Pokemon::Paralysed){
-            /* Limber */
-            if (!hasWorkingAbility(player, 50)) {
-                changeStatus(player, status);
-            }
-        }
+    if (poke(player).status() == Pokemon::Fine && canGetStatus(player,status)) {
+        changeStatus(player, status);
     }
 }
 
@@ -1262,7 +1257,7 @@ void BattleSituation::endTurnWeather()
     } else {
 	notify(All, WeatherMessage, Player1, qint8(ContinueWeather), qint8(weather));
 	/* And now the weather damage! */
-	if ((weather == Hail || weather == SandStorm) && isWeatherWorking(weather)) {
+        if (isWeatherWorking(weather)) {
 	    QSet<int> immuneTypes;
 	    if (weather == Hail) {
 		immuneTypes << Pokemon::Ice;
@@ -1272,7 +1267,8 @@ void BattleSituation::endTurnWeather()
 	    for (int i = Player1; i <= Player2; i++) {
 		if (koed(i))
 		    continue;
-		if (!immuneTypes.contains(getType(i,1)) && !immuneTypes.contains(getType(i,2))) {
+                callaeffects(i,i,"WeatherSpecial");
+                if (!turnlong[i].contains("WeatherSpecialed") && (weather == Hail || weather == SandStorm) &&!immuneTypes.contains(getType(i,1)) && !immuneTypes.contains(getType(i,2))) {
 		    notify(All, WeatherMessage, i, qint8(HurtWeather),qint8(weather));
 		    inflictDamage(i, poke(i).totalLifePoints()/16, i, false);
 		}
@@ -1426,7 +1422,8 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     callaeffects(p,t,"BasePowerModifier");
-    power = power * (10+move["BasePowerAbilityModifier"].toInt())/10;
+    callaeffects(t,p,"BasePowerFoeModifier");
+    power = power * (10+move["BasePowerAbilityModifier"].toInt())/10 * (20+move["BasePowerFoeAbilityModifier"].toInt())/20;
 
     int damage = ((((level * 2 / 5) + 2) * power * attack / 50) / def);
     damage = damage * ((poke.status() == Pokemon::Burnt && move["Category"].toInt() == Move::Physical) ? PokeFraction(1,2) : PokeFraction(1,1));
@@ -1447,12 +1444,21 @@ int BattleSituation::calculateDamage(int p, int t)
 	    damage /= 2;
 	}
     }
+    //FlashFire
+    if (type == Move::Fire && pokelong[p].contains("FlashFired") && hasWorkingAbility(p, 25)) {
+        damage = damage * 3 / 2;
+    }
     damage = (damage+2)*ch;
     callieffects(p,t,"Mod2Modifier");
     damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
     damage = damage *randnum*100/255/100*stab/2*typemod/4;
 
-    damage = damage * ((hasWorkingItem(p, 7) && typemod > 4)? 6 : 5)/5 /* mod3 */;
+    /* Mod 3 */
+    // FILTER / SOLID ROCK
+    if (typemod > 4 && (hasWorkingAbility(t,23) || hasWorkingAbility(t,94))) {
+        damage = damage * 3 / 4;
+    }
+    damage = damage * ((typemod > 4 && hasWorkingItem(p, 8))? 6 : 5)/5;
 
     return damage;
 }

@@ -1,4 +1,4 @@
-
+#12,17: free
 1#Adaptability
 2#Aftermath
 
@@ -14,14 +14,14 @@
 9#Color change
 10#CompoundEyes
 11#CuteCharm
-12#Damp
+
 13#Download
 14-2#Drizzle
 14-4#Drought
 15#Dry skin
 
 16#Effect Spore
-17#Filter
+
 18-2#Flame Body
 19#Flash Fire
 20#Flower Gift
@@ -92,7 +92,7 @@
 51-1#Snow cloak
 14-1#Snow Warning
 52#Solar power
-17#Solid Rock
+
 53#SoundProof
 54#Speed boost
 55#Stall

@@ -1170,7 +1170,7 @@ struct MMAttract : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (!b.isSeductionPossible(s,t)) {
+        if (!b.isSeductionPossible(s,t) || poke(b,t).contains("AttractedTo")){
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -1182,6 +1182,7 @@ struct MMAttract : public MM
 	b.sendMoveMessage(58,1,s,0,t);
 	if (b.hasWorkingItem(s, 17)) /* mental herb*/ {
 	    b.sendItemMessage(7,s);
+            poke(b,t).remove("Attracted");
 	    b.disposeItem(t);
 	}
     }
@@ -3582,6 +3583,21 @@ struct MMCaptivate : public MM {
     }
 };
 
+struct MMExplosion : public MM {
+    MMExplosion() {
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        //Damp
+        if (b.hasWorkingAbility(t,16)) {
+            b.fail(t,144,0);
+        } else if (b.hasWorkingAbility(s,16)) {
+            b.fail(s,144,0);
+        }
+    }
+};
+
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -3729,7 +3745,7 @@ void MoveEffect::init()
     REGISTER_MOVE(111, Sketch);
     /* Skill swap : remember, no multi-type/wonder guard */
     REGISTER_MOVE(113, WeatherBall);
-    /* 114 is free */
+    REGISTER_MOVE(114, Explosion);
     REGISTER_MOVE(115, SleepingUser);
     REGISTER_MOVE(116, SleepTalk);
     REGISTER_MOVE(117, SmellingSalt);
