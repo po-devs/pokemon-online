@@ -9,8 +9,8 @@
 
 7-9#Blaze
 8-4#Chlorophyll
-
 31#Clearbody
+
 9#Color change
 10#CompoundEyes
 11#CuteCharm

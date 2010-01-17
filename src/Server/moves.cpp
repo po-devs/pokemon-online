@@ -415,14 +415,14 @@ struct MMCurse : public MM
 
     static void uas(int s, int t, BS &b) {
 	if (turn(b,s)["CurseGhost"].toBool() == true) {
-	    b.inflictDamage(s, b.poke(s).totalLifePoints()/2, s);
+            b.inflictPercentDamage(s, 50, s);
 	    addFunction(poke(b,t), "EndTurn", "Cursed", &et);
 	    b.sendMoveMessage(25, 0, s, Pokemon::Curse, t);
 	}
     }
 
     static void et(int s, int, BS &b) {
-	b.inflictDamage(s, b.poke(s).totalLifePoints()/4, s);
+        b.inflictPercentDamage(s, 25, s);
 	b.sendMoveMessage(25, 1, s, Pokemon::Curse);
     }
 };
@@ -666,7 +666,7 @@ struct MMSuperFang : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-	b.inflictDamage(t, b.poke(t).lifePoints()/2, s, true);
+        b.inflictPercentDamage(t,50, s, true);
     }
 };
 
@@ -2883,7 +2883,7 @@ struct MMNightMare : public MM
     static void et(int s, int, BS &b) {
 	if (!b.koed(s) && b.poke(s).status() == Pokemon::Asleep) {
 	    b.sendMoveMessage(92,0,s,Pokemon::Ghost);
-	    b.inflictDamage(s, b.poke(s).totalLifePoints() / 4, s, false);
+            b.inflictPercentDamage(s, 25, s, false);
 	}
     }
 };
@@ -3405,7 +3405,7 @@ struct MMStruggle : public MM
     static void uas(int s, int, BS &b) {
         if (!b.koed(s)) {
             b.sendMoveMessage(127,0,s);
-            b.inflictDamage(s,b.poke(s).totalLifePoints()/4,s,true); //true cuz likely cuz magic guard doesn't prevent it
+            b.inflictPercentDamage(s,25,s,true); //true cuz likely cuz magic guard doesn't prevent it
         }
     }
 };

@@ -241,6 +241,7 @@ private:
     static QStringList m_Names;
     static QString m_Directory;
     static QList<Effect> m_Effects;
+    static QList<QStringList> m_Messages;
 
     static void loadNames();
     static void loadEffects();
@@ -252,6 +253,7 @@ public:
     /* Self-explainable functions */
     static QString Name(int abnum);
     static Effect Effects(int abnum);
+    static QString Message(int ab, int part);
     static int NumberOfAbilities();
 };
 

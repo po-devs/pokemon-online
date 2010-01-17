@@ -87,7 +87,7 @@ void BattleWindow::switchTo(int pokezone)
 void BattleWindow::clickforfeit()
 {
     if (QMessageBox::question(this, tr("Losing your battle"), tr("Do you mean to forfeit?"), QMessageBox::Yes | QMessageBox::No)
-	    == QMessageBox::Yes)
+        == QMessageBox::Yes)
 	emit forfeit();
 }
 
@@ -177,7 +177,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 
     switch (command)
     {
-	case SendOut:
+    case SendOut:
 	{
             std::cout << "Poke sent out!" << std::endl;
 	    if (self) {
@@ -196,12 +196,12 @@ void BattleWindow::receiveInfo(QByteArray inf)
 
 	    break;
 	}
-	case SendBack:
-            std::cout << "Poke sent back!" << std::endl;
-	    printLine(tr("%1 called %2 back!").arg(name(self), rnick(self)));
-	    switchToNaught(self);
-	    break;
-	case UseAttack:
+    case SendBack:
+        std::cout << "Poke sent back!" << std::endl;
+        printLine(tr("%1 called %2 back!").arg(name(self), rnick(self)));
+        switchToNaught(self);
+        break;
+    case UseAttack:
 	{
             std::cout << "Attack used!" << std::endl;
 	    qint16 attack;
@@ -211,7 +211,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    printHtml(tr("%1 used <span style='color:%2'><b>%3</b></span>!").arg(escapeHtml(tu(nick(self))), TypeInfo::Color(MoveInfo::Type(attack)).name(), MoveInfo::Name(attack)));
 	    break;
 	}
-	case ChangePP:
+    case ChangePP:
 	{
 	    quint8 move, PP;
 	    in  >> move >> PP;
@@ -220,21 +220,21 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    info().currentPoke().move(move).PP() = PP;
 	    myazones[info().currentIndex]->attacks[move]->updateAttack(info().currentPoke().move(move));
 	}
-	case OfferChoice:
+    case OfferChoice:
 	{
 	    info().possible = true;
 	    in >> info().choices;
 	    updateChoices();
 	    break;
 	}
-	case BeginTurn:
+    case BeginTurn:
 	{
 	    int turn;
 	    in >> turn;
 	    printHtml("<br /><span style='color:blue'><b>" + tr("Start of turn %1").arg(turn) + "</b></span>");
 	    break;
 	}
-	case ChangeHp:
+    case ChangeHp:
 	{
 	    quint16 newHp;
 	    in >> newHp;
@@ -247,125 +247,125 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    mydisplay->updatePoke(self);
 	    break;
 	}
-	case Ko:
-	    printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(self)))) + "</b>");
-	    switchToNaught(self);
-	    break;
-	case Hit:
-	    printLine(tr("Hit!"));
-	    break;
-	case Effective:
+    case Ko:
+        printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(self)))) + "</b>");
+        switchToNaught(self);
+        break;
+    case Hit:
+        printLine(tr("Hit!"));
+        break;
+    case Effective:
 	{
 	    quint8 eff;
 	    in >> eff;
 	    switch (eff) {
-		case 0:
-		    printLine(tr("It had no effect!"));
-		    break;
-		case 1:
-		case 2:
-		    printHtml("<span style='color:grey'>" + tr("It's not very effective...") + "</span>");
-		    break;
-		case 8:
-		case 16:
-		    printHtml("<span style='color:blue'>" + tr("It's super effective!") + "</span>");
-		default:
-		    break;
+     case 0:
+                printLine(tr("It had no effect!"));
+                break;
+     case 1:
+     case 2:
+                printHtml("<span style='color:grey'>" + tr("It's not very effective...") + "</span>");
+                break;
+     case 8:
+     case 16:
+                printHtml("<span style='color:blue'>" + tr("It's super effective!") + "</span>");
+     default:
+                break;
 	    }
 	    break;
 	}
-	case CriticalHit:
-	    printHtml(tr("<span style='color:red'>A critical hit!</span>"));
-	    break;
-	case Miss:
-	    printLine(tr("The attack of %1 missed!").arg(nick(self)));
-	    break;
-	case StatChange:
-	    qint8 stat, boost;
-	    in >> stat >> boost;
+    case CriticalHit:
+        printHtml(tr("<span style='color:red'>A critical hit!</span>"));
+        break;
+    case Miss:
+        printLine(tr("The attack of %1 missed!").arg(nick(self)));
+        break;
+    case StatChange:
+        qint8 stat, boost;
+        in >> stat >> boost;
 
-	    printLine(tu(tr("%1's %2 %3%4!").arg(nick(self), StatInfo::Stat(stat), abs(boost) > 1 ? tr("sharply ") : "", boost > 0 ? tr("rose") : tr("fell"))));
-	    break;
-	case StatusChange:
+        printLine(tu(tr("%1's %2 %3%4!").arg(nick(self), StatInfo::Stat(stat), abs(boost) > 1 ? tr("sharply ") : "", boost > 0 ? tr("rose") : tr("fell"))));
+        break;
+    case StatusChange:
 	{
 	    qint8 status;
 	    in >> status;
 	    switch(status)
 	    {
-		case Pokemon::Asleep:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Psychic).name() + "'>" + escapeHtml(tu(tr("%1 fell asleep!").arg(nick(self)))) + "</span>");
-		    break;
-		case Pokemon::Burnt:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Fire).name() + "'>" + escapeHtml(tu(tr("%1 was burned!").arg(nick(self)))) + "</span>");
-		    break;
-		case Pokemon::Paralysed:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Electric).name() + "'>" + escapeHtml(tu(tr("%1 is paralyzed! It may be unable to move!").arg(nick(self)))) + "</span>");
-		    break;
-		case Pokemon::Poisoned:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Poison).name() + "'>" + escapeHtml(tu(tr("%1 was poisoned!").arg(nick(self)))) + "</span>");
-		    break;
-		case Pokemon::DeeplyPoisoned:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Poison).name() + "'>" + escapeHtml(tu(tr("%1 was badly poisoned!").arg(nick(self)))) + "</span>");
-		    break;
-		case Pokemon::Frozen:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ice).name() + "'>" + escapeHtml(tu(tr("%1 was frozen solid!").arg(nick(self)))) + "</span>");
-		    break;
-		case -1:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ghost).name() + "'>" + escapeHtml(tu(tr("%1 became confused!").arg(nick(self)))) + "</span>");
-		    break;
+     case Pokemon::Asleep:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Psychic).name() + "'>" + escapeHtml(tu(tr("%1 fell asleep!").arg(nick(self)))) + "</span>");
+                break;
+     case Pokemon::Burnt:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Fire).name() + "'>" + escapeHtml(tu(tr("%1 was burned!").arg(nick(self)))) + "</span>");
+                break;
+     case Pokemon::Paralysed:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Electric).name() + "'>" + escapeHtml(tu(tr("%1 is paralyzed! It may be unable to move!").arg(nick(self)))) + "</span>");
+                break;
+     case Pokemon::Poisoned:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Poison).name() + "'>" + escapeHtml(tu(tr("%1 was poisoned!").arg(nick(self)))) + "</span>");
+                break;
+     case Pokemon::DeeplyPoisoned:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Poison).name() + "'>" + escapeHtml(tu(tr("%1 was badly poisoned!").arg(nick(self)))) + "</span>");
+                break;
+     case Pokemon::Frozen:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Ice).name() + "'>" + escapeHtml(tu(tr("%1 was frozen solid!").arg(nick(self)))) + "</span>");
+                break;
+     case -1:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Ghost).name() + "'>" + escapeHtml(tu(tr("%1 became confused!").arg(nick(self)))) + "</span>");
+                break;
 	    }
 	    break;
 	}
-	case StatusMessage:
+    case StatusMessage:
 	{
 	    qint8 status;
 	    in >> status;
 	    switch(status)
 	    {
-		case FeelConfusion:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ghost).name() + "'>" + escapeHtml(tu(tr("%1 is confused!").arg(nick(self)))) + "</span>");
-		    break;
-		case HurtConfusion:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ghost).name() + "'>" + escapeHtml("It hurt itself in its confusion!") + "</span>");
-		    break;
-		case FreeConfusion:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tu(tr("%1 snapped out of its confusion!").arg(nick(self)))) + "</span>");
-		    break;
-		case PrevParalysed:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Electric).name() + "'>" + escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(self)))) + "</span>");
-		    break;
-		case FeelAsleep:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Psychic).name() + "'>" + escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(self)))) + "</span>");
-		    break;
-		case FreeAsleep:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tu(tr("%1 woke up!").arg(nick(self)))) + "</span>");
-		    break;
-		case HurtBurn:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Fire).name() + "'>" + escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(self)))) + "</span>");
-		    break;
-		case HurtPoison:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Poison).name() + "'>" + escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(self)))) + "</span>");
-		    break;
-		case PrevFrozen:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Ice).name() + "'>" + escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(self)))) + "</span>");
-		    break;
-		case FreeFrozen:
-		    printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tu(tr("%1 thawed out!").arg(nick(self)))) + "</span>");
-		    break;
+     case FeelConfusion:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Ghost).name() + "'>" + escapeHtml(tu(tr("%1 is confused!").arg(nick(self)))) + "</span>");
+                break;
+     case HurtConfusion:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Ghost).name() + "'>" + escapeHtml("It hurt itself in its confusion!") + "</span>");
+                break;
+     case FreeConfusion:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tu(tr("%1 snapped out of its confusion!").arg(nick(self)))) + "</span>");
+                break;
+     case PrevParalysed:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Electric).name() + "'>" + escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(self)))) + "</span>");
+                break;
+     case FeelAsleep:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Psychic).name() + "'>" + escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(self)))) + "</span>");
+                break;
+     case FreeAsleep:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tu(tr("%1 woke up!").arg(nick(self)))) + "</span>");
+                break;
+     case HurtBurn:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Fire).name() + "'>" + escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(self)))) + "</span>");
+                break;
+     case HurtPoison:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Poison).name() + "'>" + escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(self)))) + "</span>");
+                break;
+     case PrevFrozen:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Ice).name() + "'>" + escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(self)))) + "</span>");
+                break;
+     case FreeFrozen:
+                printHtml("<span style='color:" + TypeInfo::Color(Move::Dark).name() + "'>" + escapeHtml(tu(tr("%1 thawed out!").arg(nick(self)))) + "</span>");
+                break;
 	    }
 	}
-	    break;
-	case Failed:
-	    printLine(tr("But it failed!"));
-	    break;
-	case BattleChat:
+        break;
+    case Failed:
+        printLine(tr("But it failed!"));
+        break;
+    case BattleChat:
 	{
 	    QString message;
 	    in >> message;
 	    printHtml(QString("<span style='color:") + (self?"#5811b1":"green") + "'><b>" + escapeHtml(name(self)) + ": </b></span>" + escapeHtml(message));
 	    break;
 	}
-	case MoveMessage:
+    case MoveMessage:
 	{
 	    quint16 move=0;
 	    uchar part=0;
@@ -388,10 +388,10 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    printHtml("<span style='color:" + TypeInfo::Color(type).name() + "'>" + escapeHtml(tu(mess)) + "</span>");
 	    break;
 	}
-	case NoOpponent:
-	    printLine(tr("But there is no target pokémon!"));
-	    break;
-	case ItemMessage:
+    case NoOpponent:
+        printLine(tr("But there is no target pokémon!"));
+        break;
+    case ItemMessage:
 	{
 	    quint16 item=0;
 	    uchar part=0;
@@ -403,13 +403,14 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    printLine(tu(mess));
 	    break;
 	}
-	case Flinch:
-	    printLine(tu(tr("%1 flinched!").arg(nick(self))));
-	    break;
-	case Recoil:
-	    printLine(tu(tr("%1 is hit with recoil!").arg(nick(self))));
-	    break;
-        case WeatherMessage: {
+    case Flinch:
+        printLine(tu(tr("%1 flinched!").arg(nick(self))));
+        break;
+    case Recoil:
+        printLine(tu(tr("%1 is hit with recoil!").arg(nick(self))));
+        break;
+    case WeatherMessage:
+        {
 	    qint8 wstatus, weather;
 	    in >> wstatus >> weather;
 	    if (weather == NormalWeather)
@@ -418,47 +419,68 @@ void BattleWindow::receiveInfo(QByteArray inf)
 			  + "'>";
 	    QString end = "</span>";
 	    switch(wstatus) {
-		case EndWeather:
-		    switch(weather) {
-			case Hail: printHtml(beg + tr("The hail stopped!") + end); break;
-			case SandStorm: printHtml(beg + tr("The sandstorm stopped!") + end); break;
-			case Sunny: printHtml(beg + tr("The sunlight faded!") + end); break;
-			case Rain: printHtml(beg + tr("The rain stopped!") + end); break;
-		    } break;
+     case EndWeather:
+                switch(weather) {
+                case Hail: printHtml(beg + tr("The hail stopped!") + end); break;
+                case SandStorm: printHtml(beg + tr("The sandstorm stopped!") + end); break;
+                case Sunny: printHtml(beg + tr("The sunlight faded!") + end); break;
+                case Rain: printHtml(beg + tr("The rain stopped!") + end); break;
+                } break;
 		case HurtWeather:
-		    switch(weather) {
-			case Hail: printHtml(beg + tu(tr("%1 is buffeted by the hail!").arg(nick(self)) + end)); break;
-			case SandStorm: printHtml(beg + tu(tr("%1 is buffeted by the sandstorm!").arg(nick(self))) + end); break;
-		    } break;
+                switch(weather) {
+                case Hail: printHtml(beg + tu(tr("%1 is buffeted by the hail!").arg(nick(self)) + end)); break;
+                case SandStorm: printHtml(beg + tu(tr("%1 is buffeted by the sandstorm!").arg(nick(self))) + end); break;
+                } break;
 		case StartWeather:
-		    switch(weather) {
-			case Hail: printHtml(beg + tr("A hailstorm whipped up!") + end); break;
-			case SandStorm: printHtml(beg + tr("A sandstorm whipped up!") + end); break;
-			case Sunny: printHtml(beg + tr("The sunlight became harsh!") + end); break;
-			case Rain: printHtml(beg + tr("It's started to rain!") + end); break;
-		    } break;
+                switch(weather) {
+                case Hail: printHtml(beg + tr("A hailstorm whipped up!") + end); break;
+                case SandStorm: printHtml(beg + tr("A sandstorm whipped up!") + end); break;
+                case Sunny: printHtml(beg + tr("The sunlight became harsh!") + end); break;
+                case Rain: printHtml(beg + tr("It's started to rain!") + end); break;
+                } break;
 		case ContinueWeather:
-		    switch(weather) {
-			case Hail: printHtml(beg + tr("Hail continues to fall!") + end); break;
-			case SandStorm: printHtml(beg + tr("The sandstorm rages!") + end); break;
-			case Sunny: printHtml(beg + tr("The sunlight is strong!") + end); break;
-			case Rain: printHtml(beg + tr("Rain continues to fall!") + end); break;
-		    } break;
+                switch(weather) {
+                case Hail: printHtml(beg + tr("Hail continues to fall!") + end); break;
+                case SandStorm: printHtml(beg + tr("The sandstorm rages!") + end); break;
+                case Sunny: printHtml(beg + tr("The sunlight is strong!") + end); break;
+                case Rain: printHtml(beg + tr("Rain continues to fall!") + end); break;
+                } break;
 	    }
         } break;
-	case StraightDamage :
+    case StraightDamage :
 	{
-	    qint16 damage;
-	    in >> damage;
-	    if (self) {
-		printLine(tr("%1 lost %2 HP! (%3% of its health)").arg(nick(self)).arg(damage).arg(damage*100/info().currentPoke().totalLifePoints()));
-	    } else {
-		printLine(tu(tr("%1 lost %2% of its health!").arg(nick(self)).arg(damage)));
-	    }
-	    break;
-	}
-	default:
-	    break;
+        qint16 damage;
+        in >> damage;
+        if (self) {
+            printLine(tr("%1 lost %2 HP! (%3% of its health)").arg(nick(self)).arg(damage).arg(damage*100/info().currentPoke().totalLifePoints()));
+        } else {
+            printLine(tu(tr("%1 lost %2% of its health!").arg(nick(self)).arg(damage)));
+        }
+        break;
+    }
+    case AbilityMessage:
+        {
+            quint16 ab=0;
+            uchar part=0;
+            qint8 type(0), foe(0);
+            qint16 other(0);
+            in >> ab >> part >> type >> foe >> other;
+            QString mess = AbilityInfo::Message(ab,part);
+            mess.replace("%s", nick(self));
+//            mess.replace("%ts", name(self));
+//            mess.replace("%tf", name(!self));
+//            mess.replace("%t", TypeInfo::Name(type));
+            mess.replace("%f", nick(!self));
+//            mess.replace("%m", MoveInfo::Name(other));
+//            mess.replace("%d", QString::number(other));
+//            mess.replace("%i", ItemInfo::Name(other));
+//            mess.replace("%a", AbilityInfo::Name(other));
+//            mess.replace("%p", PokemonInfo::Name(other));
+            printHtml("<span style='color:" + TypeInfo::Color(type).name() + "'>" + escapeHtml(tu(mess)) + "</span>");
+            break;
+        }
+    default:
+        break;
     }
 }
 
@@ -578,7 +600,7 @@ PokeZone::PokeZone(const TeamBattle &team)
 }
 
 BattleDisplay::BattleDisplay(const BattleInfo &i)
-	: info(i)
+    : info(i)
 {
     QVBoxLayout *l=  new QVBoxLayout(this);
 
@@ -614,27 +636,27 @@ void BattleDisplay::updatePoke(bool self)
 {
     if (self)
 	if (info.currentIndex != -1) {
-	    zone->switchTo(mypoke(), self);
-	    nick[Myself]->setText(tr("%1 (Lv. %2)").arg(mypoke().nick()).arg(mypoke().level()));
-	    bars[Myself]->setRange(0,mypoke().totalLifePoints());
-	    bars[Myself]->setValue(mypoke().lifePoints());
-	    bars[Myself]->setStyleSheet(health(mypoke().lifePoints()*100/mypoke().totalLifePoints()));
-	} else {
-	    zone->switchToNaught(self);
-	    nick[Myself]->setText("");
-	    bars[Myself]->setValue(0);
-	}
+        zone->switchTo(mypoke(), self);
+        nick[Myself]->setText(tr("%1 (Lv. %2)").arg(mypoke().nick()).arg(mypoke().level()));
+        bars[Myself]->setRange(0,mypoke().totalLifePoints());
+        bars[Myself]->setValue(mypoke().lifePoints());
+        bars[Myself]->setStyleSheet(health(mypoke().lifePoints()*100/mypoke().totalLifePoints()));
+    } else {
+        zone->switchToNaught(self);
+        nick[Myself]->setText("");
+        bars[Myself]->setValue(0);
+    }
     else
 	if (info.opponentAlive) {
-	    zone->switchTo(foe(), self);
-	    nick[Opponent]->setText(tr("%1 (Lv. %2)").arg(foe().nick()).arg(foe().level()));
-	    bars[Opponent]->setValue(foe().lifePercent());
-	    bars[Opponent]->setStyleSheet(health(foe().lifePercent()));
-	}  else {
-	    zone->switchToNaught(self);
-	    nick[Opponent]->setText("");
-	    bars[Opponent]->setValue(0);
-	}
+        zone->switchTo(foe(), self);
+        nick[Opponent]->setText(tr("%1 (Lv. %2)").arg(foe().nick()).arg(foe().level()));
+        bars[Opponent]->setValue(foe().lifePercent());
+        bars[Opponent]->setStyleSheet(health(foe().lifePercent()));
+    }  else {
+        zone->switchToNaught(self);
+        nick[Opponent]->setText("");
+        bars[Opponent]->setValue(0);
+    }
 }
 
 QString BattleDisplay::health(int lifePercent)

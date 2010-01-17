@@ -12,6 +12,7 @@ void AbilityEffect::activate(const QString &effect, int num, int source, int tar
 {
     AbilityInfo::Effect e = AbilityInfo::Effects(num);
 
+    qDebug() << "Activating " << effect << " for ability " << num << " (effect " << e.num << ").";
     if (!mechanics.contains(e.num) || !mechanics[e.num].functions.contains(effect)) {
         return;
     }
@@ -36,8 +37,34 @@ void AbilityEffect::setup(int num, int source, BattleSituation &b)
     b.pokelong[source]["AbilityArg"] = effect.arg;
 }
 
+struct AMAdaptability : public AM {
+    AMAdaptability() {
+        functions["DamageFormulaStart"] = &dfs;
+    }
+
+    static void dfs(int s, int, BS &b) {
+        /* So the regular stab (3) will become 4 and no stab (2) will stay 2 */
+        turn(b,s)["Stab"] = turn(b,s)["Stab"].toInt() * 4 / 3;
+    }
+};
+
+struct AMAftermath : public AM {
+    AMAftermath() {
+        functions["UponPhysicalAssault"] = &upa;
+    }
+
+    static void upa(int s, int t, BS &b) {
+        if (b.koed(s) && !b.koed(t)) {
+            b.sendAbMessage(2,0,s,t);
+            b.inflictPercentDamage(t,25,s,false);
+        }
+    }
+};
+
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
 
 void AbilityEffect::init()
 {
+    REGISTER_AB(1, Adaptability);
+    REGISTER_AB(2, Aftermath);
 }

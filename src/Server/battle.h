@@ -95,6 +95,7 @@ public:
     void inflictConfusedDamage(int player);
     void inflictRecoil(int source, int target);
     void inflictDamage(int player, int damage, int source, bool straightattack = false);
+    void inflictPercentDamage(int player, int percent, int source, bool straightattack = false);
     void inflictSubDamage(int player, int damage, int source);
     void disposeItem(int player);
     void acqItem(int player, int item);
@@ -157,7 +158,8 @@ public:
 	Flinch,
 	Recoil,
 	WeatherMessage,
-	StraightDamage
+        StraightDamage,
+        AbilityMessage
     };
 
     enum WeatherM
@@ -192,6 +194,7 @@ public:
     };
 
     void sendMoveMessage(int move, int part=0, int src=0, int type=0, int foe=-1, int other=-1, const QString &q="");
+    void sendAbMessage(int move, int part=0, int src=0, int foe=-1, int type=0, int other=-1);
     void sendItemMessage(int item, int src, int part = 0, int foe = -1);
     /* Here C++0x would make it so much better looking with variadic templates! */
     void notify(int player, int command, int who);
@@ -240,6 +243,8 @@ public:
     void callzeffects(int source, int target, const QString &name);
     /* item effects */
     void callieffects(int source, int target, const QString &name);
+    /* Ability effects */
+    void callaeffects(int source, int target, const QString &name);
 
     void emitCommand(int player, int players, const QByteArray &data);
 public:

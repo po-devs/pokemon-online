@@ -54,6 +54,7 @@ QString CategoryInfo::m_Directory;
 QStringList AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
 QList<AbilityInfo::Effect> AbilityInfo::m_Effects;
+QList<QStringList> AbilityInfo::m_Messages;
 
 QStringList GenderInfo::m_Names;
 QList<QPixmap> GenderInfo::m_Pictures;
@@ -1023,6 +1024,14 @@ void AbilityInfo::loadNames()
     fill_container_with_file(m_Names, path("abilities_en.txt"));
 }
 
+QString AbilityInfo::Message(int ab, int part) {
+    if (ab < 0 || ab >= m_Messages.size() || part < 0 || part >= m_Messages[ab].size()) {
+        return "";
+    }
+
+    return m_Messages[ab][part];
+}
+
 QString AbilityInfo::path(const QString &filename)
 {
     return m_Directory + filename;
@@ -1040,11 +1049,17 @@ void AbilityInfo::init(const QString &dir)
 
     loadNames();
     loadEffects();
+
+    QStringList temp;
+    fill_container_with_file(temp, path("ability_messages.txt"));
+    foreach (QString eff, temp) {
+        m_Messages.push_back(eff.split('|'));
+    }
 }
 
 void AbilityInfo::loadEffects()
 {
-    QList<QString> m_temp;
+    QStringList m_temp;
     fill_container_with_file(m_temp,path("ability_effects.txt"));
 
     foreach(QString str, m_temp) {
