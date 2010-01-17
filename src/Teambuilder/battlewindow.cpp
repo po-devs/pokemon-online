@@ -471,7 +471,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 //            mess.replace("%tf", name(!self));
 //            mess.replace("%t", TypeInfo::Name(type));
             mess.replace("%f", nick(!self));
-//            mess.replace("%m", MoveInfo::Name(other));
+            mess.replace("%m", MoveInfo::Name(other));
 //            mess.replace("%d", QString::number(other));
 //            mess.replace("%i", ItemInfo::Name(other));
 //            mess.replace("%a", AbilityInfo::Name(other));
