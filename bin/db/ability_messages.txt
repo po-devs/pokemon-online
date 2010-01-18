@@ -28,18 +28,17 @@
 
 
 %s's Hydration heals its status!
-%s's Hyper Cutter prevents its attack from being lowered!
+%s's %a prevents its stat from being lowered!
+%s's %a prevented its stats from being lowered!
+%s's %a heals it!
+%s's %a cures it!
+%s intimidates %f!
 
 
+%s's Leaf Guard prevents it from being affected by any status from the opponent!
 
 
-
-
-
-
-
-
-
+%s has Mold Breaker!
 
 
 
