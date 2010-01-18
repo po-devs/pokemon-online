@@ -137,7 +137,7 @@ struct AMBlaze : public AM {
 
     static void bpm(int s, int, BS &b) {
         if (b.poke(s).lifePoints() <= b.poke(s).totalLifePoints()/3 && type(b,s) == poke(b,s)["AbilityArg"].toInt()) {
-            turn(b,s)["BasePowerAbilityModifier"] = 5;
+            turn(b,s)["BasePowerAbilityModifier"] = 10;
         }
     }
 };
@@ -577,7 +577,7 @@ struct AMIronFist : public AM {
 
     static void bpm (int s, int , BS &b) {
         if (PM.contains(move(b,s))) {
-            turn(b,s)["BasePowerAbilityModifier"] = 2;
+            turn(b,s)["BasePowerAbilityModifier"] = 4;
         }
     }
 };
@@ -620,11 +620,247 @@ struct AMMoldBreaker : public AM {
     }
 };
 
+struct AMMotorDrive : public AM {
+    AMMotorDrive() {
+        functions["OpponentBlock"] = &op;
+    }
+
+    static void op(int s, int t, BS &b) {
+        if (type(b,t) == Pokemon::Fire) {
+            turn(b,s)[QString("Block%1").arg(t)] = true;
+            b.sendAbMessage(41,0,s,s,Pokemon::Electric);
+            b.gainStatMod(s,Speed,1);
+        }
+    }
+};
+
+struct AMNaturalCure : public AM {
+    AMNaturalCure () {
+        functions["UponSwitchOut"] = &uso;
+    }
+
+    static void uso (int s, int, BS &b) {
+        b.healStatus(s, b.poke(s).status());
+    }
+};
+
+struct AMNormalize : public AM {
+    AMNormalize() {
+        functions["BeforeTargetList"] = &btl;
+    }
+
+    static void btl(int s, int, BS &b) {
+        if (turn(b,s)["Type"].toInt() != Move::Curse)
+            turn(b,s)["Type"] = Move::Normal;
+    }
+};
+
+struct AMOwnTempo : public AM {
+    AMOwnTempo() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us(int s, int, BS &b) {
+        if (poke(b,s).value("Confused").toBool()) {
+            b.sendAbMessage(44,0,s);
+            poke(b,s).remove("Confused");
+        }
+    }
+};
+
+struct AMPressure : public AM {
+    AMPressure() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us(int s, int, BS &b) {
+        b.sendAbMessage(46,0,s);
+    }
+};
+
+struct AMReckless : public AM {
+    AMReckless() {
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    static void bpm (int s, int , BS &b) {
+        int mv = move(b,s);
+        //Jump kicks
+        if (turn(b,s).value("Recoil").toInt() > 0 || mv == 183 || mv == 207) {
+            turn(b,s)["BasePowerAbilityModifier"] = 4;
+        }
+    }
+};
+
+struct AMRivalry : public AM {
+    AMRivalry() {
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    static void bpm (int s, int t, BS &b) {
+        if (b.poke(s).gender() == Pokemon::Neutral || b.poke(t).gender() == Pokemon::Neutral)
+            return;
+        if (b.poke(s).gender() == b.poke(t).gender())
+            turn(b,s)["BasePowerAbilityModifier"] = 5;
+        else
+            turn(b,s)["BasePowerAbilityModifier"] = -5;
+    }
+};
+
+struct AMRoughSkin : public AM {
+    AMRoughSkin() {
+        functions["UponPhysicalAssault"] = &upa;
+    }
+
+    static void upa( int s, int t, BS &b) {
+        if (!b.koed(t)) {
+            b.sendAbMessage(50,0,s,t);
+            b.inflictDamage(t,b.poke(t).totalLifePoints()/8,s,false);
+        }
+    }
+};
+
+struct AMSandVeil : public AM {
+    AMSandVeil() {
+        functions["StatModifier"] = &sm;
+        functions["WeatherSpecial"] = &ws;
+    }
+
+    static void sm (int s, int , BS &b) {
+        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
+            turn(b,s)["Stat6AbilityModifier"] = 4;
+        }
+    }
+
+    static void ws(int s, int, BS &b) {
+        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
+            turn(b,s)["WeatherSpecialed"] = true;
+        }
+    }
+};
+
+struct AMShadowTag : public AM {
+    AMShadowTag() {
+        functions["IsItTrapped"] = &iit;
+    }
+
+    static void iit(int, int t, BS &b) {
+        //Shadow Tag
+        if (!b.hasWorkingAbility(t, 83)) turn(b,t)["Trapped"] = true;
+    }
+};
+
+struct AMShedSkin : public AM {
+    AMShedSkin() {
+        functions["EndTurn"] = &et;
+    }
+
+    static void et(int s, int, BS &b) {
+        if (rand() % 100 < 30 && b.poke(s).status() != Pokemon::Fine) {
+            b.sendAbMessage(54,0,s,s,Pokemon::Bug);
+            b.healStatus(s, b.poke(s).status());
+        }
+    }
+};
+
+struct AMSlowStart : public AM {
+    AMSlowStart() {
+        functions["UponSetup"] = &us;
+        functions["EndTurn"] = &et;
+        functions["StatModifier"] = &sm;
+    }
+
+    static void us(int s, int t, BS &b) {
+        poke(b,s)["SlowStartTurns"] = b.turn() + 4;
+        b.sendAbMessage(55,0,s);
+    }
+
+    static void et(int s, int, BS &b) {
+        if (b.turn() == poke(b,s)["SlowStartTurns"].toInt()) {
+            b.sendAbMessage(55,1,s);
+        }
+    }
+
+    static void sm(int s, int, BS &b) {
+        if (b.turn() <= poke(b,s)["SlowStartTurns"].toInt()) {
+            turn(b,s)["Stat1AbilityModifier"] = -10;
+            turn(b,s)["Stat3AbilityModifier"] = -10;
+        }
+    }
+};
+
+struct AMSolarPower : public AM {
+    AMSolarPower() {
+        functions["WeatherSpecial"] = &ws;
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm(int s, int, BS &b) {
+        if (b.isWeatherWorking(BattleSituation::Sunny)) {
+            turn(b,s)["Stat4AbilityModifier"] = 10;
+        }
+    }
+
+    static void ws(int s, int, BS &b) {
+        if (b.isWeatherWorking(BattleSituation::Sunny)) {
+            b.sendAbMessage(56,0,s,s,Pokemon::Fire);
+            b.inflictDamage(s,b.poke(s).totalLifePoints()/8,s,false);
+        }
+    }
+};
+
+struct AMSoundProof : public AM {
+    AMSoundProof() {
+        functions["OpponentBlock"] = &ob;
+    }
+
+    struct SoundMoves : public QSet<int> {
+        SoundMoves() {
+            /* Grasswhistle, Growl, Hyper Voice, Metal Sound, Perish Song, Roar, Sing, Sonicboom, Supersonic, Screech, Snore, Uproar, Roar Of Time, Bug Buzz, Chatter, and Heal Bell */
+            (*this) << 48 << 58 << 160 << 162 << 192 << 243 << 320 << 321 << 341 << 357 << 374 << 377 << 402 << 441 ;
+        }
+    };
+
+    static SoundMoves SM;
+
+    static void ob(int s, int t, BS &b) {
+        int mv = move(b,t);
+
+        if (SM.contains(mv)) {
+            turn(b,s)[QString("Block%1").arg(t)] = true;
+            b.sendAbMessage(57,0,s);
+        }
+    }
+};
+
+AMSoundProof::SoundMoves AMSoundProof::SM;
+
+struct AMSpeedBoost : public AM {
+    AMSpeedBoost() {
+        functions["EndTurn"] = &et;
+    }
+
+    static void et(int s, int, BS &b) {
+        b.sendAbMessage(58,0,s);
+        b.gainStatMod(s, Speed, 1);
+    }
+};
+
+struct AMStall : public AM {
+    AMStall() {
+        functions["TurnOrder"] = &tu;
+    }
+    static void tu (int s, int, BS &b) {
+        turn(b,s)["TurnOrder"] = -1;
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
     UponOffensiveDamageReceived
     UponSetup
+    UponSwitchOut
     IsItTrapped
     EndTurn
     BasePowerModifier
@@ -634,6 +870,8 @@ struct AMMoldBreaker : public AM {
     WeatherChange
     OpponentBlock
     PreventStatChange
+    BeforeTargetList
+    TurnOrder
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
@@ -676,4 +914,20 @@ void AbilityEffect::init()
     REGISTER_AB(37, LeafGuard);
     REGISTER_AB(39, MagnetPull);
     REGISTER_AB(40, MoldBreaker);
+    REGISTER_AB(41, MotorDrive);
+    REGISTER_AB(42, NaturalCure);
+    REGISTER_AB(43, Normalize);
+    REGISTER_AB(44, OwnTempo);
+    REGISTER_AB(46, Pressure);
+    REGISTER_AB(48, Reckless);
+    REGISTER_AB(49, Rivalry);
+    REGISTER_AB(50, RoughSkin);
+    REGISTER_AB(51, SandVeil);
+    REGISTER_AB(53, ShadowTag);
+    REGISTER_AB(54, ShedSkin);
+    REGISTER_AB(55, SlowStart);
+    REGISTER_AB(56, SolarPower);
+    REGISTER_AB(57, SoundProof);
+    REGISTER_AB(58, SpeedBoost);
+    REGISTER_AB(59, Stall);
 }

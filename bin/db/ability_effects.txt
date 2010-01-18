@@ -1,4 +1,4 @@
-#12,17,36,38: free
+#12,17,36,38,47,52: free
 1#Adaptability
 2#Aftermath
 
@@ -70,7 +70,7 @@
 33-5#Poison Point
 46#Pressure
 27#Pure Power
-47#Quick Feet
+25-3#Quick Feet
 32-2#Rain Dish
 48#Reckless
 49#Rivalry
@@ -80,7 +80,7 @@
 14-3#Sandstream
 51-3#Sandveil
 
-52#Serene Grace
+
 53#Shadow Tag
 54#Shed Skin
 
@@ -91,13 +91,13 @@
 
 51-1#Snow cloak
 14-1#Snow Warning
-52#Solar power
+56#Solar power
 
-53#SoundProof
-54#Speed boost
-55#Stall
+57#SoundProof
+58#Speed boost
+59#Stall
 33-1#Static
-56#Steadfast
+60#Steadfast
 
 
 
@@ -106,19 +106,19 @@
 
 7-6#Swarm
 8-2#Swift Swim
-57#Synchronize
-58#Tangled Feet
-59#Technician
-60#Thick fat
-61#Tinted lens
+61#Synchronize
+62#Tangled Feet
+63#Technician
+64#Thick fat
+65#Tinted lens
 7-10#Torrent
-62#Trace
-63#Truant
-64#Unaware
-65#Unburden
+66#Trace
+67#Truant
+68#Unaware
+69#Unburden
 
-66-12#Volt absorb
-66-10#Water absorb
+70-12#Volt absorb
+70-10#Water absorb
 33-2#Water Veil
 31#WhiteSmoke
-67#Wonder Guard
+71#Wonder Guard

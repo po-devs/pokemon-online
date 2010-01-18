@@ -39,26 +39,26 @@
 
 
 %s has Mold Breaker!
+%s's Motor Drive raises its speed!
 
 
-
-
+%s's Own Tempo cures its confusion!
 %s is healed by its Poison Heal!
+%s has Pressure!
 
 
 
+%s's Rough Skin hurts %f
 
 
 
+%s's Shed Skin heals its status!
+%s starts at half power!|%s's Slow Start ended! It is at full power!
+%s is hurt by the sun!
+%s's Sound Proof blocks the attack!
+%s's Speed Boost increases its speed!
 
-
-
-
-
-
-
-
-
+%s's SteadFast increases its speed!
 
 
 
