@@ -284,17 +284,17 @@ struct AMEffectSpore : public AM {
             if (rand() % 3 == 0) {
                 if (b.canGetStatus(t,Pokemon::Asleep)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Grass);
-                    b.inflictStatus(t, Pokemon::Asleep);
+                    b.inflictStatus(t, Pokemon::Asleep,s);
                 }
             } else if (rand() % 1 == 0) {
                 if (b.canGetStatus(t,Pokemon::Paralysed)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Electric);
-                    b.inflictStatus(t, Pokemon::Paralysed);
+                    b.inflictStatus(t, Pokemon::Paralysed,s);
                 }
             } else {
                 if (b.canGetStatus(t,Pokemon::Poisoned)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Poison);
-                    b.inflictStatus(t, Pokemon::Poisoned);
+                    b.inflictStatus(t, Pokemon::Poisoned,s);
                 }
             }
         }
@@ -310,7 +310,7 @@ struct AMFlameBody : public AM {
         if (b.poke(t).status() == Pokemon::Fine && rand() % 100 < 30) {
             if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
                 b.sendAbMessage(18,0,s,t,Pokemon::Curse,b.ability(s));
-                b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt());
+                b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt(),s);
             }
         }
     }
@@ -500,9 +500,123 @@ struct AMHyperCutter : public AM {
     static void psc(int s, int t, BS &b) {
         if (turn(b,s)["StatModType"].toString() == "Stat" && turn(b,s)["StatModded"].toInt() == Attack && turn(b,s)["StatModification"].toInt() < 0) {
             if (b.canSendPreventMessage(s,t))
-                b.sendAbMessage(30,0,s);
+                b.sendAbMessage(30,0,s,s,0,b.ability(s));
             b.preventStatMod(s,t);
         }
+    }
+};
+
+struct AMClearBody : public AM {
+    AMClearBody() {
+        functions["PreventStatChange"] = &psc;
+    }
+
+    static void psc(int s, int t, BS &b) {
+        if (turn(b,s)["StatModType"].toString() == "Stat" && turn(b,s)["StatModification"].toInt() < 0) {
+            if (b.canSendPreventMessage(s,t))
+                b.sendAbMessage(31,0,s,s,0,b.poke(s).ability());
+            b.preventStatMod(s,t);
+        }
+    }
+};
+
+struct AMIceBody : public AM {
+    AMIceBody() {
+        functions["WeatherSpecial"] = &ws;
+    }
+
+    static void ws(int s, int, BS &b) {
+        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
+            turn(b,s)["WeatherSpecialed"] = true; //to prevent being hit by the weather
+            b.sendAbMessage(32,0,s,s,TypeInfo::TypeForWeather(poke(b,s)["AbilityArg"].toInt()),b.ability(s));
+            b.healLife(s, b.poke(s).totalLifePoints()/16);
+        }
+    }
+};
+
+struct AMInsomnia : public AM {
+    AMInsomnia() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us(int s, int , BS &b) {
+        if (b.poke(s).status() == poke(b,s)["AbilityArg"].toInt()) {
+            b.sendAbMessage(33,0,s,s,Pokemon::Dark,b.ability(s));
+            b.healStatus(s, b.poke(s).status());
+        }
+    }
+};
+
+struct AMIntimidate : public AM {
+    AMIntimidate() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us(int s, int , BS &b) {
+        int t = b.rev(s);
+        if (b.koed(t))
+            return;
+
+        b.sendAbMessage(34,0,s,t);
+        b.loseStatMod(t,Attack,1,s);
+    }
+};
+
+struct AMIronFist : public AM {
+    AMIronFist() {
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    struct PunchingMoves : public QSet<int> {
+        PunchingMoves() {
+            (*this) << 50 << 61 << 91 << 105 << 108 << 131 << 145 << 171 << 197 << 226 << 238 << 244 << 350 << 362 << 426;
+        }
+    };
+
+    static PunchingMoves PM;
+
+    static void bpm (int s, int , BS &b) {
+        if (PM.contains(move(b,s))) {
+            turn(b,s)["BasePowerAbilityModifier"] = 2;
+        }
+    }
+};
+
+AMIronFist::PunchingMoves AMIronFist::PM;
+
+struct AMLeafGuard  : public AM {
+    AMLeafGuard() {
+        functions["PreventStatChange"]= &psc;
+    }
+
+    static void psc(int s, int t, BS &b) {
+        if (b.isWeatherWorking(BattleSituation::Sunny) && turn(b,s)["StatModType"].toString() == "Status") {
+            if (b.canSendPreventMessage(s,t))
+                b.sendAbMessage(37,0,s,s,0,b.poke(s).ability());
+            b.preventStatMod(s,t);
+        }
+    }
+};
+
+struct AMMagnetPull : public AM {
+    AMMagnetPull() {
+        functions["IsItTrapped"] = &iit;
+    }
+
+    static void iit(int, int t, BS &b) {
+        if (b.hasType(t, Pokemon::Steel)) {
+            turn(b,t)["Trapped"] = true;
+        }
+    }
+};
+
+struct AMMoldBreaker : public AM {
+    AMMoldBreaker() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us (int s, int, BS &b) {
+        b.sendAbMessage(40,0,s);
     }
 };
 
@@ -554,4 +668,12 @@ void AbilityEffect::init()
     REGISTER_AB(28, Hustle);
     REGISTER_AB(29, Hydration);
     REGISTER_AB(30, HyperCutter);
+    REGISTER_AB(31, ClearBody);
+    REGISTER_AB(32, IceBody);
+    REGISTER_AB(33, Insomnia);
+    REGISTER_AB(34, Intimidate);
+    REGISTER_AB(35, IronFist);
+    REGISTER_AB(37, LeafGuard);
+    REGISTER_AB(39, MagnetPull);
+    REGISTER_AB(40, MoldBreaker);
 }

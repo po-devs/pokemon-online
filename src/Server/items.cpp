@@ -241,7 +241,7 @@ struct IMStatusOrb : public IM
 	} else {
 	    b.sendItemMessage(19,s,1);
 	}
-	b.inflictStatus(s, poke(b,s)["ItemArg"].toInt());
+        b.inflictStatus(s, poke(b,s)["ItemArg"].toInt(), s);
     }
 };
 

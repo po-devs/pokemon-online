@@ -93,7 +93,7 @@ public:
     void healConfused(int player);
     void healLife(int player, int healing);
     bool canGetStatus(int player, int status);
-    void inflictStatus(int player, int Status);
+    void inflictStatus(int player, int Status, int inflicter);
     void inflictConfused(int player);
     void inflictConfusedDamage(int player);
     void inflictRecoil(int source, int target);

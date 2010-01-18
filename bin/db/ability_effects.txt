@@ -1,4 +1,4 @@
-#12,17: free
+#12,17,36,38: free
 1#Adaptability
 2#Aftermath
 
@@ -35,7 +35,7 @@
 27#Huge Power
 28#Hustle
 29#Hydration
-30#Hyper Cutter
+30-1#Hyper Cutter
 32-1#Ice body
 
 
@@ -43,14 +43,14 @@
 33-4#Insomnia
 34#Intimidate
 35#Iron Fist
-36#Keen Eye
+30-7#Keen Eye
 
 37#Leaf Guard
 
 
 33-1#Limber
 
-38#Magic Guard
+
 33-3#Magma Armor
 39#Magnet Pull
 25-2#Marvel Scale

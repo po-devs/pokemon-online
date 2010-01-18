@@ -1036,8 +1036,8 @@ struct MMToxicSpikes : public MM
 	int spikeslevel = team(b,s)["ToxicSpikes"].toInt();
 	switch (spikeslevel) {
 	    case 0: return;
-	    case 1: b.inflictStatus(s, Pokemon::Poisoned); break;
-	    default: b.inflictStatus(s, Pokemon::DeeplyPoisoned); break;
+            case 1: b.inflictStatus(s, Pokemon::Poisoned, s); break;
+            default: b.inflictStatus(s, Pokemon::DeeplyPoisoned, s); break;
 	}
     }
 };
@@ -2264,11 +2264,11 @@ struct MMFling : public MM
     static void uas (int s, int t, BS &b) {
 	int item = turn(b,s)["FlingItem"].toInt();
 	switch (item) {
-	    case 71: b.inflictStatus(t, Pokemon::Burnt); break; /*flame orb*/
-	    case 141: b.inflictStatus(t, Pokemon::DeeplyPoisoned); break; /*toxic orb*/
+            case 71: b.inflictStatus(t, Pokemon::Burnt, s); break; /*flame orb*/
+            case 141: b.inflictStatus(t, Pokemon::DeeplyPoisoned, s); break; /*toxic orb*/
 	    case 87: case 118: turn(b,t)["Flinched"] = true; break; /* king rock, razor fang */
-	    case 92: b.inflictStatus(t, Pokemon::Paralysed); break; /* light ball */
-	    case 166: b.inflictStatus(t, Pokemon::Poisoned); break; /* poison barb */
+            case 92: b.inflictStatus(t, Pokemon::Paralysed, s); break; /* light ball */
+            case 166: b.inflictStatus(t, Pokemon::Poisoned, s); break; /* poison barb */
 	    case 17: case 37: /* mental herb, white herb */
 		int oppitem = b.poke(t).item();
 		ItemEffect::activate("AfterSetup", item, t,s,b);
@@ -2968,7 +2968,7 @@ struct MMPsychoShift : public MM
 
     static void uas(int s, int t, BS &b) {
 	b.sendMoveMessage(98,0,s,type(b,s),t);
-	b.inflictStatus(t, b.poke(s).status());
+        b.inflictStatus(t, b.poke(s).status(), s);
 	b.healStatus(s, b.poke(s).status());
     }
 };
@@ -3559,7 +3559,7 @@ struct MMYawn : public MM {
         if (count > 0) {
             b.sendMoveMessage(147,0,s);
         } else {
-            b.inflictStatus(s, Pokemon::Asleep);
+            b.inflictStatus(s, Pokemon::Asleep, s);
             removeFunction(poke(b,s),"EndTurn", "Yawn");
             poke(b,s).remove("YawnCount");
         }

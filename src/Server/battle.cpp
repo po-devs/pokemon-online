@@ -772,7 +772,10 @@ bool BattleSituation::testFail(int player)
 
 void BattleSituation::useAttack(int player, int move, bool specialOccurence, bool tellPlayers)
 {
+    battlelong["Attacker"] = player;
+
     int attack;
+    QList<int> targetList;
 
     if (specialOccurence) {
 	attack = move;
@@ -787,28 +790,28 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     calleffects(player,player,"EvenWhenCantMove");
 
     if (!specialOccurence && !testStatus(player)) {
-	return;
+        goto end;
     }
 
     callpeffects(player, player, "DetermineAttackPossible");
     if (turnlong[player]["ImpossibleToMove"].toBool() == true) {
-	return;
+        goto end;
     }
 
     turnlong[player]["MoveChosen"] = attack;
 
     callbeffects(player,player,"MovePossible");
     if (turnlong[player]["ImpossibleToMove"].toBool()) {
-	return;
+        goto end;
     }
 
     if (!specialOccurence) {
 	calleffects(player, player, "MovePossible");
 	if (turnlong[player]["ImpossibleToMove"].toBool()) {
-	    return;
+            goto end;
 	}
 	if (!isMovePossible(player, move)) {
-	    return;
+            goto end;
 	}
 	callieffects(player,player, "RegMoveSettings");
     }
@@ -828,8 +831,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (!specialOccurence)
 	losePP(player, move, 1);
 
-    QList<int> targetList;
-
     switch(turnlong[player]["PossibleTargets"].toInt()) {
 	case Move::None: targetList.push_back(player); break;
 	case Move::User: targetList.push_back(player); break;
@@ -839,7 +840,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     if (targetList.size() == 1 && targetList[0] == rev(player) && koed(rev(player))) {
 	notify(All, NoOpponent, player);
-	return;
+        goto end;
     }
 
     callieffects(player, player, "BeforeTargetList");
@@ -998,6 +999,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	}
 	pokelong[target]["LastAttackToHit"] = attack;
     }
+
+    end:
+    battlelong.remove("Attacker");
 }
 
 bool BattleSituation::hasMove(int player, int move) {
@@ -1011,7 +1015,14 @@ bool BattleSituation::hasMove(int player, int move) {
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
-    return pokelong[player].value("AbilityNullified").toBool() ? 0 : pokelong[player]["Ability"].toInt() == ab;
+    if (battlelong.contains("Attacker")) {
+        int attacker = battlelong["Attacker"].toInt();
+        //Mold Breaker
+        if (attacker == rev(player) && hasWorkingAbility(57, attacker)) {
+            return false;
+        }
+    }
+    return pokelong[player].value("AbilityNullified").toBool() ? false : pokelong[player]["Ability"].toInt() == ab;
 }
 
 void BattleSituation::acquireAbility(int play, int ab) {
@@ -1154,7 +1165,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 			if (heal) {
 			    healStatus(targeted, status);
 			} else {
-			    inflictStatus(targeted, status);
+                            inflictStatus(targeted, status, player);
 			}
 		    }
 		} else /* StatMod change */
@@ -1218,9 +1229,19 @@ bool BattleSituation::canGetStatus(int player, int status) {
     }
 }
 
-void BattleSituation::inflictStatus(int player, int status)
+void BattleSituation::inflictStatus(int player, int status, int attacker)
 {
     if (poke(player).status() == Pokemon::Fine && canGetStatus(player,status)) {
+        if (attacker != player) {
+            QString q = QString("StatModFrom%1Prevented").arg(attacker);
+            turnlong[player].remove(q);
+            turnlong[player]["StatModType"] = QString("Status");
+            turnlong[player]["StatusInflicted"] = status;
+            callaeffects(player, attacker, "PreventStatChange");
+            if (turnlong[player].contains(q)) {
+                return;
+            }
+        }
         changeStatus(player, status);
     }
 }
@@ -1382,6 +1403,9 @@ void BattleSituation::loseStatMod(int player, int stat, int malus, int attacker)
             turnlong[player]["StatModded"] = Attack;
             turnlong[player]["StatModification"] = -malus;
             callaeffects(player, attacker, "PreventStatChange");
+            if (turnlong[player].contains(q)) {
+                return;
+            }
         }
 	notify(All, StatChange, player, qint8(stat), qint8(-malus));
 	changeStatMod(player, stat, std::max(boost-malus, -6));
@@ -1394,7 +1418,8 @@ void BattleSituation::preventStatMod(int player, int attacker) {
 }
 
 bool BattleSituation::canSendPreventMessage(int defender, int attacker) {
-    return !turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker));
+    return !turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
+            turnlong[attacker]["Power"].toInt() == 0;
 }
 
 void BattleSituation::changeStatMod(int player, int stat, int newstat)
