@@ -412,6 +412,7 @@ void BattleSituation::analyzeChoices()
         std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
 
         foreach (int player, it->second) {
+            callaeffects(player,player, "TurnOrder");
 	    callieffects(player,player, "TurnOrder");
             secondPriorities[turnlong[player]["TurnOrder"].toInt()].push_back(player);
 	}
@@ -588,8 +589,10 @@ void BattleSituation::sendBack(int player)
 	}
     }
 
-    if (!koed(player))
+    if (!koed(player)) {
+        callaeffects(player,player,"UponSwitchOut");
 	changeCurrentPoke(player, -1);
+    }
 }
 
 bool BattleSituation::testAccuracy(int player, int target)
@@ -617,12 +620,14 @@ bool BattleSituation::testAccuracy(int player, int target)
     callieffects(player,target,"StatModifier");
     callaeffects(player,target,"StatModifier");
     callieffects(target,player,"StatModifier");
+    callaeffects(target,player,"StatModifier");
     /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
 	due to the ever rounding down to make an int */
     acc = acc * getStatBoost(player, 7) * getStatBoost(target, 6)
 	    * (20+turnlong[player]["Stat7ItemModifier"].toInt())/20
             * (20-turnlong[target]["Stat6ItemModifier"].toInt())/20
-            * (20+turnlong[player]["Stat7AbilityModifier"].toInt())/20;
+            * (20+turnlong[player]["Stat7AbilityModifier"].toInt())/20
+            * (20-turnlong[target]["Stat6AbilityModifier"].toInt())/20;
 
     if (rand() % 100 < acc) {
 	return true;
@@ -712,9 +717,14 @@ bool BattleSituation::testStatus(int player)
     }
     if (turnlong[player]["Flinched"].toBool()) {
 	notify(All, Flinch, player);
+        //SteadFast
+        if (hasWorkingAbility(player, 99)) {
+            sendAbMessage(60,0,player);
+            gainStatMod(player, Speed, 1);
+        }
 	return false;
     }
-    if (pokelong[player]["Confused"].toBool()) {
+    if (pokelong[player].value("Confused").toBool()) {
 	if (pokelong[player]["ConfusedCount"].toInt() > 0) {
 	    inc(pokelong[player]["ConfusedCount"], -1);
 
@@ -746,8 +756,13 @@ void BattleSituation::testFlinch(int player, int target)
     }
 
     int rate = turnlong[player]["FlinchRate"].toInt();
+    int randnum = rand() % 100;
+    /* Serene Grace */
+    if (hasWorkingAbility(player, 82)) {
+        randnum /= 2;
+    }
 
-    if (rand() % 100 < rate) {
+    if (randnum % 100 < rate) {
 	turnlong[target]["Flinched"] = true;
     }
 
@@ -828,9 +843,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	qDebug() << poke(player).nick() << " used " << MoveInfo::Name(attack);
     }
 
-    if (!specialOccurence)
-	losePP(player, move, 1);
-
+    if (!specialOccurence) {
+        //Pressure
+        losePP(player, move, 1 + (hasWorkingAbility(rev(player), 70) && !koed(rev(player)) && turnlong[player]["Power"].toInt() > 0));
+    }
+    
     switch(turnlong[player]["PossibleTargets"].toInt()) {
 	case Move::None: targetList.push_back(player); break;
 	case Move::User: targetList.push_back(player); break;
@@ -843,6 +860,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         goto end;
     }
 
+    callaeffects(player,player, "BeforeTargetList");
     callieffects(player, player, "BeforeTargetList");
     calleffects(player, player, "BeforeTargetList");
 
@@ -1075,6 +1093,10 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
     /* Then we check if the effect hits */
     int randnum = rand() % 100;
+    /* Serene Grace */
+    if (hasWorkingAbility(player,82)) {
+        randnum /= 2;
+    }
     int maxtogo = turnlong[player]["EffectRate"].toInt();
 
     if (maxtogo != 0 && randnum > maxtogo) {
@@ -1470,10 +1492,14 @@ int BattleSituation::calculateDamage(int p, int t)
 
     callaeffects(p,t,"BasePowerModifier");
     callaeffects(t,p,"BasePowerFoeModifier");
-    power = power * (10+move["BasePowerAbilityModifier"].toInt())/10 * (20+move["BasePowerFoeAbilityModifier"].toInt())/20;
+    power = power * (20+move["BasePowerAbilityModifier"].toInt())/20 * (20+move["BasePowerFoeAbilityModifier"].toInt())/20;
 
     int damage = ((((level * 2 / 5) + 2) * power * attack / 50) / def);
-    damage = damage * ((poke.status() == Pokemon::Burnt && move["Category"].toInt() == Move::Physical) ? PokeFraction(1,2) : PokeFraction(1,1));
+    //Guts, burn
+    damage = damage * (
+                       (poke.status() == Pokemon::Burnt && move["Category"].toInt() == Move::Physical && !hasWorkingAbility(p,31))
+                       ? PokeFraction(1,2) : PokeFraction(1,1)
+                       );
     /* Light screen / Reflect */
     if (!crit && teamzone[t].value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
 	damage /= 2;
@@ -1761,13 +1787,15 @@ int BattleSituation::getStat(int player, int stat)
     turnlong[player].remove(q+"ItemModifier");
     callieffects(player, player, "StatModifier");
     callaeffects(player, player, "StatModifier");
-    int ret = pokelong[player][q].toInt()*getStatBoost(player, stat)*(20+turnlong[player][q+"AbilityModifier"].toInt())/20*(20+turnlong[player][q+"ItemModifier"].toInt())/20;
+    int ret = pokelong[player][q].toInt()*getStatBoost(player, stat)*(20+turnlong[player][q+"AbilityModifier"].toInt())/20
+              *(20+turnlong[player][q+"ItemModifier"].toInt())/20;
 
     if (stat == Speed && teamzone[player].value("TailWindCount").toInt() > 0){
         ret *= 2;
     }
 
-    if (stat == Speed && poke(player).status() == Pokemon::Paralysed) {
+    //QuickFeet
+    if (stat == Speed && poke(player).status() == Pokemon::Paralysed && !hasWorkingAbility(player, 72)) {
 	ret /= 4;
     }
 

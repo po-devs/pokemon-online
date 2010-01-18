@@ -695,7 +695,8 @@ struct MMPerishSong : public MM
 
     static void uas(int, int, BS &b) {
 	for (int t = BS::Player1; t <= BS::Player2; t++) {
-	    if (poke(b,t).contains("PerishSongCount")) {
+            //SoundProof
+            if (poke(b,t).contains("PerishSongCount")) {
 		continue;
 	    }
 	    addFunction(poke(b,t), "EndTurn", "PerishSong", &et);
@@ -706,10 +707,12 @@ struct MMPerishSong : public MM
 
     static void et(int s, int, BS &b) {
 	int count = poke(b,s)["PerishSongCount"].toInt();
-	b.sendMoveMessage(95,1,s,0,0,count);
+        //SoundProof
+        if (!b.hasWorkingAbility(s,95))
+            b.sendMoveMessage(95,1,s,0,0,count);
 	if (count > 0) {
 	    poke(b,s)["PerishSongCount"] = count - 1;
-	} else {
+        } else if (!b.hasWorkingAbility(s,95)){ //SoundProof
 	    b.koPoke(s,s,false);
 	}
     }
@@ -1155,7 +1158,8 @@ struct MMAromaTherapy : public MM
 	int move = MM::move(b,s);
 	b.sendMoveMessage(3, (move == 16) ? 0 : 1, s, type(b,s));
 	for (int i = 0; i < 6; i++) {
-	    if (!b.poke(s,i).ko()) {
+            //SoundProof
+            if (!b.poke(s,i).ko() && (move == 16 || b.poke(s,i).ability() != 95)) {
 		b.changeStatus(s,i,Pokemon::Fine);
 	    }
 	}
