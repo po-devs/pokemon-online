@@ -622,7 +622,7 @@ bool BattleSituation::testAccuracy(int player, int target)
     acc = acc * getStatBoost(player, 7) * getStatBoost(target, 6)
 	    * (20+turnlong[player]["Stat7ItemModifier"].toInt())/20
             * (20-turnlong[target]["Stat6ItemModifier"].toInt())/20
-            * (10+turnlong[player]["Stat7AbilityModifier"].toInt())/10;
+            * (20+turnlong[player]["Stat7AbilityModifier"].toInt())/20;
 
     if (rand() % 100 < acc) {
 	return true;
@@ -1166,7 +1166,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 		    if (sep == '+') {
 			gainStatMod(targeted, stat, mod);
 		    } else if (sep == '-') {
-                        loseStatMod(targeted, stat, mod, self);
+                        loseStatMod(targeted, stat, mod, player);
 		    } else {
 			changeStatMod(targeted, stat, mod);
 		    }
@@ -1239,6 +1239,11 @@ void BattleSituation::callForth(int weather, int turns)
 	notify(All, WeatherMessage, Player1, qint8(StartWeather), qint8(weather));
 	battlelong["WeatherCount"] = turns;
 	battlelong["Weather"] = weather;
+        for (int i = Player1; i <= Player2; i++) {
+            if (!koed(i)) {
+                callaeffects(i,i,"WeatherChange");
+            }
+        }
     }
 }
 
@@ -1365,14 +1370,31 @@ void BattleSituation::gainStatMod(int player, int stat, int bonus)
     }
 }
 
-void BattleSituation::loseStatMod(int player, int stat, int malus, bool self)
+void BattleSituation::loseStatMod(int player, int stat, int malus, int attacker)
 {
     QString path = tr("Boost%1").arg(stat);
     int boost = pokelong[player][path].toInt();
     if (boost > -6) {
+        if (attacker != player) {
+            QString q = QString("StatModFrom%1Prevented").arg(attacker);
+            turnlong[player].remove(q);
+            turnlong[player]["StatModType"] = QString("Stat");
+            turnlong[player]["StatModded"] = Attack;
+            turnlong[player]["StatModification"] = -malus;
+            callaeffects(player, attacker, "PreventStatChange");
+        }
 	notify(All, StatChange, player, qint8(stat), qint8(-malus));
 	changeStatMod(player, stat, std::max(boost-malus, -6));
     }
+}
+
+void BattleSituation::preventStatMod(int player, int attacker) {
+    turnlong[player][QString("StatModFrom%1Prevented").arg(attacker)] = true;
+    turnlong[player][QString("StatModFrom%1DPrevented").arg(attacker)] = true;
+}
+
+bool BattleSituation::canSendPreventMessage(int defender, int attacker) {
+    return !turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker));
 }
 
 void BattleSituation::changeStatMod(int player, int stat, int newstat)
@@ -1710,6 +1732,8 @@ void BattleSituation::losePP(int player, int move, int loss)
 int BattleSituation::getStat(int player, int stat)
 {
     QString q = "Stat"+QString::number(stat);
+    turnlong[player].remove(q+"AbilityModifier");
+    turnlong[player].remove(q+"ItemModifier");
     callieffects(player, player, "StatModifier");
     callaeffects(player, player, "StatModifier");
     int ret = pokelong[player][q].toInt()*getStatBoost(player, stat)*(20+turnlong[player][q+"AbilityModifier"].toInt())/20*(20+turnlong[player][q+"ItemModifier"].toInt())/20;

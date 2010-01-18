@@ -83,7 +83,9 @@ public:
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
     void gainStatMod(int player, int stat, int bonus);
-    void loseStatMod(int player, int stat, int malus, bool self);
+    void loseStatMod(int player, int stat, int malus, int attacker);
+    bool canSendPreventMessage(int defender, int attacker);
+    void preventStatMod(int player, int attacker);
     /* Does not do extra operations,just a setter */
     void changeStatus(int player, int status);
     void changeStatus(int team, int poke, int status);

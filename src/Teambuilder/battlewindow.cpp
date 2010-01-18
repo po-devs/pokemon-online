@@ -469,11 +469,11 @@ void BattleWindow::receiveInfo(QByteArray inf)
             mess.replace("%s", nick(self));
 //            mess.replace("%ts", name(self));
 //            mess.replace("%tf", name(!self));
-//            mess.replace("%t", TypeInfo::Name(type));
+            mess.replace("%t", TypeInfo::Name(type));
             mess.replace("%f", nick(!self));
             mess.replace("%m", MoveInfo::Name(other));
 //            mess.replace("%d", QString::number(other));
-//            mess.replace("%i", ItemInfo::Name(other));
+            mess.replace("%i", ItemInfo::Name(other));
             mess.replace("%a", AbilityInfo::Name(other));
 //            mess.replace("%p", PokemonInfo::Name(other));
             printHtml("<span style='color:" + TypeInfo::Color(type).name() + "'>" + escapeHtml(tu(mess)) + "</span>");

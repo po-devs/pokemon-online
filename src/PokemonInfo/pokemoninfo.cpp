@@ -916,6 +916,16 @@ void TypeInfo::init(const QString &dir)
     loadEff();
 }
 
+int TypeInfo::TypeForWeather(int weather) {
+    switch(weather) {
+    case Hail: return Type::Ice;
+    case Rain: return Type::Water;
+    case SandStorm: return Type::Rock;
+    case Sunny: return Type::Fire;
+    default: return Type::Normal;
+    }
+}
+
 int TypeInfo::Eff(int type_attack, int type_defend)
 {
     return m_TypeVsType[type_attack * NumberOfTypes() + type_defend];

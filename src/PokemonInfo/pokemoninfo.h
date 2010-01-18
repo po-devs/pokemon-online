@@ -170,6 +170,15 @@ public:
 class TypeInfo
 {
 private:
+    enum Weather
+    {
+        NormalWeather = 0,
+        Hail = 1,
+        Rain = 2,
+        SandStorm = 3,
+        Sunny = 4
+    };
+
     static QStringList m_Names;
     static QString m_Directory;
     static QList<QColor> m_Colors;
@@ -188,6 +197,7 @@ public:
     static QColor Color(int typenum);
     static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
+    static int TypeForWeather(int weather);
 };
 
 class NatureInfo

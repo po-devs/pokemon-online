@@ -178,7 +178,7 @@ struct AMCompoundEyes : public AM {
     }
 
     static void sm(int s, int , BS &b) {
-        turn(b,s)["Stat7AbilityModifier"] = 3;
+        turn(b,s)["Stat7AbilityModifier"] = 6;
     }
 };
 
@@ -238,9 +238,7 @@ struct AMDrizzle : public AM {
     }
 
     static void us (int s, int , BS &b) {
-        if(b.weather() != poke(b,s)["AbilityArg"].toInt()) {
-            b.callForth(poke(b,s)["AbilityArg"].toInt(), -1);
-        }
+        b.callForth(poke(b,s)["AbilityArg"].toInt(), -1);
     }
 };
 
@@ -345,6 +343,169 @@ struct AMFlowerGift : public AM {
     }
 };
 
+struct AMForeCast : public AM {
+    AMForeCast() {
+        functions["UponSetup"] = &us;
+        functions["WeatherChange"] = &us;
+    }
+
+    static void us(int s, int, BS &b) {
+        int tp = TypeInfo::TypeForWeather(b.weather());
+
+        if (poke(b,s)["Type2"].toInt() == Pokemon::Curse && tp == poke(b,s)["Type1"].toInt()) {
+            return;
+        }
+        b.sendAbMessage(21,0,s,s,tp);
+        poke(b,s)["Type1"] = tp;
+        poke(b,s)["Type2"] = Pokemon::Curse;
+    }
+};
+
+struct AMForeWarn : public AM {
+    AMForeWarn() {
+        functions["UponSetup"] = &us;
+    }
+
+    struct special_moves : public QHash<int,int> {
+        special_moves() {
+            (*this)[133] = (*this)[166] = (*this)[186] = (*this)[353] = 160;
+            (*this)[70] = (*this)[241] = (*this)[251] = 120;
+        }
+    };
+
+    static special_moves SM;
+
+    static void us(int s, int, BS &b) {
+        int t = b.rev(s);
+
+        if (!b.koed(t)) {
+            int max = 0;
+            std::vector<int> poss;
+
+            for (int i = 0; i < 4; i++) {
+                int m = b.move(t,i);
+                if (m !=0) {
+                    int pow;
+                    if (SM.contains(m)) {
+                        pow = SM[m];
+                    } else if (MoveInfo::Power(m) == 1) {
+                        pow = 80;
+                    } else {
+                        pow = MoveInfo::Power(m);
+                    }
+
+                    if (pow > max) {
+                        poss.clear();
+                        poss.push_back(m);
+                    } else if (pow == max) {
+                        poss.push_back(m);
+                    }
+                }
+            }
+
+            int m = poss[rand()%poss.size()];
+
+            b.sendAbMessage(22,0,s,t,MoveInfo::Type(m),m);
+        }
+    }
+};
+
+AMForeWarn::special_moves AMForeWarn::SM;
+
+struct AMFrisk : public AM {
+    AMFrisk() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us(int s, int , BS &b) {
+        int t = b.rev(s);
+
+        if (b.koed(t))
+            return;
+
+
+        int it = b.poke(t).item();
+
+        if (it != 0) {
+            b.sendAbMessage(23,0,s,t,0,it);
+        }
+    }
+};
+
+struct AMGuts : public AM {
+    AMGuts() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm (int s, int, BS &b) {
+        if (b.poke(s).status() != Pokemon::Fine) {
+            turn(b,s)[QString("Stat%1AbilitiyModifier").arg(poke(b,s)["AbilityArg"].toInt())] = 10;
+        }
+    }
+};
+
+struct AMHeatProof : public AM {
+    AMHeatProof() {
+        functions["BasePowerFoeModifier"] = &bpfm;
+    }
+
+    static void bpfm(int , int t, BS &b) {
+        if (type(b,t) == Pokemon::Fire) {
+            turn(b,t)["BasePowerFoeAbilityModifier"] = -10;
+        }
+    }
+};
+
+struct AMHugePower : public AM {
+    AMHugePower() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm (int s, int, BS &b) {
+        turn(b,s)["Stat1AbilitiyModifier"] = 20;
+    }
+};
+
+struct AMHustle : public AM {
+    AMHustle() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm (int s, int, BS &b) {
+        turn(b,s)["Stat1AbilitiyModifier"] = 10;
+        if (turn(b,s)["Category"].toInt() == Move::Physical) {
+            turn(b,s)["Stat7AbilityModifier"] = -4;
+        }
+    }
+};
+
+struct AMHydration : public AM {
+    AMHydration() {
+        functions["WeatherSpecial"] = &ws;
+    }
+
+    static void ws(int s, int, BS &b) {
+        if (b.isWeatherWorking(BattleSituation::Rain) && b.poke(s).status() != Pokemon::Fine) {
+            b.sendAbMessage(29,0,s,s,Pokemon::Water);
+            b.healStatus(s, b.poke(s).status());
+        }
+    }
+};
+
+struct AMHyperCutter : public AM {
+    AMHyperCutter() {
+        functions["PreventStatChange"] = &psc;
+    }
+
+    static void psc(int s, int t, BS &b) {
+        if (turn(b,s)["StatModType"].toString() == "Stat" && turn(b,s)["StatModded"].toInt() == Attack && turn(b,s)["StatModification"].toInt() < 0) {
+            if (b.canSendPreventMessage(s,t))
+                b.sendAbMessage(30,0,s);
+            b.preventStatMod(s,t);
+        }
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
@@ -356,7 +517,9 @@ struct AMFlowerGift : public AM {
     BasePowerFoeModifier
     StatModifier
     WeatherSpecial
+    WeatherChange
     OpponentBlock
+    PreventStatChange
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
@@ -381,4 +544,14 @@ void AbilityEffect::init()
     REGISTER_AB(18, FlameBody);
     REGISTER_AB(19, FlashFire);
     REGISTER_AB(20, FlowerGift);
+    REGISTER_AB(21, ForeCast);
+    REGISTER_AB(22, ForeWarn);
+    REGISTER_AB(23, Frisk);
+    //Gluttony
+    REGISTER_AB(25, Guts);
+    REGISTER_AB(26, HeatProof);
+    REGISTER_AB(27, HugePower);
+    REGISTER_AB(28, Hustle);
+    REGISTER_AB(29, Hydration);
+    REGISTER_AB(30, HyperCutter);
 }
