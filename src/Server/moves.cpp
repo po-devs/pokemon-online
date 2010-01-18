@@ -2144,12 +2144,7 @@ struct MMWeatherBall : public MM
 
 	if (weather != BattleSituation::NormalWeather && b.isWeatherWorking(weather)) {
 	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
-	    switch (weather) {
-		case BattleSituation::Hail: turn(b,s)["Type"] = Move::Ice; break;
-		case BattleSituation::SandStorm: turn(b,s)["Type"] = Move::Rock; break;
-		case BattleSituation::Sunny: turn(b,s)["Type"] = Move::Fire; break;
-		case BattleSituation::Rain: turn(b,s)["Type"] = Move::Water; break;
-	    }
+            turn(b,s)["Type"] = TypeInfo::TypeForWeather(weather);
 	}
     }
 };
