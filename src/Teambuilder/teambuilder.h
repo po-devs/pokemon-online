@@ -183,6 +183,7 @@ public slots:
     void updateEVs();
 public:
     TB_PokemonBody(PokeTeam *poke);
+    inline void changeSourcePoke(PokeTeam *poke) {m_poke = poke;}
 
     void updateNum();
     /* getting the pokemon of the team corresponding to the body */
