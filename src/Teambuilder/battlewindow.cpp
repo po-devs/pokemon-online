@@ -460,6 +460,37 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	default:
 	    break;
     }
+<<<<<<< .mine
+    case AbilityMessage:
+        {
+            quint16 ab=0;
+            uchar part=0;
+            qint8 type(0), foe(0);
+            qint16 other(0);
+            in >> ab >> part >> type >> foe >> other;
+            QString mess = AbilityInfo::Message(ab,part);
+            mess.replace("%s", nick(self));
+//            mess.replace("%ts", name(self));
+//            mess.replace("%tf", name(!self));
+            mess.replace("%t", TypeInfo::Name(type));
+            mess.replace("%f", nick(!self));
+            mess.replace("%m", MoveInfo::Name(other));
+//            mess.replace("%d", QString::number(other));
+            mess.replace("%i", ItemInfo::Name(other));
+            mess.replace("%a", AbilityInfo::Name(other));
+//            mess.replace("%p", PokemonInfo::Name(other));
+            if (type == Pokemon::Normal) {
+                printLine(escapeHtml(tu(mess)));
+            } else {
+                printHtml("<span style='color:" + TypeInfo::Color(type).name() + "'>" + escapeHtml(tu(mess)) + "</span>");
+            }
+            break;
+        }
+    default:
+        break;
+    }
+=======
+>>>>>>> .r267
 }
 
 void BattleWindow::switchToNaught(bool self)
