@@ -339,8 +339,8 @@ void TeamBuilder::changePokemonOrder(QPair<int, int>echange)
     int index = m_body->currentIndex();
     qDebug() << "currentIndex:"<<index;
     //recuperation des widgets
-    QWidget * poke1 = m_body->widget(echange.first);
-    QWidget * poke2 = m_body->widget(echange.second);
+    TB_PokemonBody * poke1 = (TB_PokemonBody *)m_body->widget(echange.first);
+    TB_PokemonBody * poke2 = (TB_PokemonBody *)m_body->widget(echange.second);
     qDebug() << "retrait des widget";
     m_body->removeWidget(poke1);
     qDebug() << "widget1";
@@ -348,47 +348,27 @@ void TeamBuilder::changePokemonOrder(QPair<int, int>echange)
     qDebug() << "widget 2";
     index = m_body->currentIndex();
     qDebug() << "currentIndex:"<<index;
-    if(echange.first>index && echange.second>index)//insertion apres l index courant
+    if(echange.first < echange.second)//insertion apres l index courant
     {
         m_body->insertWidget(echange.first,poke2);
         qDebug() <<"positionement du widget 2 a l index "<<echange.first;
         m_body->insertWidget(echange.second,poke1);
         qDebug() <<"positionement du widget 1 a l index "<<echange.second;
     }
-    else if(echange.first<=index&&echange.second>index)//deplacement de l index courant
+    else
     {
         m_body->insertWidget(echange.first,poke2);
         qDebug() <<"positionement du widget 2 a l index "<<echange.first;
         m_body->insertWidget(echange.second,poke1);
         qDebug() <<"positionement du widget 1 a l index "<<echange.second;
-    }
-    else if(echange.first>index && echange.second<=index)//deplacement de l index courant
-    {
-        m_body->insertWidget(echange.second,poke1);
-        qDebug() <<"positionement du widget 1 a l index "<<echange.second;
-        m_body->insertWidget(echange.first,poke2);
-        qDebug() <<"positionement du widget 2 a l index "<<echange.first;
-    }
-    else//decalage de l index courant
-    {
-        if(echange.first<echange.second)
-        {
-            m_body->insertWidget(echange.first,poke2);
-            qDebug() <<"positionement du widget 2 a l index "<<echange.first;
-            m_body->insertWidget(echange.second,poke1);
-            qDebug() <<"positionement du widget 1 a l index "<<echange.second;
-        }
-        else
-        {
-            m_body->insertWidget(echange.second,poke1);
-            qDebug() <<"positionement du widget 1 a l index "<<echange.second;
-            m_body->insertWidget(echange.first,poke2);
-            qDebug() <<"positionement du widget 2 a l index "<<echange.first;
-        }
     }
     qDebug() <<"Fin echange";
     m_body->setCurrentWidget(poke2);
     //this->changeBody(echange.first);
+    std::swap(*(poke1->poke()), *(poke2->poke()));
+    PokeTeam *tmp = poke1->poke();
+    poke1->changeSourcePoke(poke2->poke());
+    poke2->changeSourcePoke(tmp);
 }
 
 DockAdvanced * TeamBuilder::dockAdvanced() const
