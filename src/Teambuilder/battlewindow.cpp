@@ -460,7 +460,6 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	default:
 	    break;
     }
-<<<<<<< .mine
     case AbilityMessage:
         {
             quint16 ab=0;
@@ -489,8 +488,6 @@ void BattleWindow::receiveInfo(QByteArray inf)
     default:
         break;
     }
-=======
->>>>>>> .r267
 }
 
 void BattleWindow::switchToNaught(bool self)
