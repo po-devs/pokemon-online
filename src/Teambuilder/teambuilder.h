@@ -2,11 +2,13 @@
 #define TEAMBUILDER_H
 
 #include <QtGui>
+#include <QPair>
 
 class TB_PokemonBody;
 class TB_TrainerBody;
 class TB_EVManager;
 class DockAdvanced;
+class pokeButton;
 
 class TrainerTeam;
 class Team;
@@ -34,7 +36,7 @@ class TeamBuilder : public QWidget
 
     friend class DockAdvanced;
 private:
-    QPushButton *m_pokemon[6];
+    pokeButton *m_pokemon[6];
     QPushButton *m_trainer;
     QStackedWidget *m_body;
     TB_TrainerBody *m_trainerBody;
@@ -68,6 +70,7 @@ private slots:
     void advancedClicked(int index);
     void advancedDestroyed();
     void indexNumPokemonChangedForAdvanced(int pokeNum);
+    void changePokemonOrder(QPair<int /*pokemon1*/, int /*pokemone2*/>echange);
 
 public slots:
     void saveTeam();

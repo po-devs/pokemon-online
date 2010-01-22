@@ -78,8 +78,7 @@ public:
 	Flinch,
 	Recoil,
 	WeatherMessage,
-        StraightDamage,
-        AbilityMessage
+	StraightDamage
     };
 
     enum WeatherM
