@@ -19,7 +19,9 @@ SOURCES += main.cpp \
     ../PokemonInfo/networkstructs.cpp \
     challenge.cpp \
     battlewindow.cpp \
-    ../Utilities/functions.cpp
+    ../Utilities/functions.cpp \
+    ../Utilities/pokeListe.cpp \
+    ../Utilities/pokeButton.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -36,6 +38,8 @@ HEADERS += teambuilder.h \
     ../PokemonInfo/networkstructs.h \
     challenge.h \
     battlewindow.h \
-    ../Utilities/functions.h
+    ../Utilities/functions.h \
+    ../Utilities/pokeListe.h \
+    ../Utilities/pokeButton.h
 LIBS += -L../../bin \
     -lzip

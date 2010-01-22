@@ -5,6 +5,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/dockinterface.h"
+#include "../Utilities/pokeButton.h"
 
 template <class T, class U>
 QList<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
@@ -102,8 +103,9 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvance
 
     for (int i = 0; i < 6; i++)
     {
-	m_pokemon[i] = new QPushButton(QString("Pokémon &%1").arg(i+1));
+        m_pokemon[i] = new pokeButton(QString("Pokémon &%1").arg(i+1));
 	m_pokemon[i]->setCheckable(true);
+        connect(m_pokemon[i],SIGNAL(changePokemonOrder(QPair<int,int>)),this,SLOT(changePokemonOrder(QPair<int,int>)));
         if(i<3)
         {
             layout->addWidget(m_pokemon[i],0,(i%3)+1);
@@ -145,7 +147,7 @@ void TeamBuilder::connectAll()
     for (int i = 0; i < 7; i++)
     {
 	mapper->setMapping(at(i), i);
-	connect(at(i), SIGNAL(pressed()), mapper, SLOT(map()));
+        connect(at(i), SIGNAL(pressed()), mapper, SLOT(map()));
     }
 
     connect(mapper, SIGNAL(mapped(int)), SLOT(changeBody(int)));
@@ -329,6 +331,64 @@ void TeamBuilder::indexNumPokemonChangedForAdvanced(int pokeNum)
 	int index = QString(sender()->objectName()).remove("Poke").toInt();
         m_dockAdvanced->setPokemonNum(index,pokeNum);
     }
+}
+
+void TeamBuilder::changePokemonOrder(QPair<int, int>echange)
+{
+    qDebug() << "changement de l ordre des pokemon";
+    int index = m_body->currentIndex();
+    qDebug() << "currentIndex:"<<index;
+    //recuperation des widgets
+    QWidget * poke1 = m_body->widget(echange.first);
+    QWidget * poke2 = m_body->widget(echange.second);
+    qDebug() << "retrait des widget";
+    m_body->removeWidget(poke1);
+    qDebug() << "widget1";
+    m_body->removeWidget(poke2);
+    qDebug() << "widget 2";
+    index = m_body->currentIndex();
+    qDebug() << "currentIndex:"<<index;
+    if(echange.first>index && echange.second>index)//insertion apres l index courant
+    {
+        m_body->insertWidget(echange.first,poke2);
+        qDebug() <<"positionement du widget 2 a l index "<<echange.first;
+        m_body->insertWidget(echange.second,poke1);
+        qDebug() <<"positionement du widget 1 a l index "<<echange.second;
+    }
+    else if(echange.first<=index&&echange.second>index)//deplacement de l index courant
+    {
+        m_body->insertWidget(echange.first,poke2);
+        qDebug() <<"positionement du widget 2 a l index "<<echange.first;
+        m_body->insertWidget(echange.second,poke1);
+        qDebug() <<"positionement du widget 1 a l index "<<echange.second;
+    }
+    else if(echange.first>index && echange.second<=index)//deplacement de l index courant
+    {
+        m_body->insertWidget(echange.second,poke1);
+        qDebug() <<"positionement du widget 1 a l index "<<echange.second;
+        m_body->insertWidget(echange.first,poke2);
+        qDebug() <<"positionement du widget 2 a l index "<<echange.first;
+    }
+    else//decalage de l index courant
+    {
+        if(echange.first<echange.second)
+        {
+            m_body->insertWidget(echange.first,poke2);
+            qDebug() <<"positionement du widget 2 a l index "<<echange.first;
+            m_body->insertWidget(echange.second,poke1);
+            qDebug() <<"positionement du widget 1 a l index "<<echange.second;
+        }
+        else
+        {
+            m_body->insertWidget(echange.second,poke1);
+            qDebug() <<"positionement du widget 1 a l index "<<echange.second;
+            m_body->insertWidget(echange.first,poke2);
+            qDebug() <<"positionement du widget 2 a l index "<<echange.first;
+        }
+    }
+    qDebug() <<"Fin echange";
+    m_body->setCurrentWidget(poke2);
+    //this->changeBody(echange.first);
 }
 
 DockAdvanced * TeamBuilder::dockAdvanced() const
@@ -588,24 +648,6 @@ void TB_PokemonBody::moveCellActivated(int cell)
 
 void TB_PokemonBody::goToAdvanced()
 {
-    /*if (poke()->num() != 0)
-    {
-	if (advancedOpen()) {
-            // we show the user where the advanced window is
-	    advanced()->activateWindow();
-	    advanced()->raise();
-	    return;
-	}
-
-	m_adv = new TB_Advanced(poke());
-	advanced()->show();
-	advanced()->setAttribute(Qt::WA_DeleteOnClose, true);
-
-	connect(this, SIGNAL(pokeChanged(int)), advanced(), SLOT(close()));
-	connect(this, SIGNAL(destroyed()), advanced(), SLOT(close()));
-	connect(advanced(), SIGNAL(destroyed()), SLOT(updateAdvanced()));
-	connect(advanced(), SIGNAL(destroyed()), SLOT(setAdvancedOpenToFalse()));
-    }*/
     int index = QString(this->objectName()).remove("Poke").toInt();
     emit advanced(index);
 }
