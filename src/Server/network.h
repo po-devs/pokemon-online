@@ -15,7 +15,10 @@ public:
 	   abort: abruptly closes the socket */
     int error() const;
     QString errorString() const;
+    QString ip() const;
     bool isConnected() const;
+
+    void close();
 public slots:
     void onReceipt();
     void onDisconnect();

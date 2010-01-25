@@ -1,4 +1,4 @@
-#12,17,36,38,47,52: free
+#12,17,36,38,47,52,68: free
 1#Adaptability
 2#Aftermath
 
@@ -114,7 +114,7 @@
 7-10#Torrent
 66#Trace
 67#Truant
-68#Unaware
+
 69#Unburden
 
 70-12#Volt absorb

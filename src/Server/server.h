@@ -39,6 +39,7 @@ public slots:
     void dealWithChallenge(int desc, int from, int to);
     void battleResult(int desc, int winner, int loser);
     void sendBattleCommand(int id, const QByteArray &command);
+    void info(int , const QString& );
 
 private:
     QTcpServer myserver;

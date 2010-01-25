@@ -28,6 +28,14 @@ void Analyzer::engageBattle(int id, const TeamBattle &team, const BattleConfigur
     notify(EngageBattle, id, team, conf);
 }
 
+void Analyzer::close() {
+    socket().close();
+}
+
+QString Analyzer::ip() const {
+    return socket().ip();
+}
+
 void Analyzer::sendPlayer(int num, const BasicInfo &team)
 {
     notify(PlayersList, num, team);
@@ -83,28 +91,28 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     in >> command;
 
     switch (command) {
-	case Login:
+    case Login:
 	{
 	    TeamInfo team;
 	    in >> team;
 	    emit loggedIn(team);
 	    break;
 	}
-	case SendMessage:
+    case SendMessage:
 	{
 	    QString mess;
 	    in >> mess;
 	    emit messageReceived(mess);
 	    break;
 	}
-	case SendTeam:
+    case SendTeam:
 	{
 	    TeamInfo team;
 	    in >> team;
 	    emit teamReceived(team);
 	    break;
 	}
-	case ChallengeStuff:
+    case ChallengeStuff:
 	{
 	    quint8 stuff;
 	    int id;
@@ -112,28 +120,38 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit challengeStuff(stuff, id);
 	    break;
 	}
-	case BattleMessage:
+    case BattleMessage:
 	{
 	    BattleChoice ch;
 	    in >> ch;
 	    emit battleMessage(ch);
 	    break;
 	}
-	case BattleChat:
+    case BattleChat:
 	{
 	    QString s;
 	    in >> s;
 	    emit battleChat(s);
 	    break;
 	}
-	case BattleFinished:
-	    emit forfeitBattle();
-	    break;
-	case KeepAlive:
-	    break;
-	default:
-	    emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
-	    break;
+    case BattleFinished:
+        emit forfeitBattle();
+        break;
+    case KeepAlive:
+        break;
+    case Register:
+        emit wannaRegister();
+        break;
+    case AskForPass:
+        {
+            QString hash;
+            in >> hash;
+            emit sentHash(hash);
+            break;
+        }
+    default:
+        emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
+        break;
     }
 }
 

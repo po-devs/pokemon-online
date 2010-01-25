@@ -193,7 +193,8 @@ void BattleSituation::endTurnStatus()
 	    {
 		case Pokemon::Burnt:
 		    notify(All, StatusMessage, player, qint8(HurtBurn));
-		    inflictDamage(player, poke(player).totalLifePoints()/8, player);
+                    //HeatProof: burn does only 1/16
+                    inflictDamage(player, poke(player).totalLifePoints()/(8*(1+hasWorkingAbility(player,32))), player);
 		    break;
 		case Pokemon::DeeplyPoisoned:
                     //PoisonHeal
@@ -785,6 +786,22 @@ bool BattleSituation::testFail(int player)
     return false;
 }
 
+int BattleSituation::attacker() {
+    if (!battlelong.contains("Attacker")) {
+        return -1;
+    } else {
+        return battlelong["Attacker"].toInt();
+    }
+}
+
+int BattleSituation::attacked() {
+    if (!battlelong.contains("Attacked")) {
+        return -1;
+    } else {
+        return battlelong["Attacked"].toInt();
+    }
+}
+
 void BattleSituation::useAttack(int player, int move, bool specialOccurence, bool tellPlayers)
 {
     battlelong["Attacker"] = player;
@@ -805,6 +822,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     calleffects(player,player,"EvenWhenCantMove");
 
     if (!specialOccurence && !testStatus(player)) {
+        goto end;
+    }
+
+    //Just for truant
+    callaeffects(player, player, "DetermineAttackPossible");
+    if (turnlong[player]["ImpossibleToMove"].toBool() == true) {
         goto end;
     }
 
@@ -865,6 +888,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     calleffects(player, player, "BeforeTargetList");
 
     foreach(int target, targetList) {
+        battlelong["Attacked"] = target;
 	if (player != target && !specialOccurence && !amn.contains(attack)) {
 	    pokelong[target]["MirrorMoveMemory"] = attack;
 	}
@@ -1020,6 +1044,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     end:
     battlelong.remove("Attacker");
+    battlelong.remove("Attacked");
 }
 
 bool BattleSituation::hasMove(int player, int move) {
@@ -1036,7 +1061,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
     if (battlelong.contains("Attacker")) {
         int attacker = battlelong["Attacker"].toInt();
         //Mold Breaker
-        if (attacker == rev(player) && hasWorkingAbility(57, attacker)) {
+        if (attacker == rev(player) && hasWorkingAbility(attacker, 57)) {
             return false;
         }
     }
@@ -1265,6 +1290,12 @@ void BattleSituation::inflictStatus(int player, int status, int attacker)
             }
         }
         changeStatus(player, status);
+        if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
+            && hasWorkingAbility(player, 108)) //Synchronize
+        {
+            sendAbMessage(61,0,player,attacker);
+            inflictStatus(attacker,status, player);
+        }
     }
 }
 
@@ -1862,12 +1893,24 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     /* Boost is 1 if boost == 0,
        (2+boost)/2 if boost > 0;
        2/(2+boost) otherwise */
-    if (turnlong[player].value("CriticalHit").toBool()) {
-	if ((stat == Attack || stat == SpAttack) && boost < 0) {
-	    boost = 0;
-	} else if ((stat == Defense || stat == SpDefense) && boost > 0) {
-	    boost = 0;
-	}
+    int attacker = this->attacker();
+    int attacked = this->attacked();
+
+    if (attacker != -1 && attacked != -1) {
+        //Unaware
+        if (attacker != player && attacked == player && hasWorkingAbility(attacker, 116) && (stat == SpDefense || stat == Defense)) {
+            boost = 0;
+        } else if (attacker == player && attacked != player && hasWorkingAbility(attacked, 116) && (stat == SpAttack || stat == Attack)) {
+            boost = 0;
+        }
+        //Critical hit
+        if (turnlong[attacker].value("CriticalHit").toBool()) {
+            if ((stat == Attack || stat == SpAttack) && boost < 0) {
+                boost = 0;
+            } else if ((stat == Defense || stat == SpDefense) && boost > 0) {
+                boost = 0;
+            }
+        }
     }
 
     if (stat <= 5) {

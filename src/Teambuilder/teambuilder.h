@@ -17,18 +17,6 @@ class MainWindow;
 
 class QCompactTable;
 
-/* validator for the nicks */
-class QNickValidator : public QValidator
-{
-    Q_OBJECT
-public:
-    QNickValidator(QWidget *parent);
-
-    bool isBegEndChar(QChar ch) const;
-    void fixup(QString &input) const;
-    State validate(QString &input, int &pos) const;
-};
-
 /* The Teambuilder!! */
 class TeamBuilder : public QWidget
 {

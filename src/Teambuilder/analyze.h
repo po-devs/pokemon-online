@@ -28,7 +28,9 @@ namespace NetworkCli
 	BattleFinished,
 	BattleMessage,
 	BattleChat,
-	KeepAlive
+        KeepAlive,
+        AskForPass,
+        Register
     };
 
     enum ProtocolError
@@ -84,6 +86,8 @@ signals:
     void battleStarted(int id, const TeamBattle &myteam, const BattleConfiguration &conf);
     void battleFinished(int res);
     void battleMessage(const QByteArray &mess);
+    void passRequired(const QString &salt);
+    void notRegistered(bool);
 
 public slots:
     /* slots called by the network */

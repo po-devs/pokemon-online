@@ -59,44 +59,17 @@
 %s's Speed Boost increases its speed!
 
 %s's SteadFast increases its speed!
+%s's Synchronize changes the status of %f!
 
 
 
 
+%s's Trace copied %a!
+%s is carelessly slacking off!
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+%s's %a absorbs the attack!
+%s's Wonder Guard evades the attack!
 
 
 

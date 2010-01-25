@@ -1,4 +1,5 @@
 #include "player.h"
+#include "security.h"
 #include "../PokemonInfo/battlestructs.h"
 
 Player::Player(QTcpSocket *sock) : myrelay(sock)
@@ -14,6 +15,8 @@ Player::Player(QTcpSocket *sock) : myrelay(sock)
     connect(&relay(), SIGNAL(forfeitBattle()), SLOT(battleForfeited()));
     connect(&relay(), SIGNAL(battleMessage(BattleChoice)), SLOT(battleMessage(BattleChoice)));
     connect(&relay(), SIGNAL(battleChat(QString)), SLOT(battleChat(QString)));
+    connect(&relay(), SIGNAL(sentHash(QString)), SLOT(hashReceived(QString)));
+    connect(&relay(), SIGNAL(wannaRegister()), SLOT(registerRequest()));
 }
 
 Player::~Player()
@@ -33,6 +36,10 @@ void Player::changeState(int newstate)
     }
 }
 
+void Player::kick() {
+    relay().close();
+}
+
 void Player::disconnected()
 {
     emit disconnected(id());
@@ -40,16 +47,22 @@ void Player::disconnected()
 
 void Player::battleChat(const QString &s)
 {
+    if (!isLoggedIn())
+        return; //INVALID BEHAVIOR
     emit battleChat(id(), s);
 }
 
 void Player::battleMessage(const BattleChoice &b)
 {
+    if (!isLoggedIn())
+        return; //INVALID BEHAVIOR
     emit battleMessage(id(), b);
 }
 
 void Player::recvMessage(const QString &mess)
 {
+    if (!isLoggedIn())
+        return; //INVALID BEHAVIOR
     /* for now we just emit the signal, but later we'll do more, such as flood count */
     emit recvMessage(id(), mess);
 }
@@ -70,7 +83,7 @@ bool Player::challenge(int idto)
 void Player::battleForfeited()
 {
     if (!battling()) {
-	return;
+        return; //INVALID BEHAVIOR
     }
 
     changeState(LoggedIn);
@@ -242,9 +255,84 @@ BasicInfo Player::basicInfo() const
 
 void Player::loggedIn(const TeamInfo &_team)
 {
+    if (isLoggedIn())
+        return; //INVALID BEHAVIOR
+    if (!SecurityManager::isValid(_team.name)) {
+        emit info(id(), "invalid name: \"" + _team.name + "\"");
+        kick();
+        return;
+    }
+
     team() = _team;
 
-    emit loggedIn(id(), _team.name);
+    if (SecurityManager::exist(name())) {
+        SecurityManager::Member m = SecurityManager::member(name());
+        if (m.isProtected()) {
+            relay().notify(NetworkServ::AskForPass, m.salt);
+            return;
+        }
+
+        m.modifyIP(relay().ip());
+        m.modifyDate(QDate::currentDate().toString(Qt::ISODate));
+        SecurityManager::updateMember(m);
+        /* To tell the player he's not registered */
+        relay().notify(NetworkServ::Register);
+        emit loggedIn(id(), _team.name);
+    } else {
+        SecurityManager::create(SecurityManager::Member(name(), QDate::currentDate().toString(Qt::ISODate), "", "", relay().ip()));
+        /* To tell the player he's not registered */
+        relay().notify(NetworkServ::Register);
+        emit loggedIn(id(), _team.name);
+    }
+}
+
+void Player::registerRequest() {
+    if (!isLoggedIn())
+        return; //INVALID BEHAVIOR
+    SecurityManager::Member m = SecurityManager::member(name());
+
+    if (m.isProtected())
+        return; //INVALID BEHAVIOR
+
+    for (int i = 0; i < SecurityManager::Member::saltLength; i++) {
+        m.salt[i] = (rand() % (122-49)) + 49;
+    }
+
+    SecurityManager::updateMemory(m);
+    relay().notify(NetworkServ::AskForPass, m.salt);
+}
+
+void Player::hashReceived(const QString &hash) {
+    if (!isLoggedIn()) {
+        if (name().length() == 0) {
+            //hasn't even started the authentification
+            emit info(id(), tr("tried to log in without a name"));
+            kick();
+            return;
+        }
+        if (hash == SecurityManager::member(name()).hash) {
+            SecurityManager::Member m = SecurityManager::member(name());
+
+            m.modifyIP(relay().ip());
+            m.modifyDate(QDate::currentDate().toString(Qt::ISODate));
+            m.hash = hash;
+            SecurityManager::updateMember(m);
+            emit loggedIn(id(), name());
+        } else {
+            emit info(id(), tr("authentification failed for %1").arg(name()));
+            kick();
+            return;
+        }
+    } else {
+        SecurityManager::Member m = SecurityManager::member(name());
+        if (m.isProtected()) {
+            return; //Invalid behavior
+        }
+
+        m.hash = hash;
+        SecurityManager::updateMember(m);
+        emit info(id(), tr("%1 registered.").arg(name()));
+    }
 }
 
 QString Player::name() const

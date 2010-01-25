@@ -40,7 +40,7 @@ PokeBattle::PokeBattle()
     gender() = 0;
     status() = Pokemon::Fine;
     lifePoints() = 0;
-    totalLifePoints() = 0;
+    totalLifePoints() = 1;
     level() = 100;
 }
 
@@ -135,7 +135,7 @@ void PokeBattle::init(const PokePersonal &poke)
 	}
     }
 
-    totalLifePoints() = PokemonInfo::FullStat(poke.nature(), Hp, p.baseStats().baseHp(), poke.level(), poke.hpDV(), evs[Hp]);
+    totalLifePoints() = std::max(PokemonInfo::FullStat(poke.nature(), Hp, p.baseStats().baseHp(), poke.level(), poke.hpDV(), evs[Hp]),1);
     lifePoints() = totalLifePoints();
 
     for (int i = 0; i < 5; i++) {
