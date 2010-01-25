@@ -20,11 +20,15 @@ void Network::manageError(QAbstractSocket::SocketError err)
     myerror = err;
 }
 
+void Network::close() {
+    socket()->disconnectFromHost();
+    mysocket = NULL;
+}
+
 Network::~Network()
 {
     if (isConnected()) {
-	socket()->disconnectFromHost();;
-	mysocket = NULL;
+        close();
     }
 }
 
@@ -34,6 +38,10 @@ bool Network::isConnected() const
 	return socket()->isOpen();
     else
 	return false;
+}
+
+QString Network::ip() const {
+    return socket()->peerAddress().toString();
 }
 
 void Network::onDisconnect()

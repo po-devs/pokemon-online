@@ -26,7 +26,9 @@ namespace NetworkServ
 	BattleFinished,
 	BattleMessage,
 	BattleChat,
-	KeepAlive
+        KeepAlive,
+        AskForPass,
+        Register
     };
 
     enum ProtocolError
@@ -50,10 +52,14 @@ public:
     void sendLogin(int num, const BasicInfo &team);
     void sendLogout(int num);
     bool isConnected() const;
+    QString ip() const;
     void sendChallengeStuff(quint8 desc, int id);
     void engageBattle(int id, const TeamBattle &team, const BattleConfiguration &conf);
     void sendBattleResult(quint8 res);
     void sendBattleCommand(const QByteArray &command);
+
+    /* Closes the connection */
+    void close();
 
     /* Convenience functions to avoid writing a new one every time */
     void notify(int command);
@@ -77,6 +83,8 @@ signals:
     void challengeStuff(int desc, int id);
     void battleMessage(const BattleChoice &choice);
     void battleChat(const QString &chat);
+    void wannaRegister();
+    void sentHash(QString);
 public slots:
     /* slots called by the network */
     void error();

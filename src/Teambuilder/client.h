@@ -64,6 +64,7 @@ public slots:
     void playerLogin(const Player &p);
     void playerReceived(const Player &p);
     void playerLogout(int);
+    void sendRegister();
     /* sends the server a challenge notice */
     void sendChallenge(int id);
     /* removes the pointer to the challenge window when it is destroyed */
@@ -83,6 +84,8 @@ public slots:
     /* shows the context menu for that player */
     void showContextMenu(const QPoint&);
     void changeTeam();
+    /* A popup that asks for the pass */
+    void askForPass(const QString &salt);
 signals:
     void done();
 
@@ -99,6 +102,8 @@ private:
     QPushButton *myexit;
     /* Button to send text */
     QPushButton *mysender;
+    /* Button to register a password */
+    QPushButton *myregister;
     /* Network Relay */
     Analyzer myrelay;
     /* Challenge window , to emit or to receive*/

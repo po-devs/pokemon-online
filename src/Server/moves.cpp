@@ -3597,6 +3597,34 @@ struct MMExplosion : public MM {
     }
 };
 
+struct MMCamouflage : public MM {
+    MMCamouflage() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas (int s, int, BS &b) {
+        poke(b,s)["Type1"] = Pokemon::Normal;
+        poke(b,s)["Type2"] = Pokemon::Curse;
+        b.sendMoveMessage(17,0,s,0);
+    }
+};
+
+struct MMNaturePower : public MM
+{
+    MMNaturePower() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        int t = b.rev(s);
+
+        removeFunction(turn(b,s), "UponAttackSuccessful", "NaturePower");
+
+        int move = 433;
+        MoveEffect::setup(move,s,t,b);
+        b.useAttack(s,move,true,true);
+    }
+};
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -3647,7 +3675,7 @@ void MoveEffect::init()
     REGISTER_MOVE(14, BrickBreak);
     REGISTER_MOVE(15, Brine);
     /* Bug Bite */
-    /* Camouflage */
+    REGISTER_MOVE(17, Camouflage);
     REGISTER_MOVE(18, Charge);
     REGISTER_MOVE(19, Conversion);
     REGISTER_MOVE(20, Conversion2);
@@ -3720,7 +3748,7 @@ void MoveEffect::init()
     REGISTER_MOVE(87, Moonlight);
     REGISTER_MOVE(88, MudSport);
     /* Natural Gift */
-    /* Nature Power */
+    REGISTER_MOVE(90, NaturePower);
     REGISTER_MOVE(91, NightShade);
     REGISTER_MOVE(92, NightMare);
     REGISTER_MOVE(93, Outrage);

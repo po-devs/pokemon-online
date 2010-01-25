@@ -16,20 +16,23 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
     QGridLayout *layout = new QGridLayout(this);
 
     layout->addWidget(myplayers = new QListWidget(), 0, 0, 3, 1);
-    layout->addWidget(mychat = new QScrollDownTextEdit(), 0, 1, 1, 2);
-    layout->addWidget(myline = new QLineEdit(), 1, 1, 1, 2);
-    layout->addWidget(myexit = new QPushButton(tr("&Exit")), 2, 1);
-    layout->addWidget(mysender = new QPushButton(tr("&Send")), 2, 2);
+    layout->addWidget(mychat = new QScrollDownTextEdit(), 0, 1, 1, 3);
+    layout->addWidget(myline = new QLineEdit(), 1, 1, 1, 3);
+    layout->addWidget(myregister = new QPushButton(tr("&Register")),2,1);
+    layout->addWidget(myexit = new QPushButton(tr("&Exit")), 2, 2);
+    layout->addWidget(mysender = new QPushButton(tr("&Send")), 2, 3);
 
     myplayers->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
     myplayers->setSortingEnabled(true);
     mychat->setReadOnly(true);
+    myregister->setDisabled(true);
 
     connect(myplayers, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
+    connect(myregister, SIGNAL(clicked()), SLOT(sendRegister()));
 
     initRelay();
 
@@ -105,8 +108,24 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(challengeStuff(int,int)), SLOT(challengeStuff(int,int)));
     connect(&relay(), SIGNAL(battleStarted(int, TeamBattle, BattleConfiguration)), SLOT(battleStarted(int, TeamBattle, BattleConfiguration)));
     connect(&relay(), SIGNAL(battleFinished(int)), SLOT(battleFinished(int)));
+    connect(&relay(), SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
+    connect(&relay(), SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
 }
 
+void Client::askForPass(const QString &salt) {
+    QString pass = QInputDialog::getText(this, tr("Enter your password"),
+                                         tr("Enter your password.\n"
+                                            "\nIt is advised to use a slightly different password for each server."
+                                            " (The server only sees the encrypted form of the pass, but still...)"),
+                                         QLineEdit::Password);
+    QString hash = QString(md5_hash(md5_hash(pass)+salt));
+    relay().notify(NetworkCli::AskForPass, hash);
+}
+
+void Client::sendRegister() {
+    relay().notify(NetworkCli::Register);
+    myregister->setDisabled(true);
+}
 
 bool Client::battling() const
 {

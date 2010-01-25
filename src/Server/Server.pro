@@ -20,7 +20,10 @@ SOURCES += main.cpp \
     ../Utilities/functions.cpp \
     items.cpp \
     mechanics.cpp \
-    abilities.cpp
+    abilities.cpp \
+    security.cpp \
+    ../Utilities/otherwidgets.cpp \
+    ../Utilities/md5.c
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -35,6 +38,9 @@ HEADERS += mainwindow.h \
     ../Utilities/functions.h \
     mechanics.h \
     items.h \
-    abilities.h
+    abilities.h \
+    security.h \
+    ../Utilities/otherwidgets.h \
+    ../Utilities/md5.h
 LIBS += -L../../bin \
     -lzip

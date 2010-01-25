@@ -69,35 +69,35 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     in >> command;
 
     switch (command) {
-	case SendMessage:
+    case SendMessage:
 	{
 	    QString mess;
 	    in >> mess;
 	    emit messageReceived(mess);
 	    break;
 	}
-	case PlayersList:
+    case PlayersList:
 	{
 	    Player p;
 	    in >> p;
 	    emit playerReceived(p);
 	    break;
 	}
-	case Login:
+    case Login:
 	{
 	    Player p;
 	    in >> p;
 	    emit playerLogin(p);
 	    break;
 	}
-	case Logout:
+    case Logout:
 	{
 	    int id;
 	    in >> id;
 	    emit playerLogout(id);
 	    break;
 	}
-	case ChallengeStuff:
+    case ChallengeStuff:
 	{
 	    quint8 stuff;
 	    int id;
@@ -105,7 +105,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit challengeStuff(stuff, id);
 	    break;
 	}
-	case EngageBattle:
+    case EngageBattle:
 	{
 	    int id;
 	    TeamBattle team;
@@ -114,14 +114,14 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit battleStarted(id, team, conf);
 	    break;
 	}
-	case BattleFinished:
+    case BattleFinished:
 	{
 	    quint8 desc;
 	    in >> desc;
 	    emit battleFinished(desc);
 	    break;
 	}
-	case BattleMessage:
+    case BattleMessage:
 	{
 	    /* Such a headache, it really looks like wasting ressources */
 	    char *buf;
@@ -132,7 +132,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit battleMessage(command);
 	    break;
 	}
-	case KeepAlive:
+    case KeepAlive:
 	{
 	    QByteArray tosend;
 	    QDataStream out(&tosend, QIODevice::WriteOnly);
@@ -143,8 +143,23 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit sendCommand(tosend);
 	    break;
 	}
-	default:
-	    emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
+    case AskForPass:
+        {
+            QString salt;
+            in >> salt;
+
+            if (salt.length() < 6)
+                emit protocolError(5080, tr("The server requires insecure authentification."));
+            emit passRequired(salt);
+            break;
+        }
+    case Register:
+        {
+            emit notRegistered(true);
+            break;
+        }
+    default:
+        emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
     }
 }
 

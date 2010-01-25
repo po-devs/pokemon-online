@@ -63,6 +63,8 @@ public:
     void addChallenge(int id);
     void cancelChallenges();
 
+    void kick();
+
     Analyzer& relay();
     const Analyzer& relay() const;
 signals:
@@ -76,6 +78,7 @@ signals:
 
     void battleMessage(int id,const BattleChoice &b);
     void battleChat(int id, const QString &);
+    void info(int id, const QString &);
 public slots:
     void loggedIn(const TeamInfo &team);
     void recvMessage(const QString &mess);
@@ -85,6 +88,8 @@ public slots:
     void battleForfeited();
     void battleMessage(const BattleChoice &b);
     void battleChat(const QString &s);
+    void registerRequest();
+    void hashReceived(const QString &hash);
 private:
     TeamInfo myteam;
     Analyzer myrelay;

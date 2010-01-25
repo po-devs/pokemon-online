@@ -855,6 +855,138 @@ struct AMStall : public AM {
     }
 };
 
+struct AMTangledFeet : public AM {
+    AMTangledFeet() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm(int s, int,  BS &b) {
+        if (poke(b,s).value("Confused").toBool()) {
+            turn(b,s)["Stat6AbilityModifier"] = 10;
+        }
+    }
+};
+
+struct AMTechnician : public AM {
+    AMTechnician() {
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    static void bpm(int s, int , BS &b) {
+        if (turn(b,s)["Power"].toInt() <= 60) {
+            turn(b,s)["BasePowerAbilityModifier"] = 10;
+        }
+    }
+};
+
+struct AMThickFat : public AM {
+    AMThickFat() {
+        functions["BasePowerFoeModifier"] = &bpfm;
+    }
+
+    static void bpfm (int , int t, BS &b) {
+        int tp = turn(b,t)["Type"].toInt();
+
+        if (tp == Move::Ice || tp == Move::Fire) {
+            turn(b,t)["BasePowerFoeAbilityModifier"] = -10;
+        }
+    }
+};
+
+struct AMTintedLens : public AM {
+    AMTintedLens() {
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    static void bpm(int s, int , BS &b) {
+        if (turn(b,s)["TypeMod"].toInt() < 4) {
+            turn(b,s)["BasePowerAbilityModifier"] = 20;
+        }
+    }
+};
+
+struct AMTrace : public AM {
+    AMTrace() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us(int s, int, BS &b) {
+        int t = b.rev(s);
+
+        //Multitype
+        if (!b.koed(t) && !b.hasWorkingAbility(t,59)) {
+            b.sendAbMessage(66,0,s,t,0,b.poke(t).ability());
+        }
+    }
+};
+
+struct AMTruant : public AM {
+    AMTruant() {
+        functions["UponSetup"] = &us;
+        functions["DetermineAttackPossible"] = &dap;
+    }
+
+    static void us(int s, int, BS &b) {
+        poke(b,s)["TruantActiveTurn"] = b.turn()%2;
+    }
+
+    static void dap(int s, int, BS &b) {
+        if (b.turn()%2 != poke(b,s)["TruantActiveTurn"].toInt()) {
+            turn(b,s)["ImpossibleToMove"] = true;
+            b.sendAbMessage(67,0,s);
+        }
+    }
+};
+
+struct AMUnburden : public AM {
+    AMUnburden() {
+        functions["UponSetup"] = &us;
+        functions["StatModifier"] = &sm;
+    }
+
+    static void us(int s, int, BS &b) {
+        poke(b,s)["UnburdenToStartWith"] = b.poke(s).item() != 0;
+    }
+
+    static void sm(int s, int, BS &b) {
+        if (b.poke(s).item() == 0 && poke(b,s)["UnburdenToStartWith"].toBool()) {
+            turn(b,s)["Stat3AbilityModifier"] = 20;
+        }
+    }
+};
+
+struct AMVoltAbsorb : public AM {
+    AMVoltAbsorb() {
+        functions["OpponentBlock"] = &op;
+    }
+
+    static void op(int s, int t, BS &b) {
+        if (type(b,t) == poke(b,s)["AbilityArg"].toInt()) {
+            turn(b,s)[QString("Block%1").arg(t)] = true;
+            b.sendAbMessage(70,0,s,s,type(b,t));
+            b.healLife(s, b.poke(s).totalLifePoints()/4);
+        }
+    }
+};
+
+struct AMWonderGuard : public AM {
+    AMWonderGuard() {
+        functions["OpponentBlock"] = &op;
+    }
+
+    static void op(int s, int t, BS &b) {
+        int tp = type(b,t);
+        if (turn(b,t)["Power"].toInt() > 0 && tp != Pokemon::Curse) {
+            int mod = TypeInfo::Eff(tp, b.getType(s,1)) * TypeInfo::Eff(tp, b.getType(s,2));
+
+            if (mod < 4) {
+                b.sendAbMessage(71,0,s);
+                turn(b,s)[QString("Block%1").arg(t)] = true;
+            }
+        }
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
@@ -872,6 +1004,7 @@ struct AMStall : public AM {
     PreventStatChange
     BeforeTargetList
     TurnOrder
+    DetermineAttackPossible
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
@@ -930,4 +1063,13 @@ void AbilityEffect::init()
     REGISTER_AB(57, SoundProof);
     REGISTER_AB(58, SpeedBoost);
     REGISTER_AB(59, Stall);
+    REGISTER_AB(62, TangledFeet);
+    REGISTER_AB(63, Technician);
+    REGISTER_AB(64, ThickFat);
+    REGISTER_AB(65, TintedLens);
+    REGISTER_AB(66, Trace);
+    REGISTER_AB(67, Truant);
+    REGISTER_AB(69, Unburden);
+    REGISTER_AB(70, VoltAbsorb);
+    REGISTER_AB(71, WonderGuard);
 }

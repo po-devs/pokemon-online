@@ -67,4 +67,6 @@ inline QString tu(const QString &in) {
     }
 }
 
+QString md5_hash(const QString &toHash);
+
 #endif // FUNCTIONS_H

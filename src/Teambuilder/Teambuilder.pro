@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     battlewindow.cpp \
     ../Utilities/functions.cpp \
     ../Utilities/pokeListe.cpp \
-    ../Utilities/pokeButton.cpp
+    ../Utilities/pokeButton.cpp \
+    ../Utilities/md5.c
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -40,6 +41,7 @@ HEADERS += teambuilder.h \
     battlewindow.h \
     ../Utilities/functions.h \
     ../Utilities/pokeListe.h \
-    ../Utilities/pokeButton.h
+    ../Utilities/pokeButton.h \
+    ../Utilities/md5.h
 LIBS += -L../../bin \
     -lzip

@@ -5,6 +5,7 @@
 #include "moves.h"
 #include "items.h"
 #include "abilities.h"
+#include "security.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
 Server::Server(quint16 port)
@@ -14,6 +15,9 @@ Server::Server(quint16 port)
     mainchat()->setReadOnly(true);
 
     srand(time(NULL));
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     printLine(tr("Starting loading pokemon database..."));
 
@@ -34,6 +38,14 @@ Server::Server(quint16 port)
     AbilityEffect::init();
 
     printLine(tr("Move & items special effects loaded"));
+
+    try {
+        SecurityManager::init();
+    } catch (const QString &ex) {
+        printLine(ex);
+    }
+
+    printLine(tr("Members loaded"));
 
     if (!server()->listen(QHostAddress::Any, port))
     {
@@ -113,6 +125,7 @@ void Server::incomingConnection()
     connect(player(id), SIGNAL(disconnected(int)), SLOT(disconnected(int)));
     connect(player(id), SIGNAL(challengeStuff(int,int,int)), SLOT(dealWithChallenge(int,int,int)));
     connect(player(id), SIGNAL(battleFinished(int,int,int)), SLOT(battleResult(int,int,int)));
+    connect(player(id), SIGNAL(info(int,QString)), SLOT(info(int,QString)));
 }
 
 void Server::dealWithChallenge(int desc, int from, int to)
@@ -134,6 +147,10 @@ void Server::dealWithChallenge(int desc, int from, int to)
 	    player(to)->sendChallengeStuff(desc, from);
 	}
     }
+}
+
+void Server::info(int id, const QString &mess) {
+    printLine(QString("From Player %1: %2").arg(id).arg(mess));
 }
 
 void Server::startBattle(int id1, int id2)
