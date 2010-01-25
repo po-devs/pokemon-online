@@ -302,7 +302,8 @@ void Player::registerRequest() {
     relay().notify(NetworkServ::AskForPass, m.salt);
 }
 
-void Player::hashReceived(const QString &hash) {
+void Player::hashReceived(const QString &_hash) {
+    QString hash = md5_hash(_hash);
     if (!isLoggedIn()) {
         if (name().length() == 0) {
             //hasn't even started the authentification
