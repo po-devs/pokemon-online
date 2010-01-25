@@ -12,9 +12,11 @@
 
 #include <QMainWindow>
 #include <iostream>
+#include <ctime>
 
 int main(int argc, char *argv[])
 {
+    srand(time(NULL));
     try
     {
 	QApplication a(argc, argv);

@@ -671,16 +671,17 @@ GraphicsZone::GraphicsZone()
 {
     setScene(&scene);
 
-    scene.setSceneRect(0,0,250,250);
+    scene.setSceneRect(0,0,257,145);
+    scene.addItem(new QGraphicsPixmapItem(QPixmap(QString("db/battle_fields/%1.png").arg((rand()%11)+1))));
 
     mine = new QGraphicsPixmapItem();
     foe = new QGraphicsPixmapItem();
 
     scene.addItem(mine);
-    mine->setPos(10, 250-79);
+    mine->setPos(10, 145-79);
 
     scene.addItem(foe);
-    foe->setPos(250-100, 0);
+    foe->setPos(257-105, 20);
 }
 
 void GraphicsZone::switchToNaught(bool self)
