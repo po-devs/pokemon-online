@@ -314,6 +314,7 @@ private:
     static QString m_Directory;
     static QStringList m_stats;
     static QStringList m_status;
+    static QHash<int, QPixmap> m_statusIcons;
 
     static QString path(const QString &filename);
 public:
@@ -322,6 +323,7 @@ public:
 
     static QString Stat(int stat);
     static QString Status(int status);
+    static QPixmap Icon(int status);
 };
 
 #endif // POKEMONINFO_H

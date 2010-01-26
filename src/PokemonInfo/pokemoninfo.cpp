@@ -65,6 +65,7 @@ QString HiddenPowerInfo::m_Directory;
 QString StatInfo::m_Directory;
 QStringList StatInfo::m_stats;
 QStringList StatInfo::m_status;
+QHash<int, QPixmap> StatInfo::m_statusIcons;
 
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
@@ -1213,6 +1214,16 @@ void StatInfo::init(const QString &dir)
 
     fill_container_with_file(m_stats, path("stats_en.txt"));
     fill_container_with_file(m_status, path("status_en.txt"));
+
+    m_statusIcons[-2] = QPixmap(path("status-2.png"));
+
+    for (int i = 0; i < 7; i++) {
+        m_statusIcons[i] = QPixmap(path("status%1.png").arg(i));
+    }
+}
+
+QPixmap StatInfo::Icon(int status) {
+    return m_statusIcons[status];
 }
 
 QString StatInfo::Stat(int stat)

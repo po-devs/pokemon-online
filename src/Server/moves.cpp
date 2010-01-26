@@ -938,6 +938,7 @@ struct MMRoar : public MM
 	    }
 	}
 	b.sendPoke(t, switches[rand()%switches.size()]);
+        b.callEntryEffects(t);
     }
 };
 

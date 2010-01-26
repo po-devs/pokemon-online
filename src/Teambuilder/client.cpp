@@ -83,7 +83,7 @@ QMenuBar * Client::createMenuBar(MainWindow *w)
 {
     QMenuBar *menuBar = new QMenuBar();
     QMenu *menuFichier = menuBar->addMenu("&File");
-    menuFichier->addAction(tr("&Change Team"),this,SLOT(changeTeam()),Qt::CTRL+Qt::Key_C);
+    menuFichier->addAction(tr("Change &Team"),this,SLOT(changeTeam()),Qt::CTRL+Qt::Key_T);
     //menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
     QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
     QStringList style = QStyleFactory::keys();

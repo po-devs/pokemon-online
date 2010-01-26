@@ -36,6 +36,10 @@ void BattleSituation::start()
 {
     quit = false; /* doin' that cuz if any battle command is called why quit is set to true disasters happen */
 
+    for (int i = 0; i < 6; i++) {
+        notify(All, AbsStatusChange, Player1, qint8(poke(Player1,i).status()));
+        notify(All, AbsStatusChange, Player2, qint8(poke(Player2,i).status()));
+    }
     /* Beginning of the battle! */
     sendPoke(Player1, 0);
     sendPoke(Player2, 0);
@@ -1405,7 +1409,7 @@ bool BattleSituation::isFlying(int player)
 
 bool BattleSituation::hasSubstitute(int player)
 {
-    return !koed(player) && (pokelong[player].value("Substitute").toBool() || pokelong[player].value("HadSubstitute").toBool());
+    return !koed(player) && (pokelong[player].value("Substitute").toBool() || turnlong[player].value("HadSubstitute").toBool());
 }
 
 void BattleSituation::changeStatus(int player, int status)
@@ -1415,6 +1419,7 @@ void BattleSituation::changeStatus(int player, int status)
     }
 
     notify(All, StatusChange, player, qint8(status));
+    notify(All, AbsStatusChange, player, qint8(currentPoke(player)), qint8(status));
     poke(player).status() = status;
     if (status == Pokemon::Asleep) {
 	poke(player).sleepCount() = (rand() % 5) +1;
@@ -1431,6 +1436,7 @@ void BattleSituation::changeStatus(int team, int poke, int status)
 	changeStatus(team, status);
     } else {
 	this->poke(team, poke).status() = status;
+        notify(All, AbsStatusChange, team, qint8(poke), qint8(status));
     }
 }
 
@@ -1509,7 +1515,7 @@ int BattleSituation::calculateDamage(int p, int t)
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
     int randnum = rand() % (255-217) + 217;
-    int ch = 1 + (crit * hasWorkingAbility(p,90)); //Sniper
+    int ch = 1 + (crit * (1+hasWorkingAbility(p,90))); //Sniper
     int power = move["Power"].toInt();
     int type = move["Type"].toInt();
 
