@@ -41,6 +41,8 @@ HEADERS += mainwindow.h \
     abilities.h \
     security.h \
     ../Utilities/otherwidgets.h \
-    ../Utilities/md5.h
+    ../Utilities/md5.h \
+    ../Utilities/thread_safe_containers.h
 LIBS += -L../../bin \
     -lzip
+DEFINES = MULTI_THREADED_ACCESS

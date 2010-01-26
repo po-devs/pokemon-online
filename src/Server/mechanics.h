@@ -1,7 +1,7 @@
 #ifndef MECHANICS_H
 #define MECHANICS_H
 
-#include <QtCore>
+#include "../Utilities/thread_safe_containers.h"
 #include "battle.h"
 
 struct Mechanics
@@ -15,7 +15,7 @@ struct Mechanics
 
     typedef void (*function) (int source, int target, BattleSituation &b);
 
-    QHash<QString, function> functions;
+    QTSHash<QString, function> functions;
 
     static void addFunction(BattleSituation::context &c, const QString &effect, const QString &name, Mechanics::function f);
     static void removeFunction(BattleSituation::context &c, const QString &effect, const QString &name);

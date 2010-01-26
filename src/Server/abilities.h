@@ -15,9 +15,9 @@ struct AbilityEffect : public QVariantHash
     static void setup(int num, int source, BattleSituation &b);
     static void activate(const QString &effect, int num, int source, int target, BattleSituation &b);
 
-    static QHash<int, AbilityMechanics> mechanics;
-    static QHash<int, QString> names;
-    static QHash<QString, int> nums;
+    static QTSHash<int, AbilityMechanics> mechanics;
+    static QTSHash<int, QString> names;
+    static QTSHash<QString, int> nums;
 
     static void init();
 };

@@ -4,67 +4,73 @@
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
-QStringList PokemonInfo::m_Names;
-QList<float> PokemonInfo::m_Weights;
+QTSList<QString> PokemonInfo::m_Names;
+QTSList<float> PokemonInfo::m_Weights;
+QTSList<int> PokemonInfo::m_Genders;
+QTSList<int> PokemonInfo::m_Type1;
+QTSList<int> PokemonInfo::m_Type2;
+QTSList<int> PokemonInfo::m_Ability1;
+QTSList<int> PokemonInfo::m_Ability2;
+QTSList<PokeBaseStats> PokemonInfo::m_BaseStats;
 
 QString MoveInfo::m_Directory;
-QStringList MoveInfo::m_Names;
-QStringList MoveInfo::m_AccS;
-QStringList MoveInfo::m_PowerS;
-QStringList MoveInfo::m_SpecialEffects;
-QList<char> MoveInfo::m_Type;
-QList<char> MoveInfo::m_PP;
-QList<char> MoveInfo::m_Category;
-QStringList MoveInfo::m_Effects;
-QList<char> MoveInfo::m_Critical;
-QList<char> MoveInfo::m_EffectRate;
-QList<bool> MoveInfo::m_Physical;
-QList<bool> MoveInfo::m_KingRock;
-QList<char> MoveInfo::m_Speeds;
-QList<int> MoveInfo::m_Flinch;
-QList<int> MoveInfo::m_Recoil;
-QList<int> MoveInfo::m_Targets;
-QList<QStringList> MoveInfo::m_MoveMessages;
-QList<QPair<char, char> > MoveInfo::m_Repeat;
+QTSList<QString> MoveInfo::m_Names;
+QTSList<QString> MoveInfo::m_AccS;
+QTSList<QString> MoveInfo::m_PowerS;
+QTSList<QString> MoveInfo::m_SpecialEffects;
+QTSList<char> MoveInfo::m_Type;
+QTSList<char> MoveInfo::m_PP;
+QTSList<char> MoveInfo::m_Category;
+QTSList<QString> MoveInfo::m_Effects;
+QTSList<char> MoveInfo::m_Critical;
+QTSList<char> MoveInfo::m_EffectRate;
+QTSList<bool> MoveInfo::m_Physical;
+QTSList<bool> MoveInfo::m_KingRock;
+QTSList<char> MoveInfo::m_Speeds;
+QTSList<int> MoveInfo::m_Flinch;
+QTSList<int> MoveInfo::m_Recoil;
+QTSList<int> MoveInfo::m_Targets;
+QTSList<QStringList> MoveInfo::m_MoveMessages;
+QTSList<QPair<char, char> > MoveInfo::m_Repeat;
 
 QString ItemInfo::m_Directory;
-QStringList ItemInfo::m_BerryNames;
-QStringList ItemInfo::m_RegItemNames;
+QTSList<QString> ItemInfo::m_BerryNames;
+QTSList<QString> ItemInfo::m_RegItemNames;
 QHash<QString, int> ItemInfo::m_BerryNamesH;
 QHash<QString, int> ItemInfo::m_ItemNamesH;
-QStringList ItemInfo::m_SortedNames;
-QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects;
-QList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
-QList<QStringList> ItemInfo::m_RegMessages;
-QList<QStringList> ItemInfo::m_BerryMessages;
-QList<int> ItemInfo::m_Powers;
+QTSList<QString> ItemInfo::m_SortedNames;
+QTSList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects;
+QTSList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
+QTSList<QStringList> ItemInfo::m_RegMessages;
+QTSList<QStringList> ItemInfo::m_BerryMessages;
+QTSList<int> ItemInfo::m_Powers;
 
-QStringList TypeInfo::m_Names;
-QList<QColor> TypeInfo::m_Colors;
+QTSList<QString> TypeInfo::m_Names;
+QTSList<QColor> TypeInfo::m_Colors;
 QString TypeInfo::m_Directory;
-QList<int> TypeInfo::m_TypeVsType;
+QTSList<int> TypeInfo::m_TypeVsType;
 
-QStringList NatureInfo::m_Names;
+QTSList<QString> NatureInfo::m_Names;
 QString NatureInfo::m_Directory;
 
-QStringList CategoryInfo::m_Names;
-QList<QColor> CategoryInfo::m_Colors;
+QTSList<QString> CategoryInfo::m_Names;
+QTSList<QColor> CategoryInfo::m_Colors;
 QString CategoryInfo::m_Directory;
 
-QStringList AbilityInfo::m_Names;
+QTSList<QString> AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
-QList<AbilityInfo::Effect> AbilityInfo::m_Effects;
-QList<QStringList> AbilityInfo::m_Messages;
+QTSList<AbilityInfo::Effect> AbilityInfo::m_Effects;
+QTSList<QStringList> AbilityInfo::m_Messages;
 
-QStringList GenderInfo::m_Names;
-QList<QPixmap> GenderInfo::m_Pictures;
+QTSList<QString> GenderInfo::m_Names;
+QTSList<QPixmap> GenderInfo::m_Pictures;
 QString GenderInfo::m_Directory;
 
 QString HiddenPowerInfo::m_Directory;
 
 QString StatInfo::m_Directory;
-QStringList StatInfo::m_stats;
-QStringList StatInfo::m_status;
+QTSList<QString> StatInfo::m_stats;
+QTSList<QString> StatInfo::m_status;
 QHash<int, QPixmap> StatInfo::m_statusIcons;
 
 QByteArray readZipFile(const char *archiveName, const char *fileName)
@@ -111,24 +117,6 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
     return ret;
 }
 
-QString get_line(const QString & filename, int linenum)
-{
-    QFile file(filename);
-
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream filestream(&file);
-
-    /* discarding all the uninteresting lines, should find a more effective way */
-    for (int i = 0; i < linenum; i++)
-    {
-        filestream.readLine();
-    }
-
-    return filestream.readLine();
-}
-
-
 void fill_container_with_file(QStringList &container, const QString & filename)
 {
     QFile file(filename);
@@ -144,7 +132,22 @@ void fill_container_with_file(QStringList &container, const QString & filename)
     }
 }
 
-void fill_container_with_file(QList<QColor> &container, const QString &filename)
+void fill_container_with_file(QTSList<QString> &container, const QString & filename)
+{
+    QFile file(filename);
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream filestream(&file);
+
+    /* discarding all the uninteresting lines, should find a more effective way */
+    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+    {
+        container << filestream.readLine();
+    }
+}
+
+void fill_container_with_file(QTSList<QColor> &container, const QString &filename)
 {
     QFile file(filename);
 
@@ -159,7 +162,7 @@ void fill_container_with_file(QList<QColor> &container, const QString &filename)
     }
 }
 
-void fill_container_with_file(QList<bool> &container, const QString & filename)
+void fill_container_with_file(QTSList<bool> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -176,7 +179,7 @@ void fill_container_with_file(QList<bool> &container, const QString & filename)
     }
 }
 
-void fill_container_with_file(QList<char> &container, const QString & filename)
+void fill_container_with_file(QTSList<char> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -211,14 +214,32 @@ void fill_container_with_file(T &container, const QString & filename)
     }
 }
 
+QString get_line(const QString & filename, int linenum)
+{
+    QFile file(filename);
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream filestream(&file);
+
+    /* discarding all the uninteresting lines, should find a more effective way */
+    for (int i = 0; i < linenum; i++)
+    {
+        filestream.readLine();
+    }
+
+    return filestream.readLine();
+}
+
+
 int PokemonInfo::Type1(int pokenum)
 {
-    return get_line(path("poke_type1.txt"), pokenum).toInt();
+    return m_Type1[pokenum];
 }
 
 int PokemonInfo::Type2(int pokenum)
 {
-    return get_line(path("poke_type2.txt"), pokenum).toInt();
+    return m_Type2[pokenum];
 }
 
 int PokemonInfo::calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev)
@@ -256,6 +277,12 @@ void PokemonInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
+    fill_container_with_file(m_Type1, path("poke_type1.txt"));
+    fill_container_with_file(m_Type2, path("poke_type2.txt"));
+    fill_container_with_file(m_Genders, path("poke_gender.txt"));
+    fill_container_with_file(m_Ability1, path("poke_ability.txt"));
+    fill_container_with_file(m_Ability2, path("poke_ability2.txt"));
+    loadBaseStats();
 }
 
 int PokemonInfo::NumberOfPokemons()
@@ -280,7 +307,7 @@ int PokemonInfo::Number(const QString &pokename)
 
 int PokemonInfo::Gender(int pokenum)
 {
-    return Pokemon::GenderAvail(get_line(path("poke_gender.txt"), pokenum).toInt());
+    return m_Genders[pokenum];
 }
 
 QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney, bool back)
@@ -289,7 +316,7 @@ QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney, bool back)
 
     QString file = QString("%2/DP%3%4%5.png").arg(pokenum).arg(back?"b":"",(gender==Pokemon::Female)?"f":"m", shiney?"s":"");
 
-    QByteArray data = readZipFile(archive.toLocal8Bit(), file.toLocal8Bit());
+    QByteArray data = readZipFile(archive.toAscii(), file.toAscii());
 
     if (data.length()==0)
 	return QPixmap();
@@ -305,7 +332,7 @@ QIcon PokemonInfo::Icon(int index)
     QString archive = path("icons.zip");
     QString file = QString("gifs/%1.gif").arg(index);
 
-    QByteArray data = readZipFile(archive.toLocal8Bit(),file.toLocal8Bit());
+    QByteArray data = readZipFile(archive.toAscii(),file.toAscii());
     if(data.length() == 0)
     {
         qDebug() << "erreur chargement fichier icon";
@@ -350,21 +377,30 @@ QList<int> PokemonInfo::SpecialMoves(int pokenum)
 QList<int> PokemonInfo::Abilities(int pokenum)
 {
     QList<int> ret;
-    ret << get_line(path("poke_ability.txt"), pokenum).toInt() << get_line(path("poke_ability2.txt"), pokenum).toInt();
+    ret << m_Ability1[pokenum] << m_Ability2[pokenum];
 
     return ret;
 }
 
+void PokemonInfo::loadBaseStats()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("poke_stats.txt"));
+
+    for (int i = 0; i < temp.size(); i++) {
+        QTextStream statsstream(&temp[i], QIODevice::ReadOnly);
+
+        int hp, att, def, spd, satt, sdef;
+
+        statsstream >> hp >> att >> def >> spd >> satt >> sdef;
+
+        m_BaseStats.push_back(PokeBaseStats(hp, att, def, spd, satt, sdef));
+    }
+}
+
 PokeBaseStats PokemonInfo::BaseStats(int pokenum)
 {
-    QString stats = get_line(path("poke_stats.txt"), pokenum);
-    QTextStream statsstream(&stats, QIODevice::ReadOnly);
-
-    int hp, att, def, spd, satt, sdef;
-
-    statsstream >> hp >> att >> def >> spd >> satt >> sdef;
-
-    return PokeBaseStats(hp, att, def, spd, satt, sdef);
+    return m_BaseStats[pokenum];
 }
 
 void PokemonInfo::loadNames()
@@ -375,6 +411,10 @@ void PokemonInfo::loadNames()
 
 QString PokemonInfo::path(const QString &filename)
 {
+#ifdef MULTI_THREADED_ACCESS
+    static QMutex m;
+    QMutexLocker a(&m);
+#endif
     return m_Directory + filename;
 }
 
@@ -710,21 +750,21 @@ void ItemInfo::loadNames()
 
     m_ItemNamesH.reserve(m_RegItemNames.size());
 
-    QStringList::const_iterator it = m_RegItemNames.constBegin();
-    for (int i = 0; it != m_RegItemNames.constEnd(); i++, ++it) {
+    QStringList::const_iterator it = m_RegItemNames.begin();
+    for (int i = 0; it != m_RegItemNames.end(); i++, ++it) {
 	m_ItemNamesH.insert(*it, i);
     }
 
     fill_container_with_file(m_BerryNames, path("berries_en.txt"));
     m_BerryNamesH.reserve(m_BerryNames.size());
 
-    QStringList::const_iterator it2 = m_BerryNames.constBegin();
-    for (int i = 0; it2 != m_BerryNames.constEnd(); i++, ++it2) {
+    QStringList::const_iterator it2 = m_BerryNames.begin();
+    for (int i = 0; it2 != m_BerryNames.end(); i++, ++it2) {
 	m_BerryNamesH.insert(*it2, i+8000);
     }
 
     m_SortedNames << m_RegItemNames << m_BerryNames;
-    m_SortedNames.sort();
+    qSort(m_SortedNames);
 
     QStringList temp;
     fill_container_with_file(temp, path("item_effects.txt"));
@@ -865,13 +905,15 @@ float PokemonInfo::Weight(int pokenum) {
 
 int ItemInfo::SortedNumber(const QString &itemname)
 {
-    return (qLowerBound(m_SortedNames, itemname) - m_SortedNames.constBegin()) % (NumberOfItems());
+    return (qLowerBound(m_SortedNames, itemname) - m_SortedNames.begin()) % (NumberOfItems());
 }
 
+#ifndef MULTI_THREADED_ACCESS
 QStringList ItemInfo::SortedNames()
 {
     return m_SortedNames;
 }
+#endif
 
 void TypeInfo::loadNames()
 {
@@ -1175,6 +1217,10 @@ void HiddenPowerInfo::init(const QString &dir)
 
 QString HiddenPowerInfo::path(const QString &filename)
 {
+#ifdef MULTI_THREADED_ACCESS
+    static QMutex m;
+    QMutexLocker a(&m);
+#endif
     return m_Directory + filename;
 }
 
