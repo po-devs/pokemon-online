@@ -2,9 +2,9 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "items.h"
 
-QHash<int, MoveMechanics> MoveEffect::mechanics;
-QHash<int, QString> MoveEffect::names;
-QHash<QString, int> MoveEffect::nums;
+QTSHash<int, MoveMechanics> MoveEffect::mechanics;
+QTSHash<int, QString> MoveEffect::names;
+QTSHash<QString, int> MoveEffect::nums;
 
 Q_DECLARE_METATYPE(QList<int>)
 

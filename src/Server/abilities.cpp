@@ -4,9 +4,9 @@
 typedef AbilityMechanics AM;
 typedef BattleSituation BS;
 
-QHash<int, AbilityMechanics> AbilityEffect::mechanics;
-QHash<int, QString> AbilityEffect::names;
-QHash<QString, int> AbilityEffect::nums;
+QTSHash<int, AbilityMechanics> AbilityEffect::mechanics;
+QTSHash<int, QString> AbilityEffect::names;
+QTSHash<QString, int> AbilityEffect::nums;
 
 void AbilityEffect::activate(const QString &effect, int num, int source, int target, BattleSituation &b)
 {
