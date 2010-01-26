@@ -459,29 +459,36 @@ void BattleWindow::receiveInfo(QByteArray inf)
     }
     case AbilityMessage:
         {
-            quint16 ab=0;
-            uchar part=0;
-            qint8 type(0), foe(0);
-            qint16 other(0);
-            in >> ab >> part >> type >> foe >> other;
-            QString mess = AbilityInfo::Message(ab,part);
-            mess.replace("%s", nick(self));
-            //            mess.replace("%ts", name(self));
-            //            mess.replace("%tf", name(!self));
-            mess.replace("%t", TypeInfo::Name(type));
-            mess.replace("%f", nick(!self));
-            mess.replace("%m", MoveInfo::Name(other));
-            //            mess.replace("%d", QString::number(other));
-            mess.replace("%i", ItemInfo::Name(other));
-            mess.replace("%a", AbilityInfo::Name(other));
-            //            mess.replace("%p", PokemonInfo::Name(other));
-            if (type == Pokemon::Normal) {
-                printLine(escapeHtml(tu(mess)));
-            } else {
-                printHtml("<span style='color:" + TypeInfo::Color(type).name() + "'>" + escapeHtml(tu(mess)) + "</span>");
-            }
-            break;
+        quint16 ab=0;
+        uchar part=0;
+        qint8 type(0), foe(0);
+        qint16 other(0);
+        in >> ab >> part >> type >> foe >> other;
+        QString mess = AbilityInfo::Message(ab,part);
+        mess.replace("%s", nick(self));
+        //            mess.replace("%ts", name(self));
+        //            mess.replace("%tf", name(!self));
+        mess.replace("%t", TypeInfo::Name(type));
+        mess.replace("%f", nick(!self));
+        mess.replace("%m", MoveInfo::Name(other));
+        //            mess.replace("%d", QString::number(other));
+        mess.replace("%i", ItemInfo::Name(other));
+        mess.replace("%a", AbilityInfo::Name(other));
+        //            mess.replace("%p", PokemonInfo::Name(other));
+        if (type == Pokemon::Normal) {
+            printLine(escapeHtml(tu(mess)));
+        } else {
+            printHtml("<span style='color:" + TypeInfo::Color(type).name() + "'>" + escapeHtml(tu(mess)) + "</span>");
         }
+        break;
+    }
+    case AbsStatusChange:
+        {
+        qint8 poke, status;
+        in >> poke >> status;
+
+        mydisplay->changeStatus(self,poke,status);
+    }
     default:
         break;
     }
@@ -611,8 +618,16 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
        resize that part, might as well let  the chat be resized */
     l->setSizeConstraint(QLayout::SetFixedSize);
 
+    QHBoxLayout *foeteam = new QHBoxLayout();
+    l->addLayout(foeteam);
+    for (int i = 0; i < 6; i++) {
+        advpokeballs[i] = new QLabel();
+        advpokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
+        foeteam->addWidget(advpokeballs[i]);
+    }
     nick[Opponent] = new QLabel(info.name[Opponent]);
-    l->addWidget(nick[Opponent]);
+    foeteam->addWidget(nick[Opponent], 100, Qt::AlignRight);
+    foeteam->setSpacing(1);
 
     bars[Opponent] = new QProgressBar();
     bars[Opponent]->setObjectName("LifePoints"); /* for stylesheets */
@@ -628,8 +643,19 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
     bars[Myself]->setFormat("%v / %m");
     l->addWidget(bars[Myself]);
 
+    QHBoxLayout *team = new QHBoxLayout();
+    team->setSpacing(1);
+
+    l->addLayout(team);
     nick[Myself] = new QLabel(info.name[Myself]);
-    l->addWidget(nick[Myself]);
+    team->addWidget(nick[Myself], 100, Qt::AlignLeft);
+
+    team->addWidget(new QLabel(), 100);
+    for (int i = 0; i < 6; i++) {
+        mypokeballs[i] = new QLabel();
+        mypokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
+        team->addWidget(mypokeballs[i]);
+    }
 
     updatePoke(true);
     updatePoke(false);
@@ -640,7 +666,7 @@ void BattleDisplay::updatePoke(bool self)
     if (self)
 	if (info.currentIndex != -1) {
         zone->switchTo(mypoke(), self);
-        nick[Myself]->setText(tr("%1 (Lv. %2)").arg(mypoke().nick()).arg(mypoke().level()));
+        nick[Myself]->setText(tr("%1 Lv.%2").arg(mypoke().nick()).arg(mypoke().level()));
         bars[Myself]->setRange(0,mypoke().totalLifePoints());
         bars[Myself]->setValue(mypoke().lifePoints());
         bars[Myself]->setStyleSheet(health(mypoke().lifePoints()*100/mypoke().totalLifePoints()));
@@ -652,13 +678,21 @@ void BattleDisplay::updatePoke(bool self)
     else
 	if (info.opponentAlive) {
         zone->switchTo(foe(), self);
-        nick[Opponent]->setText(tr("%1 (Lv. %2)").arg(foe().nick()).arg(foe().level()));
+        nick[Opponent]->setText(tr("%1 Lv.%2").arg(foe().nick()).arg(foe().level()));
         bars[Opponent]->setValue(foe().lifePercent());
         bars[Opponent]->setStyleSheet(health(foe().lifePercent()));
     }  else {
         zone->switchToNaught(self);
         nick[Opponent]->setText("");
         bars[Opponent]->setValue(0);
+    }
+}
+
+void BattleDisplay::changeStatus(bool self, int poke, int status) {
+    if (self) {
+        mypokeballs[poke]->setPixmap(StatInfo::Icon(status));
+    } else {
+        advpokeballs[poke]->setPixmap(StatInfo::Icon(status));
     }
 }
 
@@ -681,7 +715,7 @@ GraphicsZone::GraphicsZone()
     mine->setPos(10, 145-79);
 
     scene.addItem(foe);
-    foe->setPos(257-105, 20);
+    foe->setPos(257-105, 16);
 }
 
 void GraphicsZone::switchToNaught(bool self)

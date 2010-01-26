@@ -79,7 +79,8 @@ public:
 	Recoil,
 	WeatherMessage,
         StraightDamage,
-        AbilityMessage
+        AbilityMessage,
+        AbsStatusChange
     };
 
     enum WeatherM
@@ -191,6 +192,7 @@ public:
     BattleDisplay(const BattleInfo &i);
 
     void updatePoke(bool self);
+    void changeStatus(bool self, int poke, int status);
 
 protected:
     const PokeBattle &mypoke() const {return info.currentPoke(); }
@@ -201,6 +203,9 @@ protected:
     GraphicsZone *zone;
     QLabel *nick[2];
     QProgressBar *bars[2];
+    /* The pokeballs to indicate how well a team is doing */
+    QLabel *advpokeballs[6];
+    QLabel *mypokeballs[6];
 };
 
 class AttackButton;

@@ -165,7 +165,8 @@ public:
 	Recoil,
 	WeatherMessage,
         StraightDamage,
-        AbilityMessage
+        AbilityMessage,
+        AbsStatusChange,
     };
 
     enum WeatherM
