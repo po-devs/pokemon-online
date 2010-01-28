@@ -5,13 +5,37 @@
 #include "moves.h"
 #include "items.h"
 #include "abilities.h"
+#include "playerswindow.h"
 #include "security.h"
+#include "antidos.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "../Utilities/otherwidgets.h"
 
 Server::Server(quint16 port)
 {
-    mymainchat = new QTextEdit(this);
-    mainchat()->setFixedSize(500,500);
+    linecount = 0;
+
+    QGridLayout *mylayout = new QGridLayout (this);
+
+    QMenuBar *bar = new QMenuBar(this);
+    QMenu *options = bar->addMenu("&Options");
+    options->addAction("&Players", this, SLOT(openPlayers()));
+    options->addAction("&Anti DoS", this, SLOT(openAntiDos()));
+    mylayout->addWidget(bar,0,0,1,2);
+
+    mylist = new QListWidget();
+    mylayout->addWidget(mylist,1,0);
+
+    mymainchat = new QTextEdit();
+    mylayout->addWidget(mymainchat,1,1);
+
+    mylist->setContextMenuPolicy(Qt::CustomContextMenu);
+    mylist->setSortingEnabled(true);
+    mylist->setFixedWidth(150);
+
+    connect(mylist, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
+
+    mainchat()->setFixedWidth(500);
     mainchat()->setReadOnly(true);
 
     srand(time(NULL));
@@ -37,13 +61,15 @@ Server::Server(quint16 port)
     ItemEffect::init();
     AbilityEffect::init();
 
-    printLine(tr("Move & items special effects loaded"));
+    printLine(tr("Move, abilities & items special effects loaded"));
 
     try {
         SecurityManager::init();
     } catch (const QString &ex) {
         printLine(ex);
     }
+
+    AntiDos::obj()->init();
 
     printLine(tr("Members loaded"));
 
@@ -55,6 +81,8 @@ Server::Server(quint16 port)
     }
 
     connect(server(), SIGNAL(newConnection()), SLOT(incomingConnection()));
+    connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(dosKick(int)));
+    connect(AntiDos::obj(), SIGNAL(ban(int)), SLOT(dosBan(int)));
 }
 
 QTcpServer * Server::server()
@@ -64,24 +92,148 @@ QTcpServer * Server::server()
 
 void Server::printLine(const QString &line)
 {
+    if (linecount > 1000) {
+        mainchat()->clear();
+        printLine("Cleared the window (1000+ lines were displayed)");
+    }
+
     mainchat()->moveCursor(QTextCursor::End);
     mainchat()->insertPlainText(line + "\n");
     qDebug() << line;
+    linecount += 1;
+}
+
+void Server::openPlayers()
+{
+    PlayersWindow *w = new PlayersWindow();
+
+    w->show();
+
+    connect(w, SIGNAL(authChanged(QString,int)), SLOT(changeAuth(QString, int)));
+    connect(w, SIGNAL(banned(QString)), SLOT(banName(QString)));
+}
+
+void Server::openAntiDos()
+{
+    AntiDosWindow *w = new AntiDosWindow();
+
+    w->show();
+}
+
+void Server::banName(const QString &name) {
+    if (mynames.contains(name)) {
+        ban(mynames[name]);
+    }
+}
+
+void Server::changeAuth(const QString &name, int auth) {
+    qDebug() << "Change Auth called with " << name;
+    if (mynames.contains(name)) {
+        qDebug() << "contained";
+        int id = mynames[name];
+        player(id)->setAuth(auth);
+        myplayersitems[id]->setText(authedName(id));
+        sendPlayer(id);
+    }
+}
+
+void Server::showContextMenu(const QPoint &p) {
+    QIdListWidgetItem *item = dynamic_cast<QIdListWidgetItem*>(list()->itemAt(p));
+
+    if (item)
+    {
+        QMenu *menu = new QMenu(this);
+
+        QSignalMapper *mymapper = new QSignalMapper(menu);
+        QAction *viewinfo = menu->addAction("&Kick", mymapper, SLOT(map()));
+        mymapper->setMapping(viewinfo, item->id());
+        connect(mymapper, SIGNAL(mapped(int)), SLOT(kick(int)));
+
+        QSignalMapper *mymapper2 = new QSignalMapper(menu);
+        QAction *viewinfo2 = menu->addAction("&Ban", mymapper2, SLOT(map()));
+        mymapper2->setMapping(viewinfo2, item->id());
+        connect(mymapper2, SIGNAL(mapped(int)), SLOT(ban(int)));
+
+        menu->exec(mapToGlobal(p));
+    }
+}
+
+void Server::kick(int id) {
+    kick(id, 0);
+}
+
+void Server::kick(int id, int src) {
+    foreach(Player *p, myplayers)
+    {
+        p->relay().notify(NetworkServ::PlayerKick, qint32(id), qint32(src));
+    }
+    if (src == 0)
+        printLine("The server kicked " + name(id) + "!");
+    else
+        printLine(name(id) + " was kicked by " + name(src));
+    player(id)->kick();
+}
+
+void Server::ban(int id) {
+    ban(id, 0);
+}
+
+void Server::ban(int id, int src) {
+    foreach(Player *p, myplayers)
+    {
+        p->relay().notify(NetworkServ::PlayerBan, qint32(id), qint32(src));
+    }
+    if (src == 0)
+        printLine("The server banned " + name(id) + "!");
+    else
+        printLine(name(id) + " was banned by " + name(src));
+    SecurityManager::ban(name(id));
+    player(id)->kick();
+}
+
+void Server::dosKick(int id) {
+    if (playerExist(id)) {
+        sendAll(tr("Player %1 (IP %2) is being overactive.").arg(name(id), player(id)->ip()));
+    }
+    kick(id);
+}
+
+void Server::dosBan(const QString &ip) {
+    sendAll(tr("IP %1 is being overactive.").arg(ip));
+    SecurityManager::ban(ip);
+}
+
+QString Server::authedName(int id) const
+{
+    QString nick = name(id);
+
+    if (player(id)->auth() > 0 && player(id)->auth() < 4) {
+        nick += ' ';
+
+        for (int i = 0; i < player(id)->auth(); i++) {
+            nick += '*';
+        }
+    }
+
+    return QString("%1    %2").arg(id).arg(nick);
 }
 
 void Server::loggedIn(int id, const QString &name)
 {
     printLine(tr("Player %1 logged in as %2").arg(id).arg(name));
 
-    foreach(Player *p, myplayers)
-	if (p->isLoggedIn() && p->name().compare(name, Qt::CaseInsensitive) == 0) {
-	    printLine(tr("Name %1 already in use, disconnecting player %2").arg(name).arg(id));
-	    sendMessage(id, tr("Another with the name %1 is already logged in").arg(name));
-	    removePlayer(id);
-	    return;
-	}
+    if (mynames.contains(name.toLower())) {
+        printLine(tr("Name %1 already in use, disconnecting player %2").arg(name).arg(id));
+        sendMessage(id, tr("Another with the name %1 is already logged in").arg(name));
+        removePlayer(id);
+        return;
+    }
 
     player(id)->changeState(Player::LoggedIn);
+
+    mynames.insert(name.toLower(), id);
+
+    myplayersitems[id]->setText(authedName(id));
 
     sendPlayersList(id);
     sendLogin(id);
@@ -113,11 +265,27 @@ void Server::incomingConnection()
 {
     int id = freeid();
 
-    myplayers[id] = new Player(server()->nextPendingConnection());
+    QTcpSocket * newconnection = server()->nextPendingConnection();
+    QString ip = newconnection->peerAddress().toString();
 
-    printLine(tr("Received pending connection on slot %1").arg(id));
+    if (SecurityManager::bannedIP(ip)) {
+        printLine(tr("Banned IP %1 tried to log in.").arg(ip));
+        delete newconnection;
+        return;
+    }
 
-    player(id)->setId(id);
+    if (!AntiDos::obj()->connecting(ip)) {
+        printLine(tr("Anti DoS manager prevented IP %1 from logging in").arg(ip));
+        delete newconnection;
+        return;
+    }
+
+    printLine(tr("Received pending connection on slot %1 from %2").arg(id).arg(ip));
+    myplayers[id] = new Player(newconnection, id);
+
+    QIdListWidgetItem *it = new QIdListWidgetItem(id, QString::number(id));
+    list()->addItem(it);
+    myplayersitems[id] = it;
 
     connect(player(id), SIGNAL(loggedIn(int, QString)), this, SLOT(loggedIn(int, QString)));
     connect(player(id), SIGNAL(recvMessage(int, QString)), this, SLOT(recvMessage(int,QString)));
@@ -126,6 +294,8 @@ void Server::incomingConnection()
     connect(player(id), SIGNAL(challengeStuff(int,int,int)), SLOT(dealWithChallenge(int,int,int)));
     connect(player(id), SIGNAL(battleFinished(int,int,int)), SLOT(battleResult(int,int,int)));
     connect(player(id), SIGNAL(info(int,QString)), SLOT(info(int,QString)));
+    connect(player(id), SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
+    connect(player(id), SIGNAL(playerBan(int,int)), SLOT(playerBan(int, int)));
 }
 
 void Server::dealWithChallenge(int desc, int from, int to)
@@ -152,6 +322,33 @@ void Server::dealWithChallenge(int desc, int from, int to)
 void Server::info(int id, const QString &mess) {
     printLine(QString("From Player %1: %2").arg(id).arg(mess));
 }
+
+void Server::playerKick(int src, int dest)
+{
+    if (!playerExist(dest))
+        return;
+    if (player(dest)->auth() >= player(src)->auth())
+        return;
+    kick(dest,src);
+}
+
+void Server::playerBan(int src, int dest)
+{
+    if (!playerExist(dest))
+        return;
+    if (player(dest)->auth() >= player(src)->auth())
+        return;
+
+    int maxauth = SecurityManager::maxAuth(player(dest)->relay().ip());
+
+    if (player(src)->auth() <= maxauth) {
+        player(src)->sendMessage("That player has authority level " + QString::number(maxauth) + " under another nick.");
+        return;
+    }
+
+    ban(dest,src);
+}
+
 
 void Server::startBattle(int id1, int id2)
 {
@@ -198,7 +395,7 @@ void Server::sendPlayersList(int id)
     foreach(Player *p, myplayers)
     {
 	if (p->isLoggedIn())
-	    relay.sendPlayer(p->id(), p->basicInfo());
+            relay.sendPlayer(p->id(), p->basicInfo(), p->auth());
     }
 }
 
@@ -207,7 +404,16 @@ void Server::sendLogin(int id)
     foreach(Player *p, myplayers)
     {
 	if (p->id() != id && p->isLoggedIn())
-	    p->relay().sendLogin(id, player(id)->basicInfo());
+            p->relay().sendLogin(id, player(id)->basicInfo(), player(id)->auth());
+    }
+}
+
+void Server::sendPlayer(int id)
+{
+    foreach(Player *p, myplayers)
+    {
+        if (p->isLoggedIn())
+            p->relay().sendPlayer(id, player(id)->basicInfo(), player(id)->auth());
     }
 }
 
@@ -247,10 +453,15 @@ void Server::removePlayer(int id)
     
 	QString playerName = p->name();
 	bool loggedIn = p->isLoggedIn();
+        AntiDos::obj()->disconnect(p->ip(), id);
 
 	delete p;
 
 	myplayers.remove(id);
+        mynames.remove(playerName.toLower());
+
+        delete list()->takeItem(list()->row(myplayersitems[id]));
+        myplayersitems.remove(id);
 
 	/* Sending the notice of logout to others only if the player is already logged in */
 	if (loggedIn)
@@ -285,6 +496,10 @@ int Server::freeid() const
 QTextEdit * Server::mainchat()
 {
     return mymainchat;
+}
+
+QListWidget * Server::list() {
+    return mylist;
 }
 
 Player * Server::player(int id)

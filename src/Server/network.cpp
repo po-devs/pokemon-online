@@ -1,7 +1,7 @@
 #include "network.h"
+#include "antidos.h"
 
-
-Network::Network(QTcpSocket *sock) : mysocket(sock), commandStarted(false)
+Network::Network(QTcpSocket *sock, int id) : mysocket(sock), commandStarted(false), myid(id)
 {
     connect(socket(), SIGNAL(readyRead()), this, SLOT(onReceipt()));
     connect(socket(), SIGNAL(disconnected()), this, SIGNAL(disconnected()));
@@ -65,6 +65,12 @@ void Network::onReceipt()
 	    char c1, c2;
 	    socket()->getChar(&c1), socket()->getChar(&c2);
 	    remainingLength=uchar(c1)*256+uchar(c2);
+
+            /* Just a little check :p */
+            if (!AntiDos::obj()->transferBegin(myid, remainingLength, ip())) {
+                return;
+            }
+
 	    /* Recursive call to write less code =) */
 	    onReceipt();
 	} else {

@@ -4,8 +4,8 @@
 #include <QtCore>
 
 #ifdef MULTI_THREADED_ACCESS
-# define MAKE_THREAD_SAFE mutable QMutex m_global_mutex;
-# define CONCURRENT_FUNCTION QMutexLocker m_global_locker(&m_global_mutex);
+# define MAKE_THREAD_SAFE mutable QMutex m_global_mutex
+# define CONCURRENT_FUNCTION QMutexLocker m_global_locker(&m_global_mutex)
 #else
 # define MAKE_THREAD_SAFE
 # define CONCURRENT_FUNCTION

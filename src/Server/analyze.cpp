@@ -6,7 +6,7 @@
 
 using namespace NetworkServ;
 
-Analyzer::Analyzer(QTcpSocket *sock) : mysocket(sock)
+Analyzer::Analyzer(QTcpSocket *sock, int id) : mysocket(sock, id)
 {
     connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
     connect(&socket(), SIGNAL(isFull(QByteArray)), this, SLOT(commandReceived(QByteArray)));
@@ -25,7 +25,7 @@ void Analyzer::sendMessage(const QString &message)
 
 void Analyzer::engageBattle(int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    notify(EngageBattle, id, team, conf);
+    notify(EngageBattle, qint32(id), team, conf);
 }
 
 void Analyzer::close() {
@@ -36,19 +36,19 @@ QString Analyzer::ip() const {
     return socket().ip();
 }
 
-void Analyzer::sendPlayer(int num, const BasicInfo &team)
+void Analyzer::sendPlayer(int num, const BasicInfo &team, int auth)
 {
-    notify(PlayersList, num, team);
+    notify(PlayersList, qint32(num), team, qint8(auth));
 }
 
-void Analyzer::sendLogin(int num, const BasicInfo &team)
+void Analyzer::sendLogin(int num, const BasicInfo &team, int auth)
 {
-    notify(Login, num, team);
+    notify(Login, qint32(num), team, qint8(auth));
 }
 
 void Analyzer::sendLogout(int num)
 {
-    notify(Logout, num);
+    notify(Logout, qint32(num));
 }
 
 void Analyzer::keepAlive()
@@ -115,7 +115,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     case ChallengeStuff:
 	{
 	    quint8 stuff;
-	    int id;
+            qint32 id;
 	    in >> stuff >> id;
 	    emit challengeStuff(stuff, id);
 	    break;
@@ -147,6 +147,20 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             QString hash;
             in >> hash;
             emit sentHash(hash);
+            break;
+        }
+    case PlayerKick:
+        {
+            qint32 id;
+            in >> id;
+            emit kick(id);
+            break;
+        }
+    case PlayerBan:
+        {
+            qint32 id;
+            in >> id;
+            emit ban(id);
             break;
         }
     default:

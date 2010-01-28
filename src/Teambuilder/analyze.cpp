@@ -22,7 +22,7 @@ void Analyzer::login(const TrainerTeam &team)
 
 void Analyzer::sendChallengeStuff(quint8 desc, int id)
 {
-    notify(ChallengeStuff, desc, id);
+    notify(ChallengeStuff, desc, qint32(id));
 }
 
 void Analyzer::sendMessage(const QString &message)
@@ -37,7 +37,7 @@ void Analyzer::sendTeam(const TrainerTeam &team)
 
 void Analyzer::sendBattleResult(int result)
 {
-    notify(BattleFinished, result);
+    notify(BattleFinished, qint32(result));
 }
 
 void Analyzer::battleCommand(const BattleChoice &comm)
@@ -92,7 +92,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	}
     case Logout:
 	{
-	    int id;
+            qint32 id;
 	    in >> id;
 	    emit playerLogout(id);
 	    break;
@@ -100,14 +100,14 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     case ChallengeStuff:
 	{
 	    quint8 stuff;
-	    int id;
+            qint32 id;
 	    in >> stuff >> id;
 	    emit challengeStuff(stuff, id);
 	    break;
 	}
     case EngageBattle:
 	{
-	    int id;
+            qint32 id;
 	    TeamBattle team;
 	    BattleConfiguration conf;
 	    in >> id >> team >> conf;
@@ -125,7 +125,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	{
 	    /* Such a headache, it really looks like wasting ressources */
 	    char *buf;
-	    uint len;
+            uint len;
 	    in.readBytes(buf, len);
 	    QByteArray command(buf, len);
 	    delete [] buf;
@@ -156,6 +156,20 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     case Register:
         {
             emit notRegistered(true);
+            break;
+        }
+    case PlayerKick:
+        {
+            qint32 p,src;
+            in >> p >> src;
+            emit playerKicked(p,src);
+            break;
+        }
+    case PlayerBan:
+        {
+            qint32 p,src;
+            in >> p >> src;
+            emit playerBanned(p,src);
             break;
         }
     default:

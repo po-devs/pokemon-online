@@ -55,8 +55,8 @@ public:
     static PokeBaseStats BaseStats(int pokenum);
     static bool Exist(int pokenum);
     static QList<int> Abilities(int pokenum);
-    static int Stat(int stat, quint8 base_stat, int level, quint8 dv, quint8 ev);
-    static int FullStat(int nature, int stat, quint8 base_stat, int level, quint8 dv, quint8 ev);
+    static int Stat(int poke, int stat, quint8 base_stat, int level, quint8 dv, quint8 ev);
+    static int FullStat(int poke, int nature, int stat, quint8 base_stat, int level, quint8 dv, quint8 ev);
 };
 
 class MoveInfo

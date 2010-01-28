@@ -7,7 +7,7 @@ class Network : public QObject
 {
     Q_OBJECT
 public:
-    Network(QTcpSocket *sock);
+    Network(QTcpSocket *sock, int id);
     ~Network();
     /* Functions to reimplement:
 	   isValid: returns whether the socket is valid or not!
@@ -37,6 +37,8 @@ private:
     /* errors stored when disconnected */
     int myerror;
     QString myerrorString;
+    /* To keep track of things */
+    int myid;
 
     QTcpSocket *socket();
     const QTcpSocket *socket() const;
