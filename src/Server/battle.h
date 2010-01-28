@@ -131,6 +131,7 @@ public:
     bool hasSubstitute(int player);
     void requestSwitchIns();
     void requestSwitch(int player);
+    void notifySub(int player, bool sub);
     int repeatNum(int player, context &move);
     PokeFraction getStatBoost(int player, int stat);
     int getStat(int player, int stat);
@@ -167,6 +168,7 @@ public:
         StraightDamage,
         AbilityMessage,
         AbsStatusChange,
+        Substitute
     };
 
     enum WeatherM

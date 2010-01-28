@@ -425,6 +425,11 @@ void BattleSituation::analyzeChoices()
     }
 }
 
+void BattleSituation::notifySub(int player, bool sub)
+{
+    notify(All, Substitute, player, sub);
+}
+
 void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 {
     int player = spot(id);
@@ -1658,6 +1663,7 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
 	pokelong[player]["Substitute"] = false;
 	turnlong[source]["DamageInflicted"] = life;
 	sendMoveMessage(128, 1, player);
+        notifySub(player, false);
     } else {
 	pokelong[player]["SubstituteLife"] = life-damage;
 	turnlong[source]["DamageInflicted"] = damage;

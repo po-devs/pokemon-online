@@ -15,6 +15,8 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
     info().possible = false;
     info().name[0] = me;
     info().name[1] = opponent;
+    info().sub[0] = false;
+    info().sub[1] = false;
     info().opponentAlive = false;
 
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -184,11 +186,13 @@ void BattleWindow::receiveInfo(QByteArray inf)
 		quint8 poke;
 		in >> poke;
                 std::cout << "Sent out " << int(poke) << std::endl;
+                info().sub[0] = false;
 		switchTo(poke);
 	    } else {
 		in >> info().opponent;
                 std::cout << "Opp Sent out " << info().opponent.num() << std::endl;
 		info().opponentAlive = true;
+                info().sub[1] = false;
 		mydisplay->updatePoke(false);
 	    }
 
@@ -488,7 +492,12 @@ void BattleWindow::receiveInfo(QByteArray inf)
         in >> poke >> status;
 
         mydisplay->changeStatus(self,poke,status);
+        break;
     }
+    case Substitute:
+        in >> info().sub[!self];
+        mydisplay->updatePoke(self);
+        break;
     default:
         break;
     }
@@ -665,7 +674,7 @@ void BattleDisplay::updatePoke(bool self)
 {
     if (self)
 	if (info.currentIndex != -1) {
-        zone->switchTo(mypoke(), self);
+        zone->switchTo(mypoke(), self, info.sub[Myself]);
         nick[Myself]->setText(tr("%1 Lv.%2").arg(mypoke().nick()).arg(mypoke().level()));
         bars[Myself]->setRange(0,mypoke().totalLifePoints());
         bars[Myself]->setValue(mypoke().lifePoints());
@@ -677,7 +686,7 @@ void BattleDisplay::updatePoke(bool self)
     }
     else
 	if (info.opponentAlive) {
-        zone->switchTo(foe(), self);
+        zone->switchTo(foe(), self, info.sub[Opponent]);
         nick[Opponent]->setText(tr("%1 Lv.%2").arg(foe().nick()).arg(foe().level()));
         bars[Opponent]->setValue(foe().lifePercent());
         bars[Opponent]->setStyleSheet(health(foe().lifePercent()));
@@ -726,19 +735,24 @@ void GraphicsZone::switchToNaught(bool self)
 	foe->setPixmap(QPixmap());
 }
 
-QPixmap GraphicsZone::loadPixmap(quint16 num, bool shiny, bool back, quint8 gender)
+QPixmap GraphicsZone::loadPixmap(quint16 num, bool shiny, bool back, quint8 gender, bool sub)
 {
-    qint32 key = this->key(num, shiny, back, gender);
+    qint32 key = this->key(num, shiny, back, gender, sub);
 
-    if (!graphics.contains(key))
-	graphics.insert(key, PokemonInfo::Picture(num, gender, shiny, back));
+    if (!graphics.contains(key)) {
+        if (sub) {
+            graphics.insert(key, PokemonInfo::Sub(back));
+        } else {
+            graphics.insert(key, PokemonInfo::Picture(num, gender, shiny, back));
+        }
+    }
 
     return graphics[key];
 }
 
-qint32 GraphicsZone::key(quint16 num, bool shiny, bool back, quint8 gender) const
+qint32 GraphicsZone::key(quint16 num, bool shiny, bool back, quint8 gender, bool sub) const
 {
-    return num + (gender << 16) + (back << 24) + (shiny<<25);
+    return sub ? ((1 << 31) + (back << 30)) : (num + (gender << 16) + (back << 24) + (shiny<<25));
 }
 
 const PokeBattle & BattleInfo::currentPoke() const

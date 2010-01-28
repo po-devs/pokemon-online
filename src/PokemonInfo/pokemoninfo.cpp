@@ -332,6 +332,23 @@ QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney, bool back)
     return ret;
 }
 
+QPixmap PokemonInfo::Sub(bool back)
+{
+    QString archive = path("poke_img.zip");
+
+    QString file = QString("sub%1.png").arg(back?"b":"");
+
+    QByteArray data = readZipFile(archive.toAscii(), file.toAscii());
+
+    if (data.length()==0)
+        return QPixmap();
+
+    QPixmap ret;
+    ret.loadFromData(data, "png");
+
+    return ret;
+}
+
 QIcon PokemonInfo::Icon(int index)
 {
     QString archive = path("icons.zip");
