@@ -54,11 +54,39 @@ void Client::showContextMenu(const QPoint &requested)
 	QAction *challenge = menu->addAction("&Challenge", mymapper2, SLOT(map()));
 	mymapper2->setMapping(challenge, item->id());
 
-	connect(mymapper, SIGNAL(mapped(int)), SLOT(seeInfo(int)));
-	connect(mymapper2, SIGNAL(mapped(int)), SLOT(sendChallenge(int)));
+        connect(mymapper, SIGNAL(mapped(int)), SLOT(seeInfo(int)));
+        connect(mymapper2, SIGNAL(mapped(int)), SLOT(sendChallenge(int)));
+
+        int myauth = player(id(ownName())).auth;
+        int otherauth = player(item->id()).auth;
+
+        if (otherauth < myauth) {
+            menu->addSeparator();
+            QSignalMapper *mymapper3 = new QSignalMapper(menu);
+            QAction *kick = menu->addAction("&Kick", mymapper3, SLOT(map()));
+            mymapper3->setMapping(kick, item->id());
+            connect(mymapper3, SIGNAL(mapped(int)), SLOT(kick(int)));
+
+            /* If you're an admin, you can ban */
+            if (myauth >= 2) {
+                menu->addSeparator();
+                QSignalMapper *mymapper4 = new QSignalMapper(menu);
+                QAction *ban = menu->addAction("&Ban", mymapper4, SLOT(map()));
+                mymapper4->setMapping(ban, item->id());
+                connect(mymapper4, SIGNAL(mapped(int)), SLOT(ban(int)));
+            }
+        }
 
 	menu->exec(mapToGlobal(requested));
     }
+}
+
+void Client::kick(int p) {
+    relay().notify(NetworkCli::PlayerKick, qint32(p));
+}
+
+void Client::ban(int p) {
+    relay().notify(NetworkCli::PlayerBan, qint32(p));
 }
 
 void Client::changeTeam()
@@ -110,7 +138,32 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(battleFinished(int)), SLOT(battleFinished(int)));
     connect(&relay(), SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
     connect(&relay(), SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
+    connect(&relay(), SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
+    connect(&relay(), SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
 }
+
+void Client::playerKicked(int dest, int src) {
+    QString mess;
+
+    if (src == 0) {
+        mess = QString("%1 was kicked by the server!").arg(name(dest));
+    } else {
+        mess = QString("%1 kicked %2!").arg(name(src), name(dest));
+    }
+    printHtml("<span style='color:red'><b>"+mess+"</b></span>");
+}
+
+void Client::playerBanned(int dest, int src) {
+    QString mess;
+
+    if (src == 0) {
+        mess = QString("%1 was banned by the server!").arg(name(dest));
+    } else {
+        mess = QString("%1 banned %2!").arg(name(src), name(dest));
+    }
+    printHtml("<span style='color:red'><b>"+mess+"</b></span>");
+}
+
 
 void Client::askForPass(const QString &salt) {
     QString pass = QInputDialog::getText(this, tr("Enter your password"),
@@ -149,13 +202,15 @@ bool Client::playerExist(int id) const
 
 Player Client::player(int id) const
 {
-    Player ret = {id, info(id)};
-    return ret;
+    return myplayersinfo[id];
 }
 
 BasicInfo Client::info(int id) const
 {
-    return myplayersinfo[id];
+    if (myplayersinfo.contains(id))
+        return myplayersinfo[id].team;
+    else
+        return BasicInfo();
 }
 
 
@@ -318,9 +373,17 @@ void Client::playerLogin(const Player& p)
 
 void Client::playerLogout(int id)
 {
-    QString name = myplayersinfo[id].name;
+    QString name = info(id).name;
 
     printLine(tr("%1 logged out.").arg(name));
+
+    /* removes the item in the playerlist */
+    removePlayer(id);
+}
+
+void Client::removePlayer(int id)
+{
+    QString name = info(id).name;
 
     /* removes the item in the playerlist */
     delete myplayers->takeItem(myplayers->row(myplayersitems[id]));
@@ -337,9 +400,23 @@ QString Client::ownName() const
 
 void Client::playerReceived(const Player &p)
 {
-    myplayersinfo.insert(p.id, p.team);
+    if (myplayersinfo.contains(p.id)) {
+        removePlayer(p.id);
+    }
 
-    QIdListWidgetItem *item = new QIdListWidgetItem(p.id, p.team.name);
+    myplayersinfo.insert(p.id, p);
+
+    QString nick = p.team.name;
+
+    if (p.auth > 0 && p.auth < 4) {
+        nick += ' ';
+
+        for (int i = 0; i < p.auth; i++) {
+            nick += '*';
+        }
+    }
+
+    QIdListWidgetItem *item = new QIdListWidgetItem(p.id, nick);
 
     myplayersitems.insert(p.id, item);
     mynames.insert(name(p.id), p.id);
@@ -394,6 +471,7 @@ QDataStream & operator >> (QDataStream &in, Player &p)
 {
     in >> p.id;
     in >> p.team;
+    in >> p.auth;
 
     return in;
 }
@@ -402,6 +480,7 @@ QDataStream & operator << (QDataStream &out, const Player &p)
 {
     out << p.id;
     out << p.team;
+    out << p.auth;
 
     return out;
 }

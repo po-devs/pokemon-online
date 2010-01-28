@@ -508,7 +508,11 @@ int PokeTeam::stat(int statno) const
 
 int PokeTeam::hp() const
 {
-    return calc_stat(baseStats().baseHp(), level(), hpEV(), hpDV()) + level() + 5;
+    /* Shedinja */
+    if (num() == 292)
+        return 1;
+    else
+        return calc_stat(baseStats().baseHp(), level(), hpEV(), hpDV()) + level() + 5;
 }
 
 int PokeTeam::attack() const

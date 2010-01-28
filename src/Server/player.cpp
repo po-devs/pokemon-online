@@ -2,10 +2,13 @@
 #include "security.h"
 #include "../PokemonInfo/battlestructs.h"
 
-Player::Player(QTcpSocket *sock) : myrelay(sock)
+Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
 {
+    myip = relay().ip();
+
     m_state = NotLoggedIn;
     m_challengedby = -1;
+    myauth = 0;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(TeamInfo)), this, SLOT(loggedIn(TeamInfo)));
@@ -17,6 +20,8 @@ Player::Player(QTcpSocket *sock) : myrelay(sock)
     connect(&relay(), SIGNAL(battleChat(QString)), SLOT(battleChat(QString)));
     connect(&relay(), SIGNAL(sentHash(QString)), SLOT(hashReceived(QString)));
     connect(&relay(), SIGNAL(wannaRegister()), SLOT(registerRequest()));
+    connect(&relay(), SIGNAL(kick(int)), SLOT(playerKick(int)));
+    connect(&relay(), SIGNAL(ban(int)), SLOT(playerBan(int)));
 }
 
 Player::~Player()
@@ -34,6 +39,14 @@ void Player::changeState(int newstate)
     {
 	cancelChallenges();
     }
+}
+
+int Player::auth() const {
+    return myauth;
+}
+
+void Player::setAuth(int auth)  {
+    myauth = auth;
 }
 
 void Player::kick() {
@@ -95,6 +108,34 @@ void Player::battleResult(int result)
 {
     relay().sendBattleResult(result);
     changeState(LoggedIn);
+}
+
+void Player::playerBan(int p) {
+    if (!isLoggedIn()) {
+        emit info(id(), "Tried to ban while not logged in");
+        kick();
+        return;
+    }
+
+    if (auth() < 2) {
+        return; //INVALID BEHAVIOR
+    }
+
+    emit playerBan(id(),p);
+}
+
+void Player::playerKick(int p) {
+    if (!isLoggedIn()) {
+        emit info(id(), "Tried to kick while not logged in");
+        kick();
+        return;
+    }
+
+    if (auth() < 1) {
+        return; //INVALID BEHAVIOR
+    }
+
+    emit playerKick(id(),p);
 }
 
 int Player::opponent() const
@@ -267,10 +308,17 @@ void Player::loggedIn(const TeamInfo &_team)
 
     if (SecurityManager::exist(name())) {
         SecurityManager::Member m = SecurityManager::member(name());
+        if (m.isBanned()) {
+            emit info(id(), "Banned: \"" + _team.name + "\"");
+            kick();
+            return;
+        }
         if (m.isProtected()) {
             relay().notify(NetworkServ::AskForPass, m.salt);
             return;
         }
+
+        myauth = m.authority();
 
         m.modifyIP(relay().ip());
         m.modifyDate(QDate::currentDate().toString(Qt::ISODate));
@@ -279,7 +327,9 @@ void Player::loggedIn(const TeamInfo &_team)
         relay().notify(NetworkServ::Register);
         emit loggedIn(id(), _team.name);
     } else {
-        SecurityManager::create(SecurityManager::Member(name(), QDate::currentDate().toString(Qt::ISODate), "", "", relay().ip()));
+        myauth = 0;
+
+        SecurityManager::create(SecurityManager::Member(name().toLower(), QDate::currentDate().toString(Qt::ISODate), "000", "", "", relay().ip()));
         /* To tell the player he's not registered */
         relay().notify(NetworkServ::Register);
         emit loggedIn(id(), _team.name);
@@ -317,6 +367,7 @@ void Player::hashReceived(const QString &_hash) {
             m.modifyIP(relay().ip());
             m.modifyDate(QDate::currentDate().toString(Qt::ISODate));
             m.hash = hash;
+            myauth = m.authority();
             SecurityManager::updateMember(m);
             emit loggedIn(id(), name());
         } else {
@@ -341,9 +392,9 @@ QString Player::name() const
     return team().name;
 }
 
-void Player::setId(int id)
+QString Player::ip() const
 {
-    myid = id;
+    return myip;
 }
 
 void Player::recvTeam(const TeamInfo &team)

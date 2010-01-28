@@ -50,6 +50,10 @@ QDataStream &operator >> (QDataStream &in, BasicInfo& team)
     in >> team.name;
     in >> team.info;
 
+    /* To avoid server overloads */
+    if (team.info.length() > 250)
+        team.info.resize(250);
+
     return in;
 }
 

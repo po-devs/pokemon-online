@@ -1,8 +1,10 @@
 #include "security.h"
 #include "../Utilities/otherwidgets.h"
 
-QHash<QString, SecurityManager::Member> SecurityManager::members;
+QMap<QString, SecurityManager::Member> SecurityManager::members;
 QNickValidator SecurityManager::val(NULL);
+QSet<QString> SecurityManager::bannedIPs;
+QMultiMap<QString, QString> SecurityManager::playersByIp;
 const char * SecurityManager::path = "members.txt";
 QHash<QString, int> SecurityManager::memberPlaces;
 QFile SecurityManager::memberFile(SecurityManager::path);
@@ -24,13 +26,16 @@ void SecurityManager::loadMembers()
 
         QStringList ls = s.split('%');
 
-        qDebug() << "Size:" << ls.size() << ", length: " << arr.length() << " "  << s.length();
-
-        if (ls.size() == 5 && isValid(ls[0])) {
-            Member m (ls[0], ls[1], ls[2], ls[3], ls[4]);
+        if (ls.size() == 6 && isValid(ls[0])) {
+            Member m (ls[0], ls[1], ls[2], ls[3], ls[4], ls[5]);
             members[ls[0]] = m;
             memberPlaces[m.name] = pos;
             pos = memberFile.pos();
+
+            if (m.isBanned()) {
+                bannedIPs.insert(m.ip.trimmed());
+            }
+            playersByIp.insert(m.ip.trimmed(), m.name);
         }
         lastPlace = memberFile.pos();
     }
@@ -58,8 +63,9 @@ void SecurityManager::loadMembers()
     }
 }
 
-SecurityManager::Member::Member(const QString &name, const QString &date, const QString &salt, const QString &hash, const QString &ip)
-    :name(name), date(date), salt(salt.leftJustified(saltLength)), hash(hash.leftJustified(hashLength)), ip(ip.leftJustified(ipLength))
+SecurityManager::Member::Member(const QString &name, const QString &date, const QString &auth, const QString &salt, const QString &hash, const QString &ip)
+    :name(name), date(date), auth(auth.leftJustified(3,'0',true)), salt(salt.leftJustified(saltLength)),
+    hash(hash.leftJustified(hashLength)), ip(ip.leftJustified(ipLength,' ',true))
 {
 }
 
@@ -67,6 +73,8 @@ void SecurityManager::Member::write(QIODevice *device) const {
     device->write(name.toUtf8().constData());
     device->write("%");
     device->write(date.toUtf8().constData());
+    device->write("%");
+    device->write(auth.toUtf8().constData());
     device->write("%");
     device->write(salt.toUtf8().constData());
     device->write("%");
@@ -87,22 +95,27 @@ bool SecurityManager::isValid(const QString &name) {
 
 bool SecurityManager::exist(const QString &name)
 {
-    return members.contains(name);
+    return members.contains(name.toLower());
+}
+
+QMap<QString,SecurityManager::Member> SecurityManager::getMembers() {
+    return members;
 }
 
 void SecurityManager::create(const Member &m) {
-    members[m.name] = m;
+    members[m.name.toLower()] = m;
 
     memberFile.seek(lastPlace);
     m.write(&memberFile);
-    memberPlaces[m.name] = lastPlace;
+    memberPlaces[m.name.toLower()] = lastPlace;
+    playersByIp.insert(m.ip.trimmed(),m.name);
     lastPlace = memberFile.pos();
 
     memberFile.flush();
 }
 
 void SecurityManager::updateMember(const Member &m) {
-    members[m.name] = m;
+    updateMemory(m);
 
     memberFile.seek(memberPlaces[m.name]);
     members[m.name].write(&memberFile);
@@ -110,6 +123,57 @@ void SecurityManager::updateMember(const Member &m) {
 
 
 void SecurityManager::updateMemory(const Member &m) {
+    playersByIp.remove(members[m.name].ip.trimmed(),m.name);
     members[m.name] = m;
+    playersByIp.insert(m.ip.trimmed(), m.name);
 }
 
+bool SecurityManager::bannedIP(const QString &ip) {
+    foreach(QString s, bannedIPs) {
+        qDebug() << "banned: " << s;
+    }
+
+    return bannedIPs.contains(ip);
+}
+
+void SecurityManager::ban(const QString &name) {
+    if (exist(name)) {
+        members[name].ban();
+        bannedIPs.insert(members[name].ip.trimmed());
+        updateMember(members[name]);
+    }
+}
+
+void SecurityManager::unban(const QString &name) {
+    if (exist(name)) {
+        members[name].unban();
+        bannedIPs.remove(members[name].ip.trimmed());
+        updateMember(members[name]);
+    }
+}
+
+void SecurityManager::setauth(const QString &name, int auth) {
+    if (exist(name)) {
+        members[name].setAuth(auth);
+        updateMember(members[name]);
+    }
+}
+
+void SecurityManager::clearPass(const QString &name) {
+    if (exist(name)) {
+        members[name].clearPass();
+        updateMember(members[name]);
+    }
+}
+
+int SecurityManager::maxAuth(const QString &ip) {
+    int max = 0;
+
+    QStringList l = playersByIp.values(ip);
+
+    foreach(QString name, l) {
+        max = std::max(max, member(name).authority());
+    }
+
+    return max;
+}

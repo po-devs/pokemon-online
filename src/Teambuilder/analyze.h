@@ -30,7 +30,9 @@ namespace NetworkCli
 	BattleChat,
         KeepAlive,
         AskForPass,
-        Register
+        Register,
+        PlayerKick,
+        PlayerBan
     };
 
     enum ProtocolError
@@ -88,6 +90,8 @@ signals:
     void battleMessage(const QByteArray &mess);
     void passRequired(const QString &salt);
     void notRegistered(bool);
+    void playerKicked(int p, int src);
+    void playerBanned(int p, int src);
 
 public slots:
     /* slots called by the network */

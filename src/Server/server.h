@@ -9,6 +9,8 @@
 class Player;
 class BattleSituation;
 
+class QIdListWidgetItem;
+
 class Server: public QWidget
 {
     Q_OBJECT
@@ -18,6 +20,7 @@ public:
     void printLine(const QString &line);
     /* returns the name of that player */
     QString name(int id) const;
+    QString authedName(int id) const;
     /* sends a message to all the players */
     void sendAll(const QString &message);
     void sendMessage(int id, const QString &message);
@@ -40,11 +43,26 @@ public slots:
     void battleResult(int desc, int winner, int loser);
     void sendBattleCommand(int id, const QByteArray &command);
     void info(int , const QString& );
-
+    void showContextMenu(const QPoint &p);
+    void kick(int i);
+    void ban(int i);
+    void dosKick(int id);
+    void dosBan(const QString &ip);
+    void openPlayers();
+    void openAntiDos();
+    void changeAuth(const QString &name, int auth);
+    void banName(const QString &name);
+    void playerKick(int src, int dest);
+    void playerBan(int src, int dest);
 private:
+    void kick(int dest, int src);
+    void ban(int dest, int src);
+    void sendPlayer(int id);
+
     QTcpServer myserver;
     /* storing players */
     QHash<int, Player*> myplayers;
+    QHash<QString, int> mynames;
     QHash<int, BattleSituation*> mybattles;
 
     QTcpServer *server();
@@ -55,10 +73,16 @@ private:
     /* removes a player */
     void removePlayer(int id);
 
+    int linecount;
+    int textLength;
+
     /** GRAPHICAL PARTS **/
 
     QTextEdit *mymainchat;
+    QListWidget *mylist;
+    QHash<int, QIdListWidgetItem *> myplayersitems;
     /* the mainchat !*/
     QTextEdit *mainchat();
+    QListWidget *list();
 };
 #endif // SERVER_H

@@ -135,11 +135,11 @@ void PokeBattle::init(const PokePersonal &poke)
 	}
     }
 
-    totalLifePoints() = std::max(PokemonInfo::FullStat(poke.nature(), Hp, p.baseStats().baseHp(), poke.level(), poke.hpDV(), evs[Hp]),1);
+    totalLifePoints() = std::max(PokemonInfo::FullStat(poke.num(), poke.nature(), Hp, p.baseStats().baseHp(), poke.level(), poke.hpDV(), evs[Hp]),1);
     lifePoints() = totalLifePoints();
 
     for (int i = 0; i < 5; i++) {
-	normal_stats[i] = PokemonInfo::FullStat(poke.nature(), i+1, p.baseStats().baseStat(i+1), poke.level(), poke.DV(i+1), evs[i+1]);
+        normal_stats[i] = PokemonInfo::FullStat(poke.num(), poke.nature(), i+1, p.baseStats().baseStat(i+1), poke.level(), poke.DV(i+1), evs[i+1]);
     }
 }
 

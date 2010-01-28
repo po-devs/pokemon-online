@@ -15,8 +15,9 @@ class QScrollDownTextEdit;
 class Player
 {
 public:
-    int id;
+    qint32 id;
     BasicInfo team;
+    qint8 auth;
 };
 
 QDataStream & operator >> (QDataStream &in, Player &p);
@@ -53,6 +54,7 @@ public:
     BasicInfo info(int id) const;
 
     void removeBattleWindow();
+    void removePlayer(int id);
 public slots:
     void errorFromNetwork(int errnum, const QString &error);
     void connected();
@@ -86,6 +88,12 @@ public slots:
     void changeTeam();
     /* A popup that asks for the pass */
     void askForPass(const QString &salt);
+    /* When someone is kicked */
+    void playerKicked(int,int);
+    void playerBanned(int,int);
+    /* When you kick someone */
+    void kick(int);
+    void ban(int);
 signals:
     void done();
 
@@ -110,7 +118,7 @@ private:
     BaseChallengeWindow *mychallenge;
     BattleWindow *mybattle;
 
-    QHash<int, BasicInfo> myplayersinfo;
+    QHash<int, Player> myplayersinfo;
     QHash<QString, int> mynames;
     QScrollDownTextEdit *mainChat();
     Analyzer & relay();

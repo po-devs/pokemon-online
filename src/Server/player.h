@@ -25,7 +25,7 @@ public:
 	Refused
     };
 
-    Player(QTcpSocket *sock);
+    Player(QTcpSocket *sock, int id);
     ~Player();
 
     /* returns all the regular info */
@@ -37,15 +37,17 @@ public:
     /* Sends a message to the player */
     void sendMessage(const QString &mess);
 
-    void setId(int id);
     int id() const;
     QString name() const;
+    QString ip() const;
 
     bool connected() const;
     bool isLoggedIn() const;
     bool battling() const;
     void changeState(int newstate);
     int state() const;
+    int auth() const;
+    void setAuth (int newAuth);
 
     int opponent () const;
     bool isChallenged() const;
@@ -79,6 +81,8 @@ signals:
     void battleMessage(int id,const BattleChoice &b);
     void battleChat(int id, const QString &);
     void info(int id, const QString &);
+    void playerKick(int,int);
+    void playerBan(int,int);
 public slots:
     void loggedIn(const TeamInfo &team);
     void recvMessage(const QString &mess);
@@ -90,10 +94,14 @@ public slots:
     void battleChat(const QString &s);
     void registerRequest();
     void hashReceived(const QString &hash);
+    void playerKick(int);
+    void playerBan(int);
 private:
     TeamInfo myteam;
     Analyzer myrelay;
     int myid;
+    int myauth;
+    QString myip;
 
     QSet<int> m_challenged;
     int m_challengedby;

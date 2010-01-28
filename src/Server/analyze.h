@@ -28,7 +28,9 @@ namespace NetworkServ
 	BattleChat,
         KeepAlive,
         AskForPass,
-        Register
+        Register,
+        PlayerKick,
+        PlayerBan
     };
 
     enum ProtocolError
@@ -43,13 +45,13 @@ class Analyzer : public QObject
 {
     Q_OBJECT
 public:
-    Analyzer(QTcpSocket *sock);
+    Analyzer(QTcpSocket *sock, int id);
 
     /* functions called by the server */
     void sendMessage(const QString &message);
     void requestLogIn();
-    void sendPlayer(int num, const BasicInfo &team);
-    void sendLogin(int num, const BasicInfo &team);
+    void sendPlayer(int num, const BasicInfo &team, int auth=0);
+    void sendLogin(int num, const BasicInfo &team, int auth=0);
     void sendLogout(int num);
     bool isConnected() const;
     QString ip() const;
@@ -85,6 +87,8 @@ signals:
     void battleChat(const QString &chat);
     void wannaRegister();
     void sentHash(QString);
+    void kick(int id);
+    void ban(int id);
 public slots:
     /* slots called by the network */
     void error();

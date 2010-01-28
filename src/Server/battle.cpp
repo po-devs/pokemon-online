@@ -164,8 +164,6 @@ void BattleSituation::beginTurn()
 
 void BattleSituation::endTurn()
 {
-    qDebug() << "Start of the end of the turn";
-
     endTurnWeather();
 
     if (!koed(Player1))
@@ -185,7 +183,6 @@ void BattleSituation::endTurn()
     endTurnStatus();
 
     requestSwitchIns();
-    qDebug() << "End of the turn";
 }
 
 void BattleSituation::endTurnStatus()
@@ -202,7 +199,7 @@ void BattleSituation::endTurnStatus()
 		    break;
 		case Pokemon::DeeplyPoisoned:
                     //PoisonHeal
-                    if (hasWorkingAbility(player, 45)) {
+                    if (hasWorkingAbility(player, 68)) {
                         sendMoveMessage(45,0,player,Pokemon::Poison);
                         healLife(player, poke(player).totalLifePoints()/8);
                     } else {
@@ -393,8 +390,6 @@ void BattleSituation::analyzeChoices()
 
     std::vector<int> playersByOrder = sortedBySpeed();
 
-    qDebug() << "First: " << PokemonInfo::Name(poke(playersByOrder[0]).num()) << ", Second: " << PokemonInfo::Name(poke(playersByOrder[1]).num());
-
     foreach(int i, playersByOrder) {
 	if (choice[i].poke())
             switches.push_back(i);
@@ -501,12 +496,10 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 {
 
     if (turnlong[source].contains(name)) {
-	qDebug() << "Calling effects for " << name ;
 	turnlong[source]["TurnEffectCall"] = true;
 	QSet<QString> &effects = *turnlong[source][name].value<QSharedPointer<QSet<QString> > >();
 
-	foreach(QString effect, effects) {
-	    qDebug() << "Called by " << effect;
+        foreach(QString effect, effects) {
 	    turnlong[source]["EffectBlocked"] = false;
 	    turnlong[source]["EffectActivated"] = effect;
 	    callpeffects(source, target, "BlockTurnEffects");
@@ -525,12 +518,10 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 void BattleSituation::callpeffects(int source, int target, const QString &name)
 {
     if (pokelong[source].contains(name)) {
-	turnlong[source]["PokeEffectCall"] = true;
-	qDebug() << "Calling pokemon long effects for " << name;
+        turnlong[source]["PokeEffectCall"] = true;
 	QSet<QString> &effects = *pokelong[source][name].value<QSharedPointer<QSet<QString> > >();
 
-	foreach(QString effect, effects) {
-	    qDebug() << "Called by " << effect;
+        foreach(QString effect, effects) {
 	    MoveMechanics::function f = pokelong[source][name + "_" + effect].value<MoveMechanics::function>();
 
 	    f(source, target, *this);
@@ -574,7 +565,6 @@ void BattleSituation::callieffects(int source, int target, const QString &name)
 
 void BattleSituation::callaeffects(int source, int target, const QString &name)
 {
-    qDebug() << "Calling abilitiy effects for " << name;
     if (hasWorkingAbility(source, ability(source)))
         AbilityEffect::activate(name, ability(source), source, target, *this);
 }
@@ -866,8 +856,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     calleffects(player, player, "MoveSettings");
 
     if (tellPlayers && !turnlong[player].contains("TellPlayers")) {
-	notify(All, UseAttack, player, qint16(attack));
-	qDebug() << poke(player).nick() << " used " << MoveInfo::Name(attack);
+        notify(All, UseAttack, player, qint16(attack));
     }
 
     if (!specialOccurence) {
@@ -910,8 +899,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             continue;
         }
 	if (turnlong[player]["Power"].toInt() > 0)
-	{
-            qDebug() << "Going offensive";
+        {
 	    int type = turnlong[player]["Type"].toInt(); /* move type */
 	    int typeadv[] = {getType(target, 1), getType(target, 2)};
 	    int typepok[] = {getType(player, 1), getType(player, 2)};
@@ -1013,8 +1001,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 	    if (!koed(player))
 		calleffects(player, target, "AfterAttackSuccessful");
-	} else {
-            qDebug() << "Going tricky";
+        } else {
 	    callpeffects(player, target, "DetermineAttackFailure");
 	    if (testFail(player))
 		continue;
@@ -1117,8 +1104,6 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     if (effect.length() == 0) {
 	return;
     }
-
-    qDebug() << "Threre's an effect to apply";
 
     /* Then we check if the effect hits */
     int randnum = rand() % 100;
@@ -1608,7 +1593,6 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
     if (straightattack)
 	callieffects(player, source, "BeforeTakingDamage");
 
-    qDebug() << "Damage inflicted (first v: " << damage << ") by " << source << " from " << player;
     if (damage == 0) {
 	damage = 1;
     }
@@ -1722,15 +1706,11 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 	return;
     }
 
-    qDebug() << "koPoke, player: " << player;
     changeHp(player, 0);
     changeStatus(player,Pokemon::Koed);
-    qDebug() << "Changed Hp to 0";
 
     notify(All, Ko, player);
-    qDebug() << "Notified players";
     koedPokes.insert(player);
-    qDebug() << "Inserted it in the list";
 
     if (straightattack && player!=source) {
 	callpeffects(player, source, "AfterKoedByStraightAttack");
@@ -1739,19 +1719,15 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 
 void BattleSituation::requestSwitchIns()
 {
-    qDebug() << "Requesting switchin";
     int count = koedPokes.size();
 
     if (count == 0) {
         return;
     }
 
-    qDebug() << "Before foreach loop (count is " << count << ")";
     foreach(int p, koedPokes) {
-	qDebug() << "p is " << p;
         requestChoice(p, false);
     }
-    qDebug() << "After foreach";
 
     sem.acquire(count);
 
@@ -1949,11 +1925,11 @@ BattleConfiguration BattleSituation::configuration() const
 void BattleSituation::emitCommand(int player, int players, const QByteArray &tosend)
 {
     if (players == All) {
-	emit battleInfo(id(Player1), tosend);
-	emit battleInfo(id(Player2), tosend);
+        emit battleInfo(qint32(id(Player1)), tosend);
+        emit battleInfo(qint32(id(Player2)), tosend);
     } else if (players == AllButPlayer) {
-	emit battleInfo(id(rev(player)), tosend);
+        emit battleInfo(qint32(id(rev(player))), tosend);
     } else {
-	emit battleInfo(id(players), tosend);
+        emit battleInfo(qint32(id(players)), tosend);
     }
 }
