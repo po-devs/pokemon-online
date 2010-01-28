@@ -234,6 +234,10 @@ struct MMBatonPass : public MM
 	}
 	turn(b,s)["BatonPassed"] = false;
 	merge(poke(b,s), turn(b,s)["BatonPassData"].value<BS::context>());
+
+        if (b.hasSubstitute(s)) {
+            b.notifySub(s,true);
+        }
     }
 };
 
@@ -1094,6 +1098,7 @@ struct MMSubstitute : public MM
     static void uas(int s, int, BS &b) {
 	poke(b,s)["Substitute"] = true;
 	poke(b,s)["SubstituteLife"] = b.poke(s).totalLifePoints()/4;
+        b.notifySub(s,true);
 	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
     }
 

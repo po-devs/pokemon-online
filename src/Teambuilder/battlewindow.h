@@ -18,6 +18,7 @@ struct BattleInfo
 {
     /* name [0] = mine, name[1] = other */
     QString name[2];
+    bool sub[2];
 
     /* Possible choices */
     bool possible;
@@ -80,7 +81,8 @@ public:
 	WeatherMessage,
         StraightDamage,
         AbilityMessage,
-        AbsStatusChange
+        AbsStatusChange,
+        Substitute
     };
 
     enum WeatherM
@@ -168,15 +170,15 @@ public:
     GraphicsZone();
     /* displays that poke */
     template <class T>
-    void switchTo(const T &poke, bool self=true);
+    void switchTo(const T &poke, bool self, bool sub);
     /* Display blank */
     void switchToNaught(bool self);
 
     /* Loads a pixmap if not loaded otherwise go see graphics */
-    QPixmap loadPixmap(quint16 num, bool shiny, bool back, quint8 gender);
+    QPixmap loadPixmap(quint16 num, bool shiny, bool back, quint8 gender, bool sub);
     /* We are using a qmap to store the graphics already loaded. So the key of the pixmap
 	is a combination of 2 bools, 1 quin8; and one quint16 */
-    qint32 key(quint16 num, bool shiny, bool back, quint8 gender) const;
+    qint32 key(quint16 num, bool shiny, bool back, quint8 gender, bool sub) const;
     QHash<qint32, QPixmap> graphics;
     /* Current pixmaps displayed */
     QGraphicsPixmapItem *mine, *foe;
@@ -254,12 +256,12 @@ private:
 
 /* Yeepee, at last templates */
 template <class T>
-void GraphicsZone::switchTo(const T &poke, bool self)
+void GraphicsZone::switchTo(const T &poke, bool self, bool sub)
 {
     if (self)
-	mine->setPixmap(loadPixmap(poke.num(), poke.shiny(), true, poke.gender()));
+        mine->setPixmap(loadPixmap(poke.num(), poke.shiny(), true, poke.gender(), sub));
     else
-	foe->setPixmap(loadPixmap(poke.num(), poke.shiny(), false, poke.gender()));
+        foe->setPixmap(loadPixmap(poke.num(), poke.shiny(), false, poke.gender(), sub));
 }
 
 #endif // BATTLEWINDOW_H
