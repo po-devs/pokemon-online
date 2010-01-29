@@ -75,7 +75,7 @@ void PokeBattle::init(const PokePersonal &poke)
     p.num() = poke.num();
     p.load();
 
-    QSet<int> moves = p.moves().toSet();
+    QSet<int> moves = p.moves();
     QList<int> pokemoves;
 
     num() = poke.num();

@@ -22,18 +22,14 @@ void ItemEffect::activate(const QString &effect, int num, int source, int target
 
 void ItemEffect::setup(int num, int source, BattleSituation &b)
 {
-    qDebug() << "Setup required for " << num;
     QList<ItemInfo::Effect> effects = ItemInfo::Effects(num);
 
     foreach(ItemInfo::Effect effect, effects) {
-	qDebug() << "Setting up " << effect.num;
 
 	/* if the effect is invalid or not yet implemented then no need to go further */
 	if (!mechanics.contains(effect.num)) {
 	    continue;
-	}
-
-	qDebug() << "Setup confirmed";
+        }
 
 	//dun remove the test
 	if (effect.args.size() > 0) {

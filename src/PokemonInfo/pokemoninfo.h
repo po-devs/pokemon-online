@@ -29,7 +29,7 @@ private:
 
     static void loadNames();
     static void loadBaseStats();
-    static QList<int> getMoves(const QString &filename, int Pokenum);
+    static QSet<int> getMoves(const QString &filename, int Pokenum);
     static QString path(const QString &filename);
     static int calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev);
 public:
@@ -47,12 +47,13 @@ public:
     static QPixmap Picture(int pokenum, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QPixmap Sub(bool back = false);
     static QIcon Icon(int index);
-    static QList<int> Moves(int pokenum);
-    static QList<int> EggMoves(int pokenum);
-    static QList<int> LevelMoves(int pokenum);
-    static QList<int> TutorMoves(int pokenum);
-    static QList<int> TMMoves(int pokenum);
-    static QList<int> SpecialMoves(int pokenum);
+    static QSet<int> Moves(int pokenum);
+    static QSet<int> EggMoves(int pokenum);
+    static QSet<int> LevelMoves(int pokenum);
+    static QSet<int> TutorMoves(int pokenum);
+    static QSet<int> TMMoves(int pokenum);
+    static QSet<int> PreEvoMoves(int pokenum);
+    static QSet<int> SpecialMoves(int pokenum);
     static PokeBaseStats BaseStats(int pokenum);
     static bool Exist(int pokenum);
     static QList<int> Abilities(int pokenum);

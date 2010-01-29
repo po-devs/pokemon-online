@@ -127,9 +127,7 @@ void Server::banName(const QString &name) {
 }
 
 void Server::changeAuth(const QString &name, int auth) {
-    qDebug() << "Change Auth called with " << name;
     if (mynames.contains(name)) {
-        qDebug() << "contained";
         int id = mynames[name];
         player(id)->setAuth(auth);
         myplayersitems[id]->setText(authedName(id));
@@ -419,13 +417,11 @@ void Server::sendPlayer(int id)
 
 void Server::sendLogout(int id)
 {
-    qDebug() << "Sending logout notice";
     foreach(Player *p, myplayers)
     {
 	if (p->isLoggedIn())
 	    p->relay().sendLogout(id);
     }
-    qDebug() << "End sending";
 }
 
 void Server::recvTeam(int id)
@@ -448,7 +444,6 @@ void Server::removePlayer(int id)
 {
     if (playerExist(id))
     {
-	qDebug() << "Removing player " << player(id)->name();
 	Player *p = player(id);
     
 	QString playerName = p->name();

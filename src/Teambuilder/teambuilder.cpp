@@ -8,9 +8,9 @@
 #include "../Utilities/pokeButton.h"
 
 template <class T, class U>
-QList<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
+QSet<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
 {
-    QList<QPair<typename T::value_type, U> > ret;
+    QSet<QPair<typename T::value_type, U> > ret;
 
     foreach(typename T::value_type val, container)
 	ret << (QPair<typename T::value_type, U>(val, value));
@@ -691,19 +691,41 @@ void TB_PokemonBody::moveEntered(int row)
 void TB_PokemonBody::configureMoves()
 {
     QList<QPair<int, QString> > moves;
+    QSet<int> already_loaded;
+
     int num = poke()->num();
 
-    moves << map_container_with_value(PokemonInfo::LevelMoves(num), tr("Level")) << map_container_with_value(PokemonInfo::EggMoves(num), tr("Breeding"))
-	    << map_container_with_value(PokemonInfo::TMMoves(num), tr("TM/HM")) << map_container_with_value(PokemonInfo::TutorMoves(num), tr("Tutor"))
-	    << map_container_with_value(PokemonInfo::SpecialMoves(num), tr("Special"));
+    QSet<QPair<int, QString> > sets[] = {
+        map_container_with_value(PokemonInfo::TMMoves(num), tr("TM/HM")),
+        map_container_with_value(PokemonInfo::TutorMoves(num), tr("4G Tutor")),
+        map_container_with_value(PokemonInfo::LevelMoves(num), tr("4G Level")),
+        map_container_with_value(PokemonInfo::PreEvoMoves(num), tr("4G Pre Evo")),
+        map_container_with_value(PokemonInfo::EggMoves(num), tr("4G Breeding")),
+        map_container_with_value(PokemonInfo::SpecialMoves(num), tr("4G Special"))
+    };
+
+    typedef QPair<int, QString> qpair;
+
+    for (int i = 0; i < 6; i++) {
+        foreach(qpair pair, sets[i]) {
+            if (already_loaded.contains(pair.first))
+                continue;
+            already_loaded.insert(pair.first);
+            moves.push_back(pair);
+        }
+    }
 
     movechoice->setRowCount(moves.size());
     movechoice->setSortingEnabled(false);
 
-    for (int i = 0; i < moves.size(); i++)
+    int i = -1;
+
+    foreach (qpair pair, moves)
     {
+        i++;
+
 	QTableWidgetItem *witem;
-	int movenum = moves[i].first;
+        int movenum = pair.first;
 	
 	witem = new QTableWidgetItem(TypeInfo::Name(MoveInfo::Type(movenum)));
 	witem->setForeground(QColor("white"));
@@ -715,7 +737,7 @@ void TB_PokemonBody::configureMoves()
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Name, witem);
 
-	witem = new QTableWidgetItem(moves[i].second);
+        witem = new QTableWidgetItem(pair.second);
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Learning, witem);
 

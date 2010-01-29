@@ -121,13 +121,11 @@ bool AntiDos::connecting(const QString &ip)
         l.erase(l.begin(), l.begin()+i);
 
         if (l.size() >= max_login_per_ip) {
-            addKick(ip);
             return false;
         }
     }
 
     if (connectionsPerIp.value(ip) >= max_people_per_ip) {
-        addKick(ip);
         return false;
     }
 
@@ -205,7 +203,7 @@ void AntiDos::addKick(const QString &ip)
 
     l.erase(l.begin(), l.begin()+i);
 
-    if (l.size() >= max_login_per_ip) {
+    if (l.size() >= ban_after_x_kicks) {
         emit ban(ip);
     }
 }

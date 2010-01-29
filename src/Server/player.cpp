@@ -300,6 +300,7 @@ void Player::loggedIn(const TeamInfo &_team)
         return; //INVALID BEHAVIOR
     if (!SecurityManager::isValid(_team.name)) {
         emit info(id(), "invalid name: \"" + _team.name + "\"");
+        sendMessage("Invalid name. Change your name");
         kick();
         return;
     }

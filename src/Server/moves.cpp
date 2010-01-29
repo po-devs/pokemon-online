@@ -3632,6 +3632,59 @@ struct MMNaturePower : public MM
     }
 };
 
+struct MMRolePlay : public MM {
+    MMRolePlay() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        /* Wonder Guard & multi-type */
+        if (b.ability(t) == 123 || b.ability(t) == 115) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas(int s, int t, BS &b) {
+        b.acquireAbility(s, b.ability(t));
+        b.sendMoveMessage(108,0,s,Pokemon::Psychic,t,b.ability(t));
+    }
+};
+
+struct MMSkillSwap : public MM {
+    MMSkillSwap() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        /* Wonder Guard & multi-type */
+        if (b.ability(t) == 123 || b.ability(t) == 115 || b.ability(s) == 123 || b.ability(s) == 115) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas(int s, int t, BS &b) {
+        int tab = b.ability(t);
+        int sab = b.ability(s);
+
+        b.acquireAbility(s, tab);
+        b.acquireAbility(t, sab);
+        b.sendMoveMessage(112,0,s,Pokemon::Psychic,t);
+    }
+};
+
+struct MMSecretPower : public MM {
+    MMSecretPower() {
+        functions["MoveSettings"] = &ms;
+    }
+
+    static void ms(int s, int, BS &b) {
+
+    }
+};
+
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -3772,11 +3825,11 @@ void MoveEffect::init()
     /* Recycle */
     REGISTER_MOVE(106, Rest);
     REGISTER_MOVE(107, Roar);
-    /* Role play : remember, no multi-type/wonder guard */
+    REGISTER_MOVE(108, RolePlay);
     REGISTER_MOVE(109, SafeGuard);
     /* Secret Power */
     REGISTER_MOVE(111, Sketch);
-    /* Skill swap : remember, no multi-type/wonder guard */
+    REGISTER_MOVE(112, SkillSwap);
     REGISTER_MOVE(113, WeatherBall);
     REGISTER_MOVE(114, Explosion);
     REGISTER_MOVE(115, SleepingUser);
