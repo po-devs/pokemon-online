@@ -125,7 +125,7 @@ void PokeGeneral::load()
     loadGenderAvail();
 }
 
-const QList<int> &PokeGeneral::moves() const
+const QSet<int> &PokeGeneral::moves() const
 {
     return m_moves;
 }

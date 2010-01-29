@@ -366,34 +366,39 @@ QIcon PokemonInfo::Icon(int index)
     return ico;
 }
 
-QList<int> PokemonInfo::Moves(int pokenum)
+QSet<int> PokemonInfo::Moves(int pokenum)
 {
-    return LevelMoves(pokenum) << EggMoves(pokenum) << TutorMoves(pokenum) << TMMoves(pokenum) << SpecialMoves(pokenum);
+    return LevelMoves(pokenum).unite(EggMoves(pokenum)).unite(TutorMoves(pokenum)).unite(TMMoves(pokenum)).unite(SpecialMoves(pokenum)).unite(PreEvoMoves(pokenum));
 }
 
-QList<int> PokemonInfo::EggMoves(int pokenum)
+QSet<int> PokemonInfo::EggMoves(int pokenum)
 {
-    return getMoves("pokes_DP_eggmoves.txt", pokenum);
+    return getMoves("4G_egg_moves.txt", pokenum);
 }
 
-QList<int> PokemonInfo::LevelMoves(int pokenum)
+QSet<int> PokemonInfo::LevelMoves(int pokenum)
 {
-    return getMoves("pokes_DP_lvmoves.txt", pokenum);
+    return getMoves("4G_level_moves.txt", pokenum);
 }
 
-QList<int> PokemonInfo::TutorMoves(int pokenum)
+QSet<int> PokemonInfo::TutorMoves(int pokenum)
 {
-    return getMoves("pokes_DP_MTmoves.txt", pokenum);
+    return getMoves("4G_tutor_moves.txt", pokenum);
 }
 
-QList<int> PokemonInfo::TMMoves(int pokenum)
+QSet<int> PokemonInfo::TMMoves(int pokenum)
 {
-    return getMoves("pokes_DP_TMmoves.txt", pokenum);
+    return getMoves("tm_and_hm_moves.txt", pokenum);
 }
 
-QList<int> PokemonInfo::SpecialMoves(int pokenum)
+QSet<int> PokemonInfo::SpecialMoves(int pokenum)
 {
-    return getMoves("pokes_DP_specialmoves.txt", pokenum);
+    return getMoves("4G_special_moves.txt", pokenum);
+}
+
+QSet<int> PokemonInfo::PreEvoMoves(int pokenum)
+{
+    return getMoves("4G_pre_evo_moves.txt", pokenum);
 }
 
 QList<int> PokemonInfo::Abilities(int pokenum)
@@ -440,17 +445,22 @@ QString PokemonInfo::path(const QString &filename)
     return m_Directory + filename;
 }
 
-QList<int> PokemonInfo::getMoves(const QString &filename, int pokenum)
+QSet<int> PokemonInfo::getMoves(const QString &filename, int pokenum)
 {
-    QList<int> return_value;
+    QSet<int> return_value;
 
     /* getting the line we want */
     QString interesting_line = get_line(path(filename), pokenum);
 
     /* extracting the moves */
-    for (int i = 0; i + 3 <= interesting_line.length(); i+=3)
+    QTextStream ss(&interesting_line, QIODevice::ReadOnly);
+    while (!ss.atEnd())
     {
-        return_value << interesting_line.mid(i,3).toUInt();
+        int val;
+        ss >> val;
+
+        if (val != 0)
+            return_value.insert(val);
     }
 
     return return_value;

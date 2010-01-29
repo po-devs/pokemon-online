@@ -12,7 +12,6 @@ void AbilityEffect::activate(const QString &effect, int num, int source, int tar
 {
     AbilityInfo::Effect e = AbilityInfo::Effects(num);
 
-    qDebug() << "Activating " << effect << " for ability " << num << " (effect " << e.num << ").";
     if (!mechanics.contains(e.num) || !mechanics[e.num].functions.contains(effect)) {
         return;
     }
@@ -21,17 +20,12 @@ void AbilityEffect::activate(const QString &effect, int num, int source, int tar
 
 void AbilityEffect::setup(int num, int source, BattleSituation &b)
 {
-    qDebug() << "Setup required for " << num;
     AbilityInfo::Effect effect = AbilityInfo::Effects(num);
-
-    qDebug() << "Setting up " << effect.num;
 
     /* if the effect is invalid or not yet implemented then no need to go further */
     if (!mechanics.contains(effect.num)) {
         return;
     }
-
-    qDebug() << "Setup confirmed";
 
     b.pokelong[source]["AbilityArg"] = effect.arg;
 

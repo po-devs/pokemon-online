@@ -197,7 +197,7 @@ class PokeGeneral
     PROPERTY(quint16, num);
 protected:
     PokeBaseStats m_stats;
-    QList<int> m_moves;
+    QSet<int> m_moves;
     QList<int> m_abilities;
     int m_types[2];
     int m_genderAvail;
@@ -216,7 +216,7 @@ public:
     const QList<int>& abilities() const;
     int genderAvail() const;
 
-    const QList<int>& moves() const;
+    const QSet<int>& moves() const;
 
     /* loads using num() */
     void load();
