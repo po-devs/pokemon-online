@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     ../Utilities/otherwidgets.cpp \
     ../Utilities/md5.c \
     playerswindow.cpp \
-    antidos.cpp
+    antidos.cpp \
+    serverconfig.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -46,7 +47,8 @@ HEADERS += mainwindow.h \
     ../Utilities/md5.h \
     ../Utilities/thread_safe_containers.h \
     playerswindow.h \
-    antidos.h
+    antidos.h \
+    serverconfig.h
 LIBS += -L../../bin \
     -lzip
 DEFINES = MULTI_THREADED_ACCESS

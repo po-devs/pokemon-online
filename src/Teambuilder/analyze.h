@@ -32,7 +32,10 @@ namespace NetworkCli
         AskForPass,
         Register,
         PlayerKick,
-        PlayerBan
+        PlayerBan,
+        ServNumChange,
+        ServDescChange,
+        ServNameChange
     };
 
     enum ProtocolError

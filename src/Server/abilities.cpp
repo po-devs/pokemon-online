@@ -620,7 +620,7 @@ struct AMMotorDrive : public AM {
     }
 
     static void op(int s, int t, BS &b) {
-        if (type(b,t) == Pokemon::Fire) {
+        if (type(b,t) == Move::Electric) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
             b.sendAbMessage(41,0,s,s,Pokemon::Electric);
             b.gainStatMod(s,Speed,1);
@@ -835,6 +835,8 @@ struct AMSpeedBoost : public AM {
     }
 
     static void et(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
         b.sendAbMessage(58,0,s);
         b.gainStatMod(s, Speed, 1);
     }

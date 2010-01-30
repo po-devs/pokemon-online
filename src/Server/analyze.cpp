@@ -28,6 +28,12 @@ void Analyzer::engageBattle(int id, const TeamBattle &team, const BattleConfigur
     notify(EngageBattle, qint32(id), team, conf);
 }
 
+void Analyzer::connectTo(const QString &host, quint16 port)
+{
+    connect(&socket(), SIGNAL(connected()), SIGNAL(connected()));
+    mysocket.connectToHost(host, port);
+}
+
 void Analyzer::close() {
     socket().close();
 }
@@ -96,6 +102,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    TeamInfo team;
 	    in >> team;
 	    emit loggedIn(team);
+            emit accepted(); // for registry;
 	    break;
 	}
     case SendMessage:
@@ -141,6 +148,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         break;
     case Register:
         emit wannaRegister();
+        emit nameTaken(); // for registry
         break;
     case AskForPass:
         {
@@ -163,6 +171,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit ban(id);
             break;
         }
+    case Logout:
+        emit ipRefused();
+        break;
+    case ServNameChange:
+        emit invalidName();
+        break;
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;
@@ -181,6 +195,8 @@ const Network & Analyzer::socket() const
 
 void Analyzer::notify(int command)
 {
+    if (!isConnected())
+        return;
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);

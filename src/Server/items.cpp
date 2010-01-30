@@ -107,7 +107,6 @@ struct IMStatModifier : public IM
     static void sm(int s, int, BS &b) {
 	QString args = poke(b,s)["ItemArg"].toString();
 	turn(b,s)["Stat" + args.left(1) + "ItemModifier"] = args.mid(2).toInt();
-	qDebug() << "there it is: " << args;
     }
 };
 
@@ -149,7 +148,7 @@ struct IMFocusSash : public IM
     static void uodr(int s, int t, BS &b) {
 	if (b.koed(s))
 	    return;
-	if (turn(b,s).contains("CannotBeKoedBy") && turn(b,s)["CannotBeKoedBy"].toInt() == t) {
+        if (turn(b,s).contains("CannotBeKoedBy") && turn(b,s)["CannotBeKoedBy"].toInt() == t && b.poke(s).lifePoints() == 1) {
 	    b.sendItemMessage(5, s);
 	    b.disposeItem(s);
 	}

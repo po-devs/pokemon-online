@@ -103,7 +103,8 @@ void Client::changeTeam()
 
 void Client::sendText()
 {
-    relay().sendMessage(myline->text());
+    if (myline->text().trimmed().length() > 0)
+        relay().sendMessage(myline->text().trimmed());
     myline->clear();
 }
 
@@ -432,14 +433,14 @@ void Client::printLine(const QString &line)
 	QString beg = line.left(pos);
 	QString end = line.right(line.length()-pos-1);
 	if (id(beg) == -1) {
-	    mainChat()->insertHtml("<span style='color:blue'><b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:blue'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
 	} else if (beg == ownName()) {
-	    mainChat()->insertHtml("<span style='color:#5811b1'><b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:#5811b1'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
 	 } else {
-	    mainChat()->insertHtml("<span style='color:green'><b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:green'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
 	}
     } else {
-	mainChat()->insertPlainText(line + "\n");
+        mainChat()->insertPlainText("(" + QTime::currentTime().toString() + ") " + line + "\n");
     }
 }
 

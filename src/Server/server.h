@@ -8,6 +8,7 @@
 
 class Player;
 class BattleSituation;
+class Analyzer;
 
 class QIdListWidgetItem;
 
@@ -32,6 +33,18 @@ public:
     void startBattle(int id1, int id2);
     void removeBattle(int id1, int id2);
 public slots:
+    /* Registry slots */
+    void connectToRegistry();
+    void regConnected();
+    void regConnectionError();
+    void regSendPlayers();
+    void regNameChanged(const QString &name);
+    void regDescChanged(const QString &desc);
+    void openConfig();
+    void nameTaken();
+    void ipRefused();
+    void invalidName();
+    void accepted();
     /* means a new connection is about to start from the TCP server */
     void incomingConnection();
     /* Signals received by players */
@@ -58,6 +71,13 @@ private:
     void kick(int dest, int src);
     void ban(int dest, int src);
     void sendPlayer(int id);
+
+    Analyzer *registry_connection;
+    QString serverName, serverDesc;
+
+    quint16 numPlayers() {
+        return myplayers.size();
+    }
 
     QTcpServer myserver;
     /* storing players */

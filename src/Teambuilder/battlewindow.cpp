@@ -31,7 +31,7 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
     mylayout->addWidget(mysend = new QPushButton(tr("&Send")), 2, 2);
     mylayout->addWidget(mystack = new QStackedWidget(), 3, 0, 1, 3);
     mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 4, 1);
-    mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémons")), 4, 2);
+    mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémon")), 4, 2);
 
     for (int i = 0; i < 6; i++) {
 	myazones[i] = new AttackZone(team.poke(i));

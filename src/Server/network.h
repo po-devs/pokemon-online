@@ -18,6 +18,8 @@ public:
     QString ip() const;
     bool isConnected() const;
 
+    void connectToHost(const QString & ip, quint16 port);
+
     void close();
 public slots:
     void onReceipt();
@@ -26,6 +28,7 @@ public slots:
     void send(const QByteArray &message);
 signals:
     void isFull(QByteArray command);
+    void connected();
     void disconnected();
     void _error();
 private:

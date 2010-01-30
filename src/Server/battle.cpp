@@ -1018,6 +1018,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		continue;
 
 	    calleffects(player, target, "BeforeHitting");
+
 	    applyMoveStatMods(player, target);
 	    calleffects(player, target, "UponAttackSuccessful");
 
@@ -1101,7 +1102,7 @@ void BattleSituation::inflictRecoil(int source, int target)
 
 void BattleSituation::applyMoveStatMods(int player, int target)
 {
-    bool sub = hasSubstitute(player);
+    bool sub = hasSubstitute(target);
 
     QString effect = turnlong[player]["StatEffect"].value<QString>();
 
