@@ -53,7 +53,7 @@ class Analyzer : public QObject
 {
     Q_OBJECT
 public:
-    Analyzer();
+    Analyzer(bool registry_connection = false);
 
     /* functions called by the client */
     void login(const TrainerTeam &team);
@@ -95,6 +95,7 @@ signals:
     void notRegistered(bool);
     void playerKicked(int p, int src);
     void playerBanned(int p, int src);
+    void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip);
 
 public slots:
     /* slots called by the network */
@@ -108,6 +109,8 @@ public slots:
 private:
     /* The connection to the outside */
     Network &socket();
+    /* To tell if its the registry we're connected to*/
+    bool registry_socket;
 
     Network mysocket;
 };

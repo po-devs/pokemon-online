@@ -548,7 +548,7 @@ void TB_PokemonBody::initMoves()
 	mapper->setMapping(completer, i);
 	mapper->setMapping(m_moves[i], i);
 	connect(completer, SIGNAL(activated(QString)), mapper, SLOT(map()));
-	connect(m_moves[i], SIGNAL(editingFinished()), mapper, SLOT(map()));
+        connect(m_moves[i], SIGNAL(textChanged(QString)), mapper, SLOT(map()));
     }
 
     connect(mapper, SIGNAL(mapped(int)), SLOT(moveCellActivated(int)));
@@ -741,15 +741,15 @@ void TB_PokemonBody::configureMoves()
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Learning, witem);
 
-	witem = new QTableWidgetItem(QString::number(MoveInfo::PP(movenum)));
+        witem = new QTableWidgetItem(QString::number(MoveInfo::PP(movenum)).rightJustified(2));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, PP, witem);
 
-	witem = new QTableWidgetItem(MoveInfo::AccS(movenum));
+        witem = new QTableWidgetItem(MoveInfo::AccS(movenum).rightJustified(3));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Acc, witem);
 
-	witem = new QTableWidgetItem(MoveInfo::PowerS(movenum));
+        witem = new QTableWidgetItem(MoveInfo::PowerS(movenum).rightJustified(3));
 	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Pow, witem);
 
@@ -761,7 +761,12 @@ void TB_PokemonBody::configureMoves()
 
     movechoice->sortItems(Name);
     movechoice->setSortingEnabled(true);
+    movechoice->resizeColumnsToContents();
     movechoice->resizeRowsToContents();
+    movechoice->horizontalHeader()->setStretchLastSection(true);
+    movechoice->horizontalHeader()->setResizeMode(PP, QHeaderView::ResizeToContents);
+    movechoice->horizontalHeader()->setResizeMode(Pow, QHeaderView::ResizeToContents);
+    movechoice->horizontalHeader()->setResizeMode(Acc, QHeaderView::ResizeToContents);
 }
 
 void TB_PokemonBody::setItem(const QString &item)

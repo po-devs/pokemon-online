@@ -340,6 +340,8 @@ public:
 
     static QString Stat(int stat);
     static QString Status(int status);
+    static QString ShortStatus(int status);
+    static QColor StatusColor(int status);
     static QPixmap Icon(int status);
 };
 

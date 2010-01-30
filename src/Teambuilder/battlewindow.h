@@ -204,6 +204,7 @@ protected:
 
     GraphicsZone *zone;
     QLabel *nick[2];
+    QLabel *status[2];
     QProgressBar *bars[2];
     /* The pokeballs to indicate how well a team is doing */
     QLabel *advpokeballs[6];

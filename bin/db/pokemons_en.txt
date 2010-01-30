@@ -492,3 +492,8 @@ Manaphy
 Darkrai
 Shaymin
 Arceus
+Rotom-C
+Rotom-H
+Rotom-F
+Rotom-W
+Rotom-S

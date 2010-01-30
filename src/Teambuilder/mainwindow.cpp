@@ -91,7 +91,7 @@ void MainWindow::launchServerChoice()
     m_choice = new ServerChoice();
 
     connect(m_choice, SIGNAL(rejected()), SLOT(launchMenu()));
-    connect(m_choice, SIGNAL(textValueSelected(QString)), this, SLOT(goOnline(QString)));
+    connect(m_choice, SIGNAL(serverChosen(QString)), this, SLOT(goOnline(QString)));
 
     setMenuBar(NULL);
     setCentralWidget(m_choice);

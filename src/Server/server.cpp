@@ -111,7 +111,7 @@ void Server::connectToRegistry()
     printLine("Connecting to registry...");
 
     QTcpSocket * s = new QTcpSocket(NULL);
-    s->connectToHost("127.0.0.1", 5082);
+    s->connectToHost("pokeymon.zapto.org", 5082);
 
     connect(s, SIGNAL(connected()), this, SLOT(regConnected()));
     connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(regConnectionError()));
@@ -410,16 +410,17 @@ void Server::incomingConnection()
 
 void Server::dealWithChallenge(int desc, int from, int to)
 {
+    if (!playerExist(to) || !player(to)->isLoggedIn()) {
+        sendMessage(from, tr("That player is not online"));
+        //INVALID BEHAVIOR
+        return;
+    }
     if (desc == Player::Sent) {
-	if (!playerExist(to) || !player(to)->isLoggedIn()) {
-	    sendMessage(from, tr("That player is not online"));
-	    //INVALID BEHAVIOR
-	    return;
-	}
 	if (!player(to)->challenge(from)) {
 	    sendMessage(from, tr("%1 is busy.").arg(name(to)));
-	    return;
-	}
+        } else {
+            printLine(tr("Challenge issued from %1 to %2").arg(name(from), name(to)));
+        }
     }  else {
 	if (desc == Player::Accepted) {
 	    startBattle(from, to);
@@ -557,6 +558,9 @@ void Server::removePlayer(int id)
     if (playerExist(id))
     {
 	Player *p = player(id);
+        p->doWhenDC();
+
+        p->blockSignals(true);
     
 	QString playerName = p->name();
 	bool loggedIn = p->isLoggedIn();
@@ -565,7 +569,8 @@ void Server::removePlayer(int id)
 	delete p;
 
 	myplayers.remove(id);
-        mynames.remove(playerName.toLower());
+        if (loggedIn)
+            mynames.remove(playerName.toLower());
 
         delete list()->takeItem(list()->row(myplayersitems[id]));
         myplayersitems.remove(id);

@@ -49,6 +49,7 @@ class Analyzer : public QObject
     Q_OBJECT
 public:
     Analyzer(QTcpSocket *sock, int id);
+    ~Analyzer();
 
     /* functions called by the server */
     void sendMessage(const QString &message);

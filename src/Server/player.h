@@ -54,7 +54,7 @@ public:
     int challengedBy() const;
     bool hasChallenged(int id) const;
 
-
+    void doWhenDC();
     /* Sends the challenge, returns false if can't even send the challenge */
     bool challenge(int id);
 

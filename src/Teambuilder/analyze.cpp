@@ -6,7 +6,7 @@
 
 using namespace NetworkCli;
 
-Analyzer::Analyzer()
+Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection)
 {
     connect(&socket(), SIGNAL(connected()), SIGNAL(connected()));
     connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
@@ -28,6 +28,7 @@ void Analyzer::sendChallengeStuff(quint8 desc, int id)
 void Analyzer::sendMessage(const QString &message)
 {
     notify(SendMessage, message);
+    notify(BattleChat, message);
 }
 
 void Analyzer::sendTeam(const TrainerTeam &team)
@@ -78,10 +79,18 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	}
     case PlayersList:
 	{
-	    Player p;
-	    in >> p;
-	    emit playerReceived(p);
-	    break;
+            if (!registry_socket) {
+                Player p;
+                in >> p;
+                emit playerReceived(p);
+                break;
+            } else {
+                // Registry socket;
+                QString servName, servDesc, ip;
+                quint16 numPlayers;
+                in >> servName >> servDesc >> numPlayers >> ip;
+                emit serverReceived(servName, servDesc, numPlayers, ip);
+            }
 	}
     case Login:
 	{

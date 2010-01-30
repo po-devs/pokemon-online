@@ -55,6 +55,8 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
     show();
 
     switchTo(0);
+
+    printHtml(tr("<span style='color:blue'><b>Battle between %1 and %2 started!</b></span> <br />").arg(name(true), name(false)));
 }
 
 QString BattleWindow::name(bool self) const
@@ -318,6 +320,10 @@ void BattleWindow::receiveInfo(QByteArray inf)
                 printHtml("<span style='color:" + TypeInfo::Color(Move::Ghost).name() + "'>" + escapeHtml(tu(tr("%1 became confused!").arg(nick(self)))) + "</span>");
                 break;
 	    }
+            if (!self) {
+                info().opponent.status() = status;
+                mydisplay->updatePoke(self);
+            }
 	    break;
 	}
     case StatusMessage:
@@ -491,7 +497,17 @@ void BattleWindow::receiveInfo(QByteArray inf)
         qint8 poke, status;
         in >> poke >> status;
 
+        if (poke < 0 || poke >= 6)
+            break;
+
         mydisplay->changeStatus(self,poke,status);
+
+        if (self) {
+            info().myteam.poke(poke).status() = status;
+            if (info().currentIndex == poke) {
+                mydisplay->updatePoke(self);
+            }
+        }
         break;
     }
     case Substitute:
@@ -634,8 +650,12 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
         advpokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
         foeteam->addWidget(advpokeballs[i]);
     }
+
+    status[Opponent] = new QLabel();
+    foeteam->addWidget(status[Opponent], 100, Qt::AlignCenter);
+
     nick[Opponent] = new QLabel(info.name[Opponent]);
-    foeteam->addWidget(nick[Opponent], 100, Qt::AlignRight);
+    foeteam->addWidget(nick[Opponent], 0, Qt::AlignRight);
     foeteam->setSpacing(1);
 
     bars[Opponent] = new QProgressBar();
@@ -657,12 +677,16 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
 
     l->addLayout(team);
     nick[Myself] = new QLabel(info.name[Myself]);
-    team->addWidget(nick[Myself], 100, Qt::AlignLeft);
+    team->addWidget(nick[Myself], 0, Qt::AlignLeft);
+
+    status[Myself] = new QLabel();
+    team->addWidget(status[Myself], 100, Qt::AlignCenter);
 
     team->addWidget(new QLabel(), 100);
     for (int i = 0; i < 6; i++) {
         mypokeballs[i] = new QLabel();
         mypokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
+        mypokeballs[i]->setToolTip(info.myteam.poke(i).nick());
         team->addWidget(mypokeballs[i]);
     }
 
@@ -672,28 +696,34 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
 
 void BattleDisplay::updatePoke(bool self)
 {
-    if (self)
+    if (self) {
 	if (info.currentIndex != -1) {
-        zone->switchTo(mypoke(), self, info.sub[Myself]);
-        nick[Myself]->setText(tr("%1 Lv.%2").arg(mypoke().nick()).arg(mypoke().level()));
-        bars[Myself]->setRange(0,mypoke().totalLifePoints());
-        bars[Myself]->setValue(mypoke().lifePoints());
-        bars[Myself]->setStyleSheet(health(mypoke().lifePoints()*100/mypoke().totalLifePoints()));
-    } else {
-        zone->switchToNaught(self);
-        nick[Myself]->setText("");
-        bars[Myself]->setValue(0);
+            zone->switchTo(mypoke(), self, info.sub[Myself]);
+            nick[Myself]->setText(tr("%1 Lv.%2").arg(mypoke().nick()).arg(mypoke().level()));
+            bars[Myself]->setRange(0,mypoke().totalLifePoints());
+            bars[Myself]->setValue(mypoke().lifePoints());
+            bars[Myself]->setStyleSheet(health(mypoke().lifePoints()*100/mypoke().totalLifePoints()));
+            int status = info.myteam.poke(info.currentIndex).status();
+            this->status[Myself]->setText("<b><span style='color:" + StatInfo::StatusColor(status).name() + "'>" + StatInfo::ShortStatus(status) + "</b></span>");
+        } else {
+            zone->switchToNaught(self);
+            nick[Myself]->setText("");
+            bars[Myself]->setValue(0);
+        }
     }
-    else
+    else {
 	if (info.opponentAlive) {
-        zone->switchTo(foe(), self, info.sub[Opponent]);
-        nick[Opponent]->setText(tr("%1 Lv.%2").arg(foe().nick()).arg(foe().level()));
-        bars[Opponent]->setValue(foe().lifePercent());
-        bars[Opponent]->setStyleSheet(health(foe().lifePercent()));
-    }  else {
-        zone->switchToNaught(self);
-        nick[Opponent]->setText("");
-        bars[Opponent]->setValue(0);
+            zone->switchTo(foe(), self, info.sub[Opponent]);
+            nick[Opponent]->setText(tr("%1 Lv.%2").arg(foe().nick()).arg(foe().level()));
+            bars[Opponent]->setValue(foe().lifePercent());
+            bars[Opponent]->setStyleSheet(health(foe().lifePercent()));
+            int status = info.opponent.status();
+            this->status[Opponent]->setText("<b><span style='color:" + StatInfo::StatusColor(status).name() + "'>" + StatInfo::ShortStatus(status) + "</b></span>");
+        }  else {
+            zone->switchToNaught(self);
+            nick[Opponent]->setText("");
+            bars[Opponent]->setValue(0);
+        }
     }
 }
 
