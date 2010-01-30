@@ -46,8 +46,10 @@ public:
     QSize maximumSize() const;
 protected:
     void paintEvent(QPaintEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
 private:
     QPixmap myPic, myHoveredPic;
+    int lastUnderMouse; // last mouse pos recorded
 };
 
 /* A widget that sets its size to the background given in parameter.

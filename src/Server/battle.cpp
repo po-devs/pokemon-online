@@ -198,9 +198,9 @@ void BattleSituation::endTurnStatus()
                     inflictDamage(player, poke(player).totalLifePoints()/(8*(1+hasWorkingAbility(player,32))), player);
 		    break;
 		case Pokemon::DeeplyPoisoned:
-                    //PoisonHeal
+                    //Poison Heal
                     if (hasWorkingAbility(player, 68)) {
-                        sendMoveMessage(45,0,player,Pokemon::Poison);
+                        sendAbMessage(45,0,player,Pokemon::Poison);
                         healLife(player, poke(player).totalLifePoints()/8);
                     } else {
                         notify(All, StatusMessage, player, qint8(HurtPoison));

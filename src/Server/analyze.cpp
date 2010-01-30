@@ -18,6 +18,11 @@ Analyzer::Analyzer(QTcpSocket *sock, int id) : mysocket(sock, id)
     mytimer->start(30000); //every 30 secs
 }
 
+Analyzer::~Analyzer()
+{
+    blockSignals(true);
+}
+
 void Analyzer::sendMessage(const QString &message)
 {
     notify(SendMessage, message);
@@ -99,10 +104,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     switch (command) {
     case Login:
 	{
-	    TeamInfo team;
-	    in >> team;
-	    emit loggedIn(team);
-            emit accepted(); // for registry;
+            if (mysocket.id() != 0) {
+                TeamInfo team;
+                in >> team;
+                emit loggedIn(team);
+            } else
+                emit accepted(); // for registry;
 	    break;
 	}
     case SendMessage:
@@ -147,8 +154,10 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     case KeepAlive:
         break;
     case Register:
-        emit wannaRegister();
-        emit nameTaken(); // for registry
+        if (mysocket.id() != 0)
+            emit wannaRegister();
+        else
+            emit nameTaken(); // for registry
         break;
     case AskForPass:
         {

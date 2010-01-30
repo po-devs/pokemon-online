@@ -21,6 +21,7 @@ public:
     void connectToHost(const QString & ip, quint16 port);
 
     void close();
+    int id() const {return myid;}
 public slots:
     void onReceipt();
     void onDisconnect();

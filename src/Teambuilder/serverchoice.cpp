@@ -1,23 +1,120 @@
 #include "serverchoice.h"
 #include "../Utilities/otherwidgets.h"
+#include "analyze.h"
 
 ServerChoice::ServerChoice()
 {
-    setInputMode(QInputDialog::TextInput);
+    setFixedSize(400,400);
+
+    registry_connection = new Analyzer(true);
+    registry_connection->connectTo("pokeymon.zapto.org", 5081);
+    registry_connection->setParent(this);
+
+    connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
+    connect(registry_connection, SIGNAL(serverReceived(QString, QString, quint16,QString)), SLOT(addServer(QString, QString, quint16, QString)));
+
+    QVBoxLayout *l = new QVBoxLayout(this);
+    mylist = new QCompactTable(0,3);
+    mylist->setMinimumHeight(200);
+
+    QStringList horHeaders;
+    horHeaders << tr("Server Name") << tr("Players") << tr("Advanced connection");
+    mylist->setHorizontalHeaderLabels(horHeaders);
+    mylist->setSelectionBehavior(QAbstractItemView::SelectRows);
+    mylist->setSelectionMode(QAbstractItemView::SingleSelection);
+    mylist->setShowGrid(false);
+    mylist->verticalHeader()->hide();
+    mylist->horizontalHeader()->setStretchLastSection(true);
+    connect(mylist, SIGNAL(cellActivated(int,int)), SLOT(regServerChosen(int)));
+    connect(mylist, SIGNAL(currentCellChanged(int,int,int,int)), SLOT(showDescription(int)));
+
+    l->addWidget(new QEntitled(tr("&Servers"), mylist));
+
+    myDesc = new QTextEdit();
+    myDesc->setReadOnly(true);
+    l->addWidget(new QEntitled("Server Description", myDesc));
 
     QSettings settings;
-    setTextValue(settings.value("default_server").toString());
+    myAdvServer = new QLineEdit(settings.value("default_server").toString());
+    connect(myAdvServer, SIGNAL(returnPressed()), SLOT(advServerChosen()));
 
-    setWindowTitle(tr("Server Choice"));
+    l->addWidget(new QEntitled("&Advanced Connection", myAdvServer));
 
-    setLabelText(tr("Enter the host name or IP of the server you want to go"));
+    QHBoxLayout *hl= new QHBoxLayout();
+    l->addLayout(hl);
 
-    connect(this, SIGNAL(textValueSelected(QString)), SLOT(textSelected(QString)));
+    QPushButton *cancel = new QPushButton("&Go Back");
+    QPushButton *ok = new QPushButton("Advanced &Connection");
+
+    connect(cancel, SIGNAL(clicked()), SIGNAL(rejected()));
+    connect(ok, SIGNAL(clicked()), SLOT(advServerChosen()));
+
+    hl->addWidget(cancel);
+    hl->addWidget(ok);
 }
 
-void ServerChoice::textSelected(const QString &text)
+void ServerChoice::regServerChosen(int row)
 {
-    /* Just storing the new default server */
+    QString ip = mylist->item(row, 2)->text();
+
     QSettings settings;
-    settings.setValue("default_server", text);
+    settings.setValue("default_server", ip);
+    emit serverChosen(ip);
+}
+
+void ServerChoice::advServerChosen()
+{
+    QString ip = myAdvServer->text().trimmed();
+
+    QSettings settings;
+    settings.setValue("default_server", ip);
+    emit serverChosen(ip);
+}
+
+void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip)
+{
+    mylist->setSortingEnabled(false);
+
+    int row = mylist->rowCount();
+    mylist->setRowCount(row+1);
+
+    QTableWidgetItem *witem;
+
+    witem = new QTableWidgetItem(name);
+    witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+    mylist->setItem(row, 0, witem);
+
+    witem = new QTableWidgetItem(QString::number(num).rightJustified(3));
+    witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+    mylist->setItem(row, 1, witem);
+
+    witem = new QTableWidgetItem(ip);
+    witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+    mylist->setItem(row, 2, witem);
+
+    mylist->sortByColumn(2);
+    mylist->setSortingEnabled(true);
+    mylist->resizeColumnsToContents();
+    mylist->resizeRowsToContents();
+    mylist->horizontalHeader()->setStretchLastSection(true);
+
+    descriptionsPerIp.insert(ip, desc);
+
+    if (mylist->currentRow() != -1)
+        showDescription(mylist->currentRow());
+}
+
+void ServerChoice::showDescription(int row)
+{
+    if (row < 0)
+        return;
+    myDesc->clear();
+    myDesc->insertPlainText(descriptionsPerIp[mylist->item(row,2)->text()]);
+}
+
+void ServerChoice::connectionError(int, const QString &mess)
+{
+    mylist->setCurrentCell(-1,-1);
+    myDesc->clear();
+    myDesc->insertPlainText(tr("Disconnected from the registry: %1").arg(mess));
 }

@@ -26,9 +26,13 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
 
 Player::~Player()
 {
+}
+
+void Player::doWhenDC()
+{
     cancelChallenges();
     if (battling())
-	battleForfeited();
+        battleForfeited();
 }
 
 void Player::changeState(int newstate)
@@ -201,11 +205,10 @@ void Player::startBattle(int id, const TeamBattle &team, const BattleConfigurati
     if (isChallenged() && challengedBy() == id) {
 	m_challengedby = -1;
     }
-    m_challenged.remove(id);
-
     changeState(Battling);
 
     removeChallenge(id);
+    cancelChallenges();
 }
 
 void Player::cancelChallenges()

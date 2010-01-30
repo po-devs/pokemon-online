@@ -47,9 +47,12 @@ void QEntitled::setTitle(const QString &title)
 }
 
 QImageButton::QImageButton(const QString &normal, const QString &hovered)
-            : myPic(normal), myHoveredPic(hovered)
+            : myPic(normal), myHoveredPic(hovered), lastUnderMouse(-1)
 {
     setFixedSize(myPic.size());
+    /* Both are necessary for some styles */
+    setMouseTracking(true);
+    setAttribute(Qt::WA_Hover, true);
 }
 
 QSize QImageButton::sizeHint() const
@@ -75,6 +78,15 @@ void QImageButton::paintEvent(QPaintEvent *e)
         painter.drawPixmap(e->rect(), myPic, e->rect());
     else
         painter.drawPixmap(e->rect(), myHoveredPic, e->rect());
+
+    lastUnderMouse = underMouse();
+}
+
+void QImageButton::mouseMoveEvent(QMouseEvent *e)
+{
+    if (int(underMouse()) == lastUnderMouse)
+        return;
+    update();
 }
 
 QImageBackground::QImageBackground(const QString &imagePath)

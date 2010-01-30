@@ -321,7 +321,7 @@ QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney, bool back)
 
     QString file = QString("%2/DP%3%4%5.png").arg(pokenum).arg(back?"b":"",(gender==Pokemon::Female)?"f":"m", shiney?"s":"");
 
-    QByteArray data = readZipFile(archive.toAscii(), file.toAscii());
+    QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
     if (data.length()==0)
 	return QPixmap();
@@ -338,7 +338,7 @@ QPixmap PokemonInfo::Sub(bool back)
 
     QString file = QString("sub%1.png").arg(back?"b":"");
 
-    QByteArray data = readZipFile(archive.toAscii(), file.toAscii());
+    QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
     if (data.length()==0)
         return QPixmap();
@@ -352,12 +352,12 @@ QPixmap PokemonInfo::Sub(bool back)
 QIcon PokemonInfo::Icon(int index)
 {
     QString archive = path("icons.zip");
-    QString file = QString("gifs/%1.gif").arg(index);
+    QString file = QString("%1.gif").arg(index);
 
-    QByteArray data = readZipFile(archive.toAscii(),file.toAscii());
+    QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
     if(data.length() == 0)
     {
-        qDebug() << "erreur chargement fichier icon";
+        qDebug() << "error loading icon";
         return QIcon();
     }
     QPixmap p;
@@ -1312,6 +1312,35 @@ QString StatInfo::Stat(int stat)
 QString StatInfo::Status(int stat)
 {
     return m_status[stat+1];
+}
+
+QString StatInfo::ShortStatus(int stat)
+{
+    switch (stat) {
+    case -2: return "Ko";
+    case 0: return "";
+    case 1: return "Par";
+    case 2: return "Brn";
+    case 3: return "Frz";
+    case 4: return "Slp";
+    case 5: return "Psn";
+    case 6: return "Tox";
+    default:
+        return "";
+    }
+}
+
+QColor StatInfo::StatusColor(int status)
+{
+    switch (status) {
+    case -2: return "#171b1a";
+    case 0: return QColor();
+    case 1: return TypeInfo::Color(Pokemon::Electric);
+    case 2: return TypeInfo::Color(Pokemon::Fire);
+    case 3: return TypeInfo::Color(Pokemon::Ice);
+    case 4: return TypeInfo::Color(Pokemon::Psychic);
+    case 5: case 6: default: return TypeInfo::Color(Pokemon::Poison);
+    }
 }
 
 QString StatInfo::path(const QString &filename)

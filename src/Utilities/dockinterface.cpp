@@ -6,7 +6,7 @@
 
 //class dockAdvanced
 DockAdvanced::DockAdvanced(TeamBuilder * builder):
-	QDockWidget(tr("Advanced Pokemons"),builder),m_builder(builder),lastStackIndex(-1)
+        QDockWidget(tr("Advanced Options"),builder),m_builder(builder),lastStackIndex(-1)
 {
     this->setAttribute(Qt::WA_DeleteOnClose);
     //parametre(s) interne(s)
