@@ -8,12 +8,14 @@
 #include "playerswindow.h"
 #include "security.h"
 #include "antidos.h"
+#include "serverconfig.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
 
 Server::Server(quint16 port)
 {
     linecount = 0;
+    registry_connection = NULL;
 
     QGridLayout *mylayout = new QGridLayout (this);
 
@@ -21,6 +23,7 @@ Server::Server(quint16 port)
     QMenu *options = bar->addMenu("&Options");
     options->addAction("&Players", this, SLOT(openPlayers()));
     options->addAction("&Anti DoS", this, SLOT(openAntiDos()));
+    options->addAction("&Config", this, SLOT(openConfig()));
     mylayout->addWidget(bar,0,0,1,2);
 
     mylist = new QListWidget();
@@ -83,11 +86,108 @@ Server::Server(quint16 port)
     connect(server(), SIGNAL(newConnection()), SLOT(incomingConnection()));
     connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(dosKick(int)));
     connect(AntiDos::obj(), SIGNAL(ban(int)), SLOT(dosBan(int)));
+
+    QSettings s;
+    serverName = s.value("server_name").toString();
+    serverDesc = s.value("server_description").toString();
+    connectToRegistry();
 }
 
 QTcpServer * Server::server()
 {
     return &myserver;
+}
+
+void Server::connectToRegistry()
+{
+    if (registry_connection != NULL) {
+        if (registry_connection->isConnected()) {
+            return;
+        }
+        else
+            delete registry_connection;
+    }
+
+    printLine("Connecting to registry...");
+
+    QTcpSocket * s = new QTcpSocket(NULL);
+    s->connectToHost("127.0.0.1", 5082);
+
+    connect(s, SIGNAL(connected()), this, SLOT(regConnected()));
+    connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(regConnectionError()));
+
+    registry_connection = new Analyzer(s,0);
+}
+
+void Server::regConnectionError()
+{
+    printLine("Error when connecting to the registry. Will restart in 30 seconds");
+    QTimer::singleShot(30000, this, SLOT(connectToRegistry()));
+}
+
+void Server::regConnected()
+{
+    printLine("Connected to registry! Sending server info...");
+    registry_connection->notify(NetworkServ::Login, serverName, serverDesc, numPlayers());
+    connect(registry_connection, SIGNAL(ipRefused()), SLOT(ipRefused()));
+    connect(registry_connection, SIGNAL(invalidName()), SLOT(invalidName()));
+    connect(registry_connection, SIGNAL(nameTaken()), SLOT(nameTaken()));
+    connect(registry_connection, SIGNAL(accepted()), SLOT(accepted()));
+
+    /* Sending Players at regular interval */
+    QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
+}
+
+void Server::regSendPlayers()
+{
+    if (registry_connection == NULL || !registry_connection->isConnected())
+        return;
+    registry_connection->notify(NetworkServ::ServNumChange, numPlayers());
+    /* Sending Players at regular interval */
+    QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
+}
+
+void Server::regNameChanged(const QString &name)
+{
+    serverName = name;
+    sendAll("The name of the server changed to " + name + ".");
+
+    if (registry_connection == NULL || !registry_connection->isConnected())
+        return;
+
+    registry_connection->notify(NetworkServ::ServNameChange, name);
+}
+
+void Server::regDescChanged(const QString &desc)
+{
+    serverDesc = desc;
+    printLine("The description of the server changed.");
+
+    if (registry_connection == NULL || !registry_connection->isConnected())
+        return;
+
+    registry_connection->notify(NetworkServ::ServDescChange, desc);
+}
+
+void Server::accepted()
+{
+    printLine("The registry acknowledged the server.");
+}
+
+void Server::invalidName()
+{
+    printLine("Invalid name for the registry. Please change it in server->config");
+}
+
+void Server::nameTaken()
+{
+    printLine("The name of the server is already in use. Please change it in server->config");
+}
+
+
+void Server::ipRefused()
+{
+    printLine("Registry wants only 1 server per IP");
 }
 
 void Server::printLine(const QString &line)
@@ -118,6 +218,16 @@ void Server::openAntiDos()
     AntiDosWindow *w = new AntiDosWindow();
 
     w->show();
+}
+
+void Server::openConfig()
+{
+    ServerWindow *w = new ServerWindow();
+
+    w->show();
+
+    connect(w, SIGNAL(nameChanged(QString)), SLOT(regNameChanged(const QString)));
+    connect(w, SIGNAL(descChanged(QString)), SLOT(regDescChanged(const QString)));
 }
 
 void Server::banName(const QString &name) {
@@ -251,7 +361,9 @@ void Server::sendMessage(int id, const QString &message)
 
 void Server::recvMessage(int id, const QString &mess)
 {
-    sendAll(tr("%1: %2").arg(name(id)).arg(mess));
+    QString re = mess.trimmed();
+    if (re.length() > 0)
+        sendAll(tr("%1: %2").arg(name(id)).arg(re));
 }
 
 QString Server::name(int id) const
@@ -477,15 +589,11 @@ void Server::sendAll(const QString &message)
 
 int Server::freeid() const
 {
-    int prev = 0;
-    for (QHash<int, Player*>::const_iterator it = myplayers.begin(); it != myplayers.end(); ++it)
-    {
-	if ( it.key() != prev + 1 ) {
-	    return prev + 1;
-	}
-	prev++;
+    for (int i = 1; ; i++) {
+        if (!myplayers.contains(i)) {
+            return i;
+        }
     }
-    return prev + 1;
 }
 
 QTextEdit * Server::mainchat()

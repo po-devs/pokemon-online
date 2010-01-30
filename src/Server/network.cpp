@@ -32,10 +32,16 @@ Network::~Network()
     }
 }
 
+void Network::connectToHost(const QString &ip, quint16 port)
+{
+    socket()->connectToHost(ip, port);
+    connect(socket(), SIGNAL(connected()), SIGNAL(connected()));
+}
+
 bool Network::isConnected() const
 {
     if (socket())
-	return socket()->isOpen();
+        return socket()->state() != QAbstractSocket::UnconnectedState;
     else
 	return false;
 }

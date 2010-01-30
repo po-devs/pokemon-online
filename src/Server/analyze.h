@@ -30,7 +30,10 @@ namespace NetworkServ
         AskForPass,
         Register,
         PlayerKick,
-        PlayerBan
+        PlayerBan,
+        ServNumChange,
+        ServDescChange,
+        ServNameChange
     };
 
     enum ProtocolError
@@ -60,6 +63,8 @@ public:
     void sendBattleResult(quint8 res);
     void sendBattleCommand(const QByteArray &command);
 
+    void connectTo(const QString &host, quint16 port);
+
     /* Closes the connection */
     void close();
 
@@ -80,6 +85,7 @@ signals:
     void loggedIn(const TeamInfo &team);
     void messageReceived(const QString &mess);
     void teamReceived(const TeamInfo &team);
+    void connected();
     void disconnected();
     void forfeitBattle();
     void challengeStuff(int desc, int id);
@@ -89,6 +95,11 @@ signals:
     void sentHash(QString);
     void kick(int id);
     void ban(int id);
+    /* Registry socket signals */
+    void ipRefused();
+    void nameTaken();
+    void invalidName();
+    void accepted();
 public slots:
     /* slots called by the network */
     void error();
@@ -105,6 +116,8 @@ private:
 template<class T>
 void Analyzer::notify(int command, const T& param)
 {
+    if (!isConnected())
+        return;
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -117,6 +130,8 @@ void Analyzer::notify(int command, const T& param)
 template<class T1, class T2>
 void Analyzer::notify(int command, const T1& param1, const T2 &param2)
 {
+    if (!isConnected())
+        return;
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -129,6 +144,8 @@ void Analyzer::notify(int command, const T1& param1, const T2 &param2)
 template<class T1, class T2, class T3>
 void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 &param3)
 {
+    if (!isConnected())
+        return;
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
