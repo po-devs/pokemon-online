@@ -72,9 +72,9 @@ void Analyzer::sendChallengeStuff(quint8 stuff, int num)
     notify(ChallengeStuff, stuff, num);
 }
 
-void Analyzer::sendBattleResult(quint8 res)
+void Analyzer::sendBattleResult(quint8 res, int winner, int loser)
 {
-    notify(BattleFinished, res);
+    notify(BattleFinished, res, qint32(winner), qint32(loser));
 }
 
 void Analyzer::sendBattleCommand(const QByteArray & command)

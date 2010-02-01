@@ -118,12 +118,12 @@ void PokeBattle::init(const PokePersonal &poke)
     }
 
     for (int i = 0; i < 6; i++) {
-	dvs() << poke.DV(i);
+        dvs() << std::min(std::max(poke.DV(i), quint8(0)),quint8(31));
     }
 
     QList<int> evs;
     for (int i = 0; i < 6; i++) {
-	evs << poke.EV(i);
+        evs << std::min(std::max(poke.EV(i), quint8(0)), quint8(255));
     }
 
     int sum = 0;

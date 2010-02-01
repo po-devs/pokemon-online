@@ -136,7 +136,7 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(&relay(), SIGNAL(challengeStuff(int,int)), SLOT(challengeStuff(int,int)));
     connect(&relay(), SIGNAL(battleStarted(int, TeamBattle, BattleConfiguration)), SLOT(battleStarted(int, TeamBattle, BattleConfiguration)));
-    connect(&relay(), SIGNAL(battleFinished(int)), SLOT(battleFinished(int)));
+    connect(&relay(), SIGNAL(battleFinished(int,int,int)), SLOT(battleFinished(int,int,int)));
     connect(&relay(), SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
     connect(&relay(), SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
     connect(&relay(), SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
@@ -267,10 +267,26 @@ void Client::forfeitBattle()
     removeBattleWindow();
 }
 
-void Client::battleFinished(int)
+void Client::battleFinished(int res, int winner, int loser)
 {
-    printLine(tr("The opponent forfeited"));
-    removeBattleWindow();
+    bool self = winner == id(ownName());
+
+    if (res == Forfeit) {
+        if (self)
+            printLine(QString("%1 forfeited.").arg(name(loser)));
+        else
+            printLine(QString("You forfeited against %1").arg(name(winner)));
+    } else if (res == Tie) {
+        printLine(QString("You tied against %1").arg(name(self ? loser : winner)));
+    } else if (res == Win) {
+        if (self)
+            printLine(QString("You won against %1.").arg(name(loser)));
+        else
+            printLine(QString("You lost against %1").arg(name(winner)));
+    }
+
+    if (res == Close || res == Forfeit)
+        removeBattleWindow();
 }
 
 void Client::removeBattleWindow()

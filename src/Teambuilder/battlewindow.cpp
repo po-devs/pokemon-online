@@ -5,6 +5,7 @@
 
 BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &team, const BattleConfiguration &_conf)
 {
+    blankMessage = false;
     conf() = _conf;
 
     this->idme() = idme;
@@ -237,7 +238,8 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	{
 	    int turn;
 	    in >> turn;
-	    printHtml("<br /><span style='color:blue'><b>" + tr("Start of turn %1").arg(turn) + "</b></span>");
+            printLine("");
+            printHtml("<span style='color:blue'><b>" + tr("Start of turn %1").arg(turn) + "</b></span>");
 	    break;
 	}
     case ChangeHp:
@@ -514,6 +516,24 @@ void BattleWindow::receiveInfo(QByteArray inf)
         in >> info().sub[!self];
         mydisplay->updatePoke(self);
         break;
+    case BattleEnd:
+    {
+            printLine("");
+            qint8 res;
+            in >> res;
+            myforfeit->setText("&Close");
+            if (res == Tie) {
+                printHtml("<span style='color:blue'><b>" + tr("Tie between %1 and %2!").arg(name(true), name(false)) + "</b></span>");
+            } else {
+                printHtml("<span style='color:blue'><b>" + tr("%1 won the battle!").arg(name(self)) + "</b></span>");
+            }
+            break;
+    }
+    case BlankMessage:
+        {
+            printLine("");
+            break;
+        }
     default:
         break;
     }
@@ -533,16 +553,25 @@ void BattleWindow::switchToNaught(bool self)
 
 void BattleWindow::printLine(const QString &str)
 {
+    if (str == "" && blankMessage) {
+        return;
+    }
+    blankMessage = str == "";
+
     mychat->insertPlainText(str + "\n");
 }
 
 void BattleWindow::printHtml(const QString &str)
 {
+    blankMessage = false;
     mychat->insertHtml(str + "<br />");
 }
 
 void BattleWindow::updateChoices()
 {
+    //just something comfortable
+    if (info().choices.attacksAllowed == false)
+        switchToPokeZone();
     /* moves first */
     if (info().currentIndex != -1)
     {

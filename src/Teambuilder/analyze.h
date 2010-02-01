@@ -89,7 +89,7 @@ signals:
     /* challengerelated */
     void challengeStuff(int desc, int id);
     void battleStarted(int id, const TeamBattle &myteam, const BattleConfiguration &conf);
-    void battleFinished(int res);
+    void battleFinished(int res, int srcid, int destid);
     void battleMessage(const QByteArray &mess);
     void passRequired(const QString &salt);
     void notRegistered(bool);

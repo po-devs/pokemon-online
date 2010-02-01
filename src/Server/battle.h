@@ -11,6 +11,7 @@ class BattleSituation : public QThread
     Q_OBJECT
 
     PROPERTY(int, turn)
+    PROPERTY(bool, finished)
 public:
     enum {
 	AllButPlayer = -2,
@@ -168,7 +169,9 @@ public:
         StraightDamage,
         AbilityMessage,
         AbsStatusChange,
-        Substitute
+        Substitute,
+        BattleEnd,
+        BlankMessage
     };
 
     enum WeatherM
@@ -224,6 +227,7 @@ public slots:
     void battleChat(int id, const QString &str);
 signals:
     void battleInfo(int id, const QByteArray &info);
+    void battleFinished(int result, int winner, int loser);
 private:
     /* To interrupt the thread when needed */
     QSemaphore sem;
@@ -231,6 +235,8 @@ private:
     bool quit;
     /* if quit==true, throws QuitException */
     void testquit();
+    /* if battle ends, stop the battle thread */
+    void testWin();
 
     /* What choice we allow the players to have */
     BattleChoices options[2];

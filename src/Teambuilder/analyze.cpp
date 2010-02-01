@@ -28,7 +28,6 @@ void Analyzer::sendChallengeStuff(quint8 desc, int id)
 void Analyzer::sendMessage(const QString &message)
 {
     notify(SendMessage, message);
-    notify(BattleChat, message);
 }
 
 void Analyzer::sendTeam(const TrainerTeam &team)
@@ -125,9 +124,11 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	}
     case BattleFinished:
 	{
-	    quint8 desc;
+            qint8 desc;
 	    in >> desc;
-	    emit battleFinished(desc);
+            qint32 id1, id2;
+            in >> id1 >> id2;
+            emit battleFinished(desc, id1, id2);
 	    break;
 	}
     case BattleMessage:

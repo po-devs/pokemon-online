@@ -61,7 +61,7 @@ public:
     QString ip() const;
     void sendChallengeStuff(quint8 desc, int id);
     void engageBattle(int id, const TeamBattle &team, const BattleConfiguration &conf);
-    void sendBattleResult(quint8 res);
+    void sendBattleResult(quint8 res, int win, int los);
     void sendBattleCommand(const QByteArray &command);
 
     void connectTo(const QString &host, quint16 port);

@@ -120,43 +120,7 @@ class TB_PokemonBody : public QWidget
 	Category,
 	LastColumn
     };
-private:
-    QCompactTable *pokechoice;
-    QComboBox *itemchoice;
-    QComboBox *naturechoice;
-    QLabel *pokeImage, *genderIcon, *level;
-    QCompactTable *movechoice;
-    QLineEdit *m_moves[4];
-    QLineEdit *m_nick;
-    TB_EVManager *evchoice;
 
-    int m_index;
-
-    /* the pokemon of the team corresponding to the body */
-    PokeTeam *m_poke;
-
-    void initPokemons();
-    void initMoves();
-    void initItems();
-
-    void configureMoves();
-private:
-    void updateMoves();
-    void updateNickname();
-    void updateItem();
-    void updateNature();
-
-    bool advancedOpen();
-
-private slots:
-    void setMove(int moveNum, int moveSlot);
-    void setMove(int movenum);
-    void moveCellActivated(int cell);
-    void moveEntered(int row);
-    void setItem(const QString &item);
-    void setNature(int nature);
-    void goToAdvanced();
-    void setNick(const QString &nick);
 signals:
     void moveChosen(int movenum);
     void pokeChanged(int pokenum);
@@ -164,6 +128,7 @@ signals:
     void advanced(int index);
 public slots:
     void setNum(int pokeNum);
+    void setPokeByNick();
     /* slots used by advanced */
     void updateImage();
     void updateGender();
@@ -177,6 +142,45 @@ public:
     /* getting the pokemon of the team corresponding to the body */
     PokeTeam *poke();
 
+private:
+    QCompactTable *pokechoice;
+    QComboBox *itemchoice;
+    QComboBox *naturechoice;
+    QLabel *pokeImage, *genderIcon, *level;
+    QCompactTable *movechoice;
+    QLineEdit *m_moves[4];
+    QLineEdit *m_nick;
+    QLineEdit *m_pokeedit;
+    TB_EVManager *evchoice;
+
+    int m_index;
+
+    /* the pokemon of the team corresponding to the body */
+    PokeTeam *m_poke;
+
+    void initPokemons();
+    void initMoves();
+    void initItems();
+
+    void configureMoves();
+
+    void updateMoves();
+    void updateNickname();
+    void updateItem();
+    void updateNature();
+    void updatePokeChoice();
+
+    bool advancedOpen();
+private slots:
+    void setMove(int moveNum, int moveSlot);
+    void setMove(int movenum);
+    void moveCellActivated(int cell);
+    void moveEntered(int row);
+    void setItem(const QString &item);
+    void setNature(int nature);
+    void goToAdvanced();
+    void setNick(const QString &nick);
+
 };
 
 /* Manages the EV bars, inside the TB_PokemonBody */
@@ -186,16 +190,17 @@ class TB_EVManager : public QGridLayout
 private:
     QSlider *m_sliders[6];
     QLabel *m_stats[6];
-    QLabel *m_evs[6];
+    QLineEdit *m_evs[6];
     QSlider *m_mainSlider;
     PokeTeam *m_poke;
 
     PokeTeam *poke();
     QSlider *slider(int stat);
     const QSlider *slider(int stat) const;
-    QLabel *evLabel(int stat);
+    QLineEdit *evLabel(int stat);
+    const QLineEdit *evLabel(int stat) const;
     QLabel *statLabel(int stat);
-    /* the reverse of slider(int) */
+    /* the reverse of slider(int), evlabel(int) */
     int stat(QObject *sender) const;
 public:
     TB_EVManager(PokeTeam *poke);
@@ -205,6 +210,7 @@ public:
     void updateMain();
 public slots:
     void EVChanged(int newvalue);
+    void EVChanged(const QString &newvalue);
 };
 
 #endif // TEAMBUILDER_H

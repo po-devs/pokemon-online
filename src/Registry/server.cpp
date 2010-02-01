@@ -4,15 +4,15 @@
 
 Server::Server(int _id, QTcpSocket *s)
 {
+    id() = _id;
+    ip() = s->peerAddress().toString();
+    listed() = false;
+
     m_relay = new Analyzer(s, id());
     m_relay->setParent(this);
 
     m_validator = new QNickValidator(NULL);
     m_validator->setParent(this);
-
-    id() = _id;
-    ip() = s->peerAddress().toString();
-    listed() = false;
 
     connect(m_relay, SIGNAL(loggedIn(QString,QString,quint16)), SLOT(login(QString,QString,quint16)));
     connect(m_relay, SIGNAL(nameChange(QString)), SLOT(nameChanged(QString)));

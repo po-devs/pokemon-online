@@ -38,11 +38,6 @@ void Player::doWhenDC()
 void Player::changeState(int newstate)
 {
     m_state = newstate;
-
-    if (m_state == Battling)
-    {
-	cancelChallenges();
-    }
 }
 
 int Player::auth() const {
@@ -108,9 +103,9 @@ void Player::battleForfeited()
     emit battleFinished(Forfeit, opponent(), id());
 }
 
-void Player::battleResult(int result)
+void Player::battleResult(int result, int winner, int loser)
 {
-    relay().sendBattleResult(result);
+    relay().sendBattleResult(result, winner, loser);
     changeState(LoggedIn);
 }
 
@@ -169,11 +164,17 @@ void Player::challengeStuff(int desc, int id)
 	    // INVALID BEHAVIOR
 	    return;
 	}
-    } else if (desc == Canceled) {
-	if (!hasChallenged(id)) {
-	    // INVALID BEHAVIOR
-	    return;
-	}
+    } else  {
+        if (battling()) {
+            // INVALID BEHAVIOR
+            return;
+        }
+        if (desc == Canceled) {
+            if (!hasChallenged(id)) {
+                // INVALID BEHAVIOR
+                return;
+            }
+        }
     }
 
     if (desc == Sent) {

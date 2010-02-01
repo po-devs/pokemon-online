@@ -81,7 +81,7 @@ public slots:
     void challengeStuff(int desc, int id);
     /* battle... */
     void battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf);
-    void battleFinished(int res);
+    void battleFinished(int res, int winner, int loser);
     void forfeitBattle();
     /* shows the context menu for that player */
     void showContextMenu(const QPoint&);

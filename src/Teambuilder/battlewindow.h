@@ -82,7 +82,9 @@ public:
         StraightDamage,
         AbilityMessage,
         AbsStatusChange,
-        Substitute
+        Substitute,
+        BattleEnd,
+        BlankMessage
     };
 
     enum WeatherM
@@ -157,6 +159,8 @@ private:
     QLineEdit *myline;
     BattleDisplay *mydisplay;
     QPushButton *myswitch, *myattack, *myforfeit, *mysend;
+
+    bool blankMessage;
 
     /* What can I do? */
 

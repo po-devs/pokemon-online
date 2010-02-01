@@ -59,7 +59,7 @@ public:
     bool challenge(int id);
 
     void startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf);
-    void battleResult(int result);
+    void battleResult(int result, int winner, int loser);
 
     void sendChallengeStuff(int stuff, int otherparty);
     void addChallenge(int id);
