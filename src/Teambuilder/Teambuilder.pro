@@ -1,4 +1,5 @@
-QT += network
+QT += network \
+      xml
 TARGET = Teambuilder
 DESTDIR = ../../bin
 TEMPLATE = app
