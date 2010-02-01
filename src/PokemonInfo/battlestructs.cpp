@@ -34,7 +34,7 @@ QDataStream & operator << (QDataStream &out, const BattleMove &mo)
 
 PokeBattle::PokeBattle()
 {
-    num() =0;
+    num() = 0;
     ability() = 0;
     item() = 0;
     gender() = 0;
@@ -281,6 +281,7 @@ void BattleChoices::disableAttack(int attack)
 void BattleChoices::disableAttacks()
 {
     std::fill(attackAllowed, attackAllowed+4, false);
+    attacksAllowed = false;
 }
 
 BattleChoices BattleChoices::SwitchOnly()

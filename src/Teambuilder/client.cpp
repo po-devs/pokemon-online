@@ -132,6 +132,7 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(messageReceived(QString)), SLOT(messageReceived(QString)));
     connect(&relay(), SIGNAL(playerReceived(Player)), SLOT(playerReceived(Player)));
+    connect(&relay(), SIGNAL(teamChanged(Player)), SLOT(teamChanged(Player)));
     connect(&relay(), SIGNAL(playerLogin(Player)), SLOT(playerLogin(Player)));
     connect(&relay(), SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(&relay(), SIGNAL(challengeStuff(int,int)), SLOT(challengeStuff(int,int)));
@@ -151,7 +152,7 @@ void Client::playerKicked(int dest, int src) {
     } else {
         mess = QString("%1 kicked %2!").arg(name(src), name(dest));
     }
-    printHtml("<span style='color:red'><b>"+mess+"</b></span>");
+    printHtml(toBoldColor(mess, Qt::red));
 }
 
 void Client::playerBanned(int dest, int src) {
@@ -162,18 +163,23 @@ void Client::playerBanned(int dest, int src) {
     } else {
         mess = QString("%1 banned %2!").arg(name(src), name(dest));
     }
-    printHtml("<span style='color:red'><b>"+mess+"</b></span>");
+    printHtml(toBoldColor(mess, Qt::red));
 }
 
 
 void Client::askForPass(const QString &salt) {
+    bool ok;
+
     QString pass = QInputDialog::getText(this, tr("Enter your password"),
                                          tr("Enter your password.\n"
                                             "\nIt is advised to use a slightly different password for each server."
                                             " (The server only sees the encrypted form of the pass, but still...)"),
-                                         QLineEdit::Password);
-    QString hash = QString(md5_hash(md5_hash(pass)+salt));
-    relay().notify(NetworkCli::AskForPass, hash);
+                                         QLineEdit::Password,"", &ok);
+
+    if (ok) {
+        QString hash = QString(md5_hash(md5_hash(pass)+salt));
+        relay().notify(NetworkCli::AskForPass, hash);
+    }
 }
 
 void Client::sendRegister() {
@@ -439,6 +445,15 @@ void Client::playerReceived(const Player &p)
     mynames.insert(name(p.id), p.id);
 
     myplayers->addItem(item);
+}
+
+void Client::teamChanged(const Player &p) {
+    if (name(p.id) != p.team.name) {
+        printLine(tr("%1 changed team and is now known as %2.").arg(name(p.id), p.team.name));
+    } else {
+        printLine(tr("%1 changed team.").arg(name(p.id)));
+    }
+    playerReceived(p);
 }
 
 void Client::printLine(const QString &line)

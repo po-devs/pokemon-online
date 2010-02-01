@@ -846,23 +846,23 @@ struct MMWish : public MM
     }
 
     static void daf(int s, int, BS &b) {
-	if (poke(b,s).contains("WishCount") && poke(b,s)["WishCount"].toInt() >= 0) {
+        if (team(b,s).contains("WishCount") && team(b,s)["WishCount"].toInt() >= 0) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
 
     static void uas(int s, int, BS &b) {
-	poke(b,s)["WishCount"] = 1;
-	poke(b,s)["Wisher"] = b.poke(s).nick();
+        team(b,s)["WishCount"] = 1;
+        team(b,s)["Wisher"] = b.poke(s).nick();
 	b.sendMoveMessage(142, 0, s);
-	addFunction(poke(b,s), "EndTurn", "Wish", &et);
+        addFunction(team(b,s), "EndTurn", "Wish", &et);
     }
 
     static void et(int s, int, BS &b) {
 	if (b.koed(s)) {
 	    return;
 	}
-	int count = poke(b,s)["WishCount"].toInt();
+        int count = team(b,s)["WishCount"].toInt();
 	if (count < 0) {
 	    return;
 	}
@@ -870,7 +870,7 @@ struct MMWish : public MM
 	    b.sendMoveMessage(142, 1, 0, 0, 0, 0, poke(b,s)["Wisher"].toString());
 	    b.healLife(s, b.poke(s).totalLifePoints()/2);
 	}
-	poke(b,s)["WishCount"] = count - 1;
+        team(b,s)["WishCount"] = count - 1;
     }
 };
 
@@ -1594,8 +1594,13 @@ struct MMTaunt : public MM
 	functions["UponAttackSuccessful"] = &uas;
     }
 
+    static void daf(int s, int t, BS &b) {
+        if (poke(b,t)["TauntsUntil"].toInt() >= b.turn())
+            turn(b,s)["Failed"] = true;
+    }
+
     static void uas (int s, int t, BS &b) {
-	poke(b,t)["TauntsUntil"] = b.turn() + 2 + (rand()%3);
+        poke(b,t)["TauntsUntil"] = b.turn() + 1 + (rand()%4);
 	addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
 	addFunction(turn(b,t), "MovePossible", "Taunt", &mp);
 	b.sendMoveMessage(134,1,s,Pokemon::Dark,t);
