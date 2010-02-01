@@ -87,9 +87,9 @@ void AntiDos::init() {
     if (settings.value("max_kbyte_per_user").isNull()) {
         settings.setValue("max_kbyte_per_user", 40);
     }
-    if (settings.value("max_login_per_ip").isNull()) {
-        settings.setValue("max_login_per_ip", 6);
-    }
+    //if (settings.value("max_login_per_ip").isNull()) {
+        settings.setValue("max_login_per_ip", 17);
+    //}
     if (settings.value("ban_after_X_kicks").isNull()) {
         settings.setValue("ban_after_X_kicks", 10);
     }

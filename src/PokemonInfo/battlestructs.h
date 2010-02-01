@@ -28,7 +28,8 @@ enum BattleResult
 {
     Forfeit,
     Win,
-    Tie
+    Tie,
+    Close
 };
 
 class BattleMove

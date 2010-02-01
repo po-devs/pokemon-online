@@ -2,6 +2,7 @@
 #define FUNCTIONS_H
 
 #include <QtCore>
+#include <QColor>
 
 /* Changes a string so all what is inside is converted to html.
 
@@ -65,6 +66,16 @@ inline QString tu(const QString &in) {
 	str2[0] = in[0].toUpper();
 	return str2;
     }
+}
+
+inline QString toColor(const QString &mess, const QColor &col)
+{
+    return QString("<span style='color:%1'>%2</span>").arg(col.name(), mess);
+}
+
+inline QString toBoldColor(const QString &mess, const QColor &col)
+{
+    return QString("<b><span style='color:%1'>%2</span></b>").arg(col.name(), mess);
 }
 
 QString md5_hash(const QString &toHash);

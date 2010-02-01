@@ -417,7 +417,8 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     QVBoxLayout *first_column = new QVBoxLayout();
     layout->addLayout(first_column,0,0);
 
-    first_column->addWidget(new QEntitled("&Pokemon", pokechoice));
+    first_column->addWidget(new QEntitled("&Pokemon", m_pokeedit));
+    first_column->addWidget(pokechoice);
     first_column->addWidget(new QEntitled("&Nickname", m_nick = new QLineEdit()));
     m_nick->setValidator(new QNickValidator(this));
     connect(m_nick, SIGNAL(textEdited(QString)), SLOT(setNick(QString)));
@@ -505,6 +506,17 @@ void TB_PokemonBody::initPokemons()
     pokechoice->resizeRowsToContents();
 
     connect(pokechoice, SIGNAL(cellActivated(int,int)), SLOT(setNum(int)));
+
+    m_pokeedit =  new QLineEdit();
+    QCompleter *completer = new QCompleter(m_pokeedit);
+    completer->setModel(pokechoice->model());
+    completer->setCompletionColumn(1);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    completer->setCompletionMode(QCompleter::PopupCompletion);
+    m_pokeedit->setCompleter(completer);
+
+    connect(completer, SIGNAL(activated(QString)), this, SLOT(setPokeByNick()));
+    connect(m_pokeedit, SIGNAL(returnPressed()), this, SLOT(setPokeByNick()));
 }
 
 void TB_PokemonBody::initMoves()
@@ -538,8 +550,7 @@ void TB_PokemonBody::initMoves()
 	QCompleter *completer = new QCompleter(m_moves[i]);
 	completer->setModel(movechoice->model());
 	completer->setCompletionColumn(Name);
-	completer->setCaseSensitivity(Qt::CaseInsensitive);
-	completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+        completer->setCaseSensitivity(Qt::CaseInsensitive);
         completer->setCompletionMode(QCompleter::PopupCompletion);
 	m_moves[i]->setCompleter(completer);
 
@@ -578,6 +589,15 @@ void TB_PokemonBody::setNum(int pokenum)
     updateNum();
 }
 
+void TB_PokemonBody::setPokeByNick()
+{
+    int number = PokemonInfo::Number(m_pokeedit->text());
+
+    if (number != 0) {
+        setNum(number);
+    }
+}
+
 void TB_PokemonBody::updateLevel()
 {
     level->setText(tr("Lv. %1").arg(poke()->level()));
@@ -594,12 +614,20 @@ void TB_PokemonBody::updateNum()
     updateNature();
     updateItem();
     updateNickname();
+    updatePokeChoice();
 
     emit pokeChanged(poke()->num());
 }
 
- void TB_PokemonBody::updateNickname()
+void TB_PokemonBody::updatePokeChoice()
 {
+    m_pokeedit->setText(PokemonInfo::Name(poke()->num()));
+    pokechoice->setCurrentCell(poke()->num(), 1, QItemSelectionModel::Rows);
+    pokechoice->scrollTo(pokechoice->currentIndex(), QAbstractItemView::PositionAtCenter);
+}
+
+ void TB_PokemonBody::updateNickname()
+{     
     m_nick->setText(poke()->nickname());
 }
 
@@ -792,13 +820,14 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
 	addWidget(new QLabel(labels[i]), i, 0, Qt::AlignLeft);
 	addWidget(m_stats[i] = new QLabel(), i, 1, Qt::AlignLeft);
 	addWidget(m_sliders[i] = new QSlider(Qt::Horizontal), i, 2);
-	addWidget(m_evs[i] = new QLabel(), i, 3, Qt::AlignLeft);
+        addWidget(m_evs[i] = new QLineEdit("0"), i, 3, Qt::AlignLeft);
 
 	slider(i)->setTracking(true);
 	slider(i)->setRange(0,255);
 	slider(i)->setMinimumWidth(150);
 	m_evs[i]->setMinimumWidth(24);
-	connect(slider(i),SIGNAL(valueChanged(int)),SLOT(EVChanged(int)));
+        connect(slider(i),SIGNAL(valueChanged(int)),SLOT(EVChanged(int)));
+        connect(m_evs[i], SIGNAL(textChanged(QString)), SLOT(EVChanged(QString)));
     }
 
     addWidget(m_mainSlider = new QSlider(Qt::Horizontal), 6, 0, 1, 4);
@@ -824,7 +853,12 @@ const QSlider * TB_EVManager::slider(int stat) const
     return m_sliders[stat];
 }
 
-QLabel * TB_EVManager::evLabel(int stat)
+QLineEdit * TB_EVManager::evLabel(int stat)
+{
+    return m_evs[stat];
+}
+
+const QLineEdit * TB_EVManager::evLabel(int stat) const
 {
     return m_evs[stat];
 }
@@ -838,7 +872,7 @@ QLabel * TB_EVManager::statLabel(int stat)
 int TB_EVManager::stat(QObject *sender) const
 {
     for (int i = 0; i < 6; i++)
-	if (sender == slider(i))
+        if (sender == slider(i) || sender == evLabel(i))
 	    return i;
     throw QString("Fatal Error in TB_EVManager, alert the developers");
 }
@@ -848,6 +882,15 @@ void TB_EVManager::updateEVs()
     for (int i = 0; i < 6; i++)
 	updateEV(i);
 
+    updateMain();
+}
+
+void TB_EVManager::EVChanged(const QString &newvalue)
+{
+    int mstat = stat(sender());
+    poke()->setEV(mstat, std::max(std::min(newvalue.toInt(), 255), 0));
+
+    updateEV(mstat);
     updateMain();
 }
 
@@ -868,10 +911,13 @@ void TB_EVManager::updateEV(int stat)
     QColor colors[3] = {Qt::darkBlue, Qt::black, Qt::red};
     QColor mycol = colors[poke()->natureBoost(stat)+1];
     QPalette pal = evLabel(stat)->palette();
+    //pal.setColor(QPalette::Text, mycol); /* it looks better in black than in color, doesn't it? */
     pal.setColor(QPalette::WindowText, mycol);
 
     evLabel(stat)->setPalette(pal);
-    evLabel(stat)->setText(QString::number(poke()->EV(stat)));
+    if (evLabel(stat)->text() != QString::number(poke()->EV(stat))) {
+        evLabel(stat)->setText(QString::number(poke()->EV(stat)));
+    }
 
     statLabel(stat)->setPalette(pal);
     statLabel(stat)->setText(QString::number(poke()->stat(stat)));

@@ -133,7 +133,7 @@ Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 %s and %f switched items!
 A tailwind started blowing behind %ts's team!|%ts's team tailwind petered out!
 %s couldn't use %m because of taunt!|%f fell for the taunt!
-%s can't use %m because of the torment!|%t is now tormented!
+%s can't use %m because of the torment!|%f is now tormented!
 Poison spikes were scattered around %tf's team!|The poison spikes disappeared around %ts's feet!
 %s transformed into %p!
 %s twisted the dimensions!|The twisted dimensions returned to normal!

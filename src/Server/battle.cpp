@@ -15,6 +15,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2)
     myid[1] = p2.id();
     mycurrentpoke[0] = -1;
     mycurrentpoke[1] = -1;
+    finished() = false;
 }
 
 MirrorMoveAmn amn;
@@ -349,6 +350,7 @@ void BattleSituation::analyzeChoice(int player)
 	}
 	sendPoke(player, choice[player].numSwitch);
     }
+    notify(All, BlankMessage, Player1);
 }
 
 std::vector<int> BattleSituation::sortedBySpeed() {
@@ -1726,6 +1728,8 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 
 void BattleSituation::requestSwitchIns()
 {
+    testWin();
+
     int count = koedPokes.size();
 
     if (count == 0) {
@@ -1756,11 +1760,7 @@ void BattleSituation::requestSwitchIns()
 
 void BattleSituation::requestSwitch(int player)
 {
-    int pokealive = countAlive(player) - (!poke(player).ko());
-
-    if (pokealive == 0) {
-	return;
-    }
+    testWin();
 
     options[player] = BattleChoices::SwitchOnly();
 
@@ -1778,6 +1778,27 @@ int BattleSituation::countAlive(int player) const
 	}
     }
     return count;
+}
+
+void BattleSituation::testWin()
+{
+    int c1 = countAlive(Player1);
+    int c2 = countAlive(Player2);
+
+    if (c1*c2==0) {
+        finished() = true;
+        if (c1 + c2 == 0) {
+            notify(All, BattleEnd, Player1, qint8(Tie));
+            emit battleFinished(Tie, id(Player1), id(Player2));
+        } else if (c1 == 0) {
+            notify(All, BattleEnd, Player2, qint8(Win));
+            emit battleFinished(Win, id(Player2), id(Player1));
+        } else {
+            notify(All, BattleEnd, Player1, qint8(Win));
+            emit battleFinished(Win, id(Player1), id(Player2));
+        }
+        sem.acquire(1);
+    }
 }
 
 void BattleSituation::changeCurrentPoke(int player, int poke)

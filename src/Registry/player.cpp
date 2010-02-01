@@ -4,11 +4,11 @@
 
 Player::Player(int _id, QTcpSocket *s)
 {
-    m_relay = new Analyzer(s, id());
-    m_relay->setParent(this);
-
     id() = _id;
     ip() = s->peerAddress().toString();
+
+    m_relay = new Analyzer(s, id());
+    m_relay->setParent(this);
 
     connect(m_relay, SIGNAL(disconnected()), SLOT(disconnected()));
 }

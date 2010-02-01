@@ -474,6 +474,7 @@ void Server::startBattle(int id1, int id2)
     player(id2)->startBattle(id1, battle->pubteam(id2), battle->configuration());
 
     connect(battle, SIGNAL(battleInfo(int,QByteArray)), SLOT(sendBattleCommand(int, QByteArray)));
+    connect(battle, SIGNAL(battleFinished(int,int,int)), SLOT(battleResult(int,int,int)));
     connect(player(id1), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
     connect(player(id1), SIGNAL(battleChat(int,QString)), battle, SLOT(battleChat(int, QString)));
     connect(player(id2), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
@@ -484,11 +485,23 @@ void Server::startBattle(int id1, int id2)
 
 void Server::battleResult(int desc, int winner, int loser)
 {
-    if (desc == Forfeit) {
-	printLine( tr("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
-	player(winner)->battleResult(Win);
+    if (desc == Forfeit && mybattles[winner]->finished()) {
+        player(winner)->battleResult(Close, winner, loser);
+        player(loser)->battleResult(Close, winner, loser);
+    } else {
+        player(winner)->battleResult(desc, winner, loser);
+        player(loser)->battleResult(desc, winner, loser);
     }
-    removeBattle(winner, loser);
+
+    if (desc == Forfeit) {
+        if (!mybattles[winner]->finished())
+            printLine( tr("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
+        removeBattle(winner, loser);
+    } else if (desc == Win) {
+        printLine( tr("%1 won his battle against %2").arg(name(winner), name(loser)));
+    } else if (desc == Tie) {
+        printLine( tr("%1 and %2 tied").arg(name(winner), name(loser)));
+    }
 }
 
 void Server::removeBattle(int winner, int loser)
