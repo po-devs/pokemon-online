@@ -50,7 +50,7 @@ public slots:
     /* Signals received by players */
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, const QString &mess);
-    void recvTeam(int id);
+    void recvTeam(int id, const QString &name);
     void disconnected(int id);
     void dealWithChallenge(int desc, int from, int to);
     void battleResult(int desc, int winner, int loser);

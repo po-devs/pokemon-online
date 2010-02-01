@@ -158,7 +158,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             QString salt;
             in >> salt;
 
-            if (salt.length() < 6)
+            if (salt.length() < 6 || strlen((" " + salt).toUtf8().data()) < 7)
                 emit protocolError(5080, tr("The server requires insecure authentification."));
             emit passRequired(salt);
             break;
@@ -180,6 +180,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             qint32 p,src;
             in >> p >> src;
             emit playerBanned(p,src);
+            break;
+        }
+    case SendTeam:
+        {
+            Player p;
+            in >> p;
+            emit teamChanged(p);
             break;
         }
     default:

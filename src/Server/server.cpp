@@ -85,7 +85,7 @@ Server::Server(quint16 port)
 
     connect(server(), SIGNAL(newConnection()), SLOT(incomingConnection()));
     connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(dosKick(int)));
-    connect(AntiDos::obj(), SIGNAL(ban(int)), SLOT(dosBan(int)));
+    connect(AntiDos::obj(), SIGNAL(ban(QString)), SLOT(dosBan(QString)));
 
     QSettings s;
     serverName = s.value("server_name").toString();
@@ -105,7 +105,7 @@ void Server::connectToRegistry()
             return;
         }
         else
-            delete registry_connection;
+            registry_connection->deleteLater();;
     }
 
     printLine("Connecting to registry...");
@@ -328,7 +328,7 @@ QString Server::authedName(int id) const
 
 void Server::loggedIn(int id, const QString &name)
 {
-    printLine(tr("Player %1 logged in as %2").arg(id).arg(name));
+    printLine(tr("Player %1 set name to %2").arg(id).arg(name));
 
     if (mynames.contains(name.toLower())) {
         printLine(tr("Name %1 already in use, disconnecting player %2").arg(name).arg(id));
@@ -337,16 +337,21 @@ void Server::loggedIn(int id, const QString &name)
         return;
     }
 
-    player(id)->changeState(Player::LoggedIn);
+    /* For new connections */
+    if (!player(id)->isLoggedIn()) {
+        player(id)->changeState(Player::LoggedIn);
 
-    mynames.insert(name.toLower(), id);
+        mynames.insert(name.toLower(), id);
 
-    myplayersitems[id]->setText(authedName(id));
+        myplayersitems[id]->setText(authedName(id));
 
-    sendPlayersList(id);
-    sendLogin(id);
+        sendPlayersList(id);
+        sendLogin(id);
 
-    sendMessage(id, tr("Welcome Message: Welcome to our server, %1").arg(name));
+        sendMessage(id, tr("Welcome Message: Welcome to our server, %1").arg(name));
+    } else { /* if already logged in */
+        recvTeam(id, name);
+    }
 }
 
 void Server::sendBattleCommand(int id, const QByteArray &comm)
@@ -380,13 +385,13 @@ void Server::incomingConnection()
 
     if (SecurityManager::bannedIP(ip)) {
         printLine(tr("Banned IP %1 tried to log in.").arg(ip));
-        delete newconnection;
+        newconnection->deleteLater();;
         return;
     }
 
     if (!AntiDos::obj()->connecting(ip)) {
         printLine(tr("Anti DoS manager prevented IP %1 from logging in").arg(ip));
-        delete newconnection;
+        newconnection->deleteLater();
         return;
     }
 
@@ -550,9 +555,34 @@ void Server::sendLogout(int id)
     }
 }
 
-void Server::recvTeam(int id)
+void Server::recvTeam(int id, const QString &_name)
 {
-    printLine(tr("%1 changed their team.").arg(name(id)));
+    printLine(tr("%1 changed their team, and their name to %2").arg(name(id), _name));
+
+    /* Normally all checks have been made to ensure the authentification is right and the
+       name isn't taken.
+
+       That's done by calling loggedIn() before to test some things if needed.
+
+       So here all i have to do is delete the old name */
+    QString oldname = player(id)->name();
+
+    if (oldname == _name) {
+        /* Haha, same name so need to do anything! */
+
+    } else {
+        /* Changing the name! */
+        mynames.remove(oldname);
+        mynames.insert(_name, id);
+        player(id)->setName(_name);
+    }
+
+    /* Sending the team change! */
+    foreach(Player *p, myplayers) {
+        if (p->isLoggedIn()) {
+            p->relay().sendTeamChange(id, player(id)->basicInfo(), player(id)->auth());
+        }
+    }
 }
 
 void Server::disconnected(int id)

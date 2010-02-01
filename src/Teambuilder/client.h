@@ -65,6 +65,7 @@ public slots:
     void sendText();
     void playerLogin(const Player &p);
     void playerReceived(const Player &p);
+    void teamChanged(const Player &p);
     void playerLogout(int);
     void sendRegister();
     /* sends the server a challenge notice */

@@ -85,6 +85,9 @@ signals:
     void playerReceived(const Player &p);
     /* login of a player */
     void playerLogin(const Player &p);
+    /* Change of team of a player */
+    void teamChanged(const Player &p);
+    /* logout... */
     void playerLogout(int id);
     /* challengerelated */
     void challengeStuff(int desc, int id);

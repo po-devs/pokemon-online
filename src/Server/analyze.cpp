@@ -52,6 +52,11 @@ void Analyzer::sendPlayer(int num, const BasicInfo &team, int auth)
     notify(PlayersList, qint32(num), team, qint8(auth));
 }
 
+void Analyzer::sendTeamChange(int num, const BasicInfo &team, int auth)
+{
+    notify(SendTeam, qint32(num), team, qint8(auth));
+}
+
 void Analyzer::sendLogin(int num, const BasicInfo &team, int auth)
 {
     notify(Login, qint32(num), team, qint8(auth));

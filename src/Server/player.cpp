@@ -48,6 +48,10 @@ void Player::setAuth(int auth)  {
     myauth = auth;
 }
 
+void Player::setName(const QString &newname)  {
+    team().name = newname;
+}
+
 void Player::kick() {
     relay().close();
 }
@@ -144,6 +148,11 @@ int Player::opponent() const
 
 void Player::challengeStuff(int desc, int id)
 {
+    if (desc < Sent || desc >= ChallengeDescLast) {
+        // INVALID BEHAVIOR
+        return;
+    }
+
     if (!isLoggedIn() || id == this->id()) {
 	// INVALID BEHAVIOR
 	return;
@@ -302,25 +311,44 @@ void Player::loggedIn(const TeamInfo &_team)
 {
     if (isLoggedIn())
         return; //INVALID BEHAVIOR
-    if (!SecurityManager::isValid(_team.name)) {
-        emit info(id(), "invalid name: \"" + _team.name + "\"");
-        sendMessage("Invalid name. Change your name");
+
+
+    AuthentificationState st = testAuthentification(_team);
+
+    if (st == Invalid) {
         kick();
         return;
     }
 
-    team() = _team;
+    if (st == Success) {
+        team() = _team;
+        emit loggedIn(id(), _team.name);
+        return;
+    }
 
-    if (SecurityManager::exist(name())) {
-        SecurityManager::Member m = SecurityManager::member(name());
+    /* st == Partial */
+    team() = _team;
+    return;
+}
+
+Player::AuthentificationState Player::testAuthentification(const TeamInfo &team)
+{
+    if (!SecurityManager::isValid(team.name)) {
+        emit info(id(), "invalid name: \"" + team.name + "\"");
+        sendMessage("Invalid name. Change your name.");
+        return Invalid;
+    }
+
+    if (SecurityManager::exist(team.name)) {
+        SecurityManager::Member m = SecurityManager::member(team.name);
         if (m.isBanned()) {
-            emit info(id(), "Banned: \"" + _team.name + "\"");
-            kick();
-            return;
+            sendMessage("You are banned!");
+            return Invalid;
         }
         if (m.isProtected()) {
             relay().notify(NetworkServ::AskForPass, m.salt);
-            return;
+            waiting_name = team.name;
+            return Partial;
         }
 
         myauth = m.authority();
@@ -330,19 +358,20 @@ void Player::loggedIn(const TeamInfo &_team)
         SecurityManager::updateMember(m);
         /* To tell the player he's not registered */
         relay().notify(NetworkServ::Register);
-        emit loggedIn(id(), _team.name);
+        return Success;
     } else {
         myauth = 0;
 
         SecurityManager::create(SecurityManager::Member(name().toLower(), QDate::currentDate().toString(Qt::ISODate), "000", "", "", relay().ip()));
         /* To tell the player he's not registered */
         relay().notify(NetworkServ::Register);
-        emit loggedIn(id(), _team.name);
+        return Success;
     }
 }
 
 void Player::registerRequest() {
-    if (!isLoggedIn())
+    /* If not logged in or in the middle of an authentification, we quit */
+    if (!isLoggedIn() || waiting_name.length() > 0)
         return; //INVALID BEHAVIOR
     SecurityManager::Member m = SecurityManager::member(name());
 
@@ -359,14 +388,8 @@ void Player::registerRequest() {
 
 void Player::hashReceived(const QString &_hash) {
     QString hash = md5_hash(_hash);
-    if (!isLoggedIn()) {
-        if (name().length() == 0) {
-            //hasn't even started the authentification
-            emit info(id(), tr("tried to log in without a name"));
-            kick();
-            return;
-        }
-        if (hash == SecurityManager::member(name()).hash) {
+    if (waiting_name.length() > 0) {
+        if (hash == SecurityManager::member(waiting_name).hash) {
             SecurityManager::Member m = SecurityManager::member(name());
 
             m.modifyIP(relay().ip());
@@ -374,7 +397,9 @@ void Player::hashReceived(const QString &_hash) {
             m.hash = hash;
             myauth = m.authority();
             SecurityManager::updateMember(m);
-            emit loggedIn(id(), name());
+
+            waiting_name.clear();
+            emit loggedIn(id(), waiting_name);
         } else {
             emit info(id(), tr("authentification failed for %1").arg(name()));
             kick();
@@ -406,9 +431,36 @@ void Player::recvTeam(const TeamInfo &team)
 {
     cancelChallenges();
 
-    this->team() = team;
+    if (team.name == this->team().name) {
+        /* No authentification required... */
+        this->team() = team;
+        emit recvTeam(id(), team.name); // no check needed, going directly there...
+        return;
+    }
 
-    emit recvTeam(id());
+    AuthentificationState s = testAuthentification(team);
+
+    /* just keeping the old name while not logged in */
+    QString name = this->team().name;
+    this->team() = team;
+    this->team().name = name;
+
+    if (s == Success) {
+        emit loggedIn(id(), team.name); //checks needed
+        return;
+    }
+
+    if (s == Invalid) {
+        kick();
+        return;
+    }
+
+    // Partial authentification
+    /*
+      .
+      .
+      .
+      */
 }
 
 void Player::sendMessage(const QString &mess)

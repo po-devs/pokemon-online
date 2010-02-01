@@ -63,6 +63,7 @@ public:
     void engageBattle(int id, const TeamBattle &team, const BattleConfiguration &conf);
     void sendBattleResult(quint8 res, int win, int los);
     void sendBattleCommand(const QByteArray &command);
+    void sendTeamChange(int num, const BasicInfo &team, int auth=0);
 
     void connectTo(const QString &host, quint16 port);
 

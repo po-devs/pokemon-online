@@ -22,7 +22,11 @@ public:
 	Accepted,
 	Canceled,
 	Busy,
-	Refused
+        Refused,
+
+
+
+        ChallengeDescLast
     };
 
     Player(QTcpSocket *sock, int id);
@@ -48,6 +52,7 @@ public:
     int state() const;
     int auth() const;
     void setAuth (int newAuth);
+    void setName (const QString & newName);
 
     int opponent () const;
     bool isChallenged() const;
@@ -73,7 +78,7 @@ signals:
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, const QString &mess);
     void disconnected(int id);
-    void recvTeam(int id);
+    void recvTeam(int id, const QString &name);
 
     void challengeStuff(int desc, int idfrom, int idto);
     void battleFinished(int desc, int winner, int loser);
@@ -107,8 +112,18 @@ private:
     int m_challengedby;
     int m_opponent;
     int m_state;
+    QString waiting_name; //For authentification procedures
 
     void removeChallenge(int id);
+
+    enum AuthentificationState
+    {
+        Invalid,
+        Partial,
+        Success
+    };
+
+    AuthentificationState testAuthentification(const TeamInfo &team);
 };
 
 #endif // PLAYER_H
