@@ -2,6 +2,7 @@
 #include "pokemoninfo.h"
 #include <QDomDocument>
 #include <QDomNode>
+#include <QtDebug>
 
 PokeBaseStats::PokeBaseStats(quint8 base_hp, quint8 base_att, quint8 base_def, quint8 base_spd, quint8 base_spAtt, quint8 base_spDef)
 {
@@ -372,8 +373,8 @@ void PokePersonal::reset()
     item() = 0;
 
     for (int i = 0; i < 6; i ++) {
-	setDV(i,31);
-	setEV(i,0);
+        setDV(i,31);
+        setEV(i,0);
     }
 }
 
@@ -464,15 +465,15 @@ void PokeTeam::load()
     /*set the default gender & ability */
     if (genderAvail() == Pokemon::NeutralAvail)
     {
-	gender() = Pokemon::Neutral;
+        gender() = Pokemon::Neutral;
     }
     else if (genderAvail() == Pokemon::FemaleAvail)
     {
-	gender() = Pokemon::Female;
+        gender() = Pokemon::Female;
     }
     else
     {
-	gender() = Pokemon::Male;
+        gender() = Pokemon::Male;
     }
     ability() = abilities()[0];
     nickname() = PokemonInfo::Name(num());
@@ -662,11 +663,13 @@ void TrainerTeam::loadFromFile(const QString &path)
         this->team().poke(cpt).shiny() = QVariant(poke.attribute("Shiny",false)).toBool();
         this->team().poke(cpt).happiness() = poke.attribute("Happiness",0).toInt(0,10);
         this->team().poke(cpt).level() = poke.attribute("Lvl",0).toInt(0,10);
-        /*int cptMove=0;
+        int cptMove=0;
+        qDebug() << "test";
         QDomElement moveElement = poke.firstChildElement("Move");
         while(!moveElement.isNull())
         {
-            this->team().poke(cpt).setMove(cptMove,moveElement.text().toInt(0,10));
+            //QMessageBox::information(0,QObject::tr(""),QString("pokemon %1 moveElement %2:%3").arg(cpt).arg(cptMove).arg(moveElement.text()));
+            this->team().poke(cpt).setMove(moveElement.text().toInt(0,10),cptMove);
             cptMove++;
             moveElement = moveElement.nextSiblingElement("Move");
         }
@@ -674,6 +677,7 @@ void TrainerTeam::loadFromFile(const QString &path)
         QDomElement DVElement = poke.firstChildElement("DV");
         while(!DVElement.isNull())
         {
+            qDebug() << QString("Pokemon %1 DVElement %2").arg(cpt).arg(cptDV) << DVElement.text().toInt(0,10);
             this->team().poke(cpt).setDV(cptDV,DVElement.text().toInt(0,10));
             cptDV++;
             DVElement = DVElement.nextSiblingElement("DV");
@@ -682,10 +686,11 @@ void TrainerTeam::loadFromFile(const QString &path)
         QDomElement EVElement = poke.firstChildElement("EV");
         while(!EVElement.isNull())
         {
+            qDebug() << QString("Pokemon %1 EVElement %2:").arg(cpt).arg(cptEV) << EVElement.text().toInt(0,10);
             this->team().poke(cpt).setEV(cptEV,EVElement.text().toInt(0,10));
             cptEV++;
             EVElement = EVElement.nextSiblingElement("EV");
-        }*/
+        }
 
         cpt++;
         poke = poke.nextSiblingElement("Pokemon");
@@ -953,11 +958,13 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
         team.team().poke(cpt).shiny() = QVariant(poke.attribute("Shiny",false)).toBool();
         team.team().poke(cpt).happiness() = poke.attribute("Happiness",0).toInt(0,10);
         team.team().poke(cpt).level() = poke.attribute("Lvl",0).toInt(0,10);
-        /*int cptMove=0;
+        int cptMove=0;
+        qDebug() << "test";
         QDomElement moveElement = poke.firstChildElement("Move");
         while(!moveElement.isNull())
         {
-            team.team().poke(cpt).setMove(cptMove,moveElement.text().toInt(0,10));
+            qDebug() <<QString("pokemon %1 moveElement %2:").arg(cpt).arg(cptMove) << moveElement.text().toInt(0,10);
+            team.team().poke(cpt).setMove(moveElement.text().toInt(0,10),cptMove);
             cptMove++;
             moveElement = moveElement.nextSiblingElement("Move");
         }
@@ -965,6 +972,7 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
         QDomElement DVElement = poke.firstChildElement("DV");
         while(!DVElement.isNull())
         {
+            qDebug() << QString("Pokemon %1 DVElement %2").arg(cpt).arg(cptDV) << DVElement.text().toInt(0,10);
             team.team().poke(cpt).setDV(cptDV,DVElement.text().toInt(0,10));
             cptDV++;
             DVElement = DVElement.nextSiblingElement("DV");
@@ -973,10 +981,11 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
         QDomElement EVElement = poke.firstChildElement("EV");
         while(!EVElement.isNull())
         {
+            qDebug() << QString("Pokemon %1 EVElement %2:").arg(cpt).arg(cptEV) << EVElement.text().toInt(0,10);
             team.team().poke(cpt).setEV(cptEV,EVElement.text().toInt(0,10));
             cptEV++;
             EVElement = EVElement.nextSiblingElement("EV");
-        }*/
+        }
         cpt++;
         poke = poke.nextSiblingElement("Pokemon");
     }
@@ -1059,7 +1068,7 @@ QDataStream & operator >> (QDataStream & in, Team & team)
 {
     for(int i=0;i<6;i++)
     {
-	in >> team.poke(i);
+        in >> team.poke(i);
     }
 
     return in;
@@ -1073,19 +1082,19 @@ QDataStream & operator >> (QDataStream & in, PokePersonal & poke)
     {
         int moveNum;
         in >> moveNum;
-	poke.setMove(moveNum,i);
+        poke.setMove(moveNum,i);
     }
     for(int i=0;i<6;i++)
     {
         quint8 DV;
         in >> DV;
-	poke.setDV(i,DV);
+        poke.setDV(i,DV);
     }
     for(int i=0;i<6;i++)
     {
         quint8 EV;
         in >> EV;
-	poke.setEV(i,EV);
+        poke.setEV(i,EV);
     }
     return in;
 }
@@ -1103,21 +1112,21 @@ QDataStream & operator >> (QDataStream & in, PokeTeam & poke)
 
     for(int i=0;i<4;i++)
     {
-	int moveNum;
-	in >> moveNum;
-	poke.setMove(moveNum,i);
+        int moveNum;
+        in >> moveNum;
+        poke.setMove(moveNum,i);
     }
     for(int i=0;i<6;i++)
     {
-	quint8 DV;
-	in >> DV;
-	poke.setDV(i,DV);
+        quint8 DV;
+        in >> DV;
+        poke.setDV(i,DV);
     }
     for(int i=0;i<6;i++)
     {
-	quint8 EV;
-	in >> EV;
-	poke.setEV(i,EV);
+        quint8 EV;
+        in >> EV;
+        poke.setEV(i,EV);
     }
     return in;
 }
