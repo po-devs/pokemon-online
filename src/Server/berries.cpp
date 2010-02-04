@@ -11,7 +11,7 @@ struct BMStatusBerry : public BM
     }
 
     static void asc(int s, int, BS &b) {
-        if (b.isKoed(s))
+        if (b.koed(s))
             return;
 
         int status = b.poke(s).status();
