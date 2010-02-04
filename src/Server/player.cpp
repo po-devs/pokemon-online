@@ -110,7 +110,8 @@ void Player::battleForfeited()
 void Player::battleResult(int result, int winner, int loser)
 {
     relay().sendBattleResult(result, winner, loser);
-    changeState(LoggedIn);
+    if (result == Forfeit || result == Close)
+        changeState(LoggedIn);
 }
 
 void Player::playerBan(int p) {
@@ -390,7 +391,7 @@ void Player::hashReceived(const QString &_hash) {
     QString hash = md5_hash(_hash);
     if (waiting_name.length() > 0) {
         if (hash == SecurityManager::member(waiting_name).hash) {
-            SecurityManager::Member m = SecurityManager::member(name());
+            SecurityManager::Member m = SecurityManager::member(waiting_name);
 
             m.modifyIP(relay().ip());
             m.modifyDate(QDate::currentDate().toString(Qt::ISODate));
@@ -398,10 +399,11 @@ void Player::hashReceived(const QString &_hash) {
             myauth = m.authority();
             SecurityManager::updateMember(m);
 
+            QString temp = waiting_name;
             waiting_name.clear();
-            emit loggedIn(id(), waiting_name);
+            emit loggedIn(id(), temp);
         } else {
-            emit info(id(), tr("authentification failed for %1").arg(name()));
+            emit info(id(), tr("authentification failed for %1").arg(waiting_name));
             kick();
             return;
         }

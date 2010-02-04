@@ -501,11 +501,14 @@ void Server::battleResult(int desc, int winner, int loser)
     if (desc == Forfeit) {
         if (!mybattles[winner]->finished())
             printLine( tr("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
-        removeBattle(winner, loser);
     } else if (desc == Win) {
         printLine( tr("%1 won his battle against %2").arg(name(winner), name(loser)));
     } else if (desc == Tie) {
         printLine( tr("%1 and %2 tied").arg(name(winner), name(loser)));
+    }
+
+    if (desc == Forfeit) {
+        removeBattle(winner, loser);
     }
 }
 
@@ -568,7 +571,7 @@ void Server::recvTeam(int id, const QString &_name)
     QString oldname = player(id)->name();
 
     if (oldname == _name) {
-        /* Haha, same name so need to do anything! */
+        /* Haha, same name so no need to do anything! */
 
     } else {
         /* Changing the name! */
@@ -583,6 +586,9 @@ void Server::recvTeam(int id, const QString &_name)
             p->relay().sendTeamChange(id, player(id)->basicInfo(), player(id)->auth());
         }
     }
+
+    /* Displaying the change */
+    myplayersitems[id]->setText(authedName(id));
 }
 
 void Server::disconnected(int id)

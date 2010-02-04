@@ -1,6 +1,7 @@
 #include "client.h"
 #include "mainwindow.h"
 #include "challenge.h"
+#include "teambuilder.h"
 #include "battlewindow.h"
 #include "../Utilities/otherwidgets.h"
 #include "../Utilities/functions.h"
@@ -10,6 +11,7 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
 {
     mychallenge = NULL;
     mybattle = NULL;
+    myteambuilder = NULL;
 
     setFixedSize(800, 600);
 
@@ -27,6 +29,7 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
     myplayers->setSortingEnabled(true);
     mychat->setReadOnly(true);
     myregister->setDisabled(true);
+    mynick = t->trainerNick();
 
     connect(myplayers, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
@@ -89,7 +92,7 @@ void Client::ban(int p) {
     relay().notify(NetworkCli::PlayerBan, qint32(p));
 }
 
-void Client::changeTeam()
+void Client::loadTeam()
 {
     QSettings settings;
     QString newLocation;
@@ -97,7 +100,7 @@ void Client::changeTeam()
     if (loadTTeamDialog(*myteam, settings.value("team_location").toString(), &newLocation))
     {
         settings.setValue("team_location", newLocation);
-        relay().sendTeam(*myteam);
+        changeTeam();
     }
 }
 
@@ -112,7 +115,8 @@ QMenuBar * Client::createMenuBar(MainWindow *w)
 {
     QMenuBar *menuBar = new QMenuBar();
     QMenu *menuFichier = menuBar->addMenu("&File");
-    menuFichier->addAction(tr("Change &Team"),this,SLOT(changeTeam()),Qt::CTRL+Qt::Key_T);
+    menuFichier->addAction(tr("&Load Team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
+    menuFichier->addAction(tr("Open &TeamBuilder"),this,SLOT(openTeamBuilder()),Qt::CTRL+Qt::Key_T);
     //menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
     QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
     QStringList style = QStyleFactory::keys();
@@ -328,7 +332,7 @@ void Client::challengeStuff(int desc, int id)
 
 bool Client::busy() const
 {
-    return challengeWindowOpen() || battling();
+    return challengeWindowOpen() || battling() || myteambuilder;
 }
 
 bool Client::challengeWindowOpen() const
@@ -418,7 +422,7 @@ void Client::removePlayer(int id)
 
 QString Client::ownName() const
 {
-    return myteam->trainerNick();
+    return mynick;
 }
 
 void Client::playerReceived(const Player &p)
@@ -515,4 +519,43 @@ QDataStream & operator << (QDataStream &out, const Player &p)
     out << p.auth;
 
     return out;
+}
+
+void Client::openTeamBuilder()
+{
+    if (myteambuilder) {
+        myteambuilder->activateWindow();
+        myteambuilder->raise();
+        return;
+    }
+
+    if (busy()) {
+        printHtml("<i>" + tr("You're already in the middle of something!") + "</i>");
+    }
+
+    myteambuilder = new QMainWindow(this);
+    myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
+
+    TeamBuilder *t = new TeamBuilder(myteam);
+    myteambuilder->setCentralWidget(t);
+    myteambuilder->show();
+    myteambuilder->setMenuBar(t->createMenuBar(myteambuilder));
+    myteambuilder->layout()->setSizeConstraint(QLayout::SetFixedSize);
+
+    connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
+    connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));
+    connect(t, SIGNAL(showDockAdvanced(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)), this, SLOT(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
+}
+
+void Client::showDock(Qt::DockWidgetArea areas, QDockWidget *dock, Qt::Orientation orientation)
+{
+    if (myteambuilder) {
+        myteambuilder->addDockWidget(areas, dock, orientation);
+    }
+}
+
+void Client::changeTeam()
+{
+    mynick = myteam->trainerNick();
+    relay().sendTeam(*myteam);
 }

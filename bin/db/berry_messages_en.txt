@@ -1,13 +1,13 @@
-%s ate its %i
+%s ate its %i!
 %s snapped out of its confusion!|%s's status cleared!|%s is not paralyzed anymore!|%s healed from its burnt!|%s thawed out!|%s is cured from its poison!|%s is cured from its poison!
 %s's %m's PPs are restored!
-%s restored a little HP!
+%s restored a some HP!
+
+
+%s restored a some HP
 
 
 
-
-%s's critical hit ratio increased!
 %s is focusing on the target!
 %s is already preparing its next move!
-%f is hit with recoil
 %f is hit with recoil

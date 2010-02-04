@@ -1,4 +1,5 @@
 #include "items.h"
+#include "berries.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
 typedef ItemMechanics IM;
@@ -460,4 +461,6 @@ void ItemEffect::init()
     REGISTER_ITEM(26, CriticalPoke);
     REGISTER_ITEM(27, PokeTypeBoost);
     REGISTER_ITEM(28, StickyBarb);
+
+    initBerries();
 }

@@ -1,3 +1,7 @@
 L'effet de Klutz n'est pas pris en compte totalement: on  devrait laisser les objets qui réduisent la vitesse
 Messages pour hyper cutter, clear body, shield dust, mist, etc.
 Flash fire s'active quand le pokémon est dégelé alors que normalement non
+Les attaques comme mimic, ...
+La gestion des PP pour leppa berry pour les attaques ci dessus
+Seisic Toss on Blissey
+Stat change message

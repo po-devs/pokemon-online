@@ -20,6 +20,7 @@ struct ItemEffect : public QVariantHash
     static QTSHash<QString, int> nums;
 
     static void init();
+    static void initBerries(); /* in berries.cpp */
 };
 
 #endif // ITEMS_H
