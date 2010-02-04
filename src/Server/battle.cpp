@@ -213,8 +213,8 @@ void BattleSituation::endTurnStatus()
 		    break;
 		case Pokemon::Poisoned:
                     //PoisonHeal
-                    if (hasWorkingAbility(player, 45)) {
-                        sendMoveMessage(45,0,player,Pokemon::Poison);
+                    if (hasWorkingAbility(player, 68)) {
+                        sendAbMessage(45,0,player,Pokemon::Poison);
                         healLife(player, poke(player).totalLifePoints()/8);
                     } else {
                         notify(All, StatusMessage, player, qint8(HurtPoison));
@@ -874,7 +874,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         notify(All, UseAttack, player, qint16(attack));
     }
 
-    if (!specialOccurence) {
+    if (!specialOccurence && !turnlong[player].contains("NoChoice")) {
         //Pressure
         losePP(player, move, 1 + (hasWorkingAbility(rev(player), 70) && !koed(rev(player)) && turnlong[player]["Power"].toInt() > 0));
     }

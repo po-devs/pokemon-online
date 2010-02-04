@@ -453,9 +453,9 @@ void Client::playerReceived(const Player &p)
 
 void Client::teamChanged(const Player &p) {
     if (name(p.id) != p.team.name) {
-        printLine(tr("%1 changed team and is now known as %2.").arg(name(p.id), p.team.name));
+        printLine(tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.team.name));
     } else {
-        printLine(tr("%1 changed team.").arg(name(p.id)));
+        printLine(tr("%1 changed teams.").arg(name(p.id)));
     }
     playerReceived(p);
 }
