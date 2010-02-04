@@ -58,7 +58,7 @@ private slots:
     void advancedClicked(int index);
     void advancedDestroyed();
     void indexNumPokemonChangedForAdvanced(int pokeNum);
-    void changePokemonOrder(QPair<int /*pokemon1*/, int /*pokemone2*/>echange);
+    void changePokemonOrder(QPair<int /*pokemon1*/, int /*pokemon2*/>echange);
 
 public slots:
     void saveTeam();
@@ -78,7 +78,7 @@ public:
     Team * getTeam()const;
 
     /* Create a menu bar to give to the main window */
-    QMenuBar *createMenuBar(MainWindow *w);
+    QMenuBar *createMenuBar(QMainWindow *w);
     void createDockAdvanced();
 };
 

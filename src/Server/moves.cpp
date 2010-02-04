@@ -867,7 +867,7 @@ struct MMWish : public MM
 	    return;
 	}
 	if (count == 0) {
-	    b.sendMoveMessage(142, 1, 0, 0, 0, 0, poke(b,s)["Wisher"].toString());
+            b.sendMoveMessage(142, 1, 0, 0, 0, 0, team(b,s)["Wisher"].toString());
 	    b.healLife(s, b.poke(s).totalLifePoints()/2);
 	}
         team(b,s)["WishCount"] = count - 1;
@@ -1924,6 +1924,7 @@ struct MMFocusEnergy : public MM
     MMFocusEnergy() {
 	functions["UponAttackSuccessful"] = &uas;
     }
+
     static void uas(int s, int, BS &b) {
 	addFunction(poke(b,s), "TurnSettings", "FocusEnergy", &ts);
 	b.sendMoveMessage(46,0,s);
@@ -1933,7 +1934,7 @@ struct MMFocusEnergy : public MM
     }
     static void btl(int s, int, BS &b) {
 	if (turn(b,s)["Power"].toInt() > 0) {
-	    inc(turn(b,s)["CriticalRaise"], 1);
+            inc(turn(b,s)["CriticalRaise"], 2);
 	}
     }
 };

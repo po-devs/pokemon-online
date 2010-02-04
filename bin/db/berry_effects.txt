@@ -57,8 +57,8 @@
 7-5#pinch sp attack
 8#pinch raises Critical hit ratio berry
 9#pinch Starf berry
-6#Anti super effective
+6#Anti super effective: gain hp after being hit by a super effective attack
 10#pinch Accuracy once berry
 11#pinch move first just once
-12#Physical recoil
-13#Special recoil
+12-0#Physical recoil
+12-1#Special recoil

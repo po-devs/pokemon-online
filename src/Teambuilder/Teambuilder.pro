@@ -46,3 +46,4 @@ HEADERS += teambuilder.h \
     ../Utilities/md5.h
 LIBS += -L../../bin \
     -lzip
+DEFINES = CLIENT_SIDE

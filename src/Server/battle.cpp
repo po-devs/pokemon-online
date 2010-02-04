@@ -165,7 +165,12 @@ void BattleSituation::beginTurn()
 
 void BattleSituation::endTurn()
 {
+    callzeffects(Player1, Player1, "EndTurn");
+    callzeffects(Player2, Player2, "EndTurn");
+
     endTurnWeather();
+
+    callbeffects(Player1,Player1,"EndTurn");
 
     if (!koed(Player1))
 	callieffects(Player1, Player1, "EndTurn");
@@ -177,9 +182,6 @@ void BattleSituation::endTurn()
 
     callpeffects(Player1, Player2, "EndTurn");
     callpeffects(Player2, Player1, "EndTurn");
-
-    callzeffects(Player1, Player1, "EndTurn");
-    callbeffects(Player1,Player1,"EndTurn");
 
     endTurnStatus();
 
@@ -416,6 +418,7 @@ void BattleSituation::analyzeChoices()
         foreach (int player, it->second) {
             callaeffects(player,player, "TurnOrder");
 	    callieffects(player,player, "TurnOrder");
+            calleffects(player,player, "TurnOrder");
             secondPriorities[turnlong[player]["TurnOrder"].toInt()].push_back(player);
 	}
 
@@ -609,6 +612,11 @@ bool BattleSituation::testAccuracy(int player, int target)
 	return true;
     }
 
+    if (pokelong[player].value("BerryLock").toBool()) {
+        pokelong[player].remove("BerryLock");
+        return true;
+    }
+
     //OHKO
     if (MoveInfo::isOHKO(turnlong[player]["MoveChosen"].toInt())) {
         return rand() % 100 < 30;
@@ -726,7 +734,7 @@ bool BattleSituation::testStatus(int player)
         }
 	return false;
     }
-    if (pokelong[player].value("Confused").toBool()) {
+    if (isConfused(player)) {
 	if (pokelong[player]["ConfusedCount"].toInt() > 0) {
 	    inc(pokelong[player]["ConfusedCount"], -1);
 
@@ -1152,12 +1160,12 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         }
 
 	/* There maybe different type of changes, aka status & mod in move 'Flatter' */
-	QStringList changes = effect.split('/');
+        QStringList changes = effect.mid(1).split('/');
 	
 	foreach (QString effect, changes)
 	{
 	    /* Now the kind of change itself */
-	    bool statusChange = effect.midRef(1,3) == "[S]"; /* otherwise it's stat change */
+            bool statusChange = effect.midRef(0,3) == "[S]"; /* otherwise it's stat change */
 
 	    if(!self && !statusChange && teamzone[targeted].value("MistCount").toInt() > 0) {
 		sendMoveMessage(86, 2, player,Pokemon::Ice,target,turnlong[player]["Attack"].toInt());
@@ -1169,7 +1177,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 		continue;
 	    }
     
-	    QStringList possibilities = effect.mid(4).split('^');
+            QStringList possibilities = effect.mid(3).split('^');
     
 	    /* Now we have a QStringLists that contains the different possibilities.
     
@@ -1250,7 +1258,14 @@ void BattleSituation::inflictConfused(int player)
 	pokelong[player]["Confused"] = true;
 	pokelong[player]["ConfusedCount"] = (rand() % 4) + 1;
 	notify(All, StatusChange, player, qint8(-1));
+
+        callieffects(player, player,"AfterStatusChange");
     }
+}
+
+bool BattleSituation::isConfused(int player)
+{
+    return pokelong[player].value("Confused").toBool();
 }
 
 void BattleSituation::healStatus(int player, int status)
@@ -1421,6 +1436,7 @@ void BattleSituation::changeStatus(int player, int status)
 	pokelong[player]["ToxicCount"] = 0;
     }
     callpeffects(player, player,"AfterStatusChange");
+    callieffects(player, player,"AfterStatusChange");
 }
 
 void BattleSituation::changeStatus(int team, int poke, int status)
@@ -1561,7 +1577,14 @@ int BattleSituation::calculateDamage(int p, int t)
     if (typemod > 4 && (hasWorkingAbility(t,23) || hasWorkingAbility(t,94))) {
         damage = damage * 3 / 4;
     }
+
+    /* Expert belt */
     damage = damage * ((typemod > 4 && hasWorkingItem(p, 8))? 6 : 5)/5;
+
+    /* Berries of the foe */
+    callieffects(t, p, "Mod3Items");
+
+    damage = damage * (10 + turnlong[p].value("Mod3Berry").toInt())/ 10;
 
     return damage;
 }
@@ -1677,6 +1700,11 @@ void BattleSituation::disposeItem(int  player) {
     poke(player).item() = 0;
 }
 
+void BattleSituation::eatBerry(int player) {
+    sendItemMessage(8000,player,0, 0, poke(player).item());
+    disposeItem(player);
+}
+
 void BattleSituation::acqItem(int player, int item) {
     poke(player).item() = item;
     ItemEffect::setup(poke(player).item(),player,*this);
@@ -1706,7 +1734,9 @@ void BattleSituation::changeHp(int player, int newHp)
     poke(player).lifePoints() = newHp;
 
     notify(player, ChangeHp, player, quint16(newHp));
-    notify(AllButPlayer, ChangeHp, player, newHp==0?quint16(0):quint16(std::max(1,poke(player).lifePoints()*100/poke(player).totalLifePoints()))); /* percentage calculus */
+    notify(AllButPlayer, ChangeHp, player, quint16(newHp == 0 ? 0 : std::max(int(poke(player).lifePercent()),1))); /* percentage calculus */
+
+    callieffects(player, player, "AfterHPChange");
 }
 
 void BattleSituation::koPoke(int player, int source, bool straightattack)
@@ -1819,6 +1849,18 @@ void BattleSituation::losePP(int player, int move, int loss)
     changePP(player, move, PP);
 
     notify(player, ChangePP, player, quint8(move), poke(player).move(move).PP());
+
+    callieffects(player, player, "AfterPPLoss");
+}
+
+void BattleSituation::gainPP(int player, int move, int gain)
+{
+    int PP = poke(player).move(move).PP();
+
+    PP = std::min(PP+gain, int(poke(player).move(move).totalPP()));
+    changePP(player, move, PP);
+
+    notify(player, ChangePP, player, quint8(move), poke(player).move(move).PP());
 }
 
 int BattleSituation::getStat(int player, int stat)
@@ -1876,13 +1918,21 @@ void BattleSituation::sendAbMessage(int move, int part, int src, int foe, int ty
 
 
 
-void BattleSituation::sendItemMessage(int move, int src, int part, int foe)
+void BattleSituation::sendItemMessage(int move, int src, int part, int foe, int berry)
 {
     if (foe ==-1)
 	notify(All, ItemMessage, src, quint16(move), uchar(part));
-    else
+    else if (berry == -1)
 	notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe));
+    else
+        notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry));
 }
+
+void BattleSituation::sendBerryMessage(int move, int src, int part, int foe, int berry)
+{
+    sendItemMessage(move+8000,src,part,foe,berry);
+}
+
 
 void BattleSituation::fail(int player, int move, int part, int type)
 {

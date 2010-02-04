@@ -97,6 +97,7 @@ public:
     void healLife(int player, int healing);
     bool canGetStatus(int player, int status);
     void inflictStatus(int player, int Status, int inflicter);
+    bool isConfused(int player);
     void inflictConfused(int player);
     void inflictConfusedDamage(int player);
     void inflictRecoil(int source, int target);
@@ -104,10 +105,12 @@ public:
     void inflictPercentDamage(int player, int percent, int source, bool straightattack = false);
     void inflictSubDamage(int player, int damage, int source);
     void disposeItem(int player);
+    void eatBerry(int player);
     void acqItem(int player, int item);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
+    void gainPP(int player, int move, int gain);
 
     int calculateDamage(int player, int target);
     void applyMoveStatMods(int player, int target);
@@ -207,7 +210,8 @@ public:
 
     void sendMoveMessage(int move, int part=0, int src=0, int type=0, int foe=-1, int other=-1, const QString &q="");
     void sendAbMessage(int move, int part=0, int src=0, int foe=-1, int type=0, int other=-1);
-    void sendItemMessage(int item, int src, int part = 0, int foe = -1);
+    void sendItemMessage(int item, int src, int part = 0, int foe = -1, int berry = -1);
+    void sendBerryMessage(int item, int src, int part = 0, int foe = -1, int berry = -1);
     /* Here C++0x would make it so much better looking with variadic templates! */
     void notify(int player, int command, int who);
     template<class T>

@@ -230,7 +230,7 @@ void TeamBuilder::updateTrainer()
     trainerbody()->updateTrainer();
 }
 
-QMenuBar * TeamBuilder::createMenuBar(MainWindow *w)
+QMenuBar * TeamBuilder::createMenuBar(QMainWindow *w)
 {
     QMenuBar *menuBar = new QMenuBar();
     QMenu *menuFichier = menuBar->addMenu("&File");
@@ -269,40 +269,37 @@ void TeamBuilder::indexNumPokemonChangedForAdvanced(int pokeNum)
 
 void TeamBuilder::changePokemonOrder(QPair<int, int>echange)
 {
-    qDebug() << "changement de l ordre des pokemon";
-    int index = m_body->currentIndex();
-    qDebug() << "currentIndex:"<<index;
+    int pbody1 = echange.first-1;
+    int pbody2 = echange.second-1;
     //recuperation des widgets
-    TB_PokemonBody * poke1 = (TB_PokemonBody *)m_body->widget(echange.first);
-    TB_PokemonBody * poke2 = (TB_PokemonBody *)m_body->widget(echange.second);
-    qDebug() << "retrait des widget";
+    TB_PokemonBody * poke1 = pokebody(pbody1);
+    TB_PokemonBody * poke2 = pokebody(pbody2);
+
     m_body->removeWidget(poke1);
-    qDebug() << "widget1";
     m_body->removeWidget(poke2);
-    qDebug() << "widget 2";
-    index = m_body->currentIndex();
-    qDebug() << "currentIndex:"<<index;
-    if(echange.first < echange.second)//insertion apres l index courant
+
+    if(echange.first < echange.second)
     {
         m_body->insertWidget(echange.first,poke2);
-        qDebug() <<"positionement du widget 2 a l index "<<echange.first;
         m_body->insertWidget(echange.second,poke1);
-        qDebug() <<"positionement du widget 1 a l index "<<echange.second;
     }
     else
     {
-        m_body->insertWidget(echange.first,poke2);
-        qDebug() <<"positionement du widget 2 a l index "<<echange.first;
         m_body->insertWidget(echange.second,poke1);
-        qDebug() <<"positionement du widget 1 a l index "<<echange.second;
+        m_body->insertWidget(echange.first,poke2);
     }
-    qDebug() <<"Fin echange";
-    m_body->setCurrentWidget(poke2);
-    //this->changeBody(echange.first);
+
+    m_body->setCurrentWidget(poke1);
+
+    /* Replacing the pokemons in the team struct */
     std::swap(*(poke1->poke()), *(poke2->poke()));
+    /* Getting the pokemon bodies their poke back */
     PokeTeam *tmp = poke1->poke();
     poke1->changeSourcePoke(poke2->poke());
     poke2->changeSourcePoke(tmp);
+
+    /* And in the tb memory */
+    std::swap(m_pbody[pbody1], m_pbody[pbody2]);
 }
 
 DockAdvanced * TeamBuilder::dockAdvanced() const

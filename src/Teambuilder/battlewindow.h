@@ -34,6 +34,7 @@ struct BattleInfo
 
     /* Current poke for ourself */
     int currentIndex;
+    int lastIndex;
 };
 
 /* The battle window called by the client, online */
@@ -161,6 +162,7 @@ private:
     QPushButton *myswitch, *myattack, *myforfeit, *mysend;
 
     bool blankMessage;
+    bool battleEnded;
 
     /* What can I do? */
 

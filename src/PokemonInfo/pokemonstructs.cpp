@@ -1,8 +1,11 @@
 #include "pokemonstructs.h"
 #include "pokemoninfo.h"
+
+#ifdef CLIENT_SIDE
 #include <QDomDocument>
 #include <QDomNode>
 #include <QtDebug>
+#endif
 
 PokeBaseStats::PokeBaseStats(quint8 base_hp, quint8 base_att, quint8 base_def, quint8 base_spd, quint8 base_spAtt, quint8 base_spDef)
 {
@@ -612,6 +615,8 @@ Team & TrainerTeam::team()
     return m_team;
 }
 
+#ifdef CLIENT_SIDE
+
 void TrainerTeam::loadFromFile(const QString &path)
 {
     //ancienne facon de charger
@@ -630,19 +635,19 @@ void TrainerTeam::loadFromFile(const QString &path)
     int line,col;
     if(!document.setContent(&file,&msg,&line,&col))
     {
-        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Erreur1 lors du chargemen de la team"));
+        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
         return;
     }
     QDomElement team = document.firstChildElement("Team");
     if(team.isNull())
     {
-        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Erreur2 lors du chargemen de la team"));
+        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
         return;
     }
     QDomElement trainer = team.firstChildElement("Trainer");
     if(trainer.isNull())
     {
-        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Erreur3 lors du chargemen de la team"));
+        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
         return;
     }
     this->setTrainerNick(trainer.text());
@@ -714,19 +719,19 @@ void TrainerTeam::saveToFile(const QString &path)
     QString msg;
     if(!document.setContent(path,&msg,&line,&col))
     {
-        QMessageBox::information(0,QObject::tr("Save Team"),QObject::tr("Erreur de parsage lors de l ouverture du fichier %1").arg(path));
+        QMessageBox::information(0,QObject::tr("Save Team"),QObject::tr("Error while parsing file %1").arg(path));
         return;
     }
     QDomElement team = document.firstChildElement("Team");
     if(team.isNull())
     {
-        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Erreur lors du chargement  de la team"));
+        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
         return;
     }
     QDomElement trainer = document.firstChildElement("Trainer");
     if(trainer.isNull())
     {
-        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Erreur lors du chargement  de la team"));
+        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
         return;
     }
     int cpt = 0;
@@ -926,7 +931,7 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
     int line,col;
     if(!document.setContent(&file,&msg,&line,&col))
     {
-        QMessageBox::information(0,QObject::tr("Save Team"),QObject::tr("Erreur de parsage lors de l ouverture du fichier %1.\nErreur:%2 \nLigne:%3 Colonne:%4").arg(location).arg(msg).arg(line).arg(col));
+        QMessageBox::information(0,QObject::tr("Save Team"),QObject::tr("Error parsing the file %1.\nError:%2 \nLine:%3 Column:%4").arg(location).arg(msg).arg(line).arg(col));
         return false;
     }
 
@@ -996,6 +1001,7 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
 
     return true;
 }
+#endif
 
 QDataStream & operator << (QDataStream & out, const Team & team)
 {

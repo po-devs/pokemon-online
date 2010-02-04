@@ -655,9 +655,9 @@ struct AMOwnTempo : public AM {
     }
 
     static void us(int s, int, BS &b) {
-        if (poke(b,s).value("Confused").toBool()) {
+        if (b.isConfused(s)) {
             b.sendAbMessage(44,0,s);
-            poke(b,s).remove("Confused");
+            b.healConfused(s);
         }
     }
 };
@@ -857,7 +857,7 @@ struct AMTangledFeet : public AM {
     }
 
     static void sm(int s, int,  BS &b) {
-        if (poke(b,s).value("Confused").toBool()) {
+        if (b.isConfused(s)) {
             turn(b,s)["Stat6AbilityModifier"] = 10;
         }
     }

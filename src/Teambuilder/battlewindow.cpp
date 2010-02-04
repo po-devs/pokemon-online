@@ -6,12 +6,14 @@
 BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &team, const BattleConfiguration &_conf)
 {
     blankMessage = false;
+    battleEnded = false;
     conf() = _conf;
 
     this->idme() = idme;
     this->idopp() = idopp;
 
     info().currentIndex = -1;
+    info().lastIndex = 0;
     info().myteam = team;
     info().possible = false;
     info().name[0] = me;
@@ -91,6 +93,11 @@ void BattleWindow::switchTo(int pokezone)
 
 void BattleWindow::clickforfeit()
 {
+    if (battleEnded) {
+        emit forfeit();
+        return;
+    }
+
     if (QMessageBox::question(this, tr("Losing your battle"), tr("Do you mean to forfeit?"), QMessageBox::Yes | QMessageBox::No)
         == QMessageBox::Yes)
 	emit forfeit();
@@ -257,8 +264,12 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	}
     case Ko:
         printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(self)))) + "</b>");
-        if (self && info().currentIndex >= 0 && info().currentIndex < 6)
-            mypzone->pokes[info().currentIndex]->setEnabled(false); //crash!!
+        if (self) {
+            if ( info().currentIndex >= 0 && info().currentIndex < 6)
+                mypzone->pokes[info().currentIndex]->setEnabled(false); //crash!!
+            else
+                mypzone->pokes[info().lastIndex]->setEnabled(false); //crash!!
+        }
         switchToNaught(self);
         break;
     case Hit:
@@ -346,22 +357,22 @@ void BattleWindow::receiveInfo(QByteArray inf)
                 printHtml(toColor(escapeHtml(tu(tr("%1 snapped out its confusion!").arg(nick(self)))), TypeInfo::Color(Move::Dark).name()));
                 break;
      case PrevParalysed:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(self)))), StatInfo::StatusColor(status)));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Paralysed)));
                 break;
      case FeelAsleep:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(self)))), StatInfo::StatusColor(status)));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Psychic)));
                 break;
      case FreeAsleep:
                 printHtml(toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(self)))), TypeInfo::Color(Move::Dark).name()));
                 break;
      case HurtBurn:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(self)))), StatInfo::StatusColor(status)));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Burnt)));
                 break;
      case HurtPoison:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(self)))), StatInfo::StatusColor(status)));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Poisoned)));
                 break;
      case PrevFrozen:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(self)))), StatInfo::StatusColor(status)));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Frozen)));
                 break;
      case FreeFrozen:
                 printHtml(toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(self)))), TypeInfo::Color(Move::Dark).name()));
@@ -410,10 +421,13 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    quint16 item=0;
 	    uchar part=0;
 	    qint8 foe = 0;
-	    in >> item >> part >> foe;
+            qint16 berry = 0;
+            in >> item >> part >> foe >> berry;
 	    QString mess = ItemInfo::Message(item, part);
 	    mess.replace("%s", nick(self));
 	    mess.replace("%f", nick(!self));
+            mess.replace("%i", ItemInfo::Name(berry));
+            mess.replace("%m", MoveInfo::Name(berry));
 	    printLine(tu(mess));
 	    break;
 	}
@@ -439,8 +453,8 @@ void BattleWindow::receiveInfo(QByteArray inf)
                 } break;
 		case HurtWeather:
                 switch(weather) {
-                case Hail: printHtml(toColor(tr("%1 is buffeted by the hail!").arg(nick(self)),c)); break;
-                case SandStorm: printHtml(toColor(tr("%1 is buffeted by the sandstorm!").arg(nick(self)),c)); break;
+                case Hail: printHtml(toColor(tr("%1 is buffeted by the hail!").arg(tu(nick(self))),c)); break;
+                case SandStorm: printHtml(toColor(tr("%1 is buffeted by the sandstorm!").arg(tu(nick(self))),c)); break;
                 } break;
 		case StartWeather:
                 switch(weather) {
@@ -521,7 +535,8 @@ void BattleWindow::receiveInfo(QByteArray inf)
             printLine("");
             qint8 res;
             in >> res;
-            myforfeit->setText("&Close");
+            myforfeit->setText(tr("&Close"));
+            battleEnded = true;
             if (res == Tie) {
                 printHtml(toBoldColor(tr("Tie between %1 and %2!").arg(name(true), name(false)), Qt::blue));
             } else {
@@ -542,6 +557,8 @@ void BattleWindow::receiveInfo(QByteArray inf)
 void BattleWindow::switchToNaught(bool self)
 {
     if (self) {
+        if (info().currentIndex != -1)
+            info().lastIndex = info().currentIndex;
 	info().currentIndex = -1;
 	switchToPokeZone();
     } else {
@@ -818,7 +835,7 @@ const PokeBattle & BattleInfo::currentPoke() const
 {
     if (currentIndex == -1) {
 	qDebug() << "Error! Call for pokémon info while none on the field. Returning a safe value instead";
-	return myteam.poke(0);
+        return myteam.poke(lastIndex);
     } else {
 	return myteam.poke(currentIndex);
     }
@@ -828,7 +845,7 @@ PokeBattle & BattleInfo::currentPoke()
 {
     if (currentIndex == -1) {
 	qDebug() << "Error! Call for pokémon info while none on the field. Returning a safe value instead";
-	return myteam.poke(0);
+        return myteam.poke(lastIndex);
     } else {
 	return myteam.poke(currentIndex);
     }

@@ -86,7 +86,7 @@ public slots:
     void forfeitBattle();
     /* shows the context menu for that player */
     void showContextMenu(const QPoint&);
-    void changeTeam();
+    void loadTeam();
     /* A popup that asks for the pass */
     void askForPass(const QString &salt);
     /* When someone is kicked */
@@ -95,11 +95,16 @@ public slots:
     /* When you kick someone */
     void kick(int);
     void ban(int);
+    /* Teambuilder slots */
+    void openTeamBuilder();
+    void changeTeam();
+    void showDock(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
 signals:
     void done();
 
 private:
     TrainerTeam *myteam;
+    QString mynick;
     /* Main chat */
     QScrollDownTextEdit *mychat;
     /* Line the user types in */
@@ -118,6 +123,9 @@ private:
     /* Challenge window , to emit or to receive*/
     BaseChallengeWindow *mychallenge;
     BattleWindow *mybattle;
+
+    /* You can call the teambuilder from here too */
+    QPointer<QMainWindow> myteambuilder;
 
     QHash<int, Player> myplayersinfo;
     QHash<QString, int> mynames;
