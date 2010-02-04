@@ -360,7 +360,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
                 printHtml(toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Paralysed)));
                 break;
      case FeelAsleep:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Psychic)));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Asleep)));
                 break;
      case FreeAsleep:
                 printHtml(toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(self)))), TypeInfo::Color(Move::Dark).name()));

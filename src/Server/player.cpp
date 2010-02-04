@@ -363,7 +363,7 @@ Player::AuthentificationState Player::testAuthentification(const TeamInfo &team)
     } else {
         myauth = 0;
 
-        SecurityManager::create(SecurityManager::Member(name().toLower(), QDate::currentDate().toString(Qt::ISODate), "000", "", "", relay().ip()));
+        SecurityManager::create(SecurityManager::Member(team.name.toLower(), QDate::currentDate().toString(Qt::ISODate), "000", "", "", relay().ip()));
         /* To tell the player he's not registered */
         relay().notify(NetworkServ::Register);
         return Success;

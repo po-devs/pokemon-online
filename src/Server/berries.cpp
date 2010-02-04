@@ -11,6 +11,9 @@ struct BMStatusBerry : public BM
     }
 
     static void asc(int s, int, BS &b) {
+        if (b.isKoed(s))
+            return;
+
         int status = b.poke(s).status();
         bool conf = b.isConfused(s);
         int arg = poke(b,s)["ItemArg"].toInt();
@@ -267,7 +270,7 @@ struct BMBerryRecoil : public BM
     }
 };
 
-#define REGISTER_BERRY(num, name) mechanics[num] = BM##name(); names[num+8000] = #name; nums[#name] = num;
+#define REGISTER_BERRY(num, name) mechanics[num+8000] = BM##name(); names[num+8000] = #name; nums[#name] = num+8000;
 
 void ItemEffect::initBerries()
 {

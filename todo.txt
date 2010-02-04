@@ -21,3 +21,4 @@ Lilp
 -faire un pokedex, movedex, etc.
 -faire un QPixmapCache pour optimiser
 -Faire des barres hp animées
+-Quand on tape sur une touche dans la fenêtre de combat, aller directement dans le line edit
