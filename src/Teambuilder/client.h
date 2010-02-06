@@ -10,6 +10,7 @@ class BaseChallengeWindow;
 class QIdListWidgetItem;
 class BattleWindow;
 class QScrollDownTextEdit;
+class PMWindow;
 
 /* Struct representing a player's data */
 class Player
@@ -45,7 +46,7 @@ public:
     bool busy() const;
     int id(const QString &name) const;
 
-    void seeChallenge(int id);
+    void seeChallenge(const ChallengeInfo &c);
     bool challengeWindowOpen() const;
     void closeChallengeWindow();
     int  challengeWindowPlayer() const;
@@ -72,14 +73,13 @@ public slots:
     void sendChallenge(int id);
     /* removes the pointer to the challenge window when it is destroyed */
     void clearChallenge();
-    void clearBattle();
     /* sends the server a "Accept Challenge" notice */
     void acceptChallenge(int id);
     void refuseChallenge(int id);
     /* Display the info for that player */
     void seeInfo(int id);
     /* Challenge info by the server */
-    void challengeStuff(int desc, int id);
+    void challengeStuff(const ChallengeInfo &c);
     /* battle... */
     void battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf);
     void battleFinished(int res, int winner, int loser);
@@ -95,6 +95,10 @@ public slots:
     /* When you kick someone */
     void kick(int);
     void ban(int);
+    /* PM */
+    void startPM(int);
+    void removePM(int);
+    void PMReceived(int, const QString);
     /* Teambuilder slots */
     void openTeamBuilder();
     void changeTeam();
@@ -107,6 +111,8 @@ private:
     QString mynick;
     /* Main chat */
     QScrollDownTextEdit *mychat;
+    /* PMs */
+    QHash<int, PMWindow*> mypms;
     /* Line the user types in */
     QLineEdit *myline;
     /* Where players are displayed */
@@ -122,12 +128,14 @@ private:
     Analyzer myrelay;
     /* Challenge window , to emit or to receive*/
     BaseChallengeWindow *mychallenge;
-    BattleWindow *mybattle;
+    QPointer<BattleWindow> mybattle;
 
     /* You can call the teambuilder from here too */
     QPointer<QMainWindow> myteambuilder;
 
     QHash<int, Player> myplayersinfo;
+
+
     QHash<QString, int> mynames;
     QScrollDownTextEdit *mainChat();
     Analyzer & relay();

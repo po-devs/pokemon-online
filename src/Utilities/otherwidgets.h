@@ -85,6 +85,8 @@ class QScrollDownTextEdit : public QTextEdit
 {
     Q_OBJECT
 public:
+    QScrollDownTextEdit();
+
     void insertHtml(const QString &text);
     void insertPlainText(const QString &text);
 };

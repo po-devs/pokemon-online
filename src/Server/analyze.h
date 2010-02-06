@@ -8,6 +8,7 @@ class BasicInfo;
 class TeamBattle;
 class BattleChoice;
 class BattleConfiguration;
+class ChallengeInfo;
 
 /* Commands to dialog with the server */
 namespace NetworkServ
@@ -33,7 +34,9 @@ namespace NetworkServ
         PlayerBan,
         ServNumChange,
         ServDescChange,
-        ServNameChange
+        ServNameChange,
+        SendPM,
+        Away
     };
 
     enum ProtocolError
@@ -59,11 +62,12 @@ public:
     void sendLogout(int num);
     bool isConnected() const;
     QString ip() const;
-    void sendChallengeStuff(quint8 desc, int id);
+    void sendChallengeStuff(const ChallengeInfo &c);
     void engageBattle(int id, const TeamBattle &team, const BattleConfiguration &conf);
     void sendBattleResult(quint8 res, int win, int los);
     void sendBattleCommand(const QByteArray &command);
     void sendTeamChange(int num, const BasicInfo &team, int auth=0);
+    void sendPM(int dest, const QString &mess);
 
     void connectTo(const QString &host, quint16 port);
 
@@ -90,13 +94,14 @@ signals:
     void connected();
     void disconnected();
     void forfeitBattle();
-    void challengeStuff(int desc, int id);
+    void challengeStuff(const ChallengeInfo &c);
     void battleMessage(const BattleChoice &choice);
     void battleChat(const QString &chat);
     void wannaRegister();
     void sentHash(QString);
     void kick(int id);
     void ban(int id);
+    void PMsent(int id, const QString);
     /* Registry socket signals */
     void ipRefused();
     void nameTaken();

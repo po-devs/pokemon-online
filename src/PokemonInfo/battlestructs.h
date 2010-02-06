@@ -73,7 +73,7 @@ public:
 
     quint16 normalStat(int stat) const;
 
-    bool ko() const {return lifePoints() == 0 || num() == 0;}
+    bool ko() const {return lifePoints() == 0 || num() == 0 || status() == Pokemon::Koed;}
     bool isFull() const { return lifePoints() == totalLifePoints(); }
     int lifePercent() const { return lifePoints()*100/totalLifePoints();}
 
@@ -146,23 +146,61 @@ QDataStream & operator << (QDataStream &out, const BattleChoices &po);
 
 struct BattleChoice
 {
+    static const int Cancel = -10;
+
     BattleChoice(bool pokeSwitch = false, qint8 numSwitch = 0);
 
     bool pokeSwitch; /* True if poke switch, false if attack switch */
-    qint8 numSwitch; /* The num of the poke or the attack to use, -1 for Struggle */
+    qint8 numSwitch; /* The num of the poke or the attack to use, -1 for Struggle, -10 for move cancelled */
 
     /* returns true if the choice is valid */
     bool match(const BattleChoices &avail) const;
     bool attack() const { return !pokeSwitch; }
     bool poke() const { return pokeSwitch; }
+    bool cancelled() const { return numSwitch == Cancel; }
 };
 
 QDataStream & operator >> (QDataStream &in, BattleChoice &po);
 QDataStream & operator << (QDataStream &out, const BattleChoice &po);
 
+struct ChallengeInfo
+{
+    enum ChallengeDesc
+    {
+        Sent,
+        Accepted,
+        Cancelled,
+        Busy,
+        Refused,
+
+
+        ChallengeDescLast
+    };
+
+    bool sleepClauseEnabled;
+    qint8 dsc;
+    qint32 opp;
+
+    explicit ChallengeInfo(int desc=0, int opponent=0, bool sleepClauseEnabled = true)
+        : sleepClauseEnabled(sleepClauseEnabled), dsc(desc), opp(opponent)
+    {
+    }
+
+    int opponent() const {return opp;}
+    qint8 desc() const { return dsc;}
+    bool sleepClause() const {return sleepClauseEnabled;}
+
+    operator int () const {
+        return opponent();
+    }
+};
+
+QDataStream & operator >> (QDataStream &in, ChallengeInfo &c);
+QDataStream & operator << (QDataStream &out, const ChallengeInfo &c);
+
 struct BattleConfiguration
 {
-    int ids[2];
+    qint32 ids[2];
 };
 
 inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)

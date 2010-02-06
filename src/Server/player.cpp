@@ -7,14 +7,13 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     myip = relay().ip();
 
     m_state = NotLoggedIn;
-    m_challengedby = -1;
     myauth = 0;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(TeamInfo)), this, SLOT(loggedIn(TeamInfo)));
     connect(&relay(), SIGNAL(messageReceived(QString)), this, SLOT(recvMessage(QString)));
     connect(&relay(), SIGNAL(teamReceived(TeamInfo)), this, SLOT(recvTeam(TeamInfo)));
-    connect(&relay(), SIGNAL(challengeStuff(int,int)), this, SLOT(challengeStuff(int,int)));
+    connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), this, SLOT(challengeStuff(ChallengeInfo)));
     connect(&relay(), SIGNAL(forfeitBattle()), SLOT(battleForfeited()));
     connect(&relay(), SIGNAL(battleMessage(BattleChoice)), SLOT(battleMessage(BattleChoice)));
     connect(&relay(), SIGNAL(battleChat(QString)), SLOT(battleChat(QString)));
@@ -22,6 +21,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(wannaRegister()), SLOT(registerRequest()));
     connect(&relay(), SIGNAL(kick(int)), SLOT(playerKick(int)));
     connect(&relay(), SIGNAL(ban(int)), SLOT(playerBan(int)));
+    connect(&relay(), SIGNAL(PMsent(int,QString)), this, SLOT(receivePM(int,QString)));
 }
 
 Player::~Player()
@@ -83,17 +83,26 @@ void Player::recvMessage(const QString &mess)
     emit recvMessage(id(), mess);
 }
 
-bool Player::challenge(int idto)
+bool Player::challenge(const ChallengeInfo &c)
 {
     if (state() != LoggedIn)
 	return false;
 
-    relay().sendChallengeStuff(Sent, idto);
+    relay().sendChallengeStuff(c);
 
     changeState(Challenged);
-    m_challengedby = idto;
+    m_challengedby = c;
 
     return true;
+}
+
+ChallengeInfo Player::getChallengeInfo(int id)
+{
+    if (m_challenged.contains(id)) {
+        return m_challenged[id];
+    } else {
+        return m_challengedby;
+    }
 }
 
 void Player::battleForfeited()
@@ -112,6 +121,23 @@ void Player::battleResult(int result, int winner, int loser)
     relay().sendBattleResult(result, winner, loser);
     if (result == Forfeit || result == Close)
         changeState(LoggedIn);
+}
+
+void Player::receivePM(int id, const QString &pm)
+{
+    if (!isLoggedIn()) {
+        //INVALID BEHAVIOR
+        return;
+    }
+
+    QString str = pm.trimmed();
+
+    if (str.length() == 0) {
+        //INVALID BEHAVIOR
+        return;
+    }
+
+    emit PMReceived(this->id(), id, str);
 }
 
 void Player::playerBan(int p) {
@@ -147,9 +173,12 @@ int Player::opponent() const
     return m_opponent;
 }
 
-void Player::challengeStuff(int desc, int id)
+void Player::challengeStuff(const ChallengeInfo &c)
 {
-    if (desc < Sent || desc >= ChallengeDescLast) {
+    int desc = c.desc();
+    int id = c;
+
+    if (desc < ChallengeInfo::Sent || desc  >= ChallengeInfo::ChallengeDescLast) {
         // INVALID BEHAVIOR
         return;
     }
@@ -159,7 +188,7 @@ void Player::challengeStuff(int desc, int id)
 	return;
     }
 
-    if (desc != Sent && desc != Canceled)
+    if (desc != ChallengeInfo::Sent && desc != ChallengeInfo::Cancelled)
     {
 	if (!isChallenged()) {
 	    // INVALID BEHAVIOR
@@ -169,7 +198,7 @@ void Player::challengeStuff(int desc, int id)
 	    // INVALID BEHAVIOR
 	    return;
 	}
-    } else if (desc == Sent) {
+    } else if (desc == ChallengeInfo::Sent) {
 	if (battling()) {
 	    // INVALID BEHAVIOR
 	    return;
@@ -179,7 +208,7 @@ void Player::challengeStuff(int desc, int id)
             // INVALID BEHAVIOR
             return;
         }
-        if (desc == Canceled) {
+        if (desc == ChallengeInfo::Cancelled) {
             if (!hasChallenged(id)) {
                 // INVALID BEHAVIOR
                 return;
@@ -187,24 +216,27 @@ void Player::challengeStuff(int desc, int id)
         }
     }
 
-    if (desc == Sent) {
-	addChallenge(id);
-    } else if (desc != Accepted) {
+    if (desc == ChallengeInfo::Sent) {
+        addChallenge(c);
+    } else if (desc != ChallengeInfo::Accepted) {
 	changeState(LoggedIn);
     }
 
-    emit challengeStuff(desc, this->id(), id);
+    ChallengeInfo d = c;
+    d.opp = this->id();
+
+    emit challengeStuff(d, this->id(), id);
 }
 
 void Player::sendChallengeStuff(int stuff, int other)
 {
     /* This is either Canceled, Refused, or Busied */
-    if (stuff == Canceled) {
+    if (stuff == ChallengeInfo::Cancelled) {
 	changeState(LoggedIn);
     } else {
 	removeChallenge(other);
     }
-    relay().sendChallengeStuff(stuff, other);
+    relay().sendChallengeStuff(ChallengeInfo(stuff, other));
 }
 
 void Player::startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf)
@@ -213,9 +245,6 @@ void Player::startBattle(int id, const TeamBattle &team, const BattleConfigurati
 
     m_opponent = id;
 
-    if (isChallenged() && challengedBy() == id) {
-	m_challengedby = -1;
-    }
     changeState(Battling);
 
     removeChallenge(id);
@@ -225,10 +254,10 @@ void Player::startBattle(int id, const TeamBattle &team, const BattleConfigurati
 void Player::cancelChallenges()
 {
     foreach(int id, m_challenged)
-	emit challengeStuff(Canceled, this->id(), id);
+        emit challengeStuff(ChallengeInfo(ChallengeInfo::Cancelled), this->id(), id);
     m_challenged.clear();
     if (isChallenged()) {
-	emit challengeStuff(Busy, this->id(), opponent());
+        emit challengeStuff(ChallengeInfo(ChallengeInfo::Busy), this->id(), opponent());
     }
 }
 
@@ -237,9 +266,9 @@ bool Player::hasChallenged(int id) const
     return m_challenged.contains(id);
 }
 
-void Player::addChallenge(int id)
+void Player::addChallenge(const ChallengeInfo &c)
 {
-    m_challenged.insert(id);
+    m_challenged.insert(c, c);
 }
 
 void Player::removeChallenge(int id)

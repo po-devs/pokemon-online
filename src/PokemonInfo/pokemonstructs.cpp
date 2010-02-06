@@ -669,7 +669,7 @@ void TrainerTeam::loadFromFile(const QString &path)
         this->team().poke(cpt).happiness() = poke.attribute("Happiness",0).toInt(0,10);
         this->team().poke(cpt).level() = poke.attribute("Lvl",0).toInt(0,10);
         int cptMove=0;
-        qDebug() << "test";
+
         QDomElement moveElement = poke.firstChildElement("Move");
         while(!moveElement.isNull())
         {
@@ -682,7 +682,6 @@ void TrainerTeam::loadFromFile(const QString &path)
         QDomElement DVElement = poke.firstChildElement("DV");
         while(!DVElement.isNull())
         {
-            qDebug() << QString("Pokemon %1 DVElement %2").arg(cpt).arg(cptDV) << DVElement.text().toInt(0,10);
             this->team().poke(cpt).setDV(cptDV,DVElement.text().toInt(0,10));
             cptDV++;
             DVElement = DVElement.nextSiblingElement("DV");
@@ -691,7 +690,6 @@ void TrainerTeam::loadFromFile(const QString &path)
         QDomElement EVElement = poke.firstChildElement("EV");
         while(!EVElement.isNull())
         {
-            qDebug() << QString("Pokemon %1 EVElement %2:").arg(cpt).arg(cptEV) << EVElement.text().toInt(0,10);
             this->team().poke(cpt).setEV(cptEV,EVElement.text().toInt(0,10));
             cptEV++;
             EVElement = EVElement.nextSiblingElement("EV");
@@ -964,11 +962,10 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
         team.team().poke(cpt).happiness() = poke.attribute("Happiness",0).toInt(0,10);
         team.team().poke(cpt).level() = poke.attribute("Lvl",0).toInt(0,10);
         int cptMove=0;
-        qDebug() << "test";
+
         QDomElement moveElement = poke.firstChildElement("Move");
         while(!moveElement.isNull())
         {
-            qDebug() <<QString("pokemon %1 moveElement %2:").arg(cpt).arg(cptMove) << moveElement.text().toInt(0,10);
             team.team().poke(cpt).setMove(moveElement.text().toInt(0,10),cptMove);
             cptMove++;
             moveElement = moveElement.nextSiblingElement("Move");
@@ -977,7 +974,6 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
         QDomElement DVElement = poke.firstChildElement("DV");
         while(!DVElement.isNull())
         {
-            qDebug() << QString("Pokemon %1 DVElement %2").arg(cpt).arg(cptDV) << DVElement.text().toInt(0,10);
             team.team().poke(cpt).setDV(cptDV,DVElement.text().toInt(0,10));
             cptDV++;
             DVElement = DVElement.nextSiblingElement("DV");
@@ -986,7 +982,6 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
         QDomElement EVElement = poke.firstChildElement("EV");
         while(!EVElement.isNull())
         {
-            qDebug() << QString("Pokemon %1 EVElement %2:").arg(cpt).arg(cptEV) << EVElement.text().toInt(0,10);
             team.team().poke(cpt).setEV(cptEV,EVElement.text().toInt(0,10));
             cptEV++;
             EVElement = EVElement.nextSiblingElement("EV");

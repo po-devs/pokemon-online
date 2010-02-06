@@ -9,7 +9,6 @@ Registry::Registry() {
     mainChat = new QTextEdit(this);
 
     mainChat->setFixedSize(500,500);
-    mainChat->setReadOnly(true);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));

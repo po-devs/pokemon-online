@@ -233,7 +233,7 @@ O[M]5-1
 #magnitude
 #me first
 #mean look
-S[M]1+
+S[M]1+1
 
 
 

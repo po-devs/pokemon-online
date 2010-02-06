@@ -9,6 +9,7 @@
 class Player;
 class BattleSituation;
 class Analyzer;
+class ChallengeInfo;
 
 class QIdListWidgetItem;
 
@@ -50,14 +51,16 @@ public slots:
     /* Signals received by players */
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, const QString &mess);
+    void recvPM(int src, int dest, const QString &mess);
     void recvTeam(int id, const QString &name);
     void disconnected(int id);
-    void dealWithChallenge(int desc, int from, int to);
+    void dealWithChallenge(const ChallengeInfo &c, int from, int to);
     void battleResult(int desc, int winner, int loser);
     void sendBattleCommand(int id, const QByteArray &command);
     void info(int , const QString& );
     void showContextMenu(const QPoint &p);
     void kick(int i);
+    void silentKick(int i);
     void ban(int i);
     void dosKick(int id);
     void dosBan(const QString &ip);

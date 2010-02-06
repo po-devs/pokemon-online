@@ -39,7 +39,6 @@ Server::Server(quint16 port)
     connect(mylist, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
 
     mainchat()->setFixedWidth(500);
-    mainchat()->setReadOnly(true);
 
     srand(time(NULL));
 
@@ -252,8 +251,13 @@ void Server::showContextMenu(const QPoint &p) {
     {
         QMenu *menu = new QMenu(this);
 
+        QSignalMapper *mymapper3 = new QSignalMapper(menu);
+        QAction *viewinfo = menu->addAction("&Silent Kick", mymapper3, SLOT(map()));
+        mymapper3->setMapping(viewinfo, item->id());
+        connect(mymapper3, SIGNAL(mapped(int)), SLOT(silentKick(int)));
+
         QSignalMapper *mymapper = new QSignalMapper(menu);
-        QAction *viewinfo = menu->addAction("&Kick", mymapper, SLOT(map()));
+        viewinfo = menu->addAction("&Kick", mymapper, SLOT(map()));
         mymapper->setMapping(viewinfo, item->id());
         connect(mymapper, SIGNAL(mapped(int)), SLOT(kick(int)));
 
@@ -270,7 +274,14 @@ void Server::kick(int id) {
     kick(id, 0);
 }
 
+void Server::silentKick(int id) {
+    if (playerExist(id))
+        player(id)->kick();
+}
+
 void Server::kick(int id, int src) {
+    if (!playerExist(id))
+        return;
     foreach(Player *p, myplayers)
     {
         p->relay().notify(NetworkServ::PlayerKick, qint32(id), qint32(src));
@@ -279,7 +290,7 @@ void Server::kick(int id, int src) {
         printLine("The server kicked " + name(id) + "!");
     else
         printLine(name(id) + " was kicked by " + name(src));
-    player(id)->kick();
+    silentKick(id);
 }
 
 void Server::ban(int id) {
@@ -371,9 +382,19 @@ void Server::recvMessage(int id, const QString &mess)
         sendAll(tr("%1: %2").arg(name(id)).arg(re));
 }
 
+void Server::recvPM(int src, int dest, const QString &mess)
+{
+    if (playerExist(dest) && player(dest)->isLoggedIn()) {
+        player(dest)->relay().sendPM(src, mess);
+    }
+}
+
 QString Server::name(int id) const
 {
-    return player(id)->name();
+    if (playerExist(id))
+        return player(id)->name();
+    else
+        return "";
 }
 
 void Server::incomingConnection()
@@ -403,34 +424,36 @@ void Server::incomingConnection()
     myplayersitems[id] = it;
 
     connect(player(id), SIGNAL(loggedIn(int, QString)), this, SLOT(loggedIn(int, QString)));
+    connect(player(id), SIGNAL(recvTeam(int, QString)), this, SLOT(recvTeam(int, QString)));
     connect(player(id), SIGNAL(recvMessage(int, QString)), this, SLOT(recvMessage(int,QString)));
-    connect(player(id), SIGNAL(recvTeam(int)), this, SLOT(recvTeam(int)));
     connect(player(id), SIGNAL(disconnected(int)), SLOT(disconnected(int)));
-    connect(player(id), SIGNAL(challengeStuff(int,int,int)), SLOT(dealWithChallenge(int,int,int)));
+    connect(player(id), SIGNAL(challengeStuff(ChallengeInfo,int,int)), SLOT(dealWithChallenge(ChallengeInfo,int,int)));
     connect(player(id), SIGNAL(battleFinished(int,int,int)), SLOT(battleResult(int,int,int)));
     connect(player(id), SIGNAL(info(int,QString)), SLOT(info(int,QString)));
     connect(player(id), SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
     connect(player(id), SIGNAL(playerBan(int,int)), SLOT(playerBan(int, int)));
+    connect(player(id), SIGNAL(PMReceived(int,int,QString)), this, SLOT(recvPM(int,int,QString)));
 }
 
-void Server::dealWithChallenge(int desc, int from, int to)
+void Server::dealWithChallenge(const ChallengeInfo &c, int from, int to)
 {
+    int desc = c.desc();
     if (!playerExist(to) || !player(to)->isLoggedIn()) {
         sendMessage(from, tr("That player is not online"));
         //INVALID BEHAVIOR
         return;
     }
-    if (desc == Player::Sent) {
-	if (!player(to)->challenge(from)) {
+    if (desc == ChallengeInfo::Sent) {
+        if (!player(to)->challenge(c)) {
 	    sendMessage(from, tr("%1 is busy.").arg(name(to)));
         } else {
             printLine(tr("Challenge issued from %1 to %2").arg(name(from), name(to)));
         }
     }  else {
-	if (desc == Player::Accepted) {
+        if (desc == ChallengeInfo::Accepted) {
 	    startBattle(from, to);
 	} else {
-	    player(to)->sendChallengeStuff(desc, from);
+            player(to)->sendChallengeStuff(c, from);
 	}
     }
 }
@@ -468,9 +491,11 @@ void Server::playerBan(int src, int dest)
 
 void Server::startBattle(int id1, int id2)
 {
+    ChallengeInfo c = player(id1)->getChallengeInfo(id2);
+
     printLine(tr("Battle between %1 and %2 started").arg(name(id1)).arg(name(id2)));
 
-    BattleSituation *battle = new BattleSituation(*player(id1), *player(id2));
+    BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c);
 
     mybattles.insert(id1, battle);
     mybattles.insert(id2, battle);

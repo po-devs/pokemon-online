@@ -20,10 +20,25 @@ void Analyzer::login(const TrainerTeam &team)
     notify(Login, team);
 }
 
-void Analyzer::sendChallengeStuff(quint8 desc, int id)
+void Analyzer::sendChallengeStuff(const ChallengeInfo &c)
 {
-    notify(ChallengeStuff, desc, qint32(id));
+    notify(ChallengeStuff, c);
 }
+
+
+void Analyzer::sendPM(int id, const QString &mess)
+{
+    notify(SendPM, qint32(id), mess);
+}
+
+enum ChallengeDesc
+{
+    Sent,
+    Accepted,
+    Canceled,
+    Busy,
+    Refused
+};
 
 void Analyzer::sendMessage(const QString &message)
 {
@@ -107,10 +122,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	}
     case ChallengeStuff:
 	{
-	    quint8 stuff;
-            qint32 id;
-	    in >> stuff >> id;
-	    emit challengeStuff(stuff, id);
+            ChallengeInfo c;
+            in >> c;
+            emit challengeStuff(c);
 	    break;
 	}
     case EngageBattle:
@@ -187,6 +201,14 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             Player p;
             in >> p;
             emit teamChanged(p);
+            break;
+        }
+    case SendPM:
+        {
+            qint32 idsrc;
+            QString mess;
+            in >> idsrc >> mess;
+            emit PMReceived(idsrc, mess);
             break;
         }
     default:

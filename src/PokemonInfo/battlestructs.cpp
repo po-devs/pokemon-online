@@ -353,3 +353,13 @@ QDataStream & operator << (QDataStream &out, const BattleChoice &po)
     out << po.pokeSwitch << po.numSwitch;
     return out;
 }
+
+QDataStream & operator >> (QDataStream &in, ChallengeInfo & c) {
+    in >> c.dsc >> c.opp >> c.sleepClauseEnabled;
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const ChallengeInfo & c) {
+    out << c.dsc <<  c.opp << c.sleepClauseEnabled;
+    return out;
+}

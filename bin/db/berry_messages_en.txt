@@ -1,5 +1,5 @@
 %s ate its %i!
-%s snapped out of its confusion!|%s's status cleared!|%s is not paralyzed anymore!|%s healed from its burnt!|%s thawed out!|%s is cured from its poison!|%s is cured from its poison!
+%s snapped out of its confusion!|%s's status cleared!|%s is not paralyzed anymore!|%s healed from its burnt!|%s thawed out!|%s woke up!|%s is cured from its poison!|%s is cured from its poison!
 %s's %m's PPs are restored!
 %s restored a some HP!
 

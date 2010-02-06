@@ -565,7 +565,8 @@ struct MMFaintUser : public MM
     }
 
     static void ms(int s, int, BS &b) {
-	b.koPoke(s, s);
+        if (!turn(b,s).value("FaintActivationPrevented").toBool())
+            b.koPoke(s, s);
     }
 };
 
@@ -1103,22 +1104,22 @@ struct MMSubstitute : public MM
     }
 
     static void bte(int s, int t, BS &b) {
-	if (s == t || t==-1) {
+        if (s == t || s==-1) {
 	    return;
 	}
-	if (!b.hasSubstitute(t)) {
+        if (!b.hasSubstitute(s)) {
 	    return;
 	}
-	QString effect = turn(b,s)["EffectActivated"].toString();
+        QString effect = turn(b,t)["EffectActivated"].toString();
 
 	if (effect == "Bind" || effect == "Block" || effect == "Covet" || effect == "Curse" || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge"
 	    || effect == "HealBlock" || effect == "KnockOff" || effect == "LeechSeed"
 	    || effect == "LockOn" || effect == "Mimic" || effect == "PsychoShift" || effect == "Sketch" || effect == "Switcheroo"
 	    || effect == "WorrySeed" || effect == "Yawn")
 	{
-	    turn(b,s)["EffectBlocked"] = true;
-	    if (turn(b,s)["Power"].toInt() == 0)
-		b.sendMoveMessage(128, 2, s,0,t,turn(b,s)["Attack"].toInt());
+            turn(b,t)["EffectBlocked"] = true;
+            if (turn(b,t)["Power"].toInt() == 0)
+                b.sendMoveMessage(128, 2, t,0,s,turn(b,t)["Attack"].toInt());
 	    return;
 	}
     }
@@ -1164,7 +1165,7 @@ struct MMAromaTherapy : public MM
 	int move = MM::move(b,s);
 	b.sendMoveMessage(3, (move == 16) ? 0 : 1, s, type(b,s));
 	for (int i = 0; i < 6; i++) {
-            //SoundProof
+            //SoundProof blocks healbell but not aromatherapy
             if (!b.poke(s,i).ko() && (move == 16 || b.poke(s,i).ability() != 95)) {
 		b.changeStatus(s,i,Pokemon::Fine);
 	    }
@@ -1279,6 +1280,11 @@ struct MMSwitcheroo : public MM
 	b.disposeItem(t);
 	b.acqItem(s, i2);
 	b.acqItem(t, i1);
+
+        if (i2)
+            b.sendMoveMessage(132,1,s,type(b,s),t,i2);
+        if (i1)
+            b.sendMoveMessage(132,1,t,type(b,s),s,i2);
     }
 };
 
@@ -1467,15 +1473,23 @@ struct MMBind : public MM
 
     static void uas (int s, int t, BS &b) {
 	poke(b,t)["TrappedBy"] = s;
+        poke(b,t)["BindedBy"] = s;
 	poke(b,t)["TrappedCount"] = b.poke(s).item() == 190 ? 5 : (rand()%4) + 2; /* Grip claw = 5 turns */
 	poke(b,t)["TrappedMove"] = move(b,s);
 	poke(b,s)["Trapped"] = t;
+        poke(b,s)["Binded"] = t;
 	addFunction(poke(b,t), "EndTurn", "Bind", &et);
     }
 
     static void et (int s, int, BS &b) {
 	int count = poke(b,s)["TrappedCount"].toInt() - 1;
 	int move = poke(b,s)["TrappedMove"].toInt();
+        int t = b.rev(s);
+        if (t != poke(b,s).value("BindedBy").toInt() || b.koed(t) || b.koed(s) || !poke(b,t).contains("Binded") || poke(b,t)["Binded"] != s) {
+            poke(b,s).remove("TrappedBy");
+            removeFunction(poke(b,s),"EndTurn", "Bind");
+            return;
+        }
 	if (count <= 0) {
 	    poke(b,s).remove("TrappedBy");
 	    removeFunction(poke(b,s),"EndTurn", "Bind");
@@ -1483,6 +1497,7 @@ struct MMBind : public MM
 	} else {
 	    poke(b,s)["TrappedCount"] = count;
 	    b.sendMoveMessage(10,0,s,MoveInfo::Type(move),s,move);
+            b.inflictDamage(s, b.poke(s).totalLifePoints()/16,s,false);
 	}
     }
 };
@@ -2037,7 +2052,7 @@ struct MMGrudge : public MM
     }
 
     static void akbst(int s, int t, BS &b) {
-    	int trn = poke(b,s)["DestinyBondTurn"].toInt();
+        int trn = poke(b,s)["GrudgeTurn"].toInt();
 
 	if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool())) {
 	    if (!b.koed(t) && !b.hasSubstitute(t)) {
@@ -2554,7 +2569,7 @@ struct MMBrickBreak : public MM
 struct MMLockOn : public MM
 {
     MMLockOn() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -3596,16 +3611,22 @@ struct MMCaptivate : public MM {
 
 struct MMExplosion : public MM {
     MMExplosion() {
-        functions["DetermineAttackFailure"] = &daf;
+        functions["MoveSettings"] = &ms;
     }
 
-    static void daf(int s, int t, BS &b) {
+    static void ms(int s, int t, BS &b) {
         //Damp
         if (b.hasWorkingAbility(t,16)) {
-            b.fail(t,144,0);
+            b.sendMoveMessage(114,0,t);
         } else if (b.hasWorkingAbility(s,16)) {
-            b.fail(s,144,0);
+            b.sendMoveMessage(114,0,s);
+        } else {
+            return;
         }
+
+        turn(b,s)["FaintActivationPrevented"] = true;
+        turn(b,s)["Power"] = 0;
+        turn(b,s)["PossibleTargets"] = Move::None;
     }
 };
 
@@ -3777,7 +3798,7 @@ void MoveEffect::init()
     REGISTER_MOVE(51, GastroAcid);
     REGISTER_MOVE(52, GrassKnot);
     REGISTER_MOVE(53, Gravity);
-    REGISTER_MOVE(54, Grudge);
+    REGISTER_MOVE(54, Grudge); //doesn't work
     REGISTER_MOVE(55, BoostSwap);
     REGISTER_MOVE(56, GyroBall);
     REGISTER_MOVE(57, Weather);

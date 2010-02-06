@@ -3,6 +3,7 @@
 
 #include "../PokemonInfo/networkstructs.h"
 #include "analyze.h"
+#include "../PokemonInfo/battlestructs.h"
 
 /* a single player */
 class Player : public QObject
@@ -15,18 +16,6 @@ public:
 	LoggedIn,
 	Challenged,
 	Battling
-    };
-    enum ChallengeDesc
-    {
-	Sent,
-	Accepted,
-	Canceled,
-	Busy,
-        Refused,
-
-
-
-        ChallengeDescLast
     };
 
     Player(QTcpSocket *sock, int id);
@@ -61,13 +50,14 @@ public:
 
     void doWhenDC();
     /* Sends the challenge, returns false if can't even send the challenge */
-    bool challenge(int id);
+    bool challenge(const ChallengeInfo &c);
+    ChallengeInfo getChallengeInfo(int id); /* to get the battle info of a challenge received by that player */
 
     void startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf);
     void battleResult(int result, int winner, int loser);
 
     void sendChallengeStuff(int stuff, int otherparty);
-    void addChallenge(int id);
+    void addChallenge(const ChallengeInfo &c);
     void cancelChallenges();
 
     void kick();
@@ -80,7 +70,7 @@ signals:
     void disconnected(int id);
     void recvTeam(int id, const QString &name);
 
-    void challengeStuff(int desc, int idfrom, int idto);
+    void challengeStuff(const ChallengeInfo &, int idfrom, int idto);
     void battleFinished(int desc, int winner, int loser);
 
     void battleMessage(int id,const BattleChoice &b);
@@ -88,12 +78,13 @@ signals:
     void info(int id, const QString &);
     void playerKick(int,int);
     void playerBan(int,int);
+    void PMReceived(int, int, const QString &);
 public slots:
     void loggedIn(const TeamInfo &team);
     void recvMessage(const QString &mess);
     void recvTeam(const TeamInfo &team);
     void disconnected();
-    void challengeStuff(int desc, int id);
+    void challengeStuff(const ChallengeInfo &c);
     void battleForfeited();
     void battleMessage(const BattleChoice &b);
     void battleChat(const QString &s);
@@ -101,6 +92,7 @@ public slots:
     void hashReceived(const QString &hash);
     void playerKick(int);
     void playerBan(int);
+    void receivePM(int, const QString&);
 private:
     TeamInfo myteam;
     Analyzer myrelay;
@@ -108,8 +100,8 @@ private:
     int myauth;
     QString myip;
 
-    QSet<int> m_challenged;
-    int m_challengedby;
+    QHash<int, ChallengeInfo> m_challenged;
+    ChallengeInfo m_challengedby;
     int m_opponent;
     int m_state;
     QString waiting_name; //For authentification procedures

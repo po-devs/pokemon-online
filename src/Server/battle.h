@@ -12,6 +12,7 @@ class BattleSituation : public QThread
 
     PROPERTY(int, turn)
     PROPERTY(bool, finished)
+    PROPERTY(bool, sleepClause)
 public:
     enum {
 	AllButPlayer = -2,
@@ -21,7 +22,7 @@ public:
     };
     typedef QVariantHash context;
 
-    BattleSituation(Player &p1, Player &p2);
+    BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData);
     ~BattleSituation();
 
     const TeamBattle &pubteam(int id);
@@ -174,7 +175,9 @@ public:
         AbsStatusChange,
         Substitute,
         BattleEnd,
-        BlankMessage
+        BlankMessage,
+        CancelMove,
+        SleepClause
     };
 
     enum WeatherM
@@ -233,7 +236,7 @@ signals:
     void battleInfo(int id, const QByteArray &info);
     void battleFinished(int result, int winner, int loser);
 private:
-    /* To interrupt the thread when needed */
+    /* To interrupt the thread when needed. We use that instead of mutex cuz we can lock/unlock them in different threads */
     QSemaphore sem;
     /* To notify the thread to quit */
     bool quit;
@@ -245,9 +248,14 @@ private:
     /* What choice we allow the players to have */
     BattleChoices options[2];
     BattleChoice choice[2];
-    bool haveChoice[2];
+    /* Is set to false once a player choses it move */
+    bool hasChoice[2];
+    /* just indicates if the player could originally move or not */
+    bool couldMove[2];
 
     TeamBattle team1, team2;
+    /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
+    int currentForcedSleepPoke[2];
     int mycurrentpoke[2]; /* -1 for koed */
     int myid[2];
     QSet<int> koedPokes;

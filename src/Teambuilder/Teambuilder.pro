@@ -1,5 +1,5 @@
 QT += network \
-      xml
+    xml
 TARGET = Teambuilder
 DESTDIR = ../../bin
 TEMPLATE = app
@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     ../Utilities/functions.cpp \
     ../Utilities/pokeListe.cpp \
     ../Utilities/pokeButton.cpp \
-    ../Utilities/md5.c
+    ../Utilities/md5.c \
+    pmwindow.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -43,7 +44,8 @@ HEADERS += teambuilder.h \
     ../Utilities/functions.h \
     ../Utilities/pokeListe.h \
     ../Utilities/pokeButton.h \
-    ../Utilities/md5.h
+    ../Utilities/md5.h \
+    pmwindow.h
 LIBS += -L../../bin \
     -lzip
 DEFINES = CLIENT_SIDE

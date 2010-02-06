@@ -128,6 +128,11 @@ int QIdListWidgetItem::id() const
     return myid;
 }
 
+QScrollDownTextEdit::QScrollDownTextEdit()
+{
+    setReadOnly(true);
+}
+
 void QScrollDownTextEdit::insertHtml(const QString &text)
 {
     moveCursor(QTextCursor::End);
@@ -182,7 +187,7 @@ QValidator::State QNickValidator::validate(const QString &input) const
     bool punct = false;
 
     for (int i = 0; i < input.length(); i++) {
-        if (input[i] == '%' || input[i] == '*')
+        if (input[i] == '%' || input[i] == '*' || input[i] == '<')
             return QValidator::Invalid;
         if (input[i].isPunct()) {
             if (punct == true) {
