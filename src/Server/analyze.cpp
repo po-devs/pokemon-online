@@ -57,6 +57,11 @@ void Analyzer::sendTeamChange(int num, const BasicInfo &team, int auth)
     notify(SendTeam, qint32(num), team, qint8(auth));
 }
 
+void Analyzer::sendPM(int dest, const QString &mess)
+{
+    notify(SendPM, qint32(dest), mess);
+}
+
 void Analyzer::sendLogin(int num, const BasicInfo &team, int auth)
 {
     notify(Login, qint32(num), team, qint8(auth));
@@ -72,9 +77,9 @@ void Analyzer::keepAlive()
     notify(KeepAlive);
 }
 
-void Analyzer::sendChallengeStuff(quint8 stuff, int num)
+void Analyzer::sendChallengeStuff(const ChallengeInfo &c)
 {
-    notify(ChallengeStuff, stuff, num);
+    notify(ChallengeStuff, c);
 }
 
 void Analyzer::sendBattleResult(quint8 res, int winner, int loser)
@@ -133,10 +138,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	}
     case ChallengeStuff:
 	{
-	    quint8 stuff;
-            qint32 id;
-	    in >> stuff >> id;
-	    emit challengeStuff(stuff, id);
+            ChallengeInfo c;
+            in >> c;
+            emit challengeStuff(c);
 	    break;
 	}
     case BattleMessage:
@@ -191,6 +195,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     case ServNameChange:
         emit invalidName();
         break;
+    case SendPM:
+        {
+            qint32 id;
+            QString s;
+            in >> id >> s;
+            emit PMsent(id, s);
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;

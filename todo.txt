@@ -22,3 +22,6 @@ Lilp
 -faire un QPixmapCache pour optimiser
 -Faire des barres hp animées
 -Quand on tape sur une touche dans la fenêtre de combat, aller directement dans le line edit
+-Changer le design de la battle window
+-Ajouter les attaques 3G
+-Faire disparaître les sprites pour les attaques comme vol, tunnel,..

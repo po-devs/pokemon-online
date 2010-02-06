@@ -5,18 +5,6 @@
 
 class Player;
 
-namespace ChallengeStuff
-{
-    enum ChallengeDesc
-    {
-	Sent,
-	Accepted,
-	Canceled,
-	Busy,
-	Refused
-    };
-}
-
 class BaseChallengeWindow : public QWidget
 {
     Q_OBJECT
@@ -32,6 +20,9 @@ signals:
 public slots:
     void onChallenge();
     void onCancel();
+protected:
+    QCheckBox *sleepClause;
+    QPushButton *challenge_b;
 private:
     int myid;
 };
@@ -41,13 +32,15 @@ class ChallengeWindow : public BaseChallengeWindow
     Q_OBJECT
 public:
     ChallengeWindow(const Player &p, QWidget *parent=0);
+protected slots:
+    void onChallenge();
 };
 
 class ChallengedWindow: public BaseChallengeWindow
 {
     Q_OBJECT
 public:
-    ChallengedWindow(const Player &p, QWidget *parent = 0);
+    ChallengedWindow(const Player &p, bool slpCls, QWidget *parent = 0);
 };
 
 #endif // CHALLENGE_H

@@ -246,7 +246,7 @@
 80#metronome
 60#healing - milk drink
 81#mimic
-
+74#Mind reader
 83#minimize
 84-16#16 is dark -- miracle eye
 22-1_4#mirror coat

@@ -3,6 +3,7 @@
 #include "challenge.h"
 #include "teambuilder.h"
 #include "battlewindow.h"
+#include "pmwindow.h"
 #include "../Utilities/otherwidgets.h"
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/pokemonstructs.h"
@@ -27,7 +28,6 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
     myplayers->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
     myplayers->setSortingEnabled(true);
-    mychat->setReadOnly(true);
     myregister->setDisabled(true);
     mynick = t->trainerNick();
 
@@ -56,9 +56,13 @@ void Client::showContextMenu(const QPoint &requested)
 	QSignalMapper *mymapper2 = new QSignalMapper(menu);
 	QAction *challenge = menu->addAction("&Challenge", mymapper2, SLOT(map()));
 	mymapper2->setMapping(challenge, item->id());
+        QSignalMapper *mymapper5 = new QSignalMapper(menu);
+        QAction *PM = menu->addAction("&PM", mymapper5, SLOT(map()));
+        mymapper5->setMapping(PM, item->id());
 
         connect(mymapper, SIGNAL(mapped(int)), SLOT(seeInfo(int)));
         connect(mymapper2, SIGNAL(mapped(int)), SLOT(sendChallenge(int)));
+        connect(mymapper5, SIGNAL(mapped(int)), SLOT(startPM(int)));
 
         int myauth = player(id(ownName())).auth;
         int otherauth = player(item->id()).auth;
@@ -90,6 +94,48 @@ void Client::kick(int p) {
 
 void Client::ban(int p) {
     relay().notify(NetworkCli::PlayerBan, qint32(p));
+}
+
+void Client::startPM(int id)
+{
+    if (id == this->id(ownName()) || !playerExist(id)) {
+        return;
+    }
+
+    if (mypms.contains(id)) {
+        mypms[id]->raise();
+        this->activateWindow();
+        return;
+    }
+
+    PMWindow *p = new PMWindow(id, ownName(), name(id));
+    p->setParent(this);
+    p->setWindowFlags(Qt::Window);
+    p->show();
+
+    connect(p, SIGNAL(challengeSent(int)), this, SLOT(sendChallenge(int)));
+    connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
+    connect(p, SIGNAL(destroyed(int)), this, SLOT(removePM(int)));
+
+    mypms[id] = p;
+}
+
+void Client::PMReceived(int id, QString pm)
+{
+    if (!playerExist(id)) {
+        return;
+    }
+    if (!mypms.contains(id)) {
+        startPM(id);
+    }
+    mypms[id]->raise();
+    mypms[id]->activateWindow();
+    mypms[id]->printLine(pm);
+}
+
+void Client::removePM(int id)
+{
+    mypms.remove(id);
 }
 
 void Client::loadTeam()
@@ -139,13 +185,14 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(teamChanged(Player)), SLOT(teamChanged(Player)));
     connect(&relay(), SIGNAL(playerLogin(Player)), SLOT(playerLogin(Player)));
     connect(&relay(), SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
-    connect(&relay(), SIGNAL(challengeStuff(int,int)), SLOT(challengeStuff(int,int)));
+    connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
     connect(&relay(), SIGNAL(battleStarted(int, TeamBattle, BattleConfiguration)), SLOT(battleStarted(int, TeamBattle, BattleConfiguration)));
     connect(&relay(), SIGNAL(battleFinished(int,int,int)), SLOT(battleFinished(int,int,int)));
     connect(&relay(), SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
     connect(&relay(), SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
     connect(&relay(), SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
     connect(&relay(), SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
+    connect(&relay(), SIGNAL(PMReceived(int,QString)), this, SLOT(PMReceived(int,QString)));
 }
 
 void Client::playerKicked(int dest, int src) {
@@ -196,11 +243,6 @@ bool Client::battling() const
     return mybattle != NULL;
 }
 
-void Client::clearBattle()
-{
-    mybattle = NULL;
-}
-
 void Client::messageReceived(const QString &mess)
 {
     printLine(mess);
@@ -241,29 +283,30 @@ void Client::seeInfo(int id)
     }
 }
 
-void Client::seeChallenge(int id)
+void Client::seeChallenge(const ChallengeInfo &c)
 {
-    if (playerExist(id))
+    if (playerExist(c))
     {
 	if (busy()) {
 	    /* Warns the server that we are too busy to accept the challenge */
-	    relay().sendChallengeStuff(ChallengeStuff::Busy, id);
-	    mychallenge->raise();
-	    mychallenge->activateWindow();
-	} else {
-	    mychallenge = new ChallengedWindow(player(id));
+            ChallengeInfo d = c;
+            d.dsc = ChallengeInfo::Busy;
+            relay().sendChallengeStuff(c);
+        } else {
+            mychallenge = new ChallengedWindow(player(c),c.sleepClause());
 	    connect(mychallenge, SIGNAL(challenge(int)), SLOT(acceptChallenge(int)));
 	    connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
 	    connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
 	    connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
 	}
+        mychallenge->raise();
+        mychallenge->activateWindow();
     }
 }
 
 void Client::battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
     mybattle = new BattleWindow(this->team()->trainerNick(),name(id), this->id(ownName()), id, team, conf);
-    connect(mybattle, SIGNAL(destroyed()), this, SLOT(clearBattle()));
     connect(mybattle, SIGNAL(forfeit()), SLOT(forfeitBattle()));
     connect(mybattle, SIGNAL(battleCommand(BattleChoice)), &relay(), SLOT(battleCommand(BattleChoice)));
     connect(mybattle, SIGNAL(battleMessage(QString)), &relay(), SLOT(battleMessage(QString)));
@@ -310,19 +353,19 @@ QString Client::name(int id) const
     return info(id).name;
 }
 
-void Client::challengeStuff(int desc, int id)
+void Client::challengeStuff(const ChallengeInfo &c)
 {
-    if (desc == ChallengeStuff::Sent) {
-	seeChallenge(id);
+    if (c.desc() == ChallengeInfo::Sent) {
+        seeChallenge(c);
     } else {
-	if (playerExist(id)) {
-	    if (desc == ChallengeStuff::Refused) {
-		printLine(tr("%1 refused your challenge.").arg(name(id)));
-	    } else if (desc == ChallengeStuff::Busy) {
-		printLine(tr("%1 is busy.").arg(name(id)));
-	    } else if (desc == ChallengeStuff::Canceled) {
-		printLine(tr("%1 canceled their challenge").arg(name(id)));
-		if (challengeWindowOpen() && challengeWindowPlayer()== id) {
+        if (playerExist(c.opponent())) {
+            if (c.desc() == ChallengeInfo::Refused) {
+                printLine(tr("%1 refused your challenge.").arg(name(c)));
+            } else if (c.desc() == ChallengeInfo::Busy) {
+                printLine(tr("%1 is busy.").arg(name(c)));
+            } else if (c.desc() == ChallengeInfo::Cancelled) {
+                printLine(tr("%1 canceled their challenge").arg(name(c)));
+                if (challengeWindowOpen() && challengeWindowPlayer()== c) {
 		    closeChallengeWindow();
 		}
 	    }
@@ -342,17 +385,18 @@ bool Client::challengeWindowOpen() const
 
 void Client::acceptChallenge(int id)
 {
-    relay().sendChallengeStuff(ChallengeStuff::Accepted, id);
+    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Accepted, id));
 }
 
 void Client::refuseChallenge(int id)
 {
-    relay().sendChallengeStuff(ChallengeStuff::Refused, id);
+    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Refused, id));
 }
 
 void Client::sendChallenge(int id)
 {
-    relay().sendChallengeStuff(ChallengeStuff::Sent, id);
+    QSettings s;
+    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Sent, id, s.value("sleep_clause").toBool()));
 }
 
 void Client::clearChallenge()
@@ -418,6 +462,10 @@ void Client::removePlayer(int id)
     myplayersitems.remove(id);
     mynames.remove(name);
     myplayersinfo.remove(id);
+    if (mypms.contains(id)) {
+        delete mypms[id];
+        mypms.remove(id);
+    }
 }
 
 QString Client::ownName() const
@@ -428,7 +476,14 @@ QString Client::ownName() const
 void Client::playerReceived(const Player &p)
 {
     if (myplayersinfo.contains(p.id)) {
-        removePlayer(p.id);
+        QString name = info(p.id).name;
+
+        /* removes the item in the playerlist */
+        delete myplayers->takeItem(myplayers->row(myplayersitems[p.id]));
+
+        myplayersitems.remove(p.id);
+        mynames.remove(name);
+        myplayersinfo.remove(p.id);
     }
 
     myplayersinfo.insert(p.id, p);
@@ -447,6 +502,9 @@ void Client::playerReceived(const Player &p)
 
     myplayersitems.insert(p.id, item);
     mynames.insert(name(p.id), p.id);
+    if (mypms.contains(p.id)) {
+        mypms[p.id]->changeName(p.team.name);
+    }
 
     myplayers->addItem(item);
 }

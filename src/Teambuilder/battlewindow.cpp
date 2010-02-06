@@ -27,14 +27,17 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
     setWindowTitle(tr("Battling against %1").arg(opponent));
     QGridLayout *mylayout = new QGridLayout(this);
 
-    mylayout->addWidget(mydisplay = new BattleDisplay(info()), 0, 0, 3, 1);
-    mylayout->addWidget(mychat = new QScrollDownTextEdit(), 0, 1, 1, 2);
-    mylayout->addWidget(myline = new QLineEdit(), 1, 1, 1, 2);
-    mylayout->addWidget(myforfeit = new QPushButton(tr("&Forfeit")), 2, 1);
-    mylayout->addWidget(mysend = new QPushButton(tr("&Send")), 2, 2);
-    mylayout->addWidget(mystack = new QStackedWidget(), 3, 0, 1, 3);
-    mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 4, 1);
-    mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémon")), 4, 2);
+    mylayout->addWidget(mydisplay = new BattleDisplay(info()), 0, 0, 3, 2);
+    mylayout->addWidget(mychat = new QScrollDownTextEdit(), 0, 2, 1, 2);
+    mylayout->addWidget(myline = new QLineEdit(), 1, 2, 1, 2);
+    mylayout->addWidget(myforfeit = new QPushButton(tr("&Forfeit")), 2, 2);
+    mylayout->addWidget(mysend = new QPushButton(tr("Sen&d")), 2, 3);
+    mylayout->addWidget(mystack = new QStackedWidget(), 3, 0, 1, 4);
+    mylayout->addWidget(mycancel = new QPushButton(tr("&Cancel")), 4,0);
+    mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 4, 2);
+    mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémon")), 4, 3);
+
+    mycancel->setDisabled(true);
 
     for (int i = 0; i < 6; i++) {
 	myazones[i] = new AttackZone(team.poke(i));
@@ -42,8 +45,6 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
 
 	connect(myazones[i], SIGNAL(clicked(int)), SLOT(attackClicked(int)));
     }
-
-    mychat->setReadOnly(true);
 
     mypzone = new PokeZone(team);
     mystack->addWidget(mypzone);
@@ -54,12 +55,14 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
     connect(myswitch, SIGNAL(clicked()), SLOT(switchToPokeZone()));
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
+    connect(mycancel, SIGNAL(clicked()), SLOT(emitCancel()));
 
     show();
 
     switchTo(0);
 
-    printHtml(tr("<span style='color:blue'><b>Battle between %1 and %2 started!</b></span> <br />").arg(name(true), name(false)));
+    printHtml(toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(name(true), name(false)));
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 QString BattleWindow::name(bool self) const
@@ -83,6 +86,17 @@ QString BattleWindow::rnick(bool self) const
 	return info().opponent.nick();
 }
 
+void BattleWindow::closeEvent(QCloseEvent *)
+{
+    emit forfeit();
+    close();
+}
+
+void BattleWindow::emitCancel()
+{
+    mycancel->setDisabled(true);
+    emit battleCommand(BattleChoice(false, BattleChoice::Cancel));
+}
 
 void BattleWindow::switchTo(int pokezone)
 {
@@ -161,6 +175,7 @@ void BattleWindow::sendChoice(const BattleChoice &b)
 {
     emit battleCommand(b);
     info().possible = false;
+    mycancel->setEnabled(true);
     updateChoices();
 }
 
@@ -238,6 +253,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	{
 	    info().possible = true;
 	    in >> info().choices;
+            mycancel->setDisabled(true);
 	    updateChoices();
 	    break;
 	}
@@ -537,6 +553,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
             in >> res;
             myforfeit->setText(tr("&Close"));
             battleEnded = true;
+            mycancel->setDisabled(true);
             if (res == Tie) {
                 printHtml(toBoldColor(tr("Tie between %1 and %2!").arg(name(true), name(false)), Qt::blue));
             } else {
@@ -545,8 +562,25 @@ void BattleWindow::receiveInfo(QByteArray inf)
             break;
     }
     case BlankMessage:
-        {
             printLine("");
+            break;
+    case CancelMove:
+        {
+            info().possible = true;
+            mycancel->setDisabled(true);
+            updateChoices();
+            break;
+        }
+    case SleepClause:
+        {
+            bool inBattle;
+            in >> inBattle;
+
+            if (inBattle) {
+                printLine(tr("Sleep Clause prevented %1 from falling asleep!").arg(nick(self)));
+            } else {
+                printHtml(toBoldColor("Rule: ", Qt::blue) + "Sleep Clause Enabled.");
+            }
             break;
         }
     default:
@@ -700,6 +734,9 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
     status[Opponent] = new QLabel();
     foeteam->addWidget(status[Opponent], 100, Qt::AlignCenter);
 
+    gender[Opponent] = new QLabel();
+    foeteam->addWidget(gender[Opponent]);
+
     nick[Opponent] = new QLabel(info.name[Opponent]);
     foeteam->addWidget(nick[Opponent], 0, Qt::AlignRight);
     foeteam->setSpacing(1);
@@ -722,6 +759,10 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
     team->setSpacing(1);
 
     l->addLayout(team);
+
+    gender[Myself] = new QLabel();
+    team->addWidget(gender[Myself]);
+
     nick[Myself] = new QLabel(info.name[Myself]);
     team->addWidget(nick[Myself], 0, Qt::AlignLeft);
 
@@ -749,11 +790,13 @@ void BattleDisplay::updatePoke(bool self)
             bars[Myself]->setRange(0,mypoke().totalLifePoints());
             bars[Myself]->setValue(mypoke().lifePoints());
             bars[Myself]->setStyleSheet(health(mypoke().lifePoints()*100/mypoke().totalLifePoints()));
+            gender[Myself]->setPixmap(GenderInfo::Picture(info.currentPoke().gender()));
             int status = info.myteam.poke(info.currentIndex).status();
             this->status[Myself]->setText(toBoldColor(StatInfo::ShortStatus(status), StatInfo::StatusColor(status)));
         } else {
             zone->switchToNaught(self);
             nick[Myself]->setText("");
+            gender[Myself]->setPixmap(QPixmap());
             bars[Myself]->setValue(0);
         }
     }
@@ -763,11 +806,13 @@ void BattleDisplay::updatePoke(bool self)
             nick[Opponent]->setText(tr("%1 Lv.%2").arg(foe().nick()).arg(foe().level()));
             bars[Opponent]->setValue(foe().lifePercent());
             bars[Opponent]->setStyleSheet(health(foe().lifePercent()));
+            gender[Opponent]->setPixmap(GenderInfo::Picture(info.opponent.gender()));
             int status = info.opponent.status();
             this->status[Opponent]->setText(toBoldColor(StatInfo::ShortStatus(status), StatInfo::StatusColor(status)));
         }  else {
             zone->switchToNaught(self);
             nick[Opponent]->setText("");
+            gender[Opponent]->setPixmap(QPixmap());
             bars[Opponent]->setValue(0);
         }
     }

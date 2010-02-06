@@ -10,6 +10,7 @@ class Player;
 class BattleChoice;
 class TeamBattle;
 class BattleConfiguration;
+class ChallengeInfo;
 
 /* Commands to dialog with the server */
 namespace NetworkCli
@@ -35,7 +36,9 @@ namespace NetworkCli
         PlayerBan,
         ServNumChange,
         ServDescChange,
-        ServNameChange
+        ServNameChange,
+        SendPM,
+        Away
     };
 
     enum ProtocolError
@@ -60,7 +63,7 @@ public:
     void sendMessage(const QString &message);
     void connectTo(const QString &host, quint16 port);
     void sendTeam(const TrainerTeam & team);
-    void sendChallengeStuff(quint8 desc, int id);
+    void sendChallengeStuff(const ChallengeInfo &c);
     void sendBattleResult(int result);
     bool isConnected() const;
 
@@ -90,7 +93,7 @@ signals:
     /* logout... */
     void playerLogout(int id);
     /* challengerelated */
-    void challengeStuff(int desc, int id);
+    void challengeStuff(const ChallengeInfo &c);
     void battleStarted(int id, const TeamBattle &myteam, const BattleConfiguration &conf);
     void battleFinished(int res, int srcid, int destid);
     void battleMessage(const QByteArray &mess);
@@ -99,6 +102,7 @@ signals:
     void playerKicked(int p, int src);
     void playerBanned(int p, int src);
     void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip);
+    void PMReceived(int id, const QString &mess);
 
 public slots:
     /* slots called by the network */
@@ -108,6 +112,9 @@ public slots:
     /* by the battle window */
     void battleCommand(const BattleChoice &comm);
     void battleMessage(const QString &mess);
+
+    /* By the pm window */
+    void sendPM(int id, const QString &mess);
 
 private:
     /* The connection to the outside */

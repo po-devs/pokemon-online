@@ -85,7 +85,9 @@ public:
         AbsStatusChange,
         Substitute,
         BattleEnd,
-        BlankMessage
+        BlankMessage,
+        CancelMove,
+        SleepClause
     };
 
     enum WeatherM
@@ -146,12 +148,14 @@ public slots:
     void sendMessage();
     void attackButton();
     void clickforfeit();
-
+    void emitCancel();
     void switchToPokeZone();
 signals:
     void battleCommand(const BattleChoice &);
     void battleMessage(const QString &str);
     void forfeit();
+protected:
+    void closeEvent(QCloseEvent *);
 private:
     QStackedWidget *mystack;
     AttackZone *myazones[6];
@@ -159,7 +163,7 @@ private:
     QScrollDownTextEdit *mychat;
     QLineEdit *myline;
     BattleDisplay *mydisplay;
-    QPushButton *myswitch, *myattack, *myforfeit, *mysend;
+    QPushButton *myswitch, *myattack, *myforfeit, *mysend, *mycancel;
 
     bool blankMessage;
     bool battleEnded;
@@ -212,6 +216,7 @@ protected:
     QLabel *nick[2];
     QLabel *status[2];
     QProgressBar *bars[2];
+    QLabel *gender[2];
     /* The pokeballs to indicate how well a team is doing */
     QLabel *advpokeballs[6];
     QLabel *mypokeballs[6];

@@ -8,7 +8,7 @@
 #include <map>
 #include <algorithm>
 
-BattleSituation::BattleSituation(Player &p1, Player &p2)
+BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
 	:team1(p1.team()), team2(p2.team())
 {
     myid[0] = p1.id();
@@ -16,6 +16,9 @@ BattleSituation::BattleSituation(Player &p1, Player &p2)
     mycurrentpoke[0] = -1;
     mycurrentpoke[1] = -1;
     finished() = false;
+    sleepClause() = c.sleepClause();
+    currentForcedSleepPoke[0] = -1;
+    currentForcedSleepPoke[1] = -1;
 }
 
 MirrorMoveAmn amn;
@@ -26,8 +29,8 @@ BattleSituation::~BattleSituation()
     {
 	/* So the thread will quit immediately after being released */
 	quit = true;
-	/* Should be enough lol */
-	sem.release(1000);
+        /* Should be enough */
+        sem.release(1000);
 	/* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
 	wait();
     }
@@ -38,17 +41,29 @@ void BattleSituation::start()
     quit = false; /* doin' that cuz if any battle command is called why quit is set to true disasters happen */
 
     for (int i = 0; i < 6; i++) {
-        notify(All, AbsStatusChange, Player1, qint8(poke(Player1,i).status()));
-        notify(All, AbsStatusChange, Player2, qint8(poke(Player2,i).status()));
+        if (poke(Player1,i).ko()) {
+            changeStatus(Player1, i, Pokemon::Koed);
+        }
+        if (poke(Player2,i).ko()) {
+            changeStatus(Player2, i, Pokemon::Koed);
+        }
     }
+
+    if (sleepClause()) {
+        //False for saying this is not in battle message but rule message
+        notify(All, SleepClause, 0, false);
+    }
+
+    notify(All, BlankMessage,0);
+
     /* Beginning of the battle! */
     sendPoke(Player1, 0);
     sendPoke(Player2, 0);
     callEntryEffects(Player1);
     callEntryEffects(Player2);
 
-    haveChoice[0] = false;
-    haveChoice[1] = false;
+    hasChoice[0] = false;
+    hasChoice[1] = false;
     turn() = 0;
 
     QThread::start();
@@ -237,14 +252,16 @@ bool BattleSituation::requestChoice(int player, bool acquire, bool custom)
 	return false;
     }
 
-    haveChoice[player] = true;
+    couldMove[player] = hasChoice[player] = true;
+
     if (!custom)
 	options[player] = createChoice(player);
 
     notify(player, OfferChoice, player, options[player]);
 
-    if (acquire)
-	sem.acquire(1); /* Lock until a choice is received */
+    if (acquire) {
+        sem.acquire(1); /* Lock until a choice is received */
+    }
 
     //test to see if the quit was requested by system or if choice was received
     testquit();
@@ -255,11 +272,15 @@ bool BattleSituation::requestChoice(int player, bool acquire, bool custom)
 
 void BattleSituation::requestChoices()
 {
+    couldMove[Player1] = couldMove[Player2] = false;
+
     /* Gets the number of choices to be done */
     int count = int(requestChoice(Player1, false)) + requestChoice(Player2, false);
 
-    /* Lock until BOTH choices are received */
-    sem.acquire(count);
+    if (count > 0) {
+        /* Lock until BOTH choices are received */
+        sem.acquire(1);
+    }
 
     //test to see if the quit was requested by system or if choice was received
     testquit();
@@ -439,8 +460,14 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 {
     int player = spot(id);
 
-    if (haveChoice[player] == false) {
-	//INVALID BEHAVIOR
+    if (hasChoice[player] == false) {
+        /* If at least one of the two player still hasn't moved, and the cancel is valid, we allow the cancel */
+        if (b.cancelled() && couldMove[player] && (hasChoice[player] || hasChoice[rev(player)])) {
+            hasChoice[player] = true;
+            notify(player, CancelMove, player);
+        } else {
+            //INVALID BEHAVIOR
+        }
     } else {
 	if (!b.match(options[player])) {
 	    //INVALID BEHAVIOR
@@ -454,8 +481,11 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 	    }
 	    /* One player has chosen their solution, so there's one less wait */
 	    choice[player] = b;
-	    haveChoice[player] = false;
-	    sem.release(1);
+            hasChoice[player] = false;
+            /* If everyone has chosen their solution, we carry on */
+            if (!hasChoice[player] && !hasChoice[rev(player)]) {
+                sem.release(1);
+            }
 	}
     }
 }
@@ -512,7 +542,7 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
         foreach(QString effect, effects) {
 	    turnlong[source]["EffectBlocked"] = false;
 	    turnlong[source]["EffectActivated"] = effect;
-	    callpeffects(source, target, "BlockTurnEffects");
+            callpeffects(target, source, "BlockTurnEffects");
 	    if (turnlong[source]["EffectBlocked"].toBool() == true) {
 		continue;
 	    }
@@ -619,7 +649,11 @@ bool BattleSituation::testAccuracy(int player, int target)
 
     //OHKO
     if (MoveInfo::isOHKO(turnlong[player]["MoveChosen"].toInt())) {
-        return rand() % 100 < 30;
+        bool ret = (rand() % 100) < 30;
+        if (!ret) {
+            notify(All, Miss, player);
+        }
+        return ret;
     }
 
     //No Guard
@@ -756,6 +790,14 @@ bool BattleSituation::testStatus(int player)
 void BattleSituation::inflictConfusedDamage(int player)
 {
     notify(All, StatusMessage, player, qint8(HurtConfusion));
+
+    turnlong[player]["Type"] = Pokemon::Curse;
+    turnlong[player]["Power"] = 40;
+    turnlong[player]["TypeMod"] = 4;
+    turnlong[player]["Stab"] = 2;
+    turnlong[player]["Category"] = Move::Physical;
+    int damage = calculateDamage(player, player);
+    inflictDamage(player, damage, player, true);
 }
 
 void BattleSituation::testFlinch(int player, int target)
@@ -979,7 +1021,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		}
 
 		bool sub = hasSubstitute(target);
-		turnlong[player]["HadSubstitute"] = sub;
+                turnlong[target]["HadSubstitute"] = sub;
 
 		if (turnlong[player]["Power"].toInt() > 1) {
 		    testCritical(player, target);
@@ -1300,6 +1342,13 @@ void BattleSituation::inflictStatus(int player, int status, int attacker)
             if (turnlong[player].contains(q)) {
                 return;
             }
+
+            if (status == Pokemon::Asleep && currentForcedSleepPoke[player] != -1) {
+                notify(All, SleepClause, player, true);
+                return;
+            } else {
+                currentForcedSleepPoke[player] = currentPoke(player);
+            }
         }
         changeStatus(player, status);
         if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
@@ -1426,6 +1475,11 @@ void BattleSituation::changeStatus(int player, int status)
 	return;
     }
 
+    //Sleep clause
+    if (status != Pokemon::Asleep && currentForcedSleepPoke[player] == currentPoke(player)) {
+        currentForcedSleepPoke[player] = -1;
+    }
+
     notify(All, StatusChange, player, qint8(status));
     notify(All, AbsStatusChange, player, qint8(currentPoke(player)), qint8(status));
     poke(player).status() = status;
@@ -1446,6 +1500,10 @@ void BattleSituation::changeStatus(int team, int poke, int status)
     } else {
 	this->poke(team, poke).status() = status;
         notify(All, AbsStatusChange, team, qint8(poke), qint8(status));
+        //Sleep clause
+        if (status != Pokemon::Asleep && currentForcedSleepPoke[team] == poke) {
+            currentForcedSleepPoke[team] = -1;
+        }
     }
 }
 
@@ -1770,7 +1828,7 @@ void BattleSituation::requestSwitchIns()
         requestChoice(p, false);
     }
 
-    sem.acquire(count);
+    sem.acquire(1);
 
     testquit();
 
@@ -1827,7 +1885,9 @@ void BattleSituation::testWin()
             notify(All, BattleEnd, Player1, qint8(Win));
             emit battleFinished(Win, id(Player1), id(Player2));
         }
+        /* The battle is finished so we stop the thread */
         sem.acquire(1);
+        throw QuitException();
     }
 }
 
