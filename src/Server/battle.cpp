@@ -386,7 +386,7 @@ std::vector<int> BattleSituation::sortedBySpeed() {
         ret.push_back(Player1);
         ret.push_back(Player2);
     } else {
-        if (rand() % 2 == 0) {
+        if (true_rand() % 2 == 0) {
             ret.push_back(Player1);
             ret.push_back(Player2);
         } else {
@@ -649,7 +649,7 @@ bool BattleSituation::testAccuracy(int player, int target)
 
     //OHKO
     if (MoveInfo::isOHKO(turnlong[player]["MoveChosen"].toInt())) {
-        bool ret = (rand() % 100) < 30;
+        bool ret = (true_rand() % 100) < 30;
         if (!ret) {
             notify(All, Miss, player);
         }
@@ -673,7 +673,7 @@ bool BattleSituation::testAccuracy(int player, int target)
             * (20+turnlong[player]["Stat7AbilityModifier"].toInt())/20
             * (20-turnlong[target]["Stat6AbilityModifier"].toInt())/20;
 
-    if (rand() % 100 < acc) {
+    if (true_rand() % 100 < acc) {
 	return true;
     } else {
 	notify(All, Miss, player);
@@ -689,7 +689,7 @@ void BattleSituation::testCritical(int player, int target)
 	return;
     }
 
-    int randnum = rand() % 48;
+    int randnum = true_rand() % 48;
     int minch;
     int craise = turnlong[player]["CriticalRaise"].toInt();
 
@@ -734,7 +734,7 @@ bool BattleSituation::testStatus(int player)
 	case Pokemon::Paralysed:
 	{
             //MagicGuard
-            if (!hasWorkingAbility(player, 52) && rand() % 4 == 0) {
+            if (!hasWorkingAbility(player, 52) && true_rand() % 4 == 0) {
 		notify(All, StatusMessage, player, qint8(PrevParalysed));
 		return false;
 	    }
@@ -742,7 +742,7 @@ bool BattleSituation::testStatus(int player)
 	}
 	case Pokemon::Frozen:
 	{
-	    if (rand() % 255 > 51)
+            if (true_rand() % 255 > 51)
 	    {
 		notify(All, StatusMessage, player, qint8(PrevFrozen));
 		return false;
@@ -774,7 +774,7 @@ bool BattleSituation::testStatus(int player)
 
 	    notify(All, StatusMessage, player, qint8(FeelConfusion));
 
-	    if (rand() % 2 == 0) {
+            if (true_rand() % 2 == 0) {
 		inflictConfusedDamage(player);
 		return false;
 	    }
@@ -808,7 +808,7 @@ void BattleSituation::testFlinch(int player, int target)
     }
 
     int rate = turnlong[player]["FlinchRate"].toInt();
-    int randnum = rand() % 100;
+    int randnum = true_rand() % 100;
     /* Serene Grace */
     if (hasWorkingAbility(player, 82)) {
         randnum /= 2;
@@ -820,7 +820,7 @@ void BattleSituation::testFlinch(int player, int target)
 
     if (hasWorkingItem(player, 87) && turnlong[player]["KingRock"].toBool()) /* King's rock */
     {
-	if (rand() % 100 < 10) {
+        if (true_rand() % 100 < 10) {
 	    turnlong[target]["Flinched"] = true;
 	}
     }
@@ -1020,6 +1020,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		    notify(All, Hit, target);
 		}
 
+                turnlong[target]["HadSubstitute"] = false;
 		bool sub = hasSubstitute(target);
                 turnlong[target]["HadSubstitute"] = sub;
 
@@ -1164,7 +1165,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     }
 
     /* Then we check if the effect hits */
-    int randnum = rand() % 100;
+    int randnum = true_rand() % 100;
     /* Serene Grace */
     if (hasWorkingAbility(player,82)) {
         randnum /= 2;
@@ -1238,7 +1239,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 		%endcode
 	    */
     
-	    QStringList mychoice = possibilities[rand()%possibilities.size()].split('&');
+            QStringList mychoice = possibilities[true_rand()%possibilities.size()].split('&');
     
 	    foreach (QString s, mychoice) {
 		std::string s2 = s.toStdString();
@@ -1298,7 +1299,7 @@ void BattleSituation::inflictConfused(int player)
     //OwnTempo
     if (!pokelong[player]["Confused"].toBool() && !hasWorkingAbility(player,65)) {
 	pokelong[player]["Confused"] = true;
-	pokelong[player]["ConfusedCount"] = (rand() % 4) + 1;
+        pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 1;
 	notify(All, StatusChange, player, qint8(-1));
 
         callieffects(player, player,"AfterStatusChange");
@@ -1484,7 +1485,7 @@ void BattleSituation::changeStatus(int player, int status)
     notify(All, AbsStatusChange, player, qint8(currentPoke(player)), qint8(status));
     poke(player).status() = status;
     if (status == Pokemon::Asleep) {
-	poke(player).sleepCount() = (rand() % 5) +1;
+        poke(player).sleepCount() = (true_rand() % 5) +1;
     }
     if (status == Pokemon::DeeplyPoisoned) {
 	pokelong[player]["ToxicCount"] = 0;
@@ -1581,7 +1582,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
-    int randnum = rand() % (255-217) + 217;
+    int randnum = true_rand() % (255-217) + 217;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,90))); //Sniper
     int power = move["Power"].toInt();
     int type = move["Type"].toInt();
@@ -1660,7 +1661,7 @@ int BattleSituation::repeatNum(int player, context &move)
     if (min == max) {
 	return min;
     } else {
-	return min + (rand() % (max-min));
+        return min + (true_rand() % (max-min));
     }
 }
 

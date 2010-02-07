@@ -11,6 +11,7 @@ class BattleChoice;
 class TeamBattle;
 class BattleConfiguration;
 class ChallengeInfo;
+class UserInfo;
 
 /* Commands to dialog with the server */
 namespace NetworkCli
@@ -38,7 +39,10 @@ namespace NetworkCli
         ServDescChange,
         ServNameChange,
         SendPM,
-        Away
+        Away,
+        GetUserInfo,
+        GetUserAlias,
+        GetBanList
     };
 
     enum ProtocolError
@@ -103,7 +107,10 @@ signals:
     void playerBanned(int p, int src);
     void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip);
     void PMReceived(int id, const QString &mess);
-
+    /* From the control panel */
+    void userInfoReceived(const UserInfo &ui);
+    void userAliasReceived(const QString &s);
+    void banListReceived(const QString &n, const QString &ip);
 public slots:
     /* slots called by the network */
     void error();
@@ -115,6 +122,10 @@ public slots:
 
     /* By the pm window */
     void sendPM(int id, const QString &mess);
+
+    /* By the control panel */
+    void getUserInfo(const QString &name);
+    void getBanList();
 
 private:
     /* The connection to the outside */

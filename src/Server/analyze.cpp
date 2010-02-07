@@ -92,6 +92,11 @@ void Analyzer::sendBattleCommand(const QByteArray & command)
     notify(BattleMessage, command);
 }
 
+void Analyzer::sendUserInfo(const UserInfo &ui)
+{
+    notify(GetUserInfo, ui);
+}
+
 void Analyzer::error()
 {
     emit connectionError(socket().error(), socket().errorString());
@@ -201,7 +206,18 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             QString s;
             in >> id >> s;
             emit PMsent(id, s);
+            break;
         }
+    case GetUserInfo:
+        {
+            QString name;
+            in >> name;
+            emit getUserInfo(name);
+            break;
+        }
+    case GetBanList:
+        emit banListRequested();
+        break;
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;

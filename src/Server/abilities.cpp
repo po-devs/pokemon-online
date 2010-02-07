@@ -183,7 +183,7 @@ struct AMCuteCharm : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if (!b.koed(t) && b.isSeductionPossible(s,t) && rand() % 100 < 30 && !poke(b,t).contains("AttractedTo")) {
+        if (!b.koed(t) && b.isSeductionPossible(s,t) && true_rand() % 100 < 30 && !poke(b,t).contains("AttractedTo")) {
             poke(b,t)["AttractedTo"] = s;
             poke(b,s)["Attracted"] = t;
             addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
@@ -201,7 +201,7 @@ struct AMCuteCharm : public AM {
             int seducer = poke(b,s)["AttractedTo"].toInt();
             if (poke(b,seducer).contains("Attracted") && poke(b,seducer)["Attracted"].toInt() == s) {
                 b.sendMoveMessage(58,0,s,0,seducer);
-                if (rand() % 2 == 0) {
+                if (true_rand() % 2 == 0) {
                     turn(b,s)["ImpossibleToMove"] = true;
                     b.sendMoveMessage(58, 2,s);
                 }
@@ -274,13 +274,13 @@ struct AMEffectSpore : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if (b.poke(t).status() == Pokemon::Fine && rand() % 100 < 30) {
-            if (rand() % 3 == 0) {
+        if (b.poke(t).status() == Pokemon::Fine && true_rand() % 100 < 30) {
+            if (true_rand() % 3 == 0) {
                 if (b.canGetStatus(t,Pokemon::Asleep)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Grass);
                     b.inflictStatus(t, Pokemon::Asleep,s);
                 }
-            } else if (rand() % 1 == 0) {
+            } else if (true_rand() % 1 == 0) {
                 if (b.canGetStatus(t,Pokemon::Paralysed)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Electric);
                     b.inflictStatus(t, Pokemon::Paralysed,s);
@@ -397,7 +397,7 @@ struct AMForeWarn : public AM {
                 }
             }
 
-            int m = poss[rand()%poss.size()];
+            int m = poss[true_rand()%poss.size()];
 
             b.sendAbMessage(22,0,s,t,MoveInfo::Type(m),m);
         }
@@ -750,7 +750,7 @@ struct AMShedSkin : public AM {
     }
 
     static void et(int s, int, BS &b) {
-        if (rand() % 100 < 30 && b.poke(s).status() != Pokemon::Fine) {
+        if (true_rand() % 100 < 30 && b.poke(s).status() != Pokemon::Fine) {
             b.sendAbMessage(54,0,s,s,Pokemon::Bug);
             b.healStatus(s, b.poke(s).status());
         }

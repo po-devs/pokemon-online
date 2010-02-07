@@ -4,6 +4,7 @@
 #include "teambuilder.h"
 #include "battlewindow.h"
 #include "pmwindow.h"
+#include "controlpanel.h"
 #include "../Utilities/otherwidgets.h"
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/pokemonstructs.h"
@@ -42,6 +43,21 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
     relay().connectTo(url, 5080);
 }
 
+int Client::ownAuth() const
+{
+    return auth(ownId());
+}
+
+int Client::auth(int id) const
+{
+    return player(id).auth;
+}
+
+int Client::ownId() const
+{
+    return id(ownName());
+}
+
 void Client::showContextMenu(const QPoint &requested)
 {
     QIdListWidgetItem *item = dynamic_cast<QIdListWidgetItem*>(myplayers->itemAt(requested));
@@ -53,18 +69,22 @@ void Client::showContextMenu(const QPoint &requested)
 	QSignalMapper *mymapper = new QSignalMapper(menu);
 	QAction *viewinfo = menu->addAction("See &Info", mymapper, SLOT(map()));
 	mymapper->setMapping(viewinfo, item->id());
-	QSignalMapper *mymapper2 = new QSignalMapper(menu);
-	QAction *challenge = menu->addAction("&Challenge", mymapper2, SLOT(map()));
-	mymapper2->setMapping(challenge, item->id());
         QSignalMapper *mymapper5 = new QSignalMapper(menu);
         QAction *PM = menu->addAction("&PM", mymapper5, SLOT(map()));
         mymapper5->setMapping(PM, item->id());
 
         connect(mymapper, SIGNAL(mapped(int)), SLOT(seeInfo(int)));
-        connect(mymapper2, SIGNAL(mapped(int)), SLOT(sendChallenge(int)));
         connect(mymapper5, SIGNAL(mapped(int)), SLOT(startPM(int)));
 
-        int myauth = player(id(ownName())).auth;
+        int myauth = ownAuth();
+
+        if (myauth > 0) {
+            QSignalMapper *mymapper2 = new QSignalMapper(menu);
+            QAction *viewinfo = menu->addAction("&Control Panel", mymapper2, SLOT(map()));
+            mymapper2->setMapping(viewinfo, item->id());
+            connect(mymapper2, SIGNAL(mapped(int)), SLOT(controlPanel(int)));
+        }
+
         int otherauth = player(item->id()).auth;
 
         if (otherauth < myauth) {
@@ -113,11 +133,47 @@ void Client::startPM(int id)
     p->setWindowFlags(Qt::Window);
     p->show();
 
-    connect(p, SIGNAL(challengeSent(int)), this, SLOT(sendChallenge(int)));
+    connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
     connect(p, SIGNAL(destroyed(int)), this, SLOT(removePM(int)));
 
     mypms[id] = p;
+}
+
+void Client::controlPanel(int id)
+{
+    if (!playerExist(id)) {
+        return;
+    }
+
+    if (myCP) {
+        myCP->raise();
+        myCP->activateWindow();
+        return;
+    }
+
+    myCP = new ControlPanel(ownAuth(), UserInfo(name(id), UserInfo::Online, auth(id)));
+    myCP->setParent(this);
+    myCP->setWindowFlags(Qt::Window);
+    myCP->show();
+
+    connect(myCP, SIGNAL(getUserInfo(QString)), &relay(), SLOT(getUserInfo(QString)));
+    connect(&relay(), SIGNAL(userInfoReceived(UserInfo)), this, SLOT(setPlayer(UserInfo)));
+    connect(&relay(), SIGNAL(userAliasReceived(QString)), myCP, SLOT(addAlias(QString)));
+    connect(this, SIGNAL(userInfoReceived(UserInfo)), myCP, SLOT(setPlayer(UserInfo)));
+    connect(&relay(), SIGNAL(banListReceived(QString,QString)), myCP, SLOT(addNameToBanList(QString, QString)));
+    connect(myCP, SIGNAL(getBanList()), &relay(), SLOT(getBanList()));
+}
+
+void Client::setPlayer(const UserInfo &ui)
+{
+    if (id(ui.name) == -1) {
+        emit userInfoReceived(ui);
+    } else {
+        UserInfo ui2 (ui);
+        ui2.flags |= UserInfo::Online;
+        emit userInfoReceived(ui2);
+    }
 }
 
 void Client::PMReceived(int id, QString pm)

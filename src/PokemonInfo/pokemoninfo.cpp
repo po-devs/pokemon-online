@@ -64,6 +64,7 @@ QTSList<QStringList> AbilityInfo::m_Messages;
 
 QTSList<QString> GenderInfo::m_Names;
 QTSList<QPixmap> GenderInfo::m_Pictures;
+QTSList<QPixmap> GenderInfo::m_BattlePictures;
 QString GenderInfo::m_Directory;
 
 QString HiddenPowerInfo::m_Directory;
@@ -1184,6 +1185,7 @@ void GenderInfo::loadPixmaps()
 {
     for (int i = 0; i < NumberOfGenders(); i++) {
         m_Pictures << QPixmap(path(QString("gender%1.png").arg(i)));
+        m_BattlePictures << QPixmap(path(QString("battle_gender%1.png").arg(i)));
     }
 }
 
@@ -1211,9 +1213,9 @@ QString GenderInfo::Name(int abnum)
     return m_Names[abnum];
 }
 
-QPixmap GenderInfo::Picture(int gender)
+QPixmap GenderInfo::Picture(int gender, bool battle)
 {
-    return m_Pictures[gender];
+    return battle ? m_BattlePictures[gender] : m_Pictures[gender];
 }
 
 int GenderInfo::Default(int genderAvail) {

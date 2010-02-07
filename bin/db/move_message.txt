@@ -104,7 +104,7 @@ A sorrowful melody could be heard by everyone on the field.|%s's perish count fe
 
 %s prepared a gust of wind!|%s is glowing!|%s lowered its head!
 %s recycled %i!
-
+%f held on to the ground using its Suction Cups!|%f is solidly rooted to the ground!
 
 %s copied %f's %a!
 %s is protected from status!|%ts's safeguard wore off!|The mist prevents %f from having being inflicted status!

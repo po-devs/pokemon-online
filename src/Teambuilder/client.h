@@ -11,6 +11,7 @@ class QIdListWidgetItem;
 class BattleWindow;
 class QScrollDownTextEdit;
 class PMWindow;
+class ControlPanel;
 
 /* Struct representing a player's data */
 class Player
@@ -45,6 +46,9 @@ public:
     bool battling() const;
     bool busy() const;
     int id(const QString &name) const;
+    int ownId() const ;
+    int ownAuth() const ;
+    int auth(int id) const ;
 
     void seeChallenge(const ChallengeInfo &c);
     bool challengeWindowOpen() const;
@@ -99,12 +103,16 @@ public slots:
     void startPM(int);
     void removePM(int);
     void PMReceived(int, const QString);
+    /* CP */
+    void controlPanel(int);
+    void setPlayer(const UserInfo &ui);
     /* Teambuilder slots */
     void openTeamBuilder();
     void changeTeam();
     void showDock(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
 signals:
     void done();
+    void userInfoReceived(const UserInfo &ui);
 
 private:
     TrainerTeam *myteam;
@@ -132,6 +140,8 @@ private:
 
     /* You can call the teambuilder from here too */
     QPointer<QMainWindow> myteambuilder;
+
+    QPointer<ControlPanel> myCP;
 
     QHash<int, Player> myplayersinfo;
 

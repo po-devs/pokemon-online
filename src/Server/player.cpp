@@ -22,6 +22,8 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(kick(int)), SLOT(playerKick(int)));
     connect(&relay(), SIGNAL(ban(int)), SLOT(playerBan(int)));
     connect(&relay(), SIGNAL(PMsent(int,QString)), this, SLOT(receivePM(int,QString)));
+    connect(&relay(), SIGNAL(getUserInfo(QString)), this, SLOT(userInfoAsked(QString)));
+    connect(&relay(), SIGNAL(banListRequested()), this, SLOT(giveBanList()));
 }
 
 Player::~Player()
@@ -261,6 +263,17 @@ void Player::cancelChallenges()
     }
 }
 
+void Player::giveBanList()
+{
+    if (myauth == 0) {
+        return; //INVALID BEHAVIOR
+    }
+    QSet<QString> bannedMembers = SecurityManager::banList();
+    foreach(QString s, bannedMembers) {
+        relay().notify(NetworkServ::GetBanList, s, SecurityManager::ip(s));
+    }
+}
+
 bool Player::hasChallenged(int id) const
 {
     return m_challenged.contains(id);
@@ -409,11 +422,34 @@ void Player::registerRequest() {
         return; //INVALID BEHAVIOR
 
     for (int i = 0; i < SecurityManager::Member::saltLength; i++) {
-        m.salt[i] = (rand() % (122-49)) + 49;
+        m.salt[i] = (true_rand() % (122-49)) + 49;
     }
 
     SecurityManager::updateMemory(m);
     relay().notify(NetworkServ::AskForPass, m.salt);
+}
+
+void Player::userInfoAsked(const QString &name)
+{
+    if (myauth == 0) {
+        return; //INVALID BEHAVIOR
+    }
+
+    if (!SecurityManager::exist(name)) {
+        relay().sendUserInfo(UserInfo(name, UserInfo::NonExistant));
+        return;
+    }
+
+    SecurityManager::Member m = SecurityManager::member(name);
+
+    UserInfo ret(name, m.isBanned() ? UserInfo::Banned : 0, m.authority(), m.ip.trimmed());
+    relay().sendUserInfo(ret);
+
+    QList<QString> aliases = SecurityManager::membersForIp(m.ip.trimmed());
+
+    foreach(QString alias, aliases) {
+        relay().notify(NetworkServ::GetUserAlias, alias);
+    }
 }
 
 void Player::hashReceived(const QString &_hash) {

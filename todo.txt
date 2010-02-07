@@ -1,6 +1,6 @@
 /* Sous windows ouvrir avec le wordpad ou autre, mais pas le bloc-note :s !! */
 -Faire une page de crédits. On pourra utiliser un/plusieurs fichiers pour faire une mini db de Credits (et rajouter une classe CreditInfo à PokemonInfo)
-- attaques de baies
+-attaques de baies
 
 Credits:
 moi
