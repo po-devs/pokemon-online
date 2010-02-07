@@ -9,6 +9,7 @@ class TeamBattle;
 class BattleChoice;
 class BattleConfiguration;
 class ChallengeInfo;
+class UserInfo;
 
 /* Commands to dialog with the server */
 namespace NetworkServ
@@ -36,7 +37,10 @@ namespace NetworkServ
         ServDescChange,
         ServNameChange,
         SendPM,
-        Away
+        Away,
+        GetUserInfo,
+        GetUserAlias,
+        GetBanList
     };
 
     enum ProtocolError
@@ -68,6 +72,7 @@ public:
     void sendBattleCommand(const QByteArray &command);
     void sendTeamChange(int num, const BasicInfo &team, int auth=0);
     void sendPM(int dest, const QString &mess);
+    void sendUserInfo(const UserInfo &ui);
 
     void connectTo(const QString &host, quint16 port);
 
@@ -102,6 +107,8 @@ signals:
     void kick(int id);
     void ban(int id);
     void PMsent(int id, const QString);
+    void getUserInfo(const QString &name);
+    void banListRequested();
     /* Registry socket signals */
     void ipRefused();
     void nameTaken();

@@ -290,6 +290,7 @@ private:
     static QTSList<QString> m_Names;
     static QString m_Directory;
     static QTSList<QPixmap> m_Pictures;
+    static QTSList<QPixmap> m_BattlePictures;
 
     static void loadNames();
     static void loadPixmaps();
@@ -301,7 +302,7 @@ public:
     /* Self-explainable functions */
     static QString Name(int gender);
     static int NumberOfGenders();
-    static QPixmap Picture(int gender);
+    static QPixmap Picture(int gender, bool battle = false);
     static int Default(int genderAvail);
     static bool Possible(int gender, int genderAvail);
 };

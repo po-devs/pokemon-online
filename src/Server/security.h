@@ -100,17 +100,23 @@ public:
     static bool bannedIP(const QString &ip);
     static void ban(const QString &name);
     static void unban(const QString &name);
+    static void IPunban(const QString &ip);
     static void setauth(const QString &name, int auth);
     static void clearPass(const QString &name);
     static int maxAuth(const QString &ip);
 
+    static QString ip(const QString &name);
+
     static QMap<QString, Member> getMembers();
+    static QList<QString> membersForIp(const QString &ip);
+    static QSet<QString> banList();
 
 private:
     static void loadMembers();
     static QMap<QString, Member> members;
     static QHash<QString, int> memberPlaces;
     static QSet<QString> bannedIPs;
+    static QSet<QString> bannedMembers;
     static QMultiMap<QString, QString> playersByIp;
     static int lastPlace;
     static QFile memberFile;

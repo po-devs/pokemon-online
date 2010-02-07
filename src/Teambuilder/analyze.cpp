@@ -25,6 +25,10 @@ void Analyzer::sendChallengeStuff(const ChallengeInfo &c)
     notify(ChallengeStuff, c);
 }
 
+void Analyzer::getUserInfo(const QString &name)
+{
+    notify(GetUserInfo, name);
+}
 
 void Analyzer::sendPM(int id, const QString &mess)
 {
@@ -211,6 +215,27 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit PMReceived(idsrc, mess);
             break;
         }
+    case GetUserInfo:
+        {
+            UserInfo ui;
+            in >> ui;
+            emit userInfoReceived(ui);
+            break;
+        }
+    case GetUserAlias:
+        {
+            QString s;
+            in >> s;
+            emit userAliasReceived(s);
+            break;
+        }
+    case GetBanList:
+        {
+            QString s, i;
+            in >> s >> i;
+            emit banListReceived(s,i);
+            break;
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
     }
@@ -219,6 +244,11 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 Network & Analyzer::socket()
 {
     return mysocket;
+}
+
+void Analyzer::getBanList()
+{
+    notify(GetBanList);
 }
 
 void Analyzer::notify(int command)

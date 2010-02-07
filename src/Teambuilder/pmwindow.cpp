@@ -33,8 +33,6 @@ PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QS
     s->setMapping(m_challenge, id);
     connect(m_challenge, SIGNAL(clicked()), s, SLOT(map()));
     connect(s, SIGNAL(mapped(int)), SIGNAL(challengeSent(int)));
-
-    m_send->raise();
 }
 
 void PMWindow::changeName(const QString &newname)

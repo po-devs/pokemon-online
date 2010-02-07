@@ -3,6 +3,7 @@
 
 #include <QtCore>
 #include <QColor>
+#include <ctime>
 
 /* Changes a string so all what is inside is converted to html.
 
@@ -76,6 +77,10 @@ inline QString toColor(const QString &mess, const QColor &col)
 inline QString toBoldColor(const QString &mess, const QColor &col)
 {
     return QString("<b><span style='color:%1'>%2</span></b>").arg(col.name(), mess);
+}
+
+inline int true_rand() {
+    return rand() + (clock())/(CLOCKS_PER_SEC/1000);
 }
 
 QString md5_hash(const QString &toHash);

@@ -104,7 +104,7 @@ void Server::connectToRegistry()
             return;
         }
         else
-            registry_connection->deleteLater();;
+            registry_connection->deleteLater();
     }
 
     printLine("Connecting to registry...");
@@ -121,7 +121,7 @@ void Server::connectToRegistry()
 void Server::regConnectionError()
 {
     printLine("Error when connecting to the registry. Will restart in 30 seconds");
-    QTimer::singleShot(30000, this, SLOT(connectToRegistry()));
+    QTimer::singleShot(10000, this, SLOT(connectToRegistry()));
 }
 
 void Server::regConnected()
@@ -307,7 +307,7 @@ void Server::ban(int id, int src) {
     else
         printLine(name(id) + " was banned by " + name(src));
     SecurityManager::ban(name(id));
-    player(id)->kick();
+    silentKick(id);
 }
 
 void Server::dosKick(int id) {

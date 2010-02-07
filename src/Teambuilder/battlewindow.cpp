@@ -63,6 +63,8 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
 
     printHtml(toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(name(true), name(false)));
     layout()->setSizeConstraint(QLayout::SetFixedSize);
+
+    myline->grabKeyboard();
 }
 
 QString BattleWindow::name(bool self) const
@@ -790,7 +792,7 @@ void BattleDisplay::updatePoke(bool self)
             bars[Myself]->setRange(0,mypoke().totalLifePoints());
             bars[Myself]->setValue(mypoke().lifePoints());
             bars[Myself]->setStyleSheet(health(mypoke().lifePoints()*100/mypoke().totalLifePoints()));
-            gender[Myself]->setPixmap(GenderInfo::Picture(info.currentPoke().gender()));
+            gender[Myself]->setPixmap(GenderInfo::Picture(info.currentPoke().gender(), true));
             int status = info.myteam.poke(info.currentIndex).status();
             this->status[Myself]->setText(toBoldColor(StatInfo::ShortStatus(status), StatInfo::StatusColor(status)));
         } else {
@@ -806,7 +808,7 @@ void BattleDisplay::updatePoke(bool self)
             nick[Opponent]->setText(tr("%1 Lv.%2").arg(foe().nick()).arg(foe().level()));
             bars[Opponent]->setValue(foe().lifePercent());
             bars[Opponent]->setStyleSheet(health(foe().lifePercent()));
-            gender[Opponent]->setPixmap(GenderInfo::Picture(info.opponent.gender()));
+            gender[Opponent]->setPixmap(GenderInfo::Picture(info.opponent.gender(), true));
             int status = info.opponent.status();
             this->status[Opponent]->setText(toBoldColor(StatInfo::ShortStatus(status), StatInfo::StatusColor(status)));
         }  else {

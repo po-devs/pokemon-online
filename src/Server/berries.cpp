@@ -215,7 +215,7 @@ struct BMStarf : public BMPinch
         if (!testpinch(s, s, b,4))
             return;
 
-        b.gainStatMod(s, (rand()%5) +1, 2);
+        b.gainStatMod(s, (true_rand()%5) +1, 2);
     }
 };
 

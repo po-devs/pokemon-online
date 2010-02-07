@@ -4,6 +4,7 @@
 QMap<QString, SecurityManager::Member> SecurityManager::members;
 QNickValidator SecurityManager::val(NULL);
 QSet<QString> SecurityManager::bannedIPs;
+QSet<QString> SecurityManager::bannedMembers;
 QMultiMap<QString, QString> SecurityManager::playersByIp;
 const char * SecurityManager::path = "members.txt";
 QHash<QString, int> SecurityManager::memberPlaces;
@@ -34,6 +35,7 @@ void SecurityManager::loadMembers()
 
             if (m.isBanned()) {
                 bannedIPs.insert(m.ip.trimmed());
+                bannedMembers.insert(m.name);
             }
             playersByIp.insert(m.ip.trimmed(), m.name);
         }
@@ -102,6 +104,16 @@ QMap<QString,SecurityManager::Member> SecurityManager::getMembers() {
     return members;
 }
 
+QList<QString> SecurityManager::membersForIp(const QString &ip)
+{
+    return playersByIp.values(ip);
+}
+
+QSet<QString> SecurityManager::banList()
+{
+    return bannedMembers;
+}
+
 void SecurityManager::create(const Member &m) {
     members[m.name.toLower()] = m;
 
@@ -139,6 +151,7 @@ bool SecurityManager::bannedIP(const QString &ip) {
 void SecurityManager::ban(const QString &name) {
     if (exist(name)) {
         members[name].ban();
+        bannedMembers.insert(name);
         bannedIPs.insert(members[name].ip.trimmed());
         updateMember(members[name]);
     }
@@ -146,10 +159,21 @@ void SecurityManager::ban(const QString &name) {
 
 void SecurityManager::unban(const QString &name) {
     if (exist(name)) {
+        IPunban(members[name].ip.trimmed());
+    }
+}
+
+void SecurityManager::IPunban(const QString &ip)
+{
+    QList<QString> _members = membersForIp(ip);
+
+    foreach(QString name, _members)
+    {
         members[name].unban();
-        bannedIPs.remove(members[name].ip.trimmed());
+        bannedMembers.remove(name);
         updateMember(members[name]);
     }
+    bannedIPs.remove(ip);
 }
 
 void SecurityManager::setauth(const QString &name, int auth) {
@@ -176,4 +200,9 @@ int SecurityManager::maxAuth(const QString &ip) {
     }
 
     return max;
+}
+
+QString SecurityManager::ip(const QString &name)
+{
+    return members[name].ip.trimmed();
 }

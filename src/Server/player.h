@@ -93,6 +93,8 @@ public slots:
     void playerKick(int);
     void playerBan(int);
     void receivePM(int, const QString&);
+    void userInfoAsked(const QString& name);
+    void giveBanList();
 private:
     TeamInfo myteam;
     Analyzer myrelay;

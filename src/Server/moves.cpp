@@ -327,7 +327,7 @@ struct MMConversion : public MM
 		    poss.push_back(b.move(s,i));
 		}
 	    }
-	    turn(b,s)["ConversionType"] = poss[rand()%poss.size()];
+            turn(b,s)["ConversionType"] = poss[true_rand()%poss.size()];
 	} else {
 	    QList<int> poss;
 	    for (int i = 0; i < 4; i++) {
@@ -338,7 +338,7 @@ struct MMConversion : public MM
 	    if (poss.size() == 0) {
 		turn(b, s)["Failed"] = true;
 	    } else {
-		turn(b,s)["ConversionType"] = poss[rand()%poss.size()];
+                turn(b,s)["ConversionType"] = poss[true_rand()%poss.size()];
 	    }
 	}
     }
@@ -379,7 +379,7 @@ struct MMConversion2 : public MM
 	if (poss.size() == 0) {
 	    turn(b,s)["Failed"] = true;
 	} else {
-	    turn(b,s)["Conversion2Type"] = poss[rand()%poss.size()];
+            turn(b,s)["Conversion2Type"] = poss[true_rand()%poss.size()];
 	}
     }
 
@@ -462,7 +462,7 @@ struct MMDetect : public MM
 
     static void daf(int s, int, BS &b) {
 	if (poke(b,s).contains("ProtectiveMoveTurn") && poke(b,s)["ProtectiveMoveTurn"].toInt() == b.turn() - 1) {
-	    if (rand()%2 == 0) {
+            if (true_rand()%2 == 0) {
 		turn(b,s)["Failed"] = true;
 	    } else {
 		poke(b,s)["ProtectiveMoveTurn"] = b.turn();
@@ -924,9 +924,11 @@ struct MMRoar : public MM
 
     static void daf(int s, int t, BS &b) {
 	/* ingrain & suction cups */
-	if (poke(b,t).value("Rooted").toBool() || b.hasWorkingAbility(t,104)) {
-	    turn(b,s)["Failed"] = true;
-	} else {
+        if (poke(b,t).value("Rooted").toBool()) {
+            b.fail(s, 107, 1, Pokemon::Grass);
+        } else if (b.hasWorkingAbility(t,104)) {
+            b.fail(s, 107, 0);
+        } else{
 	    if (b.countAlive(t) <= 1) {
 		turn(b,s)["Failed"] = true;
 	    }
@@ -942,7 +944,7 @@ struct MMRoar : public MM
 		switches.push_back(i);
 	    }
 	}
-	b.sendPoke(t, switches[rand()%switches.size()]);
+        b.sendPoke(t, switches[true_rand()%switches.size()]);
         b.callEntryEffects(t);
     }
 };
@@ -1203,7 +1205,7 @@ struct MMAttract : public MM
 	    int seducer = poke(b,s)["AttractedTo"].toInt();
 	    if (poke(b,seducer).contains("Attracted") && poke(b,seducer)["Attracted"].toInt() == s) {
 		b.sendMoveMessage(58,0,s,0,seducer);
-		if (rand() % 2 == 0) {
+                if (true_rand() % 2 == 0) {
 		    turn(b,s)["ImpossibleToMove"] = true;
 		    b.sendMoveMessage(58, 2,s);
 		}
@@ -1284,7 +1286,7 @@ struct MMSwitcheroo : public MM
         if (i2)
             b.sendMoveMessage(132,1,s,type(b,s),t,i2);
         if (i1)
-            b.sendMoveMessage(132,1,t,type(b,s),s,i2);
+            b.sendMoveMessage(132,1,t,type(b,s),s,i1);
     }
 };
 
@@ -1390,7 +1392,7 @@ struct MMAssist : public MM
 	    }
 	}
 	if (!possible_moves.empty()) {
-	    turn(b,s)["AssistMove"] = *(possible_moves.begin() + (rand() %possible_moves.size()));
+            turn(b,s)["AssistMove"] = *(possible_moves.begin() + (true_rand() %possible_moves.size()));
 	} else {
 	    turn(b,s)["Failed"] = true;
 	}
@@ -1474,7 +1476,7 @@ struct MMBind : public MM
     static void uas (int s, int t, BS &b) {
 	poke(b,t)["TrappedBy"] = s;
         poke(b,t)["BindedBy"] = s;
-	poke(b,t)["TrappedCount"] = b.poke(s).item() == 190 ? 5 : (rand()%4) + 2; /* Grip claw = 5 turns */
+        poke(b,t)["TrappedCount"] = b.poke(s).item() == 190 ? 5 : (true_rand()%4) + 2; /* Grip claw = 5 turns */
 	poke(b,t)["TrappedMove"] = move(b,s);
 	poke(b,s)["Trapped"] = t;
         poke(b,s)["Binded"] = t;
@@ -1615,7 +1617,7 @@ struct MMTaunt : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        poke(b,t)["TauntsUntil"] = b.turn() + 1 + (rand()%4);
+        poke(b,t)["TauntsUntil"] = b.turn() + 1 + (true_rand()%4);
 	addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
 	addFunction(turn(b,t), "MovePossible", "Taunt", &mp);
 	b.sendMoveMessage(134,1,s,Pokemon::Dark,t);
@@ -1683,7 +1685,7 @@ struct MMDisable : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-	poke(b,t)["DisablesUntil"] = b.turn() + 3 + (rand()%4);
+        poke(b,t)["DisablesUntil"] = b.turn() + 3 + (true_rand()%4);
 	poke(b,t)["DisabledMove"] = poke(b,t)["MoveSlot"];
 	addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
 	addFunction(turn(b,t), "MovePossible", "Disable", &mp);
@@ -1826,7 +1828,7 @@ struct MMEncore : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-	poke(b,t)["EncoresUntil"] = b.turn() + 3 + (rand()%5);
+        poke(b,t)["EncoresUntil"] = b.turn() + 3 + (true_rand()%5);
 	poke(b,t)["EncoresMove"] = poke(b,t)["LastMoveSuccessfullyUsed"];
 	addFunction(poke(b,t), "MovesPossible", "Encore", &msp);
 	addFunction(turn(b,t), "MovePossible", "Encore", &mp);
@@ -1902,7 +1904,7 @@ struct MMEndure : public MM
 
     static void daf(int s, int, BS &b) {
 	if (poke(b,s).contains("ProtectiveMoveTurn") && poke(b,s)["ProtectiveMoveTurn"].toInt() == b.turn() - 1) {
-	    if (rand()%2 == 0) {
+            if (true_rand()%2 == 0) {
 		turn(b,s)["Failed"] = true;
 	    } else {
 		poke(b,s)["ProtectiveMoveTurn"] = b.turn();
@@ -2674,7 +2676,7 @@ struct MMMagnitude: public MM
     }
 
     static void bcd(int s, int, BS &b) {
-	int randnum = rand()%20;
+        int randnum = true_rand()%20;
 
 	int pow, magn;
 
@@ -2737,7 +2739,7 @@ struct MMMetronome : public MM
 	removeFunction(turn(b,s), "UponAttackSuccessful", "Metronome");
 
 	while (1) {
-	    int move = rand() % MoveInfo::NumberOfMoves();
+            int move = true_rand() % MoveInfo::NumberOfMoves();
 
 	    if (!b.hasMove(s,move) && !MMAssist::forbidden_moves.contains(move)) {
 		MoveEffect::setup(move,s,t,b);
@@ -2925,7 +2927,7 @@ struct MMOutrage : public MM
     static void uas(int s, int, BS &b) {
 	int count = poke(b,s)["OutrageCount"].toInt();
 	if (count == 0) {
-	    poke(b,s)["OutrageCount"] = 1 + (rand() % 2);
+            poke(b,s)["OutrageCount"] = 1 + (true_rand() % 2);
 	    addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
 	    poke(b,s)["OutrageMove"] = move(b,s);
 	} else {
@@ -2961,7 +2963,7 @@ struct MMPresent : public MM
     }
 
     static void btl(int s, int, BS &b) {
-	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 40 * (rand() % 4);
+        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 40 * (true_rand() % 4);
     }
 
     static void uas(int s, int t, BS &b) {
@@ -3011,7 +3013,7 @@ struct MMPsywave : public MM
     }
 
     static void cad (int s, int t, BS &b) {
-	b.inflictDamage(t, poke(b,s)["Level"].toInt() * (5 + (rand() % 11)) / 10,s,true);
+        b.inflictDamage(t, poke(b,s)["Level"].toInt() * (5 + (true_rand() % 11)) / 10,s,true);
     }
 };
 
@@ -3212,7 +3214,7 @@ struct MMSleepTalk : public MM
 	if (mp.size() == 0) {
 	    turn(b,s)["Failed"] = true;
 	} else {
-	    turn(b,s)["SleepTalkedMove"] = b.move(s, mp[rand()%mp.size()]);
+            turn(b,s)["SleepTalkedMove"] = b.move(s, mp[true_rand()%mp.size()]);
 	}
     }
 
