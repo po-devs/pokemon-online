@@ -27,16 +27,20 @@ Server::Server(quint16 port)
     mylayout->addWidget(bar,0,0,1,2);
 
     mylist = new QListWidget();
-    mylayout->addWidget(mylist,1,0);
+    mylayout->addWidget(mylist,1,0,2,1);
 
     mymainchat = new QTextEdit();
     mylayout->addWidget(mymainchat,1,1);
+
+    myline = new QLineEdit();
+    mylayout->addWidget(myline, 2,1);
 
     mylist->setContextMenuPolicy(Qt::CustomContextMenu);
     mylist->setSortingEnabled(true);
     mylist->setFixedWidth(150);
 
     connect(mylist, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
+    connect(myline, SIGNAL(returnPressed()), SLOT(sendServerMessage()));
 
     mainchat()->setFixedWidth(500);
 
@@ -104,7 +108,7 @@ void Server::connectToRegistry()
             return;
         }
         else
-            registry_connection->deleteLater();
+            registry_connection->deleteLater();;
     }
 
     printLine("Connecting to registry...");
@@ -121,7 +125,7 @@ void Server::connectToRegistry()
 void Server::regConnectionError()
 {
     printLine("Error when connecting to the registry. Will restart in 30 seconds");
-    QTimer::singleShot(10000, this, SLOT(connectToRegistry()));
+    QTimer::singleShot(30000, this, SLOT(connectToRegistry()));
 }
 
 void Server::regConnected()
@@ -307,7 +311,7 @@ void Server::ban(int id, int src) {
     else
         printLine(name(id) + " was banned by " + name(src));
     SecurityManager::ban(name(id));
-    silentKick(id);
+    player(id)->kick();
 }
 
 void Server::dosKick(int id) {
@@ -373,6 +377,15 @@ void Server::sendBattleCommand(int id, const QByteArray &comm)
 void Server::sendMessage(int id, const QString &message)
 {
     player(id)->sendMessage(message);
+}
+
+void Server::sendServerMessage()
+{
+    if (myline->text().trimmed().length() == 0) {
+        return;
+    }
+    sendAll("~~Server~~: " + myline->text());
+    myline->clear();
 }
 
 void Server::recvMessage(int id, const QString &mess)
@@ -445,7 +458,7 @@ void Server::dealWithChallenge(const ChallengeInfo &c, int from, int to)
     }
     if (desc == ChallengeInfo::Sent) {
         if (!player(to)->challenge(c)) {
-	    sendMessage(from, tr("%1 is busy.").arg(name(to)));
+            player(from)->sendChallengeStuff(ChallengeInfo::Busy, to);
         } else {
             printLine(tr("Challenge issued from %1 to %2").arg(name(from), name(to)));
         }
@@ -453,7 +466,7 @@ void Server::dealWithChallenge(const ChallengeInfo &c, int from, int to)
         if (desc == ChallengeInfo::Accepted) {
 	    startBattle(from, to);
 	} else {
-            player(to)->sendChallengeStuff(c, from);
+            player(to)->sendChallengeStuff(c.desc(), from);
 	}
     }
 }
@@ -492,6 +505,10 @@ void Server::playerBan(int src, int dest)
 void Server::startBattle(int id1, int id2)
 {
     ChallengeInfo c = player(id1)->getChallengeInfo(id2);
+
+    if (player(id1)->battling() || player(id2)->battling()) {
+        return;
+    }
 
     printLine(tr("Battle between %1 and %2 started").arg(name(id1)).arg(name(id2)));
 
@@ -635,7 +652,7 @@ void Server::removePlayer(int id)
         p->doWhenDC();
 
         p->blockSignals(true);
-    
+
 	QString playerName = p->name();
 	bool loggedIn = p->isLoggedIn();
         AntiDos::obj()->disconnect(p->ip(), id);

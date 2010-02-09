@@ -726,12 +726,17 @@ void TB_PokemonBody::configureMoves()
         map_container_with_value(PokemonInfo::LevelMoves(num), tr("4G Level")),
         map_container_with_value(PokemonInfo::PreEvoMoves(num), tr("4G Pre Evo")),
         map_container_with_value(PokemonInfo::EggMoves(num), tr("4G Breeding")),
-        map_container_with_value(PokemonInfo::SpecialMoves(num), tr("4G Special"))
+        map_container_with_value(PokemonInfo::SpecialMoves(num), tr("4G Special")),
+        map_container_with_value(PokemonInfo::TutorMoves(num,3), tr("3G Tutor")),
+        map_container_with_value(PokemonInfo::LevelMoves(num,3), tr("3G Level")),
+        map_container_with_value(PokemonInfo::PreEvoMoves(num,3), tr("3G Pre Evo")),
+        map_container_with_value(PokemonInfo::EggMoves(num,3), tr("3G Breeding")),
+        map_container_with_value(PokemonInfo::SpecialMoves(num,3), tr("3G Special"))
     };
 
     typedef QPair<int, QString> qpair;
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 11; i++) {
         foreach(qpair pair, sets[i]) {
             if (already_loaded.contains(pair.first))
                 continue;
@@ -787,7 +792,6 @@ void TB_PokemonBody::configureMoves()
     movechoice->sortItems(Name);
     movechoice->setSortingEnabled(true);
     movechoice->resizeColumnsToContents();
-    movechoice->resizeRowsToContents();
     movechoice->horizontalHeader()->setStretchLastSection(true);
     movechoice->horizontalHeader()->setResizeMode(PP, QHeaderView::ResizeToContents);
     movechoice->horizontalHeader()->setResizeMode(Pow, QHeaderView::ResizeToContents);

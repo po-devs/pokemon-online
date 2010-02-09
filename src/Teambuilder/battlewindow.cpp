@@ -63,8 +63,6 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
 
     printHtml(toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(name(true), name(false)));
     layout()->setSizeConstraint(QLayout::SetFixedSize);
-
-    myline->grabKeyboard();
 }
 
 QString BattleWindow::name(bool self) const
@@ -538,6 +536,11 @@ void BattleWindow::receiveInfo(QByteArray inf)
 
         if (self) {
             info().myteam.poke(poke).status() = status;
+            if (status == Pokemon::Koed || status == Pokemon::Fine) {
+                mypzone->pokes[poke]->setStyleSheet("");
+            } else {
+                mypzone->pokes[poke]->setStyleSheet("background: " + StatInfo::StatusColor(status).name() + ";");
+            }
             if (info().currentIndex == poke) {
                 mydisplay->updatePoke(self);
             }
@@ -733,14 +736,15 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
         foeteam->addWidget(advpokeballs[i]);
     }
 
-    status[Opponent] = new QLabel();
-    foeteam->addWidget(status[Opponent], 100, Qt::AlignCenter);
-
     gender[Opponent] = new QLabel();
-    foeteam->addWidget(gender[Opponent]);
+    foeteam->addWidget(gender[Opponent], 100, Qt::AlignRight);
 
     nick[Opponent] = new QLabel(info.name[Opponent]);
     foeteam->addWidget(nick[Opponent], 0, Qt::AlignRight);
+
+    status[Opponent] = new QLabel();
+    foeteam->addWidget(status[Opponent]);
+
     foeteam->setSpacing(1);
 
     bars[Opponent] = new QProgressBar();
@@ -769,7 +773,7 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
     team->addWidget(nick[Myself], 0, Qt::AlignLeft);
 
     status[Myself] = new QLabel();
-    team->addWidget(status[Myself], 100, Qt::AlignCenter);
+    team->addWidget(status[Myself], 100, Qt::AlignLeft);
 
     team->addWidget(new QLabel(), 100);
     for (int i = 0; i < 6; i++) {
@@ -794,9 +798,10 @@ void BattleDisplay::updatePoke(bool self)
             bars[Myself]->setStyleSheet(health(mypoke().lifePoints()*100/mypoke().totalLifePoints()));
             gender[Myself]->setPixmap(GenderInfo::Picture(info.currentPoke().gender(), true));
             int status = info.myteam.poke(info.currentIndex).status();
-            this->status[Myself]->setText(toBoldColor(StatInfo::ShortStatus(status), StatInfo::StatusColor(status)));
+            this->status[Myself]->setPixmap(StatInfo::BattleIcon(status));
         } else {
             zone->switchToNaught(self);
+            this->status[Myself]->setPixmap(StatInfo::BattleIcon(Pokemon::Fine));
             nick[Myself]->setText("");
             gender[Myself]->setPixmap(QPixmap());
             bars[Myself]->setValue(0);
@@ -810,10 +815,11 @@ void BattleDisplay::updatePoke(bool self)
             bars[Opponent]->setStyleSheet(health(foe().lifePercent()));
             gender[Opponent]->setPixmap(GenderInfo::Picture(info.opponent.gender(), true));
             int status = info.opponent.status();
-            this->status[Opponent]->setText(toBoldColor(StatInfo::ShortStatus(status), StatInfo::StatusColor(status)));
+            this->status[Opponent]->setPixmap(StatInfo::BattleIcon(status));
         }  else {
             zone->switchToNaught(self);
             nick[Opponent]->setText("");
+            this->status[Opponent]->setPixmap(StatInfo::BattleIcon(Pokemon::Fine));
             gender[Opponent]->setPixmap(QPixmap());
             bars[Opponent]->setValue(0);
         }

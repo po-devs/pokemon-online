@@ -48,12 +48,12 @@ public:
     static QPixmap Sub(bool back = false);
     static QIcon Icon(int index);
     static QSet<int> Moves(int pokenum);
-    static QSet<int> EggMoves(int pokenum);
-    static QSet<int> LevelMoves(int pokenum);
-    static QSet<int> TutorMoves(int pokenum);
+    static QSet<int> EggMoves(int pokenum, int gen = 4);
+    static QSet<int> LevelMoves(int pokenum, int gen = 4);
+    static QSet<int> TutorMoves(int pokenum, int gen = 4);
     static QSet<int> TMMoves(int pokenum);
-    static QSet<int> PreEvoMoves(int pokenum);
-    static QSet<int> SpecialMoves(int pokenum);
+    static QSet<int> PreEvoMoves(int pokenum, int gen = 4);
+    static QSet<int> SpecialMoves(int pokenum, int gen = 4);
     static PokeBaseStats BaseStats(int pokenum);
     static bool Exist(int pokenum);
     static QList<int> Abilities(int pokenum);
@@ -333,6 +333,7 @@ private:
     static QTSList<QString> m_stats;
     static QTSList<QString> m_status;
     static QHash<int, QPixmap> m_statusIcons;
+    static QHash<int, QPixmap> m_battleIcons;
 
     static QString path(const QString &filename);
 public:
@@ -344,6 +345,7 @@ public:
     static QString ShortStatus(int status);
     static QColor StatusColor(int status);
     static QPixmap Icon(int status);
+    static QPixmap BattleIcon(int status);
 };
 
 #endif // POKEMONINFO_H

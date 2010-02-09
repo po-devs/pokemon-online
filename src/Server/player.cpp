@@ -9,6 +9,8 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     m_state = NotLoggedIn;
     myauth = 0;
 
+    resetChallenged();
+
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(TeamInfo)), this, SLOT(loggedIn(TeamInfo)));
     connect(&relay(), SIGNAL(messageReceived(QString)), this, SLOT(recvMessage(QString)));
@@ -87,7 +89,7 @@ void Player::recvMessage(const QString &mess)
 
 bool Player::challenge(const ChallengeInfo &c)
 {
-    if (state() != LoggedIn)
+    if (state() != LoggedIn || isChallenged() || battling())
 	return false;
 
     relay().sendChallengeStuff(c);
@@ -177,17 +179,24 @@ int Player::opponent() const
 
 void Player::challengeStuff(const ChallengeInfo &c)
 {
-    int desc = c.desc();
+    qDebug() << "Challenge received with desc " << c.desc() << " from " << id() << " to " << c.opponent();
+
+    if (battling()) {
+        return; // INVALID BEHAVIOR
+    }
+
     int id = c;
 
-    if (desc < ChallengeInfo::Sent || desc  >= ChallengeInfo::ChallengeDescLast) {
+    if (!isLoggedIn() || id == this->id()) {
         // INVALID BEHAVIOR
         return;
     }
 
-    if (!isLoggedIn() || id == this->id()) {
-	// INVALID BEHAVIOR
-	return;
+    int desc = c.desc();
+
+    if (desc < ChallengeInfo::Sent || desc  >= ChallengeInfo::ChallengeDescLast) {
+        // INVALID BEHAVIOR
+        return;
     }
 
     if (desc != ChallengeInfo::Sent && desc != ChallengeInfo::Cancelled)
@@ -201,17 +210,16 @@ void Player::challengeStuff(const ChallengeInfo &c)
 	    return;
 	}
     } else if (desc == ChallengeInfo::Sent) {
-	if (battling()) {
-	    // INVALID BEHAVIOR
-	    return;
-	}
+
     } else  {
-        if (battling()) {
-            // INVALID BEHAVIOR
-            return;
-        }
         if (desc == ChallengeInfo::Cancelled) {
             if (!hasChallenged(id)) {
+                // INVALID BEHAVIOR
+                return;
+            }
+        }
+        if (desc == ChallengeInfo::Busy) {
+            if (challengedBy() != id) {
                 // INVALID BEHAVIOR
                 return;
             }
@@ -235,9 +243,10 @@ void Player::sendChallengeStuff(int stuff, int other)
     /* This is either Canceled, Refused, or Busied */
     if (stuff == ChallengeInfo::Cancelled) {
 	changeState(LoggedIn);
-    } else {
-	removeChallenge(other);
     }
+
+    removeChallenge(other);
+
     relay().sendChallengeStuff(ChallengeInfo(stuff, other));
 }
 
@@ -259,7 +268,8 @@ void Player::cancelChallenges()
         emit challengeStuff(ChallengeInfo(ChallengeInfo::Cancelled), this->id(), id);
     m_challenged.clear();
     if (isChallenged()) {
-        emit challengeStuff(ChallengeInfo(ChallengeInfo::Busy), this->id(), opponent());
+        emit challengeStuff(ChallengeInfo(ChallengeInfo::Busy), this->id(), m_challengedby);
+        resetChallenged();
     }
 }
 
@@ -286,7 +296,15 @@ void Player::addChallenge(const ChallengeInfo &c)
 
 void Player::removeChallenge(int id)
 {
-    m_challenged.remove(id);
+    if (m_challenged.contains(id))
+        m_challenged.remove(id);
+    else if (m_challengedby == id)
+        resetChallenged();
+}
+
+void Player::resetChallenged()
+{
+    m_challengedby = ChallengeInfo(0,-1);
 }
 
 TeamInfo & Player::team()
@@ -326,7 +344,7 @@ bool Player::connected() const
 
 bool Player::isChallenged() const
 {
-    return m_state == Challenged;
+    return m_challengedby != -1;
 }
 
 int Player::challengedBy() const

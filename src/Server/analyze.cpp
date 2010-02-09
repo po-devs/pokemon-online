@@ -13,9 +13,12 @@ Analyzer::Analyzer(QTcpSocket *sock, int id) : mysocket(sock, id)
     connect(&socket(), SIGNAL(_error()), this, SLOT(error()));
     connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
 
-    mytimer = new QTimer(this);
-    connect(mytimer, SIGNAL(timeout()), this, SLOT(keepAlive()));
-    mytimer->start(30000); //every 30 secs
+    /* Only if its not registry */
+    if (id != 0) {
+        mytimer = new QTimer(this);
+        connect(mytimer, SIGNAL(timeout()), this, SLOT(keepAlive()));
+        mytimer->start(30000); //every 30 secs
+    }
 }
 
 Analyzer::~Analyzer()

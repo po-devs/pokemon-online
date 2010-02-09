@@ -18,7 +18,10 @@ public:
     QString ip() const;
     bool isConnected() const;
 
+    void connectToHost(const QString & ip, quint16 port);
+
     void close();
+    int id() const {return myid;}
 public slots:
     void onReceipt();
     void onDisconnect();
@@ -26,11 +29,12 @@ public slots:
     void send(const QByteArray &message);
 signals:
     void isFull(QByteArray command);
+    void connected();
     void disconnected();
     void _error();
 private:
     /* internal socket */
-    QTcpSocket *mysocket;
+    QPointer<QTcpSocket> mysocket;
     /* internal variables for the protocol */
     bool commandStarted;
     quint16 remainingLength;

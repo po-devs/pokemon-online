@@ -11,8 +11,6 @@
 class QCompactTable : public QTableWidget
 {
     Q_OBJECT
-protected:
-    int sizeHintForRow ( int row ) const;
 public:
     QCompactTable(int row, int column);
 };

@@ -417,10 +417,16 @@ void Client::challengeStuff(const ChallengeInfo &c)
         if (playerExist(c.opponent())) {
             if (c.desc() == ChallengeInfo::Refused) {
                 printLine(tr("%1 refused your challenge.").arg(name(c)));
+                if (challengeWindowOpen() && challengeWindowPlayer()== c) {
+                    closeChallengeWindow();
+                }
             } else if (c.desc() == ChallengeInfo::Busy) {
                 printLine(tr("%1 is busy.").arg(name(c)));
+                if (challengeWindowOpen() && challengeWindowPlayer()== c) {
+                    closeChallengeWindow();
+                }
             } else if (c.desc() == ChallengeInfo::Cancelled) {
-                printLine(tr("%1 canceled their challenge").arg(name(c)));
+                printLine(tr("%1 cancelled their challenge").arg(name(c)));
                 if (challengeWindowOpen() && challengeWindowPlayer()== c) {
 		    closeChallengeWindow();
 		}
@@ -581,7 +587,9 @@ void Client::printLine(const QString &line)
     if ( pos != -1 ) {
 	QString beg = line.left(pos);
 	QString end = line.right(line.length()-pos-1);
-	if (id(beg) == -1) {
+        if (beg == "~~Server~~") {
+            mainChat()->insertHtml("<span style='color:orange'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
+        } else if (id(beg) == -1) {
             mainChat()->insertHtml("<span style='color:blue'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
 	} else if (beg == ownName()) {
             mainChat()->insertHtml("<span style='color:#5811b1'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");

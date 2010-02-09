@@ -34,7 +34,7 @@ signals:
     void _error();
 private:
     /* internal socket */
-    QTcpSocket *mysocket;
+    QPointer<QTcpSocket> mysocket;
     /* internal variables for the protocol */
     bool commandStarted;
     quint16 remainingLength;

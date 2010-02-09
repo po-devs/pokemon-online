@@ -4,12 +4,9 @@
 QCompactTable::QCompactTable(int row, int column)
         : QTableWidget(row, column)
 {
+    verticalHeader()->setDefaultSectionSize(19);
 }
 
-int QCompactTable::sizeHintForRow(int) const
-{
-    return 0;
-}
 
 
 QEntitled::QEntitled(const QString &title, QWidget *widget)
