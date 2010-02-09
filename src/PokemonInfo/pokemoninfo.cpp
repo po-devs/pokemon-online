@@ -73,6 +73,7 @@ QString StatInfo::m_Directory;
 QTSList<QString> StatInfo::m_stats;
 QTSList<QString> StatInfo::m_status;
 QHash<int, QPixmap> StatInfo::m_statusIcons;
+QHash<int, QPixmap> StatInfo::m_battleIcons;
 
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
@@ -369,22 +370,26 @@ QIcon PokemonInfo::Icon(int index)
 
 QSet<int> PokemonInfo::Moves(int pokenum)
 {
-    return LevelMoves(pokenum).unite(EggMoves(pokenum)).unite(TutorMoves(pokenum)).unite(TMMoves(pokenum)).unite(SpecialMoves(pokenum)).unite(PreEvoMoves(pokenum));
+    QSet<int> tmMoves = TMMoves(pokenum);
+    for (int i = 3; i <= 4; i++) {
+         tmMoves.unite(LevelMoves(pokenum, i)).unite(EggMoves(pokenum, i)).unite(TutorMoves(pokenum, i)).unite(SpecialMoves(pokenum,i)).unite(PreEvoMoves(pokenum,i));
+    }
+    return tmMoves;
 }
 
-QSet<int> PokemonInfo::EggMoves(int pokenum)
+QSet<int> PokemonInfo::EggMoves(int pokenum, int gen)
 {
-    return getMoves("4G_egg_moves.txt", pokenum);
+    return getMoves(QString::number(gen)+"G_egg_moves.txt", pokenum);
 }
 
-QSet<int> PokemonInfo::LevelMoves(int pokenum)
+QSet<int> PokemonInfo::LevelMoves(int pokenum, int gen)
 {
-    return getMoves("4G_level_moves.txt", pokenum);
+    return getMoves(QString::number(gen)+"G_level_moves.txt", pokenum);
 }
 
-QSet<int> PokemonInfo::TutorMoves(int pokenum)
+QSet<int> PokemonInfo::TutorMoves(int pokenum, int gen)
 {
-    return getMoves("4G_tutor_moves.txt", pokenum);
+    return getMoves(QString::number(gen)+"G_tutor_moves.txt", pokenum);
 }
 
 QSet<int> PokemonInfo::TMMoves(int pokenum)
@@ -392,14 +397,14 @@ QSet<int> PokemonInfo::TMMoves(int pokenum)
     return getMoves("tm_and_hm_moves.txt", pokenum);
 }
 
-QSet<int> PokemonInfo::SpecialMoves(int pokenum)
+QSet<int> PokemonInfo::SpecialMoves(int pokenum, int gen)
 {
-    return getMoves("4G_special_moves.txt", pokenum);
+    return getMoves(QString::number(gen)+"G_special_moves.txt", pokenum);
 }
 
-QSet<int> PokemonInfo::PreEvoMoves(int pokenum)
+QSet<int> PokemonInfo::PreEvoMoves(int pokenum, int gen)
 {
-    return getMoves("4G_pre_evo_moves.txt", pokenum);
+    return getMoves(QString::number(gen)+"G_pre_evo_moves.txt", pokenum);
 }
 
 QList<int> PokemonInfo::Abilities(int pokenum)
@@ -1296,14 +1301,20 @@ void StatInfo::init(const QString &dir)
     fill_container_with_file(m_status, path("status_en.txt"));
 
     m_statusIcons[-2] = QPixmap(path("status-2.png"));
+    m_battleIcons[-2] = QPixmap(path("battle_status-2.png"));
 
     for (int i = 0; i < 7; i++) {
         m_statusIcons[i] = QPixmap(path("status%1.png").arg(i));
+        m_battleIcons[i] = QPixmap(path("battle_status%1.png").arg(i));
     }
 }
 
 QPixmap StatInfo::Icon(int status) {
     return m_statusIcons[status];
+}
+
+QPixmap StatInfo::BattleIcon(int status) {
+    return m_battleIcons[status];
 }
 
 QString StatInfo::Stat(int stat)
@@ -1336,7 +1347,7 @@ QColor StatInfo::StatusColor(int status)
 {
     switch (status) {
     case -2: return "#171b1a";
-    case 0: return QColor();
+    case 0: return TypeInfo::Color(Pokemon::Normal);
     case 1: return TypeInfo::Color(Pokemon::Electric);
     case 2: return TypeInfo::Color(Pokemon::Fire);
     case 3: return TypeInfo::Color(Pokemon::Ice);

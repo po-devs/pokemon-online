@@ -59,6 +59,7 @@ public:
     void sendChallengeStuff(int stuff, int otherparty);
     void addChallenge(const ChallengeInfo &c);
     void cancelChallenges();
+    void resetChallenged();
 
     void kick();
 

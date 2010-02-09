@@ -154,8 +154,8 @@ bool AntiDos::transferBegin(int id, int length, const QString &ip)
         /* Removing commands older than 1 minute */
         while (i < l.size()) {
             if (time(NULL)-l[i].first > 60) {
-                i++;
                 len -= l[i].second;
+                i++;
             }  else {
                 break;
             }

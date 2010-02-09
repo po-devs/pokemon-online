@@ -1821,7 +1821,7 @@ struct MMEncore : public MM
 		sl = i;
 	    }
 	}
-	if (sl == -1 || b.poke(s).move(sl).PP() == 0 ) {
+        if (sl == -1 || b.poke(t).move(sl).PP() == 0 ) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}

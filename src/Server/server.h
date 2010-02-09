@@ -39,6 +39,7 @@ public slots:
     void regConnected();
     void regConnectionError();
     void regSendPlayers();
+    void sendServerMessage();
     void regNameChanged(const QString &name);
     void regDescChanged(const QString &desc);
     void openConfig();
@@ -103,6 +104,7 @@ private:
 
     QTextEdit *mymainchat;
     QListWidget *mylist;
+    QLineEdit *myline;
     QHash<int, QIdListWidgetItem *> myplayersitems;
     /* the mainchat !*/
     QTextEdit *mainchat();

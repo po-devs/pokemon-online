@@ -5,10 +5,10 @@ Network::Network(QTcpSocket *sock, int id) : mysocket(sock), commandStarted(fals
 {
     connect(socket(), SIGNAL(readyRead()), this, SLOT(onReceipt()));
     connect(socket(), SIGNAL(disconnected()), this, SIGNAL(disconnected()));
-    connect(socket(), SIGNAL(disconnected()), this, SLOT(onDisconnect()));
     connect(socket(), SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(manageError(QAbstractSocket::SocketError)));
     /* SO THE SOCKET IS SAFELY DELETED LATER WHEN DISCONNECTED! */
     connect(socket(), SIGNAL(disconnected()), socket(), SLOT(deleteLater()));
+    connect(this, SIGNAL(destroyed()), socket(), SLOT(deleteLater()));
 }
 
 void Network::manageError(QAbstractSocket::SocketError err)
@@ -30,6 +30,12 @@ Network::~Network()
     if (isConnected()) {
         close();
     }
+}
+
+void Network::connectToHost(const QString &ip, quint16 port)
+{
+    socket()->connectToHost(ip, port);
+    connect(socket(), SIGNAL(connected()), SIGNAL(connected()));
 }
 
 bool Network::isConnected() const
