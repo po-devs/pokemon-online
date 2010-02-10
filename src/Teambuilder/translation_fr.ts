@@ -859,6 +859,11 @@ Ligne:%3 Colonne:%4</translation>
         <translation>Menu</translation>
     </message>
     <message>
+        <location filename="menu.cpp" line="34"/>
+        <source>&amp;File</source>
+        <translation>&amp;Fichier</translation>
+    </message>
+    <message>
         <location filename="menu.cpp" line="35"/>
         <source>&amp;Load Team</source>
         <translation>Charger &amp;l&apos;équipe</translation>
@@ -905,6 +910,42 @@ Ligne:%3 Colonne:%4</translation>
         <location filename="teambuilder.cpp" line="473"/>
         <source>&amp;Moves</source>
         <translation>&amp;Attaques</translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="528"/>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="528"/>
+        <source>Name</source>
+        <comment>AttackName</comment>
+        <translation>Nom</translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="528"/>
+        <source>Learning</source>
+        <translation>Apprentissage</translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="528"/>
+        <source>PP</source>
+        <translation>PP</translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="528"/>
+        <source>Pow</source>
+        <translation>Puis</translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="528"/>
+        <source>Acc</source>
+        <translation>Préc</translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="528"/>
+        <source>Category</source>
+        <translation>Catégorie</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="600"/>
@@ -1017,6 +1058,11 @@ Ligne:%3 Colonne:%4</translation>
         <location filename="teambuilder.cpp" line="25"/>
         <source>Teambuilder</source>
         <translation>Teambuilder</translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="236"/>
+        <source>&amp;File</source>
+        <translation>Fichier</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="237"/>
