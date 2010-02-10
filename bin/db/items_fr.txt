@@ -1,0 +1,213 @@
+(Pas d'objet)
+Grosse Racine
+Foul.Bleu
+Poudreclair
+Bandeau Choix
+Mouchoir Choix
+Lunet.Choix
+Noeud Destin
+Ceinture Pro
+Bandeau
+Ceinture Force
+Encens Plein
+Foul.Vert
+Ralentiqueue
+Encens Doux
+Restes
+Encens Veine
+Herbe Mental
+Poudre Metal
+Bandeau Muscle
+Bizar.Encens
+Foul.Rose
+Herbe Pouvoir
+Encens Pur
+Poudre Vite
+Tissu Fauche
+Foul.Rouge
+Encens Roc
+Encens Fleur
+Encens Mer
+Carapace Mue
+Mouchoir Soie
+Poudre Argent
+Roche Lisse
+Sable Doux
+Grelot Zen
+Encens Vague
+Herbeblanche
+Loupe
+Lunettes Sages
+Foul.Jaune
+Lentille Zoom
+Pièce  Rune
+Antidote
+Réveil
+Jus de baie
+Grande Perle
+Gros Champignon
+Ceinture Noire
+Flute Noire
+Boue Noir
+Lunettes Noire
+Flûte Bleue
+Tesson Bleu
+Anti-Brûle
+Calcium
+Carbone
+Charbon
+Rune Purif
+Fertihumide
+Ecaille Océan
+Muscle +
+Ecaille Draco
+Elixir
+Racinénergie
+Poudrénergie
+Corde Sortie
+Huile
+Pierre Stase
+Multi. Exp
+Pierre Feu
+Orbe Flamme
+Queue Skitty
+Eau Fraîche
+Total Soin
+Guérison
+Fertiglu
+Tesson Vert
+Fertipousse
+Défense Spec
+Poudre Soin
+Ecaillecoeur
+Miel
+PV Plus
+Hyper Potion
+AntiGel
+Fer
+Roche Royal
+Lava Cookie
+Pierre Plante
+Limonade
+Orbe Vie
+Balle Lumière
+Lumargile
+Oeuf Chance
+Aimant
+Max Elixir
+Huile Max
+Potion Max
+Max Repousse
+Rappel Max
+Peau Metal
+Métronome
+Graine Miracle
+Lait Meumeu
+Pierre Lune
+Eau Mystique
+Glaceternel
+Pépite
+Vieux Gâteau
+Anti-Para
+Perle
+Poképoupée
+Potion
+PP Max
+PP Plus
+Protéine
+Super Bonbon
+Croc Rasoir
+Flûte Rouge
+Tesson Rouge
+Repousse
+Herbe Rappel
+Rappel
+Cendre Sacrée
+Lentilscope
+Grelot Coque
+Sel Trefond
+Co. Trefond
+Boule Fumée
+Soda Cool
+Rosée Ame
+Rune Sort
+Fertistable
+Morc. Etoile
+Poudre Etoile
+Pierresoleil
+Super Potion
+Superepousse
+Pierre Foudre
+Petit Champignon
+Orbe Toxik
+Cuillertordu
+Ameliorator
+Pierre Eau
+Flute Blanche
+Précision +
+Attaque +
+Défense +
+Spécial +
+Défense Spé +
+Vitesse +
+Flûte Jaune
+Tesson Jaune
+Zinc
+Roche Glace
+Poing Chance
+CD Douteux
+Bec Pointu
+Orbe Adamant
+Roche Humide
+Roche Chaude
+Orbe Perlé
+Brac.Macho
+Baton
+Croc Dragon
+Pic Venin
+Chaîne Pouvoir
+Band Pouvoir
+Ceinture Pouvoir
+Poignet Pouvoir
+Lentilles Pouvoir
+Poids Pouvoir
+Pierre Aube
+Pierre Nuit
+Electiriseur
+Magmariseur
+Clé de Voûte
+Pierre Ovale
+Protecteur
+Vive Griffe
+Griffe Rasoir
+Pierre Eclat
+Piquants
+Dent Ocean
+Plaque Draco
+Plate Ombre
+Plaque Terre
+Plaque Poing
+Plaque Flamme
+Accro Griffe
+Plaque Glace
+Plaqueinsect
+Plaque Fer
+Plaque Herbe
+Plaquesprit
+Plaque Ciel
+Plaque Hydro
+Plaque Fantô
+Plaque Roc
+Masse Os
+Plaque Toxic
+Plaque Volt
+Fossile Armure
+Fossile Griffe
+Fossile Dome
+Pierre Dure
+Fosile Nautile
+Vieil Ambre
+Os Rare
+Fossile Racine
+Fossile Crâne
+Balle Fer
