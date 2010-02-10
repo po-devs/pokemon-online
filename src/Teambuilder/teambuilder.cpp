@@ -233,7 +233,7 @@ void TeamBuilder::updateTrainer()
 QMenuBar * TeamBuilder::createMenuBar(QMainWindow *w)
 {
     QMenuBar *menuBar = new QMenuBar();
-    QMenu *menuFichier = menuBar->addMenu("&File");
+    QMenu *menuFichier = menuBar->addMenu(tr("&File"));
     menuFichier->addAction(tr("&Save Team"),this,SLOT(saveTeam()),Qt::CTRL+Qt::Key_S);
     menuFichier->addAction(tr("&Load Team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
@@ -525,7 +525,7 @@ void TB_PokemonBody::initMoves()
     movechoice->setShowGrid(false);
     movechoice->verticalHeader()->hide();
     QStringList move_headers;
-    move_headers << "Type" << "Name" << "Learning" << "PP" << "Pow" << "Acc" << "Category";
+    move_headers << tr("Type") << tr("Name", "AttackName") << tr("Learning") << tr("PP") << tr("Pow") << tr("Acc") << tr("Category");
     movechoice->setHorizontalHeaderLabels(move_headers);
     movechoice->resizeRowsToContents();
     movechoice->horizontalHeader()->setStretchLastSection(true);

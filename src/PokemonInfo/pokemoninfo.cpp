@@ -795,7 +795,7 @@ void ItemInfo::init(const QString &dir)
 
 void ItemInfo::loadNames()
 {
-    fill_container_with_file(m_RegItemNames, path("items_en.txt"));
+    fill_container_with_file(m_RegItemNames, trFile(path("items")));
 
     m_ItemNamesH.reserve(m_RegItemNames.size());
 
@@ -804,7 +804,7 @@ void ItemInfo::loadNames()
 	m_ItemNamesH.insert(*it, i);
     }
 
-    fill_container_with_file(m_BerryNames, path("berries_en.txt"));
+    fill_container_with_file(m_BerryNames, trFile(path("berries")));
     m_BerryNamesH.reserve(m_BerryNames.size());
 
     QStringList::const_iterator it2 = m_BerryNames.begin();
@@ -966,7 +966,7 @@ QStringList ItemInfo::SortedNames()
 
 void TypeInfo::loadNames()
 {
-    fill_container_with_file(m_Names, path("types_en.txt"));
+    fill_container_with_file(m_Names, trFile(path("types")));
 }
 
 QString TypeInfo::path(const QString& file)
@@ -1079,7 +1079,7 @@ int NatureInfo::Boost(int nature, int stat)
 
 void CategoryInfo::loadNames()
 {
-    fill_container_with_file(m_Names, path("categories_en.txt"));
+    fill_container_with_file(m_Names, trFile(path("categories")));
 }
 
 QString CategoryInfo::path(const QString& file)
@@ -1308,7 +1308,7 @@ void StatInfo::init(const QString &dir)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    fill_container_with_file(m_stats, path("stats_en.txt"));
+    fill_container_with_file(m_stats, trFile(path("stats")));
     fill_container_with_file(m_status, path("status_en.txt"));
 
     m_statusIcons[-2] = QPixmap(path("status-2.png"));
