@@ -47,7 +47,20 @@ int main(int argc, char *argv[])
 	/* Names to use later for QSettings */
         QCoreApplication::setApplicationName("Pokeymon-Online");
 	QCoreApplication::setOrganizationName("Dreambelievers");
-	/* icon ;) */
+
+        QSettings settings;
+        if (settings.value("language").isNull()) {
+            settings.setValue("language", QLocale::system().name().section('_', 0, 0));
+        }
+
+        QString locale = settings.value("language").toString();
+
+        QTranslator translator;
+        translator.load(QString("translation_") + locale);
+        a.installTranslator(&translator);
+
+
+        /* icon ;) */
 	a.setWindowIcon(QIcon("db/icon.png"));
 
 	MainWindow w;

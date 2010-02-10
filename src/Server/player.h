@@ -5,6 +5,8 @@
 #include "analyze.h"
 #include "../PokemonInfo/battlestructs.h"
 
+class Challenge;
+
 /* a single player */
 class Player : public QObject
 {
@@ -13,8 +15,7 @@ public:
     enum State
     {
 	NotLoggedIn,
-	LoggedIn,
-	Challenged,
+        LoggedIn,
 	Battling
     };
 
@@ -44,22 +45,20 @@ public:
     void setName (const QString & newName);
 
     int opponent () const;
-    bool isChallenged() const;
-    int challengedBy() const;
-    bool hasChallenged(int id) const;
+
+    bool okForChallenge(int src) const;
+    void addChallenge(Challenge *c, bool isChallenged);
+    void removeChallenge(Challenge *c);
+    void cancelChallenges();
+    bool okForBattle() const;
+    void sendChallengeStuff(const ChallengeInfo &c);
 
     void doWhenDC();
-    /* Sends the challenge, returns false if can't even send the challenge */
-    bool challenge(const ChallengeInfo &c);
+
     ChallengeInfo getChallengeInfo(int id); /* to get the battle info of a challenge received by that player */
 
     void startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf);
     void battleResult(int result, int winner, int loser);
-
-    void sendChallengeStuff(int stuff, int otherparty);
-    void addChallenge(const ChallengeInfo &c);
-    void cancelChallenges();
-    void resetChallenged();
 
     void kick();
 
@@ -70,8 +69,7 @@ signals:
     void recvMessage(int id, const QString &mess);
     void disconnected(int id);
     void recvTeam(int id, const QString &name);
-
-    void challengeStuff(const ChallengeInfo &, int idfrom, int idto);
+    void sendChallenge(int source, int dest, const ChallengeInfo &desc);
     void battleFinished(int desc, int winner, int loser);
 
     void battleMessage(int id,const BattleChoice &b);
@@ -103,13 +101,12 @@ private:
     int myauth;
     QString myip;
 
-    QHash<int, ChallengeInfo> m_challenged;
-    ChallengeInfo m_challengedby;
     int m_opponent;
     int m_state;
     QString waiting_name; //For authentification procedures
 
-    void removeChallenge(int id);
+    Challenge * challengedBy;
+    QSet<Challenge*> challenged;
 
     enum AuthentificationState
     {
@@ -119,6 +116,35 @@ private:
     };
 
     AuthentificationState testAuthentification(const TeamInfo &team);
+};
+
+/* Warning: some of the public methods delete the object (but they remove the references
+   of the class from the players beforehand.
+
+   That means you should only use 1 function at a time */
+class Challenge : public QObject
+{
+    Q_OBJECT
+public:
+    Challenge (Player *source, Player *dest, const ChallengeInfo &c);
+
+    void manageStuff(Player *source, const ChallengeInfo &c);
+    void cancel(Player *p);
+    void onPlayerDisconnect(Player *p);
+
+    int challenger() const { return src->id(); }
+    int challenged() const { return dest->id(); }
+
+    class Exception {
+
+    };
+
+signals:
+    void battleStarted(int src, int dest, const ChallengeInfo &desc);
+private:
+    Player* src;
+    Player* dest;
+    ChallengeInfo desc;
 };
 
 #endif // PLAYER_H

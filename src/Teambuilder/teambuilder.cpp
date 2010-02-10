@@ -60,7 +60,7 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvance
     for (int i = 0; i < 6; i++)
     {
 	m_pbody[i] = new TB_PokemonBody(&team()->poke(i));
-        m_pbody[i]->setObjectName(tr("Poke%1").arg(i));
+        m_pbody[i]->setObjectName(QString("Poke%1").arg(i));
         connect(m_pbody[i],SIGNAL(pokeChanged(int)),this,SLOT(setIconForPokeButton()));
         connect(m_pbody[i],SIGNAL(nicknameChanged(QString)),this,SLOT(setNicknameIntoButton(QString)));
         connect(m_pbody[i],SIGNAL(advanced(int)),this,SLOT(advancedClicked(int)));
@@ -414,16 +414,16 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     QVBoxLayout *first_column = new QVBoxLayout();
     layout->addLayout(first_column,0,0);
 
-    first_column->addWidget(new QEntitled("&Pokemon", m_pokeedit));
+    first_column->addWidget(new QEntitled(tr("&Pokemon"), m_pokeedit));
     first_column->addWidget(pokechoice);
-    first_column->addWidget(new QEntitled("&Nickname", m_nick = new QLineEdit()));
+    first_column->addWidget(new QEntitled(tr("&Nickname"), m_nick = new QLineEdit()));
     m_nick->setValidator(new QNickValidator(this));
     connect(m_nick, SIGNAL(textEdited(QString)), SLOT(setNick(QString)));
     connect(m_nick, SIGNAL(textChanged(QString)),this,SLOT(setNick(QString)));
 
     initItems();
 
-    first_column->addWidget(new QEntitled("&Item", itemchoice));
+    first_column->addWidget(new QEntitled(tr("&Item"), itemchoice));
 
     /* second column, in the upper part */
     QVBoxLayout *second_column = new QVBoxLayout();
@@ -470,7 +470,7 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
 
     QGridLayout *mlayout = new QGridLayout();
     layout->addLayout(mlayout, 1,0,1,3);
-    mlayout->addWidget(new QEntitled("&Moves", movechoice), 0, 0, 1, 4);
+    mlayout->addWidget(new QEntitled(tr("&Moves"), movechoice), 0, 0, 1, 4);
 
     for (int i = 0; i < 4; i++)
     {

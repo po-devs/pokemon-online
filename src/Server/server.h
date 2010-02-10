@@ -31,7 +31,6 @@ public:
     void sendLogin(int id);
     void sendLogout(int id);
     bool playerExist(int id) const;
-    void startBattle(int id1, int id2);
     void removeBattle(int id1, int id2);
 public slots:
     /* Registry slots */
@@ -55,7 +54,8 @@ public slots:
     void recvPM(int src, int dest, const QString &mess);
     void recvTeam(int id, const QString &name);
     void disconnected(int id);
-    void dealWithChallenge(const ChallengeInfo &c, int from, int to);
+    void dealWithChallenge(int from, int to, const ChallengeInfo &c);
+    void startBattle(int id1, int id2, const ChallengeInfo &c);
     void battleResult(int desc, int winner, int loser);
     void sendBattleCommand(int id, const QByteArray &command);
     void info(int , const QString& );

@@ -233,6 +233,17 @@ QString get_line(const QString & filename, int linenum)
     return filestream.readLine();
 }
 
+static QString trFile(const QString &beg)
+{
+    QSettings s;
+    QString locale = s.value("langage").toString();
+
+    if (QFile::exists(beg + "_" + locale + ".txt")) {
+        return beg + "_" + locale + ".txt";
+    } else {
+        return beg + ".txt";
+    }
+}
 
 int PokemonInfo::Type1(int pokenum)
 {
@@ -438,7 +449,7 @@ PokeBaseStats PokemonInfo::BaseStats(int pokenum)
 
 void PokemonInfo::loadNames()
 {
-    fill_container_with_file(m_Names, path("pokemons_en.txt"));
+    fill_container_with_file(m_Names, trFile(path("pokemons")));
     fill_container_with_file(m_Weights, path("poke_weight.txt"));
 }
 
@@ -516,7 +527,7 @@ void MoveInfo::loadRepeats()
 void MoveInfo::loadMoveMessages()
 {
     QStringList temp;
-    fill_container_with_file(temp, path("move_message.txt"));
+    fill_container_with_file(temp, trFile(path("move_message")));
 
     foreach(QString str, temp) {
 	m_MoveMessages.push_back(str.split('|'));
@@ -602,7 +613,7 @@ int MoveInfo::Target(int movenum)
 
 void MoveInfo::loadNames()
 {
-    fill_container_with_file(m_Names, path("moves_en.txt"));
+    fill_container_with_file(m_Names, trFile(path("moves")));
 }
 
 void MoveInfo::loadPPs()
@@ -1029,7 +1040,7 @@ int TypeInfo::NumberOfTypes()
 
 void NatureInfo::loadNames()
 {
-    fill_container_with_file(m_Names, path("nature_en.txt"));
+    fill_container_with_file(m_Names, trFile(path("nature")));
 }
 
 QString NatureInfo::path(const QString &filename)

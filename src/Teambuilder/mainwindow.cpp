@@ -16,17 +16,6 @@ MainWindow::MainWindow() : m_menu(0), m_TB(0)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    PokemonInfo::init("db/");
-    ItemInfo::init("db/");
-    MoveInfo::init("db/");
-    TypeInfo::init("db/");
-    NatureInfo::init("db/");
-    CategoryInfo::init("db/");
-    AbilityInfo::init("db/");
-    GenderInfo::init("db/");
-    HiddenPowerInfo::init("db/");
-    StatInfo::init("db/");
-
     QSettings settings;
     /* initializing the default init values if not there */
     if (settings.value("team_location").isNull()) {
@@ -38,9 +27,18 @@ MainWindow::MainWindow() : m_menu(0), m_TB(0)
     if (settings.value("stylesheet").isNull()) {
 	settings.setValue("stylesheet", "db/default.qss");
     }
-    if (settings.value("default_server").isNull()) {
-	settings.setValue("default_server", "localhost");
-    }
+
+    PokemonInfo::init("db/");
+    ItemInfo::init("db/");
+    MoveInfo::init("db/");
+    TypeInfo::init("db/");
+    NatureInfo::init("db/");
+    CategoryInfo::init("db/");
+    AbilityInfo::init("db/");
+    GenderInfo::init("db/");
+    HiddenPowerInfo::init("db/");
+    StatInfo::init("db/");
+
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());
     QFile stylesheet(settings.value("stylesheet").toString());
