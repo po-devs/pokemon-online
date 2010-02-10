@@ -4,7 +4,7 @@
 QCompactTable::QCompactTable(int row, int column)
         : QTableWidget(row, column)
 {
-    verticalHeader()->setDefaultSectionSize(19);
+    verticalHeader()->setDefaultSectionSize(22);
 }
 
 

@@ -255,9 +255,9 @@ void Client::playerKicked(int dest, int src) {
     QString mess;
 
     if (src == 0) {
-        mess = QString("%1 was kicked by the server!").arg(name(dest));
+        mess = tr("%1 was kicked by the server!").arg(name(dest));
     } else {
-        mess = QString("%1 kicked %2!").arg(name(src), name(dest));
+        mess = tr("%1 kicked %2!").arg(name(src), name(dest));
     }
     printHtml(toBoldColor(mess, Qt::red));
 }
@@ -266,9 +266,9 @@ void Client::playerBanned(int dest, int src) {
     QString mess;
 
     if (src == 0) {
-        mess = QString("%1 was banned by the server!").arg(name(dest));
+        mess = tr("%1 was banned by the server!").arg(name(dest));
     } else {
-        mess = QString("%1 banned %2!").arg(name(src), name(dest));
+        mess = tr("%1 banned %2!").arg(name(src), name(dest));
     }
     printHtml(toBoldColor(mess, Qt::red));
 }

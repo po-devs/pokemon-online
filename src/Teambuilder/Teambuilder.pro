@@ -52,3 +52,4 @@ LIBS += -L../../bin \
     -lzip
 DEFINES = CLIENT_SIDE
 FORMS += controlpanel.ui
+TRANSLATIONS = translation_fr.ts

@@ -345,18 +345,24 @@ void Server::loggedIn(int id, const QString &name)
 {
     printLine(tr("Player %1 set name to %2").arg(id).arg(name));
 
-    if (mynames.contains(name.toLower())) {
-        printLine(tr("Name %1 already in use, disconnecting player %2").arg(name).arg(id));
-        sendMessage(id, tr("Another with the name %1 is already logged in").arg(name));
-        removePlayer(id);
-        return;
+    QString n = name.toLower();
+    if (mynames.contains(n)) {
+        if (!playerExist(mynames[n]) || !player(mynames[n])->isLoggedIn() || player(mynames[n])->name().toLower() != n) {
+            printLine(QString("Critical Bug needing to be solved (kept a name too much in the name list: %1)").arg(name));
+            mynames.remove(n);
+        } else {
+            printLine(tr("Name %1 already in use, disconnecting player %2").arg(name).arg(id));
+            sendMessage(id, tr("Another with the name %1 is already logged in").arg(name));
+            removePlayer(id);
+            return;
+        }
     }
 
     /* For new connections */
     if (!player(id)->isLoggedIn()) {
         player(id)->changeState(Player::LoggedIn);
 
-        mynames.insert(name.toLower(), id);
+        mynames.insert(n, id);
 
         myplayersitems[id]->setText(authedName(id));
 
@@ -440,7 +446,7 @@ void Server::incomingConnection()
     connect(player(id), SIGNAL(recvTeam(int, QString)), this, SLOT(recvTeam(int, QString)));
     connect(player(id), SIGNAL(recvMessage(int, QString)), this, SLOT(recvMessage(int,QString)));
     connect(player(id), SIGNAL(disconnected(int)), SLOT(disconnected(int)));
-    connect(player(id), SIGNAL(challengeStuff(ChallengeInfo,int,int)), SLOT(dealWithChallenge(ChallengeInfo,int,int)));
+    connect(player(id), SIGNAL(sendChallenge(int,int,ChallengeInfo)), SLOT(dealWithChallenge(int,int,ChallengeInfo)));
     connect(player(id), SIGNAL(battleFinished(int,int,int)), SLOT(battleResult(int,int,int)));
     connect(player(id), SIGNAL(info(int,QString)), SLOT(info(int,QString)));
     connect(player(id), SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
@@ -448,26 +454,18 @@ void Server::incomingConnection()
     connect(player(id), SIGNAL(PMReceived(int,int,QString)), this, SLOT(recvPM(int,int,QString)));
 }
 
-void Server::dealWithChallenge(const ChallengeInfo &c, int from, int to)
+void Server::dealWithChallenge(int from, int to, const ChallengeInfo &c)
 {
-    int desc = c.desc();
     if (!playerExist(to) || !player(to)->isLoggedIn()) {
         sendMessage(from, tr("That player is not online"));
         //INVALID BEHAVIOR
         return;
     }
-    if (desc == ChallengeInfo::Sent) {
-        if (!player(to)->challenge(c)) {
-            player(from)->sendChallengeStuff(ChallengeInfo::Busy, to);
-        } else {
-            printLine(tr("Challenge issued from %1 to %2").arg(name(from), name(to)));
-        }
-    }  else {
-        if (desc == ChallengeInfo::Accepted) {
-	    startBattle(from, to);
-	} else {
-            player(to)->sendChallengeStuff(c.desc(), from);
-	}
+    try {
+        Challenge *_c = new Challenge(player(from), player(to), c);
+        connect(_c, SIGNAL(battleStarted(int,int,ChallengeInfo)), SLOT(startBattle(int, int, ChallengeInfo)));
+    } catch (Challenge::Exception) {
+        ;
     }
 }
 
@@ -502,14 +500,8 @@ void Server::playerBan(int src, int dest)
 }
 
 
-void Server::startBattle(int id1, int id2)
+void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 {
-    ChallengeInfo c = player(id1)->getChallengeInfo(id2);
-
-    if (player(id1)->battling() || player(id2)->battling()) {
-        return;
-    }
-
     printLine(tr("Battle between %1 and %2 started").arg(name(id1)).arg(name(id2)));
 
     BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c);

@@ -1,0 +1,468 @@
+(Pas d'attaque)
+Vol-vie
+Acide
+Acidarmure
+Acupression
+Aeropique
+Aeroblast
+Hate
+Tranch'air
+Lame D'air
+Amnesie
+Pouv.antique
+Aqua-jet
+Anneau Hydro
+Hydroqueue
+Cogne
+Aromatherapi
+Assistance
+Assurance
+Etonnement
+Appel Attak
+Attraction
+Aurasphere
+Onde Boreale
+Avalanche
+Pilonnage
+Bouclier
+Relais
+Baston
+Cognobidon
+Patience
+Etreinte
+Morsure
+Rafale Feu
+Pied Bruleur
+Blizzard
+Barrage
+Plaquage
+Massd'os
+Charge-os
+Osmerang
+Rebond
+Rapace
+Casse-brique
+Saumure
+Ecume
+Bulles D'o
+Piqure
+Bourdon
+Gonflette
+Pisto-poing
+Balle Graine
+Plenitude
+Camouflage
+Seduction
+Chargeur
+Rayon Charge
+Charme
+Babil
+Claquoir
+Close Combat
+Poing Comete
+Onde Folie
+Choc Mental
+Constriction
+Adaptation
+Adaptation2
+Photocopie
+Force Cosmik
+Spore Coton
+Riposte
+Implore
+Pince-masse
+Coup-croix
+Poison-croix
+Machouille
+Eclategriffe
+Presse
+Malediction
+Coupe
+Vibrobscur
+Trou Noir
+Boul'armure
+Appel Defens
+Anti-brume
+Prlvt Destin
+Detection
+Tunnel
+Entrave
+Coup D'jus
+Plongee
+Uppercut
+Carnareket
+Coup Double
+Double Pied
+Reflet
+Damocles
+Torgnoles
+Draco Meteor
+Dracogriffe
+Danse Draco
+Dracochoc
+Draco-rage
+Dracocharge
+Dracosouffle
+Vampipoing
+Devoreve
+Bec Vrille
+Dynamopoing
+Telluriforce
+Seisme
+Bomb'oeuf
+Embargo
+Flammeche
+Encore
+Effort
+Tenacite
+Eco-sphere
+Eruption
+Explosion
+Extrasenseur
+Vit.extreme
+Facade
+Feinte
+Bluff
+Croco Larme
+Faux-chage
+Danse-plume
+Ruse
+Deflagration
+Crocs Feu
+Poing De Feu
+Danseflamme
+Abime
+Fleau
+Roue De Feu
+Lance-flamme
+Boutefeu
+Flash
+Luminocanon
+Flatterie
+Degommage
+Vol
+Exploforce
+Puissance
+Mitra-poing
+Par Ici
+Forte-paume
+Clairvoyance
+Vege-attak
+Frustration
+Furie
+Taillade
+Combo-griffe
+Prescience
+Suc Digestif
+Giga-sangsue
+Giga Impact
+Intimidation
+Noeud Herbe
+Siffl'herbe
+Gravite
+Rugissement
+Croissance
+Rancune
+Permugarde
+Guillotine
+Detricanon
+Tornade
+Gyroballe
+Grele
+Marto-poing
+Armure
+Buee Noire
+Fracass'tete
+Coup D'boule
+Glas De Soin
+Anti-soin
+Appel Soins
+Voeu Soin
+Permucoeur
+Canicule
+Coup D'main
+Pied Voltige
+Puis.cachee
+Koud'korne
+Empal'korne
+Grondement
+Hydroblast
+Hydrocanon
+Ultralaser
+Croc De Mort
+Megaphone
+Hypnose
+Ball'glace
+Laser Glace
+Crocs Givre
+Poinglace
+Eclats Glace
+Stalagtite
+Vent-glace
+Possessif
+Racines
+Mur De Fer
+Tete De Fer
+Queue De Fer
+Jugement
+Pied Saute
+Poing-karate
+Telekinesie
+Sabotage
+Dernierecour
+Ebullilave
+Lame-feuille
+Tempeteverte
+Vampirisme
+Vampigraine
+Groz'yeux
+Lechouille
+Mur Lumiere
+Verrouillage
+Grobisou
+Balayage
+Air Veinard
+Danse-lune
+Lumi-eclat
+Mach Punch
+Reflet Magik
+Feuillemagik
+Vortex Magma
+Bombaimant
+Vol Magnetik
+Ampleur
+Moi D'abord
+Regard Noir
+Yoga
+Mega-sangsue
+Ultimawashi
+Ultimapoing
+Megacorne
+Souvenir
+Fulmifer
+Griffe Acier
+Strido-son
+Poing Meteor
+Metronome
+Lait A Boire
+Copie
+Lire-esprit
+Lilliput
+Oeil Miracle
+Voile Miroir
+Mimique
+Miroi-tir
+Brume
+Ball'brume
+Rayon Lune
+Aurore
+Boue-bombe
+Tir De Boue
+Lance-boue
+Coud'boue
+Ocroupi
+Machination
+Don Naturel
+Force-nature
+Poing Dard
+Tenebres
+Tranche-nuit
+Cauchemar
+Octazooka
+Flair
+Vent Mauvais
+Colere
+Surchauffe
+Balance
+Jackpot
+Represailles
+Picpic
+Requiem
+Danse-fleur
+Dard-nuee
+Picore
+Crochetvenin
+Gaz Toxik
+Direct Toxik
+Dard-venin
+Queue-poison
+Poudre Toxik
+Ecras'face
+Poudreuse
+Rayon Gemme
+Permuforce
+Astuce Force
+Megafouet
+Cadeau
+Abri
+Rafale Psy
+Boost
+Psyko
+Psycho Boost
+Coupe Psycho
+Echange Psy
+Vague Psy
+Punition
+Poursuite
+Vive-attaque
+Frenesie
+Danse Pluie
+Tour Rapide
+Tranch'herbe
+Coupe-vent
+Soin
+Recyclage
+Protection
+Regeneration
+Repos
+Retour
+Vendetta
+Contre
+Hurlement
+Hurle-temps
+Boule Roc
+Escalade
+Poliroche
+Eboulement
+Eclate-roc
+Jet-pierres
+Tomberoche
+Roc-boulet
+Imitation
+Mawashi Geri
+Roulade
+Atterrissage
+Feu Sacre
+Rune Protect
+Tourbi-sable
+Jet De Sable
+Tempetesable
+Grimace
+Griffe
+Grincement
+Force Cachee
+Canon Graine
+Fulmigraine
+Frappe Atlas
+Destruction
+Ball'ombre
+Griffe Ombre
+Revenant
+Poing Ombre
+Ombre Portee
+Affutage
+Glaciation
+Onde De Choc
+Rayon Signal
+Vent Argente
+Berceuse
+Gribouille
+Echange
+Coud'krane
+Pique
+Stratopercut
+Paresse
+Souplesse
+Tranche
+Poudre Dodo
+Blabla Dodo
+Detritus
+Bomb-beurk
+Stimulant
+Puredpois
+Brouillard
+Saisie
+Ronflement
+E-coque
+Lance-soleil
+Sonicboom
+Spatio-rift
+Etincelle
+Toile
+Picanon
+Picots
+Relache
+Depit
+Trempette
+Spore
+Piege De Roc
+Aile D'acier
+Stockage
+Ecrasement
+Lame De Roc
+Force
+Secretion
+Lutte
+Para-spore
+Sacrifice
+Clonage
+Coup Bas
+Zenith
+Croc Fatal
+Surpuissance
+Ultrason
+Surf
+Vantardise
+Avale
+Doux Baiser
+Doux Parfum
+Meteores
+Passe-passe
+Danse-lames
+Synthese
+Charge
+Lumiqueue
+Mimi-queue
+Vent Arriere
+Belier
+Provoc
+Danse-folle
+Teleport
+Larcin
+Mania
+Fatal-foudre
+Crocs Eclair
+Cage-eclair
+Tonnerre
+Poing-eclair
+Eclair
+Chatouille
+Tourmente
+Toxik
+Pics Toxik
+Morphing
+Triplattaque
+Tourmagik
+Distorsion
+Triple Pied
+Atout
+Double-dard
+Ouragan
+Demi-tour
+Brouhaha
+Onde Vide
+Force Poigne
+Fouet Lianes
+Corps Perdu
+Electacle
+Reveil Force
+Pistolet A O
+Vibraqua
+Tourniquet
+Gicledo
+Cascade
+Ball'meteo
+Siphon
+Cyclone
+Feu Follet
+Cru-aile
+Voeu
+Repli
+Martobois
+Soucigraine
+Ligotage
+Essorage
+Plaie-croix
+Baillement
+Elecanon
+Psykoud'boul

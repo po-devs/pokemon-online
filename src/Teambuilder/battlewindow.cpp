@@ -75,7 +75,7 @@ QString BattleWindow::nick(bool self) const
     if (self)
 	return info().currentPoke().nick();
     else
-	return "the foe's " + info().opponent.nick();
+        return tr("the foe's %1").arg(info().opponent.nick());
 }
 
 QString BattleWindow::rnick(bool self) const
@@ -584,7 +584,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
             if (inBattle) {
                 printLine(tr("Sleep Clause prevented %1 from falling asleep!").arg(nick(self)));
             } else {
-                printHtml(toBoldColor("Rule: ", Qt::blue) + "Sleep Clause Enabled.");
+                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + tr("Sleep Clause Enabled."));
             }
             break;
         }
