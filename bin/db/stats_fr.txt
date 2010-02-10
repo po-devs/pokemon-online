@@ -1,0 +1,8 @@
+points de vie
+attaque
+défense
+vitesse
+attaque spéciale
+défense spéciale
+esquive
+précision
