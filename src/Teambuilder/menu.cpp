@@ -34,11 +34,19 @@ QMenuBar * TB_Menu::createMenuBar(MainWindow *w)
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
     menuFichier->addAction(tr("&Load Team"),w,SLOT(loadTeamDialog()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
-    QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
+    QMenu *menuStyle = menuBar->addMenu(tr("&Style"));
     QStringList style = QStyleFactory::keys();
     for(QStringList::iterator i = style.begin();i!=style.end();i++)
     {
         menuStyle->addAction(*i,w,SLOT(changeStyle()));
     }
+    QMenu *langMenu = menuBar->addMenu(tr("Language"));
+    QFile in ("languages.txt");
+    in.open(QIODevice::ReadOnly);
+    QStringList langs = QString::fromUtf8(in.readAll()).split('\n');
+    foreach(QString a, langs) {
+        langMenu->addAction(a,w, SLOT(changeLanguage()));
+    }
+
     return menuBar;
 }

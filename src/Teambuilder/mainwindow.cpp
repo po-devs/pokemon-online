@@ -108,6 +108,26 @@ void MainWindow::changeStyle()
     setting.setValue("application_style",style);
 }
 
+void MainWindow::changeLanguage()
+{
+    QAction * a = qobject_cast<QAction *>(sender());
+    if(!a)
+    {
+        return;
+    }
+
+    QString lang = a->text().split('(').back().left(2);
+    QSettings setting;
+
+    if (setting.value("language").toString() == lang) {
+        return;
+    }
+
+    setting.setValue("language",lang);
+
+    QMessageBox::information(this, tr("Language Change"), tr("Restart the application to the changes."));
+}
+
 void MainWindow::goOnline(const QString &url)
 {
     m_client = new Client(trainerTeam(), url);
