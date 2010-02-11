@@ -239,7 +239,7 @@
     <message>
         <location filename="battlewindow.cpp" line="385"/>
         <source>%1 is hurt by its burn!</source>
-        <translation>%1souffre de sa brûlure!</translation>
+        <translation>%1 souffre de sa brûlure!</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="388"/>
@@ -428,7 +428,7 @@
     <message>
         <location filename="client.cpp" line="25"/>
         <source>&amp;Register</source>
-        <translation>S&apos;&amp;Enregistrer</translation>
+        <translation>S&apos;&amp;enregistrer</translation>
     </message>
     <message>
         <location filename="client.cpp" line="26"/>
@@ -685,6 +685,16 @@ Il est conseillé d&apos;utiliser un mot de passe légèrement différent pour c
         <source>Pokemon Online</source>
         <translation>Pokémon Online</translation>
     </message>
+    <message>
+        <location filename="mainwindow.cpp" line="128"/>
+        <source>Language Change</source>
+        <translation>Changement de langue</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="128"/>
+        <source>Restart the application to the changes.</source>
+        <translation>Redémarrez l&apos;application pour avoir les changements.</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -783,7 +793,7 @@ Ligne:%3 Colonne:%4</translation>
     <message>
         <location filename="serverchoice.cpp" line="21"/>
         <source>Players</source>
-        <translation>Nombre de dresseurs</translation>
+        <translation>Dresseurs</translation>
     </message>
     <message>
         <location filename="serverchoice.cpp" line="21"/>
@@ -877,6 +887,11 @@ Ligne:%3 Colonne:%4</translation>
         <location filename="menu.cpp" line="37"/>
         <source>&amp;Style</source>
         <translation>&amp;Style</translation>
+    </message>
+    <message>
+        <location filename="menu.cpp" line="43"/>
+        <source>Language</source>
+        <translation>Langue</translation>
     </message>
 </context>
 <context>

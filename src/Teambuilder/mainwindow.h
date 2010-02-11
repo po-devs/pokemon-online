@@ -38,6 +38,7 @@ public slots:
     void goOnline(const QString &url);
     void launchServerChoice();
     void changeStyle();
+    void changeLanguage();
 
     /* slots called by subwindows when they need it */
     void loadTeamDialog();
