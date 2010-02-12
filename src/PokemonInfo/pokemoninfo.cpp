@@ -236,7 +236,7 @@ QString get_line(const QString & filename, int linenum)
 static QString trFile(const QString &beg)
 {
     QSettings s;
-    QString locale = s.value("langage").toString();
+    QString locale = s.value("language").toString();
 
     if (QFile::exists(beg + "_" + locale + ".txt")) {
         return beg + "_" + locale + ".txt";
@@ -1363,7 +1363,8 @@ QColor StatInfo::StatusColor(int status)
     case 2: return TypeInfo::Color(Pokemon::Fire);
     case 3: return TypeInfo::Color(Pokemon::Ice);
     case 4: return TypeInfo::Color(Pokemon::Psychic);
-    case 5: case 6: default: return TypeInfo::Color(Pokemon::Poison);
+    case 5: case 6: return TypeInfo::Color(Pokemon::Poison);
+    default: return QColor();
     }
 }
 

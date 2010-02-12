@@ -161,12 +161,14 @@ PokePersonal::PokePersonal()
     reset();
 }
 
-void PokePersonal::setMove(int moveNum, int moveSlot)
+void PokePersonal::setMove(int moveNum, int moveSlot, bool check)
 {
     if (moveNum == move(moveSlot))
         return;
-    if (moveNum != 0 && hasMove(moveNum))
-        throw QObject::tr("%1 already has move %2.").arg(PokemonInfo::Name(num()), MoveInfo::Name(moveNum));
+    if (check) {
+        if (moveNum != 0 && hasMove(moveNum))
+            throw QObject::tr("%1 already has move %2.").arg(PokemonInfo::Name(num()), MoveInfo::Name(moveNum));
+    }
 
     m_moves[moveSlot] = moveNum;
 }
@@ -617,18 +619,118 @@ Team & TrainerTeam::team()
 
 #ifdef CLIENT_SIDE
 
-void TrainerTeam::loadFromFile(const QString &path)
+
+bool TrainerTeam::saveToFile(const QString &path) const
+{
+    QFile file(path);
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::warning(0, QObject::tr("Error while saving the team"),QObject::tr("Can't create file ")+file.fileName());
+        return false;
+    }
+    /*QDataStream out(&file);
+    out.setVersion(QDataStream::Qt_4_5);
+    out << team;*/
+    QDomDocument document;
+    /*int line,col;
+    QString msg;
+    if(!document.setContent(&file,&msg,&line,&col))
+    {
+        QMessageBox::information(0,QObject::tr("Save Team"),QObject::tr("Erreur de parsage lors de l ouverture du fichier %1.\nErreur:%2 \nLigne:%3 Colonne:%4").arg(location).arg(msg).arg(line).arg(col));
+        return false;
+    }*/
+    QDomElement Team = document.createElement("Team");
+    document.appendChild(Team);
+    QDomElement trainer = document.createElement("Trainer");
+    Team.appendChild(trainer);
+    QDomText trainerName = document.createTextNode(trainerNick());
+    trainer.appendChild(trainerName);
+    trainer.setAttribute("winMsg",trainerWin());
+    trainer.setAttribute("loseMsg",trainerLose());
+    trainer.setAttribute("infoMsg",trainerInfo());
+
+    QDomElement poke[6];
+    QDomText pokeNickname[6];
+    for(int cpt = 0;cpt<6;cpt++)
+    {
+        poke[cpt] = document.createElement("Pokemon");
+        Team.appendChild(poke[cpt]);
+        pokeNickname[cpt] = document.createTextNode(team().poke(cpt).nickname());
+        poke[cpt].appendChild(pokeNickname[cpt]);
+        poke[cpt].setAttribute("Num",team().poke(cpt).num());
+        poke[cpt].setAttribute("Item",team().poke(cpt).item());
+        poke[cpt].setAttribute("Ability",team().poke(cpt).ability());
+        poke[cpt].setAttribute("Nature",team().poke(cpt).nature());
+        poke[cpt].setAttribute("Gender",team().poke(cpt).gender());
+        poke[cpt].setAttribute("Shiny",team().poke(cpt).shiny());
+        poke[cpt].setAttribute("Happiness",team().poke(cpt).happiness());
+        poke[cpt].setAttribute("Lvl",team().poke(cpt).level());
+        int index;
+        for(index = 0;index<4;index++)
+        {
+            QDomElement move = document.createElement("Move");
+            poke[cpt].appendChild(move);
+            QDomText name = document.createTextNode(QString("%1").arg(team().poke(cpt).move(index)));
+            move.appendChild(name);
+        }
+        for(index = 0;index<6;index++)
+        {
+            QDomElement Dv = document.createElement("DV");
+            poke[cpt].appendChild(Dv);
+            QDomText Dvname = document.createTextNode(QString("%1").arg(team().poke(cpt).DV(index)));
+            Dv.appendChild(Dvname);
+        }
+        for(index = 0;index<6;index++)
+        {
+            QDomElement Ev = document.createElement("EV");
+            poke[cpt].appendChild(Ev);
+            QDomText Evname = document.createTextNode(QString("%1").arg(team().poke(cpt).EV(index)));
+            Ev.appendChild(Evname);
+        }
+    }
+
+    QTextStream in(&file);
+    document.save(in,4);
+    return true;
+}
+
+bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath, QString *chosenPath)
+{
+    QString location = QFileDialog::getSaveFileName(0,QObject::tr("Saving the Team"),defaultPath, QObject::tr("Team(*.tp)"));
+    if(location.isEmpty())
+    {
+        //Maybe the user hit "Cancel"
+        return false;
+    }
+    if (chosenPath) {
+        *chosenPath = location;
+    }
+
+    return team.saveToFile(location);
+}
+
+bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *chosenPath)
+{
+    QString location = QFileDialog::getOpenFileName(0,QObject::tr("Loading the Team"),defaultPath, QObject::tr("Team(*.tp)"));
+    if(location.isEmpty())
+    {
+        //Maybe the user hit "Cancel"
+        return false;
+    }
+    if (chosenPath) {
+        *chosenPath = location;
+    }
+    return team.loadFromFile(location);
+}
+
+
+bool TrainerTeam::loadFromFile(const QString &path)
 {
     //ancienne facon de charger
     QFile file(path);
     if (!file.open(QFile::ReadOnly))
     {
-        /*QDataStream in(&file);
-
-        in.setVersion(QDataStream::Qt_4_5);
-
-        in >> *this;*/
-        return;
+        return false;
     }
     QDomDocument document;
     QString msg;
@@ -636,19 +738,19 @@ void TrainerTeam::loadFromFile(const QString &path)
     if(!document.setContent(&file,&msg,&line,&col))
     {
         QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
-        return;
+        return false;
     }
     QDomElement team = document.firstChildElement("Team");
     if(team.isNull())
     {
         QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
-        return;
+        return false;
     }
     QDomElement trainer = team.firstChildElement("Trainer");
     if(trainer.isNull())
     {
         QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
-        return;
+        return false;
     }
     this->setTrainerNick(trainer.text());
     this->setTrainerInfo(trainer.attribute("infoMsg",QString()));
@@ -674,7 +776,7 @@ void TrainerTeam::loadFromFile(const QString &path)
         while(!moveElement.isNull())
         {
             //QMessageBox::information(0,QObject::tr(""),QString("pokemon %1 moveElement %2:%3").arg(cpt).arg(cptMove).arg(moveElement.text()));
-            this->team().poke(cpt).setMove(moveElement.text().toInt(0,10),cptMove);
+            this->team().poke(cpt).setMove(moveElement.text().toInt(0,10),cptMove,false);
             cptMove++;
             moveElement = moveElement.nextSiblingElement("Move");
         }
@@ -698,302 +800,6 @@ void TrainerTeam::loadFromFile(const QString &path)
         cpt++;
         poke = poke.nextSiblingElement("Pokemon");
     }
-}
-
-void TrainerTeam::saveToFile(const QString &path)
-{
-    //Ancienne facon de sauvegarder
-    /*QFile file(path);
-    if (file.open(QFile::WriteOnly))
-    {
-        QDataStream out(&file);
-
-        out.setVersion(QDataStream::Qt_4_5);
-
-        out >> *this;
-    }*/
-    QDomDocument document;
-    int line,col;
-    QString msg;
-    if(!document.setContent(path,&msg,&line,&col))
-    {
-        QMessageBox::information(0,QObject::tr("Save Team"),QObject::tr("Error while parsing file %1").arg(path));
-        return;
-    }
-    QDomElement team = document.firstChildElement("Team");
-    if(team.isNull())
-    {
-        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
-        return;
-    }
-    QDomElement trainer = document.firstChildElement("Trainer");
-    if(trainer.isNull())
-    {
-        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
-        return;
-    }
-    int cpt = 0;
-    QDomElement poke = document.firstChildElement("Pokemon");
-    while(!poke.isNull())
-    {
-        QDomNode node;
-        node = poke.firstChild();
-        while(!node.isNull())
-        {
-            switch(node.nodeType())
-            {
-            case QDomNode::TextNode:
-                {
-                    node.toText().setData(this->team().poke(cpt).nickname());
-                    node = node.nextSibling();
-                    break;
-                }
-            case QDomNode::AttributeNode:
-                {
-                    if(node.nodeName() == "Item")
-                    {
-                        node.toAttr().setValue(QString(this->team().poke(cpt).item()));
-                    }
-                    else if(node.nodeName() == "Ability")
-                    {
-                        node.toAttr().setValue(QString(this->team().poke(cpt).ability()));
-                    }
-                    else if(node.nodeName() == "Num")
-                    {
-                        node.toAttr().setValue(QString(this->team().poke(cpt).num()));
-                    }
-                    else if(node.nodeName() == "Nature")
-                    {
-                        node.toAttr().setValue(QString(this->team().poke(cpt).nature()));
-                    }
-                    else if(node.nodeName() == "Shiny")
-                    {
-                        node.toAttr().setValue(QString(this->team().poke(cpt).shiny()));
-                    }
-                    else if(node.nodeName() == "Happiness")
-                    {
-                        node.toAttr().setValue(QString(this->team().poke(cpt).happiness()));
-                    }
-                    else if(node.nodeName() == "Lvl")
-                    {
-                        node.toAttr().setValue(QString(this->team().poke(cpt).level()));
-                    }
-                    else if(node.nodeName() == "Gender")
-                    {
-                        node.toAttr().setValue(QString(this->team().poke(cpt).gender()));
-                    }
-                    node = node.nextSibling();
-                    break;
-                }
-            default:
-                {
-                    break;
-                }
-            };
-            QDomElement moveElement = poke.firstChildElement("Move");
-            int cptMove = 0;
-            while(!moveElement.isNull())
-            {
-                QDomText moveNode = moveElement.firstChild().toText();
-                moveNode.setData(QString(this->team().poke(cpt).move(cptMove)));
-                cptMove++;
-                moveElement = moveElement.nextSiblingElement("Move");
-            }
-            QDomElement DVElement = poke.firstChildElement("DV");
-            int cptDV = 0;
-            while(!moveElement.isNull())
-            {
-                QDomText DVNode = DVElement.firstChild().toText();
-                DVNode.setData(QString(this->team().poke(cpt).DV(cptDV)));
-                cptDV++;
-                DVElement = DVElement.nextSiblingElement("DV");
-            }
-            QDomElement EVElement = poke.firstChildElement("EV");
-            int cptEV = 0;
-            while(!EVElement.isNull())
-            {
-                QDomText EVNode = EVElement.firstChild().toText();
-                EVNode.setData(QString(this->team().poke(cpt).EV(cptEV)));
-                cptEV++;
-                EVElement = EVElement.nextSiblingElement("EV");
-            }
-        }
-        poke = poke.nextSiblingElement("Pokemon");
-        cpt++;
-    }
-    QTextStream in;
-    document.save(in,4);
-}
-
-bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath, QString *chosenPath)
-{
-    QString location = QFileDialog::getSaveFileName(0,QObject::tr("Saving the Team"),defaultPath, QObject::tr("Team(*.tp)"));
-    if(location.isEmpty())
-    {
-        //Maybe the user hit "Cancel"
-        return false;
-    }
-    QFile file(location);
-    if(!file.open(QIODevice::WriteOnly))
-    {
-        QMessageBox::warning(0, QObject::tr("Error while saving the team"),QObject::tr("Can't create file ")+file.fileName());
-        return false;
-    }
-    /*QDataStream out(&file);
-    out.setVersion(QDataStream::Qt_4_5);
-    out << team;*/
-    QDomDocument document;
-    /*int line,col;
-    QString msg;
-    if(!document.setContent(&file,&msg,&line,&col))
-    {
-        QMessageBox::information(0,QObject::tr("Save Team"),QObject::tr("Erreur de parsage lors de l ouverture du fichier %1.\nErreur:%2 \nLigne:%3 Colonne:%4").arg(location).arg(msg).arg(line).arg(col));
-        return false;
-    }*/
-    QDomElement Team = document.createElement("Team");
-    document.appendChild(Team);
-    QDomElement trainer = document.createElement("Trainer");
-    Team.appendChild(trainer);
-    QDomText trainerName = document.createTextNode(team.trainerNick());
-    trainer.appendChild(trainerName);
-    trainer.setAttribute("winMsg",team.trainerWin());
-    trainer.setAttribute("loseMsg",team.trainerLose());
-    trainer.setAttribute("infoMsg",team.trainerInfo());
-
-    QDomElement poke[6];
-    QDomText pokeNickname[6];
-    for(int cpt = 0;cpt<6;cpt++)
-    {
-        poke[cpt] = document.createElement("Pokemon");
-        Team.appendChild(poke[cpt]);
-        pokeNickname[cpt] = document.createTextNode(team.team().poke(cpt).nickname());
-        poke[cpt].appendChild(pokeNickname[cpt]);
-        poke[cpt].setAttribute("Num",team.team().poke(cpt).num());
-        poke[cpt].setAttribute("Item",team.team().poke(cpt).item());
-        poke[cpt].setAttribute("Ability",team.team().poke(cpt).ability());
-        poke[cpt].setAttribute("Nature",team.team().poke(cpt).nature());
-        poke[cpt].setAttribute("Gender",team.team().poke(cpt).gender());
-        poke[cpt].setAttribute("Shiny",team.team().poke(cpt).shiny());
-        poke[cpt].setAttribute("Happiness",team.team().poke(cpt).happiness());
-        poke[cpt].setAttribute("Lvl",team.team().poke(cpt).level());
-        int index;
-        for(index = 0;index<4;index++)
-        {
-            QDomElement move = document.createElement("Move");
-            poke[cpt].appendChild(move);
-            QDomText name = document.createTextNode(QString("%1").arg(team.team().poke(cpt).move(index)));
-            move.appendChild(name);
-        }
-        for(index = 0;index<6;index++)
-        {
-            QDomElement Dv = document.createElement("DV");
-            poke[cpt].appendChild(Dv);
-            QDomText Dvname = document.createTextNode(QString("%1").arg(team.team().poke(cpt).DV(index)));
-            Dv.appendChild(Dvname);
-        }
-        for(index = 0;index<6;index++)
-        {
-            QDomElement Ev = document.createElement("EV");
-            poke[cpt].appendChild(Ev);
-            QDomText Evname = document.createTextNode(QString("%1").arg(team.team().poke(cpt).EV(index)));
-            Ev.appendChild(Evname);
-        }
-    }
-
-    QTextStream in(&file);
-    document.save(in,4);
-    if (chosenPath)
-    {
-        *chosenPath = location;
-    }
-
-    return true;
-}
-
-bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *chosenPath)
-{
-    QString location = QFileDialog::getOpenFileName(0,QObject::tr("Loading the Team"),defaultPath, QObject::tr("Team(*.tp)"));
-    if(location.isEmpty())
-    {
-        //Maybe the user hit "Cancel"
-        return false;
-    }
-    QFile file(location);
-    if(!file.open(QIODevice::ReadOnly))
-    {
-        QMessageBox::warning(0, QObject::tr("Error while loading the team"),QObject::tr("Can't open file ")+file.fileName());
-        return false;
-    }
-    QDomDocument document;
-    QString msg;
-    int line,col;
-    if(!document.setContent(&file,&msg,&line,&col))
-    {
-        QMessageBox::information(0,QObject::tr("Save Team"),QObject::tr("Error parsing the file %1.\nError:%2 \nLine:%3 Column:%4").arg(location).arg(msg).arg(line).arg(col));
-        return false;
-    }
-
-    QDomElement Team = document.firstChildElement("Team");
-    if(Team.isNull())
-    {
-        return false;
-    }
-    QDomElement Trainer = Team.firstChildElement("Trainer");
-    if(Trainer.isNull())
-    {
-        return false;
-    }
-    team.setTrainerNick(Trainer.text());
-    team.setTrainerInfo(Trainer.attribute("infoMsg",QString()));
-    team.setTrainerWin(Trainer.attribute("winMsg",QString()));
-    team.setTrainerLose(Trainer.attribute("loseMsg",QString()));
-    int cpt = 0;
-    QDomElement poke = Team.firstChildElement("Pokemon");
-    while(!poke.isNull())
-    {
-        team.team().poke(cpt).setNum(poke.attribute("Num",0).toInt(0,10));
-        team.team().poke(cpt).nickname() = poke.text();
-        team.team().poke(cpt).load();
-        team.team().poke(cpt).item() = poke.attribute("Item",0).toInt(0,10);
-        team.team().poke(cpt).ability() = poke.attribute("Ability",0).toInt(0,10);
-        team.team().poke(cpt).nature() = poke.attribute("Nature",0).toInt(0,10);
-        team.team().poke(cpt).gender() = poke.attribute("Gender",0).toInt(0,10);
-        team.team().poke(cpt).shiny() = QVariant(poke.attribute("Shiny",false)).toBool();
-        team.team().poke(cpt).happiness() = poke.attribute("Happiness",0).toInt(0,10);
-        team.team().poke(cpt).level() = poke.attribute("Lvl",0).toInt(0,10);
-        int cptMove=0;
-
-        QDomElement moveElement = poke.firstChildElement("Move");
-        while(!moveElement.isNull())
-        {
-            team.team().poke(cpt).setMove(moveElement.text().toInt(0,10),cptMove);
-            cptMove++;
-            moveElement = moveElement.nextSiblingElement("Move");
-        }
-        int cptDV=0;
-        QDomElement DVElement = poke.firstChildElement("DV");
-        while(!DVElement.isNull())
-        {
-            team.team().poke(cpt).setDV(cptDV,DVElement.text().toInt(0,10));
-            cptDV++;
-            DVElement = DVElement.nextSiblingElement("DV");
-        }
-        int cptEV=0;
-        QDomElement EVElement = poke.firstChildElement("EV");
-        while(!EVElement.isNull())
-        {
-            team.team().poke(cpt).setEV(cptEV,EVElement.text().toInt(0,10));
-            cptEV++;
-            EVElement = EVElement.nextSiblingElement("EV");
-        }
-        cpt++;
-        poke = poke.nextSiblingElement("Pokemon");
-    }
-    if (chosenPath)
-    {
-        *chosenPath = location;
-    }
-
     return true;
 }
 #endif

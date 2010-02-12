@@ -46,7 +46,7 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
 	connect(myazones[i], SIGNAL(clicked(int)), SLOT(attackClicked(int)));
     }
 
-    mypzone = new PokeZone(team);
+    mypzone = new PokeZone(info().myteam);
     mystack->addWidget(mypzone);
 
     connect(myforfeit, SIGNAL(clicked()), SLOT(clickforfeit()));
@@ -102,6 +102,7 @@ void BattleWindow::switchTo(int pokezone)
 {
     info().currentIndex = pokezone;
     mystack->setCurrentIndex(pokezone);
+    myattack->setText(tr("&Attack"));
     mydisplay->updatePoke(true);
 }
 
@@ -119,14 +120,17 @@ void BattleWindow::clickforfeit()
 
 void BattleWindow::switchToPokeZone()
 {
-    if (info().currentIndex < 0 || info().currentIndex > 5)
+    if (info().currentIndex < 0 || info().currentIndex > 5) {
 	mystack->setCurrentIndex(ZoneOfPokes);
+        myattack->setText("&Go back");
+    }
     else {
 	// Go back to the attack zone if the window is on the switch zone
 	if (mystack->currentIndex() == ZoneOfPokes) {
 	    switchTo(info().currentIndex);
 	} else {
 	    mystack->setCurrentIndex(ZoneOfPokes);
+            myattack->setText("&Go back");
 	}
     }
 }
@@ -154,6 +158,10 @@ void BattleWindow::switchClicked(int zone)
 
 void BattleWindow::attackButton()
 {
+    if (mystack->currentIndex() == ZoneOfPokes) {
+        switchToPokeZone();
+        return;
+    }
     if (info().possible) {
 	//We go with the first attack, duh
 	if (info().choices.struggle()) {
@@ -272,6 +280,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    if (self) {
 		/* Think to check for crash */
 		info().currentPoke().lifePoints() = newHp;
+                mypzone->pokes[info().validIndex()]->update();
 	    } else {
 		info().opponent.lifePercent() = newHp;
 	    }
@@ -536,11 +545,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 
         if (self) {
             info().myteam.poke(poke).status() = status;
-            if (status == Pokemon::Koed || status == Pokemon::Fine) {
-                mypzone->pokes[poke]->setStyleSheet("");
-            } else {
-                mypzone->pokes[poke]->setStyleSheet("background: " + StatInfo::StatusColor(status).name() + ";");
-            }
+            mypzone->pokes[poke]->update();
             if (info().currentIndex == poke) {
                 mydisplay->updatePoke(self);
             }
@@ -586,6 +591,17 @@ void BattleWindow::receiveInfo(QByteArray inf)
             } else {
                 printHtml(toBoldColor(tr("Rule: "), Qt::blue) + tr("Sleep Clause Enabled."));
             }
+            break;
+        }
+    case DynamicInfo:
+        {
+            in >> info().statChanges[!self];
+            mydisplay->updateToolTip(self);
+            break;
+        }
+    case DynamicStats:
+        {
+            in >> info().mystats;
             break;
         }
     default:
@@ -710,7 +726,7 @@ PokeZone::PokeZone(const TeamBattle &team)
 
     for (int i = 0; i < 6; i++)
     {
-	l->addWidget(pokes[i] = new QPushButton(PokemonInfo::Icon(team.poke(i).num()), team.poke(i).nick()), i >= 3, i % 3);
+        l->addWidget(pokes[i] = new PokeButton(team.poke(i)), i >= 3, i % 3);
 
 	mymapper->setMapping(pokes[i], i);
 	connect(pokes[i], SIGNAL(clicked()), mymapper, SLOT(map()));
@@ -718,6 +734,26 @@ PokeZone::PokeZone(const TeamBattle &team)
 
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(switchTo(int)));
 }
+
+
+PokeButton::PokeButton(const PokeBattle &p)
+    : p(&p)
+{
+    setIcon(PokemonInfo::Icon(p.num()));
+    update();
+}
+
+void PokeButton::update()
+{
+    setText(p->nick() + "\n" + QString::number(p->lifePoints()) + "/" + QString::number(p->totalLifePoints()));
+    int status = p->status();
+    if (status == Pokemon::Koed || status == Pokemon::Fine) {
+        setStyleSheet("");
+    } else {
+        setStyleSheet("background: " + StatInfo::StatusColor(status).name() + ";");
+    }
+}
+
 
 BattleDisplay::BattleDisplay(const BattleInfo &i)
     : info(i)
@@ -826,6 +862,88 @@ void BattleDisplay::updatePoke(bool self)
     }
 }
 
+void BattleDisplay::updateToolTip(bool self)
+{
+    QString tooltip;
+
+    if (self) {
+        tooltip += info.currentPoke().nick() + "\n";
+
+        for (int i = 0; i < 5; i++) {
+            tooltip += "\n" + tu(StatInfo::Stat(i+1)) + ": " + QString::number(info.mystats.stats[i]);
+            int boost = info.statChanges[!self].boosts[i];
+            if (boost > 0) {
+                tooltip += QString("(+%1)").arg(boost);
+            } else if (boost < 0) {
+                tooltip += QString("(%1)").arg(boost);
+            }
+        }
+        for (int i = 5; i < 7; i++) {
+            int boost = info.statChanges[!self].boosts[i];
+
+            if (boost != 0) {
+                tooltip += "\n" + tu(StatInfo::Stat(i+1)) + " ";
+
+                if (boost > 0) {
+                    tooltip += QString("+%1").arg(boost);
+                } else {
+                    tooltip += QString("%1").arg(boost);
+                }
+            }
+        }
+    } else {
+        tooltip += info.opponent.nick() + "\n";
+
+        for (int i = 0; i < 5; i++) {
+            tooltip += "\n" + tu(StatInfo::Stat(i+1)) + " ";
+            int boost = info.statChanges[!self].boosts[i];
+            if (boost >= 0) {
+                tooltip += QString("+%1").arg(boost);
+            } else if (boost < 0) {
+                tooltip += QString("%1").arg(boost);
+            }
+        }
+        for (int i = 5; i < 7; i++) {
+            int boost = info.statChanges[!self].boosts[i];
+            if (boost) {
+                tooltip += "\n" + tu(StatInfo::Stat(i+1)) + " ";
+
+                if (boost > 0) {
+                    tooltip += QString("+%1").arg(boost);
+                } else if (boost < 0) {
+                    tooltip += QString("%1").arg(boost);
+                }
+            }
+        }
+    }
+
+    tooltip += "\n";
+
+    int flags = info.statChanges[!self].flags;
+
+    int spikes[3] = {BattleDynamicInfo::Spikes, BattleDynamicInfo::SpikesLV2 ,BattleDynamicInfo::SpikesLV3};
+    for (int i = 0; i < 3; i++) {
+        if (flags & spikes[i]) {
+            tooltip += "\n" + tr("Spikes level %1").arg(i+1);
+            break;
+        }
+    }
+
+    int tspikes[2] = {BattleDynamicInfo::ToxicSpikes, BattleDynamicInfo::ToxicSpikesLV2};
+    for (int i = 0; i < 2; i++) {
+        if (flags & tspikes[i]) {
+            tooltip += "\n" + tr("Toxic Spikes level %1").arg(i+1);
+            break;
+        }
+    }
+
+    if (flags & BattleDynamicInfo::StealthRock) {
+        tooltip += "\n" + tr("Stealth Rock");
+    }
+
+    zone->tooltips[self] = tooltip;
+}
+
 void BattleDisplay::changeStatus(bool self, int poke, int status) {
     if (self) {
         mypokeballs[poke]->setPixmap(StatInfo::Icon(status));
@@ -886,20 +1004,21 @@ qint32 GraphicsZone::key(quint16 num, bool shiny, bool back, quint8 gender, bool
 
 const PokeBattle & BattleInfo::currentPoke() const
 {
-    if (currentIndex == -1) {
-	qDebug() << "Error! Call for pokémon info while none on the field. Returning a safe value instead";
-        return myteam.poke(lastIndex);
-    } else {
-	return myteam.poke(currentIndex);
-    }
+    return myteam.poke(validIndex());
 }
 
 PokeBattle & BattleInfo::currentPoke()
 {
-    if (currentIndex == -1) {
-	qDebug() << "Error! Call for pokémon info while none on the field. Returning a safe value instead";
-        return myteam.poke(lastIndex);
-    } else {
-	return myteam.poke(currentIndex);
+    return myteam.poke(validIndex());
+}
+
+bool GraphicsZone::event(QEvent * event)
+{
+    if (event->type() == QEvent::ToolTip) {
+        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
+
+        bool self  = helpEvent->pos().y() > height() / 2;
+        QToolTip::showText(helpEvent->globalPos(), tooltips[self]);
     }
+    return QGraphicsView::event(event);
 }

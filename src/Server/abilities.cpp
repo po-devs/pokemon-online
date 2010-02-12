@@ -86,7 +86,7 @@ struct AMAnticipation : public AM {
         }
         bool frightening_truth = false;
         for (int i = 0; i < 4; i++) {
-            if (TypeInfo::Eff(b.move(t, i), b.getType(s,1)) * TypeInfo::Eff(b.move(t, i), b.getType(s,2))) {
+            if (TypeInfo::Eff(MoveInfo::Type(b.move(t, i)), b.getType(s,1)) * TypeInfo::Eff(MoveInfo::Type(b.move(t, i)), b.getType(s,2)) > 4) {
                 frightening_truth = true;
             }
         }
@@ -143,7 +143,7 @@ struct AMChlorophyll : public AM {
 
     static void sm(int s, int, BS &b) {
         if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
-            turn(b,s)["Stat3Modifier"] = 20;
+            turn(b,s)["Stat3AbilityModifier"] = 20;
         }
     }
 };
@@ -261,7 +261,7 @@ struct AMDrySkin : public AM {
         if (b.isWeatherWorking(BattleSituation::Rain)) {
             b.sendAbMessage(15,1,s,s,Pokemon::Water);
             b.healLife(s, b.poke(s).totalLifePoints()/8);
-        } else if (b.isWeatherWorking(BattleSituation::Rain)) {
+        } else if (b.isWeatherWorking(BattleSituation::Sunny)) {
             b.sendAbMessage(15,2,s,s,Pokemon::Fire);
             b.inflictDamage(s, b.poke(s).totalLifePoints()/8, s, false);
         }
@@ -912,6 +912,7 @@ struct AMTrace : public AM {
         //Multitype
         if (!b.koed(t) && !b.hasWorkingAbility(t,59)) {
             b.sendAbMessage(66,0,s,t,0,b.poke(t).ability());
+            b.acquireAbility(s, b.ability(t));
         }
     }
 };
@@ -1028,7 +1029,7 @@ void AbilityEffect::init()
     REGISTER_AB(21, ForeCast);
     REGISTER_AB(22, ForeWarn);
     REGISTER_AB(23, Frisk);
-    //Gluttony
+    //Gluttony, but done with berries already
     REGISTER_AB(25, Guts);
     REGISTER_AB(26, HeatProof);
     REGISTER_AB(27, HugePower);

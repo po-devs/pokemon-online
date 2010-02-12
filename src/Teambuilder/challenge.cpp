@@ -3,7 +3,7 @@
 #include "../Utilities/otherwidgets.h"
 
 BaseChallengeWindow::BaseChallengeWindow(const Player &p, const QString &windowTitle, const QString &buttonOk, const QString &buttonNo, QWidget *parent)
-	: QWidget(parent)
+        : QWidget(parent), emitOnClose(true)
 {
     setWindowTitle(windowTitle.arg(p.team.name));
 
@@ -36,7 +36,14 @@ BaseChallengeWindow::BaseChallengeWindow(const Player &p, const QString &windowT
 
 void BaseChallengeWindow::closeEvent(QCloseEvent *)
 {
-    onCancel();
+    if (emitOnClose)
+        onCancel();
+}
+
+void BaseChallengeWindow::forcedClose()
+{
+    emitOnClose = false;
+    close();
 }
 
 int BaseChallengeWindow::id()

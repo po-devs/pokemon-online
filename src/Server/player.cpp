@@ -234,7 +234,7 @@ void Player::challengeStuff(const ChallengeInfo &c)
             return;
         }
 
-        if(challengedBy->challenger() == id) {
+        if(challengedBy && challengedBy->challenger() == id) {
             challengedBy->manageStuff(this, c);
         } else {
             foreach (Challenge *_c, challenged) {
@@ -539,6 +539,7 @@ void Challenge::manageStuff(Player *p, const ChallengeInfo &c)
         }
         if (!src->okForBattle()) {
             cancel(src);
+            return;
         }
 
         src->removeChallenge(this);

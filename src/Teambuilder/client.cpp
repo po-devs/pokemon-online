@@ -622,7 +622,7 @@ int Client::challengeWindowPlayer() const
 
 void Client::closeChallengeWindow()
 {
-    mychallenge->close();
+    mychallenge->forcedClose();
 }
 
 QDataStream & operator >> (QDataStream &in, Player &p)
