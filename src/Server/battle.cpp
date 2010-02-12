@@ -278,6 +278,8 @@ void BattleSituation::requestChoices()
     int count = int(requestChoice(Player1, false)) + requestChoice(Player2, false);
 
     if (count > 0) {
+        /* Send a brief update on the status */
+        notifyInfos();
         /* Lock until BOTH choices are received */
         sem.acquire(1);
     }
@@ -288,6 +290,18 @@ void BattleSituation::requestChoices()
     notify(All, BeginTurn, All, turn());
 
     /* Now all the players gonna do is analyzeChoice(int player) */
+}
+
+void BattleSituation::notifyInfos()
+{
+    for (int p = Player1; p <= Player2; p++) {
+        if (!koed(p)) {
+            BattleStats stats = constructStats(p);
+            notify(p, DynamicStats, p, stats);
+            BattleDynamicInfo infos = constructInfo(p);
+            notify(All, DynamicInfo, p, infos);
+        }
+    }
 }
 
 bool BattleSituation::koed(int player) const
@@ -1825,6 +1839,8 @@ void BattleSituation::requestSwitchIns()
         return;
     }
 
+    notifyInfos();
+
     foreach(int p, koedPokes) {
         requestChoice(p, false);
     }
@@ -1850,6 +1866,13 @@ void BattleSituation::requestSwitchIns()
 void BattleSituation::requestSwitch(int player)
 {
     testWin();
+
+    if (countAlive(player) - koed(player) == 0) {
+        //No poke to switch in, so we won't request a choice & such;
+        return;
+    }
+
+    notifyInfos();
 
     options[player] = BattleChoices::SwitchOnly();
 
@@ -2004,7 +2027,7 @@ void BattleSituation::fail(int player, int move, int part, int type)
 
 PokeFraction BattleSituation::getStatBoost(int player, int stat)
 {
-    int boost = pokelong[player][tr("Boost%1").arg(stat)].toInt();
+    int boost = pokelong[player][QString("Boost%1").arg(stat)].toInt();
 
     //simple
     if (hasWorkingAbility(player,87)) {
@@ -2071,4 +2094,43 @@ void BattleSituation::emitCommand(int player, int players, const QByteArray &tos
     } else {
         emit battleInfo(qint32(id(players)), tosend);
     }
+}
+
+BattleDynamicInfo BattleSituation::constructInfo(int player)
+{
+    BattleDynamicInfo ret;
+
+    for (int i = 0; i < 7; i++) {
+        ret.boosts[i] = pokelong[player]["Boost" + QString::number(i+1)].toInt();
+    }
+    ret.flags = 0;
+    if (teamzone[player].contains("Spikes")) {
+        switch (teamzone[player].value("Spikes").toInt()) {
+        case 1: ret.flags |= BattleDynamicInfo::Spikes; break;
+        case 2: ret.flags |= BattleDynamicInfo::SpikesLV2; break;
+        case 3: ret.flags |= BattleDynamicInfo::SpikesLV3; break;
+        }
+    }
+    if (teamzone[player].contains("ToxicSpikes")) {
+        switch (teamzone[player].value("ToxicSpikes").toInt()) {
+        case 1: ret.flags |= BattleDynamicInfo::ToxicSpikes; break;
+        case 2: ret.flags |= BattleDynamicInfo::ToxicSpikesLV2; break;
+        }
+    }
+    if (teamzone[player].contains("StealthRock")) {
+        ret.flags |= BattleDynamicInfo::StealthRock;
+    }
+
+    return ret;
+}
+
+BattleStats BattleSituation::constructStats(int player)
+{
+    BattleStats ret;
+
+    for (int i = 0; i < 5; i++) {
+        ret.stats[i] = getStat(player, i+1);
+    }
+
+    return ret;
 }

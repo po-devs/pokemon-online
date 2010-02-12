@@ -54,7 +54,7 @@ class PokeBattle
     PROPERTY(QString, nick);
     PROPERTY(quint16, lifePoints);
     PROPERTY(quint16, totalLifePoints);
-    PROPERTY(quint8, status);
+    PROPERTY(qint8, status);
     PROPERTY(qint8, sleepCount);
     PROPERTY(quint16, num);
     PROPERTY(quint16, item);
@@ -91,7 +91,7 @@ QDataStream & operator << (QDataStream &out, const PokeBattle &po);
 class ShallowBattlePoke
 {
     PROPERTY(QString, nick);
-    PROPERTY(quint8, status);
+    PROPERTY(qint8, status);
     PROPERTY(quint16, num);
     PROPERTY(bool, shiny);
     PROPERTY(quint8, gender);
@@ -216,5 +216,53 @@ inline QDataStream & operator << (QDataStream &out, const BattleConfiguration &c
 
     return out;
 }
+
+struct BattleDynamicInfo
+{
+    qint8 boosts[7];
+    enum {
+        Spikes=1,
+        SpikesLV2=2,
+        SpikesLV3=4,
+        StealthRock=8,
+        ToxicSpikes=16,
+        ToxicSpikesLV2=32
+    };
+    quint8 flags;
+};
+
+inline QDataStream & operator >> (QDataStream &in, BattleDynamicInfo &c)
+{
+    in >> c.boosts[0] >> c.boosts[1] >> c.boosts[2] >> c.boosts[3] >> c.boosts[4] >> c.boosts[5] >> c.boosts[6] >> c.flags;
+
+    return in;
+}
+
+inline QDataStream & operator << (QDataStream &out, const BattleDynamicInfo &c)
+{
+    out << c.boosts[0] << c.boosts[1] << c.boosts[2] << c.boosts[3] << c.boosts[4] << c.boosts[5] << c.boosts[6] << c.flags;
+
+    return out;
+}
+
+struct BattleStats
+{
+    qint16 stats[5];
+};
+
+inline QDataStream & operator >> (QDataStream &in, BattleStats &c)
+{
+    in >> c.stats[0] >> c.stats[1] >> c.stats[2] >> c.stats[3] >> c.stats[4];
+
+    return in;
+}
+
+inline QDataStream & operator << (QDataStream &out, const BattleStats &c)
+{
+    out << c.stats[0] << c.stats[1] << c.stats[2] << c.stats[3] << c.stats[4];
+
+    return out;
+}
+
 
 #endif // BATTLESTRUCTS_H

@@ -1,4 +1,4 @@
-/* Sous windows ouvrir avec le wordpad ou autre, mais pas le bloc-note :s !! */
+﻿/* Sous windows ouvrir avec le wordpad ou autre, mais pas le bloc-note :s !! */
 -Faire une page de crédits. On pourra utiliser un/plusieurs fichiers pour faire une mini db de Credits (et rajouter une classe CreditInfo à PokemonInfo)
 -attaques de baies
 
@@ -25,3 +25,5 @@ Lilp
 -Changer le design de la battle window
 -Ajouter les attaques 3G
 -Faire disparaître les sprites pour les attaques comme vol, tunnel,..
+-Pouvoir changer les formes (rotom, deoxys..) dans le menu advanced et pas à la fin.
+-Rajouter "Team Info" dans le menu du trainer

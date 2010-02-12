@@ -251,7 +251,7 @@ public:
     /* resets everything to default values */
     void reset();
 
-    void setMove(int moveNum, int moveSlot);
+    void setMove(int moveNum, int moveSlot, bool check=true);
     int addMove(int moveNum);
 
     bool hasMove(int moveNum);
@@ -382,8 +382,8 @@ public:
     QString trainerLose() const;
     QString trainerNick() const;
 
-    void loadFromFile(const QString &path);
-    void saveToFile(const QString &path);
+    bool loadFromFile(const QString &path);
+    bool saveToFile(const QString &path) const;
 };
 
 

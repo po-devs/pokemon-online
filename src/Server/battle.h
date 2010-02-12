@@ -143,6 +143,9 @@ public:
     /* conversion for sending a message */
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */
     ShallowBattlePoke opoke(int play, int i) const { return ShallowBattlePoke(poke(play, i));} /* aka 'opp poke', or what you need to know if it's your opponent's poke */
+    BattleDynamicInfo constructInfo(int player);
+    void notifyInfos();
+    BattleStats constructStats(int player);
 
     /* Send a message to the outworld */
     enum BattleCommand
@@ -177,7 +180,9 @@ public:
         BattleEnd,
         BlankMessage,
         CancelMove,
-        SleepClause
+        SleepClause,
+        DynamicInfo,
+        DynamicStats
     };
 
     enum WeatherM

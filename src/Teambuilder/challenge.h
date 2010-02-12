@@ -14,6 +14,8 @@ public:
     int id();
     /* defined once again so we can make a distinction between user closure and programmed closure */
     void closeEvent(QCloseEvent *event);
+    /* Won't emit refused signals when closed */
+    void forcedClose();
 signals:
     void challenge(int id);
     void cancel(int id);
@@ -25,6 +27,8 @@ protected:
     QPushButton *challenge_b;
 private:
     int myid;
+
+    bool emitOnClose;
 };
 
 class ChallengeWindow : public BaseChallengeWindow

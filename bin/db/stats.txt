@@ -2,7 +2,7 @@ life points
 attack
 defense
 speed
-special attack
-special defense
+sp. att.
+sp. def.
 evasion
 accuracy

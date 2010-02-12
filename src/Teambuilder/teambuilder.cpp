@@ -693,6 +693,8 @@ void TB_PokemonBody::setMove(int movenum, int moveslot)
 	QMessageBox::critical(this, tr("Error"), expr);
 	/* Restoring previous move */
 	m_moves[moveslot]->setText(MoveInfo::Name(poke()->move(moveslot)));
+
+        return;
     }
 }
 
@@ -898,6 +900,15 @@ void TB_EVManager::EVChanged(const QString &newvalue)
 void TB_EVManager::EVChanged(int newvalue)
 {
     int mstat = stat(sender());
+
+    if (sender() == slider(mstat)) {
+        if (newvalue < 255) {
+            newvalue = newvalue - (newvalue %4);
+        }
+        if (newvalue == poke()->EV(mstat)) {
+            return;
+        }
+    }
     poke()->setEV(mstat, newvalue);
 
     updateEV(mstat);

@@ -28,13 +28,20 @@ struct BattleInfo
     TeamBattle myteam;
     const PokeBattle &currentPoke() const;
     PokeBattle &currentPoke();
+
     /* Opponent pokemon */
     ShallowBattlePoke opponent;
     bool opponentAlive;
+    /* Stat boosts & team status */
+    BattleDynamicInfo statChanges[2];
+    BattleStats mystats;
 
     /* Current poke for ourself */
     int currentIndex;
     int lastIndex;
+    int validIndex() const {
+        return currentIndex == -1 ? lastIndex : currentIndex;
+    }
 };
 
 /* The battle window called by the client, online */
@@ -87,7 +94,9 @@ public:
         BattleEnd,
         BlankMessage,
         CancelMove,
-        SleepClause
+        SleepClause,
+        DynamicInfo,
+        DynamicStats
     };
 
     enum WeatherM
@@ -172,28 +181,7 @@ private:
 
 };
 
-/* The graphics zone, where both pokes are displayed */
-class GraphicsZone : public QGraphicsView
-{
-    Q_OBJECT
-public:
-    GraphicsZone();
-    /* displays that poke */
-    template <class T>
-    void switchTo(const T &poke, bool self, bool sub);
-    /* Display blank */
-    void switchToNaught(bool self);
-
-    /* Loads a pixmap if not loaded otherwise go see graphics */
-    QPixmap loadPixmap(quint16 num, bool shiny, bool back, quint8 gender, bool sub);
-    /* We are using a qmap to store the graphics already loaded. So the key of the pixmap
-	is a combination of 2 bools, 1 quin8; and one quint16 */
-    qint32 key(quint16 num, bool shiny, bool back, quint8 gender, bool sub) const;
-    QHash<qint32, QPixmap> graphics;
-    /* Current pixmaps displayed */
-    QGraphicsPixmapItem *mine, *foe;
-    QGraphicsScene scene;
-};
+class GraphicsZone;
 
 class BattleDisplay : public QWidget
 {
@@ -204,6 +192,7 @@ public:
     BattleDisplay(const BattleInfo &i);
 
     void updatePoke(bool self);
+    void updateToolTip(bool self);
     void changeStatus(bool self, int poke, int status);
 
 protected:
@@ -221,6 +210,34 @@ protected:
     QLabel *advpokeballs[6];
     QLabel *mypokeballs[6];
 };
+
+/* The graphics zone, where both pokes are displayed */
+class GraphicsZone : public QGraphicsView
+{
+    Q_OBJECT
+public:
+    GraphicsZone();
+    /* displays that poke */
+    template <class T>
+    void switchTo(const T &poke, bool self, bool sub);
+    /* Display blank */
+    void switchToNaught(bool self);
+    /* For tool tips */
+    bool event(QEvent *event);
+
+    /* Loads a pixmap if not loaded otherwise go see graphics */
+    QPixmap loadPixmap(quint16 num, bool shiny, bool back, quint8 gender, bool sub);
+    /* We are using a qmap to store the graphics already loaded. So the key of the pixmap
+	is a combination of 2 bools, 1 quin8; and one quint16 */
+    qint32 key(quint16 num, bool shiny, bool back, quint8 gender, bool sub) const;
+    QHash<qint32, QPixmap> graphics;
+    /* Current pixmaps displayed */
+    QGraphicsPixmapItem *mine, *foe;
+    QGraphicsScene scene;
+
+    QString tooltips[2];
+};
+
 
 class AttackButton;
 
@@ -250,6 +267,8 @@ public:
     QLabel *pp;
 };
 
+class PokeButton;
+
 /* When you want to switch pokemons, that's what you see */
 class PokeZone : public QWidget
 {
@@ -257,12 +276,23 @@ class PokeZone : public QWidget
 public:
     PokeZone(const TeamBattle &team);
 
-    QPushButton *pokes[6];
+    PokeButton *pokes[6];
 signals:
     void switchTo(int poke);
 
 private:
     QSignalMapper *mymapper;
+};
+
+class PokeButton : public QPushButton
+{
+    Q_OBJECT
+public:
+    PokeButton(const PokeBattle &p);
+    void update();
+private:
+
+    const PokeBattle *p;
 };
 
 
