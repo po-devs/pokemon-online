@@ -146,7 +146,7 @@ private:
     QCompactTable *pokechoice;
     QComboBox *itemchoice;
     QComboBox *naturechoice;
-    QLabel *pokeImage, *genderIcon, *level;
+    QLabel *pokeImage, *genderIcon, *level, *type1, *type2;
     QCompactTable *movechoice;
     QLineEdit *m_moves[4];
     QLineEdit *m_nick;
@@ -169,6 +169,7 @@ private:
     void updateItem();
     void updateNature();
     void updatePokeChoice();
+    void updateTypes();
 
     bool advancedOpen();
 private slots:

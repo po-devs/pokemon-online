@@ -8,7 +8,7 @@
 #include "../Utilities/pokeButton.h"
 
 template <class T, class U>
-QSet<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
+        QSet<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
 {
     QSet<QPair<typename T::value_type, U> > ret;
 
@@ -339,8 +339,8 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->t
     QEntitled * mwin = new QEntitled(tr("&Winning Message"), m_winMessage=new QTextEdit());
     mlayout->addWidget(mwin);
 
-//    QEntitled * mdraw = new QEntitled(tr("&Draw Message"), m_drawMessage=new QTextEdit());
-//    mlayout->addWidget(mdraw);
+    //    QEntitled * mdraw = new QEntitled(tr("&Draw Message"), m_drawMessage=new QTextEdit());
+    //    mlayout->addWidget(mdraw);
 
     QEntitled * mlose = new QEntitled(tr("&Losing Message"), m_loseMessage=new QTextEdit());
     mlayout->addWidget(mlose);
@@ -391,9 +391,9 @@ void TB_TrainerBody::setTrainerNick(const QString &newnick)
     trainerTeam()->setTrainerNick(newnick);
 }
 
- void TB_TrainerBody::changeTrainerWin()
+void TB_TrainerBody::changeTrainerWin()
 {
-     trainerTeam()->setTrainerWin(m_winMessage->toPlainText());
+    trainerTeam()->setTrainerWin(m_winMessage->toPlainText());
 }
 
 void TB_TrainerBody::changeTrainerLose()
@@ -454,6 +454,11 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
 	naturechoice->addItem(NatureInfo::Name(i));
     }
     connect(naturechoice, SIGNAL(activated(int)), SLOT(setNature(int)));
+
+    second_column->addWidget(type1 = new QLabel());
+    second_column->addWidget(type2 = new QLabel());
+
+    updateTypes();
 
     second_column->addWidget(new QEntitled(tr("&Nature"), naturechoice));
 
@@ -532,7 +537,7 @@ void TB_PokemonBody::initMoves()
     movechoice->horizontalHeader()->setResizeMode(PP, QHeaderView::ResizeToContents);
     movechoice->horizontalHeader()->setResizeMode(Pow, QHeaderView::ResizeToContents);
     movechoice->horizontalHeader()->setResizeMode(Acc, QHeaderView::ResizeToContents);
-    movechoice->setMinimumHeight(230);
+    movechoice->setMinimumHeight(250);
     movechoice->setMidLineWidth(0);
 
     connect(movechoice, SIGNAL(cellActivated(int,int)), SLOT(moveEntered(int)));
@@ -612,6 +617,7 @@ void TB_PokemonBody::updateNum()
     updateItem();
     updateNickname();
     updatePokeChoice();
+    updateTypes();
 
     emit pokeChanged(poke()->num());
 }
@@ -623,9 +629,24 @@ void TB_PokemonBody::updatePokeChoice()
     pokechoice->scrollTo(pokechoice->currentIndex(), QAbstractItemView::PositionAtCenter);
 }
 
- void TB_PokemonBody::updateNickname()
+void TB_PokemonBody::updateNickname()
 {     
     m_nick->setText(poke()->nickname());
+}
+
+void TB_PokemonBody::updateTypes()
+{
+    int ttype1 = PokemonInfo::Type1(poke()->num());
+    int ttype2 = PokemonInfo::Type2(poke()->num());
+
+    type1->setText(tr("Type 1: %1").arg(toBoldColor(TypeInfo::Name(ttype1), TypeInfo::Color(ttype1))));
+    type2->setText(tr("Type 2: %1").arg(toBoldColor(TypeInfo::Name(ttype2), TypeInfo::Color(ttype2))));
+
+    if (ttype2 == Pokemon::Curse)  {
+        type2->hide();
+    } else {
+        type2->show();
+    }
 }
 
 void TB_PokemonBody::updateItem()
@@ -920,7 +941,7 @@ void TB_EVManager::updateEV(int stat)
     slider(stat)->setValue(poke()->EV(stat));
 
     /* first the color : red if the stat is hindered by the nature, black if normal, blue if the stat is enhanced */
-    QColor colors[3] = {Qt::darkBlue, Qt::black, Qt::red};
+    QColor colors[3] = {Qt::red, Qt::black, Qt::darkGreen};
     QColor mycol = colors[poke()->natureBoost(stat)+1];
     QPalette pal = evLabel(stat)->palette();
     //pal.setColor(QPalette::Text, mycol); /* it looks better in black than in color, doesn't it? */
