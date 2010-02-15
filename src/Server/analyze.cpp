@@ -31,9 +31,9 @@ void Analyzer::sendMessage(const QString &message)
     notify(SendMessage, message);
 }
 
-void Analyzer::engageBattle(int id, const TeamBattle &team, const BattleConfiguration &conf)
+void Analyzer::engageBattle(int , int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    notify(EngageBattle, qint32(id), team, conf);
+    notify(EngageBattle, qint32(0), qint32(id), team, conf);
 }
 
 void Analyzer::connectTo(const QString &host, quint16 port)
@@ -50,14 +50,14 @@ QString Analyzer::ip() const {
     return socket().ip();
 }
 
-void Analyzer::sendPlayer(int num, const BasicInfo &team, int auth)
+void Analyzer::sendPlayer(const PlayerInfo &p)
 {
-    notify(PlayersList, qint32(num), team, qint8(auth));
+    notify(PlayersList, p);
 }
 
-void Analyzer::sendTeamChange(int num, const BasicInfo &team, int auth)
+void Analyzer::sendTeamChange(const PlayerInfo &p)
 {
-    notify(SendTeam, qint32(num), team, qint8(auth));
+    notify(SendTeam, p);
 }
 
 void Analyzer::sendPM(int dest, const QString &mess)
@@ -65,9 +65,14 @@ void Analyzer::sendPM(int dest, const QString &mess)
     notify(SendPM, qint32(dest), mess);
 }
 
-void Analyzer::sendLogin(int num, const BasicInfo &team, int auth)
+void Analyzer::sendLogin(const PlayerInfo &p)
 {
-    notify(Login, qint32(num), team, qint8(auth));
+    notify(Login, p);
+}
+
+void Analyzer::notifyAway(qint32 id, bool away)
+{
+    notify(id, away);
 }
 
 void Analyzer::sendLogout(int num)
@@ -93,6 +98,11 @@ void Analyzer::sendBattleResult(quint8 res, int winner, int loser)
 void Analyzer::sendBattleCommand(const QByteArray & command)
 {
     notify(BattleMessage, command);
+}
+
+void Analyzer::notifyBattle(qint32 id1, qint32 id2)
+{
+    notify(EngageBattle, id1, id2);
 }
 
 void Analyzer::sendUserInfo(const UserInfo &ui)

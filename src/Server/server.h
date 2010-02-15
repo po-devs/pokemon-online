@@ -10,6 +10,7 @@ class Player;
 class BattleSituation;
 class Analyzer;
 class ChallengeInfo;
+class QScrollDownTextEdit;
 
 class QIdListWidgetItem;
 
@@ -102,12 +103,12 @@ private:
 
     /** GRAPHICAL PARTS **/
 
-    QTextEdit *mymainchat;
+    QScrollDownTextEdit *mymainchat;
     QListWidget *mylist;
     QLineEdit *myline;
     QHash<int, QIdListWidgetItem *> myplayersitems;
     /* the mainchat !*/
-    QTextEdit *mainchat();
+    QScrollDownTextEdit *mainchat();
     QListWidget *list();
 };
 #endif // SERVER_H

@@ -14,9 +14,10 @@ class Player : public QObject
 public:
     enum State
     {
-	NotLoggedIn,
-        LoggedIn,
-	Battling
+        NotLoggedIn=0,
+        LoggedIn=1,
+        Battling=2,
+        Away = 4
     };
 
     Player(QTcpSocket *sock, int id);
@@ -38,7 +39,8 @@ public:
     bool connected() const;
     bool isLoggedIn() const;
     bool battling() const;
-    void changeState(int newstate);
+    bool away() const;
+    void changeState(int newstate, bool on);
     int state() const;
     int auth() const;
     void setAuth (int newAuth);
@@ -64,6 +66,8 @@ public:
 
     Analyzer& relay();
     const Analyzer& relay() const;
+
+    PlayerInfo bundle() const;
 signals:
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, const QString &mess);

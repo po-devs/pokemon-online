@@ -68,18 +68,20 @@ void Player::addChallenge(Challenge *c, bool youarechallenged)
 
 bool Player::okForChallenge(int src) const
 {
+    if (!isLoggedIn() || battling() || away())
+        return false;
+
+    /* If already challenged by someone */
     if (challengedBy != NULL) {
         return false;
     }
+    /* If already challenged that same person */
     foreach(Challenge *c, challenged) {
         if (c->challenged() == src) {
             return false;
         }
     }
-    if (!isLoggedIn())
-        return false;
-    if (battling())
-        return false;
+
     return true;
 }
 
@@ -88,9 +90,13 @@ bool Player::okForBattle() const
     return isLoggedIn() && !battling();
 }
 
-void Player::changeState(int newstate)
+void Player::changeState(int newstate, bool on)
 {
-    m_state = newstate;
+    if (on) {
+        m_state |= newstate;
+    } else {
+        m_state &= 0xFF ^ newstate;
+    }
 }
 
 int Player::auth() const {
@@ -142,7 +148,7 @@ void Player::battleForfeited()
         return; //INVALID BEHAVIOR
     }
 
-    changeState(LoggedIn);
+    changeState(LoggedIn, true);
 
     emit battleFinished(Forfeit, opponent(), id());
 }
@@ -150,8 +156,9 @@ void Player::battleForfeited()
 void Player::battleResult(int result, int winner, int loser)
 {
     relay().sendBattleResult(result, winner, loser);
-    if (result == Forfeit || result == Close)
-        changeState(LoggedIn);
+
+    if ( (winner == id() || loser == id()) && (result == Forfeit || result == Close))
+        changeState(Battling, false);
 }
 
 void Player::receivePM(int id, const QString &pm)
@@ -254,11 +261,11 @@ void Player::sendChallengeStuff(const ChallengeInfo &c)
 
 void Player::startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    relay().engageBattle(id, team, conf);
+    relay().engageBattle(this->id(), id, team, conf);
 
     m_opponent = id;
 
-    changeState(Battling);
+    changeState(Battling, true);
 
     cancelChallenges();
 }
@@ -296,7 +303,12 @@ const Analyzer & Player::relay() const
 
 bool Player::battling() const
 {
-    return state() == Battling;
+    return state() & Battling;
+}
+
+bool Player::away() const
+{
+    return state() & Away;
 }
 
 int Player::state() const
@@ -307,6 +319,17 @@ int Player::state() const
 bool Player::connected() const
 {
     return relay().isConnected();
+}
+
+PlayerInfo Player::bundle() const
+{
+    PlayerInfo p;
+    p.auth = myauth;
+    p.flags = state();
+    p.id = id();
+    p.team = basicInfo();
+
+    return p;
 }
 
 bool Player::isLoggedIn() const

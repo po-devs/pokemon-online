@@ -13,17 +13,6 @@ class QScrollDownTextEdit;
 class PMWindow;
 class ControlPanel;
 
-/* Struct representing a player's data */
-class Player
-{
-public:
-    qint32 id;
-    BasicInfo team;
-    qint8 auth;
-};
-
-QDataStream & operator >> (QDataStream &in, Player &p);
-QDataStream & operator << (QDataStream &out, const Player &p);
 
 /* The class for going online.
 
@@ -55,7 +44,7 @@ public:
     void closeChallengeWindow();
     int  challengeWindowPlayer() const;
 
-    Player player(int id) const;
+    PlayerInfo player(int id) const;
     BasicInfo info(int id) const;
 
     void removeBattleWindow();
@@ -68,9 +57,9 @@ public slots:
     void messageReceived(const QString & mess);
     /* sends what's in the line edit */
     void sendText();
-    void playerLogin(const Player &p);
-    void playerReceived(const Player &p);
-    void teamChanged(const Player &p);
+    void playerLogin(const PlayerInfo &p);
+    void playerReceived(const PlayerInfo &p);
+    void teamChanged(const PlayerInfo &p);
     void playerLogout(int);
     void sendRegister();
     /* sends the server a challenge notice */
@@ -86,6 +75,7 @@ public slots:
     void challengeStuff(const ChallengeInfo &c);
     /* battle... */
     void battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf);
+    void battleStarted(int id1, int id2);
     void battleFinished(int res, int winner, int loser);
     void forfeitBattle();
     /* shows the context menu for that player */
@@ -143,12 +133,16 @@ private:
 
     QPointer<ControlPanel> myCP;
 
-    QHash<int, Player> myplayersinfo;
+    QHash<int, PlayerInfo> myplayersinfo;
 
 
     QHash<QString, int> mynames;
     QScrollDownTextEdit *mainChat();
     Analyzer & relay();
+
+    PlayerInfo playerInfo(int id) const;
+    QIdListWidgetItem *item(int id);
+    void updateState(int player);
 
     void initRelay();
 };

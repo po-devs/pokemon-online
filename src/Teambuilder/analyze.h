@@ -6,7 +6,7 @@
 
 class Client;
 class TrainerTeam;
-class Player;
+class PlayerInfo;
 class BattleChoice;
 class TeamBattle;
 class BattleConfiguration;
@@ -89,16 +89,19 @@ signals:
     void disconnected();
     void messageReceived(const QString &mess);
     /* player from the players list */
-    void playerReceived(const Player &p);
+    void playerReceived(const PlayerInfo &p);
     /* login of a player */
-    void playerLogin(const Player &p);
+    void playerLogin(const PlayerInfo &p);
     /* Change of team of a player */
-    void teamChanged(const Player &p);
+    void teamChanged(const PlayerInfo &p);
     /* logout... */
     void playerLogout(int id);
     /* challengerelated */
     void challengeStuff(const ChallengeInfo &c);
+    /* battle including self */
     void battleStarted(int id, const TeamBattle &myteam, const BattleConfiguration &conf);
+    /* battle of strangers */
+    void battleStarted(int id1, int id2);
     void battleFinished(int res, int srcid, int destid);
     void battleMessage(const QByteArray &mess);
     void passRequired(const QString &salt);

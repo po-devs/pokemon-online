@@ -29,7 +29,7 @@ Server::Server(quint16 port)
     mylist = new QListWidget();
     mylayout->addWidget(mylist,1,0,2,1);
 
-    mymainchat = new QTextEdit();
+    mymainchat = new QScrollDownTextEdit();
     mylayout->addWidget(mymainchat,1,1);
 
     myline = new QLineEdit();
@@ -195,15 +195,8 @@ void Server::ipRefused()
 
 void Server::printLine(const QString &line)
 {
-    if (linecount > 1000) {
-        mainchat()->clear();
-        printLine("Cleared the window (1000+ lines were displayed)");
-    }
-
-    mainchat()->moveCursor(QTextCursor::End);
     mainchat()->insertPlainText(line + "\n");
     qDebug() << line;
-    linecount += 1;
 }
 
 void Server::openPlayers()
@@ -360,7 +353,7 @@ void Server::loggedIn(int id, const QString &name)
 
     /* For new connections */
     if (!player(id)->isLoggedIn()) {
-        player(id)->changeState(Player::LoggedIn);
+        player(id)->changeState(Player::LoggedIn, true);
 
         mynames.insert(n, id);
 
@@ -369,7 +362,7 @@ void Server::loggedIn(int id, const QString &name)
         sendPlayersList(id);
         sendLogin(id);
 
-        sendMessage(id, tr("Welcome Message: Welcome to our server, %1").arg(name));
+        sendMessage(id, tr("Welcome Message: %1, DOWNLOAD the update where there is the AWAY status, or your sim will prolly crash now.").arg(name));
     } else { /* if already logged in */
         recvTeam(id, name);
     }
@@ -512,6 +505,12 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     player(id1)->startBattle(id2, battle->pubteam(id1), battle->configuration());
     player(id2)->startBattle(id1, battle->pubteam(id2), battle->configuration());
 
+    foreach(Player *p, myplayers) {
+        if (p->isLoggedIn() && p->id() != id1 && p->id() != id2) {
+            p->relay().notifyBattle(id1,id2);
+        }
+    }
+
     connect(battle, SIGNAL(battleInfo(int,QByteArray)), SLOT(sendBattleCommand(int, QByteArray)));
     connect(battle, SIGNAL(battleFinished(int,int,int)), SLOT(battleResult(int,int,int)));
     connect(player(id1), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
@@ -528,8 +527,11 @@ void Server::battleResult(int desc, int winner, int loser)
         player(winner)->battleResult(Close, winner, loser);
         player(loser)->battleResult(Close, winner, loser);
     } else {
-        player(winner)->battleResult(desc, winner, loser);
-        player(loser)->battleResult(desc, winner, loser);
+        foreach(Player *p, myplayers) {
+            if (p->isLoggedIn()) {
+                p->battleResult(desc, winner, loser);
+            }
+        }
     }
 
     if (desc == Forfeit) {
@@ -561,25 +563,29 @@ void Server::sendPlayersList(int id)
     foreach(Player *p, myplayers)
     {
 	if (p->isLoggedIn())
-            relay.sendPlayer(p->id(), p->basicInfo(), p->auth());
+            relay.sendPlayer(p->bundle());
     }
 }
 
 void Server::sendLogin(int id)
 {
+    PlayerInfo bundle = player(id)->bundle();
+
     foreach(Player *p, myplayers)
     {
 	if (p->id() != id && p->isLoggedIn())
-            p->relay().sendLogin(id, player(id)->basicInfo(), player(id)->auth());
+            p->relay().sendLogin(bundle);
     }
 }
 
 void Server::sendPlayer(int id)
 {
+    PlayerInfo bundle = player(id)->bundle();
+
     foreach(Player *p, myplayers)
     {
         if (p->isLoggedIn())
-            p->relay().sendPlayer(id, player(id)->basicInfo(), player(id)->auth());
+            p->relay().sendPlayer(bundle);
     }
 }
 
@@ -614,10 +620,12 @@ void Server::recvTeam(int id, const QString &_name)
         player(id)->setName(_name);
     }
 
+    PlayerInfo bundle = player(id)->bundle();
+
     /* Sending the team change! */
     foreach(Player *p, myplayers) {
         if (p->isLoggedIn()) {
-            p->relay().sendTeamChange(id, player(id)->basicInfo(), player(id)->auth());
+            p->relay().sendTeamChange(bundle);
         }
     }
 
@@ -684,7 +692,7 @@ int Server::freeid() const
     }
 }
 
-QTextEdit * Server::mainchat()
+QScrollDownTextEdit * Server::mainchat()
 {
     return mymainchat;
 }
