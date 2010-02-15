@@ -125,13 +125,24 @@ int QIdListWidgetItem::id() const
     return myid;
 }
 
+void QIdListWidgetItem::setColor(const QColor &c)
+{
+    setForeground(QBrush(c));
+}
+
 QScrollDownTextEdit::QScrollDownTextEdit()
 {
     setReadOnly(true);
+    linecount = 0;
 }
 
 void QScrollDownTextEdit::insertHtml(const QString &text)
 {
+    if (linecount >= 1000) {
+        clear();
+        linecount = 0;
+    }
+
     moveCursor(QTextCursor::End);
     QTextEdit::insertHtml(text);
     QScrollBar * b = verticalScrollBar();
@@ -139,10 +150,17 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
     {
 	b->setValue(b->maximum());
     }
+
+    linecount++;
 }
 
 void QScrollDownTextEdit::insertPlainText(const QString &text)
 {
+    if (linecount >= 1000) {
+        clear();
+        linecount = 0;
+    }
+
     moveCursor(QTextCursor::End);
     QTextEdit::insertPlainText(text);
     QScrollBar * b = verticalScrollBar();
@@ -150,6 +168,8 @@ void QScrollDownTextEdit::insertPlainText(const QString &text)
     {
 	b->setValue(b->maximum());
     }
+
+    linecount++;
 }
 
 

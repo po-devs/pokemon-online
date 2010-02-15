@@ -5,6 +5,8 @@
 
 BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &team, const BattleConfiguration &_conf)
 {
+    QToolTip::setFont(QFont("Courier New",8));
+
     blankMessage = false;
     battleEnded = false;
     conf() = _conf;
@@ -866,11 +868,28 @@ void BattleDisplay::updateToolTip(bool self)
 {
     QString tooltip;
 
+    QString stats[7] = {
+        tu(StatInfo::Stat(1)),
+        tu(StatInfo::Stat(2)),
+        tu(StatInfo::Stat(3)),
+        tu(StatInfo::Stat(4)),
+        tu(StatInfo::Stat(5)),
+        tu(StatInfo::Stat(6)),
+        tu(StatInfo::Stat(7))
+    };
+    int max = 0;
+    for (int i = 0; i < 7; i++) {
+        max = std::max(max, stats[i].length());
+    }
+    for (int i = 0; i < 7; i++) {
+        stats[i] = stats[i].leftJustified(max, '.', false);
+    }
+
     if (self) {
         tooltip += info.currentPoke().nick() + "\n";
 
         for (int i = 0; i < 5; i++) {
-            tooltip += "\n" + tu(StatInfo::Stat(i+1)) + ": " + QString::number(info.mystats.stats[i]);
+            tooltip += "\n" + stats[i] + ": " + QString::number(info.mystats.stats[i]);
             int boost = info.statChanges[!self].boosts[i];
             if (boost > 0) {
                 tooltip += QString("(+%1)").arg(boost);
@@ -882,7 +901,7 @@ void BattleDisplay::updateToolTip(bool self)
             int boost = info.statChanges[!self].boosts[i];
 
             if (boost != 0) {
-                tooltip += "\n" + tu(StatInfo::Stat(i+1)) + " ";
+                tooltip += "\n" + stats[i] + " ";
 
                 if (boost > 0) {
                     tooltip += QString("+%1").arg(boost);
@@ -895,7 +914,7 @@ void BattleDisplay::updateToolTip(bool self)
         tooltip += info.opponent.nick() + "\n";
 
         for (int i = 0; i < 5; i++) {
-            tooltip += "\n" + tu(StatInfo::Stat(i+1)) + " ";
+            tooltip += "\n" + stats[i] + " ";
             int boost = info.statChanges[!self].boosts[i];
             if (boost >= 0) {
                 tooltip += QString("+%1").arg(boost);
@@ -906,7 +925,7 @@ void BattleDisplay::updateToolTip(bool self)
         for (int i = 5; i < 7; i++) {
             int boost = info.statChanges[!self].boosts[i];
             if (boost) {
-                tooltip += "\n" + tu(StatInfo::Stat(i+1)) + " ";
+                tooltip += "\n" + stats[i] + " ";
 
                 if (boost > 0) {
                     tooltip += QString("+%1").arg(boost);

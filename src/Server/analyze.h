@@ -4,12 +4,12 @@
 #include <QtCore>
 #include "network.h"
 
-class BasicInfo;
 class TeamBattle;
 class BattleChoice;
 class BattleConfiguration;
 class ChallengeInfo;
 class UserInfo;
+class PlayerInfo;
 
 /* Commands to dialog with the server */
 namespace NetworkServ
@@ -61,18 +61,20 @@ public:
     /* functions called by the server */
     void sendMessage(const QString &message);
     void requestLogIn();
-    void sendPlayer(int num, const BasicInfo &team, int auth=0);
-    void sendLogin(int num, const BasicInfo &team, int auth=0);
+    void sendPlayer(const PlayerInfo &p);
+    void sendLogin(const PlayerInfo &p);
     void sendLogout(int num);
     bool isConnected() const;
     QString ip() const;
     void sendChallengeStuff(const ChallengeInfo &c);
-    void engageBattle(int id, const TeamBattle &team, const BattleConfiguration &conf);
+    void engageBattle(int myid, int id, const TeamBattle &team, const BattleConfiguration &conf);
     void sendBattleResult(quint8 res, int win, int los);
     void sendBattleCommand(const QByteArray &command);
-    void sendTeamChange(int num, const BasicInfo &team, int auth=0);
+    void sendTeamChange(const PlayerInfo &p);
     void sendPM(int dest, const QString &mess);
     void sendUserInfo(const UserInfo &ui);
+    void notifyBattle(qint32 id1, qint32 id2);
+    void notifyAway(qint32 id, bool away);
 
     void connectTo(const QString &host, quint16 port);
 
@@ -87,6 +89,8 @@ public:
     void notify(int command, const T1& param1, const T2& param2);
     template<class T1, class T2, class T3>
     void notify(int command, const T1& param1, const T2& param2, const T3 &param3);
+    template<class T1, class T2, class T3, class T4>
+    void notify(int command, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4);
 signals:
     /* to send to the network */
     void sendCommand(const QByteArray &command);
@@ -165,6 +169,20 @@ void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 
     out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(command) << param1 << param2 << param3;
+
+    emit sendCommand(tosend);
+}
+
+template<class T1, class T2, class T3, class T4>
+void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 &param3, const T4 &param4)
+{
+    if (!isConnected())
+        return;
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(command) << param1 << param2 << param3 << param4;
 
     emit sendCommand(tosend);
 }

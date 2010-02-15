@@ -2,7 +2,7 @@
 #include "client.h"
 #include "../Utilities/otherwidgets.h"
 
-BaseChallengeWindow::BaseChallengeWindow(const Player &p, const QString &windowTitle, const QString &buttonOk, const QString &buttonNo, QWidget *parent)
+BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &windowTitle, const QString &buttonOk, const QString &buttonNo, QWidget *parent)
         : QWidget(parent), emitOnClose(true)
 {
     setWindowTitle(windowTitle.arg(p.team.name));
@@ -67,7 +67,7 @@ void BaseChallengeWindow::onCancel()
     close();
 }
 
-ChallengeWindow::ChallengeWindow(const Player &p, QWidget *parent)
+ChallengeWindow::ChallengeWindow(const PlayerInfo &p, QWidget *parent)
 	: BaseChallengeWindow(p, tr("%1's Info"), tr("&Challenge"), tr("Go &Back"), parent)
 {
     QSettings s;
@@ -88,7 +88,7 @@ void ChallengeWindow::onChallenge()
     close();
 }
 
-ChallengedWindow::ChallengedWindow(const Player &p, bool slpCls, QWidget *parent)
+ChallengedWindow::ChallengedWindow(const PlayerInfo &p, bool slpCls, QWidget *parent)
 	: BaseChallengeWindow(p, tr("%1 challenged you!"), tr("&Accept"), tr("&Refuse"), parent)
 {
     connect(challenge_b, SIGNAL(clicked()), SLOT(onChallenge()));

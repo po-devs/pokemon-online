@@ -73,6 +73,7 @@ public:
     QIdListWidgetItem(int id, const QString &text);
 
     int id() const;
+    void setColor(const QColor &c);
 private:
     int myid;
 };
@@ -87,6 +88,9 @@ public:
 
     void insertHtml(const QString &text);
     void insertPlainText(const QString &text);
+
+private:
+    int linecount;
 };
 
 /* validator for the nicks */

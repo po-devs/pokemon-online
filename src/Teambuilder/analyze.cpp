@@ -98,7 +98,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     case PlayersList:
 	{
             if (!registry_socket) {
-                Player p;
+                PlayerInfo p;
                 in >> p;
                 emit playerReceived(p);
                 break;
@@ -112,7 +112,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	}
     case Login:
 	{
-	    Player p;
+            PlayerInfo p;
 	    in >> p;
 	    emit playerLogin(p);
 	    break;
@@ -133,11 +133,24 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	}
     case EngageBattle:
 	{
-            qint32 id;
-	    TeamBattle team;
-	    BattleConfiguration conf;
-	    in >> id >> team >> conf;
-	    emit battleStarted(id, team, conf);
+            qint32 id1, id2;
+            in >> id1 >> id2;
+
+            if (id1 == 0) {
+                qDebug() << "aaa";
+                /* This is a battle we take part in */
+                TeamBattle team;
+                BattleConfiguration conf;
+                in >> team >> conf;
+                qDebug() << "bbb";
+                emit battleStarted(id2, team, conf);
+                qDebug() << "ccc";
+            } else {
+                qDebug() << "aaaaa";
+                /* this is a battle of strangers */
+                emit battleStarted(id1, id2);
+                qDebug() << "bbbbb";
+            }
 	    break;
 	}
     case BattleFinished:
@@ -202,7 +215,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         }
     case SendTeam:
         {
-            Player p;
+            PlayerInfo p;
             in >> p;
             emit teamChanged(p);
             break;

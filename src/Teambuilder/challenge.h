@@ -3,13 +3,13 @@
 
 #include <QtGui>
 
-class Player;
+class PlayerInfo;
 
 class BaseChallengeWindow : public QWidget
 {
     Q_OBJECT
 public:
-    BaseChallengeWindow(const Player &p, const QString &windowTitle, const QString &buttonOk, const QString &buttonNo, QWidget *parent=0);
+    BaseChallengeWindow(const PlayerInfo &p, const QString &windowTitle, const QString &buttonOk, const QString &buttonNo, QWidget *parent=0);
 
     int id();
     /* defined once again so we can make a distinction between user closure and programmed closure */
@@ -35,7 +35,7 @@ class ChallengeWindow : public BaseChallengeWindow
 {
     Q_OBJECT
 public:
-    ChallengeWindow(const Player &p, QWidget *parent=0);
+    ChallengeWindow(const PlayerInfo &p, QWidget *parent=0);
 protected slots:
     void onChallenge();
 };
@@ -44,7 +44,7 @@ class ChallengedWindow: public BaseChallengeWindow
 {
     Q_OBJECT
 public:
-    ChallengedWindow(const Player &p, bool slpCls, QWidget *parent = 0);
+    ChallengedWindow(const PlayerInfo &p, bool slpCls, QWidget *parent = 0);
 };
 
 #endif // CHALLENGE_H

@@ -539,6 +539,7 @@ void TB_PokemonBody::initMoves()
     movechoice->horizontalHeader()->setResizeMode(Acc, QHeaderView::ResizeToContents);
     movechoice->setMinimumHeight(250);
     movechoice->setMidLineWidth(0);
+    movechoice->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     connect(movechoice, SIGNAL(cellActivated(int,int)), SLOT(moveEntered(int)));
     connect(this, SIGNAL(moveChosen(int)), SLOT(setMove(int)));
@@ -782,33 +783,26 @@ void TB_PokemonBody::configureMoves()
 	
 	witem = new QTableWidgetItem(TypeInfo::Name(MoveInfo::Type(movenum)));
 	witem->setForeground(QColor("white"));
-	witem->setBackground(QColor(TypeInfo::Color(MoveInfo::Type(movenum))));
-	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+        witem->setBackground(QColor(TypeInfo::Color(MoveInfo::Type(movenum))));
 	movechoice->setItem(i, Type, witem);
 
-	witem = new QTableWidgetItem(MoveInfo::Name(movenum));
-	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+        witem = new QTableWidgetItem(MoveInfo::Name(movenum));
 	movechoice->setItem(i, Name, witem);
 
         witem = new QTableWidgetItem(pair.second);
-	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Learning, witem);
 
         witem = new QTableWidgetItem(QString::number(MoveInfo::PP(movenum)).rightJustified(2));
-	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, PP, witem);
 
         witem = new QTableWidgetItem(MoveInfo::AccS(movenum).rightJustified(3));
-	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Acc, witem);
 
         witem = new QTableWidgetItem(MoveInfo::PowerS(movenum).rightJustified(3));
-	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
 	movechoice->setItem(i, Pow, witem);
 
 	witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(movenum)));
-	witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(movenum))));
-	witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+        witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(movenum))));
 	movechoice->setItem(i, Category, witem);
     }
 

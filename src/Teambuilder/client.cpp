@@ -237,12 +237,13 @@ void Client::initRelay()
     connect(&relay(), SIGNAL(connected()), SLOT(connected()));
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(messageReceived(QString)), SLOT(messageReceived(QString)));
-    connect(&relay(), SIGNAL(playerReceived(Player)), SLOT(playerReceived(Player)));
-    connect(&relay(), SIGNAL(teamChanged(Player)), SLOT(teamChanged(Player)));
-    connect(&relay(), SIGNAL(playerLogin(Player)), SLOT(playerLogin(Player)));
+    connect(&relay(), SIGNAL(playerReceived(PlayerInfo)), SLOT(playerReceived(PlayerInfo)));
+    connect(&relay(), SIGNAL(teamChanged(PlayerInfo)), SLOT(teamChanged(PlayerInfo)));
+    connect(&relay(), SIGNAL(playerLogin(PlayerInfo)), SLOT(playerLogin(PlayerInfo)));
     connect(&relay(), SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
     connect(&relay(), SIGNAL(battleStarted(int, TeamBattle, BattleConfiguration)), SLOT(battleStarted(int, TeamBattle, BattleConfiguration)));
+    connect(&relay(), SIGNAL(battleStarted(int, int)), SLOT(battleStarted(int, int)));
     connect(&relay(), SIGNAL(battleFinished(int,int,int)), SLOT(battleFinished(int,int,int)));
     connect(&relay(), SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
     connect(&relay(), SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
@@ -309,7 +310,7 @@ bool Client::playerExist(int id) const
     return myplayersinfo.contains(id);
 }
 
-Player Client::player(int id) const
+PlayerInfo Client::player(int id) const
 {
     return myplayersinfo[id];
 }
@@ -368,6 +369,23 @@ void Client::battleStarted(int id, const TeamBattle &team, const BattleConfigura
     connect(mybattle, SIGNAL(battleMessage(QString)), &relay(), SLOT(battleMessage(QString)));
     connect(&relay(), SIGNAL(battleMessage(QByteArray)), mybattle, SLOT(receiveInfo(QByteArray)));
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
+
+    battleStarted(ownId(), id);
+}
+
+void Client::battleStarted(int id1, int id2)
+{
+    printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
+
+    myplayersinfo[id1].flags |= PlayerInfo::Battling;
+    myplayersinfo[id2].flags |= PlayerInfo::Battling;
+
+    updateState(id1);
+    updateState(id2);
+}
+
+QIdListWidgetItem *Client::item(int id) {
+    return myplayersitems.value(id);
 }
 
 void Client::forfeitBattle()
@@ -378,24 +396,22 @@ void Client::forfeitBattle()
 
 void Client::battleFinished(int res, int winner, int loser)
 {
-    bool self = winner == id(ownName());
-
     if (res == Forfeit) {
-        if (self)
-            printLine(QString("%1 forfeited.").arg(name(loser)));
-        else
-            printLine(QString("You forfeited against %1").arg(name(winner)));
+        printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)));
     } else if (res == Tie) {
-        printLine(QString("You tied against %1").arg(name(self ? loser : winner)));
+        printLine(tr("%1 and %2 tied.").arg(name(loser), name(winner)));
     } else if (res == Win) {
-        if (self)
-            printLine(QString("You won against %1.").arg(name(loser)));
-        else
-            printLine(QString("You lost against %1").arg(name(winner)));
+        printLine(tr("%1 won against %2.").arg(name(loser), name(winner)));
     }
 
-    if (res == Close || res == Forfeit)
+    if ((res == Close || res == Forfeit) && (winner == ownId() || loser == ownId()))
         removeBattleWindow();
+
+    myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
+    myplayersinfo[loser].flags &= 0xFF ^ PlayerInfo::Battling;
+
+    updateState(winner);
+    updateState(loser);
 }
 
 void Client::removeBattleWindow()
@@ -412,7 +428,11 @@ QString Client::name(int id) const
 void Client::challengeStuff(const ChallengeInfo &c)
 {
     if (c.desc() == ChallengeInfo::Sent) {
-        seeChallenge(c);
+        if (busy()) {
+            relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Busy, c));
+        } else {
+            seeChallenge(c);
+        }
     } else {
         if (playerExist(c.opponent())) {
             if (c.desc() == ChallengeInfo::Refused) {
@@ -498,7 +518,7 @@ QScrollDownTextEdit *Client::mainChat()
     return mychat;
 }
 
-void Client::playerLogin(const Player& p)
+void Client::playerLogin(const PlayerInfo& p)
 {
     playerReceived(p);
     printLine(tr("%1 logged in.").arg(p.team.name));
@@ -535,7 +555,7 @@ QString Client::ownName() const
     return mynick;
 }
 
-void Client::playerReceived(const Player &p)
+void Client::playerReceived(const PlayerInfo &p)
 {
     if (myplayersinfo.contains(p.id)) {
         QString name = info(p.id).name;
@@ -569,9 +589,11 @@ void Client::playerReceived(const Player &p)
     }
 
     myplayers->addItem(item);
+
+    updateState(p.id);
 }
 
-void Client::teamChanged(const Player &p) {
+void Client::teamChanged(const PlayerInfo &p) {
     if (name(p.id) != p.team.name) {
         printLine(tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.team.name));
     } else {
@@ -625,23 +647,6 @@ void Client::closeChallengeWindow()
     mychallenge->forcedClose();
 }
 
-QDataStream & operator >> (QDataStream &in, Player &p)
-{
-    in >> p.id;
-    in >> p.team;
-    in >> p.auth;
-
-    return in;
-}
-
-QDataStream & operator << (QDataStream &out, const Player &p)
-{
-    out << p.id;
-    out << p.team;
-    out << p.auth;
-
-    return out;
-}
 
 void Client::openTeamBuilder()
 {
@@ -680,4 +685,20 @@ void Client::changeTeam()
 {
     mynick = myteam->trainerNick();
     relay().sendTeam(*myteam);
+}
+
+PlayerInfo Client::playerInfo(int id) const
+{
+    return myplayersinfo.value(id);
+}
+
+void Client::updateState(int id)
+{
+    if (item(id)) {
+        if (playerInfo(id).battling()) {
+            item(id)->setColor(Qt::blue);
+        } else {
+            item(id)->setColor(Qt::black);
+        }
+    }
 }

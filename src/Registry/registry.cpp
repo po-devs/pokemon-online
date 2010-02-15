@@ -2,11 +2,12 @@
 #include "antidos.h"
 #include "server.h"
 #include "player.h"
+#include "../Utilities/otherwidgets.cpp"
 
 Registry::Registry() {
     linecount = 0;
 
-    mainChat = new QTextEdit(this);
+    mainChat = new QScrollDownTextEdit(this);
 
     mainChat->setFixedSize(500,500);
 
@@ -40,15 +41,8 @@ Registry::Registry() {
 
 void Registry::printLine(const QString &line)
 {
-    if (linecount > 1000) {
-        mainChat->clear();
-        printLine("Cleared the window (1000+ lines were displayed)");
-    }
-
-    mainChat->moveCursor(QTextCursor::End);
     mainChat->insertPlainText(line + "\n");
     qDebug() << line;
-    linecount += 1;
 }
 
 int Registry::freeid() const

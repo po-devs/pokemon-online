@@ -6,6 +6,7 @@
 
 class Player;
 class Server;
+class QScrollDownTextEdit;
 
 class Registry: public QWidget
 {
@@ -35,7 +36,7 @@ private:
 
     QSet<QString> bannedIPs;
 
-    QTextEdit *mainChat;
+    QScrollDownTextEdit *mainChat;
     int linecount;
 
     int freeid() const;
