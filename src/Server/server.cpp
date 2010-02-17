@@ -1,6 +1,7 @@
 #include <ctime> /* for random numbers, time(NULL) needed */
 #include "server.h"
 #include "player.h"
+#include "challenge.h"
 #include "battle.h"
 #include "moves.h"
 #include "items.h"
@@ -498,11 +499,23 @@ void Server::dealWithChallenge(int from, int to, const ChallengeInfo &c)
         return;
     }
     try {
-        Challenge *_c = new Challenge(player(from), player(to), c);
+        Challenge *_c = new Challenge(player(from), player(to), c, this);
         connect(_c, SIGNAL(battleStarted(int,int,ChallengeInfo)), SLOT(startBattle(int, int, ChallengeInfo)));
     } catch (Challenge::Exception) {
         ;
     }
+}
+
+void Server::beforeChallengeIssued(int src, int dest, Challenge *c)
+{
+    if (!myengine->beforeChallengeIssued(src, dest, c->description())) {
+        c->cancelFromServer();
+    }
+}
+
+void Server::afterChallengeIssued(int src, int dest, Challenge *c)
+{
+    myengine->afterChallengeIssued(src, dest, c->description());
 }
 
 void Server::info(int id, const QString &mess) {
