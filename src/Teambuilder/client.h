@@ -34,6 +34,7 @@ public:
     QString ownName() const;
     bool battling() const;
     bool busy() const;
+    bool away() const;
     int id(const QString &name) const;
     int ownId() const ;
     int ownAuth() const ;
@@ -96,6 +97,9 @@ public slots:
     /* CP */
     void controlPanel(int);
     void setPlayer(const UserInfo &ui);
+    /* Away... */
+    void awayChanged(int id, bool away);
+    void goAway(int away);
     /* Teambuilder slots */
     void openTeamBuilder();
     void changeTeam();
@@ -141,6 +145,7 @@ private:
     Analyzer & relay();
 
     PlayerInfo playerInfo(int id) const;
+    PlayerInfo & playerInfo(int id);
     QIdListWidgetItem *item(int id);
     void updateState(int player);
 

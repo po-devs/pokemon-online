@@ -7,7 +7,8 @@
 Registry::Registry() {
     linecount = 0;
 
-    mainChat = new QScrollDownTextEdit(this);
+    mainChat = new QScrollDownTextEdit();
+    mainChat->setParent(this);
 
     mainChat->setFixedSize(500,500);
 

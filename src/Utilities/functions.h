@@ -85,4 +85,6 @@ inline int true_rand() {
 
 QString md5_hash(const QString &toHash);
 
+void createIntMapper(QObject *src, const char *signal, QObject *dest, const char *slot, int id);
+
 #endif // FUNCTIONS_H

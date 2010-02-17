@@ -69,6 +69,11 @@ void Analyzer::battleMessage(const QString &str)
     notify(BattleChat, str);
 }
 
+void Analyzer::goAway(bool away)
+{
+    notify(Away, away);
+}
+
 void Analyzer::connectTo(const QString &host, quint16 port)
 {
     mysocket.connectToHost(host, port);
@@ -247,6 +252,14 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             QString s, i;
             in >> s >> i;
             emit banListReceived(s,i);
+            break;
+        }
+    case Away:
+        {
+            qint32 id;
+            bool away;
+            in >> id >> away;
+            emit awayChanged(id, away);
             break;
         }
     default:

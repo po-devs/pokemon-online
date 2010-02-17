@@ -66,41 +66,33 @@ void Client::showContextMenu(const QPoint &requested)
     {
 	QMenu *menu = new QMenu(this);
 
-	QSignalMapper *mymapper = new QSignalMapper(menu);
-	QAction *viewinfo = menu->addAction("See &Info", mymapper, SLOT(map()));
-	mymapper->setMapping(viewinfo, item->id());
-        QSignalMapper *mymapper5 = new QSignalMapper(menu);
-        QAction *PM = menu->addAction("&PM", mymapper5, SLOT(map()));
-        mymapper5->setMapping(PM, item->id());
+        createIntMapper(menu->addAction(tr("See &Info")), SIGNAL(triggered()), this, SLOT(seeInfo(int)), item->id());
+        createIntMapper(menu->addAction(tr("&PM")), SIGNAL(triggered()), this, SLOT(startPM(int)), item->id());
 
-        connect(mymapper, SIGNAL(mapped(int)), SLOT(seeInfo(int)));
-        connect(mymapper5, SIGNAL(mapped(int)), SLOT(startPM(int)));
+        if (item->id() == ownId()) {
+            if (away()) {
+                createIntMapper(menu->addAction(tr("Go &Back")), SIGNAL(triggered()), this, SLOT(goAway(int)), false);
+            } else {
+                createIntMapper(menu->addAction(tr("Go &Away")), SIGNAL(triggered()), this, SLOT(goAway(int)), true);
+            }
+        }
 
         int myauth = ownAuth();
 
         if (myauth > 0) {
-            QSignalMapper *mymapper2 = new QSignalMapper(menu);
-            QAction *viewinfo = menu->addAction("&Control Panel", mymapper2, SLOT(map()));
-            mymapper2->setMapping(viewinfo, item->id());
-            connect(mymapper2, SIGNAL(mapped(int)), SLOT(controlPanel(int)));
+            createIntMapper(menu->addAction(tr("&Control Panel")), SIGNAL(triggered()), this, SLOT(controlPanel(int)), item->id());
         }
 
         int otherauth = player(item->id()).auth;
 
         if (otherauth < myauth) {
-            menu->addSeparator();
-            QSignalMapper *mymapper3 = new QSignalMapper(menu);
-            QAction *kick = menu->addAction("&Kick", mymapper3, SLOT(map()));
-            mymapper3->setMapping(kick, item->id());
-            connect(mymapper3, SIGNAL(mapped(int)), SLOT(kick(int)));
+            menu->addSeparator();            
+            createIntMapper(menu->addAction(tr("&Kick")), SIGNAL(triggered()), this, SLOT(kick(int)), item->id());
 
             /* If you're an admin, you can ban */
             if (myauth >= 2) {
                 menu->addSeparator();
-                QSignalMapper *mymapper4 = new QSignalMapper(menu);
-                QAction *ban = menu->addAction("&Ban", mymapper4, SLOT(map()));
-                mymapper4->setMapping(ban, item->id());
-                connect(mymapper4, SIGNAL(mapped(int)), SLOT(ban(int)));
+                createIntMapper(menu->addAction(tr("&Ban")), SIGNAL(triggered()), this, SLOT(ban(int)), item->id());
             }
         }
 
@@ -138,6 +130,11 @@ void Client::startPM(int id)
     connect(p, SIGNAL(destroyed(int)), this, SLOT(removePM(int)));
 
     mypms[id] = p;
+}
+
+void Client::goAway(int away)
+{
+    relay().goAway(away);
 }
 
 void Client::controlPanel(int id)
@@ -232,24 +229,26 @@ QMenuBar * Client::createMenuBar(MainWindow *w)
 
 void Client::initRelay()
 {
-    connect(&relay(), SIGNAL(connectionError(int, QString)), SLOT(errorFromNetwork(int, QString)));
-    connect(&relay(), SIGNAL(protocolError(int, QString)), SLOT(errorFromNetwork(int, QString)));
-    connect(&relay(), SIGNAL(connected()), SLOT(connected()));
-    connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
-    connect(&relay(), SIGNAL(messageReceived(QString)), SLOT(messageReceived(QString)));
-    connect(&relay(), SIGNAL(playerReceived(PlayerInfo)), SLOT(playerReceived(PlayerInfo)));
-    connect(&relay(), SIGNAL(teamChanged(PlayerInfo)), SLOT(teamChanged(PlayerInfo)));
-    connect(&relay(), SIGNAL(playerLogin(PlayerInfo)), SLOT(playerLogin(PlayerInfo)));
-    connect(&relay(), SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
-    connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
-    connect(&relay(), SIGNAL(battleStarted(int, TeamBattle, BattleConfiguration)), SLOT(battleStarted(int, TeamBattle, BattleConfiguration)));
-    connect(&relay(), SIGNAL(battleStarted(int, int)), SLOT(battleStarted(int, int)));
-    connect(&relay(), SIGNAL(battleFinished(int,int,int)), SLOT(battleFinished(int,int,int)));
-    connect(&relay(), SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
-    connect(&relay(), SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
-    connect(&relay(), SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
-    connect(&relay(), SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
-    connect(&relay(), SIGNAL(PMReceived(int,QString)), this, SLOT(PMReceived(int,QString)));
+    Analyzer *relay = &this->relay();
+    connect(relay, SIGNAL(connectionError(int, QString)), SLOT(errorFromNetwork(int, QString)));
+    connect(relay, SIGNAL(protocolError(int, QString)), SLOT(errorFromNetwork(int, QString)));
+    connect(relay, SIGNAL(connected()), SLOT(connected()));
+    connect(relay, SIGNAL(disconnected()), SLOT(disconnected()));
+    connect(relay, SIGNAL(messageReceived(QString)), SLOT(messageReceived(QString)));
+    connect(relay, SIGNAL(playerReceived(PlayerInfo)), SLOT(playerReceived(PlayerInfo)));
+    connect(relay, SIGNAL(teamChanged(PlayerInfo)), SLOT(teamChanged(PlayerInfo)));
+    connect(relay, SIGNAL(playerLogin(PlayerInfo)), SLOT(playerLogin(PlayerInfo)));
+    connect(relay, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
+    connect(relay, SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
+    connect(relay, SIGNAL(battleStarted(int, TeamBattle, BattleConfiguration)), SLOT(battleStarted(int, TeamBattle, BattleConfiguration)));
+    connect(relay, SIGNAL(battleStarted(int, int)), SLOT(battleStarted(int, int)));
+    connect(relay, SIGNAL(battleFinished(int,int,int)), SLOT(battleFinished(int,int,int)));
+    connect(relay, SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
+    connect(relay, SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
+    connect(relay, SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
+    connect(relay, SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
+    connect(relay, SIGNAL(PMReceived(int,QString)), SLOT(PMReceived(int,QString)));
+    connect(relay, SIGNAL(awayChanged(int, bool)), SLOT(awayChanged(int, bool)));
 }
 
 void Client::playerKicked(int dest, int src) {
@@ -401,7 +400,7 @@ void Client::battleFinished(int res, int winner, int loser)
     } else if (res == Tie) {
         printLine(tr("%1 and %2 tied.").arg(name(loser), name(winner)));
     } else if (res == Win) {
-        printLine(tr("%1 won against %2.").arg(name(loser), name(winner)));
+        printLine(tr("%1 won against %2.").arg(name(winner), name(loser)));
     }
 
     if ((res == Close || res == Forfeit) && (winner == ownId() || loser == ownId()))
@@ -455,9 +454,26 @@ void Client::challengeStuff(const ChallengeInfo &c)
     }
 }
 
+void Client::awayChanged(int id, bool away)
+{
+    if (away) {
+        printLine(tr("%1 is away.").arg(name(id)));
+    } else {
+        printLine(tr("%1 has returned.").arg(name(id)));
+    }
+
+    playerInfo(id).changeState(PlayerInfo::Away, away);
+    updateState(id);
+}
+
 bool Client::busy() const
 {
-    return challengeWindowOpen() || battling() || myteambuilder;
+    return challengeWindowOpen() || battling() || myteambuilder || away();
+}
+
+bool Client::away() const
+{
+    return playerInfo(ownId()).away();
 }
 
 bool Client::challengeWindowOpen() const
@@ -604,6 +620,14 @@ void Client::teamChanged(const PlayerInfo &p) {
 
 void Client::printLine(const QString &line)
 {
+    if (line.length() == 0) {
+        mainChat()->insertPlainText("\n");
+        return;
+    }
+    if (line.leftRef(3) == "***") {
+        mainChat()->insertHtml("<span style='color:magenta'>(" + QTime::currentTime().toString() + ") " + escapeHtml(line) + "<br />");
+        return;
+    }
     /* Let's add colors */
     int pos = line.indexOf(':');
     if ( pos != -1 ) {
@@ -692,11 +716,18 @@ PlayerInfo Client::playerInfo(int id) const
     return myplayersinfo.value(id);
 }
 
+PlayerInfo &Client::playerInfo(int id)
+{
+    return myplayersinfo[id];
+}
+
 void Client::updateState(int id)
 {
     if (item(id)) {
         if (playerInfo(id).battling()) {
             item(id)->setColor(Qt::blue);
+        } else if (playerInfo(id).away()) {
+            item(id)->setColor(Qt::darkGray);
         } else {
             item(id)->setColor(Qt::black);
         }

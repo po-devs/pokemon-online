@@ -72,7 +72,7 @@ void Analyzer::sendLogin(const PlayerInfo &p)
 
 void Analyzer::notifyAway(qint32 id, bool away)
 {
-    notify(id, away);
+    notify(Away, id, away);
 }
 
 void Analyzer::sendLogout(int num)
@@ -231,6 +231,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     case GetBanList:
         emit banListRequested();
         break;
+    case Away:
+        {
+            bool away;
+            in >> away;
+            emit awayChange(away);
+            break;
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;

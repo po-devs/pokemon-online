@@ -25,6 +25,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(PMsent(int,QString)), this, SLOT(receivePM(int,QString)));
     connect(&relay(), SIGNAL(getUserInfo(QString)), this, SLOT(userInfoAsked(QString)));
     connect(&relay(), SIGNAL(banListRequested()), this, SLOT(giveBanList()));
+    connect(&relay(), SIGNAL(awayChange(bool)), this, SLOT(awayChange(bool)));
 }
 
 Player::~Player()
@@ -88,6 +89,20 @@ bool Player::okForChallenge(int src) const
 bool Player::okForBattle() const
 {
     return isLoggedIn() && !battling();
+}
+
+void Player::awayChange(bool away)
+{
+    if (away == this->away()) {
+        return;
+    }
+
+    if (!isLoggedIn() || battling()) {
+        return;
+    }
+
+    changeState(Away, away);
+    emit awayChange(id(), away);
 }
 
 void Player::changeState(int newstate, bool on)
@@ -574,16 +589,16 @@ void Challenge::manageStuff(Player *p, const ChallengeInfo &c)
         return;
     }
     if (c.desc() == ChallengeInfo::Busy || c.desc() == ChallengeInfo::Cancelled) {
-        cancel(p);
+        cancel(p, c.desc() == ChallengeInfo::Refused);
         return;
     }
 }
 
-void Challenge::cancel(Player *p) {
+void Challenge::cancel(Player *p, bool refused) {
     if (p == src) {
         dest->sendChallengeStuff(ChallengeInfo(ChallengeInfo::Cancelled, src->id()));
     } else {
-        src->sendChallengeStuff(ChallengeInfo(ChallengeInfo::Cancelled, dest->id()));
+        src->sendChallengeStuff(ChallengeInfo(refused ? ChallengeInfo::Refused : ChallengeInfo::Busy, dest->id()));
     }
     src->removeChallenge(this);
     dest->removeChallenge(this);

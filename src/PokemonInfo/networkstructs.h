@@ -86,6 +86,14 @@ public:
     bool away() const {
         return flags & Away;
     }
+
+    void changeState(int state, bool on) {
+        if (on) {
+            flags |= state;
+        } else {
+            flags &= 0xFF ^ state;
+        }
+    }
 };
 
 QDataStream & operator >> (QDataStream &in, PlayerInfo &p);
