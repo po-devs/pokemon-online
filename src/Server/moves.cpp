@@ -1033,8 +1033,8 @@ struct MMToxicSpikes : public MM
     }
 
     static void usi(int s, int, BS &b) {
-	if (b.hasType(s, Pokemon::Poison)) {
-	    team(b,s)["ToxicSpikes"] = 0;
+        if (b.hasType(s, Pokemon::Poison) && team(b,s).value("ToxicSpikes").toInt() > 0) {
+            team(b,s).remove("ToxicSpikes");
 	    b.sendMoveMessage(136, 1, s, Pokemon::Poison, b.rev(s));
 	    return;
 	}

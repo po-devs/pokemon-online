@@ -117,7 +117,7 @@ struct BMPinchHP : public BMPinch
 struct BMAntiSuperEffective : public BM
 {
     BMAntiSuperEffective() {
-        functions["Mod3Berry"] = &m3b;
+        functions["Mod3Items"] = &m3b;
     }
 
     static void m3b(int s, int t, BS &b) {
@@ -131,7 +131,7 @@ struct BMAntiSuperEffective : public BM
 struct BMAntiNormal : public BM
 {
     BMAntiNormal() {
-        functions["Mod3Berry"] = &m3b;
+        functions["Mod3Items"] = &m3b;
     }
 
     static void m3b(int s, int t, BS &b) {

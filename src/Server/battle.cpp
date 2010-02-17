@@ -965,7 +965,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	if (target != player && !testAccuracy(player, target)) {
 	    continue;
 	}
-        callaeffects(target,player,"OpponentBlock");
+        if (target != player) {
+            callaeffects(target,player,"OpponentBlock");
+        }
         if (turnlong[target].contains(QString("Block%1").arg(player))) {
             continue;
         }

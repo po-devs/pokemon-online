@@ -11,6 +11,8 @@ class BattleSituation;
 class Analyzer;
 class ChallengeInfo;
 class QScrollDownTextEdit;
+class ScriptEngine;
+class ScriptWindow;
 
 class QIdListWidgetItem;
 
@@ -32,6 +34,10 @@ public:
     void sendLogin(int id);
     void sendLogout(int id);
     bool playerExist(int id) const;
+    bool playerLoggedIn(int id) const;
+    bool nameExist(const QString &name) const;
+    int id(const QString &name) const;
+    int auth(int id) const;
     void removeBattle(int id1, int id2);
 public slots:
     /* Registry slots */
@@ -68,10 +74,12 @@ public slots:
     void dosBan(const QString &ip);
     void openPlayers();
     void openAntiDos();
+    void openScriptWindow();
     void changeAuth(const QString &name, int auth);
     void banName(const QString &name);
     void playerKick(int src, int dest);
     void playerBan(int src, int dest);
+    void awayChanged(int src, bool away);
 private:
     void kick(int dest, int src);
     void ban(int dest, int src);
@@ -100,6 +108,9 @@ private:
 
     int linecount;
     int textLength;
+
+    ScriptEngine *myengine;
+    QPointer<ScriptWindow> myscriptswindow;
 
     /** GRAPHICAL PARTS **/
 

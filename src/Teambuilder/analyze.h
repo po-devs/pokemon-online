@@ -70,6 +70,7 @@ public:
     void sendChallengeStuff(const ChallengeInfo &c);
     void sendBattleResult(int result);
     bool isConnected() const;
+    void goAway(bool away);
 
     /* Convenience functions to avoid writing a new one every time */
     void notify(int command);
@@ -110,6 +111,7 @@ signals:
     void playerBanned(int p, int src);
     void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip);
     void PMReceived(int id, const QString &mess);
+    void awayChanged(int id, bool away);
     /* From the control panel */
     void userInfoReceived(const UserInfo &ui);
     void userAliasReceived(const QString &s);

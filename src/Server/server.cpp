@@ -11,6 +11,7 @@
 #include "serverconfig.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
+#include "scriptengine.h"
 
 Server::Server(quint16 port)
 {
@@ -24,6 +25,7 @@ Server::Server(quint16 port)
     options->addAction("&Players", this, SLOT(openPlayers()));
     options->addAction("&Anti DoS", this, SLOT(openAntiDos()));
     options->addAction("&Config", this, SLOT(openConfig()));
+    options->addAction("&Scripts", this, SLOT(openScriptWindow()));
     mylayout->addWidget(bar,0,0,1,2);
 
     mylist = new QListWidget();
@@ -79,6 +81,8 @@ Server::Server(quint16 port)
 
     printLine(tr("Members loaded"));
 
+    myengine = new ScriptEngine(this);
+
     if (!server()->listen(QHostAddress::Any, port))
     {
 	printLine(tr("Unable to listen to port %1").arg(port));
@@ -93,6 +97,8 @@ Server::Server(quint16 port)
     QSettings s;
     serverName = s.value("server_name").toString();
     serverDesc = s.value("server_description").toString();
+
+    myengine->serverStartUp();
     connectToRegistry();
 }
 
@@ -226,15 +232,24 @@ void Server::openConfig()
     connect(w, SIGNAL(descChanged(QString)), SLOT(regDescChanged(const QString)));
 }
 
+void Server::openScriptWindow()
+{
+    myscriptswindow = new ScriptWindow();
+
+    myscriptswindow->show();
+
+    connect(myscriptswindow, SIGNAL(scriptChanged(QString)), myengine, SLOT(changeScript(QString)));
+}
+
 void Server::banName(const QString &name) {
-    if (mynames.contains(name)) {
-        ban(mynames[name]);
+    if (nameExist(name)) {
+        ban(id(name));
     }
 }
 
 void Server::changeAuth(const QString &name, int auth) {
-    if (mynames.contains(name)) {
-        int id = mynames[name];
+    if (nameExist(name)) {
+        int id = this->id(name);
         player(id)->setAuth(auth);
         myplayersitems[id]->setText(authedName(id));
         sendPlayer(id);
@@ -338,11 +353,12 @@ void Server::loggedIn(int id, const QString &name)
 {
     printLine(tr("Player %1 set name to %2").arg(id).arg(name));
 
-    QString n = name.toLower();
-    if (mynames.contains(n)) {
-        if (!playerExist(mynames[n]) || !player(mynames[n])->isLoggedIn() || player(mynames[n])->name().toLower() != n) {
+
+    if (nameExist(name)) {
+        int ids = this->id(name);
+        if (!playerExist(ids) || !player(ids)->isLoggedIn() || player(ids)->name().toLower() != name.toLower()) {
             printLine(QString("Critical Bug needing to be solved (kept a name too much in the name list: %1)").arg(name));
-            mynames.remove(n);
+            mynames.remove(name.toLower());
         } else {
             printLine(tr("Name %1 already in use, disconnecting player %2").arg(name).arg(id));
             sendMessage(id, tr("Another with the name %1 is already logged in").arg(name));
@@ -352,17 +368,23 @@ void Server::loggedIn(int id, const QString &name)
     }
 
     /* For new connections */
-    if (!player(id)->isLoggedIn()) {
-        player(id)->changeState(Player::LoggedIn, true);
-
-        mynames.insert(n, id);
-
+    if (!player(id)->isLoggedIn()) {        
+        mynames.insert(name.toLower(), id);
         myplayersitems[id]->setText(authedName(id));
+
+        if(!myengine->beforeLogIn(id)) {
+            removePlayer(id);
+            return;
+        }
+
+        player(id)->changeState(Player::LoggedIn, true);
 
         sendPlayersList(id);
         sendLogin(id);
 
-        sendMessage(id, tr("Welcome Message: %1, DOWNLOAD the update where there is the AWAY status, or your sim will prolly crash now.").arg(name));
+        sendMessage(id, tr("Welcome Message: if you havent downloaded the update with the aways status, do it."));
+
+        myengine->afterLogIn(id);
     } else { /* if already logged in */
         recvTeam(id, name);
     }
@@ -390,8 +412,12 @@ void Server::sendServerMessage()
 void Server::recvMessage(int id, const QString &mess)
 {
     QString re = mess.trimmed();
-    if (re.length() > 0)
-        sendAll(tr("%1: %2").arg(name(id)).arg(re));
+    if (re.length() > 0) {
+        if (myengine->beforeChatMessage(id, mess)) {
+            sendAll(tr("%1: %2").arg(name(id)).arg(re));
+            myengine->afterChatMessage(id, mess);
+        }
+    }
 }
 
 void Server::recvPM(int src, int dest, const QString &mess)
@@ -407,6 +433,11 @@ QString Server::name(int id) const
         return player(id)->name();
     else
         return "";
+}
+
+int Server::auth(int id) const
+{
+    return player(id)->auth();
 }
 
 void Server::incomingConnection()
@@ -435,16 +466,28 @@ void Server::incomingConnection()
     list()->addItem(it);
     myplayersitems[id] = it;
 
-    connect(player(id), SIGNAL(loggedIn(int, QString)), this, SLOT(loggedIn(int, QString)));
-    connect(player(id), SIGNAL(recvTeam(int, QString)), this, SLOT(recvTeam(int, QString)));
-    connect(player(id), SIGNAL(recvMessage(int, QString)), this, SLOT(recvMessage(int,QString)));
-    connect(player(id), SIGNAL(disconnected(int)), SLOT(disconnected(int)));
-    connect(player(id), SIGNAL(sendChallenge(int,int,ChallengeInfo)), SLOT(dealWithChallenge(int,int,ChallengeInfo)));
-    connect(player(id), SIGNAL(battleFinished(int,int,int)), SLOT(battleResult(int,int,int)));
-    connect(player(id), SIGNAL(info(int,QString)), SLOT(info(int,QString)));
-    connect(player(id), SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
-    connect(player(id), SIGNAL(playerBan(int,int)), SLOT(playerBan(int, int)));
-    connect(player(id), SIGNAL(PMReceived(int,int,QString)), this, SLOT(recvPM(int,int,QString)));
+    Player *p = player(id);
+
+    connect(p, SIGNAL(loggedIn(int, QString)), this, SLOT(loggedIn(int, QString)));
+    connect(p, SIGNAL(recvTeam(int, QString)), this, SLOT(recvTeam(int, QString)));
+    connect(p, SIGNAL(recvMessage(int, QString)), this, SLOT(recvMessage(int,QString)));
+    connect(p, SIGNAL(disconnected(int)), SLOT(disconnected(int)));
+    connect(p, SIGNAL(sendChallenge(int,int,ChallengeInfo)), SLOT(dealWithChallenge(int,int,ChallengeInfo)));
+    connect(p, SIGNAL(battleFinished(int,int,int)), SLOT(battleResult(int,int,int)));
+    connect(p, SIGNAL(info(int,QString)), SLOT(info(int,QString)));
+    connect(p, SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
+    connect(p, SIGNAL(playerBan(int,int)), SLOT(playerBan(int, int)));
+    connect(p, SIGNAL(PMReceived(int,int,QString)), this, SLOT(recvPM(int,int,QString)));
+    connect(p, SIGNAL(awayChange(int,bool)), this, SLOT(awayChanged(int, bool)));
+}
+
+void Server::awayChanged(int src, bool away)
+{
+    foreach (Player *p, myplayers) {
+        if (p->isLoggedIn()) {
+            p->relay().notifyAway(src, away);
+        }
+    }
 }
 
 void Server::dealWithChallenge(int from, int to, const ChallengeInfo &c)
@@ -615,8 +658,8 @@ void Server::recvTeam(int id, const QString &_name)
 
     } else {
         /* Changing the name! */
-        mynames.remove(oldname);
-        mynames.insert(_name, id);
+        mynames.remove(oldname.toLower());
+        mynames.insert(_name.toLower(), id);
         player(id)->setName(_name);
     }
 
@@ -644,17 +687,28 @@ bool Server::playerExist(int id) const
     return myplayers.contains(id);
 }
 
+bool Server::playerLoggedIn(int id) const
+{
+    return playerExist(id) && player(id)->isLoggedIn();
+}
+
 void Server::removePlayer(int id)
 {
     if (playerExist(id))
-    {
+    {        
 	Player *p = player(id);
+        bool loggedIn = p->isLoggedIn();
+
+        if (loggedIn) {
+            myengine->beforeLogOut(id);
+        }
+
         p->doWhenDC();
 
         p->blockSignals(true);
 
 	QString playerName = p->name();
-	bool loggedIn = p->isLoggedIn();
+
         AntiDos::obj()->disconnect(p->ip(), id);
 
 	delete p;
@@ -667,11 +721,23 @@ void Server::removePlayer(int id)
         myplayersitems.remove(id);
 
 	/* Sending the notice of logout to others only if the player is already logged in */
-	if (loggedIn)
+        if (loggedIn) {
 	    sendLogout(id);
+            myengine->afterLogOut(id);
+        }
 
 	printLine(tr("Removed player %1").arg(playerName));
     }
+}
+
+bool Server::nameExist(const QString &name) const
+{
+    return mynames.contains(name.toLower());
+}
+
+int Server::id(const QString &name) const
+{
+    return mynames.value(name.toLower());
 }
 
 void Server::sendAll(const QString &message)

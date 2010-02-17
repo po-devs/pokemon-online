@@ -118,6 +118,7 @@ signals:
     void nameTaken();
     void invalidName();
     void accepted();
+    void awayChange(bool away);
 public slots:
     /* slots called by the network */
     void error();

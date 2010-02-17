@@ -29,3 +29,11 @@ QString md5_hash(const QString &tohash) {
         sprintf(hexOutput.begin() + di * 2, "%02x", digest[di]);
     return hexOutput;
 }
+
+void createIntMapper(QObject *src, const char *signal, QObject *dest, const char *slot, int id)
+{
+    QSignalMapper *mymapper = new QSignalMapper(src);
+    mymapper->setMapping(src, id);
+    src->connect(src, signal, mymapper, SLOT(map()));
+    src->connect(mymapper, SIGNAL(mapped(int)), dest, slot);
+}

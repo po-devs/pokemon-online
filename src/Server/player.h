@@ -82,6 +82,7 @@ signals:
     void playerKick(int,int);
     void playerBan(int,int);
     void PMReceived(int, int, const QString &);
+    void awayChange(int, bool);
 public slots:
     void loggedIn(const TeamInfo &team);
     void recvMessage(const QString &mess);
@@ -98,6 +99,7 @@ public slots:
     void receivePM(int, const QString&);
     void userInfoAsked(const QString& name);
     void giveBanList();
+    void awayChange(bool away);
 private:
     TeamInfo myteam;
     Analyzer myrelay;
@@ -133,7 +135,7 @@ public:
     Challenge (Player *source, Player *dest, const ChallengeInfo &c);
 
     void manageStuff(Player *source, const ChallengeInfo &c);
-    void cancel(Player *p);
+    void cancel(Player *p, bool refused = false);
     void onPlayerDisconnect(Player *p);
 
     int challenger() const { return src->id(); }

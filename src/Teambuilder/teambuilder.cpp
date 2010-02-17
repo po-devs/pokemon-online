@@ -24,9 +24,10 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvance
     setFixedSize(600, 650);
     setWindowTitle(tr("Teambuilder"));
 
-    //setStyleSheet("background: qradialgradient(cx:0, cy:0, radius: 1, fx:0.5, fy:0.5, stop:0 white, stop:1 blue)");
+    QVBoxLayout *mylayout = new QVBoxLayout(this);
+    QGridLayout *layout = new QGridLayout();
 
-    QGridLayout *layout = new QGridLayout(this);
+    mylayout->addLayout(layout);
 
     m_trainer = new QPushButton("&Trainer", this);
     m_trainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -50,9 +51,11 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvance
         }
     }
 
+    layout->setSpacing(0);
+
     m_body = new QStackedWidget(this);
 
-    layout->addWidget(m_body,2,0,1,4);
+    mylayout->addWidget(m_body);
 
     m_trainerBody = new TB_TrainerBody(this);
     m_body->addWidget(m_trainerBody);
@@ -324,29 +327,29 @@ TeamBuilder::~TeamBuilder()
 TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->trainerTeam())
 {
     //main layout
-    QVBoxLayout *mlayout = new QVBoxLayout(this);
+    QGridLayout *mlayout = new QGridLayout(this);
 
     QEntitled * trainernick = new QEntitled(tr("T&rainer"), m_nick = new QLineEdit());
     m_nick->setMaximumWidth(150);
     m_nick->setMaxLength(15);
     /* A non-whitespace word caracter followed by any number of white characters and not ended by a space, or just nothing */
     m_nick->setValidator(new QNickValidator(this));
-    mlayout->addWidget(trainernick);
+    mlayout->addWidget(trainernick, 0, 0);
 
     QEntitled * minfo = new QEntitled(tr("Player &Info"), m_trainerInfo=new QTextEdit());
-    mlayout->addWidget(minfo);
+    mlayout->addWidget(minfo, 1, 0);
 
     QEntitled * mwin = new QEntitled(tr("&Winning Message"), m_winMessage=new QTextEdit());
-    mlayout->addWidget(mwin);
+    mlayout->addWidget(mwin, 2, 0);
 
     //    QEntitled * mdraw = new QEntitled(tr("&Draw Message"), m_drawMessage=new QTextEdit());
     //    mlayout->addWidget(mdraw);
 
     QEntitled * mlose = new QEntitled(tr("&Losing Message"), m_loseMessage=new QTextEdit());
-    mlayout->addWidget(mlose);
+    mlayout->addWidget(mlose, 3, 0);
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
-    mlayout->addLayout(buttonsLayout);
+    mlayout->addLayout(buttonsLayout, 4, 0);
 
     QPushButton *saveb, *loadb, *doneb;
 
