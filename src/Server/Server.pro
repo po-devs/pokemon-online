@@ -1,7 +1,8 @@
 # -------------------------------------------------
 # Project created by QtCreator 2009-11-05T22:07:35
 # -------------------------------------------------
-QT += network script
+QT += network \
+    script
 TARGET = Server
 DESTDIR = ../../bin
 TEMPLATE = app
@@ -28,7 +29,8 @@ SOURCES += main.cpp \
     antidos.cpp \
     serverconfig.cpp \
     berries.cpp \
-    scriptengine.cpp
+    scriptengine.cpp \
+    challenge.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -52,8 +54,7 @@ HEADERS += mainwindow.h \
     antidos.h \
     serverconfig.h \
     berries.h \
-    scriptengine.h
-LIBS += -L../../bin \
-    -lzip
+    scriptengine.h \
+    challenge.h
 DEFINES = MULTI_THREADED_ACCESS \
     SERVER_SIDE

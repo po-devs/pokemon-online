@@ -13,7 +13,7 @@ class ChallengeInfo;
 class QScrollDownTextEdit;
 class ScriptEngine;
 class ScriptWindow;
-
+class Challenge;
 class QIdListWidgetItem;
 
 class Server: public QWidget
@@ -39,6 +39,8 @@ public:
     int id(const QString &name) const;
     int auth(int id) const;
     void removeBattle(int id1, int id2);
+    void beforeChallengeIssued(int src, int dest, Challenge *c);
+    void afterChallengeIssued(int src, int dest, Challenge *c);
 public slots:
     /* Registry slots */
     void connectToRegistry();

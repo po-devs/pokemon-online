@@ -383,6 +383,7 @@ void PokePersonal::reset()
     }
 }
 
+#ifdef CLIENT_SIDE
 PokeGraphics::PokeGraphics()
         : m_num(0), m_uptodate(false)
 {
@@ -814,32 +815,6 @@ QDataStream & operator << (QDataStream & out, const Team & team)
     return out;
 }
 
-QDataStream & operator << (QDataStream & out, const PokePersonal & Pokemon)
-{
-    out << Pokemon.num();
-    out << Pokemon.nickname();
-    out << Pokemon.item();
-    out << Pokemon.ability();
-    out << Pokemon.nature();
-    out << Pokemon.gender();
-    out << Pokemon.shiny();
-    out << Pokemon.happiness();
-    out << Pokemon.level();
-    int i;
-    for(i=0;i<4;i++)
-    {
-        out << Pokemon.move(i);
-    }
-    for(i=0;i<6;i++)
-    {
-        out << Pokemon.DV(i);
-    }
-    for(i=0;i<6;i++)
-    {
-        out << Pokemon.EV(i);
-    }
-    return out;
-}
 
 QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
 {
@@ -881,9 +856,17 @@ QDataStream & operator >> (QDataStream & in, Team & team)
     return in;
 }
 
-QDataStream & operator >> (QDataStream & in, PokePersonal & poke)
+
+QDataStream & operator >> (QDataStream & in, PokeTeam & poke)
 {
-    in >> poke.num() >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level();
+    quint16 num;
+    in >> num;
+
+    poke.setNum(num);
+
+    poke.load();
+
+    in >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level();
 
     for(int i=0;i<4;i++)
     {
@@ -906,16 +889,39 @@ QDataStream & operator >> (QDataStream & in, PokePersonal & poke)
     return in;
 }
 
-QDataStream & operator >> (QDataStream & in, PokeTeam & poke)
+#endif
+
+
+QDataStream & operator << (QDataStream & out, const PokePersonal & Pokemon)
 {
-    quint16 num;
-    in >> num;
+    out << Pokemon.num();
+    out << Pokemon.nickname();
+    out << Pokemon.item();
+    out << Pokemon.ability();
+    out << Pokemon.nature();
+    out << Pokemon.gender();
+    out << Pokemon.shiny();
+    out << Pokemon.happiness();
+    out << Pokemon.level();
+    int i;
+    for(i=0;i<4;i++)
+    {
+        out << Pokemon.move(i);
+    }
+    for(i=0;i<6;i++)
+    {
+        out << Pokemon.DV(i);
+    }
+    for(i=0;i<6;i++)
+    {
+        out << Pokemon.EV(i);
+    }
+    return out;
+}
 
-    poke.setNum(num);
-
-    poke.load();
-
-    in >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level();
+QDataStream & operator >> (QDataStream & in, PokePersonal & poke)
+{
+    in >> poke.num() >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level();
 
     for(int i=0;i<4;i++)
     {

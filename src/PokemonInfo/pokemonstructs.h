@@ -290,6 +290,8 @@ public:
     void setSpDefenseEV(quint8);
 };
 
+#ifdef CLIENT_SIDE
+
 /* Contains / loads the graphics of a pokemon */
 class PokeGraphics
 {
@@ -392,13 +394,15 @@ public:
 bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath = QObject::tr("Team/trainer.tp"), QString *chosenPath=0);
 bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath = QObject::tr("Team/"), QString *chosenPath=0);
 
+
 QDataStream & operator << (QDataStream & out,const Team & team);
-QDataStream & operator << (QDataStream & out,const PokePersonal & Pokemon);
 QDataStream & operator << (QDataStream & out,const TrainerTeam & trainerTeam);
 
 QDataStream & operator >> (QDataStream & in,Team & team);
-QDataStream & operator >> (QDataStream & in,PokePersonal & Pokemon);
 QDataStream & operator >> (QDataStream & in,PokeTeam & Pokemon);
 QDataStream & operator >> (QDataStream & in,TrainerTeam & trainerTeam);
+#endif
 
+QDataStream & operator << (QDataStream & out,const PokePersonal & Pokemon);
+QDataStream & operator >> (QDataStream & in,PokePersonal & Pokemon);
 #endif // POKEMONSTRUCTS_H

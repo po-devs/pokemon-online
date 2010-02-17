@@ -1,6 +1,9 @@
 #include "pokemoninfo.h"
 #include "pokemonstructs.h"
-#include "../../SpecialIncludes/zip.h"
+
+#ifdef CLIENT_SIDE
+# include "../../SpecialIncludes/zip.h"
+#endif
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
@@ -75,6 +78,7 @@ QTSList<QString> StatInfo::m_status;
 QHash<int, QPixmap> StatInfo::m_statusIcons;
 QHash<int, QPixmap> StatInfo::m_battleIcons;
 
+#ifdef CLIENT_SIDE
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
     int error = 0;
@@ -118,6 +122,7 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
 
     return ret;
 }
+#endif
 
 void fill_container_with_file(QStringList &container, const QString & filename)
 {
@@ -328,6 +333,7 @@ int PokemonInfo::Gender(int pokenum)
     return m_Genders[pokenum];
 }
 
+#ifdef CLIENT_SIDE
 QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney, bool back)
 {
     QString archive = path("poke_img.zip");
@@ -378,6 +384,7 @@ QIcon PokemonInfo::Icon(int index)
     QIcon ico(p);
     return ico;
 }
+#endif
 
 QSet<int> PokemonInfo::Moves(int pokenum)
 {
