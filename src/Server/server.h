@@ -19,6 +19,8 @@ class QIdListWidgetItem;
 class Server: public QWidget
 {
     Q_OBJECT
+
+    friend class ScriptEngine;
 public:
     Server(quint16 port = 5080);
 
@@ -41,6 +43,7 @@ public:
     void removeBattle(int id1, int id2);
     void beforeChallengeIssued(int src, int dest, Challenge *c);
     void afterChallengeIssued(int src, int dest, Challenge *c);
+    Player * player(int id) const;
 public slots:
     /* Registry slots */
     void connectToRegistry();
@@ -102,7 +105,6 @@ private:
 
     QTcpServer *server();
     Player * player(int i);
-    const Player * player(int id) const;
     /* gets an id that's not used */
     int freeid() const;
     /* removes a player */

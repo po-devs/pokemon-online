@@ -160,6 +160,8 @@ void Client::controlPanel(int id)
     connect(this, SIGNAL(userInfoReceived(UserInfo)), myCP, SLOT(setPlayer(UserInfo)));
     connect(&relay(), SIGNAL(banListReceived(QString,QString)), myCP, SLOT(addNameToBanList(QString, QString)));
     connect(myCP, SIGNAL(getBanList()), &relay(), SLOT(getBanList()));
+    connect(myCP, SIGNAL(banRequested(QString)), SLOT(requestBan(QString)));
+    connect(myCP, SIGNAL(unbanRequested(QString)), &relay(), SLOT(CPUnban(QString)));
 }
 
 void Client::setPlayer(const UserInfo &ui)
@@ -445,11 +447,16 @@ void Client::challengeStuff(const ChallengeInfo &c)
                     closeChallengeWindow();
                 }
             } else if (c.desc() == ChallengeInfo::Cancelled) {
-                printLine(tr("%1 cancelled their challenge").arg(name(c)));
+                printLine(tr("%1 cancelled their challenge.").arg(name(c)));
                 if (challengeWindowOpen() && challengeWindowPlayer()== c) {
 		    closeChallengeWindow();
 		}
-	    }
+            } else if (c.desc() == ChallengeInfo::InvalidTeam) {
+                printLine(tr("%1 has an invalid team.").arg(name(c)));
+                if (challengeWindowOpen() && challengeWindowPlayer()== c) {
+                    closeChallengeWindow();
+                }
+            }
 	}
     }
 }
@@ -731,5 +738,14 @@ void Client::updateState(int id)
         } else {
             item(id)->setColor(Qt::black);
         }
+    }
+}
+
+void Client::requestBan(const QString &name)
+{
+    if (id(name) == -1) {
+        relay().notify(NetworkCli::CPBan, name);
+    } else {
+        ban(id(name));
     }
 }

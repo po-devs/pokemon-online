@@ -23,6 +23,8 @@ public slots:
 signals:
     void getUserInfo(const QString &name);
     void getBanList();
+    void banRequested(const QString &name);
+    void unbanRequested(const QString &name);
 private slots:
     void getUser() {
         aliasList->clear();
@@ -51,6 +53,10 @@ private slots:
     void on_refresh_clicked() {
         banTable->setRowCount(0);
         emit getBanList();
+    }
+    void on_unban_clicked();
+    void on_ban_clicked() {
+        emit banRequested(userName->text());
     }
 };
 

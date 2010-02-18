@@ -369,9 +369,10 @@ void BattleSituation::analyzeChoice(int player)
 {
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice[player].attack()) {
-	if (!koed(player) && !turnlong[player].value("HasMoved").toBool()) {
+        if (!koed(player) && !turnlong[player].value("HasMoved").toBool() && !turnlong[player].value("CantGetToMove").toBool()) {
 	    if (turnlong[player].contains("NoChoice"))
-		useAttack(player, choice[player].numSwitch);
+                /* Do not use LastMoveSuccessfullyUsed or you'll have problems with metronome */
+                useAttack(player, pokelong[player]["LastMoveUsed"].toInt(), true);
             else {
                 if (options[player].struggle()) {
                     MoveEffect::setup(394,player,rev(player),*this);
@@ -535,6 +536,7 @@ void BattleSituation::sendPoke(int player, int pok)
     for (int i = 1; i <= 6; i++)
 	pokelong[player][QString("Stat%1").arg(i)] = poke(player).normalStat(i);
     pokelong[player]["Level"] = poke(player).level();
+    turnlong[player]["CantGetToMove"] = true;
 }
 
 void BattleSituation::callEntryEffects(int player)

@@ -383,7 +383,7 @@ void Server::loggedIn(int id, const QString &name)
         sendPlayersList(id);
         sendLogin(id);
 
-        sendMessage(id, tr("Welcome Message: if you havent downloaded the update with the aways status, do it."));
+        sendMessage(id, tr("Welcome Message: The updates are now available at www.pokeymon-online.com."));
 
         myengine->afterLogIn(id);
     } else { /* if already logged in */
@@ -785,7 +785,7 @@ Player * Server::player(int id)
     return myplayers[id];
 }
 
-const Player * Server::player(int id) const
+Player * Server::player(int id) const
 {
     return myplayers[id];
 }

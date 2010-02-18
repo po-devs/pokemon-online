@@ -69,6 +69,11 @@ void Analyzer::battleMessage(const QString &str)
     notify(BattleChat, str);
 }
 
+void Analyzer::CPUnban(const QString &name)
+{
+    notify(NetworkCli::CPUnban, name);
+}
+
 void Analyzer::goAway(bool away)
 {
     notify(Away, away);
@@ -142,19 +147,14 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             in >> id1 >> id2;
 
             if (id1 == 0) {
-                qDebug() << "aaa";
                 /* This is a battle we take part in */
                 TeamBattle team;
                 BattleConfiguration conf;
                 in >> team >> conf;
-                qDebug() << "bbb";
                 emit battleStarted(id2, team, conf);
-                qDebug() << "ccc";
             } else {
-                qDebug() << "aaaaa";
                 /* this is a battle of strangers */
                 emit battleStarted(id1, id2);
-                qDebug() << "bbbbb";
             }
 	    break;
 	}

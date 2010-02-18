@@ -327,7 +327,7 @@ struct MMConversion : public MM
 		    poss.push_back(b.move(s,i));
 		}
 	    }
-            turn(b,s)["ConversionType"] = poss[true_rand()%poss.size()];
+            turn(b,s)["ConversionType"] = MoveInfo::Type(poss[true_rand()%poss.size()]);
 	} else {
 	    QList<int> poss;
 	    for (int i = 0; i < 4; i++) {
@@ -338,7 +338,7 @@ struct MMConversion : public MM
 	    if (poss.size() == 0) {
 		turn(b, s)["Failed"] = true;
 	    } else {
-                turn(b,s)["ConversionType"] = poss[true_rand()%poss.size()];
+                turn(b,s)["ConversionType"] = MoveInfo::Type(poss[true_rand()%poss.size()]);
 	    }
 	}
     }
@@ -1984,7 +1984,7 @@ struct MMGastroAcid : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-	b.sendMoveMessage(51,0,s,type(b,s),t);
+        b.sendMoveMessage(51,0,s,type(b,s),t,b.ability(t));
 	poke(b,t)["AbilityNullified"] = true;
     }
 };
@@ -2742,6 +2742,8 @@ struct MMMetronome : public MM
             int move = true_rand() % MoveInfo::NumberOfMoves();
 
 	    if (!b.hasMove(s,move) && !MMAssist::forbidden_moves.contains(move)) {
+                qDebug() << "Gonna use " << move;
+                qDebug() << "Name is " << MoveInfo::Name(move);
 		MoveEffect::setup(move,s,t,b);
 		b.useAttack(s,move,true,true);
 		break;

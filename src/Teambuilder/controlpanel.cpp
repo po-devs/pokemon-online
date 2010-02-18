@@ -86,3 +86,15 @@ void ControlPanel::addNameToBanList(const QString &name, const QString &ip)
     banTable->setItem(rowcount, 0, new QTableWidgetItem(name));
     banTable->setItem(rowcount, 1, new QTableWidgetItem(ip));
 }
+
+void ControlPanel::on_unban_clicked()
+{
+    int row = banTable->currentRow();
+
+    if (row == -1 || row >= banTable->rowCount()) {
+        return;
+    }
+
+    emit unbanRequested(banTable->item(row, 0)->text());
+    banTable->removeRow(row);
+}

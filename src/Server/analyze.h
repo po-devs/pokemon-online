@@ -40,7 +40,9 @@ namespace NetworkServ
         Away,
         GetUserInfo,
         GetUserAlias,
-        GetBanList
+        GetBanList,
+        CPBan,
+        CPUnban
     };
 
     enum ProtocolError
@@ -110,6 +112,8 @@ signals:
     void sentHash(QString);
     void kick(int id);
     void ban(int id);
+    void banRequested(const QString &name);
+    void unbanRequested(const QString &name);
     void PMsent(int id, const QString);
     void getUserInfo(const QString &name);
     void banListRequested();
