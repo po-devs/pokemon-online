@@ -23,6 +23,8 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(wannaRegister()), SLOT(registerRequest()));
     connect(&relay(), SIGNAL(kick(int)), SLOT(playerKick(int)));
     connect(&relay(), SIGNAL(ban(int)), SLOT(playerBan(int)));
+    connect(&relay(), SIGNAL(banRequested(QString)), SLOT(CPBan(QString)));
+    connect(&relay(), SIGNAL(unbanRequested(QString)), SLOT(CPUnban(QString)));
     connect(&relay(), SIGNAL(PMsent(int,QString)), this, SLOT(receivePM(int,QString)));
     connect(&relay(), SIGNAL(getUserInfo(QString)), this, SLOT(userInfoAsked(QString)));
     connect(&relay(), SIGNAL(banListRequested()), this, SLOT(giveBanList()));
@@ -208,6 +210,24 @@ void Player::playerBan(int p) {
     emit playerBan(id(),p);
 }
 
+void Player::CPBan(const QString &name)
+{
+    if (auth() < 2) {
+        return; //INVALID BEHAVIOR
+    }
+    SecurityManager::ban(name);
+    emit info(id(), "Banned player " + name + " with CP.");
+}
+
+void Player::CPUnban(const QString &name)
+{
+    if (auth() < 2) {
+        return; //INVALID BEHAVIOR
+    }
+    SecurityManager::unban(name);
+    emit info(id(), "Unbanned player " + name + " with CP.");
+}
+
 void Player::playerKick(int p) {
     if (!isLoggedIn()) {
         emit info(id(), "Tried to kick while not logged in");
@@ -239,6 +259,11 @@ void Player::challengeStuff(const ChallengeInfo &c)
 
     if (!isLoggedIn() || id == this->id()) {
         // INVALID BEHAVIOR
+        return;
+    }
+
+    if (team().invalid()) {
+        sendMessage("Your team is invalid, you can't challenge!");
         return;
     }
 
@@ -297,12 +322,12 @@ void Player::giveBanList()
     }
 }
 
-TeamInfo & Player::team()
+TeamBattle & Player::team()
 {
     return myteam;
 }
 
-const TeamInfo & Player::team() const
+const TeamBattle & Player::team() const
 {
     return myteam;
 }

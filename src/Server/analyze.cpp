@@ -238,6 +238,20 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit awayChange(away);
             break;
         }
+    case CPBan:
+        {
+            QString name;
+            in >> name;
+            emit banRequested(name);
+            break;
+        }
+    case CPUnban:
+        {
+            QString name;
+            in >> name;
+            emit unbanRequested(name);
+            break;
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;

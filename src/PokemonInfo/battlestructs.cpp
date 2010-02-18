@@ -218,6 +218,8 @@ TeamBattle::TeamBattle()
 
 TeamBattle::TeamBattle(const TeamInfo &other)
 {
+    name = other.name;
+    info = other.info;
     int curs = 0;
     for (int i = 0; i < 6; i++) {
 	poke(curs).init(other.pokemon(i));
@@ -225,6 +227,11 @@ TeamBattle::TeamBattle(const TeamInfo &other)
 	    ++curs;
 	}
     }
+}
+
+bool TeamBattle::invalid() const
+{
+    return poke(0).num() == 0;
 }
 
 PokeBattle & TeamBattle::poke(int i)

@@ -117,6 +117,11 @@ public:
 
     PokeBattle& poke(int i);
     const PokeBattle& poke(int i) const;
+
+    bool invalid() const;
+
+    QString name;
+    QString info;
 private:
     PokeBattle m_pokemons[6];
 };
@@ -172,7 +177,7 @@ struct ChallengeInfo
         Cancelled,
         Busy,
         Refused,
-
+        InvalidTeam,
 
         ChallengeDescLast
     };

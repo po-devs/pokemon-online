@@ -42,7 +42,9 @@ namespace NetworkCli
         Away,
         GetUserInfo,
         GetUserAlias,
-        GetBanList
+        GetBanList,
+        CPBan,
+        CPUnban
     };
 
     enum ProtocolError
@@ -131,6 +133,7 @@ public slots:
     /* By the control panel */
     void getUserInfo(const QString &name);
     void getBanList();
+    void CPUnban(const QString &name);
 
 private:
     /* The connection to the outside */

@@ -231,7 +231,7 @@ Houndoom
 Kingdra
 Phanpy
 Donphan
-Porygon 2
+Porygon2
 Stantler
 Smeargle
 Tyrogue

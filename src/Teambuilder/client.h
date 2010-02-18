@@ -97,6 +97,7 @@ public slots:
     /* CP */
     void controlPanel(int);
     void setPlayer(const UserInfo &ui);
+    void requestBan(const QString &name);
     /* Away... */
     void awayChanged(int id, bool away);
     void goAway(int away);

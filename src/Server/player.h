@@ -24,8 +24,8 @@ public:
     ~Player();
 
     /* returns all the regular info */
-    TeamInfo &team();
-    const TeamInfo &team() const;
+    TeamBattle &team();
+    const TeamBattle &team() const;
     /* Converts the content of the TeamInfo to a basicInfo and returns it */
     BasicInfo basicInfo() const;
 
@@ -96,12 +96,14 @@ public slots:
     void hashReceived(const QString &hash);
     void playerKick(int);
     void playerBan(int);
+    void CPBan(const QString &name);
+    void CPUnban(const QString &name);
     void receivePM(int, const QString&);
     void userInfoAsked(const QString& name);
     void giveBanList();
     void awayChange(bool away);
 private:
-    TeamInfo myteam;
+    TeamBattle myteam;
     Analyzer myrelay;
     int myid;
     int myauth;
