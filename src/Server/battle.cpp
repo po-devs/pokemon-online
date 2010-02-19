@@ -884,6 +884,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	pokelong[player][QString("Move%1Used").arg(move)] = true;
     }
 
+    qDebug() << "move " << MoveInfo::Name(attack) << " used.";
+
     turnlong[player]["HasMoved"] = true;
 
     calleffects(player,player,"EvenWhenCantMove");
@@ -1461,8 +1463,10 @@ int BattleSituation::getType(int player, int slot)
 {
     int types[] = {pokelong[player]["Type1"].toInt(),pokelong[player]["Type2"].toInt()};
 
+
     if (!pokelong[player].value("Embargoed").toBool() && ItemInfo::isPlate(poke(player).item())) {
-	if (types[1] != Pokemon::Curse) {
+        //multitype
+        if (types[1] != Pokemon::Curse || hasWorkingAbility(player, 59)) {
 	    types[0] = pokelong[player]["ItemArg"].toInt();
 	    types[1] = Pokemon::Curse;
 	}

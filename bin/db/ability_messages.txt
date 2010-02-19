@@ -18,10 +18,10 @@
 
 %s's %a activates!
 %s's raises its flame intensity!
+
 %s changed its type to %t!
 %s's Forewarn makes it wary of %m!
 %s knows its foe holds %i because of Frisk!
-
 
 
 

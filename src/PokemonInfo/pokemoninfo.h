@@ -82,6 +82,9 @@ private:
     static QTSList<int> m_Recoil;
     static QTSList<int> m_Targets;
     static QTSList<QPair<char, char> > m_Repeat;
+    static QTSList<QString> m_Descriptions;
+    static QTSList<QString> m_Details;
+
     static QString m_Directory;
 
     static void loadNames();
@@ -102,6 +105,8 @@ private:
     static void loadRecoil();
     static void loadSpecialEffects();
     static void loadMoveMessages();
+    static void loadDescriptions();
+    static void loadDetails();
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
@@ -116,6 +121,7 @@ public:
     static int FlinchRate(int movenum);
     static int Recoil(int movenum);
     static QString Description(int movenum);
+    static QString DetailedDescription(int movenum);
     static int Power(int movenum);
     /* gives the power of a move in the form of a string */
     static QString PowerS(int movenum);

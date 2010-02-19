@@ -243,7 +243,7 @@ Returns double damage done by foe
 A claw attack that may raise the user's ATTACK.
 Emits a horrible screech that sharply lowers SP. DEF.
 Fires a meteor-like punch. May raise ATTACK.
-Waggles a finger to use any POK&#233;MON move at random.
+Waggles a finger to use any POKEMON move at random.
 Recovers up to half the user's maximum HP.
 Copies a move used by the foe during one battle.
 Senses the foe's action to ensure the next move's hit.
@@ -277,7 +277,7 @@ Adds the user and foe's HP, then shares them equally.
 Throws coins at the foe. Money is recovered after.
 Power doubles if user receives damage first
 Attacks the foe with a jabbing beak, etc.
-Any POK&#233;MON hearing this song faints in 3 turns.
+Any POKEMON hearing this song faints in 3 turns.
 A rampage of 2 to 3 turns that confuses the user.
 Sharp pins are fired to strike 2 to 5 times.
 Power doubles if foe is holding a berry
@@ -416,7 +416,7 @@ Wags the tail to lower the foe's DEFENSE.
 User's team raises SPEED for 5 turns
 A reckless charge attack that also hurts the user.
 Taunts the foe into only using attack moves.
-Confuses all POK&#233;MON on the scene.
+Confuses all POKEMON on the scene.
 A psychic move for fleeing from battle instantly.
 While attacking, it may steal the foe's held item.
 A rampage of 2 to 3 turns that confuses the user.
@@ -458,11 +458,11 @@ Inflicts a burn on the foe with intense fire.
 Strikes the foe with wings spread wide.
 A wish that restores HP. It takes time to work.
 Withdraws the body into its hard shell to raise DEFENSE.
-User takes recoil damage
-Changes the ability of foe to insomnia
+User takes recoil damage.
+Changes the ability of foe to insomnia.
 Wraps and squeezes the foe 2 to 5 times with vines, etc.
 Power depends on foe's remaining HP
-No Added Effect
+No Added Effect.
 Lulls the foe into yawning, then sleeping next turn.
 Powerful and sure to cause paralysis, but inaccurate.
-May cause foe to flinch
+May cause foe to flinch.

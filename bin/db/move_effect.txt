@@ -15,7 +15,7 @@ Always strikes first.
 No effect.
 Attacks 2-5 times in a row.
 Heals party's status problems.
-Uses a random move from another Pok&eacute;mon in the team.
+Uses a random move from another Pokémon in the team.
 
 May cause opponent to flinch.
 Has high critical hit ratio.
@@ -26,7 +26,7 @@ Power doubles if hit before the attack.
 Attacks 2-5 times in a row.
 Raises user's DEFENSE two stages.
 Switches out the user but status changes remain.
-Does additional damage for every Pok&eacute;mon in trainer's team.
+Does additional damage for every Pokémon in trainer's team.
 Cut's half of user's maximum HP and maximizes ATTACK.
 User takes hits for 2 rounds, then strikes back.
 Traps opponent.
@@ -76,7 +76,7 @@ Has high critical hit ratio. May induce poison.
 May lower opponent's DEFENSE one stage.
 May lower opponent's DEFENSE one stage.
 
-Ghost type Pok&eacute;mon: User loses half their maximum HP, and the opponent gets a Nightmare. Other Pok&eacute;mon types: Raises user's ATTACK and DEFENSE one stage. Lowers user's SPEED one stage.
+Ghost type Pokémon: User loses half their maximum HP, and the opponent gets a Nightmare. Other Pokémon types: Raises user's ATTACK and DEFENSE one stage. Lowers user's SPEED one stage.
 No effect.
 May cause opponent to flinch.
 Induces sleep.
@@ -277,7 +277,7 @@ User and opponent share HP.
 User gains coins after battle.
 
 No effect.
-All Pok&eacute;mon on the field faint in 3 turns.
+All Pokémon on the field faint in 3 turns.
 User uses the same attack for 2-3 turns then becomes confused.
 Attacks 2-5 times in a row.
 
@@ -318,7 +318,7 @@ User restores health, then sleeps.
 The happier the user, the stronger the attack.
 Power doubles if hit before the attack.
 Inflicts more damage when the user's HP is down.
-Ends battle. Switches the opponent Pok&eacute;mon in a trainer battle.
+Ends battle. Switches the opponent Pokémon in a trainer battle.
 User cannot attack on the next turn.
 Attacks 2-5 times in a row.
 May induce CONFUSION.
@@ -416,7 +416,7 @@ Lowers opponent's DEFENSE one stage.
 
 User takes recoil damage.
 Opponent can only use attack moves.
-Confuses all Pok&eacute;mon on the field.
+Confuses all Pokémon on the field.
 Ends battle. Switches user in trainer battles.
 May steal opponent's item (temporarily in trainer battles).
 User uses the same attack for 2-3 turns then becomes confused.
@@ -453,7 +453,7 @@ Inflicts more damage when the user's HP is high.
 May cause opponent to flinch.
 Depends on the weather.
 
-Ends battle. Switches the opponent Pok&eacute;mon in a trainer battle.
+Ends battle. Switches the opponent Pokémon in a trainer battle.
 Induces burn.
 No effect.
 Recovers HP. Delays 1 turn.
