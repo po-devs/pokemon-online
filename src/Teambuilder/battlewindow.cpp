@@ -5,8 +5,7 @@
 
 BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &team, const BattleConfiguration &_conf)
 {
-    QToolTip::setFont(QFont("Courier New",8));
-
+    QToolTip::setFont(QFont("Verdana",10));
     blankMessage = false;
     battleEnded = false;
     conf() = _conf;
@@ -719,6 +718,11 @@ void AttackButton::updateAttack(const BattleMove &b)
     name->setText(MoveInfo::Name(b.num()));
     pp->setText(tr("%1/%2").arg(b.PP()).arg(b.totalPP()));
     this->setStyleSheet("background: " + TypeInfo::Color(MoveInfo::Type(b.num())).name() + ";");
+
+    QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nEffect: %5").arg(MoveInfo::Name(b.num()), MoveInfo::PowerS(b.num()),
+                                                                        MoveInfo::AccS(b.num()), MoveInfo::Description(b.num()),
+                                                                        MoveInfo::DetailedDescription(b.num()));
+    setToolTip(ttext);
 }
 
 PokeZone::PokeZone(const TeamBattle &team)
@@ -743,6 +747,10 @@ PokeButton::PokeButton(const PokeBattle &p)
 {
     setIcon(PokemonInfo::Icon(p.num()));
     update();
+
+    QString tooltip = tr("%1\n\nMoves:\n--%2\n--%3\n--%4\n--%5").arg(PokemonInfo::Name(p.num()), MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
+                                                     MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num()));
+    setToolTip(tooltip);
 }
 
 void PokeButton::update()
@@ -1036,8 +1044,10 @@ bool GraphicsZone::event(QEvent * event)
     if (event->type() == QEvent::ToolTip) {
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
 
-        bool self  = helpEvent->pos().y() > height() / 2;
+        bool self  = helpEvent->pos().x() < width() / 2;
+        QToolTip::setFont(QFont("Courier New",8));
         QToolTip::showText(helpEvent->globalPos(), tooltips[self]);
+        QToolTip::setFont(QFont("Verdana",10));
     }
     return QGraphicsView::event(event);
 }

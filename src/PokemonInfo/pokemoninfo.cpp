@@ -35,6 +35,8 @@ QTSList<int> MoveInfo::m_Recoil;
 QTSList<int> MoveInfo::m_Targets;
 QTSList<QStringList> MoveInfo::m_MoveMessages;
 QTSList<QPair<char, char> > MoveInfo::m_Repeat;
+QTSList<QString> MoveInfo::m_Descriptions;
+QTSList<QString> MoveInfo::m_Details;
 
 QString ItemInfo::m_Directory;
 QTSList<QString> ItemInfo::m_BerryNames;
@@ -588,6 +590,8 @@ void MoveInfo::init(const QString &dir)
     loadMoveMessages();
     loadRecoil();
     loadSpecialEffects();
+    loadDescriptions();
+    loadDetails();
 }
 
 int MoveInfo::NumberOfMoves()
@@ -621,6 +625,26 @@ int MoveInfo::Target(int movenum)
 void MoveInfo::loadNames()
 {
     fill_container_with_file(m_Names, trFile(path("moves")));
+}
+
+void MoveInfo::loadDescriptions()
+{
+    fill_container_with_file(m_Descriptions, trFile(path("move_description")));
+}
+
+void MoveInfo::loadDetails()
+{
+    fill_container_with_file(m_Details, trFile(path("move_effect")));
+}
+
+QString MoveInfo::Description(int movenum)
+{
+    return m_Descriptions[movenum];
+}
+
+QString MoveInfo::DetailedDescription(int movenum)
+{
+    return m_Details[movenum];
 }
 
 void MoveInfo::loadPPs()

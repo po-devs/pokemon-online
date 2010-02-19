@@ -149,17 +149,19 @@ bool SecurityManager::bannedIP(const QString &ip) {
 }
 
 void SecurityManager::ban(const QString &name) {
-    if (exist(name)) {
-        members[name].ban();
-        bannedMembers.insert(name);
-        bannedIPs.insert(members[name].ip.trimmed());
-        updateMember(members[name]);
+    QString name2 = name.toLower();
+    if (exist(name2)) {
+        members[name2].ban();
+        bannedMembers.insert(name2);
+        bannedIPs.insert(members[name2].ip.trimmed());
+        updateMember(members[name2]);
     }
 }
 
 void SecurityManager::unban(const QString &name) {
-    if (exist(name)) {
-        IPunban(members[name].ip.trimmed());
+    QString name2 = name.toLower();
+    if (exist(name2)) {
+        IPunban(members[name2].ip.trimmed());
     }
 }
 

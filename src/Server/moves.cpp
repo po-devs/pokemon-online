@@ -1114,7 +1114,7 @@ struct MMSubstitute : public MM
 	}
         QString effect = turn(b,t)["EffectActivated"].toString();
 
-	if (effect == "Bind" || effect == "Block" || effect == "Covet" || effect == "Curse" || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge"
+        if (effect == "Bind" || effect == "Block" || effect == "Covet" || (effect == "Curse" && b.hasType(t, Pokemon::Ghost)) || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge"
 	    || effect == "HealBlock" || effect == "KnockOff" || effect == "LeechSeed"
 	    || effect == "LockOn" || effect == "Mimic" || effect == "PsychoShift" || effect == "Sketch" || effect == "Switcheroo"
 	    || effect == "WorrySeed" || effect == "Yawn")
