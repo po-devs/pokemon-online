@@ -1466,7 +1466,7 @@ int BattleSituation::getType(int player, int slot)
 
     if (!pokelong[player].value("Embargoed").toBool() && ItemInfo::isPlate(poke(player).item())) {
         //multitype
-        if (types[1] != Pokemon::Curse || hasWorkingAbility(player, 59)) {
+        if (hasWorkingAbility(player, 59)) {
 	    types[0] = pokelong[player]["ItemArg"].toInt();
 	    types[1] = Pokemon::Curse;
 	}
