@@ -92,7 +92,6 @@ void ServerChoice::addServer(const QString &name, const QString &desc, quint16 n
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 2, witem);
 
-    mylist->sortByColumn(2);
     mylist->setSortingEnabled(true);
     mylist->resizeColumnsToContents();
     mylist->resizeRowsToContents();

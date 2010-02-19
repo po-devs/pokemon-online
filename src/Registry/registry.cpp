@@ -15,8 +15,6 @@ Registry::Registry() {
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    //AntiDos::obj()->init();
-
     if (!forPlayers.listen(QHostAddress::Any, 5081))
     {
         printLine("Unable to listen to port 5081 (players)");
