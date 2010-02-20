@@ -1112,6 +1112,10 @@ struct MMSubstitute : public MM
         if (!b.hasSubstitute(s)) {
 	    return;
 	}
+        if (turn(b,t)["TurnEffectCalled"].toString() == "DetermineAttackFailure") {
+            return;
+        }
+
         QString effect = turn(b,t)["EffectActivated"].toString();
 
         if (effect == "Bind" || effect == "Block" || effect == "Covet" || (effect == "Curse" && b.hasType(t, Pokemon::Ghost)) || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge"

@@ -30,6 +30,8 @@ DockAdvanced::DockAdvanced(TeamBuilder * builder):
 	connect(stack, SIGNAL(genderChanged()), body, SLOT(updateGender()));
 	connect(stack, SIGNAL(genderChanged()), body, SLOT(updateImage()));
 	connect(stack, SIGNAL(statChanged()), body, SLOT(updateEVs()));
+        connect(body, SIGNAL(EVChanged(int)), stack, SLOT(updateStat(int)));
+        connect(body, SIGNAL(natureChanged()), stack, SLOT(updateStats()));
     }
 
     this->setWidget(AdvancedPokemons_gestionnaire);

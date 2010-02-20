@@ -1,2 +1,3 @@
 English (en)
 Français (fr)
+Portuguese-Brazilian (pt-br)

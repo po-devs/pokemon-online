@@ -1154,7 +1154,7 @@ int CategoryInfo::NumberOfCategories()
 
 void AbilityInfo::loadNames()
 {
-    fill_container_with_file(m_Names, path("abilities_en.txt"));
+    fill_container_with_file(m_Names, trFile(path("abilities")));
 }
 
 QString AbilityInfo::Message(int ab, int part) {

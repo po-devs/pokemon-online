@@ -6,6 +6,8 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 {
     resize(300,400);
 
+    setAttribute(Qt::WA_DeleteOnClose, true);
+
     m_poke = _poke;
 
     QVBoxLayout *baselayout = new QVBoxLayout(this);
@@ -57,14 +59,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 	dvchoice[i]->setAccelerated(true);
 	connect(dvchoice[i], SIGNAL(valueChanged(int)), SLOT(changeDV(int)));
 
-	QColor colors[3] = {Qt::darkBlue, Qt::black, Qt::red};
-	QColor mycol = colors[poke()->natureBoost(i)+1];
-
 	dvlayout->addWidget((stats[i]=new QLabel()), i, 2);
-
-	QPalette pal = stats[i]->palette();
-	pal.setColor(QPalette::WindowText, mycol);
-	stats[i]->setPalette(pal);
     }
 
     secondColumn->addWidget(pokeImage=new QLabel());
@@ -137,6 +132,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 
     updateDVs();
     updateHiddenPower();
+    updateStats();
 }
 
 void TB_Advanced::changeAbility(bool ab1)
@@ -339,7 +335,9 @@ void TB_Advanced::updateStats()
 
 void TB_Advanced::updateStat(int stat)
 {
-    stats[stat]->setText(QString::number(poke()->stat(stat)));
+    QColor colors[3] = {Qt::red, Qt::black, Qt::darkGreen};
+    QColor mycol = colors[poke()->natureBoost(stat)+1];
+    stats[stat]->setText(toColor(QString::number(poke()->stat(stat)), mycol));
 }
 
 PokeTeam *TB_Advanced::poke()

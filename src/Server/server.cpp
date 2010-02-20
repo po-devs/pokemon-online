@@ -383,7 +383,7 @@ void Server::loggedIn(int id, const QString &name)
         sendPlayersList(id);
         sendLogin(id);
 
-        sendMessage(id, tr("Welcome Message: The updates are now available at www.pokeymon-online.com."));
+        sendMessage(id, tr("Welcome Message: The updates are now available at www.pokeymon-online.com. Report any bug on the forums."));
 
         myengine->afterLogIn(id);
     } else { /* if already logged in */
