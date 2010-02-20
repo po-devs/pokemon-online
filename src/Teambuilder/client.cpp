@@ -687,7 +687,7 @@ void Client::openTeamBuilder()
         return;
     }
 
-    if (busy()) {
+    if (challengeWindowOpen() || battling() || myteambuilder) {
         printHtml("<i>" + tr("You're already in the middle of something!") + "</i>");
     }
 
