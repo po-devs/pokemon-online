@@ -175,6 +175,9 @@ void BattleSituation::beginTurn()
     callpeffects(Player2, Player1, "TurnSettings");
 
     requestChoices();
+    /* preventing the players from cancelling (like when u-turn/Baton pass) */
+    hasChoice[0] = false;
+    hasChoice[1] = false;
     analyzeChoices();
 }
 
@@ -553,6 +556,7 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 
     if (turnlong[source].contains(name)) {
 	turnlong[source]["TurnEffectCall"] = true;
+        turnlong[source]["TurnEffectCalled"] = name;
 	QSet<QString> &effects = *turnlong[source][name].value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
@@ -884,7 +888,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	pokelong[player][QString("Move%1Used").arg(move)] = true;
     }
 
-    qDebug() << "move " << MoveInfo::Name(attack) << " used.";
+    qDebug() << "move " << MoveInfo::Name(attack) << " used by " << player;
 
     turnlong[player]["HasMoved"] = true;
 
@@ -969,6 +973,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	if (target != player && !testAccuracy(player, target)) {
 	    continue;
 	}
+        callbeffects(player, target, "DetermineGeneralAttackFailure");
+        if (testFail(player)) {
+            calleffects(player,target,"AttackSomehowFailed");
+            continue;
+        }
         if (target != player) {
             callaeffects(target,player,"OpponentBlock");
         }
@@ -1009,11 +1018,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    }
 
 	    callpeffects(player, target, "DetermineAttackFailure");
-	    if (testFail(player)) {
-		calleffects(player,target,"AttackSomehowFailed");
-		continue;
-	    }
-	    callbeffects(player, target, "DetermineGeneralAttackFailure");
 	    if (testFail(player)) {
 		calleffects(player,target,"AttackSomehowFailed");
 		continue;
@@ -1822,6 +1826,9 @@ void BattleSituation::changeHp(int player, int newHp)
 
 void BattleSituation::koPoke(int player, int source, bool straightattack)
 {
+    qDebug() << "koed poke from player: ";
+    qDebug() << "Poke name: " << poke(player).nick() << " " << currentPoke(player);
+
     if (poke(player).ko()) {
 	return;
     }

@@ -457,6 +457,7 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
 	naturechoice->addItem(NatureInfo::Name(i));
     }
     connect(naturechoice, SIGNAL(activated(int)), SLOT(setNature(int)));
+    connect(naturechoice, SIGNAL(activated(int)), SIGNAL(natureChanged()));
 
     second_column->addWidget(type1 = new QLabel());
     second_column->addWidget(type2 = new QLabel());
@@ -471,6 +472,7 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
 
     /* third and last column of the upper body */
     evchoice = new TB_EVManager(poke());
+    connect(evchoice, SIGNAL(EVChanged(int)), SIGNAL(EVChanged(int)));
 
     layout->addLayout(evchoice,0,2);
 
@@ -847,8 +849,8 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
 	slider(i)->setRange(0,255);
 	slider(i)->setMinimumWidth(150);
 	m_evs[i]->setMinimumWidth(24);
-        connect(slider(i),SIGNAL(valueChanged(int)),SLOT(EVChanged(int)));
-        connect(m_evs[i], SIGNAL(textChanged(QString)), SLOT(EVChanged(QString)));
+        connect(slider(i),SIGNAL(valueChanged(int)),SLOT(changeEV(int)));
+        connect(m_evs[i], SIGNAL(textChanged(QString)), SLOT(changeEV(QString)));
     }
 
     addWidget(m_mainSlider = new QSlider(Qt::Horizontal), 6, 0, 1, 4);
@@ -906,16 +908,18 @@ void TB_EVManager::updateEVs()
     updateMain();
 }
 
-void TB_EVManager::EVChanged(const QString &newvalue)
+void TB_EVManager::changeEV(const QString &newvalue)
 {
     int mstat = stat(sender());
     poke()->setEV(mstat, std::max(std::min(newvalue.toInt(), 255), 0));
 
     updateEV(mstat);
     updateMain();
+
+    emit EVChanged(mstat);
 }
 
-void TB_EVManager::EVChanged(int newvalue)
+void TB_EVManager::changeEV(int newvalue)
 {
     int mstat = stat(sender());
 
@@ -931,6 +935,8 @@ void TB_EVManager::EVChanged(int newvalue)
 
     updateEV(mstat);
     updateMain();
+
+    emit EVChanged(mstat);
 }
 
 void TB_EVManager::updateEV(int stat)

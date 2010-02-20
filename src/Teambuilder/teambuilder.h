@@ -126,6 +126,8 @@ signals:
     void pokeChanged(int pokenum);
     void nicknameChanged(QString nickname);
     void advanced(int index);
+    void EVChanged(int stat);
+    void natureChanged();
 public slots:
     void setNum(int pokeNum);
     void setPokeByNick();
@@ -141,7 +143,6 @@ public:
     void updateNum();
     /* getting the pokemon of the team corresponding to the body */
     PokeTeam *poke();
-
 private:
     QCompactTable *pokechoice;
     QComboBox *itemchoice;
@@ -210,8 +211,10 @@ public:
     void updateEV(int stat);
     void updateMain();
 public slots:
-    void EVChanged(int newvalue);
-    void EVChanged(const QString &newvalue);
+    void changeEV(int newvalue);
+    void changeEV(const QString &newvalue);
+signals:
+    void EVChanged(int stat);
 };
 
 #endif // TEAMBUILDER_H

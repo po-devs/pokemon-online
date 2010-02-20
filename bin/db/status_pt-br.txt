@@ -1,0 +1,8 @@
+confuso
+normal
+paralizado
+queimado
+congelado
+dormindo
+envenenado
+profundamente envenenado

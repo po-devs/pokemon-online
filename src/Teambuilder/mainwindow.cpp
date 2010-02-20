@@ -116,7 +116,7 @@ void MainWindow::changeLanguage()
         return;
     }
 
-    QString lang = a->text().split('(').back().left(2);
+    QString lang = a->text().split('(').back().split(')').front();
     QSettings setting;
 
     if (setting.value("language").toString() == lang) {

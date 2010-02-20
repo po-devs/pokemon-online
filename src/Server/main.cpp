@@ -37,5 +37,17 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.show();
-    return a.exec();
+    try {
+        int i = a.exec();
+        qDebug() << "Returned with status " << i;
+    } catch (const std::exception &e) {
+        qDebug() << "Caught runtime " << e.what();
+    } catch (const QString &s) {
+        qDebug() << "Caught string " << s;
+    } catch (const char* s) {
+        qDebug() << "Caught const char*  " << s;
+    } catch (...) {
+        qDebug() << "Caught Exception.";
+    }
+    return 0;
 }

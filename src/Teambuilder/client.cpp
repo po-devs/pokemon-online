@@ -215,7 +215,7 @@ void Client::sendText()
 QMenuBar * Client::createMenuBar(MainWindow *w)
 {
     QMenuBar *menuBar = new QMenuBar();
-    QMenu *menuFichier = menuBar->addMenu("&File");
+    QMenu *menuFichier = menuBar->addMenu(tr("&File"));
     menuFichier->addAction(tr("&Load Team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("Open &TeamBuilder"),this,SLOT(openTeamBuilder()),Qt::CTRL+Qt::Key_T);
     //menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
@@ -632,7 +632,7 @@ void Client::printLine(const QString &line)
         return;
     }
     if (line.leftRef(3) == "***") {
-        mainChat()->insertHtml("<span style='color:magenta'>(" + QTime::currentTime().toString() + ") " + escapeHtml(line) + "<br />");
+        mainChat()->insertHtml("<span style='color:magenta'>(" + QTime::currentTime().toString() + ") " + escapeHtml(line) + "</span><br />");
         return;
     }
     /* Let's add colors */

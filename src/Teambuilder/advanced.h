@@ -30,10 +30,6 @@ private:
     PokeTeam *poke();
     const PokeTeam *poke() const;
 
-    //Called by updateDVs
-    void updateStat(int stat);
-    void updateStats();
-
     void updatePokeImage();
     void updateGender();
     void updateAbility();
@@ -59,6 +55,10 @@ private slots:
     void changeHiddenPower(int);
     /* Do not use directly */
     void changeDV(int newval);
+public slots:
+    //called by update DV and when the stat in the teambuilder is modified.
+    void updateStats();
+    void updateStat(int stat);
 signals:
     void imageChanged();
     void genderChanged();
