@@ -393,7 +393,13 @@ void Server::loggedIn(int id, const QString &name)
 
 void Server::sendBattleCommand(int id, const QByteArray &comm)
 {
-    player(id)->relay().sendBattleCommand(comm);
+    BattleSituation *sender = (BattleSituation*) this->sender();
+
+    if (player(id)->battling() && player(id)->battle == sender)
+        player(id)->relay().sendBattleCommand(comm);
+    else {
+        player(id)->relay().sendWatchingCommand(sender->publicId(), comm);
+    }
 }
 
 void Server::sendMessage(int id, const QString &message)
@@ -408,6 +414,14 @@ void Server::sendServerMessage()
     }
     sendAll("~~Server~~: " + myline->text());
     myline->clear();
+}
+
+void Server::spectatingChat(int player, int battle, const QString &chat)
+{
+    if (!mybattles.contains(battle)) {
+        return;
+    }
+    mybattles[battle]->spectatingChat(player, chat);
 }
 
 void Server::recvMessage(int id, const QString &mess)
@@ -469,17 +483,20 @@ void Server::incomingConnection()
 
     Player *p = player(id);
 
-    connect(p, SIGNAL(loggedIn(int, QString)), this, SLOT(loggedIn(int, QString)));
-    connect(p, SIGNAL(recvTeam(int, QString)), this, SLOT(recvTeam(int, QString)));
-    connect(p, SIGNAL(recvMessage(int, QString)), this, SLOT(recvMessage(int,QString)));
+    connect(p, SIGNAL(loggedIn(int, QString)), SLOT(loggedIn(int, QString)));
+    connect(p, SIGNAL(recvTeam(int, QString)), SLOT(recvTeam(int, QString)));
+    connect(p, SIGNAL(recvMessage(int, QString)), SLOT(recvMessage(int,QString)));
     connect(p, SIGNAL(disconnected(int)), SLOT(disconnected(int)));
     connect(p, SIGNAL(sendChallenge(int,int,ChallengeInfo)), SLOT(dealWithChallenge(int,int,ChallengeInfo)));
     connect(p, SIGNAL(battleFinished(int,int,int)), SLOT(battleResult(int,int,int)));
     connect(p, SIGNAL(info(int,QString)), SLOT(info(int,QString)));
     connect(p, SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
     connect(p, SIGNAL(playerBan(int,int)), SLOT(playerBan(int, int)));
-    connect(p, SIGNAL(PMReceived(int,int,QString)), this, SLOT(recvPM(int,int,QString)));
+    connect(p, SIGNAL(PMReceived(int,int,QString)), SLOT(recvPM(int,int,QString)));
     connect(p, SIGNAL(awayChange(int,bool)), this, SLOT(awayChanged(int, bool)));
+    connect(p, SIGNAL(spectatingRequested(int,int)), SLOT(spectatingRequested(int,int)));
+    connect(p, SIGNAL(spectatingStopped(int,int)), SLOT(spectatingStopped(int,int)));
+    connect(p, SIGNAL(spectatingChat(int,int, QString)), SLOT(spectatingChat(int,int, QString)));
 }
 
 void Server::awayChanged(int src, bool away)
@@ -555,8 +572,9 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 
     BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c);
 
-    mybattles.insert(id1, battle);
-    mybattles.insert(id2, battle);
+    int id = freebattleid();
+    mybattles.insert(id, battle);
+    battle->publicId() = id;
 
     player(id1)->startBattle(id2, battle->pubteam(id1), battle->configuration());
     player(id2)->startBattle(id1, battle->pubteam(id2), battle->configuration());
@@ -579,9 +597,12 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 
 void Server::battleResult(int desc, int winner, int loser)
 {
-    if (desc == Forfeit && mybattles[winner]->finished()) {
+    if (desc == Forfeit && player(winner)->battle->finished()) {
         player(winner)->battleResult(Close, winner, loser);
         player(loser)->battleResult(Close, winner, loser);
+        foreach(int id, player(winner)->battle->spectators) {
+            player(id)->battleResult(Close, winner, loser);
+        }
     } else {
         foreach(Player *p, myplayers) {
             if (p->isLoggedIn()) {
@@ -591,7 +612,7 @@ void Server::battleResult(int desc, int winner, int loser)
     }
 
     if (desc == Forfeit) {
-        if (!mybattles[winner]->finished())
+        if (!player(winner)->battle->finished())
             printLine( tr("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
     } else if (desc == Win) {
         printLine( tr("%1 won his battle against %2").arg(name(winner), name(loser)));
@@ -606,9 +627,16 @@ void Server::battleResult(int desc, int winner, int loser)
 
 void Server::removeBattle(int winner, int loser)
 {
-    delete mybattles[winner];
-    mybattles.remove(winner);
-    mybattles.remove(loser);
+    BattleSituation *battle = player(winner)->battle;
+
+    mybattles.remove(battle->publicId());
+    foreach(int id, battle->spectators) {
+        player(id)->relay().finishSpectating(battle->publicId());
+        player(id)->battlesSpectated.remove(battle->publicId());
+    }
+    delete battle;
+    player(winner)->battle = NULL;
+    player(loser)->battle = NULL;
 }
 
 void Server::sendPlayersList(int id)
@@ -705,6 +733,29 @@ bool Server::playerLoggedIn(int id) const
     return playerExist(id) && player(id)->isLoggedIn();
 }
 
+void Server::spectatingRequested(int id, int idOfBattler)
+{
+    if (!playerLoggedIn(idOfBattler)) {
+        return; //INVALID BEHAVIOR
+    }
+    if (!player(idOfBattler)->battling()) {
+        return; //INVALID BEHAVIOR
+    }
+    BattleSituation *battle = player(idOfBattler)->battle;
+    if (!battle->acceptSpectator(id)) {
+        return;
+    }
+    player(id)->spectateBattle(name(battle->id(0)), name(battle->id(1)), battle->publicId());
+    battle->addSpectator(id);
+}
+
+void Server::spectatingStopped(int id, int idOfBattle)
+{
+    BattleSituation *battle = mybattles[idOfBattle];
+
+    battle->removeSpectator(id);
+}
+
 void Server::removePlayer(int id)
 {
     if (playerExist(id))
@@ -766,6 +817,15 @@ int Server::freeid() const
 {
     for (int i = 1; ; i++) {
         if (!myplayers.contains(i)) {
+            return i;
+        }
+    }
+}
+
+int Server::freebattleid() const
+{
+    for (int i = 1; ; i++) {
+        if (!mybattles.contains(i)) {
             return i;
         }
     }

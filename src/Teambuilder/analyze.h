@@ -44,7 +44,11 @@ namespace NetworkCli
         GetUserAlias,
         GetBanList,
         CPBan,
-        CPUnban
+        CPUnban,
+        SpectateBattle,
+        SpectatingBattleMessage,
+        SpectatingBattleChat,
+        SpectatingBattleFinished
     };
 
     enum ProtocolError
@@ -107,6 +111,9 @@ signals:
     void battleStarted(int id1, int id2);
     void battleFinished(int res, int srcid, int destid);
     void battleMessage(const QByteArray &mess);
+    void spectatedBattle(const QString& name0, const QString &name1, int battleId);
+    void spectatingBattleMessage(int battleId, const QByteArray &mess);
+    void spectatingBattleFinished(int battleId);
     void passRequired(const QString &salt);
     void notRegistered(bool);
     void playerKicked(int p, int src);
@@ -126,6 +133,8 @@ public slots:
     /* by the battle window */
     void battleCommand(const BattleChoice &comm);
     void battleMessage(const QString &mess);
+    /* spectator window */
+    void battleMessage(const QString &mess, int);
 
     /* By the pm window */
     void sendPM(int id, const QString &mess);

@@ -6,12 +6,16 @@
 #include "../PokemonInfo/battlestructs.h"
 
 class Challenge;
+class BattleSituation;
 
 /* a single player */
 class Player : public QObject
 {
     Q_OBJECT
 public:
+    BattleSituation *battle;
+    QSet<int> battlesSpectated;
+
     enum State
     {
         NotLoggedIn=0,
@@ -53,6 +57,7 @@ public:
     void removeChallenge(Challenge *c);
     void cancelChallenges();
     bool okForBattle() const;
+    void spectateBattle(const QString &name0, const QString &name1, int battleId);
     void sendChallengeStuff(const ChallengeInfo &c);
 
     void doWhenDC();
@@ -83,6 +88,9 @@ signals:
     void playerBan(int,int);
     void PMReceived(int, int, const QString &);
     void awayChange(int, bool);
+    void spectatingRequested(int, int);
+    void spectatingChat(int, int, const QString &chat);
+    void spectatingStopped(int, int battleId);
 public slots:
     void loggedIn(const TeamInfo &team);
     void recvMessage(const QString &mess);
@@ -102,6 +110,9 @@ public slots:
     void userInfoAsked(const QString& name);
     void giveBanList();
     void awayChange(bool away);
+    void spectatingRequested(int id);
+    void spectatingChat(int id, const QString &chat);
+    void quitSpectating(int id);
 private:
     TeamBattle myteam;
     Analyzer myrelay;
@@ -114,6 +125,7 @@ private:
     QString waiting_name; //For authentification procedures
 
     Challenge * challengedBy;
+
     QSet<Challenge*> challenged;
 
     enum AuthentificationState

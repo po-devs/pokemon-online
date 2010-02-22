@@ -6,13 +6,13 @@ Terra
 Pedra
 Inseto
 Fantasma
-Ferro
+Metálico
 Fogo
-Agua
+Água
 Planta
 Eletrico
 Psiquico
 Gelo
 Dragão
-Trevas
+Noturno
 ???

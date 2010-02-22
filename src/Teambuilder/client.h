@@ -9,6 +9,7 @@ class MainWindow;
 class BaseChallengeWindow;
 class QIdListWidgetItem;
 class BattleWindow;
+class BaseBattleWindow;
 class QScrollDownTextEdit;
 class PMWindow;
 class ControlPanel;
@@ -79,6 +80,10 @@ public slots:
     void battleStarted(int id1, int id2);
     void battleFinished(int res, int winner, int loser);
     void forfeitBattle();
+    void watchBattleRequ(int);
+    void watchBattle(const QString &name0, const QString &name1, int battleId);
+    void spectatingBattleMessage(int battleId, const QByteArray &command);
+    void stopWatching(int battleId);
     /* shows the context menu for that player */
     void showContextMenu(const QPoint&);
     void loadTeam();
@@ -132,6 +137,7 @@ private:
     /* Challenge window , to emit or to receive*/
     BaseChallengeWindow *mychallenge;
     QPointer<BattleWindow> mybattle;
+    QHash<int, QPointer<BaseBattleWindow> > mySpectatingBattles;
 
     /* You can call the teambuilder from here too */
     QPointer<QMainWindow> myteambuilder;

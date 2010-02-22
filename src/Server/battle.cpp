@@ -19,6 +19,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
     sleepClause() = c.sleepClause();
     currentForcedSleepPoke[0] = -1;
     currentForcedSleepPoke[1] = -1;
+    p1.battle = this;
+    p2.battle = this;
 }
 
 MirrorMoveAmn amn;
@@ -80,9 +82,47 @@ int BattleSituation::spot(int id) const
     }
 }
 
+bool BattleSituation::acceptSpectator(int id) const
+{
+    return !spectators.contains(spectatorKey(id)) && this->id(0) != id && this->id(1) != id;
+}
+
+void BattleSituation::addSpectator(int id)
+{
+    /* Assumption: each id is a different player, so key is unique */
+    int key = spectatorKey(id);
+    spectators[key] = id;
+
+    if (sleepClause()) {
+        notify(key, SleepClause, 0, false);
+    }
+
+    notify(All, Spectating, 0, true, qint32(id));
+    notify(key, BlankMessage, 0);
+
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 6; j++) {
+            notify(key, AbsStatusChange, i, qint8(j), qint8(poke(i, j).status()));
+        }
+        if (!koed(i)) {
+            notify(key, SendOut, i, opoke(i, currentPoke(i)));
+        }
+    }
+}
+
+void BattleSituation::removeSpectator(int id)
+{
+    spectators.remove(spectatorKey(id));
+    notify(All, Spectating, 0, false, qint32(id));
+}
+
 int BattleSituation::id(int spot) const
 {
-    return myid[spot];
+    if (spot >= 2) {
+        return spectators.value(spot);
+    } else {
+        return myid[spot];
+    }
 }
 
 TeamBattle &BattleSituation::team(int spot)
@@ -510,9 +550,14 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 
 void BattleSituation::battleChat(int id, const QString &str)
 {
-    notify(Player1, BattleChat, spot(id), str);
-    notify(Player2, BattleChat, spot(id), str);
+    notify(All, BattleChat, spot(id), str);
 }
+
+void BattleSituation::spectatingChat(int id, const QString &str)
+{
+    notify(All, SpectatorChat, id, qint32(id), str);
+}
+
 
 /* Battle functions! Yeah! */
 
@@ -2099,15 +2144,23 @@ BattleConfiguration BattleSituation::configuration() const
     return ret;
 }
 
-void BattleSituation::emitCommand(int player, int players, const QByteArray &tosend)
+void BattleSituation::emitCommand(int player, int players, const QByteArray &toSend)
 {
     if (players == All) {
-        emit battleInfo(qint32(id(Player1)), tosend);
-        emit battleInfo(qint32(id(Player2)), tosend);
+        emit battleInfo(qint32(id(Player1)), toSend);
+        emit battleInfo(qint32(id(Player2)), toSend);
+
+        foreach(int id, spectators) {
+            emit battleInfo(qint32(id), toSend);
+        }
     } else if (players == AllButPlayer) {
-        emit battleInfo(qint32(id(rev(player))), tosend);
+        emit battleInfo(qint32(id(rev(player))), toSend);
+
+        foreach(int id, spectators) {
+            emit battleInfo(qint32(id), toSend);
+        }
     } else {
-        emit battleInfo(qint32(id(players)), tosend);
+        emit battleInfo(qint32(id(players)), toSend);
     }
 }
 

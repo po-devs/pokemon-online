@@ -100,6 +100,11 @@ void Analyzer::sendBattleCommand(const QByteArray & command)
     notify(BattleMessage, command);
 }
 
+void Analyzer::sendWatchingCommand(qint32 id, const QByteArray &command)
+{
+    notify(SpectatingBattleMessage, qint32(id), command);
+}
+
 void Analyzer::notifyBattle(qint32 id1, qint32 id2)
 {
     notify(EngageBattle, id1, id2);
@@ -120,6 +125,11 @@ bool Analyzer::isConnected() const
     return socket().isConnected();
 }
 
+void Analyzer::finishSpectating(qint32 battleId)
+{
+    notify(NetworkServ::SpectatingBattleFinished, battleId);
+}
+
 
 void Analyzer::commandReceived(const QByteArray &commandline)
 {
@@ -128,6 +138,8 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     uchar command;
 
     in >> command;
+
+    qDebug() << "Command received from " << socket().id() << ": " <<  command;
 
     switch (command) {
     case Login:
@@ -250,6 +262,28 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             QString name;
             in >> name;
             emit unbanRequested(name);
+            break;
+        }
+    case SpectateBattle:
+        {
+            qint32 id;
+            in >> id;
+            emit battleSpectateRequested(id);
+            break;
+        }
+    case SpectatingBattleFinished:
+        {
+            qint32 id;
+            in >> id;
+            emit battleSpectateEnded(id);
+            break;
+        }
+    case SpectatingBattleChat:
+        {
+            qint32 id;
+            QString str;
+            in >> id >> str;
+            emit battleSpectateChat(id, str);
             break;
         }
     default:

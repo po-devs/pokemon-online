@@ -3,6 +3,7 @@
 #include "challenge.h"
 #include "teambuilder.h"
 #include "battlewindow.h"
+#include "basebattlewindow.h"
 #include "pmwindow.h"
 #include "controlpanel.h"
 #include "../Utilities/otherwidgets.h"
@@ -11,6 +12,7 @@
 
 Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
 {
+    setAttribute(Qt::WA_DeleteOnClose, true);
     mychallenge = NULL;
     mybattle = NULL;
     myteambuilder = NULL;
@@ -75,6 +77,8 @@ void Client::showContextMenu(const QPoint &requested)
             } else {
                 createIntMapper(menu->addAction(tr("Go &Away")), SIGNAL(triggered()), this, SLOT(goAway(int)), true);
             }
+        } else if (player(item->id()).battling()) {
+            createIntMapper(menu->addAction(tr("&Watch Battle")), SIGNAL(triggered()), this, SLOT(watchBattleRequ(int)), item->id());
         }
 
         int myauth = ownAuth();
@@ -98,6 +102,11 @@ void Client::showContextMenu(const QPoint &requested)
 
 	menu->exec(mapToGlobal(requested));
     }
+}
+
+void Client::watchBattleRequ(int id)
+{
+    relay().notify(NetworkCli::SpectateBattle, qint32(id));
 }
 
 void Client::kick(int p) {
@@ -136,6 +145,7 @@ void Client::goAway(int away)
 {
     relay().goAway(away);
 }
+
 
 void Client::controlPanel(int id)
 {
@@ -251,6 +261,9 @@ void Client::initRelay()
     connect(relay, SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
     connect(relay, SIGNAL(PMReceived(int,QString)), SLOT(PMReceived(int,QString)));
     connect(relay, SIGNAL(awayChanged(int, bool)), SLOT(awayChanged(int, bool)));
+    connect(relay, SIGNAL(spectatedBattle(QString,QString,int)), SLOT(watchBattle(QString,QString,int)));
+    connect(relay, SIGNAL(spectatingBattleMessage(int,QByteArray)), SLOT(spectatingBattleMessage(int , QByteArray)));
+    connect(relay, SIGNAL(spectatingBattleFinished(int)), SLOT(stopWatching(int)));
 }
 
 void Client::playerKicked(int dest, int src) {
@@ -294,6 +307,13 @@ void Client::askForPass(const QString &salt) {
 void Client::sendRegister() {
     relay().notify(NetworkCli::Register);
     myregister->setDisabled(true);
+}
+
+void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
+{
+    if (mySpectatingBattles.contains(battleId)) {
+        mySpectatingBattles[battleId]->receiveInfo(command);
+    }
 }
 
 bool Client::battling() const
@@ -365,6 +385,8 @@ void Client::seeChallenge(const ChallengeInfo &c)
 void Client::battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
     mybattle = new BattleWindow(this->team()->trainerNick(),name(id), this->id(ownName()), id, team, conf);
+    mybattle->client() = this;
+
     connect(mybattle, SIGNAL(forfeit()), SLOT(forfeitBattle()));
     connect(mybattle, SIGNAL(battleCommand(BattleChoice)), &relay(), SLOT(battleCommand(BattleChoice)));
     connect(mybattle, SIGNAL(battleMessage(QString)), &relay(), SLOT(battleMessage(QString)));
@@ -372,6 +394,28 @@ void Client::battleStarted(int id, const TeamBattle &team, const BattleConfigura
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
 
     battleStarted(ownId(), id);
+}
+
+void Client::watchBattle(const QString &name0, const QString &name1, int battleId)
+{
+    BaseBattleWindow *battle = new BaseBattleWindow(name0, name1);
+
+    connect(this, SIGNAL(destroyed()), battle, SLOT(close()));
+    connect(battle, SIGNAL(closedBW(int)), SLOT(stopWatching(int)));
+    connect(battle, SIGNAL(battleMessage(QString, int)), &relay(), SLOT(battleMessage(QString, int)));
+
+    battle->battleId() = battleId;
+    battle->client() = this;
+    mySpectatingBattles[battleId] = battle;
+}
+
+void Client::stopWatching(int battleId)
+{
+    if (mySpectatingBattles.contains(battleId)) {
+        mySpectatingBattles[battleId]->close();
+        mySpectatingBattles.remove(battleId);
+        relay().notify(NetworkCli::SpectatingBattleFinished, qint32(battleId));
+    }
 }
 
 void Client::battleStarted(int id1, int id2)

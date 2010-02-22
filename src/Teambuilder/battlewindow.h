@@ -9,11 +9,6 @@ class PokeZone;
 class BattleDisplay;
 class QScrollDownTextEdit;
 
-enum {
-    Myself,
-    Opponent
-};
-
 struct BattleInfo
 {
     /* name [0] = mine, name[1] = other */
@@ -46,6 +41,8 @@ struct BattleInfo
 
 /* The battle window called by the client, online */
 
+class Client;
+
 class BattleWindow : public QWidget
 {
     Q_OBJECT
@@ -54,11 +51,10 @@ class BattleWindow : public QWidget
     PROPERTY(BattleConfiguration, conf);
     PROPERTY(int, idme);
     PROPERTY(int, idopp);
+    PROPERTY(Client *, client);
 public:
     BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &myteam, const BattleConfiguration &conf);
 
-    /* analyzes the command and calls the right function */
-    void dealWithCommand(const QByteArray &);
     TeamBattle &team();
     const TeamBattle &team() const;
 
@@ -96,7 +92,9 @@ public:
         CancelMove,
         SleepClause,
         DynamicInfo,
-        DynamicStats
+        DynamicStats,
+        Spectating,
+        SpectatorChat
     };
 
     enum WeatherM

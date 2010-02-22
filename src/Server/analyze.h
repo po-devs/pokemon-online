@@ -42,7 +42,11 @@ namespace NetworkServ
         GetUserAlias,
         GetBanList,
         CPBan,
-        CPUnban
+        CPUnban,
+        SpectateBattle,
+        SpectatingBattleMessage,
+        SpectatingBattleChat,
+        SpectatingBattleFinished
     };
 
     enum ProtocolError
@@ -72,10 +76,12 @@ public:
     void engageBattle(int myid, int id, const TeamBattle &team, const BattleConfiguration &conf);
     void sendBattleResult(quint8 res, int win, int los);
     void sendBattleCommand(const QByteArray &command);
+    void sendWatchingCommand(qint32 id, const QByteArray &command);
     void sendTeamChange(const PlayerInfo &p);
     void sendPM(int dest, const QString &mess);
     void sendUserInfo(const UserInfo &ui);
     void notifyBattle(qint32 id1, qint32 id2);
+    void finishSpectating(qint32 battleId);
     void notifyAway(qint32 id, bool away);
 
     void connectTo(const QString &host, quint16 port);
@@ -108,6 +114,9 @@ signals:
     void challengeStuff(const ChallengeInfo &c);
     void battleMessage(const BattleChoice &choice);
     void battleChat(const QString &chat);
+    void battleSpectateRequested(int id);
+    void battleSpectateEnded(int id);
+    void battleSpectateChat(int id, const QString &chat);
     void wannaRegister();
     void sentHash(QString);
     void kick(int id);

@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     ../Utilities/pokeButton.cpp \
     ../Utilities/md5.c \
     pmwindow.cpp \
-    controlpanel.cpp
+    controlpanel.cpp \
+    basebattlewindow.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -47,9 +48,11 @@ HEADERS += teambuilder.h \
     ../Utilities/pokeButton.h \
     ../Utilities/md5.h \
     pmwindow.h \
-    controlpanel.h
+    controlpanel.h \
+    basebattlewindow.h
 LIBS += -L../../bin \
     -lzip
 DEFINES = CLIENT_SIDE
 FORMS += controlpanel.ui
-TRANSLATIONS = translation_fr.ts translation_pt-br.ts
+TRANSLATIONS = translation_fr.ts \
+    translation_pt-br.ts

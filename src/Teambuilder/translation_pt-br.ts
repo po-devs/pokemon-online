@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0">
+<TS version="2.0" language="pt_BR">
 <context>
     <name>Analyzer</name>
     <message>
@@ -11,7 +11,7 @@
     <message>
         <location filename="analyze.cpp" line="266"/>
         <source>Protocol error: unknown command received -- maybe an update for the program is available</source>
-        <translation type="unfinished"></translation>
+        <translation>Erro: comando desconhecido recebido -- talvez voce deva fazer update do jogo</translation>
     </message>
 </context>
 <context>
@@ -651,28 +651,28 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="controlpanel.ui" line="14"/>
         <source>Control Panel</source>
-        <translation type="unfinished"></translation>
+        <translation>Painel de Controle</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="27"/>
         <source>User Info</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="44"/>
         <source>Username: </source>
-        <translation type="unfinished"></translation>
+        <translation>Nome:</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="54"/>
         <location filename="controlpanel.ui" line="196"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Procurar</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="65"/>
         <source>Status: </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="78"/>
@@ -683,7 +683,7 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="controlpanel.ui" line="95"/>
         <source>Authority: </source>
-        <translation type="unfinished"></translation>
+        <translation>Autoridade:</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="125"/>
@@ -708,7 +708,7 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="controlpanel.ui" line="174"/>
         <source>User Alias</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="215"/>
@@ -718,7 +718,7 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="controlpanel.ui" line="273"/>
         <source>Username</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="278"/>
@@ -728,12 +728,12 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="controlpanel.ui" line="286"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>Atualizar</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="293"/>
         <source>Unban</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="300"/>
@@ -743,17 +743,17 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="controlpanel.cpp" line="45"/>
         <source>User</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="controlpanel.cpp" line="47"/>
         <source>Moderator</source>
-        <translation type="unfinished"></translation>
+        <translation>Moderador</translation>
     </message>
     <message>
         <location filename="controlpanel.cpp" line="49"/>
         <source>Administrator</source>
-        <translation type="unfinished"></translation>
+        <translation>Administrador</translation>
     </message>
     <message>
         <location filename="controlpanel.cpp" line="62"/>
@@ -776,7 +776,7 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="../Utilities/dockinterface.cpp" line="9"/>
         <source>Advanced Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Opcoes Avancadas</translation>
     </message>
 </context>
 <context>
@@ -789,7 +789,7 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="mainwindow.cpp" line="128"/>
         <source>Language Change</source>
-        <translation type="unfinished"></translation>
+        <translation>Mudar Idioma</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="128"/>
@@ -816,7 +816,7 @@ Moves:
     <message>
         <location filename="../PokemonInfo/pokemonstructs.cpp" line="170"/>
         <source>%1 already has move %2.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../PokemonInfo/pokemonstructs.cpp" line="183"/>
@@ -972,7 +972,7 @@ Moves:
     <message>
         <location filename="menu.cpp" line="43"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Idioma</translation>
     </message>
 </context>
 <context>

@@ -10,9 +10,10 @@ class BattleSituation : public QThread
 {
     Q_OBJECT
 
-    PROPERTY(int, turn)
-    PROPERTY(bool, finished)
-    PROPERTY(bool, sleepClause)
+    PROPERTY(int, turn);
+    PROPERTY(int , publicId);
+    PROPERTY(bool, finished);
+    PROPERTY(bool, sleepClause);
 public:
     enum {
 	AllButPlayer = -2,
@@ -34,6 +35,11 @@ public:
     int id(int spot) const;
     /* Return the configuration of the players (1 refer to that player, 0 to that one... */
     BattleConfiguration configuration() const;
+
+    bool acceptSpectator(int id) const;
+    void addSpectator(int id);
+
+    void removeSpectator(int id);
 
     /*
 	Below Player is either 1 or 0, aka the spot of the id.
@@ -182,7 +188,9 @@ public:
         CancelMove,
         SleepClause,
         DynamicInfo,
-        DynamicStats
+        DynamicStats,
+        Spectating,
+        SpectatorChat
     };
 
     enum WeatherM
@@ -237,6 +245,8 @@ public:
 public slots:
     void battleChoiceReceived(int id, const BattleChoice &b);
     void battleChat(int id, const QString &str);
+public:
+    void spectatingChat(int id, const QString &str);
 signals:
     void battleInfo(int id, const QByteArray &info);
     void battleFinished(int result, int winner, int loser);
@@ -249,6 +259,9 @@ private:
     void testquit();
     /* if battle ends, stop the battle thread */
     void testWin();
+    int spectatorKey(int id) const {
+        return 10000 + id;
+    }
 
     /* What choice we allow the players to have */
     BattleChoices options[2];
@@ -300,6 +313,8 @@ public:
     context battlelong;
     /* Moves that affect a team */
     context teamzone[2];
+
+    QHash<int,int> spectators;
 
     struct QuitException {};
 };
