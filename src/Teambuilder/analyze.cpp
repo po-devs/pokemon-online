@@ -69,6 +69,11 @@ void Analyzer::battleMessage(const QString &str)
     notify(BattleChat, str);
 }
 
+void Analyzer::battleMessage(const QString &str, int id)
+{
+    notify(SpectatingBattleChat, qint32(id), str);
+}
+
 void Analyzer::CPUnban(const QString &name)
 {
     notify(NetworkCli::CPUnban, name);
@@ -260,6 +265,34 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             bool away;
             in >> id >> away;
             emit awayChanged(id, away);
+            break;
+        }
+    case SpectateBattle:
+        {
+            QString name0, name1;
+            qint32 battleId;
+            in >> name0 >> name1 >> battleId;
+            emit spectatedBattle(name0, name1, battleId);
+            break;
+        }
+    case SpectatingBattleMessage:
+        {
+            qint32 battleId;
+            in >> battleId;
+            /* Such a headache, it really looks like wasting ressources */
+            char *buf;
+            uint len;
+            in.readBytes(buf, len);
+            QByteArray command(buf, len);
+            delete [] buf;
+            emit spectatingBattleMessage(battleId, command);
+            break;
+        }
+    case SpectatingBattleFinished:
+        {
+            qint32 battleId;
+            in >> battleId;
+            emit spectatingBattleFinished(battleId);
             break;
         }
     default:

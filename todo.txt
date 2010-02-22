@@ -23,7 +23,7 @@ Lilp
 -Faire des barres hp animées
 -Quand on tape sur une touche dans la fenêtre de combat, aller directement dans le line edit
 -Changer le design de la battle window
--Ajouter les attaques 3G
 -Faire disparaître les sprites pour les attaques comme vol, tunnel,..
 -Pouvoir changer les formes (rotom, deoxys..) dans le menu advanced et pas à la fin.
 -Rajouter "Team Info" dans le menu du trainer
+-Faire hériter battlewindow de BaseBattleWindow

@@ -2,6 +2,8 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include <iostream>
 #include "../Utilities/otherwidgets.h"
+#include "basebattlewindow.h"
+#include "client.h"
 
 BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &team, const BattleConfiguration &_conf)
 {
@@ -582,6 +584,23 @@ void BattleWindow::receiveInfo(QByteArray inf)
             updateChoices();
             break;
         }
+    case Spectating:
+        {
+            bool come;
+            qint32 id;
+            in >> come >> id;
+            QString mess = come ? tr("%1 is watching the battle.") : tr("%1 stopped watching the battle.");
+            printHtml(toBoldColor(mess.arg(client()->name(id)), Qt::green));
+            break;
+        }
+    case SpectatorChat:
+        {
+            qint32 id;
+            QString message;
+            in >> id >> message;
+            printHtml(toBoldColor(client()->name(id), Qt::blue) + ": " + escapeHtml(message));
+            break;
+        }
     case SleepClause:
         {
             bool inBattle;
@@ -1047,7 +1066,6 @@ bool GraphicsZone::event(QEvent * event)
         bool self  = helpEvent->pos().x() < width() / 2;
         QToolTip::setFont(QFont("Courier New",8));
         QToolTip::showText(helpEvent->globalPos(), tooltips[self]);
-        QToolTip::setFont(QFont("Verdana",10));
     }
     return QGraphicsView::event(event);
 }

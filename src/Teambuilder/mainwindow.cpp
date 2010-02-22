@@ -86,6 +86,11 @@ void MainWindow::launchTeamBuilder()
 
 void MainWindow::launchServerChoice()
 {
+    if (trainerTeam()->trainerNick().length() == 0) {
+        QMessageBox::information(this, tr("Impossible to go online"), tr("You haven't set your name yet. Do so in the teambuilder."));
+        return;
+    }
+
     m_choice = new ServerChoice();
 
     connect(m_choice, SIGNAL(rejected()), SLOT(launchMenu()));

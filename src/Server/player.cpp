@@ -5,6 +5,7 @@
 
 Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
 {
+    battle = NULL;
     challengedBy = NULL;
     myip = relay().ip();
 
@@ -12,10 +13,10 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     myauth = 0;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
-    connect(&relay(), SIGNAL(loggedIn(TeamInfo)), this, SLOT(loggedIn(TeamInfo)));
-    connect(&relay(), SIGNAL(messageReceived(QString)), this, SLOT(recvMessage(QString)));
-    connect(&relay(), SIGNAL(teamReceived(TeamInfo)), this, SLOT(recvTeam(TeamInfo)));
-    connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), this, SLOT(challengeStuff(ChallengeInfo)));
+    connect(&relay(), SIGNAL(loggedIn(TeamInfo)), SLOT(loggedIn(TeamInfo)));
+    connect(&relay(), SIGNAL(messageReceived(QString)), SLOT(recvMessage(QString)));
+    connect(&relay(), SIGNAL(teamReceived(TeamInfo)), SLOT(recvTeam(TeamInfo)));
+    connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
     connect(&relay(), SIGNAL(forfeitBattle()), SLOT(battleForfeited()));
     connect(&relay(), SIGNAL(battleMessage(BattleChoice)), SLOT(battleMessage(BattleChoice)));
     connect(&relay(), SIGNAL(battleChat(QString)), SLOT(battleChat(QString)));
@@ -25,10 +26,13 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(ban(int)), SLOT(playerBan(int)));
     connect(&relay(), SIGNAL(banRequested(QString)), SLOT(CPBan(QString)));
     connect(&relay(), SIGNAL(unbanRequested(QString)), SLOT(CPUnban(QString)));
-    connect(&relay(), SIGNAL(PMsent(int,QString)), this, SLOT(receivePM(int,QString)));
-    connect(&relay(), SIGNAL(getUserInfo(QString)), this, SLOT(userInfoAsked(QString)));
-    connect(&relay(), SIGNAL(banListRequested()), this, SLOT(giveBanList()));
-    connect(&relay(), SIGNAL(awayChange(bool)), this, SLOT(awayChange(bool)));
+    connect(&relay(), SIGNAL(PMsent(int,QString)), SLOT(receivePM(int,QString)));
+    connect(&relay(), SIGNAL(getUserInfo(QString)), SLOT(userInfoAsked(QString)));
+    connect(&relay(), SIGNAL(banListRequested()), SLOT(giveBanList()));
+    connect(&relay(), SIGNAL(awayChange(bool)), SLOT(awayChange(bool)));
+    connect(&relay(), SIGNAL(battleSpectateRequested(int)), SLOT(spectatingRequested(int)));
+    connect(&relay(), SIGNAL(battleSpectateEnded(int)), SLOT(quitSpectating(int)));
+    connect(&relay(), SIGNAL(battleSpectateChat(int,QString)), SLOT(spectatingChat(int,QString)));
 }
 
 Player::~Player()
@@ -40,6 +44,23 @@ void Player::doWhenDC()
     cancelChallenges();
     if (battling())
         battleForfeited();
+    foreach(int id, battlesSpectated) {
+        quitSpectating(id);
+    }
+}
+
+void Player::quitSpectating(int battleId)
+{
+    if (battlesSpectated.contains(battleId)) {
+        battlesSpectated.remove(battleId);
+        emit spectatingStopped(this->id(), battleId);
+    }
+}
+
+void Player::spectateBattle(const QString &name0, const QString &name1, int battleId)
+{
+    battlesSpectated.insert(battleId);
+    relay().notify(NetworkServ::SpectateBattle, name0, name1, qint32(battleId));
 }
 
 void Player::cancelChallenges()
@@ -140,9 +161,17 @@ void Player::disconnected()
 
 void Player::battleChat(const QString &s)
 {
-    if (!isLoggedIn())
+    if (!isLoggedIn() || !battling())
         return; //INVALID BEHAVIOR
     emit battleChat(id(), s);
+}
+
+void Player::spectatingChat(int id, const QString &chat)
+{
+    if (!battlesSpectated.contains(id)) {
+        return; //INVALID BEHAVIOR
+    }
+    emit spectatingChat(this->id(), id, chat);
 }
 
 void Player::battleMessage(const BattleChoice &b)
@@ -175,7 +204,7 @@ void Player::battleResult(int result, int winner, int loser)
 {
     relay().sendBattleResult(result, winner, loser);
 
-    if ( (winner == id() || loser == id()) && (result == Forfeit || result == Close))
+    if ((winner == id() || loser == id()) && (result == Forfeit || result == Close))
         changeState(Battling, false);
 }
 
@@ -567,6 +596,21 @@ void Player::recvTeam(const TeamInfo &team)
       .
       .
       */
+}
+
+void Player::spectatingRequested(int id)
+{
+    if (!isLoggedIn()) {
+        return; //INVALID BEHAVIOR
+    }
+    if (id == this->id()) {
+        return; //INVALID BEHAVIOR
+    }
+    if (battlesSpectated.size() >= 2) {
+        sendMessage(tr("You're already watching %1 battles!").arg(battlesSpectated.size()));
+        return;
+    }
+    emit spectatingRequested(this->id(), id);
 }
 
 void Player::sendMessage(const QString &mess)

@@ -149,7 +149,7 @@ Hit!
 
 A black haze covered the battlefield!
 %s landed on the ground!
-%s planted roots on the ground! %'s roots absorbed nutrients.
+%s planted roots on the ground!| %s's roots absorbed nutrients.
 
 
 

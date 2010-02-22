@@ -70,6 +70,9 @@ public slots:
     void startBattle(int id1, int id2, const ChallengeInfo &c);
     void battleResult(int desc, int winner, int loser);
     void sendBattleCommand(int id, const QByteArray &command);
+    void spectatingRequested(int id, int battle);
+    void spectatingStopped(int id, int battle);
+    void spectatingChat(int player, int battle, const QString &chat);
     void info(int , const QString& );
     void showContextMenu(const QPoint &p);
     void kick(int i);
@@ -101,12 +104,14 @@ private:
     /* storing players */
     QHash<int, Player*> myplayers;
     QHash<QString, int> mynames;
-    QHash<int, BattleSituation*> mybattles;
+
+    QHash<int, BattleSituation *> mybattles;
 
     QTcpServer *server();
     Player * player(int i);
     /* gets an id that's not used */
     int freeid() const;
+    int freebattleid() const;
     /* removes a player */
     void removePlayer(int id);
 
