@@ -23,7 +23,7 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
     info().name[1] = opponent;
     info().sub[0] = false;
     info().sub[1] = false;
-    info().opponentAlive = false;
+    info().pokeAlive[1] = false;
 
     setAttribute(Qt::WA_DeleteOnClose, true);
 
@@ -78,7 +78,7 @@ QString BattleWindow::nick(bool self) const
     if (self)
 	return info().currentPoke().nick();
     else
-        return tr("the foe's %1").arg(info().opponent.nick());
+        return tr("the foe's %1").arg(info().pokes[Opponent].nick());
 }
 
 QString BattleWindow::rnick(bool self) const
@@ -86,7 +86,7 @@ QString BattleWindow::rnick(bool self) const
     if (self)
 	return info().currentPoke().nick();
     else
-	return info().opponent.nick();
+        return info().pokes[Opponent].nick();
 }
 
 void BattleWindow::closeEvent(QCloseEvent *)
@@ -225,9 +225,9 @@ void BattleWindow::receiveInfo(QByteArray inf)
                 info().sub[0] = false;
 		switchTo(poke);
 	    } else {
-		in >> info().opponent;
-                std::cout << "Opp Sent out " << info().opponent.num() << std::endl;
-		info().opponentAlive = true;
+                in >> info().pokes[Opponent];
+                std::cout << "Opp Sent out " << info().pokes[Opponent].num() << std::endl;
+                info().pokeAlive[Opponent] = true;
                 info().sub[1] = false;
 		mydisplay->updatePoke(false);
 	    }
@@ -285,7 +285,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
 		info().currentPoke().lifePoints() = newHp;
                 mypzone->pokes[info().validIndex()]->update();
 	    } else {
-		info().opponent.lifePercent() = newHp;
+                info().pokes[Opponent].lifePercent() = newHp;
 	    }
 	    mydisplay->updatePoke(self);
 	    break;
@@ -364,7 +364,7 @@ void BattleWindow::receiveInfo(QByteArray inf)
                 break;
 	    }
             if (!self) {
-                info().opponent.status() = status;
+                info().pokes[Opponent].status() = status;
                 mydisplay->updatePoke(self);
             }
 	    break;
@@ -637,7 +637,7 @@ void BattleWindow::switchToNaught(bool self)
 	info().currentIndex = -1;
 	switchToPokeZone();
     } else {
-	info().opponentAlive = false;
+        info().pokeAlive[Opponent] = false;
     }
 
     mydisplay->updatePoke(self);
@@ -873,13 +873,13 @@ void BattleDisplay::updatePoke(bool self)
         }
     }
     else {
-	if (info.opponentAlive) {
+        if (info.pokeAlive[Opponent]) {
             zone->switchTo(foe(), self, info.sub[Opponent]);
             nick[Opponent]->setText(tr("%1 Lv.%2").arg(foe().nick()).arg(foe().level()));
             bars[Opponent]->setValue(foe().lifePercent());
             bars[Opponent]->setStyleSheet(health(foe().lifePercent()));
-            gender[Opponent]->setPixmap(GenderInfo::Picture(info.opponent.gender(), true));
-            int status = info.opponent.status();
+            gender[Opponent]->setPixmap(GenderInfo::Picture(info.pokes[Opponent].gender(), true));
+            int status = info.pokes[Opponent].status();
             this->status[Opponent]->setPixmap(StatInfo::BattleIcon(status));
         }  else {
             zone->switchToNaught(self);
@@ -938,7 +938,7 @@ void BattleDisplay::updateToolTip(bool self)
             }
         }
     } else {
-        tooltip += info.opponent.nick() + "\n";
+        tooltip += info.pokes[Opponent].nick() + "\n";
 
         for (int i = 0; i < 5; i++) {
             tooltip += "\n" + stats[i] + " ";

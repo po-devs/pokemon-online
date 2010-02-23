@@ -390,8 +390,8 @@ S[M]2+1
 #stock pile
 
 
-O[M]3-1
 
+O[M]3-1
 #struggle
 O[S]1+
 

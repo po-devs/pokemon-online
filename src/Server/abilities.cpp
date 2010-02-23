@@ -976,7 +976,7 @@ struct AMWonderGuard : public AM {
         if (turn(b,t)["Power"].toInt() > 0 && tp != Pokemon::Curse) {
             int mod = TypeInfo::Eff(tp, b.getType(s,1)) * TypeInfo::Eff(tp, b.getType(s,2));
 
-            if (mod < 4) {
+            if (mod <= 4) {
                 b.sendAbMessage(71,0,s);
                 turn(b,s)[QString("Block%1").arg(t)] = true;
             }

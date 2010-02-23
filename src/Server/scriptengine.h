@@ -57,6 +57,27 @@ public:
     Q_INVOKABLE QScriptValue auth(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
     Q_INVOKABLE QScriptValue getVal(const QString &key);
+
+    Q_INVOKABLE QScriptValue pokemon(int num);
+    Q_INVOKABLE QScriptValue pokeNum(const QString &name);
+    Q_INVOKABLE QScriptValue move(int num);
+    Q_INVOKABLE QScriptValue moveNum(const QString &name);
+    Q_INVOKABLE QScriptValue item(int num);
+    Q_INVOKABLE QScriptValue itemNum(const QString &item);
+
+    Q_INVOKABLE QScriptValue teamPoke(int id, int index);
+    Q_INVOKABLE bool hasTeamPoke(int id, int pokemonnum);
+    Q_INVOKABLE QScriptValue indexOfTeamPoke(int id, int pokenum);
+
+    Q_INVOKABLE QScriptValue teamPokeMove(int id, int pokeindex, int moveindex);
+    Q_INVOKABLE bool hasTeamPokeMove(int id, int pokeindex, int movenum);
+    Q_INVOKABLE QScriptValue indexOfTeamPokeMove(int id, int pokeindex, int movenum);
+    Q_INVOKABLE bool hasTeamMove(int id, int movenum);
+
+    Q_INVOKABLE QScriptValue teamPokeItem(int id, int pokeindex);
+    Q_INVOKABLE bool hasTeamItem(int id, int itemNum);
+
+
     Q_INVOKABLE int numPlayers();
     Q_INVOKABLE bool loggedIn(int id);
 

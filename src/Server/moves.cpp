@@ -244,7 +244,7 @@ struct MMBatonPass : public MM
 struct MMBlastBurn : public MM
 {
     MMBlastBurn() {
-	functions["AfterAttackSuccessful"] = &aas;
+        functions["UponAttackSuccessful"] = &aas;
     }
 
     static void aas(int s, int, BS &b) {
@@ -440,7 +440,7 @@ struct MMDestinyBond : public MM
     static void uas(int s, int, BS &b) {
 	poke(b,s)["DestinyBondTurn"] = b.turn();
 	addFunction(poke(b,s), "AfterKoedByStraightAttack", "DestinyBond", &akbsa);
-	b.sendMoveMessage(26, 0, s, Pokemon::Ghost);
+        b.sendMoveMessage(26, 1, s, Pokemon::Ghost);
     }
 
     static void akbsa(int s, int t, BS &b) {
@@ -860,14 +860,11 @@ struct MMWish : public MM
     }
 
     static void et(int s, int, BS &b) {
-	if (b.koed(s)) {
-	    return;
-	}
         int count = team(b,s)["WishCount"].toInt();
 	if (count < 0) {
 	    return;
 	}
-	if (count == 0) {
+        if (count == 0 && !b.koed(s)) {
             b.sendMoveMessage(142, 1, 0, 0, 0, 0, team(b,s)["Wisher"].toString());
 	    b.healLife(s, b.poke(s).totalLifePoints()/2);
 	}
@@ -1491,20 +1488,22 @@ struct MMBind : public MM
 	int count = poke(b,s)["TrappedCount"].toInt() - 1;
 	int move = poke(b,s)["TrappedMove"].toInt();
         int t = b.rev(s);
-        if (t != poke(b,s).value("BindedBy").toInt() || b.koed(t) || b.koed(s) || !poke(b,t).contains("Binded") || poke(b,t)["Binded"] != s) {
-            poke(b,s).remove("TrappedBy");
-            removeFunction(poke(b,s),"EndTurn", "Bind");
-            return;
+        if (!b.koed(s)) {
+            if (t != poke(b,s).value("BindedBy").toInt() || b.koed(t) || !poke(b,t).contains("Binded") || poke(b,t)["Binded"] != s) {
+                poke(b,s).remove("TrappedBy");
+                removeFunction(poke(b,s),"EndTurn", "Bind");
+                return;
+            }
+            if (count <= 0) {
+                poke(b,s).remove("TrappedBy");
+                removeFunction(poke(b,s),"EndTurn", "Bind");
+                b.sendMoveMessage(10,1,s,MoveInfo::Type(move),s,move);
+            } else {
+                poke(b,s)["TrappedCount"] = count;
+                b.sendMoveMessage(10,0,s,MoveInfo::Type(move),s,move);
+                b.inflictDamage(s, b.poke(s).totalLifePoints()/16,s,false);
+            }
         }
-	if (count <= 0) {
-	    poke(b,s).remove("TrappedBy");
-	    removeFunction(poke(b,s),"EndTurn", "Bind");
-	    b.sendMoveMessage(10,1,s,MoveInfo::Type(move),s,move);
-	} else {
-	    poke(b,s)["TrappedCount"] = count;
-	    b.sendMoveMessage(10,0,s,MoveInfo::Type(move),s,move);
-            b.inflictDamage(s, b.poke(s).totalLifePoints()/16,s,false);
-	}
     }
 };
 
@@ -3719,6 +3718,43 @@ struct MMSecretPower : public MM {
     }
 };
 
+struct MMBeatUp : public MM {
+    MMBeatUp() {
+        functions["MoveSettings"] = &ms;
+        functions["DetermineAttackFailure"] = &daf;
+        functions["CustomAttackingDamage"] = &cad;
+    }
+
+    static void ms(int s, int, BS &b) {
+        turn(b,s)["Type"] = Pokemon::Curse;
+        turn(b,s)["Power"] = 1;
+    }
+
+    static void daf(int s,int, BS&b) {
+        for (int i = 0; i < 6; i++) {
+            if (b.poke(s, i).status() == Pokemon::Fine) {
+                return;
+            }
+        }
+        turn(b,s)["Failed"] = true;
+    }
+
+    static void cad(int s, int t, BS &b) {
+        int def = PokemonInfo::Stat(b.poke(t).num(),Defense, PokemonInfo::BaseStats(b.poke(t).num()).baseDefense(),b.poke(t).level(),0,0);
+        for (int i = 0; i < 6; i++) {
+            PokeBattle &p = b.poke(s,i);
+            if (p.status() == Pokemon::Fine) {
+                int att = PokemonInfo::Stat(p.num(),Attack, PokemonInfo::BaseStats(p.num()).baseAttack(),p.level(),0,0);
+                int damage = (((((p.level() * 2 / 5) + 2) * 10 * att / 50) / def) + 2) * (true_rand() % (255-217) + 217)*100/255/100;
+                b.sendMoveMessage(7,0,s,Pokemon::Dark,t,0,p.nick());
+                b.inflictDamage(t,damage,t,true);
+            }
+            if (b.koed(t))
+                return;
+        }
+    }
+};
+
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -3759,7 +3795,7 @@ void MoveEffect::init()
     REGISTER_MOVE(4, Assist);
     REGISTER_MOVE(5, Assurance);
     REGISTER_MOVE(6, BatonPass);
-    /* Beat up */
+    REGISTER_MOVE(7, BeatUp);
     REGISTER_MOVE(8, BellyDrum);
     REGISTER_MOVE(9, Bide);
     REGISTER_MOVE(10, Bind);

@@ -1,7 +1,7 @@
 #include "server.h"
 #include "player.h"
 #include "scriptengine.h"
-
+#include "../PokemonInfo/pokemoninfo.h"
 
 ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
@@ -258,6 +258,188 @@ QScriptValue ScriptEngine::id(const QString &name)
     } else {
         return myserver->id(name);
     }
+}
+
+QScriptValue ScriptEngine::pokemon(int num)
+{
+    if (num < 0 || num >= PokemonInfo::NumberOfPokemons()) {
+        return myengine.undefinedValue();
+    } else {
+        return PokemonInfo::Name(num);
+    }
+}
+
+QScriptValue ScriptEngine::pokeNum(const QString &name)
+{
+    int num = PokemonInfo::Number(tu(name.toLower()));
+    if (num == 0) {
+        return myengine.undefinedValue();
+    } else {
+        return num;
+    }
+}
+
+QScriptValue ScriptEngine::move(int num)
+{
+    if (num < 0  || num >= MoveInfo::NumberOfMoves()) {
+        return myengine.undefinedValue();
+    } else {
+        return MoveInfo::Name(num);
+    }
+}
+
+QString convertToSerebiiName(const QString input)
+{
+    QString truename = input;
+    bool blankbefore = true;
+    for (int i = 0; i < truename.length(); i++) {
+        if (truename[i].isSpace()) {
+            blankbefore = true;
+        } else {
+            if (blankbefore) {
+                truename[i] = truename[i].toUpper();
+                blankbefore = false;
+            } else {
+                truename[i] = truename[i].toLower();
+            }
+        }
+    }
+    return truename;
+}
+
+QScriptValue ScriptEngine::moveNum(const QString &name)
+{
+    int num = MoveInfo::Number(convertToSerebiiName(name));
+    return num == 0 ? myengine.undefinedValue() : num;
+}
+
+QScriptValue ScriptEngine::item(int num)
+{
+    if (ItemInfo::Exist(num)) {
+        return ItemInfo::Name(num);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::itemNum(const QString &name)
+{
+    int num = ItemInfo::Number(convertToSerebiiName(name));
+    return num == 0 ? myengine.undefinedValue() : num;
+}
+
+QScriptValue ScriptEngine::teamPoke(int id, int index)
+{
+    if (!loggedIn(id) || index < 0 || index >= 6) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->team().poke(index).num();
+    }
+}
+
+bool ScriptEngine::hasTeamPoke(int id, int pokemonnum)
+{
+    if (!loggedIn(id)) {
+        printLine("Script Error in sys.hasTeamPoke(id, pokenum): no such player logged in with id " + QString::number(id));
+        return false;
+    }
+    TeamBattle &t = myserver->player(id)->team();
+    for (int i = 0; i < 6; i++) {
+        if (t.poke(i).num() == pokemonnum) {
+            return true;
+        }
+    }
+    return false;
+}
+
+QScriptValue ScriptEngine::indexOfTeamPoke(int id, int pokenum)
+{
+    if (!loggedIn(id)) {
+        printLine("Script Error in sys.indexOfTeamPoke(id, pokenum): no such player logged in with id " + QString::number(id));
+        return myengine.undefinedValue();
+    }
+    TeamBattle &t = myserver->player(id)->team();
+    for (int i = 0; i < 6; i++) {
+        if (t.poke(i).num() == pokenum) {
+            return i;
+        }
+    }
+    return myengine.undefinedValue();
+}
+
+QScriptValue ScriptEngine::teamPokeMove(int id, int pokeindex, int moveindex)
+{
+    if (!loggedIn(id) || pokeindex < 0 || moveindex < 0 || pokeindex >= 6 || moveindex >= 4) {
+        return myengine.undefinedValue();
+    }
+    return myserver->player(id)->team().poke(pokeindex).move(moveindex).num();
+}
+
+bool ScriptEngine::hasTeamPokeMove(int id, int pokeindex, int movenum)
+{
+    if (!loggedIn(id) || pokeindex < 0 || pokeindex >= 6) {
+        return false;
+    }
+    PokeBattle &poke = myserver->player(id)->team().poke(pokeindex);
+
+    for (int i = 0; i < 4; i++) {
+        if (poke.move(i).num() == movenum) {
+            return true;
+        }
+    }
+    return false;
+}
+
+QScriptValue ScriptEngine::indexOfTeamPokeMove(int id, int pokeindex, int movenum)
+{
+    if (!loggedIn(id) || pokeindex < 0 || pokeindex >= 6) {
+        return myengine.undefinedValue();
+    }
+    PokeBattle &poke = myserver->player(id)->team().poke(pokeindex);
+
+    for (int i = 0; i < 4; i++) {
+        if (poke.move(i).num() == movenum) {
+            return i;
+        }
+    }
+    return myengine.undefinedValue();
+}
+
+bool ScriptEngine::hasTeamMove(int id, int movenum)
+{
+    if (!loggedIn(id)) {
+        printLine("Script Error in sys.hasTeamMove(id, pokenum): no such player logged in with id " + QString::number(id));
+        return false;
+    }
+    for (int i = 0; i < 6; i++) {
+        if (hasTeamPokeMove(id,i,movenum))
+            return true;
+    }
+    return false;
+}
+
+QScriptValue ScriptEngine::teamPokeItem(int id, int index)
+{
+    if (!loggedIn(id) || index < 0 || index >= 6) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->team().poke(index).item();
+    }
+}
+
+bool ScriptEngine::hasTeamItem(int id, int itemnum)
+{
+    if (!loggedIn(id)) {
+        printLine("Script Error in sys.hasTeamPoke(id, pokenum): no such player logged in with id " + QString::number(id));
+        return false;
+    }
+    TeamBattle &t = myserver->player(id)->team();
+    for (int i = 0; i < 6; i++) {
+        if (t.poke(i).item() == itemnum) {
+            return true;
+        }
+    }
+    return false;
 }
 
 int ScriptEngine::numPlayers()

@@ -193,6 +193,10 @@ void QNickValidator::fixup(QString &input) const
 
 QValidator::State QNickValidator::validate(const QString &input) const
 {
+    if (input.length() > 15)
+    {
+        return QValidator::Invalid;
+    }
     if (input.length() == 0)
         return QValidator::Intermediate;
 
@@ -204,7 +208,7 @@ QValidator::State QNickValidator::validate(const QString &input) const
     bool punct = false;
 
     for (int i = 0; i < input.length(); i++) {
-        if (input[i] == '%' || input[i] == '*' || input[i] == '<')
+        if (input[i] == '%' || input[i] == '*' || input[i] == '<' || input[i] == ':')
             return QValidator::Invalid;
         if (input[i].isPunct()) {
             if (punct == true) {
