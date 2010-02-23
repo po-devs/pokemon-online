@@ -251,8 +251,13 @@ void Server::banName(const QString &name) {
 void Server::changeAuth(const QString &name, int auth) {
     if (nameExist(name)) {
         int id = this->id(name);
+        if (auth == player(id)->auth())
+            return;
         player(id)->setAuth(auth);
         myplayersitems[id]->setText(authedName(id));
+        if (SecurityManager::member(name).authority() != auth) {
+            SecurityManager::setauth(name, auth);
+        }
         sendPlayer(id);
     }
 }

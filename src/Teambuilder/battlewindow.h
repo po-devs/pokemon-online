@@ -3,18 +3,15 @@
 
 #include <QtGui>
 #include "../PokemonInfo/battlestructs.h"
+#include "basebattlewindow.h"
 
 class AttackZone;
 class PokeZone;
 class BattleDisplay;
 class QScrollDownTextEdit;
 
-struct BattleInfo
+struct BattleInfo : public BaseBattleInfo
 {
-    /* name [0] = mine, name[1] = other */
-    QString name[2];
-    bool sub[2];
-
     /* Possible choices */
     bool possible;
     BattleChoices choices;
@@ -24,11 +21,6 @@ struct BattleInfo
     const PokeBattle &currentPoke() const;
     PokeBattle &currentPoke();
 
-    /* Opponent pokemon */
-    ShallowBattlePoke opponent;
-    bool opponentAlive;
-    /* Stat boosts & team status */
-    BattleDynamicInfo statChanges[2];
     BattleStats mystats;
 
     /* Current poke for ourself */
@@ -195,7 +187,7 @@ public:
 
 protected:
     const PokeBattle &mypoke() const {return info.currentPoke(); }
-    const ShallowBattlePoke &foe() const {return info.opponent; }
+    const ShallowBattlePoke &foe() const {return info.pokes[Opponent]; }
 
     QString health(int lifePercent);
 

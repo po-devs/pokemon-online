@@ -1413,7 +1413,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker)
                 return;
             }
 
-            if (status == Pokemon::Asleep && currentForcedSleepPoke[player] != -1) {
+            if (sleepClause() && status == Pokemon::Asleep && currentForcedSleepPoke[player] != -1) {
                 notify(All, SleepClause, player, true);
                 return;
             } else {
