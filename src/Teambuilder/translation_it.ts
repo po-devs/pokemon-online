@@ -1144,6 +1144,19 @@ It is advised to use a slightly different password for each server. (The server 
     </message>
 </context>
 <context>
+    <name>PMWindow</name>
+    <message>
+        <location filename="pmwindow.cpp" line="21"/>
+        <source>&amp;Challenge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="pmwindow.cpp" line="22"/>
+        <source>&amp;Send</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PokeButton</name>
     <message>
         <location filename="battlewindow.cpp" line="770"/>
