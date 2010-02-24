@@ -117,7 +117,7 @@ void PokeBattle::init(const PokePersonal &poke)
     }
 
     shiny() = poke.shiny();
-    level() = poke.level();
+    level() = std::min(100, std::max(int(poke.level()), 1));
 
     int curs = 0;
     for (int i = 0; i < 4; i++) {
