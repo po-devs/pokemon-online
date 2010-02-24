@@ -62,7 +62,7 @@ void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
 
 	/* if the effect is invalid or not yet implemented then no need to go further */
 	if (!mechanics.contains(specialEffect)) {
-	    return;
+            break;
 	}
 
 	MoveMechanics &m = mechanics[specialEffect];
@@ -83,6 +83,7 @@ void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
 	    }
 	}
     }
+    qDebug() << "End of setup";
 }
 
 /* List of events:
@@ -740,7 +741,7 @@ struct MMHaze : public MM
 	if (s == t)
 	    b.sendMoveMessage(149);
 	for (int i = 1; i <= 7; i++) {
-	    poke(b,t)["Stat"+QString::number(i)] = 0;
+            poke(b,t)["Boost"+QString::number(i)] = 0;
 	}
     }
 };
