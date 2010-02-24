@@ -3312,12 +3312,15 @@ struct MMSnatch : public MM
 
     static void dgaf(int s, int , BS &b) {
 	if (b.battlelong.contains("Snatcher")) {
+            int snatcher = b.battlelong["Snatcher"].toInt();
+            if (!turn(b,snatcher).value("Snatcher").toBool()) {
+                return;
+            }
 	    if (turn(b,s)["Power"].toInt() == 0) {
 		int move = MM::move(b,s);
 		/* Typically, the moves that are bounced back are moves that only induce status / boost mods and nothing else,
 		    therefore having no "SpecialEffect". Exceptions are stored in bounced_moves */
 		if (( turn(b,s)["PossibleTarget"].toInt() == Move::User && MoveInfo::SpecialEffect(move).size() == 0 )|| snatched_moves.contains(move)) {
-		    int snatcher = b.battlelong["Snatcher"].toInt();
 		    b.fail(s,118,0,type(b,snatcher));
 		    /* Now Snatching ... */
 		    removeFunction(turn(b,snatcher), "UponAttackSuccessful", "Snatch");

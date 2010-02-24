@@ -552,7 +552,11 @@ struct AMIntimidate : public AM {
             return;
 
         b.sendAbMessage(34,0,s,t);
-        b.loseStatMod(t,Attack,1,s);
+        if (b.hasSubstitute(t)) {
+            b.sendAbMessage(34,1,s,t);
+        } else {
+            b.loseStatMod(t,Attack,1,s);
+        }
     }
 };
 

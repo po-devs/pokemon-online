@@ -1162,6 +1162,19 @@ Il est conseillé d&apos;utiliser un mot de passe légèrement différent pour c
     </message>
 </context>
 <context>
+    <name>PMWindow</name>
+    <message>
+        <location filename="pmwindow.cpp" line="21"/>
+        <source>&amp;Challenge</source>
+        <translation type="unfinished">&amp;Défier</translation>
+    </message>
+    <message>
+        <location filename="pmwindow.cpp" line="22"/>
+        <source>&amp;Send</source>
+        <translation type="unfinished">&amp;Envoyer</translation>
+    </message>
+</context>
+<context>
     <name>PokeButton</name>
     <message>
         <location filename="battlewindow.cpp" line="770"/>
