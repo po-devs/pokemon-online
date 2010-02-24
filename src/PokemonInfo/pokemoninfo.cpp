@@ -895,7 +895,7 @@ void ItemInfo::loadNames()
 	m_BerryMessages.push_back(eff.split('|'));
     }
 
-    fill_container_with_file(m_Powers, path("item_pow.txt"));
+    fill_container_with_file(m_Powers, path("items_pow.txt"));
 }
 
 QList<ItemInfo::Effect> ItemInfo::Effects(int item)

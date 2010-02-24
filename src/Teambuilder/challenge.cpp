@@ -1,6 +1,8 @@
 #include "challenge.h"
 #include "client.h"
 #include "../Utilities/otherwidgets.h"
+#include "../PokemonInfo/battlestructs.h"
+
 
 BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &windowTitle, const QString &buttonOk, const QString &buttonNo, QWidget *parent)
         : QWidget(parent), emitOnClose(true)
@@ -16,10 +18,19 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     QVBoxLayout *boxlayout = new QVBoxLayout(box);
     boxlayout->addWidget(new QLabel(p.team.info));
 
-    sleepClause = new QCheckBox(tr("&Sleep Clause"));
-
     mylayout->addWidget(box ,0,0,1,2 );
-    mylayout->addWidget(sleepClause, 1,0,1,2);
+
+    QVBoxLayout *clausesL= new QVBoxLayout();
+    QGroupBox *boxC = new QGroupBox(tr("C&lauses"));
+    boxC->setLayout(clausesL);
+    clausesL->setSpacing(2);
+    mylayout->addWidget(boxC, 1,0,1,2);
+
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        clauses[i] = new QCheckBox(ChallengeInfo::clause(i));
+        clausesL->addWidget(clauses[i]);
+    }
+
     mylayout->addWidget(challenge_b = new QPushButton(buttonOk), 2,0);
     mylayout->addWidget(goback = new QPushButton(buttonNo), 2,1);
 
@@ -71,10 +82,11 @@ ChallengeWindow::ChallengeWindow(const PlayerInfo &p, QWidget *parent)
 	: BaseChallengeWindow(p, tr("%1's Info"), tr("&Challenge"), tr("Go &Back"), parent)
 {
     QSettings s;
-    bool slpCls = s.value("sleep_clause").toBool();
 
-    sleepClause->setChecked(slpCls);
-    
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        clauses[i]->setChecked(s.value("clause_"+ChallengeInfo::clause(i)).toBool());
+    }
+
     //This is necessary to do that here because this is the function of the derived class that is connected then
     connect(challenge_b, SIGNAL(clicked()), SLOT(onChallenge()));
 }
@@ -82,17 +94,22 @@ ChallengeWindow::ChallengeWindow(const PlayerInfo &p, QWidget *parent)
 void ChallengeWindow::onChallenge()
 {
     QSettings s;
-    s.setValue("sleep_clause", sleepClause->isChecked());
+
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        s.setValue("clause_"+ChallengeInfo::clause(i), clauses[i]->isChecked());
+    }
 
     emit challenge(id());
     close();
 }
 
-ChallengedWindow::ChallengedWindow(const PlayerInfo &p, bool slpCls, QWidget *parent)
+ChallengedWindow::ChallengedWindow(const PlayerInfo &p, quint32 clauses, QWidget *parent)
 	: BaseChallengeWindow(p, tr("%1 challenged you!"), tr("&Accept"), tr("&Refuse"), parent)
 {
     connect(challenge_b, SIGNAL(clicked()), SLOT(onChallenge()));
 
-    sleepClause->setChecked(slpCls);
-    sleepClause->setDisabled(true);
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        this->clauses[i]->setChecked(clauses & (1 << i));
+        this->clauses[i]->setDisabled(true);
+    }
 }

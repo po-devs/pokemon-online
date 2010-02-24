@@ -82,7 +82,7 @@ public:
         BattleEnd,
         BlankMessage,
         CancelMove,
-        SleepClause,
+        Clause,
         DynamicInfo,
         DynamicStats,
         Spectating,

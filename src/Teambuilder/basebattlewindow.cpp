@@ -403,15 +403,15 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
     case BlankMessage:
             printLine("");
             break;
-    case SleepClause:
+    case Clause:
         {
             bool inBattle;
             in >> inBattle;
 
             if (inBattle) {
-                printLine(tr("Sleep Clause prevented %1 from falling asleep!").arg(nick(spot)));
+                printLine(ChallengeInfo::battleText(spot));
             } else {
-                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + tr("Sleep Clause Enabled."));
+                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(spot));
             }
             break;
         }

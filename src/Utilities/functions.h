@@ -83,6 +83,14 @@ inline int true_rand() {
     return rand() + (clock())/(CLOCKS_PER_SEC/1000);
 }
 
+inline int intlog2(unsigned x) {
+    int i;
+    for (i = 0; x > 1; i++) {
+        x/= 2;
+    }
+    return i;
+}
+
 QString md5_hash(const QString &toHash);
 
 void createIntMapper(QObject *src, const char *signal, QObject *dest, const char *slot, int id);

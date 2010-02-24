@@ -2,6 +2,7 @@
 #define CHALLENGE_H
 
 #include <QtGui>
+#include "../PokemonInfo/battlestructs.h"
 
 class PlayerInfo;
 
@@ -23,8 +24,9 @@ public slots:
     void onChallenge();
     void onCancel();
 protected:
-    QCheckBox *sleepClause;
     QPushButton *challenge_b;
+
+    QCheckBox *clauses[ChallengeInfo::numberOfClauses];
 private:
     int myid;
 
@@ -44,7 +46,7 @@ class ChallengedWindow: public BaseChallengeWindow
 {
     Q_OBJECT
 public:
-    ChallengedWindow(const PlayerInfo &p, bool slpCls, QWidget *parent = 0);
+    ChallengedWindow(const PlayerInfo &p, quint32 clauses, QWidget *parent = 0);
 };
 
 #endif // CHALLENGE_H

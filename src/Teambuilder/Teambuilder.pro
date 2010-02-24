@@ -1,6 +1,6 @@
 QT += network \
     xml
-TARGET = Teambuilder
+TARGET = Pokemon-Online
 DESTDIR = ../../bin
 TEMPLATE = app
 SOURCES += main.cpp \
@@ -56,3 +56,4 @@ DEFINES = CLIENT_SIDE
 FORMS += controlpanel.ui
 TRANSLATIONS = translation_fr.ts \
     translation_pt-br.ts
+RC_FILE = myapp.rc

@@ -2,6 +2,24 @@
 #include "pokemoninfo.h"
 #include "networkstructs.h"
 
+QString ChallengeInfo::clauseText[5] =
+{
+    QObject::tr("Sleep Clause"),
+    QObject::tr("Freeze Clause"),
+    QObject::tr("Evasion Clause"),
+    QObject::tr("OHKO Clause"),
+    QObject::tr("Disallow Specators")
+};
+
+QString ChallengeInfo::clauseBattleText[5] =
+{
+    QObject::tr("Sleep Clause prevented the sleep inducing effect of the move from working."),
+    QObject::tr("Freeze Clause prevented the freezing effect of the move from working."),
+    QObject::tr("Evasion Clause prevented the evasion increase of the move."),
+    QObject::tr("OHKO Clause prevented the One Hit KO from happening."),
+    QObject::tr("")
+};
+
 BattleMove::BattleMove()
 {
     num() = 0;
@@ -362,11 +380,11 @@ QDataStream & operator << (QDataStream &out, const BattleChoice &po)
 }
 
 QDataStream & operator >> (QDataStream &in, ChallengeInfo & c) {
-    in >> c.dsc >> c.opp >> c.sleepClauseEnabled;
+    in >> c.dsc >> c.opp >> c.clauses;
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const ChallengeInfo & c) {
-    out << c.dsc <<  c.opp << c.sleepClauseEnabled;
+    out << c.dsc <<  c.opp << c.clauses;
     return out;
 }
