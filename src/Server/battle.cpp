@@ -481,18 +481,22 @@ void BattleSituation::analyzeChoices()
     qDebug() << "Starting analyzing choices";
     /* If there's no choice then the effects are already taken care of */
     if (!turnlong[Player1].contains("NoChoice") && choice[Player1].attack() && !options[Player1].struggle()) {
-        qDebug() << "Player " << id(Player1) << " chose to attack with slot " << choice[Player1].numSwitch;
+        qDebug() << "Player1 " << id(Player1) << " chose to attack with slot " << choice[Player1].numSwitch;
         MoveEffect::setup(move(Player1,choice[Player1].numSwitch), Player1, Player2, *this);
     }
+    qDebug() << "Going to the choice of player 2";
     if (!turnlong[Player2].contains("NoChoice") && choice[Player2].attack() && !options[Player2].struggle()) {
-        qDebug() << "Player " << id(Player2) << " chose to attack with slot " << choice[Player2].numSwitch;
+        qDebug() << "Player2 " << id(Player2) << " chose to attack with slot " << choice[Player2].numSwitch;
 	MoveEffect::setup(move(Player2,choice[Player2].numSwitch), Player2, Player1, *this);
     }
+    qDebug() << "Finished basic setup";
 
     std::map<int, std::vector<int>, std::greater<int> > priorities;
     std::vector<int> switches;
 
     std::vector<int> playersByOrder = sortedBySpeed();
+
+    qDebug() << "SortedBySpeed: " << id(playersByOrder[0]) << " " << id(playersByOrder[1]);
 
     foreach(int i, playersByOrder) {
 	if (choice[i].poke())
@@ -500,6 +504,8 @@ void BattleSituation::analyzeChoices()
 	else
             priorities[turnlong[i]["SpeedPriority"].toInt()].push_back(i);
     }
+
+    qDebug() << "Number of switches: " << switches.size();
 
     foreach(int player, switches) {
 	analyzeChoice(player);
@@ -528,6 +534,7 @@ void BattleSituation::analyzeChoices()
             }
         }
     }
+    qDebug() << "End of Analyzing choices";
 }
 
 void BattleSituation::notifySub(int player, bool sub)
