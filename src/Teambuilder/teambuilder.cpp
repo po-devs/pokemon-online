@@ -210,6 +210,14 @@ void TeamBuilder::loadTeam()
     }
 }
 
+void TeamBuilder::newTeam()
+{
+    for (int i = 0; i < 6; i++) {
+        team()->poke(i) = PokeTeam();
+    }
+    updateTeam();
+}
+
 void TeamBuilder::clickOnDone()
 {
     emit done();
@@ -237,6 +245,7 @@ QMenuBar * TeamBuilder::createMenuBar(QMainWindow *w)
 {
     QMenuBar *menuBar = new QMenuBar();
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
+    menuFichier->addAction(tr("&New Team"),this,SLOT(newTeam()),Qt::CTRL+Qt::Key_N);
     menuFichier->addAction(tr("&Save Team"),this,SLOT(saveTeam()),Qt::CTRL+Qt::Key_S);
     menuFichier->addAction(tr("&Load Team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
