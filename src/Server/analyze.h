@@ -26,7 +26,7 @@ namespace NetworkServ
 	ChallengeStuff,
 	EngageBattle,
 	BattleFinished,
-	BattleMessage,
+        BattleMessage = 10,
 	BattleChat,
         KeepAlive,
         AskForPass,
