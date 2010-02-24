@@ -16,7 +16,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
     mycurrentpoke[0] = -1;
     mycurrentpoke[1] = -1;
     finished() = false;
-    sleepClause() = c.sleepClause();
+    clauses() = c.clauses;
     currentForcedSleepPoke[0] = -1;
     currentForcedSleepPoke[1] = -1;
     p1.battle = this;
@@ -51,10 +51,13 @@ void BattleSituation::start()
         }
     }
 
-    if (sleepClause()) {
+
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         //False for saying this is not in battle message but rule message
-        notify(All, SleepClause, 0, false);
+        if (clauses() & (1 << i))
+            notify(All, Clause, i, false);
     }
+
 
     notify(All, BlankMessage,0);
 
@@ -84,7 +87,12 @@ int BattleSituation::spot(int id) const
 
 bool BattleSituation::acceptSpectator(int id) const
 {
-    return !spectators.contains(spectatorKey(id)) && this->id(0) != id && this->id(1) != id;
+    return !(clauses() & ChallengeInfo::DisallowSpectator) && !spectators.contains(spectatorKey(id)) && this->id(0) != id && this->id(1) != id;
+}
+
+void BattleSituation::notifyClause(int clause, bool active)
+{
+    notify(All, Clause,active? intlog2(clause) : clause, active);
 }
 
 void BattleSituation::addSpectator(int id)
@@ -93,9 +101,12 @@ void BattleSituation::addSpectator(int id)
     int key = spectatorKey(id);
     spectators[key] = id;
 
-    if (sleepClause()) {
-        notify(key, SleepClause, 0, false);
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        //False for saying this is not in battle message but rule message
+        if (clauses() & (1 << i))
+            notify(key, Clause, i, false);
     }
+
 
     notify(All, Spectating, 0, true, qint32(id));
     notify(key, BlankMessage, 0);
@@ -1339,6 +1350,10 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 		    char sep = *ptr;
     
 		    if (sep == '+') {
+                        if (stat == Evasion && (clauses() & ChallengeInfo::EvasionClause)) {
+                            notifyClause(ChallengeInfo::EvasionClause);
+                            continue;
+                        }
 			gainStatMod(targeted, stat, mod);
 		    } else if (sep == '-') {
                         loseStatMod(targeted, stat, mod, player);
@@ -1413,11 +1428,24 @@ void BattleSituation::inflictStatus(int player, int status, int attacker)
                 return;
             }
 
-            if (sleepClause() && status == Pokemon::Asleep && currentForcedSleepPoke[player] != -1) {
-                notify(All, SleepClause, player, true);
-                return;
-            } else {
-                currentForcedSleepPoke[player] = currentPoke(player);
+            if (status == Pokemon::Asleep)
+            {
+                if (sleepClause() && currentForcedSleepPoke[player] != -1) {
+                    notifyClause(ChallengeInfo::SleepClause, true);
+                    return;
+                } else {
+                    currentForcedSleepPoke[player] = currentPoke(player);
+                }
+            } else if (status == Pokemon::Frozen)
+            {
+                if (clauses() & ChallengeInfo::FreezeClause) {
+                    for (int i = 0; i < 6; i++) {
+                        if (poke(player,i).status() == Pokemon::Frozen) {
+                            notifyClause(ChallengeInfo::FreezeClause);
+                            return;
+                        }
+                    }
+                }
             }
         }
         changeStatus(player, status);

@@ -182,18 +182,41 @@ struct ChallengeInfo
         ChallengeDescLast
     };
 
-    bool sleepClauseEnabled;
+    enum Clauses
+    {
+        SleepClause = 1,
+        FreezeClause = 2,
+        EvasionClause = 4,
+        OHKOClause = 8,
+        DisallowSpectator = 16
+    };
+
+    static const int numberOfClauses = 5;
+
+    static QString clauseText[numberOfClauses];
+    static QString clauseBattleText[numberOfClauses];
+
+    static QString clause(int index) {
+        return index >= 0 && index < numberOfClauses ? clauseText[index] : "";
+    }
+    
+    static QString battleText(int index) {
+        return index >= 0 && index < numberOfClauses ? clauseBattleText[index] : "";
+    }
+
+    quint32 clauses;
+
     qint8 dsc;
     qint32 opp;
 
-    explicit ChallengeInfo(int desc=0, int opponent=0, bool sleepClauseEnabled = true)
-        : sleepClauseEnabled(sleepClauseEnabled), dsc(desc), opp(opponent)
+    explicit ChallengeInfo(int desc=0, int opponent=0, quint32 clauses = SleepClause)
+        : clauses(clauses), dsc(desc), opp(opponent)
     {
     }
 
     int opponent() const {return opp;}
     qint8 desc() const { return dsc;}
-    bool sleepClause() const {return sleepClauseEnabled;}
+    bool sleepClause() const {return clauses & SleepClause;}
 
     operator int () const {
         return opponent();

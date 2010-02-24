@@ -163,7 +163,9 @@ enum Stat
     Defense,
     Speed,
     SpAttack,
-    SpDefense = 5
+    SpDefense,
+    Evasion,
+    Accuracy
 };
 
 class PokeBaseStats

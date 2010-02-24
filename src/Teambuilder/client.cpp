@@ -371,7 +371,7 @@ void Client::seeChallenge(const ChallengeInfo &c)
             d.dsc = ChallengeInfo::Busy;
             relay().sendChallengeStuff(c);
         } else {
-            mychallenge = new ChallengedWindow(player(c),c.sleepClause());
+            mychallenge = new ChallengedWindow(player(c),c.clauses);
 	    connect(mychallenge, SIGNAL(challenge(int)), SLOT(acceptChallenge(int)));
 	    connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
 	    connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
@@ -545,7 +545,13 @@ void Client::refuseChallenge(int id)
 void Client::sendChallenge(int id)
 {
     QSettings s;
-    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Sent, id, s.value("sleep_clause").toBool()));
+
+    quint32 clauses = 0;
+
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        clauses |= s.value("clause_"+ChallengeInfo::clause(i)).toBool() ? (1 << i) : 0;
+    }
+    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Sent, id, clauses));
 }
 
 void Client::clearChallenge()

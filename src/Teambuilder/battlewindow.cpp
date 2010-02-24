@@ -601,15 +601,15 @@ void BattleWindow::receiveInfo(QByteArray inf)
             printHtml(toBoldColor(client()->name(id), Qt::blue) + ": " + escapeHtml(message));
             break;
         }
-    case SleepClause:
+    case Clause:
         {
             bool inBattle;
             in >> inBattle;
 
             if (inBattle) {
-                printLine(tr("Sleep Clause prevented %1 from falling asleep!").arg(nick(self)));
+                printLine(ChallengeInfo::battleText(player));
             } else {
-                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + tr("Sleep Clause Enabled."));
+                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(player));
             }
             break;
         }

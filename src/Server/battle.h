@@ -13,7 +13,7 @@ class BattleSituation : public QThread
     PROPERTY(int, turn);
     PROPERTY(int , publicId);
     PROPERTY(bool, finished);
-    PROPERTY(bool, sleepClause);
+    PROPERTY(quint32, clauses);
 public:
     enum {
 	AllButPlayer = -2,
@@ -38,6 +38,15 @@ public:
 
     bool acceptSpectator(int id) const;
     void addSpectator(int id);
+
+    bool sleepClause() const {
+        return clauses() & ChallengeInfo::SleepClause;
+    }
+    bool OHKOClause() const {
+        return clauses() & ChallengeInfo::OHKOClause;
+    }
+
+    void notifyClause(int clause, bool active = true);
 
     void removeSpectator(int id);
 
@@ -186,7 +195,7 @@ public:
         BattleEnd,
         BlankMessage,
         CancelMove,
-        SleepClause,
+        Clause,
         DynamicInfo,
         DynamicStats,
         Spectating,
