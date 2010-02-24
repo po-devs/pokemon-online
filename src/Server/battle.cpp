@@ -519,27 +519,21 @@ void BattleSituation::analyzeChoices()
     std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
 
     for (it = priorities.begin(); it != priorities.end(); ++it) {
-        qDebug() << "Iterating over priorities";
-        qDebug() << "Value: " << it->first;
-        qDebug() << "Size: " << it->second.size();
 	/* There's another priority system: Ability stall, and Item lagging tail */
         std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
 
         foreach (int player, it->second) {
             qDebug() << "Stating calling TurnOrder for " << id(player) << "(" << player << ")" ;
             callaeffects(player,player, "TurnOrder");
-            qDebug() << "Items";
 	    callieffects(player,player, "TurnOrder");
-            qDebug() << "Turn Effect";
-            calleffects(player,player, "TurnOrder");
+            /* Dont add a calleffect(TurnOrder): if one of the previous
+                works then turnlong[source] would contain the value and not
+                a function and when trying to call the function it'd crash. */
             qDebug() << "Turn order is " << turnlong[player]["TurnOrder"].toInt();
             secondPriorities[turnlong[player]["TurnOrder"].toInt()].push_back(player);
 	}
 
         for(std::map<int, std::vector<int> >::iterator it = secondPriorities.begin(); it != secondPriorities.end(); ++it) {
-            qDebug() << "Iterating over second priorities";
-            qDebug() << "Value: " << it->first;
-            qDebug() << "Size: " << it->second.size();
             foreach(int p, it->second) {
                 analyzeChoice(p);
             }
