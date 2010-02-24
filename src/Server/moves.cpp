@@ -207,6 +207,8 @@ struct MMBatonPass : public MM
 	c.remove("Minimize");
 	c.remove("DefenseCurl");
 	c.remove("Ability");
+        c.remove("AbilityArg");
+        c.remove("ItemArg");
 	c.remove("Weight");
 	/* removing last resort memory */
 	c.remove("Move0Used");
