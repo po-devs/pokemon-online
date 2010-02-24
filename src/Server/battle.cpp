@@ -296,8 +296,10 @@ void BattleSituation::endTurnStatus()
 
 void BattleSituation::testquit()
 {
-    if (quit)
+    if (quit) {
+        qDebug() << "Quit required in battle";
 	throw QuitException();
+    }
 }
 
 bool BattleSituation::requestChoice(int player, bool acquire, bool custom)
@@ -421,6 +423,7 @@ bool BattleSituation::isMovePossible(int player, int move)
 
 void BattleSituation::analyzeChoice(int player)
 {
+    qDebug() << "Analyzing choice of " << id(player);
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice[player].attack()) {
         if (!koed(player) && !turnlong[player].value("HasMoved").toBool() && !turnlong[player].value("CantGetToMove").toBool()) {
@@ -944,7 +947,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	pokelong[player][QString("Move%1Used").arg(move)] = true;
     }
 
-    qDebug() << "move " << MoveInfo::Name(attack) << " used by " << player;
+    qDebug() << "move " << MoveInfo::Name(attack) << " used by " << id(player);
 
     turnlong[player]["HasMoved"] = true;
 
@@ -1899,7 +1902,7 @@ void BattleSituation::changeHp(int player, int newHp)
 
 void BattleSituation::koPoke(int player, int source, bool straightattack)
 {
-    qDebug() << "koed poke from player: ";
+    qDebug() << "koed poke from player: " << id(player);
     qDebug() << "Poke name: " << poke(player).nick() << " " << currentPoke(player);
 
     if (poke(player).ko()) {
@@ -1927,6 +1930,8 @@ void BattleSituation::requestSwitchIns()
         return;
     }
 
+    qDebug() << "Request a switch in : " << count;
+
     notifyInfos();
 
     foreach(int p, koedPokes) {
@@ -1947,6 +1952,7 @@ void BattleSituation::requestSwitchIns()
 	callEntryEffects(p);
     }
 
+    qDebug() << "Recursive call to requestSwitchIn";
     /* Recursive call */
     requestSwitchIns();
 }
