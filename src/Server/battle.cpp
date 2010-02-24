@@ -29,6 +29,7 @@ BattleSituation::~BattleSituation()
 {
     /* releases the thread */
     {
+        qDebug() << "Destruction of a battle.";
 	/* So the thread will quit immediately after being released */
 	quit = true;
         /* Should be enough */
@@ -446,6 +447,7 @@ void BattleSituation::analyzeChoice(int player)
 	sendPoke(player, choice[player].numSwitch);
     }
     notify(All, BlankMessage, Player1);
+    qDebug() << "End of analyzing";
 }
 
 std::vector<int> BattleSituation::sortedBySpeed() {
@@ -476,11 +478,16 @@ std::vector<int> BattleSituation::sortedBySpeed() {
 
 void BattleSituation::analyzeChoices()
 {
+    qDebug() << "Starting analyzing choices";
     /* If there's no choice then the effects are already taken care of */
-    if (!turnlong[Player1].contains("NoChoice") && choice[Player1].attack())
-	MoveEffect::setup(move(Player1,choice[Player1].numSwitch), Player1, Player2, *this);
-    if (!turnlong[Player2].contains("NoChoice") && choice[Player2].attack())
+    if (!turnlong[Player1].contains("NoChoice") && choice[Player1].attack() && !options[Player1].struggle()) {
+        qDebug() << "Player " << id(Player1) << " chose to attack with slot " << choice[Player1].numSwitch;
+        MoveEffect::setup(move(Player1,choice[Player1].numSwitch), Player1, Player2, *this);
+    }
+    if (!turnlong[Player2].contains("NoChoice") && choice[Player2].attack() && !options[Player2].struggle()) {
+        qDebug() << "Player " << id(Player2) << " chose to attack with slot " << choice[Player2].numSwitch;
 	MoveEffect::setup(move(Player2,choice[Player2].numSwitch), Player2, Player1, *this);
+    }
 
     std::map<int, std::vector<int>, std::greater<int> > priorities;
     std::vector<int> switches;
