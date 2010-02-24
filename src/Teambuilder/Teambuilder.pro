@@ -55,5 +55,7 @@ LIBS += -L../../bin \
 DEFINES = CLIENT_SIDE
 FORMS += controlpanel.ui
 TRANSLATIONS = translation_fr.ts \
-    translation_pt-br.ts
+    translation_pt-br.ts \
+    translation_sp.ts \
+    translation_it.ts
 RC_FILE = myapp.rc

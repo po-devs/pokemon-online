@@ -8,7 +8,7 @@ QString ChallengeInfo::clauseText[5] =
     QObject::tr("Freeze Clause"),
     QObject::tr("Evasion Clause"),
     QObject::tr("OHKO Clause"),
-    QObject::tr("Disallow Specators")
+    QObject::tr("Disallow Spectators")
 };
 
 QString ChallengeInfo::clauseBattleText[5] =
@@ -153,11 +153,11 @@ void PokeBattle::init(const PokePersonal &poke)
 	}
     }
 
-    totalLifePoints() = std::max(PokemonInfo::FullStat(poke.num(), poke.nature(), Hp, p.baseStats().baseHp(), poke.level(), poke.hpDV(), evs[Hp]),1);
+    totalLifePoints() = std::max(PokemonInfo::FullStat(num(), poke.nature(), Hp, p.baseStats().baseHp(), level(), dvs()[Hp], evs[Hp]),1);
     lifePoints() = totalLifePoints();
 
     for (int i = 0; i < 5; i++) {
-        normal_stats[i] = PokemonInfo::FullStat(poke.num(), poke.nature(), i+1, p.baseStats().baseStat(i+1), poke.level(), poke.DV(i+1), evs[i+1]);
+        normal_stats[i] = PokemonInfo::FullStat(num(), poke.nature(), i+1, p.baseStats().baseStat(i+1), level(), dvs()[i+1], evs[i+1]);
     }
 }
 

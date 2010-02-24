@@ -18,8 +18,8 @@ PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QS
     l->addWidget(m_mainwindow, 0,0,1,2);
     l->addWidget(m_textToSend, 1,0,1,2);
 
-    m_challenge = new QPushButton("&Challenge");
-    m_send = new QPushButton("&Send");
+    m_challenge = new QPushButton(tr("&Challenge"));
+    m_send = new QPushButton(tr("&Send"));
 
     l->addWidget(m_challenge,2,0);
     l->addWidget(m_send,2,1);

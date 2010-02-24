@@ -63,6 +63,7 @@ private slots:
 public slots:
     void saveTeam();
     void loadTeam();
+    void newTeam();
     void clickOnDone();
     void updateTeam();
 
