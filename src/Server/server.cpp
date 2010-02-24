@@ -765,7 +765,8 @@ void Server::spectatingStopped(int id, int idOfBattle)
 void Server::removePlayer(int id)
 {
     if (playerExist(id))
-    {        
+    {
+        qDebug() << "Starting removing player " << id;
 	Player *p = player(id);
         bool loggedIn = p->isLoggedIn();
 
