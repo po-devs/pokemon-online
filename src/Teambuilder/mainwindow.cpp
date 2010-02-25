@@ -130,7 +130,7 @@ void MainWindow::changeLanguage()
 
     setting.setValue("language",lang);
 
-    QMessageBox::information(this, tr("Language Change"), tr("Restart the application to the changes."));
+    QMessageBox::information(this, tr("Language Change"), tr("Restart the application to see the changes."));
 }
 
 void MainWindow::goOnline(const QString &url)
@@ -140,6 +140,12 @@ void MainWindow::goOnline(const QString &url)
     setMenuBar(m_client->createMenuBar(this));
 
     connect(m_client, SIGNAL(done()), SLOT(launchMenu()));
+    connect(m_client, SIGNAL(updateMenuBar()), SLOT(updateMenuBar()));
+}
+
+void MainWindow::updateMenuBar()
+{
+    setMenuBar(m_client->createMenuBar(this));
 }
 
 void MainWindow::loadTeam(const QString &path)

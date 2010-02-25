@@ -1252,7 +1252,7 @@ void BattleSituation::inflictRecoil(int source, int target)
         return;
 
     notify(All, Recoil, source);
-    inflictDamage(source, turnlong[target]["DamageTakenByAttack"].toInt()/recoil, source);
+    inflictDamage(source, turnlong[source].value("DamageInflicted").toInt()/recoil, source);
 }
 
 void BattleSituation::applyMoveStatMods(int player, int target)
