@@ -3,25 +3,36 @@
 #include "../Utilities/otherwidgets.h"
 #include "client.h"
 
+BaseBattleInfo::BaseBattleInfo(const QString &me, const QString &opp)
+{
+    name[0] = me;
+    name[1] = opp;
+    sub[0] = false;
+    sub[1] = false;
+    pokeAlive[0] = false;
+    pokeAlive[1] = false;
+}
+
 BaseBattleWindow::BaseBattleWindow(const QString &me, const QString &opponent)
 {
+    myInfo = new BaseBattleInfo(me, opponent);
+    mydisplay = new BaseBattleDisplay(info());
+    init();
+    show();
+}
+
+void BaseBattleWindow::init()
+{
+    setAttribute(Qt::WA_DeleteOnClose, true);
     QToolTip::setFont(QFont("Verdana",10));
+
     blankMessage = false;
     battleEnded = false;
 
-    info().name[0] = me;
-    info().name[1] = opponent;
-    info().sub[0] = false;
-    info().sub[1] = false;
-    info().pokeAlive[0] = false;
-    info().pokeAlive[1] = false;
+    setWindowTitle(tr("Battle between %1 and %2").arg(info().name[0], info().name[1]));
+    mylayout = new QGridLayout(this);
 
-    setAttribute(Qt::WA_DeleteOnClose, true);
-
-    setWindowTitle(tr("Battle between %1 and %2").arg(me, opponent));
-    QGridLayout *mylayout = new QGridLayout(this);
-
-    mylayout->addWidget(mydisplay = new BaseBattleDisplay(info()), 0, 0, 3, 2);
+    mylayout->addWidget(mydisplay, 0, 0, 3, 2);
     mylayout->addWidget(mychat = new QScrollDownTextEdit(), 0, 2, 1, 2);
     mylayout->addWidget(myline = new QLineEdit(), 1, 2, 1, 2);
     mylayout->addWidget(myclose = new QPushButton(tr("&Close")), 2, 2);
@@ -31,10 +42,9 @@ BaseBattleWindow::BaseBattleWindow(const QString &me, const QString &opponent)
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
 
-    show();
-
     printHtml(toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(name(true), name(false)));
     layout()->setSizeConstraint(QLayout::SetFixedSize);
+
 }
 
 QString BaseBattleWindow::name(int spot) const
@@ -200,7 +210,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                 printHtml(toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(spot)))), TypeInfo::Color(Move::Ghost).name()));
                 break;
      case HurtConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("It hurt itspot in its confusion!"))), TypeInfo::Color(Move::Ghost).name()));
+                printHtml(toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), TypeInfo::Color(Move::Ghost).name()));
                 break;
      case FreeConfusion:
                 printHtml(toColor(escapeHtml(tu(tr("%1 snapped out its confusion!").arg(nick(spot)))), TypeInfo::Color(Move::Dark).name()));
@@ -449,8 +459,8 @@ void BaseBattleWindow::printHtml(const QString &str)
     mychat->insertHtml(str + "<br />");
 }
 
-BaseBattleDisplay::BaseBattleDisplay(const BaseBattleInfo &i)
-    : info(i)
+BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
+    : myInfo(&i)
 {
     QVBoxLayout *l=  new QVBoxLayout(this);
 
@@ -469,7 +479,7 @@ BaseBattleDisplay::BaseBattleDisplay(const BaseBattleInfo &i)
     gender[Opponent] = new QLabel();
     foeteam->addWidget(gender[Opponent], 100, Qt::AlignRight);
 
-    nick[Opponent] = new QLabel(info.name[Opponent]);
+    nick[Opponent] = new QLabel(info().name[Opponent]);
     foeteam->addWidget(nick[Opponent], 0, Qt::AlignRight);
 
     status[Opponent] = new QLabel();
@@ -498,7 +508,7 @@ BaseBattleDisplay::BaseBattleDisplay(const BaseBattleInfo &i)
     gender[Myself] = new QLabel();
     team->addWidget(gender[Myself]);
 
-    nick[Myself] = new QLabel(info.name[Myself]);
+    nick[Myself] = new QLabel(info().name[Myself]);
     team->addWidget(nick[Myself], 0, Qt::AlignLeft);
 
     status[Myself] = new QLabel();
@@ -517,9 +527,9 @@ BaseBattleDisplay::BaseBattleDisplay(const BaseBattleInfo &i)
 
 void BaseBattleDisplay::updatePoke(int spot)
 {
-    if (info.pokeAlive[spot]) {
-        const ShallowBattlePoke &poke = info.pokes[spot];
-        zone->switchTo(poke, spot, info.sub[spot]);
+    if (info().pokeAlive[spot]) {
+        const ShallowBattlePoke &poke = info().pokes[spot];
+        zone->switchTo(poke, spot, info().sub[spot]);
         nick[spot]->setText(tr("%1 Lv.%2").arg(poke.nick()).arg(poke.level()));
         bars[spot]->setValue(poke.lifePercent());
         bars[spot]->setStyleSheet(health(poke.lifePercent()));
@@ -556,13 +566,13 @@ void BaseBattleDisplay::updateToolTip(int spot)
         stats[i] = stats[i].leftJustified(max, '.', false);
     }
 
-    const ShallowBattlePoke &poke = info.pokes[spot];
+    const ShallowBattlePoke &poke = info().pokes[spot];
 
     tooltip += poke.nick() + "\n";
 
     for (int i = 0; i < 5; i++) {
         tooltip += "\n" + stats[i] + " ";
-        int boost = info.statChanges[spot].boosts[i];
+        int boost = info().statChanges[spot].boosts[i];
         if (boost >= 0) {
             tooltip += QString("+%1").arg(boost);
         } else if (boost < 0) {
@@ -570,7 +580,7 @@ void BaseBattleDisplay::updateToolTip(int spot)
         }
     }
     for (int i = 5; i < 7; i++) {
-        int boost = info.statChanges[spot].boosts[i];
+        int boost = info().statChanges[spot].boosts[i];
         if (boost) {
             tooltip += "\n" + stats[i] + " ";
 
@@ -584,7 +594,7 @@ void BaseBattleDisplay::updateToolTip(int spot)
 
     tooltip += "\n";
 
-    int flags = info.statChanges[spot].flags;
+    int flags = info().statChanges[spot].flags;
 
     int spikes[3] = {BattleDynamicInfo::Spikes, BattleDynamicInfo::SpikesLV2 ,BattleDynamicInfo::SpikesLV3};
     for (int i = 0; i < 3; i++) {
@@ -619,7 +629,7 @@ void BaseBattleDisplay::changeStatus(int spot, int poke, int status) {
 
 QString BaseBattleDisplay::health(int lifePercent)
 {
-    return lifePercent > 50 ? "::chunk{background-color: #05B8CC;}" : (lifePercent >= 34 ? "::chunk{background-color: #F8DB17;}" : "::chunk{background-color: #D40202;}");
+    return lifePercent > 50 ? "::chunk{background-color: #05B8CC;}" : (lifePercent >= 26 ? "::chunk{background-color: #F8DB17;}" : "::chunk{background-color: #D40202;}");
 }
 
 BaseGraphicsZone::BaseGraphicsZone()

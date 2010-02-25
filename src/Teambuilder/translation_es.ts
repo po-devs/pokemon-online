@@ -17,12 +17,12 @@
 <context>
     <name>AttackButton</name>
     <message>
-        <location filename="battlewindow.cpp" line="738"/>
+        <location filename="battlewindow.cpp" line="436"/>
         <source>%1/%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="741"/>
+        <location filename="battlewindow.cpp" line="439"/>
         <source>%1
 
 Power: %2
@@ -37,22 +37,22 @@ Effect: %5</source>
 <context>
     <name>BaseBattleDisplay</name>
     <message>
-        <location filename="basebattlewindow.cpp" line="523"/>
+        <location filename="basebattlewindow.cpp" line="533"/>
         <source>%1 Lv.%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="592"/>
+        <location filename="basebattlewindow.cpp" line="602"/>
         <source>Spikes level %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="600"/>
+        <location filename="basebattlewindow.cpp" line="610"/>
         <source>Toxic Spikes level %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="606"/>
+        <location filename="basebattlewindow.cpp" line="616"/>
         <source>Stealth Rock</source>
         <translation type="unfinished"></translation>
     </message>
@@ -60,307 +60,307 @@ Effect: %5</source>
 <context>
     <name>BaseBattleWindow</name>
     <message>
-        <location filename="basebattlewindow.cpp" line="21"/>
+        <location filename="basebattlewindow.cpp" line="32"/>
         <source>Battle between %1 and %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="27"/>
+        <location filename="basebattlewindow.cpp" line="38"/>
         <source>&amp;Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="28"/>
+        <location filename="basebattlewindow.cpp" line="39"/>
         <source>Sen&amp;d</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="36"/>
+        <location filename="basebattlewindow.cpp" line="45"/>
         <source>Battle between %1 and %2 started!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="47"/>
+        <location filename="basebattlewindow.cpp" line="57"/>
         <source>%1&apos;s %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="100"/>
+        <location filename="basebattlewindow.cpp" line="110"/>
         <source>%1 sent out %2!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="105"/>
+        <location filename="basebattlewindow.cpp" line="115"/>
         <source>%1 called %2 back!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="113"/>
+        <location filename="basebattlewindow.cpp" line="123"/>
         <source>%1 used %2!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="121"/>
+        <location filename="basebattlewindow.cpp" line="131"/>
         <source>Start of turn %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="133"/>
+        <location filename="basebattlewindow.cpp" line="143"/>
         <source>%1 fainted!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="137"/>
+        <location filename="basebattlewindow.cpp" line="147"/>
         <source>Hit!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="145"/>
+        <location filename="basebattlewindow.cpp" line="155"/>
         <source>It had no effect!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="149"/>
+        <location filename="basebattlewindow.cpp" line="159"/>
         <source>It&apos;s not very effective...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="153"/>
+        <location filename="basebattlewindow.cpp" line="163"/>
         <source>It&apos;s super effective!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="160"/>
+        <location filename="basebattlewindow.cpp" line="170"/>
         <source>A critical hit!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="163"/>
+        <location filename="basebattlewindow.cpp" line="173"/>
         <source>The attack of %1 missed!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="169"/>
+        <location filename="basebattlewindow.cpp" line="179"/>
         <source>%1&apos;s %2 %3%4!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="169"/>
+        <location filename="basebattlewindow.cpp" line="179"/>
         <source>sharply </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="169"/>
+        <location filename="basebattlewindow.cpp" line="179"/>
         <source>rose</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="169"/>
+        <location filename="basebattlewindow.cpp" line="179"/>
         <source>fell</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="174"/>
+        <location filename="basebattlewindow.cpp" line="184"/>
         <source>%1 is paralyzed! It may be unable to move!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="175"/>
+        <location filename="basebattlewindow.cpp" line="185"/>
         <source>%1 was burned!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="176"/>
+        <location filename="basebattlewindow.cpp" line="186"/>
         <source>%1 was frozen solid!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="177"/>
+        <location filename="basebattlewindow.cpp" line="187"/>
         <source>%1 fell asleep!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="178"/>
+        <location filename="basebattlewindow.cpp" line="188"/>
         <source>%1 was poisoned!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="179"/>
+        <location filename="basebattlewindow.cpp" line="189"/>
         <source>%1 was badly poisoned!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="187"/>
+        <location filename="basebattlewindow.cpp" line="197"/>
         <source>%1 became confused!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="200"/>
+        <location filename="basebattlewindow.cpp" line="210"/>
         <source>%1 is confused!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="203"/>
+        <location filename="basebattlewindow.cpp" line="213"/>
         <source>It hurt itspot in its confusion!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="206"/>
+        <location filename="basebattlewindow.cpp" line="216"/>
         <source>%1 snapped out its confusion!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="209"/>
+        <location filename="basebattlewindow.cpp" line="219"/>
         <source>%1 is paralyzed! It can&apos;t move!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="212"/>
+        <location filename="basebattlewindow.cpp" line="222"/>
         <source>%1 is fast asleep!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="215"/>
+        <location filename="basebattlewindow.cpp" line="225"/>
         <source>%1 woke up!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="218"/>
+        <location filename="basebattlewindow.cpp" line="228"/>
         <source>%1 is hurt by its burn!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="221"/>
+        <location filename="basebattlewindow.cpp" line="231"/>
         <source>%1 is hurt by poison!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="224"/>
+        <location filename="basebattlewindow.cpp" line="234"/>
         <source>%1 is frozen solid!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="227"/>
+        <location filename="basebattlewindow.cpp" line="237"/>
         <source>%1 thawed out!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="233"/>
+        <location filename="basebattlewindow.cpp" line="243"/>
         <source>But it failed!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="247"/>
+        <location filename="basebattlewindow.cpp" line="257"/>
         <source>%1 is watching the battle.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="247"/>
+        <location filename="basebattlewindow.cpp" line="257"/>
         <source>%1 stopped watching the battle.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="283"/>
+        <location filename="basebattlewindow.cpp" line="293"/>
         <source>But there is no target pokÃ©mon!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="301"/>
+        <location filename="basebattlewindow.cpp" line="311"/>
         <source>%1 flinched!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="304"/>
+        <location filename="basebattlewindow.cpp" line="314"/>
         <source>%1 is hit with recoil!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="315"/>
+        <location filename="basebattlewindow.cpp" line="325"/>
         <source>The hail stopped!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="316"/>
+        <location filename="basebattlewindow.cpp" line="326"/>
         <source>The sandstorm stopped!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="317"/>
+        <location filename="basebattlewindow.cpp" line="327"/>
         <source>The sunlight faded!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="318"/>
+        <location filename="basebattlewindow.cpp" line="328"/>
         <source>The rain stopped!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="322"/>
+        <location filename="basebattlewindow.cpp" line="332"/>
         <source>%1 is buffeted by the hail!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="323"/>
+        <location filename="basebattlewindow.cpp" line="333"/>
         <source>%1 is buffeted by the sandstorm!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="327"/>
+        <location filename="basebattlewindow.cpp" line="337"/>
         <source>A hailstorm whipped up!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="328"/>
+        <location filename="basebattlewindow.cpp" line="338"/>
         <source>A sandstorm whipped up!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="329"/>
+        <location filename="basebattlewindow.cpp" line="339"/>
         <source>The sunlight became harsh!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="330"/>
+        <location filename="basebattlewindow.cpp" line="340"/>
         <source>It&apos;s started to rain!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="334"/>
+        <location filename="basebattlewindow.cpp" line="344"/>
         <source>Hail continues to fall!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="335"/>
+        <location filename="basebattlewindow.cpp" line="345"/>
         <source>The sandstorm rages!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="336"/>
+        <location filename="basebattlewindow.cpp" line="346"/>
         <source>The sunlight is strong!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="337"/>
+        <location filename="basebattlewindow.cpp" line="347"/>
         <source>Rain continues to fall!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="346"/>
+        <location filename="basebattlewindow.cpp" line="356"/>
         <source>%1 lost %2% of its health!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="397"/>
+        <location filename="basebattlewindow.cpp" line="407"/>
         <source>Tie between %1 and %2!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="399"/>
+        <location filename="basebattlewindow.cpp" line="409"/>
         <source>%1 won the battle!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="414"/>
+        <location filename="basebattlewindow.cpp" line="424"/>
         <source>Rule: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -381,23 +381,17 @@ Effect: %5</source>
 <context>
     <name>BattleDisplay</name>
     <message>
-        <location filename="battlewindow.cpp" line="860"/>
-        <location filename="battlewindow.cpp" line="878"/>
-        <source>%1 Lv.%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="973"/>
+        <location filename="battlewindow.cpp" line="572"/>
         <source>Spikes level %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="981"/>
+        <location filename="battlewindow.cpp" line="580"/>
         <source>Toxic Spikes level %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="987"/>
+        <location filename="battlewindow.cpp" line="586"/>
         <source>Stealth Rock</source>
         <translation type="unfinished"></translation>
     </message>
@@ -405,344 +399,64 @@ Effect: %5</source>
 <context>
     <name>BattleWindow</name>
     <message>
-        <location filename="battlewindow.cpp" line="30"/>
+        <location filename="battlewindow.cpp" line="38"/>
         <source>Battling against %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="36"/>
+        <location filename="battlewindow.cpp" line="40"/>
         <source>&amp;Forfeit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="37"/>
-        <source>Sen&amp;d</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="39"/>
+        <location filename="battlewindow.cpp" line="42"/>
         <source>&amp;Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="40"/>
-        <location filename="battlewindow.cpp" line="108"/>
+        <location filename="battlewindow.cpp" line="43"/>
+        <location filename="battlewindow.cpp" line="95"/>
         <source>&amp;Attack</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="41"/>
+        <location filename="battlewindow.cpp" line="44"/>
         <source>&amp;Switch PokÃ©mon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="67"/>
-        <source>Battle between %1 and %2 started!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="81"/>
+        <location filename="battlewindow.cpp" line="72"/>
         <source>the foe&apos;s %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="119"/>
+        <location filename="battlewindow.cpp" line="106"/>
         <source>Losing your battle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="119"/>
+        <location filename="battlewindow.cpp" line="106"/>
         <source>Do you mean to forfeit?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="235"/>
+        <location filename="battlewindow.cpp" line="242"/>
         <source>%1 sent out %2!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="241"/>
-        <source>%1 called %2 back!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="251"/>
-        <source>%1 used &lt;span style=&apos;color:%2&apos;&gt;&lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="276"/>
-        <source>Start of turn %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="battlewindow.cpp" line="294"/>
-        <source>%1 fainted!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="304"/>
-        <source>Hit!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="312"/>
-        <source>It had no effect!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="316"/>
-        <source>It&apos;s not very effective...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="320"/>
-        <source>It&apos;s super effective!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="327"/>
-        <source>A critical hit!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="330"/>
-        <source>The attack of %1 missed!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="336"/>
-        <source>%1&apos;s %2 %3%4!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="336"/>
-        <source>sharply </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="336"/>
-        <source>rose</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="336"/>
-        <source>fell</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="345"/>
-        <source>%1 fell asleep!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="348"/>
-        <source>%1 was burned!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="351"/>
-        <source>%1 is paralyzed! It may be unable to move!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="354"/>
-        <source>%1 is poisoned!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="357"/>
-        <source>%1 was badly poisoned!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="360"/>
-        <source>%1 was frozen solid!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="363"/>
-        <source>%1 became confused!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="379"/>
-        <source>%1 is confused!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="382"/>
-        <source>It hurt itself in its confusion!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="385"/>
-        <source>%1 snapped out its confusion!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="388"/>
-        <source>%1 is paralyzed! It can&apos;t move!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="391"/>
-        <source>%1 is fast asleep!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="394"/>
-        <source>%1 woke up!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="397"/>
-        <source>%1 is hurt by its burn!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="400"/>
-        <source>%1 is hurt by poison!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="403"/>
-        <source>%1 is frozen solid!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="406"/>
-        <source>%1 thawed out!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="412"/>
-        <source>But it failed!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="445"/>
-        <source>But there is no target pokÃ©mon!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="463"/>
-        <source>%1 flinched!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="466"/>
-        <source>%1 is hit with recoil!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="477"/>
-        <source>The hail stopped!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="478"/>
-        <source>The sandstorm stopped!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="479"/>
-        <source>The sunlight faded!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="480"/>
-        <source>The rain stopped!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="484"/>
-        <source>%1 is buffeted by the hail!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="485"/>
-        <source>%1 is buffeted by the sandstorm!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="489"/>
-        <source>A hailstorm whipped up!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="490"/>
-        <source>A sandstorm whipped up!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="491"/>
-        <source>The sunlight became harsh!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="492"/>
-        <source>It&apos;s started to rain!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="496"/>
-        <source>Hail continues to fall!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="497"/>
-        <source>The sandstorm rages!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="498"/>
-        <source>The sunlight is strong!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="499"/>
-        <source>Rain continues to fall!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="508"/>
         <source>%1 lost %2 HP! (%3% of its health)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="510"/>
+        <location filename="battlewindow.cpp" line="296"/>
         <source>%1 lost %2% of its health!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="567"/>
+        <location filename="battlewindow.cpp" line="323"/>
         <source>&amp;Close</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="571"/>
-        <source>Tie between %1 and %2!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="573"/>
-        <source>%1 won the battle!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="592"/>
-        <source>%1 is watching the battle.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="592"/>
-        <source>%1 stopped watching the battle.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="battlewindow.cpp" line="612"/>
-        <source>Rule: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1170,7 +884,7 @@ It is advised to use a slightly different password for each server. (The server 
 <context>
     <name>PokeButton</name>
     <message>
-        <location filename="battlewindow.cpp" line="770"/>
+        <location filename="battlewindow.cpp" line="468"/>
         <source>%1
 
 Moves:

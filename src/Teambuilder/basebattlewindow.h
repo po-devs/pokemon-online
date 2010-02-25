@@ -14,6 +14,7 @@ enum {
 
 struct BaseBattleInfo
 {
+    BaseBattleInfo(const QString & me, const QString &opp);
     /* name [0] = mine, name[1] = other */
     QString name[2];
     bool sub[2];
@@ -32,10 +33,17 @@ class BaseBattleWindow : public QWidget
 {
     Q_OBJECT
 
-    PROPERTY(BaseBattleInfo, info);
     PROPERTY(int, battleId);
     PROPERTY(Client *, client);
 public:
+    BaseBattleInfo *myInfo;
+    const BaseBattleInfo &info() const {
+        return *myInfo;
+    }
+    BaseBattleInfo &info() {
+        return *myInfo;
+    }
+
     BaseBattleWindow(const QString &me, const QString &opponent);
 
     enum BattleCommand
@@ -108,12 +116,12 @@ public:
         HurtPoison
     };
 
-    void switchToNaught(int spot);
+    virtual void switchToNaught(int spot);
 
     void printLine(const QString &str);
     void printHtml(const QString &str);
     QString name(int spot) const;
-    QString nick(int spot) const;
+    virtual QString nick(int spot) const;
     QString rnick(int spot) const;
 
 public slots:
@@ -125,9 +133,7 @@ signals:
     void battleMessage(const QString &str, int);
     void closedBW(int);
 protected:
-    void closeEvent(QCloseEvent *);
-    virtual void dealWithCommandInfo(QDataStream &s, int command, int spot);
-private:
+    QGridLayout *mylayout;
     QScrollDownTextEdit *mychat;
     QLineEdit *myline;
     BaseBattleDisplay *mydisplay;
@@ -136,8 +142,11 @@ private:
     bool blankMessage;
     bool battleEnded;
 
-    /* What can I do? */
+    BaseBattleWindow(){}
+    void init();
 
+    void closeEvent(QCloseEvent *);
+    virtual void dealWithCommandInfo(QDataStream &s, int command, int spot);
 };
 
 class BaseGraphicsZone;
@@ -146,12 +155,15 @@ class BaseBattleDisplay : public QWidget
 {
     Q_OBJECT
 public:
-    const BaseBattleInfo & info;
+    BaseBattleInfo* myInfo;
+    BaseBattleInfo &info() const {
+        return *myInfo;
+    }
 
-    BaseBattleDisplay(const BaseBattleInfo &i);
+    BaseBattleDisplay(BaseBattleInfo &i);
 
-    void updatePoke(int spot);
-    void updateToolTip(int spot);
+    virtual void updatePoke(int spot);
+    virtual void updateToolTip(int spot);
     void changeStatus(int spot, int poke, int status);
 
 protected:
@@ -193,9 +205,6 @@ public:
 
     QString tooltips[2];
 };
-
-
-
 
 /* Yeepee, at last templates */
 template <class T>

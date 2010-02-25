@@ -57,5 +57,7 @@ FORMS += controlpanel.ui
 TRANSLATIONS = translation_fr.ts \
     translation_pt-br.ts \
     translation_es.ts \
-    translation_it.ts
+    translation_it.ts \
+    translation_de.ts \
+    translation_jp.ts
 RC_FILE = myapp.rc

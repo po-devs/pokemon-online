@@ -123,9 +123,9 @@ void Client::startPM(int id)
         return;
     }
 
-    if (mypms.contains(id)) {
-        mypms[id]->raise();
-        this->activateWindow();
+    activateWindow();
+
+    if (mypms.contains(id)) {    
         return;
     }
 

@@ -12,6 +12,8 @@ class QScrollDownTextEdit;
 
 struct BattleInfo : public BaseBattleInfo
 {
+    BattleInfo(const TeamBattle &myteam, const QString &me, const QString &opp);
+
     /* Possible choices */
     bool possible;
     BattleChoices choices;
@@ -35,98 +37,32 @@ struct BattleInfo : public BaseBattleInfo
 
 class Client;
 
-class BattleWindow : public QWidget
+class BattleWindow : public BaseBattleWindow
 {
     Q_OBJECT
 
-    PROPERTY(BattleInfo, info);
     PROPERTY(BattleConfiguration, conf);
     PROPERTY(int, idme);
     PROPERTY(int, idopp);
-    PROPERTY(Client *, client);
 public:
     BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &myteam, const BattleConfiguration &conf);
+
+    BattleInfo &info() {
+        return *(BattleInfo*)(&BaseBattleWindow::info());
+    }
+
+    const BattleInfo &info() const {
+        return *(BattleInfo*)(&BaseBattleWindow::info());
+    }
 
     TeamBattle &team();
     const TeamBattle &team() const;
 
-    enum BattleCommand
-    {
-	SendOut,
-	SendBack,
-	UseAttack,
-	OfferChoice,
-	BeginTurn,
-	ChangePP,
-	ChangeHp,
-	Ko,
-	Effective, /* to tell how a move is effective */
-	Miss,
-	CriticalHit,
-	Hit, /* for moves like fury double kick etc. */
-	StatChange,
-	StatusChange,
-	StatusMessage,
-	Failed,
-	BattleChat,
-	MoveMessage,
-	ItemMessage,
-	NoOpponent,
-	Flinch,
-	Recoil,
-	WeatherMessage,
-        StraightDamage,
-        AbilityMessage,
-        AbsStatusChange,
-        Substitute,
-        BattleEnd,
-        BlankMessage,
-        CancelMove,
-        Clause,
-        DynamicInfo,
-        DynamicStats,
-        Spectating,
-        SpectatorChat
+    enum {
+        ZoneOfPokes = 6
     };
 
-    enum WeatherM
-    {
-	StartWeather,
-	ContinueWeather,
-	EndWeather,
-	HurtWeather
-    };
-
-    enum Weather
-    {
-	NormalWeather = 0,
-	Hail = 1,
-	Rain = 2,
-	SandStorm = 3,
-	Sunny = 4
-    };
-
-    enum StatusFeeling
-    {
-	FeelConfusion,
-	HurtConfusion,
-	FreeConfusion,
-	PrevParalysed,
-	PrevFrozen,
-	FreeFrozen,
-	FeelAsleep,
-	FreeAsleep,
-	HurtBurn,
-	HurtPoison
-    };
-
-    enum
-    {
-	ZoneOfPokes = 6,
-	ZoneOfNothing = 7
-    };
-
-    void switchToNaught(bool self);
+    void switchToNaught(int spot);
     void switchTo(int pokezone);
 
     /* Disable / enable buttons */
@@ -134,19 +70,14 @@ public:
     /* sends the choice */
     void sendChoice(const BattleChoice &b);
 
-    void printLine(const QString &str);
-    void printHtml(const QString &str);
-    QString name(bool self) const;
-    QString nick(bool self) const;
-    QString rnick(bool self) const;
+    QString nick(int spot) const;
 
 public slots:
-    void receiveInfo(QByteArray);
     void switchClicked(int zone);
     void attackClicked(int zone);
     void sendMessage();
     void attackButton();
-    void clickforfeit();
+    void clickClose();
     void emitCancel();
     void switchToPokeZone();
 signals:
@@ -155,77 +86,30 @@ signals:
     void forfeit();
 protected:
     void closeEvent(QCloseEvent *);
+    virtual void dealWithCommandInfo(QDataStream &s, int command, int spot);
 private:
     QStackedWidget *mystack;
     AttackZone *myazones[6];
     PokeZone *mypzone;
-    QScrollDownTextEdit *mychat;
-    QLineEdit *myline;
-    BattleDisplay *mydisplay;
-    QPushButton *myswitch, *myattack, *myforfeit, *mysend, *mycancel;
-
-    bool blankMessage;
-    bool battleEnded;
-
-    /* What can I do? */
-
+    QPushButton *myswitch, *myattack, *mycancel;
 };
 
-class GraphicsZone;
-
-class BattleDisplay : public QWidget
+class BattleDisplay : public BaseBattleDisplay
 {
     Q_OBJECT
 public:
-    const BattleInfo & info;
+    BattleDisplay(BattleInfo &i);
 
-    BattleDisplay(const BattleInfo &i);
+    void updatePoke(int spot);
+    void updateToolTip(int spot);
 
-    void updatePoke(bool self);
-    void updateToolTip(bool self);
-    void changeStatus(bool self, int poke, int status);
+    BattleInfo &info() const {
+        return *(BattleInfo *)(&BaseBattleDisplay::info());
+    }
 
 protected:
-    const PokeBattle &mypoke() const {return info.currentPoke(); }
-    const ShallowBattlePoke &foe() const {return info.pokes[Opponent]; }
-
-    QString health(int lifePercent);
-
-    GraphicsZone *zone;
-    QLabel *nick[2];
-    QLabel *status[2];
-    QProgressBar *bars[2];
-    QLabel *gender[2];
-    /* The pokeballs to indicate how well a team is doing */
-    QLabel *advpokeballs[6];
-    QLabel *mypokeballs[6];
-};
-
-/* The graphics zone, where both pokes are displayed */
-class GraphicsZone : public QGraphicsView
-{
-    Q_OBJECT
-public:
-    GraphicsZone();
-    /* displays that poke */
-    template <class T>
-    void switchTo(const T &poke, bool self, bool sub);
-    /* Display blank */
-    void switchToNaught(bool self);
-    /* For tool tips */
-    bool event(QEvent *event);
-
-    /* Loads a pixmap if not loaded otherwise go see graphics */
-    QPixmap loadPixmap(quint16 num, bool shiny, bool back, quint8 gender, bool sub);
-    /* We are using a qmap to store the graphics already loaded. So the key of the pixmap
-	is a combination of 2 bools, 1 quin8; and one quint16 */
-    qint32 key(quint16 num, bool shiny, bool back, quint8 gender, bool sub) const;
-    QHash<qint32, QPixmap> graphics;
-    /* Current pixmaps displayed */
-    QGraphicsPixmapItem *mine, *foe;
-    QGraphicsScene scene;
-
-    QString tooltips[2];
+    const PokeBattle &mypoke() const {return info().currentPoke(); }
+    const ShallowBattlePoke &foe() const {return info().pokes[Opponent]; }
 };
 
 
@@ -285,15 +169,5 @@ private:
     const PokeBattle *p;
 };
 
-
-/* Yeepee, at last templates */
-template <class T>
-void GraphicsZone::switchTo(const T &poke, bool self, bool sub)
-{
-    if (self)
-        mine->setPixmap(loadPixmap(poke.num(), poke.shiny(), true, poke.gender(), sub));
-    else
-        foe->setPixmap(loadPixmap(poke.num(), poke.shiny(), false, poke.gender(), sub));
-}
 
 #endif // BATTLEWINDOW_H

@@ -456,7 +456,7 @@ struct AMHugePower : public AM {
     }
 
     static void sm (int s, int, BS &b) {
-        turn(b,s)["Stat1AbilitiyModifier"] = 20;
+        turn(b,s)["Stat1AbilityModifier"] = 20;
     }
 };
 
@@ -466,7 +466,7 @@ struct AMHustle : public AM {
     }
 
     static void sm (int s, int, BS &b) {
-        turn(b,s)["Stat1AbilitiyModifier"] = 10;
+        turn(b,s)["Stat1AbilityModifier"] = 10;
         if (turn(b,s)["Category"].toInt() == Move::Physical) {
             turn(b,s)["Stat7AbilityModifier"] = -4;
         }
