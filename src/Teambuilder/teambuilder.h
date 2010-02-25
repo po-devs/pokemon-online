@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include <QPair>
+#include "../Utilities/otherwidgets.h"
 
 class TB_PokemonBody;
 class TB_TrainerBody;
@@ -14,8 +15,6 @@ class TrainerTeam;
 class Team;
 class PokeTeam;
 class MainWindow;
-
-class QCompactTable;
 
 /* The Teambuilder!! */
 class TeamBuilder : public QWidget
@@ -149,7 +148,15 @@ private:
     QComboBox *itemchoice;
     QComboBox *naturechoice;
     QLabel *pokeImage, *genderIcon, *level, *type1, *type2;
-    QCompactTable *movechoice;
+
+    class MoveList : public QCompactTable {
+    public:
+        MoveList(int a,int b):QCompactTable(a,b) {}
+    protected:
+        bool event(QEvent *event);
+    };
+
+    MoveList *movechoice;
     QLineEdit *m_moves[4];
     QLineEdit *m_nick;
     QLineEdit *m_pokeedit;
@@ -183,7 +190,6 @@ private slots:
     void setNature(int nature);
     void goToAdvanced();
     void setNick(const QString &nick);
-
 };
 
 /* Manages the EV bars, inside the TB_PokemonBody */

@@ -112,6 +112,7 @@ public slots:
     void showDock(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
 signals:
     void done();
+    void updateMenuBar();
     void userInfoReceived(const UserInfo &ui);
 
 private:

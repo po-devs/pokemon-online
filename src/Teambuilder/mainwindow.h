@@ -39,6 +39,7 @@ public slots:
     void launchServerChoice();
     void changeStyle();
     void changeLanguage();
+    void updateMenuBar();
 
     /* slots called by subwindows when they need it */
     void loadTeamDialog();

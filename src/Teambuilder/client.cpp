@@ -228,13 +228,15 @@ QMenuBar * Client::createMenuBar(MainWindow *w)
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
     menuFichier->addAction(tr("&Load Team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("Open &TeamBuilder"),this,SLOT(openTeamBuilder()),Qt::CTRL+Qt::Key_T);
-    //menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
     QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
     QStringList style = QStyleFactory::keys();
     for(QStringList::iterator i = style.begin();i!=style.end();i++)
     {
         menuStyle->addAction(*i,w,SLOT(changeStyle()));
     }
+    QMenu * menuActions = menuBar->addMenu(tr("&Actions"));
+    QAction * goaway = menuActions->addAction(away() ? tr("Go &Back from Away") : tr("Go &Away"));
+    createIntMapper(goaway, SIGNAL(triggered()), this, SLOT(goAway(int)), !away());
 
     return menuBar;
 }
@@ -788,6 +790,9 @@ void Client::updateState(int id)
         } else {
             item(id)->setColor(Qt::black);
         }
+    }
+    if (id == ownId()) {
+        emit updateMenuBar();
     }
 }
 

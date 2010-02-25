@@ -823,6 +823,7 @@ Efeito: %5</translation>
     </message>
     <message>
         <location filename="client.cpp" line="78"/>
+        <location filename="client.cpp" line="238"/>
         <source>Go &amp;Away</source>
         <translation>Ficar &amp;Away</translation>
     </message>
@@ -862,129 +863,139 @@ Efeito: %5</translation>
         <translation>Abrir &amp;TeamBuilder</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="232"/>
+        <location filename="client.cpp" line="231"/>
         <source>&amp;Style</source>
         <translation>&amp;Tema</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="273"/>
+        <location filename="client.cpp" line="237"/>
+        <source>&amp;Actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="238"/>
+        <source>Go &amp;Back from Away</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="275"/>
         <source>%1 was kicked by the server!</source>
         <translation>%1 foi kickado pelo  server!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="275"/>
+        <location filename="client.cpp" line="277"/>
         <source>%1 kicked %2!</source>
         <translation>%1 kickou %2!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="284"/>
+        <location filename="client.cpp" line="286"/>
         <source>%1 was banned by the server!</source>
         <translation>%1 foi banido pelo  server!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="286"/>
+        <location filename="client.cpp" line="288"/>
         <source>%1 banned %2!</source>
         <translation>%1 baniu %2!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="295"/>
+        <location filename="client.cpp" line="297"/>
         <source>Enter your password</source>
         <translation>Coloque sua senha</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="296"/>
+        <location filename="client.cpp" line="298"/>
         <source>Enter your password.
 
 It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="423"/>
+        <location filename="client.cpp" line="425"/>
         <source>Battle between %1 and %2 started.</source>
         <translation>Uma batalha entre %1 e %2 começou.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="445"/>
+        <location filename="client.cpp" line="447"/>
         <source>%1 forfeited against %2.</source>
         <translation>%1 desistiu contra %2.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="447"/>
+        <location filename="client.cpp" line="449"/>
         <source>%1 and %2 tied.</source>
         <translation>%1 e %2 empataram.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="449"/>
+        <location filename="client.cpp" line="451"/>
         <source>%1 won against %2.</source>
         <translation>%1 venceu %2.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="484"/>
+        <location filename="client.cpp" line="486"/>
         <source>%1 refused your challenge.</source>
         <translation>%1 recusou o seu desafio.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="489"/>
+        <location filename="client.cpp" line="491"/>
         <source>%1 is busy.</source>
         <translation>%1 está ocupado.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="494"/>
+        <location filename="client.cpp" line="496"/>
         <source>%1 cancelled their challenge.</source>
         <translation>%1 cancelou o desafio.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="499"/>
+        <location filename="client.cpp" line="501"/>
         <source>%1 has an invalid team.</source>
         <translation>%1 está com um time inválido.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="511"/>
+        <location filename="client.cpp" line="513"/>
         <source>%1 is away.</source>
         <translation>%1 está ocupado.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="513"/>
+        <location filename="client.cpp" line="515"/>
         <source>%1 has returned.</source>
         <translation>%1 está online.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="564"/>
+        <location filename="client.cpp" line="566"/>
         <source>Error while connected to server -- Received error nÂ°%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="569"/>
+        <location filename="client.cpp" line="571"/>
         <source>Connected to Server!</source>
         <translation>Conectado ao Server!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="576"/>
+        <location filename="client.cpp" line="578"/>
         <source>Disconnected from Server!</source>
         <translation>Desconectado do Server!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="597"/>
+        <location filename="client.cpp" line="599"/>
         <source>%1 logged in.</source>
         <translation>%1 entrou no server.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="604"/>
+        <location filename="client.cpp" line="606"/>
         <source>%1 logged out.</source>
         <translation>%1 saiu do server.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="671"/>
+        <location filename="client.cpp" line="673"/>
         <source>%1 changed teams and is now known as %2.</source>
         <translation>%1 modificou a equipe e agora é %2.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="673"/>
+        <location filename="client.cpp" line="675"/>
         <source>%1 changed teams.</source>
         <translation>%1 modificou a equipe.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="741"/>
+        <location filename="client.cpp" line="743"/>
         <source>You&apos;re already in the middle of something!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1146,7 +1157,7 @@ It is advised to use a slightly different password for each server. (The server 
     </message>
     <message>
         <location filename="mainwindow.cpp" line="133"/>
-        <source>Restart the application to the changes.</source>
+        <source>Restart the application to see the changes.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1395,144 +1406,144 @@ Ataques:
 <context>
     <name>TB_PokemonBody</name>
     <message>
-        <location filename="teambuilder.cpp" line="429"/>
+        <location filename="teambuilder.cpp" line="443"/>
         <source>&amp;Pokemon</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="431"/>
+        <location filename="teambuilder.cpp" line="445"/>
         <source>&amp;Nickname</source>
         <translation>&amp;Apelido</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="438"/>
+        <location filename="teambuilder.cpp" line="452"/>
         <source>&amp;Item</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="476"/>
+        <location filename="teambuilder.cpp" line="490"/>
         <source>&amp;Nature</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="478"/>
+        <location filename="teambuilder.cpp" line="492"/>
         <source>&amp;Advanced</source>
         <translation>&amp;Avançado</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="492"/>
+        <location filename="teambuilder.cpp" line="506"/>
         <source>&amp;Moves</source>
         <translation>&amp;Ataques</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="547"/>
+        <location filename="teambuilder.cpp" line="561"/>
         <source>Type</source>
         <translation>Tipo</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="547"/>
+        <location filename="teambuilder.cpp" line="561"/>
         <source>Name</source>
         <comment>AttackName</comment>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="547"/>
+        <location filename="teambuilder.cpp" line="561"/>
         <source>Learning</source>
         <translation>Aprende por</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="547"/>
+        <location filename="teambuilder.cpp" line="561"/>
         <source>PP</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="547"/>
+        <location filename="teambuilder.cpp" line="561"/>
         <source>Pow</source>
         <translation>Força</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="547"/>
+        <location filename="teambuilder.cpp" line="561"/>
         <source>Acc</source>
         <translation>Precisão</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="547"/>
+        <location filename="teambuilder.cpp" line="561"/>
         <source>Category</source>
         <translation>Categoria</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="620"/>
+        <location filename="teambuilder.cpp" line="634"/>
         <source>Lv. %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="657"/>
+        <location filename="teambuilder.cpp" line="671"/>
         <source>Type 1: %1</source>
         <translation>Tipo 1: %1</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="658"/>
+        <location filename="teambuilder.cpp" line="672"/>
         <source>Type 2: %1</source>
         <translation>Tipo 2: %1</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="729"/>
-        <location filename="teambuilder.cpp" line="744"/>
+        <location filename="teambuilder.cpp" line="743"/>
+        <location filename="teambuilder.cpp" line="758"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="762"/>
+        <location filename="teambuilder.cpp" line="776"/>
         <source>TM/HM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="763"/>
+        <location filename="teambuilder.cpp" line="777"/>
         <source>4G Tutor</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="764"/>
+        <location filename="teambuilder.cpp" line="778"/>
         <source>4G Level</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="765"/>
+        <location filename="teambuilder.cpp" line="779"/>
         <source>4G Pre Evo</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="766"/>
+        <location filename="teambuilder.cpp" line="780"/>
         <source>4G Breeding</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="767"/>
+        <location filename="teambuilder.cpp" line="781"/>
         <source>4G Special</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="768"/>
+        <location filename="teambuilder.cpp" line="782"/>
         <source>3G Tutor</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="769"/>
+        <location filename="teambuilder.cpp" line="783"/>
         <source>3G Level</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="770"/>
+        <location filename="teambuilder.cpp" line="784"/>
         <source>3G Pre Evo</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="771"/>
+        <location filename="teambuilder.cpp" line="785"/>
         <source>3G Breeding</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="772"/>
+        <location filename="teambuilder.cpp" line="786"/>
         <source>3G Special</source>
         <translation></translation>
     </message>

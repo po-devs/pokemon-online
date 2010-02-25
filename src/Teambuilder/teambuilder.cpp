@@ -413,6 +413,20 @@ void TB_TrainerBody::changeTrainerLose()
     trainerTeam()->setTrainerLose(m_loseMessage->toPlainText());
 }
 
+bool TB_PokemonBody::MoveList::event(QEvent * event)
+{
+    if (event->type() == QEvent::ToolTip) {
+        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
+
+        int row  = this->rowAt(helpEvent->pos().y() - horizontalHeader()->height());
+        if (row != -1) {
+            QToolTip::setFont(QFont("Verdana",10));
+            QToolTip::showText(helpEvent->globalPos(), MoveInfo::Description(MoveInfo::Number(item(row, TB_PokemonBody::Name)->text())));
+        }
+    }
+    return QCompactTable::event(event);
+}
+
 TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
 {
     m_poke = _poke;
@@ -538,7 +552,7 @@ void TB_PokemonBody::initPokemons()
 void TB_PokemonBody::initMoves()
 {
     /* now the grand move list */
-    movechoice = new QCompactTable(0,7);
+    movechoice = new MoveList(0,7);
     movechoice->setSelectionBehavior(QAbstractItemView::SelectRows);
     movechoice->setSelectionMode(QAbstractItemView::SingleSelection);
     movechoice->setShowGrid(false);
