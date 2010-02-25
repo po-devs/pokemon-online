@@ -5,36 +5,39 @@
 #include "basebattlewindow.h"
 #include "client.h"
 
+BattleInfo::BattleInfo(const TeamBattle &team, const QString &me, const QString &opp)
+    : BaseBattleInfo(me, opp)
+{
+    currentIndex = -1;
+    lastIndex = 0;
+    possible = false;
+    myteam = team;
+}
+
+const PokeBattle & BattleInfo::currentPoke() const
+{
+    return myteam.poke(validIndex());
+}
+
+PokeBattle & BattleInfo::currentPoke()
+{
+    return myteam.poke(validIndex());
+}
+
 BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &team, const BattleConfiguration &_conf)
 {
-    QToolTip::setFont(QFont("Verdana",10));
-    blankMessage = false;
-    battleEnded = false;
+    myInfo = new BattleInfo(team, me, opponent);
+    mydisplay = new BattleDisplay(info());
+    BaseBattleWindow::init();
+
     conf() = _conf;
 
     this->idme() = idme;
     this->idopp() = idopp;
 
-    info().currentIndex = -1;
-    info().lastIndex = 0;
-    info().myteam = team;
-    info().possible = false;
-    info().name[0] = me;
-    info().name[1] = opponent;
-    info().sub[0] = false;
-    info().sub[1] = false;
-    info().pokeAlive[1] = false;
-
-    setAttribute(Qt::WA_DeleteOnClose, true);
-
     setWindowTitle(tr("Battling against %1").arg(opponent));
-    QGridLayout *mylayout = new QGridLayout(this);
 
-    mylayout->addWidget(mydisplay = new BattleDisplay(info()), 0, 0, 3, 2);
-    mylayout->addWidget(mychat = new QScrollDownTextEdit(), 0, 2, 1, 2);
-    mylayout->addWidget(myline = new QLineEdit(), 1, 2, 1, 2);
-    mylayout->addWidget(myforfeit = new QPushButton(tr("&Forfeit")), 2, 2);
-    mylayout->addWidget(mysend = new QPushButton(tr("Sen&d")), 2, 3);
+    myclose->setText(tr("&Forfeit"));
     mylayout->addWidget(mystack = new QStackedWidget(), 3, 0, 1, 4);
     mylayout->addWidget(mycancel = new QPushButton(tr("&Cancel")), 4,0);
     mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 4, 2);
@@ -52,42 +55,23 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
     mypzone = new PokeZone(info().myteam);
     mystack->addWidget(mypzone);
 
-    connect(myforfeit, SIGNAL(clicked()), SLOT(clickforfeit()));
     connect(mypzone, SIGNAL(switchTo(int)), SLOT(switchClicked(int)));
     connect(myattack, SIGNAL(clicked()), SLOT(attackButton()));
     connect(myswitch, SIGNAL(clicked()), SLOT(switchToPokeZone()));
-    connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
-    connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
     connect(mycancel, SIGNAL(clicked()), SLOT(emitCancel()));
 
-    show();
-
     switchTo(0);
-
-    printHtml(toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(name(true), name(false)));
-    layout()->setSizeConstraint(QLayout::SetFixedSize);
+    show();
 }
 
-QString BattleWindow::name(bool self) const
+QString BattleWindow::nick(int spot) const
 {
-    return info().name[!self];
-}
-
-QString BattleWindow::nick(bool self) const
-{
-    if (self)
+    if (spot == Myself)
 	return info().currentPoke().nick();
     else
         return tr("the foe's %1").arg(info().pokes[Opponent].nick());
 }
 
-QString BattleWindow::rnick(bool self) const
-{
-    if (self)
-	return info().currentPoke().nick();
-    else
-        return info().pokes[Opponent].nick();
-}
 
 void BattleWindow::closeEvent(QCloseEvent *)
 {
@@ -104,12 +88,15 @@ void BattleWindow::emitCancel()
 void BattleWindow::switchTo(int pokezone)
 {
     info().currentIndex = pokezone;
+    info().pokes[Myself] = info().myteam.poke(pokezone);
+    info().pokeAlive[Myself] = info().pokes[Myself].status() != Pokemon::Koed;
+
     mystack->setCurrentIndex(pokezone);
     myattack->setText(tr("&Attack"));
-    mydisplay->updatePoke(true);
+    mydisplay->updatePoke(Myself);
 }
 
-void BattleWindow::clickforfeit()
+void BattleWindow::clickClose()
 {
     if (battleEnded) {
         emit forfeit();
@@ -200,57 +187,63 @@ void BattleWindow::sendMessage()
     }
 }
 
-void BattleWindow::receiveInfo(QByteArray inf)
+void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot)
 {
-    QDataStream in (&inf, QIODevice::ReadOnly);
-
-    uchar command;
-    qint8 player;
-
-    in >> command >> player;
-
-    bool self = conf().ids[player] == idme();
-
-    std::cout << "Command received! num #" << int(command) << " self is " << self << std::endl;
+    if (spot < 2) {
+        if (conf().ids[spot] == idme()) {
+            spot = Myself;
+        } else {
+            spot = Opponent;
+        }
+    }
 
     switch (command)
     {
+    case SendBack:
+    case UseAttack:
+    case Hit:
+    case Effective:
+    case CriticalHit:
+    case Miss:
+    case StatChange:
+    case StatusChange:
+    case StatusMessage:
+    case Failed:
+    case BattleChat:
+    case MoveMessage:
+    case NoOpponent:
+    case ItemMessage:
+    case Flinch:
+    case Recoil:
+    case WeatherMessage:
+    case BeginTurn:
+    case AbilityMessage:
+    case Substitute:
+    case BlankMessage:
+    case Spectating:
+    case SpectatorChat:
+    case Clause:
+    case DynamicInfo:
+        BaseBattleWindow::dealWithCommandInfo(in, command, spot);
+        break;
     case SendOut:
 	{
-            std::cout << "Poke sent out!" << std::endl;
-	    if (self) {
+            info().sub[spot] = false;
+            if (spot == Myself) {
 		quint8 poke;
 		in >> poke;
-                std::cout << "Sent out " << int(poke) << std::endl;
-                info().sub[0] = false;
 		switchTo(poke);
 	    } else {
                 in >> info().pokes[Opponent];
-                std::cout << "Opp Sent out " << info().pokes[Opponent].num() << std::endl;
                 info().pokeAlive[Opponent] = true;
-                info().sub[1] = false;
-		mydisplay->updatePoke(false);
+                mydisplay->updatePoke(spot);
 	    }
 
-	    printLine(tr("%1 sent out %2!").arg(name(self), rnick(self)));
+            printLine(tr("%1 sent out %2!").arg(name(spot), rnick(spot)));
 
 	    break;
 	}
-    case SendBack:
-        std::cout << "Poke sent back!" << std::endl;
-        printLine(tr("%1 called %2 back!").arg(name(self), rnick(self)));
-        switchToNaught(self);
-        break;
-    case UseAttack:
-	{
-            std::cout << "Attack used!" << std::endl;
-	    qint16 attack;
-	    in >> attack;
 
-	    //Think to check for crash if attack is invalid
-	    printHtml(tr("%1 used <span style='color:%2'><b>%3</b></span>!").arg(escapeHtml(tu(nick(self))), TypeInfo::Color(MoveInfo::Type(attack)).name(), MoveInfo::Name(attack)));
-	    break;
-	}
     case ChangePP:
 	{
 	    quint8 move, PP;
@@ -268,274 +261,43 @@ void BattleWindow::receiveInfo(QByteArray inf)
 	    updateChoices();
 	    break;
 	}
-    case BeginTurn:
-	{
-	    int turn;
-	    in >> turn;
-            printLine("");
-            printHtml("<span style='color:blue'><b>" + tr("Start of turn %1").arg(turn) + "</b></span>");
-	    break;
-	}
     case ChangeHp:
 	{
 	    quint16 newHp;
 	    in >> newHp;
-	    if (self) {
+            if (spot == Myself) {
 		/* Think to check for crash */
 		info().currentPoke().lifePoints() = newHp;
+                info().pokes[Myself].lifePercent() = info().currentPoke().lifePercent();
                 mypzone->pokes[info().validIndex()]->update();
 	    } else {
                 info().pokes[Opponent].lifePercent() = newHp;
 	    }
-	    mydisplay->updatePoke(self);
+            mydisplay->updatePoke(spot);
 	    break;
 	}
     case Ko:
-        printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(self)))) + "</b>");
-        if (self) {
+        if (spot==Myself) {
             if ( info().currentIndex >= 0 && info().currentIndex < 6)
                 mypzone->pokes[info().currentIndex]->setEnabled(false); //crash!!
             else
                 mypzone->pokes[info().lastIndex]->setEnabled(false); //crash!!
         }
-        switchToNaught(self);
+        BaseBattleWindow::dealWithCommandInfo(in, command,spot);
         break;
-    case Hit:
-        printLine(tr("Hit!"));
-        break;
-    case Effective:
-	{
-	    quint8 eff;
-	    in >> eff;
-	    switch (eff) {
-     case 0:
-                printLine(tr("It had no effect!"));
-                break;
-     case 1:
-     case 2:
-                printHtml(toColor(tr("It's not very effective..."), Qt::gray));
-                break;
-     case 8:
-     case 16:
-                printHtml(toColor(tr("It's super effective!"), Qt::blue));
-     default:
-                break;
-	    }
-	    break;
-	}
-    case CriticalHit:
-        printHtml(toColor(tr("A critical hit!"), Qt::red));
-        break;
-    case Miss:
-        printLine(tr("The attack of %1 missed!").arg(nick(self)));
-        break;
-    case StatChange:
-        qint8 stat, boost;
-        in >> stat >> boost;
 
-        printLine(tu(tr("%1's %2 %3%4!").arg(nick(self), StatInfo::Stat(stat), abs(boost) > 1 ? tr("sharply ") : "", boost > 0 ? tr("rose") : tr("fell"))));
-        break;
-    case StatusChange:
-	{
-	    qint8 status;
-	    in >> status;
-	    switch(status)
-	    {
-     case Pokemon::Asleep:
-                printHtml(toColor(escapeHtml(tu(tr("%1 fell asleep!").arg(nick(self)))), StatInfo::StatusColor(status)));
-                break;
-     case Pokemon::Burnt:
-                printHtml(toColor(escapeHtml(tu(tr("%1 was burned!").arg(nick(self)))), StatInfo::StatusColor(status)));
-                break;
-     case Pokemon::Paralysed:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is paralyzed! It may be unable to move!").arg(nick(self)))), StatInfo::StatusColor(status)));
-                break;
-     case Pokemon::Poisoned:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is poisoned!").arg(nick(self)))), StatInfo::StatusColor(status)));
-                break;
-     case Pokemon::DeeplyPoisoned:
-                printHtml(toColor(escapeHtml(tu(tr("%1 was badly poisoned!").arg(nick(self)))), StatInfo::StatusColor(status)));
-                break;
-     case Pokemon::Frozen:
-                printHtml(toColor(escapeHtml(tu(tr("%1 was frozen solid!").arg(nick(self)))), StatInfo::StatusColor(status)));
-                break;
-     case -1:
-                printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(self)))), TypeInfo::Color(Move::Ghost).name()));
-                break;
-	    }
-            if (!self) {
-                info().pokes[Opponent].status() = status;
-                mydisplay->updatePoke(self);
-            }
-	    break;
-	}
-    case StatusMessage:
-	{
-	    qint8 status;
-	    in >> status;
-	    switch(status)
-	    {
-     case FeelConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(self)))), TypeInfo::Color(Move::Ghost).name()));
-                break;
-     case HurtConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), TypeInfo::Color(Move::Ghost).name()));
-                break;
-     case FreeConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("%1 snapped out its confusion!").arg(nick(self)))), TypeInfo::Color(Move::Dark).name()));
-                break;
-     case PrevParalysed:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Paralysed)));
-                break;
-     case FeelAsleep:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Asleep)));
-                break;
-     case FreeAsleep:
-                printHtml(toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(self)))), TypeInfo::Color(Move::Dark).name()));
-                break;
-     case HurtBurn:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Burnt)));
-                break;
-     case HurtPoison:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Poisoned)));
-                break;
-     case PrevFrozen:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(self)))), StatInfo::StatusColor(Pokemon::Frozen)));
-                break;
-     case FreeFrozen:
-                printHtml(toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(self)))), TypeInfo::Color(Move::Dark).name()));
-                break;
-	    }
-	}
-        break;
-    case Failed:
-        printLine(tr("But it failed!"));
-        break;
-    case BattleChat:
-	{
-	    QString message;
-	    in >> message;
-	    printHtml(QString("<span style='color:") + (self?"#5811b1":"green") + "'><b>" + escapeHtml(name(self)) + ": </b></span>" + escapeHtml(message));
-	    break;
-	}
-    case MoveMessage:
-	{
-	    quint16 move=0;
-	    uchar part=0;
-	    qint8 type(0), foe(0);
-	    qint16 other(0);
-	    QString q;
-	    in >> move >> part >> type >> foe >> other >> q;
-	    QString mess = MoveInfo::MoveMessage(move,part);
-	    mess.replace("%s", nick(self));
-	    mess.replace("%ts", name(self));
-	    mess.replace("%tf", name(!self));
-	    mess.replace("%t", TypeInfo::Name(type));
-	    mess.replace("%f", nick(!self));
-	    mess.replace("%m", MoveInfo::Name(other));
-	    mess.replace("%d", QString::number(other));
-	    mess.replace("%q", q);
-	    mess.replace("%i", ItemInfo::Name(other));
-	    mess.replace("%a", AbilityInfo::Name(other));
-	    mess.replace("%p", PokemonInfo::Name(other));
-            printHtml(toColor(escapeHtml(tu(mess)), TypeInfo::Color(type)));
-	    break;
-	}
-    case NoOpponent:
-        printLine(tr("But there is no target pokémon!"));
-        break;
-    case ItemMessage:
-	{
-	    quint16 item=0;
-	    uchar part=0;
-	    qint8 foe = 0;
-            qint16 berry = 0;
-            in >> item >> part >> foe >> berry;
-	    QString mess = ItemInfo::Message(item, part);
-	    mess.replace("%s", nick(self));
-	    mess.replace("%f", nick(!self));
-            mess.replace("%i", ItemInfo::Name(berry));
-            mess.replace("%m", MoveInfo::Name(berry));
-	    printLine(tu(mess));
-	    break;
-	}
-    case Flinch:
-        printLine(tu(tr("%1 flinched!").arg(nick(self))));
-        break;
-    case Recoil:
-        printLine(tu(tr("%1 is hit with recoil!").arg(nick(self))));
-        break;
-    case WeatherMessage: {
-	    qint8 wstatus, weather;
-	    in >> wstatus >> weather;
-	    if (weather == NormalWeather)
-		break;
-            QColor c = (weather == Hail ? TypeInfo::Color(Type::Ice) : (weather == Sunny ? TypeInfo::Color(Type::Fire) : (weather == SandStorm ? TypeInfo::Color(Type::Rock) : TypeInfo::Color(Type::Water))));
-	    switch(wstatus) {
-     case EndWeather:
-                switch(weather) {
-                case Hail: printHtml(toColor(tr("The hail stopped!"),c)); break;
-                case SandStorm: printHtml(toColor(tr("The sandstorm stopped!"),c)); break;
-                case Sunny: printHtml(toColor(tr("The sunlight faded!"),c)); break;
-                case Rain: printHtml(toColor(tr("The rain stopped!"),c)); break;
-                } break;
-		case HurtWeather:
-                switch(weather) {
-                case Hail: printHtml(toColor(tr("%1 is buffeted by the hail!").arg(tu(nick(self))),c)); break;
-                case SandStorm: printHtml(toColor(tr("%1 is buffeted by the sandstorm!").arg(tu(nick(self))),c)); break;
-                } break;
-		case StartWeather:
-                switch(weather) {
-                case Hail: printHtml(toColor(tr("A hailstorm whipped up!"),c)); break;
-                case SandStorm: printHtml(toColor(tr("A sandstorm whipped up!"),c)); break;
-                case Sunny: printHtml(toColor(tr("The sunlight became harsh!"),c)); break;
-                case Rain: printHtml(toColor(tr("It's started to rain!"),c)); break;
-                } break;
-		case ContinueWeather:
-                switch(weather) {
-                case Hail: printHtml(toColor(tr("Hail continues to fall!"),c)); break;
-                case SandStorm: printHtml(toColor(tr("The sandstorm rages!"),c)); break;
-                case Sunny: printHtml(toColor(tr("The sunlight is strong!"),c)); break;
-                case Rain: printHtml(toColor(tr("Rain continues to fall!"),c)); break;
-                } break;
-	    }
-        } break;
     case StraightDamage :
 	{
         qint16 damage;
         in >> damage;
-        if (self) {
-            printLine(tr("%1 lost %2 HP! (%3% of its health)").arg(nick(self)).arg(damage).arg(damage*100/info().currentPoke().totalLifePoints()));
+        if (spot == Myself) {
+            printLine(tr("%1 lost %2 HP! (%3% of its health)").arg(nick(spot)).arg(damage).arg(damage*100/info().currentPoke().totalLifePoints()));
         } else {
-            printLine(tu(tr("%1 lost %2% of its health!").arg(nick(self)).arg(damage)));
+            printLine(tu(tr("%1 lost %2% of its health!").arg(nick(spot)).arg(damage)));
         }
         break;
     }
-    case AbilityMessage:
-        {
-        quint16 ab=0;
-        uchar part=0;
-        qint8 type(0), foe(0);
-        qint16 other(0);
-        in >> ab >> part >> type >> foe >> other;
-        QString mess = AbilityInfo::Message(ab,part);
-        mess.replace("%s", nick(self));
-        //            mess.replace("%ts", name(self));
-        //            mess.replace("%tf", name(!self));
-        mess.replace("%t", TypeInfo::Name(type));
-        mess.replace("%f", nick(!self));
-        mess.replace("%m", MoveInfo::Name(other));
-        //            mess.replace("%d", QString::number(other));
-        mess.replace("%i", ItemInfo::Name(other));
-        mess.replace("%a", AbilityInfo::Name(other));
-        //            mess.replace("%p", PokemonInfo::Name(other));
-        if (type == Pokemon::Normal) {
-            printLine(escapeHtml(tu(mess)));
-        } else {
-            printHtml(toColor(escapeHtml(tu(mess)),TypeInfo::Color(type)));
-        }
-        break;
-    }
+
     case AbsStatusChange:
         {
         qint8 poke, status;
@@ -544,39 +306,25 @@ void BattleWindow::receiveInfo(QByteArray inf)
         if (poke < 0 || poke >= 6)
             break;
 
-        mydisplay->changeStatus(self,poke,status);
+        mydisplay->changeStatus(spot,poke,status);
 
-        if (self) {
+        if (spot == Myself) {
             info().myteam.poke(poke).status() = status;
             mypzone->pokes[poke]->update();
             if (info().currentIndex == poke) {
-                mydisplay->updatePoke(self);
+                mydisplay->updatePoke(spot);
             }
         }
         break;
     }
-    case Substitute:
-        in >> info().sub[!self];
-        mydisplay->updatePoke(self);
-        break;
+
     case BattleEnd:
-    {
-            printLine("");
-            qint8 res;
-            in >> res;
-            myforfeit->setText(tr("&Close"));
-            battleEnded = true;
-            mycancel->setDisabled(true);
-            if (res == Tie) {
-                printHtml(toBoldColor(tr("Tie between %1 and %2!").arg(name(true), name(false)), Qt::blue));
-            } else {
-                printHtml(toBoldColor(tr("%1 won the battle!").arg(name(self)), Qt::blue));
-            }
+        {
+            myclose->setText(tr("&Close"));
+            BaseBattleWindow::dealWithCommandInfo(in, command,spot);
             break;
-    }
-    case BlankMessage:
-            printLine("");
-            break;
+        }
+
     case CancelMove:
         {
             info().possible = true;
@@ -584,44 +332,11 @@ void BattleWindow::receiveInfo(QByteArray inf)
             updateChoices();
             break;
         }
-    case Spectating:
-        {
-            bool come;
-            qint32 id;
-            in >> come >> id;
-            QString mess = come ? tr("%1 is watching the battle.") : tr("%1 stopped watching the battle.");
-            printHtml(toBoldColor(mess.arg(client()->name(id)), Qt::green));
-            break;
-        }
-    case SpectatorChat:
-        {
-            qint32 id;
-            QString message;
-            in >> id >> message;
-            printHtml(toBoldColor(client()->name(id), Qt::blue) + ": " + escapeHtml(message));
-            break;
-        }
-    case Clause:
-        {
-            bool inBattle;
-            in >> inBattle;
 
-            if (inBattle) {
-                printLine(ChallengeInfo::battleText(player));
-            } else {
-                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(player));
-            }
-            break;
-        }
-    case DynamicInfo:
-        {
-            in >> info().statChanges[!self];
-            mydisplay->updateToolTip(self);
-            break;
-        }
     case DynamicStats:
         {
             in >> info().mystats;
+            mydisplay->updateToolTip(Myself);
             break;
         }
     default:
@@ -629,34 +344,17 @@ void BattleWindow::receiveInfo(QByteArray inf)
     }
 }
 
-void BattleWindow::switchToNaught(bool self)
+void BattleWindow::switchToNaught(int spot)
 {
-    if (self) {
+    if (spot == Myself) {
         if (info().currentIndex != -1)
             info().lastIndex = info().currentIndex;
 	info().currentIndex = -1;
 	switchToPokeZone();
-    } else {
-        info().pokeAlive[Opponent] = false;
     }
 
-    mydisplay->updatePoke(self);
-}
-
-void BattleWindow::printLine(const QString &str)
-{
-    if (str == "" && blankMessage) {
-        return;
-    }
-    blankMessage = str == "";
-
-    mychat->insertPlainText(str + "\n");
-}
-
-void BattleWindow::printHtml(const QString &str)
-{
-    blankMessage = false;
-    mychat->insertHtml(str + "<br />");
+    info().pokeAlive[spot] = false;
+    mydisplay->updatePoke(spot);
 }
 
 void BattleWindow::updateChoices()
@@ -784,8 +482,8 @@ void PokeButton::update()
 }
 
 
-BattleDisplay::BattleDisplay(const BattleInfo &i)
-    : info(i)
+BattleDisplay::BattleDisplay(BattleInfo &i)
+    : BaseBattleDisplay(i)
 {
     QVBoxLayout *l=  new QVBoxLayout(this);
 
@@ -793,106 +491,33 @@ BattleDisplay::BattleDisplay(const BattleInfo &i)
        resize that part, might as well let  the chat be resized */
     l->setSizeConstraint(QLayout::SetFixedSize);
 
-    QHBoxLayout *foeteam = new QHBoxLayout();
-    l->addLayout(foeteam);
-    for (int i = 0; i < 6; i++) {
-        advpokeballs[i] = new QLabel();
-        advpokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
-        foeteam->addWidget(advpokeballs[i]);
-    }
-
-    gender[Opponent] = new QLabel();
-    foeteam->addWidget(gender[Opponent], 100, Qt::AlignRight);
-
-    nick[Opponent] = new QLabel(info.name[Opponent]);
-    foeteam->addWidget(nick[Opponent], 0, Qt::AlignRight);
-
-    status[Opponent] = new QLabel();
-    foeteam->addWidget(status[Opponent]);
-
-    foeteam->setSpacing(1);
-
-    bars[Opponent] = new QProgressBar();
-    bars[Opponent]->setObjectName("LifePoints"); /* for stylesheets */
-    bars[Opponent]->setRange(0, 100);
-    l->addWidget(bars[Opponent]);
-
-    zone = new GraphicsZone();
-    l->addWidget(zone);
-
-    bars[Myself] = new QProgressBar();
-    bars[Myself]->setObjectName("LifePoints"); /* for stylesheets */
     bars[Myself]->setRange(0,100);
     bars[Myself]->setFormat("%v / %m");
-    l->addWidget(bars[Myself]);
 
-    QHBoxLayout *team = new QHBoxLayout();
-    team->setSpacing(1);
-
-    l->addLayout(team);
-
-    gender[Myself] = new QLabel();
-    team->addWidget(gender[Myself]);
-
-    nick[Myself] = new QLabel(info.name[Myself]);
-    team->addWidget(nick[Myself], 0, Qt::AlignLeft);
-
-    status[Myself] = new QLabel();
-    team->addWidget(status[Myself], 100, Qt::AlignLeft);
-
-    team->addWidget(new QLabel(), 100);
     for (int i = 0; i < 6; i++) {
-        mypokeballs[i] = new QLabel();
-        mypokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
-        mypokeballs[i]->setToolTip(info.myteam.poke(i).nick());
-        team->addWidget(mypokeballs[i]);
+        mypokeballs[i]->setToolTip(info().myteam.poke(i).nick());
     }
 
-    updatePoke(true);
-    updatePoke(false);
+    updatePoke(Myself);
 }
 
-void BattleDisplay::updatePoke(bool self)
+void BattleDisplay::updatePoke(int spot)
 {
-    if (self) {
-	if (info.currentIndex != -1) {
-            zone->switchTo(mypoke(), self, info.sub[Myself]);
-            nick[Myself]->setText(tr("%1 Lv.%2").arg(mypoke().nick()).arg(mypoke().level()));
-            bars[Myself]->setRange(0,mypoke().totalLifePoints());
-            bars[Myself]->setValue(mypoke().lifePoints());
-            bars[Myself]->setStyleSheet(health(mypoke().lifePoints()*100/mypoke().totalLifePoints()));
-            gender[Myself]->setPixmap(GenderInfo::Picture(info.currentPoke().gender(), true));
-            int status = info.myteam.poke(info.currentIndex).status();
-            this->status[Myself]->setPixmap(StatInfo::BattleIcon(status));
-        } else {
-            zone->switchToNaught(self);
-            this->status[Myself]->setPixmap(StatInfo::BattleIcon(Pokemon::Fine));
-            nick[Myself]->setText("");
-            gender[Myself]->setPixmap(QPixmap());
-            bars[Myself]->setValue(0);
-        }
+    BaseBattleDisplay::updatePoke(spot);
+    if (spot == Myself && info().currentIndex != -1) {
+        bars[Myself]->setRange(0,mypoke().totalLifePoints());
+        bars[Myself]->setValue(mypoke().lifePoints());
     }
-    else {
-        if (info.pokeAlive[Opponent]) {
-            zone->switchTo(foe(), self, info.sub[Opponent]);
-            nick[Opponent]->setText(tr("%1 Lv.%2").arg(foe().nick()).arg(foe().level()));
-            bars[Opponent]->setValue(foe().lifePercent());
-            bars[Opponent]->setStyleSheet(health(foe().lifePercent()));
-            gender[Opponent]->setPixmap(GenderInfo::Picture(info.pokes[Opponent].gender(), true));
-            int status = info.pokes[Opponent].status();
-            this->status[Opponent]->setPixmap(StatInfo::BattleIcon(status));
-        }  else {
-            zone->switchToNaught(self);
-            nick[Opponent]->setText("");
-            this->status[Opponent]->setPixmap(StatInfo::BattleIcon(Pokemon::Fine));
-            gender[Opponent]->setPixmap(QPixmap());
-            bars[Opponent]->setValue(0);
-        }
-    }
+
 }
 
-void BattleDisplay::updateToolTip(bool self)
+void BattleDisplay::updateToolTip(int spot)
 {
+    if (spot == Opponent) {
+        BaseBattleDisplay::updatePoke(spot);
+        return;
+    }
+
     QString tooltip;
 
     QString stats[7] = {
@@ -912,60 +537,34 @@ void BattleDisplay::updateToolTip(bool self)
         stats[i] = stats[i].leftJustified(max, '.', false);
     }
 
-    if (self) {
-        tooltip += info.currentPoke().nick() + "\n";
+    tooltip += info().currentPoke().nick() + "\n";
 
-        for (int i = 0; i < 5; i++) {
-            tooltip += "\n" + stats[i] + ": " + QString::number(info.mystats.stats[i]);
-            int boost = info.statChanges[!self].boosts[i];
-            if (boost > 0) {
-                tooltip += QString("(+%1)").arg(boost);
-            } else if (boost < 0) {
-                tooltip += QString("(%1)").arg(boost);
-            }
+    for (int i = 0; i < 5; i++) {
+        tooltip += "\n" + stats[i] + ": " + QString::number(info().mystats.stats[i]);
+        int boost = info().statChanges[spot].boosts[i];
+        if (boost > 0) {
+            tooltip += QString("(+%1)").arg(boost);
+        } else if (boost < 0) {
+            tooltip += QString("(%1)").arg(boost);
         }
-        for (int i = 5; i < 7; i++) {
-            int boost = info.statChanges[!self].boosts[i];
+    }
+    for (int i = 5; i < 7; i++) {
+        int boost = info().statChanges[spot].boosts[i];
 
-            if (boost != 0) {
-                tooltip += "\n" + stats[i] + " ";
-
-                if (boost > 0) {
-                    tooltip += QString("+%1").arg(boost);
-                } else {
-                    tooltip += QString("%1").arg(boost);
-                }
-            }
-        }
-    } else {
-        tooltip += info.pokes[Opponent].nick() + "\n";
-
-        for (int i = 0; i < 5; i++) {
+        if (boost != 0) {
             tooltip += "\n" + stats[i] + " ";
-            int boost = info.statChanges[!self].boosts[i];
-            if (boost >= 0) {
-                tooltip += QString("+%1").arg(boost);
-            } else if (boost < 0) {
-                tooltip += QString("%1").arg(boost);
-            }
-        }
-        for (int i = 5; i < 7; i++) {
-            int boost = info.statChanges[!self].boosts[i];
-            if (boost) {
-                tooltip += "\n" + stats[i] + " ";
 
-                if (boost > 0) {
-                    tooltip += QString("+%1").arg(boost);
-                } else if (boost < 0) {
-                    tooltip += QString("%1").arg(boost);
-                }
+            if (boost > 0) {
+                tooltip += QString("+%1").arg(boost);
+            } else {
+                tooltip += QString("%1").arg(boost);
             }
         }
     }
 
     tooltip += "\n";
 
-    int flags = info.statChanges[!self].flags;
+    int flags = info().statChanges[spot].flags;
 
     int spikes[3] = {BattleDynamicInfo::Spikes, BattleDynamicInfo::SpikesLV2 ,BattleDynamicInfo::SpikesLV3};
     for (int i = 0; i < 3; i++) {
@@ -987,85 +586,5 @@ void BattleDisplay::updateToolTip(bool self)
         tooltip += "\n" + tr("Stealth Rock");
     }
 
-    zone->tooltips[self] = tooltip;
-}
-
-void BattleDisplay::changeStatus(bool self, int poke, int status) {
-    if (self) {
-        mypokeballs[poke]->setPixmap(StatInfo::Icon(status));
-    } else {
-        advpokeballs[poke]->setPixmap(StatInfo::Icon(status));
-    }
-}
-
-QString BattleDisplay::health(int lifePercent)
-{
-    return lifePercent > 50 ? "::chunk{background-color: #05B8CC;}" : (lifePercent >= 34 ? "::chunk{background-color: #F8DB17;}" : "::chunk{background-color: #D40202;}");
-}
-
-GraphicsZone::GraphicsZone()
-{
-    setScene(&scene);
-
-    scene.setSceneRect(0,0,257,145);
-    scene.addItem(new QGraphicsPixmapItem(QPixmap(QString("db/battle_fields/%1.png").arg((rand()%11)+1))));
-
-    mine = new QGraphicsPixmapItem();
-    foe = new QGraphicsPixmapItem();
-
-    scene.addItem(mine);
-    mine->setPos(10, 145-79);
-
-    scene.addItem(foe);
-    foe->setPos(257-105, 16);
-}
-
-void GraphicsZone::switchToNaught(bool self)
-{
-    if (self)
-	mine->setPixmap(QPixmap());
-    else
-	foe->setPixmap(QPixmap());
-}
-
-QPixmap GraphicsZone::loadPixmap(quint16 num, bool shiny, bool back, quint8 gender, bool sub)
-{
-    qint32 key = this->key(num, shiny, back, gender, sub);
-
-    if (!graphics.contains(key)) {
-        if (sub) {
-            graphics.insert(key, PokemonInfo::Sub(back));
-        } else {
-            graphics.insert(key, PokemonInfo::Picture(num, gender, shiny, back));
-        }
-    }
-
-    return graphics[key];
-}
-
-qint32 GraphicsZone::key(quint16 num, bool shiny, bool back, quint8 gender, bool sub) const
-{
-    return sub ? ((1 << 31) + (back << 30)) : (num + (gender << 16) + (back << 24) + (shiny<<25));
-}
-
-const PokeBattle & BattleInfo::currentPoke() const
-{
-    return myteam.poke(validIndex());
-}
-
-PokeBattle & BattleInfo::currentPoke()
-{
-    return myteam.poke(validIndex());
-}
-
-bool GraphicsZone::event(QEvent * event)
-{
-    if (event->type() == QEvent::ToolTip) {
-        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
-
-        bool self  = helpEvent->pos().x() < width() / 2;
-        QToolTip::setFont(QFont("Courier New",8));
-        QToolTip::showText(helpEvent->globalPos(), tooltips[self]);
-    }
-    return QGraphicsView::event(event);
+    zone->tooltips[spot] = tooltip;
 }
