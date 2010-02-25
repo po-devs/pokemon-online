@@ -928,7 +928,7 @@ struct AMTruant : public AM {
     }
 
     static void us(int s, int, BS &b) {
-        poke(b,s)["TruantActiveTurn"] = b.turn()%2+1;
+        poke(b,s)["TruantActiveTurn"] = (b.turn()+1)%2;
     }
 
     static void dap(int s, int, BS &b) {
