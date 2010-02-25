@@ -433,7 +433,7 @@ struct AMGuts : public AM {
 
     static void sm (int s, int, BS &b) {
         if (b.poke(s).status() != Pokemon::Fine) {
-            turn(b,s)[QString("Stat%1AbilitiyModifier").arg(poke(b,s)["AbilityArg"].toInt())] = 10;
+            turn(b,s)[QString("Stat%1AbilityModifier").arg(poke(b,s)["AbilityArg"].toInt())] = 10;
         }
     }
 };
