@@ -3597,7 +3597,7 @@ struct MMYawn : public MM {
 
     static void uas(int s, int t, BS &b) {
         if (poke(b,t).value("YawnCount").toInt() == 0) {
-            b.sendMoveMessage(144,1,s,Pokemon::Normal,t);
+            b.sendMoveMessage(144,0,s,Pokemon::Normal,t);
             poke(b,t)["YawnCount"] = 2;
             addFunction(poke(b,t), "EndTurn", "Yawn", &et);
         }
@@ -3607,7 +3607,7 @@ struct MMYawn : public MM {
         inc(poke(b,s)["YawnCount"], -1);
         int count = poke(b,s)["YawnCount"].toInt();
         if (count > 0) {
-            b.sendMoveMessage(144,0,s);
+            b.sendMoveMessage(144,1,s);
         } else {
             b.inflictStatus(s, Pokemon::Asleep, s);
             removeFunction(poke(b,s),"EndTurn", "Yawn");
