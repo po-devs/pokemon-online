@@ -21,7 +21,7 @@ template <class T, class U>
 
 TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvanced(0)
 {
-    setFixedSize(600, 650);
+    resize(600, 650);
     setWindowTitle(tr("Teambuilder"));
 
     QVBoxLayout *mylayout = new QVBoxLayout(this);
@@ -241,7 +241,7 @@ void TeamBuilder::updateTrainer()
     trainerbody()->updateTrainer();
 }
 
-QMenuBar * TeamBuilder::createMenuBar(QMainWindow *w)
+QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
@@ -497,12 +497,14 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     connect(evchoice, SIGNAL(EVChanged(int)), SIGNAL(EVChanged(int)));
 
     layout->addLayout(evchoice,0,2);
+    layout->setColumnStretch(2, 100);
 
     initMoves();
 
     QGridLayout *mlayout = new QGridLayout();
     layout->addLayout(mlayout, 1,0,1,3);
-    mlayout->addWidget(new QEntitled(tr("&Moves"), movechoice), 0, 0, 1, 4);
+    layout->setRowStretch(1, 100);
+    mlayout->addWidget(movechoice, 0, 0, 1, 4);
 
     for (int i = 0; i < 4; i++)
     {
@@ -519,6 +521,7 @@ void TB_PokemonBody::initPokemons()
     pokechoice->verticalHeader()->hide();
     pokechoice->horizontalHeader()->hide();
     pokechoice->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
+    pokechoice->setFixedSize(200, 120);
 
     /* Adding the poke names */
     for (int i = 0; i < PokemonInfo::NumberOfPokemons(); i++)
@@ -870,7 +873,7 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
 	slider(i)->setTracking(true);
 	slider(i)->setRange(0,255);
 	slider(i)->setMinimumWidth(150);
-	m_evs[i]->setMinimumWidth(24);
+        m_evs[i]->setFixedWidth(35);
         connect(slider(i),SIGNAL(valueChanged(int)),SLOT(changeEV(int)));
         connect(m_evs[i], SIGNAL(textChanged(QString)), SLOT(changeEV(QString)));
     }
@@ -933,10 +936,14 @@ void TB_EVManager::updateEVs()
 void TB_EVManager::changeEV(const QString &newvalue)
 {
     int mstat = stat(sender());
+
     poke()->setEV(mstat, std::max(std::min(newvalue.toInt(), 255), 0));
 
+
+    slider(mstat)->blockSignals(true);
     updateEV(mstat);
     updateMain();
+    slider(mstat)->blockSignals(false);
 
     emit EVChanged(mstat);
 }

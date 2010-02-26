@@ -4,7 +4,7 @@
 
 ServerChoice::ServerChoice()
 {
-    setFixedSize(400,400);
+    resize(500,450);
 
     registry_connection = new Analyzer(true);
     registry_connection->connectTo("pokeymon.zapto.org", 5081);
@@ -15,7 +15,6 @@ ServerChoice::ServerChoice()
 
     QVBoxLayout *l = new QVBoxLayout(this);
     mylist = new QCompactTable(0,3);
-    mylist->setMinimumHeight(200);
 
     QStringList horHeaders;
     horHeaders << tr("Server Name") << tr("Players") << tr("Advanced connection");
@@ -25,13 +24,16 @@ ServerChoice::ServerChoice()
     mylist->setShowGrid(false);
     mylist->verticalHeader()->hide();
     mylist->horizontalHeader()->setStretchLastSection(true);
+    mylist->setMinimumHeight(200);
+
     connect(mylist, SIGNAL(cellActivated(int,int)), SLOT(regServerChosen(int)));
     connect(mylist, SIGNAL(currentCellChanged(int,int,int,int)), SLOT(showDescription(int)));
 
-    l->addWidget(new QEntitled(tr("&Servers"), mylist));
+    l->addWidget(mylist, 100);
 
     myDesc = new QTextEdit();
     myDesc->setReadOnly(true);
+    myDesc->setFixedHeight(100);
     l->addWidget(new QEntitled("Server Description", myDesc));
 
     QSettings settings;

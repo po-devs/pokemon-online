@@ -6,26 +6,21 @@
 #include "serverchoice.h"
 #include <QStyleFactory>
 
-MainWindow::MainWindow() : m_menu(0), m_TB(0)
+MainEngine::MainEngine() : displayer(0)
 {
-    this->setObjectName("MainWindow");
-
-    setWindowTitle(tr("Pokemon Online"));
-    layout()->setSizeConstraint(QLayout::SetFixedSize);
-
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     QSettings settings;
     /* initializing the default init values if not there */
     if (settings.value("team_location").isNull()) {
-	settings.setValue("team_location", "Team/trainer.tp");
+        settings.setValue("team_location", "Team/trainer.tp");
     }
     if (settings.value("application_style").isNull()) {
-	settings.setValue("application_style", "cleanlooks");
+        settings.setValue("application_style", "cleanlooks");
     }
     if (settings.value("stylesheet").isNull()) {
-	settings.setValue("stylesheet", "db/default.qss");
+        settings.setValue("stylesheet", "db/default.qss");
     }
 
     PokemonInfo::init("db/");
@@ -45,62 +40,59 @@ MainWindow::MainWindow() : m_menu(0), m_TB(0)
     stylesheet.open(QIODevice::ReadOnly);
     qApp->setStyleSheet(stylesheet.readAll());
     loadTeam(settings.value("team_location").toString());
-    /* launching the first window */
+
     launchMenu();
 }
 
-TrainerTeam * MainWindow::trainerTeam()
+#define MainEngineRoutine(widget) \
+    delete displayer; \
+    displayer = new QMainWindow(); \
+    displayer->resize(widget->size()); \
+    displayer->setWindowTitle(tr("Pokemon Online")); \
+    displayer->setCentralWidget(widget); \
+    displayer->setMenuBar(widget->createMenuBar(this)); \
+    displayer->show();
+
+void MainEngine::launchMenu()
 {
-    return & m_team;
+    TB_Menu *menu = new TB_Menu();
+    MainEngineRoutine(menu);
+
+    connect(menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
+    connect(menu, SIGNAL(goToExit()), SLOT(quit()));
+    connect(menu, SIGNAL(goToOnline()), SLOT(launchServerChoice()));
+    connect(menu, SIGNAL(goToCredits()), SLOT(launchCredits()));
 }
 
-void MainWindow::launchMenu()
-{
-    m_menu = new TB_Menu();
-
-    /* We want to have space around the menu, so we put it in another widget ... */
-
-    setCentralWidget(m_menu);
-    setMenuBar(m_menu->createMenuBar(this));
-
-    connect(m_menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
-    connect(m_menu, SIGNAL(goToExit()), SLOT(close()));
-    connect(m_menu, SIGNAL(goToOnline()), SLOT(launchServerChoice()));
-    connect(m_menu, SIGNAL(goToCredits()), SLOT(launchCredits()));
-}
-
-void MainWindow::launchCredits()
+void MainEngine::launchCredits()
 {
 }
 
-void MainWindow::launchTeamBuilder()
+void MainEngine::launchTeamBuilder()
 {
-    m_TB = new TeamBuilder(trainerTeam());
-    connect(m_TB,SIGNAL(showDockAdvanced(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)),
-            this,SLOT(setDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
-    connect(m_TB, SIGNAL(done()), SLOT(launchMenu()));
+    TeamBuilder *TB = new TeamBuilder(trainerTeam());
+    MainEngineRoutine(TB);
 
-    setCentralWidget(m_TB);
-    setMenuBar(m_TB->createMenuBar(this));
+    connect(TB,SIGNAL(showDockAdvanced(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)),
+            SLOT(setDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
+    connect(TB, SIGNAL(done()), SLOT(launchMenu()));
 }
 
-void MainWindow::launchServerChoice()
+void MainEngine::launchServerChoice()
 {
     if (trainerTeam()->trainerNick().length() == 0) {
-        QMessageBox::information(this, tr("Impossible to go online"), tr("You haven't set your name yet. Do so in the teambuilder."));
+        QMessageBox::information(displayer, tr("Impossible to go online"), tr("You haven't set your name yet. Do so in the teambuilder."));
         return;
     }
 
-    m_choice = new ServerChoice();
+    ServerChoice *choice = new ServerChoice();
+    MainEngineRoutine(choice);
 
-    connect(m_choice, SIGNAL(rejected()), SLOT(launchMenu()));
-    connect(m_choice, SIGNAL(serverChosen(QString)), this, SLOT(goOnline(QString)));
-
-    setMenuBar(NULL);
-    setCentralWidget(m_choice);
+    connect(choice, SIGNAL(rejected()), SLOT(launchMenu()));
+    connect(choice, SIGNAL(serverChosen(QString)), this, SLOT(goOnline(QString)));
 }
 
-void MainWindow::changeStyle()
+void MainEngine::changeStyle()
 {
     QAction * a = qobject_cast<QAction *>(sender());
     if(!a)
@@ -113,7 +105,7 @@ void MainWindow::changeStyle()
     setting.setValue("application_style",style);
 }
 
-void MainWindow::changeLanguage()
+void MainEngine::changeLanguage()
 {
     QAction * a = qobject_cast<QAction *>(sender());
     if(!a)
@@ -130,30 +122,34 @@ void MainWindow::changeLanguage()
 
     setting.setValue("language",lang);
 
-    QMessageBox::information(this, tr("Language Change"), tr("Restart the application to see the changes."));
+    QMessageBox::information(displayer, tr("Language Change"), tr("Restart the application to see the changes."));
 }
 
-void MainWindow::goOnline(const QString &url)
+void MainEngine::goOnline(const QString &url)
 {
-    m_client = new Client(trainerTeam(), url);
-    setCentralWidget(m_client);
-    setMenuBar(m_client->createMenuBar(this));
+    Client * client = new Client(trainerTeam(), url);
+    MainEngineRoutine(client);
 
-    connect(m_client, SIGNAL(done()), SLOT(launchMenu()));
-    connect(m_client, SIGNAL(updateMenuBar()), SLOT(updateMenuBar()));
+    connect(client, SIGNAL(done()), SLOT(launchMenu()));
+    connect(client, SIGNAL(updateMenuBar()), SLOT(updateMenuBar()));
 }
 
-void MainWindow::updateMenuBar()
+void MainEngine::updateMenuBar()
 {
-    setMenuBar(m_client->createMenuBar(this));
+    displayer->setMenuBar(((Client*)sender())->createMenuBar(this));
 }
 
-void MainWindow::loadTeam(const QString &path)
+void MainEngine::quit()
+{
+    displayer->close();
+}
+
+void MainEngine::loadTeam(const QString &path)
 {
     trainerTeam()->loadFromFile(path);
 }
 
-void MainWindow::loadTeamDialog()
+void MainEngine::loadTeamDialog()
 {
     QSettings settings;
     QString newLocation;
@@ -163,12 +159,15 @@ void MainWindow::loadTeamDialog()
     }
 }
 
-void MainWindow::setDock(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation orient)
+void MainEngine::setDock(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation orient)
 {
-    this->addDockWidget(areas,dock,orient);
+    //displayer->resize(displayer->width() + dock->width(), displayer->height());
+    displayer->addDockWidget(areas,dock,orient);
 }
 
-void MainWindow::removeDock(QDockWidget * dock)
+void MainEngine::removeDock(QDockWidget * dock)
 {
-    this->removeDockWidget(dock);
+    displayer->removeDockWidget(dock);
 }
+
+#undef MainEngineRoutine

@@ -5,7 +5,7 @@
 #include "analyze.h"
 #include "../PokemonInfo/networkstructs.h"
 
-class MainWindow;
+class MainEngine;
 class BaseChallengeWindow;
 class QIdListWidgetItem;
 class BattleWindow;
@@ -26,7 +26,7 @@ public:
     Client(TrainerTeam *, const QString &url);
 
     TrainerTeam *team();
-    QMenuBar *createMenuBar(MainWindow *w);
+    QMenuBar *createMenuBar(MainEngine *w);
 
     void printLine(const QString &line);
     void printHtml(const QString &html);

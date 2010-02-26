@@ -1345,7 +1345,7 @@ void StatInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     fill_container_with_file(m_stats, trFile(path("stats")));
-    fill_container_with_file(m_status, path("status_en.txt"));
+    fill_container_with_file(m_status, trFile(path("status")));
 
     m_statusIcons[-2] = QPixmap(path("status-2.png"));
     m_battleIcons[-2] = QPixmap(path("battle_status-2.png"));
@@ -1371,7 +1371,7 @@ QString StatInfo::Stat(int stat)
 
 QString StatInfo::Status(int stat)
 {
-    return m_status[stat+1];
+    return m_status[stat];
 }
 
 QString StatInfo::ShortStatus(int stat)

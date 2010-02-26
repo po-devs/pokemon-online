@@ -2238,8 +2238,15 @@ Leech Seed can be used and will still damage its target, but will not heal the u
 struct MMHealBlock: public MM
 {
     MMHealBlock() {
+        functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
     }
+    static void daf(int s, int t, BS &b) {
+        if (poke(b,t).value("HealBlockCount").toInt() > 0) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
     static void uas(int s, int t, BS &b) {
 	poke(b,t)["HealBlockCount"] = 5;
 	addFunction(poke(b,t), "EndTurn", "HealBlock", &et);
@@ -2768,6 +2775,7 @@ struct MMMimic : public MM
 {
     MMMimic() {
 	functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -2789,8 +2797,8 @@ struct MMMimic : public MM
 
     static void uas(int s, int t, BS &b) {
 	int move = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
-	poke(b,s)["Move" + QString::number(poke(b,s)["MoveSlot"].toInt())] = move;
-	b.changePP(s,move,5);
+        int slot = poke(b,s)["MoveSlot"].toInt();
+        b.changeTempMove(s, slot, move);
 	b.sendMoveMessage(81,0,s,type(b,s),t,move);
     }
 };

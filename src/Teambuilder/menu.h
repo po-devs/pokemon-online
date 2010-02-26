@@ -4,7 +4,7 @@
 #include <QtGui>
 #include "../Utilities/otherwidgets.h"
 
-class MainWindow;
+class MainEngine;
 
 /* The plain menu you see when the program starts.
    When you click a button, it sends a signal to the main window to tell it to
@@ -27,7 +27,7 @@ class TB_Menu : public QImageBackground
 public:
     TB_Menu();
     /* Creates a menu bar to give to the main window */
-    QMenuBar *createMenuBar(MainWindow *w);
+    QMenuBar *createMenuBar(MainEngine *w);
 
 signals:
     void goToTeambuilder();

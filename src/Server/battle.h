@@ -90,8 +90,8 @@ public:
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
 	represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
     void useAttack(int player, int attack, bool specialOccurence = false, bool notify = true);
-    int attacker();
-    int attacked();
+    int attacker(); // returns the poke that attacks or -1 if not attacking
+    int attacked(); // returns the poke that is attacked or -1 if not attacking
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);
     /* Sends a poke back to his pokeball (not koed) */
@@ -162,6 +162,7 @@ public:
     void notifyInfos();
     BattleStats constructStats(int player);
 
+    void changeTempMove(int player, int slot, int move);
     /* Send a message to the outworld */
     enum BattleCommand
     {
@@ -199,7 +200,14 @@ public:
         DynamicInfo,
         DynamicStats,
         Spectating,
-        SpectatorChat
+        SpectatorChat,
+        AlreadyStatusMessage,
+        ChangeTempPoke
+    };
+
+    enum ChangeTempPoke {
+        TempMove,
+        TempAbility
     };
 
     enum WeatherM

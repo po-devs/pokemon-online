@@ -22,7 +22,7 @@ QEntitled::QEntitled(const QString &title, QWidget *widget)
         m_widget = widget;
     else
         m_widget = new QWidget();
-    m_layout->addWidget(m_widget, 0, Qt::AlignTop);
+    m_layout->addWidget(m_widget, 100, Qt::AlignTop);
     m_title->setBuddy(m_widget);
 
     /* Makes the title/items stick together */

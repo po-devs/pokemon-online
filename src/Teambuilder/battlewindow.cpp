@@ -91,10 +91,15 @@ void BattleWindow::switchTo(int pokezone)
     info().currentIndex = pokezone;
     info().pokes[Myself] = info().myteam.poke(pokezone);
     info().pokeAlive[Myself] = info().pokes[Myself].status() != Pokemon::Koed;
+    info().tempPoke() = info().currentPoke();
 
     mystack->setCurrentIndex(pokezone);
     myattack->setText(tr("&Attack"));
     mydisplay->updatePoke(Myself);
+
+    for (int i = 0; i<4; i++) {
+        myazones[info().currentIndex]->attacks[i]->updateAttack(info().tempPoke().move(i));
+    }
 }
 
 void BattleWindow::clickClose()
@@ -200,33 +205,6 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
 
     switch (command)
     {
-    case SendBack:
-    case UseAttack:
-    case Hit:
-    case Effective:
-    case CriticalHit:
-    case Miss:
-    case StatChange:
-    case StatusChange:
-    case StatusMessage:
-    case Failed:
-    case BattleChat:
-    case MoveMessage:
-    case NoOpponent:
-    case ItemMessage:
-    case Flinch:
-    case Recoil:
-    case WeatherMessage:
-    case BeginTurn:
-    case AbilityMessage:
-    case Substitute:
-    case BlankMessage:
-    case Spectating:
-    case SpectatorChat:
-    case Clause:
-    case DynamicInfo:
-        BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
-        break;
     case SendOut:
 	{
             info().sub[spot] = false;
@@ -252,7 +230,8 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
 
 	    //Think to check for crash if currentIndex != -1, move > 3
 	    info().currentPoke().move(move).PP() = PP;
-	    myazones[info().currentIndex]->attacks[move]->updateAttack(info().currentPoke().move(move));
+            info().tempPoke().move(move).PP() = PP;
+            myazones[info().currentIndex]->attacks[move]->updateAttack(info().tempPoke().move(move));
 	}
     case OfferChoice:
 	{
@@ -269,6 +248,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             if (spot == Myself) {
 		/* Think to check for crash */
 		info().currentPoke().lifePoints() = newHp;
+                info().tempPoke().lifePoints() = newHp;
                 info().pokes[Myself].lifePercent() = info().currentPoke().lifePercent();
                 mypzone->pokes[info().validIndex()]->update();
 	    } else {
@@ -340,7 +320,21 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             mydisplay->updateToolTip(Myself);
             break;
         }
+    case TempPokeChange:
+        {
+            quint8 type;
+            in >> type;
+            if (type == TempMove) {
+                quint8 slot;
+                quint16 move;
+                in >> slot >> move;
+                info().tempPoke().move(slot).num() = move;
+                myazones[info().currentIndex]->attacks[slot]->updateAttack(info().tempPoke().move(slot));
+            }
+            break;
+        }
     default:
+        BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
         break;
     }
 }

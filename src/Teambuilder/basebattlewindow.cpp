@@ -196,10 +196,15 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             } else if (status == -1) {
                 printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), TypeInfo::Color(Move::Ghost).name()));
             }
-            info().pokes[spot].status() = status;
-            mydisplay->updatePoke(spot);
+            if (status != -1) {
+                info().pokes[spot].status() = status;
+                mydisplay->updatePoke(spot);
+            }
             break;
         }
+    case AlreadyStatusMessage:
+        printHtml(toColor(tr("%1 is already %2!").arg(tu(nick(spot)), StatInfo::Status(info().pokes[spot].status())), StatInfo::StatusColor(info().pokes[spot].status())));
+        break;
     case StatusMessage:
         {
             qint8 status;

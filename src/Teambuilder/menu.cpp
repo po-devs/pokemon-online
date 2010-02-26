@@ -27,7 +27,7 @@ TB_Menu::TB_Menu()
     connect (exit, SIGNAL(clicked()), SIGNAL(goToExit()));
 }
 
-QMenuBar * TB_Menu::createMenuBar(MainWindow *w)
+QMenuBar * TB_Menu::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();
     menuBar->setStyleSheet("QMenuBar{background-image:url(db/menu_background.png);}");/*tr("QMenuBar{background-color:rgb(30,30,100);}"));*/
