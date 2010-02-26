@@ -82,7 +82,14 @@ public:
         DynamicInfo,
         DynamicStats,
         Spectating,
-        SpectatorChat
+        SpectatorChat,
+        AlreadyStatusMessage,
+        TempPokeChange
+    };
+
+    enum TempPokeChange {
+        TempMove,
+        TempAbility
     };
 
     enum WeatherM

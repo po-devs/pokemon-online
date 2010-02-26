@@ -124,6 +124,10 @@ void BattleSituation::addSpectator(int id)
     }
 
 
+    foreach (int specId, spectators) {
+        notify(key, Spectating, 0, true, qint32(specId));
+    }
+
     notify(All, Spectating, 0, true, qint32(id));
     notify(key, BlankMessage, 0);
 
@@ -1458,7 +1462,12 @@ bool BattleSituation::canGetStatus(int player, int status) {
 
 void BattleSituation::inflictStatus(int player, int status, int attacker)
 {
-    if (poke(player).status() == Pokemon::Fine && canGetStatus(player,status)) {
+    if (poke(player).status() != Pokemon::Fine) {
+        if (this->attacker() == attacker && turnlong[attacker]["Power"].toInt() == 0)
+            notify(All, AlreadyStatusMessage, player);
+        return;
+    }
+    if (canGetStatus(player,status)) {
         if (attacker != player) {
             QString q = QString("StatModFrom%1Prevented").arg(attacker);
             turnlong[player].remove(q);
@@ -1867,17 +1876,24 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	    inflictRecoil(source, player);
 	    callieffects(source,player, "UponDamageInflicted");
 	    calleffects(source, player, "UponDamageInflicted");
-	    if (!sub) {
-		callieffects(player, source, "UponOffensiveDamageReceived");
-                callaeffects(player, source, "UponOffensiveDamageReceived");
-		calleffects(player, source, "UponOffensiveDamageReceived");
-		callpeffects(player, source, "UponOffensiveDamageReceived");
-	    }
 	}
+        if (!sub) {
+            callieffects(player, source, "UponOffensiveDamageReceived");
+            callaeffects(player, source, "UponOffensiveDamageReceived");
+            calleffects(player, source, "UponOffensiveDamageReceived");
+            callpeffects(player, source, "UponOffensiveDamageReceived");
+        }
     }
 
     if (!sub)
 	turnlong[player]["DamageTaken"] = damage;
+}
+
+void BattleSituation::changeTempMove(int player, int slot, int move)
+{
+    pokelong[player]["Move" + QString::number(slot)] = move;
+    changePP(player,slot,std::min(5, int(poke(player).move(slot).PP())));
+    notify(player, ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
 }
 
 void BattleSituation::inflictSubDamage(int player, int damage, int source)
@@ -2056,6 +2072,8 @@ void BattleSituation::changeCurrentPoke(int player, int poke)
 void BattleSituation::changePP(int player, int move, int PP)
 {
     poke(player).move(move).PP() = PP;
+
+    notify(player, ChangePP, player, quint8(move), poke(player).move(move).PP());
 }
 
 void BattleSituation::losePP(int player, int move, int loss)
@@ -2064,8 +2082,6 @@ void BattleSituation::losePP(int player, int move, int loss)
 
     PP = std::max(PP-loss, 0);
     changePP(player, move, PP);
-
-    notify(player, ChangePP, player, quint8(move), poke(player).move(move).PP());
 
     callieffects(player, player, "AfterPPLoss");
 }

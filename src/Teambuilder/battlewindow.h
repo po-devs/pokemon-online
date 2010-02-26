@@ -10,8 +10,9 @@ class PokeZone;
 class BattleDisplay;
 class QScrollDownTextEdit;
 
-struct BattleInfo : public BaseBattleInfo
+class BattleInfo : public BaseBattleInfo
 {
+public:
     BattleInfo(const TeamBattle &myteam, const QString &me, const QString &opp);
 
     /* Possible choices */
@@ -31,6 +32,8 @@ struct BattleInfo : public BaseBattleInfo
     int validIndex() const {
         return currentIndex == -1 ? lastIndex : currentIndex;
     }
+
+    PROPERTY(PokeBattle, tempPoke);
 };
 
 /* The battle window called by the client, online */

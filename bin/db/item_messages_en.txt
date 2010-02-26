@@ -14,7 +14,7 @@
 
 
 
-%s restored a little HP using its Black Slude!|%s was hurt by Black Sludge!
+%s restored a little HP using its Black Sludge!|%s was hurt by Black Sludge!
 
 
 %s's Flame Orb activated!|%s's Toxic Orb activated!

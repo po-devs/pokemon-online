@@ -9,12 +9,15 @@
 
 class QCompactTable;
 class Analyzer;
+class MainEngine;
 
 class ServerChoice : public QWidget
 {
     Q_OBJECT
 public:
     ServerChoice();
+
+    QMenuBar* createMenuBar(MainEngine *) {return NULL;}
 public slots:
     void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip);
 signals:

@@ -14,21 +14,10 @@ class ServerChoice;
    All the general initialization is done here, the persistent data (i.e the team) too.
    The main window manages the sub-modules. */
 
-class MainWindow : public QMainWindow
-{
+class MainEngine : public QObject {
     Q_OBJECT
-private:
-    TrainerTeam m_team;
-
-    TB_Menu *m_menu;
-    TeamBuilder *m_TB;
-    Client *m_client;
-    ServerChoice *m_choice;
-
-    TrainerTeam *trainerTeam();
-
 public:
-    MainWindow();
+    MainEngine();
 
     void loadTeam(const QString &path);
 public slots:
@@ -40,12 +29,32 @@ public slots:
     void changeStyle();
     void changeLanguage();
     void updateMenuBar();
+    void quit();
 
     /* slots called by subwindows when they need it */
     void loadTeamDialog();
 
     void setDock(Qt::DockWidgetArea area,QDockWidget * dock,Qt::Orientation orient);
     void removeDock(QDockWidget * dock);
+private:
+    QMainWindow *displayer;
+
+    TrainerTeam m_team;
+    TrainerTeam *trainerTeam() {
+        return &m_team;
+    }
+};
+
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+private:
+
+
+    TB_Menu *m_menu;
+    TeamBuilder *m_TB;
+    Client *m_client;
+    ServerChoice *m_choice;
 };
 
 #endif // MAINWINDOW_H

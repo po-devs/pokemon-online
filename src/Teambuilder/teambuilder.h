@@ -14,7 +14,7 @@ class pokeButton;
 class TrainerTeam;
 class Team;
 class PokeTeam;
-class MainWindow;
+class MainEngine;
 
 /* The Teambuilder!! */
 class TeamBuilder : public QWidget
@@ -78,7 +78,7 @@ public:
     Team * getTeam()const;
 
     /* Create a menu bar to give to the main window */
-    QMenuBar *createMenuBar(QMainWindow *w);
+    QMenuBar *createMenuBar(MainEngine *w);
     void createDockAdvanced();
 };
 

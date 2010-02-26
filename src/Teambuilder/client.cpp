@@ -17,7 +17,7 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
     mybattle = NULL;
     myteambuilder = NULL;
 
-    setFixedSize(800, 600);
+    resize(800, 600);
 
     QGridLayout *layout = new QGridLayout(this);
 
@@ -222,7 +222,7 @@ void Client::sendText()
     myline->clear();
 }
 
-QMenuBar * Client::createMenuBar(MainWindow *w)
+QMenuBar * Client::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
@@ -749,7 +749,7 @@ void Client::openTeamBuilder()
     TeamBuilder *t = new TeamBuilder(myteam);
     myteambuilder->setCentralWidget(t);
     myteambuilder->show();
-    myteambuilder->setMenuBar(t->createMenuBar(myteambuilder));
+    myteambuilder->setMenuBar(t->createMenuBar((MainEngine*)parent()));
     myteambuilder->layout()->setSizeConstraint(QLayout::SetFixedSize);
 
     connect(t, SIGNAL(done()), this, SLOT(changeTeam()));

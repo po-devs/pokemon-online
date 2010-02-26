@@ -63,9 +63,8 @@ int main(int argc, char *argv[])
         /* icon ;) */
 	a.setWindowIcon(QIcon("db/icon.png"));
 
-	MainWindow w;
+        MainEngine w;
 
-	w.show();
 	return a.exec();
     } catch (const QString &e) {
 	qDebug() << "Exception: " << e;

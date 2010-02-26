@@ -566,7 +566,7 @@ void Player::recvTeam(const TeamInfo &team)
 {
     cancelChallenges();
 
-    if (team.name == this->team().name) {
+    if (team.name.toLower() == this->team().name.toLower()) {
         /* No authentification required... */
         this->team() = team;
         emit recvTeam(id(), team.name); // no check needed, going directly there...

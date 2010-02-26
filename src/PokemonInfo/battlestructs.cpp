@@ -1,6 +1,7 @@
 #include "battlestructs.h"
 #include "pokemoninfo.h"
 #include "networkstructs.h"
+#include "../Utilities/otherwidgets.h"
 
 QString ChallengeInfo::clauseText[] =
 {
@@ -111,8 +112,10 @@ void PokeBattle::init(const PokePersonal &poke)
     QSet<int> moves = p.moves();
     QList<int> pokemoves;
 
+    QNickValidator v(NULL);
+
     num() = poke.num();
-    nick() = poke.nickname();
+    nick() = v.validate(poke.nickname()) == QNickValidator::Acceptable ? poke.nickname() : PokemonInfo::Name(num());
     if (GenderInfo::Possible(poke.gender(), p.genderAvail())) {
 	gender() = poke.gender();
     } else {
@@ -337,7 +340,7 @@ void TeamBattle::generateRandom()
         p.updateStats();
         p.nick() = PokemonInfo::Name(p.num());
         p.status() = Pokemon::Fine;
-        p.shiny() = true_rand() % 2;
+        p.shiny() = !(true_rand() % 50);
     }
 }
 
