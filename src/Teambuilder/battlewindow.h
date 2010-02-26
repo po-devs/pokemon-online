@@ -86,7 +86,7 @@ signals:
     void forfeit();
 protected:
     void closeEvent(QCloseEvent *);
-    virtual void dealWithCommandInfo(QDataStream &s, int command, int spot);
+    virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);
 private:
     QStackedWidget *mystack;
     AttackZone *myazones[6];

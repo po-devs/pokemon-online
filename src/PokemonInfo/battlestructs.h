@@ -62,7 +62,9 @@ class PokeBattle
     PROPERTY(bool, shiny);
     PROPERTY(quint8, gender);
     PROPERTY(quint8, level);
+    PROPERTY(quint8, nature);
     PROPERTY(QList<int>, dvs);
+    PROPERTY(QList<int>, evs);
 public:
     PokeBattle();
 
@@ -72,6 +74,7 @@ public:
     const BattleMove& move(int i) const;
 
     quint16 normalStat(int stat) const;
+    void updateStats();
 
     bool ko() const {return lifePoints() == 0 || num() == 0 || status() == Pokemon::Koed;}
     bool isFull() const { return lifePoints() == totalLifePoints(); }
@@ -114,6 +117,7 @@ public:
     /* removes the invalid pokemons */
     TeamBattle(const TeamInfo &other);
     void init(const TeamInfo &other);
+    void generateRandom();
 
     PokeBattle& poke(int i);
     const PokeBattle& poke(int i) const;
@@ -188,13 +192,16 @@ struct ChallengeInfo
         FreezeClause = 2,
         EvasionClause = 4,
         OHKOClause = 8,
-        DisallowSpectator = 16
+        DisallowSpectator = 16,
+        LevelBalance = 32,
+        ChallengeCup = 64
     };
 
-    static const int numberOfClauses = 5;
+    static const int numberOfClauses = 7;
 
     static QString clauseText[numberOfClauses];
     static QString clauseBattleText[numberOfClauses];
+    static QString clauseDescription[numberOfClauses];
 
     static QString clause(int index) {
         return index >= 0 && index < numberOfClauses ? clauseText[index] : "";
@@ -202,6 +209,10 @@ struct ChallengeInfo
     
     static QString battleText(int index) {
         return index >= 0 && index < numberOfClauses ? clauseBattleText[index] : "";
+    }
+
+    static QString description(int index) {
+        return index >= 0 && index < numberOfClauses ? clauseDescription[index] : "";
     }
 
     quint32 clauses;

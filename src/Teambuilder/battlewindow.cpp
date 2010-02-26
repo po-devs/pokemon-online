@@ -62,6 +62,7 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
 
     switchTo(0);
     show();
+    printHtml(toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(name(true), name(false)));
 }
 
 QString BattleWindow::nick(int spot) const
@@ -187,7 +188,7 @@ void BattleWindow::sendMessage()
     }
 }
 
-void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot)
+void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
 {
     if (spot < 2) {
         if (conf().ids[spot] == idme()) {
@@ -224,7 +225,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot)
     case SpectatorChat:
     case Clause:
     case DynamicInfo:
-        BaseBattleWindow::dealWithCommandInfo(in, command, spot);
+        BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
         break;
     case SendOut:
 	{
@@ -283,7 +284,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot)
             else
                 mypzone->pokes[info().lastIndex]->setEnabled(false); //crash!!
         }
-        BaseBattleWindow::dealWithCommandInfo(in, command,spot);
+        BaseBattleWindow::dealWithCommandInfo(in, command,spot, truespot);
         break;
 
     case StraightDamage :
@@ -321,7 +322,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot)
     case BattleEnd:
         {
             myclose->setText(tr("&Close"));
-            BaseBattleWindow::dealWithCommandInfo(in, command,spot);
+            BaseBattleWindow::dealWithCommandInfo(in, command,spot, truespot);
             break;
         }
 
@@ -465,8 +466,9 @@ PokeButton::PokeButton(const PokeBattle &p)
     setIcon(PokemonInfo::Icon(p.num()));
     update();
 
-    QString tooltip = tr("%1\n\nMoves:\n--%2\n--%3\n--%4\n--%5").arg(PokemonInfo::Name(p.num()), MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
-                                                     MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num()));
+    QString tooltip = tr("%1 lv %2\n\nItem:%3\nAbility:%4\n\nMoves:\n--%5\n--%6\n--%7\n--%8").arg(PokemonInfo::Name(p.num()), QString::number(p.level()), ItemInfo::Name(p.item()),
+                                                                                AbilityInfo::Name(p.ability()), MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
+                                                                                MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num()));
     setToolTip(tooltip);
 }
 
@@ -514,7 +516,7 @@ void BattleDisplay::updatePoke(int spot)
 void BattleDisplay::updateToolTip(int spot)
 {
     if (spot == Opponent) {
-        BaseBattleDisplay::updatePoke(spot);
+        BaseBattleDisplay::updateToolTip(spot);
         return;
     }
 

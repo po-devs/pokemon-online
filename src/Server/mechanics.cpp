@@ -28,25 +28,25 @@ int Mechanics::move(BattleSituation &b, int source)
 
 void Mechanics::addFunction(BattleSituation::context &c, const QString &effect, const QString &name, Mechanics::function f)
 {
-    if (!c.contains(effect)) {
-	/* Those three steps are absolutely required, cuz of fucktard lack of QVariant template constuctor/ template operator =
-		and fucktard QSharedPointer implicit conversion */
+    if (!c.contains("Effect_" + effect)) {
+        /* Those three steps are absolutely required, cuz of lack of QVariant template constuctor/ template operator =
+                and QSharedPointer implicit conversion */
 	QVariant v;
 	v.setValue(QSharedPointer<QSet<QString> >(new QSet<QString>()));
-	c.insert(effect, v);
+        c.insert("Effect_" + effect, v);
     }
-    c[effect].value<QSharedPointer<QSet<QString> > >()->insert(name);
+    c["Effect_"+effect].value<QSharedPointer<QSet<QString> > >()->insert(name);
 
     QVariant v;
     v.setValue(f);
-    c.insert(effect + "_" + name,v);
+    c.insert("Effect_" + effect + "_" + name,v);
 }
 
 void Mechanics::removeFunction(BattleSituation::context &c, const QString &effect, const QString &name)
 {
-    if (!c.contains(effect)) {
+    if (!c.contains("Effect_" + effect)) {
 	return;
     }
     c[effect].value<QSharedPointer<QSet<QString> > >()->remove(name);
-    c.remove(effect + "_" + name);
+    c.remove("Effect_" + effect + "_" + name);
 }

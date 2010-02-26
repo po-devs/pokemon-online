@@ -19,6 +19,7 @@ BaseBattleWindow::BaseBattleWindow(const QString &me, const QString &opponent)
     mydisplay = new BaseBattleDisplay(info());
     init();
     show();
+    printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(name(true), name(false)));
 }
 
 void BaseBattleWindow::init()
@@ -42,7 +43,6 @@ void BaseBattleWindow::init()
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
 
-    printHtml(toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(name(true), name(false)));
     layout()->setSizeConstraint(QLayout::SetFixedSize);
 
 }
@@ -93,10 +93,10 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
 
     in >> command >> player;
 
-    dealWithCommandInfo(in, command, player);
+    dealWithCommandInfo(in, command, player, player);
 }
 
-void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot)
+void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
 {
     switch (command)
     {
@@ -419,9 +419,9 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             in >> inBattle;
 
             if (inBattle) {
-                printLine(ChallengeInfo::battleText(spot));
+                printLine(ChallengeInfo::battleText(truespot));
             } else {
-                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(spot));
+                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(truespot));
             }
             break;
         }

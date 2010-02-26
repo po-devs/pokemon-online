@@ -146,7 +146,7 @@ protected:
     void init();
 
     void closeEvent(QCloseEvent *);
-    virtual void dealWithCommandInfo(QDataStream &s, int command, int spot);
+    virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);
 };
 
 class BaseGraphicsZone;
