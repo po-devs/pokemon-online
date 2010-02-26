@@ -387,7 +387,10 @@ void Client::seeChallenge(const ChallengeInfo &c)
 void Client::battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
     mybattle = new BattleWindow(this->team()->trainerNick(),name(id), this->id(ownName()), id, team, conf);
+    mybattle->setParent(this);
+    mybattle->setWindowFlags(Qt::Window);
     mybattle->client() = this;
+    mybattle->show();
 
     connect(mybattle, SIGNAL(forfeit()), SLOT(forfeitBattle()));
     connect(mybattle, SIGNAL(battleCommand(BattleChoice)), &relay(), SLOT(battleCommand(BattleChoice)));
@@ -401,6 +404,9 @@ void Client::battleStarted(int id, const TeamBattle &team, const BattleConfigura
 void Client::watchBattle(const QString &name0, const QString &name1, int battleId)
 {
     BaseBattleWindow *battle = new BaseBattleWindow(name0, name1);
+    battle->setParent(this);
+    battle->setWindowFlags(Qt::Window);
+    battle->show();
 
     connect(this, SIGNAL(destroyed()), battle, SLOT(close()));
     connect(battle, SIGNAL(closedBW(int)), SLOT(stopWatching(int)));
