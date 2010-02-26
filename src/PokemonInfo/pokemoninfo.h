@@ -26,6 +26,7 @@ private:
     static QTSList<int> m_Ability1;
     static QTSList<int> m_Ability2;
     static QTSList<PokeBaseStats> m_BaseStats;
+    static QTSList<int> m_LevelBalance;
 
     static void loadNames();
     static void loadBaseStats();
@@ -40,6 +41,7 @@ public:
     static int NumberOfPokemons();
     static QString Name(int pokenum);
     static int Number(const QString &pokename);
+    static int LevelBalance(int pokenum);
     static float Weight(int pokenum);
     static int Gender(int pokenum);
     static int Type1(int pokenum);
@@ -178,9 +180,7 @@ public:
     static bool Exist(int itemnum);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
-#ifndef MULTI_THREADED_ACCESS
-    static QStringList SortedNames();
-#endif
+    static QTSList<QString> SortedNames();
     static QList<Effect> Effects(int item);
     static QString Message(int item, int part);
     static int Number(const QString &itemname);

@@ -2,22 +2,37 @@
 #include "pokemoninfo.h"
 #include "networkstructs.h"
 
-QString ChallengeInfo::clauseText[5] =
+QString ChallengeInfo::clauseText[] =
 {
     QObject::tr("Sleep Clause"),
     QObject::tr("Freeze Clause"),
     QObject::tr("Evasion Clause"),
     QObject::tr("OHKO Clause"),
-    QObject::tr("Disallow Spectators")
+    QObject::tr("Disallow Spectators"),
+    QObject::tr("Level Balance"),
+    QObject::tr("Challenge Cup")
 };
 
-QString ChallengeInfo::clauseBattleText[5] =
+QString ChallengeInfo::clauseBattleText[] =
 {
     QObject::tr("Sleep Clause prevented the sleep inducing effect of the move from working."),
     QObject::tr("Freeze Clause prevented the freezing effect of the move from working."),
     QObject::tr("Evasion Clause prevented the evasion increase of the move."),
     QObject::tr("OHKO Clause prevented the One Hit KO from happening."),
+    QObject::tr(""),
+    QObject::tr(""),
     QObject::tr("")
+};
+
+QString ChallengeInfo::clauseDescription[] =
+{
+    QObject::tr("You can not put more than one Pokémon of the opposing team to sleep at the same time."),
+    QObject::tr("You can not freeze more than one Pokémon of the opposing team at the same time."),
+    QObject::tr("You can't use evasion moves like Double Team."),
+    QObject::tr("You can't use One Hit KO moves like Fissure."),
+    QObject::tr("Nobody can watch your battle."),
+    QObject::tr("Pokémons levels are changed according to their strength."),
+    QObject::tr("Random teams are given to trainers.")
 };
 
 BattleMove::BattleMove()
@@ -119,6 +134,8 @@ void PokeBattle::init(const PokePersonal &poke)
     shiny() = poke.shiny();
     level() = std::min(100, std::max(int(poke.level()), 1));
 
+    nature() = std::min(NatureInfo::NumberOfNatures(), std::max(0, int(poke.nature())));
+
     int curs = 0;
     for (int i = 0; i < 4; i++) {
 	if (moves.contains(poke.move(i))) {
@@ -139,25 +156,31 @@ void PokeBattle::init(const PokePersonal &poke)
         dvs() << std::min(std::max(poke.DV(i), quint8(0)),quint8(31));
     }
 
-    QList<int> evs;
     for (int i = 0; i < 6; i++) {
-        evs << std::min(std::max(poke.EV(i), quint8(0)), quint8(255));
+        evs() << std::min(std::max(poke.EV(i), quint8(0)), quint8(255));
     }
 
     int sum = 0;
     for (int i = 0; i < 6; i++) {
-	sum += evs[i];
+        sum += evs()[i];
 	if (sum > 510) {
-	    evs[i] -= (sum-510);
+            evs()[i] -= (sum-510);
 	    sum = 510;
 	}
     }
 
-    totalLifePoints() = std::max(PokemonInfo::FullStat(num(), poke.nature(), Hp, p.baseStats().baseHp(), level(), dvs()[Hp], evs[Hp]),1);
+    updateStats();
+}
+
+void PokeBattle::updateStats()
+{
+    PokeBaseStats base = PokemonInfo::BaseStats(num());
+
+    totalLifePoints() = std::max(PokemonInfo::FullStat(num(), nature(), Hp, base.baseHp(), level(), dvs()[Hp], evs()[Hp]),1);
     lifePoints() = totalLifePoints();
 
     for (int i = 0; i < 5; i++) {
-        normal_stats[i] = PokemonInfo::FullStat(num(), poke.nature(), i+1, p.baseStats().baseStat(i+1), level(), dvs()[i+1], evs[i+1]);
+        normal_stats[i] = PokemonInfo::FullStat(num(), nature(), i+1, base.baseStat(i+1), level(), dvs()[i+1], evs()[i+1]);
     }
 }
 
@@ -250,6 +273,72 @@ TeamBattle::TeamBattle(const TeamInfo &other)
 bool TeamBattle::invalid() const
 {
     return poke(0).num() == 0;
+}
+
+void TeamBattle::generateRandom()
+{
+    QList<int> pokes;
+    for (int i = 0; i < 6; i++) {
+        while(1) {
+            int num = true_rand() % PokemonInfo::NumberOfPokemons();
+            if (pokes.contains(num) || num == 0) {
+                continue ;
+            }
+            pokes.push_back(num);
+            break;
+        }
+        PokeGeneral g;
+        PokeBattle &p = poke(i);
+
+        g.num() = pokes[i];
+        p.num() = pokes[i];
+        g.load();
+
+        p.ability() = g.abilities()[1] == 0 ? g.abilities()[0] : g.abilities()[true_rand()%g.abilities().size()];
+        if (g.genderAvail() == Pokemon::MaleAndFemaleAvail) {
+            p.gender() = true_rand()%2 ? Pokemon::Female : Pokemon::Male;
+        } else {
+            p.gender() = g.genderAvail();
+        }
+        p.nature() = true_rand()%NatureInfo::NumberOfNatures();
+        p.level() = PokemonInfo::LevelBalance(p.num());
+
+        PokePersonal p2;
+
+        for (int i = 0; i < 6; i++) {
+            p2.setDV(i, true_rand() % 32);
+        }
+        while (p2.EVSum() < 510) {
+            int stat = true_rand() % 6;
+            p2.setEV(stat, std::min(int(p2.EV(stat)) + (true_rand()%255), 255));
+        }
+
+        p.dvs() << p2.DV(0) << p2.DV(1) << p2.DV(2) << p2.DV(3) << p2.DV(4) << p2.DV(5);
+        p.evs() << p2.EV(0) << p2.EV(1) << p2.EV(2) << p2.EV(3) << p2.EV(4) << p2.EV(5);
+
+        QList<int> moves = g.moves().toList();
+        QList<int> movesTaken;
+        for (int i = 0; i < 4; i++) {
+            if (moves.size() <= i) {
+                break;
+            }
+            while(1) {
+                int movenum = moves[true_rand()%moves.size()];
+                if (movesTaken.contains(movenum)) {
+                    continue;
+                }
+                movesTaken.push_back(movenum);
+                p.move(i).num() = movenum;
+                p.move(i).load();
+                break;
+            }
+        }
+        p.item() = ItemInfo::SortedNumber(ItemInfo::SortedNames()[true_rand()%ItemInfo::NumberOfItems()]);
+        p.updateStats();
+        p.nick() = PokemonInfo::Name(p.num());
+        p.status() = Pokemon::Fine;
+        p.shiny() = true_rand() % 2;
+    }
 }
 
 PokeBattle & TeamBattle::poke(int i)

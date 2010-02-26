@@ -193,7 +193,7 @@ void QNickValidator::fixup(QString &input) const
 
 QValidator::State QNickValidator::validate(const QString &input) const
 {
-    if (input.length() > 15)
+    if (input.length() > 20)
     {
         return QValidator::Invalid;
     }

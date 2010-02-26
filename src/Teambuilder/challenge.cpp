@@ -28,6 +28,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
 
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         clauses[i] = new QCheckBox(ChallengeInfo::clause(i));
+        clauses[i]->setToolTip(ChallengeInfo::description(i));
         clausesL->addWidget(clauses[i]);
     }
 

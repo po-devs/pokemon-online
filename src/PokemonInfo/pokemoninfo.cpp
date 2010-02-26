@@ -15,6 +15,7 @@ QTSList<int> PokemonInfo::m_Type2;
 QTSList<int> PokemonInfo::m_Ability1;
 QTSList<int> PokemonInfo::m_Ability2;
 QTSList<PokeBaseStats> PokemonInfo::m_BaseStats;
+QTSList<int> PokemonInfo::m_LevelBalance;
 
 QString MoveInfo::m_Directory;
 QTSList<QString> MoveInfo::m_Names;
@@ -307,6 +308,7 @@ void PokemonInfo::init(const QString &dir)
     fill_container_with_file(m_Genders, path("poke_gender.txt"));
     fill_container_with_file(m_Ability1, path("poke_ability.txt"));
     fill_container_with_file(m_Ability2, path("poke_ability2.txt"));
+    fill_container_with_file(m_LevelBalance, path("level_balance.txt"));
     loadBaseStats();
 }
 
@@ -328,6 +330,11 @@ bool PokemonInfo::Exist(int n)
 int PokemonInfo::Number(const QString &pokename)
 {
     return (qFind(m_Names.begin(), m_Names.end(), pokename)-m_Names.begin()) % (NumberOfPokemons());
+}
+
+int PokemonInfo::LevelBalance(int pokenum)
+{
+    return m_LevelBalance[pokenum];
 }
 
 int PokemonInfo::Gender(int pokenum)
@@ -988,12 +995,10 @@ int ItemInfo::SortedNumber(const QString &itemname)
     return (qLowerBound(m_SortedNames, itemname) - m_SortedNames.begin()) % (NumberOfItems());
 }
 
-#ifndef MULTI_THREADED_ACCESS
-QStringList ItemInfo::SortedNames()
+QTSList<QString> ItemInfo::SortedNames()
 {
     return m_SortedNames;
 }
-#endif
 
 void TypeInfo::loadNames()
 {

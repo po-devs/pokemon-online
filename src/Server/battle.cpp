@@ -21,6 +21,21 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
     currentForcedSleepPoke[1] = -1;
     p1.battle = this;
     p2.battle = this;
+    if (clauses() & ChallengeInfo::ChallengeCup) {
+        team1.generateRandom();
+        team2.generateRandom();
+    } else {
+        if (clauses() & ChallengeInfo::LevelBalance) {
+            for (int i = 0; i < 6; i++) {
+                team1.poke(i).level() = PokemonInfo::LevelBalance(p1.team().poke(i).num());
+                team1.poke(i).updateStats();;
+            }
+            for (int i = 0; i < 6; i++) {
+                team2.poke(i).level() = PokemonInfo::LevelBalance(p2.team().poke(i).num());
+                team2.poke(i).updateStats();;
+            }
+        }
+    }
 }
 
 MirrorMoveAmn amn;
@@ -524,11 +539,9 @@ void BattleSituation::analyzeChoices()
 
         foreach (int player, it->second) {
             qDebug() << "Stating calling TurnOrder for " << id(player) << "(" << player << ")" ;
-            callaeffects(player,player, "TurnOrder");
-	    callieffects(player,player, "TurnOrder");
-            /* Dont add a calleffect(TurnOrder): if one of the previous
-                works then turnlong[source] would contain the value and not
-                a function and when trying to call the function it'd crash. */
+            callaeffects(player,player, "TurnOrder"); //Stall
+            callieffects(player,player, "TurnOrder"); //Lagging tail & ...
+            calleffects(player,player,"TurnOrder"); // A berry does that
             qDebug() << "Turn order is " << turnlong[player]["TurnOrder"].toInt();
             secondPriorities[turnlong[player]["TurnOrder"].toInt()].push_back(player);
 	}
@@ -632,10 +645,10 @@ void BattleSituation::callEntryEffects(int player)
 void BattleSituation::calleffects(int source, int target, const QString &name)
 {
 
-    if (turnlong[source].contains(name)) {
+    if (turnlong[source].contains("Effect_" + name)) {
 	turnlong[source]["TurnEffectCall"] = true;
         turnlong[source]["TurnEffectCalled"] = name;
-	QSet<QString> &effects = *turnlong[source][name].value<QSharedPointer<QSet<QString> > >();
+        QSet<QString> &effects = *turnlong[source]["Effect_" + name].value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
 	    turnlong[source]["EffectBlocked"] = false;
@@ -645,7 +658,7 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 		continue;
 	    }
 
-	    MoveMechanics::function f = turnlong[source][name + "_" + effect].value<MoveMechanics::function>();
+            MoveMechanics::function f = turnlong[source]["Effect_" + name + "_" + effect].value<MoveMechanics::function>();
 
 	    f(source, target, *this);
 	}
@@ -655,12 +668,12 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 
 void BattleSituation::callpeffects(int source, int target, const QString &name)
 {
-    if (pokelong[source].contains(name)) {
+    if (pokelong[source].contains("Effect_" + name)) {
         turnlong[source]["PokeEffectCall"] = true;
-	QSet<QString> &effects = *pokelong[source][name].value<QSharedPointer<QSet<QString> > >();
+        QSet<QString> &effects = *pokelong[source]["Effect_" + name].value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
-	    MoveMechanics::function f = pokelong[source][name + "_" + effect].value<MoveMechanics::function>();
+            MoveMechanics::function f = pokelong[source]["Effect_" + name + "_" + effect].value<MoveMechanics::function>();
 
 	    f(source, target, *this);
 	}
@@ -670,11 +683,11 @@ void BattleSituation::callpeffects(int source, int target, const QString &name)
 
 void BattleSituation::callbeffects(int source, int target, const QString &name)
 {
-    if (battlelong.contains(name)) {
-	QSet<QString> &effects = *battlelong[name].value<QSharedPointer<QSet<QString> > >();
+    if (battlelong.contains("Effect_" + name)) {
+        QSet<QString> &effects = *battlelong["Effect_" + name].value<QSharedPointer<QSet<QString> > >();
 
 	foreach(QString effect, effects) {
-	    MoveMechanics::function f = battlelong[name + "_" + effect].value<MoveMechanics::function>();
+            MoveMechanics::function f = battlelong["Effect_" + name + "_" + effect].value<MoveMechanics::function>();
 
 	    f(source, target, *this);
 	}
@@ -683,11 +696,11 @@ void BattleSituation::callbeffects(int source, int target, const QString &name)
 
 void BattleSituation::callzeffects(int source, int target, const QString &name)
 {
-    if (teamzone[source].contains(name)) {
-	QSet<QString> &effects = *teamzone[source][name].value<QSharedPointer<QSet<QString> > >();
+    if (teamzone[source].contains("Effect_" + name)) {
+        QSet<QString> &effects = *teamzone[source]["Effect_" + name].value<QSharedPointer<QSet<QString> > >();
 
 	foreach(QString effect, effects) {
-	    MoveMechanics::function f = teamzone[source][name + "_" + effect].value<MoveMechanics::function>();
+            MoveMechanics::function f = teamzone[source]["Effect_" + name + "_" + effect].value<MoveMechanics::function>();
 
 	    f(source, target, *this);
 	}
@@ -814,6 +827,10 @@ void BattleSituation::testCritical(int player, int target)
 
 bool BattleSituation::testStatus(int player)
 {
+    if (turnlong[player].value("HasPassedStatus") == true) {
+        return true;
+    }
+
     switch (poke(player).status()) {
 	case Pokemon::Asleep:
 	{
@@ -975,6 +992,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (!testStatus(player)) {
         goto end;
     }
+
+    turnlong[player]["HasPassedStatus"] = true;
 
     //Just for truant
     callaeffects(player, player, "DetermineAttackPossible");

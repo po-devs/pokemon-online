@@ -2939,30 +2939,24 @@ struct MMOutrage : public MM
     }
 
     static void uas(int s, int, BS &b) {
-	int count = poke(b,s)["OutrageCount"].toInt();
-	if (count == 0) {
-            poke(b,s)["OutrageCount"] = 1 + (true_rand() % 2);
+        if (poke(b,s).value("OutrageUntil").toInt() == 0) {
+            poke(b,s)["OutrageUntil"] = b.turn() +  1 + (true_rand() % 2);
 	    addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
 	    poke(b,s)["OutrageMove"] = move(b,s);
-	} else {
-	    inc(poke(b,s)["OutrageCount"], -1);
-	}
+        }
     }
 
     static void aas(int s, int, BS &b) {
-	int count = poke(b,s)["OutrageCount"].toInt();
-	if (count == 0) {
+
+        if (b.turn() >= poke(b,s)["OutrageUntil"].toInt()) {
 	    removeFunction(poke(b,s), "TurnSettings", "Outrage");
 	    b.sendMoveMessage(93,0,s,type(b,s));
 	    b.inflictConfused(s);
-	} else {
-	    poke(b,s)["NextOutrageTurn"] = b.turn() + 1;
-	}
+        }
     }
 
     static void ts(int s, int, BS &b) {
-	int count = poke(b,s)["OutrageCount"].toInt();
-	if (count > 0 && poke(b,s).value("NextOutrageTurn").toInt() == b.turn()) {
+        if (poke(b,s).value("OutrageUntil").toInt() >= b.turn()) {
 	    turn(b,s)["NoChoice"] = true;
 	    MoveEffect::setup(poke(b,s)["OutrageMove"].toInt(),s,b.rev(s),b);
 	}

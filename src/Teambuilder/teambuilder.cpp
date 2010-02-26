@@ -340,7 +340,6 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->t
 
     QEntitled * trainernick = new QEntitled(tr("T&rainer"), m_nick = new QLineEdit());
     m_nick->setMaximumWidth(150);
-    m_nick->setMaxLength(15);
     /* A non-whitespace word caracter followed by any number of white characters and not ended by a space, or just nothing */
     m_nick->setValidator(new QNickValidator(this));
     mlayout->addWidget(trainernick, 0, 0);
