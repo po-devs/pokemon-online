@@ -47,6 +47,6 @@ void Mechanics::removeFunction(BattleSituation::context &c, const QString &effec
     if (!c.contains("Effect_" + effect)) {
 	return;
     }
-    c[effect].value<QSharedPointer<QSet<QString> > >()->remove(name);
+    c["Effect_" + effect].value<QSharedPointer<QSet<QString> > >()->remove(name);
     c.remove("Effect_" + effect + "_" + name);
 }
