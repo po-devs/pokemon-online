@@ -1892,6 +1892,7 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
     } else {
 	pokelong[player]["SubstituteLife"] = life-damage;
 	turnlong[source]["DamageInflicted"] = damage;
+        sendMoveMessage(128, 3, player);
     }
 }
 
