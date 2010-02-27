@@ -40,7 +40,7 @@ QMenuBar * TB_Menu::createMenuBar(MainEngine *w)
     {
         menuStyle->addAction(*i,w,SLOT(changeStyle()));
     }
-    QMenu *langMenu = menuBar->addMenu(tr("Language"));
+    QMenu *langMenu = menuBar->addMenu(tr("&Language"));
     QFile in ("languages.txt");
     in.open(QIODevice::ReadOnly);
     QStringList langs = QString::fromUtf8(in.readAll()).split('\n');

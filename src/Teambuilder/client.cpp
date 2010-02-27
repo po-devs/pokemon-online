@@ -238,6 +238,13 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QAction * goaway = menuActions->addAction(away() ? tr("Go &Back from Away") : tr("Go &Away"));
     createIntMapper(goaway, SIGNAL(triggered()), this, SLOT(goAway(int)), !away());
 
+    QAction * saveLogs = menuActions->addAction(tr("Save &Battle Logs"));
+    saveLogs->setCheckable(true);
+    connect(saveLogs, SIGNAL(triggered(bool)), SLOT(saveBattleLogs(bool)));
+
+    QSettings s;
+    saveLogs->setChecked(s.value("save_battle_logs").toBool());
+
     return menuBar;
 }
 
@@ -309,6 +316,12 @@ void Client::askForPass(const QString &salt) {
 void Client::sendRegister() {
     relay().notify(NetworkCli::Register);
     myregister->setDisabled(true);
+}
+
+void Client::saveBattleLogs(bool save)
+{
+    QSettings s;
+    s.setValue("save_battle_logs",save);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
@@ -745,18 +758,14 @@ void Client::openTeamBuilder()
         return;
     }
 
-    if (challengeWindowOpen() || battling() || myteambuilder) {
-        printHtml("<i>" + tr("You're already in the middle of something!") + "</i>");
-    }
-
     myteambuilder = new QMainWindow(this);
     myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
 
     TeamBuilder *t = new TeamBuilder(myteam);
+    myteambuilder->resize(t->size());
     myteambuilder->setCentralWidget(t);
     myteambuilder->show();
     myteambuilder->setMenuBar(t->createMenuBar((MainEngine*)parent()));
-    myteambuilder->layout()->setSizeConstraint(QLayout::SetFixedSize);
 
     connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
     connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));

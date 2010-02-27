@@ -24,12 +24,12 @@ class Server: public QWidget
 public:
     Server(quint16 port = 5080);
 
-    void printLine(const QString &line);
+    void printLine(const QString &line, bool chatMessage = false);
     /* returns the name of that player */
     QString name(int id) const;
     QString authedName(int id) const;
     /* sends a message to all the players */
-    void sendAll(const QString &message);
+    void sendAll(const QString &message, bool chatMessage = false);
     void sendMessage(int id, const QString &message);
     void sendPlayersList(int id);
     /* Sends the login of the player to everybody but the player */

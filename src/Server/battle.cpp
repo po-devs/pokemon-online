@@ -125,7 +125,8 @@ void BattleSituation::addSpectator(int id)
 
 
     foreach (int specId, spectators) {
-        notify(key, Spectating, 0, true, qint32(specId));
+        if (specId != id)
+            notify(key, Spectating, 0, true, qint32(specId));
     }
 
     notify(All, Spectating, 0, true, qint32(id));
@@ -2016,7 +2017,7 @@ void BattleSituation::requestSwitch(int player)
 {
     testWin();
 
-    if (countAlive(player) - koed(player) == 0) {
+    if (countAlive(player) - !koed(player) == 0) {
         //No poke to switch in, so we won't request a choice & such;
         return;
     }

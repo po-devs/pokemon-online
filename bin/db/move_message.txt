@@ -126,7 +126,7 @@ Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 
 
 %s is hit with recoil!
-%s already has a substitute.|%s's subsitute faded!|%f's substitute blocked %m!|%f's substitute took the damage!
+%s already has a substitute.|%s's subsitute faded!|%f's substitute blocked %m!|%s's substitute took the damage!
 
 
 

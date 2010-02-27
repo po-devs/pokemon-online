@@ -61,16 +61,31 @@ void ScriptEngine::print(QScriptContext *context, QScriptEngine *)
 
 bool ScriptEngine::beforeChatMessage(int src, const QString &message)
 {
-    stopevent = false;
+    startStopEvent();
 
     evaluate(myscript.property("beforeChatMessage").call(myscript, QScriptValueList() << src << message));
 
-    return !stopevent;
+    return !endStopEvent();
 }
 
 void ScriptEngine::afterChatMessage(int src, const QString &message)
 {
     evaluate(myscript.property("afterChatMessage").call(myscript, QScriptValueList() << src << message));
+}
+
+
+bool ScriptEngine::beforeNewMessage(const QString &message)
+{
+    startStopEvent();
+
+    evaluate(myscript.property("beforeNewMessage").call(myscript, QScriptValueList() << message));
+
+    return !endStopEvent();
+}
+
+void ScriptEngine::afterNewMessage(const QString &message)
+{
+    evaluate(myscript.property("afterNewMessage").call(myscript, QScriptValueList() << message));
 }
 
 void ScriptEngine::serverStartUp()
@@ -80,11 +95,11 @@ void ScriptEngine::serverStartUp()
 
 bool ScriptEngine::beforeLogIn(int src)
 {
-    stopevent = false;
+    startStopEvent();
 
     evaluate(myscript.property("beforeLogIn").call(myscript, QScriptValueList() << src));
 
-    return !stopevent;
+    return !endStopEvent();
 }
 
 void ScriptEngine::afterLogIn(int src)
@@ -94,11 +109,11 @@ void ScriptEngine::afterLogIn(int src)
 
 bool ScriptEngine::beforeChallengeIssued(int src, int dest, const ChallengeInfo &c)
 {
-    stopevent = false;
+    startStopEvent();
 
     evaluate(myscript.property("beforeChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.sleepClause()));
 
-    return !stopevent;
+    return !endStopEvent();
 }
 
 void ScriptEngine::afterChallengeIssued(int src, int dest, const ChallengeInfo &c)
@@ -471,7 +486,11 @@ void ScriptEngine::printLine(const QString &s)
 
 void ScriptEngine::stopEvent()
 {
-    stopevent = true;
+    if (stopevents.size() == 0) {
+        myserver->printLine("Script Error: calling sys.stopEvent() in an unstoppable event.");
+    } else {
+        stopevents.back() = true;
+    }
 }
 
 ScriptWindow::ScriptWindow()

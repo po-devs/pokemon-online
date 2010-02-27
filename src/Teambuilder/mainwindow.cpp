@@ -22,6 +22,12 @@ MainEngine::MainEngine() : displayer(0)
     if (settings.value("stylesheet").isNull()) {
         settings.setValue("stylesheet", "db/default.qss");
     }
+    if (settings.value("save_battle_logs").isNull()) {
+        settings.setValue("save_battle_logs", true);
+    }
+    if (settings.value("battle_logs_directory").isNull()) {
+        settings.setValue("battle_logs_directory", "Logs/");
+    }
 
     PokemonInfo::init("db/");
     ItemInfo::init("db/");
@@ -57,6 +63,7 @@ void MainEngine::launchMenu()
 {
     TB_Menu *menu = new TB_Menu();
     MainEngineRoutine(menu);
+    displayer->layout()->setSizeConstraint(QLayout::SetFixedSize);
 
     connect(menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
     connect(menu, SIGNAL(goToExit()), SLOT(quit()));

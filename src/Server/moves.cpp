@@ -240,7 +240,7 @@ struct MMBatonPass : public MM
 	turn(b,s)["BatonPassed"] = false;
 	merge(poke(b,s), turn(b,s)["BatonPassData"].value<BS::context>());
 
-        if (b.hasSubstitute(s)) {
+        if (poke(b,s).value("Substitute").toBool()) {
             b.notifySub(s,true);
         }
     }
