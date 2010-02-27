@@ -140,6 +140,7 @@ void AntiDos::disconnect(const QString &ip, int id)
 {
     connectionsPerIp[ip]--;
     transfersPerId.remove(id);
+    sizeOfTransfers.remove(id);
 }
 
 bool AntiDos::transferBegin(int id, int length, const QString &ip)

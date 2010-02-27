@@ -77,6 +77,34 @@ QString BattleWindow::nick(int spot) const
 void BattleWindow::closeEvent(QCloseEvent *)
 {
     emit forfeit();
+
+    QSettings s;
+
+    if (s.value("save_battle_logs").toBool()) {
+        QString directory = s.value("battle_logs_directory").toString();
+        QString file = QFileDialog::getSaveFileName(0,QObject::tr("Saving the battle"),directory+info().name[0] + " vs " + info().name[1]
+                                     + "--" + QDate::currentDate().toString("dd MMMM yyyy") + "_" +QTime::currentTime().toString("hh'h'mm")
+                                     , QObject::tr("txt (*.txt)\nhtml (*.html)"));
+        if (file.length() != 0) {
+            QFileInfo finfo (file);
+            directory = finfo.dir().path() + "/";
+            if (directory == "/") {
+                directory = "./";
+            }
+            QFile out (file);
+            out.open(QIODevice::WriteOnly);
+
+            if (finfo.suffix() == "html") {
+                out.write(mychat->toHtml().toUtf8());
+            } else {
+#ifdef WIN32
+                out.write(mychat->toPlainText().replace("\n", "\r\n").toUtf8());
+#else
+                out.write(mychat->toPlainText().toUtf8());
+#endif
+            }
+        }
+    }
     close();
 }
 

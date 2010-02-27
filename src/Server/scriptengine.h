@@ -19,6 +19,8 @@ public:
     /* Events */
     bool beforeChatMessage(int src, const QString &message);
     void afterChatMessage(int src, const QString &message);
+    bool beforeNewMessage(const QString &message);
+    void afterNewMessage(const QString &message);
     void serverStartUp();
     void beforeLogOut(int src);
     void afterLogOut(int src);
@@ -94,7 +96,15 @@ private:
     Server *myserver;
     QScriptEngine myengine;
     QScriptValue myscript;
-    bool stopevent;
+    QVector<bool> stopevents;
+
+    void startStopEvent() {stopevents.push_back(false);}
+    bool endStopEvent() {
+        bool res = stopevents.back();
+        stopevents.pop_back();
+        return res;
+    }
+
     QSet<QString> playerArrays;
 
     void evaluate(const QScriptValue &expr);

@@ -18,6 +18,7 @@ Server::Server(quint16 port)
 {
     linecount = 0;
     registry_connection = NULL;
+    myengine = NULL;
 
     QGridLayout *mylayout = new QGridLayout (this);
 
@@ -200,10 +201,19 @@ void Server::ipRefused()
     printLine("Registry wants only 1 server per IP");
 }
 
-void Server::printLine(const QString &line)
+void Server::printLine(const QString &line, bool chatMessage)
 {
-    mainchat()->insertPlainText(line + "\n");
-    qDebug() << line;
+    if (myengine == NULL) {
+        mainchat()->insertPlainText(line + "\n");
+        qDebug() << line;
+        return;
+    }
+    if (chatMessage || myengine->beforeNewMessage(line)) {
+        mainchat()->insertPlainText(line + "\n");
+        qDebug() << line;
+        if (!chatMessage)
+            myengine->afterNewMessage(line);
+    }
 }
 
 void Server::openPlayers()
@@ -434,7 +444,7 @@ void Server::recvMessage(int id, const QString &mess)
     QString re = mess.trimmed();
     if (re.length() > 0) {
         if (myengine->beforeChatMessage(id, mess)) {
-            sendAll(tr("%1: %2").arg(name(id)).arg(re));
+            sendAll(tr("%1: %2").arg(name(id)).arg(re), true);
             myengine->afterChatMessage(id, mess);
         }
     }
@@ -811,9 +821,9 @@ int Server::id(const QString &name) const
     return mynames.value(name.toLower());
 }
 
-void Server::sendAll(const QString &message)
+void Server::sendAll(const QString &message, bool chatMessage)
 {
-    printLine(message);
+    printLine(message, chatMessage);
 
     foreach (Player *p, myplayers)
 	if (p->isLoggedIn())
