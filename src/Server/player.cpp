@@ -10,13 +10,12 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     challengedBy = NULL;
     myip = relay().ip();
     rating() = -1;
-    ladder() = true;
 
     m_state = NotLoggedIn;
     myauth = 0;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
-    connect(&relay(), SIGNAL(loggedIn(TeamInfo)), SLOT(loggedIn(TeamInfo)));
+    connect(&relay(), SIGNAL(loggedIn(TeamInfo,bool,bool)), SLOT(loggedIn(TeamInfo,bool,bool)));
     connect(&relay(), SIGNAL(messageReceived(QString)), SLOT(recvMessage(QString)));
     connect(&relay(), SIGNAL(teamReceived(TeamInfo)), SLOT(recvTeam(TeamInfo)));
     connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
@@ -36,10 +35,28 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(battleSpectateRequested(int)), SLOT(spectatingRequested(int)));
     connect(&relay(), SIGNAL(battleSpectateEnded(int)), SLOT(quitSpectating(int)));
     connect(&relay(), SIGNAL(battleSpectateChat(int,QString)), SLOT(spectatingChat(int,QString)));
+    connect(&relay(), SIGNAL(ladderChange(bool)), SLOT(ladderChange(bool)));
+    connect(&relay(), SIGNAL(showTeamChange(bool)), SLOT(showTeamChange(bool)));
 }
 
 Player::~Player()
 {
+}
+
+void Player::ladderChange(bool n)
+{
+    if (!isLoggedIn())
+        return;//INV BEHAV
+    ladder() = n;
+    emit updated(id());
+}
+
+void Player::showTeamChange(bool n)
+{
+    if (!isLoggedIn())
+        return; //INV BEHAV
+    showteam() = n;
+    emit updated(id());
 }
 
 void Player::doWhenDC()
@@ -403,6 +420,16 @@ PlayerInfo Player::bundle() const
     p.team = basicInfo();
     p.rating = ladder() ? rating() : -1;
 
+    if (showteam()) {
+        for(int i = 0; i < 6; i++) {
+            p.pokes[i] = team().poke(i).num();
+        }
+    } else {
+        for(int i = 0; i < 6; i++) {
+            p.pokes[i] = 0;
+        }
+    }
+
     return p;
 }
 
@@ -422,11 +449,13 @@ BasicInfo Player::basicInfo() const
     return ret;
 }
 
-void Player::loggedIn(const TeamInfo &_team)
+void Player::loggedIn(const TeamInfo &_team,bool ladder, bool showteam)
 {
     if (isLoggedIn())
         return; //INVALID BEHAVIOR
 
+    this->ladder() = ladder;
+    this->showteam() = showteam;
 
     AuthentificationState st = testAuthentification(_team);
 

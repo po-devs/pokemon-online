@@ -219,6 +219,7 @@ struct ChallengeInfo
 
     qint8 dsc;
     qint32 opp;
+    bool rated;
 
     explicit ChallengeInfo(int desc=0, int opponent=0, quint32 clauses = SleepClause)
         : clauses(clauses), dsc(desc), opp(opponent)

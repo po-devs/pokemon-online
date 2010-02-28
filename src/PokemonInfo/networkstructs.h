@@ -73,6 +73,7 @@ public:
     qint8 auth;
     quint8 flags;
     qint16 rating;
+    qint16 pokes[6];
 
     enum {
         LoggedIn = 1,
@@ -99,5 +100,20 @@ public:
 
 QDataStream & operator >> (QDataStream &in, PlayerInfo &p);
 QDataStream & operator << (QDataStream &out, const PlayerInfo &p);
+
+struct FullInfo
+{
+public:
+#ifdef CLIENT_SIDE
+    TrainerTeam team;
+#else
+    TeamInfo team;
+#endif
+    bool ladder;
+    bool showteam;
+};
+
+QDataStream & operator >> (QDataStream &in, FullInfo &p);
+QDataStream & operator << (QDataStream &out, const FullInfo &p);
 
 #endif // NETWORKSTRUCTS_H

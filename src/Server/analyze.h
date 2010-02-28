@@ -46,7 +46,9 @@ namespace NetworkServ
         SpectateBattle,
         SpectatingBattleMessage,
         SpectatingBattleChat,
-        SpectatingBattleFinished
+        SpectatingBattleFinished,
+        LadderChange,
+        ShowTeamChange
     };
 
     enum ProtocolError
@@ -105,7 +107,7 @@ signals:
     /* to send to the client */
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
-    void loggedIn(const TeamInfo &team);
+    void loggedIn(const TeamInfo &team, bool ladder, bool showteam);
     void messageReceived(const QString &mess);
     void teamReceived(const TeamInfo &team);
     void connected();
@@ -132,6 +134,8 @@ signals:
     void invalidName();
     void accepted();
     void awayChange(bool away);
+    void showTeamChange(bool);
+    void ladderChange(bool);
 public slots:
     /* slots called by the network */
     void error();

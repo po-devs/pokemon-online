@@ -512,6 +512,7 @@ void Server::incomingConnection()
     connect(p, SIGNAL(spectatingRequested(int,int)), SLOT(spectatingRequested(int,int)));
     connect(p, SIGNAL(spectatingStopped(int,int)), SLOT(spectatingStopped(int,int)));
     connect(p, SIGNAL(spectatingChat(int,int, QString)), SLOT(spectatingChat(int,int, QString)));
+    connect(p, SIGNAL(updated(int)), SLOT(sendPlayer(int)));
 }
 
 void Server::awayChanged(int src, bool away)

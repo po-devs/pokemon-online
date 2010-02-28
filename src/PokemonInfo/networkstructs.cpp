@@ -66,6 +66,10 @@ QDataStream & operator >> (QDataStream &in, PlayerInfo &p)
     in >> p.flags;
     in >> p.rating;
 
+    for (int i = 0; i < 6; i++) {
+        in >> p.pokes[i];
+    }
+
     return in;
 }
 
@@ -76,6 +80,24 @@ QDataStream & operator << (QDataStream &out, const PlayerInfo &p)
     out << p.auth;
     out << p.flags;
     out << p.rating;
+
+    for (int i = 0; i < 6; i++) {
+        out << p.pokes[i];
+    }
+
+    return out;
+}
+
+QDataStream & operator >> (QDataStream &in, FullInfo &p)
+{
+    in >> p.team >> p.ladder >> p.showteam;
+
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const FullInfo &p)
+{
+    out << p.team << p.ladder << p.showteam;
 
     return out;
 }

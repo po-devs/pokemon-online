@@ -15,7 +15,7 @@ Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection)
     connect(&socket(), SIGNAL(error(QAbstractSocket::SocketError)), SLOT(error()));
 }
 
-void Analyzer::login(const TrainerTeam &team)
+void Analyzer::login(const FullInfo &team)
 {
     notify(Login, team);
 }

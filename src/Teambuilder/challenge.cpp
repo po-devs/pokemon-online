@@ -30,11 +30,11 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     for (int i = 0; i < 6; i++) {
         QLabel *icon = new QLabel(this);
         icon->move(180+i*52-x,72-x);
-        icon->setPixmap(PokemonInfo::Icon(0));
+        icon->setPixmap(PokemonInfo::Icon(p.pokes[i]));
     }
 
     QLabel *pinfo = new QLabel(toColor(p.team.info, Qt::white), this);
-    pinfo->setGeometry(210-x,130-x,472-210,180-130);
+    pinfo->setGeometry(177-x,128-x,474-177,180-128);
     pinfo->setWordWrap(true);
     pinfo->setFont(QFont("Verdana", 10));
     pinfo->setAlignment(Qt::AlignTop | Qt::AlignLeft);

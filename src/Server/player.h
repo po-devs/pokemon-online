@@ -14,6 +14,7 @@ class Player : public QObject
     Q_OBJECT
     PROPERTY(int, rating);
     PROPERTY(bool, ladder);
+    PROPERTY(bool, showteam);
 public:
     BattleSituation *battle;
     QSet<int> battlesSpectated;
@@ -82,6 +83,7 @@ signals:
     void recvTeam(int id, const QString &name);
     void sendChallenge(int source, int dest, const ChallengeInfo &desc);
     void battleFinished(int desc, int winner, int loser, bool rated);
+    void updated(int id);
 
     void battleMessage(int id,const BattleChoice &b);
     void battleChat(int id, const QString &);
@@ -94,7 +96,7 @@ signals:
     void spectatingChat(int, int, const QString &chat);
     void spectatingStopped(int, int battleId);
 public slots:
-    void loggedIn(const TeamInfo &team);
+    void loggedIn(const TeamInfo &team,bool,bool);
     void recvMessage(const QString &mess);
     void recvTeam(const TeamInfo &team);
     void disconnected();
@@ -115,6 +117,8 @@ public slots:
     void spectatingRequested(int id);
     void spectatingChat(int id, const QString &chat);
     void quitSpectating(int id);
+    void ladderChange(bool);
+    void showTeamChange(bool);
 private:
     TeamBattle myteam;
     Analyzer myrelay;

@@ -5,13 +5,14 @@
 #include "network.h"
 
 class Client;
-class TrainerTeam;
+class FullInfo;
 class PlayerInfo;
 class BattleChoice;
 class TeamBattle;
 class BattleConfiguration;
 class ChallengeInfo;
 class UserInfo;
+class TrainerTeam;
 
 /* Commands to dialog with the server */
 namespace NetworkCli
@@ -48,7 +49,9 @@ namespace NetworkCli
         SpectateBattle,
         SpectatingBattleMessage,
         SpectatingBattleChat,
-        SpectatingBattleFinished
+        SpectatingBattleFinished,
+        LadderChange,
+        ShowTeamChange
     };
 
     enum ProtocolError
@@ -69,7 +72,7 @@ public:
     Analyzer(bool registry_connection = false);
 
     /* functions called by the client */
-    void login(const TrainerTeam &team);
+    void login(const FullInfo &team);
     void sendMessage(const QString &message);
     void connectTo(const QString &host, quint16 port);
     void sendTeam(const TrainerTeam & team);

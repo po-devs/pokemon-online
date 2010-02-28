@@ -146,8 +146,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	{
             if (mysocket.id() != 0) {
                 TeamInfo team;
-                in >> team;
-                emit loggedIn(team);
+                bool ladder, show_team;
+                in >> team >> ladder >> show_team;
+                emit loggedIn(team,ladder,show_team);
             } else
                 emit accepted(); // for registry;
 	    break;
@@ -284,6 +285,20 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             QString str;
             in >> id >> str;
             emit battleSpectateChat(id, str);
+            break;
+        }
+    case LadderChange:
+        {
+            bool change;
+            in >> change;
+            emit ladderChange(change);
+            break;
+        }
+    case ShowTeamChange:
+        {
+            bool change;
+            in >> change;
+            emit showTeamChange(change);
             break;
         }
     default:

@@ -17,7 +17,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
     mycurrentpoke[1] = -1;
     finished() = false;
     clauses() = c.clauses;
-    rated() = !(c.clauses & (ChallengeInfo::ChallengeCup | ChallengeInfo::LevelBalance));
+    rated() = c.rated && !(c.clauses & (ChallengeInfo::ChallengeCup | ChallengeInfo::LevelBalance));
     currentForcedSleepPoke[0] = -1;
     currentForcedSleepPoke[1] = -1;
     p1.battle = this;
