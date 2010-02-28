@@ -377,7 +377,7 @@ QPixmap PokemonInfo::Sub(bool back)
     return ret;
 }
 
-QIcon PokemonInfo::Icon(int index)
+QPixmap PokemonInfo::Icon(int index)
 {
     QString archive = path("icons.zip");
     QString file = QString("%1.PNG").arg(index);
@@ -386,12 +386,11 @@ QIcon PokemonInfo::Icon(int index)
     if(data.length() == 0)
     {
         qDebug() << "error loading icon";
-        return QIcon();
+        return QPixmap();
     }
     QPixmap p;
     p.loadFromData(data,"png");
-    QIcon ico(p);
-    return ico;
+    return p;
 }
 #endif
 

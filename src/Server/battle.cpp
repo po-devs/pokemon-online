@@ -17,6 +17,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
     mycurrentpoke[1] = -1;
     finished() = false;
     clauses() = c.clauses;
+    rated() = !(c.clauses & (ChallengeInfo::ChallengeCup | ChallengeInfo::LevelBalance));
     currentForcedSleepPoke[0] = -1;
     currentForcedSleepPoke[1] = -1;
     p1.battle = this;
@@ -2051,13 +2052,13 @@ void BattleSituation::testWin()
         finished() = true;
         if (c1 + c2 == 0) {
             notify(All, BattleEnd, Player1, qint8(Tie));
-            emit battleFinished(Tie, id(Player1), id(Player2));
+            emit battleFinished(Tie, id(Player1), id(Player2),rated());
         } else if (c1 == 0) {
             notify(All, BattleEnd, Player2, qint8(Win));
-            emit battleFinished(Win, id(Player2), id(Player1));
+            emit battleFinished(Win, id(Player2), id(Player1),rated());
         } else {
             notify(All, BattleEnd, Player1, qint8(Win));
-            emit battleFinished(Win, id(Player1), id(Player2));
+            emit battleFinished(Win, id(Player1), id(Player2),rated());
         }
         /* The battle is finished so we stop the thread */
         sem.acquire(1);

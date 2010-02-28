@@ -12,6 +12,8 @@ class BattleSituation;
 class Player : public QObject
 {
     Q_OBJECT
+    PROPERTY(int, rating);
+    PROPERTY(bool, ladder);
 public:
     BattleSituation *battle;
     QSet<int> battlesSpectated;
@@ -79,7 +81,7 @@ signals:
     void disconnected(int id);
     void recvTeam(int id, const QString &name);
     void sendChallenge(int source, int dest, const ChallengeInfo &desc);
-    void battleFinished(int desc, int winner, int loser);
+    void battleFinished(int desc, int winner, int loser, bool rated);
 
     void battleMessage(int id,const BattleChoice &b);
     void battleChat(int id, const QString &);

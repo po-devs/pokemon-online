@@ -13,6 +13,7 @@ class BattleSituation : public QThread
     PROPERTY(int, turn);
     PROPERTY(int , publicId);
     PROPERTY(bool, finished);
+    PROPERTY(bool, rated);
     PROPERTY(quint32, clauses);
 public:
     enum {
@@ -266,7 +267,7 @@ public:
     void spectatingChat(int id, const QString &str);
 signals:
     void battleInfo(int id, const QByteArray &info);
-    void battleFinished(int result, int winner, int loser);
+    void battleFinished(int result, int winner, int loser, bool rated);
 private:
     /* To interrupt the thread when needed. We use that instead of mutex cuz we can lock/unlock them in different threads */
     QSemaphore sem;

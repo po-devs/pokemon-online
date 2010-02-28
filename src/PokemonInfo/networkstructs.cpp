@@ -64,6 +64,7 @@ QDataStream & operator >> (QDataStream &in, PlayerInfo &p)
     in >> p.team;
     in >> p.auth;
     in >> p.flags;
+    in >> p.rating;
 
     return in;
 }
@@ -74,6 +75,7 @@ QDataStream & operator << (QDataStream &out, const PlayerInfo &p)
     out << p.team;
     out << p.auth;
     out << p.flags;
+    out << p.rating;
 
     return out;
 }

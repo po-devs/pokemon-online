@@ -4,9 +4,9 @@
 
 void myMessageOutput(QtMsgType type, const char *msg)
 {
-    return;
     switch (type) {
     case QtDebugMsg:
+        return;
 	fprintf(stderr, "%s\n", msg);
 	fflush(stderr);
 	break;

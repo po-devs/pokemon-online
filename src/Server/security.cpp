@@ -1,5 +1,6 @@
 #include "security.h"
 #include "../Utilities/otherwidgets.h"
+#include <cmath>
 
 QMap<QString, SecurityManager::Member> SecurityManager::members;
 QNickValidator SecurityManager::val(NULL);
@@ -27,8 +28,8 @@ void SecurityManager::loadMembers()
 
         QStringList ls = s.split('%');
 
-        if (ls.size() == 6 && isValid(ls[0])) {
-            Member m (ls[0], ls[1], ls[2], ls[3], ls[4], ls[5]);
+        if (ls.size() == 7 && isValid(ls[0])) {
+            Member m (ls[0], ls[1], ls[2], ls[3].toInt(), ls[4], ls[5], ls[6]);
             members[ls[0]] = m;
             memberPlaces[m.name] = pos;
             pos = memberFile.pos();
@@ -47,7 +48,7 @@ void SecurityManager::loadMembers()
     if (!temp.open(QFile::WriteOnly | QFile::Truncate))
         throw QObject::tr("Impossible to change users.tmp");
 
-    temp.pos();
+    pos = temp.pos();
     foreach(Member m, members) {
         m.write(&temp);
         memberPlaces[m.name] = pos;
@@ -65,9 +66,9 @@ void SecurityManager::loadMembers()
     }
 }
 
-SecurityManager::Member::Member(const QString &name, const QString &date, const QString &auth, const QString &salt, const QString &hash, const QString &ip)
-    :name(name), date(date), auth(auth.leftJustified(3,'0',true)), salt(salt.leftJustified(saltLength)),
-    hash(hash.leftJustified(hashLength)), ip(ip.leftJustified(ipLength,' ',true))
+SecurityManager::Member::Member(const QString &name, const QString &date, const QString &auth, int ladder, const QString &salt, const QString &hash, const QString &ip)
+    :name(name.toLower()), date(date), auth(auth.leftJustified(3,'0',true)), salt(salt.leftJustified(saltLength)),
+    hash(hash.leftJustified(hashLength)), ip(ip.leftJustified(ipLength,' ',true)), ladder(ladder)
 {
 }
 
@@ -78,12 +79,48 @@ void SecurityManager::Member::write(QIODevice *device) const {
     device->write("%");
     device->write(auth.toUtf8().constData());
     device->write("%");
+    device->write(QByteArray::number(ladder).rightJustified(ladderLength, '0', true).constData());
+    device->write("%");
     device->write(salt.toUtf8().constData());
     device->write("%");
     device->write(hash.toUtf8().constData());
     device->write("%");
     device->write(ip.toUtf8().constData());
     device->write("\n");
+}
+
+void SecurityManager::Member::changeRating(int opponent_rating, bool win)
+{
+    int n = auth[2].toAscii()-'0';
+
+    int newrating;
+
+    if (n == 0) {
+        if (win) {
+            newrating = std::min(opponent_rating+100, 1250);
+        } else {
+            newrating = std::max(opponent_rating-100, 750);
+        }
+    } else {
+        int kfactor;
+        if (n <= 5) {
+            static const int kfactors[] = {200, 150, 100, 80, 65, 50};
+            kfactor = kfactors[n];
+        } else {
+            kfactor = 32;
+        }
+        double myesp = 1/(1+ pow(10., (opponent_rating-rating())/400));
+        double result = win;
+
+        newrating = rating() + (result - myesp)*kfactor;
+    }
+
+    if (n <= 5) {
+        auth[2]='0'+n+1;
+    }
+
+    ladder = newrating;
+    SecurityManager::updateMember(*this);
 }
 
 void SecurityManager::init()
@@ -115,11 +152,11 @@ QSet<QString> SecurityManager::banList()
 }
 
 void SecurityManager::create(const Member &m) {
-    members[m.name.toLower()] = m;
+    members[m.name] = m;
 
     memberFile.seek(lastPlace);
     m.write(&memberFile);
-    memberPlaces[m.name.toLower()] = lastPlace;
+    memberPlaces[m.name] = lastPlace;
     playersByIp.insert(m.ip.trimmed(),m.name);
     lastPlace = memberFile.pos();
 
@@ -131,6 +168,7 @@ void SecurityManager::updateMember(const Member &m) {
 
     memberFile.seek(memberPlaces[m.name]);
     members[m.name].write(&memberFile);
+    memberFile.flush();
 }
 
 
@@ -179,16 +217,18 @@ void SecurityManager::IPunban(const QString &ip)
 }
 
 void SecurityManager::setauth(const QString &name, int auth) {
-    if (exist(name)) {
-        members[name].setAuth(auth);
-        updateMember(members[name]);
+    QString name2 = name.toLower();
+    if (exist(name2)) {
+        members[name2].setAuth(auth);
+        updateMember(members[name2]);
     }
 }
 
 void SecurityManager::clearPass(const QString &name) {
-    if (exist(name)) {
-        members[name].clearPass();
-        updateMember(members[name]);
+    QString name2 = name.toLower();
+    if (exist(name2)) {
+        members[name2].clearPass();
+        updateMember(members[name2]);
     }
 }
 
@@ -206,5 +246,9 @@ int SecurityManager::maxAuth(const QString &ip) {
 
 QString SecurityManager::ip(const QString &name)
 {
-    return members[name].ip.trimmed();
+    QString name2 = name.toLower();
+    if (exist(name2))
+        return members[name2].ip.trimmed();
+    else
+        return "";
 }

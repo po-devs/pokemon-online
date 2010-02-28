@@ -48,7 +48,7 @@ public:
     static int Type2(int pokenum);
     static QPixmap Picture(int pokenum, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QPixmap Sub(bool back = false);
-    static QIcon Icon(int index);
+    static QPixmap Icon(int index);
     static QSet<int> Moves(int pokenum);
     static QSet<int> EggMoves(int pokenum, int gen = 4);
     static QSet<int> LevelMoves(int pokenum, int gen = 4);

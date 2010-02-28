@@ -23,10 +23,16 @@ MainEngine::MainEngine() : displayer(0)
         settings.setValue("stylesheet", "db/default.qss");
     }
     if (settings.value("save_battle_logs").isNull()) {
-        settings.setValue("save_battle_logs", true);
+        settings.setValue("save_battle_logs", false);
     }
     if (settings.value("battle_logs_directory").isNull()) {
         settings.setValue("battle_logs_directory", "Logs/");
+    }
+    if (settings.value("show_team").isNull()) {
+        settings.setValue("show_team", true);
+    }
+    if (settings.value("enable_ladder").isNull()) {
+        settings.setValue("enable_ladder",true);
     }
 
     PokemonInfo::init("db/");
@@ -138,7 +144,6 @@ void MainEngine::goOnline(const QString &url)
     MainEngineRoutine(client);
 
     connect(client, SIGNAL(done()), SLOT(launchMenu()));
-    connect(client, SIGNAL(updateMenuBar()), SLOT(updateMenuBar()));
 }
 
 void MainEngine::updateMenuBar()

@@ -9,7 +9,7 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("Freeze Clause"),
     QObject::tr("Evasion Clause"),
     QObject::tr("OHKO Clause"),
-    QObject::tr("Disallow Spectators"),
+    QObject::tr("Disallow Spects"),
     QObject::tr("Level Balance"),
     QObject::tr("Challenge Cup")
 };

@@ -509,12 +509,6 @@ void PokeButton::update()
 BattleDisplay::BattleDisplay(BattleInfo &i)
     : BaseBattleDisplay(i)
 {
-    QVBoxLayout *l=  new QVBoxLayout(this);
-
-    /* As anyway the graphicsZone is a fixed size, it's useless to
-       resize that part, might as well let  the chat be resized */
-    l->setSizeConstraint(QLayout::SetFixedSize);
-
     bars[Myself]->setRange(0,100);
     bars[Myself]->setFormat("%v / %m");
 

@@ -73,6 +73,7 @@ public slots:
     void refuseChallenge(int id);
     /* Display the info for that player */
     void seeInfo(int id);
+    void seeInfo(QListWidgetItem *it);
     /* Challenge info by the server */
     void challengeStuff(const ChallengeInfo &c);
     /* battle... */
@@ -107,6 +108,10 @@ public slots:
     /* Away... */
     void awayChanged(int id, bool away);
     void goAway(int away);
+    void goAwayB(bool away) {
+        goAway(away);
+    }
+
     /* Teambuilder slots */
     void openTeamBuilder();
     void changeTeam();
@@ -140,6 +145,7 @@ private:
     BaseChallengeWindow *mychallenge;
     QPointer<BattleWindow> mybattle;
     QHash<int, QPointer<BaseBattleWindow> > mySpectatingBattles;
+    QAction *goaway;
 
     /* You can call the teambuilder from here too */
     QPointer<QMainWindow> myteambuilder;
