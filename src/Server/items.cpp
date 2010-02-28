@@ -435,6 +435,21 @@ struct IMWhiteHerb : public IM
     }
 };
 
+struct IMBerryJuice : public IM
+{
+    IMBerryJuice() {
+        functions["AfterHPChange"] = &ahpc;
+    }
+
+    static void ahpc(int s, int, BS &b) {
+        if (!b.koed(s) && b.poke(s).lifePercent() <= 50) {
+            b.sendItemMessage(18,s,0);
+            b.healLife(s, 20);
+            b.disposeItem(s);
+        }
+    }
+};
+
 
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
@@ -454,6 +469,7 @@ void ItemEffect::init()
     REGISTER_ITEM(15, ZoomLens);
     REGISTER_ITEM(16, BlackSludge);
     REGISTER_ITEM(17, QuickClaw);
+    REGISTER_ITEM(18, BerryJuice);
     REGISTER_ITEM(19, StatusOrb);
     REGISTER_ITEM(21, LifeOrb);
     REGISTER_ITEM(22, Metronome);

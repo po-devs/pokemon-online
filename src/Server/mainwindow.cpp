@@ -4,6 +4,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    QApplication::setQuitOnLastWindowClosed(false);
+
     setWindowTitle(tr("Server for Pokemon Online"));
 
     setCentralWidget(myserver = new Server());

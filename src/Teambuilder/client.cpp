@@ -21,20 +21,22 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
 
     QGridLayout *layout = new QGridLayout(this);
 
-    layout->addWidget(myplayers = new QListWidget(), 0, 0, 3, 1);
+    layout->addWidget(myplayers = new QListWidget(), 0, 0, 3, 1, Qt::AlignLeft);
     layout->addWidget(mychat = new QScrollDownTextEdit(), 0, 1, 1, 3);
     layout->addWidget(myline = new QLineEdit(), 1, 1, 1, 3);
     layout->addWidget(myregister = new QPushButton(tr("&Register")),2,1);
     layout->addWidget(myexit = new QPushButton(tr("&Exit")), 2, 2);
     layout->addWidget(mysender = new QPushButton(tr("&Send")), 2, 3);
+    layout->setColumnStretch(1,100);
 
-    myplayers->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    myplayers->setMaximumWidth(180);
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
     myplayers->setSortingEnabled(true);
     myregister->setDisabled(true);
     mynick = t->trainerNick();
 
     connect(myplayers, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
+    connect(myplayers, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(seeInfo(QListWidgetItem*)));
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
@@ -144,6 +146,7 @@ void Client::startPM(int id)
 void Client::goAway(int away)
 {
     relay().goAway(away);
+    goaway->setChecked(away);
 }
 
 
@@ -235,8 +238,10 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
         menuStyle->addAction(*i,w,SLOT(changeStyle()));
     }
     QMenu * menuActions = menuBar->addMenu(tr("&Actions"));
-    QAction * goaway = menuActions->addAction(away() ? tr("Go &Back from Away") : tr("Go &Away"));
-    createIntMapper(goaway, SIGNAL(triggered()), this, SLOT(goAway(int)), !away());
+    goaway = menuActions->addAction(tr("Go &Away"));
+    goaway->setCheckable(true);
+    goaway->setChecked(this->away());
+    connect(goaway, SIGNAL(triggered(bool)), this, SLOT(goAwayB(bool)));
 
     QAction * saveLogs = menuActions->addAction(tr("Save &Battle Logs"));
     saveLogs->setCheckable(true);
@@ -359,6 +364,10 @@ BasicInfo Client::info(int id) const
         return BasicInfo();
 }
 
+void Client::seeInfo(QListWidgetItem *it)
+{
+    seeInfo(((QIdListWidgetItem*)(it))->id());
+}
 
 void Client::seeInfo(int id)
 {
@@ -805,9 +814,6 @@ void Client::updateState(int id)
         } else {
             item(id)->setColor(Qt::black);
         }
-    }
-    if (id == ownId()) {
-        emit updateMenuBar();
     }
 }
 

@@ -72,6 +72,7 @@ public:
     BasicInfo team;
     qint8 auth;
     quint8 flags;
+    qint16 rating;
 
     enum {
         LoggedIn = 1,

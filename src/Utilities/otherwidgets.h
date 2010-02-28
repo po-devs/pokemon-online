@@ -62,7 +62,7 @@ public:
     QSize maximumSize() const;
 protected:
     void paintEvent(QPaintEvent *e);
-private:
+
     QPixmap myBackground;
 };
 

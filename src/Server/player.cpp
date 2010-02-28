@@ -2,12 +2,15 @@
 #include "security.h"
 #include "challenge.h"
 #include "../PokemonInfo/battlestructs.h"
+#include "battle.h"
 
 Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
 {
     battle = NULL;
     challengedBy = NULL;
     myip = relay().ip();
+    rating() = -1;
+    ladder() = true;
 
     m_state = NotLoggedIn;
     myauth = 0;
@@ -197,7 +200,7 @@ void Player::battleForfeited()
 
     changeState(LoggedIn, true);
 
-    emit battleFinished(Forfeit, opponent(), id());
+    emit battleFinished(Forfeit, opponent(), id(), battle->rated());
 }
 
 void Player::battleResult(int result, int winner, int loser)
@@ -398,6 +401,7 @@ PlayerInfo Player::bundle() const
     p.flags = state();
     p.id = id();
     p.team = basicInfo();
+    p.rating = ladder() ? rating() : -1;
 
     return p;
 }
@@ -431,15 +435,11 @@ void Player::loggedIn(const TeamInfo &_team)
         return;
     }
 
-    if (st == Success) {
-        team() = _team;
-        emit loggedIn(id(), _team.name);
-        return;
-    }
-
-    /* st == Partial */
     team() = _team;
-    return;
+
+    if (st == Success) {
+        emit loggedIn(id(), _team.name);
+    }
 }
 
 Player::AuthentificationState Player::testAuthentification(const TeamInfo &team)
@@ -456,6 +456,9 @@ Player::AuthentificationState Player::testAuthentification(const TeamInfo &team)
             sendMessage("You are banned!");
             return Invalid;
         }
+
+        rating() = m.rating();
+
         if (m.isProtected()) {
             relay().notify(NetworkServ::AskForPass, m.salt);
             waiting_name = team.name;
@@ -472,8 +475,9 @@ Player::AuthentificationState Player::testAuthentification(const TeamInfo &team)
         return Success;
     } else {
         myauth = 0;
+        rating() = 1000;
 
-        SecurityManager::create(SecurityManager::Member(team.name.toLower(), QDate::currentDate().toString(Qt::ISODate), "000", "", "", relay().ip()));
+        SecurityManager::create(SecurityManager::Member(team.name, QDate::currentDate().toString(Qt::ISODate), "000", 1000, "", "", relay().ip()));
         /* To tell the player he's not registered */
         relay().notify(NetworkServ::Register);
         return Success;

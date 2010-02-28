@@ -12,8 +12,22 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+ /*   void hideEvent(QHideEvent * event)
+    {
+        sticon->show();//affichage du tray
+        hide();//"cachage" de la fenetre =)
+
+    }
+    void showEvent(QShowEvent * event)
+    {
+        sticon->hide();
+        show();
+    }
+*/
 private:
     Server * myserver;
+    QSystemTrayIcon *sticon;
 };
 
 #endif // MAINWINDOW_H

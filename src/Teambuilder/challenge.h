@@ -3,10 +3,11 @@
 
 #include <QtGui>
 #include "../PokemonInfo/battlestructs.h"
+#include "../Utilities/otherwidgets.h"
 
 class PlayerInfo;
 
-class BaseChallengeWindow : public QWidget
+class BaseChallengeWindow : public QImageBackground
 {
     Q_OBJECT
 public:
@@ -24,9 +25,12 @@ public slots:
     void onChallenge();
     void onCancel();
 protected:
-    QPushButton *challenge_b;
-
+    QImageButton *challenge_b;
     QCheckBox *clauses[ChallengeInfo::numberOfClauses];
+    QPoint dragPosition;
+
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 private:
     int myid;
 

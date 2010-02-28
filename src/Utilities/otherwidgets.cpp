@@ -89,8 +89,9 @@ void QImageButton::mouseMoveEvent(QMouseEvent *e)
 QImageBackground::QImageBackground(const QString &imagePath)
         : myBackground(imagePath)
 {
-    if (!myBackground.isNull())
+    if (!myBackground.isNull()) {
         setFixedSize(myBackground.size());
+    }
 }
 
 QSize QImageBackground::sizeHint() const

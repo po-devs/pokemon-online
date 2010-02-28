@@ -503,7 +503,7 @@ void Server::incomingConnection()
     connect(p, SIGNAL(recvMessage(int, QString)), SLOT(recvMessage(int,QString)));
     connect(p, SIGNAL(disconnected(int)), SLOT(disconnected(int)));
     connect(p, SIGNAL(sendChallenge(int,int,ChallengeInfo)), SLOT(dealWithChallenge(int,int,ChallengeInfo)));
-    connect(p, SIGNAL(battleFinished(int,int,int)), SLOT(battleResult(int,int,int)));
+    connect(p, SIGNAL(battleFinished(int,int,int,bool)), SLOT(battleResult(int,int,int,bool)));
     connect(p, SIGNAL(info(int,QString)), SLOT(info(int,QString)));
     connect(p, SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
     connect(p, SIGNAL(playerBan(int,int)), SLOT(playerBan(int, int)));
@@ -601,7 +601,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     }
 
     connect(battle, SIGNAL(battleInfo(int,QByteArray)), SLOT(sendBattleCommand(int, QByteArray)));
-    connect(battle, SIGNAL(battleFinished(int,int,int)), SLOT(battleResult(int,int,int)));
+    connect(battle, SIGNAL(battleFinished(int,int,int,bool)), SLOT(battleResult(int,int,int,bool)));
     connect(player(id1), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
     connect(player(id1), SIGNAL(battleChat(int,QString)), battle, SLOT(battleChat(int, QString)));
     connect(player(id2), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
@@ -610,7 +610,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     battle->start();
 }
 
-void Server::battleResult(int desc, int winner, int loser)
+void Server::battleResult(int desc, int winner, int loser, bool rated)
 {
     if (desc == Forfeit && player(winner)->battle->finished()) {
         player(winner)->battleResult(Close, winner, loser);
@@ -619,6 +619,18 @@ void Server::battleResult(int desc, int winner, int loser)
             player(id)->battleResult(Close, winner, loser);
         }
     } else {
+        if (desc != Tie && rated) {
+            SecurityManager::Member winnerM = SecurityManager::member(player(winner)->name());
+            SecurityManager::Member loserM = SecurityManager::member(player(loser)->name());
+            int wrat = winnerM.rating();
+            int lrat = loserM.rating();
+            winnerM.changeRating(lrat, true);
+            loserM.changeRating(wrat, false);
+            player(winner)->rating() = winnerM.rating();
+            player(loser)->rating() = loserM.rating();
+            sendPlayer(winner);
+            sendPlayer(loser);
+        }
         foreach(Player *p, myplayers) {
             if (p->isLoggedIn()) {
                 p->battleResult(desc, winner, loser);
