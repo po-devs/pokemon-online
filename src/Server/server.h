@@ -88,10 +88,10 @@ public slots:
     void playerKick(int src, int dest);
     void playerBan(int src, int dest);
     void awayChanged(int src, bool away);
+    void sendPlayer(int id);
 private:
     void kick(int dest, int src);
     void ban(int dest, int src);
-    void sendPlayer(int id);
 
     Analyzer *registry_connection;
     QString serverName, serverDesc;

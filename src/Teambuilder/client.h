@@ -111,6 +111,8 @@ public slots:
     void goAwayB(bool away) {
         goAway(away);
     }
+    void showTeam(bool);
+    void enableLadder(bool);
 
     /* Teambuilder slots */
     void openTeamBuilder();

@@ -26,6 +26,7 @@ Challenge::Challenge(Player *source, Player *dest, const ChallengeInfo &c, Serve
     dest->addChallenge(this, true);
 
     ChallengeInfo d = c;
+    d.rated = source->ladder() && dest->ladder();
     d.opp = source->id();
     d.dsc = ChallengeInfo::Sent;
     dest->sendChallengeStuff(d);

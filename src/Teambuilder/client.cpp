@@ -149,6 +149,16 @@ void Client::goAway(int away)
     goaway->setChecked(away);
 }
 
+void Client::showTeam(bool b)
+{
+    relay().notify(NetworkCli::ShowTeamChange, b);
+}
+
+void Client::enableLadder(bool b)
+{
+    relay().notify(NetworkCli::LadderChange, b);
+}
+
 
 void Client::controlPanel(int id)
 {
@@ -249,6 +259,16 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     QSettings s;
     saveLogs->setChecked(s.value("save_battle_logs").toBool());
+
+    QAction * show = menuActions->addAction(tr("&Show Team"));
+    show->setCheckable(true);
+    connect(show, SIGNAL(triggered(bool)), SLOT(showTeam(bool)));
+    show->setChecked(s.value("show_team").toBool());
+
+    QAction * ladd = menuActions->addAction(tr("Enable &Ladder"));
+    ladd->setCheckable(true);
+    connect(ladd, SIGNAL(triggered(bool)), SLOT(enableLadder(bool)));
+    ladd->setChecked(s.value("enable_ladder").toBool());
 
     return menuBar;
 }
@@ -598,7 +618,10 @@ void Client::connected()
 {
     printLine(tr("Connected to Server!"));
 
-    relay().login(*team());
+    QSettings s;
+
+    FullInfo f = {*team(), s.value("enable_ladder").toBool(), s.value("show_team").toBool()};
+    relay().login(f);
 }
 
 void Client::disconnected()
