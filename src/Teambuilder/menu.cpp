@@ -33,7 +33,7 @@ QMenuBar * TB_Menu::createMenuBar(MainEngine *w)
     menuBar->setStyleSheet("QMenuBar{background-image:url(db/menu_background.png);}");/*tr("QMenuBar{background-color:rgb(30,30,100);}"));*/
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
     menuFichier->addAction(tr("&Load Team"),w,SLOT(loadTeamDialog()),Qt::CTRL+Qt::Key_L);
-    menuFichier->addAction(tr("&Quit"),w,SLOT(close()),Qt::CTRL+Qt::Key_Q);
+    menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
     QMenu *menuStyle = menuBar->addMenu(tr("&Style"));
     QStringList style = QStyleFactory::keys();
     for(QStringList::iterator i = style.begin();i!=style.end();i++)

@@ -249,8 +249,8 @@ void BattleSituation::beginTurn()
 
     requestChoices();
     /* preventing the players from cancelling (like when u-turn/Baton pass) */
-    hasChoice[0] = false;
-    hasChoice[1] = false;
+    couldMove[0] = false;
+    couldMove[1] = false;
     analyzeChoices();
 }
 
@@ -330,7 +330,8 @@ bool BattleSituation::requestChoice(int player, bool acquire, bool custom)
 	return false;
     }
 
-    couldMove[player] = hasChoice[player] = true;
+    couldMove[player] = true;
+    hasChoice[player] = true;
 
     if (!custom)
 	options[player] = createChoice(player);
@@ -572,7 +573,7 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 
     if (hasChoice[player] == false) {
         /* If at least one of the two player still hasn't moved, and the cancel is valid, we allow the cancel */
-        if (b.cancelled() && couldMove[player] && (hasChoice[player] || hasChoice[rev(player)])) {
+        if (b.cancelled() && couldMove[player] && hasChoice[rev(player)]) {
             hasChoice[player] = true;
             notify(player, CancelMove, player);
         } else {
@@ -580,11 +581,13 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
         }
     } else {
 	if (!b.match(options[player])) {
+            notify(player, BattleChat, player, QString("<debug message>: your choice is invalid"));
 	    //INVALID BEHAVIOR
 	} else {
 	    /* Routine checks */
 	    if (b.poke()) {
 		if (b.numSwitch == currentPoke(player) || poke(player, b.numSwitch).num() == 0 || poke(player, b.numSwitch).ko()) {
+                    notify(player, BattleChat, player, QString("<debug message>: you can't switch to that pokemon"));
 		    // INVALID BEHAVIOR
 		    return;
 		}
@@ -1094,12 +1097,21 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    int typepok[] = {getType(player, 1), getType(player, 2)};
 	    int typeffs[] = {TypeInfo::Eff(type, typeadv[0]),TypeInfo::Eff(type, typeadv[1])};
 	    int typemod = 1;
-	    bool fly = type == Move::Ground && !isFlying(target);
+
 
 	    for (int i = 0; i < 2; i++) {
-                if (typeffs[i] != 0 || ((!fly || typepok[i] != Pokemon::Flying) && !pokelong[target].value(QString::number(typeadv[i])+"Sleuthed").toBool()
-                    && (!hasType(target, Pokemon::Ghost) || !hasWorkingAbility(player,82)))) //Scrappy
-		    typemod *= typeffs[i];
+                if (typeffs[i] == 0) {
+                    if (type == Move::Ground && !isFlying(target))
+                        continue;
+                    if (pokelong[target].value(QString::number(typeadv[i])+"Sleuthed").toBool()) {
+                        continue;
+                    }
+                    /* Scrappy */
+                    if (hasType(target, Pokemon::Ghost) && hasWorkingAbility(player,82)) {
+                        continue;
+                    }
+                }
+                typemod *= typeffs[i];
 	    }
 
 	    if (type == Move::Ground && isFlying(target)) {
