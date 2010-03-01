@@ -1,4 +1,4 @@
-(None)
+
 Absorb
 Acid
 Acid Armor
@@ -9,7 +9,7 @@ Agility
 Air Cutter
 Air Slash
 Amnesia
-Ancientpower
+AncientPower
 Aqua Jet
 Aqua Ring
 Aqua Tail
@@ -44,7 +44,7 @@ Brave Bird
 Brick Break
 Brine
 Bubble
-Bubblebeam
+BubbleBeam
 Bug Bite
 Bug Buzz
 Bulk Up
@@ -94,19 +94,19 @@ Doom Desire
 Double Hit
 Double Kick
 Double Team
-Double-edge
-Doubleslap
+Double-Edge
+DoubleSlap
 Draco Meteor
 Dragon Claw
 Dragon Dance
 Dragon Pulse
 Dragon Rage
 Dragon Rush
-Dragonbreath
+DragonBreath
 Drain Punch
 Dream Eater
 Drill Peck
-Dynamicpunch
+DynamicPunch
 Earth Power
 Earthquake
 Egg Bomb
@@ -119,13 +119,13 @@ Energy Ball
 Eruption
 Explosion
 Extrasensory
-Extremespeed
+ExtremeSpeed
 Facade
 Faint Attack
 Fake Out
 Fake Tears
 False Swipe
-Featherdance
+FeatherDance
 Feint
 Fire Blast
 Fire Fang
@@ -158,7 +158,7 @@ Giga Drain
 Giga Impact
 Glare
 Grass Knot
-Grasswhistle
+GrassWhistle
 Gravity
 Growl
 Growth
@@ -218,7 +218,7 @@ Leech Seed
 Leer
 Lick
 Light Screen
-Lock-on
+Lock-On
 Lovely Kiss
 Low Kick
 Lucky Chant
@@ -259,7 +259,7 @@ Morning Sun
 Mud Bomb
 Mud Shot
 Mud Sport
-Mud-slap
+Mud-Slap
 Muddy Water
 Nasty Plot
 Natural Gift
@@ -286,7 +286,7 @@ Poison Gas
 Poison Jab
 Poison Sting
 Poison Tail
-Poisonpowder
+PoisonPowder
 Pound
 Powder Snow
 Power Gem
@@ -335,7 +335,7 @@ Roost
 Sacred Fire
 Safeguard
 Sand Tomb
-Sand-attack
+Sand-Attack
 Sandstorm
 Scary Face
 Scratch
@@ -368,14 +368,14 @@ Sleep Powder
 Sleep Talk
 Sludge
 Sludge Bomb
-Smellingsalt
+SmellingSalt
 Smog
-Smokescreen
+SmokeScreen
 Snatch
 Snore
 Softboiled
-Solarbeam
-Sonicboom
+SolarBeam
+SonicBoom
 Spacial Rend
 Spark
 Spider Web
@@ -424,8 +424,8 @@ Thunder
 Thunder Fang
 Thunder Wave
 Thunderbolt
-Thunderpunch
-Thundershock
+ThunderPunch
+ThunderShock
 Tickle
 Torment
 Toxic
@@ -441,11 +441,11 @@ Twister
 U-turn
 Uproar
 Vacuum Wave
-Vicegrip
+ViceGrip
 Vine Whip
 Vital Throw
 Volt Tackle
-Wake-up Slap
+Wake-Up Slap
 Water Gun
 Water Pulse
 Water Sport
@@ -454,7 +454,7 @@ Waterfall
 Weather Ball
 Whirlpool
 Whirlwind
-Will-o-wisp
+Will-O-Wisp
 Wing Attack
 Wish
 Withdraw
@@ -462,7 +462,7 @@ Wood Hammer
 Worry Seed
 Wrap
 Wring Out
-X-scissor
+X-Scissor
 Yawn
 Zap Cannon
 Zen Headbutt

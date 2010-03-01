@@ -151,11 +151,15 @@ void Client::goAway(int away)
 
 void Client::showTeam(bool b)
 {
+    QSettings s;
+    s.setValue("show_team", b);
     relay().notify(NetworkCli::ShowTeamChange, b);
 }
 
 void Client::enableLadder(bool b)
 {
+    QSettings s;
+    s.setValue("enable_ladder", b);
     relay().notify(NetworkCli::LadderChange, b);
 }
 

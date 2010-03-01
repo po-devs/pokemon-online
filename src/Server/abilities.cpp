@@ -492,7 +492,7 @@ struct AMHyperCutter : public AM {
     }
 
     static void psc(int s, int t, BS &b) {
-        if (turn(b,s)["StatModType"].toString() == "Stat" && turn(b,s)["StatModded"].toInt() == Attack && turn(b,s)["StatModification"].toInt() < 0) {
+        if (turn(b,s)["StatModType"].toString() == "Stat" && turn(b,s)["StatModded"].toInt() == poke(b,s)["AbilityArg"].toInt() && turn(b,s)["StatModification"].toInt() < 0) {
             if (b.canSendPreventMessage(s,t))
                 b.sendAbMessage(30,0,s,s,0,b.ability(s));
             b.preventStatMod(s,t);

@@ -120,7 +120,7 @@ Goldeen
 Seaking
 Staryu
 Starmie
-Mr.Mime
+Mr. Mime
 Scyther
 Jynx
 Electabuzz
@@ -248,7 +248,7 @@ Larvitar
 Pupitar
 Tyranitar
 Lugia
-Ho-oh
+Ho-Oh
 Celebi
 Treecko
 Grovyle
@@ -370,7 +370,7 @@ Gorebyss
 Relicanth
 Luvdisc
 Bagon
-Shellgon
+Shelgon
 Salamence
 Beldum
 Metang

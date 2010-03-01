@@ -651,13 +651,11 @@ bool TrainerTeam::saveToFile(const QString &path) const
     trainer.setAttribute("infoMsg",trainerInfo());
 
     QDomElement poke[6];
-    QDomText pokeNickname[6];
     for(int cpt = 0;cpt<6;cpt++)
     {
         poke[cpt] = document.createElement("Pokemon");
         Team.appendChild(poke[cpt]);
-        pokeNickname[cpt] = document.createTextNode(team().poke(cpt).nickname());
-        poke[cpt].appendChild(pokeNickname[cpt]);
+        poke[cpt].setAttribute("Nickname", team().poke(cpt).nickname());
         poke[cpt].setAttribute("Num",team().poke(cpt).num());
         poke[cpt].setAttribute("Item",team().poke(cpt).item());
         poke[cpt].setAttribute("Ability",team().poke(cpt).ability());
@@ -762,8 +760,8 @@ bool TrainerTeam::loadFromFile(const QString &path)
     while(!poke.isNull())
     {
         this->team().poke(cpt).setNum(poke.attribute("Num",0).toInt(0,10));
-        this->team().poke(cpt).nickname() = poke.text();
         this->team().poke(cpt).load();
+        this->team().poke(cpt).nickname() = poke.attribute("Nickname");
         this->team().poke(cpt).item() = poke.attribute("Item",0).toInt(0,10);
         this->team().poke(cpt).ability() = poke.attribute("Ability",0).toInt(0,10);
         this->team().poke(cpt).nature() = poke.attribute("Nature",0).toInt(0,10);
