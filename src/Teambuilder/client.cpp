@@ -216,6 +216,8 @@ void Client::PMReceived(int id, QString pm)
     if (!mypms.contains(id)) {
         startPM(id);
     }
+    activateWindow();
+
     mypms[id]->printLine(pm);
 }
 

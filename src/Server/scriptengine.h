@@ -51,6 +51,8 @@ public:
     /* Calls the underlying OS for a command */
     Q_INVOKABLE void system(const QString &command);
     Q_INVOKABLE void clearChat();
+    Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
+    Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
 
@@ -79,9 +81,10 @@ public:
     Q_INVOKABLE QScriptValue teamPokeItem(int id, int pokeindex);
     Q_INVOKABLE bool hasTeamItem(int id, int itemNum);
 
-
     Q_INVOKABLE int numPlayers();
     Q_INVOKABLE bool loggedIn(int id);
+
+    Q_INVOKABLE QScriptValue getFileContent(const QString &path);
 
     /* Set and unset player arrays:
        Those are arrays that, once a player logs off, have their content cleared
