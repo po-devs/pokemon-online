@@ -128,6 +128,10 @@ public:
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
     void gainPP(int player, int move, int gain);
+    //Uproarer
+    bool isThereUproar();
+    void addUproarer(int player);
+    void removeUproarer(int player);
 
     int calculateDamage(int player, int target);
     void applyMoveStatMods(int player, int target);
@@ -440,5 +444,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 
     emitCommand(who, player, tosend);
 }
+
+Q_DECLARE_METATYPE(QSharedPointer<QSet<int> >)
 
 #endif // BATTLE_H

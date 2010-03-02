@@ -25,6 +25,8 @@ public:
         show();
     }
 */
+protected:
+    void closeEvent(QCloseEvent *e);
 private:
     Server * myserver;
     QSystemTrayIcon *sticon;

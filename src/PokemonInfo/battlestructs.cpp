@@ -336,7 +336,7 @@ void TeamBattle::generateRandom()
                 break;
             }
         }
-        p.item() = ItemInfo::SortedNumber(ItemInfo::SortedNames()[true_rand()%ItemInfo::NumberOfItems()]);
+        p.item() = ItemInfo::Number(ItemInfo::SortedNames()[true_rand()%ItemInfo::NumberOfItems()]);
         p.updateStats();
         p.nick() = PokemonInfo::Name(p.num());
         p.status() = Pokemon::Fine;

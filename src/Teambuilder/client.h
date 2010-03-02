@@ -113,6 +113,7 @@ public slots:
     }
     void showTeam(bool);
     void enableLadder(bool);
+    void showPlayerEvents(bool);
 
     /* Teambuilder slots */
     void openTeamBuilder();
@@ -148,6 +149,7 @@ private:
     QPointer<BattleWindow> mybattle;
     QHash<int, QPointer<BaseBattleWindow> > mySpectatingBattles;
     QAction *goaway;
+    bool showPEvents;
 
     /* You can call the teambuilder from here too */
     QPointer<QMainWindow> myteambuilder;

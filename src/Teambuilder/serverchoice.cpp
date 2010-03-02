@@ -75,8 +75,6 @@ void ServerChoice::advServerChosen()
 
 void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip)
 {
-    mylist->setSortingEnabled(false);
-
     int row = mylist->rowCount();
     mylist->setRowCount(row+1);
 
@@ -94,7 +92,6 @@ void ServerChoice::addServer(const QString &name, const QString &desc, quint16 n
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 2, witem);
 
-    mylist->setSortingEnabled(true);
     mylist->resizeColumnsToContents();
     mylist->resizeRowsToContents();
     mylist->horizontalHeader()->setStretchLastSection(true);
