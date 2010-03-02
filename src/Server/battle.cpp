@@ -1107,7 +1107,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                         continue;
                     }
                     /* Scrappy */
-                    if (hasType(target, Pokemon::Ghost) && hasWorkingAbility(player,82)) {
+                    if (hasType(target, Pokemon::Ghost) && hasWorkingAbility(player,81)) {
                         continue;
                     }
                 }
@@ -1481,6 +1481,10 @@ void BattleSituation::inflictStatus(int player, int status, int attacker)
             notify(All, AlreadyStatusMessage, player);
         return;
     }
+    if (status == Pokemon::Asleep && isThereUproar()) {
+        sendMoveMessage(141,4,player);
+        return;
+    }
     if (canGetStatus(player,status)) {
         if (attacker != player) {
             QString q = QString("StatModFrom%1Prevented").arg(attacker);
@@ -1746,6 +1750,9 @@ int BattleSituation::calculateDamage(int p, int t)
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
     int randnum = true_rand() % (255-217) + 217;
+    //Spit Up
+    if (attackused == 383)
+        randnum = 255;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,90))); //Sniper
     int power = move["Power"].toInt();
     int type = move["Type"].toInt();
@@ -2304,4 +2311,35 @@ BattleStats BattleSituation::constructStats(int player)
     }
 
     return ret;
+}
+
+void BattleSituation::addUproarer(int player)
+{
+    if (!battlelong.contains("Uproarer")) {
+        QVariant v;
+        v.setValue(QSharedPointer<QSet<int> > (new QSet<int>()));
+        battlelong["Uproarer"] = v;
+    }
+
+    battlelong["Uproarer"].value< QSharedPointer<QSet<int> > >()->insert(player);
+}
+
+void BattleSituation::removeUproarer(int player)
+{
+    battlelong["Uproarer"].value<QSharedPointer<QSet<int> > >()->remove(player);
+}
+
+bool BattleSituation::isThereUproar()
+{
+    if (!battlelong.contains("Uproarer")) {
+        return false;
+    }
+
+    foreach(int player, *battlelong["Uproarer"].value<QSharedPointer< QSet<int> > >()) {
+        if (!koed(player) && pokelong[player].value("UproarUntil").toInt() >= turn()) {
+            return true;
+        }
+    }
+
+    return false;
 }

@@ -34,6 +34,9 @@ MainEngine::MainEngine() : displayer(0)
     if (settings.value("enable_ladder").isNull()) {
         settings.setValue("enable_ladder",true);
     }
+    if (settings.value("show_player_events").isNull()) {
+        settings.setValue("show_player_events", false);
+    }
 
     PokemonInfo::init("db/");
     ItemInfo::init("db/");
@@ -153,7 +156,7 @@ void MainEngine::updateMenuBar()
 
 void MainEngine::quit()
 {
-    displayer->close();
+    exit(0);
 }
 
 void MainEngine::loadTeam(const QString &path)

@@ -522,17 +522,13 @@ void TB_PokemonBody::initPokemons()
     pokechoice->horizontalHeader()->hide();
     pokechoice->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
     pokechoice->setFixedSize(200, 120);
+    pokechoice->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     /* Adding the poke names */
     for (int i = 0; i < PokemonInfo::NumberOfPokemons(); i++)
     {
-	QTableWidgetItem *item = new QTableWidgetItem(QString::number(i));
-	item->setFlags(item->flags() ^ Qt::ItemIsEditable);
-	pokechoice->setItem(i, 0, item);
-
-	item = new QTableWidgetItem(PokemonInfo::Name(i));
-	item->setFlags(item->flags() ^ Qt::ItemIsEditable);
-	pokechoice->setItem(i, 1, item);
+        pokechoice->setItem(i, 0, new QTableWidgetItem(QString::number(i)));
+        pokechoice->setItem(i, 1, new QTableWidgetItem(PokemonInfo::Name(i)));
     }
 
     pokechoice->resizeRowsToContents();

@@ -818,8 +818,8 @@ struct MMRest : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        // Insomnia, Vital Spirit
-        if (b.poke(s).status() == Pokemon::Asleep || b.poke(s).isFull() || b.hasWorkingAbility(s,42) || b.hasWorkingAbility(s,118)) {
+        // Insomnia, Vital Spirit, Uproar
+        if (b.poke(s).status() == Pokemon::Asleep || b.poke(s).isFull() || b.hasWorkingAbility(s,42) || b.hasWorkingAbility(s,118) || b.isThereUproar()) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -1039,7 +1039,7 @@ struct MMToxicSpikes : public MM
     }
 
     static void usi(int s, int, BS &b) {
-        if (b.hasType(s, Pokemon::Poison) && team(b,s).value("ToxicSpikes").toInt() > 0) {
+        if (b.hasType(s, Pokemon::Poison) && !b.isFlying(s) && team(b,s).value("ToxicSpikes").toInt() > 0) {
             team(b,s).remove("ToxicSpikes");
 	    b.sendMoveMessage(136, 1, s, Pokemon::Poison, b.rev(s));
 	    return;
@@ -2939,38 +2939,6 @@ struct MMNightMare : public MM
     }
 };
 
-struct MMOutrage : public MM
-{
-    MMOutrage() {
-	functions["UponAttackSuccessful"] = &uas;
-	functions["AfterAttackSuccessful"] = &aas;
-    }
-
-    static void uas(int s, int, BS &b) {
-        if (poke(b,s).value("OutrageUntil").toInt() == 0) {
-            poke(b,s)["OutrageUntil"] = b.turn() +  1 + (true_rand() % 2);
-	    addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
-	    poke(b,s)["OutrageMove"] = move(b,s);
-        }
-    }
-
-    static void aas(int s, int, BS &b) {
-
-        if (b.turn() >= poke(b,s)["OutrageUntil"].toInt()) {
-	    removeFunction(poke(b,s), "TurnSettings", "Outrage");
-	    b.sendMoveMessage(93,0,s,type(b,s));
-	    b.inflictConfused(s);
-        }
-    }
-
-    static void ts(int s, int, BS &b) {
-        if (poke(b,s).value("OutrageUntil").toInt() >= b.turn()) {
-	    turn(b,s)["NoChoice"] = true;
-	    MoveEffect::setup(poke(b,s)["OutrageMove"].toInt(),s,b.rev(s),b);
-	}
-    }
-};
-
 struct MMPresent : public MM
 {
     MMPresent() {
@@ -3728,7 +3696,7 @@ struct MMSecretPower : public MM {
     }
 
     static void ms(int s, int, BS &b) {
-
+        turn(b,s)["StatEffect"] = "O[S]1+";
     }
 };
 
@@ -3766,6 +3734,172 @@ struct MMBeatUp : public MM {
             if (b.koed(t))
                 return;
         }
+    }
+};
+
+struct MMOutrage : public MM
+{
+    MMOutrage() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["AfterAttackSuccessful"] = &aas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        if (poke(b,s).value("OutrageUntil").toInt() == 0) {
+            poke(b,s)["OutrageUntil"] = b.turn() +  1 + (true_rand() % 2);
+            addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
+            poke(b,s)["OutrageMove"] = move(b,s);
+        }
+    }
+
+    static void aas(int s, int, BS &b) {
+        if (b.turn() >= poke(b,s)["OutrageUntil"].toInt()) {
+            removeFunction(poke(b,s), "TurnSettings", "Outrage");
+            b.sendMoveMessage(93,0,s,type(b,s));
+            b.inflictConfused(s);
+        }
+    }
+
+    static void ts(int s, int, BS &b) {
+        if (poke(b,s).value("OutrageUntil").toInt() >= b.turn()) {
+            turn(b,s)["NoChoice"] = true;
+            MoveEffect::setup(poke(b,s)["OutrageMove"].toInt(),s,b.rev(s),b);
+        }
+    }
+};
+
+struct MMUproar : public MM {
+    MMUproar() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["AfterAttackSuccessful"] = &aas;
+    }
+
+    static void uas(int s,int, BS &b) {
+        if (poke(b,s).value("UproarUntil").toInt() == 0) {
+            poke(b,s)["UproarUntil"] = b.turn() + 1 + (true_rand() % 4);
+            b.sendMoveMessage(141,0,s);
+            for (int i = BattleSituation::Player1; i <= BattleSituation::Player2;i++) {
+                if (b.poke(i).status() == Pokemon::Asleep) {
+                    b.sendMoveMessage(141,3,i);
+                    b.changeStatus(i, Pokemon::Normal);
+                }
+            }
+            b.addUproarer(s);
+            addFunction(poke(b,s), "EndTurn", "Uproar", &et);
+            addFunction(poke(b,s), "TurnSettings", "Uproar", &ts);
+            poke(b,s)["UproarMove"] = move(b,s);
+        }
+    }
+
+    static void aas(int s, int, BS &b) {
+        if (b.turn() >= poke(b,s)["UproarUntil"].toInt()) {
+            removeFunction(poke(b,s), "TurnSettings", "Uproar");
+            removeFunction(poke(b,s), "EndTurn", "Uproar");
+            poke(b,s).remove("UproarUntil");
+            b.removeUproarer(s);
+            b.sendMoveMessage(141,2,s,type(b,s));
+        }
+    }
+
+    static void ts(int s, int, BS &b) {
+        if (poke(b,s).value("UproarUntil").toInt() >= b.turn()) {
+            turn(b,s)["NoChoice"] = true;
+            MoveEffect::setup(poke(b,s)["UproarMove"].toInt(),s,b.rev(s),b);
+        }
+    }
+
+    static void et(int s, int, BS &b) {
+        if (poke(b,s).value("UproarUntil").toInt() > b.turn()) {
+            b.sendMoveMessage(141,1,s);
+        } else {
+            for (int i = BattleSituation::Player1; i <= BattleSituation::Player2;i++) {
+                if (b.poke(i).status() == Pokemon::Asleep) {
+                    b.sendMoveMessage(141,3,i);
+                    b.changeStatus(i, Pokemon::Normal);
+                }
+            }
+        }
+    }
+};
+
+struct MMStockPile : public MM
+{
+    MMStockPile() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (poke(b,s).value("StockPileCount").toInt() >= 3) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas(int s, int, BS &b) {
+        if (poke(b,s)["Boost2"].toInt() <= 5) {
+            inc(poke(b,s)["StockPileDef"],1);
+        }
+        if (poke(b,s)["Boost5"].toInt() <= 5) {
+            inc(poke(b,s)["StockPileSDef"], 1);
+        }
+        inc(poke(b,s)["StockPileCount"], 1);
+        b.sendMoveMessage(125,0,s,0,s,poke(b,s)["StockPileCount"].toInt());
+    }
+};
+
+struct MMSwallow: public MM
+{
+    MMSwallow() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (poke(b,s).value("StockPileCount").toInt() == 0) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas(int s, int, BS &b) {
+        b.changeStatMod(s,Defense,poke(b,s)["Boost2"].toInt() - poke(b,s)["StockPileDef"].toInt());
+        b.changeStatMod(s,SpDefense,poke(b,s)["Boost5"].toInt() - poke(b,s)["StockPileSDef"].toInt());
+        poke(b,s)["StockPileDef"] = 0;
+        poke(b,s)["StockPileSDef"] = 0;
+        switch (poke(b,s)["StockPileCount"].toInt()) {
+        case 1: b.healLife(s, b.poke(s).totalLifePoints()/4); break;
+        case 2: b.healLife(s, b.poke(s).totalLifePoints()/2); break;
+        case 3: default: b.healLife(s, b.poke(s).totalLifePoints()); break;
+        }
+        poke(b,s)["StockPileCount"] = 0;
+        b.sendMoveMessage(131,0,s);
+    }
+};
+
+struct MMSpitUp : public MM
+{
+    MMSpitUp() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["UponAttackSuccessful"] = & uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (poke(b,s).value("StockPileCount").toInt() == 0) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void bcd(int s, int, BS &b) {
+        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * poke(b,s)["StockPileCount"].toInt() * 100;
+    }
+
+    static void uas(int s, int, BS &b) {
+        b.changeStatMod(s,Defense,poke(b,s)["Boost2"].toInt() - poke(b,s)["StockPileDef"].toInt());
+        b.changeStatMod(s,SpDefense,poke(b,s)["Boost5"].toInt() - poke(b,s)["StockPileSDef"].toInt());
+        poke(b,s)["StockPileDef"] = 0;
+        poke(b,s)["StockPileSDef"] = 0;
+        poke(b,s)["StockPileCount"] = 0;
+        b.sendMoveMessage(122,0,s);
     }
 };
 
@@ -3912,7 +4046,7 @@ void MoveEffect::init()
     REGISTER_MOVE(107, Roar);
     REGISTER_MOVE(108, RolePlay);
     REGISTER_MOVE(109, SafeGuard);
-    /* Secret Power */
+    REGISTER_MOVE(110, SecretPower);
     REGISTER_MOVE(111, Sketch);
     REGISTER_MOVE(112, SkillSwap);
     REGISTER_MOVE(113, WeatherBall);
@@ -3924,16 +4058,16 @@ void MoveEffect::init()
     REGISTER_MOVE(119, SolarBeam);
     REGISTER_MOVE(120, ThunderWave);
     REGISTER_MOVE(121, Spikes);
-    /* Spit up */
+    REGISTER_MOVE(122, SpitUp);
     REGISTER_MOVE(123, Spite);
     REGISTER_MOVE(124, StealthRock);
-    /* Stockpile */
+    REGISTER_MOVE(125, StockPile);
     REGISTER_MOVE(126, Stomp);
     REGISTER_MOVE(127, Struggle);
     REGISTER_MOVE(128, Substitute);
     REGISTER_MOVE(129, SuckerPunch);
     REGISTER_MOVE(130, SuperFang);
-    /* Swallow */
+    REGISTER_MOVE(131, Swallow);
     REGISTER_MOVE(132, Switcheroo);
     REGISTER_MOVE(133, TailWind)
     REGISTER_MOVE(134, Taunt);
@@ -3943,7 +4077,7 @@ void MoveEffect::init()
     REGISTER_MOVE(138, TrickRoom);
     REGISTER_MOVE(139, TripleKick);
     REGISTER_MOVE(140, UTurn);
-    //Uproar
+    REGISTER_MOVE(141, Uproar);
     REGISTER_MOVE(142, Wish);
     REGISTER_MOVE(143, WorrySeed);
     REGISTER_MOVE(144, Yawn);

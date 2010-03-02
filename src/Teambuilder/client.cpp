@@ -70,7 +70,7 @@ void Client::showContextMenu(const QPoint &requested)
     {
 	QMenu *menu = new QMenu(this);
 
-        createIntMapper(menu->addAction(tr("See &Info")), SIGNAL(triggered()), this, SLOT(seeInfo(int)), item->id());
+        createIntMapper(menu->addAction(tr("&Challenge Window")), SIGNAL(triggered()), this, SLOT(seeInfo(int)), item->id());
         createIntMapper(menu->addAction(tr("&PM")), SIGNAL(triggered()), this, SLOT(startPM(int)), item->id());
 
         if (item->id() == ownId()) {
@@ -163,6 +163,12 @@ void Client::enableLadder(bool b)
     relay().notify(NetworkCli::LadderChange, b);
 }
 
+void Client::showPlayerEvents(bool b)
+{
+    QSettings s;
+    s.setValue("show_player_events", b);
+    showPEvents = b;
+}
 
 void Client::controlPanel(int id)
 {
@@ -210,8 +216,6 @@ void Client::PMReceived(int id, QString pm)
     if (!mypms.contains(id)) {
         startPM(id);
     }
-    mypms[id]->raise();
-    mypms[id]->activateWindow();
     mypms[id]->printLine(pm);
 }
 
@@ -273,6 +277,12 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     ladd->setCheckable(true);
     connect(ladd, SIGNAL(triggered(bool)), SLOT(enableLadder(bool)));
     ladd->setChecked(s.value("enable_ladder").toBool());
+
+    QAction *show_events = menuActions->addAction(tr("Show Player &Events"));
+    show_events->setCheckable(true);
+    connect(show_events, SIGNAL(triggered(bool)), SLOT(showPlayerEvents(bool)));
+    show_events->setChecked(s.value("show_player_events").toBool());
+    showPEvents = show_events->isChecked();
 
     return menuBar;
 }
@@ -474,7 +484,8 @@ void Client::stopWatching(int battleId)
 
 void Client::battleStarted(int id1, int id2)
 {
-    printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
+    if (showPEvents)
+        printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
 
     myplayersinfo[id1].flags |= PlayerInfo::Battling;
     myplayersinfo[id2].flags |= PlayerInfo::Battling;
@@ -495,12 +506,14 @@ void Client::forfeitBattle()
 
 void Client::battleFinished(int res, int winner, int loser)
 {
-    if (res == Forfeit) {
-        printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)));
-    } else if (res == Tie) {
-        printLine(tr("%1 and %2 tied.").arg(name(loser), name(winner)));
-    } else if (res == Win) {
-        printLine(tr("%1 won against %2.").arg(name(winner), name(loser)));
+    if (showPEvents) {
+        if (res == Forfeit) {
+            printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)));
+        } else if (res == Tie) {
+            printLine(tr("%1 and %2 tied.").arg(name(loser), name(winner)));
+        } else if (res == Win) {
+            printLine(tr("%1 won against %2.").arg(name(winner), name(loser)));
+        }
     }
 
     if ((res == Close || res == Forfeit) && (winner == ownId() || loser == ownId()))
@@ -561,10 +574,12 @@ void Client::challengeStuff(const ChallengeInfo &c)
 
 void Client::awayChanged(int id, bool away)
 {
-    if (away) {
-        printLine(tr("%1 is away.").arg(name(id)));
-    } else {
-        printLine(tr("%1 has returned.").arg(name(id)));
+    if (showPEvents) {
+        if (away) {
+            printLine(tr("%1 is away.").arg(name(id)));
+        } else {
+            printLine(tr("%1 has returned.").arg(name(id)));
+        }
     }
 
     playerInfo(id).changeState(PlayerInfo::Away, away);
@@ -651,14 +666,16 @@ QScrollDownTextEdit *Client::mainChat()
 void Client::playerLogin(const PlayerInfo& p)
 {
     playerReceived(p);
-    printLine(tr("%1 logged in.").arg(p.team.name));
+    if (showPEvents)
+        printLine(tr("%1 logged in.").arg(p.team.name));
 }
 
 void Client::playerLogout(int id)
 {
     QString name = info(id).name;
 
-    printLine(tr("%1 logged out.").arg(name));
+    if (showPEvents)
+        printLine(tr("%1 logged out.").arg(name));
 
     /* removes the item in the playerlist */
     removePlayer(id);
@@ -724,10 +741,12 @@ void Client::playerReceived(const PlayerInfo &p)
 }
 
 void Client::teamChanged(const PlayerInfo &p) {
-    if (name(p.id) != p.team.name) {
-        printLine(tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.team.name));
-    } else {
-        printLine(tr("%1 changed teams.").arg(name(p.id)));
+    if (showPEvents) {
+        if (name(p.id) != p.team.name) {
+            printLine(tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.team.name));
+        } else {
+            printLine(tr("%1 changed teams.").arg(name(p.id)));
+        }
     }
     playerReceived(p);
 }

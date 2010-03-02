@@ -15,3 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
 }
+
+void MainWindow::closeEvent(QCloseEvent *)
+{
+    exit(0);
+}
