@@ -1127,7 +1127,7 @@ struct MMSubstitute : public MM
         if (effect == "Bind" || effect == "Block" || effect == "Covet" || (effect == "Curse" && b.hasType(t, Pokemon::Ghost)) || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge"
 	    || effect == "HealBlock" || effect == "KnockOff" || effect == "LeechSeed"
 	    || effect == "LockOn" || effect == "Mimic" || effect == "PsychoShift" || effect == "Sketch" || effect == "Switcheroo"
-            || effect == "WorrySeed" || effect == "Yawn" || effect == "PainSplit")
+            || effect == "WorrySeed" || effect == "Yawn" || effect == "PainSplit" || effect == "BugBite")
 	{
             turn(b,t)["EffectBlocked"] = true;
             if (turn(b,t)["Power"].toInt() == 0)
