@@ -323,6 +323,9 @@ void TeamBattle::generateRandom()
         QList<int> movesTaken;
         for (int i = 0; i < 4; i++) {
             if (moves.size() <= i) {
+                for (int j = i; j < 4; j++) {
+                    moves[j] = 0;
+                }
                 break;
             }
             while(1) {
