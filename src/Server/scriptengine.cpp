@@ -229,6 +229,30 @@ void ScriptEngine::system(const QString &command)
     ::system(command.toUtf8());
 }
 
+void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::Append)) {
+        printLine("Script Error in sys.appendToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.write(content.toUtf8());
+}
+
+void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::WriteOnly)) {
+        printLine("Script Error in sys.writeToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.write(content.toUtf8());
+}
+
 void ScriptEngine::clearChat()
 {
     ((QTextEdit*)myserver->mainchat())->clear();
@@ -455,6 +479,18 @@ bool ScriptEngine::hasTeamItem(int id, int itemnum)
         }
     }
     return false;
+}
+
+QScriptValue ScriptEngine::getFileContent(const QString &fileName)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::ReadOnly)) {
+        printLine("Script Error in sys.getFileContent(filename): error when opening " + fileName + ": " + out.errorString());
+        return myengine.undefinedValue();
+    }
+
+    return QString::fromUtf8(out.readAll());
 }
 
 int ScriptEngine::numPlayers()
