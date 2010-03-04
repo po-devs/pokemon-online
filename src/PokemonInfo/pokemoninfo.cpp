@@ -38,6 +38,7 @@ QTSList<QStringList> MoveInfo::m_MoveMessages;
 QTSList<QPair<char, char> > MoveInfo::m_Repeat;
 QTSList<QString> MoveInfo::m_Descriptions;
 QTSList<QString> MoveInfo::m_Details;
+QHash<QString, int> MoveInfo::m_LowerCaseMoves;
 
 QString ItemInfo::m_Directory;
 QTSList<QString> ItemInfo::m_BerryNames;
@@ -617,7 +618,7 @@ QString MoveInfo::MoveMessage(int moveeffect, int part)
 
 int MoveInfo::Number(const QString &movename)
 {
-    return (qFind(m_Names.begin(), m_Names.end(), movename)-m_Names.begin()) % (NumberOfMoves());
+    return m_LowerCaseMoves.value(movename.toLower());
 }
 
 QString MoveInfo::SpecialEffect(int movenum)
@@ -633,6 +634,9 @@ int MoveInfo::Target(int movenum)
 void MoveInfo::loadNames()
 {
     fill_container_with_file(m_Names, trFile(path("moves")));
+    for (int i = 0; i < m_Names.size(); i++) {
+        m_LowerCaseMoves.insert(m_Names[i].toLower(),i);
+    }
 }
 
 void MoveInfo::loadDescriptions()
@@ -1081,6 +1085,13 @@ int TypeInfo::Eff(int type_attack, int type_defend)
     return m_TypeVsType[type_attack * NumberOfTypes() + type_defend];
 }
 
+
+int TypeInfo::Number(const QString &pokename)
+{
+    return (qFind(m_Names.begin(), m_Names.end(), pokename)-m_Names.begin()) % (NumberOfTypes());
+}
+
+
 QString TypeInfo::Name(int typenum)
 {
     return m_Names[typenum];
@@ -1128,6 +1139,12 @@ int NatureInfo::NumberOfNatures()
 {
     return m_Names.size();
 }
+
+int NatureInfo::Number(const QString &pokename)
+{
+    return (qFind(m_Names.begin(), m_Names.end(), pokename)-m_Names.begin()) % (NumberOfNatures());
+}
+
 
 int NatureInfo::Boost(int nature, int stat)
 {
@@ -1234,6 +1251,11 @@ void AbilityInfo::loadEffects()
 
 AbilityInfo::Effect AbilityInfo::Effects(int abnum) {
     return m_Effects[abnum];
+}
+
+int AbilityInfo::Number(const QString &pokename)
+{
+    return (qFind(m_Names.begin(), m_Names.end(), pokename)-m_Names.begin()) % (NumberOfAbilities());
 }
 
 QString AbilityInfo::Name(int abnum)

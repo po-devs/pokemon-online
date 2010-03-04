@@ -18,6 +18,33 @@ template <class T, class U>
     return ret;
 }
 
+TeamImporter::TeamImporter()
+{
+    setWindowFlags(Qt::Window);
+    setAttribute(Qt::WA_DeleteOnClose, true);
+
+    QGridLayout *l = new QGridLayout(this);
+    l->addWidget(new QLabel(tr("Paste your exported team from Netbattle Supremacy / Shoddy Battle")),0,0,1,2);
+    l->addWidget(mycontent = new QPlainTextEdit(),1,0,1,2);
+    mycontent->resize(mycontent->width(), 250);
+
+    QPushButton *cancel, *_done;
+
+    cancel = new QPushButton(tr("&Cancel"));
+    _done = new QPushButton(tr("&Done"));
+    connect(cancel, SIGNAL(clicked()), this, SLOT(close()));
+    connect(_done, SIGNAL(clicked()), this, SLOT(close()));
+    connect(_done, SIGNAL(clicked()), this, SLOT(done()));
+
+    l->addWidget(cancel, 2,0);
+    l->addWidget(_done,2,1);
+}
+
+void TeamImporter::done()
+{
+    emit done(mycontent->toPlainText());
+}
+
 
 TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvanced(0)
 {
@@ -191,6 +218,7 @@ void TeamBuilder::advancedClicked(int index)
     }
 }
 
+
 void TeamBuilder::advancedDestroyed()
 {
     m_dockAdvanced = 0;
@@ -255,6 +283,7 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     menuFichier->addAction(tr("&New Team"),this,SLOT(newTeam()),Qt::CTRL+Qt::Key_N);
     menuFichier->addAction(tr("&Save Team"),this,SLOT(saveTeam()),Qt::CTRL+Qt::Key_S);
     menuFichier->addAction(tr("&Load Team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
+    menuFichier->addAction(tr("&Import From Txt"),this,SLOT(importFromTxt()),Qt::CTRL+Qt::Key_I);
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
     QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
     QStringList style = QStyleFactory::keys();
@@ -264,6 +293,23 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     }
 
     return menuBar;
+}
+
+void TeamBuilder::importFromTxt()
+{
+    if (m_import) {
+        m_import->raise();
+        return;
+    }
+    m_import=new TeamImporter();
+    m_import->show();;
+    connect(m_import, SIGNAL(done(QString)), SLOT(importDone(QString)));
+}
+
+void TeamBuilder::importDone(const QString &text)
+{
+    trainerTeam()->importFromTxt(text);
+    updateTeam();
 }
 
 //creation du dockAdvanced
@@ -294,31 +340,11 @@ void TeamBuilder::changePokemonOrder(QPair<int, int>echange)
     TB_PokemonBody * poke1 = pokebody(pbody1);
     TB_PokemonBody * poke2 = pokebody(pbody2);
 
-    m_body->removeWidget(poke1);
-    m_body->removeWidget(poke2);
-
-    if(echange.first < echange.second)
-    {
-        m_body->insertWidget(echange.first,poke2);
-        m_body->insertWidget(echange.second,poke1);
-    }
-    else
-    {
-        m_body->insertWidget(echange.second,poke1);
-        m_body->insertWidget(echange.first,poke2);
-    }
-
-    m_body->setCurrentWidget(poke1);
-
     /* Replacing the pokemons in the team struct */
     std::swap(*(poke1->poke()), *(poke2->poke()));
-    /* Getting the pokemon bodies their poke back */
-    PokeTeam *tmp = poke1->poke();
-    poke1->changeSourcePoke(poke2->poke());
-    poke2->changeSourcePoke(tmp);
 
-    /* And in the tb memory */
-    std::swap(m_pbody[pbody1], m_pbody[pbody2]);
+    poke1->updateNum();
+    poke2->updateNum();
 }
 
 DockAdvanced * TeamBuilder::dockAdvanced() const

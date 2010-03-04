@@ -14,9 +14,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    delete myserver;
 }
 
 void MainWindow::closeEvent(QCloseEvent *)
 {
+    myserver->atServerShutDown();
     exit(0);
 }

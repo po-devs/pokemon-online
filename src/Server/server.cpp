@@ -861,6 +861,10 @@ int Server::freebattleid() const
     }
 }
 
+void Server::atServerShutDown() {
+    myengine->serverShutDown();
+}
+
 QScrollDownTextEdit * Server::mainchat()
 {
     return mymainchat;

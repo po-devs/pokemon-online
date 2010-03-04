@@ -238,6 +238,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     case SendOut:
 	{
             info().sub[spot] = false;
+            info().specialSprite[spot] = 0;
             if (spot == Myself) {
 		quint8 poke;
 		in >> poke;

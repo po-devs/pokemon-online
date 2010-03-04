@@ -124,7 +124,7 @@ struct BMAntiSuperEffective : public BM
     }
 
     static void m3b(int s, int t, BS &b) {
-        if (turn(b,t)["TypeMod"].toInt() > 4 && turn(b,t)["Type"].toInt() == poke(b,s)["ItemArg"].toInt()) {
+        if (!b.hasSubstitute(s) && turn(b,t)["TypeMod"].toInt() > 4 && turn(b,t)["Type"].toInt() == poke(b,s)["ItemArg"].toInt()) {
             b.eatBerry(s);
             turn(b,t)["Mod3Berry"] = -5;
         }
@@ -139,7 +139,7 @@ struct BMAntiNormal : public BM
 
     static void m3b(int s, int t, BS &b) {
         /* Normal moves */
-        if (turn(b,t)["Type"].toInt() == 0) {
+        if (!b.hasSubstitute(s) && turn(b,t)["Type"].toInt() == 0) {
             b.eatBerry(s);
             turn(b,t)["Mod3Berry"] = -5;
         }

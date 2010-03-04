@@ -43,6 +43,8 @@ public:
     void removeBattle(int id1, int id2);
     void beforeChallengeIssued(int src, int dest, Challenge *c);
     void afterChallengeIssued(int src, int dest, Challenge *c);
+    void atServerShutDown();
+
     Player * player(int id) const;
 public slots:
     /* Registry slots */

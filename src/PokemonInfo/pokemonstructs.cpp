@@ -618,9 +618,6 @@ Team & TrainerTeam::team()
     return m_team;
 }
 
-#ifdef CLIENT_SIDE
-
-
 bool TrainerTeam::saveToFile(const QString &path) const
 {
     QFile file(path);
@@ -705,7 +702,13 @@ bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath, QStrin
         *chosenPath = location;
     }
 
-    return team.saveToFile(location);
+    int res = team.saveToFile(location);
+
+    /*if (res && team.trainerNick().length() > 0) {
+        QSettings s;
+        s.setValue("trainer_name", team.trainerNick());
+    }*/
+    return res;
 }
 
 bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *chosenPath)
@@ -719,9 +722,13 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
     if (chosenPath) {
         *chosenPath = location;
     }
-    return team.loadFromFile(location);
+    int res = team.loadFromFile(location);
+/*    if (res && team.trainerNick().length() > 0) {
+        QSettings s;
+        s.setValue("trainer_name", team.trainerNick());
+    } */
+    return res;
 }
-
 
 bool TrainerTeam::loadFromFile(const QString &path)
 {
@@ -801,7 +808,171 @@ bool TrainerTeam::loadFromFile(const QString &path)
     }
     return true;
 }
-#endif
+
+/******** Really ugly *********/
+bool TrainerTeam::importFromTxt(const QString &file1)
+{
+    QString file = file1;
+    file.replace("\r\n", "\n"); // for windows
+
+    QStringList pokes = file.split("\n\n");
+
+    for (int i = 0; i < pokes.size() && i < 6; i++) {
+        QStringList pokeDetail = pokes[i].split("\n");
+
+        if (pokeDetail.size() < 5) {
+            continue;
+        }
+
+        QStringList first = pokeDetail[0].split('@');
+        PokeTeam &p = team().poke(i);
+
+        p = PokeTeam();
+
+        int pokenum;
+        QString nickname;
+        int gender = 0;
+
+        if (first[0].indexOf("(M)") > -1) {
+            gender = Pokemon::Male;
+            first[0].replace("(M)", "");
+        } else if (first[0].indexOf("(F)") > -1) {
+            gender = Pokemon::Female;
+            first[0].replace("(F)", "");
+        } else {
+            gender = Pokemon::Neutral;
+        }
+
+        first[0] = first[0].trimmed();
+
+        if (first[0].contains('(')) {
+            pokenum = PokemonInfo::Number(first[0].section('(',1,1).section(')',0,0));
+            nickname = first[0].mid(0, first[0].indexOf('(')).trimmed();
+        } else {
+            pokenum = PokemonInfo::Number(first[0]);
+            nickname = first[0];
+        }
+
+        int item = 0;
+
+        if (first.size() > 1) {
+            if (first[1].contains("**")) {
+                item = ItemInfo::Number(first[1].section("**",0,0).trimmed());
+                nickname = first[1].section("**",1,1).trimmed();
+            } else {
+                item = ItemInfo::Number(first[1].trimmed());
+            }
+        }
+
+        p.setNum(pokenum);
+        p.load();
+        p.gender() = gender;
+        p.nickname() = nickname;
+        p.item() = item;
+
+
+        QStringList ability = pokeDetail[1].split(':');
+
+        if (ability.size() < 2)
+            continue;
+
+        int abnum = AbilityInfo::Number(ability[1]);
+        if (abnum != 0) {
+            p.ability() = abnum;
+        }
+
+        if (!pokeDetail[2].contains(": "))
+            continue;
+
+        QStringList evList = pokeDetail[2].split(": ")[1].split("/");
+
+        foreach(QString ev, evList) {
+            QStringList ev2 = ev.trimmed().split(' ');
+            if (ev2.length() < 2)
+                break;
+            int evnum = ev2[0].toInt();
+            int stat = 0;
+
+            /* DONT TOUCH TO THIS BEAUTIFUL ++ */
+            if (ev2[1] == "SDef")
+                stat = SpDefense;
+            else if (ev2[1] == "SAtk")
+                stat = SpAttack;
+            else if (ev2[1] == "Spd")
+                stat = Speed;
+            else if (ev2[1] == "Def")
+                stat = Defense;
+            else if (ev2[1] == "Atk")
+                stat = Attack;
+            else
+                stat = Hp;
+
+            p.setEV(stat, unsigned(evnum)%255);
+        }
+
+        p.nature() = NatureInfo::Number(pokeDetail[3].section(' ', 0, 0));
+        for (int i = 4; i < pokeDetail.size() && i < 8; i++) {
+            QString move = pokeDetail[i].section('-',1,1).trimmed();
+
+            if (move.contains('[')) {
+                int type = TypeInfo::Number(move.section('[',1,1).section(']',0,0));
+                move = move.section('[',0,0).trimmed();
+                QStringList dvs = HiddenPowerInfo::PossibilitiesForType(type)[0];
+                for(int i =0;i < dvs.size(); i++) {
+                    p.setDV(i, dvs[i].toInt());
+                }
+            }
+            p.setMove(MoveInfo::Number(move),i-4,false);
+        }
+    }
+    return true;
+/*
+    Cheetos (Starmie) @ Life Orb
+    Ability: Natural Cure
+    EVs: 4 HP/252 Spd/252 SAtk
+    Timid nature (+Spd, -Atk)
+    - Surf
+    - Ice Beam
+    - Rapid Spin
+    - Hidden Power [Ice]
+
+    Venusaur (M) @ (No Item) ** Venyy
+    Trait: Overgrow
+    EVs: 85 HP / 85 Atk / 85 Def / 85 Spd / 85 SAtk / 85 SDef
+    Hardy Nature (Neutral)
+    - Bullet Seed
+
+    Dugtrio (M) @ (No Item)
+    Trait: Sand Veil
+    EVs: 85 HP / 85 Atk / 85 Def / 85 Spd / 85 SAtk / 85 SDef
+    Hardy Nature (Neutral)
+    - Ancientpower
+
+    Smeargle (M) @ (No Item)
+    Trait: Own Tempo
+    EVs: 85 HP / 85 Atk / 85 Def / 85 Spd / 85 SAtk / 85 SDef
+    Hardy Nature (Neutral)
+    - Acid Armor
+
+    Lucario (M) @ (No Item)
+    Trait: Steadfast
+    EVs: 85 HP / 85 Atk / 85 Def / 85 Spd / 85 SAtk / 85 SDef
+    Hardy Nature (Neutral)
+    - Blaze Kick
+
+    Zapdos @ (No Item)
+    Trait: Pressure
+    EVs: 85 HP / 85 Atk / 85 Def / 85 Spd / 85 SAtk / 85 SDef
+    Hardy Nature (Neutral)
+    - Charge
+
+    Machamp (M) @ (No Item)
+    Trait: Guts
+    EVs: 85 HP / 85 Atk / 85 Def / 85 Spd / 85 SAtk / 85 SDef
+    Hardy Nature (Neutral)
+    - Bulk Up
+*/
+}
 
 QDataStream & operator << (QDataStream & out, const Team & team)
 {
