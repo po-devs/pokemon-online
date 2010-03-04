@@ -93,6 +93,11 @@ void ScriptEngine::serverStartUp()
     evaluate(myscript.property("serverStartUp").call(myscript, QScriptValueList()));
 }
 
+void ScriptEngine::serverShutDown()
+{
+    evaluate(myscript.property("serverShutDown").call(myscript, QScriptValueList()));
+}
+
 bool ScriptEngine::beforeLogIn(int src)
 {
     startStopEvent();

@@ -209,7 +209,7 @@ QValidator::State QNickValidator::validate(const QString &input) const
     bool punct = false;
 
     for (int i = 0; i < input.length(); i++) {
-        if (input[i] == '%' || input[i] == '*' || input[i] == '<' || input[i] == ':')
+        if (input[i] == '%' || input[i] == '*' || input[i] == '<' || input[i] == ':' || input[i] == '(' || input[i] == ')')
             return QValidator::Invalid;
         if (input[i].isPunct()) {
             if (punct == true) {

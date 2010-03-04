@@ -86,6 +86,7 @@ private:
     static QTSList<QPair<char, char> > m_Repeat;
     static QTSList<QString> m_Descriptions;
     static QTSList<QString> m_Details;
+    static QHash<QString, int> m_LowerCaseMoves;
 
     static QString m_Directory;
 
@@ -221,6 +222,7 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int typenum);
+    static int Number(const QString &type);
     static QColor Color(int typenum);
     static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
@@ -241,6 +243,7 @@ public:
     /* Self-explainable functions */
     static QString Name(int naturenum);
     static int NumberOfNatures();
+    static int Number(const QString &pokename);
 
     /* -1 if the nature is hindering, 0 if neutral and 1 if it boosts that stat */
     static int Boost(int nature, int stat);
@@ -290,6 +293,7 @@ public:
     /* Self-explainable functions */
     static QString Name(int abnum);
     static Effect Effects(int abnum);
+    static int Number(const QString &ab);
     static QString Message(int ab, int part);
     static int NumberOfAbilities();
 };

@@ -38,6 +38,8 @@ MainEngine::MainEngine() : displayer(0)
         settings.setValue("show_player_events", false);
     }
 
+    //trainerTeam()->setTrainerNick(settings.value("trainer_name").toString());
+
     PokemonInfo::init("db/");
     ItemInfo::init("db/");
     MoveInfo::init("db/");

@@ -22,6 +22,7 @@ public:
     bool beforeNewMessage(const QString &message);
     void afterNewMessage(const QString &message);
     void serverStartUp();
+    void serverShutDown();
     void beforeLogOut(int src);
     void afterLogOut(int src);
     bool beforeLogIn(int src);

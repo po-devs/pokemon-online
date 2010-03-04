@@ -3469,9 +3469,9 @@ struct MMTailWind : public MM {
     }
 
     static void et(int s, int, BS &b) {
-        if (team(b,s)["TailWindCount"].toInt() == 1) {
+        inc(team(b,s)["TailWindCount"], -1);
+        if (team(b,s)["TailWindCount"].toInt() == 0) {
             removeFunction(team(b,s), "EndTurn", "TailWind");
-            team(b,s)["TailWindCount"] = 0;
             b.sendMoveMessage(133,1,s,Pokemon::Flying);
         }
     }

@@ -16,12 +16,58 @@ class Team;
 class PokeTeam;
 class MainEngine;
 
+class TeamImporter : public QWidget
+{
+    Q_OBJECT
+public:
+    TeamImporter();
+signals:
+    void done(const QString&);
+public slots:
+    void done();
+private:
+    QPlainTextEdit *mycontent;
+};
+
 /* The Teambuilder!! */
 class TeamBuilder : public QWidget
 {
     Q_OBJECT
 
     friend class DockAdvanced;
+private slots:
+    void changeBody(int i);
+    void setIconForPokeButton();
+    void setNicknameIntoButton(QString nickname);
+    void advancedClicked(int index);
+    void advancedDestroyed();
+    void indexNumPokemonChangedForAdvanced(int pokeNum);
+    void changePokemonOrder(QPair<int /*pokemon1*/, int /*pokemon2*/>echange);
+
+public slots:
+    void saveTeam();
+    void loadTeam();
+    void newTeam();
+    void clickOnDone();
+    void updateTeam();
+    void importFromTxt();
+    void importDone(const QString &text);
+
+signals:
+    void done();
+    void showDockAdvanced(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
+
+public:
+    TeamBuilder(TrainerTeam *team);
+    ~TeamBuilder();
+
+    TrainerTeam *trainerTeam();
+    Team * getTeam()const;
+
+    /* Create a menu bar to give to the main window */
+    QMenuBar *createMenuBar(MainEngine *w);
+    void createDockAdvanced();
+
 private:
     pokeButton *m_pokemon[6];
     QPushButton *m_trainer;
@@ -30,6 +76,8 @@ private:
     TB_PokemonBody *m_pbody[6];
     /* the Team of the trainer */
     TrainerTeam *m_team;
+
+    QPointer<QWidget> m_import;
 
     /* returns the button associated to that zone */
     QPushButton *at(int i);
@@ -49,37 +97,6 @@ private:
     //dockAdvanced
     DockAdvanced * m_dockAdvanced;
     DockAdvanced * dockAdvanced() const;
-
-private slots:
-    void changeBody(int i);
-    void setIconForPokeButton();
-    void setNicknameIntoButton(QString nickname);
-    void advancedClicked(int index);
-    void advancedDestroyed();
-    void indexNumPokemonChangedForAdvanced(int pokeNum);
-    void changePokemonOrder(QPair<int /*pokemon1*/, int /*pokemon2*/>echange);
-
-public slots:
-    void saveTeam();
-    void loadTeam();
-    void newTeam();
-    void clickOnDone();
-    void updateTeam();
-
-signals:
-    void done();
-    void showDockAdvanced(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
-
-public:
-    TeamBuilder(TrainerTeam *team);
-    ~TeamBuilder();
-
-    TrainerTeam *trainerTeam();
-    Team * getTeam()const;
-
-    /* Create a menu bar to give to the main window */
-    QMenuBar *createMenuBar(MainEngine *w);
-    void createDockAdvanced();
 };
 
 /* This is the widget displaying a trainer's info */

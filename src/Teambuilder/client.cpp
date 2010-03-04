@@ -239,8 +239,16 @@ void Client::loadTeam()
 
 void Client::sendText()
 {
-    if (myline->text().trimmed().length() > 0)
-        relay().sendMessage(myline->text().trimmed());
+    QString text = myline->text().trimmed();
+    if (text.length() > 0) {
+        QStringList s = text.split('\n');
+        foreach(QString s1, s) {
+            if (s1.length() > 0) {
+                relay().sendMessage(s1);
+            }
+        }
+    }
+
     myline->clear();
 }
 
@@ -769,8 +777,10 @@ void Client::printLine(const QString &line)
 	QString end = line.right(line.length()-pos-1);
         if (beg == "~~Server~~") {
             mainChat()->insertHtml("<span style='color:orange'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
-        } else if (id(beg) == -1) {
+        } else if (beg == "Welcome Message") {
             mainChat()->insertHtml("<span style='color:blue'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
+        } else if (id(beg) == -1) {
+            mainChat()->insertHtml("<span style='color:#74F099'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
 	} else if (beg == ownName()) {
             mainChat()->insertHtml("<span style='color:#5811b1'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
 	 } else {
