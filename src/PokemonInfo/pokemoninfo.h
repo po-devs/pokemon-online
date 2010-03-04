@@ -167,6 +167,8 @@ private:
     static QTSList<QStringList> m_RegMessages;
     static QTSList<QStringList> m_BerryMessages;
     static QTSList<int> m_Powers;
+    static QTSList<int> m_BerryPowers;
+    static QTSList<int> m_BerryTypes;
 
     static void loadNames();
     static QString path(const QString &filename);
@@ -188,6 +190,8 @@ public:
     static int SortedNumber(const QString &itemname);
     static QString Description(int itemnum);
     static int Power(int itemnum);
+    static int BerryPower(int itemnum);
+    static int BerryType(int itemnum);
 };
 
 class TypeInfo

@@ -69,3 +69,12 @@ void PMWindow::sendMessage()
     emit messageEntered(id(), str);
     printLine(str, true);
 }
+
+void PMWindow::disable()
+{
+    printHtml("<i>" + tr("The other party left the server, so the window was disabled.") + "</i>");
+    blockSignals(true);
+    m_challenge->setDisabled(true);
+    m_send->setDisabled(true);
+    m_textToSend->setDisabled(true);
+}

@@ -172,7 +172,7 @@ struct IMBoostPokeStat : public IM
 	functions["StatModifier"] = &sm;
     }
     static void sm(int s,int, BS &b) {
-	int num = poke(b,s)["Num"].toInt();
+        int num = b.pokenum(s);
 	QStringList args = poke(b,s)["ItemArg"].toString().split('_');
 	if(!args[0].split('/').contains(QString::number(num))) {
 	    return;

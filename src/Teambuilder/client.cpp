@@ -216,7 +216,6 @@ void Client::PMReceived(int id, QString pm)
     if (!mypms.contains(id)) {
         startPM(id);
     }
-    activateWindow();
 
     mypms[id]->printLine(pm);
 }
@@ -486,7 +485,7 @@ void Client::stopWatching(int battleId)
 
 void Client::battleStarted(int id1, int id2)
 {
-    if (showPEvents)
+    if (showPEvents || id1 == ownId() || id2 == ownId())
         printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
 
     myplayersinfo[id1].flags |= PlayerInfo::Battling;
@@ -508,7 +507,7 @@ void Client::forfeitBattle()
 
 void Client::battleFinished(int res, int winner, int loser)
 {
-    if (showPEvents) {
+    if (showPEvents || winner == ownId() || loser == ownId()) {
         if (res == Forfeit) {
             printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)));
         } else if (res == Tie) {
@@ -694,7 +693,7 @@ void Client::removePlayer(int id)
     mynames.remove(name);
     myplayersinfo.remove(id);
     if (mypms.contains(id)) {
-        delete mypms[id];
+        mypms[id]->disable();
         mypms.remove(id);
     }
 }

@@ -18,6 +18,7 @@ struct BaseBattleInfo
     /* name [0] = mine, name[1] = other */
     QString name[2];
     bool sub[2];
+    quint16 specialSprite[2];
 
     /* Opponent pokemon */
     ShallowBattlePoke pokes[2];
@@ -89,7 +90,9 @@ public:
 
     enum TempPokeChange {
         TempMove,
-        TempAbility
+        TempAbility,
+        TempItem,
+        TempSprite
     };
 
     enum WeatherM
@@ -194,7 +197,7 @@ public:
     BaseGraphicsZone();
     /* displays that poke */
     template <class T>
-    void switchTo(const T &poke, int spot, bool sub);
+    void switchTo(const T &poke, int spot, bool sub, int specialSprite=0);
     /* Display blank */
     void switchToNaught(int spot);
     /* For tool tips */
@@ -215,12 +218,12 @@ public:
 
 /* Yeepee, at last templates */
 template <class T>
-void BaseGraphicsZone::switchTo(const T &poke, int spot, bool sub)
+void BaseGraphicsZone::switchTo(const T &poke, int spot, bool sub, int specialSprite)
 {
     if (spot == Myself)
-        mine->setPixmap(loadPixmap(poke.num(), poke.shiny(), true, poke.gender(), sub));
+        mine->setPixmap(loadPixmap(specialSprite?specialSprite:poke.num(), poke.shiny(), true, poke.gender(), sub));
     else
-        foe->setPixmap(loadPixmap(poke.num(), poke.shiny(), false, poke.gender(), sub));
+        foe->setPixmap(loadPixmap(specialSprite?specialSprite:poke.num(), poke.shiny(), false, poke.gender(), sub));
 }
 
 #endif // BASEBATTLEWINDOW_H
