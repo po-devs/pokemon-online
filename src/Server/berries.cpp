@@ -82,6 +82,9 @@ struct BMLeppa : public BM
 struct BMPinch : public BM
 {
     static bool testpinch(int s, int , BS &b, int ratio) {
+        if (turn(b,s).value("BugBiter").toBool()) {
+            return true;
+        }
         //Gluttony
         if (b.hasWorkingAbility(s, 30))
             ratio = 2;

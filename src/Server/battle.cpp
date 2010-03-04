@@ -102,9 +102,13 @@ int BattleSituation::spot(int id) const
     }
 }
 
-bool BattleSituation::acceptSpectator(int id) const
+bool BattleSituation::acceptSpectator(int id, bool authed) const
 {
-    return !(clauses() & ChallengeInfo::DisallowSpectator) && !spectators.contains(spectatorKey(id)) && this->id(0) != id && this->id(1) != id;
+    if (spectators.contains(spectatorKey(id)) || this->id(0) == id || this->id(1) == id)
+        return false;
+    if (authed)
+        return true;
+    return !(clauses() & ChallengeInfo::DisallowSpectator);
 }
 
 void BattleSituation::notifyClause(int clause, bool active)
@@ -139,6 +143,7 @@ void BattleSituation::addSpectator(int id)
         }
         if (!koed(i)) {
             notify(key, SendOut, i, opoke(i, currentPoke(i)));
+            notify(key, ChangeTempPoke,i,quint8(TempSprite),quint16(pokenum(i)));
         }
     }
 }
@@ -385,7 +390,7 @@ void BattleSituation::notifyInfos()
 
 bool BattleSituation::koed(int player) const
 {
-    return currentPoke(player) == -1 || poke(player).lifePoints() == 0;
+    return currentPoke(player) == -1 || poke(player).ko();
 }
 
 BattleChoices BattleSituation::createChoice(int player)
@@ -636,8 +641,13 @@ void BattleSituation::sendPoke(int player, int pok)
 	pokelong[player]["Move" + QString::number(i)] = poke(player).move(i).num();
     }
 
-    for (int i = 1; i <= 6; i++)
+    for (int i = 1; i < 6; i++)
 	pokelong[player][QString("Stat%1").arg(i)] = poke(player).normalStat(i);
+
+    for (int i = 1; i < 6; i++) {
+        pokelong[player][QString("DV%1").arg(i)] = poke(player).dvs()[i];
+    }
+
     pokelong[player]["Level"] = poke(player).level();
     turnlong[player]["CantGetToMove"] = true;
 }
@@ -1264,6 +1274,10 @@ void BattleSituation::acquireAbility(int play, int ab) {
 
 int BattleSituation::ability(int player) {
     return pokelong[player]["Ability"].toInt();
+}
+
+int BattleSituation::pokenum(int player) {
+    return pokelong[player]["Num"].toInt();
 }
 
 bool BattleSituation::hasWorkingItem(int player, int it)
@@ -1913,8 +1927,13 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 void BattleSituation::changeTempMove(int player, int slot, int move)
 {
     pokelong[player]["Move" + QString::number(slot)] = move;
-    changePP(player,slot,std::min(5, int(poke(player).move(slot).PP())));
+    changePP(player,slot,5);
     notify(player, ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
+}
+
+void BattleSituation::changeSprite(int player, int poke)
+{
+    notify(All, ChangeTempPoke, player, quint8(TempSprite), quint16(poke));
 }
 
 void BattleSituation::inflictSubDamage(int player, int damage, int source)
@@ -1934,7 +1953,11 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
 }
 
 void BattleSituation::disposeItem(int  player) {
-    poke(player).item() = 0;
+    int item = poke(player).item();
+    if (item != 0) {
+        teamzone[player]["RecyclableItem"] = item;
+        poke(player).item() = 0;
+    }
 }
 
 void BattleSituation::eatBerry(int player) {

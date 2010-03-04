@@ -15,6 +15,7 @@ struct ItemEffect : public QVariantHash
     static void setup(int num, int source, BattleSituation &b);
     static void activate(const QString &effect, int num, int source, int target, BattleSituation &b);
 
+    /* Beware, that data is used by BugBite so don't modify it directly */
     static QTSHash<int, ItemMechanics> mechanics;
     static QTSHash<int, QString> names;
     static QTSHash<QString, int> nums;

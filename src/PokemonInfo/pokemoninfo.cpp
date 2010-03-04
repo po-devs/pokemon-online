@@ -50,6 +50,8 @@ QTSList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
 QTSList<QStringList> ItemInfo::m_RegMessages;
 QTSList<QStringList> ItemInfo::m_BerryMessages;
 QTSList<int> ItemInfo::m_Powers;
+QTSList<int> ItemInfo::m_BerryPowers;
+QTSList<int> ItemInfo::m_BerryTypes;
 
 QTSList<QString> TypeInfo::m_Names;
 QTSList<QColor> TypeInfo::m_Colors;
@@ -849,6 +851,9 @@ void ItemInfo::loadNames()
 	m_BerryNamesH.insert(*it2, i+8000);
     }
 
+    fill_container_with_file(m_BerryPowers, path("berry_pow.txt"));
+    fill_container_with_file(m_BerryTypes, path("berry_type.txt"));
+
     m_SortedNames << m_RegItemNames << m_BerryNames;
     qSort(m_SortedNames);
 
@@ -945,6 +950,24 @@ int ItemInfo::Power(int itemnum) {
     } else if (Exist(itemnum)) {
 	return m_Powers[itemnum];
     } else return 0;
+}
+
+int ItemInfo::BerryPower(int itemnum)
+{
+    if (!isBerry(itemnum) || !Exist(itemnum)) {
+        return 0;
+    }
+
+    return m_BerryPowers[itemnum-8000];
+}
+
+int ItemInfo::BerryType(int itemnum)
+{
+    if (!isBerry(itemnum) || !Exist(itemnum)) {
+        return 0;
+    }
+
+    return m_BerryTypes[itemnum-8000];
 }
 
 QString ItemInfo::Name(int itemnum)

@@ -74,6 +74,13 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvance
     connectAll();
 
     updateTeam();
+
+    QPalette p = palette();
+    p.setColor(QPalette::Base, Qt::black);
+    p.setColor(QPalette::AlternateBase,Qt::black );
+    p.setColor(QPalette::Window,Qt::black );
+    p.setColor(QPalette::Foreground,Qt::black);
+    setPalette(p);
 }
 
 void TeamBuilder::connectAll()

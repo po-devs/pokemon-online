@@ -37,7 +37,7 @@ public:
     /* Return the configuration of the players (1 refer to that player, 0 to that one... */
     BattleConfiguration configuration() const;
 
-    bool acceptSpectator(int id) const;
+    bool acceptSpectator(int id, bool authed=false) const;
     void addSpectator(int id);
 
     bool sleepClause() const {
@@ -145,6 +145,7 @@ public:
     bool hasWorkingAbility(int play, int ability);
     void acquireAbility(int play, int ability);
     int ability(int player);
+    int pokenum(int player);
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
     bool isSeductionPossible(int seductor, int naiveone);
@@ -168,6 +169,7 @@ public:
     BattleStats constructStats(int player);
 
     void changeTempMove(int player, int slot, int move);
+    void changeSprite(int player, int poke);
     /* Send a message to the outworld */
     enum BattleCommand
     {
@@ -212,7 +214,9 @@ public:
 
     enum ChangeTempPoke {
         TempMove,
-        TempAbility
+        TempAbility,
+        TempItem,
+        TempSprite
     };
 
     enum WeatherM

@@ -11,6 +11,8 @@ BaseBattleInfo::BaseBattleInfo(const QString &me, const QString &opp)
     sub[1] = false;
     pokeAlive[0] = false;
     pokeAlive[1] = false;
+    specialSprite[0] = 0;
+    specialSprite[1] = 0;
 }
 
 BaseBattleWindow::BaseBattleWindow(const QString &me, const QString &opponent)
@@ -105,6 +107,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             in >> info().pokes[spot];
             info().pokeAlive[spot] = true;
             info().sub[spot] = false;
+            info().specialSprite[spot] = 0;
             mydisplay->updatePoke(spot);
 
             printLine(tr("%1 sent out %2!").arg(name(spot), rnick(spot)));
@@ -436,6 +439,16 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             mydisplay->updateToolTip(spot);
             break;
         }
+    case TempPokeChange:
+        {
+            quint8 type;
+            in >> type;
+            if (type == TempSprite) {
+                in >> info().specialSprite[spot];
+                mydisplay->updatePoke(spot);
+            }
+            break;
+        }
     default:
         break;
     }
@@ -540,7 +553,7 @@ void BaseBattleDisplay::updatePoke(int spot)
 {
     if (info().pokeAlive[spot]) {
         const ShallowBattlePoke &poke = info().pokes[spot];
-        zone->switchTo(poke, spot, info().sub[spot]);
+        zone->switchTo(poke, spot, info().sub[spot], info().specialSprite[spot]);
         nick[spot]->setText(tr("%1 Lv.%2").arg(poke.nick()).arg(poke.level()));
         bars[spot]->setValue(poke.lifePercent());
         bars[spot]->setStyleSheet(health(poke.lifePercent()));

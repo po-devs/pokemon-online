@@ -225,6 +225,10 @@ struct MMBatonPass : public MM
 	for (int i = 1; i < 6; i++) {
 	    c.remove(QString("Stat%1").arg(i));
 	}
+        for (int i = 0; i < 6; i++) {
+            c.remove(QString("DV%1").arg(i));
+        }
+
 	c.remove("Level");
 	turn(b,s)["BatonPassData"] = c;
 	turn(b,s)["BatonPassed"] = true;
@@ -411,8 +415,15 @@ struct MMCrushGrip : public MM
 struct MMCurse : public MM
 {
     MMCurse() {
+        functions["MoveSettings"] = &ms;
 	functions["BeforeHitting"] = &bh;
 	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void ms(int s, int, BS &b) {
+        if (!b.hasType(s, Pokemon::Ghost)) {
+            turn(b,s)["PossibleTargets"] = Move::User; // so that curse works even when there is no enemy.
+        }
     }
 
     static void bh(int s, int, BS &b) {
@@ -494,6 +505,9 @@ struct MMDetect : public MM
 	if (attack == 78 || attack == 128 || attack == 298 || attack == 330 || attack == 432) {
 	    return;
 	}
+        /* Mind Reader */
+        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+            return;
 	/* All other moves fail */
 	b.fail(s, 27, 0, Pokemon::Normal);
     }
@@ -557,7 +571,10 @@ struct MMHiddenPower : public MM
     }
 
     static void ms(int s, int, BS &b) {
-	QList<int> &dvs = b.poke(s).dvs();
+        QList<int> dvs;
+        for (int i = 0;i < 6; i++) {
+            dvs << poke(b,s)["DV"+QString::number(i)].toInt();
+        }
 	turn(b,s)["Type"] = HiddenPowerInfo::Type(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
 	turn(b,s)["Power"] = HiddenPowerInfo::Power(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
     }
@@ -1248,7 +1265,7 @@ struct MMKnockOff : public MM
 	if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, 101) && !b.hasWorkingAbility(t, 59)) /* Sticky Hold, MultiType */
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
-	    b.disposeItem(t);
+            b.poke(t).item() = 0;
 	}
     }
 };
@@ -1265,7 +1282,7 @@ struct MMCovet : public MM
 	{
 	    b.sendMoveMessage(23,(move(b,s)==71)?0:1,s,type(b,s),t,b.poke(t).item());
 	    b.acqItem(s, b.poke(t).item());
-	    b.disposeItem(t);
+            b.poke(t).item() = 0;
 	}
     }
 };
@@ -1288,8 +1305,6 @@ struct MMSwitcheroo : public MM
     {
 	b.sendMoveMessage(132,0,s,type(b,s),t);
 	int i1(b.poke(s).item()), i2(b.poke(t).item());
-	b.disposeItem(s);
-	b.disposeItem(t);
 	b.acqItem(s, i2);
 	b.acqItem(t, i1);
 
@@ -2197,10 +2212,10 @@ struct MMWeatherBall : public MM
 struct MMHealingWish : public MM
 {
     MMHealingWish() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["BeforeTargetList"] = &btl;
     }
 
-    static void uas(int s, int, BS &b) {
+    static void btl(int s, int, BS &b) {
 	addFunction(turn(b,s), "AfterSwitchIn", "HealingWish", &asi);
     }
 
@@ -2943,16 +2958,19 @@ struct MMPresent : public MM
 {
     MMPresent() {
 	functions["BeforeTargetList"] = &btl;
-	functions["CustomAttackingDamage"] = &uas;
+        functions["CustomAttackingDamage"] = &cad;
     }
 
     static void btl(int s, int, BS &b) {
         turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 40 * (true_rand() % 4);
+        if (turn(b,s)["Power"].toInt() == 0) {
+            turn(b,s)["Power"] = 1;
+        }
     }
 
-    static void uas(int s, int t, BS &b) {
+    static void cad(int s, int t, BS &b) {
 	b.sendMoveMessage(96,0,s,type(b,s),t);
-	b.healLife(t, 80);
+        b.healLife(t, 80);
     }
 };
 
@@ -3903,6 +3921,140 @@ struct MMSpitUp : public MM
     }
 };
 
+struct MMBugBite : public MM
+{
+    MMBugBite() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        int item = b.poke(t).item();
+        if (!ItemInfo::isBerry(item))
+            return;
+        b.disposeItem(t);
+
+        /* Setting up the conditions so berries work properly */
+        turn(b,s)["BugBiter"] = true; // for testPinch of pinch berries to return true
+        QVariant tempItemStorage = poke(b,s)["ItemArg"];
+        poke(b,s)["ItemArg"] = poke(b,t)["ItemArg"];
+
+        b.sendMoveMessage(16,0,s,type(b,s),t,item);
+
+        /* Finding the function to call :P */
+        QList<ItemInfo::Effect> l = ItemInfo::Effects(item);
+
+        foreach(ItemInfo::Effect e, l) { /* Ripped from items.cpp (ItemEffect::activate, with some changes) */
+            if (!ItemEffect::mechanics.contains(e.num)) {
+                continue;
+            }
+            foreach (function f, ItemEffect::mechanics[e.num].functions)
+                f(s, t, b);
+        }
+
+        /* Restoring initial conditions */
+        poke(b,s)["ItemArg"] = tempItemStorage;
+        turn(b,s).remove("BugBiter");
+    }
+};
+
+struct MMNaturalGift :  public MM
+{
+    MMNaturalGift() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["BeforeTargetList"] = &btl;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (!turn(b,s).value("NaturalGiftOk").toBool()) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void btl(int s, int, BS &b) {
+        int berry = b.poke(s).item();
+
+        if (!b.hasWorkingItem(s, berry) || !ItemInfo::isBerry(berry)) {
+            return;
+        }
+
+        b.eatBerry(s);
+
+        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * ItemInfo::BerryPower(berry);
+        turn(b,s)["Type"] = ItemInfo::BerryType(berry);
+        turn(b,s)["NaturalGiftOk"] = true;
+    }
+};
+
+struct MMRecycle : public MM {
+    MMRecycle() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf (int s, int, BS &b) {
+        if (!team(b,s).contains("RecyclableItem") || b.poke(s).item() != 0) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas (int s, int, BS &b) {
+        int item = team(b,s)["RecyclableItem"].toInt();
+        b.sendMoveMessage(105,0,s,0,s,item);
+        b.acqItem(s, item);
+        team(b,s).remove("RecyclableItem");
+    }
+};
+
+struct MMTransform : public MM {
+    MMTransform() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        QHash<QString, QVariant> &p = poke(b,s);
+        /* Remove the choice item effect */
+        p.remove("ChoiceMemory");
+        /* Give new values to what needed */
+        int num = b.pokenum(t);
+
+        b.sendMoveMessage(137,0,s,0,s,num);
+
+        p["Num"] = num;
+        p["Weight"] = PokemonInfo::Weight(num);
+        p["Type1"] = PokemonInfo::Type1(num);
+        p["Type2"] = PokemonInfo::Type2(num);
+        p["Ability"] = b.ability(t);
+
+        b.changeSprite(s, num);
+
+        for (int i = 0; i < 4; i++) {
+            b.changeTempMove(s,i,b.move(t,i));
+        }
+
+        for (int i = 1; i < 6; i++)
+            p[QString("Stat%1").arg(i)] = poke(b,t)[QString("Stat%1").arg(i)];
+
+        for (int i = 0; i < 6; i++) {
+            p[QString("DV%1").arg(i)] = poke(b,t)[QString("DV%1").arg(i)];
+        }
+
+        b.acquireAbility(s, b.ability(s));
+    }
+};
+
+struct MMPayback : public MM
+{
+    MMPayback() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int t, BS &b) {
+        //Attack / Switch --> power *= 2
+        if (turn(b,t).value("HasMoved").toBool() || turn(b,t).value("CantGetToMove").toBool()) {
+            turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
+        }
+    }
+};
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -3952,7 +4104,7 @@ void MoveEffect::init()
     REGISTER_MOVE(13, Bounce);
     REGISTER_MOVE(14, BrickBreak);
     REGISTER_MOVE(15, Brine);
-    /* Bug Bite */
+    REGISTER_MOVE(16, BugBite);
     REGISTER_MOVE(17, Camouflage);
     REGISTER_MOVE(18, Charge);
     REGISTER_MOVE(19, Conversion);
@@ -4025,7 +4177,7 @@ void MoveEffect::init()
     REGISTER_MOVE(86, Mist);
     REGISTER_MOVE(87, Moonlight);
     REGISTER_MOVE(88, MudSport);
-    /* Natural Gift */
+    REGISTER_MOVE(89, NaturalGift);
     REGISTER_MOVE(90, NaturePower);
     REGISTER_MOVE(91, NightShade);
     REGISTER_MOVE(92, NightMare);
@@ -4041,7 +4193,7 @@ void MoveEffect::init()
     REGISTER_MOVE(102, Rage);
     REGISTER_MOVE(103, RapidSpin);
     REGISTER_MOVE(104, RazorWind);
-    /* Recycle */
+    REGISTER_MOVE(105, Recycle);
     REGISTER_MOVE(106, Rest);
     REGISTER_MOVE(107, Roar);
     REGISTER_MOVE(108, RolePlay);
@@ -4073,7 +4225,7 @@ void MoveEffect::init()
     REGISTER_MOVE(134, Taunt);
     REGISTER_MOVE(135, Torment);
     REGISTER_MOVE(136, ToxicSpikes);
-    //transform
+    REGISTER_MOVE(137, Transform);
     REGISTER_MOVE(138, TrickRoom);
     REGISTER_MOVE(139, TripleKick);
     REGISTER_MOVE(140, UTurn);

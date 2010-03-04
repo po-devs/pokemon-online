@@ -493,6 +493,11 @@ QScriptValue ScriptEngine::getFileContent(const QString &fileName)
     return QString::fromUtf8(out.readAll());
 }
 
+int ScriptEngine::rand(int min, int max)
+{
+    return (::rand()%(max-min)) + min;
+}
+
 int ScriptEngine::numPlayers()
 {
     return myserver->numPlayers();

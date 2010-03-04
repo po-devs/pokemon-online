@@ -770,7 +770,7 @@ void Server::spectatingRequested(int id, int idOfBattler)
         return; //INVALID BEHAVIOR
     }
     BattleSituation *battle = player(idOfBattler)->battle;
-    if (!battle->acceptSpectator(id)) {
+    if (!battle->acceptSpectator(id, auth(id) > 0)) {
         sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
         return;
     }

@@ -290,6 +290,8 @@ void TeamBattle::generateRandom()
             pokes.push_back(num);
             break;
         }
+
+        qWarning() << "Generating poke " << pokes[i];
         PokeGeneral g;
         PokeBattle &p = poke(i);
 
@@ -316,6 +318,8 @@ void TeamBattle::generateRandom()
             p2.setEV(stat, std::min(int(p2.EV(stat)) + (true_rand()%255), 255));
         }
 
+        p.dvs().clear();
+        p.evs().clear();
         p.dvs() << p2.DV(0) << p2.DV(1) << p2.DV(2) << p2.DV(3) << p2.DV(4) << p2.DV(5);
         p.evs() << p2.EV(0) << p2.EV(1) << p2.EV(2) << p2.EV(3) << p2.EV(4) << p2.EV(5);
 
@@ -324,7 +328,8 @@ void TeamBattle::generateRandom()
         for (int i = 0; i < 4; i++) {
             if (moves.size() <= i) {
                 for (int j = i; j < 4; j++) {
-                    moves[j] = 0;
+                    p.move(j).num() = 0;
+                    p.move(j).load();
                 }
                 break;
             }

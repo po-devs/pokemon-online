@@ -18,6 +18,7 @@ public:
 
     void changeName(const QString &newname);
     void printLine(const QString &line, bool self = false);
+    void disable();
 signals:
     void messageEntered(int id, const QString &mess);
     void challengeSent(int id);

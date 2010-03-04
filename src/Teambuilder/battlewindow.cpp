@@ -116,10 +116,12 @@ void BattleWindow::emitCancel()
 
 void BattleWindow::switchTo(int pokezone)
 {
-    info().currentIndex = pokezone;
-    info().pokes[Myself] = info().myteam.poke(pokezone);
-    info().pokeAlive[Myself] = info().pokes[Myself].status() != Pokemon::Koed;
-    info().tempPoke() = info().currentPoke();
+    if (info().currentIndex != pokezone) {
+        info().currentIndex = pokezone;
+        info().pokes[Myself] = info().myteam.poke(pokezone);
+        info().pokeAlive[Myself] = info().pokes[Myself].status() != Pokemon::Koed;
+        info().tempPoke() = info().currentPoke();
+    }
 
     mystack->setCurrentIndex(pokezone);
     myattack->setText(tr("&Attack"));
@@ -358,6 +360,11 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                 in >> slot >> move;
                 info().tempPoke().move(slot).num() = move;
                 myazones[info().currentIndex]->attacks[slot]->updateAttack(info().tempPoke().move(slot));
+            } else {
+                if (type == TempSprite) {
+                    in >> info().specialSprite[spot];
+                    mydisplay->updatePoke(spot);
+                }
             }
             break;
         }
