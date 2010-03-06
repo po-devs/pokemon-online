@@ -34,6 +34,8 @@ public:
     bool transferBegin(int id, int length, const QString &ip);
     /* Warned that a player/IP disconnected */
     void disconnect(const QString &ip, int id);
+
+    int numberOfDiffIps();
 signals:
     /* If rules are infriged, kick / ban the corresponding id/ip in functions
        of the number of times rules are infriged */

@@ -209,7 +209,9 @@ public:
         Spectating,
         SpectatorChat,
         AlreadyStatusMessage,
-        ChangeTempPoke
+        ChangeTempPoke,
+        ClockStart,
+        ClockStop
     };
 
     enum ChangeTempPoke {
@@ -301,8 +303,20 @@ private:
     /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
     int currentForcedSleepPoke[2];
     int mycurrentpoke[2]; /* -1 for koed */
+    /* timers */
+    QAtomicInt timeleft[2];
+    QAtomicInt startedAt[2];
+    bool timeStopped[2];
+    QBasicTimer *timer;
+    /*.*/
     int myid[2];
     QSet<int> koedPokes;
+protected:
+    void timerEvent(QTimerEvent *);
+
+    void startClock(int player, bool broadCoast = true);
+    void stopClock(int player, bool broadCoast = false);
+    int timeLeft(int player);
 public:
     /* Calls the effects of source reacting to name */
     void calleffects(int source, int target, const QString &name);

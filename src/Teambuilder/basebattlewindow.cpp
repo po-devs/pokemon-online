@@ -13,6 +13,10 @@ BaseBattleInfo::BaseBattleInfo(const QString &me, const QString &opp)
     pokeAlive[1] = false;
     specialSprite[0] = 0;
     specialSprite[1] = 0;
+    time[0] = 5*60;
+    time[1] = 5*60;
+    ticking[0] = false;
+    ticking[1] = false;
 }
 
 BaseBattleWindow::BaseBattleWindow(const QString &me, const QString &opponent)
@@ -449,7 +453,20 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             }
             break;
         }
+    case ClockStart:
+        {
+            in >> info().time[spot];
+            info().ticking[spot] = true;
+            break;
+        }
+    case ClockStop:
+        {
+            in >> info().time[spot];
+            info().ticking[spot] = false;
+            break;
+        }
     default:
+        printLine("<i>" + tr("Unknown command received, are you up to date?") + "</i>");
         break;
     }
 }
@@ -491,6 +508,18 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     /* As anyway the BaseGraphicsZone is a fixed size, it's useless to
        resize that part, might as well let  the chat be resized */
     l->setSizeConstraint(QLayout::SetFixedSize);
+
+    QHBoxLayout *foetrainer = new QHBoxLayout();
+
+    timers[Opponent] = new QProgressBar();
+    timers[Opponent]->setObjectName("TimeOut"); //for style sheets
+    timers[Opponent]->setRange(0,300);
+
+    foetrainer->addWidget(timers[Opponent],0,Qt::AlignLeft);
+    foetrainer->addWidget(trainers[Opponent] = new QLabel(i.name[Opponent]),0, Qt::AlignRight);
+
+    l->addLayout(foetrainer);
+
 
     QHBoxLayout *foeteam = new QHBoxLayout();
     l->addLayout(foeteam);
@@ -545,8 +574,44 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
         team->addWidget(mypokeballs[i]);
     }
 
+    QHBoxLayout *trainer = new QHBoxLayout();
+    timers[Myself] = new QProgressBar();
+    timers[Myself]->setObjectName("TimeOut"); //for style sheets
+    timers[Myself]->setRange(0,300);
+
+    trainer->addWidget(trainers[Myself] = new QLabel(info().name[Myself]),0,Qt::AlignLeft);
+    trainer->addWidget(timers[Myself],0,Qt::AlignRight);
+
+    l->addLayout(trainer);
+
     updatePoke(Myself);
     updatePoke(Opponent);
+    updateTimers();
+
+    QTimer *t = new QTimer (this);
+    t->start(1000);
+    connect(t, SIGNAL(timeout()), SLOT(updateTimers()));
+}
+
+void BaseBattleDisplay::updateTimers()
+{
+    for (int i = Myself; i <= Opponent; i++) {
+        if (info().ticking[i])
+            info().time[i] = std::max(0, int(info().time[i])-1);
+        if (info().time[i] <= 5*60) {
+            timers[i]->setValue(info().time[i]);
+        } else {
+            timers[i]->setValue(300);
+        }
+        timers[i]->setFormat(QString("%1 : %2").arg(info().time[i]/60).arg(QString::number(info().time[i]%60).rightJustified(2,'0')));
+        if (info().time[i] > 60) {
+            timers[i]->setStyleSheet("::chunk{background-color: #29db21;}");
+        }else if (info().time[i] > 30) {
+            timers[i]->setStyleSheet("::chunk{background-color: #F8DB17;;}");
+        } else {
+            timers[i]->setStyleSheet("::chunk{background-color: #D40202;}");
+        }
+    }
 }
 
 void BaseBattleDisplay::updatePoke(int spot)

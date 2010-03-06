@@ -19,6 +19,8 @@ struct BaseBattleInfo
     QString name[2];
     bool sub[2];
     quint16 specialSprite[2];
+    quint16 time[2];
+    bool ticking[2];
 
     /* Opponent pokemon */
     ShallowBattlePoke pokes[2];
@@ -85,7 +87,9 @@ public:
         Spectating,
         SpectatorChat,
         AlreadyStatusMessage,
-        TempPokeChange
+        TempPokeChange,
+        ClockStart,
+        ClockStop
     };
 
     enum TempPokeChange {
@@ -175,6 +179,8 @@ public:
     virtual void updatePoke(int spot);
     virtual void updateToolTip(int spot);
     void changeStatus(int spot, int poke, int status);
+public slots:
+    void updateTimers();
 
 protected:
     QString health(int lifePercent);
@@ -183,6 +189,8 @@ protected:
     QLabel *nick[2];
     QLabel *status[2];
     QProgressBar *bars[2];
+    QProgressBar *timers[2];
+    QLabel *trainers[2];
     QLabel *gender[2];
     /* The pokeballs to indicate how well a team is doing */
     QLabel *advpokeballs[6];

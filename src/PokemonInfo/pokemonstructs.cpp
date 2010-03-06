@@ -813,6 +813,7 @@ bool TrainerTeam::loadFromFile(const QString &path)
 bool TrainerTeam::importFromTxt(const QString &file1)
 {
     QString file = file1;
+    file.replace("---", "");
     file.replace("\r\n", "\n"); // for windows
 
     QStringList pokes = file.split("\n\n");
@@ -912,7 +913,7 @@ bool TrainerTeam::importFromTxt(const QString &file1)
 
         p.nature() = NatureInfo::Number(pokeDetail[3].section(' ', 0, 0));
         for (int i = 4; i < pokeDetail.size() && i < 8; i++) {
-            QString move = pokeDetail[i].section('-',1,1).trimmed();
+            QString move = pokeDetail[i].section('-',1).trimmed();
 
             if (move.contains('[')) {
                 int type = TypeInfo::Number(move.section('[',1,1).section(']',0,0));

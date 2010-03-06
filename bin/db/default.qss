@@ -1,10 +1,28 @@
-QProgressBar#LifePoints {
-    border: 2px solid grey;
-    border-radius: 5px;
-    text-align: center;
-}
 
-QProgressBar#LifePoints::chunk{
-    background-color: #05B8CC;
-    width: 20px;
-}
+ QProgressBar#TimeOut {
+     border: 1px solid black;
+	 width: 93;
+	 height: 16;
+	 background-color:black;
+	 font-weight:bold;
+     text-align: center;
+	 color: white;
+	 border-radius: 5px;
+ }
+
+ QProgressBar#TimeOut::chunk{
+     background-color: #29db21;
+     width: 10px;
+ }
+ 
+ QProgressBar#LifePoints {
+     border: 2px solid grey;
+     border-radius: 5px;
+     text-align: center;
+ }
+
+ QProgressBar#LifePoints::chunk{
+     background-color: #05B8CC;
+     width: 20px;
+ }
+ 

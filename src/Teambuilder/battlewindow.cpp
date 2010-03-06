@@ -524,6 +524,9 @@ BattleDisplay::BattleDisplay(BattleInfo &i)
         mypokeballs[i]->setToolTip(info().myteam.poke(i).nick());
     }
 
+    trainers[Myself]->setText("");
+    trainers[Opponent]->setText("");
+
     updatePoke(Myself);
 }
 

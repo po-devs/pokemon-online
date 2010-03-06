@@ -142,6 +142,14 @@ void AntiDos::disconnect(const QString &ip, int id)
     connectionsPerIp[ip]--;
     transfersPerId.remove(id);
     sizeOfTransfers.remove(id);
+    if (connectionsPerIp[ip]==0) {
+        connectionsPerIp.remove(ip);
+    }
+}
+
+int AntiDos::numberOfDiffIps()
+{
+    return connectionsPerIp.count();
 }
 
 bool AntiDos::transferBegin(int id, int length, const QString &ip)

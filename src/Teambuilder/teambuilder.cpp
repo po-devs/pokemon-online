@@ -379,10 +379,22 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->t
 
     QEntitled * minfo = new QEntitled(tr("Player &Info"), m_trainerInfo=new QTextEdit());
     mlayout->addWidget(minfo, 1, 0);
+    /*m_trainerInfo->setStyleSheet(
+                                 "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                                                                  "stop: 0 #ABAFE5, stop: 1 #8588B2);"
+                                    "border: 1px solid gray;"
+                                    "border-radius: 10px"
+                                ); */
 
     QEntitled * mwin = new QEntitled(tr("&Winning Message"), m_winMessage=new QTextEdit());
     mlayout->addWidget(mwin, 2, 0);
-
+    /*m_winMessage->setStyleSheet(
+                                    "background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
+                                    "stop:0 white, stop:1 #bfbfbd);"
+                                    "border: 1px solid gray;"
+                                    "border-radius: 10px"
+                                );
+    */
     //    QEntitled * mdraw = new QEntitled(tr("&Draw Message"), m_drawMessage=new QTextEdit());
     //    mlayout->addWidget(mdraw);
 

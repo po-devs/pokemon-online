@@ -194,10 +194,11 @@ struct ChallengeInfo
         OHKOClause = 8,
         DisallowSpectator = 16,
         LevelBalance = 32,
-        ChallengeCup = 64
+        ChallengeCup = 64,
+        NoTimeOut = 128
     };
 
-    static const int numberOfClauses = 7;
+    static const int numberOfClauses = 8;
 
     static QString clauseText[numberOfClauses];
     static QString clauseBattleText[numberOfClauses];

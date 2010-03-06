@@ -697,7 +697,7 @@ struct MMSuperFang : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        b.inflictPercentDamage(t,50, s, true);
+        b.inflictDamage(t,b.poke(t).lifePoints()/2, s, true);
     }
 };
 
@@ -845,6 +845,7 @@ struct MMRest : public MM
 	b.healLife(s, b.poke(s).totalLifePoints());
 	b.changeStatus(s, Pokemon::Asleep);
 	b.poke(s).sleepCount() = 2;
+        poke(b,s)["Rested"] = true;
     }
 };
 
@@ -861,7 +862,7 @@ struct MMBellyDrum : public MM
 	}
     }
     static void uas(int s, int, BS &b) {
-	b.inflictDamage(s, b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,s);
+        b.changeHp(s, b.poke(s).lifePoints() - b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100);
     }
 };
 
@@ -2836,8 +2837,9 @@ struct MMMiracleEye : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-	poke(b,t)[poke(b,s)["MiracleEye_Arg"].toString() + "Sleuthed"] = true;
+        poke(b,t)[turn(b,s)["MiracleEye_Arg"].toString() + "Sleuthed"] = true;
 	poke(b,t)["Sleuthed"] = true;
+        b.sendMoveMessage(84,0,s,type(b,s),t);
     }
 };
 
@@ -3357,7 +3359,7 @@ struct MMSolarBeam : public MM
 		addFunction(poke(b,s), "TurnSettings", "SolarBeam", &ts);
 		b.sendMoveMessage(119,0,s,Pokemon::Grass);
 	    }
-	} else if (count > 1) {
+        } else if (count >= 1) {
 	    inc(poke(b,s)["BeamChargingCount"], -1);
 	}
     }

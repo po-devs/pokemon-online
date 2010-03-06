@@ -443,9 +443,9 @@ struct IMBerryJuice : public IM
 
     static void ahpc(int s, int, BS &b) {
         if (!b.koed(s) && b.poke(s).lifePercent() <= 50) {
+            b.disposeItem(s);
             b.sendItemMessage(18,s,0);
             b.healLife(s, 20);
-            b.disposeItem(s);
         }
     }
 };
