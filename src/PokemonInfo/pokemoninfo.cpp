@@ -355,7 +355,7 @@ QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney, bool back)
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
     if (data.length()==0)
-	return QPixmap();
+        return QPixmap();
 
     QPixmap ret;
     ret.loadFromData(data, "png");
@@ -396,6 +396,7 @@ QPixmap PokemonInfo::Icon(int index)
     return p;
 }
 #endif
+
 
 QSet<int> PokemonInfo::Moves(int pokenum)
 {

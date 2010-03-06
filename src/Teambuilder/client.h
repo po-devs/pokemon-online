@@ -51,6 +51,8 @@ public:
 
     void removeBattleWindow();
     void removePlayer(int id);
+
+    QList<QColor> chatColors;
 public slots:
     void errorFromNetwork(int errnum, const QString &error);
     void connected();

@@ -10,6 +10,7 @@
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/pokemonstructs.h"
 
+
 Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -45,6 +46,19 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
     initRelay();
 
     relay().connectTo(url, 5080);
+
+    QFile f("db/chat_colors.txt");
+    f.open(QIODevice::ReadOnly);
+
+    QStringList colors = QString::fromUtf8(f.readAll()).split('\n');
+
+    if (colors.size() == 0) {
+        chatColors << Qt::black << Qt::red << Qt::gray << Qt::darkBlue << Qt::cyan << Qt::darkMagenta << Qt::darkYellow;
+    } else {
+        foreach (QString c, colors) {
+            chatColors << QColor(c);
+        }
+    }
 }
 
 int Client::ownAuth() const
@@ -264,6 +278,8 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     {
         menuStyle->addAction(*i,w,SLOT(changeStyle()));
     }
+    menuStyle->addSeparator();
+    menuStyle->addAction(tr("Reload StyleSheet"), w, SLOT(loadStyleSheet()));
     QMenu * menuActions = menuBar->addMenu(tr("&Actions"));
     goaway = menuActions->addAction(tr("Go &Away"));
     goaway->setCheckable(true);
@@ -737,6 +753,10 @@ void Client::playerReceived(const PlayerInfo &p)
     }
 
     QIdListWidgetItem *item = new QIdListWidgetItem(p.id, nick);
+    item->setColor(chatColors[p.id % chatColors.size()]);
+    QFont f = item->font();
+    f.setBold(true);
+    item->setFont(f);
 
     myplayersitems.insert(p.id, item);
     mynames.insert(name(p.id), p.id);
@@ -781,10 +801,8 @@ void Client::printLine(const QString &line)
             mainChat()->insertHtml("<span style='color:blue'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
         } else if (id(beg) == -1) {
             mainChat()->insertHtml("<span style='color:#74F099'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
-	} else if (beg == ownName()) {
-            mainChat()->insertHtml("<span style='color:#5811b1'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
-	 } else {
-            mainChat()->insertHtml("<span style='color:green'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+        } else {
+            mainChat()->insertHtml("<span style='color:" + chatColors[id(beg)%chatColors.size()].name() + "'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
 	}
     } else {
         mainChat()->insertPlainText("(" + QTime::currentTime().toString() + ") " + line + "\n");
@@ -864,13 +882,13 @@ PlayerInfo &Client::playerInfo(int id)
 void Client::updateState(int id)
 {
     if (item(id)) {
-        if (playerInfo(id).battling()) {
+        /*if (playerInfo(id).battling()) {
             item(id)->setColor(Qt::blue);
         } else if (playerInfo(id).away()) {
             item(id)->setColor(Qt::darkGray);
         } else {
             item(id)->setColor(Qt::black);
-        }
+        }*/
     }
 }
 

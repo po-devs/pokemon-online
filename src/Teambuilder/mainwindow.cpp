@@ -61,6 +61,14 @@ MainEngine::MainEngine() : displayer(0)
     launchMenu();
 }
 
+void MainEngine::loadStyleSheet()
+{
+    QSettings s;
+    QFile stylesheet(s.value("stylesheet").toString());
+    stylesheet.open(QIODevice::ReadOnly);
+    qApp->setStyleSheet(stylesheet.readAll());
+}
+
 #define MainEngineRoutine(widget) \
     delete displayer; \
     displayer = new QMainWindow(); \

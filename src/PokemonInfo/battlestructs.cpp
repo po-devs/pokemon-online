@@ -11,7 +11,8 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("OHKO Clause"),
     QObject::tr("Disallow Spects"),
     QObject::tr("Level Balance"),
-    QObject::tr("Challenge Cup")
+    QObject::tr("Challenge Cup"),
+    QObject::tr("No Time Out")
 };
 
 QString ChallengeInfo::clauseBattleText[] =
@@ -22,7 +23,8 @@ QString ChallengeInfo::clauseBattleText[] =
     QObject::tr("OHKO Clause prevented the One Hit KO from happening."),
     QObject::tr(""),
     QObject::tr(""),
-    QObject::tr("")
+    QObject::tr(""),
+    QObject::tr("The battle ended by timeout.")
 };
 
 QString ChallengeInfo::clauseDescription[] =
@@ -33,7 +35,8 @@ QString ChallengeInfo::clauseDescription[] =
     QObject::tr("You can't use One Hit KO moves like Fissure."),
     QObject::tr("Nobody can watch your battle."),
     QObject::tr("Pokémons levels are changed according to their strength."),
-    QObject::tr("Random teams are given to trainers.")
+    QObject::tr("Random teams are given to trainers."),
+    QObject::tr("No time limit for playing.")
 };
 
 BattleMove::BattleMove()

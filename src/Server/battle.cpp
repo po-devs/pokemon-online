@@ -11,10 +11,16 @@
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
 	:team1(p1.team()), team2(p2.team())
 {
+    timer = NULL;
     myid[0] = p1.id();
     myid[1] = p2.id();
     mycurrentpoke[0] = -1;
     mycurrentpoke[1] = -1;
+    /* timers for battle timeout */
+    timeleft[0] = 5*60;
+    timeleft[1] = 5*60;
+    timeStopped[0] = true;
+    timeStopped[1] = true;
     finished() = false;
     clauses() = c.clauses;
     rated() = c.rated && !(c.clauses & (ChallengeInfo::ChallengeCup | ChallengeInfo::LevelBalance));
@@ -29,11 +35,11 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
         if (clauses() & ChallengeInfo::LevelBalance) {
             for (int i = 0; i < 6; i++) {
                 team1.poke(i).level() = PokemonInfo::LevelBalance(p1.team().poke(i).num());
-                team1.poke(i).updateStats();;
+                team1.poke(i).updateStats();
             }
             for (int i = 0; i < 6; i++) {
                 team2.poke(i).level() = PokemonInfo::LevelBalance(p2.team().poke(i).num());
-                team2.poke(i).updateStats();;
+                team2.poke(i).updateStats();
             }
         }
     }
@@ -52,6 +58,7 @@ BattleSituation::~BattleSituation()
         sem.release(1000);
 	/* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
 	wait();
+        delete timer;
     }
 }
 
@@ -87,6 +94,10 @@ void BattleSituation::start()
     hasChoice[0] = false;
     hasChoice[1] = false;
     turn() = 0;
+
+    timer = new QBasicTimer();
+    /* We are only warned of new events every 5 seconds */
+    timer->start(5000,this);
 
     QThread::start();
 }
@@ -342,6 +353,7 @@ bool BattleSituation::requestChoice(int player, bool acquire, bool custom)
 	options[player] = createChoice(player);
 
     notify(player, OfferChoice, player, options[player]);
+    startClock(player);
 
     if (acquire) {
         sem.acquire(1); /* Lock until a choice is received */
@@ -349,6 +361,7 @@ bool BattleSituation::requestChoice(int player, bool acquire, bool custom)
 
     //test to see if the quit was requested by system or if choice was received
     testquit();
+    testWin();
 
     /* Now all the players gonna do is analyzeChoice(int player) */
     return true;
@@ -368,8 +381,9 @@ void BattleSituation::requestChoices()
         sem.acquire(1);
     }
 
-    //test to see if the quit was requested by system or if choice was received
+    //test to see if the quit was requested by system or if choice was received or if win time out
     testquit();
+    testWin();
 
     notify(All, BeginTurn, All, turn());
 
@@ -452,6 +466,7 @@ bool BattleSituation::isMovePossible(int player, int move)
 void BattleSituation::analyzeChoice(int player)
 {
     qDebug() << "Analyzing choice of " << id(player);
+    stopClock(player, true);
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice[player].attack()) {
         if (!koed(player) && !turnlong[player].value("HasMoved").toBool() && !turnlong[player].value("CantGetToMove").toBool()) {
@@ -581,6 +596,7 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
         if (b.cancelled() && couldMove[player] && hasChoice[rev(player)]) {
             hasChoice[player] = true;
             notify(player, CancelMove, player);
+            startClock(player,false);
         } else {
             //INVALID BEHAVIOR
         }
@@ -600,6 +616,7 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 	    /* One player has chosen their solution, so there's one less wait */
 	    choice[player] = b;
             hasChoice[player] = false;
+            stopClock(player,false);
             /* If everyone has chosen their solution, we carry on */
             if (!hasChoice[player] && !hasChoice[rev(player)]) {
                 sem.release(1);
@@ -607,6 +624,55 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 	}
     }
 }
+
+/*****************************************
+  Beware of the multi threading problems.
+  Don't change the order of the instructions.
+  ****************************************/
+void BattleSituation::startClock(int player, bool broadCoast)
+{
+    if (clauses() & ChallengeInfo::NoTimeOut) {
+        startedAt[player] = time(NULL);
+        timeStopped[player] = false;
+
+        notify(player,ClockStart, player, quint16(timeleft[player]));
+    }
+}
+
+void BattleSituation::stopClock(int player, bool broadCoast)
+{
+    if (clauses() & ChallengeInfo::NoTimeOut) {
+        timeStopped[player] = true;
+        timeleft[player] = std::max(0,timeleft[player] - (QAtomicInt(time(NULL)) - startedAt[player]));
+
+        if (broadCoast) {
+            timeleft[player] = std::min(int(timeleft[player]+30), 5*60);
+            notify(All,ClockStop,player,quint16(timeleft[player]));
+        } else {
+            notify(player, ClockStop, player, quint16(timeleft[player]));
+        }
+    }
+}
+
+int BattleSituation::timeLeft(int player)
+{
+    if (timeStopped[player]) {
+        return timeleft[player];
+    } else {
+        return timeleft[player] - (QAtomicInt(time(NULL)) - startedAt[player]);
+    }
+}
+
+void BattleSituation::timerEvent(QTimerEvent *)
+{
+    if (timeLeft(Player1) <= 0 || timeLeft(Player2) <= 0) {
+        sem.release(1000); // the battle is finished, isn't it?
+    }
+}
+
+/*************************************************
+  End of the warning.
+  ************************************************/
 
 void BattleSituation::battleChat(int id, const QString &str)
 {
@@ -644,7 +710,7 @@ void BattleSituation::sendPoke(int player, int pok)
     for (int i = 1; i < 6; i++)
 	pokelong[player][QString("Stat%1").arg(i)] = poke(player).normalStat(i);
 
-    for (int i = 1; i < 6; i++) {
+    for (int i = 0; i < 6; i++) {
         pokelong[player][QString("DV%1").arg(i)] = poke(player).dvs()[i];
     }
 
@@ -1111,13 +1177,17 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 	    for (int i = 0; i < 2; i++) {
                 if (typeffs[i] == 0) {
-                    if (type == Move::Ground && !isFlying(target))
+                    if (type == Move::Ground && !isFlying(target)) {
+                        typemod *= 2;
                         continue;
+                    }
                     if (pokelong[target].value(QString::number(typeadv[i])+"Sleuthed").toBool()) {
+                        typemod *= 2;
                         continue;
                     }
                     /* Scrappy */
                     if (hasType(target, Pokemon::Ghost) && hasWorkingAbility(player,81)) {
+                        typemod *= 2;
                         continue;
                     }
                 }
@@ -1657,6 +1727,11 @@ void BattleSituation::changeStatus(int player, int status)
 	return;
     }
 
+    /* Guts needs to know if teh poke rested or not */
+    if (pokelong[player].value("Rested").toBool()) {
+        pokelong[player].remove("Rested");
+    }
+
     //Sleep clause
     if (status != Pokemon::Asleep && currentForcedSleepPoke[player] == currentPoke(player)) {
         currentForcedSleepPoke[player] = -1;
@@ -2087,11 +2162,34 @@ int BattleSituation::countAlive(int player) const
 
 void BattleSituation::testWin()
 {
+    int time1 = timeLeft(Player1);
+    int time2 = timeLeft(Player2);
+
+    if (time1 <= 0 || time2 <= 0) {
+        finished() = true;
+        notify(All,ClockStop,Player1,quint16(time1));
+        notify(All,ClockStop,Player2,quint16(time2));
+        notifyClause(ChallengeInfo::NoTimeOut,true);
+        if (time1 <= 0 && time2 <=0) {
+            notify(All, BattleEnd, Player1, qint8(Tie));
+            emit battleFinished(Tie, id(Player1), id(Player2),rated());
+        } else if (time1 <= 0) {
+            notify(All, BattleEnd, Player2, qint8(Win));
+            emit battleFinished(Win, id(Player2), id(Player1),rated());
+        } else {
+            notify(All, BattleEnd, Player1, qint8(Win));
+            emit battleFinished(Win, id(Player1), id(Player2),rated());
+        }
+        throw QuitException();
+    }
+
     int c1 = countAlive(Player1);
     int c2 = countAlive(Player2);
 
     if (c1*c2==0) {
         finished() = true;
+        notify(All,ClockStop,Player1,time1);
+        notify(All,ClockStop,Player2,time2);
         if (c1 + c2 == 0) {
             notify(All, BattleEnd, Player1, qint8(Tie));
             emit battleFinished(Tie, id(Player1), id(Player2),rated());
@@ -2102,7 +2200,7 @@ void BattleSituation::testWin()
             notify(All, BattleEnd, Player1, qint8(Win));
             emit battleFinished(Win, id(Player1), id(Player2),rated());
         }
-        /* The battle is finished so we stop the thread */
+        /* The battle is finished so we stop the battling thread */
         sem.acquire(1);
         throw QuitException();
     }
@@ -2318,7 +2416,7 @@ BattleDynamicInfo BattleSituation::constructInfo(int player)
         case 2: ret.flags |= BattleDynamicInfo::ToxicSpikesLV2; break;
         }
     }
-    if (teamzone[player].contains("StealthRock")) {
+    if (teamzone[player].contains("StealthRock") && teamzone[player].value("StealthRock").toBool()) {
         ret.flags |= BattleDynamicInfo::StealthRock;
     }
 

@@ -139,7 +139,7 @@ void Server::regConnectionError()
 void Server::regConnected()
 {
     printLine("Connected to registry! Sending server info...");
-    registry_connection->notify(NetworkServ::Login, serverName, serverDesc, numPlayers());
+    registry_connection->notify(NetworkServ::Login, serverName, serverDesc, quint16(AntiDos::obj()->numberOfDiffIps()));
     connect(registry_connection, SIGNAL(ipRefused()), SLOT(ipRefused()));
     connect(registry_connection, SIGNAL(invalidName()), SLOT(invalidName()));
     connect(registry_connection, SIGNAL(nameTaken()), SLOT(nameTaken()));
@@ -153,7 +153,7 @@ void Server::regSendPlayers()
 {
     if (registry_connection == NULL || !registry_connection->isConnected())
         return;
-    registry_connection->notify(NetworkServ::ServNumChange, numPlayers());
+    registry_connection->notify(NetworkServ::ServNumChange, quint16(AntiDos::obj()->numberOfDiffIps()));
     /* Sending Players at regular interval */
     QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
 }
