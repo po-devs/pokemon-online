@@ -53,6 +53,13 @@ public:
     void removePlayer(int id);
 
     QList<QColor> chatColors;
+    QList<QIcon> statusIcons;
+
+    enum Status {
+        Available = 0,
+        Away,
+        Battling
+    };
 public slots:
     void errorFromNetwork(int errnum, const QString &error);
     void connected();
@@ -125,7 +132,14 @@ signals:
     void done();
     void updateMenuBar();
     void userInfoReceived(const UserInfo &ui);
-
+protected:
+    void paintEvent(QPaintEvent *)
+    {
+        QStyleOption opt;
+        opt.init(this);
+        QPainter p(this);
+        style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+    }
 private:
     TrainerTeam *myteam;
     QString mynick;

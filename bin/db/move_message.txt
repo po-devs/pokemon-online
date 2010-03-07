@@ -7,11 +7,11 @@ A sweet fragrance flowed through %ts's team!|A chime resounded around %ts's team
 
 %q attacked!
 %s hasn't enough energy left!
-%s is storing its power!|%s unleashed its power!
+%s is storing energy!|%s unleashed energy!
 %s is hurt by %m!|%s is freed from %m!
 %s must recharge!
 %f is trapped!
-%s bounced high up in the sky!|%s went underground!|%s went underwater!|%s flew high up in the sky!
+%s bounced high up in the sky!|%s went underground!|%s went underwater!|%s flew high up!|%s vanished instantly!
 %s shattered %tf's team protections!
 
 %s ate %f's %i!
@@ -23,11 +23,11 @@ A sweet fragrance flowed through %ts's team!|A chime resounded around %ts's team
 
 %s begged %f!\n%f gave its %i to %s|%s stole %f's %i!
 %s crushed %f!
-%s inflicted a curse on %f!|%s is afflicted by the curse.
+%s cut its own HP and laid a Curse on %f!|%f is afflicted by the Curse!
 %s took %f with it!|%s is trying to take it's foe with it!
 %f protected itself!
-%f's %m is disabled!|%s can't use %m because of disable!|%s is no longer disabled!
-%s took the %m attack!|%s foresaw an attack!
+%f's %m was disabled!|%s's %m is disabled!|%s is no longer disabled!
+%s took the %m attack!|%s foresaw an attack!|%s chose Doom Desire as it's destiny!
 
 %f is awake!
 %f can't use items anymore!|%s can use items again!
@@ -51,12 +51,12 @@ A sweet fragrance flowed through %ts's team!|A chime resounded around %ts's team
 
 %f's %a is nullified!
 
-All the pokemons are stuck to the ground!|The gravity ended!
+Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne because of gravity!
 %f's %m lost all its PP because of %s' Grudge!
 %s swapped its boosts with %f!
 
 
-%s is in love with %f!|%s seduced %f!|%s is too lovestruck to move!
+%s is in love with %f!|%f fell in love!|%s is immobilized by love!
 %f can't heal!|%s can't use %m because of Heal Block!|%s's heal block wore off!
 %s regained health!
 %s is healed!
@@ -80,11 +80,11 @@ Magnitude level %d!
 
 
 %s copied %m!
-%s splashed on the ground but it had no effect!
+But nothing happened!
 
 %f is exposed!
 
-%s shrouded itself in mist!|%ts's mist wore off!|The mist prevents %f from having its stats lowered!
+%ts's team became shrouded in mist!|%ts's Mist wore off!|The mist prevents %f from having its stats lowered!
 %s regained health!|%s regained a lot of health!|%s regained little health!
 %s covered the battle field with mud!|%s covered the battle field with water!
 
@@ -121,7 +121,7 @@ A sorrowful melody could be heard by everyone on the field.|%s's perish count fe
 
 Spikes were scattered around %tf's team!|%s is hurt by spikes!
 %s released!
-%f's %m lost 4 PP!
+It reduced the PP of %f's %m by 4!
 Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 %s stockpiled %d!
 
@@ -142,14 +142,14 @@ Hit!
 %s caused an uproar!|%s is making an uproar!|%s calmed down!|%s woke up!|%s stays awake because of the uproar!
 %s made a wish!|%q's wish came true!
 %f now has insomnia!
-%f feels drowsy!|%s yawns!
+%s made %f feels drowsy!|%s yawns!
 
 
 
 
-A black haze covered the battlefield!
+All stat changes were elimnated!
 %s landed on the ground!
-%s planted roots on the ground!| %s's roots absorbed nutrients.
+%s planted its roots!| %s absorbed nutrients with its roots!
 
 
 

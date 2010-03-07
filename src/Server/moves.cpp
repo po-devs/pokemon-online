@@ -1438,8 +1438,7 @@ struct MMBide : public MM
 	addFunction(poke(b,s), "TurnSettings", "Bide", &ts);
 	addFunction(turn(b,s), "UponOffensiveDamageReceived", "Bide", &udi);
 	poke(b,s)["BideDamageCount"] = 0;
-	poke(b,s)["BideTurn"] = b.turn();
-	b.sendMoveMessage(9,0,s,type(b,s));
+        poke(b,s)["BideTurn"] = b.turn();
     }
 
     static void udi(int s, int, BS &b) {
@@ -1769,7 +1768,7 @@ struct MMDoomDesire : public MM
 	team(b,t)["DoomDesireTurn"] = b.turn() + 2;
 	team(b,t)["DoomDesireMove"] = move;
 	addFunction(team(b,t), "EndTurn", "DoomDesire", &et);
-	b.sendMoveMessage(29, 1, s, type(b,s));
+        b.sendMoveMessage(29, move==92?2:1, s, type(b,s));
     }
 
     static void et (int s, int, BS &b) {
@@ -2027,6 +2026,11 @@ struct MMGravity : public MM
 	b.battlelong["Gravity"] = true;
 	b.battlelong["GavityCount"] = 5;
 	b.sendMoveMessage(53,0,s,type(b,s));
+        for(int p = BS::Player1; p <= BS::Player2; p++) {
+            if (b.isFlying(p)) {
+                b.sendMoveMessage(53,2,p,type(b,s));
+            }
+        }
 	addFunction(b.battlelong, "EndTurn", "Gravity", &et);
     }
 
