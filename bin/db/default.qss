@@ -1,4 +1,19 @@
 
+.QMainWindow
+{
+   background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,
+            stop:0 white, stop:1 #0ca0dd);
+}
+
+ QTextEdit#MainChat {
+     background-color: white;
+     background-image: url(db/mainchat.png);
+     background-attachment: fixed;
+	 background-repeat: repeat;
+	 background-position: center
+ }
+
+
  QProgressBar#TimeOut {
      border: 1px solid black;
 	 width: 93;

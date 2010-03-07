@@ -347,7 +347,7 @@
 37|114#self destruct--def reduction is not in that file but in the program
 
 
-13#shadow force
+13-4#shadow force
 
 
 

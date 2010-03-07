@@ -248,7 +248,7 @@ struct BMCustap : public BMPinch
             return;
 
         addFunction(poke(b,s), "TurnOrder", "Custap", &to);
-        b.sendBerryMessage(10,0,s);
+        b.sendBerryMessage(11,0,s);
     }
 
     static void to (int s, int, BS &b) {
@@ -288,4 +288,5 @@ void ItemEffect::initBerries()
     REGISTER_BERRY(9, Starf);
     REGISTER_BERRY(10, BerryLock);
     REGISTER_BERRY(11, Custap);
+    REGISTER_BERRY(12, BerryRecoil);
 }

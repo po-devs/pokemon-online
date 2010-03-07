@@ -259,7 +259,7 @@ struct IMLifeOrb : public IM
 	    return;
 
 	if (turn(b,t).contains("DamageTakenBy") && turn(b,t)["DamageTakenBy"].toInt() == s) {
-	    b.sendItemMessage(21,s);
+            //b.sendItemMessage(21,s);
 	    b.inflictDamage(s,b.poke(s).totalLifePoints()/10,s);
 	}
     }

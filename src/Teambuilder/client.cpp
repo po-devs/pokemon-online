@@ -24,6 +24,7 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
 
     layout->addWidget(myplayers = new QListWidget(), 0, 0, 3, 1, Qt::AlignLeft);
     layout->addWidget(mychat = new QScrollDownTextEdit(), 0, 1, 1, 3);
+    mychat->setObjectName("MainChat");
     layout->addWidget(myline = new QLineEdit(), 1, 1, 1, 3);
     layout->addWidget(myregister = new QPushButton(tr("&Register")),2,1);
     layout->addWidget(myexit = new QPushButton(tr("&Exit")), 2, 2);
@@ -33,6 +34,16 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
     myplayers->setMaximumWidth(180);
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
     myplayers->setSortingEnabled(true);
+    /*myplayers->setStyleSheet(
+            "background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
+            "stop:0 white, stop:1 #bfbfbd);"
+            "border: 1px solid gray;"
+            "border-radius: 10px"
+        );*/
+    QPalette pal = palette();
+    pal.setColor(QPalette::AlternateBase, Qt::blue);
+    pal.setColor(QPalette::Base, Qt::blue);
+    setPalette(pal);
     myregister->setDisabled(true);
     mynick = t->trainerNick();
 
@@ -59,6 +70,8 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
             chatColors << QColor(c);
         }
     }
+
+    statusIcons << QIcon("db/Available.png") << QIcon("db/Away.png") << QIcon("db/Battling.png");
 }
 
 int Client::ownAuth() const
@@ -882,13 +895,13 @@ PlayerInfo &Client::playerInfo(int id)
 void Client::updateState(int id)
 {
     if (item(id)) {
-        /*if (playerInfo(id).battling()) {
-            item(id)->setColor(Qt::blue);
+        if (playerInfo(id).battling()) {
+            item(id)->setIcon(statusIcons[Battling]);
         } else if (playerInfo(id).away()) {
-            item(id)->setColor(Qt::darkGray);
+            item(id)->setIcon(statusIcons[Away]);
         } else {
-            item(id)->setColor(Qt::black);
-        }*/
+            item(id)->setIcon(statusIcons[Available]);
+        }
     }
 }
 

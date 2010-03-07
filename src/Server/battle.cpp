@@ -631,7 +631,7 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
   ****************************************/
 void BattleSituation::startClock(int player, bool broadCoast)
 {
-    if (clauses() & ChallengeInfo::NoTimeOut) {
+    if (!(clauses() & ChallengeInfo::NoTimeOut)) {
         startedAt[player] = time(NULL);
         timeStopped[player] = false;
 
@@ -641,7 +641,7 @@ void BattleSituation::startClock(int player, bool broadCoast)
 
 void BattleSituation::stopClock(int player, bool broadCoast)
 {
-    if (clauses() & ChallengeInfo::NoTimeOut) {
+    if (!(clauses() & ChallengeInfo::NoTimeOut)) {
         timeStopped[player] = true;
         timeleft[player] = std::max(0,timeleft[player] - (QAtomicInt(time(NULL)) - startedAt[player]));
 
