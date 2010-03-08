@@ -505,225 +505,225 @@ Effect: %5</source>
 <context>
     <name>Client</name>
     <message>
-        <location filename="client.cpp" line="27"/>
+        <location filename="client.cpp" line="29"/>
         <source>&amp;Register</source>
         <translation>&amp;Registrar</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="28"/>
+        <location filename="client.cpp" line="30"/>
         <source>&amp;Exit</source>
         <translation>&amp;Sair</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="29"/>
+        <location filename="client.cpp" line="31"/>
         <source>&amp;Send</source>
         <translation>&amp;Enviar</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="73"/>
+        <location filename="client.cpp" line="100"/>
         <source>&amp;Challenge Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="74"/>
+        <location filename="client.cpp" line="101"/>
         <source>&amp;PM</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="78"/>
+        <location filename="client.cpp" line="105"/>
         <source>Go &amp;Back</source>
         <translation>Sair do &amp;Away</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="80"/>
-        <location filename="client.cpp" line="270"/>
+        <location filename="client.cpp" line="107"/>
+        <location filename="client.cpp" line="297"/>
         <source>Go &amp;Away</source>
         <translation>Ficar &amp;Away</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="83"/>
+        <location filename="client.cpp" line="110"/>
         <source>&amp;Watch Battle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="89"/>
+        <location filename="client.cpp" line="116"/>
         <source>&amp;Control Panel</source>
         <translation>&amp;Painel de Controle</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="96"/>
+        <location filename="client.cpp" line="123"/>
         <source>&amp;Kick</source>
         <translation>&amp;Kickar</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="101"/>
+        <location filename="client.cpp" line="128"/>
         <source>&amp;Ban</source>
         <translation>&amp;Banir</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="258"/>
+        <location filename="client.cpp" line="285"/>
         <source>&amp;File</source>
         <translation>&amp;Arquivo</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="259"/>
+        <location filename="client.cpp" line="286"/>
         <source>&amp;Load Team</source>
         <translation>&amp;Carregar Equipe</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="260"/>
+        <location filename="client.cpp" line="287"/>
         <source>Open &amp;TeamBuilder</source>
         <translation>Abrir &amp;TeamBuilder</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="261"/>
+        <location filename="client.cpp" line="288"/>
         <source>&amp;Style</source>
         <translation>&amp;Tema</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="268"/>
+        <location filename="client.cpp" line="295"/>
         <source>Reload StyleSheet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="269"/>
+        <location filename="client.cpp" line="296"/>
         <source>&amp;Actions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="275"/>
+        <location filename="client.cpp" line="302"/>
         <source>Save &amp;Battle Logs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="282"/>
+        <location filename="client.cpp" line="309"/>
         <source>&amp;Show Team</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="287"/>
+        <location filename="client.cpp" line="314"/>
         <source>Enable &amp;Ladder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="292"/>
+        <location filename="client.cpp" line="319"/>
         <source>Show Player &amp;Events</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="332"/>
+        <location filename="client.cpp" line="359"/>
         <source>%1 was kicked by the server!</source>
         <translation>%1 foi kickado pelo  server!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="334"/>
+        <location filename="client.cpp" line="361"/>
         <source>%1 kicked %2!</source>
         <translation>%1 kickou %2!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="343"/>
+        <location filename="client.cpp" line="370"/>
         <source>%1 was banned by the server!</source>
         <translation>%1 foi banido pelo  server!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="345"/>
+        <location filename="client.cpp" line="372"/>
         <source>%1 banned %2!</source>
         <translation>%1 baniu %2!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="354"/>
+        <location filename="client.cpp" line="381"/>
         <source>Enter your password</source>
         <translation>Coloque sua senha</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="355"/>
+        <location filename="client.cpp" line="382"/>
         <source>Enter your password.
 
 It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="499"/>
+        <location filename="client.cpp" line="526"/>
         <source>Battle between %1 and %2 started.</source>
         <translation>Batalha entre %1 e %2 começou.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="522"/>
+        <location filename="client.cpp" line="549"/>
         <source>%1 forfeited against %2.</source>
         <translation>%1 desistiu contra %2.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="524"/>
+        <location filename="client.cpp" line="551"/>
         <source>%1 and %2 tied.</source>
         <translation>%1 e %2 empataram.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="526"/>
+        <location filename="client.cpp" line="553"/>
         <source>%1 won against %2.</source>
         <translation>%1 venceu %2.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="562"/>
+        <location filename="client.cpp" line="589"/>
         <source>%1 refused your challenge.</source>
         <translation>%1 recusou o seu desafio.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="567"/>
+        <location filename="client.cpp" line="594"/>
         <source>%1 is busy.</source>
         <translation>%1 está ocupado.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="572"/>
+        <location filename="client.cpp" line="599"/>
         <source>%1 cancelled their challenge.</source>
         <translation>%1 cancelou o desafio.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="577"/>
+        <location filename="client.cpp" line="604"/>
         <source>%1 has an invalid team.</source>
         <translation>%1 está com um time inválido.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="590"/>
+        <location filename="client.cpp" line="617"/>
         <source>%1 is away.</source>
         <translation>%1 está away.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="592"/>
+        <location filename="client.cpp" line="619"/>
         <source>%1 has returned.</source>
         <translation>%1 voltou do away.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="644"/>
+        <location filename="client.cpp" line="671"/>
         <source>Error while connected to server -- Received error nÂ°%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="649"/>
+        <location filename="client.cpp" line="676"/>
         <source>Connected to Server!</source>
         <translation>Conectado ao Server!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="659"/>
+        <location filename="client.cpp" line="686"/>
         <source>Disconnected from Server!</source>
         <translation>Desconectado do Server!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="681"/>
+        <location filename="client.cpp" line="708"/>
         <source>%1 logged in.</source>
         <translation>%1 entrou no server.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="689"/>
+        <location filename="client.cpp" line="716"/>
         <source>%1 logged out.</source>
         <translation>%1 saiu do server.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="757"/>
+        <location filename="client.cpp" line="788"/>
         <source>%1 changed teams and is now known as %2.</source>
         <translation>%1 modificou a equipe e agora é %2.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="759"/>
+        <location filename="client.cpp" line="790"/>
         <source>%1 changed teams.</source>
         <translation>%1 modificou a equipe.</translation>
     </message>
@@ -1014,58 +1014,68 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="19"/>
-        <source>Sleep Clause prevented the sleep inducing effect of the move from working.</source>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="15"/>
+        <source>No Time Out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="20"/>
-        <source>Freeze Clause prevented the freezing effect of the move from working.</source>
+        <source>Sleep Clause prevented the sleep inducing effect of the move from working.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="21"/>
-        <source>Evasion Clause prevented the evasion increase of the move.</source>
+        <source>Freeze Clause prevented the freezing effect of the move from working.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="22"/>
+        <source>Evasion Clause prevented the evasion increase of the move.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="23"/>
         <source>OHKO Clause prevented the One Hit KO from happening.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="30"/>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="32"/>
         <source>You can not put more than one Pokémon of the opposing team to sleep at the same time.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="31"/>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="33"/>
         <source>You can not freeze more than one Pokémon of the opposing team at the same time.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="32"/>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="34"/>
         <source>You can&apos;t use evasion moves like Double Team.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="33"/>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="35"/>
         <source>You can&apos;t use One Hit KO moves like Fissure.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="34"/>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="36"/>
         <source>Nobody can watch your battle.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="35"/>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="37"/>
         <source>Pokémons levels are changed according to their strength.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="36"/>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="38"/>
         <source>Random teams are given to trainers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="39"/>
+        <source>No time limit for playing.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1077,6 +1087,14 @@ Moves:
         <location filename="battlewindow.cpp" line="87"/>
         <source>txt (*.txt)
 html (*.html)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QObject::QObject::QObject::QObject</name>
+    <message>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="27"/>
+        <source>The battle ended by timeout.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

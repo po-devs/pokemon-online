@@ -263,6 +263,26 @@ void ScriptEngine::clearChat()
     ((QTextEdit*)myserver->mainchat())->clear();
 }
 
+void ScriptEngine::callLater(const QString &expr, int delay)
+{
+    QTimer *t = new QTimer(this);
+
+    timerEvents[t] = expr;
+    t->start(delay*1000);
+    connect(t, SIGNAL(timeout()), SLOT(timer()));
+}
+
+void ScriptEngine::timer()
+{
+    QTimer *t = (QTimer*) sender();
+
+    eval(timerEvents[t]);
+
+    t->stop();
+    t->deleteLater();
+    timerEvents.remove(t);
+}
+
 QScriptValue ScriptEngine::eval(const QString &script)
 {
     return myengine.evaluate(script);

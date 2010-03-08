@@ -201,7 +201,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             if (status > 0) {
                 printHtml(toColor(tu(statusChangeMessages[status-1].arg(nick(spot))), StatInfo::StatusColor(status)));
             } else if (status == -1) {
-                printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), TypeInfo::Color(Move::Ghost).name()));
+                printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), TypeInfo::Color(Type::Ghost).name()));
             }
             if (status != -1) {
                 info().pokes[spot].status() = status;
@@ -219,13 +219,13 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             switch(status)
             {
      case FeelConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(spot)))), TypeInfo::Color(Move::Ghost).name()));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(spot)))), TypeInfo::Color(Type::Ghost).name()));
                 break;
      case HurtConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), TypeInfo::Color(Move::Ghost).name()));
+                printHtml(toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), TypeInfo::Color(Type::Ghost).name()));
                 break;
      case FreeConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("%1 snapped out its confusion!").arg(nick(spot)))), TypeInfo::Color(Move::Dark).name()));
+                printHtml(toColor(escapeHtml(tu(tr("%1 snapped out its confusion!").arg(nick(spot)))), TypeInfo::Color(Type::Dark).name()));
                 break;
      case PrevParalysed:
                 printHtml(toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(spot)))), StatInfo::StatusColor(Pokemon::Paralysed)));
@@ -234,7 +234,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                 printHtml(toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(spot)))), StatInfo::StatusColor(Pokemon::Asleep)));
                 break;
      case FreeAsleep:
-                printHtml(toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(spot)))), TypeInfo::Color(Move::Dark).name()));
+                printHtml(toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(spot)))), TypeInfo::Color(Type::Dark).name()));
                 break;
      case HurtBurn:
                 printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(spot)))), StatInfo::StatusColor(Pokemon::Burnt)));
@@ -246,7 +246,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                 printHtml(toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(spot)))), StatInfo::StatusColor(Pokemon::Frozen)));
                 break;
      case FreeFrozen:
-                printHtml(toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(spot)))), TypeInfo::Color(Move::Dark).name()));
+                printHtml(toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(spot)))), TypeInfo::Color(Type::Dark).name()));
                 break;
             }
         }

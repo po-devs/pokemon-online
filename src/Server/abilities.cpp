@@ -188,7 +188,7 @@ struct AMCuteCharm : public AM {
             poke(b,s)["Attracted"] = t;
             addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
             b.sendAbMessage(11,0,s,t);
-            if (b.hasWorkingItem(s, 17)) /* mental herb*/ {
+            if (b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
                 b.sendItemMessage(7,s);
                 b.disposeItem(t);
                 poke(b,t).remove("Attracted");
@@ -626,7 +626,7 @@ struct AMMotorDrive : public AM {
     }
 
     static void op(int s, int t, BS &b) {
-        if (type(b,t) == Move::Electric) {
+        if (type(b,t) == Type::Electric) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
             b.sendAbMessage(41,0,s,s,Pokemon::Electric);
             b.gainStatMod(s,Speed,1);
@@ -650,8 +650,8 @@ struct AMNormalize : public AM {
     }
 
     static void btl(int s, int, BS &b) {
-        if (turn(b,s)["Type"].toInt() != Move::Curse)
-            turn(b,s)["Type"] = Move::Normal;
+        if (turn(b,s)["Type"].toInt() != Type::Curse)
+            turn(b,s)["Type"] = Type::Normal;
     }
 };
 
@@ -746,7 +746,7 @@ struct AMShadowTag : public AM {
 
     static void iit(int, int t, BS &b) {
         //Shadow Tag
-        if (!b.hasWorkingAbility(t, 83)) turn(b,t)["Trapped"] = true;
+        if (!b.hasWorkingAbility(t, Ability::ShadowTag)) turn(b,t)["Trapped"] = true;
     }
 };
 
@@ -889,7 +889,7 @@ struct AMThickFat : public AM {
     static void bpfm (int , int t, BS &b) {
         int tp = turn(b,t)["Type"].toInt();
 
-        if (tp == Move::Ice || tp == Move::Fire) {
+        if (tp == Type::Ice || tp == Type::Fire) {
             turn(b,t)["BasePowerFoeAbilityModifier"] = -10;
         }
     }
@@ -916,7 +916,7 @@ struct AMTrace : public AM {
         int t = b.rev(s);
 
         //Multitype
-        if (!b.koed(t) && !b.hasWorkingAbility(t,59)) {
+        if (!b.koed(t) && !b.hasWorkingAbility(t,Ability::Multitype)) {
             b.sendAbMessage(66,0,s,t,0,b.poke(t).ability());
             b.acquireAbility(s, b.ability(t));
         }

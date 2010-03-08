@@ -766,6 +766,7 @@ bool TrainerTeam::loadFromFile(const QString &path)
     int cpt = 0;
     while(!poke.isNull())
     {
+        this->team().poke(cpt).reset();
         this->team().poke(cpt).setNum(poke.attribute("Num",0).toInt(0,10));
         this->team().poke(cpt).load();
         this->team().poke(cpt).nickname() = poke.attribute("Nickname");

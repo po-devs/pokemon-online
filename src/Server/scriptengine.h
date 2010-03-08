@@ -54,6 +54,7 @@ public:
     Q_INVOKABLE void clearChat();
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
+    Q_INVOKABLE void callLater(const QString &s, int delay);
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
 
@@ -97,11 +98,14 @@ public:
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 private slots:
     void changeScript(const QString &script);
+    void timer();
 private:
     Server *myserver;
     QScriptEngine myengine;
     QScriptValue myscript;
     QVector<bool> stopevents;
+
+    QHash<QTimer*,QString> timerEvents;
 
     void startStopEvent() {stopevents.push_back(false);}
     bool endStopEvent() {

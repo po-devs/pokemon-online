@@ -127,7 +127,7 @@ struct IMFocusBand : public IM
     static void uodr(int s, int t, BS &b) {
 	if (b.koed(s))
 	    return;
-	if (turn(b,s).contains("CannotBeKoedBy") && turn(b,s)["CannotBeKoedBy"].toInt() == t) {
+        if (turn(b,s).contains("CannotBeKoedBy") && turn(b,s)["CannotBeKoedBy"].toInt() == t && b.poke(s).lifePoints() == 1) {
 	    b.sendItemMessage(4, s);
 	}
     }

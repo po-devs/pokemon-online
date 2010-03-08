@@ -264,7 +264,8 @@ struct BMBerryRecoil : public BM
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (turn(b,t)["Category"].toInt() != poke(b,s)["ItemArg"].toInt() || b.koed(t)) {
+        //Magic Guard
+        if (turn(b,t)["Category"].toInt() != poke(b,s)["ItemArg"].toInt() || b.koed(t) || b.ability(t)==52) {
             return;
         }
         b.eatBerry(s);
