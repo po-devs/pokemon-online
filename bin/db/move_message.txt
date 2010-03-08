@@ -70,7 +70,7 @@ Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne bec
 
 %s knocked off %f's %i!
 
-%f evaded the seed!|%f was seeded!|%s's health is saped by leech seed.
+%f evaded the seed!|%f was seeded!|%s's health is sapped by leech seed.
 Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|%ts's reflect wore off!|%ts's light screen wore off!
 %s took aim at %f!
 %ts's team is protected from critical hits!|%ts's lucky chant wore off!
