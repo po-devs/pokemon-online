@@ -23,8 +23,17 @@ struct BaseBattleInfo
     bool ticking[2];
 
     /* Opponent pokemon */
-    ShallowBattlePoke pokes[2];
+    ShallowBattlePoke pokemons[2][6];
     bool pokeAlive[2];
+    quint8 currentIndex[2];
+
+    ShallowBattlePoke &currentShallow(int player) {
+        return pokemons[player][currentIndex[player]];
+    }
+    const ShallowBattlePoke &currentShallow(int player) const {
+        return pokemons[player][currentIndex[player]];
+    }
+
     /* Stat boosts & team status */
     BattleDynamicInfo statChanges[2];
 };
@@ -101,7 +110,6 @@ public:
 
     enum WeatherM
     {
-        StartWeather,
         ContinueWeather,
         EndWeather,
         HurtWeather

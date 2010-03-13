@@ -31,7 +31,13 @@ Accuracy: %3
 Description: %4
 
 Effect: %5</source>
-        <translation type="unfinished"></translation>
+        <translation>%1
+
+Puissance: %2
+Précision: %3
+Description: %4
+
+Effet: %5</translation>
     </message>
 </context>
 <context>
@@ -39,22 +45,22 @@ Effect: %5</source>
     <message>
         <location filename="basebattlewindow.cpp" line="622"/>
         <source>%1 Lv.%2</source>
-        <translation type="unfinished">%1 Nv.%2</translation>
+        <translation>%1 Nv.%2</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="691"/>
         <source>Spikes level %1</source>
-        <translation type="unfinished">Picôts niveaux %1</translation>
+        <translation>Picôts niveaux %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="699"/>
         <source>Toxic Spikes level %1</source>
-        <translation type="unfinished">Pics toxiques niveaux %1</translation>
+        <translation>Pics toxiques niveaux %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="705"/>
         <source>Stealth Rock</source>
-        <translation type="unfinished">Piège roc</translation>
+        <translation>Piège roc</translation>
     </message>
 </context>
 <context>
@@ -62,17 +68,17 @@ Effect: %5</source>
     <message>
         <location filename="basebattlewindow.cpp" line="39"/>
         <source>Battle between %1 and %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Combat entre %1 et %2</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="45"/>
         <source>&amp;Close</source>
-        <translation type="unfinished">&amp;Fermer</translation>
+        <translation>&amp;Fermer</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="46"/>
         <source>Sen&amp;d</source>
-        <translation type="unfinished">&amp;Envoyer</translation>
+        <translation>&amp;Envoyer</translation>
     </message>
     <message>
         <source>Battle between %1 and %2 started!</source>
@@ -81,302 +87,302 @@ Effect: %5</source>
     <message>
         <location filename="basebattlewindow.cpp" line="63"/>
         <source>%1&apos;s %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%2 de %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="117"/>
         <source>%1 sent out %2!</source>
-        <translation type="unfinished">%1 envoie %2!</translation>
+        <translation>%1 envoie %2!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="122"/>
         <source>%1 called %2 back!</source>
-        <translation type="unfinished">%1 a rappelé %2!</translation>
+        <translation>%1 a rappelé %2!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="130"/>
         <source>%1 used %2!</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 a utilisé %2!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="138"/>
         <source>Start of turn %1</source>
-        <translation type="unfinished">Début du tour %1</translation>
+        <translation>Début du tour %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="150"/>
         <source>%1 fainted!</source>
-        <translation type="unfinished">%1 est K.O.!</translation>
+        <translation>%1 est K.O.!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="154"/>
         <source>Hit!</source>
-        <translation type="unfinished">Touché!</translation>
+        <translation>Touché!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="162"/>
         <source>It had no effect!</source>
-        <translation type="unfinished">Ca n&apos;a eu aucun effet!</translation>
+        <translation>Ca n&apos;a eu aucun effet!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="166"/>
         <source>It&apos;s not very effective...</source>
-        <translation type="unfinished">Ce n&apos;est pas très efficace...</translation>
+        <translation>Ce n&apos;est pas très efficace...</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="170"/>
         <source>It&apos;s super effective!</source>
-        <translation type="unfinished">C&apos;est super efficace!</translation>
+        <translation>C&apos;est super efficace!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="177"/>
         <source>A critical hit!</source>
-        <translation type="unfinished">Coup critique!</translation>
+        <translation>Coup critique!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="180"/>
         <source>The attack of %1 missed!</source>
-        <translation type="unfinished">%1 rate son attaque!</translation>
+        <translation>%1 rate son attaque!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="186"/>
         <source>%1&apos;s %2 %3%4!</source>
-        <translation type="unfinished">%2 de %1 %4%3!</translation>
+        <translation>%2 de %1 %4%3!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="186"/>
         <source>sharply </source>
-        <translation type="unfinished"> beaucoup</translation>
+        <translation> beaucoup</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="186"/>
         <source>rose</source>
-        <translation type="unfinished">augmente</translation>
+        <translation>augmente</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="186"/>
         <source>fell</source>
-        <translation type="unfinished">baisse</translation>
+        <translation>baisse</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="191"/>
         <source>%1 is paralyzed! It may be unable to move!</source>
-        <translation type="unfinished">%1 est paralysé! Il ne peut pas bouger!</translation>
+        <translation>%1 est paralysé! Il ne peut pas bouger!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="192"/>
         <source>%1 was burned!</source>
-        <translation type="unfinished">%1 est brûlé!</translation>
+        <translation>%1 est brûlé!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="193"/>
         <source>%1 was frozen solid!</source>
-        <translation type="unfinished">%1 est congelé!</translation>
+        <translation>%1 est congelé!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="194"/>
         <source>%1 fell asleep!</source>
-        <translation type="unfinished">%1 s&apos;endort!</translation>
+        <translation>%1 s&apos;endort!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="195"/>
         <source>%1 was poisoned!</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 est empoisonné!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="196"/>
         <source>%1 was badly poisoned!</source>
-        <translation type="unfinished">%1 est gravement empoisonné!</translation>
+        <translation>%1 est gravement empoisonné!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="204"/>
         <source>%1 became confused!</source>
-        <translation type="unfinished">%1 devient confus!</translation>
+        <translation>%1 devient confus!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="222"/>
         <source>%1 is confused!</source>
-        <translation type="unfinished">%1 est confus!</translation>
+        <translation>%1 est confus!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="28"/>
         <source>Battle between %1 and %2 is underway!</source>
-        <translation type="unfinished"></translation>
+        <translation>Le combat entre %1 et %2 est en cours!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="213"/>
         <source>%1 is already %2!</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 est déjà %2!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="225"/>
         <source>It hurt itself in its confusion!</source>
-        <translation type="unfinished">Le pokémon se blesse dans sa confusion!</translation>
+        <translation>Le pokémon se blesse dans sa confusion!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="228"/>
         <source>%1 snapped out its confusion!</source>
-        <translation type="unfinished">%1 n&apos;est plus confus!</translation>
+        <translation>%1 n&apos;est plus confus!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="231"/>
         <source>%1 is paralyzed! It can&apos;t move!</source>
-        <translation type="unfinished">%1 est paralysé! Il ne peut pas attaquer!</translation>
+        <translation>%1 est paralysé! Il ne peut pas attaquer!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="234"/>
         <source>%1 is fast asleep!</source>
-        <translation type="unfinished">%1 dort!</translation>
+        <translation>%1 dort!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="237"/>
         <source>%1 woke up!</source>
-        <translation type="unfinished">%1 se réveille!</translation>
+        <translation>%1 se réveille!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="240"/>
         <source>%1 is hurt by its burn!</source>
-        <translation type="unfinished">%1 souffre de sa brûlure!</translation>
+        <translation>%1 souffre de sa brûlure!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="243"/>
         <source>%1 is hurt by poison!</source>
-        <translation type="unfinished">%1 souffre du poison!</translation>
+        <translation>%1 souffre du poison!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="246"/>
         <source>%1 is frozen solid!</source>
-        <translation type="unfinished">%1 est gelé!</translation>
+        <translation>%1 est gelé!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="249"/>
         <source>%1 thawed out!</source>
-        <translation type="unfinished">%1 a dégelé!</translation>
+        <translation>%1 a dégelé!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="255"/>
         <source>But it failed!</source>
-        <translation type="unfinished">Mais l&apos;attaque a échoué!</translation>
+        <translation>Mais l&apos;attaque a échoué!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="269"/>
         <source>%1 is watching the battle.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 regarde le combat.</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="269"/>
         <source>%1 stopped watching the battle.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 arrête de regarder le combat.</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="305"/>
         <source>But there is no target pokÃ©mon!</source>
-        <translation type="unfinished">Mais il n&apos;y a pas de cible!</translation>
+        <translation>Mais il n&apos;y a pas de cible!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="323"/>
         <source>%1 flinched!</source>
-        <translation type="unfinished">%1 est paralysé par la peur!</translation>
+        <translation>%1 est paralysé par la peur!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="326"/>
         <source>%1 is hit with recoil!</source>
-        <translation type="unfinished">%1 est blessé par le recul!</translation>
+        <translation>%1 est blessé par le recul!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="337"/>
         <source>The hail stopped!</source>
-        <translation type="unfinished">La grêle s&apos;est arrêtée!</translation>
+        <translation>La grêle s&apos;est arrêtée!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="338"/>
         <source>The sandstorm stopped!</source>
-        <translation type="unfinished">La tempête de sable s&apos;est arrêtée!</translation>
+        <translation>La tempête de sable s&apos;est arrêtée!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="339"/>
         <source>The sunlight faded!</source>
-        <translation type="unfinished">Les rayons du soleil s&apos;atténuent!</translation>
+        <translation>Les rayons du soleil s&apos;atténuent!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="340"/>
         <source>The rain stopped!</source>
-        <translation type="unfinished">La pluie cesse de tomber!</translation>
+        <translation>La pluie cesse de tomber!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="344"/>
         <source>%1 is buffeted by the hail!</source>
-        <translation type="unfinished">%1 est frappé par la grêle!</translation>
+        <translation>%1 est frappé par la grêle!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="345"/>
         <source>%1 is buffeted by the sandstorm!</source>
-        <translation type="unfinished">%1 est frappé par la tempête de sable!</translation>
+        <translation>%1 est frappé par la tempête de sable!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="349"/>
         <source>A hailstorm whipped up!</source>
-        <translation type="unfinished">La grêle se met à tomber!</translation>
+        <translation>La grêle se met à tomber!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="350"/>
         <source>A sandstorm whipped up!</source>
-        <translation type="unfinished">Une tempête de sable se forme!</translation>
+        <translation>Une tempête de sable se forme!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="351"/>
         <source>The sunlight became harsh!</source>
-        <translation type="unfinished">Les rayon du soleil brillent!</translation>
+        <translation>Les rayon du soleil brillent!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="352"/>
         <source>It&apos;s started to rain!</source>
-        <translation type="unfinished">La pluie commence à tomber!</translation>
+        <translation>La pluie commence à tomber!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="356"/>
         <source>Hail continues to fall!</source>
-        <translation type="unfinished">La grêle continue!</translation>
+        <translation>La grêle continue!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="357"/>
         <source>The sandstorm rages!</source>
-        <translation type="unfinished">La tempête de sable fait rage!</translation>
+        <translation>La tempête de sable fait rage!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="358"/>
         <source>The sunlight is strong!</source>
-        <translation type="unfinished">Les rayons du soleil sont forst!</translation>
+        <translation>Les rayons du soleil sont forst!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="359"/>
         <source>Rain continues to fall!</source>
-        <translation type="unfinished">La pluie continue!</translation>
+        <translation>La pluie continue!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="368"/>
         <source>%1 lost %2% of its health!</source>
-        <translation type="unfinished">%1 a perdu %2% de sa vie!</translation>
+        <translation>%1 a perdu %2% de sa vie!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="419"/>
         <source>Tie between %1 and %2!</source>
-        <translation type="unfinished">Match nul entre %1 et %2!</translation>
+        <translation>Match nul entre %1 et %2!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="421"/>
         <source>%1 won the battle!</source>
-        <translation type="unfinished">%1 a gagné le combat!</translation>
+        <translation>%1 a gagné le combat!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="436"/>
         <source>Rule: </source>
-        <translation type="unfinished">Règle: </translation>
+        <translation>Règle: </translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="469"/>
         <source>Unknown command received, are you up to date?</source>
-        <translation type="unfinished"></translation>
+        <translation>Commande inconnue reçue. Etes vous à jour?</translation>
     </message>
 </context>
 <context>
@@ -447,7 +453,7 @@ Effect: %5</source>
     <message>
         <location filename="battlewindow.cpp" line="65"/>
         <source>Battle between %1 and %2 started!</source>
-        <translation type="unfinished">Le combat entre %1 et %2 a commencé!</translation>
+        <translation>Le combat entre %1 et %2 a commencé!</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="73"/>
@@ -753,43 +759,43 @@ Effect: %5</source>
     <message>
         <location filename="client.cpp" line="101"/>
         <source>&amp;PM</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;MP</translation>
     </message>
     <message>
         <location filename="client.cpp" line="105"/>
         <source>Go &amp;Back</source>
-        <translation type="unfinished">&amp;Revenir</translation>
+        <translation>&amp;Revenir</translation>
     </message>
     <message>
         <location filename="client.cpp" line="107"/>
         <location filename="client.cpp" line="297"/>
         <source>Go &amp;Away</source>
-        <translation type="unfinished"></translation>
+        <translation>Se mettre &amp;absent</translation>
     </message>
     <message>
         <location filename="client.cpp" line="110"/>
         <source>&amp;Watch Battle</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Regarder le combat</translation>
     </message>
     <message>
         <location filename="client.cpp" line="116"/>
         <source>&amp;Control Panel</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Fentêtre de contrôle</translation>
     </message>
     <message>
         <location filename="client.cpp" line="123"/>
         <source>&amp;Kick</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ejecter</translation>
     </message>
     <message>
         <location filename="client.cpp" line="128"/>
         <source>&amp;Ban</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Bannir</translation>
     </message>
     <message>
         <location filename="client.cpp" line="285"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Fichier</translation>
     </message>
     <message>
         <location filename="client.cpp" line="286"/>
@@ -809,37 +815,37 @@ Effect: %5</source>
     <message>
         <location filename="client.cpp" line="296"/>
         <source>&amp;Actions</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Actions</translation>
     </message>
     <message>
         <location filename="client.cpp" line="100"/>
         <source>&amp;Challenge Window</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Fenêtre de défi</translation>
     </message>
     <message>
         <location filename="client.cpp" line="295"/>
         <source>Reload StyleSheet</source>
-        <translation type="unfinished"></translation>
+        <translation>Recharger la feuille de style</translation>
     </message>
     <message>
         <location filename="client.cpp" line="302"/>
         <source>Save &amp;Battle Logs</source>
-        <translation type="unfinished"></translation>
+        <translation>Sauvegarder les &amp;logs de combat</translation>
     </message>
     <message>
         <location filename="client.cpp" line="309"/>
         <source>&amp;Show Team</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Révéler l&apos;équipe</translation>
     </message>
     <message>
         <location filename="client.cpp" line="314"/>
         <source>Enable &amp;Ladder</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Autoriser le classement</translation>
     </message>
     <message>
         <location filename="client.cpp" line="319"/>
         <source>Show Player &amp;Events</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Voir les évenements joueur</translation>
     </message>
     <message>
         <location filename="client.cpp" line="359"/>
@@ -878,22 +884,22 @@ Il est conseillé d&apos;utiliser un mot de passe légèrement différent pour c
     <message>
         <location filename="client.cpp" line="526"/>
         <source>Battle between %1 and %2 started.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le combat entre %1 et %2 a commencé.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="549"/>
         <source>%1 forfeited against %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 a abandonné contre %2.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="551"/>
         <source>%1 and %2 tied.</source>
-        <translation type="unfinished"></translation>
+        <translation>Match nul entre %1 et %2.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="553"/>
         <source>%1 won against %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 a gagné contre %2.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="589"/>
@@ -908,22 +914,22 @@ Il est conseillé d&apos;utiliser un mot de passe légèrement différent pour c
     <message>
         <location filename="client.cpp" line="599"/>
         <source>%1 cancelled their challenge.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 a annulé son défi.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="604"/>
         <source>%1 has an invalid team.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 a une équipe invalide.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="617"/>
         <source>%1 is away.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 est absent.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="619"/>
         <source>%1 has returned.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 est revenu.</translation>
     </message>
     <message>
         <source>%1 cancelled their challenge</source>
@@ -1107,22 +1113,22 @@ Il est conseillé d&apos;utiliser un mot de passe légèrement différent pour c
     <message>
         <location filename="mainwindow.cpp" line="110"/>
         <source>Impossible to go online</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de se connecter</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="110"/>
         <source>You haven&apos;t set your name yet. Do so in the teambuilder.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous n&apos;avez pas mis votre nom. Faites le dans le teambuilder!</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="151"/>
         <source>Language Change</source>
-        <translation type="unfinished">Changement de langue</translation>
+        <translation>Changement de langue</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="151"/>
         <source>Restart the application to see the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Redémarrez l&apos;application pour voir les changements.</translation>
     </message>
 </context>
 <context>
@@ -1145,17 +1151,17 @@ Il est conseillé d&apos;utiliser un mot de passe légèrement différent pour c
     <message>
         <location filename="pmwindow.cpp" line="21"/>
         <source>&amp;Challenge</source>
-        <translation type="unfinished">&amp;Défier</translation>
+        <translation>&amp;Défier</translation>
     </message>
     <message>
         <location filename="pmwindow.cpp" line="22"/>
         <source>&amp;Send</source>
-        <translation type="unfinished">&amp;Envoyer</translation>
+        <translation>&amp;Envoyer</translation>
     </message>
     <message>
         <location filename="pmwindow.cpp" line="75"/>
         <source>The other party left the server, so the window was disabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;autre partie a quitté le serveur donc la fenêtre a été grisée.</translation>
     </message>
 </context>
 <context>
@@ -1172,7 +1178,16 @@ Moves:
 --%6
 --%7
 --%8</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 nv %2
+
+Objet: %3
+Cap. Spé: %4
+
+Attaques:
+-- %5
+-- %6
+-- %7
+-- %8</translation>
     </message>
 </context>
 <context>
@@ -1254,113 +1269,114 @@ Ligne:%3 Colonne:%4</translation>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="8"/>
         <source>Sleep Clause</source>
-        <translation type="unfinished"></translation>
+        <translation>Clause du sommeil</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="9"/>
         <source>Freeze Clause</source>
-        <translation type="unfinished"></translation>
+        <translation>Clause du gel</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="10"/>
         <source>Evasion Clause</source>
-        <translation type="unfinished"></translation>
+        <translation>Clause de l&apos;esquive</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="11"/>
         <source>OHKO Clause</source>
-        <translation type="unfinished"></translation>
+        <translation>Clause des KO en un coup</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="12"/>
         <source>Disallow Spects</source>
-        <translation type="unfinished"></translation>
+        <translation>Refuser les spectateurs</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="13"/>
         <source>Level Balance</source>
-        <translation type="unfinished"></translation>
+        <translation>Equilibrage de niveaux</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="14"/>
         <source>Challenge Cup</source>
-        <translation type="unfinished"></translation>
+        <translation>Equipes au hasard</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="15"/>
         <source>No Time Out</source>
-        <translation type="unfinished"></translation>
+        <translation>Pas de limites de temps</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="32"/>
         <source>You can not put more than one Pokémon of the opposing team to sleep at the same time.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous ne pouvez pas infliger le sommeil à plus d&apos;un des pokémon de votre adversaire en même temps.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="33"/>
         <source>You can not freeze more than one Pokémon of the opposing team at the same time.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous ne pouvez pas geler plus d&apos;un pokémon en même temps.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="34"/>
         <source>You can&apos;t use evasion moves like Double Team.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous ne pouvez pas utiliser d&apos;attaques comme reflet qui augmentent votre esquive.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="35"/>
         <source>You can&apos;t use One Hit KO moves like Fissure.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous ne pouvez pas utiliser d&apos;attaques comme abîme qui tuent en un coup.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="36"/>
         <source>Nobody can watch your battle.</source>
-        <translation type="unfinished"></translation>
+        <translation>Personne ne peut regarder le combat.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="37"/>
         <source>Pokémons levels are changed according to their strength.</source>
-        <translation type="unfinished"></translation>
+        <translation>Les niveaux des pokémons sont équilibrés en fonction de leur stats.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="38"/>
         <source>Random teams are given to trainers.</source>
-        <translation type="unfinished"></translation>
+        <translation>Des équipes au hasard sont données aux joueurs.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="39"/>
         <source>No time limit for playing.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pas de limite de temps dans le combat.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="20"/>
         <source>Sleep Clause prevented the sleep inducing effect of the move from working.</source>
-        <translation type="unfinished"></translation>
+        <translation>La clause du sommeil a empêché le pokémon de tomber endormi.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="21"/>
         <source>Freeze Clause prevented the freezing effect of the move from working.</source>
-        <translation type="unfinished"></translation>
+        <translation>La clause de gel a emp^ché le pokémon de tomber endormi.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="22"/>
         <source>Evasion Clause prevented the evasion increase of the move.</source>
-        <translation type="unfinished"></translation>
+        <translation>La clause d&apos;esquive a empêché l&apos;equive du pokémon d&apos;augmenter.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="23"/>
         <source>OHKO Clause prevented the One Hit KO from happening.</source>
-        <translation type="unfinished"></translation>
+        <translation>La clause du KO en un coup a empêché le KO en un coup de se produire.</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="85"/>
         <source>Saving the battle</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrer le combat</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="87"/>
         <source>txt (*.txt)
 html (*.html)</source>
-        <translation type="unfinished"></translation>
+        <translation>txt (*.txt)
+html (*.html)</translation>
     </message>
 </context>
 <context>
@@ -1368,7 +1384,7 @@ html (*.html)</source>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="27"/>
         <source>The battle ended by timeout.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le combat s&apos;est terminé par épuisement du temps.</translation>
     </message>
 </context>
 <context>
@@ -1479,7 +1495,7 @@ html (*.html)</source>
         <location filename="menu.cpp" line="43"/>
         <source>&amp;Language</source>
         <oldsource>Language</oldsource>
-        <translation type="unfinished">Langue</translation>
+        <translation>Langue</translation>
     </message>
 </context>
 <context>
@@ -1557,12 +1573,12 @@ html (*.html)</source>
     <message>
         <location filename="teambuilder.cpp" line="714"/>
         <source>Type 1: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Type 1: %1</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="715"/>
         <source>Type 2: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Type 2: %1</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="786"/>
@@ -1679,7 +1695,7 @@ html (*.html)</source>
     <message>
         <location filename="teambuilder.cpp" line="283"/>
         <source>&amp;New Team</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Nouvelle équipe</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="284"/>
@@ -1694,7 +1710,7 @@ html (*.html)</source>
     <message>
         <location filename="teambuilder.cpp" line="286"/>
         <source>&amp;Import From Txt</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Importer d&apos;un texte</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="287"/>
@@ -1712,17 +1728,17 @@ html (*.html)</source>
     <message>
         <location filename="teambuilder.cpp" line="27"/>
         <source>Paste your exported team from Netbattle Supremacy / Shoddy Battle</source>
-        <translation type="unfinished"></translation>
+        <translation>Collez votre équipe sous le format exporté de Netbattle Supremacy / Shoddy Battle</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="33"/>
         <source>&amp;Cancel</source>
-        <translation type="unfinished">&amp;Annuler</translation>
+        <translation>&amp;Annuler</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="34"/>
         <source>&amp;Done</source>
-        <translation type="unfinished">&amp;Finir</translation>
+        <translation>&amp;Finir</translation>
     </message>
 </context>
 <context>

@@ -5,9 +5,9 @@
 
 
 %s restored a some HP
+The %i raised %s's %st!
 
-
-
+The %i sharply raised %s's %st!
 %s is focusing on the target!
 %s is already preparing its next move!
 %f is hit with recoil

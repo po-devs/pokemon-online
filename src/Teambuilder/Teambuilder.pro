@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     ../Utilities/md5.c \
     pmwindow.cpp \
     controlpanel.cpp \
-    basebattlewindow.cpp
+    basebattlewindow.cpp \
+    ../PokemonInfo/movesetchecker.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -49,7 +50,8 @@ HEADERS += teambuilder.h \
     ../Utilities/md5.h \
     pmwindow.h \
     controlpanel.h \
-    basebattlewindow.h
+    basebattlewindow.h \
+    ../PokemonInfo/movesetchecker.h
 LIBS += -L../../bin \
     -lzip
 DEFINES = CLIENT_SIDE

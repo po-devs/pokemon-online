@@ -16,6 +16,7 @@ QTSList<int> PokemonInfo::m_Ability1;
 QTSList<int> PokemonInfo::m_Ability2;
 QTSList<PokeBaseStats> PokemonInfo::m_BaseStats;
 QTSList<int> PokemonInfo::m_LevelBalance;
+QList<PokemonMoves> PokemonInfo::m_Moves;
 
 QString MoveInfo::m_Directory;
 QTSList<QString> MoveInfo::m_Names;
@@ -306,6 +307,7 @@ void PokemonInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
+    loadMoves();
     fill_container_with_file(m_Type1, path("poke_type1.txt"));
     fill_container_with_file(m_Type2, path("poke_type2.txt"));
     fill_container_with_file(m_Genders, path("poke_gender.txt"));
@@ -400,41 +402,44 @@ QPixmap PokemonInfo::Icon(int index)
 
 QSet<int> PokemonInfo::Moves(int pokenum)
 {
-    QSet<int> tmMoves = TMMoves(pokenum);
-    for (int i = 3; i <= 4; i++) {
-         tmMoves.unite(LevelMoves(pokenum, i)).unite(EggMoves(pokenum, i)).unite(TutorMoves(pokenum, i)).unite(SpecialMoves(pokenum,i)).unite(PreEvoMoves(pokenum,i));
-    }
-    return tmMoves;
+    QSet<int> moves;
+    return moves.unite(RegularMoves(pokenum,3)).unite(RegularMoves(pokenum, 4)).unite(EggMoves(pokenum,3)).unite(EggMoves(pokenum,4))
+            .unite(SpecialMoves(pokenum,3)).unite(SpecialMoves(pokenum,4));
+}
+
+QSet<int> PokemonInfo::RegularMoves(int pokenum, int gen)
+{
+    return m_Moves[pokenum].regularMoves[gen-3];
 }
 
 QSet<int> PokemonInfo::EggMoves(int pokenum, int gen)
 {
-    return getMoves(QString::number(gen)+"G_egg_moves.txt", pokenum);
+    return m_Moves[pokenum].eggMoves[gen-3];
 }
 
 QSet<int> PokemonInfo::LevelMoves(int pokenum, int gen)
 {
-    return getMoves(QString::number(gen)+"G_level_moves.txt", pokenum);
+    return m_Moves[pokenum].levelMoves[gen-3];
 }
 
 QSet<int> PokemonInfo::TutorMoves(int pokenum, int gen)
 {
-    return getMoves(QString::number(gen)+"G_tutor_moves.txt", pokenum);
+    return m_Moves[pokenum].tutorMoves[gen-3];
 }
 
 QSet<int> PokemonInfo::TMMoves(int pokenum)
 {
-    return getMoves("tm_and_hm_moves.txt", pokenum);
+    return m_Moves[pokenum].TMMoves;
 }
 
 QSet<int> PokemonInfo::SpecialMoves(int pokenum, int gen)
 {
-    return getMoves(QString::number(gen)+"G_special_moves.txt", pokenum);
+    return m_Moves[pokenum].specialMoves[gen-3];
 }
 
 QSet<int> PokemonInfo::PreEvoMoves(int pokenum, int gen)
 {
-    return getMoves(QString::number(gen)+"G_pre_evo_moves.txt", pokenum);
+    return m_Moves[pokenum].preEvoMoves[gen-3];
 }
 
 QList<int> PokemonInfo::Abilities(int pokenum)
@@ -472,6 +477,48 @@ void PokemonInfo::loadNames()
     fill_container_with_file(m_Weights, path("poke_weight.txt"));
 }
 
+void PokemonInfo::loadMoves()
+{
+    static const int filesize = 10;
+    QFile files[filesize];
+
+    QString fileNames[filesize] = {
+        path("tm_and_hm_moves.txt"), path("3G_egg_moves.txt"), path("3G_level_moves.txt"),
+        path("3G_tutor_moves.txt"), path("3G_special_moves.txt"), path("4G_pre_evo_moves.txt"),
+        path("4G_egg_moves.txt"), path("4G_level_moves.txt"), path("4G_tutor_moves.txt"),
+        path("4G_special_moves.txt")
+    };
+
+    for (int i = 0; i < filesize; i++) {
+        files[i].setFileName(fileNames[i]);
+        files[i].open(QIODevice::ReadOnly);
+    }
+
+    for (int i = 0; i < NumberOfPokemons(); i++) {
+        PokemonMoves moves;
+
+        QSet<int> *refs[filesize] = {
+            &moves.TMMoves, &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0],
+            &moves.preEvoMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1]
+        };
+
+        for (int j = 0; j < filesize; j++) {
+            QList<QByteArray> line = files[j].readLine().trimmed().split(' ');
+            foreach(QByteArray data, line) {
+                if (data.length() > 0)
+                    refs[j]->insert(data.toInt());
+            }
+        }
+
+        moves.regularMoves[0] = moves.TMMoves;
+        moves.regularMoves[0].unite(moves.levelMoves[0]).unite(moves.tutorMoves[0]);
+        moves.regularMoves[1] = moves.TMMoves;
+        moves.regularMoves[1].unite(moves.preEvoMoves[1]).unite(moves.levelMoves[1]).unite(moves.tutorMoves[1]);
+
+        m_Moves.push_back(moves);
+    }
+}
+
 QString PokemonInfo::path(const QString &filename)
 {
 #ifdef MULTI_THREADED_ACCESS
@@ -479,27 +526,6 @@ QString PokemonInfo::path(const QString &filename)
     QMutexLocker a(&m);
 #endif
     return m_Directory + filename;
-}
-
-QSet<int> PokemonInfo::getMoves(const QString &filename, int pokenum)
-{
-    QSet<int> return_value;
-
-    /* getting the line we want */
-    QString interesting_line = get_line(path(filename), pokenum);
-
-    /* extracting the moves */
-    QTextStream ss(&interesting_line, QIODevice::ReadOnly);
-    while (!ss.atEnd())
-    {
-        int val;
-        ss >> val;
-
-        if (val != 0)
-            return_value.insert(val);
-    }
-
-    return return_value;
 }
 
 void MoveInfo::loadCritics()
@@ -900,13 +926,13 @@ void ItemInfo::loadNames()
     }
 
     temp.clear();
-    fill_container_with_file(temp, path("item_messages_en.txt"));
+    fill_container_with_file(temp, trFile(path("item_messages")));
     foreach (QString eff, temp) {
 	m_RegMessages.push_back(eff.split('|'));
     }
 
     temp.clear();
-    fill_container_with_file(temp, path("berry_messages_en.txt"));
+    fill_container_with_file(temp, trFile(path("berry_messages")));
     foreach (QString eff, temp) {
 	m_BerryMessages.push_back(eff.split('|'));
     }
@@ -1411,7 +1437,10 @@ QPixmap StatInfo::BattleIcon(int status) {
 
 QString StatInfo::Stat(int stat)
 {
-    return m_stats[stat];
+    if (stat >= 0 && stat <= SpDefense)
+        return m_stats[stat];
+    else
+        return "";
 }
 
 QString StatInfo::Status(int stat)

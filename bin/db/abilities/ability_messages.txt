@@ -12,8 +12,8 @@
 %s's Cute Charm infatuated %f!
 %s's Download activates!
 
-
-%s's Dry Skin absorbs the attack!|%s's Dry Skin heals it!|%s's Dry Skin hurts it!
+%s's Snow Warning whipped up a hailstorm!|%s's Drizzle made it rain!|%s's Sandstream whipped up a sandstorm!|%s's Drought intensified the sun's rays!
+%s restored HP using its Dry Skin!|%s's Dry Skin hurts it!
 %s's Effect Spore activates!
 
 %s's %a activates!
@@ -64,7 +64,7 @@
 
 
 
-%s's Trace copied %a!
+%s traced %f's %a!
 %s is carelessly slacking off!
 
 

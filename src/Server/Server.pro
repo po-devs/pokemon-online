@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     serverconfig.cpp \
     berries.cpp \
     scriptengine.cpp \
-    challenge.cpp
+    challenge.cpp \
+    ../PokemonInfo/movesetchecker.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -55,6 +56,7 @@ HEADERS += mainwindow.h \
     serverconfig.h \
     berries.h \
     scriptengine.h \
-    challenge.h
+    challenge.h \
+    ../PokemonInfo/movesetchecker.h
 DEFINES = MULTI_THREADED_ACCESS \
     SERVER_SIDE

@@ -1,6 +1,7 @@
 #include "battlestructs.h"
 #include "pokemoninfo.h"
 #include "networkstructs.h"
+#include "movesetchecker.h"
 #include "../Utilities/otherwidgets.h"
 
 QString ChallengeInfo::clauseText[] =
@@ -112,9 +113,6 @@ void PokeBattle::init(const PokePersonal &poke)
     p.num() = poke.num();
     p.load();
 
-    QSet<int> moves = p.moves();
-    QList<int> pokemoves;
-
     QNickValidator v(NULL);
 
     num() = poke.num();
@@ -143,17 +141,24 @@ void PokeBattle::init(const PokePersonal &poke)
     nature() = std::min(NatureInfo::NumberOfNatures(), std::max(0, int(poke.nature())));
 
     int curs = 0;
+    QSet<int> invalid_moves;
+    QSet<int> taken_moves;
+    MoveSetChecker::isValid(num(),poke.move(0),poke.move(1),poke.move(2),poke.move(3));
+
     for (int i = 0; i < 4; i++) {
-	if (moves.contains(poke.move(i))) {
-	    if (!pokemoves.contains(poke.move(i))) {
+        if (!invalid_moves.contains(poke.move(i))) {
+            if (!taken_moves.contains(poke.move(i))) {
+                taken_moves.insert(poke.move(i));
 		move(curs).num() = poke.move(i);
 		move(curs).load();
 		++curs;
 	    }
 	}
     }
+    /* Even by removing the invalid moves indicated, the combination may still
+       not be valid, so we check once more */
 
-    if (move(0).num() == 0) {
+    if (move(0).num() == 0 || !MoveSetChecker::isValid(num(), move(0).num(), move(1).num(), move(2).num(), move(3).num())) {
 	num() = 0;
 	return;
     }
@@ -168,6 +173,9 @@ void PokeBattle::init(const PokePersonal &poke)
 
     int sum = 0;
     for (int i = 0; i < 6; i++) {
+        //Arceus
+        if (num() == 493 && evs()[i] > 100)
+            evs()[i] = 100;
         sum += evs()[i];
 	if (sum > 510) {
             evs()[i] -= (sum-510);

@@ -5,8 +5,9 @@
  #include <QStyleFactory>
 
 TB_Menu::TB_Menu()
-        : QImageBackground("db/menu_background.png")
+        : QImageBackground("db/menu/menu_background.png")
 {
+    qDebug() << "Menu!";
     setWindowTitle(tr("Menu"));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -16,10 +17,10 @@ TB_Menu::TB_Menu()
     layout->setMargin(0);
     layout->setSpacing(0);
 
-    layout->addWidget(teambuilder = new QImageButton("db/Teambuilder0.png", "db/Teambuilder1.png"), 0, Qt::AlignCenter);
-    layout->addWidget(online = new QImageButton("db/GoOnline0.png", "db/GoOnline1.png"), 0, Qt::AlignCenter);
-    layout->addWidget(credits = new QImageButton("db/Credits0.png", "db/Credits1.png"), 0, Qt::AlignCenter);
-    layout->addWidget(exit = new QImageButton("db/Quit0.png", "db/Quit1.png"), 0, Qt::AlignCenter);
+    layout->addWidget(teambuilder = new QImageButton("db/menu/Teambuilder0.png", "db/menu/Teambuilder1.png"), 0, Qt::AlignCenter);
+    layout->addWidget(online = new QImageButton("db/menu/GoOnline0.png", "db/menu/GoOnline1.png"), 0, Qt::AlignCenter);
+    layout->addWidget(credits = new QImageButton("db/menu/Credits0.png", "db/menu/Credits1.png"), 0, Qt::AlignCenter);
+    layout->addWidget(exit = new QImageButton("db/menu/Quit0.png", "db/menu/Quit1.png"), 0, Qt::AlignCenter);
 
     connect (teambuilder, SIGNAL(clicked()), SIGNAL(goToTeambuilder()));
     connect (online, SIGNAL(clicked()), SIGNAL(goToOnline()));
@@ -30,7 +31,7 @@ TB_Menu::TB_Menu()
 QMenuBar * TB_Menu::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();
-    menuBar->setStyleSheet("QMenuBar{background-image:url(db/menu_background.png);}");/*tr("QMenuBar{background-color:rgb(30,30,100);}"));*/
+    menuBar->setStyleSheet("QMenuBar{background-image:url(db/menu/menu_background.png);}");
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
     menuFichier->addAction(tr("&Load Team"),w,SLOT(loadTeamDialog()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);

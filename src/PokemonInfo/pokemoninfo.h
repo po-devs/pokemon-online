@@ -14,6 +14,20 @@ class QPixmap;
 #endif
 
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
+
+struct PokemonMoves
+{
+    //QSet<int> moves;
+    /* All moves except egg & special */
+    QSet<int> regularMoves[2];
+    QSet<int> TMMoves;
+    QSet<int> preEvoMoves[2];
+    QSet<int> levelMoves[2];
+    QSet<int> eggMoves[2];
+    QSet<int> specialMoves[2];
+    QSet<int> tutorMoves[2];
+};
+
 class PokemonInfo
 {
 private:
@@ -27,9 +41,12 @@ private:
     static QTSList<int> m_Ability2;
     static QTSList<PokeBaseStats> m_BaseStats;
     static QTSList<int> m_LevelBalance;
+    /* That is NOT multi-threaded! */
+    static QList<PokemonMoves> m_Moves;
 
     static void loadNames();
     static void loadBaseStats();
+    static void loadMoves();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
     static QString path(const QString &filename);
     static int calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev);
@@ -56,6 +73,7 @@ public:
     static QSet<int> TMMoves(int pokenum);
     static QSet<int> PreEvoMoves(int pokenum, int gen = 4);
     static QSet<int> SpecialMoves(int pokenum, int gen = 4);
+    static QSet<int> RegularMoves(int pokenum, int gen = 4);
     static PokeBaseStats BaseStats(int pokenum);
     static bool Exist(int pokenum);
     static QList<int> Abilities(int pokenum);

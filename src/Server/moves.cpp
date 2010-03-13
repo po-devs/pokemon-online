@@ -493,6 +493,7 @@ struct MMDetect : public MM
     static void uas(int s, int, BS &b) {
 	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Detect", &dgaf);
 	turn(b,s)["DetectUsed"] = true;
+        b.sendMoveMessage(27, 0, s, Pokemon::Normal);
     }
 
     static void dgaf(int s, int t, BS &b) {
@@ -846,7 +847,8 @@ struct MMRest : public MM
 
     static void uas(int s, int, BS &b) {
 	b.healLife(s, b.poke(s).totalLifePoints());
-	b.changeStatus(s, Pokemon::Asleep);
+        b.sendMoveMessage(106,0,s,type(b,s));
+        b.changeStatus(s, Pokemon::Asleep,false);
 	b.poke(s).sleepCount() = 2;
         poke(b,s)["Rested"] = true;
     }
@@ -865,6 +867,10 @@ struct MMBellyDrum : public MM
 	}
     }
     static void uas(int s, int, BS &b) {
+        if (move(b,s) == Move::BellyDrum) {
+            b.sendMoveMessage(s,1,8,type(b,s));
+            b.gainStatMod(s,Attack,12,false);
+        }
         b.changeHp(s, b.poke(s).lifePoints() - b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100);
     }
 };
@@ -885,7 +891,6 @@ struct MMWish : public MM
     static void uas(int s, int, BS &b) {
         team(b,s)["WishCount"] = 1;
         team(b,s)["Wisher"] = b.poke(s).nick();
-	b.sendMoveMessage(142, 0, s);
         addFunction(team(b,s), "EndTurn", "Wish", &et);
     }
 
@@ -895,7 +900,7 @@ struct MMWish : public MM
 	    return;
 	}
         if (count == 0 && !b.koed(s)) {
-            b.sendMoveMessage(142, 1, 0, 0, 0, 0, team(b,s)["Wisher"].toString());
+            b.sendMoveMessage(142, 0, 0, 0, 0, 0, team(b,s)["Wisher"].toString());
 	    b.healLife(s, b.poke(s).totalLifePoints()/2);
 	}
         team(b,s)["WishCount"] = count - 1;
@@ -962,16 +967,17 @@ struct MMRoar : public MM
 	}
     }
 
-    static void uas(int, int t, BS &b) {
+    static void uas(int s, int t, BS &b) {
 	int num = b.currentPoke(t);
-	b.sendBack(t);
+        //b.sendBack(t);
 	QList<int> switches;
 	for (int i = 0; i < 6; i++) {
 	    if (i != num && !b.poke(t,i).ko()) {
 		switches.push_back(i);
 	    }
 	}
-        b.sendPoke(t, switches[true_rand()%switches.size()]);
+        b.sendPoke(t, switches[true_rand()%switches.size()], true);
+        b.sendMoveMessage(107,2,s,type(b,s),t);
         b.callEntryEffects(t);
     }
 };
@@ -1132,6 +1138,7 @@ struct MMSubstitute : public MM
     static void uas(int s, int, BS &b) {
 	poke(b,s)["Substitute"] = true;
 	poke(b,s)["SubstituteLife"] = b.poke(s).totalLifePoints()/4;
+        b.sendMoveMessage(128,4,s);
         b.notifySub(s,true);
 	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
     }
@@ -1245,19 +1252,6 @@ struct MMAttract : public MM
 		    b.sendMoveMessage(58, 2,s);
 		}
 	    }
-	}
-    }
-};
-
-struct MMThunderWave : public MM
-{
-    MMThunderWave() {
-	functions["DetermineAttackFailure"] = &daf;
-    }
-
-    static void daf(int s, int t, BS &b) {
-	if (b.hasType(t, Pokemon::Ground)) {
-	    turn(b,s)["Failed"] = true;
 	}
     }
 };
@@ -1845,11 +1839,13 @@ struct MMEncore : public MM
 	addFunction(poke(b,t), "MovesPossible", "Encore", &msp);
 	addFunction(turn(b,t), "MovePossible", "Encore", &mp);
 	addFunction(poke(b,t), "EndTurn", "Encore", &et);
-	b.sendMoveMessage(33,2,s,0,t,poke(b,t)["LastMoveSuccessfullyUsed"].toInt());
+        b.sendMoveMessage(33,3,s,0,t);
     }
 
     static void et (int s, int, BS &b)
     {
+        if (b.koed(s))
+            return;
     	for (int i = 0; i < 4; i++) {
 	    if (b.move(s,i) == poke(b,s)["EncoresMove"].toInt()) {
 		if (b.poke(s).move(i).PP() <= 0) {
@@ -1929,6 +1925,7 @@ struct MMEndure : public MM
     static void uas(int s, int, BS &b) {
 	turn(b,s)["CannotBeKoed"] = true;
 	addFunction(turn(b,s), "UponOffensiveDamageReceived", "Endure", &uodr);
+        b.sendMoveMessage(35,1,s);
     }
 
     static void uodr(int s, int, BS &b) {
@@ -2009,7 +2006,7 @@ struct MMGravity : public MM
 
     static void uas(int s, int, BS &b) {
 	b.battlelong["Gravity"] = true;
-	b.battlelong["GavityCount"] = 5;
+        b.battlelong["GravityCount"] = 5;
 	b.sendMoveMessage(53,0,s,type(b,s));
         for(int p = BS::Player1; p <= BS::Player2; p++) {
             if (b.isFlying(p)) {
@@ -2021,12 +2018,14 @@ struct MMGravity : public MM
 
     static void et(int s, int, BS &b) {
 	if (b.battlelong.value("Gravity").toBool()) {
-	    int count = b.battlelong["GavityCount"].toInt() - 1;
+            int count = b.battlelong["GravityCount"].toInt() - 1;
 	    if (count <= 0) {
 		b.sendMoveMessage(53,1,s,Pokemon::Psychic);
 		removeFunction(b.battlelong, "EndTurn", "Gravity");
 		b.battlelong["Gravity"] = false;
-	    }
+            } else {
+                b.battlelong["GravityCount"] = count;
+            }
 	}
     }
 };
@@ -2115,6 +2114,7 @@ struct MMGyroBall : public MM
 struct MMWeather : public MM
 {
     MMWeather() {
+        functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -2128,9 +2128,15 @@ struct MMWeather : public MM
     };
     static WI weather_items;
 
+    static void daf(int s, int, BS &b) {
+        if (b.weather() == turn(b,s)["Weather_Arg"].toInt())
+            turn(b,s)["Failed"] = true;
+    }
+
     static void uas(int s, int, BS &b) {
 	int weather = turn(b,s)["Weather_Arg"].toInt();
 
+        b.sendMoveMessage(57,weather-1,s,type(b,s));
 	if (weather_items.contains(weather) && b.hasWorkingItem(s,weather_items[weather])) {
 	    b.callForth(weather,8);
 	} else {
@@ -2643,7 +2649,7 @@ struct MMMagicCoat : public MM
 
     /* Bounced move that are "special" */
     struct BM : public QSet<int> {
-        BM() { (*this) << Attract << Block << GastroAcid << LeechSeed << MeanLook << SpiderWeb << ThunderWave << WorrySeed << Yawn; }
+        BM() { (*this) << Attract << Block << GastroAcid << LeechSeed << MeanLook << SpiderWeb << WorrySeed << Yawn; }
     };
 
     static BM bounced_moves;
@@ -3091,7 +3097,7 @@ struct MMSafeGuard : public MM
 
     static void uas(int s, int, BS &b) {
 	b.sendMoveMessage(109,0,s,type(b,s));
-	turn(b,s)["SafeGuardCount"] = 5;
+        team(b,s)["SafeGuardCount"] = 5;
 	addFunction(team(b,s), "EndTurn", "SafeGuard", &et);
     }
 
@@ -3228,6 +3234,7 @@ struct MMSnatch : public MM
 	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Snatch", &dgaf);
 	b.battlelong["Snatcher"] = s;
 	turn(b,s)["Snatcher"] = true;
+        b.sendMoveMessage(118,1,s,type(b,s));
     }
 
     /*	* All self-affecting stat ups (including Belly Drum and Defense Curl, but excluding Curse)
@@ -3448,7 +3455,13 @@ struct MMTailWind : public MM {
 
 struct MMTorment : public MM {
     MMTorment() {
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (poke(b,t).value("Tormented").toBool())
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas (int s, int t, BS &b) {
@@ -3743,6 +3756,8 @@ struct MMOutrage : public MM
     static void aas(int s, int, BS &b) {
         if (b.turn() >= poke(b,s)["OutrageUntil"].toInt()) {
             removeFunction(poke(b,s), "TurnSettings", "Outrage");
+            poke(b,s).remove("OutrageUntil");
+            poke(b,s).remove("OutrageMove");
             b.sendMoveMessage(93,0,s,type(b,s));
             b.inflictConfused(s);
         }
@@ -4178,7 +4193,7 @@ void MoveEffect::init()
     REGISTER_MOVE(117, SmellingSalt);
     REGISTER_MOVE(118, Snatch);
     REGISTER_MOVE(119, SolarBeam);
-    REGISTER_MOVE(120, ThunderWave);
+    //Free move
     REGISTER_MOVE(121, Spikes);
     REGISTER_MOVE(122, SpitUp);
     REGISTER_MOVE(123, Spite);

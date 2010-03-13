@@ -1,4 +1,4 @@
-#156 is free
+#120,156 is free
 1#leech
 
 
@@ -422,7 +422,7 @@
 93#thrash
 152#Thunder
 
-120#thunder wave
+
 
 
 

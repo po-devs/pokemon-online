@@ -97,17 +97,17 @@ public:
     void changeHp(int player, int newHp);
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player);
-    void sendPoke(int player, int poke);
+    void sendPoke(int player, int poke, bool silent = false);
     void callEntryEffects(int player);
     void koPoke(int player, int source, bool straightattack = false);
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
-    void gainStatMod(int player, int stat, int bonus);
+    void gainStatMod(int player, int stat, int bonus, bool tell = true);
     void loseStatMod(int player, int stat, int malus, int attacker);
     bool canSendPreventMessage(int defender, int attacker);
     void preventStatMod(int player, int attacker);
     /* Does not do extra operations,just a setter */
-    void changeStatus(int player, int status);
+    void changeStatus(int player, int status, bool tell = true);
     void changeStatus(int team, int poke, int status);
     void healStatus(int player, int status);
     void healConfused(int player);
@@ -115,7 +115,7 @@ public:
     bool canGetStatus(int player, int status);
     void inflictStatus(int player, int Status, int inflicter);
     bool isConfused(int player);
-    void inflictConfused(int player);
+    void inflictConfused(int player, bool tell=true);
     void inflictConfusedDamage(int player);
     void inflictRecoil(int source, int target);
     void inflictDamage(int player, int damage, int source, bool straightattack = false);
@@ -223,7 +223,6 @@ public:
 
     enum WeatherM
     {
-	StartWeather,
 	ContinueWeather,
 	EndWeather,
 	HurtWeather
@@ -254,8 +253,8 @@ public:
 
     void sendMoveMessage(int move, int part=0, int src=0, int type=0, int foe=-1, int other=-1, const QString &q="");
     void sendAbMessage(int move, int part=0, int src=0, int foe=-1, int type=0, int other=-1);
-    void sendItemMessage(int item, int src, int part = 0, int foe = -1, int berry = -1);
-    void sendBerryMessage(int item, int src, int part = 0, int foe = -1, int berry = -1);
+    void sendItemMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
+    void sendBerryMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
     /* Here C++0x would make it so much better looking with variadic templates! */
     void notify(int player, int command, int who);
     template<class T>
