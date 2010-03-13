@@ -1,5 +1,6 @@
 #include "pokemonstructs.h"
 #include "pokemoninfo.h"
+#include "movesetchecker.h"
 
 #ifdef CLIENT_SIDE
 #include <QDomDocument>
@@ -161,23 +162,43 @@ PokePersonal::PokePersonal()
     reset();
 }
 
-void PokePersonal::setMove(int moveNum, int moveSlot, bool check)
+void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
 {
     if (moveNum == move(moveSlot))
         return;
     if (check) {
         if (moveNum != 0 && hasMove(moveNum))
-            throw QObject::tr("%1 already has move %2.").arg(PokemonInfo::Name(num()), MoveInfo::Name(moveNum));
+            throw QObject::tr("%1 already has move %2.").arg(nickname(), MoveInfo::Name(moveNum));
     }
 
     m_moves[moveSlot] = moveNum;
+
+    if (check) {
+        QSet<int> invalid_moves;
+        if (!MoveSetChecker::isValid(num(),m_moves[0],m_moves[1],m_moves[2],m_moves[3],&invalid_moves)) {
+            m_moves[moveSlot] =0;
+            if (invalid_moves.size() == 1)
+                throw QObject::tr("%1 can't learn %2 with moves from the third gen.").arg(nickname()).arg(MoveInfo::Name(*invalid_moves.begin()));
+            else {
+                QString s;
+                bool comma(false);
+                foreach(int move, invalid_moves) {
+                    if (comma)
+                        s += ", ";
+                    comma = true;
+                    s += MoveInfo::Name(move);
+                }
+                throw QObject::tr("%1 can't learn the combination of %2.").arg(nickname(), s);
+            }
+        }
+    }
 }
 
-int PokePersonal::addMove(int moveNum)
+int PokePersonal::addMove(int moveNum, bool check) throw(QString)
 {
     for (int i = 0; i < 4; i++)
         if (move(i) == 0) {
-            setMove(moveNum, i);
+            setMove(moveNum, i, check);
             return i;
         }
     throw QObject::tr("No free move available!");
@@ -244,6 +265,10 @@ void PokePersonal::controlEVs(int stat)
 
 void PokePersonal::setEV(int stat, quint8 val)
 {
+    if (num() == 493 && val > 100) //Arceus
+    {
+        val = 100;
+    }
     m_EVs[stat] = val;
     controlEVs(stat);
 }

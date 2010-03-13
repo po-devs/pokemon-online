@@ -11,6 +11,7 @@
 #include "antidos.h"
 #include "serverconfig.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/movesetchecker.h"
 #include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
 
@@ -55,15 +56,16 @@ Server::Server(quint16 port)
 
     printLine(tr("Starting loading pokemon database..."));
 
-    PokemonInfo::init("db/");
-    ItemInfo::init("db/");
-    MoveInfo::init("db/");
-    TypeInfo::init("db/");
-    NatureInfo::init("db/");
-    CategoryInfo::init("db/");
-    AbilityInfo::init("db/");
-    HiddenPowerInfo::init("db/");
-    StatInfo::init("db/");
+    PokemonInfo::init("db/pokes/");
+    MoveSetChecker::init("db/pokes/");
+    ItemInfo::init("db/items/");
+    MoveInfo::init("db/moves/");
+    TypeInfo::init("db/types/");
+    NatureInfo::init("db/natures/");
+    CategoryInfo::init("db/categories/");
+    AbilityInfo::init("db/abilities/");
+    HiddenPowerInfo::init("db/types/");
+    StatInfo::init("db/status/");
 
     printLine(tr("Pokémon database loaded"));
 
@@ -398,7 +400,7 @@ void Server::loggedIn(int id, const QString &name)
         sendPlayersList(id);
         sendLogin(id);
 
-        sendMessage(id, tr("Welcome Message: The updates are now available at www.pokeymon-online.com. Report any bug on the forums."));
+        sendMessage(id, tr("Welcome Message: The updates are now available at www.pokemon-online.eu. Report any bug on the forums."));
 
         myengine->afterLogIn(id);
     } else { /* if already logged in */

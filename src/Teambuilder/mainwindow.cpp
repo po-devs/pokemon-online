@@ -4,6 +4,7 @@
 #include "teambuilder.h"
 #include "client.h"
 #include "serverchoice.h"
+#include "../PokemonInfo/movesetchecker.h"
 #include <QStyleFactory>
 
 MainEngine::MainEngine() : displayer(0)
@@ -40,16 +41,17 @@ MainEngine::MainEngine() : displayer(0)
 
     //trainerTeam()->setTrainerNick(settings.value("trainer_name").toString());
 
-    PokemonInfo::init("db/");
-    ItemInfo::init("db/");
-    MoveInfo::init("db/");
-    TypeInfo::init("db/");
-    NatureInfo::init("db/");
-    CategoryInfo::init("db/");
-    AbilityInfo::init("db/");
-    GenderInfo::init("db/");
-    HiddenPowerInfo::init("db/");
-    StatInfo::init("db/");
+    PokemonInfo::init("db/pokes/");
+    MoveSetChecker::init("db/pokes/");
+    ItemInfo::init("db/items/");
+    MoveInfo::init("db/moves/");
+    TypeInfo::init("db/types/");
+    NatureInfo::init("db/natures/");
+    CategoryInfo::init("db/categories/");
+    AbilityInfo::init("db/abilities/");
+    GenderInfo::init("db/genders/");
+    HiddenPowerInfo::init("db/types/");
+    StatInfo::init("db/status/");
 
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());

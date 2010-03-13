@@ -56,6 +56,7 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvance
 
     mylayout->addLayout(layout);
 
+    /* Buttons of pokemons / trainers */
     m_trainer = new QPushButton("&Trainer", this);
     m_trainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_trainer->setCheckable(true);
@@ -80,13 +81,16 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvance
 
     layout->setSpacing(0);
 
+    /* Starting doing the "body" */
     m_body = new QStackedWidget(this);
 
     mylayout->addWidget(m_body);
 
+    /* Trainer body */
     m_trainerBody = new TB_TrainerBody(this);
     m_body->addWidget(m_trainerBody);
 
+    /* Pokémons bodies */
     for (int i = 0; i < 6; i++)
     {
 	m_pbody[i] = new TB_PokemonBody(&team()->poke(i));
@@ -101,13 +105,6 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvance
     connectAll();
 
     updateTeam();
-
-    QPalette p = palette();
-    p.setColor(QPalette::Base, Qt::black);
-    p.setColor(QPalette::AlternateBase,Qt::black );
-    p.setColor(QPalette::Window,Qt::black );
-    p.setColor(QPalette::Foreground,Qt::black);
-    setPalette(p);
 }
 
 void TeamBuilder::connectAll()
@@ -566,7 +563,8 @@ void TB_PokemonBody::initPokemons()
     pokechoice->verticalHeader()->hide();
     pokechoice->horizontalHeader()->hide();
     pokechoice->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
-    pokechoice->setFixedSize(200, 120);
+    pokechoice->setMaximumHeight(120);
+    pokechoice->setMaximumWidth(200);
     pokechoice->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     /* Adding the poke names */
@@ -608,7 +606,6 @@ void TB_PokemonBody::initMoves()
     movechoice->horizontalHeader()->setResizeMode(PP, QHeaderView::ResizeToContents);
     movechoice->horizontalHeader()->setResizeMode(Pow, QHeaderView::ResizeToContents);
     movechoice->horizontalHeader()->setResizeMode(Acc, QHeaderView::ResizeToContents);
-    movechoice->setMinimumHeight(250);
     movechoice->setMidLineWidth(0);
     movechoice->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -633,7 +630,8 @@ void TB_PokemonBody::initMoves()
 	mapper->setMapping(completer, i);
 	mapper->setMapping(m_moves[i], i);
 	connect(completer, SIGNAL(activated(QString)), mapper, SLOT(map()));
-        connect(m_moves[i], SIGNAL(textChanged(QString)), mapper, SLOT(map()));
+        connect(m_moves[i], SIGNAL(returnPressed()), mapper, SLOT(map()));
+        connect(m_moves[i], SIGNAL(editingFinished()), mapper, SLOT(map()));
     }
 
     connect(mapper, SIGNAL(mapped(int)), SLOT(moveCellActivated(int)));
@@ -680,6 +678,7 @@ void TB_PokemonBody::updateLevel()
 void TB_PokemonBody::updateNum()
 {
     configureMoves();
+
     updateMoves();
     updateLevel();
     updateImage();
@@ -779,7 +778,7 @@ void TB_PokemonBody::setNick(const QString &nick)
 void TB_PokemonBody::setMove(int movenum, int moveslot)
 {
     try {
-	poke()->setMove(movenum, moveslot);
+        poke()->setMove(movenum, moveslot,true);
     }
     catch (QString &expr)
     {
@@ -794,7 +793,7 @@ void TB_PokemonBody::setMove(int movenum, int moveslot)
 void TB_PokemonBody::setMove(int movenum)
 {
     try {
-	int slot = poke()->addMove(movenum);
+        int slot = poke()->addMove(movenum,true);
 	m_moves[slot]->setText(MoveInfo::Name(movenum));
     } catch (QString &expr)
     {

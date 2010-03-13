@@ -1,0 +1,493 @@
+
+Monster
+Monster
+Monster
+Monster
+Monster
+Monster
+Monster
+Monster
+Monster
+Bug
+Bug
+Bug
+Bug
+Bug
+Bug
+Flying
+Flying
+Flying
+Ground
+Ground
+Flying
+Flying
+Ground
+Ground
+Ground
+Ground
+Ground
+Ground
+Monster
+
+
+Monster
+Monster
+Monster
+Fairy
+Fairy
+Ground
+Ground
+Fairy
+Fairy
+Flying
+Flying
+Plant
+Plant
+Plant
+Bug
+Bug
+Bug
+Bug
+Ground
+Ground
+Ground
+Ground
+Water 1
+Water 1
+Ground
+Ground
+Ground
+Ground
+Water 1
+Water 1
+Water 1
+HumanShape
+HumanShape
+HumanShape
+HumanShape
+HumanShape
+HumanShape
+Plant
+Plant
+Plant
+Water 3
+Water 3
+Mineral
+Mineral
+Mineral
+Ground
+Ground
+Monster
+Monster
+Mineral
+Mineral
+Flying
+Flying
+Flying
+Water 1
+Water 1
+Indeterminate
+Indeterminate
+Water 3
+Water 3
+Indeterminate
+Indeterminate
+Indeterminate
+Mineral
+HumanShape
+HumanShape
+Water 3
+Water 3
+Mineral
+Mineral
+Plant
+Plant
+Monster
+Monster
+HumanShape
+HumanShape
+Monster
+Indeterminate
+Indeterminate
+Monster
+Monster
+Fairy
+Plant
+Monster
+Water 1
+Water 1
+Water 2
+Water 2
+Water 3
+Water 3
+HumanShape
+Bug
+HumanShape
+HumanShape
+HumanShape
+Bug
+Ground
+Water 2
+Water 2
+Monster
+Ditto
+Ground
+Ground
+Ground
+Ground
+Mineral
+Water 1
+Water 1
+Water 1
+Water 1
+Flying
+Monster
+
+
+
+Water 1
+Water 1
+Water 1
+
+
+Monster
+Monster
+Monster
+Ground
+Ground
+Ground
+Monster
+Monster
+Monster
+Ground
+Ground
+Flying
+Flying
+Bug
+Bug
+Bug
+Bug
+Flying
+Water 2
+Water 2
+
+
+
+
+Flying
+Flying
+Flying
+Monster
+Monster
+Monster
+Plant
+Water 1
+Water 1
+Mineral
+Water 1
+Fairy
+Fairy
+Fairy
+Ground
+Plant
+Plant
+Bug
+Water 1
+Water 1
+Ground
+Ground
+Flying
+Monster
+Indeterminate
+
+Indeterminate
+Ground
+Bug
+Bug
+Ground
+Bug
+Mineral
+Ground
+Ground
+Water 2
+Bug
+Bug
+Bug
+Ground
+Ground
+Ground
+Indeterminate
+Indeterminate
+Ground
+Ground
+Water 1
+Water 1
+Water 1
+Water 1
+Water 1
+Flying
+Ground
+Ground
+Water 1
+Ground
+Ground
+Mineral
+Ground
+Ground
+
+HumanShape
+
+
+
+Ground
+Fairy
+
+
+
+Monster
+Monster
+Monster
+
+
+
+Monster
+Monster
+Monster
+Ground
+Ground
+Ground
+Monster
+Monster
+Monster
+Ground
+Ground
+Ground
+Ground
+Bug
+Bug
+Bug
+Bug
+Bug
+Water 1
+Water 1
+Water 1
+Ground
+Ground
+Ground
+Flying
+Flying
+Water 1
+Water 1
+Indeterminate
+Indeterminate
+Indeterminate
+Water 1
+Water 1
+Fairy
+Fairy
+Ground
+Ground
+Ground
+Bug
+Bug
+Mineral
+Monster
+Monster
+Monster
+HumanShape
+HumanShape
+
+Mineral
+Ground
+Ground
+HumanShape
+Ground
+Monster
+Monster
+Monster
+HumanShape
+HumanShape
+Ground
+Ground
+Fairy
+Fairy
+Bug
+Bug
+Fairy
+Indeterminate
+Indeterminate
+Water 2
+Water 2
+Ground
+Ground
+Ground
+Ground
+Ground
+Ground
+Ground
+Ground
+Bug
+Bug
+Bug
+Plant
+Plant
+Flying
+Flying
+Ground
+Ground
+Mineral
+Mineral
+Water 2
+Water 2
+Water 1
+Water 1
+Mineral
+Mineral
+Water 3
+Water 3
+Water 3
+Water 3
+Water 1
+Water 1
+Fairy
+Ground
+Indeterminate
+Indeterminate
+Indeterminate
+Indeterminate
+Monster
+Indeterminate
+Ground
+
+Fairy
+Fairy
+Water 1
+Water 1
+Water 1
+Water 1
+Water 1
+Water 1
+Water 1
+Water 2
+Dragon
+Dragon
+Dragon
+Mineral
+Mineral
+Mineral
+
+
+
+
+
+
+
+
+
+
+Monster
+Monster
+Monster
+Ground
+Ground
+Ground
+Water 1
+Water 1
+Water 1
+Flying
+Flying
+Flying
+Water 1
+Water 1
+Bug
+Bug
+Ground
+Ground
+Ground
+
+Fairy
+Monster
+Monster
+Monster
+Monster
+Bug
+Bug
+Bug
+Bug
+Bug
+Ground
+Water 1
+Water 1
+Fairy
+Fairy
+Water 1
+Water 1
+Ground
+Indeterminate
+Indeterminate
+Ground
+Ground
+Indeterminate
+Flying
+Ground
+Ground
+
+Ground
+Ground
+Mineral
+Mineral
+
+
+
+Flying
+Indeterminate
+Monster
+Monster
+Monster
+
+
+Ground
+Ground
+Ground
+Bug
+Bug
+HumanShape
+HumanShape
+Plant
+Water 2
+Water 2
+
+Monster
+Monster
+Ground
+Mineral
+Monster
+Monster
+Plant
+HumanShape
+HumanShape
+Flying
+Bug
+Ground
+Ground
+Bug
+Ground
+Mineral
+Indeterminate
+Mineral
+Indeterminate
+Fairy
+Indeterminate
+
+
+
+
+
+
+
+
+
+Water 1
+Water 1
+
+

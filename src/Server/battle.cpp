@@ -687,13 +687,13 @@ void BattleSituation::spectatingChat(int id, const QString &str)
 
 /* Battle functions! Yeah! */
 
-void BattleSituation::sendPoke(int player, int pok)
+void BattleSituation::sendPoke(int player, int pok, bool silent)
 {
     koedPokes.remove(player);
     changeCurrentPoke(player, pok);
 
-    notify(player, SendOut, player, ypoke(player, pok));
-    notify(AllButPlayer, SendOut, player, opoke(player, pok));
+    notify(player, SendOut, player, silent, ypoke(player, pok));
+    notify(AllButPlayer, SendOut, player, silent, quint8(pok), opoke(player, pok));
 
     /* reset temporary variables */
     pokelong[player].clear();
@@ -1029,7 +1029,7 @@ void BattleSituation::testFlinch(int player, int target)
 bool BattleSituation::testFail(int player)
 {
     if (turnlong[player]["Failed"].toBool() == true) {
-	if (turnlong[player]["FailingMessage"].toBool() == true) {
+        if (turnlong[player]["FailingMessage"].toBool()) {
 	    notify(All, Failed, player);
 	}
 	return true;
@@ -1279,7 +1279,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    if (!koed(player))
 		calleffects(player, target, "AfterAttackSuccessful");
         } else {
-	    callpeffects(player, target, "DetermineAttackFailure");
+            callpeffects(player, target, "DetermineAttackFailure");
 	    if (testFail(player))
 		continue;
 	    callbeffects(player, target, "DetermineGeneralAttackFailure");
@@ -1288,6 +1288,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    calleffects(player, target, "DetermineAttackFailure");
 	    if (testFail(player))
 		continue;
+            int type = turnlong[player]["Type"].toInt(); /* move type */
+            if ( (type == Type::Electric && hasType(target, Type::Ground)) ||
+                 (type == Type::Poison && (hasType(target, Type::Steel) || hasType(target, Type::Poison))) ||
+                 (type == Type::Fire && hasType(target, Type::Fire)) ) {
+                notify(All, Failed, player);
+                continue;
+            }
 
 	    calleffects(player, target, "BeforeHitting");
 
@@ -1521,13 +1528,14 @@ void BattleSituation::healConfused(int player)
     pokelong[player]["Confused"] = false;
 }
 
-void BattleSituation::inflictConfused(int player)
+void BattleSituation::inflictConfused(int player, bool tell)
 {
     //OwnTempo
     if (!pokelong[player]["Confused"].toBool() && !hasWorkingAbility(player,Ability::OwnTempo)) {
 	pokelong[player]["Confused"] = true;
         pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 1;
-	notify(All, StatusChange, player, qint8(-1));
+        if (tell)
+            notify(All, StatusChange, player, qint8(-1));
 
         callieffects(player, player,"AfterStatusChange");
     }
@@ -1621,7 +1629,6 @@ void BattleSituation::callForth(int weather, int turns)
 	battlelong["WeatherCount"] = turns;
 	notify(All, WeatherMessage, Player1, qint8(ContinueWeather), qint8(weather));
     } else {
-	notify(All, WeatherMessage, Player1, qint8(StartWeather), qint8(weather));
 	battlelong["WeatherCount"] = turns;
 	battlelong["Weather"] = weather;
         for (int i = Player1; i <= Player2; i++) {
@@ -1723,7 +1730,7 @@ bool BattleSituation::hasSubstitute(int player)
     return !koed(player) && (pokelong[player].value("Substitute").toBool() || turnlong[player].value("HadSubstitute").toBool());
 }
 
-void BattleSituation::changeStatus(int player, int status)
+void BattleSituation::changeStatus(int player, int status, bool tell)
 {
     if (poke(player).status() == status) {
 	return;
@@ -1739,7 +1746,8 @@ void BattleSituation::changeStatus(int player, int status)
         currentForcedSleepPoke[player] = -1;
     }
 
-    notify(All, StatusChange, player, qint8(status));
+    if (tell)
+        notify(All, StatusChange, player, qint8(status));
     notify(All, AbsStatusChange, player, qint8(currentPoke(player)), qint8(status));
     poke(player).status() = status;
     if (status == Pokemon::Asleep) {
@@ -1766,12 +1774,13 @@ void BattleSituation::changeStatus(int team, int poke, int status)
     }
 }
 
-void BattleSituation::gainStatMod(int player, int stat, int bonus)
+void BattleSituation::gainStatMod(int player, int stat, int bonus, bool tell)
 {
     QString path = tr("Boost%1").arg(stat);
     int boost = pokelong[player][path].toInt();
     if (boost < 6) {
-	notify(All, StatChange, player, qint8(stat), qint8(bonus));
+        if (tell)
+            notify(All, StatChange, player, qint8(stat), qint8(bonus));
 	changeStatMod(player, stat, std::min(boost+bonus, 6));
     }
 }
@@ -2295,19 +2304,21 @@ void BattleSituation::sendAbMessage(int move, int part, int src, int foe, int ty
 
 
 
-void BattleSituation::sendItemMessage(int move, int src, int part, int foe, int berry)
+void BattleSituation::sendItemMessage(int move, int src, int part, int foe, int berry, int stat)
 {
     if (foe ==-1)
 	notify(All, ItemMessage, src, quint16(move), uchar(part));
     else if (berry == -1)
 	notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe));
-    else
+    else if (stat == -1)
         notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry));
+    else
+        notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry), qint8(stat));
 }
 
-void BattleSituation::sendBerryMessage(int move, int src, int part, int foe, int berry)
+void BattleSituation::sendBerryMessage(int move, int src, int part, int foe, int berry, int stat)
 {
-    sendItemMessage(move+8000,src,part,foe,berry);
+    sendItemMessage(move+8000,src,part,foe,berry,stat);
 }
 
 

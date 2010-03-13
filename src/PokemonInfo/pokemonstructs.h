@@ -1054,8 +1054,8 @@ public:
     /* resets everything to default values */
     void reset();
 
-    void setMove(int moveNum, int moveSlot, bool check=true);
-    int addMove(int moveNum);
+    void setMove(int moveNum, int moveSlot, bool check=false) throw (QString);
+    int addMove(int moveNum, bool check = false) throw (QString);
 
     bool hasMove(int moveNum);
 

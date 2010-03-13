@@ -58,7 +58,7 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
 
     relay().connectTo(url, 5080);
 
-    QFile f("db/chat_colors.txt");
+    QFile f("db/client/chat_colors.txt");
     f.open(QIODevice::ReadOnly);
 
     QStringList colors = QString::fromUtf8(f.readAll()).split('\n');
@@ -71,7 +71,7 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
         }
     }
 
-    statusIcons << QIcon("db/Available.png") << QIcon("db/Away.png") << QIcon("db/Battling.png");
+    statusIcons << QIcon("db/client/Available.png") << QIcon("db/client/Away.png") << QIcon("db/client/Battling.png");
 }
 
 int Client::ownAuth() const

@@ -232,6 +232,11 @@ struct AMDrizzle : public AM {
     }
 
     static void us (int s, int , BS &b) {
+        int w = poke(b,s)["AbilityArg"].toInt();
+        if (w != b.weather()) {
+            int type = (w == BS::Hail ? Type::Ice : (w == BS::Sunny ? Type::Fire : (w == BS::SandStorm ? Type::Rock : Type::Water)));
+            b.sendAbMessage(14,w-1,s,s,type);
+        }
         b.callForth(poke(b,s)["AbilityArg"].toInt(), -1);
     }
 };
@@ -259,10 +264,10 @@ struct AMDrySkin : public AM {
 
     static void ws (int s, int , BS &b) {
         if (b.isWeatherWorking(BattleSituation::Rain)) {
-            b.sendAbMessage(15,1,s,s,Pokemon::Water);
+            b.sendAbMessage(15,0,s,s,Pokemon::Water);
             b.healLife(s, b.poke(s).totalLifePoints()/8);
         } else if (b.isWeatherWorking(BattleSituation::Sunny)) {
-            b.sendAbMessage(15,2,s,s,Pokemon::Fire);
+            b.sendAbMessage(15,1,s,s,Pokemon::Fire);
             b.inflictDamage(s, b.poke(s).totalLifePoints()/8, s, false);
         }
     }
@@ -917,7 +922,7 @@ struct AMTrace : public AM {
 
         //Multitype
         if (!b.koed(t) && !b.hasWorkingAbility(t,Ability::Multitype)) {
-            b.sendAbMessage(66,0,s,t,0,b.poke(t).ability());
+            b.sendAbMessage(66,0,s,t,0,b.ability(t));
             b.acquireAbility(s, b.ability(t));
         }
     }

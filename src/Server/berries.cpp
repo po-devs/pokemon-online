@@ -172,11 +172,14 @@ struct BMPinchStat : public BMPinch
     }
 
     static void ahpc(int s, int, BS &b) {
+        int berry = b.poke(s).item();
+
         if (!testpinch(s, s, b,3))
             return;
 
         int arg = poke(b,s)["ItemArg"].toInt();
-        b.gainStatMod(s, arg, 1);
+        b.sendBerryMessage(7,s,0,s,berry, arg);
+        b.gainStatMod(s, arg, 1,false);
     }
 };
 
@@ -215,10 +218,14 @@ struct BMStarf : public BMPinch
     }
 
     static void ahpc(int s, int, BS &b) {
+        int berry = b.poke(s).item();
+
         if (!testpinch(s, s, b,4))
             return;
 
-        b.gainStatMod(s, (true_rand()%5) +1, 2);
+        int stat = (true_rand()%5) +1;
+        b.gainStatMod(s, stat, 2,false);
+        b.sendBerryMessage(7,s,0,s,berry, stat);
     }
 };
 

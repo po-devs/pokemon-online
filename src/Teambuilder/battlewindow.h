@@ -26,13 +26,6 @@ public:
 
     BattleStats mystats;
 
-    /* Current poke for ourself */
-    int currentIndex;
-    int lastIndex;
-    int validIndex() const {
-        return currentIndex == -1 ? lastIndex : currentIndex;
-    }
-
     PROPERTY(PokeBattle, tempPoke);
 };
 
@@ -66,7 +59,7 @@ public:
     };
 
     void switchToNaught(int spot);
-    void switchTo(int pokezone);
+    void switchTo(int pokezone, bool forced = false);
 
     /* Disable / enable buttons */
     void updateChoices();
@@ -112,7 +105,7 @@ public:
 
 protected:
     const PokeBattle &mypoke() const {return info().currentPoke(); }
-    const ShallowBattlePoke &foe() const {return info().pokes[Opponent]; }
+    const ShallowBattlePoke &foe() const {return info().currentShallow(Opponent); }
 };
 
 

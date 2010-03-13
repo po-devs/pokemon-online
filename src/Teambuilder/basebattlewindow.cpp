@@ -17,6 +17,8 @@ BaseBattleInfo::BaseBattleInfo(const QString &me, const QString &opp)
     time[1] = 5*60;
     ticking[0] = false;
     ticking[1] = false;
+    currentIndex[0] = 0;
+    currentIndex[1] = 0;
 }
 
 BaseBattleWindow::BaseBattleWindow(const QString &me, const QString &opponent)
@@ -65,7 +67,7 @@ QString BaseBattleWindow::nick(int player) const
 
 QString BaseBattleWindow::rnick(int player) const
 {
-    return info().pokes[player].nick();
+    return info().currentShallow(player).nick();
 }
 
 void BaseBattleWindow::closeEvent(QCloseEvent *)
@@ -108,13 +110,17 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
     {
     case SendOut:
         {
-            in >> info().pokes[spot];
+            bool silent;
+            in >> silent;
+            in >> info().currentIndex[spot];
+            in >> info().currentShallow(spot);
             info().pokeAlive[spot] = true;
             info().sub[spot] = false;
             info().specialSprite[spot] = 0;
             mydisplay->updatePoke(spot);
 
-            printLine(tr("%1 sent out %2!").arg(name(spot), rnick(spot)));
+            if (!silent)
+                printLine(tr("%1 sent out %2!").arg(name(spot), rnick(spot)));
 
             break;
         }
@@ -142,7 +148,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         {
             quint16 newHp;
             in >> newHp;
-            info().pokes[spot].lifePercent() = newHp;
+            info().currentShallow(spot).lifePercent() = newHp;
             mydisplay->updatePoke(spot);
             break;
         }
@@ -203,14 +209,27 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             } else if (status == -1) {
                 printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), TypeInfo::Color(Type::Ghost).name()));
             }
-            if (status != -1) {
-                info().pokes[spot].status() = status;
-                mydisplay->updatePoke(spot);
-            }
             break;
         }
+    case AbsStatusChange:
+        {
+        qint8 poke, status;
+        in >> poke >> status;
+
+        if (poke < 0 || poke >= 6)
+            break;
+
+        if (status != -1) {
+            info().currentShallow(spot).status() = status;
+            if (poke == info().currentIndex[spot])
+                mydisplay->updatePoke(spot);
+        }
+        mydisplay->changeStatus(spot,poke,status);
+        break;
+    }
     case AlreadyStatusMessage:
-        printHtml(toColor(tr("%1 is already %2!").arg(tu(nick(spot)), StatInfo::Status(info().pokes[spot].status())), StatInfo::StatusColor(info().pokes[spot].status())));
+        printHtml(toColor(tr("%1 is already %2!").arg(tu(nick(spot)), StatInfo::Status(info().currentShallow(spot).status())),
+                          StatInfo::StatusColor(info().currentShallow(spot).status())));
         break;
     case StatusMessage:
         {
@@ -309,9 +328,11 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             quint16 item=0;
             uchar part=0;
             qint8 foe = 0;
+            qint8 other=0;
             qint16 berry = 0;
-            in >> item >> part >> foe >> berry;
+            in >> item >> part >> foe >> berry >> other;
             QString mess = ItemInfo::Message(item, part);
+            mess.replace("%st", StatInfo::Stat(other));
             mess.replace("%s", nick(spot));
             mess.replace("%f", nick(!spot));
             mess.replace("%i", ItemInfo::Name(berry));
@@ -332,32 +353,25 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                 break;
             QColor c = (weather == Hail ? TypeInfo::Color(Type::Ice) : (weather == Sunny ? TypeInfo::Color(Type::Fire) : (weather == SandStorm ? TypeInfo::Color(Type::Rock) : TypeInfo::Color(Type::Water))));
             switch(wstatus) {
-     case EndWeather:
+             case EndWeather:
                 switch(weather) {
-                case Hail: printHtml(toColor(tr("The hail stopped!"),c)); break;
-                case SandStorm: printHtml(toColor(tr("The sandstorm stopped!"),c)); break;
+                case Hail: printHtml(toColor(tr("The hail subsided!"),c)); break;
+                case SandStorm: printHtml(toColor(tr("The sandstorm subsided!"),c)); break;
                 case Sunny: printHtml(toColor(tr("The sunlight faded!"),c)); break;
                 case Rain: printHtml(toColor(tr("The rain stopped!"),c)); break;
-                } break;
-                case HurtWeather:
+             } break;
+             case HurtWeather:
                 switch(weather) {
                 case Hail: printHtml(toColor(tr("%1 is buffeted by the hail!").arg(tu(nick(spot))),c)); break;
                 case SandStorm: printHtml(toColor(tr("%1 is buffeted by the sandstorm!").arg(tu(nick(spot))),c)); break;
-                } break;
-                case StartWeather:
-                switch(weather) {
-                case Hail: printHtml(toColor(tr("A hailstorm whipped up!"),c)); break;
-                case SandStorm: printHtml(toColor(tr("A sandstorm whipped up!"),c)); break;
-                case Sunny: printHtml(toColor(tr("The sunlight became harsh!"),c)); break;
-                case Rain: printHtml(toColor(tr("It's started to rain!"),c)); break;
-                } break;
-                case ContinueWeather:
+             } break;
+             case ContinueWeather:
                 switch(weather) {
                 case Hail: printHtml(toColor(tr("Hail continues to fall!"),c)); break;
                 case SandStorm: printHtml(toColor(tr("The sandstorm rages!"),c)); break;
                 case Sunny: printHtml(toColor(tr("The sunlight is strong!"),c)); break;
                 case Rain: printHtml(toColor(tr("Rain continues to fall!"),c)); break;
-                } break;
+             } break;
             }
         } break;
     case StraightDamage :
@@ -392,17 +406,6 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         } else {
             printHtml(toColor(escapeHtml(tu(mess)),TypeInfo::Color(type)));
         }
-        break;
-    }
-    case AbsStatusChange:
-        {
-        qint8 poke, status;
-        in >> poke >> status;
-
-        if (poke < 0 || poke >= 6)
-            break;
-
-        mydisplay->changeStatus(spot,poke,status);
         break;
     }
     case Substitute:
@@ -617,7 +620,7 @@ void BaseBattleDisplay::updateTimers()
 void BaseBattleDisplay::updatePoke(int spot)
 {
     if (info().pokeAlive[spot]) {
-        const ShallowBattlePoke &poke = info().pokes[spot];
+        const ShallowBattlePoke &poke = info().currentShallow(spot);
         zone->switchTo(poke, spot, info().sub[spot], info().specialSprite[spot]);
         nick[spot]->setText(tr("%1 Lv.%2").arg(poke.nick()).arg(poke.level()));
         bars[spot]->setValue(poke.lifePercent());
@@ -625,6 +628,12 @@ void BaseBattleDisplay::updatePoke(int spot)
         gender[spot]->setPixmap(GenderInfo::Picture(poke.gender(), true));
         int status = poke.status();
         this->status[spot]->setPixmap(StatInfo::BattleIcon(status));
+
+        if (spot == Myself) {
+            mypokeballs[info().currentIndex[spot]]->setToolTip(tr("%1 lv %2 -- %3%").arg(poke.nick()).arg(poke.level()).arg(poke.lifePercent()));
+        } else {
+            advpokeballs[info().currentIndex[spot]]->setToolTip(tr("%1 lv %2 -- %3%").arg(poke.nick()).arg(poke.level()).arg(poke.lifePercent()));
+        }
     }  else {
         zone->switchToNaught(spot);
         nick[spot]->setText("");
@@ -655,7 +664,7 @@ void BaseBattleDisplay::updateToolTip(int spot)
         stats[i] = stats[i].leftJustified(max, '.', false);
     }
 
-    const ShallowBattlePoke &poke = info().pokes[spot];
+    const ShallowBattlePoke &poke = info().currentShallow(spot);
 
     tooltip += poke.nick() + "\n";
 
