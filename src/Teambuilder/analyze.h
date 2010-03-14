@@ -51,7 +51,8 @@ namespace NetworkCli
         SpectatingBattleChat,
         SpectatingBattleFinished,
         LadderChange,
-        ShowTeamChange
+        ShowTeamChange,
+        VersionControl
     };
 
     enum ProtocolError
@@ -128,6 +129,7 @@ signals:
     void userInfoReceived(const UserInfo &ui);
     void userAliasReceived(const QString &s);
     void banListReceived(const QString &n, const QString &ip);
+    void versionDiff(const QString &a, const QString &b);
 public slots:
     /* slots called by the network */
     void error();

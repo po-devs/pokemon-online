@@ -44,7 +44,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     firstColumn->addWidget(dvs);
     QGridLayout *dvlayout = new QGridLayout(dvs);
     QStringList stats_l;
-    stats_l << "Hit Points" << "Attack" << "Defense" << "Speed" << "Special attack" << "Special defense";
+    stats_l << tr("Hit Points") << tr("Attack") << tr("Defense") << tr("Speed") << tr("Special attack") << tr("Special defense");
 
     for (int i = 0; i < 6; i++)
     {
@@ -71,7 +71,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     levellayout->addWidget(l_lvl);
     levellayout->addWidget(level = new QSpinBox());
     l_lvl->setBuddy(level);
-    level->setRange(2,100);
+    level->setRange(1,100);
     level->setValue(poke()->level());
     level->setAccelerated(true);
     connect(level, SIGNAL(valueChanged(int)), SLOT(changeLevel(int)));
@@ -112,7 +112,28 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     }
     connect(shiny, SIGNAL(toggled(bool)), SLOT(changeShininess(bool)));
 
-	stats_l.clear();
+    QPushButton *bForms = new QPushButton(tr("Alternate Formes"));
+    QMenu *m= new QMenu(bForms);
+
+    if (PokemonInfo::HasForms(poke()->num())) {
+        QList<int> forms = PokemonInfo::Forms(poke()->num());
+
+        foreach(int form, forms) {
+            QAction *ac = m->addAction(PokemonInfo::Name(form),this, SLOT(changeForm()));
+            if (form == poke()->num()) {
+                ac->setCheckable(true);
+                ac->setChecked(true);
+            }
+            ac->setProperty("pokemonid", form);
+        }
+
+        bForms->setMenu(m);
+    } else
+        bForms->setDisabled(true);
+
+    baselayout->addWidget(bForms);
+
+    stats_l.clear();
     stats_l << "HP" << "Att" << "Def" << "Speed" << "Sp Att" << "Sp Def";
 
     hpanddvchoice = new QCompactTable(0, 6);
@@ -133,6 +154,18 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     updateDVs();
     updateHiddenPower();
     updateStats();
+}
+
+void TB_Advanced::changeForm()
+{
+    QAction *ac = (QAction*) sender();
+    if (ac->property("pokemonid").toInt() == poke()->num()) {
+        ac->setChecked(true);
+        return;
+    }
+    else {
+        emit pokeFormChanged(ac->property("pokemonid").toInt());
+    }
 }
 
 void TB_Advanced::changeAbility(bool ab1)

@@ -51,7 +51,8 @@ HEADERS += teambuilder.h \
     pmwindow.h \
     controlpanel.h \
     basebattlewindow.h \
-    ../PokemonInfo/movesetchecker.h
+    ../PokemonInfo/movesetchecker.h \
+    ../Shared/config.h
 LIBS += -L../../bin \
     -lzip
 DEFINES = CLIENT_SIDE

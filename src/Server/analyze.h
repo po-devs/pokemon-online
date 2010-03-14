@@ -48,7 +48,8 @@ namespace NetworkServ
         SpectatingBattleChat,
         SpectatingBattleFinished,
         LadderChange,
-        ShowTeamChange
+        ShowTeamChange,
+        VersionControl
     };
 
     enum ProtocolError

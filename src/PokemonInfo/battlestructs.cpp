@@ -116,6 +116,19 @@ void PokeBattle::init(const PokePersonal &poke)
     QNickValidator v(NULL);
 
     num() = poke.num();
+
+    if (ItemInfo::Exist(poke.item())) {
+        item() = poke.item();
+    } else {
+        item() = 0;
+    }
+
+    if (item() == Item::GriseousOrb && num() != Pokemon::Giratina_O) {
+        item() = 0;
+    } else if (num() == Pokemon::Giratina_O && item() != Item::GriseousOrb) {
+        num() = Pokemon::Giratina;
+    }
+
     nick() = v.validate(poke.nickname()) == QNickValidator::Acceptable ? poke.nickname() : PokemonInfo::Name(num());
     if (GenderInfo::Possible(poke.gender(), p.genderAvail())) {
 	gender() = poke.gender();
@@ -129,11 +142,6 @@ void PokeBattle::init(const PokePersonal &poke)
 	ability() = p.abilities()[0];
     }
 
-    if (ItemInfo::Exist(poke.item())) {
-	item() = poke.item();
-    } else {
-	item() = 0;
-    }
 
     shiny() = poke.shiny();
     level() = std::min(100, std::max(int(poke.level()), 1));
@@ -174,7 +182,7 @@ void PokeBattle::init(const PokePersonal &poke)
     int sum = 0;
     for (int i = 0; i < 6; i++) {
         //Arceus
-        if (num() == 493 && evs()[i] > 100)
+        if (num() == Pokemon::Arceus && evs()[i] > 100)
             evs()[i] = 100;
         sum += evs()[i];
 	if (sum > 510) {

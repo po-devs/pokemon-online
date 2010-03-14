@@ -453,6 +453,15 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             if (type == TempSprite) {
                 in >> info().specialSprite[spot];
                 mydisplay->updatePoke(spot);
+            } else if (type == DefiniteForm)
+            {
+                quint8 poke;
+                quint16 newform;
+                in >> poke >> newform;
+                info().pokemons[spot][poke].num() = newform;
+                if (poke == info().currentIndex[spot]) {
+                    info().currentShallow(spot).num() = newform;
+                }
             }
             break;
         }

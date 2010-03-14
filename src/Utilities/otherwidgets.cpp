@@ -79,7 +79,7 @@ void QImageButton::paintEvent(QPaintEvent *e)
     lastUnderMouse = underMouse();
 }
 
-void QImageButton::mouseMoveEvent(QMouseEvent *e)
+void QImageButton::mouseMoveEvent(QMouseEvent *)
 {
     if (int(underMouse()) == lastUnderMouse)
         return;

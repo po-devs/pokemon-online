@@ -17,6 +17,8 @@ QTSList<int> PokemonInfo::m_Ability2;
 QTSList<PokeBaseStats> PokemonInfo::m_BaseStats;
 QTSList<int> PokemonInfo::m_LevelBalance;
 QList<PokemonMoves> PokemonInfo::m_Moves;
+QHash<int, QList<int> > PokemonInfo::m_AlternateForms;
+int PokemonInfo::m_trueNumberOfPokes;
 
 QString MoveInfo::m_Directory;
 QTSList<QString> MoveInfo::m_Names;
@@ -276,7 +278,7 @@ int PokemonInfo::Stat(int poke, int stat, quint8 basestat, int level, quint8 dv,
 {
     if (stat == Hp) {
         /* Shedinja */
-        if (poke == 292)
+        if (poke == Pokemon::Shedinja)
             return 1;
         else
             return calc_stat(basestat, level, dv, ev) + level + 5;
@@ -315,6 +317,11 @@ void PokemonInfo::init(const QString &dir)
     fill_container_with_file(m_Ability2, path("poke_ability2.txt"));
     fill_container_with_file(m_LevelBalance, path("level_balance.txt"));
     loadBaseStats();
+}
+
+int PokemonInfo::TrueCount()
+{
+    return m_trueNumberOfPokes;
 }
 
 int PokemonInfo::NumberOfPokemons()
@@ -473,8 +480,59 @@ PokeBaseStats PokemonInfo::BaseStats(int pokenum)
 
 void PokemonInfo::loadNames()
 {
-    fill_container_with_file(m_Names, trFile(path("pokemons")));
+    QFile in (trFile(path("pokemons")));
+    in.open(QIODevice::ReadOnly);
+
+    m_trueNumberOfPokes = QString::fromUtf8(in.readLine()).trimmed().toInt();
+    m_Names = QString::fromUtf8(in.readAll()).split('\n');
+
+    in.close();
+    in.setFileName(path("poke_forms.txt"));
+    in.open(QIODevice::ReadOnly);
+    QList<QString> l = QString::fromUtf8(in.readAll()).split('\n');
+    for (int i = 0; i < l.size(); i++) {
+        if (l[i].length() > 0) {
+            bool hidden = l[i].leftRef(2) == "H-";
+            int pok = hidden ? l[i].mid(2).toInt() : l[i].toInt();
+
+            if (!hidden) {
+                if (m_AlternateForms[pok].empty())
+                    m_AlternateForms[pok].push_back(pok);
+                m_AlternateForms[pok].push_back(i);
+            }
+            m_AlternateForms[i].push_back(pok);
+        }
+    }
+
     fill_container_with_file(m_Weights, path("poke_weight.txt"));
+}
+
+bool PokemonInfo::HasForms(int pokenum)
+{
+    return IsForm(pokenum) ? HasForms(OriginalForm(pokenum)) : m_AlternateForms.contains(pokenum);
+}
+
+bool PokemonInfo::IsForm(int pokenum)
+{
+    return pokenum >= TrueCount();
+}
+
+int PokemonInfo::OriginalForm(int pokenum)
+{
+    if (!IsForm(pokenum))
+        return pokenum;
+    else
+        return m_AlternateForms[pokenum].front();
+}
+
+QList<int> PokemonInfo::Forms(int pokenum)
+{
+    if (!HasForms(pokenum))
+        return QList<int>();
+    else if (IsForm(pokenum))
+        return Forms(OriginalForm(pokenum));
+    else
+        return m_AlternateForms[pokenum];
 }
 
 void PokemonInfo::loadMoves()
@@ -1437,7 +1495,7 @@ QPixmap StatInfo::BattleIcon(int status) {
 
 QString StatInfo::Stat(int stat)
 {
-    if (stat >= 0 && stat <= SpDefense)
+    if (stat >= 0 && stat <= Accuracy)
         return m_stats[stat];
     else
         return "";

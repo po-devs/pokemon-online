@@ -1,4 +1,5 @@
-﻿(Pas de Pokémon)
+﻿494
+(Pas de Pokémon)
 Bulbizarre
 Herbizarre
 Florizarre
@@ -497,3 +498,10 @@ Motisma-Feu
 Motisma-Glace
 Motisma-Eau
 Motisma-Vent
+Deoxys-Att
+Deoxys-Def
+Deoxys-Vit
+Cheniselle-Sol
+Cheniselle-Acier
+Shaymin-Vol
+Giratina-Ori

@@ -29,6 +29,17 @@ public:
         QList<T>::detach();
     }
 
+    QTSList<T> (const QList<T> &other) {
+        * ((QList<T>*)(this)) = other;
+        QList<T>::detach();
+    }
+
+    QTSList<T> & operator = (const QList<T> &other) {
+        * ((QList<T>*)(this)) = other;
+        QList<T>::detach();
+        return *this;
+    }
+
     int size() {
         CONCURRENT_FUNCTION;
         return QList<T>::size();

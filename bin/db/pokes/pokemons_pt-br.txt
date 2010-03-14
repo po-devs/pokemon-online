@@ -1,4 +1,5 @@
-﻿(Sem Pokémon)
+﻿494
+(Sem Pokémon)
 Bulbasaur
 Ivysaur
 Venusaur
@@ -497,3 +498,10 @@ Rotom-H
 Rotom-F
 Rotom-W
 Rotom-S
+Deoxys-A
+Deoxys-D
+Deoxys-S
+Wormadam-G
+Wormadam-S
+Shaymin-S
+Giratina-O

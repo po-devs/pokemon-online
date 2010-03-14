@@ -1097,11 +1097,27 @@ struct MMRapidSpin : public MM
     }
 
     static void uas(int s, int, BS &b) {
-	team(b,s).remove("Spikes");
-	team(b,s).remove("ToxicSpikes");
-	team(b,s).remove("StealthRock");
-	poke(b,s).remove("SeedSource");
-	poke(b,s).remove("TrappedBy");
+        if (poke(b,s).contains("SeedSource")) {
+            b.sendMoveMessage(103,1,s);
+            poke(b,s).remove("SeedSource");
+        }
+        if (team(b,s).contains("Spikes")) {
+            b.sendMoveMessage(103,2,s);
+            team(b,s).remove("Spikes");
+        }
+        if (team(b,s).contains("ToxicSpikes")) {
+            b.sendMoveMessage(103,3,s);
+            team(b,s).remove("ToxicSpikes");
+        }
+        if (team(b,s).contains("StealthRock")) {
+            b.sendMoveMessage(103,4,s);
+            team(b,s).remove("StealthRock");
+        }
+        if (poke(b,s).contains("TrappedBy")) {
+            b.sendMoveMessage(103,0,s,0,poke(b,s)["TrappedBy"].toInt(),poke(b,s)["TrappedMove"].toInt());
+            poke(b,s).remove("TrappedBy");
+            poke(b,s).remove("TrappedCount");
+        }
     }
 };
 
@@ -1267,7 +1283,7 @@ struct MMKnockOff : public MM
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && !b.hasWorkingAbility(t, Ability::Multitype)) /* Sticky Hold, MultiType */
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
-            b.poke(t).item() = 0;
+            b.loseItem(t);
 	}
     }
 };
@@ -1281,11 +1297,12 @@ struct MMCovet : public MM
     static void uas(int s,int t,BS &b)
     {
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
-            && !b.hasWorkingAbility(t, Ability::Multitype) && b.poke(s).item() == 0) /* Sticky Hold, MultiType */
+            && !b.hasWorkingAbility(t, Ability::Multitype) && b.poke(s).item() == 0
+                    && b.pokenum(t) != Pokemon::Giratina_O) /* Sticky Hold, MultiType, Giratina_O */
 	{
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
 	    b.acqItem(s, b.poke(t).item());
-            b.poke(t).item() = 0;
+            b.loseItem(t);
 	}
     }
 };
@@ -1299,7 +1316,8 @@ struct MMSwitcheroo : public MM
 
     static void daf(int s, int t, BS &b) {
         if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
-            || b.hasWorkingAbility(t, Ability::Multitype) ) /* Sticky Hold, MultiType */
+            || b.hasWorkingAbility(t, Ability::Multitype) || b.pokenum(s) == Pokemon::Giratina_O || b.pokenum(t) == Pokemon::Giratina_O )
+            /* Sticky Hold, MultiType, Giratina-O */
 	{
 	    turn(b,s)["Failed"] = true;
 	}
@@ -1500,7 +1518,8 @@ struct MMBind : public MM
             if (count <= 0) {
                 poke(b,s).remove("TrappedBy");
                 removeFunction(poke(b,s),"EndTurn", "Bind");
-                b.sendMoveMessage(10,1,s,MoveInfo::Type(move),s,move);
+                if (count == 0)
+                    b.sendMoveMessage(10,1,s,MoveInfo::Type(move),s,move);
             } else {
                 poke(b,s)["TrappedCount"] = count;
                 b.sendMoveMessage(10,0,s,MoveInfo::Type(move),s,move);
@@ -4001,6 +4020,8 @@ struct MMTransform : public MM {
         p.remove("ChoiceMemory");
         /* Give new values to what needed */
         int num = b.pokenum(t);
+        if (num == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
+            num = Pokemon::Giratina;
 
         b.sendMoveMessage(137,0,s,0,s,num);
 

@@ -70,7 +70,7 @@ public:
         Ko,
         Effective, /* to tell how a move is effective */
         Miss,
-        CriticalHit,
+        CriticalHit = 10,
         Hit, /* for moves like fury double kick etc. */
         StatChange,
         StatusChange,
@@ -80,7 +80,7 @@ public:
         MoveMessage,
         ItemMessage,
         NoOpponent,
-        Flinch,
+        Flinch = 20,
         Recoil,
         WeatherMessage,
         StraightDamage,
@@ -90,22 +90,23 @@ public:
         BattleEnd,
         BlankMessage,
         CancelMove,
-        Clause,
-        DynamicInfo,
+        Clause = 30,
+        DynamicInfo = 31,
         DynamicStats,
         Spectating,
         SpectatorChat,
         AlreadyStatusMessage,
         TempPokeChange,
-        ClockStart,
-        ClockStop
+        ClockStart = 37,
+        ClockStop = 38
     };
 
     enum TempPokeChange {
         TempMove,
         TempAbility,
         TempItem,
-        TempSprite
+        TempSprite,
+        DefiniteForm
     };
 
     enum WeatherM
