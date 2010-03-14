@@ -10,6 +10,7 @@ class TB_TrainerBody;
 class TB_EVManager;
 class DockAdvanced;
 class pokeButton;
+class TB_Advanced;
 
 class TrainerTeam;
 class Team;
@@ -153,11 +154,14 @@ public slots:
     void updateGender();
     void updateLevel();
     void updateEVs();
+    void changeForm(int pokenum);
 public:
     TB_PokemonBody(PokeTeam *poke);
+    void connectWithAdvanced(TB_Advanced *ptr);
     inline void changeSourcePoke(PokeTeam *poke) {m_poke = poke;}
 
     void updateNum();
+    void setNum(int pokeNum, bool resetEverything);
     /* getting the pokemon of the team corresponding to the body */
     PokeTeam *poke();
 private:

@@ -265,7 +265,7 @@ void PokePersonal::controlEVs(int stat)
 
 void PokePersonal::setEV(int stat, quint8 val)
 {
-    if (num() == 493 && val > 100) //Arceus
+    if (num() == Pokemon::Arceus && val > 100) //Arceus
     {
         val = 100;
     }
@@ -543,7 +543,7 @@ int PokeTeam::stat(int statno) const
 int PokeTeam::hp() const
 {
     /* Shedinja */
-    if (num() == 292)
+    if (num() == Pokemon::Shedinja)
         return 1;
     else
         return calc_stat(baseStats().baseHp(), level(), hpEV(), hpDV()) + level() + 5;

@@ -228,6 +228,7 @@ void BattleWindow::sendMessage()
 
 void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
 {
+    qDebug() << "Command " << command << " for " << spot;
     if (spot < 2) {
         if (conf().ids[spot] == idme()) {
             spot = Myself;
@@ -366,11 +367,25 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                 quint16 move;
                 in >> slot >> move;
                 info().tempPoke().move(slot).num() = move;
+                info().tempPoke().move(slot).load();
                 myazones[info().currentIndex[Myself]]->attacks[slot]->updateAttack(info().tempPoke().move(slot));
             } else {
                 if (type == TempSprite) {
                     in >> info().specialSprite[spot];
                     mydisplay->updatePoke(spot);
+                } else {
+                    if (type == DefiniteForm) {
+                        quint8 poke;
+                        quint16 newform;
+                        in >> poke >> newform;
+                        if (spot == Myself) {
+                            info().myteam.poke(poke).num() = newform;
+                        }
+                        info().pokemons[spot][poke].num() = newform;
+                        if (poke == info().currentIndex[spot]) {
+                            info().currentShallow(spot).num() = newform;
+                        }
+                    }
                 }
             }
             break;

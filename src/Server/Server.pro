@@ -57,6 +57,7 @@ HEADERS += mainwindow.h \
     berries.h \
     scriptengine.h \
     challenge.h \
-    ../PokemonInfo/movesetchecker.h
+    ../PokemonInfo/movesetchecker.h \
+    ../Shared/config.h
 DEFINES = MULTI_THREADED_ACCESS \
     SERVER_SIDE

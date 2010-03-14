@@ -36,7 +36,7 @@ void PokeMovesDb::save()
     QFile files[2][4];
 
     for (int gen = 3; gen <= 4; gen++) {
-        QString genS = "db/" + QString::number(gen) + "G_";
+        QString genS = "db/pokes/" + QString::number(gen) + "G_";
         files[gen-3][LevelMoves].setFileName(genS + "level_moves.txt");
         files[gen-3][EggMoves].setFileName(genS + "egg_moves.txt");
         files[gen-3][TutorMoves].setFileName(genS + "tutor_moves.txt");
@@ -76,8 +76,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     currentPoke = 0;
 
-    PokemonInfo::init("db/");
-    MoveInfo::init("db/");
+    PokemonInfo::init("db/pokes/");
+    MoveInfo::init("db/moves/");
     database.init();
 
     connect(ui->save, SIGNAL(triggered()), SLOT(save()));

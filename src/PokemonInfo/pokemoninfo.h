@@ -42,7 +42,9 @@ private:
     static QTSList<PokeBaseStats> m_BaseStats;
     static QTSList<int> m_LevelBalance;
     /* That is NOT multi-threaded! */
+    static QHash<int,QList<int> > m_AlternateForms;
     static QList<PokemonMoves> m_Moves;
+    static int m_trueNumberOfPokes;
 
     static void loadNames();
     static void loadBaseStats();
@@ -55,6 +57,7 @@ public:
     static void init(const QString &dir="./");
 
     /* Self-explainable functions */
+    static int TrueCount(); // pokes without counting forms
     static int NumberOfPokemons();
     static QString Name(int pokenum);
     static int Number(const QString &pokename);
@@ -74,6 +77,10 @@ public:
     static QSet<int> PreEvoMoves(int pokenum, int gen = 4);
     static QSet<int> SpecialMoves(int pokenum, int gen = 4);
     static QSet<int> RegularMoves(int pokenum, int gen = 4);
+    static bool IsForm(int pokenum);
+    static int OriginalForm(int pokenum);
+    static bool HasForms(int pokenum);
+    static QList<int> Forms(int pokenum);
     static PokeBaseStats BaseStats(int pokenum);
     static bool Exist(int pokenum);
     static QList<int> Abilities(int pokenum);

@@ -554,9 +554,21 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke)
     }
 }
 
+void TB_PokemonBody::connectWithAdvanced(TB_Advanced *ptr)
+{
+    connect(ptr, SIGNAL(levelChanged()), this, SLOT(updateLevel()));
+    connect(ptr, SIGNAL(imageChanged()), this, SLOT(updateImage()));
+    connect(ptr, SIGNAL(genderChanged()), this, SLOT(updateGender()));
+    connect(ptr, SIGNAL(genderChanged()), this, SLOT(updateImage()));
+    connect(ptr, SIGNAL(statChanged()), this, SLOT(updateEVs()));
+    connect(ptr, SIGNAL(pokeFormChanged(int)), this, SLOT(changeForm(int)));
+    connect(this, SIGNAL(EVChanged(int)), ptr, SLOT(updateStat(int)));
+    connect(this, SIGNAL(natureChanged()), ptr, SLOT(updateStats()));
+}
+
 void TB_PokemonBody::initPokemons()
 {
-    pokechoice = new QCompactTable(PokemonInfo::NumberOfPokemons(),2);
+    pokechoice = new QCompactTable(PokemonInfo::TrueCount(),2);
     pokechoice->setSelectionBehavior(QAbstractItemView::SelectRows);
     pokechoice->setSelectionMode(QAbstractItemView::SingleSelection);
     pokechoice->setShowGrid(false);
@@ -564,11 +576,11 @@ void TB_PokemonBody::initPokemons()
     pokechoice->horizontalHeader()->hide();
     pokechoice->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
     pokechoice->setMaximumHeight(120);
-    pokechoice->setMaximumWidth(200);
+    pokechoice->setFixedWidth(200);
     pokechoice->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     /* Adding the poke names */
-    for (int i = 0; i < PokemonInfo::NumberOfPokemons(); i++)
+    for (int i = 0; i < pokechoice->rowCount(); i++)
     {
         pokechoice->setItem(i, 0, new QTableWidgetItem(QString::number(i)));
         pokechoice->setItem(i, 1, new QTableWidgetItem(PokemonInfo::Name(i)));
@@ -606,6 +618,8 @@ void TB_PokemonBody::initMoves()
     movechoice->horizontalHeader()->setResizeMode(PP, QHeaderView::ResizeToContents);
     movechoice->horizontalHeader()->setResizeMode(Pow, QHeaderView::ResizeToContents);
     movechoice->horizontalHeader()->setResizeMode(Acc, QHeaderView::ResizeToContents);
+    movechoice->horizontalHeader()->setResizeMode(Name, QHeaderView::Fixed);
+    movechoice->horizontalHeader()->resizeSection(Name,130);
     movechoice->setMidLineWidth(0);
     movechoice->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -651,10 +665,18 @@ void TB_PokemonBody::goToAdvanced()
 
 void TB_PokemonBody::setNum(int pokenum)
 {
+    setNum(pokenum, true);
+}
+
+void TB_PokemonBody::setNum(int pokenum, bool resetEverything)
+{
     if (pokenum == poke()->num())
         return;
 
-    poke()->reset();
+    if (resetEverything) {
+        poke()->reset();
+    }
+
     poke()->setNum(pokenum);
     poke()->load();
 
@@ -695,8 +717,9 @@ void TB_PokemonBody::updateNum()
 
 void TB_PokemonBody::updatePokeChoice()
 {
-    m_pokeedit->setText(PokemonInfo::Name(poke()->num()));
-    pokechoice->setCurrentCell(poke()->num(), 1, QItemSelectionModel::Rows);
+    int original = PokemonInfo::OriginalForm(poke()->num());
+    m_pokeedit->setText(PokemonInfo::Name(original));
+    pokechoice->setCurrentCell(original, 1, QItemSelectionModel::Rows);
     pokechoice->scrollTo(pokechoice->currentIndex(), QAbstractItemView::PositionAtCenter);
 }
 
@@ -735,6 +758,11 @@ void TB_PokemonBody::updateEVs()
     evchoice->updateEVs();
 }
 
+void TB_PokemonBody::changeForm(int pokenum)
+{
+    setNum(pokenum, false);
+}
+
 void TB_PokemonBody::updateImage()
 {
     pokeImage->setPixmap(poke()->picture());
@@ -749,7 +777,12 @@ void TB_PokemonBody::updateMoves()
 {
     for (int i = 0; i < 4; i++)
     {
-        m_moves[i]->setText(MoveInfo::Name(poke()->move(i)));
+        if (PokemonInfo::Moves(poke()->num()).contains(poke()->move(i)))
+            m_moves[i]->setText(MoveInfo::Name(poke()->move(i)));
+        else {
+            poke()->setMove(0,i);
+            m_moves[i]->setText(MoveInfo::Name(0));
+        }
     }
 }
 
@@ -883,11 +916,24 @@ void TB_PokemonBody::configureMoves()
     movechoice->horizontalHeader()->setResizeMode(PP, QHeaderView::ResizeToContents);
     movechoice->horizontalHeader()->setResizeMode(Pow, QHeaderView::ResizeToContents);
     movechoice->horizontalHeader()->setResizeMode(Acc, QHeaderView::ResizeToContents);
+    movechoice->horizontalHeader()->setResizeMode(Name, QHeaderView::Fixed);
+    movechoice->horizontalHeader()->resizeSection(Name,130);
 }
 
 void TB_PokemonBody::setItem(const QString &item)
 {
-    poke()->item() = ItemInfo::Number(item);
+    int it = ItemInfo::Number(item);
+
+    if (it == Item::GriseousOrb && poke()->num() != Pokemon::Giratina)
+        poke()->item() = 0;
+    else {
+        poke()->item() = ItemInfo::Number(item);
+        if (poke()->item() == Item::GriseousOrb) {
+            changeForm(Pokemon::Giratina_O);
+        } else if (poke()->num() == Pokemon::Giratina_O) {
+            changeForm(Pokemon::Giratina);
+        }
+    }
 }
 
 void TB_PokemonBody::setNature(int nature)

@@ -123,6 +123,7 @@ public slots:
     void showTeam(bool);
     void enableLadder(bool);
     void showPlayerEvents(bool);
+    void versionDiff(const QString &a, const QString &b);
 
     /* Teambuilder slots */
     void openTeamBuilder();

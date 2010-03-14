@@ -350,6 +350,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(spectatedBattle(QString,QString,int)), SLOT(watchBattle(QString,QString,int)));
     connect(relay, SIGNAL(spectatingBattleMessage(int,QByteArray)), SLOT(spectatingBattleMessage(int , QByteArray)));
     connect(relay, SIGNAL(spectatingBattleFinished(int)), SLOT(stopWatching(int)));
+    connect(relay, SIGNAL(versionDiff(QString, QString)), SLOT(versionDiff(QString, QString)));
 }
 
 void Client::playerKicked(int dest, int src) {
@@ -416,6 +417,13 @@ bool Client::battling() const
 void Client::messageReceived(const QString &mess)
 {
     printLine(mess);
+}
+
+void Client::versionDiff(const QString &a, const QString &b)
+{
+    if (a != b) {
+        printHtml(toColor(tr("Your client version (%1) doesn't match with the server's (%2).").arg(a,b), QColor("#e37800")));
+    }
 }
 
 bool Client::playerExist(int id) const

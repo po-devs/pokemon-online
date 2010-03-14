@@ -211,3 +211,4 @@ Rare Bone
 Root Fossil
 Skull Fossil
 Iron Ball
+Griseous Orb

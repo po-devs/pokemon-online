@@ -145,7 +145,7 @@ O[M]5-1
 #Focus energy
 #Focus punch
 #Follow me
-O[S]2+
+O[S]1+
 
 #Rest 1 turn
 #Vary depending on happiness

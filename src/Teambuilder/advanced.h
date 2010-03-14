@@ -43,7 +43,7 @@ private:
     void changeDV(int stat, int newval);
     // Gives the num of the stat corresponding to that ptr
     int stat(QObject *dvchoiceptr);
-protected:
+public:
     /* So we can resize the table properly */
     void resizeEvent(QResizeEvent*);
 private slots:
@@ -55,6 +55,7 @@ private slots:
     void changeHiddenPower(int);
     /* Do not use directly */
     void changeDV(int newval);
+    void changeForm();
 public slots:
     //called by update DV and when the stat in the teambuilder is modified.
     void updateStats();
@@ -64,6 +65,7 @@ signals:
     void genderChanged();
     void levelChanged();
     void statChanged();
+    void pokeFormChanged(int newform);
 public:
     TB_Advanced(PokeTeam *poke);
 };

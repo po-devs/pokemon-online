@@ -313,7 +313,8 @@ struct IMPokeTypeBoost : public IM
     }
     static void bpm(int s, int, BS &b) {
 	QStringList args = poke(b,s)["ItemArg"].toString().split('_');
-	if (poke(b,s)["Num"].toInt() != args[0].toInt())
+        QStringList pokes = args[0].split('/');
+        if (!pokes.contains(QString::number(b.pokenum(s))))
 	    return;
 
 	QString type = turn(b,s)["Type"].toString();

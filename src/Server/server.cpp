@@ -14,6 +14,7 @@
 #include "../PokemonInfo/movesetchecker.h"
 #include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
+#include "../Shared/config.h"
 
 Server::Server(quint16 port)
 {
@@ -396,6 +397,8 @@ void Server::loggedIn(int id, const QString &name)
         }
 
         player(id)->changeState(Player::LoggedIn, true);
+
+        player(id)->relay().notify(NetworkServ::VersionControl, VERSION);
 
         sendPlayersList(id);
         sendLogin(id);

@@ -102,6 +102,7 @@ public:
     void koPoke(int player, int source, bool straightattack = false);
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
+    void changeForm(int player, int poke, int newform);
     void gainStatMod(int player, int stat, int bonus, bool tell = true);
     void loseStatMod(int player, int stat, int malus, int attacker);
     bool canSendPreventMessage(int defender, int attacker);
@@ -124,6 +125,7 @@ public:
     void disposeItem(int player);
     void eatBerry(int player);
     void acqItem(int player, int item);
+    void loseItem(int player);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
@@ -218,7 +220,8 @@ public:
         TempMove,
         TempAbility,
         TempItem,
-        TempSprite
+        TempSprite,
+        DefiniteForm
     };
 
     enum WeatherM

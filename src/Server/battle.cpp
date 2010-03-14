@@ -153,8 +153,8 @@ void BattleSituation::addSpectator(int id)
             notify(key, AbsStatusChange, i, qint8(j), qint8(poke(i, j).status()));
         }
         if (!koed(i)) {
-            notify(key, SendOut, i, opoke(i, currentPoke(i)));
-            notify(key, ChangeTempPoke,i,quint8(TempSprite),quint16(pokenum(i)));
+            notify(key, SendOut, i, false, quint8(0), opoke(i, currentPoke(i)));
+            notify(key, ChangeTempPoke,i, quint8(TempSprite),quint16(pokenum(i)));
         }
     }
 }
@@ -690,6 +690,10 @@ void BattleSituation::spectatingChat(int id, const QString &str)
 void BattleSituation::sendPoke(int player, int pok, bool silent)
 {
     koedPokes.remove(player);
+
+    if (poke(player,pok).num() == Pokemon::Giratina_O && poke(player,pok).item() != Item::GriseousOrb)
+        changeForm(player,pok,Pokemon::Giratina);
+
     changeCurrentPoke(player, pok);
 
     notify(player, SendOut, player, silent, ypoke(player, pok));
@@ -703,12 +707,13 @@ void BattleSituation::sendPoke(int player, int pok, bool silent)
     pokelong[player]["Type1"] = PokemonInfo::Type1(poke(player).num());
     pokelong[player]["Type2"] = PokemonInfo::Type2(poke(player).num());
     pokelong[player]["Ability"] = poke(player).ability();
+
     for (int i = 0; i < 4; i++) {
 	pokelong[player]["Move" + QString::number(i)] = poke(player).move(i).num();
     }
 
     for (int i = 1; i < 6; i++)
-	pokelong[player][QString("Stat%1").arg(i)] = poke(player).normalStat(i);
+        pokelong[player][QString("Stat%1").arg(i)] = poke(player).normalStat(i);
 
     for (int i = 0; i < 6; i++) {
         pokelong[player][QString("DV%1").arg(i)] = poke(player).dvs()[i];
@@ -2042,8 +2047,8 @@ void BattleSituation::disposeItem(int  player) {
     int item = poke(player).item();
     if (item != 0) {
         teamzone[player]["RecyclableItem"] = item;
-        poke(player).item() = 0;
     }
+    loseItem(player);
 }
 
 void BattleSituation::eatBerry(int player) {
@@ -2052,9 +2057,42 @@ void BattleSituation::eatBerry(int player) {
 }
 
 void BattleSituation::acqItem(int player, int item) {
+    if (poke(player).item() != 0)
+        loseItem(player);
     poke(player).item() = item;
     ItemEffect::setup(poke(player).item(),player,*this);
     callieffects(player,player,"AfterSetup");
+}
+
+void BattleSituation::loseItem(int player)
+{
+    poke(player).item() = 0;
+    //No Griseous Orb -> Giratina back to its ol' self
+    if (!koed(player) && pokenum(player) == Pokemon::Giratina_O) {
+        changeForm(player,currentPoke(player),Pokemon::Giratina);
+    }
+}
+
+void BattleSituation::changeForm(int player, int poke, int newform)
+{
+    PokeBattle &p  = this->poke(player,poke);
+    p.num() = newform;
+    p.ability() = PokemonInfo::Abilities(newform).front();
+
+    for (int i = 1; i < 6; i++)
+        p.setNormalStat(i,PokemonInfo::Stat(newform,i,PokemonInfo::BaseStats(newform).baseStat(i),p.level(),p.dvs()[i], p.evs()[i]));
+
+    if (poke == currentPoke(player)) {
+        changeSprite(player, newform);
+
+        pokelong[player]["Num"] = newform;
+        acquireAbility(player, p.ability());
+
+        for (int i = 1; i < 6; i++)
+            pokelong[player][QString("Stat%1").arg(i)] = p.normalStat(i);
+    }
+
+    notify(All, ChangeTempPoke, player, quint8(DefiniteForm), quint8(poke),quint16(newform));
 }
 
 void BattleSituation::healLife(int player, int healing)

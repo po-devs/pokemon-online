@@ -3,6 +3,7 @@
 #include "client.h"
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
+#include "../Shared/config.h"
 
 using namespace NetworkCli;
 
@@ -293,6 +294,14 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             qint32 battleId;
             in >> battleId;
             emit spectatingBattleFinished(battleId);
+            break;
+        }
+    case VersionControl:
+        {
+            QString version;
+            in >> version;
+            if (version != VERSION)
+                emit versionDiff(version, VERSION);
             break;
         }
     default:
