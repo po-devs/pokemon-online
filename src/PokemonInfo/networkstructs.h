@@ -12,7 +12,11 @@ public:
     const PokePersonal &pokemon(int num) const;
 
     QString name, info, win, lose;
+    quint16 avatar;
 };
+
+QDataStream & operator << (QDataStream & out,const TeamInfo & team);
+QDataStream & operator >> (QDataStream & in,TeamInfo & team);
 
 /* Only infos needed by other players */
 class BasicInfo
@@ -57,10 +61,6 @@ inline QDataStream & operator >> (QDataStream &d, UserInfo &ui) {
     return d;
 }
 
-
-QDataStream & operator << (QDataStream & out,const TeamInfo & team);
-QDataStream & operator >> (QDataStream & in,TeamInfo & team);
-
 QDataStream & operator << (QDataStream & out,const BasicInfo & team);
 QDataStream & operator >> (QDataStream & in,BasicInfo & team);
 
@@ -74,6 +74,8 @@ public:
     quint8 flags;
     qint16 rating;
     qint16 pokes[6];
+    quint16 avatar;
+    QString tier;
 
     enum {
         LoggedIn = 1,
@@ -111,6 +113,7 @@ public:
 #endif
     bool ladder;
     bool showteam;
+    quint16 avatar;
 };
 
 QDataStream & operator >> (QDataStream &in, FullInfo &p);

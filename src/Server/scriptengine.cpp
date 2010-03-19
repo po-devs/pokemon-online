@@ -401,6 +401,16 @@ QScriptValue ScriptEngine::teamPoke(int id, int index)
     }
 }
 
+QScriptValue ScriptEngine::teamPokeLevel(int id, int index)
+{
+    if (!loggedIn(id) || index < 0 || index >= 6) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->team().poke(index).level();
+    }
+}
+
+
 bool ScriptEngine::hasTeamPoke(int id, int pokemonnum)
 {
     if (!loggedIn(id)) {

@@ -14,6 +14,7 @@ class BattleSituation : public QThread
     PROPERTY(int , publicId);
     PROPERTY(bool, finished);
     PROPERTY(bool, rated);
+    PROPERTY(QString, tier);
     PROPERTY(quint32, clauses);
 public:
     enum {
@@ -213,7 +214,9 @@ public:
         AlreadyStatusMessage,
         ChangeTempPoke,
         ClockStart,
-        ClockStop
+        ClockStop,
+        Rated,
+        TierSection
     };
 
     enum ChangeTempPoke {

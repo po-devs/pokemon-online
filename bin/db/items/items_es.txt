@@ -1,0 +1,212 @@
+(Sin objeto)
+Raíz grande
+Pañuelo azul
+Polvo brillo
+Cinta elegida
+Pañuelo elegido
+Gafas elegidas
+Lazo destino
+Cinta experto
+Cinta focus
+Banda focus
+Incienso lento
+Pañuelo verde
+Cola plúmbea
+Incienso suave
+Restos
+Incienso duplo
+Hierba mental
+Polvo metálico
+Cinta fuerte
+Incienso raro
+Pañuelo rosa
+Hierba única
+Incienso puro
+Polvo veloz
+Tela terrible
+Pañuelo rojo
+Incienso roca
+Incienso floral
+Incienso marino
+Muda concha
+Pañuelo seda
+Polvo plata
+Roca suve
+Arena fina
+Campana alivio
+Incienso agua
+Hierva blanca
+Lupa 
+Gafas especiaales
+Pañuelo amarillo
+Telescopio
+Moneda amuleto
+Antídoto
+Despertar
+Zumo de baya
+Perla grande
+Seta grande
+Cinturón negro
+Flauta negra
+Lodo negro
+Gafas de sol
+Flauta azul
+Parte azul
+Antiquemar
+Calcio
+Carburante
+Carbón
+Amuleto
+Abono lento
+Escama marina
+Directo
+Escama dragón
+Elixir
+Raíz Energía
+Polvoenergía
+Cuerda huida
+Éter
+Piedraeterna
+Repartir exp.
+Piedra fuego
+Llamasfera
+Cola Skitty
+Agua fresca
+Cura total
+Restauratodo
+Abono brote
+Parte verde
+Abono rápido
+Protección esp.
+Polvo curación
+Escama corazón
+Miel
+Más PS
+HiperPoción
+Antihielo
+Hierro
+Roca del rey
+Galleta lava
+Piedra hoja
+Limonada
+Vidasfera
+Bola luminosa
+Refleluz
+Huevo suerte
+Íman
+Elixir máximo
+Éter maximo
+Máxima poción
+Máximo repelente
+Revivir máximo
+Rev. metálico
+Metronomo
+Semilla milagro
+Leche mumu
+Piedra lunar
+Agua mistica
+Antiderretir
+Pepita
+Barrita plus
+Antiparaliz
+Perla
+Poké muñeco
+Poción
+Máxmimo PP
+Más PP
+Proteína
+Caramelo raro
+Colmillagudo
+Flauta roja
+Parte roja
+Repelente
+Hierba revivir
+Revivir
+Ceniza Sagrada
+Periscopio
+Campana concha
+Sal cardumen
+Concha cardumen
+Bla humo
+Refresco
+Rocío bondad
+Hechizo
+Abono fijador
+Trozo estrella
+Polvoestelar
+Piedra solar
+Super Poción
+Superrrepel
+Piedra trueno
+Mini seta
+Toxisfera
+Cuchara tor.
+Mejora
+Piedra agua
+Flauta blanca
+Precisión X
+Ataque X
+Defensa X
+Especial X
+Defensa esp. X
+Velocidad X
+Flauta amarilla
+Parte amarilla
+Zinc
+Roca hielo
+Puño suerte
+Discoxtraño
+Pico afilado
+Diamansfera
+Roca lluvia
+Roca calor
+Lustresfera
+Brazal firme
+Palo
+Colmillo dragón
+Flecha venenosa
+Franja recia
+Banda recia
+Cinto recio
+Brazal recio
+Lente recia
+Pesa recia
+Piedra alba
+Piedra noche
+Electrizador
+Magmatizador
+Piedra espíritu
+Protector
+Garra rapida
+Garrafilada
+Piedra día
+Toxiestrella
+Diente marino
+Tabla draco
+Tabla oscura
+Tabla terrax
+Tabla fuerte
+Tabla llama
+Garra garfio
+Tabla helada
+Tabla bicho
+Tabla acero
+Tabla pardal
+Tabla mental
+Tabla cielo
+Tabla linfa
+Tabla terror
+Tabla pétra
+Hueso grueso
+Tabla toxica
+Tabla trueno
+Fósil coraza
+Fósil garra
+Fósil domo
+Piedra dura
+Fósil hélix
+Ámbar viejo
+Hueso raro
+Fósil raíz
+Fósil cráneo
+Bola Hierro

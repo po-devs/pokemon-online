@@ -98,7 +98,9 @@ public:
         AlreadyStatusMessage,
         TempPokeChange,
         ClockStart = 37,
-        ClockStop = 38
+        ClockStop = 38,
+        Rated,
+        TierSection
     };
 
     enum TempPokeChange {

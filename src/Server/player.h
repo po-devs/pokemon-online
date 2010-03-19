@@ -15,6 +15,8 @@ class Player : public QObject
     PROPERTY(int, rating);
     PROPERTY(bool, ladder);
     PROPERTY(bool, showteam);
+    PROPERTY(QString, tier);
+    PROPERTY(quint16, avatar);
 public:
     BattleSituation *battle;
     QSet<int> battlesSpectated;
@@ -119,6 +121,7 @@ public slots:
     void quitSpectating(int id);
     void ladderChange(bool);
     void showTeamChange(bool);
+    void changeTier(const QString&);
 private:
     TeamBattle myteam;
     Analyzer myrelay;

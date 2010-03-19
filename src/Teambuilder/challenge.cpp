@@ -5,66 +5,81 @@
 #include "../PokemonInfo/pokemoninfo.h"
 
 BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &windowTitle, const QString &buttonOk, const QString &buttonNo, QWidget *parent)
-        : QImageBackground("db/Challenge Window/ChallengeBG"), emitOnClose(true)
+        : QImageBackground("db/Challenge Window/ChallengeBG.png"), emitOnClose(true)
 {
     setParent(parent);
 
     setWindowTitle(windowTitle.arg(p.team.name));
-    setWindowFlags( Qt::FramelessWindowHint );
-
-
-    /* Transparent background code */
-    setMask(myBackground.mask());
-    /* End of transparent background */
 
     setAttribute(Qt::WA_DeleteOnClose, true);
 
-    QImageButton *goback;
-    const int x = 6;
+    QColor grey = "#414141";
 
-    QLabel *name = new QLabel(toBoldColor(p.team.name, "#1ba6eb"),this);
-    name->setGeometry(23-x,21-x,250-23,50-18);
-    name->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    name->setFont(QFont("db/Font/kirstyin.ttf", 17));
+    QLabel *name = new QLabel(toColor(p.team.name, grey),this);
+    name->setGeometry(54,0,230,52);
+    name->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    name->setFont(QFont("Trebuchet MS", 20, QFont::DemiBold));
 
-    for (int i = 0; i < 6; i++) {
-        QLabel *icon = new QLabel(this);
-        icon->move(180+i*52-x,72-x);
-        icon->setPixmap(PokemonInfo::Icon(p.pokes[i]));
+    QLabel *trainerPic = new QLabel(this);
+    trainerPic->move(13,85);
+    QPixmap px (QString("db/Trainer Sprites/%1.png").arg(p.avatar));
+    if (px.isNull())
+        px = QString("db/Trainer Sprites/%1.png").arg(168);
+    trainerPic->setPixmap(px);
+
+    bool hidden = p.pokes[0]==0;
+
+    if (hidden) {
+        QLabel *hiddenTeam = new QLabel(this);
+        hiddenTeam->move(163,82);
+        hiddenTeam->setPixmap(QPixmap("db/Challenge Window/HiddenInnerBall.png"));
+    } else {
+        for (int i = 0; i < 6; i++) {
+            QLabel *icon = new QLabel(this);
+            icon->move(168+i*51,84);
+            icon->setPixmap(PokemonInfo::Icon(p.pokes[i]));
+        }
     }
 
-    QLabel *pinfo = new QLabel(toColor(p.team.info, Qt::white), this);
-    pinfo->setGeometry(177-x,128-x,474-177,180-128);
+    QFont treb("Trebuchet MS", 10);
+
+    QLabel *pinfo = new QLabel(toColor(p.team.info, grey), this);
+    pinfo->setGeometry(18,200,280,50);
     pinfo->setWordWrap(true);
-    pinfo->setFont(QFont("Verdana", 10));
+    pinfo->setFont(treb);
     pinfo->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
-    QFont boldWhite("db/Font/kirstyin.ttf",8);
+    QLabel *ladder = new QLabel(toColor(p.rating == -1 ? "unknown" : QString::number(p.rating), grey),this);
+    ladder->setFont(treb);
+    ladder->setGeometry(100,148,83,18);
+    ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
-    QLabel *ladder = new QLabel(toBoldColor(p.rating == -1 ? "unknown" : QString::number(p.rating), Qt::white),this);
-    ladder->setFont(boldWhite);
-    ladder->setGeometry(84-x,87-x,160-84,102-87);
+    QLabel *tier = new QLabel(toBoldColor(p.tier, Qt::white),this);
+    tier->setFont(QFont("Trebuchet MS", 10, QFont::Bold));
+    tier->setGeometry(210,148,80,18);
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
     QWidget *container = new QWidget(this);
-    container->setGeometry(QRect(9-x,129-x,180,126));
+    container->setGeometry(QRect(322,157,136,136));
     QVBoxLayout *clausesL= new QVBoxLayout(container);
     clausesL->setSpacing(0);
 
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         clauses[i] = new QCheckBox(ChallengeInfo::clause(i));
-        clauses[i]->setFont(boldWhite);
+        clauses[i]->setFont(treb);
+        clauses[i]->setStyleSheet("color: #414141");
         clauses[i]->setToolTip(ChallengeInfo::description(i));
         clausesL->addWidget(clauses[i]);
     }
 
-    goback = new QImageButton("db/Challenge Window/" + buttonNo + "Normal", "db/Challenge Window/" + buttonNo + "Glow");
+    QImageButton *goback;
+    goback = new QImageButton("db/Challenge Window/Buttons/" + buttonNo + "ButtonNormal.png", "db/Challenge Window/Buttons/" + buttonNo + "ButtonGlow.png");
     goback->setParent(this);
-    goback->move(153-x,193-x);
+    goback->move(182,330);
 
-    challenge_b = new QImageButton("db/Challenge Window/" + buttonOk + "Normal", "db/Challenge Window/" + buttonOk + "Glow");
+    challenge_b = new QImageButton("db/Challenge Window/Buttons/" + buttonOk + "ButtonNormal.png", "db/Challenge Window/Buttons/" + buttonOk + "ButtonGlow.png");
     challenge_b->setParent(this);
-    challenge_b->move(333-x,193-x);
+    challenge_b->move(25,330);
 
     connect(goback, SIGNAL(clicked()), SLOT(onCancel()));
 
@@ -123,7 +138,7 @@ void BaseChallengeWindow::onCancel()
 }
 
 ChallengeWindow::ChallengeWindow(const PlayerInfo &p, QWidget *parent)
-        : BaseChallengeWindow(p, tr("%1's Info"), "Challenge", "GoBack", parent)
+        : BaseChallengeWindow(p, tr("%1's Info"), "Chall", "GoBack", parent)
 {
     QSettings s;
 

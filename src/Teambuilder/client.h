@@ -124,6 +124,8 @@ public slots:
     void enableLadder(bool);
     void showPlayerEvents(bool);
     void versionDiff(const QString &a, const QString &b);
+    void tierListReceived(const QString&);
+    void changeTier();
 
     /* Teambuilder slots */
     void openTeamBuilder();
@@ -131,7 +133,6 @@ public slots:
     void showDock(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
 signals:
     void done();
-    void updateMenuBar();
     void userInfoReceived(const UserInfo &ui);
 protected:
     void paintEvent(QPaintEvent *)
@@ -168,6 +169,9 @@ private:
     QAction *goaway;
     bool showPEvents;
 
+    QPointer<QMenuBar> mymenubar;
+    QPointer<QMenu> mytiermenu;
+    QList<QAction*> mytiers;
     /* You can call the teambuilder from here too */
     QPointer<QMainWindow> myteambuilder;
 
@@ -186,6 +190,7 @@ private:
     void updateState(int player);
 
     void initRelay();
+    void changeTierChecked(const QString &newtier);
 };
 
 #endif // CLIENT_H

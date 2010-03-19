@@ -85,12 +85,14 @@ public slots:
     void openPlayers();
     void openAntiDos();
     void openScriptWindow();
+    void openTiersWindow();
     void changeAuth(const QString &name, int auth);
     void banName(const QString &name);
     void playerKick(int src, int dest);
     void playerBan(int src, int dest);
     void awayChanged(int src, bool away);
     void sendPlayer(int id);
+    void tiersChanged();
 private:
     void kick(int dest, int src);
     void ban(int dest, int src);

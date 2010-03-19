@@ -228,7 +228,6 @@ void BattleWindow::sendMessage()
 
 void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
 {
-    qDebug() << "Command " << command << " for " << spot;
     if (spot < 2) {
         if (conf().ids[spot] == idme()) {
             spot = Myself;

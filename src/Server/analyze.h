@@ -49,7 +49,8 @@ namespace NetworkServ
         SpectatingBattleFinished,
         LadderChange,
         ShowTeamChange,
-        VersionControl
+        VersionControl,
+        TierSelection
     };
 
     enum ProtocolError
@@ -137,6 +138,7 @@ signals:
     void awayChange(bool away);
     void showTeamChange(bool);
     void ladderChange(bool);
+    void tierChanged(const QString &);
 public slots:
     /* slots called by the network */
     void error();

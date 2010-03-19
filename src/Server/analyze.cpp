@@ -139,8 +139,6 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 
     in >> command;
 
-    qDebug() << "Command received from " << socket().id() << ": " <<  command;
-
     switch (command) {
     case Login:
 	{
@@ -299,6 +297,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             bool change;
             in >> change;
             emit showTeamChange(change);
+            break;
+        }
+    case TierSelection:
+        {
+            QString tier;
+            in >> tier;
+            emit tierChanged(tier);
             break;
         }
     default:

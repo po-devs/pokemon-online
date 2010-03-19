@@ -322,6 +322,10 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     show_events->setChecked(s.value("show_player_events").toBool());
     showPEvents = show_events->isChecked();
 
+    mytiermenu = menuBar->addMenu(tr("&Tier"));
+
+
+    mymenubar = menuBar;
     return menuBar;
 }
 
@@ -351,6 +355,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(spectatingBattleMessage(int,QByteArray)), SLOT(spectatingBattleMessage(int , QByteArray)));
     connect(relay, SIGNAL(spectatingBattleFinished(int)), SLOT(stopWatching(int)));
     connect(relay, SIGNAL(versionDiff(QString, QString)), SLOT(versionDiff(QString, QString)));
+    connect(relay, SIGNAL(tierListReceived(QString)), SLOT(tierListReceived(QString)));
 }
 
 void Client::playerKicked(int dest, int src) {
@@ -422,8 +427,45 @@ void Client::messageReceived(const QString &mess)
 void Client::versionDiff(const QString &a, const QString &b)
 {
     if (a != b) {
-        printHtml(toColor(tr("Your client version (%1) doesn't match with the server's (%2).").arg(a,b), QColor("#e37800")));
+        printHtml(toColor(tr("Your client version (%2) doesn't match with the server's (%1).").arg(a,b), QColor("#e37800")));
     }
+}
+
+void Client::tierListReceived(const QString &tl)
+{
+    mytiermenu->clear();
+    mytiers.clear();
+
+    QStringList tierList = tl.split('\n', QString::SkipEmptyParts);
+
+    if (tierList.empty())
+        tierList.push_back("All");
+
+    foreach(QString t, tierList) {
+        mytiers.push_back(mytiermenu->addAction(t,this,SLOT(changeTier())));
+        mytiers.back()->setCheckable(true);
+    }
+
+    changeTierChecked(player(ownId()).tier);
+}
+
+void Client::changeTierChecked(const QString &newtier)
+{
+    foreach(QAction *a, mytiers) {
+        if (a->text() == newtier) {
+            a->setChecked(true);
+        } else {
+            a->setChecked(false);
+        }
+    }
+}
+
+void Client::changeTier()
+{
+    QAction *a = (QAction*)sender();
+
+    relay().notify(NetworkCli::TierSelection, a->text());
+    changeTierChecked(player(ownId()).tier);
 }
 
 bool Client::playerExist(int id) const
@@ -788,6 +830,10 @@ void Client::playerReceived(const PlayerInfo &p)
     myplayers->addItem(item);
 
     updateState(p.id);
+
+    if (p.id == ownId()) {
+        changeTierChecked(p.tier);
+    }
 }
 
 void Client::teamChanged(const PlayerInfo &p) {
