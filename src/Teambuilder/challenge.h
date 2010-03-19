@@ -44,6 +44,9 @@ public:
     ChallengeWindow(const PlayerInfo &p, QWidget *parent=0);
 protected slots:
     void onChallenge();
+
+protected:
+    void keyPressEvent(QKeyEvent * event);
 };
 
 class ChallengedWindow: public BaseChallengeWindow

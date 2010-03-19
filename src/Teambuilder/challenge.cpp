@@ -162,6 +162,19 @@ void ChallengeWindow::onChallenge()
     close();
 }
 
+void ChallengeWindow::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Escape)
+    {
+        event->accept();
+        close();
+    }
+    else
+    {
+        BaseChallengeWindow::keyPressEvent(event);
+    }
+}
+
 ChallengedWindow::ChallengedWindow(const PlayerInfo &p, quint32 clauses, QWidget *parent)
         : BaseChallengeWindow(p, tr("%1 challenged you!"), "Accept", "Decline", parent)
 {
