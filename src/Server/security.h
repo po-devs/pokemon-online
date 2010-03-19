@@ -16,14 +16,13 @@ public:
     /* A member as stored in the file */
     struct Member {
         Member(const QString &name="", const QString &date="", const QString &auth="",
-               int ladder=0, const QString &salt="", const QString &hash="", const QString &ip="");
+               const QString &salt="", const QString &hash="", const QString &ip="");
         QString name;
         QString date;
         QString auth;
         QString salt;
         QString hash;
         QString ip;
-        int ladder;
 
 
         void modifyIP(const QString ip) {
@@ -61,14 +60,6 @@ public:
         void clearPass() {
             hash = QString().leftJustified(hashLength);
         }
-
-        void changeRating(int opponent_rating, bool win);
-
-        int rating() {
-            return ladder;
-        }
-
-        static const int ladderLength = 5;
         static const int saltLength = 7;
         static const int hashLength = 32;
         static const int ipLength = 39; //IPv6 is 39, so lets be ready for the future

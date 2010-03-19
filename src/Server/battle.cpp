@@ -24,6 +24,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
     finished() = false;
     clauses() = c.clauses;
     rated() = c.rated && !(c.clauses & (ChallengeInfo::ChallengeCup | ChallengeInfo::LevelBalance));
+    if (rated())
+        tier() = p1.tier();
     currentForcedSleepPoke[0] = -1;
     currentForcedSleepPoke[1] = -1;
     p1.battle = this;
@@ -51,7 +53,6 @@ BattleSituation::~BattleSituation()
 {
     /* releases the thread */
     {
-        qDebug() << "Destruction of a battle.";
 	/* So the thread will quit immediately after being released */
 	quit = true;
         /* Should be enough */
@@ -75,6 +76,9 @@ void BattleSituation::start()
         }
     }
 
+    notify(All, Rated, Player1, rated());
+    if (rated())
+        notify(All, TierSection, Player1, tier());
 
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         //False for saying this is not in battle message but rule message
@@ -335,7 +339,6 @@ void BattleSituation::endTurnStatus()
 void BattleSituation::testquit()
 {
     if (quit) {
-        qDebug() << "Quit required in battle";
 	throw QuitException();
     }
 }
@@ -465,7 +468,6 @@ bool BattleSituation::isMovePossible(int player, int move)
 
 void BattleSituation::analyzeChoice(int player)
 {
-    qDebug() << "Analyzing choice of " << id(player);
     stopClock(player, true);
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice[player].attack()) {
@@ -489,7 +491,6 @@ void BattleSituation::analyzeChoice(int player)
 	sendPoke(player, choice[player].numSwitch);
     }
     notify(All, BlankMessage, Player1);
-    qDebug() << "End of analyzing";
 }
 
 std::vector<int> BattleSituation::sortedBySpeed() {
@@ -520,25 +521,18 @@ std::vector<int> BattleSituation::sortedBySpeed() {
 
 void BattleSituation::analyzeChoices()
 {
-    qDebug() << "Starting analyzing choices";
     /* If there's no choice then the effects are already taken care of */
     if (!turnlong[Player1].contains("NoChoice") && choice[Player1].attack() && !options[Player1].struggle()) {
-        qDebug() << "Player1 " << id(Player1) << " chose to attack with slot " << choice[Player1].numSwitch;
         MoveEffect::setup(move(Player1,choice[Player1].numSwitch), Player1, Player2, *this);
     }
-    qDebug() << "Going to the choice of player 2";
     if (!turnlong[Player2].contains("NoChoice") && choice[Player2].attack() && !options[Player2].struggle()) {
-        qDebug() << "Player2 " << id(Player2) << " chose to attack with slot " << choice[Player2].numSwitch;
 	MoveEffect::setup(move(Player2,choice[Player2].numSwitch), Player2, Player1, *this);
     }
-    qDebug() << "Finished basic setup";
 
     std::map<int, std::vector<int>, std::greater<int> > priorities;
     std::vector<int> switches;
 
     std::vector<int> playersByOrder = sortedBySpeed();
-
-    qDebug() << "SortedBySpeed: " << id(playersByOrder[0]) << " " << id(playersByOrder[1]);
 
     foreach(int i, playersByOrder) {
 	if (choice[i].poke())
@@ -547,16 +541,12 @@ void BattleSituation::analyzeChoices()
             priorities[turnlong[i]["SpeedPriority"].toInt()].push_back(i);
     }
 
-    qDebug() << "Number of switches: " << switches.size();
-
     foreach(int player, switches) {
 	analyzeChoice(player);
     }
     foreach(int player, switches) {
 	callEntryEffects(player);
     }
-
-    qDebug() << "Finished the switches";
 
     std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
 
@@ -565,11 +555,9 @@ void BattleSituation::analyzeChoices()
         std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
 
         foreach (int player, it->second) {
-            qDebug() << "Stating calling TurnOrder for " << id(player) << "(" << player << ")" ;
             callaeffects(player,player, "TurnOrder"); //Stall
             callieffects(player,player, "TurnOrder"); //Lagging tail & ...
             calleffects(player,player,"TurnOrder"); // A berry does that
-            qDebug() << "Turn order is " << turnlong[player]["TurnOrder"].toInt();
             secondPriorities[turnlong[player]["TurnOrder"].toInt()].push_back(player);
 	}
 
@@ -579,7 +567,6 @@ void BattleSituation::analyzeChoices()
             }
         }
     }
-    qDebug() << "End of Analyzing choices";
 }
 
 void BattleSituation::notifySub(int player, bool sub)
@@ -1073,8 +1060,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	pokelong[player][QString("Move%1Used").arg(move)] = true;
     }
 
-    qDebug() << "move " << MoveInfo::Name(attack) << " used by " << id(player);
-
     turnlong[player]["HasMoved"] = true;
 
     calleffects(player,player,"EvenWhenCantMove");
@@ -1294,9 +1279,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    if (testFail(player))
 		continue;
             int type = turnlong[player]["Type"].toInt(); /* move type */
-            if ( (type == Type::Electric && hasType(target, Type::Ground)) ||
+            if ( target != player && ((type == Type::Electric && hasType(target, Type::Ground)) ||
                  (type == Type::Poison && (hasType(target, Type::Steel) || hasType(target, Type::Poison))) ||
-                 (type == Type::Fire && hasType(target, Type::Fire)) ) {
+                 (type == Type::Fire && hasType(target, Type::Fire))) ) {
                 notify(All, Failed, player);
                 continue;
             }
@@ -1614,6 +1599,9 @@ void BattleSituation::inflictStatus(int player, int status, int attacker)
             }
         }
         changeStatus(player, status);
+        if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_S) {
+            changeForm(player, currentPoke(player), Pokemon::Shaymin_S);
+        }
         if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
             && hasWorkingAbility(player, Ability::Synchronize)) //Synchronize
         {
@@ -1991,8 +1979,9 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
 
     if (straightattack) {
-	turnlong[source]["DamageInflicted"] = damage;
 	if (!sub) {
+            /* If there's a sub its already taken care of */
+            turnlong[source]["DamageInflicted"] = damage;
 	    pokelong[player]["DamageTakenByAttack"] = damage;
 	    turnlong[player]["DamageTakenByAttack"] = damage;
 	    turnlong[player]["DamageTakenBy"] = source;
@@ -2125,9 +2114,6 @@ void BattleSituation::changeHp(int player, int newHp)
 
 void BattleSituation::koPoke(int player, int source, bool straightattack)
 {
-    qDebug() << "koed poke from player: " << id(player);
-    qDebug() << "Poke name: " << poke(player).nick() << " " << currentPoke(player);
-
     if (poke(player).ko()) {
 	return;
     }
@@ -2153,8 +2139,6 @@ void BattleSituation::requestSwitchIns()
         return;
     }
 
-    qDebug() << "Request a switch in : " << count;
-
     notifyInfos();
 
     foreach(int p, koedPokes) {
@@ -2175,7 +2159,6 @@ void BattleSituation::requestSwitchIns()
 	callEntryEffects(p);
     }
 
-    qDebug() << "Recursive call to requestSwitchIn";
     /* Recursive call */
     requestSwitchIns();
 }

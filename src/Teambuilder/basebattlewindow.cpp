@@ -440,6 +440,20 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             }
             break;
         }
+    case Rated:
+        {
+            bool rated;
+            in >> rated;
+            printHtml(toBoldColor(tr("Rated: "), Qt::blue) + (rated? tr("Yes") : tr("No")));
+            break;
+        }
+    case TierSection:
+        {
+            QString tier;
+            in >> tier;
+            printHtml(toBoldColor(tr("Tier: "), Qt::blue) + tier);
+            break;
+        }
     case DynamicInfo:
         {
             in >> info().statChanges[spot];

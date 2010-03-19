@@ -2,7 +2,9 @@
 #include "security.h"
 #include "challenge.h"
 #include "../PokemonInfo/battlestructs.h"
+#include "../PokemonInfo/pokemoninfo.h"
 #include "battle.h"
+#include "tier.h"
 
 Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
 {
@@ -37,6 +39,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(battleSpectateChat(int,QString)), SLOT(spectatingChat(int,QString)));
     connect(&relay(), SIGNAL(ladderChange(bool)), SLOT(ladderChange(bool)));
     connect(&relay(), SIGNAL(showTeamChange(bool)), SLOT(showTeamChange(bool)));
+    connect(&relay(), SIGNAL(tierChanged(QString)), SLOT(changeTier(QString)));
 }
 
 Player::~Player()
@@ -56,6 +59,30 @@ void Player::showTeamChange(bool n)
     if (!isLoggedIn())
         return; //INV BEHAV
     showteam() = n;
+    emit updated(id());
+}
+
+void Player::changeTier(const QString &newtier)
+{
+    if (!TierMachine::obj()->exists(newtier)) {
+        sendMessage(tr("That tier doesn't exist!"));
+        return;
+    }
+    if (!TierMachine::obj()->isValid(team(), newtier)) {
+        QString pokeList = "";
+        for(int i = 0; i < 6; i++) {
+            if (TierMachine::obj()->isBanned(team().poke(i).num(),newtier)) {
+                pokeList += PokemonInfo::Name(team().poke(i).num()) + ", ";
+            }
+        }
+        if (pokeList.length() >= 2)
+            pokeList.resize(pokeList.size()-2);
+
+        sendMessage(tr("The following pokemons are banned in %1, hence you can't choose that tier: %2.").arg(newtier,pokeList));
+        return;
+    }
+    tier() = newtier;
+    rating() = TierMachine::obj()->rating(name(), tier());
     emit updated(id());
 }
 
@@ -419,6 +446,8 @@ PlayerInfo Player::bundle() const
     p.id = id();
     p.team = basicInfo();
     p.rating = ladder() ? rating() : -1;
+    p.tier = tier();
+    p.avatar = avatar();
 
     if (showteam()) {
         for(int i = 0; i < 6; i++) {
@@ -454,6 +483,7 @@ void Player::loggedIn(const TeamInfo &_team,bool ladder, bool showteam)
     if (isLoggedIn())
         return; //INVALID BEHAVIOR
 
+    avatar() = _team.avatar;
     this->ladder() = ladder;
     this->showteam() = showteam;
 
@@ -465,6 +495,8 @@ void Player::loggedIn(const TeamInfo &_team,bool ladder, bool showteam)
     }
 
     team() = _team;
+    tier() = TierMachine::obj()->findTier(team());
+    rating() = TierMachine::obj()->rating(name(), tier());
 
     if (st == Success) {
         emit loggedIn(id(), _team.name);
@@ -486,8 +518,6 @@ Player::AuthentificationState Player::testAuthentification(const TeamInfo &team)
             return Invalid;
         }
 
-        rating() = m.rating();
-
         if (m.isProtected()) {
             relay().notify(NetworkServ::AskForPass, m.salt);
             waiting_name = team.name;
@@ -506,7 +536,7 @@ Player::AuthentificationState Player::testAuthentification(const TeamInfo &team)
         myauth = 0;
         rating() = 1000;
 
-        SecurityManager::create(SecurityManager::Member(team.name, QDate::currentDate().toString(Qt::ISODate), "000", 1000, "", "", relay().ip()));
+        SecurityManager::create(SecurityManager::Member(team.name, QDate::currentDate().toString(Qt::ISODate), "000", "", "", relay().ip()));
         /* To tell the player he's not registered */
         relay().notify(NetworkServ::Register);
         return Success;
@@ -599,9 +629,14 @@ void Player::recvTeam(const TeamInfo &team)
 {
     cancelChallenges();
 
+    avatar() = team.avatar;
+
     if (team.name.toLower() == this->team().name.toLower()) {
         /* No authentification required... */
         this->team() = team;
+        tier() = TierMachine::obj()->findTier(this->team());
+        rating() = TierMachine::obj()->rating(name(), tier());
+
         emit recvTeam(id(), team.name); // no check needed, going directly there...
         return;
     }
@@ -611,6 +646,8 @@ void Player::recvTeam(const TeamInfo &team)
     /* just keeping the old name while not logged in */
     QString name = this->team().name;
     this->team() = team;
+    tier() = TierMachine::obj()->findTier(this->team());
+    rating() = TierMachine::obj()->rating(this->name(), tier());
     this->team().name = name;
 
     if (s == Success) {

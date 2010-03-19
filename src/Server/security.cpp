@@ -28,8 +28,8 @@ void SecurityManager::loadMembers()
 
         QStringList ls = s.split('%');
 
-        if (ls.size() == 7 && isValid(ls[0])) {
-            Member m (ls[0], ls[1], ls[2], ls[3].toInt(), ls[4], ls[5], ls[6]);
+        if (ls.size() == 6 && isValid(ls[0])) {
+            Member m (ls[0], ls[1], ls[2], ls[3], ls[4], ls[5]);
             members[ls[0]] = m;
             memberPlaces[m.name] = pos;
             pos = memberFile.pos();
@@ -66,9 +66,9 @@ void SecurityManager::loadMembers()
     }
 }
 
-SecurityManager::Member::Member(const QString &name, const QString &date, const QString &auth, int ladder, const QString &salt, const QString &hash, const QString &ip)
+SecurityManager::Member::Member(const QString &name, const QString &date, const QString &auth, const QString &salt, const QString &hash, const QString &ip)
     :name(name.toLower()), date(date), auth(auth.leftJustified(3,'0',true)), salt(salt.leftJustified(saltLength)),
-    hash(hash.leftJustified(hashLength)), ip(ip.leftJustified(ipLength,' ',true)), ladder(ladder)
+    hash(hash.leftJustified(hashLength)), ip(ip.leftJustified(ipLength,' ',true))
 {
 }
 
@@ -79,48 +79,12 @@ void SecurityManager::Member::write(QIODevice *device) const {
     device->write("%");
     device->write(auth.toUtf8().constData());
     device->write("%");
-    device->write(QByteArray::number(ladder).rightJustified(ladderLength, '0', true).constData());
-    device->write("%");
     device->write(salt.toUtf8().constData());
     device->write("%");
     device->write(hash.toUtf8().constData());
     device->write("%");
     device->write(ip.toUtf8().constData());
     device->write("\n");
-}
-
-void SecurityManager::Member::changeRating(int opponent_rating, bool win)
-{
-    int n = auth[2].toAscii()-'0';
-
-    int newrating;
-
-    if (n == 0) {
-        if (win) {
-            newrating = std::min(opponent_rating+100, 1250);
-        } else {
-            newrating = std::max(opponent_rating-100, 750);
-        }
-    } else {
-        int kfactor;
-        if (n <= 5) {
-            static const int kfactors[] = {200, 150, 100, 80, 65, 50};
-            kfactor = kfactors[n];
-        } else {
-            kfactor = 32;
-        }
-        double myesp = 1/(1+ pow(10., (opponent_rating-rating())/400));
-        double result = win;
-
-        newrating = rating() + (result - myesp)*kfactor;
-    }
-
-    if (n <= 5) {
-        auth[2]='0'+n+1;
-    }
-
-    ladder = newrating;
-    SecurityManager::updateMember(*this);
 }
 
 void SecurityManager::init()

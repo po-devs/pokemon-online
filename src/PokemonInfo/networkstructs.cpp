@@ -19,8 +19,12 @@ QDataStream &operator << (QDataStream &out, const TeamInfo& team)
     out << team.info;
     out << team.lose;
     out << team.win;
+    out << team.avatar;
+
     for (int i = 0; i < 6; i++)
 	out << team.pokemon(i);
+
+
 
     return out;
 }
@@ -31,8 +35,13 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
     in >> team.info;
     in >> team.lose;
     in >> team.win;
+    in >> team.avatar;
+
     for (int i = 0; i < 6; i++)
 	in >> team.pokemon(i);
+
+
+
     if (team.name.length() > 500) {
         team.name.resize(500);
     }
@@ -73,6 +82,10 @@ QDataStream & operator >> (QDataStream &in, PlayerInfo &p)
         in >> p.pokes[i];
     }
 
+    in >> p.avatar;
+    in >> p.tier;
+
+
     return in;
 }
 
@@ -87,6 +100,9 @@ QDataStream & operator << (QDataStream &out, const PlayerInfo &p)
     for (int i = 0; i < 6; i++) {
         out << p.pokes[i];
     }
+
+    out << p.avatar;
+    out << p.tier;
 
     return out;
 }

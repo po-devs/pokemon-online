@@ -52,7 +52,8 @@ namespace NetworkCli
         SpectatingBattleFinished,
         LadderChange,
         ShowTeamChange,
-        VersionControl
+        VersionControl,
+        TierSelection
     };
 
     enum ProtocolError
@@ -125,6 +126,7 @@ signals:
     void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip);
     void PMReceived(int id, const QString &mess);
     void awayChanged(int id, bool away);
+    void tierListReceived(const QString &tl);
     /* From the control panel */
     void userInfoReceived(const UserInfo &ui);
     void userAliasReceived(const QString &s);

@@ -3286,11 +3286,13 @@ struct MMSnatch : public MM
     * Swallow
     * Synthesis
     * Tailwind
+    * Wish
     */
     struct SM : public QSet<int> {
         SM() { (*this) << Aromatherapy << BellyDrum << Camouflage << DefenseCurl << HealBell << HealOrder << Ingrain << LightScreen
                << MilkDrink << Minimize << Mist << Moonlight << MorningSun << PsychUp << Recover << Reflect << Refresh << Rest
-               << Roost << Safeguard << SlackOff << Softboiled << Stockpile << Submission << Swallow << Synthesis << Tailwind; }
+               << Roost << Safeguard << SlackOff << Softboiled << Stockpile << Substitute << Submission << Swallow << Synthesis << Tailwind
+               << Wish; }
     };
 
     static SM snatched_moves;
@@ -3303,9 +3305,9 @@ struct MMSnatch : public MM
             }
 	    if (turn(b,s)["Power"].toInt() == 0) {
 		int move = MM::move(b,s);
-		/* Typically, the moves that are bounced back are moves that only induce status / boost mods and nothing else,
-		    therefore having no "SpecialEffect". Exceptions are stored in bounced_moves */
-		if (( turn(b,s)["PossibleTarget"].toInt() == Move::User && MoveInfo::SpecialEffect(move).size() == 0 )|| snatched_moves.contains(move)) {
+                /* Typically, the moves that are snatched are moves that only induce status / boost mods and nothing else,
+                    therefore having no "SpecialEffect". Exceptions are stored in snatched_moves */
+                if (( turn(b,s)["PossibleTargets"].toInt() == Move::User && MoveInfo::SpecialEffect(move).size() == 0 )|| snatched_moves.contains(move)) {
 		    b.fail(s,118,0,type(b,snatcher));
 		    /* Now Snatching ... */
 		    removeFunction(turn(b,snatcher), "UponAttackSuccessful", "Snatch");

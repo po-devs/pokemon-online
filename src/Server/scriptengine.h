@@ -71,6 +71,7 @@ public:
     Q_INVOKABLE QScriptValue item(int num);
     Q_INVOKABLE QScriptValue itemNum(const QString &item);
 
+    Q_INVOKABLE QScriptValue teamPokeLevel(int id, int slot);
     Q_INVOKABLE QScriptValue teamPoke(int id, int index);
     Q_INVOKABLE bool hasTeamPoke(int id, int pokemonnum);
     Q_INVOKABLE QScriptValue indexOfTeamPoke(int id, int pokenum);

@@ -15,6 +15,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
 #include "../Shared/config.h"
+#include "tier.h"
 
 Server::Server(quint16 port)
 {
@@ -30,6 +31,7 @@ Server::Server(quint16 port)
     options->addAction("&Anti DoS", this, SLOT(openAntiDos()));
     options->addAction("&Config", this, SLOT(openConfig()));
     options->addAction("&Scripts", this, SLOT(openScriptWindow()));
+    options->addAction("&Tiers", this, SLOT(openTiersWindow()));
     mylayout->addWidget(bar,0,0,1,2);
 
     mylist = new QListWidget();
@@ -81,6 +83,7 @@ Server::Server(quint16 port)
     } catch (const QString &ex) {
         printLine(ex);
     }
+    TierMachine::init();
 
     AntiDos::obj()->init();
 
@@ -255,6 +258,30 @@ void Server::openScriptWindow()
     connect(myscriptswindow, SIGNAL(scriptChanged(QString)), myengine, SLOT(changeScript(QString)));
 }
 
+void Server::openTiersWindow()
+{
+    TierWindow *w = new TierWindow();
+
+    w->show();
+
+    connect(w, SIGNAL(tiersChanged()), SLOT(tiersChanged()));
+}
+
+void Server::tiersChanged()
+{
+    sendAll("Tiers have been updated!");
+
+    foreach(Player *p, myplayers) {
+        if (!TierMachine::obj()->isValid(p->team(),p->tier())) {
+            p->tier() = TierMachine::obj()->findTier(p->team());
+            p->rating() = TierMachine::obj()->rating(p->name(), p->tier());
+            if (p->isLoggedIn()) {
+                sendPlayer(p->id());
+            }
+        }
+    }
+}
+
 void Server::banName(const QString &name) {
     if (nameExist(name)) {
         ban(id(name));
@@ -399,6 +426,7 @@ void Server::loggedIn(int id, const QString &name)
         player(id)->changeState(Player::LoggedIn, true);
 
         player(id)->relay().notify(NetworkServ::VersionControl, VERSION);
+        player(id)->relay().notify(NetworkServ::TierSelection, TierMachine::obj()->tierList());
 
         sendPlayersList(id);
         sendLogin(id);
@@ -626,14 +654,12 @@ void Server::battleResult(int desc, int winner, int loser, bool rated)
         }
     } else {
         if (desc != Tie && rated) {
-            SecurityManager::Member winnerM = SecurityManager::member(player(winner)->name());
-            SecurityManager::Member loserM = SecurityManager::member(player(loser)->name());
-            int wrat = winnerM.rating();
-            int lrat = loserM.rating();
-            winnerM.changeRating(lrat, true);
-            loserM.changeRating(wrat, false);
-            player(winner)->rating() = winnerM.rating();
-            player(loser)->rating() = loserM.rating();
+            QString winn = player(winner)->name();
+            QString lose = player(loser)->name();
+            QString tier = player(winner)->tier();
+            TierMachine::obj()->changeRating(winn, lose, tier);
+            player(winner)->rating() = TierMachine::obj()->rating(winn, tier);
+            player(loser)->rating() = TierMachine::obj()->rating(lose, tier);
             sendPlayer(winner);
             sendPlayer(loser);
         }

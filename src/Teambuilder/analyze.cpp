@@ -304,6 +304,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
                 emit versionDiff(version, VERSION);
             break;
         }
+    case TierSelection:
+        {
+            QString tierList;
+            in >> tierList;
+            emit tierListReceived(tierList);
+            break;
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
     }

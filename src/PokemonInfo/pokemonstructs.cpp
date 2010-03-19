@@ -590,6 +590,7 @@ PokeTeam & Team::poke(int index)
 
 TrainerTeam::TrainerTeam()
 {
+    avatar() = 0;
 }
 
 QString TrainerTeam::trainerInfo() const
@@ -671,6 +672,7 @@ bool TrainerTeam::saveToFile(const QString &path) const
     trainer.setAttribute("winMsg",trainerWin());
     trainer.setAttribute("loseMsg",trainerLose());
     trainer.setAttribute("infoMsg",trainerInfo());
+    trainer.setAttribute("avatar", avatar());
 
     QDomElement poke[6];
     for(int cpt = 0;cpt<6;cpt++)
@@ -787,21 +789,22 @@ bool TrainerTeam::loadFromFile(const QString &path)
     this->setTrainerInfo(trainer.attribute("infoMsg",QString()));
     this->setTrainerLose(trainer.attribute("loseMsg",QString()));
     this->setTrainerWin(trainer.attribute("winMsg",QString()));
+    this->avatar() = trainer.attribute("avatar", 0).toInt();
     QDomElement poke = team.firstChildElement("Pokemon");
     int cpt = 0;
     while(!poke.isNull())
     {
         this->team().poke(cpt).reset();
-        this->team().poke(cpt).setNum(poke.attribute("Num",0).toInt(0,10));
+        this->team().poke(cpt).setNum(poke.attribute("Num",0).toInt());
         this->team().poke(cpt).load();
         this->team().poke(cpt).nickname() = poke.attribute("Nickname");
-        this->team().poke(cpt).item() = poke.attribute("Item",0).toInt(0,10);
-        this->team().poke(cpt).ability() = poke.attribute("Ability",0).toInt(0,10);
-        this->team().poke(cpt).nature() = poke.attribute("Nature",0).toInt(0,10);
-        this->team().poke(cpt).gender() = poke.attribute("Gender",0).toInt(0,10);
+        this->team().poke(cpt).item() = poke.attribute("Item",0).toInt();
+        this->team().poke(cpt).ability() = poke.attribute("Ability",0).toInt();
+        this->team().poke(cpt).nature() = poke.attribute("Nature",0).toInt();
+        this->team().poke(cpt).gender() = poke.attribute("Gender",0).toInt();
         this->team().poke(cpt).shiny() = QVariant(poke.attribute("Shiny",false)).toBool();
-        this->team().poke(cpt).happiness() = poke.attribute("Happiness",0).toInt(0,10);
-        this->team().poke(cpt).level() = poke.attribute("Lvl",0).toInt(0,10);
+        this->team().poke(cpt).happiness() = poke.attribute("Happiness",0).toInt();
+        this->team().poke(cpt).level() = poke.attribute("Lvl",0).toInt();
         int cptMove=0;
 
         QDomElement moveElement = poke.firstChildElement("Move");
@@ -1018,6 +1021,7 @@ QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
     out << trainerTeam.trainerInfo();
     out << trainerTeam.trainerLose();
     out << trainerTeam.trainerWin();
+    out << trainerTeam.avatar();
     out << trainerTeam.team();
 
     return out;
@@ -1032,7 +1036,9 @@ QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
     in >> info;
     in >> lose;
     in >> win;
+    in >> trainerTeam.avatar();
     in >> trainerTeam.team();
+
 
     trainerTeam.setTrainerNick(nick);
     trainerTeam.setTrainerInfo(info);
