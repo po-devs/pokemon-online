@@ -146,7 +146,7 @@ void pokeButton::dropEvent(QDropEvent * event)
     else if(event->source()->objectName()=="pokeListe")
     {
         pokeListe * source = qobject_cast<pokeListe *>(event->source());
-        if(source && this->isChecked() == true )
+        if(source)
         {
             const QMimeData * data = event->mimeData();
             //QMessageBox::information(0,"",QString("%1\n"+data->text()).arg(this->index));
