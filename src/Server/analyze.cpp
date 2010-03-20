@@ -142,6 +142,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     switch (command) {
     case Login:
 	{
+            qDebug() << "Login received";
             if (mysocket.id() != 0) {
                 TeamInfo team;
                 bool ladder, show_team;
@@ -149,6 +150,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
                 emit loggedIn(team,ladder,show_team);
             } else
                 emit accepted(); // for registry;
+            qDebug() << "Login end";
 	    break;
 	}
     case SendMessage:
@@ -193,7 +195,11 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         break;
     case Register:
         if (mysocket.id() != 0)
+        {
+            qDebug() << "Hash received";
             emit wannaRegister();
+            qDebug() << "End Hash received";
+        }
         else
             emit nameTaken(); // for registry
         break;

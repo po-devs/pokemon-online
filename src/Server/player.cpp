@@ -71,7 +71,7 @@ void Player::changeTier(const QString &newtier)
     if (!TierMachine::obj()->isValid(team(), newtier)) {
         QString pokeList = "";
         for(int i = 0; i < 6; i++) {
-            if (TierMachine::obj()->isBanned(team().poke(i).num(),newtier)) {
+            if (TierMachine::obj()->isBanned(team().poke(i),newtier)) {
                 pokeList += PokemonInfo::Name(team().poke(i).num()) + ", ";
             }
         }
@@ -494,8 +494,11 @@ void Player::loggedIn(const TeamInfo &_team,bool ladder, bool showteam)
         return;
     }
 
+    qDebug() << "Assigning team";
     team() = _team;
+    qDebug() << "Finding tier";
     tier() = TierMachine::obj()->findTier(team());
+    qDebug() << "Getting rating";
     rating() = TierMachine::obj()->rating(name(), tier());
 
     if (st == Success) {

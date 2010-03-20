@@ -8,7 +8,7 @@ Challenge::Challenge(Player *source, Player *dest, const ChallengeInfo &c, Serve
     if (source->id() == dest->id()) {
         throw Exception();
     }
-    if (dest->team().invalid()) {
+    if (dest->team().invalid() && !(c.clauses & ChallengeInfo::ChallengeCup)) {
         source->sendChallengeStuff(ChallengeInfo(ChallengeInfo::InvalidTeam, dest->id()));
         throw Exception();
     }
