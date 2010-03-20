@@ -94,7 +94,7 @@ void MainEngine::launchMenu()
 
 void MainEngine::launchCredits()
 {
-    QFile fichier("credit.html");
+    QFile fichier("db/credits.html");
     if(!fichier.open(QIODevice::ReadOnly))
     {
         return;
@@ -111,6 +111,8 @@ void MainEngine::launchCredits()
     //MainEngineRoutine(d_credit);
     d_credit.setLayout(l);
     d_credit.move(this->displayer->geometry().x(),this->displayer->geometry().y());
+    d_credit.setStyleSheet("background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
+                                                       "stop:0 white, stop:1 #0ca0dd);");
     d_credit.exec();
 }
 
