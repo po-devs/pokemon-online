@@ -94,7 +94,7 @@ void MainEngine::launchMenu()
 
 void MainEngine::launchCredits()
 {
-    QFile fichier("developpement.html");
+    QFile fichier("credit.html");
     if(!fichier.open(QIODevice::ReadOnly))
     {
         return;
@@ -105,7 +105,6 @@ void MainEngine::launchCredits()
     QLabel * credit = new QLabel();
     //credit->setMaximumSize(800,600);
     l->addWidget(credit);
-    credit->setObjectName("credit");
     credit->setAttribute(Qt::WA_DeleteOnClose,true);
     QTextStream out(&fichier);
     credit->setText(out.readAll());
@@ -113,7 +112,6 @@ void MainEngine::launchCredits()
     d_credit.setLayout(l);
     d_credit.move(this->displayer->geometry().x(),this->displayer->geometry().y());
     d_credit.exec();
-    //connect(credit,SIGNAL(destroyed()),this,SLOT(launchMenu()));
 }
 
 void MainEngine::launchTeamBuilder()
