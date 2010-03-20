@@ -76,8 +76,8 @@ void MainEngine::loadStyleSheet()
     displayer = new QMainWindow(); \
     displayer->resize(widget->size()); \
     displayer->setWindowTitle(tr("Pokemon Online")); \
-    displayer->setCentralWidget(widget); \
-    displayer->setMenuBar(widget->createMenuBar(this)); \
+    displayer->setCentralWidget(widget);\
+    displayer->setMenuBar(widget->createMenuBar(this));\
     displayer->show();
 
 void MainEngine::launchMenu()
@@ -94,6 +94,26 @@ void MainEngine::launchMenu()
 
 void MainEngine::launchCredits()
 {
+    QFile fichier("developpement.html");
+    if(!fichier.open(QIODevice::ReadOnly))
+    {
+        return;
+    }
+    QDialog d_credit;
+    d_credit.setMaximumSize(800,600);
+    QVBoxLayout * l = new QVBoxLayout();
+    QLabel * credit = new QLabel();
+    //credit->setMaximumSize(800,600);
+    l->addWidget(credit);
+    credit->setObjectName("credit");
+    credit->setAttribute(Qt::WA_DeleteOnClose,true);
+    QTextStream out(&fichier);
+    credit->setText(out.readAll());
+    //MainEngineRoutine(d_credit);
+    d_credit.setLayout(l);
+    d_credit.move(this->displayer->geometry().x(),this->displayer->geometry().y());
+    d_credit.exec();
+    //connect(credit,SIGNAL(destroyed()),this,SLOT(launchMenu()));
 }
 
 void MainEngine::launchTeamBuilder()

@@ -63,3 +63,4 @@ HEADERS += mainwindow.h \
     tier.h
 DEFINES = MULTI_THREADED_ACCESS \
     SERVER_SIDE
+RESOURCES += 

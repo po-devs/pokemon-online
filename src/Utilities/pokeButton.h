@@ -18,6 +18,7 @@ public:
     int index;
 signals:
     void changePokemonOrder(QPair<int /*pokemon1*/,int /*pokemon2*/>echange);
+    void changePokemonBase(int indexBody,int pokenum);
 
 protected:
     void mousePressEvent(QMouseEvent * event);
