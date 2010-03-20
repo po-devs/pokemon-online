@@ -44,6 +44,7 @@ private slots:
     void advancedDestroyed();
     void indexNumPokemonChangedForAdvanced(int pokeNum);
     void changePokemonOrder(QPair<int /*pokemon1*/, int /*pokemon2*/>echange);
+    void changePokemonBase(int indexBody, int pokenum);
 
 public slots:
     void saveTeam();
@@ -58,6 +59,8 @@ signals:
     void done();
     void showDockAdvanced(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
 
+protected:
+    void dragEnterEvent(QDragEnterEvent * event);
 public:
     TeamBuilder(TrainerTeam *team);
     ~TeamBuilder();
@@ -123,20 +126,21 @@ public:
 };
 
 /* This is the widget displaying the pokemon's info, moves, item, ... */
+class pokeListe;
 class TB_PokemonBody : public QWidget
 {
     Q_OBJECT
 
     enum Column
     {
-	Type=0,
-	Name=1,
-	Learning,
-	PP,
-	Pow,
-	Acc,
-	Category,
-	LastColumn
+        Type=0,
+        Name=1,
+        Learning,
+        PP,
+        Pow,
+        Acc,
+        Category,
+        LastColumn
     };
 
 signals:
@@ -165,7 +169,7 @@ public:
     /* getting the pokemon of the team corresponding to the body */
     PokeTeam *poke();
 private:
-    QCompactTable *pokechoice;
+    pokeListe *pokechoice;
     QComboBox *itemchoice;
     QComboBox *naturechoice;
     QLabel *pokeImage, *genderIcon, *level, *type1, *type2;

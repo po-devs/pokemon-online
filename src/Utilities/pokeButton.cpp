@@ -5,6 +5,8 @@
 #include <QIcon>
 #include <QImage>
 #include <QtDebug>
+#include "../Utilities/pokeListe.h"
+#include <QMessageBox>
 
 pokeButton::pokeButton(QWidget * parent):QPushButton(parent),index(0)
 {
@@ -72,46 +74,83 @@ void pokeButton::mouseReleaseEvent(QMouseEvent * event)
 
 void pokeButton::dragEnterEvent(QDragEnterEvent * event)
 {
-    pokeButton * source = qobject_cast<pokeButton *>(event->source());
-    if(source && source != this)
+    if(event->source()->objectName()=="pokeButton")
     {
-        event->setDropAction(Qt::MoveAction);
-        event->accept();
+        pokeButton * source = qobject_cast<pokeButton *>(event->source());
+        if(source && source != this)
+        {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        }
+    }
+    else if(event->source()->objectName()=="pokeListe")
+    {
+        pokeListe * source = qobject_cast<pokeListe *>(event->source());
+        if(source)
+        {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        }
     }
 }
 
 void pokeButton::dragMoveEvent(QDragMoveEvent * event)
 {
-    pokeButton * source = qobject_cast<pokeButton *>(event->source());
-    if(source && source != this)
+    if(event->source()->objectName()=="pokeButton")
     {
-        event->setDropAction(Qt::MoveAction);
-        event->accept();
+        pokeButton * source = qobject_cast<pokeButton *>(event->source());
+        if(source && source != this)
+        {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        }
+    }
+    else if(event->source()->objectName()=="pokeListe")
+    {
+        pokeListe * source = qobject_cast<pokeListe *>(event->source());
+        if(source)
+        {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        }
     }
 }
 
 void pokeButton::dropEvent(QDropEvent * event)
 {
-    pokeButton * source = qobject_cast<pokeButton *>(event->source());
-    if(source && source != this)
+    if(event->source()->objectName()=="pokeButton")
     {
-        if(qvariant_cast<QImage>(event->mimeData()->imageData())!=QVariant())
+        pokeButton * source = qobject_cast<pokeButton *>(event->source());
+        if(source && source != this)
         {
-            QImage image=qvariant_cast<QImage>(event->mimeData()->imageData());
-            source->setIcon(this->icon());
-            QString ns_text = this->text().remove(tr("(&%1)").arg(this->index));
-            ns_text =ns_text+tr("(&%1)").arg(source->index);
-            QString n_text = event->mimeData()->text().remove(tr("(&%1)").arg(source->index));
-            n_text = n_text+tr("(&%1)").arg(this->index);
-            source->setText(ns_text);
-            this->setIcon(QPixmap::fromImage(image));
-            this->setText(n_text);
-            QPair<int,int> echange;
-            echange.first = source->index;
-            echange.second = this->index;
-            qDebug() << "echange:" << echange;
-            source->setChecked(false);
-            emit changePokemonOrder(echange);
+            if(qvariant_cast<QImage>(event->mimeData()->imageData())!=QVariant())
+            {
+                QImage image=qvariant_cast<QImage>(event->mimeData()->imageData());
+                source->setIcon(this->icon());
+                QString ns_text = this->text().remove(tr("(&%1)").arg(this->index));
+                ns_text =ns_text+tr("(&%1)").arg(source->index);
+                QString n_text = event->mimeData()->text().remove(tr("(&%1)").arg(source->index));
+                n_text = n_text+tr("(&%1)").arg(this->index);
+                source->setText(ns_text);
+                this->setIcon(QPixmap::fromImage(image));
+                this->setText(n_text);
+                QPair<int,int> echange;
+                echange.first = source->index;
+                echange.second = this->index;
+                qDebug() << "echange:" << echange;
+                source->setChecked(false);
+                emit changePokemonOrder(echange);
+            }
+        }
+    }
+    else if(event->source()->objectName()=="pokeListe")
+    {
+        pokeListe * source = qobject_cast<pokeListe *>(event->source());
+        if(source && this->isChecked() == true )
+        {
+            const QMimeData * data = event->mimeData();
+            //QMessageBox::information(0,"",QString("%1\n"+data->text()).arg(this->index));
+            emit changePokemonBase(this->index,data->text().toInt(0,10));
         }
     }
 }

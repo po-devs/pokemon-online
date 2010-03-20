@@ -1,19 +1,19 @@
 #ifndef POKELISTE_H
 #define POKELISTE_H
 
-#include <QListView>
+#include <QTableWidget>
 
-class pokeListe : public QListView
+class QTableWidgetItem;
+class pokeListe : public QTableWidget
 {
     Q_OBJECT
 
 public:
-    pokeListe(QWidget * parent = 0);
+    pokeListe(int row,int col,QWidget * parent = 0);
     ~pokeListe();
 
 protected:
     void mousePressEvent(QMouseEvent * event);
-    //void mouseReleaseEvent(QMouseEvent * event);
     void mouseMoveEvent(QMouseEvent * event);
     //void dragEnterEvent(QDragEnterEvent * event);
     //void dragMoveEvent(QDragMoveEvent * event);
@@ -23,6 +23,7 @@ private:
     void startDrag();
 
     QPoint startPos;
+    QTableWidgetItem * itemForDrag;
 };
 
 #endif // POKELISTE_H
