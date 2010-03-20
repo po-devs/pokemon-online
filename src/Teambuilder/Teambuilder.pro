@@ -65,6 +65,5 @@ TRANSLATIONS = translation_fr.ts \
     translation_jp.ts \
     translation_ko.ts
 RC_FILE = myapp.rc
-RESOURCES += img.qrc
 RESOURCES +=
 

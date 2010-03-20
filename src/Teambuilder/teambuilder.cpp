@@ -6,6 +6,7 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/dockinterface.h"
 #include "../Utilities/pokeButton.h"
+#include "../Utilities/pokeListe.h"
 
 template <class T, class U>
         QSet<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
@@ -69,6 +70,7 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team),m_dockAdvance
         m_pokemon[i] = new pokeButton(QString("Pokémon &%1").arg(i+1));
 	m_pokemon[i]->setCheckable(true);
         connect(m_pokemon[i],SIGNAL(changePokemonOrder(QPair<int,int>)),this,SLOT(changePokemonOrder(QPair<int,int>)));
+        connect(m_pokemon[i],SIGNAL(changePokemonBase(int,int)),this,SLOT(changePokemonBase(int,int)));
         if(i<3)
         {
             layout->addWidget(m_pokemon[i],0,(i%3)+1);
@@ -344,6 +346,15 @@ void TeamBuilder::changePokemonOrder(QPair<int, int>echange)
     poke2->updateNum();
 }
 
+void TeamBuilder::changePokemonBase(int indexBody,int pokenum)
+{
+    int indexPokemonTeam = indexBody-1;
+    TB_PokemonBody * poke1 = pokebody(indexPokemonTeam);
+    //m_body->removeWidget(poke1);
+    poke1->setNum(pokenum);
+    poke1->updateNum();
+}
+
 DockAdvanced * TeamBuilder::dockAdvanced() const
 {
     return m_dockAdvanced;
@@ -361,6 +372,24 @@ TB_TrainerBody * TeamBuilder::trainerbody()
 
 TeamBuilder::~TeamBuilder()
 {
+}
+
+void TeamBuilder::dragEnterEvent(QDragEnterEvent *event)
+{
+    if(event->source()->objectName() == "pokeListe")
+    {
+        pokeListe * source = qobject_cast<pokeListe *>(event->source());
+        QDrag * drag = new QDrag(source);
+        const QMimeData * d = event->mimeData();
+        QMimeData * data = new QMimeData();
+        data->setText(d->text());
+        data->setImageData(d->imageData());
+        drag->setMimeData(data);
+        drag->setDragCursor(PokemonInfo::Picture(QVariant(d->text()).toInt(0)),Qt::MoveAction);
+        drag->exec(Qt::MoveAction);
+        //event->accept();
+        event->ignore();
+    }
 }
 
 TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->trainerTeam())
@@ -568,7 +597,7 @@ void TB_PokemonBody::connectWithAdvanced(TB_Advanced *ptr)
 
 void TB_PokemonBody::initPokemons()
 {
-    pokechoice = new QCompactTable(PokemonInfo::TrueCount(),2);
+    pokechoice = new pokeListe(PokemonInfo::TrueCount(),2);
     pokechoice->setSelectionBehavior(QAbstractItemView::SelectRows);
     pokechoice->setSelectionMode(QAbstractItemView::SingleSelection);
     pokechoice->setShowGrid(false);
