@@ -18,7 +18,7 @@ MainEngine::MainEngine() : displayer(0)
         settings.setValue("team_location", "Team/trainer.tp");
     }
     if (settings.value("application_style").isNull()) {
-        settings.setValue("application_style", "cleanlooks");
+        settings.setValue("application_style", "plastique");
     }
     if (settings.value("stylesheet").isNull()) {
         settings.setValue("stylesheet", "db/default.qss");

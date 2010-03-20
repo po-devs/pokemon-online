@@ -137,6 +137,10 @@ void BattleSituation::addSpectator(int id)
     int key = spectatorKey(id);
     spectators[key] = id;
 
+    notify(key, Rated, Player1, rated());
+    if (rated())
+        notify(key, TierSection, Player1, tier());
+
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         //False for saying this is not in battle message but rule message
         if (clauses() & (1 << i))

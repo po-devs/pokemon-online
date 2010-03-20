@@ -869,7 +869,7 @@ struct MMBellyDrum : public MM
     static void uas(int s, int, BS &b) {
         if (move(b,s) == Move::BellyDrum) {
             b.sendMoveMessage(s,1,8,type(b,s));
-            b.gainStatMod(s,Attack,12,false);
+            b.gainStatMod(s,Attack,8,false);
         }
         b.changeHp(s, b.poke(s).lifePoints() - b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100);
     }

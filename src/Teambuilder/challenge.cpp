@@ -16,7 +16,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     QColor grey = "#414141";
 
     QLabel *name = new QLabel(toColor(p.team.name, grey),this);
-    name->setGeometry(54,0,230,52);
+    name->setGeometry(54,0,290,52);
     name->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     name->setFont(QFont("Trebuchet MS", 20, QFont::DemiBold));
 
