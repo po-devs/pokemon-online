@@ -1259,6 +1259,8 @@ struct MMAttract : public MM
     }
 
     static void pda(int s, int, BS &b) {
+        if (turn(b,s).value("HasPassedStatus").toBool())
+            return;
 	if (poke(b,s).contains("AttractedTo")) {
 	    int seducer = poke(b,s)["AttractedTo"].toInt();
 	    if (poke(b,seducer).contains("Attracted") && poke(b,seducer)["Attracted"].toInt() == s) {
