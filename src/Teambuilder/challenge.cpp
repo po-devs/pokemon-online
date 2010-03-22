@@ -24,7 +24,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     trainerPic->move(13,85);
     QPixmap px (QString("db/Trainer Sprites/%1.png").arg(p.avatar));
     if (px.isNull())
-        px = QString("db/Trainer Sprites/%1.png").arg(168);
+        px = QString("db/Trainer Sprites/%1.png").arg(167);
     trainerPic->setPixmap(px);
 
     bool hidden = p.pokes[0]==0;

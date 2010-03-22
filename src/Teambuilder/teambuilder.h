@@ -7,9 +7,9 @@
 
 class TB_PokemonBody;
 class TB_TrainerBody;
+class TB_TeamBody;
 class TB_EVManager;
 class DockAdvanced;
-class pokeButton;
 class TB_Advanced;
 
 class TrainerTeam;
@@ -30,37 +30,37 @@ private:
     QPlainTextEdit *mycontent;
 };
 
+/* A box specially made to display 80*80 avatars */
+class AvatarBox : public QLabel {
+public:
+    AvatarBox(const QPixmap &pic=QPixmap());
+
+    void changePic(const QPixmap &pic);
+protected:
+    static QPixmap *background;
+    QLabel *underLying;
+};
+
+/* Titles and such with the blue pokeball in front */
+class Pokeballed : public QWidget {
+public:
+    Pokeballed(QWidget *w);
+protected:
+    Pokeballed();
+    void init(QWidget *w);
+
+    static QPixmap *pokeball;
+};
+
+class TitledWidget : public QWidget {
+public:
+    TitledWidget(const QString &title, QWidget *w);
+};
+
 /* The Teambuilder!! */
-class TeamBuilder : public QWidget
+class TeamBuilder : public QImageBackground
 {
     Q_OBJECT
-
-    friend class DockAdvanced;
-private slots:
-    void changeBody(int i);
-    void setIconForPokeButton();
-    void setNicknameIntoButton(QString nickname);
-    void advancedClicked(int index);
-    void advancedDestroyed();
-    void indexNumPokemonChangedForAdvanced(int pokeNum);
-    void changePokemonOrder(QPair<int /*pokemon1*/, int /*pokemon2*/>echange);
-    void changePokemonBase(int indexBody, int pokenum);
-
-public slots:
-    void saveTeam();
-    void loadTeam();
-    void newTeam();
-    void clickOnDone();
-    void updateTeam();
-    void importFromTxt();
-    void importDone(const QString &text);
-
-signals:
-    void done();
-    void showDockAdvanced(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
-
-protected:
-    void dragEnterEvent(QDragEnterEvent * event);
 public:
     TeamBuilder(TrainerTeam *team);
     ~TeamBuilder();
@@ -70,37 +70,49 @@ public:
 
     /* Create a menu bar to give to the main window */
     QMenuBar *createMenuBar(MainEngine *w);
-    void createDockAdvanced();
+
+    QWidget* createButtonMenu();
+public slots:
+    void saveTeam();
+    void loadTeam();
+    void newTeam();
+    void clickOnDone();
+    void updateAll();
+    void importFromTxt();
+    void importDone(const QString &text);
 
 private:
-    pokeButton *m_pokemon[6];
-    QPushButton *m_trainer;
+    enum StackWidgets {
+        TrainerW=0,
+        TeamW=1
+    };
+
+private slots:
+    void changeToTrainer();
+    void changeToTeam();
+    void changeZone();
+
+signals:
+    void done();
+    void showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation);
+private:
     QStackedWidget *m_body;
     TB_TrainerBody *m_trainerBody;
-    TB_PokemonBody *m_pbody[6];
+    TB_TeamBody *m_teamBody;
+    QImageButton *nextb;
     /* the Team of the trainer */
     TrainerTeam *m_team;
 
     QPointer<QWidget> m_import;
 
-    /* returns the button associated to that zone */
-    QPushButton *at(int i);
     Team *team();
 
-    void updatePokemon(int index);
     void updateTrainer();
-    /* makes the signal/slots connections */
-    void connectAll();
-    /* returns the current zone (0 = trainer, 1-6 = according pokémon) */
-    int currentZone() const;
-    /*...*/
+    void updateTeam();
 
-    TB_PokemonBody *pokebody(int index);
     TB_TrainerBody *trainerbody();
 
-    //dockAdvanced
-    DockAdvanced * m_dockAdvanced;
-    DockAdvanced * dockAdvanced() const;
+
 };
 
 /* This is the widget displaying a trainer's info */
@@ -108,25 +120,109 @@ private:
 class TB_TrainerBody : public QWidget
 {
     Q_OBJECT
-private:
-    QLineEdit *m_nick;
-    QTextEdit *m_winMessage, *m_loseMessage, /* *m_drawMessage, */ *m_trainerInfo;
-
-     TrainerTeam *m_team;
-     TrainerTeam* trainerTeam();
- private slots:
-     void changeTrainerInfo();
-     void setTrainerNick(const QString &);
-     void changeTrainerWin();
-     void changeTrainerLose();
 public:
     TB_TrainerBody(TeamBuilder *parent);
 
     void updateTrainer();
+private slots:
+    void changeTrainerInfo();
+    void setTrainerNick(const QString &);
+    void changeTrainerWin();
+    void changeTrainerLose();
+    void changeTrainerAvatar(int);
+    void changeTrainerColor();
+private:
+    QLineEdit *m_nick;
+    QTextEdit *m_winMessage, *m_loseMessage, *m_trainerInfo;
+    QPushButton *m_colorButton;
+    AvatarBox *m_avatar;
+    QSpinBox *m_avatarSelection;
+
+    TrainerTeam *m_team;
+    TrainerTeam* trainerTeam();
+};
+
+class TeamPokeButton : public QPushButton
+{
+    Q_OBJECT
+public:
+    TeamPokeButton(int num, int poke=0, int level=100, int item = 0);
+
+    void changeInfos(int poke=0, int level=100, int item = 0);
+    int num() const {return m_num;}
+signals:
+    void changePokemonOrder(QPair<int,int> exchange);
+    void changePokemonBase(int num, int poke);
+
+protected:
+    static QPixmap * teamBoxBall;
+
+    void mouseMoveEvent(QMouseEvent *e);
+    void mousePressEvent(QMouseEvent *e);
+    void dragEnterEvent(QDragEnterEvent *e);
+    void dropEvent(QDropEvent *e);
+    void startDrag();
+private:
+    QLabel *pokeIcon, *level, *itemIcon;
+    int m_num;
+
+    QPoint startPos;
+};
+
+class TB_TeamBody: public QWidget
+{
+    Q_OBJECT
+public:
+    TB_TeamBody(TeamBuilder *parent);
+    void updateTeam();
+signals:
+    void showDockAdvanced(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
+private slots:
+    void changeIndex();
+    void updateButton();
+    void changePokemonOrder(QPair<int,int>);
+    void changePokemonBase(int slot, int num);
+    void advancedClicked(int index, bool separateWindow);
+    void advancedDestroyed();
+    void indexNumChanged(int pokeNum);
+private:
+    TeamPokeButton *pokeButtons[6];
+    TB_PokemonBody *pokeBody[6];
+    QStackedWidget *body;
+
+    DockAdvanced * m_dockAdvanced;
+    DockAdvanced * dockAdvanced() const {
+        return m_dockAdvanced;
+    }
+    void createDockAdvanced(bool sepWindow);
+
+    TrainerTeam *m_team;
+    TrainerTeam* trainerTeam() {
+        return m_team;
+    }
+
+    friend class DockAdvanced;
 };
 
 /* This is the widget displaying the pokemon's info, moves, item, ... */
-class pokeListe;
+class TB_PokeChoice : public QCompactTable
+{
+    Q_OBJECT
+
+public:
+    TB_PokeChoice();
+
+protected:
+    void mousePressEvent(QMouseEvent * event);
+    void mouseMoveEvent(QMouseEvent * event);
+
+private:
+    void startDrag();
+
+    QPoint startPos;
+    QTableWidgetItem * itemForDrag;
+};
+
 class TB_PokemonBody : public QWidget
 {
     Q_OBJECT
@@ -147,9 +243,11 @@ signals:
     void moveChosen(int movenum);
     void pokeChanged(int pokenum);
     void nicknameChanged(QString nickname);
-    void advanced(int index);
+    void advanced(int index, bool separateWindow);
     void EVChanged(int stat);
     void natureChanged();
+    void itemChanged(int newItem);
+    void levelChanged();
 public slots:
     void setNum(int pokeNum);
     void setPokeByNick();
@@ -160,23 +258,25 @@ public slots:
     void updateEVs();
     void changeForm(int pokenum);
 public:
-    TB_PokemonBody(PokeTeam *poke);
+    TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num);
     void connectWithAdvanced(TB_Advanced *ptr);
-    inline void changeSourcePoke(PokeTeam *poke) {m_poke = poke;}
 
     void updateNum();
     void setNum(int pokeNum, bool resetEverything);
     /* getting the pokemon of the team corresponding to the body */
     PokeTeam *poke();
+    int num() const {return m_num;}
 private:
-    pokeListe *pokechoice;
+    TB_PokeChoice *pokechoice;
     QComboBox *itemchoice;
     QComboBox *naturechoice;
-    QLabel *pokeImage, *genderIcon, *level, *type1, *type2;
+    AvatarBox *pokeImage;
+    QLabel *genderIcon, *level, *type1, *type2, *pokename, *itemicon;
+    int m_num;
 
     class MoveList : public QCompactTable {
     public:
-        MoveList(int a,int b):QCompactTable(a,b) {}
+        MoveList();
     protected:
         bool event(QEvent *event);
     };
@@ -218,7 +318,7 @@ private slots:
 };
 
 /* Manages the EV bars, inside the TB_PokemonBody */
-class TB_EVManager : public QGridLayout
+class TB_EVManager : public QWidget
 {
     Q_OBJECT
 private:
@@ -227,6 +327,7 @@ private:
     QLineEdit *m_evs[6];
     QSlider *m_mainSlider;
     PokeTeam *m_poke;
+    QLabel * m_mainLabel;
 
     PokeTeam *poke();
     QSlider *slider(int stat);

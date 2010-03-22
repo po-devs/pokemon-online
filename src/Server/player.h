@@ -17,6 +17,7 @@ class Player : public QObject
     PROPERTY(bool, showteam);
     PROPERTY(QString, tier);
     PROPERTY(quint16, avatar);
+    PROPERTY(QColor, color);
 public:
     BattleSituation *battle;
     QSet<int> battlesSpectated;
@@ -98,7 +99,7 @@ signals:
     void spectatingChat(int, int, const QString &chat);
     void spectatingStopped(int, int battleId);
 public slots:
-    void loggedIn(const TeamInfo &team,bool,bool);
+    void loggedIn(const TeamInfo &team,bool,bool, QColor);
     void recvMessage(const QString &mess);
     void recvTeam(const TeamInfo &team);
     void disconnected();

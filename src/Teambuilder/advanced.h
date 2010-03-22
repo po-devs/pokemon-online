@@ -3,6 +3,8 @@
 
 #include <QtGui>
 
+class AvatarBox;
+
 /* This file contains the code for the "Advanced" window you
    can access in the Teambuilder on a pokemon */
 
@@ -15,7 +17,7 @@ class TB_Advanced : public QWidget
 private:
     PokeTeam *m_poke;
 
-    QLabel *pokeImage;
+    AvatarBox *pokeImage;
     /* hp means hidden power */
     QComboBox *hpchoice;
     QSpinBox *dvchoice[6];
@@ -43,9 +45,6 @@ private:
     void changeDV(int stat, int newval);
     // Gives the num of the stat corresponding to that ptr
     int stat(QObject *dvchoiceptr);
-public:
-    /* So we can resize the table properly */
-    void resizeEvent(QResizeEvent*);
 private slots:
     void changeAbility(bool);
     void changeShininess(bool);

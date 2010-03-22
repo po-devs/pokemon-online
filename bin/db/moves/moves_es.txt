@@ -340,7 +340,7 @@ Tormenta de arena
 Cara Susto
 Arañazo
 Chirrido
-Poder Oculto
+Daño Secreto
 Bomba Germen
 Fogonazo
 Movimiento Sísmico

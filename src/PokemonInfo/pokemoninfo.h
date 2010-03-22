@@ -218,6 +218,9 @@ public:
     static int Power(int itemnum);
     static int BerryPower(int itemnum);
     static int BerryType(int itemnum);
+#ifdef CLIENT_SIDE
+    static QPixmap Icon(int itemnum);
+#endif
 };
 
 class TypeInfo
@@ -236,6 +239,9 @@ private:
     static QString m_Directory;
     static QTSList<QColor> m_Colors;
     static QTSList<int> m_TypeVsType;
+#ifdef CLIENT_SIDE
+    static QList<QPixmap> m_Pics;
+#endif
 
     static void loadNames();
     static void loadColors();
@@ -252,6 +258,9 @@ public:
     static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
     static int TypeForWeather(int weather);
+#ifdef CLIENT_SIDE
+    static QPixmap Picture(int type);
+#endif
 };
 
 class NatureInfo

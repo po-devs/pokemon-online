@@ -5,30 +5,32 @@
 #include "../Teambuilder/mainwindow.h"
 
 //class dockAdvanced
-DockAdvanced::DockAdvanced(TeamBuilder * builder):
-        QDockWidget(tr("Advanced Options"),builder),m_builder(builder),lastStackIndex(-1)
+DockAdvanced::DockAdvanced(TB_TeamBody * builder):
+        QDockWidget(tr("Advanced Options"),builder), m_builder(builder)
 {
-    this->setAttribute(Qt::WA_DeleteOnClose);
-    //parametre(s) interne(s)
-    this->setObjectName("dockAdvanced");
-    this->setWindowIcon(QIcon("db/icon.png"));
-    this->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
+    setAttribute(Qt::WA_DeleteOnClose);
 
-    //affichage des interfaces Advanced de chaque pokemon
-    AdvancedPokemons_gestionnaire = new QStackedWidget(this);
-    connect(AdvancedPokemons_gestionnaire,SIGNAL(currentChanged(int)),this,SLOT(stackAdvancedChanged()));
+    setWindowIcon(QIcon("db/icon.png"));
+    setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
+
+    QImageBackground *bg = new QImageBackground("db/Teambuilder/Advanced/AdvBG.png");
+    bg->setParent(this);
+    setFixedSize(bg->size());
+
+    AdvStack = new QStackedWidget(bg);
+    AdvStack->setFixedSize(311,495);
 
     for(int i= 0; i<6;i++)
     {
-	PokeTeam * p = &m_builder->getTeam()->poke(i);
-	TB_Advanced * stack = new TB_Advanced(p);
-	AdvancedPokemons_gestionnaire->addWidget(stack);
-	TB_PokemonBody *body = builder->pokebody(i);
+        PokeTeam * p = &m_builder->trainerTeam()->team().poke(i);
+        TB_Advanced * stack = new TB_Advanced(p);
+        AdvStack->addWidget(stack);
+        TB_PokemonBody *body = builder->pokeBody[i];
 
         body->connectWithAdvanced(stack);
     }
 
-    this->setWidget(AdvancedPokemons_gestionnaire);
+    this->setWidget(AdvStack);
 }
 
 DockAdvanced::~DockAdvanced()
@@ -37,27 +39,21 @@ DockAdvanced::~DockAdvanced()
 
 void DockAdvanced::setCurrentPokemon(int index)
 {
-    lastStackIndex = AdvancedPokemons_gestionnaire->currentIndex();
-    AdvancedPokemons_gestionnaire->setCurrentIndex(index);
+    qDebug() << index;
+    AdvStack->setCurrentIndex(index);
 }
 
 void DockAdvanced::setPokemonNum(int indexStack,int pokeNum)
 {
-    QWidget * w = AdvancedPokemons_gestionnaire->widget(indexStack);
-    AdvancedPokemons_gestionnaire->removeWidget(w);
+    QWidget * w = AdvStack->widget(indexStack);
+    AdvStack->removeWidget(w);
     delete w;
-    TB_Advanced * adv = new TB_Advanced(&m_builder->getTeam()->poke(indexStack));
-    AdvancedPokemons_gestionnaire->insertWidget(indexStack,adv);
+    TB_Advanced * adv = new TB_Advanced(&m_builder->trainerTeam()->team().poke(indexStack));
+    AdvStack->insertWidget(indexStack,adv);
     if(pokeNum ==0)
     {
         adv->setHidden(true);
     }
-    AdvancedPokemons_gestionnaire->setCurrentIndex(indexStack);
-    m_builder->pokebody(indexStack)->connectWithAdvanced(adv);
-    adv->resizeEvent(NULL);
-}
-
-void DockAdvanced::stackAdvancedChanged()
-{
-    emit updateDataOfBody(lastStackIndex);
+    AdvStack->setCurrentIndex(indexStack);
+    m_builder->pokeBody[indexStack]->connectWithAdvanced(adv);
 }

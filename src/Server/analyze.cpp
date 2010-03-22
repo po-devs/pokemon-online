@@ -146,8 +146,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             if (mysocket.id() != 0) {
                 TeamInfo team;
                 bool ladder, show_team;
-                in >> team >> ladder >> show_team;
-                emit loggedIn(team,ladder,show_team);
+                QColor c;
+                in >> team >> ladder >> show_team >> c;
+                emit loggedIn(team,ladder,show_team,c);
             } else
                 emit accepted(); // for registry;
             qDebug() << "Login end";

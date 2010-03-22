@@ -5,9 +5,12 @@ QCompactTable::QCompactTable(int row, int column)
         : QTableWidget(row, column)
 {
     verticalHeader()->setDefaultSectionSize(22);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    setShowGrid(false);
+    verticalHeader()->hide();
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
-
-
 
 QEntitled::QEntitled(const QString &title, QWidget *widget)
 {
@@ -52,6 +55,13 @@ QImageButton::QImageButton(const QString &normal, const QString &hovered)
     setAttribute(Qt::WA_Hover, true);
 }
 
+void QImageButton::changePics(const QString &normal, const QString &hovered)
+{
+    myPic = QPixmap(normal);
+    myHoveredPic = QPixmap(hovered);
+    update();
+}
+
 QSize QImageButton::sizeHint() const
 {
     return myPic.size();
@@ -92,6 +102,12 @@ QImageBackground::QImageBackground(const QString &imagePath)
     if (!myBackground.isNull()) {
         setFixedSize(myBackground.size());
     }
+}
+
+void QImageBackground::changePic(const QString &path)
+{
+    myBackground = QPixmap(path);
+    update();
 }
 
 QSize QImageBackground::sizeHint() const

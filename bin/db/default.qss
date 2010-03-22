@@ -1,43 +1,152 @@
 
 .QMainWindow
 {
-   background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,
-            stop:0 white, stop:1 #0ca0dd);
+	background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,
+		stop:0 white, stop:1 #0ca0dd);
 }
 
- QTextEdit#MainChat {
-     background-color: white;
-     /*background-image: url(db/mainchat.png);
-     background-attachment: fixed;
-	 background-repeat: repeat;
-	 background-position: center */
- }
+QMainWindow::separator {
+	width: 0px;
+}
 
 
- QProgressBar#TimeOut {
-     border: 1px solid black;
-	 width: 93;
-	 height: 16;
-	 background-color:black;
-	 font-weight:bold;
-     text-align: center;
-	 color: white;
-	 border-radius: 5px;
- }
+QTextEdit#MainChat {
+	background-color: white;
+	/*background-image: url(db/mainchat.png);
+	background-attachment: fixed;
+	background-repeat: repeat;
+	background-position: center */
+}
 
- QProgressBar#TimeOut::chunk{
-     background-color: #29db21;
-     width: 10px;
- }
- 
- QProgressBar#LifePoints {
-     border: 2px solid grey;
-     border-radius: 5px;
-     text-align: center;
- }
+TeamBuilder QTextEdit {
+	border-radius: 5px;
+	background-color: white;
+}
 
- QProgressBar#LifePoints::chunk{
-     background-color: #05B8CC;
-     width: 20px;
- }
- 
+QSlider::groove:horizontal {
+	border: 1px solid #999999;
+	height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+	background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+	margin: 2px 2px 2px 2px;
+}
+
+QSlider::handle:horizontal {
+	/*background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #3354e3, stop:1 #788de8);
+	border: 1px solid #102eb0; 
+	border-radius: 7px;*/
+	width: 14px;
+	image:url(db/Teambuilder/ScrollBall.png);
+	margin: -8px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+}
+
+QSlider::sub-page:horizontal {
+	border: 1px solid #0072b3;
+	height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+	background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #00a2ff, stop:1 #80c2e8);
+	margin: 2px 0;
+}
+
+TeamPokeButton {
+	width: 127px;
+	height: 61px;
+	background: #9d9fa1;
+}
+
+TeamBuilder QLabel#SmallText {
+	font-family: Trebuchet MS;
+	font-size: 10pt; 
+	color: white;
+	font-weight: normal;
+}
+
+TeamBuilder QLabel {
+	font-family: Trebuchet MS;
+	font-weight: bold;
+	font-size: 11pt;
+	color: white;
+}
+
+TB_Advanced QGroupBox::title {
+	subcontrol-position: top left; /* position at the top center */
+	padding: 0 3px;
+	color: white;
+	font-family: Trebuchet MS;
+	font-weight: bold;
+	font-size: 11pt;
+}
+
+TB_Advanced QLabel#SmallText {
+	font-family: Trebuchet MS;
+	font-size: 10pt; 
+	color: white;
+	font-weight: normal;
+}
+
+TB_Advanced QLabel#BigText {
+	font-family: Trebuchet MS;
+	font-weight: normal;
+	font-size: 10pt;
+	color: white;
+}
+
+TB_Advanced QRadioButton {
+	color: #0ca0dd;
+	font-family: Trebuchet MS;
+	font-size: 10pt;
+}
+
+TB_Advanced QCheckBox {
+	color: #0ca0dd;
+	font-family: Trebuchet MS;
+	font-size: 10pt;
+}
+
+TB_Advanced QRadioButton::indicator {
+	/*even if theres no text here, it removes the older style so its cool*/
+}
+
+QProgressBar#TimeOut {
+    border: 1px solid black;
+	width: 93;
+	height: 16;
+	background-color:black;
+	font-weight:bold;
+	text-align: center;
+	color: white;
+	border-radius: 5px;
+}
+
+QProgressBar#TimeOut::chunk{
+	background-color: #29db21;
+	width: 10px;
+}
+
+QProgressBar#LifePoints {
+	border: 2px solid grey;
+	border-radius: 5px;
+	text-align: center;
+}
+
+QProgressBar#LifePoints::chunk{
+	background-color: #05B8CC;
+	width: 20px;
+}
+
+/*m_trainerInfo->setStyleSheet(
+							 "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+															  "stop: 0 #ABAFE5, stop: 1 #8588B2);"
+								"border: 1px solid gray;"
+								"border-radius: 10px"
+							); */
+/*m_winMessage->setStyleSheet(
+								"background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
+								"stop:0 white, stop:1 #bfbfbd);"
+								"border: 1px solid gray;"
+								"border-radius: 10px"
+							);
+*/
+/*TeamBuilder QSlider::handle:horizontal {
+	image:url(db/Teambuilder/ScrollBall.png);
+	margin: 0px -8px;
+	height: 23px;
+}*/
