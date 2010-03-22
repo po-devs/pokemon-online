@@ -17,8 +17,9 @@ MainEngine::MainEngine() : displayer(0)
     if (settings.value("team_location").isNull()) {
         settings.setValue("team_location", "Team/trainer.tp");
     }
-    if (settings.value("application_style").isNull()) {
+    if (settings.value("new_teambuilder").isNull() || settings.value("application_style").isNull()) {
         settings.setValue("application_style", "plastique");
+        settings.setValue("new_teambuilder",true);
     }
     if (settings.value("stylesheet").isNull()) {
         settings.setValue("stylesheet", "db/default.qss");
@@ -120,8 +121,9 @@ void MainEngine::launchTeamBuilder()
 {
     TeamBuilder *TB = new TeamBuilder(trainerTeam());
     MainEngineRoutine(TB);
+    displayer->layout()->setSizeConstraint(QLayout::SetFixedSize);
 
-    connect(TB,SIGNAL(showDockAdvanced(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)),
+    connect(TB,SIGNAL(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)),
             SLOT(setDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));
 }

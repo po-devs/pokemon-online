@@ -42,6 +42,8 @@ public:
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
     QSize maximumSize() const;
+
+    void changePics(const QString &normal, const QString &hovered);
 protected:
     void paintEvent(QPaintEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
@@ -60,6 +62,8 @@ public:
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
     QSize maximumSize() const;
+
+    void changePic(const QString &path);
 protected:
     void paintEvent(QPaintEvent *e);
 

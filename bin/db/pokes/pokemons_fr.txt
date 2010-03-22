@@ -1,5 +1,5 @@
 ﻿494
-(Pas de Pokémon)
+Missingno
 Bulbizarre
 Herbizarre
 Florizarre

@@ -33,7 +33,7 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
 
     myplayers->setMaximumWidth(180);
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
-    myplayers->setSortingEnabled(true);
+
     /*myplayers->setStyleSheet(
             "background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
             "stop:0 white, stop:1 #bfbfbd);"
@@ -727,7 +727,7 @@ void Client::connected()
 
     QSettings s;
 
-    FullInfo f = {*team(), s.value("enable_ladder").toBool(), s.value("show_team").toBool()};
+    FullInfo f = {*team(), s.value("enable_ladder").toBool(), s.value("show_team").toBool(), s.value("trainer_color").value<QColor>()};
     relay().login(f);
 }
 
@@ -816,7 +816,9 @@ void Client::playerReceived(const PlayerInfo &p)
     }
 
     QIdListWidgetItem *item = new QIdListWidgetItem(p.id, nick);
-    item->setColor(chatColors[p.id % chatColors.size()]);
+
+    item->setColor(color(p.id));
+
     QFont f = item->font();
     f.setBold(true);
     item->setFont(f);
@@ -827,7 +829,18 @@ void Client::playerReceived(const PlayerInfo &p)
         mypms[p.id]->changeName(p.team.name);
     }
 
-    myplayers->addItem(item);
+    /* To sort the people in case insensitive order */
+    bool inserted = false;
+    for(int i = 0; i < myplayers->count(); i++) {
+        if (item->text().compare(myplayers->item(i)->text(), Qt::CaseInsensitive) < 0) {
+            inserted = true;
+            myplayers->insertItem(i,item);
+        }
+    }
+
+    if (!inserted) {
+        myplayers->addItem(item);
+    }
 
     updateState(p.id);
 
@@ -869,10 +882,19 @@ void Client::printLine(const QString &line)
         } else if (id(beg) == -1) {
             mainChat()->insertHtml("<span style='color:#74F099'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
         } else {
-            mainChat()->insertHtml("<span style='color:" + chatColors[id(beg)%chatColors.size()].name() + "'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
 	}
     } else {
         mainChat()->insertPlainText("(" + QTime::currentTime().toString() + ") " + line + "\n");
+    }
+}
+
+QColor Client::color(int id) const
+{
+    if (player(id).color.name() == "#000000") {
+        return chatColors[id % chatColors.size()];
+    } else {
+        return player(id).color;
     }
 }
 
@@ -920,7 +942,7 @@ void Client::openTeamBuilder()
 
     connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
     connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));
-    connect(t, SIGNAL(showDockAdvanced(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)), this, SLOT(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
+    connect(t, SIGNAL(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)), this, SLOT(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
 }
 
 void Client::showDock(Qt::DockWidgetArea areas, QDockWidget *dock, Qt::Orientation orientation)

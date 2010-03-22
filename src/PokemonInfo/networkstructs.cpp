@@ -84,6 +84,7 @@ QDataStream & operator >> (QDataStream &in, PlayerInfo &p)
 
     in >> p.avatar;
     in >> p.tier;
+    in >> p.color;
 
 
     return in;
@@ -103,20 +104,21 @@ QDataStream & operator << (QDataStream &out, const PlayerInfo &p)
 
     out << p.avatar;
     out << p.tier;
+    out << p.color;
 
     return out;
 }
 
 QDataStream & operator >> (QDataStream &in, FullInfo &p)
 {
-    in >> p.team >> p.ladder >> p.showteam;
+    in >> p.team >> p.ladder >> p.showteam >> p.nameColor;
 
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const FullInfo &p)
 {
-    out << p.team << p.ladder << p.showteam;
+    out << p.team << p.ladder << p.showteam << p.nameColor;
 
     return out;
 }

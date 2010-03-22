@@ -17,7 +17,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     myauth = 0;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
-    connect(&relay(), SIGNAL(loggedIn(TeamInfo,bool,bool)), SLOT(loggedIn(TeamInfo,bool,bool)));
+    connect(&relay(), SIGNAL(loggedIn(TeamInfo,bool,bool,QColor)), SLOT(loggedIn(TeamInfo,bool,bool,QColor)));
     connect(&relay(), SIGNAL(messageReceived(QString)), SLOT(recvMessage(QString)));
     connect(&relay(), SIGNAL(teamReceived(TeamInfo)), SLOT(recvTeam(TeamInfo)));
     connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
@@ -448,6 +448,7 @@ PlayerInfo Player::bundle() const
     p.rating = ladder() ? rating() : -1;
     p.tier = tier();
     p.avatar = avatar();
+    p.color = color();
 
     if (showteam()) {
         for(int i = 0; i < 6; i++) {
@@ -478,7 +479,7 @@ BasicInfo Player::basicInfo() const
     return ret;
 }
 
-void Player::loggedIn(const TeamInfo &_team,bool ladder, bool showteam)
+void Player::loggedIn(const TeamInfo &_team,bool ladder, bool showteam, QColor c)
 {
     if (isLoggedIn())
         return; //INVALID BEHAVIOR
@@ -486,6 +487,7 @@ void Player::loggedIn(const TeamInfo &_team,bool ladder, bool showteam)
     avatar() = _team.avatar;
     this->ladder() = ladder;
     this->showteam() = showteam;
+    color() = c;
 
     AuthentificationState st = testAuthentification(_team);
 

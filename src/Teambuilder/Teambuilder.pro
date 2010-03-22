@@ -21,8 +21,6 @@ SOURCES += main.cpp \
     challenge.cpp \
     battlewindow.cpp \
     ../Utilities/functions.cpp \
-    ../Utilities/pokeListe.cpp \
-    ../Utilities/pokeButton.cpp \
     ../Utilities/md5.c \
     pmwindow.cpp \
     controlpanel.cpp \
@@ -45,8 +43,6 @@ HEADERS += teambuilder.h \
     challenge.h \
     battlewindow.h \
     ../Utilities/functions.h \
-    ../Utilities/pokeListe.h \
-    ../Utilities/pokeButton.h \
     ../Utilities/md5.h \
     pmwindow.h \
     controlpanel.h \
@@ -65,5 +61,4 @@ TRANSLATIONS = translation_fr.ts \
     translation_jp.ts \
     translation_ko.ts
 RC_FILE = myapp.rc
-RESOURCES +=
-
+RESOURCES += 

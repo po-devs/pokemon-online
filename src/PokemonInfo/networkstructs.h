@@ -76,6 +76,7 @@ public:
     qint16 pokes[6];
     quint16 avatar;
     QString tier;
+    QColor color;
 
     enum {
         LoggedIn = 1,
@@ -113,7 +114,7 @@ public:
 #endif
     bool ladder;
     bool showteam;
-    quint16 avatar;
+    QColor nameColor;
 };
 
 QDataStream & operator >> (QDataStream &in, FullInfo &p);

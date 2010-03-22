@@ -61,6 +61,9 @@ QTSList<QString> TypeInfo::m_Names;
 QTSList<QColor> TypeInfo::m_Colors;
 QString TypeInfo::m_Directory;
 QTSList<int> TypeInfo::m_TypeVsType;
+#ifdef CLIENT_SIDE
+QList<QPixmap> TypeInfo::m_Pics;
+#endif
 
 QTSList<QString> NatureInfo::m_Names;
 QString NatureInfo::m_Directory;
@@ -1059,6 +1062,29 @@ int ItemInfo::BerryType(int itemnum)
     return m_BerryTypes[itemnum-8000];
 }
 
+#ifdef CLIENT_SIDE
+QPixmap ItemInfo::Icon(int itemnum)
+{
+    QString archive = path("Items.zip");
+    if (isBerry(itemnum)) {
+        itemnum -= 7999;
+        archive = path("Berries.zip");
+    }
+
+    QString file = QString("%1.png").arg(itemnum);
+
+    QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
+    if(data.length() == 0)
+    {
+        qDebug() << "error loading icon";
+        return QPixmap();
+    }
+    QPixmap p;
+    p.loadFromData(data,"png");
+    return p;
+}
+#endif
+
 QString ItemInfo::Name(int itemnum)
 {
     if (!Exist(itemnum)) {
@@ -1114,6 +1140,11 @@ QTSList<QString> ItemInfo::SortedNames()
 void TypeInfo::loadNames()
 {
     fill_container_with_file(m_Names, trFile(path("types")));
+#ifdef CLIENT_SIDE
+    for (int i = 0; i < NumberOfTypes();i++) {
+        m_Pics.push_back(QPixmap(path(QString("type%1.png").arg(i))));
+    }
+#endif
 }
 
 QString TypeInfo::path(const QString& file)
@@ -1191,6 +1222,13 @@ int TypeInfo::NumberOfTypes()
 {
     return m_Names.size();
 }
+
+#ifdef CLIENT_SIDE
+QPixmap TypeInfo::Picture(int type)
+{
+    return (type >= 0 && type < NumberOfTypes()) ? m_Pics[type] : QPixmap();
+}
+#endif
 
 void NatureInfo::loadNames()
 {

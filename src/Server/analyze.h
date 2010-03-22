@@ -2,6 +2,7 @@
 #define ANALYZE_H
 
 #include <QtCore>
+#include <QColor>
 #include "network.h"
 
 class TeamBattle;
@@ -109,7 +110,7 @@ signals:
     /* to send to the client */
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
-    void loggedIn(const TeamInfo &team, bool ladder, bool showteam);
+    void loggedIn(const TeamInfo &team, bool ladder, bool showteam, QColor c);
     void messageReceived(const QString &mess);
     void teamReceived(const TeamInfo &team);
     void connected();

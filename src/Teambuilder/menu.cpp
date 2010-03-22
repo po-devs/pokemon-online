@@ -7,7 +7,6 @@
 TB_Menu::TB_Menu()
         : QImageBackground("db/menu/menu_background.png")
 {
-    qDebug() << "Menu!";
     setWindowTitle(tr("Menu"));
 
     QVBoxLayout *layout = new QVBoxLayout(this);

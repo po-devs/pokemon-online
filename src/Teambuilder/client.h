@@ -40,6 +40,7 @@ public:
     int ownId() const ;
     int ownAuth() const ;
     int auth(int id) const ;
+    QColor color(int id) const;
 
     void seeChallenge(const ChallengeInfo &c);
     bool challengeWindowOpen() const;

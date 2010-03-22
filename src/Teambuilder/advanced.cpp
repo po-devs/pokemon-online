@@ -1,16 +1,16 @@
 #include "advanced.h"
+#include "teambuilder.h"
 #include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
 TB_Advanced::TB_Advanced(PokeTeam *_poke)
 {
-    resize(300,400);
-
     setAttribute(Qt::WA_DeleteOnClose, true);
 
     m_poke = _poke;
 
     QVBoxLayout *baselayout = new QVBoxLayout(this);
+
     QHBoxLayout *uplayout = new QHBoxLayout();
     baselayout->addLayout(uplayout);
 
@@ -25,12 +25,16 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     QGridLayout *hidpower = new QGridLayout(hiddenpower);
 
     QLabel * l_type = new QLabel("&Type:");
+    l_type->setObjectName("SmallText");
     hpchoice = new QComboBox();
     l_type->setBuddy(hpchoice);
-    hpower = new QLabel();
     hidpower->addWidget(l_type, 0, 0);
     hidpower->addWidget(hpchoice, 0, 1);
-    hidpower->addWidget(new QLabel("Power:"), 1,0);
+    QLabel *l_power;
+    hidpower->addWidget(l_power=new QLabel("Power:"), 1,0);
+    l_power->setObjectName("SmallText");
+    hpower = new QLabel();
+    hpower->setObjectName("SmallText");
     hidpower->addWidget(hpower,1,1);
 
     for (int i = 1; i < TypeInfo::NumberOfTypes() - 1; i++)
@@ -44,11 +48,12 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     firstColumn->addWidget(dvs);
     QGridLayout *dvlayout = new QGridLayout(dvs);
     QStringList stats_l;
-    stats_l << tr("Hit Points") << tr("Attack") << tr("Defense") << tr("Speed") << tr("Special attack") << tr("Special defense");
+    stats_l << tr("HP:") << tr("Att:") << tr("Def:") << tr("Speed:") << tr("Sp.Att:") << tr("Sp.Def:");
 
     for (int i = 0; i < 6; i++)
     {
         QLabel * l = new QLabel(stats_l[i]);
+        l->setObjectName("BigText");
         QSpinBox * s = new QSpinBox();
         dvchoice[i] = s;
         l->setBuddy(s);
@@ -60,14 +65,16 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 	connect(dvchoice[i], SIGNAL(valueChanged(int)), SLOT(changeDV(int)));
 
 	dvlayout->addWidget((stats[i]=new QLabel()), i, 2);
+        stats[i]->setObjectName("BigText");
     }
 
-    secondColumn->addWidget(pokeImage=new QLabel());
+    secondColumn->addWidget(pokeImage=new AvatarBox(),0,Qt::AlignHCenter);
     updatePokeImage();
 
     QHBoxLayout *levellayout = new QHBoxLayout();
     secondColumn->addLayout(levellayout);
     QLabel * l_lvl = new QLabel(tr("&Level"));
+    l_lvl->setObjectName("BigText");
     levellayout->addWidget(l_lvl);
     levellayout->addWidget(level = new QSpinBox());
     l_lvl->setBuddy(level);
@@ -134,20 +141,20 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     baselayout->addWidget(bForms);
 
     stats_l.clear();
-    stats_l << "HP" << "Att" << "Def" << "Speed" << "Sp Att" << "Sp Def";
+    stats_l << tr("HP") << tr("Att") << tr("Def") << tr("Speed") << tr("Sp Att") << tr("Sp Def");
 
     hpanddvchoice = new QCompactTable(0, 6);
-    hpanddvchoice->setMinimumHeight(160);
-    hpanddvchoice->setSelectionBehavior(QAbstractItemView::SelectRows);
-    hpanddvchoice->setShowGrid(false);
-    hpanddvchoice->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 
     baselayout->addWidget(hpanddvchoice,Qt::AlignCenter);
 
     hpanddvchoice->horizontalHeader()->setStretchLastSection(true);
-    hpanddvchoice->verticalHeader()->hide();
     hpanddvchoice->setHorizontalHeaderLabels(stats_l);
-    hpanddvchoice->setSelectionMode(QAbstractItemView::SingleSelection);
+
+    for (int i = 0; i < 6; i++) {
+        hpanddvchoice->horizontalHeader()->resizeSection(i, 44);
+    }
+
+    baselayout->addSpacerItem(new QSpacerItem(0,25));
 
     connect(hpanddvchoice, SIGNAL(cellActivated(int,int)), SLOT(changeDVsAccordingToHP(int)));
 
@@ -173,17 +180,6 @@ void TB_Advanced::changeAbility(bool ab1)
     poke()->ability() = ab1? poke()->abilities()[0] : poke()->abilities()[1];
 }
 
-void TB_Advanced::resizeEvent(QResizeEvent*ev)
-{
-    int width = hpanddvchoice->horizontalHeader()->width();
-    /* making 6 columns of the same width */
-    for (int i = 0; i < 6; i++) {
-	hpanddvchoice->setColumnWidth(i, width/6);
-    }
-
-    QWidget::resizeEvent(ev);
-}
-
 void TB_Advanced::changeShininess(bool shine)
 {
     poke()->shiny() = shine;
@@ -200,7 +196,7 @@ void TB_Advanced::changeGender(bool gend1)
 
 void TB_Advanced::updatePokeImage()
 {
-    pokeImage->setPixmap(poke()->picture());
+    pokeImage->changePic(poke()->picture());
 }
 
 void TB_Advanced::updateAbility()
@@ -368,7 +364,7 @@ void TB_Advanced::updateStats()
 
 void TB_Advanced::updateStat(int stat)
 {
-    QColor colors[3] = {Qt::red, Qt::black, Qt::darkGreen};
+    QColor colors[3] = {Qt::red, Qt::white, Qt::darkGreen};
     QColor mycol = colors[poke()->natureBoost(stat)+1];
     stats[stat]->setText(toColor(QString::number(poke()->stat(stat)), mycol));
 }
