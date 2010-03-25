@@ -758,7 +758,7 @@ void TB_PokeChoice::startDrag()
 /************ POKEMON BODY ********************/
 /**********************************************/
 
-TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num)
+TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, TB_PokemonBody *copy)
 {
     m_poke = _poke;
     m_num = num;
@@ -875,7 +875,7 @@ void TB_PokemonBody::initItems()
     connect(itemchoice, SIGNAL(activated(QString)), SLOT(setItem(const QString &)));
 }
 
-void TB_PokemonBody::initPokemons()
+void TB_PokemonBody::initPokemons(TB_PokemonBody *copy)
 {
     QCompleter *completer = new QCompleter(m_pokeedit);
     completer->setModel(pokechoice->model());

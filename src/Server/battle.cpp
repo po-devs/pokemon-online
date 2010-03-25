@@ -44,6 +44,21 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
                 team2.poke(i).updateStats();
             }
         }
+        if (clauses() & ChallengeInfo::SpeciesClause) {
+            QSet<int> alreadyPokes[2];
+            for (int i = 0; i < 6; i++) {
+                if (alreadyPokes[0].contains(team1.poke(i).num())) {
+                    team1.poke(i).num() = 0;
+                } else {
+                    alreadyPokes[0].insert(team1.poke(i).num());
+                }
+                if (alreadyPokes[1].contains(team2.poke(i).num())) {
+                    team1.poke(i).num() = 0;
+                } else {
+                    alreadyPokes[1].insert(team2.poke(i).num());
+                }
+            }
+        }
     }
 }
 
@@ -630,6 +645,10 @@ void BattleSituation::startClock(int player, bool broadCoast)
     }
 }
 
+/*****************************************
+  Beware of the multi threading problems.
+  Don't change the order of the instructions.
+  ****************************************/
 void BattleSituation::stopClock(int player, bool broadCoast)
 {
     if (!(clauses() & ChallengeInfo::NoTimeOut)) {
@@ -645,6 +664,10 @@ void BattleSituation::stopClock(int player, bool broadCoast)
     }
 }
 
+/*****************************************
+  Beware of the multi threading problems.
+  Don't change the order of the instructions.
+  ****************************************/
 int BattleSituation::timeLeft(int player)
 {
     if (timeStopped[player]) {
@@ -654,6 +677,10 @@ int BattleSituation::timeLeft(int player)
     }
 }
 
+/*****************************************
+  Beware of the multi threading problems.
+  Don't change the order of the instructions.
+  ****************************************/
 void BattleSituation::timerEvent(QTimerEvent *)
 {
     if (timeLeft(Player1) <= 0 || timeLeft(Player2) <= 0) {
