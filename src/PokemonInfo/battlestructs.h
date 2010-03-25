@@ -195,10 +195,11 @@ struct ChallengeInfo
         DisallowSpectator = 16,
         LevelBalance = 32,
         ChallengeCup = 64,
-        NoTimeOut = 128
+        NoTimeOut = 128,
+        SpeciesClause = 256
     };
 
-    static const int numberOfClauses = 8;
+    static const int numberOfClauses = 9;
 
     static QString clauseText[numberOfClauses];
     static QString clauseBattleText[numberOfClauses];

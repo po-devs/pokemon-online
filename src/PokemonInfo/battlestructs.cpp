@@ -13,7 +13,8 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("Disallow Spects"),
     QObject::tr("Level Balance"),
     QObject::tr("Challenge Cup"),
-    QObject::tr("No Time Out")
+    QObject::tr("No Time Out"),
+    QObject::tr("Species Clause")
 };
 
 QString ChallengeInfo::clauseBattleText[] =
@@ -25,7 +26,8 @@ QString ChallengeInfo::clauseBattleText[] =
     QObject::tr(""),
     QObject::tr(""),
     QObject::tr(""),
-    QObject::tr("The battle ended by timeout.")
+    QObject::tr("The battle ended by timeout."),
+    QObject::tr("")
 };
 
 QString ChallengeInfo::clauseDescription[] =
@@ -37,7 +39,8 @@ QString ChallengeInfo::clauseDescription[] =
     QObject::tr("Nobody can watch your battle."),
     QObject::tr("Pokémons levels are changed according to their strength."),
     QObject::tr("Random teams are given to trainers."),
-    QObject::tr("No time limit for playing.")
+    QObject::tr("No time limit for playing."),
+    QObject::tr("One player cannot have more than one of the same pokemon per team.")
 };
 
 BattleMove::BattleMove()
