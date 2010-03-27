@@ -55,8 +55,12 @@ struct AMAftermath : public AM {
 
     static void upa(int s, int t, BS &b) {
         if (b.koed(s) && !b.koed(t)) {
-            b.sendAbMessage(2,0,s,t);
-            b.inflictPercentDamage(t,25,s,false);
+            if (!b.hasWorkingAbility(t,Ability::Damp)){
+                b.sendAbMessage(2,0,s,t);
+                b.inflictPercentDamage(t,25,s,false);
+            }
+            else
+                b.sendAbMessage(2,1,s,t);
         }
     }
 };

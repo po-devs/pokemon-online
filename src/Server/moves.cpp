@@ -47,8 +47,6 @@ typedef BattleSituation BS;
 
 void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
 {
-    qDebug() << "Setting up move " << num;
-    qDebug() << "Name is " << MoveInfo::Name(num);
     MoveEffect e(num);
 
     /* first the basic info */
@@ -85,7 +83,6 @@ void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
 	    }
 	}
     }
-    qDebug() << "End of setup";
 }
 
 /* List of events:

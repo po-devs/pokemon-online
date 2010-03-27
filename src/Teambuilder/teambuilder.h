@@ -258,7 +258,7 @@ public slots:
     void updateEVs();
     void changeForm(int pokenum);
 public:
-    TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num, TB_PokemonBody *copy = NULL);
+    TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num);
     void connectWithAdvanced(TB_Advanced *ptr);
 
     void updateNum();
