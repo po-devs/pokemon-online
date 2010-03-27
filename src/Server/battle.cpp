@@ -47,15 +47,18 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
         if (clauses() & ChallengeInfo::SpeciesClause) {
             QSet<int> alreadyPokes[2];
             for (int i = 0; i < 6; i++) {
-                if (alreadyPokes[0].contains(team1.poke(i).num())) {
+                int o1 = PokemonInfo::OriginalForm(team1.poke(i).num());
+                int o2 = PokemonInfo::OriginalForm(team2.poke(i).num());
+
+                if (alreadyPokes[0].contains(PokemonInfo::OriginalForm(o1))) {
                     team1.poke(i).num() = 0;
                 } else {
-                    alreadyPokes[0].insert(team1.poke(i).num());
+                    alreadyPokes[0].insert(o1);
                 }
-                if (alreadyPokes[1].contains(team2.poke(i).num())) {
+                if (alreadyPokes[1].contains(o2)) {
                     team1.poke(i).num() = 0;
                 } else {
-                    alreadyPokes[1].insert(team2.poke(i).num());
+                    alreadyPokes[1].insert(o2);
                 }
             }
         }

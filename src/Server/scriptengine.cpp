@@ -112,28 +112,62 @@ void ScriptEngine::afterLogIn(int src)
     evaluate(myscript.property("afterLogIn").call(myscript, QScriptValueList() << src));
 }
 
+void ScriptEngine::beforeChangeTeam(int src)
+{
+    evaluate(myscript.property("beforeChangeTeam").call(myscript, QScriptValueList() << src));
+}
+
+void ScriptEngine::afterChangeTeam(int src)
+{
+    evaluate(myscript.property("afterChangeTeam").call(myscript, QScriptValueList() << src));
+}
+
 bool ScriptEngine::beforeChallengeIssued(int src, int dest, const ChallengeInfo &c)
 {
     startStopEvent();
 
-    evaluate(myscript.property("beforeChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.sleepClause()));
+    QString clauses;
+
+    for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        clauses.append('0' + ((c.clauses >> i) & 0x01));
+    }
+
+    evaluate(myscript.property("beforeChallengeIssued").call(myscript, QScriptValueList() << src << dest << clauses));
 
     return !endStopEvent();
 }
 
 void ScriptEngine::afterChallengeIssued(int src, int dest, const ChallengeInfo &c)
 {
-    evaluate(myscript.property("afterChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.sleepClause()));
+    QString clauses;
+
+    for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        clauses.append('0' + ((c.clauses >> i) & 0x01));
+    }
+
+    evaluate(myscript.property("afterChallengeIssued").call(myscript, QScriptValueList() << src << dest << clauses));
 }
 
 void ScriptEngine::beforeBattleStarted(int src, int dest, const ChallengeInfo &c)
 {
-    evaluate(myscript.property("beforeBattleStarted").call(myscript, QScriptValueList() << src << dest << c.sleepClause()));
+    QString clauses;
+
+    for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        clauses.append('0' + ((c.clauses >> i) & 0x01));
+    }
+
+    evaluate(myscript.property("beforeBattleStarted").call(myscript, QScriptValueList() << src << dest << clauses));
 }
 
 void ScriptEngine::afterBattleStarted(int src, int dest, const ChallengeInfo &c)
 {
-    evaluate(myscript.property("beforeBattleStarted").call(myscript, QScriptValueList() << src << dest << c.sleepClause()));
+    QString clauses;
+
+    for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        clauses.append('0' + ((c.clauses >> i) & 0x01));
+    }
+
+    evaluate(myscript.property("beforeBattleStarted").call(myscript, QScriptValueList() << src << dest << clauses));
 }
 
 QString battleDesc[3] = {
@@ -209,6 +243,54 @@ void ScriptEngine::changeAuth(int id, int auth)
     } else {
         myserver->changeAuth(myserver->name(id), auth);
     }
+}
+
+void ScriptEngine::changePokeItem(int id, int slot, int item)
+{
+    if (!myserver->player(id)->isLoggedIn())
+        return;
+    if (slot < 0 || slot > 5)
+        return;
+    if (!ItemInfo::Exist(item))
+        return;
+    myserver->player(id)->team().poke(slot).item() = item;
+}
+
+void ScriptEngine::changePokeNum(int id, int slot, int num)
+{
+    if (!myserver->player(id)->isLoggedIn())
+        return;
+    if (slot < 0 || slot > 5)
+        return;
+    if (!PokemonInfo::Exist(num))
+        return;
+    myserver->player(id)->team().poke(slot).num() = num;
+}
+
+void ScriptEngine::changePokeLevel(int id, int slot, int level)
+{
+    if (!myserver->player(id)->isLoggedIn())
+        return;
+    if (slot < 0 || slot > 5)
+        return;
+    if (level < 1 || level > 100)
+        return;
+    myserver->player(id)->team().poke(slot).level() = level;
+    myserver->player(id)->team().poke(slot).updateStats();
+}
+
+void ScriptEngine::changePokeMove(int id, int pslot, int mslot, int move)
+{
+    if (!myserver->player(id)->isLoggedIn())
+        return;
+    if (pslot < 0 || pslot > 5)
+        return;
+    if (mslot < 0 || mslot > 4)
+        return;
+    if (!MoveInfo::Exist(move))
+        return;
+    myserver->player(id)->team().poke(pslot).move(mslot).num() = move;
+    myserver->player(id)->team().poke(pslot).move(mslot).load();
 }
 
 void ScriptEngine::saveVal(const QString &key, const QVariant &val)
@@ -294,6 +376,33 @@ QScriptValue ScriptEngine::auth(int id)
         return myengine.undefinedValue();
     } else {
         return myserver->auth(id);
+    }
+}
+
+QScriptValue ScriptEngine::tier(int id)
+{
+    if (!myserver->playerLoggedIn(id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->tier();
+    }
+}
+
+QScriptValue ScriptEngine::ladderRating(int id)
+{
+    if (!myserver->playerLoggedIn(id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->rating();
+    }
+}
+
+QScriptValue ScriptEngine::ladderEnabled(int id)
+{
+    if (!myserver->playerLoggedIn(id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->ladder();
     }
 }
 

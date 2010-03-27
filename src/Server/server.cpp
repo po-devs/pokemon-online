@@ -418,7 +418,7 @@ void Server::loggedIn(int id, const QString &name)
         mynames.insert(name.toLower(), id);
         myplayersitems[id]->setText(authedName(id));
 
-        if(!myengine->beforeLogIn(id)) {
+        if(!myengine->beforeLogIn(id) || !playerExist(id)) {
             removePlayer(id);
             return;
         }
@@ -617,6 +617,11 @@ void Server::playerBan(int src, int dest)
 
 void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 {
+    myengine->beforeBattleStarted(id1,id2,c);
+
+    if (!playerExist(id1) || !playerExist(id2))
+        return;
+
     printLine(tr("Battle between %1 and %2 started").arg(name(id1)).arg(name(id2)));
 
     BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c);
@@ -642,6 +647,8 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     connect(player(id2), SIGNAL(battleChat(int,QString)), battle, SLOT(battleChat(int, QString)));
 
     battle->start();
+
+    myengine->afterBattleStarted(id1,id2,c);
 }
 
 void Server::battleResult(int desc, int winner, int loser, bool rated)
@@ -743,6 +750,12 @@ void Server::sendLogout(int id)
 
 void Server::recvTeam(int id, const QString &_name)
 {
+    myengine->beforeChangeTeam(id);
+
+    /* In case that person was script kicked */
+    if (!playerExist(id))
+        return;
+
     printLine(tr("%1 changed their team, and their name to %2").arg(name(id), _name));
 
     /* Normally all checks have been made to ensure the authentification is right and the
@@ -774,6 +787,8 @@ void Server::recvTeam(int id, const QString &_name)
 
     /* Displaying the change */
     myplayersitems[id]->setText(authedName(id));
+
+    myengine->afterChangeTeam(id);
 }
 
 void Server::disconnected(int id)

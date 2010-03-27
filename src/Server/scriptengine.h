@@ -27,6 +27,8 @@ public:
     void afterLogOut(int src);
     bool beforeLogIn(int src);
     void afterLogIn(int src);
+    void beforeChangeTeam(int src);
+    void afterChangeTeam(int src);
     bool beforeChallengeIssued(int src, int dest, const ChallengeInfo &desc);
     void afterChallengeIssued(int src, int dest, const ChallengeInfo &desc);
     void beforeBattleStarted(int src, int dest, const ChallengeInfo &desc);
@@ -46,6 +48,10 @@ public:
     /* Print on the server. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void changeAuth(int id, int auth);
+    Q_INVOKABLE void changePokeLevel(int id, int slot, int level);
+    Q_INVOKABLE void changePokeNum(int id, int slot, int num);
+    Q_INVOKABLE void changePokeItem(int id, int slot, int item);
+    Q_INVOKABLE void changePokeMove(int id, int pokeslot, int moveslot, int move);
     /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
     Q_INVOKABLE void saveVal(const QString &key, const QVariant &val);
     Q_INVOKABLE void removeVal(const QString &key);
@@ -62,6 +68,9 @@ public:
     Q_INVOKABLE QScriptValue id(const QString& name);
     Q_INVOKABLE QScriptValue auth(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
+    Q_INVOKABLE QScriptValue tier(int id);
+    Q_INVOKABLE QScriptValue ladderEnabled(int id);
+    Q_INVOKABLE QScriptValue ladderRating(int id);
     Q_INVOKABLE QScriptValue getVal(const QString &key);
 
     Q_INVOKABLE QScriptValue pokemon(int num);

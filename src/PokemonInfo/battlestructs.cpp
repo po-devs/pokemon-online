@@ -107,19 +107,15 @@ void PokeBattle::setNormalStat(int stat, quint16 i)
 
 void PokeBattle::init(const PokePersonal &poke)
 {
-    qDebug() << "Pokemon is " << PokemonInfo::Name(poke.num());
+#ifdef SERVER_SIDE
     if (!PokemonInfo::Exist(poke.num())) {
 	num() = 0;
 	return;
     }
 
-    qDebug() << "It exists";
-
     PokeGeneral p;
     p.num() = poke.num();
     p.load();
-
-    qDebug() << "Loaded.";
 
     QNickValidator v(NULL);
 
@@ -131,19 +127,13 @@ void PokeBattle::init(const PokePersonal &poke)
         item() = 0;
     }
 
-    qDebug() << "Item ok";
-
     if (item() == Item::GriseousOrb && num() != Pokemon::Giratina_O) {
         item() = 0;
     } else if (num() == Pokemon::Giratina_O && item() != Item::GriseousOrb) {
         num() = Pokemon::Giratina;
     }
 
-    qDebug() << "Giratina check ok";
-
     nick() = v.validate(poke.nickname()) == QNickValidator::Acceptable ? poke.nickname() : PokemonInfo::Name(num());
-
-    qDebug() << "nick check ok";
 
     if (GenderInfo::Possible(poke.gender(), p.genderAvail())) {
 	gender() = poke.gender();
@@ -151,29 +141,21 @@ void PokeBattle::init(const PokePersonal &poke)
 	gender() = GenderInfo::Default(p.genderAvail());
     }
 
-    qDebug() << "Gender ok";
-
     if (p.abilities().contains(poke.ability())) {
 	ability() = poke.ability();
     } else {
 	ability() = p.abilities()[0];
     }
 
-    qDebug() << "Abilities ok";
-
     shiny() = poke.shiny();
     level() = std::min(100, std::max(int(poke.level()), 1));
 
     nature() = std::min(NatureInfo::NumberOfNatures(), std::max(0, int(poke.nature())));
 
-    qDebug() << "shiny, level, natures ok";
-
     int curs = 0;
     QSet<int> invalid_moves;
     QSet<int> taken_moves;
     MoveSetChecker::isValid(num(),poke.move(0),poke.move(1),poke.move(2),poke.move(3), &invalid_moves);
-
-    qDebug() << "moveset checker ok";
 
     for (int i = 0; i < 4; i++) {
         if (!invalid_moves.contains(poke.move(i))) {
@@ -187,8 +169,6 @@ void PokeBattle::init(const PokePersonal &poke)
     }
     /* Even by removing the invalid moves indicated, the combination may still
        not be valid, so we check once more */
-
-    qDebug() << "Checking a second time moves";
 
     if (move(0).num() == 0 || !MoveSetChecker::isValid(num(), move(0).num(), move(1).num(), move(2).num(), move(3).num())) {
 	num() = 0;
@@ -215,9 +195,10 @@ void PokeBattle::init(const PokePersonal &poke)
 	}
     }
 
-    qDebug() << "Evs ok";
-
     updateStats();
+#else
+    (void) poke;
+#endif
 }
 
 void PokeBattle::updateStats()
@@ -230,8 +211,6 @@ void PokeBattle::updateStats()
     for (int i = 0; i < 5; i++) {
         normal_stats[i] = PokemonInfo::FullStat(num(), nature(), i+1, base.baseStat(i+1), level(), dvs()[i+1], evs()[i+1]);
     }
-
-    qDebug() << "Stats ok";
 }
 
 QDataStream & operator >> (QDataStream &in, PokeBattle &po)
