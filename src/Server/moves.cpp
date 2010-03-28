@@ -487,7 +487,7 @@ struct MMDetect : public MM
 	}
     }
 
-    static void uas(int s, int, BS &b) {
+    static void uas(int s, int t, BS &b) {
 	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Detect", &dgaf);
 	turn(b,s)["DetectUsed"] = true;
         b.sendMoveMessage(27, 0, t, Pokemon::Normal);

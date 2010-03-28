@@ -11,7 +11,8 @@ PlayersWindow::PlayersWindow(QWidget *parent)
 
     QMap<QString, SecurityManager::Member> members = SecurityManager::getMembers();
 
-    mytable = new QTableWidget(members.size(),6);
+    mytable = new QCompactTable(members.size(),6);
+    mytable->setShowGrid(true);
     mylayout->addWidget(mytable,0,0,1,6);
 
     QMap<int, QString> authgrade;
@@ -68,6 +69,9 @@ PlayersWindow::PlayersWindow(QWidget *parent)
     mylayout->addWidget(_ban,1,3);
     mylayout->addWidget(_unban,1,4);
     mylayout->addWidget(_clpass,1,5);
+
+    if (mytable->rowCount() == 0)
+        return;
 
     connect(_user,SIGNAL(clicked()),SLOT(user()));
     connect(_mod,SIGNAL(clicked()),SLOT(mod()));

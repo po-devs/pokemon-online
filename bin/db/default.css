@@ -120,21 +120,26 @@ TB_PokemonDetail {
 	height: 225px;
 }
 
+TB_PokemonButtons {
+	background: white;
+	border: 2px solid #9b9494;
+	border-radius: 7px;
+}
+
 PokemonBoxButton {
 	background: #07a7c9;
 	color: white;
-	font-family: Trebuchet MS;
-	font-size: 10pt;
-	image: url(db/Teambuilder/Box/WhiteBall.png);
 }
 
-PokemonBoxButton:checked{
-	background: #07a7c9;
-	color: white;
-	font-family: Trebuchet MS;
-	font-size: 10pt;
-	image: url(db/Teambuilder/Box/WhiteBallGlow.png);
+PokemonBoxButton::text {
+	font-weight:bold;
 }
+
+PokemonBox {
+	background: qlineargradient(x1: 0, y1: 0, x2:0, y2: 1, stop: 0 white, stop: 1 #9faeb3);
+	border: 1px solid #059eba;
+}
+
 
 QProgressBar#TimeOut {
     border: 1px solid black;
@@ -161,6 +166,60 @@ QProgressBar#LifePoints {
 QProgressBar#LifePoints::chunk{
 	background-color: #05B8CC;
 	width: 20px;
+}
+
+TB_PokemonBoxes QTabWidget::pane { /* The tab widget frame */
+	border: 6px solid #0a9d9b;
+	padding: 0;
+	margin: 0;
+	border-radius: 8px;
+}
+
+TB_PokemonBoxes QTabWidget::tab-bar {
+	bottom: -3px;
+}
+
+/* Style the tab using the tab sub-control. Note that
+it reads QTabBar _not_ QTabWidget */
+TB_PokemonBoxes QTabBar::tab {
+	background: #bababa;
+	border: 1px solid #676a6c;
+	border-radius: 5px;
+	height: 23px;
+	min-width: 70px;
+	padding: 2px;
+}
+
+TB_PokemonBoxes QTabBar::tab::title {
+	font-weight:bold;
+	font-family:Trebuchet MS;
+	font-size: 14px;
+}
+
+TB_PokemonBoxes QTabBar::tab:selected , TB_PokemonBoxes QTabBar::tab:hover{
+	border-color: #077cff;
+	background: #88bcf1;
+}
+
+TB_PokemonBoxes QTabBar::tab:selected {
+	/* expand/overlap to the left and right by 4px */
+	margin-left: -2px;
+	margin-right: -2px;
+}
+
+TB_PokemonBoxes QTabBar::tab:first {
+	margin-left: 0px; /* the last selected tab has nothing to overlap with on the right */
+}
+
+TB_PokemonBoxes QTabBar::tab:last{
+	margin-right: 0px; /* the last selected tab has nothing to overlap with on the right */
+}
+
+
+BaseChallengeWindow QLabel#Title {
+	font-family: Trebuchet MS;
+	font-size: 20px;
+	font-weight: bold;
 }
 
 /*m_trainerInfo->setStyleSheet(
