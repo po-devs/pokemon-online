@@ -51,7 +51,7 @@ TB_PokemonDetail::TB_PokemonDetail()
 
     tnlayout->addStretch(100);
     QHBoxLayout *types = new QHBoxLayout();
-    types->addWidget(m_type1 = new QLabel());
+    types->addWidget(m_type1 = new QLabel(),0,Qt::AlignLeft);
     types->addWidget(m_type2 = new QLabel(),100,Qt::AlignLeft);
     tnlayout->addLayout(types);
     tnlayout->addWidget(m_nature = new QLabel());
@@ -93,6 +93,7 @@ void TB_PokemonDetail::updatePoke()
     m_pic->changePic(poke->picture());
     m_type1->setPixmap(TypeInfo::Picture(PokemonInfo::Type1(poke->num())));
     m_type2->setPixmap(TypeInfo::Picture(PokemonInfo::Type2(poke->num())));
+    m_type2->setVisible(PokemonInfo::Type2(poke->num()) != Type::Curse);
     m_nature->setText(tr("Nature: %1").arg(NatureInfo::Name(poke->nature())));
     m_item->setPixmap(ItemInfo::Icon(poke->item()));
     m_gender->setPixmap(GenderInfo::Picture(poke->gender(), false));
@@ -120,13 +121,6 @@ PokemonBoxButton::PokemonBoxButton(int num)
     setText(tr("Pokémon &%1").arg(num+1));
     setIcon(*theicon);
     setCheckable(true);
-
-    connect(this, SIGNAL(toggled(bool)), SLOT(p_toggled(bool)));
-}
-
-void PokemonBoxButton::p_toggled(bool b)
-{
-    setIcon(b?*theglowedicon:*theicon);
 }
 
 /****************************************************************/
@@ -150,6 +144,8 @@ TB_PokemonButtons::TB_PokemonButtons()
 
         if (i==0)
             pokebutton->setChecked(true);
+
+        buttons[i] = pokebutton;
     }
     connect(thegroup, SIGNAL(buttonClicked(int)), SIGNAL(buttonChecked(int)));
 }
@@ -158,8 +154,14 @@ TB_PokemonButtons::TB_PokemonButtons()
 /******************** TB_PokemonItem ****************************/
 /****************************************************************/
 
-TB_PokemonItem::TB_PokemonItem(PokeTeam *item) : poke(item)
+TB_PokemonItem::TB_PokemonItem(PokeTeam *item) : poke(NULL)
 {
+    changePoke(item);
+}
+
+void TB_PokemonItem::changePoke(PokeTeam *poke)
+{
+    delete this->poke, this->poke = poke;
     setPixmap(PokemonInfo::Icon(poke->num()));
 }
 
@@ -172,14 +174,34 @@ TB_PokemonItem::~TB_PokemonItem()
 /******************** TB_PokemonBox *****************************/
 /****************************************************************/
 
-PokemonBox::PokemonBox(int num) : num(num)
+QPixmap * PokemonBox::selBg = NULL;
+
+PokemonBox::PokemonBox(int num) : num(num), currentPoke(0)
 {
-    pokemons.resize(24);
+    if (selBg == NULL)
+        selBg = new QPixmap("db/Teambuilder/Box/smallBox.png");
+
+    pokemons.resize(30);
+
     setScene(new QGraphicsScene(this));
+    setSceneRect(0,0,width()-10,160);
+}
+
+void PokemonBox::drawBackground(QPainter *painter, const QRectF &rect)
+{
+    QGraphicsView::drawBackground(painter, rect);
+
+    if (currentPoke != -1) {
+        QPointF selBGPos = calculatePos(currentPoke, selBg->size());
+        QRectF intersection = rect.intersect(QRectF(selBGPos, selBg->size()));
+        QRectF srcRect = QRectF(std::max(qreal(0), intersection.x()-selBGPos.x()), std::max(qreal(0), intersection.y()-selBGPos.y()),
+                                selBg->size().width(), selBg->size().height());
+        painter->drawPixmap(intersection, *selBg, srcRect);
+    }
 }
 
 bool PokemonBox::isFull() const {
-    return freeSpot() == pokemons.size();
+    return !pokemons.contains(NULL);
 }
 
 int PokemonBox::freeSpot() const {
@@ -189,9 +211,128 @@ int PokemonBox::freeSpot() const {
     //Never reached
 }
 
+bool PokemonBox::isEmpty() const {
+    for (int i = 0; i < pokemons.size(); i++) {
+        if (pokemons[i] != NULL)
+            return false;
+    }
+    return true;
+}
+
 void PokemonBox::addPokemon(const PokeTeam &poke) throw(QString)
 {
+    if (isFull())
+        throw tr("The box is full!");
 
+    int spot = pokemons[currentPoke] == NULL ? currentPoke : freeSpot();
+    pokemons[spot] = new TB_PokemonItem(new PokeTeam(poke));
+
+    addGraphicsItem(spot);
+    changeCurrentSpot(spot);
+}
+
+PokeTeam* PokemonBox::getCurrent() throw (QString)
+{
+    if (pokemons[currentPoke] == NULL)
+        throw tr("There is no pokemon there!");
+
+    return pokemons[currentPoke]->poke;
+}
+
+void PokemonBox::deleteCurrent() throw (QString)
+{
+    if (pokemons[currentPoke] == NULL)
+        throw tr("There is no pokemon there!");
+
+    scene()->removeItem(pokemons[currentPoke]);
+    delete pokemons[currentPoke], pokemons[currentPoke] = NULL;
+}
+
+void PokemonBox::changeCurrent(const PokeTeam &poke) throw (QString)
+{
+    if (pokemons[currentPoke] == NULL)
+        throw tr("There is no pokemon there!");
+
+    pokemons[currentPoke]->changePoke(new PokeTeam(poke));
+}
+
+void PokemonBox::updateCurrentPoke()
+{
+    if (isEmpty())
+        changeCurrentSpot(0);
+    else {
+        for (int i =0; i < pokemons.size(); i++) {
+            if (currentPoke-i >= 0 && pokemons[currentPoke-i]!=NULL) {
+                changeCurrentSpot(currentPoke-i);
+                return;
+            }
+            if (currentPoke+i < pokemons.size() && pokemons[currentPoke+i]!=NULL) {
+                changeCurrentSpot(currentPoke+i);
+                return;
+            }
+        }
+    }
+}
+
+TB_PokemonItem* PokemonBox::currentItem()
+{
+    if (currentPoke == -1)
+        return NULL;
+    else
+        return pokemons[currentPoke];
+}
+
+void PokemonBox::addGraphicsItem(int spot)
+{
+    QPointF pos = calculatePos(spot);
+    pokemons[spot]->setPos(pos);
+
+    scene()->addItem(pokemons[spot]);
+}
+
+void PokemonBox::changeCurrentSpot(int newspot)
+{
+    if (newspot == currentPoke)
+        return;
+
+    /* You could test for -1s to optimize perfs */
+    updateScene(QList<QRectF>() << QRectF(calculatePos(currentPoke, selBg->size()), selBg->size())
+                                    << QRectF(calculatePos(newspot, selBg->size()), selBg->size()));
+
+    currentPoke = newspot;
+}
+
+QPointF PokemonBox::calculatePos(int spot, const QSize &itemSize)
+{
+    QPointF pos;
+    pos.setX((spot%10)*64 + 24 - itemSize.width()/2);
+    pos.setY((spot/10)*50 + 24 - itemSize.height()/2);
+
+    return pos;
+}
+
+void PokemonBox::mousePressEvent(QMouseEvent *event)
+{
+    int spot = calculateSpot(event->pos());
+
+    if (spot != -1)
+        changeCurrentSpot(spot);
+}
+
+int PokemonBox::calculateSpot(const QPoint &graphViewPos)
+{
+    QPointF pos = mapToScene(graphViewPos);
+
+    int x,y;
+
+    x = (pos.x()-24)/64 + 0.5;
+    y = (pos.y()-24)/50 + 0.5;
+
+    if (x < 10 && y < 3 && x >= 0 && y >= 0) {
+        return y*10+x;
+    } else {
+        return -1;
+    }
 }
 
 /****************************************************************/
@@ -201,6 +342,7 @@ void PokemonBox::addPokemon(const PokeTeam &poke) throw(QString)
 TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
 {
     m_team = parent->team();
+    currentPoke = 0;
     QVBoxLayout * ml = new QVBoxLayout(this);
     QHBoxLayout *firstline = new QHBoxLayout();
     ml->addLayout(firstline);
@@ -242,21 +384,84 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
     secondline->addWidget(m_boxes = new QTabWidget(), 100);
 
     for (int i = 0; i < 6; i++) {
-        m_boxes->addTab(new QGraphicsView(), *PokemonBoxButton::theicon, tr("BOX &%1").arg(QChar('A'+i)));
+        m_boxes->addTab(boxes[i] = new PokemonBox(i), *PokemonBoxButton::theicon, tr("BOX &%1").arg(QChar('A'+i)));
     }
 
     m_details->changePoke(&m_team->poke(0),0);
 
-    connect(m_buttons, SIGNAL(buttonChecked(int)), SLOT(changePokemon(int)));
+    connect(m_buttons, SIGNAL(buttonChecked(int)), SLOT(changeCurrentTeamPokemon(int)));
+    connect(bstore, SIGNAL(clicked()), SLOT(store()));
+    connect(bwithdraw, SIGNAL(clicked()), SLOT(withdraw()));
+    connect(bdelete, SIGNAL(clicked()), SLOT(deleteP()));
+    connect(bswitch, SIGNAL(clicked()), SLOT(switchP()));
 }
 
-void TB_PokemonBoxes::changePokemon(int newpoke)
+void TB_PokemonBoxes::changeCurrentTeamPokemon(int newpoke)
 {
+    currentPoke = newpoke;
     m_details->changePoke(&m_team->poke(newpoke), newpoke);
     m_details->updatePoke();
 }
 
+void TB_PokemonBoxes::store()
+{
+    try {
+        currentBox()->addPokemon(m_team->poke(currentPoke));
+    } catch(const QString &ex) {
+        QMessageBox::information(this, tr("Full Box"), ex);
+    }
+}
+
+void TB_PokemonBoxes::withdraw()
+{
+    try {
+        *currentPokeTeam() = *currentBox()->getCurrent();
+        updateSpot(currentPoke);
+    } catch(const QString &ex) {
+        QMessageBox::information(this, tr("Empty Box"), ex);
+    }
+}
+
+PokeTeam *TB_PokemonBoxes::currentPokeTeam()
+{
+    return &m_team->poke(currentPoke);
+}
+
 void TB_PokemonBoxes::updateBox()
 {
-    m_details->updatePoke();
+    for (int i =0; i< 6; i++) {
+        updateSpot(i);
+    }
+}
+
+void TB_PokemonBoxes::deleteP()
+{
+    try {
+        currentBox()->deleteCurrent();
+    } catch(const QString &ex) {
+        QMessageBox::information(this, tr("Box Empty"), ex);
+    }
+}
+
+void TB_PokemonBoxes::switchP()
+{
+    try {
+        PokeTeam *p = new PokeTeam(*currentBox()->getCurrent());
+        currentBox()->changeCurrent(*currentPokeTeam());
+        *currentPokeTeam() = *p;
+
+        delete p;
+
+        updateSpot(currentPoke);
+    } catch(const QString &ex) {
+        QMessageBox::information(this, tr("Box Empty"), ex);
+    }
+}
+
+void TB_PokemonBoxes::updateSpot(int i)
+{
+    if (currentPoke == i)
+        m_details->updatePoke();
+
+    m_buttons->buttons[i]->setIcon(PokemonInfo::Icon(m_team->poke(i).num()));
 }
