@@ -644,6 +644,49 @@ Team & TrainerTeam::team()
     return m_team;
 }
 
+QDomElement PokeTeam::toXml() const
+{
+    QDomDocument doc;
+    QDomElement el = doc.createElement("Pokemon");
+
+    el.setAttribute("Nickname", nickname());
+    el.setAttribute("Num", num());
+    el.setAttribute("Item", item());
+    el.setAttribute("Ability", ability());
+    el.setAttribute("Nature", nature());
+    el.setAttribute("Gender", gender());
+    el.setAttribute("Shiny", shiny());
+    el.setAttribute("Happiness", happiness());
+    el.setAttribute("Lvl", level());
+
+    for(int i = 0; i < 4; i++)
+    {
+        QDomElement move = doc.createElement("Move");
+        el.appendChild(move);
+
+        QDomText name = doc.createTextNode(QString("%1").arg(this->move(i)));
+        move.appendChild(name);
+    }
+    for(int i = 0; i < 6; i++)
+    {
+        QDomElement Dv = doc.createElement("DV");
+        el.appendChild(Dv);
+
+        QDomText Dvname = doc.createTextNode(QString("%1").arg(DV(i)));
+        Dv.appendChild(Dvname);
+    }
+    for(int i = 0; i < 6; i++)
+    {
+        QDomElement Ev = doc.createElement("EV");
+        el.appendChild(Ev);
+
+        QDomText Evname = doc.createTextNode(QString("%1").arg(EV(i)));
+        Ev.appendChild(Evname);
+    }
+
+    return el;
+}
+
 bool TrainerTeam::saveToFile(const QString &path) const
 {
     QFile file(path);
@@ -652,17 +695,9 @@ bool TrainerTeam::saveToFile(const QString &path) const
         QMessageBox::warning(0, QObject::tr("Error while saving the team"),QObject::tr("Can't create file ")+file.fileName());
         return false;
     }
-    /*QDataStream out(&file);
-    out.setVersion(QDataStream::Qt_4_5);
-    out << team;*/
+
     QDomDocument document;
-    /*int line,col;
-    QString msg;
-    if(!document.setContent(&file,&msg,&line,&col))
-    {
-        QMessageBox::information(0,QObject::tr("Save Team"),QObject::tr("Erreur de parsage lors de l ouverture du fichier %1.\nErreur:%2 \nLigne:%3 Colonne:%4").arg(location).arg(msg).arg(line).arg(col));
-        return false;
-    }*/
+
     QDomElement Team = document.createElement("Team");
     document.appendChild(Team);
     QDomElement trainer = document.createElement("Trainer");
@@ -674,42 +709,9 @@ bool TrainerTeam::saveToFile(const QString &path) const
     trainer.setAttribute("infoMsg",trainerInfo());
     trainer.setAttribute("avatar", avatar());
 
-    QDomElement poke[6];
-    for(int cpt = 0;cpt<6;cpt++)
+    for(int i = 0; i < 6; i++)
     {
-        poke[cpt] = document.createElement("Pokemon");
-        Team.appendChild(poke[cpt]);
-        poke[cpt].setAttribute("Nickname", team().poke(cpt).nickname());
-        poke[cpt].setAttribute("Num",team().poke(cpt).num());
-        poke[cpt].setAttribute("Item",team().poke(cpt).item());
-        poke[cpt].setAttribute("Ability",team().poke(cpt).ability());
-        poke[cpt].setAttribute("Nature",team().poke(cpt).nature());
-        poke[cpt].setAttribute("Gender",team().poke(cpt).gender());
-        poke[cpt].setAttribute("Shiny",team().poke(cpt).shiny());
-        poke[cpt].setAttribute("Happiness",team().poke(cpt).happiness());
-        poke[cpt].setAttribute("Lvl",team().poke(cpt).level());
-        int index;
-        for(index = 0;index<4;index++)
-        {
-            QDomElement move = document.createElement("Move");
-            poke[cpt].appendChild(move);
-            QDomText name = document.createTextNode(QString("%1").arg(team().poke(cpt).move(index)));
-            move.appendChild(name);
-        }
-        for(index = 0;index<6;index++)
-        {
-            QDomElement Dv = document.createElement("DV");
-            poke[cpt].appendChild(Dv);
-            QDomText Dvname = document.createTextNode(QString("%1").arg(team().poke(cpt).DV(index)));
-            Dv.appendChild(Dvname);
-        }
-        for(index = 0;index<6;index++)
-        {
-            QDomElement Ev = document.createElement("EV");
-            poke[cpt].appendChild(Ev);
-            QDomText Evname = document.createTextNode(QString("%1").arg(team().poke(cpt).EV(index)));
-            Ev.appendChild(Evname);
-        }
+        Team.appendChild(team().poke(i).toXml());
     }
 
     QTextStream in(&file);
@@ -731,10 +733,6 @@ bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath, QStrin
 
     int res = team.saveToFile(location);
 
-    /*if (res && team.trainerNick().length() > 0) {
-        QSettings s;
-        s.setValue("trainer_name", team.trainerNick());
-    }*/
     return res;
 }
 
@@ -750,16 +748,53 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
         *chosenPath = location;
     }
     int res = team.loadFromFile(location);
-/*    if (res && team.trainerNick().length() > 0) {
-        QSettings s;
-        s.setValue("trainer_name", team.trainerNick());
-    } */
+
     return res;
+}
+
+void PokeTeam::loadFromXml(const QDomElement &poke)
+{
+    reset();
+    setNum(poke.attribute("Num",0).toInt());
+    load();
+    nickname() = poke.attribute("Nickname");
+    item() = poke.attribute("Item").toInt();
+    ability() = poke.attribute("Ability").toInt();
+    nature() = poke.attribute("Nature").toInt();
+    gender() = poke.attribute("Gender").toInt();
+    shiny() = QVariant(poke.attribute("Shiny")).toBool();
+    happiness() = poke.attribute("Happiness").toInt();
+    level() = poke.attribute("Lvl").toInt();
+
+    int cptMove=0;
+
+    QDomElement moveElement = poke.firstChildElement("Move");
+    while(!moveElement.isNull())
+    {
+        setMove(moveElement.text().toInt(),cptMove,false);
+        cptMove++;
+        moveElement = moveElement.nextSiblingElement("Move");
+    }
+    int cptDV=0;
+    QDomElement DVElement = poke.firstChildElement("DV");
+    while(!DVElement.isNull())
+    {
+        setDV(cptDV,DVElement.text().toInt());
+        cptDV++;
+        DVElement = DVElement.nextSiblingElement("DV");
+    }
+    int cptEV=0;
+    QDomElement EVElement = poke.firstChildElement("EV");
+    while(!EVElement.isNull())
+    {
+        setEV(cptEV,EVElement.text().toInt());
+        cptEV++;
+        EVElement = EVElement.nextSiblingElement("EV");
+    }
 }
 
 bool TrainerTeam::loadFromFile(const QString &path)
 {
-    //ancienne facon de charger
     QFile file(path);
     if (!file.open(QFile::ReadOnly))
     {
@@ -785,52 +820,18 @@ bool TrainerTeam::loadFromFile(const QString &path)
         QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
         return false;
     }
-    this->setTrainerNick(trainer.text());
-    this->setTrainerInfo(trainer.attribute("infoMsg",QString()));
-    this->setTrainerLose(trainer.attribute("loseMsg",QString()));
-    this->setTrainerWin(trainer.attribute("winMsg",QString()));
-    this->avatar() = trainer.attribute("avatar", 0).toInt();
+
+    setTrainerNick(trainer.text());
+    setTrainerInfo(trainer.attribute("infoMsg",QString()));
+    setTrainerLose(trainer.attribute("loseMsg",QString()));
+    setTrainerWin(trainer.attribute("winMsg",QString()));
+    avatar() = trainer.attribute("avatar", 0).toInt();
+
     QDomElement poke = team.firstChildElement("Pokemon");
     int cpt = 0;
     while(!poke.isNull())
     {
-        this->team().poke(cpt).reset();
-        this->team().poke(cpt).setNum(poke.attribute("Num",0).toInt());
-        this->team().poke(cpt).load();
-        this->team().poke(cpt).nickname() = poke.attribute("Nickname");
-        this->team().poke(cpt).item() = poke.attribute("Item",0).toInt();
-        this->team().poke(cpt).ability() = poke.attribute("Ability",0).toInt();
-        this->team().poke(cpt).nature() = poke.attribute("Nature",0).toInt();
-        this->team().poke(cpt).gender() = poke.attribute("Gender",0).toInt();
-        this->team().poke(cpt).shiny() = QVariant(poke.attribute("Shiny",false)).toBool();
-        this->team().poke(cpt).happiness() = poke.attribute("Happiness",0).toInt();
-        this->team().poke(cpt).level() = poke.attribute("Lvl",0).toInt();
-        int cptMove=0;
-
-        QDomElement moveElement = poke.firstChildElement("Move");
-        while(!moveElement.isNull())
-        {
-            //QMessageBox::information(0,QObject::tr(""),QString("pokemon %1 moveElement %2:%3").arg(cpt).arg(cptMove).arg(moveElement.text()));
-            this->team().poke(cpt).setMove(moveElement.text().toInt(0,10),cptMove,false);
-            cptMove++;
-            moveElement = moveElement.nextSiblingElement("Move");
-        }
-        int cptDV=0;
-        QDomElement DVElement = poke.firstChildElement("DV");
-        while(!DVElement.isNull())
-        {
-            this->team().poke(cpt).setDV(cptDV,DVElement.text().toInt(0,10));
-            cptDV++;
-            DVElement = DVElement.nextSiblingElement("DV");
-        }
-        int cptEV=0;
-        QDomElement EVElement = poke.firstChildElement("EV");
-        while(!EVElement.isNull())
-        {
-            this->team().poke(cpt).setEV(cptEV,EVElement.text().toInt(0,10));
-            cptEV++;
-            EVElement = EVElement.nextSiblingElement("EV");
-        }
+        this->team().poke(cpt).loadFromXml(poke);
 
         cpt++;
         poke = poke.nextSiblingElement("Pokemon");
@@ -923,7 +924,6 @@ bool TrainerTeam::importFromTxt(const QString &file1)
             int evnum = ev2[0].toInt();
             int stat = 0;
 
-            /* DONT TOUCH TO THIS BEAUTIFUL ++ */
             if (ev2[1] == "SDef")
                 stat = SpDefense;
             else if (ev2[1] == "SAtk")

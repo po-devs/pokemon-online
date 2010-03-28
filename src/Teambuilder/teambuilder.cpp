@@ -123,6 +123,8 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : QImageBackground("db/Teambuild
 {
     setWindowTitle(tr("Teambuilder"));
 
+    memset(modified,false,6);
+
     /* Buttons of pokemons / trainers */
     QImageButton * m_trainer = new QImageButton("db/Teambuilder/Buttons/TrainerNorm.png", "db/Teambuilder/Buttons/TrainerGlow.png");
     m_trainer->setParent(this);
@@ -173,6 +175,7 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : QImageBackground("db/Teambuild
     connect(m_close, SIGNAL(clicked()), SIGNAL(done()));
     connect(m_teamBody, SIGNAL(showDockAdvanced(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)), this,
             SIGNAL(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
+    connect(m_boxes, SIGNAL(pokeChanged(int)), SLOT(pokeChanged(int)));
 
     updateAll();
 }
@@ -186,6 +189,11 @@ Team* TeamBuilder::team()
 TrainerTeam * TeamBuilder::trainerTeam()
 {
     return m_team;
+}
+
+void TeamBuilder::pokeChanged(int poke)
+{
+    modified[poke] = true;
 }
 
 void TeamBuilder::changeZone()
@@ -202,6 +210,12 @@ void TeamBuilder::changeToTeam()
         nextb->changePics("db/Teambuilder/Buttons/GoBackNorm.png", "db/Teambuilder/Buttons/GoBackGlow.png");
     m_body->setCurrentIndex(TeamW);
     changePic("db/Teambuilder/Team/TeamBG.png");
+    for (int i = 0; i < 6; i++) {
+        if (modified[i]) {
+            m_teamBody->updatePoke(i);
+            modified[i] = false;
+        }
+    }
 }
 
 void TeamBuilder::changeToBoxes()
@@ -210,6 +224,7 @@ void TeamBuilder::changeToBoxes()
         nextb->changePics("db/Teambuilder/Buttons/GoBackNorm.png", "db/Teambuilder/Buttons/GoBackGlow.png");
     m_body->setCurrentIndex(BoxesW);
     changePic("db/Teambuilder/Box/PokeboxBG.png");
+    updateBox();
 }
 
 void TeamBuilder::changeToTrainer()
@@ -667,8 +682,13 @@ void TB_TeamBody::updateButton()
 void TB_TeamBody::updateTeam()
 {
     for(int i=0; i < 6; i++) {
-        pokeBody[i]->updateNum();
+        updatePoke(i);
     }
+}
+
+void TB_TeamBody::updatePoke(int num)
+{
+    pokeBody[num]->updateNum();
 }
 
 void TB_TeamBody::createDockAdvanced(bool sepWindow)

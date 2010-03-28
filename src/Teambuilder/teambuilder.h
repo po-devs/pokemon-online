@@ -77,6 +77,7 @@ public slots:
     void saveTeam();
     void loadTeam();
     void newTeam();
+    void pokeChanged(int poke);
     void clickOnDone();
     void updateAll();
     void importFromTxt();
@@ -115,7 +116,7 @@ private:
 
     TB_TrainerBody *trainerbody();
 
-
+    bool modified[6];
 };
 
 /* This is the widget displaying a trainer's info */
@@ -178,6 +179,7 @@ class TB_TeamBody: public QWidget
 public:
     TB_TeamBody(TeamBuilder *parent);
     void updateTeam();
+    void updatePoke(int num);
 signals:
     void showDockAdvanced(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
 private slots:

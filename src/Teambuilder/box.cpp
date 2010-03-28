@@ -417,6 +417,7 @@ void TB_PokemonBoxes::withdraw()
     try {
         *currentPokeTeam() = *currentBox()->getCurrent();
         updateSpot(currentPoke);
+        emit pokeChanged(currentPoke);
     } catch(const QString &ex) {
         QMessageBox::information(this, tr("Empty Box"), ex);
     }
@@ -450,9 +451,13 @@ void TB_PokemonBoxes::switchP()
         currentBox()->changeCurrent(*currentPokeTeam());
         *currentPokeTeam() = *p;
 
+        /* Don't worry, if getCurrent doesn't throw exceptions then changeCurrent doesn't.
+           Hence no memory leaks */
         delete p;
 
         updateSpot(currentPoke);
+        emit pokeChanged(currentPoke);
+
     } catch(const QString &ex) {
         QMessageBox::information(this, tr("Box Empty"), ex);
     }

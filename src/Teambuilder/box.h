@@ -115,6 +115,8 @@ public slots:
     void withdraw();
     void switchP();
     void deleteP();
+signals:
+    void pokeChanged(int poke);
 protected:
     PokeTeam *currentPokeTeam();
 private:
