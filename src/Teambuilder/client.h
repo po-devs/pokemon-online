@@ -127,7 +127,9 @@ public slots:
     void versionDiff(const QString &a, const QString &b);
     void tierListReceived(const QString&);
     void changeTier();
-
+    /* Ignored */
+    void removeIgnore(int);
+    void ignore(int);
     /* Teambuilder slots */
     void openTeamBuilder();
     void changeTeam();
@@ -192,6 +194,8 @@ private:
 
     void initRelay();
     void changeTierChecked(const QString &newtier);
+    /* Ignore */
+    QList<int> myIgnored;
 };
 
 #endif // CLIENT_H
