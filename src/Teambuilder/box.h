@@ -30,8 +30,6 @@ class PokemonBoxButton : public QPushButton
     Q_OBJECT
 public:
     PokemonBoxButton(int num);
-private slots:
-    void p_toggled(bool);
 public:
     static QPixmap *theicon;
     static QPixmap *theglowedicon;
@@ -44,6 +42,9 @@ public:
     TB_PokemonButtons();
 signals:
     void buttonChecked(int button);
+
+public:
+    PokemonBoxButton *buttons[6];
 };
 
 class TB_PokemonItem : public QGraphicsPixmapItem
@@ -51,6 +52,8 @@ class TB_PokemonItem : public QGraphicsPixmapItem
 public:
     TB_PokemonItem(PokeTeam *item);
     ~TB_PokemonItem();
+
+    void changePoke(PokeTeam *poke);
 
     PokeTeam *poke;
 };
@@ -62,11 +65,40 @@ public:
     PokemonBox(int num);
 
     void addPokemon(const PokeTeam &poke) throw (QString);
+
+    /* Gets the team held by the current item */
+    PokeTeam *getCurrent() throw (QString);
+    /* Deletes the current item  */
+    void deleteCurrent() throw (QString);
+
+    void changeCurrent(const PokeTeam &poke) throw (QString);
+
     bool isFull() const;
+    bool isEmpty() const;
     int freeSpot() const;
+    /* Sets currentPoke as the first spot available */
+    void updateCurrentPoke();
+
+protected:
+    void addGraphicsItem(int spot);
+    QPointF calculatePos(int spot, const QSize& itemSize = QSize(32,32));
+    /*
+     * Gets the spot corresponding to that pos.
+     * Returns -1 on failure
+    */
+    int calculateSpot(const QPoint &graphViewPos);
+
+    void drawBackground(QPainter *painter, const QRectF &rect);
+    void changeCurrentSpot(int newspot);
+    TB_PokemonItem* currentItem();
+
+    void mousePressEvent(QMouseEvent *event);
+
+    static QPixmap *selBg;
 private:
     QVector<TB_PokemonItem*> pokemons;
     int num;
+    int currentPoke;
 };
 
 class TB_PokemonBoxes : public QWidget
@@ -76,13 +108,26 @@ public:
     TB_PokemonBoxes(TeamBuilder *parent);
 
     void updateBox();
+    void updateSpot(int i);
 public slots:
-    void changePokemon(int newpoke);
+    void changeCurrentTeamPokemon(int newpoke);
+    void store();
+    void withdraw();
+    void switchP();
+    void deleteP();
+protected:
+    PokeTeam *currentPokeTeam();
 private:
     TB_PokemonDetail *m_details;
     TB_PokemonButtons *m_buttons;
     Team *m_team;
+    int currentPoke;
     QTabWidget *m_boxes;
+    PokemonBox * boxes[6];
+
+    PokemonBox *currentBox() {
+        return boxes[m_boxes->currentIndex()];
+    }
 };
 
 #endif // BOX_H

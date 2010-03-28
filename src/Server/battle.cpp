@@ -63,6 +63,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
             }
         }
     }
+    qDebug() << "BattleSituation between " << team1.name << " and " << team2.name << " instanciated.";
 }
 
 MirrorMoveAmn amn;
@@ -267,6 +268,7 @@ void BattleSituation::run()
 # endif
 #endif
     try {
+        qDebug() << "BattleSituation between " << team1.name << " and " << team2.name << " begin running.";
 	while (!quit)
 	{
 	    beginTurn();
@@ -276,11 +278,14 @@ void BattleSituation::run()
     } catch(const QuitException &ex) {
 	; /* the exception is just there to get immediately out of the while , nothing more
 	   We could even have while (1) instead of while(!quit) (but we don't! ;) )*/
+    } catch(...) {
+        qDebug() << "unkown exception caught in battle between " << team1.name << " and " << team2.name;
     }
 }
 
 void BattleSituation::beginTurn()
 {
+    qDebug() << "Battle turn begin between " << team1.name << " and " << team2.name;
     turn() += 1;
     /* Resetting temporary variables */
     turnlong[0].clear();
@@ -543,6 +548,8 @@ std::vector<int> BattleSituation::sortedBySpeed() {
 
 void BattleSituation::analyzeChoices()
 {
+    qDebug() << "Analyzing choices in battle between " << team1.name << " and " << team2.name;
+
     /* If there's no choice then the effects are already taken care of */
     if (!turnlong[Player1].contains("NoChoice") && choice[Player1].attack() && !options[Player1].struggle()) {
         MoveEffect::setup(move(Player1,choice[Player1].numSwitch), Player1, Player2, *this);
@@ -589,6 +596,8 @@ void BattleSituation::analyzeChoices()
             }
         }
     }
+
+    qDebug() << "End Analyzing choices in battle between " << team1.name << " and " << team2.name;
 }
 
 void BattleSituation::notifySub(int player, bool sub)

@@ -175,10 +175,8 @@ void Tier::changeRating(const QString &w, const QString &l)
     ratings[l2].changeRating(oldw2, false);
     in->seek(ratings[w2].filePos());
     in->write(ratings[w2].toString().toUtf8());
-    qDebug() << "wrote " << ratings[w2].toString() << " at " << ratings[w2].filePos();
     in->seek(ratings[l2].filePos());
     in->write(ratings[l2].toString().toUtf8());
-    qDebug() << "wrote " << ratings[l2].toString() << " at " << ratings[l2].filePos();
     in->flush();
 }
 
