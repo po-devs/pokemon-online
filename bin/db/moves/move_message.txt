@@ -23,7 +23,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 
 %s begged %f!\n%f gave its %i to %s|%s stole %f's %i!
 %s crushed %f!
-%s cut its own HP and laid a Curse on %f!|%f is afflicted by the Curse!
+%s cut its own HP and laid a Curse on %f!|%s is afflicted by the Curse!
 %s took %f down with it!|%s is trying to take its foe with it!
 %f protected itself!
 %f's %m was disabled!|%s's %m is disabled!|%s is no longer disabled!

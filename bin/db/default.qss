@@ -59,10 +59,17 @@ TeamBuilder QLabel#SmallText {
 	font-weight: normal;
 }
 
-TeamBuilder QLabel {
+TeamBuilder QLabel#NormalText {
 	font-family: Trebuchet MS;
 	font-weight: bold;
 	font-size: 11pt;
+	color: white;
+}
+
+TeamBuilder QLabel#BigText {
+	font-family: Trebuchet MS;
+	font-weight: bold;
+	font-size: 12pt;
 	color: white;
 }
 
@@ -103,6 +110,30 @@ TB_Advanced QCheckBox {
 
 TB_Advanced QRadioButton::indicator {
 	/*even if theres no text here, it removes the older style so its cool*/
+}
+
+TB_PokemonDetail {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #a6a9a9 stop: 1 #5a5f63);
+	border: 3px solid #c7c8c9;
+	border-radius: 10px;
+	width: 215px;
+	height: 225px;
+}
+
+PokemonBoxButton {
+	background: #07a7c9;
+	color: white;
+	font-family: Trebuchet MS;
+	font-size: 10pt;
+	image: url(db/Teambuilder/Box/WhiteBall.png);
+}
+
+PokemonBoxButton:checked{
+	background: #07a7c9;
+	color: white;
+	font-family: Trebuchet MS;
+	font-size: 10pt;
+	image: url(db/Teambuilder/Box/WhiteBallGlow.png);
 }
 
 QProgressBar#TimeOut {
