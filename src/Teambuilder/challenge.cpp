@@ -18,7 +18,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     QLabel *name = new QLabel(toColor(p.team.name, grey),this);
     name->setGeometry(54,0,290,52);
     name->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    name->setFont(QFont("Trebuchet MS", 20, QFont::DemiBold));
+    name->setObjectName("Title");
 
     QLabel *trainerPic = new QLabel(this);
     trainerPic->move(13,85);
@@ -54,8 +54,8 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     ladder->setGeometry(100,148,83,18);
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
-    QLabel *tier = new QLabel(toBoldColor(p.tier, Qt::white),this);
-    tier->setFont(QFont("Trebuchet MS", 10, QFont::Bold));
+    QLabel *tier = new QLabel(toBoldColor(p.tier, grey),this);
+    tier->setFont(treb);
     tier->setGeometry(210,148,80,18);
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 

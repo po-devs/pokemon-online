@@ -21,9 +21,9 @@ MainEngine::MainEngine() : displayer(0)
         settings.setValue("application_style", "plastique");
         settings.setValue("new_teambuilder",true);
     }
-    if (settings.value("stylesheet").isNull()) {
-        settings.setValue("stylesheet", "db/default.qss");
-    }
+    //if (settings.value("stylesheet").isNull()) {
+        settings.setValue("stylesheet", "db/default.css");
+    //}
     if (settings.value("save_battle_logs").isNull()) {
         settings.setValue("save_battle_logs", false);
     }

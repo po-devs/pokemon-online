@@ -1,4 +1,5 @@
 #include "teambuilder.h"
+#include "box.h"
 #include "advanced.h"
 #include "mainwindow.h"
 #include "../Utilities/otherwidgets.h"
@@ -260,6 +261,7 @@ void TeamBuilder::updateAll()
 {
     updateTrainer();
     updateTeam();
+    updateBox();
 }
 
 void TeamBuilder::updateTeam()
@@ -270,6 +272,11 @@ void TeamBuilder::updateTeam()
 void TeamBuilder::updateTrainer()
 {
     m_trainerBody->updateTrainer();
+}
+
+void TeamBuilder::updateBox()
+{
+    m_boxes->updateBox();
 }
 
 QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
@@ -1402,112 +1409,4 @@ void TB_EVManager::updateMain()
 {
     m_mainSlider->setValue(poke()->EVSum());
     m_mainLabel->setText(QString::number(poke()->EVSum()));
-}
-
-TB_PokemonDetail::TB_PokemonDetail()
-{
-    setFixedSize(215,225);
-
-    QGridLayout *gl = new QGridLayout(this);
-    gl->setMargin(3);
-
-    /* Nick layout */
-    QGridLayout *nicklayout = new QGridLayout();
-    nicklayout->setSpacing(0);
-    nicklayout->setMargin(0);
-    gl->addLayout(nicklayout, 0,0);
-
-    QLabel *whitePokeball = new QLabel();
-    whitePokeball->setPixmap(QPixmap("db/Teambuilder/Box/Whiteball.png"));
-    nicklayout->addWidget(whitePokeball,0,0);
-    nicklayout->addWidget(m_name = new QLabel(),0,1);
-    nicklayout->addWidget(m_nick = new QLabel(),1,0,1,2);
-    m_name->setObjectName("NormalText");
-    m_nick->setObjectName("SmallText");
-
-    /* Level/Gender layout */
-    QGridLayout *lvlayout = new QGridLayout();
-    lvlayout->setSpacing(0);
-    lvlayout->setMargin(0);
-    gl->addLayout(lvlayout, 0,1);
-
-    lvlayout->addWidget(m_num = new QLabel(),0,0,1,2, Qt::AlignRight);
-    lvlayout->addWidget(m_gender = new QLabel(),1,0,1,1, Qt::AlignLeft);
-    lvlayout->addWidget(m_level = new QLabel(),1,1,1,1,Qt::AlignLeft);
-    lvlayout->setColumnStretch(1,100);
-    m_num->setObjectName("BigText");
-    m_level->setObjectName("SmallText");
-
-    /* Avatar box! */
-    gl->addWidget(m_pic = new AvatarBox(),1,0);
-
-    /* Type / Nature / Item */
-    QVBoxLayout *tnlayout = new QVBoxLayout();
-    gl->addLayout(tnlayout,1,1);
-
-    QLabel *type;
-    tnlayout->addWidget(type = new QLabel(tr("Type:")));
-    type->setObjectName("SmallText");
-    QHBoxLayout *types = new QHBoxLayout();
-    types->addWidget(m_type1 = new QLabel());
-    types->addWidget(m_type2 = new QLabel(),100,Qt::AlignLeft);
-    tnlayout->addLayout(types);
-    tnlayout->addWidget(m_nature = new QLabel());
-    m_nature->setObjectName("SmallText");
-    QHBoxLayout *items = new QHBoxLayout();
-    QLabel *item;
-    items->addWidget(item = new QLabel(tr("Item: ")));
-    items->addWidget(m_item=new QLabel(), 100, Qt::AlignLeft);
-    tnlayout->addLayout(items);
-    item->setObjectName("SmallText");
-
-    //Moves
-    QGridLayout *moves = new QGridLayout();
-    QLabel *lw;
-    moves->addWidget(lw = new QLabel(tr("Moves:")),0,0,1,1,Qt::AlignLeft);
-    for (int i = 0; i < 4; i++) {
-        moves->addWidget(m_moves[i] = new QLabel(), 1+i,1,1,1,Qt::AlignLeft|Qt::AlignTop);
-        m_moves[i]->setObjectName("SmallText");
-    }
-    lw->setObjectName("NormalText");
-    moves->setColumnStretch(1,100);
-    gl->addLayout(moves,2,0,1,2);
-
-    gl->setRowStretch(2,200);
-}
-
-void TB_PokemonDetail::changePoke(PokeTeam *poke, int num)
-{
-    this->num = num;
-    this->poke = poke;
-
-    updatePoke();
-}
-
-void TB_PokemonDetail::updatePoke()
-{
-    m_name->setText(PokemonInfo::Name(poke->num()));
-    m_num->setText(QString("[%1]").arg(num+1));
-    m_nick->setText(poke->nickname());
-    m_pic->changePic(poke->picture());
-    m_type1->setPixmap(TypeInfo::Picture(PokemonInfo::Type1(poke->num())));
-    m_type2->setPixmap(TypeInfo::Picture(PokemonInfo::Type2(poke->num())));
-    m_nature->setText(tr("Nature: %1").arg(NatureInfo::Name(poke->nature())));
-    m_item->setPixmap(ItemInfo::Icon(poke->item()));
-    m_gender->setPixmap(GenderInfo::Picture(poke->gender(), false));
-    m_level->setText(tr("Lv. %1").arg(poke->level()));
-
-    for (int i = 0; i < 4; i++) {
-        m_moves[i]->setText(QString("(%1) %2").arg(i+1).arg(MoveInfo::Name(poke->move(i))));
-    }
-}
-
-TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
-{
-    m_team = parent->team();
-    QVBoxLayout * ml = new QVBoxLayout(this);
-
-    ml->addWidget(m_details = new TB_PokemonDetail());
-
-    m_details->changePoke(&m_team->poke(0),0);
 }

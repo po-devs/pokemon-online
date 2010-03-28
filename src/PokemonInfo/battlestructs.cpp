@@ -288,13 +288,10 @@ TeamBattle::TeamBattle()
 
 TeamBattle::TeamBattle(const TeamInfo &other)
 {
-    qDebug() << "Assigning name";
     name = other.name;
-    qDebug() << "Assigning info";
     info = other.info;
     int curs = 0;
     for (int i = 0; i < 6; i++) {
-        qDebug() << "Assigning pokemon " << i << "(" << other.pokemon(i).num() << ")";
 	poke(curs).init(other.pokemon(i));
 	if (poke(curs).num() != 0) {
 	    ++curs;
