@@ -106,8 +106,13 @@ void Client::showContextMenu(const QPoint &requested)
             } else {
                 createIntMapper(menu->addAction(tr("Go &Away")), SIGNAL(triggered()), this, SLOT(goAway(int)), true);
             }
-        } else if (player(item->id()).battling()) {
-            createIntMapper(menu->addAction(tr("&Watch Battle")), SIGNAL(triggered()), this, SLOT(watchBattleRequ(int)), item->id());
+        } else {
+            if (player(item->id()).battling())
+                createIntMapper(menu->addAction(tr("&Watch Battle")), SIGNAL(triggered()), this, SLOT(watchBattleRequ(int)), item->id());
+            if (myIgnored.contains(item->id()))
+                createIntMapper(menu->addAction(tr("&Remove Ignore")), SIGNAL(triggered()), this, SLOT(removeIgnore(int)), item->id());
+            else
+                createIntMapper(menu->addAction(tr("&Ignore")), SIGNAL(triggered()), this, SLOT(ignore(int)), item->id());
         }
 
         int myauth = ownAuth();
@@ -237,7 +242,7 @@ void Client::setPlayer(const UserInfo &ui)
 
 void Client::PMReceived(int id, QString pm)
 {
-    if (!playerExist(id)) {
+    if (!playerExist(id) || myIgnored.contains(id)) {
         return;
     }
     if (!mypms.contains(id)) {
@@ -630,6 +635,8 @@ void Client::challengeStuff(const ChallengeInfo &c)
     if (c.desc() == ChallengeInfo::Sent) {
         if (busy()) {
             relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Busy, c));
+        } else if (myIgnored.contains(player(c).id)) {
+            relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Refused, c));
         } else {
             seeChallenge(c);
         }
@@ -761,7 +768,8 @@ void Client::playerLogin(const PlayerInfo& p)
 void Client::playerLogout(int id)
 {
     QString name = info(id).name;
-
+    if (!myIgnored.contains(id))
+        removeIgnore(id);
     if (showPEvents)
         printLine(tr("%1 logged out.").arg(name));
 
@@ -988,4 +996,14 @@ void Client::requestBan(const QString &name)
     } else {
         ban(id(name));
     }
+}
+
+void Client::ignore(int id)
+{
+    myIgnored.append(id);
+}
+
+void Client::removeIgnore(int id)
+{
+    myIgnored.removeOne(id);
 }
