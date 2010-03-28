@@ -768,7 +768,7 @@ void Client::playerLogin(const PlayerInfo& p)
 void Client::playerLogout(int id)
 {
     QString name = info(id).name;
-    if (!myIgnored.contains(id))
+    if (myIgnored.contains(id))
         removeIgnore(id);
     if (showPEvents)
         printLine(tr("%1 logged out.").arg(name));
