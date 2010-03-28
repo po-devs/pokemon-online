@@ -7,6 +7,7 @@
 
 class TB_PokemonBody;
 class TB_TrainerBody;
+class TB_PokemonBoxes;
 class TB_TeamBody;
 class TB_EVManager;
 class DockAdvanced;
@@ -66,7 +67,7 @@ public:
     ~TeamBuilder();
 
     TrainerTeam *trainerTeam();
-    Team * getTeam()const;
+    Team *team();
 
     /* Create a menu bar to give to the main window */
     QMenuBar *createMenuBar(MainEngine *w);
@@ -84,12 +85,14 @@ public slots:
 private:
     enum StackWidgets {
         TrainerW=0,
-        TeamW=1
+        TeamW=1,
+        BoxesW
     };
 
 private slots:
     void changeToTrainer();
     void changeToTeam();
+    void changeToBoxes();
     void changeZone();
 
 signals:
@@ -99,13 +102,12 @@ private:
     QStackedWidget *m_body;
     TB_TrainerBody *m_trainerBody;
     TB_TeamBody *m_teamBody;
+    TB_PokemonBoxes *m_boxes;
     QImageButton *nextb;
     /* the Team of the trainer */
     TrainerTeam *m_team;
 
     QPointer<QWidget> m_import;
-
-    Team *team();
 
     void updateTrainer();
     void updateTeam();
@@ -348,6 +350,34 @@ public slots:
     void changeEV(const QString &newvalue);
 signals:
     void EVChanged(int stat);
+};
+
+class TB_PokemonDetail : public QFrame
+{
+    Q_OBJECT
+public:
+    TB_PokemonDetail();
+
+    void changePoke(PokeTeam *poke, int num);
+    void updatePoke();
+private:
+    PokeTeam *poke;
+    int num;
+
+    QLabel *m_name, *m_nick, *m_num, *m_gender, *m_level, *m_type1, *m_type2, *m_nature, *m_item;
+    QLabel *m_moves[4];
+
+    AvatarBox *m_pic;
+};
+
+class TB_PokemonBoxes : public QWidget
+{
+    Q_OBJECT
+public:
+    TB_PokemonBoxes(TeamBuilder *parent);
+private:
+    TB_PokemonDetail *m_details;
+    Team *m_team;
 };
 
 #endif // TEAMBUILDER_H

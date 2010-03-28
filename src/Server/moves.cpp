@@ -490,7 +490,7 @@ struct MMDetect : public MM
     static void uas(int s, int, BS &b) {
 	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Detect", &dgaf);
 	turn(b,s)["DetectUsed"] = true;
-        b.sendMoveMessage(27, 0, s, Pokemon::Normal);
+        b.sendMoveMessage(27, 0, t, Pokemon::Normal);
     }
 
     static void dgaf(int s, int t, BS &b) {
