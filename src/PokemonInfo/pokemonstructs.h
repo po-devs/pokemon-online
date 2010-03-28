@@ -5,6 +5,10 @@
 #include <QDataStream>
 #include "../Utilities/functions.h"
 
+#ifdef CLIENT_SIDE
+#include <QDomElement>
+#endif
+
 namespace Pokemon
 {
     enum Gender
@@ -1659,6 +1663,9 @@ public:
     /* display automatically the right picture */
     QPixmap picture();
     QIcon icon();
+
+    void loadFromXml(const QDomElement &el);
+    QDomElement toXml() const;
 };
 
 class Team
