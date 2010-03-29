@@ -5,6 +5,8 @@
 
 #ifdef MULTI_THREADED_ACCESS
 # define MAKE_THREAD_SAFE mutable QMutex m_global_mutex
+# define CREATE_LOCK_FUNCTION void lock() {m_global_mutex.lock();} \
+                              void unlock() {m_global_mutex.unlock();}
 # define CONCURRENT_FUNCTION QMutexLocker m_global_locker(&m_global_mutex)
 #else
 # define MAKE_THREAD_SAFE
