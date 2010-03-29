@@ -1382,6 +1382,8 @@ struct MMAssist : public MM
 
     struct FM : public QSet<int>
     {
+        MAKE_THREAD_SAFE;
+        CREATE_LOCK_FUNCTION;
 	FM() {
             (*this) << NoMove << Assist << Chatter << Copycat << Counter << Covet << DestinyBond
                     << Detect << Endure << Feint << FocusPunch << FollowMe << HelpingHand << MeFirst
@@ -1408,8 +1410,10 @@ struct MMAssist : public MM
 		PokeBattle &p = b.poke(s,i);
 		for(int j = 0; j < 4; j++) {
 		    int m = p.move(j);
+                    forbidden_moves.lock();
 		    if (!forbidden_moves.contains(m))
 			possible_moves.insert(m);
+                    forbidden_moves.unlock();
 		}
 	    }
 	}
@@ -1811,6 +1815,8 @@ struct MMEncore : public MM
 
     struct FM : public QSet<int>
     {
+        MAKE_THREAD_SAFE;
+        CREATE_LOCK_FUNCTION;
 	FM() {
 	    /* Encore , Mimic Mirror Move, Sketch,  Struggle Transform, ,  */
             (*this)  << Encore << Mimic << MirrorMove << Sketch << Struggle << Transform;
@@ -1835,7 +1841,11 @@ struct MMEncore : public MM
 	    return;
 	}
 	int move = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
-	if (forbidden_moves.contains(move)) {
+        forbidden_moves.lock();
+        bool cont = forbidden_moves.contains(move);
+        forbidden_moves.unlock();
+
+        if (cont) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
@@ -2295,6 +2305,8 @@ struct MMHealBlock: public MM
     }
 
     struct FM : public QSet<int> {
+        MAKE_THREAD_SAFE;
+        CREATE_LOCK_FUNCTION;
 	FM() {
 	    /* Heal Order, Milk Drink, Moonlight, Morning Sun, Recover, Rest, Roost, Slack Off, Softboiled, Swallow, Synthesis, and Wish; */
             (*this) << HealOrder << MilkDrink << Moonlight << MorningSun << Rest << Recover << Roost << SlackOff << Softboiled << Swallow
@@ -2304,18 +2316,22 @@ struct MMHealBlock: public MM
     static FM forbidden_moves;
 
     static void msp(int s, int, BS &b) {
+        forbidden_moves.lock();
 	for (int i = 0; i < 4; i++) {
 	    if (forbidden_moves.contains(b.move(s,i))) {
 		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
 	    }
 	}
+        forbiddeno_moves.unlock();
     }
 
     static void mp(int s, int, BS &b) {
+        forbidden_moves.lock();
 	if(forbidden_moves.contains(b.move(s,poke(b,s)["MoveSlot"].toInt()))) {
 	    turn(b,s)["ImpossibleToMove"] = true;
             b.sendMoveMessage(59,1,s,Type::Psychic,s,b.move(s, poke(b,s)["MoveSlot"].toInt()));
 	}
+        forbidden_moves.unlock();
     }
 };
 
@@ -2667,12 +2683,15 @@ struct MMMagicCoat : public MM
 
     /* Bounced move that are "special" */
     struct BM : public QSet<int> {
+        MAKE_THREAD_SAFE;
+        CREATE_LOCK_FUNCTION;
         BM() { (*this) << Attract << Block << GastroAcid << LeechSeed << MeanLook << SpiderWeb << WorrySeed << Yawn; }
     };
 
     static BM bounced_moves;
 
     static void dgaf(int s, int t, BS &b) {
+        bounced_moves.lock();
 	if (turn(b,t).value("MagicCoated").toBool()) {
 	    if (turn(b,s)["Power"].toInt() == 0 && turn(b,s)["PossibleTargets"].toInt() == Move::ChosenTarget) {
 		int move = MM::move(b,s);
@@ -2687,6 +2706,7 @@ struct MMMagicCoat : public MM
 		}
 	    }
 	}
+        bounced_moves.unlock();
     }
 };
 
@@ -2782,7 +2802,10 @@ struct MMMetronome : public MM
 	while (1) {
             int move = true_rand() % MoveInfo::NumberOfMoves();
 
-	    if (!b.hasMove(s,move) && !MMAssist::forbidden_moves.contains(move)) {
+            MMAssist::forbidden_moves.lock();
+            bool correctMove = !b.hasMove(s,move) && !MMAssist::forbidden_moves.contains(move);
+            MMAssist::forbidden_moves.unlock();
+            if (correctMove) {
                 qDebug() << "Gonna use " << move;
                 qDebug() << "Name is " << MoveInfo::Name(move);
 		MoveEffect::setup(move,s,t,b);
@@ -3184,6 +3207,8 @@ struct MMSleepTalk : public MM
     }
 
     struct FM : public QSet<int> {
+        MAKE_THREAD_SAFE;
+        CREATE_LOCK_FUNCTION;
 	FM() {
 	    /*
     * That and any move the user cannot choose for use, including moves with zero PP
@@ -3197,6 +3222,7 @@ struct MMSleepTalk : public MM
     static FM forbidden_moves;
 
     static void daf(int s, int, BS &b) {
+        forbidden_moves.lock();
 	b.callpeffects(s, s, "MovesPossible");
 	QList<int> mp;
 	for (int i = 0; i < 4; i++) {
@@ -3204,6 +3230,7 @@ struct MMSleepTalk : public MM
 		mp.push_back(i);
 	    }
 	}
+        forbidden_moves.unlock();
 	if (mp.size() == 0) {
 	    turn(b,s)["Failed"] = true;
 	} else {
@@ -3288,6 +3315,8 @@ struct MMSnatch : public MM
     * Wish
     */
     struct SM : public QSet<int> {
+        MAKE_THREAD_SAFE;
+        CREATE_LOCK_FUNCTION;
         SM() { (*this) << Aromatherapy << BellyDrum << Camouflage << DefenseCurl << HealBell << HealOrder << Ingrain << LightScreen
                << MilkDrink << Minimize << Mist << Moonlight << MorningSun << PsychUp << Recover << Reflect << Refresh << Rest
                << Roost << Safeguard << SlackOff << Softboiled << Stockpile << Substitute << Submission << Swallow << Synthesis << Tailwind
@@ -3306,6 +3335,7 @@ struct MMSnatch : public MM
 		int move = MM::move(b,s);
                 /* Typically, the moves that are snatched are moves that only induce status / boost mods and nothing else,
                     therefore having no "SpecialEffect". Exceptions are stored in snatched_moves */
+                snacthed_moves.lock();
                 if (( turn(b,s)["PossibleTargets"].toInt() == Move::User && MoveInfo::SpecialEffect(move).size() == 0 )|| snatched_moves.contains(move)) {
 		    b.fail(s,118,0,type(b,snatcher));
 		    /* Now Snatching ... */
@@ -3315,6 +3345,7 @@ struct MMSnatch : public MM
 		    MoveEffect::setup(move,snatcher,s,b);
 		    b.useAttack(snatcher,move,true);
 		}
+                snatched_moves.unlock();
 	    }
 	}
     }
