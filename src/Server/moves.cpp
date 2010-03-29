@@ -2322,7 +2322,7 @@ struct MMHealBlock: public MM
 		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
 	    }
 	}
-        forbiddeno_moves.unlock();
+        forbidden_moves.unlock();
     }
 
     static void mp(int s, int, BS &b) {
@@ -3335,7 +3335,7 @@ struct MMSnatch : public MM
 		int move = MM::move(b,s);
                 /* Typically, the moves that are snatched are moves that only induce status / boost mods and nothing else,
                     therefore having no "SpecialEffect". Exceptions are stored in snatched_moves */
-                snacthed_moves.lock();
+                snatched_moves.lock();
                 if (( turn(b,s)["PossibleTargets"].toInt() == Move::User && MoveInfo::SpecialEffect(move).size() == 0 )|| snatched_moves.contains(move)) {
 		    b.fail(s,118,0,type(b,snatcher));
 		    /* Now Snatching ... */
