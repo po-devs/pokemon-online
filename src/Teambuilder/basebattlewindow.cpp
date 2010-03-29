@@ -653,9 +653,9 @@ void BaseBattleDisplay::updatePoke(int spot)
         this->status[spot]->setPixmap(StatInfo::BattleIcon(status));
 
         if (spot == Myself) {
-            mypokeballs[info().currentIndex[spot]]->setToolTip(tr("%1 lv %2 -- %3%").arg(poke.nick()).arg(poke.level()).arg(poke.lifePercent()));
+            mypokeballs[info().currentIndex[spot]]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
         } else {
-            advpokeballs[info().currentIndex[spot]]->setToolTip(tr("%1 lv %2 -- %3%").arg(poke.nick()).arg(poke.level()).arg(poke.lifePercent()));
+            advpokeballs[info().currentIndex[spot]]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
         }
     }  else {
         zone->switchToNaught(spot);

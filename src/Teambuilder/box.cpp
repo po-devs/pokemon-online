@@ -1,8 +1,10 @@
 #include "teambuilder.h"
 #include "box.h"
-//#include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/pokemonstructs.h"
+#include <QtXml>
+
+Q_DECLARE_METATYPE(PokemonBox*);
 
 /*************************************************/
 /************** TB_PokemonDetail *****************/
@@ -88,7 +90,7 @@ void TB_PokemonDetail::changePoke(PokeTeam *poke, int num)
 void TB_PokemonDetail::updatePoke()
 {
     m_name->setText(PokemonInfo::Name(poke->num()));
-    m_num->setText(QString("[%1]").arg(num+1));
+    m_num->setText(QString("[%1]").arg(num == -1 ? "X" : QString::number(num+1)));
     m_nick->setText(poke->nickname());
     m_pic->changePic(poke->picture());
     m_type1->setPixmap(TypeInfo::Picture(PokemonInfo::Type1(poke->num())));
@@ -111,7 +113,7 @@ void TB_PokemonDetail::updatePoke()
 QPixmap *PokemonBoxButton::theicon = NULL;
 QPixmap *PokemonBoxButton::theglowedicon = NULL;
 
-PokemonBoxButton::PokemonBoxButton(int num)
+PokemonBoxButton::PokemonBoxButton(int num) : num(num)
 {
     if (theicon == NULL)
         theicon = new QPixmap("db/Teambuilder/Box/WhiteBall.png");
@@ -121,6 +123,77 @@ PokemonBoxButton::PokemonBoxButton(int num)
     setText(tr("Pokémon &%1").arg(num+1));
     setIcon(*theicon);
     setCheckable(true);
+    setAcceptDrops(true);
+}
+
+void PokemonBoxButton::mouseMoveEvent(QMouseEvent * event)
+{
+    if(event->buttons() & Qt::LeftButton)
+    {
+        int distance = (event->pos()-startPos).manhattanLength();
+        if(distance >= QApplication::startDragDistance())
+        {
+            startDrag();
+        }
+    }
+
+    QPushButton::mouseMoveEvent(event);
+}
+
+void PokemonBoxButton::mousePressEvent(QMouseEvent * event)
+{
+    if(event->button() == Qt::LeftButton)
+    {
+        startPos = event->pos();
+    }
+
+    QPushButton::mousePressEvent(event);
+}
+
+void PokemonBoxButton::startDrag()
+{
+    QMimeData * data = new QMimeData();
+    data->setProperty("TeamSlot", num);
+    data->setImageData(px);
+
+    QDrag * drag = new QDrag(this);
+    drag->setMimeData(data);
+    drag->setPixmap(px);
+    drag->setHotSpot(QPoint(px.width()/2,px.height()/2));
+    drag->exec(Qt::MoveAction);
+
+    emit dragStarted(num);
+}
+
+void PokemonBoxButton::dragEnterEvent(QDragEnterEvent *event)
+{
+    event->accept();
+    event->setDropAction(Qt::MoveAction);
+}
+
+void PokemonBoxButton::dragMoveEvent(QDragMoveEvent *event)
+{
+    event->accept();
+    event->setDropAction(Qt::MoveAction);
+}
+
+void PokemonBoxButton::dropEvent(QDropEvent *event)
+{
+    const QMimeData *data = event->mimeData();
+    if (!data->property("TeamSlot").isNull())
+    {
+        event->accept();
+        int slot = data->property("TeamSlot").toInt();
+
+        if (slot != num)
+            emit pokeSwitched(slot,num);
+    } else if (!data->property("Box").isNull() && !data->property("Item").isNull())
+    {
+        PokemonBox *box = data->property("Box").value<PokemonBox*>();
+        int item =data->property("Item").toInt();
+
+        emit switchWithBox(box->getNum(), item, num);
+    }
 }
 
 /****************************************************************/
@@ -146,17 +219,27 @@ TB_PokemonButtons::TB_PokemonButtons()
             pokebutton->setChecked(true);
 
         buttons[i] = pokebutton;
+
+        connect(buttons[i], SIGNAL(dragStarted(int)), SLOT(check(int)));
     }
     connect(thegroup, SIGNAL(buttonClicked(int)), SIGNAL(buttonChecked(int)));
+}
+
+void TB_PokemonButtons::check(int index)
+{
+    for (int i = 0; i < 6; i++) {
+        buttons[i]->setChecked(i==index);
+    }
 }
 
 /****************************************************************/
 /******************** TB_PokemonItem ****************************/
 /****************************************************************/
 
-TB_PokemonItem::TB_PokemonItem(PokeTeam *item) : poke(NULL)
+TB_PokemonItem::TB_PokemonItem(PokeTeam *item, PokemonBox *box) : poke(NULL), box(box)
 {
     changePoke(item);
+    setFlags(QGraphicsItem::ItemIsMovable);
 }
 
 void TB_PokemonItem::changePoke(PokeTeam *poke)
@@ -168,6 +251,46 @@ void TB_PokemonItem::changePoke(PokeTeam *poke)
 TB_PokemonItem::~TB_PokemonItem()
 {
     delete poke, poke=NULL;
+}
+
+void TB_PokemonItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
+{
+    if(event->buttons() & Qt::LeftButton)
+    {
+        int distance = (event->pos()-startPos).manhattanLength();
+        if(distance >= QApplication::startDragDistance())
+        {
+            startDrag();
+        }
+    }
+}
+
+void TB_PokemonItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+    if (!isUnderMouse()) {
+        event->ignore();
+        return;
+    }
+    if(event->button() == Qt::LeftButton)
+    {
+        startPos = event->pos();
+    }
+    QGraphicsPixmapItem::mousePressEvent(event);
+}
+
+void TB_PokemonItem::startDrag()
+{
+    QMimeData * data = new QMimeData();
+    QVariant v;
+    v.setValue(box);
+    data->setProperty("Box", v);
+    data->setProperty("Item", box->getNumOf(this));
+    data->setImageData(pixmap());
+    QDrag * drag = new QDrag(box->parentWidget());
+    drag->setMimeData(data);
+    drag->setPixmap(pixmap());
+    drag->setHotSpot(QPoint(pixmap().width()/2,pixmap().height()/2));
+    drag->exec(Qt::MoveAction);
 }
 
 /****************************************************************/
@@ -185,6 +308,69 @@ PokemonBox::PokemonBox(int num) : num(num), currentPoke(0)
 
     setScene(new QGraphicsScene(this));
     setSceneRect(0,0,width()-10,160);
+
+    load();
+}
+
+void PokemonBox::save()
+{
+    QDomDocument doc;
+
+    QDomElement box = doc.createElement("Box");
+    box.setAttribute("Num", num);
+    doc.appendChild(box);
+
+    for(int i = 0; i < pokemons.size(); i++) {
+        if (pokemons[i]) {
+            QDomElement slot = doc.createElement("Slot");
+            slot.setAttribute("Num", i);
+            box.appendChild(slot);
+            slot.appendChild(pokemons[i]->poke->toXml());
+        }
+    }
+
+    QFile out(QString("Boxes/Box %1.box").arg(QChar('A'+getNum())));
+    out.open(QIODevice::WriteOnly);
+    QTextStream str(&out);
+    doc.save(str,4);
+}
+
+void PokemonBox::load()
+{
+    QDomDocument doc;
+
+    QFile in(QString("Boxes/Box %1.box").arg(QChar('A'+getNum())));
+    in.open(QIODevice::ReadOnly);
+
+    if(!doc.setContent(&in))
+    {
+        return ;
+    }
+
+    QDomElement box = doc.firstChildElement("Box");
+    if (box.isNull())
+        return;
+    QDomElement slot = box.firstChildElement("Slot");
+    while (!slot.isNull()) {
+        if (slot.attribute("Num").toInt() < 0 || slot.attribute("Num").toInt() > pokemons.size())
+            break;
+        int num = slot.attribute("Num").toInt();
+
+        if (pokemons[num] != NULL)
+            break;
+
+        QDomElement poke = slot.firstChildElement("Pokemon");
+
+        if (poke.isNull())
+            break;
+
+        PokeTeam p;
+        p.loadFromXml(poke);
+
+        addPokemon(p,num);
+
+        slot = slot.nextSiblingElement("Slot");
+    }
 }
 
 void PokemonBox::drawBackground(QPainter *painter, const QRectF &rect)
@@ -200,6 +386,66 @@ void PokemonBox::drawBackground(QPainter *painter, const QRectF &rect)
     }
 }
 
+void PokemonBox::dragEnterEvent(QDragEnterEvent * event)
+{
+    event->setDropAction(Qt::MoveAction);
+    event->accept();
+}
+
+/* Necessary for the box to accept the drop. */
+void PokemonBox::dragMoveEvent(QDragMoveEvent * event)
+{
+    int spot = calculateSpot(event->pos());
+
+    if (spot != -1) {
+        event->setDropAction(Qt::MoveAction);
+        event->accept();
+
+        changeCurrentSpot(spot);
+    }
+}
+
+
+void PokemonBox::dropEvent(QDropEvent * event)
+{
+    int spot;
+
+    if ( (spot = calculateSpot(event->pos())) == -1 ) {
+        return;
+    }
+
+    const QMimeData *data = event->mimeData();
+
+    if(!data->property("Box").isNull() && !data->property("Item").isNull()) {
+        event->accept();
+
+        PokemonBox *box = data->property("Box").value<PokemonBox*>();
+        int item = data->property("Item").toInt();
+
+        if (box == this && item == spot)
+            return;
+
+        changeCurrentSpot(spot);
+
+        std::swap(pokemons[spot], box->pokemons[item]);
+
+        addGraphicsItem(spot);
+
+        if (box->pokemons[item])
+            box->addGraphicsItem(item);
+
+        save();
+        if (box != this)
+            box->save();
+
+    } else if (!data->property("TeamSlot").isNull()) {
+        event->accept();
+
+        int slot = data->property("TeamSlot").toInt();
+        emit switchWithTeam(getNum(), currentPoke, slot);
+    }
+}
+
 bool PokemonBox::isFull() const {
     return !pokemons.contains(NULL);
 }
@@ -211,6 +457,16 @@ int PokemonBox::freeSpot() const {
     //Never reached
 }
 
+int PokemonBox::getNumOf(const TB_PokemonItem *it) const
+{
+    for (int i = 0; i < pokemons.size(); i++) {
+        if (it == pokemons[i])
+            return i;
+    }
+    exit(0);
+    return -1;
+}
+
 bool PokemonBox::isEmpty() const {
     for (int i = 0; i < pokemons.size(); i++) {
         if (pokemons[i] != NULL)
@@ -219,13 +475,13 @@ bool PokemonBox::isEmpty() const {
     return true;
 }
 
-void PokemonBox::addPokemon(const PokeTeam &poke) throw(QString)
+void PokemonBox::addPokemon(const PokeTeam &poke, int slot) throw(QString)
 {
     if (isFull())
         throw tr("The box is full!");
 
-    int spot = pokemons[currentPoke] == NULL ? currentPoke : freeSpot();
-    pokemons[spot] = new TB_PokemonItem(new PokeTeam(poke));
+    int spot = slot==-1 ? (pokemons[currentPoke] == NULL ? currentPoke : freeSpot()) : slot;
+    pokemons[spot] = new TB_PokemonItem(new PokeTeam(poke), this);
 
     addGraphicsItem(spot);
     changeCurrentSpot(spot);
@@ -288,6 +544,7 @@ void PokemonBox::addGraphicsItem(int spot)
     pokemons[spot]->setPos(pos);
 
     scene()->addItem(pokemons[spot]);
+    pokemons[spot]->setBox(this);
 }
 
 void PokemonBox::changeCurrentSpot(int newspot)
@@ -313,10 +570,24 @@ QPointF PokemonBox::calculatePos(int spot, const QSize &itemSize)
 
 void PokemonBox::mousePressEvent(QMouseEvent *event)
 {
+    /* To let other items than the first clicked have the mouse */
+    if (scene()->mouseGrabberItem())
+        scene()->mouseGrabberItem()->ungrabMouse();
+
     int spot = calculateSpot(event->pos());
 
-    if (spot != -1)
+    if (spot != -1) {
         changeCurrentSpot(spot);
+
+        /* To grab the mouse even if the mouse is a few
+           pixels amiss */
+        if (pokemons[spot] != NULL) {
+            pokemons[spot]->grabMouse();
+            emit show(pokemons[spot]->poke);
+        }
+    }
+
+    QGraphicsView::mousePressEvent(event);
 }
 
 int PokemonBox::calculateSpot(const QPoint &graphViewPos)
@@ -332,6 +603,33 @@ int PokemonBox::calculateSpot(const QPoint &graphViewPos)
         return y*10+x;
     } else {
         return -1;
+    }
+}
+
+/****************************************************************/
+/******************* TB_BoxContainer ****************************/
+/****************************************************************/
+
+TB_BoxContainer::TB_BoxContainer()
+{
+    setAcceptDrops(true);
+}
+
+void TB_BoxContainer::dragEnterEvent(QDragEnterEvent * event)
+{
+    event->setDropAction(Qt::MoveAction);
+    event->accept();
+}
+
+void TB_BoxContainer::dragMoveEvent(QDragMoveEvent *event)
+{
+    int tab = tabBar()->tabAt(event->pos());
+
+    qDebug() << event->pos();
+    qDebug() << tab;
+
+    if (tab != -1) {
+        setCurrentIndex(tab);
     }
 }
 
@@ -358,8 +656,8 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
     thirdColumn->addStretch(100);
     thirdColumn->addWidget(bstore = new QPushButton(tr("&Store")));
     thirdColumn->addWidget(bwithdraw = new QPushButton(tr("&Withdraw")));
-    thirdColumn->addWidget(bswitch = new QPushButton(tr("&Switch")));
-    thirdColumn->addWidget(bdelete = new QPushButton(tr("&Delete")));
+    thirdColumn->addWidget(bswitch = new QPushButton(tr("Switc&h")));
+    thirdColumn->addWidget(bdelete = new QPushButton(tr("Dele&te")));
     thirdColumn->addStretch(100);
 
     firstline->addStretch(100);
@@ -381,20 +679,30 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
     ml->addLayout(secondline);
 
     secondline->addWidget(parent->createButtonMenu(), 0, Qt::AlignBottom);
-    secondline->addWidget(m_boxes = new QTabWidget(), 100);
+    secondline->addWidget(m_boxes = new TB_BoxContainer(), 100);
 
     for (int i = 0; i < 6; i++) {
         m_boxes->addTab(boxes[i] = new PokemonBox(i), *PokemonBoxButton::theicon, tr("BOX &%1").arg(QChar('A'+i)));
+        connect(boxes[i],SIGNAL(switchWithTeam(int,int,int)),SLOT(switchBoxTeam(int,int,int)));
+        connect(boxes[i], SIGNAL(show(PokeTeam*)), SLOT(showPoke(PokeTeam*)));
     }
 
     m_details->changePoke(&m_team->poke(0),0);
 
     connect(m_buttons, SIGNAL(buttonChecked(int)), SLOT(changeCurrentTeamPokemon(int)));
+
+    for (int i = 0; i < 6; i++) {
+        connect(m_buttons->buttons[i], SIGNAL(pokeSwitched(int,int)), SLOT(switchWithinTeam(int,int)));
+        connect(m_buttons->buttons[i], SIGNAL(dragStarted(int)), SLOT(changeCurrentTeamPokemon(int)));
+        connect(m_buttons->buttons[i], SIGNAL(switchWithBox(int,int,int)), SLOT(switchBoxTeam(int,int,int)));
+    }
+
     connect(bstore, SIGNAL(clicked()), SLOT(store()));
     connect(bwithdraw, SIGNAL(clicked()), SLOT(withdraw()));
     connect(bdelete, SIGNAL(clicked()), SLOT(deleteP()));
     connect(bswitch, SIGNAL(clicked()), SLOT(switchP()));
 }
+
 
 void TB_PokemonBoxes::changeCurrentTeamPokemon(int newpoke)
 {
@@ -407,6 +715,7 @@ void TB_PokemonBoxes::store()
 {
     try {
         currentBox()->addPokemon(m_team->poke(currentPoke));
+        currentBox()->save();
     } catch(const QString &ex) {
         QMessageBox::information(this, tr("Full Box"), ex);
     }
@@ -439,6 +748,7 @@ void TB_PokemonBoxes::deleteP()
 {
     try {
         currentBox()->deleteCurrent();
+        currentBox()->save();
     } catch(const QString &ex) {
         QMessageBox::information(this, tr("Box Empty"), ex);
     }
@@ -449,6 +759,7 @@ void TB_PokemonBoxes::switchP()
     try {
         PokeTeam *p = new PokeTeam(*currentBox()->getCurrent());
         currentBox()->changeCurrent(*currentPokeTeam());
+        currentBox()->save();
         *currentPokeTeam() = *p;
 
         /* Don't worry, if getCurrent doesn't throw exceptions then changeCurrent doesn't.
@@ -461,6 +772,42 @@ void TB_PokemonBoxes::switchP()
     } catch(const QString &ex) {
         QMessageBox::information(this, tr("Box Empty"), ex);
     }
+}
+
+void TB_PokemonBoxes::switchWithinTeam(int poke1, int poke2)
+{
+    std::swap(m_team->poke(poke1), m_team->poke(poke2));
+
+    emit pokeChanged(poke1);
+    emit pokeChanged(poke2);
+
+    updateSpot(poke1);
+    updateSpot(poke2);
+}
+
+void TB_PokemonBoxes::switchBoxTeam(int box, int boxslot, int teamslot)
+{
+    m_boxes->setCurrentIndex(box);
+    currentBox()->changeCurrentSpot(boxslot);
+
+    m_buttons->check(teamslot);
+    changeCurrentTeamPokemon(teamslot);
+
+    try {
+        currentBox()->getCurrent();
+        if (m_team->poke(teamslot).num() == 0)
+            withdraw();
+        else
+            switchP();
+    } catch (const QString&) {
+        store();
+    }
+}
+
+void TB_PokemonBoxes::showPoke(PokeTeam *poke)
+{
+    m_details->changePoke(poke, -1);
+    m_details->updatePoke();
 }
 
 void TB_PokemonBoxes::updateSpot(int i)
