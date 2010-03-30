@@ -127,6 +127,7 @@ public slots:
     void versionDiff(const QString &a, const QString &b);
     void tierListReceived(const QString&);
     void changeTier();
+    void openBattleFinder();
     /* Ignored */
     void removeIgnore(int);
     void ignore(int);
@@ -196,6 +197,13 @@ private:
     void changeTierChecked(const QString &newtier);
     /* Ignore */
     QList<int> myIgnored;
+};
+
+class BattleFinder : public QWidget
+{
+    Q_OBJECT
+public:
+    BattleFinder();
 };
 
 #endif // CLIENT_H

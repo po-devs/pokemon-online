@@ -20,15 +20,20 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
 
     resize(800, 600);
 
+    QPushButton *findmatch;
     QGridLayout *layout = new QGridLayout(this);
 
     layout->addWidget(myplayers = new QListWidget(), 0, 0, 3, 1, Qt::AlignLeft);
-    layout->addWidget(mychat = new QScrollDownTextEdit(), 0, 1, 1, 3);
+    layout->addWidget(mychat = new QScrollDownTextEdit(), 0, 1);
     mychat->setObjectName("MainChat");
-    layout->addWidget(myline = new QLineEdit(), 1, 1, 1, 3);
-    layout->addWidget(myregister = new QPushButton(tr("&Register")),2,1);
-    layout->addWidget(myexit = new QPushButton(tr("&Exit")), 2, 2);
-    layout->addWidget(mysender = new QPushButton(tr("&Send")), 2, 3);
+    layout->addWidget(myline = new QLineEdit(), 1, 1);
+    QHBoxLayout *buttonsLayout = new QHBoxLayout();
+    layout->addLayout(buttonsLayout,2,1);
+
+    buttonsLayout->addWidget(findmatch = new QPushButton(tr("&Find Battle")));
+    buttonsLayout->addWidget(myregister = new QPushButton(tr("&Register")));
+    buttonsLayout->addWidget(myexit = new QPushButton(tr("&Exit")));
+    buttonsLayout->addWidget(mysender = new QPushButton(tr("&Send")));
     layout->setColumnStretch(1,100);
 
     myplayers->setMaximumWidth(180);
@@ -53,6 +58,7 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
     connect(myregister, SIGNAL(clicked()), SLOT(sendRegister()));
+    connect(findmatch, SIGNAL(clicked()), SLOT(openBattleFinder()));
 
     initRelay();
 
@@ -227,6 +233,11 @@ void Client::controlPanel(int id)
     connect(myCP, SIGNAL(getBanList()), &relay(), SLOT(getBanList()));
     connect(myCP, SIGNAL(banRequested(QString)), SLOT(requestBan(QString)));
     connect(myCP, SIGNAL(unbanRequested(QString)), &relay(), SLOT(CPUnban(QString)));
+}
+
+void Client::openBattleFinder()
+{
+
 }
 
 void Client::setPlayer(const UserInfo &ui)
@@ -1008,4 +1019,17 @@ void Client::removeIgnore(int id)
 {
     printLine(tr("You stopped ignoring %1.").arg(name(id)));
     myIgnored.removeOne(id);
+}
+
+/**********************************************************/
+/****************** BATTLE FINDER *************************/
+/**********************************************************/
+
+BattleFinder::BattleFinder()
+{
+    QFormLayout *ml = new QFormLayout();
+
+    ml->addWidget(new QCheckBox(tr("Force same tier")));
+    ml->addWidget(new QCheckBox(tr("Force rated")));
+    ml->addWidget(new QCheckBox(tr("Only battle players in the rating range")));
 }
