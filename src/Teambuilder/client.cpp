@@ -1000,10 +1000,12 @@ void Client::requestBan(const QString &name)
 
 void Client::ignore(int id)
 {
+    printLine(tr("You ignored %1.").arg(name(id)));
     myIgnored.append(id);
 }
 
 void Client::removeIgnore(int id)
 {
+    printLine(tr("You stopped ignoring %1.").arg(name(id)));
     myIgnored.removeOne(id);
 }

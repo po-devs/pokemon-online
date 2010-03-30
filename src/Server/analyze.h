@@ -51,7 +51,8 @@ namespace NetworkServ
         LadderChange,
         ShowTeamChange,
         VersionControl,
-        TierSelection
+        TierSelection,
+        ServMaxChange,
     };
 
     enum ProtocolError

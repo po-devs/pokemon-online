@@ -25,5 +25,5 @@ void Player::kick()
 
 void Player::sendServer(const Server &s)
 {
-    m_relay->sendServer(s.name(), s.desc(), s.players(), s.ip());
+    m_relay->sendServer(s.name(), s.desc(), s.players(), s.ip(),s.maxPlayers());
 }

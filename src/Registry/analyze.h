@@ -33,7 +33,8 @@ namespace NetworkReg
         PlayerBan,
         ServNumChange,
         ServDescChange,
-        ServNameChange
+        ServNameChange,
+        ServMaxChange
     };
 
     enum ProtocolError
@@ -52,7 +53,7 @@ public:
     ~Analyzer();
 
     /* functions called by the reg */
-    void sendServer(const QString &name, const QString &desc, quint16 numplayers, const QString &ip);
+    void sendServer(const QString &name, const QString &desc, quint16 numplayers, const QString &ip,quint16 max);
     void sendInvalidName();
     void sendNameTaken();
     void sendAccept();
@@ -73,6 +74,8 @@ public:
     void notify(int command, const T1& param1, const T2& param2, const T3 &param3);
     template<class T1, class T2, class T3, class T4>
     void notify(int command, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4);
+    template<class T1, class T2, class T3, class T4, class T5>
+    void notify(int command, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4,const T5 &param5);
 signals:
     /* to send to the network */
     void sendCommand(const QByteArray &command);
@@ -154,4 +157,17 @@ void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 
     emit sendCommand(tosend);
 }
 
+template<class T1, class T2, class T3, class T4,class T5>
+void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 &param3, const T4 &param4, const T5 &param5)
+{
+    if (!isConnected())
+        return;
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(command) << param1 << param2 << param3 << param4 << param5;
+
+    emit sendCommand(tosend);
+}
 #endif // ANALYZE_H

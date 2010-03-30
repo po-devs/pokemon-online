@@ -53,7 +53,8 @@ namespace NetworkCli
         LadderChange,
         ShowTeamChange,
         VersionControl,
-        TierSelection
+        TierSelection,
+        ServMaxChange
     };
 
     enum ProtocolError
