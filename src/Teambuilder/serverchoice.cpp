@@ -17,7 +17,7 @@ ServerChoice::ServerChoice()
     mylist = new QCompactTable(0,3);
 
     QStringList horHeaders;
-    horHeaders << tr("Server Name") << tr("Players/Max Players") << tr("Advanced connection");
+    horHeaders << tr("Server Name") << tr("Players/Max Pla") << tr("Advanced connection");
     mylist->setHorizontalHeaderLabels(horHeaders);
     mylist->setSelectionBehavior(QAbstractItemView::SelectRows);
     mylist->setSelectionMode(QAbstractItemView::SingleSelection);

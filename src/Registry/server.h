@@ -26,6 +26,7 @@ public:
     void accept();
     void kick();
 public slots:
+    void login(const QString &, const QString &, quint16);
     void login(const QString &, const QString &, quint16, quint16);
     void numChanged(quint16);
     void nameChanged(const QString &);
