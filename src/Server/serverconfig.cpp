@@ -19,7 +19,9 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     l->addRow("Server Description: ", serverDesc);
 
     serverPlayerMax = new QSpinBox();
-    serverPlayerMax->setMinimum(2);
+    serverPlayerMax->setRange(0,5000);
+    serverPlayerMax->setSpecialValueText(tr("unlimited"));
+    serverPlayerMax->setSingleStep(10);
     serverPlayerMax->setValue(settings.value("server_maxplayers").toInt());
 
     l->addRow("Max Players: ", serverPlayerMax);

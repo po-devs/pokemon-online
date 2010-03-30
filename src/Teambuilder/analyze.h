@@ -19,18 +19,18 @@ namespace NetworkCli
 {
     enum Command
     {
-	WhatAreYou = 0,
-	WhoAreYou,
-	Login,
-	Logout,
-	SendMessage,
-	PlayersList,
-	SendTeam,
-	ChallengeStuff,
-	EngageBattle,
-	BattleFinished,
-	BattleMessage,
-	BattleChat,
+        WhatAreYou = 0,
+        WhoAreYou,
+        Login,
+        Logout,
+        SendMessage,
+        PlayersList,
+        SendTeam,
+        ChallengeStuff,
+        EngageBattle,
+        BattleFinished,
+        BattleMessage = 10,
+        BattleChat,
         KeepAlive,
         AskForPass,
         Register,
@@ -54,7 +54,7 @@ namespace NetworkCli
         ShowTeamChange,
         VersionControl,
         TierSelection,
-        ServMaxChange
+        ServMaxChange,
     };
 
     enum ProtocolError
@@ -124,7 +124,7 @@ signals:
     void notRegistered(bool);
     void playerKicked(int p, int src);
     void playerBanned(int p, int src);
-    void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip);
+    void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip, quint16 max);
     void PMReceived(int id, const QString &mess);
     void awayChanged(int id, bool away);
     void tierListReceived(const QString &tl);

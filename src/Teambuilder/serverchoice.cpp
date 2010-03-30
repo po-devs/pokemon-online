@@ -14,10 +14,10 @@ ServerChoice::ServerChoice()
     connect(registry_connection, SIGNAL(serverReceived(QString, QString, quint16,QString,quint16)), SLOT(addServer(QString, QString, quint16, QString,quint16)));
 
     QVBoxLayout *l = new QVBoxLayout(this);
-    mylist = new QCompactTable(0,4);
+    mylist = new QCompactTable(0,3);
 
     QStringList horHeaders;
-    horHeaders << tr("Server Name") << tr("Players")<< tr("Max Players") << tr("Advanced connection");
+    horHeaders << tr("Server Name") << tr("Players/Max Players") << tr("Advanced connection");
     mylist->setHorizontalHeaderLabels(horHeaders);
     mylist->setSelectionBehavior(QAbstractItemView::SelectRows);
     mylist->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -57,7 +57,7 @@ ServerChoice::ServerChoice()
 
 void ServerChoice::regServerChosen(int row)
 {
-    QString ip = mylist->item(row, 3)->text();
+    QString ip = mylist->item(row, 2)->text();
 
     QSettings settings;
     settings.setValue("default_server", ip);
@@ -75,6 +75,11 @@ void ServerChoice::advServerChosen()
 
 void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, const quint16 max)
 {
+    QString playerStr;
+    if(max == 0)
+        playerStr = QString::number(num);
+    else
+        playerStr = QString::number(num) + "/" + max;
     int row = mylist->rowCount();
     mylist->setRowCount(row+1);
 
@@ -84,17 +89,13 @@ void ServerChoice::addServer(const QString &name, const QString &desc, quint16 n
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 0, witem);
 
-    witem = new QTableWidgetItem(QString::number(num).rightJustified(3));
+    witem = new QTableWidgetItem(playerStr.rightJustified(3));
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 1, witem);
 
-    witem = new QTableWidgetItem(QString::number(max).rightJustified(3));
-    witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-    mylist->setItem(row, 2, witem);
-
     witem = new QTableWidgetItem(ip);
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-    mylist->setItem(row, 3, witem);
+    mylist->setItem(row, 2, witem);
 
     mylist->resizeColumnsToContents();
     mylist->resizeRowsToContents();

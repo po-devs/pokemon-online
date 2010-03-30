@@ -121,9 +121,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             } else {
                 // Registry socket;
                 QString servName, servDesc, ip;
-                quint16 numPlayers;
-                in >> servName >> servDesc >> numPlayers >> ip;
-                emit serverReceived(servName, servDesc, numPlayers, ip);
+                quint16 numPlayers, max;
+                in >> servName >> servDesc >> numPlayers >> ip >> max;
+                emit serverReceived(servName, servDesc, numPlayers, ip, max);
             }
 	}
     case Login:
