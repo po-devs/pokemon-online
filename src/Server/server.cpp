@@ -105,7 +105,7 @@ Server::Server(quint16 port)
     QSettings s;
     serverName = s.value("server_name").toString();
     serverDesc = s.value("server_description").toString();
-
+    serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
     myengine->serverStartUp();
     connectToRegistry();
 }
@@ -145,12 +145,11 @@ void Server::regConnectionError()
 void Server::regConnected()
 {
     printLine("Connected to registry! Sending server info...");
-    registry_connection->notify(NetworkServ::Login, serverName, serverDesc, quint16(AntiDos::obj()->numberOfDiffIps()));
+    registry_connection->notify(NetworkServ::Login, serverName, serverDesc, quint16(AntiDos::obj()->numberOfDiffIps()), serverPlayerMax);
     connect(registry_connection, SIGNAL(ipRefused()), SLOT(ipRefused()));
     connect(registry_connection, SIGNAL(invalidName()), SLOT(invalidName()));
     connect(registry_connection, SIGNAL(nameTaken()), SLOT(nameTaken()));
     connect(registry_connection, SIGNAL(accepted()), SLOT(accepted()));
-
     /* Sending Players at regular interval */
     QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
 }
@@ -184,6 +183,16 @@ void Server::regDescChanged(const QString &desc)
         return;
 
     registry_connection->notify(NetworkServ::ServDescChange, desc);
+}
+void Server::regMaxChanged(const int &numMax)
+{
+    serverPlayerMax = numMax;
+    printLine("Maximum Players Changed.");
+
+    if (registry_connection == NULL || !registry_connection->isConnected())
+        return;
+
+    registry_connection->notify(NetworkServ::ServMaxChange,numMax);
 }
 
 void Server::accepted()
@@ -510,9 +519,15 @@ void Server::incomingConnection()
     QTcpSocket * newconnection = server()->nextPendingConnection();
     QString ip = newconnection->peerAddress().toString();
 
+    if (numPlayers() >= serverPlayerMax){
+        printLine(tr("Stopped IP %1 from logging in, server full.").arg(ip));
+        newconnection->deleteLater();
+        return;
+    }
+
     if (SecurityManager::bannedIP(ip)) {
         printLine(tr("Banned IP %1 tried to log in.").arg(ip));
-        newconnection->deleteLater();;
+        newconnection->deleteLater();
         return;
     }
 

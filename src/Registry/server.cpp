@@ -18,14 +18,16 @@ Server::Server(int _id, QTcpSocket *s)
     connect(m_relay, SIGNAL(nameChange(QString)), SLOT(nameChanged(QString)));
     connect(m_relay, SIGNAL(numChange(quint16)), SLOT(numChanged(quint16)));
     connect(m_relay, SIGNAL(descChange(QString)), SLOT(descChanged(QString)));
+    connect(m_relay, SIGNAL(maxChange(quint16)), SLOT(nameChanged(quint16)));
     connect(m_relay, SIGNAL(disconnected()), SLOT(disconnected()));
 }
 
-void Server::login(const QString &name, const QString &desc, quint16 num)
+void Server::login(const QString &name, const QString &desc, quint16 num, quint16 max)
 {
     descChanged(desc);
     numChanged(num);
     nameChanged(name);
+    maxChanged(max);
 }
 
 void Server::descChanged(const QString &desc)
@@ -49,6 +51,11 @@ void Server::nameChanged(const QString &name)
         return;
 
     emit nameChangedReq(id(), name);
+}
+
+void Server::maxChanged(const quint16 max)
+{
+    this->maxPlayers() = max;
 }
 
 void Server::refuseIP()

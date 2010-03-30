@@ -12,11 +12,13 @@ public:
 signals:
     void nameChanged(const QString &name);
     void descChanged(const QString &desc);
+    void maxChanged(const int &num);
 private slots:
     void apply();
 private:
     QLineEdit *serverName;
     QTextEdit *serverDesc;
+    QSpinBox *serverPlayerMax;
 };
 
 #endif // SERVERCONFIG_H

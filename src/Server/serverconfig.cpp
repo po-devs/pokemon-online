@@ -18,6 +18,12 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 
     l->addRow("Server Description: ", serverDesc);
 
+    serverPlayerMax = new QSpinBox();
+    serverPlayerMax->setMinimum(2);
+    serverPlayerMax->setValue(settings.value("server_maxplayers").toInt());
+
+    l->addRow("Max Players: ", serverPlayerMax);
+
     QPushButton *ok, *cancel;
 
     ok = new QPushButton("&Apply");
@@ -34,7 +40,9 @@ void ServerWindow::apply()
     QSettings settings;
     settings.setValue("server_name", serverName->text());
     settings.setValue("server_description", serverDesc->toPlainText());
+    settings.setValue("server_maxplayers", serverPlayerMax->text());
     emit descChanged(serverDesc->toPlainText());
     emit nameChanged(serverName->text());
+    emit maxChanged(serverPlayerMax->value());
     close();
 }
