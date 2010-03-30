@@ -86,7 +86,7 @@ void BattleWindow::closeEvent(QCloseEvent *)
         QString directory = s.value("battle_logs_directory").toString();
         QString file = QFileDialog::getSaveFileName(0,QObject::tr("Saving the battle"),directory+info().name[0] + " vs " + info().name[1]
                                      + "--" + QDate::currentDate().toString("dd MMMM yyyy") + "_" +QTime::currentTime().toString("hh'h'mm")
-                                     , QObject::tr("txt (*.txt)\nhtml (*.html)"));
+                                     , QObject::tr("html (*.html)\ntxt (*.txt)"));
         if (file.length() != 0) {
             QFileInfo finfo (file);
             directory = finfo.dir().path() + "/";

@@ -324,6 +324,8 @@ void BattleSituation::endTurn()
     endTurnStatus();
 
     requestSwitchIns();
+
+    qDebug() << "Battle turn begin end " << team1.name << " and " << team2.name;
 }
 
 void BattleSituation::endTurnStatus()
@@ -2050,8 +2052,8 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 void BattleSituation::changeTempMove(int player, int slot, int move)
 {
     pokelong[player]["Move" + QString::number(slot)] = move;
-    changePP(player,slot,5);
     notify(player, ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
+    changePP(player,slot,5);
 }
 
 void BattleSituation::changeSprite(int player, int poke)
