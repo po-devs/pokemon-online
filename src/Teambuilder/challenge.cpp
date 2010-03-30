@@ -44,7 +44,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     QFont treb("Trebuchet MS", 10);
 
     QLabel *pinfo = new QLabel(toColor(p.team.info, grey), this);
-    pinfo->setGeometry(18,200,280,50);
+    pinfo->setGeometry(18,197,280,53);
     pinfo->setWordWrap(true);
     pinfo->setFont(treb);
     pinfo->setAlignment(Qt::AlignTop | Qt::AlignLeft);

@@ -500,6 +500,7 @@ TeamPokeButton::TeamPokeButton(int num, int poke, int level, int item)
     this->m_num = num;
     setObjectName("PokeButton");
     setAcceptDrops(true);
+    setCheckable(true);
 
     QGridLayout *ml = new QGridLayout(this);
     ml->setMargin(2);
@@ -604,6 +605,8 @@ void TeamPokeButton::startDrag()
     drag->setMimeData(data);
     drag->setPixmap(*pokeIcon->pixmap());
     drag->exec(Qt::MoveAction);
+
+    emit clicked();
 }
 
 /*********************************************/
@@ -667,9 +670,15 @@ void TB_TeamBody::changePokemonBase(int index,int pokenum)
 
 void TB_TeamBody::changeIndex()
 {
-    body->setCurrentIndex(((TeamPokeButton*)sender())->num());
+    int num = ((TeamPokeButton*)sender())->num();
+    body->setCurrentIndex(num);
+
+    for (int i = 0; i < 6; i++) {
+        pokeButtons[i]->setChecked(i==num);
+    }
+
     if (dockAdvanced())
-        m_dockAdvanced->setCurrentPokemon(((TeamPokeButton*)sender())->num());
+        m_dockAdvanced->setCurrentPokemon(num);
 }
 
 void TB_TeamBody::updateButton()

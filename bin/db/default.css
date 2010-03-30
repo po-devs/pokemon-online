@@ -52,6 +52,10 @@ TeamPokeButton {
 	background: #9d9fa1;
 }
 
+/*TeamPokeButton:checked{
+	background: #8683b0;
+}*/
+
 TeamBuilder QLabel#SmallText {
 	font-family: Trebuchet MS;
 	font-size: 10pt; 
