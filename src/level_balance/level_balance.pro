@@ -6,6 +6,7 @@
 
 QT       -= gui
 
+DESTDIR = ../../bin
 TARGET = level_balance
 CONFIG   += console
 CONFIG   -= app_bundle

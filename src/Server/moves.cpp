@@ -1648,7 +1648,20 @@ struct MMTaunt : public MM
         poke(b,t)["TauntsUntil"] = b.turn() + 1 + (true_rand()%4);
 	addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
 	addFunction(turn(b,t), "MovePossible", "Taunt", &mp);
+        addFunction(poke(b,t), "EndTurn", "Taunt", &et);
 	b.sendMoveMessage(134,1,s,Pokemon::Dark,t);
+    }
+
+    static void et(int s, int, BS &b)
+    {
+        int tt = poke(b,s)["TauntsUntil"].toInt();
+        if (tt == b.turn()) {
+            poke(b,s).remove("TauntsUntil");
+            removeFunction(poke(b,s), "MovesPossible", "Taunt");
+            removeFunction(poke(b,s), "MovePossible", "Taunt");
+            removeFunction(poke(b,s), "EndTurn", "Taunt");
+            b.sendMoveMessage(134,2,s,Pokemon::Dark);
+        }
     }
 
     static void msp(int s, int, BS &b) {
