@@ -256,6 +256,7 @@ void Server::openConfig()
 
     connect(w, SIGNAL(nameChanged(QString)), SLOT(regNameChanged(const QString)));
     connect(w, SIGNAL(descChanged(QString)), SLOT(regDescChanged(const QString)));
+    connect(w, SIGNAL(maxChanged(int)), SLOT(regMaxChanged(int)));
 }
 
 void Server::openScriptWindow()
@@ -519,7 +520,7 @@ void Server::incomingConnection()
     QTcpSocket * newconnection = server()->nextPendingConnection();
     QString ip = newconnection->peerAddress().toString();
 
-    if (numPlayers() >= serverPlayerMax){
+    if (numPlayers() >= serverPlayerMax && serverPlayerMax != 0){
         printLine(tr("Stopped IP %1 from logging in, server full.").arg(ip));
         newconnection->deleteLater();
         return;
