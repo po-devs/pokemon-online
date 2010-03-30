@@ -59,9 +59,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     case Login:
         {
             QString name, desc;
-            quint16 num;
-            in >> name >> desc >> num;
-            emit loggedIn(name,desc,num);
+            quint16 num, max;
+            in >> name >> desc >> num >> max;
+            emit loggedIn(name,desc,num, max);
             break;
         }
     case ServNumChange:
@@ -84,6 +84,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             in >> desc;
             emit descChange(desc);
             break;
+        }
+    case ServMaxChange:
+        {
+            quint16 max;
+            in >> max;
+            emit maxChange(max);
         }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));

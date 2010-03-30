@@ -14,7 +14,7 @@ Server::Server(int _id, QTcpSocket *s)
     m_validator = new QNickValidator(NULL);
     m_validator->setParent(this);
 
-    connect(m_relay, SIGNAL(loggedIn(QString,QString,quint16)), SLOT(login(QString,QString,quint16)));
+    connect(m_relay, SIGNAL(loggedIn(QString,QString,quint16,quint16)), SLOT(login(QString,QString,quint16,quint16)));
     connect(m_relay, SIGNAL(nameChange(QString)), SLOT(nameChanged(QString)));
     connect(m_relay, SIGNAL(numChange(quint16)), SLOT(numChanged(quint16)));
     connect(m_relay, SIGNAL(descChange(QString)), SLOT(descChanged(QString)));
@@ -28,13 +28,6 @@ void Server::login(const QString &name, const QString &desc, quint16 num, quint1
     numChanged(num);
     nameChanged(name);
     maxChanged(max);
-}
-
-void Server::login(const QString &name, const QString &desc, quint16 num)
-{
-    descChanged(desc);
-    numChanged(num);
-    nameChanged(name);
 }
 
 void Server::descChanged(const QString &desc)

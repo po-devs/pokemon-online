@@ -55,6 +55,7 @@ namespace NetworkCli
         VersionControl,
         TierSelection,
         ServMaxChange,
+        FindMatch
     };
 
     enum ProtocolError
