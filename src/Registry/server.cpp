@@ -18,7 +18,7 @@ Server::Server(int _id, QTcpSocket *s)
     connect(m_relay, SIGNAL(nameChange(QString)), SLOT(nameChanged(QString)));
     connect(m_relay, SIGNAL(numChange(quint16)), SLOT(numChanged(quint16)));
     connect(m_relay, SIGNAL(descChange(QString)), SLOT(descChanged(QString)));
-    connect(m_relay, SIGNAL(maxChange(quint16)), SLOT(nameChanged(quint16)));
+    connect(m_relay, SIGNAL(maxChange(quint16)), SLOT(maxChanged(quint16)));
     connect(m_relay, SIGNAL(disconnected()), SLOT(disconnected()));
 }
 
@@ -28,6 +28,13 @@ void Server::login(const QString &name, const QString &desc, quint16 num, quint1
     numChanged(num);
     nameChanged(name);
     maxChanged(max);
+}
+
+void Server::login(const QString &name, const QString &desc, quint16 num)
+{
+    descChanged(desc);
+    numChanged(num);
+    nameChanged(name);
 }
 
 void Server::descChanged(const QString &desc)
