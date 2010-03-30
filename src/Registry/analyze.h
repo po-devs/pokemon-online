@@ -24,7 +24,7 @@ namespace NetworkReg
         ChallengeStuff,
         EngageBattle,
         BattleFinished,
-        BattleMessage,
+        BattleMessage = 10,
         BattleChat,
         KeepAlive,
         AskForPass,
@@ -34,7 +34,22 @@ namespace NetworkReg
         ServNumChange,
         ServDescChange,
         ServNameChange,
-        ServMaxChange
+        SendPM,
+        Away,
+        GetUserInfo,
+        GetUserAlias,
+        GetBanList,
+        CPBan,
+        CPUnban,
+        SpectateBattle,
+        SpectatingBattleMessage,
+        SpectatingBattleChat,
+        SpectatingBattleFinished,
+        LadderChange,
+        ShowTeamChange,
+        VersionControl,
+        TierSelection,
+        ServMaxChange,
     };
 
     enum ProtocolError
