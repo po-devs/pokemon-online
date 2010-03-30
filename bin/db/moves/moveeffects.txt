@@ -313,7 +313,7 @@ S[M]4-2
 #recover
 #recycle
 #reflect
-S[S]1-2-5-6-
+S[S]1-&2-&5-&6-
 #rest
 #return
 #revenge
