@@ -242,8 +242,19 @@ void Client::openBattleFinder()
         return;
     }
 
-    myBattleFinder = new BattleFinder();
+    myBattleFinder = new BattleFinder(this);
     myBattleFinder->show();
+}
+
+void Client::findBattle(bool rated, bool tier, bool rangeOn, int range)
+{
+    quint32 flags = 0;
+
+    flags |= rated;
+    flags |= tier << 1;
+    flags |= rangeOn << 2;
+
+    relay().notify(NetworkCli::FindMatch, flags, quint16(range));
 }
 
 void Client::setPlayer(const UserInfo &ui)
@@ -700,7 +711,7 @@ void Client::awayChanged(int id, bool away)
 
 bool Client::busy() const
 {
-    return challengeWindowOpen() || battling() || myteambuilder || away();
+    return challengeWindowOpen() || battling() || myteambuilder || away() || myBattleFinder;
 }
 
 bool Client::away() const
@@ -1031,12 +1042,62 @@ void Client::removeIgnore(int id)
 /****************** BATTLE FINDER *************************/
 /**********************************************************/
 
-BattleFinder::BattleFinder()
+BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
 {
-    QFormLayout *ml = new QFormLayout(this);
+    setAttribute(Qt::WA_DeleteOnClose, true);
+
+    QVBoxLayout *ml = new QVBoxLayout(this);
+    ml->setSpacing(10);
     setWindowFlags(Qt::Window);
 
-    ml->addWidget(new QCheckBox(tr("Force same tier")));
-    ml->addWidget(new QCheckBox(tr("Force rated")));
-    ml->addWidget(new QCheckBox(tr("Only battle players in the rating range")));
+    QPushButton *ok, *cancel;
+    ml->addWidget(rated = new QCheckBox(tr("Force rated battles")));
+    ml->addWidget(sameTier = new QCheckBox(tr("Force same tier")));
+    QHBoxLayout *sub2 = new QHBoxLayout();
+    ml->addLayout(sub2);
+    sub2->addWidget(rangeOn = new QCheckBox(tr("Only battle players in the rating range")));
+    sub2->addWidget(range = new QLineEdit());
+
+    QHBoxLayout *hl = new QHBoxLayout();
+    ml->addLayout(hl);
+    hl->addWidget(ok = new QPushButton(tr("Find Battle")));
+    hl->addWidget(cancel = new QPushButton(tr("Cancel")));
+
+    range->setMaximumWidth(35);
+
+    QSettings s;
+    rated->setChecked(s.value("find_battle_force_rated").toBool());
+    sameTier->setChecked(s.value("find_battle_same_tier").toBool());
+    rangeOn->setChecked(s.value("find_battle_range_on").toBool());
+    range->setText(QString::number(s.value("find_battle_range").toInt()));
+    changeEnabled();
+
+    connect(rated, SIGNAL(toggled(bool)), SLOT(changeEnabled()));
+    connect(sameTier, SIGNAL(toggled(bool)), SLOT(changeEnabled()));
+
+    connect(ok, SIGNAL(clicked()), SLOT(close()));
+    connect(cancel, SIGNAL(clicked()), SLOT(close()));
+    connect(ok, SIGNAL(clicked()), SLOT(throwChallenge()));
+}
+
+void BattleFinder::changeEnabled()
+{
+    // I found out its annoying to have it on so I turned it off
+    /*sameTier->setDisabled(rated->isChecked());
+    rangeOn->setDisabled(!sameTier->isChecked() && !rated->isChecked());
+    range->setDisabled(!sameTier->isChecked() && !rated->isChecked());*/
+}
+
+void BattleFinder::throwChallenge()
+{
+    QSettings s;
+
+    s.setValue("find_battle_force_rated", rated->isChecked());
+    s.setValue("find_battle_same_tier", sameTier->isChecked());
+    s.setValue("find_battle_range_on", rangeOn->isChecked());
+    s.setValue("find_battle_range", range->text().toInt());
+
+    emit findBattle(rated->isChecked(), rated->isChecked() || sameTier->isChecked(),
+                    (rated->isChecked() || sameTier->isChecked()) && rangeOn->isChecked(),
+                    range->text().toInt());
 }

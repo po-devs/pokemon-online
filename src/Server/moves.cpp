@@ -3810,12 +3810,14 @@ struct MMOutrage : public MM
     MMOutrage() {
         functions["UponAttackSuccessful"] = &uas;
         functions["AfterAttackSuccessful"] = &aas;
+        functions["AttackSomehowFailed"] = &aas;
     }
 
     static void uas(int s, int, BS &b) {
         if (poke(b,s).value("OutrageUntil").toInt() == 0) {
             poke(b,s)["OutrageUntil"] = b.turn() +  1 + (true_rand() % 2);
             addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
+            addFunction(poke(b,s), "MoveSettings", "Outrage", &ms);
             poke(b,s)["OutrageMove"] = move(b,s);
         }
     }
@@ -3831,10 +3833,14 @@ struct MMOutrage : public MM
     }
 
     static void ts(int s, int, BS &b) {
-        if (poke(b,s).value("OutrageUntil").toInt() >= b.turn()) {
+        if (poke(b,s).value("OutrageUntil").toInt() >= b.turn() && poke(b,s)["LastOutrage"].toInt() == b.turn()-1) {
             turn(b,s)["NoChoice"] = true;
             MoveEffect::setup(poke(b,s)["OutrageMove"].toInt(),s,b.rev(s),b);
         }
+    }
+
+    static void ms(int s, int, BS &b) {
+        poke(b,s)["LastOutrage"] = b.turn();
     }
 };
 
@@ -4135,7 +4141,7 @@ struct MMPayback : public MM
     *MovesPossible -- poke: at the beginning of the turn, tells if each move is possible or not
     *AfterKoedByStraightAttack -- poke: when koed by an attack
     *BlockTurnEffects -- poke: Called before calling effects for a turn event, to see if it's blocked. Used by Substitute
-    *AttackSomehowFailed -- turn, only offensive moves: When an attack fails, or misses, there may be something to do (jump kick, rollout,..)
+    *AttackSomehowFailed -- turn, only offensive moves: When an attack fails, or misses, there may be something to do (jump kick, rollout, ..)
     *StatusChange -- poke
 */
 

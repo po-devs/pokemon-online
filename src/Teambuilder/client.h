@@ -129,6 +129,7 @@ public slots:
     void tierListReceived(const QString&);
     void changeTier();
     void openBattleFinder();
+    void findBattle(bool,bool,bool,int);
     /* Ignored */
     void removeIgnore(int);
     void ignore(int);
@@ -205,7 +206,15 @@ class BattleFinder : public QWidget
 {
     Q_OBJECT
 public:
-    BattleFinder();
+    BattleFinder(QWidget *parent = NULL);
+public slots:
+    void throwChallenge();
+    void changeEnabled();
+signals:
+    void findBattle(bool rated, bool sameTier, bool rangeOn, int range);
+private:
+    QCheckBox *sameTier, *rated, *rangeOn;
+    QLineEdit *range;
 };
 
 #endif // CLIENT_H
