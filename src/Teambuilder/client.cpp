@@ -1093,7 +1093,11 @@ void BattleFinder::throwChallenge()
     s.setValue("find_battle_range_on", rangeOn->isChecked());
     s.setValue("find_battle_range", range->text().toInt());
 
-    emit findBattle(rated->isChecked(), rated->isChecked() || sameTier->isChecked(),
-                    (rated->isChecked() || sameTier->isChecked()) && rangeOn->isChecked(),
-                    range->text().toInt());
+    FindBattleData d;
+    d.rated = rated->isChecked();
+    d.sameTier = sameTier->isChecked();
+    d.range = range->text().toInt();
+    d.ranged = rangeOn->isChecked();
+
+    emit findBattle(d);
 }
