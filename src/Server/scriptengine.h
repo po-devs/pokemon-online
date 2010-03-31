@@ -31,6 +31,8 @@ public:
     void afterChangeTeam(int src);
     bool beforeChallengeIssued(int src, int dest, const ChallengeInfo &desc);
     void afterChallengeIssued(int src, int dest, const ChallengeInfo &desc);
+    bool beforeBattleMatchup(int src, int dest, const ChallengeInfo &desc);
+    void afterBattleMatchup(int src, int dest, const ChallengeInfo &desc);
     void beforeBattleStarted(int src, int dest, const ChallengeInfo &desc);
     void afterBattleStarted(int winner, int loser, const ChallengeInfo &desc);
     void beforeBattleEnded(int winner, int loser, int desc);

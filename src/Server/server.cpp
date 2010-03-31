@@ -580,6 +580,7 @@ void Server::awayChanged(int src, bool away)
 
 void Server::cancelSearch(int id)
 {
+    player(id)->battleSearch() = false;
     delete battleSearchs.take(id);
 }
 
@@ -600,17 +601,17 @@ void Server::dealWithChallenge(int from, int to, const ChallengeInfo &c)
 
 void Server::findBattle(int id, const FindBattleData &f)
 {
-    int final = -1;
+    printLine(tr("%1 initiated a battle search.").arg(name(id)));
+
+    Player *p1 = player(id);
 
     QHash<int, FindBattleData*>::iterator it;
     for(it = battleSearchs.begin(); it != battleSearchs.end(); ++it)
     {
         int key = it.key();
         FindBattleData *data = it.value();
-        Player *p1, *p2;
+        Player *p2 = player(key);
 
-        p1 = player(id);
-        p2 = player(key);
         /* We see if they do match */
         if (f.rated != data->rated) {
             /* We check both allow rated */
@@ -629,20 +630,23 @@ void Server::findBattle(int id, const FindBattleData &f)
             if (p1->rating() - data->range > p2->rating() || p1->rating() + data->range < p2->rating() )
                 continue;
 
-        final = key;
-        break;
-    }
 
-    if (final != -1) {
         //We have a match!
         ChallengeInfo c;
-        c.opp = final;
+        c.opp = key;
+        c.rated = (p1->ladder() && p2->ladder() && p1->tier() == p2->tier()) || f.rated || data->rated;
         c.clauses |= ChallengeInfo::SpeciesClause | ChallengeInfo::OHKOClause | ChallengeInfo::SleepClause | ChallengeInfo::FreezeClause;
 
-        startBattle(id,final,c);
-    } else {
-        battleSearchs.insert(id, new FindBattleData(f));
+        if (myengine->beforeBattleMatchup(id,key,c)) {
+            startBattle(id,key,c);
+            myengine->afterBattleMatchup(id,key,c);
+            return;
+        }
     }
+
+    /* Not reached if a match was found */
+    battleSearchs.insert(id, new FindBattleData(f));
+    p1->battleSearch() = true;
 }
 
 void Server::beforeChallengeIssued(int src, int dest, Challenge *c)
@@ -999,7 +1003,7 @@ Player * Server::player(int id)
 {
     if (!myplayers.contains(id))
         qDebug() << "Fatal! player called for non existing ID " << id;
-    return myplayers[id];
+    return myplayers.value(id);
 }
 
 Player * Server::player(int id) const
