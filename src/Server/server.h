@@ -100,7 +100,7 @@ private:
 
     Analyzer *registry_connection;
     QString serverName, serverDesc;
-    quint16 serverPlayerMax;
+    quint16 serverPlayerMax,serverPort;
     quint16 numPlayers() {
         return myplayers.size();
     }

@@ -19,6 +19,7 @@ private:
     QLineEdit *serverName;
     QTextEdit *serverDesc;
     QSpinBox *serverPlayerMax;
+    QSpinBox *serverPort;
 };
 
 #endif // SERVERCONFIG_H

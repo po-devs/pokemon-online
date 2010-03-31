@@ -21,7 +21,7 @@ public:
 public slots:
     void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, const quint16 max);
 signals:
-    void serverChosen(const QString &ip);
+    void serverChosen(const QString &ip, const quint16 port);
     void rejected();
 private slots:
     void showDescription(int row);

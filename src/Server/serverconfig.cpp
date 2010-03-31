@@ -26,6 +26,14 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 
     l->addRow("Max Players: ", serverPlayerMax);
 
+    serverPort = new QSpinBox();
+    serverPort->setRange(0,10000);
+    if(settings.value("server_port").toInt() == 0)
+        serverPort->setValue(5080);
+    else
+        serverPort->setValue(settings.value("server_port").toInt());
+
+    l->addRow("Port(requires restart): ", serverPort);
     QPushButton *ok, *cancel;
 
     ok = new QPushButton("&Apply");
@@ -43,6 +51,7 @@ void ServerWindow::apply()
     settings.setValue("server_name", serverName->text());
     settings.setValue("server_description", serverDesc->toPlainText());
     settings.setValue("server_maxplayers", serverPlayerMax->text());
+    settings.setValue("server_port", serverPort->text());
     emit descChanged(serverDesc->toPlainText());
     emit nameChanged(serverName->text());
     emit maxChanged(serverPlayerMax->value());

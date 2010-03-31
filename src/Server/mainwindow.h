@@ -28,6 +28,7 @@ public:
 protected:
     void closeEvent(QCloseEvent *e);
 private:
+    quint16 serverPort;
     Server * myserver;
     QSystemTrayIcon *sticon;
 };

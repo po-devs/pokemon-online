@@ -97,7 +97,7 @@ signals:
     /* to send to the reg */
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
-    void loggedIn(const QString &name, const QString &desc, quint16 num, quint16 max);
+    void loggedIn(const QString &name, const QString &desc, quint16 num, quint16 max,quint16 nport);
     void numChange(quint16 newnum);
     void nameChange(const QString &name);
     void descChange(const QString &desc);

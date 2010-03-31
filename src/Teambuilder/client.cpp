@@ -11,7 +11,7 @@
 #include "../PokemonInfo/pokemonstructs.h"
 
 
-Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
+Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), myrelay()
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
     mychallenge = NULL;
@@ -62,7 +62,7 @@ Client::Client(TrainerTeam *t, const QString &url) : myteam(t), myrelay()
 
     initRelay();
 
-    relay().connectTo(url, 5080);
+    relay().connectTo(url, port);
 
     QFile f("db/client/chat_colors.txt");
     f.open(QIODevice::ReadOnly);

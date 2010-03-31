@@ -7,7 +7,7 @@ ServerChoice::ServerChoice()
     resize(500,450);
 
     registry_connection = new Analyzer(true);
-    registry_connection->connectTo("pokeymon.zapto.org", 5081);
+    registry_connection->connectTo("pokeymon.zapto.org", 5081); // default pokeymon.zapto.org , 5081
     registry_connection->setParent(this);
 
     connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
@@ -17,7 +17,7 @@ ServerChoice::ServerChoice()
     mylist = new QCompactTable(0,3);
 
     QStringList horHeaders;
-    horHeaders << tr("Server Name") << tr("Players/Max Pla") << tr("Advanced connection");
+    horHeaders << tr("Server Name") << tr("Players/Max Players") << tr("Advanced connection");
     mylist->setHorizontalHeaderLabels(horHeaders);
     mylist->setSelectionBehavior(QAbstractItemView::SelectRows);
     mylist->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -61,7 +61,13 @@ void ServerChoice::regServerChosen(int row)
 
     QSettings settings;
     settings.setValue("default_server", ip);
-    emit serverChosen(ip);
+    if(ip.contains(":")){
+        quint16 port = ip.section(":",1,1).toInt(); //Gets port from IP:PORT
+        QString fIp = ip.section(":",0,0);  //Gets IP from IP:PORT
+        emit serverChosen(fIp,port);
+    }
+    else
+        emit serverChosen(ip,5080);
 }
 
 void ServerChoice::advServerChosen()
@@ -70,7 +76,14 @@ void ServerChoice::advServerChosen()
 
     QSettings settings;
     settings.setValue("default_server", ip);
-    emit serverChosen(ip);
+    if(ip.contains(":")){
+        quint16 port = ip.section(":",1,1).toInt(); //Gets port from IP:PORT
+        QString fIp = ip.section(":",0,0);  //Gets IP from IP:PORT
+        emit serverChosen(fIp,port);
+    }
+    else
+        emit serverChosen(ip,5080);
+
 }
 
 void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, const quint16 max)

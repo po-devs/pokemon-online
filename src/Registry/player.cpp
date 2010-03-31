@@ -25,5 +25,8 @@ void Player::kick()
 
 void Player::sendServer(const Server &s)
 {
-    m_relay->sendServer(s.name(), s.desc(), s.players(), s.ip(),s.maxPlayers());
+    if(s.port() == 0)
+        m_relay->sendServer(s.name(), s.desc(), s.players(), s.ip() + ":5080",s.maxPlayers());
+    else
+        m_relay->sendServer(s.name(), s.desc(), s.players(), s.ip() + ":" + QString::number(s.port()),s.maxPlayers());
 }
