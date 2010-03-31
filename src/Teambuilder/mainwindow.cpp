@@ -139,7 +139,7 @@ void MainEngine::launchServerChoice()
     MainEngineRoutine(choice);
 
     connect(choice, SIGNAL(rejected()), SLOT(launchMenu()));
-    connect(choice, SIGNAL(serverChosen(QString)), this, SLOT(goOnline(QString)));
+    connect(choice, SIGNAL(serverChosen(QString,quint16)), this, SLOT(goOnline(QString,quint16)));
 }
 
 void MainEngine::changeStyle()
@@ -175,9 +175,9 @@ void MainEngine::changeLanguage()
     QMessageBox::information(displayer, tr("Language Change"), tr("Restart the application to see the changes."));
 }
 
-void MainEngine::goOnline(const QString &url)
+void MainEngine::goOnline(const QString &url, const quint16 port)
 {
-    Client * client = new Client(trainerTeam(), url);
+    Client * client = new Client(trainerTeam(), url, port);
     MainEngineRoutine(client);
 
     connect(client, SIGNAL(done()), SLOT(launchMenu()));

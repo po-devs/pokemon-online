@@ -102,10 +102,13 @@ Server::Server(quint16 port)
     connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(dosKick(int)));
     connect(AntiDos::obj(), SIGNAL(ban(QString)), SLOT(dosBan(QString)));
 
+    serverPort = port;
+
     QSettings s;
     serverName = s.value("server_name").toString();
     serverDesc = s.value("server_description").toString();
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
+
     myengine->serverStartUp();
     connectToRegistry();
 }
@@ -128,7 +131,7 @@ void Server::connectToRegistry()
     printLine("Connecting to registry...");
 
     QTcpSocket * s = new QTcpSocket(NULL);
-    s->connectToHost("pokeymon.zapto.org", 5082);
+    s->connectToHost("pokeymon.zapto.org", 5082); // default pokeymon.zapto.org , 5081
 
     connect(s, SIGNAL(connected()), this, SLOT(regConnected()));
     connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(regConnectionError()));
@@ -145,7 +148,7 @@ void Server::regConnectionError()
 void Server::regConnected()
 {
     printLine("Connected to registry! Sending server info...");
-    registry_connection->notify(NetworkServ::Login, serverName, serverDesc, quint16(AntiDos::obj()->numberOfDiffIps()), serverPlayerMax);
+    registry_connection->notify(NetworkServ::Login, serverName, serverDesc, quint16(AntiDos::obj()->numberOfDiffIps()), serverPlayerMax, serverPort);
     connect(registry_connection, SIGNAL(ipRefused()), SLOT(ipRefused()));
     connect(registry_connection, SIGNAL(invalidName()), SLOT(invalidName()));
     connect(registry_connection, SIGNAL(nameTaken()), SLOT(nameTaken()));

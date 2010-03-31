@@ -24,7 +24,7 @@ public slots:
     void launchMenu();
     void launchCredits();
     void launchTeamBuilder();
-    void goOnline(const QString &url);
+    void goOnline(const QString &url, const quint16 port);
     void launchServerChoice();
     void changeStyle();
     void changeLanguage();

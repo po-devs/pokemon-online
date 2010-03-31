@@ -59,9 +59,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     case Login:
         {
             QString name, desc;
-            quint16 num, max;
-            in >> name >> desc >> num >> max;
-            emit loggedIn(name,desc,num, max);
+            quint16 num, max, nport;
+            in >> name >> desc >> num >> max >> nport;
+            emit loggedIn(name,desc,num, max, nport);
             break;
         }
     case ServNumChange:

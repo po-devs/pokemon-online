@@ -24,7 +24,7 @@ class Client : public QWidget
 {
     Q_OBJECT
 public:
-    Client(TrainerTeam *, const QString &url);
+    Client(TrainerTeam *, const QString &url, const quint16 port);
 
     TrainerTeam *team();
     QMenuBar *createMenuBar(MainEngine *w);
