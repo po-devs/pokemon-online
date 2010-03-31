@@ -2704,22 +2704,24 @@ struct MMMagicCoat : public MM
     static BM bounced_moves;
 
     static void dgaf(int s, int t, BS &b) {
-        bounced_moves.lock();
-	if (turn(b,t).value("MagicCoated").toBool()) {
+        if (turn(b,t).value("MagicCoated").toBool()) {
 	    if (turn(b,s)["Power"].toInt() == 0 && turn(b,s)["PossibleTargets"].toInt() == Move::ChosenTarget) {
 		int move = MM::move(b,s);
 		/* Typically, the moves that are bounced back are moves that only induce status / boost mods and nothing else,
 		    therefore having no "SpecialEffect". Exceptions are stored in bounced_moves */
-		if (MoveInfo::SpecialEffect(move).size() == 0|| bounced_moves.contains(move)) {
+                bounced_moves.lock();
+                bool bounced = MoveInfo::SpecialEffect(move).size() == 0|| bounced_moves.contains(move);
+                bounced_moves.unlock();
+                if (bounced) {
 		    b.fail(s,76,1,Pokemon::Psychic);
 		    /* Now Bouncing back ... */
 		    removeFunction(turn(b,t), "UponAttackSuccessful", "MagicCoat");
+
 		    MoveEffect::setup(move,t,s,b);
 		    b.useAttack(t,move,true,false);
 		}
 	    }
 	}
-        bounced_moves.unlock();
     }
 };
 
