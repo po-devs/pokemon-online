@@ -14,9 +14,6 @@ MainEngine::MainEngine() : displayer(0)
 
     QSettings settings;
     /* initializing the default init values if not there */
-    if (settings.value("team_location").isNull()) {
-        settings.setValue("team_location", "Team/trainer.tp");
-    }
     if (settings.value("new_teambuilder").isNull() || settings.value("application_style").isNull()) {
         settings.setValue("application_style", "plastique");
         settings.setValue("new_teambuilder",true);
@@ -24,23 +21,20 @@ MainEngine::MainEngine() : displayer(0)
     //if (settings.value("stylesheet").isNull()) {
         settings.setValue("stylesheet", "db/default.css");
     //}
-    if (settings.value("save_battle_logs").isNull()) {
-        settings.setValue("save_battle_logs", false);
-    }
-    if (settings.value("battle_logs_directory").isNull()) {
-        settings.setValue("battle_logs_directory", "Logs/");
-    }
-    if (settings.value("show_team").isNull()) {
-        settings.setValue("show_team", true);
-    }
-    if (settings.value("enable_ladder").isNull()) {
-        settings.setValue("enable_ladder",true);
-    }
-    if (settings.value("show_player_events").isNull()) {
-        settings.setValue("show_player_events", false);
-    }
 
-    //trainerTeam()->setTrainerNick(settings.value("trainer_name").toString());
+
+    setDefaultValue("team_location", "Team/trainer.tp");
+    setDefaultValue("save_battle_logs", false);
+    setDefaultValue("battle_logs_directory", "Logs/");
+    setDefaultValue("show_team",true);
+    setDefaultValue("enable_ladder", true);
+    setDefaultValue("show_player_events", false);
+
+    setDefaultValue("find_battle_force_rated", false);
+    setDefaultValue("find_battle_same_tier", true);
+    setDefaultValue("find_battle_range_on", true);
+    setDefaultValue("find_battle_range", 300);
+
 
     PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/");

@@ -20,6 +20,8 @@ public:
     MainEngine();
 
     void loadTeam(const QString &path);
+    template<class T>
+    void setDefaultValue(const QString &key, T value);
 public slots:
     void launchMenu();
     void launchCredits();
@@ -57,5 +59,13 @@ private:
     Client *m_client;
     ServerChoice *m_choice;
 };
+
+template<class T>
+void MainEngine::setDefaultValue(const QString &key, T value)
+{
+    QSettings s;
+    if (s.value(key).isNull())
+        s.setValue(key, value);
+}
 
 #endif // MAINWINDOW_H

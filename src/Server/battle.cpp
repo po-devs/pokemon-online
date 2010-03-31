@@ -1278,6 +1278,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		bool sub = hasSubstitute(target);
                 turnlong[target]["HadSubstitute"] = sub;
 
+                if (turnlong[player]["Power"].toInt() > 1 && i == 0)
+                    notify(All, Effective, target, quint8(typemod));
+
 		if (turnlong[player]["Power"].toInt() > 1) {
 		    testCritical(player, target);
 		    int damage = calculateDamage(player, target);
@@ -1307,9 +1310,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		/* Removing substitute... */
 		turnlong[player]["HadSubstitute"] = false;
 	    }
-
-	    if (turnlong[player]["Power"].toInt() > 1)
-		notify(All, Effective, target, quint8(typemod));
 
 	    if (!koed(player))
 		calleffects(player, target, "AfterAttackSuccessful");
