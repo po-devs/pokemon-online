@@ -769,6 +769,7 @@ void TB_PokemonBoxes::switchP()
         updateSpot(currentPoke);
         emit pokeChanged(currentPoke);
 
+
     } catch(const QString &ex) {
         QMessageBox::information(this, tr("Box Empty"), ex);
     }
@@ -812,8 +813,11 @@ void TB_PokemonBoxes::showPoke(PokeTeam *poke)
 
 void TB_PokemonBoxes::updateSpot(int i)
 {
-    if (currentPoke == i)
+    if (currentPoke == i) {
+        /* If the displayed pokemon was in a box.. */
+        m_details->changePoke(currentPokeTeam(),i);
         m_details->updatePoke();
+    }
 
     m_buttons->buttons[i]->setIcon(PokemonInfo::Icon(m_team->poke(i).num()));
 }
