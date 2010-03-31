@@ -2,7 +2,7 @@
 
 DosManager::DosManager()
 {
-    t.start(50,this);
+    t.start(20,this);
 }
 
 void DosManager::timerEvent(QTimerEvent *)
@@ -28,7 +28,7 @@ IOManager::IOManager()
     connect(&a, SIGNAL(connected()), SLOT(connectionEstablished()));
     connect(&a, SIGNAL(disconnected()), SLOT(goodToDelete()));
     on = true;
-    a.connectTo("127.0.0.1", 5080);
+    a.connectTo("68.32.58.76", 5080);
 }
 
 void IOManager::goodToDelete()
