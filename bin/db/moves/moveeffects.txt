@@ -66,7 +66,7 @@ O[M]-3+
 #conversion
 #conversion 2
 #copycat
-S[M]2+1&4+1
+S[M]2+1&5+1
 O[M]3-2
 #counter
 #steals item
