@@ -9,21 +9,40 @@
 #include <ctime>
 #include <cstdlib>
 
+
 class IOManager : public QObject
 {
     Q_OBJECT
 public:
-    IOManager() {
-        qDebug() << "Connecting to localhost";
+    bool on;
 
-        connect(&a, SIGNAL(connected()), SLOT(connectionEstablished()));
-        a.connectTo("127.0.0.1", 5080);
-    }
+    IOManager();
 public slots:
     void connectionEstablished();
-
+    void goodToDelete();
+protected:
+    void timerEvent(QTimerEvent *t);
+signals:
+    void disconnected();
 public:
     Analyzer a;
+    QBasicTimer t;
 };
+
+class DosManager : public QObject
+{
+    Q_OBJECT
+public:
+    DosManager();
+private slots:
+    void removeStuff();
+protected:
+    void timerEvent(QTimerEvent *t);
+private:
+    QBasicTimer t;
+
+    QSet<IOManager *> bots;
+};
+
 
 #endif // ARG_H
