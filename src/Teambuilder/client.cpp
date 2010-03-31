@@ -237,7 +237,13 @@ void Client::controlPanel(int id)
 
 void Client::openBattleFinder()
 {
+    if (myBattleFinder) {
+        myBattleFinder->raise();
+        return;
+    }
 
+    myBattleFinder = new BattleFinder();
+    myBattleFinder->show();
 }
 
 void Client::setPlayer(const UserInfo &ui)
@@ -1027,7 +1033,8 @@ void Client::removeIgnore(int id)
 
 BattleFinder::BattleFinder()
 {
-    QFormLayout *ml = new QFormLayout();
+    QFormLayout *ml = new QFormLayout(this);
+    setWindowFlags(Qt::Window);
 
     ml->addWidget(new QCheckBox(tr("Force same tier")));
     ml->addWidget(new QCheckBox(tr("Force rated")));

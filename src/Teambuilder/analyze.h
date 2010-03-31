@@ -26,7 +26,7 @@ namespace NetworkCli
         SendMessage,
         PlayersList,
         SendTeam,
-        ChallengeStuff,
+        ChallengeStuff = 7,
         EngageBattle,
         BattleFinished,
         BattleMessage = 10,

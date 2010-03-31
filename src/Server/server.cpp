@@ -856,6 +856,7 @@ void Server::removePlayer(int id)
         bool loggedIn = p->isLoggedIn();
 
         if (loggedIn) {
+            qDebug() << "The player is not logged in yet";
             myengine->beforeLogOut(id);
         }
 
@@ -867,13 +868,14 @@ void Server::removePlayer(int id)
 
         AntiDos::obj()->disconnect(p->ip(), id);
 
-	delete p;
+        delete p; myplayers.remove(id);
 
-	myplayers.remove(id);
         if (loggedIn)
             mynames.remove(playerName.toLower());
 
-        delete list()->takeItem(list()->row(myplayersitems[id]));
+        int row = list()->row(myplayersitems[id]);
+        qDebug() << "row of " << myplayersitems[id] << " is " << row;
+        delete list()->takeItem(row);
         myplayersitems.remove(id);
 
 	/* Sending the notice of logout to others only if the player is already logged in */
@@ -938,6 +940,8 @@ QListWidget * Server::list() {
 
 Player * Server::player(int id)
 {
+    if (!myplayers.contains(id))
+        qDebug() << "Fatal! player called for non existing ID " << id;
     return myplayers[id];
 }
 
