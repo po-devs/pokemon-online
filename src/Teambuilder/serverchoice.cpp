@@ -11,7 +11,7 @@ ServerChoice::ServerChoice()
     registry_connection->setParent(this);
 
     connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
-    connect(registry_connection, SIGNAL(serverReceived(QString, QString, quint16,QString,quint16)), SLOT(addServer(QString, QString, quint16, QString,quint16)));
+    connect(registry_connection, SIGNAL(serverReceived(QString, QString, quint16,QString,quint16,quint16)), SLOT(addServer(QString, QString, quint16, QString,quint16,quint16)));
 
     QVBoxLayout *l = new QVBoxLayout(this);
     mylist = new QCompactTable(0,3);
@@ -86,7 +86,7 @@ void ServerChoice::advServerChosen()
 
 }
 
-void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, const quint16 max)
+void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port)
 {
     QString playerStr;
     if(max == 0)
@@ -106,7 +106,7 @@ void ServerChoice::addServer(const QString &name, const QString &desc, quint16 n
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 1, witem);
 
-    witem = new QTableWidgetItem(ip);
+    witem = new QTableWidgetItem(ip + ":" + QString::number(port == 0 ? 5080 : port));
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 2, witem);
 

@@ -19,7 +19,7 @@ public:
 
     QMenuBar* createMenuBar(MainEngine *) {return NULL;}
 public slots:
-    void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, const quint16 max);
+    void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port);
 signals:
     void serverChosen(const QString &ip, const quint16 port);
     void rejected();

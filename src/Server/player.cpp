@@ -533,8 +533,9 @@ void Player::loggedIn(const TeamInfo &_team,bool ladder, bool showteam, QColor c
     team() = _team;
     qDebug() << "Finding tier";
     tier() = TierMachine::obj()->findTier(team());
-    qDebug() << "Getting rating";
+    qDebug() << "Tier is " << tier() << ", Getting rating";
     rating() = TierMachine::obj()->rating(name(), tier());
+    qDebug() << "Rating is " << TierMachine::obj()->rating(name(), tier());
 
     if (st == Success) {
         emit loggedIn(id(), _team.name);

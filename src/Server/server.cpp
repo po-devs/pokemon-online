@@ -935,7 +935,7 @@ void Server::removePlayer(int id)
             mynames.remove(playerName.toLower());
 
         int row = list()->row(myplayersitems[id]);
-        qDebug() << "row of " << myplayersitems[id] << " is " << row;
+        qDebug() << "row of " << myplayersitems[id] << " is " << row << " and content is " << list()->item(row)->text();
         delete list()->takeItem(row);
         myplayersitems.remove(id);
 
