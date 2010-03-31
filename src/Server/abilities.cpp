@@ -771,6 +771,8 @@ struct AMShedSkin : public AM {
     }
 
     static void et(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
         if (true_rand() % 100 < 30 && b.poke(s).status() != Pokemon::Fine) {
             b.sendAbMessage(54,0,s,s,Pokemon::Bug);
             b.healStatus(s, b.poke(s).status());

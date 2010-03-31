@@ -3797,7 +3797,10 @@ struct MMBeatUp : public MM {
                 int att = PokemonInfo::Stat(p.num(),Attack, PokemonInfo::BaseStats(p.num()).baseAttack(),p.level(),0,0);
                 int damage = (((((p.level() * 2 / 5) + 2) * 10 * att / 50) / def) + 2) * (true_rand() % (255-217) + 217)*100/255/100;
                 b.sendMoveMessage(7,0,s,Pokemon::Dark,t,0,p.nick());
-                b.inflictDamage(t,damage,t,true);
+                if (b.hasSubstitute(t))
+                    b.inflictSubDamage(t,damage,t);
+                else
+                    b.inflictDamage(t,damage,t,true);
             }
             if (b.koed(t))
                 return;

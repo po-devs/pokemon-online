@@ -513,3 +513,29 @@ QDataStream & operator << (QDataStream &out, const ChallengeInfo & c) {
     out << c.dsc <<  c.opp << c.clauses;
     return out;
 }
+
+QDataStream & operator >> (QDataStream &in, FindBattleData &f)
+{
+    quint32 flags;
+
+    in >> flags >> f.range;
+
+    f.rated = flags & 0x01;
+    f.sameTier = f.rated || flags & 0x2;
+    f.ranged = f.sameTier && flags & 0x4;
+
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const FindBattleData &f)
+{
+    quint32 flags = 0;
+
+    flags |= f.rated;
+    flags |= f.sameTier << 1;
+    flags |= f.ranged << 2;
+
+    out << flags << f.range;
+
+    return out;
+}

@@ -1113,8 +1113,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         goto end;
     }
 
-    turnlong[player]["HasPassedStatus"] = true;
-
     //Just for truant
     callaeffects(player, player, "DetermineAttackPossible");
     if (turnlong[player]["ImpossibleToMove"].toBool() == true) {
@@ -1125,6 +1123,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (turnlong[player]["ImpossibleToMove"].toBool() == true) {
         goto end;
     }
+
+    turnlong[player]["HasPassedStatus"] = true;
 
     turnlong[player]["MoveChosen"] = attack;
 
@@ -2023,7 +2023,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
     }
 
 
-    if (straightattack) {
+    if (straightattack && player == source) {
 	if (!sub) {
             /* If there's a sub its already taken care of */
             turnlong[source]["DamageInflicted"] = damage;

@@ -18,6 +18,7 @@ class Player : public QObject
     PROPERTY(QString, tier);
     PROPERTY(quint16, avatar);
     PROPERTY(QColor, color);
+    PROPERTY(bool, battleSearch);
 public:
     BattleSituation *battle;
     QSet<int> battlesSpectated;
@@ -50,6 +51,8 @@ public:
     bool isLoggedIn() const;
     bool battling() const;
     bool away() const;
+    bool inSearchForBattle() const { return battleSearch(); }
+    void cancelBattleSearch();
     void changeState(int newstate, bool on);
     int state() const;
     int auth() const;
@@ -98,6 +101,8 @@ signals:
     void spectatingRequested(int, int);
     void spectatingChat(int, int, const QString &chat);
     void spectatingStopped(int, int battleId);
+    void findBattle(int,const FindBattleData&);
+    void battleSearchCancelled(int);
 public slots:
     void loggedIn(const TeamInfo &team,bool,bool, QColor);
     void recvMessage(const QString &mess);
@@ -123,6 +128,7 @@ public slots:
     void ladderChange(bool);
     void showTeamChange(bool);
     void changeTier(const QString&);
+    void findBattle(const FindBattleData&);
 private:
     TeamBattle myteam;
     Analyzer myrelay;
