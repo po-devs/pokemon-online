@@ -148,6 +148,33 @@ void ScriptEngine::afterChallengeIssued(int src, int dest, const ChallengeInfo &
     evaluate(myscript.property("afterChallengeIssued").call(myscript, QScriptValueList() << src << dest << clauses));
 }
 
+bool ScriptEngine::beforeBattleMatchup(int src, int dest, const ChallengeInfo &c)
+{
+    startStopEvent();
+
+    QString clauses;
+
+    for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        clauses.append('0' + ((c.clauses >> i) & 0x01));
+    }
+
+    evaluate(myscript.property("beforeBattleMatchup").call(myscript, QScriptValueList() << src << dest << clauses));
+
+    return !endStopEvent();
+}
+
+void ScriptEngine::afterBattleMatchup(int src, int dest, const ChallengeInfo &c)
+{
+    QString clauses;
+
+    for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        clauses.append('0' + ((c.clauses >> i) & 0x01));
+    }
+
+    evaluate(myscript.property("afterBattleMatchup").call(myscript, QScriptValueList() << src << dest << clauses));
+}
+
+
 void ScriptEngine::beforeBattleStarted(int src, int dest, const ChallengeInfo &c)
 {
     QString clauses;
@@ -672,7 +699,7 @@ void ScriptEngine::printLine(const QString &s)
 void ScriptEngine::stopEvent()
 {
     if (stopevents.size() == 0) {
-        myserver->printLine("Script Error: calling sys.stopEvent() in an unstoppable event.");
+        myserver->printLine("Script Warning: calling sys.stopEvent() in an unstoppable event.");
     } else {
         stopevents.back() = true;
     }

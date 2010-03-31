@@ -68,7 +68,6 @@ void Player::cancelBattleSearch()
 {
     if (!inSearchForBattle())
         return;
-    battleSearch() = false;
     emit battleSearchCancelled(id());
 }
 
