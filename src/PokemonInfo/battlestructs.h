@@ -306,5 +306,16 @@ inline QDataStream & operator << (QDataStream &out, const BattleStats &c)
     return out;
 }
 
+struct FindBattleData
+{
+    bool rated;
+    bool sameTier;
+    bool ranged;
+    quint16 range;
+};
+
+QDataStream& operator >> (QDataStream &in, FindBattleData &f);
+QDataStream& operator << (QDataStream &out, const FindBattleData &f);
+
 
 #endif // BATTLESTRUCTS_H

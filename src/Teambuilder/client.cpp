@@ -244,17 +244,13 @@ void Client::openBattleFinder()
 
     myBattleFinder = new BattleFinder(this);
     myBattleFinder->show();
+
+    connect(myBattleFinder, SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
 }
 
-void Client::findBattle(bool rated, bool tier, bool rangeOn, int range)
+void Client::findBattle(const FindBattleData&data)
 {
-    quint32 flags = 0;
-
-    flags |= rated;
-    flags |= tier << 1;
-    flags |= rangeOn << 2;
-
-    relay().notify(NetworkCli::FindMatch, flags, quint16(range));
+    relay().notify(NetworkCli::FindMatch,data);
 }
 
 void Client::setPlayer(const UserInfo &ui)

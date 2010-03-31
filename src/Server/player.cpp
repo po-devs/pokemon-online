@@ -10,6 +10,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
 {
     battle = NULL;
     challengedBy = NULL;
+    battleSearch() = false;
     myip = relay().ip();
     rating() = -1;
 
@@ -40,6 +41,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(ladderChange(bool)), SLOT(ladderChange(bool)));
     connect(&relay(), SIGNAL(showTeamChange(bool)), SLOT(showTeamChange(bool)));
     connect(&relay(), SIGNAL(tierChanged(QString)), SLOT(changeTier(QString)));
+    connect(&relay(), SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
 }
 
 Player::~Player()
@@ -60,6 +62,14 @@ void Player::showTeamChange(bool n)
         return; //INV BEHAV
     showteam() = n;
     emit updated(id());
+}
+
+void Player::cancelBattleSearch()
+{
+    if (!inSearchForBattle())
+        return;
+    battleSearch() = false;
+    emit battleSearchCancelled(id());
 }
 
 void Player::changeTier(const QString &newtier)
@@ -118,6 +128,7 @@ void Player::cancelChallenges()
     while (challenged.size() != 0) {
         (*challenged.begin())->cancel(this);
     }
+    cancelBattleSearch();
 }
 
 void Player::removeChallenge(Challenge *c)
@@ -338,8 +349,8 @@ void Player::challengeStuff(const ChallengeInfo &c)
         return;
     }
 
-    if (team().invalid()) {
-        sendMessage("Your team is invalid, you can't challenge!");
+    if (team().invalid() && ! (c.clauses & ChallengeInfo::ChallengeCup)) {
+        sendMessage("Your team is invalid, you can't challenge except for Challenge Cup!");
         return;
     }
 
@@ -369,6 +380,27 @@ void Player::challengeStuff(const ChallengeInfo &c)
             }
         }
     }
+}
+
+void Player::findBattle(const FindBattleData& f)
+{
+    if (battling()) {
+        // INVALID BEHAVIOR
+        return;
+    }
+    if (!isLoggedIn()) {
+        // INVALID BEHAVIOR
+        return;
+    }
+    if (team().invalid())
+    {
+        sendMessage("Your team is invalid, you can't find battles!");
+        return;
+    }
+
+    cancelBattleSearch();
+
+   emit findBattle(id(),f);
 }
 
 void Player::sendChallengeStuff(const ChallengeInfo &c)

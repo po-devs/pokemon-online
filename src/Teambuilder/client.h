@@ -14,7 +14,7 @@ class QScrollDownTextEdit;
 class PMWindow;
 class ControlPanel;
 class BattleFinder;
-
+class FindBattleData;
 
 /* The class for going online.
 
@@ -129,7 +129,7 @@ public slots:
     void tierListReceived(const QString&);
     void changeTier();
     void openBattleFinder();
-    void findBattle(bool,bool,bool,int);
+    void findBattle(const FindBattleData&);
     /* Ignored */
     void removeIgnore(int);
     void ignore(int);
@@ -211,7 +211,7 @@ public slots:
     void throwChallenge();
     void changeEnabled();
 signals:
-    void findBattle(bool rated, bool sameTier, bool rangeOn, int range);
+    void findBattle(const FindBattleData&);
 private:
     QCheckBox *sameTier, *rated, *rangeOn;
     QLineEdit *range;

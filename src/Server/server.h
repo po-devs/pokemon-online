@@ -6,6 +6,7 @@
 
 /* the server */
 
+class FindBattleData;
 class Player;
 class BattleSituation;
 class Analyzer;
@@ -94,6 +95,8 @@ public slots:
     void awayChanged(int src, bool away);
     void sendPlayer(int id);
     void tiersChanged();
+    void findBattle(int id,const FindBattleData &f);
+    void cancelSearch(int id);
 private:
     void kick(int dest, int src);
     void ban(int dest, int src);
@@ -132,6 +135,7 @@ private:
     QListWidget *mylist;
     QLineEdit *myline;
     QHash<int, QIdListWidgetItem *> myplayersitems;
+    QHash<int, FindBattleData*> battleSearchs;
     /* the mainchat !*/
     QScrollDownTextEdit *mainchat();
     QListWidget *list();

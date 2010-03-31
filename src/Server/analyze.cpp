@@ -315,6 +315,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit tierChanged(tier);
             break;
         }
+    case FindBattle:
+        {
+            FindBattleData f;
+            in >> f;
+            emit findBattle(f);
+            break;
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;

@@ -565,6 +565,8 @@ void Server::incomingConnection()
     connect(p, SIGNAL(spectatingStopped(int,int)), SLOT(spectatingStopped(int,int)));
     connect(p, SIGNAL(spectatingChat(int,int, QString)), SLOT(spectatingChat(int,int, QString)));
     connect(p, SIGNAL(updated(int)), SLOT(sendPlayer(int)));
+    connect(p, SIGNAL(findBattle(int,FindBattleData)), SLOT(findBattle(int, FindBattleData)));
+    connect(p, SIGNAL(battleSearchCancelled(int)), SLOT(cancelSearch(int)));
 }
 
 void Server::awayChanged(int src, bool away)
@@ -574,6 +576,11 @@ void Server::awayChanged(int src, bool away)
             p->relay().notifyAway(src, away);
         }
     }
+}
+
+void Server::cancelSearch(int id)
+{
+    delete battleSearchs.take(id);
 }
 
 void Server::dealWithChallenge(int from, int to, const ChallengeInfo &c)
@@ -588,6 +595,53 @@ void Server::dealWithChallenge(int from, int to, const ChallengeInfo &c)
         connect(_c, SIGNAL(battleStarted(int,int,ChallengeInfo)), SLOT(startBattle(int, int, ChallengeInfo)));
     } catch (Challenge::Exception) {
         ;
+    }
+}
+
+void Server::findBattle(int id, const FindBattleData &f)
+{
+    int final = -1;
+
+    QHash<int, FindBattleData*>::iterator it;
+    for(it = battleSearchs.begin(); it != battleSearchs.end(); ++it)
+    {
+        int key = it.key();
+        FindBattleData *data = it.value();
+        Player *p1, *p2;
+
+        p1 = player(id);
+        p2 = player(key);
+        /* We see if they do match */
+        if (f.rated != data->rated) {
+            /* We check both allow rated */
+            if (! ((f.rated || p1->ladder()) && (data->rated || p2->ladder())))
+                continue;
+        }
+        /* We check the tier thing */
+        if ( (f.sameTier || data->sameTier) && p1->tier() != p2->tier() )
+            continue;
+
+        /* Then the range thing */
+        if (f.ranged)
+            if (p1->rating() - f.range > p2->rating() || p1->rating() + f.range < p2->rating() )
+                continue;
+        if (data->ranged)
+            if (p1->rating() - data->range > p2->rating() || p1->rating() + data->range < p2->rating() )
+                continue;
+
+        final = key;
+        break;
+    }
+
+    if (final != -1) {
+        //We have a match!
+        ChallengeInfo c;
+        c.opp = final;
+        c.clauses |= ChallengeInfo::SpeciesClause | ChallengeInfo::OHKOClause | ChallengeInfo::SleepClause | ChallengeInfo::FreezeClause;
+
+        startBattle(id,final,c);
+    } else {
+        battleSearchs.insert(id, new FindBattleData(f));
     }
 }
 

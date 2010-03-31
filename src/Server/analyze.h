@@ -11,6 +11,7 @@ class BattleConfiguration;
 class ChallengeInfo;
 class UserInfo;
 class PlayerInfo;
+class FindBattleData;
 
 /* Commands to dialog with the server */
 namespace NetworkServ
@@ -53,6 +54,7 @@ namespace NetworkServ
         VersionControl,
         TierSelection,
         ServMaxChange,
+        FindBattle
     };
 
     enum ProtocolError
@@ -143,6 +145,7 @@ signals:
     void showTeamChange(bool);
     void ladderChange(bool);
     void tierChanged(const QString &);
+    void findBattle(const FindBattleData &f);
 public slots:
     /* slots called by the network */
     void error();
