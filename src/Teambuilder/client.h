@@ -13,6 +13,7 @@ class BaseBattleWindow;
 class QScrollDownTextEdit;
 class PMWindow;
 class ControlPanel;
+class BattleFinder;
 
 
 /* The class for going online.
@@ -169,6 +170,7 @@ private:
     /* Challenge window , to emit or to receive*/
     BaseChallengeWindow *mychallenge;
     QPointer<BattleWindow> mybattle;
+    QPointer<BattleFinder> myBattleFinder;
     QHash<int, QPointer<BaseBattleWindow> > mySpectatingBattles;
     QAction *goaway;
     bool showPEvents;
