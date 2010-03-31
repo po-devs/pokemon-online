@@ -1,7 +1,7 @@
 #include "network.h"
 #include "antidos.h"
 
-Network::Network(QTcpSocket *sock, int id) : mysocket(sock), commandStarted(false), myid(id)
+Network::Network(QTcpSocket *sock, int id) : mysocket(sock), commandStarted(false), myid(id), stillValid(true)
 {
     connect(socket(), SIGNAL(readyRead()), this, SLOT(onReceipt()));
     connect(socket(), SIGNAL(disconnected()), this, SIGNAL(disconnected()));
@@ -21,6 +21,7 @@ void Network::manageError(QAbstractSocket::SocketError err)
 }
 
 void Network::close() {
+    stillValid = false;
     socket()->disconnectFromHost();
     mysocket = NULL;
 }
@@ -57,7 +58,7 @@ void Network::onDisconnect()
 
 void Network::onReceipt()
 {
-    if (socket())
+    if (stillValid && socket())
     {
         if (commandStarted == false) {
             /* There it's a new message we are receiving.

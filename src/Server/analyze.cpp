@@ -24,6 +24,9 @@ Analyzer::Analyzer(QTcpSocket *sock, int id) : mysocket(sock, id)
 Analyzer::~Analyzer()
 {
     blockSignals(true);
+    /* Very important feature. If you don't do this it might crash.
+        this makes the stillValid of Network redundant, but still.*/
+    socket().close();
 }
 
 void Analyzer::sendMessage(const QString &message)

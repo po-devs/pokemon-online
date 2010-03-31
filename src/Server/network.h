@@ -43,6 +43,11 @@ private:
     QString myerrorString;
     /* To keep track of things */
     int myid;
+    /* Important.
+       There were some crashes that drived me mad. If the server removes a socket, and theres still
+       data pending, the socket would crash (but it took me time to discover that).
+       So here it is! The thing to stop reading bullshit data. */
+    bool stillValid;
 
     QTcpSocket *socket();
     const QTcpSocket *socket() const;
