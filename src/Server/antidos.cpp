@@ -34,6 +34,10 @@ AntiDosWindow::AntiDosWindow()
     baxk->setValue(settings.value("ban_after_X_kicks").toInt());
     mylayout->addRow(tr("Bans after X antidos kicks per 15 minutes"), baxk);
 
+    QCheckBox *aDosOn = new QCheckBox(tr("Turn AntiDos ON"));
+    aDosOn->setChecked(!settings.value("antidos_off").toBool());
+    mylayout->addWidget(aDosOn);
+
     QPushButton *ok = new QPushButton("&Apply");
     QPushButton *cancel = new QPushButton("&Cancel");
 
@@ -47,6 +51,7 @@ AntiDosWindow::AntiDosWindow()
     max_kb_per_user = mkbpus;
     max_login_per_ip = mlpip;
     ban_after_x_kicks = baxk;
+    this->aDosOn = aDosOn;
 }
 
 void AntiDosWindow::apply()
@@ -58,6 +63,7 @@ void AntiDosWindow::apply()
     obj->max_kb_per_user = max_kb_per_user->value();
     obj->max_login_per_ip = max_login_per_ip->value();
     obj->ban_after_x_kicks = ban_after_x_kicks->value();
+    obj->on = aDosOn->isChecked();
 
     QSettings settings;
     /* initializing the default init values if not there */
@@ -67,6 +73,7 @@ void AntiDosWindow::apply()
     settings.setValue("max_kbyte_per_user", obj->max_kb_per_user);
     settings.setValue("max_login_per_ip", obj->max_login_per_ip);
     settings.setValue("ban_after_X_kicks", obj->ban_after_x_kicks);
+    settings.setValue("antidos_off", !obj->on);
 
     close();
 }
@@ -93,6 +100,9 @@ void AntiDos::init() {
     if (settings.value("ban_after_X_kicks").isNull()) {
         settings.setValue("ban_after_X_kicks", 10);
     }
+    if (settings.value("antidos_off").isNull()) {
+        settings.setValue("antidos_off", false);
+    }
 
 
     max_people_per_ip = settings.value("max_people_per_ip").toInt();
@@ -100,6 +110,7 @@ void AntiDos::init() {
     max_kb_per_user = settings.value("max_kbyte_per_user").toInt();
     max_login_per_ip = settings.value("max_login_per_ip").toInt();
     ban_after_x_kicks = settings.value("ban_after_X_kicks").toInt();
+    on = !settings.value("antidos_off").toBool();
 }
 
 bool AntiDos::connecting(const QString &ip)
@@ -120,12 +131,12 @@ bool AntiDos::connecting(const QString &ip)
 
         l.erase(l.begin(), l.begin()+i);
 
-        if (l.size() >= max_login_per_ip) {
+        if (l.size() >= max_login_per_ip && on) {
             return false;
         }
     }
 
-    if (connectionsPerIp.value(ip) >= max_people_per_ip) {
+    if (connectionsPerIp.value(ip) >= max_people_per_ip && on) {
         return false;
     }
 
@@ -172,18 +183,18 @@ bool AntiDos::transferBegin(int id, int length, const QString &ip)
 
         l.erase(l.begin(), l.begin()+i);
 
-        if (l.size() >= max_commands_per_user) {
+        if (l.size() >= max_commands_per_user && on) {
             emit kick(id);
             addKick(ip);
             return false;
         }
 
-        if (len + length > size_t(max_kb_per_user)*1024) {
+        if (len + length > size_t(max_kb_per_user)*1024 && on) {
             emit kick(id);
             addKick(ip);
             return false;
         }   
-    } else if (length > max_kb_per_user*1024) {
+    } else if (length > max_kb_per_user*1024 && on) {
         emit kick(id);
         addKick(ip);
         return false;
@@ -212,7 +223,7 @@ void AntiDos::addKick(const QString &ip)
 
     l.erase(l.begin(), l.begin()+i);
 
-    if (l.size() >= ban_after_x_kicks) {
+    if (l.size() >= ban_after_x_kicks && on) {
         emit ban(ip);
     }
 }

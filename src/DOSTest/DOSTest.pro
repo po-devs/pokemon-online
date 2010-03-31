@@ -14,16 +14,17 @@ SOURCES += main.cpp \
     ../PokemonInfo/networkstructs.cpp \
     ../PokemonInfo/movesetchecker.cpp \
     ../PokemonInfo/battlestructs.cpp \
-    ../Teambuilder/network.cpp \
-    ../Teambuilder/analyze.cpp
+    network.cpp \
+    analyze.cpp \
+    arg.cpp
 HEADERS += ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/pokemoninfo.h \
     ../PokemonInfo/networkstructs.h \
     ../PokemonInfo/movesetchecker.h \
     ../PokemonInfo/battlestructs.h \
-    ../Teambuilder/network.h \
-    ../Teambuilder/analyze.h \
-    arg.h
+    arg.h \
+    network.h \
+    analyze.h
 DEFINES = CLIENT_SIDE
 LIBS += -L../../bin \
     -lzip

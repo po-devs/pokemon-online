@@ -13,6 +13,7 @@ public slots:
     void apply();
 private:
     QSpinBox *max_people_per_ip, *max_commands_per_user, *max_kb_per_user, *max_login_per_ip, *ban_after_x_kicks;
+    QCheckBox *aDosOn;
 };
 
 /* A class to detect flood and ban DoSing IPs */
@@ -51,6 +52,7 @@ private:
     static AntiDos *instance;
 
     int max_people_per_ip, max_commands_per_user, max_kb_per_user, max_login_per_ip, ban_after_x_kicks;
+    bool on;
 
     void addKick(const QString &ip);
 };
