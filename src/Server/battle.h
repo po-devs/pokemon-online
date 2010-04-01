@@ -282,7 +282,7 @@ public:
     void spectatingChat(int id, const QString &str);
 signals:
     void battleInfo(int id, const QByteArray &info);
-    void battleFinished(int result, int winner, int loser, bool rated);
+    void battleFinished(int result, int winner, int loser, bool rated, const QString &tier);
 private:
     /* To interrupt the thread when needed. We use that instead of mutex cuz we can lock/unlock them in different threads */
     QSemaphore sem;

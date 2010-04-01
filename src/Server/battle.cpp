@@ -2023,7 +2023,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
     }
 
 
-    if (straightattack && player == source) {
+    if (straightattack && player != source) {
 	if (!sub) {
             /* If there's a sub its already taken care of */
             turnlong[source]["DamageInflicted"] = damage;
@@ -2249,13 +2249,13 @@ void BattleSituation::testWin()
         notifyClause(ChallengeInfo::NoTimeOut,true);
         if (time1 <= 0 && time2 <=0) {
             notify(All, BattleEnd, Player1, qint8(Tie));
-            emit battleFinished(Tie, id(Player1), id(Player2),rated());
+            emit battleFinished(Tie, id(Player1), id(Player2),rated(), tier());
         } else if (time1 <= 0) {
             notify(All, BattleEnd, Player2, qint8(Win));
-            emit battleFinished(Win, id(Player2), id(Player1),rated());
+            emit battleFinished(Win, id(Player2), id(Player1),rated(), tier());
         } else {
             notify(All, BattleEnd, Player1, qint8(Win));
-            emit battleFinished(Win, id(Player1), id(Player2),rated());
+            emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
         throw QuitException();
     }
@@ -2269,13 +2269,13 @@ void BattleSituation::testWin()
         notify(All,ClockStop,Player2,time2);
         if (c1 + c2 == 0) {
             notify(All, BattleEnd, Player1, qint8(Tie));
-            emit battleFinished(Tie, id(Player1), id(Player2),rated());
+            emit battleFinished(Tie, id(Player1), id(Player2),rated(), tier());
         } else if (c1 == 0) {
             notify(All, BattleEnd, Player2, qint8(Win));
-            emit battleFinished(Win, id(Player2), id(Player1),rated());
+            emit battleFinished(Win, id(Player2), id(Player1),rated(), tier());
         } else {
             notify(All, BattleEnd, Player1, qint8(Win));
-            emit battleFinished(Win, id(Player1), id(Player2),rated());
+            emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
         /* The battle is finished so we stop the battling thread */
         sem.acquire(1);
