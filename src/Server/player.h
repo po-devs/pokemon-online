@@ -9,6 +9,10 @@ class Challenge;
 class BattleSituation;
 
 /* a single player */
+/***
+  WARNING! Always use deleteLater!!
+  This is due to Analyzer that requests a deleteLater too
+***/
 class Player : public QObject
 {
     Q_OBJECT

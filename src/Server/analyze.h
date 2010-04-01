@@ -65,6 +65,12 @@ namespace NetworkServ
 
 class TeamInfo;
 
+/***
+  WARNING! Always use deleteLater on this!
+
+  Otherwise you may delete it when Network::onReceipt() still
+  does recurive calls. Crash!
+***/
 class Analyzer : public QObject
 {
     Q_OBJECT

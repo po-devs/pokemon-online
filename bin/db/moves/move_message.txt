@@ -25,7 +25,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 %s crushed %f!
 %s cut its own HP and laid a Curse on %f!|%s is afflicted by the Curse!
 %s took %f down with it!|%s is trying to take its foe with it!
-%f protected itself!
+%s protected itself!
 %f's %m was disabled!|%s's %m is disabled!|%s is no longer disabled!
 %s took the %m attack!|%s foresaw an attack!|%s chose Doom Desire as its destiny!
 

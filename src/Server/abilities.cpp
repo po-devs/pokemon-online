@@ -158,6 +158,8 @@ struct AMColorChange : public AM {
     }
 
     static void uodr(int s, int t, BS &b) {
+        if (b.koed(s))
+            return;
         if ((s!=t) && type(b,t) != Pokemon::Curse) {
             int tp = type(b,t);
             if (poke(b,s)["Type2"].toInt() == Pokemon::Curse && tp == poke(b,s)["Type1"].toInt()) {
