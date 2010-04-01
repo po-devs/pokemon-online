@@ -128,6 +128,11 @@ bool Analyzer::isConnected() const
     return socket().isConnected();
 }
 
+void Analyzer::stopRecieving()
+{
+    socket().close();
+}
+
 void Analyzer::finishSpectating(qint32 battleId)
 {
     notify(NetworkServ::SpectatingBattleFinished, battleId);

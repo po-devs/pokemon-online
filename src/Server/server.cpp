@@ -929,7 +929,7 @@ void Server::removePlayer(int id)
 
         AntiDos::obj()->disconnect(p->ip(), id);
 
-        delete p; myplayers.remove(id);
+        p->deleteLater(); myplayers.remove(id);
 
         if (loggedIn)
             mynames.remove(playerName.toLower());
