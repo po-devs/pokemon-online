@@ -147,8 +147,6 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 
     in >> command;
 
-    qDebug() << "command received from " << socket().id() << " (" << int(command) << ")";
-
     switch (command) {
     case Login:
 	{

@@ -2388,11 +2388,11 @@ void BattleSituation::sendBerryMessage(int move, int src, int part, int foe, int
 }
 
 
-void BattleSituation::fail(int player, int move, int part, int type)
+void BattleSituation::fail(int player, int move, int part, int type, int trueSource)
 {
     turnlong[player]["FailingMessage"] = false;
     turnlong[player]["Failed"] = true;
-    sendMoveMessage(move, part, player, type, rev(player),turnlong[player]["MoveChosen"].toInt());
+    sendMoveMessage(move, part, trueSource != -1? trueSource : player, type, rev(player),turnlong[player]["MoveChosen"].toInt());
 }
 
 PokeFraction BattleSituation::getStatBoost(int player, int stat)

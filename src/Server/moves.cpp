@@ -490,7 +490,7 @@ struct MMDetect : public MM
     static void uas(int s, int t, BS &b) {
 	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Detect", &dgaf);
 	turn(b,s)["DetectUsed"] = true;
-        b.sendMoveMessage(27, 0, t, Pokemon::Normal);
+        b.sendMoveMessage(27, 0, s, Pokemon::Normal);
     }
 
     static void dgaf(int s, int t, BS &b) {
@@ -508,8 +508,8 @@ struct MMDetect : public MM
         /* Mind Reader */
         if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
             return;
-	/* All other moves fail */
-	b.fail(s, 27, 0, Pokemon::Normal);
+        /* All other moves fail */
+        b.fail(s, 27, 0, Pokemon::Normal, t);
     }
 };
 
@@ -2196,7 +2196,7 @@ struct MMBlizzard : public MM
 
     static void ms(int s, int, BS &b) {
 	if (b.isWeatherWorking(BattleSituation::Hail)) {
-	    turn(b,s)["Accuracy"] = turn(b,s)["Accuracy"].toInt() * 10 / 7;
+            turn(b,s)["Accuracy"] = 0;
 	}
     }
 };
