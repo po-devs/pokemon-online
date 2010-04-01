@@ -21,6 +21,7 @@ void Network::manageError(QAbstractSocket::SocketError err)
 }
 
 void Network::close() {
+    qDebug() << "called close for network " << myid;
     stillValid = false;
     socket()->disconnectFromHost();
     mysocket = NULL;
@@ -28,6 +29,7 @@ void Network::close() {
 
 Network::~Network()
 {
+    qDebug() << "Closing network " << myid;
     if (isConnected()) {
         close();
     }
@@ -58,6 +60,8 @@ void Network::onDisconnect()
 
 void Network::onReceipt()
 {
+    qDebug() << "called onReceipt() for network " << this;
+    qDebug() << "Id is " << myid;
     if (stillValid && socket())
     {
         if (commandStarted == false) {
