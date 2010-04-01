@@ -3827,7 +3827,7 @@ struct MMOutrage : public MM
     }
 
     static void aas(int s, int, BS &b) {
-        if (b.turn() >= poke(b,s)["OutrageUntil"].toInt()) {
+        if (poke(b,s).contains("OutrageUntil") && b.turn() >= poke(b,s)["OutrageUntil"].toInt()) {
             removeFunction(poke(b,s), "TurnSettings", "Outrage");
             poke(b,s).remove("OutrageUntil");
             poke(b,s).remove("OutrageMove");

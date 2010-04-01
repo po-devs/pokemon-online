@@ -564,6 +564,7 @@ void Client::battleStarted(int id, const TeamBattle &team, const BattleConfigura
     mybattle->setWindowFlags(Qt::Window);
     mybattle->client() = this;
     mybattle->show();
+    mybattle->activateWindow();
 
     connect(mybattle, SIGNAL(forfeit()), SLOT(forfeitBattle()));
     connect(mybattle, SIGNAL(battleCommand(BattleChoice)), &relay(), SLOT(battleCommand(BattleChoice)));
