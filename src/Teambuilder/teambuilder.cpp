@@ -633,6 +633,7 @@ TB_TeamBody::TB_TeamBody(TeamBuilder *parent) : m_dockAdvanced(0), m_team(parent
         body->addWidget(pokeBody[i] = new TB_PokemonBody(parent, &trainerTeam()->team().poke(i), i));
     }
 
+    pokeButtons[0]->setChecked(true);
     for(int i = 0; i < 6; i++) {
         connect(pokeButtons[i], SIGNAL(clicked()), SLOT(changeIndex()));
         connect(pokeButtons[i], SIGNAL(changePokemonBase(int,int)), SLOT(changePokemonBase(int,int)));

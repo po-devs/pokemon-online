@@ -555,7 +555,7 @@ void Server::incomingConnection()
     connect(p, SIGNAL(recvMessage(int, QString)), SLOT(recvMessage(int,QString)));
     connect(p, SIGNAL(disconnected(int)), SLOT(disconnected(int)));
     connect(p, SIGNAL(sendChallenge(int,int,ChallengeInfo)), SLOT(dealWithChallenge(int,int,ChallengeInfo)));
-    connect(p, SIGNAL(battleFinished(int,int,int,bool)), SLOT(battleResult(int,int,int,bool)));
+    connect(p, SIGNAL(battleFinished(int,int,int,bool,const QString&)), SLOT(battleResult(int,int,int,bool, const QString&)));
     connect(p, SIGNAL(info(int,QString)), SLOT(info(int,QString)));
     connect(p, SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
     connect(p, SIGNAL(playerBan(int,int)), SLOT(playerBan(int, int)));
@@ -717,7 +717,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     }
 
     connect(battle, SIGNAL(battleInfo(int,QByteArray)), SLOT(sendBattleCommand(int, QByteArray)));
-    connect(battle, SIGNAL(battleFinished(int,int,int,bool)), SLOT(battleResult(int,int,int,bool)));
+    connect(battle, SIGNAL(battleFinished(int,int,int,bool,QString)), SLOT(battleResult(int,int,int,bool,QString)));
     connect(player(id1), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
     connect(player(id1), SIGNAL(battleChat(int,QString)), battle, SLOT(battleChat(int, QString)));
     connect(player(id2), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
@@ -728,7 +728,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     myengine->afterBattleStarted(id1,id2,c);
 }
 
-void Server::battleResult(int desc, int winner, int loser, bool rated)
+void Server::battleResult(int desc, int winner, int loser, bool rated, const QString &tier)
 {
     if (desc == Forfeit && player(winner)->battle->finished()) {
         player(winner)->battleResult(Close, winner, loser);
@@ -740,7 +740,6 @@ void Server::battleResult(int desc, int winner, int loser, bool rated)
         if (desc != Tie && rated) {
             QString winn = player(winner)->name();
             QString lose = player(loser)->name();
-            QString tier = player(winner)->tier();
             TierMachine::obj()->changeRating(winn, lose, tier);
             player(winner)->rating() = TierMachine::obj()->rating(winn, tier);
             player(loser)->rating() = TierMachine::obj()->rating(lose, tier);

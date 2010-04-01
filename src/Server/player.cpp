@@ -255,7 +255,7 @@ void Player::battleForfeited()
 
     changeState(LoggedIn, true);
 
-    emit battleFinished(Forfeit, opponent(), id(), battle->rated());
+    emit battleFinished(Forfeit, opponent(), id(), battle->rated(), battle->tier());
 }
 
 void Player::battleResult(int result, int winner, int loser)

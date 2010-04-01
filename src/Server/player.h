@@ -88,7 +88,7 @@ signals:
     void disconnected(int id);
     void recvTeam(int id, const QString &name);
     void sendChallenge(int source, int dest, const ChallengeInfo &desc);
-    void battleFinished(int desc, int winner, int loser, bool rated);
+    void battleFinished(int desc, int winner, int loser, bool rated, const QString& tier);
     void updated(int id);
 
     void battleMessage(int id,const BattleChoice &b);
