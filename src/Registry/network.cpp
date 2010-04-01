@@ -21,8 +21,10 @@ void Network::manageError(QAbstractSocket::SocketError err)
 }
 
 void Network::close() {
-    socket()->disconnectFromHost();
-    mysocket = NULL;
+    if (socket()) {
+        socket()->disconnectFromHost();
+        mysocket = NULL;
+    }
 }
 
 Network::~Network()

@@ -128,7 +128,7 @@ bool Analyzer::isConnected() const
     return socket().isConnected();
 }
 
-void Analyzer::stopRecieving()
+void Analyzer::stopReceiving()
 {
     socket().close();
 }

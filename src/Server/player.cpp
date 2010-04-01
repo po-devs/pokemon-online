@@ -97,7 +97,7 @@ void Player::changeTier(const QString &newtier)
 
 void Player::doWhenDC()
 {
-    relay().stopRecieving();
+    relay().stopReceiving();
     cancelChallenges();
     if (battling())
         battleForfeited();

@@ -3814,6 +3814,7 @@ struct MMOutrage : public MM
         functions["UponAttackSuccessful"] = &uas;
         functions["AfterAttackSuccessful"] = &aas;
         functions["AttackSomehowFailed"] = &aas;
+        functions["MoveSettings"] = &ms;
     }
 
     static void uas(int s, int, BS &b) {
