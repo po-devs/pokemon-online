@@ -114,7 +114,9 @@ void ServerChoice::addServer(const QString &name, const QString &desc, quint16 n
     mylist->resizeRowsToContents();
     mylist->horizontalHeader()->setStretchLastSection(true);
 
-    descriptionsPerIp.insert(ip, desc);
+    descriptionsPerIp.insert(ip + ":" + QString::number(port == 0 ? 5080 : port), desc);
+    /*This needed to be changed because the showDescription function was looking for a ip and port,
+      while only the IP was in the list, and in the end, the description wouldn't be displayed. */
 
     if (mylist->currentRow() != -1)
         showDescription(mylist->currentRow());
