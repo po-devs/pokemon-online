@@ -91,7 +91,7 @@ public:
     void notifyBattle(qint32 id1, qint32 id2);
     void finishSpectating(qint32 battleId);
     void notifyAway(qint32 id, bool away);
-    void stopRecieving();
+    void stopReceiving();
     void connectTo(const QString &host, quint16 port);
 
     /* Closes the connection */

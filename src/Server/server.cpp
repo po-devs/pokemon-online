@@ -917,7 +917,6 @@ void Server::removePlayer(int id)
         bool loggedIn = p->isLoggedIn();
 
         if (loggedIn) {
-            qDebug() << "The player is not logged in yet";
             myengine->beforeLogOut(id);
         }
 
@@ -935,7 +934,6 @@ void Server::removePlayer(int id)
             mynames.remove(playerName.toLower());
 
         int row = list()->row(myplayersitems[id]);
-        qDebug() << "row of " << myplayersitems[id] << " is " << row << " and content is " << list()->item(row)->text();
         delete list()->takeItem(row);
         myplayersitems.remove(id);
 
