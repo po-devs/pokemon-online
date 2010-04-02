@@ -320,6 +320,7 @@ private slots:
     void setNature(int nature);
     void goToAdvanced();
     void setNick(const QString &nick);
+    void editNature(int up, int down);
 };
 
 /* Manages the EV bars, inside the TB_PokemonBody */
@@ -345,14 +346,22 @@ private:
 public:
     TB_EVManager(PokeTeam *poke);
 
+
+    /* Nature selectors */
+    QPushButton *natureButtons[5];
+    int myStatUp;
+    int myStatDown;
+
     void updateEVs();
     void updateEV(int stat);
     void updateMain();
 public slots:
     void changeEV(int newvalue);
     void changeEV(const QString &newvalue);
+    void checkNButton();
 signals:
     void EVChanged(int stat);
+    void natureChanged(int up, int down);
 };
 
 
