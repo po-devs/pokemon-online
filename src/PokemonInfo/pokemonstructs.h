@@ -1520,16 +1520,12 @@ protected:
     int m_types[2];
     int m_genderAvail;
 
-    void loadBaseStats();
     void loadMoves();
     void loadTypes();
     void loadAbilities();
     void loadGenderAvail();
 public:
     PokeGeneral();
-
-    void setBaseStats(const PokeBaseStats &stats);
-    const PokeBaseStats & baseStats() const;
 
     const QList<int>& abilities() const;
     int genderAvail() const;
@@ -1640,10 +1636,6 @@ public:
 
 class PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtual public PokeGraphics
 {
-protected:
-    /* Calculates actual stats based on the pokemon's characteristics */
-    int calc_stat(quint8 basestat, int level, quint8 ev, quint8 dv) const;
-    int calc_stat_F(int stat) const;
 public:
     PokeTeam();
 
@@ -1651,12 +1643,6 @@ public:
     void setNum(quint16 num);
 
     int stat(int statno) const;
-    int hp() const;
-    int attack() const;
-    int defense() const;
-    int speed() const;
-    int spAttack() const;
-    int spDefense() const;
 
     /* load various data from the pokenum */
     void load();

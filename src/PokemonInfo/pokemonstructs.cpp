@@ -99,10 +99,6 @@ PokeGeneral::PokeGeneral()
     m_types[1] = -1;
 }
 
-void PokeGeneral::loadBaseStats()
-{
-    setBaseStats(PokemonInfo::BaseStats(num()));
-}
 
 void PokeGeneral::loadMoves()
 {
@@ -125,7 +121,6 @@ void PokeGeneral::loadGenderAvail()
 
 void PokeGeneral::load()
 {
-    loadBaseStats();
     loadMoves();
     loadTypes();
     loadAbilities();
@@ -145,16 +140,6 @@ const QList<int> &PokeGeneral::abilities() const
 int PokeGeneral::genderAvail() const
 {
     return m_genderAvail;
-}
-
-void PokeGeneral::setBaseStats(const PokeBaseStats &stats)
-{
-    m_stats = stats;
-}
-
-const PokeBaseStats & PokeGeneral::baseStats() const
-{
-    return m_stats;
 }
 
 PokePersonal::PokePersonal()
@@ -512,11 +497,6 @@ void PokeTeam::load()
     PokeGraphics::loadIcon(num());
 }
 
-int PokeTeam::calc_stat(quint8 basestat, int level, quint8 ev, quint8 dv) const
-{
-    return ((2*basestat + dv+ ev/4)*level)/100 + 5;
-}
-
 QPixmap PokeTeam::picture()
 {
     return PokeGraphics::picture(gender(), shiny());
@@ -527,51 +507,9 @@ QIcon PokeTeam::icon()
     return PokeGraphics::icon();
 }
 
-int PokeTeam::calc_stat_F(int stat) const
-{
-    return calc_stat(baseStats().baseStat(stat), level(), EV(stat), DV(stat)) * (10+natureBoost(stat))/10;
-}
-
 int PokeTeam::stat(int statno) const
 {
-    if (statno == Hp)
-        return hp();
-    else
-        return calc_stat_F(statno);
-}
-
-int PokeTeam::hp() const
-{
-    /* Shedinja */
-    if (num() == Pokemon::Shedinja)
-        return 1;
-    else
-        return calc_stat(baseStats().baseHp(), level(), hpEV(), hpDV()) + level() + 5;
-}
-
-int PokeTeam::attack() const
-{
-    return calc_stat_F(Attack);
-}
-
-int PokeTeam::defense() const
-{
-    return calc_stat_F(Defense);
-}
-
-int PokeTeam::speed() const
-{
-    return calc_stat_F(Speed);
-}
-
-int PokeTeam::spAttack() const
-{
-    return calc_stat_F(SpAttack);
-}
-
-int PokeTeam::spDefense() const
-{
-    return calc_stat_F(SpDefense);
+    return PokemonInfo::FullStat(num(), nature(), statno, level(),DV(statno),EV(statno));
 }
 
 Team::Team()
