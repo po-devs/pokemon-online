@@ -277,8 +277,9 @@ int PokemonInfo::calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev)
     return ((2*basestat + dv+ ev/4)*level)/100 + 5;
 }
 
-int PokemonInfo::Stat(int poke, int stat, quint8 basestat, int level, quint8 dv, quint8 ev)
+int PokemonInfo::Stat(int poke, int stat, int level, quint8 dv, quint8 ev)
 {
+    quint8 basestat = PokemonInfo::BaseStats(poke).baseStat(stat);
     if (stat == Hp) {
         /* Shedinja */
         if (poke == Pokemon::Shedinja)
@@ -290,13 +291,13 @@ int PokemonInfo::Stat(int poke, int stat, quint8 basestat, int level, quint8 dv,
 	return calc_stat(basestat, level, dv, ev);
 }
 
-int PokemonInfo::FullStat(int poke, int nature, int stat, quint8 basestat, int level, quint8 dv, quint8 ev)
+int PokemonInfo::FullStat(int poke, int nature, int stat, int level, quint8 dv, quint8 ev)
 {
     if (stat == Hp) {
-        return Stat(poke, stat, basestat, level, dv, ev);
+        return Stat(poke, stat, level, dv, ev);
     }
     else {
-        return Stat(poke, stat, basestat, level, dv, ev) * (10+NatureInfo::Boost(nature, stat)) / 10;
+        return Stat(poke, stat, level, dv, ev) * (10+NatureInfo::Boost(nature, stat)) / 10;
     }
 }
 
