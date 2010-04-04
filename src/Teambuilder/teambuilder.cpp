@@ -1509,11 +1509,21 @@ void TB_EVManager::updateMain()
 
 void TB_EVManager::updateNatureButtons()
 {
+    bool upC = false;
+    bool downC = false;
     for (int i = 0; i < 5; i++){
-        if(NatureInfo::Boost(poke()->nature(),i+1) == 1)
+        if(NatureInfo::Boost(poke()->nature(),i+1) == 1){
+            upC = true;
             myStatUp = i+1;
-        else if(NatureInfo::Boost(poke()->nature(),i+1) == -1)
+        }
+        else if(NatureInfo::Boost(poke()->nature(),i+1) == -1){
+            downC = true;
             myStatDown = i+1;
+        }
+    }
+    if(!upC&&!downC){
+        myStatUp = -1;
+        myStatDown = -1;
     }
     for (int j = 0; j<5;j++){
         if (j+1 == myStatUp)
