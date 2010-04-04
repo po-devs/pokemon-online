@@ -1334,20 +1334,19 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
         l->addWidget(m_evs[i] = new QLineEdit("0"), i, 4, Qt::AlignLeft);
 
         if (!i==0){
-            l->addWidget(natureButtons[i-1] = new QLabelLRClick(),i,1,Qt::AlignLeft);
+            l->addWidget(natureButtons[i-1] = new QImageButtonLR("db/Teambuilder/Team/=.png","db/Teambuilder/Team/=2.png"),i,1,Qt::AlignLeft);
             natureButtons[i-1]->setObjectName("SmallText");      
-            natureButtons[i-1]->setMaximumWidth(25);
-            natureButtons[i-1]->setMaximumHeight(20);
+            natureButtons[i-1]->setFixedWidth(20);
+            natureButtons[i-1]->setFixedHeight(14);
             if(NatureInfo::Boost(poke()->nature(), i) == 1){
-                natureButtons[i-1]->setText("+");
+                natureButtons[i-1]->changePics("db/Teambuilder/Team/+.png","db/Teambuilder/Team/+hover.png");
                 myStatUp = i;
             }else if(NatureInfo::Boost(poke()->nature(), i)== -1){
-                natureButtons[i-1]->setText("-");
+                natureButtons[i-1]->changePics("db/Teambuilder/Team/-.png","db/Teambuilder/Team/-hover.png");
                 myStatDown = i;
             }
             else
-                natureButtons[i-1]->setText("=");
-            //connect(natureButtons[i-1],SIGNAL(clicked()),SLOT(checkNButton()));
+                natureButtons[i-1]->changePics("db/Teambuilder/Team/=.png","db/Teambuilder/Team/=hover.png");
             connect(natureButtons[i-1],SIGNAL(rightClick()),SLOT(checkNButtonR()));
             connect(natureButtons[i-1],SIGNAL(leftClick()),SLOT(checkNButtonL()));
         }
@@ -1452,33 +1451,6 @@ void TB_EVManager::changeEV(int newvalue)
     emit EVChanged(mstat);
 }
 
-void TB_EVManager::checkNButton()
-{
-    int loc = 0;
-    for (int i = 0; i < 5; i++)
-        if (sender() == natureButtons[i])
-            loc = i;
-    if(myStatUp == loc+1){
-        int temp = myStatDown;
-        myStatDown = loc+1;
-        myStatUp = temp;
-    } else if(myStatDown == loc+1){
-        int temp = myStatUp;
-        myStatUp = loc+1;
-        myStatDown = temp;
-    }else
-        myStatUp = loc+1;
-    for (int j = 0; j<5;j++){
-        if (j+1 == myStatUp)
-            natureButtons[j]->setText("+");
-        else if(j+1 == myStatDown)
-            natureButtons[j]->setText("-");
-        else
-            natureButtons[j]->setText("=");
-    }
-   if(myStatUp != -1 && myStatDown != -1)
-      emit natureChanged(myStatUp,myStatDown);
-}
 
 void TB_EVManager::checkNButtonL()
 {
@@ -1495,11 +1467,11 @@ void TB_EVManager::checkNButtonL()
     }
     for (int j = 0; j<5;j++){
         if (j+1 == myStatUp)
-            natureButtons[j]->setText("+");
+            natureButtons[j]->changePics("db/Teambuilder/Team/+.png","db/Teambuilder/Team/+hover.png");
         else if(j+1 == myStatDown)
-            natureButtons[j]->setText("-");
+            natureButtons[j]->changePics("db/Teambuilder/Team/-.png","db/Teambuilder/Team/-hover.png");
         else
-            natureButtons[j]->setText("=");
+            natureButtons[j]->changePics("db/Teambuilder/Team/=.png","db/Teambuilder/Team/=hover.png");
     }
     if(myStatUp != -1 && myStatDown != -1)
            emit natureChanged(myStatUp,myStatDown);
@@ -1520,11 +1492,11 @@ void TB_EVManager::checkNButtonR()
     }
     for (int j = 0; j<5;j++){
         if (j+1 == myStatUp)
-            natureButtons[j]->setText("+");
+            natureButtons[j]->changePics("db/Teambuilder/Team/+.png","db/Teambuilder/Team/+hover.png");
         else if(j+1 == myStatDown)
-            natureButtons[j]->setText("-");
+            natureButtons[j]->changePics("db/Teambuilder/Team/-.png","db/Teambuilder/Team/-hover.png");
         else
-            natureButtons[j]->setText("=");
+            natureButtons[j]->changePics("db/Teambuilder/Team/=.png","db/Teambuilder/Team/=hover.png");
     }
     if(myStatUp != -1 && myStatDown != -1)
            emit natureChanged(myStatUp,myStatDown);

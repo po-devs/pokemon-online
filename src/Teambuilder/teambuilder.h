@@ -348,7 +348,7 @@ public:
 
 
     /* Nature selectors */
-    QLabelLRClick *natureButtons[5];
+    QImageButtonLR *natureButtons[5];
     int myStatUp;
     int myStatDown;
 
@@ -358,7 +358,6 @@ public:
 public slots:
     void changeEV(int newvalue);
     void changeEV(const QString &newvalue);
-    void checkNButton();
     void checkNButtonR();
     void checkNButtonL();
 signals:
