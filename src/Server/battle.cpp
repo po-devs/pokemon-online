@@ -2114,7 +2114,7 @@ void BattleSituation::changeForm(int player, int poke, int newform)
     p.ability() = PokemonInfo::Abilities(newform).front();
 
     for (int i = 1; i < 6; i++)
-        p.setNormalStat(i,PokemonInfo::Stat(newform,i,PokemonInfo::BaseStats(newform).baseStat(i),p.level(),p.dvs()[i], p.evs()[i]));
+        p.setNormalStat(i,PokemonInfo::Stat(newform,i,p.level(),p.dvs()[i], p.evs()[i]));
 
     if (poke == currentPoke(player)) {
         changeSprite(player, newform);
