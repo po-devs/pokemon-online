@@ -1328,14 +1328,16 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
         QLabel *lab;
         l->addWidget(lab = new QLabel(labels[i]), i, 0, Qt::AlignLeft);
         lab->setObjectName("SmallText");
-        l->addWidget(m_stats[i] = new QLabel(), i, 1, Qt::AlignLeft);
+        l->addWidget(m_stats[i] = new QLabel(), i, 2, Qt::AlignLeft);
         m_stats[i]->setObjectName("SmallText");
-        l->addWidget(m_sliders[i] = new QSlider(Qt::Horizontal), i, 2);
-        l->addWidget(m_evs[i] = new QLineEdit("0"), i, 3, Qt::AlignLeft);
+        l->addWidget(m_sliders[i] = new QSlider(Qt::Horizontal), i, 3);
+        l->addWidget(m_evs[i] = new QLineEdit("0"), i, 4, Qt::AlignLeft);
 
         if (!i==0){
-            l->addWidget(natureButtons[i-1] = new QPushButton("0"),i,4,Qt::AlignLeft);
-            natureButtons[i-1]->setObjectName("SmallText");
+            l->addWidget(natureButtons[i-1] = new QLabelLRClick(),i,1,Qt::AlignLeft);
+            natureButtons[i-1]->setObjectName("SmallText");      
+            natureButtons[i-1]->setMaximumWidth(25);
+            natureButtons[i-1]->setMaximumHeight(20);
             if(NatureInfo::Boost(poke()->nature(), i) == 1){
                 natureButtons[i-1]->setText("+");
                 myStatUp = i;
@@ -1345,7 +1347,9 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
             }
             else
                 natureButtons[i-1]->setText("=");
-            connect(natureButtons[i-1],SIGNAL(clicked()),SLOT(checkNButton()));
+            //connect(natureButtons[i-1],SIGNAL(clicked()),SLOT(checkNButton()));
+            connect(natureButtons[i-1],SIGNAL(rightClick()),SLOT(checkNButtonR()));
+            connect(natureButtons[i-1],SIGNAL(leftClick()),SLOT(checkNButtonL()));
         }
         slider(i)->setTracking(true);
 	slider(i)->setRange(0,255);
@@ -1356,8 +1360,8 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
 
     }
 
-    l->addWidget(m_mainSlider = new QSlider(Qt::Horizontal), 6, 0, 1, 3);
-    l->addWidget(m_mainLabel = new QLabel(), 6, 3);
+    l->addWidget(m_mainSlider = new QSlider(Qt::Horizontal), 6, 0, 1, 4);
+    l->addWidget(m_mainLabel = new QLabel(), 6, 4);
     m_mainLabel->setObjectName("SmallText");
     m_mainSlider->setEnabled(false);
     m_mainSlider->setRange(0,510);
@@ -1452,9 +1456,8 @@ void TB_EVManager::checkNButton()
 {
     int loc = 0;
     for (int i = 0; i < 5; i++)
-        if (sender() == natureButtons[i]){
+        if (sender() == natureButtons[i])
             loc = i;
-        }
     if(myStatUp == loc+1){
         int temp = myStatDown;
         myStatDown = loc+1;
@@ -1475,6 +1478,56 @@ void TB_EVManager::checkNButton()
     }
    if(myStatUp != -1 && myStatDown != -1)
       emit natureChanged(myStatUp,myStatDown);
+}
+
+void TB_EVManager::checkNButtonL()
+{
+    int loc = 0;
+    for (int i = 0; i < 5; i++)
+        if (sender() == natureButtons[i])
+            loc = i;
+    if(myStatDown == loc+1){
+        myStatUp = loc+1;
+        myStatDown = -1;
+    }
+    else{
+        myStatUp = loc+1;
+    }
+    for (int j = 0; j<5;j++){
+        if (j+1 == myStatUp)
+            natureButtons[j]->setText("+");
+        else if(j+1 == myStatDown)
+            natureButtons[j]->setText("-");
+        else
+            natureButtons[j]->setText("=");
+    }
+    if(myStatUp != -1 && myStatDown != -1)
+           emit natureChanged(myStatUp,myStatDown);
+}
+
+void TB_EVManager::checkNButtonR()
+{
+    int loc = 0;
+    for (int i = 0; i < 5; i++)
+        if (sender() == natureButtons[i])
+            loc = i;
+    if(myStatUp == loc+1){
+        myStatDown = loc+1;
+        myStatUp = -1;
+    }
+    else{
+        myStatDown = loc+1;
+    }
+    for (int j = 0; j<5;j++){
+        if (j+1 == myStatUp)
+            natureButtons[j]->setText("+");
+        else if(j+1 == myStatDown)
+            natureButtons[j]->setText("-");
+        else
+            natureButtons[j]->setText("=");
+    }
+    if(myStatUp != -1 && myStatDown != -1)
+           emit natureChanged(myStatUp,myStatDown);
 }
 
 void TB_EVManager::updateEV(int stat)
