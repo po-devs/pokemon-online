@@ -1336,19 +1336,9 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
         l->addWidget(m_evs[i] = new QLineEdit("0"), i, 4, Qt::AlignLeft);
 
         if (!i==0){
-            l->addWidget(natureButtons[i-1] = new QImageButtonLR("db/Teambuilder/Team/=.png","db/Teambuilder/Team/=2.png"),i,1,Qt::AlignLeft);
-            natureButtons[i-1]->setObjectName("SmallText");      
+            l->addWidget(natureButtons[i-1] = new QImageButtonLR("db/Teambuilder/Team/=.png","db/Teambuilder/Team/=2.png"),i,1,Qt::AlignLeft);   
             natureButtons[i-1]->setFixedWidth(20);
             natureButtons[i-1]->setFixedHeight(14);
-            if(NatureInfo::Boost(poke()->nature(), i) == 1){
-                natureButtons[i-1]->changePics("db/Teambuilder/Team/+.png","db/Teambuilder/Team/+hover.png");
-                myStatUp = i;
-            }else if(NatureInfo::Boost(poke()->nature(), i)== -1){
-                natureButtons[i-1]->changePics("db/Teambuilder/Team/-.png","db/Teambuilder/Team/-hover.png");
-                myStatDown = i;
-            }
-            else
-                natureButtons[i-1]->changePics("db/Teambuilder/Team/=.png","db/Teambuilder/Team/=hover.png");
             connect(natureButtons[i-1],SIGNAL(rightClick()),SLOT(checkNButtonR()));
             connect(natureButtons[i-1],SIGNAL(leftClick()),SLOT(checkNButtonL()));
         }
