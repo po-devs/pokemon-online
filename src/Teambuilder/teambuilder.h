@@ -334,6 +334,7 @@ private:
     QSlider *m_mainSlider;
     PokeTeam *m_poke;
     QLabel * m_mainLabel;
+    QImageButtonLR *natureButtons[5];
 
     PokeTeam *poke();
     QSlider *slider(int stat);
@@ -348,13 +349,14 @@ public:
 
 
     /* Nature selectors */
-    QImageButtonLR *natureButtons[5];
+
     int myStatUp;
     int myStatDown;
 
     void updateEVs();
     void updateEV(int stat);
     void updateMain();
+    void updateNatureButtons();
 public slots:
     void changeEV(int newvalue);
     void changeEV(const QString &newvalue);
