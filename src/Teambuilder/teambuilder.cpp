@@ -1118,6 +1118,7 @@ void TB_PokemonBody::updateItem()
 void TB_PokemonBody::updateNature()
 {
     naturechoice->setCurrentIndex(poke()->nature());
+    evchoice->updateNatureButtons();
 }
 
 void TB_PokemonBody::updateEVs()
@@ -1300,6 +1301,7 @@ void TB_PokemonBody::setNature(int nature)
     poke()->nature() = nature;
     /* As the nature has an influence over the stats, we update them */
     evchoice->updateEVs();
+    evchoice->updateNatureButtons();
 }
 
 void TB_PokemonBody::editNature(int up, int down)
@@ -1459,19 +1461,12 @@ void TB_EVManager::checkNButtonL()
         if (sender() == natureButtons[i])
             loc = i;
     if(myStatDown == loc+1){
+        int temp = myStatUp;
         myStatUp = loc+1;
-        myStatDown = -1;
+        myStatDown = temp;
     }
     else{
         myStatUp = loc+1;
-    }
-    for (int j = 0; j<5;j++){
-        if (j+1 == myStatUp)
-            natureButtons[j]->changePics("db/Teambuilder/Team/+.png","db/Teambuilder/Team/+hover.png");
-        else if(j+1 == myStatDown)
-            natureButtons[j]->changePics("db/Teambuilder/Team/-.png","db/Teambuilder/Team/-hover.png");
-        else
-            natureButtons[j]->changePics("db/Teambuilder/Team/=.png","db/Teambuilder/Team/=hover.png");
     }
     if(myStatUp != -1 && myStatDown != -1)
            emit natureChanged(myStatUp,myStatDown);
@@ -1484,19 +1479,12 @@ void TB_EVManager::checkNButtonR()
         if (sender() == natureButtons[i])
             loc = i;
     if(myStatUp == loc+1){
+        int temp = myStatDown;
         myStatDown = loc+1;
-        myStatUp = -1;
+        myStatUp = temp;
     }
     else{
         myStatDown = loc+1;
-    }
-    for (int j = 0; j<5;j++){
-        if (j+1 == myStatUp)
-            natureButtons[j]->changePics("db/Teambuilder/Team/+.png","db/Teambuilder/Team/+hover.png");
-        else if(j+1 == myStatDown)
-            natureButtons[j]->changePics("db/Teambuilder/Team/-.png","db/Teambuilder/Team/-hover.png");
-        else
-            natureButtons[j]->changePics("db/Teambuilder/Team/=.png","db/Teambuilder/Team/=hover.png");
     }
     if(myStatUp != -1 && myStatDown != -1)
            emit natureChanged(myStatUp,myStatDown);
@@ -1517,4 +1505,22 @@ void TB_EVManager::updateMain()
 {
     m_mainSlider->setValue(poke()->EVSum());
     m_mainLabel->setText(QString::number(poke()->EVSum()));
+}
+
+void TB_EVManager::updateNatureButtons()
+{
+    for (int i = 0; i < 5; i++){
+        if(NatureInfo::Boost(poke()->nature(),i+1) == 1)
+            myStatUp = i+1;
+        else if(NatureInfo::Boost(poke()->nature(),i+1) == -1)
+            myStatDown = i+1;
+    }
+    for (int j = 0; j<5;j++){
+        if (j+1 == myStatUp)
+            natureButtons[j]->changePics("db/Teambuilder/Team/+.png","db/Teambuilder/Team/+hover.png");
+        else if(j+1 == myStatDown)
+            natureButtons[j]->changePics("db/Teambuilder/Team/-.png","db/Teambuilder/Team/-hover.png");
+        else
+            natureButtons[j]->changePics("db/Teambuilder/Team/=.png","db/Teambuilder/Team/=hover.png");
+    }
 }
