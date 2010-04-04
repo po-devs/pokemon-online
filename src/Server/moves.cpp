@@ -3790,11 +3790,11 @@ struct MMBeatUp : public MM {
     }
 
     static void cad(int s, int t, BS &b) {
-        int def = PokemonInfo::Stat(b.poke(t).num(),Defense, PokemonInfo::BaseStats(b.poke(t).num()).baseDefense(),b.poke(t).level(),0,0);
+        int def = PokemonInfo::Stat(b.poke(t).num(),Defense,b.poke(t).level(),0,0);
         for (int i = 0; i < 6; i++) {
             PokeBattle &p = b.poke(s,i);
             if (p.status() == Pokemon::Fine) {
-                int att = PokemonInfo::Stat(p.num(),Attack, PokemonInfo::BaseStats(p.num()).baseAttack(),p.level(),0,0);
+                int att = PokemonInfo::Stat(p.num(),Attack,p.level(),0,0);
                 int damage = (((((p.level() * 2 / 5) + 2) * 10 * att / 50) / def) + 2) * (true_rand() % (255-217) + 217)*100/255/100;
                 b.sendMoveMessage(7,0,s,Pokemon::Dark,t,0,p.nick());
                 if (b.hasSubstitute(t))
