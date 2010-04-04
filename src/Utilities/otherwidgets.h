@@ -109,5 +109,17 @@ public:
     State validate(QString &input, int &pos) const;
     State validate(const QString &input) const;
 };
+/* I have no idea if this will work, but I'm trying :p*/
+class QLabelLRClick : public QLabel
+{
+    Q_OBJECT
+public:
+    QLabelLRClick();
+protected:
+    void mouseReleaseEvent(QMouseEvent *ev);
+signals:
+    void leftClick();
+    void rightClick();
+};
 
 #endif // OTHERWIDGETS_H

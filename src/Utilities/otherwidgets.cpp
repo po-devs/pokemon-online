@@ -262,3 +262,15 @@ QValidator::State QNickValidator::validate(QString &input, int &) const
 {
     return validate(input);
 }
+
+QLabelLRClick::QLabelLRClick()
+    :QLabel()
+{}
+
+void QLabelLRClick::mouseReleaseEvent(QMouseEvent *ev)
+{
+    if(ev->button() == Qt::LeftButton)
+        emit leftClick();
+    else if (ev->button() == Qt::RightButton)
+        emit rightClick();
+}
