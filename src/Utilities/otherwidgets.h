@@ -110,11 +110,11 @@ public:
     State validate(const QString &input) const;
 };
 /* I have no idea if this will work, but I'm trying :p*/
-class QLabelLRClick : public QLabel
+class QImageButtonLR : public QImageButton
 {
     Q_OBJECT
 public:
-    QLabelLRClick();
+    QImageButtonLR(const QString &normal, const QString &hovered);
 protected:
     void mouseReleaseEvent(QMouseEvent *ev);
 signals:

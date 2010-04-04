@@ -50,6 +50,7 @@ QImageButton::QImageButton(const QString &normal, const QString &hovered)
             : myPic(normal), myHoveredPic(hovered), lastUnderMouse(-1)
 {
     setFixedSize(myPic.size());
+
     /* Both are necessary for some styles */
     setMouseTracking(true);
     setAttribute(Qt::WA_Hover, true);
@@ -263,11 +264,11 @@ QValidator::State QNickValidator::validate(QString &input, int &) const
     return validate(input);
 }
 
-QLabelLRClick::QLabelLRClick()
-    :QLabel()
+QImageButtonLR::QImageButtonLR(const QString &normal, const QString &hovered)
+    :QImageButton(normal,hovered)
 {}
 
-void QLabelLRClick::mouseReleaseEvent(QMouseEvent *ev)
+void QImageButtonLR::mouseReleaseEvent(QMouseEvent *ev)
 {
     if(ev->button() == Qt::LeftButton)
         emit leftClick();
