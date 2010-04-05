@@ -194,7 +194,7 @@ void ScriptEngine::afterBattleStarted(int src, int dest, const ChallengeInfo &c)
         clauses.append('0' + ((c.clauses >> i) & 0x01));
     }
 
-    evaluate(myscript.property("beforeBattleStarted").call(myscript, QScriptValueList() << src << dest << clauses));
+    evaluate(myscript.property("afterBattleStarted").call(myscript, QScriptValueList() << src << dest << clauses));
 }
 
 QString battleDesc[3] = {
