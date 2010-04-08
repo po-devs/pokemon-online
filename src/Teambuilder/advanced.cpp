@@ -24,14 +24,14 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     firstColumn->addWidget(hiddenpower);
     QGridLayout *hidpower = new QGridLayout(hiddenpower);
 
-    QLabel * l_type = new QLabel("&Type:");
+    QLabel * l_type = new QLabel(tr("&Type:"));
     l_type->setObjectName("SmallText");
     hpchoice = new QComboBox();
     l_type->setBuddy(hpchoice);
     hidpower->addWidget(l_type, 0, 0);
     hidpower->addWidget(hpchoice, 0, 1);
     QLabel *l_power;
-    hidpower->addWidget(l_power=new QLabel("Power:"), 1,0);
+    hidpower->addWidget(l_power=new QLabel(tr("Power:")), 1,0);
     l_power->setObjectName("SmallText");
     hpower = new QLabel();
     hpower->setObjectName("SmallText");

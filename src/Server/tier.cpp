@@ -24,7 +24,7 @@ void MemberRating::changeRating(int opponent_rating, bool win)
     } else {
         kfactor = 32;
     }
-    double myesp = 1/(1+ pow(10., (opponent_rating-rating())/400));
+    double myesp = 1/(1+ pow(10., (float(opponent_rating)-rating())/400));
     double result = win;
 
     newrating = rating() + (result - myesp)*kfactor;
