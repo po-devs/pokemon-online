@@ -109,6 +109,8 @@ void BattleSituation::start()
     notify(All, BlankMessage,0);
 
     /* Beginning of the battle! */
+    turn() = 0; /* here for Truant */
+
     sendPoke(Player1, 0);
     sendPoke(Player2, 0);
     callEntryEffects(Player1);
@@ -116,7 +118,7 @@ void BattleSituation::start()
 
     hasChoice[0] = false;
     hasChoice[1] = false;
-    turn() = 0;
+
 
     timer = new QBasicTimer();
     /* We are only warned of new events every 5 seconds */
