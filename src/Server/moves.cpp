@@ -4302,7 +4302,7 @@ void MoveEffect::init()
     REGISTER_MOVE(142, Wish);
     REGISTER_MOVE(143, WorrySeed);
     REGISTER_MOVE(144, Yawn);
-    //Free move
+    REGISTER_MOVE(145, Payback);
     REGISTER_MOVE(146, Avalanche); /* avalanche, revenge */
     //Chatter
     REGISTER_MOVE(148, TrumpCard);
