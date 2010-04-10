@@ -3392,17 +3392,22 @@ struct MMSolarBeam : public MM
 		b.sendItemMessage(11,s);
 		b.disposeItem(s);
 		turn(b,s).remove("BeamChargingCount");
-	    } else {
-		turn(b,s)["TellPlayers"] = false;
-		poke(b,s)["ReleaseTurn"] = b.turn() + poke(b,s)["BeamChargingCount"].toInt();
-		turn(b,s)["Power"] = 0;
-		turn(b,s)["PossibleTargets"] = Move::None;
-		addFunction(poke(b,s), "TurnSettings", "SolarBeam", &ts);
-		b.sendMoveMessage(119,0,s,Pokemon::Grass);
-	    }
-        } else if (count >= 1) {
-	    inc(poke(b,s)["BeamChargingCount"], -1);
-	}
+                return;
+            }
+        } else {
+            inc(poke(b,s)["BeamChargingCount"],-1);
+        }
+        count = poke(b,s).value("BeamChargingCount").toInt();
+
+        if (count > 0)
+        {
+            turn(b,s)["TellPlayers"] = false;
+            poke(b,s)["ReleaseTurn"] = b.turn() + count;
+            turn(b,s)["Power"] = 0;
+            turn(b,s)["PossibleTargets"] = Move::None;
+            addFunction(poke(b,s), "TurnSettings", "SolarBeam", &ts);
+            b.sendMoveMessage(119,0,s,Pokemon::Grass);
+        }
     }
 
     static void ts (int s, int, BS &b) {

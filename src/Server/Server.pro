@@ -60,7 +60,8 @@ HEADERS += mainwindow.h \
     challenge.h \
     ../PokemonInfo/movesetchecker.h \
     ../Shared/config.h \
-    tier.h
+    tier.h \
+    ../Utilities/rankingtree.h
 DEFINES = MULTI_THREADED_ACCESS \
     SERVER_SIDE
 RESOURCES += 

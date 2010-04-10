@@ -56,6 +56,7 @@ void Tier::loadFromFile()
         m.name() = mmr[0];
         m.matches() = mmr[1].toInt();
         m.rating() = mmr[2].toInt();
+        m.node() = rankings.insert(m.rating(), m.name());
         ratings.insert(m.name(), m);
     }
 
@@ -154,6 +155,7 @@ void Tier::changeRating(const QString &w, const QString &l)
         MemberRating m;
         m.name() = w2;
         m.filePos() = lastFilePos;
+        m.node() = rankings.insert(m.rating(), m.name());
         in->seek(lastFilePos);
         in->write(m.toString().toUtf8());
         in->putChar('\n');
@@ -164,6 +166,7 @@ void Tier::changeRating(const QString &w, const QString &l)
         MemberRating m;
         m.name() = l2;
         m.filePos() = lastFilePos;
+        m.node() = rankings.insert(m.rating(), m.name());
         in->seek(lastFilePos);
         in->write(m.toString().toUtf8());
         in->putChar('\n');
@@ -173,6 +176,8 @@ void Tier::changeRating(const QString &w, const QString &l)
     int oldw2 = ratings[w2].rating();
     ratings[w2].changeRating(ratings[l2].rating(), true);
     ratings[l2].changeRating(oldw2, false);
+    ratings[w2].node() = rankings.changeKey(ratings[w2].node().node(), ratings[w2].rating());
+    ratings[l2].node() = rankings.changeKey(ratings[l2].node().node(), ratings[l2].rating());
     in->seek(ratings[w2].filePos());
     in->write(ratings[w2].toString().toUtf8());
     in->seek(ratings[l2].filePos());
@@ -219,16 +224,17 @@ void TierMachine::fromString(const QString &s)
     }
 
     /* Now, we just check there isn't any cyclic inheritance tree */
-    foreach(Tier t, m_tiers) {
+    for(int i = 0; i < m_tiers.length(); i++) {
         QSet<QString> family;
-        family.insert(t.name);
-        while (t.parent.length() > 0) {
-            if (family.contains(t.parent)) {
-                tier(t.name).parent.clear();
+        Tier *t = & m_tiers[i];
+        family.insert(t->name);
+        while (t->parent.length() > 0) {
+            if (family.contains(t->parent)) {
+                tier(t->name).parent.clear();
                 break;
             }
-            family.insert(t.parent);
-            t = tier(t.parent);
+            family.insert(t->parent);
+            t = &tier(t->parent);
         }
     }
 
@@ -306,6 +312,16 @@ const QList<QString> & TierMachine::tierNames() const
 int TierMachine::rating(const QString &name, const QString &tier)
 {
     return this->tier(tier).rating(name);
+}
+
+int TierMachine::ranking(const QString &name, const QString &tier)
+{
+    return this->tier(tier).ranking(name);
+}
+
+int TierMachine::count(const QString &tier)
+{
+    return this->tier(tier).rankings.count();
 }
 
 void TierMachine::changeRating(const QString &winner, const QString &loser, const QString &tier)

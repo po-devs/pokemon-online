@@ -4,6 +4,7 @@
 #include <QtCore>
 #include <QtGui>
 #include "../Utilities/functions.h"
+#include "../Utilities/rankingtree.h"
 
 class TierMachine;
 struct TeamBattle;
@@ -15,6 +16,7 @@ struct MemberRating
     PROPERTY(int, matches);
     PROPERTY(int, rating);
     PROPERTY(int, filePos);
+    PROPERTY(RankingTree<QString>::iterator, node)
 
 public:
     MemberRating() {
@@ -48,6 +50,7 @@ struct Tier
     int lastFilePos;
 
     QHash<QString, MemberRating> ratings;
+    RankingTree<QString> rankings;
 
     Tier(TierMachine *boss = NULL) : boss(boss), in(NULL) {}
     ~Tier() {
@@ -66,6 +69,14 @@ struct Tier
 
     bool isBanned(const PokeBattle &p) const;
     bool isValid(const TeamBattle &t) const;
+    bool exists(const QString &name) const {
+        return ratings.contains(name.toLower());
+    }
+    int ranking(const QString &name) const {
+        if (!exists(name))
+            return -1;
+        return ratings.value(name.toLower()).node()->ranking();
+    }
 };
 
 class TierMachine
@@ -86,10 +97,17 @@ public:
     bool exists(const QString &name) {
         return m_tierNames.contains(name);
     }
+    bool existsPlayer(const QString &name, const QString &player)
+    {
+        return exists(name) && tier(name).exists(player);
+    }
+
     bool isValid(const TeamBattle &t, const QString tier) const;
     bool isBanned(const PokeBattle &p, const QString &tier) const;
 
     int rating(const QString &name, const QString &tier);
+    int ranking(const QString &name, const QString &tier);
+    int count (const QString &tier);
     void changeRating(const QString &winner, const QString &loser, const QString &tier);
 
     QString findTier(const TeamBattle &t) const;
