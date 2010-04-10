@@ -71,6 +71,9 @@ public:
     Q_INVOKABLE QScriptValue auth(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
     Q_INVOKABLE QScriptValue tier(int id);
+    Q_INVOKABLE QScriptValue ranking(int id);
+    Q_INVOKABLE QScriptValue ranking(const QString &name, const QString &tier);
+    Q_INVOKABLE QScriptValue totalPlayersByTier(const QString &tier);
     Q_INVOKABLE QScriptValue ladderEnabled(int id);
     Q_INVOKABLE QScriptValue ladderRating(int id);
     Q_INVOKABLE QScriptValue getVal(const QString &key);

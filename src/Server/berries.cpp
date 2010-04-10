@@ -240,7 +240,7 @@ struct BMBerryLock : public BMPinch
             return;
 
         poke(b,s)["BerryLock"] = true;
-        b.sendBerryMessage(10,0,s);
+        b.sendBerryMessage(10,s,0);
     }
 };
 
@@ -255,7 +255,7 @@ struct BMCustap : public BMPinch
             return;
 
         addFunction(poke(b,s), "TurnOrder", "Custap", &to);
-        b.sendBerryMessage(11,0,s);
+        b.sendBerryMessage(11,s,0);
     }
 
     static void to (int s, int, BS &b) {

@@ -349,11 +349,6 @@ void Player::challengeStuff(const ChallengeInfo &c)
         return;
     }
 
-    if (team().invalid() && ! (c.clauses & ChallengeInfo::ChallengeCup)) {
-        sendMessage("Your team is invalid, you can't challenge except for Challenge Cup!");
-        return;
-    }
-
     int desc = c.desc();
 
     if (desc < ChallengeInfo::Sent || desc  >= ChallengeInfo::ChallengeDescLast) {
@@ -363,6 +358,10 @@ void Player::challengeStuff(const ChallengeInfo &c)
 
     if (desc == ChallengeInfo::Sent)
     {
+        if (team().invalid() && ! (c.clauses & ChallengeInfo::ChallengeCup)) {
+            sendMessage("Your team is invalid, you can't challenge except for Challenge Cup!");
+            return;
+        }
         emit sendChallenge(this->id(), id, c);
     } else {
         if (desc == ChallengeInfo::Accepted && !okForBattle()) {

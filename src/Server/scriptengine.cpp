@@ -1,5 +1,6 @@
 #include "server.h"
 #include "player.h"
+#include "tier.h"
 #include "scriptengine.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
@@ -413,6 +414,25 @@ QScriptValue ScriptEngine::tier(int id)
     } else {
         return myserver->player(id)->tier();
     }
+}
+
+QScriptValue ScriptEngine::ranking(int id)
+{
+    Player *p = myserver->player(id);
+    return ranking(p->name(), p->tier());
+}
+
+QScriptValue ScriptEngine::ranking(const QString &name, const QString &tier)
+{
+    if (!TierMachine::obj()->existsPlayer(tier, name)) {
+        return myengine.undefinedValue();
+    }
+    return TierMachine::obj()->ranking(name, tier);
+}
+
+QScriptValue ScriptEngine::totalPlayersByTier(const QString &tier)
+{
+    return TierMachine::obj()->count(tier);
 }
 
 QScriptValue ScriptEngine::ladderRating(int id)
