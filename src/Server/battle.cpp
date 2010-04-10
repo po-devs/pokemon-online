@@ -896,6 +896,10 @@ bool BattleSituation::testAccuracy(int player, int target)
         return true;
     }
 
+    turnlong[player].remove("Stat7ItemModifier");
+    turnlong[player].remove("Stat7AbilityModifier");
+    turnlong[target].remove("Stat6ItemModifier");
+    turnlong[target].remove("Stat6AbilityModifier");
     callieffects(player,target,"StatModifier");
     callaeffects(player,target,"StatModifier");
     callieffects(target,player,"StatModifier");
