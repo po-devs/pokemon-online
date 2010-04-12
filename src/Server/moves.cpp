@@ -755,13 +755,15 @@ struct MMHaze : public MM
 	functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void uas(int s, int t, BS &b) {
-	/* sending the message only once */
-	if (s == t)
-	    b.sendMoveMessage(149);
-	for (int i = 1; i <= 7; i++) {
-            poke(b,t)["Boost"+QString::number(i)] = 0;
-	}
+    static void uas(int , int , BS &b) {
+        b.sendMoveMessage(149);
+
+        for (int p = BS::Player1 ; p <= BS::Player2; p++)
+        {
+            for (int i = 1; i <= 7; i++) {
+                poke(b,p)["Boost"+QString::number(i)] = 0;
+            }
+        }
     }
 };
 

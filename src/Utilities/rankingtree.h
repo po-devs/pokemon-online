@@ -532,10 +532,20 @@ public:
         int r;
         while ((r = ptr->ranking()) != ranking)
         {
-            if (r < ranking)
+            if (r < ranking) {
+                if (ptr->left == NULL) {
+                    //qDebug() << "Critical: ranking " << ranking << " left not found, instead " << r;
+                    return ptr;
+                }
                 ptr = ptr->left;
-            else
+            }
+            else {
+                if (ptr->right == NULL) {
+                    //qDebug() << "Critical: ranking " << ranking << " right not found, instead " << r;
+                    return ptr;
+                }
                 ptr = ptr->right;
+            }
         }
 
         return ptr;
@@ -585,6 +595,9 @@ void RankingTree<T>::deleteNode(Node *n)
         next->right = n_.right == next ? n : n_.right;
         next->left = n_.left == next ? n : n_.left;
         next->changeColor(n_.color());
+
+        n->count = next->count;
+        next->count = n_.count;
 
         if (n->left)
             n->left->parent = n;
