@@ -360,6 +360,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;
     }
+    qDebug() << "End of command " << socket().id();
 }
 
 Network & Analyzer::socket()

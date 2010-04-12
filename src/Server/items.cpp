@@ -475,6 +475,7 @@ void ItemEffect::init()
     REGISTER_ITEM(21, LifeOrb);
     REGISTER_ITEM(22, Metronome);
     REGISTER_ITEM(23, ScopeLens);
+    REGISTER_ITEM(24, ShellBell);
     REGISTER_ITEM(26, CriticalPoke);
     REGISTER_ITEM(27, PokeTypeBoost);
     REGISTER_ITEM(28, StickyBarb);
