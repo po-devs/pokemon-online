@@ -133,6 +133,8 @@ public slots:
     void showTeamChange(bool);
     void changeTier(const QString&);
     void findBattle(const FindBattleData&);
+    void getRankingsByPage(const QString &tier, int page);
+    void getRankingsByName(const QString &tier, const QString &name);
 private:
     TeamBattle myteam;
     Analyzer myrelay;

@@ -96,7 +96,21 @@ public:
         }
         Node *utmostRight()
         {
-            return right == NULL ? this : right->utmostLeft();
+            return right == NULL ? this : right->utmostRight();
+        }
+        Node *prev() const
+        {
+            if (left)
+                return left->utmostRight();
+            if (!parent) {
+                /* No left, no parent, its the end! */
+                return NULL;
+            }
+            if (this == parent->left) {
+                return parent->goLeftUp();
+            } else /* this == parent->righ */
+                return parent;
+
         }
         Node *next() const
         {
@@ -111,6 +125,14 @@ public:
             } else /* this == parent->left */
                 return parent;
 
+        }
+        Node *goLeftUp()
+        {
+            if (!parent)
+                return NULL;
+            if (this == parent->right)
+                return parent;
+            return parent->goLeftUp();
         }
         Node *goRightUp()
         {
@@ -408,16 +430,32 @@ public:
     }
 
 
+
     struct iterator {
-        Node *p;
+        mutable Node *p;
 
         iterator(Node *p = NULL) : p(p)
         {
 
         }
 
+        const iterator& operator ++ () const {
+            p = p ? p->next() : p;
+            return *this;
+        }
+
         iterator& operator ++ () {
             p = p ? p->next() : p;
+            return *this;
+        }
+
+        const iterator& operator -- () const {
+            p = p ? p->prev() : p;
+            return *this;
+        }
+
+        iterator& operator -- () {
+            p = p ? p->prev() : p;
             return *this;
         }
 
@@ -447,11 +485,68 @@ public:
         }
     };
 
-    iterator begin() const {
+    typedef const iterator const_iterator;
+
+    /* This is something like O(log(n)*log(log(n))).
+       Could be O(log(n)) if you aren't lazy */
+    iterator getByRanking(int ranking)
+    {
+        if (root == NULL)
+            return iterator();
+
+        if (ranking > count()) {
+            return root->utmostLeft();
+        }
+
+        if (ranking <= 1)
+            return root->utmostRight();
+
+        Node *ptr = root;
+
+        int r;
+        while ((r = ptr->ranking()) != ranking)
+        {
+            if (r < ranking)
+                ptr = ptr->left;
+            else
+                ptr = ptr->right;
+        }
+
+        return ptr;
+    }
+
+    const_iterator getByRanking(int ranking) const
+    {
+        if (root == NULL)
+            return iterator();
+
+        if (ranking > count()) {
+            return NULL;
+        }
+
+        if (ranking <= 1)
+            return root->utmostRight();
+
+        Node *ptr = root;
+
+        int r;
+        while ((r = ptr->ranking()) != ranking)
+        {
+            if (r < ranking)
+                ptr = ptr->left;
+            else
+                ptr = ptr->right;
+        }
+
+        return ptr;
+    }
+
+
+    const_iterator begin() const {
         return root ? iterator(root->utmostLeft()) : iterator(root);
     }
 
-    iterator end() const {
+    const_iterator end() const {
         return iterator(NULL);
     }
 

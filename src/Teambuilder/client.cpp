@@ -6,6 +6,7 @@
 #include "basebattlewindow.h"
 #include "pmwindow.h"
 #include "controlpanel.h"
+#include "ranking.h"
 #include "../Utilities/otherwidgets.h"
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/pokemonstructs.h"
@@ -104,8 +105,8 @@ void Client::showContextMenu(const QPoint &requested)
 	QMenu *menu = new QMenu(this);
 
         createIntMapper(menu->addAction(tr("&Challenge Window")), SIGNAL(triggered()), this, SLOT(seeInfo(int)), item->id());
-        createIntMapper(menu->addAction(tr("&PM")), SIGNAL(triggered()), this, SLOT(startPM(int)), item->id());
 
+        createIntMapper(menu->addAction(tr("&Ranking")), SIGNAL(triggered()), this, SLOT(seeRanking(int)), item->id());
         if (item->id() == ownId()) {
             if (away()) {
                 createIntMapper(menu->addAction(tr("Go &Back")), SIGNAL(triggered()), this, SLOT(goAway(int)), false);
@@ -113,6 +114,7 @@ void Client::showContextMenu(const QPoint &requested)
                 createIntMapper(menu->addAction(tr("Go &Away")), SIGNAL(triggered()), this, SLOT(goAway(int)), true);
             }
         } else {
+            createIntMapper(menu->addAction(tr("&PM")), SIGNAL(triggered()), this, SLOT(startPM(int)), item->id());
             if (player(item->id()).battling())
                 createIntMapper(menu->addAction(tr("&Watch Battle")), SIGNAL(triggered()), this, SLOT(watchBattleRequ(int)), item->id());
             if (myIgnored.contains(item->id()))
@@ -206,6 +208,32 @@ void Client::showPlayerEvents(bool b)
     QSettings s;
     s.setValue("show_player_events", b);
     showPEvents = b;
+}
+
+void Client::seeRanking(int id)
+{
+    if (!playerExist(id)) {
+        return;
+    }
+
+    if (myRanking) {
+        myRanking->raise();
+        myRanking->activateWindow();
+        return;
+    }
+
+    myRanking = new RankingDialog(tierList);
+
+    myRanking->setParent(this);
+    myRanking->setWindowFlags(Qt::Window);
+    myRanking->show();
+
+    connect(myRanking, SIGNAL(lookForPlayer(QString,QString)), &relay(), SLOT(getRanking(QString,QString)));
+    connect(myRanking, SIGNAL(lookForPage(QString,int)), &relay(), SLOT(getRanking(QString,int)));
+    connect(&relay(), SIGNAL(rankingReceived(QString,int)), myRanking, SLOT(showRank(QString,int)));
+    connect(&relay(), SIGNAL(rankingStarted(int,int,int)), myRanking, SLOT(startRanking(int,int,int)));
+
+    myRanking->init(name(id), player(id).tier);
 }
 
 void Client::controlPanel(int id)
@@ -465,7 +493,7 @@ void Client::tierListReceived(const QString &tl)
     mytiermenu->clear();
     mytiers.clear();
 
-    QStringList tierList = tl.split('\n', QString::SkipEmptyParts);
+    tierList = tl.split('\n', QString::SkipEmptyParts);
 
     if (tierList.empty())
         tierList.push_back("All");

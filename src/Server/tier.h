@@ -110,6 +110,8 @@ public:
     int count (const QString &tier);
     void changeRating(const QString &winner, const QString &loser, const QString &tier);
 
+    const RankingTree<QString> * getRankingTree(const QString &tier);
+
     QString findTier(const TeamBattle &t) const;
 private:
     QList<Tier> m_tiers;

@@ -19,9 +19,6 @@ ControlPanel::ControlPanel(int myauth, const UserInfo &ui)
     setPlayer(ui);
 
     setCurrentIndex(0);
-
-    getUser();
-    emit getUserInfo(playerName());
 }
 
 void ControlPanel::setPlayer(const UserInfo &ui)

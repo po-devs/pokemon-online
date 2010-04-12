@@ -329,6 +329,11 @@ void TierMachine::changeRating(const QString &winner, const QString &loser, cons
     return this->tier(tier).changeRating(winner, loser);
 }
 
+const RankingTree<QString> *TierMachine::getRankingTree(const QString &tier)
+{
+    return &this->tier(tier).rankings;
+}
+
 QString TierMachine::findTier(const TeamBattle &t) const
 {
     for (int i = m_tiers.size()-1; i >= 0; i--) {

@@ -787,13 +787,19 @@ struct MMLeechSeed : public MM
     static void et(int s, int, BS &b) {
 	if (b.koed(s))
 	    return;
-	int damage = b.poke(s).totalLifePoints() / 8;
+        int damage = std::max(b.poke(s).totalLifePoints() / 8, 1);
+        
 	b.sendMoveMessage(72, 2, s, Pokemon::Grass);
 	b.inflictDamage(s, damage, s, false);
 	int s2 = poke(b,s)["SeedSource"].toInt();
 	if (b.koed(s2))
 	    return;
-	b.healLife(s2, damage);
+        if (!b.hasWorkingAbility(s, Ability::LiquidOoze))
+            b.healLife(s2, damage);
+        else {
+            b.sendMoveMessage(1,2,s2,Pokemon::Poison,s);
+            b.inflictDamage(s2, damage,s2,false);
+        }
     }
 };
 
@@ -859,7 +865,7 @@ struct MMBellyDrum : public MM
     }
 
     static void daf(int s, int, BS &b) {
-	if (b.poke(s).lifePoints() <= b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100) {
+        if (b.poke(s).lifePoints() <= std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1)) {
 	    b.fail(s, 8);
 	}
     }
@@ -868,7 +874,7 @@ struct MMBellyDrum : public MM
             b.sendMoveMessage(8,1,s,type(b,s));
             b.gainStatMod(s,Attack,8,false);
         }
-        b.changeHp(s, b.poke(s).lifePoints() - b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100);
+        b.changeHp(s, b.poke(s).lifePoints() - std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1));
     }
 };
 

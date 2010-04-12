@@ -42,6 +42,8 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(showTeamChange(bool)), SLOT(showTeamChange(bool)));
     connect(&relay(), SIGNAL(tierChanged(QString)), SLOT(changeTier(QString)));
     connect(&relay(), SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
+    connect(&relay(), SIGNAL(showRankings(QString,int)), SLOT(getRankingsByPage(QString, int)));
+    connect(&relay(), SIGNAL(showRankings(QString,QString)), SLOT(getRankingsByName(QString, QString)));
 }
 
 Player::~Player()
@@ -264,6 +266,39 @@ void Player::battleResult(int result, int winner, int loser)
 
     if ((winner == id() || loser == id()) && (result == Forfeit || result == Close))
         changeState(Battling, false);
+}
+
+void Player::getRankingsByPage(const QString &tier, int page)
+{
+    if (!TierMachine::obj()->exists(tier))
+        return;
+    /* A page is 40 players */
+    int startingRank = (page-1) * 40 + 1;
+
+    relay().startRankings(page, startingRank, (TierMachine::obj()->count(tier)-1)/40 + 1);
+
+    const RankingTree<QString> *rt = TierMachine::obj()->getRankingTree(tier);
+    RankingTree<QString>::iterator it = rt->getByRanking(startingRank);
+
+    int i = 0;
+    while (i < 40 && it != rt->end())
+    {
+        i++;
+        relay().sendRanking(it->data, it->key);
+        --it;
+    }
+}
+
+void Player::getRankingsByName(const QString &tier, const QString &name)
+{
+    if (!TierMachine::obj()->exists(tier))
+        return;
+    if (!TierMachine::obj()->existsPlayer(tier,name))
+        getRankingsByPage(tier, 1);
+    else {
+        int page = (TierMachine::obj()->ranking(name, tier)-1)/40 + 1;
+        getRankingsByPage(tier, page);
+    }
 }
 
 void Player::receivePM(int id, const QString &pm)

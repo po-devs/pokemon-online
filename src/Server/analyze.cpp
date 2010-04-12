@@ -135,7 +135,17 @@ void Analyzer::stopReceiving()
 
 void Analyzer::finishSpectating(qint32 battleId)
 {
-    notify(NetworkServ::SpectatingBattleFinished, battleId);
+    notify(SpectatingBattleFinished, battleId);
+}
+
+void Analyzer::startRankings(int page, int startingRank, int total)
+{
+    notify(ShowRankings, true, qint32(page), qint32(startingRank), qint32(total));
+}
+
+void Analyzer::sendRanking(QString name, int points)
+{
+    notify(ShowRankings, false, name, qint32(points));
 }
 
 
@@ -146,6 +156,8 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     uchar command;
 
     in >> command;
+
+    qDebug() << "from " << socket().id() << ": " << int(command);
 
     switch (command) {
     case Login:
@@ -326,6 +338,22 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             FindBattleData f;
             in >> f;
             emit findBattle(f);
+            break;
+        }
+    case ShowRankings:
+        {
+            bool bypage;
+            QString tier;
+            in >> tier >> bypage;
+            if (bypage) {
+                qint32 page;
+                in >> page;
+                emit showRankings(tier, page);
+            } else {
+                QString name;
+                in >> name;
+                emit showRankings(tier, name);
+            }
             break;
         }
     default:
