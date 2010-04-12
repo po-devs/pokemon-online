@@ -305,10 +305,12 @@ void BattleSituation::beginTurn()
 
 void BattleSituation::endTurn()
 {
+    qDebug() << "End turn between " << team1.name << " and " << team2.name;
     callzeffects(Player1, Player1, "EndTurn");
     callzeffects(Player2, Player2, "EndTurn");
 
     endTurnWeather();
+    qDebug() << "Weather gone";
 
     callbeffects(Player1,Player1,"EndTurn");
 
@@ -317,17 +319,20 @@ void BattleSituation::endTurn()
     if (!koed(Player2))
 	callieffects(Player2, Player2, "EndTurn");
 
+    qDebug() << "Items gone";
     callaeffects(Player1,Player2,"EndTurn");
     callaeffects(Player2,Player1,"EndTurn");
 
     callpeffects(Player1, Player2, "EndTurn");
     callpeffects(Player2, Player1, "EndTurn");
 
+    qDebug() << "Effects gone";
     endTurnStatus();
+    qDebug() << "Status gone";
 
     requestSwitchIns();
 
-    qDebug() << "Battle turn begin end " << team1.name << " and " << team2.name;
+    qDebug() << "Battle turn end " << team1.name << " and " << team2.name;
 }
 
 void BattleSituation::endTurnStatus()
@@ -527,10 +532,13 @@ void BattleSituation::analyzeChoice(int player)
 std::vector<int> BattleSituation::sortedBySpeed() {
     std::vector<int> ret;
 
-    if (getStat(Player1, Speed) < getStat(Player2, Speed)) {
+    int speed1 = getStat(Player1, Speed);
+    int speed2 = getStat(Player2, Speed);
+
+    if (speed1 < speed2) {
         ret.push_back(Player2);
         ret.push_back(Player1);
-    } else if (getStat(Player2, Speed) < getStat(Player1, Speed)) {
+    } else if (speed2 < speed1) {
         ret.push_back(Player1);
         ret.push_back(Player2);
     } else {
@@ -2010,8 +2018,8 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
 	int hp  = poke(player).lifePoints() - damage;
 
-	if (hp <= 0 && ((straightattack && turnlong[player].contains("CannotBeKoedBy") && turnlong[player]["CannotBeKoedBy"].toInt() == source)
-											  || turnlong[player].value("CannotBeKoed").toBool())) {
+        if (hp <= 0 && (straightattack && ((turnlong[player].contains("CannotBeKoedBy") && turnlong[player]["CannotBeKoedBy"].toInt() == source)
+                                                                                          || turnlong[player].value("CannotBeKoed").toBool()))) {
 	    damage = poke(player).lifePoints() - 1;
 	    hp = 1;
 	}

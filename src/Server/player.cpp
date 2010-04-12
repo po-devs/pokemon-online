@@ -270,18 +270,25 @@ void Player::battleResult(int result, int winner, int loser)
 
 void Player::getRankingsByPage(const QString &tier, int page)
 {
+    qDebug() << "tier: " << tier << ", page: " << page;
     if (!TierMachine::obj()->exists(tier))
         return;
     /* A page is 40 players */
     int startingRank = (page-1) * 40 + 1;
 
+    qDebug() << "rank: " << startingRank;
+
     relay().startRankings(page, startingRank, (TierMachine::obj()->count(tier)-1)/40 + 1);
 
     const RankingTree<QString> *rt = TierMachine::obj()->getRankingTree(tier);
+
+    qDebug() << "Ranking tree: " << rt;
     RankingTree<QString>::iterator it = rt->getByRanking(startingRank);
 
+    qDebug() << "Iterator ok";
+
     int i = 0;
-    while (i < 40 && it != rt->end())
+    while (i < 40 && it.p != NULL)
     {
         i++;
         relay().sendRanking(it->data, it->key);
