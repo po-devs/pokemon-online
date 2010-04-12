@@ -37,7 +37,7 @@ RankingDialog::RankingDialog(const QStringList &tiers)
     connect(tierSelection, SIGNAL(activated(int)), SLOT(searchByName()));
     connect(name, SIGNAL(returnPressed()), SLOT(searchByName()));
     connect(search, SIGNAL(clicked()), SLOT(searchByName()));
-    connect(page, SIGNAL(returnPressed()), SLOT(changePage()));
+    connect(this->page, SIGNAL(returnPressed()), SLOT(changePage()));
 }
 
 void RankingDialog::startRanking(int page, int startRank, int total)

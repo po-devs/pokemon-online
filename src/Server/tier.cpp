@@ -19,7 +19,7 @@ void MemberRating::changeRating(int opponent_rating, bool win)
 
     int kfactor;
     if (n <= 5) {
-        static const int kfactors[] = {200, 150, 100, 80, 65, 50};
+        static const int kfactors[] = {200, 100, 80, 70, 60, 50};
         kfactor = kfactors[n];
     } else {
         kfactor = 32;

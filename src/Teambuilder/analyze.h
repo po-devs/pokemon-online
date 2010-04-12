@@ -39,7 +39,7 @@ namespace NetworkCli
         ServNumChange,
         ServDescChange,
         ServNameChange,
-        SendPM,
+        SendPM = 20,
         Away,
         GetUserInfo,
         GetUserAlias,
@@ -49,14 +49,14 @@ namespace NetworkCli
         SpectateBattle,
         SpectatingBattleMessage,
         SpectatingBattleChat,
-        SpectatingBattleFinished,
+        SpectatingBattleFinished = 30,
         LadderChange,
         ShowTeamChange,
         VersionControl,
         TierSelection,
         ServMaxChange,
         FindMatch,
-        ShowRankings
+        ShowRankings = 37
     };
 
     enum ProtocolError
