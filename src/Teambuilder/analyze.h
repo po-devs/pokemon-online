@@ -55,7 +55,8 @@ namespace NetworkCli
         VersionControl,
         TierSelection,
         ServMaxChange,
-        FindMatch
+        FindMatch,
+        ShowRankings
     };
 
     enum ProtocolError
@@ -134,6 +135,9 @@ signals:
     void userAliasReceived(const QString &s);
     void banListReceived(const QString &n, const QString &ip);
     void versionDiff(const QString &a, const QString &b);
+    /* Ranking */
+    void rankingStarted(int,int,int);
+    void rankingReceived(const QString&,int);
 public slots:
     /* slots called by the network */
     void error();
@@ -152,6 +156,10 @@ public slots:
     void getUserInfo(const QString &name);
     void getBanList();
     void CPUnban(const QString &name);
+
+    /* By the rankings window */
+    void getRanking(const QString &tier, const QString &name);
+    void getRanking(const QString &tier, int page);
 
 private:
     /* The connection to the outside */

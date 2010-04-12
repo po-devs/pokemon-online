@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     analyze.cpp \
     network.cpp \
     antidos.cpp \
-    ../Utilities/otherwidgets.cpp
+    ../Utilities/otherwidgets.cpp \
+    ../Teambuilder/ranking.cpp
 HEADERS += mainwindow.h \
     registry.h \
     server.h \
@@ -22,3 +23,4 @@ HEADERS += mainwindow.h \
     network.h \
     antidos.h \
     ../Utilities/otherwidgets.h
+FORMS += ../rankings.ui

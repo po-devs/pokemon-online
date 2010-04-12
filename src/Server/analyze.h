@@ -54,7 +54,8 @@ namespace NetworkServ
         VersionControl,
         TierSelection,
         ServMaxChange,
-        FindBattle
+        FindBattle,
+        ShowRankings
     };
 
     enum ProtocolError
@@ -97,6 +98,8 @@ public:
     void notifyBattle(qint32 id1, qint32 id2);
     void finishSpectating(qint32 battleId);
     void notifyAway(qint32 id, bool away);
+    void startRankings(int page, int startingRank, int total);
+    void sendRanking(const QString name, int points);
     void stopReceiving();
     void connectTo(const QString &host, quint16 port);
 
@@ -152,6 +155,8 @@ signals:
     void ladderChange(bool);
     void tierChanged(const QString &);
     void findBattle(const FindBattleData &f);
+    void showRankings(const QString &tier, const QString &name);
+    void showRankings(const QString &tier, int page);
 public slots:
     /* slots called by the network */
     void error();

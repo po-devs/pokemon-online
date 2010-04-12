@@ -85,6 +85,16 @@ void Analyzer::goAway(bool away)
     notify(Away, away);
 }
 
+void Analyzer::getRanking(const QString &tier, const QString &name)
+{
+    notify(ShowRankings, tier, false, name);
+}
+
+void Analyzer::getRanking(const QString &tier, int page)
+{
+    notify(ShowRankings, tier, true, qint32(page));
+}
+
 void Analyzer::connectTo(const QString &host, quint16 port)
 {
     mysocket.connectToHost(host, port);
@@ -309,6 +319,23 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             QString tierList;
             in >> tierList;
             emit tierListReceived(tierList);
+            break;
+        }
+    case ShowRankings:
+        {
+            bool starting;
+            in >> starting;
+            if (starting)
+            {
+                qint32 startingPage, startingRank, total;
+                in >> startingPage >> startingRank >> total;
+                emit rankingStarted(startingPage, startingRank, total);
+            } else {
+                QString name;
+                qint32 points;
+                in >> name >> points;
+                emit rankingReceived(name, points);
+            }
             break;
         }
     default:

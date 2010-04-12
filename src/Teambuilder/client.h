@@ -13,6 +13,7 @@ class BaseBattleWindow;
 class QScrollDownTextEdit;
 class PMWindow;
 class ControlPanel;
+class RankingDialog;
 class BattleFinder;
 class FindBattleData;
 
@@ -116,6 +117,8 @@ public slots:
     void controlPanel(int);
     void setPlayer(const UserInfo &ui);
     void requestBan(const QString &name);
+    /* Ranking */
+    void seeRanking(int);
     /* Away... */
     void awayChanged(int id, bool away);
     void goAway(int away);
@@ -179,10 +182,12 @@ private:
     QPointer<QMenuBar> mymenubar;
     QPointer<QMenu> mytiermenu;
     QList<QAction*> mytiers;
+    QStringList tierList;
     /* You can call the teambuilder from here too */
     QPointer<QMainWindow> myteambuilder;
 
     QPointer<ControlPanel> myCP;
+    QPointer<RankingDialog> myRanking;
 
     QHash<int, PlayerInfo> myplayersinfo;
 

@@ -61,6 +61,7 @@ HEADERS += mainwindow.h \
     ../PokemonInfo/movesetchecker.h \
     ../Shared/config.h \
     tier.h \
+    ../Utilities/rankingtree.h \
     ../Utilities/rankingtree.h
 DEFINES = MULTI_THREADED_ACCESS \
     SERVER_SIDE

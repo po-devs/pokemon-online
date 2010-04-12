@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     controlpanel.cpp \
     basebattlewindow.cpp \
     ../PokemonInfo/movesetchecker.cpp \
-    box.cpp
+    box.cpp \
+    ranking.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -50,7 +51,8 @@ HEADERS += teambuilder.h \
     basebattlewindow.h \
     ../PokemonInfo/movesetchecker.h \
     ../Shared/config.h \
-    box.h
+    box.h \
+    ranking.h
 LIBS += -L../../bin \
     -lzip
 DEFINES = CLIENT_SIDE
