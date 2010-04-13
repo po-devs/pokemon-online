@@ -776,7 +776,8 @@ void Server::removeBattle(int winner, int loser)
         player(id)->relay().finishSpectating(battle->publicId());
         player(id)->battlesSpectated.remove(battle->publicId());
     }
-    delete battle;
+    /* When manipulating threaded objects, you need to be careful... */
+    battle->deleteLater();
     player(winner)->battle = NULL;
     player(loser)->battle = NULL;
 }
