@@ -113,8 +113,13 @@ void BattleSituation::start()
 
     sendPoke(Player1, 0);
     sendPoke(Player2, 0);
-    callEntryEffects(Player1);
-    callEntryEffects(Player2);
+
+    /* For example, if two pokemons are brought out
+       with a weather ability, the slower one acts last */
+    std::vector<int> pokes = sortedBySpeed();
+
+    foreach(int p, pokes)
+        callEntryEffects(p);;
 
     hasChoice[0] = false;
     hasChoice[1] = false;
@@ -310,7 +315,6 @@ void BattleSituation::endTurn()
     callzeffects(Player2, Player2, "EndTurn");
 
     endTurnWeather();
-    qDebug() << "Weather gone";
 
     callbeffects(Player1,Player1,"EndTurn");
 
@@ -319,14 +323,12 @@ void BattleSituation::endTurn()
     if (!koed(Player2))
 	callieffects(Player2, Player2, "EndTurn");
 
-    qDebug() << "Items gone";
     callaeffects(Player1,Player2,"EndTurn");
     callaeffects(Player2,Player1,"EndTurn");
 
     callpeffects(Player1, Player2, "EndTurn");
     callpeffects(Player2, Player1, "EndTurn");
 
-    qDebug() << "Effects gone";
     endTurnStatus();
     qDebug() << "Status gone";
 
@@ -1678,8 +1680,7 @@ int BattleSituation::weather()
 void BattleSituation::callForth(int weather, int turns)
 {
     if (weather == this->weather()) {
-	battlelong["WeatherCount"] = turns;
-	notify(All, WeatherMessage, Player1, qint8(ContinueWeather), qint8(weather));
+        battlelong["WeatherCount"] = turns;
     } else {
 	battlelong["WeatherCount"] = turns;
 	battlelong["Weather"] = weather;
@@ -2190,8 +2191,11 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 
 void BattleSituation::requestSwitchIns()
 {
+    qDebug() <<"Switch in start";
     testWin();
+    qDebug() << "....";
 
+    qDebug() << "Count is " << koedPokes.size();
     int count = koedPokes.size();
 
     if (count == 0) {
@@ -2201,19 +2205,23 @@ void BattleSituation::requestSwitchIns()
     notifyInfos();
 
     foreach(int p, koedPokes) {
+        qDebug() << "Requesting choice for " << p;
         requestChoice(p, false);
     }
 
     sem.acquire(1);
 
+    qDebug() <<"Test quit";
     testquit();
 
     QSet<int> copy = koedPokes;
 
     foreach(int p, copy) {
+        qDebug() << "Analyzing " << p;
         analyzeChoice(p);
     }
 
+    qDebug() << "calling entry effects...";
     foreach(int p, copy) {
 	callEntryEffects(p);
     }
