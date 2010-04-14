@@ -814,13 +814,21 @@ bool TrainerTeam::importFromTxt(const QString &file1)
 
         first[0] = first[0].trimmed();
 
+        QString pokestring;
         if (first[0].contains('(')) {
-            pokenum = PokemonInfo::Number(first[0].section('(',1,1).section(')',0,0));
+            pokestring = first[0].section('(',1,1).section(')',0,0);
             nickname = first[0].mid(0, first[0].indexOf('(')).trimmed();
         } else {
-            pokenum = PokemonInfo::Number(first[0]);
+            pokestring = first[0];
             nickname = first[0];
         }
+
+        // alternate formes
+        if (pokestring.indexOf('-') != -1) {
+            pokestring[pokestring.length()-1] = pokestring[pokestring.length()-1].toUpper();
+        }
+
+        pokenum = PokemonInfo::Number(pokestring);
 
         int item = 0;
 
