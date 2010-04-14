@@ -303,6 +303,7 @@ void Player::getRankingsByName(const QString &tier, const QString &name)
     if (!TierMachine::obj()->existsPlayer(tier,name))
         getRankingsByPage(tier, 1);
     else {
+        qDebug() << "Getting ranking of " << name << " in " << tier;
         int page = (TierMachine::obj()->ranking(name, tier)-1)/40 + 1;
         getRankingsByPage(tier, page);
     }
