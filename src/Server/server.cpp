@@ -452,14 +452,12 @@ void Server::loggedIn(int id, const QString &name)
     }
 }
 
-void Server::sendBattleCommand(int id, const QByteArray &comm)
+void Server::sendBattleCommand(int publicId, int id, const QByteArray &comm)
 {
-    BattleSituation *sender = (BattleSituation*) this->sender();
-
-    if (player(id)->battling() && player(id)->battle == sender)
+    if (player(id)->battling() && player(id)->battleId() == publicId)
         player(id)->relay().sendBattleCommand(comm);
     else {
-        player(id)->relay().sendWatchingCommand(sender->publicId(), comm);
+        player(id)->relay().sendWatchingCommand(publicId, comm);
     }
 }
 
@@ -701,11 +699,10 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 
     printLine(tr("Battle between %1 and %2 started").arg(name(id1)).arg(name(id2)));
 
-    BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c);
-
     int id = freebattleid();
+
+    BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id);
     mybattles.insert(id, battle);
-    battle->publicId() = id;
 
     player(id1)->startBattle(id2, battle->pubteam(id1), battle->configuration());
     player(id2)->startBattle(id1, battle->pubteam(id2), battle->configuration());
@@ -716,7 +713,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
         }
     }
 
-    connect(battle, SIGNAL(battleInfo(int,QByteArray)), SLOT(sendBattleCommand(int, QByteArray)));
+    connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int, QByteArray)));
     connect(battle, SIGNAL(battleFinished(int,int,int,bool,QString)), SLOT(battleResult(int,int,int,bool,QString)));
     connect(player(id1), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
     connect(player(id1), SIGNAL(battleChat(int,QString)), battle, SLOT(battleChat(int, QString)));
@@ -779,7 +776,9 @@ void Server::removeBattle(int winner, int loser)
     /* When manipulating threaded objects, you need to be careful... */
     battle->deleteLater();
     player(winner)->battle = NULL;
+    player(winner)->battleId() = -1;
     player(loser)->battle = NULL;
+    player(loser)->battleId() = -1;
 }
 
 void Server::sendPlayersList(int id)
