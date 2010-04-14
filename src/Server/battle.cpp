@@ -72,6 +72,8 @@ BattleSituation::~BattleSituation()
 {
     /* releases the thread */
     {
+        qDebug() << "Battle destroyed";
+        qDebug() << "Between "  << team1.name << " and " << team2.name;
 	/* So the thread will quit immediately after being released */
 	quit = true;
         /* Should be enough */
@@ -2279,6 +2281,7 @@ void BattleSituation::testWin()
             notify(All, BattleEnd, Player1, qint8(Win));
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
+        qDebug() << "Battle finished between " << team1.name << " and " << team2.name << " (timeout)" << endl;
         throw QuitException();
     }
 
@@ -2300,7 +2303,9 @@ void BattleSituation::testWin()
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
         /* The battle is finished so we stop the battling thread */
+        qDebug() << "Battle finished between " << team1.name << " and " << team2.name << " (bwin)" << endl;
         sem.acquire(1);
+        qDebug() << "Battle finished between " << team1.name << " and " << team2.name << " (awin)" << endl;
         throw QuitException();
     }
 }
