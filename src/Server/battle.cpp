@@ -8,9 +8,10 @@
 #include <map>
 #include <algorithm>
 
-BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
+BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id)
 	:team1(p1.team()), team2(p2.team())
 {
+    publicId() = id;
     timer = NULL;
     myid[0] = p1.id();
     myid[1] = p2.id();
@@ -29,7 +30,10 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c)
     currentForcedSleepPoke[0] = -1;
     currentForcedSleepPoke[1] = -1;
     p1.battle = this;
+    p1.battleId() = publicId();
     p2.battle = this;
+    p2.battleId() = publicId();
+
     if (clauses() & ChallengeInfo::ChallengeCup) {
         team1.generateRandom();
         team2.generateRandom();
@@ -2483,20 +2487,20 @@ BattleConfiguration BattleSituation::configuration() const
 void BattleSituation::emitCommand(int player, int players, const QByteArray &toSend)
 {
     if (players == All) {
-        emit battleInfo(qint32(id(Player1)), toSend);
-        emit battleInfo(qint32(id(Player2)), toSend);
+        emit battleInfo(publicId(), qint32(id(Player1)), toSend);
+        emit battleInfo(publicId(), qint32(id(Player2)), toSend);
 
         foreach(int id, spectators) {
-            emit battleInfo(qint32(id), toSend);
+            emit battleInfo(publicId(), qint32(id), toSend);
         }
     } else if (players == AllButPlayer) {
-        emit battleInfo(qint32(id(rev(player))), toSend);
+        emit battleInfo(publicId(), qint32(id(rev(player))), toSend);
 
         foreach(int id, spectators) {
-            emit battleInfo(qint32(id), toSend);
+            emit battleInfo(publicId(), qint32(id), toSend);
         }
     } else {
-        emit battleInfo(qint32(id(players)), toSend);
+        emit battleInfo(publicId(), qint32(id(players)), toSend);
     }
 }
 

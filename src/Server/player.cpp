@@ -11,6 +11,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     battle = NULL;
     challengedBy = NULL;
     battleSearch() = false;
+    battleId() = -1;
     myip = relay().ip();
     rating() = -1;
 

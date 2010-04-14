@@ -25,7 +25,7 @@ public:
     };
     typedef QVariantHash context;
 
-    BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData);
+    BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id);
     ~BattleSituation();
 
     const TeamBattle &pubteam(int id);
@@ -281,7 +281,12 @@ public slots:
 public:
     void spectatingChat(int id, const QString &str);
 signals:
-    void battleInfo(int id, const QByteArray &info);
+    /* Due to threading issue, and the signal not being direct,
+       The battle might already be deleted when the signal is received.
+
+       So the parameter "publicId" is for the server to not to have to use
+       sender(); */
+    void battleInfo(int publicId, int id, const QByteArray &info);
     void battleFinished(int result, int winner, int loser, bool rated, const QString &tier);
 private:
     /* To interrupt the thread when needed. We use that instead of mutex cuz we can lock/unlock them in different threads */

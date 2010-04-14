@@ -73,7 +73,7 @@ public slots:
     void dealWithChallenge(int from, int to, const ChallengeInfo &c);
     void startBattle(int id1, int id2, const ChallengeInfo &c);
     void battleResult(int desc, int winner, int loser, bool rated, const QString&);
-    void sendBattleCommand(int id, const QByteArray &command);
+    void sendBattleCommand(int battleId, int id, const QByteArray &command);
     void spectatingRequested(int id, int battle);
     void spectatingStopped(int id, int battle);
     void spectatingChat(int player, int battle, const QString &chat);
