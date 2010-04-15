@@ -275,3 +275,8 @@ void QImageButtonLR::mouseReleaseEvent(QMouseEvent *ev)
     else if (ev->button() == Qt::RightButton)
         emit rightClick();
 }
+
+void QClickPBar::mousePressEvent(QMouseEvent *)
+{
+    emit clicked();
+}

@@ -21,13 +21,31 @@ BaseBattleInfo::BaseBattleInfo(const QString &me, const QString &opp)
     currentIndex[1] = 0;
 }
 
-BaseBattleWindow::BaseBattleWindow(const QString &me, const QString &opponent)
+BaseBattleWindow::BaseBattleWindow(const QString &me, const QString &opponent) : delayed(false)
 {
     myInfo = new BaseBattleInfo(me, opponent);
     mydisplay = new BaseBattleDisplay(info());
     init();
     show();
     printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(name(true), name(false)));
+}
+
+void BaseBattleWindow::delay(int msec)
+{
+    delayed = true;
+
+    if (msec != 0)
+        QTimer::singleShot(msec, this, SLOT(undelay()));
+}
+
+void BaseBattleWindow::undelay()
+{
+    delayed = false;
+
+    while (delayed == false && delayedCommands.size() > 0) {
+        receiveInfo(delayedCommands.front());
+        delayedCommands.pop_front();
+    }
 }
 
 void BaseBattleWindow::init()
@@ -52,7 +70,6 @@ void BaseBattleWindow::init()
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
 
     layout()->setSizeConstraint(QLayout::SetFixedSize);
-
 }
 
 QString BaseBattleWindow::name(int spot) const
@@ -68,6 +85,30 @@ QString BaseBattleWindow::nick(int player) const
 QString BaseBattleWindow::rnick(int player) const
 {
     return info().currentShallow(player).nick();
+}
+
+void BaseBattleWindow::animateHPBar()
+{
+    const int spot = animatedHpSpot();
+    const int goal = animatedHpGoal();
+
+    //To stop the commands from being processed
+    delay();
+
+
+    /* We deal with % hp, 30 msecs per % */
+    int life = info().currentShallow(Opponent).lifePercent();
+
+    if (goal == life) {
+        delay(500);
+        return;
+    }
+
+    info().currentShallow(Opponent).lifePercent() = life < goal ? life+1 : life-1;
+    //Recursive call to update the hp bar 30msecs later
+    QTimer::singleShot(30, this, SLOT(animateHPBar()));
+
+    mydisplay->updatePoke(spot);
 }
 
 void BaseBattleWindow::closeEvent(QCloseEvent *)
@@ -94,6 +135,11 @@ void BaseBattleWindow::sendMessage()
 
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
+    if (delayed) {
+        delayedCommands.push_back(inf);
+        return;
+    }
+
     QDataStream in (&inf, QIODevice::ReadOnly);
 
     uchar command;
@@ -148,8 +194,10 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         {
             quint16 newHp;
             in >> newHp;
-            info().currentShallow(spot).lifePercent() = newHp;
-            mydisplay->updatePoke(spot);
+
+            animatedHpSpot() = spot;
+            animatedHpGoal() = newHp;
+            animateHPBar();
             break;
         }
     case Ko:
@@ -482,6 +530,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
     case ClockStart:
         {
             in >> info().time[spot];
+            info().startingTime[spot] = time(NULL);
             info().ticking[spot] = true;
             break;
         }
@@ -566,7 +615,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
 
     foeteam->setSpacing(1);
 
-    bars[Opponent] = new QProgressBar();
+    bars[Opponent] = new QClickPBar();
     bars[Opponent]->setObjectName("LifePoints"); /* for stylesheets */
     bars[Opponent]->setRange(0, 100);
     l->addWidget(bars[Opponent]);
@@ -574,7 +623,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     zone = new BaseGraphicsZone();
     l->addWidget(zone);
 
-    bars[Myself] = new QProgressBar();
+    bars[Myself] = new QClickPBar();
     bars[Myself]->setObjectName("LifePoints"); /* for stylesheets */
     bars[Myself]->setRange(0,100);
     l->addWidget(bars[Myself]);
@@ -615,24 +664,23 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     updateTimers();
 
     QTimer *t = new QTimer (this);
-    t->start(1000);
+    t->start(200);
     connect(t, SIGNAL(timeout()), SLOT(updateTimers()));
 }
 
 void BaseBattleDisplay::updateTimers()
 {
     for (int i = Myself; i <= Opponent; i++) {
-        if (info().ticking[i])
-            info().time[i] = std::max(0, int(info().time[i])-1);
-        if (info().time[i] <= 5*60) {
-            timers[i]->setValue(info().time[i]);
+        int ctime = std::max(long(0), info().ticking[i] ? info().time[i] + info().startingTime[i] - time(NULL) : info().time[i]);
+        if (ctime <= 5*60) {
+            timers[i]->setValue(ctime);
         } else {
             timers[i]->setValue(300);
         }
-        timers[i]->setFormat(QString("%1 : %2").arg(info().time[i]/60).arg(QString::number(info().time[i]%60).rightJustified(2,'0')));
-        if (info().time[i] > 60) {
+        timers[i]->setFormat(QString("%1 : %2").arg(ctime/60).arg(QString::number(ctime%60).rightJustified(2,'0')));
+        if (ctime > 60) {
             timers[i]->setStyleSheet("::chunk{background-color: #29db21;}");
-        }else if (info().time[i] > 30) {
+        }else if (ctime > 30) {
             timers[i]->setStyleSheet("::chunk{background-color: #F8DB17;;}");
         } else {
             timers[i]->setStyleSheet("::chunk{background-color: #D40202;}");
@@ -646,7 +694,7 @@ void BaseBattleDisplay::updatePoke(int spot)
         const ShallowBattlePoke &poke = info().currentShallow(spot);
         zone->switchTo(poke, spot, info().sub[spot], info().specialSprite[spot]);
         nick[spot]->setText(tr("%1 Lv.%2").arg(poke.nick()).arg(poke.level()));
-        bars[spot]->setValue(poke.lifePercent());
+        updateHp(spot);
         bars[spot]->setStyleSheet(health(poke.lifePercent()));
         gender[spot]->setPixmap(GenderInfo::Picture(poke.gender(), true));
         int status = poke.status();
@@ -664,6 +712,11 @@ void BaseBattleDisplay::updatePoke(int spot)
         gender[spot]->setPixmap(QPixmap());
         bars[spot]->setValue(0);
     }
+}
+
+void BaseBattleDisplay::updateHp(int spot)
+{
+    bars[spot]->setValue(info().currentShallow(spot).lifePercent());
 }
 
 void BaseBattleDisplay::updateToolTip(int spot)

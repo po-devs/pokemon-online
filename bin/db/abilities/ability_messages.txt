@@ -22,7 +22,7 @@
 %s changed its type to %t!
 %s's Forewarn makes it wary of %m!
 %s knows its foe holds %i because of Frisk!
-
+%s's Shield Dust blocked the secondary effects!
 
 
 

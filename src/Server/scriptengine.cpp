@@ -560,6 +560,21 @@ QScriptValue ScriptEngine::itemNum(const QString &name)
     return num == 0 ? myengine.undefinedValue() : num;
 }
 
+
+QScriptValue ScriptEngine::nature(int num)
+{
+    if (num >= 0 && num < NatureInfo::NumberOfNatures()) {
+        return NatureInfo::Name(num);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::natureNum(const QString &name)
+{
+    return NatureInfo::Number(convertToSerebiiName(name));
+}
+
 QScriptValue ScriptEngine::teamPoke(int id, int index)
 {
     if (!loggedIn(id) || index < 0 || index >= 6) {
@@ -682,6 +697,15 @@ bool ScriptEngine::hasTeamItem(int id, int itemnum)
         }
     }
     return false;
+}
+
+QScriptValue ScriptEngine::teamPokeNature(int id, int index)
+{
+    if (!loggedIn(id) || index < 0 || index >= 6) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->team().poke(index).nature();
+    }
 }
 
 QScriptValue ScriptEngine::getFileContent(const QString &fileName)

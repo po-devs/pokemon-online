@@ -278,23 +278,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             mycancel->setDisabled(true);
 	    updateChoices();
 	    break;
-	}
-    case ChangeHp:
-	{
-	    quint16 newHp;
-	    in >> newHp;
-            if (spot == Myself) {
-		/* Think to check for crash */
-		info().currentPoke().lifePoints() = newHp;
-                info().tempPoke().lifePoints() = newHp;
-                info().currentShallow(Myself).lifePercent() = info().tempPoke().lifePercent();
-                mypzone->pokes[info().currentIndex[Myself]]->update();
-            } else {
-                info().currentShallow(spot).lifePercent() = newHp;
-            }
-            mydisplay->updatePoke(spot);
-	    break;
-	}
+        }
     case Ko:
         if (spot==Myself) {
             mypzone->pokes[info().currentIndex[spot]]->setEnabled(false); //crash!!
@@ -393,6 +377,37 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
         break;
     }
+}
+
+void BattleWindow::animateHPBar()
+{
+    if (animatedHpSpot() != Myself) {
+        BaseBattleWindow::animateHPBar();
+        return;
+    }
+
+    const int goal = animatedHpGoal();
+
+    //To stop the commands from being processed
+    delay();
+
+    int life = info().currentPoke().lifePoints();
+    /* We deal with true HP. 30 msec per 3 hp */
+    if (goal == life) {
+        delay(500);
+        return;
+    }
+
+    int newHp = goal < life ? std::max(goal, life - 3) : std::min(goal, life+3);
+    info().currentPoke().lifePoints() = newHp;
+    info().tempPoke().lifePoints() = newHp;
+    info().currentShallow(Myself).lifePercent() = info().tempPoke().lifePercent();
+    mypzone->pokes[info().currentIndex[Myself]]->update();
+
+    //Recursive call to update the hp bar 30msecs later
+    QTimer::singleShot(30, this, SLOT(animateHPBar()));
+
+    mydisplay->updatePoke(Myself);
 }
 
 void BattleWindow::switchToNaught(int spot)
@@ -535,6 +550,7 @@ void PokeButton::update()
 BattleDisplay::BattleDisplay(BattleInfo &i)
     : BaseBattleDisplay(i)
 {
+    percentageMode = false;
     bars[Myself]->setRange(0,100);
     bars[Myself]->setFormat("%v / %m");
 
@@ -546,16 +562,29 @@ BattleDisplay::BattleDisplay(BattleInfo &i)
     trainers[Opponent]->setText("");
 
     updatePoke(Myself);
+
+    connect(bars[Myself], SIGNAL(clicked()), SLOT(changeBarMode()));
 }
 
-void BattleDisplay::updatePoke(int spot)
+void BattleDisplay::updateHp(int spot)
 {
-    BaseBattleDisplay::updatePoke(spot);
-    if (spot == Myself && info().pokeAlive[Myself]) {
-        bars[Myself]->setRange(0,mypoke().totalLifePoints());
+    if (spot == Opponent || percentageMode)
+        BaseBattleDisplay::updateHp(spot);
+    else {
+        bars[Myself]->setRange(0, mypoke().totalLifePoints());
         bars[Myself]->setValue(mypoke().lifePoints());
     }
+}
 
+void BattleDisplay::changeBarMode()
+{
+    bars[Myself]->setFormat(percentageMode ? "%v / %m" : "%p%");
+    percentageMode = !percentageMode;
+
+    if (percentageMode)
+        bars[Myself]->setRange(0,100);
+
+    updateHp(Myself);
 }
 
 void BattleDisplay::updateToolTip(int spot)
