@@ -394,7 +394,7 @@ void BattleWindow::animateHPBar()
     int life = info().currentPoke().lifePoints();
     /* We deal with true HP. 30 msec per 3 hp */
     if (goal == life) {
-        delay(500);
+        delay(400);
         return;
     }
 
