@@ -100,7 +100,7 @@ void BaseBattleWindow::animateHPBar()
     int life = info().currentShallow(spot).lifePercent();
 
     if (goal == life) {
-        delay(500);
+        delay(400);
         return;
     }
 

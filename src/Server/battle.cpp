@@ -2033,15 +2033,15 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	    hp = 1;
 	}
 
-	if (straightattack) {
-	    notify(player, StraightDamage,player, qint16(damage));
-	    notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
-	}
-
 	if (hp <= 0) {
 	    koPoke(player, source, straightattack);
 	} else {
 	    changeHp(player, hp);
+
+            if (straightattack) {
+                notify(player, StraightDamage,player, qint16(damage));
+                notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
+            }
 	}
     }
 
@@ -2186,7 +2186,15 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 	return;
     }
 
+    qint16 damage = poke(player).lifePoints();
+
     changeHp(player, 0);
+
+    if (straightattack) {
+        notify(player, StraightDamage,player, qint16(damage));
+        notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
+    }
+
     changeStatus(player,Pokemon::Koed);
 
     notify(All, Ko, player);
