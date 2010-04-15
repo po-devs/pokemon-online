@@ -454,10 +454,20 @@ void Server::loggedIn(int id, const QString &name)
 
 void Server::sendBattleCommand(int publicId, int id, const QByteArray &comm)
 {
+    /* As things are threaded, the player may have logged off before
+       receiving the command.
+
+       An extreme thing that might crash the client is a player logging off,
+       and another logging on and starting a battle right away with the same player id
+       and same battle id */
+    if (!playerExist(id))
+        return;
+
     if (player(id)->battling() && player(id)->battleId() == publicId)
         player(id)->relay().sendBattleCommand(comm);
     else {
-        player(id)->relay().sendWatchingCommand(publicId, comm);
+        if (player(id)->battlesSpectated.contains(publicId))
+            player(id)->relay().sendWatchingCommand(publicId, comm);
     }
 }
 
