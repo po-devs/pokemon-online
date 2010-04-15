@@ -83,6 +83,9 @@ signals:
 protected:
     void closeEvent(QCloseEvent *);
     virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);
+
+protected slots:
+    void animateHPBar();
 private:
     QStackedWidget *mystack;
     AttackZone *myazones[6];
@@ -96,16 +99,20 @@ class BattleDisplay : public BaseBattleDisplay
 public:
     BattleDisplay(BattleInfo &i);
 
-    void updatePoke(int spot);
+    void updateHp(int spot);
     void updateToolTip(int spot);
 
     BattleInfo &info() const {
         return *(BattleInfo *)(&BaseBattleDisplay::info());
     }
+public slots:
+    void changeBarMode();
 
 protected:
     const PokeBattle &mypoke() const {return info().currentPoke(); }
     const ShallowBattlePoke &foe() const {return info().currentShallow(Opponent); }
+
+    bool percentageMode;
 };
 
 

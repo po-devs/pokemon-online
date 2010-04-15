@@ -78,7 +78,7 @@ public:
 
     bool ko() const {return lifePoints() == 0 || num() == 0 || status() == Pokemon::Koed;}
     bool isFull() const { return lifePoints() == totalLifePoints(); }
-    int lifePercent() const { return lifePoints()*100/totalLifePoints();}
+    int lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
 
     void setNormalStat(int, quint16);
 private:

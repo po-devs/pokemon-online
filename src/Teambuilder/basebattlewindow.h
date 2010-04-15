@@ -6,6 +6,7 @@
 
 class BaseBattleDisplay;
 class QScrollDownTextEdit;
+class QClickPBar;
 
 enum {
     Myself,
@@ -21,6 +22,8 @@ struct BaseBattleInfo
     quint16 specialSprite[2];
     quint16 time[2];
     bool ticking[2];
+    int startingTime[2];
+
 
     /* Opponent pokemon */
     ShallowBattlePoke pokemons[2][6];
@@ -47,6 +50,8 @@ class BaseBattleWindow : public QWidget
 
     PROPERTY(int, battleId);
     PROPERTY(Client *, client);
+    PROPERTY(int, animatedHpSpot);
+    PROPERTY(int, animatedHpGoal);
 public:
     BaseBattleInfo *myInfo;
     const BaseBattleInfo &info() const {
@@ -149,10 +154,14 @@ public:
     virtual QString nick(int spot) const;
     QString rnick(int spot) const;
 
+    void delay(int msec=0);
 public slots:
     void receiveInfo(QByteArray);
     void sendMessage();
     void clickClose();
+    void undelay();
+
+    void animateHPBar();
 signals:
     void battleCommand(const BattleChoice &);
     void battleMessage(const QString &str, int);
@@ -164,10 +173,13 @@ protected:
     BaseBattleDisplay *mydisplay;
     QPushButton *myclose, *mysend;
 
+    QLinkedList<QByteArray> delayedCommands;
+    bool delayed;
+
     bool blankMessage;
     bool battleEnded;
 
-    BaseBattleWindow(){}
+    BaseBattleWindow(){delayed=false;}
     void init();
 
     void closeEvent(QCloseEvent *);
@@ -188,6 +200,7 @@ public:
     BaseBattleDisplay(BaseBattleInfo &i);
 
     virtual void updatePoke(int spot);
+    virtual void updateHp(int spot);
     virtual void updateToolTip(int spot);
     void changeStatus(int spot, int poke, int status);
 public slots:
@@ -199,7 +212,7 @@ protected:
     BaseGraphicsZone *zone;
     QLabel *nick[2];
     QLabel *status[2];
-    QProgressBar *bars[2];
+    QClickPBar *bars[2];
     QProgressBar *timers[2];
     QLabel *trainers[2];
     QLabel *gender[2];

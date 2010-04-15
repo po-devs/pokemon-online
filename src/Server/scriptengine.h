@@ -84,6 +84,8 @@ public:
     Q_INVOKABLE QScriptValue moveNum(const QString &name);
     Q_INVOKABLE QScriptValue item(int num);
     Q_INVOKABLE QScriptValue itemNum(const QString &item);
+    Q_INVOKABLE QScriptValue nature(int num);
+    Q_INVOKABLE QScriptValue natureNum(const QString &nature);
 
     Q_INVOKABLE QScriptValue teamPokeLevel(int id, int slot);
     Q_INVOKABLE QScriptValue teamPoke(int id, int index);
@@ -97,6 +99,8 @@ public:
 
     Q_INVOKABLE QScriptValue teamPokeItem(int id, int pokeindex);
     Q_INVOKABLE bool hasTeamItem(int id, int itemNum);
+
+    Q_INVOKABLE QScriptValue teamPokeNature(int id, int slot);
 
     Q_INVOKABLE int numPlayers();
     Q_INVOKABLE bool loggedIn(int id);

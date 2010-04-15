@@ -1479,13 +1479,15 @@ void BattleSituation::applyMoveStatMods(int player, int target)
             continue;
 	}
 
-	if (!self && sub) {
-	    sendMoveMessage(128, 2, player,0,target,turnlong[player]["Attack"].toInt());
+        if (!self && sub) {
+            if (turnlong[player]["Power"].toInt() == 0)
+                sendMoveMessage(128, 2, player,0,target,turnlong[player]["Attack"].toInt());
 	    continue;
 	}
 
         //Shield Dust
         if (!self && hasWorkingAbility(targeted, Ability::ShieldDust)) {
+            sendAbMessage(24,0,targeted,0,Pokemon::Bug);
             continue;
         }
 
@@ -2173,7 +2175,7 @@ void BattleSituation::changeHp(int player, int newHp)
     poke(player).lifePoints() = newHp;
 
     notify(player, ChangeHp, player, quint16(newHp));
-    notify(AllButPlayer, ChangeHp, player, quint16(newHp == 0 ? 0 : std::max(int(poke(player).lifePercent()),1))); /* percentage calculus */
+    notify(AllButPlayer, ChangeHp, player, quint16(poke(player).lifePercent())); /* percentage calculus */
 
     callieffects(player, player, "AfterHPChange");
 }

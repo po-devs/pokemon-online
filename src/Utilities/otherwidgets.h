@@ -122,4 +122,14 @@ signals:
     void rightClick();
 };
 
+/* A Progress bar that emits a signal when clicked on */
+class QClickPBar : public QProgressBar
+{
+    Q_OBJECT
+signals:
+    void clicked();
+protected:
+    void mousePressEvent(QMouseEvent *);
+};
+
 #endif // OTHERWIDGETS_H

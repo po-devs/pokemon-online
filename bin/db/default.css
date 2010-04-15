@@ -158,7 +158,7 @@ QProgressBar#TimeOut {
 
 QProgressBar#TimeOut::chunk{
 	background-color: #29db21;
-	width: 10px;
+	width: 1px;
 }
 
 QProgressBar#LifePoints {
@@ -169,7 +169,7 @@ QProgressBar#LifePoints {
 
 QProgressBar#LifePoints::chunk{
 	background-color: #05B8CC;
-	width: 20px;
+	width: 1px;
 }
 
 TB_PokemonBoxes QTabWidget::pane { /* The tab widget frame */
