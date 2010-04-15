@@ -97,14 +97,14 @@ void BaseBattleWindow::animateHPBar()
 
 
     /* We deal with % hp, 30 msecs per % */
-    int life = info().currentShallow(Opponent).lifePercent();
+    int life = info().currentShallow(spot).lifePercent();
 
     if (goal == life) {
         delay(500);
         return;
     }
 
-    info().currentShallow(Opponent).lifePercent() = life < goal ? life+1 : life-1;
+    info().currentShallow(spot).lifePercent() = life < goal ? life+1 : life-1;
     //Recursive call to update the hp bar 30msecs later
     QTimer::singleShot(30, this, SLOT(animateHPBar()));
 
