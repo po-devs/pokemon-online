@@ -1855,7 +1855,7 @@ void BattleSituation::loseStatMod(int player, int stat, int malus, int attacker)
             QString q = QString("StatModFrom%1Prevented").arg(attacker);
             turnlong[player].remove(q);
             turnlong[player]["StatModType"] = QString("Stat");
-            turnlong[player]["StatModded"] = Attack;
+            turnlong[player]["StatModded"] = stat;
             turnlong[player]["StatModification"] = -malus;
             callaeffects(player, attacker, "PreventStatChange");
             if (turnlong[player].contains(q)) {
