@@ -100,7 +100,7 @@ void BaseBattleWindow::animateHPBar()
     int life = info().currentShallow(spot).lifePercent();
 
     if (goal == life) {
-        delay(400);
+        delay(200);
         return;
     }
 
@@ -135,7 +135,7 @@ void BaseBattleWindow::sendMessage()
 
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
-    if (delayed) {
+    if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat)) {
         delayedCommands.push_back(inf);
         return;
     }
