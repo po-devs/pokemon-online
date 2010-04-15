@@ -441,8 +441,10 @@ struct MMCurse : public MM
     }
 
     static void et(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
+        b.sendMoveMessage(25, 1, s, Pokemon::Curse);
         b.inflictPercentDamage(s, 25, s);
-	b.sendMoveMessage(25, 1, s, Pokemon::Curse);
     }
 };
 
@@ -1545,30 +1547,26 @@ struct MMBounce : public MM
     MMBounce() {
 	functions["UponAttackSuccessful"] = &uas;
 	functions["OnSetup"] = &os;
-	functions["MoveSettings"] = &ms;
     }
 
     static void os(int s, int, BS &b) {
 	turn(b,s)["TellPlayers"] = false;
-    }
-
-    static void ms(int s, int, BS &b) {
-	addFunction(poke(b,s), "TurnSettings", "Bounce", &ts);
-	poke(b,s)["2TurnMove"] = turn(b,s)["Attack"];
-	turn(b,s)["Power"] = 0;
-	turn(b,s)["Accuracy"] = 0;
-	turn(b,s)["PossibleTarget"] = Move::None;
+        poke(b,s)["2TurnMove"] = turn(b,s)["Attack"];
+        turn(b,s)["Power"] = 0;
+        turn(b,s)["Accuracy"] = 0;
+        turn(b,s)["PossibleTargets"] = Move::None;
     }
 
     static void ts(int s, int, BS &b) {
 	turn(b,s)["NoChoice"] = true;
 	merge(turn(b,s), MoveEffect(poke(b,s)["2TurnMove"].toInt()));
-	addFunction(turn(b,s), "EvenWhenCantMove", "Bounce", &bes);
+        addFunction(turn(b,s), "EvenWhenCantMove", "Bounce", &ewc);
 	removeFunction(poke(b,s), "TurnSettings", "Bounce");
     }
 
-    static void bes(int s, int, BS &b) {
+    static void ewc(int s, int, BS &b) {
 	poke(b,s)["Invulnerable"] = false;
+        b.changeSprite(s, b.pokenum(s));
     }
 
     static void uas(int s, int, BS &b) {
@@ -1584,7 +1582,14 @@ struct MMBounce : public MM
 	poke(b,s)["VulnerableMoves"].setValue(vuln_moves);
 	poke(b,s)["VulnerableMults"].setValue(vuln_mult);
 	b.sendMoveMessage(13,args[0].toInt(),s,type(b,s));
+        b.changeSprite(s, -1);
 	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Bounce", &dgaf);
+        addFunction(poke(b,s), "TurnSettings", "Bounce", &ts);
+
+        int att = turn(b,s)["Attack"].toInt();
+        /* Those moves protect from weather when in the invulnerable state */
+        if (att == Move::Dig || att == Move::Dive || att == Move::ShadowForce)
+            turn(b,s)["WeatherSpecialed"] = true;
     }
 
     static void dgaf(int s, int t, BS &b) {

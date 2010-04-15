@@ -1,0 +1,9 @@
+KP
+Angriff
+Verteidigung
+Initiative
+Spezial Angriff
+Spezial Verteidigung
+Fluchtwert
+Genauigkeit
+
