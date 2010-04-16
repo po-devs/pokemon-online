@@ -156,7 +156,7 @@ QScrollDownTextEdit::QScrollDownTextEdit()
 
 void QScrollDownTextEdit::insertHtml(const QString &text)
 {
-    if (linecount >= 2000) {
+    if (linecount >= 2000 && autoClear) {
         clear();
         linecount = 0;
     }
@@ -174,7 +174,7 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
 
 void QScrollDownTextEdit::insertPlainText(const QString &text)
 {
-    if (linecount >= 1000) {
+    if (linecount >= 2000 && autoClear) {
         clear();
         linecount = 0;
     }

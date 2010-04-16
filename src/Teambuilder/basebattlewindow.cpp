@@ -61,6 +61,7 @@ void BaseBattleWindow::init()
 
     mylayout->addWidget(mydisplay, 0, 0, 3, 2);
     mylayout->addWidget(mychat = new QScrollDownTextEdit(), 0, 2, 1, 2);
+    mychat->setAutoClear(false);
     mylayout->addWidget(myline = new QLineEdit(), 1, 2, 1, 2);
     mylayout->addWidget(myclose = new QPushButton(tr("&Close")), 2, 2);
     mylayout->addWidget(mysend = new QPushButton(tr("Sen&d")), 2, 3);

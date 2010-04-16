@@ -586,6 +586,7 @@ void RankingTree<T>::deleteNode(Node *n)
         n_.right = n->right;
         n_.parent = n->parent;
         n_.count = n->count;
+        n_.changeColor(n->color());
 
         n->left = next->left;
         n->right = next->right;
