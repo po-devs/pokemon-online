@@ -129,6 +129,7 @@ public slots:
     void showTeam(bool);
     void enableLadder(bool);
     void showPlayerEvents(bool);
+    void showTimeStamps(bool);
     void versionDiff(const QString &a, const QString &b);
     void tierListReceived(const QString&);
     void changeTier();
@@ -179,6 +180,7 @@ private:
     QHash<int, QPointer<BaseBattleWindow> > mySpectatingBattles;
     QAction *goaway;
     bool showPEvents;
+    bool showTS;
 
     QPointer<QMenuBar> mymenubar;
     QPointer<QMenu> mytiermenu;

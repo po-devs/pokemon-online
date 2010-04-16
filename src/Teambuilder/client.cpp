@@ -18,7 +18,6 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mychallenge = NULL;
     mybattle = NULL;
     myteambuilder = NULL;
-
     resize(800, 600);
 
     QPushButton *findmatch;
@@ -30,7 +29,6 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     layout->addWidget(myline = new QLineEdit(), 1, 1);
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     layout->addLayout(buttonsLayout,2,1);
-
     buttonsLayout->addWidget(findmatch = new QPushButton(tr("&Find Battle")));
     buttonsLayout->addWidget(myregister = new QPushButton(tr("&Register")));
     buttonsLayout->addWidget(myexit = new QPushButton(tr("&Exit")));
@@ -194,6 +192,13 @@ void Client::showTeam(bool b)
     QSettings s;
     s.setValue("show_team", b);
     relay().notify(NetworkCli::ShowTeamChange, b);
+}
+
+void Client::showTimeStamps(bool b)
+{
+    QSettings s;
+    s.setValue("show_timestamps", b);
+    showTS = b;
 }
 
 void Client::enableLadder(bool b)
@@ -374,6 +379,12 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(show_events, SIGNAL(triggered(bool)), SLOT(showPlayerEvents(bool)));
     show_events->setChecked(s.value("show_player_events").toBool());
     showPEvents = show_events->isChecked();
+
+    QAction * show_ts = menuActions->addAction(tr("&Show Timestamps"));
+    show_ts->setCheckable(true);
+    connect(show_ts, SIGNAL(triggered(bool)), SLOT(showTimeStamps(bool)));
+    show_ts->setChecked(s.value("show_timestamps").toBool());
+    showTS = show_ts->isChecked();
 
     mytiermenu = menuBar->addMenu(tr("&Tier"));
 
@@ -935,12 +946,15 @@ void Client::teamChanged(const PlayerInfo &p) {
 
 void Client::printLine(const QString &line)
 {
+    QString timeStr = "";
+    if(showTS)
+        timeStr = "(" + QTime::currentTime().toString() + ") ";
     if (line.length() == 0) {
         mainChat()->insertPlainText("\n");
         return;
     }
     if (line.leftRef(3) == "***") {
-        mainChat()->insertHtml("<span style='color:magenta'>(" + QTime::currentTime().toString() + ") " + escapeHtml(line) + "</span><br />");
+        mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + escapeHtml(line) + "</span><br />");
         return;
     }
     /* Let's add colors */
@@ -949,16 +963,16 @@ void Client::printLine(const QString &line)
 	QString beg = line.left(pos);
 	QString end = line.right(line.length()-pos-1);
         if (beg == "~~Server~~") {
-            mainChat()->insertHtml("<span style='color:orange'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:orange'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
         } else if (beg == "Welcome Message") {
-            mainChat()->insertHtml("<span style='color:blue'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:blue'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
         } else if (id(beg) == -1) {
-            mainChat()->insertHtml("<span style='color:#74F099'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:#74F099'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
         } else {
-            mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>(" + QTime::currentTime().toString() + ") <b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
 	}
     } else {
-        mainChat()->insertPlainText("(" + QTime::currentTime().toString() + ") " + line + "\n");
+        mainChat()->insertPlainText( timeStr + line + "\n");
     }
 }
 
