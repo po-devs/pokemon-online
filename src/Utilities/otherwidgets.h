@@ -90,11 +90,15 @@ class QScrollDownTextEdit : public QTextEdit
 public:
     QScrollDownTextEdit();
 
+    void setAutoClear(bool a) {
+        autoClear = a;
+    }
     void insertHtml(const QString &text);
     void insertPlainText(const QString &text);
 
 private:
     int linecount;
+    bool autoClear;
 };
 
 /* validator for the nicks */

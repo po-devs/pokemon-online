@@ -1547,14 +1547,18 @@ struct MMBounce : public MM
     MMBounce() {
 	functions["UponAttackSuccessful"] = &uas;
 	functions["OnSetup"] = &os;
+        functions["MoveSettings"] = &ms;
     }
 
     static void os(int s, int, BS &b) {
 	turn(b,s)["TellPlayers"] = false;
-        poke(b,s)["2TurnMove"] = turn(b,s)["Attack"];
+    }
+
+    static void ms(int s, int, BS &b) {
         turn(b,s)["Power"] = 0;
         turn(b,s)["Accuracy"] = 0;
         turn(b,s)["PossibleTargets"] = Move::None;
+        poke(b,s)["2TurnMove"] = turn(b,s)["Attack"];
     }
 
     static void ts(int s, int, BS &b) {
@@ -1588,7 +1592,7 @@ struct MMBounce : public MM
 
         int att = turn(b,s)["Attack"].toInt();
         /* Those moves protect from weather when in the invulnerable state */
-        if (att == Move::Dig || att == Move::Dive || att == Move::ShadowForce)
+        if (att == Move::Dig || att == Move::Dive)
             turn(b,s)["WeatherSpecialed"] = true;
     }
 
