@@ -388,13 +388,23 @@ void BattleWindow::animateHPBar()
 
     const int goal = animatedHpGoal();
 
+    QSettings s;
+    if (!s.value("animate_hp_bar").toBool()) {
+        undelay();
+        info().currentPoke().lifePoints() = goal;
+        info().tempPoke().lifePoints() = goal;
+        info().currentShallow(Myself).lifePercent() = info().tempPoke().lifePercent();
+        mydisplay->updatePoke(Myself);
+        return;
+    }
+
     //To stop the commands from being processed
     delay();
 
     int life = info().currentPoke().lifePoints();
     /* We deal with true HP. 30 msec per 3 hp */
     if (goal == life) {
-        delay(200);
+        delay(120);
         return;
     }
 

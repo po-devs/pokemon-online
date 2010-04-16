@@ -93,6 +93,14 @@ void BaseBattleWindow::animateHPBar()
     const int spot = animatedHpSpot();
     const int goal = animatedHpGoal();
 
+    QSettings s;
+    if (!s.value("animate_hp_bar").toBool()) {
+        undelay();
+        info().currentShallow(spot).lifePercent() = goal;
+        mydisplay->updatePoke(spot);
+        return;
+    }
+
     //To stop the commands from being processed
     delay();
 
@@ -101,7 +109,7 @@ void BaseBattleWindow::animateHPBar()
     int life = info().currentShallow(spot).lifePercent();
 
     if (goal == life) {
-        delay(200);
+        delay(120);
         return;
     }
 

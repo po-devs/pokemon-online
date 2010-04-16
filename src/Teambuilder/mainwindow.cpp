@@ -29,6 +29,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("show_team",true);
     setDefaultValue("enable_ladder", true);
     setDefaultValue("show_player_events", false);
+    setDefaultValue("animate_hp_bar", true);
 
     setDefaultValue("find_battle_force_rated", false);
     setDefaultValue("find_battle_same_tier", true);
