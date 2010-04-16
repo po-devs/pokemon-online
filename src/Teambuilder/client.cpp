@@ -473,7 +473,7 @@ void Client::saveBattleLogs(bool save)
 void Client::animateHpBar(bool save)
 {
     QSettings s;
-    s.setValue("animate_hp_bar", true);
+    s.setValue("animate_hp_bar", save);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
