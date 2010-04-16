@@ -160,15 +160,19 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
         clear();
         linecount = 0;
     }
-
-    moveCursor(QTextCursor::End);
-    QTextEdit::insertHtml(text);
     QScrollBar * b = verticalScrollBar();
-    if(b->isVisible()&&b->value()!= b->maximum())
+    int f = b->value();
+    int e = b->maximum();
+    QTextEdit::insertHtml(text);
+    if(b->value() != e)
     {
-	b->setValue(b->maximum());
+        b->setValue(f);
     }
-
+    else
+    {
+        b->setValue(b->maximum());
+        moveCursor(QTextCursor::End);
+    }
     linecount++;
 }
 
@@ -179,14 +183,19 @@ void QScrollDownTextEdit::insertPlainText(const QString &text)
         linecount = 0;
     }
 
-    moveCursor(QTextCursor::End);
-    QTextEdit::insertPlainText(text);
     QScrollBar * b = verticalScrollBar();
-    if(b->isVisible()&&b->value()!= b->maximum())
+    int f = b->value();
+    int e = b->maximum();
+    QTextEdit::insertPlainText(text);
+    if(b->value() != e)
     {
-	b->setValue(b->maximum());
+        b->setValue(f);
     }
-
+    else
+    {
+        b->setValue(b->maximum());
+        moveCursor(QTextCursor::End);
+    }
     linecount++;
 }
 
