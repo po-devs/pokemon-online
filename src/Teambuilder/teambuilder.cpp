@@ -1485,7 +1485,7 @@ void TB_EVManager::updateEV(int stat)
     slider(stat)->setValue(poke()->EV(stat));
 
     /* first the color : red if the stat is hindered by the nature, black if normal, blue if the stat is enhanced */
-    QColor colors[3] = {Qt::red, Qt::white, Qt::darkGreen};
+    QColor colors[3] = {"#fff600", Qt::white, "#00baff"};
 
     evLabel(stat)->setText(QString::number(poke()->EV(stat)));
     statLabel(stat)->setText(toColor(QString::number(poke()->stat(stat)), colors[poke()->natureBoost(stat)+1]));

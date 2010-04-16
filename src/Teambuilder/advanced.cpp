@@ -364,7 +364,7 @@ void TB_Advanced::updateStats()
 
 void TB_Advanced::updateStat(int stat)
 {
-    QColor colors[3] = {Qt::red, Qt::white, Qt::darkGreen};
+    QColor colors[3] = {"#fff600", Qt::white, "#00baff"};
     QColor mycol = colors[poke()->natureBoost(stat)+1];
     stats[stat]->setText(toColor(QString::number(poke()->stat(stat)), mycol));
 }

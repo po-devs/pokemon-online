@@ -350,18 +350,14 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     }
     menuStyle->addSeparator();
     menuStyle->addAction(tr("Reload StyleSheet"), w, SLOT(loadStyleSheet()));
-    QMenu * menuActions = menuBar->addMenu(tr("&Actions"));
+    QMenu * menuActions = menuBar->addMenu(tr("&Options"));
     goaway = menuActions->addAction(tr("Go &Away"));
     goaway->setCheckable(true);
     goaway->setChecked(this->away());
     connect(goaway, SIGNAL(triggered(bool)), this, SLOT(goAwayB(bool)));
 
-    QAction * saveLogs = menuActions->addAction(tr("Save &Battle Logs"));
-    saveLogs->setCheckable(true);
-    connect(saveLogs, SIGNAL(triggered(bool)), SLOT(saveBattleLogs(bool)));
-
     QSettings s;
-    saveLogs->setChecked(s.value("save_battle_logs").toBool());
+
 
     QAction * show = menuActions->addAction(tr("&Show Team"));
     show->setCheckable(true);
@@ -381,6 +377,16 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     mytiermenu = menuBar->addMenu(tr("&Tier"));
 
+    QMenu *battleMenu = menuBar->addMenu(tr("&Battles", "Menu"));
+    QAction * saveLogs = battleMenu->addAction(tr("Save &Battle Logs"));
+    saveLogs->setCheckable(true);
+    connect(saveLogs, SIGNAL(triggered(bool)), SLOT(saveBattleLogs(bool)));
+    saveLogs->setChecked(s.value("save_battle_logs").toBool());
+
+    QAction *animateHpBar = battleMenu->addAction(tr("Animate HP Bar"));
+    animateHpBar->setCheckable(true);
+    connect(animateHpBar, SIGNAL(triggered(bool)), SLOT(animateHpBar(bool)));
+    animateHpBar->setChecked(s.value("animate_hp_bar").toBool());
 
     mymenubar = menuBar;
     return menuBar;
@@ -462,6 +468,12 @@ void Client::saveBattleLogs(bool save)
 {
     QSettings s;
     s.setValue("save_battle_logs",save);
+}
+
+void Client::animateHpBar(bool save)
+{
+    QSettings s;
+    s.setValue("animate_hp_bar", true);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)

@@ -1260,7 +1260,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    turnlong[player]["Stab"] = stab;
 	    turnlong[player]["TypeMod"] = typemod; /* is attack effective? or not? etc. */
 
-	    calleffects(player, target, "BeforeCalculatingDamage");
+            calleffects(player, target, "BeforeCalculatingDamage");
+            /* For charge */
+            callpeffects(player, target, "BeforeCalculatingDamage");
 
 	    if (typemod == 0) {
 		/* If it's ineffective we just say it */
