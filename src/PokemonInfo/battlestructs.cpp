@@ -361,7 +361,7 @@ void TeamBattle::generateRandom()
                 if (movesTaken.contains(movenum)) {
                     continue;
                 }
-                if((i == 3 && MoveInfo::Power(movenum) == 0 && MoveInfo::Power(movesTaken.value(0)) == 0 && MoveInfo::Power(movesTaken.value(1)) == 0 && MoveInfo::Power(movesTaken.value(2)) == 0)
+                if(i == 3 && MoveInfo::Power(movenum) == 0 && MoveInfo::Power(movesTaken.value(0)) == 0 && MoveInfo::Power(movesTaken.value(1)) == 0 && MoveInfo::Power(movesTaken.value(2)) == 0)
                 {
                     continue;
                 }

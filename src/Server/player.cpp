@@ -563,7 +563,7 @@ void Player::loggedIn(const TeamInfo &_team,bool ladder, bool showteam, QColor c
     this->ladder() = ladder;
     this->showteam() = showteam;
 
-    if (c.lightness() <= 150)
+    if (c.lightness() <= 140)
         color() = c;
 
     AuthentificationState st = testAuthentification(_team);

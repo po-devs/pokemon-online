@@ -3774,9 +3774,9 @@ struct MMSkillSwap : public MM {
         int tab = b.ability(t);
         int sab = b.ability(s);
 
+        b.sendMoveMessage(112,0,s,Pokemon::Psychic,t);
         b.acquireAbility(s, tab);
         b.acquireAbility(t, sab);
-        b.sendMoveMessage(112,0,s,Pokemon::Psychic,t);
     }
 };
 

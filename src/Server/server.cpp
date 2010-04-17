@@ -623,7 +623,7 @@ void Server::findBattle(int id, const FindBattleData &f)
         /* We see if they do match */
         if (f.rated != data->rated) {
             /* We check both allow rated */
-            if (! ((f.rated || p1->ladder()) && (data->rated || p2->ladder())))
+            if (! ((f.rated || p1->ladder()) && (data->rated || p2->ladder()) && p1->ip() != p2->ip()))
                 continue;
         }
         /* We check the tier thing */
