@@ -50,7 +50,11 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
     for (int i = 0; i < 6; i++) {
 	myazones[i] = new AttackZone(team.poke(i));
 	mystack->addWidget(myazones[i]);
-
+        mybgroups.append(new QButtonGroup());
+        for (int j = 0; j < 4; j ++) {
+            myazones[i]->attacks[j]->setCheckable(true);
+            mybgroups.value(i)->addButton(myazones[i]->attacks[j],j);
+        }
 	connect(myazones[i], SIGNAL(clicked(int)), SLOT(attackClicked(int)));
     }
 
@@ -166,7 +170,6 @@ void BattleWindow::switchToPokeZone()
 
 void BattleWindow::attackClicked(int zone)
 {
-    if (info().possible)
 	sendChoice(BattleChoice(false, zone));
 }
 
@@ -214,6 +217,9 @@ void BattleWindow::sendChoice(const BattleChoice &b)
     info().possible = false;
     mycancel->setEnabled(true);
     updateChoices();
+    if(b.getChoice() >=0 && b.getChoice()< 4 ){
+        mybgroups.value(info().currentIndex[Myself])->button(b.getChoice())->setChecked(true);
+    }
 }
 
 void BattleWindow::sendMessage()
@@ -277,6 +283,9 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
 	    in >> info().choices;
             mycancel->setDisabled(true);
 	    updateChoices();
+            for (int i = 0; i < 4; i ++) {
+                mybgroups.value(info().currentIndex[Myself])->button(i)->setChecked(false);
+            }
 	    break;
         }
     case Ko:
@@ -440,7 +449,7 @@ void BattleWindow::updateChoices()
     {
 	if (info().choices.attacksAllowed == false) {
 	    myattack->setEnabled(false);
-	    for (int i = 0; i < 4; i ++) {
+            for (int i = 0; i < 4; i ++) {
                 myazones[info().currentIndex[Myself]]->attacks[i]->setEnabled(false);
 	    }
 	} else {
