@@ -136,4 +136,14 @@ protected:
     void mousePressEvent(QMouseEvent *);
 };
 
+/* A dummy widget that accepts keyboard events */
+class QDummyGrabber : public QWidget
+{
+    Q_OBJECT
+public:
+    QDummyGrabber();
+protected:
+    void keyPressEvent(QKeyEvent *);
+};
+
 #endif // OTHERWIDGETS_H

@@ -602,16 +602,15 @@ void Client::seeChallenge(const ChallengeInfo &c)
 	    connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
 	    connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
 	    connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
+            mychallenge->activateWindow();
 	}
-        mychallenge->raise();
-        mychallenge->activateWindow();
     }
 }
 
 void Client::battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
     mybattle = new BattleWindow(this->team()->trainerNick(),name(id), this->id(ownName()), id, team, conf);
-    mybattle->setParent(this);
+    connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
     mybattle->setWindowFlags(Qt::Window);
     mybattle->client() = this;
     mybattle->show();
