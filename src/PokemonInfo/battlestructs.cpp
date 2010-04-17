@@ -361,13 +361,25 @@ void TeamBattle::generateRandom()
                 if (movesTaken.contains(movenum)) {
                     continue;
                 }
+                if((i == 3 && MoveInfo::Power(movenum) == 0 && MoveInfo::Power(movesTaken.value(0)) == 0 && MoveInfo::Power(movesTaken.value(1)) == 0 && MoveInfo::Power(movesTaken.value(2)) == 0)
+                {
+                    continue;
+                }
                 movesTaken.push_back(movenum);
                 p.move(i).num() = movenum;
                 p.move(i).load();
                 break;
             }
         }
+
+        //bool itemDone= false;
+        //while(itemDone)
+        //{
         p.item() = ItemInfo::Number(ItemInfo::SortedNames()[true_rand()%ItemInfo::NumberOfItems()]);
+        //    if(ItemInfo::Effects(p.item()).size() != 0)
+        //        itemDone = true;
+
+        //}
         p.updateStats();
         p.nick() = PokemonInfo::Name(p.num());
         p.status() = Pokemon::Fine;

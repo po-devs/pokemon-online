@@ -164,6 +164,7 @@ struct BattleChoice
 
     /* returns true if the choice is valid */
     bool match(const BattleChoices &avail) const;
+    int  getChoice() const { return numSwitch; };
     bool attack() const { return !pokeSwitch; }
     bool poke() const { return pokeSwitch; }
     bool cancelled() const { return numSwitch == Cancel; }
