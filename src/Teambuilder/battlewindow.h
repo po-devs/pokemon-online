@@ -89,6 +89,7 @@ protected slots:
 private:
     QStackedWidget *mystack;
     AttackZone *myazones[6];
+    QList<QButtonGroup*> mybgroups;
     PokeZone *mypzone;
     QPushButton *myswitch, *myattack, *mycancel;
 };
