@@ -175,7 +175,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             mydisplay->updatePoke(spot);
 
             if (!silent)
-                printLine(tr("%1 sent out %2!").arg(name(spot), rnick(spot)));
+                printLine(tr("%1 sent out %2! (%3)").arg(name(spot), rnick(spot), PokemonInfo::Name(info().currentShallow(spot).num())));
 
             break;
         }

@@ -317,6 +317,8 @@ void BattleSituation::beginTurn()
 void BattleSituation::endTurn()
 {
     qDebug() << "End turn between " << team1.name << " and " << team2.name;
+    testWin();
+
     callzeffects(Player1, Player1, "EndTurn");
     callzeffects(Player2, Player2, "EndTurn");
 
@@ -631,35 +633,39 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 
     if (hasChoice[player] == false) {
         /* If at least one of the two player still hasn't moved, and the cancel is valid, we allow the cancel */
-        if (b.cancelled() && couldMove[player] && hasChoice[rev(player)]) {
-            hasChoice[player] = true;
-            notify(player, CancelMove, player);
-            startClock(player,false);
+        if (couldMove[player] && hasChoice[rev(player)]) {
+            if (b.cancelled()) {
+                hasChoice[player] = true;
+                notify(player, CancelMove, player);
+                startClock(player,false);
+                return;
+            }
         } else {
+            return;
             //INVALID BEHAVIOR
         }
+    }
+
+    if (!b.match(options[player])) {
+        notify(player, BattleChat, player, QString("<debug message>: your choice is invalid"));
+        //INVALID BEHAVIOR
     } else {
-	if (!b.match(options[player])) {
-            notify(player, BattleChat, player, QString("<debug message>: your choice is invalid"));
-	    //INVALID BEHAVIOR
-	} else {
-	    /* Routine checks */
-	    if (b.poke()) {
-		if (b.numSwitch == currentPoke(player) || poke(player, b.numSwitch).num() == 0 || poke(player, b.numSwitch).ko()) {
-                    notify(player, BattleChat, player, QString("<debug message>: you can't switch to that pokemon"));
-		    // INVALID BEHAVIOR
-		    return;
-		}
-	    }
-	    /* One player has chosen their solution, so there's one less wait */
-	    choice[player] = b;
-            hasChoice[player] = false;
-            stopClock(player,false);
-            /* If everyone has chosen their solution, we carry on */
-            if (!hasChoice[player] && !hasChoice[rev(player)]) {
-                sem.release(1);
+        /* Routine checks */
+        if (b.poke()) {
+            if (b.numSwitch == currentPoke(player) || poke(player, b.numSwitch).num() == 0 || poke(player, b.numSwitch).ko()) {
+                notify(player, BattleChat, player, QString("<debug message>: you can't switch to that pokemon"));
+                // INVALID BEHAVIOR
+                return;
             }
-	}
+        }
+        /* One player has chosen their solution, so there's one less wait */
+        choice[player] = b;
+        hasChoice[player] = false;
+        stopClock(player,false);
+        /* If everyone has chosen their solution, we carry on */
+        if (!hasChoice[player] && !hasChoice[rev(player)]) {
+            sem.release(1);
+        }
     }
 }
 

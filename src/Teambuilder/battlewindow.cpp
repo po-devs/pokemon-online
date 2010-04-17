@@ -170,7 +170,7 @@ void BattleWindow::switchToPokeZone()
 
 void BattleWindow::attackClicked(int zone)
 {
-	sendChoice(BattleChoice(false, zone));
+    sendChoice(BattleChoice(false, zone));
 }
 
 void BattleWindow::switchClicked(int zone)
@@ -262,10 +262,20 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
 	    }
 
             if (!silent)
-                printLine(tr("%1 sent out %2!").arg(name(spot), rnick(spot)));
+                printLine(tr("%1 sent out %2! (%3)").arg(name(spot), rnick(spot), PokemonInfo::Name(info().currentShallow(spot).num())));
 
 	    break;
 	}
+    case ChangeHp:
+        {
+            quint16 newHp;
+            in >> newHp;
+
+            animatedHpSpot() = spot;
+            animatedHpGoal() = newHp;
+            animateHPBar();
+            break;
+        }
 
     case ChangePP:
 	{
@@ -282,10 +292,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
 	    info().possible = true;
 	    in >> info().choices;
             mycancel->setDisabled(true);
-	    updateChoices();
-            for (int i = 0; i < 4; i ++) {
-                mybgroups.value(info().currentIndex[Myself])->button(i)->setChecked(false);
-            }
+            updateChoices();
 	    break;
         }
     case Ko:
@@ -399,11 +406,12 @@ void BattleWindow::animateHPBar()
 
     QSettings s;
     if (!s.value("animate_hp_bar").toBool()) {
-        undelay();
         info().currentPoke().lifePoints() = goal;
         info().tempPoke().lifePoints() = goal;
         info().currentShallow(Myself).lifePercent() = info().tempPoke().lifePercent();
+        mypzone->pokes[info().currentIndex[Myself]]->update();
         mydisplay->updatePoke(Myself);
+        undelay();
         return;
     }
 
