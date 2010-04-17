@@ -289,3 +289,12 @@ void QClickPBar::mousePressEvent(QMouseEvent *)
 {
     emit clicked();
 }
+
+QDummyGrabber::QDummyGrabber()
+{
+    setFocusPolicy(Qt::TabFocus);
+}
+
+void QDummyGrabber::keyPressEvent(QKeyEvent *e)
+{
+}

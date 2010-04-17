@@ -72,6 +72,11 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
         clausesL->addWidget(clauses[i]);
     }
 
+    //so when the challenge window pops up and the guy is talking and press the space bar
+    //he doesn't activate the decline button
+    QWidget *w = new QDummyGrabber();
+    w->setParent(this);
+
     QImageButton *goback;
     goback = new QImageButton("db/Challenge Window/Buttons/" + buttonNo + "ButtonNormal.png", "db/Challenge Window/Buttons/" + buttonNo + "ButtonGlow.png");
     goback->setParent(this);
