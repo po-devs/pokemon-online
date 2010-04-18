@@ -713,7 +713,7 @@ struct MMPainSplit : public MM
 	if (b.koed(t) || b.koed(s)) {
 	    return;
 	}
-	int sum = b.poke(s).lifePoints() + b.poke(t).lifePoints();
+        int sum = std::min(2*b.poke(t).totalLifePoints(), std::min(2*b.poke(s).totalLifePoints(),b.poke(s).lifePoints() + b.poke(t).lifePoints()));
 	b.changeHp(s, sum/2);
 	b.changeHp(t, sum/2);
 	b.sendMoveMessage(94, 0, s, type(b,s),t);
