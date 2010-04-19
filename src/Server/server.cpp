@@ -355,7 +355,8 @@ void Server::kick(int id, int src) {
         return;
     foreach(Player *p, myplayers)
     {
-        p->relay().notify(NetworkServ::PlayerKick, qint32(id), qint32(src));
+        if (p->isLoggedIn())
+            p->relay().notify(NetworkServ::PlayerKick, qint32(id), qint32(src));
     }
     if (src == 0)
         printLine("The server kicked " + name(id) + "!");

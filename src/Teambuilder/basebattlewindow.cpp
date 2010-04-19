@@ -1,12 +1,11 @@
 #include "basebattlewindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
-#include "client.h"
 
-BaseBattleInfo::BaseBattleInfo(const QString &me, const QString &opp)
+BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp)
 {
-    name[0] = me;
-    name[1] = opp;
+    pInfo[0] = me;
+    pInfo[1] = opp;
     sub[0] = false;
     sub[1] = false;
     pokeAlive[0] = false;
@@ -21,7 +20,7 @@ BaseBattleInfo::BaseBattleInfo(const QString &me, const QString &opp)
     currentIndex[1] = 0;
 }
 
-BaseBattleWindow::BaseBattleWindow(const QString &me, const QString &opponent) : delayed(false)
+BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent) : delayed(false)
 {
     myInfo = new BaseBattleInfo(me, opponent);
     mydisplay = new BaseBattleDisplay(info());
@@ -56,15 +55,22 @@ void BaseBattleWindow::init()
     blankMessage = false;
     battleEnded = false;
 
-    setWindowTitle(tr("Battle between %1 and %2").arg(info().name[0], info().name[1]));
-    mylayout = new QGridLayout(this);
+    setWindowTitle(tr("Battle between %1 and %2").arg(name(0), name(1)));
 
-    mylayout->addWidget(mydisplay, 0, 0, 3, 2);
-    mylayout->addWidget(mychat = new QScrollDownTextEdit(), 0, 2, 1, 2);
+    QHBoxLayout *columns = new QHBoxLayout(this);
+    columns->addLayout(mylayout = new QGridLayout());
+
+    mylayout->addWidget(mydisplay, 0, 0, 1, 3);
+
+    QVBoxLayout *chat = new QVBoxLayout();
+    columns->addLayout(chat);
+    chat->addWidget(mychat = new QScrollDownTextEdit());
     mychat->setAutoClear(false);
-    mylayout->addWidget(myline = new QLineEdit(), 1, 2, 1, 2);
-    mylayout->addWidget(myclose = new QPushButton(tr("&Close")), 2, 2);
-    mylayout->addWidget(mysend = new QPushButton(tr("Sen&d")), 2, 3);
+    chat->addWidget(myline = new QLineEdit());
+    QHBoxLayout * buttons = new QHBoxLayout();
+    chat->addLayout(buttons);
+    buttons->addWidget(myclose = new QPushButton(tr("&Close")));
+    buttons->addWidget(mysend = new QPushButton(tr("Sen&d")));
 
     connect(myclose, SIGNAL(clicked()), SLOT(clickClose()));
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
@@ -75,7 +81,7 @@ void BaseBattleWindow::init()
 
 QString BaseBattleWindow::name(int spot) const
 {
-    return info().name[spot];
+    return info().name(spot);
 }
 
 QString BaseBattleWindow::nick(int player) const
@@ -174,8 +180,13 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             info().specialSprite[spot] = 0;
             mydisplay->updatePoke(spot);
 
-            if (!silent)
-                printLine(tr("%1 sent out %2! (%3)").arg(name(spot), rnick(spot), PokemonInfo::Name(info().currentShallow(spot).num())));
+            if (!silent) {
+                QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());
+                if (pokename != rnick(spot))
+                    printLine(tr("%1 sent out %2! (%3)").arg(name(spot), rnick(spot), pokename));
+                else
+                    printLine(tr("%1 sent out %2!").arg(name(spot), rnick(spot)));
+            }
 
             break;
         }
@@ -588,85 +599,104 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     : myInfo(&i)
 {
     QVBoxLayout *l=  new QVBoxLayout(this);
+    l->setMargin(0);
 
     /* As anyway the BaseGraphicsZone is a fixed size, it's useless to
        resize that part, might as well let  the chat be resized */
     l->setSizeConstraint(QLayout::SetFixedSize);
 
-    QHBoxLayout *foetrainer = new QHBoxLayout();
+    QHBoxLayout *firstLine = new QHBoxLayout();
+    l->addLayout(firstLine);
 
-    timers[Opponent] = new QProgressBar();
-    timers[Opponent]->setObjectName("TimeOut"); //for style sheets
-    timers[Opponent]->setRange(0,300);
-
-    foetrainer->addWidget(timers[Opponent],0,Qt::AlignLeft);
-    foetrainer->addWidget(trainers[Opponent] = new QLabel(i.name[Opponent]),0, Qt::AlignRight);
-
-    l->addLayout(foetrainer);
-
-
-    QHBoxLayout *foeteam = new QHBoxLayout();
-    l->addLayout(foeteam);
-    for (int i = 0; i < 6; i++) {
-        advpokeballs[i] = new QLabel();
-        advpokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
-        foeteam->addWidget(advpokeballs[i]);
-    }
-
-    gender[Opponent] = new QLabel();
-    foeteam->addWidget(gender[Opponent], 100, Qt::AlignRight);
-
-    nick[Opponent] = new QLabel(info().name[Opponent]);
-    foeteam->addWidget(nick[Opponent], 0, Qt::AlignRight);
-
-    status[Opponent] = new QLabel();
-    foeteam->addWidget(status[Opponent]);
-
-    foeteam->setSpacing(1);
-
+    firstLine->addSpacing(90);
+    QGridLayout *oppPoke = new QGridLayout();
+    oppPoke->addWidget(nick[Opponent] = new QLabel(),0,0);
+    oppPoke->addWidget(gender[Opponent] = new QLabel(),0,1);
+    oppPoke->addWidget(status[Opponent] = new QLabel());
     bars[Opponent] = new QClickPBar();
     bars[Opponent]->setObjectName("LifePoints"); /* for stylesheets */
     bars[Opponent]->setRange(0, 100);
-    l->addWidget(bars[Opponent]);
+    oppPoke->addWidget(bars[Opponent],1,0,1,2);
+    firstLine->addLayout(oppPoke);
+
+
+    QHBoxLayout *foeteam = new QHBoxLayout();
+    foeteam->addStretch(100);
+    for (int i = 0; i < 6; i++) {
+        advpokeballs[i] = new QLabel();
+        advpokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
+        foeteam->addWidget(advpokeballs[i],0,Qt::AlignTop);
+    }
+    foeteam->setSpacing(4);
+
+    QVBoxLayout * oppTeamAndName = new QVBoxLayout();
+    oppTeamAndName->addLayout(foeteam);
+    oppTeamAndName->addWidget(trainers[Opponent] = new QLabel(info().name(Opponent)),0, Qt::AlignRight);
+    trainers[Opponent]->setObjectName("TrainerNick");
+    firstLine->addLayout(oppTeamAndName);
+
 
     zone = new BaseGraphicsZone();
-    l->addWidget(zone);
 
-    bars[Myself] = new QClickPBar();
-    bars[Myself]->setObjectName("LifePoints"); /* for stylesheets */
-    bars[Myself]->setRange(0,100);
-    l->addWidget(bars[Myself]);
-
-    QHBoxLayout *team = new QHBoxLayout();
-    team->setSpacing(1);
-
-    l->addLayout(team);
-
-    gender[Myself] = new QLabel();
-    team->addWidget(gender[Myself]);
-
-    nick[Myself] = new QLabel(info().name[Myself]);
-    team->addWidget(nick[Myself], 0, Qt::AlignLeft);
-
-    status[Myself] = new QLabel();
-    team->addWidget(status[Myself], 100, Qt::AlignLeft);
-
-    team->addWidget(new QLabel(), 100);
-    for (int i = 0; i < 6; i++) {
-        mypokeballs[i] = new QLabel();
-        mypokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
-        team->addWidget(mypokeballs[i]);
-    }
-
-    QHBoxLayout *trainer = new QHBoxLayout();
+    QHBoxLayout *midzone = new QHBoxLayout();
+    QVBoxLayout *midme = new QVBoxLayout();
+    midzone->addLayout(midme);
+    midme->addStretch(100);
     timers[Myself] = new QProgressBar();
     timers[Myself]->setObjectName("TimeOut"); //for style sheets
     timers[Myself]->setRange(0,300);
+    midme->addWidget(timers[Myself]);
+    QLabel *mybox = new QLabel();
+    mybox->setObjectName("MyTrainerBox");
+    mybox->setFixedSize(82,82);
+    mybox->setPixmap(QPixmap(QString("db/Trainer Sprites/%1.png").arg(info().pInfo[Myself].avatar)));
+    midme->addWidget(mybox);
+    midzone->addWidget(zone);
+    QVBoxLayout *midopp = new QVBoxLayout();
+    midzone->addLayout(midopp);
+    QLabel *oppbox = new QLabel();
+    oppbox->setPixmap(QPixmap(QString("db/Trainer Sprites/%1.png").arg(info().pInfo[Opponent].avatar)));
+    oppbox->setObjectName("OppTrainerBox");
+    oppbox->setFixedSize(82,82);
+    midopp->addWidget(oppbox);
+    timers[Opponent] = new QProgressBar();
+    timers[Opponent]->setObjectName("TimeOut"); //for style sheets
+    timers[Opponent]->setRange(0,300);
+    midopp->addWidget(timers[Opponent]);
+    midopp->addStretch(100);
 
-    trainer->addWidget(trainers[Myself] = new QLabel(info().name[Myself]),0,Qt::AlignLeft);
-    trainer->addWidget(timers[Myself],0,Qt::AlignRight);
+    l->addLayout(midzone);
 
-    l->addLayout(trainer);
+
+    QHBoxLayout *lastLine = new QHBoxLayout();
+    l->addLayout(lastLine);
+
+    QHBoxLayout *team = new QHBoxLayout();
+    for (int i = 0; i < 6; i++) {
+        mypokeballs[i] = new QLabel();
+        mypokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
+        team->addWidget(mypokeballs[i],0,Qt::AlignBottom);
+    }
+    team->setSpacing(4);
+    team->addStretch(100);
+
+    QVBoxLayout * myTeamAndName = new QVBoxLayout();
+    myTeamAndName->addWidget(trainers[Myself] = new QLabel(info().name(Myself)),0, Qt::AlignLeft);
+    myTeamAndName->addLayout(team);
+    trainers[Myself]->setObjectName("TrainerNick");
+
+    lastLine->addLayout(myTeamAndName);
+
+    QGridLayout *myPoke = new QGridLayout();
+    myPoke->addWidget(nick[Myself] = new QLabel(),0,0);
+    myPoke->addWidget(gender[Myself] = new QLabel(),0,1);
+    myPoke->addWidget(status[Myself] = new QLabel());
+    bars[Myself] = new QClickPBar();
+    bars[Myself]->setObjectName("LifePoints"); /* for stylesheets */
+    bars[Myself]->setRange(0, 100);
+    myPoke->addWidget(bars[Myself],1,0,1,2);
+    lastLine->addLayout(myPoke);
+    lastLine->addSpacing(90);
 
     updatePoke(Myself);
     updatePoke(Opponent);
@@ -688,7 +718,7 @@ void BaseBattleDisplay::updateTimers()
         }
         timers[i]->setFormat(QString("%1 : %2").arg(ctime/60).arg(QString::number(ctime%60).rightJustified(2,'0')));
         if (ctime > 60) {
-            timers[i]->setStyleSheet("::chunk{background-color: #29db21;}");
+            timers[i]->setStyleSheet("::chunk{background-color: #55a8fc;}");
         }else if (ctime > 30) {
             timers[i]->setStyleSheet("::chunk{background-color: #F8DB17;;}");
         } else {

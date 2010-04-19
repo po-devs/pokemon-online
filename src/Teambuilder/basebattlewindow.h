@@ -3,10 +3,12 @@
 
 #include <QtGui>
 #include "../PokemonInfo/battlestructs.h"
+#include "client.h"
 
 class BaseBattleDisplay;
 class QScrollDownTextEdit;
 class QClickPBar;
+
 
 enum {
     Myself,
@@ -15,9 +17,9 @@ enum {
 
 struct BaseBattleInfo
 {
-    BaseBattleInfo(const QString & me, const QString &opp);
+    BaseBattleInfo(const PlayerInfo & me, const PlayerInfo &opp);
     /* name [0] = mine, name[1] = other */
-    QString name[2];
+    PlayerInfo pInfo[2];
     bool sub[2];
     quint16 specialSprite[2];
     quint16 time[2];
@@ -35,6 +37,10 @@ struct BaseBattleInfo
     }
     const ShallowBattlePoke &currentShallow(int player) const {
         return pokemons[player][currentIndex[player]];
+    }
+
+    QString name(int x) const {
+        return pInfo[x].team.name;
     }
 
     /* Stat boosts & team status */
@@ -61,7 +67,7 @@ public:
         return *myInfo;
     }
 
-    BaseBattleWindow(const QString &me, const QString &opponent);
+    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent);
 
     enum BattleCommand
     {

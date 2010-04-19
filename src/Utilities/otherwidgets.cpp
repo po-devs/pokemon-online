@@ -163,6 +163,7 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
     QScrollBar * b = verticalScrollBar();
     int f = b->value();
     int e = b->maximum();
+    moveCursor(QTextCursor::End);
     QTextEdit::insertHtml(text);
     if(b->value() != e)
     {
@@ -186,6 +187,9 @@ void QScrollDownTextEdit::insertPlainText(const QString &text)
     QScrollBar * b = verticalScrollBar();
     int f = b->value();
     int e = b->maximum();
+
+    moveCursor(QTextCursor::End);
+
     QTextEdit::insertPlainText(text);
     if(b->value() != e)
     {
@@ -292,9 +296,5 @@ void QClickPBar::mousePressEvent(QMouseEvent *)
 
 QDummyGrabber::QDummyGrabber()
 {
-    setFocusPolicy(Qt::TabFocus);
-}
-
-void QDummyGrabber::keyPressEvent(QKeyEvent *e)
-{
+    setFixedSize(0,0);
 }

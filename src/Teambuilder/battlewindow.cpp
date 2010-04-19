@@ -5,7 +5,7 @@
 #include "basebattlewindow.h"
 #include "client.h"
 
-BattleInfo::BattleInfo(const TeamBattle &team, const QString &me, const QString &opp)
+BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const PlayerInfo &opp)
     : BaseBattleInfo(me, opp)
 {
     possible = false;
@@ -26,7 +26,7 @@ PokeBattle & BattleInfo::currentPoke()
     return myteam.poke(currentIndex[Myself]);
 }
 
-BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &team, const BattleConfiguration &_conf)
+BattleWindow::BattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf)
 {
     myInfo = new BattleInfo(team, me, opponent);
     mydisplay = new BattleDisplay(info());
@@ -34,16 +34,13 @@ BattleWindow::BattleWindow(const QString &me, const QString &opponent, int idme,
 
     conf() = _conf;
 
-    this->idme() = idme;
-    this->idopp() = idopp;
-
-    setWindowTitle(tr("Battling against %1").arg(opponent));
+    setWindowTitle(tr("Battling against %1").arg(name(Opponent)));
 
     myclose->setText(tr("&Forfeit"));
-    mylayout->addWidget(mystack = new QStackedWidget(), 3, 0, 1, 4);
-    mylayout->addWidget(mycancel = new QPushButton(tr("&Cancel")), 4,0);
-    mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 4, 2);
-    mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémon")), 4, 3);
+    mylayout->addWidget(mystack = new QStackedWidget(), 1, 0, 1, 3);
+    mylayout->addWidget(mycancel = new QPushButton(tr("&Cancel")), 2,0);
+    mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 2, 1);
+    mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémon")), 2, 2);
 
     mycancel->setDisabled(true);
 
@@ -88,7 +85,7 @@ void BattleWindow::closeEvent(QCloseEvent *)
 
     if (s.value("save_battle_logs").toBool()) {
         QString directory = s.value("battle_logs_directory").toString();
-        QString file = QFileDialog::getSaveFileName(0,QObject::tr("Saving the battle"),directory+info().name[0] + " vs " + info().name[1]
+        QString file = QFileDialog::getSaveFileName(0,QObject::tr("Saving the battle"),directory+info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name
                                      + "--" + QDate::currentDate().toString("dd MMMM yyyy") + "_" +QTime::currentTime().toString("hh'h'mm")
                                      , QObject::tr("html (*.html)\ntxt (*.txt)"));
         if (file.length() != 0) {
@@ -261,8 +258,13 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                 mydisplay->updatePoke(spot);
 	    }
 
-            if (!silent)
-                printLine(tr("%1 sent out %2! (%3)").arg(name(spot), rnick(spot), PokemonInfo::Name(info().currentShallow(spot).num())));
+            if (!silent) {
+                QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());
+                if (pokename != rnick(spot))
+                    printLine(tr("%1 sent out %2! (%3)").arg(name(spot), rnick(spot), pokename));
+                else
+                    printLine(tr("%1 sent out %2!").arg(name(spot), rnick(spot)));
+            }
 
 	    break;
 	}
@@ -584,9 +586,6 @@ BattleDisplay::BattleDisplay(BattleInfo &i)
     for (int i = 0; i < 6; i++) {
         mypokeballs[i]->setToolTip(info().myteam.poke(i).nick());
     }
-
-    trainers[Myself]->setText("");
-    trainers[Opponent]->setText("");
 
     updatePoke(Myself);
 

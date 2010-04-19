@@ -13,7 +13,7 @@ class QScrollDownTextEdit;
 class BattleInfo : public BaseBattleInfo
 {
 public:
-    BattleInfo(const TeamBattle &myteam, const QString &me, const QString &opp);
+    BattleInfo(const TeamBattle &myteam, const PlayerInfo &me, const PlayerInfo &opp);
 
     /* Possible choices */
     bool possible;
@@ -38,10 +38,8 @@ class BattleWindow : public BaseBattleWindow
     Q_OBJECT
 
     PROPERTY(BattleConfiguration, conf);
-    PROPERTY(int, idme);
-    PROPERTY(int, idopp);
 public:
-    BattleWindow(const QString &me, const QString &opponent, int idme, int idopp, const TeamBattle &myteam, const BattleConfiguration &conf);
+    BattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf);
 
     BattleInfo &info() {
         return *(BattleInfo*)(&BaseBattleWindow::info());
@@ -87,6 +85,15 @@ protected:
 protected slots:
     void animateHPBar();
 private:
+
+    int idme() const {
+        return info().pInfo[Myself].id;
+    }
+
+    int idopp() const {
+        return info().pInfo[Opponent].id;
+    }
+
     QStackedWidget *mystack;
     AttackZone *myazones[6];
     QList<QButtonGroup*> mybgroups;
