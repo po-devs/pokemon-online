@@ -1600,23 +1600,23 @@ struct MMBounce : public MM
 	if (s == t || t == -1) {
 	    return;
 	}
-	if (!poke(b,t).value("Invulnerable").toBool()) {
+        if (!poke(b,s).value("Invulnerable").toBool()) {
 	    return;
 	}
-	int attack = turn(b,s)["Attack"].toInt();
+        int attack = turn(b,t)["Attack"].toInt();
 	/* Lets see if the poke is vulnerable to that one attack */
-	QList<int> vuln_moves = poke(b,t)["VulnerableMoves"].value<QList<int> >();
-	QList<int> vuln_mults = poke(b,t)["VulnerableMults"].value<QList<int> >();
+        QList<int> vuln_moves = poke(b,s)["VulnerableMoves"].value<QList<int> >();
+        QList<int> vuln_mults = poke(b,s)["VulnerableMults"].value<QList<int> >();
 
 	for (int i = 0; i < vuln_moves.size(); i++) {
 	    if (vuln_moves[i] == attack) {
-		turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * vuln_mults[i];
+                turn(b,t)["Power"] = turn(b,t)["Power"].toInt() * vuln_mults[i];
 		return;
 	    }
 	}
 
 	/* All other moves fail */
-        turn(b,t)["EvadeAttack"] = true;
+        turn(b,s)["EvadeAttack"] = true;
     }
 };
 
