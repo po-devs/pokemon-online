@@ -80,7 +80,7 @@ inline QString toBoldColor(const QString &mess, const QColor &col)
 }
 
 inline int true_rand() {
-    return rand() + (clock());
+    return rand() + (clock()%RAND_MAX);
 }
 
 inline int intlog2(unsigned x) {

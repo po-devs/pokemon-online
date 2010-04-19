@@ -1107,6 +1107,7 @@ struct MMRapidSpin : public MM
         if (poke(b,s).contains("SeedSource")) {
             b.sendMoveMessage(103,1,s);
             poke(b,s).remove("SeedSource");
+            removeFunction(poke(b,s), "EndTurn", "LeechSeed");
         }
         if (team(b,s).contains("Spikes")) {
             b.sendMoveMessage(103,2,s);

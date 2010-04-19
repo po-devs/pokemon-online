@@ -149,10 +149,10 @@ QProgressBar#TimeOut {
     border: 1px solid black;
 	width: 79;
 	height: 21;
-	background-color:black;
+	background-color:white;
 	font-weight:bold;
 	text-align: center;
-	color: white;
+	color: black;
 	border-radius: 7px;
 }
 
