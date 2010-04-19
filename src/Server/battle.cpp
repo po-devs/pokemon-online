@@ -891,6 +891,12 @@ bool BattleSituation::testAccuracy(int player, int target)
 {
     int acc = turnlong[player]["Accuracy"].toInt();
 
+    pokelong[target].remove("EvadeAttack");
+    callpeffects(target, source, "TestEvasion");
+
+    if (pokelong[target].contains("EvadeAttack"))
+        return false;
+
     if (acc == 0) {
 	return true;
     }

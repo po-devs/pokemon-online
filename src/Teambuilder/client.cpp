@@ -609,7 +609,7 @@ void Client::seeChallenge(const ChallengeInfo &c)
 
 void Client::battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    mybattle = new BattleWindow(this->team()->trainerNick(),name(id), this->id(ownName()), id, team, conf);
+    mybattle = new BattleWindow(player(ownId()), player(id), team, conf);
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
     mybattle->setWindowFlags(Qt::Window);
     mybattle->client() = this;
@@ -627,7 +627,7 @@ void Client::battleStarted(int id, const TeamBattle &team, const BattleConfigura
 
 void Client::watchBattle(const QString &name0, const QString &name1, int battleId)
 {
-    BaseBattleWindow *battle = new BaseBattleWindow(name0, name1);
+    BaseBattleWindow *battle = new BaseBattleWindow(player(id(name0)), player(id(name1)));
     battle->setParent(this);
     battle->setWindowFlags(Qt::Window);
     battle->show();

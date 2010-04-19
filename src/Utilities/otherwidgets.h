@@ -137,13 +137,11 @@ protected:
 };
 
 /* A dummy widget that accepts keyboard events */
-class QDummyGrabber : public QWidget
+class QDummyGrabber : public QPushButton
 {
     Q_OBJECT
 public:
     QDummyGrabber();
-protected:
-    void keyPressEvent(QKeyEvent *);
 };
 
 #endif // OTHERWIDGETS_H

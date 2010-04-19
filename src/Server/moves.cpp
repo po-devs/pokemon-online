@@ -1587,7 +1587,7 @@ struct MMBounce : public MM
 	poke(b,s)["VulnerableMults"].setValue(vuln_mult);
 	b.sendMoveMessage(13,args[0].toInt(),s,type(b,s));
         b.changeSprite(s, -1);
-	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Bounce", &dgaf);
+        addFunction(poke(b,s), "TestEvasion", "Bounce", &dgaf);
         addFunction(poke(b,s), "TurnSettings", "Bounce", &ts);
 
         int att = turn(b,s)["Attack"].toInt();
@@ -1616,7 +1616,7 @@ struct MMBounce : public MM
 	}
 
 	/* All other moves fail */
-	turn(b,s)["Failed"] = true;
+        turn(b,t)["EvadeAttack"] = true;
     }
 };
 

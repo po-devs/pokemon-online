@@ -147,17 +147,17 @@ PokemonBox {
 
 QProgressBar#TimeOut {
     border: 1px solid black;
-	width: 93;
-	height: 16;
+	width: 79;
+	height: 21;
 	background-color:black;
 	font-weight:bold;
 	text-align: center;
 	color: white;
-	border-radius: 5px;
+	border-radius: 7px;
 }
 
 QProgressBar#TimeOut::chunk{
-	background-color: #29db21;
+	background-color: #55a8fc;
 	width: 1px;
 }
 
@@ -170,6 +170,31 @@ QProgressBar#LifePoints {
 QProgressBar#LifePoints::chunk{
 	background-color: #05B8CC;
 	width: 1px;
+}
+
+BaseBattleWindow {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8f9294, stop: 0.5 #ccc9c9, stop: 1 #8f9294);
+}
+
+BaseBattleWindow QLabel#TrainerNick {
+	font-weight: bold;
+	color: #312f2f;
+	font-size: 10pt;
+}
+
+QLabel#MyTrainerBox, QLabel#OppTrainerBox {
+	height: 80px;
+	width: 80px;
+	background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #e9e8e8, stop: 0.5 #aeacac, stop: 1 #e9e8e8);
+	border-radius: 8px
+}
+
+QLabel#MyTrainerBox {
+	border: 1px solid #fa1111
+}
+
+QLabel#OppTrainerBox {
+	border: 1px solid #16a7d6
 }
 
 TB_PokemonBoxes QTabWidget::pane { /* The tab widget frame */
