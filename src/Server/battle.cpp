@@ -891,11 +891,13 @@ bool BattleSituation::testAccuracy(int player, int target)
 {
     int acc = turnlong[player]["Accuracy"].toInt();
 
-    pokelong[target].remove("EvadeAttack");
-    callpeffects(target, source, "TestEvasion");
+    turnlong[target].remove("EvadeAttack");
+    callpeffects(target, player, "TestEvasion"); //dig bounce ...
 
-    if (pokelong[target].contains("EvadeAttack"))
+    if (turnlong[target].contains("EvadeAttack")) {
+        notify(All, Miss, player);
         return false;
+    }
 
     if (acc == 0) {
 	return true;
