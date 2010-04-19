@@ -37,10 +37,10 @@ BattleWindow::BattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, con
     setWindowTitle(tr("Battling against %1").arg(name(Opponent)));
 
     myclose->setText(tr("&Forfeit"));
-    mylayout->addWidget(mystack = new QStackedWidget(), 1, 0, 1, 3);
-    mylayout->addWidget(mycancel = new QPushButton(tr("&Cancel")), 2,0);
-    mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 2, 1);
-    mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémon")), 2, 2);
+    mylayout->addWidget(mystack = new QStackedWidget(), 2, 0, 1, 3);
+    mylayout->addWidget(mycancel = new QPushButton(tr("&Cancel")), 3,0);
+    mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 3, 1);
+    mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémon")), 3, 2);
 
     mycancel->setDisabled(true);
 

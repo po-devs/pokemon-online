@@ -274,6 +274,9 @@ void BattleSituation::run()
     /* Under windows you need to do that, as rand is per-thread. But on linux it'd screw up the random thing and
         interfere with other battles */
     srand(time(NULL));
+    /* Get rid of the first predictable values for a better rand*/
+    for (int i = 0; i < 5; i++)
+        rand();
 #else
 # ifdef WIN64
     /* Under windows you need to do that, as rand is per-thread. But on linux it'd screw up the random thing */

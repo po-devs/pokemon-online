@@ -61,6 +61,7 @@ void BaseBattleWindow::init()
     columns->addLayout(mylayout = new QGridLayout());
 
     mylayout->addWidget(mydisplay, 0, 0, 1, 3);
+    mylayout->addWidget(myclose = new QPushButton(tr("&Close")),1,2);
 
     QVBoxLayout *chat = new QVBoxLayout();
     columns->addLayout(chat);
@@ -69,8 +70,11 @@ void BaseBattleWindow::init()
     chat->addWidget(myline = new QLineEdit());
     QHBoxLayout * buttons = new QHBoxLayout();
     chat->addLayout(buttons);
-    buttons->addWidget(myclose = new QPushButton(tr("&Close")));
-    buttons->addWidget(mysend = new QPushButton(tr("Sen&d")));
+    QPushButton *myignore;
+    buttons->addWidget(mysend = new QPushButton(tr("C&hat")));
+    buttons->addWidget(myignore = new QPushButton(tr("&Ignore Spectators")));
+    myignore->setCheckable(true);
+
 
     connect(myclose, SIGNAL(clicked()), SLOT(clickClose()));
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
@@ -627,7 +631,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
         advpokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
         foeteam->addWidget(advpokeballs[i],0,Qt::AlignTop);
     }
-    foeteam->setSpacing(4);
+    foeteam->setSpacing(1);
 
     QVBoxLayout * oppTeamAndName = new QVBoxLayout();
     oppTeamAndName->addLayout(foeteam);
@@ -677,7 +681,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
         mypokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
         team->addWidget(mypokeballs[i],0,Qt::AlignBottom);
     }
-    team->setSpacing(4);
+    team->setSpacing(1);
     team->addStretch(100);
 
     QVBoxLayout * myTeamAndName = new QVBoxLayout();
