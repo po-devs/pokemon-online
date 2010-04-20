@@ -826,6 +826,7 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num)
 
     box1->addWidget(new TitledWidget(tr("&Nickname"),m_nick = new QLineEdit()));
     m_nick->setValidator(new QNickValidator(m_nick));
+    m_nick->setMaxLength(12);
 
     QWidget *itemw = new QWidget();
     QHBoxLayout *hitem = new QHBoxLayout(itemw);

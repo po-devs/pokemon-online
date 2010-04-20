@@ -162,13 +162,13 @@ QProgressBar#TimeOut::chunk{
 }
 
 QProgressBar#LifePoints {
-	border: 2px solid grey;
-	border-radius: 5px;
+	border: 1px solid #353535;
+	border-left: 0px;
 	text-align: center;
 }
 
 QProgressBar#LifePoints::chunk{
-	background-color: #05B8CC;
+	background-color: #1fc42a;
 	width: 1px;
 }
 
@@ -180,6 +180,16 @@ BaseBattleWindow QLabel#TrainerNick {
 	font-weight: bold;
 	color: #312f2f;
 	font-size: 10pt;
+}
+
+BaseBattleWindow QLabel#PokemonNick {
+	font-family: Comic Sans MS;
+	font-size: 10pt;
+}
+
+BaseBattleWindow QLabel#PokemonLevel {
+	font-family: Comic Sans MS;
+	font-size: 8pt;
 }
 
 QLabel#MyTrainerBox, QLabel#OppTrainerBox {

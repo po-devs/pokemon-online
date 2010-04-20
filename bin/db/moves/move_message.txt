@@ -1,5 +1,5 @@
 
-%f had its eneergy drained!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
+%f had its energy drained!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
 A ring of water surrounds %s!|Aquaring recovered %s's hp a little.
 A soothing aroma wafted through the area!|A bell chimed!
 

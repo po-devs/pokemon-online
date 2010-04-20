@@ -693,8 +693,10 @@ void BattleSituation::startClock(int player, bool broadCoast)
 void BattleSituation::stopClock(int player, bool broadCoast)
 {
     if (!(clauses() & ChallengeInfo::NoTimeOut)) {
-        timeStopped[player] = true;
-        timeleft[player] = std::max(0,timeleft[player] - (QAtomicInt(time(NULL)) - startedAt[player]));
+        if (!timeStopped[player]) {
+            timeStopped[player] = true;
+            timeleft[player] = std::max(0,timeleft[player] - (QAtomicInt(time(NULL)) - startedAt[player]));
+        }
 
         if (broadCoast) {
             timeleft[player] = std::min(int(timeleft[player]+30), 5*60);

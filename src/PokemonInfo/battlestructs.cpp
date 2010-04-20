@@ -133,7 +133,7 @@ void PokeBattle::init(const PokePersonal &poke)
         num() = Pokemon::Giratina;
     }
 
-    nick() = v.validate(poke.nickname()) == QNickValidator::Acceptable ? poke.nickname() : PokemonInfo::Name(num());
+    nick() = (v.validate(poke.nickname()) == QNickValidator::Acceptable && poke.nickname().length() <= 12) ? poke.nickname() : PokemonInfo::Name(num());
 
     if (GenderInfo::Possible(poke.gender(), p.genderAvail())) {
 	gender() = poke.gender();

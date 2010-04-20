@@ -1,6 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define VERSION QString("0.9.25")
+#define VERSION QString("0.9.26")
 
 #endif // CONFIG_H
