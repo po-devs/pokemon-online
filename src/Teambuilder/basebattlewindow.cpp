@@ -20,7 +20,7 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp)
     currentIndex[1] = 0;
 }
 
-BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent) : delayed(false)
+BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent) : ignoreSpecs(false), delayed(false)
 {
     myInfo = new BaseBattleInfo(me, opponent);
     mydisplay = new BaseBattleDisplay(info());
@@ -76,6 +76,7 @@ void BaseBattleWindow::init()
     myignore->setCheckable(true);
 
 
+    connect(myignore, SIGNAL(toggled(bool)), SLOT(ignoreSpectators(bool)));
     connect(myclose, SIGNAL(clicked()), SLOT(clickClose()));
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
@@ -167,6 +168,11 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
     in >> command >> player;
 
     dealWithCommandInfo(in, command, player, player);
+}
+
+void BaseBattleWindow::ignoreSpectators(bool ignore)
+{
+    ignoreSpecs = ignore;
 }
 
 void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
@@ -363,6 +369,8 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         }
     case SpectatorChat:
         {
+            if (ignoreSpecs)
+                return;
             qint32 id;
             QString message;
             in >> id >> message;
@@ -613,15 +621,29 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     l->addLayout(firstLine);
 
     firstLine->addSpacing(90);
-    QGridLayout *oppPoke = new QGridLayout();
-    oppPoke->addWidget(nick[Opponent] = new QLabel(),0,0);
-    oppPoke->addWidget(gender[Opponent] = new QLabel(),0,1);
-    oppPoke->addWidget(status[Opponent] = new QLabel());
+    QLabel* oppPoke = new QLabel();
+    oppPoke->setPixmap(QPixmap("db/BattleWindow/OpponentPokeBar.png"));
+
+    nick[Opponent] = new QLabel(oppPoke);
+    nick[Opponent]->setObjectName("PokemonNick");
+    nick[Opponent]->setGeometry(8,10,102,15);
+
+    level[Opponent] = new QLabel(oppPoke);
+    level[Opponent]->setObjectName("PokemonLevel");
+    level[Opponent]->setGeometry(120,11,50,13);
+
+    gender[Opponent] = new QLabel(oppPoke);
+    gender[Opponent]->setGeometry(104,11,12,12);
+
+    status[Opponent] = new QLabel(oppPoke);
+    status[Opponent]->setGeometry(10,23,23,23);
+
     bars[Opponent] = new QClickPBar();
+    bars[Opponent]->setParent(oppPoke);
     bars[Opponent]->setObjectName("LifePoints"); /* for stylesheets */
     bars[Opponent]->setRange(0, 100);
-    oppPoke->addWidget(bars[Opponent],1,0,1,2);
-    firstLine->addLayout(oppPoke);
+    bars[Opponent]->setGeometry(75,29,90,15);
+    firstLine->addWidget(oppPoke);
 
 
     QHBoxLayout *foeteam = new QHBoxLayout();
@@ -691,15 +713,30 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
 
     lastLine->addLayout(myTeamAndName);
 
-    QGridLayout *myPoke = new QGridLayout();
-    myPoke->addWidget(nick[Myself] = new QLabel(),0,0);
-    myPoke->addWidget(gender[Myself] = new QLabel(),0,1);
-    myPoke->addWidget(status[Myself] = new QLabel());
+    QLabel* myPoke = new QLabel();
+    myPoke->setPixmap(QPixmap("db/BattleWindow/ChallengerPokeBar.png"));
+
+    nick[Myself] = new QLabel(myPoke);
+    nick[Myself]->setObjectName("PokemonNick");
+    nick[Myself]->setGeometry(25,10,102,15);
+
+    level[Myself] = new QLabel(myPoke);
+    level[Myself]->setObjectName("PokemonLevel");
+    level[Myself]->setGeometry(126,11,50,13);
+
+    gender[Myself] = new QLabel(myPoke);
+    gender[Myself]->setGeometry(111,11,12,12);
+
+    status[Myself] = new QLabel(myPoke);
+    status[Myself]->setGeometry(14,23,23,23);
+
     bars[Myself] = new QClickPBar();
+    bars[Myself]->setParent(myPoke);
     bars[Myself]->setObjectName("LifePoints"); /* for stylesheets */
     bars[Myself]->setRange(0, 100);
-    myPoke->addWidget(bars[Myself],1,0,1,2);
-    lastLine->addLayout(myPoke);
+    bars[Myself]->setGeometry(75,29,90,15);
+
+    lastLine->addWidget(myPoke);
     lastLine->addSpacing(90);
 
     updatePoke(Myself);
@@ -736,7 +773,8 @@ void BaseBattleDisplay::updatePoke(int spot)
     if (info().pokeAlive[spot]) {
         const ShallowBattlePoke &poke = info().currentShallow(spot);
         zone->switchTo(poke, spot, info().sub[spot], info().specialSprite[spot]);
-        nick[spot]->setText(tr("%1 Lv.%2").arg(poke.nick()).arg(poke.level()));
+        nick[spot]->setText(poke.nick());
+        level[spot]->setText(tr("Lv. %1").arg(poke.level()));
         updateHp(spot);
         bars[spot]->setStyleSheet(health(poke.lifePercent()));
         gender[spot]->setPixmap(GenderInfo::Picture(poke.gender(), true));
@@ -846,7 +884,7 @@ void BaseBattleDisplay::changeStatus(int spot, int poke, int status) {
 
 QString BaseBattleDisplay::health(int lifePercent)
 {
-    return lifePercent > 50 ? "::chunk{background-color: #05B8CC;}" : (lifePercent >= 26 ? "::chunk{background-color: #F8DB17;}" : "::chunk{background-color: #D40202;}");
+    return lifePercent > 50 ? "::chunk{background-color: #1fc42a;}" : (lifePercent >= 26 ? "::chunk{background-color: #F8DB17;}" : "::chunk{background-color: #D40202;}");
 }
 
 BaseGraphicsZone::BaseGraphicsZone()

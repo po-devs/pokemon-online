@@ -168,6 +168,7 @@ public slots:
     void undelay();
 
     void animateHPBar();
+    void ignoreSpectators(bool);
 signals:
     void battleCommand(const BattleChoice &);
     void battleMessage(const QString &str, int);
@@ -178,6 +179,7 @@ protected:
     QLineEdit *myline;
     BaseBattleDisplay *mydisplay;
     QPushButton *myclose, *mysend;
+    bool ignoreSpecs;
 
     QLinkedList<QByteArray> delayedCommands;
     bool delayed;
@@ -185,7 +187,7 @@ protected:
     bool blankMessage;
     bool battleEnded;
 
-    BaseBattleWindow(){delayed=false;}
+    BaseBattleWindow(){delayed=false;ignoreSpecs=false;}
     void init();
 
     void closeEvent(QCloseEvent *);
@@ -217,6 +219,7 @@ protected:
 
     BaseGraphicsZone *zone;
     QLabel *nick[2];
+    QLabel *level[2];
     QLabel *status[2];
     QClickPBar *bars[2];
     QProgressBar *timers[2];
