@@ -35,7 +35,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     buttonsLayout->addWidget(mysender = new QPushButton(tr("&Send")));
     layout->setColumnStretch(1,100);
 
-    myplayers->setMaximumWidth(180);
+    myplayers->setMaximumWidth(200);
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
 
     /*myplayers->setStyleSheet(
