@@ -1226,9 +1226,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	turnlong[player]["Failed"] = false;
 	turnlong[player]["FailingMessage"] = true;
 	if (target != -1 && koed(target)) {
+            calleffects(player,target,"AttackSomehowFailed");
 	    continue;
 	}
 	if (target != player && !testAccuracy(player, target)) {
+            calleffects(player,target,"AttackSomehowFailed");
 	    continue;
 	}
         callbeffects(player, target, "DetermineGeneralAttackFailure");
@@ -1240,6 +1242,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             callaeffects(target,player,"OpponentBlock");
         }
         if (turnlong[target].contains(QString("Block%1").arg(player))) {
+            calleffects(player,target,"AttackSomehowFailed");
             continue;
         }
 	if (turnlong[player]["Power"].toInt() > 0)
@@ -1297,11 +1300,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    }
 	    calleffects(player, target, "DetermineAttackFailure");
 	    if (testFail(player)){
-		calleffects(player,target,"AttackSomehowFailed");
-		continue;
-	    }
-
-	    if (target != player && !testAccuracy(player, target)) {
 		calleffects(player,target,"AttackSomehowFailed");
 		continue;
 	    }

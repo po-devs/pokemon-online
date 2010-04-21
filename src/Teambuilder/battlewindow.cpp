@@ -167,7 +167,8 @@ void BattleWindow::switchToPokeZone()
 
 void BattleWindow::attackClicked(int zone)
 {
-    sendChoice(BattleChoice(false, zone));
+    if (info().possible)
+        sendChoice(BattleChoice(false, zone));
 }
 
 void BattleWindow::switchClicked(int zone)
@@ -214,9 +215,6 @@ void BattleWindow::sendChoice(const BattleChoice &b)
     info().possible = false;
     mycancel->setEnabled(true);
     updateChoices();
-    if(b.getChoice() >=0 && b.getChoice()< 4 ){
-        mybgroups.value(info().currentIndex[Myself])->button(b.getChoice())->setChecked(true);
-    }
 }
 
 void BattleWindow::sendMessage()
@@ -294,6 +292,9 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
 	    info().possible = true;
 	    in >> info().choices;
             mycancel->setDisabled(true);
+            for (int i = 0; i < 4; i++) {
+                myazones[info().currentIndex[Myself]]->attacks[i]->setChecked(false);
+            }
             updateChoices();
 	    break;
         }
@@ -511,12 +512,19 @@ AttackZone::AttackZone(const PokeBattle &poke)
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }
 
-AttackButton::AttackButton(const BattleMove &b)
+AttackButton::AttackButton(const BattleMove &b) : QImageButton("db/BattleWindow/Buttons/0D.png", "db/BattleWindow/Buttons/0H.png")
 {
-    QHBoxLayout *l = new QHBoxLayout(this);
+    QVBoxLayout *l = new QVBoxLayout(this);
 
-    l->addWidget(name = new QLabel());
-    l->addWidget(pp = new QLabel(), 0, Qt::AlignRight);
+    int type = MoveInfo::Type(b.num());
+    QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
+    changePics(model.arg("D"), model.arg("H"), model.arg("C"));
+
+
+    l->addWidget(name = new QLabel(), 0, Qt::AlignCenter);
+    l->addWidget(pp = new QLabel(), 0, Qt::AlignRight | Qt::AlignVCenter);
+    name->setObjectName("AttackName");
+    pp->setObjectName("AttackPP");
     setMinimumHeight(30);
 
     updateAttack(b);
@@ -525,12 +533,15 @@ AttackButton::AttackButton(const BattleMove &b)
 void AttackButton::updateAttack(const BattleMove &b)
 {
     name->setText(MoveInfo::Name(b.num()));
-    pp->setText(tr("%1/%2").arg(b.PP()).arg(b.totalPP()));
-    this->setStyleSheet("background: " + TypeInfo::Color(MoveInfo::Type(b.num())).name() + ";");
+    pp->setText(tr("PP %1/%2").arg(b.PP()).arg(b.totalPP()));
 
     QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nEffect: %5").arg(MoveInfo::Name(b.num()), MoveInfo::PowerS(b.num()),
                                                                         MoveInfo::AccS(b.num()), MoveInfo::Description(b.num()),
                                                                         MoveInfo::DetailedDescription(b.num()));
+    int type = MoveInfo::Type(b.num());
+    QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
+    changePics(model.arg("D"), model.arg("H"), model.arg("C"));
+
     setToolTip(ttext);
 }
 

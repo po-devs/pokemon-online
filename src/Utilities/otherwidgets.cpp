@@ -46,21 +46,39 @@ void QEntitled::setTitle(const QString &title)
     m_title->setText(title);
 }
 
-QImageButton::QImageButton(const QString &normal, const QString &hovered)
-            : myPic(normal), myHoveredPic(hovered), lastUnderMouse(-1)
+QImageButton::QImageButton(const QString &normal, const QString &hovered, const QString &checked)
+            : myPic(normal), myHoveredPic(hovered), lastUnderMouse(-1), pressed(false)
 {
     setFixedSize(myPic.size());
 
     /* Both are necessary for some styles */
     setMouseTracking(true);
     setAttribute(Qt::WA_Hover, true);
+
+    if (checked != "")
+        myCheckedPic = QPixmap(checked);
 }
 
-void QImageButton::changePics(const QString &normal, const QString &hovered)
+void QImageButton::changePics(const QString &normal, const QString &hovered, const QString &checked)
 {
     myPic = QPixmap(normal);
     myHoveredPic = QPixmap(hovered);
+    if (checked != "")
+        myCheckedPic = QPixmap(checked);
+
     update();
+}
+
+void QImageButton::mousePressEvent(QMouseEvent *e)
+{
+    pressed = true;
+    QAbstractButton::mousePressEvent(e);
+}
+
+void QImageButton::mouseReleaseEvent(QMouseEvent *e)
+{
+    pressed = false;
+    QAbstractButton::mouseReleaseEvent(e);
 }
 
 QSize QImageButton::sizeHint() const
@@ -82,10 +100,14 @@ void QImageButton::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
 
-    if (!underMouse())
-        painter.drawPixmap(e->rect(), myPic, e->rect());
-    else
-        painter.drawPixmap(e->rect(), myHoveredPic, e->rect());
+    if ((this->isChecked() || pressed) && !myCheckedPic.isNull()) {
+        painter.drawPixmap(e->rect(), myCheckedPic, e->rect());
+    } else {
+        if (!underMouse())
+            painter.drawPixmap(e->rect(), myPic, e->rect());
+        else
+            painter.drawPixmap(e->rect(), myHoveredPic, e->rect());
+    }
 
     lastUnderMouse = underMouse();
 }

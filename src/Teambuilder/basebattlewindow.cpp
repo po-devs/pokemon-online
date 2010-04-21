@@ -626,6 +626,8 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
 
     nick[Opponent] = new QLabel(oppPoke);
     nick[Opponent]->setObjectName("PokemonNick");
+    QFont f("Candara.ttf");
+    nick[Opponent]->setFont(f);
     nick[Opponent]->setGeometry(8,10,102,15);
 
     level[Opponent] = new QLabel(oppPoke);

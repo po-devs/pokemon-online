@@ -38,18 +38,21 @@ class QImageButton : public QAbstractButton
 {
     Q_OBJECT
 public:
-    QImageButton(const QString &normal, const QString &hovered);
+    QImageButton(const QString &normal, const QString &hovered, const QString &checked ="");
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
     QSize maximumSize() const;
 
-    void changePics(const QString &normal, const QString &hovered);
+    void changePics(const QString &normal, const QString &hovered, const QString &checked = "");
 protected:
     void paintEvent(QPaintEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
+    void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
 private:
-    QPixmap myPic, myHoveredPic;
+    QPixmap myPic, myHoveredPic, myCheckedPic;
     int lastUnderMouse; // last mouse pos recorded
+    bool pressed;
 };
 
 /* A widget that sets its size to the background given in parameter.
