@@ -207,6 +207,17 @@ QLabel#OppTrainerBox {
 	border: 1px solid #16a7d6
 }
 
+AttackButton QLabel#AttackName, AttackButton QLabel#AttackPP{
+	font-family: Trebuchet MS;
+	font-weight: bold;
+	font-size: 10pt;
+}
+
+AttackButton QLabel#AttackPP{
+	color: white;
+	padding-right: 5px;
+}
+
 TB_PokemonBoxes QTabWidget::pane { /* The tab widget frame */
 	border: 6px solid #0a9d9b;
 	padding: 0;

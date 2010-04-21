@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include "../PokemonInfo/battlestructs.h"
+#include "../Utilities/otherwidgets.h"
 #include "basebattlewindow.h"
 
 class AttackZone;
@@ -141,7 +142,7 @@ private:
     QSignalMapper *mymapper;
 };
 
-class AttackButton: public QPushButton
+class AttackButton: public QImageButton
 {
     Q_OBJECT
 public:
