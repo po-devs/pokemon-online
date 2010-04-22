@@ -37,10 +37,16 @@ BattleWindow::BattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, con
     setWindowTitle(tr("Battling against %1").arg(name(Opponent)));
 
     myclose->setText(tr("&Forfeit"));
-    mylayout->addWidget(mystack = new QStackedWidget(), 2, 0, 1, 3);
+    mylayout->addWidget(mytab = new QTabWidget(), 2, 0, 1, 3);
     mylayout->addWidget(mycancel = new QPushButton(tr("&Cancel")), 3,0);
     mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 3, 1);
     mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémon")), 3, 2);
+
+    mytab->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    mytab->addTab(mystack = new QStackedWidget(), tr("&Moves"));
+    mytab->addTab(mypzone = new PokeZone(info().myteam), tr("&Pokémon"));
+    mytab->addTab(myspecs = new QListWidget(), tr("Spectators"));
+    myspecs->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
     mycancel->setDisabled(true);
 
@@ -55,17 +61,23 @@ BattleWindow::BattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, con
 	connect(myazones[i], SIGNAL(clicked(int)), SLOT(attackClicked(int)));
     }
 
-    mypzone = new PokeZone(info().myteam);
-    mystack->addWidget(mypzone);
-
     connect(mypzone, SIGNAL(switchTo(int)), SLOT(switchClicked(int)));
     connect(myattack, SIGNAL(clicked()), SLOT(attackButton()));
     connect(myswitch, SIGNAL(clicked()), SLOT(switchToPokeZone()));
     connect(mycancel, SIGNAL(clicked()), SLOT(emitCancel()));
+    connect(mytab, SIGNAL(currentChanged(int)), SLOT(changeAttackText(int)));
 
     switchTo(0);
     show();
     printHtml(toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(name(true), name(false)));
+}
+
+void BattleWindow::changeAttackText(int i)
+{
+    if (i == MoveTab)
+        myattack->setText(tr("&Attack"));
+    else
+        myattack->setText(tr("&Go Back"));
 }
 
 QString BattleWindow::nick(int spot) const
@@ -128,11 +140,12 @@ void BattleWindow::switchTo(int pokezone, bool forced)
     }
 
     mystack->setCurrentIndex(pokezone);
-    myattack->setText(tr("&Attack"));
+    mytab->setCurrentIndex(MoveTab);
+
     mydisplay->updatePoke(Myself);
 
     for (int i = 0; i<4; i++) {
-        myazones[info().currentIndex[Myself]]->attacks[i]->updateAttack(info().tempPoke().move(i));
+        myazones[info().currentIndex[Myself]]->attacks[i]->updateAttack(info().tempPoke().move(i), info().tempPoke());
     }
 }
 
@@ -151,16 +164,14 @@ void BattleWindow::clickClose()
 void BattleWindow::switchToPokeZone()
 {
     if (info().currentIndex[Myself] < 0 || info().currentIndex[Myself] > 5) {
-	mystack->setCurrentIndex(ZoneOfPokes);
-        myattack->setText("&Go back");
+        mytab->setCurrentIndex(PokeTab);
     }
     else {
 	// Go back to the attack zone if the window is on the switch zone
-	if (mystack->currentIndex() == ZoneOfPokes) {
-            switchTo(info().currentIndex[Myself]);
+        if (mytab->currentIndex() == PokeTab) {
+            mytab->setCurrentIndex(MoveTab);
 	} else {
-	    mystack->setCurrentIndex(ZoneOfPokes);
-            myattack->setText("&Go back");
+            mytab->setCurrentIndex(PokeTab);
 	}
     }
 }
@@ -188,7 +199,7 @@ void BattleWindow::switchClicked(int zone)
 
 void BattleWindow::attackButton()
 {
-    if (mystack->currentIndex() == ZoneOfPokes) {
+    if (mytab->currentIndex() == PokeTab) {
         switchToPokeZone();
         return;
     }
@@ -285,7 +296,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
 	    //Think to check for crash if currentIndex != -1, move > 3
 	    info().currentPoke().move(move).PP() = PP;
             info().tempPoke().move(move).PP() = PP;
-            myazones[info().currentIndex[Myself]]->attacks[move]->updateAttack(info().tempPoke().move(move));
+            myazones[info().currentIndex[Myself]]->attacks[move]->updateAttack(info().tempPoke().move(move), info().tempPoke());
 	}
     case OfferChoice:
 	{
@@ -370,7 +381,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                 in >> slot >> move;
                 info().tempPoke().move(slot).num() = move;
                 info().tempPoke().move(slot).load();
-                myazones[info().currentIndex[Myself]]->attacks[slot]->updateAttack(info().tempPoke().move(slot));
+                myazones[info().currentIndex[Myself]]->attacks[slot]->updateAttack(info().tempPoke().move(slot), info().tempPoke());
             } else {
                 if (type == TempSprite) {
                     in >> info().specialSprite[spot];
@@ -395,6 +406,21 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     default:
         BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
         break;
+    }
+}
+
+void BattleWindow::addSpectator(bool add, int id)
+{
+    BaseBattleWindow::addSpectator(add,id);
+    if (add) {
+        myspecs->addItem(new QIdListWidgetItem(id, client()->name(id)));
+    } else {
+        for (int i =0 ; i < myspecs->count(); i++) {
+            if ( ((QIdListWidgetItem*)(myspecs->item(i)))->id() == id) {
+                delete myspecs->takeItem(i);
+                return;
+            }
+        }
     }
 }
 
@@ -453,7 +479,7 @@ void BattleWindow::switchToNaught(int spot)
 void BattleWindow::updateChoices()
 {
     if (info().choices.attacksAllowed == false && info().choices.switchAllowed == true)
-        mystack->setCurrentIndex(ZoneOfPokes);
+        mytab->setCurrentIndex(PokeTab);
 
     /* moves first */
     if (info().pokeAlive[Myself])
@@ -501,9 +527,12 @@ AttackZone::AttackZone(const PokeBattle &poke)
     QGridLayout *l = new QGridLayout(this);
     mymapper = new QSignalMapper(this);
 
+    l->setSpacing(0);
+    l->setMargin(4);
+
     for (int i = 0; i < 4; i++)
     {
-	l->addWidget(attacks[i] = new AttackButton(poke.move(i)), i >= 2, i % 2);
+        l->addWidget(attacks[i] = new AttackButton(poke.move(i), poke), i >= 2, i % 2);
 
 	mymapper->setMapping(attacks[i], i);
 	connect(attacks[i], SIGNAL(clicked()), mymapper, SLOT(map()));
@@ -512,14 +541,9 @@ AttackZone::AttackZone(const PokeBattle &poke)
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }
 
-AttackButton::AttackButton(const BattleMove &b) : QImageButton("db/BattleWindow/Buttons/0D.png", "db/BattleWindow/Buttons/0H.png")
+AttackButton::AttackButton(const BattleMove &b, const PokeBattle &p) : QImageButton("db/BattleWindow/Buttons/0D.png", "db/BattleWindow/Buttons/0H.png")
 {
     QVBoxLayout *l = new QVBoxLayout(this);
-
-    int type = MoveInfo::Type(b.num());
-    QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
-    changePics(model.arg("D"), model.arg("H"), model.arg("C"));
-
 
     l->addWidget(name = new QLabel(), 0, Qt::AlignCenter);
     l->addWidget(pp = new QLabel(), 0, Qt::AlignRight | Qt::AlignVCenter);
@@ -527,10 +551,10 @@ AttackButton::AttackButton(const BattleMove &b) : QImageButton("db/BattleWindow/
     pp->setObjectName("AttackPP");
     setMinimumHeight(30);
 
-    updateAttack(b);
+    updateAttack(b,p);
 }
 
-void AttackButton::updateAttack(const BattleMove &b)
+void AttackButton::updateAttack(const BattleMove &b, const PokeBattle &p)
 {
     name->setText(MoveInfo::Name(b.num()));
     pp->setText(tr("PP %1/%2").arg(b.PP()).arg(b.totalPP()));
@@ -538,7 +562,10 @@ void AttackButton::updateAttack(const BattleMove &b)
     QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nEffect: %5").arg(MoveInfo::Name(b.num()), MoveInfo::PowerS(b.num()),
                                                                         MoveInfo::AccS(b.num()), MoveInfo::Description(b.num()),
                                                                         MoveInfo::DetailedDescription(b.num()));
-    int type = MoveInfo::Type(b.num());
+    //TODO: CHANGE WHEN BATTLESTRUCTS 'TODO' COMMENTS ARE REMOVED
+    int type = b.num() == Move::HiddenPower ?
+               /*HiddenPowerInfo::Type(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) */
+                 MoveInfo::Type(b.num()) : MoveInfo::Type(b.num());
     QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
     changePics(model.arg("D"), model.arg("H"), model.arg("C"));
 

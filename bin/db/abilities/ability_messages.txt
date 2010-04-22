@@ -12,7 +12,7 @@
 %s's Cute Charm infatuated %f!
 %s's Download activates!
 
-%s's Snow Warning whipped up a hailstorm!|%s's Drizzle made it rain!|%s's Sandstream whipped up a sandstorm!|%s's Drought intensified the sun's rays!
+%s's Snow Warning whipped up a hailstorm!|%s's Drizzle made it rain!|%s's Sand Stream whipped up a sandstorm!|%s's Drought intensified the sun's rays!
 %s restored HP using its Dry Skin!|%s's Dry Skin hurts it!
 %s's Effect Spore activates!
 

@@ -2127,8 +2127,9 @@ void BattleSituation::disposeItem(int  player) {
     loseItem(player);
 }
 
-void BattleSituation::eatBerry(int player) {
-    sendItemMessage(8000,player,0, 0, poke(player).item());
+void BattleSituation::eatBerry(int player, bool show) {
+    if (show)
+        sendItemMessage(8000,player,0, 0, poke(player).item());
     disposeItem(player);
 }
 

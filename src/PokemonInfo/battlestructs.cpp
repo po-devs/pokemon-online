@@ -225,6 +225,16 @@ QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 	in >> po.move(i);
     }
 
+    //TODO: UNCOMMENT WHEN YOU'RE READY TO REMOVE BACKWARD COMPATIBILITY
+    /*
+    for (int i = 0; i < 6; i++) {
+        in >> po.evs()[i];
+    }
+
+    for (int i = 0; i < 6; i++) {
+        in >> po.dvs()[i];
+    }*/
+
     return in;
 }
 
@@ -239,6 +249,16 @@ QDataStream & operator << (QDataStream &out, const PokeBattle &po)
     for (int i = 0; i < 4; i++) {
 	out << po.move(i);
     }
+
+    //TODO: UNCOMMENT WHEN YOU'RE READY TO REMOVE BACKWARD COMPATIBILITY
+    /*
+    for (int i = 0; i < 6; i++) {
+        out << po.evs()[i];
+    }
+
+    for (int i = 0; i < 6; i++) {
+        out << po.dvs()[i];
+    }*/
 
     return out;
 }

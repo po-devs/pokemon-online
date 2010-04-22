@@ -1,8 +1,8 @@
-points de vie
-attaque
-défense
-vitesse
-atk. spé.
-déf. spé.
-esquive
-précision
+PV
+Attaque
+Défense
+Vitesse
+Atk. Spé.
+Déf. Spé.
+Esquive
+Précision

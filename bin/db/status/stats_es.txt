@@ -1,8 +1,8 @@
 PS
-ataque
-defensa
-velocidad
-at.esp
-def.esp
-evasión
-precisión
+Ataque
+Defensa
+Velocidad
+At.Esp
+Def.Esp
+Evasión
+Precisión
