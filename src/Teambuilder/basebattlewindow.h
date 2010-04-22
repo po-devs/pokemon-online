@@ -153,6 +153,7 @@ public:
     };
 
     virtual void switchToNaught(int spot);
+    virtual void addSpectator(bool add, int id);
 
     void printLine(const QString &str);
     void printHtml(const QString &str);

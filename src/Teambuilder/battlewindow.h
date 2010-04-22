@@ -50,15 +50,18 @@ public:
         return *(BattleInfo*)(&BaseBattleWindow::info());
     }
 
+    enum {
+        MoveTab= 0,
+        PokeTab= 1
+    };
+
     TeamBattle &team();
     const TeamBattle &team() const;
 
-    enum {
-        ZoneOfPokes = 6
-    };
-
     void switchToNaught(int spot);
     void switchTo(int pokezone, bool forced = false);
+
+    void addSpectator(bool add, int id);
 
     /* Disable / enable buttons */
     void updateChoices();
@@ -85,6 +88,7 @@ protected:
 
 protected slots:
     void animateHPBar();
+    void changeAttackText(int i);
 private:
 
     int idme() const {
@@ -96,6 +100,8 @@ private:
     }
 
     QStackedWidget *mystack;
+    QTabWidget *mytab;
+    QListWidget *myspecs;
     AttackZone *myazones[6];
     QList<QButtonGroup*> mybgroups;
     PokeZone *mypzone;
@@ -146,8 +152,8 @@ class AttackButton: public QImageButton
 {
     Q_OBJECT
 public:
-    AttackButton(const BattleMove& b);
-    void updateAttack(const BattleMove& b);
+    AttackButton(const BattleMove& b, const PokeBattle &p);
+    void updateAttack(const BattleMove& b, const PokeBattle &p);
 
     QLabel *name;
     QLabel *pp;

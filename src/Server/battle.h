@@ -124,7 +124,7 @@ public:
     void inflictPercentDamage(int player, int percent, int source, bool straightattack = false);
     void inflictSubDamage(int player, int damage, int source);
     void disposeItem(int player);
-    void eatBerry(int player);
+    void eatBerry(int player, bool show=false);
     void acqItem(int player, int item);
     void loseItem(int player);
     /* Removes PP.. */

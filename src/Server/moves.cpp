@@ -791,11 +791,15 @@ struct MMLeechSeed : public MM
     static void et(int s, int, BS &b) {
 	if (b.koed(s))
 	    return;
+        int s2 = poke(b,s)["SeedSource"].toInt();
+        if (b.koed(s2))
+            return;
+
         int damage = std::max(b.poke(s).totalLifePoints() / 8, 1);
         
 	b.sendMoveMessage(72, 2, s, Pokemon::Grass);
 	b.inflictDamage(s, damage, s, false);
-	int s2 = poke(b,s)["SeedSource"].toInt();
+
 	if (b.koed(s2))
 	    return;
         if (!b.hasWorkingAbility(s, Ability::LiquidOoze))
@@ -1663,7 +1667,7 @@ struct MMTaunt : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        poke(b,t)["TauntsUntil"] = b.turn() + 1 + (true_rand()%4);
+        poke(b,t)["TauntsUntil"] = b.turn() + 2 + (true_rand()%3);
 	addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
 	addFunction(turn(b,t), "MovePossible", "Taunt", &mp);
         addFunction(poke(b,t), "EndTurn", "Taunt", &et);
@@ -3912,6 +3916,8 @@ struct MMUproar : public MM {
     }
 
     static void et(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
         if (poke(b,s).value("UproarUntil").toInt() > b.turn()) {
             b.sendMoveMessage(141,1,s);
         } else {

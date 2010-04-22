@@ -81,7 +81,7 @@ void BaseBattleWindow::init()
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
 
-    layout()->setSizeConstraint(QLayout::SetFixedSize);
+    //layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 QString BaseBattleWindow::name(int spot) const
@@ -363,8 +363,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             bool come;
             qint32 id;
             in >> come >> id;
-            QString mess = come ? tr("%1 is watching the battle.") : tr("%1 stopped watching the battle.");
-            printHtml(toBoldColor(mess.arg(client()->name(id)), Qt::green));
+            addSpectator(come, id);
             break;
         }
     case SpectatorChat:
@@ -524,7 +523,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         {
             bool rated;
             in >> rated;
-            printHtml(toBoldColor(tr("Rated: "), Qt::blue) + (rated? tr("Yes") : tr("No")));
+            printHtml(toBoldColor(tr("Rule: "), Qt::blue) + (rated? tr("Rated") : tr("Unrated")));
             break;
         }
     case TierSection:
@@ -585,6 +584,12 @@ void BaseBattleWindow::switchToNaught(int spot)
     mydisplay->updatePoke(spot);
 }
 
+void BaseBattleWindow::addSpectator(bool come, int id)
+{
+    QString mess = come ? tr("%1 is watching the battle.") : tr("%1 stopped watching the battle.");
+    printHtml(toBoldColor(mess.arg(client()->name(id)), Qt::green));
+}
+
 void BaseBattleWindow::printLine(const QString &str)
 {
     if (str == "" && blankMessage) {
@@ -628,7 +633,8 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     nick[Opponent]->setObjectName("PokemonNick");
     QFont f("Candara.ttf");
     nick[Opponent]->setFont(f);
-    nick[Opponent]->setGeometry(8,10,102,15);
+    nick[Opponent]->setGeometry(8,7,102,21);
+    nick[Opponent]->setAlignment(Qt::AlignVCenter);
 
     level[Opponent] = new QLabel(oppPoke);
     level[Opponent]->setObjectName("PokemonLevel");
@@ -720,7 +726,8 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
 
     nick[Myself] = new QLabel(myPoke);
     nick[Myself]->setObjectName("PokemonNick");
-    nick[Myself]->setGeometry(25,10,102,15);
+    nick[Myself]->setGeometry(25,7,102,21);
+    nick[Myself]->setAlignment(Qt::AlignVCenter);
 
     level[Myself] = new QLabel(myPoke);
     level[Myself]->setObjectName("PokemonLevel");

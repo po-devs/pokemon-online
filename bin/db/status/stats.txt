@@ -1,8 +1,8 @@
-life points
-attack
-defense
-speed
-sp. att.
-sp. def.
-evasion
-accuracy
+Life Points
+Attack
+Defense
+Speed
+Sp. Att.
+Sp. Def.
+Evasion
+Accuracy
