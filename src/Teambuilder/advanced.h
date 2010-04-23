@@ -56,6 +56,7 @@ private slots:
     void changeHappiness(int);
     /* Do not use directly */
     void changeDV(int newval);
+    void changeAForme();
     void changeForm();
 public slots:
     //called by update DV and when the stat in the teambuilder is modified.

@@ -20,6 +20,7 @@ QList<PokemonMoves> PokemonInfo::m_Moves;
 QHash<int, QList<int> > PokemonInfo::m_AlternateFormes;
 QHash<int, QPair<int,int> > PokemonInfo::m_AestheticFormes;
 QHash<int, bool > PokemonInfo::m_AestheticFormesHidden;
+QHash<int, QString> PokemonInfo::m_AestheticFormesDescs;
 int PokemonInfo::m_trueNumberOfPokes;
 
 QString MoveInfo::m_Directory;
@@ -315,6 +316,7 @@ void PokemonInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
+    loadFormes();
     loadMoves();
     fill_container_with_file(m_Type1, path("poke_type1.txt"));
     fill_container_with_file(m_Type2, path("poke_type2.txt"));
@@ -491,16 +493,9 @@ PokeBaseStats PokemonInfo::BaseStats(int pokenum)
     return m_BaseStats[pokenum];
 }
 
-void PokemonInfo::loadNames()
+void PokemonInfo::loadFormes()
 {
-    QFile in (trFile(path("pokemons")));
-    in.open(QIODevice::ReadOnly);
-
-    m_trueNumberOfPokes = QString::fromUtf8(in.readLine()).trimmed().toInt();
-    m_Names = QString::fromUtf8(in.readAll()).split('\n');
-
-    in.close();
-    in.setFileName(path("poke_formes.txt"));
+    QFile in(path("poke_formes.txt"));
     in.open(QIODevice::ReadOnly);
     QList<QString> l = QString::fromUtf8(in.readAll()).split('\n');
     for (int i = 0; i < l.size(); i++) {
@@ -523,6 +518,28 @@ void PokemonInfo::loadNames()
             }
         }
     }
+    in.close();
+    in.setFileName(trFile(path("formes_desc")));
+    in.open(QIODevice::ReadOnly);
+
+    l = QString::fromUtf8(in.readAll()).split('\n');
+    foreach(QString s, l) {
+        m_AestheticFormesDescs[s.section('-',0,0).toInt()] = s.section('-',1);
+    }
+}
+
+QString PokemonInfo::AestheticDesc(int pokenum, int forme)
+{
+    return m_AestheticFormesDescs.value(AestheticFormeId(pokenum) + forme);
+}
+
+void PokemonInfo::loadNames()
+{
+    QFile in (trFile(path("pokemons")));
+    in.open(QIODevice::ReadOnly);
+
+    m_trueNumberOfPokes = QString::fromUtf8(in.readLine()).trimmed().toInt();
+    m_Names = QString::fromUtf8(in.readAll()).split('\n');
 
     fill_container_with_file(m_Weights, path("poke_weight.txt"));
 }

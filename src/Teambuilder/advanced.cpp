@@ -132,21 +132,37 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     QPushButton *bForms = new QPushButton(tr("Alternate Formes"));
     QMenu *m= new QMenu(bForms);
 
-    if (PokemonInfo::HasFormes(poke()->num())) {
+    if (PokemonInfo::HasFormes(poke()->num()) && PokemonInfo::AFormesShown(poke()->num())) {
         QList<int> forms = PokemonInfo::Formes(poke()->num());
 
         foreach(int form, forms) {
             QAction *ac = m->addAction(PokemonInfo::Name(form),this, SLOT(changeForm()));
+            ac->setCheckable(true);
             if (form == poke()->num()) {
-                ac->setCheckable(true);
                 ac->setChecked(true);
             }
             ac->setProperty("pokemonid", form);
         }
 
         bForms->setMenu(m);
-    } else
+    } else if (PokemonInfo::HasAestheticFormes(poke()->num()) && PokemonInfo::AFormesShown(poke()->num())) {
+        QActionGroup *ag = new QActionGroup(m);
+        for (int i = 0; i < PokemonInfo::NumberOfAFormes(poke()->num()); i++) {
+            QString forme = PokemonInfo::AestheticDesc(poke()->num(), i);
+            if (forme != "") {
+                QAction *ac = m->addAction(forme,this, SLOT(changeAForme()));
+                ac->setCheckable(true);
+                if (i == poke()->forme()) {
+                    ac->setChecked(true);
+                }
+                ac->setProperty("forme", i);
+                ag->addAction(ac);
+            }
+        }
+        bForms->setMenu(m);
+    } else {
         bForms->setDisabled(true);
+    }
 
     baselayout->addWidget(bForms);
 
@@ -171,6 +187,15 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     updateDVs();
     updateHiddenPower();
     updateStats();
+}
+
+void TB_Advanced::changeAForme()
+{
+    QAction *ac = (QAction*) sender();
+    poke()->forme() = ac->property("forme").toInt();
+
+    updatePokeImage();
+    emit imageChanged();
 }
 
 void TB_Advanced::changeForm()

@@ -135,7 +135,7 @@ void PokeBattle::init(const PokePersonal &poke)
     forme() = 0;
 
     if (PokemonInfo::HasAestheticFormes(num()) && PokemonInfo::AFormesShown(num())) {
-        if (PokemonInfo::NumberOfAFormes(num()) <= poke.forme())
+        if (PokemonInfo::NumberOfAFormes(num()) > poke.forme())
             forme() = poke.forme();
     }
 
