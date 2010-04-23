@@ -555,6 +555,12 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                 if (poke == info().currentIndex[spot]) {
                     info().currentShallow(spot).num() = newform;
                 }
+            } else if (type == AestheticForme)
+            {
+                quint8 newforme;
+                in >> newforme;
+                info().currentShallow(spot).forme() = newforme;
+                mydisplay->updatePoke(spot);
             }
             break;
         }
@@ -921,24 +927,24 @@ void BaseGraphicsZone::switchToNaught(int spot)
         foe->setPixmap(QPixmap());
 }
 
-QPixmap BaseGraphicsZone::loadPixmap(quint16 num, bool shiny, bool back, quint8 gender, bool sub)
+QPixmap BaseGraphicsZone::loadPixmap(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub)
 {
-    qint32 key = this->key(num, shiny, back, gender, sub);
+    qint32 key = this->key(num, forme, shiny, back, gender, sub);
 
     if (!graphics.contains(key)) {
         if (sub) {
             graphics.insert(key, PokemonInfo::Sub(back));
         } else {
-            graphics.insert(key, PokemonInfo::Picture(num, gender, shiny, back));
+            graphics.insert(key, PokemonInfo::Picture(num, forme, gender, shiny, back));
         }
     }
 
     return graphics[key];
 }
 
-qint32 BaseGraphicsZone::key(quint16 num, bool shiny, bool back, quint8 gender, bool sub) const
+qint32 BaseGraphicsZone::key(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub) const
 {
-    return sub ? ((1 << 31) + (back << 30)) : (num + (gender << 16) + (back << 24) + (shiny<<25));
+    return sub ? ((1 << 31) + (back << 30)) : (num + (gender << 16) + (back << 18) + (shiny<<19) + (forme << 20));
 }
 
 bool BaseGraphicsZone::event(QEvent * event)

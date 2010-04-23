@@ -27,12 +27,12 @@ private:
     QRadioButton *ability1, *ability2;
     QRadioButton *gender1, *gender2;
     QCheckBox *shiny;
-    QSpinBox *level;
+    QSpinBox *level, *happiness;
+
 
     PokeTeam *poke();
     const PokeTeam *poke() const;
 
-    void updatePokeImage();
     void updateGender();
     void updateAbility();
     int currentHiddenPower() const;
@@ -49,9 +49,11 @@ private slots:
     void changeAbility(bool);
     void changeShininess(bool);
     void changeGender(bool);
+    void updatePokeImage();
     void changeDVsAccordingToHP(int row);
     void changeLevel(int);
     void changeHiddenPower(int);
+    void changeHappiness(int);
     /* Do not use directly */
     void changeDV(int newval);
     void changeForm();

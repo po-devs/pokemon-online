@@ -83,6 +83,15 @@ PokeBattle::PokeBattle()
     lifePoints() = 0;
     totalLifePoints() = 1;
     level() = 100;
+    happiness() = 255;
+    forme() = 0;
+
+    for (int i = 0; i < 6; i++) {
+        dvs() << 31;
+    }
+    for (int i = 0; i < 6; i++) {
+        evs() << 80;
+    }
 }
 
 const BattleMove & PokeBattle::move(int i) const
@@ -120,6 +129,15 @@ void PokeBattle::init(const PokePersonal &poke)
     QNickValidator v(NULL);
 
     num() = poke.num();
+
+    happiness() = poke.happiness();
+
+    forme() = 0;
+
+    if (PokemonInfo::HasAestheticFormes(num()) && PokemonInfo::AFormesShown(num())) {
+        if (PokemonInfo::NumberOfAFormes(num()) <= poke.forme())
+            forme() = poke.forme();
+    }
 
     if (ItemInfo::Exist(poke.item())) {
         item() = poke.item();
@@ -175,10 +193,12 @@ void PokeBattle::init(const PokePersonal &poke)
 	return;
     }
 
+    dvs().clear();
     for (int i = 0; i < 6; i++) {
         dvs() << std::min(std::max(poke.DV(i), quint8(0)),quint8(31));
     }
 
+    evs().clear();
     for (int i = 0; i < 6; i++) {
         evs() << std::min(std::max(poke.EV(i), quint8(0)), quint8(255));
     }
@@ -213,7 +233,8 @@ void PokeBattle::updateStats()
 
 QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 {
-    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.item() >> po.ability();
+    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.forme() >> po.item() >> po.ability()
+            >> po.happiness();
 
     for (int i = 0; i < 5; i++) {
 	quint16 st;
@@ -225,22 +246,21 @@ QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 	in >> po.move(i);
     }
 
-    //TODO: UNCOMMENT WHEN YOU'RE READY TO REMOVE BACKWARD COMPATIBILITY
-    /*
     for (int i = 0; i < 6; i++) {
         in >> po.evs()[i];
     }
 
     for (int i = 0; i < 6; i++) {
         in >> po.dvs()[i];
-    }*/
+    }
 
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const PokeBattle &po)
 {
-    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.item() << po.ability();
+    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.forme() << po.item() << po.ability()
+            << po.happiness();
 
     for (int i = 0; i < 5; i++) {
 	out << po.normalStat(i+1);
@@ -250,15 +270,13 @@ QDataStream & operator << (QDataStream &out, const PokeBattle &po)
 	out << po.move(i);
     }
 
-    //TODO: UNCOMMENT WHEN YOU'RE READY TO REMOVE BACKWARD COMPATIBILITY
-    /*
     for (int i = 0; i < 6; i++) {
         out << po.evs()[i];
     }
 
     for (int i = 0; i < 6; i++) {
         out << po.dvs()[i];
-    }*/
+    }
 
     return out;
 }
@@ -284,18 +302,19 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
 	lifePercent() = 1;
     }
     level() = poke.level();
+    forme() = poke.forme();
 }
 
 QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po)
 {
-    in >> po.num() >> po.nick() >> po.lifePercent() >> po.status() >> po.gender() >> po.shiny() >> po.level();
+    in >> po.num() >> po.nick() >> po.lifePercent() >> po.status() >> po.gender() >> po.shiny() >> po.level() >> po.forme();
 
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po)
 {
-    out << po.num() << po.nick() << po.lifePercent() << po.status() << po.gender() << po.shiny() << po.level();
+    out << po.num() << po.nick() << po.lifePercent() << po.status() << po.gender() << po.shiny() << po.level() << po.forme();
 
     return out;
 }
@@ -349,6 +368,8 @@ void TeamBattle::generateRandom()
             p.gender() = g.genderAvail();
         }
         p.nature() = true_rand()%NatureInfo::NumberOfNatures();
+        p.happiness() = true_rand()% 255;
+        p.forme() = 0;
         p.level() = PokemonInfo::LevelBalance(p.num());
 
         PokePersonal p2;

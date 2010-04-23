@@ -218,6 +218,7 @@ struct MMBatonPass : public MM
 	c.remove("Move1");
 	c.remove("Move2");
 	c.remove("Move3");
+        c.remove("Forme");
 	/* choice band etc. would force the same move
 		if on both the passed & the passer */
 	c.remove("ChoiceMemory");
@@ -688,7 +689,8 @@ struct MMFrustration : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 102;
+        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * std::max((move(b,s) == Move::Frustration ? (255-b.poke(s).happiness()) : b.poke(s).happiness()) * 2
+                             / 5, 1);
     }
 };
 
@@ -1575,7 +1577,7 @@ struct MMBounce : public MM
 
     static void ewc(int s, int, BS &b) {
 	poke(b,s)["Invulnerable"] = false;
-        b.changeSprite(s, b.pokenum(s));
+        b.changeSprite(s, 0);
     }
 
     static void uas(int s, int, BS &b) {

@@ -104,6 +104,8 @@ public:
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
     void changeForm(int player, int poke, int newform);
+    int forme(int player);
+    void changeAForme(int player, int newforme);
     void gainStatMod(int player, int stat, int bonus, bool tell = true);
     void loseStatMod(int player, int stat, int malus, int attacker);
     bool canSendPreventMessage(int defender, int attacker);
@@ -224,7 +226,8 @@ public:
         TempAbility,
         TempItem,
         TempSprite,
-        DefiniteForm
+        DefiniteForm,
+        AestheticForme
     };
 
     enum WeatherM

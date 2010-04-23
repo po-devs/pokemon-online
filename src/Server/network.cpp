@@ -13,10 +13,6 @@ Network::Network(QTcpSocket *sock, int id) : mysocket(sock), commandStarted(fals
 
 void Network::manageError(QAbstractSocket::SocketError err)
 {
-    qDebug() << "Error received: " << err;
-    if (socket()) {
-        qDebug() << "Error string: " << socket()->errorString();
-    }
     myerror = err;
 }
 
@@ -73,7 +69,6 @@ void Network::onReceipt()
             socket()->getChar(&c1), socket()->getChar(&c2);
             remainingLength=uchar(c1)*256+uchar(c2);
 
-            qDebug() << "Antidos check on " << id();
             /* Just a little check :p */
             if (!AntiDos::obj()->transferBegin(myid, remainingLength, ip())) {
                 return;
