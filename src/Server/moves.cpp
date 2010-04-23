@@ -3656,7 +3656,7 @@ struct MMYawn : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.poke(t).status() != Pokemon::Fine || team(b,t).value("SafeGuardCount").toInt() > 0) {
+        if (b.poke(t).status() != Pokemon::Fine || team(b,t).value("SafeGuardCount").toInt() > 0 || b.currentForcedSleepPoke[t] != -1) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -3676,6 +3676,9 @@ struct MMYawn : public MM {
             b.sendMoveMessage(144,1,s);
         } else {
             b.inflictStatus(s, Pokemon::Asleep, s);
+            if (b.sleepClause()) {
+            b.currentForcedSleepPoke[s] = b.currentPoke(s);
+        }
             removeFunction(poke(b,s),"EndTurn", "Yawn");
             poke(b,s).remove("YawnCount");
         }
