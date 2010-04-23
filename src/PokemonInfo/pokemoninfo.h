@@ -46,10 +46,12 @@ private:
     /* First and last aesthetic forme */
     static QHash<int, QPair<int, int> > m_AestheticFormes;
     static QHash<int, bool> m_AestheticFormesHidden;
+    static QHash<int, QString> m_AestheticFormesDescs;
     static QList<PokemonMoves> m_Moves;
     static int m_trueNumberOfPokes;
 
     static void loadNames();
+    static void loadFormes();
     static void loadBaseStats();
     static void loadMoves();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
@@ -90,6 +92,7 @@ public:
     static int NumberOfAFormes(int pokenum);
     static bool AFormesShown(int pokenum);
     static int AestheticFormeId(int pokenum);
+    static QString AestheticDesc(int pokenum, int forme);
     /* Standard formes: Rotom, Giratina, Deoxys, .. */
     static bool IsForme(int pokenum);
     static int OriginalForm(int pokenum);
