@@ -205,12 +205,12 @@ void Server::accepted()
 
 void Server::invalidName()
 {
-    printLine("Invalid name for the registry. Please change it in server->config");
+    printLine("Invalid name for the registry. Please change it in Options -> Config.");
 }
 
 void Server::nameTaken()
 {
-    printLine("The name of the server is already in use. Please change it in server->config");
+    printLine("The name of the server is already in use. Please change it in Options -> Config.");
 }
 
 

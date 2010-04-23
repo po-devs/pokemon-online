@@ -67,6 +67,9 @@ public:
     void changeCurrentPoke(int player, int poke);
     int countAlive(int player) const;
 
+    /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
+    int currentForcedSleepPoke[2];
+
     /* Starts the battle -- use the time before to connect signals / slots */
     void start();
     /* The battle runs in a different thread -- easier to interrutpt the battle & co */
@@ -313,8 +316,7 @@ private:
     bool couldMove[2];
 
     TeamBattle team1, team2;
-    /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
-    int currentForcedSleepPoke[2];
+
     int mycurrentpoke[2]; /* -1 for koed */
     /* timers */
     QAtomicInt timeleft[2];
