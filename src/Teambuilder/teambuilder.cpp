@@ -1015,6 +1015,7 @@ void TB_PokemonBody::connectWithAdvanced(TB_Advanced *ptr)
     connect(ptr, SIGNAL(pokeFormChanged(int)), this, SLOT(changeForm(int)));
     connect(this, SIGNAL(EVChanged(int)), ptr, SLOT(updateStat(int)));
     connect(this, SIGNAL(natureChanged()), ptr, SLOT(updateStats()));
+    connect(this, SIGNAL(pokeImageChanged()), ptr, SLOT(updatePokeImage()));
     connect(ptr, SIGNAL(levelChanged()), this, SIGNAL(levelChanged()));
 }
 
@@ -1282,6 +1283,18 @@ void TB_PokemonBody::setItem(const QString &item)
 {
     int it = ItemInfo::Number(item);
 
+    if (poke()->num() == Pokemon::Arceus) {
+        int type = 0;
+        if (ItemInfo::isPlate(it)) {
+            type = ItemInfo::PlateType(it);
+        }
+
+        if (type != poke()->forme()) {
+            poke()->forme() = type;
+            emit pokeImageChanged();
+            updateImage();
+        }
+    }
     if (it == Item::GriseousOrb && poke()->num() != Pokemon::Giratina)
         poke()->item() = 0;
     else {

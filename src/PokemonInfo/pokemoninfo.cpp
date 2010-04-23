@@ -17,7 +17,9 @@ QTSList<int> PokemonInfo::m_Ability2;
 QTSList<PokeBaseStats> PokemonInfo::m_BaseStats;
 QTSList<int> PokemonInfo::m_LevelBalance;
 QList<PokemonMoves> PokemonInfo::m_Moves;
-QHash<int, QList<int> > PokemonInfo::m_AlternateForms;
+QHash<int, QList<int> > PokemonInfo::m_AlternateFormes;
+QHash<int, QPair<int,int> > PokemonInfo::m_AestheticFormes;
+QHash<int, bool > PokemonInfo::m_AestheticFormesHidden;
 int PokemonInfo::m_trueNumberOfPokes;
 
 QString MoveInfo::m_Directory;
@@ -358,9 +360,16 @@ int PokemonInfo::Gender(int pokenum)
     return m_Genders[pokenum];
 }
 
-#ifdef CLIENT_SIDE
-QPixmap PokemonInfo::Picture(int pokenum, int gender, bool shiney, bool back)
+int PokemonInfo::AestheticFormeId(int pokenum)
 {
+    return m_AestheticFormes.value(pokenum).first;
+}
+
+#ifdef CLIENT_SIDE
+QPixmap PokemonInfo::Picture(int pokenum, int forme, int gender, bool shiney, bool back)
+{
+    pokenum = forme == 0 ? pokenum : AestheticFormeId(pokenum) + forme;
+
     QString archive = path("poke_img.zip");
 
     QString file = QString("%2/DP%3%4%5.png").arg(pokenum).arg(back?"b":"",(gender==Pokemon::Female)?"f":"m", shiney?"s":"");
@@ -491,52 +500,74 @@ void PokemonInfo::loadNames()
     m_Names = QString::fromUtf8(in.readAll()).split('\n');
 
     in.close();
-    in.setFileName(path("poke_forms.txt"));
+    in.setFileName(path("poke_formes.txt"));
     in.open(QIODevice::ReadOnly);
     QList<QString> l = QString::fromUtf8(in.readAll()).split('\n');
     for (int i = 0; i < l.size(); i++) {
         if (l[i].length() > 0) {
-            bool hidden = l[i].leftRef(2) == "H-";
-            int pok = hidden ? l[i].mid(2).toInt() : l[i].toInt();
+            if (i < TrueCount()) {
+                bool hidden = l[i].leftRef(2) == "H-";
+                QStringList begEnd = hidden?l[i].mid(2).split('~') : l[i].split('~');
+                m_AestheticFormes[i] = QPair<int,int>(begEnd[0].toInt(), begEnd[1].toInt());
+                m_AestheticFormesHidden[i] = hidden;
+            } else {
+                bool hidden = l[i].leftRef(2) == "H-";
+                int pok = hidden ? l[i].mid(2).toInt() : l[i].toInt();
 
-            if (!hidden) {
-                if (m_AlternateForms[pok].empty())
-                    m_AlternateForms[pok].push_back(pok);
-                m_AlternateForms[pok].push_back(i);
+                if (!hidden) {
+                    if (m_AlternateFormes[pok].empty())
+                        m_AlternateFormes[pok].push_back(pok);
+                    m_AlternateFormes[pok].push_back(i);
+                }
+                m_AlternateFormes[i].push_back(pok);
             }
-            m_AlternateForms[i].push_back(pok);
         }
     }
 
     fill_container_with_file(m_Weights, path("poke_weight.txt"));
 }
 
-bool PokemonInfo::HasForms(int pokenum)
+bool PokemonInfo::HasFormes(int pokenum)
 {
-    return IsForm(pokenum) ? HasForms(OriginalForm(pokenum)) : m_AlternateForms.contains(pokenum);
+    return IsForme(pokenum) ? HasFormes(OriginalForm(pokenum)) : m_AlternateFormes.contains(pokenum);
 }
 
-bool PokemonInfo::IsForm(int pokenum)
+bool PokemonInfo::HasAestheticFormes(int pokenum)
+{
+    return m_AestheticFormes.contains(pokenum);
+}
+
+bool PokemonInfo::AFormesShown(int pokenum)
+{
+    return !m_AestheticFormesHidden.value(pokenum);
+}
+
+int PokemonInfo::NumberOfAFormes(int pokenum)
+{
+    return m_AestheticFormes.value(pokenum).second - m_AestheticFormes.value(pokenum).first + 1;
+}
+
+bool PokemonInfo::IsForme(int pokenum)
 {
     return pokenum >= TrueCount();
 }
 
 int PokemonInfo::OriginalForm(int pokenum)
 {
-    if (!IsForm(pokenum))
+    if (!IsForme(pokenum))
         return pokenum;
     else
-        return m_AlternateForms[pokenum].front();
+        return m_AlternateFormes[pokenum].front();
 }
 
-QList<int> PokemonInfo::Forms(int pokenum)
+QList<int> PokemonInfo::Formes(int pokenum)
 {
-    if (!HasForms(pokenum))
+    if (!HasFormes(pokenum))
         return QList<int>();
-    else if (IsForm(pokenum))
-        return Forms(OriginalForm(pokenum));
+    else if (IsForme(pokenum))
+        return Formes(OriginalForm(pokenum));
     else
-        return m_AlternateForms[pokenum];
+        return m_AlternateFormes[pokenum];
 }
 
 void PokemonInfo::loadMoves()
@@ -1111,6 +1142,11 @@ bool ItemInfo::isBerry(int itemnum)
 bool ItemInfo::isPlate(int itemnum)
 {
     return (itemnum >= 185 && itemnum <= 202 && itemnum != 190 && itemnum != 200);
+}
+
+int ItemInfo::PlateType(int itemnum)
+{
+    return Effects(itemnum).front().args.toInt();
 }
 
 int ItemInfo::Number(const QString &itemname)

@@ -42,7 +42,10 @@ private:
     static QTSList<PokeBaseStats> m_BaseStats;
     static QTSList<int> m_LevelBalance;
     /* That is NOT multi-threaded! */
-    static QHash<int,QList<int> > m_AlternateForms;
+    static QHash<int,QList<int> > m_AlternateFormes;
+    /* First and last aesthetic forme */
+    static QHash<int, QPair<int, int> > m_AestheticFormes;
+    static QHash<int, bool> m_AestheticFormesHidden;
     static QList<PokemonMoves> m_Moves;
     static int m_trueNumberOfPokes;
 
@@ -66,7 +69,7 @@ public:
     static int Gender(int pokenum);
     static int Type1(int pokenum);
     static int Type2(int pokenum);
-    static QPixmap Picture(int pokenum, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
+    static QPixmap Picture(int pokenum, int forme = 0, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QPixmap Sub(bool back = false);
     static QPixmap Icon(int index);
     static QSet<int> Moves(int pokenum);
@@ -77,10 +80,21 @@ public:
     static QSet<int> PreEvoMoves(int pokenum, int gen = 4);
     static QSet<int> SpecialMoves(int pokenum, int gen = 4);
     static QSet<int> RegularMoves(int pokenum, int gen = 4);
-    static bool IsForm(int pokenum);
+    /* Aesthetic formes are formes that are just a small variation of
+       a poke and not a new poke. (Shaymin-S is a new poke compared to Shaymin imo).
+
+       Some are chosable, like Shellos or Unown formes, some not, like Castform formes,
+       as Castform only changes in battle.
+       */
+    static bool HasAestheticFormes(int pokenum);
+    static int NumberOfAFormes(int pokenum);
+    static bool AFormesShown(int pokenum);
+    static int AestheticFormeId(int pokenum);
+    /* Standard formes: Rotom, Giratina, Deoxys, .. */
+    static bool IsForme(int pokenum);
     static int OriginalForm(int pokenum);
-    static bool HasForms(int pokenum);
-    static QList<int> Forms(int pokenum);
+    static bool HasFormes(int pokenum);
+    static QList<int> Formes(int pokenum);
     static PokeBaseStats BaseStats(int pokenum);
     static bool Exist(int pokenum);
     static QList<int> Abilities(int pokenum);
@@ -208,6 +222,7 @@ public:
     static bool Exist(int itemnum);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
+    static int PlateType(int itemnum);
     static QTSList<QString> SortedNames();
     static QList<Effect> Effects(int item);
     static QString Message(int item, int part);

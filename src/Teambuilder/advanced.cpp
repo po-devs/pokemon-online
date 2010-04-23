@@ -41,10 +41,9 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     {
 	hpchoice->addItem(TypeInfo::Name(i));
     }
-
     connect(hpchoice, SIGNAL(activated(int)), SLOT(changeHiddenPower(int)));
 
-    QGroupBox *dvs = new QGroupBox("&DVs");
+    QGroupBox *dvs = new QGroupBox(tr("&DVs"));
     firstColumn->addWidget(dvs);
     QGridLayout *dvlayout = new QGridLayout(dvs);
     QStringList stats_l;
@@ -67,6 +66,17 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 	dvlayout->addWidget((stats[i]=new QLabel()), i, 2);
         stats[i]->setObjectName("BigText");
     }
+
+    QHBoxLayout *happLayout = new QHBoxLayout();
+    firstColumn->addLayout(happLayout);
+    QLabel *happLabel = new QLabel(tr("Happiness"));
+    happLabel->setObjectName("BigText");
+    happLayout->addWidget(happLabel);
+    happLayout->addWidget(happiness = new QSpinBox());
+    happiness->setRange(0, 255);
+    happiness->setFixedWidth(50);
+    happiness->setValue(poke()->happiness());
+    connect(happiness, SIGNAL(valueChanged(int)), SLOT(changeHappiness(int)));
 
     secondColumn->addWidget(pokeImage=new AvatarBox(),0,Qt::AlignHCenter);
     updatePokeImage();
@@ -122,8 +132,8 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     QPushButton *bForms = new QPushButton(tr("Alternate Formes"));
     QMenu *m= new QMenu(bForms);
 
-    if (PokemonInfo::HasForms(poke()->num())) {
-        QList<int> forms = PokemonInfo::Forms(poke()->num());
+    if (PokemonInfo::HasFormes(poke()->num())) {
+        QList<int> forms = PokemonInfo::Formes(poke()->num());
 
         foreach(int form, forms) {
             QAction *ac = m->addAction(PokemonInfo::Name(form),this, SLOT(changeForm()));
@@ -192,6 +202,11 @@ void TB_Advanced::changeGender(bool gend1)
     poke()->gender() = gend1 ? Pokemon::Male : Pokemon::Female;
     updatePokeImage();
     emit genderChanged();
+}
+
+void TB_Advanced::changeHappiness(int x)
+{
+    poke()->happiness() = x;
 }
 
 void TB_Advanced::updatePokeImage()

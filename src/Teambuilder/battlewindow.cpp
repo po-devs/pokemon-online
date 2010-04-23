@@ -188,6 +188,8 @@ void BattleWindow::switchClicked(int zone)
     {
 	switchToPokeZone();
     } else {
+        if (!info().choices.switchAllowed)
+            return;
         if (zone == info().currentIndex[Myself]) {
             switchTo(info().currentIndex[Myself]);
 	} else {
@@ -398,6 +400,11 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                         if (poke == info().currentIndex[spot]) {
                             info().currentShallow(spot).num() = newform;
                         }
+                    } else if (type == AestheticForme) {
+                        quint8 newforme;
+                        in >> newforme;
+                        info().currentShallow(spot).forme() = newforme;
+                        mydisplay->updatePoke(spot);
                     }
                 }
             }
@@ -559,13 +566,23 @@ void AttackButton::updateAttack(const BattleMove &b, const PokeBattle &p)
     name->setText(MoveInfo::Name(b.num()));
     pp->setText(tr("PP %1/%2").arg(b.PP()).arg(b.totalPP()));
 
-    QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nEffect: %5").arg(MoveInfo::Name(b.num()), MoveInfo::PowerS(b.num()),
+    QString power;
+    if (b.num() == Move::Return) {
+        power = QString("%1").arg(std::max((p.happiness() * 2 / 5),1));
+    } else if (b.num() == Move::Frustration) {
+        power = QString("%1").arg(std::max(( (255-p.happiness()) * 2 / 5),1));
+    } else if (b.num() == Move::HiddenPower) {
+        power = QString("%1").arg(HiddenPowerInfo::Power(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]));
+    } else {
+        power = MoveInfo::PowerS(b.num());
+    }
+
+    QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nEffect: %5").arg(MoveInfo::Name(b.num()), power,
                                                                         MoveInfo::AccS(b.num()), MoveInfo::Description(b.num()),
                                                                         MoveInfo::DetailedDescription(b.num()));
-    //TODO: CHANGE WHEN BATTLESTRUCTS 'TODO' COMMENTS ARE REMOVED
+
     int type = b.num() == Move::HiddenPower ?
-               /*HiddenPowerInfo::Type(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) */
-                 MoveInfo::Type(b.num()) : MoveInfo::Type(b.num());
+               HiddenPowerInfo::Type(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num());
     QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
     changePics(model.arg("D"), model.arg("H"), model.arg("C"));
 

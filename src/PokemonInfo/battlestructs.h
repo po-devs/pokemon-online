@@ -62,7 +62,9 @@ class PokeBattle
     PROPERTY(bool, shiny);
     PROPERTY(quint8, gender);
     PROPERTY(quint8, level);
+    PROPERTY(quint8, forme);
     PROPERTY(quint8, nature);
+    PROPERTY(quint8, happiness);
     PROPERTY(QList<int>, dvs);
     PROPERTY(QList<int>, evs);
 public:
@@ -100,6 +102,7 @@ class ShallowBattlePoke
     PROPERTY(quint8, gender);
     PROPERTY(quint8, lifePercent);
     PROPERTY(quint8, level);
+    PROPERTY(quint8, forme);
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);

@@ -253,6 +253,7 @@ signals:
     void natureChanged();
     void itemChanged(int newItem);
     void levelChanged();
+    void pokeImageChanged();
 public slots:
     void setNum(int pokeNum);
     void setPokeByNick();

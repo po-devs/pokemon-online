@@ -76,8 +76,6 @@ BattleSituation::~BattleSituation()
 {
     /* releases the thread */
     {
-        qDebug() << "Battle destroyed";
-        qDebug() << "Between "  << team1.name << " and " << team2.name;
 	/* So the thread will quit immediately after being released */
 	quit = true;
         /* Should be enough */
@@ -101,9 +99,12 @@ void BattleSituation::start()
         }
     }
 
-    notify(All, Rated, Player1, rated());
+    notify(All, BlankMessage,0);
+
     if (rated())
         notify(All, TierSection, Player1, tier());
+
+    notify(All, Rated, Player1, rated());
 
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         //False for saying this is not in battle message but rule message
@@ -195,6 +196,8 @@ void BattleSituation::addSpectator(int id)
         if (!koed(i)) {
             notify(key, SendOut, i, false, quint8(0), opoke(i, currentPoke(i)));
             notify(key, ChangeTempPoke,i, quint8(TempSprite),quint16(pokenum(i)));
+            if (forme(i) != poke(i).forme())
+                notify(key, ChangeTempPoke, i, quint8(AestheticForme), quint8(forme(i)));
         }
     }
 }
@@ -203,6 +206,11 @@ void BattleSituation::removeSpectator(int id)
 {
     spectators.remove(spectatorKey(id));
     notify(All, Spectating, 0, false, qint32(id));
+}
+
+int BattleSituation::forme(int player)
+{
+    return pokelong[player]["Forme"].toInt();
 }
 
 int BattleSituation::id(int spot) const
@@ -301,7 +309,6 @@ void BattleSituation::run()
 
 void BattleSituation::beginTurn()
 {
-    qDebug() << "Battle turn begin between " << team1.name << " and " << team2.name;
     turn() += 1;
     /* Resetting temporary variables */
     turnlong[0].clear();
@@ -319,7 +326,6 @@ void BattleSituation::beginTurn()
 
 void BattleSituation::endTurn()
 {
-    qDebug() << "End turn between " << team1.name << " and " << team2.name;
     testWin();
 
     callzeffects(Player1, Player1, "EndTurn");
@@ -341,11 +347,8 @@ void BattleSituation::endTurn()
     callpeffects(Player2, Player1, "EndTurn");
 
     endTurnStatus();
-    qDebug() << "Status gone";
 
     requestSwitchIns();
-
-    qDebug() << "Battle turn end " << team1.name << " and " << team2.name;
 }
 
 void BattleSituation::endTurnStatus()
@@ -573,8 +576,6 @@ std::vector<int> BattleSituation::sortedBySpeed() {
 
 void BattleSituation::analyzeChoices()
 {
-    qDebug() << "Analyzing choices in battle between " << team1.name << " and " << team2.name;
-
     /* If there's no choice then the effects are already taken care of */
     if (!turnlong[Player1].contains("NoChoice") && choice[Player1].attack() && !options[Player1].struggle()) {
         MoveEffect::setup(move(Player1,choice[Player1].numSwitch), Player1, Player2, *this);
@@ -621,8 +622,6 @@ void BattleSituation::analyzeChoices()
             }
         }
     }
-
-    qDebug() << "End Analyzing choices in battle between " << team1.name << " and " << team2.name;
 }
 
 void BattleSituation::notifySub(int player, bool sub)
@@ -646,6 +645,11 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
         } else {
             return;
             //INVALID BEHAVIOR
+        }
+    } else {
+        // Even if they didn't move they can still cancel
+        if (b.cancelled()) {
+            notify(player, CancelMove, player);
         }
     }
 
@@ -754,7 +758,7 @@ void BattleSituation::sendPoke(int player, int pok, bool silent)
 
     if (poke(player,pok).num() == Pokemon::Giratina_O && poke(player,pok).item() != Item::GriseousOrb)
         changeForm(player,pok,Pokemon::Giratina);
-
+    
     changeCurrentPoke(player, pok);
 
     notify(player, SendOut, player, silent, ypoke(player, pok));
@@ -768,6 +772,7 @@ void BattleSituation::sendPoke(int player, int pok, bool silent)
     pokelong[player]["Type1"] = PokemonInfo::Type1(poke(player).num());
     pokelong[player]["Type2"] = PokemonInfo::Type2(poke(player).num());
     pokelong[player]["Ability"] = poke(player).ability();
+    pokelong[player]["Forme"] = poke(player).forme();
 
     for (int i = 0; i < 4; i++) {
 	pokelong[player]["Move" + QString::number(i)] = poke(player).move(i).num();
@@ -781,6 +786,15 @@ void BattleSituation::sendPoke(int player, int pok, bool silent)
     }
 
     pokelong[player]["Level"] = poke(player).level();
+
+    if (poke(player,pok).num() == Pokemon::Arceus && ItemInfo::isPlate(poke(player,pok).item())) {
+        int type = ItemInfo::PlateType(poke(player,pok).item());
+        
+        if (type != Type::Normal) {
+            changeAForme(player, type);
+        }
+    }
+
     turnlong[player]["CantGetToMove"] = true;
 }
 
@@ -2143,11 +2157,17 @@ void BattleSituation::acqItem(int player, int item) {
 
 void BattleSituation::loseItem(int player)
 {
-    poke(player).item() = 0;
     //No Griseous Orb -> Giratina back to its ol' self
-    if (!koed(player) && pokenum(player) == Pokemon::Giratina_O) {
-        changeForm(player,currentPoke(player),Pokemon::Giratina);
+    if (!koed(player)) {
+        if (pokenum(player) == Pokemon::Giratina_O) {
+            changeForm(player,currentPoke(player),Pokemon::Giratina);
+        } else if (pokenum(player) == Pokemon::Arceus) {
+            if (getType(player, 1) != Type::Normal) {
+                changeAForme(player, Type::Normal);
+            }
+        }
     }
+    poke(player).item() = 0;
 }
 
 void BattleSituation::changeForm(int player, int poke, int newform)
@@ -2170,6 +2190,12 @@ void BattleSituation::changeForm(int player, int poke, int newform)
     }
 
     notify(All, ChangeTempPoke, player, quint8(DefiniteForm), quint8(poke),quint16(newform));
+}
+
+void BattleSituation::changeAForme(int player, int newforme)
+{
+    pokelong[player]["Forme"] = newforme;
+    notify(All, ChangeTempPoke, player, quint8(AestheticForme), quint8(newforme));
 }
 
 void BattleSituation::healLife(int player, int healing)
@@ -2227,11 +2253,8 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 
 void BattleSituation::requestSwitchIns()
 {
-    qDebug() <<"Switch in start";
     testWin();
-    qDebug() << "....";
 
-    qDebug() << "Count is " << koedPokes.size();
     int count = koedPokes.size();
 
     if (count == 0) {
@@ -2241,23 +2264,19 @@ void BattleSituation::requestSwitchIns()
     notifyInfos();
 
     foreach(int p, koedPokes) {
-        qDebug() << "Requesting choice for " << p;
         requestChoice(p, false);
     }
 
     sem.acquire(1);
 
-    qDebug() <<"Test quit";
     testquit();
 
     QSet<int> copy = koedPokes;
 
     foreach(int p, copy) {
-        qDebug() << "Analyzing " << p;
         analyzeChoice(p);
     }
 
-    qDebug() << "calling entry effects...";
     foreach(int p, copy) {
 	callEntryEffects(p);
     }

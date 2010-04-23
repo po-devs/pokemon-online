@@ -119,7 +119,8 @@ public:
         TempAbility,
         TempItem,
         TempSprite,
-        DefiniteForm
+        DefiniteForm,
+        AestheticForme
     };
 
     enum WeatherM
@@ -246,10 +247,10 @@ public:
     bool event(QEvent *event);
 
     /* Loads a pixmap if not loaded otherwise go see graphics */
-    QPixmap loadPixmap(quint16 num, bool shiny, bool back, quint8 gender, bool sub);
+    QPixmap loadPixmap(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub);
     /* We are using a qmap to store the graphics already loaded. So the key of the pixmap
         is a combination of 2 bools, 1 quin8; and one quint16 */
-    qint32 key(quint16 num, bool shiny, bool back, quint8 gender, bool sub) const;
+    qint32 key(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub) const;
     QHash<qint32, QPixmap> graphics;
     /* Current pixmaps displayed */
     QGraphicsPixmapItem *mine, *foe;
@@ -263,9 +264,9 @@ template <class T>
 void BaseGraphicsZone::switchTo(const T &poke, int spot, bool sub, int specialSprite)
 {
     if (spot == Myself)
-        mine->setPixmap(loadPixmap(specialSprite?specialSprite:poke.num(), poke.shiny(), true, poke.gender(), sub));
+        mine->setPixmap(loadPixmap(specialSprite?specialSprite:poke.num(), poke.forme(), poke.shiny(), true, poke.gender(), sub));
     else
-        foe->setPixmap(loadPixmap(specialSprite?specialSprite:poke.num(), poke.shiny(), false, poke.gender(), sub));
+        foe->setPixmap(loadPixmap(specialSprite?specialSprite:poke.num(), poke.forme(), poke.shiny(), false, poke.gender(), sub));
 }
 
 #endif // BASEBATTLEWINDOW_H

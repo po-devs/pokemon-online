@@ -157,8 +157,6 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 
     in >> command;
 
-    qDebug() << "from " << socket().id() << ": " << int(command);
-
     switch (command) {
     case Login:
 	{
@@ -360,7 +358,6 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;
     }
-    qDebug() << "End of command " << socket().id();
 }
 
 Network & Analyzer::socket()
