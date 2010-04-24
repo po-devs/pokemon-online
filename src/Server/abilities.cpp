@@ -340,6 +340,16 @@ struct AMFlashFire : public AM {
 struct AMFlowerGift : public AM {
     AMFlowerGift() {
         functions["StatModifier"] = &sm;
+        functions["UponSetup"] = &us;
+        functions["WeatherChange"] = &us;
+    }
+
+    static void us(int s, int, BS &b) {
+        if (b.weather() == BS::Sunny) {
+            if (b.forme(s) != 1) b.changeAForme(s, 1);
+        } else {
+            if (b.forme(s) != 0) b.changeAForme(s, 0);
+        }
     }
 
     static void sm(int s, int, BS &b) {
@@ -359,12 +369,19 @@ struct AMForeCast : public AM {
     static void us(int s, int, BS &b) {
         int tp = TypeInfo::TypeForWeather(b.weather());
 
+        /* Only those weathers work */
+        if (tp != Type::Ice && tp != Type::Fire && tp != Type::Water) {
+            tp = Type::Normal;
+        }
+
         if (poke(b,s)["Type2"].toInt() == Pokemon::Curse && tp == poke(b,s)["Type1"].toInt()) {
             return;
         }
         b.sendAbMessage(21,0,s,s,tp);
         poke(b,s)["Type1"] = tp;
         poke(b,s)["Type2"] = Pokemon::Curse;
+
+        b.changeAForme(s, tp == Type::Normal ? 0 : b.weather());
     }
 };
 
