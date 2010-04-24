@@ -224,6 +224,32 @@ AttackButton QLabel#AttackPP{
 	padding-right: 5px;
 }
 
+PokeBallDescBox {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f9f9f9, stop: 0.5 #e4e4e4, stop: 1 #f9f9f9);
+	border: 1px solid #696565;
+	border-radius: 5px;
+}
+
+PokeBallDescBox QLabel#PokeName {
+	font-size: 11pt;
+	text-transform: uppercase;
+	font-weight: normal;
+	font-family: "SignPainter'sGothicShadedSC JL";
+}
+
+PokeBallDescBox QLabel#PokeSpec {
+	font-size: 10pt;
+}
+
+PokeBallDescBox QLabel {
+	font-family: Trebuchet MS;
+	font-weight: bold;
+	font-size: 9pt;
+}
+
+
+
+
 TB_PokemonBoxes QTabWidget::pane { /* The tab widget frame */
 	border: 6px solid #0a9d9b;
 	padding: 0;
@@ -244,7 +270,7 @@ TB_PokemonBoxes QTabWidget::tab-bar {
 
 /* Style the tab using the tab sub-control. Note that
 it reads QTabBar _not_ QTabWidget */
-TB_PokemonBoxes QTabBar::tab, BattleWindow QTabBar::tab {
+QTabBar::tab {
 	background: #bababa;
 	border: 1px solid #676a6c;
 	border-radius: 5px;
@@ -253,28 +279,28 @@ TB_PokemonBoxes QTabBar::tab, BattleWindow QTabBar::tab {
 	padding: 2px;
 }
 
-TB_PokemonBoxes QTabBar::tab::title, BattleWindow QTabBar::tab::title {
+QTabBar::tab::title {
 	font-weight:bold;
 	font-family:Trebuchet MS;
 	font-size: 14px;
 }
 
-TB_PokemonBoxes QTabBar::tab:selected , TB_PokemonBoxes QTabBar::tab:hover, BattleWindow QTabBar::tab:selected, BattleWindow QTabBar::tab:hover{
+QTabBar::tab:selected , QTabBar::tab:hover{
 	border-color: #077cff;
 	background: #88bcf1;
 }
 
-TB_PokemonBoxes QTabBar::tab:selected , BattleWindow QTabBar::tab:selected {
+QTabBar::tab:selected {
 	/* expand/overlap to the left and right by 4px */
 	margin-left: -2px;
 	margin-right: -2px;
 }
 
-TB_PokemonBoxes QTabBar::tab:first, BattleWindow QTabBar::tab:first {
+QTabBar::tab:first {
 	margin-left: 0px; /* the last selected tab has nothing to overlap with on the right */
 }
 
-TB_PokemonBoxes QTabBar::tab:last, BattleWindow QTabBar::tab:last{
+QTabBar::tab:last{
 	margin-right: 0px; /* the last selected tab has nothing to overlap with on the right */
 }
 

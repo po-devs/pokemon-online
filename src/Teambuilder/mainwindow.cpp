@@ -117,7 +117,6 @@ void MainEngine::launchTeamBuilder()
 {
     TeamBuilder *TB = new TeamBuilder(trainerTeam());
     MainEngineRoutine(TB);
-    displayer->layout()->setSizeConstraint(QLayout::SetFixedSize);
 
     connect(TB,SIGNAL(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)),
             SLOT(setDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));

@@ -51,6 +51,8 @@ QImageButton::QImageButton(const QString &normal, const QString &hovered, const 
 {
     setFixedSize(myPic.size());
 
+    setMask(myPic.mask());
+
     /* Both are necessary for some styles */
     setMouseTracking(true);
     setAttribute(Qt::WA_Hover, true);

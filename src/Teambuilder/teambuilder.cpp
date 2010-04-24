@@ -2,6 +2,7 @@
 #include "box.h"
 #include "advanced.h"
 #include "mainwindow.h"
+#include "pokedex.h"
 #include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/pokemonstructs.h"
@@ -138,9 +139,9 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : QImageBackground("db/Teambuild
     m_box->setParent(this);
     m_box->move(4+2*138,1);
 
-    QImageButton * m_pokedex = new QImageButton("db/Teambuilder/Buttons/PokedexNorm.png", "db/Teambuilder/Buttons/PokedexGlow.png");
-    m_pokedex->setParent(this);
-    m_pokedex->move(4+3*138,1);
+    QImageButton * m_pokedexb = new QImageButton("db/Teambuilder/Buttons/PokedexNorm.png", "db/Teambuilder/Buttons/PokedexGlow.png");
+    m_pokedexb->setParent(this);
+    m_pokedexb->move(4+3*138,1);
 
     nextb = new QImageButton("db/Teambuilder/Buttons/NextNorm.png", "db/Teambuilder/Buttons/NextGlow.png");
     nextb->setParent(this);
@@ -168,9 +169,14 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : QImageBackground("db/Teambuild
     m_boxes = new TB_PokemonBoxes(this);
     m_body->addWidget(m_boxes);
 
+    /* Pokedex */
+    m_pokedex = new Pokedex(this);
+    m_body->addWidget(m_pokedex);
+
     connect(m_trainer, SIGNAL(clicked()), SLOT(changeToTrainer()));
     connect(m_team, SIGNAL(clicked()), SLOT(changeToTeam()));
     connect(m_box, SIGNAL(clicked()), SLOT(changeToBoxes()));
+    connect(m_pokedexb, SIGNAL(clicked()), SLOT(changeToPokedex()));
     connect(nextb, SIGNAL(clicked()), SLOT(changeZone()));
     connect(m_close, SIGNAL(clicked()), SIGNAL(done()));
     connect(m_teamBody, SIGNAL(showDockAdvanced(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)), this,
@@ -234,6 +240,14 @@ void TeamBuilder::changeToTrainer()
         m_body->setCurrentIndex(TrainerW);
         changePic("db/Teambuilder/Trainer/TrainerBG.png");
     }
+}
+
+void TeamBuilder::changeToPokedex()
+{
+    if (m_body->currentIndex() == TrainerW)
+        nextb->changePics("db/Teambuilder/Buttons/GoBackNorm.png", "db/Teambuilder/Buttons/GoBackGlow.png");
+    m_body->setCurrentIndex(PokedexW);
+    changePic("db/Teambuilder/PokeDex/PokedexBG.png");
 }
 
 void TeamBuilder::saveTeam()

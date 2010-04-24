@@ -459,7 +459,7 @@ void Client::askForPass(const QString &salt) {
     bool ok;
 
     QString pass = QInputDialog::getText(this, tr("Enter your password"),
-                                         tr("Enter your password.\n"
+                                         tr("Enter the password for your current name.\n"
                                             "\nIt is advised to use a slightly different password for each server."
                                             " (The server only sees the encrypted form of the pass, but still...)"),
                                          QLineEdit::Password,"", &ok);
