@@ -146,13 +146,15 @@ PokemonBox {
 
 
 QProgressBar#TimeOut {
+	font-family: LCD;
+	font-weight: bold;
+	font-size: 12pt;
     border: 1px solid black;
 	width: 79;
 	height: 21;
-	background-color:white;
-	font-weight:bold;
+	background-color:black;
 	text-align: center;
-	color: black;
+	color: white;
 	border-radius: 7px;
 }
 
@@ -183,12 +185,16 @@ BaseBattleWindow QLabel#TrainerNick {
 }
 
 BaseBattleWindow QLabel#PokemonNick {
-	font-family: Comic Sans MS;
+text-transform: uppercase;
+font-variant: small-caps; 
+	font-weight: bold;
+   font-family: Arial Rounded MT;
 	font-size: 10pt;
 }
 
 BaseBattleWindow QLabel#PokemonLevel {
-	font-family: Comic Sans MS;
+	font-weight: bold;
+  font-family: Arial Rounded MT;
 	font-size: 8pt;
 }
 
