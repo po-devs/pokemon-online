@@ -8,6 +8,7 @@
 class TB_PokemonBody;
 class TB_TrainerBody;
 class TB_PokemonBoxes;
+class Pokedex;
 class TB_TeamBody;
 class TB_EVManager;
 class DockAdvanced;
@@ -87,13 +88,15 @@ private:
     enum StackWidgets {
         TrainerW=0,
         TeamW=1,
-        BoxesW
+        BoxesW=2,
+        PokedexW=3
     };
 
 private slots:
     void changeToTrainer();
     void changeToTeam();
     void changeToBoxes();
+    void changeToPokedex();
     void changeZone();
 
 signals:
@@ -104,6 +107,7 @@ private:
     TB_TrainerBody *m_trainerBody;
     TB_TeamBody *m_teamBody;
     TB_PokemonBoxes *m_boxes;
+    Pokedex *m_pokedex;
     QImageButton *nextb;
     /* the Team of the trainer */
     TrainerTeam *m_team;
