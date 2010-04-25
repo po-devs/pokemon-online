@@ -13,7 +13,8 @@ DockAdvanced::DockAdvanced(TB_TeamBody * builder):
     setWindowIcon(QIcon("db/icon.png"));
     setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
 
-    QImageBackground *bg = new QImageBackground("db/Teambuilder/Advanced/AdvBG.png");
+    QLabel *bg = new QLabel();
+    bg->setPixmap(QPixmap("db/Teambuilder/Advanced/AdvBG.png"));
     bg->setParent(this);
     setFixedSize(bg->size());
 

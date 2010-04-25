@@ -55,24 +55,6 @@ private:
     bool pressed;
 };
 
-/* A widget that sets its size to the background given in parameter.
-   Actually it changes its background to the one given */
-class QImageBackground : public QWidget
-{
-    Q_OBJECT
-public:
-    QImageBackground(const QString &imagePath);
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
-    QSize maximumSize() const;
-
-    void changePic(const QString &path);
-protected:
-    void paintEvent(QPaintEvent *e);
-
-    QPixmap myBackground;
-};
-
 /* A QListWidgetItem with an id, for convenience */
 class QIdListWidgetItem : public QListWidgetItem
 {

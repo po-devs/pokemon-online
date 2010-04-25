@@ -247,8 +247,40 @@ PokeBallDescBox QLabel {
 	font-size: 9pt;
 }
 
+BigOpenPokeBall {
+	margin-bottom: -6px;
+}
 
+PokedexBody {
+	border: 6px solid black;
+	border-radius: 16px;
+	background: qlineargradient(x1:0, y1:0, x2: 0, y2: 1, stop: 0 #ff5411, stop: 1 #f7ebe7);
+}
 
+PokedexBody TB_PokeChoice{
+	background-color: #e3e1e1;
+	font-family: Trebuchet MS;
+	
+	text-transform: uppercase;
+	font-size: 8pt;
+}
+
+PokedexBody TB_PokeChoice::item {
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #a1a3a7);
+	margin-bottom:1;
+}
+
+Pokedex QLabel {
+	font-family: Trebuchet MS;
+	font-weight: bold;
+}
+
+PokedexBody QLabel#Separator {
+	background: black;
+	width: 5px;
+	border-left: 1px solid #421605;
+	border-right: 1px solid #421605;
+}
 
 TB_PokemonBoxes QTabWidget::pane { /* The tab widget frame */
 	border: 6px solid #0a9d9b;
@@ -270,12 +302,21 @@ TB_PokemonBoxes QTabWidget::tab-bar {
 
 /* Style the tab using the tab sub-control. Note that
 it reads QTabBar _not_ QTabWidget */
-QTabBar::tab {
+QTabBar::tab:top, QTabBar::tab:bottom {
 	background: #bababa;
 	border: 1px solid #676a6c;
 	border-radius: 5px;
 	height: 23px;
 	min-width: 70px;
+	padding: 2px;
+}
+
+QTabBar::tab:left, QTabBar::tab:right {
+	background: #bababa;
+	border: 1px solid #676a6c;
+	border-radius: 5px;
+	min-height: 23px;
+	width: 70px;
 	padding: 2px;
 }
 
@@ -290,20 +331,33 @@ QTabBar::tab:selected , QTabBar::tab:hover{
 	background: #88bcf1;
 }
 
-QTabBar::tab:selected {
+QTabBar::tab:top:selected , QTabBar::tab:bottom:selected {
 	/* expand/overlap to the left and right by 4px */
 	margin-left: -2px;
 	margin-right: -2px;
 }
 
-QTabBar::tab:first {
+QTabBar::tab:left:selected , QTabBar::tab:right:selected {
+	/* expand/overlap to the left and right by 4px */
+	margin-top: -2px;
+	margin-bottom: -2px;
+}
+
+QTabBar::tab:top:first,QTabBar::tab:bottom:first {
 	margin-left: 0px; /* the last selected tab has nothing to overlap with on the right */
 }
 
-QTabBar::tab:last{
+QTabBar::tab:top:last, QTabBar::tab:bottom:last {
 	margin-right: 0px; /* the last selected tab has nothing to overlap with on the right */
 }
 
+QTabBar::tab:left:first,QTabBar::tab:right:first {
+	margin-left: 0px; /* the last selected tab has nothing to overlap with on the right */
+}
+
+QTabBar::tab:left:last, QTabBar::tab:right:last {
+	margin-right: 0px; /* the last selected tab has nothing to overlap with on the right */
+}
 
 BaseChallengeWindow QLabel#Title {
 	font-family: Trebuchet MS;
