@@ -268,7 +268,7 @@ PokedexBody TB_PokeChoice{
 	background-image: url(db/Teambuilder/PokeDex/gradient.png);
 	background-repeat: repeat-xy;
 	font-family: Trebuchet MS;
-	text-transform: uppercase;
+	/*text-transform: uppercase;*/
 	font-size: 8pt;
 }
 

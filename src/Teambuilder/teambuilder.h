@@ -214,13 +214,13 @@ private:
     friend class DockAdvanced;
 };
 
-/* This is the widget displaying the pokemon's info, moves, item, ... */
+/* The list of pokémons */
 class TB_PokeChoice : public QCompactTable
 {
     Q_OBJECT
 
 public:
-    TB_PokeChoice();
+    TB_PokeChoice(bool missingno = true);
 
 protected:
     void mousePressEvent(QMouseEvent * event);
@@ -233,6 +233,7 @@ private:
     QTableWidgetItem * itemForDrag;
 };
 
+/* This is the widget displaying the pokemon's info, moves, item, ... */
 class TB_PokemonBody : public QWidget
 {
     Q_OBJECT

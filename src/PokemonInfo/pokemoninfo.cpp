@@ -8,7 +8,7 @@
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
 QTSList<QString> PokemonInfo::m_Names;
-QTSList<float> PokemonInfo::m_Weights;
+QTSList<QString> PokemonInfo::m_Weights;
 QTSList<int> PokemonInfo::m_Genders;
 QTSList<int> PokemonInfo::m_Type1;
 QTSList<int> PokemonInfo::m_Type2;
@@ -1178,13 +1178,27 @@ int ItemInfo::Number(const QString &itemname)
 }
 
 float PokemonInfo::Weight(int pokenum) {
-    return (m_Weights[pokenum]-0.02f)/2.2f; /* the -0.02 is just a trick to compensate the poor precision of floats, for moves like grass knot */
+    return (m_Weights[pokenum].toFloat()-0.02f)/2.2f; /* the -0.02 is just a trick to compensate the poor precision of floats, for moves like grass knot */
+}
+
+QString PokemonInfo::WeightS(int pokenum)
+{
+    return m_Weights[pokenum];
+}
+
+int PokemonInfo::BaseGender(int pokenum)
+{
+    int avail = Gender(pokenum);
+
+    return (avail == Pokemon::MaleAvail || avail == Pokemon::MaleAndFemaleAvail) ?
+            Pokemon::Male : (avail == Pokemon::NeutralAvail ? Pokemon::Neutral : Pokemon::Female);
 }
 
 int ItemInfo::SortedNumber(const QString &itemname)
 {
     return (qLowerBound(m_SortedNames, itemname) - m_SortedNames.begin()) % (NumberOfItems());
 }
+
 
 QTSList<QString> ItemInfo::SortedNames()
 {
