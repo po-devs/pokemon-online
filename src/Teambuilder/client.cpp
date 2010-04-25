@@ -399,6 +399,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(animateHpBar, SIGNAL(triggered(bool)), SLOT(animateHpBar(bool)));
     animateHpBar->setChecked(s.value("animate_hp_bar").toBool());
 
+    QAction *PlayMusic = battleMenu->addAction(tr("Play Music and Sounds"));
+    PlayMusic->setCheckable(true);
+    connect(PlayMusic, SIGNAL(triggered(bool)), SLOT(PlayMusic(bool)));
+    PlayMusic->setChecked(s.value("play_music").toBool());
+
     mymenubar = menuBar;
     return menuBar;
 }
@@ -485,6 +490,12 @@ void Client::animateHpBar(bool save)
 {
     QSettings s;
     s.setValue("animate_hp_bar", save);
+}
+
+void Client::PlayMusic(bool save)
+{
+    QSettings s;
+    s.setValue("play_music", save);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)

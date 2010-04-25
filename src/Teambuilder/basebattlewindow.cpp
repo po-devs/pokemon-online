@@ -22,6 +22,23 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp)
 
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent) : ignoreSpecs(false), delayed(false)
 {
+    //starts battle music
+    musicOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
+    music = new Phonon::MediaObject(this);
+    Phonon::createPath(music, musicOutput);
+
+    qsrand(QDateTime::currentDateTime().toTime_t());
+    QDir directory = QDir("Music");
+    QStringList files;
+    files = directory.entryList(QStringList("*"), QDir::Files | QDir::NoSymLinks);
+    music->setCurrentSource(QString("Music/" + files[qrand() % files.size()]));
+
+    QSettings s;
+    if (s.value("play_music").toBool())
+    {
+        music->play();
+    }
+
     myInfo = new BaseBattleInfo(me, opponent);
     mydisplay = new BaseBattleDisplay(info());
     init();
@@ -177,6 +194,19 @@ void BaseBattleWindow::ignoreSpectators(bool ignore)
 
 void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
 {
+    QSettings s;
+    if (s.value("play_music").toBool())
+    {
+     if(music->state() == Phonon::StoppedState)
+        {
+         music->play();
+        }
+    }
+    else
+    {
+       music->stop();
+    }
+
     switch (command)
     {
     case SendOut:
@@ -196,6 +226,12 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                     printLine(tr("%1 sent out %2! (%3)").arg(name(spot), rnick(spot), pokename));
                 else
                     printLine(tr("%1 sent out %2!").arg(name(spot), rnick(spot)));
+            }
+
+            //Plays the battle cry when a pokemon is switched in
+            if (s.value("play_music").toBool())
+            {
+            playCry(info().currentShallow(spot).num());
             }
 
             break;
@@ -231,6 +267,11 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             break;
         }
     case Ko:
+        //Plays the battle cry when a pokemon faints
+        if (s.value("play_music").toBool())
+        {
+        playCry(info().currentShallow(spot).num());
+        }
         printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(spot)))) + "</b>");
         switchToNaught(spot);
         break;
@@ -616,6 +657,30 @@ void BaseBattleWindow::printHtml(const QString &str)
 {
     blankMessage = false;
     mychat->insertHtml(str + "<br />");
+}
+
+void BaseBattleWindow::playCry(int pokenum)
+{
+    cryOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
+    cry = new Phonon::MediaObject(this);
+    Phonon::createPath(cry, cryOutput);
+
+    if (pokenum < 10)
+    {
+        cry->setCurrentSource(QString("db/pokes/cries/00%1.wav").arg(pokenum));
+    }
+    else
+        if (pokenum < 100)
+        {
+            cry->setCurrentSource(QString("db/pokes/cries/0%1.wav").arg(pokenum));
+        }
+    else
+    {
+        cry->setCurrentSource(QString("db/pokes/cries/%1.wav").arg(pokenum));
+    }
+
+    cry->play();
+    delay(1000);
 }
 
 BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)

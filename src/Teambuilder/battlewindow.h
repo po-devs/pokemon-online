@@ -6,6 +6,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "basebattlewindow.h"
 
+
 class AttackZone;
 class PokeZone;
 class BattleDisplay;
@@ -67,7 +68,6 @@ public:
     void updateChoices();
     /* sends the choice */
     void sendChoice(const BattleChoice &b);
-
     QString nick(int spot) const;
 
 public slots:
