@@ -218,6 +218,7 @@ struct MMBatonPass : public MM
 	c.remove("Move1");
 	c.remove("Move2");
 	c.remove("Move3");
+        c.remove("HasMovedOnce");
         c.remove("Forme");
 	/* choice band etc. would force the same move
 		if on both the passed & the passer */
@@ -548,7 +549,7 @@ struct MMFakeOut : public MM
     }
 
     static void daf(int s, int, BS &b) {
-	if (poke(b,s)["MovesUsed"].toInt() != 1) {
+        if (poke(b,s).value("HasMovedOnce").toBool()) {
 	    turn(b,s)["Failed"] = true;
 	}
     }

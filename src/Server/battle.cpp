@@ -1156,8 +1156,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	attack = move;
     } else {
 	attack = this->move(player,move);
-	pokelong[player]["MoveSlot"] = move;
-	pokelong[player][QString("Move%1Used").arg(move)] = true;
+        pokelong[player]["MoveSlot"] = move;
     }
 
     turnlong[player]["HasMoved"] = true;
@@ -1196,12 +1195,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	if (!isMovePossible(player, move)) {
             goto end;
 	}
+        pokelong[player][QString("Move%1Used").arg(move)] = true;
+
 	callieffects(player,player, "RegMoveSettings");
     }
 
     if (attack != Move::Struggle) { //Struggle
         pokelong[player]["LastMoveUsed"] = attack;
-        inc(pokelong[player]["MovesUsed"]);
     }
 
     calleffects(player, player, "MoveSettings");
@@ -1409,6 +1409,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     end:
+    pokelong[source]["HasMovedOnce"] = true;
+
     battlelong.remove("Attacker");
     battlelong.remove("Attacked");
 }

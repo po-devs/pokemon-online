@@ -255,19 +255,21 @@ PokedexBody {
 	border: 6px solid black;
 	border-radius: 16px;
 	background: qlineargradient(x1:0, y1:0, x2: 0, y2: 1, stop: 0 #ff5411, stop: 1 #f7ebe7);
+	width: 547px;
+	min-width: 547px;
+	max-width: 547px;
 }
 
 PokedexBody TB_PokeChoice{
-	background-color: #e3e1e1;
+	/*background-color: #e3e1e1;*/
+	/*background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #a1a3a7);
+	alternate-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #a1a3a7);*/
+	selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #e3e1e1, stop: 0.5 #5c5e5f);
+	background-image: url(db/Teambuilder/PokeDex/gradient.png);
+	background-repeat: repeat-xy;
 	font-family: Trebuchet MS;
-	
 	text-transform: uppercase;
 	font-size: 8pt;
-}
-
-PokedexBody TB_PokeChoice::item {
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #a1a3a7);
-	margin-bottom:1;
 }
 
 Pokedex QLabel {
@@ -277,9 +279,44 @@ Pokedex QLabel {
 
 PokedexBody QLabel#Separator {
 	background: black;
-	width: 5px;
+	max-width: 5px;
+	min-width: 5px;
 	border-left: 1px solid #421605;
 	border-right: 1px solid #421605;
+}
+
+/* The profile tab in the pokedex */
+ProfileTab {
+	border: 0;
+	padding-top: 5px;
+	padding-left: 5px;
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #9faeb3);
+}
+
+ProfileTab QLabel#BlueHeader {
+	border: 1px solid #b3b4b4;
+	border-radius: 5px;
+	background: #afeefb;
+	font-family: Trebuchet MS;
+	font-weight: bold;
+	font-size: 14px;
+	height: 23px;
+	max-height: 23px;
+	min-height: 23px;
+	max-width: 86px;
+}
+
+ProfileTab QLabel#GreenHeader {
+	border: 1px solid #b3b4b4;
+	border-radius: 5px;
+	background: #8bd6a6;
+	font-family: Trebuchet MS;
+	font-weight: bold;
+	font-size: 14px;
+	height: 23px;
+	max-height: 23px;
+	min-height: 23px;
+	max-width: 86px;
 }
 
 TB_PokemonBoxes QTabWidget::pane { /* The tab widget frame */
@@ -296,9 +333,25 @@ BattleWindow QTabWidget::pane {
 	border-radius: 8px;
 }
 
+
+Pokedex QTabWidget::tab-bar {
+	alignment: center;
+	bottom: -5px;
+}
+
 TB_PokemonBoxes QTabWidget::tab-bar {
 	bottom: -3px;
 }
+
+
+Pokedex QTabWidget::pane {
+	border: 2px solid #059eba;
+	padding: 0;
+	margin-bottom: 3px;
+	margin-right: 3px;
+	border-radius: 8px;
+}
+
 
 /* Style the tab using the tab sub-control. Note that
 it reads QTabBar _not_ QTabWidget */
@@ -308,15 +361,6 @@ QTabBar::tab:top, QTabBar::tab:bottom {
 	border-radius: 5px;
 	height: 23px;
 	min-width: 70px;
-	padding: 2px;
-}
-
-QTabBar::tab:left, QTabBar::tab:right {
-	background: #bababa;
-	border: 1px solid #676a6c;
-	border-radius: 5px;
-	min-height: 23px;
-	width: 70px;
 	padding: 2px;
 }
 
@@ -337,26 +381,12 @@ QTabBar::tab:top:selected , QTabBar::tab:bottom:selected {
 	margin-right: -2px;
 }
 
-QTabBar::tab:left:selected , QTabBar::tab:right:selected {
-	/* expand/overlap to the left and right by 4px */
-	margin-top: -2px;
-	margin-bottom: -2px;
-}
-
 QTabBar::tab:top:first,QTabBar::tab:bottom:first {
-	margin-left: 0px; /* the last selected tab has nothing to overlap with on the right */
+	margin-left: 15px;
 }
 
 QTabBar::tab:top:last, QTabBar::tab:bottom:last {
-	margin-right: 0px; /* the last selected tab has nothing to overlap with on the right */
-}
-
-QTabBar::tab:left:first,QTabBar::tab:right:first {
-	margin-left: 0px; /* the last selected tab has nothing to overlap with on the right */
-}
-
-QTabBar::tab:left:last, QTabBar::tab:right:last {
-	margin-right: 0px; /* the last selected tab has nothing to overlap with on the right */
+	margin-right: 0px;
 }
 
 BaseChallengeWindow QLabel#Title {
@@ -368,6 +398,33 @@ BaseChallengeWindow QLabel#Title {
 BattleWindow QStackedWidget {
 	background: #9d9f9d;
 }
+
+/*
+QTabBar::tab:left, QTabBar::tab:right {
+	background: #bababa;
+	border: 1px solid #676a6c;
+	border-radius: 5px;
+	min-height: 23px;
+	width: 70px;
+	padding: 2px;
+}
+
+
+ QTabBar::tab:left:selected , QTabBar::tab:right:selected {
+	margin-top: -2px;
+	margin-bottom: -2px;
+}
+
+QTabBar::tab:left:first,QTabBar::tab:right:first {
+	margin-left: 0px;
+}
+
+QTabBar::tab:left:last, QTabBar::tab:right:last {
+	margin-right: 0px;
+}
+
+ */
+
 
 /*m_trainerInfo->setStyleSheet(
 							 "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
