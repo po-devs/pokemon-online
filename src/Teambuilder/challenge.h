@@ -3,11 +3,12 @@
 
 #include <QtGui>
 #include "../PokemonInfo/battlestructs.h"
-#include "../Utilities/otherwidgets.h"
+
+class QImageButton;
 
 class PlayerInfo;
 
-class BaseChallengeWindow : public QImageBackground
+class BaseChallengeWindow : public QLabel
 {
     Q_OBJECT
 public:

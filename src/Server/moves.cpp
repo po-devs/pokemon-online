@@ -1763,6 +1763,7 @@ struct MMDisable : public MM
 	int tt = poke(b,s)["DisablesUntil"].toInt();
 	if (tt <= b.turn()) {
 	    removeFunction(poke(b,s), "MovesPossible", "Disable");
+            removeFunction(poke(b,s), "EndTurn", "Disable");
 	    b.sendMoveMessage(28,2,s);
 	}
     }

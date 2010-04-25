@@ -120,8 +120,10 @@ TitledWidget::TitledWidget(const QString &title, QWidget *w)
 /***********************************/
 
 
-TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : QImageBackground("db/Teambuilder/background.png"), m_team(pub_team)
+TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
 {
+    setPixmap(QPixmap("db/Teambuilder/background.png"));
+
     setWindowTitle(tr("Teambuilder"));
 
     memset(modified,false,6);
@@ -215,7 +217,7 @@ void TeamBuilder::changeToTeam()
     if (m_body->currentIndex() == TrainerW)
         nextb->changePics("db/Teambuilder/Buttons/GoBackNorm.png", "db/Teambuilder/Buttons/GoBackGlow.png");
     m_body->setCurrentIndex(TeamW);
-    changePic("db/Teambuilder/Team/TeamBG.png");
+    setPixmap(QPixmap("db/Teambuilder/Team/TeamBG.png"));
     for (int i = 0; i < 6; i++) {
         if (modified[i]) {
             m_teamBody->updatePoke(i);
@@ -229,7 +231,7 @@ void TeamBuilder::changeToBoxes()
     if (m_body->currentIndex() == TrainerW)
         nextb->changePics("db/Teambuilder/Buttons/GoBackNorm.png", "db/Teambuilder/Buttons/GoBackGlow.png");
     m_body->setCurrentIndex(BoxesW);
-    changePic("db/Teambuilder/Box/PokeboxBG.png");
+    setPixmap(QPixmap("db/Teambuilder/Box/PokeboxBG.png"));
     updateBox();
 }
 
@@ -238,7 +240,7 @@ void TeamBuilder::changeToTrainer()
     if (m_body->currentIndex() != TrainerW) {
         nextb->changePics("db/Teambuilder/Buttons/NextNorm.png", "db/Teambuilder/Buttons/NextGlow.png");
         m_body->setCurrentIndex(TrainerW);
-        changePic("db/Teambuilder/Trainer/TrainerBG.png");
+        setPixmap(QPixmap("db/Teambuilder/Trainer/TrainerBG.png"));
     }
 }
 
@@ -247,7 +249,7 @@ void TeamBuilder::changeToPokedex()
     if (m_body->currentIndex() == TrainerW)
         nextb->changePics("db/Teambuilder/Buttons/GoBackNorm.png", "db/Teambuilder/Buttons/GoBackGlow.png");
     m_body->setCurrentIndex(PokedexW);
-    changePic("db/Teambuilder/PokeDex/PokedexBG.png");
+    setPixmap(QPixmap("db/Teambuilder/PokeDex/PokedexBG.png"));
 }
 
 void TeamBuilder::saveTeam()

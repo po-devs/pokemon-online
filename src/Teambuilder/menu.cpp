@@ -2,11 +2,11 @@
 #include "mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
- #include <QStyleFactory>
+#include <QStyleFactory>
 
 TB_Menu::TB_Menu()
-        : QImageBackground("db/menu/menu_background.png")
 {
+    setPixmap(QPixmap("db/menu/menu_background.png"));
     setWindowTitle(tr("Menu"));
 
     QVBoxLayout *layout = new QVBoxLayout(this);

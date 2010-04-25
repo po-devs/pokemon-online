@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include <QPair>
+
 #include "../Utilities/otherwidgets.h"
 
 class TB_PokemonBody;
@@ -60,7 +61,7 @@ public:
 };
 
 /* The Teambuilder!! */
-class TeamBuilder : public QImageBackground
+class TeamBuilder : public QLabel
 {
     Q_OBJECT
 public:

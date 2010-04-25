@@ -121,42 +121,6 @@ void QImageButton::mouseMoveEvent(QMouseEvent *)
     update();
 }
 
-QImageBackground::QImageBackground(const QString &imagePath)
-        : myBackground(imagePath)
-{
-    if (!myBackground.isNull()) {
-        setFixedSize(myBackground.size());
-    }
-}
-
-void QImageBackground::changePic(const QString &path)
-{
-    myBackground = QPixmap(path);
-    update();
-}
-
-QSize QImageBackground::sizeHint() const
-{
-    return myBackground.size();
-}
-
-QSize QImageBackground::minimumSizeHint() const
-{
-    return sizeHint();
-}
-
-QSize QImageBackground::maximumSize() const
-{
-    return sizeHint();
-}
-
-void QImageBackground::paintEvent(QPaintEvent *e)
-{
-    QPainter painter(this);
-
-    painter.drawPixmap(e->rect(), myBackground, e->rect());
-}
-
 QIdListWidgetItem::QIdListWidgetItem(int id, const QString &text)
 	: QListWidgetItem(text), myid(id)
 {

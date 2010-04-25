@@ -5,8 +5,10 @@
 #include "../PokemonInfo/pokemoninfo.h"
 
 BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &windowTitle, const QString &buttonOk, const QString &buttonNo, QWidget *parent)
-        : QImageBackground("db/Challenge Window/ChallengeBG.png"), emitOnClose(true)
+        : emitOnClose(true)
 {
+    setPixmap(QPixmap("db/Challenge Window/ChallengeBG.png"));
+
     setParent(parent);
 
     setWindowTitle(windowTitle.arg(p.team.name));

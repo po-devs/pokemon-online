@@ -2,7 +2,6 @@
 #define TEAMBUILDER_MENU_H
 
 #include <QtGui>
-#include "../Utilities/otherwidgets.h"
 
 class MainEngine;
 
@@ -21,7 +20,7 @@ class MainEngine;
 
  */
 
-class TB_Menu : public QImageBackground
+class TB_Menu : public QLabel
 {
         Q_OBJECT
 public:
