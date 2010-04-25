@@ -32,7 +32,7 @@ class PokemonInfo
 {
 private:
     static QTSList<QString> m_Names;
-    static QTSList<float> m_Weights;
+    static QTSList<QString> m_Weights;
     static QString m_Directory;
     static QTSList<int> m_Type1;
     static QTSList<int> m_Type2;
@@ -67,8 +67,10 @@ public:
     static QString Name(int pokenum);
     static int Number(const QString &pokename);
     static int LevelBalance(int pokenum);
+    static QString WeightS(int pokenum);
     static float Weight(int pokenum);
     static int Gender(int pokenum);
+    static int BaseGender(int pokenum);
     static int Type1(int pokenum);
     static int Type2(int pokenum);
     static QPixmap Picture(int pokenum, int forme = 0, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);

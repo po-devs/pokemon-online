@@ -762,7 +762,7 @@ void TB_TeamBody::advancedDestroyed()
 /************* POKEMON CHOICE *****************/
 /**********************************************/
 
-TB_PokeChoice::TB_PokeChoice() : QCompactTable(PokemonInfo::TrueCount(), 2)
+TB_PokeChoice::TB_PokeChoice(bool missingno) : QCompactTable(PokemonInfo::TrueCount() - !missingno, 2)
 {
     setObjectName("PokeChoice");
 
@@ -772,10 +772,10 @@ TB_PokeChoice::TB_PokeChoice() : QCompactTable(PokemonInfo::TrueCount(), 2)
     horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
 
     /* Adding the poke names */
-    for (int i = 0; i < rowCount(); i++)
+    for (int i = missingno ? 0 : 1; i < PokemonInfo::TrueCount(); i++)
     {
-        setItem(i, 0, new QTableWidgetItem(QString::number(i)));
-        setItem(i, 1, new QTableWidgetItem(PokemonInfo::Name(i)));
+        setItem(i-!missingno, 0, new QTableWidgetItem(QString::number(i).rightJustified(3,'0')));
+        setItem(i-!missingno, 1, new QTableWidgetItem(PokemonInfo::Name(i)));
     }
 
     resizeRowsToContents();
