@@ -28,6 +28,23 @@ PokeBattle & BattleInfo::currentPoke()
 
 BattleWindow::BattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf)
 {
+    //starts battle music
+    musicOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
+    music = new Phonon::MediaObject(this);
+    Phonon::createPath(music, musicOutput);
+
+    qsrand(QDateTime::currentDateTime().toTime_t());
+    QDir directory = QDir("Music");
+    QStringList files;
+    files = directory.entryList(QStringList("*"), QDir::Files | QDir::NoSymLinks);
+    music->setCurrentSource(QString("Music/" + files[qrand() % files.size()]));
+
+    QSettings s;
+    if (s.value("play_music").toBool())
+    {
+        music->play();
+    }
+
     myInfo = new BattleInfo(team, me, opponent);
     mydisplay = new BattleDisplay(info());
     BaseBattleWindow::init();
@@ -91,9 +108,15 @@ QString BattleWindow::nick(int spot) const
 
 void BattleWindow::closeEvent(QCloseEvent *)
 {
+
     emit forfeit();
 
     QSettings s;
+    //stops the music
+    if (s.value("play_music").toBool())
+    {
+        music->stop();
+    }
 
     if (s.value("save_battle_logs").toBool()) {
         QString directory = s.value("battle_logs_directory").toString();
@@ -242,6 +265,19 @@ void BattleWindow::sendMessage()
 
 void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
 {
+    QSettings s;
+    if (s.value("play_music").toBool())
+    {
+     if(music->state() == Phonon::StoppedState)
+        {
+         music->play();
+        }
+    }
+    else
+    {
+       music->stop();
+    }
+
     if (spot < 2) {
         if (conf().ids[spot] == idme()) {
             spot = Myself;
@@ -275,6 +311,12 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                     printLine(tr("%1 sent out %2! (%3)").arg(name(spot), rnick(spot), pokename));
                 else
                     printLine(tr("%1 sent out %2!").arg(name(spot), rnick(spot)));
+            }
+
+            //Plays the battle cry when a pokemon is switched in
+            if (s.value("play_music").toBool())
+            {
+            playCry(info().currentShallow(spot).num());
             }
 
 	    break;
@@ -312,11 +354,19 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
 	    break;
         }
     case Ko:
-        if (spot==Myself) {
+        {
+            //Plays the battle cry when a pokemon faints
+            if (s.value("play_music").toBool())
+            {
+            playCry(info().currentShallow(spot).num());
+            }
+
+           if (spot==Myself) {
             mypzone->pokes[info().currentIndex[spot]]->setEnabled(false); //crash!!
         }
         BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
         break;
+        }
 
     case StraightDamage :
 	{

@@ -4,6 +4,12 @@
 #include <QtGui>
 #include "../PokemonInfo/battlestructs.h"
 #include "client.h"
+#include <phonon/phononnamespace.h>
+#include <phonon/audiooutput.h>
+#include <phonon/seekslider.h>
+#include <phonon/mediaobject.h>
+#include <phonon/volumeslider.h>
+#include <phonon/backendcapabilities.h>
 
 class BaseBattleDisplay;
 class QScrollDownTextEdit;
@@ -155,6 +161,12 @@ public:
 
     virtual void switchToNaught(int spot);
     virtual void addSpectator(bool add, int id);
+
+    void playCry(int pokenum);
+    Phonon::MediaObject *music;
+    Phonon::AudioOutput *musicOutput;
+    Phonon::MediaObject *cry;
+    Phonon::AudioOutput *cryOutput;
 
     void printLine(const QString &str);
     void printHtml(const QString &str);
