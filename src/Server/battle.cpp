@@ -1409,7 +1409,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     end:
-    pokelong[source]["HasMovedOnce"] = true;
+    pokelong[player]["HasMovedOnce"] = true;
 
     battlelong.remove("Attacker");
     battlelong.remove("Attacked");
@@ -1847,7 +1847,7 @@ void BattleSituation::changeStatus(int player, int status, bool tell)
     notify(All, AbsStatusChange, player, qint8(currentPoke(player)), qint8(status));
     poke(player).status() = status;
     if (status == Pokemon::Asleep) {
-        poke(player).sleepCount() = (true_rand() % 5) +1;
+        poke(player).sleepCount() = (true_rand() % 4) +1;
     }
     if (status == Pokemon::DeeplyPoisoned) {
 	pokelong[player]["ToxicCount"] = 0;
