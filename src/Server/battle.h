@@ -97,6 +97,7 @@ public:
     void useAttack(int player, int attack, bool specialOccurence = false, bool notify = true);
     int attacker(); // returns the poke that attacks or -1 if not attacking
     int attacked(); // returns the poke that is attacked or -1 if not attacking
+    bool attacking();
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);
     /* Sends a poke back to his pokeball (not koed) */

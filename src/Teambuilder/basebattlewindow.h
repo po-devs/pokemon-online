@@ -178,6 +178,7 @@ public slots:
     void clickClose();
     void undelay();
     void playMusic (bool);
+    void restartMusic();
 
     void animateHPBar();
     void ignoreSpectators(bool);
@@ -186,6 +187,9 @@ signals:
     void battleMessage(const QString &str, int);
     void closedBW(int);
 protected:
+    bool delayed;
+    bool ignoreSpecs;
+
     QGridLayout *mylayout;
     QScrollDownTextEdit *mychat;
     QLineEdit *myline;
@@ -198,15 +202,14 @@ protected:
     QBuffer cryBuffer;
     QByteArray cryData;
 
-    bool ignoreSpecs;
 
     QLinkedList<QByteArray> delayedCommands;
-    bool delayed;
+
 
     bool blankMessage;
     bool battleEnded;
 
-    BaseBattleWindow(){delayed=false;ignoreSpecs=false;}
+    BaseBattleWindow(){delayed=false;ignoreSpecs=false; music = NULL; musicOutput = NULL; cry = NULL; cryOutput = NULL;}
     void init();
 
     void closeEvent(QCloseEvent *);

@@ -1145,6 +1145,11 @@ int BattleSituation::attacked() {
     }
 }
 
+bool BattleSituation::attacking()
+{
+    return battlelong.contains("Attacker");
+}
+
 void BattleSituation::useAttack(int player, int move, bool specialOccurence, bool tellPlayers)
 {
     battlelong["Attacker"] = player;
@@ -1908,8 +1913,8 @@ void BattleSituation::preventStatMod(int player, int attacker) {
 }
 
 bool BattleSituation::canSendPreventMessage(int defender, int attacker) {
-    return !turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
-            turnlong[attacker]["Power"].toInt() == 0;
+    return attacking() || (!turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
+            turnlong[attacker]["Power"].toInt() == 0);
 }
 
 void BattleSituation::changeStatMod(int player, int stat, int newstat)

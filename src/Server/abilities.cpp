@@ -583,10 +583,11 @@ struct AMIntimidate : public AM {
         if (b.koed(t))
             return;
 
-        b.sendAbMessage(34,0,s,t);
+
         if (b.hasSubstitute(t)) {
             b.sendAbMessage(34,1,s,t);
         } else {
+            b.sendAbMessage(34,0,s,t);
             b.loseStatMod(t,Attack,1,s);
         }
     }

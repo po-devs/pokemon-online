@@ -18,14 +18,17 @@ MainEngine::MainEngine() : displayer(0)
         settings.setValue("application_style", "plastique");
         settings.setValue("new_teambuilder",true);
     }
-    //if (settings.value("stylesheet").isNull()) {
+    if (settings.value("stylesheet").isNull() || settings.value("stylesheet").toString() == "db/default.qss") {
         settings.setValue("stylesheet", "db/default.css");
-    //}
+    }
 
 
     setDefaultValue("team_location", "Team/trainer.tp");
     setDefaultValue("save_battle_logs", false);
     setDefaultValue("battle_logs_directory", "Logs/");
+    setDefaultValue("battle_music_directory", "Music/");
+    setDefaultValue("play_battle_music", true);
+    //setDefaultValue("play_battle_sounds", true);
     setDefaultValue("show_team",true);
     setDefaultValue("enable_ladder", true);
     setDefaultValue("show_player_events", false);
@@ -69,7 +72,7 @@ void MainEngine::loadStyleSheet()
 }
 
 #define MainEngineRoutine(widget) \
-    delete displayer; \
+    displayer->deleteLater(); \
     displayer = new QMainWindow(); \
     displayer->resize(widget->size()); \
     displayer->setWindowTitle(tr("Pokemon Online")); \

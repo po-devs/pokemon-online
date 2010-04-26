@@ -94,7 +94,9 @@ public slots:
     void battleFinished(int res, int winner, int loser);
     void saveBattleLogs(bool save);
     void animateHpBar(bool animate);
-    void PlayMusic(bool music);
+    void playMusic(bool music);
+    void changeBattleLogFolder();
+    void changeMusicFolder();
     void forfeitBattle();
     void watchBattleRequ(int);
     void watchBattle(const QString &name0, const QString &name1, int battleId);
