@@ -119,29 +119,35 @@ void BattleWindow::closeEvent(QCloseEvent *)
     }
 
     if (s.value("save_battle_logs").toBool()) {
-        QString directory = s.value("battle_logs_directory").toString();
-        QString file = QFileDialog::getSaveFileName(0,QObject::tr("Saving the battle"),directory+info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name
-                                     + "--" + QDate::currentDate().toString("dd MMMM yyyy") + "_" +QTime::currentTime().toString("hh'h'mm")
-                                     , QObject::tr("html (*.html)\ntxt (*.txt)"));
-        if (file.length() != 0) {
-            QFileInfo finfo (file);
-            directory = finfo.dir().path() + "/";
-            if (directory == "/") {
-                directory = "./";
-            }
-            QFile out (file);
-            out.open(QIODevice::WriteOnly);
+//        QString directory = s.value("battle_logs_directory").toString();
+//        QString file = QFileDialog::getSaveFileName(0,QObject::tr("Saving the battle"),directory+info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name
+//                                     + "--" + QDate::currentDate().toString("dd MMMM yyyy") + "_" +QTime::currentTime().toString("hh'h'mm")
+//                                     , QObject::tr("html (*.html)\ntxt (*.txt)"));
+//        if (file.length() != 0) {
+//            QFileInfo finfo (file);
+//            directory = finfo.dir().path() + "/";
+//            if (directory == "/") {
+//                directory = "./";
+//            }
+//            QFile out (file);
+//            out.open(QIODevice::WriteOnly);
+//
+//            if (finfo.suffix() == "html") {
+//                out.write(mychat->toHtml().toUtf8());
+//            } else {
+//#ifdef WIN32
+//                out.write(mychat->toPlainText().replace("\n", "\r\n").toUtf8());
+//#else
+//                out.write(mychat->toPlainText().toUtf8());
+//#endif
+//            }
+//        }
+        file = "Logs/" +info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name + "--" + QDate::currentDate().toString("dd MMMM yyyy")
+               + " at " +QTime::currentTime().toString("hh'h'mm") + ".html";
+        QFile out (file);
+        out.open(QIODevice::WriteOnly);
+        out.write(mychat->toHtml().toUtf8());
 
-            if (finfo.suffix() == "html") {
-                out.write(mychat->toHtml().toUtf8());
-            } else {
-#ifdef WIN32
-                out.write(mychat->toPlainText().replace("\n", "\r\n").toUtf8());
-#else
-                out.write(mychat->toPlainText().toUtf8());
-#endif
-            }
-        }
     }
     close();
 }
