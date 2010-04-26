@@ -142,7 +142,7 @@ void BattleWindow::closeEvent(QCloseEvent *)
 //#endif
 //            }
 //        }
-        file = "Logs/" +info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name + "--" + QDate::currentDate().toString("dd MMMM yyyy")
+        QString file = "Logs/" +info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name + "--" + QDate::currentDate().toString("dd MMMM yyyy")
                + " at " +QTime::currentTime().toString("hh'h'mm") + ".html";
         QFile out (file);
         out.open(QIODevice::WriteOnly);
