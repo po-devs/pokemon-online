@@ -146,6 +146,7 @@ public slots:
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
+    void musicPlayingChanged(bool);
 protected:
     void paintEvent(QPaintEvent *)
     {

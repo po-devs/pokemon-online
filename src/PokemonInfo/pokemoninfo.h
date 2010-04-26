@@ -71,6 +71,7 @@ public:
     static float Weight(int pokenum);
     static int Gender(int pokenum);
     static int BaseGender(int pokenum);
+    static QByteArray Cry(int pokenum);
     static int Type1(int pokenum);
     static int Type2(int pokenum);
     static QPixmap Picture(int pokenum, int forme = 0, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);

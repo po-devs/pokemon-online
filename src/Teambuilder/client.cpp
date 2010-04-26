@@ -496,6 +496,8 @@ void Client::PlayMusic(bool save)
 {
     QSettings s;
     s.setValue("play_music", save);
+
+    emit musicPlayingChanged(save);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
@@ -632,6 +634,7 @@ void Client::battleStarted(int id, const TeamBattle &team, const BattleConfigura
     connect(mybattle, SIGNAL(battleMessage(QString)), &relay(), SLOT(battleMessage(QString)));
     connect(&relay(), SIGNAL(battleMessage(QByteArray)), mybattle, SLOT(receiveInfo(QByteArray)));
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
+    connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
 
     battleStarted(ownId(), id);
 }
@@ -644,6 +647,7 @@ void Client::watchBattle(const QString &name0, const QString &name1, int battleI
     battle->show();
 
     connect(this, SIGNAL(destroyed()), battle, SLOT(close()));
+    connect(this, SIGNAL(musicPlayingChanged(bool)), battle, SLOT(playMusic(bool)));
     connect(battle, SIGNAL(closedBW(int)), SLOT(stopWatching(int)));
     connect(battle, SIGNAL(battleMessage(QString, int)), &relay(), SLOT(battleMessage(QString, int)));
 

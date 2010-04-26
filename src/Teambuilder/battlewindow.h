@@ -79,7 +79,6 @@ public slots:
     void emitCancel();
     void switchToPokeZone();
 signals:
-    void battleCommand(const BattleChoice &);
     void battleMessage(const QString &str);
     void forfeit();
 protected:
