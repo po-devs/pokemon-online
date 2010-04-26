@@ -394,15 +394,19 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(saveLogs, SIGNAL(triggered(bool)), SLOT(saveBattleLogs(bool)));
     saveLogs->setChecked(s.value("save_battle_logs").toBool());
 
+    battleMenu->addAction(tr("Change &Log Folder"), this, SLOT(changeBattleLogFolder()));
+
     QAction *animateHpBar = battleMenu->addAction(tr("Animate HP Bar"));
     animateHpBar->setCheckable(true);
     connect(animateHpBar, SIGNAL(triggered(bool)), SLOT(animateHpBar(bool)));
     animateHpBar->setChecked(s.value("animate_hp_bar").toBool());
 
-    QAction *PlayMusic = battleMenu->addAction(tr("Play Music and Sounds"));
-    PlayMusic->setCheckable(true);
-    connect(PlayMusic, SIGNAL(triggered(bool)), SLOT(PlayMusic(bool)));
-    PlayMusic->setChecked(s.value("play_music").toBool());
+    QAction *playMusic = battleMenu->addAction(tr("&Play Music and Sounds"));
+    playMusic->setCheckable(true);
+    connect(playMusic, SIGNAL(triggered(bool)), SLOT(playMusic(bool)));
+    playMusic->setChecked(s.value("play_battle_music").toBool());
+
+    battleMenu->addAction(tr("Change &Music Folder"), this, SLOT(changeMusicFolder()));
 
     mymenubar = menuBar;
     return menuBar;
@@ -480,6 +484,26 @@ void Client::sendRegister() {
     myregister->setDisabled(true);
 }
 
+void Client::changeMusicFolder()
+{
+    QSettings s;
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Battle Music Directory"), s.value("battle_music_directory").toString());
+
+    if (dir != "") {
+        s.setValue("battle_music_directory", dir + "/");
+    }
+}
+
+void Client::changeBattleLogFolder()
+{
+    QSettings s;
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Battle Logs Directory"), s.value("battle_logs_directory").toString());
+
+    if (dir != "") {
+        s.setValue("battle_logs_directory", dir + "/");
+    }
+}
+
 void Client::saveBattleLogs(bool save)
 {
     QSettings s;
@@ -492,10 +516,10 @@ void Client::animateHpBar(bool save)
     s.setValue("animate_hp_bar", save);
 }
 
-void Client::PlayMusic(bool save)
+void Client::playMusic(bool save)
 {
     QSettings s;
-    s.setValue("play_music", save);
+    s.setValue("play_battle_music", save);
 
     emit musicPlayingChanged(save);
 }

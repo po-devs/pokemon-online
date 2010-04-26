@@ -20,7 +20,8 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp)
     currentIndex[1] = 0;
 }
 
-BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent) : ignoreSpecs(false), delayed(false)
+BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent) : delayed(false), ignoreSpecs(false), music(NULL), musicOutput(NULL),
+            cry(NULL), cryOutput(NULL)
 {
     myInfo = new BaseBattleInfo(me, opponent);
     mydisplay = new BaseBattleDisplay(info());
@@ -87,18 +88,20 @@ void BaseBattleWindow::init()
     music = new Phonon::MediaObject(this);
     Phonon::createPath(music, musicOutput);
 
-    QDir directory = QDir("Music");
+    QSettings s;
+    QDir directory = QDir(s.value("battle_music_directory").toString());
     QStringList files;
     files = directory.entryList(QStringList("*"), QDir::Files | QDir::NoSymLinks);
-    music->setCurrentSource(QString("Music/" + files[rand() % files.size()]));
 
-    QSettings s;
-    if (s.value("play_music").toBool())
+    QString file = s.value("battle_music_directory").toString() + files[rand() % files.size()];
+    music->setCurrentSource(file);
+
+    if (s.value("play_battle_music").toBool())
     {
         musicPlayed() = true;
         music->play();
         //playback
-        connect(music, SIGNAL(finished()), music, SLOT(play()));
+        connect(music, SIGNAL(finished()), this, SLOT(restartMusic()));
     } else {
         musicPlayed() = false;
     }
@@ -163,6 +166,12 @@ void BaseBattleWindow::clickClose()
 {
     emit closedBW(battleId());
     return;
+}
+
+void BaseBattleWindow::restartMusic()
+{
+    music->seek(0);
+    music->play();
 }
 
 void BaseBattleWindow::sendMessage()

@@ -32,7 +32,7 @@
 %s's %a prevented its stats from being lowered!
 %s's %a heals it!
 %s's %a cures it!
-%s intimidates %f!|%f's Substitute blocks intimidate!
+%s intimidates %f!|%f's suppressed %s's Intimidate!
 
 
 %s's Leaf Guard prevents it from being affected by any status from the opponent!

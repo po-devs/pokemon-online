@@ -95,11 +95,6 @@ void BattleWindow::closeEvent(QCloseEvent *)
     emit forfeit();
 
     QSettings s;
-    //stops the music
-    if (s.value("play_music").toBool())
-    {
-        music->stop();
-    }
 
     if (s.value("save_battle_logs").toBool()) {
 //        QString directory = s.value("battle_logs_directory").toString();
@@ -125,12 +120,12 @@ void BattleWindow::closeEvent(QCloseEvent *)
 //#endif
 //            }
 //        }
-        QString file = "Logs/" +info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name + "--" + QDate::currentDate().toString("dd MMMM yyyy")
+        QSettings s;
+        QString file = s.value("battle_logs_directory").toString() + info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name + "--" + QDate::currentDate().toString("dd MMMM yyyy")
                + " at " +QTime::currentTime().toString("hh'h'mm") + ".html";
         QFile out (file);
         out.open(QIODevice::WriteOnly);
         out.write(mychat->toHtml().toUtf8());
-
     }
     close();
 }
