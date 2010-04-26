@@ -22,23 +22,6 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp)
 
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent) : ignoreSpecs(false), delayed(false)
 {
-    //starts battle music
-    musicOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
-    music = new Phonon::MediaObject(this);
-    Phonon::createPath(music, musicOutput);
-
-    qsrand(QDateTime::currentDateTime().toTime_t());
-    QDir directory = QDir("Music");
-    QStringList files;
-    files = directory.entryList(QStringList("*"), QDir::Files | QDir::NoSymLinks);
-    music->setCurrentSource(QString("Music/" + files[qrand() % files.size()]));
-
-    QSettings s;
-    if (s.value("play_music").toBool())
-    {
-        music->play();
-    }
-
     myInfo = new BaseBattleInfo(me, opponent);
     mydisplay = new BaseBattleDisplay(info());
     init();
@@ -97,6 +80,28 @@ void BaseBattleWindow::init()
     connect(myclose, SIGNAL(clicked()), SLOT(clickClose()));
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
+
+
+    //starts battle music
+    musicOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
+    music = new Phonon::MediaObject(this);
+    Phonon::createPath(music, musicOutput);
+
+    QDir directory = QDir("Music");
+    QStringList files;
+    files = directory.entryList(QStringList("*"), QDir::Files | QDir::NoSymLinks);
+    music->setCurrentSource(QString("Music/" + files[rand() % files.size()]));
+
+    QSettings s;
+    if (s.value("play_music").toBool())
+    {
+        musicPlayed() = true;
+        music->play();
+        //playback
+        connect(music, SIGNAL(finished()), music, SLOT(play()));
+    } else {
+        musicPlayed() = false;
+    }
 
     //layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
@@ -192,21 +197,23 @@ void BaseBattleWindow::ignoreSpectators(bool ignore)
     ignoreSpecs = ignore;
 }
 
+void BaseBattleWindow::playMusic(bool play)
+{
+    if (musicPlayed() == play)
+        return;
+
+    musicPlayed() = play;
+
+    if (play) {
+     music->play();
+    }
+    else {
+       music->pause();;
+    }
+}
+
 void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
 {
-    QSettings s;
-    if (s.value("play_music").toBool())
-    {
-     if(music->state() == Phonon::StoppedState)
-        {
-         music->play();
-        }
-    }
-    else
-    {
-       music->stop();
-    }
-
     switch (command)
     {
     case SendOut:
@@ -220,18 +227,19 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             info().specialSprite[spot] = 0;
             mydisplay->updatePoke(spot);
 
+            //Plays the battle cry when a pokemon is switched in
+            if (musicPlayed())
+            {
+                playCry(info().currentShallow(spot).num());
+            }
+
+
             if (!silent) {
                 QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());
                 if (pokename != rnick(spot))
                     printLine(tr("%1 sent out %2! (%3)").arg(name(spot), rnick(spot), pokename));
                 else
                     printLine(tr("%1 sent out %2!").arg(name(spot), rnick(spot)));
-            }
-
-            //Plays the battle cry when a pokemon is switched in
-            if (s.value("play_music").toBool())
-            {
-            playCry(info().currentShallow(spot).num());
             }
 
             break;
@@ -268,9 +276,9 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         }
     case Ko:
         //Plays the battle cry when a pokemon faints
-        if (s.value("play_music").toBool())
+        if (musicPlayed())
         {
-        playCry(info().currentShallow(spot).num());
+            playCry(info().currentShallow(spot).num());
         }
         printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(spot)))) + "</b>");
         switchToNaught(spot);
@@ -661,26 +669,31 @@ void BaseBattleWindow::printHtml(const QString &str)
 
 void BaseBattleWindow::playCry(int pokenum)
 {
+    if (cry) {
+        cry->stop();
+        cry->deleteLater();
+    }
+
+    if (cryOutput) {
+        cryOutput->deleteLater();
+    }
+
     cryOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
     cry = new Phonon::MediaObject(this);
     Phonon::createPath(cry, cryOutput);
 
-    if (pokenum < 10)
-    {
-        cry->setCurrentSource(QString("db/pokes/cries/00%1.wav").arg(pokenum));
-    }
-    else
-        if (pokenum < 100)
-        {
-            cry->setCurrentSource(QString("db/pokes/cries/0%1.wav").arg(pokenum));
-        }
-    else
-    {
-        cry->setCurrentSource(QString("db/pokes/cries/%1.wav").arg(pokenum));
-    }
+    cryData = PokemonInfo::Cry(pokenum);
+    cryBuffer.setBuffer(&cryData);
+    cryBuffer.open(QIODevice::ReadOnly);
+
+    cry->setCurrentSource(&cryBuffer);
 
     cry->play();
-    delay(1000);
+
+    if (cry->isValid()) {
+        delay();
+        connect(cry, SIGNAL(finished()), SLOT(undelay()));
+    }
 }
 
 BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)

@@ -64,6 +64,7 @@ class BaseBattleWindow : public QWidget
     PROPERTY(Client *, client);
     PROPERTY(int, animatedHpSpot);
     PROPERTY(int, animatedHpGoal);
+    PROPERTY(bool, musicPlayed);
 public:
     BaseBattleInfo *myInfo;
     const BaseBattleInfo &info() const {
@@ -163,10 +164,6 @@ public:
     virtual void addSpectator(bool add, int id);
 
     void playCry(int pokenum);
-    Phonon::MediaObject *music;
-    Phonon::AudioOutput *musicOutput;
-    Phonon::MediaObject *cry;
-    Phonon::AudioOutput *cryOutput;
 
     void printLine(const QString &str);
     void printHtml(const QString &str);
@@ -180,6 +177,7 @@ public slots:
     void sendMessage();
     void clickClose();
     void undelay();
+    void playMusic (bool);
 
     void animateHPBar();
     void ignoreSpectators(bool);
@@ -193,6 +191,13 @@ protected:
     QLineEdit *myline;
     BaseBattleDisplay *mydisplay;
     QPushButton *myclose, *mysend;
+    Phonon::MediaObject *music;
+    Phonon::AudioOutput *musicOutput;
+    Phonon::MediaObject *cry;
+    Phonon::AudioOutput *cryOutput;
+    QBuffer cryBuffer;
+    QByteArray cryData;
+
     bool ignoreSpecs;
 
     QLinkedList<QByteArray> delayedCommands;

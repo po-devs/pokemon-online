@@ -419,6 +419,21 @@ QPixmap PokemonInfo::Icon(int index)
     p.loadFromData(data,"png");
     return p;
 }
+
+QByteArray PokemonInfo::Cry(int num)
+{
+    QString archive = path("cries.zip");
+    QString file = QString("%1.wav").arg(OriginalForm(num)).rightJustified(7, '0');
+
+    QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
+    if(data.length() == 0)
+    {
+        qDebug() << "error loading pokémon cry " << num;
+    }
+
+    return data;
+}
+
 #endif
 
 
