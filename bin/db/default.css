@@ -233,17 +233,17 @@ PokeBallDescBox {
 PokeBallDescBox QLabel#PokeName {
 	font-size: 11pt;
 	text-transform: uppercase;
-	font-weight: normal;
 	font-family: "SignPainter'sGothicShadedSC JL";
 }
 
 PokeBallDescBox QLabel#PokeSpec {
 	font-size: 10pt;
+	font-weight: bold;
 }
 
 PokeBallDescBox QLabel {
 	font-family: Trebuchet MS;
-	font-weight: bold;
+	font-weight: normal;
 	font-size: 9pt;
 }
 
@@ -274,7 +274,6 @@ PokedexBody TB_PokeChoice{
 
 Pokedex QLabel {
 	font-family: Trebuchet MS;
-	font-weight: bold;
 }
 
 PokedexBody QLabel#Separator {

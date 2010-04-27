@@ -121,6 +121,15 @@ void MainEngine::launchTeamBuilder()
     TeamBuilder *TB = new TeamBuilder(trainerTeam());
     MainEngineRoutine(TB);
 
+    /* For the advanced window */
+#ifdef WIN32
+    displayer->layout()->setSizeConstraint(QLayout::SetFixedSize);
+#else
+# ifdef WIN64
+    displayer->layout()->setSizeConstraint(QLayout::SetFixedSize);
+# endif
+#endif
+
     connect(TB,SIGNAL(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)),
             SLOT(setDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));

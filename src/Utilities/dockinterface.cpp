@@ -16,6 +16,7 @@ DockAdvanced::DockAdvanced(TB_TeamBody * builder):
     QLabel *bg = new QLabel();
     bg->setPixmap(QPixmap("db/Teambuilder/Advanced/AdvBG.png"));
     bg->setParent(this);
+    bg->setFixedSize(bg->pixmap()->size());
     setFixedSize(bg->size());
 
     AdvStack = new QStackedWidget(bg);

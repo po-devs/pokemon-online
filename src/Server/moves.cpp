@@ -1570,10 +1570,12 @@ struct MMBounce : public MM
     }
 
     static void ts(int s, int, BS &b) {
-	turn(b,s)["NoChoice"] = true;
-	merge(turn(b,s), MoveEffect(poke(b,s)["2TurnMove"].toInt()));
-        addFunction(turn(b,s), "EvenWhenCantMove", "Bounce", &ewc);
-	removeFunction(poke(b,s), "TurnSettings", "Bounce");
+        if (poke(b,s)["Invulnerable"].toBool()) {
+            turn(b,s)["NoChoice"] = true;
+            merge(turn(b,s), MoveEffect(poke(b,s)["2TurnMove"].toInt()));
+            addFunction(turn(b,s), "EvenWhenCantMove", "Bounce", &ewc);
+        }
+        removeFunction(poke(b,s), "TurnSettings", "Bounce");
     }
 
     static void ewc(int s, int, BS &b) {
@@ -2068,7 +2070,14 @@ struct MMGastroAcid : public MM
 struct MMGravity : public MM
 {
     MMGravity() {
+        functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.battlelong.value("Gravity").toBool()) {
+            turn(b,s)["Failed"] = true;
+        }
     }
 
     static void uas(int s, int, BS &b) {
@@ -2077,10 +2086,17 @@ struct MMGravity : public MM
 	b.sendMoveMessage(53,0,s,type(b,s));
         for(int p = BS::Player1; p <= BS::Player2; p++) {
             if (b.isFlying(p)) {
-                b.sendMoveMessage(53,2,p,type(b,s));
+                b.sendMoveMessage(53,2,p,Type::Psychic);
+            }
+            if(poke(b,p).value("Invulnerable").toBool() && (poke(b,p)["2TurnMove"].toInt()==Move::Fly || poke(b,p)["2TurnMove"].toInt() == Move::Bounce)) {
+                poke(b,p)["Invulnerable"] = false;
+                b.changeSprite(p, 0);
+                b.sendMoveMessage(53,3, p, Type::Psychic, s, poke(b,p)["2TurnMove"].toInt());
+                addFunction(turn(b,p), "MovePossible", "Gravity", &mp);
             }
         }
 	addFunction(b.battlelong, "EndTurn", "Gravity", &et);
+        addFunction(b.battlelong, "MovesPossible", "Gravity", &msp);
     }
 
     static void et(int s, int, BS &b) {
@@ -2089,13 +2105,51 @@ struct MMGravity : public MM
 	    if (count <= 0) {
 		b.sendMoveMessage(53,1,s,Pokemon::Psychic);
 		removeFunction(b.battlelong, "EndTurn", "Gravity");
+                removeFunction(b.battlelong, "MovesPossible", "Gravity");
 		b.battlelong["Gravity"] = false;
             } else {
                 b.battlelong["GravityCount"] = count;
             }
 	}
     }
+
+    struct FM : public QSet<int> {
+        MAKE_THREAD_SAFE;
+        CREATE_LOCK_FUNCTION;
+        FM() {
+            (*this) << Bounce << Fly << JumpKick << HiJumpKick << Splash << MagnetRise;
+        }
+    };
+    static FM forbidden_moves;
+
+    static void mp (int s, int, BS &b) {
+        if (!b.battlelong.value("Gravity").toBool()) {
+            return;
+        }
+        forbidden_moves.lock();
+        if(forbidden_moves.contains(b.move(s,poke(b,s)["MoveSlot"].toInt()))) {
+            turn(b,s)["ImpossibleToMove"] = true;
+            b.sendMoveMessage(53,4,s,Type::Psychic,s,b.move(s, poke(b,s)["MoveSlot"].toInt()));
+        }
+        forbidden_moves.unlock();
+    }
+
+    static void msp (int s, int , BS &b) {
+        if (!b.battlelong.value("Gravity").toBool()) {
+            return;
+        }
+
+        forbidden_moves.lock();
+        for (int i = 0; i < 4; i++) {
+            if (forbidden_moves.contains(b.move(s, i))) {
+                turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
+            }
+        }
+        forbidden_moves.unlock();
+    }
 };
+
+MMGravity::FM MMGravity::forbidden_moves;
 
 struct MMGrassKnot : public MM
 {
@@ -4178,7 +4232,7 @@ struct MMPayback : public MM
 	calculating the damages lol because it won't activate if it fails but it's still attacking
     *DetermineAttackPossible -- poke: just say if the poke is supposed to be able to attack, regarless of the the move used (like attracted pokes won't attack)
     *MovePossible -- turn: before attacking, say if the move is possible or not (like when a move just got blocked by encore, taunt,disable)
-    *MovesPossible -- poke: at the beginning of the turn, tells if each move is possible or not
+    *MovesPossible -- poke, battle: at the beginning of the turn, tells if each move is possible or not
     *AfterKoedByStraightAttack -- poke: when koed by an attack
     *BlockTurnEffects -- poke: Called before calling effects for a turn event, to see if it's blocked. Used by Substitute
     *AttackSomehowFailed -- turn, only offensive moves: When an attack fails, or misses, there may be something to do (jump kick, rollout, ..)

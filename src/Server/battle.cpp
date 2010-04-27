@@ -60,7 +60,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
                     alreadyPokes[0].insert(o1);
                 }
                 if (alreadyPokes[1].contains(o2)) {
-                    team1.poke(i).num() = 0;
+                    team2.poke(i).num() = 0;
                 } else {
                     alreadyPokes[1].insert(o2);
                 }

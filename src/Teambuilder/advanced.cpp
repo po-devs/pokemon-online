@@ -114,8 +114,10 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     QVBoxLayout *abilityLayout = new QVBoxLayout(ability);
 
     abilityLayout->addWidget(ability1=new QRadioButton(AbilityInfo::Name(poke()->abilities()[0])));
+    ability1->setToolTip(AbilityInfo::Desc(poke()->abilities()[0]));
     if (poke()->abilities()[1] != 0) {
 	abilityLayout->addWidget(ability2=new QRadioButton(AbilityInfo::Name(poke()->abilities()[1])));
+        ability2->setToolTip(AbilityInfo::Desc(poke()->abilities()[1]));
 	connect(ability1, SIGNAL(toggled(bool)), SLOT(changeAbility(bool)));
 	updateAbility();
     } else {

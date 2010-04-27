@@ -106,6 +106,7 @@ public:
     static QList<int> Abilities(int pokenum);
     static int Stat(int poke, int stat, int level, quint8 dv, quint8 ev);
     static int FullStat(int poke, int nature, int stat, int level, quint8 dv, quint8 ev);
+    static QString Desc(int poke, int cartridge);
 };
 
 class MoveInfo
@@ -352,6 +353,8 @@ public:
     static int Number(const QString &ab);
     static QString Message(int ab, int part);
     static int NumberOfAbilities();
+    static QString Desc(int abnum);
+    static QString EffectDesc(int abnum);
 };
 
 class GenderInfo
