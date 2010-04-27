@@ -9,6 +9,15 @@
 #include <QDomElement>
 #endif
 
+namespace Version
+{
+    enum {
+        Platinum = 14,
+        SoulSilver = 15,
+        HeartGold = 16
+    };
+}
+
 namespace Pokemon
 {
     enum Gender

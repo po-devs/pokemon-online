@@ -265,6 +265,12 @@ static QString trFile(const QString &beg)
     }
 }
 
+QString PokemonInfo::Desc(int poke, int cartridge)
+{
+    int orpoke = OriginalForm(poke);
+    return get_line(trFile(path("description_%1").arg(cartridge)), orpoke);
+}
+
 int PokemonInfo::Type1(int pokenum)
 {
     return m_Type1[pokenum];
@@ -423,7 +429,7 @@ QPixmap PokemonInfo::Icon(int index)
 QByteArray PokemonInfo::Cry(int num)
 {
     QString archive = path("cries.zip");
-    QString file = QString("%1.wav").arg(OriginalForm(num)).rightJustified(7, '0');
+    QString file = QString("%1.wav").arg(num).rightJustified(7, '0');
 
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
     if(data.length() == 0)
@@ -1466,6 +1472,17 @@ void AbilityInfo::loadEffects()
 AbilityInfo::Effect AbilityInfo::Effects(int abnum) {
     return m_Effects[abnum];
 }
+
+QString AbilityInfo::Desc(int ab)
+{
+    return get_line(trFile(path("ability_desc")), ab);
+}
+
+QString AbilityInfo::EffectDesc(int abnum)
+{
+    return get_line(trFile(path("ability_battledesc")), abnum);
+}
+
 
 int AbilityInfo::Number(const QString &pokename)
 {

@@ -51,7 +51,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 
 %f's %a is nullified!
 
-Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne because of gravity!
+Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
 %f's %m lost all its PP because of %s' Grudge!
 %s swapped its boosts with %f!
 
