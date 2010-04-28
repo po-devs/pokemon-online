@@ -598,9 +598,7 @@ void BattleSituation::analyzeChoices()
 
     foreach(int player, switches) {
 	analyzeChoice(player);
-    }
-    foreach(int player, switches) {
-	callEntryEffects(player);
+        callEntryEffects(player);
     }
 
     std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
@@ -796,15 +794,19 @@ void BattleSituation::sendPoke(int player, int pok, bool silent)
     }
 
     turnlong[player]["CantGetToMove"] = true;
+
+    ItemEffect::setup(poke(player).item(),player,*this);
+
+    calleffects(player, player, "UponSwitchIn");
+    callzeffects(player, player, "UponSwitchIn");
 }
 
 void BattleSituation::callEntryEffects(int player)
 {
-    ItemEffect::setup(poke(player).item(),player,*this);
-    acquireAbility(player, poke(player).ability());
-    calleffects(player, player, "UponSwitchIn");
-    callzeffects(player, player, "UponSwitchIn");
-    calleffects(player, player, "AfterSwitchIn");
+    if (!koed(player)) {
+        acquireAbility(player, poke(player).ability());
+        calleffects(player, player, "AfterSwitchIn");
+    }
 }
 
 void BattleSituation::calleffects(int source, int target, const QString &name)
@@ -911,7 +913,12 @@ bool BattleSituation::testAccuracy(int player, int target)
     int acc = turnlong[player]["Accuracy"].toInt();
 
     turnlong[target].remove("EvadeAttack");
-    callpeffects(target, player, "TestEvasion"); //dig bounce ...
+    callpeffects(target, player, "TestEvasion"); /*dig bounce ..., still calling it there cuz x2 attacks
+            like EQ on dig need their boost even if lock on */
+
+    if (pokelong[target].value("LockedOnEnd").toInt() >= turn() && pokelong[player].contains("LockedOn") && pokelong[player].value("LockedOn") == target) {
+        return true;
+    }
 
     if (turnlong[target].contains("EvadeAttack")) {
         notify(All, Miss, player);
@@ -919,10 +926,6 @@ bool BattleSituation::testAccuracy(int player, int target)
     }
 
     if (acc == 0) {
-	return true;
-    }
-
-    if (pokelong[target].value("LockedOnEnd").toInt() >= turn() && pokelong[player].contains("LockedOn") && pokelong[player].value("LockedOn") == target) {
 	return true;
     }
 
@@ -1205,9 +1208,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	callieffects(player,player, "RegMoveSettings");
     }
 
-    if (attack != Move::Struggle) { //Struggle
-        pokelong[player]["LastMoveUsed"] = attack;
-    }
+    pokelong[player]["LastMoveUsed"] = attack;
 
     calleffects(player, player, "MoveSettings");
 
@@ -1266,46 +1267,14 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
 	if (turnlong[player]["Power"].toInt() > 0)
         {
-	    int type = turnlong[player]["Type"].toInt(); /* move type */
-	    int typeadv[] = {getType(target, 1), getType(target, 2)};
-	    int typepok[] = {getType(player, 1), getType(player, 2)};
-	    int typeffs[] = {TypeInfo::Eff(type, typeadv[0]),TypeInfo::Eff(type, typeadv[1])};
-	    int typemod = 1;
-
-
-	    for (int i = 0; i < 2; i++) {
-                if (typeffs[i] == 0) {
-                    if (type == Type::Ground && !isFlying(target)) {
-                        typemod *= 2;
-                        continue;
-                    }
-                    if (pokelong[target].value(QString::number(typeadv[i])+"Sleuthed").toBool()) {
-                        typemod *= 2;
-                        continue;
-                    }
-                    /* Scrappy */
-                    if (hasType(target, Pokemon::Ghost) && hasWorkingAbility(player,Ability::Scrappy)) {
-                        typemod *= 2;
-                        continue;
-                    }
-                }
-                typemod *= typeffs[i];
-	    }
-
-            if (type == Type::Ground && isFlying(target)) {
-		typemod = 0;
-	    }
-
-	    int stab = 2 + (type==typepok[0] || type==typepok[1]);
-
-	    turnlong[player]["Stab"] = stab;
-	    turnlong[player]["TypeMod"] = typemod; /* is attack effective? or not? etc. */
+            calculateTypeModStab();
 
             calleffects(player, target, "BeforeCalculatingDamage");
             /* For charge */
             callpeffects(player, target, "BeforeCalculatingDamage");
 
-	    if (typemod == 0) {
+            int typemod = turnlong[player]["TypeMod"].toInt();
+            if (typemod == 0) {
 		/* If it's ineffective we just say it */
 		notify(All, Effective, target, quint8(typemod));
 		calleffects(player,target,"AttackSomehowFailed");
@@ -1328,11 +1297,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             int num = repeatNum(player, turnlong[player]);
 	    bool hit = num > 1;
 
-	    for (int i = 0; i < num && !koed(target); i++) {
-
-		if (hit) {
-		    notify(All, Hit, target);
-		}
+            int i;
+            for (i = 0; i < num && !koed(target); i++) {
 
                 turnlong[target]["HadSubstitute"] = false;
 		bool sub = hasSubstitute(target);
@@ -1367,12 +1333,17 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 		if (!sub && !koed(target))
 		    testFlinch(player, target);
-		/* Removing substitute... */
-		turnlong[player]["HadSubstitute"] = false;
-	    }
+            }
 
-	    if (!koed(player))
-		calleffects(player, target, "AfterAttackSuccessful");
+            if (hit) {
+                notifyHits(i);
+            }
+
+            if (!koed(player)) {
+                calleffects(player, target, "AfterAttackSuccessful");
+            }
+
+            turnlong[target]["HadSubstitute"] = false;
         } else {
             callpeffects(player, target, "DetermineAttackFailure");
 	    if (testFail(player))
@@ -1413,11 +1384,17 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	pokelong[target]["LastAttackToHit"] = attack;
     }
 
+    callieffects(player, player, "AfterTargetList");
     end:
     pokelong[player]["HasMovedOnce"] = true;
 
     battlelong.remove("Attacker");
     battlelong.remove("Attacked");
+}
+
+void BattleSituation::notifyHits(int number)
+{
+    notify(All, Hit, Player1, quint8(number));
 }
 
 bool BattleSituation::hasMove(int player, int move) {
@@ -1427,6 +1404,46 @@ bool BattleSituation::hasMove(int player, int move) {
 	}
     }
     return false;
+}
+
+void BattleSituation::calculateTypeModStab()
+{
+    int player = attacker();
+    int target = attacked();
+
+    int type = turnlong[player]["Type"].toInt(); /* move type */
+    int typeadv[] = {getType(target, 1), getType(target, 2)};
+    int typepok[] = {getType(player, 1), getType(player, 2)};
+    int typeffs[] = {TypeInfo::Eff(type, typeadv[0]),TypeInfo::Eff(type, typeadv[1])};
+    int typemod = 1;
+
+    for (int i = 0; i < 2; i++) {
+        if (typeffs[i] == 0) {
+            if (type == Type::Ground && !isFlying(target)) {
+                typemod *= 2;
+                continue;
+            }
+            if (pokelong[target].value(QString::number(typeadv[i])+"Sleuthed").toBool()) {
+                typemod *= 2;
+                continue;
+            }
+            /* Scrappy */
+            if (hasType(target, Pokemon::Ghost) && hasWorkingAbility(player,Ability::Scrappy)) {
+                typemod *= 2;
+                continue;
+            }
+        }
+        typemod *= typeffs[i];
+    }
+
+    if (type == Type::Ground && isFlying(target)) {
+        typemod = 0;
+    }
+
+    int stab = 2 + (type==typepok[0] || type==typepok[1]);
+
+    turnlong[player]["Stab"] = stab;
+    turnlong[player]["TypeMod"] = typemod; /* is attack effective? or not? etc. */
 }
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
@@ -2323,18 +2340,18 @@ int BattleSituation::countAlive(int player) const
 
 void BattleSituation::testWin()
 {
-    int time1 = timeLeft(Player1);
-    int time2 = timeLeft(Player2);
+    int time1 = std::max(0, timeLeft(Player1));
+    int time2 = std::max(0, timeLeft(Player2));
 
-    if (time1 <= 0 || time2 <= 0) {
+    if (time1 == 0 || time2 == 0) {
         finished() = true;
         notify(All,ClockStop,Player1,quint16(time1));
         notify(All,ClockStop,Player2,quint16(time2));
         notifyClause(ChallengeInfo::NoTimeOut,true);
-        if (time1 <= 0 && time2 <=0) {
+        if (time1 == 0 && time2 ==0) {
             notify(All, BattleEnd, Player1, qint8(Tie));
             emit battleFinished(Tie, id(Player1), id(Player2),rated(), tier());
-        } else if (time1 <= 0) {
+        } else if (time1 == 0) {
             notify(All, BattleEnd, Player2, qint8(Win));
             emit battleFinished(Win, id(Player2), id(Player1),rated(), tier());
         } else {

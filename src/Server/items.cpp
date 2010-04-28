@@ -248,6 +248,7 @@ struct IMLifeOrb : public IM
     IMLifeOrb() {
 	functions["Mod2Modifier"] = &m2m;
 	functions["UponDamageInflicted"] = &udi;
+        functions["AfterTargetList"] = &atl;
     }
 
     static void m2m(int s, int, BS &b) {
@@ -260,11 +261,16 @@ struct IMLifeOrb : public IM
 	if (b.koed(s))
 	    return;
 
-        if (turn(b,t).contains("DamageTakenBy") && turn(b,t)["DamageTakenBy"].toInt() == s && !turn(b,s)["LifeOrbAlreadyActivated"].toBool()) {
-            //b.sendItemMessage(21,s);
-	    b.inflictDamage(s,b.poke(s).totalLifePoints()/10,s);
-            turn(b,s)["LifeOrbAlreadyActivated"] = true;
+	if (turn(b,t).contains("DamageTakenBy") && turn(b,t)["DamageTakenBy"].toInt() == s) {
+            turn(b,s)["ActivateLifeOrb"] = true;
 	}
+    }
+
+    static void atl(int s, int, BS &b) {
+        if (turn(b,s).value("ActivateLifeOrb").toBool()) {
+            //b.sendItemMessage(21,s);
+            b.inflictDamage(s,b.poke(s).totalLifePoints()/10,s);
+        }
     }
 };
 

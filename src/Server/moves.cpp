@@ -85,6 +85,39 @@ void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
     }
 }
 
+
+/* Used by moves like Metronome that may use moves like U-Turn. Then AfterAttackSuccessful would be called twice, and that would
+    not be nice because U-Turning twice :s*/
+void MoveEffect::unsetup(int num, int source, BattleSituation &b)
+{
+    /* then the hard info */
+    QStringList specialEffects = MoveInfo::SpecialEffect(num).split('|');
+
+    foreach (QString specialEffectS, specialEffects) {
+        std::string s = specialEffectS.toStdString();
+
+        int specialEffect = atoi(s.c_str());
+
+        /* if the effect is invalid or not yet implemented then no need to go further */
+        if (!mechanics.contains(specialEffect)) {
+            break;
+        }
+
+        MoveMechanics &m = mechanics[specialEffect];
+        QString &n = names[specialEffect];
+
+        QHash<QString, MoveMechanics::function>::iterator i;
+
+        for(i = m.functions.begin(); i != m.functions.end(); ++i) {
+            if (i.key() == "OnSetup") {
+                ;
+            } else {
+                Mechanics::removeFunction(b.turnlong[source], i.key(), n);
+            }
+        }
+    }
+}
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -524,7 +557,7 @@ struct MMEruption : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-	turn(b,s)["Power"] = turn(b,s)["Power"].toInt()*150*b.poke(s).lifePoints()/b.poke(s).totalLifePoints();
+        turn(b,s)["Power"] = std::max(1, turn(b,s)["Power"].toInt()*150*b.poke(s).lifePoints()/b.poke(s).totalLifePoints());
     }
 };
 
@@ -883,7 +916,7 @@ struct MMBellyDrum : public MM
     static void uas(int s, int, BS &b) {
         if (move(b,s) == Move::BellyDrum) {
             b.sendMoveMessage(8,1,s,type(b,s));
-            b.gainStatMod(s,Attack,8,false);
+            b.gainStatMod(s,Attack,12,false);
         }
         b.changeHp(s, b.poke(s).lifePoints() - std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1));
     }
@@ -1388,6 +1421,7 @@ struct MMCopycat : public MM
 	int attack = turn(b,s)["CopycatMove"].toInt();
 	MoveEffect::setup(attack, s, t, b);
 	b.useAttack(s, turn(b,s)["CopycatMove"].toInt(), true);
+        MoveEffect::unsetup(attack, s, b);
     }
 };
 
@@ -1418,6 +1452,7 @@ struct MMAssist : public MM
 	int attack = turn(b,s)["AssistMove"].toInt();
 	MoveEffect::setup(attack, s, t, b);
 	b.useAttack(s, turn(b,s)["AssistMove"].toInt(), true);
+        MoveEffect::unsetup(attack, s, b);
     }
 
     static void daf(int s, int, BS &b)
@@ -1664,6 +1699,7 @@ struct MMTaunt : public MM
 {
     MMTaunt() {
 	functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"]=  &daf;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -2487,7 +2523,8 @@ struct MMJumpKick : public MM
 	    typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
 	}
 	turn(b,s)["TypeMod"] = typemod;
-	int damage = std::min(b.calculateDamage(s,t), b.poke(t).totalLifePoints()/2);
+        turn(b,s)["Stab"] = b.hasType(s, Type::Fighting) ? 3 : 2;
+        int damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
         b.sendMoveMessage(64,0,s,Type::Fighting);
 	b.inflictDamage(s, damage, s, true);
     }
@@ -2799,6 +2836,7 @@ struct MMMagicCoat : public MM
 
 		    MoveEffect::setup(move,t,s,b);
 		    b.useAttack(t,move,true,false);
+                    MoveEffect::unsetup(move,t,b);
 		}
 	    }
 	}
@@ -2882,6 +2920,7 @@ struct MMMeFirst : public MM
 	int move = turn(b,s)["MeFirstAttack"].toInt();
 	MoveEffect::setup(move,s,t,b);
 	b.useAttack(s,move,true,true);
+        MoveEffect::unsetup(move,s,b);
     }
 };
 
@@ -2905,6 +2944,7 @@ struct MMMetronome : public MM
                 qDebug() << "Name is " << MoveInfo::Name(move);
 		MoveEffect::setup(move,s,t,b);
 		b.useAttack(s,move,true,true);
+                MoveEffect::unsetup(move, s, b);
 		break;
 	    }
 	}
@@ -2989,6 +3029,7 @@ struct MMMirrorMove : public MM
 	int move = poke(b,s)["MirrorMoveMemory"].toInt();
 	MoveEffect::setup(move,s,t,b);
 	b.useAttack(s,move,true,true);
+        MoveEffect::unsetup(move,s,b);
     }
 };
 
@@ -3339,6 +3380,7 @@ struct MMSleepTalk : public MM
 	int mv = turn(b,s)["SleepTalkedMove"].toInt();
 	MoveEffect::setup(mv,s,b.rev(s),b);
 	b.useAttack(s, mv, true);
+        MoveEffect::unsetup(mv,s,b);
     }
 };
 
@@ -3441,6 +3483,7 @@ struct MMSnatch : public MM
 		    b.battlelong.remove("Snatcher");
 		    MoveEffect::setup(move,snatcher,s,b);
 		    b.useAttack(snatcher,move,true);
+                    MoveEffect::unsetup(move,snatcher,b);
                 }
 	    }
 	}
@@ -3800,6 +3843,7 @@ struct MMNaturePower : public MM
         int move = TriAttack;
         MoveEffect::setup(move,s,t,b);
         b.useAttack(s,move,true,true);
+        MoveEffect::unsetup(move,s,b);
     }
 };
 

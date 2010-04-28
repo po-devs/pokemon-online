@@ -38,7 +38,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("find_battle_force_rated", false);
     setDefaultValue("find_battle_same_tier", true);
     setDefaultValue("find_battle_range_on", true);
-    setDefaultValue("find_battle_range", 300);
+    setDefaultValue("find_battle_range", 200);
 
 
     PokemonInfo::init("db/pokes/");

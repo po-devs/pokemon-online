@@ -53,6 +53,13 @@ private:
     QPixmap myPic, myHoveredPic, myCheckedPic;
     int lastUnderMouse; // last mouse pos recorded
     bool pressed;
+
+    enum State {
+        Normal,
+        Hovered,
+        Checked
+    };
+    int lastState;
 };
 
 /* A QListWidgetItem with an id, for convenience */

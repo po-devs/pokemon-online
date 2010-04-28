@@ -100,11 +100,11 @@ void BaseBattleWindow::init()
     {
         musicPlayed() = true;
         music->play();
-        //playback
-        connect(music, SIGNAL(finished()), this, SLOT(restartMusic()));
     } else {
         musicPlayed() = false;
     }
+    
+    connect(music, SIGNAL(aboutToFinish()), SLOT(restartMusic()));
 
     //layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
@@ -186,7 +186,7 @@ void BaseBattleWindow::sendMessage()
 
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
-    if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat)) {
+    if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)) {
         delayedCommands.push_back(inf);
         return;
     }
@@ -293,8 +293,12 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         switchToNaught(spot);
         break;
     case Hit:
-        printLine(tr("Hit!"));
-        break;
+        {
+            quint8 number;
+            in >> number;
+            printLine(tr("Hit %1 times!").arg(int(number)));
+            break;
+        }
     case Effective:
         {
             quint8 eff;

@@ -1007,6 +1007,8 @@ void Client::printLine(const QString &line)
         } else if (id(beg) == -1) {
             mainChat()->insertHtml("<span style='color:#74F099'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
         } else {
+            if (myIgnored.contains(id(beg)))
+                return;
             mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
 	}
     } else {
