@@ -31,7 +31,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 
 %f is awake!
 %f can't use items anymore!|%s can use items again!
-%s's Encore ended!|%s can't use %m because of Encore!|%f is forced to use %m!|%f received an encore!
+%s's Encore ended!|%f received an encore!
 
 %s endured the hit!|%s braced itself!
 
