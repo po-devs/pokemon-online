@@ -1334,6 +1334,7 @@ struct MMKnockOff : public MM
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
+            b.battlelong[QString("KnockedOff%1%2").arg(t).arg(b.currentPoke(t))] = true;
 	}
     }
 };
@@ -1371,6 +1372,9 @@ struct MMSwitcheroo : public MM
 	{
 	    turn(b,s)["Failed"] = true;
 	}
+        if (b.battlelong.value(QString("KnockedOff%1%2").arg(t).arg(b.currentPoke(t))).toBool() || b.battlelong.value(QString("KnockedOff%1%2").arg(s).arg(b.currentPoke(s))).toBool()) {
+            turn(b,s)["Failed"] = true;
+        }
     }
 
     static void uas(int s, int t, BS &b)
@@ -1940,11 +1944,19 @@ struct MMEncore : public MM
 
     static void uas (int s, int t, BS &b) {
         poke(b,t)["EncoresUntil"] = b.turn() + 3 + (true_rand()%5);
-	poke(b,t)["EncoresMove"] = poke(b,t)["LastMoveSuccessfullyUsed"];
+        int move =  poke(b,t)["LastMoveSuccessfullyUsed"];
+        poke(b,t)["EncoresMove"] = move;
+
+        //Changes the encored move
+        for (int i = 0; i < 4; i ++) {
+            if (b.move(t, i) == move) {
+                b.choice[i].numSwitch = i;
+                break;
+            }
+        }
 	addFunction(poke(b,t), "MovesPossible", "Encore", &msp);
-	addFunction(turn(b,t), "MovePossible", "Encore", &mp);
 	addFunction(poke(b,t), "EndTurn", "Encore", &et);
-        b.sendMoveMessage(33,3,s,0,t);
+        b.sendMoveMessage(33,1,s,0,t);
     }
 
     static void et (int s, int, BS &b)
@@ -1976,13 +1988,6 @@ struct MMEncore : public MM
 	    if (b.move(s,i) != poke(b,s)["EncoresMove"].toInt()) {
 		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
 	    }
-	}
-    }
-
-    static void mp(int s, int, BS &b) {
-	if(b.move(s,poke(b,s)["MoveSlot"].toInt()) != poke(b,s)["EncoresMove"].toInt()) {
-	    turn(b,s)["ImpossibleToMove"] = true;
-	    b.sendMoveMessage(33,1,s,0,s,b.move(s, poke(b,s)["MoveSlot"].toInt()));
 	}
     }
 };

@@ -67,9 +67,6 @@ public:
     void changeCurrentPoke(int player, int poke);
     int countAlive(int player) const;
 
-    /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
-    int currentForcedSleepPoke[2];
-
     /* Starts the battle -- use the time before to connect signals / slots */
     void start();
     /* The battle runs in a different thread -- easier to interrutpt the battle & co */
@@ -312,7 +309,6 @@ private:
 
     /* What choice we allow the players to have */
     BattleChoices options[2];
-    BattleChoice choice[2];
     /* Is set to false once a player choses it move */
     bool hasChoice[2];
     /* just indicates if the player could originally move or not */
@@ -371,6 +367,13 @@ public:
     context battlelong;
     /* Moves that affect a team */
     context teamzone[2];
+
+    /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
+    // Public because used by Yawn
+    int currentForcedSleepPoke[2];
+
+    /* The choice of a player, public because can be changed by Encore */
+    BattleChoice choice[2];
 
     QHash<int,int> spectators;
 

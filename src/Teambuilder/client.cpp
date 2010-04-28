@@ -1005,7 +1005,7 @@ void Client::printLine(const QString &line)
         } else if (beg == "Welcome Message") {
             mainChat()->insertHtml("<span style='color:blue'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
         } else if (id(beg) == -1) {
-            mainChat()->insertHtml("<span style='color:#74F099'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:#3daa68'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
         } else {
             if (myIgnored.contains(id(beg)))
                 return;
@@ -1058,8 +1058,7 @@ void Client::openTeamBuilder()
         return;
     }
 
-    myteambuilder = new QMainWindow(this);
-    myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
+    myteambuilder = new QMainWindow();
 
     TeamBuilder *t = new TeamBuilder(myteam);
     myteambuilder->resize(t->size());
@@ -1067,6 +1066,7 @@ void Client::openTeamBuilder()
     myteambuilder->show();
     myteambuilder->setMenuBar(t->createMenuBar((MainEngine*)parent()));
 
+    connect(this, SIGNAL(destroyed()), myteambuilder, SLOT(close()));
     connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
     connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));
     connect(t, SIGNAL(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)), this, SLOT(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
@@ -1146,7 +1146,7 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
     ml->addWidget(sameTier = new QCheckBox(tr("Force same tier")));
     QHBoxLayout *sub2 = new QHBoxLayout();
     ml->addLayout(sub2);
-    sub2->addWidget(rangeOn = new QCheckBox(tr("Only battle players in the rating range")));
+    sub2->addWidget(rangeOn = new QCheckBox(tr("Only battle players with a max rating difference of ")));
     sub2->addWidget(range = new QLineEdit());
 
     QHBoxLayout *hl = new QHBoxLayout();

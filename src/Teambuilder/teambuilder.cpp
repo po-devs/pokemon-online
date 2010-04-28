@@ -122,6 +122,8 @@ TitledWidget::TitledWidget(const QString &title, QWidget *w)
 
 TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
 {
+    setAttribute(Qt::WA_DeleteOnClose, true);
+
     setPixmap(QPixmap("db/Teambuilder/background.png"));
 
     setWindowTitle(tr("Teambuilder"));
@@ -451,7 +453,7 @@ void TB_TrainerBody::changeTrainerColor()
     QColor c = QColorDialog::getColor(s.value("trainer_color").value<QColor>().name());
 
     s.setValue("trainer_color", c);
-    if (c.name() != "#000000" && c.lightness() <= 140)
+    if (c.name() != "#000000" && c.lightness() <= 120)
         m_colorButton->setStyleSheet(QString("background: %1; color: white").arg(c.name()));
     else {
         s.setValue("trainer_color", "");
