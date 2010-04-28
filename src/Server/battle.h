@@ -102,12 +102,14 @@ public:
     void changeHp(int player, int newHp);
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player);
+    void notifyHits(int number);
     void sendPoke(int player, int poke, bool silent = false);
     void callEntryEffects(int player);
     void koPoke(int player, int source, bool straightattack = false);
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
     void changeForm(int player, int poke, int newform);
+    void calculateTypeModStab();
     int forme(int player);
     void changeAForme(int player, int newforme);
     void gainStatMod(int player, int stat, int bonus, bool tell = true);

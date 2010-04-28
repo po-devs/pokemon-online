@@ -52,6 +52,7 @@ QImageButton::QImageButton(const QString &normal, const QString &hovered, const 
     setFixedSize(myPic.size());
 
     setMask(myPic.mask());
+    lastState = Normal;
 
     /* Both are necessary for some styles */
     setMouseTracking(true);
@@ -102,13 +103,24 @@ void QImageButton::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
 
+    int newState;
     if ((this->isChecked() || pressed) && !myCheckedPic.isNull()) {
+        newState = Checked;
         painter.drawPixmap(e->rect(), myCheckedPic, e->rect());
     } else {
-        if (!underMouse())
+        if (!underMouse()) {
+            newState = Normal;
             painter.drawPixmap(e->rect(), myPic, e->rect());
-        else
+        }
+        else {
+            newState = Hovered;
             painter.drawPixmap(e->rect(), myHoveredPic, e->rect());
+        }
+    }
+
+    if (newState != lastState) {
+        lastState = newState;
+        setMask(lastState == Checked ? myCheckedPic.mask() : (lastState == Normal ? myPic.mask() : myHoveredPic.mask()));
     }
 
     lastUnderMouse = underMouse();
