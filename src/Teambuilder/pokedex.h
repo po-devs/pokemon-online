@@ -96,7 +96,11 @@ public:
     StatTab();
 public slots:
     void changePoke(int poke);
+private slots:
+    void increaseBoost();
+    void decreaseBoost();
 private:
+    int poke;
     QLabel *min[6];
     QLabel *max[6];
     QImageButtonLR *buttons[6];
