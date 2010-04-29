@@ -464,8 +464,6 @@ void ProfileTab::changeDesc(int poke)
 /****************************************************/
 
 StatTab::StatTab() {
-    std::fill(boost, boost + 6, 0);
-
     QVBoxLayout *vl = new QVBoxLayout(this);
 
     QGridLayout *stats = new QGridLayout();
@@ -501,8 +499,13 @@ StatTab::StatTab() {
         stats->addWidget(new QLabel(statLabels[i]), i+1, 0);
         stats->addWidget(baseStats[i] = new QProgressBar(), i+1, 1);
         stats->addWidget(min[i] = new QLabel(), i+1, 2);
-        if (i != Hp)
-            stats->addWidget(buttons[i] = new QImageButtonLR("db/Teambuilder/Team/=.png", "db/Teambuilder/Team/=hover.png"), i+1, 3);
+        if (i != Hp) {
+            stats->addWidget(buttons[i] = new QImageButtonLR("db/Teambuilder/Team/=.png", ""), i+1, 3);
+            buttons[i]->setProperty("Stat", i);
+
+            connect(buttons[i], SIGNAL(leftClick()), SLOT(increaseBoost()));
+            connect(buttons[i], SIGNAL(rightClick()), SLOT(decreaseBoost()));
+        }
         stats->addWidget(max[i] = new QLabel(), i+1, 4);
 
         min[i]->setObjectName("Stat");
@@ -516,6 +519,15 @@ StatTab::StatTab() {
 }
 
 void StatTab::changePoke(int poke) {
+    this->poke = poke;
+
+    for (int i = 1; i < 6; i++) {
+        if (boost[i] != 0)  {
+            buttons[i]->changePics("db/Teambuilder/Team/=.png", "db/Teambuilder/Team/=hover.png");
+            boost[i] = 0;
+        }
+    }
+
     int ranges[] = {30, 50, 60, 70, 80, 90, 100, 200, 300};
     QString colors[] = {"#ff0505", "#fd5300", "#ff7c49", "#ffaf49", "#ffd749", "#b9d749", "#5ee70a", "#3093ff", "#6c92bd"};
     for (int i = 0; i < 6; i++) {
@@ -542,8 +554,8 @@ void StatTab::changePoke(int poke) {
                                     " background-color: %2;"
                                     "}").arg(bg, color));
 
-        min[i]->setText(QString(" %1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(i > 1 ? 1 : 2, i), i, 100, 31, 0)));
-        max[i]->setText(QString(" %1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(i, i > 1 ? 1 : 2), i, 100, 31, 252)));
+        min[i]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(i > 1 ? 1 : 2, i), i, 100, 31, 0)));
+        max[i]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(i, i > 1 ? 1 : 2), i, 100, 31, 252)));
     }
 
     int t1 = PokemonInfo::Type1(poke);
@@ -599,6 +611,53 @@ void StatTab::changePoke(int poke) {
             il->addWidget(typePic, iCount/4, iCount%4, 1, 1, Qt::AlignHCenter);
             iCount += 1;
         }
+    }
+}
+
+void StatTab::increaseBoost()
+{
+    int stat = sender()->property("Stat").toInt();
+
+    if (boost[stat] == 6) {
+        return;
+    }
+
+    boost[stat] += 1;
+
+    min[stat]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(stat > 1 ? 1 : 2, stat), stat, 100, 31, 0) * std::max(2, 2+boost[stat]) / std::max(2, 2-boost[stat])));
+    max[stat]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(stat, stat > 1 ? 1 : 2), stat, 100, 31, 252) * std::max(2, 2+boost[stat]) / std::max(2, 2-boost[stat])));
+
+    if (boost[stat] < 0) {
+        return;
+    }
+    if (boost[stat] == 0) {
+        buttons[stat]->changePics("db/Teambuilder/Team/=.png", "db/Teambuilder/Team/=hover.png");
+    } else if (boost[stat] == 1) {
+        buttons[stat]->changePics("db/Teambuilder/Team/+.png", "db/Teambuilder/Team/+hover.png");
+    }
+}
+
+
+void StatTab::decreaseBoost()
+{
+    int stat = sender()->property("Stat").toInt();
+
+    if (boost[stat] == -6) {
+        return;
+    }
+
+    boost[stat] -= 1;
+
+    min[stat]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(stat > 1 ? 1 : 2, stat), stat, 100, 31, 0) * std::max(2, 2+boost[stat]) / std::max(2, 2-boost[stat])));
+    max[stat]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(stat, stat > 1 ? 1 : 2), stat, 100, 31, 252) * std::max(2, 2+boost[stat]) / std::max(2, 2-boost[stat])));
+
+    if (boost[stat] > 0) {
+        return;
+    }
+    if (boost[stat] == 0) {
+        buttons[stat]->changePics("db/Teambuilder/Team/=.png", "db/Teambuilder/Team/=hover.png");
+    } else if (boost[stat] == -1) {
+        buttons[stat]->changePics("db/Teambuilder/Team/-.png", "db/Teambuilder/Team/-hover.png");
     }
 }
 
