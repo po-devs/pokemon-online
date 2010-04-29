@@ -68,12 +68,12 @@
      <rect>
       <x>10</x>
       <y>330</y>
-      <width>301</width>
+      <width>381</width>
       <height>351</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -84,7 +84,7 @@
        <rect>
         <x>0</x>
         <y>1</y>
-        <width>291</width>
+        <width>371</width>
         <height>321</height>
        </rect>
       </property>
@@ -99,7 +99,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>291</width>
+        <width>371</width>
         <height>321</height>
        </rect>
       </property>
@@ -114,7 +114,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>291</width>
+        <width>371</width>
         <height>321</height>
        </rect>
       </property>
@@ -129,7 +129,22 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>291</width>
+        <width>371</width>
+        <height>321</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>TM &amp;&amp; HM</string>
+     </attribute>
+     <widget class="QListWidget" name="tmMoves">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>371</width>
         <height>321</height>
        </rect>
       </property>

@@ -12,14 +12,15 @@ enum {
     LevelMoves,
     TutorMoves,
     EggMoves,
-    SpecialMoves
+    SpecialMoves,
+    TMMoves
 };
 
 struct MoveGen
 {
     int gen;
     int pokenum;
-    QSet<int> moves[4];
+    QSet<int> moves[5];
 
     void init(int gen, int pokenum);
 };

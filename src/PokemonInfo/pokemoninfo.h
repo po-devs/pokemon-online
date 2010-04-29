@@ -301,7 +301,7 @@ public:
     static int NumberOfNatures();
     static int Number(const QString &pokename);
     /* Finds nature of two stats, first parameter is the stat raised, second it the stat lowered*/
-    static int natureOf(int statUp, int statDown);
+    static int NatureOf(int statUp, int statDown);
     /* -1 if the nature is hindering, 0 if neutral and 1 if it boosts that stat */
     static int Boost(int nature, int stat);
 };

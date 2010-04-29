@@ -26,7 +26,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("team_location", "Team/trainer.tp");
     setDefaultValue("save_battle_logs", false);
     setDefaultValue("battle_logs_directory", "Logs/");
-    setDefaultValue("battle_music_directory", "Music/");
+    setDefaultValue("battle_music_directory", "Music/Battle/");
     setDefaultValue("play_battle_music", true);
     //setDefaultValue("play_battle_sounds", true);
     setDefaultValue("show_team",true);

@@ -12,6 +12,7 @@ void MoveGen::init(int gen, int pokenum)
     moves[SpecialMoves] = PokemonInfo::SpecialMoves(pokenum,gen);
     moves[EggMoves] = PokemonInfo::EggMoves(pokenum,gen);
     moves[TutorMoves] = PokemonInfo::TutorMoves(pokenum,gen);
+    moves[TMMoves] = PokemonInfo::TMMoves(pokenum);
 }
 
 void MovesPerPoke::init(int poke)
@@ -33,7 +34,7 @@ void PokeMovesDb::init()
 
 void PokeMovesDb::save()
 {
-    QFile files[2][4];
+    QFile files[2][5];
 
     for (int gen = 3; gen <= 4; gen++) {
         QString genS = "db/pokes/" + QString::number(gen) + "G_";
@@ -41,9 +42,10 @@ void PokeMovesDb::save()
         files[gen-3][EggMoves].setFileName(genS + "egg_moves.txt");
         files[gen-3][TutorMoves].setFileName(genS + "tutor_moves.txt");
         files[gen-3][SpecialMoves].setFileName(genS + "special_moves.txt");
+        files[gen-3][TMMoves].setFileName( "db/pokes/tm_and_hm_moves.txt");
     }
     for (int gen = 3; gen <= 4; gen++) {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             files[gen-3][i].open(QIODevice::WriteOnly);
 
             for (int p = 0; p < PokemonInfo::NumberOfPokemons(); p++) {
@@ -61,6 +63,7 @@ void PokeMovesDb::save()
 
                 files[gen-3][i].write((s+"\n").toUtf8());
             }
+            files[gen-3][i].close();
         }
     }
 }
@@ -126,6 +129,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->specialMoves, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(moveDeleted(QListWidgetItem*)));
     connect(ui->eggMoves, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(moveDeleted(QListWidgetItem*)));
     connect(ui->tutorMoves, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(moveDeleted(QListWidgetItem*)));
+    connect(ui->tmMoves, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(moveDeleted(QListWidgetItem*)));
 }
 
 MainWindow::~MainWindow()
@@ -167,6 +171,7 @@ void MainWindow::switchToPokemon(int num)
     addMoves(gen, EggMoves, ui->eggMoves);
     addMoves(gen, SpecialMoves, ui->specialMoves);
     addMoves(gen, TutorMoves, ui->tutorMoves);
+    addMoves(gen, TMMoves, ui->tmMoves);
 }
 
 void MainWindow::addMoves(int gen, int cat, QListWidget *container)
@@ -223,6 +228,8 @@ void MainWindow::moveDeleted(QListWidgetItem *it)
         cat = TutorMoves;
     } else if (container == ui->specialMoves) {
         cat = SpecialMoves;
+    } else if (container == ui->tmMoves) {
+        cat = TMMoves;
     }
 
     QSet<int> &moves = database.pokes[currentPoke].gens[gen()-3].moves[cat];
