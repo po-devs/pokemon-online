@@ -569,11 +569,10 @@ void Player::loggedIn(const TeamInfo &_team,bool ladder, bool showteam, QColor c
 
     qDebug() << "Assigning team";
     team() = _team;
-    qDebug() << "Finding tier";
+    winningMessage() = _team.win;
+    losingMessage() = _team.lose;
     tier() = TierMachine::obj()->findTier(team());
-    qDebug() << "Tier is " << tier() << ", Getting rating";
     rating() = TierMachine::obj()->rating(name(), tier());
-    qDebug() << "Rating is " << TierMachine::obj()->rating(name(), tier());
 
     if (st == Success) {
         emit loggedIn(id(), _team.name);
@@ -711,6 +710,8 @@ void Player::recvTeam(const TeamInfo &team)
     if (team.name.toLower() == this->team().name.toLower()) {
         /* No authentification required... */
         this->team() = team;
+        winningMessage() = _team.win;
+        losingMessage() = _team.lose;
         tier() = TierMachine::obj()->findTier(this->team());
         rating() = TierMachine::obj()->rating(name(), tier());
 
@@ -725,6 +726,8 @@ void Player::recvTeam(const TeamInfo &team)
     this->team() = team;
     tier() = TierMachine::obj()->findTier(this->team());
     rating() = TierMachine::obj()->rating(this->name(), tier());
+    winningMessage() = _team.win;
+    losingMessage() = _team.lose;
     this->team().name = name;
 
     if (s == Success) {

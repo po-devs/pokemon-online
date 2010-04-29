@@ -1050,7 +1050,7 @@ struct MMSpikes : public MM
     }
 
     static void usi(int s, int, BS &b) {
-	int spikeslevel = team(b,s)["Spikes"].toInt();
+        int spikeslevel = team(b,s).value("Spikes").toInt();
 	if (spikeslevel <= 0 || b.isFlying(s)) {
 	    return;
 	}
@@ -1082,7 +1082,7 @@ struct MMStealthRock : public MM
     }
 
     static void usi(int s, int, BS &b) {
-	if (team(b,s)["StealthRock"].toBool() == true)
+        if (team(b,s).value("StealthRock").toBool() == true)
 	{
 	    b.sendMoveMessage(124,1,s,Pokemon::Rock);
 	    int n = TypeInfo::Eff(Pokemon::Rock, poke(b,s)["Type1"].toInt()) * TypeInfo::Eff(Pokemon::Rock, poke(b,s)["Type2"].toInt());
@@ -1115,6 +1115,7 @@ struct MMToxicSpikes : public MM
     static void usi(int s, int, BS &b) {
         if (b.hasType(s, Pokemon::Poison) && !b.isFlying(s) && team(b,s).value("ToxicSpikes").toInt() > 0) {
             team(b,s).remove("ToxicSpikes");
+            removeFunction(team(b,s), "UponSwitchIn", "ToxicSpikes");
 	    b.sendMoveMessage(136, 1, s, Pokemon::Poison, b.rev(s));
 	    return;
 	}
@@ -1128,7 +1129,7 @@ struct MMToxicSpikes : public MM
         {
             return;
         }
-	int spikeslevel = team(b,s)["ToxicSpikes"].toInt();
+        int spikeslevel = team(b,s).value("ToxicSpikes").toInt();
 	switch (spikeslevel) {
 	    case 0: return;
             case 1: b.inflictStatus(s, Pokemon::Poisoned, s); break;
@@ -1944,7 +1945,7 @@ struct MMEncore : public MM
 
     static void uas (int s, int t, BS &b) {
         poke(b,t)["EncoresUntil"] = b.turn() + 3 + (true_rand()%5);
-        int move =  poke(b,t)["LastMoveSuccessfullyUsed"];
+        int move =  poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
         poke(b,t)["EncoresMove"] = move;
 
         //Changes the encored move
@@ -3717,19 +3718,27 @@ struct MMTrickRoom : public MM {
 struct MMTripleKick : public MM {
     MMTripleKick() {
         functions["BeforeHitting"] = &bh;
-        functions["AfterAttackSuccessful"] = &aas;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void bh(int s, int, BS &b) {
-        b.sendMoveMessage(139,0,s,Pokemon::Fighting);
+    static void bh(int s, int t, BS &b) {
+        int count = 1;
+        if (b.testAccuracy(s, t)) {
+            count += 1;
+            if (b.testAccuracy(s, t)) {
+                count += 1;
+            }
+        }
+        turn(b,s)["RepeatCount"] = count;
     }
 
-    static void aas(int s, int, BS &b) {
+    static void uas(int s, int, BS &b) {
         inc(turn(b,s)["TripleKickCount"], 1);
         int tkc = turn(b,s)["TripleKickCount"].toInt();
-        if (tkc < 3) {
-            turn(b,s)["Power"] = (tkc+1)*10;
-            b.useAttack(s,move(b,s),true,false);
+        if (tkc == 1) {
+            turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
+        } else if (tkc==2) {
+            turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 3 / 2;
         }
     }
 };

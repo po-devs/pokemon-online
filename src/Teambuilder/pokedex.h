@@ -26,9 +26,14 @@ public:
 public slots:
     void changeToPokemon(int poke);
     void updatePicture();
-
+    void changeToNext();
+    void changeToPrevious();
+signals:
+    void pokemonChanged(int);
 private:
     int currentPoke;
+    int forme;
+    QPushButton *evo, *formes;
     QLabel *num, *name;
     QLabel *specy;
     QLabel *height, *weight;
@@ -52,6 +57,7 @@ public:
     void changeToPokemon(int poke);
 public slots:
     void sortByColumn(int col);
+    void changeToPokemonFromExt(int poke);
 private slots:
     void changeToPokemon(const QString &);
     void changePokemon();
