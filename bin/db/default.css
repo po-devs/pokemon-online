@@ -287,6 +287,7 @@ PokedexBody QLabel#Separator {
 /* The profile tab in the pokedex */
 ProfileTab, StatTab, MoveTab {
 	border: 0;
+	border-radius: 5px;
 	padding-top: 5px;
 	padding-left: 5px;
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #9faeb3);
@@ -346,14 +347,14 @@ PokedexBody QLabel#Stat {
 	font-size: 10pt;
 }
 
-TB_PokemonBoxes QTabWidget::pane { /* The tab widget frame */
+TB_PokemonBoxes QTabWidget#Modified::pane { /* The tab widget frame */
 	border: 6px solid #0a9d9b;
 	padding: 0;
 	margin: 0;
 	border-radius: 8px;
 }
 
-BattleWindow QTabWidget::pane {
+BattleWindow QTabWidget#Modified::pane {
 	border: 3px solid #e2e1e1;
 	padding: 0;
 	margin: 0;
@@ -361,17 +362,28 @@ BattleWindow QTabWidget::pane {
 }
 
 
-Pokedex QTabWidget::tab-bar {
+Pokedex QTabWidget#Modified::tab-bar {
 	alignment: center;
 	bottom: -5px;
 }
 
-TB_PokemonBoxes QTabWidget::tab-bar {
+Pokedex QFrame#WeakResFrame {
+	background: white;
+	border-radius: 8px;
+	border: 0;
+}
+
+StatTab QTabWidget::pane {
+	border: 1px solid #696565;
+	border-radius: 8px;
+}
+
+TB_PokemonBoxes QTabWidget#Modified::tab-bar {
 	bottom: -3px;
 }
 
 
-Pokedex QTabWidget::pane {
+Pokedex QTabWidget#Modified::pane {
 	border: 2px solid #059eba;
 	padding: 0;
 	margin-bottom: 3px;
@@ -379,10 +391,22 @@ Pokedex QTabWidget::pane {
 	border-radius: 8px;
 }
 
+StatTab QTabWidget::tab-bar {
+	left: 20px;
+	bottom: -2px;
+}
+
+StatTab QTabBar::tab:selected {
+
+}
+
+StatTab QTabBar::tab{
+	min-width: 90px;
+}
 
 /* Style the tab using the tab sub-control. Note that
 it reads QTabBar _not_ QTabWidget */
-QTabBar::tab:top, QTabBar::tab:bottom {
+QTabWidget#Modified > QTabBar::tab:top, QTabWidget#Modified > QTabBar::tab:bottom {
 	background: #bababa;
 	border: 1px solid #676a6c;
 	border-radius: 5px;
@@ -391,28 +415,28 @@ QTabBar::tab:top, QTabBar::tab:bottom {
 	padding: 2px;
 }
 
-QTabBar::tab::title {
+QTabWidget#Modified  > QTabBar::tab::title {
 	font-weight:bold;
 	font-family:Trebuchet MS;
 	font-size: 14px;
 }
 
-QTabBar::tab:selected , QTabBar::tab:hover{
+QTabWidget#Modified > QTabBar::tab:selected , QTabWidget#Modified > QTabBar::tab:hover{
 	border-color: #077cff;
 	background: #88bcf1;
 }
 
-QTabBar::tab:top:selected , QTabBar::tab:bottom:selected {
+QTabWidget#Modified > QTabBar::tab:top:selected , QTabWidget#Modified > QTabBar::tab:bottom:selected {
 	/* expand/overlap to the left and right by 4px */
 	margin-left: -2px;
 	margin-right: -2px;
 }
 
-QTabBar::tab:top:first,QTabBar::tab:bottom:first {
+QTabWidget#Modified > QTabBar::tab:top:first,QTabWidget#Modified > QTabBar::tab:bottom:first {
 	margin-left: 15px;
 }
 
-QTabBar::tab:top:last, QTabBar::tab:bottom:last {
+QTabWidget#Modified > QTabBar::tab:top:last, QTabWidget#Modified > QTabBar::tab:bottom:last {
 	margin-right: 0px;
 }
 

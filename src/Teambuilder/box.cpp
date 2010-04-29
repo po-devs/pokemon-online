@@ -612,6 +612,7 @@ int PokemonBox::calculateSpot(const QPoint &graphViewPos)
 
 TB_BoxContainer::TB_BoxContainer()
 {
+    setObjectName("Modified");
     setAcceptDrops(true);
 }
 

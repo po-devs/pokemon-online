@@ -326,6 +326,7 @@ PokedexBody::PokedexBody()
 
 
     QTabWidget *tabw = new QTabWidget();
+    tabw->setObjectName("Modified");
     hl->addWidget(tabw, 100);
 
     ProfileTab *pt;
@@ -475,7 +476,7 @@ StatTab::StatTab() {
     stats->setSpacing(4);
 
     QLabel *showoff = new QLabel(tr("Statistics"));
-    showoff->setObjectName("BlueHeader");
+    showoff->setObjectName("Title");
     stats->addWidget(showoff, 0,0);
 
     QLabel *title1, *title2, *title3;
@@ -507,6 +508,9 @@ StatTab::StatTab() {
         min[i]->setObjectName("Stat");
         max[i]->setObjectName("Stat");
     }
+
+    weakImmTab = new QTabWidget();
+    vl->addWidget(weakImmTab);
 
     changePoke(1);
 }
@@ -540,6 +544,61 @@ void StatTab::changePoke(int poke) {
 
         min[i]->setText(QString(" %1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(i > 1 ? 1 : 2, i), i, 100, 31, 0)));
         max[i]->setText(QString(" %1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(i, i > 1 ? 1 : 2), i, 100, 31, 252)));
+    }
+
+    int t1 = PokemonInfo::Type1(poke);
+    int t2 = PokemonInfo::Type2(poke);
+
+    weakImmTab->clear();
+
+    QFrame *weaknesses = new QFrame();
+    weaknesses->setObjectName("WeakResFrame");
+    weakImmTab->addTab(weaknesses, tr("Weakness"));
+    QGridLayout *wl = new QGridLayout(weaknesses);
+    wl->setMargin(4);
+    wl->setSpacing(5);
+
+    int wCount = 0;
+    for (int i = 0; i < TypeInfo::NumberOfTypes() - 1; i++) {
+        int eff = TypeInfo::Eff(i,t1) * TypeInfo::Eff(i, t2);
+        if (eff > 4) {
+            wl->addWidget(new TypeText(i, QString("x %1").arg(eff/4)), wCount/4, wCount%4);
+            wCount += 1;
+        }
+    }
+
+    QFrame *res = new QFrame();
+    res->setObjectName("WeakResFrame");
+    weakImmTab->addTab(res, tr("Resistance"));
+    QGridLayout *rl = new QGridLayout(res);
+    rl->setMargin(4);
+    rl->setSpacing(5);
+
+    int rCount = 0;
+    for (int i = 0; i < TypeInfo::NumberOfTypes() - 1; i++) {
+        int eff = TypeInfo::Eff(i,t1) * TypeInfo::Eff(i, t2);
+        if (eff < 4 && eff > 0) {
+            rl->addWidget(new TypeText(i, QString("/ %1").arg(4/eff)), rCount/4, rCount%4);
+            rCount += 1;
+        }
+    }
+
+    QFrame *imm = new QFrame();
+    imm->setObjectName("WeakResFrame");
+    weakImmTab->addTab(imm, tr("Immunity"));
+    QGridLayout *il = new QGridLayout(imm);
+    il->setMargin(4);
+    il->setSpacing(5);
+
+    int iCount = 0;
+    for (int i = 0; i < TypeInfo::NumberOfTypes() - 1; i++) {
+        int eff = TypeInfo::Eff(i,t1) * TypeInfo::Eff(i, t2);
+        if (eff == 0) {
+            QLabel *typePic = new QLabel();
+            typePic->setPixmap(TypeInfo::Picture(i));
+            il->addWidget(typePic, iCount/4, iCount%4, 1, 1, Qt::AlignHCenter);
+            iCount += 1;
+        }
     }
 }
 
@@ -592,4 +651,24 @@ PokeBallText::PokeBallText(const QString &filename, const QString &text)
     layout->addWidget(l);
     layout->addWidget(new QLabel(text));
     layout->addStretch(100);
+}
+
+
+/******************************************************/
+/*************** TYPE TEXT ****************************/
+/******************************************************/
+
+TypeText::TypeText(int type, const QString &text)
+{
+    QHBoxLayout *hl = new QHBoxLayout(this);
+    hl->setMargin(0);
+    hl->setSpacing(5);
+
+    QLabel *typeL = new QLabel();
+    typeL->setPixmap(TypeInfo::Picture(type));
+    QLabel *textL = new QLabel();
+    textL->setText(text);
+
+    hl->addWidget(typeL,0,Qt::AlignRight);
+    hl->addWidget(textL,0,Qt::AlignLeft);
 }

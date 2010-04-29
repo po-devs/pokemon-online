@@ -102,6 +102,7 @@ private:
     QImageButtonLR *buttons[6];
     QProgressBar *baseStats[6];
     int boost[6];
+    QTabWidget *weakImmTab;
 };
 
 /* Just used for CSS */
@@ -130,6 +131,12 @@ class PokeBallText : public QWidget
 {
 public:
     PokeBallText(const QString &filename, const QString &text);
+};
+
+class TypeText : public QWidget
+{
+public:
+    TypeText(int type, const QString &text);
 };
 
 #endif // POKEDEX_H
