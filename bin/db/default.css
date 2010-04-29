@@ -285,14 +285,26 @@ PokedexBody QLabel#Separator {
 }
 
 /* The profile tab in the pokedex */
-ProfileTab {
+ProfileTab, StatTab, MoveTab {
 	border: 0;
 	padding-top: 5px;
 	padding-left: 5px;
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #9faeb3);
 }
 
-ProfileTab QLabel#BlueHeader {
+StatTab QProgressBar {
+	background: white;
+	border: 1px solid #393737;
+	height: 14px;
+	text-align: center;
+}
+
+StatTab QProgressBar::chunk {
+	width: 1px;
+	background-color: #30c7ff;
+}
+
+PokedexBody QLabel#BlueHeader {
 	border: 1px solid #b3b4b4;
 	border-radius: 5px;
 	background: #afeefb;
@@ -305,7 +317,7 @@ ProfileTab QLabel#BlueHeader {
 	max-width: 86px;
 }
 
-ProfileTab QLabel#GreenHeader {
+PokedexBody QLabel#GreenHeader {
 	border: 1px solid #b3b4b4;
 	border-radius: 5px;
 	background: #8bd6a6;
@@ -316,6 +328,18 @@ ProfileTab QLabel#GreenHeader {
 	max-height: 23px;
 	min-height: 23px;
 	max-width: 86px;
+}
+
+PokedexBody QLabel#Title {
+	font-family: Trebuchet MS;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+PokedexBody QFrame#GreenBackground {
+	border: 1px solid black;
+	border-radius: 8px;
+	background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #eefaed, stop: 1 #7bf967);
 }
 
 TB_PokemonBoxes QTabWidget::pane { /* The tab widget frame */

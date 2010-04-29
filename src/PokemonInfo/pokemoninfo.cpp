@@ -1357,13 +1357,9 @@ int NatureInfo::Number(const QString &pokename)
     return (qFind(m_Names.begin(), m_Names.end(), pokename)-m_Names.begin()) % (NumberOfNatures());
 }
 
-int NatureInfo::natureOf(int statUp, int statDown)
+int NatureInfo::NatureOf(int statUp, int statDown)
 {
-    for(int i = 0; i < 25; i++){
-        if(Boost(i,statUp) == 1 && Boost(i,statDown) == -1) // lazy comparison, I want to find a better way to do this
-            return i;
-    }
-    return 0;
+    return (statUp-1) * 5 + statDown-1;
 }
 
 int NatureInfo::Boost(int nature, int stat)

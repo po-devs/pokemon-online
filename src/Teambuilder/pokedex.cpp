@@ -1,4 +1,5 @@
 #include "../PokemonInfo/pokemoninfo.h"
+#include "../Utilities/otherwidgets.h"
 #include "pokedex.h"
 #include "teambuilder.h"
 
@@ -252,11 +253,14 @@ PokedexBody::PokedexBody()
     hl->addWidget(tabw, 100);
 
     ProfileTab *pt;
+    StatTab *st;
+    MoveTab *mt;
     tabw->addTab(pt = new ProfileTab(), tr("PROFILE"));
-    tabw->addTab(new QFrame(), tr("STATS"));
-    tabw->addTab(new QFrame(), tr("MOVES"));
+    tabw->addTab(st = new StatTab(), tr("STATS"));
+    tabw->addTab(mt = new MoveTab(), tr("MOVES"));
 
     connect(this, SIGNAL(pokeChanged(int)), pt, SLOT(changeDesc(int)));
+    connect(this, SIGNAL(pokeChanged(int)), st, SLOT(changePoke(int)));
 
     changeToPokemon(1);
 }
@@ -364,6 +368,75 @@ void ProfileTab::changeDesc(int poke)
         ab2->setText(QString("<b>%1</b> - %2").arg(AbilityInfo::Name(ability2), AbilityInfo::Desc(ability2)));
         ab2->show();
     }
+}
+
+/****************************************************/
+/*********** STATTAB ********************************/
+/****************************************************/
+
+StatTab::StatTab() {
+    std::fill(boost, boost + 6, 0);
+
+    QVBoxLayout *vl = new QVBoxLayout(this);
+
+    QGridLayout *stats = new QGridLayout();
+
+    vl->addLayout(stats);
+
+    stats->setMargin(0);
+    stats->setSpacing(4);
+
+    QLabel *showoff = new QLabel(tr("Statistics"));
+    showoff->setObjectName("BlueHeader");
+    stats->addWidget(showoff, 0,0);
+
+    QLabel *title1, *title2, *title3;
+    stats->addWidget(title1 = new QLabel(tr("Base Stats")), 0, 1);
+    stats->addWidget(title2 = new QLabel(tr("Min")), 0, 2);
+    QLabel *icon = new QLabel();
+    icon->setPixmap(QPixmap("db/Teambuilder/Team/=.png"));
+    stats->addWidget(icon, 0, 3);
+    stats->addWidget(title3 = new QLabel(tr("Max")), 0, 4);
+
+    title1->setObjectName("Title");
+    title2->setObjectName("Title");
+    title3->setObjectName("Title");
+
+    QStringList statLabels =
+            QStringList() << tr("Hit Points") << tr("Attack") << tr("Defense") << tr("Speed") << tr("Special Attack") << tr("Special Defense");
+
+    QFrame *greenBG = new QFrame();
+    greenBG->setObjectName("GreenBackground");
+    stats->addWidget(greenBG, 1, 2, 6, 3);
+    for (int i = 0; i < 6; i++) {
+        stats->addWidget(new QLabel(statLabels[i]), i+1, 0);
+        stats->addWidget(baseStats[i] = new QProgressBar(), i+1, 1);
+        baseStats[i]->setFormat("%v");
+        stats->addWidget(min[i] = new QLabel(), i+1, 2);
+        if (i != Hp)
+            stats->addWidget(buttons[i] = new QImageButtonLR("db/Teambuilder/Team/=.png", "db/Teambuilder/Team/=hover.png"), i+1, 3);
+        stats->addWidget(max[i] = new QLabel(), i+1, 4);
+    }
+
+    changePoke(1);
+}
+
+void StatTab::changePoke(int poke) {
+    for (int i = 0; i < 6; i++) {
+        baseStats[i]->setValue(PokemonInfo::BaseStats(poke).baseStat(i));
+
+        min[i]->setText(QString(" %1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(i > 1 ? 1 : 2, i), i, 100, 31, 0)));
+        max[i]->setText(QString(" %1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(i, i > 1 ? 1 : 2), i, 100, 31, 252)));
+    }
+}
+
+/****************************************************/
+/*********** Move Tab *******************************/
+/****************************************************/
+
+MoveTab::MoveTab()
+{
+
 }
 
 /****************************************************/

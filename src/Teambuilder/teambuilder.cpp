@@ -1338,7 +1338,7 @@ void TB_PokemonBody::setNature(int nature)
 
 void TB_PokemonBody::editNature(int up, int down)
 {
-    setNature(NatureInfo::natureOf(up,down));
+    setNature(NatureInfo::NatureOf(up,down));
     updateNature();
 }
 

@@ -6,6 +6,7 @@
 class TeamBuilder;
 class TB_PokeChoice;
 class GridBox;
+class QImageButtonLR;
 
 class Pokedex : public QWidget
 {
@@ -73,6 +74,28 @@ public slots:
 private:
     QLabel *hgDesc, *ssDesc, *ptDesc;
     QLabel *ab1, *ab2;
+};
+
+class MoveTab : public QFrame
+{
+    Q_OBJECT
+public:
+    MoveTab();
+};
+
+class StatTab: public QFrame
+{
+    Q_OBJECT
+public:
+    StatTab();
+public slots:
+    void changePoke(int poke);
+private:
+    QLabel *min[6];
+    QLabel *max[6];
+    QImageButtonLR *buttons[6];
+    QProgressBar *baseStats[6];
+    int boost[6];
 };
 
 /* Just used for CSS */
