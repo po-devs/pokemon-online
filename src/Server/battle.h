@@ -325,6 +325,8 @@ private:
     /*.*/
     int myid[2];
     QSet<int> koedPokes;
+    QString winMessage[2];
+    QString loseMessage[2];
 protected:
     void timerEvent(QTimerEvent *);
 

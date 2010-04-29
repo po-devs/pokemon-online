@@ -24,6 +24,8 @@ class Player : public QObject
     PROPERTY(QColor, color);
     PROPERTY(bool, battleSearch);
     PROPERTY(int, battleId);
+    PROPERTY(QString, winningMessage);
+    PROPERTY(QString, losingMessage);
 public:
     BattleSituation *battle;
     QSet<int> battlesSpectated;

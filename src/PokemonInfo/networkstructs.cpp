@@ -42,8 +42,14 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
 
 
 
-    if (team.name.length() > 500) {
-        team.name.resize(500);
+    if (team.info.length() > 500) {
+        team.info.resize(500);
+    }
+    if (team.lose.length() > 200) {
+        team.lose.resize(200);
+    }
+    if (team.win.length() > 200) {
+        team.win.resize(200);
     }
 
     return in;

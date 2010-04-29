@@ -34,6 +34,7 @@ Pokedex::Pokedex(TeamBuilder *parent)
     secondCol->addWidget(body, 100, Qt::AlignRight | Qt::AlignTop);
 
     connect(body, SIGNAL(pokeChanged(int)), bop, SLOT(changeToPokemon(int)));
+    connect(bop, SIGNAL(pokemonChanged(int)), body, SLOT(changeToPokemonFromExt(int)));
 }
 
 /****************************************************/
@@ -125,8 +126,13 @@ BigOpenPokeBall::BigOpenPokeBall()
         row2->addStretch(100);
     }
 
-    ml->addWidget(new QPushButton(QIcon("db/Teambuilder/PokeDex/EvoIcon.png"), tr("&Evolution")), 2,3);
-    ml->addWidget(new QPushButton(QIcon("db/Teambuilder/PokeDex/FormeIcon.png"), tr("&Other Formes")), 3,3);
+    ml->addWidget(evo = new QPushButton(QIcon("db/Teambuilder/PokeDex/EvoIcon.png"), tr("&Evolution")), 2,3);
+    ml->addWidget(formes = new QPushButton(QIcon("db/Teambuilder/PokeDex/FormeIcon.png"), tr("&Other Formes")), 3,3);
+    evo->setCheckable(true);
+    formes->setCheckable(true);
+    QButtonGroup *evoForme = new QButtonGroup(this);
+    evoForme->addButton(evo, 0);
+    evoForme->addButton(formes, 1);
 
     ml->addWidget(back = new GridBox(QPixmap(),true),0,2,2,2);
 
@@ -139,6 +145,8 @@ BigOpenPokeBall::BigOpenPokeBall()
     toggleUp->move(433, 17);
     toggleDown->setParent(this);
     toggleDown->move(439, 23);
+    connect(toggleUp, SIGNAL(clicked()), SLOT(changeToPrevious()));
+    connect(toggleDown, SIGNAL(clicked()), SLOT(changeToNext()));
 
     shinyBox = new QCheckBox(tr("Shiny"),this);
     shinyBox->move(435,65);
@@ -150,7 +158,10 @@ BigOpenPokeBall::BigOpenPokeBall()
 
 void BigOpenPokeBall::changeToPokemon(int poke)
 {
+    forme = 0;
     currentPoke = poke;
+    evo->setDisabled(true);
+    formes->setDisabled(!PokemonInfo::HasAestheticFormes(poke) && !PokemonInfo::HasFormes(poke));
 
     update();
 }
@@ -190,10 +201,75 @@ void BigOpenPokeBall::update()
     updatePicture();
 }
 
+void BigOpenPokeBall::changeToNext()
+{
+    if (formes->isChecked()) {
+        if (formes->isEnabled()) {
+            if (PokemonInfo::HasAestheticFormes(currentPoke)) {
+                if (forme + 1 == PokemonInfo::NumberOfAFormes(currentPoke)) {
+                    forme = 0;
+                    updatePicture();
+                    return;
+                }
+                forme += 1;
+                if (PokemonInfo::AestheticDesc(currentPoke, forme) != "") {
+                    updatePicture();
+                    return;
+                } else {
+                    changeToNext();
+                }
+            } else {
+                QList<int> formes = PokemonInfo::Formes(currentPoke);
+                for (int i = 0; i < formes.size() - 1; i++) {
+                    if (formes[i] == currentPoke) {
+                        emit pokemonChanged(formes[i+1]);
+                        return;
+                    }
+                }
+                emit pokemonChanged(formes[0]);
+                return;
+            }
+        }
+    }
+}
+
+
+void BigOpenPokeBall::changeToPrevious()
+{
+    if (formes->isChecked()) {
+        if (formes->isEnabled()) {
+            if (PokemonInfo::HasAestheticFormes(currentPoke)) {
+                if (forme == 0) {
+                    forme = PokemonInfo::NumberOfAFormes(currentPoke) - 1;
+                    updatePicture();
+                    return;
+                }
+                forme -= 1;
+                if (PokemonInfo::AestheticDesc(currentPoke, forme) != "") {
+                    updatePicture();
+                    return;
+                } else {
+                    changeToPrevious();
+                }
+            } else {
+                QList<int> formes = PokemonInfo::Formes(currentPoke);
+                for (int i = 1; i < formes.size(); i++) {
+                    if (formes[i] == currentPoke) {
+                        emit pokemonChanged(formes[i-1]);
+                        return;
+                    }
+                }
+                emit pokemonChanged(formes[formes.size()-1]);
+                return;
+            }
+        }
+    }
+}
+
 void BigOpenPokeBall::updatePicture()
 {
-    front->changePic(PokemonInfo::Picture(currentPoke, 0, PokemonInfo::BaseGender(currentPoke),shiny(),false));
-    back->changePic(PokemonInfo::Picture(currentPoke, 0, PokemonInfo::BaseGender(currentPoke),shiny(),true));
+    front->changePic(PokemonInfo::Picture(currentPoke, forme, PokemonInfo::BaseGender(currentPoke),shiny(),false));
+    back->changePic(PokemonInfo::Picture(currentPoke, forme, PokemonInfo::BaseGender(currentPoke),shiny(),true));
 }
 
 bool BigOpenPokeBall::shiny() const
@@ -273,6 +349,18 @@ void PokedexBody::sortByColumn(int col)
 void PokedexBody::changeToPokemon(const QString &poke)
 {
     int num = PokemonInfo::Number(poke);
+
+    if (num != 0 && currentPoke != num) {
+        currentPoke = num;
+        emit pokeChanged(num);
+
+        changeToPokemon(num);
+    }
+}
+
+void PokedexBody::changeToPokemonFromExt(int poke)
+{
+    int num = poke;
 
     if (num != 0 && currentPoke != num) {
         currentPoke = num;
@@ -405,25 +493,50 @@ StatTab::StatTab() {
     QStringList statLabels =
             QStringList() << tr("Hit Points") << tr("Attack") << tr("Defense") << tr("Speed") << tr("Special Attack") << tr("Special Defense");
 
-    QFrame *greenBG = new QFrame();
+    /*QFrame *greenBG = new QFrame();
     greenBG->setObjectName("GreenBackground");
-    stats->addWidget(greenBG, 1, 2, 6, 3);
+    stats->addWidget(greenBG, 1, 2, 6, 3);*/
     for (int i = 0; i < 6; i++) {
         stats->addWidget(new QLabel(statLabels[i]), i+1, 0);
         stats->addWidget(baseStats[i] = new QProgressBar(), i+1, 1);
-        baseStats[i]->setFormat("%v");
         stats->addWidget(min[i] = new QLabel(), i+1, 2);
         if (i != Hp)
             stats->addWidget(buttons[i] = new QImageButtonLR("db/Teambuilder/Team/=.png", "db/Teambuilder/Team/=hover.png"), i+1, 3);
         stats->addWidget(max[i] = new QLabel(), i+1, 4);
+
+        min[i]->setObjectName("Stat");
+        max[i]->setObjectName("Stat");
     }
 
     changePoke(1);
 }
 
 void StatTab::changePoke(int poke) {
+    int ranges[] = {30, 50, 60, 70, 80, 90, 100, 200, 300};
+    QString colors[] = {"#ff0505", "#fd5300", "#ff7c49", "#ffaf49", "#ffd749", "#b9d749", "#5ee70a", "#3093ff", "#6c92bd"};
     for (int i = 0; i < 6; i++) {
-        baseStats[i]->setValue(PokemonInfo::BaseStats(poke).baseStat(i));
+        int bs = PokemonInfo::BaseStats(poke).baseStat(i);
+
+        baseStats[i]->setValue(bs%100);
+        baseStats[i]->setFormat(QString("%1").arg(bs));
+
+        QString bg = bs < 100 ? "white" : (bs < 200 ? "#30c7ff" : "#3093ff");
+
+        QString color;
+        for (unsigned j = 0; j < sizeof(ranges)/sizeof(int); j++) {
+            if (bs < ranges[j]) {
+                color = colors[j];
+                break;
+            }
+        }
+        baseStats[i]->setStyleSheet(QString("QProgressBar{	background: %1;"
+                                    "border: 1px solid #393737;"
+                                    "height: 14px;"
+                                    "text-align: center;}"
+                                    "QProgressBar::chunk {"
+                                    " width: 1px;"
+                                    " background-color: %2;"
+                                    "}").arg(bg, color));
 
         min[i]->setText(QString(" %1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(i > 1 ? 1 : 2, i), i, 100, 31, 0)));
         max[i]->setText(QString(" %1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(i, i > 1 ? 1 : 2), i, 100, 31, 252)));

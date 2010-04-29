@@ -9,12 +9,16 @@
 #include <algorithm>
 
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id)
-	:team1(p1.team()), team2(p2.team())
+        :team1(p1.team()), team2(p2.team())
 {
     publicId() = id;
     timer = NULL;
     myid[0] = p1.id();
     myid[1] = p2.id();
+    winMessage[0] = p1.winningMessage();
+    winMessage[1] = p2.winningMessage();
+    loseMessage[0] = p1.losingMessage();
+    loseMessage[1] = p2.losingMessage();
     mycurrentpoke[0] = -1;
     mycurrentpoke[1] = -1;
     /* timers for battle timeout */
@@ -1216,16 +1220,17 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         notify(All, UseAttack, player, qint16(attack));
     }
 
-    if (!specialOccurence && !turnlong[player].contains("NoChoice")) {
-        //Pressure
-        losePP(player, move, 1 + (hasWorkingAbility(rev(player), Ability::Pressure) && !koed(rev(player)) && turnlong[player]["Power"].toInt() > 0));
-    }
-    
     switch(turnlong[player]["PossibleTargets"].toInt()) {
 	case Move::None: targetList.push_back(player); break;
 	case Move::User: targetList.push_back(player); break;
 	case Move::All: targetList.push_back(player); targetList.push_back(rev(player)); break;
 	default: targetList.push_back(rev(player));
+    }
+
+    if (!specialOccurence && !turnlong[player].contains("NoChoice")) {
+        //Pressure
+        losePP(player, move, 1 + (hasWorkingAbility(rev(player), Ability::Pressure) && !koed(rev(player)) &&
+                                  targetList.contains(rev(player))));
     }
 
     if (targetList.size() == 1 && targetList[0] == rev(player) && koed(rev(player))) {
@@ -2038,6 +2043,10 @@ int BattleSituation::calculateDamage(int p, int t)
 
 int BattleSituation::repeatNum(int player, context &move)
 {
+    if (turnlong[player].contains("RepeatCount")) {
+        return turnlong[player]["RepeatCount"].toInt();
+    }
+
     int min = 1+move["RepeatMin"].toInt();
     int max = 1+move["RepeatMax"].toInt();
 
@@ -2353,9 +2362,13 @@ void BattleSituation::testWin()
             emit battleFinished(Tie, id(Player1), id(Player2),rated(), tier());
         } else if (time1 == 0) {
             notify(All, BattleEnd, Player2, qint8(Win));
+            notify(All, BattleChat, Player2, winMessage[Player2]);
+            notify(All, BattleChat, Player1, loseMessage[Player1]);
             emit battleFinished(Win, id(Player2), id(Player1),rated(), tier());
         } else {
             notify(All, BattleEnd, Player1, qint8(Win));
+            notify(All, BattleChat, Player1, winMessage[Player1]);
+            notify(All, BattleChat, Player2, loseMessage[Player2]);
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
         qDebug() << "Battle finished between " << team1.name << " and " << team2.name << " (timeout)" << endl;
@@ -2374,9 +2387,13 @@ void BattleSituation::testWin()
             emit battleFinished(Tie, id(Player1), id(Player2),rated(), tier());
         } else if (c1 == 0) {
             notify(All, BattleEnd, Player2, qint8(Win));
+            notify(All, BattleChat, Player2, winMessage[Player2]);
+            notify(All, BattleChat, Player1, loseMessage[Player1]);
             emit battleFinished(Win, id(Player2), id(Player1),rated(), tier());
         } else {
             notify(All, BattleEnd, Player1, qint8(Win));
+            notify(All, BattleChat, Player1, winMessage[Player1]);
+            notify(All, BattleChat, Player2, loseMessage[Player2]);
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
         /* The battle is finished so we stop the battling thread */

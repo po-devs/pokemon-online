@@ -836,14 +836,21 @@ bool TrainerTeam::importFromTxt(const QString &file1)
 
         int item = 0;
 
+        QString itemString;
         if (first.size() > 1) {
             if (first[1].contains("**")) {
-                item = ItemInfo::Number(first[1].section("**",0,0).trimmed());
+                itemString = first[1].section("**",0,0).trimmed();
                 nickname = first[1].section("**",1,1).trimmed();
             } else {
-                item = ItemInfo::Number(first[1].trimmed());
+                itemString = first[1].trimmed();
             }
         }
+
+        //Shoddy fix
+        if (itemString == "Platinum Orb")
+            itemString = "Griseous Orb";
+
+        item = ItemInfo::Number(itemString);
 
         p.setNum(pokenum);
         p.load();
