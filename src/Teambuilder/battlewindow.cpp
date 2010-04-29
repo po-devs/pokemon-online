@@ -41,6 +41,7 @@ BattleWindow::BattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, con
     mylayout->addWidget(mycancel = new QPushButton(tr("&Cancel")), 3,0);
     mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 3, 1);
     mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémon")), 3, 2);
+    mytab->setObjectName("Modified");
 
     mytab->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     mytab->addTab(mystack = new QStackedWidget(), tr("&Moves"));

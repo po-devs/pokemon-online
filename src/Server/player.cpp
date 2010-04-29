@@ -710,8 +710,8 @@ void Player::recvTeam(const TeamInfo &team)
     if (team.name.toLower() == this->team().name.toLower()) {
         /* No authentification required... */
         this->team() = team;
-        winningMessage() = _team.win;
-        losingMessage() = _team.lose;
+        winningMessage() = team.win;
+        losingMessage() = team.lose;
         tier() = TierMachine::obj()->findTier(this->team());
         rating() = TierMachine::obj()->rating(name(), tier());
 
@@ -726,8 +726,8 @@ void Player::recvTeam(const TeamInfo &team)
     this->team() = team;
     tier() = TierMachine::obj()->findTier(this->team());
     rating() = TierMachine::obj()->rating(this->name(), tier());
-    winningMessage() = _team.win;
-    losingMessage() = _team.lose;
+    winningMessage() = team.win;
+    losingMessage() = team.lose;
     this->team().name = name;
 
     if (s == Success) {

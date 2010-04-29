@@ -1489,6 +1489,9 @@ void TB_EVManager::checkNButtonL()
     }
     else{
         myStatUp = loc+1;
+        if (myStatDown == -1) {
+            myStatDown = myStatUp == 1 ? 2 : 1;
+        }
     }
     if(myStatUp != -1 && myStatDown != -1)
            emit natureChanged(myStatUp,myStatDown);
@@ -1507,6 +1510,9 @@ void TB_EVManager::checkNButtonR()
     }
     else{
         myStatDown = loc+1;
+        if (myStatUp == -1) {
+            myStatUp = myStatDown == 1 ? 2 : 1;
+        }
     }
     if(myStatUp != -1 && myStatDown != -1)
            emit natureChanged(myStatUp,myStatDown);
