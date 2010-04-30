@@ -258,12 +258,14 @@ struct BMCustap : public BMPinch
         if (!testpinch(s, s, b,4))
             return;
 
+        poke(b,s)["CustapTurn"] = b.turn();
         addFunction(poke(b,s), "TurnOrder", "Custap", &to);
         b.sendBerryMessage(11,s,0);
     }
 
     static void to (int s, int, BS &b) {
-        poke(b,s)["TurnOrder"] = 3;
+        if (b.turn() + 1 == poke(b,s).value("CustapTurn").toInt())
+            turn(b,s)["TurnOrder"] = 3;
         removeFunction(poke(b,s), "TurnOrder", "Custap");
     }
 };
