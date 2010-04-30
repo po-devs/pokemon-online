@@ -19,6 +19,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     winMessage[1] = p2.winningMessage();
     loseMessage[0] = p1.losingMessage();
     loseMessage[1] = p2.losingMessage();
+    attacked() = -1;
+    attacker() = -1;
     mycurrentpoke[0] = -1;
     mycurrentpoke[1] = -1;
     /* timers for battle timeout */
@@ -1136,30 +1138,14 @@ bool BattleSituation::testFail(int player)
     return false;
 }
 
-int BattleSituation::attacker() {
-    if (!battlelong.contains("Attacker")) {
-        return -1;
-    } else {
-        return battlelong["Attacker"].toInt();
-    }
-}
-
-int BattleSituation::attacked() {
-    if (!battlelong.contains("Attacked")) {
-        return -1;
-    } else {
-        return battlelong["Attacked"].toInt();
-    }
-}
-
 bool BattleSituation::attacking()
 {
-    return battlelong.contains("Attacker");
+    return attacker() != -1;
 }
 
 void BattleSituation::useAttack(int player, int move, bool specialOccurence, bool tellPlayers)
 {
-    battlelong["Attacker"] = player;
+    attacker() = player;
 
     int attack;
     QList<int> targetList;
@@ -1243,7 +1229,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     calleffects(player, player, "BeforeTargetList");
 
     foreach(int target, targetList) {
-        battlelong["Attacked"] = target;
+        attacked() = target;
 	if (player != target && !specialOccurence && !amn.contains(attack)) {
 	    pokelong[target]["MirrorMoveMemory"] = attack;
 	}
@@ -1393,8 +1379,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     end:
     pokelong[player]["HasMovedOnce"] = true;
 
-    battlelong.remove("Attacker");
-    battlelong.remove("Attacked");
+    attacker() = -1;
+    attacked() = -1;
 }
 
 void BattleSituation::notifyHits(int number)
@@ -1453,8 +1439,8 @@ void BattleSituation::calculateTypeModStab()
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
-    if (battlelong.contains("Attacker")) {
-        int attacker = battlelong["Attacker"].toInt();
+    if (attacking()) {
+        int attacker = this->attacker();
         //Mold Breaker
         if (attacker == rev(player) && hasWorkingAbility(attacker, Ability::MoldBreaker)) {
             return false;

@@ -7,12 +7,18 @@ class TeamBuilder;
 class TB_PokeChoice;
 class GridBox;
 class QImageButtonLR;
+class QCompactTable;
+class TypeChart;
 
 class Pokedex : public QWidget
 {
     Q_OBJECT
 public:
     Pokedex(TeamBuilder *parent);
+public slots:
+    void showTypeChart();
+private:
+    QPointer<TypeChart> typeChart;
 };
 
 class BigOpenPokeBall : public QLabel
@@ -87,6 +93,19 @@ class MoveTab : public QFrame
     Q_OBJECT
 public:
     MoveTab();
+public slots:
+    void changePoke(int poke);
+private:
+    QCompactTable *moves;
+
+    enum {
+        TypeCol,
+        NameCol,
+        PPCol,
+        PowerCol,
+        AccCol,
+        CategoryCol
+    };
 };
 
 class StatTab: public QFrame
@@ -141,6 +160,14 @@ class TypeText : public QWidget
 {
 public:
     TypeText(int type, const QString &text);
+};
+
+
+class TypeChart : public QWidget
+{
+    Q_OBJECT
+public:
+    TypeChart(QWidget *parent);
 };
 
 #endif // POKEDEX_H

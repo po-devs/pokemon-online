@@ -84,6 +84,7 @@ public slots:
     void updateAll();
     void importFromTxt();
     void importDone(const QString &text);
+    void showNoFrame();
 
 private:
     enum StackWidgets {

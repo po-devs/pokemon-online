@@ -330,9 +330,18 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     menuStyle->addSeparator();
     menuStyle->addAction(tr("Reload StyleSheet"), w, SLOT(loadStyleSheet()));
 
+
+    QMenu *view = menuBar->addMenu(tr("&View"));
+    view->addAction(tr("&Full Screen (for netbook users ONLY)"), this, SLOT(showNoFrame()), Qt::Key_F11);
+
     menuBar->setStyleSheet("background: #0ca3df");
 
     return menuBar;
+}
+
+void TeamBuilder::showNoFrame()
+{
+    topLevelWidget()->showFullScreen();
 }
 
 void TeamBuilder::importFromTxt()
@@ -1006,6 +1015,9 @@ TB_PokemonBody::MoveList::MoveList() : QCompactTable(0,7)
     horizontalHeader()->setResizeMode(Acc, QHeaderView::ResizeToContents);
     horizontalHeader()->setResizeMode(Name, QHeaderView::Fixed);
     horizontalHeader()->resizeSection(Name, 125);
+    horizontalHeader()->setResizeMode(Type, QHeaderView::Fixed);
+    horizontalHeader()->resizeSection(Type, 54);
+    setIconSize(QSize(48,19));
 }
 
 bool TB_PokemonBody::MoveList::event(QEvent * event)
@@ -1261,9 +1273,7 @@ void TB_PokemonBody::configureMoves()
 	QTableWidgetItem *witem;
         int movenum = pair.first;
 	
-	witem = new QTableWidgetItem(TypeInfo::Name(MoveInfo::Type(movenum)));
-	witem->setForeground(QColor("white"));
-        witem->setBackground(QColor(TypeInfo::Color(MoveInfo::Type(movenum))));
+        witem = new QTableWidgetItem(QIcon(TypeInfo::Picture(MoveInfo::Type(movenum))), "");
 	movechoice->setItem(i, Type, witem);
 
         witem = new QTableWidgetItem(MoveInfo::Name(movenum));
@@ -1288,13 +1298,6 @@ void TB_PokemonBody::configureMoves()
 
     movechoice->sortItems(Name);
     movechoice->setSortingEnabled(true);
-    movechoice->resizeColumnsToContents();
-    movechoice->horizontalHeader()->setStretchLastSection(true);
-    movechoice->horizontalHeader()->setResizeMode(PP, QHeaderView::ResizeToContents);
-    movechoice->horizontalHeader()->setResizeMode(Pow, QHeaderView::ResizeToContents);
-    movechoice->horizontalHeader()->setResizeMode(Acc, QHeaderView::ResizeToContents);
-    movechoice->horizontalHeader()->setResizeMode(Name, QHeaderView::Fixed);
-    movechoice->horizontalHeader()->resizeSection(Name,130);
 }
 
 void TB_PokemonBody::setItem(const QString &item)
