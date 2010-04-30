@@ -24,6 +24,9 @@ Pokedex::Pokedex(TeamBuilder *parent)
     firstCol->addWidget(type = new QPushButton(tr("&Type Chart")));
     firstCol->addWidget(damage = new QPushButton(tr("&Damage Calculator")));
     firstCol->addStretch(100);
+    QLabel *text = new QLabel(toBoldColor("The Pokédex is not complete yet.", Qt::blue));
+    text->setWordWrap(true);
+    firstCol->addWidget(text);
 
     damage->setDisabled(true);
 
@@ -855,4 +858,6 @@ TypeChart::TypeChart(QWidget *parent) : QWidget(parent)
             gl->setItem(i+1, j+1, l);
         }
     }
+
+    resize(55* TypeInfo::NumberOfTypes()+10, 24*TypeInfo::NumberOfTypes()-3);
 }

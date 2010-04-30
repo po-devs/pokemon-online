@@ -521,7 +521,8 @@ BattleChoices BattleSituation::createChoice(int player)
 
 bool BattleSituation::isMovePossible(int player, int move)
 {
-    return (poke(player).move(move).PP() > 0 && (turnlong[player]["Move" + QString::number(move) + "Blocked"].toBool() == false));
+    return (poke(player).move(move).PP() > 0 && (turnlong[player].value("Encored").toBool() ||
+                                                 turnlong[player]["Move" + QString::number(move) + "Blocked"].toBool() == false));
 }
 
 void BattleSituation::analyzeChoice(int player)
@@ -616,7 +617,7 @@ void BattleSituation::analyzeChoices()
         foreach (int player, it->second) {
             callaeffects(player,player, "TurnOrder"); //Stall
             callieffects(player,player, "TurnOrder"); //Lagging tail & ...
-            calleffects(player,player,"TurnOrder"); // A berry does that
+            callpeffects(player,player,"TurnOrder"); // A berry does that
             secondPriorities[turnlong[player]["TurnOrder"].toInt()].push_back(player);
 	}
 
@@ -914,7 +915,7 @@ void BattleSituation::sendBack(int player)
     }
 }
 
-bool BattleSituation::testAccuracy(int player, int target)
+bool BattleSituation::testAccuracy(int player, int target, bool silent)
 {
     int acc = turnlong[player]["Accuracy"].toInt();
 
@@ -927,7 +928,8 @@ bool BattleSituation::testAccuracy(int player, int target)
     }
 
     if (turnlong[target].contains("EvadeAttack")) {
-        notify(All, Miss, player);
+        if (!silent)
+            notify(All, Miss, player);
         return false;
     }
 
@@ -943,7 +945,7 @@ bool BattleSituation::testAccuracy(int player, int target)
     //OHKO
     if (MoveInfo::isOHKO(turnlong[player]["MoveChosen"].toInt())) {
         bool ret = (true_rand() % 100) < 30;
-        if (!ret) {
+        if (!ret && !silent) {
             notify(All, Miss, player);
         }
         return ret;
@@ -973,7 +975,8 @@ bool BattleSituation::testAccuracy(int player, int target)
     if (true_rand() % 100 < acc) {
 	return true;
     } else {
-	notify(All, Miss, player);
+        if (!silent)
+            notify(All, Miss, player);
 	calleffects(player,target,"MissAttack");
 	return false;
     }
@@ -2348,13 +2351,13 @@ void BattleSituation::testWin()
             emit battleFinished(Tie, id(Player1), id(Player2),rated(), tier());
         } else if (time1 == 0) {
             notify(All, BattleEnd, Player2, qint8(Win));
-            notify(All, BattleChat, Player2, winMessage[Player2]);
-            notify(All, BattleChat, Player1, loseMessage[Player1]);
+            notify(All, EndMessage, Player2, winMessage[Player2]);
+            notify(All, EndMessage, Player1, loseMessage[Player1]);
             emit battleFinished(Win, id(Player2), id(Player1),rated(), tier());
         } else {
             notify(All, BattleEnd, Player1, qint8(Win));
-            notify(All, BattleChat, Player1, winMessage[Player1]);
-            notify(All, BattleChat, Player2, loseMessage[Player2]);
+            notify(All, EndMessage, Player1, winMessage[Player1]);
+            notify(All, EndMessage, Player2, loseMessage[Player2]);
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
         qDebug() << "Battle finished between " << team1.name << " and " << team2.name << " (timeout)" << endl;
@@ -2373,13 +2376,13 @@ void BattleSituation::testWin()
             emit battleFinished(Tie, id(Player1), id(Player2),rated(), tier());
         } else if (c1 == 0) {
             notify(All, BattleEnd, Player2, qint8(Win));
-            notify(All, BattleChat, Player2, winMessage[Player2]);
-            notify(All, BattleChat, Player1, loseMessage[Player1]);
+            notify(All, EndMessage, Player2, winMessage[Player2]);
+            notify(All, EndMessage, Player1, loseMessage[Player1]);
             emit battleFinished(Win, id(Player2), id(Player1),rated(), tier());
         } else {
             notify(All, BattleEnd, Player1, qint8(Win));
-            notify(All, BattleChat, Player1, winMessage[Player1]);
-            notify(All, BattleChat, Player2, loseMessage[Player2]);
+            notify(All, EndMessage, Player1, winMessage[Player1]);
+            notify(All, EndMessage, Player2, loseMessage[Player2]);
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
         /* The battle is finished so we stop the battling thread */

@@ -118,7 +118,8 @@ public:
         ClockStart = 37,
         ClockStop = 38,
         Rated,
-        TierSection
+        TierSection,
+        EndMessage
     };
 
     enum TempPokeChange {

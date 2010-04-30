@@ -414,9 +414,12 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         printLine(tr("But it failed!"));
         break;
     case BattleChat:
+    case EndMessage:
         {
             QString message;
             in >> message;
+            if (message=="")
+                return;
             printHtml(QString("<span style='color:") + (spot?"#5811b1":"green") + "'><b>" + escapeHtml(name(spot)) + ": </b></span>" + escapeHtml(message));
             break;
         }
