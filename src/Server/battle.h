@@ -16,6 +16,8 @@ class BattleSituation : public QThread
     PROPERTY(bool, rated);
     PROPERTY(QString, tier);
     PROPERTY(quint32, clauses);
+    PROPERTY(int, attacker);
+    PROPERTY(int, attacked);
 public:
     enum {
 	AllButPlayer = -2,
@@ -92,8 +94,7 @@ public:
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
 	represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
     void useAttack(int player, int attack, bool specialOccurence = false, bool notify = true);
-    int attacker(); // returns the poke that attacks or -1 if not attacking
-    int attacked(); // returns the poke that is attacked or -1 if not attacking
+    /* Returns true or false if an attack is going on or not */
     bool attacking();
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);

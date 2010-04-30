@@ -19,9 +19,13 @@ Pokedex::Pokedex(TeamBuilder *parent)
 
     firstCol->setSpacing(5);
     firstCol->addSpacing(63);
-    firstCol->addWidget(new QPushButton(tr("&Type Chart")));
-    firstCol->addWidget(new QPushButton(tr("&Damage Calculator")));
+
+    QPushButton *type, *damage;
+    firstCol->addWidget(type = new QPushButton(tr("&Type Chart")));
+    firstCol->addWidget(damage = new QPushButton(tr("&Damage Calculator")));
     firstCol->addStretch(100);
+
+    damage->setDisabled(true);
 
 
     QVBoxLayout *secondCol = new QVBoxLayout();
@@ -35,6 +39,18 @@ Pokedex::Pokedex(TeamBuilder *parent)
 
     connect(body, SIGNAL(pokeChanged(int)), bop, SLOT(changeToPokemon(int)));
     connect(bop, SIGNAL(pokemonChanged(int)), body, SLOT(changeToPokemonFromExt(int)));
+    connect(type, SIGNAL(clicked()), SLOT(showTypeChart()));
+}
+
+void Pokedex::showTypeChart()
+{
+    if (typeChart) {
+        typeChart->raise();
+        typeChart->activateWindow();
+        return;
+    }
+    typeChart = new TypeChart(this);
+    typeChart->show();
 }
 
 /****************************************************/
@@ -338,6 +354,7 @@ PokedexBody::PokedexBody()
 
     connect(this, SIGNAL(pokeChanged(int)), pt, SLOT(changeDesc(int)));
     connect(this, SIGNAL(pokeChanged(int)), st, SLOT(changePoke(int)));
+    connect(this, SIGNAL(pokeChanged(int)), mt, SLOT(changePoke(int)));
 
     changeToPokemon(1);
 }
@@ -667,7 +684,58 @@ void StatTab::decreaseBoost()
 
 MoveTab::MoveTab()
 {
+    QVBoxLayout *v = new QVBoxLayout(this);
+    moves = new QCompactTable(0, 6);
 
+    v->addWidget(moves);
+    moves->setIconSize(QSize(48,19));
+
+    QStringList move_headers;
+    move_headers << tr("Type") << tr("Name", "AttackName") << tr("PP") << tr("Pow") << tr("Acc") << tr("Category");
+    moves->setHorizontalHeaderLabels(move_headers);
+    moves->resizeRowsToContents();
+    moves->horizontalHeader()->setStretchLastSection(true);
+    moves->horizontalHeader()->setResizeMode(TypeCol, QHeaderView::Fixed);
+    moves->horizontalHeader()->resizeSection(TypeCol, 54);
+    moves->horizontalHeader()->setResizeMode(PPCol, QHeaderView::Fixed);
+    moves->horizontalHeader()->resizeSection(PPCol, 25);
+    moves->horizontalHeader()->setResizeMode(PowerCol, QHeaderView::Fixed);
+    moves->horizontalHeader()->resizeSection(PowerCol, 32);
+    moves->horizontalHeader()->setResizeMode(AccCol, QHeaderView::Fixed);
+    moves->horizontalHeader()->resizeSection(AccCol, 32);
+    moves->horizontalHeader()->setResizeMode(NameCol, QHeaderView::Fixed);
+    moves->horizontalHeader()->resizeSection(NameCol, 100);
+
+    changePoke(1);
+}
+
+void MoveTab::changePoke(int poke)
+{
+    moves->setSortingEnabled(false);
+
+    QSet<int> moveList = PokemonInfo::Moves(poke);
+
+    moves->setRowCount(moveList.count());
+
+    QSet<int>::iterator it = moveList.begin();
+
+
+    for (int i = 0; it != moveList.end(); ++it, ++i)
+    {
+        int move = *it;
+        moves->setItem(i, TypeCol,new QTableWidgetItem(QIcon(TypeInfo::Picture(MoveInfo::Type(move))), ""));
+        moves->setItem(i, NameCol,new QTableWidgetItem(MoveInfo::Name(move)));
+        moves->setItem(i, PPCol,new QTableWidgetItem(QString::number(MoveInfo::PP(move))));
+        moves->setItem(i, PowerCol,new QTableWidgetItem(MoveInfo::PowerS(move)));
+        moves->setItem(i, AccCol,new QTableWidgetItem(MoveInfo::AccS(move)));
+
+        QTableWidgetItem *witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(move)));
+        witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(move))));
+        moves->setItem(i, CategoryCol, witem);
+    }
+
+    moves->sortByColumn(NameCol, Qt::AscendingOrder);
+    moves->setSortingEnabled(true);
 }
 
 /****************************************************/
@@ -730,4 +798,61 @@ TypeText::TypeText(int type, const QString &text)
 
     hl->addWidget(typeL,0,Qt::AlignRight);
     hl->addWidget(textL,0,Qt::AlignLeft);
+}
+
+/*********************************************************/
+/*************** TYPE CHART ******************************/
+/*********************************************************/
+
+
+
+TypeChart::TypeChart(QWidget *parent) : QWidget(parent)
+{
+    setAttribute(Qt::WA_DeleteOnClose, true);
+    setWindowFlags(Qt::Window);
+    QVBoxLayout *vl = new QVBoxLayout(this);
+    QCompactTable *gl = new QCompactTable(TypeInfo::NumberOfTypes(), TypeInfo::NumberOfTypes());
+    vl->addWidget(gl);
+    gl->setIconSize(QSize(48,19));
+    gl->verticalHeader()->hide();
+    gl->horizontalHeader()->hide();
+    gl->setShowGrid(true);
+
+    for (int i = 0; i < TypeInfo::NumberOfTypes(); i++) {
+        gl->horizontalHeader()->resizeSection(i, 54);
+    }
+
+    gl->setItem(0,0, new QTableWidgetItem(tr("A \\ D")));
+
+    for (int i = 0; i < TypeInfo::NumberOfTypes() - 1; i++) {
+        QTableWidgetItem *t1, *t2;
+        t1 = new QTableWidgetItem();
+        t2 = new QTableWidgetItem();
+        t1->setIcon(QIcon(TypeInfo::Picture(i)));
+        t2->setIcon(QIcon(TypeInfo::Picture(i)));
+
+        gl->setItem(0, i+1, t1);
+        gl->setItem(i+1, 0, t2);
+    }
+
+    for (int i = 0; i < TypeInfo::NumberOfTypes() - 1; i++) {
+        for (int j = 0; j < TypeInfo::NumberOfTypes() - 1; j++) {
+            int eff = TypeInfo::Eff(i, j);
+            if (eff == 2) {
+                continue;
+            }
+            QTableWidgetItem *l = new QTableWidgetItem();
+            if (eff == 0) {
+                l->setText("x 0");
+                l->setForeground(Qt::darkGray);
+            } else if (eff == 1) {
+                l->setText("/ 2");
+                l->setForeground(Qt::gray);;
+            } else if (eff == 4) {
+                l->setText("* 2");
+                l->setForeground(Qt::red);
+            }
+            gl->setItem(i+1, j+1, l);
+        }
+    }
 }

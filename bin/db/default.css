@@ -404,6 +404,10 @@ StatTab QTabBar::tab{
 	min-width: 90px;
 }
 
+TypeChart QTableWidgetItem{
+	font-weight: bold;
+}
+
 /* Style the tab using the tab sub-control. Note that
 it reads QTabBar _not_ QTabWidget */
 QTabWidget#Modified > QTabBar::tab:top, QTabWidget#Modified > QTabBar::tab:bottom {
