@@ -144,7 +144,7 @@ public:
 
     int calculateDamage(int player, int target);
     void applyMoveStatMods(int player, int target);
-    bool testAccuracy(int player, int target);
+    bool testAccuracy(int player, int target, bool silent = false);
     void testCritical(int player, int target);
     void testFlinch(int player, int target);
     bool testStatus(int player);
@@ -222,7 +222,8 @@ public:
         ClockStart,
         ClockStop,
         Rated,
-        TierSection
+        TierSection,
+        EndMessage
     };
 
     enum ChangeTempPoke {
@@ -371,12 +372,12 @@ public:
     /* Moves that affect a team */
     context teamzone[2];
 
+    /* The choice of a player, accessed by move ENCORE */
+    BattleChoice choice[2];
+
     /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
     // Public because used by Yawn
     int currentForcedSleepPoke[2];
-
-    /* The choice of a player, public because can be changed by Encore */
-    BattleChoice choice[2];
 
     QHash<int,int> spectators;
 

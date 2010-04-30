@@ -1064,6 +1064,7 @@ void Client::openTeamBuilder()
     myteambuilder->resize(t->size());
     myteambuilder->setCentralWidget(t);
     myteambuilder->show();
+    myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder->setMenuBar(t->createMenuBar((MainEngine*)parent()));
 
     connect(this, SIGNAL(destroyed()), myteambuilder, SLOT(close()));

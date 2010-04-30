@@ -1922,6 +1922,10 @@ struct MMEncore : public MM
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
+        if (poke(b,t).contains("NoChoice")) {
+            turn(b,s)["Failed"] = true;
+            return;
+        }
 	int move = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
         forbidden_moves.lock();
         bool cont = forbidden_moves.contains(move);
@@ -1951,7 +1955,10 @@ struct MMEncore : public MM
         //Changes the encored move
         for (int i = 0; i < 4; i ++) {
             if (b.move(t, i) == move) {
-                b.choice[i].numSwitch = i;
+                MoveEffect::unsetup(turn(b,t)["Attack"].toInt(), t, b);
+                b.choice[t].numSwitch = i;
+                turn(b,t)["Encored"] = true;
+                MoveEffect::setup(move, t, s, b);
                 break;
             }
         }
@@ -2134,8 +2141,8 @@ struct MMGravity : public MM
                 poke(b,p)["Invulnerable"] = false;
                 b.changeSprite(p, 0);
                 b.sendMoveMessage(53,3, p, Type::Psychic, s, poke(b,p)["2TurnMove"].toInt());
-                addFunction(turn(b,p), "MovePossible", "Gravity", &mp);
             }
+            addFunction(turn(b,p), "MovePossible", "Gravity", &mp);
         }
 	addFunction(b.battlelong, "EndTurn", "Gravity", &et);
         addFunction(b.battlelong, "MovesPossible", "Gravity", &msp);
@@ -2252,7 +2259,7 @@ struct MMBoostSwap : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-	QStringList args = poke(b,s)["BoostSwap_Arg"].toString().split('_');
+        QStringList args = turn(b,s)["BoostSwap_Arg"].toString().split('_');
 	foreach(QString str, args) {
 	    std::swap(poke(b,s)["Boost"+str], poke(b,t)["Boost"+str]);
 	}
@@ -3723,9 +3730,9 @@ struct MMTripleKick : public MM {
 
     static void bh(int s, int t, BS &b) {
         int count = 1;
-        if (b.testAccuracy(s, t)) {
+        if (b.testAccuracy(s, t, true)) {
             count += 1;
-            if (b.testAccuracy(s, t)) {
+            if (b.testAccuracy(s, t), true) {
                 count += 1;
             }
         }
@@ -3769,7 +3776,12 @@ struct MMYawn : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.poke(t).status() != Pokemon::Fine || team(b,t).value("SafeGuardCount").toInt() > 0 || b.currentForcedSleepPoke[t] != -1) {
+        if (b.poke(t).status() != Pokemon::Fine || team(b,t).value("SafeGuardCount").toInt() > 0) {
+            turn(b,s)["Failed"] = true;
+            return;
+        }
+        if (b.currentForcedSleepPoke[t] != -1) {
+            b.notifyClause(ChallengeInfo::SleepClause, true);
             turn(b,s)["Failed"] = true;
         }
     }

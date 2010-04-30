@@ -462,7 +462,7 @@ void TB_TrainerBody::changeTrainerColor()
     QColor c = QColorDialog::getColor(s.value("trainer_color").value<QColor>().name());
 
     s.setValue("trainer_color", c);
-    if (c.name() != "#000000" && c.lightness() <= 120)
+    if (c.name() != "#000000" && c.lightness() <= 140 && c.green() <= 180)
         m_colorButton->setStyleSheet(QString("background: %1; color: white").arg(c.name()));
     else {
         s.setValue("trainer_color", "");
