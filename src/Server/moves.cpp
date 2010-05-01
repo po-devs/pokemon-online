@@ -712,12 +712,12 @@ struct MMTrumpCard : public MM
 	int n = b.poke(s).move(poke(b,s)["MoveSlot"].toInt()).PP();
 	int mult;
 	switch(n) {
-	    case 0: mult = 200; break;
-	    case 1: mult = 80; break;
-	    case 2: mult = 60; break;
-	    case 3: mult = 50; break;
-	    default: mult = 40;
-	}
+ case 0: mult = 200; break;
+ case 1: mult = 80; break;
+ case 2: mult = 60; break;
+ case 3: mult = 50; break;
+ default: mult = 40;
+ }
 	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * mult;
     }
 };
@@ -731,7 +731,7 @@ struct MMFrustration : public MM
     static void bcd(int s, int, BS &b) {
         turn(b,s)["Power"] = turn(b,s)["Power"].toInt() *
                              std::max((move(b,s) == Move::Frustration ? (255-b.poke(s).happiness()) : b.poke(s).happiness()) * 2
-                             / 5, 2);
+                                      / 5, 2);
     }
 };
 
@@ -1138,10 +1138,10 @@ struct MMToxicSpikes : public MM
         }
         int spikeslevel = team(b,s).value("ToxicSpikes").toInt();
 	switch (spikeslevel) {
-	    case 0: return;
-            case 1: b.inflictStatus(s, Pokemon::Poisoned, s); break;
-            default: b.inflictStatus(s, Pokemon::DeeplyPoisoned, s); break;
-	}
+ case 0: return;
+ case 1: b.inflictStatus(s, Pokemon::Poisoned, s); break;
+ default: b.inflictStatus(s, Pokemon::DeeplyPoisoned, s); break;
+ }
     }
 };
 
@@ -1358,7 +1358,7 @@ struct MMCovet : public MM
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
             && !b.hasWorkingAbility(t, Ability::Multitype) && b.poke(s).item() == 0
                     && b.pokenum(t) != Pokemon::Giratina_O) /* Sticky Hold, MultiType, Giratina_O */
-	{
+            {
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
 	    b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
@@ -1377,7 +1377,7 @@ struct MMSwitcheroo : public MM
         if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
             || b.hasWorkingAbility(t, Ability::Multitype) || b.pokenum(s) == Pokemon::Giratina_O || b.pokenum(t) == Pokemon::Giratina_O )
             /* Sticky Hold, MultiType, Giratina-O */
-	{
+            {
 	    turn(b,s)["Failed"] = true;
 	}
         if (b.battlelong.value(QString("KnockedOff%1%2").arg(t).arg(b.currentPoke(t))).toBool() || b.battlelong.value(QString("KnockedOff%1%2").arg(s).arg(b.currentPoke(s))).toBool()) {
@@ -2511,17 +2511,17 @@ struct MMFling : public MM
     static void uas (int s, int t, BS &b) {
 	int item = turn(b,s)["FlingItem"].toInt();
 	switch (item) {
-            case Item::FlameOrb: b.inflictStatus(t, Pokemon::Burnt, s); break; /*flame orb*/
-            case Item::ToxicOrb: b.inflictStatus(t, Pokemon::DeeplyPoisoned, s); break; /*toxic orb*/
-            case Item::KingsRock: case Item::RazorFang: turn(b,t)["Flinched"] = true; break; /* king rock, razor fang */
+ case Item::FlameOrb: b.inflictStatus(t, Pokemon::Burnt, s); break; /*flame orb*/
+ case Item::ToxicOrb: b.inflictStatus(t, Pokemon::DeeplyPoisoned, s); break; /*toxic orb*/
+ case Item::KingsRock: case Item::RazorFang: turn(b,t)["Flinched"] = true; break; /* king rock, razor fang */
             case Item::LightBall: b.inflictStatus(t, Pokemon::Paralysed, s); break; /* light ball */
             case Item::PoisonBarb: b.inflictStatus(t, Pokemon::Poisoned, s); break; /* poison barb */
             case Item::WhiteHerb: case Item::MentalHerb: /* mental herb, white herb */
-		int oppitem = b.poke(t).item();
+                        int oppitem = b.poke(t).item();
 		ItemEffect::activate("AfterSetup", item, t,s,b);
 		b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
 		break;
-	}
+            }
     }
 };
 
@@ -2895,14 +2895,14 @@ struct MMMagnitude: public MM
 	int pow, magn;
 
 	switch (randnum) {
-	    case 0: magn = 4; pow = 10; break;
-	    case 1: case 2: magn = 5; pow = 30; break;
-	    case 3: case 4: case 5: case 6: magn = 6; pow = 50; break;
-	    case 7: case 8: case 9: case 10: case 11: case 12: magn = 7; pow = 70; break;
-	    case 13: case 14: case 15: case 16: magn = 8; pow = 90; break;
-	    case 17: case 18: magn = 9; pow = 110; break;
-	    case 19: default: magn = 10; pow = 150; break;
-	}
+ case 0: magn = 4; pow = 10; break;
+ case 1: case 2: magn = 5; pow = 30; break;
+ case 3: case 4: case 5: case 6: magn = 6; pow = 50; break;
+ case 7: case 8: case 9: case 10: case 11: case 12: magn = 7; pow = 70; break;
+ case 13: case 14: case 15: case 16: magn = 8; pow = 90; break;
+ case 17: case 18: magn = 9; pow = 110; break;
+ case 19: default: magn = 10; pow = 150; break;
+ }
 
 	turn(b,s)["MagnitudeLevel"] = magn;
 	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * pow;
@@ -3269,20 +3269,26 @@ struct MMPunishment : public MM
 struct MMRage : public MM
 {
     MMRage() {
+        functions["BeforeCalculatingDamage"] = &bcd;
 	functions["UponAttackSuccessful"] = &uas;
     }
 
+    static void bcd(int s, int, BS &b) {
+        if (poke(b,s)["LastMoveUsed"] != Move::Rage) {
+            poke(b,s)["RageCount"] = 0;
+        }
+        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * (1 + poke(b,s)["RageCount"].toInt());
+    }
+
     static void uas(int s, int, BS &b) {
-	poke(b,s)["RageTurn"] = b.turn();
-	addFunction(poke(b,s), "UponOffensiveDamageReceived", "Rage", &uodr);
+        addFunction(poke(b,s), "UponOffensiveDamageReceived", "Rage", &uodr);
     }
 
     static void uodr(int s, int, BS &b) {
-	int tt = poke(b,s)["RageTurn"].toInt();
-
-	if (!b.koed(s) && (tt = b.turn() || (tt +1 == b.turn() && !turn(b,s).value("HasMoved").toBool()))) {
-	    b.gainStatMod(s,Attack,1);
-	}
+        if (!b.koed(s) && poke(b,s)["LastMoveUsed"] == Move::Rage) {
+            inc(poke(b,s)["RageCount"], 1);
+            b.sendMoveMessage(102, 0, s);
+        }
     }
 };
 
@@ -3556,7 +3562,7 @@ struct MMSolarBeam : public MM
     static void ts (int s, int, BS &b) {
 	int count = poke(b,s).value("BeamChargingCount").toInt();
 	if (count > 0 &&
-		poke(b,s).value("ReleaseTurn").toInt() == b.turn() + count -1)
+            poke(b,s).value("ReleaseTurn").toInt() == b.turn() + count -1)
 	{
 	    turn(b,s)["NoChoice"] = true;
             MoveEffect::setup(SolarBeam,s,b.rev(s),b);
@@ -3805,12 +3811,12 @@ struct MMYawn : public MM {
         inc(poke(b,s)["YawnCount"], -1);
         int count = poke(b,s)["YawnCount"].toInt();
         if (count > 0) {
-            b.sendMoveMessage(144,1,s);
+
         } else {
             b.inflictStatus(s, Pokemon::Asleep, s);
             if (b.sleepClause()) {
-            b.currentForcedSleepPoke[s] = b.currentPoke(s);
-        }
+                b.currentForcedSleepPoke[s] = b.currentPoke(s);
+            }
             removeFunction(poke(b,s),"EndTurn", "Yawn");
             poke(b,s).remove("YawnCount");
         }
@@ -4287,6 +4293,35 @@ struct MMPayback : public MM
     }
 };
 
+struct MMAcupressure : public MM
+{
+    MMAcupressure() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        for (int i = Attack; i <= Accuracy; i++) {
+            if (poke(b,s)[QString("Boost%1").arg(i)].toInt() < 6) {
+                return;
+            }
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas(int s, int, BS &b) {
+        QVector<int> stats;
+        for (int i = Attack; i <= Accuracy; i++) {
+            if (poke(b,s)[QString("Boost%1").arg(i)].toInt() < 6) {
+                stats.push_back(i);
+            }
+        }
+        if (stats.empty())
+            return;
+        b.gainStatMod(s, stats[b.true_rand()%stats.size()], 2);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -4439,7 +4474,7 @@ void MoveEffect::init()
     REGISTER_MOVE(117, SmellingSalt);
     REGISTER_MOVE(118, Snatch);
     REGISTER_MOVE(119, SolarBeam);
-    //Free move
+    REGISTER_MOVE(120, Acupressure);
     REGISTER_MOVE(121, Spikes);
     REGISTER_MOVE(122, SpitUp);
     REGISTER_MOVE(123, Spite);

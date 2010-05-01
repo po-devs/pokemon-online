@@ -1,0 +1,31 @@
+(Inget föremål)
+
+
+
+%s stod ut tack vare sin focus band!
+%s stod ut tack vare sin focus sash!
+
+%s blev fullt laddad med hjälp av sin power herb!
+
+
+
+%s använde sin power herb för att attackera omedelbart!
+%s återställde lite HP med Leftovers!
+
+
+
+%s återställde lite HP med Black Sludge!|%s skadades av Black Sludge!
+
+%s återställde lite HP med sin Berry Juice!
+%s's Flame Orb aktiverad!|%s's Toxic Orb aktiverad!
+
+%s skadas av sin Life Orb!
+
+
+%ss shell bell återställde dess HP lite grann!
+
+
+
+
+%s skadas av sin Sticky Barb!|%s skadas av %fs sticky Barb!|The Sticky Barb är nu fäst vid %s!
+

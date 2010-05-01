@@ -945,7 +945,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
 
     //OHKO
     if (MoveInfo::isOHKO(turnlong[player]["MoveChosen"].toInt())) {
-        bool ret = (true_rand() % 100) < 30;
+        bool ret = (true_rand() % 100) < 30 + poke(player).level() - poke(target).level();
         if (!ret && !silent) {
             notify(All, Miss, player);
         }
@@ -1202,8 +1202,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	callieffects(player,player, "RegMoveSettings");
     }
 
-    pokelong[player]["LastMoveUsed"] = attack;
-
     calleffects(player, player, "MoveSettings");
 
     if (tellPlayers && !turnlong[player].contains("TellPlayers")) {
@@ -1382,6 +1380,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     callieffects(player, player, "AfterTargetList");
     end:
     pokelong[player]["HasMovedOnce"] = true;
+    pokelong[player]["LastMoveUsed"] = attack;
 
     attacker() = -1;
     attacked() = -1;
