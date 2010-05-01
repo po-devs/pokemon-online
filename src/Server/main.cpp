@@ -1,6 +1,7 @@
 #include <QtGui/QApplication>
 #include "mainwindow.h"
 #include <cstdio>
+#include "../Utilities/mtrand.h"
 
 void myMessageOutput(QtMsgType type, const char *msg)
 {

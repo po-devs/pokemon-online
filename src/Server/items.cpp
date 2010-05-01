@@ -119,7 +119,7 @@ struct IMFocusBand : public IM
     }
 
     static void btd(int s, int t, BS &b) {
-        if (true_rand() % 10 == 0) {
+        if (b.true_rand() % 10 == 0) {
 	    turn(b,s)["CannotBeKoedBy"] = t;
 	}
     }
@@ -398,7 +398,7 @@ struct IMQuickClaw : public IM
 	functions["TurnOrder"] = &tu;
     }
     static void tu(int s, int, BS &b) {
-        if (true_rand() % 5 == 0) {
+        if (b.true_rand() % 5 == 0) {
 	    turn(b,s)["TurnOrder"] = 2;
 	}
     }

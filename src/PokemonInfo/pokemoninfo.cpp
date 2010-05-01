@@ -271,6 +271,17 @@ QString PokemonInfo::Desc(int poke, int cartridge)
     return get_line(trFile(path("description_%1").arg(cartridge)), orpoke);
 }
 
+QString PokemonInfo::Classification(int poke)
+{
+    int orpoke = OriginalForm(poke);
+    return get_line(trFile(path("classification")), orpoke);
+}
+
+QString PokemonInfo::Height(int poke)
+{
+    return get_line(path("height.txt"), poke);
+}
+
 int PokemonInfo::Type1(int pokenum)
 {
     return m_Type1[pokenum];

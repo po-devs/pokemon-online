@@ -68,6 +68,7 @@ public:
     static int Number(const QString &pokename);
     static int LevelBalance(int pokenum);
     static QString WeightS(int pokenum);
+    static QString Classification(int pokenum);
     static float Weight(int pokenum);
     static int Gender(int pokenum);
     static int BaseGender(int pokenum);
@@ -107,6 +108,7 @@ public:
     static int Stat(int poke, int stat, int level, quint8 dv, quint8 ev);
     static int FullStat(int poke, int nature, int stat, int level, quint8 dv, quint8 ev);
     static QString Desc(int poke, int cartridge);
+    static QString Height(int poke);
 };
 
 class MoveInfo

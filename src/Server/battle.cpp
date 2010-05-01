@@ -9,7 +9,7 @@
 #include <algorithm>
 
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id)
-        :team1(p1.team()), team2(p2.team())
+        :team1(p1.team()), team2(p2.team()), true_rand(time(NULL))
 {
     publicId() = id;
     timer = NULL;
@@ -1643,7 +1643,7 @@ void BattleSituation::inflictConfused(int player, bool tell)
     //OwnTempo
     if (!pokelong[player]["Confused"].toBool() && !hasWorkingAbility(player,Ability::OwnTempo)) {
 	pokelong[player]["Confused"] = true;
-        pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 1;
+        pokelong[player]["ConfusedCount"] = (int(true_rand()) % 4) + 1;
         if (tell)
             notify(All, StatusChange, player, qint8(-1));
 

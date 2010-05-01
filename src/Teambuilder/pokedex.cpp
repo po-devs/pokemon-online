@@ -190,9 +190,9 @@ void BigOpenPokeBall::update()
     int n = currentPoke;
     num->setText(QString("%1").arg(n));
     name->setText(PokemonInfo::Name(n));
-    specy->setText("Pokemon Specy");
-    height->setText("Height");
-    weight->setText(tr("<b>Wt:</b> %1 lbs.").arg(PokemonInfo::WeightS(n)));
+    specy->setText(PokemonInfo::Classification(n));
+    height->setText(tr("<b>Ht:</b> %1").arg(PokemonInfo::Height(n)));
+    weight->setText(tr("<b>Wt:</b> %1 lbs").arg(PokemonInfo::WeightS(n)));
     type1->setPixmap(TypeInfo::Picture(PokemonInfo::Type1(n)));
     int t2 = PokemonInfo::Type2(n);
     if (t2 != Type::Curse) {
@@ -307,7 +307,9 @@ PokedexBody::PokedexBody()
     col1->setSpacing(2);
     col1->setMargin(5);
     hl->addLayout(col1);
-    col1->addWidget(new QPushButton(QIcon("db/Teambuilder/PokeDex/advsrchicon.png"), tr("&Advanced Search")));
+    QPushButton *advSearch;
+    col1->addWidget(advSearch = new QPushButton(QIcon("db/Teambuilder/PokeDex/advsrchicon.png"), tr("&Advanced Search")));
+    advSearch->setDisabled(true);
     col1->addWidget(pokeEdit = new QLineEdit());
     pokeList = new TB_PokeChoice(false);
     pokeList->verticalHeader()->setDefaultSectionSize(30);

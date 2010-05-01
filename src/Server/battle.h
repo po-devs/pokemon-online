@@ -3,6 +3,7 @@
 
 #include <QtCore>
 #include "../PokemonInfo/battlestructs.h"
+#include "../Utilities/mtrand.h"
 
 class Player;
 
@@ -378,6 +379,9 @@ public:
     /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
     // Public because used by Yawn
     int currentForcedSleepPoke[2];
+
+    /* Generator of random numbers */
+    MTRand_int32 true_rand;
 
     QHash<int,int> spectators;
 
