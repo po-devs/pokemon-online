@@ -563,7 +563,7 @@ struct MMEruption : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        turn(b,s)["Power"] = std::max(1, turn(b,s)["Power"].toInt()*150*b.poke(s).lifePoints()/b.poke(s).totalLifePoints());
+        turn(b,s)["Power"] = std::max(10, turn(b,s)["Power"].toInt()*150*b.poke(s).lifePoints()/b.poke(s).totalLifePoints());
     }
 };
 
@@ -729,8 +729,9 @@ struct MMFrustration : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * std::max((move(b,s) == Move::Frustration ? (255-b.poke(s).happiness()) : b.poke(s).happiness()) * 2
-                             / 5, 1);
+        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() *
+                             std::max((move(b,s) == Move::Frustration ? (255-b.poke(s).happiness()) : b.poke(s).happiness()) * 2
+                             / 5, 2);
     }
 };
 

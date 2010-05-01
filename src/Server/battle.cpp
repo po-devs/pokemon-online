@@ -973,7 +973,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
             * (20+turnlong[player]["Stat7AbilityModifier"].toInt())/20
             * (20-turnlong[target]["Stat6AbilityModifier"].toInt())/20;
 
-    if (true_rand() % 100 < acc) {
+    if (true_rand() % 100 < unsigned(acc)) {
 	return true;
     } else {
         if (!silent)
@@ -1644,7 +1644,7 @@ void BattleSituation::inflictConfused(int player, bool tell)
     //OwnTempo
     if (!pokelong[player]["Confused"].toBool() && !hasWorkingAbility(player,Ability::OwnTempo)) {
 	pokelong[player]["Confused"] = true;
-        pokelong[player]["ConfusedCount"] = (int(true_rand()) % 4) + 1;
+        pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 1;
         if (tell)
             notify(All, StatusChange, player, qint8(-1));
 
