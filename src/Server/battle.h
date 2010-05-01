@@ -381,7 +381,10 @@ public:
     int currentForcedSleepPoke[2];
 
     /* Generator of random numbers */
-    MTRand_int32 true_rand;
+    MTRand_int32 true_rand2;
+    int true_rand() {
+        return ::true_rand();
+    }
 
     QHash<int,int> spectators;
 
