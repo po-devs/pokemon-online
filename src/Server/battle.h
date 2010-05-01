@@ -382,8 +382,8 @@ public:
 
     /* Generator of random numbers */
     MTRand_int32 true_rand2;
-    int true_rand() {
-        return ::true_rand();
+    unsigned true_rand() {
+        return unsigned(true_rand2());
     }
 
     QHash<int,int> spectators;

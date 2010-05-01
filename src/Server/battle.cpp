@@ -11,7 +11,7 @@
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id)
         :team1(p1.team()), team2(p2.team())
 {
-
+    true_rand2.seed(time(NULL));
     publicId() = id;
     timer = NULL;
     myid[0] = p1.id();
