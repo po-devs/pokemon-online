@@ -189,7 +189,7 @@ struct AMCuteCharm : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if (!b.koed(t) && b.isSeductionPossible(s,t) && true_rand() % 100 < 30 && !poke(b,t).contains("AttractedTo")) {
+        if (!b.koed(t) && b.isSeductionPossible(s,t) && b.true_rand() % 100 < 30 && !poke(b,t).contains("AttractedTo")) {
             poke(b,t)["AttractedTo"] = s;
             poke(b,s)["Attracted"] = t;
             addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
@@ -287,13 +287,13 @@ struct AMEffectSpore : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if (b.poke(t).status() == Pokemon::Fine && true_rand() % 100 < 30) {
-            if (true_rand() % 3 == 0) {
+        if (b.poke(t).status() == Pokemon::Fine && b.true_rand() % 100 < 30) {
+            if (b.true_rand() % 3 == 0) {
                 if (b.canGetStatus(t,Pokemon::Asleep)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Grass);
                     b.inflictStatus(t, Pokemon::Asleep,s);
                 }
-            } else if (true_rand() % 1 == 0) {
+            } else if (b.true_rand() % 1 == 0) {
                 if (b.canGetStatus(t,Pokemon::Paralysed)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Electric);
                     b.inflictStatus(t, Pokemon::Paralysed,s);
@@ -793,7 +793,7 @@ struct AMShedSkin : public AM {
     static void et(int s, int, BS &b) {
         if (b.koed(s))
             return;
-        if (true_rand() % 100 < 30 && b.poke(s).status() != Pokemon::Fine) {
+        if (b.true_rand() % 100 < 30 && b.poke(s).status() != Pokemon::Fine) {
             b.sendAbMessage(54,0,s,s,Pokemon::Bug);
             b.healStatus(s, b.poke(s).status());
         }

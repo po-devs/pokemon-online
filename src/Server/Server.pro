@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     scriptengine.cpp \
     challenge.cpp \
     ../PokemonInfo/movesetchecker.cpp \
-    tier.cpp
+    tier.cpp \
+    ../Utilities/mtrand.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -62,7 +63,8 @@ HEADERS += mainwindow.h \
     ../Shared/config.h \
     tier.h \
     ../Utilities/rankingtree.h \
-    ../Utilities/rankingtree.h
+    ../Utilities/rankingtree.h \
+    ../Utilities/mtrand.h
 DEFINES = MULTI_THREADED_ACCESS \
     SERVER_SIDE
 RESOURCES += 
