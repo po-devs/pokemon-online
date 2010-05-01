@@ -93,7 +93,10 @@ void BaseBattleWindow::init()
     QStringList files;
     files = directory.entryList(QStringList("*"), QDir::Files | QDir::NoSymLinks);
 
-    QString file = s.value("battle_music_directory").toString() + files[rand() % files.size()];
+    QString file;
+    if (files.size() != 0)
+        file = s.value("battle_music_directory").toString() + files[rand() % files.size()];
+
     music->setCurrentSource(file);
 
     if (s.value("play_battle_music").toBool())
@@ -170,8 +173,16 @@ void BaseBattleWindow::clickClose()
 
 void BaseBattleWindow::restartMusic()
 {
-    music->seek(0);
-    music->play();
+    QSettings s;
+    QDir directory = QDir(s.value("battle_music_directory").toString());
+    QStringList files;
+    files = directory.entryList(QStringList("*"), QDir::Files | QDir::NoSymLinks);
+
+    QString file;
+    if (files.size() != 0)
+        file = s.value("battle_music_directory").toString() + files[rand() % files.size()];
+
+    music->enqueue(file);
 }
 
 void BaseBattleWindow::sendMessage()
