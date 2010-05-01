@@ -1,0 +1,91 @@
+
+
+%ss Aftermath skadar %f!
+%s är extremt förbannad!
+%ss Anticipation gör den skakis!
+
+%f har dåliga drömmar!
+
+
+%ss Color Change ändrade dess element till %t!
+
+%ss Cute Charm förblindade %f!
+%ss Download aktiveras!
+
+%ss Snow Warning orsakade hagel!|%ss Drizzle orsakade regnväder!|%ss Sandstream orsakade en sandstorm!|%ss Drought stärkte solens strålar!
+%s återställde HP genom sin Dry Skin!|%ss Dry Skin skadade den!
+%ss Effect Spore aktiveras!
+
+%ss %a aktiveras!
+%ss ökade sin eldstyrka!
+
+%s ändrade dess element till %t!
+%ss Forewarn förvarnar den om %m!
+%s vet att motståndaren håller %i med hjälp av Frisk!
+%ss Shield Dust blockerade de sekundära effekterna!
+
+
+
+
+%ss Hydration återställer dess status!
+%ss %a hindrar sina stats från att bli dämpade!
+%ss %a hindrar sina stats från att bli dämpade!
+%ss %a helar det!
+%ss %a botar det!
+%s skrämmer %f!|%fs Substitut blockerar intimidate!
+
+
+%ss Leaf Guard skyddar den från motståndarens försök till statusförändring!
+
+
+%s har Mold Breaker!
+%ss Motor Drive ökar dess speed!
+
+
+%ss Own Tempo botar dess förvirring!
+%s läker med sin Poison Heal!
+%s utövar sin Pressure!
+
+
+
+%ss Rough Skin skadar %f
+
+
+
+%ss Shed Skin botar dess status!
+%s startar med halv styrka!|%ss Slow Start slutade! Den är på full styrka!
+%s skadas av solen!
+%ss Sound Proof blockerar attacken!
+%ss Speed Boost ökar dess speed!
+
+%ss SteadFast ökar dess speed!
+%ss Synchronize ändrar statusen hos %f!
+
+
+
+
+%s spårade %fs %a!
+%s vilar helt oengagerad!
+
+
+%ss %a absorberar attacken!
+%ss Wonder Guard undviker attacken!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

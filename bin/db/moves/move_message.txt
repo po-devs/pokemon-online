@@ -100,7 +100,7 @@ All Pokémon hearing the song will faint in three turns!|%s's perish count fell t
 
 
 
-
+%s's rage builds up!
 %s got free of %f's %m!|%s blew away Leech Seed!|%s blew away Spikes!|%s blew away Toxic Spikes!|%s blew away Stealth Rock!
 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s lowered its head!
 %s recycled %i!
@@ -137,12 +137,12 @@ A tailwind started blowing behind %ts's team!|%ts's team tailwind petered out!
 Poison spikes were scattered all around the feet of %tf's team!|The poison spikes disappeared around %s's feet!
 %s transformed into %p!
 %s twisted the dimensions!|The twisted dimensions returned to normal!
-Hit!
+
 
 %s caused an uproar!|%s is making an uproar!|%s calmed down!|%s woke up!|%s stays awake because of the uproar!
 %q's wish came true!
 %f now has insomnia!
-%s made %f feels drowsy!|%s yawns!
+%s made %f feel drowsy!|%s yawns!
 
 
 
