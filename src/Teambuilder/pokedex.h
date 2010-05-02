@@ -9,6 +9,7 @@ class GridBox;
 class QImageButtonLR;
 class QCompactTable;
 class TypeChart;
+class AdvancedSearch;
 
 class Pokedex : public QWidget
 {
@@ -64,6 +65,7 @@ public:
 public slots:
     void sortByColumn(int col);
     void changeToPokemonFromExt(int poke);
+    void openAdvancedSearch();
 private slots:
     void changeToPokemon(const QString &);
     void changePokemon();
@@ -74,6 +76,7 @@ private:
     int currentPoke;
     TB_PokeChoice * pokeList;
     QLineEdit *pokeEdit;
+    QPointer<AdvancedSearch> aSearch;
 };
 
 class ProfileTab : public QFrame
@@ -168,6 +171,26 @@ class TypeChart : public QWidget
     Q_OBJECT
 public:
     TypeChart(QWidget *parent);
+};
+
+class AdvancedSearch : public QWidget
+{
+    Q_OBJECT
+public:
+    AdvancedSearch();
+signals:
+    void pokeSelected(int);
+private slots:
+    void search();
+    void pokeClicked(QModelIndex);
+private:
+    QCheckBox *typeBoxes[2];
+    QComboBox *typeCb[2];
+    QComboBox *abilityCb;
+    QComboBox *statSymbols[6];
+    QLineEdit *stats[6];
+    QLineEdit *move[4];
+    QListWidget *results;
 };
 
 #endif // POKEDEX_H

@@ -991,6 +991,13 @@ void MoveInfo::loadSpecialEffects()
     }
 }
 
+#ifdef CLIENT_SIDE
+QStringList MoveInfo::MoveList()
+{
+    return m_Names;
+}
+#endif
+
 void ItemInfo::init(const QString &dir)
 {
     /* makes sure it isn't already initialized */
