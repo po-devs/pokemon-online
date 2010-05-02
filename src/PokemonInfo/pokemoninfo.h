@@ -194,6 +194,7 @@ public:
     static int EffectRate(int movenum);
     static int Target(int movenum);
     static QString MoveMessage(int moveeffect, int part);
+    static QStringList MoveList();
 };
 
 class ItemInfo

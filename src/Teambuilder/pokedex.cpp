@@ -309,7 +309,6 @@ PokedexBody::PokedexBody()
     hl->addLayout(col1);
     QPushButton *advSearch;
     col1->addWidget(advSearch = new QPushButton(QIcon("db/Teambuilder/PokeDex/advsrchicon.png"), tr("&Advanced Search")));
-    advSearch->setDisabled(true);
     col1->addWidget(pokeEdit = new QLineEdit());
     pokeList = new TB_PokeChoice(false);
     pokeList->verticalHeader()->setDefaultSectionSize(30);
@@ -323,6 +322,7 @@ PokedexBody::PokedexBody()
     connect(comp, SIGNAL(activated(QString)), this, SLOT(changeToPokemon(QString)));
     connect(pokeEdit, SIGNAL(returnPressed()), SLOT(changePokemon()));
     connect(pokeList, SIGNAL(cellActivated(int,int)), SLOT(changePokemonFromRow(int)));
+    connect(advSearch, SIGNAL(clicked()), SLOT(openAdvancedSearch()));
 
     /* Buttons at the bottom */
     QHBoxLayout *buttons = new QHBoxLayout();
@@ -406,6 +406,20 @@ void PokedexBody::changeToPokemon(int poke)
 void PokedexBody::changePokemonFromRow(int row)
 {
     changeToPokemon(pokeList->item(row, SortByAlph)->text());
+}
+
+void PokedexBody::openAdvancedSearch()
+{
+    if (aSearch) {
+        aSearch->raise();
+        aSearch->activateWindow();
+        return;
+    }
+
+    aSearch = new AdvancedSearch();
+    aSearch->show();
+    connect(aSearch, SIGNAL(pokeSelected(int)), SLOT(changeToPokemonFromExt(int)));
+    connect(this, SIGNAL(destroyed()), aSearch, SLOT(close()));
 }
 
 /****************************************************/
@@ -862,4 +876,166 @@ TypeChart::TypeChart(QWidget *parent) : QWidget(parent)
     }
 
     resize(55* TypeInfo::NumberOfTypes()+10, 24*TypeInfo::NumberOfTypes()-3);
+}
+
+/*****************************************************************
+  ****************** ADVANCED SEARCH *****************************
+  ****************************************************************/
+
+AdvancedSearch::AdvancedSearch()
+{
+    setAttribute(Qt::WA_DeleteOnClose, true);
+
+    QHBoxLayout *hl = new QHBoxLayout(this);
+
+    QVBoxLayout *col1 = new QVBoxLayout();
+    hl->addLayout(col1);
+
+    QGroupBox *types = new QGroupBox(tr("Types"));
+    col1->addWidget(types);
+    QGridLayout *typeL = new QGridLayout(types);
+
+    typeBoxes[0] = new QCheckBox(tr("Type 1"));
+    typeBoxes[1] = new QCheckBox(tr("Type 2"));
+
+    typeCb[0] = new QComboBox();
+    typeCb[1] = new QComboBox();
+
+    for (int i = 0; i < TypeInfo::NumberOfTypes() - 1; i++) {
+        typeCb[0]->addItem(TypeInfo::Name(i));
+        typeCb[1]->addItem(TypeInfo::Name(i));
+    }
+
+    typeL->addWidget(typeBoxes[0], 0, 0);
+    typeL->addWidget(typeBoxes[1], 1, 0);
+    typeL->addWidget(typeCb[0], 0, 1);
+    typeL->addWidget(typeCb[1], 1, 1);
+
+    QGroupBox *abilities = new QGroupBox(tr("Ability"));
+    QVBoxLayout *v = new QVBoxLayout(abilities);
+
+    abilityCb = new QComboBox();
+    v->addWidget(abilityCb);
+    for (int i =0; i < AbilityInfo::NumberOfAbilities(); i++) {
+        abilityCb->addItem(AbilityInfo::Name(i));
+    }
+    col1->addWidget(abilities);
+
+    QGroupBox *statB = new QGroupBox(tr("Base Stats"));
+    QGridLayout *gl = new QGridLayout(statB);
+    for (int i = 0; i < 6; i++) {
+        gl->addWidget(new QLabel(StatInfo::Stat(i)), i, 0);
+        statSymbols[i] = new QComboBox();
+        statSymbols[i]->addItem(tr(" "));
+        statSymbols[i]->addItem(tr(">="));
+        statSymbols[i]->addItem(tr("="));
+        statSymbols[i]->addItem(tr("<="));
+        gl->addWidget(statSymbols[i], i, 1);
+        stats[i] = new QLineEdit();
+        gl->addWidget(stats[i], i, 2);
+    }
+    col1->addWidget(statB);
+
+    QVBoxLayout *col2 = new QVBoxLayout();
+    hl->addLayout(col2);
+
+    QGroupBox *moves = new QGroupBox(tr("Moves"));
+
+    QGridLayout *moveL = new QGridLayout (moves);
+    QCompleter *p = new QCompleter(MoveInfo::MoveList(), this);
+
+    for (int i =0 ; i < 4; i++) {
+        move[i] = new QLineEdit();
+        move[i]->setCompleter(p);
+        moveL->addWidget(move[i], i/2, i%2);
+    }
+
+    col2->addWidget(moves);
+    QPushButton *search;
+    col2->addWidget(search = new QPushButton(tr("&Search !")));
+    connect(search, SIGNAL(clicked()), SLOT(search()));
+
+    QGroupBox *results = new QGroupBox(tr("&Results"));
+    this->results = new QListWidget();
+    QVBoxLayout *vv = new QVBoxLayout(results);
+    vv->addWidget(this->results);
+    col2->addWidget(results);
+
+    connect(this->results, SIGNAL(activated(QModelIndex)), SLOT(pokeClicked(QModelIndex)));
+}
+
+void AdvancedSearch::pokeClicked(QModelIndex i)
+{
+    emit pokeSelected(PokemonInfo::Number(results->item(i.row())->text()));
+}
+
+void AdvancedSearch::search()
+{
+    QVector<int> types;
+    QSet<int> moves;
+    int ability;
+    QVector<QPair<int,int> > equalStats;
+    QVector<QPair<int,int> >  minStats;
+    QVector<QPair<int,int> >  maxStats;
+
+    if (typeBoxes[0]->isChecked()) {
+        types.push_back(typeCb[0]->currentIndex());
+    }
+    if (typeBoxes[1]->isChecked()) {
+        types.push_back(typeCb[1]->currentIndex());
+    }
+    ability = abilityCb->currentIndex();
+    for(int i = 0; i < 4; i++) {
+        moves.insert(MoveInfo::Number(move[i]->text()));
+    }
+    moves.remove(0);
+
+    for (int i = 0; i < 6; i++) {
+        if (statSymbols[i]->currentIndex() == 1) {
+            minStats.push_back(QPair<int, int> (i,stats[i]->text().toInt()));
+        } else if (statSymbols[i]->currentIndex() == 2) {
+            equalStats.push_back(QPair<int, int> (i,stats[i]->text().toInt()));
+        } else if (statSymbols[i]->currentIndex() == 3) {
+            maxStats.push_back(QPair<int, int> (i,stats[i]->text().toInt()));
+        }
+    }
+
+    QSet<int> resultingList;
+
+    for (int i = 1; i < PokemonInfo::NumberOfPokemons(); i++) {
+        if (moves.size() > 0 && !PokemonInfo::Moves(i).contains(moves)) {
+            continue;
+        }
+        for (int j = 0; j < types.size(); j++) {
+            if (PokemonInfo::Type1(i) != types[j] && PokemonInfo::Type2(i) != types[j])
+                goto loopend;
+        }
+        if (ability != 0 && !PokemonInfo::Abilities(i).contains(ability))
+            goto loopend;
+        {
+            PokeBaseStats b = PokemonInfo::BaseStats(i);
+            for (int j = 0; j < equalStats.size(); j++) {
+                if (b.baseStat(equalStats[j].first) != equalStats[j].second)
+                    goto loopend;
+            }
+            for (int j = 0; j < minStats.size(); j++) {
+                if (b.baseStat(minStats[j].first) < minStats[j].second)
+                    goto loopend;
+            }
+            for (int j = 0; j < maxStats.size(); j++) {
+                if (b.baseStat(maxStats[j].first) > maxStats[j].second)
+                    goto loopend;
+            }
+        }
+
+        resultingList.insert(i);
+        loopend:
+        ;
+    }
+
+    results->clear();
+    foreach(int poke, resultingList) {
+        results->addItem(PokemonInfo::Name(poke));
+    }
+    results->sortItems(Qt::AscendingOrder);
 }

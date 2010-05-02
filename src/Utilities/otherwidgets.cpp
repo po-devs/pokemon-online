@@ -69,6 +69,8 @@ void QImageButton::changePics(const QString &normal, const QString &hovered, con
     if (checked != "")
         myCheckedPic = QPixmap(checked);
 
+    setMask(lastState == Checked ? myCheckedPic.mask() : (lastState == Normal ? myPic.mask() : myHoveredPic.mask()));
+
     update();
 }
 
