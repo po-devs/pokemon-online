@@ -1729,6 +1729,8 @@ struct MMTaunt : public MM
 
     static void et(int s, int, BS &b)
     {
+        if (b.koed(s))
+            return;
         int tt = poke(b,s)["TauntsUntil"].toInt();
         if (tt == b.turn()) {
             poke(b,s).remove("TauntsUntil");
@@ -1842,10 +1844,11 @@ struct MMDoomDesire : public MM
     static void ms(int s, int, BS &b) {
 	turn(b,s)["Type"] = Pokemon::Curse;
 	turn(b,s)["Power"] = 1;
+        turn(b,s)["Accuracy"] = 0;
     }
 
     static void daf(int s, int t, BS &b) {
-	if (team(b,t).contains("DoomDesireTurn") && team(b,s)["DoomDesireTurn"].toInt() >= b.turn()) {
+        if (team(b,t).contains("DoomDesireTurn") && team(b,t)["DoomDesireTurn"].toInt() >= b.turn()) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -1857,6 +1860,8 @@ struct MMDoomDesire : public MM
 	team(b,t)["DoomDesireDamage"] = b.calculateDamage(s, t);
 	team(b,t)["DoomDesireTurn"] = b.turn() + 2;
 	team(b,t)["DoomDesireMove"] = move;
+        turn(b,s)["Accuracy"] = MoveInfo::Acc(move);
+        team(b,t)["DoomDesireFailed"] = b.testAccuracy(s,t,true);
 	addFunction(team(b,t), "EndTurn", "DoomDesire", &et);
         b.sendMoveMessage(29, move==DoomDesire?2:1, s, type(b,s));
     }
@@ -1864,10 +1869,14 @@ struct MMDoomDesire : public MM
     static void et (int s, int, BS &b) {
 	if (b.turn() == team(b,s).value("DoomDesireTurn"))
 	{
-	    if (!b.koed(s)) {
+            if (team(b,s)["DoomDesireFailed"].toBool()) {
+                int move = team(b,s)["DoomDesireMove"].toInt();
+                b.sendMoveMessage(29,0,s,MoveInfo::Type(move),s,move);
+                notify(All, Failed, player);
+            } else if (!b.koed(s)) {
 		int move = team(b,s)["DoomDesireMove"].toInt();
 		b.sendMoveMessage(29,0,s,MoveInfo::Type(move),s,move);
-		b.inflictDamage(s,team(b,s)["DoomDesireDamage"].toInt(), s, false); /*false is weird, it's so endure doesn't work */
+                b.inflictDamage(s,team(b,s)["DoomDesireDamage"].toInt(), s, true);
 	    }
 	    removeFunction(team(b,s), "EndTurn", "DoomDesire");
 	}
@@ -3295,7 +3304,13 @@ struct MMRage : public MM
 struct MMSafeGuard : public MM
 {
     MMSafeGuard() {
+        functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (team(b,s).value("SafeGuardCount").toInt() > 0)
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas(int s, int, BS &b) {
@@ -3972,6 +3987,7 @@ struct MMBeatUp : public MM {
                     b.inflictSubDamage(t,damage,t);
                 else
                     b.inflictDamage(t,damage,t,true);
+                turn(b,t)["HadSubstitute"] = turn(b,t)["Substitute"];
             }
             if (b.koed(t))
                 return;

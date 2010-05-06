@@ -710,6 +710,10 @@ void BaseBattleWindow::playCry(int pokenum)
     Phonon::createPath(cry, cryOutput);
 
     cryData = PokemonInfo::Cry(pokenum);
+
+    if (cryData.length() == 0)
+        return;
+
     cryBuffer.setBuffer(&cryData);
     cryBuffer.open(QIODevice::ReadOnly);
 
@@ -717,7 +721,7 @@ void BaseBattleWindow::playCry(int pokenum)
 
     cry->play();
 
-    if (cry->isValid()) {
+    if (cry->totalTime() > 0 && cry->isValid()) {
         delay();
         connect(cry, SIGNAL(finished()), SLOT(undelay()));
     }

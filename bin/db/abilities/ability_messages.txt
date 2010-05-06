@@ -43,7 +43,7 @@
 
 
 %s's Own Tempo cures its confusion!
-%s is healed by its Poison Heal!
+%s restored HP using its Poison Heal!
 %s is exerting its Pressure!
 
 

@@ -1266,6 +1266,8 @@ void TB_PokemonBody::configureMoves()
 
     int i = -1;
 
+    QFont invisible ("Verdana", 0);
+
     foreach (qpair pair, moves)
     {
         i++;
@@ -1273,7 +1275,10 @@ void TB_PokemonBody::configureMoves()
 	QTableWidgetItem *witem;
         int movenum = pair.first;
 	
-        witem = new QTableWidgetItem(QIcon(TypeInfo::Picture(MoveInfo::Type(movenum))), "");
+        /* In order to sort types accurately in the table we give them a number with an invisible font */
+        int type = MoveInfo::Type(movenum);
+        witem = new QTableWidgetItem(QIcon(TypeInfo::Picture(type)), QString("%1").arg(type));
+        witem->setFont(invisible);
 	movechoice->setItem(i, Type, witem);
 
         witem = new QTableWidgetItem(MoveInfo::Name(movenum));

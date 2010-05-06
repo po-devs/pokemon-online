@@ -739,10 +739,18 @@ void MoveTab::changePoke(int poke)
     QSet<int>::iterator it = moveList.begin();
 
 
+    QFont invisible("Verdana", 0);
+
     for (int i = 0; it != moveList.end(); ++it, ++i)
     {
         int move = *it;
-        moves->setItem(i, TypeCol,new QTableWidgetItem(QIcon(TypeInfo::Picture(MoveInfo::Type(move))), ""));
+
+        /* Invisible text used for sorting types */
+        int type = MoveInfo::Type(move);
+        QTableWidgetItem *w = new QTableWidgetItem(QIcon(TypeInfo::Picture(type)), QString::number(type));
+        w->setFont(invisible);
+        moves->setItem(i, TypeCol, w);
+
         moves->setItem(i, NameCol,new QTableWidgetItem(MoveInfo::Name(move)));
         moves->setItem(i, PPCol,new QTableWidgetItem(QString::number(MoveInfo::PP(move))));
         moves->setItem(i, PowerCol,new QTableWidgetItem(MoveInfo::PowerS(move)));

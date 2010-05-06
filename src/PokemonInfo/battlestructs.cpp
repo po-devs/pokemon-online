@@ -368,7 +368,7 @@ void TeamBattle::generateRandom()
             p.gender() = g.genderAvail();
         }
         p.nature() = true_rand()%NatureInfo::NumberOfNatures();
-        p.happiness() = true_rand()% 255;
+
         p.forme() = 0;
         p.level() = PokemonInfo::LevelBalance(p.num());
 
@@ -412,6 +412,11 @@ void TeamBattle::generateRandom()
                 break;
             }
         }
+
+        if (moves.contains(Move::Return))
+            p.happiness() = 255;
+        else if (moves.contains(Move::Frustration))
+            p.happiness() = 0;
 
         //bool itemDone= false;
         //while(itemDone)

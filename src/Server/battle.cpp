@@ -342,13 +342,13 @@ void BattleSituation::endTurn()
 
     callbeffects(Player1,Player1,"EndTurn");
 
+    callaeffects(Player1,Player2,"EndTurn");
+    callaeffects(Player2,Player1,"EndTurn");
+
     if (!koed(Player1))
 	callieffects(Player1, Player1, "EndTurn");
     if (!koed(Player2))
 	callieffects(Player2, Player2, "EndTurn");
-
-    callaeffects(Player1,Player2,"EndTurn");
-    callaeffects(Player2,Player1,"EndTurn");
 
     callpeffects(Player1, Player2, "EndTurn");
     callpeffects(Player2, Player1, "EndTurn");
@@ -1537,7 +1537,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 	}
 
         //Shield Dust
-        if (!self && hasWorkingAbility(targeted, Ability::ShieldDust)) {
+        if (!self && hasWorkingAbility(targeted, Ability::ShieldDust) && turnlong[player]["Power"].toInt() > 0) {
             sendAbMessage(24,0,targeted,0,Pokemon::Bug);
             continue;
         }
@@ -1726,7 +1726,8 @@ void BattleSituation::inflictStatus(int player, int status, int attacker)
             && hasWorkingAbility(player, Ability::Synchronize)) //Synchronize
         {
             sendAbMessage(61,0,player,attacker);
-            inflictStatus(attacker,status, player);
+            // Toxic becomes normal poison upon poisoning
+            inflictStatus(attacker,status == Pokemon::DeeplyPoisoned ? Pokemon::Poisoned : status, player);
         }
     }
 }
@@ -2083,7 +2084,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	int hp  = poke(player).lifePoints() - damage;
 
         if (hp <= 0 && (straightattack && ((turnlong[player].contains("CannotBeKoedBy") && turnlong[player]["CannotBeKoedBy"].toInt() == source)
-                                                                                          || turnlong[player].value("CannotBeKoed").toBool()))) {
+                                            || (turnlong[player].value("CannotBeKoed").toBool() && source != player)))) {
 	    damage = poke(player).lifePoints() - 1;
 	    hp = 1;
 	}
