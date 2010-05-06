@@ -652,6 +652,11 @@ void Player::userInfoAsked(const QString &name)
     UserInfo ret(name, m.isBanned() ? UserInfo::Banned : 0, m.authority(), m.ip.trimmed());
     relay().sendUserInfo(ret);
 
+    if (SecurityManager::maxAuth(m.ip.trimmed()) > auth()) {
+        relay().notify(NetworkServ::GetUserAlias, m.name);
+        return;
+    }
+
     QList<QString> aliases = SecurityManager::membersForIp(m.ip.trimmed());
 
     foreach(QString alias, aliases) {

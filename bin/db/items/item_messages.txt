@@ -1,7 +1,7 @@
 (No Item)
 
 
-
+%s restored its stats using white herb!
 %s hung on thanks to its focus band!
 %s hung on using its focus sash!
 

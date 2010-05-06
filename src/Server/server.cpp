@@ -131,7 +131,7 @@ void Server::connectToRegistry()
     printLine("Connecting to registry...");
 
     QTcpSocket * s = new QTcpSocket(NULL);
-    s->connectToHost("pokeymon.zapto.org", 5082); // default pokeymon.zapto.org , 5081
+    s->connectToHost("pokemon-online.dynalias.net", 5082);
 
     connect(s, SIGNAL(connected()), this, SLOT(regConnected()));
     connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(regConnectionError()));

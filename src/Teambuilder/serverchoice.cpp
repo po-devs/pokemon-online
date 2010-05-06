@@ -7,7 +7,7 @@ ServerChoice::ServerChoice()
     resize(500,450);
 
     registry_connection = new Analyzer(true);
-    registry_connection->connectTo("pokeymon.zapto.org", 5081); // default pokeymon.zapto.org , 5081
+    registry_connection->connectTo("pokemon-online.dynalias.net", 5081);
     registry_connection->setParent(this);
 
     connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
