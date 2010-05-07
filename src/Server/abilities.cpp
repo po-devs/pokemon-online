@@ -189,15 +189,16 @@ struct AMCuteCharm : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if (!b.koed(t) && b.isSeductionPossible(s,t) && b.true_rand() % 100 < 30 && !poke(b,t).contains("AttractedTo")) {
-            poke(b,t)["AttractedTo"] = s;
-            poke(b,s)["Attracted"] = t;
-            addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
-            b.sendAbMessage(11,0,s,t);
+        if (!b.koed(t) && b.isSeductionPossible(s,t) && b.true_rand() % 100 < 30
+            && !(poke(b,t).contains("AttractedTo") && team(b,s)["SwitchCount"] == poke(b,t)["AttractedCount"])) {
+            b.sendMoveMessage(58,1,s,0,t);
             if (b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
                 b.sendItemMessage(7,s);
                 b.disposeItem(t);
-                poke(b,t).remove("Attracted");
+            } else {
+                poke(b,t)["AttractedTo"] = s;
+                poke(b,t)["AttractedCount"] = team(b,s)["SwitchCount"];
+                addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
             }
         }
     }
@@ -207,9 +208,9 @@ struct AMCuteCharm : public AM {
             return;
         if (poke(b,s).contains("AttractedTo")) {
             int seducer = poke(b,s)["AttractedTo"].toInt();
-            if (poke(b,seducer).contains("Attracted") && poke(b,seducer)["Attracted"].toInt() == s) {
+            if (team(b,seducer)["SwitchCount"] && poke(b,s)["AttractedCount"].toInt() == team(b,seducer)["SwitchCount"]) {
                 b.sendMoveMessage(58,0,s,0,seducer);
-                if (true_rand() % 2 == 0) {
+                if (b.true_rand() % 2 == 0) {
                     turn(b,s)["ImpossibleToMove"] = true;
                     b.sendMoveMessage(58, 2,s);
                 }

@@ -182,8 +182,9 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
 void QScrollDownTextEdit::insertPlainText(const QString &text)
 {
     if (linecount >= 2000 && autoClear) {
+        this->setText(this->toHtml().section('<br />', -1000));
         clear();
-        linecount = 0;
+        linecount = 1000;
     }
 
     QScrollBar * b = verticalScrollBar();
@@ -241,7 +242,7 @@ QValidator::State QNickValidator::validate(const QString &input) const
     bool punct = false;
 
     for (int i = 0; i < input.length(); i++) {
-        if (input[i] == '%' || input[i] == '*' || input[i] == '<' || input[i] == ':' || input[i] == '(' || input[i] == ')')
+        if (input[i] == '%' || input[i] == '*' || input[i] == '<' || input[i] == ':' || input[i] == '(' || input[i] == ')' || !input[i].isPrint())
             return QValidator::Invalid;
         if (input[i].isPunct()) {
             if (punct == true) {

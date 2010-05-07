@@ -550,7 +550,7 @@ TeamPokeButton::TeamPokeButton(int num, int poke, int level, int item)
     this->level->setObjectName("SmallText");
 
     QLabel *iteml;
-    ml->addWidget(iteml = new QLabel(tr("item")), 2,1,1,1, Qt::AlignLeft);
+    ml->addWidget(iteml = new QLabel(tr("Item")), 2,1,1,1, Qt::AlignLeft);
     iteml->setObjectName("SmallText");
 
     ml->addWidget(itemIcon = new QLabel(), 2,2,1,1, Qt::AlignRight);
