@@ -358,6 +358,11 @@ void BattleSituation::endTurn()
     requestSwitchIns();
 }
 
+void BattleSituation::notifyFail(int p)
+{
+    notify(All, Failed, p);
+}
+
 void BattleSituation::endTurnStatus()
 {
     for (int player = Player1; player <= Player2; player++)
@@ -793,6 +798,10 @@ void BattleSituation::sendPoke(int player, int pok, bool silent)
 
     pokelong[player]["Level"] = poke(player).level();
 
+    /* Increase the "switch count". Switch count is used to see if the pokémon has switched
+       (like for an attack like attract), it is imo more effective that other means */
+    inc(teamzone[player]["SwitchCount"], 1);
+
     if (poke(player,pok).num() == Pokemon::Arceus && ItemInfo::isPlate(poke(player,pok).item())) {
         int type = ItemInfo::PlateType(poke(player,pok).item());
         
@@ -895,9 +904,10 @@ void BattleSituation::callaeffects(int source, int target, const QString &name)
         AbilityEffect::activate(name, ability(source), source, target, *this);
 }
 
-void BattleSituation::sendBack(int player)
+void BattleSituation::sendBack(int player, bool silent)
 {
-    notify(All, SendBack, player);
+    if (!silent)
+        notify(All, SendBack, player);
 
     /* Just calling pursuit directly here, forgive me for this */
     int opp = rev(player);
@@ -928,14 +938,16 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         return true;
     }
 
+
+    //No Guard
+    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard))) {
+        return true;
+    }
+
     if (turnlong[target].contains("EvadeAttack")) {
         if (!silent)
             notify(All, Miss, player);
         return false;
-    }
-
-    if (acc == 0) {
-	return true;
     }
 
     if (pokelong[player].value("BerryLock").toBool()) {
@@ -943,18 +955,19 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         return true;
     }
 
+    if (acc == 0) {
+	return true;
+    }
+
     //OHKO
-    if (MoveInfo::isOHKO(turnlong[player]["MoveChosen"].toInt())) {
+    int move  = turnlong[player]["MoveChosen"].toInt();
+
+    if (MoveInfo::isOHKO(move)) {
         bool ret = (true_rand() % 100) < 30 + poke(player).level() - poke(target).level();
         if (!ret && !silent) {
             notify(All, Miss, player);
         }
         return ret;
-    }
-
-    //No Guard
-    if (hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) {
-        return true;
     }
 
     turnlong[player].remove("Stat7ItemModifier");

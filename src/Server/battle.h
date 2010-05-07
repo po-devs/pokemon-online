@@ -100,7 +100,7 @@ public:
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);
     /* Sends a poke back to his pokeball (not koed) */
-    void sendBack(int player);
+    void sendBack(int player, bool silent = false);
     void notifyHits(int number);
     void sendPoke(int player, int poke, bool silent = false);
     void callEntryEffects(int player);
@@ -270,6 +270,8 @@ public:
     void sendAbMessage(int move, int part=0, int src=0, int foe=-1, int type=0, int other=-1);
     void sendItemMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
     void sendBerryMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
+
+    void notifyFail(int p);
     /* Here C++0x would make it so much better looking with variadic templates! */
     void notify(int player, int command, int who);
     template<class T>

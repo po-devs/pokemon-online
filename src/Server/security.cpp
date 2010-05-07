@@ -143,10 +143,6 @@ void SecurityManager::updateMemory(const Member &m) {
 }
 
 bool SecurityManager::bannedIP(const QString &ip) {
-    foreach(QString s, bannedIPs) {
-        qDebug() << "banned: " << s;
-    }
-
     return bannedIPs.contains(ip);
 }
 

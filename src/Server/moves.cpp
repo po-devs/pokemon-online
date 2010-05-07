@@ -277,6 +277,8 @@ struct MMBatonPass : public MM
 	}
 	turn(b,s)["BatonPassed"] = false;
 	merge(poke(b,s), turn(b,s)["BatonPassData"].value<BS::context>());
+        //and we decrease the switch count associated, so attract & co still work
+        inc(team(b,s)["SwitchCount"], -1);
 
         if (poke(b,s).value("Substitute").toBool()) {
             b.notifySub(s,true);
@@ -1030,6 +1032,7 @@ struct MMRoar : public MM
 		switches.push_back(i);
 	    }
 	}
+        b.sendBack(t, true);
         b.sendPoke(t, switches[b.true_rand()%switches.size()], true);
         b.sendMoveMessage(107,2,s,type(b,s),t);
         b.callEntryEffects(t);
@@ -1297,21 +1300,21 @@ struct MMAttract : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (!b.isSeductionPossible(s,t) || poke(b,t).contains("AttractedTo")){
+        if (!b.isSeductionPossible(s,t) || poke(b,t).contains("AttractedTo") && team(b,s)["SwitchCount"] == poke(b,t)["AttractedCount"]){
 	    turn(b,s)["Failed"] = true;
 	}
     }
 
     static void uas (int s, int t, BS &b) {
-	poke(b,t)["AttractedTo"] = s;
-	poke(b,s)["Attracted"] = t;
-	addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
 	b.sendMoveMessage(58,1,s,0,t);
         if (b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
 	    b.sendItemMessage(7,s);
-            poke(b,t).remove("Attracted");
 	    b.disposeItem(t);
-	}
+        } else {
+            poke(b,t)["AttractedTo"] = s;
+            poke(b,t)["AttractedCount"] = team(b,s)["SwitchCount"];
+            addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
+        }
     }
 
     static void pda(int s, int, BS &b) {
@@ -1319,7 +1322,7 @@ struct MMAttract : public MM
             return;
 	if (poke(b,s).contains("AttractedTo")) {
 	    int seducer = poke(b,s)["AttractedTo"].toInt();
-	    if (poke(b,seducer).contains("Attracted") && poke(b,seducer)["Attracted"].toInt() == s) {
+            if (team(b,seducer)["SwitchCount"] && poke(b,s)["AttractedCount"].toInt() == team(b,seducer)["SwitchCount"]) {
 		b.sendMoveMessage(58,0,s,0,seducer);
                 if (b.true_rand() % 2 == 0) {
 		    turn(b,s)["ImpossibleToMove"] = true;
@@ -1872,7 +1875,7 @@ struct MMDoomDesire : public MM
             if (team(b,s)["DoomDesireFailed"].toBool()) {
                 int move = team(b,s)["DoomDesireMove"].toInt();
                 b.sendMoveMessage(29,0,s,MoveInfo::Type(move),s,move);
-                notify(All, Failed, player);
+                b.notifyFail(s);
             } else if (!b.koed(s)) {
 		int move = team(b,s)["DoomDesireMove"].toInt();
 		b.sendMoveMessage(29,0,s,MoveInfo::Type(move),s,move);

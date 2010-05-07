@@ -374,8 +374,6 @@ int Player::opponent() const
 
 void Player::challengeStuff(const ChallengeInfo &c)
 {
-    qDebug() << "Challenge received with desc " << c.desc() << " from " << id() << " to " << c.opponent();
-
     if (battling()) {
         return; // INVALID BEHAVIOR
     }
