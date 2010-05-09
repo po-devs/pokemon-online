@@ -4,6 +4,7 @@
 #include "moves.h"
 #include "items.h"
 #include "abilities.h"
+#include "tier.h"
 #include <ctime> /* for random numbers, time(NULL) needed */
 #include <map>
 #include <algorithm>
@@ -11,7 +12,6 @@
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id)
         :team1(p1.team()), team2(p2.team())
 {
-    true_rand2.seed(time(NULL));
     publicId() = id;
     timer = NULL;
     myid[0] = p1.id();
@@ -31,7 +31,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     timeStopped[1] = true;
     finished() = false;
     clauses() = c.clauses;
-    rated() = c.rated && !(c.clauses & (ChallengeInfo::ChallengeCup | ChallengeInfo::LevelBalance));
+    rated() = c.rated;
     if (rated())
         tier() = p1.tier();
     currentForcedSleepPoke[0] = -1;
@@ -108,8 +108,15 @@ void BattleSituation::start()
 
     notify(All, BlankMessage,0);
 
-    if (rated())
+    if (rated()) {
         notify(All, TierSection, Player1, tier());
+
+        QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(team1.name, team2.name, tier());
+        QPair<int,int> secondChange = TierMachine::obj()->pointChangeEstimate(team2.name, team1.name, tier());
+
+        notify(Player1, PointEstimate, Player1, qint8(firstChange.first), qint8(firstChange.second));
+        notify(Player2, PointEstimate, Player2, qint8(secondChange.first), qint8(secondChange.second));
+    }
 
     notify(All, Rated, Player1, rated());
 
@@ -285,19 +292,32 @@ int BattleSituation::currentPoke(int player) const
 /* The battle loop !! */
 void BattleSituation::run()
 {
+
 #ifdef WIN32
     /* Under windows you need to do that, as rand is per-thread. But on linux it'd screw up the random thing and
         interfere with other battles */
     srand(time(NULL));
     /* Get rid of the first predictable values for a better rand*/
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 10; i++)
         rand();
 #else
 # ifdef WIN64
     /* Under windows you need to do that, as rand is per-thread. But on linux it'd screw up the random thing */
     srand(time(NULL));
+    for (int i = 0; i < 10; i++)
+        rand();
 # endif
 #endif
+    unsigned long array[10];
+    for (int i = 0; i < 10; i++) {
+        array[i] = rand();
+        array[i] |= (rand() << 16);
+    }
+    true_rand2.seed(array, 10);
+    /* To get rid of some of the defaults */
+    for (int i = 0; i < 100; i++) {
+        true_rand();
+    }
     try {
         qDebug() << "BattleSituation between " << team1.name << " and " << team2.name << " begin running.";
 	while (!quit)
@@ -527,8 +547,7 @@ BattleChoices BattleSituation::createChoice(int player)
 
 bool BattleSituation::isMovePossible(int player, int move)
 {
-    return (poke(player).move(move).PP() > 0 && (turnlong[player].value("Encored").toBool() ||
-                                                 turnlong[player]["Move" + QString::number(move) + "Blocked"].toBool() == false));
+    return (poke(player).move(move).PP() > 0 && turnlong[player]["Move" + QString::number(move) + "Blocked"].toBool() == false);
 }
 
 void BattleSituation::analyzeChoice(int player)
@@ -1202,17 +1221,22 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         goto end;
     }
 
+    callpeffects(player, player, "MovePossible");
+    if (turnlong[player]["ImpossibleToMove"].toBool()) {
+        goto end;
+    }
+
     if (!specialOccurence) {
-	calleffects(player, player, "MovePossible");
-	if (turnlong[player]["ImpossibleToMove"].toBool()) {
+        if (!isMovePossible(player, move)) {
             goto end;
-	}
-	if (!isMovePossible(player, move)) {
-            goto end;
-	}
+        }
+
         pokelong[player][QString("Move%1Used").arg(move)] = true;
 
 	callieffects(player,player, "RegMoveSettings");
+
+        pokelong[player]["LastMoveUsed"] = attack;
+        pokelong[player]["LastMoveUsedTurn"] = turn();
     }
 
     calleffects(player, player, "MoveSettings");
@@ -1305,7 +1329,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             int i;
             for (i = 0; i < num && !koed(target); i++) {
-
                 turnlong[target]["HadSubstitute"] = false;
 		bool sub = hasSubstitute(target);
                 turnlong[target]["HadSubstitute"] = sub;
@@ -1335,6 +1358,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		if (!specialOccurence && attack != Move::Chatter && attack != Move::Sketch && attack != Move::Struggle && attack != Move::Mimic) {
 		    pokelong[player]["LastMoveSuccessfullyUsed"] = attack;
 		    pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
+                    battlelong["LastMoveSuccessfullyUsed"] = attack;
 		}
 
 		if (!sub && !koed(target))
@@ -1379,6 +1403,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             if (!specialOccurence && attack != Move::Chatter && attack != Move::Sketch && attack != Move::Struggle && attack != Move::Mimic) {
 		    pokelong[player]["LastMoveSuccessfullyUsed"] = attack;
 		    pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
+                    battlelong["LastMoveSuccessfullyUsed"] = attack;
 	    }
 	    if (!koed(player))
 		calleffects(player, target, "AfterAttackSuccessful");
@@ -1393,7 +1418,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     callieffects(player, player, "AfterTargetList");
     end:
     pokelong[player]["HasMovedOnce"] = true;
-    pokelong[player]["LastMoveUsed"] = attack;
 
     attacker() = -1;
     attacked() = -1;
@@ -2306,6 +2330,7 @@ void BattleSituation::requestSwitchIns()
     sem.acquire(1);
 
     testquit();
+    testWin();
 
     QSet<int> copy = koedPokes;
 
@@ -2524,7 +2549,7 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     int boost = pokelong[player][QString("Boost%1").arg(stat)].toInt();
 
     if (hasWorkingAbility(player,Ability::Simple)) {
-        boost *= 2;
+        boost = std::max(std::min(boost*2, 6),-6);
     }
 
     /* Boost is 1 if boost == 0,

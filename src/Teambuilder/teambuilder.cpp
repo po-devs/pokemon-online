@@ -131,19 +131,19 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
     memset(modified,false,6);
 
     /* Buttons of pokemons / trainers */
-    QImageButton * m_trainer = new QImageButton("db/Teambuilder/Buttons/TrainerNorm.png", "db/Teambuilder/Buttons/TrainerGlow.png");
+    QImageButton * m_trainer = new QImageButton("db/Teambuilder/Buttons/TrainerNorm.png", "db/Teambuilder/Buttons/TrainerGlow.png", "db/Teambuilder/Buttons/TrainerGlow.png");
     m_trainer->setParent(this);
     m_trainer->move(4,1);
 
-    QImageButton * m_team = new QImageButton("db/Teambuilder/Buttons/TeamNorm.png", "db/Teambuilder/Buttons/TeamGlow.png");
+    QImageButton * m_team = new QImageButton("db/Teambuilder/Buttons/TeamNorm.png", "db/Teambuilder/Buttons/TeamGlow.png", "db/Teambuilder/Buttons/TeamGlow.png");
     m_team->setParent(this);
     m_team->move(4+138,1);
 
-    QImageButton * m_box = new QImageButton("db/Teambuilder/Buttons/BoxNorm.png", "db/Teambuilder/Buttons/BoxGlow.png");
+    QImageButton * m_box = new QImageButton("db/Teambuilder/Buttons/BoxNorm.png", "db/Teambuilder/Buttons/BoxGlow.png", "db/Teambuilder/Buttons/BoxGlow.png");
     m_box->setParent(this);
     m_box->move(4+2*138,1);
 
-    QImageButton * m_pokedexb = new QImageButton("db/Teambuilder/Buttons/PokedexNorm.png", "db/Teambuilder/Buttons/PokedexGlow.png");
+    QImageButton * m_pokedexb = new QImageButton("db/Teambuilder/Buttons/PokedexNorm.png", "db/Teambuilder/Buttons/PokedexGlow.png", "db/Teambuilder/Buttons/PokedexGlow.png");
     m_pokedexb->setParent(this);
     m_pokedexb->move(4+3*138,1);
 
@@ -154,6 +154,18 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
     QImageButton * m_close = new QImageButton("db/Teambuilder/Buttons/CloseNorm.png", "db/Teambuilder/Buttons/CloseGlow.png");
     m_close->setParent(this);
     m_close->move(490+138,545);
+
+    buttons[0] = m_trainer;
+    buttons[1] = m_team;
+    buttons[2] = m_box;
+    buttons[3] = m_pokedexb;
+
+    for (unsigned i = 0; i < sizeof(buttons)/sizeof(QImageButton*); i++) {
+        buttons[i]->setCheckable(true);
+    }
+
+    m_trainer->setChecked(true);
+
 
 
     /* Starting doing the "body" */
@@ -216,9 +228,11 @@ void TeamBuilder::changeZone()
 
 void TeamBuilder::changeToTeam()
 {
+    buttons[m_body->currentIndex()]->setChecked(false);
     if (m_body->currentIndex() == TrainerW)
         nextb->changePics("db/Teambuilder/Buttons/GoBackNorm.png", "db/Teambuilder/Buttons/GoBackGlow.png");
     m_body->setCurrentIndex(TeamW);
+    buttons[TeamW]->setChecked(true);
     setPixmap(QPixmap("db/Teambuilder/Team/TeamBG.png"));
     for (int i = 0; i < 6; i++) {
         if (modified[i]) {
@@ -230,9 +244,11 @@ void TeamBuilder::changeToTeam()
 
 void TeamBuilder::changeToBoxes()
 {
+    buttons[m_body->currentIndex()]->setChecked(false);
     if (m_body->currentIndex() == TrainerW)
         nextb->changePics("db/Teambuilder/Buttons/GoBackNorm.png", "db/Teambuilder/Buttons/GoBackGlow.png");
     m_body->setCurrentIndex(BoxesW);
+    buttons[BoxesW]->setChecked(true);
     setPixmap(QPixmap("db/Teambuilder/Box/PokeboxBG.png"));
     updateBox();
 }
@@ -240,14 +256,17 @@ void TeamBuilder::changeToBoxes()
 void TeamBuilder::changeToTrainer()
 {
     if (m_body->currentIndex() != TrainerW) {
+        buttons[m_body->currentIndex()]->setChecked(false);
         nextb->changePics("db/Teambuilder/Buttons/NextNorm.png", "db/Teambuilder/Buttons/NextGlow.png");
         m_body->setCurrentIndex(TrainerW);
         setPixmap(QPixmap("db/Teambuilder/Trainer/TrainerBG.png"));
+        buttons[TrainerW]->setChecked(true);
     }
 }
 
 void TeamBuilder::changeToPokedex()
 {
+    buttons[m_body->currentIndex()]->setChecked(false);
     if (m_body->currentIndex() == TrainerW)
         nextb->changePics("db/Teambuilder/Buttons/GoBackNorm.png", "db/Teambuilder/Buttons/GoBackGlow.png");
     m_body->setCurrentIndex(PokedexW);
@@ -888,7 +907,7 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num)
     QMenu *m = new QMenu(advanced);
     QAction *a = m->addAction(tr("Side Window"), this, SLOT(goToAdvanced()));
     a->setProperty("window", 0);
-    a = m->addAction(tr("Separate Window"), this, SLOT(goToAdvanced()));
+    a = m->addAction(tr("New Window"), this, SLOT(goToAdvanced()));
     a->setProperty("window", 1);
     advanced->setMenu(m);
 

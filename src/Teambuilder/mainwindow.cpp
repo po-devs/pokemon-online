@@ -40,6 +40,15 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("find_battle_range_on", true);
     setDefaultValue("find_battle_range", 200);
 
+    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(0)), Qt::Checked);
+    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(1)), Qt::Checked);
+    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(2)), Qt::PartiallyChecked);
+    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(3)), Qt::PartiallyChecked);
+    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(4)), Qt::PartiallyChecked);
+    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(5)), Qt::Unchecked);
+    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(6)), Qt::Unchecked);
+    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(7)), Qt::Checked);
+    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(8)), Qt::PartiallyChecked);
 
     PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/");

@@ -119,7 +119,8 @@ public:
         ClockStop = 38,
         Rated,
         TierSection,
-        EndMessage
+        EndMessage,
+        PointEstimate
     };
 
     enum TempPokeChange {
@@ -172,11 +173,11 @@ public:
     virtual QString nick(int spot) const;
     QString rnick(int spot) const;
 
-    void delay(int msec=0);
 public slots:
     void receiveInfo(QByteArray);
     void sendMessage();
     void clickClose();
+    void delay(qint64 msec=0, bool forceDelay=true);
     void undelay();
     void playMusic (bool);
     void restartMusic();
@@ -188,7 +189,7 @@ signals:
     void battleMessage(const QString &str, int);
     void closedBW(int);
 protected:
-    bool delayed;
+    int delayed;
     bool ignoreSpecs;
 
     QGridLayout *mylayout;
@@ -210,7 +211,7 @@ protected:
     bool blankMessage;
     bool battleEnded;
 
-    BaseBattleWindow(){delayed=false;ignoreSpecs=false; music = NULL; musicOutput = NULL; cry = NULL; cryOutput = NULL;}
+    BaseBattleWindow(){delayed=0;ignoreSpecs=false; music = NULL; musicOutput = NULL; cry = NULL; cryOutput = NULL;}
     void init();
 
     void closeEvent(QCloseEvent *);

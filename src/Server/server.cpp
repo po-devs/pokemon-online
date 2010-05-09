@@ -16,6 +16,7 @@
 #include "scriptengine.h"
 #include "../Shared/config.h"
 #include "tier.h"
+#include "battlingoptions.h"
 
 Server::Server(quint16 port)
 {
@@ -32,6 +33,7 @@ Server::Server(quint16 port)
     options->addAction("&Config", this, SLOT(openConfig()));
     options->addAction("&Scripts", this, SLOT(openScriptWindow()));
     options->addAction("&Tiers", this, SLOT(openTiersWindow()));
+    options->addAction("&Battle Config", this, SLOT(openBattleConfigWindow()));
     mylayout->addWidget(bar,0,0,1,2);
 
     mylist = new QListWidget();
@@ -105,6 +107,22 @@ Server::Server(quint16 port)
     serverPort = port;
 
     QSettings s;
+    if (s.value("battles_with_same_ip_unrated").isNull()) {
+        s.setValue("battles_with_same_ip_unrated", true);
+    }
+    if (s.value("rated_battles_memory_number").isNull()) {
+        s.setValue("rated_battles_memory_number", 5);
+    }
+
+    loadRatedBattlesSettings();
+
+    /*
+      The timer for clearing the last rated battles memory, set to 3 hours
+     */
+    QTimer *t= new QTimer(this);
+    connect(t, SIGNAL(timeout()), this, SLOT(clearRatedBattlesHistory()));
+    t->start(3*3600*1000);
+
     serverName = s.value("server_name").toString();
     serverDesc = s.value("server_description").toString();
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
@@ -116,6 +134,13 @@ Server::Server(quint16 port)
 QTcpServer * Server::server()
 {
     return &myserver;
+}
+
+void Server::loadRatedBattlesSettings()
+{
+    QSettings s;
+    allowRatedWithSameIp = !s.value("battles_with_same_ip_unrated").toBool();
+    diffIpsForRatedBattles = s.value("rated_battles_memory_number").toInt();
 }
 
 void Server::connectToRegistry()
@@ -198,6 +223,12 @@ void Server::regMaxChanged(const int &numMax)
     registry_connection->notify(NetworkServ::ServMaxChange,numMax);
 }
 
+void Server::clearRatedBattlesHistory()
+{
+    printLine("Auto Clearing the last rated battles history (every 3 hours)");
+    lastRatedIps.clear();
+}
+
 void Server::accepted()
 {
     printLine("The registry acknowledged the server.");
@@ -278,6 +309,15 @@ void Server::openTiersWindow()
     w->show();
 
     connect(w, SIGNAL(tiersChanged()), SLOT(tiersChanged()));
+}
+
+void Server::openBattleConfigWindow()
+{
+    BattlingOptionsWindow *w = new BattlingOptionsWindow();
+
+    w->show();
+
+    connect(w, SIGNAL(settingsChanged()), SLOT(loadRatedBattlesSettings()));
 }
 
 void Server::tiersChanged()
@@ -621,10 +661,19 @@ void Server::findBattle(int id, const FindBattleData &f)
         FindBattleData *data = it.value();
         Player *p2 = player(key);
 
-        /* We see if they do match */
-        if (f.rated != data->rated) {
-            /* We check both allow rated */
-            if (! ((f.rated || p1->ladder()) && (data->rated || p2->ladder()) && p1->ip() != p2->ip()))
+        /* First look if this not a repeat */
+        if (p2->lastFindBattleIp() == p1->ip() || p1->lastFindBattleIp() == p2->ip()) {
+            continue;
+        }
+
+        /* Check their clauses match */
+        if ( (f.bannedClauses & data->forcedClauses) != 0 || (f.forcedClauses & data->bannedClauses) != 0) {
+            continue;
+        }
+
+        /* We check both allow rated if needed */
+        if (f.rated || data->rated) {
+            if (!canHaveRatedBattle(id, key, (f.forcedClauses & ChallengeInfo::ChallengeCup) || (data->forcedClauses & ChallengeInfo::ChallengeCup), f.rated, data->rated))
                 continue;
         }
         /* We check the tier thing */
@@ -639,14 +688,15 @@ void Server::findBattle(int id, const FindBattleData &f)
             if (p1->rating() - data->range > p2->rating() || p1->rating() + data->range < p2->rating() )
                 continue;
 
-
         //We have a match!
         ChallengeInfo c;
         c.opp = key;
         c.rated = (p1->ladder() && p2->ladder() && p1->tier() == p2->tier()) || f.rated || data->rated;
-        c.clauses |= ChallengeInfo::SpeciesClause | ChallengeInfo::OHKOClause | ChallengeInfo::SleepClause | ChallengeInfo::FreezeClause;
+        c.clauses = f.forcedClauses | data->forcedClauses;
 
         if (myengine->beforeBattleMatchup(id,key,c)) {
+            player(id)->lastFindBattleIp() = player(key)->ip();
+            player(key)->lastFindBattleIp() = player(id)->ip();
             startBattle(id,key,c);
             myengine->afterBattleMatchup(id,key,c);
             return;
@@ -710,6 +760,23 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 
     printLine(tr("Battle between %1 and %2 started").arg(name(id1)).arg(name(id2)));
 
+    /* Storing the battle in the last ips to battle */
+    if (c.rated && diffIpsForRatedBattles > 0) {
+        QList<QString> &lastIps1 = lastRatedIps[player(id1)->ip()];
+
+        lastIps1.push_back(player(id2)->ip());
+        if (lastIps1.size() > diffIpsForRatedBattles) {
+            lastIps1.pop_front();
+        }
+
+        QList<QString> &lastIps2 = lastRatedIps[player(id2)->ip()];
+
+        lastIps1.push_back(player(id1)->ip());
+        if (lastIps2.size() > diffIpsForRatedBattles) {
+            lastIps2.pop_front();
+        }
+    }
+
     int id = freebattleid();
 
     BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id);
@@ -734,6 +801,32 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     battle->start();
 
     myengine->afterBattleStarted(id1,id2,c);
+}
+
+bool Server::canHaveRatedBattle(int id1, int id2, bool cc, bool force1, bool force2)
+{
+    Player *p1 = player(id1);
+    Player *p2 = player(id2);
+    if (!force1 && !p1->ladder())
+        return false;
+    if (!force2 && !p2->ladder())
+        return false;
+    if (p1->tier() != p2->tier())
+        return false;
+    if (cc != (p1->tier() == "Challenge Cup")) {
+        return false;
+    }
+    if (!allowRatedWithSameIp && p1->ip() == p2->ip())
+        return false;
+    if (diffIpsForRatedBattles > 0) {
+        QList<QString> l1 = lastRatedIps.value(p1->ip());
+        if (l1.contains(p2->ip()))
+            return false;
+        QList<QString> l2 = lastRatedIps.value(p2->ip());
+        if (l2.contains(p1->ip()))
+            return false;
+    }
+    return true;
 }
 
 void Server::battleResult(int desc, int winner, int loser, bool rated, const QString &tier)

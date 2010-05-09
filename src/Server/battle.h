@@ -224,7 +224,8 @@ public:
         ClockStop,
         Rated,
         TierSection,
-        EndMessage
+        EndMessage,
+        PointEstimate
     };
 
     enum ChangeTempPoke {

@@ -20,7 +20,7 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp)
     currentIndex[1] = 0;
 }
 
-BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent) : delayed(false), ignoreSpecs(false), music(NULL), musicOutput(NULL),
+BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent) : delayed(0), ignoreSpecs(false), music(NULL), musicOutput(NULL),
             cry(NULL), cryOutput(NULL)
 {
     myInfo = new BaseBattleInfo(me, opponent);
@@ -30,9 +30,12 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
     printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(name(true), name(false)));
 }
 
-void BaseBattleWindow::delay(int msec)
+void BaseBattleWindow::delay(qint64 msec, bool forceDelay)
 {
-    delayed = true;
+    delayed += 1;
+
+    if (!forceDelay && delayed > 1)
+        delayed = 1;
 
     if (msec != 0)
         QTimer::singleShot(msec, this, SLOT(undelay()));
@@ -40,9 +43,10 @@ void BaseBattleWindow::delay(int msec)
 
 void BaseBattleWindow::undelay()
 {
-    delayed = false;
+    if (delayed > 0)
+        delayed -= 1;
 
-    while (delayed == false && delayedCommands.size() > 0) {
+    while (delayed == 0 && delayedCommands.size() > 0) {
         receiveInfo(delayedCommands.front());
         delayedCommands.pop_front();
     }
@@ -141,14 +145,14 @@ void BaseBattleWindow::animateHPBar()
     }
 
     //To stop the commands from being processed
-    delay();
+    delay(0, false);
 
 
     /* We deal with % hp, 30 msecs per % */
     int life = info().currentShallow(spot).lifePercent();
 
     if (goal == life) {
-        delay(120);
+        delay(120, false);
         return;
     }
 
@@ -721,9 +725,13 @@ void BaseBattleWindow::playCry(int pokenum)
 
     cry->play();
 
-    if (cry->totalTime() > 0 && cry->isValid()) {
-        delay();
-        connect(cry, SIGNAL(finished()), SLOT(undelay()));
+    if (cry->isValid()) {
+        if (cry->totalTime() > 0) {
+            delay(cry->totalTime());
+        } else {
+            delay(100);
+            connect(cry, SIGNAL(totalTimeChanged(qint64)), this, SLOT(delay(qint64)));
+        }
     }
 }
 
@@ -753,7 +761,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
 
     level[Opponent] = new QLabel(oppPoke);
     level[Opponent]->setObjectName("PokemonLevel");
-    level[Opponent]->setGeometry(120,11,50,13);
+    level[Opponent]->setGeometry(120,12,50,13);
 
     gender[Opponent] = new QLabel(oppPoke);
     gender[Opponent]->setGeometry(104,11,12,12);
@@ -846,7 +854,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
 
     level[Myself] = new QLabel(myPoke);
     level[Myself]->setObjectName("PokemonLevel");
-    level[Myself]->setGeometry(126,11,50,13);
+    level[Myself]->setGeometry(126,12,50,13);
 
     gender[Myself] = new QLabel(myPoke);
     gender[Myself]->setGeometry(111,11,12,12);
@@ -948,6 +956,12 @@ void BaseBattleDisplay::updateToolTip(int spot)
     const ShallowBattlePoke &poke = info().currentShallow(spot);
 
     tooltip += poke.nick() + "\n";
+    tooltip += TypeInfo::Name(PokemonInfo::Type1(poke.num()));
+    int type2 = PokemonInfo::Type2(poke.num());
+    if (type2 != Pokemon::Curse) {
+        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(poke.num()));
+    }
+    tooltip += "\n";
 
     for (int i = 0; i < 5; i++) {
         tooltip += "\n" + stats[i] + " ";

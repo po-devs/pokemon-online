@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     QSettings s;
     if (s.value("server_port").isNull())
          s.setValue("server_port", 5080);
+
     serverPort = quint16(s.value("server_port").toInt());
 
     setCentralWidget(myserver = new Server(serverPort));

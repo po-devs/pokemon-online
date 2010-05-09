@@ -26,7 +26,7 @@ Challenge::Challenge(Player *source, Player *dest, const ChallengeInfo &c, Serve
     dest->addChallenge(this, true);
 
     ChallengeInfo d = c;
-    desc.rated = source->ladder() && dest->ladder() && source->tier() == dest->tier() && source->ip() != dest->ip();
+    desc.rated = s->canHaveRatedBattle(source->id(), dest->id(), c.clauses & ChallengeInfo::ChallengeCup, false, false);
     d.opp = source->id();
     d.dsc = ChallengeInfo::Sent;
     dest->sendChallengeStuff(d);

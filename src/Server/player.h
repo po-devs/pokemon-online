@@ -26,6 +26,7 @@ class Player : public QObject
     PROPERTY(int, battleId);
     PROPERTY(QString, winningMessage);
     PROPERTY(QString, losingMessage);
+    PROPERTY(QString, lastFindBattleIp);
 public:
     BattleSituation *battle;
     QSet<int> battlesSpectated;

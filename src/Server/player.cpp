@@ -380,6 +380,13 @@ void Player::challengeStuff(const ChallengeInfo &c)
 
     int id = c.opponent();
 
+    if (id == 0) {
+        /* Find Battle Cancel */
+        if (inSearchForBattle())
+            cancelBattleSearch();
+        return;
+    }
+
     if (!isLoggedIn() || id == this->id()) {
         // INVALID BEHAVIOR
         return;

@@ -26,6 +26,7 @@ public:
 
     QString toString() const;
     void changeRating(int other, bool win);
+    QPair<int, int> pointChangeEstimate(int otherRating);
 };
 
 struct BannedPoke {
@@ -66,6 +67,7 @@ struct Tier
     }
 
     void changeRating(const QString &winner, const QString &loser);
+    QPair<int, int> pointChangeEstimate(const QString &player, const QString &foe);
 
     bool isBanned(const PokeBattle &p) const;
     bool isValid(const TeamBattle &t) const;
@@ -109,6 +111,8 @@ public:
     int ranking(const QString &name, const QString &tier);
     int count (const QString &tier);
     void changeRating(const QString &winner, const QString &loser, const QString &tier);
+
+    QPair<int, int> pointChangeEstimate(const QString &player, const QString &foe, const QString &tier);
 
     const RankingTree<QString> * getRankingTree(const QString &tier);
 

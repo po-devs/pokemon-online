@@ -182,7 +182,7 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
 void QScrollDownTextEdit::insertPlainText(const QString &text)
 {
     if (linecount >= 2000 && autoClear) {
-        this->setText(this->toHtml().section('<br />', -1000));
+        this->setText(this->toHtml().section("<br />", -1000));
         clear();
         linecount = 1000;
     }
@@ -300,4 +300,10 @@ void QClickPBar::mousePressEvent(QMouseEvent *)
 QDummyGrabber::QDummyGrabber()
 {
     setFixedSize(0,0);
+}
+
+QSideBySide::QSideBySide(QWidget *a, QWidget *b)
+{
+    addWidget(a);
+    addWidget(b);
 }

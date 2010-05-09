@@ -102,7 +102,7 @@ All Pokémon hearing the song will faint in three turns!|%s's perish count fell t
 
 %s's rage builds up!
 %s got free of %f's %m!|%s blew away Leech Seed!|%s blew away Spikes!|%s blew away Toxic Spikes!|%s blew away Stealth Rock!
-%s prepared a gust of wind!|%s became cloaked in a harsh light!|%s lowered its head!
+%s prepared a gust of wind!|%s became cloaked in a harsh light!|%s lowered its head!|%s absorbed light!
 %s recycled %i!
 %s went to sleep and became healthy!
 %f held on to the ground using its Suction Cups!|%f is solidly rooted to the ground!|%f was dragged out!
@@ -117,7 +117,7 @@ All Pokémon hearing the song will faint in three turns!|%s's perish count fell t
 
 
 %f snatched %s's %m!|%s waits for a target to make a move!
-%s absorbed light!
+
 
 Spikes were scattered all around the feet of %tf's team!|%s is hurt by spikes!
 %s released!
@@ -133,7 +133,7 @@ Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 %s switched items with %f!|%s obtained one %i!
 A tailwind started blowing behind %ts's team!|%ts's team tailwind petered out!
 %s can't use %m after the taunt!|%f fell for the taunt!|%s's taunt ended!
-%s can't use %m because of the torment!|%f is now tormented!
+%f is now tormented!
 Poison spikes were scattered all around the feet of %tf's team!|The poison spikes disappeared around %s's feet!
 %s transformed into %p!
 %s twisted the dimensions!|The twisted dimensions returned to normal!
