@@ -14,8 +14,17 @@ QString MemberRating::toString() const
 
 void MemberRating::changeRating(int opponent_rating, bool win)
 {
+    QPair<int,int> change = pointChangeEstimate(opponent_rating);
+
+    rating() = rating() + (win ? change.first : change.second);
+
+    if (matches() <=9999)
+        matches() += 1;
+}
+
+QPair<int, int> MemberRating::pointChangeEstimate(int opponent_rating)
+{
     int n = matches();
-    int newrating;
 
     int kfactor;
     if (n <= 5) {
@@ -25,13 +34,8 @@ void MemberRating::changeRating(int opponent_rating, bool win)
         kfactor = 32;
     }
     double myesp = 1/(1+ pow(10., (float(opponent_rating)-rating())/400));
-    double result = win;
 
-    newrating = rating() + (result - myesp)*kfactor;
-
-    rating() = newrating;
-    if (matches() <=9999)
-        matches() += 1;
+    return QPair<int,int>((1. - myesp)*kfactor,(0. - myesp)*kfactor);
 }
 
 void Tier::loadFromFile()
@@ -151,6 +155,9 @@ void Tier::changeRating(const QString &w, const QString &l)
 {
     QString w2 = w.toLower();
     QString l2 = l.toLower();
+
+    /* Not really necessary, as pointChangeEstimate should always be called
+       at the beginning of the battle, but meh */
     if (!ratings.contains(w2)) {
         MemberRating m;
         m.name() = w2;
@@ -173,6 +180,7 @@ void Tier::changeRating(const QString &w, const QString &l)
         lastFilePos = in->pos();
         ratings[l2] = m;
     }
+
     int oldw2 = ratings[w2].rating();
     ratings[w2].changeRating(ratings[l2].rating(), true);
     ratings[l2].changeRating(oldw2, false);
@@ -183,6 +191,37 @@ void Tier::changeRating(const QString &w, const QString &l)
     in->seek(ratings[l2].filePos());
     in->write(ratings[l2].toString().toUtf8());
     in->flush();
+}
+
+QPair<int, int> Tier::pointChangeEstimate(const QString &player, const QString &foe)
+{
+    QString w2 = player.toLower();
+    QString l2 = foe.toLower();
+
+    if (!ratings.contains(w2)) {
+        MemberRating m;
+        m.name() = w2;
+        m.filePos() = lastFilePos;
+        m.node() = rankings.insert(m.rating(), m.name());
+        in->seek(lastFilePos);
+        in->write(m.toString().toUtf8());
+        in->putChar('\n');
+        lastFilePos = in->pos();
+        ratings[w2] = m;
+    }
+    if (!ratings.contains(l2)) {
+        MemberRating m;
+        m.name() = l2;
+        m.filePos() = lastFilePos;
+        m.node() = rankings.insert(m.rating(), m.name());
+        in->seek(lastFilePos);
+        in->write(m.toString().toUtf8());
+        in->putChar('\n');
+        lastFilePos = in->pos();
+        ratings[l2] = m;
+    }
+
+    return ratings[w2].pointChangeEstimate(ratings[l2].rating());
 }
 
 void TierMachine::init()
@@ -327,6 +366,11 @@ int TierMachine::count(const QString &tier)
 void TierMachine::changeRating(const QString &winner, const QString &loser, const QString &tier)
 {
     return this->tier(tier).changeRating(winner, loser);
+}
+
+QPair<int, int> TierMachine::pointChangeEstimate(const QString &player, const QString &foe, const QString &tier)
+{
+    return this->tier(tier).pointChangeEstimate(player, foe);
 }
 
 const RankingTree<QString> *TierMachine::getRankingTree(const QString &tier)

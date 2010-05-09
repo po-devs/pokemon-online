@@ -136,4 +136,10 @@ public:
     QDummyGrabber();
 };
 
+class QSideBySide : public QHBoxLayout
+{
+public:
+    QSideBySide(QWidget *a, QWidget *b);
+};
+
 #endif // OTHERWIDGETS_H

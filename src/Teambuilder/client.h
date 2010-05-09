@@ -4,6 +4,7 @@
 #include <QtGui>
 #include "analyze.h"
 #include "../PokemonInfo/networkstructs.h"
+#include "../PokemonInfo/battlestructs.h"
 
 class MainEngine;
 class BaseChallengeWindow;
@@ -32,6 +33,7 @@ public:
 
     void printLine(const QString &line);
     void printHtml(const QString &html);
+    void cancelFindBattle(bool verbose=true);
     bool playerExist(int id) const;
     QString name(int id) const;
     QString ownName() const;
@@ -175,6 +177,8 @@ private:
     QPushButton *mysender;
     /* Button to register a password */
     QPushButton *myregister;
+    /* Button to find a battle */
+    QPushButton *findMatch;
     /* Network Relay */
     Analyzer myrelay;
     /* Challenge window , to emit or to receive*/
@@ -185,6 +189,7 @@ private:
     QAction *goaway;
     bool showPEvents;
     bool showTS;
+    bool findingBattle;
 
     QPointer<QMenuBar> mymenubar;
     QPointer<QMenu> mytiermenu;
@@ -226,6 +231,7 @@ signals:
     void findBattle(const FindBattleData&);
 private:
     QCheckBox *sameTier, *rated, *rangeOn;
+    QCheckBox *clauses[ChallengeInfo::numberOfClauses];
     QLineEdit *range;
 };
 

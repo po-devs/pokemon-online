@@ -76,12 +76,6 @@ TeamBuilder QLabel#BigText {
 	color: white;
 }
 
-
-
-
-
-
-
 TB_Advanced QGroupBox::title {
 	subcontrol-position: top left; /* position at the top center */
 	padding: 0 3px;
@@ -117,11 +111,6 @@ TB_Advanced QCheckBox {
 	font-size: 12px;
 }
 
-
-
-
-
-
 TB_Advanced QRadioButton::indicator {
 	/*even if theres no text here, it removes the older style so its cool*/
 }
@@ -155,16 +144,10 @@ PokemonBox {
 }
 
 
-
-
-
-
-
-
 QProgressBar#TimeOut {
 	font-family: LCD;
 	font-weight: bold;
-	font-size: 14px;
+	font-size: 17px;
     border: 1px solid black;
 	width: 79;
 	height: 21;

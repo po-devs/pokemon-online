@@ -315,6 +315,8 @@ struct FindBattleData
     bool rated;
     bool sameTier;
     bool ranged;
+    quint32 forcedClauses;
+    quint32 bannedClauses;
     quint16 range;
 };
 

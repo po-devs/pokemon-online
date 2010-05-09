@@ -45,11 +45,14 @@ public:
     void beforeChallengeIssued(int src, int dest, Challenge *c);
     void afterChallengeIssued(int src, int dest, Challenge *c);
     void atServerShutDown();
+    /* Force Rated 1 and Force Rated 2 is to ignore the ladder on / off factor for those two */
+    bool canHaveRatedBattle(int id1, int id2, bool challengeCup, bool forceRated1 = false, bool forceRated2 = false);
 
     Player * player(int id) const;
 public slots:
     /* Registry slots */
     void connectToRegistry();
+    void clearRatedBattlesHistory();
     void regConnected();
     void regConnectionError();
     void regSendPlayers();
@@ -88,6 +91,7 @@ public slots:
     void openAntiDos();
     void openScriptWindow();
     void openTiersWindow();
+    void openBattleConfigWindow();
     void changeAuth(const QString &name, int auth);
     void banName(const QString &name);
     void playerKick(int src, int dest);
@@ -97,6 +101,7 @@ public slots:
     void tiersChanged();
     void findBattle(int id,const FindBattleData &f);
     void cancelSearch(int id);
+    void loadRatedBattlesSettings();
 private:
     void kick(int dest, int src);
     void ban(int dest, int src);
@@ -125,6 +130,10 @@ private:
 
     int linecount;
     int textLength;
+
+    bool allowRatedWithSameIp;
+    int diffIpsForRatedBattles;
+    QHash<QString, QList<QString> > lastRatedIps;
 
     ScriptEngine *myengine;
     QPointer<ScriptWindow> myscriptswindow;

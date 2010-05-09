@@ -14,6 +14,8 @@ BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const Playe
     for (int i = 0; i < 6; i++) {
         pokemons[Myself][i] = team.poke(i);
     }
+
+    memset(lastMove, 0, sizeof(lastMove));
 }
 
 const PokeBattle & BattleInfo::currentPoke() const
@@ -186,6 +188,7 @@ void BattleWindow::switchToPokeZone()
 
 void BattleWindow::attackClicked(int zone)
 {
+    info().lastMove[info().currentIndex[Myself]] = zone;
     if (info().possible)
         sendChoice(BattleChoice(false, zone));
 }
@@ -219,13 +222,16 @@ void BattleWindow::attackButton()
 	    /* DO STRUGGLE */
 	    sendChoice(BattleChoice(false, -1));
 	} else {
-	    for (int i = 0; i < 4; i++) {
-		if (info().choices.attackAllowed[i]) {
-		    /* DO MESSAGE AND BREAK */
-		    sendChoice(BattleChoice(false, i));
-		    break;
-		}
-	    }
+            if (info().choices.attackAllowed[info().lastMove[info().currentIndex[Myself]]])
+                sendChoice(BattleChoice(false, info().lastMove[info().currentIndex[Myself]]));
+            else
+                for (int i = 0; i < 4; i++) {
+                    if (info().choices.attackAllowed[i]) {
+                        /* DO MESSAGE AND BREAK */
+                        sendChoice(BattleChoice(false, i));
+                        break;
+                    }
+                }
 	}
     }
 }
@@ -427,6 +433,14 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             }
             break;
         }
+    case PointEstimate:
+        {
+            qint8 first, second;
+            in >> first >> second;
+
+            printHtml(toBoldColor(tr("Variation: "), Qt::blue) + QString("+%1, %2").arg(int(first)).arg(int(second)));
+            break;
+        }
     default:
         BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
         break;
@@ -468,15 +482,16 @@ void BattleWindow::animateHPBar()
         return;
     }
 
-    //To stop the commands from being processed
-    delay();
 
     int life = info().currentPoke().lifePoints();
     /* We deal with true HP. 30 msec per 3 hp */
     if (goal == life) {
-        delay(120);
+        delay(120,false);
         return;
     }
+
+    //To stop the commands from being processed
+    delay(0,false);
 
     int newHp = goal < life ? std::max(goal, life - 3) : std::min(goal, life+3);
     info().currentPoke().lifePoints() = newHp;

@@ -29,6 +29,8 @@ public:
     BattleStats mystats;
 
     PROPERTY(PokeBattle, tempPoke);
+
+    int lastMove[6];
 };
 
 /* The battle window called by the client, online */

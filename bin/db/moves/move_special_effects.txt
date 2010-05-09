@@ -309,7 +309,7 @@
 57-2#rain dance
 103#rapid spin
 
-104#razor wind
+104-0#razor wind
 60#recover
 105#recycle
 73-0#reflect
@@ -351,15 +351,15 @@
 
 
 
-43#fissure
+43#sheer cold
 
 
 
 
 111#sketch
 112#skill swap
-104#skull bash
-104#sky attack
+104-2#skull bash
+104-1#sky attack
 
 60#slack off
 
@@ -374,7 +374,7 @@
 118#snatch
 115#snore
 60#softboiled
-119#solar beam
+104-3#solar beam
 30-20#sonic boom
 
 

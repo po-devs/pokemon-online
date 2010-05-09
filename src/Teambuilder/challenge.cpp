@@ -58,7 +58,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
 
     QLabel *tier = new QLabel(toBoldColor(p.tier, Qt::white),this);
     tier->setFont(QFont("Trebuchet MS", 10, QFont::Bold));
-    tier->setGeometry(210,148,80,18);
+    tier->setGeometry(203,148,94,18);
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
     QWidget *container = new QWidget(this);

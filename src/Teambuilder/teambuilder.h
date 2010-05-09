@@ -91,7 +91,8 @@ private:
         TrainerW=0,
         TeamW=1,
         BoxesW=2,
-        PokedexW=3
+        PokedexW=3,
+        LastW
     };
 
 private slots:
@@ -111,6 +112,8 @@ private:
     TB_PokemonBoxes *m_boxes;
     Pokedex *m_pokedex;
     QImageButton *nextb;
+
+    QImageButton *buttons[LastW];
     /* the Team of the trainer */
     TrainerTeam *m_team;
 

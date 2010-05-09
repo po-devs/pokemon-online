@@ -1300,7 +1300,7 @@ struct MMAttract : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (!b.isSeductionPossible(s,t) || poke(b,t).contains("AttractedTo") && team(b,s)["SwitchCount"] == poke(b,t)["AttractedCount"]){
+        if (!b.isSeductionPossible(s,t) || (poke(b,t).contains("AttractedTo") && team(b,s)["SwitchCount"] == poke(b,t)["AttractedCount"])){
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -1322,7 +1322,7 @@ struct MMAttract : public MM
             return;
 	if (poke(b,s).contains("AttractedTo")) {
 	    int seducer = poke(b,s)["AttractedTo"].toInt();
-            if (team(b,seducer)["SwitchCount"] && poke(b,s)["AttractedCount"].toInt() == team(b,seducer)["SwitchCount"]) {
+            if (poke(b,s)["AttractedCount"].toInt() == team(b,seducer)["SwitchCount"].toInt()) {
 		b.sendMoveMessage(58,0,s,0,seducer);
                 if (b.true_rand() % 2 == 0) {
 		    turn(b,s)["ImpossibleToMove"] = true;
@@ -1431,8 +1431,8 @@ struct MMCopycat : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-	removeFunction(turn(b,s), "UponAttackSuccessful", "CopyCat");
-	removeFunction(turn(b,s), "DetermineAttackFailure", "CopyCat");
+        removeFunction(turn(b,s), "UponAttackSuccessful", "Copycat");
+        removeFunction(turn(b,s), "DetermineAttackFailure", "Copycat");
 	int attack = turn(b,s)["CopycatMove"].toInt();
 	MoveEffect::setup(attack, s, t, b);
 	b.useAttack(s, turn(b,s)["CopycatMove"].toInt(), true);
@@ -1725,7 +1725,7 @@ struct MMTaunt : public MM
     static void uas (int s, int t, BS &b) {
         poke(b,t)["TauntsUntil"] = b.turn() + 2 + (b.true_rand()%3);
 	addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
-	addFunction(turn(b,t), "MovePossible", "Taunt", &mp);
+        addFunction(poke(b,t), "MovePossible", "Taunt", &mp);
         addFunction(poke(b,t), "EndTurn", "Taunt", &et);
 	b.sendMoveMessage(134,1,s,Pokemon::Dark,t);
     }
@@ -1806,12 +1806,13 @@ struct MMDisable : public MM
     }
 
     static void uas (int s, int t, BS &b) {
+        int mv = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
         poke(b,t)["DisablesUntil"] = b.turn() + 3 + (b.true_rand()%4);
-	poke(b,t)["DisabledMove"] = poke(b,t)["MoveSlot"];
+        poke(b,t)["DisabledMove"] = mv;
 	addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
-	addFunction(turn(b,t), "MovePossible", "Disable", &mp);
+        addFunction(poke(b,t), "MovePossible", "Disable", &mp);
 	addFunction(poke(b,t), "EndTurn", "Disable", &et);
-	b.sendMoveMessage(28,0,s,0,t,b.move(t,poke(b,t)["MoveSlot"].toInt()));
+        b.sendMoveMessage(28,0,s,0,t,mv);
     }
 
     static void et (int s, int, BS &b)
@@ -1819,17 +1820,22 @@ struct MMDisable : public MM
 	int tt = poke(b,s)["DisablesUntil"].toInt();
 	if (tt <= b.turn()) {
 	    removeFunction(poke(b,s), "MovesPossible", "Disable");
+            removeFunction(poke(b,s), "MovePossible", "Disable");
             removeFunction(poke(b,s), "EndTurn", "Disable");
 	    b.sendMoveMessage(28,2,s);
 	}
     }
 
     static void msp(int s, int, BS &b) {
-	turn(b,s)["Move" + QString::number(poke(b,s)["DisabledMove"].toInt()) + "Blocked"] = true;
+        int mv = poke(b,s)["DisabledMove"].toInt();
+        for (int i = 0 ; i < 4; i++) {
+            if (b.move(s, i) == mv)
+                turn(b,s)[QString("Move%1Blocked").arg(i)] = true;
+        }
     }
 
     static void mp(int s, int, BS &b) {
-	if(poke(b,s)["MoveSlot"] == poke(b,s)["DisabledMove"]) {
+        if(move(b,s) == poke(b,s)["DisabledMove"]) {
 	    turn(b,s)["ImpossibleToMove"] = true;
 	    b.sendMoveMessage(28,1,s,0,s,b.move(s,poke(b,s)["MoveSlot"].toInt()));
 	}
@@ -1932,11 +1938,11 @@ struct MMEncore : public MM
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
-	if (!poke(b,t).contains("LastMoveSuccessfullyUsedTurn")) {
+        if (!poke(b,t).contains("LastMoveUsedTurn")) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
-	int tu = poke(b,t)["LastMoveSuccessfullyUsedTurn"].toInt();
+        int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
 	if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
 	    turn(b,s)["Failed"] = true;
 	    return;
@@ -1945,7 +1951,7 @@ struct MMEncore : public MM
             turn(b,s)["Failed"] = true;
             return;
         }
-	int move = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
+        int move = poke(b,t)["LastMoveUsed"].toInt();
         forbidden_moves.lock();
         bool cont = forbidden_moves.contains(move);
         forbidden_moves.unlock();
@@ -1968,7 +1974,7 @@ struct MMEncore : public MM
 
     static void uas (int s, int t, BS &b) {
         poke(b,t)["EncoresUntil"] = b.turn() + 3 + (b.true_rand()%5);
-        int move =  poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
+        int move =  poke(b,t)["LastMoveUsed"].toInt();
         poke(b,t)["EncoresMove"] = move;
 
         //Changes the encored move
@@ -1976,7 +1982,6 @@ struct MMEncore : public MM
             if (b.move(t, i) == move) {
                 MoveEffect::unsetup(turn(b,t)["Attack"].toInt(), t, b);
                 b.choice[t].numSwitch = i;
-                turn(b,t)["Encored"] = true;
                 MoveEffect::setup(move, t, s, b);
                 break;
             }
@@ -2161,10 +2166,10 @@ struct MMGravity : public MM
                 b.changeSprite(p, 0);
                 b.sendMoveMessage(53,3, p, Type::Psychic, s, poke(b,p)["2TurnMove"].toInt());
             }
-            addFunction(turn(b,p), "MovePossible", "Gravity", &mp);
         }
 	addFunction(b.battlelong, "EndTurn", "Gravity", &et);
         addFunction(b.battlelong, "MovesPossible", "Gravity", &msp);
+        addFunction(b.battlelong, "MovePossible", "Gravity", &mp);
     }
 
     static void et(int s, int, BS &b) {
@@ -2195,9 +2200,10 @@ struct MMGravity : public MM
             return;
         }
         forbidden_moves.lock();
-        if(forbidden_moves.contains(b.move(s,poke(b,s)["MoveSlot"].toInt()))) {
+        int mv = move(b,s);
+        if(forbidden_moves.contains(mv)) {
             turn(b,s)["ImpossibleToMove"] = true;
-            b.sendMoveMessage(53,4,s,Type::Psychic,s,b.move(s, poke(b,s)["MoveSlot"].toInt()));
+            b.sendMoveMessage(53,4,s,Type::Psychic,s,mv);
         }
         forbidden_moves.unlock();
     }
@@ -2487,10 +2493,11 @@ struct MMHealBlock: public MM
     }
 
     static void mp(int s, int, BS &b) {
+        int mv = move(b,s);
         forbidden_moves.lock();
-	if(forbidden_moves.contains(b.move(s,poke(b,s)["MoveSlot"].toInt()))) {
+        if(forbidden_moves.contains(mv)) {
 	    turn(b,s)["ImpossibleToMove"] = true;
-            b.sendMoveMessage(59,1,s,Type::Psychic,s,b.move(s, poke(b,s)["MoveSlot"].toInt()));
+            b.sendMoveMessage(59,1,s,Type::Psychic,s,mv);
 	}
         forbidden_moves.unlock();
     }
@@ -3226,14 +3233,16 @@ struct MMRazorWind : public MM
 
     static void ms(int s, int, BS &b) {
 	if (!poke(b,s).contains("ReleaseTurn") || poke(b,s)["ReleaseTurn"].toInt() != b.turn()) {
+            int mv = move(b,s);
+            if (mv == SolarBeam && b.isWeatherWorking(BS::Sunny))
+                return;
+
             if (b.hasWorkingItem(s, Item::PowerHerb)) {
 		//Power Herb
 		b.sendItemMessage(11,s);
 		b.disposeItem(s);
-	    } else {
-		int mv = move(b,s);
-		/* razor wind, sky attack, skull bash */
-                b.sendMoveMessage(104, mv == RazorWind ? 0 : (mv == SkyAttack ? 1 : 2), s, type(b,s));
+	    } else {              
+                b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
 		/* Skull bash */
                 if (mv == SkullBash) {
 		    b.gainStatMod(s,Defense,1);
@@ -3254,7 +3263,11 @@ struct MMRazorWind : public MM
 	    return;
 	}
 	turn(b,s)["NoChoice"] = true;
-	MoveEffect::setup(poke(b,s)["ChargingMove"].toInt(),s,b.rev(s),b);
+        int mv = poke(b,s)["ChargingMove"].toInt();
+        MoveEffect::setup(mv,s,b.rev(s),b);
+        if (mv == SolarBeam && b.weather() != BS::NormalWeather && b.weather() != BS::Sunny && b.isWeatherWorking(b.weather())) {
+            turn(b,s)["Power"] = turn(b,s)["Power"].toInt() / 2;
+        }
     }
 };
 
@@ -3536,59 +3549,6 @@ struct MMSnatch : public MM
 
 MMSnatch::SM MMSnatch::snatched_moves;
 
-struct MMSolarBeam : public MM
-{
-    MMSolarBeam() {
-	functions["MoveSettings"] = &ms;
-    }
-
-    static void ms (int s, int, BS &b) {
-	int count = poke(b,s).value("BeamChargingCount").toInt();
-	if (count == 0) {
-	    int weather = b.weather();
-	    if (b.isWeatherWorking(weather) && weather != BattleSituation::NormalWeather) {
-		if (weather == BattleSituation::Sunny) {
-		    return;
-		}
-		poke(b,s)["BeamChargingCount"] = 2;
-	    } else {
-		poke(b,s)["BeamChargingCount"] = 1;
-	    }
-            if (b.hasWorkingItem(s, Item::PowerHerb)) {
-		//Power Herb
-		b.sendItemMessage(11,s);
-		b.disposeItem(s);
-		turn(b,s).remove("BeamChargingCount");
-                return;
-            }
-        } else {
-            inc(poke(b,s)["BeamChargingCount"],-1);
-        }
-        count = poke(b,s).value("BeamChargingCount").toInt();
-
-        if (count > 0)
-        {
-            turn(b,s)["TellPlayers"] = false;
-            poke(b,s)["ReleaseTurn"] = b.turn() + count;
-            turn(b,s)["Power"] = 0;
-            turn(b,s)["PossibleTargets"] = Move::None;
-            addFunction(poke(b,s), "TurnSettings", "SolarBeam", &ts);
-            b.sendMoveMessage(119,0,s,Pokemon::Grass);
-        }
-    }
-
-    static void ts (int s, int, BS &b) {
-	int count = poke(b,s).value("BeamChargingCount").toInt();
-	if (count > 0 &&
-            poke(b,s).value("ReleaseTurn").toInt() == b.turn() + count -1)
-	{
-	    turn(b,s)["NoChoice"] = true;
-            MoveEffect::setup(SolarBeam,s,b.rev(s),b);
-	} else {
-	    poke(b,s).remove("BeamChargingCount");
-	}
-    }
-};
 
 struct MMSpite : public MM
 {
@@ -3706,8 +3666,7 @@ struct MMTorment : public MM {
     static void uas (int s, int t, BS &b) {
         poke(b,t)["Tormented"] = true;
         addFunction(poke(b,t), "MovesPossible", "Torment", &msp);
-        addFunction(turn(b,t), "MovePossible", "Torment", &mp);
-        b.sendMoveMessage(135,1,s,Pokemon::Dark,t);
+        b.sendMoveMessage(135,0,s,Pokemon::Dark,t);
     }
 
     static void msp(int s, int, BS &b) {
@@ -3715,14 +3674,6 @@ struct MMTorment : public MM {
             if (b.move(s,i) == poke(b,s)["LastMoveUsed"].toInt()) {
                 turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
             }
-        }
-    }
-
-    static void mp(int s, int, BS &b) {
-        int move = turn(b,s)["MoveChosen"].toInt();
-        if (move == poke(b,s)["LastMoveUsed"].toInt()) {
-            turn(b,s)["ImpossibleToMove"] = true;
-            b.sendMoveMessage(135,0,s,Pokemon::Dark,s,move);
         }
     }
 };
@@ -4185,6 +4136,8 @@ struct MMBugBite : public MM
         int item = b.poke(t).item();
         if (!ItemInfo::isBerry(item))
             return;
+        int sitem = b.poke(s).item();
+        b.poke(s).item() = item;
         b.disposeItem(t);
 
         /* Setting up the conditions so berries work properly */
@@ -4208,6 +4161,7 @@ struct MMBugBite : public MM
         /* Restoring initial conditions */
         poke(b,s)["ItemArg"] = tempItemStorage;
         turn(b,s).remove("BugBiter");
+        b.poke(s).item() = sitem;
     }
 };
 
@@ -4492,7 +4446,7 @@ void MoveEffect::init()
     REGISTER_MOVE(116, SleepTalk);
     REGISTER_MOVE(117, SmellingSalt);
     REGISTER_MOVE(118, Snatch);
-    REGISTER_MOVE(119, SolarBeam);
+    /* 199 is free */
     REGISTER_MOVE(120, Acupressure);
     REGISTER_MOVE(121, Spikes);
     REGISTER_MOVE(122, SpitUp);

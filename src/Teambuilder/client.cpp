@@ -12,7 +12,7 @@
 #include "../PokemonInfo/pokemonstructs.h"
 
 
-Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), myrelay()
+Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), myrelay(), findingBattle(false)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
     mychallenge = NULL;
@@ -20,7 +20,6 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     myteambuilder = NULL;
     resize(800, 600);
 
-    QPushButton *findmatch;
     QGridLayout *layout = new QGridLayout(this);
 
     layout->addWidget(myplayers = new QListWidget(), 0, 0, 3, 1, Qt::AlignLeft);
@@ -29,7 +28,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     layout->addWidget(myline = new QLineEdit(), 1, 1);
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     layout->addLayout(buttonsLayout,2,1);
-    buttonsLayout->addWidget(findmatch = new QPushButton(tr("&Find Battle")));
+    buttonsLayout->addWidget(findMatch = new QPushButton(tr("&Find Battle")));
     buttonsLayout->addWidget(myregister = new QPushButton(tr("&Register")));
     buttonsLayout->addWidget(myexit = new QPushButton(tr("&Exit")));
     buttonsLayout->addWidget(mysender = new QPushButton(tr("&Send")));
@@ -57,7 +56,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
     connect(myregister, SIGNAL(clicked()), SLOT(sendRegister()));
-    connect(findmatch, SIGNAL(clicked()), SLOT(openBattleFinder()));
+    connect(findMatch, SIGNAL(clicked()), SLOT(openBattleFinder()));
 
     initRelay();
 
@@ -270,6 +269,11 @@ void Client::controlPanel(int id)
 
 void Client::openBattleFinder()
 {
+    if (findingBattle) {
+        cancelFindBattle(true);
+        return;
+    }
+
     if (myBattleFinder) {
         myBattleFinder->raise();
         return;
@@ -284,6 +288,8 @@ void Client::openBattleFinder()
 void Client::findBattle(const FindBattleData&data)
 {
     relay().notify(NetworkCli::FindMatch,data);
+    findMatch->setText(tr("&Cancel Find Battle"));
+    findingBattle = true;
 }
 
 void Client::setPlayer(const UserInfo &ui)
@@ -545,6 +551,10 @@ void Client::versionDiff(const QString &a, const QString &b)
 {
     if (a != b) {
         printHtml(toColor(tr("Your client version (%2) doesn't match with the server's (%1).").arg(a,b), QColor("#e37800")));
+
+        if (b.compare(a) < 0) {
+            QMessageBox::information(this, tr("Old Version"), tr("Your version is older than the server's, there might be some things you can't do.\n\nIt is recommended to update."));
+        }
     }
 }
 
@@ -646,6 +656,7 @@ void Client::seeChallenge(const ChallengeInfo &c)
 
 void Client::battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
+    cancelFindBattle(false);
     mybattle = new BattleWindow(player(ownId()), player(id), team, conf);
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
     mybattle->setWindowFlags(Qt::Window);
@@ -742,6 +753,18 @@ void Client::removeBattleWindow()
 QString Client::name(int id) const
 {
     return info(id).name;
+}
+
+void Client::cancelFindBattle(bool verbose)
+{
+    if (!findingBattle) {
+        return;
+    }
+    if (verbose) {
+        relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Cancelled, 0));
+    }
+    findMatch->setText(tr("&Find Battle"));
+    findingBattle = false;
 }
 
 void Client::challengeStuff(const ChallengeInfo &c)
@@ -1083,6 +1106,7 @@ void Client::showDock(Qt::DockWidgetArea areas, QDockWidget *dock, Qt::Orientati
 void Client::changeTeam()
 {
     mynick = myteam->trainerNick();
+    cancelFindBattle(false);
     relay().sendTeam(*myteam);
 }
 
@@ -1138,6 +1162,8 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
 
+    QSettings s;
+
     QVBoxLayout *ml = new QVBoxLayout(this);
     ml->setSpacing(10);
     setWindowFlags(Qt::Window);
@@ -1150,6 +1176,18 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
     sub2->addWidget(rangeOn = new QCheckBox(tr("Only battle players with a max rating difference of ")));
     sub2->addWidget(range = new QLineEdit());
 
+    QGroupBox *gb = new QGroupBox(tr("Clauses"));
+    ml->addWidget(gb);
+
+    QGridLayout *gbl = new QGridLayout(gb);
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        clauses[i] = new QCheckBox(ChallengeInfo::clause(i));
+        clauses[i]->setToolTip(ChallengeInfo::description(i));
+        clauses[i]->setTristate();
+        clauses[i]->setCheckState(Qt::CheckState(s.value(QString("clause_%1_state").arg(ChallengeInfo::clause(i))).toInt()));
+        gbl->addWidget(clauses[i], i/2, i%2);
+    }
+
     QHBoxLayout *hl = new QHBoxLayout();
     ml->addLayout(hl);
     hl->addWidget(ok = new QPushButton(tr("Find Battle")));
@@ -1157,7 +1195,6 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
 
     range->setMaximumWidth(35);
 
-    QSettings s;
     rated->setChecked(s.value("find_battle_force_rated").toBool());
     sameTier->setChecked(s.value("find_battle_same_tier").toBool());
     rangeOn->setChecked(s.value("find_battle_range_on").toBool());
@@ -1194,6 +1231,23 @@ void BattleFinder::throwChallenge()
     d.sameTier = sameTier->isChecked();
     d.range = range->text().toInt();
     d.ranged = rangeOn->isChecked();
+
+    d.forcedClauses = 0;
+    d.bannedClauses = 0;
+
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        switch(clauses[i]->checkState()) {
+        case Qt::Checked:
+            d.forcedClauses |= 1 << i;
+            break;
+        case Qt::Unchecked:
+            d.bannedClauses |= 1 << i;
+            break;
+        default:
+            break;
+        }
+        s.setValue(QString("clause_%1_state").arg(ChallengeInfo::Clauses(i)), clauses[i]->checkState());
+    }
 
     emit findBattle(d);
 }
