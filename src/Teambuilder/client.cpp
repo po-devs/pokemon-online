@@ -1246,7 +1246,7 @@ void BattleFinder::throwChallenge()
         default:
             break;
         }
-        s.setValue(QString("clause_%1_state").arg(ChallengeInfo::Clauses(i)), clauses[i]->checkState());
+        s.setValue(QString("clause_%1_state").arg(i), clauses[i]->checkState());
     }
 
     emit findBattle(d);
