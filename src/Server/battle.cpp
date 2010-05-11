@@ -22,8 +22,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     loseMessage[1] = p2.losingMessage();
     attacked() = -1;
     attacker() = -1;
-    mycurrentpoke[0] = -1;
-    mycurrentpoke[1] = -1;
+
     /* timers for battle timeout */
     timeleft[0] = 5*60;
     timeleft[1] = 5*60;
@@ -32,6 +31,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     finished() = false;
     clauses() = c.clauses;
     rated() = c.rated;
+    doubles() = c.doubles;
+    numberOfSlots() = doubles() ? 4 : 2;
     if (rated())
         tier() = p1.tier();
     currentForcedSleepPoke[0] = -1;
@@ -40,6 +41,15 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     p1.battleId() = publicId();
     p2.battle = this;
     p2.battleId() = publicId();
+
+    for (int i = 0; i < numberOfSlots(); i++) {
+        mycurrentpoke.push_back(-1);
+        options.push_back(BattleChoices());
+        slotzone.push_back(context());
+        pokelong.push_back(context());
+        turnlong.push_back(context());
+        choice.push_back(BattleChoice());
+    }
 
     if (clauses() & ChallengeInfo::ChallengeCup) {
         team1.generateRandom();
@@ -132,8 +142,12 @@ void BattleSituation::start()
     /* Beginning of the battle! */
     turn() = 0; /* here for Truant */
 
-    sendPoke(Player1, 0);
-    sendPoke(Player2, 0);
+    sendPoke(slot(Player1), 0);
+    sendPoke(slot(Player2), 0);
+    if (doubles()) {
+        sendPoke(slot(Player1, true), 1);
+        sendPoke(slot(Player2, true), 1);
+    }
 
     /* For example, if two pokemons are brought out
        with a weather ability, the slower one acts last */
@@ -162,6 +176,11 @@ int BattleSituation::spot(int id) const
     } else {
 	return -1;
     }
+}
+
+int BattleSituation::slot(int player, bool second) const
+{
+    return (player+1) * (1+ second) - 1;
 }
 
 bool BattleSituation::acceptSpectator(int id, bool authed) const
@@ -208,7 +227,7 @@ void BattleSituation::addSpectator(int id)
             notify(key, AbsStatusChange, i, qint8(j), qint8(poke(i, j).status()));
         }
         if (!koed(i)) {
-            notify(key, SendOut, i, false, quint8(0), opoke(i, currentPoke(i)));
+            notify(key, SendOut, i, false, quint8(currentPoke(i)), opoke(i, currentPoke(i)));
             notify(key, ChangeTempPoke,i, quint8(TempSprite),quint16(pokenum(i)));
             if (forme(i) != poke(i).forme())
                 notify(key, ChangeTempPoke, i, quint8(AestheticForme), quint8(forme(i)));
@@ -233,6 +252,20 @@ int BattleSituation::id(int spot) const
         return spectators.value(spot);
     } else {
         return myid[spot];
+    }
+}
+
+int BattleSituation::player(int slot) const
+{
+    return slot % 2;
+}
+
+int BattleSituation::randomOpponent(int slot) const
+{
+    if (!doubles()) {
+        return rev(slot);
+    } else {
+        return this->slot(player(slot), true_rand() % 2);
     }
 }
 
@@ -274,14 +307,14 @@ PokeBattle & BattleSituation::poke(int player, int poke)
     return team(player).poke(poke);
 }
 
-const PokeBattle &BattleSituation::poke(int player) const
+const PokeBattle &BattleSituation::poke(int slot) const
 {
-    return team(player).poke(currentPoke(player));
+    return team(player(slot)).poke(currentPoke(slot));
 }
 
-PokeBattle &BattleSituation::poke(int player)
+PokeBattle &BattleSituation::poke(int slot)
 {
-    return team(player).poke(currentPoke(player));
+    return team(player(slot)).poke(currentPoke(slot));
 }
 
 int BattleSituation::currentPoke(int player) const
@@ -338,13 +371,14 @@ void BattleSituation::beginTurn()
 {
     turn() += 1;
     /* Resetting temporary variables */
-    turnlong[0].clear();
-    turnlong[1].clear();
+    for (int i = 0; i < numberOfSlots(); i++)
+        turnlong[i].clear();
 
     callpeffects(Player1, Player2, "TurnSettings");
     callpeffects(Player2, Player1, "TurnSettings");
 
     requestChoices();
+    /** WARNING: WHAT TO DO WITH THIS ? **/
     /* preventing the players from cancelling (like when u-turn/Baton pass) */
     couldMove[0] = false;
     couldMove[1] = false;
@@ -385,7 +419,7 @@ void BattleSituation::notifyFail(int p)
 
 void BattleSituation::endTurnStatus()
 {
-    for (int player = Player1; player <= Player2; player++)
+    for (int player = 0; player <= numberOfSlots(); player++)
     {
 	if (!koed(player))
 	    switch(poke(player).status())
@@ -782,59 +816,62 @@ void BattleSituation::spectatingChat(int id, const QString &str)
 
 /* Battle functions! Yeah! */
 
-void BattleSituation::sendPoke(int player, int pok, bool silent)
+void BattleSituation::sendPoke(int slot, int pok, bool silent)
 {
-    koedPokes.remove(player);
+    koedPokes.remove(slot);
+
+    int player = this->player(slot);
 
     if (poke(player,pok).num() == Pokemon::Giratina_O && poke(player,pok).item() != Item::GriseousOrb)
         changeForm(player,pok,Pokemon::Giratina);
     
-    changeCurrentPoke(player, pok);
+    changeCurrentPoke(slot, pok);
 
-    notify(player, SendOut, player, silent, ypoke(player, pok));
-    notify(AllButPlayer, SendOut, player, silent, quint8(pok), opoke(player, pok));
+    notify(player, SendOut, slot, silent, ypoke(player, pok));
+    notify(AllButPlayer, SendOut, slot, silent, quint8(pok), opoke(player, pok));
 
     /* reset temporary variables */
-    pokelong[player].clear();
+    pokelong[slot].clear();
     /* Give new values to what needed */
-    pokelong[player]["Num"] = poke(player).num();
-    pokelong[player]["Weight"] = PokemonInfo::Weight(poke(player).num());
-    pokelong[player]["Type1"] = PokemonInfo::Type1(poke(player).num());
-    pokelong[player]["Type2"] = PokemonInfo::Type2(poke(player).num());
-    pokelong[player]["Ability"] = poke(player).ability();
-    pokelong[player]["Forme"] = poke(player).forme();
+    pokelong[slot]["Num"] = poke(slot).num();
+    pokelong[slot]["Weight"] = PokemonInfo::Weight(poke(slot).num());
+    pokelong[slot]["Type1"] = PokemonInfo::Type1(poke(slot).num());
+    pokelong[slot]["Type2"] = PokemonInfo::Type2(poke(slot).num());
+    pokelong[slot]["Ability"] = poke(slot).ability();
+    pokelong[slot]["Forme"] = poke(slot).forme();
 
     for (int i = 0; i < 4; i++) {
-	pokelong[player]["Move" + QString::number(i)] = poke(player).move(i).num();
+        pokelong[slot]["Move" + QString::number(i)] = poke(slot).move(i).num();
     }
 
     for (int i = 1; i < 6; i++)
-        pokelong[player][QString("Stat%1").arg(i)] = poke(player).normalStat(i);
+        pokelong[slot][QString("Stat%1").arg(i)] = poke(slot).normalStat(i);
 
     for (int i = 0; i < 6; i++) {
-        pokelong[player][QString("DV%1").arg(i)] = poke(player).dvs()[i];
+        pokelong[slot][QString("DV%1").arg(i)] = poke(slot).dvs()[i];
     }
 
-    pokelong[player]["Level"] = poke(player).level();
+    pokelong[slot]["Level"] = poke(slot).level();
 
     /* Increase the "switch count". Switch count is used to see if the pokémon has switched
        (like for an attack like attract), it is imo more effective that other means */
-    inc(teamzone[player]["SwitchCount"], 1);
+    inc(slotzone[player]["SwitchCount"], 1);
 
     if (poke(player,pok).num() == Pokemon::Arceus && ItemInfo::isPlate(poke(player,pok).item())) {
         int type = ItemInfo::PlateType(poke(player,pok).item());
         
         if (type != Type::Normal) {
-            changeAForme(player, type);
+            changeAForme(slot, type);
         }
     }
 
-    turnlong[player]["CantGetToMove"] = true;
+    turnlong[slot]["CantGetToMove"] = true;
 
-    ItemEffect::setup(poke(player).item(),player,*this);
+    ItemEffect::setup(poke(slot).item(),slot,*this);
 
-    calleffects(player, player, "UponSwitchIn");
-    callzeffects(player, player, "UponSwitchIn");
+    calleffects(slot, slot, "UponSwitchIn");
+    callseffects(slot, slot, "UponSwitchIn");
+    callzeffects(player, slot, "UponSwitchIn");
 }
 
 void BattleSituation::callEntryEffects(int player)
@@ -907,6 +944,19 @@ void BattleSituation::callzeffects(int source, int target, const QString &name)
 
 	    f(source, target, *this);
 	}
+    }
+}
+
+void BattleSituation::callseffects(int source, int target, const QString &name)
+{
+    if (slotzone[source].contains("Effect_" + name)) {
+        QSet<QString> &effects = *slotzone[source]["Effect_" + name].value<QSharedPointer<QSet<QString> > >();
+
+        foreach(QString effect, effects) {
+            MoveMechanics::function f = slotzone[source]["Effect_" + name + "_" + effect].value<MoveMechanics::function>();
+
+            f(source, target, *this);
+        }
     }
 }
 

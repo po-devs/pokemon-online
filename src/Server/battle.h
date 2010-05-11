@@ -19,12 +19,18 @@ class BattleSituation : public QThread
     PROPERTY(quint32, clauses);
     PROPERTY(int, attacker);
     PROPERTY(int, attacked);
+    PROPERTY(bool, doubles);
+    PROPERTY(int, numberOfSlots);
 public:
     enum {
 	AllButPlayer = -2,
 	All = -1,
 	Player1,
-	Player2
+        Player2,
+        Slot11,
+        Slot21,
+        Slot12,
+        Slot22
     };
     typedef QVariantHash context;
 
@@ -67,6 +73,9 @@ public:
     const PokeBattle &poke(int player, int poke) const;
     int currentPoke(int player) const;
     bool koed(int player) const;
+    int player(int slot) const;
+    int randomOpponent(int slot) const;
+    int slot(int player, bool second=false) const;
     void changeCurrentPoke(int player, int poke);
     int countAlive(int player) const;
 
@@ -314,7 +323,7 @@ private:
     }
 
     /* What choice we allow the players to have */
-    BattleChoices options[2];
+    QList<BattleChoices> options;
     /* Is set to false once a player choses it move */
     bool hasChoice[2];
     /* just indicates if the player could originally move or not */
@@ -322,7 +331,7 @@ private:
 
     TeamBattle team1, team2;
 
-    int mycurrentpoke[2]; /* -1 for koed */
+    QList<int> mycurrentpoke; /* -1 for koed */
     /* timers */
     QAtomicInt timeleft[2];
     QAtomicInt startedAt[2];
@@ -348,6 +357,8 @@ public:
     void callbeffects(int source, int target, const QString &name);
     /* The team zone effects */
     void callzeffects(int source, int target, const QString &name);
+    /* The slot effects */
+    void callseffects(int source, int target, const QString &name);
     /* item effects */
     void callieffects(int source, int target, const QString &name);
     /* Ability effects */
@@ -367,25 +378,27 @@ public:
 
     /* Variables that are reset when the poke is switched out.
 	Like for exemple a Requiem one... */
-    context pokelong[2];
+    QList<context> pokelong;
     /* Variables that are reset every turn right before everything else happens
 	at the very beginning of a turn */
-    context turnlong[2];
+    QList<context> turnlong;
     /* General things like last move ever used, etc. */
     context battlelong;
     /* Moves that affect a team */
     context teamzone[2];
+    /* Moves that affect a particular Slot (wish, ...) */
+    QList<context> slotzone;
 
     /* The choice of a player, accessed by move ENCORE */
-    BattleChoice choice[2];
+    QList<BattleChoice> choice;
 
     /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
     // Public because used by Yawn
     int currentForcedSleepPoke[2];
 
     /* Generator of random numbers */
-    MTRand_int32 true_rand2;
-    unsigned true_rand() {
+    mutable MTRand_int32 true_rand2;
+    unsigned true_rand() const {
         return unsigned(true_rand2());
     }
 

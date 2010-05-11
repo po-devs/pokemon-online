@@ -2596,7 +2596,10 @@ struct MMIceBall : public MM
 
     static void uas(int s, int, BS &b) {
 	int count = poke(b,s)["IceBallCount"].toInt();
-	if (count >= 15) {
+        if (b.turn() - 1 != poke(b,s)["LastBallTurn"].toInt()) {
+            count = 0;
+        }
+        if (count >= 15) {
 	    poke(b,s)["IceBallCount"] = 0;
 	} else {
 	    poke(b,s)["IceBallCount"] = count*2+1;
@@ -2998,16 +3001,16 @@ struct MMMimic : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-	if (!poke(b,t).contains("LastMoveSuccessfullyUsedTurn")) {
+        if (!poke(b,t).contains("LastMoveUsedTurn")) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
-	int tu = poke(b,t)["LastMoveSuccessfullyUsedTurn"].toInt();
+        int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
 	if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
-	int move = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
+        int move = poke(b,t)["LastMoveUsed"].toInt();
         if (b.hasMove(s,move) || move == Metronome) {
 	    turn(b,s)["Failed"] = true;
 	    return;
@@ -3015,7 +3018,7 @@ struct MMMimic : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-	int move = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
+        int move = poke(b,t)["LastMoveUsed"].toInt();
         int slot = poke(b,s)["MoveSlot"].toInt();
         b.changeTempMove(s, slot, move);
 	b.sendMoveMessage(81,0,s,type(b,s),t,move);
@@ -3128,7 +3131,7 @@ struct MMMudSport : public MM
     static void uas(int s, int, BS &b) {
 	int move = MM::move(b,s);
         b.sendMoveMessage(88, move == MudSport ? 0 : 1, s, type(b,s));
-	int type = poke(b,s)["MudSport_Arg"].toInt();
+        int type = turn(b,s)["MudSport_Arg"].toInt();
 	poke(b,s)["Sported" + QString::number(type)] = true;
 	b.battlelong["Sported"+ QString::number(type)] = s;
     }

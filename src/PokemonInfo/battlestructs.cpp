@@ -561,12 +561,12 @@ QDataStream & operator << (QDataStream &out, const BattleChoice &po)
 }
 
 QDataStream & operator >> (QDataStream &in, ChallengeInfo & c) {
-    in >> c.dsc >> c.opp >> c.clauses;
+    in >> c.dsc >> c.opp >> c.clauses >> c.doubles;
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const ChallengeInfo & c) {
-    out << c.dsc <<  c.opp << c.clauses;
+    out << c.dsc <<  c.opp << c.clauses << c.doubles;
     return out;
 }
 
