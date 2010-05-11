@@ -727,6 +727,13 @@ void BattleDisplay::updateToolTip(int spot)
     }
 
     tooltip += info().currentPoke().nick() + "\n";
+    int num = info().currentPoke().num();
+    tooltip += TypeInfo::Name(PokemonInfo::Type1(num));
+    int type2 = PokemonInfo::Type2(num);
+    if (type2 != Pokemon::Curse) {
+        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(num));
+    }
+    tooltip += "\n";
 
     for (int i = 0; i < 5; i++) {
         tooltip += "\n" + stats[i] + ": " + QString::number(info().mystats.stats[i]);

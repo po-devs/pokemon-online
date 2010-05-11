@@ -1,7 +1,7 @@
 (Inget föremål)
 
 
-
+%s återställde sina stats med white herb!
 %s stod ut tack vare sin focus band!
 %s stod ut tack vare sin focus sash!
 
