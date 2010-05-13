@@ -663,23 +663,12 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
 
     firstline->addStretch(100);
 
-    QLabel *brock = new QLabel(this);
-    brock->setPixmap(QPixmap("db/Teambuilder/Box/Brock.png"));
-    brock->setFixedSize(brock->pixmap()->size());
-    brock->move(QPoint(635,2));
-
-    QLabel *mudkip = new QLabel(this);
-    mudkip->setPixmap(QPixmap("db/Teambuilder/Box/Mudkip.png"));
-    mudkip->setFixedSize(mudkip->pixmap()->size());
-    mudkip->move(QPoint(572,188));
-
     bstore->setFixedWidth(132);
 
 
     QHBoxLayout *secondline = new QHBoxLayout();
     ml->addLayout(secondline);
 
-    secondline->addWidget(parent->createButtonMenu(), 0, Qt::AlignBottom);
     secondline->addWidget(m_boxes = new TB_BoxContainer(), 100);
 
     for (int i = 0; i < 6; i++) {

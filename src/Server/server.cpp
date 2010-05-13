@@ -782,8 +782,8 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id);
     mybattles.insert(id, battle);
 
-    player(id1)->startBattle(id2, battle->pubteam(id1), battle->configuration());
-    player(id2)->startBattle(id1, battle->pubteam(id2), battle->configuration());
+    player(id1)->startBattle(id2, battle->pubteam(id1), battle->configuration(), battle->doubles());
+    player(id2)->startBattle(id1, battle->pubteam(id2), battle->configuration(), battle->doubles());
 
     foreach(Player *p, myplayers) {
         if (p->isLoggedIn() && p->id() != id1 && p->id() != id2) {
@@ -1000,7 +1000,7 @@ void Server::spectatingRequested(int id, int idOfBattler)
         sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
         return;
     }
-    player(id)->spectateBattle(name(battle->id(0)), name(battle->id(1)), battle->publicId());
+    player(id)->spectateBattle(name(battle->id(0)), name(battle->id(1)), battle->publicId(), battle->doubles());
     battle->addSpectator(id);
 }
 

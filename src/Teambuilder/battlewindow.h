@@ -15,20 +15,31 @@ class QScrollDownTextEdit;
 class BattleInfo : public BaseBattleInfo
 {
 public:
-    BattleInfo(const TeamBattle &myteam, const PlayerInfo &me, const PlayerInfo &opp);
+    BattleInfo(const TeamBattle &myteam, const PlayerInfo &me, const PlayerInfo &opp, bool doubles, int myself, int oppo);
 
     /* Possible choices */
     bool possible;
-    BattleChoices choices;
+
+    QList<BattleChoices> choices;
+    QList<bool> available;
+    QList<bool> done;
 
     /* My team */
     TeamBattle myteam;
-    const PokeBattle &currentPoke() const;
-    PokeBattle &currentPoke();
 
-    BattleStats mystats;
+    bool sent;
 
-    PROPERTY(PokeBattle, tempPoke);
+    QList<BattleStats> mystats;
+
+    const PokeBattle &currentPoke(int spot) const;
+    PokeBattle &currentPoke(int spot);
+
+    QList<PokeBattle> m_tempPoke;
+    PokeBattle &tempPoke(int spot);
+
+    int number(int spot) {
+        return spot / 2;
+    }
 
     int lastMove[6];
 };
@@ -43,7 +54,7 @@ class BattleWindow : public BaseBattleWindow
 
     PROPERTY(BattleConfiguration, conf);
 public:
-    BattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf);
+    BattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf, bool doubles);
 
     BattleInfo &info() {
         return *(BattleInfo*)(&BaseBattleWindow::info());
@@ -62,7 +73,7 @@ public:
     const TeamBattle &team() const;
 
     void switchToNaught(int spot);
-    void switchTo(int pokezone, bool forced = false);
+    void switchTo(int pokezone, int spot, bool forced);
 
     void addSpectator(bool add, int id);
 
@@ -72,6 +83,7 @@ public:
     void sendChoice(const BattleChoice &b);
     QString nick(int spot) const;
 
+    int ownSlot() const;
 public slots:
     void switchClicked(int zone);
     void attackClicked(int zone);
@@ -93,11 +105,11 @@ protected slots:
 private:
 
     int idme() const {
-        return info().pInfo[Myself].id;
+        return info().pInfo[info().myself].id;
     }
 
     int idopp() const {
-        return info().pInfo[Opponent].id;
+        return info().pInfo[info().opponent].id;
     }
 
     QStackedWidget *mystack;
@@ -125,10 +137,10 @@ public slots:
     void changeBarMode();
 
 protected:
-    const PokeBattle &mypoke() const {return info().currentPoke(); }
-    const ShallowBattlePoke &foe() const {return info().currentShallow(Opponent); }
+    const PokeBattle &mypoke(int spot) const {return info().currentPoke(spot); }
+    const ShallowBattlePoke &foe(int spot) const {return info().currentShallow(spot); }
 
-    bool percentageMode;
+    QList<bool> percentageMode;
 };
 
 

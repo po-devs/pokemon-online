@@ -6,7 +6,7 @@
 
 class QStackedWidget;
 class TB_TeamBody;
-class DockAdvanced : public QDockWidget
+class DockAdvanced : public QStackedWidget
 {
     Q_OBJECT
 
@@ -19,7 +19,6 @@ class DockAdvanced : public QDockWidget
     void setPokemonNum(int indexStack,int pokeNum);
 
  private:
-    QStackedWidget * AdvStack;
     TB_TeamBody * m_builder;
 
 };

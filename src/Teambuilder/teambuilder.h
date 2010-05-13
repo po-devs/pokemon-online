@@ -104,16 +104,15 @@ private slots:
 
 signals:
     void done();
-    void showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation);
 private:
     QStackedWidget *m_body;
     TB_TrainerBody *m_trainerBody;
     TB_TeamBody *m_teamBody;
     TB_PokemonBoxes *m_boxes;
     Pokedex *m_pokedex;
-    QImageButton *nextb;
 
     QImageButton *buttons[LastW];
+    QLabel *currentZoneLabel;
     /* the Team of the trainer */
     TrainerTeam *m_team;
 
@@ -189,8 +188,6 @@ public:
     TB_TeamBody(TeamBuilder *parent);
     void updateTeam();
     void updatePoke(int num);
-signals:
-    void showDockAdvanced(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
 private slots:
     void changeIndex();
     void updateButton();
@@ -204,6 +201,8 @@ private:
     TB_PokemonBody *pokeBody[6];
     QStackedWidget *body;
 
+    QSplitter *splitter;
+    bool advSepWindow;
     DockAdvanced * m_dockAdvanced;
     DockAdvanced * dockAdvanced() const {
         return m_dockAdvanced;

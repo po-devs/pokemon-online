@@ -74,14 +74,14 @@ public:
     void removeChallenge(Challenge *c);
     void cancelChallenges();
     bool okForBattle() const;
-    void spectateBattle(const QString &name0, const QString &name1, int battleId);
+    void spectateBattle(const QString &name0, const QString &name1, int battleId, bool doubles);
     void sendChallengeStuff(const ChallengeInfo &c);
 
     void doWhenDC();
 
     ChallengeInfo getChallengeInfo(int id); /* to get the battle info of a challenge received by that player */
 
-    void startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf);
+    void startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
     void battleResult(int result, int winner, int loser);
 
     void kick();

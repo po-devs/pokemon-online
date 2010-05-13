@@ -91,7 +91,7 @@ public slots:
     /* Challenge info by the server */
     void challengeStuff(const ChallengeInfo &c);
     /* battle... */
-    void battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf);
+    void battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
     void battleStarted(int id1, int id2);
     void battleFinished(int res, int winner, int loser);
     void saveBattleLogs(bool save);
@@ -101,7 +101,7 @@ public slots:
     void changeMusicFolder();
     void forfeitBattle();
     void watchBattleRequ(int);
-    void watchBattle(const QString &name0, const QString &name1, int battleId);
+    void watchBattle(const QString &name0, const QString &name1, int battleId, bool doubles);
     void spectatingBattleMessage(int battleId, const QByteArray &command);
     void stopWatching(int battleId);
     /* shows the context menu for that player */

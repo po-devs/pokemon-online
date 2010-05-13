@@ -36,9 +36,6 @@ public slots:
     /* slots called by subwindows when they need it */
     void loadTeamDialog();
     void loadStyleSheet();
-
-    void setDock(Qt::DockWidgetArea area,QDockWidget * dock,Qt::Orientation orient);
-    void removeDock(QDockWidget * dock);
 private:
     QMainWindow *displayer;
 

@@ -5,7 +5,6 @@
 #include "client.h"
 #include "serverchoice.h"
 #include "../PokemonInfo/movesetchecker.h"
-#include <QStyleFactory>
 
 MainEngine::MainEngine() : displayer(0)
 {
@@ -130,17 +129,6 @@ void MainEngine::launchTeamBuilder()
     TeamBuilder *TB = new TeamBuilder(trainerTeam());
     MainEngineRoutine(TB);
 
-    /* For the advanced window */
-#ifdef WIN32
-    displayer->layout()->setSizeConstraint(QLayout::SetFixedSize);
-#else
-# ifdef WIN64
-    displayer->layout()->setSizeConstraint(QLayout::SetFixedSize);
-# endif
-#endif
-
-    connect(TB,SIGNAL(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)),
-            SLOT(setDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));
 }
 
@@ -222,17 +210,6 @@ void MainEngine::loadTeamDialog()
     if (loadTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
         settings.setValue("team_location", newLocation);
     }
-}
-
-void MainEngine::setDock(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation orient)
-{
-    //displayer->resize(displayer->width() + dock->width(), displayer->height());
-    displayer->addDockWidget(areas,dock,orient);
-}
-
-void MainEngine::removeDock(QDockWidget * dock)
-{
-    displayer->removeDockWidget(dock);
 }
 
 #undef MainEngineRoutine

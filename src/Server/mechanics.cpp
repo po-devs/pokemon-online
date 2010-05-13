@@ -16,6 +16,11 @@ BattleSituation::context & Mechanics::team(BattleSituation &b, int player)
     return b.teamzone[player];
 }
 
+BattleSituation::context & Mechanics::slot(BattleSituation &b, int player)
+{
+    return b.slotzone[player];
+}
+
 int Mechanics::type(BattleSituation &b, int source)
 {
     return turn(b,source)["Type"].toInt();
