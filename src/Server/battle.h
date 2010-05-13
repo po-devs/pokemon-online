@@ -21,6 +21,7 @@ class BattleSituation : public QThread
     PROPERTY(int, attacked);
     PROPERTY(bool, doubles);
     PROPERTY(int, numberOfSlots);
+    PROPERTY(bool, blocked);
 public:
     enum {
 	AllButPlayer = -2,
@@ -41,7 +42,9 @@ public:
     /* returns 0 or 1, or -1 if that player is not involved */
     int spot(int id) const;
     /* The other player */
-    int rev(int spot) const;
+    int opponent(int player) const;
+    QList<int> revs(int slot) const;
+    QList<int> allRevs(int slot) const; //returns even koed opponents
     /* returns the id corresponding to that spot (spot is 0 or 1) */
     int id(int spot) const;
     /* Return the configuration of the players (1 refer to that player, 0 to that one... */
@@ -74,10 +77,14 @@ public:
     int currentPoke(int player) const;
     bool koed(int player) const;
     int player(int slot) const;
+    /* Returns -1 if none */
     int randomOpponent(int slot) const;
-    int slot(int player, bool second=false) const;
+    /* Returns a koed one if none */
+    int randomValidOpponent(int slot) const;
+    int slot(int player, int poke = 0) const;
     void changeCurrentPoke(int player, int poke);
     int countAlive(int player) const;
+    int countBackUp(int player) const;
 
     /* Starts the battle -- use the time before to connect signals / slots */
     void start();
@@ -173,9 +180,12 @@ public:
     int weather();
     int getType(int player, int slot);
     bool isFlying(int player);
+    bool isOut(int player, int poke);
     bool hasSubstitute(int player);
     void requestSwitchIns();
     void requestSwitch(int player);
+    bool linked(int linked, QString relationShip);
+    void link(int linker, int linked, QString relationShip);
     void notifySub(int player, bool sub);
     int repeatNum(int player, context &move);
     PokeFraction getStatBoost(int player, int stat);
@@ -234,7 +244,8 @@ public:
         Rated,
         TierSection,
         EndMessage,
-        PointEstimate
+        PointEstimate,
+        StartChoices
     };
 
     enum ChangeTempPoke {
@@ -301,6 +312,14 @@ public slots:
     void battleChat(int id, const QString &str);
 public:
     void spectatingChat(int id, const QString &str);
+private:
+    bool canCancel(int player);
+    void cancel(int player);
+
+    bool validChoice(const BattleChoice &b);
+    void storeChoice(const BattleChoice &b);
+    bool allChoicesOkForPlayer(int player);
+    bool allChoicesSet();
 signals:
     /* Due to threading issue, and the signal not being direct,
        The battle might already be deleted when the signal is received.
@@ -325,9 +344,9 @@ private:
     /* What choice we allow the players to have */
     QList<BattleChoices> options;
     /* Is set to false once a player choses it move */
-    bool hasChoice[2];
+    QList<int> hasChoice;
     /* just indicates if the player could originally move or not */
-    bool couldMove[2];
+    QList<bool> couldMove;
 
     TeamBattle team1, team2;
 

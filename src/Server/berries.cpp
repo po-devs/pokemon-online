@@ -251,22 +251,15 @@ struct BMBerryLock : public BMPinch
 struct BMCustap : public BMPinch
 {
     BMCustap() {
-        functions["AfterHPChange"] = &ahpc;
-    }
-
-    static void ahpc(int s, int, BS &b) {
-        if (!testpinch(s, s, b,4))
-            return;
-
-        poke(b,s)["CustapTurn"] = b.turn() + 1;
-        addFunction(poke(b,s), "TurnOrder", "CustapBerry", &to);
-        b.sendBerryMessage(11,s,0);
+        functions["TurnOrder"] = &to;
     }
 
     static void to (int s, int, BS &b) {
-        if (b.turn() == poke(b,s).value("CustapTurn").toInt())
-            turn(b,s)["TurnOrder"] = 3;
-        removeFunction(poke(b,s), "TurnOrder", "Custap");
+        if (!testpinch(s, s, b,4))
+            return;
+
+        b.sendBerryMessage(11,s,0);
+        turn(b,s)["TurnOrder"] = 3;
     }
 };
 

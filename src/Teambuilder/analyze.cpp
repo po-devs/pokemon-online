@@ -166,8 +166,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
                 /* This is a battle we take part in */
                 TeamBattle team;
                 BattleConfiguration conf;
-                in >> team >> conf;
-                emit battleStarted(id2, team, conf);
+                bool doubles;
+                in >> team >> conf >> doubles;
+                emit battleStarted(id2, team, conf, doubles);
             } else {
                 /* this is a battle of strangers */
                 emit battleStarted(id1, id2);
@@ -282,8 +283,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         {
             QString name0, name1;
             qint32 battleId;
-            in >> name0 >> name1 >> battleId;
-            emit spectatedBattle(name0, name1, battleId);
+            bool doubles;
+            in >> name0 >> name1 >> battleId >> doubles;
+            emit spectatedBattle(name0, name1, battleId, doubles);
             break;
         }
     case SpectatingBattleMessage:

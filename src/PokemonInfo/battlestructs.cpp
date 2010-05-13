@@ -13,7 +13,7 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("Disallow Spects"),
     QObject::tr("Level Balance"),
     QObject::tr("Challenge Cup"),
-    QObject::tr("No Time Out"),
+    QObject::tr("No Timeout"),
     QObject::tr("Species Clause")
 };
 
@@ -413,9 +413,9 @@ void TeamBattle::generateRandom()
             }
         }
 
-        if (moves.contains(Move::Return))
+        if (movesTaken.contains(Move::Return))
             p.happiness() = 255;
-        else if (moves.contains(Move::Frustration))
+        else if (movesTaken.contains(Move::Frustration))
             p.happiness() = 0;
 
         //bool itemDone= false;
@@ -490,28 +490,29 @@ void BattleChoices::disableAttacks()
     attacksAllowed = false;
 }
 
-BattleChoices BattleChoices::SwitchOnly()
+BattleChoices BattleChoices::SwitchOnly(quint8 slot)
 {
     BattleChoices ret;
     ret.disableAttacks();
+    ret.numSlot = slot;
 
     return ret;
 }
 
 QDataStream & operator >> (QDataStream &in, BattleChoices &po)
 {
-    in >> po.switchAllowed >> po.attacksAllowed >> po.attackAllowed[0] >> po.attackAllowed[1] >> po.attackAllowed[2] >> po.attackAllowed[3];
+    in >> po.numSlot >> po.switchAllowed >> po.attacksAllowed >> po.attackAllowed[0] >> po.attackAllowed[1] >> po.attackAllowed[2] >> po.attackAllowed[3];
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const BattleChoices &po)
 {
-    out << po.switchAllowed << po.attacksAllowed << po.attackAllowed[0] << po.attackAllowed[1] << po.attackAllowed[2] << po.attackAllowed[3];
+    out << po.numSlot << po.switchAllowed << po.attacksAllowed << po.attackAllowed[0] << po.attackAllowed[1] << po.attackAllowed[2] << po.attackAllowed[3];
     return out;
 }
 
-BattleChoice::BattleChoice(bool pokeswitch, qint8 numswitch)
-	: pokeSwitch(pokeswitch), numSwitch(numswitch)
+BattleChoice::BattleChoice(bool pokeSwitch, qint8 numSwitch, quint8 numSlot)
+        : pokeSwitch(pokeSwitch), numSwitch(numSwitch), numSlot(numSlot)
 {
 }
 
@@ -550,13 +551,13 @@ bool BattleChoice::match(const BattleChoices &avail) const
 
 QDataStream & operator >> (QDataStream &in, BattleChoice &po)
 {
-    in >> po.pokeSwitch >> po.numSwitch;
+    in >> po.numSlot >> po.pokeSwitch >> po.numSwitch >> po.targetPoke;
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const BattleChoice &po)
 {
-    out << po.pokeSwitch << po.numSwitch;
+    out << po.numSlot << po.pokeSwitch << po.numSwitch << po.targetPoke;
     return out;
 }
 

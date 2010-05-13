@@ -182,8 +182,6 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
         hpanddvchoice->horizontalHeader()->resizeSection(i, 44);
     }
 
-    baselayout->addSpacerItem(new QSpacerItem(0,25));
-
     connect(hpanddvchoice, SIGNAL(cellActivated(int,int)), SLOT(changeDVsAccordingToHP(int)));
 
     updateDVs();

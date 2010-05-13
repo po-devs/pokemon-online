@@ -10,6 +10,7 @@ struct Mechanics
     static BattleSituation::context & turn(BattleSituation &b, int player);
     static BattleSituation::context & poke(BattleSituation &b, int player);
     static BattleSituation::context & team(BattleSituation &b, int player);
+    static BattleSituation::context & slot(BattleSituation &b, int player);
     static int move(BattleSituation &b, int source);
     static int type(BattleSituation &b, int source);
 

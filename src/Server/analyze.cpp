@@ -34,9 +34,9 @@ void Analyzer::sendMessage(const QString &message)
     notify(SendMessage, message);
 }
 
-void Analyzer::engageBattle(int , int id, const TeamBattle &team, const BattleConfiguration &conf)
+void Analyzer::engageBattle(int , int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
 {
-    notify(EngageBattle, qint32(0), qint32(id), team, conf);
+    notify(EngageBattle, qint32(0), qint32(id), team, conf, doubles);
 }
 
 void Analyzer::connectTo(const QString &host, quint16 port)

@@ -267,13 +267,13 @@ static QString trFile(const QString &beg)
 
 QString PokemonInfo::Desc(int poke, int cartridge)
 {
-    int orpoke = OriginalForm(poke);
+    int orpoke = OriginalForme(poke);
     return get_line(trFile(path("description_%1").arg(cartridge)), orpoke);
 }
 
 QString PokemonInfo::Classification(int poke)
 {
-    int orpoke = OriginalForm(poke);
+    int orpoke = OriginalForme(poke);
     return get_line(trFile(path("classification")), orpoke);
 }
 
@@ -578,7 +578,7 @@ void PokemonInfo::loadNames()
 
 bool PokemonInfo::HasFormes(int pokenum)
 {
-    return IsForme(pokenum) ? HasFormes(OriginalForm(pokenum)) : m_AlternateFormes.contains(pokenum);
+    return IsForme(pokenum) ? HasFormes(OriginalForme(pokenum)) : m_AlternateFormes.contains(pokenum);
 }
 
 bool PokemonInfo::HasAestheticFormes(int pokenum)
@@ -601,7 +601,7 @@ bool PokemonInfo::IsForme(int pokenum)
     return pokenum >= TrueCount();
 }
 
-int PokemonInfo::OriginalForm(int pokenum)
+int PokemonInfo::OriginalForme(int pokenum)
 {
     if (!IsForme(pokenum))
         return pokenum;
@@ -614,7 +614,7 @@ QList<int> PokemonInfo::Formes(int pokenum)
     if (!HasFormes(pokenum))
         return QList<int>();
     else if (IsForme(pokenum))
-        return Formes(OriginalForm(pokenum));
+        return Formes(OriginalForme(pokenum));
     else
         return m_AlternateFormes[pokenum];
 }

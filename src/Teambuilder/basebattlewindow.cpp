@@ -2,28 +2,36 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
 
-BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp)
+BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, bool doubles)
 {
+    this->doubles=  doubles;
+    this->numberOfSlots = doubles?4:2;
+
+    opponent = 0;
+    myself = 0;
+
+    for (int i = 0; i < numberOfSlots; i++) {
+        sub.push_back(false);
+        pokeAlive.push_back(false);
+        specialSprite.push_back(0);
+        currentIndex.push_back(i/2);
+        statChanges.push_back(BattleDynamicInfo());
+    }
+
     pInfo[0] = me;
     pInfo[1] = opp;
-    sub[0] = false;
-    sub[1] = false;
-    pokeAlive[0] = false;
-    pokeAlive[1] = false;
-    specialSprite[0] = 0;
-    specialSprite[1] = 0;
+
     time[0] = 5*60;
     time[1] = 5*60;
     ticking[0] = false;
     ticking[1] = false;
-    currentIndex[0] = 0;
-    currentIndex[1] = 0;
 }
 
-BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent) : delayed(0), ignoreSpecs(false), music(NULL), musicOutput(NULL),
+BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, bool doubles) :
+        delayed(0), ignoreSpecs(false), music(NULL), musicOutput(NULL),
             cry(NULL), cryOutput(NULL)
 {
-    myInfo = new BaseBattleInfo(me, opponent);
+    myInfo = new BaseBattleInfo(me, opponent, doubles);
     mydisplay = new BaseBattleDisplay(info());
     init();
     show();
@@ -116,6 +124,16 @@ void BaseBattleWindow::init()
     //layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
+int BaseBattleWindow::player(int spot) const
+{
+    return spot % 2;
+}
+
+int BaseBattleWindow::opponent(int player) const
+{
+    return !player;
+}
+
 QString BaseBattleWindow::name(int spot) const
 {
     return info().name(spot);
@@ -123,7 +141,7 @@ QString BaseBattleWindow::name(int spot) const
 
 QString BaseBattleWindow::nick(int player) const
 {
-    return tr("%1's %2").arg(name(player), rnick(player));
+    return tr("%1's %2").arg(name(this->player(player)), rnick(player));
 }
 
 QString BaseBattleWindow::rnick(int player) const
@@ -229,7 +247,7 @@ void BaseBattleWindow::playMusic(bool play)
     musicPlayed() = play;
 
     if (play) {
-     music->play();
+        music->play();
     }
     else {
        music->pause();;
@@ -261,15 +279,15 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             if (!silent) {
                 QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());
                 if (pokename != rnick(spot))
-                    printLine(tr("%1 sent out %2! (%3)").arg(name(spot), rnick(spot), pokename));
+                    printLine(tr("%1 sent out %2! (%3)").arg(name(player(spot)), rnick(spot), pokename));
                 else
-                    printLine(tr("%1 sent out %2!").arg(name(spot), rnick(spot)));
+                    printLine(tr("%1 sent out %2!").arg(name(player(spot)), rnick(spot)));
             }
 
             break;
         }
     case SendBack:
-        printLine(tr("%1 called %2 back!").arg(name(spot), rnick(spot)));
+        printLine(tr("%1 called %2 back!").arg(name(player(spot)), rnick(spot)));
         switchToNaught(spot);
         break;
     case UseAttack:
@@ -466,10 +484,10 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             in >> move >> part >> type >> foe >> other >> q;
             QString mess = MoveInfo::MoveMessage(move,part);
             mess.replace("%s", nick(spot));
-            mess.replace("%ts", name(spot));
-            mess.replace("%tf", name(!spot));
+            mess.replace("%ts", name(player(spot)));
+            mess.replace("%tf", name(opponent(player(spot))));
             mess.replace("%t", TypeInfo::Name(type));
-            mess.replace("%f", nick(!spot));
+            mess.replace("%f", nick(foe));
             mess.replace("%m", MoveInfo::Name(other));
             mess.replace("%d", QString::number(other));
             mess.replace("%q", q);
@@ -493,7 +511,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             QString mess = ItemInfo::Message(item, part);
             mess.replace("%st", StatInfo::Stat(other));
             mess.replace("%s", nick(spot));
-            mess.replace("%f", nick(!spot));
+            mess.replace("%f", nick(foe));
             mess.replace("%i", ItemInfo::Name(berry));
             mess.replace("%m", MoveInfo::Name(berry));
             printLine(tu(mess));
@@ -554,7 +572,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         //            mess.replace("%ts", name(spot));
         //            mess.replace("%tf", name(!spot));
         mess.replace("%t", TypeInfo::Name(type));
-        mess.replace("%f", nick(!spot));
+        mess.replace("%f", nick(foe));
         mess.replace("%m", MoveInfo::Name(other));
         //            mess.replace("%d", QString::number(other));
         mess.replace("%i", ItemInfo::Name(other));
@@ -578,7 +596,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             in >> res;
             battleEnded = true;
             if (res == Tie) {
-                printHtml(toBoldColor(tr("Tie between %1 and %2!").arg(name(Myself), name(Opponent)), Qt::blue));
+                printHtml(toBoldColor(tr("Tie between %1 and %2!").arg(name(info().myself), name(info().opponent)), Qt::blue));
             } else {
                 printHtml(toBoldColor(tr("%1 won the battle!").arg(name(spot)), Qt::blue));
             }
@@ -718,6 +736,7 @@ void BaseBattleWindow::playCry(int pokenum)
     if (cryData.length() == 0)
         return;
 
+    cryBuffer.close();;
     cryBuffer.setBuffer(&cryData);
     cryBuffer.open(QIODevice::ReadOnly);
 
@@ -745,37 +764,50 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
        resize that part, might as well let  the chat be resized */
     l->setSizeConstraint(QLayout::SetFixedSize);
 
+    nick.resize(i.numberOfSlots);
+    level.resize(i.numberOfSlots);
+    gender.resize(i.numberOfSlots);
+    bars.resize(i.numberOfSlots);
+    status.resize(i.numberOfSlots);
+
     QHBoxLayout *firstLine = new QHBoxLayout();
     l->addLayout(firstLine);
 
     firstLine->addSpacing(90);
-    QLabel* oppPoke = new QLabel();
-    oppPoke->setPixmap(QPixmap("db/BattleWindow/OpponentPokeBar.png"));
 
-    nick[Opponent] = new QLabel(oppPoke);
-    nick[Opponent]->setObjectName("PokemonNick");
-    QFont f("Candara.ttf");
-    nick[Opponent]->setFont(f);
-    nick[Opponent]->setGeometry(8,7,102,21);
-    nick[Opponent]->setAlignment(Qt::AlignVCenter);
+    QVBoxLayout *obarsColumn = new QVBoxLayout();
+    obarsColumn->setMargin(0);
+    firstLine->addLayout(obarsColumn);
 
-    level[Opponent] = new QLabel(oppPoke);
-    level[Opponent]->setObjectName("PokemonLevel");
-    level[Opponent]->setGeometry(120,12,50,13);
+    for (int i = 0; i < info().numberOfSlots/2; i++) {
+        int slot = info().slot(info().opponent, i);
 
-    gender[Opponent] = new QLabel(oppPoke);
-    gender[Opponent]->setGeometry(104,11,12,12);
+        QLabel* oppPoke = new QLabel();
+        oppPoke->setPixmap(QPixmap("db/BattleWindow/OpponentPokeBar.png"));
 
-    status[Opponent] = new QLabel(oppPoke);
-    status[Opponent]->setGeometry(10,23,23,23);
+        nick[slot] = new QLabel(oppPoke);
+        nick[slot]->setObjectName("PokemonNick");
+        nick[slot]->setGeometry(8,7,102,21);
+        nick[slot]->setAlignment(Qt::AlignVCenter);
 
-    bars[Opponent] = new QClickPBar();
-    bars[Opponent]->setParent(oppPoke);
-    bars[Opponent]->setObjectName("LifePoints"); /* for stylesheets */
-    bars[Opponent]->setRange(0, 100);
-    bars[Opponent]->setGeometry(75,29,90,15);
-    firstLine->addWidget(oppPoke);
+        level[slot] = new QLabel(oppPoke);
+        level[slot]->setObjectName("PokemonLevel");
+        level[slot]->setGeometry(120,12,50,13);
 
+        gender[slot] = new QLabel(oppPoke);
+        gender[slot]->setGeometry(104,11,12,12);
+
+        status[slot] = new QLabel(oppPoke);
+        status[slot]->setGeometry(10,23,23,23);
+
+        bars[slot] = new QClickPBar();
+        bars[slot]->setParent(oppPoke);
+        bars[slot]->setObjectName("LifePoints"); /* for stylesheets */
+        bars[slot]->setRange(0, 100);
+        bars[slot]->setGeometry(75,29,90,15);
+
+        obarsColumn->addWidget(oppPoke);
+    }
 
     QHBoxLayout *foeteam = new QHBoxLayout();
     foeteam->addStretch(100);
@@ -788,38 +820,38 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
 
     QVBoxLayout * oppTeamAndName = new QVBoxLayout();
     oppTeamAndName->addLayout(foeteam);
-    oppTeamAndName->addWidget(trainers[Opponent] = new QLabel(info().name(Opponent)),0, Qt::AlignRight);
-    trainers[Opponent]->setObjectName("TrainerNick");
+    oppTeamAndName->addWidget(trainers[info().opponent] = new QLabel(info().name(info().opponent)),0, Qt::AlignRight);
+    trainers[info().opponent]->setObjectName("TrainerNick");
     firstLine->addLayout(oppTeamAndName);
 
 
-    zone = new BaseGraphicsZone();
+    zone = new BaseGraphicsZone(&info());
 
     QHBoxLayout *midzone = new QHBoxLayout();
     QVBoxLayout *midme = new QVBoxLayout();
     midzone->addLayout(midme);
     midme->addStretch(100);
-    timers[Myself] = new QProgressBar();
-    timers[Myself]->setObjectName("TimeOut"); //for style sheets
-    timers[Myself]->setRange(0,300);
-    midme->addWidget(timers[Myself]);
+    timers[info().myself] = new QProgressBar();
+    timers[info().myself]->setObjectName("TimeOut"); //for style sheets
+    timers[info().myself]->setRange(0,300);
+    midme->addWidget(timers[info().myself]);
     QLabel *mybox = new QLabel();
     mybox->setObjectName("MyTrainerBox");
     mybox->setFixedSize(82,82);
-    mybox->setPixmap(QPixmap(QString("db/Trainer Sprites/%1.png").arg(info().pInfo[Myself].avatar)));
+    mybox->setPixmap(QPixmap(QString("db/Trainer Sprites/%1.png").arg(info().pInfo[info().myself].avatar)));
     midme->addWidget(mybox);
     midzone->addWidget(zone);
     QVBoxLayout *midopp = new QVBoxLayout();
     midzone->addLayout(midopp);
     QLabel *oppbox = new QLabel();
-    oppbox->setPixmap(QPixmap(QString("db/Trainer Sprites/%1.png").arg(info().pInfo[Opponent].avatar)));
+    oppbox->setPixmap(QPixmap(QString("db/Trainer Sprites/%1.png").arg(info().pInfo[info().opponent].avatar)));
     oppbox->setObjectName("OppTrainerBox");
     oppbox->setFixedSize(82,82);
     midopp->addWidget(oppbox);
-    timers[Opponent] = new QProgressBar();
-    timers[Opponent]->setObjectName("TimeOut"); //for style sheets
-    timers[Opponent]->setRange(0,300);
-    midopp->addWidget(timers[Opponent]);
+    timers[info().opponent] = new QProgressBar();
+    timers[info().opponent]->setObjectName("TimeOut"); //for style sheets
+    timers[info().opponent]->setRange(0,300);
+    midopp->addWidget(timers[info().opponent]);
     midopp->addStretch(100);
 
     l->addLayout(midzone);
@@ -838,41 +870,52 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     team->addStretch(100);
 
     QVBoxLayout * myTeamAndName = new QVBoxLayout();
-    myTeamAndName->addWidget(trainers[Myself] = new QLabel(info().name(Myself)),0, Qt::AlignLeft);
+    myTeamAndName->addWidget(trainers[info().myself] = new QLabel(info().name(info().myself)),0, Qt::AlignLeft);
     myTeamAndName->addLayout(team);
-    trainers[Myself]->setObjectName("TrainerNick");
+    trainers[info().myself]->setObjectName("TrainerNick");
 
     lastLine->addLayout(myTeamAndName);
 
-    QLabel* myPoke = new QLabel();
-    myPoke->setPixmap(QPixmap("db/BattleWindow/ChallengerPokeBar.png"));
+    QVBoxLayout *mbarsColumn = new QVBoxLayout();
+    mbarsColumn->setMargin(0);
+    lastLine->addLayout(mbarsColumn);
 
-    nick[Myself] = new QLabel(myPoke);
-    nick[Myself]->setObjectName("PokemonNick");
-    nick[Myself]->setGeometry(25,7,102,21);
-    nick[Myself]->setAlignment(Qt::AlignVCenter);
+    for (int i = 0; i < info().numberOfSlots/2; i++) {
+        int slot = info().slot(info().myself, i);
 
-    level[Myself] = new QLabel(myPoke);
-    level[Myself]->setObjectName("PokemonLevel");
-    level[Myself]->setGeometry(126,12,50,13);
+        QLabel* myPoke = new QLabel();
+        myPoke->setPixmap(QPixmap("db/BattleWindow/ChallengerPokeBar.png"));
 
-    gender[Myself] = new QLabel(myPoke);
-    gender[Myself]->setGeometry(111,11,12,12);
+        nick[slot] = new QLabel(myPoke);
+        nick[slot]->setObjectName("PokemonNick");
+        nick[slot]->setGeometry(25,7,102,21);
+        nick[slot]->setAlignment(Qt::AlignVCenter);
 
-    status[Myself] = new QLabel(myPoke);
-    status[Myself]->setGeometry(14,23,23,23);
+        level[slot] = new QLabel(myPoke);
+        level[slot]->setObjectName("PokemonLevel");
+        level[slot]->setGeometry(126,12,50,13);
 
-    bars[Myself] = new QClickPBar();
-    bars[Myself]->setParent(myPoke);
-    bars[Myself]->setObjectName("LifePoints"); /* for stylesheets */
-    bars[Myself]->setRange(0, 100);
-    bars[Myself]->setGeometry(75,29,90,15);
+        gender[slot] = new QLabel(myPoke);
+        gender[slot]->setGeometry(111,11,12,12);
 
-    lastLine->addWidget(myPoke);
+        status[slot] = new QLabel(myPoke);
+        status[slot]->setGeometry(14,23,23,23);
+
+        bars[slot] = new QClickPBar();
+        bars[slot]->setParent(myPoke);
+        bars[slot]->setObjectName("LifePoints"); /* for stylesheets */
+        bars[slot]->setRange(0, 100);
+        bars[slot]->setGeometry(75,29,90,15);
+
+        mbarsColumn->addWidget(myPoke);
+    }
+
     lastLine->addSpacing(90);
 
-    updatePoke(Myself);
-    updatePoke(Opponent);
+    for (int i = 0; i < info().numberOfSlots; i++) {
+        updatePoke(i);
+    }
+
     updateTimers();
 
     QTimer *t = new QTimer (this);
@@ -882,7 +925,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
 
 void BaseBattleDisplay::updateTimers()
 {
-    for (int i = Myself; i <= Opponent; i++) {
+    for (int i = info().myself; i <= info().opponent; i++) {
         int ctime = std::max(long(0), info().ticking[i] ? info().time[i] + info().startingTime[i] - time(NULL) : info().time[i]);
         if (ctime <= 5*60) {
             timers[i]->setValue(ctime);
@@ -913,7 +956,7 @@ void BaseBattleDisplay::updatePoke(int spot)
         int status = poke.status();
         this->status[spot]->setPixmap(StatInfo::BattleIcon(status));
 
-        if (spot == Myself) {
+        if (info().player(spot) == info().myself) {
             mypokeballs[info().currentIndex[spot]]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
         } else {
             advpokeballs[info().currentIndex[spot]]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
@@ -1013,7 +1056,7 @@ void BaseBattleDisplay::updateToolTip(int spot)
 }
 
 void BaseBattleDisplay::changeStatus(int spot, int poke, int status) {
-    if (spot == Myself) {
+    if (info().player(spot)==info().myself) {
         mypokeballs[poke]->setPixmap(StatInfo::Icon(status));
     } else {
         advpokeballs[poke]->setPixmap(StatInfo::Icon(status));
@@ -1025,29 +1068,32 @@ QString BaseBattleDisplay::health(int lifePercent)
     return lifePercent > 50 ? "::chunk{background-color: #1fc42a;}" : (lifePercent >= 26 ? "::chunk{background-color: #F8DB17;}" : "::chunk{background-color: #D40202;}");
 }
 
-BaseGraphicsZone::BaseGraphicsZone()
+BaseGraphicsZone::BaseGraphicsZone(BaseBattleInfo *i) : mInfo(i)
 {
     setScene(&scene);
+
+    tooltips.resize(info().numberOfSlots);
+    items.resize(info().numberOfSlots);
 
     scene.setSceneRect(0,0,257,145);
     scene.addItem(new QGraphicsPixmapItem(QPixmap(QString("db/battle_fields/%1.png").arg((rand()%11)+1))));
 
-    mine = new QGraphicsPixmapItem();
-    foe = new QGraphicsPixmapItem();
+    for (int i = 0; i < info().numberOfSlots; i++) {
+        items[i] = new QGraphicsPixmapItem();
+        scene.addItem(items[i]);
+    }
 
-    scene.addItem(mine);
-    mine->setPos(10, 145-79);
-
-    scene.addItem(foe);
-    foe->setPos(257-105, 16);
+    items[info().slot(info().myself)]->setPos(10, 145-79);
+    items[info().slot(info().opponent)]->setPos(257-105, 16);
+    if (info().doubles) {
+        items[info().slot(info().myself,1)]->setPos(90, 145-79);
+        items[info().slot(info().opponent,1)]->setPos(257-195, 16);
+    }
 }
 
 void BaseGraphicsZone::switchToNaught(int spot)
 {
-    if (spot == Myself)
-        mine->setPixmap(QPixmap());
-    else
-        foe->setPixmap(QPixmap());
+    items[spot]->setPixmap(QPixmap());
 }
 
 QPixmap BaseGraphicsZone::loadPixmap(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub)

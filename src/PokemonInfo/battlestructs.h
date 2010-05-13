@@ -147,11 +147,11 @@ struct BattleChoices
     bool switchAllowed;
     bool attacksAllowed;
     bool attackAllowed[4];
-    quint8 targetsAllowed;
+    quint8 numSlot;
 
     bool struggle() const { return qFind(attackAllowed, attackAllowed+4, true) == attackAllowed+4; }
 
-    static BattleChoices SwitchOnly();
+    static BattleChoices SwitchOnly(quint8 numslot);
 };
 
 QDataStream & operator >> (QDataStream &in, BattleChoices &po);
@@ -161,11 +161,12 @@ struct BattleChoice
 {
     static const int Cancel = -10;
 
-    BattleChoice(bool pokeSwitch = false, qint8 numSwitch = 0);
+    BattleChoice(bool pokeSwitch = false, qint8 numSwitch = 0, quint8 numslot=0);
 
     bool pokeSwitch; /* True if poke switch, false if attack switch */
     qint8 numSwitch; /* The num of the poke or the attack to use, -1 for Struggle, -10 for move cancelled */
     quint8 targetPoke; /* The targetted pokémon */
+    quint8 numSlot;
 
     /* returns true if the choice is valid */
     bool match(const BattleChoices &avail) const;
@@ -251,6 +252,14 @@ QDataStream & operator << (QDataStream &out, const ChallengeInfo &c);
 struct BattleConfiguration
 {
     qint32 ids[2];
+
+    int slot(int spot, int poke = 0) const  {
+        return spot + poke*2;
+    }
+
+    int spot(int id) {
+        return ids[0] == id ? 0 : 1;
+    }
 };
 
 inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)

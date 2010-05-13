@@ -49,6 +49,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
         pokelong.push_back(context());
         turnlong.push_back(context());
         choice.push_back(BattleChoice());
+        hasChoice.push_back(false);
+        couldMove.push_back(false);
     }
 
     if (clauses() & ChallengeInfo::ChallengeCup) {
@@ -68,10 +70,10 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
         if (clauses() & ChallengeInfo::SpeciesClause) {
             QSet<int> alreadyPokes[2];
             for (int i = 0; i < 6; i++) {
-                int o1 = PokemonInfo::OriginalForm(team1.poke(i).num());
-                int o2 = PokemonInfo::OriginalForm(team2.poke(i).num());
+                int o1 = PokemonInfo::OriginalForme(team1.poke(i).num());
+                int o2 = PokemonInfo::OriginalForme(team2.poke(i).num());
 
-                if (alreadyPokes[0].contains(PokemonInfo::OriginalForm(o1))) {
+                if (alreadyPokes[0].contains(PokemonInfo::OriginalForme(o1))) {
                     team1.poke(i).num() = 0;
                 } else {
                     alreadyPokes[0].insert(o1);
@@ -156,9 +158,11 @@ void BattleSituation::start()
     foreach(int p, pokes)
         callEntryEffects(p);;
 
-    hasChoice[0] = false;
-    hasChoice[1] = false;
+    for (int i = 0; i< numberOfSlots(); i++) {
+        hasChoice[i] = false;
+    }
 
+    blocked() = false;
 
     timer = new QBasicTimer();
     /* We are only warned of new events every 5 seconds */
@@ -178,9 +182,9 @@ int BattleSituation::spot(int id) const
     }
 }
 
-int BattleSituation::slot(int player, bool second) const
+int BattleSituation::slot(int player, int poke) const
 {
-    return (player+1) * (1+ second) - 1;
+    return player + poke*2;
 }
 
 bool BattleSituation::acceptSpectator(int id, bool authed) const
@@ -262,11 +266,20 @@ int BattleSituation::player(int slot) const
 
 int BattleSituation::randomOpponent(int slot) const
 {
-    if (!doubles()) {
-        return rev(slot);
-    } else {
-        return this->slot(player(slot), true_rand() % 2);
-    }
+    QList<int> opps = revs(slot);
+    if (opps.empty())
+        return -1;
+
+    return opps[true_rand()%opps.size()];
+}
+
+int BattleSituation::randomValidOpponent(int slot) const
+{
+    QList<int> opps = revs(slot);
+    if (opps.empty())
+        return allRevs(slot).front();
+
+    return opps[true_rand()%opps.size()];
 }
 
 TeamBattle &BattleSituation::team(int spot)
@@ -292,9 +305,35 @@ const TeamBattle& BattleSituation::pubteam(int id)
     return team(spot(id));
 }
 
-int BattleSituation::rev(int p) const
+QList<int> BattleSituation::revs(int p) const
 {
-    return 1 - p;
+    int player = this->player(p);
+    int opp = opponent(player);
+    QList<int> ret;
+    if (!koed(slot(opp)))
+        ret.push_back(slot(opp));
+    if (doubles() && !koed(slot(opp, true))) {
+        ret.push_back(slot(opp, true));
+    }
+    return ret;
+}
+
+
+QList<int> BattleSituation::allRevs(int p) const
+{
+    int player = this->player(p);
+    int opp = opponent(player);
+    QList<int> ret;
+    ret.push_back(slot(opp));
+    if (doubles()) {
+        ret.push_back(slot(opp, true));
+    }
+    return ret;
+}
+
+int BattleSituation::opponent(int player) const
+{
+    return 1-player;
 }
 
 const PokeBattle & BattleSituation::poke(int player, int poke) const
@@ -347,10 +386,7 @@ void BattleSituation::run()
         array[i] |= (rand() << 16);
     }
     true_rand2.seed(array, 10);
-    /* To get rid of some of the defaults */
-    for (int i = 0; i < 100; i++) {
-        true_rand();
-    }
+
     try {
         qDebug() << "BattleSituation between " << team1.name << " and " << team2.name << " begin running.";
 	while (!quit)
@@ -374,20 +410,28 @@ void BattleSituation::beginTurn()
     for (int i = 0; i < numberOfSlots(); i++)
         turnlong[i].clear();
 
-    callpeffects(Player1, Player2, "TurnSettings");
-    callpeffects(Player2, Player1, "TurnSettings");
+    for (int i = 0; i < numberOfSlots(); i++) {
+        callpeffects(i, i, "TurnSettings");
+    }
 
     requestChoices();
-    /** WARNING: WHAT TO DO WITH THIS ? **/
+
     /* preventing the players from cancelling (like when u-turn/Baton pass) */
-    couldMove[0] = false;
-    couldMove[1] = false;
+    for (int i = 0; i < numberOfSlots(); i++)
+        couldMove[i] = false;
+
     analyzeChoices();
 }
 
 void BattleSituation::endTurn()
 {
     testWin();
+
+    std::vector<int> players = sortedBySpeed();
+
+    foreach (int player, players) {
+        callseffects(player,player, "EndTurn");
+    }
 
     callzeffects(Player1, Player1, "EndTurn");
     callzeffects(Player2, Player2, "EndTurn");
@@ -396,16 +440,18 @@ void BattleSituation::endTurn()
 
     callbeffects(Player1,Player1,"EndTurn");
 
-    callaeffects(Player1,Player2,"EndTurn");
-    callaeffects(Player2,Player1,"EndTurn");
+    foreach (int player, players) {
+        callaeffects(player,player,"EndTurn");
+    }
 
-    if (!koed(Player1))
-	callieffects(Player1, Player1, "EndTurn");
-    if (!koed(Player2))
-	callieffects(Player2, Player2, "EndTurn");
+    foreach (int player, players) {
+        if (!koed(player))
+            callieffects(player, player, "EndTurn");
+    }
 
-    callpeffects(Player1, Player2, "EndTurn");
-    callpeffects(Player2, Player1, "EndTurn");
+    foreach(int player, players) {
+        callpeffects(player, player, "EndTurn");
+    }
 
     endTurnStatus();
 
@@ -419,38 +465,38 @@ void BattleSituation::notifyFail(int p)
 
 void BattleSituation::endTurnStatus()
 {
-    for (int player = 0; player <= numberOfSlots(); player++)
+    std::vector<int> players = sortedBySpeed();
+    foreach (int player, players)
     {
-	if (!koed(player))
-	    switch(poke(player).status())
-	    {
-		case Pokemon::Burnt:
-		    notify(All, StatusMessage, player, qint8(HurtBurn));
-                    //HeatProof: burn does only 1/16
-                    inflictDamage(player, poke(player).totalLifePoints()/(8*(1+hasWorkingAbility(player,Ability::Heatproof))), player);
-		    break;
-		case Pokemon::DeeplyPoisoned:
-                    //Poison Heal
-                    if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-                        sendAbMessage(45,0,player,Pokemon::Poison);
-                        healLife(player, poke(player).totalLifePoints()/8);
-                    } else {
-                        notify(All, StatusMessage, player, qint8(HurtPoison));
-                        inflictDamage(player, poke(player).totalLifePoints()*(pokelong[player]["ToxicCount"].toInt()+1)/16, player);
-                    }
-		    pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()+1, 14);
-		    break;
-		case Pokemon::Poisoned:
-                    //PoisonHeal
-                    if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-                        sendAbMessage(45,0,player,Pokemon::Poison);
-                        healLife(player, poke(player).totalLifePoints()/8);
-                    } else {
-                        notify(All, StatusMessage, player, qint8(HurtPoison));
-                        inflictDamage(player, poke(player).totalLifePoints()/8, player);
-                    }
-		    break;
-	    }
+        switch(poke(player).status())
+        {
+            case Pokemon::Burnt:
+                notify(All, StatusMessage, player, qint8(HurtBurn));
+                //HeatProof: burn does only 1/16
+                inflictDamage(player, poke(player).totalLifePoints()/(8*(1+hasWorkingAbility(player,Ability::Heatproof))), player);
+                break;
+            case Pokemon::DeeplyPoisoned:
+                //Poison Heal
+                if (hasWorkingAbility(player, Ability::PoisonHeal)) {
+                    sendAbMessage(45,0,player,Pokemon::Poison);
+                    healLife(player, poke(player).totalLifePoints()/8);
+                } else {
+                    notify(All, StatusMessage, player, qint8(HurtPoison));
+                    inflictDamage(player, poke(player).totalLifePoints()*(pokelong[player]["ToxicCount"].toInt()+1)/16, player);
+                }
+                pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()+1, 14);
+                break;
+            case Pokemon::Poisoned:
+                //PoisonHeal
+                if (hasWorkingAbility(player, Ability::PoisonHeal)) {
+                    sendAbMessage(45,0,player,Pokemon::Poison);
+                    healLife(player, poke(player).totalLifePoints()/8);
+                } else {
+                    notify(All, StatusMessage, player, qint8(HurtPoison));
+                    inflictDamage(player, poke(player).totalLifePoints()/8, player);
+                }
+                break;
+        }
     }
 }
 
@@ -461,22 +507,27 @@ void BattleSituation::testquit()
     }
 }
 
-bool BattleSituation::requestChoice(int player, bool acquire, bool custom)
+bool BattleSituation::requestChoice(int slot, bool acquire, bool custom)
 {
-    if (turnlong[player].contains("NoChoice") && !koed(player)) {
+    int player = this->player(slot);
+
+    if (turnlong[slot].contains("NoChoice") && !koed(slot)) {
 	return false;
     }
 
-    couldMove[player] = true;
-    hasChoice[player] = true;
+    couldMove[slot] = true;
+    hasChoice[slot] = true;
 
     if (!custom)
-	options[player] = createChoice(player);
+        options[slot] = createChoice(slot);
 
-    notify(player, OfferChoice, player, options[player]);
+    notify(player, OfferChoice, slot, options[slot]);
+
     startClock(player);
 
     if (acquire) {
+        notify(player, StartChoices, player);
+        blocked() = true;
         sem.acquire(1); /* Lock until a choice is received */
     }
 
@@ -490,15 +541,28 @@ bool BattleSituation::requestChoice(int player, bool acquire, bool custom)
 
 void BattleSituation::requestChoices()
 {
-    couldMove[Player1] = couldMove[Player2] = false;
+    for (int i = 0; i < numberOfSlots(); i ++)
+        couldMove[i] = false;
 
-    /* Gets the number of choices to be done */
-    int count = int(requestChoice(Player1, false)) + requestChoice(Player2, false);
+    int count = 0;
+
+    for (int i = 0; i < numberOfSlots(); i++) {
+        count += requestChoice(i, false);
+    }
+
+    if (!allChoicesOkForPlayer(Player1)) {
+        notify(Player1, StartChoices, Player1);
+    }
+
+    if (!allChoicesOkForPlayer(Player2)) {
+        notify(Player2, StartChoices, Player2);
+    }
 
     if (count > 0) {
         /* Send a brief update on the status */
         notifyInfos();
-        /* Lock until BOTH choices are received */
+        /* Lock until ALL choices are received */
+        blocked() = true;
         sem.acquire(1);
     }
 
@@ -528,50 +592,43 @@ bool BattleSituation::koed(int player) const
     return currentPoke(player) == -1 || poke(player).ko();
 }
 
-BattleChoices BattleSituation::createChoice(int player)
+BattleChoices BattleSituation::createChoice(int slot)
 {
     /* First let's see for attacks... */
-    if (koed(player)) {
-	return BattleChoices::SwitchOnly();
+    if (koed(slot)) {
+        return BattleChoices::SwitchOnly(slot);
     }
 
     BattleChoices ret;
+    ret.numSlot = slot;
 
     /* attacks ok, lets see which ones then */
-    callpeffects(player, player, "MovesPossible");
-    callieffects(player, player, "MovesPossible");
-    callbeffects(player,player,"MovesPossible");
+    callpeffects(slot, slot, "MovesPossible");
+    callieffects(slot, slot, "MovesPossible");
+    callbeffects(slot, slot,"MovesPossible");
 
     for (int i = 0; i < 4; i++) {
-	if (!isMovePossible(player,i)) {
+        if (!isMovePossible(slot,i)) {
 	    ret.attackAllowed[i] = false;
 	}
     }
 
-    if (!hasWorkingItem(player, Item::ShedShell)) /* Shed Shell */
+    if (!hasWorkingItem(slot, Item::ShedShell)) /* Shed Shell */
     {
-	if (pokelong[player].contains("BlockedBy")) {
-	    int b = pokelong[player]["BlockedBy"].toInt();
-	    if (pokelong[b].contains("Blocked") && pokelong[b]["Blocked"].toInt() == player) {
-		ret.switchAllowed = false;
-	    }
+        if (linked(slot, "Blocked") || linked(slot, "Trapped")) {
+            ret.switchAllowed = false;
 	}
 
-	if (pokelong[player].contains("Rooted")) {
+        if (pokelong[slot].contains("Rooted")) {
 	    ret.switchAllowed = false;
 	}
 
-	if (pokelong[player].contains("TrappedBy")) {
-	    int b = pokelong[player]["TrappedBy"].toInt();
-	    if (pokelong[b].contains("Trapped") && pokelong[b]["Trapped"].toInt() == player) {
-		ret.switchAllowed = false;
-	    }
-	}
-
-        if (!koed(rev(player))) {
-            callaeffects(rev(player),player, "IsItTrapped");
-            if (turnlong[player].value("Trapped").toBool()) {
+        QList<int> opps = revs(slot);
+        foreach(int opp, opps){
+            callaeffects(opp, slot, "IsItTrapped");
+            if (turnlong[slot].value("Trapped").toBool()) {
                 ret.switchAllowed = false;
+                break;
             }
         }
     }
@@ -584,57 +641,79 @@ bool BattleSituation::isMovePossible(int player, int move)
     return (poke(player).move(move).PP() > 0 && turnlong[player]["Move" + QString::number(move) + "Blocked"].toBool() == false);
 }
 
-void BattleSituation::analyzeChoice(int player)
+void BattleSituation::analyzeChoice(int slot)
 {
+    int player = this->player(slot);
+
     stopClock(player, true);
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
-    if (choice[player].attack()) {
-        if (!koed(player) && !turnlong[player].value("HasMoved").toBool() && !turnlong[player].value("CantGetToMove").toBool()) {
-	    if (turnlong[player].contains("NoChoice"))
+    if (choice[slot].attack()) {
+        turnlong[slot]["Target"] = choice[slot].target();
+        if (!koed(slot) && !turnlong[slot].value("HasMoved").toBool() && !turnlong[slot].value("CantGetToMove").toBool()) {
+            if (turnlong[slot].contains("NoChoice"))
                 /* Do not use LastMoveSuccessfullyUsed or you'll have problems with metronome */
-                useAttack(player, pokelong[player]["LastMoveUsed"].toInt(), true);
+                useAttack(slot, pokelong[slot]["LastMoveUsed"].toInt(), true);
             else {
-                if (options[player].struggle()) {
-                    MoveEffect::setup(394,player,rev(player),*this);
-                    useAttack(player, 394, true);
+                if (options[slot].struggle()) {
+                    MoveEffect::setup(394,slot,0,*this);
+                    useAttack(slot, 394, true);
                 } else {
-                    useAttack(player, choice[player].numSwitch);
+                    useAttack(slot, choice[slot].numSwitch);
                 }
             }
 	}
     } else {
-        if (!koed(player)) { /* if the pokemon isn't ko, it IS sent back */
-	    sendBack(player);
+        if (!koed(slot)) { /* if the pokemon isn't ko, it IS sent back */
+            sendBack(slot);
 	}
-	sendPoke(player, choice[player].numSwitch);
+        sendPoke(slot, choice[slot].numSwitch);
     }
     notify(All, BlankMessage, Player1);
 }
 
+inline bool comparePair(const std::pair<int,int> & x, const std::pair<int,int> & y) {
+    return x.second>y.second;
+};
+
 std::vector<int> BattleSituation::sortedBySpeed() {
     std::vector<int> ret;
 
-    int speed1 = getStat(Player1, Speed);
-    int speed2 = getStat(Player2, Speed);
+    std::vector<std::pair<int, int> > speeds;
 
-    if (speed1 < speed2) {
-        ret.push_back(Player2);
-        ret.push_back(Player1);
-    } else if (speed2 < speed1) {
-        ret.push_back(Player1);
-        ret.push_back(Player2);
-    } else {
-        if (true_rand() % 2 == 0) {
-            ret.push_back(Player1);
-            ret.push_back(Player2);
-        } else {
-            ret.push_back(Player2);
-            ret.push_back(Player1);
+    for (int i =0; i < numberOfSlots(); i++) {
+        if (!koed(i)) {
+            speeds.push_back(std::pair<int, int>(i, getStat(i, Speed)));
         }
     }
 
+    if (speeds.size() == 0)
+        return ret;
+
+    std::sort(speeds.begin(), speeds.end(), &comparePair);
+
+    /* Now for the speed tie */
+    for (unsigned i = 0; i < speeds.size()-1; ) {
+        unsigned  j;
+        for (j = i+1; j < speeds.size(); j++) {
+            if (speeds[j].second != speeds[i].second) {
+                break;
+            }
+        }
+
+        if (j != i +1) {
+            std::random_shuffle(speeds.begin() + i, speeds.begin() + j);
+        }
+
+        i = j;
+    }
+
+    /* Now assigning, removing the pairs */
+    for (unsigned i =0; i < speeds.size(); i++) {
+        ret.push_back(speeds[i].first);
+    }
+
     if (battlelong.value("TrickRoomCount").toInt() > 0) {
-        std::swap(ret[0], ret[1]);
+        std::reverse(ret.begin(),ret.end());
     }
 
     return ret;
@@ -643,11 +722,10 @@ std::vector<int> BattleSituation::sortedBySpeed() {
 void BattleSituation::analyzeChoices()
 {
     /* If there's no choice then the effects are already taken care of */
-    if (!turnlong[Player1].contains("NoChoice") && choice[Player1].attack() && !options[Player1].struggle()) {
-        MoveEffect::setup(move(Player1,choice[Player1].numSwitch), Player1, Player2, *this);
-    }
-    if (!turnlong[Player2].contains("NoChoice") && choice[Player2].attack() && !options[Player2].struggle()) {
-	MoveEffect::setup(move(Player2,choice[Player2].numSwitch), Player2, Player1, *this);
+    for (int i = 0; i < numberOfSlots(); i++) {
+        if (!turnlong[i].contains("NoChoice") && choice[i].attack() && !options[i].struggle()) {
+            MoveEffect::setup(move(i,choice[i].numSwitch), i, i, *this);
+        }
     }
 
     std::map<int, std::vector<int>, std::greater<int> > priorities;
@@ -676,7 +754,6 @@ void BattleSituation::analyzeChoices()
         foreach (int player, it->second) {
             callaeffects(player,player, "TurnOrder"); //Stall
             callieffects(player,player, "TurnOrder"); //Lagging tail & ...
-            callpeffects(player,player,"TurnOrder"); // A berry does that
             secondPriorities[turnlong[player]["TurnOrder"].toInt()].push_back(player);
 	}
 
@@ -693,50 +770,126 @@ void BattleSituation::notifySub(int player, bool sub)
     notify(All, Substitute, player, sub);
 }
 
+bool BattleSituation::canCancel(int player)
+{
+    return blocked() && (couldMove[slot(player,0)] || (doubles() && couldMove[slot(player, 1)]));
+}
+
+void BattleSituation::cancel(int player)
+{
+    notify(player, CancelMove, player);
+
+    if (couldMove[slot(player, 0)]) {
+        hasChoice[slot(player, 0)] = true;
+    }
+
+    if (doubles() && couldMove[slot(player, 1)]) {
+        hasChoice[slot(player, 1)] = true;
+    }
+
+    startClock(player,false);
+}
+
+bool BattleSituation::validChoice(const BattleChoice &b)
+{
+    if (!couldMove[b.numSlot] || !hasChoice[b.numSlot] || !b.match(options[b.numSlot])) {
+        return false;
+    }
+
+    int player = this->player(b.numSlot);
+
+    /* If it's a switch, we check the receiving poke valid, if it's a move, we check the target */
+    if (b.poke()) {
+        if (isOut(player, b.numSwitch) || poke(player, b.numSwitch).ko()) {
+            return false;
+        }
+    } else {
+        /* It's an attack, we check the target is valid */
+        if (turnlong[b.numSlot]["PossibleTargets"].toInt() == Move::ChosenTarget && (b.target() < 0 || b.target() >= numberOfSlots() ||
+                                                                                     b.target() == b.numSlot || koed(b.target()))) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool BattleSituation::isOut(int player, int poke)
+{
+    return doubles() ? (currentPoke(slot(player, 0)) == poke || currentPoke(slot(player, 1)) == poke ) : (currentPoke(slot(player)) == poke);
+}
+
+void BattleSituation::storeChoice(const BattleChoice &b)
+{
+    int player = this->player(b.numSlot);
+
+    choice[player] = b;
+    hasChoice[player] = false;
+}
+
+bool BattleSituation::allChoicesOkForPlayer(int player)
+{
+    return doubles () ? (hasChoice[slot(player, 0)] == false && hasChoice[slot(player, 1)] == false) : (hasChoice[slot(player)] == false);
+}
+
+
+bool BattleSituation::allChoicesSet()
+{
+    for (int i = 0; i < numberOfSlots(); i++) {
+        if (hasChoice[i])
+            return false;
+    }
+    return true;
+}
+
 void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 {
     int player = spot(id);
 
-    if (hasChoice[player] == false) {
-        /* If at least one of the two player still hasn't moved, and the cancel is valid, we allow the cancel */
-        if (couldMove[player] && hasChoice[rev(player)]) {
-            if (b.cancelled()) {
-                hasChoice[player] = true;
-                notify(player, CancelMove, player);
-                startClock(player,false);
-                return;
-            }
-        } else {
-            return;
-            //INVALID BEHAVIOR
-        }
-    } else {
-        // Even if they didn't move they can still cancel
-        if (b.cancelled()) {
-            notify(player, CancelMove, player);
-        }
+    /* Simple guard to avoid multithreading problems */
+    if (!blocked()) {
+        return;
     }
 
-    if (!b.match(options[player])) {
+    if (b.numSlot < 0 || b.numSlot >= numberOfSlots()) {
+        return;
+    }
+
+    if (player != this->player(b.numSlot)) {
+        /* W00T! He tried to impersonate the other! Bad Guy! */
+        //notify(player, BattleChat, opponent(player), QString("Say, are you trying to hack this game? Beware, i'll report you and have you banned!"));
+        return;
+    }
+
+    /* If the player wants a cancel, we grant it, if possible */
+    if (b.cancelled()) {
+        if (canCancel(player)) {
+            cancel(player);
+        }
+        return;
+    }
+
+    if (!validChoice(b)) {
         notify(player, BattleChat, player, QString("<debug message>: your choice is invalid"));
-        //INVALID BEHAVIOR
-    } else {
-        /* Routine checks */
-        if (b.poke()) {
-            if (b.numSwitch == currentPoke(player) || poke(player, b.numSwitch).num() == 0 || poke(player, b.numSwitch).ko()) {
-                notify(player, BattleChat, player, QString("<debug message>: you can't switch to that pokemon"));
-                // INVALID BEHAVIOR
-                return;
-            }
-        }
-        /* One player has chosen their solution, so there's one less wait */
-        choice[player] = b;
-        hasChoice[player] = false;
+        if (canCancel(player))
+            cancel(player);
+        return;
+    }
+
+    storeChoice(b);
+
+    if (allChoicesOkForPlayer(player)) {
         stopClock(player,false);
-        /* If everyone has chosen their solution, we carry on */
-        if (!hasChoice[player] && !hasChoice[rev(player)]) {
-            sem.release(1);
+    }
+
+    if (allChoicesSet()) {
+        /* The battle thread can carry on */
+        blocked() = false;
+        /* Blocking any further cancels */
+        for (int i = 0; i < numberOfSlots(); i++) {
+            couldMove[i] = false;
         }
+        sem.release(1);
     }
 }
 
@@ -979,14 +1132,18 @@ void BattleSituation::sendBack(int player, bool silent)
         notify(All, SendBack, player);
 
     /* Just calling pursuit directly here, forgive me for this */
-    int opp = rev(player);
-    if (!koed(opp) && turnlong[opp].value("Attack").toInt() == Move::Pursuit && !turnlong[opp]["HasMoved"].toBool()) {
-	turnlong[opp]["Power"] = turnlong[opp]["Power"].toInt() * 2;
-	analyzeChoice(opp);
+    QList<int> opps = revs(player);
+    foreach(int opp, opps) {
+        if (turnlong[opp].value("Attack").toInt() == Move::Pursuit && !turnlong[opp]["HasMoved"].toBool()) {
+            turnlong[opp]["Power"] = turnlong[opp]["Power"].toInt() * 2;
+            choice[opp].targetPoke = player;
+            analyzeChoice(opp);
 
-	if (koed(player)) {
-	    Mechanics::removeFunction(turnlong[player],"UponSwitchIn","BatonPass");
-	}
+            if (koed(player)) {
+                Mechanics::removeFunction(turnlong[player],"UponSwitchIn","BatonPass");
+                break;
+            }
+        }
     }
 
     if (!koed(player)) {
@@ -1003,10 +1160,15 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     callpeffects(target, player, "TestEvasion"); /*dig bounce ..., still calling it there cuz x2 attacks
             like EQ on dig need their boost even if lock on */
 
-    if (pokelong[target].value("LockedOnEnd").toInt() >= turn() && pokelong[player].contains("LockedOn") && pokelong[player].value("LockedOn") == target) {
+    if (pokelong[player].contains("LockedOn") && pokelong[player].value("LockedOnEnd").toInt() >= turn()
+            && pokelong[player].value("LockedOn") == target && pokelong[player].value("LockedOnCount") == pokelong[target]["SwitchCount"].toInt()) {
         return true;
     }
 
+    if (pokelong[player].value("BerryLock").toBool()) {
+        pokelong[player].remove("BerryLock");
+        return true;
+    }
 
     //No Guard
     if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard))) {
@@ -1017,11 +1179,6 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         if (!silent)
             notify(All, Miss, player);
         return false;
-    }
-
-    if (pokelong[player].value("BerryLock").toBool()) {
-        pokelong[player].remove("BerryLock");
-        return true;
     }
 
     if (acc == 0) {
@@ -1248,18 +1405,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     calleffects(player,player,"EvenWhenCantMove");
 
     if (!testStatus(player)) {
-        goto end;
+        goto trueend;
     }
 
     //Just for truant
     callaeffects(player, player, "DetermineAttackPossible");
     if (turnlong[player]["ImpossibleToMove"].toBool() == true) {
-        goto end;
+        goto trueend;
     }
 
     callpeffects(player, player, "DetermineAttackPossible");
     if (turnlong[player]["ImpossibleToMove"].toBool() == true) {
-        goto end;
+        goto trueend;
     }
 
     turnlong[player]["HasPassedStatus"] = true;
@@ -1268,17 +1425,17 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     callbeffects(player,player,"MovePossible");
     if (turnlong[player]["ImpossibleToMove"].toBool()) {
-        goto end;
+        goto trueend;
     }
 
     callpeffects(player, player, "MovePossible");
     if (turnlong[player]["ImpossibleToMove"].toBool()) {
-        goto end;
+        goto trueend;
     }
 
     if (!specialOccurence) {
         if (!isMovePossible(player, move)) {
-            goto end;
+            goto trueend;
         }
 
         pokelong[player][QString("Move%1Used").arg(move)] = true;
@@ -1295,20 +1452,53 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         notify(All, UseAttack, player, qint16(attack));
     }
 
-    switch(turnlong[player]["PossibleTargets"].toInt()) {
+    switch(Move::Target(turnlong[player]["PossibleTargets"].toInt())) {
 	case Move::None: targetList.push_back(player); break;
 	case Move::User: targetList.push_back(player); break;
-	case Move::All: targetList.push_back(player); targetList.push_back(rev(player)); break;
-	default: targetList.push_back(rev(player));
+        case Move::Opponents: targetList = revs(player); break;
+        case Move::All:
+            for (int i = 0; i < numberOfSlots(); i++) {
+                if (!koed(i))
+                    targetList.push_back(i);
+            }
+            break;
+        case Move::AllButSelf:
+            for (int i = 0; i < numberOfSlots(); i++) {
+                if (!koed(i)&&i!=player)
+                    targetList.push_back(i);
+            }
+            break;
+        case Move::ChosenTarget: {
+                int target = turnlong[player]["Target"].toInt();
+                if (doubles() && !koed(target)) {
+                    targetList.push_back(target);
+                    break;
+                }
+            }
+            /* There is no "break" here and it is normal. Do not change the order */
+        case Move::RandomTarget :
+            {
+                int randomOpponent = this->randomOpponent(player);
+                if (randomOpponent != - 1)
+                    targetList.push_back(randomOpponent);
+                break;
+            }
     }
 
     if (!specialOccurence && !turnlong[player].contains("NoChoice")) {
         //Pressure
-        losePP(player, move, 1 + (hasWorkingAbility(rev(player), Ability::Pressure) && !koed(rev(player)) &&
-                                  targetList.contains(rev(player))));
+        int ppsum = 1;
+
+        foreach(int poke, targetList) {
+            if (hasWorkingAbility(poke, Ability::Pressure)) {
+                ppsum += 1;
+            }
+        }
+
+        losePP(player, move, ppsum);
     }
 
-    if (targetList.size() == 1 && targetList[0] == rev(player) && koed(rev(player))) {
+    if (targetList.size() == 0) {
 	notify(All, NoOpponent, player);
         goto end;
     }
@@ -1467,6 +1657,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     callieffects(player, player, "AfterTargetList");
     end:
+    calleffects(player, player, "BeforeEnding");
+    trueend:
     pokelong[player]["HasMovedOnce"] = true;
 
     attacker() = -1;
@@ -1530,9 +1722,8 @@ void BattleSituation::calculateTypeModStab()
 bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
     if (attacking()) {
-        int attacker = this->attacker();
-        //Mold Breaker
-        if (attacker == rev(player) && hasWorkingAbility(attacker, Ability::MoldBreaker)) {
+        // Mold Breaker
+        if (player == attacked() && player != attacker() && hasWorkingAbility(attacker(), Ability::MoldBreaker)) {
             return false;
         }
     }
@@ -1861,9 +2052,8 @@ void BattleSituation::endTurnWeather()
 	    } else {
 		immuneTypes << Pokemon::Rock << Pokemon::Ground << Pokemon::Steel;
 	    }
-	    for (int i = Player1; i <= Player2; i++) {
-		if (koed(i))
-		    continue;
+            std::vector<int> players = sortedBySpeed();
+            foreach (int i, players) {
                 callaeffects(i,i,"WeatherSpecial");
                 if (!turnlong[i].contains("WeatherSpecialed") && (weather == Hail || weather == SandStorm) &&!immuneTypes.contains(getType(i,1)) && !immuneTypes.contains(getType(i,2))) {
 		    notify(All, WeatherMessage, i, qint8(HurtWeather),qint8(weather));
@@ -1962,7 +2152,7 @@ void BattleSituation::changeStatus(int player, int status, bool tell)
 
 void BattleSituation::changeStatus(int team, int poke, int status)
 {
-    if (poke == currentPoke(team)) {
+    if (isOut(team, poke)) {
 	changeStatus(team, status);
     } else {
 	this->poke(team, poke).status() = status;
@@ -2377,6 +2567,15 @@ void BattleSituation::requestSwitchIns()
         requestChoice(p, false);
     }
 
+    if (!allChoicesOkForPlayer(Player1)) {
+        notify(Player1, StartChoices, Player1);
+    }
+
+    if (!allChoicesOkForPlayer(Player2)) {
+        notify(Player2, StartChoices, Player2);
+    }
+
+    blocked() = true;
     sem.acquire(1);
 
     testquit();
@@ -2396,31 +2595,60 @@ void BattleSituation::requestSwitchIns()
     requestSwitchIns();
 }
 
-void BattleSituation::requestSwitch(int player)
+void BattleSituation::requestSwitch(int slot)
 {
     testWin();
 
-    if (countAlive(player) - !koed(player) == 0) {
+    int player = this->player(slot);
+
+    if (countBackUp(player) == 0) {
         //No poke to switch in, so we won't request a choice & such;
         return;
     }
 
     notifyInfos();
 
-    options[player] = BattleChoices::SwitchOnly();
+    options[slot] = BattleChoices::SwitchOnly(slot);
 
     requestChoice(player,true,true);
     analyzeChoice(player);
     callEntryEffects(player);
 }
 
+bool BattleSituation::linked(int linked, QString relationShip)
+{
+    if (!pokelong[linked].contains(relationShip + "By"))
+        return false;
+
+    int linker = pokelong[linked][relationShip + "By"].toInt();
+
+    return  !koed(linker) && slotzone[linker]["SwitchCount"] == pokelong[linked][relationShip + "Count"];
+}
+
+void BattleSituation::link(int linker, int linked, QString relationShip)
+{
+    pokelong[linked][relationShip+"By"] = linker;
+    pokelong[linked][relationShip+"Count"] = slotzone[linker]["SwitchCount"].toInt();
+}
+
 int BattleSituation::countAlive(int player) const
 {
     int count = 0;
     for (int i = 0; i < 6; i++) {
-	if (poke(player, i).num() != 0 && !poke(player, i).ko()) {
+        if (!poke(player, i).ko()) {
 	    count += 1;
 	}
+    }
+    return count;
+}
+
+int BattleSituation::countBackUp(int player) const
+{
+    int count = 0;
+    for (int i = 0; i < 6; i++) {
+        if (poke(player, i).num() != 0 && !poke(player, i).ko() && currentPoke(slot(player)) != i && (!doubles() || currentPoke(slot(player, true)) != i)) {
+            count += 1;
+        }
     }
     return count;
 }
@@ -2524,7 +2752,7 @@ int BattleSituation::getStat(int player, int stat)
     int ret = pokelong[player][q].toInt()*getStatBoost(player, stat)*(20+turnlong[player][q+"AbilityModifier"].toInt())/20
               *(20+turnlong[player][q+"ItemModifier"].toInt())/20;
 
-    if (stat == Speed && teamzone[player].value("TailWindCount").toInt() > 0){
+    if (stat == Speed && teamzone[this->player(player)].value("TailWindCount").toInt() > 0){
         ret *= 2;
     }
 
@@ -2591,7 +2819,7 @@ void BattleSituation::fail(int player, int move, int part, int type, int trueSou
 {
     turnlong[player]["FailingMessage"] = false;
     turnlong[player]["Failed"] = true;
-    sendMoveMessage(move, part, trueSource != -1? trueSource : player, type, rev(player),turnlong[player]["MoveChosen"].toInt());
+    sendMoveMessage(move, part, trueSource != -1? trueSource : player, type, player,turnlong[player]["MoveChosen"].toInt());
 }
 
 PokeFraction BattleSituation::getStatBoost(int player, int stat)
@@ -2652,7 +2880,7 @@ BattleConfiguration BattleSituation::configuration() const
     return ret;
 }
 
-void BattleSituation::emitCommand(int player, int players, const QByteArray &toSend)
+void BattleSituation::emitCommand(int slot, int players, const QByteArray &toSend)
 {
     if (players == All) {
         emit battleInfo(publicId(), qint32(id(Player1)), toSend);
@@ -2662,7 +2890,7 @@ void BattleSituation::emitCommand(int player, int players, const QByteArray &toS
             emit battleInfo(publicId(), qint32(id), toSend);
         }
     } else if (players == AllButPlayer) {
-        emit battleInfo(publicId(), qint32(id(rev(player))), toSend);
+        emit battleInfo(publicId(), qint32(id(opponent(player(slot)))), toSend);
 
         foreach(int id, spectators) {
             emit battleInfo(publicId(), qint32(id), toSend);

@@ -114,12 +114,12 @@ signals:
     /* challengerelated */
     void challengeStuff(const ChallengeInfo &c);
     /* battle including self */
-    void battleStarted(int id, const TeamBattle &myteam, const BattleConfiguration &conf);
+    void battleStarted(int id, const TeamBattle &myteam, const BattleConfiguration &conf, bool doubles);
     /* battle of strangers */
     void battleStarted(int id1, int id2);
     void battleFinished(int res, int srcid, int destid);
     void battleMessage(const QByteArray &mess);
-    void spectatedBattle(const QString& name0, const QString &name1, int battleId);
+    void spectatedBattle(const QString& name0, const QString &name1, int battleId, bool doubles);
     void spectatingBattleMessage(int battleId, const QByteArray &mess);
     void spectatingBattleFinished(int battleId);
     void passRequired(const QString &salt);

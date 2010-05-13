@@ -16,27 +16,28 @@ class QScrollDownTextEdit;
 class QClickPBar;
 
 
-enum {
-    Myself,
-    Opponent
-};
-
 struct BaseBattleInfo
 {
-    BaseBattleInfo(const PlayerInfo & me, const PlayerInfo &opp);
+    BaseBattleInfo(const PlayerInfo & me, const PlayerInfo &opp, bool doubles);
     /* name [0] = mine, name[1] = other */
     PlayerInfo pInfo[2];
-    bool sub[2];
-    quint16 specialSprite[2];
+    QVector<bool> sub;
+    QVector<quint16> specialSprite;
+
     quint16 time[2];
     bool ticking[2];
     int startingTime[2];
 
+    bool doubles;
+    int numberOfSlots;
+
+    int myself;
+    int opponent;
 
     /* Opponent pokemon */
     ShallowBattlePoke pokemons[2][6];
-    bool pokeAlive[2];
-    quint8 currentIndex[2];
+    QVector<bool> pokeAlive;
+    QVector<quint8> currentIndex;
 
     ShallowBattlePoke &currentShallow(int player) {
         return pokemons[player][currentIndex[player]];
@@ -49,8 +50,16 @@ struct BaseBattleInfo
         return pInfo[x].team.name;
     }
 
+    int slot(int player, int poke=0) {
+        return player + poke*2;
+    }
+
+    int player(int slot) {
+        return slot %2;
+    }
+
     /* Stat boosts & team status */
-    BattleDynamicInfo statChanges[2];
+    QList<BattleDynamicInfo> statChanges;
 };
 
 /* The battle window called by the client, online */
@@ -74,7 +83,7 @@ public:
         return *myInfo;
     }
 
-    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent);
+    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, bool doubles);
 
     enum BattleCommand
     {
@@ -120,7 +129,8 @@ public:
         Rated,
         TierSection,
         EndMessage,
-        PointEstimate
+        PointEstimate,
+        MakeYourChoice
     };
 
     enum TempPokeChange {
@@ -172,6 +182,8 @@ public:
     QString name(int spot) const;
     virtual QString nick(int spot) const;
     QString rnick(int spot) const;
+    int player(int spot) const;
+    int opponent(int player) const;
 
 public slots:
     void receiveInfo(QByteArray);
@@ -242,13 +254,16 @@ protected:
     QString health(int lifePercent);
 
     BaseGraphicsZone *zone;
-    QLabel *nick[2];
-    QLabel *level[2];
-    QLabel *status[2];
-    QClickPBar *bars[2];
+
+    QVector<QLabel *> nick;
+    QVector<QLabel *> level;
+    QVector<QLabel *> status;
+    QVector<QLabel *> gender;
+    QVector<QClickPBar *> bars;
+
     QProgressBar *timers[2];
-    QLabel *trainers[2];
-    QLabel *gender[2];
+    QLabel * trainers[2];
+
     /* The pokeballs to indicate how well a team is doing */
     QLabel *advpokeballs[6];
     QLabel *mypokeballs[6];
@@ -259,7 +274,7 @@ class BaseGraphicsZone : public QGraphicsView
 {
     Q_OBJECT
 public:
-    BaseGraphicsZone();
+    BaseGraphicsZone(BaseBattleInfo *info);
     /* displays that poke */
     template <class T>
     void switchTo(const T &poke, int spot, bool sub, int specialSprite=0);
@@ -275,20 +290,23 @@ public:
     qint32 key(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub) const;
     QHash<qint32, QPixmap> graphics;
     /* Current pixmaps displayed */
-    QGraphicsPixmapItem *mine, *foe;
+    QVector<QGraphicsPixmapItem *> items;
     QGraphicsScene scene;
 
-    QString tooltips[2];
+    QVector<QString> tooltips;
+    BaseBattleInfo *mInfo;
+
+    BaseBattleInfo & info() {
+        return *mInfo;
+    }
 };
 
 /* Yeepee, at last templates */
 template <class T>
 void BaseGraphicsZone::switchTo(const T &poke, int spot, bool sub, int specialSprite)
 {
-    if (spot == Myself)
-        mine->setPixmap(loadPixmap(specialSprite?specialSprite:poke.num(), poke.forme(), poke.shiny(), true, poke.gender(), sub));
-    else
-        foe->setPixmap(loadPixmap(specialSprite?specialSprite:poke.num(), poke.forme(), poke.shiny(), false, poke.gender(), sub));
+    items[spot]->setPixmap(loadPixmap(specialSprite?specialSprite:poke.num(), specialSprite?0:poke.forme(), poke.shiny(),
+                                      info().player(spot) == info().myself , poke.gender(), sub));
 }
 
 #endif // BASEBATTLEWINDOW_H

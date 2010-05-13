@@ -43,6 +43,7 @@ private:
     static QTSList<int> m_LevelBalance;
     /* That is NOT multi-threaded! */
     static QHash<int,QList<int> > m_AlternateFormes;
+    static QHash<int,QList<int> > m_Evolutions;
     /* First and last aesthetic forme */
     static QHash<int, QPair<int, int> > m_AestheticFormes;
     static QHash<int, bool> m_AestheticFormesHidden;
@@ -99,9 +100,11 @@ public:
     static QString AestheticDesc(int pokenum, int forme);
     /* Standard formes: Rotom, Giratina, Deoxys, .. */
     static bool IsForme(int pokenum);
-    static int OriginalForm(int pokenum);
+    static int OriginalForme(int pokenum);
     static bool HasFormes(int pokenum);
     static QList<int> Formes(int pokenum);
+    static QList<int> Evos(int pokenum);
+    static int OriginalEvo(int pokenum);
     static PokeBaseStats BaseStats(int pokenum);
     static bool Exist(int pokenum);
     static QList<int> Abilities(int pokenum);

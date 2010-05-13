@@ -28,10 +28,7 @@ public slots:
 protected:
     QImageButton *challenge_b;
     QCheckBox *clauses[ChallengeInfo::numberOfClauses];
-    QPoint dragPosition;
-
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
+    QComboBox *battleMode;
 private:
     int myid;
 
@@ -54,7 +51,7 @@ class ChallengedWindow: public BaseChallengeWindow
 {
     Q_OBJECT
 public:
-    ChallengedWindow(const PlayerInfo &p, quint32 clauses, QWidget *parent = 0);
+    ChallengedWindow(const PlayerInfo &p, const ChallengeInfo &c, QWidget *parent = 0);
 };
 
 #endif // CHALLENGE_H

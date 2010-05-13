@@ -32,7 +32,7 @@ Pokedex::Pokedex(TeamBuilder *parent)
 
 
     QVBoxLayout *secondCol = new QVBoxLayout();
-    l->addLayout(secondCol);
+    l->addLayout(secondCol, 100);
     secondCol->setSpacing(0);
 
     BigOpenPokeBall *bop = new BigOpenPokeBall();
@@ -301,6 +301,7 @@ bool BigOpenPokeBall::shiny() const
 /****************************************************/
 PokedexBody::PokedexBody()
 {
+    //setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QHBoxLayout *hl = new QHBoxLayout(this);
     hl->setMargin(0);
     QVBoxLayout *col1 = new QVBoxLayout();
@@ -316,7 +317,7 @@ PokedexBody::PokedexBody()
     comp->setModel(pokeList->model());
     comp->setCompletionColumn(1);
     pokeEdit->setCompleter(comp);
-    col1->addWidget(pokeList);
+    col1->addWidget(pokeList,100);
     col1->addWidget(new PokeBallText("db/Teambuilder/PokeDex/Orangeball.png", tr("Sort Pokemon List")));
 
     connect(comp, SIGNAL(activated(QString)), this, SLOT(changeToPokemon(QString)));
@@ -428,13 +429,7 @@ void PokedexBody::openAdvancedSearch()
 
 ProfileTab::ProfileTab()
 {
-    QHBoxLayout *l= new QHBoxLayout(this);
-
-    l->setSpacing(0);
-    l->setMargin(2);
-
-    QVBoxLayout *firstCol = new QVBoxLayout();
-    l->addLayout(firstCol, 100);
+    QVBoxLayout *firstCol = new QVBoxLayout(this);
 
     QLabel *descHeader = new QLabel(tr("Description"));
     descHeader->setObjectName("BlueHeader");
@@ -458,10 +453,6 @@ ProfileTab::ProfileTab()
     firstCol->addWidget(ab2 = new QLabel());
     ab1->setWordWrap(true);
     ab2->setWordWrap(true);
-
-    QLabel *oak = new QLabel();
-    oak->setPixmap(QPixmap("db/Teambuilder/PokeDex/Prof.Oak.png"));
-    l->addWidget(oak);
 
     changeDesc(1);
 }

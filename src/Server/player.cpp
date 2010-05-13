@@ -95,6 +95,7 @@ void Player::changeTier(const QString &newtier)
     }
     tier() = newtier;
     rating() = TierMachine::obj()->rating(name(), tier());
+    cancelChallenges();
     emit updated(id());
 }
 
@@ -117,10 +118,10 @@ void Player::quitSpectating(int battleId)
     }
 }
 
-void Player::spectateBattle(const QString &name0, const QString &name1, int battleId)
+void Player::spectateBattle(const QString &name0, const QString &name1, int battleId, bool doubles)
 {
     battlesSpectated.insert(battleId);
-    relay().notify(NetworkServ::SpectateBattle, name0, name1, qint32(battleId));
+    relay().notify(NetworkServ::SpectateBattle, name0, name1, qint32(battleId), doubles);
 }
 
 void Player::cancelChallenges()
@@ -450,9 +451,9 @@ void Player::sendChallengeStuff(const ChallengeInfo &c)
     relay().sendChallengeStuff(c);
 }
 
-void Player::startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf)
+void Player::startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
 {
-    relay().engageBattle(this->id(), id, team, conf);
+    relay().engageBattle(this->id(), id, team, conf, doubles);
 
     m_opponent = id;
 

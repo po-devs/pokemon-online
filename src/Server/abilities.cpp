@@ -84,14 +84,14 @@ struct AMAnticipation : public AM {
     }
 
     static void us (int s, int, BS &b) {
-        int t = b.rev(s);
-        if (b.koed(t)) {
-            return;
-        }
+        QList<int> tars = b.revs(s);
         bool frightening_truth = false;
-        for (int i = 0; i < 4; i++) {
-            if (TypeInfo::Eff(MoveInfo::Type(b.move(t, i)), b.getType(s,1)) * TypeInfo::Eff(MoveInfo::Type(b.move(t, i)), b.getType(s,2)) > 4) {
-                frightening_truth = true;
+        foreach(int t, tars) {
+            for (int i = 0; i < 4; i++) {
+                if (TypeInfo::Eff(MoveInfo::Type(b.move(t, i)), b.getType(s,1)) * TypeInfo::Eff(MoveInfo::Type(b.move(t, i)), b.getType(s,2)) > 4) {
+                    frightening_truth = true;
+                    break;
+                }
             }
         }
         if (frightening_truth) {
@@ -118,8 +118,8 @@ struct AMBadDreams : public AM {
     }
 
     static void et (int s, int, BS &b) {
-        int t = b.rev(s);
-        if (!b.koed(t)) {
+        QList<int> tars = b.revs(s);
+        foreach(int t, tars) {
             if (b.poke(t).status() == Pokemon::Asleep) {
                 b.sendAbMessage(6,0,s,t,Pokemon::Ghost);
                 b.inflictDamage(t, b.poke(t).totalLifePoints()/8,s,false);
@@ -190,14 +190,14 @@ struct AMCuteCharm : public AM {
 
     static void upa(int s, int t, BS &b) {
         if (!b.koed(t) && b.isSeductionPossible(s,t) && b.true_rand() % 100 < 30
-            && !(poke(b,t).contains("AttractedTo") && team(b,s)["SwitchCount"] == poke(b,t)["AttractedCount"])) {
+            && !b.linked(t, "Attract"))
+        {
             b.sendMoveMessage(58,1,s,0,t);
             if (b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
                 b.sendItemMessage(7,s);
                 b.disposeItem(t);
             } else {
-                poke(b,t)["AttractedTo"] = s;
-                poke(b,t)["AttractedCount"] = team(b,s)["SwitchCount"];
+                b.link(s, t, "Attract");
                 addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
             }
         }
@@ -206,14 +206,13 @@ struct AMCuteCharm : public AM {
     static void pda(int s, int, BS &b) {
         if (turn(b,s).value("HasPassedStatus").toBool())
             return;
-        if (poke(b,s).contains("AttractedTo")) {
-            int seducer = poke(b,s)["AttractedTo"].toInt();
-            if (poke(b,s)["AttractedCount"].toInt() == team(b,seducer)["SwitchCount"].toInt()) {
-                b.sendMoveMessage(58,0,s,0,seducer);
-                if (b.true_rand() % 2 == 0) {
-                    turn(b,s)["ImpossibleToMove"] = true;
-                    b.sendMoveMessage(58, 2,s);
-                }
+        if (b.linked(s, "Attract")) {
+            int seducer = poke(b,s)["AttractBy"].toInt();
+
+            b.sendMoveMessage(58,0,s,0,seducer);
+            if (b.true_rand() % 2 == 0) {
+                turn(b,s)["ImpossibleToMove"] = true;
+                b.sendMoveMessage(58, 2,s);
             }
         }
     }
@@ -225,9 +224,11 @@ struct AMDownload : public AM {
     }
 
     static void us(int s, int , BS &b) {
-        int t = b.rev(s);
+        int t = b.randomOpponent(s);
+
         b.sendAbMessage(12,0,s);
-        if (b.koed(t) || b.getStat(t, Defense) > b.getStat(t, SpDefense)) {
+
+        if (t==-1|| b.getStat(t, Defense) > b.getStat(t, SpDefense)) {
             b.gainStatMod(s, SpAttack,1);
         } else {
             b.gainStatMod(s, Attack,1);
@@ -401,12 +402,16 @@ struct AMForeWarn : public AM {
     static special_moves SM;
 
     static void us(int s, int, BS &b) {
-        int t = b.rev(s);
+        QList<int> tars = b.revs(s);
 
-        if (!b.koed(t)) {
-            int max = 0;
-            std::vector<int> poss;
+        if (tars.size() == 0) {
+            return;
+        }
 
+        int max = 0;
+        std::vector<int> poss;
+
+        foreach(int t, tars) {
             for (int i = 0; i < 4; i++) {
                 int m = b.move(t,i);
                 if (m !=0) {
@@ -422,16 +427,17 @@ struct AMForeWarn : public AM {
                     if (pow > max) {
                         poss.clear();
                         poss.push_back(m);
+                        max = pow;
                     } else if (pow == max) {
                         poss.push_back(m);
                     }
                 }
             }
-
-            int m = poss[true_rand()%poss.size()];
-
-            b.sendAbMessage(22,0,s,t,MoveInfo::Type(m),m);
         }
+
+        int m = poss[true_rand()%poss.size()];
+
+        b.sendAbMessage(22,0,s,s,MoveInfo::Type(m),m);
     }
 };
 
@@ -443,11 +449,10 @@ struct AMFrisk : public AM {
     }
 
     static void us(int s, int , BS &b) {
-        int t = b.rev(s);
+        int t = b.randomOpponent(s);
 
-        if (b.koed(t))
+        if (t == -1)
             return;
-
 
         int it = b.poke(t).item();
 
@@ -464,7 +469,7 @@ struct AMGuts : public AM {
 
     static void sm (int s, int, BS &b) {
         /* Guts doesn't activate on a sleeping poke that used Rest (but other ways of sleeping
-            are activated */
+            make it activated) */
         if (b.poke(s).status() != Pokemon::Fine && !(b.poke(s).status() == Pokemon::Asleep && poke(b,s).value("Rested").toBool())) {
             turn(b,s)[QString("Stat%1AbilityModifier").arg(poke(b,s)["AbilityArg"].toInt())] = 10;
         }
@@ -580,16 +585,15 @@ struct AMIntimidate : public AM {
     }
 
     static void us(int s, int , BS &b) {
-        int t = b.rev(s);
-        if (b.koed(t))
-            return;
+        QList<int> tars = b.revs(s);
 
-
-        if (b.hasSubstitute(t)) {
-            b.sendAbMessage(34,1,s,t);
-        } else {
-            b.sendAbMessage(34,0,s,t);
-            b.loseStatMod(t,Attack,1,s);
+        foreach(int t, tars) {
+            if (b.hasSubstitute(t)) {
+                b.sendAbMessage(34,1,s,t);
+            } else {
+                b.sendAbMessage(34,0,s,t);
+                b.loseStatMod(t,Attack,1,s);
+            }
         }
     }
 };
@@ -955,10 +959,13 @@ struct AMTrace : public AM {
     }
 
     static void us(int s, int, BS &b) {
-        int t = b.rev(s);
+        int t = b.randomOpponent(s);
+
+        if (t == - 1)
+            return;
 
         //Multitype
-        if (!b.koed(t) && !b.hasWorkingAbility(t,Ability::Multitype)) {
+        if (!b.hasWorkingAbility(t,Ability::Multitype)) {
             b.sendAbMessage(66,0,s,t,0,b.ability(t));
             b.acquireAbility(s, b.ability(t));
         }

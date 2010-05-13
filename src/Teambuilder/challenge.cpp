@@ -51,6 +51,11 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     pinfo->setFont(treb);
     pinfo->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
+    battleMode = new QComboBox(this);
+    battleMode->move(18,270);
+    battleMode->addItem(tr("Singles"));
+    battleMode->addItem(tr("Doubles"));
+
     QLabel *ladder = new QLabel(toColor(p.rating == -1 ? "unknown" : QString::number(p.rating), grey),this);
     ladder->setFont(treb);
     ladder->setGeometry(100,148,83,18);
@@ -95,22 +100,6 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     show();
 }
 
-void BaseChallengeWindow::mousePressEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton) {
-        dragPosition = event->globalPos() - frameGeometry().topLeft();
-        event->accept();
-    }
-}
-
-void BaseChallengeWindow::mouseMoveEvent(QMouseEvent *event)
-{
-    if (event->buttons() & Qt::LeftButton) {
-        move(event->globalPos() - dragPosition);
-        event->accept();
-    }
-}
-
 void BaseChallengeWindow::closeEvent(QCloseEvent *)
 {
     if (emitOnClose)
@@ -153,6 +142,8 @@ ChallengeWindow::ChallengeWindow(const PlayerInfo &p, QWidget *parent)
         clauses[i]->setChecked(s.value("clause_"+ChallengeInfo::clause(i)).toBool());
     }
 
+    battleMode->setCurrentIndex(s.value("challenge_with_doubles").toInt());
+
     //This is necessary to do that here because this is the function of the derived class that is connected then
     connect(challenge_b, SIGNAL(clicked()), SLOT(onChallenge()));
 }
@@ -164,6 +155,8 @@ void ChallengeWindow::onChallenge()
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         s.setValue("clause_"+ChallengeInfo::clause(i), clauses[i]->isChecked());
     }
+
+    s.setValue("challenge_with_doubles", battleMode->currentIndex());
 
     emit challenge(id());
     close();
@@ -182,13 +175,18 @@ void ChallengeWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
-ChallengedWindow::ChallengedWindow(const PlayerInfo &p, quint32 clauses, QWidget *parent)
+ChallengedWindow::ChallengedWindow(const PlayerInfo &p, const ChallengeInfo &c, QWidget *parent)
         : BaseChallengeWindow(p, tr("%1 challenged you!"), "Accept", "Decline", parent)
 {
+    quint32 clauses = c.clauses;
+
     connect(challenge_b, SIGNAL(clicked()), SLOT(onChallenge()));
 
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         this->clauses[i]->setChecked(clauses & (1 << i));
         this->clauses[i]->setDisabled(true);
     }
+
+    battleMode->setCurrentIndex(int(c.doubles));
+    battleMode->setDisabled(true);
 }

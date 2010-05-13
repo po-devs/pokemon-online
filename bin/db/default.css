@@ -1,7 +1,42 @@
 .QMainWindow
 {
-	background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,
-		stop:0 white, stop:1 #0ca0dd);
+	/*background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,
+		stop:0 blue, stop:1 #0ca0dd); */
+	background: #009ede;
+}
+
+
+QMenuBar#MainChat{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                       stop:0 lightgray, stop:1 darkgray);
+}
+
+QMenuBar#MainChat QMenu {
+	background: darkgray;
+}
+
+QMenuBar#MainChat QMenu::item:selected{
+	background: lightgray;
+	color: black;
+}
+
+QMenuBar#MainChat::item{
+	background: transparent;
+}
+
+QMenuBar#MainChat::item:selected{
+	background: darkgray;
+}
+
+QMenuBar#MainChat::item:pressed{
+	background: #888888;
+}
+
+
+TeamBuilder {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+				stop: 0 #0ca4e0, stop: 0.031 #0bb3e9, stop: 0.061 #00d7fb, stop: 0.076 white, stop: 0.086 white, stop: .100 #919495, stop: 0.25 #626769,
+				stop: 0.5 #282e32, stop: 0.75 #626769, stop: .900 #919495, stop: 0.914 white, stop: 0.924 white, stop: 0.939 #00d7fb, stop: 0.969 #0bb3e9, stop: 1 #0ca4e0);
 }
 
 QMainWindow::separator {
@@ -269,9 +304,7 @@ PokedexBody {
 	border: 6px solid black;
 	border-radius: 16px;
 	background: qlineargradient(x1:0, y1:0, x2: 0, y2: 1, stop: 0 #ff5411, stop: 1 #f7ebe7);
-	width: 547px;
 	min-width: 600px;
-	max-width: 600px;
 }
 
 PokedexBody TB_PokeChoice{
