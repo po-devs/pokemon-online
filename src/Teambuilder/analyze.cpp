@@ -5,6 +5,8 @@
 #include "../PokemonInfo/battlestructs.h"
 #include "../Shared/config.h"
 
+#include "battlewindow.h"
+
 using namespace NetworkCli;
 
 Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection)
@@ -55,24 +57,22 @@ void Analyzer::sendTeam(const TrainerTeam &team)
     notify(SendTeam, team);
 }
 
-void Analyzer::sendBattleResult(int result)
+void Analyzer::sendBattleResult(int id, int result)
 {
-    notify(BattleFinished, qint32(result));
+    notify(BattleFinished, qint32(id), qint32(result));
 }
 
-void Analyzer::battleCommand(const BattleChoice &comm)
+void Analyzer::battleCommand(int id, const BattleChoice &comm)
 {
-    notify(BattleMessage, comm);
+    notify(BattleMessage, qint32(id), comm);
 }
 
-void Analyzer::battleMessage(const QString &str)
+void Analyzer::battleMessage(int id, const QString &str)
 {
-    notify(BattleChat, str);
-}
-
-void Analyzer::battleMessage(const QString &str, int id)
-{
-    notify(SpectatingBattleChat, qint32(id), str);
+    if (dynamic_cast<BattleWindow*>(sender()) != NULL)
+        notify(BattleChat, qint32(id), str);
+    else
+        notify(SpectatingBattleChat, qint32(id), str);
 }
 
 void Analyzer::CPUnban(const QString &name)
@@ -159,8 +159,8 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	}
     case EngageBattle:
 	{
-            qint32 id1, id2;
-            in >> id1 >> id2;
+            qint32 battleid, id1, id2;
+            in >> battleid >> id1 >> id2;
 
             if (id1 == 0) {
                 /* This is a battle we take part in */
@@ -168,31 +168,33 @@ void Analyzer::commandReceived(const QByteArray &commandline)
                 BattleConfiguration conf;
                 bool doubles;
                 in >> team >> conf >> doubles;
-                emit battleStarted(id2, team, conf, doubles);
+                emit battleStarted(battleid, id2, team, conf, doubles);
             } else {
                 /* this is a battle of strangers */
-                emit battleStarted(id1, id2);
+                emit battleStarted(battleid, id1, id2);
             }
 	    break;
 	}
     case BattleFinished:
 	{
             qint8 desc;
-	    in >> desc;
+            qint32 battleid;
             qint32 id1, id2;
-            in >> id1 >> id2;
-            emit battleFinished(desc, id1, id2);
+            in >> battleid >> desc >> id1 >> id2;
+            emit battleFinished(battleid, desc, id1, id2);
 	    break;
 	}
     case BattleMessage:
 	{
+            qint32 battleid;
+            in >> battleid;
 	    /* Such a headache, it really looks like wasting ressources */
 	    char *buf;
             uint len;
 	    in.readBytes(buf, len);
 	    QByteArray command(buf, len);
 	    delete [] buf;
-	    emit battleMessage(command);
+            emit battleMessage(battleid, command);
 	    break;
 	}
     case KeepAlive:

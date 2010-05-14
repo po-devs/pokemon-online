@@ -666,19 +666,20 @@ void Server::findBattle(int id, const FindBattleData &f)
             continue;
         }
 
-        /* Check their clauses match */
-        if ( (f.bannedClauses & data->forcedClauses) != 0 || (f.forcedClauses & data->bannedClauses) != 0) {
+        /* We check the tier thing */
+        if ( (f.sameTier || data->sameTier) && p1->tier() != p2->tier() )
+            continue;
+
+        /* The double battle thing */
+        if ( f.mode != data->mode) {
             continue;
         }
 
         /* We check both allow rated if needed */
         if (f.rated || data->rated) {
-            if (!canHaveRatedBattle(id, key, (f.forcedClauses & ChallengeInfo::ChallengeCup) || (data->forcedClauses & ChallengeInfo::ChallengeCup), f.rated, data->rated))
+            if (!canHaveRatedBattle(id, key, p1->tier() == "Challenge Cup", f.rated, data->rated))
                 continue;
         }
-        /* We check the tier thing */
-        if ( (f.sameTier || data->sameTier) && p1->tier() != p2->tier() )
-            continue;
 
         /* Then the range thing */
         if (f.ranged)
@@ -692,7 +693,12 @@ void Server::findBattle(int id, const FindBattleData &f)
         ChallengeInfo c;
         c.opp = key;
         c.rated = (p1->ladder() && p2->ladder() && p1->tier() == p2->tier()) || f.rated || data->rated;
-        c.clauses = f.forcedClauses | data->forcedClauses;
+
+        if (p1->tier() == p2->tier() && p1->tier() == "Challenge Cup") {
+            c.clauses = ChallengeInfo::ChallengeCup;
+        } else {
+            c.clauses = ChallengeInfo::SleepClause || ChallengeInfo::EvasionClause || ChallengeInfo::OHKOClause || ChallengeInfo::SpeciesClause;
+        }
 
         if (myengine->beforeBattleMatchup(id,key,c)) {
             player(id)->lastFindBattleIp() = player(key)->ip();

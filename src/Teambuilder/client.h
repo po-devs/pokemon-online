@@ -91,15 +91,16 @@ public slots:
     /* Challenge info by the server */
     void challengeStuff(const ChallengeInfo &c);
     /* battle... */
-    void battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
-    void battleStarted(int id1, int id2);
-    void battleFinished(int res, int winner, int loser);
+    void battleStarted(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
+    void battleStarted(int battleid, int id1, int id2);
+    void battleFinished(int battleid, int res, int winner, int loser);
+    void battleCommand(int battleid, const QByteArray&command);
     void saveBattleLogs(bool save);
     void animateHpBar(bool animate);
     void playMusic(bool music);
     void changeBattleLogFolder();
     void changeMusicFolder();
-    void forfeitBattle();
+    void forfeitBattle(int);
     void watchBattleRequ(int);
     void watchBattle(const QString &name0, const QString &name1, int battleId, bool doubles);
     void spectatingBattleMessage(int battleId, const QByteArray &command);
@@ -230,7 +231,7 @@ public slots:
 signals:
     void findBattle(const FindBattleData&);
 private:
-    QCheckBox *sameTier, *rated, *rangeOn;
+    QCheckBox *sameTier, *rated, *rangeOn, *doubles;
     QCheckBox *clauses[ChallengeInfo::numberOfClauses];
     QLineEdit *range;
 };

@@ -58,7 +58,7 @@ class BattleWindow : public BaseBattleWindow
 
     PROPERTY(BattleConfiguration, conf);
 public:
-    BattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf, bool doubles);
+    BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf, bool doubles);
 
     BattleInfo &info() {
         return *(BattleInfo*)(&BaseBattleWindow::info());
@@ -101,8 +101,8 @@ public slots:
     void emitCancel();
     void switchToPokeZone();
 signals:
-    void battleMessage(const QString &str);
-    void forfeit();
+    void battleMessage(int battleid, const QString &str);
+    void forfeit(int battleid);
 protected:
     void closeEvent(QCloseEvent *);
     virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);

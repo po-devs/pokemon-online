@@ -43,6 +43,7 @@ public:
     int spot(int id) const;
     /* The other player */
     int opponent(int player) const;
+    int partner(int spot) const;
     QList<int> revs(int slot) const;
     QList<int> allRevs(int slot) const; //returns even koed opponents
     /* returns the id corresponding to that spot (spot is 0 or 1) */

@@ -562,12 +562,12 @@ QDataStream & operator << (QDataStream &out, const BattleChoice &po)
 }
 
 QDataStream & operator >> (QDataStream &in, ChallengeInfo & c) {
-    in >> c.dsc >> c.opp >> c.clauses >> c.doubles;
+    in >> c.dsc >> c.opp >> c.clauses >> c.mode;
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const ChallengeInfo & c) {
-    out << c.dsc <<  c.opp << c.clauses << c.doubles;
+    out << c.dsc <<  c.opp << c.clauses << c.mode;
     return out;
 }
 
@@ -575,7 +575,7 @@ QDataStream & operator >> (QDataStream &in, FindBattleData &f)
 {
     quint32 flags;
 
-    in >> flags >> f.range >> f.forcedClauses >> f.bannedClauses;
+    in >> flags >> f.range >> f.mode;
 
     f.rated = flags & 0x01;
     f.sameTier = f.rated || flags & 0x2;
@@ -592,7 +592,7 @@ QDataStream & operator << (QDataStream &out, const FindBattleData &f)
     flags |= f.sameTier << 1;
     flags |= f.ranged << 2;
 
-    out << flags << f.range << f.forcedClauses << f.bannedClauses;
+    out << flags << f.range << f.mode;
 
     return out;
 }

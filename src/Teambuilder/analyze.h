@@ -82,7 +82,7 @@ public:
     void connectTo(const QString &host, quint16 port);
     void sendTeam(const TrainerTeam & team);
     void sendChallengeStuff(const ChallengeInfo &c);
-    void sendBattleResult(int result);
+    void sendBattleResult(int id, int result);
     bool isConnected() const;
     void goAway(bool away);
 
@@ -114,11 +114,11 @@ signals:
     /* challengerelated */
     void challengeStuff(const ChallengeInfo &c);
     /* battle including self */
-    void battleStarted(int id, const TeamBattle &myteam, const BattleConfiguration &conf, bool doubles);
+    void battleStarted(int battleid, int id, const TeamBattle &myteam, const BattleConfiguration &conf, bool doubles);
     /* battle of strangers */
-    void battleStarted(int id1, int id2);
-    void battleFinished(int res, int srcid, int destid);
-    void battleMessage(const QByteArray &mess);
+    void battleStarted(int battleid, int id1, int id2);
+    void battleFinished(int battleid, int res, int srcid, int destid);
+    void battleMessage(int battleid, const QByteArray &mess);
     void spectatedBattle(const QString& name0, const QString &name1, int battleId, bool doubles);
     void spectatingBattleMessage(int battleId, const QByteArray &mess);
     void spectatingBattleFinished(int battleId);
@@ -144,10 +144,8 @@ public slots:
     void commandReceived (const QByteArray &command);
 
     /* by the battle window */
-    void battleCommand(const BattleChoice &comm);
-    void battleMessage(const QString &mess);
-    /* spectator window */
-    void battleMessage(const QString &mess, int);
+    void battleCommand(int, const BattleChoice &comm);
+    void battleMessage(int, const QString &mess);
 
     /* By the pm window */
     void sendPM(int id, const QString &mess);

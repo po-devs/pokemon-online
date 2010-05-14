@@ -31,7 +31,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     finished() = false;
     clauses() = c.clauses;
     rated() = c.rated;
-    doubles() = c.doubles;
+    doubles() = c.mode == ChallengeInfo::Doubles;
     numberOfSlots() = doubles() ? 4 : 2;
     if (rated())
         tier() = p1.tier();
@@ -337,6 +337,11 @@ QList<int> BattleSituation::allRevs(int p) const
 int BattleSituation::opponent(int player) const
 {
     return 1-player;
+}
+
+int BattleSituation::partner(int spot) const
+{
+    return slot(player(spot), !(spot %2));
 }
 
 const PokeBattle & BattleSituation::poke(int player, int poke) const
@@ -1484,6 +1489,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
     }
 
+    callbeffects(player,player, "GeneralTargetChange");
+
     targetList.clear();
     switch(Move::Target(turnlong[player]["PossibleTargets"].toInt())) {
 	case Move::None: targetList.push_back(player); break;
@@ -1510,18 +1517,24 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
             break;
         case Move::ChosenTarget: {
-                int target = turnlong[player]["Target"].toInt();
-                if (doubles() && !koed(target)) {
-                    targetList.push_back(target);
-                    break;
+                if (doubles()) {
+                    int target = turnlong[player]["Target"].toInt();
+                    if (!koed(target)) {
+                        targetList.push_back(target);
+                        break;
+                    }
                 }
             }
             /* There is no "break" here and it is normal. Do not change the order */
         case Move::RandomTarget :
             {
-                int randomOpponent = this->randomOpponent(player);
-                if (randomOpponent != - 1)
-                    targetList.push_back(randomOpponent);
+                if (!turnlong[player].contains("TargetChanged")) {
+                    int randomOpponent = this->randomOpponent(player);
+                    if (randomOpponent != - 1)
+                        targetList.push_back(randomOpponent);
+                } else {
+                    targetList.push_back(turnlong[player]["Target"].toInt());
+                }
                 break;
             }
     }
@@ -2292,6 +2305,10 @@ int BattleSituation::calculateDamage(int p, int t)
     int power = move["Power"].toInt();
     int type = move["Type"].toInt();
 
+    if (player.contains("HelpingHanded")) {
+        power = power * 3 / 2;
+    }
+
     callieffects(p,t,"BasePowerModifier");
     power = power * (10+move["BasePowerItemModifier"].toInt())/10;
 
@@ -2741,6 +2758,13 @@ void BattleSituation::testWin()
     int time1 = std::max(0, timeLeft(Player1));
     int time2 = std::max(0, timeLeft(Player2));
 
+    /* No one wants a battle that long xd */
+    if (turn() == 1024) {
+        notify(All, BattleEnd, Player1, qint8(Tie));
+        emit battleFinished(Tie, id(Player1), id(Player2),rated(), tier());
+        throw QuitException();
+    }
+
     if (time1 == 0 || time2 == 0) {
         finished() = true;
         notify(All,ClockStop,Player1,quint16(time1));
@@ -2760,7 +2784,6 @@ void BattleSituation::testWin()
             notify(All, EndMessage, Player2, loseMessage[Player2]);
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
-        qDebug() << "Battle finished between " << team1.name << " and " << team2.name << " (timeout)" << endl;
         throw QuitException();
     }
 
@@ -2786,9 +2809,7 @@ void BattleSituation::testWin()
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
         /* The battle is finished so we stop the battling thread */
-        qDebug() << "Battle finished between " << team1.name << " and " << team2.name << " (bwin)" << endl;
         sem.acquire(1);
-        qDebug() << "Battle finished between " << team1.name << " and " << team2.name << " (awin)" << endl;
         throw QuitException();
     }
 }
@@ -2829,11 +2850,25 @@ int BattleSituation::getStat(int player, int stat)
 {
     QString q = "Stat"+QString::number(stat);
     turnlong[player].remove(q+"AbilityModifier");
+    turnlong[player].remove(q+"PartnerAbilityModifier");
     turnlong[player].remove(q+"ItemModifier");
     callieffects(player, player, "StatModifier");
     callaeffects(player, player, "StatModifier");
-    int ret = pokelong[player][q].toInt()*getStatBoost(player, stat)*(20+turnlong[player][q+"AbilityModifier"].toInt())/20
-              *(20+turnlong[player][q+"ItemModifier"].toInt())/20;
+
+    if (doubles()) {
+        int partner = this->partner(player);
+
+        if (!koed(partner)) {
+            callaeffects(partner, player, "PartnerStatModifier");
+        }
+    }
+    int ret = pokelong[player][q].toInt()*getStatBoost(player, stat)*(20+turnlong[player][q+"AbilityModifier"].toInt())/20;
+
+    if (doubles()) {
+        ret = ret * (20+turnlong[player][q+"PartnerAbilityModifier"].toInt())/20;
+    }
+
+     ret = ret * (20+turnlong[player][q+"ItemModifier"].toInt())/20;
 
     if (stat == Speed && teamzone[this->player(player)].value("TailWindCount").toInt() > 0){
         ret *= 2;

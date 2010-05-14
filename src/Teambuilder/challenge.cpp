@@ -188,6 +188,6 @@ ChallengedWindow::ChallengedWindow(const PlayerInfo &p, const ChallengeInfo &c, 
         this->clauses[i]->setDisabled(true);
     }
 
-    battleMode->setCurrentIndex(int(c.doubles));
+    battleMode->setCurrentIndex(c.mode);
     battleMode->setDisabled(true);
 }

@@ -210,7 +210,7 @@ void BaseBattleWindow::sendMessage()
     QString message = myline->text();
 
     if (message.size() != 0) {
-        emit battleMessage(message, battleId());
+        emit battleMessage(battleId(), message);
         myline->clear();
     }
 }

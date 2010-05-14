@@ -346,6 +346,7 @@ struct AMFlashFire : public AM {
 struct AMFlowerGift : public AM {
     AMFlowerGift() {
         functions["StatModifier"] = &sm;
+        functions["PartnerStatModifier"] = &sm2;
         functions["UponSetup"] = &us;
         functions["WeatherChange"] = &us;
     }
@@ -362,6 +363,13 @@ struct AMFlowerGift : public AM {
         if (b.isWeatherWorking(BattleSituation::Sunny)) {
             turn(b,s)["Stat1AbilityModifier"] = 10;
             turn(b,s)["Stat5AbilityModifier"] = 10;
+        }
+    }
+
+    static void sm2(int s, int t, BS &b) {
+        if (b.isWeatherWorking(BattleSituation::Sunny) && !b.hasWorkingAbility(t, Ability::FlowerGift)) {
+            turn(b,s)["Stat1PartnerAbilityModifier"] = 10;
+            turn(b,s)["Stat5PartnerAbilityModifier"] = 10;
         }
     }
 };
@@ -1063,6 +1071,8 @@ struct AMLightningRod : public AM {
         /* So, we make the move hit with 100 % accuracy */
         turn(b,t)["Accuracy"] = 0;
 
+        turn(b,t)["TargetChanged"] = true;
+
         if (turn(b,t)["Target"].toInt() == s) {
             return;
         } else {
@@ -1071,6 +1081,45 @@ struct AMLightningRod : public AM {
         }
     }
 };
+
+struct AMPlus : public AM {
+    AMPlus() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm(int s, int, BS &b) {
+        if (!b.doubles()) {
+            return;
+        }
+        int p = b.partner(s);
+        if (b.koed(p)) {
+            return;
+        }
+        if (b.hasWorkingAbility(p, Ability::Minus)) {
+            turn(b,s)["Stat4AbilityModifier"] = 10;
+        }
+    }
+};
+
+struct AMMinus : public AM {
+    AMMinus() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm(int s, int, BS &b) {
+        if (!b.doubles()) {
+            return;
+        }
+        int p = b.partner(s);
+        if (b.koed(p)) {
+            return;
+        }
+        if (b.hasWorkingAbility(p, Ability::Plus)) {
+            turn(b,s)["Stat4AbilityModifier"] = 10;
+        }
+    }
+};
+
 
 /* Events:
     UponPhysicalAssault
@@ -1091,6 +1140,7 @@ struct AMLightningRod : public AM {
     TurnOrder
     DetermineAttackPossible
     GeneralTargetChange
+    PartnerStatModifier
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
@@ -1130,6 +1180,7 @@ void AbilityEffect::init()
     REGISTER_AB(33, Insomnia);
     REGISTER_AB(34, Intimidate);
     REGISTER_AB(35, IronFist);
+    REGISTER_AB(36, Minus);
     REGISTER_AB(37, LeafGuard);
     REGISTER_AB(38, LightningRod)
     REGISTER_AB(39, MagnetPull);
@@ -1138,6 +1189,7 @@ void AbilityEffect::init()
     REGISTER_AB(42, NaturalCure);
     REGISTER_AB(43, Normalize);
     REGISTER_AB(44, OwnTempo);
+    REGISTER_AB(45, Plus);
     REGISTER_AB(46, Pressure);
     REGISTER_AB(48, Reckless);
     REGISTER_AB(49, Rivalry);
