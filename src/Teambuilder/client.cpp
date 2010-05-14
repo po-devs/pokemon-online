@@ -1217,7 +1217,7 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
 
     rated->setChecked(s.value("find_battle_force_rated").toBool());
     sameTier->setChecked(s.value("find_battle_same_tier").toBool());
-    doubles->setChecked(s.value("find_battle_mode").toInt());
+    doubles->setChecked(s.value("find_battle_mode").toBool());
     rangeOn->setChecked(s.value("find_battle_range_on").toBool());
     range->setText(QString::number(s.value("find_battle_range").toInt()));
     changeEnabled();

@@ -1,11 +1,10 @@
 .QMainWindow
 {
-	/*background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,
-		stop:0 blue, stop:1 #0ca0dd); */
-	background: #009ede;
+	background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,
+		stop:0 white, stop:1 #0ca0dd); 
 }
 
-
+/*
 QMenuBar#MainChat{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                                        stop:0 lightgray, stop:1 darkgray);
@@ -30,7 +29,7 @@ QMenuBar#MainChat::item:selected{
 
 QMenuBar#MainChat::item:pressed{
 	background: #888888;
-}
+}*/
 
 
 TeamBuilder {
