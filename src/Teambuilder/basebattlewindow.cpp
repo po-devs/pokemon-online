@@ -1110,6 +1110,7 @@ QString BaseBattleDisplay::health(int lifePercent)
 BaseGraphicsZone::BaseGraphicsZone(BaseBattleInfo *i) : mInfo(i)
 {
     setScene(&scene);
+    setMouseTracking(true);
 
     tooltips.resize(info().numberOfSlots);
     items.resize(info().numberOfSlots);
@@ -1158,15 +1159,16 @@ qint32 BaseGraphicsZone::key(quint16 num, quint8 forme, bool shiny, bool back, q
     return sub ? ((1 << 31) + (back << 30)) : (num + (gender << 16) + (back << 18) + (shiny<<19) + (forme << 20));
 }
 
-bool BaseGraphicsZone::event(QEvent * event)
+void BaseGraphicsZone::mouseMoveEvent(QMouseEvent * e)
 {
-    if (event->type() == QEvent::ToolTip) {
-        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
+    QGraphicsItem *it = this->itemAt(e->pos());
 
-        int spot  = !(helpEvent->pos().x() < width() / 2);
-        QToolTip::setFont(QFont("Courier New",8));
-        QToolTip::showText(helpEvent->globalPos(), tooltips[spot]);
+    for (int i = 0; i < items.size(); i++) {
+        if (items[i] == it) {
+            QToolTip::setFont(QFont("Courier New",8));
+            QToolTip::showText(e->globalPos(), tooltips[i]);
+            break;
+        }
     }
-    return QGraphicsView::event(event);
 }
 

@@ -589,7 +589,7 @@ void BattleSituation::requestChoices()
 
 void BattleSituation::notifyInfos()
 {
-    for (int p = Player1; p <= Player2; p++) {
+    for (int p = 0; p < numberOfSlots(); p++) {
         if (!koed(p)) {
             BattleStats stats = constructStats(p);
             notify(player(p), DynamicStats, p, stats);
