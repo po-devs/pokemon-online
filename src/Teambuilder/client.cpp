@@ -93,8 +93,8 @@ void Client::initRelay()
     connect(relay, SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
     connect(relay, SIGNAL(battleStarted(int, int, TeamBattle, BattleConfiguration, bool )),
             SLOT(battleStarted(int, int, TeamBattle, BattleConfiguration, bool)));
-    connect(relay, SIGNAL(battleStarted(int,int, int)), SLOT(battleStarted(int, int)));
-    connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int,int,int)));
+    connect(relay, SIGNAL(battleStarted(int,int, int)), SLOT(battleStarted(int, int, int)));
+    connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int, int,int,int)));
     connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
     connect(relay, SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
     connect(relay, SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
@@ -1253,6 +1253,7 @@ void BattleFinder::throwChallenge()
     d.sameTier = sameTier->isChecked();
     d.range = range->text().toInt();
     d.ranged = rangeOn->isChecked();
+    d.mode = doubles->isChecked();
 /*
     d.forcedClauses = 0;
     d.bannedClauses = 0;

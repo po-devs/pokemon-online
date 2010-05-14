@@ -110,7 +110,7 @@ void Analyzer::sendWatchingCommand(qint32 id, const QByteArray &command)
 
 void Analyzer::notifyBattle(qint32 id1, qint32 id2)
 {
-    notify(EngageBattle, id1, id2);
+    notify(EngageBattle, qint32(0), id1, id2);
 }
 
 void Analyzer::sendUserInfo(const UserInfo &ui)

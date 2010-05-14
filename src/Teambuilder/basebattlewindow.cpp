@@ -774,40 +774,59 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     QHBoxLayout *firstLine = new QHBoxLayout();
     l->addLayout(firstLine);
 
-    firstLine->addSpacing(90);
+    QLabel* oppPoke = new QLabel();
+    oppPoke->setPixmap(QPixmap("db/BattleWindow/NewPokeBar.png"));
+    oppPoke->setFixedSize(oppPoke->pixmap()->size());
+    firstLine->addWidget(oppPoke);
 
-    QVBoxLayout *obarsColumn = new QVBoxLayout();
-    obarsColumn->setMargin(0);
-    firstLine->addLayout(obarsColumn);
+    QVBoxLayout *oppl = new QVBoxLayout(oppPoke);
+    oppl->setMargin(5);
+    oppl->setSpacing(0);
+    oppl->addSpacing(3);
+
+    QHBoxLayout *oppl2 = new QHBoxLayout();
+    oppl->addLayout(oppl2);
+    oppl2->setMargin(0);
+    oppl2->setSpacing(6);
 
     for (int i = 0; i < info().numberOfSlots/2; i++) {
+
+        QGridLayout *inside = new QGridLayout();
+        oppl2->addLayout(inside);
+        inside->setMargin(0);
+        inside->setSpacing(4);
+
         int slot = info().slot(info().opponent, i);
 
-        QLabel* oppPoke = new QLabel();
-        oppPoke->setPixmap(QPixmap("db/BattleWindow/OpponentPokeBar.png"));
-
-        nick[slot] = new QLabel(oppPoke);
+        nick[slot] = new QLabel();
         nick[slot]->setObjectName("PokemonNick");
-        nick[slot]->setGeometry(8,7,102,21);
-        nick[slot]->setAlignment(Qt::AlignVCenter);
+        inside->addWidget(nick[slot], 0, 0, 1, 1, Qt::AlignLeft);
+        inside->setColumnStretch(0, 100);
 
-        level[slot] = new QLabel(oppPoke);
+        status[slot] = new QLabel();
+        inside->addWidget(status[slot], 0, 1);
+
+        gender[slot] = new QLabel();
+        inside->addWidget(gender[slot], 0, 2);
+
+        level[slot] = new QLabel();
         level[slot]->setObjectName("PokemonLevel");
-        level[slot]->setGeometry(120,12,50,13);
+        inside->addWidget(level[slot], 0, 3);
 
-        gender[slot] = new QLabel(oppPoke);
-        gender[slot]->setGeometry(104,11,12,12);
 
-        status[slot] = new QLabel(oppPoke);
-        status[slot]->setGeometry(10,23,23,23);
-
+        QHBoxLayout *barL = new QHBoxLayout();
+        barL->setMargin(0);
+        barL->setSpacing(0);
+        QLabel *HPIcon = new QLabel();
+        HPIcon->setPixmap(QPixmap("db/BattleWindow/HP.png"));
+        HPIcon->setFixedSize(HPIcon->pixmap()->size());
+        barL->addWidget(HPIcon);
         bars[slot] = new QClickPBar();
-        bars[slot]->setParent(oppPoke);
         bars[slot]->setObjectName("LifePoints"); /* for stylesheets */
         bars[slot]->setRange(0, 100);
-        bars[slot]->setGeometry(75,29,90,15);
+        barL->addWidget(bars[slot]);
 
-        obarsColumn->addWidget(oppPoke);
+        inside->addLayout(barL,1,0,1,4);
     }
 
     QHBoxLayout *foeteam = new QHBoxLayout();
@@ -877,41 +896,60 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
 
     lastLine->addLayout(myTeamAndName);
 
-    QVBoxLayout *mbarsColumn = new QVBoxLayout();
-    mbarsColumn->setMargin(0);
-    lastLine->addLayout(mbarsColumn);
+    QLabel* myPoke = new QLabel();
+    myPoke->setPixmap(QPixmap("db/BattleWindow/NewPokeBar.png"));
+    myPoke->setFixedSize(myPoke->pixmap()->size());
+    lastLine->addWidget(myPoke);
+
+    QVBoxLayout *myl = new QVBoxLayout(myPoke);
+    myl->setMargin(3);
+    myl->setSpacing(0);
+    myl->addSpacing(5);
+
+    QHBoxLayout *myl2 = new QHBoxLayout();
+    myl->addLayout(myl2);
+    myl2->setMargin(0);
+    myl2->setSpacing(6);
 
     for (int i = 0; i < info().numberOfSlots/2; i++) {
+
+        QGridLayout *inside = new QGridLayout();
+        myl2->addLayout(inside);
+        inside->setMargin(0);
+        inside->setSpacing(4);
+
         int slot = info().slot(info().myself, i);
 
-        QLabel* myPoke = new QLabel();
-        myPoke->setPixmap(QPixmap("db/BattleWindow/ChallengerPokeBar.png"));
-
-        nick[slot] = new QLabel(myPoke);
+        nick[slot] = new QLabel();
         nick[slot]->setObjectName("PokemonNick");
-        nick[slot]->setGeometry(25,7,102,21);
-        nick[slot]->setAlignment(Qt::AlignVCenter);
+        inside->addWidget(nick[slot], 0, 0, 1, 1, Qt::AlignLeft);
+        inside->setColumnStretch(0, 100);
 
-        level[slot] = new QLabel(myPoke);
+        status[slot] = new QLabel();
+        inside->addWidget(status[slot], 0, 1);
+
+        gender[slot] = new QLabel();
+        inside->addWidget(gender[slot], 0, 2);
+
+        level[slot] = new QLabel();
         level[slot]->setObjectName("PokemonLevel");
-        level[slot]->setGeometry(126,12,50,13);
+        inside->addWidget(level[slot], 0, 3);
 
-        gender[slot] = new QLabel(myPoke);
-        gender[slot]->setGeometry(111,11,12,12);
 
-        status[slot] = new QLabel(myPoke);
-        status[slot]->setGeometry(14,23,23,23);
-
+        QHBoxLayout *barL = new QHBoxLayout();
+        barL->setMargin(0);
+        barL->setSpacing(0);
+        QLabel *HPIcon = new QLabel();
+        HPIcon->setPixmap(QPixmap("db/BattleWindow/HP.png"));
+        HPIcon->setFixedSize(HPIcon->pixmap()->size());
+        barL->addWidget(HPIcon);
         bars[slot] = new QClickPBar();
-        bars[slot]->setParent(myPoke);
         bars[slot]->setObjectName("LifePoints"); /* for stylesheets */
         bars[slot]->setRange(0, 100);
-        bars[slot]->setGeometry(75,29,90,15);
+        barL->addWidget(bars[slot]);
 
-        mbarsColumn->addWidget(myPoke);
+        inside->addLayout(barL,1,0,1,4);
     }
-
-    lastLine->addSpacing(90);
 
     for (int i = 0; i < info().numberOfSlots; i++) {
         updatePoke(i);
