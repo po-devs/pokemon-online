@@ -511,6 +511,10 @@ bool BattleSituation::requestChoice(int slot, bool acquire, bool custom)
 {
     int player = this->player(slot);
 
+    if (koed(slot) && countBackUp(player) == 0) {
+        return false;
+    }
+
     if (turnlong[slot].contains("NoChoice") && !koed(slot)) {
 	return false;
     }
@@ -580,7 +584,7 @@ void BattleSituation::notifyInfos()
     for (int p = Player1; p <= Player2; p++) {
         if (!koed(p)) {
             BattleStats stats = constructStats(p);
-            notify(p, DynamicStats, p, stats);
+            notify(player(p), DynamicStats, p, stats);
             BattleDynamicInfo infos = constructInfo(p);
             notify(All, DynamicInfo, p, infos);
         }
@@ -803,6 +807,13 @@ bool BattleSituation::validChoice(const BattleChoice &b)
         if (isOut(player, b.numSwitch) || poke(player, b.numSwitch).ko()) {
             return false;
         }
+        /* Let's also check another switch hasn't been made to the same poke */
+        for (int i = 0; i < numberOfSlots() / 2; i++) {
+            int p2 = this->player(i);
+            if (i != b.numSlot && p2 == player && couldMove[i] && hasChoice[i] == false && choice[i].poke() && choice[i].numSwitch == b.numSwitch) {
+                return false;
+            }
+        }
     } else {
         /* It's an attack, we check the target is valid */
         if (turnlong[b.numSlot]["PossibleTargets"].toInt() == Move::ChosenTarget && (b.target() < 0 || b.target() >= numberOfSlots() ||
@@ -821,10 +832,8 @@ bool BattleSituation::isOut(int player, int poke)
 
 void BattleSituation::storeChoice(const BattleChoice &b)
 {
-    int player = this->player(b.numSlot);
-
-    choice[player] = b;
-    hasChoice[player] = false;
+    choice[b.numSlot] = b;
+    hasChoice[b.numSlot] = false;
 }
 
 bool BattleSituation::allChoicesOkForPlayer(int player)
@@ -857,7 +866,7 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 
     if (player != this->player(b.numSlot)) {
         /* W00T! He tried to impersonate the other! Bad Guy! */
-        //notify(player, BattleChat, opponent(player), QString("Say, are you trying to hack this game? Beware, i'll report you and have you banned!"));
+        notify(player, BattleChat, opponent(player), QString("Say, are you trying to hack this game? Beware, i'll report you and have you banned!"));
         return;
     }
 
@@ -899,10 +908,11 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
   ****************************************/
 void BattleSituation::startClock(int player, bool broadCoast)
 {
-    if (!(clauses() & ChallengeInfo::NoTimeOut)) {
+    if (!(clauses() & ChallengeInfo::NoTimeOut) && timeStopped[player]) {
         startedAt[player] = time(NULL);
         timeStopped[player] = false;
 
+        (void) broadCoast; // should be used to tell if we tell everyone or not, but meh.
         notify(player,ClockStart, player, quint16(timeleft[player]));
     }
 }
@@ -971,12 +981,10 @@ void BattleSituation::spectatingChat(int id, const QString &str)
 
 void BattleSituation::sendPoke(int slot, int pok, bool silent)
 {
-    koedPokes.remove(slot);
-
     int player = this->player(slot);
 
     if (poke(player,pok).num() == Pokemon::Giratina_O && poke(player,pok).item() != Item::GriseousOrb)
-        changeForm(player,pok,Pokemon::Giratina);
+        changeForme(player,pok,Pokemon::Giratina);
     
     changeCurrentPoke(slot, pok);
 
@@ -1225,7 +1233,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
 void BattleSituation::testCritical(int player, int target)
 {
     /* Shell armor, Battle Armor */
-    if (hasWorkingAbility(target, 8) || hasWorkingAbility(target, 85) || teamzone[target].value("LuckyChantCount").toInt() > 0) {
+    if (hasWorkingAbility(target, 8) || hasWorkingAbility(target, 85) || teamzone[this->player(target)].value("LuckyChantCount").toInt() > 0) {
 	return;
     }
 
@@ -1391,7 +1399,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     attacker() = player;
 
     int attack;
-    QList<int> targetList;
+    std::vector<int> targetList;
 
     if (specialOccurence) {
 	attack = move;
@@ -1455,17 +1463,23 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     switch(Move::Target(turnlong[player]["PossibleTargets"].toInt())) {
 	case Move::None: targetList.push_back(player); break;
 	case Move::User: targetList.push_back(player); break;
-        case Move::Opponents: targetList = revs(player); break;
-        case Move::All:
-            for (int i = 0; i < numberOfSlots(); i++) {
-                if (!koed(i))
-                    targetList.push_back(i);
+        case Move::Opponents:
+            targetList = sortedBySpeed();
+            for (unsigned i = 0; i < targetList.size(); i++) {
+                if (this->player(targetList[i]) == this->player(player) ) {
+                    targetList.erase(targetList.begin()+i, targetList.begin() + i + 1);
+                }
             }
             break;
+        case Move::All:
+            targetList = sortedBySpeed();
+            break;
         case Move::AllButSelf:
-            for (int i = 0; i < numberOfSlots(); i++) {
-                if (!koed(i)&&i!=player)
-                    targetList.push_back(i);
+            targetList = sortedBySpeed();
+            for (unsigned i = 0; i < targetList.size(); i++) {
+                if (targetList[i] == player) {
+                    targetList.erase(targetList.begin()+i, targetList.begin() + i + 1);
+                }
             }
             break;
         case Move::ChosenTarget: {
@@ -1490,7 +1504,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         int ppsum = 1;
 
         foreach(int poke, targetList) {
-            if (hasWorkingAbility(poke, Ability::Pressure)) {
+            if (poke != player && hasWorkingAbility(poke, Ability::Pressure)) {
                 ppsum += 1;
             }
         }
@@ -1828,12 +1842,12 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 	    /* Now the kind of change itself */
             bool statusChange = effect.midRef(0,3) == "[S]"; /* otherwise it's stat change */
 
-	    if(!self && !statusChange && teamzone[targeted].value("MistCount").toInt() > 0) {
+            if(!self && !statusChange && teamzone[this->player(targeted)].value("MistCount").toInt() > 0) {
 		sendMoveMessage(86, 2, player,Pokemon::Ice,target,turnlong[player]["Attack"].toInt());
 		continue;
 	    }
 
-	    if(!self && statusChange && teamzone[targeted].value("SafeGuardCount").toInt() > 0) {
+            if(!self && statusChange && teamzone[this->player(targeted)].value("SafeGuardCount").toInt() > 0) {
 		sendMoveMessage(109, 2, player,Pokemon::Psychic,target,turnlong[player]["Attack"].toInt());
 		continue;
 	    }
@@ -1957,8 +1971,12 @@ bool BattleSituation::canGetStatus(int player, int status) {
 void BattleSituation::inflictStatus(int player, int status, int attacker)
 {
     if (poke(player).status() != Pokemon::Fine) {
-        if (this->attacker() == attacker && turnlong[attacker]["Power"].toInt() == 0)
-            notify(All, AlreadyStatusMessage, player);
+        if (this->attacker() == attacker && turnlong[attacker]["Power"].toInt() == 0) {
+            if (poke(player).status() == status)
+                notify(All, AlreadyStatusMessage, player);
+            else
+                notify(All, Failed, player);
+        }
         return;
     }
     if (status == Pokemon::Asleep && isThereUproar()) {
@@ -1978,17 +1996,17 @@ void BattleSituation::inflictStatus(int player, int status, int attacker)
 
             if (status == Pokemon::Asleep)
             {
-                if (sleepClause() && currentForcedSleepPoke[player] != -1) {
+                if (sleepClause() && currentForcedSleepPoke[this->player(player)] != -1) {
                     notifyClause(ChallengeInfo::SleepClause, true);
                     return;
                 } else {
-                    currentForcedSleepPoke[player] = currentPoke(player);
+                    currentForcedSleepPoke[this->player(player)] = currentPoke(player);
                 }
             } else if (status == Pokemon::Frozen)
             {
                 if (clauses() & ChallengeInfo::FreezeClause) {
                     for (int i = 0; i < 6; i++) {
-                        if (poke(player,i).status() == Pokemon::Frozen) {
+                        if (poke(this->player(player),i).status() == Pokemon::Frozen) {
                             notifyClause(ChallengeInfo::FreezeClause);
                             return;
                         }
@@ -1998,7 +2016,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker)
         }
         changeStatus(player, status);
         if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_S) {
-            changeForm(player, currentPoke(player), Pokemon::Shaymin_S);
+            changeForme(player, currentPoke(player), Pokemon::Shaymin_S);
         }
         if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
             && hasWorkingAbility(player, Ability::Synchronize)) //Synchronize
@@ -2266,7 +2284,7 @@ int BattleSituation::calculateDamage(int p, int t)
                        ? PokeFraction(1,2) : PokeFraction(1,1));
 
     /* Light screen / Reflect */
-    if (!crit && teamzone[t].value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+    if (!crit && teamzone[this->player(t)].value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
 	damage /= 2;
     }
     if (isWeatherWorking(Sunny)) {
@@ -2372,7 +2390,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	    changeHp(player, hp);
 
             if (straightattack) {
-                notify(player, StraightDamage,player, qint16(damage));
+                notify(this->player(player), StraightDamage,player, qint16(damage));
                 notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
             }
 	}
@@ -2408,7 +2426,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 void BattleSituation::changeTempMove(int player, int slot, int move)
 {
     pokelong[player]["Move" + QString::number(slot)] = move;
-    notify(player, ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
+    notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
     changePP(player,slot,5);
 }
 
@@ -2436,7 +2454,7 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
 void BattleSituation::disposeItem(int  player) {
     int item = poke(player).item();
     if (item != 0) {
-        teamzone[player]["RecyclableItem"] = item;
+        teamzone[this->player(player)]["RecyclableItem"] = item;
     }
     loseItem(player);
 }
@@ -2460,7 +2478,7 @@ void BattleSituation::loseItem(int player)
     //No Griseous Orb -> Giratina back to its ol' self
     if (!koed(player)) {
         if (pokenum(player) == Pokemon::Giratina_O) {
-            changeForm(player,currentPoke(player),Pokemon::Giratina);
+            changeForme(player,currentPoke(player),Pokemon::Giratina);
         } else if (pokenum(player) == Pokemon::Arceus) {
             if (getType(player, 1) != Type::Normal) {
                 changeAForme(player, Type::Normal);
@@ -2470,7 +2488,7 @@ void BattleSituation::loseItem(int player)
     poke(player).item() = 0;
 }
 
-void BattleSituation::changeForm(int player, int poke, int newform)
+void BattleSituation::changeForme(int player, int poke, int newform)
 {
     PokeBattle &p  = this->poke(player,poke);
     p.num() = newform;
@@ -2520,7 +2538,7 @@ void BattleSituation::changeHp(int player, int newHp)
     }
     poke(player).lifePoints() = newHp;
 
-    notify(player, ChangeHp, player, quint16(newHp));
+    notify(this->player(player), ChangeHp, player, quint16(newHp));
     notify(AllButPlayer, ChangeHp, player, quint16(poke(player).lifePercent())); /* percentage calculus */
 
     callieffects(player, player, "AfterHPChange");
@@ -2537,14 +2555,13 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     changeHp(player, 0);
 
     if (straightattack) {
-        notify(player, StraightDamage,player, qint16(damage));
+        notify(this->player(player), StraightDamage,player, qint16(damage));
         notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
     }
 
     changeStatus(player,Pokemon::Koed);
 
     notify(All, Ko, player);
-    koedPokes.insert(player);
 
     if (straightattack && player!=source) {
 	callpeffects(player, source, "AfterKoedByStraightAttack");
@@ -2555,44 +2572,65 @@ void BattleSituation::requestSwitchIns()
 {
     testWin();
 
-    int count = koedPokes.size();
+    QSet<int> koedPlayers;
+    QSet<int> koedPokes;
+    QSet<int> sentPokes;
 
-    if (count == 0) {
-        return;
+    for (int i = 0; i < numberOfSlots(); i++) {
+        if (!koedPlayers.contains(player(i)) && koed(i) && countBackUp(player(i)) > 0) {
+            koedPlayers.insert(player(i));
+            koedPokes.insert(i);
+        }
     }
 
-    notifyInfos();
+    while (koedPokes.size() > 0) {
+        notifyInfos();
 
-    foreach(int p, koedPokes) {
-        requestChoice(p, false);
+        foreach(int p, koedPokes) {
+            requestChoice(p, false);
+        }
+
+        if (!allChoicesOkForPlayer(Player1)) {
+            notify(Player1, StartChoices, Player1);
+        }
+
+        if (!allChoicesOkForPlayer(Player2)) {
+            notify(Player2, StartChoices, Player2);
+        }
+
+        blocked() = true;
+        sem.acquire(1);
+
+        testquit();
+        testWin(); // timeout win
+
+        /* To clear the cancellable moves list */
+        for (int i = 0; i < numberOfSlots(); i++)
+            couldMove[i] = false;
+
+        foreach(int p, koedPokes) {
+            analyzeChoice(p);
+
+            if (!koed(p))
+                sentPokes.insert(p);
+        }
+
+        koedPokes.clear();
+        koedPlayers.clear();
+
+        testWin();
+
+        for (int i = 0; i < numberOfSlots(); i++) {
+            if (!koedPlayers.contains(player(i)) && koed(i) && countBackUp(player(i)) > 0) {
+                koedPlayers.insert(player(i));
+                koedPokes.insert(i);
+            }
+        }
     }
 
-    if (!allChoicesOkForPlayer(Player1)) {
-        notify(Player1, StartChoices, Player1);
+    foreach(int p, sentPokes) {
+        callEntryEffects(p);
     }
-
-    if (!allChoicesOkForPlayer(Player2)) {
-        notify(Player2, StartChoices, Player2);
-    }
-
-    blocked() = true;
-    sem.acquire(1);
-
-    testquit();
-    testWin();
-
-    QSet<int> copy = koedPokes;
-
-    foreach(int p, copy) {
-        analyzeChoice(p);
-    }
-
-    foreach(int p, copy) {
-	callEntryEffects(p);
-    }
-
-    /* Recursive call */
-    requestSwitchIns();
 }
 
 void BattleSituation::requestSwitch(int slot)
@@ -2719,7 +2757,7 @@ void BattleSituation::changePP(int player, int move, int PP)
 {
     poke(player).move(move).PP() = PP;
 
-    notify(player, ChangePP, player, quint8(move), poke(player).move(move).PP());
+    notify(this->player(player), ChangePP, player, quint8(move), poke(player).move(move).PP());
 }
 
 void BattleSituation::losePP(int player, int move, int loss)
@@ -2739,7 +2777,7 @@ void BattleSituation::gainPP(int player, int move, int gain)
     PP = std::min(PP+gain, int(poke(player).move(move).totalPP()));
     changePP(player, move, PP);
 
-    notify(player, ChangePP, player, quint8(move), poke(player).move(move).PP());
+    notify(this->player(player), ChangePP, player, quint8(move), poke(player).move(move).PP());
 }
 
 int BattleSituation::getStat(int player, int stat)
@@ -2900,13 +2938,16 @@ void BattleSituation::emitCommand(int slot, int players, const QByteArray &toSen
     }
 }
 
-BattleDynamicInfo BattleSituation::constructInfo(int player)
+BattleDynamicInfo BattleSituation::constructInfo(int slot)
 {
     BattleDynamicInfo ret;
 
+    int player = this->player(slot);
+
     for (int i = 0; i < 7; i++) {
-        ret.boosts[i] = pokelong[player]["Boost" + QString::number(i+1)].toInt();
+        ret.boosts[i] = pokelong[slot]["Boost" + QString::number(i+1)].toInt();
     }
+
     ret.flags = 0;
     if (teamzone[player].contains("Spikes")) {
         switch (teamzone[player].value("Spikes").toInt()) {

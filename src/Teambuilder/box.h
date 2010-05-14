@@ -190,7 +190,7 @@ private:
     Team *m_team;
     int currentPoke;
     TB_BoxContainer *m_boxes;
-    PokemonBox * boxes[6];
+    PokemonBox * boxes[26];
 
     PokemonBox *currentBox() {
         return boxes[m_boxes->currentIndex()];

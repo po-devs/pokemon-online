@@ -123,7 +123,7 @@ public:
     void koPoke(int player, int source, bool straightattack = false);
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
-    void changeForm(int player, int poke, int newform);
+    void changeForme(int player, int poke, int newform);
     void calculateTypeModStab();
     int forme(int player);
     void changeAForme(int player, int newforme);
@@ -358,7 +358,6 @@ private:
     QBasicTimer *timer;
     /*.*/
     int myid[2];
-    QSet<int> koedPokes;
     QString winMessage[2];
     QString loseMessage[2];
 protected:

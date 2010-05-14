@@ -18,7 +18,7 @@ class QClickPBar;
 
 struct BaseBattleInfo
 {
-    BaseBattleInfo(const PlayerInfo & me, const PlayerInfo &opp, bool doubles);
+    BaseBattleInfo(const PlayerInfo & me, const PlayerInfo &opp, bool doubles, int myself=0, int opponent=1);
     /* name [0] = mine, name[1] = other */
     PlayerInfo pInfo[2];
     QVector<bool> sub;
@@ -39,11 +39,11 @@ struct BaseBattleInfo
     QVector<bool> pokeAlive;
     QVector<quint8> currentIndex;
 
-    ShallowBattlePoke &currentShallow(int player) {
-        return pokemons[player][currentIndex[player]];
+    ShallowBattlePoke &currentShallow(int spot) {
+        return pokemons[player(spot)][currentIndex[spot]];
     }
-    const ShallowBattlePoke &currentShallow(int player) const {
-        return pokemons[player][currentIndex[player]];
+    const ShallowBattlePoke &currentShallow(int spot) const {
+        return pokemons[player(spot)][currentIndex[spot]];
     }
 
     QString name(int x) const {
@@ -54,7 +54,7 @@ struct BaseBattleInfo
         return player + poke*2;
     }
 
-    int player(int slot) {
+    int player(int slot) const {
         return slot %2;
     }
 
@@ -119,7 +119,7 @@ public:
         CancelMove,
         Clause = 30,
         DynamicInfo = 31,
-        DynamicStats,
+        DynamicStats = 32,
         Spectating,
         SpectatorChat,
         AlreadyStatusMessage,

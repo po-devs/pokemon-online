@@ -545,7 +545,7 @@ struct MMDetect : public MM
 	}
         int attack = move(b,s);
 	/* Curse, Feint, Psychup, Role Play, Transform */
-        if (attack == Curse || attack == Feint || attack == PsychUp || attack == RolePlay || attack == Transform) {
+        if (attack == Curse || attack == Feint || attack == PsychUp || attack == RolePlay || attack == Transform || attack == ShadowForce) {
 	    return;
 	}
         /* Mind Reader */
@@ -1628,10 +1628,24 @@ struct MMBounce : public MM
     static void ts(int s, int, BS &b) {
         if (poke(b,s)["Invulnerable"].toBool()) {
             turn(b,s)["NoChoice"] = true;
-            merge(turn(b,s), MoveEffect(poke(b,s)["2TurnMove"].toInt()));
+
+            int move = poke(b,s)["2TurnMove"].toInt();
+
+            merge(turn(b,s), MoveEffect(move));
             addFunction(turn(b,s), "EvenWhenCantMove", "Bounce", &ewc);
+
+            if (move == ShadowForce) {
+                addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
+            }
         }
         removeFunction(poke(b,s), "TurnSettings", "Bounce");
+    }
+
+    /* Only called with Shadow Force, breaks protect */
+    static void uas2(int , int t, BS &b) {
+        if (turn(b, t).value("DetectUsed").toBool() == true) {
+            turn(b, t)["DetectUsed"] = false;
+        }
     }
 
     static void ewc(int s, int, BS &b) {
@@ -2603,6 +2617,9 @@ struct MMIceBall : public MM
     }
 
     static void uas(int s, int, BS &b) {
+        if (b.poke(s).status() == Pokemon::Asleep)
+            return;
+
 	int count = poke(b,s)["IceBallCount"].toInt();
         if (b.turn() - 1 != poke(b,s)["LastBallTurn"].toInt()) {
             count = 0;
@@ -3787,11 +3804,13 @@ struct MMYawn : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.poke(t).status() != Pokemon::Fine || team(b,t).value("SafeGuardCount").toInt() > 0) {
+        int opp = b.player(t);
+
+        if (b.poke(t).status() != Pokemon::Fine || team(b,opp).value("SafeGuardCount").toInt() > 0) {
             turn(b,s)["Failed"] = true;
             return;
         }
-        if (b.currentForcedSleepPoke[t] != -1) {
+        if (b.currentForcedSleepPoke[b.player(t)] != -1) {
             b.notifyClause(ChallengeInfo::SleepClause, true);
             turn(b,s)["Failed"] = true;
         }
@@ -3812,7 +3831,7 @@ struct MMYawn : public MM {
 
         } else {
             if (b.sleepClause()) {
-                b.currentForcedSleepPoke[s] = b.currentPoke(s);
+                b.currentForcedSleepPoke[b.player(s)] = b.currentPoke(s);
             }
             b.inflictStatus(s, Pokemon::Asleep, s);
             removeFunction(poke(b,s),"EndTurn", "Yawn");
@@ -3986,7 +4005,8 @@ struct MMOutrage : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (poke(b,s).value("OutrageUntil").toInt() == 0) {
+        // Asleep is for Sleep Talk
+        if (poke(b,s).value("OutrageUntil").toInt() == 0 && b.poke(s).status() != Pokemon::Asleep) {
             poke(b,s)["OutrageUntil"] = b.turn() +  1 + (b.true_rand() % 2);
             addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
             addFunction(poke(b,s), "MoveSettings", "Outrage", &ms);
@@ -4227,16 +4247,20 @@ struct MMRecycle : public MM {
     }
 
     static void daf (int s, int, BS &b) {
-        if (!team(b,s).contains("RecyclableItem") || b.poke(s).item() != 0) {
+        int source = b.player(s);
+
+        if (!team(b,source).contains("RecyclableItem") || b.poke(s).item() != 0) {
             turn(b,s)["Failed"] = true;
         }
     }
 
     static void uas (int s, int, BS &b) {
-        int item = team(b,s)["RecyclableItem"].toInt();
+        int source = b.player(s);
+
+        int item = team(b,source)["RecyclableItem"].toInt();
         b.sendMoveMessage(105,0,s,0,s,item);
         b.acqItem(s, item);
-        team(b,s).remove("RecyclableItem");
+        team(b,source).remove("RecyclableItem");
     }
 };
 
