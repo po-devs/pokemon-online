@@ -39,6 +39,10 @@ TeamBuilder {
 				stop: 0.5 #282e32, stop: 0.75 #626769, stop: .900 #919495, stop: 0.914 white, stop: 0.924 white, stop: 0.939 #00d7fb, stop: 0.969 #0bb3e9, stop: 1 #0ca4e0);
 }
 
+DockAdvanced#OwnWindow {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8f9294, stop: 0.5 #ccc9c9, stop: 1 #8f9294);
+}
+
 QMainWindow::separator {
 	width: 0px;
 }

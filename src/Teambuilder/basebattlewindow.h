@@ -130,7 +130,8 @@ public:
         TierSection,
         EndMessage,
         PointEstimate,
-        MakeYourChoice
+        MakeYourChoice,
+        Avoid
     };
 
     enum TempPokeChange {

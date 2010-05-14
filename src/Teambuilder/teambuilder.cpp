@@ -779,6 +779,7 @@ void TB_TeamBody::createDockAdvanced(bool sepWindow)
         topLevelWidget()->resize(topLevelWidget()->width() + m_dockAdvanced->width() + 70, topLevelWidget()->height());
     }
     else {
+        m_dockAdvanced->setObjectName("OwnWindow");
         m_dockAdvanced->setWindowFlags(Qt::Window);
         m_dockAdvanced->show();
     }

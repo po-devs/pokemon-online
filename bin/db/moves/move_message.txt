@@ -71,7 +71,7 @@ A hailstorm brewed!|It started to rain!|A sandstorm brewed!|The sunlight turned 
 %s knocked off %f's %i!
 
 %f evaded the seed!|%f was seeded!|%s's health is sapped by leech seed.
-Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|%ts's reflect wore off!|%ts's light screen wore off!
+Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's reflect wore off!|%ts's light screen wore off!
 %s took aim at %f!
 %ts's team is protected from critical hits!|%ts's lucky chant wore off!
 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!

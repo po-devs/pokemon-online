@@ -17,7 +17,7 @@
 %s's Effect Spore activates!
 
 %s's %a activates!
-%s's raises its flame intensity!
+%s's Flash Fire raised the power of its Fire-type moves!|%s's Flash Fire made %m ineffective!
 
 %s changed its type to %t!
 %s's Forewarn makes it wary of %m!
@@ -36,7 +36,7 @@
 
 
 %s's Leaf Guard prevents it from being affected by any status from the opponent!
-
+%s's %a took the attack!
 
 %s has Mold Breaker!
 %s's Motor Drive raises its speed!

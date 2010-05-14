@@ -714,6 +714,9 @@ QString Player::ip() const
 
 void Player::recvTeam(const TeamInfo &team)
 {
+    if (!isLoggedIn())
+        return;
+
     cancelChallenges();
 
     avatar() = team.avatar;
