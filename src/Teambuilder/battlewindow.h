@@ -101,7 +101,6 @@ public slots:
     void emitCancel();
     void switchToPokeZone();
 signals:
-    void battleMessage(int battleid, const QString &str);
     void forfeit(int battleid);
 protected:
     void closeEvent(QCloseEvent *);

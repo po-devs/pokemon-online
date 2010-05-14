@@ -239,7 +239,7 @@ struct ChallengeInfo
     bool rated;
 
     explicit ChallengeInfo(int desc=0, int opponent=0, quint32 clauses = SleepClause, quint8 mode=Singles)
-        : clauses(clauses), dsc(desc), opp(opponent), mode(Singles)
+        : clauses(clauses), dsc(desc), opp(opponent), mode(mode)
     {
     }
 
