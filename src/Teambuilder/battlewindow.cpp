@@ -1038,6 +1038,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
     case Move::RandomTarget:
     case Move::None:
         pokes[slot]->setEnabled(true);
+        pokes[slot]->setStyleSheet("background: #07a7c9; color: white;");
     default:
         return;
     }

@@ -282,7 +282,7 @@ public:
     /* Display blank */
     void switchToNaught(int spot);
     /* For tool tips */
-    bool event(QEvent *event);
+    void mouseMoveEvent(QMouseEvent *e);
 
     /* Loads a pixmap if not loaded otherwise go see graphics */
     QPixmap loadPixmap(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub);
