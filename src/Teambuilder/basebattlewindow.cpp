@@ -902,9 +902,9 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     lastLine->addWidget(myPoke);
 
     QVBoxLayout *myl = new QVBoxLayout(myPoke);
-    myl->setMargin(3);
+    myl->setMargin(5);
     myl->setSpacing(0);
-    myl->addSpacing(5);
+    myl->addSpacing(3);
 
     QHBoxLayout *myl2 = new QHBoxLayout();
     myl->addLayout(myl2);
