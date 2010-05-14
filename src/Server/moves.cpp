@@ -1711,6 +1711,7 @@ struct MMCounter : public MM
 
     static void ms (int s, int, BS &b) {
 	turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
+        turn(b,s)["Target"] = turn(b,s).value("DamageTakenBy").toInt();
     }
 
     static void daf (int s, int t, BS &b) {
