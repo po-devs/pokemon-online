@@ -32,8 +32,8 @@ void AbilityEffect::setup(int num, int source, BattleSituation &b)
     QString activationkey = QString("Ability%1SetUp").arg(effect.num);
 
     if (!b.pokelong[source].contains(activationkey)) {
-        activate("UponSetup", num, source, source, b);
         b.pokelong[source][activationkey] = true;
+        activate("UponSetup", num, source, source, b);
     }
 }
 
@@ -333,8 +333,12 @@ struct AMFlashFire : public AM {
     static void op(int s, int t, BS &b) {
         if (type(b,t) == Pokemon::Fire) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
-            b.sendAbMessage(19,0,s,s,Pokemon::Fire);
-            poke(b,s)["FlashFired"] = true;
+            if (!poke(b,s).contains("FlashFired")) {
+                b.sendAbMessage(19,0,s,s,Pokemon::Fire);
+                poke(b,s)["FlashFired"] = true;
+            } else {
+                b.sendAbMessage(19,1,s,s,Pokemon::Fire, move(b,t));
+            }
         }
     }
 };
@@ -1039,6 +1043,35 @@ struct AMWonderGuard : public AM {
     }
 };
 
+struct AMLightningRod : public AM {
+    AMLightningRod() {
+        functions["GeneralTargetChange"] = &gtc;
+    }
+
+    static void gtc(int s, int t, BS &b) {
+        if (type(b,t) != poke(b,s)["AbilityArg"].toInt()) {
+            return;
+        }
+
+        int tarChoice = turn(b,t)["PossibleTargets"].toInt();
+        bool muliTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
+
+        if (muliTar) {
+            return;
+        }
+
+        /* So, we make the move hit with 100 % accuracy */
+        turn(b,t)["Accuracy"] = 0;
+
+        if (turn(b,t)["Target"].toInt() == s) {
+            return;
+        } else {
+            b.sendAbMessage(38,0,s);
+            turn(b,t)["Target"] = s;
+        }
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
@@ -1097,6 +1130,7 @@ void AbilityEffect::init()
     REGISTER_AB(34, Intimidate);
     REGISTER_AB(35, IronFist);
     REGISTER_AB(37, LeafGuard);
+    REGISTER_AB(38, LightningRod)
     REGISTER_AB(39, MagnetPull);
     REGISTER_AB(40, MoldBreaker);
     REGISTER_AB(41, MotorDrive);

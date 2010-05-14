@@ -1003,20 +1003,23 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
     switch (Move::Target(MoveInfo::Target(move))) {
     case Move::All:
         for (int i = 0; i < 4; i++) {
-            if (info.currentShallow(i).status() != Pokemon::Koed)
-                pokes[i]->setChecked(true);
+            if (info.currentShallow(i).status() != Pokemon::Koed) {
+                pokes[i]->setEnabled(true);
+            }
         }
         break;
     case Move::AllButSelf:
         for (int i = 0; i < 4; i++) {
-            if (info.currentShallow(i).status() != Pokemon::Koed && i != slot)
-                pokes[i]->setChecked(true);
+            if (info.currentShallow(i).status() != Pokemon::Koed && i != slot) {
+                pokes[i]->setEnabled(true);
+            }
         }
         break;
     case Move::Opponents:
         for (int i = 0; i < 4; i++) {
-            if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.opponent)
-                pokes[i]->setChecked(true);
+            if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.opponent) {
+                pokes[i]->setEnabled(true);
+            }
         }
         break;
     case Move::ChosenTarget:
@@ -1026,9 +1029,9 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
         }
         break;
     case Move::User:
-        pokes[slot]->setChecked(true);
     case Move::RandomTarget:
     case Move::None:
+        pokes[slot]->setEnabled(true);
     default:
         return;
     }

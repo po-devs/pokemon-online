@@ -245,7 +245,8 @@ public:
         TierSection,
         EndMessage,
         PointEstimate,
-        StartChoices
+        StartChoices,
+        Avoid
     };
 
     enum ChangeTempPoke {
@@ -347,6 +348,8 @@ private:
     QList<int> hasChoice;
     /* just indicates if the player could originally move or not */
     QList<bool> couldMove;
+
+    std::vector<int> targetList;
 
     TeamBattle team1, team2;
 

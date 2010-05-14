@@ -510,13 +510,18 @@ struct MMDetect : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        QList<int> tars = b.allRevs(s);
-
-        foreach (int t, tars) {
-            if (turn(b,t).value("HasMoved").toBool() || turn(b,t).value("CantGetToMove").toBool()) {
-                turn(b,s)["Failed"] = true;
-                return;
+        /* Detect / Protects fail if all other already moved */
+        bool fail = true;
+        for (int t = 0;  t < b.numberOfSlots() ; t++) {
+            if (!turn(b,t).value("HasMoved").toBool() && !turn(b,t).value("CantGetToMove").toBool()) {
+                fail = false;
+                break;
             }
+        }
+
+        if (fail) {
+            turn(b,s)["Failed"] = true;
+            return;
         }
 
 	if (poke(b,s).contains("ProtectiveMoveTurn") && poke(b,s)["ProtectiveMoveTurn"].toInt() == b.turn() - 1) {
@@ -950,7 +955,7 @@ struct MMWish : public MM
 
     static void et(int s, int, BS &b) {
         int turn = slot(b,s)["WishTurn"].toInt();
-        if (turn != b.turn() + 1) {
+        if (turn != b.turn()) {
 	    return;
 	}
         if (!b.koed(s)) {
@@ -1060,15 +1065,14 @@ struct MMSpikes : public MM
         b.sendMoveMessage(121, 0, s, 0, t);
     }
 
-    static void usi(int s, int, BS &b) {
-        int source = b.player(s);
-        int spikeslevel = team(b,source).value("Spikes").toInt();
-	if (spikeslevel <= 0 || b.isFlying(s)) {
+    static void usi(int p, int slot, BS &b) {
+        int spikeslevel = team(b,p).value("Spikes").toInt();
+        if (spikeslevel <= 0 || b.isFlying(slot)) {
 	    return;
 	}
 	int n = (spikeslevel+1);
-	b.sendMoveMessage(121,1,s);
-	b.inflictDamage(s, b.poke(s).totalLifePoints()*n/16, s);
+        b.sendMoveMessage(121,1,slot);
+        b.inflictDamage(slot, b.poke(slot).totalLifePoints()*n/16, slot);
     }
 };
 
@@ -1093,8 +1097,7 @@ struct MMStealthRock : public MM
         b.sendMoveMessage(124,0,s,Pokemon::Rock,t);
     }
 
-    static void usi(int s, int, BS &b) {
-        int source = b.player(s);
+    static void usi(int source, int s, BS &b) {
         if (team(b,source).value("StealthRock").toBool() == true)
 	{
 	    b.sendMoveMessage(124,1,s,Pokemon::Rock);
@@ -1125,9 +1128,7 @@ struct MMToxicSpikes : public MM
 	addFunction(team(b,t), "UponSwitchIn", "ToxicSpikes", &usi);
     }
 
-    static void usi(int s, int, BS &b) {
-        int source = b.player(s);
-
+    static void usi(int source, int s, BS &b) {
         if (b.hasType(s, Pokemon::Poison) && !b.isFlying(s) && team(b,s).value("ToxicSpikes").toInt() > 0) {
             team(b,source).remove("ToxicSpikes");
             removeFunction(team(b,source), "UponSwitchIn", "ToxicSpikes");
@@ -2002,6 +2003,7 @@ struct MMEncore : public MM
             if (b.move(t, i) == move) {
                 MoveEffect::unsetup(turn(b,t)["Attack"].toInt(), t, b);
                 b.choice[t].numSwitch = i;
+                b.choice[t].targetPoke = b.randomValidOpponent(t);
                 MoveEffect::setup(move, t, s, b);
                 break;
             }
@@ -2192,6 +2194,7 @@ struct MMGravity : public MM
 	addFunction(b.battlelong, "EndTurn", "Gravity", &et);
         addFunction(b.battlelong, "MovesPossible", "Gravity", &msp);
         addFunction(b.battlelong, "MovePossible", "Gravity", &mp);
+        b.sendMoveMessage(53,0,s,type(b,s));
     }
 
     static void et(int s, int, BS &b) {
@@ -2795,7 +2798,7 @@ struct MMTeamBarrier : public MM
 	}
 	int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
 
-	b.sendMoveMessage(73,cat,s,type(b,s));
+        b.sendMoveMessage(73,cat+b.doubles()*2,s,type(b,s));
         team(b,source)["Barrier" + QString::number(cat) + "Count"] = nturn;
 
         addFunction(team(b,source), "EndTurn", "TeamBarrier", &et);
@@ -2808,7 +2811,7 @@ struct MMTeamBarrier : public MM
 	    if (counts[i] != 0) {
 		team(b,s)["Barrier" + QString::number(i) + "Count"] = counts[i] - 1;
 		if (counts[i] == 1) {
-		    b.sendMoveMessage(73, 2+i,s,Pokemon::Psychic);
+                    b.sendMoveMessage(73, 4+i,s,Pokemon::Psychic);
 		}
 	    }
 	}

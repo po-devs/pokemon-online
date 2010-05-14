@@ -356,6 +356,9 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
     case Miss:
         printLine(tr("The attack of %1 missed!").arg(nick(spot)));
         break;
+    case Avoid:
+        printLine(tr("%1 avoided the attack!").arg(nick(spot)));
+        break;
     case StatChange:
         qint8 stat, boost;
         in >> stat >> boost;
@@ -496,7 +499,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             break;
         }
     case NoOpponent:
-        printLine(tr("But there is no target pokémon!"));
+        printLine(tr("But there was no target..."));
         break;
     case ItemMessage:
         {

@@ -230,11 +230,14 @@ void BattleSituation::addSpectator(int id)
         for (int j = 0; j < 6; j++) {
             notify(key, AbsStatusChange, i, qint8(j), qint8(poke(i, j).status()));
         }
-        if (!koed(i)) {
-            notify(key, SendOut, i, false, quint8(currentPoke(i)), opoke(i, currentPoke(i)));
-            notify(key, ChangeTempPoke,i, quint8(TempSprite),quint16(pokenum(i)));
-            if (forme(i) != poke(i).forme())
-                notify(key, ChangeTempPoke, i, quint8(AestheticForme), quint8(forme(i)));
+        for (int k = 0; k < numberOfSlots()/ 2; k++) {
+            int s = slot(i,k);
+            if (!koed(s)) {
+                notify(key, SendOut, s, false, quint8(currentPoke(s)), opoke(i, currentPoke(s)));
+                notify(key, ChangeTempPoke,s, quint8(TempSprite),quint16(pokenum(s)));
+                if (forme(s) != poke(s).forme())
+                    notify(key, ChangeTempPoke, s, quint8(AestheticForme), quint8(forme(s)));
+            }
         }
     }
 }
@@ -879,7 +882,6 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
     }
 
     if (!validChoice(b)) {
-        notify(player, BattleChat, player, QString("<debug message>: your choice is invalid"));
         if (canCancel(player))
             cancel(player);
         return;
@@ -1163,6 +1165,8 @@ void BattleSituation::sendBack(int player, bool silent)
 bool BattleSituation::testAccuracy(int player, int target, bool silent)
 {
     int acc = turnlong[player]["Accuracy"].toInt();
+    int tarChoice = turnlong[player]["PossibleTargets"].toInt();
+    bool muliTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
 
     turnlong[target].remove("EvadeAttack");
     callpeffects(target, player, "TestEvasion"); /*dig bounce ..., still calling it there cuz x2 attacks
@@ -1184,8 +1188,13 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
 
     if (turnlong[target].contains("EvadeAttack")) {
-        if (!silent)
-            notify(All, Miss, player);
+        if (!silent) {
+            if (muliTar) {
+                motify(All, Avoid, target);
+            } else {
+                notify(All, Miss, player);
+            }
+        }
         return false;
     }
 
@@ -1199,7 +1208,11 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     if (MoveInfo::isOHKO(move)) {
         bool ret = (true_rand() % 100) < 30 + poke(player).level() - poke(target).level();
         if (!ret && !silent) {
-            notify(All, Miss, player);
+            if (muliTar) {
+                motify(All, Avoid, target);
+            } else {
+                notify(All, Miss, player);
+            }
         }
         return ret;
     }
@@ -1223,8 +1236,13 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     if (true_rand() % 100 < unsigned(acc)) {
 	return true;
     } else {
-        if (!silent)
-            notify(All, Miss, player);
+        if (!silent) {
+            if (muliTar) {
+                motify(All, Avoid, target);
+            } else {
+                notify(All, Miss, player);
+            }
+        }
 	calleffects(player,target,"MissAttack");
 	return false;
     }
@@ -1399,7 +1417,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     attacker() = player;
 
     int attack;
-    std::vector<int> targetList;
 
     if (specialOccurence) {
 	attack = move;
@@ -1463,11 +1480,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     switch(Move::Target(turnlong[player]["PossibleTargets"].toInt())) {
 	case Move::None: targetList.push_back(player); break;
 	case Move::User: targetList.push_back(player); break;
-        case Move::Opponents:
+        case Move::Opponents: 
             targetList = sortedBySpeed();
             for (unsigned i = 0; i < targetList.size(); i++) {
                 if (this->player(targetList[i]) == this->player(player) ) {
                     targetList.erase(targetList.begin()+i, targetList.begin() + i + 1);
+                    i--;
                 }
             }
             break;
@@ -1479,6 +1497,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             for (unsigned i = 0; i < targetList.size(); i++) {
                 if (targetList[i] == player) {
                     targetList.erase(targetList.begin()+i, targetList.begin() + i + 1);
+                    i--;
                 }
             }
             break;
@@ -2285,7 +2304,25 @@ int BattleSituation::calculateDamage(int p, int t)
 
     /* Light screen / Reflect */
     if (!crit && teamzone[this->player(t)].value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
-	damage /= 2;
+        if (!doubles())
+            damage /= 2;
+        else {
+            damage = damage * 2 / 3;
+        }
+    }
+    /* Damage reduction in doubles, which occur only
+       if there's more than one alive target. */
+    if (doubles()) {
+        if (attackused == Move::Explosion || attackused == Move::Selfdestruct) {
+            damage = damage * 3 / 4;
+        } else {
+            foreach (int tar, targetList) {
+                if (tar != t && !koed(tar)) {
+                    damage = damage * 3/4;
+                    break;
+                }
+            }
+        }
     }
     if (isWeatherWorking(Sunny)) {
         if (type == Type::Fire) {
