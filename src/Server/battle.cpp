@@ -1190,7 +1190,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     if (turnlong[target].contains("EvadeAttack")) {
         if (!silent) {
             if (muliTar) {
-                motify(All, Avoid, target);
+                notify(All, Avoid, target);
             } else {
                 notify(All, Miss, player);
             }
@@ -1209,7 +1209,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         bool ret = (true_rand() % 100) < 30 + poke(player).level() - poke(target).level();
         if (!ret && !silent) {
             if (muliTar) {
-                motify(All, Avoid, target);
+                notify(All, Avoid, target);
             } else {
                 notify(All, Miss, player);
             }
@@ -1238,7 +1238,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     } else {
         if (!silent) {
             if (muliTar) {
-                motify(All, Avoid, target);
+                notify(All, Avoid, target);
             } else {
                 notify(All, Miss, player);
             }
