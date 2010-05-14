@@ -4351,6 +4351,64 @@ struct MMAcupressure : public MM
     }
 };
 
+struct MMHelpingHand : public MM
+{
+    MMHelpingHand() {
+        functions["DetermineattackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (!b.doubles() || b.koed(b.partner(s))) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas(int s, int , BS &b) {
+        int p = b.partner(s);
+
+        b.sendMoveMessage(63, 0, s, type(b,s), p);
+        turn(b,p)["HelpingHanded"] = true;
+    }
+};
+
+struct MMFollowMe : public MM
+{
+    MMFollowMe() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(48,0,s);
+
+        b.battlelong["FollowMeTurn"] = b.turn();
+        b.battlelong["FollowMePlayer"] = s;
+        /* Imagine one foe used assist + roar, then follow me wouldn't work anymore. That's
+            why we need a switch count, or that */
+        poke(b,s)["FollowMe"] = true;
+
+        addFunction(b.battlelong, "GeneralTargetChange", "FollowMe", &gtc);
+    }
+
+    static void gtc(int s, int, BS &b) {
+        if (b.battlelong["FollowMeTurn"] != b.turn())
+            return;
+        int target = b.battlelong["FollowMePlayer"].toInt();
+        if (b.koed(target) || !poke(b, target).contains("FollowMe"))
+            return;
+
+        int tarChoice = turn(b,s)["PossibleTargets"].toInt();
+        bool muliTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
+
+        if (muliTar) {
+            return;
+        }
+
+        turn(b,s)["TargetChanged"] = true;
+        turn(b,s)["Target"] = target;
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -4378,6 +4436,8 @@ struct MMAcupressure : public MM
     *BlockTurnEffects -- poke: Called before calling effects for a turn event, to see if it's blocked. Used by Substitute
     *AttackSomehowFailed -- turn, only offensive moves: When an attack fails, or misses, there may be something to do (jump kick, rollout, ..)
     *StatusChange -- poke
+    *BeforeEnding
+    *GeneralTargetChange
 */
 
 #define REGISTER_MOVE(num, name) mechanics[num] = MM##name(); names[num] = #name; nums[#name] = num;
@@ -4446,7 +4506,7 @@ void MoveEffect::init()
     REGISTER_MOVE(60, HealHalf);
     REGISTER_MOVE(61, HealingWish);
     REGISTER_MOVE(62, PowerTrick);
-    /* Helping Hand does nothing in singles */
+    REGISTER_MOVE(63, HelpingHand);
     REGISTER_MOVE(64, JumpKick);
     REGISTER_MOVE(65, HiddenPower);
     REGISTER_MOVE(66, IceBall);

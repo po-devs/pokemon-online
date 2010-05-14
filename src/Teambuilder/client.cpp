@@ -91,10 +91,11 @@ void Client::initRelay()
     connect(relay, SIGNAL(playerLogin(PlayerInfo)), SLOT(playerLogin(PlayerInfo)));
     connect(relay, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(relay, SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
-    connect(relay, SIGNAL(battleStarted(int, TeamBattle, BattleConfiguration, bool )),
-            SLOT(battleStarted(int, TeamBattle, BattleConfiguration, bool)));
-    connect(relay, SIGNAL(battleStarted(int, int)), SLOT(battleStarted(int, int)));
-    connect(relay, SIGNAL(battleFinished(int,int,int)), SLOT(battleFinished(int,int,int)));
+    connect(relay, SIGNAL(battleStarted(int, int, TeamBattle, BattleConfiguration, bool )),
+            SLOT(battleStarted(int, int, TeamBattle, BattleConfiguration, bool)));
+    connect(relay, SIGNAL(battleStarted(int,int, int)), SLOT(battleStarted(int, int)));
+    connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int,int,int)));
+    connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
     connect(relay, SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
     connect(relay, SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
     connect(relay, SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
@@ -658,27 +659,26 @@ void Client::seeChallenge(const ChallengeInfo &c)
     }
 }
 
-void Client::battleStarted(int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
+void Client::battleStarted(int battleId, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
 {
     cancelFindBattle(false);
-    mybattle = new BattleWindow(player(ownId()), player(id), team, conf, doubles);
+    mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf, doubles);
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
     mybattle->setWindowFlags(Qt::Window);
     mybattle->client() = this;
     mybattle->show();
     mybattle->activateWindow();
 
-    connect(mybattle, SIGNAL(forfeit()), SLOT(forfeitBattle()));
-    connect(mybattle, SIGNAL(battleCommand(BattleChoice)), &relay(), SLOT(battleCommand(BattleChoice)));
-    connect(mybattle, SIGNAL(battleMessage(QString)), &relay(), SLOT(battleMessage(QString)));
-    connect(&relay(), SIGNAL(battleMessage(QByteArray)), mybattle, SLOT(receiveInfo(QByteArray)));
+    connect(mybattle, SIGNAL(forfeit(int)), SLOT(forfeitBattle(int)));
+    connect(mybattle, SIGNAL(battleCommand(int, BattleChoice)), &relay(), SLOT(battleCommand(int, BattleChoice)));
+    connect(mybattle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
     connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
 
-    battleStarted(ownId(), id);
+    battleStarted(battleId, ownId(), id);
 }
 
-void Client::battleStarted(int id1, int id2)
+void Client::battleStarted(int, int id1, int id2)
 {
     if (showPEvents || id1 == ownId() || id2 == ownId())
         printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
@@ -702,7 +702,7 @@ void Client::watchBattle(const QString &name0, const QString &name1, int battleI
     connect(this, SIGNAL(destroyed()), battle, SLOT(close()));
     connect(this, SIGNAL(musicPlayingChanged(bool)), battle, SLOT(playMusic(bool)));
     connect(battle, SIGNAL(closedBW(int)), SLOT(stopWatching(int)));
-    connect(battle, SIGNAL(battleMessage(QString, int)), &relay(), SLOT(battleMessage(QString, int)));
+    connect(battle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
 
     battle->battleId() = battleId;
     battle->client() = this;
@@ -722,13 +722,13 @@ QIdListWidgetItem *Client::item(int id) {
     return myplayersitems.value(id);
 }
 
-void Client::forfeitBattle()
+void Client::forfeitBattle(int id)
 {
-    relay().sendBattleResult(Forfeit);
+    relay().sendBattleResult(id, Forfeit);
     removeBattleWindow();
 }
 
-void Client::battleFinished(int res, int winner, int loser)
+void Client::battleFinished(int, int res, int winner, int loser)
 {
     if (showPEvents || winner == ownId() || loser == ownId()) {
         if (res == Forfeit) {
@@ -748,6 +748,14 @@ void Client::battleFinished(int res, int winner, int loser)
 
     updateState(winner);
     updateState(loser);
+}
+
+void Client::battleCommand(int , const QByteArray &command)
+{
+    if (!mybattle)
+        return;
+
+    mybattle->receiveInfo(command);
 }
 
 void Client::removeBattleWindow()
@@ -1182,11 +1190,12 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
     QPushButton *ok, *cancel;
     ml->addWidget(rated = new QCheckBox(tr("Force rated battles")));
     ml->addWidget(sameTier = new QCheckBox(tr("Force same tier")));
+    ml->addWidget(doubles = new QCheckBox(tr("Double battle")));
     QHBoxLayout *sub2 = new QHBoxLayout();
     ml->addLayout(sub2);
     sub2->addWidget(rangeOn = new QCheckBox(tr("Only battle players with a max rating difference of ")));
     sub2->addWidget(range = new QLineEdit());
-
+/*
     QGroupBox *gb = new QGroupBox(tr("Clauses"));
     ml->addWidget(gb);
 
@@ -1198,7 +1207,7 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
         clauses[i]->setCheckState(Qt::CheckState(s.value(QString("clause_%1_state").arg(ChallengeInfo::clause(i))).toInt()));
         gbl->addWidget(clauses[i], i/2, i%2);
     }
-
+*/
     QHBoxLayout *hl = new QHBoxLayout();
     ml->addLayout(hl);
     hl->addWidget(ok = new QPushButton(tr("Find Battle")));
@@ -1208,6 +1217,7 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
 
     rated->setChecked(s.value("find_battle_force_rated").toBool());
     sameTier->setChecked(s.value("find_battle_same_tier").toBool());
+    doubles->setChecked(s.value("find_battle_mode").toInt());
     rangeOn->setChecked(s.value("find_battle_range_on").toBool());
     range->setText(QString::number(s.value("find_battle_range").toInt()));
     changeEnabled();
@@ -1236,13 +1246,14 @@ void BattleFinder::throwChallenge()
     s.setValue("find_battle_same_tier", sameTier->isChecked());
     s.setValue("find_battle_range_on", rangeOn->isChecked());
     s.setValue("find_battle_range", range->text().toInt());
+    s.setValue("find_battle_mode", doubles->isChecked());
 
     FindBattleData d;
     d.rated = rated->isChecked();
     d.sameTier = sameTier->isChecked();
     d.range = range->text().toInt();
     d.ranged = rangeOn->isChecked();
-
+/*
     d.forcedClauses = 0;
     d.bannedClauses = 0;
 
@@ -1259,6 +1270,6 @@ void BattleFinder::throwChallenge()
         }
         s.setValue(QString("clause_%1_state").arg(ChallengeInfo::clause(i)), clauses[i]->checkState());
     }
-
+*/
     emit findBattle(d);
 }

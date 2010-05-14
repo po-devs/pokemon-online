@@ -198,8 +198,8 @@ public slots:
     void animateHPBar();
     void ignoreSpectators(bool);
 signals:
-    void battleCommand(const BattleChoice &);
-    void battleMessage(const QString &str, int);
+    void battleCommand(int battleId, const BattleChoice &);
+    void battleMessage(int battleId, const QString &str);
     void closedBW(int);
 protected:
     int delayed;

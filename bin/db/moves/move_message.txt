@@ -46,7 +46,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 %s threw %i at %f!
 %s pumped itself!
 %s lost its focus!|%s is tightening its focus!
-
+%s became the center of attention!
 
 
 %f's %a is nullified!
@@ -61,7 +61,7 @@ A hailstorm brewed!|It started to rain!|A sandstorm brewed!|The sunlight turned 
 %s regained health!
 %s is healed!
 %s swapped its defense and attack!
-
+%s is ready to help %f!
 %s crashed on the ground!
 
 

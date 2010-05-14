@@ -46,8 +46,10 @@ PokeBattle & BattleInfo::currentPoke(int spot)
     return myteam.poke(currentIndex[spot]);
 }
 
-BattleWindow::BattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf, bool doubles)
+BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf, bool doubles)
 {
+    this->battleId() = battleId;
+
     conf() = _conf;
 
     myInfo = new BattleInfo(team, me, opponent, doubles, conf().spot(me.id), conf().spot(opponent.id));
@@ -118,7 +120,7 @@ QString BattleWindow::nick(int spot) const
 void BattleWindow::closeEvent(QCloseEvent *)
 {
 
-    emit forfeit();
+    emit forfeit(battleId());
 
     QSettings s;
 
@@ -177,7 +179,7 @@ void BattleWindow::emitCancel()
     if (info().possible) {
         cancel();
     } else {
-        emit battleCommand(BattleChoice(false, BattleChoice::Cancel, ownSlot()));
+        emit battleCommand(battleId(), BattleChoice(false, BattleChoice::Cancel, ownSlot()));
     }
 }
 
@@ -213,13 +215,13 @@ void BattleWindow::targetChosen(int i)
 void BattleWindow::clickClose()
 {
     if (battleEnded) {
-        emit forfeit();
+        emit forfeit(battleId());
         return;
     }
 
     if (QMessageBox::question(this, tr("Losing your battle"), tr("Do you mean to forfeit?"), QMessageBox::Yes | QMessageBox::No)
         == QMessageBox::Yes)
-	emit forfeit();
+        emit forfeit(battleId());
 }
 
 void BattleWindow::switchToPokeZone()
@@ -394,7 +396,7 @@ void BattleWindow::attackButton()
 
 void BattleWindow::sendChoice(const BattleChoice &b)
 {
-    emit battleCommand(b);
+    emit battleCommand(battleId(), b);
     info().possible = false;
 }
 
@@ -403,7 +405,7 @@ void BattleWindow::sendMessage()
     QString message = myline->text();
 
     if (message.size() != 0) {
-	emit battleMessage(message);
+        emit battleMessage(battleId(), message);
 	myline->clear();
     }
 }
@@ -998,6 +1000,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
         pokes[i]->setText(info.currentShallow(slot).status() == Pokemon::Koed ? "" : info.currentShallow(i).nick());
         pokes[i]->setDisabled(true);
         pokes[i]->setChecked(false);
+        pokes[i]->setStyleSheet("");
     }
 
     switch (Move::Target(MoveInfo::Target(move))) {
@@ -1005,6 +1008,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
         for (int i = 0; i < 4; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed) {
                 pokes[i]->setEnabled(true);
+                pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
             }
         }
         break;
@@ -1012,6 +1016,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
         for (int i = 0; i < 4; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed && i != slot) {
                 pokes[i]->setEnabled(true);
+                pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
             }
         }
         break;
@@ -1019,6 +1024,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
         for (int i = 0; i < 4; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.opponent) {
                 pokes[i]->setEnabled(true);
+                pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
             }
         }
         break;

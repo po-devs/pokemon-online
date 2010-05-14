@@ -207,6 +207,12 @@ struct ChallengeInfo
         SpeciesClause = 256
     };
 
+    enum Mode
+    {
+        Singles,
+        Doubles
+    };
+
     static const int numberOfClauses = 9;
 
     static QString clauseText[numberOfClauses];
@@ -229,11 +235,11 @@ struct ChallengeInfo
 
     qint8 dsc;
     qint32 opp;
-    bool doubles;
+    quint8 mode;
     bool rated;
 
-    explicit ChallengeInfo(int desc=0, int opponent=0, quint32 clauses = SleepClause, bool doubles=false)
-        : clauses(clauses), dsc(desc), opp(opponent), doubles(doubles)
+    explicit ChallengeInfo(int desc=0, int opponent=0, quint32 clauses = SleepClause, quint8 mode=Singles)
+        : clauses(clauses), dsc(desc), opp(opponent), mode(Singles)
     {
     }
 
@@ -328,9 +334,10 @@ struct FindBattleData
     bool rated;
     bool sameTier;
     bool ranged;
-    quint32 forcedClauses;
-    quint32 bannedClauses;
     quint16 range;
+    quint8 mode;
+    //quint32 forcedClauses;
+    //quint32 bannedClauses;
 };
 
 QDataStream& operator >> (QDataStream &in, FindBattleData &f);

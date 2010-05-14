@@ -54,7 +54,7 @@
 33-3#Magma Armor
 39#Magnet Pull
 25-2#Marvel Scale
-
+36#Minus
 40#Mold Breaker
 41#Motor Drive
 
@@ -65,8 +65,8 @@
 7-11#Overgrow
 44#Own tempo
 
+45#Plus
 
-45#Poison Heal
 33-5#Poison Point
 46#Pressure
 27#Pure Power

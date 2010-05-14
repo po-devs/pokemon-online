@@ -36,7 +36,7 @@ void Analyzer::sendMessage(const QString &message)
 
 void Analyzer::engageBattle(int , int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
 {
-    notify(EngageBattle, qint32(0), qint32(id), team, conf, doubles);
+    notify(EngageBattle, qint32(0), qint32(0), qint32(id), team, conf, doubles);
 }
 
 void Analyzer::connectTo(const QString &host, quint16 port)
@@ -95,12 +95,12 @@ void Analyzer::sendChallengeStuff(const ChallengeInfo &c)
 
 void Analyzer::sendBattleResult(quint8 res, int winner, int loser)
 {
-    notify(BattleFinished, res, qint32(winner), qint32(loser));
+    notify(BattleFinished, qint32(0), res, qint32(winner), qint32(loser));
 }
 
 void Analyzer::sendBattleCommand(const QByteArray & command)
 {
-    notify(BattleMessage, command);
+    notify(BattleMessage, qint32(0), command);
 }
 
 void Analyzer::sendWatchingCommand(qint32 id, const QByteArray &command)
@@ -195,6 +195,8 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	}
     case BattleMessage:
 	{
+            qint32 id;
+            in >> id;
 	    BattleChoice ch;
 	    in >> ch;
 	    emit battleMessage(ch);
@@ -202,12 +204,16 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	}
     case BattleChat:
 	{
+            qint32 id;
+            in >> id;
 	    QString s;
 	    in >> s;
 	    emit battleChat(s);
 	    break;
 	}
     case BattleFinished:
+        qint32 id;
+        in >> id;
         emit forfeitBattle();
         break;
     case KeepAlive:
