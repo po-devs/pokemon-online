@@ -182,7 +182,7 @@ PokemonBox {
 QProgressBar#TimeOut {
 	font-family: LCD;
 	font-weight: bold;
-	font-size: 17px;
+	font-size: 15px;
     border: 1px solid black;
 	width: 79;
 	height: 21;

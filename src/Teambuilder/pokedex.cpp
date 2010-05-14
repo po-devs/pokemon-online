@@ -36,9 +36,9 @@ Pokedex::Pokedex(TeamBuilder *parent)
     secondCol->setSpacing(0);
 
     BigOpenPokeBall *bop = new BigOpenPokeBall();
-    secondCol->addWidget(bop, 0, Qt::AlignRight | Qt::AlignBottom);
+    secondCol->addWidget(bop,0,Qt::AlignRight);
     PokedexBody *body = new PokedexBody();
-    secondCol->addWidget(body, 100, Qt::AlignRight | Qt::AlignTop);
+    secondCol->addWidget(body, 100);
 
     connect(body, SIGNAL(pokeChanged(int)), bop, SLOT(changeToPokemon(int)));
     connect(bop, SIGNAL(pokemonChanged(int)), body, SLOT(changeToPokemonFromExt(int)));
@@ -62,6 +62,7 @@ void Pokedex::showTypeChart()
 BigOpenPokeBall::BigOpenPokeBall()
 {
     setPixmap(QPixmap("db/Teambuilder/PokeDex/OMGHUGE.png"));
+    setFixedSize(pixmap()->size());
 
     QHBoxLayout *lll = new QHBoxLayout(this);
     lll->addSpacing(113);

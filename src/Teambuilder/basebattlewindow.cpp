@@ -2,13 +2,11 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
 
-BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, bool doubles)
+BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, bool doubles, int myself, int opponent)
+    : myself(myself), opponent(opponent)
 {
     this->doubles=  doubles;
     this->numberOfSlots = doubles?4:2;
-
-    opponent = 0;
-    myself = 0;
 
     for (int i = 0; i < numberOfSlots; i++) {
         sub.push_back(false);
@@ -18,13 +16,13 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, bool
         statChanges.push_back(BattleDynamicInfo());
     }
 
-    pInfo[0] = me;
-    pInfo[1] = opp;
+    pInfo[myself] = me;
+    pInfo[opponent] = opp;
 
-    time[0] = 5*60;
-    time[1] = 5*60;
-    ticking[0] = false;
-    ticking[1] = false;
+    time[myself] = 5*60;
+    time[opponent] = 5*60;
+    ticking[myself] = false;
+    ticking[opponent] = false;
 }
 
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, bool doubles) :
@@ -925,7 +923,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
 
 void BaseBattleDisplay::updateTimers()
 {
-    for (int i = info().myself; i <= info().opponent; i++) {
+    for (int i = 0; i <= 1; i++) {
         int ctime = std::max(long(0), info().ticking[i] ? info().time[i] + info().startingTime[i] - time(NULL) : info().time[i]);
         if (ctime <= 5*60) {
             timers[i]->setValue(ctime);
@@ -1083,11 +1081,14 @@ BaseGraphicsZone::BaseGraphicsZone(BaseBattleInfo *i) : mInfo(i)
         scene.addItem(items[i]);
     }
 
-    items[info().slot(info().myself)]->setPos(10, 145-79);
-    items[info().slot(info().opponent)]->setPos(257-105, 16);
-    if (info().doubles) {
-        items[info().slot(info().myself,1)]->setPos(90, 145-79);
-        items[info().slot(info().opponent,1)]->setPos(257-195, 16);
+    if (!info().doubles) {
+        items[info().slot(info().myself)]->setPos(10, 145-79);
+        items[info().slot(info().opponent)]->setPos(257-105, 16);
+    } else {
+        items[info().slot(info().myself)]->setPos(0, 145-79);
+        items[info().slot(info().opponent)]->setPos(257-140, 16);
+        items[info().slot(info().myself,1)]->setPos(80, 145-79);
+        items[info().slot(info().opponent,1)]->setPos(257-80, 16);
     }
 }
 

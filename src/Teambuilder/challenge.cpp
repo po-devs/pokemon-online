@@ -8,6 +8,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
         : emitOnClose(true)
 {
     setPixmap(QPixmap("db/Challenge Window/ChallengeBG.png"));
+    setFixedSize(pixmap()->size());
 
     setParent(parent);
 

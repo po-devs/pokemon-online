@@ -671,7 +671,7 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
 
     secondline->addWidget(m_boxes = new TB_BoxContainer(), 100);
 
-    for (int i = 0; i < 6; i++) {
+    for (unsigned i = 0; i < sizeof(boxes)/sizeof(PokemonBox*); i++) {
         m_boxes->addTab(boxes[i] = new PokemonBox(i), *PokemonBoxButton::theicon, tr("BOX &%1").arg(QChar('A'+i)));
         connect(boxes[i],SIGNAL(switchWithTeam(int,int,int)),SLOT(switchBoxTeam(int,int,int)));
         connect(boxes[i], SIGNAL(show(PokeTeam*)), SLOT(showPoke(PokeTeam*)));

@@ -10,6 +10,7 @@
 class AttackZone;
 class PokeZone;
 class BattleDisplay;
+class TargetSelection;
 class QScrollDownTextEdit;
 
 class BattleInfo : public BaseBattleInfo
@@ -21,8 +22,11 @@ public:
     bool possible;
 
     QList<BattleChoices> choices;
+    QList<BattleChoice> choice;
     QList<bool> available;
     QList<bool> done;
+
+    int currentSlot;
 
     /* My team */
     TeamBattle myteam;
@@ -37,7 +41,7 @@ public:
     QList<PokeBattle> m_tempPoke;
     PokeBattle &tempPoke(int spot);
 
-    int number(int spot) {
+    int number(int spot) const {
         return spot / 2;
     }
 
@@ -67,6 +71,10 @@ public:
     enum {
         MoveTab= 0,
         PokeTab= 1
+    };
+
+    enum {
+        TargetTab = 6
     };
 
     TeamBattle &team();
@@ -102,6 +110,7 @@ protected:
 protected slots:
     void animateHPBar();
     void changeAttackText(int i);
+    void targetChosen(int i);
 private:
 
     int idme() const {
@@ -112,10 +121,14 @@ private:
         return info().pInfo[info().opponent].id;
     }
 
+    void goToNextChoice();
+    void cancel();
+
     QStackedWidget *mystack;
     QTabWidget *mytab;
     QListWidget *myspecs;
     AttackZone *myazones[6];
+    TargetSelection *tarZone;
     QList<QButtonGroup*> mybgroups;
     PokeZone *mypzone;
     QPushButton *myswitch, *myattack, *mycancel;
@@ -198,6 +211,19 @@ public:
 private:
 
     const PokeBattle *p;
+};
+
+class TargetSelection : public QWidget
+{
+    Q_OBJECT
+public:
+    TargetSelection(const BattleInfo &info);
+
+    void updateData(const BattleInfo &info, int move);
+signals:
+    void targetSelected(int target);
+private:
+    QPushButton * pokes[4];
 };
 
 

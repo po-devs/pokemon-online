@@ -154,7 +154,7 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
 
     currentZoneLabel = new QLabel();
     currentZoneLabel->setPixmap(QPixmap("db/Teambuilder/Labels/PokeTrainer.png"));
-    upButtons->addWidget(currentZoneLabel,0, Qt::AlignTop | Qt::AlignLeft);
+    upButtons->addWidget(currentZoneLabel,0, Qt::AlignTop);
 
     /* Starting doing the "body" */
     m_body = new QStackedWidget(this);

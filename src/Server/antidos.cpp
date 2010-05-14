@@ -132,11 +132,13 @@ bool AntiDos::connecting(const QString &ip)
         l.erase(l.begin(), l.begin()+i);
 
         if (l.size() >= max_login_per_ip && on) {
+            qDebug() << "Too many attempts for IP " << ip;
             return false;
         }
     }
 
     if (connectionsPerIp.value(ip) >= max_people_per_ip && on) {
+        qDebug() << "Too much people for IP " << ip;
         return false;
     }
 
