@@ -1477,6 +1477,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         notify(All, UseAttack, player, qint16(attack));
     }
 
+    targetList.clear();
     switch(Move::Target(turnlong[player]["PossibleTargets"].toInt())) {
 	case Move::None: targetList.push_back(player); break;
 	case Move::User: targetList.push_back(player); break;
