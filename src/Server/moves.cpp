@@ -2179,7 +2179,10 @@ struct MMGravity : public MM
 	b.battlelong["Gravity"] = true;
         b.battlelong["GravityCount"] = 5;
 	b.sendMoveMessage(53,0,s,type(b,s));
-        for(int p = 0; p <= b.numberOfSlots(); p++) {
+
+        std::vector<int> list = b.sortedBySpeed();
+
+        foreach(int p, list) {
             if (b.koed(p))
                 continue;
             if (b.isFlying(p)) {
@@ -2194,7 +2197,6 @@ struct MMGravity : public MM
 	addFunction(b.battlelong, "EndTurn", "Gravity", &et);
         addFunction(b.battlelong, "MovesPossible", "Gravity", &msp);
         addFunction(b.battlelong, "MovePossible", "Gravity", &mp);
-        b.sendMoveMessage(53,0,s,type(b,s));
     }
 
     static void et(int s, int, BS &b) {
