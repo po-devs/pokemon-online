@@ -1477,6 +1477,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         notify(All, UseAttack, player, qint16(attack));
     }
 
+    /* Lightning Rod & Storm Drain */
+    foreach(int poke, sortedBySpeed()) {
+        if (poke != player) {
+            callaeffects(poke, player, "GeneralTargetChange");
+        }
+    }
+
     targetList.clear();
     switch(Move::Target(turnlong[player]["PossibleTargets"].toInt())) {
 	case Move::None: targetList.push_back(player); break;

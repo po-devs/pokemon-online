@@ -1090,6 +1090,7 @@ struct AMLightningRod : public AM {
     BeforeTargetList
     TurnOrder
     DetermineAttackPossible
+    GeneralTargetChange
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
