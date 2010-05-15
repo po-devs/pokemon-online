@@ -1130,7 +1130,7 @@ struct MMToxicSpikes : public MM
     }
 
     static void usi(int source, int s, BS &b) {
-        if (b.hasType(s, Pokemon::Poison) && !b.isFlying(s) && team(b,s).value("ToxicSpikes").toInt() > 0) {
+        if (b.hasType(s, Pokemon::Poison) && !b.isFlying(s) && team(b,source).value("ToxicSpikes").toInt() > 0) {
             team(b,source).remove("ToxicSpikes");
             removeFunction(team(b,source), "UponSwitchIn", "ToxicSpikes");
             b.sendMoveMessage(136, 1, s, Pokemon::Poison);
