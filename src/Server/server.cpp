@@ -700,6 +700,8 @@ void Server::findBattle(int id, const FindBattleData &f)
             c.clauses = ChallengeInfo::SleepClause || ChallengeInfo::EvasionClause || ChallengeInfo::OHKOClause || ChallengeInfo::SpeciesClause;
         }
 
+        c.mode = f.mode;
+
         if (myengine->beforeBattleMatchup(id,key,c)) {
             player(id)->lastFindBattleIp() = player(key)->ip();
             player(key)->lastFindBattleIp() = player(id)->ip();
