@@ -4096,7 +4096,7 @@ struct MMUproar : public MM {
         if (poke(b,s).value("UproarUntil").toInt() > b.turn()) {
             b.sendMoveMessage(141,1,s);
         } else {
-            for (int i = BattleSituation::Player1; i <= BattleSituation::Player2;i++) {
+            foreach (int i, b.sortedBySpeed()) {
                 if (b.poke(i).status() == Pokemon::Asleep) {
                     b.sendMoveMessage(141,3,i);
                     b.changeStatus(i, Pokemon::Normal);

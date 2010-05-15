@@ -2082,10 +2082,8 @@ void BattleSituation::callForth(int weather, int turns)
     } else {
 	battlelong["WeatherCount"] = turns;
 	battlelong["Weather"] = weather;
-        for (int i = Player1; i <= Player2; i++) {
-            if (!koed(i)) {
-                callaeffects(i,i,"WeatherChange");
-            }
+        foreach (int i, sortedBySpeed()) {
+            callaeffects(i,i,"WeatherChange");
         }
     }
 }
@@ -2193,7 +2191,7 @@ void BattleSituation::changeStatus(int player, int status, bool tell)
 
     //Sleep clause
     if (status != Pokemon::Asleep && currentForcedSleepPoke[player] == currentPoke(player)) {
-        currentForcedSleepPoke[player] = -1;
+        currentForcedSleepPoke[this->player(player)] = -1;
     }
 
     if (tell)
@@ -2712,9 +2710,9 @@ void BattleSituation::requestSwitch(int slot)
 
     options[slot] = BattleChoices::SwitchOnly(slot);
 
-    requestChoice(player,true,true);
-    analyzeChoice(player);
-    callEntryEffects(player);
+    requestChoice(slot,true,true);
+    analyzeChoice(slot);
+    callEntryEffects(slot);
 }
 
 bool BattleSituation::linked(int linked, QString relationShip)
