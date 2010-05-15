@@ -1,7 +1,1 @@
-fine
-paralysiert
-brennt
-eingefroren
-schläft
-vergiftet
-stark vergiftet
+fineparalysiertbrennteingefroren.schläftvergiftetschwer vergiftet

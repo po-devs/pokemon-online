@@ -6,62 +6,62 @@
     <message>
         <location filename="pokedex.cpp" line="894"/>
         <source>Types</source>
-        <translation type="unfinished"></translation>
+        <translation>Typen</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="898"/>
         <source>Type 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Typ 1</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="899"/>
         <source>Type 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Typ 2</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="914"/>
         <source>Ability</source>
-        <translation type="unfinished"></translation>
+        <translation>Fähigkeit</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="924"/>
         <source>Base Stats</source>
-        <translation type="unfinished"></translation>
+        <translation>Basiswerte</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="929"/>
         <source> </source>
-        <translation type="unfinished"></translation>
+        <translation> </translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="930"/>
         <source>&gt;=</source>
-        <translation type="unfinished"></translation>
+        <translation>&gt;=</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="931"/>
         <source>=</source>
-        <translation type="unfinished"></translation>
+        <translation>=</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="932"/>
         <source>&lt;=</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;=</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="942"/>
         <source>Moves</source>
-        <translation type="unfinished"></translation>
+        <translation>Attacken</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="955"/>
         <source>&amp;Search !</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Suchen !</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="958"/>
         <source>&amp;Results</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ergebnisse</translation>
     </message>
 </context>
 <context>
@@ -231,7 +231,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="360"/>
         <source>%1 avoided the attack!</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 wehrt die Attacke ab!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="366"/>
@@ -351,7 +351,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="502"/>
         <source>But there was no target...</source>
-        <translation type="unfinished"></translation>
+        <translation>Es befindet sich doch gar kein Ziel</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="536"/>
@@ -532,12 +532,12 @@ Attacken:
     <message>
         <location filename="challenge.cpp" line="57"/>
         <source>Singles</source>
-        <translation type="unfinished"></translation>
+        <translation>Einzel</translation>
     </message>
     <message>
         <location filename="challenge.cpp" line="58"/>
         <source>Doubles</source>
-        <translation type="unfinished"></translation>
+        <translation>Doppel</translation>
     </message>
 </context>
 <context>
@@ -573,7 +573,7 @@ Attacken:
     <message>
         <location filename="client.cpp" line="1193"/>
         <source>Double battle</source>
-        <translation type="unfinished"></translation>
+        <translation>Doppelkampf</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1196"/>
@@ -617,7 +617,7 @@ Attacken:
     <message>
         <location filename="battlewindow.cpp" line="66"/>
         <source>&amp;Switch PokÃ©mon</source>
-        <translation>&amp;Pokémon wechseln</translation>
+        <translation>&amp;Pokemon wechseln</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="70"/>
@@ -627,7 +627,7 @@ Attacken:
     <message>
         <location filename="battlewindow.cpp" line="71"/>
         <source>&amp;PokÃ©mon</source>
-        <translation>&amp;Pokémon</translation>
+        <translation>&amp;Pokemon</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="72"/>
@@ -687,7 +687,7 @@ Attacken:
     <message>
         <location filename="battlewindow.cpp" line="605"/>
         <source>Variation: </source>
-        <translation type="unfinished"></translation>
+        <translation>Variation: </translation>
     </message>
 </context>
 <context>
@@ -720,12 +720,12 @@ Attacken:
     <message>
         <location filename="pokedex.cpp" line="195"/>
         <source>&lt;b&gt;Ht:&lt;/b&gt; %1</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Ht:&lt;/b&gt; %1</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="196"/>
         <source>&lt;b&gt;Wt:&lt;/b&gt; %1 lbs</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Wt:&lt;/b&gt; %1 lbs</translation>
     </message>
     <message>
         <source>&lt;b&gt;Wt:&lt;/b&gt; %1 lbs.</source>
@@ -949,7 +949,7 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="client.cpp" line="445"/>
         <source>Animate HP Bar</source>
-        <translation>Animierte HP Anzeige</translation>
+        <translation>Animierte KP Anzeige</translation>
     </message>
     <message>
         <source>&amp;Play Music and Sounds</source>
@@ -962,83 +962,83 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="client.cpp" line="135"/>
         <source>&amp;Challenge</source>
-        <translation type="unfinished">&amp;Herausfordern</translation>
+        <translation>&amp;Herausfordern</translation>
     </message>
     <message>
         <location filename="client.cpp" line="137"/>
         <source>&amp;View Ranking</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Siehe Platzierung</translation>
     </message>
     <message>
         <location filename="client.cpp" line="145"/>
         <source>&amp;Send Message</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Nachricht senden</translation>
     </message>
     <message>
         <location filename="client.cpp" line="322"/>
         <source>&amp;Cancel Find Battle</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Kampfanfrage zurückziehen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="387"/>
         <source>&amp;Load team</source>
-        <translation type="unfinished"></translation>
+        <translation>Team Laden</translation>
     </message>
     <message>
         <location filename="client.cpp" line="388"/>
         <source>Open &amp;teamBuilder</source>
-        <translation type="unfinished"></translation>
+        <translation>Teambuilder öffnen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="398"/>
         <source>&amp;Idle</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;faulenzen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="406"/>
         <source>&amp;Show team</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige Team</translation>
     </message>
     <message>
         <location filename="client.cpp" line="411"/>
         <source>Enable &amp;ladder</source>
-        <translation type="unfinished"></translation>
+        <translation>aktiviere &amp;Leiter</translation>
     </message>
     <message>
         <location filename="client.cpp" line="416"/>
         <source>&amp;Enable player events</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;aktiviere Spieler Events</translation>
     </message>
     <message>
         <location filename="client.cpp" line="422"/>
         <source>Enable &amp;timestamps</source>
-        <translation type="unfinished"></translation>
+        <translation>aktiviere &amp;Zeitstempel</translation>
     </message>
     <message>
         <location filename="client.cpp" line="428"/>
         <source>&amp;Tiers</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Tier</translation>
     </message>
     <message>
         <location filename="client.cpp" line="430"/>
         <source>&amp;Battle Options</source>
         <comment>Menu</comment>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Kampf Optionen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="436"/>
         <source>Change &amp;log folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Ändere &amp;Log Ordner</translation>
     </message>
     <message>
         <location filename="client.cpp" line="438"/>
         <source>&amp;Enable sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;aktiviere Sounds</translation>
     </message>
     <message>
         <location filename="client.cpp" line="443"/>
         <source>Change &amp;sound folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Ändere &amp;Sound Ordner</translation>
     </message>
     <message>
         <location filename="client.cpp" line="482"/>
@@ -1067,14 +1067,16 @@ Es wird empfohlen für jeden Server das gleiche Passwort zu benutzen (Der Server
     <message>
         <location filename="client.cpp" line="561"/>
         <source>Old Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Alte Version</translation>
     </message>
     <message>
         <location filename="client.cpp" line="561"/>
         <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
 
 It is recommended to update.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ihre Version ist älter als die Server Version, es kann sein das Sie einige dinge nicht machen können.
+
+Es wir empfohlen ein Update zu machen.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="684"/>
@@ -1085,7 +1087,7 @@ It is recommended to update.</source>
         <location filename="client.cpp" line="689"/>
         <location filename="client.cpp" line="690"/>
         <source>Battling against %1</source>
-        <translation type="unfinished">Kampf gegen %1</translation>
+        <translation>Kampf gegen %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="735"/>
@@ -1105,7 +1107,7 @@ It is recommended to update.</source>
     <message>
         <location filename="client.cpp" line="780"/>
         <source>&amp;Find battle</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Kampf finden</translation>
     </message>
     <message>
         <location filename="client.cpp" line="797"/>
@@ -1130,12 +1132,12 @@ It is recommended to update.</source>
     <message>
         <location filename="client.cpp" line="825"/>
         <source>%1 is idling.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 faulenzt</translation>
     </message>
     <message>
         <location filename="client.cpp" line="827"/>
         <source>%1 is active and ready for battles.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ist aktiv und bereit für ein Kampf.</translation>
     </message>
     <message>
         <source>%1 is away.</source>
@@ -1379,33 +1381,33 @@ It is recommended to update.</source>
     <message>
         <location filename="pokedex.cpp" line="705"/>
         <source>Type</source>
-        <translation type="unfinished">Typ</translation>
+        <translation>Typ</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="705"/>
         <source>Name</source>
         <comment>AttackName</comment>
-        <translation type="unfinished">Name</translation>
+        <translation>Name</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="705"/>
         <source>PP</source>
-        <translation type="unfinished">AP</translation>
+        <translation>AP</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="705"/>
         <source>Pow</source>
-        <translation type="unfinished">Stärke</translation>
+        <translation>Stärke</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="705"/>
         <source>Acc</source>
-        <translation type="unfinished">Genauigkeit</translation>
+        <translation>Genauigkeit</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="705"/>
         <source>Category</source>
-        <translation type="unfinished">Kategorie</translation>
+        <translation>Kategorie</translation>
     </message>
 </context>
 <context>
@@ -1613,7 +1615,7 @@ Attacken:
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="16"/>
         <source>No Timeout</source>
-        <translation type="unfinished"></translation>
+        <translation>Kein Timeout</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="17"/>
@@ -1817,67 +1819,67 @@ Attacken:
     <message>
         <location filename="pokedex.cpp" line="504"/>
         <source>Statistics</source>
-        <translation type="unfinished"></translation>
+        <translation>Statistiken</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="509"/>
         <source>Base Stats</source>
-        <translation type="unfinished"></translation>
+        <translation>Basiswerte</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="510"/>
         <source>Min</source>
-        <translation type="unfinished"></translation>
+        <translation>Min</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="514"/>
         <source>Max</source>
-        <translation type="unfinished"></translation>
+        <translation>Max</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="521"/>
         <source>Hit Points</source>
-        <translation type="unfinished"></translation>
+        <translation>Kraftpunkte</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="521"/>
         <source>Attack</source>
-        <translation type="unfinished"></translation>
+        <translation>Angriff</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="521"/>
         <source>Defense</source>
-        <translation type="unfinished"></translation>
+        <translation>Verteidigung</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="521"/>
         <source>Speed</source>
-        <translation type="unfinished">Int</translation>
+        <translation>Initiative</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="521"/>
         <source>Special Attack</source>
-        <translation type="unfinished"></translation>
+        <translation>Spezial Angriff</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="521"/>
         <source>Special Defense</source>
-        <translation type="unfinished"></translation>
+        <translation>Spezial Verteidigung</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="596"/>
         <source>Weakness</source>
-        <translation type="unfinished"></translation>
+        <translation>Schwäche</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="612"/>
         <source>Resistance</source>
-        <translation type="unfinished"></translation>
+        <translation>Resistent</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="628"/>
         <source>Immunity</source>
-        <translation type="unfinished"></translation>
+        <translation>Immun</translation>
     </message>
 </context>
 <context>
@@ -2179,7 +2181,7 @@ Attacken:
     <message>
         <location filename="teambuilder.cpp" line="936"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Neues Fenster</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="958"/>
@@ -2442,12 +2444,12 @@ Attacken:
     <message>
         <location filename="teambuilder.cpp" line="376"/>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Siehe</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="377"/>
         <source>&amp;Full Screen (for netbook users ONLY)</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ganzer Bildschirm (nur für Netbook/Laptop Usern möglich)</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="412"/>
@@ -2480,12 +2482,12 @@ Ihre Sprache muss auf Englisch eingestellt werden, um englische Teams zu importi
     <message>
         <location filename="teambuilder.cpp" line="572"/>
         <source>PokÃ©mon &amp;%1</source>
-        <translation>Pokémon &amp;%1</translation>
+        <translation>Pokemon &amp;%1</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="581"/>
         <source>Item</source>
-        <translation type="unfinished"></translation>
+        <translation>Item</translation>
     </message>
     <message>
         <source>item</source>
@@ -2502,7 +2504,7 @@ Ihre Sprache muss auf Englisch eingestellt werden, um englische Teams zu importi
     <message>
         <location filename="pokedex.cpp" line="844"/>
         <source>A \ D</source>
-        <translation type="unfinished"></translation>
+        <translation>A \ D</translation>
     </message>
 </context>
 <context>
