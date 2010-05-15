@@ -26,7 +26,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("save_battle_logs", false);
     setDefaultValue("battle_logs_directory", "Logs/");
     setDefaultValue("battle_music_directory", "Music/Battle/");
-    setDefaultValue("play_battle_music", true);
+//    setDefaultValue("play_battle_music", true);
     //setDefaultValue("play_battle_sounds", true);
     setDefaultValue("show_team",true);
     setDefaultValue("enable_ladder", true);
@@ -38,7 +38,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("find_battle_same_tier", true);
     setDefaultValue("find_battle_range_on", true);
     setDefaultValue("find_battle_range", 200);
-
+/*
     setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(0)), Qt::Checked);
     setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(1)), Qt::Checked);
     setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(2)), Qt::PartiallyChecked);
@@ -48,7 +48,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(6)), Qt::Unchecked);
     setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(7)), Qt::Unchecked);
     setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(8)), Qt::PartiallyChecked);
-
+*/
     PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/");
     ItemInfo::init("db/items/");
