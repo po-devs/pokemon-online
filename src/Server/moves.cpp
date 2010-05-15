@@ -775,7 +775,7 @@ struct MMPerishSong : public MM
     }
 
     static void uas(int, int, BS &b) {
-        for (int t = 0; t <= b.numberOfSlots(); t++) {
+        foreach (int t, b.sortedBySpeed()) {
             //SoundProof
             if (poke(b,t).contains("PerishSongCount") || b.koed(t)) {
 		continue;
@@ -808,7 +808,7 @@ struct MMHaze : public MM
     static void uas(int , int , BS &b) {
         b.sendMoveMessage(149);
 
-        for (int p = 0; p <= b.numberOfSlots(); p++)
+        foreach (int p, b.sortedBySpeed())
         {
             for (int i = 1; i <= 7; i++) {
                 poke(b,p)["Boost"+QString::number(i)] = 0;
@@ -3871,14 +3871,15 @@ struct MMExplosion : public MM {
         functions["MoveSettings"] = &ms;
     }
 
-    static void ms(int s, int t, BS &b) {
+    static void ms(int s, int , BS &b) {
         //Damp
-        for (int i = 0; i < b.numberOfSlots(); i++) {
+        foreach (int i, b.sortedBySpeed()) {
             if (b.hasWorkingAbility(i, Ability::Damp) && !b.koed(i)) {
                 b.sendMoveMessage(114,0,i);
                 turn(b,s)["FaintActivationPrevented"] = true;
                 turn(b,s)["Power"] = 0;
                 turn(b,s)["PossibleTargets"] = Move::None;
+                return;
             }
         }
     }
@@ -4060,7 +4061,7 @@ struct MMUproar : public MM {
         if (poke(b,s).value("UproarUntil").toInt() == 0) {
             poke(b,s)["UproarUntil"] = b.turn() + 1 + (true_rand() % 4);
             b.sendMoveMessage(141,0,s);
-            for (int i = 0; i <= b.numberOfSlots(); i++) {
+            foreach (int i, b.sortedBySpeed()) {
                 if (b.poke(i).status() == Pokemon::Asleep) {
                     b.sendMoveMessage(141,3,i);
                     b.changeStatus(i, Pokemon::Normal);
