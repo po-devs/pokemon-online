@@ -2307,7 +2307,7 @@ int BattleSituation::calculateDamage(int p, int t)
     int power = move["Power"].toInt();
     int type = move["Type"].toInt();
 
-    if (player.contains("HelpingHanded")) {
+    if (move.contains("HelpingHanded")) {
         power = power * 3 / 2;
     }
 
