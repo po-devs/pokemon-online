@@ -261,7 +261,7 @@ void BattleWindow::attackClicked(int zone)
             int move = zone == -1 ? int(Move::Struggle) : info().tempPoke(slot).move(zone);
             int target = MoveInfo::Target(move);
             if (target == Move::ChosenTarget) {
-                tarZone->updateData(info(), zone);
+                tarZone->updateData(info(), move);
                 mystack->setCurrentIndex(TargetTab);
             } else {
                 info().done[info().number(slot)] = true;
@@ -374,7 +374,7 @@ void BattleWindow::attackButton()
     if (info().possible) {
         if (mystack->currentIndex() == TargetTab) {
             /* Doubles, move selection */
-            if (MoveInfo::Target(info().lastMove[info().currentIndex[slot]]) == Move::ChosenTarget) {
+            if (info().choices[n].struggle() || MoveInfo::Target(info().lastMove[info().currentIndex[slot]]) == Move::ChosenTarget) {
                 return; //We have to wait for the guy to choose a target
             }
             info().done[n] = true;

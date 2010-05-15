@@ -478,9 +478,16 @@ QTabWidget#Modified  > QTabBar::tab::title {
 	font-size: 14px;
 }
 
-QTabWidget#Modified > QTabBar::tab:selected , QTabWidget#Modified > QTabBar::tab:hover{
+QTabWidget#Modified > QTabBar::tab:hover{
 	border-color: #077cff;
+	color: white;
 	background: #88bcf1;
+}
+
+QTabWidget#Modified > QTabBar::tab:selected {
+	border-color: #077cff;
+	color: white;
+	background: #66ace1;
 }
 
 QTabWidget#Modified > QTabBar::tab:top:selected , QTabWidget#Modified > QTabBar::tab:bottom:selected {
