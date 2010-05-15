@@ -1,19 +1,19 @@
-(Keine Attacke)
+(Keine Attacke) 
 Absorber
 Säure
 Säurepanzer
 Akupressur
-Aero Ass
+Aero Ass --> Aero-Ass
 Luftstoß
 Agilität
 Windschnitt
 Luftschnitt
 Amnesie
 Antik-Kraft
-Aqua Jet
+Wasserdüse
 Wasserring
 Nassschweif
-Armstoß
+Armstoß --> Armstoss
 Aromatherapie
 Zuschuss
 Gewissheit
@@ -25,7 +25,7 @@ Aurorastrahl
 Lawine
 Stakkato
 Barriere
-Stafette
+Stafette ---> Staffette
 Prügler
 Bauchtrommel
 Geduld
@@ -37,8 +37,8 @@ Blizzard
 Rückentzug
 Bodyslam
 Knochenkeule
-Knochehatz
-Bonemerang
+Knochenhatz
+Knochmerang
 Sprungfeder
 Sturzflug
 Durchbruch
@@ -55,7 +55,7 @@ Tarnung
 Liebreiz
 Ladevorgang
 Ladestrahl
-Charm
+Charm --> Charme
 Geschwätz
 Schnapper
 Nahkampf
@@ -101,7 +101,7 @@ Drachenklaue
 Drachentanz
 Drachenpuls
 Drachenwut
-Dragonstoß
+Drachenstoß
 Feuerodem
 Ableithieb
 Traumfresser
@@ -167,12 +167,12 @@ Schutztausch
 Guillotine
 Mülltreffer
 Windstoß
-Gyro Ball
+Gyro Ball --> Gyroball
 Hagelsturm
 Hammerarm
 Härtner
 Dunkelnebel
-Kopfstoß
+Kopfstoß --> Kopfstoss
 Kopfnuss
 Vitalglocke
 Heilblockade
@@ -210,7 +210,7 @@ Karateschlag
 Psykraft
 Abschlag
 Zuflucht
-Flammesturm
+Flammesturm --> Flammensturm
 Laubklinge
 Blättersturm
 Blutsauger
@@ -238,7 +238,7 @@ Megasauger
 Megakick
 Megahieb
 Vielender
-Memento Mori
+Memento Mori --> Memento-Mori
 Metallstoß
 Metallklaue
 Metallsound
@@ -263,14 +263,14 @@ Lehmschelle
 Lehmbrühe
 Ränkeschmied
 Beerenkräfte
-Naturkraft
+Naturkraft --> Natur-Kraft
 Nietenranke
 Nachtnebel
 Nachthieb
 Nachtmahr
 Octazooka
 Schnüffler
-Unheilböhen
+Unheilböhen --> Unheilböen
 Wutanfall
 Hitzekoller
 Leidteiler
@@ -292,10 +292,10 @@ Puderschnee
 Juwelenkraft
 Krafttausch
 Krafttrick
-Power Whip
+Blattgeissel
 Geschenk
 Schutzschild
-Pystrahl
+Psytrahl
 Psycho-Plus
 Psychokinese
 Psyschub
@@ -340,7 +340,7 @@ Sandsturm
 Grimasse
 Kratzer
 Kreideschrei
-Kreideschrei
+Kreideschrei --> 2x??
 Samenbomben
 Schocksamen
 Geowurf
@@ -399,7 +399,7 @@ Delegator
 Tiefschlag
 Sonnentag
 Superzahn
-Kraftkolloss
+Kraftkolloss --> Kraftkoloss
 Superschall
 Surfer
 Angeberei
@@ -440,7 +440,7 @@ Duonadel
 Windhose
 Kehrtwende
 Aufruhe
-Vacuumwelle
+Vakuumwelle
 Klammer
 Rankenhieb
 Überwurf
@@ -465,4 +465,4 @@ Auswringen
 Kreuzschere
 Gähner
 Blitzkanone
-Zen-Kopfnuss
+Zen-Kopfstoss
