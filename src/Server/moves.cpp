@@ -3816,7 +3816,7 @@ struct MMYawn : public MM {
             turn(b,s)["Failed"] = true;
             return;
         }
-        if (b.currentForcedSleepPoke[b.player(t)] != -1) {
+        if (b.sleepClause() && b.currentForcedSleepPoke[b.player(t)] != -1) {
             b.notifyClause(ChallengeInfo::SleepClause, true);
             turn(b,s)["Failed"] = true;
         }
@@ -3836,10 +3836,14 @@ struct MMYawn : public MM {
         if (count > 0) {
 
         } else {
-            if (b.sleepClause()) {
-                b.currentForcedSleepPoke[b.player(s)] = b.currentPoke(s);
+            if (b.sleepClause() && b.currentForcedSleepPoke[b.player(s)] != -1) {
+                b.notifyClause(ChallengeInfo::SleepClause, true);
+            } else {
+                if (b.sleepClause()) {
+                    b.currentForcedSleepPoke[b.player(s)] = b.currentPoke(s);
+                }
+                b.inflictStatus(s, Pokemon::Asleep, s);
             }
-            b.inflictStatus(s, Pokemon::Asleep, s);
             removeFunction(poke(b,s),"EndTurn", "Yawn");
             poke(b,s).remove("YawnCount");
         }

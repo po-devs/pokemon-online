@@ -147,8 +147,10 @@ void BattleSituation::start()
     sendPoke(slot(Player1), 0);
     sendPoke(slot(Player2), 0);
     if (doubles()) {
-        sendPoke(slot(Player1, true), 1);
-        sendPoke(slot(Player2, true), 1);
+        if (!poke(Player1, 1).ko())
+            sendPoke(slot(Player1, 1), 1);
+        if (!poke(Player2, 1).ko())
+            sendPoke(slot(Player2, 1), 1);
     }
 
     /* For example, if two pokemons are brought out
