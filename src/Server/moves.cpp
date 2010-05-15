@@ -3128,9 +3128,9 @@ struct MMMist : public MM
 
     static void uas(int s, int, BS &b) {
 	b.sendMoveMessage(86,0,s,Pokemon::Ice);
-	turn(b,s)["MistCount"] = 5;
-
         int source = b.player(s);
+
+        team(b,source)["MistCount"] = 5;
         addFunction(team(b,source), "EndTurn", "Mist", &et);
     }
 
