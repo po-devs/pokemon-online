@@ -257,8 +257,15 @@ void BattleWindow::attackClicked(int zone)
             info().done[info().number(slot)] = true;
             goToNextChoice();
         } else {
-            tarZone->updateData(info(), info().currentPoke(slot).move(zone));
-            mystack->setCurrentIndex(TargetTab);
+            int move = info().tempPoke(slot).move(zone);
+            int target = MoveInfo::Target(move);
+            if (target == Move::ChosenTarget || target == Move::RandomTarget || target == Move::AllButSelf) {
+                tarZone->updateData(info(), info().tempPoke(slot).move(zone));
+                mystack->setCurrentIndex(TargetTab);
+            } else {
+                info().done[info().number(slot)] = true;
+                goToNextChoice();
+            }
         }
     }
 }
@@ -304,12 +311,12 @@ void BattleWindow::goToNextChoice()
                 if (info().choices[n].attacksAllowed == false) {
                     myattack->setEnabled(false);
                     for (int i = 0; i < 4; i ++) {
-                        myazones[info().currentIndex[n]]->attacks[i]->setEnabled(false);
+                        myazones[info().currentIndex[slot]]->attacks[i]->setEnabled(false);
                     }
                 } else {
                     myattack->setEnabled(true);
                     for (int i = 0; i < 4; i ++) {
-                        myazones[info().currentIndex[n]]->attacks[i]->setEnabled(info().choices[n].attackAllowed[i]);
+                        myazones[info().currentIndex[slot]]->attacks[i]->setEnabled(info().choices[n].attackAllowed[i]);
                     }
                 }
             }

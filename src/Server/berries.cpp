@@ -83,6 +83,7 @@ struct BMPinch : public BM
 {
     static bool testpinch(int s, int , BS &b, int ratio) {
         if (turn(b,s).value("BugBiter").toBool()) {
+            b.eatBerry(s);
             return true;
         }
         //Gluttony
