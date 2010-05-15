@@ -511,8 +511,8 @@ QDataStream & operator << (QDataStream &out, const BattleChoices &po)
     return out;
 }
 
-BattleChoice::BattleChoice(bool pokeSwitch, qint8 numSwitch, quint8 numSlot)
-        : pokeSwitch(pokeSwitch), numSwitch(numSwitch), numSlot(numSlot)
+BattleChoice::BattleChoice(bool pokeSwitch, qint8 numSwitch, quint8 numSlot, quint8 target)
+        : pokeSwitch(pokeSwitch), numSwitch(numSwitch), targetPoke(target), numSlot(numSlot)
 {
 }
 

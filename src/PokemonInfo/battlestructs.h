@@ -161,7 +161,7 @@ struct BattleChoice
 {
     static const int Cancel = -10;
 
-    BattleChoice(bool pokeSwitch = false, qint8 numSwitch = 0, quint8 numslot=0);
+    BattleChoice(bool pokeSwitch = false, qint8 numSwitch = 0, quint8 numslot=0, quint8 target=0);
 
     bool pokeSwitch; /* True if poke switch, false if attack switch */
     qint8 numSwitch; /* The num of the poke or the attack to use, -1 for Struggle, -10 for move cancelled */

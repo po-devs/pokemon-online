@@ -1018,13 +1018,14 @@ struct MMRoar : public MM
     }
 
     static void daf(int s, int t, BS &b) {
+        int target = b.player(t);
 	/* ingrain & suction cups */
         if (poke(b,t).value("Rooted").toBool()) {
             b.fail(s, 107, 1, Pokemon::Grass);
         } else if (b.hasWorkingAbility(t,Ability::SuctionCups)) {
             b.fail(s, 107, 0);
         } else{
-            if (b.countBackUp(t) == 0) {
+            if (b.countBackUp(target) == 0) {
 		turn(b,s)["Failed"] = true;
 	    }
 	}

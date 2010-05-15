@@ -826,7 +826,7 @@ bool BattleSituation::validChoice(const BattleChoice &b)
         }
     } else {
         /* It's an attack, we check the target is valid */
-        if (turnlong[b.numSlot]["PossibleTargets"].toInt() == Move::ChosenTarget && (b.target() < 0 || b.target() >= numberOfSlots() ||
+        if ( (b.numSwitch == -1  || MoveInfo::Target(move(b.numSlot, b.numSwitch))) == Move::ChosenTarget && (b.target() < 0 || b.target() >= numberOfSlots() ||
                                                                                      b.target() == b.numSlot || koed(b.target()))) {
             return false;
         }
