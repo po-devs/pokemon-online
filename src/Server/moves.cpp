@@ -4403,7 +4403,7 @@ struct MMFollowMe : public MM
         if (b.battlelong["FollowMeTurn"] != b.turn())
             return;
         int target = b.battlelong["FollowMePlayer"].toInt();
-        if (b.koed(target) || !poke(b, target).contains("FollowMe"))
+        if (b.koed(target) || !poke(b, target).contains("FollowMe") || b.player(s) == b.player(target))
             return;
 
         int tarChoice = turn(b,s)["PossibleTargets"].toInt();

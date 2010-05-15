@@ -343,7 +343,7 @@ int BattleSituation::opponent(int player) const
 
 int BattleSituation::partner(int spot) const
 {
-    return slot(player(spot), !(spot %2));
+    return slot(player(spot), !(spot/2));
 }
 
 const PokeBattle & BattleSituation::poke(int player, int poke) const

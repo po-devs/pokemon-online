@@ -1076,7 +1076,7 @@ struct AMLightningRod : public AM {
         if (turn(b,t)["Target"].toInt() == s) {
             return;
         } else {
-            b.sendAbMessage(38,0,s);
+            b.sendAbMessage(38,0,s,t,0,b.ability(s));
             turn(b,t)["Target"] = s;
         }
     }

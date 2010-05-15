@@ -259,7 +259,7 @@ void BattleWindow::attackClicked(int zone)
         } else {
             int move = info().tempPoke(slot).move(zone);
             int target = MoveInfo::Target(move);
-            if (target == Move::ChosenTarget || target == Move::RandomTarget || target == Move::AllButSelf) {
+            if (target == Move::ChosenTarget) {
                 tarZone->updateData(info(), info().tempPoke(slot).move(zone));
                 mystack->setCurrentIndex(TargetTab);
             } else {
