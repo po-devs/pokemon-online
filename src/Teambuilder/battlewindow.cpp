@@ -249,7 +249,8 @@ void BattleWindow::attackClicked(int zone)
 {
     int slot = info().currentSlot;
 
-    info().lastMove[info().currentIndex[slot]] = zone;
+    if (zone != -1) //struggle
+        info().lastMove[info().currentIndex[slot]] = zone;
     if (info().possible) {
         info().choice[info().number(slot)] = BattleChoice(false, zone, slot);
         info().choice[info().number(slot)].targetPoke = info().slot(info().opponent);
@@ -257,10 +258,10 @@ void BattleWindow::attackClicked(int zone)
             info().done[info().number(slot)] = true;
             goToNextChoice();
         } else {
-            int move = info().tempPoke(slot).move(zone);
+            int move = zone == -1 ? int(Move::Struggle) : info().tempPoke(slot).move(zone);
             int target = MoveInfo::Target(move);
             if (target == Move::ChosenTarget) {
-                tarZone->updateData(info(), info().tempPoke(slot).move(zone));
+                tarZone->updateData(info(), zone);
                 mystack->setCurrentIndex(TargetTab);
             } else {
                 info().done[info().number(slot)] = true;
@@ -382,9 +383,13 @@ void BattleWindow::attackButton()
             //We go with the last move, struggle, or the first possible move
             if (info().choices[n].struggle()) {
                 /* Struggle! */
-                info().choice[n] = BattleChoice(false, -1, slot);
-                info().done[n] = true;
-                goToNextChoice();
+                if (info().doubles) {
+                    attackClicked(-1);
+                } else {
+                    info().choice[n] = BattleChoice(false, -1, slot, info().slot(info().opponent));
+                    info().done[n] = true;
+                    goToNextChoice();
+                }
             } else {
                 if (info().choices[n].attackAllowed[info().lastMove[info().currentIndex[slot]]]) {
                     attackClicked(info().lastMove[info().currentIndex[slot]]);
