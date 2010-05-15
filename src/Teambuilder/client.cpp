@@ -686,10 +686,14 @@ void Client::battleStarted(int, int id1, int id2)
     myplayersinfo[id1].flags |= PlayerInfo::Battling;
     myplayersinfo[id2].flags |= PlayerInfo::Battling;
 
-    item(id1)->setToolTip(tr("Battling against %1").arg(name(id2)));
-    item(id2)->setToolTip(tr("Battling against %1").arg(name(id1)));
-    updateState(id1);
-    updateState(id2);
+    if (id1 != 0) {
+        item(id1)->setToolTip(tr("Battling against %1").arg(name(id2)));
+        updateState(id1);
+    }
+    if (id2 != 0) {
+        item(id2)->setToolTip(tr("Battling against %1").arg(name(id1)));
+        updateState(id2);
+    }
 }
 
 void Client::watchBattle(const QString &name0, const QString &name1, int battleId, bool doubles)

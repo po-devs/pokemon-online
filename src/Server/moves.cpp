@@ -1032,7 +1032,7 @@ struct MMRoar : public MM
 
     static void uas(int s, int t, BS &b) {
 	QList<int> switches;
-        int source = b.player(s);
+        int source = b.player(t);
 	for (int i = 0; i < 6; i++) {
             if (!b.isOut(source, i) && !b.poke(t,i).ko()) {
 		switches.push_back(i);
@@ -2706,6 +2706,10 @@ struct MMImprison : public MM
         QList<int> foes = b.revs(s);
 
         foreach(int foe, foes) {
+            if (!poke(b,foe).value("Imprisoner").toBool()) {
+                break;
+            }
+
             for (int i = 0; i < 4; i++)
                 if (b.move(s,i) != 0)
                     for (int j = 0; j < 4; j++)
@@ -4496,7 +4500,7 @@ void MoveEffect::init()
     REGISTER_MOVE(45, Fling);
     REGISTER_MOVE(46, FocusEnergy);
     REGISTER_MOVE(47, FocusPunch);
-    /* Follow Me -- does nothing in singles */
+    REGISTER_MOVE(48, FollowMe);
     REGISTER_MOVE(49, Frustration); /* Frustration, Return */
     REGISTER_MOVE(50, FuryCutter);
     REGISTER_MOVE(51, GastroAcid);
