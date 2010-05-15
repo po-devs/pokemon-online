@@ -1032,9 +1032,9 @@ struct MMRoar : public MM
 
     static void uas(int s, int t, BS &b) {
 	QList<int> switches;
-        int source = b.player(t);
+        int target = b.player(t);
 	for (int i = 0; i < 6; i++) {
-            if (!b.isOut(source, i) && !b.poke(t,i).ko()) {
+            if (!b.isOut(target, i) && !b.poke(target,i).ko()) {
 		switches.push_back(i);
 	    }
 	}
