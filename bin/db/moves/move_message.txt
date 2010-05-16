@@ -1,6 +1,6 @@
 
 %f had its energy drained!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
-A ring of water surrounds %s!|Aquaring recovered %s's hp a little.
+%s surrounded itself with a veil of water!|Aquaring restored %s's HP.
 A soothing aroma wafted through the area!|A bell chimed!
 
 
@@ -16,7 +16,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 
 %s ate %f's %i!
 %s transformed into the %t type!
-%s stored up electricity!
+%s began charging power!
 %s transformed into the %t type!
 %s transformed into the %t type!
 
@@ -44,7 +44,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 %f's Sturdy made the attack fail!
 
 %s threw %i at %f!
-%s pumped itself!
+%s is getting pumped!
 %s lost its focus!|%s is tightening its focus!
 %s became the center of attention!
 

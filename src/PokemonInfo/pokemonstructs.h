@@ -620,7 +620,8 @@ namespace Move
 	RandomTarget,
 	Opponents,
 	All,
-	AllButSelf
+        AllButSelf,
+        PartnerOrUser
     };
 
     enum Name

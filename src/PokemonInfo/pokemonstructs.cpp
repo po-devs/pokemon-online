@@ -827,9 +827,14 @@ bool TrainerTeam::importFromTxt(const QString &file1)
             nickname = first[0];
         }
 
-        // alternate formes
+        // alternate formes, from Shoddy :s
         if (pokestring.indexOf('-') != -1) {
             pokestring[pokestring.length()-1] = pokestring[pokestring.length()-1].toUpper();
+        }
+
+        /* Another shoddy fix */
+        if (pokestring == "Porygonz") {
+            pokestring = "Porygon-Z";
         }
 
         pokenum = PokemonInfo::Number(pokestring);

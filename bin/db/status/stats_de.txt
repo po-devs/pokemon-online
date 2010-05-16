@@ -1,1 +1,8 @@
-KraftpunkteAngriffVerteidigungInitiativeSp. AngriffSp. VerteidigungFluchtwertGenauigkeit
+Kraftpunkte
+Angriff
+Verteidigung
+Initiative
+Sp. Angriff
+Sp. Verteidigung
+Fluchtwert
+Genauigkeit

@@ -3,7 +3,7 @@ Absorber
 Säure
 Säurepanzer
 Akupressur
-Aero Ass --> Aero-Ass
+Aero-Ass
 Luftstoß
 Agilität
 Windschnitt
@@ -13,7 +13,7 @@ Antik-Kraft
 Wasserdüse
 Wasserring
 Nassschweif
-Armstoß --> Armstoss
+Armstoss
 Aromatherapie
 Zuschuss
 Gewissheit
@@ -25,7 +25,7 @@ Aurorastrahl
 Lawine
 Stakkato
 Barriere
-Stafette ---> Staffette
+Staffette
 Prügler
 Bauchtrommel
 Geduld
@@ -55,7 +55,7 @@ Tarnung
 Liebreiz
 Ladevorgang
 Ladestrahl
-Charm --> Charme
+Charme
 Geschwätz
 Schnapper
 Nahkampf
@@ -167,12 +167,12 @@ Schutztausch
 Guillotine
 Mülltreffer
 Windstoß
-Gyro Ball --> Gyroball
+Gyroball
 Hagelsturm
 Hammerarm
 Härtner
 Dunkelnebel
-Kopfstoß --> Kopfstoss
+Kopfstoss
 Kopfnuss
 Vitalglocke
 Heilblockade
@@ -210,7 +210,7 @@ Karateschlag
 Psykraft
 Abschlag
 Zuflucht
-Flammesturm --> Flammensturm
+Flammensturm
 Laubklinge
 Blättersturm
 Blutsauger
@@ -238,7 +238,7 @@ Megasauger
 Megakick
 Megahieb
 Vielender
-Memento Mori --> Memento-Mori
+Memento-Mori
 Metallstoß
 Metallklaue
 Metallsound
@@ -263,14 +263,14 @@ Lehmschelle
 Lehmbrühe
 Ränkeschmied
 Beerenkräfte
-Naturkraft --> Natur-Kraft
+Natur-Kraft
 Nietenranke
 Nachtnebel
 Nachthieb
 Nachtmahr
 Octazooka
 Schnüffler
-Unheilböhen --> Unheilböen
+Unheilböen
 Wutanfall
 Hitzekoller
 Leidteiler
@@ -399,7 +399,7 @@ Delegator
 Tiefschlag
 Sonnentag
 Superzahn
-Kraftkolloss --> Kraftkoloss
+Kraftkoloss
 Superschall
 Surfer
 Angeberei

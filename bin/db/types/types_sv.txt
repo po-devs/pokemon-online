@@ -4,8 +4,7 @@ Flygande
 Gift
 Mark
 Sten
-Kryp
-Spöke
+KrypSpöke
 Stål
 Eld
 Vatten

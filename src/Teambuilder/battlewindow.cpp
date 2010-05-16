@@ -260,7 +260,7 @@ void BattleWindow::attackClicked(int zone)
         } else {
             int move = zone == -1 ? int(Move::Struggle) : info().tempPoke(slot).move(zone);
             int target = MoveInfo::Target(move);
-            if (target == Move::ChosenTarget) {
+            if (target == Move::ChosenTarget || target == Move::PartnerOrUser) {
                 tarZone->updateData(info(), move);
                 mystack->setCurrentIndex(TargetTab);
             } else {
@@ -1044,6 +1044,13 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
         for (int i = 0; i < 4; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed && i != slot)
                 pokes[i]->setEnabled(true);
+        }
+        break;
+    case Move::PartnerOrUser:
+        for (int i = 0; i < 4; i++) {
+            if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.player(slot)) {
+                pokes[i]->setEnabled(true);
+            }
         }
         break;
     case Move::User:
