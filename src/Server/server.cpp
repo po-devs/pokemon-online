@@ -697,7 +697,7 @@ void Server::findBattle(int id, const FindBattleData &f)
         if (p1->tier() == p2->tier() && p1->tier() == "Challenge Cup") {
             c.clauses = ChallengeInfo::ChallengeCup;
         } else {
-            c.clauses = ChallengeInfo::SleepClause || ChallengeInfo::EvasionClause || ChallengeInfo::OHKOClause || ChallengeInfo::SpeciesClause;
+            c.clauses = ChallengeInfo::SleepClause | ChallengeInfo::EvasionClause | ChallengeInfo::OHKOClause | ChallengeInfo::SpeciesClause;
         }
 
         c.mode = f.mode;
