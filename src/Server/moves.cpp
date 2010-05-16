@@ -4347,8 +4347,8 @@ struct MMAcupressure : public MM
             if (poke(b,t)[QString("Boost%1").arg(i)].toInt() < 6) {
                 return;
             }
-            turn(b,s)["Failed"] = true;
         }
+        turn(b,s)["Failed"] = true;
     }
 
     static void uas(int , int t, BS &b) {
