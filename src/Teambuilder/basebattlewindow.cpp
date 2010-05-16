@@ -51,6 +51,8 @@ void BaseBattleWindow::undelay()
 {
     if (delayed > 0)
         delayed -= 1;
+    else
+        return;
 
     while (delayed == 0 && delayedCommands.size() > 0) {
         receiveInfo(delayedCommands.front());

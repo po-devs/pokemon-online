@@ -564,7 +564,7 @@ struct MMDetect : public MM
 struct MMEruption : public MM
 {
     MMEruption() {
-	functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BeforeTargetList"] = &bcd;
     }
 
     static void bcd(int s, int, BS &b) {
@@ -580,7 +580,7 @@ struct MMFacade : public MM
 
     static void bcd(int s, int, BS &b) {
 	int status = b.poke(s).status();
-	if (status == Pokemon::Burnt || status == Pokemon::Poisoned || status == Pokemon::Paralysed) {
+        if (status == Pokemon::Burnt || status == Pokemon::Poisoned || status == Pokemon::DeeplyPoisoned || status == Pokemon::Paralysed) {
 	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt()*2;
 	}
     }
@@ -684,7 +684,7 @@ struct MMOHKO : public MM
 struct MMFlail : public MM
 {
     MMFlail() {
-	functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BeforeTargetList"] = &bcd;
     }
 
     static void bcd(int s, int, BS &b) {
@@ -709,7 +709,7 @@ struct MMFlail : public MM
 struct MMTrumpCard : public MM
 {
     MMTrumpCard() {
-	functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BeforeTargetList"] = &bcd;
     }
 
     static void bcd(int s, int, BS &b)
@@ -730,7 +730,7 @@ struct MMTrumpCard : public MM
 struct MMFrustration : public MM
 {
     MMFrustration() {
-	functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BeforeTargetList"] = &bcd;
     }
 
     static void bcd(int s, int, BS &b) {
@@ -880,12 +880,12 @@ struct MMRoost : public MM
     static void uas(int s, int, BS &b) {
 	b.sendMoveMessage(150,0,s,Pokemon::Flying);
 
-	turn(b,s)["Roosted"] = true;
+        poke(b,s)["Roosted"] = true;
 	addFunction(poke(b,s), "EndTurn", "Roost", &et);
     }
 
     static void et(int s, int, BS &b) {
-	turn(b,s)["Roosted"] = false;
+        poke(b,s)["Roosted"] = false;
     }
 };
 
@@ -1240,7 +1240,8 @@ struct MMSubstitute : public MM
 
         QString effect = turn(b,t)["EffectActivated"].toString();
 
-        if (effect == "Bind" || effect == "Block" || effect == "Covet" || (effect == "Curse" && b.hasType(t, Pokemon::Ghost)) || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge"
+        if (effect == "Acupressure" || effect == "Bind" || effect == "Block" || effect == "Covet" || (effect == "Curse" && b.hasType(t, Pokemon::Ghost))
+            || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge"
 	    || effect == "HealBlock" || effect == "KnockOff" || effect == "LeechSeed"
 	    || effect == "LockOn" || effect == "Mimic" || effect == "PsychoShift" || effect == "Sketch" || effect == "Switcheroo"
             || effect == "WorrySeed" || effect == "Yawn" || effect == "PainSplit" || effect == "BugBite")
@@ -2566,6 +2567,7 @@ struct MMFling : public MM
             case Item::PoisonBarb: b.inflictStatus(t, Pokemon::Poisoned, s); break; /* poison barb */
             case Item::WhiteHerb: case Item::MentalHerb: /* mental herb, white herb */
                 int oppitem = b.poke(t).item();
+                b.sendMoveMessage(45, 0, s, type(b,s), t, item);
 		ItemEffect::activate("AfterSetup", item, t,s,b);
 		b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
 		break;
@@ -2685,12 +2687,12 @@ struct MMImprison : public MM
     static void mp(int s, int, BS &b) {
         QList<int> foes = b.revs(s);
 
+        int attack = move(b,s);
+
         foreach(int foe, foes) {
             if (!poke(b,foe).value("Imprisoner").toBool()) {
-                break;
+                continue;
             }
-
-            int attack = move(b,s);
 
             for (int i = 0; i < 4; i++) {
                 if (b.move(foe,i) == attack) {
@@ -2708,7 +2710,7 @@ struct MMImprison : public MM
 
         foreach(int foe, foes) {
             if (!poke(b,foe).value("Imprisoner").toBool()) {
-                break;
+                continue;
             }
 
             for (int i = 0; i < 4; i++)
@@ -2951,7 +2953,7 @@ struct MMDefog : public MM
 struct MMMagnitude: public MM
 {
     MMMagnitude() {
-	functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BeforeTargetList"] = &bcd;
 	functions["BeforeHitting"] = &bh;
     }
 
@@ -4340,25 +4342,25 @@ struct MMAcupressure : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void daf(int s, int, BS &b) {
+    static void daf(int s, int t, BS &b) {
         for (int i = Attack; i <= Accuracy; i++) {
-            if (poke(b,s)[QString("Boost%1").arg(i)].toInt() < 6) {
+            if (poke(b,t)[QString("Boost%1").arg(i)].toInt() < 6) {
                 return;
             }
             turn(b,s)["Failed"] = true;
         }
     }
 
-    static void uas(int s, int, BS &b) {
+    static void uas(int , int t, BS &b) {
         QVector<int> stats;
         for (int i = Attack; i <= Accuracy; i++) {
-            if (poke(b,s)[QString("Boost%1").arg(i)].toInt() < 6) {
+            if (poke(b,t)[QString("Boost%1").arg(i)].toInt() < 6) {
                 stats.push_back(i);
             }
         }
         if (stats.empty())
             return;
-        b.gainStatMod(s, stats[b.true_rand()%stats.size()], 2);
+        b.gainStatMod(t, stats[b.true_rand()%stats.size()], 2);
     }
 };
 

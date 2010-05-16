@@ -317,8 +317,8 @@ QList<int> BattleSituation::revs(int p) const
     QList<int> ret;
     if (!koed(slot(opp)))
         ret.push_back(slot(opp));
-    if (doubles() && !koed(slot(opp, true))) {
-        ret.push_back(slot(opp, true));
+    if (doubles() && !koed(slot(opp, 1))) {
+        ret.push_back(slot(opp, 1));
     }
     return ret;
 }
@@ -454,6 +454,9 @@ void BattleSituation::endTurn()
         callaeffects(player,player,"EndTurn");
     }
 
+    /* Before toxic orb & ... */
+    endTurnStatus();
+
     foreach (int player, players) {
         if (!koed(player))
             callieffects(player, player, "EndTurn");
@@ -463,7 +466,6 @@ void BattleSituation::endTurn()
         callpeffects(player, player, "EndTurn");
     }
 
-    endTurnStatus();
 
     requestSwitchIns();
 }
@@ -665,8 +667,8 @@ void BattleSituation::analyzeChoice(int slot)
         turnlong[slot]["Target"] = choice[slot].target();
         if (!koed(slot) && !turnlong[slot].value("HasMoved").toBool() && !turnlong[slot].value("CantGetToMove").toBool()) {
             if (turnlong[slot].contains("NoChoice"))
-                /* Do not use LastMoveSuccessfullyUsed or you'll have problems with metronome */
-                useAttack(slot, pokelong[slot]["LastMoveUsed"].toInt(), true);
+                /* Automatic move */
+                useAttack(slot, pokelong[slot]["LastSpecialMoveUsed"].toInt(), true);
             else {
                 if (options[slot].struggle()) {
                     MoveEffect::setup(394,slot,0,*this);
@@ -826,9 +828,19 @@ bool BattleSituation::validChoice(const BattleChoice &b)
         }
     } else {
         /* It's an attack, we check the target is valid */
-        if ( (b.numSwitch == -1  || MoveInfo::Target(move(b.numSlot, b.numSwitch)) == Move::ChosenTarget)  && (b.target() < 0 || b.target() >= numberOfSlots() ||
-                                                                                     b.target() == b.numSlot || koed(b.target()))) {
-            return false;
+        if (b.numSwitch == -1) {
+            if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.numSlot || koed(b.target()))
+                return false;
+        } else {
+            int target = MoveInfo::Target(move(b.numSlot, b.numSwitch));
+
+            if (target == Move::ChosenTarget) {
+                if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.numSlot || koed(b.target()))
+                    return false;
+            } else if (doubles() && target == Move::PartnerOrUser) {
+                if (b.target() < 0 || b.target() >= numberOfSlots() || this->player(b.target()) != this->player(b.numSlot) || koed(b.target()))
+                    return false;
+            }
         }
     }
 
@@ -1478,6 +1490,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         pokelong[player]["LastMoveUsedTurn"] = turn();
     }
 
+    //For metronome calling fly / sky attack / w/e
+    pokelong[player]["LastSpecialMoveUsed"] = attack;
+
     calleffects(player, player, "MoveSettings");
 
     if (tellPlayers && !turnlong[player].contains("TellPlayers")) {
@@ -1539,6 +1554,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
                 break;
             }
+        case Move::PartnerOrUser:
+            if (!doubles()) {
+                targetList.push_back(player);
+            } else {
+                int target = turnlong[player]["Target"].toInt();
+                if (!koed(target)) {
+                    targetList.push_back(target);
+                } else {
+                    targetList.push_back(player);
+                }
+            }
+            break;
     }
 
     if (!specialOccurence && !turnlong[player].contains("NoChoice")) {
@@ -2158,7 +2185,7 @@ int BattleSituation::getType(int player, int slot)
 	}
     }
 
-    if (types[slot-1] == Pokemon::Flying && turnlong[player].value("Roosted").toBool())
+    if (types[slot-1] == Pokemon::Flying && pokelong[player].value("Roosted").toBool())
     {
 	return Pokemon::Curse;
     }
@@ -2211,7 +2238,7 @@ void BattleSituation::changeStatus(int player, int status, bool tell)
 void BattleSituation::changeStatus(int team, int poke, int status)
 {
     if (isOut(team, poke)) {
-	changeStatus(team, status);
+        changeStatus(currentPoke(slot(team,0)) == poke ? slot(team,0) : slot(team,1), status);
     } else {
 	this->poke(team, poke).status() = status;
         notify(All, AbsStatusChange, team, qint8(poke), qint8(status));

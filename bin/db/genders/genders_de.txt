@@ -1,1 +1,3 @@
-NeutralMännlichWeiblich
+Neutral
+Männlich
+Weiblich
