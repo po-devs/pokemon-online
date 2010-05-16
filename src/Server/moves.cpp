@@ -1486,7 +1486,7 @@ struct MMAssist : public MM
         int player = b.player(s);
 	QSet<int> possible_moves;
 	for (int i = 0; i < 6; i++) {
-            if (!b.isOut(player, i) && b.poke(s, i).num() != 0) {
+            if (!b.isOut(player, i) && b.poke(player, i).num() != 0) {
                 PokeBattle &p = b.poke(player,i);
 		for(int j = 0; j < 4; j++) {
 		    int m = p.move(j);
