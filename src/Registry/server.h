@@ -2,7 +2,7 @@
 #define SERVER_H
 
 #include <QtCore>
-#include "../Utilities/functions.h"
+#include "macro.h"
 
 class QTcpSocket;
 class Analyzer;
@@ -37,7 +37,6 @@ signals:
     void nameChangedReq(int id, const QString &name);
     void disconnection(int id);
 private:
-    QNickValidator *m_validator;
     Analyzer *m_relay;
 };
 

@@ -1,14 +1,14 @@
 #ifndef REGISTRY_H
 #define REGISTRY_H
 
-#include <QtGui>
+#include <QtCore>
 #include <QtNetwork>
 
 class Player;
 class Server;
 class QScrollDownTextEdit;
 
-class Registry: public QWidget
+class Registry: public QObject
 {
     Q_OBJECT
 public:

@@ -1,4 +1,3 @@
-#include "../Utilities/otherwidgets.h"
 #include "analyze.h"
 #include "server.h"
 
@@ -10,9 +9,6 @@ Server::Server(int _id, QTcpSocket *s)
 
     m_relay = new Analyzer(s, id());
     m_relay->setParent(this);
-
-    m_validator = new QNickValidator(NULL);
-    m_validator->setParent(this);
 
     connect(m_relay, SIGNAL(loggedIn(QString,QString,quint16,quint16,quint16)), SLOT(login(QString,QString,quint16,quint16,quint16)));
     connect(m_relay, SIGNAL(nameChange(QString)), SLOT(nameChanged(QString)));
@@ -43,7 +39,7 @@ void Server::numChanged(quint16 num)
 
 void Server::nameChanged(const QString &name)
 {
-    if (m_validator->validate(name) != QValidator::Acceptable) {
+    if (name.length() > 20) {
         m_relay->sendInvalidName();
         return;
     }

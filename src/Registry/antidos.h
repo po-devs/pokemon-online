@@ -1,19 +1,9 @@
 #ifndef ANTIDOS_H
 #define ANTIDOS_H
 
-#include <QtGui>
+#include <QtCore>
 #include <ctime>
 
-class AntiDosWindow : public QWidget
-{
-    Q_OBJECT
-public:
-    AntiDosWindow();
-public slots:
-    void apply();
-private:
-    QSpinBox *max_people_per_ip, *max_commands_per_user, *max_kb_per_user, *max_login_per_ip, *ban_after_x_kicks;
-};
 
 /* A class to detect flood and ban DoSing IPs */
 class AntiDos : public QObject
