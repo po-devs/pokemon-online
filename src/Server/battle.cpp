@@ -57,22 +57,32 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
         team1.generateRandom();
         team2.generateRandom();
     } else {
-        if (clauses() & ChallengeInfo::ItemClause) {
-            QSet<int> alreadyItems[2];
+//        if (clauses() & ChallengeInfo::ItemClause) {
+//            QSet<int> alreadyItems[2];
+//            for (int i = 0; i < 6; i++) {
+//                int o1 = team1.poke(i).item();
+//                int o2 = team1.poke(i).item();
+//
+//                if (alreadyItems[0].contains(o1)) {
+//                    team1.poke(i).item() = 0;
+//                } else {
+//                    alreadyItems[0].insert(o1);
+//                }
+//                if (alreadyItems[1].contains(o2)) {
+//                    team2.poke(i).item() = 0;
+//                } else {
+//                    alreadyItems[1].insert(o2);
+//                }
+//            }
+//        }
+        if (clauses() & ChallengeInfo::LevelBalance) {
             for (int i = 0; i < 6; i++) {
-                int o1 = team1.poke(i).item();
-                int o2 = team1.poke(i).item();
-
-                if (alreadyItems[0].contains(o1)) {
-                    team1.poke(i).item() = 0;
-                } else {
-                    alreadyItems[0].insert(o1);
-                }
-                if (alreadyItems[1].contains(o2)) {
-                    team2.poke(i).item() = 0;
-                } else {
-                    alreadyItems[1].insert(o2);
-                }
+                team1.poke(i).level() = PokemonInfo::LevelBalance(p1.team().poke(i).num());
+                team1.poke(i).updateStats();
+            }
+            for (int i = 0; i < 6; i++) {
+                team2.poke(i).level() = PokemonInfo::LevelBalance(p2.team().poke(i).num());
+                team2.poke(i).updateStats();
             }
         }
         if (clauses() & ChallengeInfo::SpeciesClause) {
