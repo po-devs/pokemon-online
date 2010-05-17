@@ -2,15 +2,9 @@
 #include "antidos.h"
 #include "server.h"
 #include "player.h"
-#include "../Utilities/otherwidgets.cpp"
 
 Registry::Registry() {
     linecount = 0;
-
-    mainChat = new QScrollDownTextEdit();
-    mainChat->setParent(this);
-
-    mainChat->setFixedSize(500,500);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
@@ -40,7 +34,6 @@ Registry::Registry() {
 
 void Registry::printLine(const QString &line)
 {
-    mainChat->insertPlainText(line + "\n");
     qDebug() << line;
 }
 

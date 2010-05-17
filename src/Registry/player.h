@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 #include <QtCore>
-#include "../Utilities/functions.h"
+#include "macro.h"
 
 class QTcpSocket;
 class Analyzer;

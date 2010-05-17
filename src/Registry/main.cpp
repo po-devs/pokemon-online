@@ -1,4 +1,4 @@
-#include <QtGui/QApplication>
+#include <QtCore>
 #include "mainwindow.h"
 #include <cstdio>
 
@@ -23,19 +23,14 @@ void myMessageOutput(QtMsgType type, const char *msg)
 
 int main(int argc, char *argv[])
 {
-#ifdef WIN32
-    freopen("logs_reg.txt", "a", stderr);
-    qInstallMsgHandler(myMessageOutput);
-#endif
     fprintf(stderr, "\n-----------------------\nNew Server, starting logs\n-----------------------\n\n");
 
-    QApplication a(argc, argv);
+    QCoreApplication a(argc, argv);
 
     /* Names to use later for QSettings */
     QCoreApplication::setApplicationName("Registry for Pokeymon-Online");
     QCoreApplication::setOrganizationName("Dreambelievers");
 
     MainWindow w;
-    w.show();
     return a.exec();
 }

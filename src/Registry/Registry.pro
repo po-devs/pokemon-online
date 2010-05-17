@@ -2,6 +2,7 @@
 # Project created by QtCreator 2009-11-05T22:07:35
 # -------------------------------------------------
 QT += network
+QT -= gui
 TARGET = Registry
 DESTDIR = ../../bin
 TEMPLATE = app
@@ -12,9 +13,7 @@ SOURCES += main.cpp \
     player.cpp \
     analyze.cpp \
     network.cpp \
-    antidos.cpp \
-    ../Utilities/otherwidgets.cpp \
-    ../Teambuilder/ranking.cpp
+    antidos.cpp
 HEADERS += mainwindow.h \
     registry.h \
     server.h \
@@ -22,5 +21,5 @@ HEADERS += mainwindow.h \
     analyze.h \
     network.h \
     antidos.h \
-    ../Utilities/otherwidgets.h
-FORMS += ../rankings.ui
+    macro.h
+DEFINES = REGISTRY_SIDE

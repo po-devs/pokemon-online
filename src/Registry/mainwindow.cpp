@@ -1,13 +1,10 @@
 #include "mainwindow.h"
 #include "registry.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+MainWindow::MainWindow(QObject *parent)
+    : QObject(parent)
 {
-    setWindowTitle(tr("Registry for Pokemon Online"));
-
-    setCentralWidget(myserver = new Registry());
-    resize(500,500);
+    myserver = new Registry();
 }
 
 MainWindow::~MainWindow()
