@@ -201,7 +201,7 @@ struct ChallengeInfo
         EvasionClause = 4,
         OHKOClause = 8,
         DisallowSpectator = 16,
-        LevelBalance = 32,
+        ItemClause = 32,
         ChallengeCup = 64,
         NoTimeOut = 128,
         SpeciesClause = 256
