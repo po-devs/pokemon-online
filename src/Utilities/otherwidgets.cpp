@@ -242,8 +242,7 @@ QValidator::State QNickValidator::validate(const QString &input) const
     bool punct = false;
 
     for (int i = 0; i < input.length(); i++) {
-        if (input[i] == '%' || input[i] == '*' || input[i] == '<' || input[i] == ':' || input[i] == '(' || input[i] == ')'
-            || (input[i].category() >= QChar::Other_Control && input[i].category() <= QChar::Other_NotAssigned))
+        if (input[i] == '%' || input[i] == '*' || input[i] == '<' || input[i] == ':' || input[i] == '(' || input[i] == ')')
             return QValidator::Invalid;
         if (input[i].isPunct()) {
             if (punct == true) {
@@ -262,6 +261,10 @@ QValidator::State QNickValidator::validate(const QString &input) const
             //we allow another punct & space
             punct = false;
             spaced = false;
+        }
+
+        if (input[i].category() >= QChar::Other_Control && input[i].category() <= QChar::Other_NotAssigned) {
+            return QValidator::Intermediate;
         }
     }
 

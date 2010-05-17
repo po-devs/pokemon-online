@@ -2645,7 +2645,7 @@ struct MMIceBall : public MM
     static void ts(int s, int t, BS &b) {
 	if (poke(b,s).contains("LastBallTurn") && poke(b,s)["LastBallTurn"].toInt() + 1 == b.turn() && poke(b,s)["IceBallCount"].toInt() > 0) {
 	    turn(b,s)["NoChoice"] = true;
-	    MoveEffect::setup(poke(b,s)["LastMoveUsed"].toInt(),s,t,b);
+            MoveEffect::setup(poke(b,s)["LastSpecialMoveUsed"].toInt(),s,t,b);
 	}
     }
 };
