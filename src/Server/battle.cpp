@@ -1500,7 +1500,6 @@ bool BattleSituation::attacking()
 
 void BattleSituation::useAttack(int player, int move, bool specialOccurence, bool tellPlayers)
 {
-    qDebug() << MoveInfo::Name(move) << " was used ! ";
     attacker() = player;
 
     int attack;
@@ -1511,6 +1510,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	attack = this->move(player,move);
         pokelong[player]["MoveSlot"] = move;
     }
+
+    qDebug() << MoveInfo::Name(attack) << " was used ! ";
 
     turnlong[player]["HasMoved"] = true;
 
