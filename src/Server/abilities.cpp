@@ -114,7 +114,7 @@ struct AMArenaTrap : public AM {
 
 struct AMBadDreams : public AM {
     AMBadDreams() {
-        functions["EndTurn"] = &et;
+        functions["EndTurn69"] = &et;
     }
 
     static void et (int s, int, BS &b) {
@@ -804,7 +804,7 @@ struct AMShadowTag : public AM {
 
 struct AMShedSkin : public AM {
     AMShedSkin() {
-        functions["EndTurn"] = &et;
+        functions["EndTurn62"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -820,7 +820,7 @@ struct AMShedSkin : public AM {
 struct AMSlowStart : public AM {
     AMSlowStart() {
         functions["UponSetup"] = &us;
-        functions["EndTurn"] = &et;
+        functions["EndTurn20."] = &et;
         functions["StatModifier"] = &sm;
     }
 
@@ -895,7 +895,7 @@ AMSoundProof::SoundMoves AMSoundProof::SM;
 
 struct AMSpeedBoost : public AM {
     AMSpeedBoost() {
-        functions["EndTurn"] = &et;
+        functions["EndTurn62"] = &et;
     }
 
     static void et(int s, int, BS &b) {

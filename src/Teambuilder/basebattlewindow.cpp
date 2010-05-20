@@ -74,6 +74,7 @@ void BaseBattleWindow::init()
     columns->addLayout(mylayout = new QGridLayout());
 
     mylayout->addWidget(mydisplay, 0, 0, 1, 3);
+    mylayout->addWidget(saveLogs = new QCheckBox(tr("Save log")), 1, 0, 1, 2);
     mylayout->addWidget(myclose = new QPushButton(tr("&Close")),1,2);
 
     QVBoxLayout *chat = new QVBoxLayout();
@@ -181,8 +182,44 @@ void BaseBattleWindow::animateHPBar()
     mydisplay->updatePoke(spot);
 }
 
+void BaseBattleWindow::checkAndSaveLog()
+{
+    if (saveLogs->isChecked()) {
+//        QString directory = s.value("battle_logs_directory").toString();
+//        QString file = QFileDialog::getSaveFileName(0,QObject::tr("Saving the battle"),directory+info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name
+//                                     + "--" + QDate::currentDate().toString("dd MMMM yyyy") + "_" +QTime::currentTime().toString("hh'h'mm")
+//                                     , QObject::tr("html (*.html)\ntxt (*.txt)"));
+//        if (file.length() != 0) {
+//            QFileInfo finfo (file);
+//            directory = finfo.dir().path() + "/";
+//            if (directory == "/") {
+//                directory = "./";
+//            }
+//            QFile out (file);
+//            out.open(QIODevice::WriteOnly);
+//
+//            if (finfo.suffix() == "html") {
+//                out.write(mychat->toHtml().toUtf8());
+//            } else {
+//#ifdef WIN32
+//                out.write(mychat->toPlainText().replace("\n", "\r\n").toUtf8());
+//#else
+//                out.write(mychat->toPlainText().toUtf8());
+//#endif
+//            }
+//        }
+        QSettings s;
+        QString file = s.value("battle_logs_directory").toString() + info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name + "--" + QDate::currentDate().toString("dd MMMM yyyy")
+               + " at " +QTime::currentTime().toString("hh'h'mm") + ".html";
+        QFile out (file);
+        out.open(QIODevice::WriteOnly);
+        out.write(mychat->toHtml().toUtf8());
+    }
+}
+
 void BaseBattleWindow::closeEvent(QCloseEvent *)
 {
+    checkAndSaveLog();
     emit closedBW(battleId());
     close();
 }

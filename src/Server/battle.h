@@ -105,7 +105,7 @@ public:
     /* Commands for the battle situation */
     void beginTurn();
     void endTurn();
-    void endTurnStatus();
+    void endTurnStatus(int player);
     void endTurnWeather();
     void callForth(int weather, int turns);
     /* Attack... */

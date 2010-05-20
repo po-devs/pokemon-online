@@ -33,6 +33,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("show_player_events", false);
     setDefaultValue("show_timestamps", true);
     setDefaultValue("animate_hp_bar", true);
+    setDefaultValue("sort_players_by_tier", true);
 
     setDefaultValue("find_battle_force_rated", false);
     setDefaultValue("find_battle_same_tier", true);

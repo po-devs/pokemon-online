@@ -325,6 +325,10 @@ void Server::tiersChanged()
     sendAll("Tiers have been updated!");
 
     foreach(Player *p, myplayers) {
+        sendTierList(p->id());
+    }
+
+    foreach(Player *p, myplayers) {
         if (!TierMachine::obj()->isValid(p->team(),p->tier())) {
             p->tier() = TierMachine::obj()->findTier(p->team());
             p->rating() = TierMachine::obj()->rating(p->name(), p->tier());
@@ -480,7 +484,7 @@ void Server::loggedIn(int id, const QString &name)
         player(id)->changeState(Player::LoggedIn, true);
 
         player(id)->relay().notify(NetworkServ::VersionControl, VERSION);
-        player(id)->relay().notify(NetworkServ::TierSelection, TierMachine::obj()->tierList());
+        sendTierList(id);
 
         sendPlayersList(id);
         sendLogin(id);
@@ -491,6 +495,11 @@ void Server::loggedIn(int id, const QString &name)
     } else { /* if already logged in */
         recvTeam(id, name);
     }
+}
+
+void Server::sendTierList(int id)
+{
+    player(id)->relay().notify(NetworkServ::TierSelection, TierMachine::obj()->tierList());
 }
 
 void Server::sendBattleCommand(int publicId, int id, const QByteArray &comm)
@@ -696,6 +705,8 @@ void Server::findBattle(int id, const FindBattleData &f)
 
         if (p1->tier() == p2->tier() && p1->tier() == "Challenge Cup") {
             c.clauses = ChallengeInfo::ChallengeCup;
+        } else if (p1->tier() == p2->tier() && p1->tier() == "VGC") {
+            c.clauses = ChallengeInfo::SpeciesClause;
         } else {
             c.clauses = ChallengeInfo::SleepClause | ChallengeInfo::EvasionClause | ChallengeInfo::OHKOClause | ChallengeInfo::SpeciesClause;
         }

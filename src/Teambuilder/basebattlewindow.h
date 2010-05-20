@@ -216,6 +216,7 @@ protected:
     Phonon::AudioOutput *cryOutput;
     QBuffer cryBuffer;
     QByteArray cryData;
+    QCheckBox *saveLogs;
 
 
     QLinkedList<QByteArray> delayedCommands;
@@ -226,6 +227,7 @@ protected:
 
     BaseBattleWindow(){delayed=0;ignoreSpecs=false; music = NULL; musicOutput = NULL; cry = NULL; cryOutput = NULL;}
     void init();
+    void checkAndSaveLog();
 
     void closeEvent(QCloseEvent *);
     virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);

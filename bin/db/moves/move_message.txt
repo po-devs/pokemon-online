@@ -6,7 +6,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 
 
 %q attacked!
-%s hasn't enough energy left!|%s cut its own HP and maximized its attack!
+%s hasn't enough energy left!|%s cut its own HP and maximized its Attack!
 %s is storing energy!|%s unleashed energy!
 %s was hurt by %m!|%s is freed from %m!|%f became trapped by swirling magma!
 %s must recharge!
@@ -22,7 +22,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 
 
 %s begged %f!%f gave its %i to %s|%s stole %f's %i!
-%s crushed %f!
+
 %s cut its own HP and laid a Curse on %f!|%s is afflicted by the Curse!
 %s took %f down with it!|%s is trying to take its foe with it!
 %s protected itself!
@@ -57,16 +57,16 @@ Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne bec
 
 A hailstorm brewed!|It started to rain!|A sandstorm brewed!|The sunlight turned harsh!
 %s is in love with %f!|%f fell in love!|%s is immobilized by love!
-%f can't heal!|%s can't use %m because of Heal Block!|%s's heal block wore off!
+%f was prevented from healing!|%s can't use %m because of Heal Block!|%s's heal block wore off!
 %s regained health!
-%s is healed!
+%s regained health!|The healing wish came true!|It became cloaked in mystical moonlight!
 %s swapped its defense and attack!
 %s is ready to help %f!
 %s crashed on the ground!
 
 
 %s sealed the opponent's move(s)!|%s cannot use the sealed %m!
-%s floats on a magnetic field!|The magnet field %s was floating on canceled out!
+%s levitated on electromagnetism!|%s electromagnetism wore off!
 
 %s knocked off %f's %i!
 
@@ -76,7 +76,7 @@ Reflect raised %ts's team defense!|Light Screen raised %ts's team special defens
 %ts's team is protected from critical hits!|%ts's lucky chant wore off!
 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!
 %s cleared the field around %tf's team!
-Magnitude level %d!
+Magnitude %d!
 
 
 %s learned %m!
@@ -102,7 +102,7 @@ All Pokémon hearing the song will faint in three turns!|%s's perish count fell t
 
 %s's rage builds up!
 %s got free of %f's %m!|%s blew away Leech Seed!|%s blew away Spikes!|%s blew away Toxic Spikes!|%s blew away Stealth Rock!
-%s prepared a gust of wind!|%s became cloaked in a harsh light!|%s lowered its head!|%s absorbed light!
+%s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbed light!
 %s recycled %i!
 %s went to sleep and became healthy!
 %f held on to the ground using its Suction Cups!|%f is solidly rooted to the ground!|%f was dragged out!
@@ -116,7 +116,7 @@ All Pokémon hearing the song will faint in three turns!|%s's perish count fell t
 
 
 
-%f snatched %s's %m!|%s waits for a target to make a move!
+%s snatched %f's %m!|%s waits for a target to make a move!
 
 
 Spikes were scattered all around the feet of %tf's team!|%s is hurt by spikes!
@@ -149,7 +149,7 @@ Poison spikes were scattered all around the feet of %tf's team!|The poison spike
 
 All stat changes were elimnated!
 %s landed on the ground!
-%s planted its roots!| %s absorbed nutrients with its roots!
+%s planted its roots!|%s absorbed nutrients with its roots!
 
 
 

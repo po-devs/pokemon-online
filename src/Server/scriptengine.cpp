@@ -133,7 +133,7 @@ bool ScriptEngine::beforeChallengeIssued(int src, int dest, const ChallengeInfo 
         clauses.append('0' + ((c.clauses >> i) & 0x01));
     }
 
-    evaluate(myscript.property("beforeChallengeIssued").call(myscript, QScriptValueList() << src << dest << clauses));
+    evaluate(myscript.property("beforeChallengeIssued").call(myscript, QScriptValueList() << src << dest << clauses << c.rated << c.mode));
 
     return !endStopEvent();
 }
@@ -146,7 +146,7 @@ void ScriptEngine::afterChallengeIssued(int src, int dest, const ChallengeInfo &
         clauses.append('0' + ((c.clauses >> i) & 0x01));
     }
 
-    evaluate(myscript.property("afterChallengeIssued").call(myscript, QScriptValueList() << src << dest << clauses));
+    evaluate(myscript.property("afterChallengeIssued").call(myscript, QScriptValueList() << src << dest << clauses << c.rated << c.mode));
 }
 
 bool ScriptEngine::beforeBattleMatchup(int src, int dest, const ChallengeInfo &c)
@@ -697,6 +697,16 @@ bool ScriptEngine::hasTeamItem(int id, int itemnum)
         }
     }
     return false;
+}
+
+long ScriptEngine::time()
+{
+    return ::time(NULL);
+}
+
+QScriptValue ScriptEngine::getTierList()
+{
+    return  TierMachine::obj()->tierNames().join("\n");
 }
 
 QScriptValue ScriptEngine::teamPokeNature(int id, int index)

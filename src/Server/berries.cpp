@@ -64,17 +64,37 @@ struct BMStatusBerry : public BM
 struct BMLeppa : public BM
 {
     BMLeppa() {
-        functions["AfterPPLoss"] = &appl;
+        functions["BeforeEnding"] = &appl;
     }
 
     static void appl(int s, int, BS &b) {
+        int minmove = 0;
+        int minPP = 100;
+        bool init = false;
+        bool zeroPP = false;
         for (int i = 0; i < 4; i++) {
-            if (b.poke(s).move(i).PP() == 0 && b.move(s,i) != 0) {
-                b.eatBerry(s);
-                b.sendBerryMessage(2,s,0,0,b.move(s,i));
-                b.gainPP(s,i,10);
+            if (b.move(s, i) == 0) {
+                continue;
+            }
+            if (b.poke(s).move(i).PP() == 0) {
+                zeroPP = true;
+                init = true;
+                minmove = i;
+                minPP = 0;
                 break;
             }
+            if (b.poke(s).move(i).PP() < minPP && b.poke(s).move(i).PP() < b.poke(s).move(i).totalPP()) {
+                minmove = i;
+                init = true;
+                minPP = b.poke(s).move(i).PP();
+            }
+        }
+            
+        
+        if (init && (zeroPP || turn(b,s).value("BugBiter").toBool())) {
+            b.eatBerry(s);
+            b.sendBerryMessage(2,s,0,0,b.move(s,minmove));
+            b.gainPP(s,minmove,10);
         }
     }
 };

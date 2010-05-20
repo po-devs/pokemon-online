@@ -181,14 +181,18 @@ PokemonBox {
 	border: 1px solid #059eba;
 }
 
+QPushButton#PokemonTargetButton {
+	min-height: 40px;
+}
+
 
 QProgressBar#TimeOut {
 	font-family: LCD;
 	font-weight: bold;
 	font-size: 15px;
     border: 1px solid black;
-	width: 79;
-	height: 21;
+	width: 79px;
+	height: 21px;
 	background-color:black;
 	text-align: center;
 	color: white;

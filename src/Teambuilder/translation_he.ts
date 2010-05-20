@@ -138,12 +138,12 @@ Effect: %5</source>
     <message>
         <location filename="basebattlewindow.cpp" line="36"/>
         <source>Battle between %1 and %2 is underway!</source>
-        <translation>קרב בין %1 לבין %2 מתחיל!</translation>
+        <translation>!מתחיל %2 לבין %1 בין קרב</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="69"/>
         <source>Battle between %1 and %2</source>
-        <translation>קרב בין %1 לבין %2</translation>
+        <translation>%2 לבין %1 בין קרב</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="75"/>
@@ -163,27 +163,27 @@ Effect: %5</source>
     <message>
         <location filename="basebattlewindow.cpp" line="142"/>
         <source>%1&apos;s %2</source>
-        <translation>ה%1 של %2</translation>
+        <translation>%2 של ה%1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="280"/>
         <source>%1 sent out %2! (%3)</source>
-        <translation>%1 שלח את %2! (%3)</translation>
+        <translation>(%3) !%2 את שלח %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="282"/>
         <source>%1 sent out %2!</source>
-        <translation>%1 שלח את %2!</translation>
+        <translation>!%2 את שלח %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="288"/>
         <source>%1 called %2 back!</source>
-        <translation>%1 קרא ל%2 לחזור!</translation>
+        <translation>!לחזור ל%2 קרא %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="296"/>
         <source>%1 used %2!</source>
-        <translation>%1 השתמש ב%2!</translation>
+        <translation>!%2ב השתמש %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="304"/>
@@ -193,12 +193,12 @@ Effect: %5</source>
     <message>
         <location filename="basebattlewindow.cpp" line="323"/>
         <source>%1 fainted!</source>
-        <translation>%1 התעלף!</translation>
+        <translation>!התעלף %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="330"/>
         <source>Hit %1 times!</source>
-        <translation>פגע %1 פעמים!</translation>
+        <translation>!פעמים %1 פגע</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="339"/>
@@ -223,17 +223,17 @@ Effect: %5</source>
     <message>
         <location filename="basebattlewindow.cpp" line="357"/>
         <source>The attack of %1 missed!</source>
-        <translation>ההתקפה של %1 פספסה!</translation>
+        <translation>!פספסה %1 של ההתקפה</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="360"/>
         <source>%1 avoided the attack!</source>
-        <translation>%1 התחמק מהמהלך!</translation>
+        <translation>!מהמהלך התחמק %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="366"/>
         <source>%1&apos;s %2 %3%4!</source>
-        <translation>%1ה %2 %3%4!</translation>
+        <translation>!%4 %3 %2 של ה%1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="366"/>
@@ -253,92 +253,92 @@ Effect: %5</source>
     <message>
         <location filename="basebattlewindow.cpp" line="371"/>
         <source>%1 is paralyzed! It may be unable to move!</source>
-        <translation>%1 משותק! ייתכן כי הוא לא יוכל לזוז!</translation>
+        <translation>!לזוז יוכל לא הוא כי ייתכן משותק! %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="372"/>
         <source>%1 was burned!</source>
-        <translation>%1 נשרף!</translation>
+        <translation>!נשרף %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="373"/>
         <source>%1 was frozen solid!</source>
-        <translation>%1 קפוא!</translation>
+        <translation>!קפוא %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="374"/>
         <source>%1 fell asleep!</source>
-        <translation>%1 נרדם!</translation>
+        <translation>!נרדם %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="375"/>
         <source>%1 was poisoned!</source>
-        <translation>%1 הורעל!</translation>
+        <translation>!הורעל %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="376"/>
         <source>%1 was badly poisoned!</source>
-        <translation>%1 הורעל בצורה חמורה!</translation>
+        <translation>!חמורה בצורה הורעל %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="384"/>
         <source>%1 became confused!</source>
-        <translation>%1 התבלבל!</translation>
+        <translation>!התבלבל %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="405"/>
         <source>%1 is already %2!</source>
-        <translation>%1 כבר %2!</translation>
+        <translation>!%2 כבר %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="415"/>
         <source>%1 is confused!</source>
-        <translation>%1 מבולבל!</translation>
+        <translation>!מבולבל %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="418"/>
         <source>It hurt itself in its confusion!</source>
-        <translation>פגע בעצמו בשל הבלבול!</translation>
+        <translation>!הבלבול בגלל בעצמו פגע</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="421"/>
         <source>%1 snapped out its confusion!</source>
-        <translation>%1 הפסיק להיות מבולבל!</translation>
+        <translation>!מבולבל להיות הפסיק %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="424"/>
         <source>%1 is paralyzed! It can&apos;t move!</source>
-        <translation>%1 מבולבל! הוא לא יכול לזוז!</translation>
+        <translation>!לזוז יכול לא הוא משותק! %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="427"/>
         <source>%1 is fast asleep!</source>
-        <translation>%1 ישן עמוק!</translation>
+        <translation>!עמוק ישן %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="430"/>
         <source>%1 woke up!</source>
-        <translation>%1 התעורר!</translation>
+        <translation>!התעורר %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="433"/>
         <source>%1 is hurt by its burn!</source>
-        <translation>%1 קבל כוויה מהשריפה!</translation>
+        <translation>!מהשריפה כוויה קבל %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="436"/>
         <source>%1 is hurt by poison!</source>
-        <translation>%1 ניזוק מההרעלה!</translation>
+        <translation>!מההרעלה ניזוק %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="439"/>
         <source>%1 is frozen solid!</source>
-        <translation>%1 קפוא במקום!</translation>
+        <translation>!במקום קפוא %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="442"/>
         <source>%1 thawed out!</source>
-        <translation>%1 הפשיר!</translation>
+        <translation>!הפשיר %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="448"/>
@@ -348,17 +348,17 @@ Effect: %5</source>
     <message>
         <location filename="basebattlewindow.cpp" line="502"/>
         <source>But there was no target...</source>
-        <translation>%אבל אין מטרה...</translation>
+        <translation>אבל אין מטרה...</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="522"/>
         <source>%1 flinched!</source>
-        <translation>%1 נרתע!</translation>
+        <translation>!נרתע %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="525"/>
         <source>%1 is hit with recoil!</source>
-        <translation>%1 קבל מכה מההדף!</translation>
+        <translation>!מההדף מכה קבל %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="536"/>
@@ -378,52 +378,52 @@ Effect: %5</source>
     <message>
         <location filename="basebattlewindow.cpp" line="539"/>
         <source>The rain stopped!</source>
-        <translation>הגשם נפסק!</translation>
+        <translation type="unfinished">הגשם נפסק!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="543"/>
         <source>%1 is buffeted by the hail!</source>
-        <translation>ל%1 קר מהברד!</translation>
+        <translation>!מהברד קר ל%1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="544"/>
         <source>%1 is buffeted by the sandstorm!</source>
-        <translation>ל%1 קשה בסופת החול!</translation>
+        <translation>!החול מסופת נפגע %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="548"/>
         <source>Hail continues to fall!</source>
-        <translation>הברד ממשיך לרדת!</translation>
+        <translation>!הברד ממשיך לרדת</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="549"/>
         <source>The sandstorm rages!</source>
-        <translation>ספות החול ממשיכה!</translation>
+        <translation>!סופת החול ממשיכה</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="550"/>
         <source>The sunlight is strong!</source>
-        <translation>השמש חזקה!</translation>
+        <translation>!השמש חזקה</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="551"/>
         <source>Rain continues to fall!</source>
-        <translation>הגשם ממשיך לרדת!</translation>
+        <translation>!הגשם ממשיך לרדת</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="560"/>
         <source>%1 lost %2% of its health!</source>
-        <translation>%1 אבד %2 מבריאותו!</translation>
+        <translation>!חיים נקודות %2 ירדו ל%1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="600"/>
         <source>Tie between %1 and %2!</source>
-        <translation>תיקו בין %1 לבין %2!</translation>
+        <translation>!%2 לבין %1 בין תיקו</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="602"/>
         <source>%1 won the battle!</source>
-        <translation>%1 ניצח בקרב!</translation>
+        <translation>!בקרב ניצח %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="617"/>
@@ -454,12 +454,12 @@ Effect: %5</source>
     <message>
         <location filename="basebattlewindow.cpp" line="694"/>
         <source>%1 is watching the battle.</source>
-        <translation>%1 צופה בקרב.</translation>
+        <translation>.בקרב צופה %1</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="694"/>
         <source>%1 stopped watching the battle.</source>
-        <translation>%1 הפסיק לצפות בקרב.</translation>
+        <translation>.בקרב לצפות הפסיק %1</translation>
     </message>
 </context>
 <context>
@@ -855,22 +855,22 @@ Effect: %5</source>
     <message>
         <location filename="client.cpp" line="459"/>
         <source>%1 was kicked by the server!</source>
-        <translation>%1 הועף מהסרבר!</translation>
+        <translation>!מהסרבר הועף %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="461"/>
         <source>%1 kicked %2!</source>
-        <translation>%1 העיף את %2!</translation>
+        <translation>!%2 את העיף %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="470"/>
         <source>%1 was banned by the server!</source>
-        <translation>%1 קבל באן מהסרבר!</translation>
+        <translation>!מהסרבר באן קבל %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="472"/>
         <source>%1 banned %2!</source>
-        <translation>%1 נתנן ל%2באן!</translation>
+        <translation>!ל%2 באן נתן %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="481"/>
@@ -897,7 +897,7 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="client.cpp" line="558"/>
         <source>Your client version (%2) doesn&apos;t match with the server&apos;s (%1).</source>
-        <translation>גרסת התוכנה שלך (%2) לא תואמת את הגרסה של הסרבר (%1).</translation>
+        <translation>.(%2) הסרבר של את תואמת לא (%1) שלך התוכנית גרסת</translation>
     </message>
     <message>
         <location filename="client.cpp" line="561"/>
@@ -914,28 +914,28 @@ It is recommended to update.</source>
     <message>
         <location filename="client.cpp" line="684"/>
         <source>Battle between %1 and %2 started.</source>
-        <translation>קרב בין %1 לבין %2 החל.</translation>
+        <translation>.החל %2 לבין %1 בין קרב</translation>
     </message>
     <message>
         <location filename="client.cpp" line="689"/>
         <location filename="client.cpp" line="690"/>
         <source>Battling against %1</source>
-        <translation>נלחם נגד %1</translation>
+        <translation>%1 נגד נלחם</translation>
     </message>
     <message>
         <location filename="client.cpp" line="735"/>
         <source>%1 forfeited against %2.</source>
-        <translation>%1 פרש נגד %2.</translation>
+        <translation>%2 נגד פרש %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="737"/>
         <source>%1 and %2 tied.</source>
-        <translation>%1 ו%2 סיימו בתיקו.</translation>
+        <translation>.בתיקו סיימו ו%2 %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="739"/>
         <source>%1 won against %2.</source>
-        <translation>%1 ניצח את %2.</translation>
+        <translation>.%2 נגד ניצח %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="780"/>
@@ -945,32 +945,32 @@ It is recommended to update.</source>
     <message>
         <location filename="client.cpp" line="797"/>
         <source>%1 refused your challenge.</source>
-        <translation>%1 סרב לאתגר שלך.</translation>
+        <translation>.שלך לאתגר סרב %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="802"/>
         <source>%1 is busy.</source>
-        <translation>%1 עסוק.</translation>
+        <translation>.עסוק %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="807"/>
         <source>%1 cancelled their challenge.</source>
-        <translation>%1 בטל את האתגר.</translation>
+        <translation>.האתר את בטל %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="812"/>
         <source>%1 has an invalid team.</source>
-        <translation>ל%1 אין קבוצה חוקית.</translation>
+        <translation>.חוקית קבוצה אין ל%1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="825"/>
         <source>%1 is idling.</source>
-        <translation>%1 חוסם.</translation>
+        <translation>.חוסם %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="827"/>
         <source>%1 is active and ready for battles.</source>
-        <translation>%1 פעיל ומוכן להלחם.</translation>
+        <translation>להלחם. ומוכן פעיל %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="882"/>
@@ -980,42 +980,42 @@ It is recommended to update.</source>
     <message>
         <location filename="client.cpp" line="887"/>
         <source>Connected to Server!</source>
-        <translation>התחברת לסרבר!</translation>
+        <translation>!התחברת לסרבר</translation>
     </message>
     <message>
         <location filename="client.cpp" line="897"/>
         <source>Disconnected from Server!</source>
-        <translation>התנתקת מהסרבר!</translation>
+        <translation>!מהסרבר התנתקת</translation>
     </message>
     <message>
         <location filename="client.cpp" line="919"/>
         <source>%1 logged in.</source>
-        <translation>%1 התחבר.</translation>
+        <translation>.התחבר %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="928"/>
         <source>%1 logged out.</source>
-        <translation>%1 התנתק.</translation>
+        <translation>.התנתק %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1017"/>
         <source>%1 changed teams and is now known as %2.</source>
-        <translation>%1 שנה את קבוצת וכעת ידוע בשם %2.</translation>
+        <translation>.%2 בתור ידוע וכעת קבוצתו את שנה %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1019"/>
         <source>%1 changed teams.</source>
-        <translation>%1 שנה את קבוצתו.</translation>
+        <translation>.קבוצתו את שינה %1</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1166"/>
         <source>You ignored %1.</source>
-        <translation>התעלמת מ%1.</translation>
+        <translation>.מ%1 מתעלם אתה</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1172"/>
         <source>You stopped ignoring %1.</source>
-        <translation>הפסקת להתעלם מ%1.</translation>
+        <translation>.מ%1 להתעלם הפסקת</translation>
     </message>
 </context>
 <context>

@@ -11,7 +11,7 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("Evasion Clause"),
     QObject::tr("OHKO Clause"),
     QObject::tr("Disallow Spects"),
-    QObject::tr("Level Balance"),
+    QObject::tr("Item Clause"),
     QObject::tr("Challenge Cup"),
     QObject::tr("No Timeout"),
     QObject::tr("Species Clause")
@@ -37,7 +37,7 @@ QString ChallengeInfo::clauseDescription[] =
     QObject::tr("You can't use evasion moves like Double Team."),
     QObject::tr("You can't use One Hit KO moves like Fissure."),
     QObject::tr("Nobody can watch your battle."),
-    QObject::tr("Pokémons levels are changed according to their strength."),
+    QObject::tr("No more than one of the same items is allowed per team."),
     QObject::tr("Random teams are given to trainers."),
     QObject::tr("No time limit for playing."),
     QObject::tr("One player cannot have more than one of the same pokemon per team.")
