@@ -42,7 +42,7 @@ void ItemEffect::setup(int num, int source, BattleSituation &b)
 struct IMBlackSludge : public IM
 {
     IMBlackSludge() {
-	functions["EndTurn"] = &et;
+        functions["EndTurn63"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -64,7 +64,7 @@ struct IMBlackSludge : public IM
 struct IMLeftOvers : public IM
 {
     IMLeftOvers() {
-	functions["EndTurn"] = &et;
+        functions["EndTurn63"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -224,7 +224,7 @@ struct IMZoomLens : public IM
 struct IMStatusOrb : public IM
 {
     IMStatusOrb() {
-	functions["EndTurn"] = &et;
+        functions["EndTurn66"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -337,7 +337,7 @@ struct IMPokeTypeBoost : public IM
 struct IMStickyBarb : public IM
 {
     IMStickyBarb() {
-	functions["EndTurn"] = &et;
+        functions["EndTurn618"] = &et;
 	functions["UponPhysicalAssault"] = &upa;
     }
 

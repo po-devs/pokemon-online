@@ -145,7 +145,7 @@ bool Tier::isBanned(const PokeBattle &p) const {
 bool Tier::isValid(const TeamBattle &t)  const
 {
     for (int i = 0; i< 6; i++)
-        if (isBanned(t.poke(i)))
+        if (t.poke(i).num() != 0 && isBanned(t.poke(i)))
             return false;
 
     return true;
@@ -330,6 +330,9 @@ const Tier &TierMachine::tier(const QString &name) const
 
 bool TierMachine::isValid(const TeamBattle &t, QString tier) const
 {
+    if (!exists(tier))
+        return false;
+
     return this->tier(tier).isValid(t);
 }
 
@@ -343,7 +346,7 @@ TierMachine *TierMachine::obj()
     return inst;
 }
 
-const QList<QString> & TierMachine::tierNames() const
+const QStringList & TierMachine::tierNames() const
 {
     return m_tierNames;
 }

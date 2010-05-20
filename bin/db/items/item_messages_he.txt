@@ -1,0 +1,31 @@
+(No Item)
+
+
+
+%s ניצל בזכות הFocus Band!
+%s ניצל בזכות הFocus Sash!
+
+%s נטען לחלוטין בזכות הPower Herb!
+
+
+
+%s השתמש בPower Herb שלו כדי לתקוף מיד!
+%s החזיר לעצמו מעט חיים בזכות הLeftovers!
+
+
+
+%s  החזיר לעצמו מעט חיים בזכות ה Black Sludge!| %s ניזוק מה Black Sludge!
+
+%s  החזיר לעצמו מעט חיים בזכות הBerry Juice!
+הFlame Orb של %s הופעל! | הToxic Orb של %s הופעל!
+
+%s ניזוק בגלל הLife Orb!
+
+
+הShell Bell של %s החזיר לו מעט חיים!
+
+
+
+
+%s is hurt by its Sticky Barb!|%s is hurt by %f's sticky Barb!|The Sticky Barb is now attached to %s!
+

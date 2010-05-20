@@ -57,6 +57,9 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     mydisplay = new BattleDisplay(info());
     BaseBattleWindow::init();
 
+    QSettings s;
+    saveLogs->setChecked(s.value("save_battle_logs").toBool());
+
     setWindowTitle(tr("Battling against %1").arg(name(info().opponent)));
 
     myclose->setText(tr("&Forfeit"));
@@ -119,42 +122,8 @@ QString BattleWindow::nick(int spot) const
 
 void BattleWindow::closeEvent(QCloseEvent *)
 {
-
+    checkAndSaveLog();
     emit forfeit(battleId());
-
-    QSettings s;
-
-    if (s.value("save_battle_logs").toBool()) {
-//        QString directory = s.value("battle_logs_directory").toString();
-//        QString file = QFileDialog::getSaveFileName(0,QObject::tr("Saving the battle"),directory+info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name
-//                                     + "--" + QDate::currentDate().toString("dd MMMM yyyy") + "_" +QTime::currentTime().toString("hh'h'mm")
-//                                     , QObject::tr("html (*.html)\ntxt (*.txt)"));
-//        if (file.length() != 0) {
-//            QFileInfo finfo (file);
-//            directory = finfo.dir().path() + "/";
-//            if (directory == "/") {
-//                directory = "./";
-//            }
-//            QFile out (file);
-//            out.open(QIODevice::WriteOnly);
-//
-//            if (finfo.suffix() == "html") {
-//                out.write(mychat->toHtml().toUtf8());
-//            } else {
-//#ifdef WIN32
-//                out.write(mychat->toPlainText().replace("\n", "\r\n").toUtf8());
-//#else
-//                out.write(mychat->toPlainText().toUtf8());
-//#endif
-//            }
-//        }
-        QSettings s;
-        QString file = s.value("battle_logs_directory").toString() + info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name + "--" + QDate::currentDate().toString("dd MMMM yyyy")
-               + " at " +QTime::currentTime().toString("hh'h'mm") + ".html";
-        QFile out (file);
-        out.open(QIODevice::WriteOnly);
-        out.write(mychat->toHtml().toUtf8());
-    }
     close();
 }
 
@@ -819,6 +788,8 @@ PokeZone::PokeZone(const TeamBattle &team)
 PokeButton::PokeButton(const PokeBattle &p)
     : p(&p)
 {
+    setIconSize(QSize(32,32));
+    setMinimumHeight(50);
     setIcon(PokemonInfo::Icon(p.num()));
     update();
 
@@ -997,6 +968,8 @@ TargetSelection::TargetSelection(const BattleInfo &info)
 
         gl->addWidget(pokes[i] = new QPushButton(), !opp, info.number(i));
         pokes[i]->setCheckable(true);
+        pokes[i]->setObjectName("PokemonTargetButton");
+        pokes[i]->setIconSize(QSize(32,32));
 
         bg->addButton(pokes[i], i);
     }
@@ -1010,6 +983,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
 
     for (int i = 0; i < 4; i++) {
         pokes[i]->setText(info.currentShallow(slot).status() == Pokemon::Koed ? "" : info.currentShallow(i).nick());
+        pokes[i]->setIcon(PokemonInfo::Icon(info.currentShallow(i).num()));
         pokes[i]->setDisabled(true);
         pokes[i]->setChecked(false);
         pokes[i]->setStyleSheet("");

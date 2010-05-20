@@ -53,7 +53,7 @@
 
 
 %s's Shed Skin heals its status!
-%s starts at half power!|%s's Slow Start ended! It is at full power!
+%s can't get it going because of it's Slow Start!|%s finally got its act together!
 %s is hurt by the sun!
 %s's Sound Proof blocks the attack!
 %s's Speed Boost increases its speed!

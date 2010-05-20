@@ -93,10 +93,10 @@ public:
     QString toString()const;
     void fromString(const QString &s);
 
-    const QList<QString>& tierNames() const;
+    const QStringList& tierNames() const;
     Tier& tier(const QString &name);
     const Tier& tier(const QString &name) const;
-    bool exists(const QString &name) {
+    bool exists(const QString &name) const {
         return m_tierNames.contains(name);
     }
     bool existsPlayer(const QString &name, const QString &player)
@@ -119,7 +119,7 @@ public:
     QString findTier(const TeamBattle &t) const;
 private:
     QList<Tier> m_tiers;
-    QList<QString> m_tierNames;
+    QStringList m_tierNames;
     static TierMachine *inst;
 };
 

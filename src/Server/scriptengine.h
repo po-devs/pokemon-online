@@ -107,6 +107,8 @@ public:
 
     Q_INVOKABLE QScriptValue getFileContent(const QString &path);
     Q_INVOKABLE int rand(int min, int max);
+    Q_INVOKABLE long time();
+    Q_INVOKABLE QScriptValue getTierList();
 
     /* Set and unset player arrays:
        Those are arrays that, once a player logs off, have their content cleared

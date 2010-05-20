@@ -57,34 +57,34 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
         team1.generateRandom();
         team2.generateRandom();
     } else {
-//        if (clauses() & ChallengeInfo::ItemClause) {
-//            QSet<int> alreadyItems[2];
-//            for (int i = 0; i < 6; i++) {
-//                int o1 = team1.poke(i).item();
-//                int o2 = team1.poke(i).item();
-//
-//                if (alreadyItems[0].contains(o1)) {
-//                    team1.poke(i).item() = 0;
-//                } else {
-//                    alreadyItems[0].insert(o1);
-//                }
-//                if (alreadyItems[1].contains(o2)) {
-//                    team2.poke(i).item() = 0;
-//                } else {
-//                    alreadyItems[1].insert(o2);
-//                }
-//            }
-//        }
-        if (clauses() & ChallengeInfo::LevelBalance) {
+        if (clauses() & ChallengeInfo::ItemClause) {
+            QSet<int> alreadyItems[2];
             for (int i = 0; i < 6; i++) {
-                team1.poke(i).level() = PokemonInfo::LevelBalance(p1.team().poke(i).num());
-                team1.poke(i).updateStats();
-            }
-            for (int i = 0; i < 6; i++) {
-                team2.poke(i).level() = PokemonInfo::LevelBalance(p2.team().poke(i).num());
-                team2.poke(i).updateStats();
+                int o1 = team1.poke(i).item();
+                int o2 = team1.poke(i).item();
+
+                if (alreadyItems[0].contains(o1)) {
+                    team1.poke(i).item() = 0;
+                } else {
+                    alreadyItems[0].insert(o1);
+                }
+                if (alreadyItems[1].contains(o2)) {
+                    team2.poke(i).item() = 0;
+                } else {
+                    alreadyItems[1].insert(o2);
+                }
             }
         }
+//        if (clauses() & ChallengeInfo::LevelBalance) {
+//            for (int i = 0; i < 6; i++) {
+//                team1.poke(i).level() = PokemonInfo::LevelBalance(p1.team().poke(i).num());
+//                team1.poke(i).updateStats();
+//            }
+//            for (int i = 0; i < 6; i++) {
+//                team2.poke(i).level() = PokemonInfo::LevelBalance(p2.team().poke(i).num());
+//                team2.poke(i).updateStats();
+//            }
+//        }
         if (clauses() & ChallengeInfo::SpeciesClause) {
             QSet<int> alreadyPokes[2];
             for (int i = 0; i < 6; i++) {
@@ -457,35 +457,85 @@ void BattleSituation::endTurn()
 
     std::vector<int> players = sortedBySpeed();
 
-    foreach (int player, players) {
-        callseffects(player,player, "EndTurn");
-    }
-
     callzeffects(Player1, Player1, "EndTurn");
     callzeffects(Player2, Player2, "EndTurn");
 
+    foreach (int player, players) {
+        callseffects(player,player, "EndTurn2");
+    }
+
     endTurnWeather();
 
-    callbeffects(Player1,Player1,"EndTurn");
+    callbeffects(Player1,Player1,"EndTurn5");
 
     foreach (int player, players) {
-        callaeffects(player,player,"EndTurn");
-    }
+        /* Ingrain, aquaring */
+        callpeffects(player, player, "EndTurn60");
 
-    /* Before toxic orb & ... */
-    endTurnStatus();
+        /* Speed boost, shed skin */
+        callaeffects(player,player, "EndTurn62");
 
-    foreach (int player, players) {
-        if (!koed(player))
-            callieffects(player, player, "EndTurn");
-    }
+//        if (koed(player)) <-- cannot be koed
+//            continue;
 
-    foreach(int player, players) {
+        /* Lefties, black sludge */
+        callieffects(player, player, "EndTurn63");
+
+        /* Leech Seed, Nightmare. Warning: Leech Seed and rapid spin are linked */
+        callpeffects(player, player, "EndTurn64");
+
+        endTurnStatus(player);
+
+        if (koed(player)) {
+            continue;
+        }
+
+        /* Status orbs */
+        callieffects(player, player, "EndTurn66");
+
+        /* Trapping moves damage and Curse. Warning: Rapid spin and trapping moves are linked */
+        callpeffects(player, player, "EndTurn68");
+
+        if (koed(player))
+            continue;
+
+        /* Bad dreams -- on others */
+        callaeffects(player,player, "EndTurn69");
+
+        /* Outrage, Uproar */
+        callpeffects(player, player, "EndTurn610");
+
+        /* Disable, taunt, encore, magnet rise, heal block, embargo */
+        callpeffects(player, player, "EndTurn611");
+
+        /* Roost */
         callpeffects(player, player, "EndTurn");
+
+        /* Yawn */
+        callpeffects(player, player, "EndTurn617");
+
+        /* Sticky barb */
+        callieffects(player, player, "EndTurn618");
     }
+
+
+    foreach (int player, players) {
+        callseffects(player,player, "EndTurn7");
+    }
+
+    foreach (int player, players) {
+        callpeffects(player,player, "EndTurn8");
+    }
+
+    callbeffects(Player1,Player1,"EndTurn9");
 
 
     requestSwitchIns();
+
+    /* Slow Start */
+    foreach (int player, sortedBySpeed()) {
+        callaeffects(player,player, "EndTurn20.");
+    }
 }
 
 void BattleSituation::notifyFail(int p)
@@ -493,40 +543,39 @@ void BattleSituation::notifyFail(int p)
     notify(All, Failed, p);
 }
 
-void BattleSituation::endTurnStatus()
+void BattleSituation::endTurnStatus(int player)
 {
-    std::vector<int> players = sortedBySpeed();
-    foreach (int player, players)
+    if (koed(player))
+        return;
+
+    switch(poke(player).status())
     {
-        switch(poke(player).status())
-        {
-            case Pokemon::Burnt:
-                notify(All, StatusMessage, player, qint8(HurtBurn));
-                //HeatProof: burn does only 1/16
-                inflictDamage(player, poke(player).totalLifePoints()/(8*(1+hasWorkingAbility(player,Ability::Heatproof))), player);
-                break;
-            case Pokemon::DeeplyPoisoned:
-                //Poison Heal
-                if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-                    sendAbMessage(45,0,player,Pokemon::Poison);
-                    healLife(player, poke(player).totalLifePoints()/8);
-                } else {
-                    notify(All, StatusMessage, player, qint8(HurtPoison));
-                    inflictDamage(player, poke(player).totalLifePoints()*(pokelong[player]["ToxicCount"].toInt()+1)/16, player);
-                }
-                pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()+1, 14);
-                break;
-            case Pokemon::Poisoned:
-                //PoisonHeal
-                if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-                    sendAbMessage(45,0,player,Pokemon::Poison);
-                    healLife(player, poke(player).totalLifePoints()/8);
-                } else {
-                    notify(All, StatusMessage, player, qint8(HurtPoison));
-                    inflictDamage(player, poke(player).totalLifePoints()/8, player);
-                }
-                break;
-        }
+        case Pokemon::Burnt:
+            notify(All, StatusMessage, player, qint8(HurtBurn));
+            //HeatProof: burn does only 1/16
+            inflictDamage(player, poke(player).totalLifePoints()/(8*(1+hasWorkingAbility(player,Ability::Heatproof))), player);
+            break;
+        case Pokemon::DeeplyPoisoned:
+            //Poison Heal
+            if (hasWorkingAbility(player, Ability::PoisonHeal)) {
+                sendAbMessage(45,0,player,Pokemon::Poison);
+                healLife(player, poke(player).totalLifePoints()/8);
+            } else {
+                notify(All, StatusMessage, player, qint8(HurtPoison));
+                inflictDamage(player, poke(player).totalLifePoints()*(pokelong[player]["ToxicCount"].toInt()+1)/16, player);
+            }
+            pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()+1, 14);
+            break;
+        case Pokemon::Poisoned:
+            //PoisonHeal
+            if (hasWorkingAbility(player, Ability::PoisonHeal)) {
+                sendAbMessage(45,0,player,Pokemon::Poison);
+                healLife(player, poke(player).totalLifePoints()/8);
+            } else {
+                notify(All, StatusMessage, player, qint8(HurtPoison));
+                inflictDamage(player, poke(player).totalLifePoints()/8, player);
+            }
+            break;
     }
 }
 
@@ -1762,6 +1811,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     calleffects(player, player, "BeforeEnding");
     trueend:
     pokelong[player]["HasMovedOnce"] = true;
+    /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
+    calleffects(player, player, "AfterAttackFinished");
 
     attacker() = -1;
     attacked() = -1;
@@ -2172,12 +2223,17 @@ void BattleSituation::endTurnWeather()
 }
 
 bool BattleSituation::isWeatherWorking(int weather) {
-    //Air lock & Cloud nine
-    if (hasWorkingAbility(Player1, Ability::AirLock) || hasWorkingAbility(Player1, Ability::CloudNine)
-        || hasWorkingAbility(Player2, Ability::AirLock) || hasWorkingAbility(Player2, Ability::CloudNine)) {
+    if (this->weather() != weather)
         return false;
+
+    //Air lock & Cloud nine
+
+    for (int i = 0; i < numberOfSlots(); i++)  {
+        if (hasWorkingAbility(i, Ability::AirLock) || hasWorkingAbility(i, Ability::CloudNine)) {
+            return false;
+        }
     }
-    return this->weather() == weather;
+    return true;
 }
 
 bool BattleSituation::isSeductionPossible(int seductor, int naiveone) {
@@ -2568,7 +2624,7 @@ void BattleSituation::disposeItem(int  player) {
 }
 
 void BattleSituation::eatBerry(int player, bool show) {
-    if (show)
+    if (show && !turnlong[player].value("BugBiter").toBool())
         sendItemMessage(8000,player,0, 0, poke(player).item());
     disposeItem(player);
 }
@@ -2878,8 +2934,6 @@ void BattleSituation::losePP(int player, int move, int loss)
 
     PP = std::max(PP-loss, 0);
     changePP(player, move, PP);
-
-    callieffects(player, player, "AfterPPLoss");
 }
 
 void BattleSituation::gainPP(int player, int move, int gain)

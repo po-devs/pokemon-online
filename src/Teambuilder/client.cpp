@@ -128,7 +128,7 @@ void Client::showContextMenu(const QPoint &requested)
 {
     QIdListWidgetItem *item = dynamic_cast<QIdListWidgetItem*>(myplayers->itemAt(requested));
 
-    if (item)
+    if (item && item->id() != 0)
     {
 	QMenu *menu = new QMenu(this);
 
@@ -425,6 +425,12 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     show_ts->setChecked(s.value("show_timestamps").toBool());
     showTS = show_ts->isChecked();
 
+    QAction *sortByTier = menuActions->addAction(tr("Sort players by &tiers"));
+    sortByTier->setCheckable(true);
+    connect(sortByTier, SIGNAL(triggered(bool)), SLOT(sortPlayersCountingTiers(bool)));
+    sortByTier->setChecked(s.value("sort_players_by_tier").toBool());
+    sortBT = sortByTier->isChecked();
+
     mytiermenu = menuBar->addMenu(tr("&Tiers"));
 
     QMenu *battleMenu = menuBar->addMenu(tr("&Battle Options", "Menu"));
@@ -579,6 +585,75 @@ void Client::tierListReceived(const QString &tl)
     }
 
     changeTierChecked(player(ownId()).tier);
+
+    QSettings s;
+
+    if (s.value("sort_players_by_tier").toBool()) {
+        sortAllPlayersByTier();
+    }
+}
+
+void Client::sortPlayersCountingTiers(bool byTier)
+{
+    sortBT = byTier;
+    QSettings s;
+    s.setValue("sort_players_by_tier", sortBT);
+
+    if (sortBT) {
+        sortAllPlayersByTier();
+    } else {
+        sortAllPlayersNormally();
+    }
+}
+
+void Client::sortAllPlayersByTier()
+{
+    foreach(QIdListWidgetItem *it, mytiersitems) {
+        delete myplayers->takeItem(myplayers->row(it));
+    }
+
+    mytiersitems.clear();
+
+    foreach(QIdListWidgetItem *it, myplayersitems) {
+        myplayers->takeItem(myplayers->row(it));
+    }
+
+    foreach(QString tier, tierList) {
+        QIdListWidgetItem *it = new QIdListWidgetItem(0, tier);
+        placeItem(it, 0);
+        mytiersitems.insert(tier, it);
+    }
+
+    QHash<int, QIdListWidgetItem *>::iterator iter;
+
+    for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
+        QString tier = player(iter.key()).tier;
+
+        if (mytiersitems.contains(tier)) {
+            placeItem(iter.value(), myplayers->row(mytiersitems[tier])+1);
+        } else {
+            placeItem(iter.value(), 0);
+        }
+    }
+}
+
+void Client::sortAllPlayersNormally()
+{
+    foreach(QIdListWidgetItem *it, mytiersitems) {
+        delete myplayers->takeItem(myplayers->row(it));
+    }
+
+    mytiersitems.clear();
+
+    foreach(QIdListWidgetItem *it, myplayersitems) {
+        myplayers->takeItem(myplayers->row(it));
+    }
+
+    QHash<int, QIdListWidgetItem *>::iterator iter;
+
+    for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
+        placeItem(iter.value(), 0);
+    }
 }
 
 void Client::changeTierChecked(const QString &newtier)
@@ -956,20 +1031,9 @@ QString Client::ownName() const
     return mynick;
 }
 
-void Client::playerReceived(const PlayerInfo &p)
+QString Client::authedNick(int id) const
 {
-    if (myplayersinfo.contains(p.id)) {
-        QString name = info(p.id).name;
-
-        /* removes the item in the playerlist */
-        delete myplayers->takeItem(myplayers->row(myplayersitems[p.id]));
-
-        myplayersitems.remove(p.id);
-        mynames.remove(name);
-        myplayersinfo.remove(p.id);
-    }
-
-    myplayersinfo.insert(p.id, p);
+    PlayerInfo p = player(id);
 
     QString nick = p.team.name;
 
@@ -981,13 +1045,40 @@ void Client::playerReceived(const PlayerInfo &p)
         }
     }
 
-    QIdListWidgetItem *item = new QIdListWidgetItem(p.id, nick);
+    return nick;
+}
+
+void Client::playerReceived(const PlayerInfo &p)
+{
+    QIdListWidgetItem *item = NULL;
+
+    if (myplayersinfo.contains(p.id)) {
+        QString name = info(p.id).name;
+
+        /* removes the item in the playerlist */
+        myplayers->takeItem(myplayers->row(myplayersitems[p.id]));
+        item = myplayersitems[p.id];
+
+        myplayersitems.remove(p.id);
+        mynames.remove(name);
+        myplayersinfo.remove(p.id);
+    }
+
+    myplayersinfo.insert(p.id, p);
+
+    QString nick = authedNick(p.id);
+
+    if (!item) {
+        item = new QIdListWidgetItem(p.id, nick);
+
+        QFont f = item->font();
+        f.setBold(true);
+        item->setFont(f);
+    } else {
+        item->setText(nick);
+    }
 
     item->setColor(color(p.id));
-
-    QFont f = item->font();
-    f.setBold(true);
-    item->setFont(f);
 
     myplayersitems.insert(p.id, item);
     mynames.insert(name(p.id), p.id);
@@ -995,23 +1086,38 @@ void Client::playerReceived(const PlayerInfo &p)
         mypms[p.id]->changeName(p.team.name);
     }
 
-    /* To sort the people in case insensitive order */
-    bool inserted = false;
-    for(int i = 0; i < myplayers->count(); i++) {
-        if (item->text().compare(myplayers->item(i)->text(), Qt::CaseInsensitive) < 0) {
-            inserted = true;
-            myplayers->insertItem(i,item);
-        }
-    }
-
-    if (!inserted) {
-        myplayers->addItem(item);
+    if (sortBT && mytiersitems.contains(p.tier)) {
+        placeItem(item, myplayers->row(mytiersitems[p.tier]) + 1);
+    } else {
+        placeItem(item);
     }
 
     updateState(p.id);
 
     if (p.id == ownId()) {
         changeTierChecked(p.tier);
+    }
+}
+
+void Client::placeItem(QIdListWidgetItem *item, int offset)
+{
+    /* To sort the people in case insensitive order */
+    bool inserted = false;
+    for(int i = offset; i < myplayers->count(); i++) {
+        if ( item->id() != 0 && (static_cast<QIdListWidgetItem*>(myplayers->item(i)))->id() == 0 ) {
+            inserted = true;
+            myplayers->insertItem(i,item);
+            break;
+        }
+        if (item->text().compare(myplayers->item(i)->text(), Qt::CaseInsensitive) < 0) {
+            inserted = true;
+            myplayers->insertItem(i,item);
+            break;
+        }
+    }
+
+    if (!inserted) {
+        myplayers->addItem(item);
     }
 }
 

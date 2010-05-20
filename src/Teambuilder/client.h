@@ -44,7 +44,10 @@ public:
     int ownId() const ;
     int ownAuth() const ;
     int auth(int id) const ;
+    QString authedNick(int id) const;
     QColor color(int id) const;
+    void sortAllPlayersByTier();
+    void sortAllPlayersNormally();
 
     void seeChallenge(const ChallengeInfo &c);
     bool challengeWindowOpen() const;
@@ -134,6 +137,7 @@ public slots:
     }
     void showTeam(bool);
     void enableLadder(bool);
+    void sortPlayersCountingTiers(bool);
     void showPlayerEvents(bool);
     void showTimeStamps(bool);
     void versionDiff(const QString &a, const QString &b);
@@ -172,6 +176,7 @@ private:
     /* Where players are displayed */
     QListWidget *myplayers;
     QHash<int, QIdListWidgetItem *> myplayersitems;
+    QHash<QString, QIdListWidgetItem *> mytiersitems;
     /* Button to exit */
     QPushButton *myexit;
     /* Button to send text */
@@ -190,6 +195,7 @@ private:
     QAction *goaway;
     bool showPEvents;
     bool showTS;
+    bool sortBT;
     bool findingBattle;
 
     QPointer<QMenuBar> mymenubar;
@@ -213,6 +219,7 @@ private:
     PlayerInfo & playerInfo(int id);
     QIdListWidgetItem *item(int id);
     void updateState(int player);
+    void placeItem(QIdListWidgetItem*it, int offset=0);
 
     void initRelay();
     void changeTierChecked(const QString &newtier);
