@@ -26,8 +26,8 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("save_battle_logs", false);
     setDefaultValue("battle_logs_directory", "Logs/");
     setDefaultValue("battle_music_directory", "Music/Battle/");
-//    setDefaultValue("play_battle_music", true);
-    //setDefaultValue("play_battle_sounds", true);
+    setDefaultValue("play_battle_music", false);
+    setDefaultValue("play_battle_sounds", false);
     setDefaultValue("show_team",true);
     setDefaultValue("enable_ladder", true);
     setDefaultValue("show_player_events", false);

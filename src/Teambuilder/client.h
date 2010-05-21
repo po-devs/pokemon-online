@@ -135,6 +135,7 @@ public slots:
     void goAwayB(bool away) {
         goAway(away);
     }
+    void changeButtonStyle(bool old);
     void showTeam(bool);
     void enableLadder(bool);
     void sortPlayersCountingTiers(bool);

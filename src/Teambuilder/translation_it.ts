@@ -95,7 +95,14 @@ Accuracy: %3
 Description: %4
 
 Effect: %5</source>
-        <translation>%1\n\nPotenza: %2\nPrecisione: %3\n\nDescrizione: %4\n\nEffetto:%5</translation>
+        <translation>%1
+
+Potenza: %2
+Precisione: %3
+
+Descrizione: %4
+
+Effetto:%5</translation>
     </message>
 </context>
 <context>
@@ -557,7 +564,7 @@ Effect: %5</source>
         <location filename="battlewindow.cpp" line="66"/>
         <source>&amp;Switch PokÃ©mon</source>
         <translatorcomment>no words containing &quot;s&quot; for accelerator</translatorcomment>
-        <translation>Cambia PokÃ©mon</translation>
+        <translation>Cambia Pokémon</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="70"/>
@@ -567,7 +574,7 @@ Effect: %5</source>
     <message>
         <location filename="battlewindow.cpp" line="71"/>
         <source>&amp;PokÃ©mon</source>
-        <translation>&amp;PokÃ©mon</translation>
+        <translation>&amp;Pokémon</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="72"/>
@@ -901,7 +908,9 @@ Effect: %5</source>
         <source>Enter the password for your current name.
 
 It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
-        <translation>Inserisci la password per il tuo nome attuale.\n\nÈ consigliabile usare una password leggermente diversa per ogni server. (Anche se il server vede solo la forma criptata della password)</translation>
+        <translation>Inserisci la password per il tuo nome attuale.
+
+È consigliabile usare una password leggermente diversa per ogni server. (Anche se il server vede solo la forma criptata della password)</translation>
     </message>
     <message>
         <location filename="client.cpp" line="501"/>
@@ -928,7 +937,9 @@ It is advised to use a slightly different password for each server. (The server 
         <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
 
 It is recommended to update.</source>
-        <translation>La versione del tuo client è più vecchia di quella del server, potrebbero esserci alcune cose che non puoi fare.\n\nSi raccomanda di aggiornare.</translation>
+        <translation>La versione del tuo client è più vecchia di quella del server, potrebbero esserci alcune cose che non puoi fare.
+
+Si raccomanda di aggiornare.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="684"/>
@@ -1263,7 +1274,16 @@ Moves:
 --%6
 --%7
 --%8</source>
-        <translation>%1 lv %2\n\nOggetto:%3\nAbilità:%4\n\nMosse:\n--%5\n--%6\n--%7\n--%8</translation>
+        <translation>%1 lv %2
+
+Oggetto:%3
+Abilità:%4
+
+Mosse:
+--%5
+--%6
+--%7
+--%8</translation>
     </message>
 </context>
 <context>
@@ -1333,7 +1353,7 @@ Moves:
     <message>
         <location filename="box.cpp" line="123"/>
         <source>PokÃ©mon &amp;%1</source>
-        <translation>PokÃ©mon &amp;%1</translation>
+        <translation>Pokémon &amp;%1</translation>
     </message>
 </context>
 <context>
@@ -1942,7 +1962,7 @@ Moves:
     <message>
         <location filename="teambuilder.cpp" line="928"/>
         <source>PokÃ©mon %1</source>
-        <translation>PokÃ©mon %1</translation>
+        <translation>Pokémon %1</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="934"/>
@@ -2210,7 +2230,8 @@ Moves:
         <location filename="teambuilder.cpp" line="28"/>
         <source>Paste your exported team from Netbattle Supremacy / Shoddy Battle
 Your language needs to be set to English to import English teams.</source>
-        <translation type="unfinished">Incolla il tuo team esportato da Netbattle Supremacy o Shoddy Battle\nIl tuo linguaggio dev&apos;essere l&apos;inglese (English) perché funzioni.</translation>
+        <translation>Incolla il tuo team esportato da Netbattle Supremacy o Shoddy Battle
+Il tuo linguaggio dev&apos;essere l&apos;inglese (English) perché funzioni.</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="34"/>
@@ -2229,7 +2250,7 @@ Your language needs to be set to English to import English teams.</source>
     <message>
         <location filename="teambuilder.cpp" line="572"/>
         <source>PokÃ©mon &amp;%1</source>
-        <translation>PokÃ©mon &amp;%1</translation>
+        <translation>Pokémon &amp;%1</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="581"/>

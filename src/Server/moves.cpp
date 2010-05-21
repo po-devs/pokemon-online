@@ -2938,8 +2938,11 @@ struct MMMagicCoat : public MM
 
     static void dgaf(int s, int t, BS &b) {
         if (turn(b,t).value("MagicCoated").toBool()) {
-	    if (turn(b,s)["Power"].toInt() == 0 && turn(b,s)["PossibleTargets"].toInt() == Move::ChosenTarget) {
+            if (t != s && turn(b,s)["Power"].toInt() == 0) {
 		int move = MM::move(b,s);
+                if (move == TeeterDance)
+                    return;
+
 		/* Typically, the moves that are bounced back are moves that only induce status / boost mods and nothing else,
 		    therefore having no "SpecialEffect". Exceptions are stored in bounced_moves */
                 bounced_moves.lock();
@@ -2951,6 +2954,7 @@ struct MMMagicCoat : public MM
 		    removeFunction(turn(b,t), "UponAttackSuccessful", "MagicCoat");
 
 		    MoveEffect::setup(move,t,s,b);
+                    turn(b,t)["PossibleTargets"] = Move::ChosenTarget;
                     turn(b,t)["Target"] = s;
 		    b.useAttack(t,move,true,false);
                     MoveEffect::unsetup(move,t,b);
@@ -3962,8 +3966,8 @@ struct MMRolePlay : public MM {
     }
 
     static void uas(int s, int t, BS &b) {
-        b.acquireAbility(s, b.ability(t));
         b.sendMoveMessage(108,0,s,Pokemon::Psychic,t,b.ability(t));
+        b.acquireAbility(s, b.ability(t));
     }
 };
 

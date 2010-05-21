@@ -17,7 +17,7 @@ ServerChoice::ServerChoice()
     mylist = new QCompactTable(0,3);
 
     QStringList horHeaders;
-    horHeaders << tr("Server Name") << tr("Players/Max Players") << tr("Advanced connection");
+    horHeaders << tr("Server Name") << tr("Players / Max") << tr("Advanced connection");
     mylist->setHorizontalHeaderLabels(horHeaders);
     mylist->setSelectionBehavior(QAbstractItemView::SelectRows);
     mylist->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -88,11 +88,13 @@ void ServerChoice::advServerChosen()
 
 void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port)
 {
+    mylist->setSortingEnabled(false);
+
     QString playerStr;
     if(max == 0)
-        playerStr = QString::number(num);
+        playerStr = QString::number(num).rightJustified(3);
     else
-        playerStr = QString::number(num) + "/" + QString::number(max);
+        playerStr = QString::number(num).rightJustified(3) + " / " + QString::number(max);
     int row = mylist->rowCount();
     mylist->setRowCount(row+1);
 
@@ -102,7 +104,7 @@ void ServerChoice::addServer(const QString &name, const QString &desc, quint16 n
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 0, witem);
 
-    witem = new QTableWidgetItem(playerStr.rightJustified(3));
+    witem = new QTableWidgetItem(playerStr);
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 1, witem);
 
@@ -110,13 +112,12 @@ void ServerChoice::addServer(const QString &name, const QString &desc, quint16 n
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 2, witem);
 
-    mylist->resizeColumnsToContents();
-    mylist->resizeRowsToContents();
-    mylist->horizontalHeader()->setStretchLastSection(true);
-
     descriptionsPerIp.insert(ip + ":" + QString::number(port == 0 ? 5080 : port), desc);
     /*This needed to be changed because the showDescription function was looking for a ip and port,
       while only the IP was in the list, and in the end, the description wouldn't be displayed. */
+
+    mylist->setSortingEnabled(true);
+    mylist->sortByColumn(1);
 
     if (mylist->currentRow() != -1)
         showDescription(mylist->currentRow());

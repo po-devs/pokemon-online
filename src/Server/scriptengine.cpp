@@ -159,7 +159,7 @@ bool ScriptEngine::beforeBattleMatchup(int src, int dest, const ChallengeInfo &c
         clauses.append('0' + ((c.clauses >> i) & 0x01));
     }
 
-    evaluate(myscript.property("beforeBattleMatchup").call(myscript, QScriptValueList() << src << dest << clauses));
+    evaluate(myscript.property("beforeBattleMatchup").call(myscript, QScriptValueList() << src << dest << clauses << c.rated << c.mode));
 
     return !endStopEvent();
 }
@@ -172,7 +172,7 @@ void ScriptEngine::afterBattleMatchup(int src, int dest, const ChallengeInfo &c)
         clauses.append('0' + ((c.clauses >> i) & 0x01));
     }
 
-    evaluate(myscript.property("afterBattleMatchup").call(myscript, QScriptValueList() << src << dest << clauses));
+    evaluate(myscript.property("afterBattleMatchup").call(myscript, QScriptValueList() << src << dest << clauses << c.rated << c.mode));
 }
 
 
@@ -184,7 +184,7 @@ void ScriptEngine::beforeBattleStarted(int src, int dest, const ChallengeInfo &c
         clauses.append('0' + ((c.clauses >> i) & 0x01));
     }
 
-    evaluate(myscript.property("beforeBattleStarted").call(myscript, QScriptValueList() << src << dest << clauses));
+    evaluate(myscript.property("beforeBattleStarted").call(myscript, QScriptValueList() << src << dest << clauses << c.rated << c.mode));
 }
 
 void ScriptEngine::afterBattleStarted(int src, int dest, const ChallengeInfo &c)
@@ -195,7 +195,7 @@ void ScriptEngine::afterBattleStarted(int src, int dest, const ChallengeInfo &c)
         clauses.append('0' + ((c.clauses >> i) & 0x01));
     }
 
-    evaluate(myscript.property("afterBattleStarted").call(myscript, QScriptValueList() << src << dest << clauses));
+    evaluate(myscript.property("afterBattleStarted").call(myscript, QScriptValueList() << src << dest << clauses << c.rated << c.mode));
 }
 
 QString battleDesc[3] = {

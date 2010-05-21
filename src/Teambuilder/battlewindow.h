@@ -156,7 +156,7 @@ protected:
 };
 
 
-class AttackButton;
+class AbstractAttackButton;
 
 /* An attack zone is the zone where the attacks are displayed */
 class AttackZone : public QWidget
@@ -165,7 +165,8 @@ class AttackZone : public QWidget
 public:
     AttackZone(const PokeBattle &poke);
 
-    AttackButton *attacks[4];
+    AbstractAttackButton *tattacks[4];
+    QAbstractButton *attacks[4];
 signals:
     void clicked(int attack);
 
@@ -173,15 +174,34 @@ private:
     QSignalMapper *mymapper;
 };
 
-class AttackButton: public QImageButton
+class AbstractAttackButton
 {
-    Q_OBJECT
 public:
-    AttackButton(const BattleMove& b, const PokeBattle &p);
-    void updateAttack(const BattleMove& b, const PokeBattle &p);
+    //AbstractAttackButton();
+    virtual void updateAttack(const BattleMove& b, const PokeBattle &p) = 0;
+
+    QAbstractButton *pointer() {
+        return dynamic_cast<QAbstractButton *> (this);
+    }
 
     QLabel *name;
     QLabel *pp;
+};
+
+class ImageAttackButton : public QImageButton, public AbstractAttackButton
+{
+    Q_OBJECT
+public:
+    ImageAttackButton(const BattleMove& b, const PokeBattle &p);
+    virtual void updateAttack(const BattleMove& b, const PokeBattle &p);
+};
+
+class OldAttackButton : public QPushButton, public AbstractAttackButton
+{
+    Q_OBJECT
+public:
+    OldAttackButton(const BattleMove& b, const PokeBattle &p);
+    virtual void updateAttack(const BattleMove& b, const PokeBattle &p);
 };
 
 class PokeButton;

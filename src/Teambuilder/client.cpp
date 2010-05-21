@@ -441,7 +441,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     battleMenu->addAction(tr("Change &log folder"), this, SLOT(changeBattleLogFolder()));
 
-    QAction *playMusic = battleMenu->addAction(tr("&Enable sounds"));
+    QAction *playMusic = battleMenu->addAction(tr("&Enable sounds (Risky!)"));
     playMusic->setCheckable(true);
     connect(playMusic, SIGNAL(triggered(bool)), SLOT(playMusic(bool)));
     playMusic->setChecked(s.value("play_battle_music").toBool());
@@ -452,6 +452,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     animateHpBar->setCheckable(true);
     connect(animateHpBar, SIGNAL(triggered(bool)), SLOT(animateHpBar(bool)));
     animateHpBar->setChecked(s.value("animate_hp_bar").toBool());
+
+    QAction *oldStyleButtons = battleMenu->addAction(tr("Old School buttons"));
+    oldStyleButtons->setCheckable(true);
+    connect(oldStyleButtons, SIGNAL(triggered(bool)), SLOT(changeButtonStyle(bool)));
+    oldStyleButtons->setChecked(s.value("old_attack_buttons").toBool());
 
     mymenubar = menuBar;
 
@@ -519,6 +524,12 @@ void Client::changeBattleLogFolder()
     if (dir != "") {
         s.setValue("battle_logs_directory", dir + "/");
     }
+}
+
+void Client::changeButtonStyle(bool old)
+{
+    QSettings s;
+    s.setValue("old_attack_buttons",old);
 }
 
 void Client::saveBattleLogs(bool save)
@@ -620,6 +631,13 @@ void Client::sortAllPlayersByTier()
 
     foreach(QString tier, tierList) {
         QIdListWidgetItem *it = new QIdListWidgetItem(0, tier);
+        //it->setBackgroundColor("#0CA0DD");
+        //it->setColor("white");
+        QFont f = it->font();
+        f.setPixelSize(15);
+        f.setBold(true);
+        it->setFont(f);
+
         placeItem(it, 0);
         mytiersitems.insert(tier, it);
     }

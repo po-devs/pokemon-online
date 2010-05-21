@@ -243,7 +243,9 @@ BaseBattleWindow QLabel#PokemonLevel {
 }
 
 
-
+PokeButton {
+	min-height: 50px;
+}
 
 
 
@@ -265,18 +267,20 @@ QLabel#OppTrainerBox {
 
 
 
-AttackButton QLabel#AttackName, AttackButton QLabel#AttackPP{
+QLabel#AttackName, QLabel#AttackPP{
 	font-family: Trebuchet MS;
 	font-weight: bold;
 	font-size: 13px;
 }
 
-AttackButton QLabel#AttackPP{
+QLabel#AttackPP{
 	color: white;
 	padding-right: 5px;
 }
 
-
+OldAttackButton{
+	min-height: 45px;
+}
 
 
 
@@ -457,8 +461,8 @@ StatTab QTabBar::tab:selected {
 
 }
 
-StatTab QTabBar::tab{
-	min-width: 90px;
+StatTab QTabBar::tab {
+	min-width: 100px;
 }
 
 TypeChart QTableWidgetItem{
@@ -472,7 +476,7 @@ QTabWidget#Modified > QTabBar::tab:top, QTabWidget#Modified > QTabBar::tab:botto
 	border: 1px solid #676a6c;
 	border-radius: 5px;
 	height: 23px;
-	min-width: 70px;
+	min-width: 90px;
 	padding: 2px;
 }
 
