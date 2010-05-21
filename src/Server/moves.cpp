@@ -2445,7 +2445,7 @@ struct MMHealingWish : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.countBackUp(s) == 0) {
+        if (b.countBackUp(b.player(s)) == 0) {
             turn(b,s)["Failed"] = true;
         }
     }
