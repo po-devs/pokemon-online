@@ -26,6 +26,9 @@
 1033-Gastrodon-East
 1040-Cherrim
 1041-Cherrim-Sunshine
+1045-Burmy
+1046-Burmy-G
+1047-Burmy-S
 1050-Unown-A
 1051-Unown-B
 1052-Unown-C

@@ -69,7 +69,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémon")), 3, 2);
     mytab->setObjectName("Modified");
 
-    mytab->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    mytab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     mytab->addTab(mystack = new QStackedWidget(), tr("&Moves"));
     mytab->addTab(mypzone = new PokeZone(info().myteam), tr("&Pokémon"));
     mytab->addTab(myspecs = new QListWidget(), tr("Spectators"));
@@ -167,7 +167,7 @@ void BattleWindow::switchTo(int pokezone, int spot, bool forced)
     mydisplay->updatePoke(spot);
 
     for (int i = 0; i<4; i++) {
-        myazones[info().currentIndex[spot]]->attacks[i]->updateAttack(info().tempPoke(spot).move(i), info().tempPoke(spot));
+        myazones[info().currentIndex[spot]]->tattacks[i]->updateAttack(info().tempPoke(spot).move(i), info().tempPoke(spot));
     }
 }
 
@@ -449,7 +449,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
 	    //Think to check for crash if currentIndex != -1, move > 3
             info().currentPoke(spot).move(move).PP() = PP;
             info().tempPoke(spot).move(move).PP() = PP;
-            myazones[info().currentIndex[spot]]->attacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot));
+            myazones[info().currentIndex[spot]]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot));
 
             break;
 	}
@@ -551,7 +551,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                 in >> slot >> move;
                 info().tempPoke(spot).move(slot).num() = move;
                 info().tempPoke(spot).move(slot).load();
-                myazones[info().currentIndex[spot]]->attacks[slot]->updateAttack(info().tempPoke(spot).move(slot), info().tempPoke(spot));
+                myazones[info().currentIndex[spot]]->tattacks[slot]->updateAttack(info().tempPoke(spot).move(slot), info().tempPoke(spot));
             } else {
                 if (type == TempSprite) {
                     in >> info().specialSprite[spot];
@@ -713,21 +713,34 @@ AttackZone::AttackZone(const PokeBattle &poke)
     QGridLayout *l = new QGridLayout(this);
     mymapper = new QSignalMapper(this);
 
-    l->setSpacing(0);
-    l->setMargin(4);
+    QSettings s;
+
+    bool old = s.value("old_attack_buttons").toBool();
+
+    if (!old) {
+        l->setSpacing(2);
+        l->setMargin(5);
+    }
 
     for (int i = 0; i < 4; i++)
     {
-        l->addWidget(attacks[i] = new AttackButton(poke.move(i), poke), i >= 2, i % 2);
+        if (old)
+            attacks[i] = new OldAttackButton(poke.move(i), poke);
+        else
+            attacks[i] = new ImageAttackButton(poke.move(i), poke);
+
+        tattacks[i] = dynamic_cast<AbstractAttackButton*>(attacks[i]);
+
+        l->addWidget(attacks[i], i >= 2, i % 2);
 
 	mymapper->setMapping(attacks[i], i);
-	connect(attacks[i], SIGNAL(clicked()), mymapper, SLOT(map()));
+        connect(dynamic_cast<QAbstractButton*>(attacks[i]), SIGNAL(clicked()), mymapper, SLOT(map()));
     }
 
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }
 
-AttackButton::AttackButton(const BattleMove &b, const PokeBattle &p) : QImageButton("db/BattleWindow/Buttons/0D.png", "db/BattleWindow/Buttons/0H.png")
+OldAttackButton::OldAttackButton(const BattleMove &b, const PokeBattle &p)/* : QImageButton("db/BattleWindow/Buttons/0D.png", "db/BattleWindow/Buttons/0H.png")*/
 {
     QVBoxLayout *l = new QVBoxLayout(this);
 
@@ -735,12 +748,54 @@ AttackButton::AttackButton(const BattleMove &b, const PokeBattle &p) : QImageBut
     l->addWidget(pp = new QLabel(), 0, Qt::AlignRight | Qt::AlignVCenter);
     name->setObjectName("AttackName");
     pp->setObjectName("AttackPP");
-    setMinimumHeight(30);
+    //setMinimumWidth(200);
 
     updateAttack(b,p);
 }
 
-void AttackButton::updateAttack(const BattleMove &b, const PokeBattle &p)
+void OldAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p)
+{
+    name->setText(MoveInfo::Name(b.num()));
+    pp->setText(tr("PP %1/%2").arg(b.PP()).arg(b.totalPP()));
+
+    QString power;
+    if (b.num() == Move::Return) {
+        power = QString("%1").arg(std::max((p.happiness() * 2 / 5),1));
+    } else if (b.num() == Move::Frustration) {
+        power = QString("%1").arg(std::max(( (255-p.happiness()) * 2 / 5),1));
+    } else if (b.num() == Move::HiddenPower) {
+        power = QString("%1").arg(HiddenPowerInfo::Power(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]));
+    } else {
+        power = MoveInfo::PowerS(b.num());
+    }
+
+    QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nEffect: %5").arg(MoveInfo::Name(b.num()), power,
+                                                                        MoveInfo::AccS(b.num()), MoveInfo::Description(b.num()),
+                                                                        MoveInfo::DetailedDescription(b.num()));
+
+    int type = b.num() == Move::HiddenPower ?
+               HiddenPowerInfo::Type(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num());
+    /*QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
+    changePics(model.arg("D"), model.arg("H"), model.arg("C"));*/
+    setStyleSheet(QString("background: %1;").arg(TypeInfo::Color(type).name()));
+
+    setToolTip(ttext);
+}
+
+ImageAttackButton::ImageAttackButton(const BattleMove &b, const PokeBattle &p) : QImageButton("db/BattleWindow/Buttons/0D.png", "db/BattleWindow/Buttons/0H.png")
+{
+    QVBoxLayout *l = new QVBoxLayout(this);
+
+    l->addWidget(name = new QLabel(), 0, Qt::AlignCenter);
+    l->addWidget(pp = new QLabel(), 0, Qt::AlignRight | Qt::AlignVCenter);
+    name->setObjectName("AttackName");
+    pp->setObjectName("AttackPP");
+    //setMinimumWidth(200);
+
+    updateAttack(b,p);
+}
+
+void ImageAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p)
 {
     name->setText(MoveInfo::Name(b.num()));
     pp->setText(tr("PP %1/%2").arg(b.PP()).arg(b.totalPP()));
@@ -789,7 +844,6 @@ PokeButton::PokeButton(const PokeBattle &p)
     : p(&p)
 {
     setIconSize(QSize(32,32));
-    setMinimumHeight(50);
     setIcon(PokemonInfo::Icon(p.num()));
     update();
 

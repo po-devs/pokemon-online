@@ -1511,7 +1511,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         pokelong[player]["MoveSlot"] = move;
     }
 
-    qDebug() << MoveInfo::Name(attack) << " was used ! ";
+    qDebug() << MoveInfo::Name(attack) << " was used  by " <<  player << " in " << team1.name << " vs " << team2.name;
 
     turnlong[player]["HasMoved"] = true;
 
@@ -2230,7 +2230,7 @@ bool BattleSituation::isWeatherWorking(int weather) {
     //Air lock & Cloud nine
 
     for (int i = 0; i < numberOfSlots(); i++)  {
-        if (hasWorkingAbility(i, Ability::AirLock) || hasWorkingAbility(i, Ability::CloudNine)) {
+        if (!koed(i) && (hasWorkingAbility(i, Ability::AirLock) || hasWorkingAbility(i, Ability::CloudNine))) {
             return false;
         }
     }
