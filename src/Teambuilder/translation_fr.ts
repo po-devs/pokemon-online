@@ -1151,7 +1151,7 @@ Effet: %5</translation>
     <message>
         <location filename="client.cpp" line="422"/>
         <source>Enable &amp;timestamps</source>
-        <translation type="unfinished">Montrer les pastille de &amp;temps</translation>
+        <translation>Montrer les pastille de &amp;temps</translation>
     </message>
     <message>
         <location filename="client.cpp" line="428"/>
