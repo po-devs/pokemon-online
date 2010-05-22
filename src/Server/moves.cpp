@@ -4419,7 +4419,7 @@ struct MMAcupressure : public MM
 struct MMHelpingHand : public MM
 {
     MMHelpingHand() {
-        functions["DetermineattackFailure"] = &daf;
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
     }
 
