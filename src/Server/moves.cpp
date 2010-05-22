@@ -230,7 +230,12 @@ struct MMBatonPass : public MM
 	}
     }
 
-    static void uas(int s, int, BS &b) {
+    static void uas(int s, int, BS &b)
+    {
+        addFunction(turn(b,t), "AfterAttackFinished", &aaf);
+    }
+
+    static void aff(int s, int, BS &b) {
 	/* first we copy the temp effects, then put them to the next poke */
 	BS::context c = poke(b, s);
     	c.remove("Type1");
@@ -285,6 +290,33 @@ struct MMBatonPass : public MM
         }
     }
 };
+
+
+struct MMUTurn : public MM
+{
+    MMUTurn() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["AfterAttackFinished"] = &aas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        turn(b,s)["UTurnSuccess"] = true;
+    }
+
+    static void aas(int s, int, BS &b) {
+        if (!turn(b,s).contains("UTurnSuccess")) {
+            return;
+        }
+        if (b.countAlive(s) <= 1) {
+            return;
+        }
+        if (b.koed(s)) {
+            return;
+        }
+        b.requestSwitch(s);
+    }
+};
+
 
 struct MMBlastBurn : public MM
 {
@@ -1188,31 +1220,6 @@ struct MMRapidSpin : public MM
     }
 };
 
-struct MMUTurn : public MM
-{
-    MMUTurn() {
-        functions["UponAttackSuccessful"] = &uas;
-        functions["AfterAttackFinished"] = &aas;
-    }
-
-    static void uas(int s, int, BS &b) {
-        turn(b,s)["UTurnSuccess"] = true;
-    }
-
-    static void aas(int s, int, BS &b) {
-        if (!turn(b,s).contains("UTurnSuccess")) {
-            return;
-        }
-	if (b.countAlive(s) <= 1) {
-	    return;
-	}
-	if (b.koed(s)) {
-	    return;
-	}
-	b.requestSwitch(s);
-    }
-};
-
 struct MMSubstitute : public MM
 {
     MMSubstitute() {
@@ -1587,14 +1594,14 @@ struct MMBind : public MM
 
     static void uas (int s, int t, BS &b) {
         b.link(s, t, "Trapped");
-        poke(b,t)["TrappedCount"] = b.poke(s).item() == Item::GripClaw ? 5 : (b.true_rand()%4) + 2; /* Grip claw = 5 turns */
+        poke(b,t)["TrappedRemainingTurns"] = b.poke(s).item() == Item::GripClaw ? 5 : (b.true_rand()%4) + 2; /* Grip claw = 5 turns */
 	poke(b,t)["TrappedMove"] = move(b,s);
         addFunction(poke(b,t), "EndTurn68", "Bind", &et);
     }
 
     static void et (int s, int, BS &b) {
-	int count = poke(b,s)["TrappedCount"].toInt() - 1;
-	int move = poke(b,s)["TrappedMove"].toInt();
+        int count = poke(b,s)["TrappedRemainingTurns"].toInt() - 1;
+        int move = poke(b,s)["TrappedRemainingTurns"].toInt();
 
         if (!b.koed(s)) {
             if (!b.linked(s, "Trapped")) {
@@ -1608,7 +1615,7 @@ struct MMBind : public MM
                 if (count == 0)
                     b.sendMoveMessage(10,1,s,MoveInfo::Type(move),s,move);
             } else {
-                poke(b,s)["TrappedCount"] = count;
+                poke(b,s)["TrappedRemainingTurns"] = count;
                 b.sendMoveMessage(10,0,s,MoveInfo::Type(move),s,move);
                 b.inflictDamage(s, b.poke(s).totalLifePoints()/16,s,false);
             }
