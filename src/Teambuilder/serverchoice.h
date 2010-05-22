@@ -31,7 +31,7 @@ private slots:
 private:
     QCompactTable *mylist;
     QLineEdit *myAdvServer;
-    QTextEdit *myDesc;
+    QTextBrowser *myDesc;
     Analyzer *registry_connection;
 
     QHash<QString, QString> descriptionsPerIp;

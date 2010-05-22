@@ -17,7 +17,7 @@ private slots:
     void apply();
 private:
     QLineEdit *serverName;
-    QTextEdit *serverDesc;
+    QPlainTextEdit *serverDesc;
     QSpinBox *serverPlayerMax;
     QSpinBox *serverPort;
 };
