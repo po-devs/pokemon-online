@@ -2412,6 +2412,7 @@ int BattleSituation::calculateDamage(int p, int t)
         power = power * 3 / 2;
     }
 
+    move.remove("BasePowerItemModifier");
     callieffects(p,t,"BasePowerModifier");
     power = power * (10+move["BasePowerItemModifier"].toInt())/10;
 
@@ -2420,6 +2421,8 @@ int BattleSituation::calculateDamage(int p, int t)
 	power /= 2;
     }
 
+    move.remove("BasePowerAbilityModifier");
+    move.remove("BasePowerFoeAbilityModifier");
     callaeffects(p,t,"BasePowerModifier");
     callaeffects(t,p,"BasePowerFoeModifier");
     power = power * (20+move["BasePowerAbilityModifier"].toInt())/20 * (20+move["BasePowerFoeAbilityModifier"].toInt())/20;
@@ -2470,6 +2473,7 @@ int BattleSituation::calculateDamage(int p, int t)
         damage = damage * 3 / 2;
     }
     damage = (damage+2)*ch;
+    move.remove("ItemMod2Modifier");
     callieffects(p,t,"Mod2Modifier");
     damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
     damage = damage *randnum*100/255/100*stab/2*typemod/4;
@@ -2482,6 +2486,8 @@ int BattleSituation::calculateDamage(int p, int t)
 
     /* Expert belt */
     damage = damage * ((typemod > 4 && hasWorkingItem(p, Item::ExpertBelt))? 6 : 5)/5;
+
+    move.remove("Mod3Berry");
 
     /* Berries of the foe */
     callieffects(t, p, "Mod3Items");
@@ -2825,7 +2831,7 @@ bool BattleSituation::linked(int linked, QString relationShip)
 
     int linker = pokelong[linked][relationShip + "By"].toInt();
 
-    return  !koed(linker) && slotzone[linker]["SwitchCount"] == pokelong[linked][relationShip + "Count"];
+    return  !koed(linker) && slotzone[linker]["SwitchCount"].toInt() == pokelong[linked][relationShip + "Count"].toInt();
 }
 
 void BattleSituation::link(int linker, int linked, QString relationShip)
