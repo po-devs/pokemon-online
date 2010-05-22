@@ -14,7 +14,7 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 
     l->addRow("Server Name: ", serverName);
 
-    serverDesc = new QTextEdit(settings.value("server_description").toString());
+    serverDesc = new QPlainTextEdit(settings.value("server_description").toString());
 
     l->addRow("Server Description: ", serverDesc);
 

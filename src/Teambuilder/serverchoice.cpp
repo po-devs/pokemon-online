@@ -23,6 +23,7 @@ ServerChoice::ServerChoice()
     mylist->setSelectionMode(QAbstractItemView::SingleSelection);
     mylist->setShowGrid(false);
     mylist->verticalHeader()->hide();
+    mylist->horizontalHeader()->resizeSection(0, 150);
     mylist->horizontalHeader()->setStretchLastSection(true);
     mylist->setMinimumHeight(200);
 
@@ -31,8 +32,8 @@ ServerChoice::ServerChoice()
 
     l->addWidget(mylist, 100);
 
-    myDesc = new QTextEdit();
-    myDesc->setReadOnly(true);
+    myDesc = new QTextBrowser();
+    myDesc->setOpenExternalLinks(true);
     myDesc->setFixedHeight(100);
     l->addWidget(new QEntitled("Server Description", myDesc));
 
@@ -128,7 +129,7 @@ void ServerChoice::showDescription(int row)
     if (row < 0)
         return;
     myDesc->clear();
-    myDesc->insertPlainText(descriptionsPerIp[mylist->item(row,2)->text()]);
+    myDesc->insertHtml(descriptionsPerIp[mylist->item(row,2)->text()]);
 }
 
 void ServerChoice::connectionError(int, const QString &mess)

@@ -317,6 +317,7 @@ PokedexBody::PokedexBody()
     QCompleter *comp = new QCompleter(pokeEdit);
     comp->setModel(pokeList->model());
     comp->setCompletionColumn(1);
+    comp->setCaseSensitivity(Qt::CaseInsensitive);
     pokeEdit->setCompleter(comp);
     col1->addWidget(pokeList,100);
     col1->addWidget(new PokeBallText("db/Teambuilder/PokeDex/Orangeball.png", tr("Sort Pokemon List")));
@@ -943,6 +944,7 @@ AdvancedSearch::AdvancedSearch()
 
     QGridLayout *moveL = new QGridLayout (moves);
     QCompleter *p = new QCompleter(MoveInfo::MoveList(), this);
+    p->setCaseSensitivity(Qt::CaseInsensitive);
 
     for (int i =0 ; i < 4; i++) {
         move[i] = new QLineEdit();
