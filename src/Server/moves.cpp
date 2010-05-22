@@ -225,17 +225,17 @@ struct MMBatonPass : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.countBackUp(s) == 0) {
+        if (b.countBackUp(b.player(s)) == 0) {
 	    turn(b,s)["Failed"] =true;
 	}
     }
 
     static void uas(int s, int, BS &b)
     {
-        addFunction(turn(b,t), "AfterAttackFinished", &aaf);
+        addFunction(turn(b,s), "AfterAttackFinished", "BatonPass", &aaf);
     }
 
-    static void aff(int s, int, BS &b) {
+    static void aaf(int s, int, BS &b) {
 	/* first we copy the temp effects, then put them to the next poke */
 	BS::context c = poke(b, s);
     	c.remove("Type1");
