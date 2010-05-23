@@ -52,7 +52,7 @@ Server::Server(quint16 port)
     connect(mylist, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendServerMessage()));
 
-    mainchat()->setFixedWidth(500);
+    mainchat()->setMinimumWidth(500);
 
     srand(time(NULL));
 
