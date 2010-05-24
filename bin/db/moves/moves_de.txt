@@ -299,7 +299,7 @@ Psytrahl
 Psycho-Plus
 Psychokinese
 Psyschub
-Psychokinese
+Psychoklinge
 Psybann
 Psywelle
 Strafattacke
@@ -340,7 +340,7 @@ Sandsturm
 Grimasse
 Kratzer
 Kreideschrei
-Kreideschrei --> 2x??
+Geheimpower
 Samenbomben
 Schocksamen
 Geowurf

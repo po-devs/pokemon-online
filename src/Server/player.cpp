@@ -714,16 +714,29 @@ QString Player::ip() const
 
 void Player::recvTeam(const TeamInfo &team)
 {
+    /* If the guy is not logged in, obvious. If he is battling, he could make it so the points lost are on his other team */
     if (!isLoggedIn())
         return;
+
+    bool keepSameName = false;
+    QString oldName = name();
+
+    /* If a player is battling, and changs name, well that's a way to evaded rating points on his old nick,
+       so until this stupid flaw is fixed, no name change... */
+    if (team.name != name() && battling()) {
+        keepSameName = true;
+    }
 
     cancelChallenges();
 
     avatar() = team.avatar;
 
-    if (team.name.toLower() == this->team().name.toLower()) {
+    if (team.name.toLower() == this->team().name.toLower() || keepSameName) {
         /* No authentification required... */
         this->team() = team;
+        if (keepSameName) {
+            this->team().name = oldName;
+        }
         winningMessage() = team.win;
         losingMessage() = team.lose;
         tier() = TierMachine::obj()->findTier(this->team());

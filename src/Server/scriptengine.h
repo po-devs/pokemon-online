@@ -50,6 +50,7 @@ public:
     /* Print on the server. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void changeAuth(int id, int auth);
+    Q_INVOKABLE void changeRating(QString name, QString tier, int newRating);
     Q_INVOKABLE void changePokeLevel(int id, int slot, int level);
     Q_INVOKABLE void changePokeNum(int id, int slot, int num);
     Q_INVOKABLE void changePokeItem(int id, int slot, int item);

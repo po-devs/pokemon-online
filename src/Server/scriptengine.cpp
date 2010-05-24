@@ -273,6 +273,14 @@ void ScriptEngine::changeAuth(int id, int auth)
     }
 }
 
+void ScriptEngine::changeRating(QString name, QString tier, int newRating)
+{
+    if (!TierMachine::obj()->exists(tier))
+        printLine("Script Error in sys.changeRating(name, tier, rating): no such tier as " + tier);
+    else
+        TierMachine::obj()->changeRating(name, tier, newRating);
+}
+
 void ScriptEngine::changePokeItem(int id, int slot, int item)
 {
     if (!myserver->player(id)->isLoggedIn())

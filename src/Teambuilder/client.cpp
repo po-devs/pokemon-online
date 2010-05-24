@@ -1250,7 +1250,12 @@ void Client::showDock(Qt::DockWidgetArea areas, QDockWidget *dock, Qt::Orientati
 
 void Client::changeTeam()
 {
-    mynick = myteam->trainerNick();
+    if (battling()) {
+        printLine(tr("You can't change teams while battling, so your nick was kept."));
+        myteam->trainerNick() = mynick;
+    } else {
+        mynick = myteam->trainerNick();
+    }
     cancelFindBattle(false);
     relay().sendTeam(*myteam);
 }

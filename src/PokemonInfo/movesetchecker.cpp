@@ -40,6 +40,13 @@ void MoveSetChecker::init(const QString &dir)
 bool MoveSetChecker::isValid(int pokenum, int move1, int move2, int move3, int move4, QSet<int> *invalid_moves) {
     QSet<int> moves;
     moves << move1 << move2 << move3 << move4;
+
+    return isValid(pokenum, moves, invalid_moves);
+}
+
+
+bool MoveSetChecker::isValid(int pokenum, const QSet<int> &moves2, QSet<int> *invalid_moves) {
+    QSet<int> moves = moves2;
     moves.remove(0);
 
     if (!PokemonInfo::Moves(pokenum).contains(moves)) {
@@ -56,8 +63,7 @@ bool MoveSetChecker::isValid(int pokenum, int move1, int move2, int move3, int m
     if (moves.empty() || moves.size() == 1)
         return true;
 
-    foreach(QSet<int> combination, (*legalCombinations[4-3])[pokenum]) {
-        if (combination.contains(moves))
+    if (isAnEggMoveCombination(pokenum, 4, moves)) {
             return true;
     }
 
@@ -78,13 +84,23 @@ bool MoveSetChecker::isValid(int pokenum, int move1, int move2, int move3, int m
         }
     }
 
-    foreach(QSet<int> combination, (*legalCombinations[3-3])[pokenum]) {
-        if (combination.contains(moves))
+    if (isAnEggMoveCombination(pokenum, 3, moves)) {
             return true;
     }
 
     if (invalid_moves) {
         *invalid_moves = moves;
     }
+    return false;
+}
+
+/* Used by ChainBreeding */
+bool MoveSetChecker::isAnEggMoveCombination(int pokenum, int gen, QSet<int> moves)
+{
+    foreach(QSet<int> combination, (*legalCombinations[gen-3])[pokenum]) {
+        if (combination.contains(moves))
+            return true;
+    }
+
     return false;
 }

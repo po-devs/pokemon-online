@@ -1601,7 +1601,7 @@ struct MMBind : public MM
 
     static void et (int s, int, BS &b) {
         int count = poke(b,s)["TrappedRemainingTurns"].toInt() - 1;
-        int move = poke(b,s)["TrappedRemainingTurns"].toInt();
+        int move = poke(b,s)["TrappedMove"].toInt();
 
         if (!b.koed(s)) {
             if (!b.linked(s, "Trapped")) {
@@ -4125,6 +4125,7 @@ struct MMUproar : public MM {
 
 
     static void ts(int s, int, BS &b) {
+        turn(b,s)["UproarBefore"] = poke(b,s).contains("LastUproar") && poke(b,s).value("LastUproar").toInt() == b.turn()  - 1;
         if (poke(b,s).value("UproarUntil").toInt() >= b.turn() && poke(b,s).value("LastUproar").toInt() == b.turn() - 1) {
             turn(b,s)["NoChoice"] = true;
             MoveEffect::setup(poke(b,s)["UproarMove"].toInt(),s,s,b);
