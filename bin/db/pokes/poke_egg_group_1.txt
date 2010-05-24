@@ -170,10 +170,10 @@ Bug
 Flying
 Water 2
 Water 2
-
-
-
-
+Ground
+Fairy
+Fairy
+Flying
 Flying
 Flying
 Flying
@@ -234,11 +234,11 @@ Ground
 Mineral
 Ground
 Ground
-
 HumanShape
-
-
-
+HumanShape
+HumanShape
+HumanShape
+HumanShape
 Ground
 Fairy
 
@@ -296,7 +296,7 @@ Monster
 Monster
 HumanShape
 HumanShape
-
+Water 1
 Mineral
 Ground
 Ground
@@ -404,7 +404,7 @@ Bug
 Ground
 Ground
 Ground
-
+Fairy
 Fairy
 Monster
 Monster
@@ -436,16 +436,16 @@ Ground
 Ground
 Mineral
 Mineral
-
-
-
+Mineral
+HumanShape
+Fairy
 Flying
 Indeterminate
 Monster
 Monster
 Monster
-
-
+Monster
+Ground
 Ground
 Ground
 Ground
@@ -456,7 +456,7 @@ HumanShape
 Plant
 Water 2
 Water 2
-
+Water 1
 Monster
 Monster
 Ground

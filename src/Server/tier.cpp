@@ -151,13 +151,36 @@ bool Tier::isValid(const TeamBattle &t)  const
     return true;
 }
 
+void Tier::changeRating(const QString &player, int newRating)
+{
+    QString w2 = player.toLower();
+    if (!ratings.contains(w2)) {
+        MemberRating m;
+        m.name() = w2;
+        m.filePos() = lastFilePos;
+        m.node() = rankings.insert(m.rating(), m.name());
+        in->seek(lastFilePos);
+        in->write(m.toString().toUtf8());
+        in->putChar('\n');
+        lastFilePos = in->pos();
+        ratings[w2] = m;
+    }
+    ratings[w2].rating() = newRating;
+    ratings[w2].node() = rankings.changeKey(ratings[w2].node().node(), ratings[w2].rating());
+
+    in->seek(ratings[w2].filePos());
+    in->write(ratings[w2].toString().toUtf8());
+
+    in->flush();
+}
+
 void Tier::changeRating(const QString &w, const QString &l)
 {
     QString w2 = w.toLower();
     QString l2 = l.toLower();
 
     /* Not really necessary, as pointChangeEstimate should always be called
-       at the beginning of the battle, but meh */
+       at the beginning of the battle, but meh maybe it's not a battle */
     if (!ratings.contains(w2)) {
         MemberRating m;
         m.name() = w2;
@@ -369,6 +392,11 @@ int TierMachine::count(const QString &tier)
 void TierMachine::changeRating(const QString &winner, const QString &loser, const QString &tier)
 {
     return this->tier(tier).changeRating(winner, loser);
+}
+
+void TierMachine::changeRating(const QString &player, const QString &tier, int newRating)
+{
+    return this->tier(tier).changeRating(player, newRating);
 }
 
 QPair<int, int> TierMachine::pointChangeEstimate(const QString &player, const QString &foe, const QString &tier)

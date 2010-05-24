@@ -1,4 +1,5 @@
 #include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/movesetchecker.h"
 #include <algorithm>
 
 QList< QSet<QSet<int> > > legalCombinations;
@@ -38,14 +39,22 @@ QString getLine(const QString & filename, int linenum)
 
 int main(int, char**)
 {
-    PokemonInfo::init("db/");
+    PokemonInfo::init("db/pokes/");
+    MoveSetChecker::init("db/pokes/");
+    MoveInfo::init("db/moves/");
 
-    int pokenum = 498;
+    int pokenum = 386;
     int gen = 3;
 
+    qDebug() << "Gen " << gen;
+    qDebug() << "Pokemons: " << pokenum;
+    qDebug() << "";
+
+    int count = 0;
+
     for (int i = 0; i <= pokenum; i++) {
-        QString group1(getLine("db/poke_egg_group_1.txt",i));
-        QString group2(getLine("db/poke_egg_group_2.txt",i));
+        QString group1(getLine("db/pokes/poke_egg_group_1.txt",i));
+        QString group2(getLine("db/pokes/poke_egg_group_2.txt",i));
 
         pokesOfGroup.insert(group1,i);
         pokesOfGroup.insert(group2,i);
@@ -80,16 +89,15 @@ int main(int, char**)
         legalCombinations.push_back(QSet<QSet<int> > ());
 
         QSet<int> eggMoves = PokemonInfo::EggMoves(i, gen);
-        QSet<int> regularMoves = PokemonInfo::TMMoves(i).unite(PokemonInfo::TutorMoves(i,gen))
-                                 .unite(PokemonInfo::LevelMoves(i,gen)).unite(PokemonInfo::PreEvoMoves(i,gen));
+        QSet<int> regularMoves = PokemonInfo::RegularMoves(i, gen);
 
         //We don't want useless data
         foreach(int move, regularMoves) {
             eggMoves.remove(move);
         }
 
-        QString groups[2] = {getLine("db/poke_egg_group_1.txt",i),
-                             getLine("db/poke_egg_group_2.txt",i)};
+        QString groups[2] = {getLine("db/pokes/poke_egg_group_1.txt",i),
+                             getLine("db/pokes/poke_egg_group_2.txt",i)};
 
         /* All egg moves combinations */
         QSet<QSet<int> > allCombinations;
@@ -130,6 +138,14 @@ int main(int, char**)
             }
         }
 
+        /* Saves up time */
+        foreach(QSet<int> combination, allCombinations) {
+            if (MoveSetChecker::isAnEggMoveCombination(i, gen, combination)) {
+                legalCombinations[i].insert(combination);
+                allCombinations.remove(combination);
+            }
+        }
+
         for(int c = 0;c < 2; c++) {
             if (groups[c].trimmed().length() == 0) {
                 continue;
@@ -143,14 +159,14 @@ int main(int, char**)
                 }
 
                 //We get the regular moves of that poke
-                QSet<int> regularMoves = PokemonInfo::TMMoves(poke).unite(PokemonInfo::TutorMoves(poke,gen))
-                                         .unite(PokemonInfo::LevelMoves(poke,gen)).unite(PokemonInfo::PreEvoMoves(poke,gen));
+                QSet<int> regularMoves = PokemonInfo::RegularMoves(poke, gen);
                 //And now the "special moves" of that poke.
                 QSet<int> specialMoves = PokemonInfo::EggMoves(poke,gen).unite(PokemonInfo::SpecialMoves(poke,gen));
 
                 /* And now, we assume that the poke can inherit only 1 special move of the father and any number of regular moves.
                    Of course that may not be true, and some poke given in events have many eggmoves or egg moves
-                    + special moves that they could give another poke. However that is rare. */
+                    + special moves that they could give another poke. This is solved by running the program multiple time :p. */
+
 
                 /* We look at all egg moves combinations possible and see if the father can give them */
                 foreach(QSet<int> combination, allCombinations) {
@@ -162,21 +178,46 @@ int main(int, char**)
                         }
                     }
                     /* Now then, if copy.size() is 0 then all moves in the combination are
-                       part from the regular moves of the father. */
-                    if (copy.empty()) {
+                       part from the regular moves of the father. Otherwise, all regular moves
+                        are removed and the remaining moves are in copy and tested to see if the
+                        father could learn them legally */
+                    if (copy.empty() || MoveSetChecker::isAnEggMoveCombination(poke, gen, copy)) {
                         legalCombinations[i].insert(combination);
                         /* we remove it to avoid doing it again */
                         allCombinations.remove(combination);
                         /* and we continue! */
+
+                        if (!MoveSetChecker::isAnEggMoveCombination(i, gen, combination)) {
+                            count ++;
+                            qDebug() << "Combination added for " << PokemonInfo::Name(i) << " learnt from " << PokemonInfo::Name(poke);
+
+                            foreach (int z , combination) {
+                                qDebug() << "- " << MoveInfo::Name(z);
+                            }
+
+                            qDebug() << "";
+                        }
+
                         continue;
                     }
                     /* Else, given our hypothesis, all moves but 1 must be regular and 1 move
-                       is special. */
+                       is special. (1 move combinations don't appear in EggMoveCombinations, that's why we need a second if) */
                     if (copy.size() == 1) {
                         /* last remaining move, are you in the special moves of your father? */
                         if (specialMoves.contains(*copy.begin())) {
                             legalCombinations[i].insert(combination);
                             allCombinations.remove(combination);
+
+                            if (!MoveSetChecker::isAnEggMoveCombination(i, gen, combination)) {
+                                count ++;
+                                qDebug() << "Combination added for " << PokemonInfo::Name(i) << " learnt from " << PokemonInfo::Name(poke);
+
+                                foreach (int z , combination) {
+                                    qDebug() << "- " << MoveInfo::Name(z);
+                                }
+
+                                qDebug() << "";
+                            }
                         }
                     }
                 }
@@ -202,7 +243,7 @@ int main(int, char**)
     /* Now we proudly save the obtained combinations */
 
     QFile out("legal_combinations_" +QString::number(gen) + "G.txt");
-    out.open(QIODevice::ReadWrite);
+    out.open(QIODevice::WriteOnly);
 
     bool space, ord, newline;
     newline = false;
@@ -224,6 +265,8 @@ int main(int, char**)
         }
         newline = true;
     }
+
+    qDebug() << count << " combinations added!";
 
     return 0;
 }

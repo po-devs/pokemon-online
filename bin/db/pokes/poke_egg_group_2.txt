@@ -170,10 +170,10 @@ Water 1
 
 
 
+Fairy
 
 
-
-
+Fairy
 Fairy
 
 
@@ -296,7 +296,7 @@ Ground
 Ground
 
 
-
+Fairy
 
 Fairy
 Fairy
@@ -404,7 +404,7 @@ Ground
 
 
 
-
+Plant
 Plant
 
 
@@ -445,7 +445,7 @@ Dragon
 Dragon
 Dragon
 
-
+HumanShape
 HumanShape
 
 

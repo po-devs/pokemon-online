@@ -2598,7 +2598,7 @@ void BattleSituation::changeTempMove(int player, int slot, int move)
 {
     pokelong[player]["Move" + QString::number(slot)] = move;
     notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
-    changePP(player,slot,5);
+    changePP(player,slot,std::min(MoveInfo::PP(move), 5));
 }
 
 void BattleSituation::changeSprite(int player, int poke)

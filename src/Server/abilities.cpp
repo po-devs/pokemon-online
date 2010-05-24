@@ -976,10 +976,11 @@ struct AMTrace : public AM {
         if (t == - 1)
             return;
 
+        int ab = b.ability(t);
         //Multitype
-        if (!b.hasWorkingAbility(t,Ability::Multitype)) {
-            b.sendAbMessage(66,0,s,t,0,b.ability(t));
-            b.acquireAbility(s, b.ability(t));
+        if (b.hasWorkingAbility(t, ab) && ab != Ability::Multitype && ab !=  Ability::Trace) {
+            b.sendAbMessage(66,0,s,t,0,ab);
+            b.acquireAbility(s, ab);
         }
     }
 };

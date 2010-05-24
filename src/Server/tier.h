@@ -67,6 +67,7 @@ struct Tier
     }
 
     void changeRating(const QString &winner, const QString &loser);
+    void changeRating(const QString &player, int newRating);
     QPair<int, int> pointChangeEstimate(const QString &player, const QString &foe);
 
     bool isBanned(const PokeBattle &p) const;
@@ -111,6 +112,7 @@ public:
     int ranking(const QString &name, const QString &tier);
     int count (const QString &tier);
     void changeRating(const QString &winner, const QString &loser, const QString &tier);
+    void changeRating(const QString &winner, const QString &tier, int newRating);
 
     QPair<int, int> pointChangeEstimate(const QString &player, const QString &foe, const QString &tier);
 
