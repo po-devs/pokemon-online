@@ -56,7 +56,7 @@
     <message>
         <location filename="pokedex.cpp" line="955"/>
         <source>&amp;Search !</source>
-        <translation>&amp;Suchen !</translation>
+        <translation>&amp;Suche !</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="958"/>
@@ -69,13 +69,12 @@
     <message>
         <location filename="analyze.cpp" line="217"/>
         <source>The server requires insecure authentification.</source>
-        <translatorcomment>(Nimm am besten nicht für jeden Server ein anderes Passwort, sonst kommst du durcheinander ;))</translatorcomment>
-        <translation>Starte die Anwendung neu um die Änderungen zu sehen.</translation>
+        <translation>Der Server erfordert ein unsicheres Zertifikat.</translation>
     </message>
     <message>
         <location filename="analyze.cpp" line="346"/>
         <source>Protocol error: unknown command received -- maybe an update for the program is available</source>
-        <translation>Achtung: Unbekannter Befehl eingegangen - Vielleicht ist ein Update vorhanden (Schau nach!)</translation>
+        <translation>Achtung: Unbekannter Befehl eingegangen - Vielleicht ist ein Update vorhanden</translation>
     </message>
 </context>
 <context>
@@ -99,16 +98,14 @@ Accuracy: %3
 Description: %4
 
 Effect: %5</source>
-        <translation>%1 Level %2
+        <translation>%1
 
-Item:%3
-Fähigkeit:%4
+Kraft: %2
+Genauigkeit: %3
 
-Attacken:
---%5
---%6
---%7
---%8</translation>
+Beschreibung: %4
+
+Effekt: %5</translation>
     </message>
 </context>
 <context>
@@ -149,7 +146,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="69"/>
         <source>Battle between %1 and %2</source>
-        <translation>Ein Kampf zwischen% 1 und% 2 ist im Gange!</translation>
+        <translation>Ein Kampf zwischen %1 und %2 ist im Gange!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="75"/>
@@ -172,7 +169,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="280"/>
         <source>%1 sent out %2! (%3)</source>
-        <translation>%1 schickt %2! in den Kampf(%3)</translation>
+        <translation>%1 schickt %2 (%3) in den Kampf!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="282"/>
@@ -182,7 +179,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="288"/>
         <source>%1 called %2 back!</source>
-        <translation>%1 hat %2 zurück gerufen</translation>
+        <translation>%1 hat %2 zurückgerufen!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="296"/>
@@ -221,17 +218,17 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="354"/>
         <source>A critical hit!</source>
-        <translation>Ein Volltrefer!</translation>
+        <translation>Volltreffer!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="357"/>
         <source>The attack of %1 missed!</source>
-        <translation>Die Attacke von %1 ging daneben</translation>
+        <translation>Die Attacke von %1 ging daneben!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="360"/>
         <source>%1 avoided the attack!</source>
-        <translation>%1 wehrt die Attacke ab!</translation>
+        <translation>%1 hat den Angriff abgefangen!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="366"/>
@@ -257,7 +254,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="371"/>
         <source>%1 is paralyzed! It may be unable to move!</source>
-        <translation>%1 wurde paralysiert. Es kann sich möglicherweise aufgrund der Paralyse nicht bewegen!</translation>
+        <translation>%1 wurde paralysiert. Es kann sich möglicherweise nicht bewegen!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="372"/>
@@ -272,7 +269,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="374"/>
         <source>%1 fell asleep!</source>
-        <translation>%1 schläft ein!</translation>
+        <translation>%1 ist eingeschlafen!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="375"/>
@@ -292,7 +289,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="405"/>
         <source>%1 is already %2!</source>
-        <translation>%1 ist bereit%2!</translation>
+        <translation>%1 ist bereits %2!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="415"/>
@@ -311,7 +308,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="424"/>
         <source>%1 is paralyzed! It can&apos;t move!</source>
-        <translation>%1 ist paralysiert!</translation>
+        <translation>%1 ist paralysiert! Es kann sich nicht bewegen!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="427"/>
@@ -326,7 +323,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="433"/>
         <source>%1 is hurt by its burn!</source>
-        <translation>%1 brenn!</translation>
+        <translation>%1 brennt!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="436"/>
@@ -351,7 +348,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="502"/>
         <source>But there was no target...</source>
-        <translation>Es befindet sich doch gar kein Ziel</translation>
+        <translation>Aber es gibt kein Ziel...</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="536"/>
@@ -400,7 +397,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="36"/>
         <source>Battle between %1 and %2 is underway!</source>
-        <translation>Kampf zwischen% 1 und% 2 ist im Gange!</translation>
+        <translation>Kampf zwischen%1 und%2 ist im Gange!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="85"/>
@@ -410,17 +407,17 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="86"/>
         <source>&amp;Ignore Spectators</source>
-        <translation>&amp;Ignoriert Zuschauer</translation>
+        <translation>&amp;Ignoriere Zuschauer</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="330"/>
         <source>Hit %1 times!</source>
-        <translation>Trifft %1 einmal!</translation>
+        <translation>%1mal getroffen!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="418"/>
         <source>It hurt itself in its confusion!</source>
-        <translation>hat sich vor Verwirrung selbst verletzt!</translation>
+        <translation>Es hat sich vor Verwirrung selbst verletzt!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="522"/>
@@ -453,7 +450,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="543"/>
         <source>%1 is buffeted by the hail!</source>
-        <translation>%1 wurde durch den hagel verletzt!</translation>
+        <translation>%1 wurde durch den Hagel verletzt!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="544"/>
@@ -500,7 +497,7 @@ Attacken:
     <message>
         <location filename="basebattlewindow.cpp" line="560"/>
         <source>%1 lost %2% of its health!</source>
-        <translation>%1 verliert %2 Prozent seiner KP!</translation>
+        <translation>%1 verliert %2% seiner KP!</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="600"/>
@@ -516,7 +513,7 @@ Attacken:
         <location filename="basebattlewindow.cpp" line="617"/>
         <location filename="basebattlewindow.cpp" line="625"/>
         <source>Rule: </source>
-        <translation>Regeln:</translation>
+        <translation>Regel: </translation>
     </message>
 </context>
 <context>
@@ -532,12 +529,12 @@ Attacken:
     <message>
         <location filename="challenge.cpp" line="57"/>
         <source>Singles</source>
-        <translation>Einzel</translation>
+        <translation>Einzelkampf</translation>
     </message>
     <message>
         <location filename="challenge.cpp" line="58"/>
         <source>Doubles</source>
-        <translation>Doppel</translation>
+        <translation>Doppelkampf</translation>
     </message>
 </context>
 <context>
@@ -563,12 +560,12 @@ Attacken:
     <message>
         <location filename="client.cpp" line="1191"/>
         <source>Force rated battles</source>
-        <translation>Wertungskampf</translation>
+        <translation>Wertungskämpfe erzwingen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1192"/>
         <source>Force same tier</source>
-        <translation>gleiche Tier</translation>
+        <translation>gleichen Tier erzwingen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1193"/>
@@ -578,7 +575,7 @@ Attacken:
     <message>
         <location filename="client.cpp" line="1196"/>
         <source>Only battle players with a max rating difference of </source>
-        <translation>Nur Spieler mit einem maximalen Rating Unterschied von </translation>
+        <translation>Nur gegen Spieler mit einem maximalen Ratingunterschied von </translation>
     </message>
     <message>
         <location filename="client.cpp" line="1213"/>
@@ -588,7 +585,7 @@ Attacken:
     <message>
         <location filename="client.cpp" line="1214"/>
         <source>Cancel</source>
-        <translation>Löschen</translation>
+        <translation>Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -617,7 +614,7 @@ Attacken:
     <message>
         <location filename="battlewindow.cpp" line="66"/>
         <source>&amp;Switch PokÃ©mon</source>
-        <translation>&amp;Pokemon wechseln</translation>
+        <translation>&amp;Pokémon wechseln</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="70"/>
@@ -627,7 +624,7 @@ Attacken:
     <message>
         <location filename="battlewindow.cpp" line="71"/>
         <source>&amp;PokÃ©mon</source>
-        <translation>&amp;Pokemon</translation>
+        <translation>&amp;Pokémon</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="72"/>
@@ -642,7 +639,7 @@ Attacken:
     <message>
         <location filename="battlewindow.cpp" line="108"/>
         <source>&amp;Go Back</source>
-        <translation>Komm zurück</translation>
+        <translation>&amp;Zurück</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="116"/>
@@ -657,12 +654,12 @@ Attacken:
     <message>
         <location filename="battlewindow.cpp" line="222"/>
         <source>Do you mean to forfeit?</source>
-        <translation>Bist du sicher, das du aufgeben möchtest?</translation>
+        <translation>Bist du sicher, dass du aufgeben möchtest?</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="445"/>
         <source>%1 sent out %2! (%3)</source>
-        <translation>%1 schickt %2! (%3)</translation>
+        <translation>%1 schickt %2 (%3) in den Kampf!</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="447"/>
@@ -672,7 +669,7 @@ Attacken:
     <message>
         <location filename="battlewindow.cpp" line="516"/>
         <source>%1 lost %2 HP! (%3% of its health)</source>
-        <translation>%1 verliert %2 KP (%3% seiner Gesundheit)</translation>
+        <translation>%1 verliert %2 KP! (%3% seiner Gesundheit)</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="518"/>
@@ -695,12 +692,12 @@ Attacken:
     <message>
         <location filename="pokedex.cpp" line="125"/>
         <source>Type: </source>
-        <translation>Typ</translation>
+        <translation>Typ: </translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="135"/>
         <source>Gender: </source>
-        <translation>Geschlecht</translation>
+        <translation>Geschlecht: </translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="149"/>
@@ -710,7 +707,7 @@ Attacken:
     <message>
         <location filename="pokedex.cpp" line="150"/>
         <source>&amp;Other Formes</source>
-        <translation>&amp;Andere Form</translation>
+        <translation>&amp;Andere Formen</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="171"/>
@@ -720,12 +717,12 @@ Attacken:
     <message>
         <location filename="pokedex.cpp" line="195"/>
         <source>&lt;b&gt;Ht:&lt;/b&gt; %1</source>
-        <translation>&lt;b&gt;Ht:&lt;/b&gt; %1</translation>
+        <translation>&lt;b&gt;Größe:&lt;/b&gt; %1</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="196"/>
         <source>&lt;b&gt;Wt:&lt;/b&gt; %1 lbs</source>
-        <translation>&lt;b&gt;Wt:&lt;/b&gt; %1 lbs</translation>
+        <translation>&lt;b&gt;Gewicht:&lt;/b&gt; %1 lbs</translation>
     </message>
     <message>
         <source>&lt;b&gt;Wt:&lt;/b&gt; %1 lbs.</source>
@@ -774,7 +771,7 @@ Attacken:
     <message>
         <location filename="client.cpp" line="33"/>
         <source>&amp;Exit</source>
-        <translation>&amp;Server verlassen</translation>
+        <translation>Server &amp;verlassen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="34"/>
@@ -797,7 +794,7 @@ Attacken:
     <message>
         <location filename="client.cpp" line="31"/>
         <source>&amp;Find Battle</source>
-        <translation>&amp;Kampf suchen</translation>
+        <translation>Kampf &amp;suchen</translation>
     </message>
     <message>
         <source>&amp;Challenge Window</source>
@@ -810,8 +807,7 @@ Attacken:
     <message>
         <location filename="client.cpp" line="142"/>
         <source>Go &amp;Away</source>
-        <translatorcomment>Kenne keine deutsche Übersetzung ;)</translatorcomment>
-        <translation>&amp;Away (afk)</translation>
+        <translation>&amp;afk gehen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="147"/>
@@ -821,7 +817,7 @@ Attacken:
     <message>
         <location filename="client.cpp" line="149"/>
         <source>&amp;Remove Ignore</source>
-        <translation>&amp; Entfernen Ignorieren</translation>
+        <translation>Ignorieren &amp;entfernen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="151"/>
@@ -905,7 +901,7 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="client.cpp" line="396"/>
         <source>Reload StyleSheet</source>
-        <translation>StyleSheet neu laden</translation>
+        <translation>StyleSheet neuladen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="397"/>
@@ -940,7 +936,7 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="client.cpp" line="431"/>
         <source>Save &amp;Battle Logs</source>
-        <translation>Kampf logs speichern</translation>
+        <translation>Kampflogs speichern</translation>
     </message>
     <message>
         <source>Change &amp;Log Folder</source>
@@ -949,7 +945,7 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="client.cpp" line="445"/>
         <source>Animate HP Bar</source>
-        <translation>Animierte KP Anzeige</translation>
+        <translation>KP-Anzeige animieren</translation>
     </message>
     <message>
         <source>&amp;Play Music and Sounds</source>
@@ -967,102 +963,102 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="client.cpp" line="137"/>
         <source>&amp;View Ranking</source>
-        <translation>&amp;Siehe Platzierung</translation>
+        <translation>&amp;Ranking ansehen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="145"/>
         <source>&amp;Send Message</source>
-        <translation>&amp;Nachricht senden</translation>
+        <translation>&amp;Nachricht verschicken</translation>
     </message>
     <message>
         <location filename="client.cpp" line="322"/>
         <source>&amp;Cancel Find Battle</source>
-        <translation>&amp;Kampfanfrage zurückziehen</translation>
+        <translation>&amp;Suche nach Kampf abbrechen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="387"/>
         <source>&amp;Load team</source>
-        <translation>Team Laden</translation>
+        <translation>&amp;Team laden</translation>
     </message>
     <message>
         <location filename="client.cpp" line="388"/>
         <source>Open &amp;teamBuilder</source>
-        <translation>Teambuilder öffnen</translation>
+        <translation>&amp;TeamBuilder öffnen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="398"/>
         <source>&amp;Idle</source>
-        <translation>&amp;faulenzen</translation>
+        <translation>&amp;afk</translation>
     </message>
     <message>
         <location filename="client.cpp" line="406"/>
         <source>&amp;Show team</source>
-        <translation>Zeige Team</translation>
+        <translation>&amp;Team anzeigen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="411"/>
         <source>Enable &amp;ladder</source>
-        <translation>aktiviere &amp;Leiter</translation>
+        <translation>&amp;Leiter aktivieren</translation>
     </message>
     <message>
         <location filename="client.cpp" line="416"/>
         <source>&amp;Enable player events</source>
-        <translation>&amp;aktiviere Spieler Events</translation>
+        <translation>&amp;Veranstaltungen erlauben</translation>
     </message>
     <message>
         <location filename="client.cpp" line="422"/>
         <source>Enable &amp;timestamps</source>
-        <translation>aktiviere &amp;Zeitstempel</translation>
+        <translation>&amp;Zeitstempel aktivieren</translation>
     </message>
     <message>
         <location filename="client.cpp" line="428"/>
         <source>&amp;Tiers</source>
-        <translation>&amp;Tier</translation>
+        <translation>&amp;Tiers</translation>
     </message>
     <message>
         <location filename="client.cpp" line="430"/>
         <source>&amp;Battle Options</source>
         <comment>Menu</comment>
-        <translation>&amp;Kampf Optionen</translation>
+        <translation>&amp;Kampfoptionen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="436"/>
         <source>Change &amp;log folder</source>
-        <translation>Ändere &amp;Log Ordner</translation>
+        <translation>&amp;Logordner wechseln</translation>
     </message>
     <message>
         <location filename="client.cpp" line="438"/>
         <source>&amp;Enable sounds</source>
-        <translation>&amp;aktiviere Sounds</translation>
+        <translation>&amp;Sounds aktivieren</translation>
     </message>
     <message>
         <location filename="client.cpp" line="443"/>
         <source>Change &amp;sound folder</source>
-        <translation>Ändere &amp;Sound Ordner</translation>
+        <translation>&amp;Soundordner wechseln</translation>
     </message>
     <message>
         <location filename="client.cpp" line="482"/>
         <source>Enter the password for your current name.
 
 It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
-        <translation>Geben Sie das Kennwort für Ihren Nutzername.
+        <translation>Geben Sie das Kennwort für Ihren Benutzernamen ein.
 
-Es wird empfohlen für jeden Server das gleiche Passwort zu benutzen (Der Server sieht nur die verschlüsselte Form des Passworts, aber immer noch ...)</translation>
+Es wird empfohlen, für jeden Server ein leicht abgeändertes zu benutzen (Der Server sieht nur die verschlüsselte Form des Passwortes, aber dennoch...)</translation>
     </message>
     <message>
         <location filename="client.cpp" line="501"/>
         <source>Battle Music Directory</source>
-        <translation>Kampf Musik Verzeichnis</translation>
+        <translation>Verzeichnis der Kampfmusik</translation>
     </message>
     <message>
         <location filename="client.cpp" line="511"/>
         <source>Battle Logs Directory</source>
-        <translation>Kampf Logs Verzeichnis</translation>
+        <translation>Verzeichnis der Kampflogs</translation>
     </message>
     <message>
         <location filename="client.cpp" line="558"/>
         <source>Your client version (%2) doesn&apos;t match with the server&apos;s (%1).</source>
-        <translation>Ihre Client-Version (% 2) Spielt nicht mit dem Server(%1).</translation>
+        <translation>Die Version Ihres Clients (%2) passt nicht zu der des Servers (%1).</translation>
     </message>
     <message>
         <location filename="client.cpp" line="561"/>
@@ -1074,9 +1070,9 @@ Es wird empfohlen für jeden Server das gleiche Passwort zu benutzen (Der Server
         <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
 
 It is recommended to update.</source>
-        <translation>Ihre Version ist älter als die Server Version, es kann sein das Sie einige dinge nicht machen können.
+        <translation>Ihre Version ist älter als die des Servers, es könnte sein, dass manche Dinge nicht funktionieren.
 
-Es wir empfohlen ein Update zu machen.</translation>
+Es wird empfohlen, ein Update durchzuführen.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="684"/>
@@ -1107,7 +1103,7 @@ Es wir empfohlen ein Update zu machen.</translation>
     <message>
         <location filename="client.cpp" line="780"/>
         <source>&amp;Find battle</source>
-        <translation>&amp;Kampf finden</translation>
+        <translation>&amp;Kampf suchen</translation>
     </message>
     <message>
         <location filename="client.cpp" line="797"/>
@@ -1132,12 +1128,12 @@ Es wir empfohlen ein Update zu machen.</translation>
     <message>
         <location filename="client.cpp" line="825"/>
         <source>%1 is idling.</source>
-        <translation>%1 faulenzt</translation>
+        <translation>%1 ist afk.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="827"/>
         <source>%1 is active and ready for battles.</source>
-        <translation>%1 ist aktiv und bereit für ein Kampf.</translation>
+        <translation>%1 ist aktiv und bereit für Kämpfe.</translation>
     </message>
     <message>
         <source>%1 is away.</source>
@@ -1150,7 +1146,7 @@ Es wir empfohlen ein Update zu machen.</translation>
     <message>
         <location filename="client.cpp" line="882"/>
         <source>Error while connected to server -- Received error nÂ°%1: %2</source>
-        <translation>Fehler beim verbinden mit dem Server - Fehler Nr. %1: %2</translation>
+        <translation>Fehler beim Verbinden mit dem Server - Fehler Nr. %1: %2</translation>
     </message>
     <message>
         <location filename="client.cpp" line="887"/>
@@ -1180,7 +1176,7 @@ Es wir empfohlen ein Update zu machen.</translation>
     <message>
         <location filename="client.cpp" line="1019"/>
         <source>%1 changed teams.</source>
-        <translation>%1 hat Teams getauscht.</translation>
+        <translation>%1 hat die Teams getauscht.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1166"/>
@@ -1190,7 +1186,7 @@ Es wir empfohlen ein Update zu machen.</translation>
     <message>
         <location filename="client.cpp" line="1172"/>
         <source>You stopped ignoring %1.</source>
-        <translation>Du hörst auf %1 zu ignorieren</translation>
+        <translation>Du hörst auf, %1 zu ignorieren</translation>
     </message>
     <message>
         <source>You&apos;re already in the middle of something!</source>
@@ -1615,7 +1611,7 @@ Attacken:
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="16"/>
         <source>No Timeout</source>
-        <translation>Kein Timeout</translation>
+        <translation>Keine Zeitbegrenzung</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="17"/>
@@ -1859,12 +1855,12 @@ Attacken:
     <message>
         <location filename="pokedex.cpp" line="521"/>
         <source>Special Attack</source>
-        <translation>Spezial Angriff</translation>
+        <translation>Spezialangriff</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="521"/>
         <source>Special Defense</source>
-        <translation>Spezial Verteidigung</translation>
+        <translation>Spezialverteidigung</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="596"/>
@@ -1874,12 +1870,12 @@ Attacken:
     <message>
         <location filename="pokedex.cpp" line="612"/>
         <source>Resistance</source>
-        <translation>Resistent</translation>
+        <translation>Resistenz</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="628"/>
         <source>Immunity</source>
-        <translation>Immun</translation>
+        <translation>Immunität</translation>
     </message>
 </context>
 <context>
@@ -2444,12 +2440,12 @@ Attacken:
     <message>
         <location filename="teambuilder.cpp" line="376"/>
         <source>&amp;View</source>
-        <translation>&amp;Siehe</translation>
+        <translation>&amp;Ansehen</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="377"/>
         <source>&amp;Full Screen (for netbook users ONLY)</source>
-        <translation>&amp;Ganzer Bildschirm (nur für Netbook/Laptop Usern möglich)</translation>
+        <translation>&amp;Vollbild (NUR für Netbooks!)</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="412"/>
@@ -2482,7 +2478,7 @@ Ihre Sprache muss auf Englisch eingestellt werden, um englische Teams zu importi
     <message>
         <location filename="teambuilder.cpp" line="572"/>
         <source>PokÃ©mon &amp;%1</source>
-        <translation>Pokemon &amp;%1</translation>
+        <translation>Pokémon &amp;%1</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="581"/>
