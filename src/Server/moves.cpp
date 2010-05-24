@@ -222,6 +222,8 @@ struct MMBatonPass : public MM
     MMBatonPass() {
 	functions["DetermineAttackSuccessful"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
+        // the function has to be in that list when called by metronome, so it can be unsetup
+        functions["AfterAttackFinished"] = &aaf;
     }
 
     static void daf(int s, int, BS &b) {
@@ -232,10 +234,12 @@ struct MMBatonPass : public MM
 
     static void uas(int s, int, BS &b)
     {
-        addFunction(turn(b,s), "AfterAttackFinished", "BatonPass", &aaf);
+        turn(b,s)["BatonPassSuccess"] = true;
     }
 
     static void aaf(int s, int, BS &b) {
+        if (!turn(b,s).contains("BatonPassSuccess"))
+            return;
 	/* first we copy the temp effects, then put them to the next poke */
 	BS::context c = poke(b, s);
     	c.remove("Type1");
@@ -2449,6 +2453,8 @@ struct MMHealingWish : public MM
     MMHealingWish() {
         functions["DetermineAttackFailure"] = &daf;
         functions["BeforeTargetList"] = &btl;
+        /* Has to be put there so it can be unsetup by calling moves */
+        functions["AfterAttackFinished"] = &aaf;
     }
 
     static void daf(int s, int, BS &b) {
@@ -2458,11 +2464,13 @@ struct MMHealingWish : public MM
     }
 
     static void btl(int s, int, BS &b) {
-	addFunction(turn(b,s), "AfterSwitchIn", "HealingWish", &asi);
-        addFunction(turn(b,s), "AfterAttackFinished", "HealingWish", &aaf);
+        turn(b,s)["HealingWishSuccess"] = true;
     }
 
     static void aaf(int s, int, BS &b) {
+        if (!turn(b,s).contains("HealingWishSuccess"))
+            return;
+        addFunction(turn(b,s), "AfterSwitchIn", "HealingWish", &asi);
         b.requestSwitch(s);
     }
 
