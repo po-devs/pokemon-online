@@ -723,7 +723,7 @@ void Player::recvTeam(const TeamInfo &team)
 
     /* If a player is battling, and changs name, well that's a way to evaded rating points on his old nick,
        so until this stupid flaw is fixed, no name change... */
-    if (team.name != name() && battling()) {
+    if (team.name != oldName && battling()) {
         keepSameName = true;
     }
 
@@ -742,7 +742,7 @@ void Player::recvTeam(const TeamInfo &team)
         tier() = TierMachine::obj()->findTier(this->team());
         rating() = TierMachine::obj()->rating(name(), tier());
 
-        emit recvTeam(id(), team.name); // no check needed, going directly there...
+        emit recvTeam(id(), this->name()); // no check needed, going directly there...
         return;
     }
 
