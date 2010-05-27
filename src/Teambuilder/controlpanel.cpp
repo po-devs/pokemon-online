@@ -28,6 +28,7 @@ void ControlPanel::setPlayer(const UserInfo &ui)
     authority->setText(authorityText(ui.auth));
     status->setText(statusText(ui));
     ip->setText(ui.ip);
+    lastAp->setText(ui.date);
 
     mute->setDisabled(true);
     if (!ui.online()) {
