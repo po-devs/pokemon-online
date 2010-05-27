@@ -461,14 +461,20 @@ void BattleSituation::endTurn()
     callzeffects(Player2, Player2, "EndTurn");
 
     foreach (int player, players) {
+        /* Wish */
         callseffects(player,player, "EndTurn2");
     }
 
     endTurnWeather();
 
+    testWin();
+
     callbeffects(Player1,Player1,"EndTurn5");
 
     foreach (int player, players) {
+        if (koed(player))
+            continue;
+
         /* Ingrain, aquaring */
         callpeffects(player, player, "EndTurn60");
 
@@ -480,6 +486,10 @@ void BattleSituation::endTurn()
 
         /* Lefties, black sludge */
         callieffects(player, player, "EndTurn63");
+
+        if (koed(player)) {
+            continue;
+        }
 
         /* Leech Seed, Nightmare. Warning: Leech Seed and rapid spin are linked */
         callpeffects(player, player, "EndTurn64");
@@ -518,14 +528,22 @@ void BattleSituation::endTurn()
         callieffects(player, player, "EndTurn618");
     }
 
+    testWin();
+
 
     foreach (int player, players) {
+        /* Doom Desire */
         callseffects(player,player, "EndTurn7");
     }
 
+    testWin();
+
     foreach (int player, players) {
+        /* Perish Song */
         callpeffects(player,player, "EndTurn8");
     }
+
+    testWin();
 
     callbeffects(Player1,Player1,"EndTurn9");
 
@@ -545,7 +563,7 @@ void BattleSituation::notifyFail(int p)
 
 void BattleSituation::endTurnStatus(int player)
 {
-    if (koed(player))
+    if (koed(player) || hasWorkingAbility(player, Ability::MagicGuard))
         return;
 
     switch(poke(player).status())
@@ -843,6 +861,7 @@ void BattleSituation::analyzeChoices()
         for(std::map<int, std::vector<int> >::iterator it = secondPriorities.begin(); it != secondPriorities.end(); ++it) {
             foreach(int p, it->second) {
                 analyzeChoice(p);
+                testWin();
             }
         }
     }
@@ -1809,6 +1828,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     callieffects(player, player, "AfterTargetList");
     end:
+    callieffects(player, player, "BeforeEnding");
     calleffects(player, player, "BeforeEnding");
     trueend:
     pokelong[player]["HasMovedOnce"] = true;
@@ -2211,7 +2231,8 @@ void BattleSituation::endTurnWeather()
             std::vector<int> players = sortedBySpeed();
             foreach (int i, players) {
                 callaeffects(i,i,"WeatherSpecial");
-                if (!turnlong[i].contains("WeatherSpecialed") && (weather == Hail || weather == SandStorm) &&!immuneTypes.contains(getType(i,1)) && !immuneTypes.contains(getType(i,2))) {
+                if (!turnlong[i].contains("WeatherSpecialed") && (weather == Hail || weather == SandStorm) &&!immuneTypes.contains(getType(i,1))
+                        && !immuneTypes.contains(getType(i,2)) && !hasWorkingAbility(i, Ability::MagicGuard)) {
 		    notify(All, WeatherMessage, i, qint8(HurtWeather),qint8(weather));
 		    inflictDamage(i, poke(i).totalLifePoints()/16, i, false);
 		}

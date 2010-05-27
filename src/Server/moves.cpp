@@ -197,8 +197,8 @@ struct MMAssurance : public MM
 	functions["BeforeCalculatingDamage"] = &bcd;
     }
 
-    static void bcd(int s, int, BS &b) {
-	if (turn(b,s).contains("DamageTaken")) {
+    static void bcd(int s, int t, BS &b) {
+        if (turn(b,t).contains("DamageTaken")) {
 	    turn(b, s)["Power"] = turn(b, s)["Power"].toInt() * 2;
 	}
     }
@@ -861,7 +861,7 @@ struct MMLeechSeed : public MM
 
     static void daf(int s, int t, BS &b) {
 	if (b.hasType(t, Pokemon::Grass) || (poke(b,t).contains("SeedSource"))) {
-	    b.fail(s, 72,0,Pokemon::Grass);
+            b.fail(t, 72,0,Pokemon::Grass,s);
 	}
     }
 
@@ -872,7 +872,7 @@ struct MMLeechSeed : public MM
     }
 
     static void et(int s, int, BS &b) {
-	if (b.koed(s))
+        if (b.koed(s) || b.hasWorkingAbility(s, Ability::MagicGuard))
 	    return;
         int s2 = poke(b,s)["SeedSource"].toInt();
         if (b.koed(s2))
@@ -1103,7 +1103,7 @@ struct MMSpikes : public MM
 
     static void usi(int p, int slot, BS &b) {
         int spikeslevel = team(b,p).value("Spikes").toInt();
-        if (spikeslevel <= 0 || b.isFlying(slot)) {
+        if (spikeslevel <= 0 || b.isFlying(slot) || b.hasWorkingAbility(slot, Ability::MagicGuard)) {
 	    return;
 	}
 	int n = (spikeslevel+1);
@@ -1134,7 +1134,7 @@ struct MMStealthRock : public MM
     }
 
     static void usi(int source, int s, BS &b) {
-        if (team(b,source).value("StealthRock").toBool() == true)
+        if (team(b,source).value("StealthRock").toBool() == true && !b.hasWorkingAbility(s, Ability::MagicGuard))
 	{
 	    b.sendMoveMessage(124,1,s,Pokemon::Rock);
 	    int n = TypeInfo::Eff(Pokemon::Rock, poke(b,s)["Type1"].toInt()) * TypeInfo::Eff(Pokemon::Rock, poke(b,s)["Type2"].toInt());
@@ -2452,7 +2452,7 @@ struct MMHealingWish : public MM
 {
     MMHealingWish() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["BeforeTargetList"] = &btl;
+        functions["UponAttackSuccessful"] = &btl;
         /* Has to be put there so it can be unsetup by calling moves */
         functions["AfterAttackFinished"] = &aaf;
     }
@@ -2589,24 +2589,53 @@ struct MMFling : public MM
 	if (b.poke(s).item() != 0 && b.hasWorkingItem(s, b.poke(s).item())) {
 	    turn(b,s)["FlingItem"] = b.poke(s).item();
 	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * ItemInfo::Power(b.poke(s).item());
+            b.sendMoveMessage(45, 0, s, type(b,s), s, b.poke(s).item());
 	    b.disposeItem(s);
 	}
     }
 
     static void uas (int s, int t, BS &b) {
 	int item = turn(b,s)["FlingItem"].toInt();
-	switch (item) {
-            case Item::FlameOrb: b.inflictStatus(t, Pokemon::Burnt, s); break; /*flame orb*/
-            case Item::ToxicOrb: b.inflictStatus(t, Pokemon::DeeplyPoisoned, s); break; /*toxic orb*/
-            case Item::KingsRock: case Item::RazorFang: turn(b,t)["Flinched"] = true; break; /* king rock, razor fang */
-            case Item::LightBall: b.inflictStatus(t, Pokemon::Paralysed, s); break; /* light ball */
-            case Item::PoisonBarb: b.inflictStatus(t, Pokemon::Poisoned, s); break; /* poison barb */
-            case Item::WhiteHerb: case Item::MentalHerb: /* mental herb, white herb */
-                int oppitem = b.poke(t).item();
-                b.sendMoveMessage(45, 0, s, type(b,s), t, item);
-		ItemEffect::activate("AfterSetup", item, t,s,b);
-		b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
-		break;
+        if (!ItemInfo::isBerry(item)) {
+            switch (item) {
+                case Item::FlameOrb: b.inflictStatus(t, Pokemon::Burnt, s); break; /*flame orb*/
+                case Item::ToxicOrb: b.inflictStatus(t, Pokemon::DeeplyPoisoned, s); break; /*toxic orb*/
+                case Item::KingsRock: case Item::RazorFang: turn(b,t)["Flinched"] = true; break; /* king rock, razor fang */
+                case Item::LightBall: b.inflictStatus(t, Pokemon::Paralysed, s); break; /* light ball */
+                case Item::PoisonBarb: b.inflictStatus(t, Pokemon::Poisoned, s); break; /* poison barb */
+                case Item::WhiteHerb: case Item::MentalHerb: /* mental herb, white herb */
+                    int oppitem = b.poke(t).item();
+                    ItemEffect::activate("AfterSetup", item, t,s,b);
+                    b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
+                    break;
+            }
+        } else {
+            int sitem = b.poke(t).item();
+
+            /* Setting up the conditions so berries work properly */
+            turn(b,t)["BugBiter"] = true; // for testPinch of pinch berries to return true
+            QVariant tempItemStorage = poke(b,t)["ItemArg"];
+            poke(b,t)["ItemArg"] = poke(b,s)["ItemArg"];
+
+            b.sendMoveMessage(16,0,t,type(b,s),t,item);
+
+            /* Finding the function to call :P */
+            QList<ItemInfo::Effect> l = ItemInfo::Effects(item);
+
+            foreach(ItemInfo::Effect e, l) { /* Ripped from items.cpp (ItemEffect::activate, with some changes) */
+                if (!ItemEffect::mechanics.contains(e.num)) {
+                    continue;
+                }
+                foreach (function f, ItemEffect::mechanics[e.num].functions)
+                    f(s, t, b);
+            }
+
+            /* Restoring initial conditions */
+            poke(b,t)["ItemArg"] = tempItemStorage;
+            turn(b,t).remove("BugBiter");
+
+            /* in case the item was "eaten" as a berry */
+            b.poke(t).item() = sitem;
         }
     }
 };

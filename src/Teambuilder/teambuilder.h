@@ -51,7 +51,7 @@ public:
 protected:
     Pokeballed();
     void init(QWidget *w);
-
+public:
     static QPixmap *pokeball;
 };
 
@@ -74,7 +74,6 @@ public:
     /* Create a menu bar to give to the main window */
     QMenuBar *createMenuBar(MainEngine *w);
 
-    QWidget* createButtonMenu();
 public slots:
     void saveTeam();
     void loadTeam();
@@ -83,6 +82,7 @@ public slots:
     void clickOnDone();
     void updateAll();
     void importFromTxt();
+    void exportToTxt();
     void importDone(const QString &text);
     void showNoFrame();
 

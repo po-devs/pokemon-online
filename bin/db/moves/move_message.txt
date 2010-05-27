@@ -43,7 +43,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 
 %f's Sturdy made the attack fail!
 
-%s threw %i at %f!
+%s flung its %i!
 %s is getting pumped!
 %s lost its focus!|%s is tightening its focus!
 %s became the center of attention!

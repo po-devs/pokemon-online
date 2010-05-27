@@ -149,6 +149,7 @@ BigOpenPokeBall::BigOpenPokeBall()
     ml->addWidget(evo = new QPushButton(QIcon("db/Teambuilder/PokeDex/EvoIcon.png"), tr("&Evolution")), 2,3);
     ml->addWidget(formes = new QPushButton(QIcon("db/Teambuilder/PokeDex/FormeIcon.png"), tr("&Other Formes")), 3,3);
     evo->setCheckable(true);
+    evo->setChecked(true);
     formes->setCheckable(true);
     QButtonGroup *evoForme = new QButtonGroup(this);
     evoForme->addButton(evo, 0);
@@ -180,7 +181,7 @@ void BigOpenPokeBall::changeToPokemon(int poke)
 {
     forme = 0;
     currentPoke = poke;
-    evo->setDisabled(true);
+    evo->setDisabled(!PokemonInfo::IsInEvoChain(poke));
     formes->setDisabled(!PokemonInfo::HasAestheticFormes(poke) && !PokemonInfo::HasFormes(poke));
 
     update();
@@ -250,6 +251,16 @@ void BigOpenPokeBall::changeToNext()
                 return;
             }
         }
+    } else if (evo->isChecked() && evo->isEnabled()) {
+        QList<int> formes = PokemonInfo::Evos(currentPoke);
+        for (int i = 0; i < formes.size() - 1; i++) {
+            if (formes[i] == currentPoke) {
+                emit pokemonChanged(formes[i+1]);
+                return;
+            }
+        }
+        emit pokemonChanged(formes[0]);
+        return;
     }
 }
 
@@ -283,6 +294,16 @@ void BigOpenPokeBall::changeToPrevious()
                 return;
             }
         }
+    }else if (evo->isChecked() && evo->isEnabled()) {
+        QList<int> formes = PokemonInfo::Evos(currentPoke);
+        for (int i = 1; i < formes.size(); i++) {
+            if (formes[i] == currentPoke) {
+                emit pokemonChanged(formes[i-1]);
+                return;
+            }
+        }
+        emit pokemonChanged(formes[formes.size()-1]);
+        return;
     }
 }
 

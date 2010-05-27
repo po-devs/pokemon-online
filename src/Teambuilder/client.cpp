@@ -440,14 +440,14 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     saveLogs->setChecked(s.value("save_battle_logs").toBool());
 
     battleMenu->addAction(tr("Change &log folder"), this, SLOT(changeBattleLogFolder()));
-
+/*
     QAction *playMusic = battleMenu->addAction(tr("&Enable sounds (Risky!)"));
     playMusic->setCheckable(true);
     connect(playMusic, SIGNAL(triggered(bool)), SLOT(playMusic(bool)));
     playMusic->setChecked(s.value("play_battle_music").toBool());
 
     battleMenu->addAction(tr("Change &sound folder"), this, SLOT(changeMusicFolder()));
-
+*/
     QAction *animateHpBar = battleMenu->addAction(tr("Animate HP Bar"));
     animateHpBar->setCheckable(true);
     connect(animateHpBar, SIGNAL(triggered(bool)), SLOT(animateHpBar(bool)));
@@ -505,7 +505,7 @@ void Client::sendRegister() {
     relay().notify(NetworkCli::Register);
     myregister->setDisabled(true);
 }
-
+/*
 void Client::changeMusicFolder()
 {
     QSettings s;
@@ -515,7 +515,7 @@ void Client::changeMusicFolder()
         s.setValue("battle_music_directory", dir + "/");
     }
 }
-
+*/
 void Client::changeBattleLogFolder()
 {
     QSettings s;
@@ -543,7 +543,7 @@ void Client::animateHpBar(bool save)
     QSettings s;
     s.setValue("animate_hp_bar", save);
 }
-
+/*
 void Client::playMusic(bool save)
 {
     QSettings s;
@@ -551,7 +551,7 @@ void Client::playMusic(bool save)
 
     emit musicPlayingChanged(save);
 }
-
+*/
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
 {
     if (mySpectatingBattles.contains(battleId)) {
@@ -766,7 +766,7 @@ void Client::battleStarted(int battleId, int id, const TeamBattle &team, const B
     connect(mybattle, SIGNAL(battleCommand(int, BattleChoice)), &relay(), SLOT(battleCommand(int, BattleChoice)));
     connect(mybattle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
-    connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
+    //connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
 
     battleStarted(battleId, ownId(), id);
 }
@@ -797,7 +797,7 @@ void Client::watchBattle(const QString &name0, const QString &name1, int battleI
     battle->show();
 
     connect(this, SIGNAL(destroyed()), battle, SLOT(close()));
-    connect(this, SIGNAL(musicPlayingChanged(bool)), battle, SLOT(playMusic(bool)));
+    //connect(this, SIGNAL(musicPlayingChanged(bool)), battle, SLOT(playMusic(bool)));
     connect(battle, SIGNAL(closedBW(int)), SLOT(stopWatching(int)));
     connect(battle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
 

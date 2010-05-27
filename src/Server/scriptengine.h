@@ -87,6 +87,8 @@ public:
     Q_INVOKABLE QScriptValue itemNum(const QString &item);
     Q_INVOKABLE QScriptValue nature(int num);
     Q_INVOKABLE QScriptValue natureNum(const QString &nature);
+    Q_INVOKABLE QScriptValue ability(int num);
+    Q_INVOKABLE QScriptValue abilityNum(const QString &nature);
 
     Q_INVOKABLE QScriptValue teamPokeLevel(int id, int slot);
     Q_INVOKABLE QScriptValue teamPoke(int id, int index);

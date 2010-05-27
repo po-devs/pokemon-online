@@ -25,15 +25,15 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("team_location", "Team/trainer.tp");
     setDefaultValue("save_battle_logs", false);
     setDefaultValue("battle_logs_directory", "Logs/");
-    setDefaultValue("battle_music_directory", "Music/Battle/");
+/*    setDefaultValue("battle_music_directory", "Music/Battle/");
     setDefaultValue("play_battle_music", false);
-    setDefaultValue("play_battle_sounds", false);
+    setDefaultValue("play_battle_sounds", false); */
     setDefaultValue("show_team",true);
     setDefaultValue("enable_ladder", true);
     setDefaultValue("show_player_events", false);
     setDefaultValue("show_timestamps", true);
     setDefaultValue("animate_hp_bar", true);
-    setDefaultValue("sort_players_by_tier", true);
+    setDefaultValue("sort_players_by_tier", false);
 
     setDefaultValue("find_battle_force_rated", false);
     setDefaultValue("find_battle_same_tier", true);
