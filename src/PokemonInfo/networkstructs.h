@@ -38,9 +38,10 @@ struct UserInfo
     qint8 auth;
     QString ip;
     QString name;
+    QString date;
 
-    UserInfo (QString name = "", qint8 flags = Online, qint8 auth = 0, QString ip = "")
-        : flags(flags), auth(auth), ip(ip), name(name)
+    UserInfo (QString name = "", qint8 flags = Online, qint8 auth = 0, QString ip = "", QString date = "")
+        : flags(flags), auth(auth), ip(ip), name(name), date(date)
     {
 
     }
@@ -52,12 +53,12 @@ struct UserInfo
 };
 
 inline QDataStream & operator << (QDataStream &d, const UserInfo &ui) {
-    d << ui.flags << ui.auth << ui.ip << ui.name;
+    d << ui.date << ui.flags << ui.auth << ui.ip << ui.name;
     return d;
 }
 
 inline QDataStream & operator >> (QDataStream &d, UserInfo &ui) {
-    d >> ui.flags >> ui.auth >> ui.ip >> ui.name;
+    d >> ui.date >> ui.flags >> ui.auth >> ui.ip >> ui.name;
     return d;
 }
 

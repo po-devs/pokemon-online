@@ -655,7 +655,7 @@ void Player::userInfoAsked(const QString &name)
 
     SecurityManager::Member m = SecurityManager::member(name);
 
-    UserInfo ret(name, m.isBanned() ? UserInfo::Banned : 0, m.authority(), m.ip.trimmed());
+    UserInfo ret(name, m.isBanned() ? UserInfo::Banned : 0, m.authority(), m.ip.trimmed(), m.date.trimmed());
     relay().sendUserInfo(ret);
 
     if (SecurityManager::maxAuth(m.ip.trimmed()) > auth()) {
