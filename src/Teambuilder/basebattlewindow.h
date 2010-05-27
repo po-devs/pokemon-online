@@ -73,7 +73,7 @@ class BaseBattleWindow : public QWidget
     PROPERTY(Client *, client);
     PROPERTY(int, animatedHpSpot);
     PROPERTY(int, animatedHpGoal);
-    PROPERTY(bool, musicPlayed);
+    //PROPERTY(bool, musicPlayed);
 public:
     BaseBattleInfo *myInfo;
     const BaseBattleInfo &info() const {
@@ -176,7 +176,7 @@ public:
     virtual void switchToNaught(int spot);
     virtual void addSpectator(bool add, int id);
 
-    void playCry(int pokenum);
+    //void playCry(int pokenum);
 
     void printLine(const QString &str);
     void printHtml(const QString &str);
@@ -192,8 +192,8 @@ public slots:
     void clickClose();
     void delay(qint64 msec=0, bool forceDelay=true);
     void undelay();
-    void playMusic (bool);
-    void restartMusic();
+    /*void playMusic (bool);
+    void restartMusic();*/
 
     void animateHPBar();
     void ignoreSpectators(bool);
@@ -210,12 +210,15 @@ protected:
     QLineEdit *myline;
     BaseBattleDisplay *mydisplay;
     QPushButton *myclose, *mysend;
+    /*
     Phonon::MediaObject *music;
     Phonon::AudioOutput *musicOutput;
     Phonon::MediaObject *cry;
     Phonon::AudioOutput *cryOutput;
+
     QBuffer cryBuffer;
     QByteArray cryData;
+    */
     QCheckBox *saveLogs;
 
 
@@ -225,7 +228,7 @@ protected:
     bool blankMessage;
     bool battleEnded;
 
-    BaseBattleWindow(){delayed=0;ignoreSpecs=false; music = NULL; musicOutput = NULL; cry = NULL; cryOutput = NULL;}
+    BaseBattleWindow(){delayed=0;ignoreSpecs=false;/* music = NULL; musicOutput = NULL; cry = NULL; cryOutput = NULL;*/}
     void init();
     void checkAndSaveLog();
 

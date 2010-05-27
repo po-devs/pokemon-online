@@ -31,6 +31,11 @@ QMenuBar#MainChat::item:pressed{
 	background: #888888;
 }*/
 
+QMenuBar#TeamBuilder
+{
+	background: #0ca3df;
+}
+
 
 TeamBuilder {
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,

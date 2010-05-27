@@ -26,8 +26,8 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, bool
 }
 
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, bool doubles) :
-        delayed(0), ignoreSpecs(false), music(NULL), musicOutput(NULL),
-            cry(NULL), cryOutput(NULL)
+        delayed(0), ignoreSpecs(false)/*, music(NULL), musicOutput(NULL),
+            cry(NULL), cryOutput(NULL)*/
 {
     myInfo = new BaseBattleInfo(me, opponent, doubles);
     mydisplay = new BaseBattleDisplay(info());
@@ -95,7 +95,7 @@ void BaseBattleWindow::init()
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
 
-
+/*
     //starts battle music
     musicOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
     music = new Phonon::MediaObject(this);
@@ -121,7 +121,7 @@ void BaseBattleWindow::init()
     }
     
     connect(music, SIGNAL(aboutToFinish()), SLOT(restartMusic()));
-
+*/
     //layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
@@ -229,7 +229,7 @@ void BaseBattleWindow::clickClose()
     emit closedBW(battleId());
     return;
 }
-
+/*
 void BaseBattleWindow::restartMusic()
 {
     QSettings s;
@@ -243,7 +243,7 @@ void BaseBattleWindow::restartMusic()
 
     music->enqueue(file);
 }
-
+*/
 void BaseBattleWindow::sendMessage()
 {
     QString message = myline->text();
@@ -275,7 +275,7 @@ void BaseBattleWindow::ignoreSpectators(bool ignore)
 {
     ignoreSpecs = ignore;
 }
-
+/*
 void BaseBattleWindow::playMusic(bool play)
 {
     if (musicPlayed() == play)
@@ -290,6 +290,7 @@ void BaseBattleWindow::playMusic(bool play)
        music->pause();;
     }
 }
+*/
 
 void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
 {
@@ -305,13 +306,13 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             info().sub[spot] = false;
             info().specialSprite[spot] = 0;
             mydisplay->updatePoke(spot);
-
+/*
             //Plays the battle cry when a pokemon is switched in
             if (musicPlayed())
             {
                 playCry(info().currentShallow(spot).num());
             }
-
+*/
 
             if (!silent) {
                 QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());
@@ -354,11 +355,13 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             break;
         }
     case Ko:
+        /*
         //Plays the battle cry when a pokemon faints
         if (musicPlayed())
         {
             playCry(info().currentShallow(spot).num());
         }
+        */
         printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(spot)))) + "</b>");
         switchToNaught(spot);
         break;
@@ -441,7 +444,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         break;
     }
     case AlreadyStatusMessage:
-        printHtml(toColor(tr("%1 is already %2!").arg(tu(nick(spot)), StatInfo::Status(info().currentShallow(spot).status())),
+        printHtml(toColor(tr("%1 is already %2.").arg(tu(nick(spot)), StatInfo::Status(info().currentShallow(spot).status())),
                           StatInfo::StatusColor(info().currentShallow(spot).status())));
         break;
     case StatusMessage:
@@ -756,6 +759,7 @@ void BaseBattleWindow::printHtml(const QString &str)
     mychat->insertHtml(str + "<br />");
 }
 
+/*
 void BaseBattleWindow::playCry(int pokenum)
 {
     if (cry) {
@@ -793,6 +797,8 @@ void BaseBattleWindow::playCry(int pokenum)
         }
     }
 }
+
+*/
 
 BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     : myInfo(&i)

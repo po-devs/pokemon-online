@@ -966,6 +966,74 @@ bool TrainerTeam::importFromTxt(const QString &file1)
 */
 }
 
+/******** Less ugly *********/
+QString TrainerTeam::exportToTxt() const
+{
+    QString ret = "";
+    for (int i = 0; i < 6; i++) {
+        if (team().poke(i).num() == 0)
+            continue;
+
+        const PokeTeam &p = team().poke(i);
+
+        ret += p.nickname();
+
+        if (p.nickname() != PokemonInfo::Name(p.num())) {
+            ret += " (" + PokemonInfo::Name(p.num()) + ")";
+        }
+
+        if (p.gender() != Pokemon::Neutral) {
+            ret += QString(" (") + (p.gender() == Pokemon::Male ? "M" : "F") + ")";
+        }
+
+        ret += " @ " + ItemInfo::Name(p.item()) + "\n";
+
+        ret += "Trait: " + AbilityInfo::Name(p.ability()) + "\n";
+
+        ret += "EVs: ";
+
+        QString stats[] = {"HP", "Atk", "Def", "Spd", "SAtk", "SDef"};
+
+        bool started = false;
+        for (int i = 0; i < 6; i++) {
+            if (p.EV(i) != 0) {
+                if (started) {
+                    ret += " / ";
+                }
+                started = true;
+
+                ret += QString ("%1 %2").arg(p.EV(i)).arg(stats[i]);
+            }
+        }
+
+        ret += "\n";
+
+        ret += NatureInfo::Name(p.nature()) + " Nature";
+
+        int up = NatureInfo::StatBoosted(p.nature());
+
+        if (up != 0) {
+            int down = NatureInfo::StatHindered(p.nature());
+            ret += " (+" + stats[up] + ", -" + stats[down] + ")";
+        }
+        ret += "\n";
+
+        for (int i = 0; i < 4; i++) {
+            if (p.move(i) != 0) {
+                ret += "- " + MoveInfo::Name(p.move(i)) ;
+                if (p.move(i) == Move::HiddenPower) {
+                    ret += " [" + TypeInfo::Name(HiddenPowerInfo::Type(p.DV(0), p.DV(1), p.DV(2), p.DV(3), p.DV(4), p.DV(5))) + "]";
+                }
+                ret += "\n";
+            }
+        }
+
+        ret += "\n";
+    }
+    return ret.trimmed();
+}
+
+
 QDataStream & operator << (QDataStream & out, const Team & team)
 {
     for(int index = 0;index<6;index++)

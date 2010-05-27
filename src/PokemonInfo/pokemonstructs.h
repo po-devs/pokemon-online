@@ -1707,6 +1707,7 @@ public:
     bool loadFromFile(const QString &path);
     bool saveToFile(const QString &path) const;
     bool importFromTxt(const QString &path);
+    QString exportToTxt() const;
 };
 
 

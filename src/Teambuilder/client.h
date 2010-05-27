@@ -100,9 +100,10 @@ public slots:
     void battleCommand(int battleid, const QByteArray&command);
     void saveBattleLogs(bool save);
     void animateHpBar(bool animate);
-    void playMusic(bool music);
+/*  void playMusic(bool music);
+    void changeMusicFolder();    */
+
     void changeBattleLogFolder();
-    void changeMusicFolder();
     void forfeitBattle(int);
     void watchBattleRequ(int);
     void watchBattle(const QString &name0, const QString &name1, int battleId, bool doubles);
@@ -156,7 +157,7 @@ public slots:
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
-    void musicPlayingChanged(bool);
+//    void musicPlayingChanged(bool);
 protected:
     void paintEvent(QPaintEvent *)
     {

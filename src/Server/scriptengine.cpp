@@ -583,6 +583,20 @@ QScriptValue ScriptEngine::natureNum(const QString &name)
     return NatureInfo::Number(convertToSerebiiName(name));
 }
 
+QScriptValue ScriptEngine::ability(int num)
+{
+    if (num >= 0 && num < AbilityInfo::NumberOfAbilities()) {
+        return AbilityInfo::Name(num);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::abilityNum(const QString &ability)
+{
+    return AbilityInfo::Number(ability);
+}
+
 QScriptValue ScriptEngine::teamPoke(int id, int index)
 {
     if (!loggedIn(id) || index < 0 || index >= 6) {

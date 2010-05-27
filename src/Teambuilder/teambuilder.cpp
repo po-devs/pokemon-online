@@ -357,11 +357,13 @@ void TeamBuilder::updateBox()
 QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();
+    menuBar->setObjectName("TeamBuilder");
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
-    menuFichier->addAction(tr("&New Team"),this,SLOT(newTeam()),Qt::CTRL+Qt::Key_N);
-    menuFichier->addAction(tr("&Save Team"),this,SLOT(saveTeam()),Qt::CTRL+Qt::Key_S);
-    menuFichier->addAction(tr("&Load Team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
-    menuFichier->addAction(tr("&Import From Txt"),this,SLOT(importFromTxt()),Qt::CTRL+Qt::Key_I);
+    menuFichier->addAction(tr("&New team"),this,SLOT(newTeam()),Qt::CTRL+Qt::Key_N);
+    menuFichier->addAction(tr("&Save team"),this,SLOT(saveTeam()),Qt::CTRL+Qt::Key_S);
+    menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
+    menuFichier->addAction(tr("&Import from text"),this,SLOT(importFromTxt()),Qt::CTRL+Qt::Key_I);
+    menuFichier->addAction(tr("&Export to text"),this,SLOT(exportToTxt()),Qt::CTRL+Qt::Key_E);
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
     QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
     QStringList style = QStyleFactory::keys();
@@ -375,8 +377,6 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
 
     QMenu *view = menuBar->addMenu(tr("&View"));
     view->addAction(tr("&Full Screen (for netbook users ONLY)"), this, SLOT(showNoFrame()), Qt::Key_F11);
-
-    menuBar->setStyleSheet("background: #0ca3df;");
 
     return menuBar;
 }
@@ -403,17 +403,18 @@ void TeamBuilder::importDone(const QString &text)
     updateTeam();
 }
 
-QWidget * TeamBuilder::createButtonMenu()
+void TeamBuilder::exportToTxt()
 {
-    QWidget *w = new QWidget();
-    QVBoxLayout *vl = new QVBoxLayout(w);
-    QPushButton  *importb;
-    vl->setMargin(0);
-    vl->addWidget(importb = new QPushButton(tr("&Import from .txt")));
+    QTextEdit *exporting = new QTextEdit(this);
+    exporting->setWindowFlags(Qt::Window);
+    exporting->setAttribute(Qt::WA_DeleteOnClose, true);
 
-    connect(importb, SIGNAL(clicked()), SLOT(importFromTxt()));
+    exporting->setText(trainerTeam()->exportToTxt());
+    exporting->setReadOnly(true);
 
-    return w;
+    exporting->show();
+    exporting->setBackgroundRole(QPalette::Base);
+    exporting->resize(500,700);
 }
 
 TeamBuilder::~TeamBuilder()
@@ -910,8 +911,13 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num)
 
     box1->addSpacerItem(new QSpacerItem(0,6));
 
-    QWidget *w = upparent->createButtonMenu();
-    box1->addWidget(w);
+    QPushButton  *importb;
+    box1->addWidget(importb = new QPushButton(tr("&Import")));
+    connect(importb, SIGNAL(clicked()), upparent, SLOT(importFromTxt()));
+
+    QPushButton  *exportb;
+    box1->addWidget(exportb = new QPushButton(tr("&Export")));
+    connect(exportb, SIGNAL(clicked()), upparent, SLOT(exportToTxt()));
 
     /*** Box 2 ***/
     QHBoxLayout *box2 = new QHBoxLayout();
@@ -1005,7 +1011,7 @@ void TB_PokemonBody::initItems()
     connect(itemchoice, SIGNAL(activated(QString)), SLOT(setItem(const QString &)));
 }
 
-void TB_PokemonBody::initPokemons(TB_PokemonBody *copy)
+void TB_PokemonBody::initPokemons(TB_PokemonBody *)
 {
     QCompleter *completer = new QCompleter(m_pokeedit);
     completer->setModel(pokechoice->model());

@@ -44,6 +44,7 @@ private:
     /* That is NOT multi-threaded! */
     static QHash<int,QList<int> > m_AlternateFormes;
     static QHash<int,QList<int> > m_Evolutions;
+    static QList<int> m_OriginalEvos;
     /* First and last aesthetic forme */
     static QHash<int, QPair<int, int> > m_AestheticFormes;
     static QHash<int, bool> m_AestheticFormesHidden;
@@ -53,6 +54,7 @@ private:
 
     static void loadNames();
     static void loadFormes();
+    static void loadEvos();
     static void loadBaseStats();
     static void loadMoves();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
@@ -105,6 +107,7 @@ public:
     static QList<int> Formes(int pokenum);
     static QList<int> Evos(int pokenum);
     static int OriginalEvo(int pokenum);
+    static bool IsInEvoChain(int pokenum);
     static PokeBaseStats BaseStats(int pokenum);
     static bool Exist(int pokenum);
     static QList<int> Abilities(int pokenum);
@@ -310,6 +313,8 @@ public:
     static int NatureOf(int statUp, int statDown);
     /* -1 if the nature is hindering, 0 if neutral and 1 if it boosts that stat */
     static int Boost(int nature, int stat);
+    static int StatBoosted(int nature);
+    static int StatHindered(int nature);
 };
 
 class CategoryInfo

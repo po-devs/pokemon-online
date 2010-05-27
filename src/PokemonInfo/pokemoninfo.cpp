@@ -22,6 +22,8 @@ QHash<int, QPair<int,int> > PokemonInfo::m_AestheticFormes;
 QHash<int, bool > PokemonInfo::m_AestheticFormesHidden;
 QHash<int, QString> PokemonInfo::m_AestheticFormesDescs;
 int PokemonInfo::m_trueNumberOfPokes;
+QHash<int,QList<int> > PokemonInfo::m_Evolutions;
+QList<int> PokemonInfo::m_OriginalEvos;
 
 QString MoveInfo::m_Directory;
 QTSList<QString> MoveInfo::m_Names;
@@ -334,6 +336,7 @@ void PokemonInfo::init(const QString &dir)
 
     loadNames();
     loadFormes();
+    loadEvos();
     loadMoves();
     fill_container_with_file(m_Type1, path("poke_type1.txt"));
     fill_container_with_file(m_Type2, path("poke_type2.txt"));
@@ -342,6 +345,40 @@ void PokemonInfo::init(const QString &dir)
     fill_container_with_file(m_Ability2, path("poke_ability2.txt"));
     fill_container_with_file(m_LevelBalance, path("level_balance.txt"));
     loadBaseStats();
+}
+
+void PokemonInfo::loadEvos()
+{
+    QFile in(path("evolutions.txt"));
+    in.open(QIODevice::ReadOnly);
+    QList<QString> l = QString::fromUtf8(in.readAll()).split('\n');
+    for (int i = 0; i < l.size(); i++) {
+        m_OriginalEvos.push_back(0);
+    }
+    for (int i = 0; i < l.size(); i++) {
+        if (l[i].length() > 0) {
+            int preEvo = l[i].toInt();
+            int orEvo = m_OriginalEvos[preEvo] == 0 ? preEvo : m_OriginalEvos[preEvo];
+            m_OriginalEvos[i] = orEvo;
+            m_OriginalEvos[orEvo] = orEvo;
+
+            if (!m_Evolutions.contains(orEvo)) {
+                m_Evolutions[orEvo].push_back(orEvo);
+            }
+
+            if (m_Evolutions.contains(i)) {
+                m_Evolutions[orEvo].append(m_Evolutions[i]);
+
+                foreach (int poke, m_Evolutions[i]) {
+                    m_OriginalEvos[poke] = orEvo;
+                }
+
+                m_Evolutions.remove(i);
+            } else {
+                m_Evolutions[orEvo].push_back(i);
+            }
+        }
+    }
 }
 
 int PokemonInfo::TrueCount()
@@ -617,6 +654,21 @@ QList<int> PokemonInfo::Formes(int pokenum)
         return Formes(OriginalForme(pokenum));
     else
         return m_AlternateFormes[pokenum];
+}
+
+int PokemonInfo::OriginalEvo(int pokenum)
+{
+    return m_OriginalEvos[pokenum];
+}
+
+QList<int> PokemonInfo::Evos(int pokenum)
+{
+    return m_Evolutions.value(OriginalEvo(pokenum));
+}
+
+bool PokemonInfo::IsInEvoChain(int pokenum)
+{
+    return OriginalEvo(pokenum) != 0;
 }
 
 void PokemonInfo::loadMoves()
@@ -1383,6 +1435,16 @@ int NatureInfo::NatureOf(int statUp, int statDown)
 int NatureInfo::Boost(int nature, int stat)
 {
     return -(nature%5 == stat-1) + (nature/5 == stat-1);
+}
+
+int NatureInfo::StatBoosted(int nature)
+{
+    return Boost(nature, nature/5+1) == 0 ? 0 : nature/5+1;
+}
+
+int NatureInfo::StatHindered(int nature)
+{
+    return Boost(nature, (nature%5)+1) == 0 ? 0 : (nature%5)+1;
 }
 
 
