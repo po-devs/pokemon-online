@@ -12,12 +12,14 @@ public:
 signals:
     void nameChanged(const QString &name);
     void descChanged(const QString &desc);
+    void announcementChanged(const QString &ann);
     void maxChanged(const int &num);
 private slots:
     void apply();
 private:
     QLineEdit *serverName;
     QPlainTextEdit *serverDesc;
+    QPlainTextEdit *serverAnnouncement;
     QSpinBox *serverPlayerMax;
     QSpinBox *serverPort;
 };

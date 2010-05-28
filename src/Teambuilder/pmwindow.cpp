@@ -45,10 +45,18 @@ void PMWindow::printLine(const QString &line, bool self)
 {
     if (line.trimmed().length() == 0)
         return;
+
+    QSettings s;
+    bool tt = s.value("show_timestamps2").toBool();
+    QString timeStr = "";
+
+    if (tt)
+        timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
+
     if (self) {
-        printHtml(toBoldColor(escapeHtml(m_ownName) + ": ", Qt::darkBlue) + escapeHtml(line));
+        printHtml(toColor(timeStr + "<b>" + escapeHtml(m_ownName) + ": </b>", Qt::darkBlue) + escapeHtml(line));
     } else {
-        printHtml(toBoldColor(escapeHtml(name()) + ": ", Qt::darkGray) + escapeHtml(line));
+        printHtml(toColor(timeStr + "<b>" + escapeHtml(name()) + ": </b>", Qt::darkGray) + escapeHtml(line));
     }
 }
 

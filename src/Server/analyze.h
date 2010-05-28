@@ -55,7 +55,8 @@ namespace NetworkServ
         TierSelection,
         ServMaxChange,
         FindBattle,
-        ShowRankings
+        ShowRankings,
+        Announcement
     };
 
     enum ProtocolError

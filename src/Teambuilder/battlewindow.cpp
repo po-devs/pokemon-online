@@ -49,6 +49,7 @@ PokeBattle & BattleInfo::currentPoke(int spot)
 BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf, bool doubles)
 {
     this->battleId() = battleId;
+    this->started() = false;
 
     conf() = _conf;
 
@@ -101,6 +102,8 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
 
     show();
     printHtml(toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(name(1), name(0)));
+
+    disableAll();
 }
 
 void BattleWindow::changeAttackText(int i)
@@ -267,6 +270,8 @@ void BattleWindow::goToNextChoice()
         int n = i;
 
         if (info().available[n] && !info().done[n]) {
+            enableAll();
+
             info().currentSlot = slot;
 
             if (info().choices[n].attacksAllowed == false && info().choices[n].switchAllowed == true)
@@ -293,6 +298,7 @@ void BattleWindow::goToNextChoice()
             /* Then pokemon */
             if (info().choices[n].switchAllowed == false) {
                 myswitch->setEnabled(false);
+                mypzone->setEnabled(false);
             } else {
                 myswitch->setEnabled(true);
                 for (int i = 0; i < 6; i++) {
@@ -323,11 +329,31 @@ void BattleWindow::goToNextChoice()
     myattack->setEnabled(false);
     myswitch->setEnabled(false);
 
+    disableAll();
+
     for (int i =0; i < info().available.size(); i++)  {
         if (info().available[i]) {
             sendChoice(info().choice[i]);
         }
     }
+}
+
+void BattleWindow::disableAll()
+{
+    mypzone->setEnabled(false);
+    for (int i = 0; i < 6; i++)
+        myazones[i]->setEnabled(false);
+    if (info().doubles)
+        tarZone->setEnabled(false);
+}
+
+void BattleWindow::enableAll()
+{
+    mypzone->setEnabled(true);
+    for (int i = 0; i < 6; i++)
+        myazones[i]->setEnabled(true);
+    if (info().doubles)
+        tarZone->setEnabled(true);
 }
 
 void BattleWindow::attackButton()
@@ -418,7 +444,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             {
                 playCry(info().currentShallow(spot).num());
             }
-*/
+            */
 
             if (!silent) {
                 QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());

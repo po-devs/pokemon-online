@@ -1278,7 +1278,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
             like EQ on dig need their boost even if lock on */
 
     if (pokelong[player].contains("LockedOn") && pokelong[player].value("LockedOnEnd").toInt() >= turn()
-            && pokelong[player].value("LockedOn") == target && pokelong[player].value("LockedOnCount") == pokelong[target]["SwitchCount"].toInt()) {
+            && pokelong[player].value("LockedOn") == target &&
+                    pokelong[player].value("LockedOnCount").toInt() == slotzone[target]["SwitchCount"].toInt()) {
         return true;
     }
 
@@ -1930,8 +1931,8 @@ int BattleSituation::move(int player, int slot)
 
 void BattleSituation::inflictRecoil(int source, int)
 {
-    //Rockhead
-    if (koed(source) || hasWorkingAbility(source,Ability::RockHead))
+    //Rockhead, MagicGuard
+    if (koed(source) || hasWorkingAbility(source,Ability::RockHead) || hasWorkingAbility(source,Ability::MagicGuard))
         return;
 
     int recoil = turnlong[source]["Recoil"].toInt();
@@ -2547,11 +2548,6 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 {
     if (koed(player)) {
 	return;
-    }
-
-    //Magic guard
-    if (hasWorkingAbility(player, Ability::MagicGuard) && !straightattack) {
-        return;
     }
 
     if (straightattack)

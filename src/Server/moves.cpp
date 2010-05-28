@@ -508,7 +508,7 @@ struct MMCurse : public MM
     }
 
     static void et(int s, int, BS &b) {
-        if (b.koed(s))
+        if (b.koed(s) || b.hasWorkingAbility(s, Ability::MagicGuard))
             return;
         b.sendMoveMessage(25, 1, s, Pokemon::Curse);
         b.inflictPercentDamage(s, 25, s);
@@ -3284,7 +3284,7 @@ struct MMNightMare : public MM
     }
 
     static void et(int s, int, BS &b) {
-	if (!b.koed(s) && b.poke(s).status() == Pokemon::Asleep) {
+        if (!b.koed(s) && b.poke(s).status() == Pokemon::Asleep && !b.hasWorkingAbility(s, Ability::MagicGuard)) {
 	    b.sendMoveMessage(92,0,s,Pokemon::Ghost);
             b.inflictPercentDamage(s, 25, s, false);
 	}
@@ -3749,7 +3749,7 @@ struct MMStruggle : public MM
     static void uas(int s, int, BS &b) {
         if (!b.koed(s)) {
             b.sendMoveMessage(127,0,s);
-            b.inflictPercentDamage(s,25,s,true); //true cuz likely cuz magic guard doesn't prevent it
+            b.inflictPercentDamage(s,25,s);
         }
     }
 };

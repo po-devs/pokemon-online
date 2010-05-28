@@ -1,5 +1,6 @@
 #include "berries.h"
 #include "items.h"
+#include "../PokemonInfo/pokemonstructs.h"
 
 typedef BerryMechanics BM;
 typedef BattleSituation BS;
@@ -292,7 +293,7 @@ struct BMBerryRecoil : public BM
 
     static void uodr(int s, int t, BS &b) {
         //Magic Guard
-        if (turn(b,t)["Category"].toInt() != poke(b,s)["ItemArg"].toInt() || b.koed(t) || b.ability(t)==52) {
+        if (turn(b,t)["Category"].toInt() != poke(b,s)["ItemArg"].toInt() || b.koed(t) || b.hasWorkingAbility(t, Ability::MagicGuard)) {
             return;
         }
         b.eatBerry(s);

@@ -67,6 +67,7 @@ void BaseBattleWindow::init()
 
     blankMessage = false;
     battleEnded = false;
+    started() = false;
 
     setWindowTitle(tr("Battle between %1 and %2").arg(name(0), name(1)));
 
@@ -259,6 +260,11 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
     if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)) {
         delayedCommands.push_back(inf);
         return;
+    }
+    if (!started() && inf[0] == char(OfferChoice)) {
+        delayedCommands.push_back(inf);
+        started() = true;
+        delay(700);
     }
 
     QDataStream in (&inf, QIODevice::ReadOnly);

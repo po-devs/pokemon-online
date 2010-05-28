@@ -60,6 +60,15 @@ QTextEdit#MainChat {
 	background-position: center
 }
 
+QLabel#Announcement {
+	border-radius: 2px;
+	border: 1px solid grey;
+	font-size: 10px;
+	background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop:0 #cbe6f8, stop:1 #15abea);
+	padding: 2px;
+	text-align: center;
+}
+
 TeamBuilder QTextEdit {
 	border-radius: 5px;
 	background-color: white;

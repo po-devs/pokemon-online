@@ -120,7 +120,7 @@ struct AMBadDreams : public AM {
     static void et (int s, int, BS &b) {
         QList<int> tars = b.revs(s);
         foreach(int t, tars) {
-            if (b.poke(t).status() == Pokemon::Asleep) {
+            if (b.poke(t).status() == Pokemon::Asleep && !b.hasWorkingAbility(t, Ability::MagicGuard)) {
                 b.sendAbMessage(6,0,s,t,Pokemon::Ghost);
                 b.inflictDamage(t, b.poke(t).totalLifePoints()/8,s,false);
             }

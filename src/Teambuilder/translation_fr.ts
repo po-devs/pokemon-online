@@ -1275,7 +1275,7 @@ Il est recommendé de se mettre à jour.</translation>
     <message>
         <location filename="client.cpp" line="1254"/>
         <source>You can&apos;t change teams while battling, so your nick was kept.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vous ne pouvez pas changer de noms  lorsque vous combattez.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1299"/>
@@ -1298,7 +1298,7 @@ Il est conseillé d&apos;utiliser un mot de passe légèrement différent pour c
     <message>
         <location filename="client.cpp" line="575"/>
         <source>Your client version (%2) doesn&apos;t match with the server&apos;s (%1).</source>
-        <translation>Votre version (%2) ne correspond pas à celle du serveur (%2).</translation>
+        <translation type="unfinished">Votre version (%2) ne correspond pas à celle du serveur (%1).</translation>
     </message>
     <message>
         <location filename="client.cpp" line="777"/>

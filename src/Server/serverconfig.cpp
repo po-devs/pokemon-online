@@ -18,6 +18,10 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 
     l->addRow("Server Description: ", serverDesc);
 
+    serverAnnouncement = new QPlainTextEdit(settings.value("server_announcement").toString());
+
+    l->addRow("Announcement: ", serverAnnouncement);
+
     serverPlayerMax = new QSpinBox();
     serverPlayerMax->setRange(0,5000);
     serverPlayerMax->setSpecialValueText(tr("unlimited"));
@@ -52,8 +56,10 @@ void ServerWindow::apply()
     settings.setValue("server_description", serverDesc->toPlainText());
     settings.setValue("server_maxplayers", serverPlayerMax->text());
     settings.setValue("server_port", serverPort->text());
+    settings.setValue("server_announcement", serverAnnouncement->toPlainText());
     emit descChanged(serverDesc->toPlainText());
     emit nameChanged(serverName->text());
     emit maxChanged(serverPlayerMax->value());
+    emit announcementChanged(serverAnnouncement->toPlainText());
     close();
 }

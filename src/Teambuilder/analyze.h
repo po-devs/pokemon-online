@@ -56,7 +56,8 @@ namespace NetworkCli
         TierSelection,
         ServMaxChange,
         FindMatch,
-        ShowRankings = 37
+        ShowRankings = 37,
+        Announcement
     };
 
     enum ProtocolError
@@ -130,6 +131,7 @@ signals:
     void PMReceived(int id, const QString &mess);
     void awayChanged(int id, bool away);
     void tierListReceived(const QString &tl);
+    void announcement(const QString &announcement);
     /* From the control panel */
     void userInfoReceived(const UserInfo &ui);
     void userAliasReceived(const QString &s);

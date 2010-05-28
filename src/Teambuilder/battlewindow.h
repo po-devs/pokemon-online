@@ -123,6 +123,9 @@ private:
     void goToNextChoice();
     void cancel();
 
+    void disableAll();
+    void enableAll();
+
     QStackedWidget *mystack;
     QTabWidget *mytab;
     QListWidget *myspecs;

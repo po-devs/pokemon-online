@@ -267,7 +267,7 @@ struct IMLifeOrb : public IM
     }
 
     static void atl(int s, int, BS &b) {
-        if (turn(b,s).value("ActivateLifeOrb").toBool()) {
+        if (turn(b,s).value("ActivateLifeOrb").toBool() && !b.hasWorkingAbility(s, Ability::MagicGuard)) {
             //b.sendItemMessage(21,s);
             b.inflictDamage(s,b.poke(s).totalLifePoints()/10,s);
         }
@@ -342,11 +342,16 @@ struct IMStickyBarb : public IM
     }
 
     static void et(int s, int, BS &b) {
+        if (b.hasWorkingAbility(s, Ability::MagicGuard))
+            return;
+
 	b.sendItemMessage(29,s,0);
 	b.inflictDamage(s, b.poke(s).totalLifePoints()/8,s);
     }
 
     static void upa(int s, int t, BS &b) {
+        if (b.hasWorkingAbility(t, Ability::MagicGuard))
+            return;
 	b.sendItemMessage(29,t,1,s);
 	b.inflictDamage(t,b.poke(s).totalLifePoints()/8,s);
 	if (!b.koed(t) && b.poke(t).item() == 0) {

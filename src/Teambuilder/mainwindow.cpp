@@ -32,8 +32,10 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("enable_ladder", true);
     setDefaultValue("show_player_events", false);
     setDefaultValue("show_timestamps", true);
+    setDefaultValue("show_timestamps2", true);
     setDefaultValue("animate_hp_bar", true);
     setDefaultValue("sort_players_by_tier", false);
+    setDefaultValue("show_all_items", false);
 
     setDefaultValue("find_battle_force_rated", false);
     setDefaultValue("find_battle_same_tier", true);

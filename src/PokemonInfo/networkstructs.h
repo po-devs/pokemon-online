@@ -53,12 +53,12 @@ struct UserInfo
 };
 
 inline QDataStream & operator << (QDataStream &d, const UserInfo &ui) {
-    d << ui.date << ui.flags << ui.auth << ui.ip << ui.name;
+    d << ui.flags << ui.auth << ui.ip << ui.name << ui.date;
     return d;
 }
 
 inline QDataStream & operator >> (QDataStream &d, UserInfo &ui) {
-    d >> ui.date >> ui.flags >> ui.auth >> ui.ip >> ui.name;
+    d >> ui.flags >> ui.auth >> ui.ip >> ui.name >> ui.date;
     return d;
 }
 

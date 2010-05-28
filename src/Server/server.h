@@ -61,6 +61,7 @@ public slots:
     void regNameChanged(const QString &name);
     void regDescChanged(const QString &desc);
     void regMaxChanged(const int &num);
+    void announcementChanged(const QString &announcement);
     void openConfig();
     void nameTaken();
     void ipRefused();
@@ -108,7 +109,7 @@ private:
     void ban(int dest, int src);
 
     Analyzer *registry_connection;
-    QString serverName, serverDesc;
+    QString serverName, serverDesc, serverAnnouncement;
     quint16 serverPlayerMax,serverPort;
     quint16 numPlayers() {
         return myplayers.size();

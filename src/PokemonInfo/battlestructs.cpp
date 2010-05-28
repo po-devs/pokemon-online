@@ -418,14 +418,14 @@ void TeamBattle::generateRandom()
         else if (movesTaken.contains(Move::Frustration))
             p.happiness() = 0;
 
-        //bool itemDone= false;
-        //while(itemDone)
-        //{
-        p.item() = ItemInfo::Number(ItemInfo::SortedNames()[true_rand()%ItemInfo::NumberOfItems()]);
-        //    if(ItemInfo::Effects(p.item()).size() != 0)
-        //        itemDone = true;
+        bool itemDone= false;
+        while(!itemDone)
+        {
+            p.item() = ItemInfo::Number(ItemInfo::SortedNames()[true_rand()%ItemInfo::NumberOfItems()]);
+            if(ItemInfo::isUseful(p.item()))
+                itemDone = true;
 
-        //}
+        }
         p.updateStats();
         p.nick() = PokemonInfo::Name(p.num());
         p.status() = Pokemon::Fine;
