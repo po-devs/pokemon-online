@@ -376,9 +376,25 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
 
 
     QMenu *view = menuBar->addMenu(tr("&View"));
+    QAction *items = view->addAction(tr("&Show all items"));
     view->addAction(tr("&Full Screen (for netbook users ONLY)"), this, SLOT(showNoFrame()), Qt::Key_F11);
 
+    items->setCheckable(true);
+    QSettings s;
+    items->setChecked(s.value("show_all_items").toBool());
+
+    connect(items, SIGNAL(toggled(bool)), this, SLOT(changeItemDisplay(bool)));
+
     return menuBar;
+}
+
+void TeamBuilder::changeItemDisplay(bool b)
+{
+    QSettings s;
+    s.setValue("show_all_items", b);
+    for (int i = 0; i < 6; i++) {
+        m_teamBody->pokeBody[i]->reloadItems(b);
+    }
 }
 
 void TeamBuilder::showNoFrame()
@@ -1005,11 +1021,21 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num)
 
 void TB_PokemonBody::initItems()
 {
-    QStringList itemList = ItemInfo::SortedNames();
+    QSettings s;
+    QStringList itemList = s.value("show_all_items").toBool() ? ItemInfo::SortedNames() : ItemInfo::SortedUsefulNames();
     itemchoice->addItems(itemList);
 
     connect(itemchoice, SIGNAL(activated(QString)), SLOT(setItem(const QString &)));
 }
+
+void TB_PokemonBody::reloadItems(bool showAllItems)
+{
+    itemchoice->clear();
+    QStringList itemList = showAllItems ? ItemInfo::SortedNames() : ItemInfo::SortedUsefulNames();
+    itemchoice->addItems(itemList);
+    updateItem();
+}
+
 
 void TB_PokemonBody::initPokemons(TB_PokemonBody *)
 {
@@ -1194,7 +1220,30 @@ void TB_PokemonBody::updateTypes()
 
 void TB_PokemonBody::updateItem()
 {
-    itemchoice->setCurrentIndex(ItemInfo::SortedNumber(ItemInfo::Name(poke()->item())));
+    QString item = ItemInfo::Name(poke()->item());
+    int low = 0;
+    int high = itemchoice->count();
+
+    while (low != high) {
+        if (low + 1 == high) {
+            if (itemchoice->itemText(low) == item)
+                itemchoice->setCurrentIndex(low);
+            else if (itemchoice->itemText(high) == item)
+                itemchoice->setCurrentIndex(high);
+            break;
+        }
+        int mid = low + (high-low)/2;
+        int x = itemchoice->itemText(mid).compare(item);
+        if (x == 0) {
+            itemchoice->setCurrentIndex(mid);
+            break;
+        } else if (x > 0){
+            high = mid;
+        } else {
+            low = mid;
+        }
+    }
+
     itemicon->setPixmap(ItemInfo::Icon(poke()->item()));
 }
 

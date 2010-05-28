@@ -234,6 +234,48 @@ void ScriptEngine::afterLogOut(int src)
     }
 }
 
+bool ScriptEngine::beforePlayerKick(int src, int dest)
+{
+    startStopEvent();
+
+    evaluate(myscript.property("beforePlayerKick").call(myscript, QScriptValueList() << src << dest));
+
+    return !endStopEvent();
+}
+
+void ScriptEngine::afterPlayerKick(int src, int dest)
+{
+    evaluate(myscript.property("afterPlayerKick").call(myscript, QScriptValueList() << src << dest));
+}
+
+bool ScriptEngine::beforePlayerBan(int src, int dest)
+{
+    startStopEvent();
+
+    evaluate(myscript.property("beforePlayerBan").call(myscript, QScriptValueList() << src << dest));
+
+    return !endStopEvent();
+}
+
+void ScriptEngine::afterPlayerBan(int src, int dest)
+{
+    evaluate(myscript.property("afterPlayerBan").call(myscript, QScriptValueList() << src << dest));
+}
+
+bool ScriptEngine::beforePlayerAway(int src, bool away)
+{
+    startStopEvent();
+
+    evaluate(myscript.property("beforePlayerAway").call(myscript, QScriptValueList() << src << away));
+
+    return !endStopEvent();
+}
+
+void ScriptEngine::afterPlayerAway(int src, bool away)
+{
+    evaluate(myscript.property("afterPlayerAway").call(myscript, QScriptValueList() << src << away));
+}
+
 void ScriptEngine::evaluate(const QScriptValue &expr)
 {
     if (expr.isError()) {
@@ -412,6 +454,15 @@ QScriptValue ScriptEngine::auth(int id)
         return myengine.undefinedValue();
     } else {
         return myserver->auth(id);
+    }
+}
+
+QScriptValue ScriptEngine::away(int id)
+{
+    if (!myserver->playerLoggedIn(id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->away();
     }
 }
 
@@ -737,6 +788,24 @@ QScriptValue ScriptEngine::teamPokeNature(int id, int index)
         return myengine.undefinedValue();
     } else {
         return myserver->player(id)->team().poke(index).nature();
+    }
+}
+
+QScriptValue ScriptEngine::teamPokeEV(int id, int index, int stat)
+{
+    if (!loggedIn(id) || index < 0 || index >= 6 || stat < 0 || stat >= 6) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->team().poke(index).evs()[stat];
+    }
+}
+
+QScriptValue ScriptEngine::teamPokeDV(int id, int index, int stat)
+{
+    if (!loggedIn(id) || index < 0 || index >= 6 || stat < 0 || stat >= 6) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->team().poke(index).dvs()[stat];
     }
 }
 

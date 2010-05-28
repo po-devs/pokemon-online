@@ -85,6 +85,7 @@ public slots:
     void exportToTxt();
     void importDone(const QString &text);
     void showNoFrame();
+    void changeItemDisplay(bool allItems);
 
 private:
     enum StackWidgets {
@@ -198,7 +199,9 @@ private slots:
     void indexNumChanged(int pokeNum);
 private:
     TeamPokeButton *pokeButtons[6];
+public:
     TB_PokemonBody *pokeBody[6];
+private:
     QStackedWidget *body;
 
     QSplitter *splitter;
@@ -281,6 +284,8 @@ public:
     /* getting the pokemon of the team corresponding to the body */
     PokeTeam *poke();
     int num() const {return m_num;}
+
+    void reloadItems(bool showAllItems);
 private:
     TB_PokeChoice *pokechoice;
     QComboBox *itemchoice;

@@ -125,6 +125,7 @@ Server::Server(quint16 port)
 
     serverName = s.value("server_name").toString();
     serverDesc = s.value("server_description").toString();
+    serverAnnouncement = s.value("server_announcement").toString();
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
 
     myengine->serverStartUp();
@@ -193,6 +194,9 @@ void Server::regSendPlayers()
 
 void Server::regNameChanged(const QString &name)
 {
+    if (serverName == name)
+        return;
+
     serverName = name;
     sendAll("The name of the server changed to " + name + ".");
 
@@ -204,6 +208,9 @@ void Server::regNameChanged(const QString &name)
 
 void Server::regDescChanged(const QString &desc)
 {
+    if (serverDesc == desc)
+        return;
+
     serverDesc = desc;
     printLine("The description of the server changed.");
 
@@ -212,8 +219,12 @@ void Server::regDescChanged(const QString &desc)
 
     registry_connection->notify(NetworkServ::ServDescChange, desc);
 }
+
 void Server::regMaxChanged(const int &numMax)
 {
+    if (numMax == serverPlayerMax)
+        return;
+
     serverPlayerMax = numMax;
     printLine("Maximum Players Changed.");
 
@@ -221,6 +232,16 @@ void Server::regMaxChanged(const int &numMax)
         return;
 
     registry_connection->notify(NetworkServ::ServMaxChange,numMax);
+}
+
+void Server::announcementChanged(const QString &announcement)
+{
+    if (announcement == serverAnnouncement)
+        return;
+
+    serverAnnouncement = announcement;
+
+    printLine("Announcement changed.");
 }
 
 void Server::clearRatedBattlesHistory()
@@ -291,6 +312,7 @@ void Server::openConfig()
     connect(w, SIGNAL(nameChanged(QString)), SLOT(regNameChanged(const QString)));
     connect(w, SIGNAL(descChanged(QString)), SLOT(regDescChanged(const QString)));
     connect(w, SIGNAL(maxChanged(int)), SLOT(regMaxChanged(int)));
+    connect(w, SIGNAL(announcementChanged(QString)), SLOT(announcementChanged(QString)));
 }
 
 void Server::openScriptWindow()
@@ -484,9 +506,14 @@ void Server::loggedIn(int id, const QString &name)
         player(id)->changeState(Player::LoggedIn, true);
 
         player(id)->relay().notify(NetworkServ::VersionControl, VERSION);
+
+        if (serverAnnouncement.length() > 0)
+            player(id)->relay().notify(NetworkServ::Announcement, serverAnnouncement);
+
         sendTierList(id);
 
         sendPlayersList(id);
+
         sendLogin(id);
 
         sendMessage(id, tr("Welcome Message: The updates are now available at www.pokemon-online.eu. Report any bug on the forums."));
@@ -629,10 +656,15 @@ void Server::incomingConnection()
 
 void Server::awayChanged(int src, bool away)
 {
-    foreach (Player *p, myplayers) {
-        if (p->isLoggedIn()) {
-            p->relay().notifyAway(src, away);
+    if (myengine->beforePlayerAway(src, away)) {
+        if (!playerExist(src))
+            return;
+        foreach (Player *p, myplayers) {
+            if (p->isLoggedIn()) {
+                p->relay().notifyAway(src, away);
+            }
         }
+        myengine->afterPlayerAway(src, away);
     }
 }
 
@@ -749,7 +781,12 @@ void Server::playerKick(int src, int dest)
         return;
     if (player(dest)->auth() >= player(src)->auth())
         return;
-    kick(dest,src);
+    if (myengine->beforePlayerKick(src, dest)) {
+        if (!playerExist(src) || !playerExist(dest))
+            return;
+        kick(dest,src);
+        myengine->afterPlayerKick(src, dest);
+    }
 }
 
 void Server::playerBan(int src, int dest)
@@ -766,7 +803,12 @@ void Server::playerBan(int src, int dest)
         return;
     }
 
-    ban(dest,src);
+    if (myengine->beforePlayerBan(src, dest)) {
+        if (!playerExist(src) || !playerExist(dest))
+            return;
+        ban(dest,src);
+        myengine->afterPlayerBan(src, dest);
+    }
 }
 
 

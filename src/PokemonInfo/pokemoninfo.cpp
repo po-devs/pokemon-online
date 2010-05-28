@@ -61,6 +61,8 @@ QTSList<QStringList> ItemInfo::m_BerryMessages;
 QTSList<int> ItemInfo::m_Powers;
 QTSList<int> ItemInfo::m_BerryPowers;
 QTSList<int> ItemInfo::m_BerryTypes;
+QList<int> ItemInfo::m_UsefulItems;
+QTSList<QString> ItemInfo::m_SortedUsefulNames;
 
 QTSList<QString> TypeInfo::m_Names;
 QTSList<QColor> TypeInfo::m_Colors;
@@ -1085,9 +1087,18 @@ void ItemInfo::loadNames()
 
     fill_container_with_file(m_BerryPowers, path("berry_pow.txt"));
     fill_container_with_file(m_BerryTypes, path("berry_type.txt"));
+    fill_container_with_file(m_UsefulItems, path("item_useful.txt"));
 
     m_SortedNames << m_RegItemNames << m_BerryNames;
     qSort(m_SortedNames);
+
+    m_SortedUsefulNames << m_BerryNames;
+
+    for (int i = 0; i < m_RegItemNames.size(); i++) {
+        if (isUseful(i))
+            m_SortedUsefulNames.push_back(m_RegItemNames[i]);
+    }
+    qSort(m_SortedUsefulNames);
 
     QStringList temp;
     fill_container_with_file(temp, path("item_effects.txt"));
@@ -1252,6 +1263,11 @@ bool ItemInfo::isPlate(int itemnum)
     return (itemnum >= 185 && itemnum <= 202 && itemnum != 190 && itemnum != 200);
 }
 
+bool ItemInfo::isUseful(int itemnum)
+{
+    return isBerry(itemnum) || m_UsefulItems[itemnum] == true;
+}
+
 int ItemInfo::PlateType(int itemnum)
 {
     return Effects(itemnum).front().args.toInt();
@@ -1294,6 +1310,11 @@ int ItemInfo::SortedNumber(const QString &itemname)
 QTSList<QString> ItemInfo::SortedNames()
 {
     return m_SortedNames;
+}
+
+QTSList<QString> ItemInfo::SortedUsefulNames()
+{
+    return m_SortedUsefulNames;
 }
 
 void TypeInfo::loadNames()

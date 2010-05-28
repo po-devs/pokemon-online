@@ -37,6 +37,12 @@ public:
     void afterBattleStarted(int winner, int loser, const ChallengeInfo &desc);
     void beforeBattleEnded(int winner, int loser, int desc);
     void afterBattleEnded(int winner, int loser, int desc);
+    bool beforePlayerAway(int src, bool away);
+    void afterPlayerAway(int src, bool away);
+    bool beforePlayerKick(int src, int dest);
+    void afterPlayerKick(int src, int dest);
+    bool beforePlayerBan(int src, int dest);
+    void afterPlayerBan(int src, int dest);
 
     /* Functions called in scripts */
     Q_INVOKABLE void sendAll(const QString &mess);
@@ -70,6 +76,7 @@ public:
     Q_INVOKABLE QScriptValue name(int id);
     Q_INVOKABLE QScriptValue id(const QString& name);
     Q_INVOKABLE QScriptValue auth(int id);
+    Q_INVOKABLE QScriptValue away(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
     Q_INVOKABLE QScriptValue tier(int id);
     Q_INVOKABLE QScriptValue ranking(int id);
@@ -104,6 +111,8 @@ public:
     Q_INVOKABLE bool hasTeamItem(int id, int itemNum);
 
     Q_INVOKABLE QScriptValue teamPokeNature(int id, int slot);
+    Q_INVOKABLE QScriptValue teamPokeEV(int id, int slot, int stat);
+    Q_INVOKABLE QScriptValue teamPokeDV(int id, int slot, int stat);
 
     Q_INVOKABLE int numPlayers();
     Q_INVOKABLE bool loggedIn(int id);

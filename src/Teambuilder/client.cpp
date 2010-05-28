@@ -22,12 +22,17 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     QGridLayout *layout = new QGridLayout(this);
 
-    layout->addWidget(myplayers = new QListWidget(), 0, 0, 3, 1, Qt::AlignLeft);
-    layout->addWidget(mychat = new QScrollDownTextEdit(), 0, 1);
+    layout->addWidget(myplayers = new QListWidget(), 0, 0, 4, 1, Qt::AlignLeft);
+    layout->addWidget(announcement = new QLabel(), 0, 1);
+    announcement->setObjectName("Announcement");
+    announcement->setOpenExternalLinks(true);
+    announcement->setWordWrap(true);
+    announcement->hide();
+    layout->addWidget(mychat = new QScrollDownTextEdit(), 1, 1);
     mychat->setObjectName("MainChat");
-    layout->addWidget(myline = new QLineEdit(), 1, 1);
+    layout->addWidget(myline = new QLineEdit(), 2, 1);
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
-    layout->addLayout(buttonsLayout,2,1);
+    layout->addLayout(buttonsLayout,3,1);
     buttonsLayout->addWidget(findMatch = new QPushButton(tr("&Find Battle")));
     buttonsLayout->addWidget(myregister = new QPushButton(tr("&Register")));
     buttonsLayout->addWidget(myexit = new QPushButton(tr("&Exit")));
@@ -37,12 +42,6 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     myplayers->setMaximumWidth(200);
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    /*myplayers->setStyleSheet(
-            "background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
-            "stop:0 white, stop:1 #bfbfbd);"
-            "border: 1px solid gray;"
-            "border-radius: 10px"
-        );*/
     QPalette pal = palette();
     pal.setColor(QPalette::AlternateBase, Qt::blue);
     pal.setColor(QPalette::Base, Qt::blue);
@@ -107,6 +106,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(spectatingBattleFinished(int)), SLOT(stopWatching(int)));
     connect(relay, SIGNAL(versionDiff(QString, QString)), SLOT(versionDiff(QString, QString)));
     connect(relay, SIGNAL(tierListReceived(QString)), SLOT(tierListReceived(QString)));
+    connect(relay, SIGNAL(announcement(QString)), SLOT(announcementReceived(QString)));
 }
 
 int Client::ownAuth() const
@@ -229,6 +229,22 @@ void Client::showTimeStamps(bool b)
     QSettings s;
     s.setValue("show_timestamps", b);
     showTS = b;
+}
+
+void Client::showTimeStamps2(bool b)
+{
+    QSettings s;
+    s.setValue("show_timestamps2", b);
+}
+
+void Client::ignoreServerVersion(bool b)
+{
+    QSettings s;
+    if (b) {
+        s.setValue("ignore_version_" + serverVersion, true);
+    } else {
+        s.remove("ignore_version_" + serverVersion);
+    }
 }
 
 void Client::enableLadder(bool b)
@@ -425,6 +441,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     show_ts->setChecked(s.value("show_timestamps").toBool());
     showTS = show_ts->isChecked();
 
+    QAction * show_ts2 = menuActions->addAction(tr("Enable timestamps in &PMs"));
+    show_ts2->setCheckable(true);
+    connect(show_ts2, SIGNAL(triggered(bool)), SLOT(showTimeStamps2(bool)));
+    show_ts2->setChecked(s.value("show_timestamps2").toBool());
+
     QAction *sortByTier = menuActions->addAction(tr("Sort players by &tiers"));
     sortByTier->setCheckable(true);
     connect(sortByTier, SIGNAL(triggered(bool)), SLOT(sortPlayersCountingTiers(bool)));
@@ -571,13 +592,34 @@ void Client::messageReceived(const QString &mess)
 
 void Client::versionDiff(const QString &a, const QString &b)
 {
+    serverVersion = a;
+
     if (a != b) {
         printHtml(toColor(tr("Your client version (%2) doesn't match with the server's (%1).").arg(a,b), QColor("#e37800")));
 
         if (b.compare(a) < 0) {
-            QMessageBox::information(this, tr("Old Version"), tr("Your version is older than the server's, there might be some things you can't do.\n\nIt is recommended to update."));
+            QSettings s;
+
+            if (s.contains("ignore_version_" + serverVersion))
+                return;
+
+            QMessageBox *update = new QMessageBox(QMessageBox::Information, tr("Old Version"), tr("Your version is older than the server's, there might be some things you can't do.\n\nhttp://www.pokemon-online.eu/downloads.php for updates."),QMessageBox::Ok  | QMessageBox::Ignore,NULL, Qt::Window);
+            int result = update->exec();
+
+            if (result & QMessageBox::Ignore)
+                ignoreServerVersion(true);
         }
     }
+}
+
+void Client::announcementReceived(const QString &ann)
+{
+    if (ann.length() == 0)
+        return;
+
+    announcement->setText(ann);
+    announcement->setAlignment(Qt::AlignCenter);
+    announcement->show();
 }
 
 void Client::tierListReceived(const QString &tl)

@@ -79,6 +79,7 @@ public slots:
     void playerLogin(const PlayerInfo &p);
     void playerReceived(const PlayerInfo &p);
     void teamChanged(const PlayerInfo &p);
+    void announcementReceived(const QString &);
     void playerLogout(int);
     void sendRegister();
     /* sends the server a challenge notice */
@@ -142,6 +143,8 @@ public slots:
     void sortPlayersCountingTiers(bool);
     void showPlayerEvents(bool);
     void showTimeStamps(bool);
+    void showTimeStamps2(bool);
+    void ignoreServerVersion(bool);
     void versionDiff(const QString &a, const QString &b);
     void tierListReceived(const QString&);
     void changeTier();
@@ -175,6 +178,7 @@ private:
     QHash<int, PMWindow*> mypms;
     /* Line the user types in */
     QLineEdit *myline;
+    QLabel *announcement;
     /* Where players are displayed */
     QListWidget *myplayers;
     QHash<int, QIdListWidgetItem *> myplayersitems;
@@ -199,6 +203,8 @@ private:
     bool showTS;
     bool sortBT;
     bool findingBattle;
+
+    QString serverVersion;
 
     QPointer<QMenuBar> mymenubar;
     QPointer<QMenu> mytiermenu;

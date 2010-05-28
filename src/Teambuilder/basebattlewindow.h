@@ -73,6 +73,7 @@ class BaseBattleWindow : public QWidget
     PROPERTY(Client *, client);
     PROPERTY(int, animatedHpSpot);
     PROPERTY(int, animatedHpGoal);
+    PROPERTY(bool, started);
     //PROPERTY(bool, musicPlayed);
 public:
     BaseBattleInfo *myInfo;

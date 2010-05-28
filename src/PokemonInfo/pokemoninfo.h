@@ -217,6 +217,7 @@ private:
     static QHash<QString, int> m_BerryNamesH;
     static QHash<QString, int> m_ItemNamesH;
     static QTSList<QString> m_SortedNames;
+    static QTSList<QString> m_SortedUsefulNames;
     static QString m_Directory;
     static QTSList<QList<Effect> > m_RegEffects;
     static QTSList<QList<Effect> > m_BerryEffects;
@@ -225,6 +226,7 @@ private:
     static QTSList<int> m_Powers;
     static QTSList<int> m_BerryPowers;
     static QTSList<int> m_BerryTypes;
+    static QList<int> m_UsefulItems;
 
     static void loadNames();
     static QString path(const QString &filename);
@@ -238,8 +240,10 @@ public:
     static bool Exist(int itemnum);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
+    static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
     static QTSList<QString> SortedNames();
+    static QTSList<QString> SortedUsefulNames();
     static QList<Effect> Effects(int item);
     static QString Message(int item, int part);
     static int Number(const QString &itemname);
