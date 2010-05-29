@@ -43,7 +43,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     myplayers->setMaximumWidth(200);
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
-    myplayers->setHeaderItem(new QCSTreeWidgetItem(0));
+    myplayers->setHeaderItem(new QTreeWidgetItem(0));
     myplayers->headerItem()->setText(0,"Players");
 
     QPalette pal = palette();
@@ -666,12 +666,16 @@ void Client::sortPlayersCountingTiers(bool byTier)
 
 void Client::sortAllPlayersByTier()
 {
-    foreach(QIdTreeWidgetItem *it, mytiersitems) {
-        myplayers->headerItem()->removeChild(it);
+    foreach(QIdTreeWidgetItem *it, mytiersitems)
+    {
+        delete myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
     }
 
     mytiersitems.clear();
-
+    foreach(QIdTreeWidgetItem *it, myplayersitems)
+    {
+        myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
+    }
 
     foreach(QString tier, tierList) {
         QIdTreeWidgetItem *it = new QIdTreeWidgetItem(0, tier, 0);
@@ -696,22 +700,29 @@ void Client::sortAllPlayersByTier()
         if (mytiersitems.contains(tier)) {
             placeItem(iter.value(), mytiersitems.value(tier));
         } else {
-            myplayers->addTopLevelItem(iter.value());
+            placeItem(iter.value(),myplayers->headerItem());
         }
     }
 }
 
 void Client::sortAllPlayersNormally()
 {
-    myplayers->headerItem()->setText(0,"Players");
-        myplayers->clear();
+    foreach(QIdTreeWidgetItem *it, myplayersitems)
+    {
+        it->parent()->takeChild(it->parent()->indexOfChild(it));
+    }
+
+    foreach(QIdTreeWidgetItem *it, mytiersitems)
+    {
+        delete myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
+    }
 
     mytiersitems.clear();
 
     QHash<int, QIdTreeWidgetItem *>::iterator iter;
 
     for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
-        myplayers->addTopLevelItem(iter.value());
+        placeItem(iter.value(),myplayers->headerItem());
     }
 }
 
@@ -1074,14 +1085,13 @@ void Client::removePlayer(int id)
     QString name = info(id).name;
 
     /* removes the item in the playerlist */
-    if(sortBT) {
-        for(int i = 0; i < myplayers->topLevelItemCount(); i++)
-        {
+
+    for(int i = 0; i < myplayers->topLevelItemCount(); i++)
+    {
             myplayers->topLevelItem(i)->removeChild(myplayersitems[id]);
-        }
-    } else {
-        myplayers->removeItemWidget(myplayersitems[id],0);
     }
+
+
 
     myplayersitems.remove(id);
     mynames.remove(name);
@@ -1122,14 +1132,14 @@ void Client::playerReceived(const PlayerInfo &p)
         QString name = info(p.id).name;
 
         /* removes the item in the playerlist */
-        if(sortBT) {
-            for(int i = 0; i < myplayers->topLevelItemCount(); i++)
-            {
+
+        for(int i = 0; i < myplayers->topLevelItemCount(); i++)
+        {
                 myplayers->topLevelItem(i)->removeChild(myplayersitems[p.id]);
-            }
-        } else {
-            myplayers->removeItemWidget(myplayersitems[p.id],0);
         }
+
+
+
         item = myplayersitems[p.id];
 
         myplayersitems.remove(p.id);
@@ -1141,7 +1151,7 @@ void Client::playerReceived(const PlayerInfo &p)
 
     QString nick = authedNick(p.id);
 
-    if (!item) {
+    if (!item || item->id() < 0) {
         item = new QIdTreeWidgetItem(p.id, nick, 0);
 
         QFont f = item->font(item->level());
@@ -1161,7 +1171,7 @@ void Client::playerReceived(const PlayerInfo &p)
     if (sortBT && mytiersitems.contains(p.tier)) {
         placeItem(item, mytiersitems.value(p.tier));
     } else {
-        myplayers->addTopLevelItem(item);
+        placeItem(item,myplayers->headerItem());
     }
 
     updateState(p.id);
@@ -1173,13 +1183,21 @@ void Client::playerReceived(const PlayerInfo &p)
 
 void Client::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
 {
-    /* To sort the people in case insensitive order */
+    if(item->id() >= 0) {
 
-             parent->addChild(item);
-             parent->sortChildren(0,Qt::AscendingOrder);
-             return;
-
-     
+        if(parent == myplayers->headerItem()) {
+            myplayers->addTopLevelItem(item);
+            myplayers->sortItems(0,Qt::AscendingOrder);
+        }
+        QIdTreeWidgetItem *newI;
+        if(item->parent()) {
+            newI = dynamic_cast<QIdTreeWidgetItem*>(item->parent()->takeChild(item->parent()->indexOfChild(item)));
+            delete item;
+        } else
+            newI = item;
+        parent->addChild(newI);
+        parent->sortChildren(0,Qt::AscendingOrder);
+    }
 }
 
 void Client::teamChanged(const PlayerInfo &p) {
@@ -1315,7 +1333,7 @@ PlayerInfo &Client::playerInfo(int id)
 
 void Client::updateState(int id)
 {
-    if (item(id)) {
+    if (item(id) && item(id)->level() >= 0) {
         if (playerInfo(id).battling()) {
             item(id)->setIcon(0, statusIcons[Battling]);
         } else if (playerInfo(id).away()) {
