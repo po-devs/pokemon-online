@@ -136,7 +136,7 @@ void QImageButton::mouseMoveEvent(QMouseEvent *)
 }
 
 QIdTreeWidgetItem::QIdTreeWidgetItem(int id, const QString &text,int level)
-        : QCSTreeWidgetItem(0), myid(id), mylevel(level)
+        : QTreeWidgetItem(0), myid(id), mylevel(level)
 {
     setText(mylevel,text);
 }

@@ -63,17 +63,8 @@ private:
 };
 
 /* A QListWidgetItem with an id, for convenience */
-class QCSTreeWidgetItem : public QTreeWidgetItem {
-public:
-   QCSTreeWidgetItem(QTreeWidget* parent):QTreeWidgetItem(parent){}
-private:
-   bool operator<(const QTreeWidgetItem &other)const {
-       int column = treeWidget()->sortColumn();
-       return text(column).toLower() < other.text(column).toLower();
-    }
-};
 
-class QIdTreeWidgetItem : public QCSTreeWidgetItem
+class QIdTreeWidgetItem : public QTreeWidgetItem
 {
 public:
     QIdTreeWidgetItem(int id, const QString &text, int level);
@@ -84,6 +75,10 @@ public:
 private:
     int myid;
     int mylevel;
+    bool operator<(const QTreeWidgetItem &other)const {
+        int column = treeWidget()->sortColumn();
+        return text(column).toLower() < other.text(column).toLower();
+     }
 };
 
 
