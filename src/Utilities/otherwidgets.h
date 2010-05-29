@@ -63,6 +63,30 @@ private:
 };
 
 /* A QListWidgetItem with an id, for convenience */
+class QCSTreeWidgetItem : public QTreeWidgetItem {
+public:
+   QCSTreeWidgetItem(QTreeWidget* parent):QTreeWidgetItem(parent){}
+private:
+   bool operator<(const QTreeWidgetItem &other)const {
+       int column = treeWidget()->sortColumn();
+       return text(column).toLower() < other.text(column).toLower();
+    }
+};
+
+class QIdTreeWidgetItem : public QCSTreeWidgetItem
+{
+public:
+    QIdTreeWidgetItem(int id, const QString &text, int level);
+
+    int id() const;
+    int level() const;
+    void setColor(const QColor &c);
+private:
+    int myid;
+    int mylevel;
+};
+
+
 class QIdListWidgetItem : public QListWidgetItem
 {
 public:
@@ -73,7 +97,6 @@ public:
 private:
     int myid;
 };
-
 /* A textedit that scrolls down automatically, unless not down, and that
    always insert the text at the end */
 class QScrollDownTextEdit : public QTextEdit

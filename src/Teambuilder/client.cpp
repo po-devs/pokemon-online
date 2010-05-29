@@ -22,7 +22,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     QGridLayout *layout = new QGridLayout(this);
 
-    layout->addWidget(myplayers = new QListWidget(), 0, 0, 4, 1, Qt::AlignLeft);
+    layout->addWidget(myplayers = new QTreeWidget(), 0, 0, 4, 1, Qt::AlignLeft);
     layout->addWidget(announcement = new QLabel(), 0, 1);
     announcement->setObjectName("Announcement");
     announcement->setOpenExternalLinks(true);
@@ -37,10 +37,14 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     buttonsLayout->addWidget(myregister = new QPushButton(tr("&Register")));
     buttonsLayout->addWidget(myexit = new QPushButton(tr("&Exit")));
     buttonsLayout->addWidget(mysender = new QPushButton(tr("&Send")));
+    buttonsLayout->addWidget(mybugs = new QPushButton(tr("&Report a Bug")));
     layout->setColumnStretch(1,100);
+
 
     myplayers->setMaximumWidth(200);
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
+    myplayers->setHeaderItem(new QCSTreeWidgetItem(0));
+    myplayers->headerItem()->setText(0,"Players");
 
     QPalette pal = palette();
     pal.setColor(QPalette::AlternateBase, Qt::blue);
@@ -50,11 +54,12 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mynick = t->trainerNick();
 
     connect(myplayers, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
-    connect(myplayers, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(seeInfo(QListWidgetItem*)));
+    connect(myplayers, SIGNAL(itemActivated(QTreeWidgetItem*)), SLOT(seeInfo(QTreeWidgetItem*)));
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
     connect(myregister, SIGNAL(clicked()), SLOT(sendRegister()));
+    connect(mybugs, SIGNAL(clicked()), SLOT(bugReport()));
     connect(findMatch, SIGNAL(clicked()), SLOT(openBattleFinder()));
 
     initRelay();
@@ -126,7 +131,7 @@ int Client::ownId() const
 
 void Client::showContextMenu(const QPoint &requested)
 {
-    QIdListWidgetItem *item = dynamic_cast<QIdListWidgetItem*>(myplayers->itemAt(requested));
+    QIdTreeWidgetItem *item = dynamic_cast<QIdTreeWidgetItem*>(myplayers->itemAt(requested));
 
     if (item && item->id() != 0)
     {
@@ -661,58 +666,52 @@ void Client::sortPlayersCountingTiers(bool byTier)
 
 void Client::sortAllPlayersByTier()
 {
-    foreach(QIdListWidgetItem *it, mytiersitems) {
-        delete myplayers->takeItem(myplayers->row(it));
+    foreach(QIdTreeWidgetItem *it, mytiersitems) {
+        myplayers->headerItem()->removeChild(it);
     }
 
     mytiersitems.clear();
 
-    foreach(QIdListWidgetItem *it, myplayersitems) {
-        myplayers->takeItem(myplayers->row(it));
-    }
 
     foreach(QString tier, tierList) {
-        QIdListWidgetItem *it = new QIdListWidgetItem(0, tier);
+        QIdTreeWidgetItem *it = new QIdTreeWidgetItem(0, tier, 0);
         //it->setBackgroundColor("#0CA0DD");
         //it->setColor("white");
-        QFont f = it->font();
+        QFont f = it->font(0);
         f.setPixelSize(15);
         f.setBold(true);
-        it->setFont(f);
-
-        placeItem(it, 0);
+        it->setFont(0,f);
+        it->setText(0,tier);
+        myplayers->addTopLevelItem(it);
         mytiersitems.insert(tier, it);
-    }
 
-    QHash<int, QIdListWidgetItem *>::iterator iter;
+    }
+    myplayers->expandAll();
+
+    QHash<int, QIdTreeWidgetItem *>::iterator iter;
 
     for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
         QString tier = player(iter.key()).tier;
 
         if (mytiersitems.contains(tier)) {
-            placeItem(iter.value(), myplayers->row(mytiersitems[tier])+1);
+            placeItem(iter.value(), mytiersitems.value(tier));
         } else {
-            placeItem(iter.value(), 0);
+            myplayers->addTopLevelItem(iter.value());
         }
     }
 }
 
 void Client::sortAllPlayersNormally()
 {
-    foreach(QIdListWidgetItem *it, mytiersitems) {
-        delete myplayers->takeItem(myplayers->row(it));
-    }
+    myplayers->headerItem()->setText(0,"Players");
+        myplayers->clear();
 
     mytiersitems.clear();
 
-    foreach(QIdListWidgetItem *it, myplayersitems) {
-        myplayers->takeItem(myplayers->row(it));
-    }
-
-    QHash<int, QIdListWidgetItem *>::iterator iter;
+    QHash<int, QIdTreeWidgetItem *>::iterator iter;
 
     for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
-        placeItem(iter.value(), 0);
+        myplayers->addTopLevelItem(iter.value());
     }
 }
 
@@ -755,7 +754,7 @@ BasicInfo Client::info(int id) const
 
 void Client::seeInfo(QListWidgetItem *it)
 {
-    seeInfo(((QIdListWidgetItem*)(it))->id());
+    seeInfo(((QIdTreeWidgetItem*)(it))->id());
 }
 
 void Client::seeInfo(int id)
@@ -822,11 +821,11 @@ void Client::battleStarted(int, int id1, int id2)
     myplayersinfo[id2].flags |= PlayerInfo::Battling;
 
     if (id1 != 0) {
-        item(id1)->setToolTip(tr("Battling against %1").arg(name(id2)));
+        item(id1)->setToolTip(0,tr("Battling against %1").arg(name(id2)));
         updateState(id1);
     }
     if (id2 != 0) {
-        item(id2)->setToolTip(tr("Battling against %1").arg(name(id1)));
+        item(id2)->setToolTip(0,tr("Battling against %1").arg(name(id1)));
         updateState(id2);
     }
 }
@@ -857,7 +856,7 @@ void Client::stopWatching(int battleId)
     }
 }
 
-QIdListWidgetItem *Client::item(int id) {
+QIdTreeWidgetItem *Client::item(int id) {
     return myplayersitems.value(id);
 }
 
@@ -1075,7 +1074,14 @@ void Client::removePlayer(int id)
     QString name = info(id).name;
 
     /* removes the item in the playerlist */
-    delete myplayers->takeItem(myplayers->row(myplayersitems[id]));
+    if(sortBT) {
+        for(int i = 0; i < myplayers->topLevelItemCount(); i++)
+        {
+            myplayers->topLevelItem(i)->removeChild(myplayersitems[id]);
+        }
+    } else {
+        myplayers->removeItemWidget(myplayersitems[id],0);
+    }
 
     myplayersitems.remove(id);
     mynames.remove(name);
@@ -1110,13 +1116,20 @@ QString Client::authedNick(int id) const
 
 void Client::playerReceived(const PlayerInfo &p)
 {
-    QIdListWidgetItem *item = NULL;
+    QIdTreeWidgetItem *item = NULL;
 
     if (myplayersinfo.contains(p.id)) {
         QString name = info(p.id).name;
 
         /* removes the item in the playerlist */
-        myplayers->takeItem(myplayers->row(myplayersitems[p.id]));
+        if(sortBT) {
+            for(int i = 0; i < myplayers->topLevelItemCount(); i++)
+            {
+                myplayers->topLevelItem(i)->removeChild(myplayersitems[p.id]);
+            }
+        } else {
+            myplayers->removeItemWidget(myplayersitems[p.id],0);
+        }
         item = myplayersitems[p.id];
 
         myplayersitems.remove(p.id);
@@ -1129,14 +1142,13 @@ void Client::playerReceived(const PlayerInfo &p)
     QString nick = authedNick(p.id);
 
     if (!item) {
-        item = new QIdListWidgetItem(p.id, nick);
+        item = new QIdTreeWidgetItem(p.id, nick, 0);
 
-        QFont f = item->font();
+        QFont f = item->font(item->level());
         f.setBold(true);
-        item->setFont(f);
-    } else {
-        item->setText(nick);
+        item->setFont(item->level(),f);
     }
+    item->setText(item->level(),nick);
 
     item->setColor(color(p.id));
 
@@ -1147,9 +1159,9 @@ void Client::playerReceived(const PlayerInfo &p)
     }
 
     if (sortBT && mytiersitems.contains(p.tier)) {
-        placeItem(item, myplayers->row(mytiersitems[p.tier]) + 1);
+        placeItem(item, mytiersitems.value(p.tier));
     } else {
-        placeItem(item);
+        myplayers->addTopLevelItem(item);
     }
 
     updateState(p.id);
@@ -1159,26 +1171,15 @@ void Client::playerReceived(const PlayerInfo &p)
     }
 }
 
-void Client::placeItem(QIdListWidgetItem *item, int offset)
+void Client::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
 {
     /* To sort the people in case insensitive order */
-    bool inserted = false;
-    for(int i = offset; i < myplayers->count(); i++) {
-        if ( item->id() != 0 && (static_cast<QIdListWidgetItem*>(myplayers->item(i)))->id() == 0 ) {
-            inserted = true;
-            myplayers->insertItem(i,item);
-            break;
-        }
-        if (item->text().compare(myplayers->item(i)->text(), Qt::CaseInsensitive) < 0) {
-            inserted = true;
-            myplayers->insertItem(i,item);
-            break;
-        }
-    }
 
-    if (!inserted) {
-        myplayers->addItem(item);
-    }
+             parent->addChild(item);
+             parent->sortChildren(0,Qt::AscendingOrder);
+             return;
+
+     
 }
 
 void Client::teamChanged(const PlayerInfo &p) {
@@ -1316,13 +1317,13 @@ void Client::updateState(int id)
 {
     if (item(id)) {
         if (playerInfo(id).battling()) {
-            item(id)->setIcon(statusIcons[Battling]);
+            item(id)->setIcon(0, statusIcons[Battling]);
         } else if (playerInfo(id).away()) {
-            item(id)->setIcon(statusIcons[Away]);
-            item(id)->setToolTip("");
+            item(id)->setIcon(0, statusIcons[Away]);
+            item(id)->setToolTip(0, "");
         } else {
-            item(id)->setIcon(statusIcons[Available]);
-            item(id)->setToolTip("");
+            item(id)->setIcon(0, statusIcons[Available]);
+            item(id)->setToolTip(0, "");
         }
     }
 }
@@ -1346,6 +1347,11 @@ void Client::removeIgnore(int id)
 {
     printLine(tr("You stopped ignoring %1.").arg(name(id)));
     myIgnored.removeOne(id);
+}
+
+void Client::bugReport()
+{
+    QDesktopServices::openUrl(QUrl("http://pokemon-online.eu/forums/forumdisplay.php?9-Bugs-and-Fixes"));
 }
 
 /**********************************************************/
