@@ -1369,7 +1369,7 @@ void Client::removeIgnore(int id)
 
 void Client::bugReport()
 {
-    QDesktopServices::openUrl(QUrl("http://pokemon-online.eu/forums/forumdisplay.php?9-Bugs-and-Fixes"));
+    QDesktopServices::openUrl(QUrl("http://pokemon-online.eu/forums/newthread.php?do=newthread&f=9"));
 }
 
 /**********************************************************/
