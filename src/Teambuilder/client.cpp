@@ -1151,13 +1151,12 @@ void Client::playerReceived(const PlayerInfo &p)
 
     QString nick = authedNick(p.id);
 
-    if (!item || item->id() < 0) {
-        item = new QIdTreeWidgetItem(p.id, nick, 0);
 
-        QFont f = item->font(item->level());
-        f.setBold(true);
-        item->setFont(item->level(),f);
-    }
+    item = new QIdTreeWidgetItem(p.id, nick, 0);
+
+    QFont f = item->font(item->level());
+    f.setBold(true);
+    item->setFont(item->level(),f);
     item->setText(item->level(),nick);
 
     item->setColor(color(p.id));
@@ -1184,7 +1183,6 @@ void Client::playerReceived(const PlayerInfo &p)
 void Client::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
 {
     if(item->id() >= 0) {
-
         if(parent == myplayers->headerItem()) {
             myplayers->addTopLevelItem(item);
             myplayers->sortItems(0,Qt::AscendingOrder);
