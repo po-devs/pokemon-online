@@ -8,7 +8,7 @@
 
 class MainEngine;
 class BaseChallengeWindow;
-class QIdListWidgetItem;
+class QIdTreeWidgetItem;
 class BattleWindow;
 class BaseBattleWindow;
 class QScrollDownTextEdit;
@@ -157,6 +157,7 @@ public slots:
     void openTeamBuilder();
     void changeTeam();
     void showDock(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
+    void bugReport();
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
@@ -180,9 +181,9 @@ private:
     QLineEdit *myline;
     QLabel *announcement;
     /* Where players are displayed */
-    QListWidget *myplayers;
-    QHash<int, QIdListWidgetItem *> myplayersitems;
-    QHash<QString, QIdListWidgetItem *> mytiersitems;
+    QTreeWidget *myplayers;
+    QHash<int, QIdTreeWidgetItem *> myplayersitems;
+    QHash<QString, QIdTreeWidgetItem *> mytiersitems;
     /* Button to exit */
     QPushButton *myexit;
     /* Button to send text */
@@ -191,6 +192,8 @@ private:
     QPushButton *myregister;
     /* Button to find a battle */
     QPushButton *findMatch;
+    // Bug Report
+    QPushButton *mybugs;
     /* Network Relay */
     Analyzer myrelay;
     /* Challenge window , to emit or to receive*/
@@ -225,9 +228,9 @@ private:
 
     PlayerInfo playerInfo(int id) const;
     PlayerInfo & playerInfo(int id);
-    QIdListWidgetItem *item(int id);
+    QIdTreeWidgetItem *item(int id);
     void updateState(int player);
-    void placeItem(QIdListWidgetItem*it, int offset=0);
+    void placeItem(QIdTreeWidgetItem*it, QTreeWidgetItem *parent);
 
     void initRelay();
     void changeTierChecked(const QString &newtier);
