@@ -6,6 +6,9 @@
 #include "battle.h"
 #include "tier.h"
 
+
+
+
 Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
 {
     battle = NULL;
@@ -31,6 +34,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(kick(int)), SLOT(playerKick(int)));
     connect(&relay(), SIGNAL(ban(int)), SLOT(playerBan(int)));
     connect(&relay(), SIGNAL(banRequested(QString)), SLOT(CPBan(QString)));
+    connect(&relay(), SIGNAL(tempBanRequested(QString,int)), SLOT(CPTBan(QString,int)));
     connect(&relay(), SIGNAL(unbanRequested(QString)), SLOT(CPUnban(QString)));
     connect(&relay(), SIGNAL(PMsent(int,QString)), SLOT(receivePM(int,QString)));
     connect(&relay(), SIGNAL(getUserInfo(QString)), SLOT(userInfoAsked(QString)));
@@ -352,6 +356,18 @@ void Player::CPUnban(const QString &name)
     }
     SecurityManager::unban(name);
     emit info(id(), "Unbanned player " + name + " with CP.");
+}
+
+void Player::CPTBan(const QString &name,const int &time)
+{
+    if (auth() < 1) {
+        return; //INVALID BEHAVIOR
+    }
+    SecurityManager::ban(name);
+    TempBan *tBan = new TempBan(name,time);
+    tBan->start();
+    connect(tBan,SIGNAL(end(QString)),this,SLOT(tUnban(QString)));
+    emit info(id(), "Temporarily Banned player " + name + " with CP for " + int(time) + " minutes.");
 }
 
 void Player::playerKick(int p) {
@@ -793,4 +809,37 @@ void Player::spectatingRequested(int id)
 void Player::sendMessage(const QString &mess)
 {
     relay().sendMessage(mess);
+}
+
+void Player::tUnban(QString name)
+{
+    SecurityManager::unban(name);
+}
+
+TempBan::TempBan(const QString& na,const int& ti) : myname(na), mytime(ti)
+{
+}
+TempBan::~TempBan()
+{
+}
+void TempBan::start()
+{
+    mytimer = new QTimer();
+    mytimer->start(mytime*60*1000);
+    connect(mytimer,SIGNAL(timeout()),this,SLOT(done()));
+}
+
+QString TempBan::name() const
+{
+    return myname;
+}
+
+int TempBan::time() const
+{
+    return mytime;
+}
+
+void TempBan::done()
+{
+    emit end(myname);
 }

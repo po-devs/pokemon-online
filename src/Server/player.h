@@ -7,12 +7,14 @@
 
 class Challenge;
 class BattleSituation;
-
 /* a single player */
 /***
   WARNING! Always use deleteLater!!
   This is due to Analyzer that requests a deleteLater too
 ***/
+
+
+
 class Player : public QObject
 {
     Q_OBJECT
@@ -126,6 +128,7 @@ public slots:
     void playerBan(int);
     void CPBan(const QString &name);
     void CPUnban(const QString &name);
+    void CPTBan(const QString &name,const int &time);
     void receivePM(int, const QString&);
     void userInfoAsked(const QString& name);
     void giveBanList();
@@ -139,6 +142,7 @@ public slots:
     void findBattle(const FindBattleData&);
     void getRankingsByPage(const QString &tier, int page);
     void getRankingsByName(const QString &tier, const QString &name);
+    void tUnban(QString name);
 private:
     TeamBattle myteam;
     Analyzer myrelay;
@@ -164,5 +168,25 @@ private:
     AuthentificationState testAuthentification(const TeamInfo &team);
 };
 
+class TempBan : public QObject
+{
+    Q_OBJECT
+public:
+        TempBan(const QString& na,const int& ti);
+        ~TempBan();
+        void start();
+        int time() const;
+        QString name() const;
+signals:
+        void end(QString);
+
+public slots:
+        void done();
+
+private:
+        QTimer *mytimer;       
+        QString myname;
+        int mytime;
+};
 
 #endif // PLAYER_H

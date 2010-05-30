@@ -25,6 +25,7 @@ signals:
     void getBanList();
     void banRequested(const QString &name);
     void unbanRequested(const QString &name);
+    void tempBanRequested(const QString &name,const int &time);
 private slots:
     void getUser() {
         aliasList->clear();
@@ -57,6 +58,9 @@ private slots:
     void on_unban_clicked();
     void on_ban_clicked() {
         emit banRequested(userName->text());
+    }
+    void on_tBan_clicked() {
+        emit tempBanRequested(userName->text(),time->value());
     }
 };
 

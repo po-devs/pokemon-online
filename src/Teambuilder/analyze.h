@@ -57,7 +57,8 @@ namespace NetworkCli
         ServMaxChange,
         FindMatch,
         ShowRankings = 37,
-        Announcement
+        Announcement,
+        CPTBan
     };
 
     enum ProtocolError
@@ -156,7 +157,7 @@ public slots:
     void getUserInfo(const QString &name);
     void getBanList();
     void CPUnban(const QString &name);
-
+    void CPTBan(const QString &name,const int &time);
     /* By the rankings window */
     void getRanking(const QString &tier, const QString &name);
     void getRanking(const QString &tier, int page);

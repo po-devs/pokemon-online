@@ -360,6 +360,14 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             }
             break;
         }
+    case CPTBan:
+        {
+            QString name;
+            int time;
+            in  >> name >> time;
+            emit tempBanRequested(name, time);
+            break;
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;
