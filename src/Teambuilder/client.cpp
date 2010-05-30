@@ -54,7 +54,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mynick = t->trainerNick();
 
     connect(myplayers, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
-    connect(myplayers, SIGNAL(itemActivated(QTreeWidgetItem*)), SLOT(seeInfo(QTreeWidgetItem*)));
+    connect(myplayers, SIGNAL(itemActivated(QTreeWidgetItem*, int)), SLOT(seeInfo(QTreeWidgetItem*)));
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
@@ -1086,10 +1086,17 @@ void Client::removePlayer(int id)
 
     /* removes the item in the playerlist */
 
-    for(int i = 0; i < myplayers->topLevelItemCount(); i++)
-    {
+    if(sortBT){
+        for(int i = 0; i < myplayers->topLevelItemCount(); i++)
+        {
             myplayers->topLevelItem(i)->removeChild(myplayersitems[id]);
+        }
     }
+
+    else{
+        myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(myplayersitems.value(id)));
+    }
+
 
 
 
@@ -1133,9 +1140,15 @@ void Client::playerReceived(const PlayerInfo &p)
 
         /* removes the item in the playerlist */
 
-        for(int i = 0; i < myplayers->topLevelItemCount(); i++)
-        {
+        if(sortBT){
+            for(int i = 0; i < myplayers->topLevelItemCount(); i++)
+            {
                 myplayers->topLevelItem(i)->removeChild(myplayersitems[p.id]);
+            }
+        }
+
+        else{
+            myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(myplayersitems.value(p.id)));
         }
 
 
