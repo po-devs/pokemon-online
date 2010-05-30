@@ -56,7 +56,8 @@ namespace NetworkServ
         ServMaxChange,
         FindBattle,
         ShowRankings,
-        Announcement
+        Announcement,
+        CPTBan
     };
 
     enum ProtocolError
@@ -160,6 +161,7 @@ signals:
     void findBattle(const FindBattleData &f);
     void showRankings(const QString &tier, const QString &name);
     void showRankings(const QString &tier, int page);
+    void tempBanRequested(const QString &name,const int &time);
 public slots:
     /* slots called by the network */
     void error();

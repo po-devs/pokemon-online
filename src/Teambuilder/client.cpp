@@ -317,6 +317,7 @@ void Client::controlPanel(int id)
     connect(myCP, SIGNAL(getBanList()), &relay(), SLOT(getBanList()));
     connect(myCP, SIGNAL(banRequested(QString)), SLOT(requestBan(QString)));
     connect(myCP, SIGNAL(unbanRequested(QString)), &relay(), SLOT(CPUnban(QString)));
+    connect(myCP, SIGNAL(tempBanRequested(QString, int)), &relay(), SLOT(CPTBan(QString,int)));
 }
 
 void Client::openBattleFinder()
