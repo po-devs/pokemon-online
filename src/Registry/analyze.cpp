@@ -1,8 +1,6 @@
 #include "analyze.h"
 #include "network.h"
 
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/battlestructs.h"
 
 using namespace NetworkReg;
 
