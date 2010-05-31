@@ -576,7 +576,7 @@ void BattleSituation::endTurnStatus(int player)
         case Pokemon::DeeplyPoisoned:
             //Poison Heal
             if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-                sendAbMessage(45,0,player,Pokemon::Poison);
+                sendAbMessage(45,0,player,0,Pokemon::Poison);
                 healLife(player, poke(player).totalLifePoints()/8);
             } else {
                 notify(All, StatusMessage, player, qint8(HurtPoison));
@@ -587,7 +587,7 @@ void BattleSituation::endTurnStatus(int player)
         case Pokemon::Poisoned:
             //PoisonHeal
             if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-                sendAbMessage(45,0,player,Pokemon::Poison);
+                sendAbMessage(45,0,player,0,Pokemon::Poison);
                 healLife(player, poke(player).totalLifePoints()/8);
             } else {
                 notify(All, StatusMessage, player, qint8(HurtPoison));
@@ -1247,16 +1247,18 @@ void BattleSituation::sendBack(int player, bool silent)
         notify(All, SendBack, player);
 
     /* Just calling pursuit directly here, forgive me for this */
-    QList<int> opps = revs(player);
-    foreach(int opp, opps) {
-        if (turnlong[opp].value("Attack").toInt() == Move::Pursuit && !turnlong[opp]["HasMoved"].toBool()) {
-            turnlong[opp]["Power"] = turnlong[opp]["Power"].toInt() * 2;
-            choice[opp].targetPoke = player;
-            analyzeChoice(opp);
+    if (!turnlong[player].value("BatonPassed").toBool()) {
+        QList<int> opps = revs(player);
+        foreach(int opp, opps) {
+            if (turnlong[opp].value("Attack").toInt() == Move::Pursuit && !turnlong[opp]["HasMoved"].toBool()) {
+                turnlong[opp]["Power"] = turnlong[opp]["Power"].toInt() * 2;
+                choice[opp].targetPoke = player;
+                analyzeChoice(opp);
 
-            if (koed(player)) {
-                Mechanics::removeFunction(turnlong[player],"UponSwitchIn","BatonPass");
-                break;
+                if (koed(player)) {
+                    Mechanics::removeFunction(turnlong[player],"UponSwitchIn","BatonPass");
+                    break;
+                }
             }
         }
     }

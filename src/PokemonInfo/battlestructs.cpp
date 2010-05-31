@@ -379,7 +379,7 @@ void TeamBattle::generateRandom()
         }
         while (p2.EVSum() < 510) {
             int stat = true_rand() % 6;
-            p2.setEV(stat, std::min(int(p2.EV(stat)) + (true_rand()%255), 255));
+            p2.setEV(stat, std::min(int(p2.EV(stat)) + (true_rand()%255), long(255)));
         }
 
         p.dvs().clear();

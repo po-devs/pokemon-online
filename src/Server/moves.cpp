@@ -861,7 +861,7 @@ struct MMLeechSeed : public MM
 
     static void daf(int s, int t, BS &b) {
 	if (b.hasType(t, Pokemon::Grass) || (poke(b,t).contains("SeedSource"))) {
-            b.fail(t, 72,0,Pokemon::Grass,s);
+            b.fail(s, 72,0,Pokemon::Grass,t);
 	}
     }
 
@@ -878,7 +878,7 @@ struct MMLeechSeed : public MM
         if (b.koed(s2))
             return;
 
-        int damage = std::max(b.poke(s).totalLifePoints() / 8, 1);
+        int damage = std::min(int(b.poke(s).lifePoints()), std::max(b.poke(s).totalLifePoints() / 8, 1));
         
 	b.sendMoveMessage(72, 2, s, Pokemon::Grass);
 	b.inflictDamage(s, damage, s, false);
@@ -1825,16 +1825,16 @@ struct MMDisable : public MM
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
-	if (!poke(b,t).contains("LastMoveSuccessfullyUsedTurn")) {
+        if (!poke(b,t).contains("LastMoveUsedTurn")) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
-	int tu = poke(b,t)["LastMoveSuccessfullyUsedTurn"].toInt();
+        int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
 	if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
-	int move = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
+        int move = poke(b,t)["LastMoveUsed"].toInt();
     	int sl = -1;
 	for (int i = 0; i < 4; i++) {
 	    if (b.move(t, i) == move) {
@@ -1848,7 +1848,7 @@ struct MMDisable : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        int mv = poke(b,t)["LastMoveSuccessfullyUsed"].toInt();
+        int mv = poke(b,t)["LastMoveUsed"].toInt();
         poke(b,t)["DisablesUntil"] = b.turn() + 3 + (b.true_rand()%4);
         poke(b,t)["DisabledMove"] = mv;
 	addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
@@ -2927,7 +2927,7 @@ struct MMLockOn : public MM
     static void uas(int s, int t, BS &b) {
         poke(b,s)["LockedOnEnd"] = b.turn() + 1;
 	poke(b,s)["LockedOn"] = t;
-        poke(b,s)["LockedOnCount"] = poke(b,t).value("SwitchCount");
+        poke(b,s)["LockedOnCount"] = slot(b,t).value("SwitchCount");
 
 	b.sendMoveMessage(74,0,s,type(b,s),t);
     }
@@ -3430,18 +3430,23 @@ struct MMRage : public MM
 
     static void uas(int s, int, BS &b) {
         addFunction(poke(b,s), "UponOffensiveDamageReceived", "Rage", &uodr);
+        if (poke(b,s).contains("RageBuilt") && poke(b,s)["LastMoveUsed"] == Move::Rage) {
+            poke(b,s).remove("AttractBy");
+            b.healConfused(s);
+            poke(b,s).remove("Tormented");
+        }
+        poke(b,s).remove("RageBuilt");
     }
 
     static void uodr(int s, int, BS &b) {
         if (!b.koed(s) && poke(b,s)["LastMoveUsed"] == Move::Rage) {
-            poke(b,s).remove("AttractBy");
-            b.healConfused(s);
-            poke(b,s).remove("Tormented");
+            poke(b,s)["RageBuilt"] = true;
             if (poke(b,s)[QString("Boost%1").arg(Attack)].toInt() < 6) {
                 b.gainStatMod(s, Attack, 1,false);
                 b.sendMoveMessage(102, 0, s);
             }
         }
+
     }
 };
 
@@ -4144,7 +4149,7 @@ struct MMUproar : public MM {
 
     static void uas(int s,int, BS &b) {
         if (poke(b,s).value("UproarUntil").toInt() < b.turn() || !turn(b,s).value("UproarBefore").toBool()) {
-            poke(b,s)["UproarUntil"] = b.turn() + 1 + (true_rand() % 4);
+            poke(b,s)["UproarUntil"] = b.turn() + 1 + (b.true_rand() % 4);
             b.sendMoveMessage(141,0,s);
             foreach (int i, b.sortedBySpeed()) {
                 if (b.poke(i).status() == Pokemon::Asleep) {
