@@ -70,6 +70,6 @@ TRANSLATIONS = translation_fr.ts \
     translation_fi.ts \
     translation_sv.ts \
     translation_he.ts \
-    translation_cn.ts
+    translation_zh-cn.ts
 RC_FILE = myapp.rc
 RESOURCES += 

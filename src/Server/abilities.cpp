@@ -1028,8 +1028,13 @@ struct AMVoltAbsorb : public AM {
     static void op(int s, int t, BS &b) {
         if (type(b,t) == poke(b,s)["AbilityArg"].toInt()) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
-            b.sendAbMessage(70,0,s,s,type(b,t), b.ability(s));
-            b.healLife(s, b.poke(s).totalLifePoints()/4);
+
+            if (b.poke(s).lifePoints() == b.poke(s).totalLifePoints()) {
+                b.sendAbMessage(70,1,s,s,type(b,t), b.ability(s));
+            } else {
+                b.sendAbMessage(70,0,s,s,type(b,t), b.ability(s));
+                b.healLife(s, b.poke(s).totalLifePoints()/4);
+            }
         }
     }
 };

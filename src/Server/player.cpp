@@ -651,7 +651,7 @@ void Player::registerRequest() {
         return; //INVALID BEHAVIOR
 
     for (int i = 0; i < SecurityManager::Member::saltLength; i++) {
-        m.salt[i] = (true_rand() % (122-49)) + 49;
+        m.salt[i] = uchar((true_rand() % (122-49)) + 49);
     }
 
     SecurityManager::updateMemory(m);
