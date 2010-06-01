@@ -18,6 +18,7 @@ private slots:
     void user();
     void mod();
     void admin();
+    void owner();
     void clpass();
 private:
     QList<QString> playersbynum;

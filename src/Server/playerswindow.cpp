@@ -19,6 +19,7 @@ PlayersWindow::PlayersWindow(QWidget *parent)
     authgrade[0] = "User";
     authgrade[1] = "Mod";
     authgrade[2] = "Admin";
+    authgrade[3] = "Owner";
 
     QStringList headers;
     headers << "Player" << "Authority" << "Banned Status" << "Registered" << "IP" << "Last Appearance";
@@ -56,26 +57,25 @@ PlayersWindow::PlayersWindow(QWidget *parent)
         i++;
     }
 
-    QPushButton *_user = new QPushButton(tr("&User"));
-    QPushButton *_mod = new QPushButton(tr("&Mod"));
-    QPushButton *_admin = new QPushButton(tr("&Admin"));
+    QPushButton *_authority = new QPushButton(tr("&Authority"));
+    QMenu *m = new QMenu(_authority);
+    QAction *a = m->addAction(tr("User"), this, SLOT(user()));
+    a = m->addAction(tr("Moderator"), this, SLOT(mod()));
+    a = m->addAction(tr("Administrator"), this, SLOT(admin()));
+    _authority->setMenu(m);
+
     QPushButton *_ban = new QPushButton(tr("&Ban"));
     QPushButton *_unban = new QPushButton(tr("U&nban"));
     QPushButton *_clpass = new QPushButton(tr("&Clear Password"));
 
-    mylayout->addWidget(_user,1,0);
-    mylayout->addWidget(_mod,1,1);
-    mylayout->addWidget(_admin,1,2);
-    mylayout->addWidget(_ban,1,3);
-    mylayout->addWidget(_unban,1,4);
-    mylayout->addWidget(_clpass,1,5);
+    mylayout->addWidget(_authority,1,0);
+    mylayout->addWidget(_ban,1,2);
+    mylayout->addWidget(_unban,1,3);
+    mylayout->addWidget(_clpass,1,4);
 
     if (mytable->rowCount() == 0)
         return;
 
-    connect(_user,SIGNAL(clicked()),SLOT(user()));
-    connect(_mod,SIGNAL(clicked()),SLOT(mod()));
-    connect(_admin,SIGNAL(clicked()),SLOT(admin()));
     connect(_ban,SIGNAL(clicked()),SLOT(ban()));
     connect(_unban,SIGNAL(clicked()),SLOT(unban()));
     connect(_clpass,SIGNAL(clicked()),SLOT(clpass()));
@@ -115,8 +115,15 @@ void PlayersWindow::admin()
     emit authChanged(playersbynum[mytable->currentRow()],2);
 }
 
+void PlayersWindow::owner()
+{
+    SecurityManager::setauth(playersbynum[mytable->currentRow()], 3);
+    mytable->item(mytable->currentRow(), 1)->setText("Owner");
+    emit authChanged(playersbynum[mytable->currentRow()],3);
+}
+
 void PlayersWindow::clpass()
 {
     SecurityManager::clearPass(playersbynum[mytable->currentRow()]);
-    mytable->item(mytable->currentRow(), 3)->setText("No");
+    mytable->item(mytable->currentRow(), 4)->setText("No");
 }
