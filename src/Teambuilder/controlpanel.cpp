@@ -58,6 +58,8 @@ QString ControlPanel::statusText(const UserInfo &ui) const
         ret = "";
     } else if (ui.banned()) {
         ret = toBoldColor(tr("Banned"), Qt::red);
+    } else if (ui.tempBanned()) {
+        ret = toBoldColor(tr("Tempbanned"), QColor("orange"));
     } else if (ui.online()) {
         ret = toBoldColor(tr("Online"), Qt::green);
     } else {
@@ -85,6 +87,15 @@ void ControlPanel::addNameToBanList(const QString &name, const QString &ip)
     banTable->setItem(rowcount, 1, new QTableWidgetItem(ip));
 }
 
+void ControlPanel::addNameToTBanList(const QString &name, const QString &ip, int time)
+{
+    int rowcount = tbanTable->rowCount();
+    tbanTable->setRowCount(rowcount+1);
+    tbanTable->setItem(rowcount, 0, new QTableWidgetItem(name));
+    tbanTable->setItem(rowcount, 1, new QTableWidgetItem(ip));
+    tbanTable->setItem(rowcount, 2, new QTableWidgetItem(QString::number(time)));
+}
+
 void ControlPanel::on_unban_clicked()
 {
     int row = banTable->currentRow();
@@ -95,4 +106,16 @@ void ControlPanel::on_unban_clicked()
 
     emit unbanRequested(banTable->item(row, 0)->text());
     banTable->removeRow(row);
+}
+
+void ControlPanel::on_tunban_clicked()
+{
+    int row = tbanTable->currentRow();
+
+    if (row == -1 || row >= tbanTable->rowCount()) {
+        return;
+    }
+
+    emit tunbanRequested(tbanTable->item(row, 0)->text());
+    tbanTable->removeRow(row);
 }

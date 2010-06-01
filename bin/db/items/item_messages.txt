@@ -15,7 +15,7 @@
 
 
 %s restored a little HP using its Black Sludge!|%s was hurt by Black Sludge!
-
+%s's Quick Claw activated!
 %s restored a little HP using its Berry Juice!
 %s's Flame Orb activated!|%s's Toxic Orb activated!
 

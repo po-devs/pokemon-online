@@ -91,7 +91,7 @@ public slots:
     void refuseChallenge(int id);
     /* Display the info for that player */
     void seeInfo(int id);
-    void seeInfo(QListWidgetItem *it);
+    void seeInfo(QTreeWidgetItem *it);
     /* Challenge info by the server */
     void challengeStuff(const ChallengeInfo &c);
     /* battle... */
@@ -121,6 +121,7 @@ public slots:
     /* When you kick someone */
     void kick(int);
     void ban(int);
+    void tempban(int, int);
     /* PM */
     void startPM(int);
     void removePM(int);
@@ -129,6 +130,7 @@ public slots:
     void controlPanel(int);
     void setPlayer(const UserInfo &ui);
     void requestBan(const QString &name);
+    void requestTempBan(const QString &name, int time);
     /* Ranking */
     void seeRanking(int);
     /* Away... */

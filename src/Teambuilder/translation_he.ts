@@ -26,7 +26,7 @@
     <message>
         <location filename="pokedex.cpp" line="946"/>
         <source>Base Stats</source>
-        <translation>סטטוסים בסיסיים</translation>
+        <translation>נתונים בסיסיים</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="951"/>
@@ -56,7 +56,7 @@
     <message>
         <location filename="pokedex.cpp" line="978"/>
         <source>&amp;Search !</source>
-        <translation>&amp;חיפוש !</translation>
+        <translation>&amp;! חיפוש</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="981"/>
@@ -72,7 +72,7 @@
         <translation>הסרבר צורך הרשאה לא בטוחה.</translation>
     </message>
     <message>
-        <location filename="analyze.cpp" line="353"/>
+        <location filename="analyze.cpp" line="346"/>
         <source>Protocol error: unknown command received -- maybe an update for the program is available</source>
         <translation>בעיית פרוטוקול: פקודה לא מוכרת התקבלה - אולי ישנו עדכון זמין לתוכנה</translation>
     </message>
@@ -105,28 +105,28 @@ Effect: %5</source>
 <context>
     <name>BaseBattleDisplay</name>
     <message>
-        <location filename="basebattlewindow.cpp" line="1042"/>
+        <location filename="basebattlewindow.cpp" line="1036"/>
         <source>Lv. %1</source>
         <translation>רמה %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="1050"/>
-        <location filename="basebattlewindow.cpp" line="1052"/>
+        <location filename="basebattlewindow.cpp" line="1044"/>
+        <location filename="basebattlewindow.cpp" line="1046"/>
         <source>%1 lv %2 -- %3%</source>
         <translation>%1 רמה %2 -- %3%</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="1128"/>
+        <location filename="basebattlewindow.cpp" line="1122"/>
         <source>Spikes level %1</source>
         <translation>Spikes רמה %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="1136"/>
+        <location filename="basebattlewindow.cpp" line="1130"/>
         <source>Toxic Spikes level %1</source>
         <translation>Toxic Spikes רמה %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="1142"/>
+        <location filename="basebattlewindow.cpp" line="1136"/>
         <source>Stealth Rock</source>
         <translation>Stealth Rock</translation>
     </message>
@@ -136,155 +136,155 @@ Effect: %5</source>
     <message>
         <location filename="basebattlewindow.cpp" line="36"/>
         <source>Battle between %1 and %2 is underway!</source>
-        <translation>!מתחיל %2 לבין %1 בין קרב</translation>
+        <translation>התחיל %1 לבין %2 קרב בין</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="72"/>
+        <location filename="basebattlewindow.cpp" line="71"/>
         <source>Battle between %1 and %2</source>
-        <translation>%2 לבין %1 בין קרב</translation>
+        <translation type="unfinished">%1 לבין %2 קרב בין</translation>
+    </message>
+    <message>
+        <location filename="basebattlewindow.cpp" line="77"/>
+        <source>Save log</source>
+        <translation>שמור רשומה</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="78"/>
-        <source>Save log</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="basebattlewindow.cpp" line="79"/>
         <source>&amp;Close</source>
         <translation>&amp;סגור</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="89"/>
+        <location filename="basebattlewindow.cpp" line="88"/>
         <source>C&amp;hat</source>
         <translation>&amp;צ&apos;אט</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="90"/>
+        <location filename="basebattlewindow.cpp" line="89"/>
         <source>&amp;Ignore Spectators</source>
         <translation>&amp;התעלם מצופים</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="146"/>
+        <location filename="basebattlewindow.cpp" line="145"/>
         <source>%1&apos;s %2</source>
         <translation>%2 של ה%1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="326"/>
+        <location filename="basebattlewindow.cpp" line="320"/>
         <source>%1 sent out %2! (%3)</source>
         <translation>(%3) !%2 את שלח %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="328"/>
+        <location filename="basebattlewindow.cpp" line="322"/>
         <source>%1 sent out %2!</source>
-        <translation>!%2 את שלח %1</translation>
+        <translation>!%2 שלח את %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="334"/>
+        <location filename="basebattlewindow.cpp" line="328"/>
         <source>%1 called %2 back!</source>
         <translation>!לחזור ל%2 קרא %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="342"/>
+        <location filename="basebattlewindow.cpp" line="336"/>
         <source>%1 used %2!</source>
         <translation>!%2ב השתמש %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="350"/>
+        <location filename="basebattlewindow.cpp" line="344"/>
         <source>Start of turn %1</source>
         <translation>התחלת תור %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="371"/>
+        <location filename="basebattlewindow.cpp" line="365"/>
         <source>%1 fainted!</source>
         <translation>!התעלף %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="378"/>
+        <location filename="basebattlewindow.cpp" line="372"/>
         <source>Hit %1 times!</source>
         <translation>!פעמים %1 פגע</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="387"/>
+        <location filename="basebattlewindow.cpp" line="381"/>
         <source>It had no effect!</source>
         <translation>אין לזה השפעה!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="391"/>
+        <location filename="basebattlewindow.cpp" line="385"/>
         <source>It&apos;s not very effective...</source>
-        <translation>זה לא מספיק משפיע...</translation>
+        <translation>זה לא משפיע במיוחד...</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="395"/>
+        <location filename="basebattlewindow.cpp" line="389"/>
         <source>It&apos;s super effective!</source>
         <translation>זה משפיע מאוד!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="402"/>
+        <location filename="basebattlewindow.cpp" line="396"/>
         <source>A critical hit!</source>
         <translation>מכה קריטית!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="405"/>
+        <location filename="basebattlewindow.cpp" line="399"/>
         <source>The attack of %1 missed!</source>
         <translation>!פספסה %1 של ההתקפה</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="408"/>
+        <location filename="basebattlewindow.cpp" line="402"/>
         <source>%1 avoided the attack!</source>
-        <translation>!מהמהלך התחמק %1</translation>
+        <translation>! %1 התחמק מהמתקפה</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="414"/>
+        <location filename="basebattlewindow.cpp" line="408"/>
         <source>%1&apos;s %2 %3%4!</source>
         <translation>!%4 %3 %2 של ה%1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="414"/>
+        <location filename="basebattlewindow.cpp" line="408"/>
         <source>sharply </source>
         <translation>בצורה משמעותית</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="414"/>
+        <location filename="basebattlewindow.cpp" line="408"/>
         <source>rose</source>
         <translation>השתפרה</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="414"/>
+        <location filename="basebattlewindow.cpp" line="408"/>
         <source>fell</source>
-        <translation>הונמכה</translation>
+        <translation>התדרדרה</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="419"/>
+        <location filename="basebattlewindow.cpp" line="413"/>
         <source>%1 is paralyzed! It may be unable to move!</source>
         <translation>!לזוז יוכל לא הוא כי ייתכן משותק! %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="420"/>
+        <location filename="basebattlewindow.cpp" line="414"/>
         <source>%1 was burned!</source>
         <translation>!נשרף %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="421"/>
+        <location filename="basebattlewindow.cpp" line="415"/>
         <source>%1 was frozen solid!</source>
         <translation>!קפוא %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="422"/>
+        <location filename="basebattlewindow.cpp" line="416"/>
         <source>%1 fell asleep!</source>
         <translation>!נרדם %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="423"/>
+        <location filename="basebattlewindow.cpp" line="417"/>
         <source>%1 was poisoned!</source>
         <translation>!הורעל %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="424"/>
+        <location filename="basebattlewindow.cpp" line="418"/>
         <source>%1 was badly poisoned!</source>
         <translation>!חמורה בצורה הורעל %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="432"/>
+        <location filename="basebattlewindow.cpp" line="426"/>
         <source>%1 became confused!</source>
         <translation>!התבלבל %1</translation>
     </message>
@@ -293,178 +293,178 @@ Effect: %5</source>
         <translation type="obsolete">!%2 כבר %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="453"/>
+        <location filename="basebattlewindow.cpp" line="447"/>
         <source>%1 is already %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>! %2 כבר %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="463"/>
+        <location filename="basebattlewindow.cpp" line="457"/>
         <source>%1 is confused!</source>
         <translation>!מבולבל %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="466"/>
+        <location filename="basebattlewindow.cpp" line="460"/>
         <source>It hurt itself in its confusion!</source>
-        <translation>!הבלבול בגלל בעצמו פגע</translation>
+        <translation>הבלבול גרם לו לפגוע בעצמו!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="469"/>
+        <location filename="basebattlewindow.cpp" line="463"/>
         <source>%1 snapped out its confusion!</source>
-        <translation>!מבולבל להיות הפסיק %1</translation>
+        <translation>הפסיק להיות מבולבל %1 !</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="472"/>
+        <location filename="basebattlewindow.cpp" line="466"/>
         <source>%1 is paralyzed! It can&apos;t move!</source>
         <translation>!לזוז יכול לא הוא משותק! %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="475"/>
+        <location filename="basebattlewindow.cpp" line="469"/>
         <source>%1 is fast asleep!</source>
-        <translation>!עמוק ישן %1</translation>
+        <translation>!נרדם %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="478"/>
+        <location filename="basebattlewindow.cpp" line="472"/>
         <source>%1 woke up!</source>
         <translation>!התעורר %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="481"/>
+        <location filename="basebattlewindow.cpp" line="475"/>
         <source>%1 is hurt by its burn!</source>
         <translation>!מהשריפה כוויה קבל %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="484"/>
+        <location filename="basebattlewindow.cpp" line="478"/>
         <source>%1 is hurt by poison!</source>
-        <translation>!מההרעלה ניזוק %1</translation>
+        <translation>!ניזוק מההרעלה %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="487"/>
+        <location filename="basebattlewindow.cpp" line="481"/>
         <source>%1 is frozen solid!</source>
-        <translation>!במקום קפוא %1</translation>
+        <translation>!קפוא במקום %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="490"/>
+        <location filename="basebattlewindow.cpp" line="484"/>
         <source>%1 thawed out!</source>
         <translation>!הפשיר %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="496"/>
+        <location filename="basebattlewindow.cpp" line="490"/>
         <source>But it failed!</source>
         <translation>אבל זה נכשל!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="550"/>
+        <location filename="basebattlewindow.cpp" line="544"/>
         <source>But there was no target...</source>
         <translation>אבל אין מטרה...</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="570"/>
+        <location filename="basebattlewindow.cpp" line="564"/>
         <source>%1 flinched!</source>
         <translation>!נרתע %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="573"/>
+        <location filename="basebattlewindow.cpp" line="567"/>
         <source>%1 is hit with recoil!</source>
         <translation>!מההדף מכה קבל %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="584"/>
+        <location filename="basebattlewindow.cpp" line="578"/>
         <source>The hail subsided!</source>
-        <translation>הברד הפסיק!</translation>
+        <translation type="unfinished">הברד הפסיק!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="585"/>
+        <location filename="basebattlewindow.cpp" line="579"/>
         <source>The sandstorm subsided!</source>
-        <translation>סופת החול פסקה!</translation>
+        <translation type="unfinished">סופת החול פסקה!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="586"/>
+        <location filename="basebattlewindow.cpp" line="580"/>
         <source>The sunlight faded!</source>
         <translation>השמש הפסיקה!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="587"/>
+        <location filename="basebattlewindow.cpp" line="581"/>
         <source>The rain stopped!</source>
-        <translation type="unfinished">הגשם נפסק!</translation>
+        <translation>הגשם נפסק!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="591"/>
+        <location filename="basebattlewindow.cpp" line="585"/>
         <source>%1 is buffeted by the hail!</source>
         <translation>!מהברד קר ל%1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="592"/>
+        <location filename="basebattlewindow.cpp" line="586"/>
         <source>%1 is buffeted by the sandstorm!</source>
         <translation>!החול מסופת נפגע %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="596"/>
+        <location filename="basebattlewindow.cpp" line="590"/>
         <source>Hail continues to fall!</source>
         <translation>!הברד ממשיך לרדת</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="597"/>
+        <location filename="basebattlewindow.cpp" line="591"/>
         <source>The sandstorm rages!</source>
-        <translation>!סופת החול ממשיכה</translation>
+        <translation>סופת החול !ממשיכה</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="598"/>
+        <location filename="basebattlewindow.cpp" line="592"/>
         <source>The sunlight is strong!</source>
         <translation>!השמש חזקה</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="599"/>
+        <location filename="basebattlewindow.cpp" line="593"/>
         <source>Rain continues to fall!</source>
         <translation>!הגשם ממשיך לרדת</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="608"/>
+        <location filename="basebattlewindow.cpp" line="602"/>
         <source>%1 lost %2% of its health!</source>
         <translation>!חיים נקודות %2 ירדו ל%1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="648"/>
+        <location filename="basebattlewindow.cpp" line="642"/>
         <source>Tie between %1 and %2!</source>
         <translation>!%2 לבין %1 בין תיקו</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="650"/>
+        <location filename="basebattlewindow.cpp" line="644"/>
         <source>%1 won the battle!</source>
-        <translation>!בקרב ניצח %1</translation>
+        <translation type="unfinished">!ניצח בקרב %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="665"/>
-        <location filename="basebattlewindow.cpp" line="673"/>
+        <location filename="basebattlewindow.cpp" line="659"/>
+        <location filename="basebattlewindow.cpp" line="667"/>
         <source>Rule: </source>
         <translation>חוק: </translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="673"/>
+        <location filename="basebattlewindow.cpp" line="667"/>
         <source>Rated</source>
         <translation>מדורג</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="673"/>
+        <location filename="basebattlewindow.cpp" line="667"/>
         <source>Unrated</source>
         <translation>לא מדורג</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="680"/>
+        <location filename="basebattlewindow.cpp" line="674"/>
         <source>Tier: </source>
         <translation>טייר: </translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="728"/>
+        <location filename="basebattlewindow.cpp" line="722"/>
         <source>Unknown command received, are you up to date?</source>
         <translation>פקודה לא מוכרת התקבלה, האם אתה מעודכן?</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="742"/>
+        <location filename="basebattlewindow.cpp" line="736"/>
         <source>%1 is watching the battle.</source>
         <translation>.בקרב צופה %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="742"/>
+        <location filename="basebattlewindow.cpp" line="736"/>
         <source>%1 stopped watching the battle.</source>
         <translation>.בקרב לצפות הפסיק %1</translation>
     </message>
@@ -485,17 +485,17 @@ Effect: %5</source>
 <context>
     <name>BattleDisplay</name>
     <message>
-        <location filename="battlewindow.cpp" line="1013"/>
+        <location filename="battlewindow.cpp" line="987"/>
         <source>Spikes level %1</source>
-        <translation>Spikes level %1</translation>
+        <translation>הרמה של Spikes היא %1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1021"/>
+        <location filename="battlewindow.cpp" line="995"/>
         <source>Toxic Spikes level %1</source>
         <translation>Toxic Spikes level %1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1027"/>
+        <location filename="battlewindow.cpp" line="1001"/>
         <source>Stealth Rock</source>
         <translation>Stealth Rock</translation>
     </message>
@@ -503,32 +503,32 @@ Effect: %5</source>
 <context>
     <name>BattleFinder</name>
     <message>
-        <location filename="client.cpp" line="1366"/>
+        <location filename="client.cpp" line="1324"/>
         <source>Force rated battles</source>
         <translation>חייב קרב מדורג</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1367"/>
+        <location filename="client.cpp" line="1325"/>
         <source>Force same tier</source>
         <translation>חייב אותו טייר</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1368"/>
+        <location filename="client.cpp" line="1326"/>
         <source>Double battle</source>
         <translation>קרב זוגות</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1371"/>
+        <location filename="client.cpp" line="1329"/>
         <source>Only battle players with a max rating difference of </source>
-        <translation>שחק רק נגד יריבים שהפרש הנוקודת שלהם משלך קטן מ</translation>
+        <translation>שחק רק נגד יריבים שהפרש הנקודות שלהם קטן מ: </translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1388"/>
+        <location filename="client.cpp" line="1346"/>
         <source>Find Battle</source>
         <translation>מצא קרב</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1389"/>
+        <location filename="client.cpp" line="1347"/>
         <source>Cancel</source>
         <translation>ביטול</translation>
     </message>
@@ -536,98 +536,98 @@ Effect: %5</source>
 <context>
     <name>BattleWindow</name>
     <message>
-        <location filename="battlewindow.cpp" line="64"/>
+        <location filename="battlewindow.cpp" line="63"/>
         <source>Battling against %1</source>
         <translation>נלחם נגד %1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="66"/>
+        <location filename="battlewindow.cpp" line="65"/>
         <source>&amp;Forfeit</source>
         <translation>&amp;כניעה</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="68"/>
+        <location filename="battlewindow.cpp" line="67"/>
         <source>&amp;Cancel</source>
         <translation>&amp;ביטול</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="69"/>
-        <location filename="battlewindow.cpp" line="112"/>
+        <location filename="battlewindow.cpp" line="68"/>
+        <location filename="battlewindow.cpp" line="109"/>
         <source>&amp;Attack</source>
         <translation>&amp;תקוף</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="70"/>
+        <location filename="battlewindow.cpp" line="69"/>
         <source>&amp;Switch PokÃ©mon</source>
         <translation>&amp;החלף פוקימון</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="74"/>
+        <location filename="battlewindow.cpp" line="73"/>
         <source>&amp;Moves</source>
-        <translation>&amp;מהלכים</translation>
+        <translation>&amp;מתקפות</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="75"/>
+        <location filename="battlewindow.cpp" line="74"/>
         <source>&amp;PokÃ©mon</source>
         <translation>&amp;פוקימונים</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="76"/>
+        <location filename="battlewindow.cpp" line="75"/>
         <source>Spectators</source>
         <translation>צופים</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="104"/>
+        <location filename="battlewindow.cpp" line="103"/>
         <source>Battle between %1 and %2 started!</source>
-        <translation>קרב בין %1 לבין %2 החל!</translation>
+        <translation>בין קרב %1 לבין %2 התחיל!</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="114"/>
+        <location filename="battlewindow.cpp" line="111"/>
         <source>&amp;Go Back</source>
         <translation>&amp;חזור</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="122"/>
+        <location filename="battlewindow.cpp" line="119"/>
         <source>the foe&apos;s %1</source>
-        <translation>ה%1 של היריב</translation>
+        <translation>%1 ה של היריב</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="194"/>
+        <location filename="battlewindow.cpp" line="191"/>
         <source>Losing your battle</source>
-        <translation>להפסיד בקרב שלך</translation>
+        <translation>מפסיד בקרב</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="194"/>
+        <location filename="battlewindow.cpp" line="191"/>
         <source>Do you mean to forfeit?</source>
         <translation>אתה מתכוון לפרוש?</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="452"/>
+        <location filename="battlewindow.cpp" line="426"/>
         <source>%1 sent out %2! (%3)</source>
-        <translation>%1 שלח את %2! (%3)</translation>
+        <translation>(%3) %2 שלח את %1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="454"/>
+        <location filename="battlewindow.cpp" line="428"/>
         <source>%1 sent out %2!</source>
-        <translation>%1 שלח את %2!</translation>
+        <translation type="unfinished">%2 שלח את %1!</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="523"/>
+        <location filename="battlewindow.cpp" line="497"/>
         <source>%1 lost %2 HP! (%3% of its health)</source>
         <translation>%1 אבד %2 נקודות חיים! (%3 מהבריאות)</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="525"/>
+        <location filename="battlewindow.cpp" line="499"/>
         <source>%1 lost %2% of its health!</source>
         <translation>%1 אבד %2 מהבריאות שלו!</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="554"/>
+        <location filename="battlewindow.cpp" line="528"/>
         <source>&amp;Close</source>
         <translation>&amp;סגור</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="612"/>
+        <location filename="battlewindow.cpp" line="586"/>
         <source>Variation: </source>
         <translation>וריאציה:</translation>
     </message>
@@ -642,7 +642,7 @@ Effect: %5</source>
     <message>
         <location filename="pokedex.cpp" line="135"/>
         <source>Gender: </source>
-        <translation>מין:</translation>
+        <translation>מגדר:</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="149"/>
@@ -652,12 +652,12 @@ Effect: %5</source>
     <message>
         <location filename="pokedex.cpp" line="150"/>
         <source>&amp;Other Formes</source>
-        <translation>&amp;צורות שונות</translation>
+        <translation>&amp;צורות חילופיות</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="172"/>
         <source>Shiny</source>
-        <translation>זוהר</translation>
+        <translation>נוצץ</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="196"/>
@@ -675,7 +675,7 @@ Effect: %5</source>
     <message>
         <location filename="challenge.cpp" line="138"/>
         <source>%1&apos;s Info</source>
-        <translation>המידע של %1</translation>
+        <translation>%1 המידע על</translation>
     </message>
 </context>
 <context>
@@ -683,45 +683,45 @@ Effect: %5</source>
     <message>
         <location filename="challenge.cpp" line="180"/>
         <source>%1 challenged you!</source>
-        <translation>%1 אתגר אותך!</translation>
+        <translation>הזמין אותך לקרב %1!</translation>
     </message>
 </context>
 <context>
     <name>Client</name>
     <message>
-        <location filename="client.cpp" line="36"/>
+        <location filename="client.cpp" line="31"/>
         <source>&amp;Find Battle</source>
-        <translation>&amp;מצא קרב</translation>
+        <translation>&amp;חפש קרב</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="37"/>
+        <location filename="client.cpp" line="32"/>
         <source>&amp;Register</source>
         <translation>&amp;הרשם</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="38"/>
+        <location filename="client.cpp" line="33"/>
         <source>&amp;Exit</source>
         <translation>&amp;יציאה</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="39"/>
+        <location filename="client.cpp" line="34"/>
         <source>&amp;Send</source>
         <translation>&amp;שלח</translation>
     </message>
     <message>
         <location filename="client.cpp" line="135"/>
         <source>&amp;Challenge</source>
-        <translation>&amp;אתגר לקרב</translation>
+        <translation>&amp;הזמן לקרב</translation>
     </message>
     <message>
         <location filename="client.cpp" line="137"/>
         <source>&amp;View Ranking</source>
-        <translation>&amp;הראה דירוג</translation>
+        <translation>&amp;הצג דירוג</translation>
     </message>
     <message>
         <location filename="client.cpp" line="140"/>
         <source>Go &amp;Back</source>
-        <translation>לא &amp;נמצא</translation>
+        <translation>&amp;חזור</translation>
     </message>
     <message>
         <location filename="client.cpp" line="142"/>
@@ -756,7 +756,7 @@ Effect: %5</source>
     <message>
         <location filename="client.cpp" line="164"/>
         <source>&amp;Kick</source>
-        <translation>&amp;להעיף</translation>
+        <translation>&amp;העף</translation>
     </message>
     <message>
         <location filename="client.cpp" line="169"/>
@@ -764,102 +764,90 @@ Effect: %5</source>
         <translation>&amp;באן</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="338"/>
+        <location filename="client.cpp" line="322"/>
         <source>&amp;Cancel Find Battle</source>
-        <translation>&amp;בטל מציאת קרב</translation>
+        <translation>&amp;בטל חיפוש קרב</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="402"/>
+        <location filename="client.cpp" line="386"/>
         <source>&amp;File</source>
         <translation>&amp;קובץ</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="403"/>
+        <location filename="client.cpp" line="387"/>
         <source>&amp;Load team</source>
         <translation>&amp;טען קבוצה</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="404"/>
+        <location filename="client.cpp" line="388"/>
         <source>Open &amp;teamBuilder</source>
         <translation>&amp;פתח את בונה הקבוצות</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="405"/>
+        <location filename="client.cpp" line="389"/>
         <source>&amp;Style</source>
-        <translation>&amp;סטייל</translation>
+        <translation>&amp;סגנון</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="412"/>
+        <location filename="client.cpp" line="396"/>
         <source>Reload StyleSheet</source>
-        <translation>טען מחדש את נייר הסטייל</translation>
+        <translation>טען מחדש את הסגנונות</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="413"/>
+        <location filename="client.cpp" line="397"/>
         <source>&amp;Options</source>
         <translation>&amp;אפשרויות</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="414"/>
+        <location filename="client.cpp" line="398"/>
         <source>&amp;Idle</source>
-        <translation>&amp;השבתה</translation>
+        <translation>&amp;לא פעיל</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="422"/>
+        <location filename="client.cpp" line="406"/>
         <source>&amp;Show team</source>
-        <translation>&amp;הראה קבוצה</translation>
+        <translation>&amp;הצג קבוצה</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="427"/>
+        <location filename="client.cpp" line="411"/>
         <source>Enable &amp;ladder</source>
-        <translation>אפשר &amp;שיפור</translation>
+        <translation>אפשר &amp;דירוג</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="432"/>
+        <location filename="client.cpp" line="416"/>
         <source>&amp;Enable player events</source>
         <translation>&amp;אפשר צפייה בפעולות משתמשים</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="438"/>
+        <location filename="client.cpp" line="422"/>
         <source>Enable &amp;timestamps</source>
-        <translation>אפשר &amp;ראיית זמן</translation>
+        <translation>אפשר הצגת &amp;זמן</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="444"/>
-        <source>Enable timestamps in &amp;PMs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="449"/>
+        <location filename="client.cpp" line="428"/>
         <source>Sort players by &amp;tiers</source>
-        <translation type="unfinished"></translation>
+        <translation>מיין שחקנים לפי &amp;טיירים</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="455"/>
+        <location filename="client.cpp" line="434"/>
         <source>&amp;Tiers</source>
         <translation>&amp;טיירים</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="457"/>
+        <location filename="client.cpp" line="436"/>
         <source>&amp;Battle Options</source>
         <comment>Menu</comment>
         <translation>&amp;אפשרויות קרב</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="458"/>
+        <location filename="client.cpp" line="437"/>
         <source>Save &amp;Battle Logs</source>
-        <translation>שמור &amp;את לוג הקרב</translation>
+        <translation>שמור את &amp;רשומות הקרב</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="463"/>
+        <location filename="client.cpp" line="442"/>
         <source>Change &amp;log folder</source>
-        <translation>שנה &amp;את תיקיית הלוגים</translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="606"/>
-        <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
-
-http://www.pokemon-online.eu/downloads.php for updates.</source>
-        <translation type="unfinished"></translation>
+        <translation>שנה &amp;את תיקיית הרשומות</translation>
     </message>
     <message>
         <source>&amp;Enable sounds</source>
@@ -870,182 +858,186 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <translation type="obsolete">שנה &amp;תיקיית קולות</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="472"/>
+        <location filename="client.cpp" line="451"/>
         <source>Animate HP Bar</source>
-        <translation>אנימציית באר נקודות החיים</translation>
+        <translation>הנפש את תיבת נקודות החיים</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="477"/>
+        <location filename="client.cpp" line="456"/>
         <source>Old School buttons</source>
-        <translation type="unfinished"></translation>
+        <translation>מקשים בסגנון הדורות הישנים</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="491"/>
+        <location filename="client.cpp" line="470"/>
         <source>%1 was kicked by the server!</source>
         <translation>!מהסרבר הועף %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="493"/>
+        <location filename="client.cpp" line="472"/>
         <source>%1 kicked %2!</source>
         <translation>!%2 את העיף %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="502"/>
+        <location filename="client.cpp" line="481"/>
         <source>%1 was banned by the server!</source>
         <translation>!מהסרבר באן קבל %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="504"/>
+        <location filename="client.cpp" line="483"/>
         <source>%1 banned %2!</source>
         <translation>!ל%2 באן נתן %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="513"/>
+        <location filename="client.cpp" line="492"/>
         <source>Enter your password</source>
         <translation>אנא הכנס סיסמה</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="514"/>
+        <location filename="client.cpp" line="493"/>
         <source>Enter the password for your current name.
 
 It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
-        <translation>אנא הקלד סיסמה לסרבר הזה (מומלצת סיסמה שונה לכל סרבר על מנת לשמור על בטחונכם)</translation>
+        <translatorcomment>לבדוק</translatorcomment>
+        <translation>הקלד סיסמתך לשם המשתמש הנוכחי שלך.
+
+מומלץ להשתמש בסיסמה שונה במעט בכל שרת. (השרת רואה רק את הקוד המוצפן של סיסמתך, אך ליתר בטחון...)</translation>
     </message>
     <message>
         <source>Battle Music Directory</source>
         <translation type="obsolete">ספריית מנגינות הקרב</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="543"/>
+        <location filename="client.cpp" line="522"/>
         <source>Battle Logs Directory</source>
-        <translation>ספריית הלוגים של הקרבות</translation>
+        <translation>ספריית רשומות של קרבות</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="598"/>
+        <location filename="client.cpp" line="575"/>
         <source>Your client version (%2) doesn&apos;t match with the server&apos;s (%1).</source>
         <translation>.(%2) הסרבר של את תואמת לא (%1) שלך התוכנית גרסת</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="606"/>
+        <location filename="client.cpp" line="578"/>
         <source>Old Version</source>
         <translation>גרסה ישנה</translation>
     </message>
     <message>
+        <location filename="client.cpp" line="578"/>
         <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
 
 It is recommended to update.</source>
-        <translation type="obsolete">הגרסה שלך מתקדמת מזו של הסרבר, ולכן ייתכן ויהיו מספר דברים שאותם לא תוכל לבצע. המלץ להשתדרג.</translation>
+        <translation>גרסתך ישנה מזו של השרת, לכן ייתכן שיהיו פעולות שלא תוכל לעשות</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="819"/>
+        <location filename="client.cpp" line="777"/>
         <source>Battle between %1 and %2 started.</source>
-        <translation>.החל %2 לבין %1 בין קרב</translation>
+        <translation>החל %1 לבין %2 קרב בין</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="825"/>
-        <location filename="client.cpp" line="829"/>
+        <location filename="client.cpp" line="783"/>
+        <location filename="client.cpp" line="787"/>
         <source>Battling against %1</source>
         <translation>%1 נגד נלחם</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="874"/>
+        <location filename="client.cpp" line="832"/>
         <source>%1 forfeited against %2.</source>
-        <translation>%2 נגד פרש %1</translation>
+        <translation>%2 נכנע ל %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="876"/>
+        <location filename="client.cpp" line="834"/>
         <source>%1 and %2 tied.</source>
-        <translation>.בתיקו סיימו ו%2 %1</translation>
+        <translation>סיימו בתיקו ו%2 %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="878"/>
+        <location filename="client.cpp" line="836"/>
         <source>%1 won against %2.</source>
-        <translation>.%2 נגד ניצח %1</translation>
+        <translation>%2 ניצח נגד %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="919"/>
+        <location filename="client.cpp" line="877"/>
         <source>&amp;Find battle</source>
         <translation>&amp;מצא קרב</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="936"/>
+        <location filename="client.cpp" line="894"/>
         <source>%1 refused your challenge.</source>
-        <translation>.שלך לאתגר סרב %1</translation>
+        <translation>דחה את ההזמנה שלך %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="941"/>
+        <location filename="client.cpp" line="899"/>
         <source>%1 is busy.</source>
-        <translation>.עסוק %1</translation>
+        <translation>עסוק %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="946"/>
+        <location filename="client.cpp" line="904"/>
         <source>%1 cancelled their challenge.</source>
-        <translation>.האתר את בטל %1</translation>
+        <translation>ביטל את ההזמנה לקרב %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="951"/>
+        <location filename="client.cpp" line="909"/>
         <source>%1 has an invalid team.</source>
-        <translation>.חוקית קבוצה אין ל%1</translation>
+        <translation>חוקית קבוצה אין ל%1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="964"/>
+        <location filename="client.cpp" line="922"/>
         <source>%1 is idling.</source>
-        <translation>.חוסם %1</translation>
+        <translation>.לא פעיל כרגע %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="966"/>
+        <location filename="client.cpp" line="924"/>
         <source>%1 is active and ready for battles.</source>
-        <translation>להלחם. ומוכן פעיל %1</translation>
+        <translation>פעיל ומוכן לקרב %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1021"/>
+        <location filename="client.cpp" line="979"/>
         <source>Error while connected to server -- Received error nÂ°%1: %2</source>
-        <translation>בעייה בהתחברות לסרבר -- התקבלה תקלה %1: %2</translation>
+        <translation>בעייה בהתחברות לשרת -- התקבלה תקלה %1: %2</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1026"/>
+        <location filename="client.cpp" line="984"/>
         <source>Connected to Server!</source>
-        <translation>!התחברת לסרבר</translation>
+        <translation>התחברת לשרת!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1036"/>
+        <location filename="client.cpp" line="994"/>
         <source>Disconnected from Server!</source>
-        <translation>!מהסרבר התנתקת</translation>
+        <translation>התנתקת מהשרת!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1058"/>
+        <location filename="client.cpp" line="1016"/>
         <source>%1 logged in.</source>
-        <translation>.התחבר %1</translation>
+        <translation>התחבר %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1067"/>
+        <location filename="client.cpp" line="1025"/>
         <source>%1 logged out.</source>
-        <translation>.התנתק %1</translation>
+        <translation>התנתק %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1187"/>
+        <location filename="client.cpp" line="1145"/>
         <source>%1 changed teams and is now known as %2.</source>
-        <translation>.%2 בתור ידוע וכעת קבוצתו את שנה %1</translation>
+        <translation>%2 שינה את קבוצתו וידוע כעת כ %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1189"/>
+        <location filename="client.cpp" line="1147"/>
         <source>%1 changed teams.</source>
-        <translation>.קבוצתו את שינה %1</translation>
+        <translation>שינה את קבוצתו %1</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1296"/>
+        <location filename="client.cpp" line="1254"/>
         <source>You can&apos;t change teams while battling, so your nick was kept.</source>
-        <translation type="unfinished"></translation>
+        <translation>אינך יכול לשנות את קבוצתך בעת קרב, לכן שמך נשמר</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1341"/>
+        <location filename="client.cpp" line="1299"/>
         <source>You ignored %1.</source>
-        <translation>.מ%1 מתעלם אתה</translation>
+        <translation>%1 אתה מתעלם מ</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1347"/>
+        <location filename="client.cpp" line="1305"/>
         <source>You stopped ignoring %1.</source>
-        <translation>.מ%1 להתעלם הפסקת</translation>
+        <translation>%1 הפסקת להתעלם מ</translation>
     </message>
 </context>
 <context>
@@ -1067,7 +1059,7 @@ It is recommended to update.</source>
     </message>
     <message>
         <location filename="controlpanel.ui" line="54"/>
-        <location filename="controlpanel.ui" line="220"/>
+        <location filename="controlpanel.ui" line="196"/>
         <source>Search</source>
         <translation>חפש</translation>
     </message>
@@ -1078,7 +1070,7 @@ It is recommended to update.</source>
     </message>
     <message>
         <location filename="controlpanel.ui" line="78"/>
-        <location filename="controlpanel.cpp" line="62"/>
+        <location filename="controlpanel.cpp" line="61"/>
         <source>Online</source>
         <translation>אונליין</translation>
     </message>
@@ -1094,86 +1086,81 @@ It is recommended to update.</source>
     </message>
     <message>
         <location filename="controlpanel.ui" line="149"/>
-        <source>Last Appearance:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="controlpanel.ui" line="173"/>
         <source>Mute</source>
         <translation>השתק</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="180"/>
+        <location filename="controlpanel.ui" line="156"/>
         <source>Kick</source>
-        <translation>העף</translation>
+        <translation>Kick</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="187"/>
+        <location filename="controlpanel.ui" line="163"/>
         <source>Ban</source>
-        <translation>באן</translation>
+        <translation>Ban</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="198"/>
+        <location filename="controlpanel.ui" line="174"/>
         <source>User Alias</source>
-        <translation>משתמשים נוספים איתם הוא נרשם</translation>
+        <translation>כינויים נוספים</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="239"/>
+        <location filename="controlpanel.ui" line="215"/>
         <source>Ban List</source>
         <translation>רשימת באנים</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="297"/>
+        <location filename="controlpanel.ui" line="273"/>
         <source>Username</source>
         <translation>שם משתמש</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="302"/>
+        <location filename="controlpanel.ui" line="278"/>
         <source>Banned IP</source>
-        <translation>באן IP</translation>
+        <translation>מנוע מכניסה IP</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="310"/>
+        <location filename="controlpanel.ui" line="286"/>
         <source>Refresh</source>
-        <translation>רענון</translation>
+        <translation>רענן</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="317"/>
+        <location filename="controlpanel.ui" line="293"/>
         <source>Unban</source>
-        <translation>להסיר באן</translation>
+        <translation>הסר באן</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="324"/>
+        <location filename="controlpanel.ui" line="300"/>
         <source>Ban IP ...</source>
         <translation>באן IP ...</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="43"/>
+        <location filename="controlpanel.cpp" line="42"/>
         <source>User</source>
         <translation>משתמש</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="45"/>
+        <location filename="controlpanel.cpp" line="44"/>
         <source>Moderator</source>
         <translation>מודראטור</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="47"/>
+        <location filename="controlpanel.cpp" line="46"/>
         <source>Administrator</source>
-        <translation>בכיר</translation>
+        <translation>אדמיניסטרטור</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="60"/>
+        <location filename="controlpanel.cpp" line="59"/>
         <source>Banned</source>
         <translation>בבאן</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="64"/>
+        <location filename="controlpanel.cpp" line="63"/>
         <source>Offline</source>
         <translation>מנותק</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="69"/>
+        <location filename="controlpanel.cpp" line="68"/>
         <source>[Muted]</source>
         <translation>[מושתק]</translation>
     </message>
@@ -1183,18 +1170,18 @@ It is recommended to update.</source>
     <message>
         <location filename="../Utilities/dockinterface.cpp" line="13"/>
         <source>Advanced Options</source>
-        <translation>אפשרויות מורחבות</translation>
+        <translation>אפשרויות מתקדמות</translation>
     </message>
 </context>
 <context>
     <name>ImageAttackButton</name>
     <message>
-        <location filename="battlewindow.cpp" line="827"/>
+        <location filename="battlewindow.cpp" line="801"/>
         <source>PP %1/%2</source>
-        <translation type="unfinished">נקודות כוח %2/%1</translation>
+        <translation>נקודות כוח %2/%1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="840"/>
+        <location filename="battlewindow.cpp" line="814"/>
         <source>%1
 
 Power: %2
@@ -1203,35 +1190,35 @@ Accuracy: %3
 Description: %4
 
 Effect: %5</source>
-        <translation type="unfinished">%1
+        <translation>%1
 
 כוח: %2
 סיכויי פגיעה: %3
 
 תיאור: %4
 
-אפקט: %5</translation>
+השפעה: %5</translation>
     </message>
 </context>
 <context>
     <name>MainEngine</name>
     <message>
-        <location filename="mainwindow.cpp" line="141"/>
+        <location filename="mainwindow.cpp" line="139"/>
         <source>Impossible to go online</source>
-        <translation>בלתי אפשרי להתחבר אונליין</translation>
+        <translation>בלתי אפשרי להתחבר לרשת</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="141"/>
+        <location filename="mainwindow.cpp" line="139"/>
         <source>You haven&apos;t set your name yet. Do so in the teambuilder.</source>
-        <translation>עוד אין לך שם משתמש. הגדר אחד בבונה הקבוצות.</translation>
+        <translation>לא בחרת לעצמך עדיין שם. עשה כן בבונה קבוצות.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="182"/>
+        <location filename="mainwindow.cpp" line="180"/>
         <source>Language Change</source>
         <translation>שינוי שפה</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="182"/>
+        <location filename="mainwindow.cpp" line="180"/>
         <source>Restart the application to see the changes.</source>
         <translation>התחל מחדש את התוכנה, וראה את השינויים.</translation>
     </message>
@@ -1273,12 +1260,12 @@ Effect: %5</source>
 <context>
     <name>OldAttackButton</name>
     <message>
-        <location filename="battlewindow.cpp" line="785"/>
+        <location filename="battlewindow.cpp" line="759"/>
         <source>PP %1/%2</source>
-        <translation type="unfinished">נקודות כוח %2/%1</translation>
+        <translation>נקודות כוח %2/%1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="798"/>
+        <location filename="battlewindow.cpp" line="772"/>
         <source>%1
 
 Power: %2
@@ -1287,14 +1274,14 @@ Accuracy: %3
 Description: %4
 
 Effect: %5</source>
-        <translation type="unfinished">%1
+        <translation>%1
 
 כוח: %2
 סיכויי פגיעה: %3
 
 תיאור: %4
 
-אפקט: %5</translation>
+השפעה: %5</translation>
     </message>
 </context>
 <context>
@@ -1302,7 +1289,7 @@ Effect: %5</source>
     <message>
         <location filename="pmwindow.cpp" line="21"/>
         <source>&amp;Challenge</source>
-        <translation>&amp;אתגר</translation>
+        <translation>&amp;הזמן לקרב</translation>
     </message>
     <message>
         <location filename="pmwindow.cpp" line="22"/>
@@ -1310,15 +1297,16 @@ Effect: %5</source>
         <translation>&amp;שלח</translation>
     </message>
     <message>
-        <location filename="pmwindow.cpp" line="83"/>
+        <location filename="pmwindow.cpp" line="75"/>
         <source>The other party left the server, so the window was disabled.</source>
-        <translation>חברך לשיחה עזבו, ולכן הגישה לחלון נחסמה.</translation>
+        <translatorcomment>לבדוק</translatorcomment>
+        <translation>המשתמש התנתק מהשרת, לכן החלון נוטרל.</translation>
     </message>
 </context>
 <context>
     <name>PokeButton</name>
     <message>
-        <location filename="battlewindow.cpp" line="876"/>
+        <location filename="battlewindow.cpp" line="850"/>
         <source>%1 lv %2
 
 Item:%3
@@ -1331,10 +1319,10 @@ Moves:
 --%8</source>
         <translation>%1 lv %2
 
-חפץ:%3
+אבזר:%3
 יכולת:%4
 
-מהלכים:
+מתקפות:
 --%5
 --%6
 --%7
@@ -1359,7 +1347,7 @@ Moves:
     <message>
         <location filename="pokedex.cpp" line="334"/>
         <source>&amp;Advanced Search</source>
-        <translation>&amp;חיפוש נרחב</translation>
+        <translation>&amp;חיפוש מתקדם</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="344"/>
@@ -1369,7 +1357,7 @@ Moves:
     <message>
         <location filename="pokedex.cpp" line="355"/>
         <source>A-Z</source>
-        <translation>א&apos; עד ב&apos;</translation>
+        <translation>A-Z</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="380"/>
@@ -1379,12 +1367,12 @@ Moves:
     <message>
         <location filename="pokedex.cpp" line="381"/>
         <source>STATS</source>
-        <translation>סטטוסים</translation>
+        <translation>נתונים</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="382"/>
         <source>MOVES</source>
-        <translation>מהלכים</translation>
+        <translation>מתקפות</translation>
     </message>
 </context>
 <context>
@@ -1399,7 +1387,7 @@ Moves:
         <location filename="box.cpp" line="501"/>
         <location filename="box.cpp" line="510"/>
         <source>There is no pokemon there!</source>
-        <translation>אין כאן אף פוקימון!</translation>
+        <translation>אין שם אף פוקימון!</translation>
     </message>
 </context>
 <context>
@@ -1443,27 +1431,27 @@ Moves:
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="9"/>
         <source>Sleep Clause</source>
-        <translation>חוק השינה</translation>
+        <translation>סעיף שינה</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="10"/>
         <source>Freeze Clause</source>
-        <translation>חוק הקפאון</translation>
+        <translation>סעיף קפאון</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="11"/>
         <source>Evasion Clause</source>
-        <translation>חוק הפגיעה וההתחמקות</translation>
+        <translation>סעיף התחמקות</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="12"/>
         <source>OHKO Clause</source>
-        <translation>חוק הנב&quot;א</translation>
+        <translation>סעיף התעלפות במתקפה בודדת</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="13"/>
         <source>Disallow Spects</source>
-        <translation>לא להרשות Spects</translation>
+        <translation>ללא צופים</translation>
     </message>
     <message>
         <source>Level Balance</source>
@@ -1472,12 +1460,12 @@ Moves:
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="14"/>
         <source>Item Clause</source>
-        <translation type="unfinished"></translation>
+        <translation>סעיף אביזרים</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="15"/>
         <source>Challenge Cup</source>
-        <translation>אתגור גביע</translation>
+        <translation>גביע האתגר</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="16"/>
@@ -1492,27 +1480,27 @@ Moves:
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="22"/>
         <source>Sleep Clause prevented the sleep inducing effect of the move from working.</source>
-        <translation>אי אפשר שיהיה לך יותר מפוקימון ישן אחד בקבוצה. Rest לא נחשב.</translation>
+        <translation>סעיף השינה מנע מהפוקימון להרדם.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="23"/>
         <source>Freeze Clause prevented the freezing effect of the move from working.</source>
-        <translation>אי אפשר שיהיה לך יותר מפוקימון קפוא אחד בקבוצה.</translation>
+        <translation>סעיף הקפאון מנע מהפוקימון .לקפוא</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="24"/>
         <source>Evasion Clause prevented the evasion increase of the move.</source>
-        <translation>סיכויי פגיעה וסיכויי התחמקות לא יכולים להשתנות כלל.</translation>
+        <translation>סעיף ההתחמקות מנע מהפוקימון מלהעלות את רמת ההתחמקות .שלו</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="25"/>
         <source>OHKO Clause prevented the One Hit KO from happening.</source>
-        <translation>קיצור של &quot;נצחון במכה אחת&quot;, מתקפות מסויימות שמנצחות אוטומתית לא עובדות.</translation>
+        <translation>סעיף העילפון במכה בודדת מנע מהמכה להתרחש</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="35"/>
         <source>You can not put more than one Pokémon of the opposing team to sleep at the same time.</source>
-        <translation>אתה לא יכול להרדים יותר מפוקימון אחד ליריב שלך בו זמנית.</translation>
+        <translation>אינך יכול להרדים יותר מפוקימון יריב אחד באותו זמן.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="36"/>
@@ -1527,17 +1515,17 @@ Moves:
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="38"/>
         <source>You can&apos;t use One Hit KO moves like Fissure.</source>
-        <translation>אתה לא יכול להשתמש במהלכי נב&quot;א כמו Fissure.</translation>
+        <translation>אין אתה יכול להתשמש במהלכים שמעלפים במכה אחת כמו Fissure.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="39"/>
         <source>Nobody can watch your battle.</source>
-        <translation>אף אחד לא יכול לצפות בקרבות שלך.</translation>
+        <translation>אף אחד לא יכול לצפות בקרב שלך.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="40"/>
         <source>No more than one of the same items is allowed per team.</source>
-        <translation type="unfinished"></translation>
+        <translation>לא יותר מאבזר אחד מאותו סוג בכל קבוצה.</translation>
     </message>
     <message>
         <source>Pokémons levels are changed according to their strength.</source>
@@ -1546,22 +1534,22 @@ Moves:
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="41"/>
         <source>Random teams are given to trainers.</source>
-        <translation>קבוצות רנדומליות ניתנות לשני השחקנים.</translation>
+        <translation>קבוצות אקראיות ניתנות למאמנים.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="42"/>
         <source>No time limit for playing.</source>
-        <translation>אין הגבלת זמן לתורות ולקרב.</translation>
+        <translation>ללא הגבלת זמן תורות הקרב.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="43"/>
         <source>One player cannot have more than one of the same pokemon per team.</source>
-        <translation>אי אפשר שיהי לך יותר מפעם אחת את אותו הפוקימון בקבוצה.</translation>
+        <translation>לא יותר מפוקימון אחד מאותו מין בכל קבוצה.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/pokemonstructs.cpp" line="156"/>
         <source>%1 already has move %2.</source>
-        <translation>%1 כבר יודע %2.</translation>
+        <translation>%2 יודע כבר %1.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/pokemonstructs.cpp" line="166"/>
@@ -1609,7 +1597,7 @@ Moves:
         <location filename="../PokemonInfo/pokemonstructs.cpp" line="756"/>
         <location filename="../PokemonInfo/pokemonstructs.cpp" line="762"/>
         <source>Load Team</source>
-        <translation>טוען קבוצה</translation>
+        <translation>טען קבוצה</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/pokemonstructs.cpp" line="750"/>
@@ -1624,7 +1612,7 @@ Moves:
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="29"/>
         <source>The battle ended by timeout.</source>
-        <translation>נגמר הזמן, הקרב הסתיים.</translation>
+        <translation>הקרב הסתיים עקב חריגה מהזמן המוגבל</translation>
     </message>
 </context>
 <context>
@@ -1655,7 +1643,7 @@ Moves:
     <message>
         <location filename="serverchoice.cpp" line="20"/>
         <source>Server Name</source>
-        <translation>שם הסרבר</translation>
+        <translation>שם השרת</translation>
     </message>
     <message>
         <source>Players/Max Players</source>
@@ -1669,11 +1657,12 @@ Moves:
     <message>
         <location filename="serverchoice.cpp" line="20"/>
         <source>Players / Max</source>
-        <translation type="unfinished"></translation>
+        <translation>מקסימום / שחקנים</translation>
     </message>
     <message>
         <location filename="serverchoice.cpp" line="139"/>
         <source>Disconnected from the registry: %1</source>
+        <translatorcomment>לבדוק</translatorcomment>
         <translation>התנתקת מההרשמה: %1</translation>
     </message>
 </context>
@@ -1687,7 +1676,7 @@ Moves:
     <message>
         <location filename="pokedex.cpp" line="531"/>
         <source>Base Stats</source>
-        <translation>סטטוסים בסיסיים</translation>
+        <translation>נתונים בסיסיים</translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="532"/>
@@ -1750,7 +1739,7 @@ Moves:
     <message>
         <location filename="advanced.cpp" line="23"/>
         <source>&amp;Hidden Power</source>
-        <translation>&amp;כוח חבוי</translation>
+        <translation>&amp;כוח נסתר</translation>
     </message>
     <message>
         <location filename="advanced.cpp" line="27"/>
@@ -1770,7 +1759,7 @@ Moves:
     <message>
         <location filename="advanced.cpp" line="50"/>
         <source>HP:</source>
-        <translation>חיים:</translation>
+        <translation>נקודות חיים:</translation>
     </message>
     <message>
         <location filename="advanced.cpp" line="50"/>
@@ -1810,7 +1799,7 @@ Moves:
     <message>
         <location filename="advanced.cpp" line="96"/>
         <source>&amp;Gender</source>
-        <translation>&amp;מין</translation>
+        <translation>&amp;מגדר</translation>
     </message>
     <message>
         <location filename="advanced.cpp" line="102"/>
@@ -1837,17 +1826,17 @@ Moves:
     <message>
         <location filename="advanced.cpp" line="128"/>
         <source>&amp;Shiny</source>
-        <translation>&amp;זוהר</translation>
+        <translation>&amp;נוצץ</translation>
     </message>
     <message>
         <location filename="advanced.cpp" line="134"/>
         <source>Alternate Formes</source>
-        <translation>צורות שונות</translation>
+        <translation>צורות חילופיות</translation>
     </message>
     <message>
         <location filename="advanced.cpp" line="172"/>
         <source>HP</source>
-        <translation>חיים</translation>
+        <translation>נקודות חיים</translation>
     </message>
     <message>
         <location filename="advanced.cpp" line="172"/>
@@ -1877,38 +1866,38 @@ Moves:
     <message>
         <location filename="advanced.cpp" line="282"/>
         <source>Fatal error in TB_Advanced::stat(QObject *) : the pointer provided does not correspond to any dvchoice</source>
-        <translation>בעיה פטאלית TB_Advanced::stat(QObject *) : the pointer provided does not correspond to any dvchoice</translation>
+        <translation>Fatal error in TB_Advanced::stat(QObject *) : the pointer provided does not correspond to any dvchoice</translation>
     </message>
 </context>
 <context>
     <name>TB_EVManager</name>
     <message>
-        <location filename="teambuilder.cpp" line="1466"/>
+        <location filename="teambuilder.cpp" line="1417"/>
         <source>Hit Points:</source>
         <translation>נקודות חיים:</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1466"/>
+        <location filename="teambuilder.cpp" line="1417"/>
         <source>Attack:</source>
         <translation>התקפה:</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1466"/>
+        <location filename="teambuilder.cpp" line="1417"/>
         <source>Defense:</source>
         <translation>הגנה:</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1466"/>
+        <location filename="teambuilder.cpp" line="1417"/>
         <source>Speed:</source>
         <translation>מהירות:</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1466"/>
+        <location filename="teambuilder.cpp" line="1417"/>
         <source>Special Attack:</source>
         <translation>התקפה מיוחדת:</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1466"/>
+        <location filename="teambuilder.cpp" line="1417"/>
         <source>Special Defense:</source>
         <translation>הגנה מיוחדת:</translation>
     </message>
@@ -1938,7 +1927,7 @@ Moves:
     <message>
         <location filename="menu.cpp" line="37"/>
         <source>&amp;Style</source>
-        <translation>&amp;סטייל</translation>
+        <translation>&amp;סגנון</translation>
     </message>
     <message>
         <location filename="menu.cpp" line="43"/>
@@ -1949,150 +1938,150 @@ Moves:
 <context>
     <name>TB_PokemonBody</name>
     <message>
-        <location filename="teambuilder.cpp" line="916"/>
+        <location filename="teambuilder.cpp" line="900"/>
         <source>&amp;Nickname</source>
         <translation>&amp;כינוי</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="926"/>
+        <location filename="teambuilder.cpp" line="910"/>
         <source>&amp;Item</source>
-        <translation>&amp;חפץ</translation>
+        <translation>&amp;אבזר</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="931"/>
+        <location filename="teambuilder.cpp" line="915"/>
         <source>&amp;Import</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;ייבוא</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="935"/>
+        <location filename="teambuilder.cpp" line="919"/>
         <source>&amp;Export</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;ייצוא</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="950"/>
+        <location filename="teambuilder.cpp" line="934"/>
         <source>PokÃ©mon %1</source>
         <translation>פוקימון %1</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="954"/>
+        <location filename="teambuilder.cpp" line="938"/>
         <source>&amp;Advanced</source>
         <translation>&amp;מתקדם</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="956"/>
+        <location filename="teambuilder.cpp" line="940"/>
         <source>Side Window</source>
         <translation>חלון צדדי</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="958"/>
+        <location filename="teambuilder.cpp" line="942"/>
         <source>New Window</source>
         <translation>חלון חדש</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="971"/>
-        <location filename="teambuilder.cpp" line="1086"/>
+        <location filename="teambuilder.cpp" line="955"/>
+        <location filename="teambuilder.cpp" line="1060"/>
         <source>Type</source>
         <translation>סוג</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="980"/>
+        <location filename="teambuilder.cpp" line="964"/>
         <source>N&amp;ature</source>
-        <translation>&amp;טבע</translation>
+        <translation>&amp;אופי</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1086"/>
+        <location filename="teambuilder.cpp" line="1060"/>
         <source>Name</source>
         <comment>AttackName</comment>
-        <translation>שם</translation>
+        <translation>שם מתקפה</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1086"/>
+        <location filename="teambuilder.cpp" line="1060"/>
         <source>Learning</source>
         <translation>לומד</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1086"/>
+        <location filename="teambuilder.cpp" line="1060"/>
         <source>PP</source>
         <translation>נקודות כוח</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1086"/>
+        <location filename="teambuilder.cpp" line="1060"/>
         <source>Pow</source>
         <translation>כוח</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1086"/>
+        <location filename="teambuilder.cpp" line="1060"/>
         <source>Acc</source>
         <translation>סיכויי פגיעה</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1086"/>
+        <location filename="teambuilder.cpp" line="1060"/>
         <source>Category</source>
         <translation>קטגוריה</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1171"/>
+        <location filename="teambuilder.cpp" line="1145"/>
         <source>Lv. %1</source>
         <translation>רמה %1</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1307"/>
-        <location filename="teambuilder.cpp" line="1322"/>
+        <location filename="teambuilder.cpp" line="1258"/>
+        <location filename="teambuilder.cpp" line="1273"/>
         <source>Error</source>
         <translation>שגיאה</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1340"/>
+        <location filename="teambuilder.cpp" line="1291"/>
         <source>TM/HM</source>
         <translation>TM/HM</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1341"/>
+        <location filename="teambuilder.cpp" line="1292"/>
         <source>4G Tutor</source>
         <translation>מלמד בדור 4</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1342"/>
+        <location filename="teambuilder.cpp" line="1293"/>
         <source>4G Level</source>
         <translation>ברמה בדור 4</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1343"/>
+        <location filename="teambuilder.cpp" line="1294"/>
         <source>4G Pre Evo</source>
         <translation>תת מתפתח בדור 4</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1344"/>
+        <location filename="teambuilder.cpp" line="1295"/>
         <source>4G Breeding</source>
         <translation>רבייה בדור 4</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1345"/>
+        <location filename="teambuilder.cpp" line="1296"/>
         <source>4G Special</source>
         <translation>ספיישל דור 4</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1346"/>
+        <location filename="teambuilder.cpp" line="1297"/>
         <source>3G Tutor</source>
         <translation>מלמד בדור 3</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1347"/>
+        <location filename="teambuilder.cpp" line="1298"/>
         <source>3G Level</source>
         <translation>רמה בדור 3</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1348"/>
+        <location filename="teambuilder.cpp" line="1299"/>
         <source>3G Pre Evo</source>
         <translation>תת התפתחות בדור 3</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1349"/>
+        <location filename="teambuilder.cpp" line="1300"/>
         <source>3G Breeding</source>
         <translation>רבייה בדור 3</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1350"/>
+        <location filename="teambuilder.cpp" line="1301"/>
         <source>3G Special</source>
         <translation>ספיישל דור 3</translation>
     </message>
@@ -2127,17 +2116,17 @@ Moves:
     <message>
         <location filename="box.cpp" line="675"/>
         <source>BOX &amp;%1</source>
-        <translation>קופסא &amp;%1</translation>
+        <translation>קופסה &amp;%1</translation>
     </message>
     <message>
         <location filename="box.cpp" line="710"/>
         <source>Full Box</source>
-        <translation>קופסא מלאה</translation>
+        <translation>קופסה מלאה</translation>
     </message>
     <message>
         <location filename="box.cpp" line="721"/>
         <source>Empty Box</source>
-        <translation>קופסא ריקה</translation>
+        <translation>קופסה ריקה</translation>
     </message>
     <message>
         <location filename="box.cpp" line="743"/>
@@ -2151,17 +2140,17 @@ Moves:
     <message>
         <location filename="box.cpp" line="63"/>
         <source>Item: </source>
-        <translation>חפץ:</translation>
+        <translation>אבזר:</translation>
     </message>
     <message>
         <location filename="box.cpp" line="72"/>
         <source>Moves:</source>
-        <translation>מהלכים:</translation>
+        <translation>מתקפות:</translation>
     </message>
     <message>
         <location filename="box.cpp" line="99"/>
         <source>Nature: %1</source>
-        <translation>טבע: %1</translation>
+        <translation>אופי: %1</translation>
     </message>
     <message>
         <location filename="box.cpp" line="102"/>
@@ -2172,37 +2161,37 @@ Moves:
 <context>
     <name>TB_TrainerBody</name>
     <message>
-        <location filename="teambuilder.cpp" line="454"/>
+        <location filename="teambuilder.cpp" line="438"/>
         <source>Avatar</source>
         <translation>אווטאר</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="465"/>
+        <location filename="teambuilder.cpp" line="449"/>
         <source>Trainer &amp;Name</source>
         <translation>שם &amp;משתמש</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="470"/>
+        <location filename="teambuilder.cpp" line="454"/>
         <source>Name Color</source>
         <translation>צבע השם</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="470"/>
+        <location filename="teambuilder.cpp" line="454"/>
         <source>Change &amp;Color</source>
         <translation>שנה &amp;צבע</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="477"/>
+        <location filename="teambuilder.cpp" line="461"/>
         <source>Trainer I&amp;nformation</source>
         <translation>&amp;מידע על המשתמש</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="480"/>
+        <location filename="teambuilder.cpp" line="464"/>
         <source>&amp;Winning Message</source>
         <translation>&amp;הודעת ניצחון</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="481"/>
+        <location filename="teambuilder.cpp" line="465"/>
         <source>L&amp;osing Message</source>
         <translation>&amp;הודעת הפסד</translation>
     </message>
@@ -2212,7 +2201,8 @@ Moves:
     <message>
         <location filename="teambuilder.cpp" line="129"/>
         <source>Teambuilder</source>
-        <translation>בונה הקבוצות</translation>
+        <translatorcomment>לבדוק</translatorcomment>
+        <translation>בנה קבוצה</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="322"/>
@@ -2222,7 +2212,7 @@ Moves:
     <message>
         <location filename="teambuilder.cpp" line="322"/>
         <source>You sure?</source>
-        <translation>בטוח?</translation>
+        <translation>האם הנך בטוח?</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="361"/>
@@ -2237,13 +2227,13 @@ Moves:
         <location filename="teambuilder.cpp" line="362"/>
         <source>&amp;New team</source>
         <oldsource>&amp;Save Team</oldsource>
-        <translation type="unfinished">&amp;שמור קבוצה</translation>
+        <translation>&amp;קבוצה חדשה</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="363"/>
         <source>&amp;Save team</source>
         <oldsource>&amp;Load Team</oldsource>
-        <translation type="unfinished">&amp;טען קבוצה</translation>
+        <translation>&amp;שמור קבוצה</translation>
     </message>
     <message>
         <source>&amp;Import From Txt</source>
@@ -2252,17 +2242,18 @@ Moves:
     <message>
         <location filename="teambuilder.cpp" line="364"/>
         <source>&amp;Load team</source>
-        <translation type="unfinished">&amp;טען קבוצה</translation>
+        <translation>&amp;טען קבוצה</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="365"/>
         <source>&amp;Import from text</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;יבא קבוצה מטקסט</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="366"/>
         <source>&amp;Export to text</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>לבדוק</translatorcomment>
+        <translation>&amp;המר לטקסט</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="367"/>
@@ -2272,12 +2263,13 @@ Moves:
     <message>
         <location filename="teambuilder.cpp" line="368"/>
         <source>&amp;Style</source>
-        <translation>&amp;סטייל</translation>
+        <translation>&amp;סגנון</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="375"/>
         <source>Reload StyleSheet</source>
-        <translation>טען מחדש דף סטייל</translation>
+        <translatorcomment>לבדוק</translatorcomment>
+        <translation>רענן רשימת סגנונות</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="378"/>
@@ -2286,13 +2278,9 @@ Moves:
     </message>
     <message>
         <location filename="teambuilder.cpp" line="379"/>
-        <source>&amp;Show all items</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="teambuilder.cpp" line="380"/>
         <source>&amp;Full Screen (for netbook users ONLY)</source>
-        <translation>&amp; מסך מלא (למשתמש Netbook בלבד)</translation>
+        <translatorcomment>האנגלית הופך את המילים - הסדר הגיוני</translatorcomment>
+        <translation>&amp;בלבד Netbook מסך מלא - למשתמשי</translation>
     </message>
     <message>
         <source>&amp;Import from .txt</source>
@@ -2305,6 +2293,7 @@ Moves:
         <location filename="teambuilder.cpp" line="28"/>
         <source>Paste your exported team from Netbattle Supremacy / Shoddy Battle
 Your language needs to be set to English to import English teams.</source>
+        <translatorcomment>לבדוק</translatorcomment>
         <translation>הדבר את הקבוצה המומרת שלך מNet Battle Supremacy / Shoddy Battle.
 השפה צריכה להיות אנגלית.</translation>
     </message>
@@ -2322,17 +2311,17 @@ Your language needs to be set to English to import English teams.</source>
 <context>
     <name>TeamPokeButton</name>
     <message>
-        <location filename="teambuilder.cpp" line="589"/>
+        <location filename="teambuilder.cpp" line="573"/>
         <source>PokÃ©mon &amp;%1</source>
         <translation>פוקימון &amp;%1</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="598"/>
+        <location filename="teambuilder.cpp" line="582"/>
         <source>Item</source>
-        <translation>חפץ</translation>
+        <translation>אבזר</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="610"/>
+        <location filename="teambuilder.cpp" line="594"/>
         <source>Lv. %1</source>
         <translation>רמה %1</translation>
     </message>

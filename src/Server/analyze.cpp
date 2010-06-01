@@ -363,11 +363,29 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     case CPTBan:
         {
             QString name;
-            int time;
+            qint32 time;
             in  >> name >> time;
             emit tempBanRequested(name, time);
             break;
         }
+    case PlayerTBan:
+        {
+            qint32 id;
+            qint32 time;
+            in  >> id >> time;
+            emit tempBan(id, time);
+            break;
+        }
+    case CPTUnban:
+        {
+            QString name;
+            in >> name;
+            emit tunbanRequested(name);
+            break;
+        }
+    case GetTBanList:
+        emit tbanListRequested();
+        break;
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;

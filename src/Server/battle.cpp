@@ -1649,11 +1649,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             if (!doubles()) {
                 targetList.push_back(player);
             } else {
+                /* Acupressure can be called with sleep talk, so the target needs to be checked */
                 int target = turnlong[player]["Target"].toInt();
-                if (!koed(target)) {
+                if (!koed(target) && this->player(target) == this->player(player)) {
                     targetList.push_back(target);
                 } else {
-                    targetList.push_back(player);
+                    targetList.push_back(randomValidOpponent(randomValidOpponent(player)));
                 }
             }
             break;
@@ -3050,7 +3051,7 @@ void BattleSituation::sendItemMessage(int move, int src, int part, int foe, int 
     else if (stat == -1)
         notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry));
     else
-        notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry), qint8(stat));
+        notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry), qint16(stat));
 }
 
 void BattleSituation::sendBerryMessage(int move, int src, int part, int foe, int berry, int stat)

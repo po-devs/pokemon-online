@@ -405,6 +405,7 @@ struct IMQuickClaw : public IM
     static void tu(int s, int, BS &b) {
         if (b.true_rand() % 5 == 0) {
 	    turn(b,s)["TurnOrder"] = 2;
+            b.sendItemMessage(17, s);
 	}
     }
 };
