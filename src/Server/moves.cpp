@@ -699,6 +699,9 @@ struct MMOHKO : public MM
 
     static void uas(int s, int t, BS &b) {
 	b.inflictDamage(t, b.poke(t).totalLifePoints(), s, true);
+        if (b.koed(t)) {
+            b.sendMoveMessage(43,0,s,type(b,s));
+        }
     }
 
     static void daf(int s, int t, BS &b) {

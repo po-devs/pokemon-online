@@ -31,7 +31,8 @@ struct UserInfo
         Online = 1,
         Banned = 2,
         Muted = 4,
-        NonExistant = 8
+        NonExistant = 8,
+        TempBanned = 16
     };
 
     qint8 flags;
@@ -50,6 +51,7 @@ struct UserInfo
     bool online() const { return flags & Online;}
     bool banned() const { return flags & Banned;}
     bool muted() const { return flags & Muted;}
+    bool tempBanned() const { return flags & TempBanned;}
 };
 
 inline QDataStream & operator << (QDataStream &d, const UserInfo &ui) {

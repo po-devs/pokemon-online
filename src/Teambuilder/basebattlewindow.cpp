@@ -554,7 +554,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             quint16 item=0;
             uchar part=0;
             qint8 foe = 0;
-            qint8 other=0;
+            qint16 other=0;
             qint16 berry = 0;
             in >> item >> part >> foe >> berry >> other;
             QString mess = ItemInfo::Message(item, part);
@@ -562,7 +562,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             mess.replace("%s", nick(spot));
             mess.replace("%f", nick(foe));
             mess.replace("%i", ItemInfo::Name(berry));
-            mess.replace("%m", MoveInfo::Name(berry));
+            mess.replace("%m", MoveInfo::Name(other));
             printLine(tu(mess));
             break;
         }

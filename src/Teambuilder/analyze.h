@@ -58,7 +58,10 @@ namespace NetworkCli
         FindMatch,
         ShowRankings = 37,
         Announcement,
-        CPTBan
+        CPTBan,
+        CPTUnban,
+        PlayerTBan,
+        GetTBanList
     };
 
     enum ProtocolError
@@ -156,8 +159,9 @@ public slots:
     /* By the control panel */
     void getUserInfo(const QString &name);
     void getBanList();
+    void getTBanList();
     void CPUnban(const QString &name);
-    void CPTBan(const QString &name,const int &time);
+    void CPTUnban(const QString &name);
     /* By the rankings window */
     void getRanking(const QString &tier, const QString &name);
     void getRanking(const QString &tier, int page);

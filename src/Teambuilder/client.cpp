@@ -192,6 +192,10 @@ void Client::ban(int p) {
     relay().notify(NetworkCli::PlayerBan, qint32(p));
 }
 
+void Client::tempban(int p, int time) {
+    relay().notify(NetworkCli::PlayerBan, qint32(p), qint32(time));
+}
+
 void Client::startPM(int id)
 {
     if (id == this->id(ownName()) || !playerExist(id)) {
@@ -200,7 +204,7 @@ void Client::startPM(int id)
 
     activateWindow();
 
-    if (mypms.contains(id)) {    
+    if (mypms.contains(id)) {
         return;
     }
 
@@ -314,10 +318,13 @@ void Client::controlPanel(int id)
     connect(&relay(), SIGNAL(userAliasReceived(QString)), myCP, SLOT(addAlias(QString)));
     connect(this, SIGNAL(userInfoReceived(UserInfo)), myCP, SLOT(setPlayer(UserInfo)));
     connect(&relay(), SIGNAL(banListReceived(QString,QString)), myCP, SLOT(addNameToBanList(QString, QString)));
+    connect(&relay(), SIGNAL(tbanListReceived(QString,QString,int)), myCP, SLOT(addNameToTBanList(QString, QString,int)));
     connect(myCP, SIGNAL(getBanList()), &relay(), SLOT(getBanList()));
+    connect(myCP, SIGNAL(getTBanList()), &relay(), SLOT(getTBanList()));
     connect(myCP, SIGNAL(banRequested(QString)), SLOT(requestBan(QString)));
     connect(myCP, SIGNAL(unbanRequested(QString)), &relay(), SLOT(CPUnban(QString)));
-    connect(myCP, SIGNAL(tempBanRequested(QString, int)), &relay(), SLOT(CPTBan(QString,int)));
+    connect(myCP, SIGNAL(tunbanRequested(QString)), &relay(), SLOT(CPTUnban(QString)));
+    connect(myCP, SIGNAL(tempBanRequested(QString, int)),this, SLOT(requestTempBan(QString,int)));
 }
 
 void Client::openBattleFinder()
@@ -764,7 +771,7 @@ BasicInfo Client::info(int id) const
         return BasicInfo();
 }
 
-void Client::seeInfo(QListWidgetItem *it)
+void Client::seeInfo(QTreeWidgetItem *it)
 {
     seeInfo(((QIdTreeWidgetItem*)(it))->id());
 }
@@ -984,7 +991,7 @@ void Client::awayChanged(int id, bool away)
 
 bool Client::busy() const
 {
-    return challengeWindowOpen() || battling() || myteambuilder || away() || myBattleFinder;
+    return challengeWindowOpen() || battling() || away();
 }
 
 bool Client::away() const
@@ -1364,6 +1371,15 @@ void Client::requestBan(const QString &name)
         relay().notify(NetworkCli::CPBan, name);
     } else {
         ban(id(name));
+    }
+}
+
+void Client::requestTempBan(const QString &name, int time)
+{
+    if (id(name) == -1) {
+        relay().notify(NetworkCli::CPTBan, name, qint32(time));
+    } else {
+        tempban(id(name), time);
     }
 }
 

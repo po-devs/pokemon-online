@@ -345,6 +345,11 @@ void Player::CPBan(const QString &name)
     if (auth() < 2) {
         return; //INVALID BEHAVIOR
     }
+    int maxAuth = SecurityManager::maxAuth(SecurityManager::ip(name));
+    if (maxAuth >= auth()) {
+        sendMessage(name + " has authority " + maxAuth + " under another nick.");
+        return;
+    }
     SecurityManager::ban(name);
     emit info(id(), "Banned player " + name + " with CP.");
 }
@@ -358,11 +363,18 @@ void Player::CPUnban(const QString &name)
     emit info(id(), "Unbanned player " + name + " with CP.");
 }
 
-void Player::CPTBan(const QString &name,const int &time)
+void Player::CPTBan(const QString &name, int time)
 {
     if (auth() < 1) {
         return; //INVALID BEHAVIOR
     }
+    int maxAuth = SecurityManager::maxAuth(SecurityManager::ip(name));
+    if (maxAuth >= auth()) {
+        sendMessage(name + " has authority " + maxAuth + " under another nick.");
+        return;
+    }
+    /* Checking the time boundaries */
+    time = std::max(1, std::min(time, 1440));
     SecurityManager::ban(name);
     TempBan *tBan = new TempBan(name,time);
     tBan->start();

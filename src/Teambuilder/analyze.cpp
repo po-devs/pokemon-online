@@ -80,9 +80,9 @@ void Analyzer::CPUnban(const QString &name)
     notify(NetworkCli::CPUnban, name);
 }
 
-void Analyzer::CPTBan(const QString &name,const int &time)
+void Analyzer::CPTUnban(const QString &name)
 {
-    notify(NetworkCli::CPTBan, name, time);
+    notify(NetworkCli::CPUnban, name);
 }
 
 void Analyzer::goAway(bool away)
@@ -367,6 +367,11 @@ Network & Analyzer::socket()
 void Analyzer::getBanList()
 {
     notify(GetBanList);
+}
+
+void Analyzer::getTBanList()
+{
+    notify(GetTBanList);
 }
 
 void Analyzer::notify(int command)

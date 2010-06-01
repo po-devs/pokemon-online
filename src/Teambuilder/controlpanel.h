@@ -20,11 +20,14 @@ public slots:
     void setPlayer(const UserInfo &ui);
     void addAlias(const QString &name);
     void addNameToBanList(const QString &name, const QString &ip);
+    void addNameToTBanList(const QString &name, const QString &ip, int time);
 signals:
     void getUserInfo(const QString &name);
     void getBanList();
+    void getTBanList();
     void banRequested(const QString &name);
     void unbanRequested(const QString &name);
+    void tunbanRequested(const QString &name);
     void tempBanRequested(const QString &name,const int &time);
 private slots:
     void getUser() {
@@ -55,7 +58,12 @@ private slots:
         banTable->setRowCount(0);
         emit getBanList();
     }
+    void on_trefresh_clicked() {
+        tbanTable->setRowCount(0);
+        emit getTBanList();
+    }
     void on_unban_clicked();
+    void on_tunban_clicked();
     void on_ban_clicked() {
         emit banRequested(userName->text());
     }

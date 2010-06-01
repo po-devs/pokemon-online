@@ -128,7 +128,7 @@ public slots:
     void playerBan(int);
     void CPBan(const QString &name);
     void CPUnban(const QString &name);
-    void CPTBan(const QString &name,const int &time);
+    void CPTBan(const QString &name, int time);
     void receivePM(int, const QString&);
     void userInfoAsked(const QString& name);
     void giveBanList();

@@ -57,7 +57,10 @@ namespace NetworkServ
         FindBattle,
         ShowRankings,
         Announcement,
-        CPTBan
+        CPTBan,
+        CPTUnban,
+        PlayerTBan,
+        GetTBanList
     };
 
     enum ProtocolError
@@ -146,9 +149,13 @@ signals:
     void ban(int id);
     void banRequested(const QString &name);
     void unbanRequested(const QString &name);
+    void tempBan(int id, int time);
+    void tempBanRequested(const QString &name, int time);
+    void tunbanRequested(const QString &name);
     void PMsent(int id, const QString);
     void getUserInfo(const QString &name);
     void banListRequested();
+    void tbanListRequested();
     /* Registry socket signals */
     void ipRefused();
     void nameTaken();
@@ -161,7 +168,6 @@ signals:
     void findBattle(const FindBattleData &f);
     void showRankings(const QString &tier, const QString &name);
     void showRankings(const QString &tier, int page);
-    void tempBanRequested(const QString &name,const int &time);
 public slots:
     /* slots called by the network */
     void error();
