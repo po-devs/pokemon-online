@@ -3028,6 +3028,7 @@ struct MMDefog : public MM
 	team(b,t).remove("ToxicSpikes");
 	team(b,t).remove("StealthRock");
 	team(b,t).remove("MistCount");
+        team(b,t).remove("SafeGuardCount");
 	b.sendMoveMessage(77,0,s,type(b,s),t);
     }
 };
@@ -3906,7 +3907,7 @@ struct MMYawn : public MM {
     static void daf(int s, int t, BS &b) {
         int opp = b.player(t);
 
-        if (b.poke(t).status() != Pokemon::Fine || team(b,opp).value("SafeGuardCount").toInt() > 0) {
+        if (b.poke(t).status() != Pokemon::Fine || team(b,opp).value("SafeGuardCount").toInt() > 0 || poke(b,t).value("YawnCount").toInt() == 0) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -3917,11 +3918,9 @@ struct MMYawn : public MM {
     }
 
     static void uas(int s, int t, BS &b) {
-        if (poke(b,t).value("YawnCount").toInt() == 0) {
-            b.sendMoveMessage(144,0,s,Pokemon::Normal,t);
-            poke(b,t)["YawnCount"] = 2;
-            addFunction(poke(b,t), "EndTurn617", "Yawn", &et);
-        }
+        b.sendMoveMessage(144,0,s,Pokemon::Normal,t);
+        poke(b,t)["YawnCount"] = 2;
+        addFunction(poke(b,t), "EndTurn617", "Yawn", &et);
     }
 
     static void et(int s, int, BS &b) {

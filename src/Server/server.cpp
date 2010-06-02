@@ -908,21 +908,23 @@ void Server::battleResult(int desc, int winner, int loser, bool rated, const QSt
             sendPlayer(winner);
             sendPlayer(loser);
         }
+        myengine->beforeBattleEnded(winner, loser, desc);
         foreach(Player *p, myplayers) {
             if (p->isLoggedIn()) {
                 p->battleResult(desc, winner, loser);
             }
         }
+
+        if (desc == Forfeit) {
+            printLine( tr("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
+        } else if (desc == Win) {
+            printLine( tr("%1 won his battle against %2").arg(name(winner), name(loser)));
+        } else if (desc == Tie) {
+            printLine( tr("%1 and %2 tied").arg(name(winner), name(loser)));
+        }
+        myengine->afterBattleEnded(winner, loser, desc);
     }
 
-    if (desc == Forfeit) {
-        if (!player(winner)->battle->finished())
-            printLine( tr("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
-    } else if (desc == Win) {
-        printLine( tr("%1 won his battle against %2").arg(name(winner), name(loser)));
-    } else if (desc == Tie) {
-        printLine( tr("%1 and %2 tied").arg(name(winner), name(loser)));
-    }
 
     if (desc == Forfeit) {
         removeBattle(winner, loser);
