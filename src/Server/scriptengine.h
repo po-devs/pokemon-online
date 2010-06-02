@@ -6,6 +6,11 @@
 
 #include <QtScript>
 
+#include <QScriptValueIterator>
+
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 class Server;
 class ChallengeInfo;
@@ -73,6 +78,11 @@ public:
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
 
+    /* GET call */
+    Q_INVOKABLE void webCall(const QString &urlstring, const QString &expr);
+    /* POST call */
+    Q_INVOKABLE void webCall(const QString &urlstring, const QString &expr, const QScriptValue &params_array);
+
     Q_INVOKABLE QScriptValue name(int id);
     Q_INVOKABLE QScriptValue id(const QString& name);
     Q_INVOKABLE QScriptValue auth(int id);
@@ -129,9 +139,12 @@ public:
     Q_INVOKABLE void unsetPA(const QString &name);
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
+
 private slots:
     void changeScript(const QString &script);
     void timer();
+    void webCall_replyFinished(QNetworkReply* reply);
+    
 private:
     Server *myserver;
     QScriptEngine myengine;
@@ -139,6 +152,7 @@ private:
     QVector<bool> stopevents;
 
     QHash<QTimer*,QString> timerEvents;
+    QHash<QNetworkReply*,QString> webCallEvents;
 
     void startStopEvent() {stopevents.push_back(false);}
     bool endStopEvent() {

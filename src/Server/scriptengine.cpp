@@ -423,11 +423,75 @@ void ScriptEngine::clearChat()
     ((QTextEdit*)myserver->mainchat())->clear();
 }
 
+/**
+ * Function will perform a GET-Request server side
+ * @param urlstring web-url
+ * @author Remco vd Zon
+ */
+void ScriptEngine::webCall(const QString &urlstring, const QString &expr)
+{
+	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+	QNetworkRequest request;
+	
+	request.setUrl(QUrl(urlstring));
+	request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+	
+	connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
+	QNetworkReply *reply = manager->get(request);
+	webCallEvents[reply] = expr;
+}
+
+/**
+ * Function will perform a POST-Request server side
+ * @param urlstring web-url
+ * @param params_array javascript array [key]=>value.
+ * @author Remco vd Zon
+ */
+void ScriptEngine::webCall(const QString &urlstring, const QString &expr, const QScriptValue &params_array)
+{
+	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+	QNetworkRequest request;
+	QByteArray postData;
+	
+	request.setUrl(QUrl(urlstring));
+	request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+
+	//parse the POST fields
+	QScriptValueIterator it(params_array);
+	while (it.hasNext()) {
+		it.next();
+		postData.append( it.name() + "=" + it.value().toString().replace(QString("&"), QString("%26"))); //encode ampersands!
+		if(it.hasNext()) postData.append("&");
+	}
+
+	connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
+	QNetworkReply *reply = manager->post(request, postData);
+	webCallEvents[reply] = expr;
+}
+
+void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
+	//escape reply before sending it to the javascript evaluator
+	QString x = reply->readAll();
+	x = x.replace(QString("'"), QString("\\'"));
+	x = x.replace(QString("\n"), QString("\\n"));
+
+	//put reply in a var "resp", can be used in expr
+	// i.e. expr = 'print("The resp was: "+resp);'
+	eval( "var resp = '"+x+"';"+webCallEvents[reply] );
+	webCallEvents.remove( reply );
+	reply->deleteLater();
+}
+
 void ScriptEngine::callLater(const QString &expr, int delay)
 {
+    if (delay <= 0) {
+        return;
+    }
+
     QTimer *t = new QTimer(this);
 
     timerEvents[t] = expr;
+    t->setSingleShot(true);
     t->start(delay*1000);
     connect(t, SIGNAL(timeout()), SLOT(timer()));
 }
@@ -438,9 +502,8 @@ void ScriptEngine::timer()
 
     eval(timerEvents[t]);
 
-    t->stop();
-    t->deleteLater();
     timerEvents.remove(t);
+    t->deleteLater();
 }
 
 QScriptValue ScriptEngine::eval(const QString &script)

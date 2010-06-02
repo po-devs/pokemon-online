@@ -246,7 +246,7 @@ struct BMStarf : public BMPinch
     static void ahpc(int s, int, BS &b) {
         int berry = b.poke(s).item();
 
-        if (!testpinch(s, s, b,4))
+        if (!testpinch(s, s, b, 4))
             return;
 
         int stat = (b.true_rand()%5) +1;

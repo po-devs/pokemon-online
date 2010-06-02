@@ -1394,6 +1394,31 @@ bool BattleSituation::testStatus(int player)
         return true;
     }
 
+    if (turnlong[player]["Flinched"].toBool()) {
+        notify(All, Flinch, player);
+        //SteadFast
+        if (hasWorkingAbility(player, Ability::Steadfast)) {
+            sendAbMessage(60,0,player);
+            gainStatMod(player, Speed, 1);
+        }
+        return false;
+    }
+    if (isConfused(player)) {
+        if (pokelong[player]["ConfusedCount"].toInt() > 0) {
+            inc(pokelong[player]["ConfusedCount"], -1);
+
+            notify(All, StatusMessage, player, qint8(FeelConfusion));
+
+            if (true_rand() % 2 == 0) {
+                inflictConfusedDamage(player);
+                return false;
+            }
+        } else {
+            healConfused(player);
+            notify(All, StatusMessage, player, qint8(FreeConfusion));
+        }
+    }
+
     switch (poke(player).status()) {
 	case Pokemon::Asleep:
 	{
@@ -1436,30 +1461,6 @@ bool BattleSituation::testStatus(int player)
 	case Pokemon::Poisoned:
 	default:
 	    break;
-    }
-    if (turnlong[player]["Flinched"].toBool()) {
-	notify(All, Flinch, player);
-        //SteadFast
-        if (hasWorkingAbility(player, Ability::Steadfast)) {
-            sendAbMessage(60,0,player);
-            gainStatMod(player, Speed, 1);
-        }
-	return false;
-    }
-    if (isConfused(player)) {
-	if (pokelong[player]["ConfusedCount"].toInt() > 0) {
-	    inc(pokelong[player]["ConfusedCount"], -1);
-
-	    notify(All, StatusMessage, player, qint8(FeelConfusion));
-
-            if (true_rand() % 2 == 0) {
-		inflictConfusedDamage(player);
-		return false;
-	    }
-	} else {
-	    healConfused(player);
-	    notify(All, StatusMessage, player, qint8(FreeConfusion));
-	}
     }
 
     return true;
@@ -2318,7 +2319,7 @@ void BattleSituation::changeStatus(int player, int status, bool tell)
     }
 
     //Sleep clause
-    if (status != Pokemon::Asleep && currentForcedSleepPoke[player] == currentPoke(player)) {
+    if (status != Pokemon::Asleep && currentForcedSleepPoke[this->player(player)] == currentPoke(player)) {
         currentForcedSleepPoke[this->player(player)] = -1;
     }
 

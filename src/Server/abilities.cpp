@@ -367,7 +367,7 @@ struct AMFlowerGift : public AM {
     }
 
     static void sm2(int s, int t, BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Sunny) && !b.hasWorkingAbility(t, Ability::FlowerGift)) {
+        if (b.isWeatherWorking(BattleSituation::Sunny) && b.hasWorkingAbility(t, Ability::FlowerGift)) {
             turn(b,s)["Stat1PartnerAbilityModifier"] = 10;
             turn(b,s)["Stat5PartnerAbilityModifier"] = 10;
         }
