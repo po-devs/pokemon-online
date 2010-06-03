@@ -66,7 +66,8 @@ public:
     enum Status {
         Available = 0,
         Away,
-        Battling
+        Battling,
+        Ignored
     };
 public slots:
     void errorFromNetwork(int errnum, const QString &error);
