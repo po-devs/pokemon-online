@@ -1353,7 +1353,9 @@ PlayerInfo &Client::playerInfo(int id)
 void Client::updateState(int id)
 {
     if (item(id) && item(id)->level() >= 0) {
-        if (playerInfo(id).battling()) {
+        if (myIgnored.contains(id)) {
+            return;
+        }  if (playerInfo(id).battling()) {
             item(id)->setIcon(0, statusIcons[Battling]);
         } else if (playerInfo(id).away()) {
             item(id)->setIcon(0, statusIcons[Away]);
