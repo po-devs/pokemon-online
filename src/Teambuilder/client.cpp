@@ -79,7 +79,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
         }
     }
 
-    statusIcons << QIcon("db/client/Available.png") << QIcon("db/client/Away.png") << QIcon("db/client/Battling.png");
+    statusIcons << QIcon("db/client/Available.png") << QIcon("db/client/Away.png") << QIcon("db/client/Battling.png") << QIcon("db/client/Ignored.png");
 }
 
 void Client::initRelay()
@@ -1387,12 +1387,14 @@ void Client::ignore(int id)
 {
     printLine(tr("You ignored %1.").arg(name(id)));
     myIgnored.append(id);
+    item(id)->setIcon(0, statusIcons[Ignored]);
 }
 
 void Client::removeIgnore(int id)
 {
     printLine(tr("You stopped ignoring %1.").arg(name(id)));
     myIgnored.removeOne(id);
+    updateState(id);
 }
 
 void Client::bugReport()
