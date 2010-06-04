@@ -642,7 +642,7 @@ struct MMDreamingTarget : public MM
 
     static void daf(int s, int t, BS &b) {
 	if (b.poke(t).status() != Pokemon::Asleep || b.hasSubstitute(t)) {
-	    b.fail(s, 31);
+            b.fail(s, 31, 0, type(b,s), t);
 	}
     }
 };
@@ -2112,7 +2112,7 @@ struct MMEndure : public MM
 
     static void uas(int s, int, BS &b) {
 	turn(b,s)["CannotBeKoed"] = true;
-	addFunction(turn(b,s), "UponOffensiveDamageReceived", "Endure", &uodr);
+        addFunction(turn(b,s), "UponSelfSurvival", "Endure", &uodr);
         b.sendMoveMessage(35,1,s);
     }
 

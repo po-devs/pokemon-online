@@ -366,10 +366,11 @@ struct AMFlowerGift : public AM {
         }
     }
 
-    static void sm2(int s, int t, BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Sunny) && b.hasWorkingAbility(t, Ability::FlowerGift)) {
-            turn(b,s)["Stat1PartnerAbilityModifier"] = 10;
-            turn(b,s)["Stat5PartnerAbilityModifier"] = 10;
+    static void sm2(int , int t, BS &b) {
+        /* FlowerGift doesn't stack */
+        if (b.isWeatherWorking(BattleSituation::Sunny) && !b.hasWorkingAbility(t, Ability::FlowerGift)) {
+            turn(b,t)["Stat1PartnerAbilityModifier"] = 10;
+            turn(b,t)["Stat5PartnerAbilityModifier"] = 10;
         }
     }
 };

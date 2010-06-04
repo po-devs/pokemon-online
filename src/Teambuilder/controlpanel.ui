@@ -20,7 +20,7 @@
    <enum>QTabWidget::Rounded</enum>
   </property>
   <property name="currentIndex">
-   <number>2</number>
+   <number>3</number>
   </property>
   <widget class="QWidget" name="userInfo">
    <attribute name="title">
@@ -29,9 +29,9 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>10</x>
       <y>10</y>
-      <width>311</width>
+      <width>301</width>
       <height>291</height>
      </rect>
     </property>
@@ -240,7 +240,7 @@
       <x>10</x>
       <y>10</y>
       <width>301</width>
-      <height>291</height>
+      <height>281</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -369,10 +369,10 @@
    <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>10</x>
       <y>10</y>
-      <width>321</width>
-      <height>301</height>
+      <width>301</width>
+      <height>291</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_3">
@@ -458,30 +458,6 @@
        </attribute>
        <attribute name="verticalHeaderStretchLastSection">
         <bool>false</bool>
-       </attribute>
-       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="horizontalHeaderCascadingSectionResizes">
-        <bool>true</bool>
-       </attribute>
-       <attribute name="horizontalHeaderVisible">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="verticalHeaderCascadingSectionResizes">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="verticalHeaderShowSortIndicator" stdset="0">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="verticalHeaderHighlightSections">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="verticalHeaderStretchLastSection">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>100</number>
        </attribute>
        <column>
         <property name="text">
