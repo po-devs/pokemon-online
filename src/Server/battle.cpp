@@ -2591,7 +2591,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
             /* Endure & Focus Sash */
             if (survivalItem) {
-                calleffects(player, source, "UponSelfSurvival");
+                callieffects(player, source, "UponSelfSurvival");
                 calleffects(player, source, "UponSelfSurvival");
             }
 	}
