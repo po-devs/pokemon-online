@@ -115,7 +115,7 @@ struct IMFocusBand : public IM
 {
     IMFocusBand() {
 	functions["BeforeTakingDamage"] = &btd;
-	functions["UponOffensiveDamageReceived"] = &uodr;
+        functions["UponSelfSurvival"] = &uodr;
     }
 
     static void btd(int s, int t, BS &b) {
@@ -137,7 +137,7 @@ struct IMFocusSash : public IM
 {
     IMFocusSash() {
 	functions["BeforeTakingDamage"] = &btd;
-	functions["UponOffensiveDamageReceived"] = &uodr;
+        functions["UponSelfSurvival"] = &uodr;
     }
 
     static void btd(int s, int t, BS &b) {

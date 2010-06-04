@@ -2570,10 +2570,13 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
 	int hp  = poke(player).lifePoints() - damage;
 
+        bool survivalItem = false;
+
         if (hp <= 0 && (straightattack && ((turnlong[player].contains("CannotBeKoedBy") && turnlong[player]["CannotBeKoedBy"].toInt() == source)
                                             || (turnlong[player].value("CannotBeKoed").toBool() && source != player)))) {
 	    damage = poke(player).lifePoints() - 1;
 	    hp = 1;
+            survivalItem = true;
 	}
 
 	if (hp <= 0) {
@@ -2584,6 +2587,12 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
             if (straightattack) {
                 notify(this->player(player), StraightDamage,player, qint16(damage));
                 notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
+            }
+
+            /* Endure & Focus Sash */
+            if (survivalItem) {
+                calleffects(player, source, "UponSelfSurvival");
+                calleffects(player, source, "UponSelfSurvival");
             }
 	}
     }
@@ -2604,10 +2613,10 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	    calleffects(source, player, "UponDamageInflicted");
 	}
         if (!sub) {
-            callieffects(player, source, "UponOffensiveDamageReceived");
             callaeffects(player, source, "UponOffensiveDamageReceived");
             calleffects(player, source, "UponOffensiveDamageReceived");
             callpeffects(player, source, "UponOffensiveDamageReceived");
+            callieffects(player, source, "UponOffensiveDamageReceived");
         }
     }
 
