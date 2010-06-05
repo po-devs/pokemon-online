@@ -1,4 +1,5 @@
 #include "serverconfig.h"
+#include "server.h"
 #include "../Utilities/otherwidgets.h"
 
 ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
@@ -8,6 +9,13 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     QFormLayout *l = new QFormLayout(this);
 
     QSettings settings;
+
+    serverPrivate = new QComboBox;
+    serverPrivate->addItem("Public");
+    serverPrivate->addItem("Private");
+    serverPrivate->setCurrentIndex(settings.value("server_private").toInt());
+    l->addRow("Public/Private: ", serverPrivate);
+
     serverName = new QLineEdit(settings.value("server_name").toString());
 
     serverName->setValidator(new QNickValidator(serverName));
@@ -52,6 +60,7 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 void ServerWindow::apply()
 {
     QSettings settings;
+    settings.setValue("server_private", serverPrivate->currentIndex());
     settings.setValue("server_name", serverName->text());
     settings.setValue("server_description", serverDesc->toPlainText());
     settings.setValue("server_maxplayers", serverPlayerMax->text());
@@ -61,5 +70,6 @@ void ServerWindow::apply()
     emit nameChanged(serverName->text());
     emit maxChanged(serverPlayerMax->value());
     emit announcementChanged(serverAnnouncement->toPlainText());
+    emit privacyChanged(serverPrivate->currentIndex());
     close();
 }

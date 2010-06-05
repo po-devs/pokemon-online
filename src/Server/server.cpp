@@ -123,13 +123,21 @@ Server::Server(quint16 port)
     connect(t, SIGNAL(timeout()), this, SLOT(clearRatedBattlesHistory()));
     t->start(3*3600*1000);
 
+    serverPrivate = quint16(s.value("server_private").toInt());
     serverName = s.value("server_name").toString();
     serverDesc = s.value("server_description").toString();
     serverAnnouncement = s.value("server_announcement").toString();
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
 
     myengine->serverStartUp();
+    if (serverPrivate == 1)
+    {
+        return;
+    }
+        else
+    {
     connectToRegistry();
+}
 }
 
 QTcpServer * Server::server()
@@ -165,6 +173,13 @@ void Server::connectToRegistry()
     registry_connection = new Analyzer(s,0);
 }
 
+void Server::disconnectFromRegistry()
+{
+    registry_connection->deleteLater();
+    printLine("Disconnected from registry.");
+    registry_connection = NULL;
+}
+
 void Server::regConnectionError()
 {
     printLine("Error when connecting to the registry. Will restart in 30 seconds");
@@ -190,6 +205,25 @@ void Server::regSendPlayers()
     registry_connection->notify(NetworkServ::ServNumChange, quint16(AntiDos::obj()->numberOfDiffIps()));
     /* Sending Players at regular interval */
     QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
+}
+
+void Server::regPrivacyChanged(const int &priv)
+{
+    if (serverPrivate == priv)
+        return;
+
+    serverPrivate = priv;
+
+    if (serverPrivate == 1)
+    {
+        printLine("The server is now private.");
+        disconnectFromRegistry();
+    }
+    else
+    {
+        printLine("The server is now public.");
+        connectToRegistry();
+    }
 }
 
 void Server::regNameChanged(const QString &name)
@@ -308,7 +342,7 @@ void Server::openConfig()
     ServerWindow *w = new ServerWindow();
 
     w->show();
-
+    connect(w, SIGNAL(privacyChanged(int)), SLOT(regPrivacyChanged(int)));
     connect(w, SIGNAL(nameChanged(QString)), SLOT(regNameChanged(const QString)));
     connect(w, SIGNAL(descChanged(QString)), SLOT(regDescChanged(const QString)));
     connect(w, SIGNAL(maxChanged(int)), SLOT(regMaxChanged(int)));
