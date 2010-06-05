@@ -58,6 +58,7 @@ public slots:
     void regConnectionError();
     void regSendPlayers();
     void sendServerMessage();
+    void regPrivacyChanged(const int &priv);
     void regNameChanged(const QString &name);
     void regDescChanged(const QString &desc);
     void regMaxChanged(const int &num);
@@ -104,13 +105,14 @@ public slots:
     void findBattle(int id,const FindBattleData &f);
     void cancelSearch(int id);
     void loadRatedBattlesSettings();
+    void disconnectFromRegistry();
 private:
     void kick(int dest, int src);
     void ban(int dest, int src);
 
     Analyzer *registry_connection;
     QString serverName, serverDesc, serverAnnouncement;
-    quint16 serverPlayerMax,serverPort;
+    quint16 serverPrivate, serverPlayerMax,serverPort;
     quint16 numPlayers() {
         return myplayers.size();
     }
