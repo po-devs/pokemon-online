@@ -74,8 +74,15 @@ void PMWindow::sendMessage()
         return;
     }
 
-    emit messageEntered(id(), str);
-    printLine(str, true);
+    if (str.length() > 0) {
+        QStringList s = str.split('\n');
+        foreach(QString s1, s) {
+            if (s1.length() > 0) {
+                emit messageEntered(id(), s1);
+                printLine(s1, true);
+            }
+        }
+    }
 }
 
 void PMWindow::disable()
