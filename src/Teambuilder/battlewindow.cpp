@@ -412,7 +412,12 @@ void BattleWindow::sendMessage()
     QString message = myline->text();
 
     if (message.size() != 0) {
-        emit battleMessage(battleId(), message);
+        QStringList s = message.split('\n');
+        foreach(QString s1, s) {
+            if (s1.length() > 0) {
+                emit battleMessage(battleId(), s1);
+            }
+        }
 	myline->clear();
     }
 }
