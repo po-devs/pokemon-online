@@ -125,5 +125,5 @@ void PlayersWindow::owner()
 void PlayersWindow::clpass()
 {
     SecurityManager::clearPass(playersbynum[mytable->currentRow()]);
-    mytable->item(mytable->currentRow(), 4)->setText("No");
+    mytable->item(mytable->currentRow(), 3)->setText("No");
 }
