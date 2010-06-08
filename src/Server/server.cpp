@@ -26,16 +26,6 @@ Server::Server(quint16 port)
 
     QGridLayout *mylayout = new QGridLayout (this);
 
-    QMenuBar *bar = new QMenuBar(this);
-    QMenu *options = bar->addMenu("&Options");
-    options->addAction("&Players", this, SLOT(openPlayers()));
-    options->addAction("&Anti DoS", this, SLOT(openAntiDos()));
-    options->addAction("&Config", this, SLOT(openConfig()));
-    options->addAction("&Scripts", this, SLOT(openScriptWindow()));
-    options->addAction("&Tiers", this, SLOT(openTiersWindow()));
-    options->addAction("&Battle Config", this, SLOT(openBattleConfigWindow()));
-    mylayout->addWidget(bar,0,0,1,2);
-
     mylist = new QListWidget();
     mylayout->addWidget(mylist,1,0,2,1);
 
@@ -138,6 +128,18 @@ Server::Server(quint16 port)
     {
     connectToRegistry();
 }
+}
+
+QMenuBar* Server::createMenuBar() {
+    QMenuBar *bar = new QMenuBar(this);
+    QMenu *options = bar->addMenu("&Options");
+    options->addAction("&Players", this, SLOT(openPlayers()));
+    options->addAction("&Anti DoS", this, SLOT(openAntiDos()));
+    options->addAction("&Config", this, SLOT(openConfig()));
+    options->addAction("&Scripts", this, SLOT(openScriptWindow()));
+    options->addAction("&Tiers", this, SLOT(openTiersWindow()));
+    options->addAction("&Battle Config", this, SLOT(openBattleConfigWindow()));
+    return bar;
 }
 
 QTcpServer * Server::server()
