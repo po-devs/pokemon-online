@@ -1,4 +1,4 @@
-#12,17,36,38,47,52,68: free
+#17,36,38,47,52,68: free
 1#Adaptability
 2#Aftermath
 
@@ -39,7 +39,7 @@
 32-1#Ice body
 
 
-
+12#Inner focus
 33-4#Insomnia
 34#Intimidate
 35#Iron Fist

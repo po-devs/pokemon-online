@@ -896,11 +896,16 @@ AMSoundProof::SoundMoves AMSoundProof::SM;
 
 struct AMSpeedBoost : public AM {
     AMSpeedBoost() {
+        functions["OnSetup"] = &os;
         functions["EndTurn62"] = &et;
     }
 
+    static void os(int s, int, BS &b) {
+        poke(b,s)["SpeedBoostSetupTurn"] = b.turn();
+    }
+
     static void et(int s, int, BS &b) {
-        if (b.koed(s))
+        if (b.koed(s) && b.turn() != poke(b,s).value("SpeedBoostSetupTurn").toInt())
             return;
         b.sendAbMessage(58,0,s);
         b.gainStatMod(s, Speed, 1);
@@ -1165,6 +1170,7 @@ void AbilityEffect::init()
     REGISTER_AB(9, ColorChange);
     REGISTER_AB(10, CompoundEyes);
     REGISTER_AB(11, CuteCharm);
+    //Inner Focus Message
     REGISTER_AB(13, Download);
     REGISTER_AB(14, Drizzle);
     REGISTER_AB(15, DrySkin);
