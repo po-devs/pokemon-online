@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     setCentralWidget(myserver = new Server(serverPort));
     resize(500,500);
+    setMenuBar(myserver->createMenuBar());
 }
 
 MainWindow::~MainWindow()

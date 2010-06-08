@@ -25,6 +25,7 @@ class Server: public QWidget
 public:
     Server(quint16 port = 5080);
 
+    QMenuBar* createMenuBar();
     void printLine(const QString &line, bool chatMessage = false);
     /* returns the name of that player */
     QString name(int id) const;
