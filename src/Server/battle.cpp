@@ -1542,8 +1542,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         pokelong[player]["MoveSlot"] = move;
     }
 
-    qDebug() << MoveInfo::Name(attack) << " was used  by " <<  player << " in " << team1.name << " vs " << team2.name;
-
     turnlong[player]["HasMoved"] = true;
 
     calleffects(player,player,"EvenWhenCantMove");
