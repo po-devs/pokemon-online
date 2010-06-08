@@ -1394,6 +1394,19 @@ bool BattleSituation::testStatus(int player)
         return true;
     }
 
+    if (poke(player).status() == Pokemon::Asleep) {
+        if (poke(player).sleepCount() > 0) {
+            //Early bird
+            poke(player).sleepCount() -= 1 + hasWorkingAbility(player, Ability::EarlyBird);
+            notify(All, StatusMessage, player, qint8(FeelAsleep));
+            if (!turnlong[player].value("SleepingMove").toBool())
+                return false;
+        } else {
+            healStatus(player, Pokemon::Asleep);
+            notify(All, StatusMessage, player, qint8(FreeAsleep));
+        }
+    }
+
     if (turnlong[player]["Flinched"].toBool()) {
         notify(All, Flinch, player);
         //SteadFast
@@ -1420,20 +1433,6 @@ bool BattleSituation::testStatus(int player)
     }
 
     switch (poke(player).status()) {
-	case Pokemon::Asleep:
-	{
-	    if (poke(player).sleepCount() > 0) {
-                //Early bird
-                poke(player).sleepCount() -= 1 + hasWorkingAbility(player, Ability::EarlyBird);
-		notify(All, StatusMessage, player, qint8(FeelAsleep));
-		if (!turnlong[player].value("SleepingMove").toBool())
-		    return false;
-	    } else {
-		healStatus(player, Pokemon::Asleep);
-		notify(All, StatusMessage, player, qint8(FreeAsleep));
-	    }
-	    break;
-	}
 	case Pokemon::Paralysed:
 	{
             //MagicGuard
@@ -1481,12 +1480,21 @@ void BattleSituation::inflictConfusedDamage(int player)
 
 void BattleSituation::testFlinch(int player, int target)
 {
-    //Inner focus
-    if (hasWorkingAbility(target, Ability::InnerFocus)) {
+    //Inner focus, shield dust
+    if (hasWorkingAbility(target, Ability::ShieldDust)) {
         return;
     }
 
     int rate = turnlong[player]["FlinchRate"].toInt();
+
+    if (hasWorkingAbility(target, Ability::InnerFocus)) {
+        if (rate == 100) {
+            sendAbMessage(12,0,player);
+        }
+        return;
+    }
+
+
     int randnum = true_rand() % 100;
     /* Serene Grace */
     if (hasWorkingAbility(player, Ability::SereneGrace)) {
@@ -2829,8 +2837,10 @@ void BattleSituation::requestSwitchIns()
         }
     }
 
-    foreach(int p, sentPokes) {
-        callEntryEffects(p);
+    foreach(int p, sortedBySpeed()) {
+        if (sentPokes.contains(p)) {
+            callEntryEffects(p);
+        }
     }
 }
 

@@ -350,12 +350,7 @@ struct IMStickyBarb : public IM
     }
 
     static void upa(int s, int t, BS &b) {
-        if (b.hasWorkingAbility(t, Ability::MagicGuard))
-            return;
-	b.sendItemMessage(29,t,1,s);
-	b.inflictDamage(t,b.poke(s).totalLifePoints()/8,s);
 	if (!b.koed(t) && b.poke(t).item() == 0) {
-	    b.sendItemMessage(29,t,2);
 	    b.poke(t).item() = b.poke(s).item();
 	    b.disposeItem(s);
 	}
