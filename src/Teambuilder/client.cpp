@@ -1257,7 +1257,12 @@ void Client::printLine(const QString &line)
         } else {
             if (myIgnored.contains(id(beg)))
                 return;
+            if (auth(id(beg)) > 0) {
+                mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + "+<i><b>" + escapeHtml(beg) + ":</i></b></span>" + escapeHtml(end) + "<br />");
+            }
+            else {
             mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+        }
 	}
     } else {
         mainChat()->insertPlainText( timeStr + line + "\n");
