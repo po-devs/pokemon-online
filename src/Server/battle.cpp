@@ -225,7 +225,7 @@ void BattleSituation::notifyClause(int clause, bool active)
 void BattleSituation::addSpectator(int id)
 {
     /* Simple guard to avoid multithreading problems -- would need to be improved :s */
-    while (!blocked()) {
+    while (!blocked() && !finished()) {
         ;
     }
 
@@ -638,8 +638,7 @@ bool BattleSituation::requestChoice(int slot, bool acquire, bool custom)
 
     if (acquire) {
         notify(player, StartChoices, player);
-        blocked() = true;
-        sem.acquire(1); /* Lock until a choice is received */
+        block(1);
     }
 
     //test to see if the quit was requested by system or if choice was received
@@ -673,8 +672,7 @@ void BattleSituation::requestChoices()
         /* Send a brief update on the status */
         notifyInfos();
         /* Lock until ALL choices are received */
-        blocked() = true;
-        sem.acquire(1);
+        block(1);
     }
 
     //test to see if the quit was requested by system or if choice was received or if win time out
@@ -1028,6 +1026,12 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
         }
         sem.release(1);
     }
+}
+
+void BattleSituation::block(int num)
+{
+    blocked() = true;
+    sem.acquire(num);
 }
 
 /*****************************************
@@ -2639,8 +2643,8 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	    callieffects(source,player, "UponDamageInflicted");
 	    calleffects(source, player, "UponDamageInflicted");
 	}
+        callaeffects(player, source, "UponOffensiveDamageReceived");
         if (!sub) {
-            callaeffects(player, source, "UponOffensiveDamageReceived");
             calleffects(player, source, "UponOffensiveDamageReceived");
             callpeffects(player, source, "UponOffensiveDamageReceived");
             callieffects(player, source, "UponOffensiveDamageReceived");
@@ -2826,8 +2830,7 @@ void BattleSituation::requestSwitchIns()
             notify(Player2, StartChoices, Player2);
         }
 
-        blocked() = true;
-        sem.acquire(1);
+        block(1);
 
         testquit();
         testWin(); // timeout win
@@ -2976,9 +2979,6 @@ void BattleSituation::testWin()
             notify(All, EndMessage, Player2, loseMessage[Player2]);
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
-        /* The battle is finished so we stop the battling thread */
-        blocked() = true;
-        sem.acquire(1);
         /* When the lock is release, we leave */
         throw QuitException();
     }

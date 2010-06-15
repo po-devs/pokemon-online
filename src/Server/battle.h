@@ -370,6 +370,7 @@ protected:
     void startClock(int player, bool broadCoast = true);
     void stopClock(int player, bool broadCoast = false);
     int timeLeft(int player);
+    void block(int num);
 public:
     std::vector<int> targetList;
     /* Calls the effects of source reacting to name */
