@@ -985,6 +985,10 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
         return;
     }
 
+    if (finished()) {
+        return;
+    }
+
     if (b.numSlot < 0 || b.numSlot >= numberOfSlots()) {
         return;
     }
@@ -2973,7 +2977,9 @@ void BattleSituation::testWin()
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
         /* The battle is finished so we stop the battling thread */
+        blocked() = true;
         sem.acquire(1);
+        /* When the lock is release, we leave */
         throw QuitException();
     }
 }
