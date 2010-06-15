@@ -209,7 +209,7 @@ int BattleSituation::slot(int player, int poke) const
 
 bool BattleSituation::acceptSpectator(int id, bool authed) const
 {
-    QMutexLocker(&spectatorMutex);
+    QMutexLocker m(&spectatorMutex);
     if (spectators.contains(spectatorKey(id)) || this->id(0) == id || this->id(1) == id)
         return false;
     if (authed)

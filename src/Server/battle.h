@@ -333,7 +333,7 @@ signals:
 private:
     /* To interrupt the thread when needed. We use that instead of mutex cuz we can lock/unlock them in different threads */
     QSemaphore sem;
-    QMutex spectatorMutex;
+    mutable QMutex spectatorMutex;
     /* To notify the thread to quit */
     bool quit;
     /* if quit==true, throws QuitException */
