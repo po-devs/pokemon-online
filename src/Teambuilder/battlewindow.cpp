@@ -585,7 +585,13 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                 myazones[info().currentIndex[spot]]->tattacks[slot]->updateAttack(info().tempPoke(spot).move(slot), info().tempPoke(spot));
             } else {
                 if (type == TempSprite) {
+                    int old = info().specialSprite[spot];
                     in >> info().specialSprite[spot];
+                    if (info().specialSprite[spot] == -1) {
+                        info().lastSeenSpecialSprite[spot] = old;
+                    } else if (info().specialSprite[spot] == 0) {
+                        info().specialSprite[spot] = old;
+                    }
                     mydisplay->updatePoke(spot);
                 } else {
                     if (type == DefiniteForm) {

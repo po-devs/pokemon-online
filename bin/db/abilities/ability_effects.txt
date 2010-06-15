@@ -96,7 +96,7 @@
 57#SoundProof
 58#Speed boost
 59#Stall
-33-1#Static
+18-1#Static
 60#Steadfast
 
 

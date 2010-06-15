@@ -144,7 +144,7 @@ public:
     void inflictConfused(int player, bool tell=true);
     void inflictConfusedDamage(int player);
     void inflictRecoil(int source, int target);
-    void inflictDamage(int player, int damage, int source, bool straightattack = false);
+    void inflictDamage(int player, int damage, int source, bool straightattack = false, bool goForSub = false);
     void inflictPercentDamage(int player, int percent, int source, bool straightattack = false);
     void inflictSubDamage(int player, int damage, int source);
     void disposeItem(int player);
@@ -333,6 +333,7 @@ signals:
 private:
     /* To interrupt the thread when needed. We use that instead of mutex cuz we can lock/unlock them in different threads */
     QSemaphore sem;
+    QMutex spectatorMutex;
     /* To notify the thread to quit */
     bool quit;
     /* if quit==true, throws QuitException */
@@ -350,7 +351,6 @@ private:
     /* just indicates if the player could originally move or not */
     QList<bool> couldMove;
 
-    std::vector<int> targetList;
 
     TeamBattle team1, team2;
 
@@ -371,6 +371,7 @@ protected:
     void stopClock(int player, bool broadCoast = false);
     int timeLeft(int player);
 public:
+    std::vector<int> targetList;
     /* Calls the effects of source reacting to name */
     void calleffects(int source, int target, const QString &name);
     /* This time the pokelong effects */

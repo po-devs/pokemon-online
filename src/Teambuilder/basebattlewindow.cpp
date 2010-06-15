@@ -12,6 +12,7 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, bool
         sub.push_back(false);
         pokeAlive.push_back(false);
         specialSprite.push_back(0);
+        lastSeenSpecialSprite.push_back(0);
         currentIndex.push_back(i/2);
         statChanges.push_back(BattleDynamicInfo());
     }
@@ -691,7 +692,13 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             quint8 type;
             in >> type;
             if (type == TempSprite) {
+                int old = info().specialSprite[spot];
                 in >> info().specialSprite[spot];
+                if (info().specialSprite[spot] == -1) {
+                    info().lastSeenSpecialSprite[spot] = old;
+                } else if (info().specialSprite[spot] == 0) {
+                    info().specialSprite[spot] = old;
+                }
                 mydisplay->updatePoke(spot);
             } else if (type == DefiniteForm)
             {
