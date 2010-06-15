@@ -240,6 +240,7 @@ public:
     static bool Exist(int itemnum);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
+    static bool isMail(int itemnum);
     static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
     static QTSList<QString> SortedNames();

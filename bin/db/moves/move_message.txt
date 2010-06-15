@@ -70,7 +70,7 @@ A hailstorm brewed!|It started to rain!|A sandstorm brewed!|The sunlight turned 
 
 %s knocked off %f's %i!
 
-%s evaded the seed!|%f was seeded!|%s's health is sapped by leech seed.
+It doesn't affect %s...|%f was seeded!|%s's health is sapped by leech seed.
 Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's reflect wore off!|%ts's light screen wore off!
 %s took aim at %f!
 %ts's team is protected from critical hits!|%ts's lucky chant wore off!
@@ -105,7 +105,7 @@ All Pokémon hearing the song will faint in three turns!|%s's perish count fell t
 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbed light!
 %s recycled %i!
 %s went to sleep and became healthy!
-%f held on to the ground using its Suction Cups!|%f is solidly rooted to the ground!|%f was dragged out!
+%s held on to the ground using its Suction Cups!|%s is solidly rooted to the ground!|%f was dragged out!
 %s copied %f's %a!
 %ts's team became cloaked in a mystical veil!|%ts's team is no longer protected by Safeguard!|Safeguard prevents %f from being inflicted by status!
 

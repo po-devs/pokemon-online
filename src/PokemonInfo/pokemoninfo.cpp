@@ -1263,6 +1263,11 @@ bool ItemInfo::isPlate(int itemnum)
     return (itemnum >= 185 && itemnum <= 202 && itemnum != 190 && itemnum != 200);
 }
 
+bool ItemInfo::isMail(int itemnum)
+{
+    return (itemnum >= 214 && itemnum <= 226);
+}
+
 bool ItemInfo::isUseful(int itemnum)
 {
     return isBerry(itemnum) || m_UsefulItems[itemnum] == true;

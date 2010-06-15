@@ -10,7 +10,7 @@
 #include <algorithm>
 
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id)
-        :team1(p1.team()), team2(p2.team())
+    : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
 {
     publicId() = id;
     timer = NULL;
@@ -209,6 +209,7 @@ int BattleSituation::slot(int player, int poke) const
 
 bool BattleSituation::acceptSpectator(int id, bool authed) const
 {
+    QMutexLocker(&spectatorMutex);
     if (spectators.contains(spectatorKey(id)) || this->id(0) == id || this->id(1) == id)
         return false;
     if (authed)
@@ -223,6 +224,12 @@ void BattleSituation::notifyClause(int clause, bool active)
 
 void BattleSituation::addSpectator(int id)
 {
+    /* Simple guard to avoid multithreading problems -- would need to be improved :s */
+    while (!blocked()) {
+        ;
+    }
+
+    /* To avoid threading problems / Next time think of something better, cuz now we have to wait till the battle finishes processings */
     /* Assumption: each id is a different player, so key is unique */
     int key = spectatorKey(id);
     spectators[key] = id;
@@ -264,7 +271,10 @@ void BattleSituation::addSpectator(int id)
 
 void BattleSituation::removeSpectator(int id)
 {
+    spectatorMutex.lock();
     spectators.remove(spectatorKey(id));
+    spectatorMutex.unlock();
+
     notify(All, Spectating, 0, false, qint32(id));
 }
 
@@ -847,6 +857,7 @@ void BattleSituation::analyzeChoices()
     }
 
     std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
+    std::vector<int> players;
 
     for (it = priorities.begin(); it != priorities.end(); ++it) {
 	/* There's another priority system: Ability stall, and Item lagging tail */
@@ -860,10 +871,16 @@ void BattleSituation::analyzeChoices()
 
         for(std::map<int, std::vector<int> >::iterator it = secondPriorities.begin(); it != secondPriorities.end(); ++it) {
             foreach(int p, it->second) {
-                analyzeChoice(p);
-                testWin();
+                players.push_back(p);
             }
         }
+    }
+
+    /* The loop is separated, cuz all TurnOrders must be called at the beggining of the turn,
+       cf custap berry */
+    foreach(int p, players) {
+        analyzeChoice(p);
+        testWin();
     }
 }
 
@@ -1634,7 +1651,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         case Move::ChosenTarget: {
                 if (doubles()) {
                     int target = turnlong[player]["Target"].toInt();
-                    if (!koed(target)) {
+                    if (!koed(target) && target != player) {
                         targetList.push_back(target);
                         break;
                     }
@@ -2554,7 +2571,7 @@ void BattleSituation::inflictPercentDamage(int player, int percent, int source, 
     inflictDamage(player,poke(player).totalLifePoints()*percent/100,source, straightattack);
 }
 
-void BattleSituation::inflictDamage(int player, int damage, int source, bool straightattack)
+void BattleSituation::inflictDamage(int player, int damage, int source, bool straightattack, bool goForSub)
 {
     if (koed(player)) {
 	return;
@@ -2569,7 +2586,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
     bool sub = hasSubstitute(player);
 
-    if (sub && player != source && straightattack) {
+    if (sub && (player != source || goForSub) && straightattack) {
 	inflictSubDamage(player, damage, source);
     } else {
 	damage = std::min(int(poke(player).lifePoints()), damage);
@@ -3149,15 +3166,19 @@ void BattleSituation::emitCommand(int slot, int players, const QByteArray &toSen
         emit battleInfo(publicId(), qint32(id(Player1)), toSend);
         emit battleInfo(publicId(), qint32(id(Player2)), toSend);
 
+        spectatorMutex.lock();
         foreach(int id, spectators) {
             emit battleInfo(publicId(), qint32(id), toSend);
         }
+        spectatorMutex.unlock();
     } else if (players == AllButPlayer) {
         emit battleInfo(publicId(), qint32(id(opponent(player(slot)))), toSend);
 
+        spectatorMutex.lock();
         foreach(int id, spectators) {
             emit battleInfo(publicId(), qint32(id), toSend);
         }
+        spectatorMutex.unlock();
     } else {
         emit battleInfo(publicId(), qint32(id(players)), toSend);
     }

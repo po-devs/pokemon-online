@@ -912,7 +912,13 @@ struct MMHealHalf : public MM
 struct MMRoost : public MM
 {
     MMRoost() {
+        functions["DetermineAttackFailure"] =  &daf;
 	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf (int s, int, BS &b) {
+        if (b.poke(s).isFull())
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas(int s, int, BS &b) {
@@ -1059,9 +1065,9 @@ struct MMRoar : public MM
         int target = b.player(t);
 	/* ingrain & suction cups */
         if (poke(b,t).value("Rooted").toBool()) {
-            b.fail(s, 107, 1, Pokemon::Grass);
+            b.fail(s, 107, 1, Pokemon::Grass,t);
         } else if (b.hasWorkingAbility(t,Ability::SuctionCups)) {
-            b.fail(s, 107, 0);
+            b.fail(s, 107, 0, 0, t);
         } else{
             if (b.countBackUp(target) == 0) {
 		turn(b,s)["Failed"] = true;
@@ -1371,7 +1377,8 @@ struct MMKnockOff : public MM
 
     static void uas(int s,int t,BS &b)
     {
-        if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && !b.hasWorkingAbility(t, Ability::Multitype)) /* Sticky Hold, MultiType */
+        if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && !b.hasWorkingAbility(t, Ability::Multitype)
+            && b.poke(t).item() != Item::GriseousOrb) /* Sticky Hold, MultiType, Giratina-O */
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
@@ -1390,8 +1397,9 @@ struct MMCovet : public MM
     {
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
             && !b.hasWorkingAbility(t, Ability::Multitype) && b.poke(s).item() == 0
-                    && b.pokenum(t) != Pokemon::Giratina_O) /* Sticky Hold, MultiType, Giratina_O */
-            {
+                    && b.pokenum(t) != Pokemon::Giratina_O && !ItemInfo::isMail(b.poke(s).item())
+            && !ItemInfo::isMail(b.poke(t).item())) /* Sticky Hold, MultiType, Giratina_O, Mail*/
+        {
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
 	    b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
@@ -1408,11 +1416,13 @@ struct MMSwitcheroo : public MM
 
     static void daf(int s, int t, BS &b) {
         if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
-            || b.hasWorkingAbility(t, Ability::Multitype) || b.pokenum(s) == Pokemon::Giratina_O || b.pokenum(t) == Pokemon::Giratina_O )
-            /* Sticky Hold, MultiType, Giratina-O */
+            || b.hasWorkingAbility(t, Ability::Multitype) || b.pokenum(s) == Pokemon::Giratina_O || b.pokenum(t) == Pokemon::Giratina_O
+                    || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item()))
+            /* Sticky Hold, MultiType, Giratina-O, Mail */
             {
 	    turn(b,s)["Failed"] = true;
 	}
+        /* Knock off */
         if (b.battlelong.value(QString("KnockedOff%1%2").arg(t).arg(b.currentPoke(t))).toBool() || b.battlelong.value(QString("KnockedOff%1%2").arg(s).arg(b.currentPoke(s))).toBool()) {
             turn(b,s)["Failed"] = true;
         }
@@ -1930,7 +1940,7 @@ struct MMDoomDesire : public MM
             } else if (!b.koed(s)) {
                 int move = slot(b,s)["DoomDesireMove"].toInt();
 		b.sendMoveMessage(29,0,s,MoveInfo::Type(move),s,move);
-                b.inflictDamage(s,slot(b,s)["DoomDesireDamage"].toInt(), s, true);
+                b.inflictDamage(s,slot(b,s)["DoomDesireDamage"].toInt(), s, true, true);
 	    }
             removeFunction(slot(b,s), "EndTurn7", "DoomDesire");
 	}
@@ -2589,10 +2599,11 @@ struct MMFling : public MM
     }
 
     static void btl(int s, int, BS &b) {
-	if (b.poke(s).item() != 0 && b.hasWorkingItem(s, b.poke(s).item())) {
+        if (b.poke(s).item() != 0 && b.hasWorkingItem(s, b.poke(s).item()) && ItemInfo::Power(b.poke(s).item()) > 0) {
 	    turn(b,s)["FlingItem"] = b.poke(s).item();
 	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * ItemInfo::Power(b.poke(s).item());
-            b.sendMoveMessage(45, 0, s, type(b,s), s, b.poke(s).item());
+            int t = b.targetList.front();
+            b.sendMoveMessage(45, 0, s, type(b,s), t, b.poke(s).item());
 	    b.disposeItem(s);
 	}
     }
@@ -3022,14 +3033,20 @@ struct MMDefog : public MM
     static void uas (int s, int , BS &b) {
         int t = b.opponent(b.player(s));
 
-        team(b,t).remove("Barrier0Count");
-	team(b,t).remove("Barrier1Count");
-	team(b,t).remove("Spikes");
-	team(b,t).remove("ToxicSpikes");
-	team(b,t).remove("StealthRock");
-	team(b,t).remove("MistCount");
-        team(b,t).remove("SafeGuardCount");
-	b.sendMoveMessage(77,0,s,type(b,s),t);
+        BS::context &c = team(b,t);
+
+        if (c.contains("Barrier0Count") || c.contains("Barrier1Count") || c.contains("Spikes") || c.contains("ToxicSpikes")
+            || c.contains("StealthRock") || c.contains("MistCount") || c.contains("SafeGuardCount"))
+            b.sendMoveMessage(77,0,s,type(b,s),t);
+
+        c.remove("Barrier0Count");
+        c.remove("Barrier1Count");
+        c.remove("Spikes");
+        c.remove("ToxicSpikes");
+        c.remove("StealthRock");
+        c.remove("MistCount");
+        c.remove("SafeGuardCount");
+
     }
 };
 

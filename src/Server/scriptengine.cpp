@@ -10,6 +10,7 @@ ScriptEngine::ScriptEngine(Server *s) {
 
     QScriptValue sys = myengine.newQObject(this);
     myengine.globalObject().setProperty("sys", sys);
+    myengine.globalObject().setProperty("script", myscript);
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);

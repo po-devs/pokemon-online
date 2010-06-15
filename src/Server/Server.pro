@@ -2,7 +2,8 @@
 # Project created by QtCreator 2009-11-05T22:07:35
 # -------------------------------------------------
 QT += network \
-    script
+    script \
+    sql
 TARGET = Server
 DESTDIR = ../../bin
 TEMPLATE = app
@@ -34,7 +35,8 @@ SOURCES += main.cpp \
     ../PokemonInfo/movesetchecker.cpp \
     tier.cpp \
     ../Utilities/mtrand.cpp \
-    battlingoptions.cpp
+    battlingoptions.cpp \
+    sql.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -66,7 +68,10 @@ HEADERS += mainwindow.h \
     ../Utilities/rankingtree.h \
     ../Utilities/rankingtree.h \
     ../Utilities/mtrand.h \
-    battlingoptions.h
+    battlingoptions.h \
+    sql.h \
+    functionThread.h \
+    waitingobject.h
 DEFINES = MULTI_THREADED_ACCESS \
     SERVER_SIDE
 RESOURCES += 
