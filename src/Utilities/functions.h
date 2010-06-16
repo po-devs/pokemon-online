@@ -91,7 +91,7 @@ inline int intlog2(unsigned x) {
     return i;
 }
 
-QString md5_hash(const QString &toHash);
+QByteArray md5_hash(const QByteArray &toHash);
 
 void createIntMapper(QObject *src, const char *signal, QObject *dest, const char *slot, int id);
 

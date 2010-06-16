@@ -17,9 +17,15 @@
 #include "../Shared/config.h"
 #include "tier.h"
 #include "battlingoptions.h"
+#include "sql.h"
+
+Server *Server::serverIns = NULL;
 
 Server::Server(quint16 port)
 {
+    try {
+    serverIns = this;
+
     linecount = 0;
     registry_connection = NULL;
     myengine = NULL;
@@ -49,6 +55,12 @@ Server::Server(quint16 port)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
+    try {
+        SQLCreator::createSQLConnection();
+    } catch (const QString &ex) {
+        printLine(ex);
+    }
+
     printLine(tr("Starting loading pokemon database..."));
 
     PokemonInfo::init("db/pokes/");
@@ -75,6 +87,7 @@ Server::Server(quint16 port)
     } catch (const QString &ex) {
         printLine(ex);
     }
+
     TierMachine::init();
 
     AntiDos::obj()->init();
@@ -113,20 +126,15 @@ Server::Server(quint16 port)
     connect(t, SIGNAL(timeout()), this, SLOT(clearRatedBattlesHistory()));
     t->start(3*3600*1000);
 
-    serverPrivate = quint16(s.value("server_private").toInt());
     serverName = s.value("server_name").toString();
     serverDesc = s.value("server_description").toString();
     serverAnnouncement = s.value("server_announcement").toString();
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
 
     myengine->serverStartUp();
-    if (serverPrivate == 1)
-    {
-        return;
-    }
-        else
-    {
     connectToRegistry();
+} catch (...) {
+    qDebug() << "Exception";
 }
 }
 
@@ -140,6 +148,12 @@ QMenuBar* Server::createMenuBar() {
     options->addAction("&Tiers", this, SLOT(openTiersWindow()));
     options->addAction("&Battle Config", this, SLOT(openBattleConfigWindow()));
     return bar;
+}
+
+
+void Server::print(const QString &line)
+{
+    serverIns->printLine(line, false);
 }
 
 QTcpServer * Server::server()
@@ -175,13 +189,6 @@ void Server::connectToRegistry()
     registry_connection = new Analyzer(s,0);
 }
 
-void Server::disconnectFromRegistry()
-{
-    registry_connection->deleteLater();
-    printLine("Disconnected from registry.");
-    registry_connection = NULL;
-}
-
 void Server::regConnectionError()
 {
     printLine("Error when connecting to the registry. Will restart in 30 seconds");
@@ -207,25 +214,6 @@ void Server::regSendPlayers()
     registry_connection->notify(NetworkServ::ServNumChange, quint16(AntiDos::obj()->numberOfDiffIps()));
     /* Sending Players at regular interval */
     QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
-}
-
-void Server::regPrivacyChanged(const int &priv)
-{
-    if (serverPrivate == priv)
-        return;
-
-    serverPrivate = priv;
-
-    if (serverPrivate == 1)
-    {
-        printLine("The server is now private.");
-        disconnectFromRegistry();
-    }
-    else
-    {
-        printLine("The server is now public.");
-        connectToRegistry();
-    }
 }
 
 void Server::regNameChanged(const QString &name)
@@ -307,19 +295,23 @@ void Server::ipRefused()
     printLine("Registry wants only 1 server per IP");
 }
 
-void Server::printLine(const QString &line, bool chatMessage)
+
+/* Returns false if the event "newMessage" was stopped (nothing to do with "chatMessage" */
+bool Server::printLine(const QString &line, bool chatMessage)
 {
     if (myengine == NULL) {
         mainchat()->insertPlainText(line + "\n");
         qDebug() << line;
-        return;
+        return true;
     }
     if (chatMessage || myengine->beforeNewMessage(line)) {
         mainchat()->insertPlainText(line + "\n");
         qDebug() << line;
         if (!chatMessage)
             myengine->afterNewMessage(line);
+        return true;
     }
+    return false;
 }
 
 void Server::openPlayers()
@@ -344,7 +336,7 @@ void Server::openConfig()
     ServerWindow *w = new ServerWindow();
 
     w->show();
-    connect(w, SIGNAL(privacyChanged(int)), SLOT(regPrivacyChanged(int)));
+
     connect(w, SIGNAL(nameChanged(QString)), SLOT(regNameChanged(const QString)));
     connect(w, SIGNAL(descChanged(QString)), SLOT(regDescChanged(const QString)));
     connect(w, SIGNAL(maxChanged(int)), SLOT(regMaxChanged(int)));
@@ -1161,11 +1153,11 @@ int Server::id(const QString &name) const
 
 void Server::sendAll(const QString &message, bool chatMessage)
 {
-    printLine(message, chatMessage);
-
-    foreach (Player *p, myplayers)
-	if (p->isLoggedIn())
-	    p->sendMessage(message);
+    if (printLine(message, chatMessage)) {
+        foreach (Player *p, myplayers)
+            if (p->isLoggedIn())
+                p->sendMessage(message);
+    }
 }
 
 int Server::freeid() const

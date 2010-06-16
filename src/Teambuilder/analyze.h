@@ -172,6 +172,8 @@ private:
     /* To tell if its the registry we're connected to*/
     bool registry_socket;
 
+    QList<QByteArray> storedCommands;
+
     Network mysocket;
 };
 

@@ -211,3 +211,16 @@ Um osso precioso. Vender por dinheiro
 Revive Lileep
 Revive Cranidos
 Diminui a velocidade do usuário, também faz com que ataques Voadores e a Abilidade de Levitar tornem-se vuneráveis a ataques de Terra, quando equipado a eles
+Air Mail
+Bloom Mail
+Brick Mail
+Bubble Mail
+Flame Mail
+Grass Mail
+Harbor Mail
+Heart Mail
+Mosaic Mail
+Snow Mail
+Space Mail
+Steel Mail
+Tunnel Mail

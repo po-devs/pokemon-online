@@ -19,6 +19,8 @@ Analyzer::Analyzer(QTcpSocket *sock, int id) : mysocket(sock, id)
         connect(mytimer, SIGNAL(timeout()), this, SLOT(keepAlive()));
         mytimer->start(30000); //every 30 secs
     }
+
+    delayCount = 0;
 }
 
 Analyzer::~Analyzer()
@@ -148,8 +150,7 @@ void Analyzer::sendRanking(QString name, int points)
     notify(ShowRankings, false, name, qint32(points));
 }
 
-
-void Analyzer::commandReceived(const QByteArray &commandline)
+void Analyzer::dealWithCommand(const QByteArray &commandline)
 {
     QDataStream in (commandline);
     in.setVersion(QDataStream::Qt_4_5);
@@ -159,7 +160,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 
     switch (command) {
     case Login:
-	{
+        {
             qDebug() << "Login received";
             if (mysocket.id() != 0) {
                 TeamInfo team;
@@ -170,47 +171,47 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             } else
                 emit accepted(); // for registry;
             qDebug() << "Login end";
-	    break;
-	}
+            break;
+        }
     case SendMessage:
-	{
-	    QString mess;
-	    in >> mess;
-	    emit messageReceived(mess);
-	    break;
-	}
+        {
+            QString mess;
+            in >> mess;
+            emit messageReceived(mess);
+            break;
+        }
     case SendTeam:
-	{
-	    TeamInfo team;
-	    in >> team;
-	    emit teamReceived(team);
-	    break;
-	}
+        {
+            TeamInfo team;
+            in >> team;
+            emit teamReceived(team);
+            break;
+        }
     case ChallengeStuff:
-	{
+        {
             ChallengeInfo c;
             in >> c;
             emit challengeStuff(c);
-	    break;
-	}
+            break;
+        }
     case BattleMessage:
-	{
+        {
             qint32 id;
             in >> id;
-	    BattleChoice ch;
-	    in >> ch;
-	    emit battleMessage(ch);
-	    break;
-	}
+            BattleChoice ch;
+            in >> ch;
+            emit battleMessage(ch);
+            break;
+        }
     case BattleChat:
-	{
+        {
             qint32 id;
             in >> id;
-	    QString s;
-	    in >> s;
-	    emit battleChat(s);
-	    break;
-	}
+            QString s;
+            in >> s;
+            emit battleChat(s);
+            break;
+        }
     case BattleFinished:
         qint32 id;
         in >> id;
@@ -392,6 +393,29 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     }
 }
 
+void Analyzer::commandReceived(const QByteArray &command)
+{
+    if (delayCount > 0) {
+        delayedCommands.push_back(command);
+    } else {
+        dealWithCommand(command);
+    }
+}
+
+void Analyzer::delay()
+{
+    delayCount += 1;
+}
+
+void Analyzer::undelay()
+{
+    delayCount -=1;
+
+    while(delayedCommands.size() > 0 && delayCount==0) {
+        dealWithCommand(delayedCommands.takeFirst());
+    }
+}
+
 Network & Analyzer::socket()
 {
     return mysocket;
@@ -404,8 +428,6 @@ const Network & Analyzer::socket() const
 
 void Analyzer::notify(int command)
 {
-    if (!isConnected())
-        return;
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);

@@ -25,8 +25,8 @@ class Server: public QWidget
 public:
     Server(quint16 port = 5080);
 
-    QMenuBar* createMenuBar();
-    void printLine(const QString &line, bool chatMessage = false);
+    static void print(const QString &line);
+    bool printLine(const QString &line, bool chatMessage = false);
     /* returns the name of that player */
     QString name(int id) const;
     QString authedName(int id) const;
@@ -50,6 +50,8 @@ public:
     /* Force Rated 1 and Force Rated 2 is to ignore the ladder on / off factor for those two */
     bool canHaveRatedBattle(int id1, int id2, bool challengeCup, bool forceRated1 = false, bool forceRated2 = false);
 
+    QMenuBar *createMenuBar();
+
     Player * player(int id) const;
 public slots:
     /* Registry slots */
@@ -59,7 +61,6 @@ public slots:
     void regConnectionError();
     void regSendPlayers();
     void sendServerMessage();
-    void regPrivacyChanged(const int &priv);
     void regNameChanged(const QString &name);
     void regDescChanged(const QString &desc);
     void regMaxChanged(const int &num);
@@ -106,14 +107,15 @@ public slots:
     void findBattle(int id,const FindBattleData &f);
     void cancelSearch(int id);
     void loadRatedBattlesSettings();
-    void disconnectFromRegistry();
 private:
     void kick(int dest, int src);
     void ban(int dest, int src);
 
+    static Server *serverIns;
+
     Analyzer *registry_connection;
     QString serverName, serverDesc, serverAnnouncement;
-    quint16 serverPrivate, serverPlayerMax,serverPort;
+    quint16 serverPlayerMax,serverPort;
     quint16 numPlayers() {
         return myplayers.size();
     }

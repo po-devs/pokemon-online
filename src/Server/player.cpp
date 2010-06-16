@@ -13,6 +13,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
 {
     battle = NULL;
     challengedBy = NULL;
+    lockCount = 0;
     battleSearch() = false;
     battleId() = -1;
     myip = relay().ip();
@@ -49,6 +50,8 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
     connect(&relay(), SIGNAL(showRankings(QString,int)), SLOT(getRankingsByPage(QString, int)));
     connect(&relay(), SIGNAL(showRankings(QString,QString)), SLOT(getRankingsByName(QString, QString)));
+    /* To avoid threading / simulateneous calls problems, it's queued */
+    connect(this, SIGNAL(unlocked()), &relay(), SLOT(undelay()),Qt::QueuedConnection);
 }
 
 Player::~Player()
@@ -76,6 +79,18 @@ void Player::cancelBattleSearch()
     if (!inSearchForBattle())
         return;
     emit battleSearchCancelled(id());
+}
+
+void Player::lock()
+{
+    lockCount += 1;
+    relay().delay();
+}
+
+void Player::unlock()
+{
+    if (lockCount >= 0)
+        emit unlocked();
 }
 
 void Player::changeTier(const QString &newtier)
@@ -276,7 +291,6 @@ void Player::battleResult(int result, int winner, int loser)
 
 void Player::getRankingsByPage(const QString &tier, int page)
 {
-    qDebug() << "tier: " << tier << ", page: " << page;
     if (!TierMachine::obj()->exists(tier))
         return;
     /* A page is 40 players */
@@ -582,75 +596,105 @@ BasicInfo Player::basicInfo() const
     return ret;
 }
 
-void Player::loggedIn(const TeamInfo &_team,bool ladder, bool showteam, QColor c)
+void Player::loggedIn(const TeamInfo &team,bool ladder, bool showteam, QColor c)
 {
     if (isLoggedIn())
-        return; //INVALID BEHAVIOR
+        return;
 
-    avatar() = _team.avatar;
-    this->ladder() = ladder;
-    this->showteam() = showteam;
-
-    if (c.lightness() <= 140 && c.green() <= 180)
-        color() = c;
-
-    AuthentificationState st = testAuthentification(_team);
-
-    if (st == Invalid) {
-        kick();
+    if (!testNameValidity(team.name)) {
         return;
     }
 
-    qDebug() << "Assigning team";
-    team() = _team;
-    winningMessage() = _team.win;
-    losingMessage() = _team.lose;
-    tier() = TierMachine::obj()->findTier(team());
-    rating() = TierMachine::obj()->rating(name(), tier());
+    this->ladder() = ladder;
+    this->showteam() = showteam;
 
-    if (st == Success) {
-        emit loggedIn(id(), _team.name);
-    }
+    assignNewColor(c);
+    assignTeam(team);
+
+    testAuthentification(team.name);
 }
 
-Player::AuthentificationState Player::testAuthentification(const TeamInfo &team)
+void Player::loginSuccess()
 {
-    if (!SecurityManager::isValid(team.name)) {
-        emit info(id(), "invalid name: \"" + team.name + "\"");
-        sendMessage("Invalid name. Change your name.");
-        return Invalid;
-    }
+    findTierAndRating();
+    emit loggedIn(id(), team().name);
+}
 
-    if (SecurityManager::exist(team.name)) {
-        SecurityManager::Member m = SecurityManager::member(team.name);
+void Player::testAuthentification(const QString &name)
+{
+    lock();
+
+    waiting_name = name;
+
+    SecurityManager::loadMemberInMemory(name, this, SLOT(testAuthentificationLoaded()));
+}
+
+void Player::testAuthentificationLoaded()
+{
+    unlock();
+    QString name = waiting_name;
+
+    if (SecurityManager::exist(name)) {
+        SecurityManager::Member m = SecurityManager::member(name);
         if (m.isBanned()) {
             sendMessage("You are banned!");
-            return Invalid;
+            kick();
+            return;
         }
 
         if (m.isProtected()) {
-            relay().notify(NetworkServ::AskForPass, m.salt);
-            waiting_name = team.name;
-            return Partial;
+            relay().notify(NetworkServ::AskForPass, QString(m.salt));
+            return;
         }
 
         myauth = m.authority();
 
-        m.modifyIP(relay().ip());
-        m.modifyDate(QDate::currentDate().toString(Qt::ISODate));
+        m.modifyIP(relay().ip().toAscii());
+        m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toAscii());
         SecurityManager::updateMember(m);
         /* To tell the player he's not registered */
         relay().notify(NetworkServ::Register);
-        return Success;
+        loginSuccess();
     } else {
         myauth = 0;
         rating() = 1000;
 
-        SecurityManager::create(SecurityManager::Member(team.name, QDate::currentDate().toString(Qt::ISODate), "000", "", "", relay().ip()));
+        SecurityManager::create(name, QDate::currentDate().toString(Qt::ISODate), relay().ip());
         /* To tell the player he's not registered */
         relay().notify(NetworkServ::Register);
-        return Success;
+        loginSuccess();
     }
+}
+
+void Player::findTierAndRating()
+{
+    tier() = TierMachine::obj()->findTier(team());
+    rating() = TierMachine::obj()->rating(name(), tier());
+}
+
+void Player::assignNewColor(const QColor &c)
+{
+    if (c.lightness() <= 140 && c.green() <= 180)
+        color() = c;
+}
+
+void Player::assignTeam(const TeamInfo &team)
+{
+    avatar() = team.avatar;
+    this->team() = team;
+    winningMessage() = team.win;
+    losingMessage() = team.lose;
+}
+
+bool Player::testNameValidity(const QString &name)
+{
+    if(!SecurityManager::isValid(name)) {
+        emit info(id(), "invalid name: \"" + name + "\"");
+        sendMessage("Invalid name. Change your name.");
+        kick();
+        return false;
+    }
+    return true;
 }
 
 void Player::registerRequest() {
@@ -666,7 +710,7 @@ void Player::registerRequest() {
         m.salt[i] = uchar((true_rand() % (122-49)) + 49);
     }
 
-    SecurityManager::updateMemory(m);
+    SecurityManager::updateMember(m);
     relay().notify(NetworkServ::AskForPass, m.salt);
 }
 
@@ -699,13 +743,13 @@ void Player::userInfoAsked(const QString &name)
 }
 
 void Player::hashReceived(const QString &_hash) {
-    QString hash = md5_hash(_hash);
+    QByteArray hash = md5_hash(_hash.toAscii());
     if (waiting_name.length() > 0) {
         if (hash == SecurityManager::member(waiting_name).hash) {
             SecurityManager::Member m = SecurityManager::member(waiting_name);
 
-            m.modifyIP(relay().ip());
-            m.modifyDate(QDate::currentDate().toString(Qt::ISODate));
+            m.modifyIP(relay().ip().toAscii());
+            m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toAscii());
             m.hash = hash;
             myauth = m.authority();
             SecurityManager::updateMember(m);
@@ -742,65 +786,65 @@ QString Player::ip() const
 
 void Player::recvTeam(const TeamInfo &team)
 {
-    /* If the guy is not logged in, obvious. If he is battling, he could make it so the points lost are on his other team */
-    if (!isLoggedIn())
-        return;
-
-    bool keepSameName = false;
-    QString oldName = name();
-
-    /* If a player is battling, and changs name, well that's a way to evaded rating points on his old nick,
-       so until this stupid flaw is fixed, no name change... */
-    if (team.name != oldName && battling()) {
-        keepSameName = true;
-    }
-
-    cancelChallenges();
-
-    avatar() = team.avatar;
-
-    if (team.name.toLower() == this->team().name.toLower() || keepSameName) {
-        /* No authentification required... */
-        this->team() = team;
-        if (keepSameName) {
-            this->team().name = oldName;
-        }
-        winningMessage() = team.win;
-        losingMessage() = team.lose;
-        tier() = TierMachine::obj()->findTier(this->team());
-        rating() = TierMachine::obj()->rating(name(), tier());
-
-        emit recvTeam(id(), this->name()); // no check needed, going directly there...
-        return;
-    }
-
-    AuthentificationState s = testAuthentification(team);
-
-    /* just keeping the old name while not logged in */
-    QString name = this->team().name;
-    this->team() = team;
-    tier() = TierMachine::obj()->findTier(this->team());
-    rating() = TierMachine::obj()->rating(this->name(), tier());
-    winningMessage() = team.win;
-    losingMessage() = team.lose;
-    this->team().name = name;
-
-    if (s == Success) {
-        emit loggedIn(id(), team.name); //checks needed
-        return;
-    }
-
-    if (s == Invalid) {
-        kick();
-        return;
-    }
-
-    // Partial authentification
-    /*
-      .
-      .
-      .
-      */
+//    /* If the guy is not logged in, obvious. If he is battling, he could make it so the points lost are on his other team */
+//    if (!isLoggedIn())
+//        return;
+//
+//    bool keepSameName = false;
+//    QString oldName = name();
+//
+//    /* If a player is battling, and changs name, well that's a way to evaded rating points on his old nick,
+//       so until this stupid flaw is fixed, no name change... */
+//    if (team.name != oldName && battling()) {
+//        keepSameName = true;
+//    }
+//
+//    cancelChallenges();
+//
+//    avatar() = team.avatar;
+//
+//    if (team.name.toLower() == this->team().name.toLower() || keepSameName) {
+//        /* No authentification required... */
+//        this->team() = team;
+//        if (keepSameName) {
+//            this->team().name = oldName;
+//        }
+//        winningMessage() = team.win;
+//        losingMessage() = team.lose;
+//        tier() = TierMachine::obj()->findTier(this->team());
+//        rating() = TierMachine::obj()->rating(name(), tier());
+//
+//        emit recvTeam(id(), this->name()); // no check needed, going directly there...
+//        return;
+//    }
+//
+//    AuthentificationState s = testAuthentification(team);
+//
+//    /* just keeping the old name while not logged in */
+//    QString name = this->team().name;
+//    this->team() = team;
+//    tier() = TierMachine::obj()->findTier(this->team());
+//    rating() = TierMachine::obj()->rating(this->name(), tier());
+//    winningMessage() = team.win;
+//    losingMessage() = team.lose;
+//    this->team().name = name;
+//
+//    if (s == Success) {
+//        emit loggedIn(id(), team.name); //checks needed
+//        return;
+//    }
+//
+//    if (s == Invalid) {
+//        kick();
+//        return;
+//    }
+//
+//    // Partial authentification
+//    /*
+//      .
+//      .
+//      .
+//      */
 }
 
 void Player::spectatingRequested(int id)

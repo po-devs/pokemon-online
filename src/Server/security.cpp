@@ -1,94 +1,113 @@
 #include "security.h"
+#include "sql.h"
+#include <QtSql>
 #include "../Utilities/otherwidgets.h"
-#include <cmath>
+#include <ctime>
+#include "server.h"
+#include "waitingobject.h"
 
-QMap<QString, SecurityManager::Member> SecurityManager::members;
+QHash<QString, SecurityManager::Member> SecurityManager::members;
 QNickValidator SecurityManager::val(NULL);
 QSet<QString> SecurityManager::bannedIPs;
 QSet<QString> SecurityManager::bannedMembers;
-QMultiMap<QString, QString> SecurityManager::playersByIp;
-const char * SecurityManager::path = "members.txt";
-QHash<QString, int> SecurityManager::memberPlaces;
-QFile SecurityManager::memberFile(SecurityManager::path);
-int SecurityManager::lastPlace;
+QSet<WaitingObject*> SecurityManager::freeObjects;
+QSet<WaitingObject*> SecurityManager::usedObjects;
+QLinkedList<QString> SecurityManager::cachedMembersOrder;
+QSet<QString> SecurityManager::nonExistentMembers;
+QMutex SecurityManager::memberMutex;
+QMutex SecurityManager::cachedMembersMutex;
+int SecurityManager::nextLoadThreadNumber = 0;
+LoadThread * SecurityManager::threads = NULL;
+InsertThread * SecurityManager::ithread = NULL;
 
 void SecurityManager::loadMembers()
 {
-    if (!QFile::exists(path) && QFile::exists("users.tmp"))
-        QFile::rename("users.tmp", "members.txt");
+    QSqlQuery query;
 
-    if (!memberFile.open(QFile::ReadWrite)) {
-        throw QObject::tr("Error: cannot open the file that contains the members (%1)").arg(path);
-    }
+    query.exec("select * from trainers limit 1");
 
-    int pos = memberFile.pos();
-    while (!memberFile.atEnd()) {
-        QByteArray arr = memberFile.readLine();
-        QString s = QString::fromUtf8(arr.constData(), std::max(0,arr.length()-1)); //-1 to remove the \n
+    if (!query.next()) {
+        if (SQLCreator::databaseType == SQLCreator::PostGreSQL) {
+            /* The only way to have an auto increment field with PostGreSQL is to my knowledge using the serial type */
+            query.exec("create table trainers (id serial, "
+                                                 "name varchar(20), laston char(10), auth int, banned boolean,"
+                                                 "salt varchar(7), hash varchar(32), ip varchar(39), primary key(id), unique(name))");
 
-        QStringList ls = s.split('%');
-
-        if (ls.size() == 6 && isValid(ls[0])) {
-            Member m (ls[0], ls[1], ls[2], ls[3], ls[4], ls[5]);
-            members[ls[0]] = m;
-            memberPlaces[m.name] = pos;
-            pos = memberFile.pos();
-
-            if (m.isBanned()) {
-                bannedIPs.insert(m.ip.trimmed());
-                bannedMembers.insert(m.name);
-            }
-            playersByIp.insert(m.ip.trimmed(), m.name);
+        } else if (SQLCreator::databaseType == SQLCreator::SQLite){
+            /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
+            query.exec("create table if not exists trainers (id integer primary key, name varchar(20) unique, "
+                            "laston char(10), auth int, banned boolean, salt varchar(7), hash varchar(32), "
+                            "ip varchar(39)));");
+        } else {
+            throw QString("Using a not supported database");
         }
-        lastPlace = memberFile.pos();
+
+        query.exec("create index tname_index on trainers (name)");
+        query.exec("create index tip_index on trainers (ip)");
+
+        Server::print("importing old db");
+        QFile memberFile("members.txt");
+
+        if (!memberFile.open(QFile::ReadWrite)) {
+            throw QObject::tr("Error: cannot open the file that contains the members ");
+        }
+
+        clock_t t = clock();
+
+        query.prepare("insert into trainers(name, laston, auth,  banned, salt, hash, ip) values (:name, :laston, :auth,"
+                      ":banned, :salt, :hash, :ip)");
+
+        while (!memberFile.atEnd()) {
+            QByteArray arr = memberFile.readLine();
+            QString s = QString::fromUtf8(arr.constData(), std::max(0,arr.length()-1)); //-1 to remove the \n
+
+            QStringList ls = s.split('%');
+
+            if (ls.size() == 6 && isValid(ls[0])) {
+                query.bindValue(":name", ls[0]);
+                query.bindValue(":laston",ls[1]);
+                query.bindValue(":auth", ls[2][0].toAscii()-'0');
+                query.bindValue(":banned", ls[2][1] == '1');
+                query.bindValue(":salt", ls[3].trimmed());
+                query.bindValue(":hash", ls[4].trimmed());
+                query.bindValue(":ip", ls[5].trimmed());
+                query.exec();
+            }
+        }
+
+
+        t = clock() - t;
+
+        Server::print(QString::number(float(t)/CLOCKS_PER_SEC) + " secs");
+        Server::print(query.lastError().text());
     }
 
-    //We also clean up the file by rewritting it with only the valid contents
-    QFile temp ("users.tmp");
-    if (!temp.open(QFile::WriteOnly | QFile::Truncate))
-        throw QObject::tr("Impossible to change users.tmp");
+    query.exec("select * from trainers limit 1");
 
-    pos = temp.pos();
-    foreach(Member m, members) {
-        m.write(&temp);
-        memberPlaces[m.name] = pos;
-        pos = temp.pos();
-    }
-
-    lastPlace = temp.pos();
-
-    temp.flush();
-    memberFile.remove();
-    temp.rename(path);
-
-    if (!memberFile.open(QFile::ReadWrite)) {
-        throw QObject::tr("Error: cannot reopen the file that contains the members (%1)").arg(path);
-    }
+    if (query.next())
+        for (int i = 0; i < 8; i++)
+            Server::print(query.value(i).toString());
 }
 
-SecurityManager::Member::Member(const QString &name, const QString &date, const QString &auth, const QString &salt, const QString &hash, const QString &ip)
-    :name(name.toLower()), date(date), auth(auth.leftJustified(3,'0',true)), salt(salt.leftJustified(saltLength)),
-    hash(hash.leftJustified(hashLength)), ip(ip.leftJustified(ipLength,' ',true))
+SecurityManager::Member::Member(const QString &name, const QByteArray &date, int auth, bool banned, const QByteArray &salt, const QByteArray &hash,
+                                const QByteArray &ip)
+    :name(name.toLower()), date(date), auth(auth), banned(banned), salt(salt), hash(hash), ip(ip)
 {
-}
-
-void SecurityManager::Member::write(QIODevice *device) const {
-    device->write(name.toUtf8().constData());
-    device->write("%");
-    device->write(date.toUtf8().constData());
-    device->write("%");
-    device->write(auth.toUtf8().constData());
-    device->write("%");
-    device->write(salt.toUtf8().constData());
-    device->write("%");
-    device->write(hash.toUtf8().constData());
-    device->write("%");
-    device->write(ip.toUtf8().constData());
-    device->write("\n");
 }
 
 void SecurityManager::init()
 {
+
+    threads = new LoadThread[loadThreadCount];
+
+    for (int i = 0; i < loadThreadCount; i++) {
+        threads[i].start();
+    }
+
+    ithread = new InsertThread();
+    ithread->start();
+
+
     loadMembers();
 }
 
@@ -98,16 +117,41 @@ bool SecurityManager::isValid(const QString &name) {
 
 bool SecurityManager::exist(const QString &name)
 {
-    return members.contains(name.toLower());
+    QString n2 = name.toLower();
+
+    {
+        QMutexLocker m(&memberMutex);
+
+        if (nonExistentMembers.contains(n2))
+            return false;
+
+        if (members.contains(n2)) {
+            return true;
+        }
+    }
+
+    loadMemberInMemory(n2);
+
+    return exist(n2);
 }
 
-QMap<QString,SecurityManager::Member> SecurityManager::getMembers() {
-    return members;
+SecurityManager::Member SecurityManager::member(const QString &name)
+{
+    QString n2 = name.toLower();
+    /* Exist will make a call to loadInMemory if needed */
+    if (exist(n2)) {
+        QMutexLocker lock(&memberMutex);
+        return members[n2];
+    } else {
+        qDebug() << "Critical! Unreachable code reached";
+        return member(name);
+    }
 }
+
 
 QList<QString> SecurityManager::membersForIp(const QString &ip)
 {
-    return playersByIp.values(ip);
+    return QList<QString>();
 }
 
 QSet<QString> SecurityManager::banList()
@@ -115,31 +159,63 @@ QSet<QString> SecurityManager::banList()
     return bannedMembers;
 }
 
-void SecurityManager::create(const Member &m) {
-    members[m.name] = m;
+void SecurityManager::create(const QString &name, const QString &date, const QString &ip) {
+    Member m(name.toLower(), date.toAscii(), 0, false, "", "", ip.toAscii());
+    addMemberInMemory(m);
+    updateMemberInDatabase(m, true);
+}
 
-    memberFile.seek(lastPlace);
-    m.write(&memberFile);
-    memberPlaces[m.name] = lastPlace;
-    playersByIp.insert(m.ip.trimmed(),m.name);
-    lastPlace = memberFile.pos();
+void SecurityManager::addNonExistant(const QString &name)
+{
+    memberMutex.lock();
 
-    memberFile.flush();
+    nonExistentMembers.insert(name.toLower());
+
+    memberMutex.unlock();
+}
+
+void SecurityManager::updateMemberInDatabase(const Member &m, bool add)
+{
+    ithread->pushMember(m, !add);
 }
 
 void SecurityManager::updateMember(const Member &m) {
-    updateMemory(m);
+    addMemberInMemory(m);
 
-    memberFile.seek(memberPlaces[m.name]);
-    members[m.name].write(&memberFile);
-    memberFile.flush();
+    updateMemberInDatabase(m, false);
 }
 
+void SecurityManager::addMemberInMemory(const Member &m)
+{
+    memberMutex.lock();
 
-void SecurityManager::updateMemory(const Member &m) {
-    playersByIp.remove(members[m.name].ip.trimmed(),m.name);
+    nonExistentMembers.remove(m.name);
+    if (!members.contains(m.name))
+        cachedMembersOrder.push_front(m.name);
+
     members[m.name] = m;
-    playersByIp.insert(m.ip.trimmed(), m.name);
+
+    memberMutex.unlock();
+}
+
+void SecurityManager::cleanCache()
+{
+    cachedMembersMutex.lock();
+
+    while(cachedMembersOrder.size() > 10000) {
+        removeMemberInMemory(cachedMembersOrder.takeLast());
+    }
+
+    cachedMembersMutex.unlock();
+}
+
+void SecurityManager::removeMemberInMemory(const QString &name)
+{
+    memberMutex.lock();
+
+    members.remove(name);
+
+    memberMutex.unlock();
 }
 
 bool SecurityManager::bannedIP(const QString &ip) {
@@ -194,13 +270,13 @@ void SecurityManager::clearPass(const QString &name) {
 
 int SecurityManager::maxAuth(const QString &ip) {
     int max = 0;
-
+/*
     QStringList l = playersByIp.values(ip);
 
     foreach(QString name, l) {
         max = std::max(max, member(name).authority());
     }
-
+*/
     return max;
 }
 
@@ -211,4 +287,174 @@ QString SecurityManager::ip(const QString &name)
         return members[name2].ip.trimmed();
     else
         return "";
+}
+
+void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
+{
+    QString n2 = name.toLower();
+
+    if (o == NULL) {
+        if (isInMemory(n2))
+            return;
+
+        QSqlQuery q;
+        LoadThread::processQuery(&q, name, GetInfoOnUser);
+
+        return;
+    }
+
+    cleanCache();
+
+    WaitingObject *w = getObject();
+
+    connect(w, SIGNAL(waitFinished()), o, slot);
+
+    if (isInMemory(n2))
+        w->emitSignal();
+    else {
+        usedObjects.insert(w);
+
+        LoadThread *t = getThread();
+
+        t->pushQuery(n2, w, GetInfoOnUser);
+    }
+}
+
+bool SecurityManager::isInMemory(const QString &name)
+{
+    QString n2 = name.toLower();
+
+    QMutexLocker lock(&memberMutex);
+    return members.contains(n2) || nonExistentMembers.contains(n2);
+}
+
+WaitingObject * SecurityManager::getObject()
+{
+    if (!freeObjects.isEmpty()) {
+        WaitingObject *w = *freeObjects.begin();
+        freeObjects.remove(w);
+        return w;
+    } else {
+        return new WaitingObject();
+    }
+}
+
+void SecurityManager::freeObject()
+{
+    usedObjects.remove((WaitingObject*)sender());
+    freeObjects.insert((WaitingObject*)sender());
+}
+
+LoadThread * SecurityManager::getThread()
+{
+    int n = nextLoadThreadNumber;
+    nextLoadThreadNumber = (nextLoadThreadNumber + 1) % loadThreadCount;
+    return threads + n;
+}
+
+SecurityManager * SecurityManager::instance = new SecurityManager();
+
+
+void LoadThread::run()
+{
+    QString dbname = QString::number(int(QThread::currentThreadId()));
+
+    SQLCreator::createSQLConnection(dbname);
+    QSqlDatabase db = QSqlDatabase::database(dbname);
+    QSqlQuery sql(db);
+    sql.setForwardOnly(true);
+
+    sem.acquire(1);
+
+    forever {
+        queryMutex.lock();
+        Query q = queries.takeFirst();
+        queryMutex.unlock();
+
+        processQuery(&sql, q.member, q.query_type);
+        q.w->emitSignal();
+
+        sem.acquire(1);
+    }
+}
+
+
+void LoadThread::pushQuery(const QString &name, WaitingObject *w, SecurityManager::QueryType query_type)
+{
+    queryMutex.lock();
+
+    queries.push_back(Query(name, w, query_type));
+
+    queryMutex.unlock();
+
+    sem.release(1);
+}
+
+void LoadThread::processQuery(QSqlQuery *q, const QString &name, SecurityManager::QueryType query_type)
+{
+    if (query_type == SecurityManager::GetInfoOnUser) {
+        q->prepare("select laston, auth, banned, salt, hash, ip from trainers where name=? limit 1");
+        q->addBindValue(name);
+        q->exec();
+        if (!q->next()) {
+            SecurityManager::addNonExistant(name);
+        } else {
+            SecurityManager::Member m(name, q->value(0).toByteArray(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
+                                      q->value(4).toByteArray(), q->value(5).toByteArray());
+            SecurityManager::addMemberInMemory(m);
+        }
+    }
+}
+
+void InsertThread::run()
+{
+    QString dbname = QString::number(int(QThread::currentThreadId()));
+
+    SQLCreator::createSQLConnection(dbname);
+    QSqlDatabase db = QSqlDatabase::database(dbname);
+    QSqlQuery sql(db);
+    sql.setForwardOnly(true);
+
+    sem.acquire(1);
+
+    forever {
+        memberMutex.lock();
+        QPair<SecurityManager::Member, bool> p = members.takeFirst();
+        memberMutex.unlock();
+
+        processMember(&sql, p.first, p.second);
+
+        sem.acquire(1);
+    }
+}
+
+
+void InsertThread::pushMember(const SecurityManager::Member &member, bool update)
+{
+    memberMutex.lock();
+
+    members.push_back(QPair<SecurityManager::Member, bool> (member, update) );
+
+    memberMutex.unlock();
+
+    sem.release(1);
+}
+
+void InsertThread::processMember(QSqlQuery *q, const SecurityManager::Member &m, bool update)
+{
+    if (!update)
+        q->prepare("insert into trainers(name, laston, auth, banned, salt, hash, ip) values(:name, :laston, :auth, :banned, :salt, :hash, :ip)");
+    else
+        q->prepare("update trainers set laston=:laston, auth=:auth, banned=:banned, salt=:salt, hash=:hash, ip=:ip) "
+                   "where name=:name limit 1");
+
+    q->bindValue("name", m.name);
+    q->bindValue("laston", m.date);
+    q->bindValue("auth", m.auth);
+    q->bindValue("banned", m.banned);
+    q->bindValue("hash", m.hash);
+    q->bindValue("salt", m.salt);
+    q->bindValue("ip", m.ip);
+
+    q->exec();
 }

@@ -530,7 +530,7 @@ void Client::askForPass(const QString &salt) {
                                          QLineEdit::Password,"", &ok);
 
     if (ok) {
-        QString hash = QString(md5_hash(md5_hash(pass)+salt));
+        QString hash = QString(md5_hash(md5_hash(pass.toAscii())+salt.toAscii()));
         relay().notify(NetworkCli::AskForPass, hash);
     }
 }

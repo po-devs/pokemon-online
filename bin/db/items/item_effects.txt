@@ -212,3 +212,16 @@
 
 1-3_-10#Iron Ball
 27-487/505_15_7#Lustrous Orb
+31#Air Mail
+31#Bloom Mail
+31#Brick Mail
+31#Bubble Mail
+31#Flame Mail
+31#Grass Mail
+31#Harbor Mail
+31#Heart Mail
+31#Mosaic Mail
+31#Snow Mail
+31#Space Mail
+31#Steel Mail
+31#Tunnel Mail

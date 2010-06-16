@@ -70,7 +70,6 @@ HEADERS += mainwindow.h \
     ../Utilities/mtrand.h \
     battlingoptions.h \
     sql.h \
-    functionThread.h \
     waitingobject.h
 DEFINES = MULTI_THREADED_ACCESS \
     SERVER_SIDE

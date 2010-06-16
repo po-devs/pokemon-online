@@ -13,11 +13,10 @@ class BattleSituation;
   This is due to Analyzer that requests a deleteLater too
 ***/
 
-
-
 class Player : public QObject
 {
     Q_OBJECT
+
     PROPERTY(int, rating);
     PROPERTY(bool, ladder);
     PROPERTY(bool, showteam);
@@ -92,6 +91,11 @@ public:
     const Analyzer& relay() const;
 
     PlayerInfo bundle() const;
+
+    /* A locked player will stop processing its events */
+    void lock();
+    void unlock();
+    bool isLocked() const;
 signals:
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, const QString &mess);
@@ -113,6 +117,7 @@ signals:
     void spectatingStopped(int, int battleId);
     void findBattle(int,const FindBattleData&);
     void battleSearchCancelled(int);
+    void unlocked();
 public slots:
     void loggedIn(const TeamInfo &team,bool,bool, QColor);
     void recvMessage(const QString &mess);
@@ -143,9 +148,12 @@ public slots:
     void getRankingsByPage(const QString &tier, int page);
     void getRankingsByName(const QString &tier, const QString &name);
     void tUnban(QString name);
+    void testAuthentificationLoaded();
 private:
     TeamBattle myteam;
     Analyzer myrelay;
+    int lockCount;
+
     int myid;
     int myauth;
     QString myip;
@@ -158,14 +166,13 @@ private:
 
     QSet<Challenge*> challenged;
 
-    enum AuthentificationState
-    {
-        Invalid,
-        Partial,
-        Success
-    };
+    void assignTeam(const TeamInfo &team);
+    void assignNewColor(const QColor &c);
+    bool testNameValidity(const QString &name);
+    void findTierAndRating();
+    void loginSuccess();
 
-    AuthentificationState testAuthentification(const TeamInfo &team);
+    void testAuthentification(const QString &name);
 };
 
 class TempBan : public QObject

@@ -106,6 +106,8 @@ QString Network::errorString() const
 
 void Network::send(const QByteArray &message)
 {
+    if (!isConnected())
+        return;
     socket()->putChar(message.length()/256);
     socket()->putChar(message.length()%256);
     socket()->write(message);
