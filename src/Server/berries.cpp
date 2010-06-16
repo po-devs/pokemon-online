@@ -251,7 +251,7 @@ struct BMStarf : public BMPinch
 
         int stat = (b.true_rand()%5) +1;
         b.gainStatMod(s, stat, 2,false);
-        b.sendBerryMessage(7,s,0,s,berry, stat);
+        b.sendBerryMessage(9,s,0,s,berry, stat);
     }
 };
 

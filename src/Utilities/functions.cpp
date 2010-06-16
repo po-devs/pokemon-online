@@ -12,9 +12,7 @@ QString escapeHtml(const QString & toConvert)
     return ret;
 }
 
-QString md5_hash(const QString &tohash) {
-    QByteArray result = tohash.toUtf8();
-
+QByteArray md5_hash(const QByteArray &result) {
     md5_state_t state;
     md5_init(&state);
     md5_append(&state, (const md5_byte_t*)result.constData(), result.length());

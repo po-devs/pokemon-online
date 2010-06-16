@@ -9,7 +9,7 @@ PlayersWindow::PlayersWindow(QWidget *parent)
 
     QGridLayout *mylayout = new QGridLayout(this);
 
-    QMap<QString, SecurityManager::Member> members = SecurityManager::getMembers();
+    QMap<QString, SecurityManager::Member> members;
 
     mytable = new QCompactTable(members.size(),6);
     mytable->setShowGrid(true);
@@ -28,33 +28,33 @@ PlayersWindow::PlayersWindow(QWidget *parent)
     int i = 0;
 
     foreach(SecurityManager::Member m, members) {
-        playersbynum.push_back(m.name);
-
-        QTableWidgetItem *witem = new QTableWidgetItem(m.name);
-        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-        mytable->setItem(i, 0, witem);
-
-        witem = new QTableWidgetItem(authgrade[m.authority()]);
-        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-        mytable->setItem(i, 1, witem);
-
-        witem = new QTableWidgetItem(m.isBanned() ? "Banned" : "Fine");
-        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-        mytable->setItem(i, 2, witem);
-
-        witem = new QTableWidgetItem(m.isProtected() ? "Yes" : "No");
-        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-        mytable->setItem(i, 3, witem);
-
-        witem = new QTableWidgetItem(m.ip.trimmed());
-        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-        mytable->setItem(i, 4, witem);
-
-        witem = new QTableWidgetItem(m.date);
-        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-        mytable->setItem(i, 5, witem);
-
-        i++;
+//        playersbynum.push_back(m.name);
+//
+//        QTableWidgetItem *witem = new QTableWidgetItem(m.name);
+//        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+//        mytable->setItem(i, 0, witem);
+//
+//        witem = new QTableWidgetItem(authgrade[m.authority()]);
+//        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+//        mytable->setItem(i, 1, witem);
+//
+//        witem = new QTableWidgetItem(m.isBanned() ? "Banned" : "Fine");
+//        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+//        mytable->setItem(i, 2, witem);
+//
+//        witem = new QTableWidgetItem(m.isProtected() ? "Yes" : "No");
+//        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+//        mytable->setItem(i, 3, witem);
+//
+//        witem = new QTableWidgetItem(m.ip.trimmed());
+//        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+//        mytable->setItem(i, 4, witem);
+//
+//        witem = new QTableWidgetItem(m.date);
+//        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+//        mytable->setItem(i, 5, witem);
+//
+//        i++;
     }
 
     QPushButton *_authority = new QPushButton(tr("&Authority"));

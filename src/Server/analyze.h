@@ -111,6 +111,8 @@ public:
     /* Closes the connection */
     void close();
 
+    void delay();
+
     /* Convenience functions to avoid writing a new one every time */
     void notify(int command);
     template<class T>
@@ -173,19 +175,24 @@ public slots:
     void error();
     void commandReceived (const QByteArray &command);
     void keepAlive();
+    void undelay();
 private:
     Network &socket();
     const Network &socket() const;
 
+    void dealWithCommand(const QByteArray &command);
+
+    QLinkedList<QByteArray> delayedCommands;
+    int delayCount;
+
     Network mysocket;
     QTimer *mytimer;
+    QMutex mutex;
 };
 
 template<class T>
 void Analyzer::notify(int command, const T& param)
 {
-    if (!isConnected())
-        return;
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -198,8 +205,6 @@ void Analyzer::notify(int command, const T& param)
 template<class T1, class T2>
 void Analyzer::notify(int command, const T1& param1, const T2 &param2)
 {
-    if (!isConnected())
-        return;
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -212,8 +217,6 @@ void Analyzer::notify(int command, const T1& param1, const T2 &param2)
 template<class T1, class T2, class T3>
 void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 &param3)
 {
-    if (!isConnected())
-        return;
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -226,8 +229,6 @@ void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 
 template<class T1, class T2, class T3, class T4>
 void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 &param3, const T4 &param4)
 {
-    if (!isConnected())
-        return;
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -240,8 +241,6 @@ void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 
 template<class T1, class T2, class T3, class T4,class T5>
 void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 &param3, const T4 &param4, const T5 &param5)
 {
-    if (!isConnected())
-        return;
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -254,8 +253,6 @@ void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 
 template<class T1, class T2, class T3, class T4,class T5, class T6>
 void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 &param3, const T4 &param4, const T5 &param5, const T6 &param6)
 {
-    if (!isConnected())
-        return;
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);

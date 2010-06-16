@@ -3,33 +3,42 @@
 
 #include <QtNetwork>
 #include <QtCore>
+#include <QtSql>
 #include "../Utilities/otherwidgets.h"
 
-class SecurityManager
+class WaitingObject;
+class LoadThread;
+class InsertThread;
+
+class SecurityManager : public QObject
 {
+    Q_OBJECT
 public:
-    /* The file where the members are */
-    static const char * path;
+
+    enum QueryType {
+        GetInfoOnUser
+    };
 
     static void init();
 
     /* A member as stored in the file */
     struct Member {
-        Member(const QString &name="", const QString &date="", const QString &auth="",
-               const QString &salt="", const QString &hash="", const QString &ip="");
+        Member(const QString &name="", const QByteArray &date="", int auth = 0, bool banned = false,
+               const QByteArray &salt="", const QByteArray &hash="", const QByteArray &ip="");
         QString name;
-        QString date;
-        QString auth;
-        QString salt;
-        QString hash;
-        QString ip;
+        QByteArray date;
+        int auth;
+        bool banned;
+        QByteArray salt;
+        QByteArray hash;
+        QByteArray ip;
 
 
-        void modifyIP(const QString ip) {
-            this->ip = ip.leftJustified(ipLength, ' ', true);
+        void modifyIP(const QByteArray &ip) {
+            this->ip = ip;
         }
 
-        void modifyDate(const QString &date) {
+        void modifyDate(const QByteArray &date) {
             this->date = date;
         }
 
@@ -38,70 +47,130 @@ public:
         }
 
         bool isBanned() const {
-            return auth[1] == '1';
+            return banned;
         }
 
         int authority() const {
-            return auth[0].toAscii() - '0';
+            return  auth;
         }
 
-        void setAuth(int _auth) {
-            auth[0] = '0' + _auth;
+        void setAuth(int auth) {
+            this->auth = auth;
         }
 
         void ban() {
-            auth[1] = '1';
+            banned = true;
         }
 
         void unban() {
-            auth[1] = '0';
+            banned = false;
         }
 
         void clearPass() {
-            hash = QString().leftJustified(hashLength);
+            hash = "";
         }
-        static const int saltLength = 7;
-        static const int hashLength = 32;
-        static const int ipLength = 39; //IPv6 is 39, so lets be ready for the future
 
-        void write(QIODevice *device) const;
+        static const int saltLength = 7;
     };
 
     static bool isValid(const QString &name);
     static bool exist(const QString &name);
-    static void create (const Member &m);
-    static Member member(const QString &name) {
-        return members[name.toLower()];
-    }
-    //Change the member in the file
+    static void create (const QString &name, const QString &date, const QString &ip);
+    static Member member(const QString &name);
+
     static void updateMember(const Member &m);
-    //Just change in memory
-    static void updateMemory(const Member &m);
 
     static bool bannedIP(const QString &ip);
+    static bool isInMemory(const QString &name);
     static void ban(const QString &name);
     static void unban(const QString &name);
     static void IPunban(const QString &ip);
     static void setauth(const QString &name, int auth);
     static void clearPass(const QString &name);
+    static void addNonExistant(const QString &name);
+    static void addMemberInMemory(const Member &m);
+    static void removeMemberInMemory(const QString &name);
+    static void updateMemberInDatabase(const Member &m, bool add);
+    static void cleanCache();
     static int maxAuth(const QString &ip);
+
+    static void loadMemberInMemory(const QString &name, QObject *o=NULL, const char *slot=NULL);
 
     static QString ip(const QString &name);
 
-    static QMap<QString, Member> getMembers();
     static QList<QString> membersForIp(const QString &ip);
     static QSet<QString> banList();
 
+private slots:
+    void freeObject();
+
 private:
     static void loadMembers();
-    static QMap<QString, Member> members;
-    static QHash<QString, int> memberPlaces;
+    static QHash<QString, Member> members;
+    static QSet<QString> nonExistentMembers;
+    static QMutex memberMutex;
+    static QLinkedList<QString> cachedMembersOrder;
+    static QMutex cachedMembersMutex;
     static QSet<QString> bannedIPs;
     static QSet<QString> bannedMembers;
-    static QMultiMap<QString, QString> playersByIp;
-    static int lastPlace;
-    static QFile memberFile;
+
+    static WaitingObject* getObject();
+    static void freeObject(WaitingObject *c);
+    static LoadThread * getThread();
+
+
+    static QSet<WaitingObject*> freeObjects;
+    static QSet<WaitingObject*> usedObjects;
+
+    static SecurityManager * instance;
+
+    static const int loadThreadCount=4;
+    static int nextLoadThreadNumber;
+    static LoadThread *threads;
+    static InsertThread *ithread;
+
     static QNickValidator val;
+};
+
+class LoadThread : public QThread
+{
+public:
+    void pushQuery(const QString &name, WaitingObject *w, SecurityManager::QueryType query_type);
+
+    void run();
+
+    static void processQuery (QSqlQuery *q, const QString &name, SecurityManager::QueryType query_type);
+private:
+    struct Query {
+        QString member;
+        WaitingObject *w;
+        SecurityManager::QueryType query_type;
+
+        Query(const QString &m, WaitingObject *w, SecurityManager::QueryType query_type)
+            : member(m), w(w), query_type(query_type)
+        {
+
+        }
+    };
+
+    QLinkedList<Query> queries;
+    QMutex queryMutex;
+    QSemaphore sem;
+};
+
+class InsertThread : public QThread
+{
+public:
+    /* update/insert ? */
+    void pushMember(const SecurityManager::Member &m, bool update=true);
+
+    void run();
+
+    static void processMember (QSqlQuery *q, const SecurityManager::Member &m, bool update=true);
+private:
+    QLinkedList<QPair<SecurityManager::Member, bool> > members;
+    QMutex memberMutex;
+    QSemaphore sem;
 };
 
 #endif // SECURITY_H

@@ -211,3 +211,16 @@ A Valuable Bone. Sell for money
 Revives into Lileep
 Revives into Cranidos
 Lowers speed of holder, also makes Flying-types and Levitate Ability using Pokémon vulnerable to Ground moves when equipped to them
+Air Mail
+Bloom Mail
+Brick Mail
+Bubble Mail
+Flame Mail
+Grass Mail
+Harbor Mail
+Heart Mail
+Mosaic Mail
+Snow Mail
+Space Mail
+Steel Mail
+Tunnel Mail

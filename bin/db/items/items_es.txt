@@ -210,3 +210,16 @@ Hueso raro
 Fósil raíz
 Fósil cráneo
 Bola Hierro
+Air Mail
+Bloom Mail
+Brick Mail
+Bubble Mail
+Flame Mail
+Grass Mail
+Harbor Mail
+Heart Mail
+Mosaic Mail
+Snow Mail
+Space Mail
+Steel Mail
+Tunnel Mail
