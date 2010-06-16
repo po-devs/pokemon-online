@@ -610,6 +610,7 @@ void BattleSituation::endTurnStatus(int player)
 void BattleSituation::testquit()
 {
     if (quit) {
+        finished() = true;
 	throw QuitException();
     }
 }
@@ -2931,6 +2932,7 @@ void BattleSituation::testWin()
 
     /* No one wants a battle that long xd */
     if (turn() == 1024) {
+        finished() = true;
         notify(All, BattleEnd, Player1, qint8(Tie));
         emit battleFinished(Tie, id(Player1), id(Player2),rated(), tier());
         throw QuitException();
@@ -2979,7 +2981,6 @@ void BattleSituation::testWin()
             notify(All, EndMessage, Player2, loseMessage[Player2]);
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
-        /* When the lock is release, we leave */
         throw QuitException();
     }
 }
