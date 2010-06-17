@@ -17,6 +17,10 @@ Challenge::Challenge(Player *source, Player *dest, const ChallengeInfo &c, Serve
         throw Exception();
     }
 
+    if (dest->isLocked()) {
+        throw Exception();
+    }
+
     s->beforeChallengeIssued(source->id(), dest->id(), this);
 
     if (cancelledFromServer)

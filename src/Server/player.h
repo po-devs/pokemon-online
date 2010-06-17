@@ -160,7 +160,8 @@ private:
 
     int m_opponent;
     int m_state;
-    QString waiting_name; //For authentification procedures
+    TeamInfo *waiting_team;
+    QString waiting_name;
 
     Challenge * challengedBy;
 
@@ -171,6 +172,8 @@ private:
     bool testNameValidity(const QString &name);
     void findTierAndRating();
     void loginSuccess();
+    void changeWaitingTeam(const TeamInfo &t);
+    void removeWaitingTeam();
 
     void testAuthentification(const QString &name);
 };

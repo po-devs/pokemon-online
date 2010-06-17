@@ -3719,11 +3719,11 @@ struct MMSpite : public MM
     }
 
     static void daf (int s, int t, BS &b) {
-        if (!poke(b,t).contains("LastMoveSuccessfullyUsedTurn")) {
+        if (!poke(b,t).contains("LastMoveUsedTurn")) {
             turn(b,s)["Failed"] = true;
             return;
         }
-        int tu = poke(b,t)["LastMoveSuccessfullyUsedTurn"].toInt();
+        int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
         if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
             turn(b,s)["Failed"] = true;
             return;

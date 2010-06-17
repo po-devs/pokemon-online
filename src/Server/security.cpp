@@ -442,19 +442,19 @@ void InsertThread::pushMember(const SecurityManager::Member &member, bool update
 
 void InsertThread::processMember(QSqlQuery *q, const SecurityManager::Member &m, bool update)
 {
-    if (!update)
-        q->prepare("insert into trainers(name, laston, auth, banned, salt, hash, ip) values(:name, :laston, :auth, :banned, :salt, :hash, :ip)");
+    q->finish();
+    if (update)
+        q->prepare("update trainers set laston=:laston, auth=:auth, banned=:banned, salt=:salt, hash=:hash, ip=:ip where name=:name");
     else
-        q->prepare("update trainers set laston=:laston, auth=:auth, banned=:banned, salt=:salt, hash=:hash, ip=:ip) "
-                   "where name=:name limit 1");
+        q->prepare("insert into trainers(name, laston, auth, banned, salt, hash, ip) values(:name, :laston, :auth, :banned, :salt, :hash, :ip)");
 
-    q->bindValue("name", m.name);
-    q->bindValue("laston", m.date);
-    q->bindValue("auth", m.auth);
-    q->bindValue("banned", m.banned);
-    q->bindValue("hash", m.hash);
-    q->bindValue("salt", m.salt);
-    q->bindValue("ip", m.ip);
+    q->bindValue(":name", m.name);
+    q->bindValue(":laston", m.date);
+    q->bindValue(":auth", m.auth);
+    q->bindValue(":banned", m.banned);
+    q->bindValue(":hash", m.hash);
+    q->bindValue(":salt", m.salt);
+    q->bindValue(":ip", m.ip);
 
     q->exec();
 }

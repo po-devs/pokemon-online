@@ -396,7 +396,8 @@ struct AMForeCast : public AM {
         poke(b,s)["Type1"] = tp;
         poke(b,s)["Type2"] = Pokemon::Curse;
 
-        b.changeAForme(s, tp == Type::Normal ? 0 : b.weather());
+        if (b.pokenum(s) == Pokemon::Castform)
+            b.changeAForme(s, tp == Type::Normal ? 0 : b.weather());
     }
 };
 
