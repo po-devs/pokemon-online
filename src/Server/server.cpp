@@ -1091,8 +1091,8 @@ void Server::spectatingRequested(int id, int idOfBattler)
         sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
         return;
     }
-    player(id)->spectateBattle(name(battle->id(0)), name(battle->id(1)), battle->publicId(), battle->doubles());
-    battle->addSpectator(id);
+
+    battle->addSpectator(player(id));
 }
 
 void Server::spectatingStopped(int id, int idOfBattle)

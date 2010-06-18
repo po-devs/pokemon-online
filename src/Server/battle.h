@@ -52,7 +52,7 @@ public:
     BattleConfiguration configuration() const;
 
     bool acceptSpectator(int id, bool authed=false) const;
-    void addSpectator(int id);
+    void addSpectator(Player *p);
 
     bool sleepClause() const {
         return clauses() & ChallengeInfo::SleepClause;
@@ -350,7 +350,7 @@ private:
     QList<int> hasChoice;
     /* just indicates if the player could originally move or not */
     QList<bool> couldMove;
-
+    QList<QPointer<Player> > pendingSpectators;
 
     TeamBattle team1, team2;
 
