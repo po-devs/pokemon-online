@@ -99,7 +99,7 @@ public:
     static QString ip(const QString &name);
 
     static QList<QString> membersForIp(const QString &ip);
-    static QSet<QString> banList();
+    static QHash<QString, QString> banList();
 
 private slots:
     void freeObject();
@@ -112,7 +112,7 @@ private:
     static QLinkedList<QString> cachedMembersOrder;
     static QMutex cachedMembersMutex;
     static QSet<QString> bannedIPs;
-    static QSet<QString> bannedMembers;
+    static QHash<QString, QString> bannedMembers;
 
     static WaitingObject* getObject();
     static void freeObject(WaitingObject *c);

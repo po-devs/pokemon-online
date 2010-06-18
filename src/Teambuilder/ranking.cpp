@@ -58,6 +58,15 @@ void RankingDialog::showRank(const QString &name, int points)
     players->setItem(r, 1, new QTableWidgetItem(name));
     players->setItem(r, 2, new QTableWidgetItem(QString("%1").arg(points)));
 
+    if (name == this->name->text()) {
+        QFont f = players->font();
+        f.setBold(true);
+
+        players->item(r, 0)->setFont(f);
+        players->item(r, 1)->setFont(f);
+        players->item(r, 2)->setFont(f);
+    }
+
     curRank++;
 }
 

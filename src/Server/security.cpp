@@ -9,7 +9,7 @@
 QHash<QString, SecurityManager::Member> SecurityManager::members;
 QNickValidator SecurityManager::val(NULL);
 QSet<QString> SecurityManager::bannedIPs;
-QSet<QString> SecurityManager::bannedMembers;
+QHash<QString, QString> SecurityManager::bannedMembers;
 QSet<WaitingObject*> SecurityManager::freeObjects;
 QSet<WaitingObject*> SecurityManager::usedObjects;
 QLinkedList<QString> SecurityManager::cachedMembersOrder;
@@ -23,6 +23,8 @@ InsertThread * SecurityManager::ithread = NULL;
 void SecurityManager::loadMembers()
 {
     QSqlQuery query;
+
+    query.setForwardOnly(true);
 
     query.exec("select * from trainers limit 1");
 
@@ -80,6 +82,14 @@ void SecurityManager::loadMembers()
 
         Server::print(QString::number(float(t)/CLOCKS_PER_SEC) + " secs");
         Server::print(query.lastError().text());
+    }
+
+    /* Loading the ban list */
+    query.exec("select name, ip from trainers where banned = true");
+
+    while (query.next()) {
+        bannedIPs.insert(query.value(1).toString());
+        bannedMembers.insert(query.value(0).toString(), query.value(1).toString());
     }
 
     query.exec("select * from trainers limit 1");
@@ -154,7 +164,7 @@ QList<QString> SecurityManager::membersForIp(const QString &ip)
     return QList<QString>();
 }
 
-QSet<QString> SecurityManager::banList()
+QHash<QString, QString> SecurityManager::banList()
 {
     return bannedMembers;
 }
@@ -226,8 +236,8 @@ void SecurityManager::ban(const QString &name) {
     QString name2 = name.toLower();
     if (exist(name2)) {
         members[name2].ban();
-        bannedMembers.insert(name2);
-        bannedIPs.insert(members[name2].ip.trimmed());
+        bannedMembers.insert(name2, members[name2].ip);
+        bannedIPs.insert(members[name2].ip);
         updateMember(members[name2]);
     }
 }
@@ -235,7 +245,7 @@ void SecurityManager::ban(const QString &name) {
 void SecurityManager::unban(const QString &name) {
     QString name2 = name.toLower();
     if (exist(name2)) {
-        IPunban(members[name2].ip.trimmed());
+        IPunban(members[name2].ip);
     }
 }
 

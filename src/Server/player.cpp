@@ -521,9 +521,13 @@ void Player::giveBanList()
     if (myauth == 0) {
         return; //INVALID BEHAVIOR
     }
-    QSet<QString> bannedMembers = SecurityManager::banList();
-    foreach(QString s, bannedMembers) {
-        relay().notify(NetworkServ::GetBanList, s, SecurityManager::ip(s));
+    QHash<QString, QString> bannedMembers = SecurityManager::banList();
+
+    QHashIterator<QString, QString> it(bannedMembers);
+
+    while (it.hasNext()) {
+        it.next();
+        relay().notify(NetworkServ::GetBanList, it.key(), it.value());
     }
 }
 
@@ -785,6 +789,10 @@ void Player::userInfoAsked(const QString &name)
 void Player::hashReceived(const QString &_hash) {
     QByteArray hash = md5_hash(_hash.toAscii());
     if (waiting_name.length() > 0) {
+        if (battling()) {
+            sendMessage("You can't change teams while battling.");
+            return;
+        }
         if (hash == SecurityManager::member(waiting_name).hash) {
             SecurityManager::Member m = SecurityManager::member(waiting_name);
 
