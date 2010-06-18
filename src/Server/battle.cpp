@@ -222,12 +222,16 @@ void BattleSituation::notifyClause(int clause, bool active)
     notify(All, Clause,active? intlog2(clause) : clause, active);
 }
 
-void BattleSituation::addSpectator(int id)
+void BattleSituation::addSpectator(Player *p)
 {
     /* Simple guard to avoid multithreading problems -- would need to be improved :s */
-    while (!blocked() && !finished()) {
-        ;
+    if (!blocked() && !finished()) {
+        pendingSpectators.append(QPointer<Player>(p));
+        return;
     }
+
+    p->spectateBattle(team1.name, team2.name, publicId(), doubles());
+    int id = p->id();
 
     /* To avoid threading problems / Next time think of something better, cuz now we have to wait till the battle finishes processings */
     /* Assumption: each id is a different player, so key is unique */
@@ -986,6 +990,18 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 
     if (finished()) {
         return;
+    }
+
+    if (pendingSpectators.size() > 0) {
+        QList<QPointer<Player> > copy = pendingSpectators;
+
+        pendingSpectators.clear();
+
+        foreach (QPointer<Player> p, copy) {
+            if (p) {
+                addSpectator(p);
+            }
+        }
     }
 
     if (b.numSlot < 0 || b.numSlot >= numberOfSlots()) {
