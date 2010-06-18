@@ -1762,7 +1762,7 @@ struct MMCounter : public MM
 
     static void daf (int s, int t, BS &b) {
         if (!turn(b,s).contains("CounterDamage"))
-            return;
+            turn(b,s)["Failed"] = true;
     }
 
     static void cad(int s, int t, BS &b) {
