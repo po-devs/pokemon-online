@@ -225,7 +225,7 @@ void BattleSituation::notifyClause(int clause, bool active)
 void BattleSituation::addSpectator(Player *p)
 {
     /* Simple guard to avoid multithreading problems -- would need to be improved :s */
-    if (!blocked() && !finished()) {
+    if (!blocked() || !finished()) {
         pendingSpectators.append(QPointer<Player>(p));
         return;
     }
