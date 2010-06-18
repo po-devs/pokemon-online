@@ -68,7 +68,7 @@
 21#copycat
 
 
-22-0_4#counter: 0 is physical, 4/2 is the ratio
+22-0#counter: 0 is physical
 23#covet
 
 
@@ -239,7 +239,7 @@
 
 
 37#memento
-22-0&1_3#metal burst
+119#metal burst
 
 
 
@@ -249,7 +249,7 @@
 74#Mind reader
 83#minimize
 84-16#16 is dark -- miracle eye
-22-1_4#mirror coat
+22-1#mirror coat
 85#mirror move
 
 86#mist

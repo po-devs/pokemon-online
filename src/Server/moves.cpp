@@ -1738,30 +1738,62 @@ struct MMCounter : public MM
 {
     MMCounter() {
 	functions["MoveSettings"] = &ms;
+        functions["UponOffensiveDamageReceived"] = &uodr;
 	functions["DetermineAttackFailure"] = &daf;
 	functions["CustomAttackingDamage"] = &cad;
     }
 
+    static void uodr(int s, int source, BS &b) {
+        if (turn(b, source)["Category"] != turn(b,s)["Counter_Arg"].toInt()) {
+            return;
+        }
+
+        if (turn(b, s)["DamageTakenByAttack"].toInt() <= 0) {
+            return;
+        }
+
+        turn(b,s)["CounterDamage"] = 2 * turn(b,s)["DamageTakenByAttack"].toInt();
+        turn(b,s)["Target"] = source;
+    }
+
     static void ms (int s, int, BS &b) {
 	turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
-        turn(b,s)["Target"] = turn(b,s).value("DamageTakenBy").toInt();
     }
 
     static void daf (int s, int t, BS &b) {
-	int dam = turn(b,s).value("DamageTakenByAttack").toInt();
-	if (dam == 0) {
-	    turn(b,s)["Failed"] = true;
-	    return;
-	}
-	QStringList args = turn(b,s)["Counter_Arg"].toString().split('_');
-	if (args[0].length() == 1 && turn(b,t)["Category"].toInt() != args[0].toInt()) {
-	    turn(b,s)["Failed"] = true;
-	}
-	turn(b,s)["CounterDamage"] = dam * args[1].toInt() / 2;
+        if (!turn(b,s).contains("CounterDamage"))
+            return;
     }
 
     static void cad(int s, int t, BS &b) {
 	b.inflictDamage(t, turn(b,s)["CounterDamage"].toInt(), s, true);
+    }
+};
+
+struct MMMetalBurst : public MM
+{
+    MMMetalBurst() {
+        functions["MoveSettings"] = &ms;
+        functions["DetermineAttackFailure"] = &daf;
+        functions["CustomAttackingDamage"] = &cad;
+    }
+
+    static void ms (int s, int, BS &b) {
+        turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
+        turn(b,s)["Target"] = turn(b,s).value("DamageTakenBy").toInt();
+    }
+
+    static void daf (int s, int t, BS &b) {
+        int dam = turn(b,s).value("DamageTakenByAttack").toInt();
+        if (dam == 0) {
+            turn(b,s)["Failed"] = true;
+            return;
+        }
+        turn(b,s)["CounterDamage"] = dam * 3 / 2;
+    }
+
+    static void cad(int s, int t, BS &b) {
+        b.inflictDamage(t, turn(b,s)["CounterDamage"].toInt(), s, true);
     }
 };
 
@@ -4689,7 +4721,7 @@ void MoveEffect::init()
     REGISTER_MOVE(116, SleepTalk);
     REGISTER_MOVE(117, SmellingSalt);
     REGISTER_MOVE(118, Snatch);
-    /* 199 is free */
+    REGISTER_MOVE(119, MetalBurst);
     REGISTER_MOVE(120, Acupressure);
     REGISTER_MOVE(121, Spikes);
     REGISTER_MOVE(122, SpitUp);
