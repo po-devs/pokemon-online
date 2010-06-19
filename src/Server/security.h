@@ -16,7 +16,7 @@ class SecurityManager : public QObject
 public:
 
     enum QueryType {
-        GetInfoOnUser
+        GetInfoOnUser,
     };
 
     static void init();
@@ -98,7 +98,7 @@ public:
 
     static QString ip(const QString &name);
 
-    static QList<QString> membersForIp(const QString &ip);
+    static QStringList membersForIp(const QString &ip);
     static QHash<QString, QString> banList();
 
 private slots:

@@ -70,8 +70,15 @@ void SecurityManager::loadMembers()
                 query.bindValue(":laston",ls[1]);
                 query.bindValue(":auth", ls[2][0].toAscii()-'0');
                 query.bindValue(":banned", ls[2][1] == '1');
-                query.bindValue(":salt", ls[3].trimmed());
-                query.bindValue(":hash", ls[4].trimmed());
+                /* Weirdly, i seem to have problems when updating something that has a salt containing \, probably postgresql driver,
+                   so i remove them. */
+                if (!ls[3].contains('\\')) {
+                    query.bindValue(":salt", ls[3].trimmed());
+                    query.bindValue(":hash", ls[4].trimmed());
+                } else {
+                    query.bindValue(":salt", "");
+                    query.bindValue(":hash", "");
+                }
                 query.bindValue(":ip", ls[5].trimmed());
                 query.exec();
             }
@@ -85,18 +92,19 @@ void SecurityManager::loadMembers()
     }
 
     /* Loading the ban list */
-    query.exec("select name, ip from trainers where banned = true");
+    query.exec("select name, ip from trainers where banned=true");
 
     while (query.next()) {
         bannedIPs.insert(query.value(1).toString());
         bannedMembers.insert(query.value(0).toString(), query.value(1).toString());
     }
 
-    query.exec("select * from trainers limit 1");
-
-    if (query.next())
-        for (int i = 0; i < 8; i++)
-            Server::print(query.value(i).toString());
+//    Uncomment if you want to test the database connection
+//    query.exec("select * from trainers limit 1");
+//
+//    if (query.next())
+//        for (int i = 0; i < 8; i++)
+//            Server::print(query.value(i).toString());
 }
 
 SecurityManager::Member::Member(const QString &name, const QByteArray &date, int auth, bool banned, const QByteArray &salt, const QByteArray &hash,
@@ -159,9 +167,22 @@ SecurityManager::Member SecurityManager::member(const QString &name)
 }
 
 
-QList<QString> SecurityManager::membersForIp(const QString &ip)
+QStringList SecurityManager::membersForIp(const QString &ip)
 {
-    return QList<QString>();
+    QSqlQuery q;
+    q.setForwardOnly(true);
+
+    q.prepare("select name from trainers where ip=?");
+    q.addBindValue(ip);
+    q.exec();
+
+    QStringList ret;
+
+    while (q.next()) {
+        ret.push_back(q.value(0).toString());
+    }
+
+    return ret;
 }
 
 QHash<QString, QString> SecurityManager::banList()
@@ -280,13 +301,18 @@ void SecurityManager::clearPass(const QString &name) {
 
 int SecurityManager::maxAuth(const QString &ip) {
     int max = 0;
-/*
-    QStringList l = playersByIp.values(ip);
 
-    foreach(QString name, l) {
-        max = std::max(max, member(name).authority());
+    QSqlQuery q;
+    q.setForwardOnly(true);
+
+    q.prepare("select auth from trainers where ip=? order by auth desc");
+    q.addBindValue(ip);
+    q.exec();
+
+    if (q.next()) {
+        max = q.value(0).toInt();
     }
-*/
+
     return max;
 }
 
@@ -308,6 +334,7 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
             return;
 
         QSqlQuery q;
+        q.setForwardOnly(true);
         LoadThread::processQuery(&q, name, GetInfoOnUser);
 
         return;

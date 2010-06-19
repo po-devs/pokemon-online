@@ -14,7 +14,7 @@ public:
     }
     void emitSignal() {
         emit waitFinished();
-        disconnect(SIGNAL(waitFinished()), receiver, slot);
+        disconnect();
     }
 signals:
     void waitFinished();

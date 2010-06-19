@@ -827,7 +827,7 @@ void Server::playerBan(int src, int dest)
     int maxauth = SecurityManager::maxAuth(player(dest)->relay().ip());
 
     if (player(src)->auth() <= maxauth) {
-        player(src)->sendMessage("That player has authority level " + QString::number(maxauth) + " under another nick.");
+        player(src)->sendMessage("That player has authority level superior or equal to yours under another nick.");
         return;
     }
 
