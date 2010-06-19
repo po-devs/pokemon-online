@@ -21,8 +21,9 @@ private slots:
     void owner();
     void clpass();
 private:
-    QList<QString> playersbynum;
     QTableWidget *mytable;
+
+    QString currentName();
 };
 
 #endif // PLAYERSWINDOW_H

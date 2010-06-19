@@ -9,9 +9,8 @@ PlayersWindow::PlayersWindow(QWidget *parent)
 
     QGridLayout *mylayout = new QGridLayout(this);
 
-    QMap<QString, SecurityManager::Member> members;
+    mytable = new QCompactTable(0,6);
 
-    mytable = new QCompactTable(members.size(),6);
     mytable->setShowGrid(true);
     mylayout->addWidget(mytable,0,0,1,6);
 
@@ -25,37 +24,44 @@ PlayersWindow::PlayersWindow(QWidget *parent)
     headers << "Player" << "Authority" << "Banned Status" << "Registered" << "IP" << "Last Appearance";
     mytable->setHorizontalHeaderLabels(headers);
 
+    QSqlQuery q;
+    q.setForwardOnly(true);
+
+    q.exec("select count(id) from trainers");
+
+    if (q.next()) {
+        mytable->setRowCount(q.value(0).toInt());
+    }
+
+    q.exec("select name, auth, banned, hash, ip, laston from trainers order by name asc");
+
     int i = 0;
 
-    foreach(SecurityManager::Member m, members) {
-//        playersbynum.push_back(m.name);
-//
-//        QTableWidgetItem *witem = new QTableWidgetItem(m.name);
-//        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-//        mytable->setItem(i, 0, witem);
-//
-//        witem = new QTableWidgetItem(authgrade[m.authority()]);
-//        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-//        mytable->setItem(i, 1, witem);
-//
-//        witem = new QTableWidgetItem(m.isBanned() ? "Banned" : "Fine");
-//        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-//        mytable->setItem(i, 2, witem);
-//
-//        witem = new QTableWidgetItem(m.isProtected() ? "Yes" : "No");
-//        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-//        mytable->setItem(i, 3, witem);
-//
-//        witem = new QTableWidgetItem(m.ip.trimmed());
-//        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-//        mytable->setItem(i, 4, witem);
-//
-//        witem = new QTableWidgetItem(m.date);
-//        witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
-//        mytable->setItem(i, 5, witem);
-//
-//        i++;
+    while(q.next()) {
+        QTableWidgetItem *witem = new QTableWidgetItem(q.value(0).toString());
+        mytable->setItem(i, 0, witem);
+
+        witem = new QTableWidgetItem(authgrade[q.value(1).toInt()]);
+        mytable->setItem(i, 1, witem);
+
+        witem = new QTableWidgetItem(q.value(2).toBool() ? "Banned" : "Fine");
+        mytable->setItem(i, 2, witem);
+
+        witem = new QTableWidgetItem(q.value(3).toString().length() > 0 ? "Yes" : "No");
+        mytable->setItem(i, 3, witem);
+
+        witem = new QTableWidgetItem(q.value(4).toString());
+        mytable->setItem(i, 4, witem);
+
+        witem = new QTableWidgetItem(q.value(5).toString());
+        mytable->setItem(i, 5, witem);
+
+        i++;
     }
+
+    mytable->sortByColumn(0, Qt::AscendingOrder);
+
+    mytable->setSortingEnabled(true);
 
     QPushButton *_authority = new QPushButton(tr("&Authority"));
     QMenu *m = new QMenu(_authority);
@@ -81,49 +87,58 @@ PlayersWindow::PlayersWindow(QWidget *parent)
     connect(_clpass,SIGNAL(clicked()),SLOT(clpass()));
 }
 
+QString PlayersWindow::currentName()
+{
+    return mytable->item(mytable->currentRow(), 0)->text();
+}
+
 void PlayersWindow::ban()
 {
-    SecurityManager::ban(playersbynum[mytable->currentRow()]);
+    SecurityManager::ban(currentName());
     mytable->item(mytable->currentRow(), 2)->setText("Banned");
-    emit banned(playersbynum[mytable->currentRow()]);
+    emit banned(currentName());
 }
 
 void PlayersWindow::unban()
 {
-    SecurityManager::unban(playersbynum[mytable->currentRow()]);
+    SecurityManager::unban(currentName());
     mytable->item(mytable->currentRow(), 2)->setText("Fine");
 }
 
 void PlayersWindow::user()
 {
-    SecurityManager::setauth(playersbynum[mytable->currentRow()], 0);
+    QString name = currentName();
+    SecurityManager::setauth(name, 0);
     mytable->item(mytable->currentRow(), 1)->setText("User");
-    emit authChanged(playersbynum[mytable->currentRow()],0);
+    emit authChanged(name,0);
 }
 
 void PlayersWindow::mod()
 {
-    SecurityManager::setauth(playersbynum[mytable->currentRow()], 1);
+    QString name = currentName();
+    SecurityManager::setauth(name, 1);
     mytable->item(mytable->currentRow(), 1)->setText("Mod");
-    emit authChanged(playersbynum[mytable->currentRow()],1);
+    emit authChanged(name,1);
 }
 
 void PlayersWindow::admin()
 {
-    SecurityManager::setauth(playersbynum[mytable->currentRow()], 2);
+    QString name = currentName();
+    SecurityManager::setauth(name, 2);
     mytable->item(mytable->currentRow(), 1)->setText("Admin");
-    emit authChanged(playersbynum[mytable->currentRow()],2);
+    emit authChanged(name,2);
 }
 
 void PlayersWindow::owner()
 {
-    SecurityManager::setauth(playersbynum[mytable->currentRow()], 3);
+    QString name = currentName();
+    SecurityManager::setauth(name, 3);
     mytable->item(mytable->currentRow(), 1)->setText("Owner");
-    emit authChanged(playersbynum[mytable->currentRow()],3);
+    emit authChanged(name,3);
 }
 
 void PlayersWindow::clpass()
 {
-    SecurityManager::clearPass(playersbynum[mytable->currentRow()]);
+    SecurityManager::clearPass(currentName());
     mytable->item(mytable->currentRow(), 3)->setText("No");
 }

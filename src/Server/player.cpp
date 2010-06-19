@@ -373,7 +373,7 @@ void Player::CPBan(const QString &name)
     }
     int maxAuth = SecurityManager::maxAuth(SecurityManager::ip(name));
     if (maxAuth >= auth()) {
-        sendMessage(name + " has authority " + maxAuth + " under another nick.");
+        sendMessage(name + " has authority equal or superior to yours under another nick.");
         return;
     }
     SecurityManager::ban(name);
@@ -751,7 +751,7 @@ void Player::registerRequest() {
         return; //INVALID BEHAVIOR
 
     for (int i = 0; i < SecurityManager::Member::saltLength; i++) {
-        m.salt[i] = uchar((true_rand() % (122-49)) + 49);
+        m.salt[i] = uchar((true_rand() % (90-49)) + 49);
     }
 
     SecurityManager::updateMember(m);
@@ -771,15 +771,15 @@ void Player::userInfoAsked(const QString &name)
 
     SecurityManager::Member m = SecurityManager::member(name);
 
-    UserInfo ret(name, m.isBanned() ? UserInfo::Banned : 0, m.authority(), m.ip.trimmed(), m.date.trimmed());
+    UserInfo ret(name, m.isBanned() ? UserInfo::Banned : 0, m.authority(), m.ip, m.date);
     relay().sendUserInfo(ret);
 
-    if (SecurityManager::maxAuth(m.ip.trimmed()) > auth()) {
+    if (SecurityManager::maxAuth(m.ip) > auth()) {
         relay().notify(NetworkServ::GetUserAlias, m.name);
         return;
     }
 
-    QList<QString> aliases = SecurityManager::membersForIp(m.ip.trimmed());
+    QList<QString> aliases = SecurityManager::membersForIp(m.ip);
 
     foreach(QString alias, aliases) {
         relay().notify(NetworkServ::GetUserAlias, alias);

@@ -51,8 +51,7 @@ private slots:
         emit getUserInfo(aliasName->text());
     }
     void on_aliasList_itemActivated(QListWidgetItem *it) {
-        getUser();
-        emit getUserInfo(it->text());
+        aliasName->setText(it->text());
     }
     void on_refresh_clicked() {
         banTable->setRowCount(0);
