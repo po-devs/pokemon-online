@@ -233,7 +233,7 @@ private:
     PlayerInfo & playerInfo(int id);
     QIdTreeWidgetItem *item(int id);
     void updateState(int player);
-    void placeItem(QIdTreeWidgetItem*it, QTreeWidgetItem *parent);
+    void placeItem(QIdTreeWidgetItem*it, QTreeWidgetItem *parent, bool autosort = true);
 
     void initRelay();
     void changeTierChecked(const QString &newtier);

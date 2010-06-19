@@ -710,10 +710,15 @@ void Client::sortAllPlayersByTier()
         QString tier = player(iter.key()).tier;
 
         if (mytiersitems.contains(tier)) {
-            placeItem(iter.value(), mytiersitems.value(tier));
+            placeItem(iter.value(), mytiersitems.value(tier), false);
         } else {
-            placeItem(iter.value(),myplayers->headerItem());
+            placeItem(iter.value(),myplayers->headerItem(), false);
         }
+    }
+
+    myplayers->headerItem()->sortChildren(0, Qt::AscendingOrder);
+    foreach(QIdTreeWidgetItem *it, mytiersitems) {
+        it->sortChildren(0, Qt::AscendingOrder);
     }
 }
 
@@ -1166,9 +1171,7 @@ void Client::playerReceived(const PlayerInfo &p)
             myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(myplayersitems.value(p.id)));
         }
 
-
-
-        item = myplayersitems[p.id];
+        delete myplayersitems[p.id];
 
         myplayersitems.remove(p.id);
         mynames.remove(name);
@@ -1208,7 +1211,7 @@ void Client::playerReceived(const PlayerInfo &p)
     }
 }
 
-void Client::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
+void Client::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent, bool autosort)
 {
     if(item->id() >= 0) {
         if(parent == myplayers->headerItem()) {
@@ -1216,7 +1219,8 @@ void Client::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
             myplayers->sortItems(0,Qt::AscendingOrder);
         }
         parent->addChild(item);
-        parent->sortChildren(0,Qt::AscendingOrder);
+        if (autosort)
+            parent->sortChildren(0,Qt::AscendingOrder);
     }
 }
 
