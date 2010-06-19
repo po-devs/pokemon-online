@@ -674,16 +674,20 @@ void Client::sortPlayersCountingTiers(bool byTier)
 
 void Client::sortAllPlayersByTier()
 {
+    foreach(QIdTreeWidgetItem *it, myplayersitems)
+    {
+        if (it->parent())
+            it->parent()->takeChild(it->parent()->indexOfChild(it));
+        else
+            myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
+    }
+
     foreach(QIdTreeWidgetItem *it, mytiersitems)
     {
         delete myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
     }
 
     mytiersitems.clear();
-    foreach(QIdTreeWidgetItem *it, myplayersitems)
-    {
-        myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
-    }
 
     foreach(QString tier, tierList) {
         QIdTreeWidgetItem *it = new QIdTreeWidgetItem(0, tier, 0);
@@ -717,7 +721,10 @@ void Client::sortAllPlayersNormally()
 {
     foreach(QIdTreeWidgetItem *it, myplayersitems)
     {
-        it->parent()->takeChild(it->parent()->indexOfChild(it));
+        if (parent())
+            it->parent()->takeChild(it->parent()->indexOfChild(it));
+        else
+            myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
     }
 
     foreach(QIdTreeWidgetItem *it, mytiersitems)
@@ -1208,13 +1215,7 @@ void Client::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
             myplayers->addTopLevelItem(item);
             myplayers->sortItems(0,Qt::AscendingOrder);
         }
-        QIdTreeWidgetItem *newI;
-        if(item->parent()) {
-            newI = dynamic_cast<QIdTreeWidgetItem*>(item->parent()->takeChild(item->parent()->indexOfChild(item)));
-            delete item;
-        } else
-            newI = item;
-        parent->addChild(newI);
+        parent->addChild(item);
         parent->sortChildren(0,Qt::AscendingOrder);
     }
 }
