@@ -18,7 +18,7 @@ class SQLCreator {
 public:
     static void createSQLConnection(const QString &name = QString())
     {
-        mutex.lock();
+        QMutexLocker m(&mutex);
         QSettings s;
         databaseType = s.value("sql_driver").toInt();
 
@@ -39,16 +39,15 @@ public:
             db.setPassword(s.value("sql_db_pass").toString());
         }
 
+        /* Cleans the database on restart */
+        if (name == "")
+            db.exec("vacuum");
+
         if (!db.open() && name=="") {
             throw (QString("Unable to establish a database connection.") + db.lastError().text());
         } else if (name == "") {
             throw (QString("Connection to the database established!"));
         }
-
-        /* Cleans the database on restart */
-        if (name == "")
-            db.exec("vacuum");
-        mutex.unlock();
     }
 
     enum DataBaseType  {
