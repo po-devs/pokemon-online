@@ -37,15 +37,18 @@ void SecurityManager::loadMembers()
 
         } else if (SQLCreator::databaseType == SQLCreator::SQLite){
             /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
-            query.exec("create table if not exists trainers (id integer primary key, name varchar(20) unique, "
+            query.exec("create table trainers (id integer primary key, name varchar(20) unique, "
                             "laston char(10), auth int, banned boolean, salt varchar(7), hash varchar(32), "
-                            "ip varchar(39)));");
+                            "ip varchar(39));");
         } else {
             throw QString("Using a not supported database");
         }
 
+        Server::print(query.lastError().text());
+        
         query.exec("create index tname_index on trainers (name)");
         query.exec("create index tip_index on trainers (ip)");
+        Server::print(query.lastError().text());
 
         Server::print("importing old db");
         QFile memberFile("members.txt");
@@ -99,7 +102,7 @@ void SecurityManager::loadMembers()
         bannedMembers.insert(query.value(0).toString(), query.value(1).toString());
     }
 
-//    Uncomment if you want to test the database connection
+//    //Uncomment if you want to test the database connection
 //    query.exec("select * from trainers limit 1");
 //
 //    if (query.next())
