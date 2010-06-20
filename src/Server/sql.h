@@ -18,19 +18,26 @@ class SQLCreator {
 public:
     static void createSQLConnection(const QString &name = QString())
     {
-        databaseType = PostGreSQL;
+        mutex.lock();
+        QSettings s;
+        databaseType = s.value("sql_driver").toInt();
+
+        QString driver = databaseType == SQLite ? "QSQLITE":"QPSQL";
 
         QSqlDatabase db;
         if (name == "")
-            db = QSqlDatabase::addDatabase("QPSQL");
+            db = QSqlDatabase::addDatabase(driver);
         else
-            db = QSqlDatabase::addDatabase("QPSQL", name);
+            db = QSqlDatabase::addDatabase(driver, name);
 
-        db.setHostName("localhost");
-        db.setPort(5432);
-        db.setDatabaseName("pokemon");
-        db.setUserName("postgres");
-        db.setPassword("admin");
+        db.setDatabaseName(s.value("sql_db_name").toString());
+
+        if (databaseType == PostGreSQL) {
+            db.setHostName(s.value("sql_db_host").toString());
+            db.setPort(s.value("sql_db_port").toInt());
+            db.setUserName(s.value("sql_db_user").toString());
+            db.setPassword(s.value("sql_db_pass").toString());
+        }
 
         if (!db.open() && name=="") {
             throw (QString("Unable to establish a database connection.") + db.lastError().text());
@@ -38,14 +45,10 @@ public:
             throw (QString("Connection to the database established!"));
         }
 
-        QSqlQuery query;
-        query.exec("create table trainers (id serial, "
-                                             "name varchar(20), laston char(10), auth int, banned boolean,"
-                                             "salt varchar(7), hash varchar(32), ip varchar(39), primary key(id), unique(name))");
-
         /* Cleans the database on restart */
         if (name == "")
             db.exec("vacuum");
+        mutex.unlock();
     }
 
     enum DataBaseType  {
@@ -54,6 +57,7 @@ public:
     };
 
     static int databaseType;
+    static QMutex mutex;
 };
 
 #endif // SQL_H

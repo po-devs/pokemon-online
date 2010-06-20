@@ -97,6 +97,7 @@ public slots:
     void openScriptWindow();
     void openTiersWindow();
     void openBattleConfigWindow();
+    void openSqlConfigWindow();
     void changeAuth(const QString &name, int auth);
     void banName(const QString &name);
     void playerKick(int src, int dest);

@@ -1,4 +1,3 @@
-#include "server.h"
 #include "player.h"
 #include "security.h"
 #include "challenge.h"

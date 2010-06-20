@@ -18,6 +18,7 @@
 #include "tier.h"
 #include "battlingoptions.h"
 #include "sql.h"
+#include "sqlconfig.h"
 
 Server *Server::serverIns = NULL;
 
@@ -54,6 +55,27 @@ Server::Server(quint16 port)
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    QSettings s;
+
+    if (!s.contains("sql_driver")) {
+        s.setValue("sql_driver", SQLCreator::SQLite);
+    }
+    if (!s.contains("sql_db_name")) {
+        s.setValue("sql_db_name", "pokemon");
+    }
+    if (!s.contains("sql_db_port")) {
+        s.setValue("sql_db_port", 5432);
+    }
+    if (!s.contains("sql_db_user")) {
+        s.setValue("sql_db_user", "postgres");
+    }
+    if (!s.contains("sql_db_pass")) {
+        s.setValue("sql_db_pass", "admin");
+    }
+    if (!s.contains("sql_db_host")) {
+        s.setValue("sql_db_host", "localhost");
+    }
 
     try {
         SQLCreator::createSQLConnection();
@@ -109,7 +131,6 @@ Server::Server(quint16 port)
 
     serverPort = port;
 
-    QSettings s;
     if (s.value("battles_with_same_ip_unrated").isNull()) {
         s.setValue("battles_with_same_ip_unrated", true);
     }
@@ -147,6 +168,7 @@ QMenuBar* Server::createMenuBar() {
     options->addAction("&Scripts", this, SLOT(openScriptWindow()));
     options->addAction("&Tiers", this, SLOT(openTiersWindow()));
     options->addAction("&Battle Config", this, SLOT(openBattleConfigWindow()));
+    options->addAction("&SQL Config", this, SLOT(openSqlConfigWindow()));
     return bar;
 }
 
@@ -368,6 +390,13 @@ void Server::openBattleConfigWindow()
     w->show();
 
     connect(w, SIGNAL(settingsChanged()), SLOT(loadRatedBattlesSettings()));
+}
+
+void Server::openSqlConfigWindow()
+{
+    SQLConfigWindow *w = new SQLConfigWindow();
+
+    w->show();
 }
 
 void Server::tiersChanged()

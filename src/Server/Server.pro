@@ -36,7 +36,8 @@ SOURCES += main.cpp \
     tier.cpp \
     ../Utilities/mtrand.cpp \
     battlingoptions.cpp \
-    sql.cpp
+    sql.cpp \
+    sqlconfig.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -70,7 +71,8 @@ HEADERS += mainwindow.h \
     ../Utilities/mtrand.h \
     battlingoptions.h \
     sql.h \
-    waitingobject.h
+    waitingobject.h \
+    sqlconfig.h
 DEFINES = MULTI_THREADED_ACCESS \
     SERVER_SIDE
 RESOURCES += 
