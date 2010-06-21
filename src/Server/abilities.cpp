@@ -826,7 +826,7 @@ struct AMSlowStart : public AM {
         functions["StatModifier"] = &sm;
     }
 
-    static void us(int s, int t, BS &b) {
+    static void us(int s, int, BS &b) {
         poke(b,s)["SlowStartTurns"] = b.turn() + 4;
         b.sendAbMessage(55,0,s);
     }

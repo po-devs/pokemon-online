@@ -1328,14 +1328,6 @@ void Client::openTeamBuilder()
     connect(this, SIGNAL(destroyed()), myteambuilder, SLOT(close()));
     connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
     connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));
-    connect(t, SIGNAL(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)), this, SLOT(showDock(Qt::DockWidgetArea,QDockWidget*,Qt::Orientation)));
-}
-
-void Client::showDock(Qt::DockWidgetArea areas, QDockWidget *dock, Qt::Orientation orientation)
-{
-    if (myteambuilder) {
-        myteambuilder->addDockWidget(areas, dock, orientation);
-    }
 }
 
 void Client::changeTeam()

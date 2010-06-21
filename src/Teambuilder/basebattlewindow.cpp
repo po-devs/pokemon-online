@@ -697,7 +697,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                 if (info().specialSprite[spot] == -1) {
                     info().lastSeenSpecialSprite[spot] = old;
                 } else if (info().specialSprite[spot] == 0) {
-                    info().specialSprite[spot] = old;
+                    info().specialSprite[spot] = info().lastSeenSpecialSprite[spot];
                 }
                 mydisplay->updatePoke(spot);
             } else if (type == DefiniteForm)

@@ -570,7 +570,7 @@ struct MMDetect : public MM
 	}
     }
 
-    static void uas(int s, int t, BS &b) {
+    static void uas(int s, int, BS &b) {
 	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Detect", &dgaf);
 	turn(b,s)["DetectUsed"] = true;
         b.sendMoveMessage(27, 0, s, Pokemon::Normal);
@@ -1111,8 +1111,8 @@ struct MMSpikes : public MM
     }
 
     static void usi(int p, int slot, BS &b) {
-        int spikeslevel = team(b,p).value("Spikes").toInt();
-        if (spikeslevel <= 0 || b.isFlying(slot) || b.hasWorkingAbility(slot, Ability::MagicGuard)) {
+        int spikeslevel = team(b,slot).value("Spikes").toInt();
+        if (spikeslevel <= 0 || b.koed(p) || b.isFlying(slot) || b.hasWorkingAbility(slot, Ability::MagicGuard)) {
 	    return;
 	}
 	int n = (spikeslevel+1);
@@ -1143,7 +1143,7 @@ struct MMStealthRock : public MM
     }
 
     static void usi(int source, int s, BS &b) {
-        if (team(b,source).value("StealthRock").toBool() == true && !b.hasWorkingAbility(s, Ability::MagicGuard))
+        if (!b.koed(s) && team(b,source).value("StealthRock").toBool() == true && !b.hasWorkingAbility(s, Ability::MagicGuard))
 	{
 	    b.sendMoveMessage(124,1,s,Pokemon::Rock);
 	    int n = TypeInfo::Eff(Pokemon::Rock, poke(b,s)["Type1"].toInt()) * TypeInfo::Eff(Pokemon::Rock, poke(b,s)["Type2"].toInt());
@@ -1174,7 +1174,7 @@ struct MMToxicSpikes : public MM
     }
 
     static void usi(int source, int s, BS &b) {
-        if (b.hasType(s, Pokemon::Poison) && !b.isFlying(s) && team(b,source).value("ToxicSpikes").toInt() > 0) {
+        if (!b.koed(s) && b.hasType(s, Pokemon::Poison) && !b.isFlying(s) && team(b,source).value("ToxicSpikes").toInt() > 0) {
             team(b,source).remove("ToxicSpikes");
             removeFunction(team(b,source), "UponSwitchIn", "ToxicSpikes");
             b.sendMoveMessage(136, 1, s, Pokemon::Poison);
@@ -1760,7 +1760,7 @@ struct MMCounter : public MM
 	turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
     }
 
-    static void daf (int s, int t, BS &b) {
+    static void daf (int s, int, BS &b) {
         if (!turn(b,s).contains("CounterDamage"))
             turn(b,s)["Failed"] = true;
     }
@@ -1783,7 +1783,7 @@ struct MMMetalBurst : public MM
         turn(b,s)["Target"] = turn(b,s).value("DamageTakenBy").toInt();
     }
 
-    static void daf (int s, int t, BS &b) {
+    static void daf (int s, int, BS &b) {
         int dam = turn(b,s).value("DamageTakenByAttack").toInt();
         if (dam == 0) {
             turn(b,s)["Failed"] = true;
@@ -4543,8 +4543,10 @@ struct MMFollowMe : public MM
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(48,0,s);
 
-        b.battlelong["FollowMeTurn"] = b.turn();
-        b.battlelong["FollowMePlayer"] = s;
+        int source = b.player(s);
+
+        team(b, source)["FollowMeTurn"] = b.turn();
+        team(b, source)["FollowMePlayer"] = s;
         /* Imagine one foe used assist + roar, then follow me wouldn't work anymore. That's
             why we need a switch count, or that */
         poke(b,s)["FollowMe"] = true;
@@ -4553,9 +4555,11 @@ struct MMFollowMe : public MM
     }
 
     static void gtc(int s, int, BS &b) {
-        if (b.battlelong["FollowMeTurn"] != b.turn())
+        int tar = b.opponent(b.player(s));
+
+        if (team(b, tar)["FollowMeTurn"] != b.turn())
             return;
-        int target = b.battlelong["FollowMePlayer"].toInt();
+        int target = team(b, tar)["FollowMePlayer"].toInt();
         if (b.koed(target) || !poke(b, target).contains("FollowMe") || b.player(s) == b.player(target))
             return;
 

@@ -22,8 +22,8 @@ struct BaseBattleInfo
     /* name [0] = mine, name[1] = other */
     PlayerInfo pInfo[2];
     QVector<bool> sub;
-    QVector<quint16> specialSprite;
-    QVector<quint16> lastSeenSpecialSprite;
+    QVector<qint16> specialSprite;
+    QVector<qint16> lastSeenSpecialSprite;
 
     quint16 time[2];
     bool ticking[2];

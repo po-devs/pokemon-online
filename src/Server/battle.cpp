@@ -1448,6 +1448,16 @@ bool BattleSituation::testStatus(int player)
             notify(All, StatusMessage, player, qint8(FreeAsleep));
         }
     }
+    if (poke(player).status() == Pokemon::Frozen)
+    {
+        if (true_rand() % 255 > 51)
+        {
+            notify(All, StatusMessage, player, qint8(PrevFrozen));
+            return false;
+        }
+        healStatus(player, Pokemon::Frozen);
+        notify(All, StatusMessage, player, qint8(FreeFrozen));
+    }
 
     if (turnlong[player]["Flinched"].toBool()) {
         notify(All, Flinch, player);
@@ -1474,34 +1484,12 @@ bool BattleSituation::testStatus(int player)
         }
     }
 
-    switch (poke(player).status()) {
-	case Pokemon::Paralysed:
-	{
-            //MagicGuard
-            if (!hasWorkingAbility(player, Ability::MagicGuard) && true_rand() % 4 == 0) {
-		notify(All, StatusMessage, player, qint8(PrevParalysed));
-		return false;
-	    }
-	    break;
-	}
-	case Pokemon::Frozen:
-	{
-            if (true_rand() % 255 > 51)
-	    {
-		notify(All, StatusMessage, player, qint8(PrevFrozen));
-		return false;
-	    }
-	    healStatus(player, Pokemon::Frozen);
-	    notify(All, StatusMessage, player, qint8(FreeFrozen));
-	    break;
-	}
-
-	case Pokemon::Fine:
-	case Pokemon::Burnt:
-	case Pokemon::DeeplyPoisoned:
-	case Pokemon::Poisoned:
-	default:
-	    break;
+    if (poke(player).status() == Pokemon::Paralysed) {
+        //MagicGuard
+        if (!hasWorkingAbility(player, Ability::MagicGuard) && true_rand() % 4 == 0) {
+            notify(All, StatusMessage, player, qint8(PrevParalysed));
+            return false;
+        }
     }
 
     return true;
@@ -2823,7 +2811,6 @@ void BattleSituation::requestSwitchIns()
 
     QSet<int> koedPlayers;
     QSet<int> koedPokes;
-    QSet<int> sentPokes;
 
     for (int i = 0; i < numberOfSlots(); i++) {
         if (!koedPlayers.contains(player(i)) && koed(i) && countBackUp(player(i)) > 0) {
@@ -2831,6 +2818,9 @@ void BattleSituation::requestSwitchIns()
             koedPokes.insert(i);
         }
     }
+
+    //In doules, the pokémons are sent by waves
+    QList<QSet<int> > waves;
 
     while (koedPokes.size() > 0) {
         notifyInfos();
@@ -2856,12 +2846,15 @@ void BattleSituation::requestSwitchIns()
         for (int i = 0; i < numberOfSlots(); i++)
             couldMove[i] = false;
 
+        QSet<int> wave;
         foreach(int p, koedPokes) {
             analyzeChoice(p);
 
-            if (!koed(p))
-                sentPokes.insert(p);
+            if (!koed(p)) {
+                wave.insert(p);
+            }
         }
+        waves.push_back(wave);
 
         koedPokes.clear();
         koedPlayers.clear();
@@ -2876,9 +2869,14 @@ void BattleSituation::requestSwitchIns()
         }
     }
 
-    foreach(int p, sortedBySpeed()) {
-        if (sentPokes.contains(p)) {
-            callEntryEffects(p);
+    std::vector<int> sorted = sortedBySpeed();
+
+    /* Each wave calls the abilities in order , then next wave and so on. */
+    foreach(QSet<int> wave, waves) {
+        foreach(int p, sorted) {
+            if (wave.contains(p)) {
+                callEntryEffects(p);
+            }
         }
     }
 }

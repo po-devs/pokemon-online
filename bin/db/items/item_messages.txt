@@ -5,7 +5,7 @@
 %s hung on thanks to its focus band!
 %s hung on using its focus sash!
 
-%s became fully charged due to its power herb!
+%s used its white herb to come back to his senses!
 
 
 
