@@ -41,7 +41,7 @@ It doesn't affect %s!
 
 
 
-%f's Sturdy made the attack fail!
+%f's Sturdy made the attack fail!|It's a one hit KO!
 
 %s flung its %i!
 %s is getting pumped!
@@ -142,7 +142,7 @@ Poison spikes were scattered all around the feet of %tf's team!|The poison spike
 %s caused an uproar!|%s is making an uproar!|%s calmed down!|%s woke up!|%s stays awake because of the uproar!
 %q's wish came true!
 %f now has insomnia!
-%s made %f feel drowsy!|%s yawns!
+%s made %f feel drowsy!|%s yawns!|%s's %a made it ineffective!
 
 
 
