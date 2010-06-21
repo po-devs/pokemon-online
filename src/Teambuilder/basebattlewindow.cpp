@@ -406,7 +406,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         printLine(tr("The attack of %1 missed!").arg(nick(spot)));
         break;
     case Avoid:
-        printLine(tr("%1 avoided the attack!").arg(nick(spot)));
+        printLine(tr("%1 avoided the attack!").arg(tu(nick(spot))));
         break;
     case StatChange:
         qint8 stat, boost;

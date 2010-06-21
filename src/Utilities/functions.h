@@ -95,4 +95,5 @@ QByteArray md5_hash(const QByteArray &toHash);
 
 void createIntMapper(QObject *src, const char *signal, QObject *dest, const char *slot, int id);
 
+QString slug(const QString &s);
 #endif // FUNCTIONS_H

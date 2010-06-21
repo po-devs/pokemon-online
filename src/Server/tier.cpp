@@ -1,8 +1,10 @@
 #include <cmath>
+#include <ctime>
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "tier.h"
 #include "security.h"
+#include "server.h"
 
 TierMachine* TierMachine::inst;
 
@@ -38,50 +40,72 @@ QPair<int, int> MemberRating::pointChangeEstimate(int opponent_rating)
     return QPair<int,int>((1. - myesp)*kfactor,(0. - myesp)*kfactor);
 }
 
+void Tier::changeName(const QString &name)
+{
+    this->m_name = name;
+    this->slug = ::slug(name);
+}
+
+QString Tier::name() const
+{
+    return m_name;
+}
+
 void Tier::loadFromFile()
 {
-    ratings.clear();
+    QSqlQuery query;
 
-    delete in;
-    in = new QFile("tier_" + name + ".txt");
-    in->open(QIODevice::ReadOnly);
+    query.setForwardOnly(true);
 
-    QStringList members = QString::fromUtf8(in->readAll()).split('\n');
-    foreach(QString member, members) {
-        QString m2 = member.toLower();
-        QStringList mmr = m2.split('%');
-        if (mmr.size() != 3)
-            continue;
-        if (!SecurityManager::exist(mmr[0]))
-            continue;
-        if (ratings.contains(mmr[0]))
-            continue;
-        MemberRating m;
-        m.name() = mmr[0];
-        m.matches() = mmr[1].toInt();
-        m.rating() = mmr[2].toInt();
-        m.node() = rankings.insert(m.rating(), m.name());
-        ratings.insert(m.name(), m);
+    query.exec(QString("select * from %1 limit 1").arg(slug));
+
+    if (!query.next()) {
+        if (SQLCreator::databaseType == SQLCreator::PostGreSQL) {
+            /* The only way to have an auto increment field with PostGreSQL is to my knowledge using the serial type */
+            query.exec(QString("create table %1 (id serial, name varchar(20), rating int, matches int, primary key(id))").arg(slug));
+        } else if (SQLCreator::databaseType == SQLCreator::SQLite){
+            /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
+            query.exec(QString("create table %1 (id integer primary key autoincrement, name varchar(20) unique, rating int, matches int, primary key(id))").arg(slug));
+        } else {
+            throw QString("Using a not supported database");
+        }
+
+        query.exec(QString("create index tiername_index on %1 (name)").arg(slug));
+        query.exec(QString("create index tierrating_index on %1 (rating)").arg(slug));
+
+        Server::print(QString("Importing old database for tier %1").arg(name()));
+
+        QFile in("tier_" + name() + ".txt");
+        in.open(QIODevice::ReadOnly);
+
+        QStringList members = QString::fromUtf8(in.readAll()).split('\n');
+
+        clock_t t = clock();
+
+        query.prepare(QString("insert into %1(name, rating, matches) values (:name, :rating, :matches)").arg(slug));
+
+        foreach(QString member, members) {
+            QString m2 = member.toLower();
+            QStringList mmr = m2.split('%');
+            if (mmr.size() != 3)
+                continue;
+
+            query.bindValue(":name", mmr[0]);
+            query.bindValue(":matches", mmr[1].toInt());
+            query.bindValue(":rating", mmr[2].toInt());
+
+            query.exec();
+        }
+
+        t = clock() - t;
+
+        Server::print(QString::number(float(t)/CLOCKS_PER_SEC) + " secs");
+        Server::print(query.lastError().text());
     }
-
-    in->close();
-    in->open(QIODevice::WriteOnly);
-
-    int pos = 0;
-    QHash<QString,MemberRating>::iterator it;
-    for (it = ratings.begin(); it != ratings.end(); ++it) {
-        it->filePos() = pos;
-        in->write(it->toString().toUtf8());
-        in->putChar('\n');
-        pos = in->pos();
-    }
-    lastFilePos = pos;
-    in->close();
-    in->open(QIODevice::ReadWrite);
 }
 
 QString Tier::toString() const {
-    QString ret = name + "=";
+    QString ret = name() + "=";
 
     if (parent.length() > 0) {
         ret += parent + "+";
@@ -98,14 +122,14 @@ QString Tier::toString() const {
 }
 
 void Tier::fromString(const QString &s) {
-    name.clear();
+    changeName("");
     parent.clear();
     bannedPokes.clear();
     bannedPokes2.clear();
 
     QStringList s2 = s.split('=');
     if (s2.size() > 1) {
-        name = s2[0];
+        changeName(s2[0]);
         QStringList rest = s2[1].split('+');
         QStringList pokes;
 
@@ -154,24 +178,12 @@ bool Tier::isValid(const TeamBattle &t)  const
 void Tier::changeRating(const QString &player, int newRating)
 {
     QString w2 = player.toLower();
-    if (!ratings.contains(w2)) {
+    if (!members.contains(w2)) {
         MemberRating m;
         m.name() = w2;
-        m.filePos() = lastFilePos;
-        m.node() = rankings.insert(m.rating(), m.name());
-        in->seek(lastFilePos);
-        in->write(m.toString().toUtf8());
-        in->putChar('\n');
-        lastFilePos = in->pos();
-        ratings[w2] = m;
+        members[w2] = m;
     }
-    ratings[w2].rating() = newRating;
-    ratings[w2].node() = rankings.changeKey(ratings[w2].node().node(), ratings[w2].rating());
-
-    in->seek(ratings[w2].filePos());
-    in->write(ratings[w2].toString().toUtf8());
-
-    in->flush();
+    members[w2].rating() = newRating;
 }
 
 void Tier::changeRating(const QString &w, const QString &l)
@@ -181,39 +193,20 @@ void Tier::changeRating(const QString &w, const QString &l)
 
     /* Not really necessary, as pointChangeEstimate should always be called
        at the beginning of the battle, but meh maybe it's not a battle */
-    if (!ratings.contains(w2)) {
+    if (!members.contains(w2)) {
         MemberRating m;
         m.name() = w2;
-        m.filePos() = lastFilePos;
-        m.node() = rankings.insert(m.rating(), m.name());
-        in->seek(lastFilePos);
-        in->write(m.toString().toUtf8());
-        in->putChar('\n');
-        lastFilePos = in->pos();
-        ratings[w2] = m;
+        members[w2] = m;
     }
-    if (!ratings.contains(l2)) {
+    if (!members.contains(l2)) {
         MemberRating m;
         m.name() = l2;
-        m.filePos() = lastFilePos;
-        m.node() = rankings.insert(m.rating(), m.name());
-        in->seek(lastFilePos);
-        in->write(m.toString().toUtf8());
-        in->putChar('\n');
-        lastFilePos = in->pos();
-        ratings[l2] = m;
+        members[l2] = m;
     }
 
-    int oldw2 = ratings[w2].rating();
-    ratings[w2].changeRating(ratings[l2].rating(), true);
-    ratings[l2].changeRating(oldw2, false);
-    ratings[w2].node() = rankings.changeKey(ratings[w2].node().node(), ratings[w2].rating());
-    ratings[l2].node() = rankings.changeKey(ratings[l2].node().node(), ratings[l2].rating());
-    in->seek(ratings[w2].filePos());
-    in->write(ratings[w2].toString().toUtf8());
-    in->seek(ratings[l2].filePos());
-    in->write(ratings[l2].toString().toUtf8());
-    in->flush();
+    int oldw2 = members[w2].rating();
+    members[w2].changeRating(members[l2].rating(), true);
+    members[l2].changeRating(oldw2, false);
 }
 
 QPair<int, int> Tier::pointChangeEstimate(const QString &player, const QString &foe)
@@ -221,30 +214,18 @@ QPair<int, int> Tier::pointChangeEstimate(const QString &player, const QString &
     QString w2 = player.toLower();
     QString l2 = foe.toLower();
 
-    if (!ratings.contains(w2)) {
+    if (!members.contains(w2)) {
         MemberRating m;
         m.name() = w2;
-        m.filePos() = lastFilePos;
-        m.node() = rankings.insert(m.rating(), m.name());
-        in->seek(lastFilePos);
-        in->write(m.toString().toUtf8());
-        in->putChar('\n');
-        lastFilePos = in->pos();
-        ratings[w2] = m;
+        members[w2] = m;
     }
-    if (!ratings.contains(l2)) {
+    if (!members.contains(l2)) {
         MemberRating m;
         m.name() = l2;
-        m.filePos() = lastFilePos;
-        m.node() = rankings.insert(m.rating(), m.name());
-        in->seek(lastFilePos);
-        in->write(m.toString().toUtf8());
-        in->putChar('\n');
-        lastFilePos = in->pos();
-        ratings[l2] = m;
+        members[l2] = m;
     }
 
-    return ratings[w2].pointChangeEstimate(ratings[l2].rating());
+    return members[w2].pointChangeEstimate(members[l2].rating());
 }
 
 void TierMachine::init()
@@ -278,10 +259,10 @@ void TierMachine::fromString(const QString &s)
     foreach(QString candidate, candidates) {
         m_tiers.push_back(Tier(this));
         m_tiers.back().fromString(candidate);
-        if (m_tierNames.contains(m_tiers.back().name)) {
+        if (m_tierNames.contains(m_tiers.back().name())) {
             m_tiers.pop_back();
         } else {
-            m_tierNames.push_back(m_tiers.back().name);
+            m_tierNames.push_back(m_tiers.back().name());
         }
     }
 
@@ -289,10 +270,10 @@ void TierMachine::fromString(const QString &s)
     for(int i = 0; i < m_tiers.length(); i++) {
         QSet<QString> family;
         Tier *t = & m_tiers[i];
-        family.insert(t->name);
+        family.insert(t->name());
         while (t->parent.length() > 0) {
             if (family.contains(t->parent)) {
-                tier(t->name).parent.clear();
+                tier(t->name()).parent.clear();
                 break;
             }
             family.insert(t->parent);
@@ -386,7 +367,7 @@ int TierMachine::ranking(const QString &name, const QString &tier)
 
 int TierMachine::count(const QString &tier)
 {
-    return this->tier(tier).rankings.count();
+    return this->tier(tier).members.count();
 }
 
 void TierMachine::changeRating(const QString &winner, const QString &loser, const QString &tier)
@@ -402,11 +383,6 @@ void TierMachine::changeRating(const QString &player, const QString &tier, int n
 QPair<int, int> TierMachine::pointChangeEstimate(const QString &player, const QString &foe, const QString &tier)
 {
     return this->tier(tier).pointChangeEstimate(player, foe);
-}
-
-const RankingTree<QString> *TierMachine::getRankingTree(const QString &tier)
-{
-    return &this->tier(tier).rankings;
 }
 
 QString TierMachine::findTier(const TeamBattle &t) const

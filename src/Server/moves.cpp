@@ -700,7 +700,7 @@ struct MMOHKO : public MM
     static void uas(int s, int t, BS &b) {
 	b.inflictDamage(t, b.poke(t).totalLifePoints(), s, true);
         if (b.koed(t)) {
-            b.sendMoveMessage(43,0,s,type(b,s));
+            b.sendMoveMessage(43,1,s,type(b,s));
         }
     }
 
@@ -3959,6 +3959,9 @@ struct MMYawn : public MM {
         if (b.poke(t).status() != Pokemon::Fine || team(b,opp).value("SafeGuardCount").toInt() > 0 || poke(b,t).value("YawnCount").toInt() > 0) {
             turn(b,s)["Failed"] = true;
             return;
+        }
+        if (b.hasWorkingAbility(t, Ability::Insomnia) || b.hasWorkingAbility(t, Ability::VitalSpirit)) {
+            b.fail(s, 144, 2, 0, t);
         }
         if (b.sleepClause() && b.currentForcedSleepPoke[b.player(t)] != -1) {
             b.notifyClause(ChallengeInfo::SleepClause, true);
