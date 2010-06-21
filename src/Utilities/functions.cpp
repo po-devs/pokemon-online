@@ -35,3 +35,16 @@ void createIntMapper(QObject *src, const char *signal, QObject *dest, const char
     src->connect(src, signal, mymapper, SLOT(map()));
     src->connect(mymapper, SIGNAL(mapped(int)), dest, slot);
 }
+
+QString slug(const QString &s)
+{
+    QString ret = "";
+
+    foreach(QChar c, s) {
+        if (c.isLetter() || c == '_') {
+            ret += c.toLower();
+        }
+    }
+
+    return ret;
+}

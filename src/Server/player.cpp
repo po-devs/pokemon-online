@@ -309,17 +309,17 @@ void Player::getRankingsByPage(const QString &tier, int page)
 
     relay().startRankings(page, startingRank, (TierMachine::obj()->count(tier)-1)/40 + 1);
 
-    const RankingTree<QString> *rt = TierMachine::obj()->getRankingTree(tier);
-
-    RankingTree<QString>::iterator it = rt->getByRanking(startingRank);
-
-    int i = 0;
-    while (i < 40 && it.p != NULL)
-    {
-        i++;
-        relay().sendRanking(it->data, it->key);
-        --it;
-    }
+//    const RankingTree<QString> *rt = TierMachine::obj()->getRankingTree(tier);
+//
+//    RankingTree<QString>::iterator it = rt->getByRanking(startingRank);
+//
+//    int i = 0;
+//    while (i < 40 && it.p != NULL)
+//    {
+//        i++;
+//        relay().sendRanking(it->data, it->key);
+//        --it;
+//    }
 }
 
 void Player::getRankingsByName(const QString &tier, const QString &name)

@@ -58,7 +58,7 @@ void RankingDialog::showRank(const QString &name, int points)
     players->setItem(r, 1, new QTableWidgetItem(name));
     players->setItem(r, 2, new QTableWidgetItem(QString("%1").arg(points)));
 
-    if (name == this->name->text()) {
+    if (name == this->name->text().toLower()) {
         QFont f = players->font();
         f.setBold(true);
 
