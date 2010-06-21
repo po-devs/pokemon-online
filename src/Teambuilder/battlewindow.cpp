@@ -590,7 +590,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                     if (info().specialSprite[spot] == -1) {
                         info().lastSeenSpecialSprite[spot] = old;
                     } else if (info().specialSprite[spot] == 0) {
-                        info().specialSprite[spot] = old;
+                        info().specialSprite[spot] = info().lastSeenSpecialSprite[spot];
                     }
                     mydisplay->updatePoke(spot);
                 } else {

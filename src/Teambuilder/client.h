@@ -159,7 +159,6 @@ public slots:
     /* Teambuilder slots */
     void openTeamBuilder();
     void changeTeam();
-    void showDock(Qt::DockWidgetArea areas,QDockWidget * dock,Qt::Orientation);
     void bugReport();
 signals:
     void done();

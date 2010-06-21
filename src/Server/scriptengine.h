@@ -70,7 +70,7 @@ public:
     Q_INVOKABLE void saveVal(const QString &key, const QVariant &val);
     Q_INVOKABLE void removeVal(const QString &key);
     /* Calls the underlying OS for a command */
-    Q_INVOKABLE void system(const QString &command);
+    Q_INVOKABLE int system(const QString &command);
     Q_INVOKABLE void clearChat();
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);

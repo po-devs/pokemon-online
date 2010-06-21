@@ -390,9 +390,9 @@ void ScriptEngine::removeVal(const QString &key)
     s.remove("Script_"+key);
 }
 
-void ScriptEngine::system(const QString &command)
+int ScriptEngine::system(const QString &command)
 {
-    ::system(command.toUtf8());
+    return ::system(command.toUtf8());
 }
 
 void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
