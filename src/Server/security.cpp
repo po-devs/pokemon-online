@@ -34,7 +34,11 @@ void SecurityManager::loadMembers()
             query.exec("create table trainers (id serial, "
                                                  "name varchar(20), laston char(10), auth int, banned boolean,"
                                                  "salt varchar(7), hash varchar(32), ip varchar(39), primary key(id), unique(name))");
-
+        } else if (SQLCreator::databaseType == SQLCreator::MySQL) {
+            query.exec("CREATE TABLE IF NOT EXISTS trainers (id int(11) NOT NULL auto_increment, "
+                                                            "name varchar(20), laston char(10), auth int(11), banned bool, "
+                                                            "salt varchar(7), hash varchar(32), ip varchar(39), "
+                                                            "PRIMARY KEY (id));");
         } else if (SQLCreator::databaseType == SQLCreator::SQLite){
             /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
             query.exec("create table trainers (id integer primary key autoincrement, name varchar(20) unique, "

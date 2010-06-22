@@ -22,7 +22,22 @@ public:
         QSettings s;
         databaseType = s.value("sql_driver").toInt();
 
-        QString driver = databaseType == SQLite ? "QSQLITE":"QPSQL";
+        QString driver;
+        switch(databaseType)
+        {
+            case PostGreSQL:
+                driver = "QPSQL";
+            break;
+
+            case MySQL:
+                driver = "QMYSQL";
+            break;
+
+            case SQLite:
+            default:
+                driver = "QSQLITE";
+            break;
+        }
 
         QSqlDatabase db;
         if (name == "")
@@ -32,7 +47,7 @@ public:
 
         db.setDatabaseName(s.value("sql_db_name").toString());
 
-        if (databaseType == PostGreSQL) {
+        if (databaseType == PostGreSQL || databaseType == MySQL) {
             db.setHostName(s.value("sql_db_host").toString());
             db.setPort(s.value("sql_db_port").toInt());
             db.setUserName(s.value("sql_db_user").toString());
@@ -40,7 +55,7 @@ public:
         }
 
         /* Cleans the database on restart */
-        if (name == "")
+        if (name == "" && databaseType != MySQL)
             db.exec("vacuum");
 
         if (!db.open() && name=="") {
@@ -52,7 +67,8 @@ public:
 
     enum DataBaseType  {
         SQLite,
-        PostGreSQL
+        PostGreSQL,
+        MySQL
     };
 
     static int databaseType;
