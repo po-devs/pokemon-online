@@ -21,6 +21,8 @@ SQLConfigWindow::SQLConfigWindow()
     v->addLayout(new QSideBySide(new QLabel(tr("SQL Database type: ")), b));
     if (s.value("sql_driver").toInt() == SQLCreator::PostGreSQL) {
         b->setCurrentIndex(1);
+    } else if (s.value("sql_driver").toInt() == SQLCreator::MySQL) {
+        b->setCurrentIndex(2);
     }
 
     name = new QLineEdit();

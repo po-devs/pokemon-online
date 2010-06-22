@@ -154,8 +154,8 @@ Server::Server(quint16 port)
 
     myengine->serverStartUp();
     connectToRegistry();
-} catch (...) {
-    qDebug() << "Exception";
+} catch (const QString &e) {
+    qDebug() << "Exception" << e;
 }
 }
 
