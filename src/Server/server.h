@@ -47,6 +47,7 @@ public:
     void beforeChallengeIssued(int src, int dest, Challenge *c);
     void afterChallengeIssued(int src, int dest, Challenge *c);
     void atServerShutDown();
+    void disconnectFromRegistry();
     /* Force Rated 1 and Force Rated 2 is to ignore the ladder on / off factor for those two */
     bool canHaveRatedBattle(int id1, int id2, bool challengeCup, bool forceRated1 = false, bool forceRated2 = false);
 
@@ -108,6 +109,7 @@ public slots:
     void findBattle(int id,const FindBattleData &f);
     void cancelSearch(int id);
     void loadRatedBattlesSettings();
+    void regPrivacyChanged(const int &priv);
 private:
     void kick(int dest, int src);
     void ban(int dest, int src);
@@ -116,7 +118,7 @@ private:
 
     Analyzer *registry_connection;
     QString serverName, serverDesc, serverAnnouncement;
-    quint16 serverPlayerMax,serverPort;
+    quint16 serverPrivate, serverPlayerMax,serverPort;
     quint16 numPlayers() {
         return myplayers.size();
     }

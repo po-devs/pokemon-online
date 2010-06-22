@@ -82,7 +82,7 @@ private:
 
     QString m_name;
     /* Used for table name in SQL database */
-    QString slug;
+    QString sql_table;
 
     QHash<QString, MemberRating> members;
     QSet<QString> nonExistentMembers;
