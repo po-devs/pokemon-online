@@ -43,7 +43,7 @@ QPair<int, int> MemberRating::pointChangeEstimate(int opponent_rating)
 void Tier::changeName(const QString &name)
 {
     this->m_name = name;
-    this->slug = ::slug(name);
+    this->sql_table = "tier_" + ::slug(name);
 }
 
 QString Tier::name() const
@@ -57,23 +57,23 @@ void Tier::loadFromFile()
 
     query.setForwardOnly(true);
 
-    query.exec(QString("select * from %1 limit 1").arg(slug));
+    query.exec(QString("select * from %1 limit 1").arg(sql_table));
 
     if (!query.next()) {
         if (SQLCreator::databaseType == SQLCreator::PostGreSQL) {
             /* The only way to have an auto increment field with PostGreSQL is to my knowledge using the serial type */
-            query.exec(QString("create table %1 (id serial, name varchar(20), rating int, matches int, primary key(id))").arg(slug));
+            query.exec(QString("create table %1 (id serial, name varchar(20), rating int, matches int, primary key(id))").arg(sql_table));
         } else if (SQLCreator::databaseType == SQLCreator::MySQL){
-            query.exec(QString("create table %1 (id integer auto_increment, name varchar(20) unique, rating int, matches int, primary key(id))").arg(slug));
+            query.exec(QString("create table %1 (id integer auto_increment, name varchar(20) unique, rating int, matches int, primary key(id))").arg(sql_table));
         } else if (SQLCreator::databaseType == SQLCreator::SQLite){
             /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
-            query.exec(QString("create table %1 (id integer primary key autoincrement, name varchar(20) unique, rating int, matches int, primary key(id))").arg(slug));
+            query.exec(QString("create table %1 (id integer primary key autoincrement, name varchar(20) unique, rating int, matches int, primary key(id))").arg(sql_table));
         } else {
             throw QString("Using a not supported database");
         }
 
-        query.exec(QString("create index tiername_index on %1 (name)").arg(slug));
-        query.exec(QString("create index tierrating_index on %1 (rating)").arg(slug));
+        query.exec(QString("create index tiername_index on %1 (name)").arg(sql_table));
+        query.exec(QString("create index tierrating_index on %1 (rating)").arg(sql_table));
 
         Server::print(QString("Importing old database for tier %1").arg(name()));
 
@@ -84,7 +84,7 @@ void Tier::loadFromFile()
 
         clock_t t = clock();
 
-        query.prepare(QString("insert into %1(name, rating, matches) values (:name, :rating, :matches)").arg(slug));
+        query.prepare(QString("insert into %1(name, rating, matches) values (:name, :rating, :matches)").arg(sql_table));
 
         foreach(QString member, members) {
             QString m2 = member.toLower();

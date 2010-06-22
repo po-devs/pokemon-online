@@ -1572,6 +1572,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         pokelong[player]["MoveSlot"] = move;
     }
 
+    qDebug() << player << " chose to use " << MoveInfo::Name(attack);
+
     turnlong[player]["HasMoved"] = true;
 
     calleffects(player,player,"EvenWhenCantMove");

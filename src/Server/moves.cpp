@@ -840,7 +840,16 @@ struct MMPerishSong : public MM
 struct MMHaze : public MM
 {
     MMHaze() {
+        functions["BeforeTargetList"] = &btl;
 	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    /* Haze is a move that affects all, and is affected by pressure.
+       So we keep it an all target move until the execution,
+       where we handle this differently. */
+    static void btl(int s, int, BS &b) {
+        b.targetList.clear();
+        b.targetList.push_back(s);
     }
 
     static void uas(int , int , BS &b) {
@@ -2526,6 +2535,7 @@ struct MMHealingWish : public MM
             b.sendMoveMessage(61,0,s,t);
 	    b.healLife(s,b.poke(s).totalLifePoints());
 	    b.changeStatus(s, Pokemon::Fine);
+            removeFunction(turn(b,s), "AfterSwitchIn", "HealingWish");
 	}
     }
 };

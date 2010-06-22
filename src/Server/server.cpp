@@ -151,9 +151,12 @@ Server::Server(quint16 port)
     serverDesc = s.value("server_description").toString();
     serverAnnouncement = s.value("server_announcement").toString();
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
+    serverPrivate = quint16(s.value("server_private").toInt());
 
     myengine->serverStartUp();
-    connectToRegistry();
+
+    if (serverPrivate != 1)
+        connectToRegistry();
 } catch (const QString &e) {
     qDebug() << "Exception" << e;
 }
@@ -209,6 +212,33 @@ void Server::connectToRegistry()
     connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(regConnectionError()));
 
     registry_connection = new Analyzer(s,0);
+}
+
+void Server::disconnectFromRegistry()
+{
+    registry_connection->deleteLater();
+    printLine("Disconnected from registry.");
+    registry_connection = NULL;
+}
+
+
+void Server::regPrivacyChanged(const int &priv)
+{
+    if (serverPrivate == priv)
+        return;
+
+    serverPrivate = priv;
+
+    if (serverPrivate == 1)
+    {
+        printLine("The server is now private.");
+        disconnectFromRegistry();
+    }
+    else
+    {
+        printLine("The server is now public.");
+        connectToRegistry();
+    }
 }
 
 void Server::regConnectionError()
@@ -362,6 +392,7 @@ void Server::openConfig()
     connect(w, SIGNAL(nameChanged(QString)), SLOT(regNameChanged(const QString)));
     connect(w, SIGNAL(descChanged(QString)), SLOT(regDescChanged(const QString)));
     connect(w, SIGNAL(maxChanged(int)), SLOT(regMaxChanged(int)));
+    connect(w, SIGNAL(privacyChanged(int)), SLOT(regPrivacyChanged(int)));
     connect(w, SIGNAL(announcementChanged(QString)), SLOT(announcementChanged(QString)));
 }
 
