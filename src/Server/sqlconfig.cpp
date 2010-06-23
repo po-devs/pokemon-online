@@ -9,7 +9,9 @@ SQLConfigWindow::SQLConfigWindow()
     QVBoxLayout *v = new QVBoxLayout(this);
 
     QLabel *desc = new QLabel(tr("<b><span style='color:red'>Don't touch anything if you've no clue what SQL is!</span></b><br /><br />For any change to have effect, you need to restart the server."
-                                 "<br />If you change the settings without knowledge of what you are doing, you'll probably end up without any users stored anymore."));
+                                 "<br />If you change the settings without knowledge of what you are doing, you'll probably end up without any users stored anymore.<br/><br/>SQLite is the "
+                                 "only system fully supported by default. PostGreSQL needs an external installation, but libraries to link PostGreSQL and Qt should be available in the download. "
+                                 "MySQL needs the user to get the right DLLs and to install a MySQL database too."));
     desc->setWordWrap(true);
     v->addWidget(desc);
 

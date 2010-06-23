@@ -46,7 +46,7 @@ struct IMBlackSludge : public IM
     }
 
     static void et(int s, int, BS &b) {
-	if(b.koed(s)) {
+        if(b.koed(s) || b.hasWorkingAbility(s, Ability::MagicGuard)) {
 	    return;
 	}
 	if(b.hasType(s, Pokemon::Poison)) {
