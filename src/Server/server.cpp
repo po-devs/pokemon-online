@@ -15,7 +15,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
 #include "../Shared/config.h"
-#include "tier.h"
+#include "tiermachine.h"
 #include "battlingoptions.h"
 #include "sql.h"
 #include "sqlconfig.h"
@@ -440,8 +440,7 @@ void Server::tiersChanged()
 
     foreach(Player *p, myplayers) {
         if (!TierMachine::obj()->isValid(p->team(),p->tier())) {
-            p->tier() = TierMachine::obj()->findTier(p->team());
-            p->rating() = TierMachine::obj()->rating(p->name(), p->tier());
+            p->findTierAndRating();
             if (p->isLoggedIn()) {
                 sendPlayer(p->id());
             }

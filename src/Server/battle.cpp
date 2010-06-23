@@ -4,7 +4,7 @@
 #include "moves.h"
 #include "items.h"
 #include "abilities.h"
-#include "tier.h"
+#include "tiermachine.h"
 #include <ctime> /* for random numbers, time(NULL) needed */
 #include <map>
 #include <algorithm>
