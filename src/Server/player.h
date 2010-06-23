@@ -96,6 +96,7 @@ public:
     void lock();
     void unlock();
     bool isLocked() const;
+    void findTierAndRating();
 signals:
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, const QString &mess);
@@ -170,7 +171,6 @@ private:
     void assignTeam(const TeamInfo &team);
     void assignNewColor(const QColor &c);
     bool testNameValidity(const QString &name);
-    void findTierAndRating();
     void loginSuccess();
     void changeWaitingTeam(const TeamInfo &t);
     void removeWaitingTeam();

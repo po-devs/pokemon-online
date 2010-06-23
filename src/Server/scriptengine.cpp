@@ -1,6 +1,6 @@
 #include "server.h"
 #include "player.h"
-#include "tier.h"
+#include "tiermachine.h"
 #include "scriptengine.h"
 #include "../PokemonInfo/pokemoninfo.h"
 

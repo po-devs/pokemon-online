@@ -54,13 +54,11 @@ public:
             db.setPassword(s.value("sql_db_pass").toString());
         }
 
-        /* Cleans the database on restart */
-        if (name == "" && databaseType != MySQL)
-            db.exec("vacuum");
-
         if (!db.open() && name=="") {
             throw (QString("Unable to establish a database connection.") + db.lastError().text());
         } else if (name == "") {
+            if (databaseType != MySQL)
+                db.exec("vacuum");
             throw (QString("Connection to the database established!"));
         }
     }

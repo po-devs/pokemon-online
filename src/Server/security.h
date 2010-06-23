@@ -5,10 +5,9 @@
 #include <QtCore>
 #include <QtSql>
 #include "../Utilities/otherwidgets.h"
+#include "loadinsertthread.h"
 
 class WaitingObject;
-class LoadThread;
-class InsertThread;
 
 class SecurityManager : public QObject
 {
@@ -103,6 +102,8 @@ public:
 
 private slots:
     void freeObject();
+    static void insertMember(QSqlQuery *q, void *m, bool update);
+    static void loadMember(QSqlQuery *q, const QString &name, int query_type);
 
 private:
     static void loadMembers();
@@ -127,50 +128,9 @@ private:
     static const int loadThreadCount=4;
     static int nextLoadThreadNumber;
     static LoadThread *threads;
-    static InsertThread *ithread;
+    static InsertThread<Member> *ithread;
 
     static QNickValidator val;
-};
-
-class LoadThread : public QThread
-{
-public:
-    void pushQuery(const QString &name, WaitingObject *w, SecurityManager::QueryType query_type);
-
-    void run();
-
-    static void processQuery (QSqlQuery *q, const QString &name, SecurityManager::QueryType query_type);
-private:
-    struct Query {
-        QString member;
-        WaitingObject *w;
-        SecurityManager::QueryType query_type;
-
-        Query(const QString &m, WaitingObject *w, SecurityManager::QueryType query_type)
-            : member(m), w(w), query_type(query_type)
-        {
-
-        }
-    };
-
-    QLinkedList<Query> queries;
-    QMutex queryMutex;
-    QSemaphore sem;
-};
-
-class InsertThread : public QThread
-{
-public:
-    /* update/insert ? */
-    void pushMember(const SecurityManager::Member &m, bool update=true);
-
-    void run();
-
-    static void processMember (QSqlQuery *q, const SecurityManager::Member &m, bool update=true);
-private:
-    QLinkedList<QPair<SecurityManager::Member, bool> > members;
-    QMutex memberMutex;
-    QSemaphore sem;
 };
 
 #endif // SECURITY_H

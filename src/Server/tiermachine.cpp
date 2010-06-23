@@ -1,0 +1,201 @@
+#include "tiermachine.h"
+#include "tier.h"
+
+TierMachine* TierMachine::inst;
+
+void TierMachine::init()
+{
+    inst = new TierMachine();
+
+    QFile in("tiers.txt");
+    in.open(QIODevice::ReadOnly);
+    inst->fromString(QString::fromUtf8(in.readAll()));
+}
+
+void TierMachine::save()
+{
+    QFile out("tiers.txt");
+    out.open(QIODevice::WriteOnly);
+    out.write(toString().toUtf8());
+}
+
+void TierMachine::fromString(const QString &s)
+{
+    m_tiers.clear();
+    m_tierNames.clear();
+
+    QStringList candidates = s.split('\n', QString::SkipEmptyParts);
+
+    if (candidates.empty()) {
+        candidates.push_back("All=");
+    }
+
+
+    foreach(QString candidate, candidates) {
+        m_tiers.push_back(Tier(this));
+        m_tiers.back().fromString(candidate);
+        if (m_tierNames.contains(m_tiers.back().name())) {
+            m_tiers.pop_back();
+        } else {
+            m_tierNames.push_back(m_tiers.back().name());
+        }
+    }
+
+    /* Now, we just check there isn't any cyclic inheritance tree */
+    for(int i = 0; i < m_tiers.length(); i++) {
+        QSet<QString> family;
+        Tier *t = & m_tiers[i];
+        family.insert(t->name());
+        while (t->parent.length() > 0) {
+            if (family.contains(t->parent)) {
+                tier(t->name()).parent.clear();
+                break;
+            }
+            family.insert(t->parent);
+            t = &tier(t->parent);
+        }
+    }
+
+    /* Then, we open the files and load the ladders for each tier and people */
+    for (int i =0; i < m_tiers.size(); i++) {
+        m_tiers[i].loadFromFile();
+    }
+
+    /* And we change the tierList variable too! */
+    tierList().clear();
+    foreach (QString tier, m_tierNames)
+    {
+        tierList() += tier + "\n";
+    }
+    if (tierList().length() > 0) {
+        tierList().resize(tierList().size()-1);
+    }
+}
+
+QString TierMachine::toString() const
+{
+    QString res = "";
+
+    for(int i = 0; i < m_tiers.size(); i++) {
+        res += m_tiers[i].toString() + "\n";
+    }
+    if (res.length() > 0) {
+        res.resize(res.size()-1);
+    }
+
+    return res;
+}
+
+
+Tier &TierMachine::tier(const QString &name)
+{
+    for(int i = 0; i < m_tierNames.length(); i++) {
+        if (m_tierNames[i].compare(name, Qt::CaseInsensitive) == 0) {
+            return m_tiers[i];
+        }
+    }
+    return m_tiers[0];
+}
+
+const Tier &TierMachine::tier(const QString &name) const
+{
+    for(int i = 0; i < m_tierNames.length(); i++) {
+        if (m_tierNames[i].compare(name, Qt::CaseInsensitive) == 0) {
+            return m_tiers[i];
+        }
+    }
+    return m_tiers[0];
+}
+
+bool TierMachine::isValid(const TeamBattle &t, QString tier) const
+{
+    if (!exists(tier))
+        return false;
+
+    return this->tier(tier).isValid(t);
+}
+
+bool TierMachine::isBanned(const PokeBattle &pok, const QString & tier) const
+{
+    return this->tier(tier).isBanned(pok);
+}
+
+TierMachine *TierMachine::obj()
+{
+    return inst;
+}
+
+const QStringList & TierMachine::tierNames() const
+{
+    return m_tierNames;
+}
+
+int TierMachine::rating(const QString &name, const QString &tier)
+{
+    return this->tier(tier).rating(name);
+}
+
+int TierMachine::ranking(const QString &name, const QString &tier)
+{
+    return this->tier(tier).ranking(name);
+}
+
+int TierMachine::count(const QString &tier)
+{
+    return this->tier(tier).members.count();
+}
+
+void TierMachine::changeRating(const QString &winner, const QString &loser, const QString &tier)
+{
+    return this->tier(tier).changeRating(winner, loser);
+}
+
+void TierMachine::changeRating(const QString &player, const QString &tier, int newRating)
+{
+    return this->tier(tier).changeRating(player, newRating);
+}
+
+QPair<int, int> TierMachine::pointChangeEstimate(const QString &player, const QString &foe, const QString &tier)
+{
+    return this->tier(tier).pointChangeEstimate(player, foe);
+}
+
+QString TierMachine::findTier(const TeamBattle &t) const
+{
+    for (int i = m_tiers.size()-1; i >= 0; i--) {
+        if (m_tiers[i].isValid(t)) {
+            return m_tierNames[i];
+        }
+    }
+    return m_tierNames[0];
+}
+
+bool TierMachine::existsPlayer(const QString &name, const QString &player)
+{
+   return exists(name) && tier(name).exists(player);
+}
+
+TierWindow::TierWindow(QWidget *parent) : QWidget(parent)
+{
+    setAttribute(Qt::WA_DeleteOnClose,true);
+
+    QGridLayout *layout = new QGridLayout(this);
+
+    layout->addWidget(m_editWindow = new QPlainTextEdit(),0,0,1,2);
+    QPushButton *ok;
+    layout->addWidget(ok = new QPushButton(tr("&Done")),1,1);
+
+    m_editWindow->setPlainText(TierMachine::obj()->toString());
+
+    connect(ok, SIGNAL(clicked()), SLOT(done()));
+    connect(ok, SIGNAL(clicked()), SLOT(close()));
+}
+
+void TierWindow::done()
+{
+    TierMachine::obj()->fromString(m_editWindow->toPlainText());
+    TierMachine::obj()->save();
+
+    emit tiersChanged();
+}
+

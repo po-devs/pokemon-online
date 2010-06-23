@@ -18,7 +18,7 @@ QMutex SecurityManager::memberMutex;
 QMutex SecurityManager::cachedMembersMutex;
 int SecurityManager::nextLoadThreadNumber = 0;
 LoadThread * SecurityManager::threads = NULL;
-InsertThread * SecurityManager::ithread = NULL;
+InsertThread<SecurityManager::Member> * SecurityManager::ithread = NULL;
 
 void SecurityManager::loadMembers()
 {
@@ -119,14 +119,16 @@ SecurityManager::Member::Member(const QString &name, const QByteArray &date, int
 
 void SecurityManager::init()
 {
-
     threads = new LoadThread[loadThreadCount];
 
     for (int i = 0; i < loadThreadCount; i++) {
+        connect(&threads[i], SIGNAL(processQuery (QSqlQuery *, QString, int)), instance, SLOT(loadMember(QSqlQuery*,QString,int)), Qt::DirectConnection);
         threads[i].start();
     }
 
-    ithread = new InsertThread();
+    ithread = new InsertThread<Member>();
+    connect(ithread, SIGNAL(processMember(QSqlQuery*,void*,bool)), instance, SLOT(insertMember(QSqlQuery*,void*,bool)), Qt::DirectConnection);
+
     ithread->start();
 
 
@@ -339,7 +341,7 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
 
         QSqlQuery q;
         q.setForwardOnly(true);
-        LoadThread::processQuery(&q, name, GetInfoOnUser);
+        loadMember(&q, name, GetInfoOnUser);
 
         return;
     }
@@ -396,109 +398,41 @@ LoadThread * SecurityManager::getThread()
     return threads + n;
 }
 
-SecurityManager * SecurityManager::instance = new SecurityManager();
-
-
-void LoadThread::run()
+void SecurityManager::insertMember(QSqlQuery *q, void *m2, bool update)
 {
-    QString dbname = QString::number(int(QThread::currentThreadId()));
+    SecurityManager::Member *m = (SecurityManager::Member*) m2;
 
-    SQLCreator::createSQLConnection(dbname);
-    QSqlDatabase db = QSqlDatabase::database(dbname);
-    QSqlQuery sql(db);
-    sql.setForwardOnly(true);
-
-    sem.acquire(1);
-
-    forever {
-        queryMutex.lock();
-        Query q = queries.takeFirst();
-        queryMutex.unlock();
-
-        processQuery(&sql, q.member, q.query_type);
-        q.w->emitSignal();
-
-        sem.acquire(1);
-    }
-}
-
-
-void LoadThread::pushQuery(const QString &name, WaitingObject *w, SecurityManager::QueryType query_type)
-{
-    queryMutex.lock();
-
-    queries.push_back(Query(name, w, query_type));
-
-    queryMutex.unlock();
-
-    sem.release(1);
-}
-
-void LoadThread::processQuery(QSqlQuery *q, const QString &name, SecurityManager::QueryType query_type)
-{
-    if (query_type == SecurityManager::GetInfoOnUser) {
-        q->prepare("select laston, auth, banned, salt, hash, ip from trainers where name=? limit 1");
-        q->addBindValue(name);
-        q->exec();
-        if (!q->next()) {
-            SecurityManager::addNonExistant(name);
-        } else {
-            SecurityManager::Member m(name, q->value(0).toByteArray(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
-                                      q->value(4).toByteArray(), q->value(5).toByteArray());
-            SecurityManager::addMemberInMemory(m);
-        }
-    }
-}
-
-void InsertThread::run()
-{
-    QString dbname = QString::number(int(QThread::currentThreadId()));
-
-    SQLCreator::createSQLConnection(dbname);
-    QSqlDatabase db = QSqlDatabase::database(dbname);
-    QSqlQuery sql(db);
-    sql.setForwardOnly(true);
-
-    sem.acquire(1);
-
-    forever {
-        memberMutex.lock();
-        QPair<SecurityManager::Member, bool> p = members.takeFirst();
-        memberMutex.unlock();
-
-        processMember(&sql, p.first, p.second);
-
-        sem.acquire(1);
-    }
-}
-
-
-void InsertThread::pushMember(const SecurityManager::Member &member, bool update)
-{
-    memberMutex.lock();
-
-    members.push_back(QPair<SecurityManager::Member, bool> (member, update) );
-
-    memberMutex.unlock();
-
-    sem.release(1);
-}
-
-void InsertThread::processMember(QSqlQuery *q, const SecurityManager::Member &m, bool update)
-{
     q->finish();
     if (update)
         q->prepare("update trainers set laston=:laston, auth=:auth, banned=:banned, salt=:salt, hash=:hash, ip=:ip where name=:name");
     else
         q->prepare("insert into trainers(name, laston, auth, banned, salt, hash, ip) values(:name, :laston, :auth, :banned, :salt, :hash, :ip)");
 
-    q->bindValue(":name", m.name);
-    q->bindValue(":laston", m.date);
-    q->bindValue(":auth", m.auth);
-    q->bindValue(":banned", m.banned);
-    q->bindValue(":hash", m.hash);
-    q->bindValue(":salt", m.salt);
-    q->bindValue(":ip", m.ip);
+    q->bindValue(":name", m->name);
+    q->bindValue(":laston", m->date);
+    q->bindValue(":auth", m->auth);
+    q->bindValue(":banned", m->banned);
+    q->bindValue(":hash", m->hash);
+    q->bindValue(":salt", m->salt);
+    q->bindValue(":ip", m->ip);
 
     q->exec();
 }
+
+void SecurityManager::loadMember(QSqlQuery *q, const QString &name, int query_type)
+{
+    if (query_type == SecurityManager::GetInfoOnUser) {
+        q->prepare("select laston, auth, banned, salt, hash, ip from trainers where name=? limit 1");
+        q->addBindValue(name);
+        q->exec();
+        if (!q->next()) {
+            addNonExistant(name);
+        } else {
+            SecurityManager::Member m(name, q->value(0).toByteArray(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
+                                      q->value(4).toByteArray(), q->value(5).toByteArray());
+            addMemberInMemory(m);
+        }
+    }
+}
+
+SecurityManager * SecurityManager::instance = new SecurityManager();

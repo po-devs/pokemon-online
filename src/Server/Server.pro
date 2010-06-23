@@ -37,7 +37,9 @@ SOURCES += main.cpp \
     ../Utilities/mtrand.cpp \
     battlingoptions.cpp \
     sql.cpp \
-    sqlconfig.cpp
+    sqlconfig.cpp \
+    tiermachine.cpp \
+    loadinsertthread.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -72,7 +74,9 @@ HEADERS += mainwindow.h \
     battlingoptions.h \
     sql.h \
     waitingobject.h \
-    sqlconfig.h
+    sqlconfig.h \
+    tiermachine.h \
+    loadinsertthread.h
 DEFINES = MULTI_THREADED_ACCESS \
     SERVER_SIDE
 RESOURCES += 

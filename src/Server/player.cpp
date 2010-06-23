@@ -4,7 +4,7 @@
 #include "../PokemonInfo/battlestructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "battle.h"
-#include "tier.h"
+#include "tiermachine.h"
 
 
 
