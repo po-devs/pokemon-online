@@ -350,10 +350,13 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
 
     connect(w, SIGNAL(waitFinished()), o, slot);
 
-    if (isInMemory(n2))
+    if (isInMemory(n2)) {
         w->emitSignal();
+        freeObjects.insert(w);
+    }
     else {
         usedObjects.insert(w);
+        connect(w, SIGNAL(waitFinished()), SecurityManager::instance, SLOT(freeObject()));
 
         LoadThread *t = getThread();
 
