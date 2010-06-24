@@ -6,16 +6,12 @@
 #include "server.h"
 #include "waitingobject.h"
 
-QHash<QString, SecurityManager::Member> SecurityManager::members;
+MemoryHolder<SecurityManager::Member> SecurityManager::holder;
 QNickValidator SecurityManager::val(NULL);
 QSet<QString> SecurityManager::bannedIPs;
 QHash<QString, QString> SecurityManager::bannedMembers;
 QSet<WaitingObject*> SecurityManager::freeObjects;
 QSet<WaitingObject*> SecurityManager::usedObjects;
-QLinkedList<QString> SecurityManager::cachedMembersOrder;
-QSet<QString> SecurityManager::nonExistentMembers;
-QMutex SecurityManager::memberMutex;
-QMutex SecurityManager::cachedMembersMutex;
 int SecurityManager::nextLoadThreadNumber = 0;
 LoadThread * SecurityManager::threads = NULL;
 InsertThread<SecurityManager::Member> * SecurityManager::ithread = NULL;
@@ -141,35 +137,20 @@ bool SecurityManager::isValid(const QString &name) {
 
 bool SecurityManager::exist(const QString &name)
 {
-    QString n2 = name.toLower();
-
-    {
-        QMutexLocker m(&memberMutex);
-
-        if (nonExistentMembers.contains(n2))
-            return false;
-
-        if (members.contains(n2)) {
-            return true;
-        }
+    if (!holder.isInMemory(name)) {
+        loadMemberInMemory(name);
     }
 
-    loadMemberInMemory(n2);
-
-    return exist(n2);
+    return holder.exists(name);
 }
 
 SecurityManager::Member SecurityManager::member(const QString &name)
 {
-    QString n2 = name.toLower();
-    /* Exist will make a call to loadInMemory if needed */
-    if (exist(n2)) {
-        QMutexLocker lock(&memberMutex);
-        return members[n2];
-    } else {
-        qDebug() << "Critical! Unreachable code reached";
-        return member(name);
+    if (!holder.isInMemory(name)) {
+        loadMemberInMemory(name);
     }
+
+    return holder.member(name);
 }
 
 
@@ -198,17 +179,8 @@ QHash<QString, QString> SecurityManager::banList()
 
 void SecurityManager::create(const QString &name, const QString &date, const QString &ip) {
     Member m(name.toLower(), date.toAscii(), 0, false, "", "", ip.toAscii());
-    addMemberInMemory(m);
+    holder.addMemberInMemory(m);
     updateMemberInDatabase(m, true);
-}
-
-void SecurityManager::addNonExistant(const QString &name)
-{
-    memberMutex.lock();
-
-    nonExistentMembers.insert(name.toLower());
-
-    memberMutex.unlock();
 }
 
 void SecurityManager::updateMemberInDatabase(const Member &m, bool add)
@@ -217,42 +189,9 @@ void SecurityManager::updateMemberInDatabase(const Member &m, bool add)
 }
 
 void SecurityManager::updateMember(const Member &m) {
-    addMemberInMemory(m);
+    holder.addMemberInMemory(m);
 
     updateMemberInDatabase(m, false);
-}
-
-void SecurityManager::addMemberInMemory(const Member &m)
-{
-    memberMutex.lock();
-
-    nonExistentMembers.remove(m.name);
-    if (!members.contains(m.name))
-        cachedMembersOrder.push_front(m.name);
-
-    members[m.name] = m;
-
-    memberMutex.unlock();
-}
-
-void SecurityManager::cleanCache()
-{
-    cachedMembersMutex.lock();
-
-    while(cachedMembersOrder.size() > 10000) {
-        removeMemberInMemory(cachedMembersOrder.takeLast());
-    }
-
-    cachedMembersMutex.unlock();
-}
-
-void SecurityManager::removeMemberInMemory(const QString &name)
-{
-    memberMutex.lock();
-
-    members.remove(name);
-
-    memberMutex.unlock();
 }
 
 bool SecurityManager::bannedIP(const QString &ip) {
@@ -260,19 +199,21 @@ bool SecurityManager::bannedIP(const QString &ip) {
 }
 
 void SecurityManager::ban(const QString &name) {
-    QString name2 = name.toLower();
-    if (exist(name2)) {
-        members[name2].ban();
-        bannedMembers.insert(name2, members[name2].ip);
-        bannedIPs.insert(members[name2].ip);
-        updateMember(members[name2]);
+    if (exist(name)) {
+        Member m = member(name);
+        m.ban();
+
+        bannedMembers.insert(name.toLower(), m.ip);
+        bannedIPs.insert(m.ip);
+
+        updateMember(m);
     }
 }
 
 void SecurityManager::unban(const QString &name) {
-    QString name2 = name.toLower();
-    if (exist(name2)) {
-        IPunban(members[name2].ip);
+    if (exist(name)) {
+        Member m = member(name);
+        IPunban(m.ip);
     }
 }
 
@@ -282,26 +223,27 @@ void SecurityManager::IPunban(const QString &ip)
 
     foreach(QString name, _members)
     {
-        members[name].unban();
+        Member m = member(name);
+        m.unban();
         bannedMembers.remove(name);
-        updateMember(members[name]);
+        updateMember(m);
     }
     bannedIPs.remove(ip);
 }
 
 void SecurityManager::setauth(const QString &name, int auth) {
-    QString name2 = name.toLower();
-    if (exist(name2)) {
-        members[name2].setAuth(auth);
-        updateMember(members[name2]);
+    if (exist(name)) {
+        Member m = member(name);
+        m.setAuth(auth);
+        updateMember(m);
     }
 }
 
 void SecurityManager::clearPass(const QString &name) {
-    QString name2 = name.toLower();
-    if (exist(name2)) {
-        members[name2].clearPass();
-        updateMember(members[name2]);
+    if (exist(name)) {
+        Member m = member(name);
+        m.clearPass();
+        updateMember(m);
     }
 }
 
@@ -324,9 +266,8 @@ int SecurityManager::maxAuth(const QString &ip) {
 
 QString SecurityManager::ip(const QString &name)
 {
-    QString name2 = name.toLower();
-    if (exist(name2))
-        return members[name2].ip.trimmed();
+    if (exist(name))
+        return member(name).ip;
     else
         return "";
 }
@@ -336,7 +277,7 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
     QString n2 = name.toLower();
 
     if (o == NULL) {
-        if (isInMemory(n2))
+        if (holder.isInMemory(n2))
             return;
 
         QSqlQuery q;
@@ -346,13 +287,13 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
         return;
     }
 
-    cleanCache();
+    holder.cleanCache();
 
     WaitingObject *w = getObject();
 
     connect(w, SIGNAL(waitFinished()), o, slot);
 
-    if (isInMemory(n2)) {
+    if (holder.isInMemory(n2)) {
         w->emitSignal();
         freeObjects.insert(w);
     }
@@ -366,13 +307,6 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
     }
 }
 
-bool SecurityManager::isInMemory(const QString &name)
-{
-    QString n2 = name.toLower();
-
-    QMutexLocker lock(&memberMutex);
-    return members.contains(n2) || nonExistentMembers.contains(n2);
-}
 
 WaitingObject * SecurityManager::getObject()
 {
@@ -426,11 +360,11 @@ void SecurityManager::loadMember(QSqlQuery *q, const QString &name, int query_ty
         q->addBindValue(name);
         q->exec();
         if (!q->next()) {
-            addNonExistant(name);
+            holder.addNonExistant(name);
         } else {
             SecurityManager::Member m(name, q->value(0).toByteArray(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
                                       q->value(4).toByteArray(), q->value(5).toByteArray());
-            addMemberInMemory(m);
+            holder.addMemberInMemory(m);
         }
     }
 }

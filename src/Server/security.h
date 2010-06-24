@@ -5,6 +5,7 @@
 #include <QtCore>
 #include <QtSql>
 #include "../Utilities/otherwidgets.h"
+#include "memoryholder.h"
 #include "loadinsertthread.h"
 
 class WaitingObject;
@@ -80,17 +81,12 @@ public:
     static void updateMember(const Member &m);
 
     static bool bannedIP(const QString &ip);
-    static bool isInMemory(const QString &name);
     static void ban(const QString &name);
     static void unban(const QString &name);
     static void IPunban(const QString &ip);
     static void setauth(const QString &name, int auth);
     static void clearPass(const QString &name);
-    static void addNonExistant(const QString &name);
-    static void addMemberInMemory(const Member &m);
-    static void removeMemberInMemory(const QString &name);
     static void updateMemberInDatabase(const Member &m, bool add);
-    static void cleanCache();
     static int maxAuth(const QString &ip);
 
     static void loadMemberInMemory(const QString &name, QObject *o=NULL, const char *slot=NULL);
@@ -107,11 +103,9 @@ private slots:
 
 private:
     static void loadMembers();
-    static QHash<QString, Member> members;
-    static QSet<QString> nonExistentMembers;
-    static QMutex memberMutex;
-    static QLinkedList<QString> cachedMembersOrder;
-    static QMutex cachedMembersMutex;
+
+    static MemoryHolder<Member> holder;
+
     static QSet<QString> bannedIPs;
     static QHash<QString, QString> bannedMembers;
 
