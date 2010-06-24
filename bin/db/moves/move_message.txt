@@ -14,7 +14,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 %s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!
 %s shattered %tf's team protections!
 
-%s ate %f's %i!
+%s stole and ate %f's %i!
 %s transformed into the %t type!
 %s began charging power!
 %s transformed into the %t type!
