@@ -62,7 +62,7 @@ A hailstorm brewed!|It started to rain!|A sandstorm brewed!|The sunlight turned 
 %s regained health!|The healing wish came true!|It became cloaked in mystical moonlight!
 %s swapped its defense and attack!
 %s is ready to help %f!
-%s crashed on the ground!
+%s kept going and crashed!
 
 
 %s sealed the opponent's move(s)!|%s cannot use the sealed %m!
