@@ -1807,6 +1807,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
 		applyMoveStatMods(player, target);
 
+                /* For berries that activate after taking damage */
+                callieffects(target, player, "TestPinch");
+
 		battlelong["LastMoveSuccesfullyUsed"] = attack;
 			     /* Chatter Mimic Sketch Struggle  */
 		if (!specialOccurence && attack != Move::Chatter && attack != Move::Sketch && attack != Move::Struggle && attack != Move::Mimic) {

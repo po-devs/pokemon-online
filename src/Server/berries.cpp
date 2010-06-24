@@ -124,9 +124,20 @@ struct BMPinchHP : public BMPinch
 {
     BMPinchHP() {
         functions["AfterHPChange"] = &ahpc;
+        functions["TestPinch"] = &tp;
     }
 
     static void ahpc(int s, int, BS &b) {
+        /* Those berries don't activate immediately when attacked by offensive moves,
+           but only after side effects applied. At that time, the battle thread will call
+           the effect "TestPinch"
+        */
+        if (b.attacked() == s && turn(b,b.attacker())["Power"].toInt() > 0)
+            return;
+        tp(s, s, b);
+    }
+
+    static void tp(int s, int, BS &b) {
         if (!testpinch(s, s, b,2))
             return;
 
@@ -175,7 +186,7 @@ struct BMAntiNormal : public BM
 struct BMSuperHP : public BM
 {
     BMSuperHP() {
-        functions["UponOffensiveDamageReceived"] = &uodr;
+        functions["TestPinch"] = &uodr;
     }
 
     static void uodr(int s, int t, BS &b) {
