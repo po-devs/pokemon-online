@@ -76,7 +76,8 @@ HEADERS += mainwindow.h \
     waitingobject.h \
     sqlconfig.h \
     tiermachine.h \
-    loadinsertthread.h
+    loadinsertthread.h \
+    memoryholder.h
 DEFINES = MULTI_THREADED_ACCESS \
     SERVER_SIDE
 RESOURCES += 
