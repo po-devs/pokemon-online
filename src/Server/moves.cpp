@@ -3652,7 +3652,7 @@ struct MMSmellingSalt : public MM
 
     static void bcd(int s, int t, BS &b) {
 	if (b.poke(t).status() == turn(b,s)["SmellingSalt_Arg"].toInt()) {
-	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt();
+	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
 	}
     }
 
