@@ -483,6 +483,62 @@ void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
 	reply->deleteLater();
 }
 
+/**
+ * Function will perform a GET-Request server side, synchronously
+ * @param urlstring web-url
+ * @author Remco cd Zon and Toni Fadjukoff
+ */
+QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring) {
+	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+	QNetworkRequest request;
+	
+	request.setUrl(QUrl(urlstring));
+	request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+	
+	connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(synchronousWebCall_replyFinished(QNetworkReply*)));
+	manager->get(request);
+
+	sync_loop.exec();
+	return sync_data;
+}
+
+/**
+ * Function will perform a POST-Request server side, synchronously
+ * @param urlstring web-url
+ * @param params_array javascript array [key]=>value.
+ * @author Remco vd Zon and Toni Fadjukoff
+ */
+QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring, const QScriptValue &params_array)
+{
+	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+	QNetworkRequest request;
+	QByteArray postData;
+	
+	request.setUrl(QUrl(urlstring));
+	request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+
+	//parse the POST fields
+	QScriptValueIterator it(params_array);
+	while (it.hasNext()) {
+		it.next();
+		postData.append( it.name() + "=" + it.value().toString().replace(QString("&"), QString("%26"))); //encode ampersands!
+		if(it.hasNext()) postData.append("&");
+	}
+
+	connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(synchronousWebCall_replyFinished(QNetworkReply*)));
+	manager->post(request, postData);
+
+	sync_loop.exec();
+	return sync_data;
+}
+
+void ScriptEngine::synchronousWebCall_replyFinished(QNetworkReply* reply) {
+        sync_data = reply->readAll();
+        sync_data = sync_data.replace(QString("'"), QString("\\'"));
+        sync_data = sync_data.replace(QString("\n"), QString("\\n"));
+        sync_loop.exit();
+}
+
 void ScriptEngine::callLater(const QString &expr, int delay)
 {
     if (delay <= 0) {
