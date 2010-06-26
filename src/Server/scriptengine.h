@@ -82,6 +82,10 @@ public:
     Q_INVOKABLE void webCall(const QString &urlstring, const QString &expr);
     /* POST call */
     Q_INVOKABLE void webCall(const QString &urlstring, const QString &expr, const QScriptValue &params_array);
+    /* synchronous GET call */
+    Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring);
+    /* synchronous POST call */
+    Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring, const QScriptValue &params_array);
 
     Q_INVOKABLE QScriptValue name(int id);
     Q_INVOKABLE QScriptValue id(const QString& name);
@@ -144,6 +148,7 @@ private slots:
     void changeScript(const QString &script);
     void timer();
     void webCall_replyFinished(QNetworkReply* reply);
+    void synchronousWebCall_replyFinished(QNetworkReply* reply);
     
 private:
     Server *myserver;
@@ -162,6 +167,9 @@ private:
     }
 
     QSet<QString> playerArrays;
+
+    QEventLoop sync_loop;
+    QString sync_data;
 
     void evaluate(const QScriptValue &expr);
     void printLine(const QString &s);
