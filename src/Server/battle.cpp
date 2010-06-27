@@ -1165,7 +1165,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     /* Increase the "switch count". Switch count is used to see if the pokémon has switched
        (like for an attack like attract), it is imo more effective that other means */
-    inc(slotzone[player]["SwitchCount"], 1);
+    inc(slotzone[slot]["SwitchCount"], 1);
 
     if (poke(player,pok).num() == Pokemon::Arceus && ItemInfo::isPlate(poke(player,pok).item())) {
         int type = ItemInfo::PlateType(poke(player,pok).item());
