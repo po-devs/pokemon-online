@@ -4,9 +4,9 @@
 typedef AbilityMechanics AM;
 typedef BattleSituation BS;
 
-QTSHash<int, AbilityMechanics> AbilityEffect::mechanics;
-QTSHash<int, QString> AbilityEffect::names;
-QTSHash<QString, int> AbilityEffect::nums;
+QHash<int, AbilityMechanics> AbilityEffect::mechanics;
+QHash<int, QString> AbilityEffect::names;
+QHash<QString, int> AbilityEffect::nums;
 
 void AbilityEffect::activate(const QString &effect, int num, int source, int target, BattleSituation &b)
 {
@@ -618,8 +618,6 @@ struct AMIronFist : public AM {
     }
 
     struct PunchingMoves : public QSet<int> {
-        MAKE_THREAD_SAFE;
-        CREATE_LOCK_FUNCTION;
         PunchingMoves() {
             (*this) << 50 << 61 << 91 << 105 << 108 << 131 << 145 << 171 << 197 << 226 << 238 << 244 << 350 << 362 << 426;
         }
@@ -628,11 +626,9 @@ struct AMIronFist : public AM {
     static PunchingMoves PM;
 
     static void bpm (int s, int , BS &b) {
-        PM.lock();
         if (PM.contains(move(b,s))) {
             turn(b,s)["BasePowerAbilityModifier"] = 4;
         }
-        PM.unlock();
     }
 };
 
@@ -871,8 +867,6 @@ struct AMSoundProof : public AM {
     }
 
     struct SoundMoves : public QSet<int> {
-        MAKE_THREAD_SAFE;
-        CREATE_LOCK_FUNCTION;
         SoundMoves() {
             /* Grasswhistle, Growl, Hyper Voice, Metal Sound, Perish Song, Roar, Sing, Sonicboom, Supersonic, Screech, Snore, Uproar, Roar Of Time, Bug Buzz, Chatter, and Heal Bell */
             (*this) << 48 << 58 << 160 << 162 << 192 << 243 << 320 << 321 << 341 << 357 << 374 << 377 << 402 << 441 ;
@@ -884,12 +878,10 @@ struct AMSoundProof : public AM {
     static void ob(int s, int t, BS &b) {
         int mv = move(b,t);
 
-        SM.lock();
         if (SM.contains(mv)) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
             b.sendAbMessage(57,0,s);
         }
-        SM.unlock();
     }
 };
 

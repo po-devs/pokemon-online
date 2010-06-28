@@ -7,15 +7,15 @@
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
-QTSList<QString> PokemonInfo::m_Names;
-QTSList<QString> PokemonInfo::m_Weights;
-QTSList<int> PokemonInfo::m_Genders;
-QTSList<int> PokemonInfo::m_Type1;
-QTSList<int> PokemonInfo::m_Type2;
-QTSList<int> PokemonInfo::m_Ability1;
-QTSList<int> PokemonInfo::m_Ability2;
-QTSList<PokeBaseStats> PokemonInfo::m_BaseStats;
-QTSList<int> PokemonInfo::m_LevelBalance;
+QList<QString> PokemonInfo::m_Names;
+QList<QString> PokemonInfo::m_Weights;
+QList<int> PokemonInfo::m_Genders;
+QList<int> PokemonInfo::m_Type1;
+QList<int> PokemonInfo::m_Type2;
+QList<int> PokemonInfo::m_Ability1;
+QList<int> PokemonInfo::m_Ability2;
+QList<PokeBaseStats> PokemonInfo::m_BaseStats;
+QList<int> PokemonInfo::m_LevelBalance;
 QList<PokemonMoves> PokemonInfo::m_Moves;
 QHash<int, QList<int> > PokemonInfo::m_AlternateFormes;
 QHash<int, QPair<int,int> > PokemonInfo::m_AestheticFormes;
@@ -26,74 +26,74 @@ QHash<int,QList<int> > PokemonInfo::m_Evolutions;
 QList<int> PokemonInfo::m_OriginalEvos;
 
 QString MoveInfo::m_Directory;
-QTSList<QString> MoveInfo::m_Names;
-QTSList<QString> MoveInfo::m_AccS;
-QTSList<QString> MoveInfo::m_PowerS;
-QTSList<QString> MoveInfo::m_SpecialEffects;
-QTSList<char> MoveInfo::m_Type;
-QTSList<char> MoveInfo::m_PP;
-QTSList<char> MoveInfo::m_Category;
-QTSList<QString> MoveInfo::m_Effects;
-QTSList<char> MoveInfo::m_Critical;
-QTSList<char> MoveInfo::m_EffectRate;
-QTSList<bool> MoveInfo::m_Physical;
-QTSList<bool> MoveInfo::m_KingRock;
-QTSList<char> MoveInfo::m_Speeds;
-QTSList<int> MoveInfo::m_Flinch;
-QTSList<int> MoveInfo::m_Recoil;
-QTSList<int> MoveInfo::m_Targets;
-QTSList<QStringList> MoveInfo::m_MoveMessages;
-QTSList<QPair<char, char> > MoveInfo::m_Repeat;
-QTSList<QString> MoveInfo::m_Descriptions;
-QTSList<QString> MoveInfo::m_Details;
+QList<QString> MoveInfo::m_Names;
+QList<QString> MoveInfo::m_AccS;
+QList<QString> MoveInfo::m_PowerS;
+QList<QString> MoveInfo::m_SpecialEffects;
+QList<char> MoveInfo::m_Type;
+QList<char> MoveInfo::m_PP;
+QList<char> MoveInfo::m_Category;
+QList<QString> MoveInfo::m_Effects;
+QList<char> MoveInfo::m_Critical;
+QList<char> MoveInfo::m_EffectRate;
+QList<bool> MoveInfo::m_Physical;
+QList<bool> MoveInfo::m_KingRock;
+QList<char> MoveInfo::m_Speeds;
+QList<int> MoveInfo::m_Flinch;
+QList<int> MoveInfo::m_Recoil;
+QList<int> MoveInfo::m_Targets;
+QList<QStringList> MoveInfo::m_MoveMessages;
+QList<QPair<char, char> > MoveInfo::m_Repeat;
+QList<QString> MoveInfo::m_Descriptions;
+QList<QString> MoveInfo::m_Details;
 QHash<QString, int> MoveInfo::m_LowerCaseMoves;
 
 QString ItemInfo::m_Directory;
-QTSList<QString> ItemInfo::m_BerryNames;
-QTSList<QString> ItemInfo::m_RegItemNames;
+QList<QString> ItemInfo::m_BerryNames;
+QList<QString> ItemInfo::m_RegItemNames;
 QHash<QString, int> ItemInfo::m_BerryNamesH;
 QHash<QString, int> ItemInfo::m_ItemNamesH;
-QTSList<QString> ItemInfo::m_SortedNames;
-QTSList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects;
-QTSList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
-QTSList<QStringList> ItemInfo::m_RegMessages;
-QTSList<QStringList> ItemInfo::m_BerryMessages;
-QTSList<int> ItemInfo::m_Powers;
-QTSList<int> ItemInfo::m_BerryPowers;
-QTSList<int> ItemInfo::m_BerryTypes;
+QList<QString> ItemInfo::m_SortedNames;
+QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects;
+QList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
+QList<QStringList> ItemInfo::m_RegMessages;
+QList<QStringList> ItemInfo::m_BerryMessages;
+QList<int> ItemInfo::m_Powers;
+QList<int> ItemInfo::m_BerryPowers;
+QList<int> ItemInfo::m_BerryTypes;
 QList<int> ItemInfo::m_UsefulItems;
-QTSList<QString> ItemInfo::m_SortedUsefulNames;
+QList<QString> ItemInfo::m_SortedUsefulNames;
 
-QTSList<QString> TypeInfo::m_Names;
-QTSList<QColor> TypeInfo::m_Colors;
+QList<QString> TypeInfo::m_Names;
+QList<QColor> TypeInfo::m_Colors;
 QString TypeInfo::m_Directory;
-QTSList<int> TypeInfo::m_TypeVsType;
+QList<int> TypeInfo::m_TypeVsType;
 #ifdef CLIENT_SIDE
 QList<QPixmap> TypeInfo::m_Pics;
 #endif
 
-QTSList<QString> NatureInfo::m_Names;
+QList<QString> NatureInfo::m_Names;
 QString NatureInfo::m_Directory;
 
-QTSList<QString> CategoryInfo::m_Names;
-QTSList<QColor> CategoryInfo::m_Colors;
+QList<QString> CategoryInfo::m_Names;
+QList<QColor> CategoryInfo::m_Colors;
 QString CategoryInfo::m_Directory;
 
-QTSList<QString> AbilityInfo::m_Names;
+QList<QString> AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
-QTSList<AbilityInfo::Effect> AbilityInfo::m_Effects;
-QTSList<QStringList> AbilityInfo::m_Messages;
+QList<AbilityInfo::Effect> AbilityInfo::m_Effects;
+QList<QStringList> AbilityInfo::m_Messages;
 
-QTSList<QString> GenderInfo::m_Names;
-QTSList<QPixmap> GenderInfo::m_Pictures;
-QTSList<QPixmap> GenderInfo::m_BattlePictures;
+QList<QString> GenderInfo::m_Names;
+QList<QPixmap> GenderInfo::m_Pictures;
+QList<QPixmap> GenderInfo::m_BattlePictures;
 QString GenderInfo::m_Directory;
 
 QString HiddenPowerInfo::m_Directory;
 
 QString StatInfo::m_Directory;
-QTSList<QString> StatInfo::m_stats;
-QTSList<QString> StatInfo::m_status;
+QList<QString> StatInfo::m_stats;
+QList<QString> StatInfo::m_status;
 QHash<int, QPixmap> StatInfo::m_statusIcons;
 QHash<int, QPixmap> StatInfo::m_battleIcons;
 
@@ -158,7 +158,7 @@ void fill_container_with_file(QStringList &container, const QString & filename)
     }
 }
 
-void fill_container_with_file(QTSList<QString> &container, const QString & filename)
+void fill_container_with_file(QList<QString> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -173,7 +173,7 @@ void fill_container_with_file(QTSList<QString> &container, const QString & filen
     }
 }
 
-void fill_container_with_file(QTSList<QColor> &container, const QString &filename)
+void fill_container_with_file(QList<QColor> &container, const QString &filename)
 {
     QFile file(filename);
 
@@ -188,7 +188,7 @@ void fill_container_with_file(QTSList<QColor> &container, const QString &filenam
     }
 }
 
-void fill_container_with_file(QTSList<bool> &container, const QString & filename)
+void fill_container_with_file(QList<bool> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -205,7 +205,7 @@ void fill_container_with_file(QTSList<bool> &container, const QString & filename
     }
 }
 
-void fill_container_with_file(QTSList<char> &container, const QString & filename)
+void fill_container_with_file(QList<char> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -1312,12 +1312,12 @@ int ItemInfo::SortedNumber(const QString &itemname)
 }
 
 
-QTSList<QString> ItemInfo::SortedNames()
+QList<QString> ItemInfo::SortedNames()
 {
     return m_SortedNames;
 }
 
-QTSList<QString> ItemInfo::SortedUsefulNames()
+QList<QString> ItemInfo::SortedUsefulNames()
 {
     return m_SortedUsefulNames;
 }

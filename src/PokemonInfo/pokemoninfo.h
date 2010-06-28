@@ -7,12 +7,6 @@
 class PokeBaseStats;
 class QPixmap;
 
-#ifdef MULTI_THREADED_ACCESS
-#include "../Utilities/thread_safe_containers.h"
-#else
-#define QTSList QList
-#endif
-
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
 
 struct PokemonMoves
@@ -31,16 +25,16 @@ struct PokemonMoves
 class PokemonInfo
 {
 private:
-    static QTSList<QString> m_Names;
-    static QTSList<QString> m_Weights;
+    static QList<QString> m_Names;
+    static QList<QString> m_Weights;
     static QString m_Directory;
-    static QTSList<int> m_Type1;
-    static QTSList<int> m_Type2;
-    static QTSList<int> m_Genders;
-    static QTSList<int> m_Ability1;
-    static QTSList<int> m_Ability2;
-    static QTSList<PokeBaseStats> m_BaseStats;
-    static QTSList<int> m_LevelBalance;
+    static QList<int> m_Type1;
+    static QList<int> m_Type2;
+    static QList<int> m_Genders;
+    static QList<int> m_Ability1;
+    static QList<int> m_Ability2;
+    static QList<PokeBaseStats> m_BaseStats;
+    static QList<int> m_LevelBalance;
     /* That is NOT multi-threaded! */
     static QHash<int,QList<int> > m_AlternateFormes;
     static QHash<int,QList<int> > m_Evolutions;
@@ -120,26 +114,26 @@ public:
 class MoveInfo
 {
 private:
-    static QTSList<QString> m_Names;
-    static QTSList<QString> m_PowerS;
-    static QTSList<QString> m_AccS;
-    static QTSList<QString> m_Effects;
-    static QTSList<QString> m_SpecialEffects;
-    static QTSList<QStringList> m_MoveMessages;
-    static QTSList<char> m_Type;
-    static QTSList<char> m_PP;
-    static QTSList<char> m_Category;
-    static QTSList<char> m_Critical;
-    static QTSList<char> m_EffectRate;
-    static QTSList<bool> m_Physical;
-    static QTSList<bool> m_KingRock;
-    static QTSList<char> m_Speeds;
-    static QTSList<int> m_Flinch;
-    static QTSList<int> m_Recoil;
-    static QTSList<int> m_Targets;
-    static QTSList<QPair<char, char> > m_Repeat;
-    static QTSList<QString> m_Descriptions;
-    static QTSList<QString> m_Details;
+    static QList<QString> m_Names;
+    static QList<QString> m_PowerS;
+    static QList<QString> m_AccS;
+    static QList<QString> m_Effects;
+    static QList<QString> m_SpecialEffects;
+    static QList<QStringList> m_MoveMessages;
+    static QList<char> m_Type;
+    static QList<char> m_PP;
+    static QList<char> m_Category;
+    static QList<char> m_Critical;
+    static QList<char> m_EffectRate;
+    static QList<bool> m_Physical;
+    static QList<bool> m_KingRock;
+    static QList<char> m_Speeds;
+    static QList<int> m_Flinch;
+    static QList<int> m_Recoil;
+    static QList<int> m_Targets;
+    static QList<QPair<char, char> > m_Repeat;
+    static QList<QString> m_Descriptions;
+    static QList<QString> m_Details;
     static QHash<QString, int> m_LowerCaseMoves;
 
     static QString m_Directory;
@@ -212,20 +206,20 @@ public:
 	Effect(int i, const QString &q="") : num(i), args(q){}
     };
 private:
-    static QTSList<QString> m_BerryNames;
-    static QTSList<QString> m_RegItemNames;
+    static QList<QString> m_BerryNames;
+    static QList<QString> m_RegItemNames;
     static QHash<QString, int> m_BerryNamesH;
     static QHash<QString, int> m_ItemNamesH;
-    static QTSList<QString> m_SortedNames;
-    static QTSList<QString> m_SortedUsefulNames;
+    static QList<QString> m_SortedNames;
+    static QList<QString> m_SortedUsefulNames;
     static QString m_Directory;
-    static QTSList<QList<Effect> > m_RegEffects;
-    static QTSList<QList<Effect> > m_BerryEffects;
-    static QTSList<QStringList> m_RegMessages;
-    static QTSList<QStringList> m_BerryMessages;
-    static QTSList<int> m_Powers;
-    static QTSList<int> m_BerryPowers;
-    static QTSList<int> m_BerryTypes;
+    static QList<QList<Effect> > m_RegEffects;
+    static QList<QList<Effect> > m_BerryEffects;
+    static QList<QStringList> m_RegMessages;
+    static QList<QStringList> m_BerryMessages;
+    static QList<int> m_Powers;
+    static QList<int> m_BerryPowers;
+    static QList<int> m_BerryTypes;
     static QList<int> m_UsefulItems;
 
     static void loadNames();
@@ -243,8 +237,8 @@ public:
     static bool isMail(int itemnum);
     static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
-    static QTSList<QString> SortedNames();
-    static QTSList<QString> SortedUsefulNames();
+    static QList<QString> SortedNames();
+    static QList<QString> SortedUsefulNames();
     static QList<Effect> Effects(int item);
     static QString Message(int item, int part);
     static int Number(const QString &itemname);
@@ -271,10 +265,10 @@ private:
         Sunny = 4
     };
 
-    static QTSList<QString> m_Names;
+    static QList<QString> m_Names;
     static QString m_Directory;
-    static QTSList<QColor> m_Colors;
-    static QTSList<int> m_TypeVsType;
+    static QList<QColor> m_Colors;
+    static QList<int> m_TypeVsType;
 #ifdef CLIENT_SIDE
     static QList<QPixmap> m_Pics;
 #endif
@@ -302,7 +296,7 @@ public:
 class NatureInfo
 {
 private:
-    static QTSList<QString> m_Names;
+    static QList<QString> m_Names;
     static QString m_Directory;
     static void loadNames();
     static QString path(const QString &filename);
@@ -325,9 +319,9 @@ public:
 class CategoryInfo
 {
 private:
-    static QTSList<QString> m_Names;
+    static QList<QString> m_Names;
     static QString m_Directory;
-    static QTSList<QColor> m_Colors;
+    static QList<QColor> m_Colors;
 
     static void loadNames();
     static void loadColors();
@@ -351,10 +345,10 @@ public:
         Effect(int i, int q=0) : num(i), arg(q){}
     };
 private:
-    static QTSList<QString> m_Names;
+    static QList<QString> m_Names;
     static QString m_Directory;
-    static QTSList<Effect> m_Effects;
-    static QTSList<QStringList> m_Messages;
+    static QList<Effect> m_Effects;
+    static QList<QStringList> m_Messages;
 
     static void loadNames();
     static void loadEffects();
@@ -376,10 +370,10 @@ public:
 class GenderInfo
 {
 private:
-    static QTSList<QString> m_Names;
+    static QList<QString> m_Names;
     static QString m_Directory;
-    static QTSList<QPixmap> m_Pictures;
-    static QTSList<QPixmap> m_BattlePictures;
+    static QList<QPixmap> m_Pictures;
+    static QList<QPixmap> m_BattlePictures;
 
     static void loadNames();
     static void loadPixmaps();
@@ -419,8 +413,8 @@ class StatInfo
 {
 private:
     static QString m_Directory;
-    static QTSList<QString> m_stats;
-    static QTSList<QString> m_status;
+    static QList<QString> m_stats;
+    static QList<QString> m_status;
     static QHash<int, QPixmap> m_statusIcons;
     static QHash<int, QPixmap> m_battleIcons;
 

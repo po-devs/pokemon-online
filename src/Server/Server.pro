@@ -58,7 +58,6 @@ HEADERS += mainwindow.h \
     security.h \
     ../Utilities/otherwidgets.h \
     ../Utilities/md5.h \
-    ../Utilities/thread_safe_containers.h \
     playerswindow.h \
     antidos.h \
     serverconfig.h \
@@ -78,6 +77,5 @@ HEADERS += mainwindow.h \
     tiermachine.h \
     loadinsertthread.h \
     memoryholder.h
-DEFINES = MULTI_THREADED_ACCESS \
-    SERVER_SIDE
+DEFINES = SERVER_SIDE
 RESOURCES += 

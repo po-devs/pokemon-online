@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0">
+<TS version="2.0" language="ru_RU">
 <context>
     <name>AdvancedSearch</name>
     <message>
@@ -109,6 +109,11 @@
 <context>
     <name>BaseBattleWindow</name>
     <message>
+        <location filename="basebattlewindow.cpp" line="37"/>
+        <source>Battle between %1 and %2 is underway!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="basebattlewindow.cpp" line="73"/>
         <source>Battle between %1 and %2</source>
         <translation type="unfinished"></translation>
@@ -124,8 +129,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="basebattlewindow.cpp" line="90"/>
+        <source>C&amp;hat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="basebattlewindow.cpp" line="91"/>
+        <source>&amp;Ignore Spectators</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="basebattlewindow.cpp" line="147"/>
         <source>%1&apos;s %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="basebattlewindow.cpp" line="327"/>
+        <source>%1 sent out %2! (%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -151,6 +171,11 @@
     <message>
         <location filename="basebattlewindow.cpp" line="372"/>
         <source>%1 fainted!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="basebattlewindow.cpp" line="379"/>
+        <source>Hit %1 times!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -249,26 +274,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="551"/>
-        <source>But there was no target...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="basebattlewindow.cpp" line="585"/>
-        <source>The hail subsided!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="basebattlewindow.cpp" line="586"/>
-        <source>The sandstorm subsided!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="basebattlewindow.cpp" line="37"/>
-        <source>Battle between %1 and %2 is underway!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="basebattlewindow.cpp" line="467"/>
         <source>It hurt itself in its confusion!</source>
         <translation type="unfinished"></translation>
@@ -319,43 +324,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="674"/>
-        <source>Rated</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="basebattlewindow.cpp" line="674"/>
-        <source>Unrated</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="basebattlewindow.cpp" line="749"/>
-        <source>%1 is watching the battle.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="basebattlewindow.cpp" line="749"/>
-        <source>%1 stopped watching the battle.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="basebattlewindow.cpp" line="90"/>
-        <source>C&amp;hat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="basebattlewindow.cpp" line="91"/>
-        <source>&amp;Ignore Spectators</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="basebattlewindow.cpp" line="327"/>
-        <source>%1 sent out %2! (%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="basebattlewindow.cpp" line="379"/>
-        <source>Hit %1 times!</source>
+        <location filename="basebattlewindow.cpp" line="551"/>
+        <source>But there was no target...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -366,6 +336,16 @@
     <message>
         <location filename="basebattlewindow.cpp" line="574"/>
         <source>%1 is hit with recoil!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="basebattlewindow.cpp" line="585"/>
+        <source>The hail subsided!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="basebattlewindow.cpp" line="586"/>
+        <source>The sandstorm subsided!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -430,6 +410,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="basebattlewindow.cpp" line="674"/>
+        <source>Rated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="basebattlewindow.cpp" line="674"/>
+        <source>Unrated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="basebattlewindow.cpp" line="681"/>
         <source>Tier: </source>
         <translation type="unfinished"></translation>
@@ -437,6 +427,16 @@
     <message>
         <location filename="basebattlewindow.cpp" line="735"/>
         <source>Unknown command received, are you up to date?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="basebattlewindow.cpp" line="749"/>
+        <source>%1 is watching the battle.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="basebattlewindow.cpp" line="749"/>
+        <source>%1 stopped watching the battle.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -660,6 +660,11 @@
 <context>
     <name>Client</name>
     <message>
+        <location filename="client.cpp" line="36"/>
+        <source>&amp;Find Battle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="client.cpp" line="37"/>
         <source>&amp;Register</source>
         <translation type="unfinished"></translation>
@@ -675,13 +680,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="145"/>
-        <source>Go &amp;Back</source>
+        <location filename="client.cpp" line="40"/>
+        <source>&amp;Report a Bug</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="36"/>
-        <source>&amp;Find Battle</source>
+        <location filename="client.cpp" line="140"/>
+        <source>&amp;Challenge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="142"/>
+        <source>&amp;View Ranking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="145"/>
+        <source>Go &amp;Back</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -690,8 +705,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="client.cpp" line="150"/>
+        <source>&amp;Send Message</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="client.cpp" line="152"/>
         <source>&amp;Watch Battle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="154"/>
+        <source>&amp;Remove Ignore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="156"/>
+        <source>&amp;Ignore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -710,63 +740,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="415"/>
-        <source>&amp;File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="418"/>
-        <source>&amp;Style</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="154"/>
-        <source>&amp;Remove Ignore</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="156"/>
-        <source>&amp;Ignore</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="425"/>
-        <source>Reload StyleSheet</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="471"/>
-        <source>Save &amp;Battle Logs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="426"/>
-        <source>&amp;Options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="485"/>
-        <source>Animate HP Bar</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="140"/>
-        <source>&amp;Challenge</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="142"/>
-        <source>&amp;View Ranking</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="150"/>
-        <source>&amp;Send Message</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="client.cpp" line="351"/>
         <source>&amp;Cancel Find Battle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="415"/>
+        <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -777,6 +757,21 @@
     <message>
         <location filename="client.cpp" line="417"/>
         <source>Open &amp;teamBuilder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="418"/>
+        <source>&amp;Style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="425"/>
+        <source>Reload StyleSheet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="426"/>
+        <source>&amp;Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -826,8 +821,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="client.cpp" line="471"/>
+        <source>Save &amp;Battle Logs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="client.cpp" line="476"/>
         <source>Change &amp;log folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="485"/>
+        <source>Animate HP Bar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="490"/>
+        <source>Old School buttons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -863,23 +873,6 @@ It is advised to use a slightly different password for each server. (The server 
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="619"/>
-        <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
-
-http://www.pokemon-online.eu/downloads.php for updates.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="490"/>
-        <source>Old School buttons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="40"/>
-        <source>&amp;Report a Bug</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="client.cpp" line="556"/>
         <source>Battle Logs Directory</source>
         <translation type="unfinished"></translation>
@@ -892,6 +885,13 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
     <message>
         <location filename="client.cpp" line="619"/>
         <source>Old Version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="619"/>
+        <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
+
+http://www.pokemon-online.eu/downloads.php for updates.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1016,7 +1016,6 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
     <message>
         <location filename="controlpanel.ui" line="27"/>
         <source>User info</source>
-        <oldsource>User Info</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1082,13 +1081,31 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="367"/>
-        <source>Temporary bans</source>
+        <location filename="controlpanel.ui" line="235"/>
+        <source>User alias</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="474"/>
-        <source>Time left</source>
+        <location filename="controlpanel.ui" line="276"/>
+        <source>Ban list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="controlpanel.ui" line="294"/>
+        <location filename="controlpanel.ui" line="385"/>
+        <source>Refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="controlpanel.ui" line="301"/>
+        <location filename="controlpanel.ui" line="392"/>
+        <source>Unban</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="controlpanel.ui" line="308"/>
+        <location filename="controlpanel.ui" line="399"/>
+        <source>Ban IP ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1104,31 +1121,13 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="294"/>
-        <location filename="controlpanel.ui" line="385"/>
-        <source>Refresh</source>
+        <location filename="controlpanel.ui" line="367"/>
+        <source>Temporary bans</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="235"/>
-        <source>User alias</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="controlpanel.ui" line="276"/>
-        <source>Ban list</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="controlpanel.ui" line="301"/>
-        <location filename="controlpanel.ui" line="392"/>
-        <source>Unban</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="controlpanel.ui" line="308"/>
-        <location filename="controlpanel.ui" line="399"/>
-        <source>Ban IP ...</source>
+        <location filename="controlpanel.ui" line="474"/>
+        <source>Time left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1432,13 +1431,43 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="14"/>
+        <source>Item Clause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="15"/>
         <source>Challenge Cup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="16"/>
+        <source>No Timeout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="17"/>
         <source>Species Clause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="22"/>
+        <source>Sleep Clause prevented the sleep inducing effect of the move from working.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="23"/>
+        <source>Freeze Clause prevented the freezing effect of the move from working.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="24"/>
+        <source>Evasion Clause prevented the evasion increase of the move.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PokemonInfo/battlestructs.cpp" line="25"/>
+        <source>OHKO Clause prevented the One Hit KO from happening.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1484,36 +1513,6 @@ Moves:
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="43"/>
         <source>One player cannot have more than one of the same pokemon per team.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="22"/>
-        <source>Sleep Clause prevented the sleep inducing effect of the move from working.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="14"/>
-        <source>Item Clause</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="16"/>
-        <source>No Timeout</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="23"/>
-        <source>Freeze Clause prevented the freezing effect of the move from working.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="24"/>
-        <source>Evasion Clause prevented the evasion increase of the move.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../PokemonInfo/battlestructs.cpp" line="25"/>
-        <source>OHKO Clause prevented the One Hit KO from happening.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1617,12 +1616,12 @@ Moves:
     </message>
     <message>
         <location filename="serverchoice.cpp" line="20"/>
-        <source>Advanced connection</source>
+        <source>Players / Max</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="serverchoice.cpp" line="20"/>
-        <source>Players / Max</source>
+        <source>Advanced connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1897,7 +1896,6 @@ Moves:
     <message>
         <location filename="menu.cpp" line="43"/>
         <source>&amp;Language</source>
-        <oldsource>Language</oldsource>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1914,8 +1912,28 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="teambuilder.cpp" line="931"/>
+        <source>&amp;Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="935"/>
+        <source>&amp;Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="950"/>
+        <source>PokÃ©mon %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="teambuilder.cpp" line="954"/>
         <source>&amp;Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="956"/>
+        <source>Side Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1927,6 +1945,11 @@ Moves:
         <location filename="teambuilder.cpp" line="971"/>
         <location filename="teambuilder.cpp" line="1086"/>
         <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="980"/>
+        <source>N&amp;ature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1963,31 +1986,6 @@ Moves:
     <message>
         <location filename="teambuilder.cpp" line="1171"/>
         <source>Lv. %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="teambuilder.cpp" line="950"/>
-        <source>PokÃ©mon %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="teambuilder.cpp" line="931"/>
-        <source>&amp;Import</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="teambuilder.cpp" line="935"/>
-        <source>&amp;Export</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="teambuilder.cpp" line="956"/>
-        <source>Side Window</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="teambuilder.cpp" line="980"/>
-        <source>N&amp;ature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2187,13 +2185,11 @@ Moves:
     <message>
         <location filename="teambuilder.cpp" line="362"/>
         <source>&amp;New team</source>
-        <oldsource>&amp;Save Team</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="363"/>
         <source>&amp;Save team</source>
-        <oldsource>&amp;Load Team</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>

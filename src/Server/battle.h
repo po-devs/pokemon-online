@@ -425,8 +425,13 @@ public:
     unsigned true_rand() const {
         return unsigned(true_rand2());
     }
-
+private:
     QHash<int,int> spectators;
+public:
+    QHash<int, int> getSpectators() {
+        QMutexLocker m(&spectatorMutex);
+        return spectators;
+    }
 
     struct QuitException {};
 };

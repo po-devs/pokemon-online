@@ -982,7 +982,7 @@ void Server::battleResult(int desc, int winner, int loser, bool rated, const QSt
     if (desc == Forfeit && player(winner)->battle->finished()) {
         player(winner)->battleResult(Close, winner, loser);
         player(loser)->battleResult(Close, winner, loser);
-        foreach(int id, player(winner)->battle->spectators) {
+        foreach(int id, player(winner)->battle->getSpectators()) {
             player(id)->battleResult(Close, winner, loser);
         }
     } else {
@@ -1023,7 +1023,7 @@ void Server::removeBattle(int winner, int loser)
     BattleSituation *battle = player(winner)->battle;
 
     mybattles.remove(battle->publicId());
-    foreach(int id, battle->spectators) {
+    foreach(int id, battle->getSpectators()) {
         player(id)->relay().finishSpectating(battle->publicId());
         player(id)->battlesSpectated.remove(battle->publicId());
     }
