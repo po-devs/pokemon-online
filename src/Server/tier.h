@@ -4,7 +4,7 @@
 #include <QtCore>
 #include <QtGui>
 #include "sql.h"
-#include "../Utilities/functions.h"
+#include "memoryholder.h"
 
 class TierMachine;
 struct TeamBattle;
@@ -13,14 +13,14 @@ class WaitingObject;
 
 struct MemberRating
 {
-    PROPERTY(QString, name);
-    PROPERTY(int, matches);
-    PROPERTY(int, rating);
+    QString name;
+    int matches;
+    int rating;
 
-public:
-    MemberRating() {
-        rating() = 1000;
-        matches() = 0;
+    MemberRating(const QString &name="") {
+        rating = 1000;
+        matches = 0;
+        this->name = name;
     }
 
     QString toString() const;
@@ -51,14 +51,13 @@ public:
     QMultiHash<int, BannedPoke> bannedPokes2; // The set is there to keep good perfs
     QList<BannedPoke> bannedPokes; // The list is there to keep the same order
 
-    Tier(TierMachine *boss = NULL) : boss(boss), memberMutex(new QMutex),
-        cachedMembersMutex(new QMutex){}
+    Tier(TierMachine *boss = NULL) : boss(boss) {}
 
     void fromString(const QString &s);
     QString toString() const;
 
     int rating(const QString &name) const {
-        return members.value(name.toLower()).rating();
+        return holder.member(name).rating;
     }
 
     void changeRating(const QString &winner, const QString &loser);
@@ -67,15 +66,10 @@ public:
 
     bool isBanned(const PokeBattle &p) const;
     bool isValid(const TeamBattle &t) const;
-    bool exists(const QString &name) const {
-        return members.contains(name.toLower());
-    }
-    int ranking(const QString &name) const {
-        if (!exists(name))
-            return -1;
-        //return members.value(name.toLower()).node()->ranking();
-        return 1;
-    }
+    bool exists(const QString &name) const;
+    int ranking(const QString &name) const;
+    void updateMember(const MemberRating &m);
+    void loadMemberInMemory(const QString &name);
 
 private:
     void loadFromFile();
@@ -84,16 +78,11 @@ private:
     /* Used for table name in SQL database */
     QString sql_table;
 
-    QHash<QString, MemberRating> members;
-    QSet<QString> nonExistentMembers;
-    QSharedPointer<QMutex> memberMutex;
-    QLinkedList<QString> cachedMembersOrder;
-    QSharedPointer<QMutex> cachedMembersMutex;
-    QSet<QString> bannedIPs;
-    QHash<QString, QString> bannedMembers;
+    MemoryHolder<MemberRating> holder;
 
     WaitingObject* getObject();
     void freeObject(WaitingObject *c);
+    MemberRating member(const QString &name);
 
     QSet<WaitingObject*> freeObjects;
     QSet<WaitingObject*> usedObjects;
