@@ -64,7 +64,7 @@ public:
         memberMutex.unlock();
     }
     /* Precondition: the member must be in memory. */
-    bool exists(const QString &name)
+    bool exists(const QString &name) const
     {
         QString n2 = name.toLower();
 
@@ -82,7 +82,7 @@ public:
         }
     }
 
-    Member member (const QString &name2) {
+    Member member (const QString &name2) const {
         QString name = name2.toLower();
 
         if (exists(name)) {
@@ -97,9 +97,9 @@ public:
 protected:
     QHash<QString, Member> members;
     QSet<QString> nonExistentMembers;
-    QMutex memberMutex;
+    mutable QMutex memberMutex;
     QLinkedList<QString> cachedMembersOrder;
-    QMutex cachedMembersMutex;
+    mutable QMutex cachedMembersMutex;
     int cacheSize;
 };
 

@@ -19,10 +19,18 @@ void TierMachine::save()
     out.write(toString().toUtf8());
 }
 
+void TierMachine::clear()
+{
+    while (m_tiers.size() > 0) {
+        delete m_tiers.takeLast();
+    }
+
+    m_tierNames.clear();
+}
+
 void TierMachine::fromString(const QString &s)
 {
-    m_tiers.clear();
-    m_tierNames.clear();
+    clear();
 
     QStringList candidates = s.split('\n', QString::SkipEmptyParts);
 
@@ -32,19 +40,19 @@ void TierMachine::fromString(const QString &s)
 
 
     foreach(QString candidate, candidates) {
-        m_tiers.push_back(Tier(this));
-        m_tiers.back().fromString(candidate);
-        if (m_tierNames.contains(m_tiers.back().name())) {
-            m_tiers.pop_back();
+        m_tiers.push_back(new Tier(this));
+        m_tiers.back()->fromString(candidate);
+        if (m_tierNames.contains(m_tiers.back()->name())) {
+            delete m_tiers.takeLast();
         } else {
-            m_tierNames.push_back(m_tiers.back().name());
+            m_tierNames.push_back(m_tiers.back()->name());
         }
     }
 
     /* Now, we just check there isn't any cyclic inheritance tree */
     for(int i = 0; i < m_tiers.length(); i++) {
         QSet<QString> family;
-        Tier *t = & m_tiers[i];
+        Tier *t = m_tiers[i];
         family.insert(t->name());
         while (t->parent.length() > 0) {
             if (family.contains(t->parent)) {
@@ -58,7 +66,7 @@ void TierMachine::fromString(const QString &s)
 
     /* Then, we open the files and load the ladders for each tier and people */
     for (int i =0; i < m_tiers.size(); i++) {
-        m_tiers[i].loadFromFile();
+        m_tiers[i]->loadFromFile();
     }
 
     /* And we change the tierList variable too! */
@@ -77,7 +85,7 @@ QString TierMachine::toString() const
     QString res = "";
 
     for(int i = 0; i < m_tiers.size(); i++) {
-        res += m_tiers[i].toString() + "\n";
+        res += m_tiers[i]->toString() + "\n";
     }
     if (res.length() > 0) {
         res.resize(res.size()-1);
@@ -91,20 +99,30 @@ Tier &TierMachine::tier(const QString &name)
 {
     for(int i = 0; i < m_tierNames.length(); i++) {
         if (m_tierNames[i].compare(name, Qt::CaseInsensitive) == 0) {
-            return m_tiers[i];
+            return *m_tiers[i];
         }
     }
-    return m_tiers[0];
+    return *m_tiers[0];
 }
 
 const Tier &TierMachine::tier(const QString &name) const
 {
     for(int i = 0; i < m_tierNames.length(); i++) {
         if (m_tierNames[i].compare(name, Qt::CaseInsensitive) == 0) {
-            return m_tiers[i];
+            return *m_tiers[i];
         }
     }
-    return m_tiers[0];
+    return *m_tiers[0];
+}
+
+bool TierMachine::exists(const QString &name) const
+{
+    for(int i = 0; i < m_tierNames.length(); i++) {
+        if (m_tierNames[i].compare(name, Qt::CaseInsensitive) == 0) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool TierMachine::isValid(const TeamBattle &t, QString tier) const
@@ -142,7 +160,9 @@ int TierMachine::ranking(const QString &name, const QString &tier)
 
 int TierMachine::count(const QString &tier)
 {
-    return this->tier(tier).members.count();
+    (void) tier;
+    return 0;
+    //return this->tier(tier).members.count();
 }
 
 void TierMachine::changeRating(const QString &winner, const QString &loser, const QString &tier)
@@ -163,7 +183,7 @@ QPair<int, int> TierMachine::pointChangeEstimate(const QString &player, const QS
 QString TierMachine::findTier(const TeamBattle &t) const
 {
     for (int i = m_tiers.size()-1; i >= 0; i--) {
-        if (m_tiers[i].isValid(t)) {
+        if (m_tiers[i]->isValid(t)) {
             return m_tierNames[i];
         }
     }

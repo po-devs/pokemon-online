@@ -23,6 +23,7 @@ public:
     static void init();
     static TierMachine *obj();
 
+    void clear();
     void save();
 
     QString toString()const;
@@ -31,9 +32,7 @@ public:
     const QStringList& tierNames() const;
     Tier& tier(const QString &name);
     const Tier& tier(const QString &name) const;
-    bool exists(const QString &name) const {
-        return m_tierNames.contains(name);
-    }
+    bool exists(const QString &name) const;
     bool existsPlayer(const QString &name, const QString &player);
     bool isValid(const TeamBattle &t, const QString tier) const;
     bool isBanned(const PokeBattle &p, const QString &tier) const;
@@ -48,7 +47,7 @@ public:
 
     QString findTier(const TeamBattle &t) const;
 private:
-    QList<Tier> m_tiers;
+    QList<Tier*> m_tiers;
     QStringList m_tierNames;
     static TierMachine *inst;
 };

@@ -9,23 +9,20 @@
 
 QString MemberRating::toString() const
 {
-    return name() + "%" + QString::number(matches()).rightJustified(5,'0',true) + "%" +
-            QString::number(rating()).rightJustified(5,'0',true);
+    return name + "%" + QString::number(matches).rightJustified(5,'0',true) + "%" +
+            QString::number(rating).rightJustified(5,'0',true);
 }
 
 void MemberRating::changeRating(int opponent_rating, bool win)
 {
     QPair<int,int> change = pointChangeEstimate(opponent_rating);
 
-    rating() = rating() + (win ? change.first : change.second);
-
-    if (matches() <=9999)
-        matches() += 1;
+    rating = rating + (win ? change.first : change.second);
 }
 
 QPair<int, int> MemberRating::pointChangeEstimate(int opponent_rating)
 {
-    int n = matches();
+    int n = matches;
 
     int kfactor;
     if (n <= 5) {
@@ -34,7 +31,7 @@ QPair<int, int> MemberRating::pointChangeEstimate(int opponent_rating)
     } else {
         kfactor = 32;
     }
-    double myesp = 1/(1+ pow(10., (float(opponent_rating)-rating())/400));
+    double myesp = 1/(1+ pow(10., (float(opponent_rating)-rating)/400));
 
     return QPair<int,int>((1. - myesp)*kfactor,(0. - myesp)*kfactor);
 }
@@ -167,6 +164,19 @@ bool Tier::isBanned(const PokeBattle &p) const {
     }
 }
 
+bool Tier::exists(const QString &name) const
+{
+    return holder.exists(name.toLower());
+}
+
+int Tier::ranking(const QString &name) const
+{
+   if (!exists(name))
+       return -1;
+   //return members.value(name.toLower()).node()->ranking();
+   return 1;
+}
+
 bool Tier::isValid(const TeamBattle &t)  const
 {
     for (int i = 0; i< 6; i++)
@@ -178,53 +188,46 @@ bool Tier::isValid(const TeamBattle &t)  const
 
 void Tier::changeRating(const QString &player, int newRating)
 {
-    QString w2 = player.toLower();
-    if (!members.contains(w2)) {
-        MemberRating m;
-        m.name() = w2;
-        members[w2] = m;
-    }
-    members[w2].rating() = newRating;
+    MemberRating m = member(player);
+    m.rating = newRating;
+
+    updateMember(m);
+}
+
+MemberRating Tier::member(const QString &name)
+{
+    if (!holder.isInMemory(name))
+        loadMemberInMemory(name);
+
+    return holder.member(name);
+}
+
+void Tier::loadMemberInMemory(const QString &name)
+{
+    (void) name;
+}
+
+void Tier::updateMember(const MemberRating &m)
+{
+    holder.addMemberInMemory(m);
 }
 
 void Tier::changeRating(const QString &w, const QString &l)
 {
-    QString w2 = w.toLower();
-    QString l2 = l.toLower();
-
     /* Not really necessary, as pointChangeEstimate should always be called
        at the beginning of the battle, but meh maybe it's not a battle */
-    if (!members.contains(w2)) {
-        MemberRating m;
-        m.name() = w2;
-        members[w2] = m;
-    }
-    if (!members.contains(l2)) {
-        MemberRating m;
-        m.name() = l2;
-        members[l2] = m;
-    }
+    MemberRating win = member(w);
+    MemberRating los = member(l);
 
-    int oldw2 = members[w2].rating();
-    members[w2].changeRating(members[l2].rating(), true);
-    members[l2].changeRating(oldw2, false);
+    int oldwin = win.rating;
+    win.changeRating(los.rating, true);
+    los.changeRating(oldwin, false);
+
+    updateMember(win);
+    updateMember(los);
 }
 
 QPair<int, int> Tier::pointChangeEstimate(const QString &player, const QString &foe)
 {
-    QString w2 = player.toLower();
-    QString l2 = foe.toLower();
-
-    if (!members.contains(w2)) {
-        MemberRating m;
-        m.name() = w2;
-        members[w2] = m;
-    }
-    if (!members.contains(l2)) {
-        MemberRating m;
-        m.name() = l2;
-        members[l2] = m;
-    }
-
-    return members[w2].pointChangeEstimate(members[l2].rating());
+    return member(player).pointChangeEstimate(member(foe).rating);
 }
