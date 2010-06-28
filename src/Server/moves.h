@@ -20,9 +20,9 @@ struct MoveEffect : public QVariantHash
     static void setup(int movenum, int source, int target, BattleSituation &b);
     static void unsetup(int movenum, int source, BattleSituation &b);
 
-    static QTSHash<int, MoveMechanics> mechanics;
-    static QTSHash<int, QString> names;
-    static QTSHash<QString, int> nums;
+    static QHash<int, MoveMechanics> mechanics;
+    static QHash<int, QString> names;
+    static QHash<QString, int> nums;
 
     static void init();
 };

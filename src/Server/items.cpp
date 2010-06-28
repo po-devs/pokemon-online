@@ -5,9 +5,9 @@
 typedef ItemMechanics IM;
 typedef BattleSituation BS;
 
-QTSHash<int, ItemMechanics> ItemEffect::mechanics;
-QTSHash<int, QString> ItemEffect::names;
-QTSHash<QString, int> ItemEffect::nums;
+QHash<int, ItemMechanics> ItemEffect::mechanics;
+QHash<int, QString> ItemEffect::names;
+QHash<QString, int> ItemEffect::nums;
 
 void ItemEffect::activate(const QString &effect, int num, int source, int target, BattleSituation &b)
 {
