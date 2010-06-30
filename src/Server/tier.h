@@ -10,6 +10,7 @@ class TierMachine;
 struct TeamBattle;
 struct PokeBattle;
 class WaitingObject;
+class LoadThread;
 
 struct MemberRating
 {
@@ -17,10 +18,7 @@ struct MemberRating
     int matches;
     int rating;
 
-    MemberRating(const QString &name="") {
-        rating = 1000;
-        matches = 0;
-        this->name = name;
+    MemberRating(const QString &name="", int matches=0, int rating=1000) : name(name), matches(matches), rating(rating) {
     }
 
     QString toString() const;
@@ -45,13 +43,14 @@ class Tier
 public:
     void changeName(const QString &name);
     QString name() const;
+    void changeId(int id);
 
     QString parent;
     TierMachine *boss;
     QMultiHash<int, BannedPoke> bannedPokes2; // The set is there to keep good perfs
     QList<BannedPoke> bannedPokes; // The list is there to keep the same order
 
-    Tier(TierMachine *boss = NULL) : boss(boss) {}
+    Tier(TierMachine *boss = NULL);
 
     void fromString(const QString &s);
     QString toString() const;
@@ -69,7 +68,17 @@ public:
     bool exists(const QString &name) const;
     int ranking(const QString &name) const;
     void updateMember(const MemberRating &m);
-    void loadMemberInMemory(const QString &name);
+    void loadMemberInMemory(const QString &name, QObject *o=NULL, const char *slot=NULL);
+    void processQuery(QSqlQuery *q, const QString &name, int type);
+protected:
+    enum QueryType {
+        GetInfoOnUser
+    };
+
+    int make_query_number(QueryType type);
+    int id() const {
+        return m_id;
+    }
 
 private:
     void loadFromFile();
@@ -77,15 +86,13 @@ private:
     QString m_name;
     /* Used for table name in SQL database */
     QString sql_table;
+    int m_id;
 
     MemoryHolder<MemberRating> holder;
 
-    WaitingObject* getObject();
-    void freeObject(WaitingObject *c);
     MemberRating member(const QString &name);
 
-    QSet<WaitingObject*> freeObjects;
-    QSet<WaitingObject*> usedObjects;
+    LoadThread *getThread();
 };
 
 

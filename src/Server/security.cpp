@@ -10,8 +10,6 @@ MemoryHolder<SecurityManager::Member> SecurityManager::holder;
 QNickValidator SecurityManager::val(NULL);
 QSet<QString> SecurityManager::bannedIPs;
 QHash<QString, QString> SecurityManager::bannedMembers;
-QSet<WaitingObject*> SecurityManager::freeObjects;
-QSet<WaitingObject*> SecurityManager::usedObjects;
 int SecurityManager::nextLoadThreadNumber = 0;
 LoadThread * SecurityManager::threads = NULL;
 InsertThread<SecurityManager::Member> * SecurityManager::ithread = NULL;
@@ -123,7 +121,7 @@ void SecurityManager::init()
     }
 
     ithread = new InsertThread<Member>();
-    connect(ithread, SIGNAL(processMember(QSqlQuery*,void*,bool)), instance, SLOT(insertMember(QSqlQuery*,void*,bool)), Qt::DirectConnection);
+    connect(ithread, SIGNAL(processMember(QSqlQuery*,void*,int)), instance, SLOT(insertMember(QSqlQuery*,void*,int)), Qt::DirectConnection);
 
     ithread->start();
 
@@ -289,17 +287,17 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
 
     holder.cleanCache();
 
-    WaitingObject *w = getObject();
+    WaitingObject *w = WaitingObjects::getObject();
 
     connect(w, SIGNAL(waitFinished()), o, slot);
 
     if (holder.isInMemory(n2)) {
         w->emitSignal();
-        freeObjects.insert(w);
+        WaitingObjects::freeObject(w);
     }
     else {
-        usedObjects.insert(w);
-        connect(w, SIGNAL(waitFinished()), SecurityManager::instance, SLOT(freeObject()));
+        WaitingObjects::useObject(w);
+        connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
 
         LoadThread *t = getThread();
 
@@ -307,32 +305,15 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
     }
 }
 
-
-WaitingObject * SecurityManager::getObject()
-{
-    if (!freeObjects.isEmpty()) {
-        WaitingObject *w = *freeObjects.begin();
-        freeObjects.remove(w);
-        return w;
-    } else {
-        return new WaitingObject();
-    }
-}
-
-void SecurityManager::freeObject()
-{
-    usedObjects.remove((WaitingObject*)sender());
-    freeObjects.insert((WaitingObject*)sender());
-}
-
 LoadThread * SecurityManager::getThread()
 {
-    int n = nextLoadThreadNumber;
+    /* '%' is a safety thing, in case nextLoadThreadNumber is also accessed in writing and that messes it up, at least it isn't out of bounds now */
+    int n = nextLoadThreadNumber % loadThreadCount;
     nextLoadThreadNumber = (nextLoadThreadNumber + 1) % loadThreadCount;
     return threads + n;
 }
 
-void SecurityManager::insertMember(QSqlQuery *q, void *m2, bool update)
+void SecurityManager::insertMember(QSqlQuery *q, void *m2, int update)
 {
     SecurityManager::Member *m = (SecurityManager::Member*) m2;
 
@@ -369,4 +350,7 @@ void SecurityManager::loadMember(QSqlQuery *q, const QString &name, int query_ty
     }
 }
 
+
+/* Used for threads */
 SecurityManager * SecurityManager::instance = new SecurityManager();
+

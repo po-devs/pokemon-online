@@ -6,6 +6,7 @@
 #include "tiermachine.h"
 #include "security.h"
 #include "server.h"
+#include "waitingobject.h"
 
 QString MemberRating::toString() const
 {
@@ -17,6 +18,7 @@ void MemberRating::changeRating(int opponent_rating, bool win)
 {
     QPair<int,int> change = pointChangeEstimate(opponent_rating);
 
+    matches += 1;
     rating = rating + (win ? change.first : change.second);
 }
 
@@ -45,6 +47,16 @@ void Tier::changeName(const QString &name)
 QString Tier::name() const
 {
     return m_name;
+}
+
+void Tier::changeId(int id)
+{
+    m_id = id;
+}
+
+int Tier::make_query_number(QueryType type)
+{
+    return (type << 16) + id();
 }
 
 void Tier::loadFromFile()
@@ -194,24 +206,6 @@ void Tier::changeRating(const QString &player, int newRating)
     updateMember(m);
 }
 
-MemberRating Tier::member(const QString &name)
-{
-    if (!holder.isInMemory(name))
-        loadMemberInMemory(name);
-
-    return holder.member(name);
-}
-
-void Tier::loadMemberInMemory(const QString &name)
-{
-    (void) name;
-}
-
-void Tier::updateMember(const MemberRating &m)
-{
-    holder.addMemberInMemory(m);
-}
-
 void Tier::changeRating(const QString &w, const QString &l)
 {
     /* Not really necessary, as pointChangeEstimate should always be called
@@ -227,7 +221,80 @@ void Tier::changeRating(const QString &w, const QString &l)
     updateMember(los);
 }
 
+MemberRating Tier::member(const QString &name)
+{
+    if (!holder.isInMemory(name))
+        loadMemberInMemory(name);
+
+    return holder.member(name);
+}
+
+void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
+{
+    QString n2 = name.toLower();
+
+    if (o == NULL) {
+        if (holder.isInMemory(n2))
+            return;
+
+        QSqlQuery q;
+        q.setForwardOnly(true);
+        processQuery(&q, n2, GetInfoOnUser);
+
+        return;
+    }
+
+    holder.cleanCache();
+
+    WaitingObject *w = WaitingObjects::getObject();
+
+    QObject::connect(w, SIGNAL(waitFinished()), o, slot);
+
+    if (holder.isInMemory(n2)) {
+        w->emitSignal();
+        WaitingObjects::freeObject(w);
+    }
+    else {
+        WaitingObjects::useObject(w);
+        QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
+
+        LoadThread *t = getThread();
+
+        t->pushQuery(n2, w, make_query_number(GetInfoOnUser));
+    }
+}
+
+/* Precondition: name is in lowercase */
+void Tier::processQuery(QSqlQuery *q, const QString &name, int type)
+{
+    if (type == GetInfoOnUser) {
+        q->prepare(QString("select matches, rating from %1 where name=? limit 1").arg(sql_table));
+        q->addBindValue(name);
+        q->exec();
+        if (!q->next()) {
+            holder.addNonExistant(name);
+        } else {
+            MemberRating m(name, q->value(0).toInt(), q->value(1).toInt());
+            holder.addMemberInMemory(m);
+        }
+    }
+}
+
+void Tier::updateMember(const MemberRating &m)
+{
+    holder.addMemberInMemory(m);
+}
+
+Tier::Tier(TierMachine *boss) : boss(boss), holder(1000){
+
+}
+
 QPair<int, int> Tier::pointChangeEstimate(const QString &player, const QString &foe)
 {
     return member(player).pointChangeEstimate(member(foe).rating);
+}
+
+LoadThread * Tier::getThread()
+{
+    return boss->getThread();
 }

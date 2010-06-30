@@ -143,7 +143,7 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
 }
 #endif
 
-void fill_container_with_file(QStringList &container, const QString & filename)
+static void fill_container_with_file(QStringList &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -158,7 +158,7 @@ void fill_container_with_file(QStringList &container, const QString & filename)
     }
 }
 
-void fill_container_with_file(QList<QString> &container, const QString & filename)
+static void fill_container_with_file(QList<QString> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -173,7 +173,7 @@ void fill_container_with_file(QList<QString> &container, const QString & filenam
     }
 }
 
-void fill_container_with_file(QList<QColor> &container, const QString &filename)
+static void fill_container_with_file(QList<QColor> &container, const QString &filename)
 {
     QFile file(filename);
 
@@ -188,7 +188,7 @@ void fill_container_with_file(QList<QColor> &container, const QString &filename)
     }
 }
 
-void fill_container_with_file(QList<bool> &container, const QString & filename)
+static void fill_container_with_file(QList<bool> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -205,7 +205,7 @@ void fill_container_with_file(QList<bool> &container, const QString & filename)
     }
 }
 
-void fill_container_with_file(QList<char> &container, const QString & filename)
+static void fill_container_with_file(QList<char> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -223,7 +223,7 @@ void fill_container_with_file(QList<char> &container, const QString & filename)
 }
 
 template <class T>
-void fill_container_with_file(T &container, const QString & filename)
+static void fill_container_with_file(T &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -240,7 +240,7 @@ void fill_container_with_file(T &container, const QString & filename)
     }
 }
 
-QString get_line(const QString & filename, int linenum)
+static QString get_line(const QString & filename, int linenum)
 {
     QFile file(filename);
 

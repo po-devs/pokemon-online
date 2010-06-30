@@ -6,10 +6,25 @@ TierMachine* TierMachine::inst;
 void TierMachine::init()
 {
     inst = new TierMachine();
+}
+
+TierMachine::TierMachine()
+{
+    threads = new LoadThread[loadThreadCount];
+
+    for (int i = 0; i < loadThreadCount; i++) {
+        connect(&threads[i], SIGNAL(processQuery (QSqlQuery *, QString, int)), this, SLOT(processQuery(QSqlQuery*,QString,int)), Qt::DirectConnection);
+        threads[i].start();
+    }
+
+    ithread = new InsertThread<MemberRating>();
+    connect(ithread, SIGNAL(processMember(QSqlQuery*,void*,int)), this, SLOT(insertMember(QSqlQuery*,void*,int)), Qt::DirectConnection);
+
+    ithread->start();
 
     QFile in("tiers.txt");
     in.open(QIODevice::ReadOnly);
-    inst->fromString(QString::fromUtf8(in.readAll()));
+    fromString(QString::fromUtf8(in.readAll()));
 }
 
 void TierMachine::save()
@@ -219,3 +234,10 @@ void TierWindow::done()
     emit tiersChanged();
 }
 
+LoadThread *TierMachine::getThread()
+{
+    /* '%' is a safety thing, in case nextLoadThreadNumber is also accessed in writing and that messes it up, at least it isn't out of bounds now */
+    int n = nextLoadThreadNumber % loadThreadCount;
+    nextLoadThreadNumber = (nextLoadThreadNumber + 1) % loadThreadCount;
+    return threads + n;
+}

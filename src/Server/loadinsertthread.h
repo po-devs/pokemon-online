@@ -49,11 +49,11 @@ class InsertThread : public AbstractInsertThread
 {
 public:
     /* update/insert ? */
-    void pushMember(const T &m, bool update=true);
+    void pushMember(const T &m, int desc);
 
     void run();
 private:
-    QLinkedList<QPair<T, bool> > members;
+    QLinkedList<QPair<T, int> > members;
     QMutex memberMutex;
     QSemaphore sem;
 };
@@ -62,7 +62,7 @@ private:
 template <class T>
 void InsertThread<T>::run()
 {
-    QString dbname = QString::number(int(QThread::currentThreadId()));
+    QString dbname = QString::number(intptr_t(QThread::currentThreadId()));
 
     SQLCreator::createSQLConnection(dbname);
     QSqlDatabase db = QSqlDatabase::database(dbname);
@@ -73,7 +73,7 @@ void InsertThread<T>::run()
 
     forever {
         memberMutex.lock();
-        QPair<T , bool> p = members.takeFirst();
+        QPair<T , int> p = members.takeFirst();
         memberMutex.unlock();
 
         emit processMember(&sql, &p.first, p.second);
@@ -83,11 +83,11 @@ void InsertThread<T>::run()
 }
 
 template <class T>
-void InsertThread<T>::pushMember(const T &member, bool update)
+void InsertThread<T>::pushMember(const T &member, int desc)
 {
     memberMutex.lock();
 
-    members.push_back(QPair<T, bool> (member, update) );
+    members.push_back(QPair<T, int> (member, desc) );
 
     memberMutex.unlock();
 
