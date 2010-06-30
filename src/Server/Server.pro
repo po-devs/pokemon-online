@@ -39,7 +39,8 @@ SOURCES += main.cpp \
     sql.cpp \
     sqlconfig.cpp \
     tiermachine.cpp \
-    loadinsertthread.cpp
+    loadinsertthread.cpp \
+    waitingobject.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \

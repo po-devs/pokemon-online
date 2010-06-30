@@ -97,8 +97,7 @@ public:
     static QHash<QString, QString> banList();
 
 private slots:
-    void freeObject();
-    static void insertMember(QSqlQuery *q, void *m, bool update);
+    static void insertMember(QSqlQuery *q, void *m, int update);
     static void loadMember(QSqlQuery *q, const QString &name, int query_type);
 
 private:
@@ -111,8 +110,6 @@ private:
 
     static WaitingObject* getObject();
     static void freeObject(WaitingObject *c);
-    static LoadThread * getThread();
-
 
     static QSet<WaitingObject*> freeObjects;
     static QSet<WaitingObject*> usedObjects;
@@ -123,6 +120,8 @@ private:
     static int nextLoadThreadNumber;
     static LoadThread *threads;
     static InsertThread<Member> *ithread;
+
+    static LoadThread * getThread();
 
     static QNickValidator val;
 };

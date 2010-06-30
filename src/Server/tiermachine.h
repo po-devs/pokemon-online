@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <QtSql>
 #include "../Utilities/functions.h"
+#include "loadinsertthread.h"
 
 class Tier;
 struct TeamBattle;
@@ -12,8 +13,11 @@ class WaitingObject;
 class MemberRating;
 
 
-class TierMachine
+class TierMachine : public QObject
 {
+    Q_OBJECT
+
+    friend class Tier;
     PROPERTY(QString, tierList);
 public:
     enum QueryType {
@@ -22,6 +26,8 @@ public:
 
     static void init();
     static TierMachine *obj();
+
+    TierMachine();
 
     void clear();
     void save();
@@ -50,6 +56,13 @@ private:
     QList<Tier*> m_tiers;
     QStringList m_tierNames;
     static TierMachine *inst;
+
+    static const int loadThreadCount=4;
+    int nextLoadThreadNumber;
+    LoadThread *threads;
+    InsertThread<MemberRating> *ithread;
+
+    LoadThread * getThread();
 };
 
 
@@ -66,46 +79,5 @@ private:
     QPlainTextEdit *m_editWindow;
 };
 
-
-class LoadTThread : public QThread
-{
-public:
-    void pushQuery(const QString &name, WaitingObject *w, TierMachine::QueryType query_type);
-
-    void run();
-
-    static void processQuery (QSqlQuery *q, const QString &name, TierMachine::QueryType query_type);
-private:
-    struct Query {
-        QString member;
-        WaitingObject *w;
-        TierMachine::QueryType query_type;
-
-        Query(const QString &m, WaitingObject *w, TierMachine::QueryType query_type)
-            : member(m), w(w), query_type(query_type)
-        {
-
-        }
-    };
-
-    QLinkedList<Query> queries;
-    QMutex queryMutex;
-    QSemaphore sem;
-};
-
-class InsertTThread : public QThread
-{
-public:
-    /* update/insert ? */
-    void pushMember(const MemberRating &m, bool update=true);
-
-    void run();
-
-    static void processMember (QSqlQuery *q, const MemberRating &m, bool update=true);
-private:
-    QLinkedList<QPair<MemberRating, bool> > members;
-    QMutex memberMutex;
-    QSemaphore sem;
-};
 
 #endif // TIERMACHINE_H
