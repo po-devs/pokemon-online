@@ -303,13 +303,13 @@ void Tier::insertMember(QSqlQuery *q, void *data, int update)
     MemberRating *m = (MemberRating*) data;
 
     if (update)
-        q->prepare(QString("update %1 set matches=:matches, rating=:rating, where name=:name").arg(sql_table));
+        q->prepare(QString("update %1 set matches=:matches, rating=:rating where name=:name").arg(sql_table));
     else
-        q->prepare(QString("insert into %1(name, matches, rating) values(:name, :matches, :rating)"));
+        q->prepare(QString("insert into %1(name, matches, rating) values(:name, :matches, :rating)").arg(sql_table));
 
     q->bindValue(":name", m->name);
-    q->bindValue(":rating", m->rating);
     q->bindValue(":matches", m->matches);
+    q->bindValue(":rating", m->rating);
 
     q->exec();
     q->finish();
@@ -324,7 +324,7 @@ void Tier::updateMember(const MemberRating &m, bool add)
 
 void Tier::updateMemberInDatabase(const MemberRating &m, bool add)
 {
-    boss->ithread->pushMember(m, make_query_number(!add));
+    boss->ithread->pushMember(m, make_query_number(int(!add)));
 }
 
 Tier::Tier(TierMachine *boss) : boss(boss), holder(1000){
@@ -333,7 +333,10 @@ Tier::Tier(TierMachine *boss) : boss(boss), holder(1000){
 
 QPair<int, int> Tier::pointChangeEstimate(const QString &player, const QString &foe)
 {
-    return member(player).pointChangeEstimate(member(foe).rating);
+    MemberRating p = exists(player) ? member(player) : MemberRating(player);
+    MemberRating f = exists(foe) ? member(foe) : MemberRating(foe);
+
+    return p.pointChangeEstimate(f.rating);
 }
 
 LoadThread * Tier::getThread()

@@ -34,7 +34,7 @@ void TierMachine::processQuery(QSqlQuery *q, const QString &member, int queryNo)
     if (m_tiers.length() > tierno) {
         m_tiers[tierno]->processQuery(q, member, queryNo >> 16);
     } else {
-        qDebug() << "Critical! invalid tier query";
+        qDebug() << "Critical! invalid load tier membe query, tier requested: " << tierno << "query no: " << queryNo;
         return;
     }
 }
@@ -46,7 +46,7 @@ void TierMachine::insertMember(QSqlQuery *q, void *m, int queryNo)
     if (m_tiers.length() > tierno) {
         m_tiers[tierno]->insertMember(q, m, queryNo >> 16);
     } else {
-        qDebug() << "Critical! invalid tier query";
+        qDebug() << "Critical! invalid insert tier query, tier requested: " << tierno << "query no: " << queryNo;
         return;
     }
 }
@@ -105,6 +105,7 @@ void TierMachine::fromString(const QString &s)
 
     /* Then, we open the files and load the ladders for each tier and people */
     for (int i =0; i < m_tiers.size(); i++) {
+        m_tiers[i]->changeId(i);
         m_tiers[i]->loadFromFile();
     }
 
