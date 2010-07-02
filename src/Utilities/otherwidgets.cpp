@@ -46,12 +46,39 @@ void QEntitled::setTitle(const QString &title)
     m_title->setText(title);
 }
 
+/* On linux the function p.mask() screws up,
+   so a new one is made */
+static QBitmap mask(const QPixmap &p)
+{
+    /*
+     * If you ever have problems with images (because the borders aren't alpha'd properly,
+     *   uncomment this code.
+     * /
+
+    QBitmap b(p.width(), p.height());
+
+    QImage image = p.toImage();
+
+    for (int i = 0; i < image.width(); i++) {
+        for (int j = 0; j < image.height(); j++) {
+            image.setPixel(i,j, qAlpha(image.pixel(i,j)) <= 0x0f ? 0x0 : 0xffffffff);
+        }
+    }
+
+    if (image.size().width() == 138) {
+        image.save("image.bmp");
+    }
+    return QBitmap::fromData(p.size(), image.bits());
+    */
+    return QBitmap::fromData(p.size(), p.toImage().bits());
+}
+
 QImageButton::QImageButton(const QString &normal, const QString &hovered, const QString &checked)
             : myPic(normal), myHoveredPic(hovered), lastUnderMouse(-1), pressed(false)
 {
     setFixedSize(myPic.size());
 
-    setMask(myPic.mask());
+    setMask(::mask(myPic));
     lastState = Normal;
 
     /* Both are necessary for some styles */
@@ -69,7 +96,7 @@ void QImageButton::changePics(const QString &normal, const QString &hovered, con
     if (checked != "")
         myCheckedPic = QPixmap(checked);
 
-    setMask(lastState == Checked ? myCheckedPic.mask() : (lastState == Normal ? myPic.mask() : myHoveredPic.mask()));
+    setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : ::mask(myHoveredPic)));
 
     update();
 }
@@ -122,7 +149,7 @@ void QImageButton::paintEvent(QPaintEvent *e)
 
     if (newState != lastState) {
         lastState = newState;
-        setMask(lastState == Checked ? myCheckedPic.mask() : (lastState == Normal ? myPic.mask() : myHoveredPic.mask()));
+        setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : ::mask(myHoveredPic)));
     }
 
     lastUnderMouse = underMouse();
