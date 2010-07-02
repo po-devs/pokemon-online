@@ -27,6 +27,30 @@ TierMachine::TierMachine()
     fromString(QString::fromUtf8(in.readAll()));
 }
 
+void TierMachine::processQuery(QSqlQuery *q, const QString &member, int queryNo)
+{
+    int tierno = queryNo % (1 << 16);
+
+    if (m_tiers.length() > tierno) {
+        m_tiers[tierno]->processQuery(q, member, queryNo >> 16);
+    } else {
+        qDebug() << "Critical! invalid tier query";
+        return;
+    }
+}
+
+void TierMachine::insertMember(QSqlQuery *q, void *m, int queryNo)
+{
+    int tierno = queryNo % (1 << 16);
+
+    if (m_tiers.length() > tierno) {
+        m_tiers[tierno]->insertMember(q, m, queryNo >> 16);
+    } else {
+        qDebug() << "Critical! invalid tier query";
+        return;
+    }
+}
+
 void TierMachine::save()
 {
     QFile out("tiers.txt");

@@ -41,7 +41,7 @@ public:
     virtual void run() = 0;
 
 signals:
-    void processMember (QSqlQuery *q, void * m, bool update=true);
+    void processMember (QSqlQuery *q, void * m, int type=1);
 };
 
 template <class T>

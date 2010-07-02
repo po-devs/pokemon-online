@@ -74,8 +74,9 @@ public:
             if (members.contains(n2)) {
                 return true;
             }
-            else
+            else {
                 return false;
+            }
 
 //            if (nonExistentMembers.contains(n2))
 //                return false;
@@ -90,7 +91,7 @@ public:
             return members.value(name);
         }
 
-        qDebug() << "Critical! Unreachable code reached";
+        qDebug() << "Critical! Unreachable code reached! Name " << name << " doesn't exist.";
         return Member(name);
     }
 

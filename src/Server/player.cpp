@@ -92,7 +92,7 @@ void Player::lock()
 
 void Player::unlock()
 {
-    qDebug() << "unlocking " << id();
+    qDebug() << "Unlocking " << id();
     lockCount -= 1;
     if (lockCount >= 0)
         emit unlocked();
@@ -637,6 +637,7 @@ void Player::loginSuccess()
         assignTeam(*waiting_team);
         removeWaitingTeam();
     }
+    waiting_name.clear();
 
     findTierAndRating();
     if (!isLoggedIn())
@@ -754,7 +755,7 @@ void Player::registerRequest() {
     }
 
     SecurityManager::updateMember(m);
-    relay().notify(NetworkServ::AskForPass, m.salt);
+    relay().notify(NetworkServ::AskForPass, QString(m.salt));
 }
 
 void Player::userInfoAsked(const QString &name)

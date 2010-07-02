@@ -75,7 +75,7 @@ void Tier::loadFromFile()
             query.exec(QString("create table %1 (id integer auto_increment, name varchar(20) unique, rating int, matches int, primary key(id))").arg(sql_table));
         } else if (SQLCreator::databaseType == SQLCreator::SQLite){
             /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
-            query.exec(QString("create table %1 (id integer primary key autoincrement, name varchar(20) unique, rating int, matches int, primary key(id))").arg(sql_table));
+            query.exec(QString("create table %1 (id integer primary key autoincrement, name varchar(20) unique, rating int, matches int)").arg(sql_table));
         } else {
             throw QString("Using a not supported database");
         }
@@ -83,7 +83,7 @@ void Tier::loadFromFile()
         query.exec(QString("create index tiername_index on %1 (name)").arg(sql_table));
         query.exec(QString("create index tierrating_index on %1 (rating)").arg(sql_table));
 
-        Server::print(QString("Importing old database for tier %1").arg(name()));
+        Server::print(QString("Importing old database for tier %1 to table %2").arg(name(), sql_table));
 
         QFile in("tier_" + name() + ".txt");
         in.open(QIODevice::ReadOnly);
@@ -277,7 +277,25 @@ void Tier::processQuery(QSqlQuery *q, const QString &name, int type)
             MemberRating m(name, q->value(0).toInt(), q->value(1).toInt());
             holder.addMemberInMemory(m);
         }
+        q->finish();
     }
+}
+
+void Tier::insertMember(QSqlQuery *q, void *data, int update)
+{
+    MemberRating *m = (MemberRating*) data;
+
+    if (update)
+        q->prepare(QString("update %1 set matches=:matches, rating=:rating, where name=:name").arg(sql_table));
+    else
+        q->prepare(QString("insert into %1(name, matches, rating) values(:name, :matches, :rating)"));
+
+    q->bindValue(":name", m->name);
+    q->bindValue(":rating", m->rating);
+    q->bindValue(":matches", m->matches);
+
+    q->exec();
+    q->finish();
 }
 
 void Tier::updateMember(const MemberRating &m)

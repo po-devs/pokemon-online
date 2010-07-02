@@ -52,6 +52,9 @@ public:
     QPair<int, int> pointChangeEstimate(const QString &player, const QString &foe, const QString &tier);
 
     QString findTier(const TeamBattle &t) const;
+public slots:
+    void processQuery(QSqlQuery*,const QString &,int);
+    void insertMember(QSqlQuery*,void *,int);
 private:
     QList<Tier*> m_tiers;
     QStringList m_tierNames;

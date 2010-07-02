@@ -1356,7 +1356,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     int move  = turnlong[player]["MoveChosen"].toInt();
 
     if (MoveInfo::isOHKO(move)) {
-        bool ret = (true_rand() % 100) < 30 + poke(player).level() - poke(target).level();
+        bool ret = (true_rand() % 100) < unsigned (30 + poke(player).level() - poke(target).level());
         if (!ret && !silent) {
             if (muliTar) {
                 notify(All, Avoid, target);

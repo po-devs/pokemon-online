@@ -378,7 +378,7 @@ void PokePersonal::reset()
     num() = 0;
     level() = 100;
     for (int i = 0; i < 4; i++)
-        setMove(0,i);
+        m_moves[i] = 0;
     happiness() = 0;
     shiny() = false;
     gender() = Pokemon::Neutral;
@@ -389,8 +389,8 @@ void PokePersonal::reset()
     forme() = 0;
 
     for (int i = 0; i < 6; i ++) {
-        setDV(i,31);
-        setEV(i,0);
+        m_DVs[i] = 31;
+        m_EVs[i] = 0;
     }
 }
 
