@@ -18,7 +18,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mychallenge = NULL;
     mybattle = NULL;
     myteambuilder = NULL;
-    resize(800, 600);
+    resize(1000, 700);
 
     QGridLayout *layout = new QGridLayout(this);
 
@@ -1253,6 +1253,10 @@ void Client::printLine(const QString &line)
     if ( pos != -1 ) {
 	QString beg = line.left(pos);
 	QString end = line.right(line.length()-pos-1);
+
+        if (id(beg) != ownId() && end.contains(QRegExp(QString("\\b%1\\b").arg(ownName())))) {
+            activateWindow();
+        }
         if (beg == "~~Server~~") {
             mainChat()->insertHtml("<span style='color:orange'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
         } else if (beg == "Welcome Message") {
