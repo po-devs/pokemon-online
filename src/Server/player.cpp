@@ -639,11 +639,8 @@ void Player::loginSuccess()
     }
     waiting_name.clear();
 
+    ontologin = true;
     findTierAndRating();
-    if (!isLoggedIn())
-        emit loggedIn(id(), team().name);
-    else
-        emit recvTeam(id(), team().name);
 }
 
 void Player::testAuthentification(const QString &name)
@@ -703,6 +700,14 @@ void Player::ratingLoaded()
 {
     unlock();
     rating() = TierMachine::obj()->rating(name(), tier());
+
+    if (ontologin) {
+        ontologin = false;
+        if (!isLoggedIn())
+            emit loggedIn(id(), team().name);
+        else
+            emit recvTeam(id(), team().name);
+    }
 }
 
 void Player::assignNewColor(const QColor &c)

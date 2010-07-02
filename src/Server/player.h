@@ -159,6 +159,7 @@ private:
     int myid;
     int myauth;
     QString myip;
+    bool ontologin;
 
     int m_opponent;
     int m_state;
