@@ -47,15 +47,15 @@ void QEntitled::setTitle(const QString &title)
 }
 
 /* On linux the function p.mask() screws up,
-   so a new one is made */
+   so a new one is made. On windows the standard one is fine */
 static QBitmap mask(const QPixmap &p)
 {
+#if !defined(WIN32) && !defined(WIN64)
     /*
-     * If you ever have problems with images (because the borders aren't alpha'd properly,
-     *   uncomment this code.
-     * /
-
-    QBitmap b(p.width(), p.height());
+     *
+     *  This code is for when borders aren't alpha'd properly (all the move types battle buttons needs to have their border alpha'd)
+     *  Of course the problem only occurs on linux
+     */
 
     QImage image = p.toImage();
 
@@ -69,8 +69,14 @@ static QBitmap mask(const QPixmap &p)
         image.save("image.bmp");
     }
     return QBitmap::fromData(p.size(), image.bits());
-    */
+
+    /*
+      Use this code when you've removed any non-alpha border from all images called by qimagebutton (including battle buttons, challenge window and menu, and pokedex arrows)
     return QBitmap::fromData(p.size(), p.toImage().bits());
+    */
+#else
+    return p.mask();
+#endif
 }
 
 QImageButton::QImageButton(const QString &normal, const QString &hovered, const QString &checked)
