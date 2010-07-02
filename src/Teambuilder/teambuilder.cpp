@@ -177,7 +177,7 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
     m_body->addWidget(m_pokedex);
     vl->addWidget(m_body, 585-2*54);
 
-    QHBoxLayout *downButtons = new QHBoxLayout(this);
+    QHBoxLayout *downButtons = new QHBoxLayout();
 
     QImageButton * m_new = new QImageButton("db/Teambuilder/Buttons/NewNorm.png", "db/Teambuilder/Buttons/NewGlow.png");
     downButtons->addWidget(m_new, 0, Qt::AlignBottom);
