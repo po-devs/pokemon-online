@@ -695,6 +695,13 @@ void Player::testAuthentificationLoaded()
 void Player::findTierAndRating()
 {
     tier() = TierMachine::obj()->findTier(team());
+    lock();
+    TierMachine::obj()->loadMemberInMemory(name(), tier(), this, SLOT(ratingLoaded()));
+}
+
+void Player::ratingLoaded()
+{
+    unlock();
     rating() = TierMachine::obj()->rating(name(), tier());
 }
 

@@ -15,7 +15,7 @@ public:
         this->cacheSize = cacheSize;
     }
 
-    bool isInMemory(const QString &name)
+    bool isInMemory(const QString &name) const
     {
         QString n2 = name.toLower();
 

@@ -18,7 +18,7 @@ struct MemberRating
     int matches;
     int rating;
 
-    MemberRating(const QString &name="", int matches=0, int rating=1000) : name(name), matches(matches), rating(rating) {
+    MemberRating(const QString &name="", int matches=0, int rating=1000) : name(name.toLower()), matches(matches), rating(rating) {
     }
 
     QString toString() const;
@@ -55,9 +55,7 @@ public:
     void fromString(const QString &s);
     QString toString() const;
 
-    int rating(const QString &name) const {
-        return holder.member(name).rating;
-    }
+    int rating(const QString &name);
 
     void changeRating(const QString &winner, const QString &loser);
     void changeRating(const QString &player, int newRating);
@@ -65,9 +63,10 @@ public:
 
     bool isBanned(const PokeBattle &p) const;
     bool isValid(const TeamBattle &t) const;
-    bool exists(const QString &name) const;
-    int ranking(const QString &name) const;
-    void updateMember(const MemberRating &m);
+    bool exists(const QString &name);
+    int ranking(const QString &name);
+    void updateMember(const MemberRating &m, bool add=false);
+    void updateMemberInDatabase(const MemberRating &m, bool add=false);
     void loadMemberInMemory(const QString &name, QObject *o=NULL, const char *slot=NULL);
     void processQuery(QSqlQuery *q, const QString &name, int type);
     void insertMember(QSqlQuery *q, void *data, int type);
@@ -76,7 +75,7 @@ protected:
         GetInfoOnUser
     };
 
-    int make_query_number(QueryType type);
+    int make_query_number(int type);
     int id() const {
         return m_id;
     }
@@ -89,7 +88,7 @@ private:
     QString sql_table;
     int m_id;
 
-    MemoryHolder<MemberRating> holder;
+    mutable MemoryHolder<MemberRating> holder;
 
     MemberRating member(const QString &name);
 

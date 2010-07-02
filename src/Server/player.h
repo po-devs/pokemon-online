@@ -150,6 +150,7 @@ public slots:
     void getRankingsByName(const QString &tier, const QString &name);
     void tUnban(QString name);
     void testAuthentificationLoaded();
+    void ratingLoaded();
 private:
     TeamBattle myteam;
     Analyzer myrelay;
