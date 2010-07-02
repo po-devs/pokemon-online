@@ -43,6 +43,7 @@ public:
     bool isValid(const TeamBattle &t, const QString tier) const;
     bool isBanned(const PokeBattle &p, const QString &tier) const;
 
+    void loadMemberInMemory(const QString &name, const QString &tier, QObject *o, const char *slot);
     int rating(const QString &name, const QString &tier);
     int ranking(const QString &name, const QString &tier);
     int count (const QString &tier);

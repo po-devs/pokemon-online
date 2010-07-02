@@ -133,6 +133,11 @@ QString TierMachine::toString() const
     return res;
 }
 
+void TierMachine::loadMemberInMemory(const QString &name, const QString &tier, QObject *o, const char *slot)
+{
+    this->tier(tier).loadMemberInMemory(name, o, slot);
+}
+
 
 Tier &TierMachine::tier(const QString &name)
 {

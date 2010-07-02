@@ -54,7 +54,7 @@ void Tier::changeId(int id)
     m_id = id;
 }
 
-int Tier::make_query_number(QueryType type)
+int Tier::make_query_number(int type)
 {
     return (type << 16) + id();
 }
@@ -176,12 +176,14 @@ bool Tier::isBanned(const PokeBattle &p) const {
     }
 }
 
-bool Tier::exists(const QString &name) const
+bool Tier::exists(const QString &name)
 {
-    return holder.exists(name.toLower());
+    if (!holder.isInMemory(name))
+        loadMemberInMemory(name);
+    return holder.exists(name);
 }
 
-int Tier::ranking(const QString &name) const
+int Tier::ranking(const QString &name)
 {
    if (!exists(name))
        return -1;
@@ -210,15 +212,19 @@ void Tier::changeRating(const QString &w, const QString &l)
 {
     /* Not really necessary, as pointChangeEstimate should always be called
        at the beginning of the battle, but meh maybe it's not a battle */
-    MemberRating win = member(w);
-    MemberRating los = member(l);
+    bool addw(false), addl(false);
+    addw = !exists(w);
+    addl = !exists(l);
+
+    MemberRating win = addw ? MemberRating(w) : member(w);
+    MemberRating los = addl ? MemberRating(l) : member(l);
 
     int oldwin = win.rating;
     win.changeRating(los.rating, true);
     los.changeRating(oldwin, false);
 
-    updateMember(win);
-    updateMember(los);
+    updateMember(win, addw);
+    updateMember(los, addl);
 }
 
 MemberRating Tier::member(const QString &name)
@@ -227,6 +233,17 @@ MemberRating Tier::member(const QString &name)
         loadMemberInMemory(name);
 
     return holder.member(name);
+}
+
+int Tier::rating(const QString &name)
+{
+    if (!holder.isInMemory(name))
+        loadMemberInMemory(name);
+    if (exists(name)) {
+        return holder.member(name).rating;
+    } else {
+        return 1000;
+    }
 }
 
 void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
@@ -298,9 +315,16 @@ void Tier::insertMember(QSqlQuery *q, void *data, int update)
     q->finish();
 }
 
-void Tier::updateMember(const MemberRating &m)
+void Tier::updateMember(const MemberRating &m, bool add)
 {
     holder.addMemberInMemory(m);
+
+    updateMemberInDatabase(m, add);
+}
+
+void Tier::updateMemberInDatabase(const MemberRating &m, bool add)
+{
+    boss->ithread->pushMember(m, make_query_number(!add));
 }
 
 Tier::Tier(TierMachine *boss) : boss(boss), holder(1000){
