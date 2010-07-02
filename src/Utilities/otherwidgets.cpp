@@ -80,8 +80,9 @@ QImageButton::QImageButton(const QString &normal, const QString &hovered, const 
             : myPic(normal), myHoveredPic(hovered), lastUnderMouse(-1), pressed(false)
 {
     setFixedSize(myPic.size());
-
+#if defined(WIN32) || defined(WIN64)
     setMask(::mask(myPic));
+#endif
     lastState = Normal;
 
     /* Both are necessary for some styles */
@@ -99,7 +100,9 @@ void QImageButton::changePics(const QString &normal, const QString &hovered, con
     if (checked != "")
         myCheckedPic = QPixmap(checked);
 
+#if defined(WIN32) || defined(WIN64)
     setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : ::mask(myHoveredPic)));
+#endif
 
     update();
 }
@@ -152,7 +155,9 @@ void QImageButton::paintEvent(QPaintEvent *e)
 
     if (newState != lastState) {
         lastState = newState;
+#if defined(WIN32) || defined(WIN64)
         setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : ::mask(myHoveredPic)));
+#endif
     }
 
     lastUnderMouse = underMouse();
