@@ -6,7 +6,7 @@
 #include "server.h"
 #include "waitingobject.h"
 
-MemoryHolder<SecurityManager::Member> SecurityManager::holder;
+MemoryHolder<SecurityManager::Member>  SecurityManager::holder;
 QNickValidator SecurityManager::val(NULL);
 QSet<QString> SecurityManager::bannedIPs;
 QHash<QString, QString> SecurityManager::bannedMembers;
@@ -278,6 +278,8 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
         if (holder.isInMemory(n2))
             return;
 
+        qDebug() << "loading member in memory not with a thread";
+
         QSqlQuery q;
         q.setForwardOnly(true);
         loadMember(&q, name, GetInfoOnUser);
@@ -317,7 +319,6 @@ void SecurityManager::insertMember(QSqlQuery *q, void *m2, int update)
 {
     SecurityManager::Member *m = (SecurityManager::Member*) m2;
 
-    q->finish();
     if (update)
         q->prepare("update trainers set laston=:laston, auth=:auth, banned=:banned, salt=:salt, hash=:hash, ip=:ip where name=:name");
     else
@@ -332,6 +333,7 @@ void SecurityManager::insertMember(QSqlQuery *q, void *m2, int update)
     q->bindValue(":ip", m->ip);
 
     q->exec();
+    q->finish();
 }
 
 void SecurityManager::loadMember(QSqlQuery *q, const QString &name, int query_type)
@@ -347,6 +349,7 @@ void SecurityManager::loadMember(QSqlQuery *q, const QString &name, int query_ty
                                       q->value(4).toByteArray(), q->value(5).toByteArray());
             holder.addMemberInMemory(m);
         }
+        q->finish();
     }
 }
 

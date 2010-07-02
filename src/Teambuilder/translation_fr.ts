@@ -2740,7 +2740,7 @@ html (*.html)</translation>
         <location filename="teambuilder.cpp" line="362"/>
         <source>&amp;New team</source>
         <oldsource>&amp;Save Team</oldsource>
-        <translation type="unfinished">&amp;Sauver l&apos;équipe</translation>
+        <translation>&amp;Nouvelle équipe</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="363"/>

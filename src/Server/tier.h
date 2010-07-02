@@ -70,6 +70,7 @@ public:
     void updateMember(const MemberRating &m);
     void loadMemberInMemory(const QString &name, QObject *o=NULL, const char *slot=NULL);
     void processQuery(QSqlQuery *q, const QString &name, int type);
+    void insertMember(QSqlQuery *q, void *data, int type);
 protected:
     enum QueryType {
         GetInfoOnUser
