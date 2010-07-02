@@ -65,9 +65,6 @@ static QBitmap mask(const QPixmap &p)
         }
     }
 
-    if (image.size().width() == 138) {
-        image.save("image.bmp");
-    }
     return QBitmap::fromData(p.size(), image.bits());
 
     /*
