@@ -362,7 +362,7 @@ int TB_Advanced::calculateHiddenPowerType() const
 
 void TB_Advanced::changeHiddenPower(int newtype)
 {
-    if (newtype == calculateHiddenPowerType())
+    if (newtype+1 == calculateHiddenPowerType())
 	return;
 
     updateHpAndDvChoice();

@@ -215,7 +215,7 @@ QScrollDownTextEdit::QScrollDownTextEdit()
 void QScrollDownTextEdit::insertHtml(const QString &text)
 {
     if (linecount >= 2000 && autoClear) {
-        this->setText(this->toHtml().section("<br />", -1000));
+        this->setHtml(this->toHtml().section("<br />", -1000));
         linecount = 1000;
     }
     QScrollBar * b = verticalScrollBar();
@@ -238,7 +238,7 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
 void QScrollDownTextEdit::insertPlainText(const QString &text)
 {
     if (linecount >= 2000 && autoClear) {
-        this->setText(this->toHtml().section("<br />", -1000));
+        this->setHtml(this->toHtml().section("<br />", -1000));
         linecount = 1000;
     }
 

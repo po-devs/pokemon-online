@@ -1245,6 +1245,9 @@ void Client::printLine(const QString &line)
         return;
     }
     if (line.leftRef(3) == "***") {
+        if (line.contains(QRegExp(QString("\\b%1\\b").arg(ownName())))) {
+            activateWindow();
+        }
         mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + escapeHtml(line) + "</span><br />");
         return;
     }
@@ -1254,7 +1257,7 @@ void Client::printLine(const QString &line)
 	QString beg = line.left(pos);
 	QString end = line.right(line.length()-pos-1);
 
-        if (id(beg) != ownId() && end.contains(QRegExp(QString("\\b%1\\b").arg(ownName())))) {
+        if (end.contains(QRegExp(QString("\\b%1\\b").arg(ownName())))) {
             activateWindow();
         }
         if (beg == "~~Server~~") {
