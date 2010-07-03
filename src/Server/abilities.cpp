@@ -226,7 +226,7 @@ struct AMDownload : public AM {
     static void us(int s, int , BS &b) {
         int t = b.randomOpponent(s);
 
-        b.sendAbMessage(12,0,s);
+        b.sendAbMessage(13,0,s);
 
         if (t==-1|| b.getStat(t, Defense) > b.getStat(t, SpDefense)) {
             b.gainStatMod(s, SpAttack,1);
