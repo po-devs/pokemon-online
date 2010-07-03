@@ -294,14 +294,12 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
     WaitingObject *w = WaitingObjects::getObject();
 
     connect(w, SIGNAL(waitFinished()), o, slot);
+    connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
 
     if (holder.isInMemory(n2)) {
         w->emitSignal();
-        WaitingObjects::freeObject(w);
     }
     else {
-        connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
-
         LoadThread *t = getThread();
 
         t->pushQuery(n2, w, GetInfoOnUser);

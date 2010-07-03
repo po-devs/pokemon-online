@@ -299,14 +299,12 @@ void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
        because then the user at the signal's reception can use the object at will knowing it's not already
        used by another Player or w/e */
     QObject::connect(w, SIGNAL(waitFinished()), o, slot);
+    QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
 
     if (holder.isInMemory(n2)) {
         w->emitSignal();
-        WaitingObjects::freeObject(w);
     }
     else {
-        QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
-
         LoadThread *t = getThread();
 
         t->pushQuery(n2, w, make_query_number(GetInfoOnUser));
