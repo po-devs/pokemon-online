@@ -2,7 +2,6 @@
 
 WaitingObjects * WaitingObjects::instance = new WaitingObjects();
 QSet<WaitingObject*> WaitingObjects::freeObjects;
-QSet<WaitingObject*> WaitingObjects::usedObjects;
 
 WaitingObject * WaitingObjects::getObject()
 {
@@ -22,15 +21,8 @@ void WaitingObjects::freeObject()
 
 void WaitingObjects::freeObject(WaitingObject *c)
 {
-    usedObjects.remove(c);
     freeObjects.insert(c);
     c->disconnect();
-}
-
-void WaitingObjects::useObject(WaitingObject *c)
-{
-    freeObjects.remove(c);
-    usedObjects.insert(c);
 }
 
 WaitingObjects *WaitingObjects::getInstance()

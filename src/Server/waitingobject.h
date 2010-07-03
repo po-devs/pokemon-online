@@ -22,7 +22,6 @@ class WaitingObjects : public QObject
 public:
     static WaitingObject* getObject();
     static void freeObject(WaitingObject *c);
-    static void useObject(WaitingObject *c);
     static WaitingObjects * getInstance();
 
 public slots:
@@ -32,7 +31,6 @@ private:
     static WaitingObjects *instance;
 
     static QSet<WaitingObject*> freeObjects;
-    static QSet<WaitingObject*> usedObjects;
 };
 
 #endif // WAITINGOBJECT_H

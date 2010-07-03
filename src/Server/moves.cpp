@@ -1155,7 +1155,7 @@ struct MMStealthRock : public MM
         if (!b.koed(s) && team(b,source).value("StealthRock").toBool() == true && !b.hasWorkingAbility(s, Ability::MagicGuard))
 	{
 	    b.sendMoveMessage(124,1,s,Pokemon::Rock);
-	    int n = TypeInfo::Eff(Pokemon::Rock, poke(b,s)["Type1"].toInt()) * TypeInfo::Eff(Pokemon::Rock, poke(b,s)["Type2"].toInt());
+            int n = TypeInfo::Eff(Pokemon::Rock, b.getType(s, 1)) * TypeInfo::Eff(Pokemon::Rock, b.getType(s, 2));
 	    b.inflictDamage(s, b.poke(s).totalLifePoints()*n/32, s);
 	}
     }

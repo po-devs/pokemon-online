@@ -300,7 +300,6 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
         WaitingObjects::freeObject(w);
     }
     else {
-        WaitingObjects::useObject(w);
         connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
 
         LoadThread *t = getThread();
