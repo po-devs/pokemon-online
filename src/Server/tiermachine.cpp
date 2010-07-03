@@ -205,9 +205,10 @@ int TierMachine::ranking(const QString &name, const QString &tier)
 
 int TierMachine::count(const QString &tier)
 {
-    (void) tier;
-    return 0;
-    //return this->tier(tier).members.count();
+    if (!exists(tier))
+        return 0;
+
+    return this->tier(tier).count();
 }
 
 void TierMachine::changeRating(const QString &winner, const QString &loser, const QString &tier)

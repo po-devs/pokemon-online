@@ -57,6 +57,7 @@ void SecurityManager::loadMembers()
         query.prepare("insert into trainers(name, laston, auth,  banned, salt, hash, ip) values (:name, :laston, :auth,"
                       ":banned, :salt, :hash, :ip)");
 
+        QSqlDatabase::database().transaction();
         while (!memberFile.atEnd()) {
             QByteArray arr = memberFile.readLine();
             QString s = QString::fromUtf8(arr.constData(), std::max(0,arr.length()-1)); //-1 to remove the \n
@@ -82,6 +83,7 @@ void SecurityManager::loadMembers()
             }
         }
 
+        QSqlDatabase::database().commit();
 
         t = clock() - t;
 
