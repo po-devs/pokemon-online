@@ -305,7 +305,6 @@ void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
         WaitingObjects::freeObject(w);
     }
     else {
-        WaitingObjects::useObject(w);
         QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
 
         LoadThread *t = getThread();
@@ -322,8 +321,6 @@ void Tier::fetchRankings(const QVariant &data, QObject *o, const char *slot)
        because then the user at the signal's reception can use the object at will knowing it's not already
        used by another Player or w/e */
     QObject::connect(w, SIGNAL(waitFinished()), o, slot);
-
-    WaitingObjects::useObject(w);
     QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
 
     LoadThread *t = getThread();
