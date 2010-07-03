@@ -69,11 +69,13 @@ public:
     void updateMember(const MemberRating &m, bool add=false);
     void updateMemberInDatabase(const MemberRating &m, bool add=false);
     void loadMemberInMemory(const QString &name, QObject *o=NULL, const char *slot=NULL);
-    void processQuery(QSqlQuery *q, const QString &name, int type);
+    void fetchRankings(const QVariant &data, QObject *o, const char *slot);
+    void processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w);
     void insertMember(QSqlQuery *q, void *data, int type);
 protected:
     enum QueryType {
-        GetInfoOnUser
+        GetInfoOnUser,
+        GetRankings,
     };
 
     int make_query_number(int type);
@@ -88,6 +90,7 @@ private:
     /* Used for table name in SQL database */
     QString sql_table;
     int m_id;
+    int m_count;
 
     mutable MemoryHolder<MemberRating> holder;
 
@@ -96,7 +99,4 @@ private:
     LoadThread *getThread();
 };
 
-
-
 #endif // TIER_H
-

@@ -148,6 +148,7 @@ public slots:
     void findBattle(const FindBattleData&);
     void getRankingsByPage(const QString &tier, int page);
     void getRankingsByName(const QString &tier, const QString &name);
+    void displayRankings();
     void tUnban(QString name);
     void testAuthentificationLoaded();
     void ratingLoaded();

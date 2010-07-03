@@ -118,7 +118,7 @@ void SecurityManager::init()
     threads = new LoadThread[loadThreadCount];
 
     for (int i = 0; i < loadThreadCount; i++) {
-        connect(&threads[i], SIGNAL(processQuery (QSqlQuery *, QString, int)), instance, SLOT(loadMember(QSqlQuery*,QString,int)), Qt::DirectConnection);
+        connect(&threads[i], SIGNAL(processQuery (QSqlQuery *, QVariant, int, WaitingObject*)), instance, SLOT(loadMember(QSqlQuery*,QVariant,int)), Qt::DirectConnection);
         threads[i].start();
     }
 
@@ -338,16 +338,16 @@ void SecurityManager::insertMember(QSqlQuery *q, void *m2, int update)
     q->finish();
 }
 
-void SecurityManager::loadMember(QSqlQuery *q, const QString &name, int query_type)
+void SecurityManager::loadMember(QSqlQuery *q, const QVariant &name, int query_type)
 {
     if (query_type == SecurityManager::GetInfoOnUser) {
         q->prepare("select laston, auth, banned, salt, hash, ip from trainers where name=? limit 1");
         q->addBindValue(name);
         q->exec();
         if (!q->next()) {
-            holder.addNonExistant(name);
+            holder.addNonExistant(name.toString());
         } else {
-            SecurityManager::Member m(name, q->value(0).toByteArray(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
+            SecurityManager::Member m(name.toString(), q->value(0).toByteArray(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
                                       q->value(4).toByteArray(), q->value(5).toByteArray());
             holder.addMemberInMemory(m);
         }

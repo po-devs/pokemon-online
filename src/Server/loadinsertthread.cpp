@@ -18,7 +18,7 @@ void LoadThread::run()
         Query q = queries.takeFirst();
         queryMutex.unlock();
 
-        emit processQuery(&sql, q.member, q.query_type);
+        emit processQuery(&sql, q.data, q.query_type, q.w);
         q.w->emitSignal();
 
         sem.acquire(1);
@@ -26,7 +26,7 @@ void LoadThread::run()
 }
 
 
-void LoadThread::pushQuery(const QString &name, WaitingObject *w, int query_type)
+void LoadThread::pushQuery(const QVariant &name, WaitingObject *w, int query_type)
 {
     queryMutex.lock();
 

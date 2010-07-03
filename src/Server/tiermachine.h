@@ -12,7 +12,6 @@ struct PokeBattle;
 class WaitingObject;
 class MemberRating;
 
-
 class TierMachine : public QObject
 {
     Q_OBJECT
@@ -44,6 +43,8 @@ public:
     bool isBanned(const PokeBattle &p, const QString &tier) const;
 
     void loadMemberInMemory(const QString &name, const QString &tier, QObject *o, const char *slot);
+    void fetchRankings(const QString &tier, const QVariant &data, QObject *o, const char *slot);
+
     int rating(const QString &name, const QString &tier);
     int ranking(const QString &name, const QString &tier);
     int count (const QString &tier);
@@ -53,8 +54,10 @@ public:
     QPair<int, int> pointChangeEstimate(const QString &player, const QString &foe, const QString &tier);
 
     QString findTier(const TeamBattle &t) const;
+
+    static const int playersByPage = 40;
 public slots:
-    void processQuery(QSqlQuery*,const QString &,int);
+    void processQuery(QSqlQuery*,const QVariant &,int,WaitingObject*);
     void insertMember(QSqlQuery*,void *,int);
 private:
     QList<Tier*> m_tiers;
@@ -83,5 +86,8 @@ private:
     QPlainTextEdit *m_editWindow;
 };
 
+/* For rankings */
+typedef QVector<QPair<QString, int> > qvectorqpairqstringint;
+Q_DECLARE_METATYPE(qvectorqpairqstringint)
 
 #endif // TIERMACHINE_H

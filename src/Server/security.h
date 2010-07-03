@@ -98,7 +98,7 @@ public:
 
 private slots:
     static void insertMember(QSqlQuery *q, void *m, int update);
-    static void loadMember(QSqlQuery *q, const QString &name, int query_type);
+    static void loadMember(QSqlQuery *q, const QVariant &name, int query_type);
 
 private:
     static void loadMembers();
