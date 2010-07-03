@@ -65,6 +65,7 @@ public:
     bool isValid(const TeamBattle &t) const;
     bool exists(const QString &name);
     int ranking(const QString &name);
+    int count();
     void updateMember(const MemberRating &m, bool add=false);
     void updateMemberInDatabase(const MemberRating &m, bool add=false);
     void loadMemberInMemory(const QString &name, QObject *o=NULL, const char *slot=NULL);

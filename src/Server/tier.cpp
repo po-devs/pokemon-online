@@ -94,6 +94,8 @@ void Tier::loadFromFile()
 
         query.prepare(QString("insert into %1(name, rating, matches) values (:name, :rating, :matches)").arg(sql_table));
 
+        QSqlDatabase::database().transaction();
+
         foreach(QString member, members) {
             QString m2 = member.toLower();
             QStringList mmr = m2.split('%');
@@ -106,6 +108,8 @@ void Tier::loadFromFile()
 
             query.exec();
         }
+        
+        QSqlDatabase::database().commit();
 
         t = clock() - t;
 
@@ -150,7 +154,7 @@ void Tier::fromString(const QString &s) {
             pokes = rest[0].split(',');
         }
 
-         foreach(QString poke, pokes) {
+        foreach(QString poke, pokes) {
             BannedPoke pok = BannedPoke(PokemonInfo::Number(poke.section('@',0,0).trimmed()), ItemInfo::Number(poke.section('@',1,1).trimmed()));
             if (pok.poke != 0) {
                 bannedPokes.push_back(pok);
@@ -158,6 +162,17 @@ void Tier::fromString(const QString &s) {
             }
         }
     }
+}
+
+int Tier::count()
+{
+    QSqlQuery q;
+    q.setForwardOnly(true);
+
+    q.exec(QString("select count(*) from %1").arg(sql_table));
+
+    q.next();
+    return q.value(0).toInt();
 }
 
 bool Tier::isBanned(const PokeBattle &p) const {
@@ -185,10 +200,22 @@ bool Tier::exists(const QString &name)
 
 int Tier::ranking(const QString &name)
 {
-   if (!exists(name))
-       return -1;
-   //return members.value(name.toLower()).node()->ranking();
-   return 1;
+    Server::print(QString("Ranking for %1").arg(name));
+    if (!exists(name))
+        return -1;
+    int r = rating(name);
+    QSqlQuery q;
+    q.setForwardOnly(true);
+    q.prepare(QString("select count(*) from %1 where (rating>:r1 or (rating=:r2 and name<=:name))").arg(sql_table));
+    q.bindValue(":r1", r);
+    q.bindValue(":r2", r);
+    q.bindValue(":name", name);
+    q.exec();
+
+    if (q.next())
+        return q.value(0).toInt();
+    else
+        return -1;
 }
 
 bool Tier::isValid(const TeamBattle &t)  const
