@@ -17,8 +17,6 @@ WaitingObject * WaitingObjects::getObject()
 
 void WaitingObjects::freeObject()
 {
-    if (!sender())
-        return;
     freeObject((WaitingObject*)sender());
 }
 
@@ -26,6 +24,7 @@ void WaitingObjects::freeObject(WaitingObject *c)
 {
     usedObjects.remove(c);
     freeObjects.insert(c);
+    c->disconnect();
 }
 
 void WaitingObjects::useObject(WaitingObject *c)

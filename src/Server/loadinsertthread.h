@@ -11,19 +11,19 @@ class LoadThread : public QThread
 {
     Q_OBJECT
 public:
-    void pushQuery(const QString &name, WaitingObject *w, int query_type);
+    void pushQuery(const QVariant &name, WaitingObject *w, int query_type);
 
     void run();
 signals:
-    void processQuery (QSqlQuery *q, const QString &name, int query_type);
+    void processQuery (QSqlQuery *q, const QVariant &data, int query_type, WaitingObject *w);
 private:
     struct Query {
-        QString member;
+        QVariant data;
         WaitingObject *w;
         int query_type;
 
-        Query(const QString &m, WaitingObject *w, int query_type)
-            : member(m), w(w), query_type(query_type)
+        Query(const QVariant &m, WaitingObject *w, int query_type)
+            : data(m), w(w), query_type(query_type)
         {
 
         }

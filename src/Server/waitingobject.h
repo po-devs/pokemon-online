@@ -9,8 +9,9 @@ class WaitingObject : public QObject
 public:
     void emitSignal() {
         emit waitFinished();
-        disconnect();
     }
+
+    QVariantHash data;
 signals:
     void waitFinished();
 };

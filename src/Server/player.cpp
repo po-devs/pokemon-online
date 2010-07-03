@@ -5,7 +5,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "battle.h"
 #include "tiermachine.h"
-
+#include "waitingobject.h"
 
 
 
@@ -300,37 +300,39 @@ void Player::battleResult(int result, int winner, int loser)
         changeState(Battling, false);
 }
 
+void Player::getRankingsByName(const QString &tier, const QString &name)
+{
+    if (!TierMachine::obj()->exists(tier))
+        return;
+    TierMachine::obj()->fetchRankings(tier, name, this, SLOT(displayRankings()));
+}
+
 void Player::getRankingsByPage(const QString &tier, int page)
 {
     if (!TierMachine::obj()->exists(tier))
         return;
     /* A page is 40 players */
-    int startingRank = (page-1) * 40 + 1;
-
-    relay().startRankings(page, startingRank, (TierMachine::obj()->count(tier)-1)/40 + 1);
-
-//    const RankingTree<QString> *rt = TierMachine::obj()->getRankingTree(tier);
-//
-//    RankingTree<QString>::iterator it = rt->getByRanking(startingRank);
-//
-//    int i = 0;
-//    while (i < 40 && it.p != NULL)
-//    {
-//        i++;
-//        relay().sendRanking(it->data, it->key);
-//        --it;
-//    }
+    TierMachine::obj()->fetchRankings(tier, page, this, SLOT(displayRankings()));
 }
 
-void Player::getRankingsByName(const QString &tier, const QString &name)
+void Player::displayRankings()
 {
-    if (!TierMachine::obj()->exists(tier))
-        return;
-    if (!TierMachine::obj()->existsPlayer(tier,name))
-        getRankingsByPage(tier, 1);
-    else {
-        int page = (TierMachine::obj()->ranking(name, tier)-1)/40 + 1;
-        getRankingsByPage(tier, page);
+    WaitingObject *src = (WaitingObject*) (sender());
+
+    int page = src->data["rankingpage"].toInt();
+    int startingRank = (page-1) * TierMachine::playersByPage + 1;
+
+    int count = TierMachine::obj()->count(src->data.value("tier").toString());
+    relay().startRankings(page, startingRank, (count-1) / TierMachine::playersByPage + 1);
+
+    typedef QPair<QString, int> p;
+    QVector<p> results = src->data["rankingdata"].value<QVector<p> >();
+
+    /* Removing the properties to clear memory */
+    src->data.clear();
+
+    foreach(p pair, results) {
+        relay().sendRanking(pair.first, pair.second);
     }
 }
 

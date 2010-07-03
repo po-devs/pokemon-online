@@ -166,13 +166,17 @@ void Tier::fromString(const QString &s) {
 
 int Tier::count()
 {
-    QSqlQuery q;
-    q.setForwardOnly(true);
+    if (m_count != -1) {
+        return m_count;
+    } else {
+        QSqlQuery q;
+        q.setForwardOnly(true);
 
-    q.exec(QString("select count(*) from %1").arg(sql_table));
+        q.exec(QString("select count(*) from %1").arg(sql_table));
 
-    q.next();
-    return q.value(0).toInt();
+        q.next();
+        return (m_count = q.value(0).toInt());
+    }
 }
 
 bool Tier::isBanned(const PokeBattle &p) const {
@@ -200,7 +204,6 @@ bool Tier::exists(const QString &name)
 
 int Tier::ranking(const QString &name)
 {
-    Server::print(QString("Ranking for %1").arg(name));
     if (!exists(name))
         return -1;
     int r = rating(name);
@@ -283,7 +286,7 @@ void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
 
         QSqlQuery q;
         q.setForwardOnly(true);
-        processQuery(&q, n2, GetInfoOnUser);
+        processQuery(&q, n2, GetInfoOnUser, NULL);
 
         return;
     }
@@ -292,6 +295,9 @@ void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
 
     WaitingObject *w = WaitingObjects::getObject();
 
+    /* It is important that this connect is done before the connect to freeObject(),
+       because then the user at the signal's reception can use the object at will knowing it's not already
+       used by another Player or w/e */
     QObject::connect(w, SIGNAL(waitFinished()), o, slot);
 
     if (holder.isInMemory(n2)) {
@@ -308,20 +314,63 @@ void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
     }
 }
 
+void Tier::fetchRankings(const QVariant &data, QObject *o, const char *slot)
+{
+    WaitingObject *w = WaitingObjects::getObject();
+
+    /* It is important that this connect is done before the connect to freeObject(),
+       because then the user at the signal's reception can use the object at will knowing it's not already
+       used by another Player or w/e */
+    QObject::connect(w, SIGNAL(waitFinished()), o, slot);
+
+    WaitingObjects::useObject(w);
+    QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
+
+    LoadThread *t = getThread();
+
+    t->pushQuery(data, w, make_query_number(GetRankings));
+}
+
 /* Precondition: name is in lowercase */
-void Tier::processQuery(QSqlQuery *q, const QString &name, int type)
+void Tier::processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w)
 {
     if (type == GetInfoOnUser) {
         q->prepare(QString("select matches, rating from %1 where name=? limit 1").arg(sql_table));
         q->addBindValue(name);
         q->exec();
         if (!q->next()) {
-            holder.addNonExistant(name);
+            holder.addNonExistant(name.toString());
         } else {
-            MemberRating m(name, q->value(0).toInt(), q->value(1).toInt());
+            MemberRating m(name.toString(), q->value(0).toInt(), q->value(1).toInt());
             holder.addMemberInMemory(m);
         }
         q->finish();
+    } else if (type == GetRankings) {
+        int p;
+
+        if (name.type() == QVariant::String) {
+            int r = ranking(name.toString());
+            p = (r-1)/TierMachine::playersByPage + 1;
+        }
+        else {
+            p = name.toInt();
+        }
+
+        q->prepare(QString("select name, rating from %1 order by rating desc, name desc limit ?, ?").arg(sql_table));
+        q->addBindValue((p-1)*TierMachine::playersByPage);
+        q->addBindValue(TierMachine::playersByPage);
+
+        QVector<QPair<QString, int> > results;
+        results.reserve(TierMachine::playersByPage);
+
+        q->exec();
+        while (q->next()) {
+            results.push_back(QPair<QString, int>(q->value(0).toString(), q->value(1).toInt()));
+        }
+        q->finish();
+        w->data["rankingpage"] = p;
+        w->data["tier"] = this->name();
+        w->data["rankingdata"] = QVariant::fromValue(results);
     }
 }
 
@@ -346,6 +395,9 @@ void Tier::updateMember(const MemberRating &m, bool add)
 {
     holder.addMemberInMemory(m);
 
+    if (add) {
+        m_count += 1;
+    }
     updateMemberInDatabase(m, add);
 }
 
@@ -354,7 +406,7 @@ void Tier::updateMemberInDatabase(const MemberRating &m, bool add)
     boss->ithread->pushMember(m, make_query_number(int(!add)));
 }
 
-Tier::Tier(TierMachine *boss) : boss(boss), holder(1000){
+Tier::Tier(TierMachine *boss) : boss(boss), m_count(-1), holder(1000) {
 
 }
 

@@ -13,9 +13,11 @@ TierMachine::TierMachine()
     threads = new LoadThread[loadThreadCount];
 
     for (int i = 0; i < loadThreadCount; i++) {
-        connect(&threads[i], SIGNAL(processQuery (QSqlQuery *, QString, int)), this, SLOT(processQuery(QSqlQuery*,QString,int)), Qt::DirectConnection);
+        connect(&threads[i], SIGNAL(processQuery (QSqlQuery *, QVariant, int, WaitingObject*)), this, SLOT(processQuery(QSqlQuery*, QVariant, int, WaitingObject *)), Qt::DirectConnection);
         threads[i].start();
     }
+
+    nextLoadThreadNumber = 0;
 
     ithread = new InsertThread<MemberRating>();
     connect(ithread, SIGNAL(processMember(QSqlQuery*,void*,int)), this, SLOT(insertMember(QSqlQuery*,void*,int)), Qt::DirectConnection);
@@ -27,14 +29,14 @@ TierMachine::TierMachine()
     fromString(QString::fromUtf8(in.readAll()));
 }
 
-void TierMachine::processQuery(QSqlQuery *q, const QString &member, int queryNo)
+void TierMachine::processQuery(QSqlQuery *q, const QVariant &data, int queryNo, WaitingObject *w)
 {
     int tierno = queryNo % (1 << 16);
 
     if (m_tiers.length() > tierno) {
-        m_tiers[tierno]->processQuery(q, member, queryNo >> 16);
+        m_tiers[tierno]->processQuery(q, data, queryNo >> 16,w);
     } else {
-        qDebug() << "Critical! invalid load tier membe query, tier requested: " << tierno << "query no: " << queryNo;
+        qDebug() << "Critical! invalid load tier member query, tier requested: " << tierno << "query no: " << queryNo;
         return;
     }
 }
@@ -139,6 +141,10 @@ void TierMachine::loadMemberInMemory(const QString &name, const QString &tier, Q
     this->tier(tier).loadMemberInMemory(name, o, slot);
 }
 
+void TierMachine::fetchRankings(const QString &name, const QVariant &data, QObject *o, const char *slot)
+{
+    this->tier(name).fetchRankings(data, o, slot);
+}
 
 Tier &TierMachine::tier(const QString &name)
 {
@@ -269,6 +275,6 @@ LoadThread *TierMachine::getThread()
 {
     /* '%' is a safety thing, in case nextLoadThreadNumber is also accessed in writing and that messes it up, at least it isn't out of bounds now */
     int n = nextLoadThreadNumber % loadThreadCount;
-    nextLoadThreadNumber = (nextLoadThreadNumber + 1) % loadThreadCount;
+    nextLoadThreadNumber = (n + 1) % loadThreadCount;
     return threads + n;
 }
