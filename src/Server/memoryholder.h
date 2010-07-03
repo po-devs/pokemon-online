@@ -36,6 +36,7 @@ public:
         memberMutex.unlock();
     }
 
+    /* Should only be called from the main thread */
     void cleanCache()
     {
         cachedMembersMutex.lock();
@@ -55,6 +56,7 @@ public:
 
         memberMutex.unlock();
     }
+
     void addNonExistant(const QString &name)
     {
         memberMutex.lock();
@@ -63,7 +65,8 @@ public:
 
         memberMutex.unlock();
     }
-    /* Precondition: the member must be in memory. */
+
+    /* Precondition: the member must be in memory, otherwise returns false in all cases. */
     bool exists(const QString &name) const
     {
         QString n2 = name.toLower();
