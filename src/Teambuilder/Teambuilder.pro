@@ -1,6 +1,5 @@
 QT += network \
-    xml \
-    phonon
+    xml
 TARGET = Pokemon-Online
 DESTDIR = ../../bin
 TEMPLATE = app
