@@ -70,7 +70,7 @@ static QBitmap mask(const QPixmap &p)
 
     /*
       Use this code when you've removed any non-alpha border from all images called by qimagebutton (including battle buttons, challenge window and menu, and pokedex arrows)
-    return QBitmap::fromData(p.size(), p.toImage().bits());
+      return QBitmap::fromData(p.size(), p.toImage().bits());
     */
 #else
     return p.mask();
