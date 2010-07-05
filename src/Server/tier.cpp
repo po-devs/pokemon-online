@@ -352,9 +352,9 @@ void Tier::processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObj
         }
 
         if (SQLCreator::databaseType == SQLCreator::PostGreSQL)
-            q->prepare(QString("select name, rating from %1 order by rating desc, name desc offset ? limit ?").arg(sql_table));
+            q->prepare(QString("select name, rating from %1 order by rating desc, name asc offset ? limit ?").arg(sql_table));
         else
-            q->prepare(QString("select name, rating from %1 order by rating desc, name desc limit ?, ?").arg(sql_table));
+            q->prepare(QString("select name, rating from %1 order by rating desc, name asc limit ?, ?").arg(sql_table));
 
         q->addBindValue((p-1)*TierMachine::playersByPage);
         q->addBindValue(TierMachine::playersByPage);
