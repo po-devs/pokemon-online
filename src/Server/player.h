@@ -98,6 +98,9 @@ public:
     bool isLocked() const;
     void findTierAndRating();
     void findRating();
+
+    void executeTierChange(const QString&);
+    void executeAwayChange(bool away);
 signals:
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, const QString &mess);

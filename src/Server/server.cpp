@@ -744,15 +744,12 @@ void Server::incomingConnection()
 
 void Server::awayChanged(int src, bool away)
 {
-    if (myengine->beforePlayerAway(src, away)) {
-        if (!playerExist(src))
-            return;
-        foreach (Player *p, myplayers) {
-            if (p->isLoggedIn()) {
-                p->relay().notifyAway(src, away);
-            }
+    if (!playerExist(src))
+        return;
+    foreach (Player *p, myplayers) {
+        if (p->isLoggedIn()) {
+            p->relay().notifyAway(src, away);
         }
-        myengine->afterPlayerAway(src, away);
     }
 }
 
@@ -867,6 +864,16 @@ bool Server::beforeChangeTier(int src, const QString &old, const QString &dest)
 void Server::afterChangeTier(int src, const QString &old, const QString &dest)
 {
     myengine->afterChangeTier(src, old, dest);
+}
+
+bool Server::beforePlayerAway(int src, bool away)
+{
+    return myengine->beforePlayerAway(src, away);
+}
+
+void Server::afterPlayerAway(int src, bool away)
+{
+    myengine->afterPlayerAway(src, away);
 }
 
 void Server::info(int id, const QString &mess) {
