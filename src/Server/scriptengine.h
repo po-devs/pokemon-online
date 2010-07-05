@@ -108,6 +108,7 @@ public:
     Q_INVOKABLE QScriptValue ladderRating(int id);
     Q_INVOKABLE QScriptValue getVal(const QString &key);
     Q_INVOKABLE QScriptValue getVal(const QString &file, const QString &key);
+    Q_INVOKABLE bool hasLegalTeamForTier(int id, const QString &tier);
 
     Q_INVOKABLE QScriptValue pokemon(int num);
     Q_INVOKABLE QScriptValue pokeNum(const QString &name);
