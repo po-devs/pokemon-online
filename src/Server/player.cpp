@@ -637,10 +637,13 @@ void Player::loggedIn(const TeamInfo &team,bool ladder, bool showteam, QColor c)
 void Player::loginSuccess()
 {
     if (waiting_team) {
+        /* Don't get the new name yet, wait till fully logged in (with rating and all) */
+        if (isLoggedIn()) {
+            waiting_team->name = name();
+        }
         assignTeam(*waiting_team);
         removeWaitingTeam();
     }
-    waiting_name.clear();
 
     ontologin = true;
     findTierAndRating();
@@ -712,9 +715,10 @@ void Player::ratingLoaded()
     if (ontologin) {
         ontologin = false;
         if (!isLoggedIn())
-            emit loggedIn(id(), team().name);
+            emit loggedIn(id(), waiting_name);
         else
-            emit recvTeam(id(), team().name);
+            emit recvTeam(id(), waiting_name);
+        waiting_name.clear();
     } else {
         emit updated(id());
     }
