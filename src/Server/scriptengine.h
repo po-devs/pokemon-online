@@ -34,6 +34,8 @@ public:
     void afterLogIn(int src);
     void beforeChangeTeam(int src);
     void afterChangeTeam(int src);
+    bool beforeChangeTier(int src, const QString& oldTier, const QString &newTier);
+    void afterChangeTier(int src, const QString& oldTier, const QString &newTier);
     bool beforeChallengeIssued(int src, int dest, const ChallengeInfo &desc);
     void afterChallengeIssued(int src, int dest, const ChallengeInfo &desc);
     bool beforeBattleMatchup(int src, int dest, const ChallengeInfo &desc);
@@ -57,18 +59,23 @@ public:
        If called in 'beforeChallengeIssued', the challenge won't be issued.
        */
     Q_INVOKABLE void stopEvent();
+    Q_INVOKABLE void shutDown();
     Q_INVOKABLE void sendMessage(int id, const QString &mess);
     /* Print on the server. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void changeAuth(int id, int auth);
-    Q_INVOKABLE void changeRating(QString name, QString tier, int newRating);
+    Q_INVOKABLE void changeAway(int id, bool away);
+    Q_INVOKABLE void changeRating(const QString& name, const QString& tier, int newRating);
     Q_INVOKABLE void changePokeLevel(int id, int slot, int level);
     Q_INVOKABLE void changePokeNum(int id, int slot, int num);
     Q_INVOKABLE void changePokeItem(int id, int slot, int item);
     Q_INVOKABLE void changePokeMove(int id, int pokeslot, int moveslot, int move);
+    Q_INVOKABLE void changeTier(int id, const QString &tier);
     /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
     Q_INVOKABLE void saveVal(const QString &key, const QVariant &val);
+    Q_INVOKABLE void saveVal(const QString &file, const QString &key, const QVariant &val);
     Q_INVOKABLE void removeVal(const QString &key);
+    Q_INVOKABLE void removeVal(const QString &file, const QString &key);
     /* Calls the underlying OS for a command */
     Q_INVOKABLE int system(const QString &command);
     Q_INVOKABLE void clearChat();
@@ -90,6 +97,7 @@ public:
     Q_INVOKABLE QScriptValue name(int id);
     Q_INVOKABLE QScriptValue id(const QString& name);
     Q_INVOKABLE QScriptValue auth(int id);
+    Q_INVOKABLE QScriptValue battling(int id);
     Q_INVOKABLE QScriptValue away(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
     Q_INVOKABLE QScriptValue tier(int id);
@@ -99,6 +107,7 @@ public:
     Q_INVOKABLE QScriptValue ladderEnabled(int id);
     Q_INVOKABLE QScriptValue ladderRating(int id);
     Q_INVOKABLE QScriptValue getVal(const QString &key);
+    Q_INVOKABLE QScriptValue getVal(const QString &file, const QString &key);
 
     Q_INVOKABLE QScriptValue pokemon(int num);
     Q_INVOKABLE QScriptValue pokeNum(const QString &name);

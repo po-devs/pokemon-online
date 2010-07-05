@@ -85,14 +85,12 @@ void Player::cancelBattleSearch()
 
 void Player::lock()
 {
-    qDebug() << "Locking " << id();
     lockCount += 1;
     relay().delay();
 }
 
 void Player::unlock()
 {
-    qDebug() << "Unlocking " << id();
     lockCount -= 1;
     if (lockCount >= 0)
         emit unlocked();
@@ -123,10 +121,13 @@ void Player::changeTier(const QString &newtier)
         sendMessage(tr("The following pokemons are banned in %1, hence you can't choose that tier: %2.").arg(newtier,pokeList));
         return;
     }
-    tier() = newtier;
-    rating() = TierMachine::obj()->rating(name(), tier());
-    cancelChallenges();
-    emit updated(id());
+    if (Server::serverIns->beforeChangeTier(id(), tier(), newtier)) {
+        QString oldtier = tier();
+        tier() = newtier;
+        findRating();
+        cancelChallenges();
+        Server::serverIns->afterChangeTier(id(), oldtier, tier());
+    }
 }
 
 void Player::doWhenDC()
@@ -694,6 +695,11 @@ void Player::testAuthentificationLoaded()
 void Player::findTierAndRating()
 {
     tier() = TierMachine::obj()->findTier(team());
+    findRating();
+}
+
+void Player::findRating()
+{
     lock();
     TierMachine::obj()->loadMemberInMemory(name(), tier(), this, SLOT(ratingLoaded()));
 }
@@ -709,6 +715,8 @@ void Player::ratingLoaded()
             emit loggedIn(id(), team().name);
         else
             emit recvTeam(id(), team().name);
+    } else {
+        emit updated(id());
     }
 }
 

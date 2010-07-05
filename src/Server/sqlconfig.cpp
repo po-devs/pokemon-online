@@ -10,8 +10,8 @@ SQLConfigWindow::SQLConfigWindow()
 
     QLabel *desc = new QLabel(tr("<b><span style='color:red'>Don't touch anything if you've no clue what SQL is!</span></b><br /><br />For any change to have effect, you need to restart the server."
                                  "<br />If you change the settings without knowledge of what you are doing, you'll probably end up without any users stored anymore.<br/><br/>SQLite is the "
-                                 "only system fully supported by default. PostGreSQL needs an external installation, but libraries to link PostGreSQL and Qt should be available in the download. "
-                                 "MySQL needs the user to get the right DLLs and to install a MySQL database too."));
+                                 "only system fully supported by default. PostGreSQL needs an external installation, and you then just have to put the .dlls in that are located in PostGreSQL's bin folder in the server folder. "
+                                 "MySQL needs the user to get the right DLLs, the MySQL driver and to install a MySQL database too (it is advised to be on linux to do this as this is far less complicated)."));
     desc->setWordWrap(true);
     v->addWidget(desc);
 
@@ -20,6 +20,7 @@ SQLConfigWindow::SQLConfigWindow()
     b = new QComboBox();
     b->addItem("SQLite");
     b->addItem("PostGreSQL");
+    b->addItem("MySQL");
     v->addLayout(new QSideBySide(new QLabel(tr("SQL Database type: ")), b));
     if (s.value("sql_driver").toInt() == SQLCreator::PostGreSQL) {
         b->setCurrentIndex(1);

@@ -97,6 +97,7 @@ public:
     void unlock();
     bool isLocked() const;
     void findTierAndRating();
+    void findRating();
 signals:
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, const QString &mess);
