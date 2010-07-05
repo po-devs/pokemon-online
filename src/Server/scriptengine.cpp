@@ -409,7 +409,7 @@ void ScriptEngine::changeAway(int id, bool away)
     if (!myserver->playerLoggedIn(id)) {
         printLine("Script Error in sys.changeAway(id, auth): no such player logged in with id " + QString::number(id));
     } else {
-        myserver->player(id)->awayChange(away);
+        myserver->player(id)->executeAwayChange(away);;
     }
 }
 
@@ -428,7 +428,7 @@ void ScriptEngine::changeTier(int id, const QString &tier)
     else if (!myserver->playerLoggedIn(id)) {
         printLine("Script Error in sys.changeTier(id, tier): no such player logged in with id " + QString::number(id));
     } else {
-        myserver->player(id)->changeTier(tier);
+        myserver->player(id)->executeTierChange(tier);
     }
 }
 

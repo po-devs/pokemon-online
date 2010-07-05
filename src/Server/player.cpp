@@ -100,6 +100,8 @@ void Player::unlock()
 
 void Player::changeTier(const QString &newtier)
 {
+    if (tier() == newtier)
+        return;
     if (battling()) {
         sendMessage(tr("You can't change tiers while battling."));
         return;
@@ -123,11 +125,16 @@ void Player::changeTier(const QString &newtier)
     }
     if (Server::serverIns->beforeChangeTier(id(), tier(), newtier)) {
         QString oldtier = tier();
-        tier() = newtier;
-        findRating();
-        cancelChallenges();
+        executeTierChange(newtier);
         Server::serverIns->afterChangeTier(id(), oldtier, tier());
     }
+}
+
+void Player::executeTierChange(const QString &newtier)
+{
+    tier() = newtier;
+    findRating();
+    cancelChallenges();
 }
 
 void Player::doWhenDC()
@@ -218,6 +225,14 @@ void Player::awayChange(bool away)
         return;
     }
 
+    if (Server::serverIns->beforePlayerAway(id(), away)) {
+        executeAwayChange(away);
+        Server::serverIns->afterPlayerAway(id(), away);
+    }
+}
+
+void Player::executeAwayChange(bool away)
+{
     changeState(Away, away);
     emit awayChange(id(), away);
 }

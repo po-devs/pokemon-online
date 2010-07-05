@@ -48,6 +48,8 @@ public:
     void afterChallengeIssued(int src, int dest, Challenge *c);
     bool beforeChangeTier(int src, const QString &oldTier, const QString &newTier);
     void afterChangeTier(int src, const QString &oldTier, const QString &newTier);
+    bool beforePlayerAway(int src, bool away);
+    void afterPlayerAway(int src, bool away);
     void atServerShutDown();
     void disconnectFromRegistry();
     /* Force Rated 1 and Force Rated 2 is to ignore the ladder on / off factor for those two */
