@@ -53,7 +53,6 @@ static QBitmap mask(const QPixmap &p)
 {
 #if !defined(WIN32) && !defined(WIN64)
     /*
-     *
      *  This code is for when borders aren't alpha'd properly (all the move types battle buttons needs to have their border alpha'd)
      *  Of course the problem only occurs on linux
      */
