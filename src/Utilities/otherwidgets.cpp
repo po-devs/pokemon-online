@@ -46,6 +46,7 @@ void QEntitled::setTitle(const QString &title)
     m_title->setText(title);
 }
 
+#if defined(WIN32) || defined(WIN64)
 /* On linux the function p.mask() screws up,
    so a new one is made. On windows the standard one is fine */
 static QBitmap mask(const QPixmap &p)
@@ -75,6 +76,7 @@ static QBitmap mask(const QPixmap &p)
     return p.mask();
 #endif
 }
+#endif
 
 QImageButton::QImageButton(const QString &normal, const QString &hovered, const QString &checked)
             : myPic(normal), myHoveredPic(hovered), lastUnderMouse(-1), pressed(false)
