@@ -1244,10 +1244,10 @@ void Client::printLine(const QString &line)
         mainChat()->insertPlainText("\n");
         return;
     }
+    if (line.contains(QRegExp(QString("\\b%1\\b").arg(ownName())))) {
+        activateWindow();
+    }
     if (line.leftRef(3) == "***") {
-        if (line.contains(QRegExp(QString("\\b%1\\b").arg(ownName())))) {
-            activateWindow();
-        }
         mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + escapeHtml(line) + "</span><br />");
         return;
     }
@@ -1257,9 +1257,6 @@ void Client::printLine(const QString &line)
 	QString beg = line.left(pos);
 	QString end = line.right(line.length()-pos-1);
 
-        if (end.contains(QRegExp(QString("\\b%1\\b").arg(ownName())))) {
-            activateWindow();
-        }
         if (beg == "~~Server~~") {
             mainChat()->insertHtml("<span style='color:orange'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
         } else if (beg == "Welcome Message") {

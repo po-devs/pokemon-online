@@ -28,6 +28,7 @@ Server::Server(quint16 port)
     serverIns = this;
 
     linecount = 0;
+    numberOfPlayersLoggedIn = 0;
     registry_connection = NULL;
     myengine = NULL;
 
@@ -858,6 +859,16 @@ void Server::afterChallengeIssued(int src, int dest, Challenge *c)
     myengine->afterChallengeIssued(src, dest, c->description());
 }
 
+bool Server::beforeChangeTier(int src, const QString &old, const QString &dest)
+{
+    return myengine->beforeChangeTier(src, old, dest);
+}
+
+void Server::afterChangeTier(int src, const QString &old, const QString &dest)
+{
+    myengine->afterChangeTier(src, old, dest);
+}
+
 void Server::info(int id, const QString &mess) {
     printLine(QString("From Player %1: %2").arg(id).arg(mess));
 }
@@ -1049,6 +1060,7 @@ void Server::sendPlayersList(int id)
 
 void Server::sendLogin(int id)
 {
+    numberOfPlayersLoggedIn += 1;
     PlayerInfo bundle = player(id)->bundle();
 
     foreach(Player *p, myplayers)
@@ -1071,6 +1083,7 @@ void Server::sendPlayer(int id)
 
 void Server::sendLogout(int id)
 {
+    numberOfPlayersLoggedIn -= 1;
     foreach(Player *p, myplayers)
     {
 	if (p->isLoggedIn())

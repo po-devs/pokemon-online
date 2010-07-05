@@ -63,6 +63,9 @@ void ScriptEngine::print(QScriptContext *context, QScriptEngine *)
 
 bool ScriptEngine::beforeChatMessage(int src, const QString &message)
 {
+    if (!myscript.property("beforeChatMessage", QScriptValue::ResolveLocal).isValid())
+        return true;
+
     startStopEvent();
 
     evaluate(myscript.property("beforeChatMessage").call(myscript, QScriptValueList() << src << message));
@@ -72,12 +75,18 @@ bool ScriptEngine::beforeChatMessage(int src, const QString &message)
 
 void ScriptEngine::afterChatMessage(int src, const QString &message)
 {
+    if (!myscript.property("afterChatMessage", QScriptValue::ResolveLocal).isValid())
+        return;
+
     evaluate(myscript.property("afterChatMessage").call(myscript, QScriptValueList() << src << message));
 }
 
 
 bool ScriptEngine::beforeNewMessage(const QString &message)
 {
+    if (!myscript.property("beforeNewMessage", QScriptValue::ResolveLocal).isValid())
+        return true;
+
     startStopEvent();
 
     evaluate(myscript.property("beforeNewMessage").call(myscript, QScriptValueList() << message));
@@ -87,6 +96,9 @@ bool ScriptEngine::beforeNewMessage(const QString &message)
 
 void ScriptEngine::afterNewMessage(const QString &message)
 {
+    if (!myscript.property("afterNewMessage", QScriptValue::ResolveLocal).isValid())
+        return;
+
     evaluate(myscript.property("afterNewMessage").call(myscript, QScriptValueList() << message));
 }
 
@@ -102,6 +114,9 @@ void ScriptEngine::serverShutDown()
 
 bool ScriptEngine::beforeLogIn(int src)
 {
+    if (!myscript.property("beforeLogIn", QScriptValue::ResolveLocal).isValid())
+        return true;
+
     startStopEvent();
 
     evaluate(myscript.property("beforeLogIn").call(myscript, QScriptValueList() << src));
@@ -111,21 +126,53 @@ bool ScriptEngine::beforeLogIn(int src)
 
 void ScriptEngine::afterLogIn(int src)
 {
+    if (!myscript.property("afterLogIn", QScriptValue::ResolveLocal).isValid())
+        return;
+
     evaluate(myscript.property("afterLogIn").call(myscript, QScriptValueList() << src));
 }
 
 void ScriptEngine::beforeChangeTeam(int src)
 {
+    if (!myscript.property("beforeChangeTeam", QScriptValue::ResolveLocal).isValid())
+        return;
+
     evaluate(myscript.property("beforeChangeTeam").call(myscript, QScriptValueList() << src));
 }
 
 void ScriptEngine::afterChangeTeam(int src)
 {
+    if (!myscript.property("afterChangeTeam", QScriptValue::ResolveLocal).isValid())
+        return;
+
     evaluate(myscript.property("afterChangeTeam").call(myscript, QScriptValueList() << src));
+}
+
+bool ScriptEngine::beforeChangeTier(int src, const QString &oldTier, const QString &newTier)
+{
+    if (!myscript.property("beforeChangeTier", QScriptValue::ResolveLocal).isValid())
+        return true;
+
+    startStopEvent();
+
+    evaluate(myscript.property("beforeChangeTier").call(myscript, QScriptValueList() << src << oldTier << newTier));
+
+    return !endStopEvent();
+}
+
+void ScriptEngine::afterChangeTier(int src, const QString &oldTier, const QString &newTier)
+{
+    if (!myscript.property("afterChangeTier", QScriptValue::ResolveLocal).isValid())
+        return;
+
+    evaluate(myscript.property("afterChangeTier").call(myscript, QScriptValueList() << src << oldTier << newTier));
 }
 
 bool ScriptEngine::beforeChallengeIssued(int src, int dest, const ChallengeInfo &c)
 {
+    if (!myscript.property("beforeChallengeIssued", QScriptValue::ResolveLocal).isValid())
+        return true;
+
     startStopEvent();
 
     QString clauses;
@@ -141,6 +188,9 @@ bool ScriptEngine::beforeChallengeIssued(int src, int dest, const ChallengeInfo 
 
 void ScriptEngine::afterChallengeIssued(int src, int dest, const ChallengeInfo &c)
 {
+    if (!myscript.property("afterChallengeIssued", QScriptValue::ResolveLocal).isValid())
+        return;
+
     QString clauses;
 
     for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
@@ -152,6 +202,9 @@ void ScriptEngine::afterChallengeIssued(int src, int dest, const ChallengeInfo &
 
 bool ScriptEngine::beforeBattleMatchup(int src, int dest, const ChallengeInfo &c)
 {
+    if (!myscript.property("beforeBattleMatchup", QScriptValue::ResolveLocal).isValid())
+        return true;
+
     startStopEvent();
 
     QString clauses;
@@ -167,6 +220,9 @@ bool ScriptEngine::beforeBattleMatchup(int src, int dest, const ChallengeInfo &c
 
 void ScriptEngine::afterBattleMatchup(int src, int dest, const ChallengeInfo &c)
 {
+    if (!myscript.property("afterBattleMatchup", QScriptValue::ResolveLocal).isValid())
+        return;
+
     QString clauses;
 
     for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
@@ -179,6 +235,9 @@ void ScriptEngine::afterBattleMatchup(int src, int dest, const ChallengeInfo &c)
 
 void ScriptEngine::beforeBattleStarted(int src, int dest, const ChallengeInfo &c)
 {
+    if (!myscript.property("beforeBattleStarted", QScriptValue::ResolveLocal).isValid())
+        return;
+
     QString clauses;
 
     for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
@@ -190,6 +249,9 @@ void ScriptEngine::beforeBattleStarted(int src, int dest, const ChallengeInfo &c
 
 void ScriptEngine::afterBattleStarted(int src, int dest, const ChallengeInfo &c)
 {
+    if (!myscript.property("afterBattleStarted", QScriptValue::ResolveLocal).isValid())
+        return;
+
     QString clauses;
 
     for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
@@ -207,6 +269,8 @@ QString battleDesc[3] = {
 
 void ScriptEngine::beforeBattleEnded(int src, int dest, int desc)
 {
+    if (!myscript.property("beforeBattleEnded", QScriptValue::ResolveLocal).isValid())
+        return;
     if (desc < 0 || desc > 2)
         return;
     evaluate(myscript.property("beforeBattleEnded").call(myscript, QScriptValueList() << src << dest << battleDesc[desc]));
@@ -214,6 +278,8 @@ void ScriptEngine::beforeBattleEnded(int src, int dest, int desc)
 
 void ScriptEngine::afterBattleEnded(int src, int dest, int desc)
 {
+    if (!myscript.property("afterBattleEnded", QScriptValue::ResolveLocal).isValid())
+        return;
     if (desc < 0 || desc > 2)
         return;
     evaluate(myscript.property("afterBattleEnded").call(myscript, QScriptValueList() << src << dest << battleDesc[desc]));
@@ -221,11 +287,15 @@ void ScriptEngine::afterBattleEnded(int src, int dest, int desc)
 
 void ScriptEngine::beforeLogOut(int src)
 {
+    if (!myscript.property("beforeLogOut", QScriptValue::ResolveLocal).isValid())
+        return;
     evaluate(myscript.property("beforeLogOut").call(myscript, QScriptValueList() << src));
 }
 
 void ScriptEngine::afterLogOut(int src)
 {
+    if (!myscript.property("afterLogOut", QScriptValue::ResolveLocal).isValid())
+        return;
     evaluate(myscript.property("afterLogOut").call(myscript, QScriptValueList() << src));
     QString srcS = QString::number(src);
 
@@ -237,6 +307,9 @@ void ScriptEngine::afterLogOut(int src)
 
 bool ScriptEngine::beforePlayerKick(int src, int dest)
 {
+    if (!myscript.property("beforePlayerKick", QScriptValue::ResolveLocal).isValid())
+        return true;
+
     startStopEvent();
 
     evaluate(myscript.property("beforePlayerKick").call(myscript, QScriptValueList() << src << dest));
@@ -246,11 +319,17 @@ bool ScriptEngine::beforePlayerKick(int src, int dest)
 
 void ScriptEngine::afterPlayerKick(int src, int dest)
 {
+    if (!myscript.property("afterPlayerKick", QScriptValue::ResolveLocal).isValid())
+        return;
+
     evaluate(myscript.property("afterPlayerKick").call(myscript, QScriptValueList() << src << dest));
 }
 
 bool ScriptEngine::beforePlayerBan(int src, int dest)
 {
+    if (!myscript.property("beforePlayerBan", QScriptValue::ResolveLocal).isValid())
+        return true;
+
     startStopEvent();
 
     evaluate(myscript.property("beforePlayerBan").call(myscript, QScriptValueList() << src << dest));
@@ -260,11 +339,17 @@ bool ScriptEngine::beforePlayerBan(int src, int dest)
 
 void ScriptEngine::afterPlayerBan(int src, int dest)
 {
+    if (!myscript.property("afterPlayerBan", QScriptValue::ResolveLocal).isValid())
+        return;
+
     evaluate(myscript.property("afterPlayerBan").call(myscript, QScriptValueList() << src << dest));
 }
 
 bool ScriptEngine::beforePlayerAway(int src, bool away)
 {
+    if (!myscript.property("beforePlayerAway", QScriptValue::ResolveLocal).isValid())
+        return true;
+
     startStopEvent();
 
     evaluate(myscript.property("beforePlayerAway").call(myscript, QScriptValueList() << src << away));
@@ -274,6 +359,9 @@ bool ScriptEngine::beforePlayerAway(int src, bool away)
 
 void ScriptEngine::afterPlayerAway(int src, bool away)
 {
+    if (!myscript.property("afterPlayerAway", QScriptValue::ResolveLocal).isValid())
+        return;
+
     evaluate(myscript.property("afterPlayerAway").call(myscript, QScriptValueList() << src << away));
 }
 
@@ -310,19 +398,41 @@ void ScriptEngine::kick(int id)
 void ScriptEngine::changeAuth(int id, int auth)
 {
     if (!myserver->playerLoggedIn(id)) {
-        printLine("Script Error in sys.auth(id): no such player logged in with id " + QString::number(id));
+        printLine("Script Error in sys.changeAuth(id, auth): no such player logged in with id " + QString::number(id));
     } else {
         myserver->changeAuth(myserver->name(id), auth);
     }
 }
 
-void ScriptEngine::changeRating(QString name, QString tier, int newRating)
+void ScriptEngine::changeAway(int id, bool away)
+{
+    if (!myserver->playerLoggedIn(id)) {
+        printLine("Script Error in sys.changeAway(id, auth): no such player logged in with id " + QString::number(id));
+    } else {
+        myserver->player(id)->awayChange(away);
+    }
+}
+
+void ScriptEngine::changeRating(const QString& name, const QString& tier, int newRating)
 {
     if (!TierMachine::obj()->exists(tier))
         printLine("Script Error in sys.changeRating(name, tier, rating): no such tier as " + tier);
     else
         TierMachine::obj()->changeRating(name, tier, newRating);
 }
+
+void ScriptEngine::changeTier(int id, const QString &tier)
+{
+    if (!TierMachine::obj()->exists(tier))
+        printLine("Script Error in sys.changeTier(id, tier): no such tier as " + tier);
+    else if (!myserver->playerLoggedIn(id)) {
+        printLine("Script Error in sys.changeTier(id, tier): no such player logged in with id " + QString::number(id));
+    } else {
+        myserver->player(id)->changeTier(tier);
+    }
+}
+
+
 
 void ScriptEngine::changePokeItem(int id, int slot, int item)
 {
@@ -387,6 +497,24 @@ QScriptValue ScriptEngine::getVal(const QString &key)
 void ScriptEngine::removeVal(const QString &key)
 {
     QSettings s;
+    s.remove("Script_"+key);
+}
+
+void ScriptEngine::saveVal(const QString &file, const QString &key, const QVariant &val)
+{
+    QSettings s(file);
+    s.setValue("Script_"+key, val);
+}
+
+QScriptValue ScriptEngine::getVal(const QString &file, const QString &key)
+{
+    QSettings s(file);
+    return s.value("Script_"+key).toString();
+}
+
+void ScriptEngine::removeVal(const QString &file, const QString &key)
+{
+    QSettings s(file);
     s.remove("Script_"+key);
 }
 
@@ -574,6 +702,15 @@ QScriptValue ScriptEngine::auth(int id)
         return myengine.undefinedValue();
     } else {
         return myserver->auth(id);
+    }
+}
+
+QScriptValue ScriptEngine::battling(int id)
+{
+    if (!myserver->playerLoggedIn(id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->battling();
     }
 }
 
@@ -948,7 +1085,7 @@ int ScriptEngine::rand(int min, int max)
 
 int ScriptEngine::numPlayers()
 {
-    return myserver->numPlayers();
+    return myserver->numberOfPlayersLoggedIn;
 }
 
 bool ScriptEngine::loggedIn(int id)
@@ -980,6 +1117,13 @@ void ScriptEngine::stopEvent()
     } else {
         stopevents.back() = true;
     }
+}
+
+void ScriptEngine::shutDown()
+{
+    Server::print("Scripted server shutdown");
+    serverShutDown();
+    exit(0);
 }
 
 ScriptWindow::ScriptWindow()

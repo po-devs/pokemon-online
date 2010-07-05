@@ -46,6 +46,8 @@ public:
     void removeBattle(int id1, int id2);
     void beforeChallengeIssued(int src, int dest, Challenge *c);
     void afterChallengeIssued(int src, int dest, Challenge *c);
+    bool beforeChangeTier(int src, const QString &oldTier, const QString &newTier);
+    void afterChangeTier(int src, const QString &oldTier, const QString &newTier);
     void atServerShutDown();
     void disconnectFromRegistry();
     /* Force Rated 1 and Force Rated 2 is to ignore the ladder on / off factor for those two */
@@ -54,6 +56,8 @@ public:
     QMenuBar *createMenuBar();
 
     Player * player(int id) const;
+
+    static Server *serverIns;
 public slots:
     /* Registry slots */
     void connectToRegistry();
@@ -114,8 +118,6 @@ private:
     void kick(int dest, int src);
     void ban(int dest, int src);
 
-    static Server *serverIns;
-
     Analyzer *registry_connection;
     QString serverName, serverDesc, serverAnnouncement;
     quint16 serverPrivate, serverPlayerMax,serverPort;
@@ -137,6 +139,8 @@ private:
     int freebattleid() const;
     /* removes a player */
     void removePlayer(int id);
+
+    int numberOfPlayersLoggedIn;
 
     int linecount;
     int textLength;
