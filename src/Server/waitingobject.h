@@ -19,6 +19,8 @@ signals:
 class WaitingObjects : public QObject
 {
     Q_OBJECT
+
+    friend class ScriptEngine;
 public:
     static WaitingObject* getObject();
     static void freeObject(WaitingObject *c);
@@ -28,6 +30,9 @@ public slots:
     /* Must be called with a waiting object to free as sender(), or segfault */
     void freeObject();
 private:
+    /* Use publicly as read-only to know how many WaitingObject instances have been allocated in total */
+    static int objectCount;
+
     static WaitingObjects *instance;
 
     static QSet<WaitingObject*> freeObjects;

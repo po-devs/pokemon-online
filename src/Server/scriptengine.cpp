@@ -1,6 +1,9 @@
 #include "server.h"
 #include "player.h"
+#include "security.h"
+#include "waitingobject.h"
 #include "tiermachine.h"
+#include "tier.h"
 #include "scriptengine.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
@@ -523,6 +526,23 @@ bool ScriptEngine::hasLegalTeamForTier(int id, const QString &tier)
     if (!TierMachine::obj()->exists(tier))
         return false;
     return TierMachine::obj()->isValid(myserver->player(id)->team(),tier);
+}
+
+QScriptValue ScriptEngine::memoryDump()
+{
+    QString ret;
+
+    ret += QString("Members\n\tCached in memory> %1\n\tCached as non-existing> %2\n").arg(SecurityManager::holder.cachedMembersCount()).arg(SecurityManager::holder.cachedNonExistingCount());
+    ret += QString("Waiting Objects\n\tFree Objects> %1\n\tTotal Objects> %2\n").arg(WaitingObjects::freeObjects.count()).arg(WaitingObjects::objectCount);
+    ret += QString("Battles\n\tActive> %1\n\tRated Battles History> %2\n").arg(myserver->mybattles.count()).arg(myserver->lastRatedIps.count());
+    ret += QString("-------------------------\n-------------------------\n");
+
+    foreach (QString tier, TierMachine::obj()->tierList().split('\n')) {
+        const Tier &t = TierMachine::obj()->tier(tier);
+        ret += QString("Tier %1\n\tCached in memory> %2\n\tCached as non-existing> %3\n").arg(tier).arg(t.holder.cachedMembersCount()).arg(t.holder.cachedNonExistingCount());
+    }
+
+    return ret;
 }
 
 int ScriptEngine::system(const QString &command)

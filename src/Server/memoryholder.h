@@ -48,6 +48,21 @@ public:
         cachedMembersMutex.unlock();
     }
 
+    /* Used for debugging purposes */
+    int cachedMembersCount()
+    {
+        QMutexLocker m(&cachedMembersMutex);
+
+        return cachedMembersOrder.size();
+    }
+
+    int cachedNonExistingCount()
+    {
+        QMutexLocker m(&memberMutex);
+
+        return nonExistentMembers.size();
+    }
+
     void removeMemberInMemory(const QString &name)
     {
         memberMutex.lock();

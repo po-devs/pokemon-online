@@ -13,6 +13,8 @@ class WaitingObject;
 class SecurityManager : public QObject
 {
     Q_OBJECT
+
+    friend class ScriptEngine;
 public:
 
     enum QueryType {
