@@ -908,10 +908,12 @@ bool TrainerTeam::importFromTxt(const QString &file1)
 
             if (move.contains('[')) {
                 int type = TypeInfo::Number(move.section('[',1,1).section(']',0,0));
-                move = move.section('[',0,0).trimmed();
-                QStringList dvs = HiddenPowerInfo::PossibilitiesForType(type)[0];
-                for(int i =0;i < dvs.size(); i++) {
-                    p.setDV(i, dvs[i].toInt());
+                if (type != 0) {
+                    move = move.section('[',0,0).trimmed();
+                    QStringList dvs = HiddenPowerInfo::PossibilitiesForType(type)[0];
+                    for(int i =0;i < dvs.size(); i++) {
+                        p.setDV(i, dvs[i].toInt());
+                    }
                 }
             }
             p.setMove(MoveInfo::Number(move),i-4,false);
