@@ -284,7 +284,7 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
 
         QSqlQuery q;
         q.setForwardOnly(true);
-        loadMember(&q, name, GetInfoOnUser);
+        loadMember(&q, n2, GetInfoOnUser);
 
         return;
     }
