@@ -2,6 +2,7 @@
 
 WaitingObjects * WaitingObjects::instance = new WaitingObjects();
 QSet<WaitingObject*> WaitingObjects::freeObjects;
+int WaitingObjects::objectCount = 0;
 
 WaitingObject * WaitingObjects::getObject()
 {
@@ -10,6 +11,7 @@ WaitingObject * WaitingObjects::getObject()
         freeObjects.remove(w);
         return w;
     } else {
+        objectCount += 1;
         return new WaitingObject();
     }
 }

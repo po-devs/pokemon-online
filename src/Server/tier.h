@@ -40,6 +40,7 @@ inline uint qHash(const BannedPoke &p) {
 class Tier
 {
     friend class TierMachine;
+    friend class ScriptEngine;
 public:
     void changeName(const QString &name);
     QString name() const;
