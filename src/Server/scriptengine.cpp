@@ -518,6 +518,13 @@ void ScriptEngine::removeVal(const QString &file, const QString &key)
     s.remove("Script_"+key);
 }
 
+bool ScriptEngine::hasLegalTeamForTier(int id, const QString &tier)
+{
+    if (!TierMachine::obj()->exists(tier))
+        return false;
+    return TierMachine::obj()->isValid(myserver->player(id)->team(),tier);
+}
+
 int ScriptEngine::system(const QString &command)
 {
     return ::system(command.toUtf8());
