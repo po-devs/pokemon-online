@@ -1244,12 +1244,15 @@ void Client::printLine(const QString &line)
         mainChat()->insertPlainText("\n");
         return;
     }
-    if (line.contains(QRegExp(QString("\\b%1\\b").arg(ownName())))) {
-        activateWindow();
-    }
     if (line.leftRef(3) == "***") {
         mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + escapeHtml(line) + "</span><br />");
         return;
+    }
+    /* Only activates if no window has focus */
+    if (!QApplication::activeWindow()) {
+        if (line.contains(QRegExp(QString("\\b%1\\b").arg(ownName())))) {
+            activateWindow();
+        }
     }
     /* Let's add colors */
     int pos = line.indexOf(':');
