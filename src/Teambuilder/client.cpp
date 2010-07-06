@@ -20,28 +20,34 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     myteambuilder = NULL;
     resize(1000, 700);
 
-    QGridLayout *layout = new QGridLayout(this);
+    QHBoxLayout *h = new QHBoxLayout(this);
+    QSplitter *s = new QSplitter(Qt::Horizontal);
+    h->addWidget(s);
+    s->setChildrenCollapsible(false);
 
-    layout->addWidget(myplayers = new QTreeWidget(), 0, 0, 4, 1, Qt::AlignLeft);
-    layout->addWidget(announcement = new QLabel(), 0, 1);
+    s->addWidget(myplayers = new QTreeWidget());
+
+    QWidget *container = new QWidget();
+    s->addWidget(container);
+
+    QVBoxLayout *layout = new QVBoxLayout(container);
+    layout->setMargin(0);
+
+    layout->addWidget(announcement = new QLabel());
     announcement->setObjectName("Announcement");
     announcement->setOpenExternalLinks(true);
     announcement->setWordWrap(true);
     announcement->hide();
-    layout->addWidget(mychat = new QScrollDownTextEdit(), 1, 1);
+    layout->addWidget(mychat = new QScrollDownTextEdit());
     mychat->setObjectName("MainChat");
-    layout->addWidget(myline = new QLineEdit(), 2, 1);
+    layout->addWidget(myline = new QLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
-    layout->addLayout(buttonsLayout,3,1);
+    layout->addLayout(buttonsLayout);
     buttonsLayout->addWidget(findMatch = new QPushButton(tr("&Find Battle")));
     buttonsLayout->addWidget(myregister = new QPushButton(tr("&Register")));
     buttonsLayout->addWidget(myexit = new QPushButton(tr("&Exit")));
     buttonsLayout->addWidget(mysender = new QPushButton(tr("&Send")));
-    buttonsLayout->addWidget(mybugs = new QPushButton(tr("&Report a Bug")));
-    layout->setColumnStretch(1,100);
 
-
-    myplayers->setMaximumWidth(200);
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
     myplayers->setHeaderItem(new QTreeWidgetItem(0));
     myplayers->headerItem()->setText(0,"Players");
@@ -53,13 +59,14 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     myregister->setDisabled(true);
     mynick = t->trainerNick();
 
+    s->setSizes(QList<int>() << 200 << 800);
+
     connect(myplayers, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
     connect(myplayers, SIGNAL(itemActivated(QTreeWidgetItem*, int)), SLOT(seeInfo(QTreeWidgetItem*)));
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
     connect(myregister, SIGNAL(clicked()), SLOT(sendRegister()));
-    connect(mybugs, SIGNAL(clicked()), SLOT(bugReport()));
     connect(findMatch, SIGNAL(clicked()), SLOT(openBattleFinder()));
 
     initRelay();
@@ -1406,11 +1413,6 @@ void Client::removeIgnore(int id)
     printLine(tr("You stopped ignoring %1.").arg(name(id)));
     myIgnored.removeOne(id);
     updateState(id);
-}
-
-void Client::bugReport()
-{
-    QDesktopServices::openUrl(QUrl("http://pokemon-online.eu/forums/newthread.php?do=newthread&f=9"));
 }
 
 /**********************************************************/
