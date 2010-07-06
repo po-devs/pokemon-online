@@ -390,6 +390,9 @@ void TeamBattle::generateRandom()
         QList<int> moves = g.moves().toList();
         QList<int> movesTaken;
         for (int i = 0; i < 4; i++) {
+            /* If there are no other moves possible,
+               sets the remaining moves to 0 and exit the loop
+               (like for weedle) */
             if (moves.size() <= i) {
                 for (int j = i; j < 4; j++) {
                     p.move(j).num() = 0;

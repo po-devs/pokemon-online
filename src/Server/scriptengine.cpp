@@ -1,6 +1,7 @@
 #include "server.h"
 #include "player.h"
 #include "security.h"
+#include "antidos.h"
 #include "waitingobject.h"
 #include "tiermachine.h"
 #include "tier.h"
@@ -528,6 +529,16 @@ bool ScriptEngine::hasLegalTeamForTier(int id, const QString &tier)
     return TierMachine::obj()->isValid(myserver->player(id)->team(),tier);
 }
 
+int ScriptEngine::maxAuth(const QString &ip)
+{
+    return SecurityManager::maxAuth(ip);
+}
+
+QScriptValue ScriptEngine::aliases(const QString &ip)
+{
+    return SecurityManager::membersForIp(ip).join("\n");
+}
+
 QScriptValue ScriptEngine::memoryDump()
 {
     QString ret;
@@ -535,6 +546,8 @@ QScriptValue ScriptEngine::memoryDump()
     ret += QString("Members\n\tCached in memory> %1\n\tCached as non-existing> %2\n").arg(SecurityManager::holder.cachedMembersCount()).arg(SecurityManager::holder.cachedNonExistingCount());
     ret += QString("Waiting Objects\n\tFree Objects> %1\n\tTotal Objects> %2\n").arg(WaitingObjects::freeObjects.count()).arg(WaitingObjects::objectCount);
     ret += QString("Battles\n\tActive> %1\n\tRated Battles History> %2\n").arg(myserver->mybattles.count()).arg(myserver->lastRatedIps.count());
+    ret += QString("Antidos\n\tConnections Per IP> %1\n\tLogins per IP> %2\n\ŧTransfers Per Id> %3\n\tSize of Transfers> %4Kicks per IP> %5").arg(AntiDos::obj()->connectionsPerIp.count(),
+                        AntiDos::obj()->loginsPerIp.count(), AntiDos::obj()->transfersPerId.count(), AntiDos::obj()->sizeOfTransfers.count(), AntiDos::obj()->kicksPerIp.count());
     ret += QString("-------------------------\n-------------------------\n");
 
     foreach (QString tier, TierMachine::obj()->tierList().split('\n')) {

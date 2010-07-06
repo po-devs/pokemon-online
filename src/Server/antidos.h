@@ -21,6 +21,7 @@ class AntiDos : public QObject
 {
     Q_OBJECT
     friend class AntiDosWindow;
+    friend class ScriptEngine;
 public:
     AntiDos();
 
