@@ -159,7 +159,6 @@ public slots:
     /* Teambuilder slots */
     void openTeamBuilder();
     void changeTeam();
-    void bugReport();
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
