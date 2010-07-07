@@ -745,6 +745,34 @@ QScriptValue ScriptEngine::auth(int id)
     }
 }
 
+QScriptValue ScriptEngine::dbAuth(const QString &name)
+{
+    if (!SecurityManager::exist(name)) {
+        return myengine.undefinedValue();
+    } else {
+        return SecurityManager::Member(name).auth;
+    }
+}
+
+QScriptValue ScriptEngine::dbIp(const QString &name)
+{
+    if (!SecurityManager::exist(name)) {
+        return myengine.undefinedValue();
+    } else {
+        return QString(SecurityManager::Member(name).ip);
+    }
+}
+
+QScriptValue ScriptEngine::dbLastOn(const QString &name)
+{
+    if (!SecurityManager::exist(name)) {
+        return myengine.undefinedValue();
+    } else {
+        return QString(SecurityManager::Member(name).date);
+    }
+}
+
+
 QScriptValue ScriptEngine::battling(int id)
 {
     if (!myserver->playerLoggedIn(id)) {
