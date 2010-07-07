@@ -889,7 +889,7 @@ void Player::recvTeam(const TeamInfo &team)
     if (team.name.toLower() == oldName.toLower()) {
         assignTeam(team);
 
-        loginSuccess();
+        findTierAndRating();
         return;
     }
 
