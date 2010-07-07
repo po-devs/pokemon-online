@@ -100,6 +100,9 @@ public:
     Q_INVOKABLE QScriptValue battling(int id);
     Q_INVOKABLE QScriptValue away(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
+    Q_INVOKABLE QScriptValue dbAuth(const QString &name);
+    Q_INVOKABLE QScriptValue dbIp(const QString &name);
+    Q_INVOKABLE QScriptValue dbLastOn(const QString &name);
     Q_INVOKABLE QScriptValue tier(int id);
     Q_INVOKABLE QScriptValue ranking(int id);
     Q_INVOKABLE QScriptValue ranking(const QString &name, const QString &tier);
