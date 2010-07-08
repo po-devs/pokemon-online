@@ -548,7 +548,7 @@ struct MMDetect : public MM
         /* Detect / Protects fail if all other already moved */
         bool fail = true;
         for (int t = 0;  t < b.numberOfSlots() ; t++) {
-            if (!turn(b,t).value("HasMoved").toBool() && !turn(b,t).value("CantGetToMove").toBool()) {
+            if (!turn(b,t).value("HasMoved").toBool() && !turn(b,t).value("CantGetToMove").toBool() && !b.koed(t)) {
                 fail = false;
                 break;
             }
