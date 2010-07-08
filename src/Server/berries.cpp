@@ -206,9 +206,22 @@ struct BMPinchStat : public BMPinch
 {
     BMPinchStat() {
         functions["AfterHPChange"] = &ahpc;
+        functions["TestPinch"] = &tp;
     }
 
     static void ahpc(int s, int, BS &b) {
+        /* Those berries don't activate immediately when attacked by offensive moves,
+           but only after side effects applied. At that time, the battle thread will call
+           the effect "TestPinch"
+        */
+        if (b.attacked() == s && turn(b,b.attacker())["Power"].toInt() > 0)
+            return;
+        tp(s, s, b);
+    }
+
+    static void tp(int s, int, BS &b) {
+        /* The berry may change after the call to test pinch (eaten),
+           so saved before. */
         int berry = b.poke(s).item();
 
         if (!testpinch(s, s, b,4))
@@ -224,9 +237,20 @@ struct BMCriticalPinch : public BMPinch
 {
     BMCriticalPinch() {
         functions["AfterHPChange"] = &ahpc;
+        functions["TestPinch"] = &tp;
     }
 
     static void ahpc(int s, int, BS &b) {
+        /* Those berries don't activate immediately when attacked by offensive moves,
+           but only after side effects applied. At that time, the battle thread will call
+           the effect "TestPinch"
+        */
+        if (b.attacked() == s && turn(b,b.attacker())["Power"].toInt() > 0)
+            return;
+        tp(s, s, b);
+    }
+
+    static void tp(int s, int, BS &b) {
         if (!testpinch(s, s, b,4))
             return;
 
@@ -252,9 +276,20 @@ struct BMStarf : public BMPinch
 {
     BMStarf() {
         functions["AfterHPChange"] = &ahpc;
+        functions["TestPinch"] = &tp;
     }
 
     static void ahpc(int s, int, BS &b) {
+        /* Those berries don't activate immediately when attacked by offensive moves,
+           but only after side effects applied. At that time, the battle thread will call
+           the effect "TestPinch"
+        */
+        if (b.attacked() == s && turn(b,b.attacker())["Power"].toInt() > 0)
+            return;
+        tp(s, s, b);
+    }
+
+    static void tp(int s, int, BS &b) {
         int berry = b.poke(s).item();
 
         if (!testpinch(s, s, b, 4))
@@ -269,10 +304,10 @@ struct BMStarf : public BMPinch
 struct BMBerryLock : public BMPinch
 {
     BMBerryLock() {
-        functions["AfterHPChange"] = &ahpc;
+        functions["BeforeTargetList"] = &btl;
     }
 
-    static void ahpc(int s, int, BS &b) {
+    static void btl(int s, int, BS &b) {
         if (!testpinch(s, s, b,4))
             return;
 
