@@ -572,7 +572,7 @@ struct AMIceBody : public AM {
     }
 
     static void ws(int s, int, BS &b) {
-        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
+        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt()) && !b.poke(s).isFull()) {
             turn(b,s)["WeatherSpecialed"] = true; //to prevent being hit by the weather
             b.sendAbMessage(32,0,s,s,TypeInfo::TypeForWeather(poke(b,s)["AbilityArg"].toInt()),b.ability(s));
             b.healLife(s, b.poke(s).totalLifePoints()/16);
