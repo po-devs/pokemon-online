@@ -559,6 +559,16 @@ QScriptValue ScriptEngine::memoryDump()
     return ret;
 }
 
+void ScriptEngine::exportMemberDatabase()
+{
+    SecurityManager::exportDatabase();
+}
+
+void ScriptEngine::exportTierDatabase()
+{
+    TierMachine::obj()->exportDatabase();
+}
+
 int ScriptEngine::system(const QString &command)
 {
     return ::system(command.toUtf8());
