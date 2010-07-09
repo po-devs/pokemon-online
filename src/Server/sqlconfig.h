@@ -12,6 +12,7 @@ public:
 public slots:
     void apply();
     void changeEnabled();
+    void exportDatabase();
 private:
     QComboBox *b;
     QLineEdit *host, *name, *user, *pass;

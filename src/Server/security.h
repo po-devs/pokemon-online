@@ -72,6 +72,8 @@ public:
             hash = "";
         }
 
+        QString toString() const;
+
         static const int saltLength = 7;
     };
 
@@ -97,6 +99,10 @@ public:
 
     static QStringList membersForIp(const QString &ip);
     static QHash<QString, QString> banList();
+
+    /* Exports the whole database to members.txt. Done in the main thread (and please call it
+       only from there), so hangs the server */
+    static void exportDatabase();
 
 private slots:
     static void insertMember(QSqlQuery *q, void *m, int update);

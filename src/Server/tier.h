@@ -73,6 +73,8 @@ public:
     void fetchRankings(const QVariant &data, QObject *o, const char *slot);
     void processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w);
     void insertMember(QSqlQuery *q, void *data, int type);
+
+    void exportDatabase() const;
 protected:
     enum QueryType {
         GetInfoOnUser,

@@ -1,6 +1,8 @@
 #include "sql.h"
 #include "sqlconfig.h"
 #include "../Utilities/otherwidgets.h"
+#include "security.h"
+#include "tiermachine.h"
 
 SQLConfigWindow::SQLConfigWindow()
 {
@@ -49,9 +51,13 @@ SQLConfigWindow::SQLConfigWindow()
     port->setValue(s.value("sql_db_port").toInt());
     v->addLayout(new QSideBySide(new QLabel(tr("Port: ")), port));
 
+    QPushButton *exporting = new QPushButton(tr("&Export"));
+    connect(exporting, SIGNAL(clicked()), SLOT(exportDatabase()));
+
     QPushButton *apply = new QPushButton(tr("&Apply"));
     connect(apply, SIGNAL(clicked()), this, SLOT(apply()));
-    v->addWidget(apply);
+
+    v->addLayout(new QSideBySide(exporting, apply));
 
     connect(b, SIGNAL(activated(int)), SLOT(changeEnabled()));
     changeEnabled();
@@ -77,4 +83,19 @@ void SQLConfigWindow::apply()
     s.setValue("sql_db_user", user->text());
     s.setValue("sql_db_pass", pass->text());
     s.setValue("sql_db_host", host->text());
+}
+
+void SQLConfigWindow::exportDatabase()
+{
+    if (!QMessageBox::question(this, "Exporting all the data", "Exporting will create a backup of the database with .txt files, and may hang the server a little."
+                               " Are you sure you want to continue?", QMessageBox::Yes, QMessageBox::No)) {
+        return;
+    }
+
+    SecurityManager::exportDatabase();
+    TierMachine::obj()->exportDatabase();
+
+    QMessageBox::information(this, "Database Saved!", "The database was saved successfully (members.txt and tier_*.txt files). If you want to import it"
+                             " from another server, put those files in the other server's directory and make sure the database it has access to is empty,"
+                             " otherwise it won't import. You also have to restart the other server.");
 }

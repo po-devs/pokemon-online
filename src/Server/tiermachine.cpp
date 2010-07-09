@@ -199,6 +199,13 @@ const QStringList & TierMachine::tierNames() const
     return m_tierNames;
 }
 
+void TierMachine::exportDatabase() const
+{
+    for(int i = 0; i < m_tiers.size(); i++) {
+        m_tiers[i]->exportDatabase();
+    }
+}
+
 int TierMachine::rating(const QString &name, const QString &tier)
 {
     return this->tier(tier).rating(name);
