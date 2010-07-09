@@ -78,6 +78,9 @@ public:
     Q_INVOKABLE void removeVal(const QString &file, const QString &key);
     /* Calls the underlying OS for a command */
     Q_INVOKABLE int system(const QString &command);
+    /* Export the SQL databases to old style txt files */
+    Q_INVOKABLE void exportMemberDatabase();
+    Q_INVOKABLE void exportTierDatabase();
     Q_INVOKABLE void clearChat();
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
