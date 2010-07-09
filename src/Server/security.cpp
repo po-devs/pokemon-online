@@ -14,6 +14,22 @@ int SecurityManager::nextLoadThreadNumber = 0;
 LoadThread * SecurityManager::threads = NULL;
 InsertThread<SecurityManager::Member> * SecurityManager::ithread = NULL;
 
+SecurityManager::Member::Member(const QString &name, const QByteArray &date, int auth, bool banned, const QByteArray &salt, const QByteArray &hash,
+                                const QByteArray &ip)
+    :name(name.toLower()), date(date), auth(auth), banned(banned), salt(salt), hash(hash), ip(ip)
+{
+}
+
+QString SecurityManager::Member::toString() const
+{
+    char auth[4] = {'0','0','0', '\0'};
+    if (this->authority() != 0)
+        auth[0] += this->authority();
+    if (this->isBanned())
+        auth[1] = '1';
+    return QString("%1%%2%%3%%4%%5%%6\n").arg(name, date, auth, salt, hash, ip);
+}
+
 void SecurityManager::loadMembers()
 {
     QSqlQuery query;
@@ -105,12 +121,6 @@ void SecurityManager::loadMembers()
 //    if (query.next())
 //        for (int i = 0; i < 8; i++)
 //            Server::print(query.value(i).toString());
-}
-
-SecurityManager::Member::Member(const QString &name, const QByteArray &date, int auth, bool banned, const QByteArray &salt, const QByteArray &hash,
-                                const QByteArray &ip)
-    :name(name.toLower()), date(date), auth(auth), banned(banned), salt(salt), hash(hash), ip(ip)
-{
 }
 
 void SecurityManager::init()
@@ -344,12 +354,32 @@ void SecurityManager::loadMember(QSqlQuery *q, const QVariant &name, int query_t
         if (!q->next()) {
             holder.addNonExistant(name.toString());
         } else {
-            SecurityManager::Member m(name.toString(), q->value(0).toByteArray(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
+            Member m(name.toString(), q->value(0).toByteArray(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
                                       q->value(4).toByteArray(), q->value(5).toByteArray());
             holder.addMemberInMemory(m);
         }
         q->finish();
     }
+}
+
+void SecurityManager::exportDatabase()
+{
+    QFile out("members.txt");
+
+    out .open(QIODevice::WriteOnly);
+
+    QSqlQuery q;
+    q.setForwardOnly(true);
+
+    q.exec("select name, laston, auth, banned, salt, hash, ip from trainers order by name asc");
+
+    while (q.next()) {
+        Member m(q.value(0).toString(), q.value(1).toByteArray(), q.value(2).toInt(), q.value(3).toBool(), q.value(4).toByteArray(), q.value(5).toByteArray()
+                 , q.value(6).toByteArray());
+        out.write(m.toString().toUtf8());
+    }
+
+    Server::print("Member database exported!");
 }
 
 

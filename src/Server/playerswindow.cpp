@@ -27,7 +27,7 @@ PlayersWindow::PlayersWindow(QWidget *parent)
     QSqlQuery q;
     q.setForwardOnly(true);
 
-    q.exec("select count(id) from trainers");
+    q.exec("select count(*) from trainers");
 
     if (q.next()) {
         mytable->setRowCount(q.value(0).toInt());

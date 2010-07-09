@@ -52,10 +52,12 @@ public:
     void changeRating(const QString &winner, const QString &tier, int newRating);
 
     QPair<int, int> pointChangeEstimate(const QString &player, const QString &foe, const QString &tier);
-
     QString findTier(const TeamBattle &t) const;
 
+    void exportDatabase() const;
+
     static const int playersByPage = 40;
+
 public slots:
     void processQuery(QSqlQuery*,const QVariant &,int,WaitingObject*);
     void insertMember(QSqlQuery*,void *,int);

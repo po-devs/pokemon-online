@@ -10,8 +10,8 @@
 
 QString MemberRating::toString() const
 {
-    return name + "%" + QString::number(matches).rightJustified(5,'0',true) + "%" +
-            QString::number(rating).rightJustified(5,'0',true);
+    return name + "%" + QString::number(matches) + "%" +
+            QString::number(rating) + "\n";
 }
 
 void MemberRating::changeRating(int opponent_rating, bool win)
@@ -324,6 +324,25 @@ void Tier::fetchRankings(const QVariant &data, QObject *o, const char *slot)
     LoadThread *t = getThread();
 
     t->pushQuery(data, w, make_query_number(GetRankings));
+}
+
+void Tier::exportDatabase() const
+{
+    QFile out(QString("tier_%1.txt").arg(name()));
+
+    out .open(QIODevice::WriteOnly);
+
+    QSqlQuery q;
+    q.setForwardOnly(true);
+
+    q.exec(QString("select name, matches, rating from %1 order by name asc").arg(sql_table));
+
+    while (q.next()) {
+        MemberRating m(q.value(0).toString(), q.value(1).toInt(), q.value(2).toInt());
+        out.write(m.toString().toUtf8());
+    }
+
+    Server::print(QString("Database of tier %1 exported!").arg(name()));
 }
 
 /* Precondition: name is in lowercase */
