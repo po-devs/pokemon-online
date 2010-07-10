@@ -164,8 +164,10 @@ public:
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
-private slots:
+public slots:
     void changeScript(const QString &script);
+
+private slots:
     void timer();
     void webCall_replyFinished(QNetworkReply* reply);
     void synchronousWebCall_replyFinished(QNetworkReply* reply);
