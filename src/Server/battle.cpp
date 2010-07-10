@@ -2712,7 +2712,6 @@ void BattleSituation::acqItem(int player, int item) {
         loseItem(player);
     poke(player).item() = item;
     ItemEffect::setup(poke(player).item(),player,*this);
-    callieffects(player,player,"AfterSetup");
 }
 
 void BattleSituation::loseItem(int player)
