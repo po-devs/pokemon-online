@@ -400,7 +400,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             break;
         }
     case CriticalHit:
-        printHtml(toColor(tr("A critical hit!"), Qt::red));
+        printHtml(toColor(tr("A critical hit!"), "#6b0000"));
         break;
     case Miss:
         printLine(tr("The attack of %1 missed!").arg(nick(spot)));
