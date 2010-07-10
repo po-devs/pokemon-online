@@ -930,9 +930,9 @@ TempBan::~TempBan()
 }
 void TempBan::start()
 {
-    mytimer = new QTimer();
-    mytimer->start(mytime*60*1000);
-    connect(mytimer,SIGNAL(timeout()),this,SLOT(done()));
+//    mytimer = new QTimer();
+//    mytimer->start(mytime*60*1000);
+//    connect(mytimer,SIGNAL(timeout()),this,SLOT(done()));
 }
 
 QString TempBan::name() const
