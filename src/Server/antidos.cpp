@@ -79,7 +79,8 @@ void AntiDosWindow::apply()
 }
 
 AntiDos::AntiDos() {
-
+    // Clears history every day, to save RAM.
+    timer.start(24*3600, this);
 }
 
 void AntiDos::init() {
@@ -228,6 +229,13 @@ void AntiDos::addKick(const QString &ip)
     if (l.size() >= ban_after_x_kicks && on) {
         emit ban(ip);
     }
+}
+
+void AntiDos::timerEvent(QTimerEvent *)
+{
+    // Clears the history every 24 hours to avoid memory consumption
+    loginsPerIp.clear();
+    kicksPerIp.clear();
 }
 
 AntiDos * AntiDos::instance = new AntiDos();
