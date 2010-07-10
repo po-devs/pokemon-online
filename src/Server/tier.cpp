@@ -174,8 +174,11 @@ int Tier::count()
 
         q.exec(QString("select count(*) from %1").arg(sql_table));
 
-        q.next();
-        return (m_count = q.value(0).toInt());
+        if (q.next()) {
+            return (m_count = q.value(0).toInt());
+        } else {
+            return 1;
+        }
     }
 }
 
