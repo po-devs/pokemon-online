@@ -545,10 +545,10 @@ struct MMDetect : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        /* Detect / Protects fail if all other already moved */
+        /* Detect / Protects fail if all others already moved */
         bool fail = true;
         for (int t = 0;  t < b.numberOfSlots() ; t++) {
-            if (!turn(b,t).value("HasMoved").toBool() && !turn(b,t).value("CantGetToMove").toBool() && !b.koed(t)) {
+            if (!turn(b,t).value("HasMoved").toBool() && !turn(b,t).value("CantGetToMove").toBool() && !b.koed(t) && s!=t) {
                 fail = false;
                 break;
             }
