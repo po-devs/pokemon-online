@@ -761,7 +761,7 @@ QScriptValue ScriptEngine::dbAuth(const QString &name)
     if (!SecurityManager::exist(name)) {
         return myengine.undefinedValue();
     } else {
-        return SecurityManager::Member(name).auth;
+        return SecurityManager::member(name).auth;
     }
 }
 
@@ -770,7 +770,7 @@ QScriptValue ScriptEngine::dbIp(const QString &name)
     if (!SecurityManager::exist(name)) {
         return myengine.undefinedValue();
     } else {
-        return QString(SecurityManager::Member(name).ip);
+        return QString(SecurityManager::member(name).ip);
     }
 }
 
@@ -779,7 +779,7 @@ QScriptValue ScriptEngine::dbLastOn(const QString &name)
     if (!SecurityManager::exist(name)) {
         return myengine.undefinedValue();
     } else {
-        return QString(SecurityManager::Member(name).date);
+        return QString(SecurityManager::member(name).date);
     }
 }
 
