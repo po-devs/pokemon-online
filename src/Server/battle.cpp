@@ -1310,7 +1310,7 @@ void BattleSituation::sendBack(int player, bool silent)
            so we don't check if the ability is working, and just make a test
            directly */
         if (ability(player) == Ability::NaturalCure) {
-            healStatus(s, poke(s).status());
+            healStatus(player, poke(player).status());
         }
 	changeCurrentPoke(player, -1);
     }
@@ -1573,6 +1573,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (specialOccurence) {
 	attack = move;
     } else {
+        //Quick claw, special case
+        if (turnlong[player].value("QuickClawed").toBool()) {
+            //The message only shows up if it's not the last pokémon to move
+            for (int i = 0; i < numberOfSlots(); i++) {
+                if (!turnlong[i].value("HasMoved").toBool() && !turnlong[i].value("CantGetToMove").toBool() && !koed(i) && i != player) {
+                    sendItemMessage(17, player);
+                    break;
+                }
+            }
+        }
 	attack = this->move(player,move);
         pokelong[player]["MoveSlot"] = move;
     }
