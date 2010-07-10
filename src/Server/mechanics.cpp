@@ -34,10 +34,7 @@ int Mechanics::move(BattleSituation &b, int source)
 void Mechanics::addFunction(BattleSituation::context &c, const QString &effect, const QString &name, Mechanics::function f)
 {
     if (!c.contains("Effect_" + effect)) {
-        /* Those three steps are absolutely required, cuz of lack of QVariant template constuctor/ template operator =
-                and QSharedPointer implicit conversion */
-	QVariant v;
-	v.setValue(QSharedPointer<QSet<QString> >(new QSet<QString>()));
+        QVariant v = QVariant::fromValue(QSharedPointer<QSet<QString> >(new QSet<QString>()));
         c.insert("Effect_" + effect, v);
     }
     c["Effect_"+effect].value<QSharedPointer<QSet<QString> > >()->insert(name);
