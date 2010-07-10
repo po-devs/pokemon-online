@@ -600,7 +600,7 @@ void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
 
 void ScriptEngine::clearChat()
 {
-    ((QTextEdit*)myserver->mainchat())->clear();
+    //((QTextEdit*)myserver->mainchat())->clear();
 }
 
 /**

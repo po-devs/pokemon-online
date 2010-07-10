@@ -1,30 +1,25 @@
 #include "mainwindow.h"
 #include "server.h"
+#include "serverwidget.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(Server *myserver, QWidget *parent)
     : QMainWindow(parent)
 {
     QApplication::setQuitOnLastWindowClosed(false);
 
     setWindowTitle(tr("Server for Pokemon Online"));
-    QSettings s;
-    if (s.value("server_port").isNull())
-         s.setValue("server_port", 5080);
-
-    serverPort = quint16(s.value("server_port").toInt());
-
-    setCentralWidget(myserver = new Server(serverPort));
+    setCentralWidget(myserverwidget = new ServerWidget(myserver));
     resize(500,500);
-    setMenuBar(myserver->createMenuBar());
+    setMenuBar(myserverwidget->createMenuBar());
 }
 
 MainWindow::~MainWindow()
 {
-    delete myserver;
+    delete myserverwidget;
 }
 
 void MainWindow::closeEvent(QCloseEvent *)
 {
-    myserver->atServerShutDown();
+    //myserver->atServerShutDown();
     exit(0);
 }

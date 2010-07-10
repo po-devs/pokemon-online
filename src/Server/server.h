@@ -1,7 +1,6 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <QtGui>
 #include <QtNetwork>
 
 /* the server */
@@ -11,19 +10,17 @@ class Player;
 class BattleSituation;
 class Analyzer;
 class ChallengeInfo;
-class QScrollDownTextEdit;
 class ScriptEngine;
-class ScriptWindow;
 class Challenge;
-class QIdListWidgetItem;
 
-class Server: public QWidget
+class Server: public QObject
 {
     Q_OBJECT
 
     friend class ScriptEngine;
 public:
     Server(quint16 port = 5080);
+    void start();
 
     static void print(const QString &line);
     bool printLine(const QString &line, bool chatMessage = false);
@@ -55,11 +52,20 @@ public:
     /* Force Rated 1 and Force Rated 2 is to ignore the ladder on / off factor for those two */
     bool canHaveRatedBattle(int id1, int id2, bool challengeCup, bool forceRated1 = false, bool forceRated2 = false);
 
-    QMenuBar *createMenuBar();
-
     Player * player(int id) const;
 
+    void sendServerMessage(const QString &message);
+
     static Server *serverIns;
+
+signals:
+    void chatmessage(const QString &name);
+    void servermessage(const QString &name);
+
+    void player_incomingconnection(int id);
+    void player_logout(int id);
+    void player_authchange(int id, const QString &name);
+
 public slots:
     /* Registry slots */
     void connectToRegistry();
@@ -67,12 +73,11 @@ public slots:
     void regConnected();
     void regConnectionError();
     void regSendPlayers();
-    void sendServerMessage();
     void regNameChanged(const QString &name);
     void regDescChanged(const QString &desc);
     void regMaxChanged(const int &num);
+    void changeScript(const QString &script);
     void announcementChanged(const QString &announcement);
-    void openConfig();
     void nameTaken();
     void ipRefused();
     void invalidName();
@@ -93,18 +98,13 @@ public slots:
     void spectatingStopped(int id, int battle);
     void spectatingChat(int player, int battle, const QString &chat);
     void info(int , const QString& );
-    void showContextMenu(const QPoint &p);
+
     void kick(int i);
     void silentKick(int i);
     void ban(int i);
     void dosKick(int id);
     void dosBan(const QString &ip);
-    void openPlayers();
-    void openAntiDos();
-    void openScriptWindow();
-    void openTiersWindow();
-    void openBattleConfigWindow();
-    void openSqlConfigWindow();
+
     void changeAuth(const QString &name, int auth);
     void banName(const QString &name);
     void playerKick(int src, int dest);
@@ -116,6 +116,7 @@ public slots:
     void cancelSearch(int id);
     void loadRatedBattlesSettings();
     void regPrivacyChanged(const int &priv);
+
 private:
     void kick(int dest, int src);
     void ban(int dest, int src);
@@ -144,25 +145,13 @@ private:
 
     int numberOfPlayersLoggedIn;
 
-    int linecount;
-    int textLength;
-
     bool allowRatedWithSameIp;
     int diffIpsForRatedBattles;
     QHash<QString, QList<QString> > lastRatedIps;
 
     ScriptEngine *myengine;
-    QPointer<ScriptWindow> myscriptswindow;
 
-    /** GRAPHICAL PARTS **/
-
-    QScrollDownTextEdit *mymainchat;
-    QListWidget *mylist;
-    QLineEdit *myline;
-    QHash<int, QIdListWidgetItem *> myplayersitems;
     QHash<int, FindBattleData*> battleSearchs;
-    /* the mainchat !*/
-    QScrollDownTextEdit *mainchat();
-    QListWidget *list();
+
 };
 #endif // SERVER_H

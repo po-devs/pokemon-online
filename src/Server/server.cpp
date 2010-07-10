@@ -6,7 +6,6 @@
 #include "moves.h"
 #include "items.h"
 #include "abilities.h"
-#include "playerswindow.h"
 #include "security.h"
 #include "antidos.h"
 #include "serverconfig.h"
@@ -24,33 +23,25 @@ Server *Server::serverIns = NULL;
 
 Server::Server(quint16 port)
 {
+    serverPort = port;
+}
+
+/**
+ * The following code is not placed in the constructor,
+ * because view-components may want to show startup messages (printLine).
+ *
+ * This can be only acheived (in a clean way) by first letting a view listen
+ * to the signal "servermessage". Therefore, the serverobject must be passed
+ * to that view (by construction of the view), and then the server should start.
+ */
+void Server::start(){
     try {
     serverIns = this;
 
-    linecount = 0;
+    //linecount = 0;
     numberOfPlayersLoggedIn = 0;
     registry_connection = NULL;
     myengine = NULL;
-
-    QGridLayout *mylayout = new QGridLayout (this);
-
-    mylist = new QListWidget();
-    mylayout->addWidget(mylist,1,0,2,1);
-
-    mymainchat = new QScrollDownTextEdit();
-    mylayout->addWidget(mymainchat,1,1);
-
-    myline = new QLineEdit();
-    mylayout->addWidget(myline, 2,1);
-
-    mylist->setContextMenuPolicy(Qt::CustomContextMenu);
-    mylist->setSortingEnabled(true);
-    mylist->setFixedWidth(150);
-
-    connect(mylist, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
-    connect(myline, SIGNAL(returnPressed()), SLOT(sendServerMessage()));
-
-    mainchat()->setMinimumWidth(500);
 
     srand(time(NULL));
 
@@ -95,7 +86,7 @@ Server::Server(quint16 port)
     CategoryInfo::init("db/categories/");
     AbilityInfo::init("db/abilities/");
     HiddenPowerInfo::init("db/types/");
-    StatInfo::init("db/status/");
+    StatInfo::init("db/status/", false); //false; disable loading images, which Qt can't handle in non-GUI mode (linux compat.).
 
     printLine(tr("Pokémon database loaded"));
 
@@ -119,18 +110,16 @@ Server::Server(quint16 port)
 
     myengine = new ScriptEngine(this);
 
-    if (!server()->listen(QHostAddress::Any, port))
+    if (!server()->listen(QHostAddress::Any, serverPort))
     {
-	printLine(tr("Unable to listen to port %1").arg(port));
+	printLine(tr("Unable to listen to port %1").arg(serverPort));
     } else {
-	printLine(tr("Starting to listen to port %1").arg(port));
+	printLine(tr("Starting to listen to port %1").arg(serverPort));
     }
 
     connect(server(), SIGNAL(newConnection()), SLOT(incomingConnection()));
     connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(dosKick(int)));
     connect(AntiDos::obj(), SIGNAL(ban(QString)), SLOT(dosBan(QString)));
-
-    serverPort = port;
 
     if (s.value("battles_with_same_ip_unrated").isNull()) {
         s.setValue("battles_with_same_ip_unrated", true);
@@ -162,20 +151,6 @@ Server::Server(quint16 port)
     qDebug() << "Exception" << e;
 }
 }
-
-QMenuBar* Server::createMenuBar() {
-    QMenuBar *bar = new QMenuBar(this);
-    QMenu *options = bar->addMenu("&Options");
-    options->addAction("&Players", this, SLOT(openPlayers()));
-    options->addAction("&Anti DoS", this, SLOT(openAntiDos()));
-    options->addAction("&Config", this, SLOT(openConfig()));
-    options->addAction("&Scripts", this, SLOT(openScriptWindow()));
-    options->addAction("&Tiers", this, SLOT(openTiersWindow()));
-    options->addAction("&Battle Config", this, SLOT(openBattleConfigWindow()));
-    options->addAction("&SQL Config", this, SLOT(openSqlConfigWindow()));
-    return bar;
-}
-
 
 void Server::print(const QString &line)
 {
@@ -311,6 +286,11 @@ void Server::regMaxChanged(const int &numMax)
     registry_connection->notify(NetworkServ::ServMaxChange,numMax);
 }
 
+void Server::changeScript(const QString &script)
+{
+    myengine->changeScript(script);
+}
+
 void Server::announcementChanged(const QString &announcement)
 {
     if (announcement == serverAnnouncement)
@@ -352,14 +332,18 @@ void Server::ipRefused()
 /* Returns false if the event "newMessage" was stopped (nothing to do with "chatMessage" */
 bool Server::printLine(const QString &line, bool chatMessage)
 {
+    //notify possible views (if any)
+    if(chatMessage){
+        emit chatmessage(line);
+    } else {
+        emit servermessage(line);
+    }
+    
+    qDebug() << line;
     if (myengine == NULL) {
-        mainchat()->insertPlainText(line + "\n");
-        qDebug() << line;
         return true;
     }
     if (chatMessage || myengine->beforeNewMessage(line)) {
-        mainchat()->insertPlainText(line + "\n");
-        qDebug() << line;
         if (!chatMessage)
             myengine->afterNewMessage(line);
         return true;
@@ -367,69 +351,6 @@ bool Server::printLine(const QString &line, bool chatMessage)
     return false;
 }
 
-void Server::openPlayers()
-{
-    PlayersWindow *w = new PlayersWindow();
-
-    w->show();
-
-    connect(w, SIGNAL(authChanged(QString,int)), SLOT(changeAuth(QString, int)));
-    connect(w, SIGNAL(banned(QString)), SLOT(banName(QString)));
-}
-
-void Server::openAntiDos()
-{
-    AntiDosWindow *w = new AntiDosWindow();
-
-    w->show();
-}
-
-void Server::openConfig()
-{
-    ServerWindow *w = new ServerWindow();
-
-    w->show();
-
-    connect(w, SIGNAL(nameChanged(QString)), SLOT(regNameChanged(const QString)));
-    connect(w, SIGNAL(descChanged(QString)), SLOT(regDescChanged(const QString)));
-    connect(w, SIGNAL(maxChanged(int)), SLOT(regMaxChanged(int)));
-    connect(w, SIGNAL(privacyChanged(int)), SLOT(regPrivacyChanged(int)));
-    connect(w, SIGNAL(announcementChanged(QString)), SLOT(announcementChanged(QString)));
-}
-
-void Server::openScriptWindow()
-{
-    myscriptswindow = new ScriptWindow();
-
-    myscriptswindow->show();
-
-    connect(myscriptswindow, SIGNAL(scriptChanged(QString)), myengine, SLOT(changeScript(QString)));
-}
-
-void Server::openTiersWindow()
-{
-    TierWindow *w = new TierWindow();
-
-    w->show();
-
-    connect(w, SIGNAL(tiersChanged()), SLOT(tiersChanged()));
-}
-
-void Server::openBattleConfigWindow()
-{
-    BattlingOptionsWindow *w = new BattlingOptionsWindow();
-
-    w->show();
-
-    connect(w, SIGNAL(settingsChanged()), SLOT(loadRatedBattlesSettings()));
-}
-
-void Server::openSqlConfigWindow()
-{
-    SQLConfigWindow *w = new SQLConfigWindow();
-
-    w->show();
-}
 
 void Server::tiersChanged()
 {
@@ -461,37 +382,12 @@ void Server::changeAuth(const QString &name, int auth) {
         if (auth == player(id)->auth())
             return;
         player(id)->setAuth(auth);
-        myplayersitems[id]->setText(authedName(id));
+        
+        emit player_authchange(id, authedName(id));
         if (SecurityManager::member(name).authority() != auth) {
             SecurityManager::setauth(name, auth);
         }
         sendPlayer(id);
-    }
-}
-
-void Server::showContextMenu(const QPoint &p) {
-    QIdListWidgetItem *item = dynamic_cast<QIdListWidgetItem*>(list()->itemAt(p));
-
-    if (item)
-    {
-        QMenu *menu = new QMenu(this);
-
-        QSignalMapper *mymapper3 = new QSignalMapper(menu);
-        QAction *viewinfo = menu->addAction("&Silent Kick", mymapper3, SLOT(map()));
-        mymapper3->setMapping(viewinfo, item->id());
-        connect(mymapper3, SIGNAL(mapped(int)), SLOT(silentKick(int)));
-
-        QSignalMapper *mymapper = new QSignalMapper(menu);
-        viewinfo = menu->addAction("&Kick", mymapper, SLOT(map()));
-        mymapper->setMapping(viewinfo, item->id());
-        connect(mymapper, SIGNAL(mapped(int)), SLOT(kick(int)));
-
-        QSignalMapper *mymapper2 = new QSignalMapper(menu);
-        QAction *viewinfo2 = menu->addAction("&Ban", mymapper2, SLOT(map()));
-        mymapper2->setMapping(viewinfo2, item->id());
-        connect(mymapper2, SIGNAL(mapped(int)), SLOT(ban(int)));
-
-        menu->exec(mapToGlobal(p));
     }
 }
 
@@ -584,7 +480,7 @@ void Server::loggedIn(int id, const QString &name)
     /* For new connections */
     if (!player(id)->isLoggedIn()) {        
         mynames.insert(name.toLower(), id);
-        myplayersitems[id]->setText(authedName(id));
+        emit player_authchange(id, authedName(id));
 
         if(!myengine->beforeLogIn(id) || !playerExist(id)) {
             removePlayer(id);
@@ -641,13 +537,9 @@ void Server::sendMessage(int id, const QString &message)
     player(id)->sendMessage(message);
 }
 
-void Server::sendServerMessage()
+void Server::sendServerMessage(const QString &message)
 {
-    if (myline->text().trimmed().length() == 0) {
-        return;
-    }
-    sendAll("~~Server~~: " + myline->text());
-    myline->clear();
+    sendAll("~~Server~~: " + message);
 }
 
 void Server::spectatingChat(int player, int battle, const QString &chat)
@@ -717,9 +609,7 @@ void Server::incomingConnection()
     printLine(tr("Received pending connection on slot %1 from %2").arg(id).arg(ip));
     myplayers[id] = new Player(newconnection, id);
 
-    QIdListWidgetItem *it = new QIdListWidgetItem(id, QString::number(id));
-    list()->addItem(it);
-    myplayersitems[id] = it;
+    emit player_incomingconnection(id);
 
     Player *p = player(id);
 
@@ -1135,8 +1025,7 @@ void Server::recvTeam(int id, const QString &_name)
         }
     }
 
-    /* Displaying the change */
-    myplayersitems[id]->setText(authedName(id));
+    emit player_authchange(id, authedName(id));
 
     myengine->afterChangeTeam(id);
 }
@@ -1206,9 +1095,7 @@ void Server::removePlayer(int id)
         if (loggedIn)
             mynames.remove(playerName.toLower());
 
-        int row = list()->row(myplayersitems[id]);
-        delete list()->takeItem(row);
-        myplayersitems.remove(id);
+        emit player_logout(id);
 
 	/* Sending the notice of logout to others only if the player is already logged in */
         if (loggedIn) {
@@ -1261,14 +1148,6 @@ void Server::atServerShutDown() {
     myengine->serverShutDown();
 }
 
-QScrollDownTextEdit * Server::mainchat()
-{
-    return mymainchat;
-}
-
-QListWidget * Server::list() {
-    return mylist;
-}
 
 Player * Server::player(int id)
 {

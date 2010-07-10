@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include <cstdio>
 #include "../Utilities/mtrand.h"
+#include "server.h"
 
 void myMessageOutput(QtMsgType type, const char *msg)
 {
@@ -28,19 +29,68 @@ int main(int argc, char *argv[])
     freopen("logs.txt", "a", stderr);
     qInstallMsgHandler(myMessageOutput);
 #endif
-    fprintf(stderr, "\n-----------------------\nNew Server, starting logs\n-----------------------\n\n");
-
-    QApplication a(argc, argv);
 
     /* Names to use later for QSettings */
     QCoreApplication::setApplicationName("Server for Pokeymon-Online");
     QCoreApplication::setOrganizationName("Dreambelievers");
 
-    MainWindow w;
-    w.show();
-    try {
-        int i = a.exec();
+    //default: show a window
+    bool showWindow = true;
+
+    //parse commandline argumetns
+    for(int i = 0; i < argc; i++){
+        if(strcmp( argv[i], "--headless") == 0){
+            showWindow = false;
+        } else if(strcmp( argv[i], "--help") == 0){
+            fprintf(stdout, "Server for Pokeymon-Online Help\n");
+            fprintf(stdout, "Please visit http://www.pokemon-online.eu/ for more information.\n");
+            fprintf(stdout, "\n");
+            fprintf(stdout, "Usage: ./Server [[options]]\n");
+            fprintf(stdout, "Options:\n");
+            fprintf(stdout, "  --headless\tRuns server without GUI (no X server required)\n");
+            fprintf(stdout, "\n");
+            return 0;   //exit app
+        }
+    }
+
+    fprintf(stderr, "\n-----------------------\nNew Server, starting logs\n-----------------------\n\n");
+
+    QSettings s;
+    if (s.value("server_port").isNull())
+        s.setValue("server_port", 5080);
+
+    quint16 serverPort = quint16(s.value("server_port").toInt());
+    Server * myserver;
+    myserver = new Server(serverPort);
+
+    try{
+        int i = -1;
+        if(showWindow == false){
+
+            qDebug() << "Server is running in headless mode";
+            qDebug() << "Notice that it is not possible (yet) to configure the server in headless mode!";
+            qDebug() << "Please change the configuration manually or in windowed mode.";
+            qDebug() << "A web-tool for configuring and maintaining will be implemented later.\n";
+
+            //in headless mode let's use QCoreApplication insted of QApplication
+            QCoreApplication b(argc, argv);
+
+            myserver->start();
+            i = b.exec();
+            qDebug() << "Returned with status " << i;
+
+        } else {
+            qDebug() << "Server is running in windowed mode";
+            QApplication a(argc, argv);
+
+            MainWindow w(myserver);
+            w.show();
+            myserver->start();
+            i = a.exec();
+        }
+
         qDebug() << "Returned with status " << i;
+
     } catch (const std::exception &e) {
         qDebug() << "Caught runtime " << e.what();
     } catch (const QString &s) {
@@ -50,5 +100,6 @@ int main(int argc, char *argv[])
     } catch (...) {
         qDebug() << "Caught Exception.";
     }
+
     return 0;
 }
