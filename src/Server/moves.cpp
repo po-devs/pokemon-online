@@ -4348,8 +4348,14 @@ struct MMBugBite : public MM
             if (!ItemEffect::mechanics.contains(e.num)) {
                 continue;
             }
-            foreach (function f, ItemEffect::mechanics[e.num].functions)
+            foreach (function f, ItemEffect::mechanics[e.num].functions) {
                 f(s, t, b);
+
+                //Some berries have 2 functions for pinch testing... so quitting after one used up the berry
+                if (b.poke(s).item() == 0) {
+                    break;
+                }
+            }
         }
 
         /* Restoring initial conditions */
