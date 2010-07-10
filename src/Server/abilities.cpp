@@ -684,16 +684,6 @@ struct AMMotorDrive : public AM {
     }
 };
 
-struct AMNaturalCure : public AM {
-    AMNaturalCure () {
-        functions["UponSwitchOut"] = &uso;
-    }
-
-    static void uso (int s, int, BS &b) {
-        b.healStatus(s, b.poke(s).status());
-    }
-};
-
 struct AMNormalize : public AM {
     AMNormalize() {
         functions["BeforeTargetList"] = &btl;
@@ -1131,7 +1121,6 @@ struct AMMinus : public AM {
     DamageFormulaStart
     UponOffensiveDamageReceived
     UponSetup
-    UponSwitchOut
     IsItTrapped
     EndTurn
     BasePowerModifier
@@ -1192,7 +1181,7 @@ void AbilityEffect::init()
     REGISTER_AB(39, MagnetPull);
     REGISTER_AB(40, MoldBreaker);
     REGISTER_AB(41, MotorDrive);
-    REGISTER_AB(42, NaturalCure);
+    //Natural cure, built-in
     REGISTER_AB(43, Normalize);
     REGISTER_AB(44, OwnTempo);
     REGISTER_AB(45, Plus);
