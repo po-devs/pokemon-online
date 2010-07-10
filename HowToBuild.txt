@@ -3,6 +3,6 @@
 HOW TO BUILD THE PROJECT:
 * Learn how to use SVN
 * Download all the files using SVN
-* For linux users, install libzip-dev package (in a terminal: sudo apt-get install libzip-dev)
+* For linux users, install libzip-dev package (For Ubuntu --in a terminal--: sudo apt-get install libzip-dev)
 * For windows users, put the file in SpecialInclude into your includepath
 * Open Teambuilder.pro and build and run the project. Or if you know how to and want to, use qmake 

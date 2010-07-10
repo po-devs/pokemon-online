@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QtGui>
+#include "server.h"
+#include "serverwidget.h"
 
 class Server;
 
@@ -10,7 +12,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow(Server *myserver, QWidget *parent = 0);
+
     ~MainWindow();
 
  /*   void hideEvent(QHideEvent * event)
@@ -28,8 +31,7 @@ public:
 protected:
     void closeEvent(QCloseEvent *e);
 private:
-    quint16 serverPort;
-    Server * myserver;
+    ServerWidget * myserverwidget;
     QSystemTrayIcon *sticon;
 };
 

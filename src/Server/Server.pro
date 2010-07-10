@@ -12,6 +12,7 @@ SOURCES += main.cpp \
     network.cpp \
     analyze.cpp \
     server.cpp \
+    serverwidget.cpp \
     ../PokemonInfo/pokemoninfo.cpp \
     ../PokemonInfo/pokemonstructs.cpp \
     ../PokemonInfo/battlestructs.cpp \
@@ -45,6 +46,7 @@ HEADERS += mainwindow.h \
     network.h \
     analyze.h \
     server.h \
+    serverwidget.h \
     ../PokemonInfo/pokemoninfo.h \
     ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/battlestructs.h \
