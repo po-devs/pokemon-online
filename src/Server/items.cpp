@@ -26,7 +26,6 @@ void ItemEffect::setup(int num, int source, BattleSituation &b)
     QList<ItemInfo::Effect> effects = ItemInfo::Effects(num);
 
     foreach(ItemInfo::Effect effect, effects) {
-
 	/* if the effect is invalid or not yet implemented then no need to go further */
 	if (!mechanics.contains(effect.num)) {
 	    continue;
@@ -37,6 +36,8 @@ void ItemEffect::setup(int num, int source, BattleSituation &b)
 	    b.pokelong[source]["ItemArg"] = effect.args;
 	}
     }
+
+    activate("UponSetup", num, source, source, b);
 }
 
 struct IMBlackSludge : public IM
@@ -408,7 +409,7 @@ struct IMQuickClaw : public IM
 struct IMMentalHerb : public IM
 {
     IMMentalHerb() {
-	functions["AfterSetup"] = &as;
+        functions["UponSetup"] = &as;
     }
 
     static void as(int s, int, BS &b) {
@@ -427,7 +428,7 @@ struct IMMentalHerb : public IM
 struct IMWhiteHerb : public IM
 {
     IMWhiteHerb() {
-	functions["AfterSetup"] = &as;
+        functions["UponSetup"] = &as;
 	functions["AfterStatChange"] = &as;
     }
 
