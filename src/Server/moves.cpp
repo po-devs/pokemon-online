@@ -2663,8 +2663,11 @@ struct MMFling : public MM
                 if (!ItemEffect::mechanics.contains(e.num)) {
                     continue;
                 }
-                foreach (function f, ItemEffect::mechanics[e.num].functions)
-                    f(s, t, b);
+                foreach (function f, ItemEffect::mechanics[e.num].functions) {
+                    f(t, s, b);
+                    if (b.poke(t).item() == 0)
+                        break;
+                }
             }
 
             /* Restoring initial conditions */
