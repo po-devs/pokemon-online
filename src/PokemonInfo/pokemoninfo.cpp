@@ -1711,11 +1711,7 @@ QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type)
     return ret;
 }
 
-/**
- * When running in headless mode (with no screen), Qt does *not* support
- * QPixmap, causing a segmentation failure.
- */
-void StatInfo::init(const QString &dir, const bool &loadimg)
+void StatInfo::init(const QString &dir)
 {
     if (m_stats.size() != 0)
 	return;
@@ -1728,17 +1724,17 @@ void StatInfo::init(const QString &dir, const bool &loadimg)
     fill_container_with_file(m_stats, trFile(path("stats")));
     fill_container_with_file(m_status, trFile(path("status")));
 
-    if(loadimg){
-        m_statusIcons[-2] = QPixmap(path("status-2.png"));
-        m_battleIcons[-2] = QPixmap(path("battle_status-2.png"));
+#ifdef CLIENT_SIDE
+    m_statusIcons[-2] = QPixmap(path("status-2.png"));
+    m_battleIcons[-2] = QPixmap(path("battle_status-2.png"));
 
-        for (int i = 0; i < 7; i++) {
-            m_statusIcons[i] = QPixmap(path("status%1.png").arg(i));
-            m_battleIcons[i] = QPixmap(path("battle_status%1.png").arg(i));
-        }
+    for (int i = 0; i < 7; i++) {
+        m_statusIcons[i] = QPixmap(path("status%1.png").arg(i));
+        m_battleIcons[i] = QPixmap(path("battle_status%1.png").arg(i));
     }
+#endif
 }
-
+#ifdef CLIENT_SIDE
 QPixmap StatInfo::Icon(int status) {
     return m_statusIcons[status];
 }
@@ -1746,7 +1742,7 @@ QPixmap StatInfo::Icon(int status) {
 QPixmap StatInfo::BattleIcon(int status) {
     return m_battleIcons[status];
 }
-
+#endif
 QString StatInfo::Stat(int stat)
 {
     if (stat >= 0 && stat <= Accuracy)
