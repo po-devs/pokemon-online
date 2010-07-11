@@ -2830,6 +2830,7 @@ void BattleSituation::requestSwitchIns()
 
     QSet<int> koedPlayers;
     QSet<int> koedPokes;
+    QSet<int> sentPokes;
 
     for (int i = 0; i < numberOfSlots(); i++) {
         if (!koedPlayers.contains(player(i)) && koed(i) && countBackUp(player(i)) > 0) {
@@ -2837,9 +2838,6 @@ void BattleSituation::requestSwitchIns()
             koedPokes.insert(i);
         }
     }
-
-    //In doules, the pokémons are sent by waves
-    QList<QSet<int> > waves;
 
     while (koedPokes.size() > 0) {
         notifyInfos();
@@ -2865,15 +2863,13 @@ void BattleSituation::requestSwitchIns()
         for (int i = 0; i < numberOfSlots(); i++)
             couldMove[i] = false;
 
-        QSet<int> wave;
         foreach(int p, koedPokes) {
             analyzeChoice(p);
 
             if (!koed(p)) {
-                wave.insert(p);
+                sentPokes.insert(p);
             }
         }
-        waves.push_back(wave);
 
         koedPokes.clear();
         koedPlayers.clear();
@@ -2891,11 +2887,9 @@ void BattleSituation::requestSwitchIns()
     std::vector<int> sorted = sortedBySpeed();
 
     /* Each wave calls the abilities in order , then next wave and so on. */
-    foreach(QSet<int> wave, waves) {
-        foreach(int p, sorted) {
-            if (wave.contains(p)) {
-                callEntryEffects(p);
-            }
+    foreach(int p, sorted) {
+        if (sentPokes.contains(p)) {
+            callEntryEffects(p);
         }
     }
 }
