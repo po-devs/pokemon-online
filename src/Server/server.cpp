@@ -86,7 +86,7 @@ void Server::start(){
     CategoryInfo::init("db/categories/");
     AbilityInfo::init("db/abilities/");
     HiddenPowerInfo::init("db/types/");
-    StatInfo::init("db/status/", false); //false; disable loading images, which Qt can't handle in non-GUI mode (linux compat.).
+    StatInfo::init("db/status/");
 
     printLine(tr("Pokémon database loaded"));
 

@@ -421,7 +421,7 @@ private:
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="./", const bool &loadimg=true);
+    static void init(const QString &dir="./");
 
     static QString Stat(int stat);
     static QString Status(int status);
