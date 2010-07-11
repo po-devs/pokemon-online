@@ -94,6 +94,7 @@ private:
     QString sql_table;
     int m_id;
     int m_count;
+    int last_count_time;
 
     mutable MemoryHolder<MemberRating> holder;
 
