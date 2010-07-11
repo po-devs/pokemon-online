@@ -87,8 +87,8 @@ void SQLConfigWindow::apply()
 
 void SQLConfigWindow::exportDatabase()
 {
-    if (!QMessageBox::question(this, "Exporting all the data", "Exporting will create a backup of the database with .txt files, and may hang the server a little."
-                               " Are you sure you want to continue?", QMessageBox::Yes, QMessageBox::No)) {
+    if (QMessageBox::question(this, "Exporting all the data", "Exporting will create a backup of the database with .txt files, and may hang the server a little."
+                              " Are you sure you want to continue?", QMessageBox::Yes, QMessageBox::No) != QMessageBox::Yes) {
         return;
     }
 

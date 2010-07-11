@@ -169,7 +169,13 @@ QStringList SecurityManager::membersForIp(const QString &ip)
     QSqlQuery q;
     q.setForwardOnly(true);
 
-    q.prepare("select name from trainers where ip=?");
+    if (SQLCreator::databaseType == SQLCreator::SQLite) {
+        /* On SQLite, there's some bug with the qt driver probably,
+           but here it oftens return nothing if i use '=' instead of 'like', so... */
+        q.prepare("select name from trainers where ip like ?");
+    } else {
+        q.prepare("select name from trainers where ip=?");
+    }
     q.addBindValue(ip);
     q.exec();
 
