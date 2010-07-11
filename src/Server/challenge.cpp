@@ -30,7 +30,8 @@ Challenge::Challenge(Player *source, Player *dest, const ChallengeInfo &c, Serve
     dest->addChallenge(this, true);
 
     ChallengeInfo d = c;
-    desc.rated = s->canHaveRatedBattle(source->id(), dest->id(), c.clauses & ChallengeInfo::ChallengeCup, false, false);
+    /* Now only rated battles are through Find Battle */
+    desc.rated = false;//s->canHaveRatedBattle(source->id(), dest->id(), c.clauses & ChallengeInfo::ChallengeCup, false, false);
     d.opp = source->id();
     d.dsc = ChallengeInfo::Sent;
     dest->sendChallengeStuff(d);
