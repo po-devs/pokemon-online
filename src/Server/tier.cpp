@@ -166,7 +166,7 @@ void Tier::fromString(const QString &s) {
 
 int Tier::count()
 {
-    if (m_count != -1) {
+    if (m_count != -1 && time(NULL) - last_count_time < 3600) {
         return m_count;
     } else {
         QSqlQuery q;
@@ -174,11 +174,9 @@ int Tier::count()
 
         q.exec(QString("select count(*) from %1").arg(sql_table));
 
-        if (q.next()) {
-            return (m_count = q.value(0).toInt());
-        } else {
-            return 1;
-        }
+        q.next();
+        last_count_time = time(NULL);
+        return (m_count = q.value(0).toInt());
     }
 }
 
@@ -427,7 +425,7 @@ void Tier::updateMemberInDatabase(const MemberRating &m, bool add)
     boss->ithread->pushMember(m, make_query_number(int(!add)));
 }
 
-Tier::Tier(TierMachine *boss) : boss(boss), m_count(-1), holder(1000) {
+Tier::Tier(TierMachine *boss) : boss(boss), m_count(-1), last_count_time(0), holder(1000) {
 
 }
 
