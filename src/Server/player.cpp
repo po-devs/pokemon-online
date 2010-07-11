@@ -731,8 +731,10 @@ void Player::ratingLoaded()
         ontologin = false;
         if (!isLoggedIn())
             emit loggedIn(id(), waiting_name);
-        else
+        else if (waiting_name.length() > 0)
             emit recvTeam(id(), waiting_name);
+        else
+            emit recvTeam(id(), name());
         waiting_name.clear();
     } else {
         emit updated(id());
@@ -889,6 +891,8 @@ void Player::recvTeam(const TeamInfo &team)
     if (team.name.toLower() == oldName.toLower()) {
         assignTeam(team);
 
+        //Still needs to deal with afterChangeTeam event
+        ontologin = true;
         findTierAndRating();
         return;
     }
