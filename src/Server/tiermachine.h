@@ -66,7 +66,7 @@ private:
     QStringList m_tierNames;
     static TierMachine *inst;
 
-    static const int loadThreadCount=4;
+    static const int loadThreadCount=2;
     int nextLoadThreadNumber;
     LoadThread *threads;
     InsertThread<MemberRating> *ithread;

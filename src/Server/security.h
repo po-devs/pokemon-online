@@ -124,7 +124,7 @@ private:
 
     static SecurityManager * instance;
 
-    static const int loadThreadCount=4;
+    static const int loadThreadCount=2;
     static int nextLoadThreadNumber;
     static LoadThread *threads;
     static InsertThread<Member> *ithread;
