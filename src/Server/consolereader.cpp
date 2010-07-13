@@ -9,9 +9,9 @@ ConsoleReader::ConsoleReader(Server* server) : m_Server(server), m_TextStream(st
 
 void ConsoleReader::read(int)
 { 
-	QString line = m_TextStream.readLine();
-	if(line != "")
-	{
-		m_Server->sendServerMessage(line);
-	}
+    QString line = m_TextStream.readLine();
+    if(line != "")
+    {
+        m_Server->sendServerMessage(line);
+    }
 }
