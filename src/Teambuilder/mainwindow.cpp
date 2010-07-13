@@ -83,7 +83,8 @@ void MainEngine::loadStyleSheet()
 }
 
 #define MainEngineRoutine(widget) \
-    displayer->deleteLater(); \
+    if (displayer) \
+        displayer->deleteLater(); \
     displayer = new QMainWindow(); \
     displayer->resize(widget->size()); \
     displayer->setWindowTitle(tr("Pokemon Online")); \
