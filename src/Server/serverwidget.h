@@ -23,6 +23,8 @@ class ServerWidget: public QWidget
 public:
     ServerWidget(Server *myserver);
     QMenuBar *createMenuBar();
+
+    void atShutDown();
     
 public slots:
     void showContextMenu(const QPoint &p);
