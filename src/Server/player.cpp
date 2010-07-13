@@ -729,12 +729,10 @@ void Player::ratingLoaded()
 
     if (ontologin) {
         ontologin = false;
-        if (!isLoggedIn())
+        if (waiting_name.length() > 0)
             emit loggedIn(id(), waiting_name);
-        else if (waiting_name.length() > 0)
-            emit recvTeam(id(), waiting_name);
         else
-            emit recvTeam(id(), name());
+            emit loggedIn(id(), name());
         waiting_name.clear();
     } else {
         emit updated(id());
