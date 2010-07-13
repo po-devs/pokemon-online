@@ -2632,19 +2632,23 @@ struct MMFling : public MM
     }
 
     static void uas (int s, int t, BS &b) {
+        if (b.hasSubstitute(t))
+            return;
 	int item = turn(b,s)["FlingItem"].toInt();
         if (!ItemInfo::isBerry(item)) {
-            switch (item) {
-                case Item::FlameOrb: b.inflictStatus(t, Pokemon::Burnt, s); break; /*flame orb*/
-                case Item::ToxicOrb: b.inflictStatus(t, Pokemon::DeeplyPoisoned, s); break; /*toxic orb*/
-                case Item::KingsRock: case Item::RazorFang: turn(b,t)["Flinched"] = true; break; /* king rock, razor fang */
-                case Item::LightBall: b.inflictStatus(t, Pokemon::Paralysed, s); break; /* light ball */
-                case Item::PoisonBarb: b.inflictStatus(t, Pokemon::Poisoned, s); break; /* poison barb */
-                case Item::WhiteHerb: case Item::MentalHerb: /* mental herb, white herb */
-                    int oppitem = b.poke(t).item();
-                    ItemEffect::activate("AfterSetup", item, t,s,b);
-                    b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
-                    break;
+            if (item == Item::WhiteHerb || item == Item::MentalHerb) {
+                int oppitem = b.poke(t).item();
+                ItemEffect::activate("OnSetup", item, t,s,b);
+                b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
+            } else if (item == Item::RazorFang || item == Item::KingsRock) {
+                turn(b,t)["Flinched"] = true; /* king rock, razor fang */
+            } else if (!team(b, b.player(t)).contains("SafeGuardCount"))  {
+                switch (item) {
+                    case Item::FlameOrb: b.inflictStatus(t, Pokemon::Burnt, s); break; /*flame orb*/
+                    case Item::ToxicOrb: b.inflictStatus(t, Pokemon::DeeplyPoisoned, s); break; /*toxic orb*/
+                    case Item::LightBall: b.inflictStatus(t, Pokemon::Paralysed, s); break; /* light ball */
+                    case Item::PoisonBarb: b.inflictStatus(t, Pokemon::Poisoned, s); break; /* poison barb */
+                }
             }
         } else {
             int sitem = b.poke(t).item();
