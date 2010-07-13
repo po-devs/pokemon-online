@@ -7,15 +7,15 @@ class Server;
 
 class ConsoleReader : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	ConsoleReader(Server* server);
+    ConsoleReader(Server* server);
 
 public slots:
-	void read(int);
+    void read(int);
 private:
-	Server* m_Server;
-	QTextStream m_TextStream;
+    Server* m_Server;
+    QTextStream m_TextStream;
 
 };
 
