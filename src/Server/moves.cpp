@@ -3686,13 +3686,11 @@ struct MMSnatch : public MM
     * Swallow
     * Synthesis
     * Tailwind
-    * Wish
     */
     struct SM : public QSet<int> {
         SM() { (*this) << Aromatherapy << BellyDrum << Camouflage << DefenseCurl << HealBell << HealOrder << Ingrain << LightScreen
                << MilkDrink << Minimize << Mist << Moonlight << MorningSun << PsychUp << Recover << Reflect << Refresh << Rest
-               << Roost << Safeguard << SlackOff << Softboiled << Stockpile << Substitute << Submission << Swallow << Synthesis << Tailwind
-               << Wish; }
+               << Roost << Safeguard << SlackOff << Softboiled << Stockpile << Substitute << Submission << Swallow << Synthesis << Tailwind; }
     };
 
     static SM snatched_moves;
