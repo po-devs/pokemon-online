@@ -63,6 +63,7 @@ public:
     Q_INVOKABLE void sendMessage(int id, const QString &mess);
     /* Print on the server. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
+    Q_INVOKABLE void clearPass(const QString &name);
     Q_INVOKABLE void changeAuth(int id, int auth);
     Q_INVOKABLE void changeAway(int id, bool away);
     Q_INVOKABLE void changeRating(const QString& name, const QString& tier, int newRating);
@@ -106,6 +107,7 @@ public:
     Q_INVOKABLE QScriptValue dbAuth(const QString &name);
     Q_INVOKABLE QScriptValue dbIp(const QString &name);
     Q_INVOKABLE QScriptValue dbLastOn(const QString &name);
+    Q_INVOKABLE bool dbRegistered(const QString &name);
     Q_INVOKABLE QScriptValue tier(int id);
     Q_INVOKABLE QScriptValue ranking(int id);
     Q_INVOKABLE QScriptValue ranking(const QString &name, const QString &tier);

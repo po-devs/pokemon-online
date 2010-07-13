@@ -399,6 +399,14 @@ void ScriptEngine::kick(int id)
     }
 }
 
+void ScriptEngine::clearPass(const QString &name)
+{
+    if (!SecurityManager::exist(name)) {
+        printLine("Script Error in sys.clearPass(name): no such player name as " + name);
+    }
+    SecurityManager::clearPass(name);
+}
+
 void ScriptEngine::changeAuth(int id, int auth)
 {
     if (!myserver->playerLoggedIn(id)) {
@@ -435,8 +443,6 @@ void ScriptEngine::changeTier(int id, const QString &tier)
         myserver->player(id)->executeTierChange(tier);
     }
 }
-
-
 
 void ScriptEngine::changePokeItem(int id, int slot, int item)
 {
@@ -601,6 +607,11 @@ void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
 void ScriptEngine::clearChat()
 {
     //((QTextEdit*)myserver->mainchat())->clear();
+}
+
+bool ScriptEngine::dbRegistered(const QString &name)
+{
+    return SecurityManager::member(name).isProtected();
 }
 
 /**

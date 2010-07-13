@@ -75,6 +75,9 @@ int main(int argc, char *argv[])
             //in headless mode let's use QCoreApplication insted of QApplication
             QCoreApplication b(argc, argv);
 
+            //This is done by MainWindow automatically too.
+            QObject::connect(b, SIGNAL(aboutToQuit()), myserver, SLOT(atServerShutDown()));
+
             myserver->start();
             i = b.exec();
             qDebug() << "Returned with status " << i;
