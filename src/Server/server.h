@@ -47,7 +47,6 @@ public:
     void afterChangeTier(int src, const QString &oldTier, const QString &newTier);
     bool beforePlayerAway(int src, bool away);
     void afterPlayerAway(int src, bool away);
-    void atServerShutDown();
     void disconnectFromRegistry();
     /* Force Rated 1 and Force Rated 2 is to ignore the ladder on / off factor for those two */
     bool canHaveRatedBattle(int id1, int id2, bool challengeCup, bool forceRated1 = false, bool forceRated2 = false);
@@ -117,6 +116,7 @@ public slots:
     void loadRatedBattlesSettings();
     void regPrivacyChanged(const int &priv);
 
+    void atServerShutDown();
 private:
     void kick(int dest, int src);
     void ban(int dest, int src);
