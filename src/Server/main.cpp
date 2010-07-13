@@ -3,6 +3,7 @@
 #include <cstdio>
 #include "../Utilities/mtrand.h"
 #include "server.h"
+#include "consolereader.h"
 
 void myMessageOutput(QtMsgType type, const char *msg)
 {
@@ -37,7 +38,7 @@ int main(int argc, char *argv[])
     //default: show a window
     bool showWindow = true;
 
-    //parse commandline argumetns
+    //parse commandline arguments
     for(int i = 0; i < argc; i++){
         if(strcmp( argv[i], "--headless") == 0){
             showWindow = false;
@@ -72,13 +73,18 @@ int main(int argc, char *argv[])
             qDebug() << "Please change the configuration manually or in windowed mode.";
             qDebug() << "A web-tool for configuring and maintaining will be implemented later.\n";
 
-            //in headless mode let's use QCoreApplication insted of QApplication
+            //in headless mode let's use QCoreApplication instead of QApplication
             QCoreApplication b(argc, argv);
 
             //This is done by MainWindow automatically too.
             QObject::connect(b, SIGNAL(aboutToQuit()), myserver, SLOT(atServerShutDown()));
 
             myserver->start();
+
+            ConsoleReader reader(myserver);
+            QSocketNotifier notifier(fileno(stdin), QSocketNotifier::Read);
+            QObject::connect(&notifier, SIGNAL(activated(int)), &reader, SLOT(read(int)));
+
             i = b.exec();
             qDebug() << "Returned with status " << i;
 

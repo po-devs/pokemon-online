@@ -41,7 +41,8 @@ SOURCES += main.cpp \
     sqlconfig.cpp \
     tiermachine.cpp \
     loadinsertthread.cpp \
-    waitingobject.cpp
+    waitingobject.cpp \
+    consolereader.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -79,6 +80,7 @@ HEADERS += mainwindow.h \
     sqlconfig.h \
     tiermachine.h \
     loadinsertthread.h \
-    memoryholder.h
+    memoryholder.h \
+    consolereader.h
 DEFINES = SERVER_SIDE
 RESOURCES += 
