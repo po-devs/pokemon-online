@@ -167,6 +167,7 @@ public:
     void testFlinch(int player, int target);
     bool testStatus(int player);
     bool testFail(int player);
+    void failSilently(int player);
     void fail(int player, int move, int part=0, int type=0, int trueSource = -1);
     bool hasType(int player, int type);
     bool hasWorkingAbility(int play, int ability);
