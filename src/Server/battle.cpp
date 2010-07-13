@@ -3136,6 +3136,12 @@ void BattleSituation::fail(int player, int move, int part, int type, int trueSou
     sendMoveMessage(move, part, trueSource != -1? trueSource : player, type, player,turnlong[player]["MoveChosen"].toInt());
 }
 
+void BattleSituation::failSilently(int player)
+{
+    turnlong[player]["FailingMessage"] = false;
+    turnlong[player]["Failed"] = true;
+}
+
 PokeFraction BattleSituation::getStatBoost(int player, int stat)
 {
     int boost = pokelong[player][QString("Boost%1").arg(stat)].toInt();

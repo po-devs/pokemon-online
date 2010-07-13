@@ -4485,6 +4485,10 @@ struct MMAcupressure : public MM
     }
 
     static void daf(int s, int t, BS &b) {
+        if (b.hasSubstitute(s)) {
+            b.failSilently(s);
+            b.sendMoveMessage(128, 2, t, 0, s, Move::Acupressure);
+        }
         for (int i = Attack; i <= Accuracy; i++) {
             if (poke(b,t)[QString("Boost%1").arg(i)].toInt() < 6) {
                 return;
