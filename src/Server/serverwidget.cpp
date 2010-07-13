@@ -190,12 +190,15 @@ void ServerWidget::sendServerMessage()
 }
 
 
-
 void ServerWidget::addChatline(const QString &line){
     mainchat()->insertPlainText(line + "\n");
 
 }
 
+void ServerWidget::atShutDown()
+{
+    server->atServerShutDown();
+}
 
 /**
  * The following functions are slots which will take care

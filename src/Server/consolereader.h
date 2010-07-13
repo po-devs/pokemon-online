@@ -16,7 +16,6 @@ public slots:
 private:
     Server* m_Server;
     QTextStream m_TextStream;
-
 };
 
 #endif

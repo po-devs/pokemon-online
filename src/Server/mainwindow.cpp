@@ -20,6 +20,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *)
 {
-    myserver->atServerShutDown();
+    myserverwidget->atShutDown();
     exit(0);
 }
