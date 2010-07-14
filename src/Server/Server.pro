@@ -42,7 +42,9 @@ SOURCES += main.cpp \
     tiermachine.cpp \
     loadinsertthread.cpp \
     waitingobject.cpp \
-    consolereader.cpp
+    consolereader.cpp \
+    ../Utilities/coro.c \
+    ../Utilities/contextswitch.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -81,6 +83,8 @@ HEADERS += mainwindow.h \
     tiermachine.h \
     loadinsertthread.h \
     memoryholder.h \
-    consolereader.h
+    consolereader.h \
+    ../Utilities/coro.h \
+    ../Utilities/contextswitch.h
 DEFINES = SERVER_SIDE
 RESOURCES += 
