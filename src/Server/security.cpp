@@ -108,7 +108,7 @@ void SecurityManager::loadMembers()
     }
 
     /* Loading the ban list */
-    query.exec("select name, ip from trainers where banned=true");
+    query.exec("select name, ip from trainers where banned='true'");
 
     while (query.next()) {
         bannedIPs.insert(query.value(1).toString());
@@ -269,7 +269,11 @@ int SecurityManager::maxAuth(const QString &ip) {
     QSqlQuery q;
     q.setForwardOnly(true);
 
-    q.prepare("select auth from trainers where ip=? order by auth desc");
+    if (SQLCreator::databaseType != SQLCreator::SQLite) {
+        q.prepare("select auth from trainers where ip=? order by auth desc");
+    } else {
+        q.prepare("select auth from trainers where ip like ? order by auth desc");
+    }
     q.addBindValue(ip);
     q.exec();
 
