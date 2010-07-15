@@ -21,51 +21,121 @@
   used to be each in a new thread and then on the Beta Server where over 80 battles would be running
   it would cause serious problems.
 
-  This was developped specifically for PO so it's not as generic as you would like.
+  This was developped specifically for PO so it's not as generic as you would like. And if not used with
+  threads it could fail badly, if you want info / examples drop on #po on irc.freenode.net, or better, on
+  our forums.
+
+  If you would like a concrete example of coroutines to understand how it works, create a main.cpp with that:
+
+#include <iostream>
+
+extern "C" {
+#include "coro.h"
+}
+
+using namespace std;
+
+coro_context a, b, init;
+
+void foo(void *)
+{
+    for (int i = 0; i < 10; i++) {
+        cout << i * 2 << endl;
+        coro_transfer(&a, &b);
+    }
+
+    // Returning to main
+    coro_transfer(&a, &init);
+}
+
+void foo2(void *)
+{
+    for (int i = 0; i < 10; i++) {
+        cout << (i * 2)+1 << endl;
+        coro_transfer(&b, &a);
+    }
+
+    //Never reached but safety mesure
+    coro_transfer(&b, &init);
+}
+
+int main()
+{
+    coro_create(&init, NULL, NULL, NULL, 0);
+
+    void *stack1 = malloc(256*256);
+    void *stack2 = malloc(256*256);
+    coro_create(&a, foo, NULL, stack1, 256*256);
+    coro_create(&b, foo2, NULL, stack2, 256*256);
+    coro_transfer(&init, &a);
+
+    free(stack1);
+    free(stack2);
+
+    cout << "Hello world!" << endl;
+    return 0;
+}
+
+  And figure out why it displays all numbers in order =p
+
+  (Dont forget to include coro.c and coro.h in your project)
+
 */
 
 class ContextCallee;
+
+class ContextQuitEx {
+
+};
 
 class ContextSwitcher
 {
     friend class ContextCallee;
 public:
+    enum Scheduling {
+        Start = 0,
+        Continue = 1,
+        Cease = 2
+    };
+
+    typedef QPair<ContextCallee *, Scheduling> pair;
+    typedef QPair<ContextSwitcher *, ContextCallee *> startpair;
+
     ContextSwitcher();
     ~ContextSwitcher();
 
-    /* Thread safe */
-    void terminateCallee(ContextCallee *c);
+    /* Starts the main loop. Call it from a thread, because it will block till the ends of time. */
+    void proceed();
+
+    /* Thread safe. Ends the run() by throwing an exception, that is caught. It will be executed in the ContextSwitcher thread
+        so it might not execute directly, but will do as soon as the current ContextCallee yields. */
+    void terminate(ContextCallee *c);
 private:
     /* Creating contexts is not even reentrant, but with a mutex
        it's fine */
     static QMutex guardian;
+    QMutex ownGuardian;
+    QSemaphore streamController;
 
     coro_context main_context;
     QSet<ContextCallee *> contexts;
     ContextCallee *current_context;
+    ContextCallee *context_to_delete;
+
+    QList<pair> scheduled;
 
     void create_context(coro_context *c, coro_func function=NULL, void *param=NULL, void *stack=NULL, long stacksize=0);
 protected:
     /* Adds the callee and runs it */
     void runNewCallee(ContextCallee *callee);
 
+    /* Takes a QPair<ContextSwitcher*, ContextCalle*> * as a parameter. Freeing the arg if dynamicly allocated
+       is the responsability of the caller */
+    static void runNewCalleeS(void *);
+
     void schedule(ContextCallee *c);
     void yield();
-    void exit();
 };
-
-
-/* Internal structure used */
-struct Context
-{
-    coro_context context;
-    void *stack;
-    long stacksize;
-
-    Context(long stacksize = 100*1000);
-    ~Context();
-};
-
 
 class ContextCallee
 {
@@ -78,11 +148,16 @@ public:
 
     virtual void run() = 0;
 
+    /* If called in a different thread, will wait till the context stuff ended. If in the same
+       thread, you're badly screwed. */
+    void wait();
+
+    /* Asks to be rescheduled asap. Thread safe. */
+    void schedule();
+
 protected:
     /* Gives the hand back to the Context Switcher */
     void yield();
-    /* Asks to be rescheduled asap. Thread safe. */
-    void schedule();
     /* Terminate the context, but doesn't delete the class. In short it just exits of the run() function and cleanly at that.
         Though in practice you do not need to call it if you don't need it */
     void exit();
@@ -91,6 +166,7 @@ private:
 
     long stacksize;
     void *stack;
+    bool needsToExit;
     coro_context context;
 };
 
