@@ -108,6 +108,9 @@ void Server::start(){
 
     printLine(tr("Members loaded"));
 
+    battleThread.start();
+    printLine(tr("Battle Thread started"));
+
     myengine = new ScriptEngine(this);
 
     if (!server()->listen(QHostAddress::Any, serverPort))
@@ -854,7 +857,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     connect(player(id2), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
     connect(player(id2), SIGNAL(battleChat(int,QString)), battle, SLOT(battleChat(int, QString)));
 
-    battle->start();
+    battle->start(battleThread);
 
     myengine->afterBattleStarted(id1,id2,c);
 }

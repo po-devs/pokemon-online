@@ -15,14 +15,18 @@ ContextSwitcher::~ContextSwitcher()
     }
     contexts.clear();
 
-    coro_destroy(main_context);
+#ifdef CORO_PTHREAD
+    coro_destroy(&main_context);
+#endif
 }
 
 void ContextSwitcher::run()
 {
     forever {
         if (context_to_delete) {
-            context_to_delete->ctx = NULL;
+            /* That literally finishes the deleting operation by allowing wait()
+               to finish */
+            context_to_delete->_finished = true;
             context_to_delete = NULL;
         }
 
@@ -53,7 +57,6 @@ void ContextSwitcher::run()
         }
         case Start: {
             contexts.insert(p.first);
-            p.first->ctx = this;
             startpair sp(this, p.first);
             create_context(&p.first->context, &ContextSwitcher::runNewCalleeS, &sp, p.first->stack, p.first->stacksize);
 
@@ -82,13 +85,15 @@ void ContextSwitcher::runNewCalleeS(void *p)
     try {
         sp.second->run();
     } catch (ContextQuitEx) {
-        /* We can't use the stack after we do sp.second->ctx = NULL.
-           Not using the stack means not using sp.
-           So we will do that in the main context instead of here */
-        sp.first->contexts.remove(sp.second);
-        sp.first->context_to_delete = sp.second;
-        sp.second->yield();
+
     }
+    /* We can't use the stack after we set finished() to true, because then this might get deleted.
+       Not using the stack means not using sp.
+       So we will do that in the main context instead of here */
+    sp.first->contexts.remove(sp.second);
+    sp.first->context_to_delete = sp.second;
+    /* Gets back to the main context */
+    sp.first->yield();
 }
 
 
@@ -137,14 +142,14 @@ void ContextSwitcher::create_context(coro_context *c, coro_func function, void *
     guardian.unlock();
 }
 
-ContextCallee::ContextCallee(long stacksize) : ctx(NULL), needsToExit(false)
+ContextCallee::ContextCallee(long stacksize) : ctx(NULL), needsToExit(false), _finished(false)
 {
     stack = malloc(stacksize);
 }
 
 ContextCallee::~ContextCallee()
 {
-    if (ctx) {
+    if (!finished()) {
         qCritical() << "Context callee killed without being normally exited, will probably cause a crash or some kind of problem."
                 " You need to wait() before calling the destructor, to make sure it's ended.";
     }
@@ -157,6 +162,8 @@ ContextCallee::~ContextCallee()
 
 void ContextCallee::start(ContextSwitcher &ctx)
 {
+    /* To tell we are not finished */
+    this->ctx = &ctx;
     /* Adds ourselves to the stack */
     ctx.runNewCallee(this);
 }
@@ -180,10 +187,20 @@ void ContextCallee::yield()
     }
 }
 
+void ContextCallee::terminate()
+{
+    ctx->terminate(this);
+}
+
 void ContextCallee::wait()
 {
     /* Qt does not provide public functions to wait so it might use 100% CPU */
-    while (ctx) {
+    while (!finished()) {
         ;
     }
+}
+
+bool ContextCallee::finished()
+{
+    return _finished;
 }

@@ -28,7 +28,6 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     timeleft[1] = 5*60;
     timeStopped[0] = true;
     timeStopped[1] = true;
-    finished() = false;
     clauses() = c.clauses;
     rated() = c.rated;
     doubles() = c.mode == ChallengeInfo::Doubles;
@@ -75,16 +74,6 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
                 }
             }
         }
-//        if (clauses() & ChallengeInfo::LevelBalance) {
-//            for (int i = 0; i < 6; i++) {
-//                team1.poke(i).level() = PokemonInfo::LevelBalance(p1.team().poke(i).num());
-//                team1.poke(i).updateStats();
-//            }
-//            for (int i = 0; i < 6; i++) {
-//                team2.poke(i).level() = PokemonInfo::LevelBalance(p2.team().poke(i).num());
-//                team2.poke(i).updateStats();
-//            }
-//        }
         if (clauses() & ChallengeInfo::SpeciesClause) {
             QSet<int> alreadyPokes[2];
             for (int i = 0; i < 6; i++) {
@@ -111,22 +100,14 @@ MirrorMoveAmn amn;
 
 BattleSituation::~BattleSituation()
 {
-    /* releases the thread */
-    {
-	/* So the thread will quit immediately after being released */
-	quit = true;
-        /* Should be enough */
-        sem.release(1000);
-	/* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
-	wait();
-        delete timer;
-    }
+    terminate();
+    /* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
+    wait();
+    delete timer;
 }
 
-void BattleSituation::start()
+void BattleSituation::start(ContextSwitcher &ctx)
 {
-    quit = false; /* doin' that cuz if any battle command is called why quit is set to true disasters happen */
-
     for (int i = 0; i < 6; i++) {
         if (poke(Player1,i).ko()) {
             changeStatus(Player1, i, Pokemon::Koed);
@@ -188,7 +169,7 @@ void BattleSituation::start()
     /* We are only warned of new events every 5 seconds */
     timer->start(5000,this);
 
-    QThread::start();
+    ContextCallee::start(ctx);
 }
 
 int BattleSituation::spot(int id) const
@@ -429,20 +410,14 @@ void BattleSituation::run()
     }
     true_rand2.seed(array, 10);
 
-    try {
-        qDebug() << "BattleSituation between " << team1.name << " and " << team2.name << " begin running.";
-	while (!quit)
-	{
-	    beginTurn();
+    qDebug() << "BattleSituation between " << team1.name << " and " << team2.name << " begin running.";
+    forever
+    {
+        beginTurn();
 
-	    endTurn();
-	}
-    } catch(const QuitException &ex) {
-	; /* the exception is just there to get immediately out of the while , nothing more
-	   We could even have while (1) instead of while(!quit) (but we don't! ;) )*/
-    } catch(...) {
-        qDebug() << "unkown exception caught in battle between " << team1.name << " and " << team2.name;
+        endTurn();
     }
+
 }
 
 void BattleSituation::beginTurn()
@@ -611,14 +586,6 @@ void BattleSituation::endTurnStatus(int player)
     }
 }
 
-void BattleSituation::testquit()
-{
-    if (quit) {
-        finished() = true;
-	throw QuitException();
-    }
-}
-
 bool BattleSituation::requestChoice(int slot, bool acquire, bool custom)
 {
     int player = this->player(slot);
@@ -643,12 +610,8 @@ bool BattleSituation::requestChoice(int slot, bool acquire, bool custom)
 
     if (acquire) {
         notify(player, StartChoices, player);
-        block(1);
+        yield();
     }
-
-    //test to see if the quit was requested by system or if choice was received
-    testquit();
-    testWin();
 
     /* Now all the players gonna do is analyzeChoice(int player) */
     return true;
@@ -677,12 +640,8 @@ void BattleSituation::requestChoices()
         /* Send a brief update on the status */
         notifyInfos();
         /* Lock until ALL choices are received */
-        block(1);
+        yield();
     }
-
-    //test to see if the quit was requested by system or if choice was received or if win time out
-    testquit();
-    testWin();
 
     notify(All, BeginTurn, All, turn());
 
@@ -1035,20 +994,25 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
     }
 
     if (allChoicesSet()) {
-        /* The battle thread can carry on */
-        blocked() = false;
         /* Blocking any further cancels */
         for (int i = 0; i < numberOfSlots(); i++) {
             couldMove[i] = false;
         }
-        sem.release(1);
+        schedule();
     }
 }
 
-void BattleSituation::block(int num)
+void BattleSituation::yield()
 {
     blocked() = true;
-    sem.acquire(num);
+    ContextCallee::yield();
+    testWin();
+}
+
+void BattleSituation::schedule()
+{
+    blocked() = false;
+    ContextCallee::schedule();
 }
 
 /*****************************************
@@ -1107,7 +1071,7 @@ int BattleSituation::timeLeft(int player)
 void BattleSituation::timerEvent(QTimerEvent *)
 {
     if (timeLeft(Player1) <= 0 || timeLeft(Player2) <= 0) {
-        sem.release(1000); // the battle is finished, isn't it?
+        schedule(); // the battle is finished, isn't it?
     }
 }
 
@@ -2854,10 +2818,7 @@ void BattleSituation::requestSwitchIns()
             notify(Player2, StartChoices, Player2);
         }
 
-        block(1);
-
-        testquit();
-        testWin(); // timeout win
+        yield();
 
         /* To clear the cancellable moves list */
         for (int i = 0; i < numberOfSlots(); i++)
@@ -2959,14 +2920,12 @@ void BattleSituation::testWin()
 
     /* No one wants a battle that long xd */
     if (turn() == 1024) {
-        finished() = true;
         notify(All, BattleEnd, Player1, qint8(Tie));
         emit battleFinished(Tie, id(Player1), id(Player2),rated(), tier());
-        throw QuitException();
+        exit();
     }
 
     if (time1 == 0 || time2 == 0) {
-        finished() = true;
         notify(All,ClockStop,Player1,quint16(time1));
         notify(All,ClockStop,Player2,quint16(time2));
         notifyClause(ChallengeInfo::NoTimeOut,true);
@@ -2984,14 +2943,13 @@ void BattleSituation::testWin()
             notify(All, EndMessage, Player2, loseMessage[Player2]);
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
-        throw QuitException();
+        exit();
     }
 
     int c1 = countAlive(Player1);
     int c2 = countAlive(Player2);
 
     if (c1*c2==0) {
-        finished() = true;
         notify(All,ClockStop,Player1,time1);
         notify(All,ClockStop,Player2,time2);
         if (c1 + c2 == 0) {
@@ -3008,7 +2966,7 @@ void BattleSituation::testWin()
             notify(All, EndMessage, Player2, loseMessage[Player2]);
             emit battleFinished(Win, id(Player1), id(Player2),rated(), tier());
         }
-        throw QuitException();
+        exit();
     }
 }
 

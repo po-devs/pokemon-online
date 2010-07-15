@@ -138,7 +138,7 @@ protected:
     void yield();
 };
 
-class ContextCallee
+class ContextCallee : public QObject
 {
     friend class ContextSwitcher;
 public:
@@ -156,11 +156,17 @@ public:
     /* Asks to be rescheduled asap. Thread safe. */
     void schedule();
 
+    bool finished();
+
+    /* Used to be terminated. Thread safe */
+    void terminate();
+
 protected:
     /* Gives the hand back to the Context Switcher */
     void yield();
     /* Terminate the context, but doesn't delete the class. In short it just exits of the run() function and cleanly at that.
-        Though in practice you do not need to call it if you don't need it */
+        Though in practice you do not need to call it if you don't need it. And only callable from the main context, or you'll have
+        big problems */
     void exit();
 private:
     ContextSwitcher *ctx;
@@ -168,6 +174,7 @@ private:
     long stacksize;
     void *stack;
     bool needsToExit;
+    bool _finished;
     coro_context context;
 };
 
