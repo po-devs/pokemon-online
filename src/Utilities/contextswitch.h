@@ -88,7 +88,7 @@ class ContextQuitEx {
 
 };
 
-class ContextSwitcher
+class ContextSwitcher : public QThread
 {
     friend class ContextCallee;
 public:
@@ -104,8 +104,8 @@ public:
     ContextSwitcher();
     ~ContextSwitcher();
 
-    /* Starts the main loop. Call it from a thread, because it will block till the ends of time. */
-    void proceed();
+    /* Starts the main loop. */
+    void run();
 
     /* Thread safe. Ends the run() by throwing an exception, that is caught. It will be executed in the ContextSwitcher thread
         so it might not execute directly, but will do as soon as the current ContextCallee yields. */
@@ -125,6 +125,7 @@ private:
     QList<pair> scheduled;
 
     void create_context(coro_context *c, coro_func function=NULL, void *param=NULL, void *stack=NULL, long stacksize=0);
+    void switch_context(ContextCallee *new_context);
 protected:
     /* Adds the callee and runs it */
     void runNewCallee(ContextCallee *callee);
