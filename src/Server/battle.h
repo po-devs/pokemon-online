@@ -4,16 +4,15 @@
 #include <QtCore>
 #include "../PokemonInfo/battlestructs.h"
 #include "../Utilities/mtrand.h"
-
+#include "../Utilities/contextswitch.h"
 class Player;
 
-class BattleSituation : public QThread
+class BattleSituation : public ContextCallee
 {
     Q_OBJECT
 
     PROPERTY(int, turn);
     PROPERTY(int , publicId);
-    PROPERTY(bool, finished);
     PROPERTY(bool, rated);
     PROPERTY(QString, tier);
     PROPERTY(quint32, clauses);
@@ -88,7 +87,7 @@ public:
     int countBackUp(int player) const;
 
     /* Starts the battle -- use the time before to connect signals / slots */
-    void start();
+    void start(ContextSwitcher &ctx);
     /* The battle runs in a different thread -- easier to interrutpt the battle & co */
     void run();
     /* requests choice of action from the player */
@@ -332,13 +331,8 @@ signals:
     void battleInfo(int publicId, int id, const QByteArray &info);
     void battleFinished(int result, int winner, int loser, bool rated, const QString &tier);
 private:
-    /* To interrupt the thread when needed. We use that instead of mutex cuz we can lock/unlock them in different threads */
-    QSemaphore sem;
     mutable QMutex spectatorMutex;
-    /* To notify the thread to quit */
-    bool quit;
-    /* if quit==true, throws QuitException */
-    void testquit();
+
     /* if battle ends, stop the battle thread */
     void testWin();
     int spectatorKey(int id) const {
@@ -371,7 +365,9 @@ protected:
     void startClock(int player, bool broadCoast = true);
     void stopClock(int player, bool broadCoast = false);
     int timeLeft(int player);
-    void block(int num);
+
+    void yield();
+    void schedule();
 public:
     std::vector<int> targetList;
     /* Calls the effects of source reacting to name */
@@ -439,9 +435,6 @@ public:
 
 inline void BattleSituation::notify(int player, int command, int who)
 {
-    /* Doing that cuz we never know */
-    testquit();
-
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -454,9 +447,6 @@ inline void BattleSituation::notify(int player, int command, int who)
 template<class T>
 void BattleSituation::notify(int player, int command, int who, const T& param)
 {
-    /* Doing that cuz we never know */
-    testquit();
-
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -469,9 +459,6 @@ void BattleSituation::notify(int player, int command, int who, const T& param)
 template<class T1, class T2>
 void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2)
 {
-    /* Doing that cuz we never know */
-    testquit();
-
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -484,9 +471,6 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 template<class T1, class T2, class T3>
 void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3)
 {
-    /* Doing that cuz we never know */
-    testquit();
-
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -499,9 +483,6 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 template<class T1, class T2, class T3, class T4>
 void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4)
 {
-    /* Doing that cuz we never know */
-    testquit();
-
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -514,9 +495,6 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 template<class T1, class T2, class T3, class T4, class T5>
 void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4, const T5 &param5)
 {
-    /* Doing that cuz we never know */
-    testquit();
-
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
@@ -529,9 +507,6 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 template<class T1, class T2, class T3, class T4, class T5, class T6>
 void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4, const T5 &param5, const T6 &param6)
 {
-    /* Doing that cuz we never know */
-    testquit();
-
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);

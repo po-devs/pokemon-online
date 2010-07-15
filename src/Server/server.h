@@ -2,7 +2,7 @@
 #define SERVER_H
 
 #include <QtNetwork>
-
+#include "../Utilities/contextswitch.h"
 /* the server */
 
 class FindBattleData;
@@ -153,5 +153,6 @@ private:
 
     QHash<int, FindBattleData*> battleSearchs;
 
+    ContextSwitcher battleThread;
 };
 #endif // SERVER_H
