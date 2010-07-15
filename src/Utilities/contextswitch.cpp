@@ -9,15 +9,18 @@ ContextSwitcher::ContextSwitcher() : current_context(NULL), context_to_delete(NU
 
 ContextSwitcher::~ContextSwitcher()
 {
+    /* Normally, all contexts should have disappeared before though */
     foreach (ContextCallee *x, contexts) {
         delete x;
     }
     contexts.clear();
+
+    coro_destroy(main_context);
 }
 
-void ContextSwitcher::proceed()
+void ContextSwitcher::run()
 {
-    while (1) {
+    forever {
         if (context_to_delete) {
             context_to_delete->ctx = NULL;
             context_to_delete = NULL;
@@ -45,8 +48,7 @@ void ContextSwitcher::proceed()
             contexts.remove(p.first);
             p.first->needsToExit = true;
 
-            current_context = p.first;
-            coro_transfer(&main_context, &current_context->context);
+            switch_context(p.first);
             break;
         }
         case Start: {
@@ -55,14 +57,20 @@ void ContextSwitcher::proceed()
             startpair sp(this, p.first);
             create_context(&p.first->context, &ContextSwitcher::runNewCalleeS, &sp, p.first->stack, p.first->stacksize);
 
-            current_context = p.first;
-            coro_transfer(&main_context, &current_context->context);
+            switch_context(p.first);
+            break;
         }
         case Continue:
-            current_context = p.first;
-            coro_transfer(&main_context, &current_context->context);
+            switch_context(p.first);
+            break;
         }
     }
+}
+
+void ContextSwitcher::switch_context(ContextCallee *new_context)
+{
+    current_context = new_context;
+    coro_transfer(&main_context, &current_context->context);
 }
 
 void ContextSwitcher::runNewCalleeS(void *p)
