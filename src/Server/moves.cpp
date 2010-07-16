@@ -245,6 +245,7 @@ struct MMBatonPass : public MM
     	c.remove("Type1");
 	c.remove("Type2");
 	c.remove("Num");
+        c.remove("YawnCount");
 	c.remove("Minimize");
 	c.remove("DefenseCurl");
 	c.remove("Ability");
@@ -3963,7 +3964,7 @@ struct MMYawn : public MM {
     static void et(int s, int, BS &b) {
         inc(poke(b,s)["YawnCount"], -1);
         int count = poke(b,s)["YawnCount"].toInt();
-        if (count > 0) {
+        if (count != 0) {
 
         } else {
             if (b.sleepClause() && b.currentForcedSleepPoke[b.player(s)] != -1) {
