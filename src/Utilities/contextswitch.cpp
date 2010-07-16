@@ -34,7 +34,7 @@ void ContextSwitcher::run()
 
         ownGuardian.lock();
 
-        if (scheduled.size() > 0) {
+        if (scheduled.size() == 0) {
             ownGuardian.unlock();
             continue;
         }
@@ -142,7 +142,7 @@ void ContextSwitcher::create_context(coro_context *c, coro_func function, void *
     guardian.unlock();
 }
 
-ContextCallee::ContextCallee(long stacksize) : ctx(NULL), needsToExit(false), _finished(false)
+ContextCallee::ContextCallee(long stacksize) : ctx(NULL), stacksize(stacksize), needsToExit(false), _finished(false)
 {
     stack = malloc(stacksize);
 }

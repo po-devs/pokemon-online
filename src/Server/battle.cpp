@@ -104,6 +104,8 @@ BattleSituation::~BattleSituation()
     /* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
     wait();
     delete timer;
+
+    qDebug() << "BattleSituation between " << team1.name << " and " << team2.name << " finished.";
 }
 
 void BattleSituation::start(ContextSwitcher &ctx)
