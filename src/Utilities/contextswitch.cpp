@@ -194,10 +194,13 @@ void ContextCallee::terminate()
 
 void ContextCallee::wait()
 {
+    qDebug() << "Starting wait of " << this;
     /* Qt does not provide public functions to wait so it might use 100% CPU */
     while (!finished()) {
         ;
     }
+
+    qDebug() << "Ending wait of " << this;
 }
 
 bool ContextCallee::finished()
