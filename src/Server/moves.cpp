@@ -2534,7 +2534,7 @@ struct MMPowerTrick : public MM
     }
 
     static void uas(int s, int, BS &b) {
-	std::swap(poke(b,s)["Stat1"], poke(b,s)["Stat2"]);
+        poke(b,s)["PowerTricked"] = true;
 	b.sendMoveMessage(62,0,s,type(b,s));
     }
 };

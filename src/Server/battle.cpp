@@ -3004,6 +3004,10 @@ void BattleSituation::gainPP(int player, int move, int gain)
 
 int BattleSituation::getStat(int player, int stat)
 {
+    /* Attack and defense switched */
+    if (pokelong[player].contains("PowerTricked") && (stat == 1 || stat == 2)) {
+        stat = 3 - stat;
+    }
     QString q = "Stat"+QString::number(stat);
     turnlong[player].remove(q+"AbilityModifier");
     turnlong[player].remove(q+"PartnerAbilityModifier");
