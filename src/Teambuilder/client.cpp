@@ -15,7 +15,6 @@
 Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), myrelay(), findingBattle(false)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
-    mychallenge = NULL;
     mybattle = NULL;
     myteambuilder = NULL;
     resize(1000, 700);
@@ -799,15 +798,12 @@ void Client::seeInfo(int id)
 {
     if (playerExist(id))
     {
-	if (mychallenge != NULL) {
-	    mychallenge->raise();
-	    mychallenge->activateWindow();
-	} else {
-	    mychallenge = new ChallengeWindow(player(id));
-	    connect(mychallenge, SIGNAL(challenge(int)), SLOT(sendChallenge(int)));
-	    connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
-	    connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
-	}
+        BaseChallengeWindow *mychallenge = new ChallengeWindow(player(id));
+        connect(mychallenge, SIGNAL(challenge(int)), SLOT(sendChallenge(int)));
+        connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
+        connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
+
+        mychallenges.insert(mychallenge);
     }
 }
 
@@ -821,12 +817,13 @@ void Client::seeChallenge(const ChallengeInfo &c)
             d.dsc = ChallengeInfo::Busy;
             relay().sendChallengeStuff(c);
         } else {
-            mychallenge = new ChallengedWindow(player(c),c);
+            BaseChallengeWindow *mychallenge = new ChallengedWindow(player(c),c);
 	    connect(mychallenge, SIGNAL(challenge(int)), SLOT(acceptChallenge(int)));
 	    connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
 	    connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
 	    connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
             mychallenge->activateWindow();
+            mychallenges.insert(mychallenge);
 	}
     }
 }
@@ -969,25 +966,26 @@ void Client::challengeStuff(const ChallengeInfo &c)
         }
     } else {
         if (playerExist(c.opponent())) {
+            BaseChallengeWindow *b;
             if (c.desc() == ChallengeInfo::Refused) {
                 printLine(tr("%1 refused your challenge.").arg(name(c)));
-                if (challengeWindowOpen() && challengeWindowPlayer()== c) {
-                    closeChallengeWindow();
+                while ( (b = getChallengeWindow(c)) ) {
+                    closeChallengeWindow(b);
                 }
             } else if (c.desc() == ChallengeInfo::Busy) {
                 printLine(tr("%1 is busy.").arg(name(c)));
-                if (challengeWindowOpen() && challengeWindowPlayer()== c) {
-                    closeChallengeWindow();
+                while ( (b = getChallengeWindow(c)) ) {
+                    closeChallengeWindow(b);
                 }
             } else if (c.desc() == ChallengeInfo::Cancelled) {
                 printLine(tr("%1 cancelled their challenge.").arg(name(c)));
-                if (challengeWindowOpen() && challengeWindowPlayer()== c) {
-		    closeChallengeWindow();
-		}
+                while ( (b = getChallengeWindow(c)) ) {
+                    closeChallengeWindow(b);
+                }
             } else if (c.desc() == ChallengeInfo::InvalidTeam) {
                 printLine(tr("%1 has an invalid team.").arg(name(c)));
-                if (challengeWindowOpen() && challengeWindowPlayer()== c) {
-                    closeChallengeWindow();
+                while ( (b = getChallengeWindow(c)) ) {
+                    closeChallengeWindow(b);
                 }
             }
 	}
@@ -1010,17 +1008,12 @@ void Client::awayChanged(int id, bool away)
 
 bool Client::busy() const
 {
-    return challengeWindowOpen() || battling() || away();
+    return battling() || away();
 }
 
 bool Client::away() const
 {
     return playerInfo(ownId()).away();
-}
-
-bool Client::challengeWindowOpen() const
-{
-    return mychallenge != 0;
 }
 
 void Client::acceptChallenge(int id)
@@ -1050,7 +1043,7 @@ void Client::sendChallenge(int id)
 
 void Client::clearChallenge()
 {
-    mychallenge = NULL;
+    mychallenges.remove(dynamic_cast<BaseChallengeWindow*>(sender()));
 }
 
 void Client::errorFromNetwork(int errnum, const QString &errorDesc)
@@ -1311,16 +1304,20 @@ int Client::id(const QString &name) const
     }
 }
 
-int Client::challengeWindowPlayer() const
+void Client::closeChallengeWindow(BaseChallengeWindow *b)
 {
-    return mychallenge->id();
+    b->forcedClose();
 }
 
-void Client::closeChallengeWindow()
+BaseChallengeWindow * Client::getChallengeWindow(int player)
 {
-    mychallenge->forcedClose();
-}
+    foreach(BaseChallengeWindow *c, mychallenges) {
+        if (c->id() == player)
+            return c;
+    }
 
+    return NULL;
+}
 
 void Client::openTeamBuilder()
 {
