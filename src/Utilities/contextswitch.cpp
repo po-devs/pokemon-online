@@ -23,9 +23,11 @@ void ContextSwitcher::run()
 {
     forever {
         if (context_to_delete) {
+            qDebug() << "Marking context " << context_to_delete << " finished";
             /* That literally finishes the deleting operation by allowing wait()
                to finish */
             context_to_delete->_finished = true;
+            qDebug() << "Context " << context_to_delete << " marked finished";
             context_to_delete = NULL;
         }
 
@@ -89,6 +91,7 @@ void ContextSwitcher::runNewCalleeS(void *p)
     } catch (ContextQuitEx) {
 
     }
+    qDebug() << "Run function of " << sp.second << " ended.";
     /* We can't use the stack after we set finished() to true, because then this might get deleted.
        Not using the stack means not using sp.
        So we will do that in the main context instead of here */
