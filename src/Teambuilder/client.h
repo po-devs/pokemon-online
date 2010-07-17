@@ -50,9 +50,6 @@ public:
     void sortAllPlayersNormally();
 
     void seeChallenge(const ChallengeInfo &c);
-    bool challengeWindowOpen() const;
-    void closeChallengeWindow();
-    int  challengeWindowPlayer() const;
 
     PlayerInfo player(int id) const;
     BasicInfo info(int id) const;
@@ -197,8 +194,8 @@ private:
     QPushButton *mybugs;
     /* Network Relay */
     Analyzer myrelay;
-    /* Challenge window , to emit or to receive*/
-    BaseChallengeWindow *mychallenge;
+    /* Challenge windows , to emit or to receive*/
+    QSet<BaseChallengeWindow *> mychallenges;
     QPointer<BattleWindow> mybattle;
     QPointer<BattleFinder> myBattleFinder;
     QHash<int, QPointer<BaseBattleWindow> > mySpectatingBattles;
@@ -232,6 +229,9 @@ private:
     QIdTreeWidgetItem *item(int id);
     void updateState(int player);
     void placeItem(QIdTreeWidgetItem*it, QTreeWidgetItem *parent, bool autosort = true);
+    /* Returns the challenge window displaying that player or NULL otherwise */
+    BaseChallengeWindow * getChallengeWindow(int player);
+    void closeChallengeWindow(BaseChallengeWindow *c);
 
     void initRelay();
     void changeTierChecked(const QString &newtier);

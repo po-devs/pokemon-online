@@ -188,7 +188,7 @@ void Player::addChallenge(Challenge *c, bool youarechallenged)
 
 bool Player::okForChallenge(int) const
 {
-    if (!isLoggedIn() || battling() || away())
+    if (!isLoggedIn() || battling() || away() || challengedBy.size() >= 3)
         return false;
 
     return true;
@@ -479,6 +479,10 @@ void Player::challengeStuff(const ChallengeInfo &c)
     {
         if (team().invalid() && ! (c.clauses & ChallengeInfo::ChallengeCup)) {
             sendMessage("Your team is invalid, you can't challenge except for Challenge Cup!");
+            return;
+        }
+        if (challenged.size() >= 10) {
+            sendMessage("You already have challenge 10 people, you can't challenge more!");
             return;
         }
         emit sendChallenge(this->id(), id, c);
