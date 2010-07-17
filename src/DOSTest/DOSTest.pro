@@ -24,8 +24,7 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/battlestructs.h \
     arg.h \
     network.h \
-    analyze.h \
-    ../Utilities/rankingtree.h
+    analyze.h
 DEFINES = CLIENT_SIDE
 LIBS += -L../../bin \
     -lzip

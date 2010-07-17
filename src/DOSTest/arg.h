@@ -17,6 +17,7 @@ public:
     bool on;
 
     IOManager();
+    ~IOManager();
 public slots:
     void connectionEstablished();
     void goodToDelete();
@@ -25,8 +26,10 @@ protected:
 signals:
     void disconnected();
 public:
-    Analyzer a;
+    Analyzer *a;
     QBasicTimer t;
+private:
+    int count;
 };
 
 class DosManager : public QObject

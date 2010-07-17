@@ -308,9 +308,9 @@ void Player::battleForfeited()
     emit battleFinished(Forfeit, opponent(), id(), battle->rated(), battle->tier());
 }
 
-void Player::battleResult(int result, int winner, int loser)
+void Player::battleResult(int battleid, int result, int winner, int loser)
 {
-    relay().sendBattleResult(result, winner, loser);
+    relay().sendBattleResult(battleid, result, winner, loser);
 
     if ((winner == id() || loser == id()) && (result == Forfeit || result == Close))
         changeState(Battling, false);
@@ -502,10 +502,12 @@ void Player::findBattle(const FindBattleData& f)
         // INVALID BEHAVIOR
         return;
     }
+
     if (!isLoggedIn()) {
         // INVALID BEHAVIOR
         return;
     }
+
     if (team().invalid())
     {
         sendMessage("Your team is invalid, you can't find battles!");
@@ -514,7 +516,8 @@ void Player::findBattle(const FindBattleData& f)
 
     cancelBattleSearch();
 
-   emit findBattle(id(),f);
+    Server::print("Find battle requested");
+    emit findBattle(id(),f);
 }
 
 void Player::sendChallengeStuff(const ChallengeInfo &c)
@@ -932,9 +935,9 @@ TempBan::~TempBan()
 }
 void TempBan::start()
 {
-//    mytimer = new QTimer();
-//    mytimer->start(mytime*60*1000);
-//    connect(mytimer,SIGNAL(timeout()),this,SLOT(done()));
+    //    mytimer = new QTimer();
+    //    mytimer->start(mytime*60*1000);
+    //    connect(mytimer,SIGNAL(timeout()),this,SLOT(done()));
 }
 
 QString TempBan::name() const

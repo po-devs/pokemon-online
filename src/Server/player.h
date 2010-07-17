@@ -83,7 +83,7 @@ public:
     ChallengeInfo getChallengeInfo(int id); /* to get the battle info of a challenge received by that player */
 
     void startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
-    void battleResult(int result, int winner, int loser);
+    void battleResult(int battleid, int result, int winner, int loser);
 
     void kick();
 
@@ -110,8 +110,8 @@ signals:
     void battleFinished(int desc, int winner, int loser, bool rated, const QString& tier);
     void updated(int id);
 
-    void battleMessage(int id,const BattleChoice &b);
-    void battleChat(int id, const QString &);
+    void battleMessage(int battleid,int id,const BattleChoice &b);
+    void battleChat(int battleid, int id, const QString &);
     void info(int id, const QString &);
     void playerKick(int,int);
     void playerBan(int,int);
