@@ -15,9 +15,8 @@ ContextSwitcher::~ContextSwitcher()
     }
     contexts.clear();
 
-#ifdef CORO_PTHREAD
-    coro_destroy(&main_context);
-#endif
+    //to suppress "no effect" warning
+    (void) coro_destroy(&main_context);
 }
 
 void ContextSwitcher::run()
@@ -44,6 +43,7 @@ void ContextSwitcher::run()
         ownGuardian.unlock();
 
         if (!contexts.contains(p.first) && p.second != Start) {
+            qDebug() << "Non existant context scheduled, discarding: " << p.first;
             continue;
         }
 
@@ -51,6 +51,8 @@ void ContextSwitcher::run()
         case Cease: {
             contexts.remove(p.first);
             p.first->needsToExit = true;
+
+            qDebug() << "Ceasing " << p.first;
 
             switch_context(p.first);
             break;
@@ -153,10 +155,9 @@ ContextCallee::~ContextCallee()
         qCritical() << "Context callee killed without being normally exited, will probably cause a crash or some kind of problem."
                 " You need to wait() before calling the destructor, to make sure it's ended.";
     }
-    /* Not needed unless you use PThreads, because it causes a warning otherwise it's been commented out :/. */
-#ifdef CORO_PTHREAD
-    coro_destroy(&context);
-#endif
+    /* Not needed unless you use PThreads, because it causes a warning otherwise it's been warning'd out :/. */
+    (void) coro_destroy(&context);
+
     free(stack);
 }
 
@@ -180,15 +181,19 @@ void ContextCallee::schedule()
 
 void ContextCallee::yield()
 {
+    qDebug() << "Yielding " << this;
     ctx->yield();
+    qDebug() << "Yielding ended for" << this;
     /* If for example the main thread or w/e requested the exit */
     if (needsToExit) {
+        qDebug() << "Exiting " << this;
         exit();
     }
 }
 
 void ContextCallee::terminate()
 {
+    qDebug() << "Terminate scheduled for " << this;
     ctx->terminate(this);
 }
 
