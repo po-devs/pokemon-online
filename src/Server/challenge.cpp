@@ -18,6 +18,7 @@ Challenge::Challenge(Player *source, Player *dest, const ChallengeInfo &c, Serve
     }
 
     if (dest->isLocked()) {
+        source->sendChallengeStuff(ChallengeInfo(ChallengeInfo::Busy, dest->id()));
         throw Exception();
     }
 

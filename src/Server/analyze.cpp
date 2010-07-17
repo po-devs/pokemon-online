@@ -200,7 +200,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             in >> id;
             BattleChoice ch;
             in >> ch;
-            emit battleMessage(ch);
+            emit battleMessage(id,ch);
             break;
         }
     case BattleChat:
@@ -209,13 +209,13 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             in >> id;
             QString s;
             in >> s;
-            emit battleChat(s);
+            emit battleChat(id,s);
             break;
         }
     case BattleFinished:
         qint32 id;
         in >> id;
-        emit forfeitBattle();
+        emit forfeitBattle(id);
         break;
     case KeepAlive:
         break;
