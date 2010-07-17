@@ -24,12 +24,11 @@ class Player : public QObject
     PROPERTY(quint16, avatar);
     PROPERTY(QColor, color);
     PROPERTY(bool, battleSearch);
-    PROPERTY(int, battleId);
     PROPERTY(QString, winningMessage);
     PROPERTY(QString, losingMessage);
     PROPERTY(QString, lastFindBattleIp);
 public:
-    BattleSituation *battle;
+
     QSet<int> battlesSpectated;
 
     enum State
@@ -59,6 +58,9 @@ public:
     bool connected() const;
     bool isLoggedIn() const;
     bool battling() const;
+    bool hasBattle(int battleId) const;
+    void addBattle(int battleid);
+    void removeBattle(int battleid);
     bool away() const;
     bool inSearchForBattle() const { return battleSearch(); }
     void cancelBattleSearch();
@@ -107,7 +109,7 @@ signals:
     void disconnected(int id);
     void recvTeam(int id, const QString &name);
     void sendChallenge(int source, int dest, const ChallengeInfo &desc);
-    void battleFinished(int desc, int winner, int loser, bool rated, const QString& tier);
+    void battleFinished(int pubid, int desc, int winner, int loser);
     void updated(int id);
 
     void battleMessage(int battleid,int id,const BattleChoice &b);
@@ -129,9 +131,9 @@ public slots:
     void recvTeam(const TeamInfo &team);
     void disconnected();
     void challengeStuff(const ChallengeInfo &c);
-    void battleForfeited();
-    void battleMessage(const BattleChoice &b);
-    void battleChat(const QString &s);
+    void battleForfeited(int id);
+    void battleMessage(int id, const BattleChoice &b);
+    void battleChat(int id, const QString &s);
     void registerRequest();
     void hashReceived(const QString &hash);
     void playerKick(int);
@@ -171,9 +173,9 @@ private:
     TeamInfo *waiting_team;
     QString waiting_name;
 
-    Challenge * challengedBy;
-
+    QSet<int> battles;
     QSet<Challenge*> challenged;
+    QSet<Challenge*> challengedBy;
 
     void assignTeam(const TeamInfo &team);
     void assignNewColor(const QColor &c);
@@ -181,6 +183,8 @@ private:
     void loginSuccess();
     void changeWaitingTeam(const TeamInfo &t);
     void removeWaitingTeam();
+    /* only call when sure there is one battle */
+    int firstBattleId();
 
     void testAuthentification(const QString &name);
 };

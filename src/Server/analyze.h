@@ -138,10 +138,10 @@ signals:
     void teamReceived(const TeamInfo &team);
     void connected();
     void disconnected();
-    void forfeitBattle();
+    void forfeitBattle(int id);
     void challengeStuff(const ChallengeInfo &c);
-    void battleMessage(const BattleChoice &choice);
-    void battleChat(const QString &chat);
+    void battleMessage(int id, const BattleChoice &choice);
+    void battleChat(int id, const QString &chat);
     void battleSpectateRequested(int id);
     void battleSpectateEnded(int id);
     void battleSpectateChat(int id, const QString &chat);

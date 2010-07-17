@@ -9,6 +9,7 @@ class FindBattleData;
 class Player;
 class BattleSituation;
 class Analyzer;
+class BattleChoice;
 class ChallengeInfo;
 class ScriptEngine;
 class Challenge;
@@ -91,10 +92,12 @@ public slots:
     void disconnected(int id);
     void dealWithChallenge(int from, int to, const ChallengeInfo &c);
     void startBattle(int id1, int id2, const ChallengeInfo &c);
-    void battleResult(int battleid, int desc, int winner, int loser, bool rated, const QString&);
+    void battleResult(int battleid, int desc, int winner, int loser);
     void sendBattleCommand(int battleId, int id, const QByteArray &command);
     void spectatingRequested(int id, int battle);
     void spectatingStopped(int id, int battle);
+    void battleMessage(int player, int battle, const BattleChoice &message);
+    void battleChat(int player, int battle, const QString &chat);
     void spectatingChat(int player, int battle, const QString &chat);
     void info(int , const QString& );
 

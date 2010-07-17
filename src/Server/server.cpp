@@ -527,7 +527,7 @@ void Server::sendBattleCommand(int publicId, int id, const QByteArray &comm)
     if (!playerExist(id))
         return;
 
-    if (player(id)->battling() && player(id)->battleId() == publicId)
+    if (player(id)->hasBattle(publicId))
         player(id)->relay().sendBattleCommand(publicId, comm);
     else {
         if (player(id)->battlesSpectated.contains(publicId))
@@ -543,6 +543,24 @@ void Server::sendMessage(int id, const QString &message)
 void Server::sendServerMessage(const QString &message)
 {
     sendAll("~~Server~~: " + message);
+}
+
+void Server::battleMessage(int player, int battle, const BattleChoice &choice)
+{
+    if (!mybattles.contains(battle)) {
+        return;
+    }
+
+    mybattles[battle]->battleChoiceReceived(player, choice);
+}
+
+void Server::battleChat(int player, int battle, const QString &chat)
+{
+    if (!mybattles.contains(battle)) {
+        return;
+    }
+
+    mybattles[battle]->battleChat(player, chat);
 }
 
 void Server::spectatingChat(int player, int battle, const QString &chat)
@@ -621,7 +639,7 @@ void Server::incomingConnection()
     connect(p, SIGNAL(recvMessage(int, QString)), SLOT(recvMessage(int,QString)));
     connect(p, SIGNAL(disconnected(int)), SLOT(disconnected(int)));
     connect(p, SIGNAL(sendChallenge(int,int,ChallengeInfo)), SLOT(dealWithChallenge(int,int,ChallengeInfo)));
-    connect(p, SIGNAL(battleFinished(int,int,int,int,bool,const QString&)), SLOT(battleResult(int,int,int,int,bool, const QString&)));
+    connect(p, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int,int,int,int)));
     connect(p, SIGNAL(info(int,QString)), SLOT(info(int,QString)));
     connect(p, SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
     connect(p, SIGNAL(playerBan(int,int)), SLOT(playerBan(int, int)));
@@ -629,6 +647,8 @@ void Server::incomingConnection()
     connect(p, SIGNAL(awayChange(int,bool)), this, SLOT(awayChanged(int, bool)));
     connect(p, SIGNAL(spectatingRequested(int,int)), SLOT(spectatingRequested(int,int)));
     connect(p, SIGNAL(spectatingStopped(int,int)), SLOT(spectatingStopped(int,int)));
+    connect(p, SIGNAL(battleChat(int,int,QString)), SLOT(battleChat(int,int,QString)));
+    connect(p, SIGNAL(battleMessage(int,int,BattleChoice)), SLOT(battleMessage(int,int,BattleChoice)));
     connect(p, SIGNAL(spectatingChat(int,int, QString)), SLOT(spectatingChat(int,int, QString)));
     connect(p, SIGNAL(updated(int)), SLOT(sendPlayer(int)));
     connect(p, SIGNAL(findBattle(int,FindBattleData)), SLOT(findBattle(int, FindBattleData)));
@@ -680,10 +700,10 @@ void Server::findBattle(int id, const FindBattleData &f)
         FindBattleData *data = it.value();
         Player *p2 = player(key);
 
-//        /* First look if this not a repeat */
-//        if (p2->lastFindBattleIp() == p1->ip() || p1->lastFindBattleIp() == p2->ip()) {
-//            continue;
-//        }
+        /* First look if this not a repeat */
+        if (p2->lastFindBattleIp() == p1->ip() || p1->lastFindBattleIp() == p2->ip()) {
+            continue;
+        }
 
         /* We check the tier thing */
         if ( (f.sameTier || data->sameTier) && p1->tier() != p2->tier() )
@@ -850,12 +870,8 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
         }
     }
 
-    connect(battle, SIGNAL(battleInfo(int,int,int,QByteArray)), SLOT(sendBattleCommand(int,int,int, QByteArray)));
-    connect(battle, SIGNAL(battleFinished(int,int,int,int,bool,QString)), SLOT(battleResult(int,int,int,bool,QString)));
-    connect(player(id1), SIGNAL(battleMessage(int,int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,int,BattleChoice)));
-    connect(player(id1), SIGNAL(battleChat(int,int,QString)), battle, SLOT(battleChat(int,int, QString)));
-    connect(player(id2), SIGNAL(battleMessage(int,int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,int,BattleChoice)));
-    connect(player(id2), SIGNAL(battleChat(int,int,QString)), battle, SLOT(battleChat(int,int, QString)));
+    connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
+    connect(battle, SIGNAL(battleFinished(int,int,int,int,bool)), SLOT(battleResult(int, int,int,int)));
 
     battle->start(battleThread);
 
@@ -888,12 +904,16 @@ bool Server::canHaveRatedBattle(int id1, int id2, bool cc, bool force1, bool for
     return true;
 }
 
-void Server::battleResult(int battleid, int desc, int winner, int loser, bool rated, const QString &tier)
+void Server::battleResult(int battleid, int desc, int winner, int loser)
 {
-    if (desc == Forfeit && player(winner)->battle->finished()) {
+    bool rated = mybattles.value(battleid)->rated();
+    QString tier = mybattles.value(battleid)->tier();
+    BattleSituation *battle = mybattles[battleid];
+
+    if (desc == Forfeit && battle->finished()) {
         player(winner)->battleResult(battleid, Close, winner, loser);
         player(loser)->battleResult(battleid, Close, winner, loser);
-        foreach(int id, player(winner)->battle->getSpectators()) {
+        foreach(int id, battle->getSpectators()) {
             player(id)->battleResult(battleid, Close, winner, loser);
         }
     } else {
@@ -941,13 +961,11 @@ void Server::removeBattle(int battleid)
     /* When manipulating threaded objects, you need to be careful... */
     battle->deleteLater();
 
-    Player* p1 = player(battle->spot(0));
-    Player* p2 = player(battle->spot(1));
+    Player* p1 = player(battle->id(0));
+    Player* p2 = player(battle->id(1));
 
-    p1->battle = NULL;
-    p1->battleId() = -1;
-    p2->battle = NULL;
-    p2->battleId() = -1;
+    p1->removeBattle(battleid);
+    p2->removeBattle(battleid);
 }
 
 void Server::sendPlayersList(int id)
@@ -1053,15 +1071,12 @@ bool Server::playerLoggedIn(int id) const
     return playerExist(id) && player(id)->isLoggedIn();
 }
 
-void Server::spectatingRequested(int id, int idOfBattler)
+void Server::spectatingRequested(int id, int idOfBattle)
 {
-    if (!playerLoggedIn(idOfBattler)) {
-        return; //INVALID BEHAVIOR
+    if (!mybattles.contains(idOfBattle)) {
+        return; // Invalid behavior
     }
-    if (!player(idOfBattler)->battling()) {
-        return; //INVALID BEHAVIOR
-    }
-    BattleSituation *battle = player(idOfBattler)->battle;
+    BattleSituation *battle = mybattles.value(idOfBattle);
     if (!battle->acceptSpectator(id, auth(id) > 0)) {
         sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
         return;
