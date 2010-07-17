@@ -23,11 +23,9 @@ void ContextSwitcher::run()
 {
     forever {
         if (context_to_delete) {
-            qDebug() << "Marking context " << context_to_delete << " finished";
             /* That literally finishes the deleting operation by allowing wait()
                to finish */
             context_to_delete->_finished = true;
-            qDebug() << "Context " << context_to_delete << " marked finished";
             context_to_delete = NULL;
         }
 
@@ -45,7 +43,6 @@ void ContextSwitcher::run()
         ownGuardian.unlock();
 
         if (!contexts.contains(p.first) && p.second != Start) {
-            qDebug() << "Non existant context scheduled, discarding: " << p.first;
             continue;
         }
 
@@ -53,8 +50,6 @@ void ContextSwitcher::run()
         case Cease: {
             contexts.remove(p.first);
             p.first->needsToExit = true;
-
-            qDebug() << "Ceasing " << p.first;
 
             switch_context(p.first);
             break;
@@ -91,7 +86,6 @@ void ContextSwitcher::runNewCalleeS(void *p)
     } catch (ContextQuitEx) {
 
     }
-    qDebug() << "Run function of " << sp.second << " ended.";
     /* We can't use the stack after we set finished() to true, because then this might get deleted.
        Not using the stack means not using sp.
        So we will do that in the main context instead of here */
@@ -184,31 +178,24 @@ void ContextCallee::schedule()
 
 void ContextCallee::yield()
 {
-    qDebug() << "Yielding " << this;
     ctx->yield();
-    qDebug() << "Yielding ended for" << this;
     /* If for example the main thread or w/e requested the exit */
     if (needsToExit) {
-        qDebug() << "Exiting " << this;
         exit();
     }
 }
 
 void ContextCallee::terminate()
 {
-    qDebug() << "Terminate scheduled for " << this;
     ctx->terminate(this);
 }
 
 void ContextCallee::wait()
 {
-    qDebug() << "Starting wait of " << this;
     /* Qt does not provide public functions to wait so it might use 100% CPU */
     while (!finished()) {
         ;
     }
-
-    qDebug() << "Ending wait of " << this;
 }
 
 bool ContextCallee::finished()
