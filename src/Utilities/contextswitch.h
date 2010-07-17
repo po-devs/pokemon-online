@@ -174,7 +174,7 @@ private:
     long stacksize;
     void *stack;
     bool needsToExit;
-    bool _finished;
+    volatile bool _finished;
     coro_context context;
 };
 
