@@ -95,14 +95,14 @@ void Analyzer::sendChallengeStuff(const ChallengeInfo &c)
     notify(ChallengeStuff, c);
 }
 
-void Analyzer::sendBattleResult(quint8 res, int winner, int loser)
+void Analyzer::sendBattleResult(qint32 battleid, quint8 res, int winner, int loser)
 {
-    notify(BattleFinished, qint32(0), res, qint32(winner), qint32(loser));
+    notify(BattleFinished, battleid, res, qint32(winner), qint32(loser));
 }
 
-void Analyzer::sendBattleCommand(const QByteArray & command)
+void Analyzer::sendBattleCommand(qint32 battleid, const QByteArray & command)
 {
-    notify(BattleMessage, qint32(0), command);
+    notify(BattleMessage,battleid, command);
 }
 
 void Analyzer::sendWatchingCommand(qint32 id, const QByteArray &command)
@@ -110,9 +110,9 @@ void Analyzer::sendWatchingCommand(qint32 id, const QByteArray &command)
     notify(SpectatingBattleMessage, qint32(id), command);
 }
 
-void Analyzer::notifyBattle(qint32 id1, qint32 id2)
+void Analyzer::notifyBattle(qint32 battleid, qint32 id1, qint32 id2)
 {
-    notify(EngageBattle, qint32(0), id1, id2);
+    notify(EngageBattle, battleid , id1, id2);
 }
 
 void Analyzer::sendUserInfo(const UserInfo &ui)

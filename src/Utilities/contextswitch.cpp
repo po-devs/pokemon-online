@@ -15,9 +15,8 @@ ContextSwitcher::~ContextSwitcher()
     }
     contexts.clear();
 
-#ifdef CORO_PTHREAD
-    coro_destroy(&main_context);
-#endif
+    //to suppress "no effect" warning
+    (void) coro_destroy(&main_context);
 }
 
 void ContextSwitcher::run()
@@ -153,10 +152,9 @@ ContextCallee::~ContextCallee()
         qCritical() << "Context callee killed without being normally exited, will probably cause a crash or some kind of problem."
                 " You need to wait() before calling the destructor, to make sure it's ended.";
     }
-    /* Not needed unless you use PThreads, because it causes a warning otherwise it's been commented out :/. */
-#ifdef CORO_PTHREAD
-    coro_destroy(&context);
-#endif
+    /* Not needed unless you use PThreads, because it causes a warning otherwise it's been warning'd out :/. */
+    (void) coro_destroy(&context);
+
     free(stack);
 }
 

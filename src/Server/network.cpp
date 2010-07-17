@@ -9,6 +9,7 @@ Network::Network(QTcpSocket *sock, int id) : mysocket(sock), commandStarted(fals
     /* SO THE SOCKET IS SAFELY DELETED LATER WHEN DISCONNECTED! */
     connect(socket(), SIGNAL(disconnected()), socket(), SLOT(deleteLater()));
     connect(this, SIGNAL(destroyed()), socket(), SLOT(deleteLater()));
+    _ip = socket()->peerAddress().toString();
 }
 
 void Network::manageError(QAbstractSocket::SocketError err)
@@ -44,7 +45,7 @@ bool Network::isConnected() const
 }
 
 QString Network::ip() const {
-    return socket()->peerAddress().toString();
+    return _ip;
 }
 
 void Network::onDisconnect()

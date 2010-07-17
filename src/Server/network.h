@@ -49,6 +49,8 @@ private:
        So here it is! The thing to stop reading bullshit data. */
     bool stillValid;
 
+    QString _ip;
+
     QTcpSocket *socket();
     const QTcpSocket *socket() const;
 };

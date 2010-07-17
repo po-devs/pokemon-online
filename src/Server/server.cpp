@@ -528,7 +528,7 @@ void Server::sendBattleCommand(int publicId, int id, const QByteArray &comm)
         return;
 
     if (player(id)->battling() && player(id)->battleId() == publicId)
-        player(id)->relay().sendBattleCommand(comm);
+        player(id)->relay().sendBattleCommand(publicId, comm);
     else {
         if (player(id)->battlesSpectated.contains(publicId))
             player(id)->relay().sendWatchingCommand(publicId, comm);
@@ -621,7 +621,7 @@ void Server::incomingConnection()
     connect(p, SIGNAL(recvMessage(int, QString)), SLOT(recvMessage(int,QString)));
     connect(p, SIGNAL(disconnected(int)), SLOT(disconnected(int)));
     connect(p, SIGNAL(sendChallenge(int,int,ChallengeInfo)), SLOT(dealWithChallenge(int,int,ChallengeInfo)));
-    connect(p, SIGNAL(battleFinished(int,int,int,bool,const QString&)), SLOT(battleResult(int,int,int,bool, const QString&)));
+    connect(p, SIGNAL(battleFinished(int,int,int,int,bool,const QString&)), SLOT(battleResult(int,int,int,int,bool, const QString&)));
     connect(p, SIGNAL(info(int,QString)), SLOT(info(int,QString)));
     connect(p, SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
     connect(p, SIGNAL(playerBan(int,int)), SLOT(playerBan(int, int)));
@@ -680,10 +680,10 @@ void Server::findBattle(int id, const FindBattleData &f)
         FindBattleData *data = it.value();
         Player *p2 = player(key);
 
-        /* First look if this not a repeat */
-        if (p2->lastFindBattleIp() == p1->ip() || p1->lastFindBattleIp() == p2->ip()) {
-            continue;
-        }
+//        /* First look if this not a repeat */
+//        if (p2->lastFindBattleIp() == p1->ip() || p1->lastFindBattleIp() == p2->ip()) {
+//            continue;
+//        }
 
         /* We check the tier thing */
         if ( (f.sameTier || data->sameTier) && p1->tier() != p2->tier() )
@@ -846,16 +846,16 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 
     foreach(Player *p, myplayers) {
         if (p->isLoggedIn() && p->id() != id1 && p->id() != id2) {
-            p->relay().notifyBattle(id1,id2);
+            p->relay().notifyBattle(id,id1,id2);
         }
     }
 
-    connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int, QByteArray)));
-    connect(battle, SIGNAL(battleFinished(int,int,int,bool,QString)), SLOT(battleResult(int,int,int,bool,QString)));
-    connect(player(id1), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
-    connect(player(id1), SIGNAL(battleChat(int,QString)), battle, SLOT(battleChat(int, QString)));
-    connect(player(id2), SIGNAL(battleMessage(int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,BattleChoice)));
-    connect(player(id2), SIGNAL(battleChat(int,QString)), battle, SLOT(battleChat(int, QString)));
+    connect(battle, SIGNAL(battleInfo(int,int,int,QByteArray)), SLOT(sendBattleCommand(int,int,int, QByteArray)));
+    connect(battle, SIGNAL(battleFinished(int,int,int,int,bool,QString)), SLOT(battleResult(int,int,int,bool,QString)));
+    connect(player(id1), SIGNAL(battleMessage(int,int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,int,BattleChoice)));
+    connect(player(id1), SIGNAL(battleChat(int,int,QString)), battle, SLOT(battleChat(int,int, QString)));
+    connect(player(id2), SIGNAL(battleMessage(int,int,BattleChoice)), battle, SLOT(battleChoiceReceived(int,int,BattleChoice)));
+    connect(player(id2), SIGNAL(battleChat(int,int,QString)), battle, SLOT(battleChat(int,int, QString)));
 
     battle->start(battleThread);
 
@@ -888,13 +888,13 @@ bool Server::canHaveRatedBattle(int id1, int id2, bool cc, bool force1, bool for
     return true;
 }
 
-void Server::battleResult(int desc, int winner, int loser, bool rated, const QString &tier)
+void Server::battleResult(int battleid, int desc, int winner, int loser, bool rated, const QString &tier)
 {
     if (desc == Forfeit && player(winner)->battle->finished()) {
-        player(winner)->battleResult(Close, winner, loser);
-        player(loser)->battleResult(Close, winner, loser);
+        player(winner)->battleResult(battleid, Close, winner, loser);
+        player(loser)->battleResult(battleid, Close, winner, loser);
         foreach(int id, player(winner)->battle->getSpectators()) {
-            player(id)->battleResult(Close, winner, loser);
+            player(id)->battleResult(battleid, Close, winner, loser);
         }
     } else {
         if (desc != Tie && rated) {
@@ -909,7 +909,7 @@ void Server::battleResult(int desc, int winner, int loser, bool rated, const QSt
         myengine->beforeBattleEnded(winner, loser, desc);
         foreach(Player *p, myplayers) {
             if (p->isLoggedIn()) {
-                p->battleResult(desc, winner, loser);
+                p->battleResult(battleid, desc, winner, loser);
             }
         }
 
@@ -925,25 +925,29 @@ void Server::battleResult(int desc, int winner, int loser, bool rated, const QSt
 
 
     if (desc == Forfeit) {
-        removeBattle(winner, loser);
+        removeBattle(battleid);
     }
 }
 
-void Server::removeBattle(int winner, int loser)
+void Server::removeBattle(int battleid)
 {
-    BattleSituation *battle = player(winner)->battle;
+    BattleSituation *battle = mybattles.value(battleid);
 
-    mybattles.remove(battle->publicId());
+    mybattles.remove(battleid);
     foreach(int id, battle->getSpectators()) {
-        player(id)->relay().finishSpectating(battle->publicId());
-        player(id)->battlesSpectated.remove(battle->publicId());
+        player(id)->relay().finishSpectating(battleid);
+        player(id)->battlesSpectated.remove(battleid);
     }
     /* When manipulating threaded objects, you need to be careful... */
     battle->deleteLater();
-    player(winner)->battle = NULL;
-    player(winner)->battleId() = -1;
-    player(loser)->battle = NULL;
-    player(loser)->battleId() = -1;
+
+    Player* p1 = player(battle->spot(0));
+    Player* p2 = player(battle->spot(1));
+
+    p1->battle = NULL;
+    p1->battleId() = -1;
+    p2->battle = NULL;
+    p2->battleId() = -1;
 }
 
 void Server::sendPlayersList(int id)

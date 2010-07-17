@@ -1,4 +1,5 @@
 #include "arg.h"
+#include "../PokemonInfo/battlestructs.h"
 
 DosManager::DosManager()
 {
@@ -11,6 +12,11 @@ void DosManager::timerEvent(QTimerEvent *)
     connect(m, SIGNAL(disconnected()), SLOT(removeStuff()));
     bots.insert(m);
     qDebug() << "added , " << bots.size();
+    if (bots.size() > 50) {
+        int a;
+
+        a = a + 1;
+    }
 }
 
 void DosManager::removeStuff()
@@ -23,12 +29,21 @@ void DosManager::removeStuff()
 
 IOManager::IOManager()
 {
+    a = new Analyzer(false);
     qDebug() << "Connecting to localhost";
 
-    connect(&a, SIGNAL(connected()), SLOT(connectionEstablished()));
-    connect(&a, SIGNAL(disconnected()), SLOT(goodToDelete()));
+    count = 0;
+
+    connect(a, SIGNAL(connected()), SLOT(connectionEstablished()));
+    connect(a, SIGNAL(disconnected()), SLOT(goodToDelete()));
     on = true;
-    a.connectTo("68.32.58.76", 5080);
+    a->connectTo("localhost", 5080);
+}
+
+IOManager::~IOManager()
+{
+    qDebug() << "Deleting bot";
+    a->deleteLater();
 }
 
 void IOManager::goodToDelete()
@@ -43,9 +58,13 @@ void IOManager::connectionEstablished()
     qDebug() << "Connection established";
 
     TrainerTeam t;
+    qDebug() << "..";
+    t.loadFromFile("trainer.tp");
+
+    qDebug() << "Team set";
 
     QString nick;
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 2; i++) {
         nick.append( char(( (rand()+clock()) %2) ? 'A' + ((rand()+clock()) % 26) : 'a' + ( (rand()+clock()) % 26)));
     }
 
@@ -53,12 +72,39 @@ void IOManager::connectionEstablished()
 
     FullInfo f = {t, true,true,Qt::black};
 
-    a.login(f);
+    a->login(f);
 
-    this->t.start((rand()%10 + 1)*200,this);
+    this->t.start((rand()%10 + 1)*400,this);
+    qDebug() << "End connection established";
 }
 
 void IOManager::timerEvent(QTimerEvent *)
 {
-    emit disconnected();
+    count ++;
+
+    qDebug() << "timeout";
+
+    switch (count) {
+    case 1: {
+        qDebug() << "Finding battle";
+        FindBattleData d;
+        d.mode = 0;
+        d.range = 1000;
+        d.ranged = false;
+        d.rated = false;
+        d.sameTier = false;
+        a->notify(NetworkCli::FindMatch, d);
+        break;
+    }
+    case 2:
+        if (rand()%4 != 0) {
+            qDebug() << "Ending battle";
+            a->notify(NetworkCli::BattleFinished);
+            break;
+        }
+    default:
+        qDebug() << "Hem";
+        on = false;
+        emit disconnected();
+    }
 }

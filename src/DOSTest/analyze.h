@@ -39,7 +39,7 @@ namespace NetworkCli
         ServNumChange,
         ServDescChange,
         ServNameChange,
-        SendPM,
+        SendPM = 20,
         Away,
         GetUserInfo,
         GetUserAlias,
@@ -49,13 +49,19 @@ namespace NetworkCli
         SpectateBattle,
         SpectatingBattleMessage,
         SpectatingBattleChat,
-        SpectatingBattleFinished,
+        SpectatingBattleFinished = 30,
         LadderChange,
         ShowTeamChange,
         VersionControl,
         TierSelection,
         ServMaxChange,
-        FindMatch
+        FindMatch,
+        ShowRankings = 37,
+        Announcement,
+        CPTBan,
+        CPTUnban,
+        PlayerTBan,
+        GetTBanList
     };
 
     enum ProtocolError
@@ -169,7 +175,8 @@ void Analyzer::notify(int command, const T& param)
     QDataStream out(&tosend, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_5);
 
-    out << uchar(command) << param;
+    out << uchar(command);
+    out << param;
 
     emit sendCommand(tosend);
 }

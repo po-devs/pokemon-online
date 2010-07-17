@@ -94,13 +94,13 @@ public:
     QString ip() const;
     void sendChallengeStuff(const ChallengeInfo &c);
     void engageBattle(int myid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
-    void sendBattleResult(quint8 res, int win, int los);
-    void sendBattleCommand(const QByteArray &command);
+    void sendBattleResult(qint32 battleid, quint8 res, int win, int los);
+    void sendBattleCommand(qint32 battleid, const QByteArray &command);
     void sendWatchingCommand(qint32 id, const QByteArray &command);
     void sendTeamChange(const PlayerInfo &p);
     void sendPM(int dest, const QString &mess);
     void sendUserInfo(const UserInfo &ui);
-    void notifyBattle(qint32 id1, qint32 id2);
+    void notifyBattle(qint32 battleid, qint32 id1, qint32 id2);
     void finishSpectating(qint32 battleId);
     void notifyAway(qint32 id, bool away);
     void startRankings(int page, int startingRank, int total);

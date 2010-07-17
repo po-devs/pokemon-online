@@ -40,7 +40,7 @@ public:
     bool nameExist(const QString &name) const;
     int id(const QString &name) const;
     int auth(int id) const;
-    void removeBattle(int id1, int id2);
+    void removeBattle(int battleid);
     void beforeChallengeIssued(int src, int dest, Challenge *c);
     void afterChallengeIssued(int src, int dest, Challenge *c);
     bool beforeChangeTier(int src, const QString &oldTier, const QString &newTier);
@@ -91,7 +91,7 @@ public slots:
     void disconnected(int id);
     void dealWithChallenge(int from, int to, const ChallengeInfo &c);
     void startBattle(int id1, int id2, const ChallengeInfo &c);
-    void battleResult(int desc, int winner, int loser, bool rated, const QString&);
+    void battleResult(int battleid, int desc, int winner, int loser, bool rated, const QString&);
     void sendBattleCommand(int battleId, int id, const QByteArray &command);
     void spectatingRequested(int id, int battle);
     void spectatingStopped(int id, int battle);
