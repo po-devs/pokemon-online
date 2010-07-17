@@ -207,8 +207,10 @@ void BattleSituation::notifyClause(int clause, bool active)
 
 void BattleSituation::addSpectator(Player *p)
 {
+    qDebug() << "Adding specator " << p;
     /* Simple guard to avoid multithreading problems -- would need to be improved :s */
     if (!blocked() && !finished()) {
+        qDebug() << "Adding specator " << p << " as pending";
         pendingSpectators.append(QPointer<Player>(p));
         return;
     }
@@ -258,6 +260,7 @@ void BattleSituation::addSpectator(Player *p)
 
 void BattleSituation::removeSpectator(int id)
 {
+    qDebug() << "Removing spectator";
     spectatorMutex.lock();
     spectators.remove(spectatorKey(id));
     spectatorMutex.unlock();
@@ -1552,8 +1555,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	attack = this->move(player,move);
         pokelong[player]["MoveSlot"] = move;
     }
-
-    qDebug() << player << " chose to use " << MoveInfo::Name(attack);
 
     turnlong[player]["HasMoved"] = true;
 
@@ -3004,6 +3005,10 @@ void BattleSituation::gainPP(int player, int move, int gain)
 
 int BattleSituation::getStat(int player, int stat)
 {
+    /* Attack and defense switched */
+    if (pokelong[player].contains("PowerTricked") && (stat == 1 || stat == 2)) {
+        stat = 3 - stat;
+    }
     QString q = "Stat"+QString::number(stat);
     turnlong[player].remove(q+"AbilityModifier");
     turnlong[player].remove(q+"PartnerAbilityModifier");

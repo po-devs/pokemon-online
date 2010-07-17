@@ -207,6 +207,8 @@ void coro_destroy (coro_context *ctx);
 #  define CORO_LOSER 1 /* you don't win with windoze */
 # elif defined(__linux) && (defined(__x86) || defined (__amd64))
 #  define CORO_ASM 1
+# elif defined(__MACH__)
+#  define CORO_PTHREAD 1
 # elif defined(HAVE_UCONTEXT_H)
 #  define CORO_UCONTEXT 1
 # elif defined(HAVE_SETJMP_H) && defined(HAVE_SIGALTSTACK)
