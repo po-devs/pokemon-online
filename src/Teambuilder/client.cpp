@@ -1238,6 +1238,9 @@ void Client::teamChanged(const PlayerInfo &p) {
     if (showPEvents) {
         if (name(p.id) != p.team.name) {
             printLine(tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.team.name));
+            if (p.id == ownId()) {
+                mynick = p.team.name;
+            }
         } else {
             printLine(tr("%1 changed teams.").arg(name(p.id)));
         }
@@ -1353,11 +1356,9 @@ void Client::openTeamBuilder()
 
 void Client::changeTeam()
 {
-    if (battling()) {
+    if (battling() && myteam->trainerNick() != mynick) {
         printLine(tr("You can't change teams while battling, so your nick was kept."));
         myteam->trainerNick() = mynick;
-    } else {
-        mynick = myteam->trainerNick();
     }
     cancelFindBattle(false);
     relay().sendTeam(*myteam);
