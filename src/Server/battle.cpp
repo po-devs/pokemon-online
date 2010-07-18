@@ -2755,6 +2755,10 @@ void BattleSituation::healLife(int player, int healing)
 
 void BattleSituation::changeHp(int player, int newHp)
 {
+    if (newHp > poke(player).totalLifePoints()) {
+        newHp = poke(player).totalLifePoints();
+    }
+
     if (newHp == poke(player).lifePoints()) {
 	/* no change, so don't bother */
 	return;

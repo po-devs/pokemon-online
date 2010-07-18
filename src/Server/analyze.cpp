@@ -110,6 +110,11 @@ void Analyzer::sendWatchingCommand(qint32 id, const QByteArray &command)
     notify(SpectatingBattleMessage, qint32(id), command);
 }
 
+void Analyzer::sendBattleList(const QHash<int, Battle> &battles)
+{
+    notify(BattleList, battles);
+}
+
 void Analyzer::notifyBattle(qint32 battleid, qint32 id1, qint32 id2)
 {
     notify(EngageBattle, battleid , id1, id2);

@@ -171,10 +171,11 @@ void QImageButton::mouseMoveEvent(QMouseEvent *)
     update();
 }
 
-QIdTreeWidgetItem::QIdTreeWidgetItem(int id, const QString &text,int level)
-        : QTreeWidgetItem(0), myid(id), mylevel(level)
+QIdTreeWidgetItem::QIdTreeWidgetItem(int id, const QStringList &text)
+        : QTreeWidgetItem(0), myid(id)
 {
-    setText(mylevel,text);
+    for (int i = 0; i < text.size(); i++)
+        setText(i,text[i]);
 }
 
 int QIdTreeWidgetItem::id() const
@@ -182,14 +183,9 @@ int QIdTreeWidgetItem::id() const
     return myid;
 }
 
-int QIdTreeWidgetItem::level() const
-{
-    return mylevel;
-}
-
 void QIdTreeWidgetItem::setColor(const QColor &c)
 {
-    setForeground(mylevel,QBrush(c));
+    setForeground(0,QBrush(c));
 }
 
 QIdListWidgetItem::QIdListWidgetItem(int id, const QString &text)

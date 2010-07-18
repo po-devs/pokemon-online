@@ -10,6 +10,7 @@
 #include "antidos.h"
 #include "serverconfig.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/movesetchecker.h"
 #include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
@@ -302,6 +303,10 @@ void Server::announcementChanged(const QString &announcement)
     serverAnnouncement = announcement;
 
     printLine("Announcement changed.");
+
+    foreach(Player *p, myplayers) {
+        p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
+    }
 }
 
 void Server::clearRatedBattlesHistory()
@@ -860,6 +865,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 
     BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id);
     mybattles.insert(id, battle);
+    battleList.insert(id, Battle(id1, id2));
 
     player(id1)->startBattle(id, id2, battle->pubteam(id1), battle->configuration(), battle->doubles());
     player(id2)->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), battle->doubles());
@@ -958,6 +964,8 @@ void Server::removeBattle(int battleid)
     BattleSituation *battle = mybattles.value(battleid);
 
     mybattles.remove(battleid);
+    battleList.remove(battleid);
+
     foreach(int id, battle->getSpectators()) {
         player(id)->relay().finishSpectating(battleid);
         player(id)->battlesSpectated.remove(battleid);
@@ -982,6 +990,13 @@ void Server::sendPlayersList(int id)
 	if (p->isLoggedIn())
             relay.sendPlayer(p->bundle());
     }
+}
+
+void Server::sendBattlesList(int id)
+{
+    Analyzer &relay = player(id)->relay();
+
+    relay.sendBattleList(battleList);
 }
 
 void Server::sendLogin(int id)

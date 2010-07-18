@@ -77,6 +77,7 @@ public slots:
     void playerLogin(const PlayerInfo &p);
     void playerReceived(const PlayerInfo &p);
     void teamChanged(const PlayerInfo &p);
+    void battleListReceived(const QHash<int, Battle> &battles);
     void announcementReceived(const QString &);
     void playerLogout(int);
     void sendRegister();
@@ -104,12 +105,14 @@ public slots:
 
     void changeBattleLogFolder();
     void forfeitBattle(int);
+    void watchBattleOf(int);
     void watchBattleRequ(int);
     void watchBattle(const QString &name0, const QString &name1, int battleId, bool doubles);
     void spectatingBattleMessage(int battleId, const QByteArray &command);
     void stopWatching(int battleId);
     /* shows the context menu for that player */
     void showContextMenu(const QPoint&);
+    void battleListActivated(QTreeWidgetItem* it);
     void loadTeam();
     /* A popup that asks for the pass */
     void askForPass(const QString &salt);
@@ -182,6 +185,9 @@ private:
     QTreeWidget *myplayers;
     QHash<int, QIdTreeWidgetItem *> myplayersitems;
     QHash<QString, QIdTreeWidgetItem *> mytiersitems;
+    QTreeWidget *battleList;
+    QHash<int, Battle> battles;
+    QHash<int, QIdTreeWidgetItem *> battleItems;
     /* Button to exit */
     QPushButton *myexit;
     /* Button to send text */
@@ -227,7 +233,7 @@ private:
     PlayerInfo & playerInfo(int id);
     QIdTreeWidgetItem *item(int id);
     void updateState(int player);
-    void placeItem(QIdTreeWidgetItem*it, QTreeWidgetItem *parent, bool autosort = true);
+    void placeItem(QIdTreeWidgetItem*it, QTreeWidgetItem *parent=NULL);
     /* Returns the challenge window displaying that player or NULL otherwise */
     BaseChallengeWindow * getChallengeWindow(int player);
     void closeChallengeWindow(BaseChallengeWindow *c);

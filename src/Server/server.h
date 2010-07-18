@@ -3,6 +3,7 @@
 
 #include <QtNetwork>
 #include "../Utilities/contextswitch.h"
+#include "../PokemonInfo/networkstructs.h"
 /* the server */
 
 class FindBattleData;
@@ -32,6 +33,7 @@ public:
     void sendAll(const QString &message, bool chatMessage = false);
     void sendMessage(int id, const QString &message);
     void sendPlayersList(int id);
+    void sendBattlesList(int id);
     /* Sends the login of the player to everybody but the player */
     void sendLogin(int id);
     void sendLogout(int id);
@@ -137,6 +139,7 @@ private:
     QHash<QString, int> mynames;
 
     QHash<int, BattleSituation *> mybattles;
+    QHash<int, Battle> battleList;
 
     QTcpServer *server();
     Player * player(int i);

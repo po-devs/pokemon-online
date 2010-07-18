@@ -901,9 +901,6 @@ void Player::spectatingRequested(int id)
     if (!isLoggedIn()) {
         return; //INVALID BEHAVIOR
     }
-    if (id == this->id()) {
-        return; //INVALID BEHAVIOR
-    }
     if (battlesSpectated.size() >= 2) {
         sendMessage(tr("You're already watching %1 battles!").arg(battlesSpectated.size()));
         return;
