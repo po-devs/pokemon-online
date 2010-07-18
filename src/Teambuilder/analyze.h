@@ -11,6 +11,7 @@ class BattleChoice;
 class TeamBattle;
 class BattleConfiguration;
 class ChallengeInfo;
+class Battle;
 class UserInfo;
 class TrainerTeam;
 
@@ -61,7 +62,8 @@ namespace NetworkCli
         CPTBan,
         CPTUnban,
         PlayerTBan,
-        GetTBanList
+        GetTBanList,
+        BattleList
     };
 
     enum ProtocolError
@@ -132,6 +134,7 @@ signals:
     void playerKicked(int p, int src);
     void playerBanned(int p, int src);
     void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip, quint16 max, quint16 port);
+    void battleListReceived(const QHash<int, Battle> &battles);
     void PMReceived(int id, const QString &mess);
     void awayChanged(int id, bool away);
     void tierListReceived(const QString &tl);

@@ -6,6 +6,7 @@
 #include "network.h"
 
 class TeamBattle;
+class Battle;
 class BattleChoice;
 class BattleConfiguration;
 class ChallengeInfo;
@@ -60,7 +61,8 @@ namespace NetworkServ
         CPTBan,
         CPTUnban,
         PlayerTBan,
-        GetTBanList
+        GetTBanList,
+        BattleList
     };
 
     enum ProtocolError
@@ -88,6 +90,7 @@ public:
     void sendMessage(const QString &message);
     void requestLogIn();
     void sendPlayer(const PlayerInfo &p);
+    void sendBattleList(const QHash<int, Battle> &battles);
     void sendLogin(const PlayerInfo &p);
     void sendLogout(int num);
     bool isConnected() const;

@@ -23,7 +23,17 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     h->addWidget(s);
     s->setChildrenCollapsible(false);
 
-    s->addWidget(myplayers = new QTreeWidget());
+    QTabWidget *mytab = new QTabWidget();
+    mytab->addTab(myplayers = new QTreeWidget(), tr("Players"));
+    mytab->addTab(battleList = new QTreeWidget(), tr("Battles"));
+    myplayers->setColumnCount(1);
+    myplayers->header()->hide();
+    battleList->setColumnCount(2);
+    battleList->setHeaderLabels(QStringList() << tr("Player 1") << tr("Player 2"));
+    battleList->setSortingEnabled(true);
+    battleList->resizeColumnToContents(0);
+
+    s->addWidget(mytab);
 
     QWidget *container = new QWidget();
     s->addWidget(container);
@@ -47,8 +57,6 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     buttonsLayout->addWidget(mysender = new QPushButton(tr("&Send")));
 
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
-    myplayers->setHeaderItem(new QTreeWidgetItem(0));
-    myplayers->headerItem()->setText(0,"Players");
 
     QPalette pal = palette();
     pal.setColor(QPalette::AlternateBase, Qt::blue);
@@ -61,6 +69,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     connect(myplayers, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
     connect(myplayers, SIGNAL(itemActivated(QTreeWidgetItem*, int)), SLOT(seeInfo(QTreeWidgetItem*)));
+    connect(battleList, SIGNAL(itemActivated(QTreeWidgetItem*,int)), SLOT(battleListActivated(QTreeWidgetItem*)));
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
@@ -154,7 +163,7 @@ void Client::showContextMenu(const QPoint &requested)
         } else {
             createIntMapper(menu->addAction(tr("&Send Message")), SIGNAL(triggered()), this, SLOT(startPM(int)), item->id());
             if (player(item->id()).battling())
-                createIntMapper(menu->addAction(tr("&Watch Battle")), SIGNAL(triggered()), this, SLOT(watchBattleRequ(int)), item->id());
+                createIntMapper(menu->addAction(tr("&Watch Battle")), SIGNAL(triggered()), this, SLOT(watchBattleOf(int)), item->id());
             if (myIgnored.contains(item->id()))
                 createIntMapper(menu->addAction(tr("&Remove Ignore")), SIGNAL(triggered()), this, SLOT(removeIgnore(int)), item->id());
             else
@@ -181,6 +190,24 @@ void Client::showContextMenu(const QPoint &requested)
         }
 
 	menu->exec(mapToGlobal(requested));
+    }
+}
+
+void Client::battleListActivated(QTreeWidgetItem *it)
+{
+    QIdTreeWidgetItem *i;
+    if ( (i=dynamic_cast<QIdTreeWidgetItem*>(it)) ) {
+        watchBattleRequ(i->id());
+    }
+}
+
+void Client::watchBattleOf(int player)
+{
+    foreach(Battle b, battles) {
+        if (b.id1 == player || b.id2 == player) {
+            watchBattleRequ(player);
+            return;
+        }
     }
 }
 
@@ -694,7 +721,7 @@ void Client::sortAllPlayersByTier()
     mytiersitems.clear();
 
     foreach(QString tier, tierList) {
-        QIdTreeWidgetItem *it = new QIdTreeWidgetItem(0, tier, 0);
+        QIdTreeWidgetItem *it = new QIdTreeWidgetItem(0, QStringList() << tier);
         //it->setBackgroundColor("#0CA0DD");
         //it->setColor("white");
         QFont f = it->font(0);
@@ -714,9 +741,9 @@ void Client::sortAllPlayersByTier()
         QString tier = player(iter.key()).tier;
 
         if (mytiersitems.contains(tier)) {
-            placeItem(iter.value(), mytiersitems.value(tier), false);
+            placeItem(iter.value(), mytiersitems.value(tier));
         } else {
-            placeItem(iter.value(),myplayers->headerItem(), false);
+            placeItem(iter.value());
         }
     }
 
@@ -847,13 +874,18 @@ void Client::battleStarted(int battleId, int id, const TeamBattle &team, const B
     battleStarted(battleId, ownId(), id);
 }
 
-void Client::battleStarted(int, int id1, int id2)
+void Client::battleStarted(int bid, int id1, int id2)
 {
     if (showPEvents || id1 == ownId() || id2 == ownId())
         printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
 
     myplayersinfo[id1].flags |= PlayerInfo::Battling;
     myplayersinfo[id2].flags |= PlayerInfo::Battling;
+
+    battles.insert(bid, Battle(id1, id2));
+    QIdTreeWidgetItem *it = new QIdTreeWidgetItem(bid, QStringList() << name(id1) << name(id2));
+    battleItems.insert(bid, it);
+    battleList->addTopLevelItem(it);
 
     if (id1 != 0) {
         item(id1)->setToolTip(0,tr("Battling against %1").arg(name(id2)));
@@ -917,8 +949,22 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
     if ((res == Close || res == Forfeit) && (battleid != 0 || (winner == ownId() || loser == ownId())))
         removeBattleWindow(battleid);
 
+    battles.remove(battleid);
+    battleList->takeTopLevelItem(battleList->indexOfTopLevelItem(battleItems[battleid]));
+    delete battleItems.take(battleid);
+
+
     myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
     myplayersinfo[loser].flags &= 0xFF ^ PlayerInfo::Battling;
+
+    foreach(Battle b, battles) {
+        if (b.id1 == winner || b.id2 == winner) {
+            myplayersinfo[winner].flags |= PlayerInfo::Battling;
+        }
+        if (b.id1 == loser || b.id2 == loser) {
+            myplayersinfo[loser].flags |= PlayerInfo::Battling;
+        }
+    }
 
     updateState(winner);
     updateState(loser);
@@ -1104,6 +1150,22 @@ void Client::playerLogout(int id)
     removePlayer(id);
 }
 
+
+void Client::battleListReceived(const QHash<int, Battle> &battles)
+{
+    this->battles = battles;
+
+    QHashIterator<int, Battle> h(battles);
+
+    while (h.hasNext()) {
+        h.next();
+        QIdTreeWidgetItem *it = new QIdTreeWidgetItem(h.key(), QStringList() << name(h.value().id1) << name(h.value().id2));
+        battleItems.insert(h.key(), it);
+        battleList->addTopLevelItem(it);
+    }
+}
+
+
 void Client::removePlayer(int id)
 {
     QString name = info(id).name;
@@ -1120,9 +1182,6 @@ void Client::removePlayer(int id)
     else{
         myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(myplayersitems.value(id)));
     }
-
-
-
 
     myplayersitems.remove(id);
     mynames.remove(name);
@@ -1187,12 +1246,12 @@ void Client::playerReceived(const PlayerInfo &p)
     QString nick = authedNick(p.id);
 
 
-    item = new QIdTreeWidgetItem(p.id, nick, 0);
+    item = new QIdTreeWidgetItem(p.id, QStringList() << nick);
 
-    QFont f = item->font(item->level());
+    QFont f = item->font(0);
     f.setBold(true);
-    item->setFont(item->level(),f);
-    item->setText(item->level(),nick);
+    item->setFont(0,f);
+    item->setText(0,nick);
 
     item->setColor(color(p.id));
 
@@ -1205,7 +1264,7 @@ void Client::playerReceived(const PlayerInfo &p)
     if (sortBT && mytiersitems.contains(p.tier)) {
         placeItem(item, mytiersitems.value(p.tier));
     } else {
-        placeItem(item,myplayers->headerItem());
+        placeItem(item,NULL);
     }
 
     updateState(p.id);
@@ -1215,16 +1274,16 @@ void Client::playerReceived(const PlayerInfo &p)
     }
 }
 
-void Client::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent, bool autosort)
+void Client::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
 {
     if(item->id() >= 0) {
-        if(parent == myplayers->headerItem()) {
+        if(parent == NULL) {
             myplayers->addTopLevelItem(item);
             myplayers->sortItems(0,Qt::AscendingOrder);
-        }
-        parent->addChild(item);
-        if (autosort)
+        } else {
+            parent->addChild(item);
             parent->sortChildren(0,Qt::AscendingOrder);
+        }
     }
 }
 
@@ -1370,7 +1429,7 @@ PlayerInfo &Client::playerInfo(int id)
 
 void Client::updateState(int id)
 {
-    if (item(id) && item(id)->level() >= 0) {
+    if (item(id)) {
         if (myIgnored.contains(id)) {
             item(id)->setIcon(0, statusIcons[Ignored]);
         }  if (playerInfo(id).battling()) {

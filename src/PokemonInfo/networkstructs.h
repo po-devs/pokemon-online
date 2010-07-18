@@ -109,7 +109,6 @@ QDataStream & operator << (QDataStream &out, const PlayerInfo &p);
 
 struct FullInfo
 {
-public:
 #ifdef CLIENT_SIDE
     TrainerTeam team;
 #else
@@ -122,5 +121,16 @@ public:
 
 QDataStream & operator >> (QDataStream &in, FullInfo &p);
 QDataStream & operator << (QDataStream &out, const FullInfo &p);
+
+
+struct Battle
+{
+    qint32 id1, id2;
+
+    Battle(int id1=0, int id2=0);
+};
+
+QDataStream & operator >> (QDataStream &in, Battle &p);
+QDataStream & operator << (QDataStream &out, const Battle &p);
 
 #endif // NETWORKSTRUCTS_H

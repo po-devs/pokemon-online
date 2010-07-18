@@ -67,10 +67,9 @@ private:
 class QIdTreeWidgetItem : public QTreeWidgetItem
 {
 public:
-    QIdTreeWidgetItem(int id, const QString &text, int level);
+    QIdTreeWidgetItem(int id, const QStringList &text);
 
     int id() const;
-    int level() const;
     void setColor(const QColor &c);
 private:
     int myid;

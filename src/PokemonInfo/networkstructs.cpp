@@ -24,8 +24,6 @@ QDataStream &operator << (QDataStream &out, const TeamInfo& team)
     for (int i = 0; i < 6; i++)
 	out << team.pokemon(i);
 
-
-
     return out;
 }
 
@@ -39,8 +37,6 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
 
     for (int i = 0; i < 6; i++)
 	in >> team.pokemon(i);
-
-
 
     if (team.info.length() > 500) {
         team.info.resize(500);
@@ -92,7 +88,6 @@ QDataStream & operator >> (QDataStream &in, PlayerInfo &p)
     in >> p.tier;
     in >> p.color;
 
-
     return in;
 }
 
@@ -129,3 +124,23 @@ QDataStream & operator << (QDataStream &out, const FullInfo &p)
     return out;
 }
 
+Battle::Battle(int id1, int id2) : id1(id1), id2(id2)
+{
+
+}
+
+QDataStream & operator >> (QDataStream &in, Battle &p)
+{
+    //in >> p.battleid >> p.id1 >> p.id2;
+    in >> p.id1 >> p.id2;
+
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const Battle &p)
+{
+    //out << p.battleid << p.id1 << p.id2;
+    out << p.id1 << p.id2;
+
+    return out;
+}
