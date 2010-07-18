@@ -156,8 +156,6 @@ public slots:
     /* Teambuilder slots */
     void openTeamBuilder();
     void changeTeam();
-
-    void clearBattleWindow();
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
@@ -198,9 +196,9 @@ private:
     Analyzer myrelay;
     /* Challenge windows , to emit or to receive*/
     QSet<BaseChallengeWindow *> mychallenges;
-    QSet<BattleWindow *> mybattles;
     QPointer<BattleFinder> myBattleFinder;
-    QHash<int, QPointer<BaseBattleWindow> > mySpectatingBattles;
+    QHash<int, BaseBattleWindow* > mySpectatingBattles;
+    QHash<int, BattleWindow* > mybattles;
     QAction *goaway;
     bool showPEvents;
     bool showTS;
