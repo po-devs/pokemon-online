@@ -436,7 +436,6 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     QSettings s;
 
-
     QAction * show = menuActions->addAction(tr("&Show team"));
     show->setCheckable(true);
     connect(show, SIGNAL(triggered(bool)), SLOT(showTeam(bool)));
@@ -1378,7 +1377,7 @@ void Client::updateState(int id)
 {
     if (item(id) && item(id)->level() >= 0) {
         if (myIgnored.contains(id)) {
-            return;
+            item(id)->setIcon(0, statusIcons[Ignored]);
         }  if (playerInfo(id).battling()) {
             item(id)->setIcon(0, statusIcons[Battling]);
         } else if (playerInfo(id).away()) {
