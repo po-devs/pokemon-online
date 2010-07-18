@@ -196,7 +196,7 @@ bool Player::okForChallenge(int) const
 
 bool Player::okForBattle() const
 {
-    return isLoggedIn() && !battling();
+    return isLoggedIn();
 }
 
 void Player::awayChange(bool away)
@@ -508,7 +508,6 @@ void Player::findBattle(const FindBattleData& f)
 
     cancelBattleSearch();
 
-    Server::print("Find battle requested");
     emit findBattle(id(),f);
 }
 
