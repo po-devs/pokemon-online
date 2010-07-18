@@ -70,8 +70,6 @@ public:
     void setAuth (int newAuth);
     void setName (const QString & newName);
 
-    int opponent () const;
-
     bool okForChallenge(int src) const;
     void addChallenge(Challenge *c, bool isChallenged);
     void removeChallenge(Challenge *c);
@@ -168,7 +166,6 @@ private:
     QString myip;
     bool ontologin;
 
-    int m_opponent;
     int m_state;
     TeamInfo *waiting_team;
     QString waiting_name;
