@@ -84,7 +84,7 @@ public:
 
     ChallengeInfo getChallengeInfo(int id); /* to get the battle info of a challenge received by that player */
 
-    void startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
+    void startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
     void battleResult(int battleid, int result, int winner, int loser);
 
     void kick();
