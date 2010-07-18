@@ -911,7 +911,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     BattleSituation *battle = mybattles[battleid];
 
     if (winner == 0) {
-        winner = battle->id(battle->opponent(battle->player(loser)));
+        winner = battle->id(battle->opponent(battle->spot(loser)));
     }
 
     if (desc == Forfeit && battle->finished()) {
