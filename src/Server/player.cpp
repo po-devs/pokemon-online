@@ -521,10 +521,7 @@ void Player::startBattle(int battleid, int id, const TeamBattle &team, const Bat
     relay().engageBattle(battleid, this->id(), id, team, conf, doubles);
 
     cancelChallenges();
-
-    if (battles.size() >= 3) {
-        cancelBattleSearch();
-    }
+    cancelBattleSearch();
 }
 
 void Player::giveBanList()
@@ -591,7 +588,7 @@ PlayerInfo Player::bundle() const
 {
     PlayerInfo p;
     p.auth = myauth;
-    p.flags = state() & (Battling && battling());
+    p.flags = state() | (Battling && battling());
     p.id = id();
     p.team = basicInfo();
     p.rating = ladder() ? rating() : -1;
