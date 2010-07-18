@@ -258,14 +258,10 @@ int Player::firstBattleId()
 
 void Player::battleChat(int bid, const QString &s)
 {
-    if (!battling())
+    if (!hasBattle(bid))
         return; //INVALID BEHAVIOR
-    /* Compatibility with one-battle versions */
-    if (bid == 0) {
-        emit battleChat(id(), firstBattleId(), s);
-    } else if (hasBattle(bid)) {
-        emit battleChat(id(), bid, s);
-    }
+
+    emit battleChat(id(), bid, s);
 }
 
 void Player::spectatingChat(int id, const QString &chat)
@@ -278,14 +274,10 @@ void Player::spectatingChat(int id, const QString &chat)
 
 void Player::battleMessage(int bid, const BattleChoice &b)
 {
-    if (!battling())
+    if (!hasBattle(bid))
         return; //INVALID BEHAVIOR
-    /* Compatibility with one-battle versions */
-    if (bid == 0) {
-        emit battleMessage(id(), firstBattleId(), b);
-    } else if (hasBattle(bid)) {
-        emit battleMessage(id(), bid, b);
-    }
+
+    emit battleMessage(id(), bid, b);
 }
 
 void Player::recvMessage(const QString &mess)
@@ -298,15 +290,10 @@ void Player::recvMessage(const QString &mess)
 
 void Player::battleForfeited(int bid)
 {
-    if (!battling()) {
+    if (!hasBattle(bid))
         return; //INVALID BEHAVIOR
-    }
-    /* Compatibility with one-battle versions */
-    if (bid == 0) {
-        emit battleFinished(firstBattleId(), Forfeit, opponent(), id());
-    } else if (hasBattle(bid)) {
-        emit battleFinished(bid, Forfeit, opponent(), id());
-    }
+
+    emit battleFinished(bid, Forfeit, opponent(), id());
 }
 
 void Player::battleResult(int battleid, int result, int winner, int loser)
@@ -535,9 +522,9 @@ void Player::sendChallengeStuff(const ChallengeInfo &c)
     relay().sendChallengeStuff(c);
 }
 
-void Player::startBattle(int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
+void Player::startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
 {
-    relay().engageBattle(this->id(), id, team, conf, doubles);
+    relay().engageBattle(battleid, this->id(), id, team, conf, doubles);
 
     cancelChallenges();
 

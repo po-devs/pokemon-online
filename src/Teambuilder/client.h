@@ -54,8 +54,8 @@ public:
     PlayerInfo player(int id) const;
     BasicInfo info(int id) const;
 
-    void removeBattleWindow();
     void removePlayer(int id);
+    void removeBattleWindow(int id);
 
     QList<QColor> chatColors;
     QList<QIcon> statusIcons;
@@ -156,6 +156,8 @@ public slots:
     /* Teambuilder slots */
     void openTeamBuilder();
     void changeTeam();
+
+    void clearBattleWindow();
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
@@ -196,7 +198,7 @@ private:
     Analyzer myrelay;
     /* Challenge windows , to emit or to receive*/
     QSet<BaseChallengeWindow *> mychallenges;
-    QPointer<BattleWindow> mybattle;
+    QSet<BattleWindow *> mybattles;
     QPointer<BattleFinder> myBattleFinder;
     QHash<int, QPointer<BaseBattleWindow> > mySpectatingBattles;
     QAction *goaway;
@@ -218,7 +220,6 @@ private:
     QPointer<RankingDialog> myRanking;
 
     QHash<int, PlayerInfo> myplayersinfo;
-
 
     QHash<QString, int> mynames;
     QScrollDownTextEdit *mainChat();

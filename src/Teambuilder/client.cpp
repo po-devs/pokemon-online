@@ -15,7 +15,6 @@
 Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), myrelay(), findingBattle(false)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
-    mybattle = NULL;
     myteambuilder = NULL;
     resize(1000, 700);
 
@@ -601,7 +600,7 @@ void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
 
 bool Client::battling() const
 {
-    return mybattle != NULL;
+    return mybattles.size() > 0;
 }
 
 void Client::messageReceived(const QString &mess)
@@ -831,7 +830,7 @@ void Client::seeChallenge(const ChallengeInfo &c)
 void Client::battleStarted(int battleId, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
 {
     cancelFindBattle(false);
-    mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf, doubles);
+    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf, doubles);
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
     mybattle->setWindowFlags(Qt::Window);
     mybattle->client() = this;
@@ -841,8 +840,11 @@ void Client::battleStarted(int battleId, int id, const TeamBattle &team, const B
     connect(mybattle, SIGNAL(forfeit(int)), SLOT(forfeitBattle(int)));
     connect(mybattle, SIGNAL(battleCommand(int, BattleChoice)), &relay(), SLOT(battleCommand(int, BattleChoice)));
     connect(mybattle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
+    connect(mybattle, SIGNAL(destroyed()), this, SLOT(clearBattleWindow()));
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
     //connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
+
+    mybattles.insert(mybattle);
 
     battleStarted(battleId, ownId(), id);
 }
@@ -898,10 +900,10 @@ QIdTreeWidgetItem *Client::item(int id) {
 void Client::forfeitBattle(int id)
 {
     relay().sendBattleResult(id, Forfeit);
-    removeBattleWindow();
+    removeBattleWindow(id);
 }
 
-void Client::battleFinished(int, int res, int winner, int loser)
+void Client::battleFinished(int battleid, int res, int winner, int loser)
 {
     if (showPEvents || winner == ownId() || loser == ownId()) {
         if (res == Forfeit) {
@@ -914,7 +916,7 @@ void Client::battleFinished(int, int res, int winner, int loser)
     }
 
     if ((res == Close || res == Forfeit) && (winner == ownId() || loser == ownId()))
-        removeBattleWindow();
+        removeBattleWindow(battleid);
 
     myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
     myplayersinfo[loser].flags &= 0xFF ^ PlayerInfo::Battling;
@@ -923,18 +925,22 @@ void Client::battleFinished(int, int res, int winner, int loser)
     updateState(loser);
 }
 
-void Client::battleCommand(int , const QByteArray &command)
+void Client::battleCommand(int battleid, const QByteArray &command)
 {
-    if (!mybattle)
-        return;
-
-    mybattle->receiveInfo(command);
+    foreach (BattleWindow *b, mybattles) {
+        if (b->battleId() == battleid) {
+            b->receiveInfo(command);
+            return;
+        }
+    }
 }
 
-void Client::removeBattleWindow()
+void Client::removeBattleWindow(int battleid)
 {
-    if (mybattle)
-	mybattle->close();
+    foreach(BattleWindow *w, mybattles) {
+        if (w->battleId() == battleid)
+            w->close();
+    }
 }
 
 QString Client::name(int id) const
@@ -1044,6 +1050,11 @@ void Client::sendChallenge(int id)
 void Client::clearChallenge()
 {
     mychallenges.remove(dynamic_cast<BaseChallengeWindow*>(sender()));
+}
+
+void Client::clearBattleWindow()
+{
+    mybattles.remove(dynamic_cast<BattleWindow*>(sender()));
 }
 
 void Client::errorFromNetwork(int errnum, const QString &errorDesc)
