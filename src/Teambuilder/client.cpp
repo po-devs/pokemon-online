@@ -839,11 +839,10 @@ void Client::battleStarted(int battleId, int id, const TeamBattle &team, const B
     connect(mybattle, SIGNAL(forfeit(int)), SLOT(forfeitBattle(int)));
     connect(mybattle, SIGNAL(battleCommand(int, BattleChoice)), &relay(), SLOT(battleCommand(int, BattleChoice)));
     connect(mybattle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
-    connect(mybattle, SIGNAL(destroyed()), this, SLOT(clearBattleWindow()));
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
     //connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
 
-    mybattles.insert(mybattle);
+    mybattles[battleId] = mybattle;
 
     battleStarted(battleId, ownId(), id);
 }
@@ -914,7 +913,8 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
         }
     }
 
-    if ((res == Close || res == Forfeit) && (winner == ownId() || loser == ownId()))
+    /* On old servers battleid is always 0 so you don't want to forfeit that battle ... */
+    if ((res == Close || res == Forfeit) && (battleid != 0 || (winner == ownId() || loser == ownId())))
         removeBattleWindow(battleid);
 
     myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
@@ -926,20 +926,19 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
 
 void Client::battleCommand(int battleid, const QByteArray &command)
 {
-    foreach (BattleWindow *b, mybattles) {
-        if (b->battleId() == battleid) {
-            b->receiveInfo(command);
-            return;
-        }
-    }
+    if (!mybattles.contains(battleid))
+        return;
+
+    mybattles[battleid]->receiveInfo(command);
 }
 
 void Client::removeBattleWindow(int battleid)
 {
-    foreach(BattleWindow *w, mybattles) {
-        if (w->battleId() == battleid)
-            w->close();
-    }
+    if (!mybattles.contains(battleid))
+        return;
+
+    BattleWindow *w = mybattles.take(battleid);
+    w->close();
 }
 
 QString Client::name(int id) const
@@ -1049,11 +1048,6 @@ void Client::sendChallenge(int id)
 void Client::clearChallenge()
 {
     mychallenges.remove(dynamic_cast<BaseChallengeWindow*>(sender()));
-}
-
-void Client::clearBattleWindow()
-{
-    mybattles.remove(dynamic_cast<BattleWindow*>(sender()));
 }
 
 void Client::errorFromNetwork(int errnum, const QString &errorDesc)
