@@ -861,8 +861,8 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id);
     mybattles.insert(id, battle);
 
-    player(id1)->startBattle(id2, battle->pubteam(id1), battle->configuration(), battle->doubles());
-    player(id2)->startBattle(id1, battle->pubteam(id2), battle->configuration(), battle->doubles());
+    player(id1)->startBattle(id, id2, battle->pubteam(id1), battle->configuration(), battle->doubles());
+    player(id2)->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), battle->doubles());
 
     foreach(Player *p, myplayers) {
         if (p->isLoggedIn() && p->id() != id1 && p->id() != id2) {
