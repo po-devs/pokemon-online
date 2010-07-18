@@ -1699,10 +1699,10 @@ public:
     void setTrainerLose(const QString &newlose);
     void setTrainerNick(const QString &newnick);
 
-    QString trainerInfo() const;
-    QString trainerWin() const;
-    QString trainerLose() const;
-    QString trainerNick() const;
+    const QString & trainerInfo() const;
+    const QString & trainerWin() const;
+    const QString & trainerLose() const;
+    const QString & trainerNick() const;
 
     bool loadFromFile(const QString &path);
     bool saveToFile(const QString &path) const;

@@ -1358,7 +1358,7 @@ void Client::changeTeam()
 {
     if (battling() && myteam->trainerNick() != mynick) {
         printLine(tr("You can't change teams while battling, so your nick was kept."));
-        myteam->trainerNick() = mynick;
+        myteam->setTrainerNick(mynick);
     }
     cancelFindBattle(false);
     relay().sendTeam(*myteam);
