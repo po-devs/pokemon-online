@@ -293,7 +293,7 @@ void Player::battleForfeited(int bid)
     if (!hasBattle(bid))
         return; //INVALID BEHAVIOR
 
-    emit battleFinished(bid, Forfeit, opponent(), id());
+    emit battleFinished(bid, Forfeit, 0, id());
 }
 
 void Player::battleResult(int battleid, int result, int winner, int loser)
@@ -432,11 +432,6 @@ void Player::playerKick(int p) {
     }
 
     emit playerKick(id(),p);
-}
-
-int Player::opponent() const
-{
-    return m_opponent;
 }
 
 void Player::challengeStuff(const ChallengeInfo &c)

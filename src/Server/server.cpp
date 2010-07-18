@@ -910,6 +910,10 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     QString tier = mybattles.value(battleid)->tier();
     BattleSituation *battle = mybattles[battleid];
 
+    if (winner == 0) {
+        winner = battle->id(battle->opponent(battle->player(loser)));
+    }
+
     if (desc == Forfeit && battle->finished()) {
         player(winner)->battleResult(battleid, Close, winner, loser);
         player(loser)->battleResult(battleid, Close, winner, loser);
