@@ -533,22 +533,22 @@ TrainerTeam::TrainerTeam()
     avatar() = 0;
 }
 
-QString TrainerTeam::trainerInfo() const
+const QString & TrainerTeam::trainerInfo() const
 {
     return m_trainerInfo;
 }
 
-QString TrainerTeam::trainerLose() const
+const QString & TrainerTeam::trainerLose() const
 {
     return m_trainerLose;
 }
 
-QString TrainerTeam::trainerWin() const
+const QString & TrainerTeam::trainerWin() const
 {
     return m_trainerWin;
 }
 
-QString TrainerTeam::trainerNick() const
+const QString & TrainerTeam::trainerNick() const
 {
     return m_trainerNick;
 }
