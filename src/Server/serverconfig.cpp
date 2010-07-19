@@ -39,7 +39,7 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     l->addRow("Max Players: ", serverPlayerMax);
 
     serverPort = new QSpinBox();
-    serverPort->setRange(0,10000);
+    serverPort->setRange(0,65535);
     if(settings.value("server_port").toInt() == 0)
         serverPort->setValue(5080);
     else
