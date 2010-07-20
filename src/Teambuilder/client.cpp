@@ -203,9 +203,19 @@ void Client::battleListActivated(QTreeWidgetItem *it)
 
 void Client::watchBattleOf(int player)
 {
-    foreach(Battle b, battles) {
-        if (b.id1 == player || b.id2 == player) {
-            watchBattleRequ(player);
+    if (battles.empty() || battles.contains(0)) {
+        //Old Server, or bad luck, assuming old server anyway
+        watchBattleRequ(player);
+        return;
+    }
+
+    QHashIterator<int, Battle> h(battles);
+
+    while (h.hasNext()) {
+        h.next();
+
+        if (h.value().id1 == player || h.value().id2 == player) {
+            watchBattleRequ(h.key());
             return;
         }
     }
@@ -505,14 +515,14 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     saveLogs->setChecked(s.value("save_battle_logs").toBool());
 
     battleMenu->addAction(tr("Change &log folder"), this, SLOT(changeBattleLogFolder()));
-/*
-    QAction *playMusic = battleMenu->addAction(tr("&Enable sounds (Risky!)"));
+
+    QAction *playMusic = battleMenu->addAction(tr("&Enable sounds (Testing! Remove if problems with the sim)"));
     playMusic->setCheckable(true);
     connect(playMusic, SIGNAL(triggered(bool)), SLOT(playMusic(bool)));
     playMusic->setChecked(s.value("play_battle_music").toBool());
 
-    battleMenu->addAction(tr("Change &sound folder"), this, SLOT(changeMusicFolder()));
-*/
+    battleMenu->addAction(tr("Change &music folder"), this, SLOT(changeMusicFolder()));
+
     QAction *animateHpBar = battleMenu->addAction(tr("Animate HP Bar"));
     animateHpBar->setCheckable(true);
     connect(animateHpBar, SIGNAL(triggered(bool)), SLOT(animateHpBar(bool)));
@@ -570,7 +580,7 @@ void Client::sendRegister() {
     relay().notify(NetworkCli::Register);
     myregister->setDisabled(true);
 }
-/*
+
 void Client::changeMusicFolder()
 {
     QSettings s;
@@ -580,7 +590,7 @@ void Client::changeMusicFolder()
         s.setValue("battle_music_directory", dir + "/");
     }
 }
-*/
+
 void Client::changeBattleLogFolder()
 {
     QSettings s;
@@ -608,15 +618,15 @@ void Client::animateHpBar(bool save)
     QSettings s;
     s.setValue("animate_hp_bar", save);
 }
-/*
+
 void Client::playMusic(bool save)
 {
     QSettings s;
     s.setValue("play_battle_music", save);
 
-    emit musicPlayingChanged(save);
+//    emit musicPlayingChanged(save);
 }
-*/
+
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
 {
     if (mySpectatingBattles.contains(battleId)) {
@@ -1557,23 +1567,6 @@ void BattleFinder::throwChallenge()
     d.range = range->text().toInt();
     d.ranged = rangeOn->isChecked();
     d.mode = doubles->isChecked();
-/*
-    d.forcedClauses = 0;
-    d.bannedClauses = 0;
 
-    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        switch(clauses[i]->checkState()) {
-        case Qt::Checked:
-            d.forcedClauses |= 1 << i;
-            break;
-        case Qt::Unchecked:
-            d.bannedClauses |= 1 << i;
-            break;
-        default:
-            break;
-        }
-        s.setValue(QString("clause_%1_state").arg(ChallengeInfo::clause(i)), clauses[i]->checkState());
-    }
-*/
     emit findBattle(d);
 }

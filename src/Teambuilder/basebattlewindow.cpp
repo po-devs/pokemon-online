@@ -77,7 +77,11 @@ void BaseBattleWindow::init()
 
     mylayout->addWidget(mydisplay, 0, 0, 1, 3);
     mylayout->addWidget(saveLogs = new QCheckBox(tr("Save log")), 1, 0, 1, 2);
+    mylayout->addWidget(musicOn = new QCheckBox(tr("Music")), 1, 1, 1, 2);
     mylayout->addWidget(myclose = new QPushButton(tr("&Close")),1,2);
+
+    QSettings s;
+    musicOn->setChecked(s.value("play_battle_music").toBool());
 
     QVBoxLayout *chat = new QVBoxLayout();
     columns->addLayout(chat);
@@ -91,40 +95,58 @@ void BaseBattleWindow::init()
     buttons->addWidget(myignore = new QPushButton(tr("&Ignore Spectators")));
     myignore->setCheckable(true);
 
-
+    connect(musicOn, SIGNAL(toggled(bool)), SLOT(musicPlayStop()));
     connect(myignore, SIGNAL(toggled(bool)), SLOT(ignoreSpectators(bool)));
     connect(myclose, SIGNAL(clicked()), SLOT(clickClose()));
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
 
-/*
-    //starts battle music
-    musicOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
-    music = new Phonon::MediaObject(this);
-    Phonon::createPath(music, musicOutput);
+    audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
+    mediaObject = new Phonon::MediaObject(this);
 
-    QSettings s;
-    QDir directory = QDir(s.value("battle_music_directory").toString());
-    QStringList files;
-    files = directory.entryList(QStringList("*"), QDir::Files | QDir::NoSymLinks);
+    /* To link both */
+    Phonon::createPath(mediaObject, audioOutput);
 
-    QString file;
-    if (files.size() != 0)
-        file = s.value("battle_music_directory").toString() + files[rand() % files.size()];
+    connect(mediaObject, SIGNAL(aboutToFinish()), this, SLOT(enqueueMusic()));
 
-    music->setCurrentSource(file);
+    musicPlayStop();
+}
 
-    if (s.value("play_battle_music").toBool())
-    {
-        musicPlayed() = true;
-        music->play();
-    } else {
-        musicPlayed() = false;
+bool BaseBattleWindow::playMusic() const
+{
+    return musicOn->isChecked();
+}
+
+void BaseBattleWindow::musicPlayStop()
+{
+    if (!playMusic()) {
+        mediaObject->pause();
+        return;
     }
-    
-    connect(music, SIGNAL(aboutToFinish()), SLOT(restartMusic()));
-*/
-    //layout()->setSizeConstraint(QLayout::SetFixedSize);
+
+    if (sources.size() == 0) {
+        QSettings s;
+        QDir directory = QDir(s.value("battle_music_directory").toString());
+        QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it", QDir::Files | QDir::NoSymLinks | QDir::Readable);
+
+        foreach(QString file, files) {
+            sources.push_back(directory.absoluteFilePath(file));
+        }
+
+        if (sources.size() == 0)
+            return;
+
+        mediaObject->setCurrentSource(sources[true_rand()%sources.size()]);
+    }
+
+    mediaObject->play();
+}
+
+void BaseBattleWindow::enqueueMusic()
+{
+    if (sources.size() == 0)
+        return;
+    mediaObject->enqueue(sources[true_rand()%sources.size()]);
 }
 
 int BaseBattleWindow::player(int spot) const
@@ -187,29 +209,6 @@ void BaseBattleWindow::animateHPBar()
 void BaseBattleWindow::checkAndSaveLog()
 {
     if (saveLogs->isChecked()) {
-//        QString directory = s.value("battle_logs_directory").toString();
-//        QString file = QFileDialog::getSaveFileName(0,QObject::tr("Saving the battle"),directory+info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name
-//                                     + "--" + QDate::currentDate().toString("dd MMMM yyyy") + "_" +QTime::currentTime().toString("hh'h'mm")
-//                                     , QObject::tr("html (*.html)\ntxt (*.txt)"));
-//        if (file.length() != 0) {
-//            QFileInfo finfo (file);
-//            directory = finfo.dir().path() + "/";
-//            if (directory == "/") {
-//                directory = "./";
-//            }
-//            QFile out (file);
-//            out.open(QIODevice::WriteOnly);
-//
-//            if (finfo.suffix() == "html") {
-//                out.write(mychat->toHtml().toUtf8());
-//            } else {
-//#ifdef WIN32
-//                out.write(mychat->toPlainText().replace("\n", "\r\n").toUtf8());
-//#else
-//                out.write(mychat->toPlainText().toUtf8());
-//#endif
-//            }
-//        }
         QSettings s;
         QString file = s.value("battle_logs_directory").toString() + info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name + "--" + QDate::currentDate().toString("dd MMMM yyyy")
                + " at " +QTime::currentTime().toString("hh'h'mm") + ".html";

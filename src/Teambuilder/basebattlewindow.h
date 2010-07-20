@@ -5,10 +5,12 @@
 #include "../PokemonInfo/battlestructs.h"
 #include "client.h"
 
+#include <phonon/mediaobject.h>
+#include <phonon/audiooutput.h>
+
 class BaseBattleDisplay;
 class QScrollDownTextEdit;
 class QClickPBar;
-
 
 struct BaseBattleInfo
 {
@@ -69,7 +71,6 @@ class BaseBattleWindow : public QWidget
     PROPERTY(int, animatedHpSpot);
     PROPERTY(int, animatedHpGoal);
     PROPERTY(bool, started);
-    //PROPERTY(bool, musicPlayed);
 public:
     BaseBattleInfo *myInfo;
     const BaseBattleInfo &info() const {
@@ -182,17 +183,20 @@ public:
     int player(int spot) const;
     int opponent(int player) const;
 
+    bool playMusic() const;
+
 public slots:
     void receiveInfo(QByteArray);
     void sendMessage();
     void clickClose();
     void delay(qint64 msec=0, bool forceDelay=true);
     void undelay();
-    /*void playMusic (bool);
-    void restartMusic();*/
 
     void animateHPBar();
     void ignoreSpectators(bool);
+
+    void musicPlayStop();
+    void enqueueMusic();
 signals:
     void battleCommand(int battleId, const BattleChoice &);
     void battleMessage(int battleId, const QString &str);
@@ -206,25 +210,23 @@ protected:
     QLineEdit *myline;
     BaseBattleDisplay *mydisplay;
     QPushButton *myclose, *mysend;
-    /*
-    Phonon::MediaObject *music;
-    Phonon::AudioOutput *musicOutput;
-    Phonon::MediaObject *cry;
-    Phonon::AudioOutput *cryOutput;
 
-    QBuffer cryBuffer;
-    QByteArray cryData;
-    */
     QCheckBox *saveLogs;
+    QCheckBox *musicOn;
 
+    /* The device which outputs the sound */
+    Phonon::AudioOutput *audioOutput;
+    /* The media the device listens from */
+    Phonon::MediaObject *mediaObject;
+    /* The media sources for the music */
+    QList<Phonon::MediaSource> sources;
 
     QLinkedList<QByteArray> delayedCommands;
-
 
     bool blankMessage;
     bool battleEnded;
 
-    BaseBattleWindow(){delayed=0;ignoreSpecs=false;/* music = NULL; musicOutput = NULL; cry = NULL; cryOutput = NULL;*/}
+    BaseBattleWindow(){delayed=0;ignoreSpecs=false;}
     void init();
     void checkAndSaveLog();
 
