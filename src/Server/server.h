@@ -120,6 +120,7 @@ public slots:
     void cancelSearch(int id);
     void loadRatedBattlesSettings();
     void regPrivacyChanged(const int &priv);
+    void logSavingChanged(bool logging);
 
     void atServerShutDown();
 private:
