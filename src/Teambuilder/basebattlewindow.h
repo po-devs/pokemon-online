@@ -219,7 +219,7 @@ protected:
     /* The media the device listens from */
     Phonon::MediaObject *mediaObject;
     /* The media sources for the music */
-    QList<Phonon::MediaSource> sources;
+    QList<QString> sources;
 
     QLinkedList<QByteArray> delayedCommands;
 

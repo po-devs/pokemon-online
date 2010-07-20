@@ -124,20 +124,30 @@ void BaseBattleWindow::musicPlayStop()
         return;
     }
 
-    if (sources.size() == 0) {
-        QSettings s;
-        QDir directory = QDir(s.value("battle_music_directory").toString());
-        QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it", QDir::Files | QDir::NoSymLinks | QDir::Readable);
+    /* If more than 5 songs, start with a new music, otherwise carry on where it left. */
+    QSettings s;
+    QDir directory = QDir(s.value("battle_music_directory").toString());
+    QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it", QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Name);
 
-        foreach(QString file, files) {
-            sources.push_back(directory.absoluteFilePath(file));
-        }
+    QStringList tmpSources;
 
-        if (sources.size() == 0)
-            return;
-
-        mediaObject->setCurrentSource(sources[true_rand()%sources.size()]);
+    foreach(QString file, files) {
+        tmpSources.push_back(directory.absoluteFilePath(file));
     }
+
+    /* If it's the same musics as before with only 1 file, we start playing again the paused file (would not be nice to restart from the
+        start). Otherwise, a random file will be played from the start */
+    if (tmpSources == sources && sources.size() == 1) {
+        mediaObject->play();
+        return;
+    }
+
+    sources = tmpSources;
+
+    if (sources.size() == 0)
+        return;
+
+    mediaObject->setCurrentSource(sources[true_rand()%sources.size()]);
 
     mediaObject->play();
 }
