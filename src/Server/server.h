@@ -25,7 +25,7 @@ public:
     void start();
 
     static void print(const QString &line);
-    bool printLine(const QString &line, bool chatMessage = false);
+    bool printLine(const QString &line, bool chatMessage = false, bool forcedLog = false);
     /* returns the name of that player */
     QString name(int id) const;
     QString authedName(int id) const;
@@ -132,6 +132,8 @@ private:
     quint16 numPlayers() {
         return myplayers.size();
     }
+
+    bool showLogMessages;
 
     QTcpServer myserver;
     /* storing players */
