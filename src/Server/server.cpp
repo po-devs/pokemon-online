@@ -43,6 +43,8 @@ void Server::start(){
     numberOfPlayersLoggedIn = 0;
     registry_connection = NULL;
     myengine = NULL;
+    /* Set it to true to show startup messages anyway, which should be important */
+    this->showLogMessages = true;
 
     srand(time(NULL));
 
@@ -68,6 +70,9 @@ void Server::start(){
     }
     if (!s.contains("sql_db_host")) {
         s.setValue("sql_db_host", "localhost");
+    }
+    if (!s.contains("show_log_messages")) {
+        s.setValue("show_log_messages", true);
     }
 
     try {
@@ -149,6 +154,8 @@ void Server::start(){
 
     myengine->serverStartUp();
 
+    this->showLogMessages = s.value("show_log_messages").toBool();
+
     if (serverPrivate != 1)
         connectToRegistry();
 } catch (const QString &e) {
@@ -158,7 +165,7 @@ void Server::start(){
 
 void Server::print(const QString &line)
 {
-    serverIns->printLine(line, false);
+    serverIns->printLine(line, false, true);
 }
 
 QTcpServer * Server::server()
@@ -180,8 +187,13 @@ void Server::connectToRegistry()
             return;
         }
         else
-            registry_connection->deleteLater();;
+            registry_connection->deleteLater();
     }
+
+    registry_connection = NULL;
+
+    if (serverPrivate)
+        return;
 
     printLine("Connecting to registry...");
 
@@ -337,9 +349,12 @@ void Server::ipRefused()
 }
 
 
-/* Returns false if the event "newMessage" was stopped (nothing to do with "chatMessage" */
-bool Server::printLine(const QString &line, bool chatMessage)
+/* Returns false if the event "newMessage" was stopped (nothing to do with "chatMessage") */
+bool Server::printLine(const QString &line, bool chatMessage, bool forcedLog)
 {
+    if (!chatMessage && !showLogMessages && !forcedLog)
+        return false;
+
     //notify possible views (if any)
     if(chatMessage){
         emit chatmessage(line);
@@ -627,7 +642,8 @@ void Server::incomingConnection()
     }
 
     if (!AntiDos::obj()->connecting(ip)) {
-        printLine(tr("Anti DoS manager prevented IP %1 from logging in").arg(ip));
+        /* Useless to waste lines on that especially if it is DoS'd */
+        //printLine(tr("Anti DoS manager prevented IP %1 from logging in").arg(ip));
         newconnection->deleteLater();
         return;
     }

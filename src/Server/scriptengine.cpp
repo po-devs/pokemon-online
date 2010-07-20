@@ -1197,13 +1197,13 @@ void ScriptEngine::unsetPA(const QString &name)
 
 void ScriptEngine::printLine(const QString &s)
 {
-    myserver->printLine(s);
+    myserver->printLine(s, false, true);
 }
 
 void ScriptEngine::stopEvent()
 {
     if (stopevents.size() == 0) {
-        myserver->printLine("Script Warning: calling sys.stopEvent() in an unstoppable event.");
+        printLine("Script Warning: calling sys.stopEvent() in an unstoppable event.");
     } else {
         stopevents.back() = true;
     }

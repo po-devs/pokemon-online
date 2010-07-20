@@ -220,7 +220,17 @@ void BaseBattleWindow::checkAndSaveLog()
 {
     if (saveLogs->isChecked()) {
         QSettings s;
-        QString file = s.value("battle_logs_directory").toString() + info().pInfo[0].team.name + " vs " + info().pInfo[1].team.name + "--" + QDate::currentDate().toString("dd MMMM yyyy")
+
+        QString n1(info().pInfo[0].team.name), n2(info().pInfo[1].team.name);
+
+        /* Those characters are banned in file names on windows */
+        QList<QChar> bannedCh = QList<QChar> () << '"' << '/' << '\\' << ':' << '*' << '|' << '?' << '<' << '>';
+        foreach(QChar c, bannedCh) {
+            n1 = n1.replace(c, ' ');
+            n2 = n2.replace(c, ' ');
+        }
+
+        QString file = s.value("battle_logs_directory").toString() + n1 + " vs " + n2 + "--" + QDate::currentDate().toString("dd MMMM yyyy")
                + " at " +QTime::currentTime().toString("hh'h'mm") + ".html";
         QFile out (file);
         out.open(QIODevice::WriteOnly);
