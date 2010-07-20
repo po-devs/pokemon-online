@@ -1323,6 +1323,7 @@ void Client::printLine(const QString &line)
     /* Only activates if no window has focus */
     if (!QApplication::activeWindow()) {
         if (line.contains(QRegExp(QString("\\b%1\\b").arg(ownName())))) {
+            raise();
             activateWindow();
         }
     }
