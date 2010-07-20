@@ -10,11 +10,12 @@ class ServerWindow : public QWidget
 public:
     ServerWindow(QWidget *parent = 0);
 signals:
-    void privacyChanged(const int &priv);
+    void privacyChanged(int priv);
     void nameChanged(const QString &name);
     void descChanged(const QString &desc);
     void announcementChanged(const QString &ann);
-    void maxChanged(const int &num);
+    void maxChanged(int num);
+    void logSavingChanged(bool logSaving);
 private slots:
     void apply();
 private:
@@ -24,6 +25,7 @@ private:
     QPlainTextEdit *serverAnnouncement;
     QSpinBox *serverPlayerMax;
     QSpinBox *serverPort;
+    QCheckBox *saveLogs;
 };
 
 #endif // SERVERCONFIG_H
