@@ -767,7 +767,7 @@ void Client::sortAllPlayersNormally()
 {
     foreach(QIdTreeWidgetItem *it, myplayersitems)
     {
-        if (parent())
+        if (it->parent())
             it->parent()->takeChild(it->parent()->indexOfChild(it));
         else
             myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
@@ -783,7 +783,7 @@ void Client::sortAllPlayersNormally()
     QHash<int, QIdTreeWidgetItem *>::iterator iter;
 
     for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
-        placeItem(iter.value(),myplayers->headerItem());
+        placeItem(iter.value(), NULL);
     }
 }
 

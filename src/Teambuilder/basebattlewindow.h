@@ -184,6 +184,7 @@ public:
     int opponent(int player) const;
 
     bool playMusic() const;
+    void playCry(int pokemon);
 
 public slots:
     void receiveInfo(QByteArray);
@@ -197,6 +198,7 @@ public slots:
 
     void musicPlayStop();
     void enqueueMusic();
+    void criesProblem(Phonon::State newState);
 signals:
     void battleCommand(int battleId, const BattleChoice &);
     void battleMessage(int battleId, const QString &str);
@@ -220,6 +222,11 @@ protected:
     Phonon::MediaObject *mediaObject;
     /* The media sources for the music */
     QList<QString> sources;
+    /* The media the device listens from for pokemon cries */
+    Phonon::MediaObject * cryObject;
+    /* The pokemon cries stored in memory */
+    QHash<int, QByteArray> cries;
+    QBuffer cryBuffer;
 
     QLinkedList<QByteArray> delayedCommands;
 

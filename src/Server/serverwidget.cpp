@@ -130,6 +130,7 @@ void ServerWidget::openConfig()
     connect(w, SIGNAL(maxChanged(int)), server, SLOT(regMaxChanged(int)));
     connect(w, SIGNAL(privacyChanged(int)), server, SLOT(regPrivacyChanged(int)));
     connect(w, SIGNAL(announcementChanged(QString)), server, SLOT(announcementChanged(QString)));
+    connect(w, SIGNAL(logSavingChanged(bool)), server, SLOT(logSavingChanged(bool)));
 }
 
 void ServerWidget::openScriptWindow()

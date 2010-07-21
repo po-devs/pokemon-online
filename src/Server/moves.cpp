@@ -1659,10 +1659,23 @@ struct MMBounce : public MM
     }
 
     static void ms(int s, int, BS &b) {
-        turn(b,s)["Power"] = 0;
-        turn(b,s)["Accuracy"] = 0;
-        turn(b,s)["PossibleTargets"] = Move::None;
-        poke(b,s)["2TurnMove"] = turn(b,s)["Attack"];
+        QStringList args = turn(b,s)["Bounce_Arg"].toString().split('_');
+        b.sendMoveMessage(13,args[0].toInt(),s,type(b,s));
+
+        if (b.hasWorkingItem(s, Item::PowerHerb)) {
+            b.sendItemMessage(11,s);
+            b.disposeItem(s);
+
+            removeFunction(turn(b,s), "UponAttackSuccessful", "Bounce");
+            if (move(b,s) == ShadowForce) {
+                addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
+            }
+        } else {
+            turn(b,s)["Power"] = 0;
+            turn(b,s)["Accuracy"] = 0;
+            turn(b,s)["PossibleTargets"] = Move::None;
+            poke(b,s)["2TurnMove"] = turn(b,s)["Attack"];
+        }
     }
 
     static void ts(int s, int, BS &b) {
@@ -1705,7 +1718,6 @@ struct MMBounce : public MM
 	poke(b,s)["Invulnerable"] = true;
 	poke(b,s)["VulnerableMoves"].setValue(vuln_moves);
 	poke(b,s)["VulnerableMults"].setValue(vuln_mult);
-	b.sendMoveMessage(13,args[0].toInt(),s,type(b,s));
         b.changeSprite(s, -1);
         addFunction(poke(b,s), "TestEvasion", "Bounce", &dgaf);
         addFunction(poke(b,s), "TurnSettings", "Bounce", &ts);
@@ -3415,16 +3427,23 @@ struct MMRazorWind : public MM
             if (mv == SolarBeam && b.isWeatherWorking(BS::Sunny))
                 return;
 
+            b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
+            /* Skull bash */
+            if (mv == SkullBash) {
+                b.gainStatMod(s,Defense,1);
+            }
+
             if (b.hasWorkingItem(s, Item::PowerHerb)) {
 		//Power Herb
 		b.sendItemMessage(11,s);
 		b.disposeItem(s);
+
+                if (mv == SolarBeam && b.weather() != BS::NormalWeather && b.weather() != BS::Sunny && b.isWeatherWorking(b.weather())) {
+                    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() / 2;
+                }
 	    } else {              
                 b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
-		/* Skull bash */
-                if (mv == SkullBash) {
-		    b.gainStatMod(s,Defense,1);
-		}
+
 		poke(b,s)["ChargingMove"] = mv;
 		poke(b,s)["ReleaseTurn"] = b.turn() + 1;
 		turn(b,s)["TellPlayers"] = false;
