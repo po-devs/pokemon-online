@@ -130,8 +130,10 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	{
             if (!registry_socket) {
                 PlayerInfo p;
-                in >> p;
-                emit playerReceived(p);
+                while (!in.atEnd()) {
+                    in >> p;
+                    emit playerReceived(p);
+                }
                 break;
             } else {
                 // Registry socket;

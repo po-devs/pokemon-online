@@ -55,6 +55,11 @@ QString Analyzer::ip() const {
     return socket().ip();
 }
 
+void Analyzer::sendPlayers(const QList<PlayerInfo> &p)
+{
+    notify_expand(PlayersList, p);
+}
+
 void Analyzer::sendPlayer(const PlayerInfo &p)
 {
     notify(PlayersList, p);
