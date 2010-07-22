@@ -116,7 +116,7 @@ void BaseBattleWindow::init()
     Phonon::createPath(cryObject, cryOutput);
 
     connect(mediaObject, SIGNAL(aboutToFinish()), this, SLOT(enqueueMusic()));
-    connect(cryObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)), this, SLOT(criesProblem(Phonon::State)), Qt::QueuedConnection);
+    connect(cryObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)), this, SLOT(criesProblem(Phonon::State)));
 
     musicPlayStop();
 }
@@ -136,7 +136,8 @@ void BaseBattleWindow::musicPlayStop()
     /* If more than 5 songs, start with a new music, otherwise carry on where it left. */
     QSettings s;
     QDir directory = QDir(s.value("battle_music_directory").toString());
-    QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it", QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Name);
+    QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it",
+                                            QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Name);
 
     QStringList tmpSources;
 
@@ -311,10 +312,8 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
     /* At the start of the battle 700 ms are waited, to prevent misclicks
        when wanting to do something else */
     if (!started() && inf[0] == char(OfferChoice)) {
-        delayedCommands.push_front(inf);
         started() = true;
         delay(700);
-        return;
     }
 
     QDataStream in (&inf, QIODevice::ReadOnly);
