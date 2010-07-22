@@ -221,6 +221,7 @@ void Analyzer::notify_expand(int command, const T& paramList)
 
     while (it != paramList.end()) {
         out << *it;
+        ++it;
     }
 
     emit sendCommand(tosend);

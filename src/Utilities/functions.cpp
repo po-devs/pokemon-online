@@ -12,7 +12,7 @@ QString escapeHtml(const QString & toConvert)
 }
 
 QByteArray md5_hash(const QByteArray &result) {
-    return QCryptographicHash::hash(result, QCryptographicHash::Md5);
+    return QCryptographicHash::hash(result, QCryptographicHash::Md5).toHex();
 }
 
 void createIntMapper(QObject *src, const char *signal, QObject *dest, const char *slot, int id)

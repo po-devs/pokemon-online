@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Dreambelievers");
 
     try {
-        cross::DynamicLibrary dyn("myplugins/pokemonOnlineStats-plugin.dll");
+        cross::DynamicLibrary dyn("myplugins/usagestats.dll");
         PluginInstanceFunction f = (PluginInstanceFunction)(dyn.GetFunction("createPluginClass"));
         ServerPlugin * s = f();
         if (s) {
