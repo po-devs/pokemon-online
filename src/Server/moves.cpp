@@ -2078,14 +2078,17 @@ struct MMEncore : public MM
         int move =  poke(b,t)["LastMoveUsed"].toInt();
         poke(b,t)["EncoresMove"] = move;
 
-        //Changes the encored move
-        for (int i = 0; i < 4; i ++) {
-            if (b.move(t, i) == move) {
-                MoveEffect::unsetup(turn(b,t)["Attack"].toInt(), t, b);
-                b.choice[t].numSwitch = i;
-                b.choice[t].targetPoke = b.randomValidOpponent(t);
-                MoveEffect::setup(move, t, s, b);
-                break;
+        /*Changes the encored move, if no choice is off (otherwise recharging moves like blast burn would attack again,
+            and i bet something strange would also happen with charging move */
+        if (!turn(b,t).contains("NoChoice")) {
+            for (int i = 0; i < 4; i ++) {
+                if (b.move(t, i) == move) {
+                    MoveEffect::unsetup(turn(b,t)["Attack"].toInt(), t, b);
+                    b.choice[t].numSwitch = i;
+                    b.choice[t].targetPoke = b.randomValidOpponent(t);
+                    MoveEffect::setup(move, t, s, b);
+                    break;
+                }
             }
         }
 	addFunction(poke(b,t), "MovesPossible", "Encore", &msp);
