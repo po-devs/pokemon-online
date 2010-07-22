@@ -183,7 +183,7 @@ public:
     int player(int spot) const;
     int opponent(int player) const;
 
-    bool playMusic() const;
+    bool musicPlayed() const;
     void playCry(int pokemon);
 
 public slots:
@@ -222,6 +222,8 @@ protected:
     Phonon::MediaObject *mediaObject;
     /* The media sources for the music */
     QList<QString> sources;
+    /* The device for cries */
+    Phonon::AudioOutput *cryOutput;
     /* The media the device listens from for pokemon cries */
     Phonon::MediaObject * cryObject;
     /* The pokemon cries stored in memory */

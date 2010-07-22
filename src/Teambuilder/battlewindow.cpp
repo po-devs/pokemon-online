@@ -424,6 +424,7 @@ void BattleWindow::sendMessage()
 
 void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
 {
+    qDebug() << "Dealing with command " << command;
     int player = info().player(spot);
     switch (command)
     {
@@ -442,14 +443,13 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                 in >> info().currentShallow(spot);
                 info().pokeAlive[spot] = true;
                 mydisplay->updatePoke(spot);
-            }/*
+            }
 
             //Plays the battle cry when a pokemon is switched in
             if (musicPlayed())
             {
                 playCry(info().currentShallow(spot).num());
             }
-            */
 
             if (!silent) {
                 QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());
@@ -627,6 +627,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
         break;
     }
+    qDebug() << "End of dealing";
 }
 
 void BattleWindow::addSpectator(bool add, int id)

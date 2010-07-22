@@ -39,6 +39,7 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
 
 void BaseBattleWindow::delay(qint64 msec, bool forceDelay)
 {
+    qDebug() << "delay";
     delayed += 1;
 
     if (!forceDelay && delayed > 1)
@@ -46,19 +47,22 @@ void BaseBattleWindow::delay(qint64 msec, bool forceDelay)
 
     if (msec != 0)
         QTimer::singleShot(msec, this, SLOT(undelay()));
+    qDebug() << "end of delay";
 }
 
 void BaseBattleWindow::undelay()
 {
+    qDebug() << "undelay";
     if (delayed > 0)
         delayed -= 1;
     else
         return;
 
     while (delayed == 0 && delayedCommands.size() > 0) {
-        receiveInfo(delayedCommands.front());
-        delayedCommands.pop_front();
+        QByteArray command = delayedCommands.takeFirst();
+        receiveInfo(command);
     }
+    qDebug() << "end of undelay";
 }
 
 void BaseBattleWindow::init()
@@ -103,26 +107,28 @@ void BaseBattleWindow::init()
 
     audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
     mediaObject = new Phonon::MediaObject(this);
+
+    cryOutput = new Phonon::AudioOutput(Phonon::GameCategory, this);
     cryObject = new Phonon::MediaObject(this);
 
     /* To link both */
     Phonon::createPath(mediaObject, audioOutput);
-    Phonon::createPath(cryObject, audioOutput);
+    Phonon::createPath(cryObject, cryOutput);
 
     connect(mediaObject, SIGNAL(aboutToFinish()), this, SLOT(enqueueMusic()));
-    connect(cryObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)), this, SLOT(criesProblem(Phonon::State)));
+    connect(cryObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)), this, SLOT(criesProblem(Phonon::State)), Qt::QueuedConnection);
 
     musicPlayStop();
 }
 
-bool BaseBattleWindow::playMusic() const
+bool BaseBattleWindow::musicPlayed() const
 {
     return musicOn->isChecked();
 }
 
 void BaseBattleWindow::musicPlayStop()
 {
-    if (!playMusic()) {
+    if (!musicPlayed()) {
         mediaObject->pause();
         return;
     }
@@ -164,14 +170,14 @@ void BaseBattleWindow::enqueueMusic()
 
 void BaseBattleWindow::criesProblem(Phonon::State newState)
 {
-    if (newState != Phonon::PlayingState) {
+    if (newState != Phonon::PlayingState && newState != Phonon::LoadingState) {
         undelay();
     }
 }
 
 void BaseBattleWindow::playCry(int pokemon)
 {
-    if (!playMusic())
+    if (!musicPlayed())
         return;
 
     delay();
@@ -180,7 +186,11 @@ void BaseBattleWindow::playCry(int pokemon)
         cries.insert(pokemon, PokemonInfo::Cry(pokemon));
     }
 
+    cryObject->stop();
+
+    cryBuffer.close();
     cryBuffer.setBuffer(&cries[pokemon]);
+    cryBuffer.open(QIODevice::ReadOnly);
 
     cryObject->setCurrentSource(&cryBuffer);
     cryObject->play();
@@ -280,21 +290,7 @@ void BaseBattleWindow::clickClose()
     emit closedBW(battleId());
     return;
 }
-/*
-void BaseBattleWindow::restartMusic()
-{
-    QSettings s;
-    QDir directory = QDir(s.value("battle_music_directory").toString());
-    QStringList files;
-    files = directory.entryList(QStringList("*"), QDir::Files | QDir::NoSymLinks);
 
-    QString file;
-    if (files.size() != 0)
-        file = s.value("battle_music_directory").toString() + files[rand() % files.size()];
-
-    music->enqueue(file);
-}
-*/
 void BaseBattleWindow::sendMessage()
 {
     QString message = myline->text();
@@ -307,14 +303,18 @@ void BaseBattleWindow::sendMessage()
 
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
+    qDebug() << "Received data" << int(inf[0]);
     if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)) {
         delayedCommands.push_back(inf);
         return;
     }
+    /* At the start of the battle 700 ms are waited, to prevent misclicks
+       when wanting to do something else */
     if (!started() && inf[0] == char(OfferChoice)) {
-        delayedCommands.push_back(inf);
+        delayedCommands.push_front(inf);
         started() = true;
         delay(700);
+        return;
     }
 
     QDataStream in (&inf, QIODevice::ReadOnly);
@@ -325,28 +325,13 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
     in >> command >> player;
 
     dealWithCommandInfo(in, command, player, player);
+    qDebug() << "End Received data";
 }
 
 void BaseBattleWindow::ignoreSpectators(bool ignore)
 {
     ignoreSpecs = ignore;
 }
-/*
-void BaseBattleWindow::playMusic(bool play)
-{
-    if (musicPlayed() == play)
-        return;
-
-    musicPlayed() = play;
-
-    if (play) {
-        music->play();
-    }
-    else {
-       music->pause();;
-    }
-}
-*/
 
 void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
 {
@@ -362,13 +347,13 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             info().sub[spot] = false;
             info().specialSprite[spot] = 0;
             mydisplay->updatePoke(spot);
-/*
+
             //Plays the battle cry when a pokemon is switched in
             if (musicPlayed())
             {
                 playCry(info().currentShallow(spot).num());
             }
-*/
+
 
             if (!silent) {
                 QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());
@@ -411,13 +396,12 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             break;
         }
     case Ko:
-        /*
         //Plays the battle cry when a pokemon faints
         if (musicPlayed())
         {
             playCry(info().currentShallow(spot).num());
         }
-        */
+
         printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(spot)))) + "</b>");
         switchToNaught(spot);
         break;
@@ -820,47 +804,6 @@ void BaseBattleWindow::printHtml(const QString &str)
     blankMessage = false;
     mychat->insertHtml(str + "<br />");
 }
-
-/*
-void BaseBattleWindow::playCry(int pokenum)
-{
-    if (cry) {
-        cry->stop();
-        cry->deleteLater();
-    }
-
-    if (cryOutput) {
-        cryOutput->deleteLater();
-    }
-
-    cryOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
-    cry = new Phonon::MediaObject(this);
-    Phonon::createPath(cry, cryOutput);
-
-    cryData = PokemonInfo::Cry(pokenum);
-
-    if (cryData.length() == 0)
-        return;
-
-    cryBuffer.close();;
-    cryBuffer.setBuffer(&cryData);
-    cryBuffer.open(QIODevice::ReadOnly);
-
-    cry->setCurrentSource(&cryBuffer);
-
-    cry->play();
-
-    if (cry->isValid()) {
-        if (cry->totalTime() > 0) {
-            delay(cry->totalTime());
-        } else {
-            delay(100);
-            connect(cry, SIGNAL(totalTimeChanged(qint64)), this, SLOT(delay(qint64)));
-        }
-    }
-}
-
-*/
 
 BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     : myInfo(&i)
