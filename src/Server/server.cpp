@@ -459,7 +459,7 @@ void Server::dosKick(int id) {
     if (playerExist(id)) {
         sendAll(tr("Player %1 (IP %2) is being overactive.").arg(name(id), player(id)->ip()));
     }
-    kick(id);
+    silentKick(id);
 }
 
 void Server::dosBan(const QString &ip) {
