@@ -424,7 +424,6 @@ void BattleWindow::sendMessage()
 
 void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
 {
-    qDebug() << "Dealing with command " << command;
     int player = info().player(spot);
     switch (command)
     {
@@ -627,7 +626,6 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
         break;
     }
-    qDebug() << "End of dealing";
 }
 
 void BattleWindow::addSpectator(bool add, int id)

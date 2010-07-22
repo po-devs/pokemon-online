@@ -39,7 +39,6 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
 
 void BaseBattleWindow::delay(qint64 msec, bool forceDelay)
 {
-    qDebug() << "delay";
     delayed += 1;
 
     if (!forceDelay && delayed > 1)
@@ -47,12 +46,10 @@ void BaseBattleWindow::delay(qint64 msec, bool forceDelay)
 
     if (msec != 0)
         QTimer::singleShot(msec, this, SLOT(undelay()));
-    qDebug() << "end of delay";
 }
 
 void BaseBattleWindow::undelay()
 {
-    qDebug() << "undelay";
     if (delayed > 0)
         delayed -= 1;
     else
@@ -62,7 +59,6 @@ void BaseBattleWindow::undelay()
         QByteArray command = delayedCommands.takeFirst();
         receiveInfo(command);
     }
-    qDebug() << "end of undelay";
 }
 
 void BaseBattleWindow::init()
@@ -304,7 +300,6 @@ void BaseBattleWindow::sendMessage()
 
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
-    qDebug() << "Received data" << int(inf[0]);
     if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)) {
         delayedCommands.push_back(inf);
         return;
@@ -324,7 +319,6 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
     in >> command >> player;
 
     dealWithCommandInfo(in, command, player, player);
-    qDebug() << "End Received data";
 }
 
 void BaseBattleWindow::ignoreSpectators(bool ignore)
