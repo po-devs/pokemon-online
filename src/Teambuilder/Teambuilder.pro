@@ -22,7 +22,6 @@ SOURCES += main.cpp \
     challenge.cpp \
     battlewindow.cpp \
     ../Utilities/functions.cpp \
-    ../Utilities/md5.c \
     pmwindow.cpp \
     controlpanel.cpp \
     basebattlewindow.cpp \
@@ -47,7 +46,6 @@ HEADERS += teambuilder.h \
     challenge.h \
     battlewindow.h \
     ../Utilities/functions.h \
-    ../Utilities/md5.h \
     pmwindow.h \
     controlpanel.h \
     basebattlewindow.h \
@@ -60,8 +58,7 @@ LIBS += -L../../bin \
     -lzip
 DEFINES = CLIENT_SIDE
 FORMS += controlpanel.ui
-TRANSLATIONS =  \
-    translation_de.ts \
+TRANSLATIONS = translation_de.ts \
     translation_es.ts \
     translation_fi.ts \
     translation_fr.ts \
