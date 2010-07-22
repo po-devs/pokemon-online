@@ -263,6 +263,13 @@ struct MMBatonPass : public MM
 	c.remove("Move3");
         c.remove("HasMovedOnce");
         c.remove("Forme");
+        /* Removing attract */
+        c.remove("AttractBy");
+        foreach( int opp, b.revs(s)) {
+            if (b.linked(opp, "Attract"))
+                poke(b, opp).remove("AttractBy");
+        }
+
 	/* choice band etc. would force the same move
 		if on both the passed & the passer */
 	c.remove("ChoiceMemory");
