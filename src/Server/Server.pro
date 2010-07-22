@@ -43,7 +43,8 @@ SOURCES += main.cpp \
     waitingobject.cpp \
     consolereader.cpp \
     ../Utilities/coro.c \
-    ../Utilities/contextswitch.cpp
+    ../Utilities/contextswitch.cpp \
+    ../Utilities/CrossDynamicLib.cpp
 HEADERS += mainwindow.h \
     network.h \
     analyze.h \
@@ -83,6 +84,8 @@ HEADERS += mainwindow.h \
     memoryholder.h \
     consolereader.h \
     ../Utilities/coro.h \
-    ../Utilities/contextswitch.h
+    ../Utilities/contextswitch.h \
+    ../Utilities/CrossDynamicLib.h \
+    plugininterface.h
 DEFINES = SERVER_SIDE
 RESOURCES += 
