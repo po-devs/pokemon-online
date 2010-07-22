@@ -665,6 +665,7 @@ void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
 	QString x = reply->readAll();
 	x = x.replace(QString("'"), QString("\\'"));
 	x = x.replace(QString("\n"), QString("\\n"));
+	x = x.replace(QString("\r"), QString("\\n"));
 
 	//put reply in a var "resp", can be used in expr
 	// i.e. expr = 'print("The resp was: "+resp);'
@@ -724,8 +725,6 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring, const QS
 
 void ScriptEngine::synchronousWebCall_replyFinished(QNetworkReply* reply) {
         sync_data = reply->readAll();
-        sync_data = sync_data.replace(QString("'"), QString("\\'"));
-        sync_data = sync_data.replace(QString("\n"), QString("\\n"));
         sync_loop.exit();
 }
 
