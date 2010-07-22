@@ -313,7 +313,7 @@ void BattleWindow::goToNextChoice()
                         mypzone->pokes[info().currentIndex[oslot]]->setEnabled(false);
                     }
 
-                    /* Also, you can't switch to a pokémon you've chosen before */
+                    /* Also, you can't switch to a pokemon you've chosen before */
                     for (int i = 0; i < info().available.size(); i++) {
                         if (info().available[i] && info().done[i] && info().choice[i].poke()) {
                             mypzone->pokes[info().choice[i].numSwitch]->setEnabled(false);

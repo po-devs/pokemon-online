@@ -1216,6 +1216,9 @@ int ItemInfo::BerryType(int itemnum)
 #ifdef CLIENT_SIDE
 QPixmap ItemInfo::Icon(int itemnum)
 {
+    if (itemnum == 0)
+        return QPixmap();
+
     QString archive = path("Items.zip");
     if (isBerry(itemnum)) {
         itemnum -= 7999;
