@@ -26,7 +26,6 @@ SOURCES += main.cpp \
     abilities.cpp \
     security.cpp \
     ../Utilities/otherwidgets.cpp \
-    ../Utilities/md5.c \
     playerswindow.cpp \
     antidos.cpp \
     serverconfig.cpp \
@@ -63,7 +62,6 @@ HEADERS += mainwindow.h \
     abilities.h \
     security.h \
     ../Utilities/otherwidgets.h \
-    ../Utilities/md5.h \
     playerswindow.h \
     antidos.h \
     serverconfig.h \
