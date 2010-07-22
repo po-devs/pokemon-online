@@ -1008,11 +1008,22 @@ void Server::sendPlayersList(int id)
 {
     Analyzer &relay = player(id)->relay();
 
+    QList<PlayerInfo> data;
     /* getting what to send */
     foreach(Player *p, myplayers)
     {
-	if (p->isLoggedIn())
-            relay.sendPlayer(p->bundle());
+        if (p->isLoggedIn()) {
+            data.push_back(p->bundle());
+            if (data.size() >= 50) {
+                relay.sendPlayers(data);
+                data.clear();
+            }
+        }
+    }
+
+    if (data.size() > 0) {
+        relay.sendPlayers(data);
+        data.clear();
     }
 }
 
@@ -1184,7 +1195,7 @@ int Server::id(const QString &name) const
 
 void Server::sendAll(const QString &message, bool chatMessage)
 {
-    if (printLine(message, chatMessage)) {
+    if (printLine(message, chatMessage, true)) {
         foreach (Player *p, myplayers)
             if (p->isLoggedIn())
                 p->sendMessage(message);

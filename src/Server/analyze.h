@@ -90,6 +90,7 @@ public:
     void sendMessage(const QString &message);
     void requestLogIn();
     void sendPlayer(const PlayerInfo &p);
+    void sendPlayers(const QList<PlayerInfo> &p);
     void sendBattleList(const QHash<int, Battle> &battles);
     void sendLogin(const PlayerInfo &p);
     void sendLogout(int num);
@@ -130,6 +131,8 @@ public:
     void notify(int command, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4,const T5 &param5);
     template<class T1, class T2, class T3, class T4, class T5, class T6>
     void notify(int command, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4,const T5 &param5, const T6 &param6);
+    template<class T>
+    void notify_expand(int command, const T &paramList);
 signals:
     /* to send to the network */
     void sendCommand(const QByteArray &command);
@@ -201,6 +204,24 @@ void Analyzer::notify(int command, const T& param)
     out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(command) << param;
+
+    emit sendCommand(tosend);
+}
+
+template<class T>
+void Analyzer::notify_expand(int command, const T& paramList)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+
+    out << uchar(command);
+
+    typename T::const_iterator it = paramList.begin();
+
+    while (it != paramList.end()) {
+        out << *it;
+    }
 
     emit sendCommand(tosend);
 }
