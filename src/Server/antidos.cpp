@@ -80,7 +80,7 @@ void AntiDosWindow::apply()
 
 AntiDos::AntiDos() {
     // Clears history every day, to save RAM.
-    timer.start(24*3600, this);
+    connect(&timer, SIGNAL(timeout()), this, SLOT(clearData()));
 }
 
 void AntiDos::init() {
@@ -234,7 +234,7 @@ void AntiDos::addKick(const QString &ip)
     }
 }
 
-void AntiDos::timerEvent(QTimerEvent *)
+void AntiDos::clearData()
 {
     // Clears the history every 24 hours to avoid memory consumption
     loginsPerIp.clear();
