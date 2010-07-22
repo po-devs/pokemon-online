@@ -43,6 +43,8 @@ void Server::start(){
     numberOfPlayersLoggedIn = 0;
     registry_connection = NULL;
     myengine = NULL;
+    /* Set it to true to show startup messages anyway, which should be important */
+    this->showLogMessages = true;
 
     srand(time(NULL));
 
@@ -68,6 +70,9 @@ void Server::start(){
     }
     if (!s.contains("sql_db_host")) {
         s.setValue("sql_db_host", "localhost");
+    }
+    if (!s.contains("show_log_messages")) {
+        s.setValue("show_log_messages", true);
     }
 
     try {
@@ -149,6 +154,8 @@ void Server::start(){
 
     myengine->serverStartUp();
 
+    this->showLogMessages = s.value("show_log_messages").toBool();
+
     if (serverPrivate != 1)
         connectToRegistry();
 } catch (const QString &e) {
@@ -158,7 +165,7 @@ void Server::start(){
 
 void Server::print(const QString &line)
 {
-    serverIns->printLine(line, false);
+    serverIns->printLine(line, false, true);
 }
 
 QTcpServer * Server::server()
@@ -180,8 +187,13 @@ void Server::connectToRegistry()
             return;
         }
         else
-            registry_connection->deleteLater();;
+            registry_connection->deleteLater();
     }
+
+    registry_connection = NULL;
+
+    if (serverPrivate)
+        return;
 
     printLine("Connecting to registry...");
 
@@ -211,12 +223,12 @@ void Server::regPrivacyChanged(const int &priv)
 
     if (serverPrivate == 1)
     {
-        printLine("The server is now private.");
+        printLine("The server is now private.", false, true);
         disconnectFromRegistry();
     }
     else
     {
-        printLine("The server is now public.");
+        printLine("The server is now public.", false, true);
         connectToRegistry();
     }
 }
@@ -268,7 +280,7 @@ void Server::regDescChanged(const QString &desc)
         return;
 
     serverDesc = desc;
-    printLine("The description of the server changed.");
+    printLine("The description of the server changed.", false, true);
 
     if (registry_connection == NULL || !registry_connection->isConnected())
         return;
@@ -282,7 +294,7 @@ void Server::regMaxChanged(const int &numMax)
         return;
 
     serverPlayerMax = numMax;
-    printLine("Maximum Players Changed.");
+    printLine("Maximum Players Changed.", false, true);
 
     if (registry_connection == NULL || !registry_connection->isConnected())
         return;
@@ -302,7 +314,7 @@ void Server::announcementChanged(const QString &announcement)
 
     serverAnnouncement = announcement;
 
-    printLine("Announcement changed.");
+    printLine("Announcement changed.", false, true);
 
     foreach(Player *p, myplayers) {
         p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
@@ -322,24 +334,27 @@ void Server::accepted()
 
 void Server::invalidName()
 {
-    printLine("Invalid name for the registry. Please change it in Options -> Config.");
+    printLine("Invalid name for the registry. Please change it in Options -> Config.", false, true);
 }
 
 void Server::nameTaken()
 {
-    printLine("The name of the server is already in use. Please change it in Options -> Config.");
+    printLine("The name of the server is already in use. Please change it in Options -> Config.", false, true);
 }
 
 
 void Server::ipRefused()
 {
-    printLine("Registry wants only 1 server per IP");
+    printLine("Registry wants only 1 server per IP", false, true);
 }
 
 
-/* Returns false if the event "newMessage" was stopped (nothing to do with "chatMessage" */
-bool Server::printLine(const QString &line, bool chatMessage)
+/* Returns false if the event "newMessage" was stopped (nothing to do with "chatMessage") */
+bool Server::printLine(const QString &line, bool chatMessage, bool forcedLog)
 {
+    if (!chatMessage && !showLogMessages && !forcedLog)
+        return false;
+
     //notify possible views (if any)
     if(chatMessage){
         emit chatmessage(line);
@@ -469,7 +484,7 @@ QString Server::authedName(int id) const
 
 void Server::loggedIn(int id, const QString &name)
 {
-    printLine(tr("Player %1 set name to %2").arg(id).arg(name));
+    printLine(QString("Player %1 set name to %2").arg(id).arg(name));
 
 
     if (nameExist(name)) {
@@ -479,7 +494,7 @@ void Server::loggedIn(int id, const QString &name)
             mynames.remove(name.toLower());
         } else {
             printLine(tr("Name %1 already in use, disconnecting player %2").arg(name).arg(id));
-            sendMessage(id, tr("Another with the name %1 is already logged in").arg(name));
+            sendMessage(id, QString("Another with the name %1 is already logged in").arg(name));
             removePlayer(id);
             return;
         }
@@ -615,24 +630,25 @@ void Server::incomingConnection()
     QString ip = newconnection->peerAddress().toString();
 
     if (numPlayers() >= serverPlayerMax && serverPlayerMax != 0){
-        printLine(tr("Stopped IP %1 from logging in, server full.").arg(ip));
+        printLine(QString("Stopped IP %1 from logging in, server full.").arg(ip));
         newconnection->deleteLater();
         return;
     }
 
     if (SecurityManager::bannedIP(ip)) {
-        printLine(tr("Banned IP %1 tried to log in.").arg(ip));
+        printLine(QString("Banned IP %1 tried to log in.").arg(ip));
         newconnection->deleteLater();
         return;
     }
 
     if (!AntiDos::obj()->connecting(ip)) {
-        printLine(tr("Anti DoS manager prevented IP %1 from logging in").arg(ip));
+        /* Useless to waste lines on that especially if it is DoS'd */
+        //printLine(tr("Anti DoS manager prevented IP %1 from logging in").arg(ip));
         newconnection->deleteLater();
         return;
     }
 
-    printLine(tr("Received pending connection on slot %1 from %2").arg(id).arg(ip));
+    printLine(QString("Received pending connection on slot %1 from %2").arg(id).arg(ip));
     myplayers[id] = new Player(newconnection, id);
 
     emit player_incomingconnection(id);
@@ -694,7 +710,7 @@ void Server::dealWithChallenge(int from, int to, const ChallengeInfo &c)
 
 void Server::findBattle(int id, const FindBattleData &f)
 {
-    printLine(tr("%1 initiated a battle search.").arg(name(id)));
+    printLine(QString("%1 initiated a battle search.").arg(name(id)));
 
     Player *p1 = player(id);
 
@@ -794,6 +810,14 @@ void Server::afterPlayerAway(int src, bool away)
     myengine->afterPlayerAway(src, away);
 }
 
+void Server::logSavingChanged(bool logging)
+{
+    if (logging == showLogMessages)
+        return;
+    showLogMessages = logging;
+    printLine("Logging changed", false, true);
+}
+
 void Server::info(int id, const QString &mess) {
     printLine(QString("From Player %1: %2").arg(id).arg(mess));
 }
@@ -842,7 +866,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     if (!playerExist(id1) || !playerExist(id2))
         return;
 
-    printLine(tr("Battle between %1 and %2 started").arg(name(id1)).arg(name(id2)));
+    printLine(QString("Battle between %1 and %2 started").arg(name(id1)).arg(name(id2)));
 
     /* Storing the battle in the last ips to battle */
     if (c.rated && diffIpsForRatedBattles > 0) {
@@ -944,11 +968,11 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         }
 
         if (desc == Forfeit) {
-            printLine( tr("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
+            printLine(QString("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
         } else if (desc == Win) {
-            printLine( tr("%1 won his battle against %2").arg(name(winner), name(loser)));
+            printLine(QString("%1 won his battle against %2").arg(name(winner), name(loser)));
         } else if (desc == Tie) {
-            printLine( tr("%1 and %2 tied").arg(name(winner), name(loser)));
+            printLine(QString("%1 and %2 tied").arg(name(winner), name(loser)));
         }
         myengine->afterBattleEnded(winner, loser, desc);
     }
@@ -1040,7 +1064,7 @@ void Server::recvTeam(int id, const QString &_name)
     if (!playerExist(id))
         return;
 
-    printLine(tr("%1 changed their team, and their name to %2").arg(name(id), _name));
+    printLine(QString("%1 changed their team, and their name to %2").arg(name(id), _name));
 
     /* Normally all checks have been made to ensure the authentification is right and the
        name isn't taken.
@@ -1076,7 +1100,7 @@ void Server::recvTeam(int id, const QString &_name)
 
 void Server::disconnected(int id)
 {
-    printLine(tr("Received disconnection from player %1").arg(name(id)));
+    printLine(QString("Received disconnection from player %1").arg(name(id)));
     removePlayer(id);
 }
 
@@ -1144,7 +1168,7 @@ void Server::removePlayer(int id)
             myengine->afterLogOut(id);
         }
 
-	printLine(tr("Removed player %1").arg(playerName));
+        printLine(QString("Removed player %1").arg(playerName));
     }
 }
 

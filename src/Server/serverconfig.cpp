@@ -39,7 +39,7 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     l->addRow("Max Players: ", serverPlayerMax);
 
     serverPort = new QSpinBox();
-    serverPort->setRange(0,10000);
+    serverPort->setRange(0,65535);
     if(settings.value("server_port").toInt() == 0)
         serverPort->setValue(5080);
     else
@@ -47,6 +47,9 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 
     l->addRow("Port(requires restart): ", serverPort);
     QPushButton *ok, *cancel;
+
+    l->addRow("Extended Logging: ", saveLogs = new QCheckBox("Show all player events and all logging"));
+    saveLogs->setChecked(settings.value("show_log_messages").toBool());
 
     ok = new QPushButton("&Apply");
     cancel = new QPushButton("&Cancel");
@@ -66,10 +69,12 @@ void ServerWindow::apply()
     settings.setValue("server_maxplayers", serverPlayerMax->text());
     settings.setValue("server_port", serverPort->text());
     settings.setValue("server_announcement", serverAnnouncement->toPlainText());
+    settings.setValue("show_log_messages", saveLogs->isChecked());
     emit descChanged(serverDesc->toPlainText());
     emit nameChanged(serverName->text());
     emit maxChanged(serverPlayerMax->value());
     emit announcementChanged(serverAnnouncement->toPlainText());
     emit privacyChanged(serverPrivate->currentIndex());
+    emit logSavingChanged(saveLogs->isChecked());
     close();
 }

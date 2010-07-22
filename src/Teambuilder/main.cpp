@@ -44,6 +44,9 @@ int main(int argc, char *argv[])
     {
 	QApplication a(argc, argv);
 
+        QFontDatabase::addApplicationFont("LCD.tff");
+        QFontDatabase::addApplicationFont("Signshsc.tff");
+
 	/* Names to use later for QSettings */
         QCoreApplication::setApplicationName("Pokeymon-Online");
 	QCoreApplication::setOrganizationName("Dreambelievers");
