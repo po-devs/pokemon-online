@@ -5,6 +5,7 @@
 #include <ctime>
 #include "server.h"
 #include "waitingobject.h"
+#include "loadinsertthread.h"
 
 MemoryHolder<SecurityManager::Member>  SecurityManager::holder;
 QNickValidator SecurityManager::val(NULL);

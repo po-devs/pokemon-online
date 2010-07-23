@@ -7,6 +7,7 @@
 #include "security.h"
 #include "server.h"
 #include "waitingobject.h"
+#include "loadinsertthread.h"
 
 QString MemberRating::toString() const
 {

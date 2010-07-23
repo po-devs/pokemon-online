@@ -9,6 +9,9 @@ DESTDIR = ../../bin/myplugins
 TEMPLATE = lib
 
 DEFINES += POKEMONONLINESTATSPLUGIN_LIBRARY
+DEFINES += SERVER_SIDE
+LIBS += -L../../bin \
+    -lmaindll
 
 SOURCES += usagestats.cpp
 

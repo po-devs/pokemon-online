@@ -1,12 +1,9 @@
 #include <QtGui/QApplication>
-#include "mainwindow.h"
 #include <cstdio>
-#include "../Utilities/mtrand.h"
+#include <exception>
+#include "mainwindow.h"
 #include "server.h"
 #include "consolereader.h"
-#include "../Utilities/CrossDynamicLib.h"
-#include "plugininterface.h"
-#include <exception>
 
 void myMessageOutput(QtMsgType type, const char *msg)
 {
@@ -37,17 +34,6 @@ int main(int argc, char *argv[])
     /* Names to use later for QSettings */
     QCoreApplication::setApplicationName("Server for Pokeymon-Online");
     QCoreApplication::setOrganizationName("Dreambelievers");
-
-    try {
-        cross::DynamicLibrary dyn("myplugins/usagestats.dll");
-        PluginInstanceFunction f = (PluginInstanceFunction)(dyn.GetFunction("createPluginClass"));
-        ServerPlugin * s = f();
-        if (s) {
-            qDebug() << "Sucessfully opened plugin " << s->pluginName();
-        }
-    } catch (const std::exception &ex) {
-        qDebug() << "Loading of the plugin failed: " << ex.what();
-    }
 
     //default: show a window
     bool showWindow = true;

@@ -1,14 +1,15 @@
 #ifndef SECURITY_H
 #define SECURITY_H
 
-#include <QtNetwork>
 #include <QtCore>
-#include <QtSql>
+
 #include "../Utilities/otherwidgets.h"
 #include "memoryholder.h"
-#include "loadinsertthread.h"
 
 class WaitingObject;
+class QSqlQuery;
+class LoadThread;
+template<class T> class InsertThread;
 
 class SecurityManager : public QObject
 {

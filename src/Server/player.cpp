@@ -5,7 +5,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "tiermachine.h"
 #include "waitingobject.h"
-
+#include "server.h"
 
 
 Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
