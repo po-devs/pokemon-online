@@ -2,15 +2,16 @@
 #define TIERMACHINE_H
 
 #include <QtGui>
-#include <QtSql>
 #include "../Utilities/functions.h"
-#include "loadinsertthread.h"
 
 class Tier;
 struct TeamBattle;
 struct PokeBattle;
 class WaitingObject;
 class MemberRating;
+class QSqlQuery;
+class LoadThread;
+template<class T> class InsertThread;
 
 class TierMachine : public QObject
 {

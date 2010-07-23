@@ -1,5 +1,6 @@
 #include "tiermachine.h"
 #include "tier.h"
+#include "loadinsertthread.h"
 
 TierMachine* TierMachine::inst;
 

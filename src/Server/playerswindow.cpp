@@ -2,6 +2,8 @@
 
 #include "security.h"
 
+#include <QSqlQuery>
+
 PlayersWindow::PlayersWindow(QWidget *parent)
     : QWidget (parent)
 {

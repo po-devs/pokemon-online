@@ -1,7 +1,6 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <QtNetwork>
 #include "../Utilities/contextswitch.h"
 #include "../PokemonInfo/networkstructs.h"
 /* the server */
@@ -14,6 +13,7 @@ class BattleChoice;
 class ChallengeInfo;
 class ScriptEngine;
 class Challenge;
+class QTcpServer;
 
 class Server: public QObject
 {
@@ -22,6 +22,8 @@ class Server: public QObject
     friend class ScriptEngine;
 public:
     Server(quint16 port = 5080);
+    ~Server();
+
     void start();
 
     static void print(const QString &line);
@@ -136,7 +138,7 @@ private:
 
     bool showLogMessages;
 
-    QTcpServer myserver;
+    QTcpServer *myserver;
     /* storing players */
     QHash<int, Player*> myplayers;
     QHash<QString, int> mynames;

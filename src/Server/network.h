@@ -1,7 +1,9 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include <QtNetwork>
+#include <QtCore>
+
+class QTcpSocket;
 
 class Network : public QObject
 {
@@ -25,7 +27,7 @@ public:
 public slots:
     void onReceipt();
     void onDisconnect();
-    void manageError(QAbstractSocket::SocketError);
+    void manageError(int error);
     void send(const QByteArray &message);
 signals:
     void isFull(QByteArray command);

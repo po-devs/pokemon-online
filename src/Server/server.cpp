@@ -1,4 +1,5 @@
 #include <ctime> /* for random numbers, time(NULL) needed */
+#include <QtNetwork>
 #include "server.h"
 #include "player.h"
 #include "challenge.h"
@@ -25,6 +26,12 @@ Server *Server::serverIns = NULL;
 Server::Server(quint16 port)
 {
     serverPort = port;
+    myserver = new QTcpServer();
+}
+
+Server::~Server()
+{
+    myserver->deleteLater();
 }
 
 /**
@@ -170,7 +177,7 @@ void Server::print(const QString &line)
 
 QTcpServer * Server::server()
 {
-    return &myserver;
+    return myserver;
 }
 
 void Server::loadRatedBattlesSettings()

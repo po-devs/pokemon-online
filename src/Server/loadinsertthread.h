@@ -2,10 +2,10 @@
 #define LOADINSERTTHREAD_H
 
 #include <QtCore>
-#include <QtSql>
 #include "sql.h"
 
 class WaitingObject;
+class QSqlQuery;
 
 class LoadThread : public QThread
 {
