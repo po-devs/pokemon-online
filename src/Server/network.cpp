@@ -1,5 +1,3 @@
-#include <QtNetwork>
-
 #include "network.h"
 #include "antidos.h"
 
@@ -7,14 +5,14 @@ Network::Network(QTcpSocket *sock, int id) : mysocket(sock), commandStarted(fals
 {
     connect(socket(), SIGNAL(readyRead()), this, SLOT(onReceipt()));
     connect(socket(), SIGNAL(disconnected()), this, SIGNAL(disconnected()));
-    connect(socket(), SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(manageError(int)));
+    connect(socket(), SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(manageError(QAbstractSocket::SocketError)));
     /* SO THE SOCKET IS SAFELY DELETED LATER WHEN DISCONNECTED! */
     connect(socket(), SIGNAL(disconnected()), socket(), SLOT(deleteLater()));
     connect(this, SIGNAL(destroyed()), socket(), SLOT(deleteLater()));
     _ip = socket()->peerAddress().toString();
 }
 
-void Network::manageError(int err)
+void Network::manageError(QAbstractSocket::SocketError err)
 {
     myerror = err;
 }

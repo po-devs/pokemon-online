@@ -10,6 +10,8 @@ PokemonOnlineStatsPlugin::PokemonOnlineStatsPlugin()
 {
     QDir d;
     d.mkdir("usage_stats");
+    d.mkdir("usage_stats/raw");
+    d.mkdir("usage_stats/formatted");
 }
 
 QString PokemonOnlineStatsPlugin::pluginName()
@@ -23,7 +25,8 @@ void PokemonOnlineStatsPlugin::battleStarting(Player *p1, Player *p2)
         QString tier = p1->tier();
         if (!existingDirs.contains(tier)) {
             QDir d;
-            d.mkdir(QString("usage_stats/%1").arg(tier));
+            d.mkdir(QString("usage_stats/raw/%1").arg(tier));
+            existingDirs[tier] = QString("usage_stats/raw/%1").arg(tier);
         }
     }
 }

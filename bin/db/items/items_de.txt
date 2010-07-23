@@ -211,6 +211,7 @@ Steinknochen
 Wurzelfossil
 Kopffossil
 Eisenkugel
+Platinum Orb
 Air Mail
 Bloom Mail
 Brick Mail
