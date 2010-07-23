@@ -1,9 +1,7 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include <QtCore>
-
-class QTcpSocket;
+#include <QtNetwork>
 
 class Network : public QObject
 {
@@ -12,9 +10,9 @@ public:
     Network(QTcpSocket *sock, int id);
     ~Network();
     /* Functions to reimplement:
-	   isValid: returns whether the socket is valid or not!
-	   close: closes the socket after writing the pending data
-	   abort: abruptly closes the socket */
+           isValid: returns whether the socket is valid or not!
+           close: closes the socket after writing the pending data
+           abort: abruptly closes the socket */
     int error() const;
     QString errorString() const;
     QString ip() const;
@@ -27,7 +25,7 @@ public:
 public slots:
     void onReceipt();
     void onDisconnect();
-    void manageError(int error);
+    void manageError(QAbstractSocket::SocketError);
     void send(const QByteArray &message);
 signals:
     void isFull(QByteArray command);

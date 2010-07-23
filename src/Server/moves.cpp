@@ -593,7 +593,8 @@ struct MMDetect : public MM
 	}
         int attack = move(b,s);
 	/* Curse, Feint, Psychup, Role Play, Transform */
-        if (attack == Curse || attack == Feint || attack == PsychUp || attack == RolePlay || attack == Transform || attack == ShadowForce) {
+        if (attack == Curse || attack == Feint || attack == PsychUp || attack == RolePlay || attack == Transform || attack == ShadowForce
+            || attack == DoomDesire || attack == FutureSight) {
 	    return;
 	}
         /* Mind Reader */
