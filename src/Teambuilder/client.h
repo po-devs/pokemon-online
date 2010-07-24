@@ -49,6 +49,15 @@ public:
     void sortAllPlayersByTier();
     void sortAllPlayersNormally();
 
+    enum Status {
+        Available = 0,
+        Away,
+        Battling,
+        Ignored,
+        LastStatus
+    };
+    QIcon statusIcon(int auth, Status status) const;
+
     void seeChallenge(const ChallengeInfo &c);
 
     PlayerInfo player(int id) const;
@@ -60,12 +69,6 @@ public:
     QList<QColor> chatColors;
     QList<QIcon> statusIcons;
 
-    enum Status {
-        Available = 0,
-        Away,
-        Battling,
-        Ignored
-    };
 public slots:
     void errorFromNetwork(int errnum, const QString &error);
     void connected();
@@ -162,7 +165,6 @@ public slots:
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
-//    void musicPlayingChanged(bool);
 protected:
     void paintEvent(QPaintEvent *)
     {

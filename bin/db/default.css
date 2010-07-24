@@ -4,6 +4,25 @@
 		stop:0 white, stop:1 #0ca0dd); 
 }
 
+Client QTextEdit {
+	font-family: Segoe UI;
+	font-size: 13px;
+}
+
+Client QTreeWidget {
+	font-family: Segoe UI Semibold;
+	font-size: 12px;
+}
+
+Client QTreeWidget::branch:!has-children {
+	border: 0px;
+	width: 5px;
+}
+
+Client QTreeWidget#PlayerList::item {
+	/*height: 20px;*/
+}
+
 /*
 QMenuBar#MainChat{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -262,8 +281,6 @@ PokeButton {
 }
 
 
-
-
 QLabel#MyTrainerBox, QLabel#OppTrainerBox {
 	height: 80px;
 	width: 80px;
@@ -279,8 +296,6 @@ QLabel#OppTrainerBox {
 	border: 1px solid #16a7d6
 }
 
-
-
 QLabel#AttackName, QLabel#AttackPP{
 	font-family: Trebuchet MS;
 	font-weight: bold;
@@ -295,10 +310,6 @@ QLabel#AttackPP{
 OldAttackButton{
 	min-height: 45px;
 }
-
-
-
-
 
 
 PokeBallDescBox {

@@ -29,11 +29,14 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mytab->addTab(battleList = new QTreeWidget(), tr("Battles"));
     myplayers->setColumnCount(1);
     myplayers->header()->hide();
-    myplayers->setAlternatingRowColors(true);
+    myplayers->setIconSize(QSize(24,24));
+    myplayers->setIndentation(13);
+    myplayers->setObjectName("PlayerList");
     battleList->setColumnCount(2);
     battleList->setHeaderLabels(QStringList() << tr("Player 1") << tr("Player 2"));
     battleList->setSortingEnabled(true);
     battleList->resizeColumnToContents(0);
+    battleList->setIndentation(0);
 
     s->addWidget(mytab);
 
@@ -95,7 +98,14 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
         }
     }
 
-    statusIcons << QIcon("db/client/Available.png") << QIcon("db/client/Away.png") << QIcon("db/client/Battling.png") << QIcon("db/client/Ignored.png");
+    const char * authLevels[] = {"u", "m", "a", "o"};
+    const char * statuses[] = {"Available", "Away", "Battle", "Ignore"};
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < LastStatus; j++) {
+            statusIcons << QIcon(QString("db/client/%1%2.png").arg(authLevels[i], statuses[j]));
+        }
+    }
 }
 
 void Client::initRelay()
@@ -143,6 +153,13 @@ int Client::auth(int id) const
 int Client::ownId() const
 {
     return _mid;
+}
+
+QIcon Client::statusIcon(int auth, Status status) const
+{
+    if (auth > 3)
+        auth = 0;
+    return statusIcons[auth*LastStatus+status];
 }
 
 void Client::showContextMenu(const QPoint &requested)
@@ -1214,13 +1231,13 @@ QString Client::authedNick(int id) const
 
     QString nick = p.team.name;
 
-    if (p.auth > 0 && p.auth < 4) {
+    /*if (p.auth > 0 && p.auth < 4) {
         nick += ' ';
 
         for (int i = 0; i < p.auth; i++) {
             nick += '*';
         }
-    }
+    }*/
 
     return nick;
 }
@@ -1263,8 +1280,7 @@ void Client::playerReceived(const PlayerInfo &p)
     item = new QIdTreeWidgetItem(p.id, QStringList() << nick);
 
     QFont f = item->font(0);
-    if (auth(p.id) > 0)
-        f.setBold(true);
+    f.setBold(true);
     item->setFont(0,f);
     item->setText(0,nick);
 
@@ -1347,7 +1363,7 @@ void Client::printLine(const QString &line)
         } else if (beg == "Welcome Message") {
             mainChat()->insertHtml("<span style='color:blue'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
         } else if (id(beg) == -1) {
-            mainChat()->insertHtml("<span style='color:#3daa68'>" + timeStr + escapeHtml(beg)  + ":</span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:#3daa68'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + escapeHtml(end) + "<br />");
         } else {
             if (myIgnored.contains(id(beg)))
                 return;
@@ -1357,7 +1373,7 @@ void Client::printLine(const QString &line)
             else if (id(beg) == ownId()) {
                 mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
             } else {
-                mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + escapeHtml(beg) + ":</span>" + escapeHtml(end) + "<br />");
+                mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
             }
 	}
     } else {
@@ -1447,16 +1463,17 @@ PlayerInfo &Client::playerInfo(int id)
 
 void Client::updateState(int id)
 {
+    int auth = this->auth(id);
     if (item(id)) {
         if (myIgnored.contains(id)) {
-            item(id)->setIcon(0, statusIcons[Ignored]);
+            item(id)->setIcon(0, statusIcon(auth,Ignored));
         }  if (playerInfo(id).battling()) {
-        item(id)->setIcon(0, statusIcons[Battling]);
+        item(id)->setIcon(0, statusIcon(auth,Battling));
     } else if (playerInfo(id).away()) {
-        item(id)->setIcon(0, statusIcons[Away]);
+        item(id)->setIcon(0, statusIcon(auth,Away));
         item(id)->setToolTip(0, "");
     } else {
-        item(id)->setIcon(0, statusIcons[Available]);
+        item(id)->setIcon(0, statusIcon(auth,Available));
         item(id)->setToolTip(0, "");
     }
 }
@@ -1484,7 +1501,7 @@ void Client::ignore(int id)
 {
     printLine(tr("You ignored %1.").arg(name(id)));
     myIgnored.append(id);
-    item(id)->setIcon(0, statusIcons[Ignored]);
+    updateState(id);
 }
 
 void Client::removeIgnore(int id)
