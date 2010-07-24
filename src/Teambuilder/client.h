@@ -210,6 +210,7 @@ private:
     bool showTS;
     bool sortBT;
     bool findingBattle;
+    int _mid;
 
     QString serverVersion;
 

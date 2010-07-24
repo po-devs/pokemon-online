@@ -14,6 +14,7 @@
 
 Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), myrelay(), findingBattle(false)
 {
+    _mid = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder = NULL;
     resize(1000, 700);
@@ -28,6 +29,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mytab->addTab(battleList = new QTreeWidget(), tr("Battles"));
     myplayers->setColumnCount(1);
     myplayers->header()->hide();
+    myplayers->setAlternatingRowColors(true);
     battleList->setColumnCount(2);
     battleList->setHeaderLabels(QStringList() << tr("Player 1") << tr("Player 2"));
     battleList->setSortingEnabled(true);
@@ -140,7 +142,7 @@ int Client::auth(int id) const
 
 int Client::ownId() const
 {
-    return id(ownName());
+    return _mid;
 }
 
 void Client::showContextMenu(const QPoint &requested)
@@ -624,7 +626,7 @@ void Client::playMusic(bool save)
     QSettings s;
     s.setValue("play_battle_music", save);
 
-//    emit musicPlayingChanged(save);
+    //    emit musicPlayingChanged(save);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
@@ -736,7 +738,6 @@ void Client::sortAllPlayersByTier()
         //it->setColor("white");
         QFont f = it->font(0);
         f.setPixelSize(15);
-        f.setBold(true);
         it->setFont(0,f);
         it->setText(0,tier);
         myplayers->addTopLevelItem(it);
@@ -1204,7 +1205,7 @@ void Client::removePlayer(int id)
 
 QString Client::ownName() const
 {
-    return mynick;
+    return name(ownId());
 }
 
 QString Client::authedNick(int id) const
@@ -1226,6 +1227,9 @@ QString Client::authedNick(int id) const
 
 void Client::playerReceived(const PlayerInfo &p)
 {
+    if (ownId()==-1 && p.team.name == mynick)
+        _mid = p.id;
+
     QIdTreeWidgetItem *item = NULL;
 
     if (myplayersinfo.contains(p.id)) {
@@ -1259,7 +1263,8 @@ void Client::playerReceived(const PlayerInfo &p)
     item = new QIdTreeWidgetItem(p.id, QStringList() << nick);
 
     QFont f = item->font(0);
-    f.setBold(true);
+    if (auth(p.id) > 0)
+        f.setBold(true);
     item->setFont(0,f);
     item->setText(0,nick);
 
@@ -1322,7 +1327,7 @@ void Client::printLine(const QString &line)
     }
     /* Only activates if no window has focus */
     if (!QApplication::activeWindow()) {
-        if (line.contains(QRegExp(QString("\\b%1\\b").arg(ownName())))) {
+        if (line.contains(QRegExp(QString("\\b%1\\b").arg(ownName()),Qt::CaseInsensitive))) {
             raise();
             activateWindow();
         }
@@ -1342,16 +1347,18 @@ void Client::printLine(const QString &line)
         } else if (beg == "Welcome Message") {
             mainChat()->insertHtml("<span style='color:blue'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
         } else if (id(beg) == -1) {
-            mainChat()->insertHtml("<span style='color:#3daa68'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:#3daa68'>" + timeStr + escapeHtml(beg)  + ":</span>" + escapeHtml(end) + "<br />");
         } else {
             if (myIgnored.contains(id(beg)))
                 return;
             if (auth(id(beg)) > 0) {
                 mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + "+<i><b>" + escapeHtml(beg) + ":</i></b></span>" + escapeHtml(end) + "<br />");
             }
-            else {
-            mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
-        }
+            else if (id(beg) == ownId()) {
+                mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+            } else {
+                mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + escapeHtml(beg) + ":</span>" + escapeHtml(end) + "<br />");
+            }
 	}
     } else {
         mainChat()->insertPlainText( timeStr + line + "\n");
@@ -1444,15 +1451,15 @@ void Client::updateState(int id)
         if (myIgnored.contains(id)) {
             item(id)->setIcon(0, statusIcons[Ignored]);
         }  if (playerInfo(id).battling()) {
-            item(id)->setIcon(0, statusIcons[Battling]);
-        } else if (playerInfo(id).away()) {
-            item(id)->setIcon(0, statusIcons[Away]);
-            item(id)->setToolTip(0, "");
-        } else {
-            item(id)->setIcon(0, statusIcons[Available]);
-            item(id)->setToolTip(0, "");
-        }
+        item(id)->setIcon(0, statusIcons[Battling]);
+    } else if (playerInfo(id).away()) {
+        item(id)->setIcon(0, statusIcons[Away]);
+        item(id)->setToolTip(0, "");
+    } else {
+        item(id)->setIcon(0, statusIcons[Available]);
+        item(id)->setToolTip(0, "");
     }
+}
 }
 
 void Client::requestBan(const QString &name)
@@ -1509,7 +1516,7 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
     ml->addLayout(sub2);
     sub2->addWidget(rangeOn = new QCheckBox(tr("Only battle players with a max rating difference of ")));
     sub2->addWidget(range = new QLineEdit());
-/*
+    /*
     QGroupBox *gb = new QGroupBox(tr("Clauses"));
     ml->addWidget(gb);
 
