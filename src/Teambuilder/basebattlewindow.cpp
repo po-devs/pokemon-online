@@ -27,8 +27,7 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, bool
 }
 
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, bool doubles) :
-        delayed(0), ignoreSpecs(false)/*, music(NULL), musicOutput(NULL),
-            cry(NULL), cryOutput(NULL)*/
+        delayed(0), ignoreSpecs(false)
 {
     myInfo = new BaseBattleInfo(me, opponent, doubles);
     mydisplay = new BaseBattleDisplay(info());
@@ -182,8 +181,6 @@ void BaseBattleWindow::playCry(int pokemon)
     if (!cries.contains(pokemon)) {
         cries.insert(pokemon, PokemonInfo::Cry(pokemon));
     }
-
-    cryObject->stop();
 
     cryBuffer.close();
     cryBuffer.setBuffer(&cries[pokemon]);
@@ -547,7 +544,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             qint32 id;
             QString message;
             in >> id >> message;
-            printHtml(toBoldColor(client()->name(id), Qt::blue) + ": " + escapeHtml(message));
+            printHtml(toColor(client()->name(id), Qt::blue) + ": " + escapeHtml(message));
             break;
         }
     case MoveMessage:

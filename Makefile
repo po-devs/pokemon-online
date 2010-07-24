@@ -1,7 +1,7 @@
 BT=src/Teambuilder/
 BS=src/Server/
-BU=src/Utilities
-BP=src/PokemonInfo
+BU=src/Utilities/
+BP=src/PokemonInfo/
 
 
 all:	
