@@ -67,7 +67,6 @@ class BaseBattleWindow : public QWidget
     Q_OBJECT
 
     PROPERTY(int, battleId);
-    PROPERTY(Client *, client);
     PROPERTY(int, animatedHpSpot);
     PROPERTY(int, animatedHpGoal);
     PROPERTY(bool, started);
@@ -183,6 +182,14 @@ public:
     int player(int spot) const;
     int opponent(int player) const;
 
+    Client *& client() {
+        return _mclient;
+    }
+
+    const Client * client() const {
+        return _mclient;
+    }
+
     bool musicPlayed() const;
     void playCry(int pokemon);
 
@@ -212,6 +219,7 @@ protected:
     QLineEdit *myline;
     BaseBattleDisplay *mydisplay;
     QPushButton *myclose, *mysend;
+    Client *_mclient;
 
     QCheckBox *saveLogs;
     QCheckBox *musicOn;

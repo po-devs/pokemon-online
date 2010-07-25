@@ -10,6 +10,8 @@ extern "C" {
 POKEMONONLINESTATSPLUGINSHARED_EXPORT ServerPlugin * createPluginClass(void);
 };
 
+class PokeBattle;
+
 class POKEMONONLINESTATSPLUGINSHARED_EXPORT PokemonOnlineStatsPlugin
     : public ServerPlugin
 {
@@ -19,10 +21,17 @@ public:
 
     QString pluginName();
 
-    void battleStarting(Player *p1, Player *p2);
+    void battleStarting(PlayerInterface *p1, PlayerInterface *p2);
 
 private:
-    QSet<QString> existingDirs;
+    QHash<QString, QString> existingDirs;
+    QCryptographicHash md5;
+
+    /* Returns a simplified version of the pokemon on 24 bytes */
+    QByteArray data(const PokeBattle &p) const;
+    void savePokemon(const PokeBattle &p, bool lead, const QString &d);
+
+    static const int bufsize = 5*sizeof(qint32)+4*sizeof(quint16);
 };
 
 #endif // POKEMONONLINESTATSPLUGIN_H

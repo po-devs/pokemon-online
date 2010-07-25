@@ -8,7 +8,7 @@
    a lot of changes... */
 
 class QWidget;
-class Player;
+class PlayerInterface;
 
 class ServerPlugin
 {
@@ -24,7 +24,7 @@ public:
     }
 
     /* For plugins that needs to know (like some stat gathering plugins =) ) */
-    virtual void battleStarting(Player *p1, Player *p2) {
+    virtual void battleStarting(PlayerInterface *p1, PlayerInterface *p2) {
     }
 };
 

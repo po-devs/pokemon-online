@@ -52,21 +52,21 @@ QDataStream & operator << (QDataStream &out, const BattleMove &mo);
 class PokeBattle
 {
     PROPERTY(QString, nick);
+    PROPERTY(QList<int>, dvs);
+    PROPERTY(QList<int>, evs);
     PROPERTY(quint16, lifePoints);
     PROPERTY(quint16, totalLifePoints);
-    PROPERTY(qint8, status);
-    PROPERTY(qint8, sleepCount);
     PROPERTY(quint16, num);
     PROPERTY(quint16, item);
     PROPERTY(quint16, ability);
-    PROPERTY(bool, shiny);
+    PROPERTY(qint8, status);
+    PROPERTY(qint8, sleepCount);
     PROPERTY(quint8, gender);
     PROPERTY(quint8, level);
     PROPERTY(quint8, forme);
     PROPERTY(quint8, nature);
     PROPERTY(quint8, happiness);
-    PROPERTY(QList<int>, dvs);
-    PROPERTY(QList<int>, evs);
+    PROPERTY(bool, shiny);
 public:
     PokeBattle();
 
@@ -263,7 +263,7 @@ struct BattleConfiguration
         return spot + poke*2;
     }
 
-    int spot(int id) {
+    int spot(int id) const {
         return ids[0] == id ? 0 : 1;
     }
 };
