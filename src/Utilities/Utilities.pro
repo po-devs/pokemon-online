@@ -15,3 +15,4 @@ HEADERS += otherwidgets.h \
     CrossDynamicLib.h \
     coro.h \
     contextswitch.h
+OTHER_FILES += 

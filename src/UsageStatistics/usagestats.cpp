@@ -30,14 +30,14 @@ QByteArray PokemonOnlineStatsPlugin::data(const PokeBattle &p) const {
     QByteArray ret;
     ret.resize(bufsize);
 
-    /* Constructs 24 bytes of raw data representing the pokemon */
+    /* Constructs 28 bytes of raw data representing the pokemon */
     qint32 *a = (qint32*)ret.data();
     
-    a[0] = p.num() << 16 + p.item();
-    a[1] = p.ability() << 16 + p.gender() << 8 + p.level();
-    a[2] = p.nature() << 24 + p.evs()[0] << 16 + p.evs()[1] << 8 + p.evs()[2];
-    a[3] = p.evs()[3] << 16 + p.evs()[4] << 8 + p.evs()[5];
-    a[4] = p.dvs()[5] << 25 + p.dvs()[4] << 20 + p.dvs()[3] << 15 + p.dvs()[2] << 10 + p.dvs()[1] << 5 + p.dvs()[0];
+    a[0] = (p.num() << 16) + p.item();
+    a[1] = (p.ability() << 16) + (p.gender() << 8) + p.level();
+    a[2] = (p.nature() << 24) + (p.evs()[0] << 16) + (p.evs()[1] << 8) + p.evs()[2];
+    a[3] = (p.evs()[3] << 16) + (p.evs()[4] << 8) + p.evs()[5];
+    a[4] = (p.dvs()[0] << 25) + (p.dvs()[1] << 20) + (p.dvs()[2] << 15) + (p.dvs()[3] << 10) + (p.dvs()[4] << 5) + p.dvs()[5];
 
     /* Here the moves are sorted because we don't want to have different
        movesets when moves are in a different order */
@@ -51,9 +51,11 @@ QByteArray PokemonOnlineStatsPlugin::data(const PokeBattle &p) const {
     return ret;
 }
 
-void PokemonOnlineStatsPlugin::battleStarting(PlayerInterface *p1, PlayerInterface *p2)
+void PokemonOnlineStatsPlugin::battleStarting(PlayerInterface *p1, PlayerInterface *p2, const ChallengeInfo &c)
 {
-    if (p1->tier() != p2->tier())
+    /* We only keep track of battles between players of the same tier
+       and not CC battles */
+    if (p1->tier() != p2->tier() || c.clauses & ChallengeInfo::ChallengeCup)
         return;
 
     QString tier = p1->tier();
@@ -77,7 +79,12 @@ void PokemonOnlineStatsPlugin::battleStarting(PlayerInterface *p1, PlayerInterfa
 /* Basically, we take the first 2 letters of the hash of the pokemon's raw data,
    and we open that file. We then put the pokemon if it isn't already in, and
    we also open another file with those two letters + _count, in which we write
-   two numbers: the usage and the lead usage of the set. */
+   two numbers: the usage and the lead usage of the set.
+
+   The reason for using low level functions is because this is a pretty critical
+   section in my opinion for big servers, and C++ file management systems are
+   pretty slow.
+*/
 void PokemonOnlineStatsPlugin::savePokemon(const PokeBattle &p, bool lead, const QString &d)
 {
     if (p.num() == 0)
@@ -86,49 +93,44 @@ void PokemonOnlineStatsPlugin::savePokemon(const PokeBattle &p, bool lead, const
     const QByteArray &data = this->data(p);
 
     QByteArray file = (d + QCryptographicHash::hash(data, QCryptographicHash::Md5).left(1).toHex()).toUtf8();
-    QByteArray file2 = file + "_count";
 
-    FILE *raw_f = fopen(file.data(), "rw");
+    FILE *raw_f = fopen(file.data(), "r+");
+
+    if (!raw_f) {
+        raw_f = fopen(file.data(), "w+");
+    }
 
     char buffer[bufsize];
 
-    int count = 0;
-    while (fread(buffer, sizeof(char), bufsize/sizeof(char), raw_f) == signed(bufsize) ) {
+    /* We look for the pokemon in the file. Read 28 bytes, compare, skip 8 bytes, read 28 bytes, ... */
+    while (!feof(raw_f) && fread(buffer, sizeof(char), bufsize/sizeof(char), raw_f) == signed(bufsize) ) {
         if (memcmp(data.data(), buffer, bufsize) == 0) {
             break;
         }
-        count = count + 1;
+        /* Not being interested by the count */
+        fseek(raw_f, 2 * sizeof(qint32), SEEK_CUR);
     }
 
-    bool newFile = false;
+    qint32 usage(0), leadusage(0);
+
+    /* The pokemon was never used before */
     if (feof(raw_f)) {
-        newFile = true;
         fseek(raw_f, 0, SEEK_END);
         fwrite(data.data(), sizeof(char), bufsize/sizeof(char), raw_f);
-    }
-
-    fclose(raw_f);
-
-    FILE *count_f = fopen(file2.data(), "rw");
-
-    fseek(count_f, count * sizeof(qint32) * 2, SEEK_SET);
-
-    qint32 usage, leadusage;
-
-    if (newFile) {
-        usage = 0;
-        leadusage = 0;
     } else {
-        fread(&usage, sizeof(qint32), 1, count_f);
-        fread(&leadusage, sizeof(qint32), 1, count_f);
-        fseek(count_f, -sizeof(qint32)*2, SEEK_CUR);
+        /* The pokemon was used before so there's already a count,
+            so we read the count and then move back */
+        fread(&usage, sizeof(qint32), 1, raw_f);
+        fread(&leadusage, sizeof(qint32), 1, raw_f);
+        fseek(raw_f, -sizeof(qint32)*2, SEEK_CUR);
     }
 
     usage += 1;
     leadusage += int(lead);
 
-    fwrite(&usage, sizeof(qint32), 1, count_f);
-    fwrite(&leadusage, sizeof(qint32), 1, count_f);
+    /* Write the final counts */
+    fwrite(&usage, sizeof(qint32), 1, raw_f);
+    fwrite(&leadusage, sizeof(qint32), 1, raw_f);
 
-    fclose(count_f);
+    fclose(raw_f);
 }

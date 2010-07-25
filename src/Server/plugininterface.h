@@ -9,6 +9,7 @@
 
 class QWidget;
 class PlayerInterface;
+class ChallengeInfo;
 
 class ServerPlugin
 {
@@ -24,7 +25,7 @@ public:
     }
 
     /* For plugins that needs to know (like some stat gathering plugins =) ) */
-    virtual void battleStarting(PlayerInterface *p1, PlayerInterface *p2) {
+    virtual void battleStarting(PlayerInterface *p1, PlayerInterface *p2, const ChallengeInfo &c) {
     }
 };
 

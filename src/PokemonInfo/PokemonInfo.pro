@@ -14,3 +14,4 @@ HEADERS += pokemonstructs.h \
     battlestructs.h
 LIBS += -L../../bin \
     -lutilities
+OTHER_FILES += 

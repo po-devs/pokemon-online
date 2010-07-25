@@ -14,6 +14,7 @@ class ChallengeInfo;
 class ScriptEngine;
 class Challenge;
 class QTcpServer;
+class PluginManager;
 
 class Server: public QObject
 {
@@ -139,6 +140,8 @@ private:
     bool showLogMessages;
 
     QTcpServer *myserver;
+    PluginManager *pluginManager;
+
     /* storing players */
     QHash<int, Player*> myplayers;
     QHash<QString, int> mynames;
