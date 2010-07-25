@@ -8,3 +8,4 @@ HOW TO BUILD THE PROJECT:
 * For windows users, put the file in SpecialInclude into your includepath
 * On linux just run the makefile
 * On windows open src/Teambuilder/Teambuilder.pro and build and run the project. If you want to run the server, you need to build src/Utilities/Utilities.pro and src/PokemonInfo/PokemonInfo.pro before the server
+* On mac, you need to run qmake -spec macx-g++ if you want Makefile. Running qmake without -spec option creates .xcodeproject file, which you can build using xcodebuild command line tool or XCode IDE
