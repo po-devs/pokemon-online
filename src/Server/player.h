@@ -4,6 +4,7 @@
 #include "../PokemonInfo/networkstructs.h"
 #include "analyze.h"
 #include "../PokemonInfo/battlestructs.h"
+#include "playerinterface.h"
 
 class Challenge;
 class BattleSituation;
@@ -13,7 +14,7 @@ class BattleSituation;
   This is due to Analyzer that requests a deleteLater too
 ***/
 
-class Player : public QObject
+class Player : public QObject, public PlayerInterface
 {
     Q_OBJECT
 

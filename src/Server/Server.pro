@@ -68,4 +68,5 @@ HEADERS += player.h \
     serverconfig.h \
     waitingobject.h \
     tiermachine.h \
-    tier.h
+    tier.h \
+    playerinterface.h
