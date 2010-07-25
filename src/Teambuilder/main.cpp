@@ -14,6 +14,12 @@
 #include <iostream>
 #include <ctime>
 
+#ifdef Q_OS_MACX
+#include <CoreFoundation/CFURL.h>
+#include <CoreFoundation/CFBundle.h>
+#endif
+
+
 void myMessageOutput(QtMsgType type, const char *msg)
 {
     switch (type) {
@@ -39,6 +45,17 @@ int main(int argc, char *argv[])
     freopen("stdout.txt", "a", stderr);
     qInstallMsgHandler(myMessageOutput);
 #endif
+#ifdef Q_OS_MACX
+    // On Mac, switch working directory to resources folder
+    CFURLRef pluginRef = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+    CFStringRef macPath = CFURLCopyFileSystemPath(pluginRef, kCFURLPOSIXPathStyle);
+    QString path( CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding()) );
+    path += "/Contents/Resources";
+    QDir::setCurrent( path );
+    CFRelease(pluginRef);
+    CFRelease(macPath);
+#endif
+
     srand(time(NULL));
     try
     {
