@@ -264,6 +264,9 @@ void BaseBattleWindow::checkAndSaveLog()
             n2 = n2.replace(c, ' ');
         }
 
+        if(!QDir::home().exists(s.value("battle_logs_directory").toString())) {
+            QDir::home().mkpath(s.value("battle_logs_directory").toString());
+        }
         QString file = s.value("battle_logs_directory").toString() + n1 + " vs " + n2 + "--" + QDate::currentDate().toString("dd MMMM yyyy")
                + " at " +QTime::currentTime().toString("hh'h'mm") + ".html";
         QFile out (file);
