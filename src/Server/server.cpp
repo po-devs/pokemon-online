@@ -20,6 +20,7 @@
 #include "battlingoptions.h"
 #include "sql.h"
 #include "sqlconfig.h"
+#include "pluginmanager.h"
 
 Server *Server::serverIns = NULL;
 
@@ -27,11 +28,14 @@ Server::Server(quint16 port)
 {
     serverPort = port;
     myserver = new QTcpServer();
+    pluginManager = new PluginManager();
 }
+
 
 Server::~Server()
 {
     myserver->deleteLater();
+    delete pluginManager;
 }
 
 /**
@@ -898,8 +902,9 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     mybattles.insert(id, battle);
     battleList.insert(id, Battle(id1, id2));
 
-    player(id1)->startBattle(id, id2, battle->pubteam(id1), battle->configuration(), battle->doubles());
-    player(id2)->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), battle->doubles());
+    Player *p1 (player(id1)), *p2 (player(id2));
+    p1->startBattle(id, id2, battle->pubteam(id1), battle->configuration(), battle->doubles());
+    p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), battle->doubles());
 
     foreach(Player *p, myplayers) {
         if (p->isLoggedIn() && p->id() != id1 && p->id() != id2) {
@@ -909,6 +914,8 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 
     connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
     connect(battle, SIGNAL(battleFinished(int,int,int,int,bool)), SLOT(battleResult(int, int,int,int)));
+
+    pluginManager->battleStarting(p1, p2, c);
 
     battle->start(battleThread);
 

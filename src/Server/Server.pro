@@ -69,4 +69,17 @@ HEADERS += player.h \
     waitingobject.h \
     tiermachine.h \
     tier.h \
-    playerinterface.h
+    playerinterface.h \
+    ../PokemonInfo/pokemonstructs.h \
+    ../PokemonInfo/pokemoninfo.h \
+    ../PokemonInfo/networkstructs.h \
+    ../PokemonInfo/movesetchecker.h \
+    ../PokemonInfo/battlestructs.h \
+    ../Shared/config.h \
+    ../Utilities/otherwidgets.h \
+    ../Utilities/mtrand.h \
+    ../Utilities/functions.h \
+    ../Utilities/CrossDynamicLib.h \
+    ../Utilities/coro.h \
+    ../Utilities/contextswitch.h
+OTHER_FILES += 

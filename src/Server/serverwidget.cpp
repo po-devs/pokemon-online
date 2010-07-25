@@ -24,42 +24,34 @@
 ServerWidget::ServerWidget(Server *myserver)
 {
     server = myserver;
-    
-    try{
 
-        QGridLayout *mylayout = new QGridLayout (this);
+    QGridLayout *mylayout = new QGridLayout (this);
 
-        mylist = new QListWidget();
-        mylayout->addWidget(mylist,1,0,2,1);
+    mylist = new QListWidget();
+    mylayout->addWidget(mylist,1,0,2,1);
 
-        mymainchat = new QScrollDownTextEdit();
-        mylayout->addWidget(mymainchat,1,1);
+    mymainchat = new QScrollDownTextEdit();
+    mylayout->addWidget(mymainchat,1,1);
 
-        myline = new QLineEdit();
-        mylayout->addWidget(myline, 2,1);
+    myline = new QLineEdit();
+    mylayout->addWidget(myline, 2,1);
 
-        mylist->setContextMenuPolicy(Qt::CustomContextMenu);
-        mylist->setSortingEnabled(true);
-        mylist->setFixedWidth(150);
+    mylist->setContextMenuPolicy(Qt::CustomContextMenu);
+    mylist->setSortingEnabled(true);
+    mylist->setFixedWidth(150);
 
-        connect(mylist, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
-        connect(myline, SIGNAL(returnPressed()), SLOT(sendServerMessage()));
+    connect(mylist, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
+    connect(myline, SIGNAL(returnPressed()), SLOT(sendServerMessage()));
 
-        //the server emits a signal when there is a (chat)message to be shown
-        connect(server, SIGNAL(chatmessage(QString)), SLOT(addChatline(QString)));
-        connect(server, SIGNAL(servermessage(QString)), SLOT(addChatline(QString)));
+    //the server emits a signal when there is a (chat)message to be shown
+    connect(server, SIGNAL(chatmessage(QString)), SLOT(addChatline(QString)));
+    connect(server, SIGNAL(servermessage(QString)), SLOT(addChatline(QString)));
 
-        connect(server, SIGNAL(player_incomingconnection(int)), SLOT(playerConnects(int)));
-        connect(server, SIGNAL(player_logout(int)), SLOT(playerDisconnects(int)));
-        connect(server, SIGNAL(player_authchange(int, QString)), SLOT(playerChangedName(int, QString)));
+    connect(server, SIGNAL(player_incomingconnection(int)), SLOT(playerConnects(int)));
+    connect(server, SIGNAL(player_logout(int)), SLOT(playerDisconnects(int)));
+    connect(server, SIGNAL(player_authchange(int, QString)), SLOT(playerChangedName(int, QString)));
 
-        mainchat()->setMinimumWidth(500);
-
-    } catch (const QString &e) {
-        qDebug() << "Exception" << e;
-    }
-
-
+    mainchat()->setMinimumWidth(500);
 }
 
 

@@ -21,13 +21,13 @@ public:
 
     QString pluginName();
 
-    void battleStarting(PlayerInterface *p1, PlayerInterface *p2);
+    void battleStarting(PlayerInterface *p1, PlayerInterface *p2, const ChallengeInfo &c);
 
 private:
     QHash<QString, QString> existingDirs;
     QCryptographicHash md5;
 
-    /* Returns a simplified version of the pokemon on 24 bytes */
+    /* Returns a simplified version of the pokemon on 28 bytes */
     QByteArray data(const PokeBattle &p) const;
     void savePokemon(const PokeBattle &p, bool lead, const QString &d);
 
