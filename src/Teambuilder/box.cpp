@@ -328,8 +328,15 @@ void PokemonBox::save()
             slot.appendChild(pokemons[i]->poke->toXml());
         }
     }
-
-    QFile out(QString("Boxes/Box %1.box").arg(QChar('A'+getNum())));
+#if defined(Q_OS_MAC)
+    QString boxpath = QString(QDir::homePath() + "/Library/Application Support/Pokemon Online/Boxes");
+    if(!QDir::home().exists(boxpath)) {
+        QDir::home().mkpath(boxpath);
+    }
+#else
+    QString boxpath = QString("Boxes");
+#endif
+    QFile out(QString(boxpath + "/Box %1.box").arg(QChar('A'+getNum())));
     out.open(QIODevice::WriteOnly);
     QTextStream str(&out);
     doc.save(str,4);
@@ -339,7 +346,15 @@ void PokemonBox::load()
 {
     QDomDocument doc;
 
-    QFile in(QString("Boxes/Box %1.box").arg(QChar('A'+getNum())));
+#if defined(Q_OS_MAC)
+    QString boxpath = QString(QDir::homePath() + "/Library/Application Support/Pokemon Online/Boxes");
+    if(!QDir::home().exists(boxpath)) {
+        QDir::home().mkpath(boxpath);
+    }
+#else
+    QString boxpath = QString("Boxes");
+#endif
+    QFile in(QString(boxpath + "/Box %1.box").arg(QChar('A'+getNum())));
     in.open(QIODevice::ReadOnly);
 
     if(!doc.setContent(&in))

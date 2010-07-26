@@ -72,3 +72,6 @@ TRANSLATIONS = translation_de.ts \
     translation_zh-cn.ts
 RC_FILE = myapp.rc
 RESOURCES += 
+macx {
+    LIBS += -framework CoreFoundation
+}
