@@ -31,7 +31,7 @@ namespace NetworkServ
 	BattleFinished,
         BattleMessage = 10,
 	BattleChat,
-        KeepAlive,
+        KeepAlive, /* obsolete since we use a native Qt option now */
         AskForPass,
         Register,
         PlayerKick,
@@ -180,7 +180,6 @@ public slots:
     /* slots called by the network */
     void error();
     void commandReceived (const QByteArray &command);
-    void keepAlive();
     void undelay();
 private:
     Network &socket();
@@ -192,7 +191,6 @@ private:
     int delayCount;
 
     Network mysocket;
-    QTimer *mytimer;
     QMutex mutex;
 };
 

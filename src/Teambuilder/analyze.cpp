@@ -12,6 +12,7 @@ using namespace NetworkCli;
 Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection)
 {
     connect(&socket(), SIGNAL(connected()), SIGNAL(connected()));
+    connect(&socket(), SIGNAL(connected()), this, SLOT(wasConnected()));
     connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
     connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
     connect(&socket(), SIGNAL(isFull(QByteArray)), SLOT(commandReceived(QByteArray)));
@@ -108,6 +109,11 @@ void Analyzer::connectTo(const QString &host, quint16 port)
 void Analyzer::error()
 {
     emit connectionError(socket().error(), socket().errorString());
+}
+
+void Analyzer::wasConnected()
+{
+    socket().setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 }
 
 void Analyzer::commandReceived(const QByteArray &commandline)
