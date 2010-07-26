@@ -1,0 +1,76 @@
+/* Top 5 pokemon in the tier page */
+.topPokemon {
+	font-weight: bold;
+	margin-bottom: 0px;
+}
+
+/* Lower pokemon in the tier page */
+.lowPokemon {
+	margin-bottom: 0px;
+}
+
+/* Top of a tier page */
+.tierBattleNumber {
+}
+
+/* Top of a pokemon page */
+.pokemonBattleNumber {
+	/*text-align: center;*/
+}
+
+/* Ranks within a pokemon page */
+.pokemonRank {
+	font-weight: bold;
+}
+
+/* Styles <ul> */
+.moveList {
+}
+
+/* Styles <li> */
+.move {
+}
+
+/* Level, item, ability */
+.pokemonTitle {
+	margin-bottom: 0px;
+}
+
+/* Evs, ivs, nature */
+.advanced {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 0.9em;
+}
+
+.smallPercent {
+	padding-left: 10px;
+	font-size: 0.7em;
+}
+
+/* Links */
+a {
+    text-decoration : none;
+    color : #0ca0dd;
+}
+a:hover {
+    color : #0462dd;
+    text-shadow : 0px 0px 3px #0462dd;
+}
+a img {
+    border : 0px;
+}
+
+header {
+    display : block;
+    margin : 0px auto;
+	/*text-align: center;*/
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+body {
+	
+}
