@@ -1,0 +1,42 @@
+page{{
+<html>
+	<head>
+		<title>Pok&eacute;mon {pokemon}</title>
+		<link rel="stylesheet" type="text/css" href="../style.css" />
+		<meta http-equiv="Content-Type" content="text/html"; charset="utf-8" />
+		<script type="text/javascript" src="../script.js"></script>
+	</head>
+	<body>
+		<header><a href='index.html'>Tier {tier}</a></header>
+		<img src="{imagelink}" />
+		<p class='pokemonBattleNumber'>Usage Percentage: {percentage} % ({battles} battles)</p>
+		{moveset*}
+	</body>
+</html>
+}}
+
+moveset{{
+	<p class='pokemonRank'># {rank} - {percentage} % ({battles} battles)</p>
+	<hr />
+	<p class='pokemonTitle'>{pokemon} @ {item} Lv. {level} -- {abilities}</p>
+	<!-- This is the first stat set, the other are in the braces -->
+	{firststatset}
+	<div style='display: none;'>
+		{statset*}
+	</div>
+	<ul class='moveList'>
+		<li class='move'>{move1}</li>
+		<li class='move'>{move2}</li>
+		<li class='move'>{move3}</li>
+		<li class='move'>{move4}</li>
+	</ul>
+}}
+
+firststatset{{
+	<p class="advanced">Nature: {nature} - EVs: {evs} <!-- - IVs: {ivs}--><span class='smallPercent'>({percentage} %)</span>
+		<input type='button' onclick='hideShow(this)' value='+'/></p>
+}}
+
+statset{{
+	<p class='advanced'>Nature: {nature} - EVs: {evs} <!-- - IVs: {ivs}--><span class='smallPercent'>({percentage} %)</span></p>
+}}

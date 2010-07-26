@@ -1,3 +1,6 @@
+.tier {
+}
+
 /* Top 5 pokemon in the tier page */
 .topPokemon {
 	font-weight: bold;
@@ -69,6 +72,10 @@ header {
 	/*text-align: center;*/
 	font-size: 1.2em;
 	font-weight: bold;
+}
+
+h1 {
+	text-align: center;
 }
 
 body {

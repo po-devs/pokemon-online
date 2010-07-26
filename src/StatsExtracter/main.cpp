@@ -33,6 +33,114 @@ static void recurseRemove(const QString &path) {
     d.rmdir(d.absolutePath());
 }
 
+class Skeleton {
+public:
+    Skeleton(const QString &path);
+
+    void addDefaultValue(const char *member, const QVariant &value);
+    Skeleton &appendChild(const QString &item);
+
+    QString generate() const;
+private:
+    Skeleton *top;
+    Skeleton(Skeleton *top, const QString &body);
+    Skeleton *parent () const {
+        return top;
+    }
+    bool isBoss() const {
+        return top == NULL;
+    }
+
+    /* {moveset *} */
+    QHash<QString, QList<Skeleton> > children;
+    /* {pokemon} */
+    QHash<QString, QString> values;
+    /* moveset{{
+       xxx
+       }} */
+    QHash<QString, QString> bodies;
+    /* page {{
+       }} */
+    QString body;
+
+    QString getSkeletonBody(const QString &name) const;
+};
+
+Skeleton::Skeleton(const QString &path) {
+    QFile f(path);
+    f.open(QIODevice::ReadOnly);
+
+    QString text = QString(f.readAll());
+
+    QRegExp r("([a-z]+)\\{\\{((?:[^}].?)*)\\}\\}", Qt::CaseSensitive, QRegExp::Wildcard);
+    r.setPatternSyntax(QRegExp::RegExp2);
+    int pos = 0;
+
+    while (r.indexIn(text, pos) > -1) {
+        pos += r.matchedLength();
+
+        if (r.cap(1) == "page") {
+            body = r.cap(2);
+        } else {
+            bodies[r.cap(1)] = r.cap(2);
+        }
+    }
+
+    top = NULL;
+}
+
+Skeleton::Skeleton(Skeleton *top, const QString &body) : top(top), body(body) {
+}
+
+void Skeleton::addDefaultValue(const char *member, const QVariant &value) {
+    values[member] = value.toString();
+}
+
+Skeleton & Skeleton::appendChild(const QString &item) {
+    children[item].push_back(Skeleton(parent() == NULL ? this : parent(), getSkeletonBody(item)));
+    return children[item].back();
+}
+
+QString Skeleton::getSkeletonBody(const QString &name) const {
+    return isBoss() ? bodies.value(name) : parent()->getSkeletonBody(name);
+}
+
+QString Skeleton::generate() const {
+    QHashIterator<QString, QList<Skeleton> > it(children);
+    
+    QString body = this->body;
+
+    while (it.hasNext()) {
+        it.next();
+
+        if (it.value().size() == 0) {
+            continue;
+        }
+
+        if (body.indexOf(QString("{%1}").arg(it.key())) != -1) {
+            body.replace(QString("{%1}").arg(it.key()), it.value().front().generate());
+        } else if (body.indexOf(QString("{%1*}").arg(it.key())) != -1) {
+            QString remplacement;
+
+            for (int i = 0; i < it.value().size(); i++) {
+                remplacement += it.value()[i].generate();
+            }
+
+            body.replace(QString("{%1*}").arg(it.key()), remplacement);
+        }
+    }
+
+    QHashIterator <QString, QString> it2(values);
+    while (it2.hasNext()) {
+        it2.next();
+        body.replace(QString("{%1}").arg(it2.key()), it2.value());
+    }
+
+    body.replace(QRegExp("\\{[^}]*\\}"), "");
+
+    return body;
+}
+
 struct SecondaryStuff {
     quint8 evs[6];
     quint8 dvs[6];
@@ -61,27 +169,26 @@ struct SecondaryStuff {
         return *this;
     }
 
-    QString toHtml() const;
+    void complete(Skeleton &s) const;
 };
 
-QString SecondaryStuff::toHtml() const
+void SecondaryStuff::complete(Skeleton &s) const
 {
     static const char* stats[] = {"HP", "Atk", "Def", "Spd", "SAtk", "SDef"};
 
-    QStringList tot;
-
-    tot.append(QString("Nature: %1").arg(NatureInfo::Name(nature)));
+    s.addDefaultValue("nature", NatureInfo::Name(nature));
 
     QStringList inc;
 
     for (int i = 0; i < 6; i++) {
-        if (evs[i] != 0) {
+        if (evs[i] != 0)
             inc.append(QString("%1 %2").arg(evs[i]).arg(stats[i]));
-        }
     }
 
     if (inc.size() > 0) {
-       tot.append("EVs: " + inc.join(" / "));
+        s.addDefaultValue("evs", inc.join(" / "));
+    } else {
+        s.addDefaultValue("evs", 0);
     }
 
     inc.clear();
@@ -93,10 +200,10 @@ QString SecondaryStuff::toHtml() const
     }
 
     if (inc.size() > 0) {
-       tot.append("IVs: " + inc.join(" / "));
+        s.addDefaultValue("ivs", inc.join(" / "));
+    } else {
+        s.addDefaultValue("ivs", "All 31");
     }
-
-    return tot.join(" - ");
 }
 
 struct MoveSet {
@@ -146,7 +253,7 @@ struct MoveSet {
         return *this;
     }
 
-    void write(QFile &f) const;
+    void complete(Skeleton &m) const;
 };
 
 MoveSet::MoveSet()
@@ -195,16 +302,19 @@ MoveSet::MoveSet(char buffer[28], int usage, int defAb)
     options.insert(s,s);
 }
 
-void MoveSet::write(QFile &f) const
+void MoveSet::complete(Skeleton &m) const
 {
     QList<int> ab = PokemonInfo::Abilities(num);
     int tot = abilities[0] + abilities[1];
 
-    f.write(QObject::tr("<p class='pokemonTitle'>%1 @ %2 Lv. %3 -- %4</p>\n")
-            .arg(PokemonInfo::Name(num), ItemInfo::Name(item)).arg(level)
-            .arg(abilities[0]*abilities[1] == 0 ? (abilities[0] == 0 ? AbilityInfo::Name(ab[1]) : AbilityInfo::Name(ab[0]))
-                : QString("%1 (%2 %) / %3 (%4 %)").arg(AbilityInfo::Name(ab[0])).arg(double(100*abilities[0])/tot,0,'f',2)
-                .arg(AbilityInfo::Name(ab[1])).arg(double(100*abilities[1])/tot,0,'f',2)).toUtf8());
+    m.addDefaultValue("pokemon", PokemonInfo::Name(num));
+    m.addDefaultValue("item", ItemInfo::Name(item));
+    m.addDefaultValue("level", level);
+    m.addDefaultValue("abilities", abilities[0]*abilities[1] == 0 ? (abilities[0] == 0 ? AbilityInfo::Name(ab[1]) : AbilityInfo::Name(ab[0]))
+        : QString("%1 (%2 %) / %3 (%4 %)").arg(AbilityInfo::Name(ab[0])).arg(double(100*abilities[0])/tot,0,'f',1)
+        .arg(AbilityInfo::Name(ab[1])).arg(double(100*abilities[1])/tot,0,'f',1).toUtf8());
+
+
     QMultiMap<int, SecondaryStuff> usageMap;
     foreach(const SecondaryStuff &s, options)  {
         usageMap.insertMulti(s.usage, s);
@@ -215,32 +325,31 @@ void MoveSet::write(QFile &f) const
 
     it.previous();
 
-    f.write(QString("<p class='advanced'>%1 <span class='smallPercent'>(%2 %)</span> %3</p>\n")
-            .arg(it.value().toHtml()).arg(double(100*it.value().usage)/usage,0,'f',1)
-            .arg(it.hasPrevious() ? "<input type='button' onclick='hideShow(this)' value='+'/>": "").toUtf8());
+    Skeleton &s = m.appendChild("firststatset");
+    s.addDefaultValue("percentage", QString::number(double(100*it.value().usage)/usage));
+    it.value().complete(s);
 
-    if (it.hasPrevious()) {
-        f.write("<div style='display: none'>\n");
-
-        while (it.hasPrevious()) {
-            it.previous();
-            f.write(QString("<p class='advanced'>%1 <span class='smallPercent'>(%2 %)</span></p>\n")
-                    .arg(it.value().toHtml()).arg(double(100*it.value().usage)/usage,0,'f',1).toUtf8());
-        }
-
-        f.write("</div>\n");
+    while (it.hasPrevious()) {
+        it.previous();
+        Skeleton &s = m.appendChild("statset");
+        s.addDefaultValue("percentage", QString::number(double(100*it.value().usage)/usage));
+        it.value().complete(s);
     }
 
-    f.write("<ul class='moveList'>\n");
-    for (int i = 0; i < 4; i++) {
-        f.write(QString("\t<li class='move'>%1</li>\n").arg(MoveInfo::Name(moves[i])).toUtf8());
-    }
-    f.write("</ul>\n");
+    m.addDefaultValue("move1", MoveInfo::Name(moves[0]));
+    m.addDefaultValue("move2", MoveInfo::Name(moves[1]));
+    m.addDefaultValue("move3", MoveInfo::Name(moves[2]));
+    m.addDefaultValue("move4", MoveInfo::Name(moves[3]));
 }
 
-static QString getImageLink(int pokemon)
+static QString getImageLink(int pokemon, bool root=false)
 {
-    return QString("<img src='../poke_img/%1/DP%2.png' />").arg(pokemon).arg(PokemonInfo::Gender(pokemon) == Pokemon::FemaleAvail ? "f" : "m");
+    return QString(root ? "poke_img/%1/DP%2.png" : "../poke_img/%1/DP%2.png").arg(pokemon).arg(PokemonInfo::Gender(pokemon) == Pokemon::FemaleAvail ? "f" : "m");
+}
+
+static QString getIconLink(int pokemon, bool root=false)
+{
+    return QString(root ? "icons/%1.PNG" : "../icons/%1.PNG").arg(pokemon);
 }
 
 int main(int argc, char *argv[])
@@ -283,6 +392,8 @@ int main(int argc, char *argv[])
 
     QStringList dirs = d.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
+    QList<QPair<QString, int> > mostUsedPokemon;
+
     foreach(QString dir, dirs) {
         d.cd(dir);
 
@@ -315,16 +426,12 @@ int main(int argc, char *argv[])
         outDir.mkpath("usage_stats/formatted/" + dir);
         outDir.cd("usage_stats/formatted/" + dir);
 
-        QFile index(outDir.absoluteFilePath("index.html"));
-
-        index.open(QIODevice::WriteOnly);
-
         int totalBattles = totalusage/6;
 
-        index.write(QObject::tr("<html><head>\n<title>Tier %1</title>\n"
-                                "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n"
-                                "<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\" />\n</head><body>\n").arg(dir).toUtf8());
-        index.write(QObject::tr("<p class='tierBattleNumber'>Number of Battles: %1</p>\n").arg(totalBattles/2).toUtf8());
+        Skeleton tierSk("usage_stats/formatted/tier_page.template");
+        tierSk.addDefaultValue("tier", dir);
+        tierSk.addDefaultValue("battles", totalBattles/2);
+
         QHashIterator<int, int> hit(usage);
         QMultiMap<int, int> reverseUsage;
 
@@ -338,24 +445,21 @@ int main(int argc, char *argv[])
         QMapIterator<int, int> it(reverseUsage);
         it.toBack();
 
-        while (it.hasPrevious() && i < 5) {
-            i += 1;
-            it.previous();
-            index.write(QString("<p class='topPokemon'>#%1 - <a href='%4.html'>%2</a> (%3 %)</p>\n").arg(i)
-                        .arg(PokemonInfo::Name(it.value())).arg(double(100*it.key())/totalBattles,0,'f',2)
-                        .arg(it.value()).toUtf8());
-            index.write(getImageLink(it.value()).append('\n').toUtf8());
-        }
-
         while (it.hasPrevious()) {
             i += 1;
             it.previous();
-            index.write(QString("<p class='lowPokemon'>#%1 - <img src='../icons/%4.PNG' /> <a href='%4.html'>%2</a> (%3 %)</p>\n")
-                        .arg(i).arg(PokemonInfo::Name(it.value())).arg(double(100*it.key())/totalBattles,0,'f',2)
-                        .arg(it.value()).toUtf8());
+            Skeleton &childSk = tierSk.appendChild(i <= 5 ? "toppokemon" : "lowpokemon");
+            childSk.addDefaultValue("rank", i);
+            childSk.addDefaultValue("imagelink", getImageLink(it.value()));
+            childSk.addDefaultValue("iconlink", getIconLink(it.value()));
+            childSk.addDefaultValue("pokemonlink", QString("%1.html").arg(it.value()));
+            childSk.addDefaultValue("percentage", QString::number(double(100*it.key())/totalBattles,'f',2));
+            childSk.addDefaultValue("pokemon", PokemonInfo::Name(it.value()));
         }
 
-        index.write(QObject::tr("</body></html>").toUtf8());
+        QFile index(outDir.absoluteFilePath("index.html"));
+        index.open(QIODevice::WriteOnly);
+        index.write(tierSk.generate().toUtf8());
 
         it.toBack();
 
@@ -392,18 +496,12 @@ int main(int argc, char *argv[])
                 fclose(f);
             }
 
-            QFile pokef(outDir.absoluteFilePath("%1.html").arg(pokemon));
-            pokef.open(QIODevice::WriteOnly);
-
-            pokef.write(QObject::tr("<html><head>\n<title>Pok&eacute;mon %1</title>\n"
-                                     "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n"
-                                     "<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\" />\n"
-                                     "<script type=\"text/javascript\" src=\"../script.js\"></script></head><body>\n")
-                        .arg(PokemonInfo::Name(pokemon)).toUtf8());
-            pokef.write(QString("<header><a href='index.html'>Tier %1</a></header>").arg(dir).toUtf8());
-            pokef.write(getImageLink(pokemon).append('\n').toUtf8());
-            pokef.write(QObject::tr("<p class='pokemonBattleNumber'>Usage Percentage: %1 % (%2 battles)</p>")
-                        .arg(double(100*it.key())/totalBattles,0,'f',2).arg(it.key()).toUtf8());
+            Skeleton s("usage_stats/formatted/pokemon_page.template");
+            s.addDefaultValue("pokemon", PokemonInfo::Name(pokemon));
+            s.addDefaultValue("tier", dir);
+            s.addDefaultValue("imagelink", getImageLink(pokemon));
+            s.addDefaultValue("percentage", QString::number(double(100*it.key())/totalBattles,'f',2));
+            s.addDefaultValue("battles", it.key());
 
             QMultiMap <int, MoveSet> usageOrder;
 
@@ -424,15 +522,38 @@ int main(int argc, char *argv[])
                 usageIt.previous();
                 i+= 1;
 
-                pokef.write(QObject::tr("<p class='pokemonRank'># %1 - %2 % (%3 battles)</p>\n<hr />\n")
-                            .arg(i).arg(double(100*usageIt.key())/it.key(),0,'f',2).arg(usageIt.key()).toUtf8());
-                usageIt.value().write(pokef);
+                Skeleton &m = s.appendChild("moveset");
+                m.addDefaultValue("rank", i);
+                m.addDefaultValue("percentage", QString::number(double(100*usageIt.key())/it.key(),'f',2));
+                m.addDefaultValue("battles", usageIt.key());
+                usageIt.value().complete(m);
             }
-            pokef.write("</body></html>");
+            QFile pokef(outDir.absoluteFilePath("%1.html").arg(pokemon));
+            pokef.open(QIODevice::WriteOnly);
+            pokef.write(s.generate().toUtf8());
         }
 
+        mostUsedPokemon.push_back(QPair<QString, int> (dir, reverseUsage.size() > 0 ? (--reverseUsage.end()).value() : 0));
         d.cdUp();
     }
+
+    typedef QPair<QString, int> pair;
+
+    Skeleton indexSk("usage_stats/formatted/index.template");
+    foreach(pair p, mostUsedPokemon) {
+        if (p.second == 0)
+            continue;
+        Skeleton &pok = indexSk.appendChild("tier");
+
+        pok.addDefaultValue("tier", p.first);
+        pok.addDefaultValue("pokemon", PokemonInfo::Name(p.second));
+        pok.addDefaultValue("imagelink", getImageLink(p.second, true));
+        pok.addDefaultValue("iconlink", getIconLink(p.second, true));
+    }
+
+    QFile f("usage_stats/formatted/index.html");
+    f.open(QIODevice::WriteOnly);
+    f.write(indexSk.generate().toUtf8());
 
     recurseRemove(dirname);
 
