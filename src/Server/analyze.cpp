@@ -15,9 +15,7 @@ Analyzer::Analyzer(QTcpSocket *sock, int id) : mysocket(sock, id)
 
     /* Only if its not registry */
     if (id != 0) {
-        mytimer = new QTimer(this);
-        connect(mytimer, SIGNAL(timeout()), this, SLOT(keepAlive()));
-        mytimer->start(30000); //every 30 secs
+        sock->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
     }
 
     delayCount = 0;
@@ -88,11 +86,6 @@ void Analyzer::notifyAway(qint32 id, bool away)
 void Analyzer::sendLogout(int num)
 {
     notify(Logout, qint32(num));
-}
-
-void Analyzer::keepAlive()
-{
-    notify(KeepAlive);
 }
 
 void Analyzer::sendChallengeStuff(const ChallengeInfo &c)

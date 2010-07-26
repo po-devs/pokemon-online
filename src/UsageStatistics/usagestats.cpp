@@ -21,6 +21,10 @@ QString PokemonOnlineStatsPlugin::pluginName()
     return "Usage Statistics";
 }
 
+inline int norm(int ev) {
+    return (ev/4)*4;
+}
+
 /*
  * From here onward C functions are used in order to optimize
  * speed for that crucial problem, because we access files a lot.
@@ -35,8 +39,8 @@ QByteArray PokemonOnlineStatsPlugin::data(const PokeBattle &p) const {
     
     a[0] = (p.num() << 16) + p.item();
     a[1] = (p.ability() << 16) + (p.gender() << 8) + p.level();
-    a[2] = (p.nature() << 24) + (p.evs()[0] << 16) + (p.evs()[1] << 8) + p.evs()[2];
-    a[3] = (p.evs()[3] << 16) + (p.evs()[4] << 8) + p.evs()[5];
+    a[2] = (p.nature() << 24) + (norm(p.evs()[0]) << 16) + (norm(p.evs()[1]) << 8) + norm(p.evs()[2]);
+    a[3] = (norm(p.evs()[3]) << 16) + (norm(p.evs()[4]) << 8) + norm(p.evs()[5]);
     a[4] = (p.dvs()[0] << 25) + (p.dvs()[1] << 20) + (p.dvs()[2] << 15) + (p.dvs()[3] << 10) + (p.dvs()[4] << 5) + p.dvs()[5];
 
     /* Here the moves are sorted because we don't want to have different
@@ -87,12 +91,9 @@ void PokemonOnlineStatsPlugin::battleStarting(PlayerInterface *p1, PlayerInterfa
 */
 void PokemonOnlineStatsPlugin::savePokemon(const PokeBattle &p, bool lead, const QString &d)
 {
-    if (p.num() == 0)
-        return;
-
     const QByteArray &data = this->data(p);
 
-    QByteArray file = (d + QCryptographicHash::hash(data, QCryptographicHash::Md5).left(1).toHex()).toUtf8();
+    QByteArray file = (d + QCryptographicHash::hash(data, QCryptographicHash::Md5).toHex().left(3)).toUtf8();
 
     FILE *raw_f = fopen(file.data(), "r+");
 

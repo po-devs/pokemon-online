@@ -157,7 +157,7 @@ int Client::ownId() const
 
 QIcon Client::statusIcon(int auth, Status status) const
 {
-    if (auth > 3)
+    if (auth > 3 || auth < 0)
         auth = 0;
     return statusIcons[auth*LastStatus+status];
 }

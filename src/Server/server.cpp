@@ -1022,22 +1022,34 @@ void Server::sendPlayersList(int id)
 {
     Analyzer &relay = player(id)->relay();
 
-    QList<PlayerInfo> data;
-    /* getting what to send */
+    /* What will be in next version,
+        to not make a huge compatibility break
+        between two close versions, the client
+        already has it, and the server will work
+        like that the version after */
+//    QList<PlayerInfo> data;
+//    /* getting what to send */
+//    foreach(Player *p, myplayers)
+//    {
+//        if (p->isLoggedIn()) {
+//            data.push_back(p->bundle());
+//            if (data.size() >= 50) {
+//                relay.sendPlayers(data);
+//                data.clear();
+//            }
+//        }
+//    }
+//
+//    if (data.size() > 0) {
+//        relay.sendPlayers(data);
+//        data.clear();
+//    }
+
     foreach(Player *p, myplayers)
     {
         if (p->isLoggedIn()) {
-            data.push_back(p->bundle());
-            if (data.size() >= 50) {
-                relay.sendPlayers(data);
-                data.clear();
-            }
+            relay.sendPlayer(p->bundle());
         }
-    }
-
-    if (data.size() > 0) {
-        relay.sendPlayers(data);
-        data.clear();
     }
 }
 

@@ -150,6 +150,7 @@ signals:
 public slots:
     /* slots called by the network */
     void error();
+    void wasConnected();
     void commandReceived (const QByteArray &command);
 
     /* by the battle window */
