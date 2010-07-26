@@ -21,11 +21,15 @@ MainEngine::MainEngine() : displayer(0)
         settings.setValue("stylesheet", "db/default.css");
     }
 
-
+#ifdef Q_OS_MACX
+    setDefaultValue("team_location", QDir::homePath() + "/Documents/trainer.tp");
+    setDefaultValue("battle_logs_directory", QDir::homePath() + "/Documents/Pokemon-Online Logs/");
+#else
     setDefaultValue("team_location", "Team/trainer.tp");
-    setDefaultValue("save_battle_logs", false);
     setDefaultValue("battle_logs_directory", "Logs/");
+#endif
     setDefaultValue("battle_music_directory", "Music/Battle/");
+    setDefaultValue("save_battle_logs", false);
     setDefaultValue("play_battle_music", false);
     setDefaultValue("play_battle_sounds", false);
     setDefaultValue("show_team",true);
