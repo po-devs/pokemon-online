@@ -16,18 +16,8 @@ public:
 
     ~MainWindow();
 
- /*   void hideEvent(QHideEvent * event)
-    {
-        sticon->show();//affichage du tray
-        hide();//"cachage" de la fenetre =)
-
-    }
-    void showEvent(QShowEvent * event)
-    {
-        sticon->hide();
-        show();
-    }
-*/
+public slots:
+    void reloadMenuBar();
 protected:
     void closeEvent(QCloseEvent *e);
 private:

@@ -11,6 +11,13 @@ MainWindow::MainWindow(Server *myserver, QWidget *parent)
     setCentralWidget(myserverwidget = new ServerWidget(myserver));
     resize(500,500);
     setMenuBar(myserverwidget->createMenuBar());
+
+    connect(myserverwidget, SIGNAL(menuBarChanged()), this, SLOT(reloadMenuBar()));
+}
+
+void MainWindow::reloadMenuBar()
+{
+    setMenuBar(myserverwidget->createMenuBar());
 }
 
 MainWindow::~MainWindow()

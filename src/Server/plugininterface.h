@@ -16,12 +16,16 @@ class ServerPlugin
 public:
     /* The name of the option the plugin would take in the menu bar.
        Also appears as the name of the plugin */
-    virtual QString pluginName() = 0;
+    virtual QString pluginName() const = 0;
 
     /* A widget that would be used to configure the plugin in the menu bar.
        Return NULL if you don't want one (default behavior) */
     virtual QWidget * getConfigurationWidget() {
         return NULL;
+    }
+
+    virtual bool hasConfigurationWidget() const {
+        return false;
     }
 
     /* For plugins that needs to know (like some stat gathering plugins =) ) */

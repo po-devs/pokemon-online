@@ -21,6 +21,7 @@ class Server: public QObject
     Q_OBJECT
 
     friend class ScriptEngine;
+    friend class ServerWidget;
 public:
     Server(quint16 port = 5080);
     ~Server();
