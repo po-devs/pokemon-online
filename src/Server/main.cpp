@@ -94,7 +94,6 @@ int main(int argc, char *argv[])
 
             MainWindow w(myserver);
             w.show();
-            myserver->start();
             i = a.exec();
         }
 

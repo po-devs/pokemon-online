@@ -51,9 +51,11 @@ ServerWidget::ServerWidget(Server *myserver)
     connect(server, SIGNAL(player_logout(int)), SLOT(playerDisconnects(int)));
     connect(server, SIGNAL(player_authchange(int, QString)), SLOT(playerChangedName(int, QString)));
 
-    connect(server->myengine, SIGNAL(clearTheChat()), this, SLOT(clearChat()));
-
     mainchat()->setMinimumWidth(500);
+
+    server->start();
+
+    connect(server->myengine, SIGNAL(clearTheChat()), this, SLOT(clearChat()));
 }
 
 
