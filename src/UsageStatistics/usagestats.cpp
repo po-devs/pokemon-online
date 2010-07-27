@@ -95,49 +95,36 @@ void PokemonOnlineStatsPlugin::savePokemon(const PokeBattle &p, bool lead, const
 
     QByteArray file = (d + QCryptographicHash::hash(data, QCryptographicHash::Md5).toHex().left(3)).toUtf8();
 
-    FILE *raw_f = fopen(file.data(), "r+");
+    FILE *raw_f = fopen(file.data(), "r+b");
 
     if (!raw_f) {
-        raw_f = fopen(file.data(), "w+");
+        raw_f = fopen(file.data(), "w+b");
     }
 
     char buffer[bufsize];
-    /* Needed to keep track, because on windows if you rely on ftell you're in deep.
-       In case of errors or eof or whatever.
-        Also used a lot for seeking, to clear those nasty errors. */
-    int pos = 0;
 
     /* We look for the pokemon in the file. Read 28 bytes, compare, skip 8 bytes, read 28 bytes, ... */
     while (!feof(raw_f) && fread(buffer, sizeof(char), bufsize/sizeof(char), raw_f) == signed(bufsize) ) {
-        pos += bufsize;
         if (memcmp(data.data(), buffer, bufsize) == 0) {
             break;
         }
-        pos += 2 * sizeof(qint32);
         /* Not being interested by the count, so we seek forward */
-        fseek(raw_f, pos, SEEK_SET);
+        fseek(raw_f, 2*sizeof(qint32), SEEK_CUR);
     }
 
     qint32 usage(0), leadusage(0);
 
     /* The pokemon was never used before? */
-    if (pos%(bufsize+2*sizeof(qint32)) == 0) {
-        /* Don't hesitate to abuse fseek... True story. */
-        rewind(raw_f);
-        fseek(raw_f, pos, SEEK_SET);
+    if (feof(raw_f)) {
+        fseek(raw_f, 0, SEEK_END);
         fwrite(data.data(), sizeof(char), bufsize/sizeof(char), raw_f);
-        pos += bufsize;
-        fseek(raw_f, pos, SEEK_SET);
     } else {
-        rewind(raw_f);
-        fseek(raw_f, pos, SEEK_SET);
         /* The pokemon was used before so there's already a count,
             so we read the count and then move back */
         fread(&usage, sizeof(qint32), 1, raw_f);
         fread(&leadusage, sizeof(qint32), 1, raw_f);
         /* Seek back to the place where the count is... */
-        rewind(raw_f);
-        fseek(raw_f, pos, SEEK_SET);
+        fseek(raw_f, -2*sizeof(qint32), SEEK_CUR);
     }
 
     usage += 1;
