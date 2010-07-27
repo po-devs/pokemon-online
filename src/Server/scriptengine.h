@@ -166,6 +166,8 @@ public:
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
+signals:
+    void clearTheChat();
 public slots:
     void changeScript(const QString &script);
 

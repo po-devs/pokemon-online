@@ -43,6 +43,7 @@ public slots:
     void playerConnects(int id);
     void playerChangedName(int id, const QString &name);
     void playerDisconnects(int id);
+    void clearChat();
 signals:
     void menuBarChanged();
 private slots:
