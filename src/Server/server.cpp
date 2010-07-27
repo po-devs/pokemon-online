@@ -366,18 +366,17 @@ bool Server::printLine(const QString &line, bool chatMessage, bool forcedLog)
     if (!chatMessage && !showLogMessages && !forcedLog)
         return false;
 
-    //notify possible views (if any)
-    if(chatMessage){
-        emit chatmessage(line);
-    } else {
-        emit servermessage(line);
-    }
-    
     qDebug() << line;
     if (myengine == NULL) {
         return true;
     }
     if (chatMessage || myengine->beforeNewMessage(line)) {
+        //notify possible views (if any)
+        if(chatMessage){
+            emit chatmessage(line);
+        } else {
+            emit servermessage(line);
+        }
         if (!chatMessage)
             myengine->afterNewMessage(line);
         return true;
@@ -1247,6 +1246,8 @@ int Server::freebattleid() const
 }
 
 void Server::atServerShutDown() {
+    delete pluginManager, pluginManager = NULL;
+
     myengine->serverShutDown();
 }
 
