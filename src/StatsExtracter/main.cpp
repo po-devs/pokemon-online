@@ -404,7 +404,7 @@ int main(int argc, char *argv[])
         qint32 totalusage(0);
 
         foreach(QString file, files) {
-            FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "r");
+            FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "rb");
 
             char buffer[28];
             int pos = 0;
@@ -420,8 +420,10 @@ int main(int argc, char *argv[])
 
                 int pokenum = (*((qint32*) buffer)) >> 16;
 
-                usage[pokenum] += iusage;
-                totalusage += iusage;
+                if (pokenum != 0) {
+                    usage[pokenum] += iusage;
+                    totalusage += iusage;
+                }
             }
 
             fclose(f);
@@ -478,7 +480,7 @@ int main(int argc, char *argv[])
             int defAb = PokemonInfo::Abilities(it.value())[0];
 
             foreach(QString file, files) {
-                FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "r");
+                FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "rb");
 
                 char buffer[28];
                 int pos = 0;
