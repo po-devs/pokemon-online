@@ -606,7 +606,7 @@ void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
 
 void ScriptEngine::clearChat()
 {
-    //((QTextEdit*)myserver->mainchat())->clear();
+    emit clearTheChat();
 }
 
 bool ScriptEngine::dbRegistered(const QString &name)

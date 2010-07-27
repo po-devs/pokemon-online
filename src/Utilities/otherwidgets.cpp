@@ -205,6 +205,7 @@ void QIdListWidgetItem::setColor(const QColor &c)
 
 QScrollDownTextEdit::QScrollDownTextEdit()
 {
+    autoClear = true;
     setReadOnly(true);
     linecount = 0;
 }

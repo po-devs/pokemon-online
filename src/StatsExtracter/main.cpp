@@ -326,13 +326,13 @@ void MoveSet::complete(Skeleton &m) const
     it.previous();
 
     Skeleton &s = m.appendChild("firststatset");
-    s.addDefaultValue("percentage", QString::number(double(100*it.value().usage)/usage));
+    s.addDefaultValue("percentage", QString::number(double(100*it.value().usage)/usage, 'f', 1));
     it.value().complete(s);
 
     while (it.hasPrevious()) {
         it.previous();
         Skeleton &s = m.appendChild("statset");
-        s.addDefaultValue("percentage", QString::number(double(100*it.value().usage)/usage));
+        s.addDefaultValue("percentage", QString::number(double(100*it.value().usage)/usage, 'f', 1));
         it.value().complete(s);
     }
 
@@ -407,11 +407,16 @@ int main(int argc, char *argv[])
             FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "r");
 
             char buffer[28];
+            int pos = 0;
             while (fread(buffer, sizeof(char), 28/sizeof(char), f) == 28) {
+                pos += 28;
                 qint32 iusage(0), ileadusage(0);
 
+                fseek(f, pos, SEEK_SET);
                 fread(&iusage, sizeof(qint32), 1, f);
                 fread(&ileadusage, sizeof(qint32), 1, f);
+                pos += 2 * sizeof(qint32);
+                fseek(f, pos, SEEK_SET);
 
                 int pokenum = (*((qint32*) buffer)) >> 16;
 
@@ -460,6 +465,7 @@ int main(int argc, char *argv[])
         QFile index(outDir.absoluteFilePath("index.html"));
         index.open(QIODevice::WriteOnly);
         index.write(tierSk.generate().toUtf8());
+        index.close();
 
         it.toBack();
 
@@ -475,11 +481,16 @@ int main(int argc, char *argv[])
                 FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "r");
 
                 char buffer[28];
+                int pos = 0;
                 while (fread(buffer, sizeof(char), 28/sizeof(char), f) == 28) {
+                    pos += 28;
                     qint32 iusage(0), ileadusage(0);
 
+                    fseek(f, pos, SEEK_SET);
                     fread(&iusage, sizeof(qint32), 1, f);
                     fread(&ileadusage, sizeof(qint32), 1, f);
+                    pos += 2 * sizeof(qint32);
+                    fseek(f, pos, SEEK_SET);
 
                     int pokenum = (*((qint32*) buffer)) >> 16;
 
