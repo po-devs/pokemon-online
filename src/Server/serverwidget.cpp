@@ -11,8 +11,6 @@
 #include "security.h"
 #include "antidos.h"
 #include "serverconfig.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/movesetchecker.h"
 #include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
 #include "../Shared/config.h"
@@ -20,6 +18,8 @@
 #include "battlingoptions.h"
 #include "sql.h"
 #include "sqlconfig.h"
+#include "pluginmanager.h"
+#include "plugininterface.h"
 
 ServerWidget::ServerWidget(Server *myserver)
 {
@@ -65,6 +65,14 @@ QMenuBar* ServerWidget::createMenuBar() {
     options->addAction("&Tiers", this, SLOT(openTiersWindow()));
     options->addAction("&Battle Config", this, SLOT(openBattleConfigWindow()));
     options->addAction("&SQL Config", this, SLOT(openSqlConfigWindow()));
+    QMenu *plugins = bar->addMenu("&Plugins");
+    plugins->addAction("Plugin &Manager", this, SLOT(openPluginManager()));
+    plugins->addSeparator();
+
+    foreach(QString s, server->pluginManager->getVisiblePlugins()) {
+        plugins->addAction(s, this, SLOT(openPluginConfig()));
+    }
+
     return bar;
 }
 
@@ -94,6 +102,22 @@ void ServerWidget::showContextMenu(const QPoint &p) {
     }
 }
 
+void ServerWidget::openPluginConfig()
+{
+    QAction *ac = (QAction*)sender();
+
+    ServerPlugin *s = server->pluginManager->plugin(ac->text());
+
+    if (s) {
+        QWidget *config = s->getConfigurationWidget();
+
+        if (config) {
+            config->setAttribute(Qt::WA_DeleteOnClose);
+            config->show();
+        }
+    }
+}
+
 void ServerWidget::openPlayers()
 {
     PlayersWindow *w = new PlayersWindow();
@@ -102,6 +126,15 @@ void ServerWidget::openPlayers()
 
     connect(w, SIGNAL(authChanged(QString,int)), server, SLOT(changeAuth(QString, int)));
     connect(w, SIGNAL(banned(QString)), server, SLOT(banName(QString)));
+}
+
+void ServerWidget::openPluginManager()
+{
+    PluginManagerWidget *w = new PluginManagerWidget(*server->pluginManager);
+
+    w->show();
+
+    connect(w, SIGNAL(pluginListChanged()), this, SIGNAL(menuBarChanged()));
 }
 
 void ServerWidget::openAntiDos()

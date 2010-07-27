@@ -16,7 +16,7 @@ PokemonOnlineStatsPlugin::PokemonOnlineStatsPlugin()
     d.mkdir("usage_stats/formatted");
 }
 
-QString PokemonOnlineStatsPlugin::pluginName()
+QString PokemonOnlineStatsPlugin::pluginName() const
 {
     return "Usage Statistics";
 }
@@ -134,4 +134,8 @@ void PokemonOnlineStatsPlugin::savePokemon(const PokeBattle &p, bool lead, const
     fwrite(&leadusage, sizeof(qint32), 1, raw_f);
 
     fclose(raw_f);
+}
+
+bool PokemonOnlineStatsPlugin::hasConfigurationWidget() const {
+    return false;
 }

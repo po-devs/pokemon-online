@@ -35,6 +35,7 @@ public slots:
     void openTiersWindow();
     void openBattleConfigWindow();
     void openSqlConfigWindow();
+    void openPluginManager();
 
     void sendServerMessage();
     void addChatline(const QString &line);
@@ -42,7 +43,11 @@ public slots:
     void playerConnects(int id);
     void playerChangedName(int id, const QString &name);
     void playerDisconnects(int id);
-
+signals:
+    void menuBarChanged();
+private slots:
+    /* Relies on sender() */
+    void openPluginConfig();
 private:
     QListWidget *mylist;
     QScrollDownTextEdit *mymainchat;
@@ -56,7 +61,6 @@ private:
     QPointer<ScriptWindow> myscriptswindow;
 
     Server *server;
-
 };
 
 #endif	/* SERVERWIDGET_H */

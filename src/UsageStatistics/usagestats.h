@@ -19,9 +19,10 @@ public:
     PokemonOnlineStatsPlugin();
     virtual ~PokemonOnlineStatsPlugin() {}
 
-    QString pluginName();
+    QString pluginName() const;
 
     void battleStarting(PlayerInterface *p1, PlayerInterface *p2, const ChallengeInfo &c);
+    bool hasConfigurationWidget() const;
 
 private:
     QHash<QString, QString> existingDirs;
