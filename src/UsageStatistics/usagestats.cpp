@@ -50,7 +50,7 @@ QByteArray PokemonOnlineStatsPlugin::data(const PokeBattle &p) const {
     moves[1] = p.move(1).num();
     moves[2] = p.move(2).num();
     moves[3] = p.move(3).num();
-    qSort(&moves[0], &moves[3]);
+    qSort(&moves[0], &moves[4]);
 
     return ret;
 }

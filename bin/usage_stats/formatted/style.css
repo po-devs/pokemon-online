@@ -1,4 +1,11 @@
 .tier {
+	margin-top: 8px;
+	margin-bottom: 0px;
+}
+
+.hiddenPower {
+	padding-left: 4px;
+	font-weight: bold;
 }
 
 /* Top 5 pokemon in the tier page */
@@ -49,9 +56,71 @@
 }
 
 .smallPercent {
-	padding-left: 10px;
+	padding-left: 4px;
 	font-size: 0.7em;
 }
+
+.button {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin: 0px;
+}
+
+.normal {
+	color: #a8a878;
+}
+.fighting {
+	color: #c03028;
+}
+.flying {
+	color: #a890f0;
+}
+.poison {
+	color: #a040a0;
+}
+.ground {
+	color: #e0c068;
+}
+.rock {
+	color: #b8a038;
+}
+.bug {
+	color: #a8b820;
+}
+.ghost {
+	color: #705898;
+}
+.steel {
+	color: #b8b8d0;
+}
+.fire {
+	color: #f08030;
+}
+.water {
+	color: #6890f0;
+}
+.grass {
+	color: #78c850;
+}
+.electric {
+	color: #f8d030;
+}
+.psychic {
+	color: #f85888;
+}
+.ice {
+	color: #98d8d8;
+}
+.dragon {
+	color: #7038f8;
+}
+.dark {
+	color: #705848;
+}
+.curse {
+	color: #68a090;
+}
+
 
 /* Links */
 a {
@@ -80,4 +149,8 @@ h1 {
 
 body {
 	
+}
+
+div {
+	margin: 0px;
 }
