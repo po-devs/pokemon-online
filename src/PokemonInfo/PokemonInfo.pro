@@ -1,7 +1,7 @@
 TARGET = pokemonlib
 TEMPLATE = lib
 DESTDIR = ../../bin
-DEFINES += SERVER_SIDE
+QT += xml
 SOURCES += pokemonstructs.cpp \
     pokemoninfo.cpp \
     networkstructs.cpp \
@@ -13,5 +13,6 @@ HEADERS += pokemonstructs.h \
     movesetchecker.h \
     battlestructs.h
 LIBS += -L../../bin \
-    -lutilities
+    -lutilities \
+    -lzip
 OTHER_FILES += 

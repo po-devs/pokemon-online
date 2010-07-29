@@ -214,9 +214,9 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
 {
     QScrollBar * b = verticalScrollBar();
     if (linecount >= 2000 && autoClear) {
-        this->setHtml(this->toHtml().section("<br />", -1000));
-        linecount = 1000;
+        keepLines(1000);
         moveCursor(QTextCursor::End);
+        linecount = 1000;
         QTextEdit::insertHtml(text);
         b->setValue(b->maximum());
         return;
@@ -226,6 +226,7 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
     int e = b->maximum();
     moveCursor(QTextCursor::End);
     QTextEdit::insertHtml(text);
+
     if(b->value() != e)
     {
         b->setValue(f);
@@ -238,13 +239,28 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
     linecount++;
 }
 
+void QScrollDownTextEdit::keepLines(int numberOfLines)
+{
+    setReadOnly(false);
+    moveCursor(QTextCursor::Start);
+    moveCursor(QTextCursor::End, QTextCursor::KeepAnchor);
+
+    while (numberOfLines > 0) {
+        --numberOfLines;
+        moveCursor(QTextCursor::Up, QTextCursor::KeepAnchor);
+    }
+
+    cut();
+    setReadOnly(true);
+}
+
 void QScrollDownTextEdit::insertPlainText(const QString &text)
 {
     QScrollBar * b = verticalScrollBar();
     if (linecount >= 2000 && autoClear) {
-        this->setHtml(this->toHtml().section("<br />", -1000));
-        linecount = 1000;
+        keepLines(1000);
         moveCursor(QTextCursor::End);
+        linecount = 1000;
         QTextEdit::insertPlainText(text);
         b->setValue(b->maximum());
         return;
@@ -254,8 +270,8 @@ void QScrollDownTextEdit::insertPlainText(const QString &text)
     int e = b->maximum();
 
     moveCursor(QTextCursor::End);
-
     QTextEdit::insertPlainText(text);
+
     if(b->value() != e)
     {
         b->setValue(f);

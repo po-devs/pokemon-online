@@ -16,7 +16,6 @@ SOURCES += main.cpp \
     antidos.cpp \
     player.cpp \
     network.cpp \
-    moves.cpp \
     mechanics.cpp \
     mainwindow.cpp \
     loadinsertthread.cpp \
@@ -34,7 +33,8 @@ SOURCES += main.cpp \
     serverconfig.cpp \
     waitingobject.cpp \
     tiermachine.cpp \
-    tier.cpp
+    tier.cpp \
+    moves.cpp
 DEFINES = SERVER_SIDE
 LIBS += -L../../bin \
     -lutilities \

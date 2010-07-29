@@ -27,7 +27,7 @@ PluginManager::PluginManager()
             continue;
         }
 
-        ServerPlugin *s = f();
+        ClientPlugin *s = f();
 
         if (!s) {
             delete l;
@@ -42,7 +42,7 @@ PluginManager::PluginManager()
 
 PluginManager::~PluginManager()
 {
-    foreach(ServerPlugin *s, plugins) {
+    foreach(ClientPlugin *s, plugins) {
         delete s;
     }
     plugins.clear();
@@ -72,7 +72,7 @@ void PluginManager::addPlugin(const QString &path)
         return;
     }
 
-    ServerPlugin *s = f();
+    ClientPlugin *s = f();
 
     if (!s) {
         delete l;
@@ -128,7 +128,7 @@ QStringList PluginManager::getVisiblePlugins() const
     return ret;
 }
 
-ServerPlugin * PluginManager::plugin(const QString &name) const
+ClientPlugin * PluginManager::plugin(const QString &name) const
 {
     for (int i = 0; i < plugins.size(); i++) {
         if (plugins[i]->pluginName() == name)
@@ -136,13 +136,6 @@ ServerPlugin * PluginManager::plugin(const QString &name) const
     }
 
     return NULL;
-}
-
-void PluginManager::battleStarting(PlayerInterface *p1, PlayerInterface *p2, const ChallengeInfo &c)
-{
-    foreach(ServerPlugin *s, plugins) {
-        s->battleStarting(p1, p2, c);
-    }
 }
 
 PluginManagerWidget::PluginManagerWidget(PluginManager &pl)
@@ -174,7 +167,7 @@ void PluginManagerWidget::addClicked()
     QFileDialog *fd = new QFileDialog(this);
     fd->setAttribute(Qt::WA_DeleteOnClose, true);
     fd->setFileMode(QFileDialog::ExistingFile);
-    fd->setDirectory("serverplugins");
+    fd->setDirectory("myplugins");
     fd->show();
 
     connect(fd, SIGNAL(fileSelected(QString)), this, SLOT(addPlugin(QString)));

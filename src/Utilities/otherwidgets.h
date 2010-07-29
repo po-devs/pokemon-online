@@ -104,6 +104,7 @@ public:
     }
     void insertHtml(const QString &text);
     void insertPlainText(const QString &text);
+    void keepLines(int numberOfLines);
 
 private:
     int linecount;

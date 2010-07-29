@@ -107,7 +107,7 @@ QString Skeleton::getSkeletonBody(const QString &name) const {
 
 QString Skeleton::generate() const {
     QHashIterator<QString, QList<Skeleton> > it(children);
-    
+
     QString body = this->body;
 
     while (it.hasNext()) {
@@ -169,10 +169,10 @@ struct SecondaryStuff {
         return *this;
     }
 
-    void complete(Skeleton &s) const;
+    void complete(Skeleton &s, bool hiddenPower) const;
 };
 
-void SecondaryStuff::complete(Skeleton &s) const
+void SecondaryStuff::complete(Skeleton &s, bool hiddenPower) const
 {
     static const char* stats[] = {"HP", "Atk", "Def", "Spd", "SAtk", "SDef"};
 
@@ -204,22 +204,21 @@ void SecondaryStuff::complete(Skeleton &s) const
     } else {
         s.addDefaultValue("ivs", "All 31");
     }
+
+    if (hiddenPower) {
+        int type = HiddenPowerInfo::Type(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+        QString name = TypeInfo::Name(type);
+
+        s.addDefaultValue("hiddenpower", QString("[<span class='%1'>%2</span>]").arg(name.toLower(), name));
+    }
 }
 
-struct MoveSet {
+struct RawSet {
+    quint16 level;
     quint16 item;
     quint16 moves[4];
-    quint16 level;
-    quint16 abilities[2];
-    quint16 usage;
-    quint16 num;
 
-    QMap<SecondaryStuff, SecondaryStuff> options;
-
-    MoveSet();
-    MoveSet(char buffer[28], int usage, int defAb);
-
-    bool operator < (const MoveSet &other) const {
+    bool operator < (const RawSet &other) const {
         if (item != other.item) {
             return item < other.item;
         }
@@ -228,13 +227,25 @@ struct MoveSet {
             return level < other.level;
         }
 
-        return memcmp(moves, other.moves, sizeof(moves));
+        for (int i = 0; i < 4; i++) {
+            if (moves[i] != other.moves[i]) {
+                return moves[i] < other.moves[i];
+            }
+        }
+        return 0;
     }
+};
 
-    bool operator == (const MoveSet &other) const {
-        return item == other.item && memcmp(moves, other.moves, sizeof(moves)) == 0
-                && level == other.level;
-    }
+struct MoveSet {
+    quint16 abilities[2];
+    quint16 usage;
+    quint16 num;
+    RawSet raw;
+
+    QMap<SecondaryStuff, SecondaryStuff> options;
+
+    MoveSet();
+    MoveSet(char buffer[28], int usage, int defAb);
 
     MoveSet & operator += (const MoveSet &other) {
         usage += other.usage;
@@ -254,6 +265,8 @@ struct MoveSet {
     }
 
     void complete(Skeleton &m) const;
+
+    bool hasHiddenPower() const;
 };
 
 MoveSet::MoveSet()
@@ -265,7 +278,7 @@ MoveSet::MoveSet(char buffer[28], int usage, int defAb)
 {
     qint32 *buf = (qint32 *) buffer;
 
-    item = buf[0] & 0xFFFF;
+    raw.item = buf[0] & 0xFFFF;
     num = buf[0] >> 16;
 
     if (defAb == buf[1] >> 16) {
@@ -276,7 +289,7 @@ MoveSet::MoveSet(char buffer[28], int usage, int defAb)
         abilities[1] = usage;
     }
 
-    level = buf [1] & 0xFF;
+    raw.level = buf [1] & 0xFF;
 
     SecondaryStuff s;
 
@@ -290,16 +303,25 @@ MoveSet::MoveSet(char buffer[28], int usage, int defAb)
     s.evs[5] = buf[3] & 0xFF;
 
     for (int i = 0; i < 6; i++) {
-        s.dvs[i] = (buf[4] >> (5-i)) & 0x1F;
+        s.dvs[i] = (buf[4] >> (5-i)*5) & 0x1F;
     }
 
     qint16 *moves = (qint16 *) (&buf[5]);
 
+    qSort(&moves[0], &moves[4]);
+
     for (int i =0; i < 4; i++) {
-        this->moves[i] = moves[i];
+        raw.moves[i] = moves[i];
     }
 
     options.insert(s,s);
+}
+
+bool MoveSet::hasHiddenPower() const {
+    return raw.moves[0] == Move::HiddenPower ||
+            raw.moves[1] == Move::HiddenPower ||
+            raw.moves[2] == Move::HiddenPower ||
+            raw.moves[3] == Move::HiddenPower;
 }
 
 void MoveSet::complete(Skeleton &m) const
@@ -308,8 +330,8 @@ void MoveSet::complete(Skeleton &m) const
     int tot = abilities[0] + abilities[1];
 
     m.addDefaultValue("pokemon", PokemonInfo::Name(num));
-    m.addDefaultValue("item", ItemInfo::Name(item));
-    m.addDefaultValue("level", level);
+    m.addDefaultValue("item", ItemInfo::Name(raw.item));
+    m.addDefaultValue("level", raw.level);
     m.addDefaultValue("abilities", abilities[0]*abilities[1] == 0 ? (abilities[0] == 0 ? AbilityInfo::Name(ab[1]) : AbilityInfo::Name(ab[0]))
         : QString("%1 (%2 %) / %3 (%4 %)").arg(AbilityInfo::Name(ab[0])).arg(double(100*abilities[0])/tot,0,'f',1)
         .arg(AbilityInfo::Name(ab[1])).arg(double(100*abilities[1])/tot,0,'f',1).toUtf8());
@@ -327,19 +349,21 @@ void MoveSet::complete(Skeleton &m) const
 
     Skeleton &s = m.appendChild("firststatset");
     s.addDefaultValue("percentage", QString::number(double(100*it.value().usage)/usage, 'f', 1));
-    it.value().complete(s);
+
+    bool hp = hasHiddenPower();
+    it.value().complete(s, hp);
 
     while (it.hasPrevious()) {
         it.previous();
         Skeleton &s = m.appendChild("statset");
         s.addDefaultValue("percentage", QString::number(double(100*it.value().usage)/usage, 'f', 1));
-        it.value().complete(s);
+        it.value().complete(s, hp);
     }
 
-    m.addDefaultValue("move1", MoveInfo::Name(moves[0]));
-    m.addDefaultValue("move2", MoveInfo::Name(moves[1]));
-    m.addDefaultValue("move3", MoveInfo::Name(moves[2]));
-    m.addDefaultValue("move4", MoveInfo::Name(moves[3]));
+    m.addDefaultValue("move1", MoveInfo::Name(raw.moves[0]));
+    m.addDefaultValue("move2", MoveInfo::Name(raw.moves[1]));
+    m.addDefaultValue("move3", MoveInfo::Name(raw.moves[2]));
+    m.addDefaultValue("move4", MoveInfo::Name(raw.moves[3]));
 }
 
 static QString getImageLink(int pokemon, bool root=false)
@@ -352,6 +376,111 @@ static QString getIconLink(int pokemon, bool root=false)
     return QString(root ? "icons/%1.PNG" : "../icons/%1.PNG").arg(pokemon);
 }
 
+struct Bcc {
+    QByteArray buffer;
+    int usage;
+    int leadUsage;
+
+    Bcc(const QByteArray &a, int usage, int leadUsage):
+            buffer(a), usage(usage), leadUsage(leadUsage) {
+
+    }
+};
+
+struct GlobalThings {
+    QHash<int, int> moves;
+    QHash<int, int> items;
+    int abilities[2];
+
+    int totalMoves;
+    int totalItems;
+
+    GlobalThings() {
+        totalItems = 0;
+        totalMoves = 0;
+        abilities[0] = 0;
+        abilities[1] = 1;
+    }
+};
+
+void addMoveset(QMap<RawSet, MoveSet> &container, char *buffer, int usage, int defAb, GlobalThings &globals) {
+    if (usage == 0)
+        return;
+    MoveSet m = MoveSet(buffer, usage, defAb);
+
+    globals.abilities[0] += m.abilities[0];
+    globals.abilities[1] += m.abilities[1];
+    globals.items[m.raw.item] += m.usage;
+    globals.totalItems += m.usage;
+
+    for (int i = 0; i < 4; i++) {
+        if (m.raw.moves[i] != 0) {
+            globals.moves[m.raw.moves[i]] += m.usage;
+        }
+    }
+    globals.totalMoves += m.usage;
+
+    if (!container.contains(m.raw)) {
+        container.insert(m.raw, m);
+    } else {
+        container[m.raw] += m;
+    }
+}
+
+void parseMovesets(Skeleton &s, QMap<RawSet, MoveSet> &movesets, const QString &key, int totalUsage) {
+    QMultiMap <int, MoveSet> usageOrder;
+
+    QMapIterator<RawSet, MoveSet> mit (movesets);
+
+    while (mit.hasNext()) {
+        mit.next();
+
+        usageOrder.insertMulti(mit.value().usage, mit.value());
+    }
+
+    QMapIterator<int, MoveSet> usageIt(usageOrder);
+
+    usageIt.toBack();
+    int i = 0;
+
+    while (usageIt.hasPrevious() && i < 25) {
+        usageIt.previous();
+        i+= 1;
+
+        Skeleton &m = s.appendChild(key);
+        m.addDefaultValue("rank", i);
+        m.addDefaultValue("percentage", QString::number(double(100*usageIt.key())/totalUsage,'f',2));
+        m.addDefaultValue("battles", usageIt.key());
+        usageIt.value().complete(m);
+    }
+}
+
+void parseGlobals(Skeleton &s, QHash<int, int> &movesets, int totalUsage, const QString &bigkey, const char *smallkey, QString (*f)(int)) {
+    QMultiMap <int, int> usageOrder;
+
+    QHashIterator<int, int> mit (movesets);
+
+    while (mit.hasNext()) {
+        mit.next();
+
+        usageOrder.insertMulti(mit.value(), mit.key());
+    }
+
+    QMapIterator<int, int> usageIt(usageOrder);
+
+    usageIt.toBack();
+    int i = 0;
+
+    while (usageIt.hasPrevious() && i < 20) {
+        usageIt.previous();
+        i+= 1;
+
+        Skeleton &m = s.appendChild(bigkey);
+        m.addDefaultValue(smallkey, f(usageIt.value()));
+        m.addDefaultValue("percentage", QString::number(double(100*usageIt.key())/totalUsage,'f',2));
+    }
+}
+
 int main(int argc, char *argv[])
 {
     (void) argc;
@@ -362,6 +491,8 @@ int main(int argc, char *argv[])
     AbilityInfo::init("db/abilities/");
     ItemInfo::init("db/items/");
     NatureInfo::init("db/natures/");
+    HiddenPowerInfo::init("db/types/");
+    TypeInfo::init("db/types/");
 
     srand(time(NULL));
     for (int i = 0; i < 100; i++)
@@ -384,10 +515,12 @@ int main(int argc, char *argv[])
     d.mkpath(dirname);
     d.cd(dirname);
 
+    fprintf(stdout, "Moving raw files to a safe directory... (may take time)");
+
 #ifdef WIN32
-    system( ("xcopy usage_stats\\raw\\* " + dirname + " /s").toAscii().data() );
+    system( ("xcopy usage_stats\\raw\\* " + dirname + " /s > copy.txt").toAscii().data() );
 #else
-    system( ("cp -R usage_stats/raw " + dirname).toAscii().data() );
+    system( ("cp -R usage_stats/raw " + dirname).toAscii().data() + " > copy.txt" );
 #endif
 
     QStringList dirs = d.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -401,26 +534,33 @@ int main(int argc, char *argv[])
 
         /* First we get the usage of each pokemon */
         QHash<int, int> usage;
+        QHash<int, int> leadUsage;
         qint32 totalusage(0);
 
+        QHash<int, QList<Bcc> > buffers;
+
+        fprintf(stdout, "\nDoing Tier %s\n", dir.toUtf8().data());
+
         foreach(QString file, files) {
-            FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "r");
+            FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "rb");
 
             char buffer[28];
-            int pos = 0;
+
             while (fread(buffer, sizeof(char), 28/sizeof(char), f) == 28) {
-                pos += 28;
                 qint32 iusage(0), ileadusage(0);
 
-                fseek(f, pos, SEEK_SET);
                 fread(&iusage, sizeof(qint32), 1, f);
                 fread(&ileadusage, sizeof(qint32), 1, f);
-                pos += 2 * sizeof(qint32);
-                fseek(f, pos, SEEK_SET);
 
                 int pokenum = (*((qint32*) buffer)) >> 16;
 
-                usage[pokenum] += iusage;
+                if (pokenum != 0) {
+                    usage[pokenum] += iusage;
+                    if (ileadusage > 0) {
+                        leadUsage[pokenum] += ileadusage;
+                    }
+                    buffers[pokenum].append(Bcc(QByteArray(buffer, 28), iusage, ileadusage));
+                }
                 totalusage += iusage;
             }
 
@@ -474,37 +614,20 @@ int main(int argc, char *argv[])
 
             int pokemon = it.value();
 
-            QMap<MoveSet, MoveSet> movesets;
-            int defAb = PokemonInfo::Abilities(it.value())[0];
+            int normalUsage = it.key() - leadUsage[pokemon];
 
-            foreach(QString file, files) {
-                FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "r");
+            fprintf(stdout, "Doing Pokemon %s\n", PokemonInfo::Name(pokemon).toUtf8().data());
 
-                char buffer[28];
-                int pos = 0;
-                while (fread(buffer, sizeof(char), 28/sizeof(char), f) == 28) {
-                    pos += 28;
-                    qint32 iusage(0), ileadusage(0);
+            QMap<RawSet, MoveSet> movesets;
+            QMap<RawSet, MoveSet> leadsets;
+            GlobalThings globals;
+            int defAb = PokemonInfo::Abilities(pokemon)[0];
 
-                    fseek(f, pos, SEEK_SET);
-                    fread(&iusage, sizeof(qint32), 1, f);
-                    fread(&ileadusage, sizeof(qint32), 1, f);
-                    pos += 2 * sizeof(qint32);
-                    fseek(f, pos, SEEK_SET);
+            foreach(Bcc b, buffers[pokemon]) {
+                char *buffer = b.buffer.data();
 
-                    int pokenum = (*((qint32*) buffer)) >> 16;
-
-                    if (pokenum == pokemon) {
-                        MoveSet m = MoveSet(buffer, iusage, defAb);
-
-                        if (!movesets.contains(m)) {
-                            movesets.insert(m, m);
-                        } else {
-                            movesets[m] += m;
-                        }
-                    }
-                }
-                fclose(f);
+                addMoveset(movesets, buffer, b.usage-b.leadUsage, defAb, globals);
+                addMoveset(leadsets, buffer, b.leadUsage, defAb, globals);
             }
 
             Skeleton s("usage_stats/formatted/pokemon_page.template");
@@ -513,32 +636,24 @@ int main(int argc, char *argv[])
             s.addDefaultValue("imagelink", getImageLink(pokemon));
             s.addDefaultValue("percentage", QString::number(double(100*it.key())/totalBattles,'f',2));
             s.addDefaultValue("battles", it.key());
+            s.addDefaultValue("nonleadpercentage", QString::number(double(100*normalUsage)/totalBattles,'f',2));
+            s.addDefaultValue("nonleadbattles", normalUsage);
+            s.addDefaultValue("leadpercentage", QString::number(double(100*leadUsage[pokemon])/totalBattles,'f',2));
+            s.addDefaultValue("leadbattles", leadUsage[pokemon]);
 
-            QMultiMap <int, MoveSet> usageOrder;
-
-            QMapIterator<MoveSet, MoveSet> mit (movesets);
-
-            while (mit.hasNext()) {
-                mit.next();
-
-                usageOrder.insertMulti(mit.value().usage, mit.value());
+            parseMovesets(s, movesets, "moveset", normalUsage);
+            parseMovesets(s, leadsets, "leadmoveset", leadUsage[pokemon]);
+            parseGlobals(s, globals.moves, globals.totalMoves, "globalmove", "move", &MoveInfo::Name);
+            parseGlobals(s, globals.items, globals.totalItems, "globalitem", "item", &ItemInfo::Name);
+            QHash<int, int> abilities;
+            abilities[defAb] = globals.abilities[0];
+            int totAbilities = globals.abilities[0];
+            if (globals.abilities[1] > 0 && PokemonInfo::Abilities(pokemon)[1] != 0) {
+                abilities[PokemonInfo::Abilities(pokemon)[1]] = globals.abilities[1];
+                totAbilities += globals.abilities[1];
             }
+            parseGlobals(s, abilities, totAbilities, "globalability", "ability", &AbilityInfo::Name);
 
-            QMapIterator<int, MoveSet> usageIt(usageOrder);
-
-            usageIt.toBack();
-            int i = 0;
-
-            while (usageIt.hasPrevious() && i < 25) {
-                usageIt.previous();
-                i+= 1;
-
-                Skeleton &m = s.appendChild("moveset");
-                m.addDefaultValue("rank", i);
-                m.addDefaultValue("percentage", QString::number(double(100*usageIt.key())/it.key(),'f',2));
-                m.addDefaultValue("battles", usageIt.key());
-                usageIt.value().complete(m);
-            }
             QFile pokef(outDir.absoluteFilePath("%1.html").arg(pokemon));
             pokef.open(QIODevice::WriteOnly);
             pokef.write(s.generate().toUtf8());

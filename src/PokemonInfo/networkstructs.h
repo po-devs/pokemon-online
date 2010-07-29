@@ -109,11 +109,8 @@ QDataStream & operator << (QDataStream &out, const PlayerInfo &p);
 
 struct FullInfo
 {
-#ifdef CLIENT_SIDE
     TrainerTeam team;
-#else
-    TeamInfo team;
-#endif
+
     bool ladder;
     bool showteam;
     QColor nameColor;

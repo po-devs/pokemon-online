@@ -1596,13 +1596,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
         pokelong[player][QString("Move%1Used").arg(move)] = true;
 
-	callieffects(player,player, "RegMoveSettings");
-
         pokelong[player]["LastMoveUsed"] = attack;
         pokelong[player]["LastMoveUsedTurn"] = turn();
+    } else if (attack != 0 && pokelong[player].value("LastMoveUsedTurn").toInt() != turn()) {
+	/* Recharge moves have their attack as 0 on the recharge turn : Blast Burn , ...
+	  So that's why attack is tested against 0. */
+	/* Those are needed for when a choiced move is used, or torment is used, and for example
+		the foe used Assit + Fly or simply fly. */
+	pokelong[player]["LastMoveUsed"] = attack;
+	pokelong[player]["LastMoveUsedTurn"] = turn();
     }
 
-    //For metronome calling fly / sky attack / w/e
+    //For metronome calling fly / sky attack / ...
     pokelong[player]["LastSpecialMoveUsed"] = attack;
 
     calleffects(player, player, "MoveSettings");
