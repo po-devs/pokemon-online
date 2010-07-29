@@ -125,6 +125,14 @@
 	width: 33.33%;
 }
 
+.globaltable th, .globaltable td{
+	background: #dddddd;
+	/*margin: 0;
+	padding: 0;
+	border-width: 5px;
+	border-color: #dddddd;*/
+}
+
 
 /* Links */
 a {
