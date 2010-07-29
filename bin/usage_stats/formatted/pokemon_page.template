@@ -22,28 +22,34 @@ page{{
 	<body>
 		<header><a href='index.html'>Tier {tier}</a></header>
 		<p><input type='button' onclick="spoiler(document.getElementById('globals'))" value='Show globals'/></p>
-		<table class="globaltable" style="display: none;" id="globals">
+		<div id="globals" style="display: none;">
+		<img src="{imagelink}" />
+		<table class="globaltable">
 			<tr><th>Moves</th>
 			<th>Items</th>
 			<th>Abilities</th></tr>
 			<tr>
 				<td valign="top" class="globaltd">
-					<ol id="globalMoves">
+					<table>
+						<tr><th>Rank</th><th>Name</th><th>Usage</th></tr>
 						{globalmove*}
-					</ol>
+					</table>
 				</td>
 				<td valign="top" class="globaltd">
-					<ol id="globalItems">
+					<table>
+						<tr><th>Rank</th><th>Name</th><th>Usage</th></tr>
 						{globalitem*}
-					</ol>
+					</table>
 				</td>
 				<td valign="top" class="globaltd">
-					<ul id="globalAbilities">
+					<table>	
+						<tr><th>Rank</th><th>Name</th><th>Usage</th></tr>
 						{globalability*}
-					</ul>
+					</table>
 				</td>
 			</tr>
 		</table>
+		</div>
 		<img src="{imagelink}" />
 		<table style="width: 100%">
 			<caption>Global Usage: {percentage} % ({battles} battles)</caption>
@@ -56,15 +62,15 @@ page{{
 }}
 
 globalmove{{
-	<li class='globalMove'>{move} <span class='smallPercent'>({percentage} %)</span></li>
+	<tr><td><code>{rank}</code></td><td><code>| {move}</code></td><td><code>&nbsp;| {percentage} % <!-- {battles} battles --></code></td></tr>
 }}
 
 globalitem{{
-	<li class='globalItem'>{item} <span class='smallPercent'>({percentage} %)</span></li>
+	<tr><td><code>{rank}</code></td><td><code>| {item}</code></td><td><code>&nbsp;| {percentage} % <!-- {battles} battles --></code></td></tr>
 }}
 
 globalability{{
-	<li class='globalAbility'>{ability} <span class='smallPercent'>({percentage} %)</span></li>
+	<tr><td><code>{rank}</code></td><td><code>| {ability}</code></td><td><code>&nbsp;| {percentage} % <!-- {battles} battles --></code></td></tr>
 }}
 
 moveset{{

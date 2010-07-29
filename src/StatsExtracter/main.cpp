@@ -471,13 +471,15 @@ void parseGlobals(Skeleton &s, QHash<int, int> &movesets, int totalUsage, const 
     usageIt.toBack();
     int i = 0;
 
-    while (usageIt.hasPrevious() && i < 20) {
+    while (usageIt.hasPrevious() && i < 25) {
         usageIt.previous();
         i+= 1;
 
         Skeleton &m = s.appendChild(bigkey);
         m.addDefaultValue(smallkey, f(usageIt.value()));
         m.addDefaultValue("percentage", QString::number(double(100*usageIt.key())/totalUsage,'f',2));
+        m.addDefaultValue("rank", i);
+        m.addDefaultValue("battles", usageIt.key());
     }
 }
 
