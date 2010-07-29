@@ -5,9 +5,7 @@
 #include <QDataStream>
 #include "../Utilities/functions.h"
 
-#ifdef CLIENT_SIDE
-#include <QDomElement>
-#endif
+class QDomElement;
 
 namespace Version
 {
@@ -1615,8 +1613,6 @@ public:
     void setSpDefenseEV(quint8);
 };
 
-#ifdef CLIENT_SIDE
-
 /* Contains / loads the graphics of a pokemon */
 class PokeGraphics
 {
@@ -1663,7 +1659,7 @@ public:
     QIcon icon();
 
     void loadFromXml(const QDomElement &el);
-    QDomElement toXml() const;
+    QDomElement & toXml(QDomElement &dest) const;
 };
 
 class Team
@@ -1723,7 +1719,7 @@ QDataStream & operator << (QDataStream & out,const TrainerTeam & trainerTeam);
 QDataStream & operator >> (QDataStream & in,Team & team);
 QDataStream & operator >> (QDataStream & in,PokeTeam & Pokemon);
 QDataStream & operator >> (QDataStream & in,TrainerTeam & trainerTeam);
-#endif
+
 
 QDataStream & operator << (QDataStream & out,const PokePersonal & Pokemon);
 QDataStream & operator >> (QDataStream & in,PokePersonal & Pokemon);

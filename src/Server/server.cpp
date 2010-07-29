@@ -47,7 +47,6 @@ Server::~Server()
  * to that view (by construction of the view), and then the server should start.
  */
 void Server::start(){
-    try {
     serverIns = this;
 
     //linecount = 0;
@@ -94,6 +93,9 @@ void Server::start(){
 
     printLine(tr("Starting loading pokemon database..."));
 
+    /* Really useful for headless servers */
+    PokemonInfoConfig::setConfig(PokemonInfoConfig::NoGui);
+
     PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/");
     ItemInfo::init("db/items/");
@@ -128,8 +130,6 @@ void Server::start(){
     battleThread.start();
     printLine(tr("Battle Thread started"));
 
-    myengine = new ScriptEngine(this);
-
     if (!server()->listen(QHostAddress::Any, serverPort))
     {
 	printLine(tr("Unable to listen to port %1").arg(serverPort));
@@ -163,15 +163,13 @@ void Server::start(){
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
     serverPrivate = quint16(s.value("server_private").toInt());
 
+    myengine = new ScriptEngine(this);
     myengine->serverStartUp();
 
     this->showLogMessages = s.value("show_log_messages").toBool();
 
     if (serverPrivate != 1)
         connectToRegistry();
-} catch (const QString &e) {
-    qDebug() << "Exception" << e;
-}
 }
 
 void Server::print(const QString &line)
@@ -368,6 +366,7 @@ bool Server::printLine(const QString &line, bool chatMessage, bool forcedLog)
 
     qDebug() << line;
     if (myengine == NULL) {
+        emit servermessage(line);
         return true;
     }
     if (chatMessage || myengine->beforeNewMessage(line)) {

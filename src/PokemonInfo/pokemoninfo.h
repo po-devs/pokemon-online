@@ -7,6 +7,20 @@
 class PokeBaseStats;
 class QPixmap;
 
+class PokemonInfoConfig {
+public:
+    enum Config {
+        Gui = 0,
+        NoGui
+    };
+
+    static Config config();
+
+    static void setConfig(Config cf);
+private:
+    static Config _config;
+};
+
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
 
 struct PokemonMoves
@@ -56,7 +70,7 @@ private:
     static int calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev);
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="./");
+    static void init(const QString &dir="db/pokes/");
 
     /* Self-explainable functions */
     static int TrueCount(); // pokes without counting forms
@@ -161,7 +175,7 @@ private:
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="./");
+    static void init(const QString &dir="db/moves/");
 
     /* Self-explainable functions */
     static QString Name(int movenum);
@@ -226,7 +240,7 @@ private:
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="./");
+    static void init(const QString &dir="db/items/");
 
     /* Self-explainable functions */
     static int NumberOfItems();
@@ -248,9 +262,7 @@ public:
     static int Power(int itemnum);
     static int BerryPower(int itemnum);
     static int BerryType(int itemnum);
-#ifdef CLIENT_SIDE
     static QPixmap Icon(int itemnum);
-#endif
 };
 
 class TypeInfo
@@ -269,9 +281,7 @@ private:
     static QString m_Directory;
     static QList<QColor> m_Colors;
     static QList<int> m_TypeVsType;
-#ifdef CLIENT_SIDE
     static QList<QPixmap> m_Pics;
-#endif
 
     static void loadNames();
     static void loadColors();
@@ -279,7 +289,7 @@ private:
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="./");
+    static void init(const QString &dir="db/types/");
 
     /* Self-explainable functions */
     static QString Name(int typenum);
@@ -288,9 +298,7 @@ public:
     static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
     static int TypeForWeather(int weather);
-#ifdef CLIENT_SIDE
     static QPixmap Picture(int type);
-#endif
 };
 
 class NatureInfo
@@ -302,7 +310,7 @@ private:
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="./");
+    static void init(const QString &dir="db/nature/");
 
     /* Self-explainable functions */
     static QString Name(int naturenum);
@@ -328,7 +336,7 @@ private:
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="./");
+    static void init(const QString &dir="db/categories/");
 
     /* Self-explainable functions */
     static QString Name(int catnum);
@@ -355,7 +363,7 @@ private:
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="./");
+    static void init(const QString &dir="db/abilities/");
 
     /* Self-explainable functions */
     static QString Name(int abnum);
@@ -380,7 +388,7 @@ private:
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="./");
+    static void init(const QString &dir="db/genders/");
 
     /* Self-explainable functions */
     static QString Name(int gender);
@@ -390,7 +398,6 @@ public:
     static bool Possible(int gender, int genderAvail);
 };
 
-
 class HiddenPowerInfo
 {
 private:
@@ -399,7 +406,7 @@ private:
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="./");
+    static void init(const QString &dir="db/types/");
 
     /* The type of the hidden power depending on the dvs */
     static int Type(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
@@ -421,7 +428,7 @@ private:
     static QString path(const QString &filename);
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="./");
+    static void init(const QString &dir="db/stats/");
 
     static QString Stat(int stat);
     static QString Status(int status);

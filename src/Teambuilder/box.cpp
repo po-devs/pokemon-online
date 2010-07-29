@@ -325,7 +325,8 @@ void PokemonBox::save()
             QDomElement slot = doc.createElement("Slot");
             slot.setAttribute("Num", i);
             box.appendChild(slot);
-            slot.appendChild(pokemons[i]->poke->toXml());
+            QDomElement pokemon = doc.createElement("Pokemon");
+            slot.appendChild(pokemons[i]->poke->toXml(pokemon));
         }
     }
 #if defined(Q_OS_MAC)
