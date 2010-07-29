@@ -5,6 +5,7 @@
 #include <QPair>
 
 #include "../Utilities/otherwidgets.h"
+#include "centralwidget.h"
 
 class TB_PokemonBody;
 class TB_TrainerBody;
@@ -61,7 +62,7 @@ public:
 };
 
 /* The Teambuilder!! */
-class TeamBuilder : public QLabel
+class TeamBuilder : public QLabel, public CentralWidgetInterface
 {
     Q_OBJECT
 public:
@@ -220,7 +221,7 @@ private:
     friend class DockAdvanced;
 };
 
-/* The list of pokémons */
+/* The list of pokemons */
 class TB_PokeChoice : public QCompactTable
 {
     Q_OBJECT

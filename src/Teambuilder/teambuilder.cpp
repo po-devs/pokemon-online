@@ -1,12 +1,12 @@
+#include "../Utilities/otherwidgets.h"
+#include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/pokemonstructs.h"
 #include "teambuilder.h"
 #include "box.h"
 #include "advanced.h"
 #include "mainwindow.h"
 #include "pokedex.h"
-#include "../Utilities/otherwidgets.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../Utilities/dockinterface.h"
+#include "dockinterface.h"
 
 template <class T, class U>
         QSet<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)

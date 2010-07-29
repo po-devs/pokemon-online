@@ -9,26 +9,20 @@ SOURCES += main.cpp \
     advanced.cpp \
     menu.cpp \
     mainwindow.cpp \
-    ../PokemonInfo/pokemoninfo.cpp \
-    ../PokemonInfo/pokemonstructs.cpp \
-    ../Utilities/otherwidgets.cpp \
     network.cpp \
-    ../Utilities/dockinterface.cpp \
+    dockinterface.cpp \
     client.cpp \
     analyze.cpp \
     serverchoice.cpp \
-    ../PokemonInfo/battlestructs.cpp \
-    ../PokemonInfo/networkstructs.cpp \
     challenge.cpp \
     battlewindow.cpp \
-    ../Utilities/functions.cpp \
     pmwindow.cpp \
     controlpanel.cpp \
     basebattlewindow.cpp \
-    ../PokemonInfo/movesetchecker.cpp \
     box.cpp \
     ranking.cpp \
-    pokedex.cpp
+    pokedex.cpp \
+    pluginmanager.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -37,7 +31,7 @@ HEADERS += teambuilder.h \
     ../PokemonInfo/pokemonstructs.h \
     ../Utilities/otherwidgets.h \
     network.h \
-    ../Utilities/dockinterface.h \
+    dockinterface.h \
     client.h \
     analyze.h \
     serverchoice.h \
@@ -53,10 +47,13 @@ HEADERS += teambuilder.h \
     ../Shared/config.h \
     box.h \
     ranking.h \
-    pokedex.h
+    pokedex.h \
+    pluginmanager.h \
+    plugininterface.h \
+    centralwidget.h
 LIBS += -L../../bin \
-    -lzip
-DEFINES = CLIENT_SIDE
+    -lpokemonlib \
+    -lutilities
 FORMS += controlpanel.ui
 TRANSLATIONS = translation_de.ts \
     translation_es.ts \

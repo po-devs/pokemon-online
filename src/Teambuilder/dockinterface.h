@@ -2,7 +2,6 @@
 #define DOCKINTERFACE_H
 
 #include <QtGui>
-#include "otherwidgets.h"
 
 class QStackedWidget;
 class TB_TeamBody;

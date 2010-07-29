@@ -5,9 +5,13 @@
 #include "client.h"
 #include "serverchoice.h"
 #include "../PokemonInfo/movesetchecker.h"
+#include "pluginmanager.h"
+#include "plugininterface.h"
 
 MainEngine::MainEngine() : displayer(0)
 {
+    pluginManager = new PluginManager();
+
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
@@ -45,17 +49,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("find_battle_same_tier", true);
     setDefaultValue("find_battle_range_on", true);
     setDefaultValue("find_battle_range", 200);
-/*
-    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(0)), Qt::Checked);
-    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(1)), Qt::Checked);
-    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(2)), Qt::PartiallyChecked);
-    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(3)), Qt::PartiallyChecked);
-    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(4)), Qt::PartiallyChecked);
-    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(5)), Qt::Unchecked);
-    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(6)), Qt::Unchecked);
-    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(7)), Qt::Unchecked);
-    setDefaultValue(QString("clause_%1_state").arg(ChallengeInfo::clause(8)), Qt::PartiallyChecked);
-*/
+
     PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/");
     ItemInfo::init("db/items/");
@@ -76,6 +70,48 @@ MainEngine::MainEngine() : displayer(0)
     loadTeam(settings.value("team_location").toString());
 
     launchMenu();
+}
+
+MainEngine::~MainEngine()
+{
+    delete pluginManager, pluginManager = NULL;
+}
+
+QMenuBar *MainEngine::transformMenuBar(QMenuBar *param)
+{
+    QMenu *m = param->addMenu(tr("Plugins"));
+    m->addAction(tr("Plugin Manager"), this, SLOT(openPluginManager()));
+    m->addSeparator();
+
+    foreach(QString plugin, pluginManager->getVisiblePlugins()) {
+        m->addAction(plugin, this, SLOT(openPluginConfiguration()));
+    }
+
+    return param;
+}
+
+void MainEngine::openPluginManager()
+{
+    PluginManagerWidget *w = new PluginManagerWidget(*pluginManager);
+
+    w->show();
+
+    connect(w, SIGNAL(pluginListChanged()), SLOT(updateMenuBar()));
+}
+
+void MainEngine::openPluginConfiguration()
+{
+    QString plugin = ((QAction*)(sender()))->text();
+
+    ClientPlugin *c = pluginManager->plugin(plugin);
+
+    if (c && c->hasConfigurationWidget()) {
+        QWidget *w = c->getConfigurationWidget();
+        if (w) {
+            w->setAttribute(Qt::WA_DeleteOnClose, true);
+            w->show();
+        }
+    }
 }
 
 void MainEngine::loadStyleSheet()
@@ -197,11 +233,14 @@ void MainEngine::goOnline(const QString &url, const quint16 port)
 
 void MainEngine::updateMenuBar()
 {
-    displayer->setMenuBar(((Client*)sender())->createMenuBar(this));
+    displayer->setMenuBar((dynamic_cast<CentralWidgetInterface*>(displayer->centralWidget()))
+                            ->createMenuBar(this));
 }
 
 void MainEngine::quit()
 {
+    /* Has to be deleted here, otherwise windows error if the libraries are not detached */
+    delete pluginManager, pluginManager = NULL;
     exit(0);
 }
 
