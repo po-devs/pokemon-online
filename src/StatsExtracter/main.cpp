@@ -387,10 +387,38 @@ struct Bcc {
     }
 };
 
-void addMoveset(QMap<RawSet, MoveSet> &container, char *buffer, int usage, int defAb) {
+struct GlobalThings {
+    QHash<int, int> moves;
+    QHash<int, int> items;
+    int abilities[2];
+
+    int totalMoves;
+    int totalItems;
+
+    GlobalThings() {
+        totalItems = 0;
+        totalMoves = 0;
+        abilities[0] = 0;
+        abilities[1] = 1;
+    }
+};
+
+void addMoveset(QMap<RawSet, MoveSet> &container, char *buffer, int usage, int defAb, GlobalThings &globals) {
     if (usage == 0)
         return;
     MoveSet m = MoveSet(buffer, usage, defAb);
+
+    globals.abilities[0] += m.abilities[0];
+    globals.abilities[1] += m.abilities[1];
+    globals.items[m.raw.item] += m.usage;
+    globals.totalItems += m.usage;
+
+    for (int i = 0; i < 4; i++) {
+        if (m.raw.moves[i] != 0) {
+            globals.moves[m.raw.moves[i]] += m.usage;
+        }
+    }
+    globals.totalMoves += m.usage;
 
     if (!container.contains(m.raw)) {
         container.insert(m.raw, m);
@@ -424,6 +452,32 @@ void parseMovesets(Skeleton &s, QMap<RawSet, MoveSet> &movesets, const QString &
         m.addDefaultValue("percentage", QString::number(double(100*usageIt.key())/totalUsage,'f',2));
         m.addDefaultValue("battles", usageIt.key());
         usageIt.value().complete(m);
+    }
+}
+
+void parseGlobals(Skeleton &s, QHash<int, int> &movesets, int totalUsage, const QString &bigkey, const char *smallkey, QString (*f)(int)) {
+    QMultiMap <int, int> usageOrder;
+
+    QHashIterator<int, int> mit (movesets);
+
+    while (mit.hasNext()) {
+        mit.next();
+
+        usageOrder.insertMulti(mit.value(), mit.key());
+    }
+
+    QMapIterator<int, int> usageIt(usageOrder);
+
+    usageIt.toBack();
+    int i = 0;
+
+    while (usageIt.hasPrevious() && i < 20) {
+        usageIt.previous();
+        i+= 1;
+
+        Skeleton &m = s.appendChild(bigkey);
+        m.addDefaultValue(smallkey, f(usageIt.value()));
+        m.addDefaultValue("percentage", QString::number(double(100*usageIt.key())/totalUsage,'f',2));
     }
 }
 
@@ -566,13 +620,14 @@ int main(int argc, char *argv[])
 
             QMap<RawSet, MoveSet> movesets;
             QMap<RawSet, MoveSet> leadsets;
-            int defAb = PokemonInfo::Abilities(it.value())[0];
+            GlobalThings globals;
+            int defAb = PokemonInfo::Abilities(pokemon)[0];
 
             foreach(Bcc b, buffers[pokemon]) {
                 char *buffer = b.buffer.data();
 
-                addMoveset(movesets, buffer, b.usage, defAb);
-                addMoveset(leadsets, buffer, b.leadUsage, defAb);
+                addMoveset(movesets, buffer, b.usage-b.leadUsage, defAb, globals);
+                addMoveset(leadsets, buffer, b.leadUsage, defAb, globals);
             }
 
             Skeleton s("usage_stats/formatted/pokemon_page.template");
@@ -586,8 +641,18 @@ int main(int argc, char *argv[])
             s.addDefaultValue("leadpercentage", QString::number(double(100*leadUsage[pokemon])/totalBattles,'f',2));
             s.addDefaultValue("leadbattles", leadUsage[pokemon]);
 
-            parseMovesets(s, movesets, "moveset", it.key());
+            parseMovesets(s, movesets, "moveset", normalUsage);
             parseMovesets(s, leadsets, "leadmoveset", leadUsage[pokemon]);
+            parseGlobals(s, globals.moves, globals.totalMoves, "globalmove", "move", &MoveInfo::Name);
+            parseGlobals(s, globals.items, globals.totalItems, "globalitem", "item", &ItemInfo::Name);
+            QHash<int, int> abilities;
+            abilities[defAb] = globals.abilities[0];
+            int totAbilities = globals.abilities[0];
+            if (globals.abilities[1] > 0 && PokemonInfo::Abilities(pokemon)[1] != 0) {
+                abilities[PokemonInfo::Abilities(pokemon)[1]] = globals.abilities[1];
+                totAbilities += globals.abilities[1];
+            }
+            parseGlobals(s, abilities, totAbilities, "globalability", "ability", &AbilityInfo::Name);
 
             QFile pokef(outDir.absoluteFilePath("%1.html").arg(pokemon));
             pokef.open(QIODevice::WriteOnly);
