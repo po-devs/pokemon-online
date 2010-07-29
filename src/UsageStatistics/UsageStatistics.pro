@@ -2,7 +2,7 @@
 # Project created by QtCreator 2010-07-22T23:36:49
 # -------------------------------------------------
 TARGET = usagestats
-DESTDIR = ../../bin/myplugins
+DESTDIR = ../../bin/serverplugins
 TEMPLATE = lib
 DEFINES += POKEMONONLINESTATSPLUGIN_LIBRARY
 DEFINES += SERVER_SIDE

@@ -3,11 +3,13 @@
 
 #include <QtGui>
 #include "../PokemonInfo/pokemoninfo.h"
+#include "centralwidget.h"
 
 class TB_Menu;
 class TeamBuilder;
 class Client;
 class ServerChoice;
+class PluginManager;
 
 /* The main window!
 
@@ -18,6 +20,7 @@ class MainEngine : public QObject {
     Q_OBJECT
 public:
     MainEngine();
+    ~MainEngine();
 
     void loadTeam(const QString &path);
     template<class T>
@@ -31,30 +34,25 @@ public slots:
     void changeStyle();
     void changeLanguage();
     void updateMenuBar();
+    void openPluginManager();
     void quit();
 
     /* slots called by subwindows when they need it */
     void loadTeamDialog();
     void loadStyleSheet();
+private slots:
+    /* Relies on ((QAction*)(sender()))->text() */
+    void openPluginConfiguration();
 private:
     QMainWindow *displayer;
+    PluginManager *pluginManager;
+
+    QMenuBar* transformMenuBar(QMenuBar *param);
 
     TrainerTeam m_team;
     TrainerTeam *trainerTeam() {
         return &m_team;
     }
-};
-
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-private:
-
-
-    TB_Menu *m_menu;
-    TeamBuilder *m_TB;
-    Client *m_client;
-    ServerChoice *m_choice;
 };
 
 template<class T>

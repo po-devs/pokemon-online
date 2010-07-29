@@ -8,10 +8,8 @@
    a lot of changes... */
 
 class QWidget;
-class PlayerInterface;
-class ChallengeInfo;
 
-class ServerPlugin
+class ClientPlugin
 {
 public:
     /* The name of the option the plugin would take in the menu bar.
@@ -27,20 +25,16 @@ public:
     virtual bool hasConfigurationWidget() const {
         return false;
     }
-
-    /* For plugins that needs to know (like some stat gathering plugins =) ) */
-    virtual void battleStarting(PlayerInterface *, PlayerInterface *, const ChallengeInfo &) {
-    }
 };
 
 /* Each plugin will have to have a function like that named
    createPluginClass, that creates a ServerEngine (or a derived
     class) through new and returns it. */
-typedef ServerPlugin *(*PluginInstanceFunction) ();
+typedef ClientPlugin *(*PluginInstanceFunction) ();
 
 /* Will be used like that:
 
-class MyPlugin : public ServerPlugin
+class MyPlugin : public ClientPlugin
 {
 ...
 }

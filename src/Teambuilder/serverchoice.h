@@ -2,6 +2,7 @@
 #define SERVERCHOICE_H
 
 #include <QtGui>
+#include "centralwidget.h"
 
 /* This is the dialog, when you click on "Go Online" from the menu.
    It requests a hostname/IP address to connect to, and then
@@ -9,15 +10,13 @@
 
 class QCompactTable;
 class Analyzer;
-class MainEngine;
 
-class ServerChoice : public QWidget
+class ServerChoice : public QWidget, public CentralWidgetInterface
 {
     Q_OBJECT
 public:
     ServerChoice();
 
-    QMenuBar* createMenuBar(MainEngine *) {return NULL;}
 public slots:
     void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port);
 signals:

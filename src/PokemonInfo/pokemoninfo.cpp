@@ -1,9 +1,17 @@
 #include "pokemoninfo.h"
 #include "pokemonstructs.h"
 
-#ifdef CLIENT_SIDE
-# include "../../SpecialIncludes/zip.h"
-#endif
+#include "../../SpecialIncludes/zip.h"
+
+PokemonInfoConfig::Config PokemonInfoConfig::_config = PokemonInfoConfig::Gui;
+
+void PokemonInfoConfig::setConfig(Config cf) {
+    _config = cf;
+}
+
+PokemonInfoConfig::Config PokemonInfoConfig::config() {
+    return _config;
+}
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
@@ -68,9 +76,8 @@ QList<QString> TypeInfo::m_Names;
 QList<QColor> TypeInfo::m_Colors;
 QString TypeInfo::m_Directory;
 QList<int> TypeInfo::m_TypeVsType;
-#ifdef CLIENT_SIDE
+
 QList<QPixmap> TypeInfo::m_Pics;
-#endif
 
 QList<QString> NatureInfo::m_Names;
 QString NatureInfo::m_Directory;
@@ -97,7 +104,6 @@ QList<QString> StatInfo::m_status;
 QHash<int, QPixmap> StatInfo::m_statusIcons;
 QHash<int, QPixmap> StatInfo::m_battleIcons;
 
-#ifdef CLIENT_SIDE
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
     int error = 0;
@@ -141,7 +147,6 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
 
     return ret;
 }
-#endif
 
 static void fill_container_with_file(QStringList &container, const QString & filename)
 {
@@ -423,7 +428,6 @@ int PokemonInfo::AestheticFormeId(int pokenum)
     return m_AestheticFormes.value(pokenum).first;
 }
 
-#ifdef CLIENT_SIDE
 QPixmap PokemonInfo::Picture(int pokenum, int forme, int gender, bool shiney, bool back)
 {
     pokenum = forme == 0 ? pokenum : AestheticFormeId(pokenum) + forme;
@@ -484,14 +488,11 @@ QByteArray PokemonInfo::Cry(int num)
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
     if(data.length() == 0)
     {
-        qDebug() << "error loading pokémon cry " << num;
+        qDebug() << "error loading pokemon cry " << num;
     }
 
     return data;
 }
-
-#endif
-
 
 QSet<int> PokemonInfo::Moves(int pokenum)
 {
@@ -717,10 +718,6 @@ void PokemonInfo::loadMoves()
 
 QString PokemonInfo::path(const QString &filename)
 {
-#ifdef MULTI_THREADED_ACCESS
-    static QMutex m;
-    QMutexLocker a(&m);
-#endif
     return m_Directory + filename;
 }
 
@@ -1045,12 +1042,10 @@ void MoveInfo::loadSpecialEffects()
     }
 }
 
-#ifdef CLIENT_SIDE
 QStringList MoveInfo::MoveList()
 {
     return m_Names;
 }
-#endif
 
 void ItemInfo::init(const QString &dir)
 {
@@ -1213,7 +1208,6 @@ int ItemInfo::BerryType(int itemnum)
     return m_BerryTypes[itemnum-8000];
 }
 
-#ifdef CLIENT_SIDE
 QPixmap ItemInfo::Icon(int itemnum)
 {
     if (itemnum == 0)
@@ -1237,7 +1231,6 @@ QPixmap ItemInfo::Icon(int itemnum)
     p.loadFromData(data,"png");
     return p;
 }
-#endif
 
 QString ItemInfo::Name(int itemnum)
 {
@@ -1328,11 +1321,12 @@ QList<QString> ItemInfo::SortedUsefulNames()
 void TypeInfo::loadNames()
 {
     fill_container_with_file(m_Names, trFile(path("types")));
-#ifdef CLIENT_SIDE
-    for (int i = 0; i < NumberOfTypes();i++) {
-        m_Pics.push_back(QPixmap(path(QString("type%1.png").arg(i))));
+
+    if (PokemonInfoConfig::config() == PokemonInfoConfig::Gui) {
+        for (int i = 0; i < NumberOfTypes();i++) {
+            m_Pics.push_back(QPixmap(path(QString("type%1.png").arg(i))));
+        }
     }
-#endif
 }
 
 QString TypeInfo::path(const QString& file)
@@ -1411,12 +1405,10 @@ int TypeInfo::NumberOfTypes()
     return m_Names.size();
 }
 
-#ifdef CLIENT_SIDE
 QPixmap TypeInfo::Picture(int type)
 {
     return (type >= 0 && type < NumberOfTypes()) ? m_Pics[type] : QPixmap();
 }
-#endif
 
 void NatureInfo::loadNames()
 {
@@ -1683,10 +1675,6 @@ void HiddenPowerInfo::init(const QString &dir)
 
 QString HiddenPowerInfo::path(const QString &filename)
 {
-#ifdef MULTI_THREADED_ACCESS
-    static QMutex m;
-    QMutexLocker a(&m);
-#endif
     return m_Directory + filename;
 }
 
@@ -1727,17 +1715,17 @@ void StatInfo::init(const QString &dir)
     fill_container_with_file(m_stats, trFile(path("stats")));
     fill_container_with_file(m_status, trFile(path("status")));
 
-#ifdef CLIENT_SIDE
-    m_statusIcons[-2] = QPixmap(path("status-2.png"));
-    m_battleIcons[-2] = QPixmap(path("battle_status-2.png"));
+    if (PokemonInfoConfig::config() == PokemonInfoConfig::Gui) {
+        m_statusIcons[-2] = QPixmap(path("status-2.png"));
+        m_battleIcons[-2] = QPixmap(path("battle_status-2.png"));
 
-    for (int i = 0; i < 7; i++) {
-        m_statusIcons[i] = QPixmap(path("status%1.png").arg(i));
-        m_battleIcons[i] = QPixmap(path("battle_status%1.png").arg(i));
+        for (int i = 0; i < 7; i++) {
+            m_statusIcons[i] = QPixmap(path("status%1.png").arg(i));
+            m_battleIcons[i] = QPixmap(path("battle_status%1.png").arg(i));
+        }
     }
-#endif
 }
-#ifdef CLIENT_SIDE
+
 QPixmap StatInfo::Icon(int status) {
     return m_statusIcons[status];
 }
@@ -1745,7 +1733,7 @@ QPixmap StatInfo::Icon(int status) {
 QPixmap StatInfo::BattleIcon(int status) {
     return m_battleIcons[status];
 }
-#endif
+
 QString StatInfo::Stat(int stat)
 {
     if (stat >= 0 && stat <= Accuracy)

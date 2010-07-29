@@ -2,6 +2,7 @@
 #define TEAMBUILDER_MENU_H
 
 #include <QtGui>
+#include "centralwidget.h"
 
 class MainEngine;
 
@@ -20,7 +21,7 @@ class MainEngine;
 
  */
 
-class TB_Menu : public QLabel
+class TB_Menu : public QLabel, public CentralWidgetInterface
 {
         Q_OBJECT
 public:

@@ -2,11 +2,9 @@
 #include "pokemoninfo.h"
 #include "movesetchecker.h"
 
-#ifdef CLIENT_SIDE
 #include <QDomDocument>
 #include <QDomNode>
-#include <QtDebug>
-#endif
+#include <QDomElement>
 
 PokeBaseStats::PokeBaseStats(quint8 base_hp, quint8 base_att, quint8 base_def, quint8 base_spd, quint8 base_spAtt, quint8 base_spDef)
 {
@@ -151,9 +149,11 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
 {
     if (moveNum == move(moveSlot))
         return;
-    if (check) {
-        if (moveNum != 0 && hasMove(moveNum))
+    if (check && moveNum != 0) {
+        if (hasMove(moveNum))
             throw QObject::tr("%1 already has move %2.").arg(nickname(), MoveInfo::Name(moveNum));
+        else if (!PokemonInfo::Moves(num()).contains(moveNum))
+            throw QObject::tr("%1 can't learn %2.").arg(nickname(), MoveInfo::Name(moveNum));
     }
 
     m_moves[moveSlot] = moveNum;
@@ -394,7 +394,6 @@ void PokePersonal::reset()
     }
 }
 
-#ifdef CLIENT_SIDE
 PokeGraphics::PokeGraphics()
         : m_num(0), m_uptodate(false)
 {
@@ -584,10 +583,9 @@ Team & TrainerTeam::team()
     return m_team;
 }
 
-QDomElement PokeTeam::toXml() const
+QDomElement & PokeTeam::toXml(QDomElement &el) const
 {
     QDomDocument doc;
-    QDomElement el = doc.createElement("Pokemon");
 
     el.setAttribute("Nickname", nickname());
     el.setAttribute("Num", num());
@@ -652,7 +650,8 @@ bool TrainerTeam::saveToFile(const QString &path) const
 
     for(int i = 0; i < 6; i++)
     {
-        Team.appendChild(team().poke(i).toXml());
+        QDomElement pokemon = document.createElement("Pokemon");
+        Team.appendChild(team().poke(i).toXml(pokemon));
     }
 
     QTextStream in(&file);
@@ -1122,8 +1121,6 @@ QDataStream & operator >> (QDataStream & in, PokeTeam & poke)
     }
     return in;
 }
-
-#endif
 
 
 QDataStream & operator << (QDataStream & out, const PokePersonal & Pokemon)

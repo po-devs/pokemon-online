@@ -5,6 +5,7 @@
 #include "analyze.h"
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
+#include "centralwidget.h"
 
 class MainEngine;
 class BaseChallengeWindow;
@@ -22,7 +23,7 @@ class FindBattleData;
 
     It displays the mainchat, the players list, ... and also have the dialog engine in it*/
 
-class Client : public QWidget
+class Client : public QWidget, public CentralWidgetInterface
 {
     Q_OBJECT
 public:
