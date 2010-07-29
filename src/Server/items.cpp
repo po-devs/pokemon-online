@@ -80,7 +80,7 @@ struct IMChoiceItem : public IM
 {
     IMChoiceItem() {
 	functions["MovesPossible"] = &mp;
-	functions["RegMoveSettings"] = &rms;
+	functions["AfterTargetList"] = &atl;
     }
 
     static void mp(int s, int, BS &b) {
@@ -88,15 +88,26 @@ struct IMChoiceItem : public IM
 	    return;
 	}
 	int mem = poke(b,s)["ChoiceMemory"].toInt();
+	int index=-1;
 	for (int i = 0; i < 4; i++) {
-	    if (mem != i) {
+	    if (mem  == b.move(s, i)) {
+		index = i;
+		break;
+	    }
+	}
+        /* Happens for example when using metronome + fly, and is correct in regard
+           to the ingame behavior */
+        if (index == -1)
+            return;
+	for (int i = 0; i < 4; i++) {
+	    if (index != i) {
 		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
 	    }
 	}
     }
 
-    static void rms(int s, int, BS &b) {
-	poke(b,s)["ChoiceMemory"] = poke(b,s)["MoveSlot"];
+    static void atl(int s, int, BS &b) {
+	poke(b,s)["ChoiceMemory"] = poke(b,s)["LastMoveUsed"];
     }
 };
 

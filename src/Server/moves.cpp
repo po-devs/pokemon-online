@@ -4460,8 +4460,6 @@ struct MMTransform : public MM {
 
     static void uas(int s, int t, BS &b) {
         QHash<QString, QVariant> &p = poke(b,s);
-        /* Remove the choice item effect */
-        p.remove("ChoiceMemory");
         /* Give new values to what needed */
         int num = b.pokenum(t);
         if (num == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
