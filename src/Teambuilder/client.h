@@ -191,6 +191,7 @@ private:
     QTreeWidget *battleList;
     QHash<int, Battle> battles;
     QHash<int, QIdTreeWidgetItem *> battleItems;
+    QListWidget *channels;
     /* Button to exit */
     QPushButton *myexit;
     /* Button to send text */

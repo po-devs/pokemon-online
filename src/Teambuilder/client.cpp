@@ -27,6 +27,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     QTabWidget *mytab = new QTabWidget();
     mytab->addTab(myplayers = new QTreeWidget(), tr("Players"));
     mytab->addTab(battleList = new QTreeWidget(), tr("Battles"));
+    mytab->addTab(channels = new QListWidget(), tr("Channels"));
     myplayers->setColumnCount(1);
     myplayers->header()->hide();
     myplayers->setIconSize(QSize(24,24));
