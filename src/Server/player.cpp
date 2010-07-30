@@ -630,6 +630,9 @@ void Player::loggedIn(const TeamInfo &team,bool ladder, bool showteam, QColor c)
     if (isLoggedIn())
         return;
 
+    /* Version control, whatever happens, because the problem could be because of an old version */
+    relay().notify(NetworkServ::VersionControl, VERSION);
+
     if (!testNameValidity(team.name)) {
         sendMessage("Invalid name");
         kick();

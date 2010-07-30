@@ -521,8 +521,6 @@ void Server::loggedIn(int id, const QString &name)
 
         player(id)->changeState(Player::LoggedIn, true);
 
-        player(id)->relay().notify(NetworkServ::VersionControl, VERSION);
-
         if (serverAnnouncement.length() > 0)
             player(id)->relay().notify(NetworkServ::Announcement, serverAnnouncement);
 
