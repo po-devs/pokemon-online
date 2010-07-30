@@ -885,6 +885,9 @@ void Player::recvTeam(const TeamInfo &team)
 
     if (team.name.toLower() == oldName.toLower()) {
         assignTeam(team);
+        /* Clears the wainting name in case it's not clear,
+           else something bad could happen */
+        waiting_name = "";
 
         //Still needs to deal with afterChangeTeam event
         ontologin = true;

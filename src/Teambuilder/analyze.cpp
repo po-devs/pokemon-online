@@ -369,6 +369,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit battleListReceived(battles);
             break;
         }
+    case ChannelsList:
+        {
+            QByteArray list;
+            in >> list;
+            emit channelsListReceived(list.split(','));
+            break;
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
     }

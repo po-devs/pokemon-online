@@ -63,7 +63,8 @@ namespace NetworkCli
         CPTUnban,
         PlayerTBan,
         GetTBanList,
-        BattleList
+        BattleList,
+        ChannelsList
     };
 
     enum ProtocolError
@@ -147,6 +148,7 @@ signals:
     /* Ranking */
     void rankingStarted(int,int,int);
     void rankingReceived(const QString&,int);
+    void channelsListReceived(const QList<QByteArray> &channels);
 public slots:
     /* slots called by the network */
     void error();

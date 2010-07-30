@@ -62,7 +62,8 @@ namespace NetworkServ
         CPTUnban,
         PlayerTBan,
         GetTBanList,
-        BattleList
+        BattleList,
+        ChannelsList
     };
 
     enum ProtocolError
