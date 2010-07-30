@@ -155,6 +155,9 @@ public slots:
     void wasConnected();
     void commandReceived (const QByteArray &command);
 
+    /* by a channel */
+    void channelCommand(int command, int channelid, const QByteArray &body);
+
     /* by the battle window */
     void battleCommand(int, const BattleChoice &comm);
     void battleMessage(int, const QString &mess);

@@ -68,6 +68,19 @@ void Analyzer::battleCommand(int id, const BattleChoice &comm)
     notify(BattleMessage, qint32(id), comm);
 }
 
+void Analyzer::channelCommand(int command, int channelid, const QByteArray &body)
+{
+    QByteArray tosend;
+    QDataStream out(&tosend, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+    out << uchar(command) << qint32(channelid);
+
+    /* We don't know for sure that << body will do what we want (as ServerSide we don't want
+       to add a layer here), so a little hack, hoping datastreams concatenate data the same way as
+        we do. */
+    emit sendCommand(tosend + body);
+}
+
 void Analyzer::battleMessage(int id, const QString &str)
 {
     if (dynamic_cast<BattleWindow*>(sender()) != NULL)
@@ -200,25 +213,10 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     case BattleMessage:
 	{
             qint32 battleid;
-            in >> battleid;
-	    /* Such a headache, it really looks like wasting ressources */
-	    char *buf;
-            uint len;
-	    in.readBytes(buf, len);
-	    QByteArray command(buf, len);
-	    delete [] buf;
+            QByteArray command;
+            in >> battleid >> command;
+
             emit battleMessage(battleid, command);
-	    break;
-	}
-    case KeepAlive:
-	{
-	    QByteArray tosend;
-	    QDataStream out(&tosend, QIODevice::WriteOnly);
-	    out.setVersion(QDataStream::Qt_4_5);
-
-	    out << uchar(KeepAlive);
-
-	    emit sendCommand(tosend);
 	    break;
 	}
     case AskForPass:
@@ -317,14 +315,14 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             break;
         }
     case SpectatingBattleFinished:
-        {
+{
             qint32 battleId;
             in >> battleId;
             emit spectatingBattleFinished(battleId);
             break;
         }
     case VersionControl:
-        {
+{
             QString version;
             in >> version;
             if (version != VERSION)
@@ -332,14 +330,14 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             break;
         }
     case TierSelection:
-        {
+{
             QString tierList;
             in >> tierList;
             emit tierListReceived(tierList);
             break;
         }
     case ShowRankings:
-        {
+{
             bool starting;
             in >> starting;
             if (starting)
@@ -356,29 +354,29 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             break;
         }
     case Announcement:
-        {
+{
             QString ann;
             in >> ann;
             emit announcement(ann);
             break;
         }
     case BattleList:
-        {
+{
             QHash<int, Battle> battles;
             in >> battles;
             emit battleListReceived(battles);
             break;
         }
     case ChannelsList:
-        {
+{
             QByteArray list;
             in >> list;
             emit channelsListReceived(list.split(','));
             break;
         }
     default:
-        emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
-    }
+emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
+}
 }
 
 Network & Analyzer::socket()

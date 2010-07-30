@@ -15,7 +15,6 @@
 #include "../PokemonInfo/movesetchecker.h"
 #include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
-#include "../Shared/config.h"
 #include "tiermachine.h"
 #include "battlingoptions.h"
 #include "sql.h"

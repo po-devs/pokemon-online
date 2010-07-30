@@ -312,6 +312,7 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
     }
 
     QDataStream in (&inf, QIODevice::ReadOnly);
+    in.setVersion(QDataStream::Qt_4_5);
 
     uchar command;
     qint8 player;
