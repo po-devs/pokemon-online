@@ -52,6 +52,8 @@ public:
     /* Sends a message to the player */
     void sendMessage(const QString &mess);
 
+    bool hasSentCommand(int commandid) const;
+
     int id() const;
     QString name() const;
     QString ip() const;
@@ -166,6 +168,7 @@ private:
     int myauth;
     QString myip;
     bool ontologin;
+    mutable int lastcommand;
 
     int m_state;
     TeamInfo *waiting_team;

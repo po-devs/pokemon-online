@@ -63,7 +63,9 @@ namespace NetworkServ
         PlayerTBan,
         GetTBanList,
         BattleList,
-        ChannelsList
+        ChannelsList,
+        JoinChannel,
+        LeaveChannel
     };
 
     enum ProtocolError

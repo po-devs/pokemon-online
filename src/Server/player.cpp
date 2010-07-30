@@ -1,3 +1,4 @@
+#include "../Shared/config.h"
 #include "player.h"
 #include "security.h"
 #include "challenge.h"
@@ -486,6 +487,15 @@ void Player::challengeStuff(const ChallengeInfo &c)
             }
         }
     }
+}
+
+bool Player::hasSentCommand(int commandid) const
+{
+    if (commandid != lastcommand) {
+        lastcommand = commandid;
+        return false;
+    }
+    return true;
 }
 
 void Player::findBattle(const FindBattleData& f)

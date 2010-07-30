@@ -3,6 +3,8 @@
 
 #include "../Utilities/contextswitch.h"
 #include "../PokemonInfo/networkstructs.h"
+#include "channel.h"
+
 /* the server */
 
 class FindBattleData;
@@ -139,6 +141,13 @@ private:
     }
 
     bool showLogMessages;
+
+    /* When sending messages to several players, we don't want to send them twice to the same person.
+
+       We could construct a set everytime to remember players to who we already sent the command,
+        but that would be doing too many allocations. Instead we use a commandId for this kind of commands,
+        and check that the last command sent to the player wasn't that particular command. */
+    int lastDataId;
 
     QTcpServer *myserver;
     PluginManager *pluginManager;

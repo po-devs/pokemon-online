@@ -81,5 +81,6 @@ HEADERS += player.h \
     ../Utilities/functions.h \
     ../Utilities/CrossDynamicLib.h \
     ../Utilities/coro.h \
-    ../Utilities/contextswitch.h
+    ../Utilities/contextswitch.h \
+    channel.h
 OTHER_FILES += 
