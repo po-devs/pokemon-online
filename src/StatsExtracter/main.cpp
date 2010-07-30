@@ -488,6 +488,7 @@ int main(int argc, char *argv[])
     (void) argc;
     (void) argv;
 
+    PokemonInfoConfig::setConfig(PokemonInfoConfig::NoGui);
     PokemonInfo::init("db/pokes/");
     MoveInfo::init("db/moves/");
     AbilityInfo::init("db/abilities/");

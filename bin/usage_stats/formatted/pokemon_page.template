@@ -26,8 +26,7 @@ page{{
 		<img src="{imagelink}" />
 		<table class="globaltable">
 			<tr><th>Moves</th>
-			<th>Items</th>
-			<th>Abilities</th></tr>
+			<th>Items</th></tr>
 			<tr>
 				<td valign="top" class="globaltd">
 					<table>
@@ -41,16 +40,13 @@ page{{
 						{globalitem*}
 					</table>
 				</td>
-				<td valign="top" class="globaltd">
-					<table>	
-						<tr><th>Rank</th><th>Name</th><th>Usage</th></tr>
-						{globalability*}
-					</table>
-				</td>
 			</tr>
 		</table>
 		</div>
 		<img src="{imagelink}" />
+		<ul>
+			{globalability*}
+		</ul>
 		<table style="width: 100%">
 			<caption>Global Usage: {percentage} % ({battles} battles)</caption>
 			<tr><th>Regular Usage</th><th>Lead Usage</th></tr>
@@ -70,7 +66,7 @@ globalitem{{
 }}
 
 globalability{{
-	<tr><td><code>{rank}</code></td><td><code>| {ability}</code></td><td><code>&nbsp;| {percentage} % <!-- {battles} battles --></code></td></tr>
+	<li>{ability} - {percentage} % ({battles} battles)</li>
 }}
 
 moveset{{
