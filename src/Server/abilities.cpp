@@ -1035,7 +1035,8 @@ struct AMWonderGuard : public AM {
 
     static void op(int s, int t, BS &b) {
         int tp = type(b,t);
-        if (turn(b,t)["Power"].toInt() > 0 && tp != Pokemon::Curse) {
+        /* Fire fang always hits through Wonder Guard, at least in 4th gen... */
+        if (turn(b,t)["Power"].toInt() > 0 && tp != Pokemon::Curse && move(b, t) != Move::FireFang) {
             int mod = TypeInfo::Eff(tp, b.getType(s,1)) * TypeInfo::Eff(tp, b.getType(s,2));
 
             if (mod <= 4) {

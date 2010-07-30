@@ -304,7 +304,7 @@ void ScriptEngine::afterLogOut(int src)
     QString srcS = QString::number(src);
 
     foreach(QString pa, playerArrays) {
-        myengine.evaluate(QString("if (typeof %1 != 'undefined') {delete %1[%2];} else { sys.unsetPA(%1);}")
+        myengine.evaluate(QString("if (typeof script.%1 != 'undefined') {delete script.%1[%2];} else { sys.unsetPA(%1);}")
                           .arg(pa, srcS));
     }
 }
@@ -1186,13 +1186,13 @@ bool ScriptEngine::loggedIn(int id)
 void ScriptEngine::setPA(const QString &name)
 {
     playerArrays.insert(name);
-    myengine.evaluate(QString("%1 = [];").arg(name));
+    myengine.evaluate(QString("script.%1 = [];").arg(name));
 }
 
 void ScriptEngine::unsetPA(const QString &name)
 {
     playerArrays.remove(name);
-    myengine.evaluate("delete " + name);
+    myengine.evaluate("delete script." + name);
 }
 
 void ScriptEngine::printLine(const QString &s)
