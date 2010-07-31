@@ -982,7 +982,6 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
     battleList->takeTopLevelItem(battleList->indexOfTopLevelItem(battleItems[battleid]));
     delete battleItems.take(battleid);
 
-
     myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
     myplayersinfo[loser].flags &= 0xFF ^ PlayerInfo::Battling;
 

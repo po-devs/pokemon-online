@@ -37,8 +37,9 @@ public:
     QString authedName(int id) const;
     /* sends a message to all the players */
     void sendAll(const QString &message, bool chatMessage = false);
+    void sendChanAll(const QString &message);
     void sendMessage(int id, const QString &message);
-    void sendPlayersList(int id);
+    void sendChanMessage(int id, int chanid, const QString &message);
     void sendBattlesList(int id);
     /* Sends the login of the player to everybody but the player */
     void sendLogin(int id);
@@ -148,6 +149,15 @@ private:
         but that would be doing too many allocations. Instead we use a commandId for this kind of commands,
         and check that the last command sent to the player wasn't that particular command. */
     int lastDataId;
+    /* Counters for ids.
+
+        They have two advantages: you can get a non used id fast, there's astronomically low chances that
+        an id on a client doesn't corresponds to an id on the server, because the lag between the client
+        and the server would have to live to see a full loop of these counters. (lag seeing a few billion
+        players go by... lol ^^)
+
+        The disavandtage is that you don't have clean ids, that are close to 0. */
+    mutable int playercounter, battlecounter, channelcounter;
 
     QTcpServer *myserver;
     PluginManager *pluginManager;
@@ -155,6 +165,9 @@ private:
     /* storing players */
     QHash<int, Player*> myplayers;
     QHash<QString, int> mynames;
+
+    QHash<int, Channel> channels;
+    QHash<QString, int> channelids;
 
     QHash<int, BattleSituation *> mybattles;
     QHash<int, Battle> battleList;
@@ -164,8 +177,25 @@ private:
     /* gets an id that's not used */
     int freeid() const;
     int freebattleid() const;
+    int freechannelid() const;
     /* removes a player */
     void removePlayer(int id);
+    /* creates a channel */
+    void addChannel(const QString &name);
+    /* Makes a player join a channel */
+    void joinChannel(int playerid, int channelid);
+
+    inline bool channelExist(int id) const {
+        return channels.contains(id);
+    }
+
+    inline Channel &channel(int id) {
+        return channels[id];
+    }
+
+    inline bool channelContains(int chanid, int playerid) const {
+        return channel(chanid).players.contains(player(playerid));
+    }
 
     int numberOfPlayersLoggedIn;
 

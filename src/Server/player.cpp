@@ -725,6 +725,17 @@ void Player::findTierAndRating()
     findRating();
 }
 
+bool Player::hasKnowledgeOf(const Player *other) const {
+    return knowledge.contains(other->id()) || channels.intersect(other->channels).size() > 0;
+}
+
+void Player::acquireKnowledgeOf(const Player *other) {
+    relay().sendPlayer(other->bundle());
+    other->relay().sendPlayer(bundle());
+    knowledge.insert(other->id());
+    other->knowledge.insert(id());
+}
+
 void Player::findRating()
 {
     lock();

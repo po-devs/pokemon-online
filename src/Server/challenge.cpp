@@ -27,6 +27,10 @@ Challenge::Challenge(Player *source, Player *dest, const ChallengeInfo &c, Serve
     if (cancelledFromServer)
         throw Exception();
 
+    if (!source->hasKnowledgeOf(dest)) {
+        source->acquireKnowledgeOf(dest);
+    }
+
     source->addChallenge(this, false);
     dest->addChallenge(this, true);
 

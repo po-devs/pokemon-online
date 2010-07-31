@@ -34,7 +34,8 @@ SOURCES += main.cpp \
     waitingobject.cpp \
     tiermachine.cpp \
     tier.cpp \
-    moves.cpp
+    moves.cpp \
+    channel.cpp
 DEFINES = SERVER_SIDE
 LIBS += -L../../bin \
     -lutilities \
