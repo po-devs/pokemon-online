@@ -61,6 +61,8 @@ public:
     bool connected() const;
     bool isLoggedIn() const;
     bool battling() const;
+    void acquireKnowledgeOf(const Player *other);
+    bool hasKnowledgeOf(const Player *other) const;
     bool hasBattle(int battleId) const;
     void addBattle(int battleid);
     void removeBattle(int battleid);
@@ -177,6 +179,41 @@ private:
     QSet<int> battles;
     QSet<Challenge*> challenged;
     QSet<Challenge*> challengedBy;
+
+    /* Each player may know other players that are in different IRC rooms.
+       For example when ones uses find battle and fights someone unrelated.
+       Or when one send a PM and leaves the room, the PM should still be valid
+       as long as both parties are connected, and for that users need to have
+       knowledge of people in other rooms.
+
+       Typically, a player gains knowledge of another player when:
+       - A player requests knowledge of another player
+       - A players PMs another player
+       - Battles (watching, battling, whatever)
+       - <More to be added>
+
+       When a players A gains knowledge of player B, player B also gains knowledge of Player A.
+       This is because for example i want to notify to everyone Player A logged off, i just
+       look at the players Player A is knowledgeable of, + the channels player A is in, and that's
+       it.
+
+       One other thing -- knowledge lasts until one players quit the server (not the room, the server).
+       The reason IRC servers don't need that concept of knowledge is because they
+       rely on name, and i rely on player ID. Also, it may be good to use a different
+       algorithm for player ids, like increasing a counter each time a player logs on
+       and then gives that id. It will make the probability of a player logging off
+       and another logging on and taking his ID smaller. Though we then should provide
+       scripters an easy way of looking up all players.
+
+       Knowledge will be also used to send / or not / info on the PMer / PMee if they are not
+       in each other' knowledges. Knowledge for battles is not necessary (info could just be sent
+       if the players don't know each other) but keeping in memory that they know each other
+       could save bandwidth.
+    */
+    QSet<int> knowledge;
+
+    /* The channels a player is on */
+    QSet<int> channels;
 
     void assignTeam(const TeamInfo &team);
     void assignNewColor(const QColor &c);

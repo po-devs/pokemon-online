@@ -421,7 +421,7 @@ void ScriptEngine::changeAway(int id, bool away)
     if (!myserver->playerLoggedIn(id)) {
         printLine("Script Error in sys.changeAway(id, auth): no such player logged in with id " + QString::number(id));
     } else {
-        myserver->player(id)->executeAwayChange(away);;
+        myserver->player(id)->executeAwayChange(away);
     }
 }
 
@@ -553,7 +553,7 @@ QScriptValue ScriptEngine::memoryDump()
     ret += QString("Waiting Objects\n\tFree Objects> %1\n\tTotal Objects> %2\n").arg(WaitingObjects::freeObjects.count()).arg(WaitingObjects::objectCount);
     ret += QString("Battles\n\tActive> %1\n\tRated Battles History> %2\n").arg(myserver->mybattles.count()).arg(myserver->lastRatedIps.count());
     ret += QString("Antidos\n\tConnections Per IP> %1\n\tLogins per IP> %2\n\tTransfers Per Id> %3\n\tSize of Transfers> %4\n\tKicks per IP> %5\n").arg(AntiDos::obj()->connectionsPerIp.count()).arg(
-                        AntiDos::obj()->loginsPerIp.count()).arg(AntiDos::obj()->transfersPerId.count()).arg(AntiDos::obj()->sizeOfTransfers.count())
+            AntiDos::obj()->loginsPerIp.count()).arg(AntiDos::obj()->transfersPerId.count()).arg(AntiDos::obj()->sizeOfTransfers.count())
            .arg(AntiDos::obj()->kicksPerIp.count());
     ret += QString("-------------------------\n-------------------------\n");
 
@@ -621,15 +621,15 @@ bool ScriptEngine::dbRegistered(const QString &name)
  */
 void ScriptEngine::webCall(const QString &urlstring, const QString &expr)
 {
-	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-	QNetworkRequest request;
-	
-	request.setUrl(QUrl(urlstring));
-	request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
-	
-	connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
-	QNetworkReply *reply = manager->get(request);
-	webCallEvents[reply] = expr;
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QNetworkRequest request;
+
+    request.setUrl(QUrl(urlstring));
+    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
+    QNetworkReply *reply = manager->get(request);
+    webCallEvents[reply] = expr;
 }
 
 /**
@@ -640,39 +640,39 @@ void ScriptEngine::webCall(const QString &urlstring, const QString &expr)
  */
 void ScriptEngine::webCall(const QString &urlstring, const QString &expr, const QScriptValue &params_array)
 {
-	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-	QNetworkRequest request;
-	QByteArray postData;
-	
-	request.setUrl(QUrl(urlstring));
-	request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QNetworkRequest request;
+    QByteArray postData;
 
-	//parse the POST fields
-	QScriptValueIterator it(params_array);
-	while (it.hasNext()) {
-		it.next();
-		postData.append( it.name() + "=" + it.value().toString().replace(QString("&"), QString("%26"))); //encode ampersands!
-		if(it.hasNext()) postData.append("&");
-	}
+    request.setUrl(QUrl(urlstring));
+    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
 
-	connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
-	QNetworkReply *reply = manager->post(request, postData);
-	webCallEvents[reply] = expr;
+    //parse the POST fields
+    QScriptValueIterator it(params_array);
+    while (it.hasNext()) {
+        it.next();
+        postData.append( it.name() + "=" + it.value().toString().replace(QString("&"), QString("%26"))); //encode ampersands!
+        if(it.hasNext()) postData.append("&");
+    }
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
+    QNetworkReply *reply = manager->post(request, postData);
+    webCallEvents[reply] = expr;
 }
 
 void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
-	//escape reply before sending it to the javascript evaluator
-	QString x = reply->readAll();
-	x = x.replace(QString("'"), QString("\\'"));
-	x = x.replace(QString("\n"), QString("\\n"));
-        x = x.replace(QString("\r"), QString("\\r"));
-        x = x.replace(QString("\\"), QString("\\\\"));
+    //escape reply before sending it to the javascript evaluator
+    QString x = reply->readAll();
+    x = x.replace(QString("'"), QString("\\'"));
+    x = x.replace(QString("\n"), QString("\\n"));
+    x = x.replace(QString("\r"), QString("\\r"));
+    x = x.replace(QString("\\"), QString("\\\\"));
 
-	//put reply in a var "resp", can be used in expr
-	// i.e. expr = 'print("The resp was: "+resp);'
-	eval( "var resp = '"+x+"';"+webCallEvents[reply] );
-	webCallEvents.remove( reply );
-	reply->deleteLater();
+    //put reply in a var "resp", can be used in expr
+    // i.e. expr = 'print("The resp was: "+resp);'
+    eval( "var resp = '"+x+"';"+webCallEvents[reply] );
+    webCallEvents.remove( reply );
+    reply->deleteLater();
 }
 
 /**
@@ -681,17 +681,17 @@ void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
  * @author Remco cd Zon and Toni Fadjukoff
  */
 QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring) {
-	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-	QNetworkRequest request;
-	
-	request.setUrl(QUrl(urlstring));
-	request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
-	
-	connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(synchronousWebCall_replyFinished(QNetworkReply*)));
-	manager->get(request);
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QNetworkRequest request;
 
-	sync_loop.exec();
-	return sync_data;
+    request.setUrl(QUrl(urlstring));
+    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(synchronousWebCall_replyFinished(QNetworkReply*)));
+    manager->get(request);
+
+    sync_loop.exec();
+    return sync_data;
 }
 
 /**
@@ -702,31 +702,31 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring) {
  */
 QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring, const QScriptValue &params_array)
 {
-	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-	QNetworkRequest request;
-	QByteArray postData;
-	
-	request.setUrl(QUrl(urlstring));
-	request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QNetworkRequest request;
+    QByteArray postData;
 
-	//parse the POST fields
-	QScriptValueIterator it(params_array);
-	while (it.hasNext()) {
-		it.next();
-		postData.append( it.name() + "=" + it.value().toString().replace(QString("&"), QString("%26"))); //encode ampersands!
-		if(it.hasNext()) postData.append("&");
-	}
+    request.setUrl(QUrl(urlstring));
+    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
 
-	connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(synchronousWebCall_replyFinished(QNetworkReply*)));
-	manager->post(request, postData);
+    //parse the POST fields
+    QScriptValueIterator it(params_array);
+    while (it.hasNext()) {
+        it.next();
+        postData.append( it.name() + "=" + it.value().toString().replace(QString("&"), QString("%26"))); //encode ampersands!
+        if(it.hasNext()) postData.append("&");
+    }
 
-	sync_loop.exec();
-	return sync_data;
+    connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(synchronousWebCall_replyFinished(QNetworkReply*)));
+    manager->post(request, postData);
+
+    sync_loop.exec();
+    return sync_data;
 }
 
 void ScriptEngine::synchronousWebCall_replyFinished(QNetworkReply* reply) {
-        sync_data = reply->readAll();
-        sync_loop.exit();
+    sync_data = reply->readAll();
+    sync_loop.exit();
 }
 
 void ScriptEngine::callLater(const QString &expr, int delay)
