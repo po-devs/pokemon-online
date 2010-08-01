@@ -390,6 +390,13 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
     case GetTBanList:
         emit tbanListRequested();
         break;
+    case JoinChannel:
+        {
+            QString name;
+            in >> name;
+            emit joinRequested(name);
+            break;
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;

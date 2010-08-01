@@ -64,8 +64,10 @@ namespace NetworkServ
         GetTBanList,
         BattleList,
         ChannelsList,
+        ChannelPlayers,
         JoinChannel,
-        LeaveChannel
+        LeaveChannel,
+        ChannelBattle
     };
 
     enum ProtocolError
@@ -179,6 +181,7 @@ signals:
     void findBattle(const FindBattleData &f);
     void showRankings(const QString &tier, const QString &name);
     void showRankings(const QString &tier, int page);
+    void joinRequested(const QString &channel);
 public slots:
     /* slots called by the network */
     void error();
