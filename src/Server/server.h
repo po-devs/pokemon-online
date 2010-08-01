@@ -40,7 +40,7 @@ public:
     void sendChanAll(const QString &message);
     void sendMessage(int id, const QString &message);
     void sendChanMessage(int id, int chanid, const QString &message);
-    void sendBattlesList(int id);
+    void sendBattlesList(int id, int chanid);
     /* Sends the login of the player to everybody but the player */
     void sendLogin(int id);
     void sendLogout(int id);
@@ -60,8 +60,6 @@ public:
     void disconnectFromRegistry();
     /* Force Rated 1 and Force Rated 2 is to ignore the ladder on / off factor for those two */
     bool canHaveRatedBattle(int id1, int id2, bool challengeCup, bool forceRated1 = false, bool forceRated2 = false);
-
-    Player * player(int id) const;
 
     void sendServerMessage(const QString &message);
 
@@ -109,6 +107,7 @@ public slots:
     void battleChat(int player, int battle, const QString &chat);
     void spectatingChat(int player, int battle, const QString &chat);
     void joinRequest(int player, const QString &chn);
+    void leaveRequest(int player, int chan);
     void info(int , const QString& );
 
     void kick(int i);
@@ -167,14 +166,14 @@ private:
     QHash<int, Player*> myplayers;
     QHash<QString, int> mynames;
 
-    QHash<int, Channel> channels;
+    QHash<int, Channel*> channels;
     QHash<QString, int> channelids;
 
     QHash<int, BattleSituation *> mybattles;
     QHash<int, Battle> battleList;
 
     QTcpServer *server();
-    Player * player(int i);
+    Player * player(int i) const;
     /* gets an id that's not used */
     int freeid() const;
     int freebattleid() const;
@@ -182,9 +181,12 @@ private:
     /* removes a player */
     void removePlayer(int id);
     /* creates a channel */
-    void addChannel(const QString &name);
+    void addChannel(const QString &name="");
+    void removeChannel(int channelid);
     /* Makes a player join a channel */
     void joinChannel(int playerid, int chanid);
+    /* Sends the list of channels to a player */
+    void sendChannelList(int player);
 
     inline bool channelExist(int id) const {
         return channels.contains(id);
@@ -194,8 +196,8 @@ private:
         return channelids.contains(name.toLower());
     }
 
-    inline Channel &channel(int id) {
-        return channels[id];
+    inline Channel &channel(int id) const {
+        return * channels[id];
     }
 
     inline bool channelContains(int chanid, int playerid) const {

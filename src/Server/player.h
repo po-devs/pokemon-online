@@ -61,9 +61,10 @@ public:
     bool connected() const;
     bool isLoggedIn() const;
     bool battling() const;
-    void acquireKnowledgeOf(const Player *other);
-    void acquireRoughKnowledgeOf(const Player *other);
-    bool hasKnowledgeOf(const Player *other) const;
+    void acquireKnowledgeOf(Player *other);
+    void acquireRoughKnowledgeOf(Player *other);
+    void addChannel(int chanid);
+    bool hasKnowledgeOf(Player *other) const;
     bool isInSameChannel(const Player *other) const;
     bool hasBattle(int battleId) const;
     void addBattle(int battleid);
@@ -87,6 +88,10 @@ public:
     bool okForBattle() const;
     void spectateBattle(const QString &name0, const QString &name1, int battleId, bool doubles);
     void sendChallengeStuff(const ChallengeInfo &c);
+
+    QSet<int> &getChannels() {
+        return channels;
+    }
 
     void doWhenDC();
 
@@ -134,8 +139,8 @@ signals:
     void battleSearchCancelled(int);
     void unlocked();
     void joinRequested(int id, const QString &channel);
+    void leaveRequested(int id, int channelid);
 public slots:
-    void joinRequested(int slotid);
     void loggedIn(const TeamInfo &team,bool,bool, QColor);
     void recvMessage(const QString &mess);
     void recvTeam(const TeamInfo &team);
@@ -168,6 +173,8 @@ public slots:
     void tUnban(QString name);
     void testAuthentificationLoaded();
     void ratingLoaded();
+    void joinRequested(const QString &channel);
+    void leaveRequested(int slotid);
 private:
     TeamBattle myteam;
     Analyzer myrelay;

@@ -49,6 +49,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(showRankings(QString,int)), SLOT(getRankingsByPage(QString, int)));
     connect(&relay(), SIGNAL(showRankings(QString,QString)), SLOT(getRankingsByName(QString, QString)));
     connect(&relay(), SIGNAL(joinRequested(QString)), SLOT(joinRequested(QString)));
+    connect(&relay(), SIGNAL(leaveChannel(int)), SLOT(leaveRequested(int)));
     /* To avoid threading / simulateneous calls problems, it's queued */
     connect(this, SIGNAL(unlocked()), &relay(), SLOT(undelay()),Qt::QueuedConnection);
 }
@@ -174,6 +175,19 @@ void Player::joinRequested(const QString &name)
     }
 
     emit joinRequested(id(), name);
+}
+
+void Player::leaveRequested(int slotid)
+{
+    if (!isLoggedIn()) {
+        return;
+    }
+
+    if (!channels.contains(slotid)) {
+        return;
+    }
+
+    emit leaveRequested(id(), slotid);
 }
 
 void Player::spectateBattle(const QString &name0, const QString &name1, int battleId, bool doubles)
@@ -745,7 +759,7 @@ void Player::findTierAndRating()
     findRating();
 }
 
-bool Player::hasKnowledgeOf(const Player *other) const {
+bool Player::hasKnowledgeOf(Player *other) const {
     return knowledge.contains(other) || hasKnowledgeOf(other);
 }
 
@@ -758,7 +772,7 @@ bool Player::isInSameChannel(const Player *other) const {
     return false;
 }
 
-void Player::acquireKnowledgeOf(const Player *other) {
+void Player::acquireKnowledgeOf(Player *other) {
     if (!isInSameChannel(other)) {
         relay().sendPlayer(other->bundle());
         other->relay().sendPlayer(bundle());
@@ -768,7 +782,7 @@ void Player::acquireKnowledgeOf(const Player *other) {
 }
 
 /* Only rough knowledge, meaning updated infos don't matter */
-void Player::acquireRoughKnowledgeOf(const Player *other) {
+void Player::acquireRoughKnowledgeOf(Player *other) {
     if (knowledge.contains(other))
         return;
     acquireKnowledgeOf(other);
@@ -778,6 +792,11 @@ void Player::findRating()
 {
     lock();
     TierMachine::obj()->loadMemberInMemory(name(), tier(), this, SLOT(ratingLoaded()));
+}
+
+void Player::addChannel(int chanid)
+{
+    channels.insert(chanid);
 }
 
 void Player::ratingLoaded()
