@@ -48,6 +48,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     connect(&relay(), SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
     connect(&relay(), SIGNAL(showRankings(QString,int)), SLOT(getRankingsByPage(QString, int)));
     connect(&relay(), SIGNAL(showRankings(QString,QString)), SLOT(getRankingsByName(QString, QString)));
+    connect(&relay(), SIGNAL(joinRequested(QString)), SLOT(joinRequested(QString)));
     /* To avoid threading / simulateneous calls problems, it's queued */
     connect(this, SIGNAL(unlocked()), &relay(), SLOT(undelay()),Qt::QueuedConnection);
 }
@@ -146,6 +147,11 @@ void Player::doWhenDC()
     foreach(int id, battlesSpectated) {
         quitSpectating(id);
     }
+    foreach(Player *p, knowledge) {
+        p->relay().sendLogout(this->id());
+        p->knowledge.remove(this);
+    }
+    knowledge.clear();
 }
 
 void Player::quitSpectating(int battleId)
@@ -154,6 +160,20 @@ void Player::quitSpectating(int battleId)
         battlesSpectated.remove(battleId);
         emit spectatingStopped(this->id(), battleId);
     }
+}
+
+void Player::joinRequested(const QString &name)
+{
+    if (!isLoggedIn()) {
+        return;
+    }
+    /* Too many channels */
+    if (auth() == 0 && channels.size() >= 7) {
+        sendMessage("You can't join more than 7 channels");
+        return;
+    }
+
+    emit joinRequested(id(), name);
 }
 
 void Player::spectateBattle(const QString &name0, const QString &name1, int battleId, bool doubles)
@@ -726,14 +746,32 @@ void Player::findTierAndRating()
 }
 
 bool Player::hasKnowledgeOf(const Player *other) const {
-    return knowledge.contains(other->id()) || channels.intersect(other->channels).size() > 0;
+    return knowledge.contains(other) || hasKnowledgeOf(other);
+}
+
+bool Player::isInSameChannel(const Player *other) const {
+    foreach(int chanid, channels) {
+        if (other->channels.contains(chanid)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void Player::acquireKnowledgeOf(const Player *other) {
-    relay().sendPlayer(other->bundle());
-    other->relay().sendPlayer(bundle());
-    knowledge.insert(other->id());
-    other->knowledge.insert(id());
+    if (!isInSameChannel(other)) {
+        relay().sendPlayer(other->bundle());
+        other->relay().sendPlayer(bundle());
+    }
+    knowledge.insert(other);
+    other->knowledge.insert(this);
+}
+
+/* Only rough knowledge, meaning updated infos don't matter */
+void Player::acquireRoughKnowledgeOf(const Player *other) {
+    if (knowledge.contains(other))
+        return;
+    acquireKnowledgeOf(other);
 }
 
 void Player::findRating()

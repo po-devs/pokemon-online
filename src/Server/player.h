@@ -62,7 +62,9 @@ public:
     bool isLoggedIn() const;
     bool battling() const;
     void acquireKnowledgeOf(const Player *other);
+    void acquireRoughKnowledgeOf(const Player *other);
     bool hasKnowledgeOf(const Player *other) const;
+    bool isInSameChannel(const Player *other) const;
     bool hasBattle(int battleId) const;
     void addBattle(int battleid);
     void removeBattle(int battleid);
@@ -74,6 +76,9 @@ public:
     int auth() const;
     void setAuth (int newAuth);
     void setName (const QString & newName);
+    const QSet<int> & getBattles() const {
+        return battles;
+    }
 
     bool okForChallenge(int src) const;
     void addChallenge(Challenge *c, bool isChallenged);
@@ -128,7 +133,9 @@ signals:
     void findBattle(int,const FindBattleData&);
     void battleSearchCancelled(int);
     void unlocked();
+    void joinRequested(int id, const QString &channel);
 public slots:
+    void joinRequested(int slotid);
     void loggedIn(const TeamInfo &team,bool,bool, QColor);
     void recvMessage(const QString &mess);
     void recvTeam(const TeamInfo &team);
@@ -210,7 +217,7 @@ private:
        if the players don't know each other) but keeping in memory that they know each other
        could save bandwidth.
     */
-    QSet<int> knowledge;
+    QSet<Player*> knowledge;
 
     /* The channels a player is on */
     QSet<int> channels;

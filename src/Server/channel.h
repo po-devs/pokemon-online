@@ -2,6 +2,7 @@
 #define CHANNEL_H
 
 #include <QtCore>
+#include "../PokemonInfo/networkstructs.h"
 
 class QNickValidator;
 class Player;
@@ -9,6 +10,7 @@ class Player;
 struct Channel {
     QString name;
     QSet<Player *> players;
+    QHash<int, Battle> battleList;
 
     Channel(const QString &name);
 

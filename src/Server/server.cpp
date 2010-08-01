@@ -180,7 +180,7 @@ QTcpServer * Server::server()
 }
 
 void Server::addChannel(const QString &name="") {
-    if (channelids.contains(name)) {
+    if (channelids.contains(name.toLower())) {
         return; //Teehee
     }
     if (channelids.size() == 0) {
@@ -196,14 +196,14 @@ void Server::addChannel(const QString &name="") {
             chanName = places[true_rand() % sizeof(places)/sizeof(const char *)];
         }
         channels[0] = Channel(chanName);
-        channelids[chanName] = 0;
+        channelids[chanName.toLower()] = 0;
     } else {
         if (!Channel::validName(name)) {
             return;
         }
         int chanid = freechannelid();
         channels[chanid] = Channel(name);
-        channelids[name] = chanid;
+        channelids[name.toLower()] = chanid;
     }
 }
 
@@ -223,11 +223,23 @@ void Server::joinChannel(int playerid, int channelid) {
         ids.push_back(p->id());
     }
 
-    relay.sendSelfJoin(channelid, channel(channelid).name);
     relay.sendChannelPlayers(channelid, ids);
 
     foreach(Player *p, channel.players) {
         p->relay().sendJoin(playerid, channel(channelid));
+    }
+
+    channel.players.insert(player);
+
+    relay.sendBattleList(channelid, channel.battleList);
+
+    foreach(int battleid, player->getBattles()) {
+        if (!channel.battleList.contains(battleid)) {
+            channel.battleList.insert(battleid, battleList[battleid]);
+            foreach(Player *p, channel.players) {
+                p->relay().sendChannelBattle(channelid, battleid, battleList[battleid]);
+            }
+        }
     }
 }
 
@@ -542,7 +554,7 @@ void Server::loggedIn(int id, const QString &name)
 
     if (nameExist(name)) {
         int ids = this->id(name);
-        if (!playerExist(ids) || !player(ids)->isLoggedIn() || player(ids)->name().toLower() != name.toLower()) {
+        if (!playerLoggedIn(ids) || player(ids)->name().toLower() != name.toLower()) {
             printLine(QString("Critical Bug needing to be solved (kept a name too much in the name list: %1)").arg(name));
             mynames.remove(name.toLower());
         } else {
@@ -572,6 +584,7 @@ void Server::loggedIn(int id, const QString &name)
             p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
 
         sendTierList(id);
+        sendChannelList(id);
         numberOfPlayersLoggedIn += 1;
 
         /* Makes the player join the default channel */
@@ -644,6 +657,24 @@ void Server::spectatingChat(int player, int battle, const QString &chat)
     mybattles[battle]->spectatingChat(player, chat);
 }
 
+void Server::joinRequest(int player, const QString &channel)
+{
+    if (!channelExist(channel)) {
+        if (channels.size() >= 1000) {
+            sendMessage(player, "The server is limited to 1000 channels.");
+            return;
+        }
+        addChannel(channel);
+    }
+
+    if (channel(channelids).players.contains(this->player(player))) {
+        //already in the channel
+        return;
+    }
+
+    joinChannel(player, channelids[channel]);
+}
+
 void Server::recvMessage(int id, const QString &mess)
 {
     QString re = mess.trimmed();
@@ -657,8 +688,11 @@ void Server::recvMessage(int id, const QString &mess)
 
 void Server::recvPM(int src, int dest, const QString &mess)
 {
-    if (playerExist(dest) && player(dest)->isLoggedIn()) {
-        player(dest)->relay().sendPM(src, mess);
+    if (playerLoggedIn(dest)) {
+        Player *d = player(dest);
+
+        d->acquireRoughKnowledgeOf(player(src));
+        d->relay().sendPM(src, mess);
     }
 }
 
@@ -727,6 +761,7 @@ void Server::incomingConnection()
     connect(p, SIGNAL(updated(int)), SLOT(sendPlayer(int)));
     connect(p, SIGNAL(findBattle(int,FindBattleData)), SLOT(findBattle(int, FindBattleData)));
     connect(p, SIGNAL(battleSearchCancelled(int)), SLOT(cancelSearch(int)));
+    connect(p, SIGNAL(joinRequested(int,QString)), SLOT(joinRequest(int,QString)));
 }
 
 void Server::awayChanged(int src, bool away)
@@ -753,7 +788,7 @@ void Server::cancelSearch(int id)
 
 void Server::dealWithChallenge(int from, int to, const ChallengeInfo &c)
 {
-    if (!player(to)->isLoggedIn()) {
+    if (!playerLoggedIn(to)) {
         sendMessage(from, tr("That player is not online"));
         return;
     }
@@ -950,12 +985,22 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     battleList.insert(id, Battle(id1, id2));
 
     Player *p1 (player(id1)), *p2 (player(id2));
+
+    if (!p1->isInSameChannel(p2)) {
+        p1->relay().sendPlayer(p2->bundle());
+        p2->relay().sendPlayer(p1->bundle());
+    }
+
     p1->startBattle(id, id2, battle->pubteam(id1), battle->configuration(), battle->doubles());
     p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), battle->doubles());
 
     ++lastDataId;
     foreach(int chanid, p1->channels) {
-        foreach(Player *p, channel(chanid).players) {
+        Channel &chan = channel(chanid);
+        if (!chan.battleList.contains(id)) {
+            chan.battleList.insert(Battle(id1, id2));
+        }
+        foreach(Player *p, chan.players) {
             /* That test avoids to send twice the same data to the client */
             if (!p->hasSentCommand(lastDataId)) {
                 p->relay().notifyBattle(id,id1,id2);
@@ -963,7 +1008,11 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
         }
     }
     foreach(int chanid, p2->channels) {
-        foreach(Player *p, channel(chanid).players) {
+        Channel &chan = channel(chanid);
+        if (!chan.battleList.contains(id)) {
+            chan.battleList.insert(Battle(id1, id2));
+        }
+        foreach(Player *p, chan.players) {
             /* That test avoids to send twice the same data to the client */
             if (!p->hasSentCommand(lastDataId)) {
                 p->relay().notifyBattle(id,id1,id2);
@@ -1036,7 +1085,9 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
 
         ++lastDataId;
         foreach(int chanid, pw->channels) {
-            foreach(Player *p, channel(chanid).players) {
+            Channel &chan = channel(chanid);
+            chan.battleList.remove(battleid);
+            foreach(Player *p, chan.players) {
                 /* That test avoids to send twice the same data to the client */
                 if (!p->hasSentCommand(lastDataId)) {
                     p->battleResult(battleid, desc, winner, loser);
@@ -1044,7 +1095,9 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
             }
         }
         foreach(int chanid, pl->channels) {
-            foreach(Player *p, channel(chanid).players) {
+            Channel &chan = channel(chanid);
+            chan.battleList.remove(battleid);
+            foreach(Player *p, chan.players) {
                 /* That test avoids to send twice the same data to the client */
                 if (!p->hasSentCommand(lastDataId)) {
                     p->battleResult(battleid, desc, winner, loser);
@@ -1088,11 +1141,11 @@ void Server::removeBattle(int battleid)
     p2->removeBattle(battleid);
 }
 
-void Server::sendBattlesList(int id)
+void Server::sendBattlesList(int playerid, int chanid)
 {
-    Analyzer &relay = player(id)->relay();
+    Analyzer &relay = player(playerid)->relay();
 
-    relay.sendBattleList(battleList);
+    relay.sendBattleList(channel(chanid).battleList);
 }
 
 void Server::sendPlayer(int id)
@@ -1200,6 +1253,34 @@ void Server::spectatingRequested(int id, int idOfBattle)
     if (!battle->acceptSpectator(id, auth(id) > 0)) {
         sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
         return;
+    }
+
+    Player *source = player(id);
+    Player *p1(battle->id(0)), *p2(battle->id(1));
+
+    PlayerInfo bundle = source->bundle();
+
+    if (!p1->isInSameChannel(source)) {
+        p1->relay().sendPlayer(bundle);
+    }
+    if (!p2->isInSameChannel(source)) {
+        p2->relay().sendPlayer(bundle);
+    }
+    foreach(int id, battle->getSpectators()) {
+        Player *p = player(id);
+        if (!p->isInSameChannel(source)) {
+            p->relay().sendPlayer(bundle);
+            source->relay().sendPlayer(p->bundle());
+        }
+    }
+    foreach(QPointer<Player> p, battle->getPendingSpectators()) {
+        if (!p)
+            continue;
+
+        if (!p->isInSameChannel(source)) {
+            p->relay().sendPlayer(bundle);
+            source->relay().sendPlayer(p->bundle());
+        }
     }
 
     battle->addSpectator(player(id));

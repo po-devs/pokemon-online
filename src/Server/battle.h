@@ -425,9 +425,13 @@ public:
 private:
     QHash<int,int> spectators;
 public:
-    QHash<int, int> getSpectators() {
+    const QHash<int, int> &getSpectators() const {
         QMutexLocker m(&spectatorMutex);
         return spectators;
+    }
+
+    const QList<QPointer<Player> > &getPendingSpectators() const {
+        return pendingSpectators;
     }
 
     struct QuitException {};

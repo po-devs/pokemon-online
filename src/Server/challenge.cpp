@@ -27,8 +27,9 @@ Challenge::Challenge(Player *source, Player *dest, const ChallengeInfo &c, Serve
     if (cancelledFromServer)
         throw Exception();
 
-    if (!source->hasKnowledgeOf(dest)) {
-        source->acquireKnowledgeOf(dest);
+    if (!source->isInSameChannel(dest)) {
+        source->relay().sendPlayer(dest->bundle());
+        dest->relay().sendPlayer(source->bundle());
     }
 
     source->addChallenge(this, false);

@@ -108,6 +108,7 @@ public slots:
     void battleMessage(int player, int battle, const BattleChoice &message);
     void battleChat(int player, int battle, const QString &chat);
     void spectatingChat(int player, int battle, const QString &chat);
+    void joinRequest(int player, const QString &chn);
     void info(int , const QString& );
 
     void kick(int i);
@@ -183,10 +184,14 @@ private:
     /* creates a channel */
     void addChannel(const QString &name);
     /* Makes a player join a channel */
-    void joinChannel(int playerid, int channelid);
+    void joinChannel(int playerid, int chanid);
 
     inline bool channelExist(int id) const {
         return channels.contains(id);
+    }
+
+    inline bool channelExist(const QString &name) const {
+        return channelids.contains(name.toLower());
     }
 
     inline Channel &channel(int id) {
