@@ -252,10 +252,9 @@ void QScrollDownTextEdit::keepLines(int numberOfLines)
 
     /* All this is used as a way to clear the text partially, because this
        is so damn hard to do with QTextEdit... */
-    QClipboard *cb = QApplication::clipboard();
-    QMimeData *copy = new QMimeData(* cb->mimeData());
     cut();
-    cb->setMimeData(copy);
+    QClipboard *cb = QApplication::clipboard();
+    cb->clear();
 
     setReadOnly(true);
 }

@@ -108,9 +108,9 @@ void Analyzer::sendWatchingCommand(qint32 id, const QByteArray &command)
     notify(SpectatingBattleMessage, qint32(id), command);
 }
 
-void Analyzer::sendBattleList(const QHash<int, Battle> &battles)
+void Analyzer::sendBattleList(int channelid, const QHash<int, Battle> &battles)
 {
-    notify(BattleList, battles);
+    notify(BattleList, qint32(channelid), battles);
 }
 
 void Analyzer::notifyBattle(qint32 battleid, qint32 id1, qint32 id2)
@@ -396,6 +396,12 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             in >> name;
             emit joinRequested(name);
             break;
+        }
+    case LeaveChannel:
+        {
+            qint32 id;
+            in >> id;
+            emit leaveChannel(id);
         }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
