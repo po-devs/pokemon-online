@@ -3453,8 +3453,6 @@ struct MMRazorWind : public MM
                     turn(b,s)["Power"] = turn(b,s)["Power"].toInt() / 2;
                 }
 	    } else {              
-                b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
-
 		poke(b,s)["ChargingMove"] = mv;
 		poke(b,s)["ReleaseTurn"] = b.turn() + 1;
 		turn(b,s)["TellPlayers"] = false;

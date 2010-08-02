@@ -148,7 +148,7 @@ signals:
     /* Ranking */
     void rankingStarted(int,int,int);
     void rankingReceived(const QString&,int);
-    void channelsListReceived(const QList<QByteArray> &channels);
+    void channelsListReceived(const QHash<qint32, QString> &channels);
 public slots:
     /* slots called by the network */
     void error();

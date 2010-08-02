@@ -22,7 +22,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(TeamInfo,bool,bool,QColor)), SLOT(loggedIn(TeamInfo,bool,bool,QColor)));
-    connect(&relay(), SIGNAL(messageReceived(QString)), SLOT(recvMessage(QString)));
+    connect(&relay(), SIGNAL(messageReceived(int, QString)), SLOT(recvMessage(int, QString)));
     connect(&relay(), SIGNAL(teamReceived(TeamInfo)), SLOT(recvTeam(TeamInfo)));
     connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
     connect(&relay(), SIGNAL(forfeitBattle(int)), SLOT(battleForfeited(int)));
@@ -315,12 +315,14 @@ void Player::battleMessage(int bid, const BattleChoice &b)
     emit battleMessage(id(), bid, b);
 }
 
-void Player::recvMessage(const QString &mess)
+void Player::recvMessage(int chan, const QString &mess)
 {
     if (!isLoggedIn())
         return; //INVALID BEHAVIOR
+    if (!channels.contains(chan))
+        return;
     /* for now we just emit the signal, but later we'll do more, such as flood count */
-    emit recvMessage(id(), mess);
+    emit recvMessage(id(), chan, mess);
 }
 
 void Player::battleForfeited(int bid)
@@ -799,6 +801,11 @@ void Player::addChannel(int chanid)
     channels.insert(chanid);
 }
 
+void Player::removeChannel(int chanid)
+{
+    channels.remove(chanid);
+}
+
 void Player::ratingLoaded()
 {
     unlock();
@@ -995,6 +1002,11 @@ void Player::spectatingRequested(int id)
 void Player::sendMessage(const QString &mess)
 {
     relay().sendMessage(mess);
+}
+
+void Player::sendChanMessage(int channel, const QString &mess)
+{
+    relay().sendChannelMessage(channel, mess);
 }
 
 void Player::tUnban(QString name)

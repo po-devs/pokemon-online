@@ -158,12 +158,6 @@ public:
     Q_INVOKABLE long time();
     Q_INVOKABLE QScriptValue getTierList();
 
-    /* Set and unset player arrays:
-       Those are arrays that, once a player logs off, have their content cleared
-       for that offset. Useful as "session variables". */
-    Q_INVOKABLE void setPA(const QString &name);
-    Q_INVOKABLE void unsetPA(const QString &name);
-
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
 signals:
@@ -191,8 +185,6 @@ private:
         stopevents.pop_back();
         return res;
     }
-
-    QSet<QString> playerArrays;
 
     QEventLoop sync_loop;
     QString sync_data;

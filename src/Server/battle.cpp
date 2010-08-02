@@ -1829,9 +1829,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    if (testFail(player))
 		continue;
             int type = turnlong[player]["Type"].toInt(); /* move type */
-            if ( target != player && ((type == Type::Electric && hasType(target, Type::Ground)) ||
-                 (type == Type::Poison && (hasType(target, Type::Steel) || hasType(target, Type::Poison))) ||
-                 (type == Type::Fire && hasType(target, Type::Fire))) ) {
+            if ( target != player && ((type == Type::Fire && hasType(target, Type::Fire)) ||
+                                      ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::Smog)
+                                       && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0))){
                 notify(All, Failed, player);
                 continue;
             }

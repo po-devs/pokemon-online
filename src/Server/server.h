@@ -37,7 +37,7 @@ public:
     QString authedName(int id) const;
     /* sends a message to all the players */
     void sendAll(const QString &message, bool chatMessage = false);
-    void sendChanAll(const QString &message);
+    void sendChanAll(int channel, const QString &message);
     void sendMessage(int id, const QString &message);
     void sendChanMessage(int id, int chanid, const QString &message);
     void sendBattlesList(int id, int chanid);
@@ -93,7 +93,7 @@ public slots:
     void incomingConnection();
     /* Signals received by players */
     void loggedIn(int id, const QString &name);
-    void recvMessage(int id, const QString &mess);
+    void recvMessage(int id, int chanid, const QString &mess);
     void recvPM(int src, int dest, const QString &mess);
     void recvTeam(int id, const QString &name);
     void disconnected(int id);
@@ -168,9 +168,10 @@ private:
 
     QHash<int, Channel*> channels;
     QHash<QString, int> channelids;
+    QHash<qint32, QString> channelNames;
 
     QHash<int, BattleSituation *> mybattles;
-    QHash<int, Battle> battleList;
+    QHash<qint32, Battle> battleList;
 
     QTcpServer *server();
     Player * player(int i) const;

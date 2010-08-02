@@ -34,6 +34,11 @@ void Analyzer::sendMessage(const QString &message)
     notify(SendMessage, message);
 }
 
+void Analyzer::sendChannelMessage(int chanid, const QString &message)
+{
+    notify(ChannelMessage, qint32(chanid), message);
+}
+
 void Analyzer::engageBattle(int battleid, int , int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
 {
     notify(EngageBattle, qint32(battleid), qint32(0), qint32(id), team, conf, doubles);
@@ -113,6 +118,21 @@ void Analyzer::sendBattleList(int channelid, const QHash<int, Battle> &battles)
     notify(BattleList, qint32(channelid), battles);
 }
 
+void Analyzer::sendJoin(int channelid, int playerid)
+{
+    notify(JoinChannel, qint32(channelid), qint32(playerid));
+}
+
+void Analyzer::sendChannelBattle(int chanid, int battleid, const Battle &battle)
+{
+    notify(ChannelBattle, qint32(chanid), qint32(battleid), battle);
+}
+
+void Analyzer::sendChannelPlayers(int channelid, const QVector<qint32> &ids)
+{
+    notify(ChannelPlayers, qint32(channelid), ids);
+}
+
 void Analyzer::notifyBattle(qint32 battleid, qint32 id1, qint32 id2)
 {
     notify(EngageBattle, battleid , id1, id2);
@@ -176,11 +196,20 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             qDebug() << "Login end";
             break;
         }
-    case SendMessage:
+        /* If used, would be used to dial with the server directly */
+/*    case SendMessage:
         {
             QString mess;
             in >> mess;
             emit messageReceived(mess);
+            break;
+        } */
+    case ChannelMessage:
+        {
+            qint32 chanid;
+            QString mess;
+            in >> chanid >> mess;
+            emit messageReceived(chanid, mess);
             break;
         }
     case SendTeam:

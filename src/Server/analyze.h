@@ -69,7 +69,8 @@ namespace NetworkServ
         LeaveChannel,
         ChannelBattle,
         RemoveChannel,
-        AddChannel
+        AddChannel,
+        ChannelMessage
     };
 
     enum ProtocolError
@@ -95,11 +96,12 @@ public:
 
     /* functions called by the server */
     void sendMessage(const QString &message);
+    void sendChannelMessage(int chanid, const QString &message);
     void requestLogIn();
     void sendPlayer(const PlayerInfo &p);
     void sendPlayers(const QList<PlayerInfo> &p);
-    void sendBattleList(int chanid, const QHash<int, Battle> &battles);
-    void sendChannelPlayers(int channelid, const QVector<int> &ids);
+    void sendBattleList(int chanid, const QHash<qint32, Battle> &battles);
+    void sendChannelPlayers(int channelid, const QVector<qint32> &ids);
     void sendJoin(int channelid, int playerid);
     void sendChannelBattle(int chanid, int battleid, const Battle &battle);
     void sendLogin(const PlayerInfo &p);
@@ -150,7 +152,7 @@ signals:
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
     void loggedIn(const TeamInfo &team, bool ladder, bool showteam, QColor c);
-    void messageReceived(const QString &mess);
+    void messageReceived(int chanid, const QString &mess);
     void teamReceived(const TeamInfo &team);
     void connected();
     void disconnected();
