@@ -17,6 +17,9 @@ Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection)
     connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
     connect(&socket(), SIGNAL(isFull(QByteArray)), SLOT(commandReceived(QByteArray)));
     connect(&socket(), SIGNAL(error(QAbstractSocket::SocketError)), SLOT(error()));
+
+    /* Commands that will be redirected to channels */
+    channelCommands << BattleList << ChannelPlayers << JoinChannel << LeaveChannel << ChannelBattle << ChannelMessage;
 }
 
 void Analyzer::login(const FullInfo &team)
@@ -129,6 +132,13 @@ void Analyzer::wasConnected()
     socket().setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 }
 
+/*{
+    QHash<qint32, Battle> battles;
+    in >> battles;
+    emit battleListReceived(battles);
+    break;
+}*/
+
 void Analyzer::commandReceived(const QByteArray &commandline)
 {
     QDataStream in (commandline);
@@ -137,16 +147,24 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 
     in >> command;
 
+    if (channelCommands.contains(command)) {
+        qint32 chanid;
+        in >> chanid;
+
+        /* Because we're giving a pointer to a locally declared instance, this connection must
+           be a DIRECT connection and never go in Queued mode. If you want queued mode, find another
+           way to transfer the data */
+        emit channelCommandReceived(chanid, command, &in);
+        return;
+    }
     switch (command) {
-    case SendMessage:
-	{
+    case SendMessage: {
 	    QString mess;
 	    in >> mess;
 	    emit messageReceived(mess);
 	    break;
 	}
-    case PlayersList:
-	{
+    case PlayersList: {
             if (!registry_socket) {
                 PlayerInfo p;
                 while (!in.atEnd()) {
@@ -162,29 +180,25 @@ void Analyzer::commandReceived(const QByteArray &commandline)
                 emit serverReceived(servName, servDesc, numPlayers, ip, max, port);
             }
 	}
-    case Login:
-	{
+    case Login: {
             PlayerInfo p;
 	    in >> p;
 	    emit playerLogin(p);
 	    break;
 	}
-    case Logout:
-	{
+    case Logout: {
             qint32 id;
 	    in >> id;
 	    emit playerLogout(id);
 	    break;
 	}
-    case ChallengeStuff:
-	{
+    case ChallengeStuff: {
             ChallengeInfo c;
             in >> c;
             emit challengeStuff(c);
 	    break;
 	}
-    case EngageBattle:
-	{
+    case EngageBattle: {
             qint32 battleid, id1, id2;
             in >> battleid >> id1 >> id2;
 
@@ -201,8 +215,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             }
 	    break;
 	}
-    case BattleFinished:
-	{
+    case BattleFinished: {
             qint8 desc;
             qint32 battleid;
             qint32 id1, id2;
@@ -210,8 +223,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit battleFinished(battleid, desc, id1, id2);
 	    break;
 	}
-    case BattleMessage:
-	{
+    case BattleMessage: {
             qint32 battleid;
             QByteArray command;
             in >> battleid >> command;
@@ -219,8 +231,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit battleMessage(battleid, command);
 	    break;
 	}
-    case AskForPass:
-        {
+    case AskForPass: {
             QString salt;
             in >> salt;
 
@@ -229,71 +240,61 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit passRequired(salt);
             break;
         }
-    case Register:
-        {
+    case Register: {
             emit notRegistered(true);
             break;
         }
-    case PlayerKick:
-        {
+    case PlayerKick: {
             qint32 p,src;
             in >> p >> src;
             emit playerKicked(p,src);
             break;
         }
-    case PlayerBan:
-        {
+    case PlayerBan: {
             qint32 p,src;
             in >> p >> src;
             emit playerBanned(p,src);
             break;
         }
-    case SendTeam:
-        {
+    case SendTeam: {
             PlayerInfo p;
             in >> p;
             emit teamChanged(p);
             break;
         }
-    case SendPM:
-        {
+    case SendPM: {
             qint32 idsrc;
             QString mess;
             in >> idsrc >> mess;
             emit PMReceived(idsrc, mess);
             break;
         }
-    case GetUserInfo:
-        {
+    case GetUserInfo: {
             UserInfo ui;
             in >> ui;
             emit userInfoReceived(ui);
             break;
         }
-    case GetUserAlias:
-        {
+    case GetUserAlias: {
             QString s;
             in >> s;
             emit userAliasReceived(s);
             break;
         }
-    case GetBanList:
-        {
+    case GetBanList: {
             QString s, i;
             in >> s >> i;
             emit banListReceived(s,i);
             break;
         }
-    case Away:
-        {
+    case Away: {
             qint32 id;
             bool away;
             in >> id >> away;
             emit awayChanged(id, away);
             break;
         }
-    case SpectateBattle:
-        {
+    case SpectateBattle: {
             QString name0, name1;
             qint32 battleId;
             bool doubles;
@@ -301,8 +302,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit spectatedBattle(name0, name1, battleId, doubles);
             break;
         }
-    case SpectatingBattleMessage:
-        {
+    case SpectatingBattleMessage: {
             qint32 battleId;
             in >> battleId;
             /* Such a headache, it really looks like wasting ressources */
@@ -314,30 +314,26 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit spectatingBattleMessage(battleId, command);
             break;
         }
-    case SpectatingBattleFinished:
-{
+    case SpectatingBattleFinished: {
             qint32 battleId;
             in >> battleId;
             emit spectatingBattleFinished(battleId);
             break;
         }
-    case VersionControl:
-{
+    case VersionControl: {
             QString version;
             in >> version;
             if (version != VERSION)
                 emit versionDiff(version, VERSION);
             break;
         }
-    case TierSelection:
-{
+    case TierSelection: {
             QString tierList;
             in >> tierList;
             emit tierListReceived(tierList);
             break;
         }
-    case ShowRankings:
-{
+    case ShowRankings: {
             bool starting;
             in >> starting;
             if (starting)
@@ -353,22 +349,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             }
             break;
         }
-    case Announcement:
-{
+    case Announcement: {
             QString ann;
             in >> ann;
             emit announcement(ann);
             break;
         }
-    case BattleList:
-{
-            QHash<qint32, Battle> battles;
-            in >> battles;
-            emit battleListReceived(battles);
-            break;
-        }
-    case ChannelsList:
-        {
+    case ChannelsList: {
             QHash<qint32, QString> channels;
             in >> channels;
             emit channelsListReceived(channels);

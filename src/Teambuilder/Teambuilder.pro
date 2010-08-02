@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     box.cpp \
     ranking.cpp \
     pokedex.cpp \
-    pluginmanager.cpp
+    pluginmanager.cpp \
+    channel.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -50,7 +51,8 @@ HEADERS += teambuilder.h \
     pokedex.h \
     pluginmanager.h \
     plugininterface.h \
-    centralwidget.h
+    centralwidget.h \
+    channel.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities

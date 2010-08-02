@@ -27,12 +27,12 @@ namespace NetworkCli
         SendMessage,
         PlayersList,
         SendTeam,
-        ChallengeStuff = 7,
+        ChallengeStuff,
         EngageBattle,
         BattleFinished,
         BattleMessage = 10,
         BattleChat,
-        KeepAlive,
+        KeepAlive, /* obsolete since we use a native Qt option now */
         AskForPass,
         Register,
         PlayerKick,
@@ -56,15 +56,22 @@ namespace NetworkCli
         VersionControl,
         TierSelection,
         ServMaxChange,
-        FindMatch,
-        ShowRankings = 37,
+        FindBattle,
+        ShowRankings,
         Announcement,
         CPTBan,
         CPTUnban,
         PlayerTBan,
         GetTBanList,
         BattleList,
-        ChannelsList
+        ChannelsList,
+        ChannelPlayers,
+        JoinChannel,
+        LeaveChannel,
+        ChannelBattle,
+        RemoveChannel,
+        AddChannel,
+        ChannelMessage
     };
 
     enum ProtocolError
@@ -110,7 +117,10 @@ signals:
     void protocolError(int errorNum, const QString &errorDesc);
     void connected();
     void disconnected();
+    /* Message to appear in all the mainchats */
     void messageReceived(const QString &mess);
+    /* Command specific to a channel */
+    void channelCommandReceived(int command, int channel, QDataStream *stream);
     /* player from the players list */
     void playerReceived(const PlayerInfo &p);
     /* login of a player */
@@ -135,7 +145,6 @@ signals:
     void playerKicked(int p, int src);
     void playerBanned(int p, int src);
     void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip, quint16 max, quint16 port);
-    void battleListReceived(const QHash<int, Battle> &battles);
     void PMReceived(int id, const QString &mess);
     void awayChanged(int id, bool away);
     void tierListReceived(const QString &tl);
@@ -182,6 +191,7 @@ private:
     bool registry_socket;
 
     QList<QByteArray> storedCommands;
+    QSet<int> channelCommands;
 
     Network mysocket;
 };

@@ -25,19 +25,9 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     s->setChildrenCollapsible(false);
 
     QTabWidget *mytab = new QTabWidget();
-    mytab->addTab(myplayers = new QTreeWidget(), tr("Players"));
-    mytab->addTab(battleList = new QTreeWidget(), tr("Battles"));
+    mytab->addTab(players = new QStackedWidget(), tr("Players"));
+    mytab->addTab(battles = new QStackedWidget(), tr("Battles"));
     mytab->addTab(channels = new QListWidget(), tr("Channels"));
-    myplayers->setColumnCount(1);
-    myplayers->header()->hide();
-    myplayers->setIconSize(QSize(24,24));
-    myplayers->setIndentation(13);
-    myplayers->setObjectName("PlayerList");
-    battleList->setColumnCount(2);
-    battleList->setHeaderLabels(QStringList() << tr("Player 1") << tr("Player 2"));
-    battleList->setSortingEnabled(true);
-    battleList->resizeColumnToContents(0);
-    battleList->setIndentation(0);
 
     s->addWidget(mytab);
 
@@ -52,8 +42,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     announcement->setOpenExternalLinks(true);
     announcement->setWordWrap(true);
     announcement->hide();
-    layout->addWidget(mychat = new QScrollDownTextEdit());
-    mychat->setObjectName("MainChat");
+    layout->addWidget(channelSwitch = new QTabWidget());
     layout->addWidget(myline = new QLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     layout->addLayout(buttonsLayout);
@@ -73,9 +62,6 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     s->setSizes(QList<int>() << 200 << 800);
 
-    connect(myplayers, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
-    connect(myplayers, SIGNAL(itemActivated(QTreeWidgetItem*, int)), SLOT(seeInfo(QTreeWidgetItem*)));
-    connect(battleList, SIGNAL(itemActivated(QTreeWidgetItem*,int)), SLOT(battleListActivated(QTreeWidgetItem*)));
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
@@ -161,56 +147,6 @@ QIcon Client::statusIcon(int auth, Status status) const
     if (auth > 3 || auth < 0)
         auth = 0;
     return statusIcons[auth*LastStatus+status];
-}
-
-void Client::showContextMenu(const QPoint &requested)
-{
-    QIdTreeWidgetItem *item = dynamic_cast<QIdTreeWidgetItem*>(myplayers->itemAt(requested));
-
-    if (item && item->id() != 0)
-    {
-	QMenu *menu = new QMenu(this);
-
-        createIntMapper(menu->addAction(tr("&Challenge")), SIGNAL(triggered()), this, SLOT(seeInfo(int)), item->id());
-
-        createIntMapper(menu->addAction(tr("&View Ranking")), SIGNAL(triggered()), this, SLOT(seeRanking(int)), item->id());
-        if (item->id() == ownId()) {
-            if (away()) {
-                createIntMapper(menu->addAction(tr("Go &Back")), SIGNAL(triggered()), this, SLOT(goAway(int)), false);
-            } else {
-                createIntMapper(menu->addAction(tr("Go &Away")), SIGNAL(triggered()), this, SLOT(goAway(int)), true);
-            }
-        } else {
-            createIntMapper(menu->addAction(tr("&Send Message")), SIGNAL(triggered()), this, SLOT(startPM(int)), item->id());
-            if (player(item->id()).battling())
-                createIntMapper(menu->addAction(tr("&Watch Battle")), SIGNAL(triggered()), this, SLOT(watchBattleOf(int)), item->id());
-            if (myIgnored.contains(item->id()))
-                createIntMapper(menu->addAction(tr("&Remove Ignore")), SIGNAL(triggered()), this, SLOT(removeIgnore(int)), item->id());
-            else
-                createIntMapper(menu->addAction(tr("&Ignore")), SIGNAL(triggered()), this, SLOT(ignore(int)), item->id());
-        }
-
-        int myauth = ownAuth();
-
-        if (myauth > 0) {
-            createIntMapper(menu->addAction(tr("&Control Panel")), SIGNAL(triggered()), this, SLOT(controlPanel(int)), item->id());
-        }
-
-        int otherauth = player(item->id()).auth;
-
-        if (otherauth < myauth) {
-            menu->addSeparator();            
-            createIntMapper(menu->addAction(tr("&Kick")), SIGNAL(triggered()), this, SLOT(kick(int)), item->id());
-
-            /* If you're an admin, you can ban */
-            if (myauth >= 2) {
-                menu->addSeparator();
-                createIntMapper(menu->addAction(tr("&Ban")), SIGNAL(triggered()), this, SLOT(ban(int)), item->id());
-            }
-        }
-
-	menu->exec(mapToGlobal(requested));
-    }
 }
 
 void Client::battleListActivated(QTreeWidgetItem *it)

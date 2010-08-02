@@ -114,8 +114,6 @@ public slots:
     void watchBattle(const QString &name0, const QString &name1, int battleId, bool doubles);
     void spectatingBattleMessage(int battleId, const QByteArray &command);
     void stopWatching(int battleId);
-    /* shows the context menu for that player */
-    void showContextMenu(const QPoint&);
     void battleListActivated(QTreeWidgetItem* it);
     void loadTeam();
     /* A popup that asks for the pass */
@@ -185,13 +183,10 @@ private:
     QLineEdit *myline;
     QLabel *announcement;
     /* Where players are displayed */
-    QTreeWidget *myplayers;
-    QHash<int, QIdTreeWidgetItem *> myplayersitems;
-    QHash<QString, QIdTreeWidgetItem *> mytiersitems;
-    QTreeWidget *battleList;
-    QHash<int, Battle> battles;
-    QHash<int, QIdTreeWidgetItem *> battleItems;
+    QStackedWidget *players, *battles, *mainChat;
+    QTabWidget *channelSwitch;
     QListWidget *channels;
+
     /* Button to exit */
     QPushButton *myexit;
     /* Button to send text */
@@ -231,12 +226,11 @@ private:
     QHash<int, PlayerInfo> myplayersinfo;
 
     QHash<QString, int> mynames;
-    QScrollDownTextEdit *mainChat();
+
     Analyzer & relay();
 
     PlayerInfo playerInfo(int id) const;
     PlayerInfo & playerInfo(int id);
-    QIdTreeWidgetItem *item(int id);
     void updateState(int player);
     void placeItem(QIdTreeWidgetItem*it, QTreeWidgetItem *parent=NULL);
     /* Returns the challenge window displaying that player or NULL otherwise */

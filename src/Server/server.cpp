@@ -738,7 +738,7 @@ void Server::recvMessage(int id, int channel, const QString &mess)
     QString re = mess.trimmed();
     if (re.length() > 0) {
         if (myengine->beforeChatMessage(id, mess)) {
-            sendChanAll(channel, QString("%1: %2").arg(name(id)).arg(re));
+            sendChannelMessage(channel, QString("%1: %2").arg(name(id)).arg(re));
             myengine->afterChatMessage(id, mess);
         }
     }
@@ -1412,10 +1412,15 @@ void Server::sendAll(const QString &message, bool chatMessage)
     }
 }
 
-void Server::sendChanAll(int channel, const QString &message)
+void Server::sendChannelMessage(int channel, const QString &message)
 {
     foreach (Player *p, this->channel(channel).players)
         p->sendChanMessage(channel, message);
+}
+
+void Server::sendChannelMessage(int id, int chanid, const QString &message)
+{
+    player(id)->sendChanMessage(chanid, message);
 }
 
 int Server::freeid() const

@@ -35,11 +35,14 @@ public:
     /* returns the name of that player */
     QString name(int id) const;
     QString authedName(int id) const;
-    /* sends a message to all the players */
+    /* Sends a broadcast message to all the players */
     void sendAll(const QString &message, bool chatMessage = false);
-    void sendChanAll(int channel, const QString &message);
+    /* Send a broadcast to one player */
     void sendMessage(int id, const QString &message);
-    void sendChanMessage(int id, int chanid, const QString &message);
+    /* Sends to the whole channel */
+    void sendChannelMessage(int channel, const QString &message);
+    /* Sends to a particular guy in the channel */
+    void sendChannelMessage(int id, int chanid, const QString &message);
     void sendBattlesList(int id, int chanid);
     /* Sends the login of the player to everybody but the player */
     void sendLogin(int id);
