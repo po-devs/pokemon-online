@@ -362,16 +362,16 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         }
     case BattleList:
 {
-            QHash<int, Battle> battles;
+            QHash<qint32, Battle> battles;
             in >> battles;
             emit battleListReceived(battles);
             break;
         }
     case ChannelsList:
-{
-            QByteArray list;
-            in >> list;
-            emit channelsListReceived(list.split(','));
+        {
+            QHash<qint32, QString> channels;
+            in >> channels;
+            emit channelsListReceived(channels);
             break;
         }
     default:

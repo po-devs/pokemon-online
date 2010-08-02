@@ -301,12 +301,6 @@ void ScriptEngine::afterLogOut(int src)
     if (!myscript.property("afterLogOut", QScriptValue::ResolveLocal).isValid())
         return;
     evaluate(myscript.property("afterLogOut").call(myscript, QScriptValueList() << src));
-    QString srcS = QString::number(src);
-
-    foreach(QString pa, playerArrays) {
-        myengine.evaluate(QString("if (typeof script.%1 != 'undefined') {delete script.%1[%2];} else { sys.unsetPA(%1);}")
-                          .arg(pa, srcS));
-    }
 }
 
 bool ScriptEngine::beforePlayerKick(int src, int dest)
@@ -1181,18 +1175,6 @@ int ScriptEngine::numPlayers()
 bool ScriptEngine::loggedIn(int id)
 {
     return myserver->playerLoggedIn(id);
-}
-
-void ScriptEngine::setPA(const QString &name)
-{
-    playerArrays.insert(name);
-    myengine.evaluate(QString("script.%1 = [];").arg(name));
-}
-
-void ScriptEngine::unsetPA(const QString &name)
-{
-    playerArrays.remove(name);
-    myengine.evaluate("delete script." + name);
 }
 
 void ScriptEngine::printLine(const QString &s)

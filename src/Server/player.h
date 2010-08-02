@@ -51,6 +51,7 @@ public:
 
     /* Sends a message to the player */
     void sendMessage(const QString &mess);
+    void sendChanMessage(int channel, const QString &mess);
 
     bool hasSentCommand(int commandid) const;
 
@@ -64,6 +65,7 @@ public:
     void acquireKnowledgeOf(Player *other);
     void acquireRoughKnowledgeOf(Player *other);
     void addChannel(int chanid);
+    void removeChannel(int chanid);
     bool hasKnowledgeOf(Player *other) const;
     bool isInSameChannel(const Player *other) const;
     bool hasBattle(int battleId) const;
@@ -118,7 +120,7 @@ public:
     void executeAwayChange(bool away);
 signals:
     void loggedIn(int id, const QString &name);
-    void recvMessage(int id, const QString &mess);
+    void recvMessage(int id, int chanid, const QString &mess);
     void disconnected(int id);
     void recvTeam(int id, const QString &name);
     void sendChallenge(int source, int dest, const ChallengeInfo &desc);
@@ -142,7 +144,7 @@ signals:
     void leaveRequested(int id, int channelid);
 public slots:
     void loggedIn(const TeamInfo &team,bool,bool, QColor);
-    void recvMessage(const QString &mess);
+    void recvMessage(int chan, const QString &mess);
     void recvTeam(const TeamInfo &team);
     void disconnected();
     void challengeStuff(const ChallengeInfo &c);

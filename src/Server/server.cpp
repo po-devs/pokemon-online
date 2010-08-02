@@ -197,6 +197,7 @@ void Server::addChannel(const QString &name) {
         }
         channels[0] = new Channel(chanName);
         channelids[chanName.toLower()] = 0;
+        channelNames[0] = chanName;
     } else {
         if (!Channel::validName(name)) {
             return;
@@ -204,6 +205,7 @@ void Server::addChannel(const QString &name) {
         int chanid = freechannelid();
         channels[chanid] = new Channel(name);
         channelids[name.toLower()] = chanid;
+        channelNames[chanid] = name;
     }
 
     foreach(Player *p, myplayers) {
@@ -273,6 +275,7 @@ void Server::leaveRequest(int playerid, int channelid)
     }
 
     channel.players.remove(player);
+    player->removeChannel(channelid);
 
     if (channel.players.size() <= 0 && channelid != 0) {
         removeChannel(channelid);
@@ -280,6 +283,8 @@ void Server::leaveRequest(int playerid, int channelid)
 }
 
 void Server::removeChannel(int channelid) {
+    QString chanName = channelNames.take(channelid);
+    channelids.remove(chanName.toLower());
     delete channels.take(channelid);
 
     foreach(Player *p, myplayers) {
@@ -645,7 +650,7 @@ void Server::loggedIn(int id, const QString &name)
 void Server::sendChannelList(int player) {
     Player *p = this->player(player);
 
-    p->relay().notify(NetworkServ::ChannelsList, channelids);
+    p->relay().notify(NetworkServ::ChannelsList, channelNames);
 }
 
 void Server::sendTierList(int id)
@@ -728,12 +733,12 @@ void Server::joinRequest(int player, const QString &channel)
     joinChannel(player, channelid);
 }
 
-void Server::recvMessage(int id, const QString &mess)
+void Server::recvMessage(int id, int channel, const QString &mess)
 {
     QString re = mess.trimmed();
     if (re.length() > 0) {
         if (myengine->beforeChatMessage(id, mess)) {
-            sendAll(tr("%1: %2").arg(name(id)).arg(re), true);
+            sendChanAll(channel, QString("%1: %2").arg(name(id)).arg(re));
             myengine->afterChatMessage(id, mess);
         }
     }
@@ -797,7 +802,7 @@ void Server::incomingConnection()
 
     connect(p, SIGNAL(loggedIn(int, QString)), SLOT(loggedIn(int, QString)));
     connect(p, SIGNAL(recvTeam(int, QString)), SLOT(recvTeam(int, QString)));
-    connect(p, SIGNAL(recvMessage(int, QString)), SLOT(recvMessage(int,QString)));
+    connect(p, SIGNAL(recvMessage(int, int, QString)), SLOT(recvMessage(int, int, QString)));
     connect(p, SIGNAL(disconnected(int)), SLOT(disconnected(int)));
     connect(p, SIGNAL(sendChallenge(int,int,ChallengeInfo)), SLOT(dealWithChallenge(int,int,ChallengeInfo)));
     connect(p, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int,int,int,int)));
@@ -1367,10 +1372,9 @@ void Server::removePlayer(int id)
 
         AntiDos::obj()->disconnect(p->ip(), id);
 
-        p->deleteLater(); myplayers.remove(id);
-
-        if (loggedIn)
-            mynames.remove(playerName.toLower());
+        foreach(int chanid, p->getChannels()) {
+            leaveRequest(id, chanid);
+        }
 
         emit player_logout(id);
 
@@ -1379,6 +1383,11 @@ void Server::removePlayer(int id)
 	    sendLogout(id);
             myengine->afterLogOut(id);
         }
+
+        p->deleteLater(); myplayers.remove(id);
+
+        if (loggedIn)
+            mynames.remove(playerName.toLower());
 
         printLine(QString("Removed player %1").arg(playerName));
     }
@@ -1401,6 +1410,12 @@ void Server::sendAll(const QString &message, bool chatMessage)
             if (p->isLoggedIn())
                 p->sendMessage(message);
     }
+}
+
+void Server::sendChanAll(int channel, const QString &message)
+{
+    foreach (Player *p, this->channel(channel).players)
+        p->sendChanMessage(channel, message);
 }
 
 int Server::freeid() const
