@@ -36,7 +36,7 @@ QPair<int, int> MemberRating::pointChangeEstimate(int opponent_rating)
     }
     double myesp = 1/(1+ pow(10., (float(opponent_rating)-rating)/400));
 
-    return QPair<int,int>((1. - myesp)*kfactor,(0. - myesp)*kfactor);
+    return QPair<int,int>(int((1. - myesp)*kfactor),int((0. - myesp)*kfactor));
 }
 
 void Tier::changeName(const QString &name)

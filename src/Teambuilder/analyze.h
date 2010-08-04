@@ -60,7 +60,7 @@ namespace NetworkCli
         ShowRankings,
         Announcement,
         CPTBan,
-        CPTUnban,
+        CPTUnban = 40,
         PlayerTBan,
         GetTBanList,
         BattleList,
@@ -70,7 +70,7 @@ namespace NetworkCli
         LeaveChannel,
         ChannelBattle,
         RemoveChannel,
-        AddChannel,
+        AddChannel = 50,
         ChannelMessage
     };
 
@@ -94,6 +94,7 @@ public:
     /* functions called by the client */
     void login(const FullInfo &team);
     void sendMessage(const QString &message);
+    void sendChanMessage(int channelid, const QString &message);
     void connectTo(const QString &host, quint16 port);
     void sendTeam(const TrainerTeam & team);
     void sendChallengeStuff(const ChallengeInfo &c);
@@ -158,6 +159,7 @@ signals:
     void rankingStarted(int,int,int);
     void rankingReceived(const QString&,int);
     void channelsListReceived(const QHash<qint32, QString> &channels);
+    void channelPlayers(int chanid, const QVector<qint32> &channels);
 public slots:
     /* slots called by the network */
     void error();

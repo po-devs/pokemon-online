@@ -10,7 +10,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/pokemonstructs.h"
-
+#include "channel.h"
 
 Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), myrelay(), findingBattle(false)
 {
@@ -25,8 +25,8 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     s->setChildrenCollapsible(false);
 
     QTabWidget *mytab = new QTabWidget();
-    mytab->addTab(players = new QStackedWidget(), tr("Players"));
-    mytab->addTab(battles = new QStackedWidget(), tr("Battles"));
+    mytab->addTab(playersW = new QStackedWidget(), tr("Players"));
+    mytab->addTab(battlesW = new QStackedWidget(), tr("Battles"));
     mytab->addTab(channels = new QListWidget(), tr("Channels"));
 
     s->addWidget(mytab);
@@ -42,7 +42,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     announcement->setOpenExternalLinks(true);
     announcement->setWordWrap(true);
     announcement->hide();
-    layout->addWidget(channelSwitch = new QTabWidget());
+    layout->addWidget(mainChat = new QTabWidget());
     layout->addWidget(myline = new QLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     layout->addLayout(buttonsLayout);
@@ -50,8 +50,6 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     buttonsLayout->addWidget(myregister = new QPushButton(tr("&Register")));
     buttonsLayout->addWidget(myexit = new QPushButton(tr("&Exit")));
     buttonsLayout->addWidget(mysender = new QPushButton(tr("&Send")));
-
-    myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
 
     QPalette pal = palette();
     pal.setColor(QPalette::AlternateBase, Qt::blue);
@@ -125,6 +123,9 @@ void Client::initRelay()
     connect(relay, SIGNAL(versionDiff(QString, QString)), SLOT(versionDiff(QString, QString)));
     connect(relay, SIGNAL(tierListReceived(QString)), SLOT(tierListReceived(QString)));
     connect(relay, SIGNAL(announcement(QString)), SLOT(announcementReceived(QString)));
+    connect(relay, SIGNAL(channelsListReceived(QHash<qint32,QString>)), SLOT(channelsListReceived(QHash<qint32,QString>)));
+    connect(relay, SIGNAL(channelPlayers(int,QVector<qint32>)), SLOT(channelPlayers(int,QVector<qint32>)));
+    connect(relay, SIGNAL(channelCommandReceived(int,int,QDataStream*)), SLOT(channelCommandReceived(int,int,QDataStream*)));
 }
 
 int Client::ownAuth() const
@@ -142,6 +143,15 @@ int Client::ownId() const
     return _mid;
 }
 
+int Client::currentChannel() const
+{
+    if (mychannels.size() == 0) {
+        return -1;
+    }
+
+    return channelByNames[mainChat->tabText(mainChat->currentIndex()).toLower()];
+}
+
 QIcon Client::statusIcon(int auth, Status status) const
 {
     if (auth > 3 || auth < 0)
@@ -155,6 +165,42 @@ void Client::battleListActivated(QTreeWidgetItem *it)
     if ( (i=dynamic_cast<QIdTreeWidgetItem*>(it)) ) {
         watchBattleRequ(i->id());
     }
+}
+
+void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
+{
+    channelNames = channelsL;
+    QHashIterator<qint32, QString> it (channelNames);
+
+    while (it.hasNext()) {
+        it.next();
+
+        channelByNames.insert(it.value().toLower(), it.key());
+    }
+
+    channels->addItems(channelsL.values());
+}
+
+void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
+{
+    if (hasChannel(chanid)) {
+        /* Then for some reason we aren't synchronized, but let's get it smooth */
+        Channel *c = mychannels.value(chanid);
+
+        foreach(qint32 id, ids) {
+            c->playerReceived(id);
+        }
+
+        return;
+    }
+
+    Channel *c = new Channel(channelNames.value(chanid), chanid, this);
+
+    playersW->addWidget(c->playersWidget());
+    mainChat->addTab(c->mainChat(), c->name());
+    battlesW->addWidget(c->battlesWidget());
+
+    mychannels[chanid] = c;
 }
 
 void Client::watchBattleOf(int player)
@@ -345,7 +391,7 @@ void Client::openBattleFinder()
 
 void Client::findBattle(const FindBattleData&data)
 {
-    relay().notify(NetworkCli::FindMatch,data);
+    relay().notify(NetworkCli::FindBattle,data);
     findMatch->setText(tr("&Cancel Find Battle"));
     findingBattle = true;
 }
@@ -392,17 +438,40 @@ void Client::loadTeam()
 
 void Client::sendText()
 {
+    if (currentChannel() == -1)
+        return;
+
+    int cid = currentChannel();
+
     QString text = myline->text().trimmed();
     if (text.length() > 0) {
         QStringList s = text.split('\n');
         foreach(QString s1, s) {
             if (s1.length() > 0) {
-                relay().sendMessage(s1);
+                relay().sendChanMessage(cid, s1);
             }
         }
     }
 
     myline->clear();
+}
+
+bool Client::hasChannel(int channelid) const
+{
+    return mychannels.contains(channelid);
+}
+
+Channel *Client::channel(int channelid)
+{
+    return mychannels.value(channelid);
+}
+
+void Client::channelCommandReceived(int command, int channel, QDataStream *stream)
+{
+    if (!hasChannel(channel))
+        return;
+
+    this->channel(channel)->dealWithCommand(command, stream);
 }
 
 QMenuBar * Client::createMenuBar(MainEngine *w)
@@ -652,7 +721,8 @@ void Client::tierListReceived(const QString &tl)
     QSettings s;
 
     if (s.value("sort_players_by_tier").toBool()) {
-        sortAllPlayersByTier();
+        foreach(Channel *c, mychannels)
+            c->sortAllPlayersByTier();
     }
 }
 
@@ -663,82 +733,11 @@ void Client::sortPlayersCountingTiers(bool byTier)
     s.setValue("sort_players_by_tier", sortBT);
 
     if (sortBT) {
-        sortAllPlayersByTier();
+        foreach(Channel *c, mychannels)
+            c->sortAllPlayersByTier();
     } else {
-        sortAllPlayersNormally();
-    }
-}
-
-void Client::sortAllPlayersByTier()
-{
-    foreach(QIdTreeWidgetItem *it, myplayersitems)
-    {
-        if (it->parent())
-            it->parent()->takeChild(it->parent()->indexOfChild(it));
-        else
-            myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
-    }
-
-    foreach(QIdTreeWidgetItem *it, mytiersitems)
-    {
-        delete myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
-    }
-
-    mytiersitems.clear();
-
-    foreach(QString tier, tierList) {
-        QIdTreeWidgetItem *it = new QIdTreeWidgetItem(0, QStringList() << tier);
-        //it->setBackgroundColor("#0CA0DD");
-        //it->setColor("white");
-        QFont f = it->font(0);
-        f.setPixelSize(15);
-        it->setFont(0,f);
-        it->setText(0,tier);
-        myplayers->addTopLevelItem(it);
-        mytiersitems.insert(tier, it);
-
-    }
-    myplayers->expandAll();
-
-    QHash<int, QIdTreeWidgetItem *>::iterator iter;
-
-    for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
-        QString tier = player(iter.key()).tier;
-
-        if (mytiersitems.contains(tier)) {
-            placeItem(iter.value(), mytiersitems.value(tier));
-        } else {
-            placeItem(iter.value());
-        }
-    }
-
-    myplayers->headerItem()->sortChildren(0, Qt::AscendingOrder);
-    foreach(QIdTreeWidgetItem *it, mytiersitems) {
-        it->sortChildren(0, Qt::AscendingOrder);
-    }
-}
-
-void Client::sortAllPlayersNormally()
-{
-    foreach(QIdTreeWidgetItem *it, myplayersitems)
-    {
-        if (it->parent())
-            it->parent()->takeChild(it->parent()->indexOfChild(it));
-        else
-            myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
-    }
-
-    foreach(QIdTreeWidgetItem *it, mytiersitems)
-    {
-        delete myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
-    }
-
-    mytiersitems.clear();
-
-    QHash<int, QIdTreeWidgetItem *>::iterator iter;
-
-    for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
-        placeItem(iter.value(), NULL);
+        foreach(Channel *c, mychannels)
+            c->sortAllPlayersNormally();
     }
 }
 
@@ -768,7 +767,7 @@ bool Client::playerExist(int id) const
 
 PlayerInfo Client::player(int id) const
 {
-    return myplayersinfo[id];
+    return myplayersinfo.value(id);
 }
 
 BasicInfo Client::info(int id) const
@@ -847,18 +846,8 @@ void Client::battleStarted(int bid, int id1, int id2)
     myplayersinfo[id1].flags |= PlayerInfo::Battling;
     myplayersinfo[id2].flags |= PlayerInfo::Battling;
 
-    battles.insert(bid, Battle(id1, id2));
-    QIdTreeWidgetItem *it = new QIdTreeWidgetItem(bid, QStringList() << name(id1) << name(id2));
-    battleItems.insert(bid, it);
-    battleList->addTopLevelItem(it);
-
-    if (id1 != 0) {
-        item(id1)->setToolTip(0,tr("Battling against %1").arg(name(id2)));
-        updateState(id1);
-    }
-    if (id2 != 0) {
-        item(id2)->setToolTip(0,tr("Battling against %1").arg(name(id1)));
-        updateState(id2);
+    foreach(Channel *c, mychannels) {
+        c->battleStarted(bid, id1, id2);
     }
 }
 
@@ -870,7 +859,6 @@ void Client::watchBattle(const QString &name0, const QString &name1, int battleI
     battle->show();
 
     connect(this, SIGNAL(destroyed()), battle, SLOT(close()));
-    //connect(this, SIGNAL(musicPlayingChanged(bool)), battle, SLOT(playMusic(bool)));
     connect(battle, SIGNAL(closedBW(int)), SLOT(stopWatching(int)));
     connect(battle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
 
@@ -888,10 +876,6 @@ void Client::stopWatching(int battleId)
     }
 }
 
-QIdTreeWidgetItem *Client::item(int id) {
-    return myplayersitems.value(id);
-}
-
 void Client::forfeitBattle(int id)
 {
     relay().sendBattleResult(id, Forfeit);
@@ -900,23 +884,13 @@ void Client::forfeitBattle(int id)
 
 void Client::battleFinished(int battleid, int res, int winner, int loser)
 {
-    if (showPEvents || winner == ownId() || loser == ownId()) {
-        if (res == Forfeit) {
-            printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)));
-        } else if (res == Tie) {
-            printLine(tr("%1 and %2 tied.").arg(name(loser), name(winner)));
-        } else if (res == Win) {
-            printLine(tr("%1 won against %2.").arg(name(winner), name(loser)));
-        }
-    }
-
     /* On old servers battleid is always 0 so you don't want to forfeit that battle ... */
     if ((res == Close || res == Forfeit) && (battleid != 0 || (winner == ownId() || loser == ownId())))
         removeBattleWindow(battleid);
 
-    battles.remove(battleid);
-    battleList->takeTopLevelItem(battleList->indexOfTopLevelItem(battleItems[battleid]));
-    delete battleItems.take(battleid);
+    foreach(Channel *c, mychannels) {
+        c->battleEnded(battleid, res, winner, loser);
+    }
 
     myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
     myplayersinfo[loser].flags &= 0xFF ^ PlayerInfo::Battling;
@@ -953,7 +927,10 @@ void Client::removeBattleWindow(int battleid)
 
 QString Client::name(int id) const
 {
-    return info(id).name;
+    if (myplayersinfo.contains(id))
+        return info(id).name;
+    else
+        return "~Unknown~";
 }
 
 void Client::cancelFindBattle(bool verbose)
@@ -1027,7 +1004,7 @@ bool Client::busy() const
 
 bool Client::away() const
 {
-    return playerInfo(ownId()).away();
+    return player(ownId()).away();
 }
 
 void Client::acceptChallenge(int id)
@@ -1038,6 +1015,11 @@ void Client::acceptChallenge(int id)
 void Client::refuseChallenge(int id)
 {
     relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Refused, id));
+}
+
+QString Client::tier(int player) const
+{
+    return this->player(player).tier;
 }
 
 void Client::sendChallenge(int id)
@@ -1090,43 +1072,17 @@ Analyzer &Client::relay()
     return myrelay;
 }
 
-QScrollDownTextEdit *Client::mainChat()
-{
-    return mychat;
-}
-
 void Client::playerLogin(const PlayerInfo& p)
 {
-    playerReceived(p);
-    if (showPEvents)
-        printLine(tr("%1 logged in.").arg(p.team.name));
+    _mid = p.id;
+    mynick = p.team.name;
+    myplayersinfo[p.id] = p;
 }
 
 void Client::playerLogout(int id)
 {
-    QString name = info(id).name;
-    if (myIgnored.contains(id))
-        removeIgnore(id);
-    if (showPEvents)
-        printLine(tr("%1 logged out.").arg(name));
-
     /* removes the item in the playerlist */
     removePlayer(id);
-}
-
-
-void Client::battleListReceived(const QHash<int, Battle> &battles)
-{
-    this->battles = battles;
-
-    QHashIterator<int, Battle> h(battles);
-
-    while (h.hasNext()) {
-        h.next();
-        QIdTreeWidgetItem *it = new QIdTreeWidgetItem(h.key(), QStringList() << name(h.value().id1) << name(h.value().id2));
-        battleItems.insert(h.key(), it);
-        battleList->addTopLevelItem(it);
-    }
 }
 
 
@@ -1134,26 +1090,21 @@ void Client::removePlayer(int id)
 {
     QString name = info(id).name;
 
-    /* removes the item in the playerlist */
-
-    if(sortBT){
-        for(int i = 0; i < myplayers->topLevelItemCount(); i++)
-        {
-            myplayers->topLevelItem(i)->removeChild(myplayersitems[id]);
-        }
+    foreach(Channel *c, mychannels) {
+        if (c->hasPlayer(id))
+            c->playerLogOut(id);
     }
 
-    else{
-        myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(myplayersitems.value(id)));
-    }
+    if (myIgnored.contains(id))
+        removeIgnore(id);
 
-    myplayersitems.remove(id);
-    mynames.remove(name);
     myplayersinfo.remove(id);
     if (mypms.contains(id)) {
         mypms[id]->disable();
         mypms.remove(id);
     }
+
+    mynames.remove(name);
 }
 
 QString Client::ownName() const
@@ -1167,90 +1118,30 @@ QString Client::authedNick(int id) const
 
     QString nick = p.team.name;
 
-    /*if (p.auth > 0 && p.auth < 4) {
-        nick += ' ';
-
-        for (int i = 0; i < p.auth; i++) {
-            nick += '*';
-        }
-    }*/
-
     return nick;
 }
 
 void Client::playerReceived(const PlayerInfo &p)
 {
-    if (ownId()==-1 && p.team.name == mynick)
-        _mid = p.id;
-
-    QIdTreeWidgetItem *item = NULL;
-
     if (myplayersinfo.contains(p.id)) {
-        QString name = info(p.id).name;
-
-        /* removes the item in the playerlist */
-
-        if(sortBT){
-            for(int i = 0; i < myplayers->topLevelItemCount(); i++)
-            {
-                myplayers->topLevelItem(i)->removeChild(myplayersitems[p.id]);
-            }
-        }
-
-        else{
-            myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(myplayersitems.value(p.id)));
-        }
-
-        delete myplayersitems[p.id];
-
-        myplayersitems.remove(p.id);
-        mynames.remove(name);
+        mynames.remove(info(p.id).name);
         myplayersinfo.remove(p.id);
     }
 
     myplayersinfo.insert(p.id, p);
+    mynames.insert(p.team.name, p.id);
 
-    QString nick = authedNick(p.id);
-
-
-    item = new QIdTreeWidgetItem(p.id, QStringList() << nick);
-
-    QFont f = item->font(0);
-    f.setBold(true);
-    item->setFont(0,f);
-    item->setText(0,nick);
-
-    item->setColor(color(p.id));
-
-    myplayersitems.insert(p.id, item);
-    mynames.insert(name(p.id), p.id);
     if (mypms.contains(p.id)) {
         mypms[p.id]->changeName(p.team.name);
     }
 
-    if (sortBT && mytiersitems.contains(p.tier)) {
-        placeItem(item, mytiersitems.value(p.tier));
-    } else {
-        placeItem(item,NULL);
-    }
-
-    updateState(p.id);
-
     if (p.id == ownId()) {
         changeTierChecked(p.tier);
     }
-}
 
-void Client::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
-{
-    if(item->id() >= 0) {
-        if(parent == NULL) {
-            myplayers->addTopLevelItem(item);
-            myplayers->sortItems(0,Qt::AscendingOrder);
-        } else {
-            parent->addChild(item);
-            parent->sortChildren(0,Qt::AscendingOrder);
-        }
+    foreach(Channel *c, mychannels) {
+        if (c->hasPlayer(p.id))
+            c->playerReceived(p.id);
     }
 }
 
@@ -1268,55 +1159,6 @@ void Client::teamChanged(const PlayerInfo &p) {
     playerReceived(p);
 }
 
-void Client::printLine(const QString &line)
-{
-    QString timeStr = "";
-    if(showTS)
-        timeStr = "(" + QTime::currentTime().toString() + ") ";
-    if (line.length() == 0) {
-        mainChat()->insertPlainText("\n");
-        return;
-    }
-    /* Only activates if no window has focus */
-    if (!QApplication::activeWindow()) {
-        if (line.contains(QRegExp(QString("\\b%1\\b").arg(ownName()),Qt::CaseInsensitive))) {
-            raise();
-            activateWindow();
-        }
-    }
-    if (line.leftRef(3) == "***") {
-        mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + escapeHtml(line) + "</span><br />");
-        return;
-    }
-    /* Let's add colors */
-    int pos = line.indexOf(':');
-    if ( pos != -1 ) {
-	QString beg = line.left(pos);
-	QString end = line.right(line.length()-pos-1);
-
-        if (beg == "~~Server~~") {
-            mainChat()->insertHtml("<span style='color:orange'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
-        } else if (beg == "Welcome Message") {
-            mainChat()->insertHtml("<span style='color:blue'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
-        } else if (id(beg) == -1) {
-            mainChat()->insertHtml("<span style='color:#3daa68'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + escapeHtml(end) + "<br />");
-        } else {
-            if (myIgnored.contains(id(beg)))
-                return;
-            if (auth(id(beg)) > 0 && auth(id(beg)) <= 3) {
-                mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + "+<i><b>" + escapeHtml(beg) + ":</i></b></span>" + escapeHtml(end) + "<br />");
-            }
-            else if (id(beg) == ownId()) {
-                mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
-            } else {
-                mainChat()->insertHtml("<span style='color:" + color(id(beg)).name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
-            }
-	}
-    } else {
-        mainChat()->insertPlainText( timeStr + line + "\n");
-    }
-}
-
 QColor Client::color(int id) const
 {
     if (player(id).color.name() == "#000000") {
@@ -1324,11 +1166,6 @@ QColor Client::color(int id) const
     } else {
         return player(id).color;
     }
-}
-
-void Client::printHtml(const QString &line)
-{
-    mainChat()->insertHtml(line + "<br />");
 }
 
 int Client::id(const QString &name) const
@@ -1387,11 +1224,6 @@ void Client::changeTeam()
     relay().sendTeam(*myteam);
 }
 
-PlayerInfo Client::playerInfo(int id) const
-{
-    return myplayersinfo.value(id);
-}
-
 PlayerInfo &Client::playerInfo(int id)
 {
     return myplayersinfo[id];
@@ -1399,20 +1231,16 @@ PlayerInfo &Client::playerInfo(int id)
 
 void Client::updateState(int id)
 {
-    int auth = this->auth(id);
-    if (item(id)) {
-        if (myIgnored.contains(id)) {
-            item(id)->setIcon(0, statusIcon(auth,Ignored));
-        }  if (playerInfo(id).battling()) {
-        item(id)->setIcon(0, statusIcon(auth,Battling));
-    } else if (playerInfo(id).away()) {
-        item(id)->setIcon(0, statusIcon(auth,Away));
-        item(id)->setToolTip(0, "");
-    } else {
-        item(id)->setIcon(0, statusIcon(auth,Available));
-        item(id)->setToolTip(0, "");
+    foreach(Channel *c, mychannels) {
+        if (c->hasPlayer(id)) {
+            c->updateState(id);
+        }
     }
 }
+
+bool Client::isIgnored(int id) const
+{
+    return myIgnored.contains(id);
 }
 
 void Client::requestBan(const QString &name)
@@ -1435,16 +1263,37 @@ void Client::requestTempBan(const QString &name, int time)
 
 void Client::ignore(int id)
 {
-    printLine(tr("You ignored %1.").arg(name(id)));
+    printLine(id, tr("You ignored %1.").arg(name(id)));
     myIgnored.append(id);
     updateState(id);
 }
 
 void Client::removeIgnore(int id)
 {
-    printLine(tr("You stopped ignoring %1.").arg(name(id)));
+    printLine(id, tr("You stopped ignoring %1.").arg(name(id)));
     myIgnored.removeOne(id);
     updateState(id);
+}
+
+void Client::printHtml(const QString &html)
+{
+    foreach(Channel *c, mychannels)
+        c->printHtml(html);
+}
+
+void Client::printLine(const QString &line)
+{
+    foreach(Channel *c, mychannels)
+        c->printLine(line);
+}
+
+void Client::printLine(int playerid, const QString &line)
+{
+    foreach(Channel *c, mychannels) {
+        if (c->hasPlayer(playerid)) {
+            c->printLine(line);
+        }
+    }
 }
 
 /**********************************************************/

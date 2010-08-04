@@ -107,13 +107,11 @@ QHash<int, QPixmap> StatInfo::m_battleIcons;
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
     int error = 0;
-    zip *archive;
-    zip_file *file;
     char buffer[1024];
     int readsize = 0;
     QByteArray ret;
 
-    archive = zip_open(archiveName, 0, &error);
+    zip * archive = zip_open(archiveName, 0, &error);
 
     if (!archive)
     {
@@ -121,7 +119,7 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
         return ret;
     }
 
-    file = zip_fopen(archive, fileName, 0);
+    zip_file *file = zip_fopen(archive, fileName, 0);
 
     if (!file)
     {

@@ -1831,7 +1831,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             int type = turnlong[player]["Type"].toInt(); /* move type */
             if ( target != player && ((type == Type::Fire && hasType(target, Type::Fire)) ||
                                       ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::Smog)
-                                       && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0))){
+                                       && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0
+                                       && !pokelong[target].value(QString("%1Sleuthed").arg(type)).toBool()))){
                 notify(All, Failed, player);
                 continue;
             }

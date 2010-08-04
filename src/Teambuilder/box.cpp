@@ -257,7 +257,7 @@ void TB_PokemonItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 {
     if(event->buttons() & Qt::LeftButton)
     {
-        int distance = (event->pos()-startPos).manhattanLength();
+        int distance = int((event->pos()-startPos).manhattanLength());
         if(distance >= QApplication::startDragDistance())
         {
             startDrag();
@@ -612,8 +612,8 @@ int PokemonBox::calculateSpot(const QPoint &graphViewPos)
 
     int x,y;
 
-    x = (pos.x()-24)/64 + 0.5;
-    y = (pos.y()-24)/50 + 0.5;
+    x = int((pos.x()-24)/64 + 0.5);
+    y = int((pos.y()-24)/50 + 0.5);
 
     if (x < 10 && y < 3 && x >= 0 && y >= 0) {
         return y*10+x;
