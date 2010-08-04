@@ -137,7 +137,7 @@ Flammenrad
 Flammenwurf
 Flammenblitz
 Blitz
-Litchkanone
+Blitzkanone
 Schmeichler
 Schleuder
 Fliegen

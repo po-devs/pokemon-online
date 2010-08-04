@@ -1,0 +1,13 @@
+%s aﬂ seine %i!
+%s ist nicht mehr verwirrt !|Statusproblem von %s wurde aufgehoben !|%s ist nicht mehr paralysiert !|Verbrennung von %s wurde geheilt !|%s ist aufgetaut !|%s wacht auf !|%s ist nicht mehr vergiftet !|%s ist nicht mehr vergiftet !
+%s's %m's PPs are restored!
+%s restored a some HP!
+%i von %s schw‰cht die Wirkung von %m!
+%i von %s schw‰cht die Wirkung von %m!
+%s restored a some HP
+The %i raised %s's %st!
+
+The %i sharply raised %s's %st!
+%s is focusing on the target!
+%s is already preparing its next move!
+%f is hit with recoil
