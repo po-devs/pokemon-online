@@ -19,7 +19,7 @@ Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection)
     connect(&socket(), SIGNAL(error(QAbstractSocket::SocketError)), SLOT(error()));
 
     /* Commands that will be redirected to channels */
-    channelCommands << BattleList << ChannelPlayers << JoinChannel << LeaveChannel << ChannelBattle << ChannelMessage;
+    channelCommands << BattleList << JoinChannel << LeaveChannel << ChannelBattle << ChannelMessage;
 }
 
 void Analyzer::login(const FullInfo &team)
@@ -54,6 +54,11 @@ enum ChallengeDesc
 void Analyzer::sendMessage(const QString &message)
 {
     notify(SendMessage, message);
+}
+
+void Analyzer::sendChanMessage(int channelid, const QString &message)
+{
+    notify(ChannelMessage, qint32(channelid), message);
 }
 
 void Analyzer::sendTeam(const TrainerTeam &team)
@@ -154,7 +159,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         /* Because we're giving a pointer to a locally declared instance, this connection must
            be a DIRECT connection and never go in Queued mode. If you want queued mode, find another
            way to transfer the data */
-        emit channelCommandReceived(chanid, command, &in);
+        emit channelCommandReceived(command, chanid, &in);
         return;
     }
     switch (command) {
@@ -361,9 +366,18 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit channelsListReceived(channels);
             break;
         }
-    default:
-emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
-}
+    case ChannelPlayers: {
+            QVector<qint32> ids;
+            qint32 chanid;
+            in >> chanid >> ids;
+
+            emit channelPlayers(chanid, ids);
+            break;
+        }
+    default: {
+        emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
+        }
+    }
 }
 
 Network & Analyzer::socket()

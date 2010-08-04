@@ -118,7 +118,7 @@ void Analyzer::sendBattleList(int channelid, const QHash<int, Battle> &battles)
     notify(BattleList, qint32(channelid), battles);
 }
 
-void Analyzer::sendJoin(int channelid, int playerid)
+void Analyzer::sendJoin(int playerid, int channelid)
 {
     notify(JoinChannel, qint32(channelid), qint32(playerid));
 }

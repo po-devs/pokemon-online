@@ -16,7 +16,8 @@ public:
     int id() const {
         return myid;
     }
-    int name() const {
+    int ownId() const;
+    QString name() const {
         return myname;
     }
 
@@ -24,11 +25,31 @@ public:
         return myplayers;
     }
     QTreeWidget *battlesWidget() {
-        return mybattles;
+        return battleList;
     }
     QScrollDownTextEdit *mainChat() {
         return mymainchat;
     }
+    bool hasPlayer(int player) const {
+        return ownPlayers.contains(player);
+    }
+    QString name(int player);
+
+    void sortAllPlayersByTier();
+    void sortAllPlayersNormally();
+    void playerReceived(int playerid);
+    void placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent=NULL);
+    void battleStarted(int battleid, int id1, int id2);
+    void battleEnded(int battleid, int res, int winner, int loser);
+    void playerLogOut(int id);
+    void updateState(int id);
+    void removePlayer(int id);
+    void insertNewPlayer(int id);
+
+    void printLine(const QString &str);
+    void printHtml(const QString &str);
+
+    void dealWithCommand(int command, QDataStream *stream);
 public slots:
     void showContextMenu(const QPoint &point);
 private:
@@ -36,13 +57,16 @@ private:
     QHash<int, QIdTreeWidgetItem *> myplayersitems;
     QHash<QString, QIdTreeWidgetItem *> mytiersitems;
     QTreeWidget *battleList;
-    QHash<qint32, Battle> battles;
     QHash<int, QIdTreeWidgetItem *> battleItems;
+    QHash<qint32, Battle> battles;
     QScrollDownTextEdit *mymainchat;
+
     Client *client;
 
+    QSet<int> ownPlayers;
+
     QString myname;
-    QString myid;
+    int myid;
 
     QIdTreeWidgetItem *item(int  id);
 };

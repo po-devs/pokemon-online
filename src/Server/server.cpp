@@ -183,10 +183,14 @@ void Server::addChannel(const QString &name) {
     if (channelids.contains(name.toLower())) {
         return; //Teehee
     }
+
+    int chanid = 0;
+    QString chanName = name;
+
     if (channelids.size() == 0) {
         /* Time to add the default channel */
         QSettings s;
-        QString chanName = s.value("mainchanname").toString();
+        chanName = s.value("mainchanname").toString();
         if (!Channel::validName(chanName)) {
             static const char* places [] = {
                 "Radio Tower", "Pallet Town", "Icy cave", "Stark Mountain", "Mnt. Silver", "Route 202", "Old Power Plant", "Mewtwo's Cave",
@@ -195,22 +199,20 @@ void Server::addChannel(const QString &name) {
 
             chanName = places[true_rand() % sizeof(places)/sizeof(const char *)];
         }
-        channels[0] = new Channel(chanName);
-        channelids[chanName.toLower()] = 0;
-        channelNames[0] = chanName;
     } else {
         if (!Channel::validName(name)) {
             return;
         }
-        int chanid = freechannelid();
-        channels[chanid] = new Channel(name);
-        channelids[name.toLower()] = chanid;
-        channelNames[chanid] = name;
+        chanid = freechannelid();
     }
+
+    channels[chanid] = new Channel(chanName);
+    channelids[chanName.toLower()] = 0;
+    channelNames[chanid] = chanName;
 
     foreach(Player *p, myplayers) {
         if (p->isLoggedIn())
-            p->relay().notify(NetworkServ::AddChannel, name);
+            p->relay().notify(NetworkServ::AddChannel, chanName, qint32(chanid));
     }
 }
 
@@ -236,13 +238,13 @@ void Server::joinChannel(int playerid, int channelid) {
     }
 
     relay.sendChannelPlayers(channelid, ids);
-
-    foreach(Player *p, channel.players) {
-        p->relay().sendJoin(playerid, channelid);
-    }
-
     channel.players.insert(player);
     player->addChannel(channelid);
+
+    foreach(Player *p, channel.players) {
+        printLine(QString("Sending join of %1 on %2 to %3").arg(playerid).arg(channelid).arg(p->id()));
+        p->relay().sendJoin(playerid, channelid);
+    }
 
     relay.sendBattleList(channelid, channel.battleList);
 
@@ -1445,7 +1447,7 @@ int Server::freechannelid() const
 {
     do {
         ++channelcounter;
-    } while (channels.contains(channelcounter) || channelcounter == 0); /* 0 is reserved */
+    } while (channels.contains(channelcounter) || channelcounter == 0 || channelcounter == -1); /* 0, -1 are reserved */
 
     return channelcounter;
 }

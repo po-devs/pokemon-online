@@ -18,6 +18,7 @@ class ControlPanel;
 class RankingDialog;
 class BattleFinder;
 class FindBattleData;
+class Channel;
 
 /* The class for going online.
 
@@ -34,21 +35,26 @@ public:
 
     void printLine(const QString &line);
     void printHtml(const QString &html);
+    /* Prints a line to all the channels which have that player */
+    void printLine(int playerid, const QString &line);
     void cancelFindBattle(bool verbose=true);
     bool playerExist(int id) const;
     QString name(int id) const;
     QString ownName() const;
     bool battling() const;
     bool busy() const;
+    bool hasChannel(int channelid) const;
     bool away() const;
     int id(const QString &name) const;
+    int currentChannel() const;
+    Channel *channel(int channelid);
     int ownId() const ;
     int ownAuth() const ;
     int auth(int id) const ;
+    bool isIgnored(int id) const;
     QString authedNick(int id) const;
     QColor color(int id) const;
-    void sortAllPlayersByTier();
-    void sortAllPlayersNormally();
+    QString tier(int player) const;
 
     enum Status {
         Available = 0,
@@ -70,6 +76,14 @@ public:
     QList<QColor> chatColors;
     QList<QIcon> statusIcons;
 
+    QStringList getTierList() const {
+        return tierList;
+    }
+
+    /* Show player events, sort by tier, show timestamps */
+    bool showPEvents;
+    bool sortBT;
+    bool showTS;
 public slots:
     void errorFromNetwork(int errnum, const QString &error);
     void connected();
@@ -81,7 +95,6 @@ public slots:
     void playerLogin(const PlayerInfo &p);
     void playerReceived(const PlayerInfo &p);
     void teamChanged(const PlayerInfo &p);
-    void battleListReceived(const QHash<int, Battle> &battles);
     void announcementReceived(const QString &);
     void playerLogout(int);
     void sendRegister();
@@ -97,6 +110,10 @@ public slots:
     void seeInfo(QTreeWidgetItem *it);
     /* Challenge info by the server */
     void challengeStuff(const ChallengeInfo &c);
+    /* Channels list */
+    void channelCommandReceived(int command, int channel, QDataStream *stream);
+    void channelsListReceived(const QHash<qint32, QString> &channels);
+    void channelPlayers(int chanid, const QVector<qint32> &ids);
     /* battle... */
     void battleStarted(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
     void battleStarted(int battleid, int id1, int id2);
@@ -106,7 +123,6 @@ public slots:
     void animateHpBar(bool animate);
     void playMusic(bool music);
     void changeMusicFolder();
-
     void changeBattleLogFolder();
     void forfeitBattle(int);
     void watchBattleOf(int);
@@ -183,9 +199,13 @@ private:
     QLineEdit *myline;
     QLabel *announcement;
     /* Where players are displayed */
-    QStackedWidget *players, *battles, *mainChat;
-    QTabWidget *channelSwitch;
+    QStackedWidget *playersW, *battlesW;
+    QTabWidget *mainChat;
     QListWidget *channels;
+    QHash<qint32, QString> channelNames;
+    QHash<QString, qint32> channelByNames;
+    QHash<qint32, Channel *> mychannels;
+    QHash<qint32, Battle> battles;
 
     /* Button to exit */
     QPushButton *myexit;
@@ -205,9 +225,7 @@ private:
     QHash<int, BaseBattleWindow* > mySpectatingBattles;
     QHash<int, BattleWindow* > mybattles;
     QAction *goaway;
-    bool showPEvents;
-    bool showTS;
-    bool sortBT;
+
     bool findingBattle;
     int _mid;
 
@@ -224,15 +242,12 @@ private:
     QPointer<RankingDialog> myRanking;
 
     QHash<int, PlayerInfo> myplayersinfo;
-
     QHash<QString, int> mynames;
 
     Analyzer & relay();
 
-    PlayerInfo playerInfo(int id) const;
     PlayerInfo & playerInfo(int id);
     void updateState(int player);
-    void placeItem(QIdTreeWidgetItem*it, QTreeWidgetItem *parent=NULL);
     /* Returns the challenge window displaying that player or NULL otherwise */
     BaseChallengeWindow * getChallengeWindow(int player);
     void closeChallengeWindow(BaseChallengeWindow *c);
