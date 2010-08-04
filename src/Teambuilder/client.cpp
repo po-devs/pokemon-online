@@ -1077,6 +1077,7 @@ void Client::playerLogin(const PlayerInfo& p)
     _mid = p.id;
     mynick = p.team.name;
     myplayersinfo[p.id] = p;
+    mynames[p.team.name] = p.id;
 }
 
 void Client::playerLogout(int id)

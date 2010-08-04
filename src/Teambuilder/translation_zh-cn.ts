@@ -682,7 +682,7 @@
     <message>
         <location filename="client.cpp" line="40"/>
         <source>&amp;Report a Bug</source>
-        <translation type="unfinished"></translation>
+        <translation>报告Bug</translation>
     </message>
     <message>
         <location filename="client.cpp" line="140"/>
@@ -1021,7 +1021,7 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <location filename="controlpanel.ui" line="27"/>
         <source>User info</source>
         <oldsource>User Info</oldsource>
-        <translation type="unfinished">用户信息</translation>
+        <translation>用户信息</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="44"/>
@@ -1063,12 +1063,12 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
     <message>
         <location filename="controlpanel.ui" line="179"/>
         <source>Temporary Ban:</source>
-        <translation type="unfinished"></translation>
+        <translation>临时封禁：</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="199"/>
         <source>Temp Ban</source>
-        <translation type="unfinished"></translation>
+        <translation>临时封禁</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="210"/>
@@ -1088,12 +1088,12 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
     <message>
         <location filename="controlpanel.ui" line="367"/>
         <source>Temporary bans</source>
-        <translation type="unfinished"></translation>
+        <translation>临时封禁列表</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="474"/>
         <source>Time left</source>
-        <translation type="unfinished"></translation>
+        <translation>剩余时间</translation>
     </message>
     <message>
         <source>User Alias</source>
@@ -1124,12 +1124,12 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
     <message>
         <location filename="controlpanel.ui" line="235"/>
         <source>User alias</source>
-        <translation type="unfinished"></translation>
+        <translation>用户别名</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="276"/>
         <source>Ban list</source>
-        <translation type="unfinished"></translation>
+        <translation>封禁列表</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="301"/>
@@ -1166,7 +1166,7 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
     <message>
         <location filename="controlpanel.cpp" line="62"/>
         <source>Tempbanned</source>
-        <translation type="unfinished"></translation>
+        <translation>已临时封禁</translation>
     </message>
     <message>
         <location filename="controlpanel.cpp" line="66"/>
