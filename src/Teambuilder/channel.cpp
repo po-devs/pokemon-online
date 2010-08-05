@@ -71,12 +71,12 @@ void Channel::showContextMenu(const QPoint &requested)
 
             if (otherauth < myauth) {
                 menu->addSeparator();
-                createIntMapper(menu->addAction(tr("&Kick")), SIGNAL(triggered()), this, SLOT(kick(int)), item->id());
+                createIntMapper(menu->addAction(tr("&Kick")), SIGNAL(triggered()), client, SLOT(kick(int)), item->id());
 
                 /* If you're an admin, you can ban */
                 if (myauth >= 2) {
                     menu->addSeparator();
-                    createIntMapper(menu->addAction(tr("&Ban")), SIGNAL(triggered()), this, SLOT(ban(int)), item->id());
+                    createIntMapper(menu->addAction(tr("&Ban")), SIGNAL(triggered()), client, SLOT(ban(int)), item->id());
                 }
             }
         }
@@ -181,7 +181,7 @@ void Channel::battleStarted(int bid, int id1, int id2)
     if (!hasPlayer(id1) && !hasPlayer(id2))
         return;
 
-    if (showPEvents || id1 == ownId() || id2 == ownId())
+    if (client->showPEvents || id1 == ownId() || id2 == ownId())
         printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
 
     battleReceived(bid, id1, id2);
