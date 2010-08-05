@@ -265,7 +265,7 @@ void Server::leaveRequest(int playerid, int channelid)
     Player *player = this->player(playerid);
 
     foreach(Player *p, channel.players) {
-        p->relay().notify(NetworkServ::LeaveChannel, qint32(playerid));
+        p->relay().notify(NetworkServ::LeaveChannel, qint32(channelid), qint32(playerid));
     }
 
     foreach(int battleid, player->getBattles()) {
@@ -1123,11 +1123,12 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     QString tier = mybattles.value(battleid)->tier();
     BattleSituation *battle = mybattles[battleid];
 
-    Player *pw(player(winner)), *pl(player(loser));
-
     if (winner == 0) {
         winner = battle->id(battle->opponent(battle->spot(loser)));
     }
+
+    Player *pw = player(winner);
+    Player *pl = player(loser);
 
     if (desc == Forfeit && battle->finished()) {
         pw->battleResult(battleid, Close, winner, loser);
