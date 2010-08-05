@@ -300,7 +300,8 @@ void BaseBattleWindow::sendMessage()
 
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
-    if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)) {
+    if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)
+        && inf[0] != char(Spectating)) {
         delayedCommands.push_back(inf);
         return;
     }
@@ -320,6 +321,12 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
     in >> command >> player;
 
     dealWithCommandInfo(in, command, player, player);
+}
+
+bool BaseBattleWindow::hasKnowledgeOf(int player) const
+{
+    /* Ironically, the battlers id aren't even stored here, so we have to use another way */
+    return spectators.contains(player) || client()->name(player) == name(0) || client()->name(player) == name(1);
 }
 
 void BaseBattleWindow::ignoreSpectators(bool ignore)
@@ -773,6 +780,11 @@ void BaseBattleWindow::switchToNaught(int spot)
 
 void BaseBattleWindow::addSpectator(bool come, int id)
 {
+    if (come) {
+        spectators.insert(id);
+    } else {
+        spectators.remove(id);
+    }
     QString mess = come ? tr("%1 is watching the battle.") : tr("%1 stopped watching the battle.");
     printHtml(toBoldColor(mess.arg(client()->name(id)), Qt::green));
 }

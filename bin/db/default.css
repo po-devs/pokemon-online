@@ -19,8 +19,40 @@ Client QTreeWidget::branch:!has-children {
 	width: 5px;
 }
 
-Client QTreeWidget#PlayerList::item {
-	/*height: 20px;*/
+Client QTreeWidget::item, Client QListWidget::item {
+	min-height: 22px;
+}
+
+QTabWidget#MainChat::tab-bar {
+    left: 5px; /* move to the right by 5px */
+}
+
+/* Style the tab using the tab sub-control. Note that
+    it reads QTabBar _not_ QTabWidget */
+QTabWidget#MainChat QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+    border: 2px solid #C4C4C3;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    min-width: 8ex;
+    padding: 2px;
+}
+
+QTabWidget#MainChat QTabBar::tab:selected, QTabWidget#MainChat QTabBar::tab:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fafafa, stop: 0.4 #f4f4f4,
+                                stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+}
+
+QTabWidget#MainChat QTabBar::tab:selected {
+    border-color: #9B9B9B;
+    border-bottom-color: #C2C7CB; /* same as pane color */
+}
+
+QTabWidget#MainChat QTabBar::tab:!selected {
+    margin-top: 2px; /* make non-selected tabs look smaller */
 }
 
 /*
@@ -536,8 +568,6 @@ QTabWidget#Modified > QTabBar::tab:top:first,QTabWidget#Modified > QTabBar::tab:
 QTabWidget#Modified > QTabBar::tab:top:last, QTabWidget#Modified > QTabBar::tab:bottom:last {
 	margin-right: 0px;
 }
-
-
 
 
 BaseChallengeWindow QLabel#Title {

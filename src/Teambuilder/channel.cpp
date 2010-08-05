@@ -171,24 +171,39 @@ void Channel::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
     }
 }
 
+QHash<qint32, Battle> & Channel::getBattles()
+{
+    return battles;
+}
+
 void Channel::battleStarted(int bid, int id1, int id2)
 {
     if (!hasPlayer(id1) && !hasPlayer(id2))
         return;
 
+    if (showPEvents || id1 == ownId() || id2 == ownId())
+        printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
+
+    battleReceived(bid, id1, id2);
+
+    if (id1 != 0 && item(id1) != NULL) {
+        item(id1)->setToolTip(0,tr("Battling against %1").arg(name(id2)));
+        updateState(id1);
+    }
+    if (id2 != 0 && item(id2) != NULL) {
+        item(id2)->setToolTip(0,tr("Battling against %1").arg(name(id1)));
+        updateState(id2);
+    }
+}
+
+void Channel::battleReceived(int bid, int id1, int id2)
+{
+    if (battles.contains(bid))
+        return;
     battles.insert(bid, Battle(id1, id2));
     QIdTreeWidgetItem *it = new QIdTreeWidgetItem(bid, QStringList() << name(id1) << name(id2));
     battleItems.insert(bid, it);
     battleList->addTopLevelItem(it);
-
-    if (id1 != 0) {
-        item(id1)->setToolTip(0,tr("Battling against %1").arg(name(id2)));
-        updateState(id1);
-    }
-    if (id2 != 0) {
-        item(id2)->setToolTip(0,tr("Battling against %1").arg(name(id1)));
-        updateState(id2);
-    }
 }
 
 QIdTreeWidgetItem *Channel::item(int id) {
@@ -220,23 +235,6 @@ void Channel::battleEnded(int battleid, int res, int winner, int loser)
     }
 }
 
-/*
-
-void Client::battleListReceived(const QHash<int, Battle> &battles)
-{
-    this->battles = battles;
-
-    QHashIterator<int, Battle> h(battles);
-
-    while (h.hasNext()) {
-        h.next();
-        QIdTreeWidgetItem *it = new QIdTreeWidgetItem(h.key(), QStringList() << name(h.value().id1) << name(h.value().id2));
-        battleItems.insert(h.key(), it);
-        battleList->addTopLevelItem(it);
-    }
-}
-*/
-
 void Channel::playerReceived(int playerid) {
     if (!ownPlayers.contains(playerid)) {
         insertNewPlayer(playerid);
@@ -250,7 +248,8 @@ void Channel::playerReceived(int playerid) {
     else
         myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(item));
 
-    item->setText(0, client->info(playerid).name);
+    changeName(playerid, client->name(playerid));
+
     item->setColor(client->color(playerid));
 
     QString tier = client->tier(playerid);
@@ -261,6 +260,27 @@ void Channel::playerReceived(int playerid) {
     }
 
     updateState(playerid);
+}
+
+/* When a player has a name updated, change all possible places of that name */
+void Channel::changeName(int id, const QString &name)
+{
+    /* Playerslist */
+    if (myplayersitems.contains(id))
+        myplayersitems.value(id)->setText(0, name);
+
+    /* Battleslist */
+    QHashIterator<qint32, Battle> bit(battles);
+    while (bit.hasNext()) {
+        bit.next();
+
+        QIdTreeWidgetItem *tit = battleItems.value(bit.key());
+        if (bit.value().id1 == id) {
+            tit->setText(0, name);
+        } else if (bit.value().id2 == id) {
+            tit->setText(1, name);
+        }
+    }
 }
 
 void Channel::insertNewPlayer(int playerid)
@@ -297,15 +317,40 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
 
         playerReceived(id);
         if (client->showPEvents) {
-            printLine(tr("%1 has joined the channel.").arg(name(command)));
+            printLine(tr("%1 joined the channel.").arg(name(id)));
         }
     } else if (command == NetworkCli::ChannelMessage) {
         QString message;
 
         in >> message;
         printLine(message);
-    } else {
-        printLine(QString::number(command));
+    } else if (command == NetworkCli::BattleList) {
+        QHash<qint32, Battle> battles;
+        in >> battles;
+        this->battles = battles;
+
+        QHashIterator<int, Battle> h(battles);
+
+        while (h.hasNext()) {
+            h.next();
+            QIdTreeWidgetItem *it = new QIdTreeWidgetItem(h.key(), QStringList() << name(h.value().id1) << name(h.value().id2));
+            battleItems.insert(h.key(), it);
+            battleList->addTopLevelItem(it);
+        }
+    } else if (command == NetworkCli::LeaveChannel) {
+        qint32 id;
+        in >> id;
+        if (client->showPEvents) {
+            printLine(tr("%1 left the channel.").arg(name(id)));
+        }
+        /* Remove everything... */
+        removePlayer(id);
+    } else if (command == NetworkCli::ChannelBattle) {
+        qint32 id, id1, id2;
+        in >> id >> id1 >> id2;
+        battleReceived(id, id1, id2);
+    } else{
+        printHtml(tr("<i>Unkown command received: %1. Maybe the client should be updated?</i>").arg(command));
     }
 }
 
@@ -334,11 +379,16 @@ void Channel::playerLogOut(int id) {
 
     if (client->showPEvents)
         printLine(tr("%1 logged out.").arg(name));
+
+    removePlayer(id);
 }
 
 void Channel::removePlayer(int id) {
-    QIdTreeWidgetItem *item = myplayersitems.take(id);
+    /* Data */
+    ownPlayers.remove(id);
 
+    /* Players List */
+    QIdTreeWidgetItem *item = myplayersitems.take(id);
     if (item->parent())
         item->parent()->takeChild(item->parent()->indexOfChild(item));
     else
@@ -346,7 +396,37 @@ void Channel::removePlayer(int id) {
 
     delete item;
 
-    ownPlayers.remove(id);
+    /* Battleslist */
+    QSet<int> dlt;
+    QHashIterator<qint32, Battle> bit(battles);
+    while (bit.hasNext()) {
+        bit.next();
+
+        QIdTreeWidgetItem *tit = battleItems.value(bit.key());
+        if (!hasPlayer(bit.value().id1) && !hasPlayer(bit.value().id2)) {
+            battlesWidget()->takeTopLevelItem(battlesWidget()->indexOfTopLevelItem(tit));
+            delete tit;
+            battleItems.remove(bit.key());
+            dlt.insert(bit.key());
+        }
+    }
+
+    foreach(int id, dlt) {
+        battles.remove(id);
+    }
+}
+
+bool Channel::hasRemoteKnowledgeOf(int player) const
+{
+    if (hasPlayer(player))
+        return true;
+
+    foreach(Battle b, battles) {
+        if (b.id1 == player || b.id2 == player)
+            return true;
+    }
+
+    return false;
 }
 
 void Channel::printLine(const QString &line)
@@ -404,5 +484,5 @@ void Channel::printLine(const QString &line)
 
 void Channel::printHtml(const QString &str)
 {
-    mainChat()->insertHtml(str);
+    mainChat()->insertHtml(str + "<br />");
 }

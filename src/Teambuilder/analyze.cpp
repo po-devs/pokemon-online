@@ -169,6 +169,10 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit messageReceived(mess);
 	    break;
 	}
+    case KeepAlive: {
+            /* Just kept there in order not to display an old version message because of an unkown command */
+            break;
+        }
     case PlayersList: {
             if (!registry_socket) {
                 PlayerInfo p;

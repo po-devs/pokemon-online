@@ -41,6 +41,11 @@ void PMWindow::changeName(const QString &newname)
     setWindowTitle(newname);
 }
 
+void PMWindow::changeSelf(const QString &newname)
+{
+    this->m_ownName = newname;
+}
+
 void PMWindow::printLine(const QString &line, bool self)
 {
     if (line.trimmed().length() == 0)

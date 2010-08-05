@@ -1063,7 +1063,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
         }
         foreach(Player *p, chan.players) {
             /* That test avoids to send twice the same data to the client */
-            if (!p->hasSentCommand(lastDataId)) {
+            if (p->id() != id1 && p->id() != id2 && !p->hasSentCommand(lastDataId)) {
                 p->relay().notifyBattle(id,id1,id2);
             }
         }
@@ -1075,7 +1075,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
         }
         foreach(Player *p, chan.players) {
             /* That test avoids to send twice the same data to the client */
-            if (!p->hasSentCommand(lastDataId)) {
+            if (p->id() != id1 && p->id() != id2 && !p->hasSentCommand(lastDataId)) {
                 p->relay().notifyBattle(id,id1,id2);
             }
         }

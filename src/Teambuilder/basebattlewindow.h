@@ -192,6 +192,7 @@ public:
 
     bool musicPlayed() const;
     void playCry(int pokemon);
+    bool hasKnowledgeOf(int player) const;
 
 public slots:
     void receiveInfo(QByteArray);
@@ -239,6 +240,7 @@ protected:
     QBuffer cryBuffer;
 
     QLinkedList<QByteArray> delayedCommands;
+    QSet<int> spectators;
 
     bool blankMessage;
     bool battleEnded;
