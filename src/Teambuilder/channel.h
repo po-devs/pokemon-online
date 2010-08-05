@@ -33,6 +33,7 @@ public:
     bool hasPlayer(int player) const {
         return ownPlayers.contains(player);
     }
+    bool hasRemoteKnowledgeOf(int player) const;
     QString name(int player);
 
     void sortAllPlayersByTier();
@@ -40,16 +41,20 @@ public:
     void playerReceived(int playerid);
     void placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent=NULL);
     void battleStarted(int battleid, int id1, int id2);
+    void battleReceived(int battleid, int id1, int id2);
     void battleEnded(int battleid, int res, int winner, int loser);
     void playerLogOut(int id);
     void updateState(int id);
     void removePlayer(int id);
     void insertNewPlayer(int id);
 
+    void changeName(int id, const QString &name);
+
     void printLine(const QString &str);
     void printHtml(const QString &str);
 
     void dealWithCommand(int command, QDataStream *stream);
+    QHash<qint32, Battle> &getBattles();
 public slots:
     void showContextMenu(const QPoint &point);
 private:

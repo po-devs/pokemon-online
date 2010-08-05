@@ -12,7 +12,7 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "channel.h"
 
-Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), myrelay(), findingBattle(false)
+Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), myrelay()
 {
     _mid = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -43,6 +43,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     announcement->setWordWrap(true);
     announcement->hide();
     layout->addWidget(mainChat = new QTabWidget());
+    mainChat->setObjectName("MainChat");
     layout->addWidget(myline = new QLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     layout->addLayout(buttonsLayout);
@@ -91,6 +92,16 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
             statusIcons << QIcon(QString("db/client/%1%2.png").arg(authLevels[i], statuses[j]));
         }
     }
+
+    QTimer *tim = new QTimer(this);
+
+    connect(tim, SIGNAL(timeout()), SLOT(fadeAway()));
+    /* Every 2 minutes */
+    tim->setInterval(2*60*1000);
+    tim->start();
+
+    /* Default channel on to display messages */
+    channelPlayers(0);
 }
 
 void Client::initRelay()
@@ -169,6 +180,8 @@ void Client::battleListActivated(QTreeWidgetItem *it)
 
 void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
 {
+    channels->clear();
+
     channelNames = channelsL;
     QHashIterator<qint32, QString> it (channelNames);
 
@@ -176,6 +189,11 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
         it.next();
 
         channelByNames.insert(it.value().toLower(), it.key());
+
+        /* We would have a default screen open */
+        if (mychannels.contains(it.key())) {
+            mainChat->setTabText(mainChat->indexOf(mychannels.value(it.key())->mainChat()), it.value());
+        }
     }
 
     channels->addItems(channelsL.values());
@@ -259,9 +277,15 @@ void Client::startPM(int id)
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
+    connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int)), this, SLOT(removePM(int)));
 
     mypms[id] = p;
+}
+
+void Client::registerPermPlayer(int id)
+{
+    pmedPlayers.insert(id);
 }
 
 void Client::goAway(int away)
@@ -416,6 +440,7 @@ void Client::PMReceived(int id, QString pm)
         startPM(id);
     }
 
+    registerPermPlayer(id);
     mypms[id]->printLine(pm);
 }
 
@@ -472,6 +497,11 @@ void Client::channelCommandReceived(int command, int channel, QDataStream *strea
         return;
 
     this->channel(channel)->dealWithCommand(command, stream);
+
+    /* Do not let a battle pass by! */
+    if (command == NetworkCli::ChannelBattle || command == NetworkCli::BattleList) {
+        battles.unite(this->channel(channel)->getBattles());
+    }
 }
 
 QMenuBar * Client::createMenuBar(MainEngine *w)
@@ -840,12 +870,10 @@ void Client::battleStarted(int battleId, int id, const TeamBattle &team, const B
 
 void Client::battleStarted(int bid, int id1, int id2)
 {
-    if (showPEvents || id1 == ownId() || id2 == ownId())
-        printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
-
     myplayersinfo[id1].flags |= PlayerInfo::Battling;
     myplayersinfo[id2].flags |= PlayerInfo::Battling;
 
+    battles.insert(bid, Battle(id1, id2));
     foreach(Channel *c, mychannels) {
         c->battleStarted(bid, id1, id2);
     }
@@ -891,6 +919,8 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
     foreach(Channel *c, mychannels) {
         c->battleEnded(battleid, res, winner, loser);
     }
+
+    battles.remove(battleid);
 
     myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
     myplayersinfo[loser].flags &= 0xFF ^ PlayerInfo::Battling;
@@ -1100,12 +1130,52 @@ void Client::removePlayer(int id)
         removeIgnore(id);
 
     myplayersinfo.remove(id);
+    pmedPlayers.remove(id);
+    fade.remove(id);
+
     if (mypms.contains(id)) {
         mypms[id]->disable();
         mypms.remove(id);
     }
 
-    mynames.remove(name);
+    /* Name removed... Only if no one took it since the 10 minutes we never saw the guy */
+    if (mynames.value(name) == id)
+        mynames.remove(name);
+}
+
+void Client::fadeAway()
+{
+    foreach(int player, myplayersinfo.keys()) {
+        if (pmedPlayers.contains(player))
+            continue;
+        if (mypms.contains(player))
+            continue;
+        foreach(Channel *c, mychannels) {
+            if (c->hasRemoteKnowledgeOf(player))
+                goto refresh;
+        }
+        foreach(BattleWindow *w, mybattles){
+            if (w->hasKnowledgeOf(player))
+                goto refresh;
+        }
+        foreach(BaseBattleWindow *w, mybattles) {
+            if (w->hasKnowledgeOf(player))
+                goto refresh;
+        }
+
+        fade[player] += 1;
+        if (fade[player] >= 5) {
+            removePlayer(player);
+        }
+        continue;
+refresh:
+        refreshPlayer(player);
+    }
+}
+
+void Client::refreshPlayer(int id)
+{
+    fade.remove(id);
 }
 
 QString Client::ownName() const
@@ -1125,16 +1195,16 @@ QString Client::authedNick(int id) const
 void Client::playerReceived(const PlayerInfo &p)
 {
     if (myplayersinfo.contains(p.id)) {
-        mynames.remove(info(p.id).name);
+        /* It's not sync perfectly, so someone who relogs can happen, that's why we do that test */
+        if (mynames.value(p.team.name) == p.id)
+            mynames.remove(info(p.id).name);
         myplayersinfo.remove(p.id);
     }
 
     myplayersinfo.insert(p.id, p);
-    mynames.insert(p.team.name, p.id);
+    refreshPlayer(p.id);
 
-    if (mypms.contains(p.id)) {
-        mypms[p.id]->changeName(p.team.name);
-    }
+    changeName(p.id, p.team.name);
 
     if (p.id == ownId()) {
         changeTierChecked(p.tier);
@@ -1143,6 +1213,23 @@ void Client::playerReceived(const PlayerInfo &p)
     foreach(Channel *c, mychannels) {
         if (c->hasPlayer(p.id))
             c->playerReceived(p.id);
+        else
+            c->changeName(p.id, p.team.name); /* Even if the player isn't in the channel, someone in the channel could be battling him, ... */
+    }
+}
+
+void Client::changeName(int player, const QString &name)
+{
+    mynames[name] = player;
+
+    if (mypms.contains(player)) {
+        mypms[player]->changeName(name);
+    }
+
+    if (player == ownId()) {
+        foreach(PMWindow *p, mypms) {
+            p->changeSelf(name);
+        }
     }
 }
 

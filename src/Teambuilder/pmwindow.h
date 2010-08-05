@@ -17,6 +17,7 @@ public:
     }
 
     void changeName(const QString &newname);
+    void changeSelf(const QString &newname);
     void printLine(const QString &line, bool self = false);
     void disable();
 signals:

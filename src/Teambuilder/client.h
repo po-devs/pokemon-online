@@ -55,6 +55,9 @@ public:
     QString authedNick(int id) const;
     QColor color(int id) const;
     QString tier(int player) const;
+    void changeName(int player, const QString &name);
+    /* Resets fade away counter */
+    void refreshPlayer(int id);
 
     enum Status {
         Available = 0,
@@ -113,7 +116,7 @@ public slots:
     /* Channels list */
     void channelCommandReceived(int command, int channel, QDataStream *stream);
     void channelsListReceived(const QHash<qint32, QString> &channels);
-    void channelPlayers(int chanid, const QVector<qint32> &ids);
+    void channelPlayers(int chanid, const QVector<qint32> &ids = QVector<qint32>());
     /* battle... */
     void battleStarted(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
     void battleStarted(int battleid, int id1, int id2);
@@ -177,6 +180,9 @@ public slots:
     /* Teambuilder slots */
     void openTeamBuilder();
     void changeTeam();
+    /* Automatic removal of players in memory */
+    void fadeAway();
+    void registerPermPlayer(int id);
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
@@ -191,6 +197,8 @@ protected:
 private:
     TrainerTeam *myteam;
     QString mynick;
+
+    /* GUI */
     /* Main chat */
     QScrollDownTextEdit *mychat;
     /* PMs */
@@ -202,11 +210,6 @@ private:
     QStackedWidget *playersW, *battlesW;
     QTabWidget *mainChat;
     QListWidget *channels;
-    QHash<qint32, QString> channelNames;
-    QHash<QString, qint32> channelByNames;
-    QHash<qint32, Channel *> mychannels;
-    QHash<qint32, Battle> battles;
-
     /* Button to exit */
     QPushButton *myexit;
     /* Button to send text */
@@ -215,10 +218,14 @@ private:
     QPushButton *myregister;
     /* Button to find a battle */
     QPushButton *findMatch;
-    // Bug Report
-    QPushButton *mybugs;
-    /* Network Relay */
-    Analyzer myrelay;
+
+    /*Channels */
+    QHash<qint32, QString> channelNames;
+    QHash<QString, qint32> channelByNames;
+    QHash<qint32, Channel *> mychannels;
+    /* Ignore */
+    QList<int> myIgnored;
+
     /* Challenge windows , to emit or to receive*/
     QSet<BaseChallengeWindow *> mychallenges;
     QPointer<BattleFinder> myBattleFinder;
@@ -242,8 +249,17 @@ private:
     QPointer<RankingDialog> myRanking;
 
     QHash<int, PlayerInfo> myplayersinfo;
+    /* Players scheduled for deletion are put here */
+    QHash<int, int> fade;
+    /* Players which we have PMed are supposed to be kept in memory until they
+       log out for real */
+    QSet<int> pmedPlayers;
     QHash<QString, int> mynames;
 
+    QHash<qint32, Battle> battles;
+
+    /* Network Relay */
+    Analyzer myrelay;
     Analyzer & relay();
 
     PlayerInfo & playerInfo(int id);
@@ -254,8 +270,6 @@ private:
 
     void initRelay();
     void changeTierChecked(const QString &newtier);
-    /* Ignore */
-    QList<int> myIgnored;
 };
 
 class BattleFinder : public QWidget
