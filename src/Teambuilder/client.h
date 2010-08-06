@@ -78,6 +78,7 @@ public:
 
     QList<QColor> chatColors;
     QList<QIcon> statusIcons;
+    QIcon chatot;
 
     QStringList getTierList() const {
         return tierList;
