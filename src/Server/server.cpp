@@ -193,7 +193,7 @@ void Server::addChannel(const QString &name) {
         chanName = s.value("mainchanname").toString();
         if (!Channel::validName(chanName)) {
             static const char* places [] = {
-                "Radio Tower", "Pallet Town", "Icy cave", "Stark Mountain", "Mnt. Silver", "Route 202", "Old Power Plant", "Mewtwo's Cave",
+                "Radio Tower", "Pallet Town", "Icy cave", "Stark Mountain", "Mount Silver", "Route 202", "Old Power Plant", "Mewtwo's Cave",
                 "Silph. Corp.", "Dragon's Lair", "Cinnabar Island"
             };
 

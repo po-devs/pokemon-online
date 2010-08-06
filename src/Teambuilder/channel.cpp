@@ -3,7 +3,7 @@
 #include "../Utilities/otherwidgets.h"
 
 Channel::Channel(const QString &name, int id, Client *parent)
-    : QObject(parent), client(parent), myname(name), myid(id)
+    : QObject(parent), client(parent), myname(name), myid(id), readyToQuit(false)
 {
     /* Those will actually be gotten back by the client itself, when
        he adds the channel */
@@ -33,9 +33,6 @@ Channel::Channel(const QString &name, int id, Client *parent)
 
 Channel::~Channel()
 {
-    delete battlesWidget();
-    delete playersWidget();
-    delete mainChat();
 }
 
 int Channel::ownId() const {
@@ -354,6 +351,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
         removePlayer(id);
 
         if (id == ownId()) {
+            printHtml(tr("<i>You are not in the channel anymore</i>"));
             emit quitChannel(this->id());
         }
     } else if (command == NetworkCli::ChannelBattle) {
