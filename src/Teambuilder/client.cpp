@@ -28,9 +28,23 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mytab->setMovable(true);
     mytab->addTab(playersW = new QStackedWidget(), tr("Players"));
     mytab->addTab(battlesW = new QStackedWidget(), tr("Battles"));
-    mytab->addTab(channels = new QListWidget(), tr("Channels"));
-    chatot = QIcon("db/client/chatoticon.png");
+    QWidget *channelContainer = new QWidget();
+    mytab->addTab(channelContainer, tr("Channels"));
+    QGridLayout *containerLayout = new QGridLayout(channelContainer);
+    channels = new QListWidget();
     channels->setIconSize(QSize(24,24));
+    chatot = QIcon("db/client/chatoticon.png");
+    containerLayout->addWidget(channels, 0, 0, 1, 2);
+    containerLayout->addWidget(new QLabel(tr("Join: ")), 1, 0);
+    containerLayout->addWidget(channelJoin = new QLineEdit(), 1, 1);
+    QNickValidator *val = new QNickValidator(channelJoin);
+    channelJoin->setValidator(val);
+    QCompleter *cpl = new QCompleter(channels->model(), channelJoin);
+    channelJoin->setCompleter(cpl);
+
+    connect(channels, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(itemJoin(QListWidgetItem*)));
+    connect(channelJoin, SIGNAL(returnPressed()), this, SLOT(lineJoin()));
+
 
     s->addWidget(mytab);
 
@@ -67,6 +81,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     s->setSizes(QList<int>() << 200 << 800);
 
     connect(mainChat, SIGNAL(tabCloseRequested(int)), SLOT(leaveChannelR(int)));
+    connect(mainChat, SIGNAL(currentChanged(int)), SLOT(firstChannelChanged(int)));
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
@@ -186,6 +201,19 @@ void Client::battleListActivated(QTreeWidgetItem *it)
     }
 }
 
+void Client::firstChannelChanged(int tabindex)
+{
+    int chanid = channelByNames.value(mainChat->tabText(tabindex).toLower());
+
+    if (!hasChannel(chanid))
+        return;
+
+    Channel *c = channel(chanid);
+
+    playersW->setCurrentWidget(c->playersWidget());
+    battlesW->setCurrentWidget(c->battlesWidget());
+}
+
 void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
 {
     channels->clear();
@@ -247,6 +275,9 @@ void Client::removeChannel(int id)
             delete channels->takeItem(i);
         }
     }
+
+    QString chanName = channelNames.take(id);
+    channelByNames.remove(chanName.toLower());
 }
 
 void Client::leaveChannelR(int index)
@@ -279,7 +310,37 @@ void Client::leaveChannel(int id)
     playersW->removeWidget(c->playersWidget());
     battlesW->removeWidget(c->battlesWidget());
 
+    mychannels.remove(id);
+
     delete c;
+}
+
+void Client::itemJoin(QListWidgetItem *it)
+{
+    QString text = it->text().trimmed();
+    channelJoin->setText(text);
+
+    lineJoin();
+}
+
+void Client::lineJoin()
+{
+    QString text = channelJoin->text().trimmed();
+
+    if (text.length() == 0) {
+        return;
+    }
+
+    if (channelByNames.contains(text.toLower())) {
+        int id = channelByNames.value(text.toLower());
+
+        if (hasChannel(id)) {
+            /* No use joining the same channel twice */
+            return;
+        }
+    }
+
+    relay().notify(NetworkCli::JoinChannel, text);
 }
 
 void Client::watchBattleOf(int player)
