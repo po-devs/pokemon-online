@@ -122,6 +122,9 @@ public slots:
     void removeChannel(int id);
     void leaveChannelR(int index);
     void leaveChannel(int id);
+    void itemJoin(QListWidgetItem *);
+    void lineJoin();
+    void firstChannelChanged(int tabindex);
     /* battle... */
     void battleStarted(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
     void battleStarted(int battleid, int id1, int id2);
@@ -215,6 +218,7 @@ private:
     QStackedWidget *playersW, *battlesW;
     QTabWidget *mainChat;
     QListWidget *channels;
+    QLineEdit *channelJoin;
     /* Button to exit */
     QPushButton *myexit;
     /* Button to send text */

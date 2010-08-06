@@ -187,6 +187,11 @@ void Player::leaveRequested(int slotid)
         return;
     }
 
+    /* Not allowing the player to have less than 1 channel open ! */
+    if (channels.size() <= 1) {
+        return;
+    }
+
     emit leaveRequested(id(), slotid);
 }
 

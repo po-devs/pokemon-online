@@ -206,8 +206,10 @@ void Server::addChannel(const QString &name) {
         chanid = freechannelid();
     }
 
+    printLine(QString("Channel %1 was created").arg(chanName));
+
     channels[chanid] = new Channel(chanName);
-    channelids[chanName.toLower()] = 0;
+    channelids[chanName.toLower()] = chanid;
     channelNames[chanid] = chanName;
 
     foreach(Player *p, myplayers) {
@@ -241,8 +243,9 @@ void Server::joinChannel(int playerid, int channelid) {
     channel.players.insert(player);
     player->addChannel(channelid);
 
+    printLine(QString("%1 joined channel %2.").arg(player->name(), channel.name));
+
     foreach(Player *p, channel.players) {
-        printLine(QString("Sending join of %1 on %2 to %3").arg(playerid).arg(channelid).arg(p->id()));
         p->relay().sendJoin(playerid, channelid);
     }
 
@@ -276,6 +279,7 @@ void Server::leaveRequest(int playerid, int channelid)
         }
     }
 
+    printLine(QString("%1 left channel %2.").arg(player->name(), channel.name));
     channel.players.remove(player);
     player->removeChannel(channelid);
 
@@ -286,6 +290,7 @@ void Server::leaveRequest(int playerid, int channelid)
 
 void Server::removeChannel(int channelid) {
     QString chanName = channelNames.take(channelid);
+    printLine(QString("Channel %1 was removed.").arg(chanName));
     channelids.remove(chanName.toLower());
     delete channels.take(channelid);
 
@@ -725,7 +730,7 @@ void Server::joinRequest(int player, const QString &channel)
         addChannel(channel);
     }
 
-    int channelid = channelids[channel];
+    int channelid = channelids[channel.toLower()];
 
     if (this->channel(channelid).players.contains(this->player(player))) {
         //already in the channel
