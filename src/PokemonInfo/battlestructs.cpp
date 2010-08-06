@@ -32,8 +32,8 @@ QString ChallengeInfo::clauseBattleText[] =
 
 QString ChallengeInfo::clauseDescription[] =
 {
-    QObject::tr("You can not put more than one Pokémon of the opposing team to sleep at the same time."),
-    QObject::tr("You can not freeze more than one Pokémon of the opposing team at the same time."),
+    QObject::tr("You can not put more than one Pokemon of the opposing team to sleep at the same time."),
+    QObject::tr("You can not freeze more than one Pokemon of the opposing team at the same time."),
     QObject::tr("You can't use evasion moves like Double Team."),
     QObject::tr("You can't use One Hit KO moves like Fissure."),
     QObject::tr("Nobody can watch your battle."),
@@ -116,7 +116,6 @@ void PokeBattle::setNormalStat(int stat, quint16 i)
 
 void PokeBattle::init(const PokePersonal &poke)
 {
-#ifdef SERVER_SIDE
     if (!PokemonInfo::Exist(poke.num())) {
 	num() = 0;
 	return;
@@ -216,9 +215,6 @@ void PokeBattle::init(const PokePersonal &poke)
     }
 
     updateStats();
-#else
-    (void) poke;
-#endif
 }
 
 void PokeBattle::updateStats()
