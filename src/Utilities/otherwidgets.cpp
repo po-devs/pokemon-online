@@ -193,6 +193,11 @@ QIdListWidgetItem::QIdListWidgetItem(int id, const QString &text)
 {
 }
 
+QIdListWidgetItem::QIdListWidgetItem(int id, const QIcon &icon, const QString &text)
+        : QListWidgetItem(icon, text), myid(id)
+{
+}
+
 int QIdListWidgetItem::id() const
 {
     return myid;

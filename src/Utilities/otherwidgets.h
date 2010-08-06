@@ -85,6 +85,7 @@ class QIdListWidgetItem : public QListWidgetItem
 {
 public:
     QIdListWidgetItem(int id, const QString &text);
+    QIdListWidgetItem(int id, const QIcon &icon, const QString &text);
 
     int id() const;
     void setColor(const QColor &c);

@@ -12,6 +12,7 @@ class Channel : public QObject {
     Q_OBJECT
 public:
     Channel(const QString &name, int id, Client *parent);
+    ~Channel();
 
     int id() const {
         return myid;
@@ -55,6 +56,8 @@ public:
 
     void dealWithCommand(int command, QDataStream *stream);
     QHash<qint32, Battle> &getBattles();
+signals:
+    void quitChannel(int chanid);
 public slots:
     void showContextMenu(const QPoint &point);
 private:

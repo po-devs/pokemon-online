@@ -31,6 +31,13 @@ Channel::Channel(const QString &name, int id, Client *parent)
     connect(battleList, SIGNAL(itemActivated(QTreeWidgetItem*,int)), client, SLOT(battleListActivated(QTreeWidgetItem*)));
 }
 
+Channel::~Channel()
+{
+    delete battlesWidget();
+    delete playersWidget();
+    delete mainChat();
+}
+
 int Channel::ownId() const {
     return client->ownId();
 }
@@ -345,6 +352,10 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
         }
         /* Remove everything... */
         removePlayer(id);
+
+        if (id == ownId()) {
+            emit quitChannel(this->id());
+        }
     } else if (command == NetworkCli::ChannelBattle) {
         qint32 id, id1, id2;
         in >> id >> id1 >> id2;

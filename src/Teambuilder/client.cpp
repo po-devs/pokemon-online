@@ -48,6 +48,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     layout->addWidget(mainChat = new QTabWidget());
     mainChat->setObjectName("MainChat");
     mainChat->setMovable(true);
+    mainChat->setTabsClosable(true);
     layout->addWidget(myline = new QLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     layout->addLayout(buttonsLayout);
@@ -65,6 +66,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     s->setSizes(QList<int>() << 200 << 800);
 
+    connect(mainChat, SIGNAL(tabCloseRequested(int)), SLOT(leaveChannelR(int)));
     connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
@@ -141,6 +143,8 @@ void Client::initRelay()
     connect(relay, SIGNAL(channelsListReceived(QHash<qint32,QString>)), SLOT(channelsListReceived(QHash<qint32,QString>)));
     connect(relay, SIGNAL(channelPlayers(int,QVector<qint32>)), SLOT(channelPlayers(int,QVector<qint32>)));
     connect(relay, SIGNAL(channelCommandReceived(int,int,QDataStream*)), SLOT(channelCommandReceived(int,int,QDataStream*)));
+    connect(relay, SIGNAL(addChannel(QString,int)), SLOT(addChannel(QString,int)));
+    connect(relay, SIGNAL(removeChannel(int)), SLOT(removeChannel(int)));
 }
 
 int Client::ownAuth() const
@@ -198,10 +202,8 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
         if (mychannels.contains(it.key())) {
             mainChat->setTabText(mainChat->indexOf(mychannels.value(it.key())->mainChat()), it.value());
         }
-    }
 
-    foreach(QString chan, channelsL.values()) {
-        channels->addItem(new QListWidgetItem(chatot, chan));
+        channels->addItem(new QIdListWidgetItem(it.key(), chatot, it.value()));
     }
 }
 
@@ -225,6 +227,59 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
     battlesW->addWidget(c->battlesWidget());
 
     mychannels[chanid] = c;
+
+    connect(c, SIGNAL(quitChannel(int)), SLOT(leaveChannel(int)));
+}
+
+void Client::addChannel(const QString &name, int id)
+{
+    channelNames.insert(id, name);
+    channelByNames.insert(name.toLower(),id);
+    channels->addItem(new QIdListWidgetItem(id, chatot, name));
+}
+
+void Client::removeChannel(int id)
+{
+    for (int i = 0; i < channels->count(); i++)  {
+        QIdListWidgetItem *item = dynamic_cast<QIdListWidgetItem*>(channels->item(i));
+
+        if (item->id() == id) {
+            delete channels->takeItem(i);
+        }
+    }
+}
+
+void Client::leaveChannelR(int index)
+{
+    if (mychannels.size() == 0)
+        return;
+
+    int id = channelByNames.value(mainChat->tabText(index).toLower());
+    relay().notify(NetworkCli::LeaveChannel, qint32(id));
+}
+
+void Client::leaveChannel(int id)
+{
+    if (!hasChannel(id))
+        return;
+
+    QString name = channel(id)->name();
+    int index = 0;
+    for(int i = 0; i < mainChat->count(); i++) {
+        if (mainChat->tabText(i).toLower() == name.toLower())
+        {
+            index = i;
+            break;
+        }
+    }
+
+    Channel *c = channel(id);
+
+    mainChat->removeTab(index);
+    playersW->removeWidget(c->playersWidget());
+    battlesW->removeWidget(c->battlesWidget());
+
+    delete c;
 }
 
 void Client::watchBattleOf(int player)

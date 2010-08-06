@@ -118,6 +118,10 @@ public slots:
     void channelCommandReceived(int command, int channel, QDataStream *stream);
     void channelsListReceived(const QHash<qint32, QString> &channels);
     void channelPlayers(int chanid, const QVector<qint32> &ids = QVector<qint32>());
+    void addChannel(const QString &name, int id);
+    void removeChannel(int id);
+    void leaveChannelR(int index);
+    void leaveChannel(int id);
     /* battle... */
     void battleStarted(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
     void battleStarted(int battleid, int id1, int id2);

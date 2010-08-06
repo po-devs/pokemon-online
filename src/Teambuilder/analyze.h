@@ -160,6 +160,8 @@ signals:
     void rankingReceived(const QString&,int);
     void channelsListReceived(const QHash<qint32, QString> &channels);
     void channelPlayers(int chanid, const QVector<qint32> &channels);
+    void addChannel(QString name, int id);
+    void removeChannel(int id);
 public slots:
     /* slots called by the network */
     void error();
