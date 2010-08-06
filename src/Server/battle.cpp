@@ -2934,7 +2934,7 @@ void BattleSituation::testWin()
     /* No one wants a battle that long xd */
     if (turn() == 1024) {
         notify(All, BattleEnd, Player1, qint8(Tie));
-        emit battleFinished(Tie, id(Player1), id(Player2));
+        emit battleFinished(publicId(), Tie, id(Player1), id(Player2));
         exit();
     }
 
@@ -2944,17 +2944,17 @@ void BattleSituation::testWin()
         notifyClause(ChallengeInfo::NoTimeOut,true);
         if (time1 == 0 && time2 ==0) {
             notify(All, BattleEnd, Player1, qint8(Tie));
-            emit battleFinished(Tie, id(Player1), id(Player2));
+            emit battleFinished(publicId(), Tie, id(Player1), id(Player2));
         } else if (time1 == 0) {
             notify(All, BattleEnd, Player2, qint8(Win));
             notify(All, EndMessage, Player2, winMessage[Player2]);
             notify(All, EndMessage, Player1, loseMessage[Player1]);
-            emit battleFinished(Win, id(Player2), id(Player1));
+            emit battleFinished(publicId(), Win, id(Player2), id(Player1));
         } else {
             notify(All, BattleEnd, Player1, qint8(Win));
             notify(All, EndMessage, Player1, winMessage[Player1]);
             notify(All, EndMessage, Player2, loseMessage[Player2]);
-            emit battleFinished(Win, id(Player1), id(Player2));
+            emit battleFinished(publicId(), Win, id(Player1), id(Player2));
         }
         exit();
     }
@@ -2967,17 +2967,17 @@ void BattleSituation::testWin()
         notify(All,ClockStop,Player2,time2);
         if (c1 + c2 == 0) {
             notify(All, BattleEnd, Player1, qint8(Tie));
-            emit battleFinished(Tie, id(Player1), id(Player2));
+            emit battleFinished(publicId(), Tie, id(Player1), id(Player2));
         } else if (c1 == 0) {
             notify(All, BattleEnd, Player2, qint8(Win));
             notify(All, EndMessage, Player2, winMessage[Player2]);
             notify(All, EndMessage, Player1, loseMessage[Player1]);
-            emit battleFinished(Win, id(Player2), id(Player1));
+            emit battleFinished(publicId(), Win, id(Player2), id(Player1));
         } else {
             notify(All, BattleEnd, Player1, qint8(Win));
             notify(All, EndMessage, Player1, winMessage[Player1]);
             notify(All, EndMessage, Player2, loseMessage[Player2]);
-            emit battleFinished(Win, id(Player1), id(Player2));
+            emit battleFinished(publicId(), Win, id(Player1), id(Player2));
         }
         exit();
     }

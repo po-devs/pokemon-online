@@ -329,7 +329,7 @@ signals:
        So the parameter "publicId" is for the server to not to have to use
        sender(); */
     void battleInfo(int publicId, int id, const QByteArray &info);
-    void battleFinished(int result, int winner, int loser);
+    void battleFinished(int battleid, int result, int winner, int loser);
 private:
     mutable QMutex spectatorMutex;
 
