@@ -25,9 +25,12 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     s->setChildrenCollapsible(false);
 
     QTabWidget *mytab = new QTabWidget();
+    mytab->setMovable(true);
     mytab->addTab(playersW = new QStackedWidget(), tr("Players"));
     mytab->addTab(battlesW = new QStackedWidget(), tr("Battles"));
     mytab->addTab(channels = new QListWidget(), tr("Channels"));
+    chatot = QIcon("db/client/chatoticon.png");
+    channels->setIconSize(QSize(24,24));
 
     s->addWidget(mytab);
 
@@ -44,6 +47,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     announcement->hide();
     layout->addWidget(mainChat = new QTabWidget());
     mainChat->setObjectName("MainChat");
+    mainChat->setMovable(true);
     layout->addWidget(myline = new QLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     layout->addLayout(buttonsLayout);
@@ -196,7 +200,9 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
         }
     }
 
-    channels->addItems(channelsL.values());
+    foreach(QString chan, channelsL.values()) {
+        channels->addItem(new QListWidgetItem(chatot, chan));
+    }
 }
 
 void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
