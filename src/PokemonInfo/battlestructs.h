@@ -165,7 +165,7 @@ struct BattleChoice
 
     bool pokeSwitch; /* True if poke switch, false if attack switch */
     qint8 numSwitch; /* The num of the poke or the attack to use, -1 for Struggle, -10 for move cancelled */
-    quint8 targetPoke; /* The targetted pokémon */
+    quint8 targetPoke; /* The targetted pokemon */
     quint8 numSlot;
 
     /* returns true if the choice is valid */
