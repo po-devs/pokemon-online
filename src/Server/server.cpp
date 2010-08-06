@@ -126,9 +126,9 @@ void Server::start(){
 
     if (!server()->listen(QHostAddress::Any, serverPort))
     {
-	printLine(tr("Unable to listen to port %1").arg(serverPort));
+        printLine(tr("Unable to listen to port %1").arg(serverPort));
     } else {
-	printLine(tr("Starting to listen to port %1").arg(serverPort));
+        printLine(tr("Starting to listen to port %1").arg(serverPort));
     }
 
     connect(server(), SIGNAL(newConnection()), SLOT(incomingConnection()));
@@ -527,7 +527,7 @@ void Server::changeAuth(const QString &name, int auth) {
         if (auth == player(id)->auth())
             return;
         player(id)->setAuth(auth);
-        
+
         emit player_authchange(id, authedName(id));
         if (SecurityManager::member(name).authority() != auth) {
             SecurityManager::setauth(name, auth);
@@ -623,7 +623,7 @@ void Server::loggedIn(int id, const QString &name)
     }
 
     /* For new connections */
-    if (!player(id)->isLoggedIn()) {        
+    if (!player(id)->isLoggedIn()) {
         mynames.insert(name.toLower(), id);
         emit player_authchange(id, authedName(id));
 
@@ -1088,7 +1088,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     }
 
     connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
-    connect(battle, SIGNAL(battleFinished(int,int,int,int,bool)), SLOT(battleResult(int, int,int,int)));
+    connect(battle, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int, int,int,int)));
 
     pluginManager->battleStarting(p1, p2, c);
 
@@ -1366,7 +1366,7 @@ void Server::removePlayer(int id)
     if (playerExist(id))
     {
         qDebug() << "Starting removing player " << id;
-	Player *p = player(id);
+        Player *p = player(id);
         bool loggedIn = p->isLoggedIn();
 
         if (loggedIn) {
@@ -1377,7 +1377,7 @@ void Server::removePlayer(int id)
 
         p->blockSignals(true);
 
-	QString playerName = p->name();
+        QString playerName = p->name();
 
         AntiDos::obj()->disconnect(p->ip(), id);
 
@@ -1387,9 +1387,9 @@ void Server::removePlayer(int id)
 
         emit player_logout(id);
 
-	/* Sending the notice of logout to others only if the player is already logged in */
+        /* Sending the notice of logout to others only if the player is already logged in */
         if (loggedIn) {
-	    sendLogout(id);
+            sendLogout(id);
             myengine->afterLogOut(id);
         }
 

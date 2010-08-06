@@ -40,7 +40,6 @@ DEFINES = SERVER_SIDE
 LIBS += -L../../bin \
     -lutilities \
     -lpokemonlib
-RESOURCES += 
 HEADERS += player.h \
     network.h \
     moves.h \
@@ -84,4 +83,3 @@ HEADERS += player.h \
     ../Utilities/coro.h \
     ../Utilities/contextswitch.h \
     channel.h
-OTHER_FILES += 
