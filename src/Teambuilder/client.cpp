@@ -255,6 +255,10 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
 
     mychannels[chanid] = c;
 
+    foreach(qint32 id, ids) {
+        c->playerReceived(id);
+    }
+
     connect(c, SIGNAL(quitChannel(int)), SLOT(leaveChannel(int)));
 }
 
