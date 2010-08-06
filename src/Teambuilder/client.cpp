@@ -45,7 +45,6 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     connect(channels, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(itemJoin(QListWidgetItem*)));
     connect(channelJoin, SIGNAL(returnPressed()), this, SLOT(lineJoin()));
 
-
     s->addWidget(mytab);
 
     QWidget *container = new QWidget();
@@ -282,17 +281,30 @@ void Client::removeChannel(int id)
 
 void Client::leaveChannelR(int index)
 {
-    if (mychannels.size() == 0)
+    if (mychannels.size() == 1)
         return;
 
     int id = channelByNames.value(mainChat->tabText(index).toLower());
-    relay().notify(NetworkCli::LeaveChannel, qint32(id));
+
+    if (channel(id)->isReadyToQuit()) {
+        leaveChannel(id);
+    } else {
+        channel(id)->makeReadyToQuit();
+        relay().notify(NetworkCli::LeaveChannel, qint32(id));
+    }
 }
 
 void Client::leaveChannel(int id)
 {
     if (!hasChannel(id))
         return;
+
+    Channel *c = channel(id);
+
+    if (!c->isReadyToQuit()) {
+        c->makeReadyToQuit();
+        return;
+    }
 
     QString name = channel(id)->name();
     int index = 0;
@@ -304,15 +316,13 @@ void Client::leaveChannel(int id)
         }
     }
 
-    Channel *c = channel(id);
-
     mainChat->removeTab(index);
     playersW->removeWidget(c->playersWidget());
     battlesW->removeWidget(c->battlesWidget());
 
     mychannels.remove(id);
 
-    delete c;
+    c->deleteLater();
 }
 
 void Client::itemJoin(QListWidgetItem *it)

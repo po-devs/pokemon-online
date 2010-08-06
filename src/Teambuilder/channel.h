@@ -49,6 +49,14 @@ public:
     void removePlayer(int id);
     void insertNewPlayer(int id);
 
+    void makeReadyToQuit() {
+        readyToQuit = true;
+    }
+    bool isReadyToQuit() const {
+        return readyToQuit;
+    }
+    void signalDisconnection();
+
     void changeName(int id, const QString &name);
 
     void printLine(const QString &str);
@@ -75,6 +83,7 @@ private:
 
     QString myname;
     int myid;
+    bool readyToQuit;
 
     QIdTreeWidgetItem *item(int  id);
 };
