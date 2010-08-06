@@ -26,6 +26,12 @@ Channel::Channel(const QString &name, int id, Client *parent)
     battleList->resizeColumnToContents(0);
     battleList->setIndentation(0);
 
+    if(client->sortBT) {
+        sortAllPlayersByTier();
+    } else {
+        sortAllPlayersNormally();
+    }
+
     connect(myplayers, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
     connect(myplayers, SIGNAL(itemActivated(QTreeWidgetItem*, int)), client, SLOT(seeInfo(QTreeWidgetItem*)));
     connect(battleList, SIGNAL(itemActivated(QTreeWidgetItem*,int)), client, SLOT(battleListActivated(QTreeWidgetItem*)));
@@ -393,6 +399,8 @@ void Channel::playerLogOut(int id) {
 }
 
 void Channel::removePlayer(int id) {
+    if (!ownPlayers.contains(id))
+        return;
     /* Data */
     ownPlayers.remove(id);
 
