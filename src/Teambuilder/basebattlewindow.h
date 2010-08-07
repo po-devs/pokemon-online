@@ -238,6 +238,7 @@ protected:
     /* The pokemon cries stored in memory */
     QHash<int, QByteArray> cries;
     QBuffer cryBuffer;
+    bool undelayOnSounds;
 
     QLinkedList<QByteArray> delayedCommands;
     QSet<int> spectators;

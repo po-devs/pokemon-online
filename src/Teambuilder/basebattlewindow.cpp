@@ -113,6 +113,8 @@ void BaseBattleWindow::init()
     connect(mediaObject, SIGNAL(aboutToFinish()), this, SLOT(enqueueMusic()));
     connect(cryObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)), this, SLOT(criesProblem(Phonon::State)));
 
+    undelayOnSounds = true;
+
     musicPlayStop();
 }
 
@@ -166,7 +168,7 @@ void BaseBattleWindow::enqueueMusic()
 
 void BaseBattleWindow::criesProblem(Phonon::State newState)
 {
-    if (newState != Phonon::PlayingState && newState != Phonon::LoadingState) {
+    if (newState != Phonon::PlayingState && newState != Phonon::LoadingState && undelayOnSounds) {
         undelay();
     }
 }
@@ -181,6 +183,10 @@ void BaseBattleWindow::playCry(int pokemon)
     if (!cries.contains(pokemon)) {
         cries.insert(pokemon, PokemonInfo::Cry(pokemon));
     }
+
+    undelayOnSounds = false;
+    cryObject->stop();
+    undelayOnSounds = true;
 
     cryBuffer.close();
     cryBuffer.setBuffer(&cries[pokemon]);
