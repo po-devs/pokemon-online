@@ -1172,7 +1172,7 @@ BaseGraphicsZone::BaseGraphicsZone(BaseBattleInfo *i) : mInfo(i)
     items.resize(info().numberOfSlots);
 
     scene.setSceneRect(0,0,257,145);
-    scene.addItem(new QGraphicsPixmapItem(QPixmap(QString("db/battle_fields/%1.png").arg((rand()%15)+1))));
+    scene.addItem(new QGraphicsPixmapItem(QPixmap(QString("db/battle_fields/%1.png").arg((rand()%11)+1))));
 
     for (int i = 0; i < info().numberOfSlots; i++) {
         items[i] = new QGraphicsPixmapItem();
