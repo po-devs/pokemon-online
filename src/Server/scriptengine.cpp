@@ -31,10 +31,32 @@ void ScriptEngine::changeScript(const QString &script)
     myscript = myengine.evaluate(script);
 
     if (myscript.isError()) {
-        printLine("Script Error line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + myscript.toString());
+        printLine("Fatal Script Error line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + myscript.toString());
     } else {
         printLine("Script Check: OK");
     }
+}
+
+void ScriptEngine::setPA(const QString &name)
+{
+    QScriptString str = myengine.toStringHandle(name);
+    if(playerArrays.contains(str))
+        return;
+
+    playerArrays.push_back(str);
+    QScriptValue pa = myengine.newArray();
+
+    myengine.globalObject().setProperty(name, pa);
+}
+
+void ScriptEngine::unsetPA(const QString &name)
+{
+    QScriptString str = myengine.toStringHandle(name);
+    if (!playerArrays.contains(str))
+        return;
+
+    playerArrays.removeOne(str);
+    myengine.globalObject().setProperty(name, QScriptValue());
 }
 
 QScriptValue ScriptEngine::nativePrint(QScriptContext *context, QScriptEngine *engine)
@@ -65,24 +87,73 @@ void ScriptEngine::print(QScriptContext *context, QScriptEngine *)
     printLine(result);
 }
 
-bool ScriptEngine::beforeChatMessage(int src, const QString &message)
+bool ScriptEngine::testChannel(const QString &function, int id)
+{
+    if (!myserver->channelExist(id)) {
+        if (function.length() > 0)
+            warn(function, QString("No channel numbered %1 existing").arg(id));
+        return false;
+    }
+
+    return true;
+}
+
+bool ScriptEngine::testPlayer(const QString &function, int id)
+{
+    if (!myserver->playerExist(id)) {
+        if (function.length() > 0)
+            warn(function, QString("No player numbered %1 existing").arg(id));
+        return false;
+    }
+
+    return true;
+}
+
+bool ScriptEngine::testPlayerInChannel(const QString &function, int id, int chan)
+{
+    if (!myserver->player(id)->getChannels().contains(chan)) {
+        if (function.length() > 0)
+            warn(function, QString("Player number %1 is not in channel number %2").arg(id).arg(chan));
+        return false;
+    }
+
+    return true;
+}
+
+bool ScriptEngine::testRange(const QString &function, int val, int min, int max)
+{
+    if (val < min || val > max) {
+        if (function.length() > 0)
+            warn(function, QString("%1 is out of the range [%2, %3]").arg(val).arg(min).arg(max));
+        return false;
+    }
+
+    return true;
+}
+
+void ScriptEngine::warn(const QString &function, const QString &message)
+{
+    printLine(QString("Script Warning in %1: %2").arg(function, message));
+}
+
+bool ScriptEngine::beforeChatMessage(int src, const QString &message, int channel)
 {
     if (!myscript.property("beforeChatMessage", QScriptValue::ResolveLocal).isValid())
         return true;
 
     startStopEvent();
 
-    evaluate(myscript.property("beforeChatMessage").call(myscript, QScriptValueList() << src << message));
+    evaluate(myscript.property("beforeChatMessage").call(myscript, QScriptValueList() << src << message << channel));
 
     return !endStopEvent();
 }
 
-void ScriptEngine::afterChatMessage(int src, const QString &message)
+void ScriptEngine::afterChatMessage(int src, const QString &message, int channel)
 {
     if (!myscript.property("afterChatMessage", QScriptValue::ResolveLocal).isValid())
         return;
 
-    evaluate(myscript.property("afterChatMessage").call(myscript, QScriptValueList() << src << message));
+    evaluate(myscript.property("afterChatMessage").call(myscript, QScriptValueList() << src << message << channel));
 }
 
 
@@ -298,9 +369,14 @@ void ScriptEngine::beforeLogOut(int src)
 
 void ScriptEngine::afterLogOut(int src)
 {
-    if (!myscript.property("afterLogOut", QScriptValue::ResolveLocal).isValid())
-        return;
     evaluate(myscript.property("afterLogOut").call(myscript, QScriptValueList() << src));
+
+    /* Removes the player from the player array */
+    foreach(QScriptString pa, playerArrays) {
+        if (!myengine.globalObject().property(pa).isNull()) {
+            myengine.globalObject().property(pa).setProperty(src, QScriptValue());
+        }
+    }
 }
 
 bool ScriptEngine::beforePlayerKick(int src, int dest)
@@ -375,46 +451,89 @@ void ScriptEngine::sendAll(const QString &mess)
     myserver->sendAll(mess);
 }
 
+void ScriptEngine::sendAll(const QString &mess, int channel)
+{
+    if (testChannel("sendAll(mess, channel)", channel)) {
+        myserver->sendChannelMessage(channel, mess);
+    }
+}
+
 void ScriptEngine::sendMessage(int id, const QString &mess)
 {
-    if (!myserver->playerExist(id)) {
-        printLine("Script Error in sys.sendMessage(id, mess): no such player id as " + QString::number(id));
-    } else {
+    if (testPlayer("sendMessage(id, mess)", id)) {
         myserver->sendMessage(id, mess);
+    }
+}
+
+void ScriptEngine::sendMessage(int id, const QString &mess, int channel)
+{
+    if (testChannel("sendMessage(id, mess, channel)", channel) && testPlayer("sendMessage(id, mess, channel)", id) &&
+        testPlayerInChannel("sendMessage(id, mess, channel)", id, channel))
+    {
+        myserver->sendChannelMessage(id, channel, mess);
     }
 }
 
 void ScriptEngine::kick(int id)
 {
-    if (!myserver->playerExist(id)) {
-        printLine("Script Error in sys.kick(id): no such player id as " + QString::number(id));
-    } else {
+    if (testPlayer("kick(id)", id)) {
         myserver->silentKick(id);
     }
+}
+
+void ScriptEngine::kick(int id, int chanid)
+{
+    if (testPlayer("kick(id, channel)", id) && testChannel("kick(id, channel)", chanid)
+        && testPlayerInChannel("kick(id, channel)", id, chanid))
+    {
+        myserver->leaveRequest(id, chanid);
+    }
+}
+
+void ScriptEngine::putInChannel(int id, int chanid)
+{
+    if (!testPlayer("putInChannel(id, chanid)", id) || !testChannel("putInChannel(id, chanid)", chanid)) {
+        return;
+    }
+    if (myserver->player(id)->getChannels().contains(chanid)){
+        printLine(QString("Script Warning in sys.putInChannel(id, chan): player %1 is already in channel %2").arg(id).arg(chanid));
+    } else {
+        myserver->joinChannel(id, chanid);
+    }
+}
+
+QScriptValue ScriptEngine::createChannel(const QString &channame)
+{
+    if (myserver->channelExist(channame)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->addChannel(channame);
+    }
+}
+
+bool ScriptEngine::existChannel(const QString &channame)
+{
+    return myserver->channelExist(channame);
 }
 
 void ScriptEngine::clearPass(const QString &name)
 {
     if (!SecurityManager::exist(name)) {
-        printLine("Script Error in sys.clearPass(name): no such player name as " + name);
+        printLine("Script Warning in sys.clearPass(name): no such player name as " + name);
     }
     SecurityManager::clearPass(name);
 }
 
 void ScriptEngine::changeAuth(int id, int auth)
 {
-    if (!myserver->playerLoggedIn(id)) {
-        printLine("Script Error in sys.changeAuth(id, auth): no such player logged in with id " + QString::number(id));
-    } else {
+    if (testPlayer("changeAuth(id, auth)", id)) {
         myserver->changeAuth(myserver->name(id), auth);
     }
 }
 
 void ScriptEngine::changeAway(int id, bool away)
 {
-    if (!myserver->playerLoggedIn(id)) {
-        printLine("Script Error in sys.changeAway(id, auth): no such player logged in with id " + QString::number(id));
-    } else {
+    if (testPlayer("changeAway(id, away)", id)) {
         myserver->player(id)->executeAwayChange(away);
     }
 }
@@ -422,7 +541,7 @@ void ScriptEngine::changeAway(int id, bool away)
 void ScriptEngine::changeRating(const QString& name, const QString& tier, int newRating)
 {
     if (!TierMachine::obj()->exists(tier))
-        printLine("Script Error in sys.changeRating(name, tier, rating): no such tier as " + tier);
+        printLine("Script Warning in sys.changeRating(name, tier, rating): no such tier as " + tier);
     else
         TierMachine::obj()->changeRating(name, tier, newRating);
 }
@@ -430,19 +549,15 @@ void ScriptEngine::changeRating(const QString& name, const QString& tier, int ne
 void ScriptEngine::changeTier(int id, const QString &tier)
 {
     if (!TierMachine::obj()->exists(tier))
-        printLine("Script Error in sys.changeTier(id, tier): no such tier as " + tier);
-    else if (!myserver->playerLoggedIn(id)) {
-        printLine("Script Error in sys.changeTier(id, tier): no such player logged in with id " + QString::number(id));
-    } else {
+        printLine("Script Warning in sys.changeTier(id, tier): no such tier as " + tier);
+    else if (testPlayer("changeTier(id, tier)", id)) {
         myserver->player(id)->executeTierChange(tier);
     }
 }
 
 void ScriptEngine::changePokeItem(int id, int slot, int item)
 {
-    if (!myserver->player(id)->isLoggedIn())
-        return;
-    if (slot < 0 || slot > 5)
+    if (!testPlayer("changePokeItem(id, slot, item)", id) || !testRange("changePokeItem(id, slot, item)", slot, 0, 5))
         return;
     if (!ItemInfo::Exist(item))
         return;
@@ -451,9 +566,7 @@ void ScriptEngine::changePokeItem(int id, int slot, int item)
 
 void ScriptEngine::changePokeNum(int id, int slot, int num)
 {
-    if (!myserver->player(id)->isLoggedIn())
-        return;
-    if (slot < 0 || slot > 5)
+    if (!testPlayer("changePokeNum(id, slot, item)", id) || !testRange("changePokeNum(id, slot, num)", slot, 0, 5))
         return;
     if (!PokemonInfo::Exist(num))
         return;
@@ -462,11 +575,7 @@ void ScriptEngine::changePokeNum(int id, int slot, int num)
 
 void ScriptEngine::changePokeLevel(int id, int slot, int level)
 {
-    if (!myserver->player(id)->isLoggedIn())
-        return;
-    if (slot < 0 || slot > 5)
-        return;
-    if (level < 1 || level > 100)
+    if (!testPlayer("", id) || !testRange("", slot, 0, 5) || !testRange("", level, 1, 100))
         return;
     myserver->player(id)->team().poke(slot).level() = level;
     myserver->player(id)->team().poke(slot).updateStats();
@@ -474,11 +583,7 @@ void ScriptEngine::changePokeLevel(int id, int slot, int level)
 
 void ScriptEngine::changePokeMove(int id, int pslot, int mslot, int move)
 {
-    if (!myserver->player(id)->isLoggedIn())
-        return;
-    if (pslot < 0 || pslot > 5)
-        return;
-    if (mslot < 0 || mslot > 4)
+    if (!testPlayer("", id) || !testRange("", pslot, 0, 5) || !testRange("", mslot, 0, 4))
         return;
     if (!MoveInfo::Exist(move))
         return;
@@ -579,7 +684,7 @@ void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
     QFile out(fileName);
 
     if (!out.open(QIODevice::Append)) {
-        printLine("Script Error in sys.appendToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        printLine("Script Warning in sys.appendToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
         return;
     }
 
@@ -591,7 +696,7 @@ void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
     QFile out(fileName);
 
     if (!out.open(QIODevice::WriteOnly)) {
-        printLine("Script Error in sys.writeToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        printLine("Script Warning in sys.writeToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
         return;
     }
 
@@ -1010,8 +1115,7 @@ QScriptValue ScriptEngine::teamPokeLevel(int id, int index)
 
 bool ScriptEngine::hasTeamPoke(int id, int pokemonnum)
 {
-    if (!loggedIn(id)) {
-        printLine("Script Error in sys.hasTeamPoke(id, pokenum): no such player logged in with id " + QString::number(id));
+    if (!testPlayer("hasTeamPoke(id, poke)",id)) {
         return false;
     }
     TeamBattle &t = myserver->player(id)->team();
@@ -1026,7 +1130,7 @@ bool ScriptEngine::hasTeamPoke(int id, int pokemonnum)
 QScriptValue ScriptEngine::indexOfTeamPoke(int id, int pokenum)
 {
     if (!loggedIn(id)) {
-        printLine("Script Error in sys.indexOfTeamPoke(id, pokenum): no such player logged in with id " + QString::number(id));
+        printLine("Script Warning in sys.indexOfTeamPoke(id, pokenum): no such player logged in with id " + QString::number(id));
         return myengine.undefinedValue();
     }
     TeamBattle &t = myserver->player(id)->team();
@@ -1079,7 +1183,7 @@ QScriptValue ScriptEngine::indexOfTeamPokeMove(int id, int pokeindex, int movenu
 bool ScriptEngine::hasTeamMove(int id, int movenum)
 {
     if (!loggedIn(id)) {
-        printLine("Script Error in sys.hasTeamMove(id, pokenum): no such player logged in with id " + QString::number(id));
+        printLine("Script Warning in sys.hasTeamMove(id, pokenum): no such player logged in with id " + QString::number(id));
         return false;
     }
     for (int i = 0; i < 6; i++) {
@@ -1101,7 +1205,7 @@ QScriptValue ScriptEngine::teamPokeItem(int id, int index)
 bool ScriptEngine::hasTeamItem(int id, int itemnum)
 {
     if (!loggedIn(id)) {
-        printLine("Script Error in sys.hasTeamPoke(id, pokenum): no such player logged in with id " + QString::number(id));
+        printLine("Script Warning in sys.hasTeamPoke(id, pokenum): no such player logged in with id " + QString::number(id));
         return false;
     }
     TeamBattle &t = myserver->player(id)->team();
@@ -1120,7 +1224,98 @@ long ScriptEngine::time()
 
 QScriptValue ScriptEngine::getTierList()
 {
-    return  TierMachine::obj()->tierNames().join("\n");
+    QStringList origin = TierMachine::obj()->tierNames();
+
+    QScriptValue ret = myengine.newArray(origin.count());
+
+    for(int i = 0;i < origin.size(); i++) {
+        ret.setProperty(i, origin[i]);
+    }
+
+    return  ret;
+}
+
+QScriptValue ScriptEngine::playerIds()
+{
+    QList<int> keys = myserver->myplayers.keys();
+
+    QScriptValue ret = myengine.newArray(keys.count());
+
+    for (int i = 0; i < keys.size(); i++) {
+        ret.setProperty(i, keys[i]);
+    }
+
+    return ret;
+}
+
+QScriptValue ScriptEngine::channelIds()
+{
+    QList<int> keys = myserver->channels.keys();
+
+    QScriptValue ret = myengine.newArray(keys.count());
+
+    for (int i = 0; i < keys.size(); i++) {
+        ret.setProperty(i, keys[i]);
+    }
+
+    return ret;
+}
+
+QScriptValue ScriptEngine::channel(int id)
+{
+    if (!myserver->channelExist(id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->channel(id).name;
+    }
+}
+
+QScriptValue ScriptEngine::channelId(const QString &name)
+{
+    if (!myserver->channelExist(name)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->channelids.value(name.toLower());
+    }
+}
+
+QScriptValue ScriptEngine::channelsOfPlayer(int playerid)
+{
+    if (!myserver->playerExist(playerid)) {
+        return myengine.undefinedValue();
+    } else {
+        Player *p = myserver->player(playerid);
+
+        QSet<int> chans = p->getChannels();
+        int i = 0;
+        QScriptValue ret = myengine.newArray(chans.count());
+
+        foreach(int chan, chans) {
+            ret.setProperty(i, chan);
+            i += 1;
+        }
+
+        return ret;
+    }
+}
+
+QScriptValue ScriptEngine::playersOfChannel(int channelid)
+{
+    if (!myserver->channelExist(channelid)) {
+        return myengine.undefinedValue();
+    } else {
+        Channel &c = myserver->channel(channelid);
+
+        int i = 0;
+        QScriptValue ret = myengine.newArray(c.players.count());
+
+        foreach(Player *p, c.players) {
+            ret.setProperty(i, p->id());
+            i += 1;
+        }
+
+        return ret;
+    }
 }
 
 QScriptValue ScriptEngine::teamPokeNature(int id, int index)
@@ -1155,7 +1350,7 @@ QScriptValue ScriptEngine::getFileContent(const QString &fileName)
     QFile out(fileName);
 
     if (!out.open(QIODevice::ReadOnly)) {
-        printLine("Script Error in sys.getFileContent(filename): error when opening " + fileName + ": " + out.errorString());
+        printLine("Script Warning in sys.getFileContent(filename): error when opening " + fileName + ": " + out.errorString());
         return myengine.undefinedValue();
     }
 

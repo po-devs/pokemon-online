@@ -230,6 +230,7 @@ class PokeButton : public QPushButton
 public:
     PokeButton(const PokeBattle &p);
     void update();
+    void updateToolTip();
 private:
 
     const PokeBattle *p;

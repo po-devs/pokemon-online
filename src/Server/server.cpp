@@ -179,9 +179,9 @@ QTcpServer * Server::server()
     return myserver;
 }
 
-void Server::addChannel(const QString &name) {
+int Server::addChannel(const QString &name) {
     if (channelids.contains(name.toLower())) {
-        return; //Teehee
+        return -1; //Teehee
     }
 
     int chanid = 0;
@@ -201,7 +201,7 @@ void Server::addChannel(const QString &name) {
         }
     } else {
         if (!Channel::validName(name)) {
-            return;
+            return -1;
         }
         chanid = freechannelid();
     }
@@ -216,6 +216,8 @@ void Server::addChannel(const QString &name) {
         if (p->isLoggedIn())
             p->relay().notify(NetworkServ::AddChannel, chanName, qint32(chanid));
     }
+
+    return chanid;
 }
 
 void Server::joinChannel(int playerid, int channelid) {
@@ -744,10 +746,10 @@ void Server::recvMessage(int id, int channel, const QString &mess)
 {
     QString re = mess.trimmed();
     if (re.length() > 0) {
-        if (myengine->beforeChatMessage(id, mess)) {
+        if (myengine->beforeChatMessage(id, mess, channel)) {
             printLine(QString("[#%1] %2: %3").arg(this->channel(channel).name, name(id), re));
             sendChannelMessage(channel, QString("%1: %2").arg(name(id)).arg(re));
-            myengine->afterChatMessage(id, mess);
+            myengine->afterChatMessage(id, mess, channel);
         }
     }
 }

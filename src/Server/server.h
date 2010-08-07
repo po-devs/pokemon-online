@@ -185,7 +185,7 @@ private:
     /* removes a player */
     void removePlayer(int id);
     /* creates a channel */
-    void addChannel(const QString &name="");
+    int addChannel(const QString &name="");
     void removeChannel(int channelid);
     /* Makes a player join a channel */
     void joinChannel(int playerid, int chanid);
