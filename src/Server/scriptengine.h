@@ -22,8 +22,8 @@ public:
     ScriptEngine(Server *s);
 
     /* Events */
-    bool beforeChatMessage(int src, const QString &message);
-    void afterChatMessage(int src, const QString &message);
+    bool beforeChatMessage(int src, const QString &message, int channel);
+    void afterChatMessage(int src, const QString &message, int channel);
     bool beforeNewMessage(const QString &message);
     void afterNewMessage(const QString &message);
     void serverStartUp();
@@ -53,7 +53,11 @@ public:
 
     /* Functions called in scripts */
     Q_INVOKABLE void sendAll(const QString &mess);
+    Q_INVOKABLE void sendAll(const QString &mess, int channel);
     Q_INVOKABLE void kick(int id);
+    Q_INVOKABLE void kick(int playerid, int chanid);
+    Q_INVOKABLE void putInChannel(int playerid, int chanid);
+    Q_INVOKABLE QScriptValue createChannel(const QString &channame);
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
        If called in 'beforeChallengeIssued', the challenge won't be issued.
@@ -61,6 +65,7 @@ public:
     Q_INVOKABLE void stopEvent();
     Q_INVOKABLE void shutDown();
     Q_INVOKABLE void sendMessage(int id, const QString &mess);
+    Q_INVOKABLE void sendMessage(int id, const QString &mess, int channel);
     /* Print on the server. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void clearPass(const QString &name);
@@ -88,6 +93,8 @@ public:
     Q_INVOKABLE void callLater(const QString &s, int delay);
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
+    Q_INVOKABLE void setPA(const QString &name);
+    Q_INVOKABLE void unsetPA(const QString &name);
 
     /* GET call */
     Q_INVOKABLE void webCall(const QString &urlstring, const QString &expr);
@@ -98,6 +105,14 @@ public:
     /* synchronous POST call */
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring, const QScriptValue &params_array);
 
+    Q_INVOKABLE QScriptValue channelIds();
+    Q_INVOKABLE QScriptValue channel(int id);
+    Q_INVOKABLE QScriptValue channelId(const QString &name);
+    Q_INVOKABLE QScriptValue channelsOfPlayer(int playerid);
+    Q_INVOKABLE QScriptValue playersOfChannel(int channelid);
+    Q_INVOKABLE bool existChannel(const QString &channame);
+
+    Q_INVOKABLE QScriptValue playerIds();
     Q_INVOKABLE QScriptValue name(int id);
     Q_INVOKABLE QScriptValue id(const QString& name);
     Q_INVOKABLE QScriptValue auth(int id);
@@ -175,6 +190,7 @@ private:
     QScriptEngine myengine;
     QScriptValue myscript;
     QVector<bool> stopevents;
+    QList<QScriptString> playerArrays;
 
     QHash<QTimer*,QString> timerEvents;
     QHash<QNetworkReply*,QString> webCallEvents;
@@ -191,6 +207,12 @@ private:
 
     void evaluate(const QScriptValue &expr);
     void printLine(const QString &s);
+
+    bool testPlayer(const QString &function, int id);
+    bool testChannel(const QString &function, int id);
+    bool testPlayerInChannel(const QString &function, int id, int chan);
+    bool testRange(const QString &function, int val, int min, int max);
+    void warn(const QString &function, const QString &message);
 };
 
 class ScriptWindow : public QWidget

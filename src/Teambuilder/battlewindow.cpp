@@ -480,6 +480,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             info().currentPoke(spot).move(move).PP() = PP;
             info().tempPoke(spot).move(move).PP() = PP;
             myazones[info().currentIndex[spot]]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot));
+            mypzone->pokes[info().currentIndex[spot]]->updateToolTip();
 
             break;
 	}
@@ -883,11 +884,7 @@ PokeButton::PokeButton(const PokeBattle &p)
     setIcon(PokemonInfo::Icon(p.num()));
     update();
 
-    QString tooltip = tr("%1 lv %2\n\nItem:%3\nAbility:%4\n\nMoves:\n--%5\n--%6\n--%7\n--%8")
-                      .arg(PokemonInfo::Name(p.num()), QString::number(p.level()), ItemInfo::Name(p.item()),
-                      AbilityInfo::Name(p.ability()), MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
-                      MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num()));
-    setToolTip(tooltip);
+    updateToolTip();
 }
 
 void PokeButton::update()
@@ -899,6 +896,19 @@ void PokeButton::update()
     } else {
         setStyleSheet("background: " + StatInfo::StatusColor(status).name() + ";");
     }
+    
+    updateToolTip();
+}
+
+void PokeButton::updateToolTip()
+{
+    const PokeBattle &p = *(this->p);
+    QString tooltip = tr("%1 lv %2\n\nItem:%3\nAbility:%4\n\nMoves:\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP\n--%8 - %12 PP")
+                      .arg(PokemonInfo::Name(p.num()), QString::number(p.level()), ItemInfo::Name(p.item()),
+                      AbilityInfo::Name(p.ability()), MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
+                      MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num())).arg(p.move(0).PP()).arg(p.move(1).PP())
+                      .arg(p.move(2).PP()).arg(p.move(3).PP());
+    setToolTip(tooltip);
 }
 
 

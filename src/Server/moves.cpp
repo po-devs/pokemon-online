@@ -2752,6 +2752,9 @@ struct MMIceBall : public MM
     }
 
     static void bcd(int s, int, BS &b) {
+        if (! (poke(b,s).contains("LastBallTurn") && poke(b,s).value("LastBallTurn").toInt() + 1 == b.turn()) ) {
+            poke(b,s)["IceBallCount"] = 0;
+        }
 	if (poke(b,s).contains("DefenseCurl")) {
 	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
 	}
