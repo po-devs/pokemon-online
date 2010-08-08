@@ -129,6 +129,7 @@ public slots:
     /* battle... */
     void battleStarted(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
     void battleStarted(int battleid, int id1, int id2);
+    void battleReceived(int battleid, int id1, int id2);
     void battleFinished(int battleid, int res, int winner, int loser);
     void battleCommand(int battleid, const QByteArray&command);
     void saveBattleLogs(bool save);

@@ -733,8 +733,8 @@ void BattleSituation::analyzeChoice(int slot)
                 useAttack(slot, pokelong[slot]["LastSpecialMoveUsed"].toInt(), true);
             else {
                 if (options[slot].struggle()) {
-                    MoveEffect::setup(394,slot,0,*this);
-                    useAttack(slot, 394, true);
+                    MoveEffect::setup(Move::Struggle,slot,0,*this);
+                    useAttack(slot, Move::Struggle, true);
                 } else {
                     useAttack(slot, choice[slot].numSwitch);
                 }
@@ -1598,7 +1598,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
         pokelong[player]["LastMoveUsed"] = attack;
         pokelong[player]["LastMoveUsedTurn"] = turn();
-    } else if (attack != 0 && pokelong[player].value("LastMoveUsedTurn").toInt() != turn()) {
+    } else if (attack != 0 && pokelong[player].value("LastMoveUsedTurn").toInt() != turn() && attack != Move::Struggle) {
 	/* Recharge moves have their attack as 0 on the recharge turn : Blast Burn , ...
 	  So that's why attack is tested against 0. */
 	/* Those are needed for when a choiced move is used, or torment is used, and for example
@@ -1797,14 +1797,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 /* For berries that activate after taking damage */
                 callieffects(target, player, "TestPinch");
 
-		battlelong["LastMoveSuccesfullyUsed"] = attack;
-			     /* Chatter Mimic Sketch Struggle  */
-		if (!specialOccurence && attack != Move::Chatter && attack != Move::Sketch && attack != Move::Struggle && attack != Move::Mimic) {
-		    pokelong[player]["LastMoveSuccessfullyUsed"] = attack;
-		    pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
-                    battlelong["LastMoveSuccessfullyUsed"] = attack;
-		}
-
 		if (!sub && !koed(target))
 		    testFlinch(player, target);
             }
@@ -1842,14 +1834,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    applyMoveStatMods(player, target);
 	    calleffects(player, target, "UponAttackSuccessful");
 
-	    battlelong["LastMoveSuccesfullyUsed"] = attack;
-
-	    /* this is put after calleffects to avoid endless sleepTalk/copycat for example */
-            if (!specialOccurence && attack != Move::Chatter && attack != Move::Sketch && attack != Move::Struggle && attack != Move::Mimic) {
-		    pokelong[player]["LastMoveSuccessfullyUsed"] = attack;
-		    pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
-                    battlelong["LastMoveSuccessfullyUsed"] = attack;
-	    }
 	    if (!koed(player))
 		calleffects(player, target, "AfterAttackSuccessful");
 	}
@@ -1858,6 +1842,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    healStatus(target, Pokemon::Frozen);
 	}
 	pokelong[target]["LastAttackToHit"] = attack;
+    }
+
+    if (!specialOccurence && attack != Move::Struggle) {
+            battlelong["LastMoveSuccesfullyUsed"] = attack;
+            pokelong[player]["LastMoveSuccessfullyUsed"] = attack;
+            pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
+            battlelong["LastMoveSuccessfullyUsed"] = attack;
     }
 
     callieffects(player, player, "AfterTargetList");

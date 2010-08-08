@@ -69,6 +69,7 @@ public:
     QHash<qint32, Battle> &getBattles();
 signals:
     void quitChannel(int chanid);
+    void battleReceived2(int battleid, int id1, int id2);
 public slots:
     void showContextMenu(const QPoint &point);
 private:
