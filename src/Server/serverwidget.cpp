@@ -165,6 +165,7 @@ void ServerWidget::openConfig()
     connect(w, SIGNAL(privacyChanged(int)), server, SLOT(regPrivacyChanged(int)));
     connect(w, SIGNAL(announcementChanged(QString)), server, SLOT(announcementChanged(QString)));
     connect(w, SIGNAL(logSavingChanged(bool)), server, SLOT(logSavingChanged(bool)));
+    connect(w, SIGNAL(mainChanChanged(QString)), server, SLOT(mainChanChanged(QString)));
 }
 
 void ServerWidget::openScriptWindow()

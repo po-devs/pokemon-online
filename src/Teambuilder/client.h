@@ -119,6 +119,7 @@ public slots:
     void channelsListReceived(const QHash<qint32, QString> &channels);
     void channelPlayers(int chanid, const QVector<qint32> &ids = QVector<qint32>());
     void addChannel(const QString &name, int id);
+    void channelNameChanged(int id, const QString &name);
     void removeChannel(int id);
     void leaveChannelR(int index);
     void leaveChannel(int id);

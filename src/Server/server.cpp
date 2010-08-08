@@ -220,7 +220,8 @@ int Server::addChannel(const QString &name, int playerid) {
             p->relay().notify(NetworkServ::AddChannel, chanName, qint32(chanid));
     }
 
-    myengine->afterChannelCreated(chanid, chanName, playerid);
+    if (chanid != 0)
+        myengine->afterChannelCreated(chanid, chanName, playerid);
 
     return chanid;
 }
@@ -473,6 +474,28 @@ void Server::announcementChanged(const QString &announcement)
     }
 }
 
+void Server::mainChanChanged(const QString &name) {
+    if (name == channel(0).name) {
+        return;
+    }
+
+    if (channelExist(name)) {
+        printLine("Another channel with that name already exists, doing nothing.");
+        return;
+    }
+
+    channelids.remove(channel(0).name.toLower());
+    channel(0).name = name;
+    channelids[name.toLower()] = 0;
+    channelNames[0] = name;
+
+    printLine("Main channel name changed", false, true);
+
+    foreach(Player *p, myplayers) {
+        p->relay().notify(NetworkServ::ChanNameChange, qint32(0), name);
+    }
+}
+
 void Server::clearRatedBattlesHistory()
 {
     printLine("Auto Clearing the last rated battles history (every 3 hours)");
@@ -505,16 +528,18 @@ bool Server::printLine(const QString &line, bool chatMessage, bool forcedLog)
     if (!chatMessage && !showLogMessages && !forcedLog)
         return false;
 
-    qDebug() << line;
     if (myengine == NULL) {
+        qDebug() << line;
         emit servermessage(line);
         return true;
     }
     if (chatMessage || myengine->beforeNewMessage(line)) {
         //notify possible views (if any)
         if(chatMessage){
+            qDebug() << line;
             emit chatmessage(line);
         } else {
+            qDebug() << line;
             emit servermessage(line);
         }
         if (!chatMessage)

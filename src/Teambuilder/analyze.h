@@ -71,7 +71,8 @@ namespace NetworkCli
         ChannelBattle,
         RemoveChannel,
         AddChannel = 50,
-        ChannelMessage
+        ChannelMessage,
+        ChanNameChange
     };
 
     enum ProtocolError
@@ -161,6 +162,7 @@ signals:
     void channelsListReceived(const QHash<qint32, QString> &channels);
     void channelPlayers(int chanid, const QVector<qint32> &channels);
     void addChannel(QString name, int id);
+    void channelNameChanged(int id, const QString &name);
     void removeChannel(int id);
 public slots:
     /* slots called by the network */

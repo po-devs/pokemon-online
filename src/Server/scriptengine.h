@@ -119,6 +119,8 @@ public:
     Q_INVOKABLE QScriptValue channelsOfPlayer(int playerid);
     Q_INVOKABLE QScriptValue playersOfChannel(int channelid);
     Q_INVOKABLE bool existChannel(const QString &channame);
+    Q_INVOKABLE bool isInChannel(int playerid, int channelid);
+    Q_INVOKABLE bool isInSameChannel(int player1, int player2);
 
     Q_INVOKABLE QScriptValue playerIds();
     Q_INVOKABLE QScriptValue name(int id);

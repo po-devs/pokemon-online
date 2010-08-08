@@ -17,10 +17,13 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     l->addRow("Public/Private: ", serverPrivate);
 
     serverName = new QLineEdit(settings.value("server_name").toString());
+    mainChan = new QLineEdit(settings.value("mainchanname").toString());
 
     serverName->setValidator(new QNickValidator(serverName));
+    mainChan->setValidator(new QNickValidator(mainChan));
 
     l->addRow("Server Name: ", serverName);
+    l->addRow("Main Channel: ", mainChan);
 
     serverDesc = new QPlainTextEdit(settings.value("server_description").toString());
 
@@ -70,11 +73,13 @@ void ServerWindow::apply()
     settings.setValue("server_port", serverPort->text());
     settings.setValue("server_announcement", serverAnnouncement->toPlainText());
     settings.setValue("show_log_messages", saveLogs->isChecked());
+    settings.setValue("mainchanname", mainChan->text());
     emit descChanged(serverDesc->toPlainText());
     emit nameChanged(serverName->text());
     emit maxChanged(serverPlayerMax->value());
     emit announcementChanged(serverAnnouncement->toPlainText());
     emit privacyChanged(serverPrivate->currentIndex());
     emit logSavingChanged(saveLogs->isChecked());
+    emit mainChanChanged(mainChan->text());
     close();
 }

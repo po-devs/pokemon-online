@@ -100,7 +100,7 @@ bool ScriptEngine::testChannel(const QString &function, int id)
 
 bool ScriptEngine::testPlayer(const QString &function, int id)
 {
-    if (!myserver->playerExist(id)) {
+    if (!loggedIn(id)) {
         if (function.length() > 0)
             warn(function, QString("No player numbered %1 existing").arg(id));
         return false;
@@ -1239,6 +1239,20 @@ QScriptValue ScriptEngine::channelId(const QString &name)
     } else {
         return myserver->channelids.value(name.toLower());
     }
+}
+
+bool ScriptEngine::isInChannel(int playerid, int channelid)
+{
+    if (!loggedIn(playerid))
+        return false;
+    return (myserver->player(playerid)->getChannels().contains(channelid));
+}
+
+bool ScriptEngine::isInSameChannel(int playerid, int player2)
+{
+    if (!loggedIn(playerid) || !loggedIn(player2))
+        return false;
+    return (myserver->player(playerid)->isInSameChannel(myserver->player(player2)));
 }
 
 QScriptValue ScriptEngine::channelsOfPlayer(int playerid)
