@@ -34,6 +34,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     channels = new QListWidget();
     channels->setIconSize(QSize(24,24));
     chatot = QIcon("db/client/chatoticon.png");
+    greychatot = QIcon("db/client/greychatot.png");
     containerLayout->addWidget(channels, 0, 0, 1, 2);
     containerLayout->addWidget(new QLabel(tr("Join: ")), 1, 0);
     containerLayout->addWidget(channelJoin = new QLineEdit(), 1, 1);
@@ -231,7 +232,10 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
             mainChat->setTabText(mainChat->indexOf(mychannels.value(it.key())->mainChat()), it.value());
         }
 
-        channels->addItem(new QIdListWidgetItem(it.key(), chatot, it.value()));
+        if (hasChannel(it.key()))
+            channels->addItem(new QIdListWidgetItem(it.key(), chatot, it.value()));
+        else
+            channels->addItem(new QIdListWidgetItem(it.key(), greychatot, it.value()));
     }
 }
 
@@ -250,6 +254,11 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
 
     Channel *c = new Channel(channelNames.value(chanid), chanid, this);
 
+    for(int i =0;i < channels->count(); i++) {
+        if (channels->item(i)->text() == c->name())
+            channels->item(i)->setIcon(chatot);
+    }
+
     playersW->addWidget(c->playersWidget());
     mainChat->addTab(c->mainChat(), c->name());
     battlesW->addWidget(c->battlesWidget());
@@ -267,7 +276,7 @@ void Client::addChannel(const QString &name, int id)
 {
     channelNames.insert(id, name);
     channelByNames.insert(name.toLower(),id);
-    channels->addItem(new QIdListWidgetItem(id, chatot, name));
+    channels->addItem(new QIdListWidgetItem(id, greychatot, name));
 }
 
 void Client::channelNameChanged(int id, const QString &name)
@@ -336,6 +345,13 @@ void Client::leaveChannel(int id)
     }
 
     QString name = channel(id)->name();
+
+    for(int i = 0; i < channels->count(); i++) {
+        if (channels->item(i)->text() == name) {
+            channels->item(i)->setIcon(greychatot);
+        }
+    }
+
     int index = 0;
     for(int i = 0; i < mainChat->count(); i++) {
         if (mainChat->tabText(i).toLower() == name.toLower())
