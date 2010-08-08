@@ -32,6 +32,14 @@ public:
     void afterLogOut(int src);
     bool beforeLogIn(int src);
     void afterLogIn(int src);
+    bool beforeChannelCreated(int channelid, const QString &channelname, int playerid);
+    void afterChannelCreated(int channelid, const QString &channelname, int playerid);
+    bool beforeChannelDestroyed(int channelid);
+    void afterChannelDestroyed(int channelid);
+    bool beforeChannelJoin(int src, int channelid);
+    void afterChannelJoin(int src, int channelid);
+    void beforeChannelLeave(int src, int channelid);
+    void afterChannelLeave(int src, int channelid);
     void beforeChangeTeam(int src);
     void afterChangeTeam(int src);
     bool beforeChangeTier(int src, const QString& oldTier, const QString &newTier);
@@ -213,6 +221,19 @@ private:
     bool testPlayerInChannel(const QString &function, int id, int chan);
     bool testRange(const QString &function, int val, int min, int max);
     void warn(const QString &function, const QString &message);
+
+    template<class T>
+    void makeEvent(const QString &event, const T& param);
+    template<class T, class T2>
+    void makeEvent(const QString &event, const T &param, const T2 &param2);
+    template<class T, class T2, class T3>
+    void makeEvent(const QString &event, const T& param, const T2 &param2, const T3 &param3);
+    template<class T>
+    bool makeSEvent(const QString &event, const T& param);
+    template<class T, class T2>
+    bool makeSEvent(const QString &event, const T &param, const T2 &param2);
+    template<class T, class T2, class T3>
+    bool makeSEvent(const QString &event, const T& param, const T2 &param2, const T3 &param3);
 };
 
 class ScriptWindow : public QWidget
@@ -227,5 +248,71 @@ public slots:
 private:
     QTextEdit *myedit;
 };
+
+template<class T>
+void ScriptEngine::makeEvent(const QString &event, const T &param)
+{
+    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
+        return;
+
+    evaluate(myscript.property(event).call(myscript, QScriptValueList() << param));
+}
+
+template<class T, class T2>
+void ScriptEngine::makeEvent(const QString &event, const T &param, const T2 &param2)
+{
+    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
+        return;
+
+    evaluate(myscript.property(event).call(myscript, QScriptValueList() << param << param2));
+}
+
+template<class T, class T2, class T3>
+void ScriptEngine::makeEvent(const QString &event, const T &param, const T2 &param2, const T3 &param3)
+{
+    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
+        return;
+
+    evaluate(myscript.property(event).call(myscript, QScriptValueList() << param << param2 << param3));
+}
+
+template<class T>
+bool ScriptEngine::makeSEvent(const QString &event, const T &param)
+{
+    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
+        return true;
+
+    startStopEvent();
+
+    evaluate(myscript.property(event).call(myscript, QScriptValueList() << param));
+
+    return !endStopEvent();
+}
+
+template<class T, class T2>
+bool ScriptEngine::makeSEvent(const QString &event, const T &param, const T2 &param2)
+{
+    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
+        return true;
+
+    startStopEvent();
+
+    evaluate(myscript.property(event).call(myscript, QScriptValueList() << param << param2));
+
+    return !endStopEvent();
+}
+
+template<class T, class T2, class T3>
+bool ScriptEngine::makeSEvent(const QString &event, const T &param, const T2 &param2, const T3 &param3)
+{
+    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
+        return true;
+
+    startStopEvent();
+
+    evaluate(myscript.property(event).call(myscript, QScriptValueList() << param << param2 << param3));
+
+    return !endStopEvent();
+}
 
 #endif // SCRIPTENGINE_H

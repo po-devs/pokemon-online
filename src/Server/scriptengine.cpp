@@ -138,43 +138,23 @@ void ScriptEngine::warn(const QString &function, const QString &message)
 
 bool ScriptEngine::beforeChatMessage(int src, const QString &message, int channel)
 {
-    if (!myscript.property("beforeChatMessage", QScriptValue::ResolveLocal).isValid())
-        return true;
-
-    startStopEvent();
-
-    evaluate(myscript.property("beforeChatMessage").call(myscript, QScriptValueList() << src << message << channel));
-
-    return !endStopEvent();
+    return makeSEvent("beforeChatMessage", src, message, channel);
 }
 
 void ScriptEngine::afterChatMessage(int src, const QString &message, int channel)
 {
-    if (!myscript.property("afterChatMessage", QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property("afterChatMessage").call(myscript, QScriptValueList() << src << message << channel));
+    makeEvent("afterChatMessage", src, message, channel);
 }
 
 
 bool ScriptEngine::beforeNewMessage(const QString &message)
 {
-    if (!myscript.property("beforeNewMessage", QScriptValue::ResolveLocal).isValid())
-        return true;
-
-    startStopEvent();
-
-    evaluate(myscript.property("beforeNewMessage").call(myscript, QScriptValueList() << message));
-
-    return !endStopEvent();
+    return makeSEvent("beforeNewMessage", message);
 }
 
 void ScriptEngine::afterNewMessage(const QString &message)
 {
-    if (!myscript.property("afterNewMessage", QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property("afterNewMessage").call(myscript, QScriptValueList() << message));
+    makeEvent("afterNewMessage", message);
 }
 
 void ScriptEngine::serverStartUp()
@@ -189,58 +169,72 @@ void ScriptEngine::serverShutDown()
 
 bool ScriptEngine::beforeLogIn(int src)
 {
-    if (!myscript.property("beforeLogIn", QScriptValue::ResolveLocal).isValid())
-        return true;
-
-    startStopEvent();
-
-    evaluate(myscript.property("beforeLogIn").call(myscript, QScriptValueList() << src));
-
-    return !endStopEvent();
+    return makeSEvent("beforeLogIn", src);
 }
 
 void ScriptEngine::afterLogIn(int src)
 {
-    if (!myscript.property("afterLogIn", QScriptValue::ResolveLocal).isValid())
-        return;
+    makeEvent("afterLogIn", src);
+}
 
-    evaluate(myscript.property("afterLogIn").call(myscript, QScriptValueList() << src));
+bool ScriptEngine::beforeChannelCreated(int channelid, const QString &channelname, int playerid)
+{
+    return makeSEvent("beforeChannelCreated", channelid, channelname, playerid);
+}
+
+void ScriptEngine::afterChannelCreated(int channelid, const QString &channelname, int playerid)
+{
+    makeEvent("afterChannelCreated", channelid, channelname, playerid);
+}
+
+bool ScriptEngine::beforeChannelDestroyed(int channelid)
+{
+    return makeSEvent("beforeChannelDestroyed", channelid);
+}
+
+void ScriptEngine::afterChannelDestroyed(int channelid)
+{
+    makeEvent("afterChannelDestroyed", channelid);
+}
+
+bool ScriptEngine::beforeChannelJoin(int playerid, int channelid)
+{
+    return makeSEvent("beforeChannelJoin", playerid, channelid);
+}
+
+void ScriptEngine::afterChannelJoin(int playerid, int channelid)
+{
+    makeEvent("afterChannelJoin", playerid, channelid);
+}
+
+void ScriptEngine::beforeChannelLeave(int playerid, int channelid)
+{
+    makeEvent("beforeChannelLeave", playerid, channelid);
+}
+
+void ScriptEngine::afterChannelLeave(int playerid, int channelid)
+{
+    makeEvent("afterChannelLeave", playerid, channelid);
 }
 
 void ScriptEngine::beforeChangeTeam(int src)
 {
-    if (!myscript.property("beforeChangeTeam", QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property("beforeChangeTeam").call(myscript, QScriptValueList() << src));
+    makeEvent("beforeChangeTeam", src);
 }
 
 void ScriptEngine::afterChangeTeam(int src)
 {
-    if (!myscript.property("afterChangeTeam", QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property("afterChangeTeam").call(myscript, QScriptValueList() << src));
+    makeEvent("afterChangeTeam", src);
 }
 
 bool ScriptEngine::beforeChangeTier(int src, const QString &oldTier, const QString &newTier)
 {
-    if (!myscript.property("beforeChangeTier", QScriptValue::ResolveLocal).isValid())
-        return true;
-
-    startStopEvent();
-
-    evaluate(myscript.property("beforeChangeTier").call(myscript, QScriptValueList() << src << oldTier << newTier));
-
-    return !endStopEvent();
+    return makeSEvent("beforeChangeTier", src, oldTier, newTier);
 }
 
 void ScriptEngine::afterChangeTier(int src, const QString &oldTier, const QString &newTier)
 {
-    if (!myscript.property("afterChangeTier", QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property("afterChangeTier").call(myscript, QScriptValueList() << src << oldTier << newTier));
+    makeEvent("afterChangeTier", src, oldTier, newTier);
 }
 
 bool ScriptEngine::beforeChallengeIssued(int src, int dest, const ChallengeInfo &c)
@@ -362,14 +356,12 @@ void ScriptEngine::afterBattleEnded(int src, int dest, int desc)
 
 void ScriptEngine::beforeLogOut(int src)
 {
-    if (!myscript.property("beforeLogOut", QScriptValue::ResolveLocal).isValid())
-        return;
-    evaluate(myscript.property("beforeLogOut").call(myscript, QScriptValueList() << src));
+    makeEvent("beforeLogOut", src);
 }
 
 void ScriptEngine::afterLogOut(int src)
 {
-    evaluate(myscript.property("afterLogOut").call(myscript, QScriptValueList() << src));
+    makeEvent("afterLogOut", src);
 
     /* Removes the player from the player array */
     foreach(QScriptString pa, playerArrays) {
@@ -381,62 +373,32 @@ void ScriptEngine::afterLogOut(int src)
 
 bool ScriptEngine::beforePlayerKick(int src, int dest)
 {
-    if (!myscript.property("beforePlayerKick", QScriptValue::ResolveLocal).isValid())
-        return true;
-
-    startStopEvent();
-
-    evaluate(myscript.property("beforePlayerKick").call(myscript, QScriptValueList() << src << dest));
-
-    return !endStopEvent();
+    return makeSEvent("beforePlayerKick", src, dest);
 }
 
 void ScriptEngine::afterPlayerKick(int src, int dest)
 {
-    if (!myscript.property("afterPlayerKick", QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property("afterPlayerKick").call(myscript, QScriptValueList() << src << dest));
+    makeEvent("afterPlayerKick", src, dest);
 }
 
 bool ScriptEngine::beforePlayerBan(int src, int dest)
 {
-    if (!myscript.property("beforePlayerBan", QScriptValue::ResolveLocal).isValid())
-        return true;
-
-    startStopEvent();
-
-    evaluate(myscript.property("beforePlayerBan").call(myscript, QScriptValueList() << src << dest));
-
-    return !endStopEvent();
+    return makeSEvent("beforePlayerBan", src, dest);
 }
 
 void ScriptEngine::afterPlayerBan(int src, int dest)
 {
-    if (!myscript.property("afterPlayerBan", QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property("afterPlayerBan").call(myscript, QScriptValueList() << src << dest));
+    makeEvent("afterPlayerBan", src, dest);
 }
 
 bool ScriptEngine::beforePlayerAway(int src, bool away)
 {
-    if (!myscript.property("beforePlayerAway", QScriptValue::ResolveLocal).isValid())
-        return true;
-
-    startStopEvent();
-
-    evaluate(myscript.property("beforePlayerAway").call(myscript, QScriptValueList() << src << away));
-
-    return !endStopEvent();
+    return makeSEvent("beforePlayerAway", src, away);
 }
 
 void ScriptEngine::afterPlayerAway(int src, bool away)
 {
-    if (!myscript.property("afterPlayerAway", QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property("afterPlayerAway").call(myscript, QScriptValueList() << src << away));
+    makeEvent("afterPlayerAway", src, away);
 }
 
 void ScriptEngine::evaluate(const QScriptValue &expr)

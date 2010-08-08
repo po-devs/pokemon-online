@@ -179,7 +179,7 @@ QTcpServer * Server::server()
     return myserver;
 }
 
-int Server::addChannel(const QString &name) {
+int Server::addChannel(const QString &name, int playerid) {
     if (channelids.contains(name.toLower())) {
         return -1; //Teehee
     }
@@ -204,6 +204,9 @@ int Server::addChannel(const QString &name) {
             return -1;
         }
         chanid = freechannelid();
+
+        if (!myengine->beforeChannelCreated(chanid, chanName, playerid))
+            return -1;
     }
 
     printLine(QString("Channel %1 was created").arg(chanName));
@@ -217,11 +220,20 @@ int Server::addChannel(const QString &name) {
             p->relay().notify(NetworkServ::AddChannel, chanName, qint32(chanid));
     }
 
+    myengine->afterChannelCreated(chanid, chanName, playerid);
+
     return chanid;
 }
 
 void Server::joinChannel(int playerid, int channelid) {
     if (!channels.contains(channelid)) {
+        return;
+    }
+    if (!myengine->beforeChannelJoin(playerid, channelid)) {
+        return;
+    }
+    /* Because the script might have kicked the player */
+    if (!playerExist(playerid)) {
         return;
     }
 
@@ -261,6 +273,8 @@ void Server::joinChannel(int playerid, int channelid) {
             }
         }
     }
+
+    myengine->afterChannelJoin(playerid, channelid);
 }
 
 void Server::leaveRequest(int playerid, int channelid)
@@ -268,6 +282,8 @@ void Server::leaveRequest(int playerid, int channelid)
     Channel &channel = this->channel(channelid);
 
     Player *player = this->player(playerid);
+
+    myengine->beforeChannelLeave(playerid, channelid);
 
     foreach(Player *p, channel.players) {
         p->relay().notify(NetworkServ::LeaveChannel, qint32(channelid), qint32(playerid));
@@ -285,12 +301,17 @@ void Server::leaveRequest(int playerid, int channelid)
     channel.players.remove(player);
     player->removeChannel(channelid);
 
+    myengine->afterChannelLeave(playerid, channelid);
+
     if (channel.players.size() <= 0 && channelid != 0) {
         removeChannel(channelid);
     }
 }
 
 void Server::removeChannel(int channelid) {
+    if (!myengine->beforeChannelDestroyed(channelid))
+        return;
+
     QString chanName = channelNames.take(channelid);
     printLine(QString("Channel %1 was removed.").arg(chanName));
     channelids.remove(chanName.toLower());
@@ -300,6 +321,8 @@ void Server::removeChannel(int channelid) {
         if (p->isLoggedIn())
             p->relay().notify(NetworkServ::RemoveChannel, qint32(channelid));
     }
+
+    myengine->afterChannelDestroyed(channelid);
 }
 
 void Server::loadRatedBattlesSettings()
@@ -729,8 +752,14 @@ void Server::joinRequest(int player, const QString &channel)
             sendMessage(player, "The server is limited to 1000 channels.");
             return;
         }
-        addChannel(channel);
+        if (addChannel(channel, player) == -1)
+            return;
     }
+
+    /* Because scripts might have caused the destruction of the previous channel,
+       if the scripter puts some code in addChannel that would cause a masskick */
+    if (!channelExist(channel))
+        return;
 
     int channelid = channelids[channel.toLower()];
 
