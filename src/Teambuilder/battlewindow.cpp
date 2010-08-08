@@ -67,12 +67,12 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     mylayout->addWidget(mytab = new QTabWidget(), 2, 0, 1, 3);
     mylayout->addWidget(mycancel = new QPushButton(tr("&Cancel")), 3,0);
     mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 3, 1);
-    mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokémon")), 3, 2);
+    mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokemon")), 3, 2);
     mytab->setObjectName("Modified");
 
     mytab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     mytab->addTab(mystack = new QStackedWidget(), tr("&Moves"));
-    mytab->addTab(mypzone = new PokeZone(info().myteam), tr("&Pokémon"));
+    mytab->addTab(mypzone = new PokeZone(info().myteam), tr("&Pokemon"));
     mytab->addTab(myspecs = new QListWidget(), tr("Spectators"));
     myspecs->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
@@ -90,7 +90,12 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     if (info().doubles) {
         mystack->addWidget(tarZone = new TargetSelection(info()));
         connect(tarZone, SIGNAL(targetSelected(int)), SLOT(targetChosen(int)));
+    } else {
+        mystack->addWidget(new QWidget());
     }
+
+    mystack->addWidget(szone = new StruggleZone());
+    connect(szone, SIGNAL(attackClicked()), SLOT(attackButton()));
 
     connect(mypzone, SIGNAL(switchTo(int)), SLOT(switchClicked(int)));
     connect(myattack, SIGNAL(clicked()), SLOT(attackButton()));
@@ -292,6 +297,12 @@ void BattleWindow::goToNextChoice()
                     myattack->setEnabled(true);
                     for (int i = 0; i < 4; i ++) {
                         myazones[info().currentIndex[slot]]->attacks[i]->setEnabled(info().choices[n].attackAllowed[i]);
+                    }
+
+                    if (info().choices[n].struggle()) {
+                        mystack->setCurrentWidget(szone);
+                    } else {
+                        mystack->setCurrentWidget(myazones[info().currentIndex[slot]]);
                     }
                 }
             }
@@ -1135,4 +1146,16 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
     default:
         return;
     }
+}
+
+StruggleZone::StruggleZone()
+{
+    QHBoxLayout *l = new QHBoxLayout(this);
+
+    QImageButton *b = new QImageButton("db/BattleWindow/Buttons/AttackD.png", "db/BattleWindow/Buttons/AttackH.png", "db/BattleWindow/Buttons/AttackC.png");
+    l->addWidget(b, 0, Qt::AlignCenter);
+
+    b->setCheckable(true);
+
+    connect(b, SIGNAL(clicked()), this, SIGNAL(attackClicked()));
 }

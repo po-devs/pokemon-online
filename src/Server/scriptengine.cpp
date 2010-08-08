@@ -14,7 +14,6 @@ ScriptEngine::ScriptEngine(Server *s) {
 
     QScriptValue sys = myengine.newQObject(this);
     myengine.globalObject().setProperty("sys", sys);
-    myengine.globalObject().setProperty("script", myscript);
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);
@@ -29,6 +28,7 @@ ScriptEngine::ScriptEngine(Server *s) {
 void ScriptEngine::changeScript(const QString &script)
 {
     myscript = myengine.evaluate(script);
+    myengine.globalObject().setProperty("script", myscript);
 
     if (myscript.isError()) {
         printLine("Fatal Script Error line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + myscript.toString());
@@ -603,7 +603,15 @@ int ScriptEngine::maxAuth(const QString &ip)
 
 QScriptValue ScriptEngine::aliases(const QString &ip)
 {
-    return SecurityManager::membersForIp(ip).join("\n");
+    QStringList mip = SecurityManager::membersForIp(ip);
+
+    QScriptValue ret = myengine.newArray(mip.count());
+
+    for(int i = 0; i < mip.size(); i++) {
+        ret.setProperty(i, mip[i]);
+    }
+
+    return ret;
 }
 
 QScriptValue ScriptEngine::memoryDump()
