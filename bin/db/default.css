@@ -5,8 +5,8 @@
 }
 
 Client QTextEdit {
-	font-family: Segoe UI;
-	font-size: 12px;
+	font-family: Tahoma;
+	size: 8px
 }
 
 Client QTreeWidget {
