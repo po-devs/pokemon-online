@@ -159,6 +159,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(channelCommandReceived(int,int,QDataStream*)), SLOT(channelCommandReceived(int,int,QDataStream*)));
     connect(relay, SIGNAL(addChannel(QString,int)), SLOT(addChannel(QString,int)));
     connect(relay, SIGNAL(removeChannel(int)), SLOT(removeChannel(int)));
+    connect(relay, SIGNAL(channelNameChanged(int,QString)), SLOT(channelNameChanged(int,QString)));
 }
 
 int Client::ownAuth() const
@@ -267,6 +268,30 @@ void Client::addChannel(const QString &name, int id)
     channelNames.insert(id, name);
     channelByNames.insert(name.toLower(),id);
     channels->addItem(new QIdListWidgetItem(id, chatot, name));
+}
+
+void Client::channelNameChanged(int id, const QString &name)
+{
+    QString old = channelNames.value(id);
+    channelNames[id] = name;
+    channelByNames.remove(old.toLower());
+    channelByNames[name.toLower()] = id;
+
+    for(int i = 0; i < channels->count(); i++) {
+        if (channels->item(id)->text() == old) {
+            channels->item(id)->setText(name);
+        }
+    }
+
+    for (int i = 0; i < mainChat->count(); i++) {
+        if (mainChat->tabText(i) == old) {
+            mainChat->setTabText(i, name);
+        }
+    }
+
+    if (hasChannel(id)) {
+        channel(id)->setName(name);
+    }
 }
 
 void Client::removeChannel(int id)

@@ -21,6 +21,9 @@ public:
     QString name() const {
         return myname;
     }
+    void setName(const QString &name) {
+        myname = name;
+    }
 
     QTreeWidget *playersWidget() {
         return myplayers;

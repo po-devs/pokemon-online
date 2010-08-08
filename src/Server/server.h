@@ -88,6 +88,7 @@ public slots:
     void regMaxChanged(const int &num);
     void changeScript(const QString &script);
     void announcementChanged(const QString &announcement);
+    void mainChanChanged(const QString &mainChan);
     void nameTaken();
     void ipRefused();
     void invalidName();

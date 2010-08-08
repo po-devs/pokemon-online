@@ -11,6 +11,7 @@ public:
     ServerWindow(QWidget *parent = 0);
 signals:
     void privacyChanged(int priv);
+    void mainChanChanged(const QString &mainchan);
     void nameChanged(const QString &name);
     void descChanged(const QString &desc);
     void announcementChanged(const QString &ann);
@@ -21,6 +22,7 @@ private slots:
 private:
     QComboBox *serverPrivate;
     QLineEdit *serverName;
+    QLineEdit *mainChan;
     QPlainTextEdit *serverDesc;
     QPlainTextEdit *serverAnnouncement;
     QSpinBox *serverPlayerMax;

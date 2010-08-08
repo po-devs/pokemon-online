@@ -70,7 +70,8 @@ namespace NetworkServ
         ChannelBattle,
         RemoveChannel,
         AddChannel,
-        ChannelMessage
+        ChannelMessage,
+        ChanNameChange
     };
 
     enum ProtocolError

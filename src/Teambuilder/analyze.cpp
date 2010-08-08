@@ -393,6 +393,14 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit removeChannel(id);
             break;
         }
+    case ChanNameChange: {
+            qint32 id;
+            QString name;
+            in >> id >> name;
+
+            emit channelNameChanged(id, name);
+            break;
+        }
     default: {
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
         }
