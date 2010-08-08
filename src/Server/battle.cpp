@@ -1603,7 +1603,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	  So that's why attack is tested against 0. */
 	/* Those are needed for when a choiced move is used, or torment is used, and for example
 		the foe used Assit + Fly or simply fly. */
-	pokelong[player]["LastMoveUsed"] = attack;
+        if (attack != Move::Struggle) {
+            pokelong[player]["LastMoveUsed"] = attack;
+        }
 	pokelong[player]["LastMoveUsedTurn"] = turn();
     }
 
