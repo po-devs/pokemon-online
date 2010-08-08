@@ -3200,6 +3200,14 @@ struct MMMimic : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    struct FailedMoves : public QSet<int> {
+        FailedMoves() {
+            (*this) << Metronome << Struggle << Sketch << Mimic << Chatter;
+        }
+    };
+
+    static FailedMoves FM;
+
     static void daf(int s, int t, BS &b) {
         if (!poke(b,t).contains("LastMoveUsedTurn")) {
 	    turn(b,s)["Failed"] = true;
@@ -3211,7 +3219,7 @@ struct MMMimic : public MM
 	    return;
 	}
         int move = poke(b,t)["LastMoveUsed"].toInt();
-        if (b.hasMove(s,move) || move == Metronome) {
+        if (b.hasMove(s,move) || FM.contains(move)) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
@@ -3224,6 +3232,8 @@ struct MMMimic : public MM
 	b.sendMoveMessage(81,0,s,type(b,s),t,move);
     }
 };
+
+MMMimic::FailedMoves MMMimic::FM;
 
 struct MMMinimize : public MM
 {

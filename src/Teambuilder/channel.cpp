@@ -210,6 +210,7 @@ void Channel::battleReceived(int bid, int id1, int id2)
 {
     if (battles.contains(bid))
         return;
+
     battles.insert(bid, Battle(id1, id2));
     QIdTreeWidgetItem *it = new QIdTreeWidgetItem(bid, QStringList() << name(id1) << name(id2));
     battleItems.insert(bid, it);
@@ -346,6 +347,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
             QIdTreeWidgetItem *it = new QIdTreeWidgetItem(h.key(), QStringList() << name(h.value().id1) << name(h.value().id2));
             battleItems.insert(h.key(), it);
             battleList->addTopLevelItem(it);
+            emit battleReceived2(h.key(), h.value().id1, h.value().id2);
         }
     } else if (command == NetworkCli::LeaveChannel) {
         qint32 id;
@@ -363,6 +365,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
     } else if (command == NetworkCli::ChannelBattle) {
         qint32 id, id1, id2;
         in >> id >> id1 >> id2;
+        emit battleReceived2(id, id1, id2);
         battleReceived(id, id1, id2);
     } else{
         printHtml(tr("<i>Unkown command received: %1. Maybe the client should be updated?</i>").arg(command));

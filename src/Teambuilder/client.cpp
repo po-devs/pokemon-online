@@ -271,6 +271,7 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
     }
 
     connect(c, SIGNAL(quitChannel(int)), SLOT(leaveChannel(int)));
+    connect(c, SIGNAL(battleReceived2(int,int,int)), this, SLOT(battleReceived(int,int,int)));
 }
 
 void Client::addChannel(const QString &name, int id)
@@ -1057,6 +1058,22 @@ void Client::battleStarted(int bid, int id1, int id2)
     }
 }
 
+
+void Client::battleReceived(int battleid, int id1, int id2)
+{
+    if (battles.contains(battleid)) {
+        return;
+    }
+
+    myplayersinfo[id1].flags |= PlayerInfo::Battling;
+    myplayersinfo[id2].flags |= PlayerInfo::Battling;
+
+    battles.insert(battleid, Battle(id1, id2));
+
+    updateState(id1);
+    updateState(id2);
+}
+
 void Client::watchBattle(const QString &name0, const QString &name1, int battleId, bool doubles)
 {
     BaseBattleWindow *battle = new BaseBattleWindow(player(id(name0)), player(id(name1)), doubles);
@@ -1445,6 +1462,7 @@ int Client::id(const QString &name) const
 
 void Client::closeChallengeWindow(BaseChallengeWindow *b)
 {
+    mychallenges.remove(b);
     b->forcedClose();
 }
 
