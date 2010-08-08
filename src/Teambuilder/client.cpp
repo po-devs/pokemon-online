@@ -21,6 +21,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     QHBoxLayout *h = new QHBoxLayout(this);
     QSplitter *s = new QSplitter(Qt::Horizontal);
+    s->setStyle(QStyleFactory::create("Plastique"));
     h->addWidget(s);
     s->setChildrenCollapsible(false);
 

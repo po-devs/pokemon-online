@@ -11,7 +11,7 @@ class AttackZone;
 class PokeZone;
 class BattleDisplay;
 class TargetSelection;
-class QScrollDownTextEdit;
+class StruggleZone;
 
 class BattleInfo : public BaseBattleInfo
 {
@@ -74,7 +74,8 @@ public:
     };
 
     enum {
-        TargetTab = 6
+        TargetTab = 6,
+        StruggleTab = 7
     };
 
     TeamBattle &team();
@@ -130,6 +131,7 @@ private:
     QTabWidget *mytab;
     QListWidget *myspecs;
     AttackZone *myazones[6];
+    StruggleZone *szone;
     TargetSelection *tarZone;
     QList<QButtonGroup*> mybgroups;
     PokeZone *mypzone;
@@ -247,6 +249,16 @@ signals:
     void targetSelected(int target);
 private:
     QPushButton * pokes[4];
+};
+
+class StruggleZone : public QWidget
+{
+    Q_OBJECT
+public:
+    StruggleZone();
+
+signals:
+    void attackClicked();
 };
 
 
