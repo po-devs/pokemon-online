@@ -732,10 +732,10 @@ void ScriptEngine::webCall(const QString &urlstring, const QString &expr, const 
 void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
     //escape reply before sending it to the javascript evaluator
     QString x = reply->readAll();
+    x = x.replace(QString("\\"), QString("\\\\"));
     x = x.replace(QString("'"), QString("\\'"));
     x = x.replace(QString("\n"), QString("\\n"));
     x = x.replace(QString("\r"), QString(""));
-    x = x.replace(QString("\\"), QString("\\\\"));
 
     //put reply in a var "resp", can be used in expr
     // i.e. expr = 'print("The resp was: "+resp);'

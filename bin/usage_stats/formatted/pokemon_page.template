@@ -23,7 +23,7 @@ page{{
 		<header><a href='index.html'>Tier {tier}</a></header>
 		<p><input type='button' onclick="spoiler(document.getElementById('globals'))" value='Show globals'/></p>
 		<div id="globals" style="display: none;">
-		<img src="{imagelink}" />
+		<img src="../poke_img/{imagelink}" />
 		<table class="globaltable">
 			<tr><th>Moves</th>
 			<th>Items</th></tr>
@@ -43,7 +43,7 @@ page{{
 			</tr>
 		</table>
 		</div>
-		<img src="{imagelink}" />
+		<img src="../poke_img/{imagelink}" />
 		<ul>
 			{globalability*}
 		</ul>
