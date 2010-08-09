@@ -17,6 +17,7 @@ signals:
     void announcementChanged(const QString &ann);
     void maxChanged(int num);
     void logSavingChanged(bool logSaving);
+    void latencyChanged(bool lowDelay);
 private slots:
     void apply();
 private:
@@ -28,6 +29,7 @@ private:
     QSpinBox *serverPlayerMax;
     QSpinBox *serverPort;
     QCheckBox *saveLogs;
+    QCheckBox *lowLatency;
 };
 
 #endif // SERVERCONFIG_H

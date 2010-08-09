@@ -58,6 +58,11 @@ QString Analyzer::ip() const {
     return socket().ip();
 }
 
+void Analyzer::setLowDelay(bool lowDelay)
+{
+    socket().setLowDelay(lowDelay);
+}
+
 void Analyzer::sendPlayers(const QList<PlayerInfo> &p)
 {
     notify_expand(PlayersList, p);

@@ -25,6 +25,13 @@ void Network::close() {
     }
 }
 
+void Network::setLowDelay(bool lowDelay)
+{
+    if (socket()) {
+        socket()->setSocketOption(QAbstractSocket::LowDelayOption, lowDelay);
+    }
+}
+
 Network::~Network()
 {
     close();

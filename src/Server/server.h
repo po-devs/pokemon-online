@@ -89,6 +89,9 @@ public slots:
     void changeScript(const QString &script);
     void announcementChanged(const QString &announcement);
     void mainChanChanged(const QString &mainChan);
+    void regPrivacyChanged(const int &priv);
+    void logSavingChanged(bool logging);
+    void TCPDelayChanged(bool lowTCP);
     void nameTaken();
     void ipRefused();
     void invalidName();
@@ -130,8 +133,6 @@ public slots:
     void findBattle(int id,const FindBattleData &f);
     void cancelSearch(int id);
     void loadRatedBattlesSettings();
-    void regPrivacyChanged(const int &priv);
-    void logSavingChanged(bool logging);
 
     void atServerShutDown();
 private:
@@ -141,11 +142,12 @@ private:
     Analyzer *registry_connection;
     QString serverName, serverDesc, serverAnnouncement;
     quint16 serverPrivate, serverPlayerMax,serverPort;
+    bool showLogMessages;
+    bool lowTCPDelay;
+
     quint16 numPlayers() {
         return myplayers.size();
     }
-
-    bool showLogMessages;
 
     /* When sending messages to several players, we don't want to send them twice to the same person.
 

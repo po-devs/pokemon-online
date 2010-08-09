@@ -156,6 +156,7 @@ void Server::start(){
     serverAnnouncement = s.value("server_announcement").toString();
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
     serverPrivate = quint16(s.value("server_private").toInt());
+    lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
 
     /* Adds the main channel */
     addChannel();
@@ -857,6 +858,8 @@ void Server::incomingConnection()
     }
 
     printLine(QString("Received pending connection on slot %1 from %2").arg(id).arg(ip));
+
+    newconnection->setSocketOption(QAbstractSocket::LowDelayOption, lowTCPDelay);
     myplayers[id] = new Player(newconnection, id);
 
     emit player_incomingconnection(id);
@@ -1031,6 +1034,18 @@ void Server::logSavingChanged(bool logging)
         return;
     showLogMessages = logging;
     printLine("Logging changed", false, true);
+}
+
+void Server::TCPDelayChanged(bool lowTCP)
+{
+    if (lowTCPDelay == lowTCP)
+        return;
+    lowTCPDelay = true;
+    printLine("Low TCP Delay setting changed", false, true);
+
+    foreach(Player *p, myplayers) {
+        p->relay().setLowDelay(lowTCP);
+    }
 }
 
 void Server::info(int id, const QString &mess) {

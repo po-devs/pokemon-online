@@ -17,6 +17,8 @@ public:
     QString errorString() const;
     QString ip() const;
     bool isConnected() const;
+    /* Trades bandwith for latency */
+    void setLowDelay(bool lowDelay);
 
     void connectToHost(const QString & ip, quint16 port);
 

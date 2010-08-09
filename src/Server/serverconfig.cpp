@@ -54,6 +54,9 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     l->addRow("Extended Logging: ", saveLogs = new QCheckBox("Show all player events and all logging"));
     saveLogs->setChecked(settings.value("show_log_messages").toBool());
 
+    l->addRow("Low Latency: ", lowLatency = new QCheckBox("Sacrifices bandwith for latency (look up Nagle's algorithm)"));
+    lowLatency->setChecked(settings.value("low_TCP_delay").toBool());
+
     ok = new QPushButton("&Apply");
     cancel = new QPushButton("&Cancel");
 
@@ -74,6 +77,7 @@ void ServerWindow::apply()
     settings.setValue("server_announcement", serverAnnouncement->toPlainText());
     settings.setValue("show_log_messages", saveLogs->isChecked());
     settings.setValue("mainchanname", mainChan->text());
+    settings.setValue("low_TCP_delay", lowLatency->isChecked());
     emit descChanged(serverDesc->toPlainText());
     emit nameChanged(serverName->text());
     emit maxChanged(serverPlayerMax->value());
@@ -81,5 +85,6 @@ void ServerWindow::apply()
     emit privacyChanged(serverPrivate->currentIndex());
     emit logSavingChanged(saveLogs->isChecked());
     emit mainChanChanged(mainChan->text());
+    emit latencyChanged(lowLatency->isChecked());
     close();
 }
