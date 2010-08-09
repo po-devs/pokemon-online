@@ -3640,7 +3640,8 @@ struct MMSleepTalk : public MM
 	b.callpeffects(s, s, "MovesPossible");
 	QList<int> mp;
 	for (int i = 0; i < 4; i++) {
-	    if (b.isMovePossible(s,i) && !forbidden_moves.contains(b.move(s,i))) {
+            /* Sleep talk can work on 0 PP moves but not on disabled moves*/
+            if (turn(b, s).value("Move" + QString::number(i) + "Blocked").toBool() == false && !forbidden_moves.contains(b.move(s,i))) {
 		mp.push_back(i);
 	    }
 	}
