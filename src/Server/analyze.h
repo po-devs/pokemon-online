@@ -124,6 +124,7 @@ public:
     void sendRanking(const QString name, int points);
     void stopReceiving();
     void connectTo(const QString &host, quint16 port);
+    void setLowDelay(bool lowDelay);
 
     /* Closes the connection */
     void close();
