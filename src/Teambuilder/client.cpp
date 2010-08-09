@@ -60,7 +60,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     announcement->setOpenExternalLinks(true);
     announcement->setWordWrap(true);
     announcement->hide();
-    layout->addWidget(mainChat = new QTabWidget());
+    layout->addWidget(mainChat = new QExposedTabWidget());
     mainChat->setObjectName("MainChat");
     mainChat->setMovable(true);
     mainChat->setTabsClosable(true);
@@ -214,6 +214,9 @@ void Client::firstChannelChanged(int tabindex)
 
     playersW->setCurrentWidget(c->playersWidget());
     battlesW->setCurrentWidget(c->battlesWidget());
+
+    /* Restores the black color of a possibly activated channel */
+    mainChat->tabBar()->setTabTextColor(tabindex, mainChat->tabBar()->palette().text().color());
 }
 
 void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
@@ -272,6 +275,19 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
 
     connect(c, SIGNAL(quitChannel(int)), SLOT(leaveChannel(int)));
     connect(c, SIGNAL(battleReceived2(int,int,int)), this, SLOT(battleReceived(int,int,int)));
+    connect(c, SIGNAL(activated(Channel*)), this, SLOT(channelActivated(Channel*)));
+}
+
+void Client::channelActivated(Channel *c)
+{
+    if (c->mainChat() == mainChat->currentWidget())
+        return;
+    for (int i = 0; i < mainChat->count(); i++) {
+        if (mainChat->widget(i) == c->mainChat()) {
+            mainChat->tabBar()->setTabTextColor(i, Qt::darkGreen);
+            break;
+        }
+    }
 }
 
 void Client::addChannel(const QString &name, int id)
@@ -1567,17 +1583,21 @@ void Client::printHtml(const QString &html)
 
 void Client::printLine(const QString &line)
 {
-    foreach(Channel *c, mychannels)
-        c->printLine(line);
+    if (mychannels.size() == 0)
+        return;
+
+    int chanid = channelByNames.value(mainChat->tabText(mainChat->currentIndex()).toLower());
+    Channel *c = channel(chanid);
+
+    c->printLine(line);
 }
 
+/* Prints a line regarding a particular player */
 void Client::printLine(int playerid, const QString &line)
 {
-    foreach(Channel *c, mychannels) {
-        if (c->hasPlayer(playerid)) {
-            c->printLine(line);
-        }
-    }
+    (void) playerid;
+
+    printLine(line);
 }
 
 /**********************************************************/

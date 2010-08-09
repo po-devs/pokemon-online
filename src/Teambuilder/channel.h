@@ -70,6 +70,7 @@ public:
 signals:
     void quitChannel(int chanid);
     void battleReceived2(int battleid, int id1, int id2);
+    void activated(Channel *c);
 public slots:
     void showContextMenu(const QPoint &point);
 private:
