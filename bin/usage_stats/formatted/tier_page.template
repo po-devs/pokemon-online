@@ -17,9 +17,9 @@ page{{
 
 toppokemon{{
 	<p class='topPokemon'># {rank} - <a href='{pokemonlink}'>{pokemon}</a> ({percentage} %)</p>
-	<img src='{imagelink}' />
+	<img src='../poke_img/{imagelink}' />
 }}
 
 lowpokemon{{
-	<p class='lowPokemon'># {rank} - <img src='{iconlink}' /> <a href='{pokemonlink}'>{pokemon}</a> ({percentage} %)</p>
+	<p class='lowPokemon'># {rank} - <img src='../icons/{iconlink}' /> <a href='{pokemonlink}'>{pokemon}</a> ({percentage} %)</p>
 }}

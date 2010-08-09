@@ -135,6 +135,8 @@ void Analyzer::error()
 void Analyzer::wasConnected()
 {
     socket().setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+    /* At least makes client use full bandwith, even if the server doesn't */
+    socket().setSocketOption(QAbstractSocket::LowDelayOption, 1);
 }
 
 /*{

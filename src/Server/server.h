@@ -40,7 +40,7 @@ public:
     /* Send a broadcast to one player */
     void sendMessage(int id, const QString &message);
     /* Sends to the whole channel */
-    void sendChannelMessage(int channel, const QString &message);
+    void sendChannelMessage(int channel, const QString &message, bool chat = false);
     /* Sends to a particular guy in the channel */
     void sendChannelMessage(int id, int chanid, const QString &message);
     void sendBattlesList(int id, int chanid);

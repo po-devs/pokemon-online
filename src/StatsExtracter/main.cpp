@@ -366,14 +366,14 @@ void MoveSet::complete(Skeleton &m) const
     m.addDefaultValue("move4", MoveInfo::Name(raw.moves[3]));
 }
 
-static QString getImageLink(int pokemon, bool root=false)
+static QString getImageLink(int pokemon)
 {
-    return QString(root ? "poke_img/%1/DP%2.png" : "../poke_img/%1/DP%2.png").arg(pokemon).arg(PokemonInfo::Gender(pokemon) == Pokemon::FemaleAvail ? "f" : "m");
+    return QString("%1/DP%2.png").arg(pokemon).arg(PokemonInfo::Gender(pokemon) == Pokemon::FemaleAvail ? "f" : "m");
 }
 
-static QString getIconLink(int pokemon, bool root=false)
+static QString getIconLink(int pokemon)
 {
-    return QString(root ? "icons/%1.PNG" : "../icons/%1.PNG").arg(pokemon);
+    return QString("%1.PNG").arg(pokemon);
 }
 
 struct Bcc {
@@ -676,8 +676,8 @@ int main(int argc, char *argv[])
 
         pok.addDefaultValue("tier", p.first);
         pok.addDefaultValue("pokemon", PokemonInfo::Name(p.second));
-        pok.addDefaultValue("imagelink", getImageLink(p.second, true));
-        pok.addDefaultValue("iconlink", getIconLink(p.second, true));
+        pok.addDefaultValue("imagelink", getImageLink(p.second));
+        pok.addDefaultValue("iconlink", getIconLink(p.second));
     }
 
     QFile f("usage_stats/formatted/index.html");
