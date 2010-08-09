@@ -758,27 +758,27 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     mytiermenu = menuBar->addMenu(tr("&Tiers"));
 
-    QMenu *battleMenu = menuBar->addMenu(tr("&Battle Options", "Menu"));
+    QMenu *battleMenu = menuBar->addMenu(tr("&Battle options", "Menu"));
     QAction * saveLogs = battleMenu->addAction(tr("Save &Battle Logs"));
     saveLogs->setCheckable(true);
     connect(saveLogs, SIGNAL(triggered(bool)), SLOT(saveBattleLogs(bool)));
     saveLogs->setChecked(s.value("save_battle_logs").toBool());
 
-    battleMenu->addAction(tr("Change &log folder"), this, SLOT(changeBattleLogFolder()));
+    battleMenu->addAction(tr("Change &log folder ..."), this, SLOT(changeBattleLogFolder()));
 
     QAction *playMusic = battleMenu->addAction(tr("&Enable sounds (Testing! Remove if problems with the sim)"));
     playMusic->setCheckable(true);
     connect(playMusic, SIGNAL(triggered(bool)), SLOT(playMusic(bool)));
     playMusic->setChecked(s.value("play_battle_music").toBool());
 
-    battleMenu->addAction(tr("Change &music folder"), this, SLOT(changeMusicFolder()));
+    battleMenu->addAction(tr("Change &music folder ..."), this, SLOT(changeMusicFolder()));
 
     QAction *animateHpBar = battleMenu->addAction(tr("Animate HP Bar"));
     animateHpBar->setCheckable(true);
     connect(animateHpBar, SIGNAL(triggered(bool)), SLOT(animateHpBar(bool)));
     animateHpBar->setChecked(s.value("animate_hp_bar").toBool());
 
-    QAction *oldStyleButtons = battleMenu->addAction(tr("Old School buttons"));
+    QAction *oldStyleButtons = battleMenu->addAction(tr("Old school buttons"));
     oldStyleButtons->setCheckable(true);
     connect(oldStyleButtons, SIGNAL(triggered(bool)), SLOT(changeButtonStyle(bool)));
     oldStyleButtons->setChecked(s.value("old_attack_buttons").toBool());
