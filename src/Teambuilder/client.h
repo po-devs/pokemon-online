@@ -19,6 +19,7 @@ class RankingDialog;
 class BattleFinder;
 class FindBattleData;
 class Channel;
+class QExposedTabWidget;
 
 /* The class for going online.
 
@@ -126,6 +127,7 @@ public slots:
     void itemJoin(QListWidgetItem *);
     void lineJoin();
     void firstChannelChanged(int tabindex);
+    void channelActivated(Channel *c);
     /* battle... */
     void battleStarted(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
     void battleStarted(int battleid, int id1, int id2);
@@ -218,7 +220,7 @@ private:
     QLabel *announcement;
     /* Where players are displayed */
     QStackedWidget *playersW, *battlesW;
-    QTabWidget *mainChat;
+    QExposedTabWidget *mainChat;
     QListWidget *channels;
     QLineEdit *channelJoin;
     /* Button to exit */

@@ -161,4 +161,10 @@ public:
     QSideBySide(QWidget *a, QWidget *b);
 };
 
+class QExposedTabWidget : public QTabWidget
+{
+public:
+    QTabBar * tabBar() { return QTabWidget::tabBar(); }
+};
+
 #endif // OTHERWIDGETS_H

@@ -497,6 +497,7 @@ void Channel::printLine(const QString &line)
                 mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
             }
         }
+        emit activated(this);
     } else {
         mainChat()->insertPlainText( timeStr + line + "\n");
     }
@@ -505,4 +506,5 @@ void Channel::printLine(const QString &line)
 void Channel::printHtml(const QString &str)
 {
     mainChat()->insertHtml(str + "<br />");
+    emit activated(this);
 }
