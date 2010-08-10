@@ -19,8 +19,12 @@ Client QTreeWidget::branch:!has-children {
 	width: 5px;
 }
 
-Client QTreeWidget::item, Client QListWidget::item {
+Client QListWidget::item {
 	min-height: 22px;
+}
+
+Client QTreeWidget::item {
+	min-height: 20px;
 }
 
 QTabWidget#MainChat::tab-bar {
