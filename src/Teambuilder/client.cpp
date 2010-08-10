@@ -1586,18 +1586,17 @@ void Client::printLine(const QString &line)
     if (mychannels.size() == 0)
         return;
 
-    int chanid = channelByNames.value(mainChat->tabText(mainChat->currentIndex()).toLower());
-    Channel *c = channel(chanid);
-
-    c->printLine(line);
+    foreach(Channel *c, mychannels)
+        c->printLine(line);
 }
 
 /* Prints a line regarding a particular player */
 void Client::printLine(int playerid, const QString &line)
 {
-    (void) playerid;
-
-    printLine(line);
+    foreach(Channel *c, mychannels) {
+        if (c->hasPlayer(playerid))
+            c->printLine(line);
+    }
 }
 
 /**********************************************************/
@@ -1622,19 +1621,7 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
     ml->addLayout(sub2);
     sub2->addWidget(rangeOn = new QCheckBox(tr("Only battle players with a max rating difference of ")));
     sub2->addWidget(range = new QLineEdit());
-    /*
-    QGroupBox *gb = new QGroupBox(tr("Clauses"));
-    ml->addWidget(gb);
 
-    QGridLayout *gbl = new QGridLayout(gb);
-    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        clauses[i] = new QCheckBox(ChallengeInfo::clause(i));
-        clauses[i]->setToolTip(ChallengeInfo::description(i));
-        clauses[i]->setTristate();
-        clauses[i]->setCheckState(Qt::CheckState(s.value(QString("clause_%1_state").arg(ChallengeInfo::clause(i))).toInt()));
-        gbl->addWidget(clauses[i], i/2, i%2);
-    }
-*/
     QHBoxLayout *hl = new QHBoxLayout();
     ml->addLayout(hl);
     hl->addWidget(ok = new QPushButton(tr("Find Battle")));
@@ -1659,10 +1646,6 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
 
 void BattleFinder::changeEnabled()
 {
-    // I found out its annoying to have it on so I turned it off
-    /*sameTier->setDisabled(rated->isChecked());
-    rangeOn->setDisabled(!sameTier->isChecked() && !rated->isChecked());
-    range->setDisabled(!sameTier->isChecked() && !rated->isChecked());*/
 }
 
 void BattleFinder::throwChallenge()
