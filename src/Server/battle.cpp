@@ -1167,7 +1167,7 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
     if (turnlong[source].contains("Effect_" + name)) {
 	turnlong[source]["TurnEffectCall"] = true;
         turnlong[source]["TurnEffectCalled"] = name;
-        QSet<QString> &effects = *turnlong[source]["Effect_" + name].value<QSharedPointer<QSet<QString> > >();
+        QSet<QString> &effects = *turnlong[source].value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
 	    turnlong[source]["EffectBlocked"] = false;
@@ -1177,9 +1177,10 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 		continue;
 	    }
 
-            MoveMechanics::function f = turnlong[source]["Effect_" + name + "_" + effect].value<MoveMechanics::function>();
+            MoveMechanics::function f = turnlong[source].value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
-	    f(source, target, *this);
+            if (f)
+                f(source, target, *this);
 	}
 	turnlong[source]["TurnEffectCall"] = false;
     }
@@ -1189,12 +1190,15 @@ void BattleSituation::callpeffects(int source, int target, const QString &name)
 {
     if (pokelong[source].contains("Effect_" + name)) {
         turnlong[source]["PokeEffectCall"] = true;
-        QSet<QString> &effects = *pokelong[source]["Effect_" + name].value<QSharedPointer<QSet<QString> > >();
+        QSet<QString> &effects = *pokelong[source].value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
-            MoveMechanics::function f = pokelong[source]["Effect_" + name + "_" + effect].value<MoveMechanics::function>();
+            MoveMechanics::function f = pokelong[source].value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
-	    f(source, target, *this);
+            /* If a pokémons dies from leechseed,its status changes, and so nightmare function would be removed
+               but still be in the foreach, causing a crash */
+            if (f)
+                f(source, target, *this);
 	}
 	turnlong[source]["PokeEffectCall"] = false;
     }
@@ -1203,12 +1207,13 @@ void BattleSituation::callpeffects(int source, int target, const QString &name)
 void BattleSituation::callbeffects(int source, int target, const QString &name)
 {
     if (battlelong.contains("Effect_" + name)) {
-        QSet<QString> &effects = *battlelong["Effect_" + name].value<QSharedPointer<QSet<QString> > >();
+        QSet<QString> &effects = *battlelong.value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
 	foreach(QString effect, effects) {
-            MoveMechanics::function f = battlelong["Effect_" + name + "_" + effect].value<MoveMechanics::function>();
+            MoveMechanics::function f = battlelong.value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
-	    f(source, target, *this);
+            if (f)
+                f(source, target, *this);
 	}
     }
 }
@@ -1216,12 +1221,13 @@ void BattleSituation::callbeffects(int source, int target, const QString &name)
 void BattleSituation::callzeffects(int source, int target, const QString &name)
 {
     if (teamzone[source].contains("Effect_" + name)) {
-        QSet<QString> &effects = *teamzone[source]["Effect_" + name].value<QSharedPointer<QSet<QString> > >();
+        QSet<QString> &effects = *teamzone[source].value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
 	foreach(QString effect, effects) {
-            MoveMechanics::function f = teamzone[source]["Effect_" + name + "_" + effect].value<MoveMechanics::function>();
+            MoveMechanics::function f = teamzone[source].value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
-	    f(source, target, *this);
+            if (f)
+                f(source, target, *this);
 	}
     }
 }
@@ -1229,12 +1235,13 @@ void BattleSituation::callzeffects(int source, int target, const QString &name)
 void BattleSituation::callseffects(int source, int target, const QString &name)
 {
     if (slotzone[source].contains("Effect_" + name)) {
-        QSet<QString> &effects = *slotzone[source]["Effect_" + name].value<QSharedPointer<QSet<QString> > >();
+        QSet<QString> &effects = *slotzone[source].value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
-            MoveMechanics::function f = slotzone[source]["Effect_" + name + "_" + effect].value<MoveMechanics::function>();
+            MoveMechanics::function f = slotzone[source].value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
-            f(source, target, *this);
+            if (f)
+                f(source, target, *this);
         }
     }
 }
@@ -2376,7 +2383,7 @@ void BattleSituation::changeStatus(int team, int poke, int status)
 void BattleSituation::gainStatMod(int player, int stat, int bonus, bool tell)
 {
     QString path = tr("Boost%1").arg(stat);
-    int boost = pokelong[player][path].toInt();
+    int boost = pokelong[player].value(path).toInt();
     if (boost < 6) {
         if (tell)
             notify(All, StatChange, player, qint8(stat), qint8(bonus));
@@ -2387,7 +2394,7 @@ void BattleSituation::gainStatMod(int player, int stat, int bonus, bool tell)
 void BattleSituation::loseStatMod(int player, int stat, int malus, int attacker)
 {
     QString path = tr("Boost%1").arg(stat);
-    int boost = pokelong[player][path].toInt();
+    int boost = pokelong[player].value(path).toInt();
     if (boost > -6) {
         if (attacker != player) {
             QString q = QString("StatModFrom%1Prevented").arg(attacker);
@@ -3112,7 +3119,7 @@ void BattleSituation::failSilently(int player)
 
 PokeFraction BattleSituation::getStatBoost(int player, int stat)
 {
-    int boost = pokelong[player][QString("Boost%1").arg(stat)].toInt();
+    int boost = pokelong[player].value(QString("Boost%1").arg(stat)).toInt();
 
     if (hasWorkingAbility(player,Ability::Simple)) {
         boost = std::max(std::min(boost*2, 6),-6);
@@ -3199,7 +3206,7 @@ BattleDynamicInfo BattleSituation::constructInfo(int slot)
     int player = this->player(slot);
 
     for (int i = 0; i < 7; i++) {
-        ret.boosts[i] = pokelong[slot]["Boost" + QString::number(i+1)].toInt();
+        ret.boosts[i] = pokelong[slot].value("Boost" + QString::number(i+1)).toInt();
     }
 
     ret.flags = 0;
