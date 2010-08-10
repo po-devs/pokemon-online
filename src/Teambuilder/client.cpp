@@ -33,7 +33,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mytab->addTab(channelContainer, tr("Channels"));
     QGridLayout *containerLayout = new QGridLayout(channelContainer);
     channels = new QListWidget();
-    channels->setIconSize(QSize(24,24));
+    channels->setIconSize(QSize(22,22));
     chatot = QIcon("db/client/chatoticon.png");
     greychatot = QIcon("db/client/greychatot.png");
     containerLayout->addWidget(channels, 0, 0, 1, 2);
