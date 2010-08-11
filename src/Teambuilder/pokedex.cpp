@@ -498,13 +498,14 @@ void ProfileTab::changeDesc(int poke)
         ptDesc->hide();
     }
 
-    int ability1 = PokemonInfo::Abilities(poke)[0];
-    ab1->setText(QString("<b>%1</b> - %2").arg(AbilityInfo::Name(ability1), AbilityInfo::Desc(ability1)));
-    int ability2 = PokemonInfo::Abilities(poke)[1];
-    if (ability2 == 0) {
+    AbilityGroup ab = PokemonInfo::Abilities(poke);
+
+    ab1->setText(QString("<b>%1</b> - %2").arg(AbilityInfo::Name(ab.ab1), AbilityInfo::Desc(ab.ab1)));
+
+    if (ab.ab2 == 0) {
         ab2->hide();
     } else {
-        ab2->setText(QString("<b>%1</b> - %2").arg(AbilityInfo::Name(ability2), AbilityInfo::Desc(ability2)));
+        ab2->setText(QString("<b>%1</b> - %2").arg(AbilityInfo::Name(ab.ab2), AbilityInfo::Desc(ab.ab2)));
         ab2->show();
     }
 }
@@ -1033,21 +1034,25 @@ void AdvancedSearch::search()
             if (PokemonInfo::Type1(i) != types[j] && PokemonInfo::Type2(i) != types[j])
                 goto loopend;
         }
-        if (ability != 0 && !PokemonInfo::Abilities(i).contains(ability))
-            goto loopend;
+
         {
-            PokeBaseStats b = PokemonInfo::BaseStats(i);
-            for (int j = 0; j < equalStats.size(); j++) {
-                if (b.baseStat(equalStats[j].first) != equalStats[j].second)
-                    goto loopend;
-            }
-            for (int j = 0; j < minStats.size(); j++) {
-                if (b.baseStat(minStats[j].first) < minStats[j].second)
-                    goto loopend;
-            }
-            for (int j = 0; j < maxStats.size(); j++) {
-                if (b.baseStat(maxStats[j].first) > maxStats[j].second)
-                    goto loopend;
+            AbilityGroup ab = PokemonInfo::Abilities(i);
+            if (ability != 0 && ab.ab1 != ability && ab.ab2 != ability)
+                goto loopend;
+            {
+                PokeBaseStats b = PokemonInfo::BaseStats(i);
+                for (int j = 0; j < equalStats.size(); j++) {
+                    if (b.baseStat(equalStats[j].first) != equalStats[j].second)
+                        goto loopend;
+                }
+                for (int j = 0; j < minStats.size(); j++) {
+                    if (b.baseStat(minStats[j].first) < minStats[j].second)
+                        goto loopend;
+                }
+                for (int j = 0; j < maxStats.size(); j++) {
+                    if (b.baseStat(maxStats[j].first) > maxStats[j].second)
+                        goto loopend;
+                }
             }
         }
 

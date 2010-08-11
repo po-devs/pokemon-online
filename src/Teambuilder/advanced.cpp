@@ -113,11 +113,11 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     secondColumn->addWidget(ability);
     QVBoxLayout *abilityLayout = new QVBoxLayout(ability);
 
-    abilityLayout->addWidget(ability1=new QRadioButton(AbilityInfo::Name(poke()->abilities()[0])));
-    ability1->setToolTip(AbilityInfo::Desc(poke()->abilities()[0]));
-    if (poke()->abilities()[1] != 0) {
-	abilityLayout->addWidget(ability2=new QRadioButton(AbilityInfo::Name(poke()->abilities()[1])));
-        ability2->setToolTip(AbilityInfo::Desc(poke()->abilities()[1]));
+    abilityLayout->addWidget(ability1=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab1)));
+    ability1->setToolTip(AbilityInfo::Desc(poke()->abilities().ab1));
+    if (poke()->abilities().ab2 != 0) {
+        abilityLayout->addWidget(ability2=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab2)));
+        ability2->setToolTip(AbilityInfo::Desc(poke()->abilities().ab2));
 	connect(ability1, SIGNAL(toggled(bool)), SLOT(changeAbility(bool)));
 	updateAbility();
     } else {
@@ -212,7 +212,7 @@ void TB_Advanced::changeForm()
 
 void TB_Advanced::changeAbility(bool ab1)
 {
-    poke()->ability() = ab1? poke()->abilities()[0] : poke()->abilities()[1];
+    poke()->ability() = ab1? poke()->abilities().ab1 : poke()->abilities().ab2;
 }
 
 void TB_Advanced::changeShininess(bool shine)
@@ -241,7 +241,7 @@ void TB_Advanced::updatePokeImage()
 
 void TB_Advanced::updateAbility()
 {
-    if (poke()->ability() == poke()->abilities()[0])
+    if (poke()->ability() == poke()->abilities().ab1)
     {
 	ability1->setChecked(true);
     } else {

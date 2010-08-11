@@ -116,7 +116,7 @@ void PokeBattle::setNormalStat(int stat, quint16 i)
 
 void PokeBattle::init(const PokePersonal &poke)
 {
-    if (!PokemonInfo::Exist(poke.num())) {
+    if (!PokemonInfo::Exists(poke.num())) {
 	num() = 0;
 	return;
     }
@@ -138,7 +138,7 @@ void PokeBattle::init(const PokePersonal &poke)
             forme() = poke.forme();
     }
 
-    if (ItemInfo::Exist(poke.item())) {
+    if (ItemInfo::Exists(poke.item())) {
         item() = poke.item();
     } else {
         item() = 0;
@@ -158,10 +158,10 @@ void PokeBattle::init(const PokePersonal &poke)
 	gender() = GenderInfo::Default(p.genderAvail());
     }
 
-    if (p.abilities().contains(poke.ability())) {
+    if (p.abilities().ab1 == poke.ability() || p.abilities().ab2 == poke.ability()) {
 	ability() = poke.ability();
     } else {
-	ability() = p.abilities()[0];
+        ability() = p.abilities().ab1;
     }
 
     shiny() = poke.shiny();
@@ -172,7 +172,6 @@ void PokeBattle::init(const PokePersonal &poke)
     int curs = 0;
     QSet<int> invalid_moves;
     QSet<int> taken_moves;
-    /* Gets the invalid moves */
     MoveSetChecker::isValid(num(), 4, poke.move(0),poke.move(1),poke.move(2),poke.move(3), &invalid_moves);
 
     for (int i = 0; i < 4; i++) {
@@ -358,7 +357,7 @@ void TeamBattle::generateRandom()
         p.num() = pokes[i];
         g.load();
 
-        p.ability() = g.abilities()[1] == 0 ? g.abilities()[0] : g.abilities()[true_rand()%g.abilities().size()];
+        p.ability() = (g.abilities().ab2 == 0 || true_rand()%2) ? g.abilities().ab1 : g.abilities().ab2;
         if (g.genderAvail() == Pokemon::MaleAndFemaleAvail) {
             p.gender() = true_rand()%2 ? Pokemon::Female : Pokemon::Male;
         } else {

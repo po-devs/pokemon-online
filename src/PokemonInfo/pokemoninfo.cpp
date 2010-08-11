@@ -20,8 +20,8 @@ QList<QString> PokemonInfo::m_Weights;
 QList<int> PokemonInfo::m_Genders;
 QList<int> PokemonInfo::m_Type1;
 QList<int> PokemonInfo::m_Type2;
-QList<int> PokemonInfo::m_Ability1;
-QList<int> PokemonInfo::m_Ability2;
+QList<int> PokemonInfo::m_Ability1[2];
+QList<int> PokemonInfo::m_Ability2[2];
 QList<PokeBaseStats> PokemonInfo::m_BaseStats;
 QList<int> PokemonInfo::m_LevelBalance;
 QList<PokemonMoves> PokemonInfo::m_Moves;
@@ -90,6 +90,7 @@ QList<QString> AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
 QList<AbilityInfo::Effect> AbilityInfo::m_Effects;
 QList<QStringList> AbilityInfo::m_Messages;
+QSet<int> AbilityInfo::m_3rdGenAbilities;
 
 QList<QString> GenderInfo::m_Names;
 QList<QPixmap> GenderInfo::m_Pictures;
@@ -346,8 +347,10 @@ void PokemonInfo::init(const QString &dir)
     fill_container_with_file(m_Type1, path("poke_type1.txt"));
     fill_container_with_file(m_Type2, path("poke_type2.txt"));
     fill_container_with_file(m_Genders, path("poke_gender.txt"));
-    fill_container_with_file(m_Ability1, path("poke_ability.txt"));
-    fill_container_with_file(m_Ability2, path("poke_ability2.txt"));
+    fill_container_with_file(m_Ability1[0], path("poke_ability_3G.txt"));
+    fill_container_with_file(m_Ability2[0], path("poke_ability2_3G.txt"));
+    fill_container_with_file(m_Ability1[1], path("poke_ability_4G.txt"));
+    fill_container_with_file(m_Ability2[1], path("poke_ability2_4G.txt"));
     fill_container_with_file(m_LevelBalance, path("level_balance.txt"));
     loadBaseStats();
 }
@@ -396,22 +399,18 @@ int PokemonInfo::NumberOfPokemons()
     return m_Names.size();
 }
 
-bool PokemonInfo::BelongsToGen(int pokemon, int gen)
-{
-    if (gen == 4)
-        return true;
-    else //gen == 3
-        return OriginalForme(pokemon) <= 386;
-}
-
 QString PokemonInfo::Name(int pokenum)
 {
-    return Exist(pokenum) ? m_Names[pokenum] : m_Names[0];
+    return Exists(pokenum) ? m_Names[pokenum] : m_Names[0];
 }
 
-bool PokemonInfo::Exist(int n)
+bool PokemonInfo::Exists(int n, int gen)
 {
-    return n < NumberOfPokemons() && n>=0;
+    if (n >= NumberOfPokemons() || n<0)
+        return false;
+    if (gen == 4)
+        return true;
+    return OriginalForme(n) <= 386;
 }
 
 int PokemonInfo::Number(const QString &pokename)
@@ -546,10 +545,12 @@ QSet<int> PokemonInfo::PreEvoMoves(int pokenum, int gen)
     return m_Moves[pokenum].preEvoMoves[gen-3];
 }
 
-QList<int> PokemonInfo::Abilities(int pokenum, int)
+AbilityGroup PokemonInfo::Abilities(int pokenum, int gen)
 {
-    QList<int> ret;
-    ret << m_Ability1[pokenum] << m_Ability2[pokenum];
+    AbilityGroup ret;
+
+    ret.ab1 = m_Ability1[gen-3][pokenum];
+    ret.ab2 = m_Ability2[gen-3][pokenum];
 
     return ret;
 }
@@ -921,10 +922,10 @@ QString MoveInfo::path(const QString &file)
 
 QString MoveInfo::Name(int movenum)
 {
-    return Exist(movenum) ? m_Names[movenum] : m_Names[0];
+    return Exists(movenum) ? m_Names[movenum] : m_Names[0];
 }
 
-bool MoveInfo::Exist(int movenum)
+bool MoveInfo::Exists(int movenum)
 {
     return movenum >= 0 && movenum < NumberOfMoves();
 }
@@ -1159,7 +1160,7 @@ void ItemInfo::loadNames()
 
 QList<ItemInfo::Effect> ItemInfo::Effects(int item)
 {
-    if (!Exist(item)) {
+    if (!Exists(item)) {
 	return QList<ItemInfo::Effect>();
     } else {
 	return isBerry(item) ? m_BerryEffects[item-8000] : m_RegEffects[item];
@@ -1195,14 +1196,14 @@ int ItemInfo::NumberOfItems()
 int ItemInfo::Power(int itemnum) {
     if (isBerry(itemnum)) {
 	return 10;
-    } else if (Exist(itemnum)) {
+    } else if (Exists(itemnum)) {
 	return m_Powers[itemnum];
     } else return 0;
 }
 
 int ItemInfo::BerryPower(int itemnum)
 {
-    if (!isBerry(itemnum) || !Exist(itemnum)) {
+    if (!isBerry(itemnum) || !Exists(itemnum)) {
         return 0;
     }
 
@@ -1211,7 +1212,7 @@ int ItemInfo::BerryPower(int itemnum)
 
 int ItemInfo::BerryType(int itemnum)
 {
-    if (!isBerry(itemnum) || !Exist(itemnum)) {
+    if (!isBerry(itemnum) || !Exists(itemnum)) {
         return 0;
     }
 
@@ -1244,7 +1245,7 @@ QPixmap ItemInfo::Icon(int itemnum)
 
 QString ItemInfo::Name(int itemnum)
 {
-    if (!Exist(itemnum)) {
+    if (!Exists(itemnum)) {
 	return 0;
     }
     if (itemnum < 8000) {
@@ -1254,7 +1255,7 @@ QString ItemInfo::Name(int itemnum)
     }
 }
 
-bool ItemInfo::Exist(int itemnum)
+bool ItemInfo::Exists(int itemnum)
 {
     return !(itemnum < 8000 && itemnum >= m_RegItemNames.size()) && !(itemnum >= 8000 + m_BerryNames.size());
 }
@@ -1559,6 +1560,17 @@ void AbilityInfo::init(const QString &dir)
     foreach (QString eff, temp) {
         m_Messages.push_back(eff.split('|'));
     }
+
+    fill_container_with_file(m_3rdGenAbilities, path("gen3.txt"));
+}
+
+bool AbilityInfo::Exists(int ability, int gen)
+{
+    if (ability < 0 || ability >= NumberOfAbilities())
+        return false;
+    if (gen == 4)
+        return true;
+    return m_3rdGenAbilities.contains(ability);
 }
 
 void AbilityInfo::loadEffects()
