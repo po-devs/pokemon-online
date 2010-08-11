@@ -15,6 +15,7 @@ PokemonInfoConfig::Config PokemonInfoConfig::config() {
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
+QString PokemonInfo::m_Directory_custom;
 QList<QString> PokemonInfo::m_Names;
 QList<QString> PokemonInfo::m_Weights;
 QList<int> PokemonInfo::m_Genders;
@@ -335,6 +336,7 @@ void PokemonInfo::init(const QString &dir)
         return;
 
     m_Directory = dir;
+    m_Directory_custom = "custom_" + m_Directory;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
@@ -426,11 +428,11 @@ int PokemonInfo::AestheticFormeId(int pokenum)
     return m_AestheticFormes.value(pokenum).first;
 }
 
-QPixmap PokemonInfo::Picture(int pokenum, int forme, int gender, bool shiney, bool back)
+QPixmap PokemonInfo::Picture(int pokenum, int forme, int gender, bool shiney, bool back, bool customPokemon)
 {
     pokenum = forme == 0 ? pokenum : AestheticFormeId(pokenum) + forme;
 
-    QString archive = path("poke_img.zip");
+    QString archive = path("poke_img.zip", customPokemon);
 
     QString file = QString("%2/DP%3%4%5.png").arg(pokenum).arg(back?"b":"",(gender==Pokemon::Female)?"f":"m", shiney?"s":"");
 
@@ -714,9 +716,9 @@ void PokemonInfo::loadMoves()
     }
 }
 
-QString PokemonInfo::path(const QString &filename)
+QString PokemonInfo::path(const QString &filename, const bool customPokemon)
 {
-    return m_Directory + filename;
+    return (customPokemon ? m_Directory_custom : m_Directory) + filename;
 }
 
 void MoveInfo::loadCritics()
