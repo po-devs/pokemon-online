@@ -396,6 +396,14 @@ int PokemonInfo::NumberOfPokemons()
     return m_Names.size();
 }
 
+bool PokemonInfo::BelongsToGen(int pokemon, int gen)
+{
+    if (gen == 4)
+        return true;
+    else //gen == 3
+        return OriginalForme(pokemon) <= 386;
+}
+
 QString PokemonInfo::Name(int pokenum)
 {
     return Exist(pokenum) ? m_Names[pokenum] : m_Names[0];
@@ -492,11 +500,15 @@ QByteArray PokemonInfo::Cry(int num)
     return data;
 }
 
-QSet<int> PokemonInfo::Moves(int pokenum)
+QSet<int> PokemonInfo::Moves(int pokenum, int gen)
 {
     QSet<int> moves;
-    return moves.unite(RegularMoves(pokenum,3)).unite(RegularMoves(pokenum, 4)).unite(EggMoves(pokenum,3)).unite(EggMoves(pokenum,4))
-            .unite(SpecialMoves(pokenum,3)).unite(SpecialMoves(pokenum,4));
+    moves.unite(RegularMoves(pokenum,3)).unite(SpecialMoves(pokenum,3)).unite(EggMoves(pokenum,3));
+
+    if (gen >= 4)
+        moves.unite(SpecialMoves(pokenum,4)).unite(RegularMoves(pokenum, 4)).unite(EggMoves(pokenum,4));
+
+    return moves;
 }
 
 QSet<int> PokemonInfo::RegularMoves(int pokenum, int gen)
@@ -534,7 +546,7 @@ QSet<int> PokemonInfo::PreEvoMoves(int pokenum, int gen)
     return m_Moves[pokenum].preEvoMoves[gen-3];
 }
 
-QList<int> PokemonInfo::Abilities(int pokenum)
+QList<int> PokemonInfo::Abilities(int pokenum, int)
 {
     QList<int> ret;
     ret << m_Ability1[pokenum] << m_Ability2[pokenum];

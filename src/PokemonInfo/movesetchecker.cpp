@@ -37,24 +37,27 @@ void MoveSetChecker::init(const QString &dir)
     }
 }
 
-bool MoveSetChecker::isValid(int pokenum, int move1, int move2, int move3, int move4, QSet<int> *invalid_moves) {
+bool MoveSetChecker::isValid(int pokenum, int gen, int move1, int move2, int move3, int move4, QSet<int> *invalid_moves) {
     QSet<int> moves;
     moves << move1 << move2 << move3 << move4;
 
-    return isValid(pokenum, moves, invalid_moves);
+    return isValid(pokenum, gen, moves, invalid_moves);
 }
 
 
-bool MoveSetChecker::isValid(int pokenum, const QSet<int> &moves2, QSet<int> *invalid_moves) {
+bool MoveSetChecker::isValid(int pokenum, int gen, const QSet<int> &moves2, QSet<int> *invalid_moves) {
     QSet<int> moves = moves2;
     moves.remove(0);
 
-    if (!PokemonInfo::Moves(pokenum).contains(moves)) {
+    if (!PokemonInfo::Moves(pokenum, gen).contains(moves)) {
         if (invalid_moves) {
             *invalid_moves = moves.subtract(PokemonInfo::Moves(pokenum));
         }
         return false;
     }
+
+    if (gen == 3)
+        goto gen3;
 
     /* now we know the pokemon at least know all moves */
 
@@ -67,6 +70,7 @@ bool MoveSetChecker::isValid(int pokenum, const QSet<int> &moves2, QSet<int> *in
             return true;
     }
 
+gen3:
     /* Now we have to go back to third gen, and not use 4 gen egg mvoes / special moves */
     moves.subtract(PokemonInfo::RegularMoves(pokenum,3));
 
