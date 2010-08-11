@@ -91,8 +91,6 @@ PokeGeneral::PokeGeneral()
     num() = 0;
     gen() = 4;
     //default for non-bugged programs
-    m_abilities.push_back(0);
-    m_abilities.push_back(0);
     m_genderAvail = Pokemon::NeutralAvail;
     m_types[0] = Pokemon::Curse;
     m_types[1] = -1;
@@ -131,7 +129,7 @@ const QSet<int> &PokeGeneral::moves() const
     return m_moves;
 }
 
-const QList<int> &PokeGeneral::abilities() const
+const AbilityGroup &PokeGeneral::abilities() const
 {
     return m_abilities;
 }
@@ -183,7 +181,7 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
 
 void PokePersonal::runCheck()
 {
-    if (!PokemonInfo::BelongsToGen(num(), gen())) {
+    if (!PokemonInfo::Exists(num(), gen())) {
         reset();
         return;
     }
@@ -202,6 +200,11 @@ void PokePersonal::runCheck()
 
         MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), &invalidMoves);
     }
+
+    AbilityGroup ab = PokemonInfo::Abilities(num(), gen());
+
+    if (ability() != ab.ab2)
+        ability() = ab.ab1;
 }
 
 int PokePersonal::addMove(int moveNum, bool check) throw(QString)
@@ -417,7 +420,7 @@ void PokeTeam::load()
     {
         gender() = Pokemon::Male;
     }
-    ability() = abilities()[0];
+    ability() = abilities().ab1;
     nickname() = PokemonInfo::Name(num());
     PokeGraphics::load(forme(), gender(), false);
     PokeGraphics::loadIcon(num());

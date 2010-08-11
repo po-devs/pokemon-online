@@ -36,6 +36,7 @@ struct PokemonMoves
     QSet<int> tutorMoves[2];
 };
 
+
 class PokemonInfo
 {
 public:
@@ -45,7 +46,6 @@ public:
     /* Self-explainable functions */
     static int TrueCount(int gen=4); // pokes without counting forms
     static int NumberOfPokemons();
-    static bool BelongsToGen(int pokenum, int gen);
     static QString Name(int pokenum);
     static int Number(const QString &pokename);
     static int LevelBalance(int pokenum);
@@ -88,8 +88,8 @@ public:
     static int OriginalEvo(int pokenum);
     static bool IsInEvoChain(int pokenum);
     static PokeBaseStats BaseStats(int pokenum);
-    static bool Exist(int pokenum);
-    static QList<int> Abilities(int pokenum, int gen=4);
+    static bool Exists(int pokenum, int gen=4);
+    static AbilityGroup Abilities(int pokenum, int gen=4);
     static int Stat(int poke, int stat, int level, quint8 dv, quint8 ev);
     static int FullStat(int poke, int nature, int stat, int level, quint8 dv, quint8 ev);
     static QString Desc(int poke, int cartridge);
@@ -101,8 +101,8 @@ private:
     static QList<int> m_Type1;
     static QList<int> m_Type2;
     static QList<int> m_Genders;
-    static QList<int> m_Ability1;
-    static QList<int> m_Ability2;
+    static QList<int> m_Ability1[2];
+    static QList<int> m_Ability2[2];
     static QList<PokeBaseStats> m_BaseStats;
     static QList<int> m_LevelBalance;
     /* That is NOT multi-threaded! */
@@ -204,7 +204,7 @@ public:
     static int SpeedPriority(int movenum);
     static bool PhysicalContact(int movenum);
     static bool KingRock(int movenum);
-    static bool Exist(int movenum);
+    static bool Exists(int movenum);
     static bool isOHKO(int movenum);
     static int EffectRate(int movenum);
     static int Target(int movenum);
@@ -246,7 +246,7 @@ public:
     /* Self-explainable functions */
     static int NumberOfItems();
     static QString Name(int itemnum);
-    static bool Exist(int itemnum);
+    static bool Exists(int itemnum);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
     static bool isMail(int itemnum);
@@ -353,15 +353,6 @@ public:
         int arg;
         Effect(int i, int q=0) : num(i), arg(q){}
     };
-private:
-    static QList<QString> m_Names;
-    static QString m_Directory;
-    static QList<Effect> m_Effects;
-    static QList<QStringList> m_Messages;
-
-    static void loadNames();
-    static void loadEffects();
-    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/abilities/");
@@ -374,6 +365,17 @@ public:
     static int NumberOfAbilities();
     static QString Desc(int abnum);
     static QString EffectDesc(int abnum);
+    static bool Exists(int ability, int gen);
+private:
+    static QList<QString> m_Names;
+    static QString m_Directory;
+    static QList<Effect> m_Effects;
+    static QList<QStringList> m_Messages;
+    static QSet<int> m_3rdGenAbilities;
+
+    static void loadNames();
+    static void loadEffects();
+    static QString path(const QString &filename);
 };
 
 class GenderInfo

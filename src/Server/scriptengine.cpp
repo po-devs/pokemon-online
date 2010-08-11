@@ -521,7 +521,7 @@ void ScriptEngine::changePokeItem(int id, int slot, int item)
 {
     if (!testPlayer("changePokeItem(id, slot, item)", id) || !testRange("changePokeItem(id, slot, item)", slot, 0, 5))
         return;
-    if (!ItemInfo::Exist(item))
+    if (!ItemInfo::Exists(item))
         return;
     myserver->player(id)->team().poke(slot).item() = item;
 }
@@ -530,7 +530,7 @@ void ScriptEngine::changePokeNum(int id, int slot, int num)
 {
     if (!testPlayer("changePokeNum(id, slot, item)", id) || !testRange("changePokeNum(id, slot, num)", slot, 0, 5))
         return;
-    if (!PokemonInfo::Exist(num))
+    if (!PokemonInfo::Exists(num, 4))
         return;
     myserver->player(id)->team().poke(slot).num() = num;
 }
@@ -547,7 +547,7 @@ void ScriptEngine::changePokeMove(int id, int pslot, int mslot, int move)
 {
     if (!testPlayer("", id) || !testRange("", pslot, 0, 5) || !testRange("", mslot, 0, 4))
         return;
-    if (!MoveInfo::Exist(move))
+    if (!MoveInfo::Exists(move))
         return;
     myserver->player(id)->team().poke(pslot).move(mslot).num() = move;
     myserver->player(id)->team().poke(pslot).move(mslot).load();
@@ -1022,7 +1022,7 @@ QScriptValue ScriptEngine::moveNum(const QString &name)
 
 QScriptValue ScriptEngine::item(int num)
 {
-    if (ItemInfo::Exist(num)) {
+    if (ItemInfo::Exists(num)) {
         return ItemInfo::Name(num);
     } else {
         return myengine.undefinedValue();

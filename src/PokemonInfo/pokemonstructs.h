@@ -1492,6 +1492,16 @@ enum Stat
     Accuracy
 };
 
+struct AbilityGroup {
+    quint16 ab1;
+    quint16 ab2;
+
+    AbilityGroup() {
+        ab1 = 0;
+        ab2 = 0;
+    }
+};
+
 class PokeBaseStats
 {
 private:
@@ -1525,7 +1535,7 @@ class PokeGeneral
 protected:
     PokeBaseStats m_stats;
     QSet<int> m_moves;
-    QList<int> m_abilities;
+    AbilityGroup m_abilities;
     int m_types[2];
     int m_genderAvail;
 
@@ -1536,7 +1546,7 @@ protected:
 public:
     PokeGeneral();
 
-    const QList<int>& abilities() const;
+    const AbilityGroup &abilities() const;
     int genderAvail() const;
 
     const QSet<int>& moves() const;
