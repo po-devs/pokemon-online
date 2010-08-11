@@ -1132,14 +1132,16 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
 
     battles.remove(battleid);
 
-    myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
+    if (myplayersinfo.contains(winner))
+        myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
+    if (myplayersinfo.contains(loser))
     myplayersinfo[loser].flags &= 0xFF ^ PlayerInfo::Battling;
 
     foreach(Battle b, battles) {
-        if (b.id1 == winner || b.id2 == winner) {
+        if (myplayersinfo.contains(winner) && (b.id1 == winner || b.id2 == winner)) {
             myplayersinfo[winner].flags |= PlayerInfo::Battling;
         }
-        if (b.id1 == loser || b.id2 == loser) {
+        if (myplayersinfo.contains(loser) && (b.id1 == loser || b.id2 == loser)) {
             myplayersinfo[loser].flags |= PlayerInfo::Battling;
         }
     }
