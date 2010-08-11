@@ -12,7 +12,7 @@ void MoveGen::init(int gen, int pokenum)
     moves[SpecialMoves] = PokemonInfo::SpecialMoves(pokenum,gen);
     moves[EggMoves] = PokemonInfo::EggMoves(pokenum,gen);
     moves[TutorMoves] = PokemonInfo::TutorMoves(pokenum,gen);
-    moves[TMMoves] = PokemonInfo::TMMoves(pokenum);
+    moves[TMMoves] = PokemonInfo::TMMoves(pokenum, gen);
 }
 
 void MovesPerPoke::init(int poke)
@@ -42,7 +42,7 @@ void PokeMovesDb::save()
         files[gen-3][EggMoves].setFileName(genS + "egg_moves.txt");
         files[gen-3][TutorMoves].setFileName(genS + "tutor_moves.txt");
         files[gen-3][SpecialMoves].setFileName(genS + "special_moves.txt");
-        files[gen-3][TMMoves].setFileName( "db/pokes/tm_and_hm_moves.txt");
+        files[gen-3][TMMoves].setFileName(genS + "tm_and_hm_moves.txt");
     }
     for (int gen = 3; gen <= 4; gen++) {
         for (int i = 0; i < 5; i++) {

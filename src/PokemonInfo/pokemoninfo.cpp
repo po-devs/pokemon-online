@@ -519,9 +519,9 @@ QSet<int> PokemonInfo::TutorMoves(int pokenum, int gen)
     return m_Moves[pokenum].tutorMoves[gen-3];
 }
 
-QSet<int> PokemonInfo::TMMoves(int pokenum)
+QSet<int> PokemonInfo::TMMoves(int pokenum, int gen)
 {
-    return m_Moves[pokenum].TMMoves;
+    return m_Moves[pokenum].TMMoves[gen-3];
 }
 
 QSet<int> PokemonInfo::SpecialMoves(int pokenum, int gen)
@@ -674,11 +674,11 @@ bool PokemonInfo::IsInEvoChain(int pokenum)
 
 void PokemonInfo::loadMoves()
 {
-    static const int filesize = 10;
+    static const int filesize = 11;
     QFile files[filesize];
 
     QString fileNames[filesize] = {
-        path("tm_and_hm_moves.txt"), path("3G_egg_moves.txt"), path("3G_level_moves.txt"),
+        path("3G_tm_and_hm_moves.txt"), path("4G_tm_and_hm_moves.txt"), path("3G_egg_moves.txt"), path("3G_level_moves.txt"),
         path("3G_tutor_moves.txt"), path("3G_special_moves.txt"), path("4G_pre_evo_moves.txt"),
         path("4G_egg_moves.txt"), path("4G_level_moves.txt"), path("4G_tutor_moves.txt"),
         path("4G_special_moves.txt")
@@ -693,7 +693,7 @@ void PokemonInfo::loadMoves()
         PokemonMoves moves;
 
         QSet<int> *refs[filesize] = {
-            &moves.TMMoves, &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0],
+            &moves.TMMoves[0], &moves.TMMoves[1], &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0],
             &moves.preEvoMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1]
         };
 
@@ -705,9 +705,9 @@ void PokemonInfo::loadMoves()
             }
         }
 
-        moves.regularMoves[0] = moves.TMMoves;
+        moves.regularMoves[0] = moves.TMMoves[0];
         moves.regularMoves[0].unite(moves.levelMoves[0]).unite(moves.tutorMoves[0]);
-        moves.regularMoves[1] = moves.TMMoves;
+        moves.regularMoves[1] = moves.TMMoves[1];
         moves.regularMoves[1].unite(moves.preEvoMoves[1]).unite(moves.levelMoves[1]).unite(moves.tutorMoves[1]);
 
         m_Moves.push_back(moves);
