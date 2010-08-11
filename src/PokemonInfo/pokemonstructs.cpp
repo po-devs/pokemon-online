@@ -565,6 +565,7 @@ bool TrainerTeam::saveToFile(const QString &path) const
     QDomDocument document;
 
     QDomElement Team = document.createElement("Team");
+    Team.setAttribute("gen", gen());
     document.appendChild(Team);
     QDomElement trainer = document.createElement("Trainer");
     Team.appendChild(trainer);
@@ -682,6 +683,8 @@ bool TrainerTeam::loadFromFile(const QString &path)
         QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
         return false;
     }
+    int gen = team.attribute("gen", "4");
+    this->team().setGen(gen);
     QDomElement trainer = team.firstChildElement("Trainer");
     if(trainer.isNull())
     {
@@ -690,9 +693,9 @@ bool TrainerTeam::loadFromFile(const QString &path)
     }
 
     setTrainerNick(trainer.text());
-    setTrainerInfo(trainer.attribute("infoMsg",QString()));
-    setTrainerLose(trainer.attribute("loseMsg",QString()));
-    setTrainerWin(trainer.attribute("winMsg",QString()));
+    setTrainerInfo(trainer.attribute("infoMsg"));
+    setTrainerLose(trainer.attribute("loseMsg"));
+    setTrainerWin(trainer.attribute("winMsg"));
     avatar() = trainer.attribute("avatar", 0).toInt();
 
     QDomElement poke = team.firstChildElement("Pokemon");
