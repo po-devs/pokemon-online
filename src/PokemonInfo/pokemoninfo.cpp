@@ -386,9 +386,9 @@ void PokemonInfo::loadEvos()
     }
 }
 
-int PokemonInfo::TrueCount()
+int PokemonInfo::TrueCount(int gen)
 {
-    return m_trueNumberOfPokes;
+    return gen == 4 ? m_trueNumberOfPokes : 387;
 }
 
 int PokemonInfo::NumberOfPokemons()

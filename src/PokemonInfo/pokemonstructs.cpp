@@ -565,7 +565,7 @@ bool TrainerTeam::saveToFile(const QString &path) const
     QDomDocument document;
 
     QDomElement Team = document.createElement("Team");
-    Team.setAttribute("gen", gen());
+    Team.setAttribute("gen", team().gen());
     document.appendChild(Team);
     QDomElement trainer = document.createElement("Trainer");
     Team.appendChild(trainer);
@@ -683,7 +683,7 @@ bool TrainerTeam::loadFromFile(const QString &path)
         QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
         return false;
     }
-    int gen = team.attribute("gen", "4");
+    int gen = team.attribute("gen", "4").toInt();
     this->team().setGen(gen);
     QDomElement trainer = team.firstChildElement("Trainer");
     if(trainer.isNull())

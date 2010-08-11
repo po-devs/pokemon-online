@@ -113,6 +113,7 @@ private:
     TB_TeamBody *m_teamBody;
     TB_PokemonBoxes *m_boxes;
     Pokedex *m_pokedex;
+    QAction *gen3, *gen4;
 
     QImageButton *buttons[LastW];
     QLabel *currentZoneLabel;
@@ -231,8 +232,9 @@ class TB_PokeChoice : public QCompactTable
     Q_OBJECT
 
 public:
-    TB_PokeChoice(bool missingno = true);
+    TB_PokeChoice(int gen, bool missingno);
 
+    void changeGen(int gen);
 protected:
     void mousePressEvent(QMouseEvent * event);
     void mouseMoveEvent(QMouseEvent * event);
@@ -242,6 +244,9 @@ private:
 
     QPoint startPos;
     QTableWidgetItem * itemForDrag;
+
+    bool missingno;
+    int gen;
 };
 
 /* This is the widget displaying the pokemon's info, moves, item, ... */
@@ -294,6 +299,17 @@ signals:
     void levelChanged();
     void pokeImageChanged();
 
+private slots:
+    void setMove(int moveNum, int moveSlot);
+    void setMove(int movenum);
+    void moveCellActivated(int cell);
+    void moveEntered(int row);
+    void setItem(const QString &item);
+    void setNature(int nature);
+    void goToAdvanced();
+    void setNick(const QString &nick);
+    void editNature(int up, int down);
+
 private:
     TB_PokeChoice *pokechoice;
     QComboBox *itemchoice;
@@ -335,16 +351,6 @@ private:
     void updateTypes();
 
     bool advancedOpen();
-private slots:
-    void setMove(int moveNum, int moveSlot);
-    void setMove(int movenum);
-    void moveCellActivated(int cell);
-    void moveEntered(int row);
-    void setItem(const QString &item);
-    void setNature(int nature);
-    void goToAdvanced();
-    void setNick(const QString &nick);
-    void editNature(int up, int down);
 };
 
 /* Manages the EV bars, inside the TB_PokemonBody */

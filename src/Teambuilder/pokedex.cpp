@@ -333,7 +333,7 @@ PokedexBody::PokedexBody()
     QPushButton *advSearch;
     col1->addWidget(advSearch = new QPushButton(QIcon("db/Teambuilder/PokeDex/advsrchicon.png"), tr("&Advanced Search")));
     col1->addWidget(pokeEdit = new QLineEdit());
-    pokeList = new TB_PokeChoice(false);
+    pokeList = new TB_PokeChoice(4, false);
     pokeList->verticalHeader()->setDefaultSectionSize(30);
     QCompleter *comp = new QCompleter(pokeEdit);
     comp->setModel(pokeList->model());
