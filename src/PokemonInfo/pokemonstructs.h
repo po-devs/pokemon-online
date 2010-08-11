@@ -1517,10 +1517,11 @@ public:
     void setBaseStat(int stat, quint8 base);
 };
 
-/* Data that every pokémon of the same specy share. */
+/* Data that every pokemon of the same specy share. */
 class PokeGeneral
 {
     PROPERTY(quint16, num);
+    PROPERTY(quint8, gen);
 protected:
     PokeBaseStats m_stats;
     QSet<int> m_moves;
@@ -1557,6 +1558,7 @@ class PokePersonal
     PROPERTY(quint8, happiness);
     PROPERTY(quint8, level);
     PROPERTY(quint8, forme);
+    PROPERTY(quint8, gen);
 protected:
     int m_moves[4];
 
@@ -1573,6 +1575,8 @@ public:
     int move(int moveSlot) const;
     /* resets everything to default values */
     void reset();
+    /* Removes / Reset things if they are wrong */
+    void runCheck();
 
     void setMove(int moveNum, int moveSlot, bool check=false) throw (QString);
     int addMove(int moveNum, bool check = false) throw (QString);
@@ -1580,37 +1584,12 @@ public:
     bool hasMove(int moveNum);
 
     quint8 DV(int stat) const;
-    quint8 hpDV() const;
-    quint8 attackDV() const;
-    quint8 defenseDV() const;
-    quint8 speedDV() const;
-    quint8 spAttackDV() const;
-    quint8 spDefenseDV() const;
-
     void setDV(int stat, quint8 DV);
-    void setHpDV(quint8);
-    void setAttackDV(quint8);
-    void setDefenseDV(quint8);
-    void setSpeedDV(quint8);
-    void setSpAttackDV(quint8);
-    void setSpDefenseDV(quint8);
 
     quint8 EV(int stat) const;
-    quint8 hpEV() const;
-    quint8 attackEV() const;
-    quint8 defenseEV() const;
-    quint8 speedEV() const;
-    quint8 spAttackEV() const;
-    quint8 spDefenseEV() const;
     int EVSum() const;
 
     void setEV(int stat, quint8 EV);
-    void setHpEV(quint8);
-    void setAttackEV(quint8);
-    void setDefenseEV(quint8);
-    void setSpeedEV(quint8);
-    void setSpAttackEV(quint8);
-    void setSpDefenseEV(quint8);
 };
 
 /* Contains / loads the graphics of a pokemon */
@@ -1649,6 +1628,8 @@ public:
 
     quint16 num() const;
     void setNum(quint16 num);
+    void setGen(int gen);
+    void runCheck();
 
     int stat(int statno) const;
 
@@ -1666,12 +1647,15 @@ class Team
 {
 protected:
     PokeTeam m_pokes[6];
+    quint8 m_gen;
 
 public:
     Team();
+    int gen() const {return m_gen;}
+    void setGen(int gen);
 
-    const PokeTeam & poke(int index) const;
-    PokeTeam & poke(int index);
+    const PokeTeam & poke(int index) const {return m_pokes[index];}
+    PokeTeam & poke(int index) {return m_pokes[index];}
 };
 
 class TrainerTeam

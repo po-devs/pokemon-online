@@ -38,6 +38,62 @@ struct PokemonMoves
 
 class PokemonInfo
 {
+public:
+    /* directory where all the data is */
+    static void init(const QString &dir="db/pokes/");
+
+    /* Self-explainable functions */
+    static int TrueCount(); // pokes without counting forms
+    static int NumberOfPokemons();
+    static bool BelongsToGen(int pokenum, int gen);
+    static QString Name(int pokenum);
+    static int Number(const QString &pokename);
+    static int LevelBalance(int pokenum);
+    static QString WeightS(int pokenum);
+    static QString Classification(int pokenum);
+    static float Weight(int pokenum);
+    static int Gender(int pokenum);
+    static int BaseGender(int pokenum);
+    static QByteArray Cry(int pokenum);
+    static int Type1(int pokenum);
+    static int Type2(int pokenum);
+    static QPixmap Picture(int pokenum, int forme = 0, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
+    static QPixmap Sub(bool back = false);
+    static QPixmap Icon(int index);
+    static QSet<int> Moves(int pokenum, int gen = 4);
+    static QSet<int> EggMoves(int pokenum, int gen = 4);
+    static QSet<int> LevelMoves(int pokenum, int gen = 4);
+    static QSet<int> TutorMoves(int pokenum, int gen = 4);
+    static QSet<int> TMMoves(int pokenum, int gen = 4);
+    static QSet<int> PreEvoMoves(int pokenum, int gen = 4);
+    static QSet<int> SpecialMoves(int pokenum, int gen = 4);
+    static QSet<int> RegularMoves(int pokenum, int gen = 4);
+    /* Aesthetic formes are formes that are just a small variation of
+       a poke and not a new poke. (Shaymin-S is a new poke compared to Shaymin imo).
+
+       Some are chosable, like Shellos or Unown formes, some not, like Castform formes,
+       as Castform only changes in battle.
+       */
+    static bool HasAestheticFormes(int pokenum);
+    static int NumberOfAFormes(int pokenum);
+    static bool AFormesShown(int pokenum);
+    static int AestheticFormeId(int pokenum);
+    static QString AestheticDesc(int pokenum, int forme);
+    /* Standard formes: Rotom, Giratina, Deoxys, .. */
+    static bool IsForme(int pokenum);
+    static int OriginalForme(int pokenum);
+    static bool HasFormes(int pokenum);
+    static QList<int> Formes(int pokenum);
+    static QList<int> Evos(int pokenum);
+    static int OriginalEvo(int pokenum);
+    static bool IsInEvoChain(int pokenum);
+    static PokeBaseStats BaseStats(int pokenum);
+    static bool Exist(int pokenum);
+    static QList<int> Abilities(int pokenum, int gen=4);
+    static int Stat(int poke, int stat, int level, quint8 dv, quint8 ev);
+    static int FullStat(int poke, int nature, int stat, int level, quint8 dv, quint8 ev);
+    static QString Desc(int poke, int cartridge);
+    static QString Height(int poke);
 private:
     static QList<QString> m_Names;
     static QList<QString> m_Weights;
@@ -68,61 +124,6 @@ private:
     static QSet<int> getMoves(const QString &filename, int Pokenum);
     static QString path(const QString &filename);
     static int calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev);
-public:
-    /* directory where all the data is */
-    static void init(const QString &dir="db/pokes/");
-
-    /* Self-explainable functions */
-    static int TrueCount(); // pokes without counting forms
-    static int NumberOfPokemons();
-    static QString Name(int pokenum);
-    static int Number(const QString &pokename);
-    static int LevelBalance(int pokenum);
-    static QString WeightS(int pokenum);
-    static QString Classification(int pokenum);
-    static float Weight(int pokenum);
-    static int Gender(int pokenum);
-    static int BaseGender(int pokenum);
-    static QByteArray Cry(int pokenum);
-    static int Type1(int pokenum);
-    static int Type2(int pokenum);
-    static QPixmap Picture(int pokenum, int forme = 0, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
-    static QPixmap Sub(bool back = false);
-    static QPixmap Icon(int index);
-    static QSet<int> Moves(int pokenum);
-    static QSet<int> EggMoves(int pokenum, int gen = 4);
-    static QSet<int> LevelMoves(int pokenum, int gen = 4);
-    static QSet<int> TutorMoves(int pokenum, int gen = 4);
-    static QSet<int> TMMoves(int pokenum, int gen = 4);
-    static QSet<int> PreEvoMoves(int pokenum, int gen = 4);
-    static QSet<int> SpecialMoves(int pokenum, int gen = 4);
-    static QSet<int> RegularMoves(int pokenum, int gen = 4);
-    /* Aesthetic formes are formes that are just a small variation of
-       a poke and not a new poke. (Shaymin-S is a new poke compared to Shaymin imo).
-
-       Some are chosable, like Shellos or Unown formes, some not, like Castform formes,
-       as Castform only changes in battle.
-       */
-    static bool HasAestheticFormes(int pokenum);
-    static int NumberOfAFormes(int pokenum);
-    static bool AFormesShown(int pokenum);
-    static int AestheticFormeId(int pokenum);
-    static QString AestheticDesc(int pokenum, int forme);
-    /* Standard formes: Rotom, Giratina, Deoxys, .. */
-    static bool IsForme(int pokenum);
-    static int OriginalForme(int pokenum);
-    static bool HasFormes(int pokenum);
-    static QList<int> Formes(int pokenum);
-    static QList<int> Evos(int pokenum);
-    static int OriginalEvo(int pokenum);
-    static bool IsInEvoChain(int pokenum);
-    static PokeBaseStats BaseStats(int pokenum);
-    static bool Exist(int pokenum);
-    static QList<int> Abilities(int pokenum);
-    static int Stat(int poke, int stat, int level, quint8 dv, quint8 ev);
-    static int FullStat(int poke, int nature, int stat, int level, quint8 dv, quint8 ev);
-    static QString Desc(int poke, int cartridge);
-    static QString Height(int poke);
 };
 
 class MoveInfo
