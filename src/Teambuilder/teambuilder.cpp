@@ -690,6 +690,7 @@ TB_TeamBody::TB_TeamBody(TeamBuilder *parent) : m_dockAdvanced(0), m_team(parent
     QHBoxLayout *hh = new QHBoxLayout(this);
     hh->setMargin(0);
     splitter = new QSplitter();
+    splitter->setStyle(QStyleFactory::create("Plastique"));
     hh->addWidget(splitter);
     splitter->setChildrenCollapsible(false);
 
