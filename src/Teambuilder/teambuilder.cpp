@@ -120,7 +120,7 @@ TitledWidget::TitledWidget(const QString &title, QWidget *w)
 /***********************************/
 
 
-TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
+TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : gen3(NULL), gen4(NULL), m_team(pub_team)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
 
@@ -165,7 +165,7 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
     m_body->addWidget(m_trainerBody);
 
     /* Team Body */
-    m_teamBody = new TB_TeamBody(this);
+    m_teamBody = new TB_TeamBody(this, team()->gen());
     m_body->addWidget(m_teamBody);
 
     /* Pokemon Boxes */
@@ -347,6 +347,13 @@ void TeamBuilder::updateAll()
 
 void TeamBuilder::updateTeam()
 {
+    if (gen3 && gen4) {
+        if (team()->gen() == 3) {
+            gen3->setChecked(true);
+        } else {
+            gen4->setChecked(true);
+        }
+    }
     m_teamBody->updateTeam();
 }
 
@@ -383,14 +390,19 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
 
     QMenu *gen = menuBar->addMenu(tr("&Gen."));
     QActionGroup *gens = new QActionGroup(gen);
-    QAction *gen3 = gen->addAction(tr("Advance (&3rd gen)"),this,SLOT(genChanged()));
-    QAction *gen4 = gen->addAction(tr("HGSS (&4th gen)"), this, SLOT(genChanged()));
+    gen3 = gen->addAction(tr("Advance (&3rd gen)"),this,SLOT(genChanged()));
+    gen4 = gen->addAction(tr("HGSS (&4th gen)"), this, SLOT(genChanged()));
 
     gen3->setCheckable(true);
     gen4->setCheckable(true);
-    gen4->setChecked(true);
     gen3->setProperty("gen", 3);
     gen4->setProperty("gen", 4);
+
+    if (team()->gen() == 3) {
+        gen3->setChecked(true);
+    } else {
+        gen4->setChecked(true);
+    }
 
     gens->addAction(gen3);
     gens->addAction(gen4);
@@ -794,6 +806,8 @@ void TB_TeamBody::updateButton()
 
 void TB_TeamBody::updateTeam()
 {
+    changeGeneration(trainerTeam()->team().gen());
+
     for(int i=0; i < 6; i++) {
         updatePoke(i);
     }
@@ -810,6 +824,8 @@ void TB_TeamBody::changeGeneration(int gen)
         return;
 
     this->gen = gen;
+    trainerTeam()->team().setGen(gen);
+
     for(int i = 0; i < 6; i++) {
         pokeBody[i]->changeGeneration(gen);
     }
@@ -867,8 +883,11 @@ void TB_TeamBody::advancedDestroyed()
 /************* POKEMON CHOICE *****************/
 /**********************************************/
 
-TB_PokeChoice::TB_PokeChoice(bool missingno) : QCompactTable(PokemonInfo::TrueCount() - !missingno, 2)
+TB_PokeChoice::TB_PokeChoice(int gen, bool missingno) : QCompactTable(PokemonInfo::TrueCount(gen) - !missingno, 2)
 {
+    this->missingno = missingno;
+    this->gen = gen;
+
     setObjectName("PokeChoice");
 
     setFixedWidth(150);
@@ -877,13 +896,30 @@ TB_PokeChoice::TB_PokeChoice(bool missingno) : QCompactTable(PokemonInfo::TrueCo
     horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
 
     /* Adding the poke names */
-    for (int i = missingno ? 0 : 1; i < PokemonInfo::TrueCount(); i++)
+    for (int i = missingno ? 0 : 1; i < PokemonInfo::TrueCount(gen); i++)
     {
         setItem(i-!missingno, 0, new QTableWidgetItem(QString::number(i).rightJustified(3,'0')));
         setItem(i-!missingno, 1, new QTableWidgetItem(PokemonInfo::Name(i)));
     }
 
     resizeRowsToContents();
+}
+
+void TB_PokeChoice::changeGen(int gen)
+{
+    if (this->gen == gen)
+        return;
+
+    int oldCount = rowCount();
+    this->gen = gen;
+
+    setRowCount(PokemonInfo::TrueCount(gen) - !missingno);
+
+    /* Only update rows that are not filled */
+    for (int x = oldCount; x < rowCount(); x++) {
+        setItem(x-!missingno, 0, new QTableWidgetItem(QString::number(x).rightJustified(3,'0')));
+        setItem(x-!missingno, 1, new QTableWidgetItem(PokemonInfo::Name(x)));
+    }
 }
 
 void TB_PokeChoice::mousePressEvent(QMouseEvent *event)
@@ -944,7 +980,7 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, 
     ml->addLayout(box1,0,0,2,1);
 
     box1->addWidget(new Pokeballed(m_pokeedit = new QLineEdit()));
-    box1->addWidget(pokechoice = new TB_PokeChoice(),100);
+    box1->addWidget(pokechoice = new TB_PokeChoice(gen, true),100);
 
     box1->addWidget(new TitledWidget(tr("&Nickname"),m_nick = new QLineEdit()));
     m_nick->setValidator(new QNickValidator(m_nick));
@@ -1072,6 +1108,8 @@ void TB_PokemonBody::reloadItems(bool showAllItems)
 void TB_PokemonBody::changeGeneration(int gen)
 {
     this->gen = gen;
+    pokechoice->changeGen(gen);
+
     poke()->setGen(gen);
     poke()->load();
     poke()->runCheck();

@@ -43,7 +43,7 @@ public:
     static void init(const QString &dir="db/pokes/");
 
     /* Self-explainable functions */
-    static int TrueCount(); // pokes without counting forms
+    static int TrueCount(int gen=4); // pokes without counting forms
     static int NumberOfPokemons();
     static bool BelongsToGen(int pokenum, int gen);
     static QString Name(int pokenum);
