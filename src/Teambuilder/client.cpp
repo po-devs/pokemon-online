@@ -1093,7 +1093,6 @@ void Client::battleReceived(int battleid, int id1, int id2)
 void Client::watchBattle(const QString &name0, const QString &name1, int battleId, bool doubles)
 {
     BaseBattleWindow *battle = new BaseBattleWindow(player(id(name0)), player(id(name1)), doubles);
-    battle->setParent(this);
     battle->setWindowFlags(Qt::Window);
     battle->show();
 
