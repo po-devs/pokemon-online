@@ -51,7 +51,7 @@ bool MoveSetChecker::isValid(int pokenum, int gen, const QSet<int> &moves2, QSet
 
     if (!PokemonInfo::Moves(pokenum, gen).contains(moves)) {
         if (invalid_moves) {
-            *invalid_moves = moves.subtract(PokemonInfo::Moves(pokenum));
+            *invalid_moves = moves.subtract(PokemonInfo::Moves(pokenum, gen));
         }
         return false;
     }
