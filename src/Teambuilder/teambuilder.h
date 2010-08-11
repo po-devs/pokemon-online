@@ -103,6 +103,7 @@ private slots:
     void changeToBoxes();
     void changeToPokedex();
     void changeZone();
+    void genChanged();
 
 signals:
     void done();
@@ -147,7 +148,7 @@ private slots:
     void changeTrainerColor();
 private:
     QLineEdit *m_nick;
-    QTextEdit *m_winMessage, *m_loseMessage, *m_trainerInfo;
+    QPlainTextEdit *m_winMessage, *m_loseMessage, *m_trainerInfo;
     QPushButton *m_colorButton;
     AvatarBox *m_avatar;
     QSpinBox *m_avatarSelection;
@@ -187,9 +188,10 @@ class TB_TeamBody: public QWidget
 {
     Q_OBJECT
 public:
-    TB_TeamBody(TeamBuilder *parent);
+    TB_TeamBody(TeamBuilder *parent, int gen=4);
     void updateTeam();
     void updatePoke(int num);
+    void changeGeneration(int gen);
 private slots:
     void changeIndex();
     void updateButton();
@@ -217,6 +219,8 @@ private:
     TrainerTeam* trainerTeam() {
         return m_team;
     }
+
+    int gen;
 
     friend class DockAdvanced;
 };
@@ -256,6 +260,28 @@ class TB_PokemonBody : public QWidget
         Category,
         LastColumn
     };
+public:
+    TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num, int gen=4);
+    void connectWithAdvanced(TB_Advanced *ptr);
+
+    void updateNum();
+    void setNum(int pokeNum, bool resetEverything);
+    /* getting the pokemon of the team corresponding to the body */
+    PokeTeam *poke();
+    int num() const {return m_num;}
+
+    void reloadItems(bool showAllItems);
+    void changeGeneration(int gen);
+
+public slots:
+    void setNum(int pokeNum);
+    void setPokeByNick();
+    /* slots used by advanced */
+    void updateImage();
+    void updateGender();
+    void updateLevel();
+    void updateEVs();
+    void changeForme(int pokenum);
 
 signals:
     void moveChosen(int movenum);
@@ -267,26 +293,7 @@ signals:
     void itemChanged(int newItem);
     void levelChanged();
     void pokeImageChanged();
-public slots:
-    void setNum(int pokeNum);
-    void setPokeByNick();
-    /* slots used by advanced */
-    void updateImage();
-    void updateGender();
-    void updateLevel();
-    void updateEVs();
-    void changeForm(int pokenum);
-public:
-    TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num);
-    void connectWithAdvanced(TB_Advanced *ptr);
 
-    void updateNum();
-    void setNum(int pokeNum, bool resetEverything);
-    /* getting the pokemon of the team corresponding to the body */
-    PokeTeam *poke();
-    int num() const {return m_num;}
-
-    void reloadItems(bool showAllItems);
 private:
     TB_PokeChoice *pokechoice;
     QComboBox *itemchoice;
@@ -309,6 +316,7 @@ private:
     TB_EVManager *evchoice;
 
     int m_index;
+    int gen;
 
     /* the pokemon of the team corresponding to the body */
     PokeTeam *m_poke;

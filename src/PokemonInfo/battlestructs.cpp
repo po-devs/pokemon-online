@@ -172,7 +172,8 @@ void PokeBattle::init(const PokePersonal &poke)
     int curs = 0;
     QSet<int> invalid_moves;
     QSet<int> taken_moves;
-    MoveSetChecker::isValid(num(),poke.move(0),poke.move(1),poke.move(2),poke.move(3), &invalid_moves);
+    /* Gets the invalid moves */
+    MoveSetChecker::isValid(num(), 4, poke.move(0),poke.move(1),poke.move(2),poke.move(3), &invalid_moves);
 
     for (int i = 0; i < 4; i++) {
         if (!invalid_moves.contains(poke.move(i))) {
@@ -187,7 +188,7 @@ void PokeBattle::init(const PokePersonal &poke)
     /* Even by removing the invalid moves indicated, the combination may still
        not be valid, so we check once more */
 
-    if (move(0).num() == 0 || !MoveSetChecker::isValid(num(), move(0).num(), move(1).num(), move(2).num(), move(3).num())) {
+    if (move(0).num() == 0 || !MoveSetChecker::isValid(num(), 4, move(0).num(), move(1).num(), move(2).num(), move(3).num())) {
 	num() = 0;
 	return;
     }
