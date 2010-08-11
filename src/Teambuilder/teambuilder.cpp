@@ -690,6 +690,7 @@ TB_TeamBody::TB_TeamBody(TeamBuilder *parent) : m_dockAdvanced(0), m_team(parent
     QHBoxLayout *hh = new QHBoxLayout(this);
     hh->setMargin(0);
     splitter = new QSplitter();
+    splitter->setStyle(QStyleFactory::create("Plastique"));
     hh->addWidget(splitter);
     splitter->setChildrenCollapsible(false);
 
@@ -1338,11 +1339,12 @@ void TB_PokemonBody::configureMoves()
 
     QSet<QPair<int, QString> > sets[] = {
         map_container_with_value(PokemonInfo::TMMoves(num), tr("TM/HM")),
-        map_container_with_value(PokemonInfo::TutorMoves(num), tr("4G Tutor")),
-        map_container_with_value(PokemonInfo::LevelMoves(num), tr("4G Level")),
-        map_container_with_value(PokemonInfo::PreEvoMoves(num), tr("4G Pre Evo")),
-        map_container_with_value(PokemonInfo::EggMoves(num), tr("4G Breeding")),
-        map_container_with_value(PokemonInfo::SpecialMoves(num), tr("4G Special")),
+        map_container_with_value(PokemonInfo::TutorMoves(num), tr("Move Tutor")),
+        map_container_with_value(PokemonInfo::LevelMoves(num), tr("Level")),
+        map_container_with_value(PokemonInfo::PreEvoMoves(num), tr("Pre Evo")),
+        map_container_with_value(PokemonInfo::EggMoves(num), tr("Breeding")),
+        map_container_with_value(PokemonInfo::SpecialMoves(num), tr("Special")),
+        map_container_with_value(PokemonInfo::TMMoves(num, 3), tr("3G TM/HM")),
         map_container_with_value(PokemonInfo::TutorMoves(num,3), tr("3G Tutor")),
         map_container_with_value(PokemonInfo::LevelMoves(num,3), tr("3G Level")),
         map_container_with_value(PokemonInfo::PreEvoMoves(num,3), tr("3G Pre Evo")),

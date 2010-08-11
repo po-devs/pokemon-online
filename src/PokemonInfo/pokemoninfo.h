@@ -28,7 +28,7 @@ struct PokemonMoves
     //QSet<int> moves;
     /* All moves except egg & special */
     QSet<int> regularMoves[2];
-    QSet<int> TMMoves;
+    QSet<int> TMMoves[2];
     QSet<int> preEvoMoves[2];
     QSet<int> levelMoves[2];
     QSet<int> eggMoves[2];
@@ -93,7 +93,7 @@ public:
     static QSet<int> EggMoves(int pokenum, int gen = 4);
     static QSet<int> LevelMoves(int pokenum, int gen = 4);
     static QSet<int> TutorMoves(int pokenum, int gen = 4);
-    static QSet<int> TMMoves(int pokenum);
+    static QSet<int> TMMoves(int pokenum, int gen = 4);
     static QSet<int> PreEvoMoves(int pokenum, int gen = 4);
     static QSet<int> SpecialMoves(int pokenum, int gen = 4);
     static QSet<int> RegularMoves(int pokenum, int gen = 4);

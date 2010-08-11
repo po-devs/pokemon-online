@@ -3,13 +3,10 @@
 # -------------------------------------------------
 TARGET = MoveMachine
 DESTDIR = ../../bin
+LIBS += -L../../bin -lutilities -lpokemonlib
 TEMPLATE = app
 SOURCES += main.cpp \
-    mainwindow.cpp \
-    ../PokemonInfo/pokemoninfo.cpp \
-    ../Utilities/otherwidgets.cpp \
-    ../PokemonInfo/pokemonstructs.cpp \
-    ../PokemonInfo/movesetchecker.cpp
+    mainwindow.cpp
 HEADERS += mainwindow.h \
     ../Utilities/otherwidgets.h \
     ../PokemonInfo/movesetchecker.h
