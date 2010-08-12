@@ -1527,14 +1527,13 @@ protected:
     QList<int> m_abilities;
     int m_types[2];
     int m_genderAvail;
-    bool customPokemonFlag;
 
     void loadMoves();
     void loadTypes();
     void loadAbilities();
     void loadGenderAvail();
 public:
-    PokeGeneral(const bool customPokemon = false);
+    PokeGeneral();
 
     const QList<int>& abilities() const;
     int genderAvail() const;
@@ -1543,9 +1542,6 @@ public:
 
     /* loads using num() */
     void load();
-
-    /* Is Pokemon custom made? */
-    bool isCustom(void);
 };
 
 /* Data that is unique to a pokémon */
