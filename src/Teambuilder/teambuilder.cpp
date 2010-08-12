@@ -722,7 +722,7 @@ TB_TeamBody::TB_TeamBody(TeamBuilder *parent, int gen) : m_dockAdvanced(0), m_te
     QHBoxLayout *hh = new QHBoxLayout(this);
     hh->setMargin(0);
     splitter = new QSplitter();
-    splitter->setStyle(QStyleFactory::create("Plastique"));
+    //splitter->setStyle(QStyleFactory::create("Plastique"));
     hh->addWidget(splitter);
     splitter->setChildrenCollapsible(false);
 
@@ -1091,7 +1091,7 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, 
 void TB_PokemonBody::initItems()
 {
     QSettings s;
-    QStringList itemList = s.value("show_all_items").toBool() ? ItemInfo::SortedNames() : ItemInfo::SortedUsefulNames();
+    QStringList itemList = s.value("show_all_items").toBool() ? ItemInfo::SortedNames(gen) : ItemInfo::SortedUsefulNames(gen);
     itemchoice->addItems(itemList);
 
     connect(itemchoice, SIGNAL(activated(QString)), SLOT(setItem(const QString &)));
@@ -1100,7 +1100,7 @@ void TB_PokemonBody::initItems()
 void TB_PokemonBody::reloadItems(bool showAllItems)
 {
     itemchoice->clear();
-    QStringList itemList = showAllItems ? ItemInfo::SortedNames() : ItemInfo::SortedUsefulNames();
+    QStringList itemList = showAllItems ? ItemInfo::SortedNames(gen) : ItemInfo::SortedUsefulNames(gen);
     itemchoice->addItems(itemList);
     updateItem();
 }
@@ -1115,6 +1115,9 @@ void TB_PokemonBody::changeGeneration(int gen)
     poke()->runCheck();
 
     updateNum();
+
+    QSettings s;
+    reloadItems(s.value("show_all_items").toBool());
 }
 
 void TB_PokemonBody::initPokemons(TB_PokemonBody *)

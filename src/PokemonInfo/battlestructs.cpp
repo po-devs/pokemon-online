@@ -420,7 +420,7 @@ void TeamBattle::generateRandom()
         bool itemDone= false;
         while(!itemDone)
         {
-            p.item() = ItemInfo::Number(ItemInfo::SortedNames()[true_rand()%ItemInfo::NumberOfItems()]);
+            p.item() = ItemInfo::Number(ItemInfo::SortedNames(4)[true_rand()%ItemInfo::NumberOfItems()]);
             if(ItemInfo::isUseful(p.item()))
                 itemDone = true;
 

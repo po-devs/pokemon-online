@@ -61,7 +61,8 @@ QList<QString> ItemInfo::m_BerryNames;
 QList<QString> ItemInfo::m_RegItemNames;
 QHash<QString, int> ItemInfo::m_BerryNamesH;
 QHash<QString, int> ItemInfo::m_ItemNamesH;
-QList<QString> ItemInfo::m_SortedNames;
+QList<QString> ItemInfo::m_SortedNames[2];
+QList<QString> ItemInfo::m_SortedUsefulNames[2];
 QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects;
 QList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
 QList<QStringList> ItemInfo::m_RegMessages;
@@ -70,7 +71,7 @@ QList<int> ItemInfo::m_Powers;
 QList<int> ItemInfo::m_BerryPowers;
 QList<int> ItemInfo::m_BerryTypes;
 QList<int> ItemInfo::m_UsefulItems;
-QList<QString> ItemInfo::m_SortedUsefulNames;
+QSet<int> ItemInfo::m_3rdGenItems;
 
 QList<QString> TypeInfo::m_Names;
 QList<QColor> TypeInfo::m_Colors;
@@ -1094,17 +1095,34 @@ void ItemInfo::loadNames()
     fill_container_with_file(m_BerryPowers, path("berry_pow.txt"));
     fill_container_with_file(m_BerryTypes, path("berry_type.txt"));
     fill_container_with_file(m_UsefulItems, path("item_useful.txt"));
+    fill_container_with_file(m_3rdGenItems, path("items_gen3.txt"));
 
-    m_SortedNames << m_RegItemNames << m_BerryNames;
-    qSort(m_SortedNames);
+    QList<int> tempb;
+    fill_container_with_file(tempb, path("berries_gen3.txt"));
+    foreach(int b, tempb) {
+        m_3rdGenItems.insert(b+8000);
+    }
 
-    m_SortedUsefulNames << m_BerryNames;
+    m_SortedNames[1] << m_RegItemNames << m_BerryNames;
+    qSort(m_SortedNames[1]);
+
+    m_SortedUsefulNames[1] << m_BerryNames;
 
     for (int i = 0; i < m_RegItemNames.size(); i++) {
         if (isUseful(i))
-            m_SortedUsefulNames.push_back(m_RegItemNames[i]);
+            m_SortedUsefulNames[1].push_back(m_RegItemNames[i]);
     }
-    qSort(m_SortedUsefulNames);
+    qSort(m_SortedUsefulNames[1]);
+
+    for (int i = 0; i < m_SortedNames[1].size(); i++) {
+        if (Exists(Number(m_SortedNames[1][i]), 3))
+            m_SortedNames[0].push_back(m_SortedNames[1][i]);
+    }
+
+    for (int i = 0; i < m_SortedUsefulNames[1].size(); i++) {
+        if (Exists(Number(m_SortedUsefulNames[1][i]), 3))
+            m_SortedUsefulNames[0].push_back(m_SortedUsefulNames[1][i]);
+    }
 
     QStringList temp;
     fill_container_with_file(temp, path("item_effects.txt"));
@@ -1190,7 +1208,7 @@ QString ItemInfo::path(const QString &file)
 
 int ItemInfo::NumberOfItems()
 {
-    return m_SortedNames.size();
+    return m_SortedNames[4-3].size();
 }
 
 int ItemInfo::Power(int itemnum) {
@@ -1255,9 +1273,14 @@ QString ItemInfo::Name(int itemnum)
     }
 }
 
-bool ItemInfo::Exists(int itemnum)
+bool ItemInfo::Exists(int itemnum, int gen)
 {
-    return !(itemnum < 8000 && itemnum >= m_RegItemNames.size()) && !(itemnum >= 8000 + m_BerryNames.size());
+    if ((itemnum < 8000 && itemnum >= m_RegItemNames.size()) && !(itemnum >= 8000 + m_BerryNames.size()))
+        return false;
+    if (gen == 4)
+        return true;
+
+    return m_3rdGenItems.contains(itemnum);
 }
 
 bool ItemInfo::isBerry(int itemnum)
@@ -1313,20 +1336,14 @@ int PokemonInfo::BaseGender(int pokenum)
             Pokemon::Male : (avail == Pokemon::NeutralAvail ? Pokemon::Neutral : Pokemon::Female);
 }
 
-int ItemInfo::SortedNumber(const QString &itemname)
+QList<QString> ItemInfo::SortedNames(int gen)
 {
-    return (qLowerBound(m_SortedNames, itemname) - m_SortedNames.begin()) % (NumberOfItems());
+    return m_SortedNames[gen-3];
 }
 
-
-QList<QString> ItemInfo::SortedNames()
+QList<QString> ItemInfo::SortedUsefulNames(int gen)
 {
-    return m_SortedNames;
-}
-
-QList<QString> ItemInfo::SortedUsefulNames()
-{
-    return m_SortedUsefulNames;
+    return m_SortedUsefulNames[gen-3];
 }
 
 void TypeInfo::loadNames()

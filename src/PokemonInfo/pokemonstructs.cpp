@@ -205,6 +205,10 @@ void PokePersonal::runCheck()
 
     if (ability() != ab.ab2)
         ability() = ab.ab1;
+
+    if (!ItemInfo::Exists(item(), gen())) {
+        item() = 0;
+    }
 }
 
 int PokePersonal::addMove(int moveNum, bool check) throw(QString)

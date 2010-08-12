@@ -220,13 +220,36 @@ public:
 	QString args;
 	Effect(int i, const QString &q="") : num(i), args(q){}
     };
+
+    /* directory where all the data is */
+    static void init(const QString &dir="db/items/");
+
+    /* Self-explainable functions */
+    static int NumberOfItems();
+    static QString Name(int itemnum);
+    static bool Exists(int itemnum, int gen=4);
+    static bool isBerry(int itemnum);
+    static bool isPlate(int itemnum);
+    static bool isMail(int itemnum);
+    static bool isUseful(int itemnum);
+    static int PlateType(int itemnum);
+    static QList<QString> SortedNames(int gen);
+    static QList<QString> SortedUsefulNames(int gen);
+    static QList<Effect> Effects(int item);
+    static QString Message(int item, int part);
+    static int Number(const QString &itemname);
+    static QString Description(int itemnum);
+    static int Power(int itemnum);
+    static int BerryPower(int itemnum);
+    static int BerryType(int itemnum);
+    static QPixmap Icon(int itemnum);
 private:
     static QList<QString> m_BerryNames;
     static QList<QString> m_RegItemNames;
     static QHash<QString, int> m_BerryNamesH;
     static QHash<QString, int> m_ItemNamesH;
-    static QList<QString> m_SortedNames;
-    static QList<QString> m_SortedUsefulNames;
+    static QList<QString> m_SortedNames[2];
+    static QList<QString> m_SortedUsefulNames[2];
     static QString m_Directory;
     static QList<QList<Effect> > m_RegEffects;
     static QList<QList<Effect> > m_BerryEffects;
@@ -236,34 +259,10 @@ private:
     static QList<int> m_BerryPowers;
     static QList<int> m_BerryTypes;
     static QList<int> m_UsefulItems;
+    static QSet<int> m_3rdGenItems;
 
     static void loadNames();
     static QString path(const QString &filename);
-public:
-    /* directory where all the data is */
-    static void init(const QString &dir="db/items/");
-
-    /* Self-explainable functions */
-    static int NumberOfItems();
-    static QString Name(int itemnum);
-    static bool Exists(int itemnum);
-    static bool isBerry(int itemnum);
-    static bool isPlate(int itemnum);
-    static bool isMail(int itemnum);
-    static bool isUseful(int itemnum);
-    static int PlateType(int itemnum);
-    static QList<QString> SortedNames();
-    static QList<QString> SortedUsefulNames();
-    static QList<Effect> Effects(int item);
-    static QString Message(int item, int part);
-    static int Number(const QString &itemname);
-    /* returns the number corresponding to the name, but with the sortedNames as a ref */
-    static int SortedNumber(const QString &itemname);
-    static QString Description(int itemnum);
-    static int Power(int itemnum);
-    static int BerryPower(int itemnum);
-    static int BerryType(int itemnum);
-    static QPixmap Icon(int itemnum);
 };
 
 class TypeInfo
