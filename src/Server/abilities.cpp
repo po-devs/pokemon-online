@@ -432,10 +432,10 @@ struct AMForeWarn : public AM {
                     int pow;
                     if (SM.contains(m)) {
                         pow = SM[m];
-                    } else if (MoveInfo::Power(m) == 1) {
+                    } else if (MoveInfo::Power(m, b.gen()) == 1) {
                         pow = 80;
                     } else {
-                        pow = MoveInfo::Power(m);
+                        pow = MoveInfo::Power(m, b.gen());
                     }
 
                     if (pow > max) {
@@ -786,7 +786,7 @@ struct AMShadowTag : public AM {
 
     static void iit(int, int t, BS &b) {
         //Shadow Tag
-        if (!b.hasWorkingAbility(t, Ability::ShadowTag)) turn(b,t)["Trapped"] = true;
+        if (!b.hasWorkingAbility(t, Ability::ShadowTag) || b.gen() == 3) turn(b,t)["Trapped"] = true;
     }
 };
 

@@ -768,11 +768,11 @@ void MoveTab::changePoke(int poke)
 
         moves->setItem(i, NameCol,new QTableWidgetItem(MoveInfo::Name(move)));
         moves->setItem(i, PPCol,new QTableWidgetItem(QString::number(MoveInfo::PP(move))));
-        moves->setItem(i, PowerCol,new QTableWidgetItem(MoveInfo::PowerS(move)));
+        moves->setItem(i, PowerCol,new QTableWidgetItem(MoveInfo::PowerS(move, 4)));
         moves->setItem(i, AccCol,new QTableWidgetItem(MoveInfo::AccS(move)));
 
-        QTableWidgetItem *witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(move)));
-        witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(move))));
+        QTableWidgetItem *witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(move, 4)));
+        witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(move, 4))));
         moves->setItem(i, CategoryCol, witem);
     }
 

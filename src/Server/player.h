@@ -2,12 +2,14 @@
 #define PLAYER_H
 
 #include "../PokemonInfo/networkstructs.h"
-#include "analyze.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "playerinterface.h"
 
 class Challenge;
 class BattleSituation;
+class Analyzer;
+class QTcpSocket;
+
 /* a single player */
 /***
   WARNING! Always use deleteLater!!
@@ -58,6 +60,7 @@ public:
     int id() const;
     QString name() const;
     QString ip() const;
+    int gen() const;
 
     bool connected() const;
     bool isLoggedIn() const;
@@ -143,9 +146,9 @@ signals:
     void joinRequested(int id, const QString &channel);
     void leaveRequested(int id, int channelid);
 public slots:
-    void loggedIn(const TeamInfo &team,bool,bool, QColor);
+    void loggedIn(TeamInfo &team,bool,bool, QColor);
     void recvMessage(int chan, const QString &mess);
-    void recvTeam(const TeamInfo &team);
+    void recvTeam(TeamInfo &team);
     void disconnected();
     void challengeStuff(const ChallengeInfo &c);
     void battleForfeited(int id);
@@ -179,7 +182,7 @@ public slots:
     void leaveRequested(int slotid);
 private:
     TeamBattle myteam;
-    Analyzer myrelay;
+    Analyzer *myrelay;
     int lockCount;
 
     int myid;
@@ -231,7 +234,7 @@ private:
     /* The channels a player is on */
     QSet<int> channels;
 
-    void assignTeam(const TeamInfo &team);
+    void assignTeam(TeamInfo &team);
     void assignNewColor(const QColor &c);
     bool testNameValidity(const QString &name);
     void loginSuccess();

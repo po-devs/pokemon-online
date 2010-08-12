@@ -36,13 +36,11 @@ class BattleMove
 {
     PROPERTY(quint8, PP);
     PROPERTY(quint8, totalPP);
-    PROPERTY(quint8, power);
-    PROPERTY(quint8, type);
     PROPERTY(quint16, num);
 public:
     BattleMove();
 
-    void load();
+    void load(int gen);
     operator int () {return num();}
 };
 
@@ -70,7 +68,7 @@ class PokeBattle
 public:
     PokeBattle();
 
-    void init(const PokePersonal &poke);
+    void init(PokePersonal &poke);
 
     BattleMove& move(int i);
     const BattleMove& move(int i) const;
@@ -118,9 +116,9 @@ class TeamBattle
 public:
     TeamBattle();
     /* removes the invalid pokemons */
-    TeamBattle(const TeamInfo &other);
-    void init(const TeamInfo &other);
-    void generateRandom();
+    TeamBattle(TeamInfo &other);
+    void init(TeamInfo &other);
+    void generateRandom(int gen);
 
     PokeBattle& poke(int i);
     const PokeBattle& poke(int i) const;
@@ -129,6 +127,7 @@ public:
 
     QString name;
     QString info;
+    int gen;
 private:
     PokeBattle m_pokemons[6];
 };
@@ -190,6 +189,7 @@ struct ChallengeInfo
         Busy,
         Refused,
         InvalidTeam,
+        InvalidGen,
 
         ChallengeDescLast
     };
@@ -257,6 +257,7 @@ QDataStream & operator << (QDataStream &out, const ChallengeInfo &c);
 
 struct BattleConfiguration
 {
+    quint8 gen;
     qint32 ids[2];
 
     int slot(int spot, int poke = 0) const  {
@@ -270,14 +271,14 @@ struct BattleConfiguration
 
 inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)
 {
-    in >> c.ids[0] >> c.ids[1];
+    in >> c.ids[0] >> c.ids[1] >> c.gen;
 
     return in;
 }
 
 inline QDataStream & operator << (QDataStream &out, const BattleConfiguration &c)
 {
-    out << c.ids[0] << c.ids[1];
+    out << c.ids[0] << c.ids[1] << c.gen;
 
     return out;
 }

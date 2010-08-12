@@ -1,5 +1,9 @@
-#include <ctime> /* for random numbers, time(NULL) needed */
 #include <QtNetwork>
+#include <ctime> /* for random numbers, time(NULL) needed */
+#include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/networkstructs.h"
+#include "../PokemonInfo/movesetchecker.h"
+#include "../Utilities/otherwidgets.h"
 #include "server.h"
 #include "player.h"
 #include "challenge.h"
@@ -10,16 +14,13 @@
 #include "security.h"
 #include "antidos.h"
 #include "serverconfig.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/networkstructs.h"
-#include "../PokemonInfo/movesetchecker.h"
-#include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
 #include "tiermachine.h"
 #include "battlingoptions.h"
 #include "sql.h"
 #include "sqlconfig.h"
 #include "pluginmanager.h"
+#include "analyze.h"
 
 Server *Server::serverIns = NULL;
 
@@ -942,6 +943,9 @@ void Server::findBattle(int id, const FindBattleData &f)
         if (p2->lastFindBattleIp() == p1->ip() || p1->lastFindBattleIp() == p2->ip()) {
             continue;
         }
+
+        if (p1->gen() != p2->gen())
+            continue;
 
         /* We check the tier thing */
         if ( (f.sameTier || data->sameTier) && p1->tier() != p2->tier() )
