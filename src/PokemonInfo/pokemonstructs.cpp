@@ -86,7 +86,7 @@ void PokeBaseStats::setBaseStat(int stat, quint8 base)
     m_BaseStats[stat] = base;
 }
 
-PokeGeneral::PokeGeneral(const bool customPokemon)
+PokeGeneral::PokeGeneral()
 {
     num() = 0;
     //default for non-bugged programs
@@ -95,7 +95,6 @@ PokeGeneral::PokeGeneral(const bool customPokemon)
     m_genderAvail = Pokemon::NeutralAvail;
     m_types[0] = Pokemon::Curse;
     m_types[1] = -1;
-    customPokemonFlag = customPokemon;
 }
 
 
@@ -1175,9 +1174,4 @@ QDataStream & operator >> (QDataStream & in, PokePersonal & poke)
         poke.setEV(i,EV);
     }
     return in;
-}
-
-bool PokeGeneral::isCustom(void)
-{
-    return customPokemonFlag;
 }
