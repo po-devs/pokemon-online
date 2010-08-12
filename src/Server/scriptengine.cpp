@@ -1377,6 +1377,11 @@ void ScriptEngine::shutDown()
     exit(0);
 }
 
+void ScriptEngine::modifyTypeChart(int type_attack, int type_defend, int value)
+{
+    TypeInfo::modifyTypeChart(type_attack, type_defend, value);
+}
+
 ScriptWindow::ScriptWindow()
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
