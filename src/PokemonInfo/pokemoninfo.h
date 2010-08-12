@@ -28,7 +28,7 @@ struct PokemonMoves
     //QSet<int> moves;
     /* All moves except egg & special */
     QSet<int> regularMoves[2];
-    QSet<int> TMMoves;
+    QSet<int> TMMoves[2];
     QSet<int> preEvoMoves[2];
     QSet<int> levelMoves[2];
     QSet<int> eggMoves[2];
@@ -36,44 +36,15 @@ struct PokemonMoves
     QSet<int> tutorMoves[2];
 };
 
+
 class PokemonInfo
 {
-private:
-    static QList<QString> m_Names;
-    static QList<QString> m_Weights;
-    static QString m_Directory;
-    static QList<int> m_Type1;
-    static QList<int> m_Type2;
-    static QList<int> m_Genders;
-    static QList<int> m_Ability1;
-    static QList<int> m_Ability2;
-    static QList<PokeBaseStats> m_BaseStats;
-    static QList<int> m_LevelBalance;
-    /* That is NOT multi-threaded! */
-    static QHash<int,QList<int> > m_AlternateFormes;
-    static QHash<int,QList<int> > m_Evolutions;
-    static QList<int> m_OriginalEvos;
-    /* First and last aesthetic forme */
-    static QHash<int, QPair<int, int> > m_AestheticFormes;
-    static QHash<int, bool> m_AestheticFormesHidden;
-    static QHash<int, QString> m_AestheticFormesDescs;
-    static QList<PokemonMoves> m_Moves;
-    static int m_trueNumberOfPokes;
-
-    static void loadNames();
-    static void loadFormes();
-    static void loadEvos();
-    static void loadBaseStats();
-    static void loadMoves();
-    static QSet<int> getMoves(const QString &filename, int Pokenum);
-    static QString path(const QString &filename);
-    static int calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/pokes/");
 
     /* Self-explainable functions */
-    static int TrueCount(); // pokes without counting forms
+    static int TrueCount(int gen=4); // pokes without counting forms
     static int NumberOfPokemons();
     static QString Name(int pokenum);
     static int Number(const QString &pokename);
@@ -89,11 +60,11 @@ public:
     static QPixmap Picture(int pokenum, int forme = 0, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QPixmap Sub(bool back = false);
     static QPixmap Icon(int index);
-    static QSet<int> Moves(int pokenum);
+    static QSet<int> Moves(int pokenum, int gen = 4);
     static QSet<int> EggMoves(int pokenum, int gen = 4);
     static QSet<int> LevelMoves(int pokenum, int gen = 4);
     static QSet<int> TutorMoves(int pokenum, int gen = 4);
-    static QSet<int> TMMoves(int pokenum);
+    static QSet<int> TMMoves(int pokenum, int gen = 4);
     static QSet<int> PreEvoMoves(int pokenum, int gen = 4);
     static QSet<int> SpecialMoves(int pokenum, int gen = 4);
     static QSet<int> RegularMoves(int pokenum, int gen = 4);
@@ -117,12 +88,42 @@ public:
     static int OriginalEvo(int pokenum);
     static bool IsInEvoChain(int pokenum);
     static PokeBaseStats BaseStats(int pokenum);
-    static bool Exist(int pokenum);
-    static QList<int> Abilities(int pokenum);
+    static bool Exists(int pokenum, int gen=4);
+    static AbilityGroup Abilities(int pokenum, int gen=4);
     static int Stat(int poke, int stat, int level, quint8 dv, quint8 ev);
     static int FullStat(int poke, int nature, int stat, int level, quint8 dv, quint8 ev);
     static QString Desc(int poke, int cartridge);
     static QString Height(int poke);
+private:
+    static QList<QString> m_Names;
+    static QList<QString> m_Weights;
+    static QString m_Directory;
+    static QList<int> m_Type1;
+    static QList<int> m_Type2;
+    static QList<int> m_Genders;
+    static QList<int> m_Ability1[2];
+    static QList<int> m_Ability2[2];
+    static QList<PokeBaseStats> m_BaseStats;
+    static QList<int> m_LevelBalance;
+    /* That is NOT multi-threaded! */
+    static QHash<int,QList<int> > m_AlternateFormes;
+    static QHash<int,QList<int> > m_Evolutions;
+    static QList<int> m_OriginalEvos;
+    /* First and last aesthetic forme */
+    static QHash<int, QPair<int, int> > m_AestheticFormes;
+    static QHash<int, bool> m_AestheticFormesHidden;
+    static QHash<int, QString> m_AestheticFormesDescs;
+    static QList<PokemonMoves> m_Moves;
+    static int m_trueNumberOfPokes;
+
+    static void loadNames();
+    static void loadFormes();
+    static void loadEvos();
+    static void loadBaseStats();
+    static void loadMoves();
+    static QSet<int> getMoves(const QString &filename, int Pokenum);
+    static QString path(const QString &filename);
+    static int calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev);
 };
 
 class MoveInfo
@@ -203,7 +204,7 @@ public:
     static int SpeedPriority(int movenum);
     static bool PhysicalContact(int movenum);
     static bool KingRock(int movenum);
-    static bool Exist(int movenum);
+    static bool Exists(int movenum);
     static bool isOHKO(int movenum);
     static int EffectRate(int movenum);
     static int Target(int movenum);
@@ -219,13 +220,36 @@ public:
 	QString args;
 	Effect(int i, const QString &q="") : num(i), args(q){}
     };
+
+    /* directory where all the data is */
+    static void init(const QString &dir="db/items/");
+
+    /* Self-explainable functions */
+    static int NumberOfItems();
+    static QString Name(int itemnum);
+    static bool Exists(int itemnum, int gen=4);
+    static bool isBerry(int itemnum);
+    static bool isPlate(int itemnum);
+    static bool isMail(int itemnum);
+    static bool isUseful(int itemnum);
+    static int PlateType(int itemnum);
+    static QList<QString> SortedNames(int gen);
+    static QList<QString> SortedUsefulNames(int gen);
+    static QList<Effect> Effects(int item);
+    static QString Message(int item, int part);
+    static int Number(const QString &itemname);
+    static QString Description(int itemnum);
+    static int Power(int itemnum);
+    static int BerryPower(int itemnum);
+    static int BerryType(int itemnum);
+    static QPixmap Icon(int itemnum);
 private:
     static QList<QString> m_BerryNames;
     static QList<QString> m_RegItemNames;
     static QHash<QString, int> m_BerryNamesH;
     static QHash<QString, int> m_ItemNamesH;
-    static QList<QString> m_SortedNames;
-    static QList<QString> m_SortedUsefulNames;
+    static QList<QString> m_SortedNames[2];
+    static QList<QString> m_SortedUsefulNames[2];
     static QString m_Directory;
     static QList<QList<Effect> > m_RegEffects;
     static QList<QList<Effect> > m_BerryEffects;
@@ -235,34 +259,10 @@ private:
     static QList<int> m_BerryPowers;
     static QList<int> m_BerryTypes;
     static QList<int> m_UsefulItems;
+    static QSet<int> m_3rdGenItems;
 
     static void loadNames();
     static QString path(const QString &filename);
-public:
-    /* directory where all the data is */
-    static void init(const QString &dir="db/items/");
-
-    /* Self-explainable functions */
-    static int NumberOfItems();
-    static QString Name(int itemnum);
-    static bool Exist(int itemnum);
-    static bool isBerry(int itemnum);
-    static bool isPlate(int itemnum);
-    static bool isMail(int itemnum);
-    static bool isUseful(int itemnum);
-    static int PlateType(int itemnum);
-    static QList<QString> SortedNames();
-    static QList<QString> SortedUsefulNames();
-    static QList<Effect> Effects(int item);
-    static QString Message(int item, int part);
-    static int Number(const QString &itemname);
-    /* returns the number corresponding to the name, but with the sortedNames as a ref */
-    static int SortedNumber(const QString &itemname);
-    static QString Description(int itemnum);
-    static int Power(int itemnum);
-    static int BerryPower(int itemnum);
-    static int BerryType(int itemnum);
-    static QPixmap Icon(int itemnum);
 };
 
 class TypeInfo
@@ -352,15 +352,6 @@ public:
         int arg;
         Effect(int i, int q=0) : num(i), arg(q){}
     };
-private:
-    static QList<QString> m_Names;
-    static QString m_Directory;
-    static QList<Effect> m_Effects;
-    static QList<QStringList> m_Messages;
-
-    static void loadNames();
-    static void loadEffects();
-    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/abilities/");
@@ -373,6 +364,17 @@ public:
     static int NumberOfAbilities();
     static QString Desc(int abnum);
     static QString EffectDesc(int abnum);
+    static bool Exists(int ability, int gen);
+private:
+    static QList<QString> m_Names;
+    static QString m_Directory;
+    static QList<Effect> m_Effects;
+    static QList<QStringList> m_Messages;
+    static QSet<int> m_3rdGenAbilities;
+
+    static void loadNames();
+    static void loadEffects();
+    static QString path(const QString &filename);
 };
 
 class GenderInfo

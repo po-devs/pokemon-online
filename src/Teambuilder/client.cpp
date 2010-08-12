@@ -33,7 +33,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mytab->addTab(channelContainer, tr("Channels"));
     QGridLayout *containerLayout = new QGridLayout(channelContainer);
     channels = new QListWidget();
-    channels->setIconSize(QSize(22,22));
+    channels->setIconSize(QSize(24,24));
     chatot = QIcon("db/client/chatoticon.png");
     greychatot = QIcon("db/client/greychatot.png");
     containerLayout->addWidget(channels, 0, 0, 1, 2);
@@ -1093,7 +1093,6 @@ void Client::battleReceived(int battleid, int id1, int id2)
 void Client::watchBattle(const QString &name0, const QString &name1, int battleId, bool doubles)
 {
     BaseBattleWindow *battle = new BaseBattleWindow(player(id(name0)), player(id(name1)), doubles);
-    battle->setParent(this);
     battle->setWindowFlags(Qt::Window);
     battle->show();
 
@@ -1133,14 +1132,16 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
 
     battles.remove(battleid);
 
-    myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
+    if (myplayersinfo.contains(winner))
+        myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
+    if (myplayersinfo.contains(loser))
     myplayersinfo[loser].flags &= 0xFF ^ PlayerInfo::Battling;
 
     foreach(Battle b, battles) {
-        if (b.id1 == winner || b.id2 == winner) {
+        if (myplayersinfo.contains(winner) && (b.id1 == winner || b.id2 == winner)) {
             myplayersinfo[winner].flags |= PlayerInfo::Battling;
         }
-        if (b.id1 == loser || b.id2 == loser) {
+        if (myplayersinfo.contains(loser) && (b.id1 == loser || b.id2 == loser)) {
             myplayersinfo[loser].flags |= PlayerInfo::Battling;
         }
     }

@@ -15,7 +15,7 @@ Channel::Channel(const QString &name, int id, Client *parent)
 
     myplayers->setColumnCount(1);
     myplayers->header()->hide();
-    myplayers->setIconSize(QSize(24,24));
+    myplayers->setIconSize(QSize(18,18));
     myplayers->setIndentation(13);
     myplayers->setObjectName("PlayerList");
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -395,10 +395,10 @@ void Channel::updateState(int id)
 void Channel::playerLogOut(int id) {
     QString name = this->name(id);
 
+    removePlayer(id);
+
     if (client->showPEvents)
         printLine(tr("%1 logged out.").arg(name));
-
-    removePlayer(id);
 }
 
 void Channel::removePlayer(int id) {

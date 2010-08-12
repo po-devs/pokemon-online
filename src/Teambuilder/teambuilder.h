@@ -103,6 +103,7 @@ private slots:
     void changeToBoxes();
     void changeToPokedex();
     void changeZone();
+    void genChanged();
 
 signals:
     void done();
@@ -112,6 +113,7 @@ private:
     TB_TeamBody *m_teamBody;
     TB_PokemonBoxes *m_boxes;
     Pokedex *m_pokedex;
+    QAction *gen3, *gen4;
 
     QImageButton *buttons[LastW];
     QLabel *currentZoneLabel;
@@ -147,7 +149,7 @@ private slots:
     void changeTrainerColor();
 private:
     QLineEdit *m_nick;
-    QTextEdit *m_winMessage, *m_loseMessage, *m_trainerInfo;
+    QPlainTextEdit *m_winMessage, *m_loseMessage, *m_trainerInfo;
     QPushButton *m_colorButton;
     AvatarBox *m_avatar;
     QSpinBox *m_avatarSelection;
@@ -187,9 +189,10 @@ class TB_TeamBody: public QWidget
 {
     Q_OBJECT
 public:
-    TB_TeamBody(TeamBuilder *parent);
+    TB_TeamBody(TeamBuilder *parent, int gen=4);
     void updateTeam();
     void updatePoke(int num);
+    void changeGeneration(int gen);
 private slots:
     void changeIndex();
     void updateButton();
@@ -218,6 +221,8 @@ private:
         return m_team;
     }
 
+    int gen;
+
     friend class DockAdvanced;
 };
 
@@ -227,8 +232,9 @@ class TB_PokeChoice : public QCompactTable
     Q_OBJECT
 
 public:
-    TB_PokeChoice(bool missingno = true);
+    TB_PokeChoice(int gen, bool missingno);
 
+    void changeGen(int gen);
 protected:
     void mousePressEvent(QMouseEvent * event);
     void mouseMoveEvent(QMouseEvent * event);
@@ -238,6 +244,9 @@ private:
 
     QPoint startPos;
     QTableWidgetItem * itemForDrag;
+
+    bool missingno;
+    int gen;
 };
 
 /* This is the widget displaying the pokemon's info, moves, item, ... */
@@ -256,6 +265,28 @@ class TB_PokemonBody : public QWidget
         Category,
         LastColumn
     };
+public:
+    TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num, int gen=4);
+    void connectWithAdvanced(TB_Advanced *ptr);
+
+    void updateNum();
+    void setNum(int pokeNum, bool resetEverything);
+    /* getting the pokemon of the team corresponding to the body */
+    PokeTeam *poke();
+    int num() const {return m_num;}
+
+    void reloadItems(bool showAllItems);
+    void changeGeneration(int gen);
+
+public slots:
+    void setNum(int pokeNum);
+    void setPokeByNick();
+    /* slots used by advanced */
+    void updateImage();
+    void updateGender();
+    void updateLevel();
+    void updateEVs();
+    void changeForme(int pokenum);
 
 signals:
     void moveChosen(int movenum);
@@ -267,26 +298,18 @@ signals:
     void itemChanged(int newItem);
     void levelChanged();
     void pokeImageChanged();
-public slots:
-    void setNum(int pokeNum);
-    void setPokeByNick();
-    /* slots used by advanced */
-    void updateImage();
-    void updateGender();
-    void updateLevel();
-    void updateEVs();
-    void changeForm(int pokenum);
-public:
-    TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num);
-    void connectWithAdvanced(TB_Advanced *ptr);
 
-    void updateNum();
-    void setNum(int pokeNum, bool resetEverything);
-    /* getting the pokemon of the team corresponding to the body */
-    PokeTeam *poke();
-    int num() const {return m_num;}
+private slots:
+    void setMove(int moveNum, int moveSlot);
+    void setMove(int movenum);
+    void moveCellActivated(int cell);
+    void moveEntered(int row);
+    void setItem(const QString &item);
+    void setNature(int nature);
+    void goToAdvanced();
+    void setNick(const QString &nick);
+    void editNature(int up, int down);
 
-    void reloadItems(bool showAllItems);
 private:
     TB_PokeChoice *pokechoice;
     QComboBox *itemchoice;
@@ -309,6 +332,7 @@ private:
     TB_EVManager *evchoice;
 
     int m_index;
+    int gen;
 
     /* the pokemon of the team corresponding to the body */
     PokeTeam *m_poke;
@@ -327,16 +351,6 @@ private:
     void updateTypes();
 
     bool advancedOpen();
-private slots:
-    void setMove(int moveNum, int moveSlot);
-    void setMove(int movenum);
-    void moveCellActivated(int cell);
-    void moveEntered(int row);
-    void setItem(const QString &item);
-    void setNature(int nature);
-    void goToAdvanced();
-    void setNick(const QString &nick);
-    void editNature(int up, int down);
 };
 
 /* Manages the EV bars, inside the TB_PokemonBody */

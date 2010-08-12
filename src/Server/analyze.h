@@ -197,6 +197,7 @@ public slots:
     void error();
     void commandReceived (const QByteArray &command);
     void undelay();
+    void keepAlive();
 private:
     Network &socket();
     const Network &socket() const;

@@ -13,6 +13,9 @@ Analyzer::Analyzer(QTcpSocket *sock, int id) : mysocket(sock, id)
     connect(&socket(), SIGNAL(_error()), this, SLOT(error()));
     connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
 
+    QTimer *t = new QTimer(this);
+    t->setInterval(30*1000);
+    t->start();
     /* Only if its not registry */
     if (id != 0) {
         sock->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
@@ -27,6 +30,12 @@ Analyzer::~Analyzer()
     /* Very important feature. If you don't do this it might crash.
         this makes the stillValid of Network redundant, but still.*/
     socket().close();
+}
+
+void Analyzer::keepAlive()
+{
+    /* Seems that the keep alive option doesn't work on all computers */
+    notify(KeepAlive);
 }
 
 void Analyzer::sendMessage(const QString &message)
