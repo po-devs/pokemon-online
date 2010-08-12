@@ -1400,9 +1400,11 @@ void Server::spectatingRequested(int id, int idOfBattle)
 
     if (!p1->isInSameChannel(source)) {
         p1->relay().sendPlayer(bundle);
+        source->relay().sendPlayer(p1->bundle());
     }
     if (!p2->isInSameChannel(source)) {
         p2->relay().sendPlayer(bundle);
+        source->relay().sendPlayer(p2->bundle());
     }
     foreach(int id, battle->getSpectators()) {
         Player *p = player(id);

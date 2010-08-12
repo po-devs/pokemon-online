@@ -326,15 +326,15 @@ bool MoveSet::hasHiddenPower() const {
 
 void MoveSet::complete(Skeleton &m) const
 {
-    QList<int> ab = PokemonInfo::Abilities(num);
+    AbilityGroup ab = PokemonInfo::Abilities(num);
     int tot = abilities[0] + abilities[1];
 
     m.addDefaultValue("pokemon", PokemonInfo::Name(num));
     m.addDefaultValue("item", ItemInfo::Name(raw.item));
     m.addDefaultValue("level", raw.level);
-    m.addDefaultValue("abilities", abilities[0]*abilities[1] == 0 ? (abilities[0] == 0 ? AbilityInfo::Name(ab[1]) : AbilityInfo::Name(ab[0]))
-        : QString("%1 (%2 %) / %3 (%4 %)").arg(AbilityInfo::Name(ab[0])).arg(double(100*abilities[0])/tot,0,'f',1)
-        .arg(AbilityInfo::Name(ab[1])).arg(double(100*abilities[1])/tot,0,'f',1).toUtf8());
+    m.addDefaultValue("abilities", abilities[0]*abilities[1] == 0 ? (abilities[0] == 0 ? AbilityInfo::Name(ab.ab2) : AbilityInfo::Name(ab.ab1))
+        : QString("%1 (%2 %) / %3 (%4 %)").arg(AbilityInfo::Name(ab.ab1)).arg(double(100*abilities[0])/tot,0,'f',1)
+        .arg(AbilityInfo::Name(ab.ab2)).arg(double(100*abilities[1])/tot,0,'f',1).toUtf8());
 
 
     QMultiMap<int, SecondaryStuff> usageMap;
@@ -624,7 +624,7 @@ int main(int argc, char *argv[])
             QMap<RawSet, MoveSet> movesets;
             QMap<RawSet, MoveSet> leadsets;
             GlobalThings globals;
-            int defAb = PokemonInfo::Abilities(pokemon)[0];
+            int defAb = PokemonInfo::Abilities(pokemon).ab1;
 
             foreach(Bcc b, buffers[pokemon]) {
                 char *buffer = b.buffer.data();
@@ -651,8 +651,8 @@ int main(int argc, char *argv[])
             QHash<int, int> abilities;
             abilities[defAb] = globals.abilities[0];
             int totAbilities = globals.abilities[0];
-            if (globals.abilities[1] > 0 && PokemonInfo::Abilities(pokemon)[1] != 0) {
-                abilities[PokemonInfo::Abilities(pokemon)[1]] = globals.abilities[1];
+            if (globals.abilities[1] > 0 && PokemonInfo::Abilities(pokemon).ab2 != 0) {
+                abilities[PokemonInfo::Abilities(pokemon).ab2] = globals.abilities[1];
                 totAbilities += globals.abilities[1];
             }
             parseGlobals(s, abilities, totAbilities, "globalability", "ability", &AbilityInfo::Name);
