@@ -841,6 +841,9 @@ struct MMPerishSong : public MM
     }
 
     static void et(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
+
 	int count = poke(b,s)["PerishSongCount"].toInt();
         //SoundProof
         if (!b.hasWorkingAbility(s,Ability::Soundproof))
@@ -1843,7 +1846,11 @@ struct MMTaunt : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        poke(b,t)["TauntsUntil"] = b.turn() + 2 + (b.true_rand()%3);
+        if (b.gen() >= 4) {
+            poke(b,t)["TauntsUntil"] = b.turn() + 2 + (b.true_rand()%3);
+        } else {
+            poke(b,t)["TauntsUntil"] = b.turn() + 1;
+        }
 	addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
         addFunction(poke(b,t), "MovePossible", "Taunt", &mp);
         addFunction(poke(b,t), "EndTurn611", "Taunt", &et);
@@ -1860,7 +1867,8 @@ struct MMTaunt : public MM
             removeFunction(poke(b,s), "MovesPossible", "Taunt");
             removeFunction(poke(b,s), "MovePossible", "Taunt");
             removeFunction(poke(b,s), "EndTurn611", "Taunt");
-            b.sendMoveMessage(134,2,s,Pokemon::Dark);
+            if (b.gen() >= 4)
+                b.sendMoveMessage(134,2,s,Pokemon::Dark);
         }
     }
 
@@ -2469,7 +2477,7 @@ struct MMBlizzard : public MM
     }
 
     static void ms(int s, int, BS &b) {
-	if (b.isWeatherWorking(BattleSituation::Hail)) {
+        if (b.gen() == 4 && b.isWeatherWorking(BattleSituation::Hail)) {
             turn(b,s)["Accuracy"] = 0;
 	}
     }
@@ -4310,11 +4318,13 @@ struct MMStockPile : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (poke(b,s)["Boost2"].toInt() <= 5) {
-            inc(poke(b,s)["StockPileDef"],1);
-        }
-        if (poke(b,s)["Boost5"].toInt() <= 5) {
-            inc(poke(b,s)["StockPileSDef"], 1);
+        if (b.gen() >= 4) {
+            if (poke(b,s)["Boost2"].toInt() <= 5) {
+                inc(poke(b,s)["StockPileDef"],1);
+            }
+            if (poke(b,s)["Boost5"].toInt() <= 5) {
+                inc(poke(b,s)["StockPileSDef"], 1);
+            }
         }
         inc(poke(b,s)["StockPileCount"], 1);
         b.sendMoveMessage(125,0,s,0,s,poke(b,s)["StockPileCount"].toInt());
@@ -4335,10 +4345,12 @@ struct MMSwallow: public MM
     }
 
     static void uas(int s, int, BS &b) {
-        b.changeStatMod(s,Defense,poke(b,s)["Boost2"].toInt() - poke(b,s)["StockPileDef"].toInt());
-        b.changeStatMod(s,SpDefense,poke(b,s)["Boost5"].toInt() - poke(b,s)["StockPileSDef"].toInt());
-        poke(b,s)["StockPileDef"] = 0;
-        poke(b,s)["StockPileSDef"] = 0;
+        if (b.gen() >= 4) {
+            b.changeStatMod(s,Defense,poke(b,s)["Boost2"].toInt() - poke(b,s)["StockPileDef"].toInt());
+            b.changeStatMod(s,SpDefense,poke(b,s)["Boost5"].toInt() - poke(b,s)["StockPileSDef"].toInt());
+            poke(b,s)["StockPileDef"] = 0;
+            poke(b,s)["StockPileSDef"] = 0;
+        }
         switch (poke(b,s)["StockPileCount"].toInt()) {
         case 1: b.healLife(s, b.poke(s).totalLifePoints()/4); break;
         case 2: b.healLife(s, b.poke(s).totalLifePoints()/2); break;
@@ -4368,11 +4380,13 @@ struct MMSpitUp : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        b.changeStatMod(s,Defense,poke(b,s)["Boost2"].toInt() - poke(b,s)["StockPileDef"].toInt());
-        b.changeStatMod(s,SpDefense,poke(b,s)["Boost5"].toInt() - poke(b,s)["StockPileSDef"].toInt());
-        poke(b,s)["StockPileDef"] = 0;
-        poke(b,s)["StockPileSDef"] = 0;
-        poke(b,s)["StockPileCount"] = 0;
+        if (b.gen() > 4) {
+            b.changeStatMod(s,Defense,poke(b,s)["Boost2"].toInt() - poke(b,s)["StockPileDef"].toInt());
+            b.changeStatMod(s,SpDefense,poke(b,s)["Boost5"].toInt() - poke(b,s)["StockPileSDef"].toInt());
+            poke(b,s)["StockPileDef"] = 0;
+            poke(b,s)["StockPileSDef"] = 0;
+            poke(b,s)["StockPileCount"] = 0;
+        }
         b.sendMoveMessage(122,0,s);
     }
 };
