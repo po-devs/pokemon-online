@@ -4012,10 +4012,10 @@ struct MMYawn : public MM {
             if (b.sleepClause() && b.currentForcedSleepPoke[b.player(s)] != -1) {
                 b.notifyClause(ChallengeInfo::SleepClause, true);
             } else {
-                if (b.sleepClause()) {
+                b.inflictStatus(s, Pokemon::Asleep, s);
+                if (b.sleepClause() && b.poke(s).status() == Pokemon::Asleep) {
                     b.currentForcedSleepPoke[b.player(s)] = b.currentPoke(s);
                 }
-                b.inflictStatus(s, Pokemon::Asleep, s);
             }
             removeFunction(poke(b,s),"EndTurn617", "Yawn");
             poke(b,s).remove("YawnCount");
