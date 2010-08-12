@@ -89,9 +89,8 @@ void PokeBaseStats::setBaseStat(int stat, quint8 base)
 PokeGeneral::PokeGeneral()
 {
     num() = 0;
+    gen() = 4;
     //default for non-bugged programs
-    m_abilities.push_back(0);
-    m_abilities.push_back(0);
     m_genderAvail = Pokemon::NeutralAvail;
     m_types[0] = Pokemon::Curse;
     m_types[1] = -1;
@@ -100,7 +99,7 @@ PokeGeneral::PokeGeneral()
 
 void PokeGeneral::loadMoves()
 {
-    m_moves = PokemonInfo::Moves(num());
+    m_moves = PokemonInfo::Moves(num(), gen());
 }
 
 void PokeGeneral::loadTypes()
@@ -109,7 +108,7 @@ void PokeGeneral::loadTypes()
 
 void PokeGeneral::loadAbilities()
 {
-    m_abilities = PokemonInfo::Abilities(num());
+    m_abilities = PokemonInfo::Abilities(num(), gen());
 }
 
 void PokeGeneral::loadGenderAvail()
@@ -130,7 +129,7 @@ const QSet<int> &PokeGeneral::moves() const
     return m_moves;
 }
 
-const QList<int> &PokeGeneral::abilities() const
+const AbilityGroup &PokeGeneral::abilities() const
 {
     return m_abilities;
 }
@@ -142,6 +141,7 @@ int PokeGeneral::genderAvail() const
 
 PokePersonal::PokePersonal()
 {
+    this->gen() = 4;
     reset();
 }
 
@@ -152,7 +152,7 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
     if (check && moveNum != 0) {
         if (hasMove(moveNum))
             throw QObject::tr("%1 already has move %2.").arg(nickname(), MoveInfo::Name(moveNum));
-        else if (!PokemonInfo::Moves(num()).contains(moveNum))
+        else if (!PokemonInfo::Moves(num(), gen()).contains(moveNum))
             throw QObject::tr("%1 can't learn %2.").arg(nickname(), MoveInfo::Name(moveNum));
     }
 
@@ -160,7 +160,7 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
 
     if (check) {
         QSet<int> invalid_moves;
-        if (!MoveSetChecker::isValid(num(),m_moves[0],m_moves[1],m_moves[2],m_moves[3],&invalid_moves)) {
+        if (!MoveSetChecker::isValid(num(), gen(), m_moves[0],m_moves[1],m_moves[2],m_moves[3],&invalid_moves)) {
             m_moves[moveSlot] =0;
             if (invalid_moves.size() == 1)
                 throw QObject::tr("%1 can't learn %2 with moves from the third gen.").arg(nickname()).arg(MoveInfo::Name(*invalid_moves.begin()));
@@ -176,6 +176,38 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
                 throw QObject::tr("%1 can't learn the combination of %2.").arg(nickname(), s);
             }
         }
+    }
+}
+
+void PokePersonal::runCheck()
+{
+    if (!PokemonInfo::Exists(num(), gen())) {
+        reset();
+        return;
+    }
+
+    QSet<int> invalidMoves;
+
+    MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), &invalidMoves);
+
+    while (invalidMoves.size() > 0) {
+        for (int i = 0; i < 4; i++) {
+            if (invalidMoves.contains(move(i))) {
+                setMove(0, i, false);
+            }
+        }
+        invalidMoves.clear();
+
+        MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), &invalidMoves);
+    }
+
+    AbilityGroup ab = PokemonInfo::Abilities(num(), gen());
+
+    if (ability() != ab.ab2)
+        ability() = ab.ab1;
+
+    if (!ItemInfo::Exists(item(), gen())) {
+        item() = 0;
     }
 }
 
@@ -195,41 +227,6 @@ bool PokePersonal::hasMove(int moveNum)
         if (move(i) == moveNum)
             return true;
     return false;
-}
-
-void PokePersonal::setDV(int stat, quint8 val)
-{
-    m_DVs[stat] = val;
-}
-
-void PokePersonal::setHpDV(quint8 val)
-{
-    setDV(Hp, val);
-}
-
-void PokePersonal::setAttackDV(quint8 val)
-{
-    setDV(Attack, val);
-}
-
-void PokePersonal::setDefenseDV(quint8 val)
-{
-    setDV(Defense, val);
-}
-
-void PokePersonal::setSpeedDV(quint8 val)
-{
-    setDV(Speed, val);
-}
-
-void PokePersonal::setSpAttackDV(quint8 val)
-{
-    setDV(SpAttack, val);
-}
-
-void PokePersonal::setSpDefenseDV(quint8 val)
-{
-    setDV(SpDefense, val);
 }
 
 void PokePersonal::controlEVs(int stat)
@@ -258,109 +255,24 @@ void PokePersonal::setEV(int stat, quint8 val)
     controlEVs(stat);
 }
 
-void PokePersonal::setHpEV(quint8 val)
-{
-    setEV(Hp, val);
-}
-
-void PokePersonal::setAttackEV(quint8 val)
-{
-    setEV(Attack, val);
-}
-
-void PokePersonal::setDefenseEV(quint8 val)
-{
-    setEV(Defense, val);
-}
-
-void PokePersonal::setSpeedEV(quint8 val)
-{
-    setEV(Speed, val);
-}
-
-void PokePersonal::setSpAttackEV(quint8 val)
-{
-    setEV(SpAttack, val);
-}
-
-void PokePersonal::setSpDefenseEV(quint8 val)
-{
-    setEV(SpDefense, val);
-}
-
 quint8 PokePersonal::DV(int stat) const
 {
     return m_DVs[stat];
 }
 
-quint8 PokePersonal::hpDV() const
+void PokePersonal::setDV(int stat, quint8 val)
 {
-    return DV(Hp);
-}
-
-quint8 PokePersonal::attackDV() const
-{
-    return DV(Attack);
-}
-
-quint8 PokePersonal::defenseDV() const
-{
-    return DV(Defense);
-}
-
-quint8 PokePersonal::speedDV() const
-{
-    return DV(Speed);
-}
-
-quint8 PokePersonal::spAttackDV() const
-{
-    return DV(SpAttack);
-}
-
-quint8 PokePersonal::spDefenseDV() const
-{
-    return DV(SpDefense);
+    m_DVs[stat] = val;
 }
 
 int PokePersonal::EVSum() const
 {
-    return hpEV() + attackEV() + defenseEV() + speedEV() + spAttackEV() + spDefenseEV();
+    return EV(Hp) + EV(Attack) + EV(Defense) + EV(Speed) + EV(SpAttack) + EV(SpDefense);
 }
 
 quint8 PokePersonal::EV(int stat) const
 {
     return m_EVs[stat];
-}
-
-quint8 PokePersonal::hpEV() const
-{
-    return EV(Hp);
-}
-
-quint8 PokePersonal::attackEV() const
-{
-    return EV(Attack);
-}
-
-quint8 PokePersonal::defenseEV() const
-{
-    return EV(Defense);
-}
-
-quint8 PokePersonal::speedEV() const
-{
-    return EV(Speed);
-}
-
-quint8 PokePersonal::spAttackEV() const
-{
-    return EV(SpAttack);
-}
-
-quint8 PokePersonal::spDefenseEV() const
-{
-    return EV(SpDefense);
 }
 
 int PokePersonal::move(int moveSlot) const
@@ -471,9 +383,29 @@ void PokeTeam::setNum(quint16 num)
     PokeGraphics::setNum(num);
 }
 
+void PokeTeam::setGen(int gen)
+{
+    PokeGeneral::gen() = gen;
+    PokePersonal::gen() = gen;
+}
+
+void PokeTeam::runCheck()
+{
+    int num = this->num();
+
+    PokePersonal::runCheck();
+
+    /* If the pokemon is reset to 0, we also make PokeGeneral and PokeGraphics reset */
+    if (num != PokePersonal::num()) {
+        setNum(PokePersonal::num());
+
+        load();
+    }
+}
+
 quint16 PokeTeam::num() const
 {
-    return PokeGeneral::num();
+    return PokePersonal::num();
 }
 
 void PokeTeam::load()
@@ -492,7 +424,7 @@ void PokeTeam::load()
     {
         gender() = Pokemon::Male;
     }
-    ability() = abilities()[0];
+    ability() = abilities().ab1;
     nickname() = PokemonInfo::Name(num());
     PokeGraphics::load(forme(), gender(), false);
     PokeGraphics::loadIcon(num());
@@ -513,18 +445,20 @@ int PokeTeam::stat(int statno) const
     return PokemonInfo::FullStat(num(), nature(), statno, level(),DV(statno),EV(statno));
 }
 
-Team::Team()
+Team::Team(): m_gen(4)
 {
 }
 
-const PokeTeam & Team::poke(int index) const
+void Team::setGen(int gen)
 {
-    return m_pokes[index];
-}
+    if (this->gen() == gen)
+        return;
 
-PokeTeam & Team::poke(int index)
-{
-    return m_pokes[index];
+    m_gen = gen;
+
+    for (int i = 0; i < 6; i++) {
+        poke(i).setGen(gen);
+    }
 }
 
 TrainerTeam::TrainerTeam()
@@ -638,6 +572,7 @@ bool TrainerTeam::saveToFile(const QString &path) const
     QDomDocument document;
 
     QDomElement Team = document.createElement("Team");
+    Team.setAttribute("gen", team().gen());
     document.appendChild(Team);
     QDomElement trainer = document.createElement("Trainer");
     Team.appendChild(trainer);
@@ -755,6 +690,8 @@ bool TrainerTeam::loadFromFile(const QString &path)
         QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
         return false;
     }
+    int gen = team.attribute("gen", "4").toInt();
+    this->team().setGen(gen);
     QDomElement trainer = team.firstChildElement("Trainer");
     if(trainer.isNull())
     {
@@ -763,9 +700,9 @@ bool TrainerTeam::loadFromFile(const QString &path)
     }
 
     setTrainerNick(trainer.text());
-    setTrainerInfo(trainer.attribute("infoMsg",QString()));
-    setTrainerLose(trainer.attribute("loseMsg",QString()));
-    setTrainerWin(trainer.attribute("winMsg",QString()));
+    setTrainerInfo(trainer.attribute("infoMsg"));
+    setTrainerLose(trainer.attribute("loseMsg"));
+    setTrainerWin(trainer.attribute("winMsg"));
     avatar() = trainer.attribute("avatar", 0).toInt();
 
     QDomElement poke = team.firstChildElement("Pokemon");
@@ -917,6 +854,9 @@ bool TrainerTeam::importFromTxt(const QString &file1)
             }
             p.setMove(MoveInfo::Number(move),i-4,false);
         }
+
+        /* Removes invalid move combinations */
+        p.runCheck();
     }
     return true;
 /*
