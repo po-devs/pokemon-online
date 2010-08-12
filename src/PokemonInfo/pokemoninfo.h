@@ -42,7 +42,6 @@ private:
     static QList<QString> m_Names;
     static QList<QString> m_Weights;
     static QString m_Directory;
-    static QString m_Directory_custom;
     static QList<int> m_Type1;
     static QList<int> m_Type2;
     static QList<int> m_Genders;
@@ -67,7 +66,7 @@ private:
     static void loadBaseStats();
     static void loadMoves();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
-    static QString path(const QString &filename, const bool customPokemon = false);
+    static QString path(const QString &filename);
     static int calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev);
 public:
     /* directory where all the data is */
@@ -87,7 +86,7 @@ public:
     static QByteArray Cry(int pokenum);
     static int Type1(int pokenum);
     static int Type2(int pokenum);
-    static QPixmap Picture(int pokenum, int forme = 0, int gender = Pokemon::Male, bool shiney = false, bool backimage = false, bool customPokemon = false);
+    static QPixmap Picture(int pokenum, int forme = 0, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QPixmap Sub(bool back = false);
     static QPixmap Icon(int index);
     static QSet<int> Moves(int pokenum);
