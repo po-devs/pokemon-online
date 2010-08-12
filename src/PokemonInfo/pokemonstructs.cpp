@@ -691,6 +691,8 @@ bool TrainerTeam::loadFromFile(const QString &path)
         return false;
     }
     int gen = team.attribute("gen", "4").toInt();
+    if (gen != 3)
+        gen = 4;
     this->team().setGen(gen);
     QDomElement trainer = team.firstChildElement("Trainer");
     if(trainer.isNull())
@@ -982,6 +984,8 @@ QDataStream & operator << (QDataStream & out, const Team & team)
         const PokeTeam & poke = team.poke(index);
         out << poke;
     }
+    out << quint8(team.gen());
+
     return out;
 }
 
@@ -1025,6 +1029,11 @@ QDataStream & operator >> (QDataStream & in, Team & team)
     {
         in >> team.poke(i);
     }
+    quint8 gen;
+
+    in >> gen;
+
+    team.setGen(gen);
 
     return in;
 }

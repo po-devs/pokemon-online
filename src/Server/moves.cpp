@@ -19,7 +19,7 @@ int MoveMechanics::num(const QString &name)
     }
 }
 
-MoveEffect::MoveEffect(int num)
+MoveEffect::MoveEffect(int num, int gen)
 {
     /* Different steps: critical raise, number of times, ... */
     (*this)["CriticalRaise"] = MoveInfo::CriticalRaise(num);
@@ -28,14 +28,14 @@ MoveEffect::MoveEffect(int num)
     (*this)["SpeedPriority"] = MoveInfo::SpeedPriority(num);
     (*this)["PhysicalContact"] = MoveInfo::PhysicalContact(num);
     (*this)["KingRock"] = MoveInfo::KingRock(num);
-    (*this)["Power"] = MoveInfo::Power(num);
+    (*this)["Power"] = MoveInfo::Power(num, gen);
     (*this)["Accuracy"] = MoveInfo::Acc(num);
     (*this)["Type"] = MoveInfo::Type(num);
-    (*this)["Category"] = MoveInfo::Category(num);
+    (*this)["Category"] = MoveInfo::Category(num, gen);
     (*this)["EffectRate"] = MoveInfo::EffectRate(num);
     (*this)["StatEffect"] = MoveInfo::Effect(num);
     (*this)["FlinchRate"] = MoveInfo::FlinchRate(num);
-    (*this)["Recoil"] = MoveInfo::Recoil(num);
+    (*this)["Recoil"] = MoveInfo::Recoil(num, gen);
     (*this)["Attack"] = num;
     (*this)["PossibleTargets"] = MoveInfo::Target(num);
 }
@@ -47,7 +47,7 @@ typedef BattleSituation BS;
 
 void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
 {
-    MoveEffect e(num);
+    MoveEffect e(num, b.gen());
 
     /* first the basic info */
     merge(b.turnlong[source], e);
@@ -667,8 +667,15 @@ struct MMHiddenPower : public MM
         for (int i = 0;i < 6; i++) {
             dvs << poke(b,s)["DV"+QString::number(i)].toInt();
         }
-	turn(b,s)["Type"] = HiddenPowerInfo::Type(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+
+        int type = HiddenPowerInfo::Type(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+        turn(b,s)["Type"] = type;
 	turn(b,s)["Power"] = HiddenPowerInfo::Power(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+
+        /* In 3rd gen, hidden powers can be physical! */
+        if (b.gen() == 3) {
+            turn(b, s)["Category"] = TypeInfo::Category(type);
+        }
     }
 };
 
@@ -1692,7 +1699,7 @@ struct MMBounce : public MM
 
             int move = poke(b,s)["2TurnMove"].toInt();
 
-            merge(turn(b,s), MoveEffect(move));
+            merge(turn(b,s), MoveEffect(move, b.gen()));
             addFunction(turn(b,s), "EvenWhenCantMove", "Bounce", &ewc);
 
             if (move == ShadowForce) {
@@ -1863,7 +1870,7 @@ struct MMTaunt : public MM
 	    return;
 	}
 	for (int i = 0; i < 4; i++) {
-	    if (MoveInfo::Power(b.move(s,i)) == 0) {
+            if (MoveInfo::Power(b.move(s,i), b.gen()) == 0) {
 		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
 	    }
 	}
@@ -1875,7 +1882,7 @@ struct MMTaunt : public MM
 	    return;
 	}
 	int move = turn(b,s)["MoveChosen"].toInt();
-	if (MoveInfo::Power(move) == 0) {
+        if (MoveInfo::Power(move, b.gen()) == 0) {
 	    turn(b,s)["ImpossibleToMove"] = true;
 	    b.sendMoveMessage(134,0,s,Pokemon::Dark,s,move);
 	}
@@ -1978,7 +1985,7 @@ struct MMDoomDesire : public MM
     static void cad(int s, int t, BS &b) {
 	int move = MM::move(b,s);
 	turn(b,s)["CriticalHit"] = false;
-	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * MoveInfo::Power(move);
+        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * MoveInfo::Power(move, b.gen());
         slot(b,t)["DoomDesireDamage"] = b.calculateDamage(s, t);
         slot(b,t)["DoomDesireTurn"] = b.turn() + 2;
         slot(b,t)["DoomDesireMove"] = move;
@@ -3148,7 +3155,7 @@ struct MMMeFirst : public MM
 	    return;
 	}
 	int num = turn(b,t).value("Attack").toInt();
-	if (MoveInfo::Power(num) == 0) {
+        if (MoveInfo::Power(num, b.gen()) == 0) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
@@ -3178,11 +3185,9 @@ struct MMMetronome : public MM
 	while (1) {
             int move = b.true_rand() % MoveInfo::NumberOfMoves();
 
-            bool correctMove = !b.hasMove(s,move) && !MMAssist::forbidden_moves.contains(move);
+            bool correctMove = !b.hasMove(s,move) && !MMAssist::forbidden_moves.contains(move) && MoveInfo::Exists(move, b.gen());
 
             if (correctMove) {
-                qDebug() << "Gonna use " << move;
-                qDebug() << "Name is " << MoveInfo::Name(move);
 		MoveEffect::setup(move,s,t,b);
                 turn(b,s)["Target"] = b.randomValidOpponent(s);
 		b.useAttack(s,move,true,true);
@@ -3592,7 +3597,7 @@ struct MMSketch : public MM
 	b.sendMoveMessage(111,0,s,type(b,s),t,mv);
 	int slot = poke(b,s)["MoveSlot"].toInt();
 	b.poke(s).move(slot).num() = mv;
-	b.poke(s).move(slot).load();
+        b.poke(s).move(slot).load(b.gen());
 	b.changePP(s,slot,2);
 	b.changePP(s,slot,b.poke(s).move(slot).totalPP());
     }
@@ -3835,7 +3840,9 @@ struct MMStruggle : public MM
     static void uas(int s, int, BS &b) {
         if (!b.koed(s)) {
             b.sendMoveMessage(127,0,s);
-            b.inflictPercentDamage(s,25,s);
+
+            if (b.gen() >= 4)
+                b.inflictPercentDamage(s,25,s);
         }
     }
 };

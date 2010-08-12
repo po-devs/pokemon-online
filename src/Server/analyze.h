@@ -153,9 +153,9 @@ signals:
     /* to send to the client */
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
-    void loggedIn(const TeamInfo &team, bool ladder, bool showteam, QColor c);
+    void loggedIn(TeamInfo &team, bool ladder, bool showteam, QColor c);
     void messageReceived(int chanid, const QString &mess);
-    void teamReceived(const TeamInfo &team);
+    void teamReceived(TeamInfo &team);
     void connected();
     void disconnected();
     void forfeitBattle(int id);

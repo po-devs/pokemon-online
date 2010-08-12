@@ -22,6 +22,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     loseMessage[1] = p2.losingMessage();
     attacked() = -1;
     attacker() = -1;
+    gen() = std::max(p1.gen(), p2.gen());
 
     /* timers for battle timeout */
     timeleft[0] = 5*60;
@@ -51,8 +52,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     }
 
     if (clauses() & ChallengeInfo::ChallengeCup) {
-        team1.generateRandom();
-        team2.generateRandom();
+        team1.generateRandom(gen());
+        team2.generateRandom(gen());
     } else {
         if (clauses() & ChallengeInfo::ItemClause) {
             QSet<int> alreadyItems[2];
@@ -449,6 +450,10 @@ void BattleSituation::endTurn()
 {
     testWin();
 
+    /* Gen3 switches pokemons in before endturn effects */
+    if (gen() == 3)
+        requestSwitchIns();
+
     std::vector<int> players = sortedBySpeed();
 
     callzeffects(Player1, Player1, "EndTurn");
@@ -540,7 +545,6 @@ void BattleSituation::endTurn()
     testWin();
 
     callbeffects(Player1,Player1,"EndTurn9");
-
 
     requestSwitchIns();
 
@@ -2326,9 +2330,10 @@ int BattleSituation::getType(int player, int slot)
 
 bool BattleSituation::isFlying(int player)
 {
-    /* Item 212 is iron ball, ability is levitate */
     return !battlelong.value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) && !pokelong[player].value("Rooted").toBool() &&
-            (hasWorkingAbility(player, Ability::Levitate) ||  hasType(player, Pokemon::Flying) || pokelong[player].value("MagnetRiseCount").toInt() > 0);
+           !pokelong[player].value("Roosted").toBool() && (hasWorkingAbility(player, Ability::Levitate)
+                                                           || hasType(player, Pokemon::Flying)
+                                                           || pokelong[player].value("MagnetRiseCount").toInt() > 0);
 }
 
 bool BattleSituation::hasSubstitute(int player)
@@ -3050,7 +3055,7 @@ int BattleSituation::getStat(int player, int stat)
 	ret /= 4;
     }
 
-    if (stat == SpDefense && isWeatherWorking(SandStorm) && hasType(player,Pokemon::Rock))
+    if (gen() >= 4 && stat == SpDefense && isWeatherWorking(SandStorm) && hasType(player,Pokemon::Rock))
 	ret = ret * 3 / 2;
 
     if (ret == 0) {
@@ -3171,6 +3176,7 @@ BattleConfiguration BattleSituation::configuration() const
 
     ret.ids[0] = id(0);
     ret.ids[1] = id(1);
+    ret.gen = gen();
 
     return ret;
 }
