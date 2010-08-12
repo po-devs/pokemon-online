@@ -1438,6 +1438,11 @@ QPixmap TypeInfo::Picture(int type)
     return (type >= 0 && type < NumberOfTypes()) ? m_Pics[type] : QPixmap();
 }
 
+void TypeInfo::modifyTypeChart(int type_attack, int type_defend, int value)
+{
+    m_TypeVsType[type_attack * NumberOfTypes() + type_defend] = value;
+}
+
 void NatureInfo::loadNames()
 {
     fill_container_with_file(m_Names, trFile(path("nature")));
