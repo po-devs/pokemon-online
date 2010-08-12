@@ -4009,12 +4009,14 @@ struct MMYawn : public MM {
         if (count != 0) {
 
         } else {
-            if (b.sleepClause() && b.currentForcedSleepPoke[b.player(s)] != -1) {
-                b.notifyClause(ChallengeInfo::SleepClause, true);
-            } else {
-                b.inflictStatus(s, Pokemon::Asleep, s);
-                if (b.sleepClause() && b.poke(s).status() == Pokemon::Asleep) {
-                    b.currentForcedSleepPoke[b.player(s)] = b.currentPoke(s);
+            if (b.poke(s).status() == Pokemon::Fine) {
+                if (b.sleepClause() && b.currentForcedSleepPoke[b.player(s)] != -1) {
+                    b.notifyClause(ChallengeInfo::SleepClause, true);
+                } else {
+                    b.inflictStatus(s, Pokemon::Asleep, s);
+                    if (b.sleepClause() && b.poke(s).status() == Pokemon::Asleep) {
+                        b.currentForcedSleepPoke[b.player(s)] = b.currentPoke(s);
+                    }
                 }
             }
             removeFunction(poke(b,s),"EndTurn617", "Yawn");
