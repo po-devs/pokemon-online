@@ -236,9 +236,9 @@ void BattleWindow::attackClicked(int zone)
             goToNextChoice();
         } else {
             int move = zone == -1 ? int(Move::Struggle) : info().tempPoke(slot).move(zone);
-            int target = MoveInfo::Target(move);
+            int target = MoveInfo::Target(move, gen());
             if (target == Move::ChosenTarget || target == Move::PartnerOrUser) {
-                tarZone->updateData(info(), move);
+                tarZone->updateData(info(), move, gen());
                 mystack->setCurrentIndex(TargetTab);
             } else {
                 info().done[info().number(slot)] = true;
@@ -380,7 +380,7 @@ void BattleWindow::attackButton()
     if (info().possible) {
         if (mystack->currentIndex() == TargetTab) {
             /* Doubles, move selection */
-            if (info().choices[n].struggle() || MoveInfo::Target(info().lastMove[info().currentIndex[slot]]) == Move::ChosenTarget) {
+            if (info().choices[n].struggle() || MoveInfo::Target(info().lastMove[info().currentIndex[slot]], gen()) == Move::ChosenTarget) {
                 return; //We have to wait for the guy to choose a target
             }
             info().done[n] = true;
@@ -1088,7 +1088,7 @@ TargetSelection::TargetSelection(const BattleInfo &info)
     connect(bg, SIGNAL(buttonClicked(int)), SIGNAL(targetSelected(int)));
 }
 
-void TargetSelection::updateData(const BattleInfo &info, int move)
+void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
 {
     int slot = info.currentSlot;
 
@@ -1100,7 +1100,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
         pokes[i]->setStyleSheet("");
     }
 
-    switch (Move::Target(MoveInfo::Target(move))) {
+    switch (Move::Target(MoveInfo::Target(move, gen))) {
     case Move::All:
         for (int i = 0; i < 4; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed) {

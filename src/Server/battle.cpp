@@ -906,7 +906,7 @@ bool BattleSituation::validChoice(const BattleChoice &b)
             if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.numSlot || koed(b.target()))
                 return false;
         } else {
-            int target = MoveInfo::Target(move(b.numSlot, b.numSwitch));
+            int target = MoveInfo::Target(move(b.numSlot, b.numSwitch), gen());
 
             if (target == Move::ChosenTarget) {
                 if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.numSlot || koed(b.target()))

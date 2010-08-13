@@ -248,7 +248,7 @@ class TargetSelection : public QWidget
 public:
     TargetSelection(const BattleInfo &info);
 
-    void updateData(const BattleInfo &info, int move);
+    void updateData(const BattleInfo &info, int move, int gen);
 signals:
     void targetSelected(int target);
 private:

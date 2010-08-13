@@ -37,7 +37,7 @@ MoveEffect::MoveEffect(int num, int gen)
     (*this)["FlinchRate"] = MoveInfo::FlinchRate(num, gen);
     (*this)["Recoil"] = MoveInfo::Recoil(num, gen);
     (*this)["Attack"] = num;
-    (*this)["PossibleTargets"] = MoveInfo::Target(num);
+    (*this)["PossibleTargets"] = MoveInfo::Target(num, gen);
 }
 
 /* There's gonna be tons of structures inheriting it,

@@ -161,7 +161,7 @@ public:
     static bool Exists(int movenum, int gen);
     static bool isOHKO(int movenum);
     static int EffectRate(int movenum);
-    static int Target(int movenum);
+    static int Target(int movenum, int gen);
     static QString MoveMessage(int moveeffect, int part);
     static QStringList MoveList();
 
