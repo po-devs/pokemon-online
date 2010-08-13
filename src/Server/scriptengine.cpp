@@ -1377,9 +1377,33 @@ void ScriptEngine::shutDown()
     exit(0);
 }
 
-void ScriptEngine::modifyTypeChart(int type_attack, int type_defend, int value)
+void ScriptEngine::modifyTypeChart(int type_attack, int type_defend, const QString &modifier)
 {
-    TypeInfo::modifyTypeChart(type_attack, type_defend, value);
+    QString compare_to = modifier.toLower();
+    QString modifiers[] = { "none", "ineffective", "normal", "effective" };
+    int real_modifiers[] = { 0, 1, 2, 4 };
+    int i = 0;
+    while((i < 4) && (modifiers[i] != compare_to)) i++;
+    if(i < 4) TypeInfo::modifyTypeChart(type_attack, type_defend, real_modifiers[i]);
+}
+
+QScriptValue ScriptEngine::type(int id)
+{
+    if (id >= 0  && id < TypeInfo::NumberOfTypes()) {
+        return TypeInfo::Name(id);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::typeNum(const QString &typeName)
+{
+    int num = TypeInfo::Number(convertToSerebiiName(typeName));
+    if (num >= 0  && num < TypeInfo::NumberOfTypes()) {
+        return num;
+    } else {
+        return myengine.undefinedValue();
+    }
 }
 
 ScriptWindow::ScriptWindow()
