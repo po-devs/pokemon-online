@@ -818,7 +818,7 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p, int
     }
 
     QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nEffect: %5").arg(MoveInfo::Name(b.num()), power,
-                                                                        MoveInfo::AccS(b.num()), MoveInfo::Description(b.num()),
+                                                                        MoveInfo::AccS(b.num(), gen), MoveInfo::Description(b.num()),
                                                                         MoveInfo::DetailedDescription(b.num()));
 
     int type = b.num() == Move::HiddenPower ?
@@ -860,7 +860,7 @@ void ImageAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p, i
     }
 
     QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nEffect: %5").arg(MoveInfo::Name(b.num()), power,
-                                                                        MoveInfo::AccS(b.num()), MoveInfo::Description(b.num()),
+                                                                        MoveInfo::AccS(b.num(), gen), MoveInfo::Description(b.num()),
                                                                         MoveInfo::DetailedDescription(b.num()));
 
     int type = b.num() == Move::HiddenPower ?

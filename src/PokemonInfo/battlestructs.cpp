@@ -50,8 +50,8 @@ BattleMove::BattleMove()
     totalPP() = 0;
 }
 
-void BattleMove::load(int) {
-    PP() = MoveInfo::PP(num())*8/5; /* 3 PP-ups */
+void BattleMove::load(int gen) {
+    PP() = MoveInfo::PP(num(), gen)*8/5; /* 3 PP-ups */
     totalPP() = PP();
 }
 

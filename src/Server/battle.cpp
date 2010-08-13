@@ -1742,15 +1742,30 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player,target,"AttackSomehowFailed");
             continue;
         }
-        if (target != player) {
-            callaeffects(target,player,"OpponentBlock");
+        /* In 4Th gen, WoW and TWave trigger Flash Fire & Volt Absorb */
+        if (gen() >= 4) {
+            if (target != player) {
+                callaeffects(target,player,"OpponentBlock");
+            }
+            if (turnlong[target].contains(QString("Block%1").arg(player))) {
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
         }
-        if (turnlong[target].contains(QString("Block%1").arg(player))) {
-            calleffects(player,target,"AttackSomehowFailed");
-            continue;
-        }
+
 	if (turnlong[player]["Power"].toInt() > 0)
         {
+            /* In 3rd gen, only offensive attacks trigger Flash Fire & Volt Absorb */
+            if (gen() == 3) {
+                if (target != player) {
+                    callaeffects(target,player,"OpponentBlock");
+                }
+                if (turnlong[target].contains(QString("Block%1").arg(player))) {
+                    calleffects(player,target,"AttackSomehowFailed");
+                    continue;
+                }
+            }
+
             calculateTypeModStab();
 
             calleffects(player, target, "BeforeCalculatingDamage");
@@ -2504,13 +2519,16 @@ int BattleSituation::calculateDamage(int p, int t)
     /* Damage reduction in doubles, which occur only
        if there's more than one alive target. */
     if (doubles()) {
-        if (attackused == Move::Explosion || attackused == Move::Selfdestruct) {
-            damage = damage * 3 / 4;
-        } else {
-            foreach (int tar, targetList) {
-                if (tar != t && !koed(tar)) {
-                    damage = damage * 3/4;
-                    break;
+        /* In gen 3, attacks that hit everyone don't have reduced damage */
+        if (gen() >= 4 || (move["PossibleTargets"] != Move::All && move["PossibleTargets"] != Move::AllButSelf) ) {
+            if (attackused == Move::Explosion || attackused == Move::Selfdestruct) {
+                damage = damage * 3 / 4;
+            } else {
+                foreach (int tar, targetList) {
+                    if (tar != t && !koed(tar)) {
+                        damage = damage * 3/4;
+                        break;
+                    }
                 }
             }
         }
@@ -2662,7 +2680,7 @@ void BattleSituation::changeTempMove(int player, int slot, int move)
 {
     pokelong[player]["Move" + QString::number(slot)] = move;
     notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
-    changePP(player,slot,std::min(MoveInfo::PP(move), 5));
+    changePP(player,slot,std::min(MoveInfo::PP(move, gen()), 5));
 }
 
 void BattleSituation::changeSprite(int player, int poke)
