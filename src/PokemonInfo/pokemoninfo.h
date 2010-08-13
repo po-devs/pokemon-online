@@ -145,10 +145,10 @@ public:
     static int Power(int movenum, int gen);
     /* gives the power of a move in the form of a string */
     static QString PowerS(int movenum, int gen);
-    static int PP(int movenum);
-    static int Acc(int movenum);
+    static int PP(int movenum, int gen);
+    static int Acc(int movenum, int gen);
     /* gives the accuracy of a move in the form of a string */
-    static QString AccS(int movenum);
+    static QString AccS(int movenum, int gen);
     /* the status mod of a move*/
     static QString Effect(int movenum);
     static QString SpecialEffect(int movenum);
@@ -168,22 +168,22 @@ public:
 private:
     static QList<QString> m_Names;
     static QSet<int> m_3rdGenMoves;
-    static QList<int> m_Power;
-    static QList<int> m_Acc;
+    static QVector<int> m_Power[2];
+    static QVector<int> m_Acc[2];
     static QList<QString> m_Effects;
     static QList<QString> m_SpecialEffects;
     static QList<QStringList> m_MoveMessages;
-    static QList<char> m_Type;
-    static QList<char> m_PP;
-    static QList<char> m_Category;
-    static QList<char> m_Critical;
-    static QList<char> m_EffectRate;
-    static QList<bool> m_Physical;
-    static QList<bool> m_KingRock;
-    static QList<char> m_Speeds;
-    static QList<int> m_Flinch;
-    static QList<int> m_Recoil;
-    static QList<int> m_Targets;
+    static QVector<char> m_Type;
+    static QVector<char> m_PP[2];
+    static QVector<char> m_Category;
+    static QVector<char> m_Critical;
+    static QVector<char> m_EffectRate;
+    static QVector<bool> m_Physical;
+    static QVector<bool> m_KingRock;
+    static QVector<char> m_Speeds;
+    static QVector<int> m_Flinch;
+    static QVector<int> m_Recoil;
+    static QVector<int> m_Targets;
     static QList<QPair<char, char> > m_Repeat;
     static QList<QString> m_Descriptions;
     static QList<QString> m_Details;

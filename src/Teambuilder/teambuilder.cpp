@@ -1475,10 +1475,10 @@ void TB_PokemonBody::configureMoves()
         witem = new QTableWidgetItem(pair.second);
 	movechoice->setItem(i, Learning, witem);
 
-        witem = new QTableWidgetItem(QString::number(MoveInfo::PP(movenum)).rightJustified(2));
+        witem = new QTableWidgetItem(QString::number(MoveInfo::PP(movenum, gen)).rightJustified(2));
 	movechoice->setItem(i, PP, witem);
 
-        witem = new QTableWidgetItem(MoveInfo::AccS(movenum).rightJustified(3));
+        witem = new QTableWidgetItem(MoveInfo::AccS(movenum, gen).rightJustified(3));
 	movechoice->setItem(i, Acc, witem);
 
         witem = new QTableWidgetItem(MoveInfo::PowerS(movenum, gen).rightJustified(3));

@@ -29,7 +29,7 @@ MoveEffect::MoveEffect(int num, int gen)
     (*this)["PhysicalContact"] = MoveInfo::PhysicalContact(num);
     (*this)["KingRock"] = MoveInfo::KingRock(num);
     (*this)["Power"] = MoveInfo::Power(num, gen);
-    (*this)["Accuracy"] = MoveInfo::Acc(num);
+    (*this)["Accuracy"] = MoveInfo::Acc(num, gen);
     (*this)["Type"] = MoveInfo::Type(num);
     (*this)["Category"] = MoveInfo::Category(num, gen);
     (*this)["EffectRate"] = MoveInfo::EffectRate(num);
@@ -1282,6 +1282,25 @@ struct MMSubstitute : public MM
 	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
     }
 
+    struct Blocked4G : public QSet<QString> {
+        Blocked4G() {
+            (*this) << "Acupressure" << "Bind" << "Block" << "Covet" << "Embargo" << "GastroAcid" << "Grudge" << "HealBlock" << "KnockOff"
+                    << "LeechSeed" << "LockOn" << "Mimic" << "PsychoShift" << "Sketch" << "Switcheroo" << "WorrySeed" << "Yawn" << "PainSplit"
+                    << "BugBite";
+        }
+    };
+
+    static Blocked4G block4;
+
+    struct Blocked3G : public QSet<QString> {
+        Blocked3G() {
+            (*this) << "Bind" << "Block" << "Covet" << "Grudge" << "KnockOff" << "LeechSeed" << "LockOn" << "Mimic" << "Sketch" << "WorrySeed"
+                    << "PainSplit";
+        }
+    };
+
+    static Blocked3G block3;
+
     static void bte(int s, int t, BS &b) {
         if (s == t || s==-1) {
 	    return;
@@ -1295,11 +1314,9 @@ struct MMSubstitute : public MM
 
         QString effect = turn(b,t)["EffectActivated"].toString();
 
-        if (effect == "Acupressure" || effect == "Bind" || effect == "Block" || effect == "Covet" || (effect == "Curse" && b.hasType(t, Pokemon::Ghost))
-            || effect == "Embargo" || effect == "GastroAcid" || effect == "Grudge"
-	    || effect == "HealBlock" || effect == "KnockOff" || effect == "LeechSeed"
-	    || effect == "LockOn" || effect == "Mimic" || effect == "PsychoShift" || effect == "Sketch" || effect == "Switcheroo"
-            || effect == "WorrySeed" || effect == "Yawn" || effect == "PainSplit" || effect == "BugBite")
+        QSet<QString> &ref = * (b.gen() <= 3 ? dynamic_cast<QSet<QString>* > (&block3) : dynamic_cast<QSet<QString>* > (&block4));
+
+        if (ref.contains(effect) || (effect == "Curse" && b.hasType(t, Pokemon::Ghost)))
 	{
             turn(b,t)["EffectBlocked"] = true;
             if (turn(b,t)["Power"].toInt() == 0)
@@ -1308,6 +1325,9 @@ struct MMSubstitute : public MM
 	}
     }
 };
+
+MMSubstitute::Blocked3G MMSubstitute::block3;
+MMSubstitute::Blocked4G MMSubstitute::block4;
 
 struct MMFocusPunch : public MM
 {
@@ -1780,7 +1800,12 @@ struct MMCounter : public MM
     }
 
     static void uodr(int s, int source, BS &b) {
-        if (turn(b, source)["Category"] != turn(b,s)["Counter_Arg"].toInt()) {
+
+        if (b.gen() >= 4 && turn(b, source)["Category"] != turn(b,s)["Counter_Arg"].toInt()) {
+            return;
+        }
+        /* In third gen, all hidden power are countered by counter but not by mirror coat */
+        if (b.gen() <= 3 && TypeInfo::Category(type(b, source)) != turn(b,s)["Counter_Arg"].toInt()) {
             return;
         }
 
@@ -1997,7 +2022,7 @@ struct MMDoomDesire : public MM
         slot(b,t)["DoomDesireDamage"] = b.calculateDamage(s, t);
         slot(b,t)["DoomDesireTurn"] = b.turn() + 2;
         slot(b,t)["DoomDesireMove"] = move;
-        turn(b,s)["Accuracy"] = MoveInfo::Acc(move);
+        turn(b,s)["Accuracy"] = MoveInfo::Acc(move, b.gen());
         slot(b,t)["DoomDesireFailed"] = !b.testAccuracy(s,t,true);
         addFunction(slot(b,t), "EndTurn7", "DoomDesire", &et);
         b.sendMoveMessage(29, move==DoomDesire?2:1, s, type(b,s));
@@ -3810,7 +3835,10 @@ struct MMSpite : public MM
     static void uas(int s, int t, BS &b)
     {
         int slot = poke(b,t)["MoveSlot"].toInt();
-        b.losePP(t,slot,4);
+        if (b.gen() >= 4)
+            b.losePP(t, slot, 4);
+        else
+            b.losePP(t, slot, 2 + (b.true_rand()%4) );
         b.sendMoveMessage(123,0,s,Pokemon::Ghost,t,b.move(t,slot));
     }
 };

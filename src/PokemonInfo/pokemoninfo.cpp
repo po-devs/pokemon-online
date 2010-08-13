@@ -35,21 +35,21 @@ QList<int> PokemonInfo::m_OriginalEvos;
 
 QString MoveInfo::m_Directory;
 QList<QString> MoveInfo::m_Names;
-QList<int> MoveInfo::m_Acc;
-QList<int> MoveInfo::m_Power;
+QVector<int> MoveInfo::m_Acc[2];
+QVector<int> MoveInfo::m_Power[2];
 QList<QString> MoveInfo::m_SpecialEffects;
-QList<char> MoveInfo::m_Type;
-QList<char> MoveInfo::m_PP;
-QList<char> MoveInfo::m_Category;
+QVector<char> MoveInfo::m_Type;
+QVector<char> MoveInfo::m_PP[2];
+QVector<char> MoveInfo::m_Category;
 QList<QString> MoveInfo::m_Effects;
-QList<char> MoveInfo::m_Critical;
-QList<char> MoveInfo::m_EffectRate;
-QList<bool> MoveInfo::m_Physical;
-QList<bool> MoveInfo::m_KingRock;
-QList<char> MoveInfo::m_Speeds;
-QList<int> MoveInfo::m_Flinch;
-QList<int> MoveInfo::m_Recoil;
-QList<int> MoveInfo::m_Targets;
+QVector<char> MoveInfo::m_Critical;
+QVector<char> MoveInfo::m_EffectRate;
+QVector<bool> MoveInfo::m_Physical;
+QVector<bool> MoveInfo::m_KingRock;
+QVector<char> MoveInfo::m_Speeds;
+QVector<int> MoveInfo::m_Flinch;
+QVector<int> MoveInfo::m_Recoil;
+QVector<int> MoveInfo::m_Targets;
 QList<QStringList> MoveInfo::m_MoveMessages;
 QList<QPair<char, char> > MoveInfo::m_Repeat;
 QList<QString> MoveInfo::m_Descriptions;
@@ -194,7 +194,7 @@ static void fill_container_with_file(QList<QColor> &container, const QString &fi
     }
 }
 
-static void fill_container_with_file(QList<bool> &container, const QString & filename)
+static void fill_container_with_file(QVector<bool> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -205,13 +205,13 @@ static void fill_container_with_file(QList<bool> &container, const QString & fil
     /* discarding all the uninteresting lines, should find a more effective way */
     while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
     {
-	int var;
-	filestream >> var;
-	container << var;
+        int var;
+        filestream >> var;
+        container << var;
     }
 }
 
-static void fill_container_with_file(QList<char> &container, const QString & filename)
+static void fill_container_with_file(QVector<char> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -222,9 +222,9 @@ static void fill_container_with_file(QList<char> &container, const QString & fil
     /* discarding all the uninteresting lines, should find a more effective way */
     while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
     {
-	int var;
-	filestream >> var;
-	container << var;
+        int var;
+        filestream >> var;
+        container << var;
     }
 }
 
@@ -902,7 +902,8 @@ QString MoveInfo::DetailedDescription(int movenum)
 
 void MoveInfo::loadPPs()
 {
-    fill_container_with_file(m_PP, path("move_pp.txt"));
+    fill_container_with_file(m_PP[0], path("move_pp_3G.txt"));
+    fill_container_with_file(m_PP[1], path("move_pp.txt"));
 }
 
 void MoveInfo::loadTypes()
@@ -918,20 +919,36 @@ void MoveInfo::loadCategorys()
 void MoveInfo::loadPowers()
 {
     QList<QString> temp;
+    fill_container_with_file(temp, path("move_power_3G.txt"));
+
+    foreach (QString s, temp) {
+        m_Power[0].push_back(s.toInt());
+    }
+
+    temp.clear();
+
     fill_container_with_file(temp, path("move_power.txt"));
 
     foreach (QString s, temp) {
-        m_Power.push_back(s.toInt());
+        m_Power[1].push_back(s.toInt());
     }
 }
 
 void MoveInfo::loadAccs()
 {
     QList<QString> temp;
+    fill_container_with_file(temp, path("move_accuracy_3G.txt"));
+
+    foreach (QString s, temp) {
+        m_Acc[0].push_back(s.toInt());
+    }
+
+    temp.clear();
+
     fill_container_with_file(temp, path("move_accuracy.txt"));
 
     foreach (QString s, temp) {
-        m_Acc.push_back(s.toInt());
+        m_Acc[1].push_back(s.toInt());
     }
 }
 
@@ -958,10 +975,7 @@ bool MoveInfo::Exists(int movenum, int gen)
 
 int MoveInfo::Power(int movenum, int gen)
 {
-    if (gen == 3 && movenum == Move::Outrage)
-        return 90;
-
-    return m_Power[movenum];
+    return m_Power[gen-3][movenum];
 }
 
 bool MoveInfo::isOHKO(int movenum)
@@ -990,20 +1004,20 @@ int MoveInfo::Category(int movenum, int gen)
     }
 }
 
-int MoveInfo::PP(int movenum)
+int MoveInfo::PP(int movenum, int gen)
 {
-    return m_PP[movenum];
+    return m_PP[gen-3][movenum];
 }
 
-int MoveInfo::Acc(int movenum)
+int MoveInfo::Acc(int movenum, int gen)
 {
-    int ret = m_Acc[movenum];
+    int ret = m_Acc[gen-3][movenum];
     return ret == 0 ? 65535 : ret;
 }
 
-QString MoveInfo::AccS(int movenum)
+QString MoveInfo::AccS(int movenum, int gen)
 {
-    return m_Acc[movenum] == 0 ? "--" : QString::number(m_Acc[movenum]);
+    return m_Acc[gen-3][movenum] == 0 ? "--" : QString::number(m_Acc[gen-3][movenum]);
 }
 
 QString MoveInfo::PowerS(int movenum, int gen)
