@@ -1056,8 +1056,10 @@ int MoveInfo::SpeedPriority(int num)
     return m_Speeds[num];
 }
 
-int MoveInfo::FlinchRate(int num)
+int MoveInfo::FlinchRate(int num, int gen)
 {
+    if (gen <= 3 && num == Move::Waterfall)
+        return 0;
     return m_Flinch[num];
 }
 
