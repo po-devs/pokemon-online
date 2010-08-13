@@ -183,7 +183,9 @@ public:
     Q_INVOKABLE long time();
     Q_INVOKABLE QScriptValue getTierList();
 
-    Q_INVOKABLE void modifyTypeChart(int type_attack, int type_defend, int value);
+    Q_INVOKABLE void modifyTypeChart(int type_attack, int type_defend, const QString &modifier);
+    Q_INVOKABLE QScriptValue type(int id);
+    Q_INVOKABLE QScriptValue typeNum(const QString &typeName);
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
