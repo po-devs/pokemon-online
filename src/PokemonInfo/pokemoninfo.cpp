@@ -862,8 +862,11 @@ QString MoveInfo::SpecialEffect(int movenum)
     return m_SpecialEffects[movenum];
 }
 
-int MoveInfo::Target(int movenum)
+int MoveInfo::Target(int movenum, int gen)
 {
+    if (gen == 3 && movenum == Move::Surf)
+        return Move::Opponents;
+
     return m_Targets[movenum];
 }
 
