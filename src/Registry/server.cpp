@@ -5,7 +5,6 @@ Server::Server(int _id, QTcpSocket *s)
 {
     id() = _id;
     ip() = s->peerAddress().toString();
-    address() = ip();
     listed() = false;
 
     m_relay = new Analyzer(s, id());
