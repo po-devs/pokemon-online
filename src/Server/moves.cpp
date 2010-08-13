@@ -34,7 +34,7 @@ MoveEffect::MoveEffect(int num, int gen)
     (*this)["Category"] = MoveInfo::Category(num, gen);
     (*this)["EffectRate"] = MoveInfo::EffectRate(num);
     (*this)["StatEffect"] = MoveInfo::Effect(num);
-    (*this)["FlinchRate"] = MoveInfo::FlinchRate(num);
+    (*this)["FlinchRate"] = MoveInfo::FlinchRate(num, gen);
     (*this)["Recoil"] = MoveInfo::Recoil(num, gen);
     (*this)["Attack"] = num;
     (*this)["PossibleTargets"] = MoveInfo::Target(num);

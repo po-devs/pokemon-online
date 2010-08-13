@@ -138,7 +138,7 @@ public:
     static int Category(int movenum, int gen);
     static int Number(const QString &movename);
     static int NumberOfMoves();
-    static int FlinchRate(int movenum);
+    static int FlinchRate(int movenum, int gen);
     static int Recoil(int movenum, int gen);
     static QString Description(int movenum);
     static QString DetailedDescription(int movenum);
