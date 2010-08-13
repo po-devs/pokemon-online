@@ -5,6 +5,7 @@ Server::Server(int _id, QTcpSocket *s)
 {
     id() = _id;
     ip() = s->peerAddress().toString();
+    address() = ip();
     listed() = false;
 
     m_relay = new Analyzer(s, id());
@@ -24,7 +25,15 @@ void Server::login(const QString &name, const QString &desc, quint16 num, quint1
     numChanged(num);
     nameChanged(name);
     maxChanged(max);
+    int oldport = port();
     port() = nport;
+
+    emit portSet(id(), nport, oldport);
+}
+
+QString Server::getAddress(int port) const
+{
+    return ip() + ":" + QString::number(port);
 }
 
 void Server::descChanged(const QString &desc)
