@@ -86,6 +86,7 @@ public:
     static QList<int> Formes(int pokenum);
     static QList<int> Evos(int pokenum);
     static int OriginalEvo(int pokenum);
+    static int PreEvo(int pokenum);
     static bool IsInEvoChain(int pokenum);
     static PokeBaseStats BaseStats(int pokenum);
     static bool Exists(int pokenum, int gen=4);
@@ -109,6 +110,7 @@ private:
     static QHash<int,QList<int> > m_AlternateFormes;
     static QHash<int,QList<int> > m_Evolutions;
     static QList<int> m_OriginalEvos;
+    static QList<int> m_PreEvos;
     /* First and last aesthetic forme */
     static QHash<int, QPair<int, int> > m_AestheticFormes;
     static QHash<int, bool> m_AestheticFormesHidden;
@@ -150,13 +152,13 @@ public:
     /* gives the accuracy of a move in the form of a string */
     static QString AccS(int movenum, int gen);
     /* the status mod of a move*/
-    static QString Effect(int movenum);
+    static QString Effect(int movenum, int gen);
     static QString SpecialEffect(int movenum);
     static int CriticalRaise(int movenum);
     static int RepeatMin(int movenum);
     static int RepeatMax(int movenum);
     static int SpeedPriority(int movenum);
-    static bool PhysicalContact(int movenum);
+    static bool PhysicalContact(int movenum, int gen);
     static bool KingRock(int movenum);
     static bool Exists(int movenum, int gen);
     static bool isOHKO(int movenum);
@@ -170,7 +172,7 @@ private:
     static QSet<int> m_3rdGenMoves;
     static QVector<int> m_Power[2];
     static QVector<int> m_Acc[2];
-    static QList<QString> m_Effects;
+    static QList<QString> m_Effects[2];
     static QList<QString> m_SpecialEffects;
     static QList<QStringList> m_MoveMessages;
     static QVector<char> m_Type;
@@ -237,7 +239,7 @@ public:
     static int PlateType(int itemnum);
     static QList<QString> SortedNames(int gen);
     static QList<QString> SortedUsefulNames(int gen);
-    static QList<Effect> Effects(int item);
+    static QList<Effect> Effects(int item, int gen);
     static QString Message(int item, int part);
     static int Number(const QString &itemname);
     static QString Description(int itemnum);
@@ -253,7 +255,7 @@ private:
     static QList<QString> m_SortedNames[2];
     static QList<QString> m_SortedUsefulNames[2];
     static QString m_Directory;
-    static QList<QList<Effect> > m_RegEffects;
+    static QList<QList<Effect> > m_RegEffects[2];
     static QList<QList<Effect> > m_BerryEffects;
     static QList<QStringList> m_RegMessages;
     static QList<QStringList> m_BerryMessages;

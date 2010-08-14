@@ -32,6 +32,7 @@ QHash<int, QString> PokemonInfo::m_AestheticFormesDescs;
 int PokemonInfo::m_trueNumberOfPokes;
 QHash<int,QList<int> > PokemonInfo::m_Evolutions;
 QList<int> PokemonInfo::m_OriginalEvos;
+QList<int> PokemonInfo::m_PreEvos;
 
 QString MoveInfo::m_Directory;
 QList<QString> MoveInfo::m_Names;
@@ -364,12 +365,14 @@ void PokemonInfo::loadEvos()
     QList<QString> l = QString::fromUtf8(in.readAll()).split('\n');
     for (int i = 0; i < l.size(); i++) {
         m_OriginalEvos.push_back(0);
+        m_PreEvos.push_back(0);
     }
     for (int i = 0; i < l.size(); i++) {
         if (l[i].length() > 0) {
             int preEvo = l[i].toInt();
             int orEvo = m_OriginalEvos[preEvo] == 0 ? preEvo : m_OriginalEvos[preEvo];
             m_OriginalEvos[i] = orEvo;
+            m_PreEvos[i] = preEvo;
             m_OriginalEvos[orEvo] = orEvo;
 
             if (!m_Evolutions.contains(orEvo)) {
@@ -673,6 +676,11 @@ QList<int> PokemonInfo::Formes(int pokenum)
 }
 
 int PokemonInfo::OriginalEvo(int pokenum)
+{
+    return m_OriginalEvos[pokenum];
+}
+
+int PokemonInfo::PreEvo(int pokenum)
 {
     return m_OriginalEvos[pokenum];
 }
@@ -1033,9 +1041,9 @@ QString MoveInfo::PowerS(int movenum, int gen)
     }
 }
 
-QString MoveInfo::Effect(int movenum)
+QString MoveInfo::Effect(int movenum, int gen)
 {
-    return m_Effects[movenum];
+    return m_Effects[gen-3][movenum];
 }
 
 int MoveInfo::CriticalRaise(int num)
@@ -1048,8 +1056,11 @@ int MoveInfo::EffectRate(int num)
     return m_EffectRate[num];
 }
 
-bool MoveInfo::PhysicalContact(int num)
+bool MoveInfo::PhysicalContact(int num, int gen)
 {
+    if (gen <= 3 && num == Move::Overheat)
+        return true;
+
     return m_Physical[num];
 }
 
@@ -1097,7 +1108,15 @@ void MoveInfo::loadEffects()
 
     /* Removing comments, aka anything starting from '#' */
     foreach (QString eff, temp) {
-	m_Effects.push_back(eff.split('#').front());
+        m_Effects[1].push_back(eff.split('#').front());
+    }
+
+    temp.clear();
+    fill_container_with_file(temp, path("moveeffects_3G.txt"));
+
+    /* Removing comments, aka anything starting from '#' */
+    foreach (QString eff, temp) {
+        m_Effects[0].push_back(eff.split('#').front());
     }
 }
 
@@ -1198,10 +1217,31 @@ void ItemInfo::loadNames()
 		toPush.push_back(Effect(atoi(s.c_str())));
 	    }
 	}
-	m_RegEffects.push_back(toPush);
+        m_RegEffects[1].push_back(toPush);
     }
 
     temp.clear();
+
+    fill_container_with_file(temp, path("item_effects_3G.txt"));
+
+    /* Removing comments, aka anything starting from '#' */
+    foreach (QString eff, temp) {
+        QStringList effects = eff.split('#').front().split('|');
+        QList<Effect> toPush;
+        foreach(QString eff, effects) {
+            std::string s = eff.toStdString();
+            size_t pos = s.find('-');
+            if (pos != std::string::npos) {
+                toPush.push_back(Effect(atoi(s.c_str()), eff.mid(pos+1)));
+            } else {
+                toPush.push_back(Effect(atoi(s.c_str())));
+            }
+        }
+        m_RegEffects[0].push_back(toPush);
+    }
+
+    temp.clear();
+
     fill_container_with_file(temp, path("berry_effects.txt"));
     /* Removing comments, aka anything starting from '#' */
     foreach (QString eff, temp) {
@@ -1234,12 +1274,12 @@ void ItemInfo::loadNames()
     fill_container_with_file(m_Powers, path("items_pow.txt"));
 }
 
-QList<ItemInfo::Effect> ItemInfo::Effects(int item)
+QList<ItemInfo::Effect> ItemInfo::Effects(int item, int gen)
 {
     if (!Exists(item)) {
 	return QList<ItemInfo::Effect>();
     } else {
-	return isBerry(item) ? m_BerryEffects[item-8000] : m_RegEffects[item];
+        return isBerry(item) ? m_BerryEffects[item-8000] : m_RegEffects[gen-3][item];
     }
 }
 

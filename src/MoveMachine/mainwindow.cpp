@@ -25,50 +25,18 @@ void MovesPerPoke::init(int poke)
 
 void PokeMovesDb::init()
 {
-    QSet<int> thirdgen;
     for (int i =0; i < PokemonInfo::NumberOfPokemons(); i++) {
         MovesPerPoke p;
         p.init(i);
-        thirdgen.unite(p.gens[0].moves[LevelMoves]).unite(p.gens[0].moves[SpecialMoves]).unite(p.gens[0].moves[EggMoves]).unite(p.gens[0].moves[TutorMoves]);
         pokes.push_back(p);
     }
 
-    thirdgen << Move::Return << Move::Overheat << Move::SecretPower << Move::Flash << Move::Frustration << Move::Facade << Move::Surf << Move::Dive << Move::Waterfall << Move::Cut << Move::RockSmash << Move::Fly << Move::Strength << Move::Whirlpool;
-
-    QSet<int> badTMs;
-    badTMs << Move::FalseSwipe << Move::Will_O_Wisp << Move::Endure << Move::DragonPulse << Move::SilverWind << Move::Explosion
-            << Move::Recycle << Move::ThunderWave << Move::SwordsDance << Move::PsychUp << Move::DarkPulse << Move::RockSlide
-            << Move::X_Scissor << Move::SleepTalk << Move::Swagger << Move::Substitute;
-
     for (int i =0; i < PokemonInfo::NumberOfPokemons(); i++) {
-        MovesPerPoke p = pokes[i];
+        int preEvo = PokemonInfo::PreEvo(i);
 
-        if (p.gens[0].moves[LevelMoves].empty())
-            p.gens[0].moves[TMMoves].clear();
-        else {
-            p.gens[0].moves[TMMoves] = p.gens[1].moves[TMMoves];
-            p.gens[0].moves[TMMoves].intersect(thirdgen);
-            p.gens[0].moves[TMMoves].subtract(badTMs);
+        if (preEvo != 0) {
+            pokes[i].gens[0].moves[LevelMoves].unite(pokes[preEvo].gens[0].moves[LevelMoves]);
         }
-
-        pokes[i] = p;
-    }
-
-    thirdgen.insert(0);
-
-    QFile out("thirdgen.txt");
-
-    /* Sorting the moves */
-    QMap<int, int> outm;
-
-    foreach(int move, thirdgen) {
-        outm [move] = move;
-    }
-
-    out.open(QIODevice::WriteOnly);
-
-    foreach(int move, outm) {
-        out.write(QByteArray::number(move) + "\n");
     }
 }
 

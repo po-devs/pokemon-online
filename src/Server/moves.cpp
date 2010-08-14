@@ -26,7 +26,7 @@ MoveEffect::MoveEffect(int num, int gen)
     (*this)["RepeatMin"] = MoveInfo::RepeatMin(num);
     (*this)["RepeatMax"] = MoveInfo::RepeatMax(num);
     (*this)["SpeedPriority"] = MoveInfo::SpeedPriority(num);
-    (*this)["PhysicalContact"] = MoveInfo::PhysicalContact(num);
+    (*this)["PhysicalContact"] = MoveInfo::PhysicalContact(num, gen);
     (*this)["KingRock"] = MoveInfo::KingRock(num);
     (*this)["Power"] = MoveInfo::Power(num, gen);
     (*this)["Accuracy"] = MoveInfo::Acc(num, gen);
@@ -1285,7 +1285,7 @@ struct MMSubstitute : public MM
     struct Blocked4G : public QSet<QString> {
         Blocked4G() {
             (*this) << "Acupressure" << "Bind" << "Block" << "Covet" << "Embargo" << "GastroAcid" << "Grudge" << "HealBlock" << "KnockOff"
-                    << "LeechSeed" << "LockOn" << "Mimic" << "PsychoShift" << "Sketch" << "Switcheroo" << "WorrySeed" << "Yawn" << "PainSplit"
+                    << "LeechSeed" << "LockOn" << "Mimic" << "PsychoShift" << "Sketch" << "Switcheroo" << "Trick" << "WorrySeed" << "Yawn" << "PainSplit"
                     << "BugBite";
         }
     };
@@ -1295,7 +1295,7 @@ struct MMSubstitute : public MM
     struct Blocked3G : public QSet<QString> {
         Blocked3G() {
             (*this) << "Bind" << "Block" << "Covet" << "Grudge" << "KnockOff" << "LeechSeed" << "LockOn" << "Mimic" << "Sketch" << "WorrySeed"
-                    << "PainSplit";
+                    << "PainSplit" << "Switcheroo";
         }
     };
 
@@ -2759,15 +2759,23 @@ struct MMJumpKick : public MM
 	int typeadv[] = {b.getType(t, 1), b.getType(t, 2)};
 	int type = MM::type(b,s);
 	if (typeadv[0] == Pokemon::Ghost) {
+            if (b.gen() <= 3)
+                return;
 	    typemod = TypeInfo::Eff(type, typeadv[1]);
 	} else if (typeadv[1] == Pokemon::Ghost) {
+            if (b.gen() <= 3)
+                return;
 	    typemod = TypeInfo::Eff(type, typeadv[0]);
 	} else {
 	    typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
 	}
 	turn(b,s)["TypeMod"] = typemod;
         turn(b,s)["Stab"] = b.hasType(s, Type::Fighting) ? 3 : 2;
-        int damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
+        int damage;
+        if (b.gen() >= 4)
+            damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
+        else
+            damage = std::min(b.calculateDamage(s,t)/8, b.poke(t).totalLifePoints()/4);
         b.sendMoveMessage(64,0,s,Type::Fighting);
 	b.inflictDamage(s, damage, s, true);
     }
