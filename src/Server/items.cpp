@@ -215,7 +215,10 @@ struct IMBoostType : public IM
     }
     static void bpm(int s, int, BS &b) {
 	if (turn(b,s)["Type"] == poke(b,s)["ItemArg"]) {
-	    turn(b,s)["BasePowerItemModifier"] = 2;
+            if (b.gen() >= 4)
+                turn(b,s)["BasePowerItemModifier"] = 2;
+            else
+                turn(b,s)["BasePowerItemModifier"] = 1;
 	}
     }
 };

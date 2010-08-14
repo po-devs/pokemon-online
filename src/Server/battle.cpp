@@ -674,6 +674,11 @@ bool BattleSituation::koed(int player) const
     return currentPoke(player) == -1 || poke(player).ko();
 }
 
+bool BattleSituation::wasKoed(int player) const
+{
+    return currentPoke(player) == -1 || turnlong[player].contains("WasKoed");
+}
+
 BattleChoices BattleSituation::createChoice(int slot)
 {
     /* First let's see for attacks... */
@@ -731,7 +736,7 @@ void BattleSituation::analyzeChoice(int slot)
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice[slot].attack()) {
         turnlong[slot]["Target"] = choice[slot].target();
-        if (!koed(slot) && !turnlong[slot].value("HasMoved").toBool() && !turnlong[slot].value("CantGetToMove").toBool()) {
+        if (!wasKoed(slot) && !turnlong[slot].value("HasMoved").toBool() && !turnlong[slot].value("CantGetToMove").toBool()) {
             if (turnlong[slot].contains("NoChoice"))
                 /* Automatic move */
                 useAttack(slot, pokelong[slot]["LastSpecialMoveUsed"].toInt(), true);
@@ -849,9 +854,23 @@ void BattleSituation::analyzeChoices()
 
     /* The loop is separated, cuz all TurnOrders must be called at the beggining of the turn,
        cf custap berry */
-    foreach(int p, players) {
-        analyzeChoice(p);
-        testWin();
+    if (gen() >= 4) {
+        foreach(int p, players) {
+            analyzeChoice(p);
+            testWin();
+        }
+    } else { // gen <= 3
+        for(int i = 0; i < players.size(); i++) {
+            if (!doubles()) {
+                if (koed(0) || koed(1))
+                    break;
+            } else {
+                requestSwitchIns();
+            }
+
+            analyzeChoice(p);
+            testWin();
+        }
     }
 }
 
@@ -1742,30 +1761,17 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player,target,"AttackSomehowFailed");
             continue;
         }
-        /* In 4Th gen, WoW and TWave trigger Flash Fire & Volt Absorb */
-        if (gen() >= 4) {
-            if (target != player) {
-                callaeffects(target,player,"OpponentBlock");
-            }
-            if (turnlong[target].contains(QString("Block%1").arg(player))) {
-                calleffects(player,target,"AttackSomehowFailed");
-                continue;
-            }
+
+        if (target != player) {
+            callaeffects(target,player,"OpponentBlock");
+        }
+        if (turnlong[target].contains(QString("Block%1").arg(player))) {
+            calleffects(player,target,"AttackSomehowFailed");
+            continue;
         }
 
 	if (turnlong[player]["Power"].toInt() > 0)
         {
-            /* In 3rd gen, only offensive attacks trigger Flash Fire & Volt Absorb */
-            if (gen() == 3) {
-                if (target != player) {
-                    callaeffects(target,player,"OpponentBlock");
-                }
-                if (turnlong[target].contains(QString("Block%1").arg(player))) {
-                    calleffects(player,target,"AttackSomehowFailed");
-                    continue;
-                }
-            }
-
             calculateTypeModStab();
 
             calleffects(player, target, "BeforeCalculatingDamage");
@@ -2035,11 +2041,14 @@ void BattleSituation::applyMoveStatMods(int player, int target)
             continue;
 	}
 
-        if (!self && sub) {
-            if (turnlong[player]["Power"].toInt() == 0)
-                sendMoveMessage(128, 2, player,0,target,turnlong[player]["Attack"].toInt());
-	    continue;
-	}
+        /* Tickle bypasses sub */
+        if (! (gen == 3 && turnlong[player]["Attack"].toInt() == Move::Tickle)) {
+            if (!self && sub) {
+                if (turnlong[player]["Power"].toInt() == 0)
+                    sendMoveMessage(128, 2, player,0,target,turnlong[player]["Attack"].toInt());
+                continue;
+            }
+        }
 
         //Shield Dust
         if (!self && hasWorkingAbility(targeted, Ability::ShieldDust) && turnlong[player]["Power"].toInt() > 0) {
@@ -2818,6 +2827,8 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     changeStatus(player,Pokemon::Koed);
 
     notify(All, Ko, player);
+    //useful for third gen
+    turnlong[player]["WasKoed"] = true;
 
     if (straightattack && player!=source) {
 	callpeffects(player, source, "AfterKoedByStraightAttack");

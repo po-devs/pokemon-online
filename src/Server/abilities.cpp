@@ -18,7 +18,7 @@ void AbilityEffect::activate(const QString &effect, int num, int source, int tar
     mechanics[e.num].functions[effect](source, target, b);
 }
 
-void AbilityEffect::setup(int num, int source, BattleSituation &b)
+void AbilityEffect::setup(int num, int source, BattleSituation &b, bool firstAct)
 {
     AbilityInfo::Effect effect = AbilityInfo::Effects(num);
 
@@ -31,7 +31,8 @@ void AbilityEffect::setup(int num, int source, BattleSituation &b)
 
     QString activationkey = QString("Ability%1SetUp").arg(effect.num);
 
-    if (!b.pokelong[source].contains(activationkey)) {
+    /* In gen 3, intimidate/insomnia/... aren't triggered by Trace */
+    if (!b.pokelong[source].contains(activationkey) && (b.gen() == 4 || firstAct)) {
         b.pokelong[source][activationkey] = true;
         activate("UponSetup", num, source, source, b);
     }
@@ -331,7 +332,7 @@ struct AMFlashFire : public AM {
     }
 
     static void op(int s, int t, BS &b) {
-        if (type(b,t) == Pokemon::Fire) {
+        if (type(b,t) == Pokemon::Fire && (b.gen() >= 4 || turn(b,t)["Power"].toInt() == 0) ) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
             if (!poke(b,s).contains("FlashFired")) {
                 b.sendAbMessage(19,0,s,s,Pokemon::Fire);
@@ -858,8 +859,9 @@ struct AMSoundProof : public AM {
 
     struct SoundMoves : public QSet<int> {
         SoundMoves() {
-            /* Grasswhistle, Growl, Hyper Voice, Metal Sound, Perish Song, Roar, Sing, Sonicboom, Supersonic, Screech, Snore, Uproar, Roar Of Time, Bug Buzz, Chatter, and Heal Bell */
-            (*this) << 48 << 58 << 160 << 162 << 192 << 243 << 320 << 321 << 341 << 357 << 374 << 377 << 402 << 441 ;
+            (*this) << Move::GrassWhistle << Move::Growl << Move::HyperVoice << Move::MetalSound <<
+                    Move::Roar << Move::RoarOfTime << Move::Sing << Move::SonicBoom << Move::SonicBoom << Move::Supersonic <<
+                    Move::Screech << Move::Snore << Move::Uproar << Move::BugBuzz << Move::HealBell << Move::Chatter ;
         }
     };
 
@@ -976,15 +978,13 @@ struct AMTrace : public AM {
 
 struct AMTruant : public AM {
     AMTruant() {
-        functions["UponSetup"] = &us;
         functions["DetermineAttackPossible"] = &dap;
     }
 
-    static void us(int s, int, BS &b) {
-        poke(b,s)["TruantActiveTurn"] = (b.turn()+1)%2;
-    }
-
     static void dap(int s, int, BS &b) {
+        if (!poke(b, s).contains("TruantActiveTurn")) {
+            poke(b,s)["TruantActiveTurn"] = b.turn%2;
+        }
         if (b.turn()%2 != poke(b,s)["TruantActiveTurn"].toInt()) {
             turn(b,s)["ImpossibleToMove"] = true;
             b.sendAbMessage(67,0,s);
@@ -1015,7 +1015,7 @@ struct AMVoltAbsorb : public AM {
     }
 
     static void op(int s, int t, BS &b) {
-        if (type(b,t) == poke(b,s)["AbilityArg"].toInt()) {
+        if (type(b,t) == poke(b,s)["AbilityArg"].toInt() && (b.gen() >= 4 || turn(b,t)["Power"].toInt() == 0) ) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
 
             if (b.poke(s).lifePoints() == b.poke(s).totalLifePoints()) {

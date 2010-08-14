@@ -77,6 +77,7 @@ public:
     const PokeBattle &poke(int player, int poke) const;
     int currentPoke(int player) const;
     bool koed(int player) const;
+    bool wasKoed(int player) const;
     int player(int slot) const;
     /* Returns -1 if none */
     int randomOpponent(int slot) const;
