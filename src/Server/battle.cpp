@@ -868,7 +868,7 @@ void BattleSituation::analyzeChoices()
                 requestSwitchIns();
             }
 
-            analyzeChoice(p);
+            analyzeChoice(players[i]);
             testWin();
         }
     }
@@ -1179,7 +1179,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 void BattleSituation::callEntryEffects(int player)
 {
     if (!koed(player)) {
-        acquireAbility(player, poke(player).ability());
+        acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
     }
 }
@@ -1963,9 +1963,9 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
     return pokelong[player].value("AbilityNullified").toBool() ? false : pokelong[player]["Ability"].toInt() == ab;
 }
 
-void BattleSituation::acquireAbility(int play, int ab) {
+void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
     pokelong[play]["Ability"] = ab;
-    AbilityEffect::setup(ability(play),play,*this);
+    AbilityEffect::setup(ability(play),play,*this, firstTime);
 }
 
 int BattleSituation::ability(int player) {
@@ -2041,8 +2041,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
             continue;
 	}
 
-        /* Tickle bypasses sub */
-        if (! (gen == 3 && turnlong[player]["Attack"].toInt() == Move::Tickle)) {
+        /* Tickle bypasses sub in 3rd gen */
+        if (! (gen() == 3 && turnlong[player]["Attack"].toInt() == Move::Tickle)) {
             if (!self && sub) {
                 if (turnlong[player]["Power"].toInt() == 0)
                     sendMoveMessage(128, 2, player,0,target,turnlong[player]["Attack"].toInt());

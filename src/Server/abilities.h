@@ -12,7 +12,7 @@ struct AbilityEffect : public QVariantHash
 {
     AbilityEffect(int num);
 
-    static void setup(int num, int source, BattleSituation &b);
+    static void setup(int num, int source, BattleSituation &b, bool firstAct = false);
     static void activate(const QString &effect, int num, int source, int target, BattleSituation &b);
 
     static QHash<int, AbilityMechanics> mechanics;
