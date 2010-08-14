@@ -42,7 +42,7 @@ QList<QString> MoveInfo::m_SpecialEffects;
 QVector<char> MoveInfo::m_Type;
 QVector<char> MoveInfo::m_PP[2];
 QVector<char> MoveInfo::m_Category;
-QList<QString> MoveInfo::m_Effects;
+QList<QString> MoveInfo::m_Effects[2];
 QVector<char> MoveInfo::m_Critical;
 QVector<char> MoveInfo::m_EffectRate;
 QVector<bool> MoveInfo::m_Physical;
@@ -65,7 +65,7 @@ QHash<QString, int> ItemInfo::m_BerryNamesH;
 QHash<QString, int> ItemInfo::m_ItemNamesH;
 QList<QString> ItemInfo::m_SortedNames[2];
 QList<QString> ItemInfo::m_SortedUsefulNames[2];
-QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects;
+QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects[2];
 QList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
 QList<QStringList> ItemInfo::m_RegMessages;
 QList<QStringList> ItemInfo::m_BerryMessages;
@@ -1403,7 +1403,7 @@ bool ItemInfo::isUseful(int itemnum)
 
 int ItemInfo::PlateType(int itemnum)
 {
-    return Effects(itemnum).front().args.toInt();
+    return Effects(itemnum, 4).front().args.toInt();
 }
 
 int ItemInfo::Number(const QString &itemname)

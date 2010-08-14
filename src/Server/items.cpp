@@ -11,7 +11,7 @@ QHash<QString, int> ItemEffect::nums;
 
 void ItemEffect::activate(const QString &effect, int num, int source, int target, BattleSituation &b)
 {
-    QList<ItemInfo::Effect> l = ItemInfo::Effects(num);
+    QList<ItemInfo::Effect> l = ItemInfo::Effects(num, b.gen());
 
     foreach(ItemInfo::Effect e, l) {
 	if (!mechanics.contains(e.num) || !mechanics[e.num].functions.contains(effect)) {
@@ -23,7 +23,7 @@ void ItemEffect::activate(const QString &effect, int num, int source, int target
 
 void ItemEffect::setup(int num, int source, BattleSituation &b)
 {
-    QList<ItemInfo::Effect> effects = ItemInfo::Effects(num);
+    QList<ItemInfo::Effect> effects = ItemInfo::Effects(num, b.gen());
 
     foreach(ItemInfo::Effect effect, effects) {
 	/* if the effect is invalid or not yet implemented then no need to go further */

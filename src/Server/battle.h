@@ -172,7 +172,7 @@ public:
     void fail(int player, int move, int part=0, int type=0, int trueSource = -1);
     bool hasType(int player, int type);
     bool hasWorkingAbility(int play, int ability);
-    void acquireAbility(int play, int ability);
+    void acquireAbility(int play, int ability, bool firstTime=false);
     int ability(int player);
     int pokenum(int player);
     bool hasWorkingItem(int player, int item);

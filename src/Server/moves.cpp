@@ -33,7 +33,7 @@ MoveEffect::MoveEffect(int num, int gen)
     (*this)["Type"] = MoveInfo::Type(num);
     (*this)["Category"] = MoveInfo::Category(num, gen);
     (*this)["EffectRate"] = MoveInfo::EffectRate(num);
-    (*this)["StatEffect"] = MoveInfo::Effect(num);
+    (*this)["StatEffect"] = MoveInfo::Effect(num, gen);
     (*this)["FlinchRate"] = MoveInfo::FlinchRate(num, gen);
     (*this)["Recoil"] = MoveInfo::Recoil(num, gen);
     (*this)["Attack"] = num;
@@ -2725,7 +2725,7 @@ struct MMFling : public MM
             b.sendMoveMessage(16,0,t,type(b,s),t,item);
 
             /* Finding the function to call :P */
-            QList<ItemInfo::Effect> l = ItemInfo::Effects(item);
+            QList<ItemInfo::Effect> l = ItemInfo::Effects(item, b.gen());
 
             foreach(ItemInfo::Effect e, l) { /* Ripped from items.cpp (ItemEffect::activate, with some changes) */
                 if (!ItemEffect::mechanics.contains(e.num)) {
@@ -4449,7 +4449,7 @@ struct MMBugBite : public MM
         b.sendMoveMessage(16,0,s,type(b,s),t,item);
 
         /* Finding the function to call :P */
-        QList<ItemInfo::Effect> l = ItemInfo::Effects(item);
+        QList<ItemInfo::Effect> l = ItemInfo::Effects(item, b.gen());
 
         foreach(ItemInfo::Effect e, l) { /* Ripped from items.cpp (ItemEffect::activate, with some changes) */
             if (!ItemEffect::mechanics.contains(e.num)) {
