@@ -1198,8 +1198,8 @@ BaseGraphicsZone::BaseGraphicsZone(BaseBattleInfo *i) : mInfo(i)
         }
     } else if (info().gen <= 3) {
         if (!info().doubles) {
-            items[info().slot(info().myself)]->setPos(10, 145-63);
-            items[info().slot(info().opponent)]->setPos(257-105, 95 - 63);
+            items[info().slot(info().myself)]->setPos(10+8, 145-63);
+            items[info().slot(info().opponent)]->setPos(257-105+8, 95 - 63);
         } else {
             items[info().slot(info().myself)]->setPos(0, 145-63);
             items[info().slot(info().opponent)]->setPos(257-140, 95 - 63);
