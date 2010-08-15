@@ -139,8 +139,8 @@ void Client::initRelay()
     connect(relay, SIGNAL(playerLogin(PlayerInfo)), SLOT(playerLogin(PlayerInfo)));
     connect(relay, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(relay, SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
-    connect(relay, SIGNAL(battleStarted(int, int, TeamBattle, BattleConfiguration, bool )),
-            SLOT(battleStarted(int, int, TeamBattle, BattleConfiguration, bool)));
+    connect(relay, SIGNAL(battleStarted(int, int, TeamBattle, BattleConfiguration)),
+            SLOT(battleStarted(int, int, TeamBattle, BattleConfiguration)));
     connect(relay, SIGNAL(battleStarted(int,int, int)), SLOT(battleStarted(int, int, int)));
     connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int, int,int,int)));
     connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
@@ -150,7 +150,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
     connect(relay, SIGNAL(PMReceived(int,QString)), SLOT(PMReceived(int,QString)));
     connect(relay, SIGNAL(awayChanged(int, bool)), SLOT(awayChanged(int, bool)));
-    connect(relay, SIGNAL(spectatedBattle(QString,QString,int,bool)), SLOT(watchBattle(QString,QString,int,bool)));
+    connect(relay, SIGNAL(spectatedBattle(int,BattleConfiguration)), SLOT(watchBattle(int,BattleConfiguration)));
     connect(relay, SIGNAL(spectatingBattleMessage(int,QByteArray)), SLOT(spectatingBattleMessage(int , QByteArray)));
     connect(relay, SIGNAL(spectatingBattleFinished(int)), SLOT(stopWatching(int)));
     connect(relay, SIGNAL(versionDiff(QString, QString)), SLOT(versionDiff(QString, QString)));
@@ -472,7 +472,7 @@ void Client::startPM(int id)
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
-    connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(registerPermPlayer(int)));
+    connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int)), this, SLOT(removePM(int)));
 
     mypms[id] = p;
@@ -1042,10 +1042,10 @@ void Client::seeChallenge(const ChallengeInfo &c)
     }
 }
 
-void Client::battleStarted(int battleId, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
+void Client::battleStarted(int battleId, int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
     cancelFindBattle(false);
-    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf, doubles);
+    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf);
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
     mybattle->setWindowFlags(Qt::Window);
     mybattle->client() = this;
@@ -1090,9 +1090,9 @@ void Client::battleReceived(int battleid, int id1, int id2)
     updateState(id2);
 }
 
-void Client::watchBattle(const QString &name0, const QString &name1, int battleId, bool doubles)
+void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 {
-    BaseBattleWindow *battle = new BaseBattleWindow(player(id(name0)), player(id(name1)), doubles);
+    BaseBattleWindow *battle = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf);
     battle->setWindowFlags(Qt::Window);
     battle->show();
 

@@ -309,8 +309,8 @@ void BigOpenPokeBall::changeToPrevious()
 
 void BigOpenPokeBall::updatePicture()
 {
-    front->changePic(PokemonInfo::Picture(currentPoke, forme, PokemonInfo::BaseGender(currentPoke),shiny(),false));
-    back->changePic(PokemonInfo::Picture(currentPoke, forme, PokemonInfo::BaseGender(currentPoke),shiny(),true));
+    front->changePic(PokemonInfo::Picture(currentPoke, 4, forme, PokemonInfo::BaseGender(currentPoke),shiny(),false));
+    back->changePic(PokemonInfo::Picture(currentPoke, 4, forme, PokemonInfo::BaseGender(currentPoke),shiny(),true));
 }
 
 bool BigOpenPokeBall::shiny() const

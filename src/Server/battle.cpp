@@ -212,7 +212,7 @@ void BattleSituation::addSpectator(Player *p)
         return;
     }
 
-    p->spectateBattle(team1.name, team2.name, publicId(), doubles());
+    p->spectateBattle(publicId(), configuration());
     int id = p->id();
 
     /* Assumption: each id is a different player, so key is unique */
@@ -1573,7 +1573,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	attack = move;
     } else {
         //Quick claw, special case
-        if (turnlong[player].value("QuickClawed").toBool()) {
+        if (gen() >= 4 && turnlong[player].value("QuickClawed").toBool()) {
             //The message only shows up if it's not the last pokémon to move
             for (int i = 0; i < numberOfSlots(); i++) {
                 if (!turnlong[i].value("HasMoved").toBool() && !turnlong[i].value("CantGetToMove").toBool() && !koed(i) && i != player) {
@@ -3206,6 +3206,7 @@ BattleConfiguration BattleSituation::configuration() const
     ret.ids[0] = id(0);
     ret.ids[1] = id(1);
     ret.gen = gen();
+    ret.doubles = doubles();
 
     return ret;
 }

@@ -119,7 +119,6 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
 
     if (!archive)
     {
-        qDebug() << "Error when opening archive" << archiveName;
         return ret;
     }
 
@@ -127,7 +126,6 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
 
     if (!file)
     {
-        qDebug() << "Error when opening file "<< fileName <<" in archive: " << archiveName <<" : " << zip_strerror(archive);
         zip_close(archive);
         return ret;
     }
@@ -138,11 +136,6 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
 
         readsize = zip_fread(file, buffer, 1024);
     } while (readsize > 0) ;
-
-    if (readsize < 0)
-    {
-        qDebug() << "Error when reading file "<< fileName <<" in archive: " << archiveName <<" : " << zip_file_strerror(file);
-    }
 
     zip_fclose(file);
     zip_close(archive);
@@ -438,18 +431,32 @@ int PokemonInfo::AestheticFormeId(int pokenum)
     return m_AestheticFormes.value(pokenum).first;
 }
 
-QPixmap PokemonInfo::Picture(int pokenum, int forme, int gender, bool shiney, bool back)
+QPixmap PokemonInfo::Picture(int pokenum, int gen, int forme, int gender, bool shiney, bool back)
 {
     pokenum = forme == 0 ? pokenum : AestheticFormeId(pokenum) + forme;
 
     QString archive = path("poke_img.zip");
 
-    QString file = QString("%2/DP%3%4%5.png").arg(pokenum).arg(back?"b":"",(gender==Pokemon::Female)?"f":"m", shiney?"s":"");
+    QString file;
+
+    if (gen ==3)
+        file = QString("%1/%2%3.png").arg(pokenum).arg(back?"3Gback":"RFLG").arg(shiney?"s":"");
+    else if (gen == 4)
+        file = QString("%2/DP%3%4%5.png").arg(pokenum).arg(back?"b":"",(gender==Pokemon::Female)?"f":"m", shiney?"s":"");
+
+    qDebug() << "gen: " << gen << ", " << file;
 
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
     if (data.length()==0)
+    {
+        if (gen == 3) {
+            return PokemonInfo::Picture(pokenum, 4, forme, gender, shiney, back);
+        } else if (gen == 4 && gender == Pokemon::Female) {
+            return PokemonInfo::Picture(pokenum, 4, forme, Pokemon::Male, shiney, back);
+        }
         return QPixmap();
+    }
 
     QPixmap ret;
     ret.loadFromData(data, "png");

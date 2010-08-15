@@ -317,6 +317,12 @@ void PokeGraphics::setNum(int num)
     setUpToDate(false);
 }
 
+void PokeGraphics::setGen(int gen)
+{
+    m_gen = gen;
+    setUpToDate(false);
+}
+
 void PokeGraphics::setUpToDate(bool uptodate)
 {
     m_uptodate = uptodate;
@@ -335,7 +341,7 @@ void PokeGraphics::load(int forme, int gender, bool shiny)
     m_storedgender = gender;
     m_storedshininess = shiny;
     m_storedforme = forme;
-    m_picture = PokemonInfo::Picture(num(), forme, gender, shiny);
+    m_picture = PokemonInfo::Picture(num(), gen(), forme, gender, shiny, false);
     setUpToDate(true);
 }
 
@@ -371,6 +377,11 @@ int PokeGraphics::num() const
     return m_num;
 }
 
+int PokeGraphics::gen() const
+{
+    return m_gen;
+}
+
 PokeTeam::PokeTeam()
 {
     setNum(0);
@@ -387,6 +398,7 @@ void PokeTeam::setGen(int gen)
 {
     PokeGeneral::gen() = gen;
     PokePersonal::gen() = gen;
+    PokeGraphics::setGen(gen);
 }
 
 void PokeTeam::runCheck()
@@ -979,12 +991,13 @@ QString TrainerTeam::exportToTxt() const
 
 QDataStream & operator << (QDataStream & out, const Team & team)
 {
+    out << quint8(team.gen());
+
     for(int index = 0;index<6;index++)
     {
         const PokeTeam & poke = team.poke(index);
         out << poke;
     }
-    out << quint8(team.gen());
 
     return out;
 }
@@ -1025,15 +1038,16 @@ QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
 
 QDataStream & operator >> (QDataStream & in, Team & team)
 {
-    for(int i=0;i<6;i++)
-    {
-        in >> team.poke(i);
-    }
     quint8 gen;
 
     in >> gen;
 
     team.setGen(gen);
+
+    for(int i=0;i<6;i++)
+    {
+        in >> team.poke(i);
+    }
 
     return in;
 }

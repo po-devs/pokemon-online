@@ -1132,8 +1132,8 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
         p2->relay().sendPlayer(p1->bundle());
     }
 
-    p1->startBattle(id, id2, battle->pubteam(id1), battle->configuration(), battle->doubles());
-    p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), battle->doubles());
+    p1->startBattle(id, id2, battle->pubteam(id1), battle->configuration());
+    p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration());
 
     ++lastDataId;
     foreach(int chanid, p1->getChannels()) {

@@ -31,6 +31,8 @@ struct BaseBattleInfo
     int myself;
     int opponent;
 
+    int gen;
+
     /* Opponent pokemon */
     ShallowBattlePoke pokemons[2][6];
     QVector<bool> pokeAlive;
@@ -70,6 +72,7 @@ class BaseBattleWindow : public QWidget
     PROPERTY(int, animatedHpSpot);
     PROPERTY(int, animatedHpGoal);
     PROPERTY(bool, started);
+    PROPERTY(BattleConfiguration, conf);
 public:
     BaseBattleInfo *myInfo;
     const BaseBattleInfo &info() const {
@@ -79,7 +82,11 @@ public:
         return *myInfo;
     }
 
-    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, bool doubles);
+    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf);
+
+    int gen() const {
+        return info().gen;
+    }
 
     enum BattleCommand
     {

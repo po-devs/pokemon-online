@@ -169,7 +169,7 @@ struct BattleChoice
 
     /* returns true if the choice is valid */
     bool match(const BattleChoices &avail) const;
-    int  getChoice() const { return numSwitch; };
+    int  getChoice() const { return numSwitch; }
     bool attack() const { return !pokeSwitch; }
     bool poke() const { return pokeSwitch; }
     bool cancelled() const { return numSwitch == Cancel; }
@@ -258,6 +258,7 @@ QDataStream & operator << (QDataStream &out, const ChallengeInfo &c);
 struct BattleConfiguration
 {
     quint8 gen;
+    bool doubles;
     qint32 ids[2];
 
     int slot(int spot, int poke = 0) const  {
@@ -271,14 +272,14 @@ struct BattleConfiguration
 
 inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)
 {
-    in >> c.ids[0] >> c.ids[1] >> c.gen;
+    in >> c.gen >> c.doubles >> c.ids[0] >> c.ids[1];
 
     return in;
 }
 
 inline QDataStream & operator << (QDataStream &out, const BattleConfiguration &c)
 {
-    out << c.ids[0] << c.ids[1] << c.gen;
+    out << c.gen << c.doubles << c.ids[0] << c.ids[1];
 
     return out;
 }
