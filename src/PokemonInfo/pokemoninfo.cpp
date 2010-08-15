@@ -462,11 +462,11 @@ QPixmap PokemonInfo::Picture(int pokenum, int gen, int forme, int gender, bool s
     return ret;
 }
 
-QPixmap PokemonInfo::Sub(bool back)
+QPixmap PokemonInfo::Sub(int gen, bool back)
 {
     QString archive = path("poke_img.zip");
 
-    QString file = QString("sub%1.png").arg(back?"b":"");
+    QString file = QString("sub%1%2.png").arg(back?"b":"").arg(gen==4?"":"3G");
 
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
