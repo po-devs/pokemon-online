@@ -129,7 +129,7 @@ public slots:
     void firstChannelChanged(int tabindex);
     void channelActivated(Channel *c);
     /* battle... */
-    void battleStarted(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
+    void battleStarted(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf);
     void battleStarted(int battleid, int id1, int id2);
     void battleReceived(int battleid, int id1, int id2);
     void battleFinished(int battleid, int res, int winner, int loser);
@@ -142,7 +142,7 @@ public slots:
     void forfeitBattle(int);
     void watchBattleOf(int);
     void watchBattleRequ(int);
-    void watchBattle(const QString &name0, const QString &name1, int battleId, bool doubles);
+    void watchBattle(int battleId, const BattleConfiguration &conf);
     void spectatingBattleMessage(int battleId, const QByteArray &command);
     void stopWatching(int battleId);
     void battleListActivated(QTreeWidgetItem* it);

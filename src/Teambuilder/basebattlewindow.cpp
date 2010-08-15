@@ -26,11 +26,12 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, bool
     ticking[opponent] = false;
 }
 
-BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, bool doubles) :
+BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf) :
         delayed(0), ignoreSpecs(false)
 {
-    myInfo = new BaseBattleInfo(me, opponent, doubles);
+    myInfo = new BaseBattleInfo(me, opponent, conf.doubles);
     mydisplay = new BaseBattleDisplay(info());
+    this->conf() = conf;
     init();
     show();
     printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(name(true), name(false)));
@@ -1185,14 +1186,26 @@ BaseGraphicsZone::BaseGraphicsZone(BaseBattleInfo *i) : mInfo(i)
         scene.addItem(items[i]);
     }
 
-    if (!info().doubles) {
-        items[info().slot(info().myself)]->setPos(10, 145-79);
-        items[info().slot(info().opponent)]->setPos(257-105, 16);
-    } else {
-        items[info().slot(info().myself)]->setPos(0, 145-79);
-        items[info().slot(info().opponent)]->setPos(257-140, 16);
-        items[info().slot(info().myself,1)]->setPos(80, 145-79);
-        items[info().slot(info().opponent,1)]->setPos(257-80, 16);
+    if (info().gen >= 4) {
+        if (!info().doubles) {
+            items[info().slot(info().myself)]->setPos(10, 145-79);
+            items[info().slot(info().opponent)]->setPos(257-105, 95 - 79);
+        } else {
+            items[info().slot(info().myself)]->setPos(0, 145-79);
+            items[info().slot(info().opponent)]->setPos(257-140, 95 - 79);
+            items[info().slot(info().myself,1)]->setPos(80, 145-79);
+            items[info().slot(info().opponent,1)]->setPos(257-80, 95 - 79);
+        }
+    } else if (info().gen <= 3) {
+        if (!info().doubles) {
+            items[info().slot(info().myself)]->setPos(10, 145-63);
+            items[info().slot(info().opponent)]->setPos(257-105, 95 - 63);
+        } else {
+            items[info().slot(info().myself)]->setPos(0, 145-63);
+            items[info().slot(info().opponent)]->setPos(257-140, 95 - 63);
+            items[info().slot(info().myself,1)]->setPos(80, 145-63);
+            items[info().slot(info().opponent,1)]->setPos(257-80, 95 - 63);
+        }
     }
 }
 
@@ -1209,7 +1222,7 @@ QPixmap BaseGraphicsZone::loadPixmap(quint16 num, quint8 forme, bool shiny, bool
         if (sub) {
             graphics.insert(key, PokemonInfo::Sub(back));
         } else {
-            graphics.insert(key, PokemonInfo::Picture(num, forme, gender, shiny, back));
+            graphics.insert(key, PokemonInfo::Picture(num, info().gen, forme, gender, shiny, back));
         }
     }
 

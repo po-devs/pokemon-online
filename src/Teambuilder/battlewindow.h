@@ -58,7 +58,7 @@ class BattleWindow : public BaseBattleWindow
 
     PROPERTY(BattleConfiguration, conf);
 public:
-    BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf, bool doubles);
+    BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf);
 
     BattleInfo &info() {
         return *(BattleInfo*)(&BaseBattleWindow::info());
@@ -66,10 +66,6 @@ public:
 
     const BattleInfo &info() const {
         return *(BattleInfo*)(&BaseBattleWindow::info());
-    }
-
-    int gen() const {
-        return conf().gen;
     }
 
     enum {

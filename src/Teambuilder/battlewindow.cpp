@@ -46,14 +46,15 @@ PokeBattle & BattleInfo::currentPoke(int spot)
     return myteam.poke(currentIndex[spot]);
 }
 
-BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf, bool doubles)
+BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf)
 {
     this->battleId() = battleId;
     this->started() = false;
 
     conf() = _conf;
 
-    myInfo = new BattleInfo(team, me, opponent, doubles, conf().spot(me.id), conf().spot(opponent.id));
+    myInfo = new BattleInfo(team, me, opponent, conf().doubles, conf().spot(me.id), conf().spot(opponent.id));
+    info().gen = conf().gen;
 
     mydisplay = new BattleDisplay(info());
     BaseBattleWindow::init();

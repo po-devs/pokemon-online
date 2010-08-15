@@ -332,7 +332,7 @@ struct AMFlashFire : public AM {
     }
 
     static void op(int s, int t, BS &b) {
-        if (type(b,t) == Pokemon::Fire && (b.gen() >= 4 || turn(b,t)["Power"].toInt() == 0) ) {
+        if (type(b,t) == Pokemon::Fire && (b.gen() >= 4 || turn(b,s)["Power"].toInt() == 0) ) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
             if (!poke(b,s).contains("FlashFired")) {
                 b.sendAbMessage(19,0,s,s,Pokemon::Fire);
@@ -1015,7 +1015,7 @@ struct AMVoltAbsorb : public AM {
     }
 
     static void op(int s, int t, BS &b) {
-        if (type(b,t) == poke(b,s)["AbilityArg"].toInt() && (b.gen() >= 4 || turn(b,t)["Power"].toInt() == 0) ) {
+        if (type(b,t) == poke(b,s)["AbilityArg"].toInt() && (b.gen() >= 4 || turn(b,s)["Power"].toInt() == 0) ) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
 
             if (b.poke(s).lifePoints() == b.poke(s).totalLifePoints()) {

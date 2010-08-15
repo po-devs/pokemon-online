@@ -21,9 +21,10 @@ QDataStream &operator << (QDataStream &out, const TeamInfo& team)
     out << team.win;
     out << team.avatar;
 
+    out << team.gen;
+
     for (int i = 0; i < 6; i++)
 	out << team.pokemon(i);
-    out << team.gen;
 
     return out;
 }
@@ -36,11 +37,12 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
     in >> team.win;
     in >> team.avatar;
 
+    in >> team.gen;
+
     for (int i = 0; i < 6; i++) {
 	in >> team.pokemon(i);
     }
 
-    in >> team.gen;
     if (team.gen != 3)
         team.gen = 4;
 

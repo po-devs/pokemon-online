@@ -1613,6 +1613,7 @@ protected:
     int m_num;
     int m_storedgender;
     int m_storedforme;
+    int m_gen;
     bool m_storedshininess;
     bool m_uptodate;
 
@@ -1626,7 +1627,9 @@ public:
     QIcon icon(int index);
 
     void setNum(int num);
+    void setGen(int gen);
     int num() const;
+    int gen() const;
     void load(int forme, int gender, bool shiny);
     void loadIcon(int index);
 };

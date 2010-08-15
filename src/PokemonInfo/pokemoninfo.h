@@ -57,7 +57,7 @@ public:
     static QByteArray Cry(int pokenum);
     static int Type1(int pokenum);
     static int Type2(int pokenum);
-    static QPixmap Picture(int pokenum, int forme = 0, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
+    static QPixmap Picture(int pokenum, int gen = 4, int forme = 0, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QPixmap Sub(bool back = false);
     static QPixmap Icon(int index);
     static QSet<int> Moves(int pokenum, int gen = 4);

@@ -67,6 +67,8 @@ AvatarBox::AvatarBox(const QPixmap &pic)
 void AvatarBox::changePic(const QPixmap &pic)
 {
     underLying->setPixmap(pic);
+    underLying->setFixedSize(pic.size());
+    underLying->move( (82 - pic.width())/2, 81-pic.height());
 }
 
 /**********************************/
@@ -952,11 +954,11 @@ void TB_PokeChoice::startDrag()
         itemForDrag = item(itemForDrag->row(),0);
 
         data->setText(itemForDrag->text());
-        data->setImageData(PokemonInfo::Picture(itemForDrag->text().toInt()));
+        data->setImageData(PokemonInfo::Picture(itemForDrag->text().toInt(), gen));
 
         QDrag * drag = new QDrag(this);
         drag->setMimeData(data);
-        drag->setPixmap(PokemonInfo::Picture(itemForDrag->text().toInt()));
+        drag->setPixmap(PokemonInfo::Picture(itemForDrag->text().toInt(), gen));
         drag->exec(Qt::MoveAction);
     }
 }

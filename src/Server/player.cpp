@@ -197,10 +197,10 @@ void Player::leaveRequested(int slotid)
     emit leaveRequested(id(), slotid);
 }
 
-void Player::spectateBattle(const QString &name0, const QString &name1, int battleId, bool doubles)
+void Player::spectateBattle(int battleId, const BattleConfiguration &battle)
 {
     battlesSpectated.insert(battleId);
-    relay().notify(NetworkServ::SpectateBattle, name0, name1, qint32(battleId), doubles);
+    relay().notify(NetworkServ::SpectateBattle, qint32(battleId), battle);
 }
 
 void Player::cancelChallenges()
@@ -569,9 +569,9 @@ void Player::sendChallengeStuff(const ChallengeInfo &c)
     relay().sendChallengeStuff(c);
 }
 
-void Player::startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
+void Player::startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    relay().engageBattle(battleid, this->id(), id, team, conf, doubles);
+    relay().engageBattle(battleid, this->id(), id, team, conf);
 
     cancelChallenges();
     cancelBattleSearch();
