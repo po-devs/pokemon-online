@@ -29,9 +29,11 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, bool
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf) :
         delayed(0), ignoreSpecs(false)
 {
-    myInfo = new BaseBattleInfo(me, opponent, conf.doubles);
-    mydisplay = new BaseBattleDisplay(info());
     this->conf() = conf;
+    myInfo = new BaseBattleInfo(me, opponent, conf.doubles);
+    info().gen = conf.gen;
+    mydisplay = new BaseBattleDisplay(info());
+
     init();
     show();
     printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(name(true), name(false)));
@@ -1220,7 +1222,7 @@ QPixmap BaseGraphicsZone::loadPixmap(quint16 num, quint8 forme, bool shiny, bool
 
     if (!graphics.contains(key)) {
         if (sub) {
-            graphics.insert(key, PokemonInfo::Sub(back));
+            graphics.insert(key, PokemonInfo::Sub(info().gen, back));
         } else {
             graphics.insert(key, PokemonInfo::Picture(num, info().gen, forme, gender, shiny, back));
         }
