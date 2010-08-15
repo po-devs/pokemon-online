@@ -444,8 +444,6 @@ QPixmap PokemonInfo::Picture(int pokenum, int gen, int forme, int gender, bool s
     else if (gen == 4)
         file = QString("%2/DP%3%4%5.png").arg(pokenum).arg(back?"b":"",(gender==Pokemon::Female)?"f":"m", shiney?"s":"");
 
-    qDebug() << "gen: " << gen << ", " << file;
-
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
     if (data.length()==0)
@@ -1460,7 +1458,7 @@ void TypeInfo::loadNames()
         for (int i = 0; i < NumberOfTypes();i++) {
             m_Pics.push_back(QPixmap(path(QString("type%1.png").arg(i))));
         }
-    }    
+    }
 }
 
 QString TypeInfo::path(const QString& file)
