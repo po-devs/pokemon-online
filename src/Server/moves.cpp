@@ -2775,7 +2775,7 @@ struct MMJumpKick : public MM
         if (b.gen() >= 4)
             damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
         else
-            damage = std::min(b.calculateDamage(s,t)/8, b.poke(t).totalLifePoints()/4);
+            damage = std::min(b.calculateDamage(s,t)/8, b.poke(t).totalLifePoints()/2);
         b.sendMoveMessage(64,0,s,Type::Fighting);
 	b.inflictDamage(s, damage, s, true);
     }
