@@ -431,7 +431,14 @@ void TeamBuilder::changeItemDisplay(bool b)
 
 void TeamBuilder::showNoFrame()
 {
-    topLevelWidget()->showFullScreen();
+    bool static k=false;//if it is full screen?
+    if(k){
+        topLevelWidget()->showNormal();
+        k=false;
+    }else{
+        topLevelWidget()->showFullScreen();
+        k=true;
+    }
 }
 
 void TeamBuilder::importFromTxt()
