@@ -536,8 +536,8 @@ void QIRCLineEdit::keyPressEvent(QKeyEvent *e)
             if(m_Inputlist2.empty()){
 
             }else{
-                setText(m_Inputlist2.first());
-                m_Inputlist2.removeFirst();
+                setText(m_Inputlist2.last());
+                m_Inputlist2.removeLast();
             }
         }else if(text()!=""){
             if(m_Inputlist2.empty()){
@@ -545,8 +545,8 @@ void QIRCLineEdit::keyPressEvent(QKeyEvent *e)
                 clear();
             }else{
                 m_Inputlist1.append(text());
-                setText(m_Inputlist2.first());
-                m_Inputlist2.removeFirst();
+                setText(m_Inputlist2.last());
+                m_Inputlist2.removeLast();
             }
         }
     }else{
