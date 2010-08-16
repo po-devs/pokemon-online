@@ -64,7 +64,8 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mainChat->setObjectName("MainChat");
     mainChat->setMovable(true);
     mainChat->setTabsClosable(true);
-    layout->addWidget(myline = new QLineEdit());
+//    layout->addWidget(myline = new QLineEdit());
+    layout->addWidget(myline = new QIRCLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     layout->addLayout(buttonsLayout);
     buttonsLayout->addWidget(findMatch = new QPushButton(tr("&Find Battle")));
