@@ -509,7 +509,6 @@ void QImageButtonP::mouseMoveEvent(QMouseEvent *)
 
 QIRCLineEdit::QIRCLineEdit()
 {
-    current = m_Inputlist.count();
     connect(this,SIGNAL(textEdited(QString)),this,SLOT(myTextEdited()));
 }
 
@@ -517,40 +516,54 @@ void QIRCLineEdit::keyPressEvent(QKeyEvent *e)
 {
     if(e->key() == Qt::Key_Up) {
         if(text()==""){
-            if(m_Inputlist.empty()){
+            if(m_Inputlist1.empty()){
 
             }else{
-                setText(m_Inputlist.last());
-                current--;
+                setText(m_Inputlist1.last());
+                m_Inputlist1.removeLast();
             }
         }else if(text()!=""){
-            if(current>=m_Inputlist.count()){
-                m_Inputlist.append(text());
-                current--;
-                setText(m_Inputlist[current]);
-            }else if(current<m_Inputlist.count()){
-                current--;
-                setText(m_Inputlist[current]);
+            m_Inputlist2.append(text());
+            if(m_Inputlist1.empty()){
+                clear();
+            }else{
+                setText(m_Inputlist1.last());
+                m_Inputlist1.removeLast();
             }
         }
     }else if(e->key() == Qt::Key_Down) {
         if(text()==""){
+            if(m_Inputlist2.empty()){
 
+            }else{
+                setText(m_Inputlist2.first());
+                m_Inputlist2.removeFirst();
+            }
         }else if(text()!=""){
-            if(current>=m_Inputlist.count()){
-                m_Inputlist.append(text());
-                current=m_Inputlist.count();
+            if(m_Inputlist2.empty()){
+                m_Inputlist1.append(text());
                 clear();
-            }else if(current<m_Inputlist.count()){
-                current++;
-                setText(m_Inputlist[current]);
+            }else{
+                m_Inputlist1.append(text());
+                setText(m_Inputlist2.first());
+                m_Inputlist2.removeFirst();
             }
         }
     }else{
-        QWidget::keyPressEvent(e);
+        QLineEdit::keyPressEvent(e);
     }
 
 }
-void QIRCLineEdit::myTextEdited(){
-    current=m_Inputlist.count();
+void QIRCLineEdit::myTextEdited()
+{
+    //if(!m_Inputlist2.empty()) m_Inputlist1.append(m_Currentline);
+    m_Inputlist2.clear();
+}
+
+void QIRCLineEdit::myclear()
+{
+    if(text()!=""){
+        m_Inputlist1.append(text());
+    }
+    QLineEdit::clear();
 }
