@@ -299,6 +299,8 @@ public:
     static int NumberOfTypes();
     static int TypeForWeather(int weather);
     static QPixmap Picture(int type);
+
+    static void modifyTypeChart(int type_attack, int type_defend, int value);
 };
 
 class NatureInfo
