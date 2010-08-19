@@ -16,6 +16,9 @@ Analyzer::Analyzer(QTcpSocket *sock, int id) : mysocket(sock, id)
     QTimer *t = new QTimer(this);
     t->setInterval(30*1000);
     t->start();
+
+    connect(t, SIGNAL(timeout()), SLOT(keepAlive()));
+
     /* Only if its not registry */
     if (id != 0) {
         sock->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
