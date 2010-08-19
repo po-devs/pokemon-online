@@ -83,4 +83,5 @@ HEADERS += player.h \
     ../Utilities/CrossDynamicLib.h \
     ../Utilities/coro.h \
     ../Utilities/contextswitch.h \
-    channel.h
+    channel.h \
+    tiertree.h

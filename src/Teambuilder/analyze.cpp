@@ -172,7 +172,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    break;
 	}
     case KeepAlive: {
-            /* Just kept there in order not to display an old version message because of an unkown command */
+            notify(KeepAlive);
             break;
         }
     case PlayersList: {

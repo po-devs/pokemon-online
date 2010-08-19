@@ -46,11 +46,6 @@ public:
     QString name() const;
     void changeId(int id);
 
-    QString parent;
-    TierMachine *boss;
-    QMultiHash<int, BannedPoke> bannedPokes2; // The set is there to keep good perfs
-    QList<BannedPoke> bannedPokes; // The list is there to keep the same order
-
     Tier(TierMachine *boss = NULL);
 
     void fromString(const QString &s);
@@ -87,6 +82,22 @@ protected:
     }
 
 private:
+    TierMachine *boss;
+
+    bool banPokes;
+    QMultiHash<int, BannedPoke> bannedPokes2; // The set is there to keep good perfs
+    QList<BannedPoke> bannedPokes; // The list is there to keep the same order
+    QMultiHash<int, BannedPoke> restrictedPokes;
+    QList<int> restrictedPokes;
+    int maxRestrictedPokes;
+    int numberOfPokemons;
+    int maxLevel;
+    int gen;
+    QString banParent;
+    QSet<int> bannedItems;
+    QSet<int> bannedMoves;
+
+
     void loadFromFile();
 
     QString m_name;
