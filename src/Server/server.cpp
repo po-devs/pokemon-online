@@ -1195,6 +1195,13 @@ bool Server::canHaveRatedBattle(int id1, int id2, bool cc, bool force1, bool for
 
 void Server::battleResult(int battleid, int desc, int winner, int loser)
 {
+    if (!mybattles.contains(battleid)) {
+        /* If a player forfeits at the same time a battle ends, as the signal is asynchorneous
+           because of different threads, it can be emitted twice. So that's why we may fall into
+           this if */
+        return;
+    }
+
     bool rated = mybattles.value(battleid)->rated();
     QString tier = mybattles.value(battleid)->tier();
     BattleSituation *battle = mybattles[battleid];
