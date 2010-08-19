@@ -2122,7 +2122,11 @@ struct MMEncore : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        poke(b,t)["EncoresUntil"] = b.turn() + 3 + (b.true_rand()%5);
+        if (b.gen() <= 3)
+            poke(b,t)["EncoresUntil"] = b.turn() + 1 + (b.true_rand()%5);
+        else
+            poke(b,t)["EncoresUntil"] = b.turn() + 3 + (b.true_rand()%5);
+
         int move =  poke(b,t)["LastMoveUsed"].toInt();
         poke(b,t)["EncoresMove"] = move;
 
