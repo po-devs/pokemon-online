@@ -6,6 +6,7 @@
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "centralwidget.h"
+#include "../Utilities/otherwidgets.h"
 
 class MainEngine;
 class BaseChallengeWindow;
@@ -216,7 +217,8 @@ private:
     /* PMs */
     QHash<int, PMWindow*> mypms;
     /* Line the user types in */
-    QLineEdit *myline;
+//    QLineEdit *myline;
+    QIRCLineEdit *myline;
     QLabel *announcement;
     /* Where players are displayed */
     QStackedWidget *playersW, *battlesW;
