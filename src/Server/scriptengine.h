@@ -187,6 +187,9 @@ public:
     Q_INVOKABLE QScriptValue type(int id);
     Q_INVOKABLE QScriptValue typeNum(const QString &typeName);
 
+    Q_INVOKABLE QScriptValue getUsers();
+    Q_INVOKABLE QScriptValue getScript();
+
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
 signals:
