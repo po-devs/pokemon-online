@@ -216,4 +216,26 @@ public slots:
     void myclear();
 };
 
+#ifdef WIN32
+#include <windows.h>
+
+class QGlobalHotKey : public QWidget
+{
+    quint32 times;
+    ATOM keyatom;
+    QString keyid;
+    quint32 nativeMods;
+    quint32 nativeKey;
+    QList<bool> visiblelist;
+public:
+    QGlobalHotKey(quint32 p_nativeMods, quint32 p_nativeKey, QString p_keyid);
+    ~QGlobalHotKey();
+    QGlobalHotKey(const QGlobalHotKey&){}
+private:
+    bool setHotKey();
+    bool clearHotKey();
+    bool winEvent(MSG* msg, long* result);
+};
+
+#endif
 #endif // OTHERWIDGETS_H

@@ -4,15 +4,18 @@
 #include "../Utilities/otherwidgets.h"
 #include <QStyleFactory>
 
+
 TB_Menu::TB_Menu()
 {
     setPixmap(QPixmap("db/menu/menu_background.png"));
     setWindowTitle(tr("Menu"));
 
+
     QVBoxLayout *layout = new QVBoxLayout(this);
-
-
     QImageButtonP *credits,*teambuilder, *online, *exit;
+    #ifdef WIN32
+    QGlobalHotKey *MyHotKey=new QGlobalHotKey(0,0x77,"POboss");
+    #endif
 
     layout->setMargin(0);
     layout->setSpacing(0);
