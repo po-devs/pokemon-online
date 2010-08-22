@@ -86,6 +86,7 @@ public:
     static QList<int> Formes(int pokenum);
     static QList<int> Evos(int pokenum);
     static int OriginalEvo(int pokenum);
+    static int PreEvo(int pokenum);
     static bool IsInEvoChain(int pokenum);
     static PokeBaseStats BaseStats(int pokenum);
     static bool Exists(int pokenum, int gen=4);
@@ -109,6 +110,7 @@ private:
     static QHash<int,QList<int> > m_AlternateFormes;
     static QHash<int,QList<int> > m_Evolutions;
     static QList<int> m_OriginalEvos;
+    static QList<int> m_PreEvos;
     /* First and last aesthetic forme */
     static QHash<int, QPair<int, int> > m_AestheticFormes;
     static QHash<int, bool> m_AestheticFormesHidden;
@@ -128,24 +130,62 @@ private:
 
 class MoveInfo
 {
+public:
+    /* directory where all the data is */
+    static void init(const QString &dir="db/moves/");
+
+    /* Self-explainable functions */
+    static QString Name(int movenum);
+    static int Type(int movenum);
+    static int Category(int movenum, int gen);
+    static int Number(const QString &movename);
+    static int NumberOfMoves();
+    static int FlinchRate(int movenum, int gen);
+    static int Recoil(int movenum, int gen);
+    static QString Description(int movenum);
+    static QString DetailedDescription(int movenum);
+    static int Power(int movenum, int gen);
+    /* gives the power of a move in the form of a string */
+    static QString PowerS(int movenum, int gen);
+    static int PP(int movenum, int gen);
+    static int Acc(int movenum, int gen);
+    /* gives the accuracy of a move in the form of a string */
+    static QString AccS(int movenum, int gen);
+    /* the status mod of a move*/
+    static QString Effect(int movenum, int gen);
+    static QString SpecialEffect(int movenum);
+    static int CriticalRaise(int movenum);
+    static int RepeatMin(int movenum);
+    static int RepeatMax(int movenum);
+    static int SpeedPriority(int movenum);
+    static bool PhysicalContact(int movenum, int gen);
+    static bool KingRock(int movenum);
+    static bool Exists(int movenum, int gen);
+    static bool isOHKO(int movenum);
+    static int EffectRate(int movenum);
+    static int Target(int movenum, int gen);
+    static QString MoveMessage(int moveeffect, int part);
+    static QStringList MoveList();
+
 private:
     static QList<QString> m_Names;
-    static QList<QString> m_PowerS;
-    static QList<QString> m_AccS;
-    static QList<QString> m_Effects;
+    static QSet<int> m_3rdGenMoves;
+    static QVector<int> m_Power[2];
+    static QVector<int> m_Acc[2];
+    static QList<QString> m_Effects[2];
     static QList<QString> m_SpecialEffects;
     static QList<QStringList> m_MoveMessages;
-    static QList<char> m_Type;
-    static QList<char> m_PP;
-    static QList<char> m_Category;
-    static QList<char> m_Critical;
-    static QList<char> m_EffectRate;
-    static QList<bool> m_Physical;
-    static QList<bool> m_KingRock;
-    static QList<char> m_Speeds;
-    static QList<int> m_Flinch;
-    static QList<int> m_Recoil;
-    static QList<int> m_Targets;
+    static QVector<char> m_Type;
+    static QVector<char> m_PP[2];
+    static QVector<char> m_Category;
+    static QVector<char> m_Critical;
+    static QVector<char> m_EffectRate;
+    static QVector<bool> m_Physical;
+    static QVector<bool> m_KingRock;
+    static QVector<char> m_Speeds;
+    static QVector<int> m_Flinch;
+    static QVector<int> m_Recoil;
+    static QVector<int> m_Targets;
     static QList<QPair<char, char> > m_Repeat;
     static QList<QString> m_Descriptions;
     static QList<QString> m_Details;
@@ -174,42 +214,6 @@ private:
     static void loadDescriptions();
     static void loadDetails();
     static QString path(const QString &filename);
-public:
-    /* directory where all the data is */
-    static void init(const QString &dir="db/moves/");
-
-    /* Self-explainable functions */
-    static QString Name(int movenum);
-    static int Type(int movenum);
-    static int Category(int movenum);
-    static int Number(const QString &movename);
-    static int NumberOfMoves();
-    static int FlinchRate(int movenum);
-    static int Recoil(int movenum);
-    static QString Description(int movenum);
-    static QString DetailedDescription(int movenum);
-    static int Power(int movenum);
-    /* gives the power of a move in the form of a string */
-    static QString PowerS(int movenum);
-    static int PP(int movenum);
-    static int Acc(int movenum);
-    /* gives the accuracy of a move in the form of a string */
-    static QString AccS(int movenum);
-    /* the status mod of a move*/
-    static QString Effect(int movenum);
-    static QString SpecialEffect(int movenum);
-    static int CriticalRaise(int movenum);
-    static int RepeatMin(int movenum);
-    static int RepeatMax(int movenum);
-    static int SpeedPriority(int movenum);
-    static bool PhysicalContact(int movenum);
-    static bool KingRock(int movenum);
-    static bool Exists(int movenum);
-    static bool isOHKO(int movenum);
-    static int EffectRate(int movenum);
-    static int Target(int movenum);
-    static QString MoveMessage(int moveeffect, int part);
-    static QStringList MoveList();
 };
 
 class ItemInfo
@@ -235,7 +239,7 @@ public:
     static int PlateType(int itemnum);
     static QList<QString> SortedNames(int gen);
     static QList<QString> SortedUsefulNames(int gen);
-    static QList<Effect> Effects(int item);
+    static QList<Effect> Effects(int item, int gen);
     static QString Message(int item, int part);
     static int Number(const QString &itemname);
     static QString Description(int itemnum);
@@ -251,7 +255,7 @@ private:
     static QList<QString> m_SortedNames[2];
     static QList<QString> m_SortedUsefulNames[2];
     static QString m_Directory;
-    static QList<QList<Effect> > m_RegEffects;
+    static QList<QList<Effect> > m_RegEffects[2];
     static QList<QList<Effect> > m_BerryEffects;
     static QList<QStringList> m_RegMessages;
     static QList<QStringList> m_BerryMessages;
@@ -267,6 +271,19 @@ private:
 
 class TypeInfo
 {
+public:
+    /* directory where all the data is */
+    static void init(const QString &dir="db/types/");
+
+    /* Self-explainable functions */
+    static QString Name(int typenum);
+    static int Number(const QString &type);
+    static QColor Color(int typenum);
+    static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
+    static int NumberOfTypes();
+    static int TypeForWeather(int weather);
+    static QPixmap Picture(int type);
+    static int Category(int type);
 private:
     enum Weather
     {
@@ -282,23 +299,12 @@ private:
     static QList<QColor> m_Colors;
     static QList<int> m_TypeVsType;
     static QList<QPixmap> m_Pics;
+    static QList<int> m_Categories;
 
     static void loadNames();
     static void loadColors();
     static void loadEff();
     static QString path(const QString &filename);
-public:
-    /* directory where all the data is */
-    static void init(const QString &dir="db/types/");
-
-    /* Self-explainable functions */
-    static QString Name(int typenum);
-    static int Number(const QString &type);
-    static QColor Color(int typenum);
-    static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
-    static int NumberOfTypes();
-    static int TypeForWeather(int weather);
-    static QPixmap Picture(int type);
 };
 
 class NatureInfo

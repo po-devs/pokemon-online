@@ -1,16 +1,17 @@
 #include "../Shared/config.h"
+#include "../PokemonInfo/battlestructs.h"
+#include "../PokemonInfo/pokemoninfo.h"
 #include "player.h"
 #include "security.h"
 #include "challenge.h"
-#include "../PokemonInfo/battlestructs.h"
-#include "../PokemonInfo/pokemoninfo.h"
 #include "tiermachine.h"
 #include "waitingobject.h"
 #include "server.h"
+#include "analyze.h"
 
-
-Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
+Player::Player(QTcpSocket *sock, int id) : myid(id)
 {
+    myrelay = new Analyzer(sock, id);
     lockCount = 0;
     battleSearch() = false;
     myip = relay().ip();
@@ -21,9 +22,9 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     myauth = 0;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
-    connect(&relay(), SIGNAL(loggedIn(TeamInfo,bool,bool,QColor)), SLOT(loggedIn(TeamInfo,bool,bool,QColor)));
+    connect(&relay(), SIGNAL(loggedIn(TeamInfo&,bool,bool,QColor)), SLOT(loggedIn(TeamInfo&,bool,bool,QColor)));
     connect(&relay(), SIGNAL(messageReceived(int, QString)), SLOT(recvMessage(int, QString)));
-    connect(&relay(), SIGNAL(teamReceived(TeamInfo)), SLOT(recvTeam(TeamInfo)));
+    connect(&relay(), SIGNAL(teamReceived(TeamInfo&)), SLOT(recvTeam(TeamInfo&)));
     connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
     connect(&relay(), SIGNAL(forfeitBattle(int)), SLOT(battleForfeited(int)));
     connect(&relay(), SIGNAL(battleMessage(int,BattleChoice)), SLOT(battleMessage(int,BattleChoice)));
@@ -57,6 +58,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
 Player::~Player()
 {
     removeWaitingTeam();
+    delete myrelay;
 }
 
 void Player::ladderChange(bool n)
@@ -600,14 +602,19 @@ const TeamBattle & Player::team() const
     return myteam;
 }
 
+int Player::gen() const
+{
+    return team().gen;
+}
+
 Analyzer & Player::relay()
 {
-    return myrelay;
+    return *myrelay;
 }
 
 const Analyzer & Player::relay() const
 {
-    return myrelay;
+    return *myrelay;
 }
 
 bool Player::battling() const
@@ -646,6 +653,7 @@ PlayerInfo Player::bundle() const
     p.tier = tier();
     p.avatar = avatar();
     p.color = color();
+    p.gen = gen();
 
     if (showteam()) {
         for(int i = 0; i < 6; i++) {
@@ -676,7 +684,7 @@ BasicInfo Player::basicInfo() const
     return ret;
 }
 
-void Player::loggedIn(const TeamInfo &team,bool ladder, bool showteam, QColor c)
+void Player::loggedIn(TeamInfo &team,bool ladder, bool showteam, QColor c)
 {
     if (isLoggedIn())
         return;
@@ -834,7 +842,7 @@ void Player::assignNewColor(const QColor &c)
         color() = c;
 }
 
-void Player::assignTeam(const TeamInfo &team)
+void Player::assignTeam(TeamInfo &team)
 {
     avatar() = team.avatar;
     this->team() = team;
@@ -960,7 +968,7 @@ QString Player::ip() const
     return myip;
 }
 
-void Player::recvTeam(const TeamInfo &team)
+void Player::recvTeam(TeamInfo &team)
 {
     /* If the guy is not logged in, obvious. If he is battling, he could make it so the points lost are on his other team */
     if (!isLoggedIn())

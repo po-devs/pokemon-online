@@ -1456,14 +1456,6 @@ void TB_PokemonBody::configureMoves()
         }
     }
 
-    if (gen >= 4) {
-        movechoice->setColumnCount(LastColumn);
-        movechoice->setHorizontalHeaderItem(LastColumn-1, new QTableWidgetItem("Category"));
-    } else {
-        /* 3G and lower don't have special / physical split, hence no categories */
-        movechoice->setColumnCount(LastColumn-1);
-    }
-
     movechoice->setRowCount(moves.size());
     movechoice->setSortingEnabled(false);
 
@@ -1490,20 +1482,18 @@ void TB_PokemonBody::configureMoves()
         witem = new QTableWidgetItem(pair.second);
 	movechoice->setItem(i, Learning, witem);
 
-        witem = new QTableWidgetItem(QString::number(MoveInfo::PP(movenum)).rightJustified(2));
+        witem = new QTableWidgetItem(QString::number(MoveInfo::PP(movenum, gen)).rightJustified(2));
 	movechoice->setItem(i, PP, witem);
 
-        witem = new QTableWidgetItem(MoveInfo::AccS(movenum).rightJustified(3));
+        witem = new QTableWidgetItem(MoveInfo::AccS(movenum, gen).rightJustified(3));
 	movechoice->setItem(i, Acc, witem);
 
-        witem = new QTableWidgetItem(MoveInfo::PowerS(movenum).rightJustified(3));
+        witem = new QTableWidgetItem(MoveInfo::PowerS(movenum, gen).rightJustified(3));
 	movechoice->setItem(i, Pow, witem);
 
-        if (gen >= 4) {
-            witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(movenum)));
-            witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(movenum))));
-            movechoice->setItem(i, Category, witem);
-        }
+        witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(movenum, gen)));
+        witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(movenum, gen))));
+        movechoice->setItem(i, Category, witem);
     }
 
     movechoice->sortItems(Name);

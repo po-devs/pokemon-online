@@ -13,6 +13,7 @@ public:
 
     QString name, info, win, lose;
     quint16 avatar;
+    quint8 gen;
 };
 
 QDataStream & operator << (QDataStream & out,const TeamInfo & team);
@@ -80,6 +81,7 @@ public:
     quint16 avatar;
     QString tier;
     QColor color;
+    quint8 gen;
 
     enum {
         LoggedIn = 1,

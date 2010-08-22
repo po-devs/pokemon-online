@@ -1661,7 +1661,7 @@ protected:
 
 public:
     Team();
-    int gen() const {return m_gen;}
+    quint8 gen() const {return m_gen;}
     void setGen(int gen);
 
     const PokeTeam & poke(int index) const {return m_pokes[index];}
