@@ -1,23 +1,23 @@
-(No Ability)
-Adaptabilité
+ï»¿(No Ability)
+AdaptabilitÃ©
 Boom Final
 Air Lock
-Colérique
+ColÃ©rique
 Anticipation
-Piège
-Mauvais Rêve
+PiÃ¨ge
+Mauvais RÃªve
 Armurebaston
 Brasier
 Chlorophylle
 Corps Sain
 Ciel Gris
-Déguisement
-Oeil Composé
+DÃ©guisement
+Oeil ComposÃ©
 Joli Sourire
 Moiteur
-Télécharge
+TÃ©lÃ©charge
 Crachin
-Sécheresse
+SÃ©cheresse
 Dry Skin
 Matinal
 Pose Spore
@@ -26,7 +26,7 @@ Corps Ardent
 Torche
 Don Floral
 Meteo
-Prédiction
+PrÃ©diction
 Fouille
 Gloutonnerie
 Cran
@@ -46,22 +46,22 @@ Poing de Fer
 Regard Vif
 Maladresse
 Feuille Garde
-Lévitation
+LÃ©vitation
 Paratonnerre
-Échauffement
+Ã‰chauffement
 Suintement
 Garde Magik
 Armumagma
-Magnépiège
-Écaille Spéciale
+MagnÃ©piÃ¨ge
+Ã‰caille SpÃ©ciale
 Minus
 Brise Moule
-Motorisé
+MotorisÃ©
 Multitype
-Médic Nature
+MÃ©dic Nature
 Annulle Garde
 Normalise
-Benêt
+BenÃªt
 Engrais
 Tempo Perso
 Rammassage
@@ -70,27 +70,27 @@ Soin Poison
 Point Poison
 Pression
 Force Pure
-Pied Véloce
+Pied VÃ©loce
 Cuvette
-Téméraire
-Rivalité
-Tête de Roc
+TÃ©mÃ©raire
+RivalitÃ©
+TÃªte de Roc
 Peau dure
 Fuite
 Sable volant
 Voile sable
 Querelleur
-Sérénité
+SÃ©rÃ©nitÃ©
 Marque Ombre
 Mue
 Coque Armure
 Ecran poudre
 Simple
 Multi coups
-Début calme
+DÃ©but calme
 Sniper
-Snow Cloak
 Rideau Neige
+Alerte Neige
 Force soleil
 Solide Roc
 Anti bruit
@@ -101,7 +101,7 @@ Impassible
 Puanteur
 Glue
 Lavabo
-Fermeté
+FermetÃ©
 Ventouse
 Chanceux
 Essaim
@@ -110,15 +110,15 @@ Synchro
 Tempo perso
 Technicien
 Isograisse
-Lumiteintée
+LumiteintÃ©e
 Torrent
 Calque
-Absentéisme
+AbsentÃ©isme 
 Inconscient
-Délestage
+DÃ©lestage
 Esprit Vital
 Absorb Volt
 Absorb Eau
 Ignifu voile
-Ecran fumée
+Ecran fumÃ©e
 Garde magic

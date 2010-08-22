@@ -1221,6 +1221,11 @@ void Client::challengeStuff(const ChallengeInfo &c)
                 while ( (b = getChallengeWindow(c)) ) {
                     closeChallengeWindow(b);
                 }
+            } else if (c.desc() == ChallengeInfo::InvalidGen) {
+                printLine(tr("%1 has a different gen than yours.").arg(name(c)));
+                while ( (b = getChallengeWindow(c)) ) {
+                    closeChallengeWindow(b);
+                }
             }
 	}
     }

@@ -108,3 +108,8 @@ bool MoveSetChecker::isAnEggMoveCombination(int pokenum, int gen, QSet<int> move
 
     return false;
 }
+
+QList<QSet<int> > MoveSetChecker::combinationsFor(int pokenum, int gen)
+{
+    return (*legalCombinations)[gen-3][pokenum];
+}

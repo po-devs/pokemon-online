@@ -547,10 +547,11 @@ void ScriptEngine::changePokeMove(int id, int pslot, int mslot, int move)
 {
     if (!testPlayer("", id) || !testRange("", pslot, 0, 5) || !testRange("", mslot, 0, 4))
         return;
-    if (!MoveInfo::Exists(move))
+    if (!MoveInfo::Exists(move, 4))
         return;
-    myserver->player(id)->team().poke(pslot).move(mslot).num() = move;
-    myserver->player(id)->team().poke(pslot).move(mslot).load();
+    Player *p = myserver->player(id);
+    p->team().poke(pslot).move(mslot).num() = move;
+    p->team().poke(pslot).move(mslot).load(p->gen());
 }
 
 void ScriptEngine::saveVal(const QString &key, const QVariant &val)
