@@ -109,7 +109,13 @@ void SecurityManager::loadMembers()
     }
 
     /* Loading the ban list */
-    query.exec("select name, ip from trainers where banned='true'");
+
+    if (SQLCreator::databaseType == SQLCreator::MySQL) {
+        query.exec("select name, ip from trainers where banned=1");
+    }
+	else {
+        query.exec("select name, ip from trainers where banned='true'");
+    }
 
     while (query.next()) {
         bannedIPs.insert(query.value(1).toString());
