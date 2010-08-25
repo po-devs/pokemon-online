@@ -93,13 +93,13 @@ public:
 private:
     int myid;
 };
-/* A textedit that scrolls down automatically, unless not down, and that
+/* A textbrowser that scrolls down automatically, unless not down, and that
    always insert the text at the end */
-class QScrollDownTextEdit : public QTextEdit
+class QScrollDownTextBrowser : public QTextBrowser
 {
     Q_OBJECT
 public:
-    QScrollDownTextEdit();
+    QScrollDownTextBrowser();
 
     void setAutoClear(bool a) {
         autoClear = a;

@@ -84,7 +84,7 @@ void BaseBattleWindow::init()
 
     QVBoxLayout *chat = new QVBoxLayout();
     columns->addLayout(chat);
-    chat->addWidget(mychat = new QScrollDownTextEdit());
+    chat->addWidget(mychat = new QScrollDownTextBrowser());
     mychat->setAutoClear(false);
     chat->addWidget(myline = new QLineEdit());
     QHBoxLayout * buttons = new QHBoxLayout();

@@ -12,7 +12,7 @@ PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QS
     QGridLayout *l = new QGridLayout(this);
     this->setLayout(l);
 
-    m_mainwindow = new QScrollDownTextEdit();
+    m_mainwindow = new QScrollDownTextBrowser();
     m_textToSend = new QLineEdit();
 
     l->addWidget(m_mainwindow, 0,0,1,2);
