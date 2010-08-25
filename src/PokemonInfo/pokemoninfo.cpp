@@ -977,7 +977,7 @@ QString MoveInfo::Name(int movenum)
 
 bool MoveInfo::Exists(int movenum, int gen)
 {
-    if (movenum < 0 && movenum >= NumberOfMoves())
+    if (movenum < 0 || movenum >= NumberOfMoves())
         return false;
 
     if (gen == 4)
