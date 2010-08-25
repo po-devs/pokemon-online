@@ -240,7 +240,10 @@ PokemonBoxButton {
 	background: #07a7c9;
 	color: white;
 }
-
+PokemonBoxButton:checked{
+	background: #067D98;
+	color: black;
+}
 PokemonBoxButton::text {
 	font-weight:bold;
 }
