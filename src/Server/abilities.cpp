@@ -352,6 +352,8 @@ struct AMFlowerGift : public AM {
     }
 
     static void us(int s, int, BS &b) {
+        if (b.poke(s).num() != Pokemon::Cherrim)
+            return;
         if (b.weather() == BS::Sunny) {
             if (b.forme(s) != 1) b.changeAForme(s, 1);
         } else {
