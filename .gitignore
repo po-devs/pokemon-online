@@ -1,0 +1,5 @@
+*.o
+moc_*
+bin/Server
+bin/lib*.so
+bin/lib*.so.*
