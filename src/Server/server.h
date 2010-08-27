@@ -35,7 +35,6 @@ public:
     /* returns the name of that player */
     QString name(int id) const;
     QString authedName(int id) const;
-    QString getUsers();
     /* Sends a broadcast message to all the players */
     void sendAll(const QString &message, bool chatMessage = false);
     /* Send a broadcast to one player */

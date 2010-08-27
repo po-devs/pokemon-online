@@ -1448,11 +1448,6 @@ void ScriptWindow::okPressed()
     close();
 }
 
-QScriptValue ScriptEngine::getUsers()
-{
-    return myserver->getUsers();
-}
-
 QScriptValue ScriptEngine::getScript()
 {
     return myscript;
