@@ -224,7 +224,7 @@ protected:
 
     QGridLayout *mylayout;
     QScrollDownTextEdit *mychat;
-    QLineEdit *myline;
+    QIRCLineEdit *myline;
     BaseBattleDisplay *mydisplay;
     QPushButton *myclose, *mysend;
     Client *_mclient;

@@ -2,6 +2,7 @@
 #define OTHERWIDGETS_H
 
 #include <QtGui>
+#include <QList>
 
 /*
     Those are widgets that Qt lacks, and that are to use like Qt Widgets
@@ -165,6 +166,54 @@ class QExposedTabWidget : public QTabWidget
 {
 public:
     QTabBar * tabBar() { return QTabWidget::tabBar(); }
+};
+
+/* A new Button with pressed pic*/
+class QImageButtonP : public QAbstractButton
+{
+    Q_OBJECT
+public:
+    QImageButtonP(const QString &normal, const QString &hovered, const QString &pressed, const QString &checked ="");
+    QSize sizeHint() const;
+    QSize minimumSizeHint() const;
+    QSize maximumSize() const;
+
+    void changePics(const QString &normal, const QString &hovered, const QString &pressed, const QString &checked = "");
+protected:
+    void paintEvent(QPaintEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
+private:
+    QPixmap myPic, myHoveredPic, myCheckedPic, myPressedPic;
+    int lastUnderMouse; // last mouse pos recorded
+    bool bpressed;
+
+    enum State {
+        Normal,
+        Hovered,
+        Checked,
+        Pressed
+    };
+    int lastState;
+};
+
+/* A new LineEdit that like IRC chat*/
+class QIRCLineEdit : public QLineEdit
+{
+    Q_OBJECT
+public:
+    QIRCLineEdit();
+private:
+    void keyPressEvent(QKeyEvent *);
+    //QList<QString> m_Inputlist1;//Stores the inputed strings,up list.
+    //QList<QString> m_Inputlist2;//Stores the inputed strings,down list.
+    QList<QString> m_Inputlist;
+    quint16 listindex;
+    //QString m_Currentline;//Stores a copy of the current text in the LineEdit.
+public slots:
+    void myTextEdited();
+    void myclear();
 };
 
 #endif // OTHERWIDGETS_H
