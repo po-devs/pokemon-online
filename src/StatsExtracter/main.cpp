@@ -523,7 +523,7 @@ int main(int argc, char *argv[])
 #ifdef WIN32
     system( ("xcopy usage_stats\\raw\\* " + dirname + " /s > copy.txt").toAscii().data() );
 #else
-    system( ("cp -R usage_stats/raw " + dirname).toAscii().data() + " > copy.txt" );
+    system( ("cp -R usage_stats/raw/* " + dirname).toAscii().data() );
 #endif
 
     QStringList dirs = d.entryList(QDir::Dirs | QDir::NoDotAndDotDot);

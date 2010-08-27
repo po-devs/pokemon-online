@@ -7,7 +7,7 @@ Channel::Channel(const QString &name, int id, Client *parent)
 {
     /* Those will actually be gotten back by the client itself, when
        he adds the channel */
-    mymainchat = new QScrollDownTextEdit();
+    mymainchat = new QScrollDownTextBrowser();
     myplayers = new QTreeWidget();
     battleList = new QTreeWidget();
 
