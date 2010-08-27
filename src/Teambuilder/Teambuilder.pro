@@ -65,6 +65,7 @@ TRANSLATIONS = translation_de.ts \
     translation_it.ts \
     translation_jp.ts \
     translation_ko.ts \
+    translation_pl.ts \
     translation_pt-br.ts \
     translation_ru.ts \
     translation_sv.ts \
