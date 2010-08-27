@@ -89,7 +89,7 @@ void BaseBattleWindow::init()
     columns->addLayout(chat);
     chat->addWidget(mychat = new QScrollDownTextEdit());
     mychat->setAutoClear(false);
-    chat->addWidget(myline = new QLineEdit());
+    chat->addWidget(myline = new QIRCLineEdit());
     QHBoxLayout * buttons = new QHBoxLayout();
     chat->addLayout(buttons);
     QPushButton *myignore;
@@ -303,7 +303,7 @@ void BaseBattleWindow::sendMessage()
 
     if (message.size() != 0) {
         emit battleMessage(battleId(), message);
-        myline->clear();
+        myline->myclear();
     }
 }
 

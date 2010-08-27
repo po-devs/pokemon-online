@@ -4,22 +4,23 @@
 #include "../Utilities/otherwidgets.h"
 #include <QStyleFactory>
 
+
 TB_Menu::TB_Menu()
 {
     setPixmap(QPixmap("db/menu/menu_background.png"));
     setWindowTitle(tr("Menu"));
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
 
-    QImageButton *teambuilder, *online, *credits, *exit;
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    QImageButtonP *credits,*teambuilder, *online, *exit;
 
     layout->setMargin(0);
     layout->setSpacing(0);
 
-    layout->addWidget(teambuilder = new QImageButton("db/menu/Teambuilder0.png", "db/menu/Teambuilder1.png"), 0, Qt::AlignCenter);
-    layout->addWidget(online = new QImageButton("db/menu/GoOnline0.png", "db/menu/GoOnline1.png"), 0, Qt::AlignCenter);
-    layout->addWidget(credits = new QImageButton("db/menu/Credits0.png", "db/menu/Credits1.png"), 0, Qt::AlignCenter);
-    layout->addWidget(exit = new QImageButton("db/menu/Quit0.png", "db/menu/Quit1.png"), 0, Qt::AlignCenter);
+    layout->addWidget(teambuilder = new QImageButtonP("db/menu/Teambuilder0.png", "db/menu/Teambuilder1.png", "db/menu/Teambuilder2.png"), 0, Qt::AlignCenter);
+    layout->addWidget(online = new QImageButtonP("db/menu/GoOnline0.png", "db/menu/GoOnline1.png", "db/menu/GoOnline2.png"), 0, Qt::AlignCenter);
+    layout->addWidget(credits = new QImageButtonP("db/menu/Credits0.png", "db/menu/Credits1.png", "db/menu/Credits2.png"), 0, Qt::AlignCenter);
+    layout->addWidget(exit = new QImageButtonP("db/menu/Quit0.png", "db/menu/Quit1.png", "db/menu/Quit2.png"), 0, Qt::AlignCenter);
 
     connect (teambuilder, SIGNAL(clicked()), SIGNAL(goToTeambuilder()));
     connect (online, SIGNAL(clicked()), SIGNAL(goToOnline()));

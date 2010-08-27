@@ -394,3 +394,184 @@ QSideBySide::QSideBySide(QWidget *a, QWidget *b)
     addWidget(a);
     addWidget(b);
 }
+
+/////////////////////////////////////
+/*new button with pressed pic*/
+QImageButtonP::QImageButtonP(const QString &normal, const QString &hovered, const QString &pressed, const QString &checked)
+            : myPic(normal), myHoveredPic(hovered), myPressedPic(pressed), lastUnderMouse(-1), bpressed(false)
+{
+    setFixedSize(myPic.size());
+#if defined(WIN32) || defined(WIN64)
+    setMask(::mask(myPic));
+#endif
+    lastState = Normal;
+
+    /* Both are necessary for some styles */
+    setMouseTracking(true);
+    setAttribute(Qt::WA_Hover, true);
+
+    if (checked != "")
+        myCheckedPic = QPixmap(checked);
+}
+
+void QImageButtonP::changePics(const QString &normal, const QString &hovered,const QString &pressed, const QString &checked)
+{
+    myPic = QPixmap(normal);
+    myHoveredPic = QPixmap(hovered);
+    myPressedPic = QPixmap(pressed);
+    if (checked != "")
+        myCheckedPic = QPixmap(checked);
+
+#if defined(WIN32) || defined(WIN64)
+    setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : (lastState == Pressed ? ::mask(myPressedPic) : ::mask(myHoveredPic))));
+#endif
+
+    update();
+}
+
+void QImageButtonP::mousePressEvent(QMouseEvent *e)
+{
+    bpressed = true;
+    QAbstractButton::mousePressEvent(e);
+}
+
+void QImageButtonP::mouseReleaseEvent(QMouseEvent *e)
+{
+    bpressed = false;
+    QAbstractButton::mouseReleaseEvent(e);
+}
+
+QSize QImageButtonP::sizeHint() const
+{
+    return myPic.size();
+}
+
+QSize QImageButtonP::minimumSizeHint() const
+{
+    return sizeHint();
+}
+
+QSize QImageButtonP::maximumSize() const
+{
+    return sizeHint();
+}
+
+void QImageButtonP::paintEvent(QPaintEvent *e)
+{
+    QPainter painter(this);
+
+    int newState;
+    if ((this->isChecked()) && !myCheckedPic.isNull()) {
+        newState = Checked;
+        painter.drawPixmap(e->rect(), myCheckedPic, e->rect());
+    }else if(this->isDown () && !myPressedPic.isNull()) {
+        newState = Pressed;
+        painter.drawPixmap(e->rect(), myPressedPic, e->rect());
+    }else {
+        if (!underMouse()) {
+            newState = Normal;
+            painter.drawPixmap(e->rect(), myPic, e->rect());
+        }
+        else {
+            newState = Hovered;
+            painter.drawPixmap(e->rect(), myHoveredPic, e->rect());
+        }
+    }
+
+    if (newState != lastState) {
+        lastState = newState;
+#if defined(WIN32) || defined(WIN64)
+        setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : (lastState == Pressed ? ::mask(myPressedPic) : ::mask(myHoveredPic))));
+#endif
+    }
+
+    lastUnderMouse = underMouse();
+}
+
+void QImageButtonP::mouseMoveEvent(QMouseEvent *)
+{
+    if (int(underMouse()) == lastUnderMouse)
+        return;
+    update();
+}
+
+///////////////////////////////////
+/*new LineEdit like IRC*/
+
+QIRCLineEdit::QIRCLineEdit()
+{
+    connect(this,SIGNAL(textEdited(QString)),this,SLOT(myTextEdited()));
+    listindex=0;
+}
+
+void QIRCLineEdit::keyPressEvent(QKeyEvent *e)
+{
+    if(e->key() == Qt::Key_Up) {
+        if(text()==""){
+            if(m_Inputlist.empty()){
+
+            }else{
+                listindex--;
+                setText(m_Inputlist[listindex]);
+            }
+        }else if(text()!=""){
+            //m_Inputlist2.append(text());
+            if(listindex<=m_Inputlist.count()){
+                //m_Inputlist.append(text());
+                if(listindex==0){
+                    setText(m_Inputlist[0]);
+                }else{
+                    if(listindex==m_Inputlist.count()) m_Inputlist.append(text());
+                    listindex--;
+                    setText(m_Inputlist[listindex]);
+                }
+            }else if(listindex>m_Inputlist.count()){
+                if(!m_Inputlist.empty()){
+                    m_Inputlist.append(text());
+                    setText(m_Inputlist[listindex--]);
+                }
+            }
+        }
+    }else if(e->key() == Qt::Key_Down) {
+        if(text()==""){
+            if(m_Inputlist.empty()){
+
+            }else{
+                listindex++;
+                setText(m_Inputlist[listindex]);
+            }
+        }else if(text()!=""){
+            if(listindex+1<m_Inputlist.count()){
+                listindex++;
+                setText(m_Inputlist[listindex]);
+            }else if(listindex>=m_Inputlist.count()){
+
+            }
+
+        }
+    }else{
+        QLineEdit::keyPressEvent(e);
+    }
+
+}
+void QIRCLineEdit::myTextEdited()
+{
+    if(m_Inputlist.count()==0){
+        listindex=1;
+    }else{
+        listindex=m_Inputlist.count();
+    }
+}
+
+void QIRCLineEdit::myclear()
+{
+    if(text()!=""){
+        m_Inputlist.append(text());
+        if(m_Inputlist.count()==0){
+            listindex=1;
+        }else{
+            listindex=m_Inputlist.count();
+        }
+    }
+    QLineEdit::clear();
+}

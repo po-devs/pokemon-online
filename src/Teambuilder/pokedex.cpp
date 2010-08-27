@@ -885,14 +885,17 @@ TypeChart::TypeChart(QWidget *parent) : QWidget(parent)
             }
             QTableWidgetItem *l = new QTableWidgetItem();
             if (eff == 0) {
-                l->setText("x 0");
-                l->setForeground(Qt::darkGray);
+                l->setText(" 0 ×");
+                l->setForeground(Qt::white);
+                l->setBackgroundColor(Qt::black);
             } else if (eff == 1) {
-                l->setText("/ 2");
-                l->setForeground(Qt::gray);;
+                l->setText(" ½ ×");
+                l->setForeground(Qt::white);;
+                l->setBackgroundColor(Qt::red);
             } else if (eff == 4) {
-                l->setText("* 2");
-                l->setForeground(Qt::red);
+                l->setText(" 2 ×");
+                l->setForeground(Qt::white);
+                l->setBackgroundColor(QColor(0,153,0));
             }
             gl->setItem(i+1, j+1, l);
         }
