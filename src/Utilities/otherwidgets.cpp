@@ -208,21 +208,22 @@ void QIdListWidgetItem::setColor(const QColor &c)
     setForeground(QBrush(c));
 }
 
-QScrollDownTextEdit::QScrollDownTextEdit()
+QScrollDownTextBrowser::QScrollDownTextBrowser()
 {
     autoClear = true;
     setReadOnly(true);
+    setOpenExternalLinks(true);
     linecount = 0;
 }
 
-void QScrollDownTextEdit::insertHtml(const QString &text)
+void QScrollDownTextBrowser::insertHtml(const QString &text)
 {
     QScrollBar * b = verticalScrollBar();
     if (linecount >= 2000 && autoClear) {
         keepLines(1000);
         moveCursor(QTextCursor::End);
         linecount = 1000;
-        QTextEdit::insertHtml(text);
+        QTextBrowser::insertHtml(text);
         b->setValue(b->maximum());
         return;
     }
@@ -230,7 +231,7 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
     int f = b->value();
     int e = b->maximum();
     moveCursor(QTextCursor::End);
-    QTextEdit::insertHtml(text);
+    QTextBrowser::insertHtml(text);
 
     if(b->value() != e)
     {
@@ -244,7 +245,7 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
     linecount++;
 }
 
-void QScrollDownTextEdit::keepLines(int numberOfLines)
+void QScrollDownTextBrowser::keepLines(int numberOfLines)
 {
     setReadOnly(false);
     moveCursor(QTextCursor::Start);
@@ -259,14 +260,14 @@ void QScrollDownTextEdit::keepLines(int numberOfLines)
     setReadOnly(true);
 }
 
-void QScrollDownTextEdit::insertPlainText(const QString &text)
+void QScrollDownTextBrowser::insertPlainText(const QString &text)
 {
     QScrollBar * b = verticalScrollBar();
     if (linecount >= 2000 && autoClear) {
         keepLines(1000);
         moveCursor(QTextCursor::End);
         linecount = 1000;
-        QTextEdit::insertPlainText(text);
+        QTextBrowser::insertPlainText(text);
         b->setValue(b->maximum());
         return;
     }
@@ -275,7 +276,7 @@ void QScrollDownTextEdit::insertPlainText(const QString &text)
     int e = b->maximum();
 
     moveCursor(QTextCursor::End);
-    QTextEdit::insertPlainText(text);
+    QTextBrowser::insertPlainText(text);
 
     if(b->value() != e)
     {

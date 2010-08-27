@@ -6,7 +6,7 @@
 
 class Player;
 class Server;
-class QScrollDownTextEdit;
+class QScrollDownTextBrowser;
 
 class Registry: public QObject
 {
@@ -36,7 +36,7 @@ private:
 
     QSet<QString> bannedIPs;
 
-    QScrollDownTextEdit *mainChat;
+    QScrollDownTextBrowser *mainChat;
     int linecount;
 
     int freeid() const;

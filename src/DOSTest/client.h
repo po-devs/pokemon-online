@@ -10,7 +10,7 @@ class BaseChallengeWindow;
 class QIdListWidgetItem;
 class BattleWindow;
 class BaseBattleWindow;
-class QScrollDownTextEdit;
+class QScrollDownTextBrowser;
 class PMWindow;
 class ControlPanel;
 class BattleFinder;
@@ -151,7 +151,7 @@ private:
     TrainerTeam *myteam;
     QString mynick;
     /* Main chat */
-    QScrollDownTextEdit *mychat;
+    QScrollDownTextBrowser *mychat;
     /* PMs */
     QHash<int, PMWindow*> mypms;
     /* Line the user types in */
@@ -187,7 +187,7 @@ private:
 
 
     QHash<QString, int> mynames;
-    QScrollDownTextEdit *mainChat();
+    QScrollDownTextBrowser *mainChat();
     Analyzer & relay();
 
     PlayerInfo playerInfo(int id) const;

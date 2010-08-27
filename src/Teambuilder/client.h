@@ -13,7 +13,7 @@ class BaseChallengeWindow;
 class QIdTreeWidgetItem;
 class BattleWindow;
 class BaseBattleWindow;
-class QScrollDownTextEdit;
+class QScrollDownTextBrowser;
 class PMWindow;
 class ControlPanel;
 class RankingDialog;
@@ -213,7 +213,7 @@ private:
 
     /* GUI */
     /* Main chat */
-    QScrollDownTextEdit *mychat;
+    QScrollDownTextBrowser *mychat;
     /* PMs */
     QHash<int, PMWindow*> mypms;
     /* Line the user types in */

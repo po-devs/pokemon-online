@@ -11,7 +11,7 @@
 #include <QtGui>
 #include "server.h"
 
-class QScrollDownTextEdit;
+class QScrollDownTextBrowser;
 class ScriptWindow;
 class QIdListWidgetItem;
 
@@ -51,10 +51,10 @@ private slots:
     void openPluginConfig();
 private:
     QListWidget *mylist;
-    QScrollDownTextEdit *mymainchat;
+    QScrollDownTextBrowser *mymainchat;
     QLineEdit *myline;
     
-    QScrollDownTextEdit *mainchat();
+    QScrollDownTextBrowser *mainchat();
     QListWidget *list();
 
     QHash<int, QIdListWidgetItem *> myplayersitems;

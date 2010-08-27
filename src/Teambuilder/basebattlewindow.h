@@ -9,7 +9,7 @@
 #include <phonon/audiooutput.h>
 
 class BaseBattleDisplay;
-class QScrollDownTextEdit;
+class QScrollDownTextBrowser;
 class QClickPBar;
 
 struct BaseBattleInfo
@@ -216,7 +216,7 @@ protected:
     bool ignoreSpecs;
 
     QGridLayout *mylayout;
-    QScrollDownTextEdit *mychat;
+    QScrollDownTextBrowser *mychat;
     QLineEdit *myline;
     BaseBattleDisplay *mydisplay;
     QPushButton *myclose, *mysend;
