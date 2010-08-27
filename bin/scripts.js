@@ -40,6 +40,16 @@ init : function() {
 		return a.toLowerCase() == b.toLowerCase();
 	}
 	
+	if (typeof(channelTopics) == 'undefined')
+		channelTopics = [];
+	
+	if (sys.existChannel("Tournaments")) { 
+        tourchannel = sys.channelId("Tournaments");
+    } else {
+        tourchannel = sys.createChannel("Tournaments");
+		channelTopics[tourchannel] = "Welcome to the tournament channel, where tournaments are held! type /join to join a tour in its signup phase! type /viewround to see the progress of an ongoing tournament!";
+    }
+	
     if (typeof(varsCreated) != 'undefined')
         return;
 
@@ -115,6 +125,7 @@ init : function() {
     } else {
         staffchannel = sys.createChannel("Indigo Plateau");
     }
+	
 	channelTopics[staffchannel] = "Welcome to the Staff Channel! Discuss of all what users shouldn't hear here! Or more serious stuff...";
 	permChannels[staffchannel] = true;
     
@@ -163,7 +174,7 @@ afterChannelJoin : function(player, chan) {
 ,
 
 beforeChannelDestroyed : function(channel) {
-    if (channel == staffchannel || (channel in permChannels && permChannels[channel] == true) ) {
+    if (channel == staffchannel ||  channel == tourchannel || (channel in permChannels && permChannels[channel] == true) ) {
         sys.stopEvent();
         return;
     }
@@ -421,8 +432,8 @@ beforeChatMessage: function(src, message, chan) {
             return;
         }
         if (command == "join"){
-            if (channel != 0) {
-                sendChanMessage(src, "+TourBot: You must be in the main channel to join a tournament!");
+            if (!sys.isInChannel(src, tourchannel)) {
+                sendChanMessage(src, "+TourBot: You must be in the tournaments channel to join a tournament!");
                 return;
             }
             if (tourmode != 1){
@@ -442,7 +453,7 @@ beforeChatMessage: function(src, message, chan) {
             if (this.tourSpots() > 0){
                 tourmembers.push(name);
                 tourplayers[name] = sys.name(src);
-                sys.sendAll("~~Server~~: " + sys.name(src) + " joined the tournament! " + this.tourSpots() + " more spot(s) left!", 0);
+                sys.sendAll("~~Server~~: " + sys.name(src) + " joined the tournament! " + this.tourSpots() + " more spot(s) left!", tourchannel);
                 if (this.tourSpots() == 0){
                     tourmode = 2;
                     roundnumber = 0;
@@ -527,12 +538,12 @@ beforeChatMessage: function(src, message, chan) {
             if (tourmembers.indexOf(name2) != -1) {
                 tourmembers.splice(tourmembers.indexOf(name2),1);
                 delete tourplayers[name2];
-                sys.sendAll("+TourneyBot: " + commandData + " was removed from the tournament by " + sys.name(src) + "!", 0);
+                sys.sendAll("+TourneyBot: " + commandData + " was removed from the tournament by " + sys.name(src) + "!", tourchannel);
                 return;
             }
             if (tourbattlers.indexOf(name2) != -1) {
                 battlesStarted[Math.floor(tourbattlers.indexOf(name2)/2)] = true;
-                sys.sendAll("+TourneyBot: " + commandData + " was removed from the tournament by " + sys.name(src) + "!", 0);
+                sys.sendAll("+TourneyBot: " + commandData + " was removed from the tournament by " + sys.name(src) + "!", tourchannel);
                 this.tourBattleEnd(this.tourOpponent(name2), name2);
             }
             return;
@@ -546,7 +557,7 @@ beforeChatMessage: function(src, message, chan) {
                 sendChanMessage(src, "+TourneyBot: " +commandData + " is already in the tournament.");
                 return;
             }
-            sys.sendAll("+TourneyBot: " +commandData + " was added to the tournament by " + sys.name(src) + ".", 0);
+            sys.sendAll("+TourneyBot: " +commandData + " was added to the tournament by " + sys.name(src) + ".", tourchannel);
             tourmembers.push(commandData.toLowerCase()); 
             tourplayers[commandData.toLowerCase()] = commandData;
             
@@ -582,7 +593,7 @@ beforeChatMessage: function(src, message, chan) {
                 sendChanMessage(src, "+TourBot: Neither are in the tourney.");
                 return;
             }
-            sys.sendAll("+TourBot: " + players[0] + " and " + players[1] + " were exchanged places in the ongoing tournament by " + sys.name(src) + ".", 0);
+            sys.sendAll("+TourBot: " + players[0] + " and " + players[1] + " were exchanged places in the ongoing tournament by " + sys.name(src) + ".", tourchannel);
             
             var p1 = players[0].toLowerCase();
             var p2 = players[1].toLowerCase();
@@ -652,17 +663,22 @@ beforeChatMessage: function(src, message, chan) {
 			tourplayers = [];
 			battlesStarted = [];
 			battlesLost = [];
+			
+			var chans = [0, tourchannel];
 
-			sys.sendAll("", 0);
-			sys.sendAll(border, 0);
-			sys.sendAll("*** A Tournament was started by " + sys.name(src) + "! ***", 0);
-			sys.sendAll("PLAYERS: " + tournumber, 0);
-			sys.sendAll("TYPE: Single Elimination", 0);
-			sys.sendAll("TIER: " + tourtier, 0);
-			sys.sendAll("", 0);
-			sys.sendAll("*** Type /join or !join to enter the tournament! ***", 0);
-			sys.sendAll(border, 0);
-			sys.sendAll("", 0);
+			for (var x in chans) {
+				var y = chans[x];
+				sys.sendAll("", y);
+				sys.sendAll(border, y);
+				sys.sendAll("*** A Tournament was started by " + sys.name(src) + "! ***", y);
+				sys.sendAll("PLAYERS: " + tournumber, y);
+				sys.sendAll("TYPE: Single Elimination", y);
+				sys.sendAll("TIER: " + tourtier, y);
+				sys.sendAll("", y);
+				sys.sendAll("*** Go in the Tournaments channel and type /join or !join to enter the tournament! ***", y);
+				sys.sendAll(border, y);
+				sys.sendAll("", y);
+			}
 			return;
         }
         
@@ -684,12 +700,12 @@ beforeChatMessage: function(src, message, chan) {
             
             tournumber = count;
             
-			sys.sendAll("", 0);
-			sys.sendAll(border, 0);
-            sys.sendAll("~~Server~~: " +  sys.name(src) + " changed the numbers of entrants to " + count + "!", 0);
-			sys.sendAll("*** " + this.tourSpots() + " more spot(s) left!", 0);
-			sys.sendAll(border, 0);
-            sys.sendAll("", 0);
+			sys.sendAll("", tourchannel);
+			sys.sendAll(border, tourchannel);
+            sys.sendAll("~~Server~~: " +  sys.name(src) + " changed the numbers of entrants to " + count + "!", tourchannel);
+			sys.sendAll("*** " + this.tourSpots() + " more spot(s) left!", tourchannel);
+			sys.sendAll(border, tourchannel);
+            sys.sendAll("", tourchannel);
 			
             if (this.tourSpots() == 0 ){
                 tourmode = 2;
@@ -983,32 +999,32 @@ roundPairing : function() {
     battlesLost = [];
     
     if (tourmembers.length == 1) {
-		sys.sendAll("",0);
-        sys.sendAll(border,0);
-        sys.sendAll("",0);
-        sys.sendAll("THE WINNER OF THE TOURNAMENT IS : " + tourplayers[tourmembers[0]],0);
-        sys.sendAll("",0);
-        sys.sendAll("*** Congratulations, " + tourplayers[tourmembers[0]] + ", on your success! ***",0);
-        sys.sendAll("",0);
-        sys.sendAll(border,0);
-        sys.sendAll("",0);
+		sys.sendAll("", tourchannel);
+        sys.sendAll(border, tourchannel);
+        sys.sendAll("", tourchannel);
+        sys.sendAll("THE WINNER OF THE TOURNAMENT IS : " + tourplayers[tourmembers[0]], tourchannel);
+        sys.sendAll("", tourchannel);
+        sys.sendAll("*** Congratulations, " + tourplayers[tourmembers[0]] + ", on your success! ***", tourchannel);
+        sys.sendAll("", tourchannel);
+        sys.sendAll(border, tourchannel);
+        sys.sendAll("", tourchannel);
         tourmode = 0;
         return;
     }
     
     var finals = tourmembers.length == 2;
     
-	sys.sendAll("", 0);
-	sys.sendAll(border, 0);
+	sys.sendAll("", tourchannel);
+	sys.sendAll(border, tourchannel);
     
 	if (!finals) {
-        sys.sendAll("*** Round " + roundnumber + " of " + tourtier + " tournament ***", 0);
+        sys.sendAll("*** Round " + roundnumber + " of " + tourtier + " tournament ***", tourchannel);
 	}
     else {
-        sys.sendAll("*** FINALS OF " + tourtier.toUpperCase() + " TOURNAMENT ***",0);
+        sys.sendAll("*** FINALS OF " + tourtier.toUpperCase() + " TOURNAMENT ***", tourchannel);
 	}
 	
-	sys.sendAll("", 0);
+	sys.sendAll("", tourchannel);
     
 	var i = 0;
     while (tourmembers.length >= 2) {
@@ -1027,18 +1043,18 @@ roundPairing : function() {
         battlesStarted.push(false);
         
         if (!finals)
-            sys.sendAll (i + "." + this.padd(name1) + " VS " + name2, 0);
+            sys.sendAll (i + "." + this.padd(name1) + " VS " + name2, tourchannel);
         else
-            sys.sendAll ("  " + this.padd(name1) + " VS " + name2,0);
+            sys.sendAll ("  " + this.padd(name1) + " VS " + name2, tourchannel);
     }
     
     if (tourmembers.length > 0) {
-        sys.sendAll ("", 0);
-        sys.sendAll ("*** " + tourplayers[tourmembers[0]] + " is randomly selected to go to next round!", 0);
+        sys.sendAll ("", tourchannel);
+        sys.sendAll ("*** " + tourplayers[tourmembers[0]] + " is randomly selected to go to next round!", tourchannel);
     }
 	
-	sys.sendAll(border, 0);
-	sys.sendAll("", 0);
+	sys.sendAll(border, tourchannel);
+	sys.sendAll("", tourchannel);
 }
 
 ,
@@ -1130,16 +1146,16 @@ tourBattleEnd : function(src, dest)
     delete tourplayers[destL];
     
 	if (tourbattlers.length != 0 || tourmembers.length > 1) {
-		sys.sendAll("", 0);
-		sys.sendAll(border, 0);
-		sys.sendAll("~~Server~~: " + src + " advances to the next round.", 0);
-		sys.sendAll("~~Server~~: " + dest + " is out of the tournament.", 0);
+		sys.sendAll("", tourchannel);
+		sys.sendAll(border, tourchannel);
+		sys.sendAll("~~Server~~: " + src + " advances to the next round.", tourchannel);
+		sys.sendAll("~~Server~~: " + dest + " is out of the tournament.", tourchannel);
 	}
     
     if (tourbattlers.length > 0) {
-        sys.sendAll("*** " + tourbattlers.length/2 + " battle(s) remaining.", 0);
-		sys.sendAll(border, 0);
-        sys.sendAll("", 0);
+        sys.sendAll("*** " + tourbattlers.length/2 + " battle(s) remaining.", tourchannel);
+		sys.sendAll(border, tourchannel);
+        sys.sendAll("", tourchannel);
         return;
     }
     
