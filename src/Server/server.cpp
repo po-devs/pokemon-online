@@ -1552,15 +1552,3 @@ Player * Server::player(int id) const
         qDebug() << "Fatal! player called for non existing ID " << id;
     return myplayers.value(id);
 }
-
-QString Server::getUsers()
-{
-    QString users = "";
-    foreach (Player *p, myplayers) {
-        if (p->isLoggedIn()) {
-            users.append( p->name() );
-	        users.append( ", " );
-        }
-    }
-    return users;
-}
