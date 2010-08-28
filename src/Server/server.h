@@ -5,6 +5,8 @@
 #include "../PokemonInfo/networkstructs.h"
 #include "channel.h"
 
+#define PRINTOPT(a, b) (fprintf(stdout, "  %-25s\t%s\n", a, b))
+
 /* the server */
 
 class FindBattleData;
