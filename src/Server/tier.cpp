@@ -445,17 +445,19 @@ void Tier::loadFromXml(const QDomElement &elem)
     last_count_time = 0;
 
     QDomNodeList moves = elem.elementsByTagName("clausedMove");
-    foreach(QDomNode n, moves) {
+    for (int i = 0; i < moves.count(); i++) {
+        QDomNode n = moves.item(i);
         if (MoveInfo::Exists(n.nodeValue(), gen))
             bannedMoves.insert(MoveInfo::Number(n.nodeValue()));
     }
-    QDomNodeList items = elem.elementsByTagName("clausedMove");
-    foreach(QDomNode n, items) {
+    for (int i = 0; i < items.count(); i++) {
+        QDomNode n = items.item(i);
         if (ItemInfo::Exists(n.nodeValue(), gen))
             bannedItem.insert(ItemInfo::Number(n.nodeValue()));
     }
     QDomNodeList clausesL = elem.elementsByTagName("clause");
-    foreach(QDomNode n, clausesL) {
+    for (int i = 0; i < clausesL.count(); i++) {
+        QDomNode n = clausesL.item(i);
         int index = ChallengeInfo::clause(n.nodeValue());
 
         if (index > -1)  {
@@ -504,8 +506,12 @@ void BannedPoke::loadFromXml(const QDomElement &elem) {
     }
 }
 
-Tier::Tier(TierMachine *boss) : boss(boss), m_count(-1), last_count_time(0), holder(1000) {
+Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), m_count(-1), last_count_time(0), holder(1000) {
 
+}
+
+void Tier::kill() {
+    node->kill(this);
 }
 
 QPair<int, int> Tier::pointChangeEstimate(const QString &player, const QString &foe)

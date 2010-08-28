@@ -19,6 +19,7 @@ struct TierCategory
 
     QList<Tier *> gatherTiers();
     void clear();
+    void kill(Tier *t);
 };
 
 class TierTree

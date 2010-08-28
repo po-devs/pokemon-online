@@ -7,6 +7,7 @@
 #include "memoryholder.h"
 
 class TierMachine;
+class TierCategory;
 struct TeamBattle;
 struct PokeBattle;
 class WaitingObject;
@@ -50,7 +51,7 @@ public:
     QString name() const;
     void changeId(int newid);
 
-    Tier(TierMachine *boss = NULL);
+    Tier(TierMachine *boss, TierCategory *cat);
 
     QString toString() const;
 
@@ -79,6 +80,8 @@ public:
     void loadFromXml(const QDomElement &elem);
     /* Load tier ladders */
     void loadFromFile();
+    /* Kills and deletes itself, as well as from the category parent. Beware to not use any member functions after */
+    void kill();
 protected:
     enum QueryType {
         GetInfoOnUser,
@@ -91,6 +94,7 @@ protected:
     }
 private:
     TierMachine *boss;
+    TierCategory *node;
 
     bool banPokes;
     QMultiHash<int, BannedPoke> bannedPokes2; // The set is there to keep good perfs

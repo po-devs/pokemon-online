@@ -7,6 +7,11 @@ TierCategory::~TierCategory()
     clear();
 }
 
+void TierCategory::kill(Tier *t) {
+    subLeafs.removeAll(t);
+    delete t;
+}
+
 void TierCategory::clear()
 {
     foreach(TierCategory *c, subCategories) {
@@ -37,7 +42,7 @@ void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool 
             c->loadFromXml(n, boss);
             subCategories.push_back(c);
         } else if (n.tagName() == "tier") {
-            Tier *t = new Tier(boss);
+            Tier *t = new Tier(boss, this);
             t->loadFromXml(n);
             subLeafs.push_back(t);
         }
