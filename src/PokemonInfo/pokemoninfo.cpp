@@ -15,23 +15,21 @@ PokemonInfoConfig::Config PokemonInfoConfig::config() {
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
-QList<QString> PokemonInfo::m_Names;
-QList<QString> PokemonInfo::m_Weights;
-QList<int> PokemonInfo::m_Genders;
-QList<int> PokemonInfo::m_Type1;
-QList<int> PokemonInfo::m_Type2;
-QList<int> PokemonInfo::m_Ability1[2];
-QList<int> PokemonInfo::m_Ability2[2];
-QList<PokeBaseStats> PokemonInfo::m_BaseStats;
-QList<int> PokemonInfo::m_LevelBalance;
-QList<PokemonMoves> PokemonInfo::m_Moves;
-QHash<int, QList<int> > PokemonInfo::m_AlternateFormes;
-QHash<int, QPair<int,int> > PokemonInfo::m_AestheticFormes;
-QHash<int, bool > PokemonInfo::m_AestheticFormesHidden;
-QHash<int, QString> PokemonInfo::m_AestheticFormesDescs;
+QMap<Pokemon::uniqueId, QString> PokemonInfo::m_Names;
+QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Weights;
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Genders;
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type1;
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type2;
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Ability1[2];
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Ability2[2];
+QHash<Pokemon::uniqueId, PokeBaseStats> PokemonInfo::m_BaseStats;
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_LevelBalance;
+QHash<Pokemon::uniqueId, PokemonMoves> PokemonInfo::m_Moves;
+QHash<quint16, quint16> PokemonInfo::m_MaxForme;
+QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Options;
 int PokemonInfo::m_trueNumberOfPokes;
-QHash<int,QList<int> > PokemonInfo::m_Evolutions;
-QList<int> PokemonInfo::m_OriginalEvos;
+QHash<quint16, QList<quint16> > PokemonInfo::m_Evolutions;
+QHash<quint16, quint16> PokemonInfo::m_OriginalEvos;
 
 QString MoveInfo::m_Directory;
 QList<QString> MoveInfo::m_Names;
@@ -227,6 +225,29 @@ static void fill_container_with_file(QList<char> &container, const QString & fil
     }
 }
 
+static void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString &filename)
+{
+    QFile file(filename);
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QTextStream filestream(&file);
+    /* discarding all the uninteresting lines, should find a more effective way */
+    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+    {
+        QString current = filestream.readLine().trimmed();
+        QString options, other_data;
+        Pokemon::uniqueId pokeid();
+        bool ok = Pokemon::uniqueId::extract(current, pokeid, options, other_data);
+        if(ok) {
+            bool converted;
+            int data = other_data.toInt(&converted);
+            if(converted) {
+                container[pokeid] = data;
+            }
+        }
+    }
+
+}
+
 template <class T>
 static void fill_container_with_file(T &container, const QString & filename)
 {
@@ -274,31 +295,32 @@ static QString trFile(const QString &beg)
     }
 }
 
-QString PokemonInfo::Desc(int poke, int cartridge)
+// FIXME: it should be read as any other data.
+QString PokemonInfo::Desc(const Pokemon::uniqueId &pokeid, int cartridge)
 {
-    int orpoke = OriginalForme(poke);
-    return get_line(trFile(path("description_%1").arg(cartridge)), orpoke);
+    return get_line(trFile(path("description_%1").arg(cartridge)), pokeid.pokenum);
 }
 
-QString PokemonInfo::Classification(int poke)
+// FIXME: it should be read as any other data.
+QString PokemonInfo::Classification(const Pokemon::uniqueId &pokeid)
 {
-    int orpoke = OriginalForme(poke);
-    return get_line(trFile(path("classification")), orpoke);
+    return get_line(trFile(path("classification")), pokeid.pokenum);
 }
 
-QString PokemonInfo::Height(int poke)
+// FIXME: it should be read as any other data.
+QString PokemonInfo::Height(const Pokemon::uniqueId &pokeid)
 {
-    return get_line(path("height.txt"), poke);
+    return get_line(path("height.txt"), pokeid.pokenum);
 }
 
-int PokemonInfo::Type1(int pokenum)
+int PokemonInfo::Type1(const Pokemon::uniqueId &pokeid)
 {
-    return m_Type1[pokenum];
+    return m_Type1.value(pokeid);
 }
 
-int PokemonInfo::Type2(int pokenum)
+int PokemonInfo::Type2(const Pokemon::uniqueId &pokeid)
 {
-    return m_Type2[pokenum];
+    return m_Type2.value(pokeid);
 }
 
 int PokemonInfo::calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev)
@@ -306,27 +328,27 @@ int PokemonInfo::calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev)
     return ((2*basestat + dv+ ev/4)*level)/100 + 5;
 }
 
-int PokemonInfo::Stat(int poke, int stat, int level, quint8 dv, quint8 ev)
+int PokemonInfo::Stat(const Pokemon::uniqueId &pokeid, int stat, int level, quint8 dv, quint8 ev)
 {
-    quint8 basestat = PokemonInfo::BaseStats(poke).baseStat(stat);
+    quint8 basestat = PokemonInfo::BaseStats(pokeid).baseStat(stat);
     if (stat == Hp) {
-        /* Shedinja */
-        if (poke == Pokemon::Shedinja)
+        /* Formely direct check for Shedinja */
+        if(m_Options.value(pokeid).contains('1')) {
             return 1;
-        else
+        }else{
             return calc_stat(basestat, level, dv, ev) + level + 5;
+        }
     }
-    else
 	return calc_stat(basestat, level, dv, ev);
 }
 
-int PokemonInfo::FullStat(int poke, int nature, int stat, int level, quint8 dv, quint8 ev)
+int PokemonInfo::FullStat(const Pokemon::uniqueId &pokeid, int nature, int stat, int level, quint8 dv, quint8 ev)
 {
     if (stat == Hp) {
-        return Stat(poke, stat, level, dv, ev);
+        return Stat(pokeid, stat, level, dv, ev);
     }
     else {
-        return Stat(poke, stat, level, dv, ev) * (10+NatureInfo::Boost(nature, stat)) / 10;
+        return Stat(pokeid, stat, level, dv, ev) * (10+NatureInfo::Boost(nature, stat)) / 10;
     }
 }
 
@@ -342,49 +364,34 @@ void PokemonInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
-    loadFormes();
     loadEvos();
     loadMoves();
-    fill_container_with_file(m_Type1, path("poke_type1.txt"));
-    fill_container_with_file(m_Type2, path("poke_type2.txt"));
-    fill_container_with_file(m_Genders, path("poke_gender.txt"));
-    fill_container_with_file(m_Ability1[0], path("poke_ability_3G.txt"));
-    fill_container_with_file(m_Ability2[0], path("poke_ability2_3G.txt"));
-    fill_container_with_file(m_Ability1[1], path("poke_ability_4G.txt"));
-    fill_container_with_file(m_Ability2[1], path("poke_ability2_4G.txt"));
-    fill_container_with_file(m_LevelBalance, path("level_balance.txt"));
+    fill_uid_int(m_Type1, path("poke_type1.txt"));
+    fill_uid_int(m_Type2, path("poke_type2.txt"));
+    fill_uid_int(m_Genders, path("poke_gender.txt"));
+    fill_uid_int(m_Ability1[0], path("poke_ability_3G.txt"));
+    fill_uid_int(m_Ability2[0], path("poke_ability2_3G.txt"));
+    fill_uid_int(m_Ability1[1], path("poke_ability_4G.txt"));
+    fill_uid_int(m_Ability2[1], path("poke_ability2_4G.txt"));
+    fill_uid_int(m_LevelBalance, path("level_balance.txt"));
     loadBaseStats();
+    makeDataConsistent();
 }
 
 void PokemonInfo::loadEvos()
 {
-    QFile in(path("evolutions.txt"));
-    in.open(QIODevice::ReadOnly);
-    QList<QString> l = QString::fromUtf8(in.readAll()).split('\n');
-    for (int i = 0; i < l.size(); i++) {
-        m_OriginalEvos.push_back(0);
-    }
-    for (int i = 0; i < l.size(); i++) {
-        if (l[i].length() > 0) {
-            int preEvo = l[i].toInt();
-            int orEvo = m_OriginalEvos[preEvo] == 0 ? preEvo : m_OriginalEvos[preEvo];
-            m_OriginalEvos[i] = orEvo;
-            m_OriginalEvos[orEvo] = orEvo;
-
-            if (!m_Evolutions.contains(orEvo)) {
-                m_Evolutions[orEvo].push_back(orEvo);
-            }
-
-            if (m_Evolutions.contains(i)) {
-                m_Evolutions[orEvo].append(m_Evolutions[i]);
-
-                foreach (int poke, m_Evolutions[i]) {
-                    m_OriginalEvos[poke] = orEvo;
-                }
-
-                m_Evolutions.remove(i);
-            } else {
-                m_Evolutions[orEvo].push_back(i);
+    QStringList temp;
+    fill_container_with_file(temp, "evolutions.txt");
+    for(int i = 0; i < temp.size(); i++) {
+        QString current = temp[i].trimmed();
+        QString preEvo;
+        quint16 pokenum;
+        bool ok = Pokemon::uniqueId::extract_short(current, pokenum, preEvo);
+        if(ok) {
+            bool converted;
+            quint16 value = preEvo.toUInt(&converted);
+            if(converted) {
+                m_OriginalEvos[pokenum] = value;
             }
         }
     }
@@ -400,47 +407,51 @@ int PokemonInfo::NumberOfPokemons()
     return m_Names.size();
 }
 
-QString PokemonInfo::Name(int pokenum)
+QString PokemonInfo::Name(const Pokemon::uniqueId &pokeid)
 {
-    return Exists(pokenum) ? m_Names[pokenum] : m_Names[0];
+    if(Exists(pokeid))
+    {
+        return m_Names.value(pokeid);
+    }else{
+        return m_Names.value(Pokemon::uniqueId());
+    }
 }
 
-bool PokemonInfo::Exists(int n, int gen)
+bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, int gen)
 {
-    if (n >= NumberOfPokemons() || n<0)
-        return false;
-    if (gen == 4)
+    if(m_Names.contains(pokeid))
+    {
+        switch(gen)
+        {
+        case 3:
+            return pokeid.pokenum <= 386;
+        }
         return true;
-    return OriginalForme(n) <= 386;
+    }else{
+        return false;
+    }
 }
 
-int PokemonInfo::Number(const QString &pokename)
+Pokemon::uniqueId PokemonInfo::Number(const QString &pokename)
 {
-    return (qFind(m_Names.begin(), m_Names.end(), pokename)-m_Names.begin()) % (NumberOfPokemons());
+    return m_Names.key(pokename, Pokemon::uniqueId())
 }
 
-int PokemonInfo::LevelBalance(int pokenum)
+int PokemonInfo::LevelBalance(const Pokemon::uniqueId &pokeid)
 {
-    return m_LevelBalance[pokenum];
+    return m_LevelBalance.value(pokeid);
 }
 
-int PokemonInfo::Gender(int pokenum)
+int PokemonInfo::Gender(const Pokemon::uniqueId &pokeid)
 {
-    return m_Genders[pokenum];
+    return m_Genders.value(pokeid);
 }
 
-int PokemonInfo::AestheticFormeId(int pokenum)
+QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gender, bool shiney, bool back)
 {
-    return m_AestheticFormes.value(pokenum).first;
-}
-
-QPixmap PokemonInfo::Picture(int pokenum, int forme, int gender, bool shiney, bool back)
-{
-    pokenum = forme == 0 ? pokenum : AestheticFormeId(pokenum) + forme;
-
     QString archive = path("poke_img.zip");
 
-    QString file = QString("%2/DP%3%4%5.png").arg(pokenum).arg(back?"b":"",(gender==Pokemon::Female)?"f":"m", shiney?"s":"");
+    QString file = QString("%2/DP%3%4%5.png").arg(pokeid.toString()).arg(back?"b":"",(gender==Pokemon::Female)?"f":"m", shiney?"s":"");
 
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
@@ -470,10 +481,10 @@ QPixmap PokemonInfo::Sub(bool back)
     return ret;
 }
 
-QPixmap PokemonInfo::Icon(int index)
+QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid)
 {
     QString archive = path("icons.zip");
-    QString file = QString("%1.PNG").arg(index);
+    QString file = QString("%1.PNG").arg(pokeid.toString());
 
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
     if(data.length() == 0)
@@ -486,8 +497,9 @@ QPixmap PokemonInfo::Icon(int index)
     return p;
 }
 
-QByteArray PokemonInfo::Cry(int num)
+QByteArray PokemonInfo::Cry(const Pokemon::uniqueId &pokeid)
 {
+    quint16 num = pokeid.pokenum;
     QString archive = path("cries.zip");
     QString file = QString("%1.wav").arg(num).rightJustified(7, '0');
 
@@ -500,58 +512,58 @@ QByteArray PokemonInfo::Cry(int num)
     return data;
 }
 
-QSet<int> PokemonInfo::Moves(int pokenum, int gen)
+QSet<int> PokemonInfo::Moves(const Pokemon::uniqueId &pokeid, int gen)
 {
     QSet<int> moves;
-    moves.unite(RegularMoves(pokenum,3)).unite(SpecialMoves(pokenum,3)).unite(EggMoves(pokenum,3));
+    moves.unite(RegularMoves(pokeid,3)).unite(SpecialMoves(pokeid,3)).unite(EggMoves(pokeid,3));
 
     if (gen >= 4)
-        moves.unite(SpecialMoves(pokenum,4)).unite(RegularMoves(pokenum, 4)).unite(EggMoves(pokenum,4));
+        moves.unite(SpecialMoves(pokeid,4)).unite(RegularMoves(pokeid, 4)).unite(EggMoves(pokeid,4));
 
     return moves;
 }
 
-QSet<int> PokemonInfo::RegularMoves(int pokenum, int gen)
+QSet<int> PokemonInfo::RegularMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves[pokenum].regularMoves[gen-3];
+    return m_Moves.value(pokeid).regularMoves[gen-3];
 }
 
-QSet<int> PokemonInfo::EggMoves(int pokenum, int gen)
+QSet<int> PokemonInfo::EggMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves[pokenum].eggMoves[gen-3];
+    return m_Moves.value(pokeid).eggMoves[gen-3];
 }
 
-QSet<int> PokemonInfo::LevelMoves(int pokenum, int gen)
+QSet<int> PokemonInfo::LevelMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves[pokenum].levelMoves[gen-3];
+    return m_Moves.value(pokeid).levelMoves[gen-3];
 }
 
-QSet<int> PokemonInfo::TutorMoves(int pokenum, int gen)
+QSet<int> PokemonInfo::TutorMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves[pokenum].tutorMoves[gen-3];
+    return m_Moves.value(pokeid).tutorMoves[gen-3];
 }
 
-QSet<int> PokemonInfo::TMMoves(int pokenum, int gen)
+QSet<int> PokemonInfo::TMMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves[pokenum].TMMoves[gen-3];
+    return m_Moves.value(pokeid).TMMoves[gen-3];
 }
 
-QSet<int> PokemonInfo::SpecialMoves(int pokenum, int gen)
+QSet<int> PokemonInfo::SpecialMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves[pokenum].specialMoves[gen-3];
+    return m_Moves.value(pokeid).specialMoves[gen-3];
 }
 
-QSet<int> PokemonInfo::PreEvoMoves(int pokenum, int gen)
+QSet<int> PokemonInfo::PreEvoMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves[pokenum].preEvoMoves[gen-3];
+    return m_Moves.value(pokeid).preEvoMoves[gen-3];
 }
 
-AbilityGroup PokemonInfo::Abilities(int pokenum, int gen)
+AbilityGroup PokemonInfo::Abilities(const Pokemon::uniqueId &pokeid, int gen)
 {
     AbilityGroup ret;
 
-    ret.ab1 = m_Ability1[gen-3][pokenum];
-    ret.ab2 = m_Ability2[gen-3][pokenum];
+    ret.ab1 = m_Ability1[gen-3].value(pokeid);
+    ret.ab2 = m_Ability2[gen-3].value(pokeid);
 
     return ret;
 }
@@ -562,118 +574,98 @@ void PokemonInfo::loadBaseStats()
     fill_container_with_file(temp, path("poke_stats.txt"));
 
     for (int i = 0; i < temp.size(); i++) {
-        QTextStream statsstream(&temp[i], QIODevice::ReadOnly);
-
-        int hp, att, def, spd, satt, sdef;
-
-        statsstream >> hp >> att >> def >> spd >> satt >> sdef;
-
-        m_BaseStats.push_back(PokeBaseStats(hp, att, def, spd, satt, sdef));
-    }
+        QString current = temp[i].trimmed();
+        QString options, text_stats;
+        Pokemon::uniqueId id();
+        bool ok = Pokemon::uniqueId::extract(current, id, options, text_stats);
+        if(ok){
+            QTextStream statsstream(&text_stats, QIODevice::ReadOnly);
+            int hp, att, def, spd, satt, sdef;
+            statsstream >> hp >> att >> def >> spd >> satt >> sdef;
+            m_BaseStats[id] = PokeBaseStats(hp, att, def, spd, satt, sdef);
+        } // if ok
+    } // for i
 }
 
-PokeBaseStats PokemonInfo::BaseStats(int pokenum)
+PokeBaseStats PokemonInfo::BaseStats(const Pokemon::uniqueId &pokeid)
 {
-    return m_BaseStats[pokenum];
-}
-
-void PokemonInfo::loadFormes()
-{
-    QFile in(path("poke_formes.txt"));
-    in.open(QIODevice::ReadOnly);
-    QList<QString> l = QString::fromUtf8(in.readAll()).split('\n');
-    for (int i = 0; i < l.size(); i++) {
-        if (l[i].length() > 0) {
-            if (i < TrueCount()) {
-                bool hidden = l[i].leftRef(2) == "H-";
-                QStringList begEnd = hidden?l[i].mid(2).split('~') : l[i].split('~');
-                m_AestheticFormes[i] = QPair<int,int>(begEnd[0].toInt(), begEnd[1].toInt());
-                m_AestheticFormesHidden[i] = hidden;
-            } else {
-                bool hidden = l[i].leftRef(2) == "H-";
-                int pok = hidden ? l[i].mid(2).toInt() : l[i].toInt();
-
-                if (!hidden) {
-                    if (m_AlternateFormes[pok].empty())
-                        m_AlternateFormes[pok].push_back(pok);
-                    m_AlternateFormes[pok].push_back(i);
-                }
-                m_AlternateFormes[i].push_back(pok);
-            }
-        }
-    }
-    in.close();
-    in.setFileName(trFile(path("formes_desc")));
-    in.open(QIODevice::ReadOnly);
-
-    l = QString::fromUtf8(in.readAll()).split('\n');
-    foreach(QString s, l) {
-        m_AestheticFormesDescs[s.section('-',0,0).toInt()] = s.section('-',1);
-    }
-}
-
-QString PokemonInfo::AestheticDesc(int pokenum, int forme)
-{
-    return m_AestheticFormesDescs.value(AestheticFormeId(pokenum) + forme);
+    return m_BaseStats.value(pokeid);
 }
 
 void PokemonInfo::loadNames()
 {
-    QFile in (trFile(path("pokemons")));
-    in.open(QIODevice::ReadOnly);
+    QStringList temp;
+    QString options;
+    fill_container_with_file(temp, trFile(path("pokemons")));
 
-    m_trueNumberOfPokes = QString::fromUtf8(in.readLine()).trimmed().toInt();
-    m_Names = QString::fromUtf8(in.readAll()).split('\n');
+    for(int i = 0; i < temp.size(); i++) {
+        QString current = temp[i].trimmed();
+        QString name;
+        Pokemon::uniqueId id();
+        bool ok = Pokemon::uniqueId::extract(current, id, options, name);
+        if(ok) {
+            m_Names[id] = name;
+            m_Options[id] = options;
+            // Calculate a number of formes a given base pokemon have.
+            quint16 max_forme = m_MaxForme.value(id.pokenum, 0);
+            if(max_forme < id.subnum){
+                max_forme = id.subnum;
+            }
+            m_MaxForme[id.pokenum] = max_forme;
+        }
+    }
 
-    fill_container_with_file(m_Weights, path("poke_weight.txt"));
+    // Loading weights too for some reason...
+    temp.clear(); options.clear();
+    fill_container_with_file(temp, path("poke_weight.txt"));
+    for(int i = 0; i < temp.size(); i++) {
+        QString current = temp[i].trimmed();
+        QString weight;
+        Pokemon::uniqueId id();
+        bool ok = Pokemon::uniqueId::extract(current, id, options, weight);
+        if(ok) {
+            m_Weights[id] = weight;
+        }
+    }
 }
 
-bool PokemonInfo::HasFormes(int pokenum)
+bool PokemonInfo::HasFormes(const Pokemon::uniqueId &pokeid)
 {
-    return IsForme(pokenum) ? HasFormes(OriginalForme(pokenum)) : m_AlternateFormes.contains(pokenum);
+    return NumberOfAFormes(pokeid) > 0;
 }
 
-bool PokemonInfo::HasAestheticFormes(int pokenum)
+bool PokemonInfo::AFormesShown(const Pokemon::uniqueId &pokeid)
 {
-    return m_AestheticFormes.contains(pokenum);
+    return !m_Options.value(pokeid).contains('H');
 }
 
-bool PokemonInfo::AFormesShown(int pokenum)
+quint16 PokemonInfo::NumberOfAFormes(const Pokemon::uniqueId &pokeid)
 {
-    return !m_AestheticFormesHidden.value(pokenum);
+    return m_MaxForme.value(pokeid.pokenum, 0);
 }
 
-int PokemonInfo::NumberOfAFormes(int pokenum)
+bool PokemonInfo::IsForme(const Pokemon::uniqueId &pokeid)
 {
-    return m_AestheticFormes.value(pokenum).second - m_AestheticFormes.value(pokenum).first + 1;
+    return pokeid.subnum != 0;
 }
 
-bool PokemonInfo::IsForme(int pokenum)
+Pokemon::uniqueId PokemonInfo::OriginalForme(const Pokemon::uniqueId &pokeid)
 {
-    return pokenum >= TrueCount();
+    return Pokemon::uniqueId(pokeid.pokenum, 0);
 }
 
-int PokemonInfo::OriginalForme(int pokenum)
+QList<Pokemon::uniqueId> PokemonInfo::Formes(const Pokemon::uniqueId &pokeid)
 {
-    if (!IsForme(pokenum))
-        return pokenum;
-    else
-        return m_AlternateFormes[pokenum].front();
+    QList<Pokemon::uniqueId> result;
+    for(quint16 i = 1; i <= NumberOfAFormes(pokeid); i++) {
+        result.append(Pokemon::uniqueId(pokeid.pokenum, i));
+    }
+    return result;
 }
 
-QList<int> PokemonInfo::Formes(int pokenum)
+Pokemon::uniqueId PokemonInfo::OriginalEvo(const Pokemon::uniqueId &pokeid)
 {
-    if (!HasFormes(pokenum))
-        return QList<int>();
-    else if (IsForme(pokenum))
-        return Formes(OriginalForme(pokenum));
-    else
-        return m_AlternateFormes[pokenum];
-}
-
-int PokemonInfo::OriginalEvo(int pokenum)
-{
-    return m_OriginalEvos[pokenum];
+    return Pokemon::uniqueId(m_OriginalEvos.value(pokeid.pokenum), 0);
 }
 
 QList<int> PokemonInfo::Evos(int pokenum)
@@ -681,15 +673,14 @@ QList<int> PokemonInfo::Evos(int pokenum)
     return m_Evolutions.value(OriginalEvo(pokenum));
 }
 
-bool PokemonInfo::IsInEvoChain(int pokenum)
+bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
 {
-    return OriginalEvo(pokenum) != 0;
+    return OriginalEvo(pokeid).pokenum != pokeid.pokenum;
 }
 
 void PokemonInfo::loadMoves()
 {
     static const int filesize = 11;
-    QFile files[filesize];
 
     QString fileNames[filesize] = {
         path("3G_tm_and_hm_moves.txt"), path("4G_tm_and_hm_moves.txt"), path("3G_egg_moves.txt"), path("3G_level_moves.txt"),
@@ -699,38 +690,106 @@ void PokemonInfo::loadMoves()
     };
 
     for (int i = 0; i < filesize; i++) {
-        files[i].setFileName(fileNames[i]);
-        files[i].open(QIODevice::ReadOnly);
-    }
-
-    for (int i = 0; i < NumberOfPokemons(); i++) {
-        PokemonMoves moves;
-
-        QSet<int> *refs[filesize] = {
-            &moves.TMMoves[0], &moves.TMMoves[1], &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0],
-            &moves.preEvoMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1]
-        };
-
-        for (int j = 0; j < filesize; j++) {
-            QList<QByteArray> line = files[j].readLine().trimmed().split(' ');
-            foreach(QByteArray data, line) {
-                if (data.length() > 0)
-                    refs[j]->insert(data.toInt());
+        QStringList temp;
+        fill_container_with_file(temp, fileNames[i]);
+        for(int j = 0; j < temp.size(); j++) {
+            QString current = temp[j].trimmed();
+            QString options, text_moves;
+            Pokemon::uniqueId pokeid();
+            bool ok = Pokemon::uniqueId::extract(current, pokeid, options, text_moves);
+            if(ok) {
+                QStringList move_list = text_moves.split(' ');
+                QSet<int> data_set;
+                for(int ml_counter = 0; ml_counter < move_list.size(); ml_counter++) {
+                    bool converted;
+                    int cur_move = move_list[ml_counter].toInt(&converted);
+                    if(converted) {
+                        data_set->insert(cur_move);
+                    }
+                }
+                // Should create an item with pokeid key
+                // in m_Moves if it does not exist.
+                PokemonMoves moves = m_Moves[pokeid];
+                QSet<int> *refs[filesize] = {
+                    &moves.TMMoves[0], &moves.TMMoves[1], &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0],
+                    &moves.preEvoMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1]
+                };
+                refs[i] = data_set;
             }
         }
-
-        moves.regularMoves[0] = moves.TMMoves[0];
-        moves.regularMoves[0].unite(moves.levelMoves[0]).unite(moves.tutorMoves[0]);
-        moves.regularMoves[1] = moves.TMMoves[1];
-        moves.regularMoves[1].unite(moves.preEvoMoves[1]).unite(moves.levelMoves[1]).unite(moves.tutorMoves[1]);
-
-        m_Moves.push_back(moves);
     }
 }
 
 QString PokemonInfo::path(const QString &filename)
 {
     return m_Directory + filename;
+}
+
+void PokemonInfo::makeDataConsistent()
+{
+    // Count base forms. We no longer need to save it in a file.
+    m_trueNumberOfPokes = 0;
+    // Also adds data to pokemon that do not have data set explicitely (some formes).
+    QMap<Pokemon::uniqueId, QString>::const_iterator it = m_Names.constBegin();
+    while (it != m_Names.constEnd()) {
+        Pokemon::uniqueId id = it.key();
+        if(id.subnum == 0) {
+            // Count base forms.
+            m_trueNumberOfPokes++;
+            // Original evolutions.
+            if(!m_OriginalEvos.contains(id.pokenum)) {
+                m_OriginalEvos[id.pokenum] = id.pokenum;
+            }
+            // m_Evolutions initial filler data.
+            m_Evolutions[id.pokenum] = QList<quint16>();
+        }
+        // Weight
+        if(!m_Weights.contains(id)) {
+            m_Weights[id] = m_Weights.value(OriginalForme(id));
+        }
+        // Base stats.
+        if(!m_BaseStats.contains(id)) {
+            m_BaseStats[id] = m_BaseStats.value(OriginalForme(id));
+        }
+        // Moves.
+        if(!m_Moves.contains(id)) {
+            m_Moves[id] = m_Moves.value(OriginalForme(id));
+        }
+        // Other.
+        if(!m_LevelBalance.contains(id)) {
+            m_LevelBalance[id] = m_LevelBalance.value(OriginalForme(id));
+        }
+        if(!m_Type1.contains(id)) {
+            m_Type1[id] = m_Type1.value(OriginalForme(id));
+        }
+        if(!m_Type2.contains(id)) {
+            m_Type2[id] = m_Type2.value(OriginalForme(id));
+        }
+        if(!m_Genders.contains(id)) {
+            m_Genders[id] = m_Genders.value(OriginalForme(id));
+        }
+        if(!m_Ability1[0].contains(id)) {
+            m_Ability1[0][id] = m_Ability1[0].value(OriginalForme(id));
+        }
+        if(!m_Ability2[0].contains(id)) {
+            m_Ability2[0][id] = m_Ability2[0].value(OriginalForme(id));
+        }
+        if(!m_Ability1[1].contains(id)) {
+            m_Ability1[1][id] = m_Ability1[1].value(OriginalForme(id));
+        }
+        if(!m_Ability2[1].contains(id)) {
+            m_Ability2[1][id] = m_Ability2[1].value(OriginalForme(id));
+        }
+        // Next.
+        ++it;
+    }
+    // Calculate m_Evolutions.
+    QHash<quint16, quint16>::const_iterator eit = m_OriginalEvos.constBegin();
+    while (eit != m_OriginalEvos.constEnd()) {
+        m_Evolutions[eit.value()].append(eit.key());
+        // Next.
+        ++eit;
+    }
 }
 
 void MoveInfo::loadCritics()
@@ -1319,18 +1378,18 @@ int ItemInfo::Number(const QString &itemname)
     }
 }
 
-float PokemonInfo::Weight(int pokenum) {
-    return (m_Weights[pokenum].toFloat()-0.02f)/2.2f; /* the -0.02 is just a trick to compensate the poor precision of floats, for moves like grass knot */
+float PokemonInfo::Weight(const Pokemon::uniqueId &pokeid) {
+    return (m_Weights.value(pokeid).toFloat()-0.02f)/2.2f; /* the -0.02 is just a trick to compensate the poor precision of floats, for moves like grass knot */
 }
 
-QString PokemonInfo::WeightS(int pokenum)
+QString PokemonInfo::WeightS(const Pokemon::uniqueId &pokeid)
 {
-    return m_Weights[pokenum];
+    return m_Weights.value(pokeid);
 }
 
-int PokemonInfo::BaseGender(int pokenum)
+int PokemonInfo::BaseGender(const Pokemon::uniqueId &pokeid)
 {
-    int avail = Gender(pokenum);
+    int avail = Gender(pokeid);
 
     return (avail == Pokemon::MaleAvail || avail == Pokemon::MaleAndFemaleAvail) ?
             Pokemon::Male : (avail == Pokemon::NeutralAvail ? Pokemon::Neutral : Pokemon::Female);
