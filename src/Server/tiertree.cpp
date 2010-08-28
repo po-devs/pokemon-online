@@ -45,10 +45,24 @@ void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool 
     }
 }
 
+QList<Tier *> TierCategory::gatherTiers()
+{
+    QList l = subLeafs;
+    foreach(TierCategory *c, subCategories) {
+        l.append(c->gatherTiers());
+    }
+    return l;
+}
+
 void TierTree::loadFromXml(const QString &xmldata, TierMachine *boss)
 {
     QDomDocument doc;
     doc.setContent(xmldata);
     QDomElement docElem = doc.documentElement();
     root.loadFromXml(docElem, boss, true);
+}
+
+QList<Tier*> TierTree::gatherTiers()
+{
+    return root.gatherTiers();
 }

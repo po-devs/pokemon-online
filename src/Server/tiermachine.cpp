@@ -63,10 +63,6 @@ void TierMachine::save()
 
 void TierMachine::clear()
 {
-    while (m_tiers.size() > 0) {
-        delete m_tiers.takeLast();
-    }
-
     m_tierNames.clear();
 }
 
@@ -74,53 +70,49 @@ void TierMachine::fromString(const QString &s)
 {
     clear();
 
-    QStringList candidates = s.split('\n', QString::SkipEmptyParts);
+    tree.loadFromXml(s, this);
 
-    if (candidates.empty()) {
-        candidates.push_back("All=");
+    QList<Tier *> tiers = tree.gatherTiers();
+    if (tiers.empty()) {
+        Tier *t = new Tier(this);
+        t->changeName("All");
+        tree.root.subLeafs.push_back(t);
+        tiers.push_back(t);
     }
 
+    QHash<QString, Tier *> tierNames;
 
-    foreach(QString candidate, candidates) {
-        m_tiers.push_back(new Tier(this));
-        m_tiers.back()->fromString(candidate);
-        if (m_tierNames.contains(m_tiers.back()->name())) {
-            delete m_tiers.takeLast();
-        } else {
-            m_tierNames.push_back(m_tiers.back()->name());
+    /* Removing duplicates */
+    foreach(Tier *t, tiers) {
+        if (tierNames.contains(t->name())) {
+            t->kill(); /* Destroys the tier */
+            continue;
         }
+        tierNames.insert(t->name(), t);
     }
 
-    /* Now, we just check there isn't any cyclic inheritance tree */
-    for(int i = 0; i < m_tiers.length(); i++) {
-        QSet<QString> family;
-        Tier *t = m_tiers[i];
-        family.insert(t->name());
-        while (t->parent.length() > 0) {
-            if (family.contains(t->parent)) {
-                tier(t->name()).parent.clear();
-                break;
-            }
-            family.insert(t->parent);
-            t = &tier(t->parent);
+    /* Some duplicates may have been removed, so we gather the tiers again */
+    tiers = tree.gatherTiers();
+
+
+    /* Doing inheritance trees */
+    foreach(Tier *t, tiers) {
+        QString banParent = t->banParentS;
+
+        if (tierNames.contains(banParent)) {
+            t->addBanParent(tierNames[banParent]);
         }
     }
 
     /* Then, we open the files and load the ladders for each tier and people */
-    for (int i =0; i < m_tiers.size(); i++) {
-        m_tiers[i]->changeId(i);
-        m_tiers[i]->loadFromFile();
+    for (int i =0; i < tiers.size(); i++) {
+        tiers[i]->changeId(i);
+        tiers[i]->loadFromFile();
     }
 
-    /* And we change the tierList variable too! */
-    tierList().clear();
-    foreach (QString tier, m_tierNames)
-    {
-        tierList() += tier + "\n";
-    }
-    if (tierList().length() > 0) {
-        tierList().resize(tierList().size()-1);
-    }
+    m_tiers = tiers;
+
+    /* Do tierList . */
 }
 
 QString TierMachine::toString() const
