@@ -60,13 +60,13 @@ int main(int argc, char *argv[])
             fprintf(stdout, "\n");
             fprintf(stdout, "Usage: ./Server [[options]]\n");
             fprintf(stdout, "Options:\n");
-            fprintf(stdout, "  %.20s\t%s\n", "-a, --announce [ANNOUNCE]", "Sets the server announcement.");
-            fprintf(stdout, "  %.20s\t%s\n", "-d, --desc [DESC]", "Sets the server description.");
-            fprintf(stdout, "  %.20s\t%s\n", "-h, --help", "Displays this help.");
-            fprintf(stdout, "  %.20s\t%s\n", "-H, --headless", "Runs server without GUI (no X server required)");
-            fprintf(stdout, "  %.20s\t%s\n", "-n, --name [NAME]", "Sets the server name.");
-            fprintf(stdout, "  %.20s\t%s\n", "-p, --port [PORT]", "Sets the server port.");
-            fprintf(stdout, "  %.20s\t%s\n", "-P, --private", "Makes the server private.");
+            PRINTOPT("-a, --announce [ANNOUNCE]", "Sets the server announcement.");
+            PRINTOPT("-d, --desc [DESC]", "Sets the server description.");
+            PRINTOPT("-h, --help", "Displays this help.");
+            PRINTOPT("-H, --headless", "Runs server without GUI (no X server required)");
+            PRINTOPT("-n, --name [NAME]", "Sets the server name.");
+            PRINTOPT("-p, --port [PORT]", "Sets the server port.");
+            PRINTOPT("-P, --private", "Makes the server private.");
             fprintf(stdout, "\n");
             return 0;   //exit app
         } else if(strcmp(argv[i], "-H") == 0 || strcmp(argv[i], "--headless") == 0){
