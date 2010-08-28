@@ -4,14 +4,20 @@
 #include <QtCore>
 
 class Tier;
+class TierMachine;
+class QDomElement;
 
 struct TierCategory
 {
     QList<Tier *> subLeafs;
     QList<TierCategory *> subCategories;
     QString name;
+    bool root;
 
-    void loadFromXml(const QString &xmldata);
+    ~TierCategory();
+    void loadFromXml(const QDomElement &xmldata, TierMachine *boss, bool root=false);
+
+    void clear();
 };
 
 class TierTree
@@ -19,7 +25,7 @@ class TierTree
 public:
     TierCategory root;
 
-    void loadFromXml(const QString &xmldata);
+    void loadFromXml(const QString &xmldata, TierMachine *boss);
 };
 
 #endif // TIERTREE_H

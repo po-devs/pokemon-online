@@ -11,6 +11,7 @@ struct TeamBattle;
 struct PokeBattle;
 class WaitingObject;
 class LoadThread;
+class QDomElement;
 
 struct MemberRating
 {
@@ -29,8 +30,11 @@ struct MemberRating
 struct BannedPoke {
     int poke;
     int item;
+    QSet<int> moves;
 
     BannedPoke(int poke=0, int item=0):poke(poke),item(item) {}
+
+    void loadFromXml(const QDomElement &elem);
 };
 
 inline uint qHash(const BannedPoke &p) {
@@ -44,11 +48,10 @@ class Tier
 public:
     void changeName(const QString &name);
     QString name() const;
-    void changeId(int id);
+    void changeId(int newid);
 
     Tier(TierMachine *boss = NULL);
 
-    void fromString(const QString &s);
     QString toString() const;
 
     int rating(const QString &name);
@@ -70,6 +73,7 @@ public:
     void insertMember(QSqlQuery *q, void *data, int type);
 
     void exportDatabase() const;
+    void loadFromXml(const QDomElement &elem);
 protected:
     enum QueryType {
         GetInfoOnUser,
@@ -80,15 +84,14 @@ protected:
     int id() const {
         return m_id;
     }
-
 private:
     TierMachine *boss;
 
     bool banPokes;
     QMultiHash<int, BannedPoke> bannedPokes2; // The set is there to keep good perfs
     QList<BannedPoke> bannedPokes; // The list is there to keep the same order
-    QMultiHash<int, BannedPoke> restrictedPokes;
-    QList<int> restrictedPokes;
+    QMultiHash<int, BannedPoke> restrictedPokes2;
+    QList<BannedPoke> restrictedPokes;
     int maxRestrictedPokes;
     int numberOfPokemons;
     int maxLevel;
@@ -96,9 +99,8 @@ private:
     QString banParent;
     QSet<int> bannedItems;
     QSet<int> bannedMoves;
-
-
-    void loadFromFile();
+    int doubles; /* < 0 : singles, 0: either, > 0: doubles */
+    quint32 clauses;
 
     QString m_name;
     /* Used for table name in SQL database */
