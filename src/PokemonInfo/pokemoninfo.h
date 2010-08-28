@@ -46,81 +46,84 @@ public:
     /* Self-explainable functions */
     static int TrueCount(int gen=4); // pokes without counting forms
     static int NumberOfPokemons();
-    static QString Name(int pokenum);
-    static int Number(const QString &pokename);
-    static int LevelBalance(int pokenum);
-    static QString WeightS(int pokenum);
-    static QString Classification(int pokenum);
-    static float Weight(int pokenum);
-    static int Gender(int pokenum);
-    static int BaseGender(int pokenum);
-    static QByteArray Cry(int pokenum);
-    static int Type1(int pokenum);
-    static int Type2(int pokenum);
-    static QPixmap Picture(int pokenum, int forme = 0, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
+    static QString Name(const Pokemon::uniqueId &pokenid);
+    static Pokemon::uniqueId Number(const QString &pokename);
+    static int LevelBalance(const Pokemon::uniqueId &pokeid);
+    static QString WeightS(const Pokemon::uniqueId &pokeid);
+    static QString Classification(const Pokemon::uniqueId &pokeid);
+    static float Weight(const Pokemon::uniqueId &pokeid);
+    static int Gender(const Pokemon::uniqueId &pokeid);
+    static int BaseGender(const Pokemon::uniqueId &pokeid);
+    static QByteArray Cry(const Pokemon::uniqueId &pokeid);
+    static int Type1(const Pokemon::uniqueId &pokeid);
+    static int Type2(const Pokemon::uniqueId &pokeid);
+    static QPixmap Picture(const Pokemon::uniqueId &pokeid, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QPixmap Sub(bool back = false);
-    static QPixmap Icon(int index);
-    static QSet<int> Moves(int pokenum, int gen = 4);
-    static QSet<int> EggMoves(int pokenum, int gen = 4);
-    static QSet<int> LevelMoves(int pokenum, int gen = 4);
-    static QSet<int> TutorMoves(int pokenum, int gen = 4);
-    static QSet<int> TMMoves(int pokenum, int gen = 4);
-    static QSet<int> PreEvoMoves(int pokenum, int gen = 4);
-    static QSet<int> SpecialMoves(int pokenum, int gen = 4);
-    static QSet<int> RegularMoves(int pokenum, int gen = 4);
-    /* Aesthetic formes are formes that are just a small variation of
-       a poke and not a new poke. (Shaymin-S is a new poke compared to Shaymin imo).
-
-       Some are chosable, like Shellos or Unown formes, some not, like Castform formes,
-       as Castform only changes in battle.
-       */
-    static bool HasAestheticFormes(int pokenum);
-    static int NumberOfAFormes(int pokenum);
-    static bool AFormesShown(int pokenum);
-    static int AestheticFormeId(int pokenum);
-    static QString AestheticDesc(int pokenum, int forme);
+    static QPixmap Icon(const Pokemon::uniqueId &pokeid);
+    static QSet<int> Moves(const Pokemon::uniqueId &pokeid, int gen = 4);
+    static QSet<int> EggMoves(const Pokemon::uniqueId &pokeid, int gen = 4);
+    static QSet<int> LevelMoves(const Pokemon::uniqueId &pokeid, int gen = 4);
+    static QSet<int> TutorMoves(const Pokemon::uniqueId &pokeid, int gen = 4);
+    static QSet<int> TMMoves(const Pokemon::uniqueId &pokeid, int gen = 4);
+    static QSet<int> PreEvoMoves(const Pokemon::uniqueId &pokeid, int gen = 4);
+    static QSet<int> SpecialMoves(const Pokemon::uniqueId &pokeid, int gen = 4);
+    static QSet<int> RegularMoves(const Pokemon::uniqueId &pokeid, int gen = 4);
+    // Base form do NOT count.
+    static quint16 NumberOfAFormes(const Pokemon::uniqueId &pokeid);
+    static bool AFormesShown(const Pokemon::uniqueId &pokeid);
     /* Standard formes: Rotom, Giratina, Deoxys, .. */
-    static bool IsForme(int pokenum);
-    static int OriginalForme(int pokenum);
-    static bool HasFormes(int pokenum);
-    static QList<int> Formes(int pokenum);
+    static bool IsForme(const Pokemon::uniqueId &pokeid);
+    static Pokemon::uniqueId OriginalForme(const Pokemon::uniqueId &pokeid);
+    static bool HasFormes(const Pokemon::uniqueId &pokeid);
+    // Will NOT return base form. Should it?
+    static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid);
     static QList<int> Evos(int pokenum);
-    static int OriginalEvo(int pokenum);
-    static bool IsInEvoChain(int pokenum);
-    static PokeBaseStats BaseStats(int pokenum);
-    static bool Exists(int pokenum, int gen=4);
-    static AbilityGroup Abilities(int pokenum, int gen=4);
-    static int Stat(int poke, int stat, int level, quint8 dv, quint8 ev);
-    static int FullStat(int poke, int nature, int stat, int level, quint8 dv, quint8 ev);
-    static QString Desc(int poke, int cartridge);
-    static QString Height(int poke);
+    // Will always return base form (subnum 0).
+    static Pokemon::uniqueId OriginalEvo(const Pokemon::uniqueId &pokeid);
+    static bool IsInEvoChain(const Pokemon::uniqueId &pokeid);
+    static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
+    static bool Exists(const Pokemon::uniqueId &pokeid, int gen=4);
+    static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, int gen=4);
+    static int Stat(const Pokemon::uniqueId &pokeid, int stat, int level, quint8 dv, quint8 ev);
+    static int FullStat(const Pokemon::uniqueId &pokeid, int nature, int stat, int level, quint8 dv, quint8 ev);
+    static QString Desc(const Pokemon::uniqueId &pokeid, int cartridge);
+    static QString Height(const Pokemon::uniqueId &pokeid);
 private:
-    static QList<QString> m_Names;
-    static QList<QString> m_Weights;
+    // m_Names is a base.
+    // It is assumed that anything that is not there do not exist at all.
+    // Is a map because we need it to be sorted.
+    static QMap<Pokemon::uniqueId, QString> m_Names;
+    static QHash<Pokemon::uniqueId, QString> m_Weights;
     static QString m_Directory;
-    static QList<int> m_Type1;
-    static QList<int> m_Type2;
-    static QList<int> m_Genders;
-    static QList<int> m_Ability1[2];
-    static QList<int> m_Ability2[2];
-    static QList<PokeBaseStats> m_BaseStats;
-    static QList<int> m_LevelBalance;
+    static QHash<Pokemon::uniqueId, int> m_Type1;
+    static QHash<Pokemon::uniqueId, int> m_Type2;
+    static QHash<Pokemon::uniqueId, int> m_Genders;
+    static QHash<Pokemon::uniqueId, int> m_Ability1[2];
+    static QHash<Pokemon::uniqueId, int> m_Ability2[2];
+    static QHash<Pokemon::uniqueId, PokeBaseStats> m_BaseStats;
+    static QHash<Pokemon::uniqueId, int> m_LevelBalance;
     /* That is NOT multi-threaded! */
-    static QHash<int,QList<int> > m_AlternateFormes;
-    static QHash<int,QList<int> > m_Evolutions;
-    static QList<int> m_OriginalEvos;
-    /* First and last aesthetic forme */
-    static QHash<int, QPair<int, int> > m_AestheticFormes;
-    static QHash<int, bool> m_AestheticFormesHidden;
-    static QHash<int, QString> m_AestheticFormesDescs;
-    static QList<PokemonMoves> m_Moves;
+    static QHash<quint16, QList<quint16> > m_Evolutions;
+    static QHash<quint16, quint16> m_OriginalEvos;
+    // A number of forms a pokemon has. 0 for most cases.
+    // Keep it as QHash.
+    // quint16 as only pokenum matters.
+    static QHash<quint16, quint16> m_MaxForme;
+    static QHash<Pokemon::uniqueId, PokemonMoves> m_Moves;
+    // Holds 1-letter options.
+    // Sample use: if(m_Options.value(pokeid).contains('H')) whatever();
+    // Values for pokemons.txt:
+    // 1 - always 1 HP.
+    // H - hidden form(e).
+    static QHash<Pokemon::uniqueId, QString> m_Options;
     static int m_trueNumberOfPokes;
 
     static void loadNames();
-    static void loadFormes();
     static void loadEvos();
     static void loadBaseStats();
     static void loadMoves();
+    // Call this after loading all data.
+    static void makeDataConsistent();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
     static QString path(const QString &filename);
     static int calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev);

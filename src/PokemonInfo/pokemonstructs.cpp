@@ -88,7 +88,7 @@ void PokeBaseStats::setBaseStat(int stat, quint8 base)
 
 PokeGeneral::PokeGeneral()
 {
-    num() = 0;
+    num() = Pokemon::uniqueId();
     gen() = 4;
     //default for non-bugged programs
     m_genderAvail = Pokemon::NeutralAvail;
@@ -311,7 +311,7 @@ PokeGraphics::PokeGraphics()
 {
 }
 
-void PokeGraphics::setNum(int num)
+void PokeGraphics::setNum(Pokemon::uniqueId num)
 {
     m_num = num;
     setUpToDate(false);
@@ -339,9 +339,9 @@ void PokeGraphics::load(int forme, int gender, bool shiny)
     setUpToDate(true);
 }
 
-void PokeGraphics::loadIcon(int index)
+void PokeGraphics::loadIcon(const Pokemon::uniqueId &pokeid)
 {
-    m_icon = PokemonInfo::Icon(index);
+    m_icon = PokemonInfo::Icon(pokeid);
 }
 
 QPixmap PokeGraphics::picture()
@@ -366,17 +366,17 @@ QIcon PokeGraphics::icon(int index)
     return icon();
 }
 
-int PokeGraphics::num() const
+Pokemon::uniqueId PokeGraphics::num() const
 {
     return m_num;
 }
 
 PokeTeam::PokeTeam()
 {
-    setNum(0);
+    setNum(Pokemon::uniqueId(Pokemon::NoPoke));
 }
 
-void PokeTeam::setNum(quint16 num)
+void PokeTeam::setNum(Pokemon::uniqueId num)
 {
     PokeGeneral::num() = num;
     PokePersonal::num() = num;
@@ -391,7 +391,7 @@ void PokeTeam::setGen(int gen)
 
 void PokeTeam::runCheck()
 {
-    int num = this->num();
+    Pokemon::uniqueId num = this->num();
 
     PokePersonal::runCheck();
 
@@ -403,7 +403,7 @@ void PokeTeam::runCheck()
     }
 }
 
-quint16 PokeTeam::num() const
+Pokemon::uniqueId PokeTeam::num() const
 {
     return PokePersonal::num();
 }
@@ -1114,4 +1114,72 @@ QDataStream & operator >> (QDataStream & in, PokePersonal & poke)
         poke.setEV(i,EV);
     }
     return in;
+}
+
+inline uint qHash(const Pokemon::uniqueId &key)
+{
+    return qHash(key.toPokeRef());
+}
+
+QString Pokemon::uniqueId::toString() const
+{
+    QString result = QString("%1").arg(pokenum);
+    if(subnum) result.append(QString("-%1").arg(subnum));
+    return result;
+}
+quint32 Pokemon::uniqueId::toPokeRef() const
+{
+    return pokenum + (subnum << 16);
+}
+
+bool Pokemon::uniqueId::extract(const QString &from, Pokemon::uniqueId &data, QString &options, QString &remaining)
+{
+    bool result = false;
+    if(!from.isEmpty()) {
+        int space_pos = from.indexOf(' '); // 1 space delimeter (first)
+        if(space_pos != -1) {
+            QString poke_name = from.mid(space_pos + 1);
+            if(!poke_name.isEmpty()){
+                // ":" delimeter for values. pokenum:subnum:1-letter-options
+                QStringList values = from.left(space_pos).split(':');
+                if(values.size() > 1) {
+                    bool ok, ok2;
+                    uint num = values[0].toUInt(&ok);
+                    uint sub = values[1].toUInt(&ok);
+                    if(ok && ok2) {
+                        remaining = poke_name;
+                        data.pokenum = num;
+                        data.subnum = sub;
+                        result = true;
+                        // optional: options
+                        options.clear();
+                        if(values.size() > 2) options = values[2];
+                    } // if ok
+                } // if values
+            } // if !poke_name
+        } // if space_pos
+    } // if !from
+    return result;
+}
+
+bool Pokemon::uniqueId::extract_short(const QString &from, quint16 &pokenum, QString &remaining)
+{
+    bool result = false;
+    if(!from.isEmpty()) {
+        int space_pos = from.indexOf(' '); // 1 space delimeter (first)
+        if(space_pos != -1) {
+            QString other_data = from.mid(space_pos + 1);
+            if(!other_data.isEmpty()){
+                QString text_pokenum = from.left(space_pos);
+                bool ok;
+                quint16 read_pokenum = text_pokenum.toUInt(&ok);
+                if(ok) {
+                    pokenum = read_pokenum;
+                    remaining = other_data;
+                    result = true;
+                }
+            } // if !poke_name
+        } // if space_pos
+    } // if !from
+    return result;
 }

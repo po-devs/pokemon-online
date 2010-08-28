@@ -598,6 +598,41 @@ namespace Pokemon
         Shaymin_S,
         Giratina_O
     };
+    class uniqueId
+    {
+    public:
+        quint16 pokenum;
+        quint16 subnum;
+        uniqueId() : pokenum(0), subnum(0) {}
+        uniqueId(int num, int subnum) : pokenum(num), subnum(subnum) {}
+        uniqueId(const uniqueId &id) { pokenum = id.pokenum; subnum = id.subnum; }
+        uniqueId(quint32 pokeRef) {
+              subnum = pokeRef >> 16;
+              pokenum = pokeRef & 0xFFFF;
+        }
+        bool operator == (const uniqueId &other) const {
+            return (pokenum == other.pokenum) && (subnum == other.subnum);
+        }
+        bool operator != (const uniqueId &other) const {
+            return (pokenum != other.pokenum) || (subnum != other.subnum);
+        }
+        bool operator < (const uniqueId &other) const {
+            return (pokenum < other.pokenum) || ((pokenum == other.pokenum) && (subnum < other.subnum));
+        }
+        bool operator > (const uniqueId &other) const {
+            return (pokenum > other.pokenum) || ((pokenum == other.pokenum) && (subnum > other.subnum));
+        }
+        QString toString() const;
+        quint32 toPokeRef() const;
+        // Separates pokenum:subnum:1-letter-options data from
+        // the other part of a string.
+        // 'data' will be modified to hold extracted data.
+        // 'remaining' will be modified to hold remaining part.
+        // Will return true if everything is fine. And false otherwise.
+        static bool extract(const QString &from, uniqueId &data, QString &options, QString &remaining);
+        // Extracts short data in a "pokenum data_text" form.
+        static bool extract_short(const QString &from, quint16 &pokenum, QString &remaining);
+    };
 }
 
 
@@ -1530,7 +1565,7 @@ public:
 /* Data that every pokemon of the same specy share. */
 class PokeGeneral
 {
-    PROPERTY(quint16, num);
+    PROPERTY(Pokemon::uniqueId, num);
     PROPERTY(quint8, gen);
 protected:
     PokeBaseStats m_stats;
@@ -1559,7 +1594,7 @@ public:
 class PokePersonal
 {
     PROPERTY(QString, nickname);
-    PROPERTY(quint16, num);
+    PROPERTY(Pokemon::uniqueId, num);
     PROPERTY(quint16, item);
     PROPERTY(quint16, ability);
     PROPERTY(quint8, nature);
@@ -1610,7 +1645,7 @@ protected:
        image is stored can do to */
     QPixmap m_picture;
     QIcon m_icon;
-    int m_num;
+    Pokemon::uniqueId m_num;
     int m_storedgender;
     int m_storedforme;
     bool m_storedshininess;
@@ -1625,10 +1660,10 @@ public:
     QIcon icon();
     QIcon icon(int index);
 
-    void setNum(int num);
-    int num() const;
+    void setNum(Pokemon::uniqueId num);
+    Pokemon::uniqueId num() const;
     void load(int forme, int gender, bool shiny);
-    void loadIcon(int index);
+    void loadIcon(const Pokemon::uniqueId &pokeid);
 };
 
 class PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtual public PokeGraphics
@@ -1636,8 +1671,8 @@ class PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtua
 public:
     PokeTeam();
 
-    quint16 num() const;
-    void setNum(quint16 num);
+    Pokemon::uniqueId num() const;
+    void setNum(Pokemon::uniqueId num);
     void setGen(int gen);
     void runCheck();
 
