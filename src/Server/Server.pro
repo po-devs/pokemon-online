@@ -36,7 +36,8 @@ SOURCES += main.cpp \
     tiermachine.cpp \
     tier.cpp \
     moves.cpp \
-    channel.cpp
+    channel.cpp \
+    tiertree.cpp
 DEFINES = SERVER_SIDE
 LIBS += -L../../bin \
     -lutilities \
