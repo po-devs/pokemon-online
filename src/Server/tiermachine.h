@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include "../Utilities/functions.h"
+#include "tiertree.h"
 
 class Tier;
 struct TeamBattle;
@@ -66,6 +67,7 @@ private:
     QList<Tier*> m_tiers;
     QStringList m_tierNames;
     static TierMachine *inst;
+    TierTree tree;
 
     static const int loadThreadCount=2;
     int nextLoadThreadNumber;

@@ -60,6 +60,8 @@ public:
     void changeRating(const QString &player, int newRating);
     QPair<int, int> pointChangeEstimate(const QString &player, const QString &foe);
 
+    void addBanParent(Tier *t);
+
     bool isBanned(const PokeBattle &p) const;
     bool isValid(const TeamBattle &t) const;
     bool exists(const QString &name);
@@ -73,7 +75,10 @@ public:
     void insertMember(QSqlQuery *q, void *data, int type);
 
     void exportDatabase() const;
+    /* Load tier configuration */
     void loadFromXml(const QDomElement &elem);
+    /* Load tier ladders */
+    void loadFromFile();
 protected:
     enum QueryType {
         GetInfoOnUser,
@@ -96,7 +101,8 @@ private:
     int numberOfPokemons;
     int maxLevel;
     int gen;
-    QString banParent;
+    QString banParentS;
+    Tier *parent;
     QSet<int> bannedItems;
     QSet<int> bannedMoves;
     int doubles; /* < 0 : singles, 0: either, > 0: doubles */

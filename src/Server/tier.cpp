@@ -153,6 +153,28 @@ int Tier::count()
     }
 }
 
+void Tier::addBanParent(Tier *t)
+{
+    if (!t) {
+        parent = NULL;
+        return;
+    }
+
+    Tier *it = *t;
+
+    while (it != NULL) {
+        if (it == this) {
+            parent = NULL;
+            return;
+        }
+
+        it = it->parent;
+    }
+
+    /* No cyclic tree, so we can assign it */
+    parent = it;
+}
+
 bool Tier::isBanned(const PokeBattle &p) const {
     if (bannedPokes2.contains(p.num())) {
         QList<BannedPoke> values = bannedPokes2.values(p.num());
@@ -401,7 +423,8 @@ void Tier::updateMemberInDatabase(const MemberRating &m, bool add)
 void Tier::loadFromXml(const QDomElement &elem)
 {
     banPokes = elem.attribute("banMode", "ban") == "ban";
-    banParent = elem.attribute("banParent");
+    banParentS = elem.attribute("banParent");
+    parent = NULL;
     changeName(elem.attribute("name"));
     gen = elem.attribute("gen", "4").toInt();
     maxLevel = elem.attribute("maxLevel", "100").toInt();
