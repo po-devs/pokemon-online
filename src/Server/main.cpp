@@ -38,25 +38,58 @@ int main(int argc, char *argv[])
     //default: show a window
     bool showWindow = true;
 
+    QSettings s;
+
     //parse commandline arguments
     for(int i = 0; i < argc; i++){
-        if(strcmp( argv[i], "--headless") == 0){
-            showWindow = false;
-        } else if(strcmp( argv[i], "--help") == 0){
+        if(strcmp(argv[i], "-a") == 0 || strcmp(argv[i], "--announce") == 0){
+            if (++i == argc){
+                fprintf(stderr, "No server announcement provided.\n");
+                return 1;
+            }
+            s.setValue("server_announcement", argv[i]);
+        } else if(strcmp( argv[i], "-d") == 0 || strcmp(argv[i], "--desc") == 0){
+            if (++i == argc){
+                fprintf(stderr, "No server description provided.\n");
+                return 1;
+            }
+            s.setValue("server_description", argv[i]);
+        } else if(strcmp( argv[i], "-h") == 0 || strcmp( argv[i], "--help") == 0){
             fprintf(stdout, "Server for Pokeymon-Online Help\n");
             fprintf(stdout, "Please visit http://www.pokemon-online.eu/ for more information.\n");
             fprintf(stdout, "\n");
             fprintf(stdout, "Usage: ./Server [[options]]\n");
             fprintf(stdout, "Options:\n");
-            fprintf(stdout, "  --headless\tRuns server without GUI (no X server required)\n");
+            fprintf(stdout, "  %.20s\t%s\n", "-a, --announce [ANNOUNCE]", "Sets the server announcement.");
+            fprintf(stdout, "  %.20s\t%s\n", "-d, --desc [DESC]", "Sets the server description.");
+            fprintf(stdout, "  %.20s\t%s\n", "-h, --help", "Displays this help.");
+            fprintf(stdout, "  %.20s\t%s\n", "-H, --headless", "Runs server without GUI (no X server required)");
+            fprintf(stdout, "  %.20s\t%s\n", "-n, --name [NAME]", "Sets the server name.");
+            fprintf(stdout, "  %.20s\t%s\n", "-p, --port [PORT]", "Sets the server port.");
+            fprintf(stdout, "  %.20s\t%s\n", "-P, --private", "Makes the server private.");
             fprintf(stdout, "\n");
             return 0;   //exit app
+        } else if(strcmp(argv[i], "-H") == 0 || strcmp(argv[i], "--headless") == 0){
+            showWindow = false;
+        } else if(strcmp( argv[i], "-n") == 0 || strcmp(argv[i], "--name") == 0){
+            if (++i == argc){
+                fprintf(stderr, "No server name provided.\n");
+                return 1;
+            }
+            s.setValue("server_name", argv[i]);
+        } else if(strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--port") == 0){
+            if (++i == argc){
+                fprintf(stderr, "No server port provided.\n");
+                return 1;
+            }
+            s.setValue("server_port", argv[i]);
+        } else if(strcmp(argv[i], "-P") == 0 || strcmp(argv[i], "--private") == 0){
+            s.setValue("server_private", 1);
         }
     }
 
     fprintf(stderr, "\n-----------------------\nNew Server, starting logs\n-----------------------\n\n");
 
-    QSettings s;
     if (s.value("server_port").isNull())
         s.setValue("server_port", 5080);
 
