@@ -35,6 +35,12 @@ struct BannedPoke {
 
     BannedPoke(int poke=0, int item=0):poke(poke),item(item) {}
 
+    bool isBanned(const PokeBattle &poke) const;
+    /* This time checks if the pokemon is 'contained' within the BannedPoke,
+       for when instead of banning pokemons you want to restrict to some pokémons,
+       or some pokemons / movesets */
+    bool isForcedMatch(const PokeBattle &poke) const;
+
     void loadFromXml(const QDomElement &elem);
     QDomElement & toXml(QDomElement &dest) const;
 };
@@ -65,6 +71,7 @@ public:
     void addBanParent(Tier *t);
 
     bool isBanned(const PokeBattle &p) const;
+    bool isRestricted(const PokeBattle &p) const;
     bool isValid(const TeamBattle &t) const;
     bool exists(const QString &name);
     int ranking(const QString &name);
@@ -98,10 +105,8 @@ private:
     TierCategory *node;
 
     bool banPokes;
-    QMultiHash<int, BannedPoke> bannedPokes2; // The set is there to keep good perfs
-    QList<BannedPoke> bannedPokes; // The list is there to keep the same order
-    QMultiHash<int, BannedPoke> restrictedPokes2;
-    QList<BannedPoke> restrictedPokes;
+    QMultiHash<int, BannedPoke> bannedSets; // The set is there to keep good perfs
+    QMultiHash<int, BannedPoke> restrictedSets;
     int maxRestrictedPokes;
     int numberOfPokemons;
     int maxLevel;
@@ -110,6 +115,8 @@ private:
     Tier *parent;
     QSet<int> bannedItems;
     QSet<int> bannedMoves;
+    QSet<int> bannedPokes;
+    QSet<int> restrictedPokes;
     int doubles; /* < 0 : singles, 0: either, > 0: doubles */
     quint32 clauses;
 
