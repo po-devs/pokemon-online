@@ -120,23 +120,6 @@ void Tier::loadFromFile()
     }
 }
 
-QString Tier::toString() const {
-    QString ret = name() + "=";
-
-    if (parent.length() > 0) {
-        ret += parent + "+";
-    }
-
-    if (bannedPokes.count() > 0) {
-        foreach(BannedPoke pok, bannedPokes) {
-            ret += PokemonInfo::Name(pok.poke) + (pok.item == 0 ? "" : QString("@%1").arg(ItemInfo::Name(pok.item))) + ", ";
-        }
-        ret.resize(ret.length()-2);
-    }
-
-    return ret;
-}
-
 int Tier::count()
 {
     if (m_count != -1 && time(NULL) - last_count_time < 3600) {
@@ -465,7 +448,7 @@ void Tier::loadFromXml(const QDomElement &elem)
         }
     }
 
-    QDomElement pokElem = elem.firstChildElement("clausedPokemon");
+    QDomElement pokElem = elem.firstChildElement("clausedPokemons");
     if (!pokElem.isNull()) {
         pokElem = elem.firstChildElement("pokemon");
 
@@ -480,7 +463,7 @@ void Tier::loadFromXml(const QDomElement &elem)
         }
     }
 
-    pokElem = elem.firstChildElement("restrictedPokemon");
+    pokElem = elem.firstChildElement("restrictedPokemons");
     if (!pokElem.isNull()) {
         pokElem = elem.firstChildElement("pokemon");
 
@@ -496,13 +479,94 @@ void Tier::loadFromXml(const QDomElement &elem)
     }
 }
 
+QDomElement & Tier::toXml(QDomElement &dest) const {
+    dest.setAttribute("name", name());
+
+    if (banPokes) {
+        dest.setAttribute("banMode", "ban");
+    } else {
+        dest.setAttribute("banMode", "restrict");
+    }
+
+    dest.setAttribute("banParent", banParentS);
+    dest.setAttribute("gen", gen);
+    dest.setAttribute("maxLevel", maxLevel);
+    dest.setAttribute("numberOfPokemons", numberOfPokemons);
+    dest.setAttribute("numberOfRestricted", maxRestrictedPokes);
+    dest.setAttribute("doubles", doubles);
+
+    QDomDocument doc;
+
+    foreach(int move, bannedMoves) {
+        QDomElement elem = doc.createElement("clausedMove");
+        elem.setNodeValue(MoveInfo::Name(move));
+        dest.appendChild(elem);
+    }
+
+    foreach(int item, bannedItems) {
+        QDomElement elem = doc.createElement("clausedItem");
+        elem.setNodeValue(ItemInfo::Name(move));
+        dest.appendChild(item);
+    }
+
+    int i = 0;
+    while (clauses > 0) {
+        if (clauses % 2 == 1) {
+            QDomElement elem = doc.createElement("clause");
+            elem.setNodeValue(ChallengeInfo::clause(i));
+            dest.appendChild(item);
+        }
+        clauses /= 2;
+        i++;
+    }
+
+    if (bannedPokes.size() > 0) {
+        QDomElement elem = doc.createElement("clausedPokemons");
+        foreach(BannedPoke b, bannedPokes) {
+            QDomElement belem = doc.createElement("pokemon");
+            b.toXml(belem);
+            elem.appendChild(belem);
+        }
+        dest.appendChild(elem);
+    }
+
+    if (restrictedPokes.size() > 0) {
+        QDomElement elem = doc.createElement("restrictedPokemons");
+        foreach(BannedPoke b, restrictedPokes) {
+            QDomElement belem = doc.createElement("pokemon");
+            b.toXml(belem);
+            elem.appendChild(belem);
+        }
+        dest.appendChild(elem);
+    }
+
+    return dest;
+}
+
 void BannedPoke::loadFromXml(const QDomElement &elem) {
     poke = PokemonInfo::Number(elem.attribute("name"));
     item = ItemInfo::Number("item");
     QDomNodeList moves = elem.elementsByTagName("move");
     foreach(QDomNode n, moves) {
-        if (MoveInfo::Exists(n.nodeValue(), gen))
-            moves.insert(MoveInfo::Number(n.nodeValue()));
+        if (MoveInfo::Exists(n.nodeValue(), gen)) {
+            int move = MoveInfo::Number(n.nodeValue());
+            if (move != 0) {
+                this->moves.insert(move);
+            }
+        }
+    }
+}
+
+QDomElement &BannedPoke::toXml(QDomElement &dest) const {
+    dest.setAttribute("name", PokemonInfo::Name(poke));
+    if (item > 0)
+        dest.setAttribute("item", ItemInfo::Name(item));
+    if (moves.size() > 0) {
+        QDomDocument doc;
+        foreach(int move, moves) {
+            QDomElement el = doc.createElement("move");
+            el.setNodeValue(MoveInfo::Name(move));
+        }
     }
 }
 
