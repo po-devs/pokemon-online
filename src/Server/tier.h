@@ -36,6 +36,7 @@ struct BannedPoke {
     BannedPoke(int poke=0, int item=0):poke(poke),item(item) {}
 
     void loadFromXml(const QDomElement &elem);
+    QDomElement & toXml(QDomElement &dest) const;
 };
 
 inline uint qHash(const BannedPoke &p) {
@@ -53,7 +54,7 @@ public:
 
     Tier(TierMachine *boss, TierCategory *cat);
 
-    QString toString() const;
+    QDomElement & toXml(QDomElement &dest) const;
 
     int rating(const QString &name);
 
