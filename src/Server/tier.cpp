@@ -143,7 +143,7 @@ void Tier::addBanParent(Tier *t)
         return;
     }
 
-    Tier *it = *t;
+    Tier *it = t;
 
     while (it != NULL) {
         if (it == this) {
@@ -167,8 +167,8 @@ bool Tier::isBanned(const PokeBattle &p) const {
                 return true;
         }
     }
-    if (parent.length() > 0 && boss != NULL) {
-        return boss->tier(parent).isBanned(p);
+    if (parent) {
+        return parent->isBanned(p);
     } else {
         return false;
     }
@@ -430,13 +430,16 @@ void Tier::loadFromXml(const QDomElement &elem)
     QDomNodeList moves = elem.elementsByTagName("clausedMove");
     for (int i = 0; i < moves.count(); i++) {
         QDomNode n = moves.item(i);
-        if (MoveInfo::Exists(n.nodeValue(), gen))
-            bannedMoves.insert(MoveInfo::Number(n.nodeValue()));
+        int num = MoveInfo::Number(n.nodeValue());
+        if (num != 0)
+            bannedMoves.insert(num);
     }
+    QDomNodeList items = elem.elementsByTagName("clausedItem");
     for (int i = 0; i < items.count(); i++) {
         QDomNode n = items.item(i);
-        if (ItemInfo::Exists(n.nodeValue(), gen))
-            bannedItem.insert(ItemInfo::Number(n.nodeValue()));
+        int num = ItemInfo::Number(n.nodeValue());
+        if (num != 0)
+            bannedItems.insert(num);
     }
     QDomNodeList clausesL = elem.elementsByTagName("clause");
     for (int i = 0; i < clausesL.count(); i++) {
@@ -505,16 +508,17 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
 
     foreach(int item, bannedItems) {
         QDomElement elem = doc.createElement("clausedItem");
-        elem.setNodeValue(ItemInfo::Name(move));
-        dest.appendChild(item);
+        elem.setNodeValue(ItemInfo::Name(item));
+        dest.appendChild(elem);
     }
 
+    int clauses = this->clauses;
     int i = 0;
     while (clauses > 0) {
         if (clauses % 2 == 1) {
             QDomElement elem = doc.createElement("clause");
             elem.setNodeValue(ChallengeInfo::clause(i));
-            dest.appendChild(item);
+            dest.appendChild(elem);
         }
         clauses /= 2;
         i++;
@@ -547,12 +551,13 @@ void BannedPoke::loadFromXml(const QDomElement &elem) {
     poke = PokemonInfo::Number(elem.attribute("name"));
     item = ItemInfo::Number("item");
     QDomNodeList moves = elem.elementsByTagName("move");
-    foreach(QDomNode n, moves) {
-        if (MoveInfo::Exists(n.nodeValue(), gen)) {
-            int move = MoveInfo::Number(n.nodeValue());
-            if (move != 0) {
-                this->moves.insert(move);
-            }
+
+    for(int i =0; i < moves.count(); i++) {
+        QDomNode n = moves.at(i);
+        int move = MoveInfo::Number(n.nodeValue());
+
+        if (move != 0) {
+            this->moves.insert(move);
         }
     }
 }
@@ -568,6 +573,8 @@ QDomElement &BannedPoke::toXml(QDomElement &dest) const {
             el.setNodeValue(MoveInfo::Name(move));
         }
     }
+
+    return dest;
 }
 
 Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), m_count(-1), last_count_time(0), holder(1000) {
