@@ -585,18 +585,19 @@ namespace Pokemon
         Darkrai,
         Shaymin,
         Arceus,
-        Rotom_C,
-        Rotom_H,
-        Rotom_F,
-        Rotom_W,
-        Rotom_S,
-        Deoxys_A,
-        Deoxys_D,
-        Deoxys_S,
-        Wormadam_G,
-        Wormadam_S,
-        Shaymin_S,
-        Giratina_O
+        // Base forms end here.
+        Rotom_C = Rotom + (1 << 16),
+        Rotom_H = Rotom + (2 << 16),
+        Rotom_F = Rotom + (3 << 16),
+        Rotom_W = Rotom + (4 << 16),
+        Rotom_S = Rotom + (5 << 16),
+        Deoxys_A = Deoxys + (1 << 16),
+        Deoxys_D = Deoxys + (2 << 16),
+        Deoxys_S = Deoxys + (3 << 16),
+        Wormadam_G = Wormadam + (1 << 16),
+        Wormadam_S = Wormadam + (2 << 16),
+        Giratina_O = Giratina + (1 << 16),
+        Shaymin_S = Shaymin + (1 << 16)
     };
     class uniqueId
     {
