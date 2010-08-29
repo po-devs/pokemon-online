@@ -48,6 +48,12 @@ int main(int argc, char *argv[])
                 return 1;
             }
             s.setValue("server_announcement", argv[i]);
+        } else if(strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--channel") == 0){
+            if (++i == argc){
+                fprintf(stderr, "No main channel name provided.\n");
+                return 1;
+            }
+            s.setValue("mainchanname", argv[i]);
         } else if(strcmp( argv[i], "-d") == 0 || strcmp(argv[i], "--desc") == 0){
             if (++i == argc){
                 fprintf(stderr, "No server description provided.\n");
@@ -61,9 +67,11 @@ int main(int argc, char *argv[])
             fprintf(stdout, "Usage: ./Server [[options]]\n");
             fprintf(stdout, "Options:\n");
             PRINTOPT("-a, --announce [ANNOUNCE]", "Sets the server announcement.");
+            PRINTOPT("-c, --channel [NAME]", "Sets the main channel name.");
             PRINTOPT("-d, --desc [DESC]", "Sets the server description.");
             PRINTOPT("-h, --help", "Displays this help.");
             PRINTOPT("-H, --headless", "Runs server without GUI (no X server required)");
+            PRINTOPT("-L, --low-latency", "Runs the server in low-latency mode.");
             PRINTOPT("-n, --name [NAME]", "Sets the server name.");
             PRINTOPT("-p, --port [PORT]", "Sets the server port.");
             PRINTOPT("-P, --private", "Makes the server private.");
@@ -71,6 +79,8 @@ int main(int argc, char *argv[])
             return 0;   //exit app
         } else if(strcmp(argv[i], "-H") == 0 || strcmp(argv[i], "--headless") == 0){
             showWindow = false;
+        } else if(strcmp(argv[i], "-L") == 0 || strcmp(argv[i], "--low-latency") ==0){
+            s.setValue("low_TCP_delay", true);
         } else if(strcmp( argv[i], "-n") == 0 || strcmp(argv[i], "--name") == 0){
             if (++i == argc){
                 fprintf(stderr, "No server name provided.\n");
