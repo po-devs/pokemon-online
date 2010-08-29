@@ -16,6 +16,7 @@ struct TierCategory
 
     ~TierCategory();
     void loadFromXml(const QDomElement &xmldata, TierMachine *boss, bool root=false);
+    QDomElement &toXml(QDomElement &xml) const;
 
     QList<Tier *> gatherTiers();
     void clear();
@@ -28,6 +29,7 @@ public:
     TierCategory root;
 
     void loadFromXml(const QString &xmldata, TierMachine *boss);
+    QString toXml() const;
     QList<Tier *> gatherTiers();
 };
 

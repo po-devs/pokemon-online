@@ -117,16 +117,7 @@ void TierMachine::fromString(const QString &s)
 
 QString TierMachine::toString() const
 {
-    QString res = "";
-
-    for(int i = 0; i < m_tiers.size(); i++) {
-        res += m_tiers[i]->toString() + "\n";
-    }
-    if (res.length() > 0) {
-        res.resize(res.size()-1);
-    }
-
-    return res;
+    return tree.toXml();
 }
 
 void TierMachine::loadMemberInMemory(const QString &name, const QString &tier, QObject *o, const char *slot)

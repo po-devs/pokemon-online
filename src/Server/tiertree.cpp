@@ -50,9 +50,31 @@ void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool 
     }
 }
 
+QDomElement & TierCategory::toXml(QDomElement &xml) const {
+    if (!root) {
+        xml.setAttribute("name", name);
+    }
+
+    QDomDocument doc;
+
+    foreach (Tier *t, subLeafs) {
+        QDomElement elem = doc.createElement("tier");
+        t->toXml(elem);
+        xml.appendChild(elem);
+    }
+
+    foreach (TierCategory *c, subCategories) {
+        QDomElement elem = doc.createElement("category");
+        c->toXml(elem);
+        xml.appendChild(elem);
+    }
+
+    return xml;
+}
+
 QList<Tier *> TierCategory::gatherTiers()
 {
-    QList l = subLeafs;
+    QList<Tier*> l = subLeafs;
     foreach(TierCategory *c, subCategories) {
         l.append(c->gatherTiers());
     }
@@ -65,6 +87,19 @@ void TierTree::loadFromXml(const QString &xmldata, TierMachine *boss)
     doc.setContent(xmldata);
     QDomElement docElem = doc.documentElement();
     root.loadFromXml(docElem, boss, true);
+}
+
+QString TierTree::toXml() const
+{
+    QDomDocument doc;
+
+    QDomElement main = doc.createElement("category");
+
+    root.toXml(main);
+
+    doc.appendChild(main);
+
+    return doc.toString();
 }
 
 QList<Tier*> TierTree::gatherTiers()
