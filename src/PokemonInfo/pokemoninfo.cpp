@@ -745,11 +745,11 @@ void PokemonInfo::makeDataConsistent()
         }
         // Weight
         if(!m_Weights.contains(id)) {
-            m_Weights[id] = m_Weights.value(OriginalForme(id));
+            m_Weights[id] = m_Weights.value(OriginalForme(id), "0.0");
         }
         // Base stats.
         if(!m_BaseStats.contains(id)) {
-            m_BaseStats[id] = m_BaseStats.value(OriginalForme(id));
+            m_BaseStats[id] = m_BaseStats.value(OriginalForme(id), PokeBaseStats());
         }
         // Moves.
         if(!m_Moves.contains(id)) {
@@ -757,28 +757,28 @@ void PokemonInfo::makeDataConsistent()
         }
         // Other.
         if(!m_LevelBalance.contains(id)) {
-            m_LevelBalance[id] = m_LevelBalance.value(OriginalForme(id));
+            m_LevelBalance[id] = m_LevelBalance.value(OriginalForme(id), 1);
         }
         if(!m_Type1.contains(id)) {
-            m_Type1[id] = m_Type1.value(OriginalForme(id));
+            m_Type1[id] = m_Type1.value(OriginalForme(id), Pokemon::Normal);
         }
         if(!m_Type2.contains(id)) {
-            m_Type2[id] = m_Type2.value(OriginalForme(id));
+            m_Type2[id] = m_Type2.value(OriginalForme(id), Pokemon::Curse);
         }
         if(!m_Genders.contains(id)) {
-            m_Genders[id] = m_Genders.value(OriginalForme(id));
+            m_Genders[id] = m_Genders.value(OriginalForme(id), Pokemon::NeutralAvail);
         }
         if(!m_Ability1[0].contains(id)) {
-            m_Ability1[0][id] = m_Ability1[0].value(OriginalForme(id));
+            m_Ability1[0][id] = m_Ability1[0].value(OriginalForme(id), Ability::NoAbility);
         }
         if(!m_Ability2[0].contains(id)) {
-            m_Ability2[0][id] = m_Ability2[0].value(OriginalForme(id));
+            m_Ability2[0][id] = m_Ability2[0].value(OriginalForme(id), Ability::NoAbility);
         }
         if(!m_Ability1[1].contains(id)) {
-            m_Ability1[1][id] = m_Ability1[1].value(OriginalForme(id));
+            m_Ability1[1][id] = m_Ability1[1].value(OriginalForme(id), Ability::NoAbility);
         }
         if(!m_Ability2[1].contains(id)) {
-            m_Ability2[1][id] = m_Ability2[1].value(OriginalForme(id));
+            m_Ability2[1][id] = m_Ability2[1].value(OriginalForme(id), Ability::NoAbility);
         }
         // Next.
         ++it;
