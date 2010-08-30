@@ -54,6 +54,13 @@ QWidget *ConfigCombo<T>::getInternalWidget()
 
     ret->addItems(labels);
 
+    for (int i = 0; i < values.size(); i++) {
+        if (values[i] == ConfigHelper<T>::var) {
+            ret->setCurrentIndex(i);
+            break;
+        }
+    }
+
     QObject::connect(ret, SIGNAL(activated(int)), SLOT(editingDone()));
 
     return ret;
@@ -67,4 +74,28 @@ void ConfigCombo<T>::doWhenEditingDone()
     if (index >= 0 && index < values.size()) {
         ConfigHelper<T>::var = values[index];
     }
+}
+
+ConfigSpin::ConfigSpin(const QString &desc, int &var, int min, int max)
+    : ConfigHelper<int> (desc, var), min(min), max(max)
+{
+
+}
+
+QWidget * ConfigSpin::getInternalWidget()
+{
+    QSpinBox *ret = new QSpinBox();
+
+    ret->setRange(min, max);
+
+    ret->setValue(var);
+
+    connect(ret, SIGNAL(valueChanged(int)), SLOT(editingDone()));
+
+    return ret;
+}
+
+void ConfigSpin::editingDone()
+{
+    var = ((QSpinBox*)(ConfigHelper<T>::internalWidget))->value();
 }

@@ -54,4 +54,12 @@ private:
     virtual void doWhenEditingDone();
 };
 
+/* Creates a SpinBox */
+class ConfigSpin : public ConfigHelper<int> {
+public:
+    ConfigSpin(const QString &desc, int &var, int min, int max);
+private:
+    int min, max;
+}
+
 #endif // CONFIGHELPER_H
