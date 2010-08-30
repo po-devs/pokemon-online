@@ -46,7 +46,7 @@ public:
     /* Self-explainable functions */
     static int TrueCount(int gen=4); // pokes without counting forms
     static int NumberOfPokemons();
-    static QString Name(const Pokemon::uniqueId &pokenid);
+    static QString Name(const Pokemon::uniqueId &pokeid);
     static Pokemon::uniqueId Number(const QString &pokename);
     static int LevelBalance(const Pokemon::uniqueId &pokeid);
     static QString WeightS(const Pokemon::uniqueId &pokeid);
