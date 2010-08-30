@@ -623,18 +623,6 @@ namespace Pokemon
         bool operator > (const uniqueId &other) const {
             return (pokenum > other.pokenum) || ((pokenum == other.pokenum) && (subnum > other.subnum));
         }
-        QDataStream & operator << (QDataStream &out, const Pokemon::uniqueId &id)
-        {
-            out << id.pokenum;
-            out << id.subnum;
-            return out;
-        }
-        QDataStream & operator >> (QDataStream &in, const Pokemon::uniqueId &id)
-        {
-            in >> id.pokenum;
-            in >> id.subnum;
-            return out;
-        }
         QString toString() const;
         quint32 toPokeRef() const;
         // Separates pokenum:subnum:1-letter-options data from
@@ -1769,5 +1757,8 @@ inline uint qHash(const Pokemon::uniqueId &key)
 {
     return qHash(key.toPokeRef());
 }
+
+QDataStream & operator << (QDataStream &out, const Pokemon::uniqueId &id);
+QDataStream & operator >> (QDataStream &in, const Pokemon::uniqueId &id);
 
 #endif // POKEMONSTRUCTS_H
