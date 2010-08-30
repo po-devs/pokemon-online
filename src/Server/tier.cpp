@@ -30,7 +30,7 @@ QPair<int, int> MemberRating::pointChangeEstimate(int opponent_rating)
 
     int kfactor;
     if (n <= 5) {
-        static const int kfactors[] = {200, 100, 80, 70, 60, 50};
+        static const int kfactors[] = {100, 90, 80, 70, 60, 50};
         kfactor = kfactors[n];
     } else {
         kfactor = 32;
