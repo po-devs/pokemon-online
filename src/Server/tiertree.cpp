@@ -80,6 +80,23 @@ void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool 
     }
 }
 
+TierCategory *TierCategory::dataClone()
+{
+    TierCategory *c = new TierCategory();
+    c->name = name;
+    c->root = root;
+
+    foreach(TierCategory *tc, subCategories) {
+        c->subCategories.push_back(tc->dataClone());
+    }
+
+    foreach(Tier *t, subLeafs) {
+        c->subLeafs.push_back(t->dataClone());
+    }
+
+    return c;
+}
+
 QDomElement & TierCategory::toXml(QDomElement &xml) const {
     if (!root) {
         xml.setAttribute("name", name);
