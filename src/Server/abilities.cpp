@@ -486,7 +486,7 @@ struct AMGuts : public AM {
         /* Guts doesn't activate on a sleeping poke that used Rest (but other ways of sleeping
             make it activated) */
         if (b.poke(s).status() != Pokemon::Fine) {
-            if (b.ability(s) == Ability::MarvelScale || b.poke(s).status() != Pokemon::Asleep || !poke(b,s).value("Rested").toBool()) {
+            if (b.gen() > 3 || b.ability(s) == Ability::MarvelScale || b.poke(s).status() != Pokemon::Asleep || !poke(b,s).value("Rested").toBool()) {
                 turn(b,s)[QString("Stat%1AbilityModifier").arg(poke(b,s)["AbilityArg"].toInt())] = 10;
             }
         }
