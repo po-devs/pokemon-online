@@ -1115,11 +1115,6 @@ QDataStream & operator >> (QDataStream & in, PokePersonal & poke)
     return in;
 }
 
-inline uint qHash(const Pokemon::uniqueId &key)
-{
-    return qHash(key.toPokeRef());
-}
-
 QString Pokemon::uniqueId::toString() const
 {
     QString result = QString("%1").arg(pokenum);

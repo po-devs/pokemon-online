@@ -1752,4 +1752,10 @@ QDataStream & operator >> (QDataStream & in,TrainerTeam & trainerTeam);
 
 QDataStream & operator << (QDataStream & out,const PokePersonal & Pokemon);
 QDataStream & operator >> (QDataStream & in,PokePersonal & Pokemon);
+
+inline uint qHash(const Pokemon::uniqueId &key)
+{
+    return qHash(key.toPokeRef());
+}
+
 #endif // POKEMONSTRUCTS_H
