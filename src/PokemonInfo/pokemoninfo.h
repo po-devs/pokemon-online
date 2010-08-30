@@ -120,7 +120,8 @@ private:
     // H - hidden form(e).
     static QHash<Pokemon::uniqueId, QString> m_Options;
     static int m_trueNumberOfPokes;
-    static int m_NumberOfVisiblePokes;
+    // To get random pokemon faster.
+    static QList<Pokemon::uniqueId> m_VisiblePokesPlainList;
 
     static void loadNames();
     static void loadEvos();
