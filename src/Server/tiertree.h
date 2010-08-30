@@ -22,6 +22,7 @@ struct TierCategory
     void cleanCategories();
     void clear();
     void kill(Tier *t);
+    TierCategory *dataClone();
 
     void serialize(QDataStream &stream, int level = -1);
 };
