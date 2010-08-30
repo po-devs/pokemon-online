@@ -327,15 +327,14 @@ bool PokeGraphics::upToDate() const
     return m_uptodate;
 }
 
-void PokeGraphics::load(int forme, int gender, bool shiny)
+void PokeGraphics::load(int gender, bool shiny)
 {
-    if (upToDate() && gender==m_storedgender && shiny == m_storedshininess && forme==m_storedforme)
+    if (upToDate() && gender==m_storedgender && shiny == m_storedshininess)
         return;
 
     m_storedgender = gender;
     m_storedshininess = shiny;
-    m_storedforme = forme;
-    m_picture = PokemonInfo::Picture(num(), forme, gender, shiny);
+    m_picture = PokemonInfo::Picture(num(), gender, shiny);
     setUpToDate(true);
 }
 
@@ -349,9 +348,9 @@ QPixmap PokeGraphics::picture()
     return m_picture;
 }
 
-QPixmap PokeGraphics::picture(int forme, int gender, bool shiny)
+QPixmap PokeGraphics::picture(int gender, bool shiny)
 {
-    load(forme, gender, shiny);
+    load(gender, shiny);
     return picture();
 }
 
@@ -360,9 +359,9 @@ QIcon PokeGraphics::icon()
     return m_icon;
 }
 
-QIcon PokeGraphics::icon(int index)
+QIcon PokeGraphics::icon(const Pokemon::uniqueId &pokeid)
 {
-    loadIcon(index);
+    loadIcon(pokeid);
     return icon();
 }
 

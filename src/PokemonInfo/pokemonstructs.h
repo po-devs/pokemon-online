@@ -1648,7 +1648,6 @@ protected:
     QIcon m_icon;
     Pokemon::uniqueId m_num;
     int m_storedgender;
-    int m_storedforme;
     bool m_storedshininess;
     bool m_uptodate;
 
@@ -1657,13 +1656,13 @@ protected:
 public:
     PokeGraphics();
     QPixmap picture(); /* just gives the already loaded picture */
-    QPixmap picture(int forme, int gender, bool shiny); /* loads a new picture if necessary, anyway gives the right picture */
+    QPixmap picture(int gender, bool shiny); /* loads a new picture if necessary, anyway gives the right picture */
     QIcon icon();
-    QIcon icon(int index);
+    QIcon icon(const Pokemon::uniqueId &pokeid);
 
     void setNum(Pokemon::uniqueId num);
     Pokemon::uniqueId num() const;
-    void load(int forme, int gender, bool shiny);
+    void load(int gender, bool shiny);
     void loadIcon(const Pokemon::uniqueId &pokeid);
 };
 
