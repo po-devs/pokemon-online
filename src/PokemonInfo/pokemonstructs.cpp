@@ -287,7 +287,7 @@ int PokePersonal::natureBoost(int stat) const
 
 void PokePersonal::reset()
 {
-    num() = 0;
+    num() = Pokemon::NoPoke;
     level() = 100;
     for (int i = 0; i < 4; i++)
         m_moves[i] = 0;
@@ -298,7 +298,6 @@ void PokePersonal::reset()
     nickname() = "";
     nature() = 0;
     item() = 0;
-    forme() = 0;
 
     for (int i = 0; i < 6; i ++) {
         m_DVs[i] = 31;
@@ -307,7 +306,7 @@ void PokePersonal::reset()
 }
 
 PokeGraphics::PokeGraphics()
-        : m_num(0), m_uptodate(false)
+    : m_num(Pokemon::NoPoke), m_uptodate(false)
 {
 }
 
@@ -1030,14 +1029,14 @@ QDataStream & operator >> (QDataStream & in, Team & team)
 
 QDataStream & operator >> (QDataStream & in, PokeTeam & poke)
 {
-    quint16 num;
+    Pokemon::uniqueId num;
     in >> num;
 
     poke.setNum(num);
 
     poke.load();
 
-    in >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level() >> poke.forme();
+    in >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level();
 
     for(int i=0;i<4;i++)
     {
@@ -1072,7 +1071,6 @@ QDataStream & operator << (QDataStream & out, const PokePersonal & Pokemon)
     out << Pokemon.shiny();
     out << Pokemon.happiness();
     out << Pokemon.level();
-    out << Pokemon.forme();
     int i;
     for(i=0;i<4;i++)
     {
@@ -1091,7 +1089,7 @@ QDataStream & operator << (QDataStream & out, const PokePersonal & Pokemon)
 
 QDataStream & operator >> (QDataStream & in, PokePersonal & poke)
 {
-    in >> poke.num() >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level() >> poke.forme();
+    in >> poke.num() >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level();
 
     for(int i=0;i<4;i++)
     {

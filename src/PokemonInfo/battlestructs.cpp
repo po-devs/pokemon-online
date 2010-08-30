@@ -219,7 +219,7 @@ void PokeBattle::updateStats()
 
 QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 {
-    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.forme() >> po.item() >> po.ability()
+    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.item() >> po.ability()
             >> po.happiness();
 
     for (int i = 0; i < 5; i++) {
@@ -245,7 +245,7 @@ QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 
 QDataStream & operator << (QDataStream &out, const PokeBattle &po)
 {
-    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.forme() << po.item() << po.ability()
+    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.item() << po.ability()
             << po.happiness();
 
     for (int i = 0; i < 5; i++) {
@@ -292,14 +292,14 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
 
 QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po)
 {
-    in >> po.num() >> po.nick() >> po.lifePercent() >> po.status() >> po.gender() >> po.shiny() >> po.level() >> po.forme();
+    in >> po.num() >> po.nick() >> po.lifePercent() >> po.status() >> po.gender() >> po.shiny() >> po.level();
 
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po)
 {
-    out << po.num() << po.nick() << po.lifePercent() << po.status() << po.gender() << po.shiny() << po.level() << po.forme();
+    out << po.num() << po.nick() << po.lifePercent() << po.status() << po.gender() << po.shiny() << po.level();
 
     return out;
 }
