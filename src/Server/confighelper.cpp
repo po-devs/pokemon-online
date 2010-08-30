@@ -14,6 +14,29 @@
 
    Visual C++ > GCC on this point */
 
+void ConfigForm::addConfigHelper(AbstractConfigHelper *helper)
+{
+    helpers.push_back(helper);
+}
+
+QWidget* ConfigForm::generateConfigWidget()
+{
+    QWidget *ret = new QWidget();
+
+    QVBoxLayout *v = new QVBoxLayout(ret);
+
+    foreach(AbstractConfigHelper *helper, helpers) {
+        v->addWidget(helper->generateConfigWidget());
+    }
+
+    QPushButton *cancel = new QPushButton("Cancel");
+    QPushButton *apply = new QPushButton("Apply");
+
+    v->addLayout(new QSideBySide(cancel, apply));
+
+    return ret;
+}
+
 AbstractConfigHelper::AbstractConfigHelper(const QString &desc) : description(desc) {
 
 }
@@ -27,11 +50,6 @@ QWidget *AbstractConfigHelper::generateConfigWidget() {
         w->setLayout(new QSideBySide(new QLabel(description), internalWidget));
         return w;
     }
-}
-
-void AbstractConfigHelper::editingDone()
-{
-    doWhenEditingDone();
 }
 
 template<class T>
@@ -67,7 +85,7 @@ QWidget *ConfigCombo<T>::getInternalWidget()
 }
 
 template<class T>
-void ConfigCombo<T>::doWhenEditingDone()
+void ConfigCombo<T>::updateVal()
 {
     int index = ((QComboBox*)(ConfigHelper<T>::internalWidget))->currentIndex();
 
@@ -87,15 +105,50 @@ QWidget * ConfigSpin::getInternalWidget()
     QSpinBox *ret = new QSpinBox();
 
     ret->setRange(min, max);
-
     ret->setValue(var);
-
-    connect(ret, SIGNAL(valueChanged(int)), SLOT(editingDone()));
 
     return ret;
 }
 
-void ConfigSpin::editingDone()
+void ConfigSpin::updateVal()
 {
     var = ((QSpinBox*)(ConfigHelper<T>::internalWidget))->value();
+}
+
+ConfigLine::ConfigLine(const QString &desc, QString &var)
+    : ConfigHelper<QString> (desc, var)
+{
+
+}
+
+void ConfigLine::updateVal()
+{
+    var = ((QLineEdit*)(ConfigHelper<T>::internalWidget))->text();
+}
+
+QWidget *ConfigLine::getInternalWidget()
+{
+    QLineEdit *ret = new QLineEdit();
+    ret->setText(var);
+
+    return ret;
+}
+
+ConfigCheck::ConfigCheck(const QString &desc, bool &var)
+    : ConfigHelper<bool> ("", var), checkBoxText(desc)
+{
+
+}
+
+void ConfigCheck::updateVal()
+{
+    var = ((QCheckBox*)(ConfigHelper<T>::internalWidget))->isChecked();
+}
+
+QWidget *ConfigCheck::getInternalWidget()
+{
+    QCheckBox *ret = new QCheckBox(checkBoxText);
+    ret->setChecked(var);
+
+    return ret;
 }
