@@ -91,6 +91,9 @@ void TierMachine::fromString(const QString &s)
         tierNames.insert(t->name(), t);
     }
 
+    /* Removing useless categories */
+    tree.cleanCategories();
+
     /* Some duplicates may have been removed, so we gather the tiers again */
     tiers = tree.gatherTiers();
 
@@ -112,7 +115,17 @@ void TierMachine::fromString(const QString &s)
 
     m_tiers = tiers;
 
+    m_tierByNames.clear();
+    foreach(Tier *t, tiers) {
+        m_tierByNames[t->name()] = t;
+    }
+
     /* Do tierList . */
+    m_tierList = tree.buildTierList();
+}
+
+QByteArray TierMachine::tierList() const {
+    return m_tierList;
 }
 
 QString TierMachine::toString() const
@@ -132,32 +145,25 @@ void TierMachine::fetchRankings(const QString &name, const QVariant &data, QObje
 
 Tier &TierMachine::tier(const QString &name)
 {
-    for(int i = 0; i < m_tierNames.length(); i++) {
-        if (m_tierNames[i].compare(name, Qt::CaseInsensitive) == 0) {
-            return *m_tiers[i];
-        }
+    if (m_tierByNames.contains(name)) {
+        return *m_tierByNames[name];
     }
+
     return *m_tiers[0];
 }
 
 const Tier &TierMachine::tier(const QString &name) const
 {
-    for(int i = 0; i < m_tierNames.length(); i++) {
-        if (m_tierNames[i].compare(name, Qt::CaseInsensitive) == 0) {
-            return *m_tiers[i];
-        }
+    if (m_tierByNames.contains(name)) {
+        return *m_tierByNames[name];
     }
+
     return *m_tiers[0];
 }
 
 bool TierMachine::exists(const QString &name) const
 {
-    for(int i = 0; i < m_tierNames.length(); i++) {
-        if (m_tierNames[i].compare(name, Qt::CaseInsensitive) == 0) {
-            return true;
-        }
-    }
-    return false;
+    return m_tierByNames.contains(name);
 }
 
 bool TierMachine::isValid(const TeamBattle &t, QString tier) const
