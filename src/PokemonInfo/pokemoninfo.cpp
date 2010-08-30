@@ -601,18 +601,24 @@ PokeBaseStats PokemonInfo::BaseStats(const Pokemon::uniqueId &pokeid)
 void PokemonInfo::loadNames()
 {
     QStringList temp;
-    QString options;
     fill_container_with_file(temp, trFile(path("pokemons")));
     m_NumberOfVisiblePokes = 0;
 
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString name;
+        QString options;
         Pokemon::uniqueId id;
         bool ok = Pokemon::uniqueId::extract(current, id, options, name);
         if(ok) {
             m_Names[id] = name;
-            if(!options.contains('H')) {
+            if(options.contains('H')) {
+                if(id.subnum == 0) {
+                    // Base form cannot be hidden.
+                    options.remove('H');
+                    m_NumberOfVisiblePokes++;
+                }
+            }else{
                 m_NumberOfVisiblePokes++;
             }
             m_Options[id] = options;
