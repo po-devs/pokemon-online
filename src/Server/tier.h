@@ -118,6 +118,7 @@ private:
     QSet<int> bannedPokes;
     QSet<int> restrictedPokes;
     int doubles; /* < 0 : singles, 0: either, > 0: doubles */
+    int displayOrder;
     quint32 clauses;
 
     QString m_name;

@@ -244,30 +244,6 @@ bool TierMachine::existsPlayer(const QString &name, const QString &player)
    return exists(name) && tier(name).exists(player);
 }
 
-TierWindow::TierWindow(QWidget *parent) : QWidget(parent)
-{
-    setAttribute(Qt::WA_DeleteOnClose,true);
-
-    QGridLayout *layout = new QGridLayout(this);
-
-    layout->addWidget(m_editWindow = new QPlainTextEdit(),0,0,1,2);
-    QPushButton *ok;
-    layout->addWidget(ok = new QPushButton(tr("&Done")),1,1);
-
-    m_editWindow->setPlainText(TierMachine::obj()->toString());
-
-    connect(ok, SIGNAL(clicked()), SLOT(done()));
-    connect(ok, SIGNAL(clicked()), SLOT(close()));
-}
-
-void TierWindow::done()
-{
-    TierMachine::obj()->fromString(m_editWindow->toPlainText());
-    TierMachine::obj()->save();
-
-    emit tiersChanged();
-}
-
 LoadThread *TierMachine::getThread()
 {
     /* '%' is a safety thing, in case nextLoadThreadNumber is also accessed in writing and that messes it up, at least it isn't out of bounds now */

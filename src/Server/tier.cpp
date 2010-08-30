@@ -488,6 +488,7 @@ void Tier::loadFromXml(const QDomElement &elem)
     numberOfPokemons = elem.attribute("numberOfPokemons", "6").toInt();
     maxRestrictedPokes = elem.attribute("numberOfRestricted", "1").toInt();
     doubles = elem.attribute("doubles", "0").toInt();
+    displayOrder = elem.attribute("displayOrder", "0").toInt();
 
     clauses = 0;
     bannedSets.clear();
@@ -581,6 +582,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
     dest.setAttribute("numberOfPokemons", numberOfPokemons);
     dest.setAttribute("numberOfRestricted", maxRestrictedPokes);
     dest.setAttribute("doubles", doubles);
+    dest.setAttribute("displayOrder", 0);
 
     if (bannedMoves.size() > 0) {
         QStringList bannedMovesS;
@@ -724,7 +726,16 @@ bool BannedPoke::isForcedMatch(const PokeBattle &poke) const
 }
 
 Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), m_count(-1), last_count_time(0), holder(1000) {
+    banPokes = true;
+    parent = NULL;
+    gen = 4;
+    maxLevel = 100;
+    numberOfPokemons = 6;
+    maxRestrictedPokes = 1;
+    doubles = 0;
+    displayOrder = 0;
 
+    clauses = 0;
 }
 
 void Tier::kill() {
