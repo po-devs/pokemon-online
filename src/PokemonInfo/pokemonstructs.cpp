@@ -737,7 +737,7 @@ bool TrainerTeam::importFromTxt(const QString &file1)
 
         p = PokeTeam();
 
-        int pokenum;
+        Pokemon::uniqueId pokenum;
         QString nickname;
         int gender = 0;
 
@@ -911,7 +911,7 @@ QString TrainerTeam::exportToTxt() const
 {
     QString ret = "";
     for (int i = 0; i < 6; i++) {
-        if (team().poke(i).num() == 0)
+        if (team().poke(i).num() == Pokemon::NoPoke)
             continue;
 
         const PokeTeam &p = team().poke(i);
