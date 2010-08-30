@@ -17,9 +17,8 @@ class ConfigForm : public QObject
 public:
     QWidget* generateConfigWidget();
     void addConfigHelper(AbstractConfigHelper *helper);
-signals:
-    void configConfirmed();
-    void configCancelled();
+public slots:
+    void applyVals();
 private:
     QList<AbstractConfigHelper *> helpers;
 };
@@ -41,7 +40,7 @@ template <class T>
 class ConfigHelper : public AbstractConfigHelper {
 public:
     ConfigHelper(const QString &desc, T &var);
-private:
+protected:
     T &var;
 };
 

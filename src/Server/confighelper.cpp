@@ -29,12 +29,14 @@ QWidget* ConfigForm::generateConfigWidget()
         v->addWidget(helper->generateConfigWidget());
     }
 
-    QPushButton *cancel = new QPushButton("Cancel");
-    QPushButton *apply = new QPushButton("Apply");
-
-    v->addLayout(new QSideBySide(cancel, apply));
-
     return ret;
+}
+
+void ConfigForm::applyVals()
+{
+    foreach(AbstractConfigHelper *helper, helpers) {
+        helper->updateVal();
+    }
 }
 
 AbstractConfigHelper::AbstractConfigHelper(const QString &desc) : description(desc) {
@@ -112,7 +114,7 @@ QWidget * ConfigSpin::getInternalWidget()
 
 void ConfigSpin::updateVal()
 {
-    var = ((QSpinBox*)(ConfigHelper<T>::internalWidget))->value();
+    var = ((QSpinBox*)(internalWidget))->value();
 }
 
 ConfigLine::ConfigLine(const QString &desc, QString &var)
@@ -123,7 +125,7 @@ ConfigLine::ConfigLine(const QString &desc, QString &var)
 
 void ConfigLine::updateVal()
 {
-    var = ((QLineEdit*)(ConfigHelper<T>::internalWidget))->text();
+    var = ((QLineEdit*)(internalWidget))->text();
 }
 
 QWidget *ConfigLine::getInternalWidget()
@@ -142,7 +144,7 @@ ConfigCheck::ConfigCheck(const QString &desc, bool &var)
 
 void ConfigCheck::updateVal()
 {
-    var = ((QCheckBox*)(ConfigHelper<T>::internalWidget))->isChecked();
+    var = ((QCheckBox*)(internalWidget))->isChecked();
 }
 
 QWidget *ConfigCheck::getInternalWidget()
