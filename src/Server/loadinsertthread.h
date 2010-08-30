@@ -34,6 +34,8 @@ private:
     QSemaphore sem;
 };
 
+/* Qt doesn't manage templates and signals well, hence why the abstract class
+   without templates */
 class AbstractInsertThread : public QThread
 {
     Q_OBJECT
