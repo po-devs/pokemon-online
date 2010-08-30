@@ -45,7 +45,8 @@ public:
 
     /* Self-explainable functions */
     static int TrueCount(int gen=4); // pokes without counting forms
-    static int NumberOfPokemons();
+    static int NumberOfPokemons(); // base + all forms.
+    static int NumberOfVisiblePokes(); // base + visible forms.
     static QString Name(const Pokemon::uniqueId &pokeid);
     static Pokemon::uniqueId Number(const QString &pokename);
     static int LevelBalance(const Pokemon::uniqueId &pokeid);
@@ -88,6 +89,8 @@ public:
     static int FullStat(const Pokemon::uniqueId &pokeid, int nature, int stat, int level, quint8 dv, quint8 ev);
     static QString Desc(const Pokemon::uniqueId &pokeid, int cartridge);
     static QString Height(const Pokemon::uniqueId &pokeid);
+    // Will NOT return Missingno.
+    static Pokemon::uniqueId getRandomPokemon();
 private:
     // m_Names is a base.
     // It is assumed that anything that is not there do not exist at all.
@@ -117,6 +120,7 @@ private:
     // H - hidden form(e).
     static QHash<Pokemon::uniqueId, QString> m_Options;
     static int m_trueNumberOfPokes;
+    static int m_NumberOfVisiblePokes;
 
     static void loadNames();
     static void loadEvos();

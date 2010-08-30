@@ -1,5 +1,4 @@
 #include "battlestructs.h"
-#include "pokemoninfo.h"
 #include "networkstructs.h"
 #include "movesetchecker.h"
 #include "../Utilities/otherwidgets.h"
@@ -75,7 +74,7 @@ QDataStream & operator << (QDataStream &out, const BattleMove &mo)
 
 PokeBattle::PokeBattle()
 {
-    num() = 0;
+    num() = Pokemon::NoPoke;
     ability() = 0;
     item() = 0;
     gender() = 0;
@@ -84,7 +83,6 @@ PokeBattle::PokeBattle()
     totalLifePoints() = 1;
     level() = 100;
     happiness() = 255;
-    forme() = 0;
 
     for (int i = 0; i < 6; i++) {
         dvs() << 31;
@@ -117,8 +115,8 @@ void PokeBattle::setNormalStat(int stat, quint16 i)
 void PokeBattle::init(const PokePersonal &poke)
 {
     if (!PokemonInfo::Exists(poke.num())) {
-	num() = 0;
-	return;
+        num() = Pokemon::NoPoke;
+        return;
     }
 
     PokeGeneral p;
@@ -130,13 +128,6 @@ void PokeBattle::init(const PokePersonal &poke)
     num() = poke.num();
 
     happiness() = poke.happiness();
-
-    forme() = 0;
-
-    if (PokemonInfo::HasAestheticFormes(num()) && PokemonInfo::AFormesShown(num())) {
-        if (PokemonInfo::NumberOfAFormes(num()) > poke.forme())
-            forme() = poke.forme();
-    }
 
     if (ItemInfo::Exists(poke.item())) {
         item() = poke.item();
@@ -153,13 +144,13 @@ void PokeBattle::init(const PokePersonal &poke)
     nick() = (v.validate(poke.nickname()) == QNickValidator::Acceptable && poke.nickname().length() <= 12) ? poke.nickname() : PokemonInfo::Name(num());
 
     if (GenderInfo::Possible(poke.gender(), p.genderAvail())) {
-	gender() = poke.gender();
+        gender() = poke.gender();
     } else {
-	gender() = GenderInfo::Default(p.genderAvail());
+        gender() = GenderInfo::Default(p.genderAvail());
     }
 
     if (p.abilities().ab1 == poke.ability() || p.abilities().ab2 == poke.ability()) {
-	ability() = poke.ability();
+        ability() = poke.ability();
     } else {
         ability() = p.abilities().ab1;
     }
@@ -188,8 +179,8 @@ void PokeBattle::init(const PokePersonal &poke)
        not be valid, so we check once more */
 
     if (move(0).num() == 0 || !MoveSetChecker::isValid(num(), 4, move(0).num(), move(1).num(), move(2).num(), move(3).num())) {
-	num() = 0;
-	return;
+        num() = 0;
+        return;
     }
 
     dvs().clear();
@@ -205,13 +196,12 @@ void PokeBattle::init(const PokePersonal &poke)
     int sum = 0;
     for (int i = 0; i < 6; i++) {
         //Arceus
-        if (num() == Pokemon::Arceus && evs()[i] > 100)
-            evs()[i] = 100;
+        if (num() == Pokemon::Arceus && evs()[i] > 100) evs()[i] = 100;
         sum += evs()[i];
-	if (sum > 510) {
+        if (sum > 510) {
             evs()[i] -= (sum-510);
-	    sum = 510;
-	}
+            sum = 510;
+        }
     }
 
     updateStats();
@@ -298,7 +288,6 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
 	lifePercent() = 1;
     }
     level() = poke.level();
-    forme() = poke.forme();
 }
 
 QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po)
@@ -325,25 +314,25 @@ TeamBattle::TeamBattle(const TeamInfo &other)
     info = other.info;
     int curs = 0;
     for (int i = 0; i < 6; i++) {
-	poke(curs).init(other.pokemon(i));
-	if (poke(curs).num() != 0) {
-	    ++curs;
-	}
+        poke(curs).init(other.pokemon(i));
+        if (poke(curs).num() != 0) {
+            ++curs;
+        }
     }
 }
 
 bool TeamBattle::invalid() const
 {
-    return poke(0).num() == 0;
+    return poke(0).num() == Pokemon::NoPoke;
 }
 
 void TeamBattle::generateRandom()
 {
-    QList<int> pokes;
+    QList<Pokemon::uniqueId> pokes;
     for (int i = 0; i < 6; i++) {
         while(1) {
-            int num = true_rand() % PokemonInfo::NumberOfPokemons();
-            if (pokes.contains(num) || num == 0) {
+            Pokemon::uniqueId num = PokemonInfo::getRandomPokemon();
+            if (pokes.contains(num)) {
                 continue ;
             }
             pokes.push_back(num);
@@ -365,7 +354,6 @@ void TeamBattle::generateRandom()
         }
         p.nature() = true_rand()%NatureInfo::NumberOfNatures();
 
-        p.forme() = 0;
         p.level() = PokemonInfo::LevelBalance(p.num());
 
         PokePersonal p2;
@@ -435,17 +423,17 @@ void TeamBattle::generateRandom()
 PokeBattle & TeamBattle::poke(int i)
 {
     if (i >= 0 && i < 6)
-	return m_pokemons[i];
+        return m_pokemons[i];
     else
-	return m_pokemons[0];
+        return m_pokemons[0];
 }
 
 const PokeBattle & TeamBattle::poke(int i) const
 {
     if (i >= 0 && i < 6)
-	return m_pokemons[i];
+        return m_pokemons[i];
     else
-	return m_pokemons[0];
+        return m_pokemons[0];
 }
 
 QDataStream & operator >> (QDataStream &in, TeamBattle &te)

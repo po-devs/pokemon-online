@@ -2,6 +2,7 @@
 #include "pokemonstructs.h"
 
 #include "../../SpecialIncludes/zip.h"
+#include "../Utilities/functions.h"
 
 PokemonInfoConfig::Config PokemonInfoConfig::_config = PokemonInfoConfig::Gui;
 
@@ -28,6 +29,7 @@ QHash<Pokemon::uniqueId, PokemonMoves> PokemonInfo::m_Moves;
 QHash<quint16, quint16> PokemonInfo::m_MaxForme;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Options;
 int PokemonInfo::m_trueNumberOfPokes;
+int PokemonInfo::m_NumberOfVisiblePokes;
 QHash<quint16, QList<quint16> > PokemonInfo::m_Evolutions;
 QHash<quint16, quint16> PokemonInfo::m_OriginalEvos;
 
@@ -407,6 +409,10 @@ int PokemonInfo::NumberOfPokemons()
     return m_Names.size();
 }
 
+int PokemonInfo::NumberOfVisiblePokes() {
+    return m_NumberOfVisiblePokes;
+}
+
 QString PokemonInfo::Name(const Pokemon::uniqueId &pokeid)
 {
     if(Exists(pokeid))
@@ -576,7 +582,7 @@ void PokemonInfo::loadBaseStats()
     for (int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString options, text_stats;
-        Pokemon::uniqueId id();
+        Pokemon::uniqueId id;
         bool ok = Pokemon::uniqueId::extract(current, id, options, text_stats);
         if(ok){
             QTextStream statsstream(&text_stats, QIODevice::ReadOnly);
@@ -597,14 +603,18 @@ void PokemonInfo::loadNames()
     QStringList temp;
     QString options;
     fill_container_with_file(temp, trFile(path("pokemons")));
+    m_NumberOfVisiblePokes = 0;
 
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString name;
-        Pokemon::uniqueId id();
+        Pokemon::uniqueId id;
         bool ok = Pokemon::uniqueId::extract(current, id, options, name);
         if(ok) {
             m_Names[id] = name;
+            if(!options.contains('H')) {
+                m_NumberOfVisiblePokes++;
+            }
             m_Options[id] = options;
             // Calculate a number of formes a given base pokemon have.
             quint16 max_forme = m_MaxForme.value(id.pokenum, 0);
@@ -621,7 +631,7 @@ void PokemonInfo::loadNames()
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString weight;
-        Pokemon::uniqueId id();
+        Pokemon::uniqueId id;
         bool ok = Pokemon::uniqueId::extract(current, id, options, weight);
         if(ok) {
             m_Weights[id] = weight;
@@ -790,6 +800,30 @@ void PokemonInfo::makeDataConsistent()
         // Next.
         ++eit;
     }
+}
+
+static Pokemon::uniqueId PokemonInfo::getRandomPokemon()
+{
+    Pokemon::uniqueId result;
+    
+    // We should have at least 2 visible pokemon to work anyway.
+    // Missingno (0:0) is required but special.
+    // Plus a trainer should have an ability to select at least one Pokemon.
+    int random_num = true_rand() % (PokemonInfo::NumberOfVisiblePokes() - 1);
+    QMap<Pokemon::uniqueId, QString>::const_iterator it = m_Names.constBegin();
+    // Skip Missingno. m_Names is a map therefore first item is Missingno (0:0).
+    ++it;
+    int current_iteration = 0;
+
+    while ((it != m_Names.constEnd()) && (current_iteration != random_num)) {
+        current_iteration++;
+        ++it;
+    }
+    if(it != m_Names.constEnd()) result = it.key();
+    // Return Bulbasaur if Missingno.
+    // Should NOT happen normally.
+    if(result == Pokemon::NoPoke) result.pokenum = 1;
+    return result;
 }
 
 void MoveInfo::loadCritics()
