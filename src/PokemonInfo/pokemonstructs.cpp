@@ -521,14 +521,14 @@ QDomElement & PokeTeam::toXml(QDomElement &el) const
     QDomDocument doc;
 
     el.setAttribute("Nickname", nickname());
-    el.setAttribute("Num", num());
+    el.setAttribute("Num", num().pokenum);
     el.setAttribute("Item", item());
     el.setAttribute("Ability", ability());
     el.setAttribute("Nature", nature());
     el.setAttribute("Gender", gender());
     el.setAttribute("Shiny", shiny());
     el.setAttribute("Happiness", happiness());
-    el.setAttribute("Forme", forme());
+    el.setAttribute("Forme", num().subnum);
     el.setAttribute("Lvl", level());
 
     for(int i = 0; i < 4; i++)
@@ -629,7 +629,7 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
 void PokeTeam::loadFromXml(const QDomElement &poke)
 {
     reset();
-    setNum(poke.attribute("Num",0).toInt());
+    setNum(Pokemon::uniqueId(poke.attribute("Num",0).toInt(), poke.attribute("Forme",0).toInt()));
     load();
     nickname() = poke.attribute("Nickname");
     item() = poke.attribute("Item").toInt();
@@ -639,7 +639,6 @@ void PokeTeam::loadFromXml(const QDomElement &poke)
     shiny() = QVariant(poke.attribute("Shiny")).toBool();
     happiness() = poke.attribute("Happiness").toInt();
     level() = poke.attribute("Lvl").toInt();
-    forme() = poke.attribute("Forme").toInt();
 
     int cptMove=0;
 
