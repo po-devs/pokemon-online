@@ -7,6 +7,36 @@ TierCategory::~TierCategory()
     clear();
 }
 
+void TierCategory::cleanCategories()
+{
+    foreach(TierCategory *c, subCategories) {
+        c->cleanCategories();
+    }
+
+    foreach(TierCategory *c, subCategories) {
+        if (c->subCategories.empty() && c->subLeafs.empty()) {
+            subCategories.removeOne(c);
+        }
+    }
+}
+
+void TierCategory::serialize(QDataStream &stream, int level)
+{
+    if (!root) {
+        stream << uchar(level) << name;
+    }
+
+    level += 1;
+
+    foreach(TierCategory *c, subCategories) {
+        c->serialize(stream, level);
+    }
+
+    foreach(Tier *t, subLeafs) {
+        stream << uchar (level) << t->name();
+    }
+}
+
 void TierCategory::kill(Tier *t) {
     subLeafs.removeAll(t);
     delete t;
@@ -105,4 +135,20 @@ QString TierTree::toXml() const
 QList<Tier*> TierTree::gatherTiers()
 {
     return root.gatherTiers();
+}
+
+QByteArray TierTree::buildTierList()
+{
+    QByteArray toWrite;
+
+    QDataStream stream(&toWrite, QIODevice::WriteOnly);
+    stream.setVersion(QDataStream::Qt_4_5);
+
+    root.serialize(stream, -1);
+
+    return toWrite;
+}
+
+void TierTree::cleanCategories() {
+    root.cleanCategories();
 }

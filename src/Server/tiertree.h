@@ -19,8 +19,11 @@ struct TierCategory
     QDomElement &toXml(QDomElement &xml) const;
 
     QList<Tier *> gatherTiers();
+    void cleanCategories();
     void clear();
     void kill(Tier *t);
+
+    void serialize(QDataStream &stream, int level = -1);
 };
 
 class TierTree
@@ -31,6 +34,10 @@ public:
     void loadFromXml(const QString &xmldata, TierMachine *boss);
     QString toXml() const;
     QList<Tier *> gatherTiers();
+    /* Removing branches without leafs */
+    void cleanCategories();
+    /* Building the tier list as sent over network */
+    QByteArray buildTierList();
 };
 
 #endif // TIERTREE_H
