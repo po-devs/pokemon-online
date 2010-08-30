@@ -425,13 +425,13 @@ void PokeTeam::load()
     }
     ability() = abilities().ab1;
     nickname() = PokemonInfo::Name(num());
-    PokeGraphics::load(forme(), gender(), false);
+    PokeGraphics::load(gender(), false);
     PokeGraphics::loadIcon(num());
 }
 
 QPixmap PokeTeam::picture()
 {
-    return PokeGraphics::picture(forme(), gender(), shiny());
+    return PokeGraphics::picture(gender(), shiny());
 }
 
 QIcon PokeTeam::icon()
