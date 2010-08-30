@@ -1174,3 +1174,17 @@ bool Pokemon::uniqueId::extract_short(const QString &from, quint16 &pokenum, QSt
     } // if !from
     return result;
 }
+
+QDataStream & operator << (QDataStream &out, const Pokemon::uniqueId &id)
+{
+    out << id.pokenum;
+    out << id.subnum;
+    return out;
+}
+
+QDataStream & operator >> (QDataStream &in, const Pokemon::uniqueId &id)
+{
+    in >> id.pokenum;
+    in >> id.subnum;
+    return in;
+}
