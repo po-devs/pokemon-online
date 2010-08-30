@@ -79,20 +79,6 @@ private:
     LoadThread * getThread();
 };
 
-
-class TierWindow : public QWidget
-{
-    Q_OBJECT
-public:
-    TierWindow(QWidget *parent = NULL);
-signals:
-    void tiersChanged();
-private slots:
-    void done();
-private:
-    QPlainTextEdit *m_editWindow;
-};
-
 /* For rankings */
 typedef QVector<QPair<QString, int> > qvectorqpairqstringint;
 Q_DECLARE_METATYPE(qvectorqpairqstringint)

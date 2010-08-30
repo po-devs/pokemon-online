@@ -37,7 +37,8 @@ SOURCES += main.cpp \
     tier.cpp \
     moves.cpp \
     channel.cpp \
-    tiertree.cpp
+    tiertree.cpp \
+    tierwindow.cpp
 DEFINES = SERVER_SIDE
 LIBS += -L../../bin \
     -lutilities \
@@ -85,4 +86,5 @@ HEADERS += player.h \
     ../Utilities/coro.h \
     ../Utilities/contextswitch.h \
     channel.h \
-    tiertree.h
+    tiertree.h \
+    tierwindow.h
