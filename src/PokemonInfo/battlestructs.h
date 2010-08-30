@@ -5,6 +5,7 @@
 
 #include <QtCore>
 #include "../Utilities/functions.h"
+#include "pokemoninfo.h"
 
 class TeamInfo;
 class PokePersonal;
@@ -56,14 +57,13 @@ class PokeBattle
     PROPERTY(QList<int>, evs);
     PROPERTY(quint16, lifePoints);
     PROPERTY(quint16, totalLifePoints);
-    PROPERTY(quint16, num);
+    PROPERTY(Pokemon::uniqueId, num);
     PROPERTY(quint16, item);
     PROPERTY(quint16, ability);
     PROPERTY(qint8, status);
     PROPERTY(qint8, sleepCount);
     PROPERTY(quint8, gender);
     PROPERTY(quint8, level);
-    PROPERTY(quint8, forme);
     PROPERTY(quint8, nature);
     PROPERTY(quint8, happiness);
     PROPERTY(bool, shiny);
@@ -78,7 +78,7 @@ public:
     quint16 normalStat(int stat) const;
     void updateStats();
 
-    bool ko() const {return lifePoints() == 0 || num() == 0 || status() == Pokemon::Koed;}
+    bool ko() const {return lifePoints() == 0 || num() == Pokemon::NoPoke || status() == Pokemon::Koed;}
     bool isFull() const { return lifePoints() == totalLifePoints(); }
     int lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
 
@@ -97,12 +97,11 @@ class ShallowBattlePoke
 {
     PROPERTY(QString, nick);
     PROPERTY(qint8, status);
-    PROPERTY(quint16, num);
+    PROPERTY(Pokemon::uniqueId, num);
     PROPERTY(bool, shiny);
     PROPERTY(quint8, gender);
     PROPERTY(quint8, lifePercent);
     PROPERTY(quint8, level);
-    PROPERTY(quint8, forme);
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);
