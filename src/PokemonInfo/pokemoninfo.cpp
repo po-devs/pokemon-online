@@ -235,7 +235,7 @@ static void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString
     {
         QString current = filestream.readLine().trimmed();
         QString options, other_data;
-        Pokemon::uniqueId pokeid();
+        Pokemon::uniqueId pokeid;
         bool ok = Pokemon::uniqueId::extract(current, pokeid, options, other_data);
         if(ok) {
             bool converted;
@@ -695,7 +695,7 @@ void PokemonInfo::loadMoves()
         for(int j = 0; j < temp.size(); j++) {
             QString current = temp[j].trimmed();
             QString options, text_moves;
-            Pokemon::uniqueId pokeid();
+            Pokemon::uniqueId pokeid;
             bool ok = Pokemon::uniqueId::extract(current, pokeid, options, text_moves);
             if(ok) {
                 QStringList move_list = text_moves.split(' ');
