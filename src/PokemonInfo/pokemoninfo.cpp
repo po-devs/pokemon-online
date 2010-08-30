@@ -29,9 +29,9 @@ QHash<Pokemon::uniqueId, PokemonMoves> PokemonInfo::m_Moves;
 QHash<quint16, quint16> PokemonInfo::m_MaxForme;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Options;
 int PokemonInfo::m_trueNumberOfPokes;
-int PokemonInfo::m_NumberOfVisiblePokes;
 QHash<quint16, QList<quint16> > PokemonInfo::m_Evolutions;
 QHash<quint16, quint16> PokemonInfo::m_OriginalEvos;
+QList<Pokemon::uniqueId> m_VisiblePokesPlainList;
 
 QString MoveInfo::m_Directory;
 QList<QString> MoveInfo::m_Names;
@@ -410,7 +410,7 @@ int PokemonInfo::NumberOfPokemons()
 }
 
 int PokemonInfo::NumberOfVisiblePokes() {
-    return m_NumberOfVisiblePokes;
+    return m_VisiblePokesPlainList.size();
 }
 
 QString PokemonInfo::Name(const Pokemon::uniqueId &pokeid)
@@ -602,7 +602,6 @@ void PokemonInfo::loadNames()
 {
     QStringList temp;
     fill_container_with_file(temp, trFile(path("pokemons")));
-    m_NumberOfVisiblePokes = 0;
 
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
@@ -616,10 +615,10 @@ void PokemonInfo::loadNames()
                 if(id.subnum == 0) {
                     // Base form cannot be hidden.
                     options.remove('H');
-                    m_NumberOfVisiblePokes++;
+                    m_VisiblePokesPlainList.append(id);
                 }
             }else{
-                m_NumberOfVisiblePokes++;
+                m_VisiblePokesPlainList.append(id);
             }
             m_Options[id] = options;
             // Calculate a number of formes a given base pokemon have.
@@ -810,26 +809,15 @@ void PokemonInfo::makeDataConsistent()
 
 static Pokemon::uniqueId PokemonInfo::getRandomPokemon()
 {
-    Pokemon::uniqueId result;
-    
-    // We should have at least 2 visible pokemon to work anyway.
-    // Missingno (0:0) is required but special.
-    // Plus a trainer should have an ability to select at least one Pokemon.
-    int random_num = true_rand() % (PokemonInfo::NumberOfVisiblePokes() - 1);
-    QMap<Pokemon::uniqueId, QString>::const_iterator it = m_Names.constBegin();
-    // Skip Missingno. m_Names is a map therefore first item is Missingno (0:0).
-    ++it;
-    int current_iteration = 0;
-
-    while ((it != m_Names.constEnd()) && (current_iteration != random_num)) {
-        current_iteration++;
-        ++it;
+    int random = true_rand() % (NumberOfVisiblePokes());
+    if(m_VisiblePokesPlainList[random] == Pokemon::NoPoke) {
+        if(random == (NumberOfVisiblePokes() - 1)) {
+            random--;
+        }else{
+            random++;
+        };
     }
-    if(it != m_Names.constEnd()) result = it.key();
-    // Return Bulbasaur if Missingno.
-    // Should NOT happen normally.
-    if(result == Pokemon::NoPoke) result.pokenum = 1;
-    return result;
+    return m_VisiblePokesPlainList[random];
 }
 
 void MoveInfo::loadCritics()
