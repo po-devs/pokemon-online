@@ -55,7 +55,7 @@ QWidget *AbstractConfigHelper::generateConfigWidget() {
 }
 
 template<class T>
-ConfigHelper<T>::ConfigHelper(const QString &desc, T &var) : var(var) {
+ConfigHelper<T>::ConfigHelper(const QString &desc, T &var) : AbstractConfigHelper(desc), var(var) {
 
 }
 
