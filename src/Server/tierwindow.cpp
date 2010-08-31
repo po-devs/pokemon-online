@@ -32,9 +32,13 @@ TierWindow::TierWindow(QWidget *parent) : QWidget(parent)
     connect(finish, SIGNAL(clicked()), SLOT(close()));
 }
 
+TierWindow::~TierWindow() {
+    delete dataTree;
+}
+
 void TierWindow::done()
 {
-    TierMachine::obj()->fromString(dataTree.toXml());
+    TierMachine::obj()->fromString(dataTree->toXml());
     TierMachine::obj()->save();
 
     emit tiersChanged();

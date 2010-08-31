@@ -56,6 +56,13 @@ void TierCategory::clear()
     name.clear();
 }
 
+void TierCategory::clearWithoutDeleting()
+{
+    subLeafs.clear();
+    subCategories.clear();
+    name.clear();
+}
+
 void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool root)
 {
     clear();
@@ -80,18 +87,18 @@ void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool 
     }
 }
 
-TierCategory TierCategory::dataClone() const
+TierCategory *TierCategory::dataClone() const
 {
-    TierCategory c;
-    c.name = name;
-    c.root = root;
+    TierCategory *c = new TierCategory();
+    c->name = name;
+    c->root = root;
 
     foreach(TierCategory *tc, subCategories) {
-        c.subCategories.push_back(new TierCategory(tc->dataClone()));
+        c->subCategories.push_back(tc->dataClone());
     }
 
     foreach(Tier *t, subLeafs) {
-        c.subLeafs.push_back(t->dataClone());
+        c->subLeafs.push_back(t->dataClone());
     }
 
     return c;
@@ -170,11 +177,17 @@ void TierTree::cleanCategories() {
     root.cleanCategories();
 }
 
-TierTree TierTree::dataClone() const
+TierTree *TierTree::dataClone() const
 {
-    TierTree t;
+    TierTree *t = new TierTree();
 
-    t.root = root.dataClone();
+    TierCategory *rootCopy = root.dataClone();
+    t->root = *rootCopy;
+
+    /* As it was copied in the new root, data is shared, and so we have
+       to break the sharing */
+    rootCopy->clearWithoutDeleting();
+    delete rootCopy;
 
     return t;
 }

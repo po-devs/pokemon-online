@@ -37,7 +37,7 @@ struct BannedPoke {
 
     bool isBanned(const PokeBattle &poke) const;
     /* This time checks if the pokemon is 'contained' within the BannedPoke,
-       for when instead of banning pokemons you want to restrict to some pokémons,
+       for when instead of banning pokemons you want to restrict to some pokemons,
        or some pokemons / movesets */
     bool isForcedMatch(const PokeBattle &poke) const;
 
