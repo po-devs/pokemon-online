@@ -25,7 +25,7 @@ TierMachine::TierMachine()
 
     ithread->start();
 
-    QFile in("tiers.txt");
+    QFile in("tiers.xml");
     in.open(QIODevice::ReadOnly);
     fromString(QString::fromUtf8(in.readAll()));
 }
@@ -56,7 +56,7 @@ void TierMachine::insertMember(QSqlQuery *q, void *m, int queryNo)
 
 void TierMachine::save()
 {
-    QFile out("tiers.txt");
+    QFile out("tiers.xml");
     out.open(QIODevice::WriteOnly);
     out.write(toString().toUtf8());
 }
@@ -250,4 +250,9 @@ LoadThread *TierMachine::getThread()
     int n = nextLoadThreadNumber % loadThreadCount;
     nextLoadThreadNumber = (n + 1) % loadThreadCount;
     return threads + n;
+}
+
+TierTree TierMachine::getDataTree() const
+{
+    return tree.dataClone();
 }

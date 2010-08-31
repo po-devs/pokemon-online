@@ -58,7 +58,7 @@ public:
     QString name() const;
     void changeId(int newid);
 
-    Tier(TierMachine *boss, TierCategory *cat);
+    Tier(TierMachine *boss = NULL, TierCategory *cat = NULL);
 
     QDomElement & toXml(QDomElement &dest) const;
 
@@ -90,6 +90,9 @@ public:
     void loadFromFile();
     /* Kills and deletes itself, as well as from the category parent. Beware to not use any member functions after */
     void kill();
+
+    /* Gives a dummy tier with the same data, just used as a representation or something to work on */
+    Tier *dataClone() const;
 protected:
     enum QueryType {
         GetInfoOnUser,
