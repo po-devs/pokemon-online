@@ -57,6 +57,7 @@ public:
     QString findTier(const TeamBattle &t) const;
 
     void exportDatabase() const;
+    TierTree getDataTree() const;
 
     static const int playersByPage = 40;
 

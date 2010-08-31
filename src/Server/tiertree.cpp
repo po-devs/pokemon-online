@@ -80,18 +80,18 @@ void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool 
     }
 }
 
-TierCategory *TierCategory::dataClone()
+TierCategory TierCategory::dataClone() const
 {
-    TierCategory *c = new TierCategory();
-    c->name = name;
-    c->root = root;
+    TierCategory c;
+    c.name = name;
+    c.root = root;
 
     foreach(TierCategory *tc, subCategories) {
-        c->subCategories.push_back(tc->dataClone());
+        c.subCategories.push_back(new TierCategory(tc->dataClone()));
     }
 
     foreach(Tier *t, subLeafs) {
-        c->subLeafs.push_back(t->dataClone());
+        c.subLeafs.push_back(t->dataClone());
     }
 
     return c;
@@ -168,4 +168,13 @@ QByteArray TierTree::buildTierList()
 
 void TierTree::cleanCategories() {
     root.cleanCategories();
+}
+
+TierTree TierTree::dataClone() const
+{
+    TierTree t;
+
+    t.root = root.dataClone();
+
+    return t;
 }

@@ -2,6 +2,7 @@
 #define TIERWINDOW_H
 
 #include <QtGui>
+#include "tiertree.h"
 
 class TierWindow : public QWidget
 {
@@ -13,7 +14,10 @@ signals:
 private slots:
     void done();
 private:
-    QPlainTextEdit *m_editWindow;
+    QTreeWidget *m_tree;
+    QWidget *configWidget;
+
+    TierTree dataTree;
 };
 
 
