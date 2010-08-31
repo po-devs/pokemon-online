@@ -1,4 +1,5 @@
 #include <QtXml>
+#include <QtGui>
 #include "tiertree.h"
 #include "tier.h"
 
@@ -104,6 +105,33 @@ TierCategory *TierCategory::dataClone() const
     return c;
 }
 
+void TierCategory::buildRootGui(QTreeWidget *tree)
+{
+    foreach(TierCategory *c, subCategories) {
+        tree->addTopLevelItem(c->buildGui());
+    }
+
+    foreach(Tier *t, subLeafs) {
+        tree->addTopLevelItem(new QTreeWidgetItem(QStringList() << t->name()));
+    }
+}
+
+QTreeWidgetItem *TierCategory::buildGui() {
+    QTreeWidgetItem *it = new QTreeWidgetItem();
+
+    it->setText(0, name);
+
+    foreach(TierCategory *c, subCategories) {
+        it->addChild(c->buildGui());
+    }
+
+    foreach(Tier *t, subLeafs) {
+        it->addChild(new QTreeWidgetItem(QStringList() << t->name()));
+    }
+
+    return it;
+}
+
 QDomElement & TierCategory::toXml(QDomElement &xml) const {
     if (!root) {
         xml.setAttribute("name", name);
@@ -190,4 +218,11 @@ TierTree *TierTree::dataClone() const
     delete rootCopy;
 
     return t;
+}
+
+void TierTree::buildTreeGui(QTreeWidget *tree)
+{
+    tree->clear();
+
+    root.buildRootGui(tree);
 }
