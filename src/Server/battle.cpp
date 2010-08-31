@@ -1155,7 +1155,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     pokelong[slot]["Level"] = poke(slot).level();
 
-    /* Increase the "switch count". Switch count is used to see if the pokémon has switched
+    /* Increase the "switch count". Switch count is used to see if the pokemon has switched
        (like for an attack like attract), it is imo more effective that other means */
     inc(slotzone[slot]["SwitchCount"], 1);
 
@@ -1218,11 +1218,11 @@ void BattleSituation::callpeffects(int source, int target, const QString &name)
         foreach(QString effect, effects) {
             MoveMechanics::function f = pokelong[source].value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
-            /* If a pokémons dies from leechseed,its status changes, and so nightmare function would be removed
+            /* If a pokemons dies from leechseed,its status changes, and so nightmare function would be removed
                but still be in the foreach, causing a crash */
             if (f)
                 f(source, target, *this);
-	}
+        }
 	turnlong[source]["PokeEffectCall"] = false;
     }
 }
@@ -1574,7 +1574,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     } else {
         //Quick claw, special case
         if (gen() >= 4 && turnlong[player].value("QuickClawed").toBool()) {
-            //The message only shows up if it's not the last pokémon to move
+            //The message only shows up if it's not the last pokemon to move
             for (int i = 0; i < numberOfSlots(); i++) {
                 if (!turnlong[i].value("HasMoved").toBool() && !turnlong[i].value("CantGetToMove").toBool() && !koed(i) && i != player) {
                     sendItemMessage(17, player);

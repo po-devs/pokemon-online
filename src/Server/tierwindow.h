@@ -9,6 +9,7 @@ class TierWindow : public QWidget
     Q_OBJECT
 public:
     TierWindow(QWidget *parent = NULL);
+    ~TierWindow();
 signals:
     void tiersChanged();
 private slots:
@@ -17,7 +18,7 @@ private:
     QTreeWidget *m_tree;
     QWidget *configWidget;
 
-    TierTree dataTree;
+    TierTree *dataTree;
 };
 
 
