@@ -617,7 +617,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
             restrictedPokesS.append(PokemonInfo::Name(poke));
         }
         restrictedPokesS.sort();
-        dest.setAttribute("pokemons", restrictedPokesS.join(","));
+        dest.setAttribute("restrictedPokemons", restrictedPokesS.join(","));
     }
 
     if (clauses != 0) {
@@ -753,4 +753,30 @@ QPair<int, int> Tier::pointChangeEstimate(const QString &player, const QString &
 LoadThread * Tier::getThread()
 {
     return boss->getThread();
+}
+
+Tier *Tier::dataClone() const
+{
+    Tier *ret = new Tier();
+    Tier &t = *ret;
+
+    t.banPokes = banPokes;
+    t.bannedSets = bannedSets; // The set is there to keep good perfs
+    t.restrictedSets = restrictedSets;
+    t.maxRestrictedPokes = maxRestrictedPokes;
+    t.numberOfPokemons = numberOfPokemons;
+    t.maxLevel = maxLevel;
+    t.gen = gen;
+    t.banParentS = banParentS;
+    t.bannedItems = bannedItems;
+    t.bannedMoves = bannedMoves;
+    t.bannedPokes = bannedPokes;
+    t.restrictedPokes = restrictedPokes;
+    t.doubles = doubles;
+    t.displayOrder = displayOrder;
+    t.clauses = clauses;
+
+    t.m_name = m_name;
+
+    return ret;
 }
