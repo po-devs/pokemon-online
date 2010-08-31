@@ -14,6 +14,12 @@
 
    Visual C++ > GCC on this point */
 
+ConfigForm::ConfigForm(const QString &button1, const QString &button2)
+    :button1S(button1), button2S(button2)
+{
+
+}
+
 void ConfigForm::addConfigHelper(AbstractConfigHelper *helper)
 {
     helpers.push_back(helper);
@@ -28,6 +34,30 @@ QWidget* ConfigForm::generateConfigWidget()
     foreach(AbstractConfigHelper *helper, helpers) {
         v->addWidget(helper->generateConfigWidget());
     }
+
+    if (button1S.isEmpty() && button2S.isEmpty())
+        return ret;
+    if (button1S.isEmpty()) {
+        QPushButton *p = new QPushButton(button2S);
+        v->addWidget(p);
+
+        connect(p, SIGNAL(clicked()), SIGNAL(button2()));
+        return ret;
+    }
+    if (button2S.isEmpty()) {
+        QPushButton *p = new QPushButton(button1S);
+        v->addWidget(p);
+
+        connect(p, SIGNAL(clicked()), SIGNAL(button1()));
+        return ret;
+    }
+    QPushButton *p1 = new QPushButton(button1S);
+    QPushButton *p2 = new QPushButton(button2S);
+
+    connect(p1, SIGNAL(clicked()), SIGNAL(button1()));
+    connect(p2, SIGNAL(clicked()), SIGNAL(button2()));
+
+    v->addLayout(new QSideBySide(p1, p2));
 
     return ret;
 }

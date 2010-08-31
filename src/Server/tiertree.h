@@ -22,16 +22,15 @@ struct TierCategory
     void cleanCategories();
     void clear();
     void kill(Tier *t);
-    TierCategory *dataClone();
+    TierCategory dataClone() const;
 
     void serialize(QDataStream &stream, int level = -1);
 };
 
 class TierTree
 {
+    friend class TierMachine;
 public:
-    TierCategory root;
-
     void loadFromXml(const QString &xmldata, TierMachine *boss);
     QString toXml() const;
     QList<Tier *> gatherTiers();
@@ -39,6 +38,11 @@ public:
     void cleanCategories();
     /* Building the tier list as sent over network */
     QByteArray buildTierList();
+    /* Returns a copy, but that has no effect on ratings, just used to represent and touch
+       the structure of tiers without harming the real one */
+    TierTree dataClone() const;
+private:
+    TierCategory root;
 };
 
 #endif // TIERTREE_H

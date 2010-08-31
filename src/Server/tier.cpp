@@ -617,7 +617,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
             restrictedPokesS.append(PokemonInfo::Name(poke));
         }
         restrictedPokesS.sort();
-        dest.setAttribute("pokemons", restrictedPokesS.join(","));
+        dest.setAttribute("restrictedPokemons", restrictedPokesS.join(","));
     }
 
     if (clauses != 0) {

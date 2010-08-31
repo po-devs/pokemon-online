@@ -15,12 +15,19 @@ class ConfigForm : public QObject
 {
     Q_OBJECT
 public:
+    ConfigForm(const QString &button1, const QString &button2);
+
     QWidget* generateConfigWidget();
     void addConfigHelper(AbstractConfigHelper *helper);
 public slots:
     void applyVals();
+signals:
+    void button1();
+    void button2();
 private:
     QList<AbstractConfigHelper *> helpers;
+
+    QString button1S, button2S;
 };
 
 class AbstractConfigHelper
