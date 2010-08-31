@@ -28,6 +28,8 @@ TierWindow::TierWindow(QWidget *parent) : QWidget(parent)
     layout->addWidget(add,1,1);
     layout->addWidget(finish,1,2);
 
+    dataTree->buildTreeGui(m_tree);
+
     connect(finish, SIGNAL(clicked()), SLOT(done()));
     connect(finish, SIGNAL(clicked()), SLOT(close()));
 }
