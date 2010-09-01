@@ -26,6 +26,7 @@ private slots:
     void addNew();
     void addNewTier(const QString &name);
     void addNewCategory(const QString &name);
+    void deleteCurrent();
 private:
     QTreeWidget *m_tree;
     QWidget *configWidget;
