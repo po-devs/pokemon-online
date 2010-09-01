@@ -508,7 +508,7 @@ void Player::challengeStuff(const ChallengeInfo &c)
             return;
         }
         if (challenged.size() >= 10) {
-            sendMessage("You already have challenge 10 people, you can't challenge more!");
+            sendMessage("You already have challenged 10 people, you can't challenge more!");
             return;
         }
         emit sendChallenge(this->id(), id, c);

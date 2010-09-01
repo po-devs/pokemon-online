@@ -163,6 +163,14 @@ void TierWindow::openTierEdit(Tier *t)
 
     helper->addConfigHelper(new ConfigCombo<int>("Doubles in Find Battle", t->doubles, QStringList() << "Force" << "Allow" << "Forbid",
                                                  QList<int>() << 1 << 0 << (-1) ));
+
+    int clauses = t->clauses;
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        this->clauses[i] = (clauses >> i) % 2;
+
+        helper->addConfigHelper(new ConfigCheck(ChallengeInfo::clause(i), this->clauses[i]));
+    }
+
     helper->addConfigHelper(new ConfigSpin("Tier display order", t->displayOrder, -100, 100));
 
     internalWidget = helper->generateConfigWidget();
@@ -245,6 +253,13 @@ void TierWindow::updateTier()
     currentTier->importBannedPokes(pokemons);
     currentTier->importBannedMoves(moves);
     currentTier->importRestrictedPokes(restrPokemons);
+
+    int clRes = 0;
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        if (clauses[i])
+            clRes |= 1 << i;
+    }
+    currentTier->clauses = clRes;
 
     TierCategory *c = dataTree->getParentCategory(currentTier);
     if (c->name() != parent) {

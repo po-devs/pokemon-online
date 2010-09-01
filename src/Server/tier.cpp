@@ -786,6 +786,11 @@ bool Tier::allowMode(int mode) const
     return false;
 }
 
+int Tier::getClauses() const
+{
+    return clauses;
+}
+
 Tier *Tier::dataClone() const
 {
     Tier *ret = new Tier();

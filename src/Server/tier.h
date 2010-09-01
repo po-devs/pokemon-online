@@ -88,6 +88,7 @@ public:
     void processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w);
     void insertMember(QSqlQuery *q, void *data, int type);
     bool allowMode(int mode) const;
+    int getClauses() const;
 
     QString getBannedPokes() const;
     QString getRestrictedPokes() const;

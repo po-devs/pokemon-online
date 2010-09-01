@@ -975,15 +975,7 @@ void Server::findBattle(int id, const FindBattleData &f)
         ChallengeInfo c;
         c.opp = key;
         c.rated = (p1->ladder() && p2->ladder() && p1->tier() == p2->tier()) || f.rated || data->rated;
-
-        if (p1->tier() == p2->tier() && p1->tier() == "Challenge Cup") {
-            c.clauses = ChallengeInfo::ChallengeCup;
-        } else if (p1->tier() == p2->tier() && p1->tier() == "VGC") {
-            c.clauses = ChallengeInfo::SpeciesClause;
-        } else {
-            c.clauses = ChallengeInfo::SleepClause | ChallengeInfo::EvasionClause | ChallengeInfo::OHKOClause | ChallengeInfo::SpeciesClause
-                        | ChallengeInfo::FreezeClause;
-        }
+        c.clauses = TierMachine::obj()->tier(p1->tier()).getClauses();
 
         c.mode = f.mode;
 
