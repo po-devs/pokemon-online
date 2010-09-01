@@ -183,7 +183,7 @@ public slots:
     void showTimeStamps2(bool);
     void ignoreServerVersion(bool);
     void versionDiff(const QString &a, const QString &b);
-    void tierListReceived(const QString&);
+    void tierListReceived(QByteArray);
     void changeTier();
     void openBattleFinder();
     void findBattle(const FindBattleData&);

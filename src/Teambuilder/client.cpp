@@ -155,7 +155,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(spectatingBattleMessage(int,QByteArray)), SLOT(spectatingBattleMessage(int , QByteArray)));
     connect(relay, SIGNAL(spectatingBattleFinished(int)), SLOT(stopWatching(int)));
     connect(relay, SIGNAL(versionDiff(QString, QString)), SLOT(versionDiff(QString, QString)));
-    connect(relay, SIGNAL(tierListReceived(QString)), SLOT(tierListReceived(QString)));
+    connect(relay, SIGNAL(tierListReceived(QByteArray)), SLOT(tierListReceived(QByteArray)));
     connect(relay, SIGNAL(announcement(QString)), SLOT(announcementReceived(QString)));
     connect(relay, SIGNAL(channelsListReceived(QHash<qint32,QString>)), SLOT(channelsListReceived(QHash<qint32,QString>)));
     connect(relay, SIGNAL(channelPlayers(int,QVector<qint32>)), SLOT(channelPlayers(int,QVector<qint32>)));
@@ -939,12 +939,21 @@ void Client::announcementReceived(const QString &ann)
     announcement->show();
 }
 
-void Client::tierListReceived(const QString &tl)
+void Client::tierListReceived(QByteArray tl)
 {
     mytiermenu->clear();
     mytiers.clear();
+    tierList.clear();
 
-    tierList = tl.split('\n', QString::SkipEmptyParts);
+    QDataStream stream(&tl, QIODevice::ReadOnly);
+
+    while (!stream.atEnd()) {
+        uchar filler;
+        stream >> filler;
+        QString s;
+        stream >> s;
+        tierList.push_back(s);
+    }
 
     if (tierList.empty())
         tierList.push_back("All");
