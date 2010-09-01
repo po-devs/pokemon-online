@@ -4,11 +4,18 @@
 #include <QtGui>
 #include "tiertree.h"
 
+class ConfigForm;
+
 class TierWindow : public QWidget
 {
     Q_OBJECT
 public:
     TierWindow(QWidget *parent = NULL);
+    ~TierWindow();
+
+    void openTierEdit();
+public slots:
+    editingRequested(QTreeWidgetItem *item);
 signals:
     void tiersChanged();
 private slots:
@@ -18,6 +25,16 @@ private:
     QWidget *configWidget;
 
     TierTree dataTree;
+
+    enum Type {
+        Tier,
+        Category
+    };
+
+    ConfigForm *helper;
+    QString currentEdit;
+
+    void clearCurrentEdit();
 };
 
 
