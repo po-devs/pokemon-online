@@ -82,9 +82,34 @@ void TierWindow::done()
     emit tiersChanged();
 }
 
-void TierWindow::openCategoryEdit(TierCategory *)
+void TierWindow::openCategoryEdit(TierCategory *c)
 {
+    helper = new ConfigForm("Delete Category", "Apply");
+    currentEdit = c->name();
+    currentType = CategoryT;
+    currentTierCat = c;
 
+    helper->addConfigHelper(new ConfigLine("Name", currentEdit));
+
+    {
+        QStringList parents;
+        parents << "";
+        QList<TierCategory *> cats = dataTree->gatherCategories();
+        foreach(TierCategory *c, cats) {
+            parents << c->name();
+        }
+        parent = dataTree->getParentCategory(c)->name();
+        helper->addConfigHelper(new ConfigCombo<QString>("Parent Category", parent, parents, parents));
+    }
+
+    helper->addConfigHelper(new ConfigSpin("Category display order", c->displayOrder, -100, 100));
+
+    internalWidget = helper->generateConfigWidget();
+    internalWidget->layout()->setMargin(0);
+    internalWidget->layout()->setSpacing(0);
+    updateInternalWidget();
+
+    connect(helper, SIGNAL(button2()), SLOT(updateCategory()));
 }
 
 void TierWindow::openTierEdit(Tier *t)
@@ -126,7 +151,6 @@ void TierWindow::openTierEdit(Tier *t)
     helper->addConfigHelper(new ConfigSpin("Max number of restricted pokemons", t->maxRestrictedPokes, 0, 6));
     helper->addConfigHelper(new ConfigLine("Restricted Pokemons", restrPokemons));
     helper->addConfigHelper(new ConfigSpin("Max level of pokemons", t->maxLevel, 1, 100));
-    helper->addConfigHelper(new ConfigSpin("Tier display order", t->displayOrder, -100, 100));
 
     pokemons = t->getBannedPokes();
     moves = t->getBannedMoves();
@@ -135,6 +159,7 @@ void TierWindow::openTierEdit(Tier *t)
 
     helper->addConfigHelper(new ConfigCombo<int>("Doubles in Find Battle", t->doubles, QStringList() << "Force" << "Allow" << "Forbid",
                                                  QList<int>() << 1 << 0 << (-1) ));
+    helper->addConfigHelper(new ConfigSpin("Tier display order", t->displayOrder, -100, 100));
 
     internalWidget = helper->generateConfigWidget();
     internalWidget->layout()->setMargin(0);
@@ -169,6 +194,31 @@ void TierWindow::updateTier()
         /* If the xml file is malformed, and has a tier and a category with the same name, it can crash here */
         TierCategory *c = (TierCategory*)dataTree->getNode(parent);
         c->appendChild(currentTier);
+    }
+
+    updateTree();
+}
+
+void TierWindow::updateCategory()
+{
+    helper->applyVals();
+
+    if (currentEdit != currentTierCat->name()) {
+        /* Prevent to have duplicate names */
+        if (dataTree->getNode(currentEdit)) {
+            currentEdit = currentTierCat->name();
+            QMessageBox::information(this, "Name Taken", "The name is already taken, so the old one will stay");
+        } else {
+            currentTierCat->changeName(currentEdit);
+        }
+    }
+
+    TierCategory *c = dataTree->getParentCategory(currentTierCat);
+    if (c->name() != parent) {
+        c->removeChild(currentTierCat);
+        /* If the xml file is malformed, and has a tier and a category with the same name, it can crash here */
+        TierCategory *c = (TierCategory*)dataTree->getNode(parent);
+        c->appendChild(currentTierCat);
     }
 
     updateTree();

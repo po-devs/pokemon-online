@@ -22,6 +22,7 @@ signals:
 private slots:
     void done();
     void updateTier();
+    void updateCategory();
 private:
     QTreeWidget *m_tree;
     QWidget *configWidget;
