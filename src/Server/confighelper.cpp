@@ -20,6 +20,15 @@ ConfigForm::ConfigForm(const QString &button1, const QString &button2)
 
 }
 
+ConfigForm::~ConfigForm()
+{
+    foreach(AbstractConfigHelper *help, helpers) {
+        delete help;
+    }
+
+    helpers.clear();
+}
+
 void ConfigForm::addConfigHelper(AbstractConfigHelper *helper)
 {
     helpers.push_back(helper);

@@ -25,6 +25,8 @@ struct TierCategory
     TierCategory dataClone() const;
 
     void serialize(QDataStream &stream, int level = -1);
+    Tier *getTier(const QString &name);
+    TierCategory *getCategory(const QString &name);
 };
 
 class TierTree
@@ -41,6 +43,9 @@ public:
     /* Returns a copy, but that has no effect on ratings, just used to represent and touch
        the structure of tiers without harming the real one */
     TierTree dataClone() const;
+
+    Tier *getTier(const QString &name);
+    TierCategory *getCategory(const QString &name);
 private:
     TierCategory root;
 };

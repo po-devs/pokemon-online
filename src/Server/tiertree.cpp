@@ -56,6 +56,42 @@ void TierCategory::clear()
     name.clear();
 }
 
+Tier * TierCategory::getTier(const QString &name)
+{
+    foreach(Tier *t, subLeafs) {
+        if (t->name() == name)
+            return t;
+    }
+
+    foreach(TierCategory *tc, subCategories) {
+        Tier *t=  tc->getTier(name);
+
+        if (t) {
+            return t;
+        }
+    }
+
+    return NULL;
+}
+
+TierCategory * TierCategory::getCategory(const QString &name)
+{
+    foreach(TierCategory *tc, subCategories) {
+        if (tc->name == name)
+            return tc;
+    }
+
+    foreach(TierCategory *tc, subCategories) {
+        TierCategory *c =  tc->getCategory(name);
+
+        if (c) {
+            return c;
+        }
+    }
+
+    return NULL;
+}
+
 void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool root)
 {
     clear();
@@ -177,4 +213,12 @@ TierTree TierTree::dataClone() const
     t.root = root.dataClone();
 
     return t;
+}
+
+Tier *TierTree::getTier(const QString &name) {
+    return root.getTier(name);
+}
+
+TierCategory *TierTree::getCategory(const QString &name) {
+    return root.getCategory(name);
 }

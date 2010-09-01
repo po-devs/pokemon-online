@@ -1,7 +1,7 @@
 #include "tierwindow.h"
 #include "tiermachine.h"
 
-TierWindow::TierWindow(QWidget *parent) : QWidget(parent)
+TierWindow::TierWindow(QWidget *parent) : QWidget(parent), helper(NULL)
 {
     setAttribute(Qt::WA_DeleteOnClose,true);
 
@@ -28,8 +28,36 @@ TierWindow::TierWindow(QWidget *parent) : QWidget(parent)
     layout->addWidget(add,1,1);
     layout->addWidget(finish,1,2);
 
+    connect(m_tree, SIGNAL(itemActivated(QTreeWidgetItem*,int)), SLOT(editingRequested(QTreeWidgetItem*)));
     connect(finish, SIGNAL(clicked()), SLOT(done()));
     connect(finish, SIGNAL(clicked()), SLOT(close()));
+}
+
+TierWindow::~TierWindow() {
+    clearCurrentEdit();
+}
+
+void TierWindow::editingRequested(QTreeWidgetItem *item)
+{
+    clearCurrentEdit();
+
+    TierCategory *tc = NULL;
+    if ( (tc = dataTree.getCategory(item->text())) ) {
+        openCategoryEdit(tc);
+        return;
+    }
+
+    Tier *t = NULL;
+    if ( (t = dataTree.getTier(item->text())) ) {
+        openTierEdit(tc);
+        return;
+    }
+}
+
+void TierWindow::clearCurrentEdit()
+{
+    delete helper, helper = NULL;
+    currentEdit.clear();
 }
 
 void TierWindow::done()
