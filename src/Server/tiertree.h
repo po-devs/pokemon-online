@@ -46,6 +46,7 @@ struct TierCategory : public TierNode
 class TierTree
 {
     friend class TierMachine;
+    friend class TierWindow;
 public:
     void loadFromXml(const QString &xmldata, TierMachine *boss);
     QString toXml() const;

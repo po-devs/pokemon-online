@@ -23,11 +23,7 @@ TierWindow::TierWindow(QWidget *parent) : QWidget(parent), helper(NULL)
     v->addWidget(internalWidget);
 
     QPushButton *add, *finish;
-    add = new QPushButton("Add New");
-    QMenu *m = new QMenu(add);
-    m->addAction("Tier");
-    m->addAction("Category");
-    add->setMenu(m);
+    add = new QPushButton("Add New...");
 
     finish = new QPushButton("Finish and Apply");
 
@@ -39,6 +35,7 @@ TierWindow::TierWindow(QWidget *parent) : QWidget(parent), helper(NULL)
     updateTree();
 
     connect(m_tree, SIGNAL(itemActivated(QTreeWidgetItem*,int)), SLOT(editingRequested(QTreeWidgetItem*)));
+    connect(add, SIGNAL(clicked()), SLOT(addNew()));
     connect(finish, SIGNAL(clicked()), SLOT(done()));
     connect(finish, SIGNAL(clicked()), SLOT(close()));
 }
@@ -46,6 +43,14 @@ TierWindow::TierWindow(QWidget *parent) : QWidget(parent), helper(NULL)
 TierWindow::~TierWindow() {
     clearCurrentEdit();
     delete dataTree;
+}
+
+void TierWindow::addNew()
+{
+    TierWNameW *w = new TierWNameW();
+
+    connect(w, SIGNAL(addNewCategory(QString)), SLOT(addNewCategory(QString)));
+    connect(w, SIGNAL(addNewTier(QString)), SLOT(addNewTier(QString)));
 }
 
 void TierWindow::editingRequested(QTreeWidgetItem *item)
@@ -143,14 +148,14 @@ void TierWindow::openTierEdit(Tier *t)
 
     helper->addConfigHelper(new ConfigCombo<int>("Generation", t->gen, QStringList() << "Any" << "3rd Gen" << "4th Gen",
                             QList<int> () << 0 << 3 << 4));
-    helper->addConfigHelper(new ConfigCheck("Ban pokemons/moves/items (uncheck to restrict the choice to them instead)", t->banPokes));
-    helper->addConfigHelper(new ConfigSpin("Max number of pokemons", t->numberOfPokemons, 1, 6));
-    helper->addConfigHelper(new ConfigText("Pokemons", pokemons));
+    helper->addConfigHelper(new ConfigCheck("Ban pokemon/moves/items (uncheck to restrict the choice to them instead)", t->banPokes));
+    helper->addConfigHelper(new ConfigSpin("Max number of pokemon", t->numberOfPokemons, 1, 6));
+    helper->addConfigHelper(new ConfigText("Pokemon", pokemons));
     helper->addConfigHelper(new ConfigLine("Moves", moves));
     helper->addConfigHelper(new ConfigLine("Items", items));
-    helper->addConfigHelper(new ConfigSpin("Max number of restricted pokemons", t->maxRestrictedPokes, 0, 6));
-    helper->addConfigHelper(new ConfigLine("Restricted Pokemons", restrPokemons));
-    helper->addConfigHelper(new ConfigSpin("Max level of pokemons", t->maxLevel, 1, 100));
+    helper->addConfigHelper(new ConfigSpin("Max number of restricted pokemon", t->maxRestrictedPokes, 0, 6));
+    helper->addConfigHelper(new ConfigLine("Restricted Pokemon", restrPokemons));
+    helper->addConfigHelper(new ConfigSpin("Pokemon's max level", t->maxLevel, 1, 100));
 
     pokemons = t->getBannedPokes();
     moves = t->getBannedMoves();
@@ -167,6 +172,40 @@ void TierWindow::openTierEdit(Tier *t)
     updateInternalWidget();
 
     connect(helper, SIGNAL(button2()), SLOT(updateTier()));
+}
+
+void TierWindow::addNewCategory(const QString &name)
+{
+    TierNode *t = dataTree->getNode(name);
+
+    if (t) {
+        QMessageBox::information(this, "Name Taken", "The name is already taken, the category won't be created");
+        return;
+    }
+
+    TierCategory *c = new TierCategory();
+    c->changeName(name);
+
+    dataTree->root.appendChild(c);
+
+    updateTree();
+}
+
+void TierWindow::addNewTier(const QString &name)
+{
+    TierNode *n = dataTree->getNode(name);
+
+    if (n) {
+        QMessageBox::information(this, "Name Taken", "The name is already taken, the tier won't be created");
+        return;
+    }
+
+    Tier *t = new Tier();
+    t->changeName(name);
+
+    dataTree->root.appendChild(t);
+
+    updateTree();
 }
 
 void TierWindow::updateTier()
@@ -214,7 +253,7 @@ void TierWindow::updateCategory()
     }
 
     TierCategory *c = dataTree->getParentCategory(currentTierCat);
-    if (c->name() != parent) {
+    if (c->name() != parent && currentTierCat->name() != parent) {
         c->removeChild(currentTierCat);
         /* If the xml file is malformed, and has a tier and a category with the same name, it can crash here */
         TierCategory *c = (TierCategory*)dataTree->getNode(parent);
@@ -235,5 +274,40 @@ void TierWindow::updateInternalWidget()
 {
     if (internalWidget) {
         configWidget->layout()->addWidget(internalWidget);
+    }
+}
+
+TierWNameW::TierWNameW()
+{
+    setWindowFlags(Qt::Window);
+    setAttribute(Qt::WA_DeleteOnClose, true);
+
+    QVBoxLayout *v = new QVBoxLayout(this);
+    v->addWidget(line = new QLineEdit());
+    v->addWidget(bTier = new QRadioButton("Tier"));
+    v->addWidget(bCat = new QRadioButton("Category"));
+    QPushButton *ok = new QPushButton("Ok");
+    v->addWidget(ok);
+
+    connect(ok, SIGNAL(clicked()), SLOT(addClicked()));
+    connect(ok, SIGNAL(clicked()), SLOT(close()));
+
+    show();
+}
+
+void TierWNameW::addClicked()
+{
+    if (!bTier->isChecked() && !bCat->isChecked())
+        return;
+    QString text = line->text();
+
+    if (text.length() == 0) {
+        return;
+    }
+
+    if (bTier->isChecked()) {
+        emit addNewTier(text);
+    } else {
+        emit addNewCategory(text);
     }
 }
