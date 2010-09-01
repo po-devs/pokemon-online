@@ -16,6 +16,7 @@
 #include "serverconfig.h"
 #include "scriptengine.h"
 #include "tiermachine.h"
+#include "tier.h"
 #include "battlingoptions.h"
 #include "sql.h"
 #include "sqlconfig.h"
@@ -958,7 +959,7 @@ void Server::findBattle(int id, const FindBattleData &f)
 
         /* We check both allow rated if needed */
         if (f.rated || data->rated) {
-            if (!canHaveRatedBattle(id, key, p1->tier() == "Challenge Cup", f.rated, data->rated))
+            if (!canHaveRatedBattle(id, key, f.mode, f.rated, data->rated))
                 continue;
         }
 
@@ -1171,7 +1172,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     myengine->afterBattleStarted(id1,id2,c);
 }
 
-bool Server::canHaveRatedBattle(int id1, int id2, bool cc, bool force1, bool force2)
+bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool force2)
 {
     Player *p1 = player(id1);
     Player *p2 = player(id2);
@@ -1181,9 +1182,6 @@ bool Server::canHaveRatedBattle(int id1, int id2, bool cc, bool force1, bool for
         return false;
     if (p1->tier() != p2->tier())
         return false;
-    if (cc != (p1->tier() == "Challenge Cup")) {
-        return false;
-    }
     if (!allowRatedWithSameIp && p1->ip() == p2->ip())
         return false;
     if (diffIpsForRatedBattles > 0) {
@@ -1194,6 +1192,12 @@ bool Server::canHaveRatedBattle(int id1, int id2, bool cc, bool force1, bool for
         if (l2.contains(p1->ip()))
             return false;
     }
+    Tier *t = &TierMachine::obj()->tier(p1->tier());
+    if (!t->allowMode(mode))
+        return false;
+    t = &TierMachine::obj()->tier(p2->tier());
+    if (!t->allowMode(mode))
+        return false;
     return true;
 }
 

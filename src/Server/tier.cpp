@@ -773,6 +773,19 @@ LoadThread * Tier::getThread()
     return boss->getThread();
 }
 
+bool Tier::allowMode(int mode) const
+{
+    if (doubles == 0) {
+        return true;
+    }
+
+    if (mode && doubles >= 1)
+        return true;
+    if (!mode && doubles <= -1)
+        return true;
+    return false;
+}
+
 Tier *Tier::dataClone() const
 {
     Tier *ret = new Tier();

@@ -110,10 +110,9 @@ void TierWindow::openCategoryEdit(TierCategory *c)
     helper->addConfigHelper(new ConfigSpin("Category display order", c->displayOrder, -100, 100));
 
     internalWidget = helper->generateConfigWidget();
-    internalWidget->layout()->setMargin(0);
-    internalWidget->layout()->setSpacing(0);
     updateInternalWidget();
 
+    connect(helper, SIGNAL(button1()), SLOT(deleteCurrent()));
     connect(helper, SIGNAL(button2()), SLOT(updateCategory()));
 }
 
@@ -171,7 +170,27 @@ void TierWindow::openTierEdit(Tier *t)
     internalWidget->layout()->setSpacing(0);
     updateInternalWidget();
 
+    connect(helper, SIGNAL(button1()), SLOT(deleteCurrent()));
     connect(helper, SIGNAL(button2()), SLOT(updateTier()));
+}
+
+void TierWindow::deleteCurrent()
+{
+    QMessageBox::StandardButton answer = QMessageBox::question(this, "Deletion of " + currentEdit,
+        QString("Are you sure you want to delete the tier/category %1? If you do so, the data will be definitely lost, and if it's a category all subtiers/categories will be lost too.")
+        .arg(currentEdit), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+
+    if (answer == QMessageBox::Yes) {
+        TierNode *n;
+        if (currentType == TierT)
+            n = currentTier;
+        else
+            n = currentTierCat;
+        TierCategory *parent = dataTree->getParentCategory(n);
+        parent->kill(n);
+        clearCurrentEdit();
+        updateTree();
+    }
 }
 
 void TierWindow::addNewCategory(const QString &name)

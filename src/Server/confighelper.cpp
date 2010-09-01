@@ -39,6 +39,7 @@ QWidget* ConfigForm::generateConfigWidget()
     QWidget *ret = new QWidget();
 
     QVBoxLayout *v = new QVBoxLayout(ret);
+    v->setMargin(0);
 
     foreach(AbstractConfigHelper *helper, helpers) {
         v->addWidget(helper->generateConfigWidget());
@@ -89,6 +90,7 @@ QWidget *AbstractConfigHelper::generateConfigWidget() {
     } else {
         QWidget *w = new QWidget();
         w->setLayout(new QSideBySide(new QLabel(description), internalWidget));
+        w->layout()->setMargin(5);
         return w;
     }
 }
