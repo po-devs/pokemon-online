@@ -46,11 +46,6 @@ void Tier::changeName(const QString &name)
     this->sql_table = "tier_" + ::slug(name);
 }
 
-QString Tier::name() const
-{
-    return m_name;
-}
-
 void Tier::changeId(int id)
 {
     m_id = id;
@@ -172,12 +167,12 @@ bool Tier::isBanned(const PokeBattle &p) const {
         if (bannedItems.contains(p.item())) {
             return true;
         }
-        if (bannedSets.contains(p.num())) {
-            foreach (BannedPoke b, bannedSets.values(p.num())) {
-                if (b.isBanned(p))
-                    return true;
-            }
-        }
+//        if (bannedSets.contains(p.num())) {
+//            foreach (BannedPoke b, bannedSets.values(p.num())) {
+//                if (b.isBanned(p))
+//                    return true;
+//            }
+//        }
     } else {
         /* The mode is the "restrict" mode, so instead we force the pokemons to have
            some characteristics */
@@ -193,14 +188,14 @@ bool Tier::isBanned(const PokeBattle &p) const {
         if (bannedItems.size() > 0 && p.item() != 0 && !bannedItems.contains(p.item())) {
             return true;
         }
-        if (bannedSets.size() > 0 && bannedSets.contains(p.num())) {
-            foreach (BannedPoke b, bannedSets.values(p.num())) {
-                if (b.isForcedMatch(p))
-                    goto afterloop;
-            }
-            return true;
-            afterloop:;
-        }
+//        if (bannedSets.size() > 0 && bannedSets.contains(p.num())) {
+//            foreach (BannedPoke b, bannedSets.values(p.num())) {
+//                if (b.isForcedMatch(p))
+//                    goto afterloop;
+//            }
+//            return true;
+//            afterloop:;
+//        }
     }
 
     if (parent) {
@@ -215,12 +210,12 @@ bool Tier::isRestricted(const PokeBattle &p) const
     if (restrictedPokes.contains(p.num()))
         return true;
 
-    if (restrictedSets.contains(p.num())) {
-        foreach (BannedPoke set, restrictedSets) {
-            if (set.isBanned(p))
-                return true;
-        }
-    }
+//    if (restrictedSets.contains(p.num())) {
+//        foreach (BannedPoke set, restrictedSets) {
+//            if (set.isBanned(p))
+//                return true;
+//        }
+//    }
 
     return false;
 }
@@ -491,43 +486,16 @@ void Tier::loadFromXml(const QDomElement &elem)
     displayOrder = elem.attribute("displayOrder", "0").toInt();
 
     clauses = 0;
-    bannedSets.clear();
-    restrictedSets.clear();
-    bannedPokes.clear();
-    bannedItems.clear();
-    bannedMoves.clear();
+//    bannedSets.clear();
+//    restrictedSets.clear();
 
     m_count = -1;
     last_count_time = 0;
 
-    QStringList moves = elem.attribute("moves").split(",");
-    foreach(QString move, moves) {
-        int num = MoveInfo::Number(move.trimmed());
-
-        if (num != 0)
-            bannedMoves.insert(num);
-    }
-
-    QStringList items = elem.attribute("items").split(",");
-    foreach (QString item, items) {
-        int num = ItemInfo::Number(item.trimmed());
-        if (num != 0)
-            bannedItems.insert(num);
-    }
-
-    QStringList pokes = elem.attribute("pokemons").split(",");
-    foreach (QString poke, pokes) {
-        int num = PokemonInfo::Number(poke.trimmed());
-        if (num != 0)
-            bannedPokes.insert(num);
-    }
-
-    QStringList rpokes = elem.attribute("restrictedPokemons").split(",");
-    foreach (QString poke, rpokes) {
-        int num = PokemonInfo::Number(poke.trimmed());
-        if (num != 0)
-            restrictedPokes.insert(num);
-    }
+    importBannedMoves(elem.attribute("moves"));
+    importBannedItems(elem.attribute("items"));
+    importBannedPokes(elem.attribute("pokemons"));
+    importRestrictedPokes(elem.attribute("restrictedPokemons"));
 
     QStringList clausesL = elem.attribute("clauses").split(",");
     foreach(QString clause, clausesL) {
@@ -538,33 +506,33 @@ void Tier::loadFromXml(const QDomElement &elem)
         }
     }
 
-    QDomElement pokElem = elem.firstChildElement("sets");
-    if (!pokElem.isNull()) {
-        pokElem = elem.firstChildElement("pokemon");
+//    QDomElement pokElem = elem.firstChildElement("sets");
+//    if (!pokElem.isNull()) {
+//        pokElem = elem.firstChildElement("pokemon");
 
-        while (!pokElem.isNull()) {
-            BannedPoke p;
-            p.loadFromXml(elem);
+//        while (!pokElem.isNull()) {
+//            BannedPoke p;
+//            p.loadFromXml(elem);
 
-            bannedSets.insert(p.poke, p);
+//            bannedSets.insert(p.poke, p);
 
-            pokElem = elem.nextSiblingElement("pokemon");
-        }
-    }
+//            pokElem = elem.nextSiblingElement("pokemon");
+//        }
+//    }
 
-    pokElem = elem.firstChildElement("restrictedSets");
-    if (!pokElem.isNull()) {
-        pokElem = elem.firstChildElement("pokemon");
+//    pokElem = elem.firstChildElement("restrictedSets");
+//    if (!pokElem.isNull()) {
+//        pokElem = elem.firstChildElement("pokemon");
 
-        while (!pokElem.isNull()) {
-            BannedPoke p;
-            p.loadFromXml(elem);
+//        while (!pokElem.isNull()) {
+//            BannedPoke p;
+//            p.loadFromXml(elem);
 
-            restrictedSets.insert(p.poke, p);
+//            restrictedSets.insert(p.poke, p);
 
-            pokElem = elem.nextSiblingElement("pokemon");
-        }
-    }
+//            pokElem = elem.nextSiblingElement("pokemon");
+//        }
+//    }
 }
 
 QDomElement & Tier::toXml(QDomElement &dest) const {
@@ -582,43 +550,11 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
     dest.setAttribute("numberOfPokemons", numberOfPokemons);
     dest.setAttribute("numberOfRestricted", maxRestrictedPokes);
     dest.setAttribute("doubles", doubles);
-    dest.setAttribute("displayOrder", 0);
-
-    if (bannedMoves.size() > 0) {
-        QStringList bannedMovesS;
-        foreach(int move, bannedMoves) {
-            bannedMovesS.append(MoveInfo::Name(move));
-        }
-        bannedMovesS.sort();
-        dest.setAttribute("moves", bannedMovesS.join(","));
-    }
-
-    if (bannedItems.size() > 0) {
-        QStringList bannedItemsS;
-        foreach(int item, bannedItems) {
-            bannedItemsS.append(MoveInfo::Name(item));
-        }
-        bannedItemsS.sort();
-        dest.setAttribute("items", bannedItemsS.join(","));
-    }
-
-    if (bannedPokes.size() > 0) {
-        QStringList bannedPokesS;
-        foreach(int poke, bannedPokes) {
-            bannedPokesS.append(PokemonInfo::Name(poke));
-        }
-        bannedPokesS.sort();
-        dest.setAttribute("pokemons", bannedPokesS.join(","));
-    }
-
-    if (restrictedPokes.size() > 0) {
-        QStringList restrictedPokesS;
-        foreach(int poke, restrictedPokes) {
-            restrictedPokesS.append(PokemonInfo::Name(poke));
-        }
-        restrictedPokesS.sort();
-        dest.setAttribute("restrictedPokemons", restrictedPokesS.join(","));
-    }
+    dest.setAttribute("displayOrder", displayOrder);
+    dest.setAttribute("moves", getBannedMoves());
+    dest.setAttribute("items", getBannedItems());
+    dest.setAttribute("pokemons", getBannedPokes());
+    dest.setAttribute("restrictedPokemons", getRestrictedPokes());
 
     if (clauses != 0) {
         QStringList res;
@@ -635,95 +571,177 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
         dest.setAttribute("clauses", res.join(","));
     }
 
-    QDomDocument doc;
+//    QDomDocument doc;
 
-    if (bannedSets.size() > 0) {
-        QDomElement elem = doc.createElement("sets");
-        foreach(BannedPoke b, bannedSets) {
-            QDomElement belem = doc.createElement("pokemon");
-            b.toXml(belem);
-            elem.appendChild(belem);
-        }
-        dest.appendChild(elem);
-    }
+//    if (bannedSets.size() > 0) {
+//        QDomElement elem = doc.createElement("sets");
+//        foreach(BannedPoke b, bannedSets) {
+//            QDomElement belem = doc.createElement("pokemon");
+//            b.toXml(belem);
+//            elem.appendChild(belem);
+//        }
+//        dest.appendChild(elem);
+//    }
 
-    if (restrictedSets.size() > 0) {
-        QDomElement elem = doc.createElement("restrictedSets");
-        foreach(BannedPoke b, restrictedSets) {
-            QDomElement belem = doc.createElement("pokemon");
-            b.toXml(belem);
-            elem.appendChild(belem);
-        }
-        dest.appendChild(elem);
-    }
+//    if (restrictedSets.size() > 0) {
+//        QDomElement elem = doc.createElement("restrictedSets");
+//        foreach(BannedPoke b, restrictedSets) {
+//            QDomElement belem = doc.createElement("pokemon");
+//            b.toXml(belem);
+//            elem.appendChild(belem);
+//        }
+//        dest.appendChild(elem);
+//    }
 
     return dest;
 }
 
-void BannedPoke::loadFromXml(const QDomElement &elem) {
-    poke = PokemonInfo::Number(elem.attribute("name"));
-    item = ItemInfo::Number("item");
+QString Tier::getBannedPokes() const
+{
+    QStringList bannedPokesS;
+    foreach(int poke, bannedPokes) {
+        bannedPokesS.append(PokemonInfo::Name(poke));
+    }
+    bannedPokesS.sort();
+    return bannedPokesS.join(", ");
+}
 
-    QStringList moves = elem.attribute("moves").split(",");
-    foreach (QString move, moves) {
+QString Tier::getBannedItems() const
+{
+    QStringList bannedItemsS;
+    foreach(int item, bannedItems) {
+        bannedItemsS.append(ItemInfo::Name(item));
+    }
+    bannedItemsS.sort();
+    return bannedItemsS.join(", ");
+}
+
+QString Tier::getBannedMoves() const
+{
+    QStringList bannedMovesS;
+    foreach(int move, bannedMoves) {
+        bannedMovesS.append(MoveInfo::Name(move));
+    }
+    bannedMovesS.sort();
+    return bannedMovesS.join(", ");
+}
+
+QString Tier::getRestrictedPokes() const
+{
+    QStringList restrictedPokesS;
+    foreach(int poke, restrictedPokes) {
+        restrictedPokesS.append(PokemonInfo::Name(poke));
+    }
+    restrictedPokesS.sort();
+    return restrictedPokesS.join(", ");
+}
+
+void Tier::importBannedPokes(const QString &s)
+{
+    bannedPokes.clear();
+    QStringList pokes = s.split(",");
+    foreach (QString poke, pokes) {
+        int num = PokemonInfo::Number(poke.trimmed());
+        if (num != 0)
+            bannedPokes.insert(num);
+    }
+}
+
+void Tier::importBannedItems(const QString &s)
+{
+    QStringList items = s.split(",");
+    foreach (QString item, items) {
+        int num = ItemInfo::Number(item.trimmed());
+        if (num != 0)
+            bannedItems.insert(num);
+    }
+}
+
+void Tier::importBannedMoves(const QString &s)
+{
+    QStringList moves = s.split(",");
+    foreach(QString move, moves) {
         int num = MoveInfo::Number(move.trimmed());
 
-        if (num != 0) {
-            this->moves.insert(num);
-        }
+        if (num != 0)
+            bannedMoves.insert(num);
     }
 }
 
-QDomElement &BannedPoke::toXml(QDomElement &dest) const {
-    dest.setAttribute("name", PokemonInfo::Name(poke));
-    if (item > 0)
-        dest.setAttribute("item", ItemInfo::Name(item));
-    if (moves.size() > 0) {
-        QStringList res;
-        foreach(int move, moves) {
-            res.append(MoveInfo::Name(move));
-        }
-        res.sort();
-        dest.setAttribute("moves", res.join(","));
-    }
-
-    return dest;
-}
-
-bool BannedPoke::isBanned(const PokeBattle &poke) const
+void Tier::importRestrictedPokes(const QString &s)
 {
-    if (moves.size() == 0 && item == 0)
-        return true;
-    if (item != 0 && poke.item() == item) {
-        return true;
+    QStringList rpokes = s.split(",");
+    foreach (QString poke, rpokes) {
+        int num = PokemonInfo::Number(poke.trimmed());
+        if (num != 0)
+            restrictedPokes.insert(num);
     }
-    if (moves.size() > 0) {
-        for (int i = 0; i < 4; i++) {
-            if (moves.contains(poke.move(i).num())) {
-                return true;
-            }
-        }
-    }
-
-    return false;
 }
 
-bool BannedPoke::isForcedMatch(const PokeBattle &poke) const
-{
-    if (moves.size() == 0 && item == 0)
-        return true;
-    if (item != 0 && poke.item() != item) {
-        return false;
-    }
-    if (moves.size() > 0) {
-        for (int i = 0; i < 4; i++) {
-            if (!moves.contains(poke.move(i).num())) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
+//void BannedPoke::loadFromXml(const QDomElement &elem) {
+//    poke = PokemonInfo::Number(elem.attribute("name"));
+//    item = ItemInfo::Number("item");
+
+//    QStringList moves = elem.attribute("moves").split(",");
+//    foreach (QString move, moves) {
+//        int num = MoveInfo::Number(move.trimmed());
+
+//        if (num != 0) {
+//            this->moves.insert(num);
+//        }
+//    }
+//}
+
+//QDomElement &BannedPoke::toXml(QDomElement &dest) const {
+//    dest.setAttribute("name", PokemonInfo::Name(poke));
+//    if (item > 0)
+//        dest.setAttribute("item", ItemInfo::Name(item));
+//    if (moves.size() > 0) {
+//        QStringList res;
+//        foreach(int move, moves) {
+//            res.append(MoveInfo::Name(move));
+//        }
+//        res.sort();
+//        dest.setAttribute("moves", res.join(","));
+//    }
+
+//    return dest;
+//}
+
+//bool BannedPoke::isBanned(const PokeBattle &poke) const
+//{
+//    if (moves.size() == 0 && item == 0)
+//        return true;
+//    if (item != 0 && poke.item() == item) {
+//        return true;
+//    }
+//    if (moves.size() > 0) {
+//        for (int i = 0; i < 4; i++) {
+//            if (moves.contains(poke.move(i).num())) {
+//                return true;
+//            }
+//        }
+//    }
+
+//    return false;
+//}
+
+//bool BannedPoke::isForcedMatch(const PokeBattle &poke) const
+//{
+//    if (moves.size() == 0 && item == 0)
+//        return true;
+//    if (item != 0 && poke.item() != item) {
+//        return false;
+//    }
+//    if (moves.size() > 0) {
+//        for (int i = 0; i < 4; i++) {
+//            if (!moves.contains(poke.move(i).num())) {
+//                return false;
+//            }
+//        }
+//    }
+//    return true;
+//}
 
 Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), m_count(-1), last_count_time(0), holder(1000) {
     banPokes = true;
@@ -761,8 +779,8 @@ Tier *Tier::dataClone() const
     Tier &t = *ret;
 
     t.banPokes = banPokes;
-    t.bannedSets = bannedSets; // The set is there to keep good perfs
-    t.restrictedSets = restrictedSets;
+//    t.bannedSets = bannedSets;
+//    t.restrictedSets = restrictedSets;
     t.maxRestrictedPokes = maxRestrictedPokes;
     t.numberOfPokemons = numberOfPokemons;
     t.maxLevel = maxLevel;

@@ -93,48 +93,6 @@ QWidget *AbstractConfigHelper::generateConfigWidget() {
     }
 }
 
-template<class T>
-ConfigHelper<T>::ConfigHelper(const QString &desc, T &var) : AbstractConfigHelper(desc), var(var) {
-
-}
-
-
-template<class T>
-ConfigCombo<T>::ConfigCombo(const QString &desc, T &var, const QStringList &labels, const QList<T> &values)
-    : ConfigHelper<T>(desc, var), labels(labels), values(values)
-{
-
-}
-
-template<class T>
-QWidget *ConfigCombo<T>::getInternalWidget()
-{
-    QComboBox *ret = new QComboBox();
-
-    ret->addItems(labels);
-
-    for (int i = 0; i < values.size(); i++) {
-        if (values[i] == ConfigHelper<T>::var) {
-            ret->setCurrentIndex(i);
-            break;
-        }
-    }
-
-    QObject::connect(ret, SIGNAL(activated(int)), SLOT(editingDone()));
-
-    return ret;
-}
-
-template<class T>
-void ConfigCombo<T>::updateVal()
-{
-    int index = ((QComboBox*)(ConfigHelper<T>::internalWidget))->currentIndex();
-
-    if (index >= 0 && index < values.size()) {
-        ConfigHelper<T>::var = values[index];
-    }
-}
-
 ConfigSpin::ConfigSpin(const QString &desc, int &var, int min, int max)
     : ConfigHelper<int> (desc, var), min(min), max(max)
 {
@@ -171,6 +129,25 @@ QWidget *ConfigLine::getInternalWidget()
 {
     QLineEdit *ret = new QLineEdit();
     ret->setText(var);
+
+    return ret;
+}
+
+ConfigText::ConfigText(const QString &desc, QString &var)
+    : ConfigHelper<QString> (desc, var)
+{
+
+}
+
+void ConfigText::updateVal()
+{
+    var = ((QPlainTextEdit*)(internalWidget))->toPlainText();
+}
+
+QWidget *ConfigText::getInternalWidget()
+{
+    QPlainTextEdit *ret = new QPlainTextEdit();
+    ret->setPlainText(var);
 
     return ret;
 }

@@ -21,9 +21,11 @@ signals:
     void tiersChanged();
 private slots:
     void done();
+    void updateTier();
 private:
     QTreeWidget *m_tree;
     QWidget *configWidget;
+    QWidget *internalWidget;
 
     TierTree *dataTree;
 
@@ -36,6 +38,15 @@ private:
     QString currentEdit;
 
     void clearCurrentEdit();
+    /* Data used to configure categories / tiers */
+    QString parent;
+    QString pokemons, restrPokemons, moves, items;
+    TierCategory *currentTierCat;
+    Tier *currentTier;
+    Type currentType;
+
+    void updateInternalWidget();
+    void updateTree();
 };
 
 

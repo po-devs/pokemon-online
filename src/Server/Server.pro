@@ -89,4 +89,5 @@ HEADERS += player.h \
     channel.h \
     tiertree.h \
     tierwindow.h \
-    confighelper.h
+    confighelper.h \
+    tiernode.h

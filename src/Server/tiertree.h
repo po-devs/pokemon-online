@@ -2,6 +2,7 @@
 #define TIERTREE_H
 
 #include <QtCore>
+#include "tiernode.h"
 
 class Tier;
 class TierMachine;
@@ -9,11 +10,9 @@ class QDomElement;
 class QTreeWidget;
 class QTreeWidgetItem;
 
-struct TierCategory
+struct TierCategory : public TierNode
 {
-    QList<Tier *> subLeafs;
-    QList<TierCategory *> subCategories;
-    QString name;
+    QList<TierNode *> subNodes;
     bool root;
 
     ~TierCategory();
@@ -21,20 +20,27 @@ struct TierCategory
     QDomElement &toXml(QDomElement &xml) const;
 
     QList<Tier *> gatherTiers();
+    QList<TierCategory *> gatherCategories();
+    QList<Tier *> firstLevelTiers();
+    QList<TierCategory *> firstLevelCategories();
     void cleanCategories();
     void clear();
     void clearWithoutDeleting();
-    void kill(Tier *t);
+    void kill(TierNode *t);
     TierCategory *dataClone() const;
 
     void serialize(QDataStream &stream, int level = -1);
 
-    Tier *getTier(const QString &name);
-    TierCategory *getCategory(const QString &name);
+    TierNode *getNode(const QString &name);
+    TierCategory *getParentCategory(TierNode *t);
+    void appendChild(TierNode *t);
+    void removeChild(TierNode *t);
 
-
-    QTreeWidgetItem *buildGui();
+    void reorder();
+    QTreeWidgetItem *buildGui() const;
     void buildRootGui(QTreeWidget *tree);
+
+    bool isCategory() const { return true; }
 };
 
 class TierTree
@@ -44,6 +50,7 @@ public:
     void loadFromXml(const QString &xmldata, TierMachine *boss);
     QString toXml() const;
     QList<Tier *> gatherTiers();
+    QList<TierCategory *> gatherCategories();
     /* Removing branches without leafs */
     void cleanCategories();
     /* Building the tier list as sent over network */
@@ -52,10 +59,12 @@ public:
        the structure of tiers without harming the real one */
     TierTree *dataClone() const;
 
-    Tier *getTier(const QString &name);
-    TierCategory *getCategory(const QString &name);
+    TierNode *getNode(const QString &name);
+    TierCategory *getParentCategory(TierNode *c);
 
     void buildTreeGui(QTreeWidget *tree);
+    /* Reorder tiers / categories with the right display order */
+    void reorder();
 private:
     TierCategory root;
 };
