@@ -18,6 +18,10 @@ PokemonInfoConfig::Config PokemonInfoConfig::config() {
 QString PokemonInfo::m_Directory;
 QMap<Pokemon::uniqueId, QString> PokemonInfo::m_Names;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Weights;
+QHash<int, QHash<quint16, QString> > PokemonInfo::m_Desc;
+QHash<quint16, QString> PokemonInfo::m_Classification;
+QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Height;
+
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Genders;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type1;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type2;
@@ -31,7 +35,7 @@ QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Options;
 int PokemonInfo::m_trueNumberOfPokes;
 QHash<quint16, QList<quint16> > PokemonInfo::m_Evolutions;
 QHash<quint16, quint16> PokemonInfo::m_OriginalEvos;
-QList<Pokemon::uniqueId> m_VisiblePokesPlainList;
+QList<Pokemon::uniqueId> PokemonInfo::m_VisiblePokesPlainList;
 
 QString MoveInfo::m_Directory;
 QList<QString> MoveInfo::m_Names;
@@ -297,22 +301,23 @@ static QString trFile(const QString &beg)
     }
 }
 
-// FIXME: it should be read as any other data.
 QString PokemonInfo::Desc(const Pokemon::uniqueId &pokeid, int cartridge)
 {
-    return get_line(trFile(path("description_%1").arg(cartridge)), pokeid.pokenum);
+    QString result = "";
+    if(m_Desc.contains(cartridge)) {
+        result = m_Desc.value(cartridge).value(pokeid.pokenum, "");
+    }
+    return result;
 }
 
-// FIXME: it should be read as any other data.
 QString PokemonInfo::Classification(const Pokemon::uniqueId &pokeid)
 {
-    return get_line(trFile(path("classification")), pokeid.pokenum);
+    return m_Classification.value(pokeid.pokenum, "");
 }
 
-// FIXME: it should be read as any other data.
 QString PokemonInfo::Height(const Pokemon::uniqueId &pokeid)
 {
-    return get_line(path("height.txt"), pokeid.pokenum);
+    return m_Height.value(pokeid, "0.0");
 }
 
 int PokemonInfo::Type1(const Pokemon::uniqueId &pokeid)
@@ -376,8 +381,55 @@ void PokemonInfo::init(const QString &dir)
     fill_uid_int(m_Ability1[1], path("poke_ability_4G.txt"));
     fill_uid_int(m_Ability2[1], path("poke_ability2_4G.txt"));
     fill_uid_int(m_LevelBalance, path("level_balance.txt"));
+    loadClassifications();
+    loadHeights();
+    loadDescriptions();
     loadBaseStats();
     makeDataConsistent();
+}
+
+void PokemonInfo::loadClassifications()
+{
+    QStringList temp;
+    fill_container_with_file(temp, trFile(path("classification")));
+    for(int i = 0; i < temp.size(); i++) {
+        QString current = temp[i].trimmed();
+        QString description;
+        quint16 pokenum;
+        bool ok = Pokemon::uniqueId::extract_short(current, pokenum, description);
+        if(ok) m_Classification[pokenum] = description;
+    }
+}
+
+void PokemonInfo::loadHeights()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("height"));
+    for(int i = 0; i < temp.size(); i++) {
+        QString current = temp[i].trimmed();
+        QString options, height;
+        Pokemon::uniqueId pokeid;
+        bool ok = Pokemon::uniqueId::extract(current, pokeid, options, height);
+        if(ok) m_Height[pokeid] = height;
+    }
+}
+
+void PokemonInfo::loadDescriptions()
+{
+    static const int CARTS_LEN = 3;
+    int carts[] = { 14, 15, 16 };
+    for(int i = 0; i < CARTS_LEN; i++)
+    {
+        QStringList temp;
+        fill_container_with_file(temp, trFile(path("description_%1").arg(carts[i])));
+        for(int j = 0; j < temp.size(); j++) {
+            QString current = temp[j].trimmed();
+            QString description;
+            quint16 pokenum;
+            bool ok = Pokemon::uniqueId::extract_short(current, pokenum, description);
+            if(ok) m_Desc[carts[i]][pokenum] = description;
+        }
+    }
 }
 
 void PokemonInfo::loadEvos()
