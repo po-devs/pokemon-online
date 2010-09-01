@@ -1,4 +1,5 @@
 #include <QtXml>
+#include <QtGui>
 #include "tiertree.h"
 #include "tier.h"
 
@@ -92,6 +93,13 @@ TierCategory * TierCategory::getCategory(const QString &name)
     return NULL;
 }
 
+void TierCategory::clearWithoutDeleting()
+{
+    subLeafs.clear();
+    subCategories.clear();
+    name.clear();
+}
+
 void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool root)
 {
     clear();
@@ -116,21 +124,48 @@ void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool 
     }
 }
 
-TierCategory TierCategory::dataClone() const
+TierCategory *TierCategory::dataClone() const
 {
-    TierCategory c;
-    c.name = name;
-    c.root = root;
+    TierCategory *c = new TierCategory();
+    c->name = name;
+    c->root = root;
 
     foreach(TierCategory *tc, subCategories) {
-        c.subCategories.push_back(new TierCategory(tc->dataClone()));
+        c->subCategories.push_back(tc->dataClone());
     }
 
     foreach(Tier *t, subLeafs) {
-        c.subLeafs.push_back(t->dataClone());
+        c->subLeafs.push_back(t->dataClone());
     }
 
     return c;
+}
+
+void TierCategory::buildRootGui(QTreeWidget *tree)
+{
+    foreach(TierCategory *c, subCategories) {
+        tree->addTopLevelItem(c->buildGui());
+    }
+
+    foreach(Tier *t, subLeafs) {
+        tree->addTopLevelItem(new QTreeWidgetItem(QStringList() << t->name()));
+    }
+}
+
+QTreeWidgetItem *TierCategory::buildGui() {
+    QTreeWidgetItem *it = new QTreeWidgetItem();
+
+    it->setText(0, name);
+
+    foreach(TierCategory *c, subCategories) {
+        it->addChild(c->buildGui());
+    }
+
+    foreach(Tier *t, subLeafs) {
+        it->addChild(new QTreeWidgetItem(QStringList() << t->name()));
+    }
+
+    return it;
 }
 
 QDomElement & TierCategory::toXml(QDomElement &xml) const {
@@ -206,11 +241,17 @@ void TierTree::cleanCategories() {
     root.cleanCategories();
 }
 
-TierTree TierTree::dataClone() const
+TierTree *TierTree::dataClone() const
 {
-    TierTree t;
+    TierTree *t = new TierTree();
 
-    t.root = root.dataClone();
+    TierCategory *rootCopy = root.dataClone();
+    t->root = *rootCopy;
+
+    /* As it was copied in the new root, data is shared, and so we have
+       to break the sharing */
+    rootCopy->clearWithoutDeleting();
+    delete rootCopy;
 
     return t;
 }
@@ -221,4 +262,11 @@ Tier *TierTree::getTier(const QString &name) {
 
 TierCategory *TierTree::getCategory(const QString &name) {
     return root.getCategory(name);
+}
+
+void TierTree::buildTreeGui(QTreeWidget *tree)
+{
+    tree->clear();
+
+    root.buildRootGui(tree);
 }

@@ -235,6 +235,7 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
         /* We would have a default screen open */
         if (mychannels.contains(it.key())) {
             mainChat->setTabText(mainChat->indexOf(mychannels.value(it.key())->mainChat()), it.value());
+            channelNameChanged(it.key(),it.value());
         }
 
         if (hasChannel(it.key()))
@@ -341,6 +342,19 @@ void Client::leaveChannelR(int index)
     if (mychannels.size() == 1)
         return;
 
+    if (!channelByNames.contains(mainChat->tabText(index).toLower())) {
+        foreach(Channel *c, mychannels) {
+            if (c->name() == mainChat->tabText(index)) {
+                c->makeReadyToQuit();
+                int id = c->id();
+
+                leaveChannel(id);
+                break;
+            }
+        }
+        return;
+    }
+
     int id = channelByNames.value(mainChat->tabText(index).toLower());
 
     if (channel(id)->isReadyToQuit()) {
@@ -371,7 +385,7 @@ void Client::leaveChannel(int id)
         }
     }
 
-    int index = 0;
+    int index = -1;
     for(int i = 0; i < mainChat->count(); i++) {
         if (mainChat->tabText(i).toLower() == name.toLower())
         {
@@ -874,8 +888,6 @@ void Client::playMusic(bool save)
 {
     QSettings s;
     s.setValue("play_battle_music", save);
-
-    //    emit musicPlayingChanged(save);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)

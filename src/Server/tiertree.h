@@ -6,6 +6,8 @@
 class Tier;
 class TierMachine;
 class QDomElement;
+class QTreeWidget;
+class QTreeWidgetItem;
 
 struct TierCategory
 {
@@ -21,12 +23,18 @@ struct TierCategory
     QList<Tier *> gatherTiers();
     void cleanCategories();
     void clear();
+    void clearWithoutDeleting();
     void kill(Tier *t);
-    TierCategory dataClone() const;
+    TierCategory *dataClone() const;
 
     void serialize(QDataStream &stream, int level = -1);
+
     Tier *getTier(const QString &name);
     TierCategory *getCategory(const QString &name);
+
+
+    QTreeWidgetItem *buildGui();
+    void buildRootGui(QTreeWidget *tree);
 };
 
 class TierTree
@@ -42,10 +50,12 @@ public:
     QByteArray buildTierList();
     /* Returns a copy, but that has no effect on ratings, just used to represent and touch
        the structure of tiers without harming the real one */
-    TierTree dataClone() const;
+    TierTree *dataClone() const;
 
     Tier *getTier(const QString &name);
     TierCategory *getCategory(const QString &name);
+
+    void buildTreeGui(QTreeWidget *tree);
 private:
     TierCategory root;
 };
