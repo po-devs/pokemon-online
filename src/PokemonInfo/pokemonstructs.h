@@ -1759,6 +1759,6 @@ inline uint qHash(const Pokemon::uniqueId &key)
 }
 
 QDataStream & operator << (QDataStream &out, const Pokemon::uniqueId &id);
-QDataStream & operator >> (QDataStream &in, const Pokemon::uniqueId &id);
+QDataStream & operator >> (QDataStream &in, Pokemon::uniqueId &id);
 
 #endif // POKEMONSTRUCTS_H

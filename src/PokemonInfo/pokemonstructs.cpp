@@ -1182,7 +1182,7 @@ QDataStream & operator << (QDataStream &out, const Pokemon::uniqueId &id)
     return out;
 }
 
-QDataStream & operator >> (QDataStream &in, const Pokemon::uniqueId &id)
+QDataStream & operator >> (QDataStream &in, Pokemon::uniqueId &id)
 {
     in >> id.pokenum;
     in >> id.subnum;
