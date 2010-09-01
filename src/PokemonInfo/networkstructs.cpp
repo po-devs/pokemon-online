@@ -35,8 +35,7 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
     in >> team.win;
     in >> team.avatar;
 
-    for (int i = 0; i < 6; i++)
-	in >> team.pokemon(i);
+    for (int i = 0; i < 6; i++) in >> team.pokemon(i);
 
     if (team.info.length() > 300) {
         team.info.resize(300);
