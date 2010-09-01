@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include "tiertree.h"
+#include "../PokemonInfo/battlestructs.h"
 
 class ConfigForm;
 
@@ -49,6 +50,7 @@ private:
     TierCategory *currentTierCat;
     Tier *currentTier;
     Type currentType;
+    bool clauses[ChallengeInfo::numberOfClauses];
 
     void updateInternalWidget();
     void updateTree();
