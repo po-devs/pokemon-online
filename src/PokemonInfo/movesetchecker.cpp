@@ -37,21 +37,21 @@ void MoveSetChecker::init(const QString &dir)
     }
 }
 
-bool MoveSetChecker::isValid(int pokenum, int gen, int move1, int move2, int move3, int move4, QSet<int> *invalid_moves) {
+bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, int move1, int move2, int move3, int move4, QSet<int> *invalid_moves) {
     QSet<int> moves;
     moves << move1 << move2 << move3 << move4;
 
-    return isValid(pokenum, gen, moves, invalid_moves);
+    return isValid(pokeid, gen, moves, invalid_moves);
 }
 
 
-bool MoveSetChecker::isValid(int pokenum, int gen, const QSet<int> &moves2, QSet<int> *invalid_moves) {
+bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSet<int> &moves2, QSet<int> *invalid_moves) {
     QSet<int> moves = moves2;
     moves.remove(0);
 
-    if (!PokemonInfo::Moves(pokenum, gen).contains(moves)) {
+    if (!PokemonInfo::Moves(pokeid, gen).contains(moves)) {
         if (invalid_moves) {
-            *invalid_moves = moves.subtract(PokemonInfo::Moves(pokenum, gen));
+            *invalid_moves = moves.subtract(PokemonInfo::Moves(pokeid, gen));
         }
         return false;
     }
@@ -61,24 +61,24 @@ bool MoveSetChecker::isValid(int pokenum, int gen, const QSet<int> &moves2, QSet
 
     /* now we know the pokemon at least know all moves */
 
-    moves.subtract(PokemonInfo::RegularMoves(pokenum,4));
+    moves.subtract(PokemonInfo::RegularMoves(pokeid,4));
 
     if (moves.empty() || moves.size() == 1)
         return true;
 
-    if (isAnEggMoveCombination(pokenum, 4, moves)) {
+    if (isAnEggMoveCombination(pokeid, 4, moves)) {
             return true;
     }
 
 gen3:
     /* Now we have to go back to third gen, and not use 4 gen egg mvoes / special moves */
-    moves.subtract(PokemonInfo::RegularMoves(pokenum,3));
+    moves.subtract(PokemonInfo::RegularMoves(pokeid,3));
 
     if (moves.empty())
         return true;
     if (moves.size() == 1) {
-        if (PokemonInfo::EggMoves(pokenum,3).contains(*moves.begin()) ||
-            PokemonInfo::SpecialMoves(pokenum,3).contains(*moves.begin()))
+        if (PokemonInfo::EggMoves(pokeid,3).contains(*moves.begin()) ||
+            PokemonInfo::SpecialMoves(pokeid,3).contains(*moves.begin()))
             return true;
         else {
             if (invalid_moves) {
@@ -88,7 +88,7 @@ gen3:
         }
     }
 
-    if (isAnEggMoveCombination(pokenum, 3, moves)) {
+    if (isAnEggMoveCombination(pokeid, 3, moves)) {
             return true;
     }
 
@@ -99,9 +99,9 @@ gen3:
 }
 
 /* Used by ChainBreeding */
-bool MoveSetChecker::isAnEggMoveCombination(int pokenum, int gen, QSet<int> moves)
+bool MoveSetChecker::isAnEggMoveCombination(const Pokemon::uniqueId &pokeid, int gen, QSet<int> moves)
 {
-    foreach(QSet<int> combination, (*legalCombinations[gen-3])[pokenum]) {
+    foreach(QSet<int> combination, (*legalCombinations[gen-3])[pokeid]) {
         if (combination.contains(moves))
             return true;
     }
