@@ -149,7 +149,7 @@ signals:
     void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip, quint16 max, quint16 port);
     void PMReceived(int id, const QString &mess);
     void awayChanged(int id, bool away);
-    void tierListReceived(const QString &tl);
+    void tierListReceived(const QByteArray &tl);
     void announcement(const QString &announcement);
     /* From the control panel */
     void userInfoReceived(const UserInfo &ui);

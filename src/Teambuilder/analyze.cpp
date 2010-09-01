@@ -337,7 +337,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             break;
         }
     case TierSelection: {
-            QString tierList;
+            QByteArray tierList;
             in >> tierList;
             emit tierListReceived(tierList);
             break;
