@@ -23,6 +23,9 @@ private slots:
     void done();
     void updateTier();
     void updateCategory();
+    void addNew();
+    void addNewTier(const QString &name);
+    void addNewCategory(const QString &name);
 private:
     QTreeWidget *m_tree;
     QWidget *configWidget;
@@ -48,6 +51,24 @@ private:
 
     void updateInternalWidget();
     void updateTree();
+};
+
+class TierWNameW : public QWidget
+{
+    Q_OBJECT
+public:
+    TierWNameW();
+
+signals:
+    void addNewTier(const QString &name);
+    void addNewCategory(const QString &name);
+
+private slots:
+    void addClicked();
+
+private:
+    QLineEdit *line;
+    QRadioButton *bTier, *bCat;
 };
 
 
