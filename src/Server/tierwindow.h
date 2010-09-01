@@ -13,9 +13,10 @@ public:
     TierWindow(QWidget *parent = NULL);
     ~TierWindow();
 
-    void openTierEdit();
+    void openTierEdit(Tier *t);
+    void openCategoryEdit(TierCategory *c);
 public slots:
-    editingRequested(QTreeWidgetItem *item);
+    void editingRequested(QTreeWidgetItem *item);
 signals:
     void tiersChanged();
 private slots:
@@ -24,11 +25,11 @@ private:
     QTreeWidget *m_tree;
     QWidget *configWidget;
 
-    TierTree dataTree;
+    TierTree *dataTree;
 
     enum Type {
-        Tier,
-        Category
+        TierT,
+        CategoryT
     };
 
     ConfigForm *helper;

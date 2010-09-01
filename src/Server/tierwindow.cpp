@@ -1,5 +1,7 @@
 #include "tierwindow.h"
 #include "tiermachine.h"
+#include "confighelper.h"
+#include "tier.h"
 
 TierWindow::TierWindow(QWidget *parent) : QWidget(parent), helper(NULL)
 {
@@ -28,6 +30,8 @@ TierWindow::TierWindow(QWidget *parent) : QWidget(parent), helper(NULL)
     layout->addWidget(add,1,1);
     layout->addWidget(finish,1,2);
 
+    dataTree->buildTreeGui(m_tree);
+
     connect(m_tree, SIGNAL(itemActivated(QTreeWidgetItem*,int)), SLOT(editingRequested(QTreeWidgetItem*)));
     connect(finish, SIGNAL(clicked()), SLOT(done()));
     connect(finish, SIGNAL(clicked()), SLOT(close()));
@@ -35,6 +39,7 @@ TierWindow::TierWindow(QWidget *parent) : QWidget(parent), helper(NULL)
 
 TierWindow::~TierWindow() {
     clearCurrentEdit();
+    delete dataTree;
 }
 
 void TierWindow::editingRequested(QTreeWidgetItem *item)
@@ -42,14 +47,14 @@ void TierWindow::editingRequested(QTreeWidgetItem *item)
     clearCurrentEdit();
 
     TierCategory *tc = NULL;
-    if ( (tc = dataTree.getCategory(item->text())) ) {
+    if ( (tc = dataTree->getCategory(item->text(0))) ) {
         openCategoryEdit(tc);
         return;
     }
 
     Tier *t = NULL;
-    if ( (t = dataTree.getTier(item->text())) ) {
-        openTierEdit(tc);
+    if ( (t = dataTree->getTier(item->text(0))) ) {
+        openTierEdit(t);
         return;
     }
 }
@@ -62,9 +67,18 @@ void TierWindow::clearCurrentEdit()
 
 void TierWindow::done()
 {
-    TierMachine::obj()->fromString(dataTree.toXml());
+    TierMachine::obj()->fromString(dataTree->toXml());
     TierMachine::obj()->save();
 
     emit tiersChanged();
 }
 
+void TierWindow::openCategoryEdit(TierCategory *)
+{
+
+}
+
+void TierWindow::openTierEdit(Tier *)
+{
+
+}

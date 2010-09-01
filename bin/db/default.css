@@ -108,11 +108,11 @@ QMainWindow::separator {
 
 
 QTextEdit#MainChat {
-	background-color: white;
 	background-image: url(db/mainchat.png);
 	background-attachment: fixed;
 	background-repeat: repeat;
-	background-position: center
+	background-position: center;
+	font-size: 12px;
 }
 
 QLabel#Announcement {

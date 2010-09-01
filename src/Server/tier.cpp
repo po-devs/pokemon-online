@@ -179,7 +179,7 @@ bool Tier::isBanned(const PokeBattle &p) const {
             }
         }
     } else {
-        /* The mode is the "restrict" mode, so instead we force the pokémons to have
+        /* The mode is the "restrict" mode, so instead we force the pokemons to have
            some characteristics */
         if (bannedPokes.size() > 0 && !bannedPokes.contains(p.num()))
             return true;
@@ -637,9 +637,9 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
 
     QDomDocument doc;
 
-    if (bannedPokes.size() > 0) {
+    if (bannedSets.size() > 0) {
         QDomElement elem = doc.createElement("sets");
-        foreach(BannedPoke b, bannedPokes) {
+        foreach(BannedPoke b, bannedSets) {
             QDomElement belem = doc.createElement("pokemon");
             b.toXml(belem);
             elem.appendChild(belem);
@@ -647,9 +647,9 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
         dest.appendChild(elem);
     }
 
-    if (restrictedPokes.size() > 0) {
+    if (restrictedSets.size() > 0) {
         QDomElement elem = doc.createElement("restrictedSets");
-        foreach(BannedPoke b, restrictedPokes) {
+        foreach(BannedPoke b, restrictedSets) {
             QDomElement belem = doc.createElement("pokemon");
             b.toXml(belem);
             elem.appendChild(belem);

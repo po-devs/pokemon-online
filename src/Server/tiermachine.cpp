@@ -252,7 +252,7 @@ LoadThread *TierMachine::getThread()
     return threads + n;
 }
 
-TierTree TierMachine::getDataTree() const
+TierTree *TierMachine::getDataTree() const
 {
     return tree.dataClone();
 }
