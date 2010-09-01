@@ -1,5 +1,6 @@
 #include <QtXml>
 #include <QtGui>
+#include <algorithm>
 #include "tiertree.h"
 #include "tier.h"
 
@@ -10,13 +11,13 @@ TierCategory::~TierCategory()
 
 void TierCategory::cleanCategories()
 {
-    foreach(TierCategory *c, subCategories) {
+    foreach(TierCategory *c, firstLevelCategories()) {
         c->cleanCategories();
     }
 
-    foreach(TierCategory *c, subCategories) {
-        if (c->subCategories.empty() && c->subLeafs.empty()) {
-            subCategories.removeOne(c);
+    foreach(TierCategory *c, firstLevelCategories()) {
+        if (c->subNodes.empty()) {
+            subNodes.removeOne(c);
         }
     }
 }
@@ -24,69 +25,84 @@ void TierCategory::cleanCategories()
 void TierCategory::serialize(QDataStream &stream, int level)
 {
     if (!root) {
-        stream << uchar(level) << name;
+        TierNode::serialize(stream, level);
     }
 
     level += 1;
 
-    foreach(TierCategory *c, subCategories) {
-        c->serialize(stream, level);
-    }
-
-    foreach(Tier *t, subLeafs) {
-        stream << uchar (level) << t->name();
+    foreach(TierNode *n, subNodes) {
+        n->serialize(stream, level);
     }
 }
 
-void TierCategory::kill(Tier *t) {
-    subLeafs.removeAll(t);
-    delete t;
-}
-
-void TierCategory::clear()
+TierCategory *TierCategory::getParentCategory(TierNode *c)
 {
-    foreach(TierCategory *c, subCategories) {
-        c->clear();
-        delete c;
-    }
-    foreach(Tier *t, subLeafs) {
-        delete t;
-    }
-    subLeafs.clear();
-    subCategories.clear();
-    name.clear();
-}
-
-Tier * TierCategory::getTier(const QString &name)
-{
-    foreach(Tier *t, subLeafs) {
-        if (t->name() == name)
-            return t;
+    if (subNodes.contains(c)) {
+        return this;
     }
 
-    foreach(TierCategory *tc, subCategories) {
-        Tier *t=  tc->getTier(name);
+    foreach(TierCategory *tc, firstLevelCategories()) {
+        TierCategory *tcr =  tc->getParentCategory(c);
 
-        if (t) {
-            return t;
-        }
+        if (tcr)
+            return tcr;
     }
 
     return NULL;
 }
 
-TierCategory * TierCategory::getCategory(const QString &name)
+static bool nodeComp(TierNode *n1, TierNode *n2) {
+    if (n1->displayOrder < n2->displayOrder)
+        return true;
+    if (n2->displayOrder > n1->displayOrder)
+        return false;
+    if (n1->isCategory() && !n2->isCategory())
+        return true;
+    return false;
+}
+
+void TierCategory::reorder()
 {
-    foreach(TierCategory *tc, subCategories) {
-        if (tc->name == name)
-            return tc;
+    std::sort(subNodes.begin(), subNodes.end(), nodeComp);
+
+    foreach(TierCategory *c, firstLevelCategories()) {
+        c->reorder();
+    }
+}
+
+void TierCategory::kill(TierNode *t) {
+    subNodes.removeAll(t);
+    delete t;
+}
+
+void TierCategory::clear()
+{
+    foreach(TierCategory *c, firstLevelCategories()) {
+        c->clear();
+    }
+    foreach(TierNode *t, subNodes) {
+        delete t;
+    }
+    subNodes.clear();
+    changeName("");
+}
+
+TierNode * TierCategory::getNode(const QString &name)
+{
+    if (root && name == "") {
+        return this;
     }
 
-    foreach(TierCategory *tc, subCategories) {
-        TierCategory *c =  tc->getCategory(name);
+    foreach(TierNode *n, subNodes) {
+        if (n->name() == name)
+            return n;
+    }
 
-        if (c) {
-            return c;
+    foreach(TierCategory *tc, firstLevelCategories()) {
+        TierNode *n =  tc->getNode(name);
+
+        if (n) {
+            return n;
         }
     }
 
@@ -95,9 +111,8 @@ TierCategory * TierCategory::getCategory(const QString &name)
 
 void TierCategory::clearWithoutDeleting()
 {
-    subLeafs.clear();
-    subCategories.clear();
-    name.clear();
+    subNodes.clear();
+    changeName("");
 }
 
 void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool root)
@@ -105,21 +120,25 @@ void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool 
     clear();
 
     if (!root)
-        name = elem.attribute("name");
+        changeName(elem.attribute("name"));
+
+    displayOrder = elem.attribute("displayOrder").toInt();
 
     this->root = root;
 
     QDomElement n = elem.firstChildElement();
     while(!n.isNull()) {
+        TierNode *newN;
         if (n.tagName() == "category") {
-            TierCategory *c = new TierCategory();
-            c->loadFromXml(n, boss);
-            subCategories.push_back(c);
+            newN = new TierCategory();
+            ((TierCategory*)(newN))->loadFromXml(n, boss);
         } else if (n.tagName() == "tier") {
-            Tier *t = new Tier(boss, this);
-            t->loadFromXml(n);
-            subLeafs.push_back(t);
+            newN = new Tier(boss, this);
+            newN->loadFromXml(n);
+        } else {
+            break;
         }
+        subNodes.push_back(newN);
         n = n.nextSiblingElement();
     }
 }
@@ -127,42 +146,39 @@ void TierCategory::loadFromXml(const QDomElement &elem, TierMachine *boss, bool 
 TierCategory *TierCategory::dataClone() const
 {
     TierCategory *c = new TierCategory();
-    c->name = name;
+    c->changeName(name());
+    c->displayOrder = displayOrder;
     c->root = root;
 
-    foreach(TierCategory *tc, subCategories) {
-        c->subCategories.push_back(tc->dataClone());
-    }
-
-    foreach(Tier *t, subLeafs) {
-        c->subLeafs.push_back(t->dataClone());
+    foreach(TierNode *n, subNodes) {
+        c->subNodes.push_back(n->dataClone());
     }
 
     return c;
 }
 
+void TierCategory::appendChild(TierNode *t)
+{
+    subNodes.append(t);
+}
+
+void TierCategory::removeChild(TierNode *t)
+{
+    subNodes.removeOne(t);
+}
+
 void TierCategory::buildRootGui(QTreeWidget *tree)
 {
-    foreach(TierCategory *c, subCategories) {
+    foreach(TierNode *c, subNodes) {
         tree->addTopLevelItem(c->buildGui());
-    }
-
-    foreach(Tier *t, subLeafs) {
-        tree->addTopLevelItem(new QTreeWidgetItem(QStringList() << t->name()));
     }
 }
 
-QTreeWidgetItem *TierCategory::buildGui() {
-    QTreeWidgetItem *it = new QTreeWidgetItem();
+QTreeWidgetItem *TierCategory::buildGui()  const{
+    QTreeWidgetItem *it = TierNode::buildGui();
 
-    it->setText(0, name);
-
-    foreach(TierCategory *c, subCategories) {
+    foreach(TierNode *c, subNodes) {
         it->addChild(c->buildGui());
-    }
-
-    foreach(Tier *t, subLeafs) {
-        it->addChild(new QTreeWidgetItem(QStringList() << t->name()));
     }
 
     return it;
@@ -170,19 +186,20 @@ QTreeWidgetItem *TierCategory::buildGui() {
 
 QDomElement & TierCategory::toXml(QDomElement &xml) const {
     if (!root) {
-        xml.setAttribute("name", name);
+        xml.setAttribute("name", name());
     }
 
-    QDomDocument doc;
+    xml.setAttribute("displayOrder", displayOrder);
 
-    foreach (Tier *t, subLeafs) {
-        QDomElement elem = doc.createElement("tier");
-        t->toXml(elem);
-        xml.appendChild(elem);
-    }
+    foreach (TierNode *c, subNodes) {
+        QDomElement elem;
 
-    foreach (TierCategory *c, subCategories) {
-        QDomElement elem = doc.createElement("category");
+        if (c->isCategory()) {
+            elem.setTagName("category");
+        } else {
+            elem.setTagName("tier");
+        }
+
         c->toXml(elem);
         xml.appendChild(elem);
     }
@@ -192,11 +209,52 @@ QDomElement & TierCategory::toXml(QDomElement &xml) const {
 
 QList<Tier *> TierCategory::gatherTiers()
 {
-    QList<Tier*> l = subLeafs;
-    foreach(TierCategory *c, subCategories) {
+    QList<Tier*> l = firstLevelTiers();
+    foreach(TierCategory *c, firstLevelCategories()) {
         l.append(c->gatherTiers());
     }
     return l;
+}
+
+QList<Tier *> TierCategory::firstLevelTiers()
+{
+    QList<Tier *> ret;
+
+    foreach(TierNode *n, subNodes) {
+        if (n->isTier()) {
+            Tier *t = dynamic_cast<Tier*>(n);
+            if (t) {
+                ret.push_back(t);
+            }
+        }
+    }
+
+    return ret;
+}
+
+QList<TierCategory *> TierCategory::gatherCategories()
+{
+    QList<TierCategory*> l = firstLevelCategories();
+    foreach(TierCategory *c, l) {
+        l.append(c->gatherCategories());
+    }
+    return l;
+}
+
+QList<TierCategory *> TierCategory::firstLevelCategories()
+{
+    QList<TierCategory *> ret;
+
+    foreach(TierNode *n, subNodes) {
+        if (n->isCategory()) {
+            TierCategory *t = dynamic_cast<TierCategory*>(n);
+            if (t) {
+                ret.push_back(t);
+            }
+        }
+    }
+
+    return ret;
 }
 
 void TierTree::loadFromXml(const QString &xmldata, TierMachine *boss)
@@ -205,6 +263,7 @@ void TierTree::loadFromXml(const QString &xmldata, TierMachine *boss)
     doc.setContent(xmldata);
     QDomElement docElem = doc.documentElement();
     root.loadFromXml(docElem, boss, true);
+    reorder();
 }
 
 QString TierTree::toXml() const
@@ -256,12 +315,8 @@ TierTree *TierTree::dataClone() const
     return t;
 }
 
-Tier *TierTree::getTier(const QString &name) {
-    return root.getTier(name);
-}
-
-TierCategory *TierTree::getCategory(const QString &name) {
-    return root.getCategory(name);
+TierNode *TierTree::getNode(const QString &name) {
+    return root.getNode(name);
 }
 
 void TierTree::buildTreeGui(QTreeWidget *tree)
@@ -269,4 +324,19 @@ void TierTree::buildTreeGui(QTreeWidget *tree)
     tree->clear();
 
     root.buildRootGui(tree);
+}
+
+QList<TierCategory *> TierTree::gatherCategories()
+{
+    return root.gatherCategories();
+}
+
+TierCategory *TierTree::getParentCategory(TierNode *n)
+{
+    return root.getParentCategory(n);
+}
+
+void TierTree::reorder()
+{
+    root.reorder();
 }

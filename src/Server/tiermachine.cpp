@@ -76,7 +76,7 @@ void TierMachine::fromString(const QString &s)
     if (tiers.empty()) {
         Tier *t = new Tier(this, &tree.root);
         t->changeName("All");
-        tree.root.subLeafs.push_back(t);
+        tree.root.subNodes.push_back(t);
         tiers.push_back(t);
     }
 

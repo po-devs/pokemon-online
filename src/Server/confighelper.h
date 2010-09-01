@@ -2,6 +2,7 @@
 #define CONFIGHELPER_H
 
 #include <QtCore>
+#include <QtGui>
 
 /* This file allows to avoid writing bothersome code in order to make GUI config windows.
 
@@ -87,6 +88,15 @@ private:
     virtual QWidget *getInternalWidget();
 };
 
+/* Creates a text edit */
+class ConfigText : public ConfigHelper<QString> {
+public:
+    ConfigText(const QString &desc, QString &var);
+    void updateVal();
+private:
+    virtual QWidget *getInternalWidget();
+};
+
 /* Creates a QCheckBox */
 class ConfigCheck : public ConfigHelper<bool> {
 public:
@@ -96,5 +106,45 @@ private:
     QString checkBoxText;
     virtual QWidget *getInternalWidget();
 };
+
+template<class T>
+ConfigHelper<T>::ConfigHelper(const QString &desc, T &var) : AbstractConfigHelper(desc), var(var) {
+
+}
+
+template<class T>
+ConfigCombo<T>::ConfigCombo(const QString &desc, T &var, const QStringList &labels, const QList<T> &values)
+    : ConfigHelper<T>(desc, var), labels(labels), values(values)
+{
+
+}
+
+template<class T>
+QWidget *ConfigCombo<T>::getInternalWidget()
+{
+    QComboBox *ret = new QComboBox();
+
+    ret->addItems(labels);
+
+    for (int i = 0; i < values.size(); i++) {
+        if (values[i] == ConfigHelper<T>::var) {
+            ret->setCurrentIndex(i);
+            break;
+        }
+    }
+
+    return ret;
+}
+
+template<class T>
+void ConfigCombo<T>::updateVal()
+{
+    int index = ((QComboBox*)(ConfigHelper<T>::internalWidget))->currentIndex();
+
+    if (index >= 0 && index < values.size()) {
+        ConfigHelper<T>::var = values[index];
+    }
+}
+
 
 #endif // CONFIGHELPER_H
