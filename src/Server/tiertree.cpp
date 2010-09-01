@@ -192,12 +192,13 @@ QDomElement & TierCategory::toXml(QDomElement &xml) const {
     xml.setAttribute("displayOrder", displayOrder);
 
     foreach (TierNode *c, subNodes) {
+        QDomDocument doc;
         QDomElement elem;
 
         if (c->isCategory()) {
-            elem.setTagName("category");
+            elem = doc.createElement("category");
         } else {
-            elem.setTagName("tier");
+            elem = doc.createElement("tier");
         }
 
         c->toXml(elem);
