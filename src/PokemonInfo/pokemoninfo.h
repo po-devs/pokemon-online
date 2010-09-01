@@ -97,6 +97,9 @@ private:
     // Is a map because we need it to be sorted.
     static QMap<Pokemon::uniqueId, QString> m_Names;
     static QHash<Pokemon::uniqueId, QString> m_Weights;
+    static QHash<int, QHash<quint16, QString> > m_Desc;
+    static QHash<quint16, QString> m_Classification;
+    static QHash<Pokemon::uniqueId, QString> m_Height;
     static QString m_Directory;
     static QHash<Pokemon::uniqueId, int> m_Type1;
     static QHash<Pokemon::uniqueId, int> m_Type2;
@@ -127,6 +130,9 @@ private:
     static void loadEvos();
     static void loadBaseStats();
     static void loadMoves();
+    static void loadClassifications();
+    static void loadHeights();
+    static void loadDescriptions();
     // Call this after loading all data.
     static void makeDataConsistent();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
