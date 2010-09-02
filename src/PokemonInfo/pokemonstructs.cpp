@@ -869,7 +869,12 @@ bool TrainerTeam::importFromTxt(const QString &file1)
                     }
                 }
             }
-            p.setMove(MoveInfo::Number(move),i-4,false);
+            int moveNum = MoveInfo::Number(move);
+            p.setMove(moveNum,i-4,false);
+
+            if (moveNum == Move::Return) {
+                p.happiness() = 255;
+            }
         }
 
         /* Removes invalid move combinations */
