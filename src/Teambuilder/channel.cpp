@@ -293,7 +293,7 @@ void Channel::insertNewPlayer(int playerid)
     myplayersitems.insert(playerid, item);
 
     QString tier = client->tier(playerid);
-    if (client->sortBT) {
+    if (client->sortBT && client->tierList.contains(tier)) {
         if (mytiersitems.contains(tier))
             placeItem(item, mytiersitems.value(tier));
         else
