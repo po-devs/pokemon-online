@@ -1674,6 +1674,7 @@ public:
 class TrainerTeam
 {
     PROPERTY(quint16, avatar);
+    PROPERTY(QString, defaultTier);
 protected:
     Team m_team;
     QString m_trainerNick;

@@ -5,6 +5,7 @@
 #include "security.h"
 #include "challenge.h"
 #include "tiermachine.h"
+#include "tier.h"
 #include "waitingobject.h"
 #include "server.h"
 #include "analyze.h"
@@ -112,17 +113,29 @@ void Player::changeTier(const QString &newtier)
         return;
     }
     if (!TierMachine::obj()->isValid(team(), newtier)) {
+        Tier *tier = &TierMachine::obj()->tier(newtier);
+
+        if (!tier->allowGen(team().gen)) {
+            sendMessage(tr("The generation of your team is invalid for that tier."));
+            return;
+        }
+
         QString pokeList = "";
         for(int i = 0; i < 6; i++) {
-            if (TierMachine::obj()->isBanned(team().poke(i),newtier)) {
+            if (tier->isBanned(team().poke(i))) {
                 pokeList += PokemonInfo::Name(team().poke(i).num()) + ", ";
             }
         }
         if (pokeList.length() >= 2)
             pokeList.resize(pokeList.size()-2);
 
-        sendMessage(tr("The following pokemons are banned in %1, hence you can't choose that tier: %2.").arg(newtier,pokeList));
-        return;
+        if (pokeList.size() > 0) {
+            sendMessage(tr("The following pokemons of your team are invalid (ban, level, moveset, item...) in %1, hence you can't choose that tier: %2.").arg(newtier,pokeList));
+            return;
+        } else {
+            sendMessage(tr("You have too many restricted pokemons, or simply too many pokemons for the tier %1.").arg(newtier));
+            return;
+        }
     }
     if (Server::serverIns->beforeChangeTier(id(), tier(), newtier)) {
         QString oldtier = tier();
@@ -770,7 +783,10 @@ void Player::testAuthentificationLoaded()
 
 void Player::findTierAndRating()
 {
-    tier() = TierMachine::obj()->findTier(team());
+    if (TierMachine::obj()->exists(defaultTier()) && TierMachine::obj()->isValid(team(), defaultTier()))
+        tier() = defaultTier();
+    else
+        tier() = TierMachine::obj()->findTier(team());
     findRating();
 }
 
@@ -848,6 +864,7 @@ void Player::assignTeam(TeamInfo &team)
     this->team() = team;
     winningMessage() = team.win;
     losingMessage() = team.lose;
+    defaultTier() = team.defaultTier;
 }
 
 void Player::changeWaitingTeam(const TeamInfo &t)
