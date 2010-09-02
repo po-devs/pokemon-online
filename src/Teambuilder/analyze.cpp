@@ -172,7 +172,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    break;
 	}
     case KeepAlive: {
-            /* Just kept there in order not to display an old version message because of an unkown command */
+            notify(KeepAlive);
             break;
         }
     case PlayersList: {
@@ -217,9 +217,8 @@ void Analyzer::commandReceived(const QByteArray &commandline)
                 /* This is a battle we take part in */
                 TeamBattle team;
                 BattleConfiguration conf;
-                bool doubles;
-                in >> team >> conf >> doubles;
-                emit battleStarted(battleid, id2, team, conf, doubles);
+                in >> conf >> team;
+                emit battleStarted(battleid, id2, team, conf);
             } else {
                 /* this is a battle of strangers */
                 emit battleStarted(battleid, id1, id2);
@@ -306,11 +305,10 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             break;
         }
     case SpectateBattle: {
-            QString name0, name1;
+            BattleConfiguration conf;
             qint32 battleId;
-            bool doubles;
-            in >> name0 >> name1 >> battleId >> doubles;
-            emit spectatedBattle(name0, name1, battleId, doubles);
+            in >> battleId >> conf;
+            emit spectatedBattle(battleId, conf);
             break;
         }
     case SpectatingBattleMessage: {
@@ -339,7 +337,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             break;
         }
     case TierSelection: {
-            QString tierList;
+            QByteArray tierList;
             in >> tierList;
             emit tierListReceived(tierList);
             break;

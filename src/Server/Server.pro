@@ -36,7 +36,10 @@ SOURCES += main.cpp \
     tiermachine.cpp \
     tier.cpp \
     moves.cpp \
-    channel.cpp
+    channel.cpp \
+    tiertree.cpp \
+    tierwindow.cpp \
+    confighelper.cpp
 DEFINES = SERVER_SIDE
 LIBS += -L../../bin \
     -lutilities \
@@ -83,4 +86,8 @@ HEADERS += player.h \
     ../Utilities/CrossDynamicLib.h \
     ../Utilities/coro.h \
     ../Utilities/contextswitch.h \
-    channel.h
+    channel.h \
+    tiertree.h \
+    tierwindow.h \
+    confighelper.h \
+    tiernode.h

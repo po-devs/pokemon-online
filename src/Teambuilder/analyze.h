@@ -134,12 +134,12 @@ signals:
     /* challengerelated */
     void challengeStuff(const ChallengeInfo &c);
     /* battle including self */
-    void battleStarted(int battleid, int id, const TeamBattle &myteam, const BattleConfiguration &conf, bool doubles);
+    void battleStarted(int battleid, int id, const TeamBattle &myteam, const BattleConfiguration &conf);
     /* battle of strangers */
     void battleStarted(int battleid, int id1, int id2);
     void battleFinished(int battleid, int res, int srcid, int destid);
     void battleMessage(int battleid, const QByteArray &mess);
-    void spectatedBattle(const QString& name0, const QString &name1, int battleId, bool doubles);
+    void spectatedBattle(int battleId, const BattleConfiguration &conf);
     void spectatingBattleMessage(int battleId, const QByteArray &mess);
     void spectatingBattleFinished(int battleId);
     void passRequired(const QString &salt);
@@ -149,7 +149,7 @@ signals:
     void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip, quint16 max, quint16 port);
     void PMReceived(int id, const QString &mess);
     void awayChanged(int id, bool away);
-    void tierListReceived(const QString &tl);
+    void tierListReceived(const QByteArray &tl);
     void announcement(const QString &announcement);
     /* From the control panel */
     void userInfoReceived(const UserInfo &ui);
