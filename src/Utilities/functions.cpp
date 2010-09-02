@@ -29,7 +29,7 @@ QString slug(const QString &s)
     QString ret = "";
 
     foreach(QChar c, s) {
-        if (c.isLetter() || c == '_') {
+        if (c.isLetter() || c.isDigit() || c == '_') {
             ret += c.toLower();
         }
     }

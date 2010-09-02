@@ -110,7 +110,7 @@ public:
     bool isConnected() const;
     QString ip() const;
     void sendChallengeStuff(const ChallengeInfo &c);
-    void engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
+    void engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf);
     void sendBattleResult(qint32 battleid, quint8 res, int win, int los);
     void sendBattleCommand(qint32 battleid, const QByteArray &command);
     void sendWatchingCommand(qint32 id, const QByteArray &command);
@@ -153,9 +153,9 @@ signals:
     /* to send to the client */
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
-    void loggedIn(const TeamInfo &team, bool ladder, bool showteam, QColor c);
+    void loggedIn(TeamInfo &team, bool ladder, bool showteam, QColor c);
     void messageReceived(int chanid, const QString &mess);
-    void teamReceived(const TeamInfo &team);
+    void teamReceived(TeamInfo &team);
     void connected();
     void disconnected();
     void forfeitBattle(int id);

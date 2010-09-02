@@ -25,7 +25,11 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     h->addWidget(s);
     s->setChildrenCollapsible(false);
 
+    QSettings settings;
+
     QTabWidget *mytab = new QTabWidget();
+    /* Cancels out the effect of the splitter being Plastique */
+    mytab->setStyle(QStyleFactory::create(settings.value("application_style").toString()));
     mytab->setMovable(true);
     mytab->addTab(playersW = new QStackedWidget(), tr("Players"));
     mytab->addTab(battlesW = new QStackedWidget(), tr("Battles"));
@@ -64,6 +68,8 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mainChat->setObjectName("MainChat");
     mainChat->setMovable(true);
     mainChat->setTabsClosable(true);
+    /* Cancels out the effect of the splitter being Plastique */
+    mainChat->setStyle(QStyleFactory::create(settings.value("application_style").toString()));
 //    layout->addWidget(myline = new QLineEdit());
     layout->addWidget(myline = new QIRCLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
@@ -140,8 +146,8 @@ void Client::initRelay()
     connect(relay, SIGNAL(playerLogin(PlayerInfo)), SLOT(playerLogin(PlayerInfo)));
     connect(relay, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(relay, SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
-    connect(relay, SIGNAL(battleStarted(int, int, TeamBattle, BattleConfiguration, bool )),
-            SLOT(battleStarted(int, int, TeamBattle, BattleConfiguration, bool)));
+    connect(relay, SIGNAL(battleStarted(int, int, TeamBattle, BattleConfiguration)),
+            SLOT(battleStarted(int, int, TeamBattle, BattleConfiguration)));
     connect(relay, SIGNAL(battleStarted(int,int, int)), SLOT(battleStarted(int, int, int)));
     connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int, int,int,int)));
     connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
@@ -151,11 +157,11 @@ void Client::initRelay()
     connect(relay, SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
     connect(relay, SIGNAL(PMReceived(int,QString)), SLOT(PMReceived(int,QString)));
     connect(relay, SIGNAL(awayChanged(int, bool)), SLOT(awayChanged(int, bool)));
-    connect(relay, SIGNAL(spectatedBattle(QString,QString,int,bool)), SLOT(watchBattle(QString,QString,int,bool)));
+    connect(relay, SIGNAL(spectatedBattle(int,BattleConfiguration)), SLOT(watchBattle(int,BattleConfiguration)));
     connect(relay, SIGNAL(spectatingBattleMessage(int,QByteArray)), SLOT(spectatingBattleMessage(int , QByteArray)));
     connect(relay, SIGNAL(spectatingBattleFinished(int)), SLOT(stopWatching(int)));
     connect(relay, SIGNAL(versionDiff(QString, QString)), SLOT(versionDiff(QString, QString)));
-    connect(relay, SIGNAL(tierListReceived(QString)), SLOT(tierListReceived(QString)));
+    connect(relay, SIGNAL(tierListReceived(QByteArray)), SLOT(tierListReceived(QByteArray)));
     connect(relay, SIGNAL(announcement(QString)), SLOT(announcementReceived(QString)));
     connect(relay, SIGNAL(channelsListReceived(QHash<qint32,QString>)), SLOT(channelsListReceived(QHash<qint32,QString>)));
     connect(relay, SIGNAL(channelPlayers(int,QVector<qint32>)), SLOT(channelPlayers(int,QVector<qint32>)));
@@ -235,6 +241,7 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
         /* We would have a default screen open */
         if (mychannels.contains(it.key())) {
             mainChat->setTabText(mainChat->indexOf(mychannels.value(it.key())->mainChat()), it.value());
+            channelNameChanged(it.key(),it.value());
         }
 
         if (hasChannel(it.key()))
@@ -341,6 +348,19 @@ void Client::leaveChannelR(int index)
     if (mychannels.size() == 1)
         return;
 
+    if (!channelByNames.contains(mainChat->tabText(index).toLower())) {
+        foreach(Channel *c, mychannels) {
+            if (c->name() == mainChat->tabText(index)) {
+                c->makeReadyToQuit();
+                int id = c->id();
+
+                leaveChannel(id);
+                break;
+            }
+        }
+        return;
+    }
+
     int id = channelByNames.value(mainChat->tabText(index).toLower());
 
     if (channel(id)->isReadyToQuit()) {
@@ -371,7 +391,7 @@ void Client::leaveChannel(int id)
         }
     }
 
-    int index = 0;
+    int index = -1;
     for(int i = 0; i < mainChat->count(); i++) {
         if (mainChat->tabText(i).toLower() == name.toLower())
         {
@@ -473,7 +493,7 @@ void Client::startPM(int id)
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
-    connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(registerPermPlayer(int)));
+    connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int)), this, SLOT(removePM(int)));
 
     mypms[id] = p;
@@ -874,8 +894,6 @@ void Client::playMusic(bool save)
 {
     QSettings s;
     s.setValue("play_battle_music", save);
-
-    //    emit musicPlayingChanged(save);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
@@ -927,21 +945,20 @@ void Client::announcementReceived(const QString &ann)
     announcement->show();
 }
 
-void Client::tierListReceived(const QString &tl)
+void Client::tierListReceived(const QByteArray &tl)
 {
     mytiermenu->clear();
     mytiers.clear();
+    tierList.clear();
+    tierRoot.buildFromRaw(tl);
+    tierList = tierRoot.getTierList();
 
-    tierList = tl.split('\n', QString::SkipEmptyParts);
-
-    if (tierList.empty())
-        tierList.push_back("All");
-
-    foreach(QString t, tierList) {
-        mytiers.push_back(mytiermenu->addAction(t,this,SLOT(changeTier())));
-        mytiers.back()->setCheckable(true);
+    if (tierList.empty()) {
+        tierRoot.subNodes.push_back(new TierNode("All"));
+        tierList = tierRoot.getTierList();
     }
 
+    mytiers = tierRoot.buildMenu(mytiermenu, this);
     changeTierChecked(player(ownId()).tier);
 
     QSettings s;
@@ -1006,7 +1023,8 @@ BasicInfo Client::info(int id) const
 
 void Client::seeInfo(QTreeWidgetItem *it)
 {
-    seeInfo(((QIdTreeWidgetItem*)(it))->id());
+    if (dynamic_cast<QIdTreeWidgetItem*>(it))
+        seeInfo(((QIdTreeWidgetItem*)(it))->id());
 }
 
 void Client::seeInfo(int id)
@@ -1043,10 +1061,10 @@ void Client::seeChallenge(const ChallengeInfo &c)
     }
 }
 
-void Client::battleStarted(int battleId, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
+void Client::battleStarted(int battleId, int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
     cancelFindBattle(false);
-    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf, doubles);
+    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf);
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
     mybattle->setWindowFlags(Qt::Window);
     mybattle->client() = this;
@@ -1091,9 +1109,9 @@ void Client::battleReceived(int battleid, int id1, int id2)
     updateState(id2);
 }
 
-void Client::watchBattle(const QString &name0, const QString &name1, int battleId, bool doubles)
+void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 {
-    BaseBattleWindow *battle = new BaseBattleWindow(player(id(name0)), player(id(name1)), doubles);
+    BaseBattleWindow *battle = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf);
     battle->setWindowFlags(Qt::Window);
     battle->show();
 
@@ -1218,6 +1236,11 @@ void Client::challengeStuff(const ChallengeInfo &c)
                 }
             } else if (c.desc() == ChallengeInfo::InvalidTeam) {
                 printLine(tr("%1 has an invalid team.").arg(name(c)));
+                while ( (b = getChallengeWindow(c)) ) {
+                    closeChallengeWindow(b);
+                }
+            } else if (c.desc() == ChallengeInfo::InvalidGen) {
+                printLine(tr("%1 has a different gen than yours.").arg(name(c)));
                 while ( (b = getChallengeWindow(c)) ) {
                     closeChallengeWindow(b);
                 }

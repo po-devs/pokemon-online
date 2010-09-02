@@ -317,6 +317,12 @@ void PokeGraphics::setNum(int num)
     setUpToDate(false);
 }
 
+void PokeGraphics::setGen(int gen)
+{
+    m_gen = gen;
+    setUpToDate(false);
+}
+
 void PokeGraphics::setUpToDate(bool uptodate)
 {
     m_uptodate = uptodate;
@@ -335,7 +341,7 @@ void PokeGraphics::load(int forme, int gender, bool shiny)
     m_storedgender = gender;
     m_storedshininess = shiny;
     m_storedforme = forme;
-    m_picture = PokemonInfo::Picture(num(), forme, gender, shiny);
+    m_picture = PokemonInfo::Picture(num(), gen(), forme, gender, shiny, false);
     setUpToDate(true);
 }
 
@@ -371,9 +377,15 @@ int PokeGraphics::num() const
     return m_num;
 }
 
+int PokeGraphics::gen() const
+{
+    return m_gen;
+}
+
 PokeTeam::PokeTeam()
 {
     setNum(0);
+    setGen(4);
 }
 
 void PokeTeam::setNum(quint16 num)
@@ -387,6 +399,7 @@ void PokeTeam::setGen(int gen)
 {
     PokeGeneral::gen() = gen;
     PokePersonal::gen() = gen;
+    PokeGraphics::setGen(gen);
 }
 
 void PokeTeam::runCheck()
@@ -573,6 +586,7 @@ bool TrainerTeam::saveToFile(const QString &path) const
 
     QDomElement Team = document.createElement("Team");
     Team.setAttribute("gen", team().gen());
+    Team.setAttribute("defaultTier", defaultTier());
     document.appendChild(Team);
     QDomElement trainer = document.createElement("Trainer");
     Team.appendChild(trainer);
@@ -691,7 +705,11 @@ bool TrainerTeam::loadFromFile(const QString &path)
         return false;
     }
     int gen = team.attribute("gen", "4").toInt();
+    if (gen != 3)
+        gen = 4;
     this->team().setGen(gen);
+    defaultTier() = team.attribute("defaultTier");
+
     QDomElement trainer = team.firstChildElement("Trainer");
     if(trainer.isNull())
     {
@@ -852,7 +870,12 @@ bool TrainerTeam::importFromTxt(const QString &file1)
                     }
                 }
             }
-            p.setMove(MoveInfo::Number(move),i-4,false);
+            int moveNum = MoveInfo::Number(move);
+            p.setMove(moveNum,i-4,false);
+
+            if (moveNum == Move::Return) {
+                p.happiness() = 255;
+            }
         }
 
         /* Removes invalid move combinations */
@@ -977,11 +1000,14 @@ QString TrainerTeam::exportToTxt() const
 
 QDataStream & operator << (QDataStream & out, const Team & team)
 {
+    out << quint8(team.gen());
+
     for(int index = 0;index<6;index++)
     {
         const PokeTeam & poke = team.poke(index);
         out << poke;
     }
+
     return out;
 }
 
@@ -993,6 +1019,7 @@ QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
     out << trainerTeam.trainerLose();
     out << trainerTeam.trainerWin();
     out << trainerTeam.avatar();
+    out << trainerTeam.defaultTier();
     out << trainerTeam.team();
 
     return out;
@@ -1008,6 +1035,7 @@ QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
     in >> lose;
     in >> win;
     in >> trainerTeam.avatar();
+    in >> trainerTeam.defaultTier();
     in >> trainerTeam.team();
 
 
@@ -1021,6 +1049,12 @@ QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
 
 QDataStream & operator >> (QDataStream & in, Team & team)
 {
+    quint8 gen;
+
+    in >> gen;
+
+    team.setGen(gen);
+
     for(int i=0;i<6;i++)
     {
         in >> team.poke(i);
