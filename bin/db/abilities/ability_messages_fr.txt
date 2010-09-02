@@ -1,0 +1,90 @@
+
+
+Boom Final du %s blesse %f!
+%s est vraiment frustré!
+Anticipation du %s le fait trembler!
+
+%f est tourmenté par Mauvais Rêve!
+
+
+Déguisement du %s le change pour le type %t!
+
+%f tombe amoureux de %s à cause de Joli Sourire!
+Attention du %s l'empêche d'avoir peur!
+Télécharge du %s s'active!
+Alerte Neige du %s provoque une tempête de grêle!|Crachin du %s fait tomber la pluie!|Sable Volant du %s provoque une tempête de sable!|Sécheresse du %s intensifie les rayons du soleil!
+%s récupère des PV grâce à Peau Sèche!|Peau Sèche du %s lui fait perdre des PV!
+Pose Spore du %s s'active!
+
+%s's %a s'active!
+Torche de%s augmente la puissance des ses capacités de type Feu!|Torche du %s rend %m inefficace!
+
+%s change son type pour %t!
+Prédiction du %s l'avertit de %m!
+Fouille du %s lui dévoile %i tenu!
+Ecran Poudre du %s empêche le cumul d'effets!
+
+
+
+
+Hydratation du %s le guéri de son altération de statut!
+%a du %s empêche la diminution de stats!
+%a du %s a empêché ses stats d'être diminués!
+%a du %s lui restaure des PV!
+%a du %s le guérit!
+%s intimide %f!|Le clone du %f empêche Intimidation du %s de fonctionner!
+
+
+Feuille Garde du %s bloque les altérations de statut!
+%a du %s reçoit l'attaque!
+
+%s a Brise Moule!
+Motorisé du %s augmente sa stat Vitesse!
+
+
+Tempo Perso du %s l'empêche d'être confus!
+Soin Poison du %s lui restaure des PV!
+%s exerce Pression!
+
+
+
+Peau Dure du %s blesse %f!
+
+
+
+%s's Mue soigne le statut!
+%s ne peut pas bouger à cause de Début Calme!|%s retrouve enfin ses facultés!
+%s a perdu quelques PV à cause de Force Soleil
+%s's Anti Bruit bloque l'attaque!
+%s's Turbo augmente sa vitesse!
+
+%s's Impassible augmente sa bitesse!
+%s's Synchro change le statut of %f!
+
+
+
+
+%s calque %f's %a!
+%s paresse!
+
+
+%s's %a absorbe l'attaque!|%s's %a rend l'attaque inutile!
+%s's Garde Magic déjoue the l'attaque!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

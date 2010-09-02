@@ -26,6 +26,7 @@ public:
     void refuseName();
     void accept();
     void kick();
+    QString getAddress(int port) const;
 public slots:
     void login(const QString &, const QString &, quint16, quint16,quint16);
     void numChanged(quint16);
@@ -35,6 +36,7 @@ public slots:
     void disconnected();
 signals:
     void nameChangedReq(int id, const QString &name);
+    void portSet(int id, int port, int oldport);
     void disconnection(int id);
 private:
     Analyzer *m_relay;

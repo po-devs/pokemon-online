@@ -108,11 +108,11 @@ QMainWindow::separator {
 
 
 QTextEdit#MainChat {
-	background-color: white;
 	background-image: url(db/mainchat.png);
 	background-attachment: fixed;
 	background-repeat: repeat;
-	background-position: center
+	background-position: center;
+	font-size: 12px;
 }
 
 QLabel#Announcement {
@@ -240,7 +240,10 @@ PokemonBoxButton {
 	background: #07a7c9;
 	color: white;
 }
-
+PokemonBoxButton:checked{
+	background: #067D98;
+	color: black;
+}
 PokemonBoxButton::text {
 	font-weight:bold;
 }

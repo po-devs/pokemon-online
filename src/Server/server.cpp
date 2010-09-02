@@ -1,5 +1,9 @@
-#include <ctime> /* for random numbers, time(NULL) needed */
 #include <QtNetwork>
+#include <ctime> /* for random numbers, time(NULL) needed */
+#include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/networkstructs.h"
+#include "../PokemonInfo/movesetchecker.h"
+#include "../Utilities/otherwidgets.h"
 #include "server.h"
 #include "player.h"
 #include "challenge.h"
@@ -10,16 +14,14 @@
 #include "security.h"
 #include "antidos.h"
 #include "serverconfig.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/networkstructs.h"
-#include "../PokemonInfo/movesetchecker.h"
-#include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
 #include "tiermachine.h"
+#include "tier.h"
 #include "battlingoptions.h"
 #include "sql.h"
 #include "sqlconfig.h"
 #include "pluginmanager.h"
+#include "analyze.h"
 
 Server *Server::serverIns = NULL;
 
@@ -943,6 +945,9 @@ void Server::findBattle(int id, const FindBattleData &f)
             continue;
         }
 
+        if (p1->gen() != p2->gen())
+            continue;
+
         /* We check the tier thing */
         if ( (f.sameTier || data->sameTier) && p1->tier() != p2->tier() )
             continue;
@@ -954,7 +959,7 @@ void Server::findBattle(int id, const FindBattleData &f)
 
         /* We check both allow rated if needed */
         if (f.rated || data->rated) {
-            if (!canHaveRatedBattle(id, key, p1->tier() == "Challenge Cup", f.rated, data->rated))
+            if (!canHaveRatedBattle(id, key, f.mode, f.rated, data->rated))
                 continue;
         }
 
@@ -970,15 +975,7 @@ void Server::findBattle(int id, const FindBattleData &f)
         ChallengeInfo c;
         c.opp = key;
         c.rated = (p1->ladder() && p2->ladder() && p1->tier() == p2->tier()) || f.rated || data->rated;
-
-        if (p1->tier() == p2->tier() && p1->tier() == "Challenge Cup") {
-            c.clauses = ChallengeInfo::ChallengeCup;
-        } else if (p1->tier() == p2->tier() && p1->tier() == "VGC") {
-            c.clauses = ChallengeInfo::SpeciesClause;
-        } else {
-            c.clauses = ChallengeInfo::SleepClause | ChallengeInfo::EvasionClause | ChallengeInfo::OHKOClause | ChallengeInfo::SpeciesClause
-                        | ChallengeInfo::FreezeClause;
-        }
+        c.clauses = TierMachine::obj()->tier(p1->tier()).getClauses();
 
         c.mode = f.mode;
 
@@ -1128,8 +1125,8 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
         p2->relay().sendPlayer(p1->bundle());
     }
 
-    p1->startBattle(id, id2, battle->pubteam(id1), battle->configuration(), battle->doubles());
-    p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), battle->doubles());
+    p1->startBattle(id, id2, battle->pubteam(id1), battle->configuration());
+    p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration());
 
     ++lastDataId;
     foreach(int chanid, p1->getChannels()) {
@@ -1167,7 +1164,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     myengine->afterBattleStarted(id1,id2,c);
 }
 
-bool Server::canHaveRatedBattle(int id1, int id2, bool cc, bool force1, bool force2)
+bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool force2)
 {
     Player *p1 = player(id1);
     Player *p2 = player(id2);
@@ -1177,9 +1174,6 @@ bool Server::canHaveRatedBattle(int id1, int id2, bool cc, bool force1, bool for
         return false;
     if (p1->tier() != p2->tier())
         return false;
-    if (cc != (p1->tier() == "Challenge Cup")) {
-        return false;
-    }
     if (!allowRatedWithSameIp && p1->ip() == p2->ip())
         return false;
     if (diffIpsForRatedBattles > 0) {
@@ -1190,6 +1184,12 @@ bool Server::canHaveRatedBattle(int id1, int id2, bool cc, bool force1, bool for
         if (l2.contains(p1->ip()))
             return false;
     }
+    Tier *t = &TierMachine::obj()->tier(p1->tier());
+    if (!t->allowMode(mode))
+        return false;
+    t = &TierMachine::obj()->tier(p2->tier());
+    if (!t->allowMode(mode))
+        return false;
     return true;
 }
 

@@ -70,19 +70,6 @@ int main(int, char**)
         qDebug() << "Group " << s;;
     }
 
-    /* Now then, a very basic algorithm that nevertheless in my opinion is 95 %
-       accurate, at least */
-
-    /* By the way it could be hundred times faster, but I just want to see an
-       algorithm taking time being solved, gives me the impression my computer
-        works and make the fun last.
-
-        For example caching all the moves of all the pokes (and not like its
-        done in MoveMachine) could speed this by the difference between reading
-        files and reading RAM.
-    */
-
-
     for (int i = 0; i<= pokenum; i++)
     {
         qDebug() << "Doing poke " << PokemonInfo::Name(i);
@@ -145,6 +132,8 @@ int main(int, char**)
                 allCombinations.remove(combination);
             }
         }
+        /* Adding all the combinations of special moves */
+        legalCombinations[i].unite(MoveSetChecker::combinationsFor(i, gen).toSet());
 
         for(int c = 0;c < 2; c++) {
             if (groups[c].trimmed().length() == 0) {

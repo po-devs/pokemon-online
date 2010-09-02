@@ -13,6 +13,9 @@
 #include <QMainWindow>
 #include <iostream>
 #include <ctime>
+#if defined(WIN32) || defined(WIN64)
+//#include "../Utilities/otherwidgets.cpp"
+#endif
 
 #ifdef Q_OS_MACX
 #include <CoreFoundation/CFURL.h>
@@ -39,6 +42,8 @@ void myMessageOutput(QtMsgType type, const char *msg)
     }
 }
 
+
+
 int main(int argc, char *argv[])
 {
 #ifdef WIN32
@@ -59,7 +64,10 @@ int main(int argc, char *argv[])
     srand(time(NULL));
     try
     {
+        //HotKeyClass HotKeyEvent;
 	QApplication a(argc, argv);
+        //a.installEventFilter(&HotKeyEvent);
+
 
         QFontDatabase::addApplicationFont("LCD.tff");
         QFontDatabase::addApplicationFont("Signshsc.tff");
@@ -91,6 +99,5 @@ int main(int argc, char *argv[])
     } catch (...) {
         qDebug() << "Received exception.";
     }
-
     return 0;
 }

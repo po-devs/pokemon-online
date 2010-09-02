@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include "../Utilities/functions.h"
+#include "tiertree.h"
 
 class Tier;
 struct TeamBattle;
@@ -18,7 +19,6 @@ class TierMachine : public QObject
     Q_OBJECT
 
     friend class Tier;
-    PROPERTY(QString, tierList);
 public:
     enum QueryType {
         GetInfoOnUser
@@ -36,6 +36,7 @@ public:
     void fromString(const QString &s);
 
     const QStringList& tierNames() const;
+    QByteArray tierList() const;
     Tier& tier(const QString &name);
     const Tier& tier(const QString &name) const;
     bool exists(const QString &name) const;
@@ -56,6 +57,7 @@ public:
     QString findTier(const TeamBattle &t) const;
 
     void exportDatabase() const;
+    TierTree *getDataTree() const;
 
     static const int playersByPage = 40;
 
@@ -64,8 +66,11 @@ public slots:
     void insertMember(QSqlQuery*,void *,int);
 private:
     QList<Tier*> m_tiers;
+    QHash<QString, Tier*> m_tierByNames;
     QStringList m_tierNames;
     static TierMachine *inst;
+    TierTree tree;
+    QByteArray m_tierList;
 
     static const int loadThreadCount=2;
     int nextLoadThreadNumber;
@@ -73,20 +78,6 @@ private:
     InsertThread<MemberRating> *ithread;
 
     LoadThread * getThread();
-};
-
-
-class TierWindow : public QWidget
-{
-    Q_OBJECT
-public:
-    TierWindow(QWidget *parent = NULL);
-signals:
-    void tiersChanged();
-private slots:
-    void done();
-private:
-    QPlainTextEdit *m_editWindow;
 };
 
 /* For rankings */

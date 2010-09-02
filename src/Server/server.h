@@ -62,7 +62,8 @@ public:
     void afterPlayerAway(int src, bool away);
     void disconnectFromRegistry();
     /* Force Rated 1 and Force Rated 2 is to ignore the ladder on / off factor for those two */
-    bool canHaveRatedBattle(int id1, int id2, bool challengeCup, bool forceRated1 = false, bool forceRated2 = false);
+    bool canHaveRatedBattle(int id1, int id2, int mode, bool forceRated1 = false, bool forceRated2 = false);
+
     void sendServerMessage(const QString &message);
 
     static Server *serverIns;

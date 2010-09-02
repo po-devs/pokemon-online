@@ -146,7 +146,12 @@ struct BMPinchHP : public BMPinch
         if (arg == 10) /* oran berry */
             b.healLife(s, 10);
         else /* Sitrus Berry */
-            b.healLife(s, b.poke(s).totalLifePoints()/4);
+        {
+            if (b.gen() >= 4)
+                b.healLife(s, b.poke(s).totalLifePoints()/4);
+            else
+                b.healLife(s, 30);
+        }
     }
 };
 
