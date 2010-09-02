@@ -385,6 +385,7 @@ int PokeGraphics::gen() const
 PokeTeam::PokeTeam()
 {
     setNum(0);
+    setGen(4);
 }
 
 void PokeTeam::setNum(quint16 num)
