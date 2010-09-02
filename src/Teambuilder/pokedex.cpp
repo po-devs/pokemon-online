@@ -309,8 +309,8 @@ void BigOpenPokeBall::changeToPrevious()
 
 void BigOpenPokeBall::updatePicture()
 {
-    front->changePic(PokemonInfo::Picture(currentPoke, forme, PokemonInfo::BaseGender(currentPoke),shiny(),false));
-    back->changePic(PokemonInfo::Picture(currentPoke, forme, PokemonInfo::BaseGender(currentPoke),shiny(),true));
+    front->changePic(PokemonInfo::Picture(currentPoke, 4, forme, PokemonInfo::BaseGender(currentPoke),shiny(),false));
+    back->changePic(PokemonInfo::Picture(currentPoke, 4, forme, PokemonInfo::BaseGender(currentPoke),shiny(),true));
 }
 
 bool BigOpenPokeBall::shiny() const
@@ -767,12 +767,12 @@ void MoveTab::changePoke(int poke)
         moves->setItem(i, TypeCol, w);
 
         moves->setItem(i, NameCol,new QTableWidgetItem(MoveInfo::Name(move)));
-        moves->setItem(i, PPCol,new QTableWidgetItem(QString::number(MoveInfo::PP(move))));
-        moves->setItem(i, PowerCol,new QTableWidgetItem(MoveInfo::PowerS(move)));
-        moves->setItem(i, AccCol,new QTableWidgetItem(MoveInfo::AccS(move)));
+        moves->setItem(i, PPCol,new QTableWidgetItem(QString::number(MoveInfo::PP(move, 4))));
+        moves->setItem(i, PowerCol,new QTableWidgetItem(MoveInfo::PowerS(move, 4)));
+        moves->setItem(i, AccCol,new QTableWidgetItem(MoveInfo::AccS(move, 4)));
 
-        QTableWidgetItem *witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(move)));
-        witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(move))));
+        QTableWidgetItem *witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(move, 4)));
+        witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(move, 4))));
         moves->setItem(i, CategoryCol, witem);
     }
 

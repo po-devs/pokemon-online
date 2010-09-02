@@ -1,11 +1,16 @@
 #include "challenge.h"
 #include "server.h"
 #include "player.h"
+#include "analyze.h"
 
 Challenge::Challenge(Player *source, Player *dest, const ChallengeInfo &c, Server *s)
     :src(source), dest(dest), desc(c), cancelledFromServer(false)
 {
     if (source->id() == dest->id()) {
+        throw Exception();
+    }
+    if (dest->gen() != source->gen()) {
+        source->sendChallengeStuff(ChallengeInfo(ChallengeInfo::InvalidGen, dest->id()));
         throw Exception();
     }
     if (dest->team().invalid() && !(c.clauses & ChallengeInfo::ChallengeCup)) {

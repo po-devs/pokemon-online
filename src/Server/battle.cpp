@@ -22,6 +22,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     loseMessage[1] = p2.losingMessage();
     attacked() = -1;
     attacker() = -1;
+    gen() = std::max(p1.gen(), p2.gen());
 
     /* timers for battle timeout */
     timeleft[0] = 5*60;
@@ -51,8 +52,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     }
 
     if (clauses() & ChallengeInfo::ChallengeCup) {
-        team1.generateRandom();
-        team2.generateRandom();
+        team1.generateRandom(gen());
+        team2.generateRandom(gen());
     } else {
         if (clauses() & ChallengeInfo::ItemClause) {
             QSet<int> alreadyItems[2];
@@ -211,7 +212,7 @@ void BattleSituation::addSpectator(Player *p)
         return;
     }
 
-    p->spectateBattle(team1.name, team2.name, publicId(), doubles());
+    p->spectateBattle(publicId(), configuration());
     int id = p->id();
 
     /* Assumption: each id is a different player, so key is unique */
@@ -449,6 +450,10 @@ void BattleSituation::endTurn()
 {
     testWin();
 
+    /* Gen3 switches pokemons in before endturn effects */
+    if (gen() == 3)
+        requestSwitchIns();
+
     std::vector<int> players = sortedBySpeed();
 
     callzeffects(Player1, Player1, "EndTurn");
@@ -540,7 +545,6 @@ void BattleSituation::endTurn()
     testWin();
 
     callbeffects(Player1,Player1,"EndTurn9");
-
 
     requestSwitchIns();
 
@@ -670,6 +674,11 @@ bool BattleSituation::koed(int player) const
     return currentPoke(player) == -1 || poke(player).ko();
 }
 
+bool BattleSituation::wasKoed(int player) const
+{
+    return currentPoke(player) == -1 || turnlong[player].contains("WasKoed");
+}
+
 BattleChoices BattleSituation::createChoice(int slot)
 {
     /* First let's see for attacks... */
@@ -727,7 +736,7 @@ void BattleSituation::analyzeChoice(int slot)
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice[slot].attack()) {
         turnlong[slot]["Target"] = choice[slot].target();
-        if (!koed(slot) && !turnlong[slot].value("HasMoved").toBool() && !turnlong[slot].value("CantGetToMove").toBool()) {
+        if (!wasKoed(slot) && !turnlong[slot].value("HasMoved").toBool() && !turnlong[slot].value("CantGetToMove").toBool()) {
             if (turnlong[slot].contains("NoChoice"))
                 /* Automatic move */
                 useAttack(slot, pokelong[slot]["LastSpecialMoveUsed"].toInt(), true);
@@ -845,9 +854,23 @@ void BattleSituation::analyzeChoices()
 
     /* The loop is separated, cuz all TurnOrders must be called at the beggining of the turn,
        cf custap berry */
-    foreach(int p, players) {
-        analyzeChoice(p);
-        testWin();
+    if (gen() >= 4) {
+        foreach(int p, players) {
+            analyzeChoice(p);
+            testWin();
+        }
+    } else { // gen <= 3
+        for(int i = 0; i < players.size(); i++) {
+            if (!doubles()) {
+                if (koed(0) || koed(1))
+                    break;
+            } else {
+                requestSwitchIns();
+            }
+
+            analyzeChoice(players[i]);
+            testWin();
+        }
     }
 }
 
@@ -902,7 +925,7 @@ bool BattleSituation::validChoice(const BattleChoice &b)
             if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.numSlot || koed(b.target()))
                 return false;
         } else {
-            int target = MoveInfo::Target(move(b.numSlot, b.numSwitch));
+            int target = MoveInfo::Target(move(b.numSlot, b.numSwitch), gen());
 
             if (target == Move::ChosenTarget) {
                 if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.numSlot || koed(b.target()))
@@ -1132,7 +1155,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     pokelong[slot]["Level"] = poke(slot).level();
 
-    /* Increase the "switch count". Switch count is used to see if the pokémon has switched
+    /* Increase the "switch count". Switch count is used to see if the pokemon has switched
        (like for an attack like attract), it is imo more effective that other means */
     inc(slotzone[slot]["SwitchCount"], 1);
 
@@ -1156,7 +1179,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 void BattleSituation::callEntryEffects(int player)
 {
     if (!koed(player)) {
-        acquireAbility(player, poke(player).ability());
+        acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
     }
 }
@@ -1195,11 +1218,11 @@ void BattleSituation::callpeffects(int source, int target, const QString &name)
         foreach(QString effect, effects) {
             MoveMechanics::function f = pokelong[source].value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
-            /* If a pokémons dies from leechseed,its status changes, and so nightmare function would be removed
+            /* If a pokemons dies from leechseed,its status changes, and so nightmare function would be removed
                but still be in the foreach, causing a crash */
             if (f)
                 f(source, target, *this);
-	}
+        }
 	turnlong[source]["PokeEffectCall"] = false;
     }
 }
@@ -1550,8 +1573,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	attack = move;
     } else {
         //Quick claw, special case
-        if (turnlong[player].value("QuickClawed").toBool()) {
-            //The message only shows up if it's not the last pokémon to move
+        if (gen() >= 4 && turnlong[player].value("QuickClawed").toBool()) {
+            //The message only shows up if it's not the last pokemon to move
             for (int i = 0; i < numberOfSlots(); i++) {
                 if (!turnlong[i].value("HasMoved").toBool() && !turnlong[i].value("CantGetToMove").toBool() && !koed(i) && i != player) {
                     sendItemMessage(17, player);
@@ -1738,6 +1761,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player,target,"AttackSomehowFailed");
             continue;
         }
+
         if (target != player) {
             callaeffects(target,player,"OpponentBlock");
         }
@@ -1745,6 +1769,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player,target,"AttackSomehowFailed");
             continue;
         }
+
 	if (turnlong[player]["Power"].toInt() > 0)
         {
             calculateTypeModStab();
@@ -1830,8 +1855,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    if (testFail(player))
 		continue;
             int type = turnlong[player]["Type"].toInt(); /* move type */
-            if ( target != player && ((type == Type::Fire && hasType(target, Type::Fire)) ||
-                                      ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::Smog)
+            if ( target != player &&
+                 ((type == Type::Fire && hasType(target, Type::Fire)) ||
+                  (type == Type::Poison && (hasType(target, Type::Poison))) ||
+                  ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::Smog || attack == Move::Will_O_Wisp)
                                        && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0
                                        && !pokelong[target].value(QString("%1Sleuthed").arg(type)).toBool()))){
                 notify(All, Failed, player);
@@ -1938,9 +1965,9 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
     return pokelong[player].value("AbilityNullified").toBool() ? false : pokelong[player]["Ability"].toInt() == ab;
 }
 
-void BattleSituation::acquireAbility(int play, int ab) {
+void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
     pokelong[play]["Ability"] = ab;
-    AbilityEffect::setup(ability(play),play,*this);
+    AbilityEffect::setup(ability(play),play,*this, firstTime);
 }
 
 int BattleSituation::ability(int player) {
@@ -2016,11 +2043,14 @@ void BattleSituation::applyMoveStatMods(int player, int target)
             continue;
 	}
 
-        if (!self && sub) {
-            if (turnlong[player]["Power"].toInt() == 0)
-                sendMoveMessage(128, 2, player,0,target,turnlong[player]["Attack"].toInt());
-	    continue;
-	}
+        /* Tickle bypasses sub in 3rd gen */
+        if (! (gen() == 3 && turnlong[player]["Attack"].toInt() == Move::Tickle)) {
+            if (!self && sub) {
+                if (turnlong[player]["Power"].toInt() == 0)
+                    sendMoveMessage(128, 2, player,0,target,turnlong[player]["Attack"].toInt());
+                continue;
+            }
+        }
 
         //Shield Dust
         if (!self && hasWorkingAbility(targeted, Ability::ShieldDust) && turnlong[player]["Power"].toInt() > 0) {
@@ -2326,9 +2356,10 @@ int BattleSituation::getType(int player, int slot)
 
 bool BattleSituation::isFlying(int player)
 {
-    /* Item 212 is iron ball, ability is levitate */
     return !battlelong.value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) && !pokelong[player].value("Rooted").toBool() &&
-            (hasWorkingAbility(player, Ability::Levitate) ||  hasType(player, Pokemon::Flying) || pokelong[player].value("MagnetRiseCount").toInt() > 0);
+           !pokelong[player].value("Roosted").toBool() && (hasWorkingAbility(player, Ability::Levitate)
+                                                           || hasType(player, Pokemon::Flying)
+                                                           || pokelong[player].value("MagnetRiseCount").toInt() > 0);
 }
 
 bool BattleSituation::hasSubstitute(int player)
@@ -2499,13 +2530,16 @@ int BattleSituation::calculateDamage(int p, int t)
     /* Damage reduction in doubles, which occur only
        if there's more than one alive target. */
     if (doubles()) {
-        if (attackused == Move::Explosion || attackused == Move::Selfdestruct) {
-            damage = damage * 3 / 4;
-        } else {
-            foreach (int tar, targetList) {
-                if (tar != t && !koed(tar)) {
-                    damage = damage * 3/4;
-                    break;
+        /* In gen 3, attacks that hit everyone don't have reduced damage */
+        if (gen() >= 4 || (move["PossibleTargets"] != Move::All && move["PossibleTargets"] != Move::AllButSelf) ) {
+            if (attackused == Move::Explosion || attackused == Move::Selfdestruct) {
+                damage = damage * 3 / 4;
+            } else {
+                foreach (int tar, targetList) {
+                    if (tar != t && !koed(tar)) {
+                        damage = damage * 3/4;
+                        break;
+                    }
                 }
             }
         }
@@ -2657,7 +2691,7 @@ void BattleSituation::changeTempMove(int player, int slot, int move)
 {
     pokelong[player]["Move" + QString::number(slot)] = move;
     notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
-    changePP(player,slot,std::min(MoveInfo::PP(move), 5));
+    changePP(player,slot,std::min(MoveInfo::PP(move, gen()), 5));
 }
 
 void BattleSituation::changeSprite(int player, int poke)
@@ -2795,6 +2829,8 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     changeStatus(player,Pokemon::Koed);
 
     notify(All, Ko, player);
+    //useful for third gen
+    turnlong[player]["WasKoed"] = true;
 
     if (straightattack && player!=source) {
 	callpeffects(player, source, "AfterKoedByStraightAttack");
@@ -3050,7 +3086,7 @@ int BattleSituation::getStat(int player, int stat)
 	ret /= 4;
     }
 
-    if (stat == SpDefense && isWeatherWorking(SandStorm) && hasType(player,Pokemon::Rock))
+    if (gen() >= 4 && stat == SpDefense && isWeatherWorking(SandStorm) && hasType(player,Pokemon::Rock))
 	ret = ret * 3 / 2;
 
     if (ret == 0) {
@@ -3171,6 +3207,8 @@ BattleConfiguration BattleSituation::configuration() const
 
     ret.ids[0] = id(0);
     ret.ids[1] = id(1);
+    ret.gen = gen();
+    ret.doubles = doubles();
 
     return ret;
 }

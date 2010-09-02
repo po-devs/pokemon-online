@@ -14,7 +14,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
 #include "../Shared/config.h"
-#include "tiermachine.h"
+#include "tierwindow.h"
 #include "battlingoptions.h"
 #include "sql.h"
 #include "sqlconfig.h"

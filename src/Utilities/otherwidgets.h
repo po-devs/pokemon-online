@@ -206,8 +206,10 @@ public:
     QIRCLineEdit();
 private:
     void keyPressEvent(QKeyEvent *);
-    QList<QString> m_Inputlist1;//Stores the inputed strings,up list.
-    QList<QString> m_Inputlist2;//Stores the inputed strings,down list.
+    //QList<QString> m_Inputlist1;//Stores the inputed strings,up list.
+    //QList<QString> m_Inputlist2;//Stores the inputed strings,down list.
+    QList<QString> m_Inputlist;
+    quint16 listindex;
     //QString m_Currentline;//Stores a copy of the current text in the LineEdit.
 public slots:
     void myTextEdited();
