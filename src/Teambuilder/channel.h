@@ -76,7 +76,7 @@ public slots:
 private:
     QTreeWidget *myplayers;
     QHash<int, QIdTreeWidgetItem *> myplayersitems;
-    QHash<QString, QIdTreeWidgetItem *> mytiersitems;
+    QHash<QString, QTreeWidgetItem *> mytiersitems;
     QTreeWidget *battleList;
     QHash<int, QIdTreeWidgetItem *> battleItems;
     QHash<qint32, Battle> battles;
@@ -91,6 +91,7 @@ private:
     bool readyToQuit;
 
     QIdTreeWidgetItem *item(int  id);
+    void getBackAllPlayerItems();
 };
 
 #endif // CHANNEL_H

@@ -20,6 +20,7 @@ QDataStream &operator << (QDataStream &out, const TeamInfo& team)
     out << team.lose;
     out << team.win;
     out << team.avatar;
+    out << team.defaultTier;
 
     out << team.gen;
 
@@ -36,6 +37,7 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
     in >> team.lose;
     in >> team.win;
     in >> team.avatar;
+    in >> team.defaultTier;
 
     in >> team.gen;
 
