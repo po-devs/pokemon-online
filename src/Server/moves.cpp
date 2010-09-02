@@ -1561,14 +1561,14 @@ struct MMAssist : public MM
     static void daf(int s, int, BS &b)
     {
         int player = b.player(s);
-	QSet<int> possible_moves;
+        QList<int> possible_moves;
 	for (int i = 0; i < 6; i++) {
             if (!b.isOut(player, i) && b.poke(player, i).num() != 0) {
                 PokeBattle &p = b.poke(player,i);
 		for(int j = 0; j < 4; j++) {
 		    int m = p.move(j);
 		    if (!forbidden_moves.contains(m))
-			possible_moves.insert(m);
+                        possible_moves.push_back(m);
 		}
 	    }
 	}
