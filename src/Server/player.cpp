@@ -783,7 +783,10 @@ void Player::testAuthentificationLoaded()
 
 void Player::findTierAndRating()
 {
-    tier() = TierMachine::obj()->findTier(team());
+    if (TierMachine::obj()->exists(defaultTier()) && TierMachine::obj()->isValid(team(), defaultTier()))
+        tier() = defaultTier();
+    else
+        tier() = TierMachine::obj()->findTier(team());
     findRating();
 }
 
@@ -861,6 +864,7 @@ void Player::assignTeam(TeamInfo &team)
     this->team() = team;
     winningMessage() = team.win;
     losingMessage() = team.lose;
+    defaultTier() = team.defaultTier;
 }
 
 void Player::changeWaitingTeam(const TeamInfo &t)
