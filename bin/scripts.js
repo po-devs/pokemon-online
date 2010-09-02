@@ -13,13 +13,6 @@ init : function() {
         return a + "*" + sys.name(b);
     }
 
-    semiUbers = [];
-    
-    var tempU = new Array(150,249,250,382,383,384,483,484,487,505);
-    for (x in tempU) {
-        semiUbers[tempU[x]] = true;
-    }
-    
     saveKey = function(thing, id, val) {
         sys.saveVal(key(thing,id), val);
     }
@@ -718,11 +711,11 @@ beforeChatMessage: function(src, message, chan) {
         if (command == "endtour"){
             if (tourmode != 0){
                 tourmode = 0;
-                sys.sendAll("",0);
-				sys.sendAll(border,0);
-				sys.sendAll("~~Server~~: The tournament was cancelled by " + sys.name(src) + "!",0);
-				sys.sendAll(border,0);
-				sys.sendAll("",0);
+                sys.sendAll("", tourchannel);
+				sys.sendAll(border, tourchannel);
+				sys.sendAll("~~Server~~: The tournament was cancelled by " + sys.name(src) + "!", tourchannel);
+				sys.sendAll(border, tourchannel);
+				sys.sendAll("", tourchannel);
             }else
                 sendChanMessage(src, "Sorry, you are unable to end a tournament because one is not currently running.");
             return;
@@ -999,33 +992,43 @@ roundPairing : function() {
     battlesLost = [];
     
     if (tourmembers.length == 1) {
-		sys.sendAll("", tourchannel);
-        sys.sendAll(border, tourchannel);
-        sys.sendAll("", tourchannel);
-        sys.sendAll("THE WINNER OF THE TOURNAMENT IS : " + tourplayers[tourmembers[0]], tourchannel);
-        sys.sendAll("", tourchannel);
-        sys.sendAll("*** Congratulations, " + tourplayers[tourmembers[0]] + ", on your success! ***", tourchannel);
-        sys.sendAll("", tourchannel);
-        sys.sendAll(border, tourchannel);
-        sys.sendAll("", tourchannel);
+		var chans = [0, tourchannel];
+		
+		for (x in chans) {
+			var tchan = chans[x];
+			sys.sendAll("", tchan);
+			sys.sendAll(border, tchan);
+			sys.sendAll("", tchan);
+			sys.sendAll("THE WINNER OF THE TOURNAMENT IS : " + tourplayers[tourmembers[0]], tchan);
+			sys.sendAll("", tchan);
+			sys.sendAll("*** Congratulations, " + tourplayers[tourmembers[0]] + ", on your success! ***", tchan);
+			sys.sendAll("", tchan);
+			sys.sendAll(border, tchan);
+			sys.sendAll("", tchan);
+		}
         tourmode = 0;
         return;
     }
     
     var finals = tourmembers.length == 2;
     
-	sys.sendAll("", tourchannel);
-	sys.sendAll(border, tourchannel);
-    
 	if (!finals) {
+		sys.sendAll("", tourchannel);
+		sys.sendAll(border, tourchannel);
         sys.sendAll("*** Round " + roundnumber + " of " + tourtier + " tournament ***", tourchannel);
+		sys.sendAll("", tourchannel);
 	}
     else {
+		sys.sendAll("", tourchannel);
+		sys.sendAll(border, tourchannel);
         sys.sendAll("*** FINALS OF " + tourtier.toUpperCase() + " TOURNAMENT ***", tourchannel);
+		sys.sendAll("", tourchannel);
+		sys.sendAll("", 0);
+		sys.sendAll(border, 0);
+        sys.sendAll("*** FINALS OF " + tourtier.toUpperCase() + " TOURNAMENT ***", 0);
+		sys.sendAll("", 0);
 	}
 	
-	sys.sendAll("", tourchannel);
-    
 	var i = 0;
     while (tourmembers.length >= 2) {
 		i += 1;
@@ -1044,8 +1047,10 @@ roundPairing : function() {
         
         if (!finals)
             sys.sendAll (i + "." + this.padd(name1) + " VS " + name2, tourchannel);
-        else
+        else {
             sys.sendAll ("  " + this.padd(name1) + " VS " + name2, tourchannel);
+			sys.sendAll ("  " + this.padd(name1) + " VS " + name2, 0);
+		}
     }
     
     if (tourmembers.length > 0) {
@@ -1055,6 +1060,10 @@ roundPairing : function() {
 	
 	sys.sendAll(border, tourchannel);
 	sys.sendAll("", tourchannel);
+	if (finals) {
+		sys.sendAll(border, 0);
+		sys.sendAll("", 0);
+	}
 }
 
 ,
@@ -1194,42 +1203,6 @@ isMCaps : function(message) {
 
 ,
 
-changeTeamLevel : function (src, level) {
-    for (var i = 0; i < 6; i++) {
-        if (sys.teamPokeLevel(src, i) > level)
-            sys.changePokeLevel(src, i, level);        
-    }
-}
-
-,
-
-testVgcOk : function (src)
-{
-    if (sys.teamPoke(src, 4) != 0 || sys.teamPoke(src, 5) != 0) {
-        return false;
-    }
-    
-    if (sys.hasTeamItem(src, sys.itemNum("Soul Dew"))) {
-        return false;
-    }
-    
-    var semiCount = 0;
-    
-    for (var i = 0; i < 4; i += 1) {
-        if (typeof(semiUbers[sys.teamPoke(src, i)]) != "undefined") {
-            semiCount += 1;
-        }
-    }
-    
-    if (semiCount > 2) {
-        return false;
-    }
-    
-    return true;
-}
-
-,
-
 beforeChallengeIssued : function (src, dest, clauses, rated, mode) {
     if (battlesStopped) {
         sys.sendMessage(src, "+BattleBot: Battles are now stopped as the server will restart soon.");
@@ -1282,49 +1255,12 @@ beforeChallengeIssued : function (src, dest, clauses, rated, mode) {
     /* Challenge Cup Clause */
     if (clauses[6] == 1)
         return;
-    
-    if (sys.tier(src) == "VGC" && sys.tier(dest) == "VGC") {
-        if (mode != 1) {
-            sys.sendMessage(src, "+VGC: The battles are doubles!");
-            sys.stopEvent();
-            return;
-        }
-        if (!this.testVgcOk(src)) {
-            sys.sendMessage(src, "+VGC: Your team is not VGC compatible.");
-            sys.stopEvent();
-            return;
-        }
-        if (!this.testVgcOk(dest)) {
-            sys.sendMessage(src, "+VGC: Your opponent team is not VGC compatible.");
-            sys.stopEvent();
-            return;
-        }
-    }
+
     
     if (sys.tier(src).indexOf("Doubles") != -1 && sys.tier(dest).indexOf("Doubles") != -1 && mode == 0) {
         sys.sendMessage(src, "+Bot: To fight in doubles, enable doubles in the challenge window!");
         sys.stopEvent();
         return;
-    }
-
-    /* Regular tier checks that can't be made using the built-in server tier system */
-    if (sys.tier(src) == "LittleCup" && sys.tier(dest) == "LittleCup") {
-        if (sys.hasTeamMove(src, sys.moveNum("SonicBoom")) || sys.hasTeamMove(src, sys.moveNum("Dragon Rage"))) {
-            sys.sendMessage(src, "+Bot: SonicBoom and Dragon Rage are banned in Little Cup!");
-            sys.stopEvent();
-        }
-        if (sys.hasTeamMove(dest, sys.moveNum("SonicBoom")) || sys.hasTeamMove(dest, sys.moveNum("Dragon Rage"))) {
-            sys.sendMessage(src, "+Bot: Your opponent has banned moves SonicBoom or Dragon Rage in Little Cup tier!");
-            sys.stopEvent();
-        }
-        if (sys.hasTeamItem(src, sys.itemNum("Berry Juice"))) {
-            sys.sendMessage(src, "+Bot: Berry Juice is banned in Little Cup!");
-            sys.stopEvent();
-        }
-        if (sys.hasTeamItem(dest, sys.itemNum("Berry Juice"))) {
-            sys.sendMessage(src, "+Bot: Berry Juice is banned in Little Cup and your opponent has it!");
-            sys.stopEvent();
-        }
     }
 
     this.eventMovesCheck(src);
@@ -1338,33 +1274,6 @@ beforeBattleMatchup : function(src,dest,clauses,rated)
     if (battlesStopped) {
         sys.stopEvent();
         return;
-    }
-    
-    if (sys.tier(src) == "VGC" && sys.tier(dest) == "VGC") {
-        if (!this.testVgcOk(src)) {
-            sys.stopEvent();
-            return;
-        }
-        if (!this.testVgcOk(dest)) {
-            sys.stopEvent();
-            return;
-        }
-    }
-    
-/* Regular tier checks that can't be made using the built-in server tier system */
-    if (sys.tier(src) == "LittleCup" && sys.tier(dest) == "LittleCup") {
-        if (sys.hasTeamMove(src, sys.moveNum("SonicBoom")) || sys.hasTeamMove(src, sys.moveNum("Dragon Rage"))) {
-            sys.stopEvent();
-        }
-        if (sys.hasTeamMove(dest, sys.moveNum("SonicBoom")) || sys.hasTeamMove(dest, sys.moveNum("Dragon Rage"))) {
-            sys.stopEvent();
-        }
-        if (sys.hasTeamItem(src, sys.itemNum("Berry Juice"))) {
-            sys.stopEvent();
-        }
-        if (sys.hasTeamItem(dest, sys.itemNum("Berry Juice"))) {
-            sys.stopEvent();
-        }
     }
 
     this.eventMovesCheck(src);
@@ -1391,19 +1300,6 @@ eventMovesCheck : function(src)
                 }
             }
         }
-    }
-}
-,
-
-beforeBattleStarted : function(src, dest,clauses) {    
-    if (sys.tier(src) == "VGC" && sys.tier(dest) == "VGC") {
-        this.changeTeamLevel(src, 50);
-        this.changeTeamLevel(dest, 50);
-    }
-    /* If this is little cup, the levels are changed to be level 5 */
-    if (sys.tier(src) == "LittleCup" && sys.tier(dest) == "LittleCup") {
-        this.changeTeamLevel(src, 5);
-        this.changeTeamLevel(dest, 5)
     }
 }
 
