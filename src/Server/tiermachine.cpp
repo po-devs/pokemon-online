@@ -64,6 +64,7 @@ void TierMachine::save()
 void TierMachine::clear()
 {
     m_tierNames.clear();
+    m_tierByNames.clear();
 }
 
 void TierMachine::fromString(const QString &s)
@@ -97,6 +98,10 @@ void TierMachine::fromString(const QString &s)
     /* Some duplicates may have been removed, so we gather the tiers again */
     tiers = tree.gatherTiers();
 
+    foreach(Tier *t, tiers) {
+        m_tierByNames[t->name()] = t;
+        m_tierNames.push_back(t->name());
+    }
 
     /* Doing inheritance trees */
     foreach(Tier *t, tiers) {
@@ -114,11 +119,6 @@ void TierMachine::fromString(const QString &s)
     }
 
     m_tiers = tiers;
-
-    m_tierByNames.clear();
-    foreach(Tier *t, tiers) {
-        m_tierByNames[t->name()] = t;
-    }
 
     /* Do tierList . */
     m_tierList = tree.buildTierList();

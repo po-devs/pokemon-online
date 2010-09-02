@@ -25,7 +25,11 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     h->addWidget(s);
     s->setChildrenCollapsible(false);
 
+    QSettings settings;
+
     QTabWidget *mytab = new QTabWidget();
+    /* Cancels out the effect of the splitter being Plastique */
+    mytab->setStyle(QStyleFactory::create(settings.value("application_style").toString()));
     mytab->setMovable(true);
     mytab->addTab(playersW = new QStackedWidget(), tr("Players"));
     mytab->addTab(battlesW = new QStackedWidget(), tr("Battles"));
@@ -64,6 +68,8 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mainChat->setObjectName("MainChat");
     mainChat->setMovable(true);
     mainChat->setTabsClosable(true);
+    /* Cancels out the effect of the splitter being Plastique */
+    mainChat->setStyle(QStyleFactory::create(settings.value("application_style").toString()));
 //    layout->addWidget(myline = new QLineEdit());
     layout->addWidget(myline = new QIRCLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
@@ -939,30 +945,20 @@ void Client::announcementReceived(const QString &ann)
     announcement->show();
 }
 
-void Client::tierListReceived(QByteArray tl)
+void Client::tierListReceived(const QByteArray &tl)
 {
     mytiermenu->clear();
     mytiers.clear();
     tierList.clear();
+    tierRoot.buildFromRaw(tl);
+    tierList = tierRoot.getTierList();
 
-    QDataStream stream(&tl, QIODevice::ReadOnly);
-
-    while (!stream.atEnd()) {
-        uchar filler;
-        stream >> filler;
-        QString s;
-        stream >> s;
-        tierList.push_back(s);
+    if (tierList.empty()) {
+        tierRoot.subNodes.push_back(new TierNode("All"));
+        tierList = tierRoot.getTierList();
     }
 
-    if (tierList.empty())
-        tierList.push_back("All");
-
-    foreach(QString t, tierList) {
-        mytiers.push_back(mytiermenu->addAction(t,this,SLOT(changeTier())));
-        mytiers.back()->setCheckable(true);
-    }
-
+    mytiers = tierRoot.buildMenu(mytiermenu, this);
     changeTierChecked(player(ownId()).tier);
 
     QSettings s;
@@ -1027,7 +1023,8 @@ BasicInfo Client::info(int id) const
 
 void Client::seeInfo(QTreeWidgetItem *it)
 {
-    seeInfo(((QIdTreeWidgetItem*)(it))->id());
+    if (dynamic_cast<QIdTreeWidgetItem*>(it))
+        seeInfo(((QIdTreeWidgetItem*)(it))->id());
 }
 
 void Client::seeInfo(int id)

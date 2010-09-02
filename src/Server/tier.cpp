@@ -150,10 +150,12 @@ void Tier::addBanParent(Tier *t)
     }
 
     /* No cyclic tree, so we can assign it */
-    parent = it;
+    parent = t;
 }
 
 bool Tier::isBanned(const PokeBattle &p) const {
+    if (p.level() > maxLevel)
+        return true;
     if (banPokes) {
         if (bannedPokes.contains(p.num()))
             return true;
@@ -248,7 +250,7 @@ int Tier::ranking(const QString &name)
 
 bool Tier::isValid(const TeamBattle &t)  const
 {
-    if (gen != 0 && t.gen != gen) {
+    if (!allowGen(t.gen)) {
         return false;
     }
 
@@ -784,6 +786,13 @@ bool Tier::allowMode(int mode) const
     if (!mode && doubles <= -1)
         return true;
     return false;
+}
+
+bool Tier::allowGen(int gen) const
+{
+    if (this->gen == 0)
+        return true;
+    return this->gen == gen;
 }
 
 int Tier::getClauses() const

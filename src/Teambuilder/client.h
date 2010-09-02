@@ -7,6 +7,7 @@
 #include "../PokemonInfo/battlestructs.h"
 #include "centralwidget.h"
 #include "../Utilities/otherwidgets.h"
+#include "tierstruct.h"
 
 class MainEngine;
 class BaseChallengeWindow;
@@ -90,6 +91,7 @@ public:
     bool showPEvents;
     bool sortBT;
     bool showTS;
+    TierNode tierRoot;
 public slots:
     void errorFromNetwork(int errnum, const QString &error);
     void connected();
@@ -183,7 +185,7 @@ public slots:
     void showTimeStamps2(bool);
     void ignoreServerVersion(bool);
     void versionDiff(const QString &a, const QString &b);
-    void tierListReceived(QByteArray);
+    void tierListReceived(const QByteArray &array);
     void changeTier();
     void openBattleFinder();
     void findBattle(const FindBattleData&);
