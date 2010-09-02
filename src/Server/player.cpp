@@ -517,7 +517,7 @@ void Player::challengeStuff(const ChallengeInfo &c)
     if (desc == ChallengeInfo::Sent)
     {
         if (team().invalid() && ! (c.clauses & ChallengeInfo::ChallengeCup)) {
-            sendMessage("Your team is invalid, you can't challenge except for Challenge Cup!");
+            sendMessage("Your team is invalid, you can't challenge except for Challenge Cup! Try giving moves to your pokemon.");
             return;
         }
         if (challenged.size() >= 10) {
