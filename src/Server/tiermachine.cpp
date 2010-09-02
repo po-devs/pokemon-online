@@ -94,6 +94,8 @@ void TierMachine::fromString(const QString &s)
 
     /* Removing useless categories */
     tree.cleanCategories();
+    /* Getting the order right if it wasn't alraedy in the file */
+    tree.reorder();
 
     /* Some duplicates may have been removed, so we gather the tiers again */
     tiers = tree.gatherTiers();

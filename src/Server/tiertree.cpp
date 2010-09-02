@@ -210,9 +210,13 @@ QDomElement & TierCategory::toXml(QDomElement &xml) const {
 
 QList<Tier *> TierCategory::gatherTiers()
 {
-    QList<Tier*> l = firstLevelTiers();
-    foreach(TierCategory *c, firstLevelCategories()) {
-        l.append(c->gatherTiers());
+    QList<Tier*> l;
+    foreach(TierNode *t, subNodes) {
+        if (t->isTier()) {
+            l.append((Tier*)(t));
+        } else {
+            l.append(((TierCategory*)(t))->gatherTiers());
+        }
     }
     return l;
 }

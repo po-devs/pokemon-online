@@ -25,6 +25,7 @@ class Player : public QObject, public PlayerInterface
     PROPERTY(bool, showteam);
     PROPERTY(QString, tier);
     PROPERTY(quint16, avatar);
+    PROPERTY(QString, defaultTier);
     PROPERTY(QColor, color);
     PROPERTY(bool, battleSearch);
     PROPERTY(QString, winningMessage);

@@ -507,12 +507,17 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->t
     m_nick->setMaximumWidth(150);
     m_nick->setValidator(new QNickValidator(m_nick));
 
+    QHBoxLayout *colorTier = new QHBoxLayout();
+    colorTier->setMargin(0);
+    col2->addLayout(colorTier);
     /* Trainer name color */
-    col2->addWidget(new TitledWidget(tr("Name Color"), m_colorButton = new QPushButton(tr("Change &Color"))));
+    colorTier->addWidget(new TitledWidget(tr("Name Color"), m_colorButton = new QPushButton(tr("Change &Color"))));
     QSettings s;
     if (s.value("trainer_color").value<QColor>().name() != "#000000")
         m_colorButton->setStyleSheet(QString("background: %1;color:white").arg(s.value("trainer_color").value<QColor>().name()));
     m_colorButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    colorTier->addWidget(new TitledWidget(tr("Team Tier"), m_tier = new QLineEdit()));
+    m_tier->setText(trainerTeam()->defaultTier());
 
     /* Trainer information */
     col2->addWidget(new TitledWidget(tr("Trainer I&nformation"), m_trainerInfo = new QPlainTextEdit()));
@@ -536,6 +541,7 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->t
 
     connect (m_colorButton, SIGNAL(clicked()), SLOT(changeTrainerColor()));
     connect (m_nick, SIGNAL(textEdited(QString)), SLOT(setTrainerNick(QString)));
+    connect (m_tier, SIGNAL(textEdited(QString)), SLOT(changeTier(QString)));
     connect (m_winMessage, SIGNAL(textChanged()), SLOT(changeTrainerWin()));
     connect (m_loseMessage, SIGNAL(textChanged()), SLOT(changeTrainerLose()));
     connect (m_trainerInfo, SIGNAL(textChanged()), SLOT(changeTrainerInfo()));
@@ -578,6 +584,11 @@ void TB_TrainerBody::changeTrainerInfo()
 void TB_TrainerBody::setTrainerNick(const QString &newnick)
 {
     trainerTeam()->setTrainerNick(newnick);
+}
+
+void TB_TrainerBody::changeTier(const QString &tier)
+{
+    trainerTeam()->defaultTier() = tier;
 }
 
 void TB_TrainerBody::changeTrainerWin()

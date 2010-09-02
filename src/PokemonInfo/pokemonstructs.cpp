@@ -585,6 +585,7 @@ bool TrainerTeam::saveToFile(const QString &path) const
 
     QDomElement Team = document.createElement("Team");
     Team.setAttribute("gen", team().gen());
+    Team.setAttribute("defaultTier", defaultTier());
     document.appendChild(Team);
     QDomElement trainer = document.createElement("Trainer");
     Team.appendChild(trainer);
@@ -706,6 +707,8 @@ bool TrainerTeam::loadFromFile(const QString &path)
     if (gen != 3)
         gen = 4;
     this->team().setGen(gen);
+    defaultTier() = team.attribute("defaultTier");
+
     QDomElement trainer = team.firstChildElement("Trainer");
     if(trainer.isNull())
     {
@@ -1010,6 +1013,7 @@ QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
     out << trainerTeam.trainerLose();
     out << trainerTeam.trainerWin();
     out << trainerTeam.avatar();
+    out << trainerTeam.defaultTier();
     out << trainerTeam.team();
 
     return out;
@@ -1025,6 +1029,7 @@ QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
     in >> lose;
     in >> win;
     in >> trainerTeam.avatar();
+    in >> trainerTeam.defaultTier();
     in >> trainerTeam.team();
 
 

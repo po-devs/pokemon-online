@@ -11,7 +11,7 @@ public:
     PokePersonal &pokemon(int num);
     const PokePersonal &pokemon(int num) const;
 
-    QString name, info, win, lose;
+    QString name, info, win, lose, defaultTier;
     quint16 avatar;
     quint8 gen;
 };
