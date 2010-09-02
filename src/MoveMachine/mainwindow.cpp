@@ -60,7 +60,10 @@ void PokeMovesDb::save()
                 QString s;
                 bool start = true;
 
-                foreach(int move, pokes[p].gens[gen-3].moves[i]) {
+                QList<int> moves = pokes[p].gens[gen-3].moves[i].toList();
+                qSort(moves);
+
+                foreach(int move, moves) {
                     if (!start) {
                         s += " ";
                     } else {
