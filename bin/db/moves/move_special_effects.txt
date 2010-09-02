@@ -135,7 +135,7 @@
 44#flail
 153#flame wheel
 
-
+153#flareBlitz
 
 
 
