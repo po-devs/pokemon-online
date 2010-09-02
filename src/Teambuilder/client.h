@@ -92,6 +92,7 @@ public:
     bool sortBT;
     bool showTS;
     TierNode tierRoot;
+    QStringList tierList;
 public slots:
     void errorFromNetwork(int errnum, const QString &error);
     void connected();
@@ -258,7 +259,6 @@ private:
     QPointer<QMenuBar> mymenubar;
     QPointer<QMenu> mytiermenu;
     QList<QAction*> mytiers;
-    QStringList tierList;
     /* You can call the teambuilder from here too */
     QPointer<QMainWindow> myteambuilder;
 
