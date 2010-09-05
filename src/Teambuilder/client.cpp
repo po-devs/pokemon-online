@@ -694,7 +694,7 @@ void Client::sendText()
         }
     }
 
-    myline->myclear();
+    myline->clear();
 }
 
 bool Client::hasChannel(int channelid) const

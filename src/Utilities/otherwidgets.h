@@ -204,6 +204,8 @@ class QIRCLineEdit : public QLineEdit
     Q_OBJECT
 public:
     QIRCLineEdit();
+
+    void clear();
 private:
     void keyPressEvent(QKeyEvent *);
     //QList<QString> m_Inputlist1;//Stores the inputed strings,up list.
@@ -211,9 +213,6 @@ private:
     QList<QString> m_Inputlist;
     quint16 listindex;
     //QString m_Currentline;//Stores a copy of the current text in the LineEdit.
-public slots:
-    void myTextEdited();
-    void myclear();
 };
 
 #endif // OTHERWIDGETS_H
