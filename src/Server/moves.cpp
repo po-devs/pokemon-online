@@ -1814,10 +1814,11 @@ struct MMCounter : public MM
         }
 
         turn(b,s)["CounterDamage"] = 2 * turn(b,s)["DamageTakenByAttack"].toInt();
-        turn(b,s)["Target"] = source;
+        turn(b,s)["CounterTarget"] = source;
     }
 
     static void ms (int s, int, BS &b) {
+        turn(b,s)["Target"] = turn(b,s)["CounterTarget"];
 	turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
     }
 
