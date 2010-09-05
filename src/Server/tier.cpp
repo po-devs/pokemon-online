@@ -640,6 +640,8 @@ QString Tier::getRestrictedPokes() const
 
 void Tier::importBannedPokes(const QString &s)
 {
+    if (s.length() == 0)
+        return;
     bannedPokes.clear();
     QStringList pokes = s.split(",");
     foreach (QString poke, pokes) {
@@ -651,6 +653,8 @@ void Tier::importBannedPokes(const QString &s)
 
 void Tier::importBannedItems(const QString &s)
 {
+    if (s.length() == 0)
+        return;
     QStringList items = s.split(",");
     foreach (QString item, items) {
         int num = ItemInfo::Number(item.trimmed());
@@ -661,6 +665,8 @@ void Tier::importBannedItems(const QString &s)
 
 void Tier::importBannedMoves(const QString &s)
 {
+    if (s.length() == 0)
+        return;
     QStringList moves = s.split(",");
     foreach(QString move, moves) {
         int num = MoveInfo::Number(move.trimmed());
@@ -672,6 +678,8 @@ void Tier::importBannedMoves(const QString &s)
 
 void Tier::importRestrictedPokes(const QString &s)
 {
+    if (s.length() == 0)
+        return;
     QStringList rpokes = s.split(",");
     foreach (QString poke, rpokes) {
         int num = PokemonInfo::Number(poke.trimmed());
