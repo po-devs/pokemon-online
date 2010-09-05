@@ -5,6 +5,7 @@
 #include "../Utilities/functions.h"
 
 class QScrollDownTextBrowser;
+class QIRCLineEdit;
 
 struct PMWindow : public QWidget
 {
@@ -36,7 +37,7 @@ private:
     void printHtml(const QString &htmlCode);
 
     QScrollDownTextBrowser *m_mainwindow;
-    QLineEdit *m_textToSend;
+    QIRCLineEdit *m_textToSend;
     QPushButton *m_challenge, *m_send;
 };
 

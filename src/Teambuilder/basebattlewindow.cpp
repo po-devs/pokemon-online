@@ -303,7 +303,7 @@ void BaseBattleWindow::sendMessage()
 
     if (message.size() != 0) {
         emit battleMessage(battleId(), message);
-        myline->myclear();
+        myline->clear();
     }
 }
 
