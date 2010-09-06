@@ -178,12 +178,14 @@ struct BMAntiNormal : public BM
     }
 
     static void m3b(int s, int t, BS &b) {
-        /* Normal moves */
-        if (!b.hasSubstitute(s) && turn(b,t)["Type"].toInt() == 0) {
-            b.sendBerryMessage(4,s,0,t,b.poke(s).item(),turn(b,t)["Move"].toInt());
-            b.eatBerry(s,false);
+        if (b.gen() >= 4) {
+            /* Normal moves */
+            if (!b.hasSubstitute(s) && turn(b,t)["Type"].toInt() == 0) {
+                b.sendBerryMessage(4,s,0,t,b.poke(s).item(),turn(b,t)["Move"].toInt());
+                b.eatBerry(s,false);
 
-            turn(b,t)["Mod3Berry"] = -5;
+                turn(b,t)["Mod3Berry"] = -5;
+            }
         }
     }
 };
