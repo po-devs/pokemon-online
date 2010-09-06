@@ -98,7 +98,7 @@ private:
     static QMap<Pokemon::uniqueId, QString> m_Names;
     static QHash<Pokemon::uniqueId, QString> m_Weights;
     static QHash<int, QHash<quint16, QString> > m_Desc;
-    static QHash<quint16, QString> m_Classification;
+    static QHash<int, QString> m_Classification;
     static QHash<Pokemon::uniqueId, QString> m_Height;
     static QString m_Directory;
     static QHash<Pokemon::uniqueId, int> m_Type1;
@@ -109,12 +109,12 @@ private:
     static QHash<Pokemon::uniqueId, PokeBaseStats> m_BaseStats;
     static QHash<Pokemon::uniqueId, int> m_LevelBalance;
     /* That is NOT multi-threaded! */
-    static QHash<quint16, QList<quint16> > m_Evolutions;
-    static QHash<quint16, quint16> m_OriginalEvos;
+    static QHash<int, QList<int> > m_Evolutions;
+    static QHash<int, int> m_OriginalEvos;
     // A number of forms a pokemon has. 0 for most cases.
     // Keep it as QHash.
     // quint16 as only pokenum matters.
-    static QHash<quint16, quint16> m_MaxForme;
+    static QHash<int, quint16> m_MaxForme;
     static QHash<Pokemon::uniqueId, PokemonMoves> m_Moves;
     // Holds 1-letter options.
     // Sample use: if(m_Options.value(pokeid).contains('H')) whatever();
