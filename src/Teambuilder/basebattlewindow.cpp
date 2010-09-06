@@ -358,7 +358,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             //Plays the battle cry when a pokemon is switched in
             if (musicPlayed())
             {
-                playCry(info().currentShallow(spot).num());
+                playCry(info().currentShallow(spot).num().pokenum);
             }
 
 
@@ -406,7 +406,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         //Plays the battle cry when a pokemon faints
         if (musicPlayed())
         {
-            playCry(info().currentShallow(spot).num());
+            playCry(info().currentShallow(spot).num().pokenum);
         }
 
         printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(spot)))) + "</b>");
@@ -749,12 +749,6 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                 if (poke == info().currentIndex[spot]) {
                     info().currentShallow(spot).num() = newform;
                 }
-            } else if (type == AestheticForme)
-            {
-                quint8 newforme;
-                in >> newforme;
-                info().currentShallow(spot).forme() = newforme;
-                mydisplay->updatePoke(spot);
             }
             break;
         }
@@ -1201,24 +1195,24 @@ void BaseGraphicsZone::switchToNaught(int spot)
     items[spot]->setPixmap(QPixmap());
 }
 
-QPixmap BaseGraphicsZone::loadPixmap(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub)
+QPixmap BaseGraphicsZone::loadPixmap(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub)
 {
-    qint32 key = this->key(num, forme, shiny, back, gender, sub);
+    quint64 key = this->key(num, shiny, back, gender, sub);
 
     if (!graphics.contains(key)) {
         if (sub) {
             graphics.insert(key, PokemonInfo::Sub(back));
         } else {
-            graphics.insert(key, PokemonInfo::Picture(num, forme, gender, shiny, back));
+            graphics.insert(key, PokemonInfo::Picture(num, gender, shiny, back));
         }
     }
 
     return graphics[key];
 }
 
-qint32 BaseGraphicsZone::key(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub) const
+quint64 BaseGraphicsZone::key(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub) const
 {
-    return sub ? ((1 << 31) + (back << 30)) : (num + (gender << 16) + (back << 18) + (shiny<<19) + (forme << 20));
+    return sub ? ((1 << 27) + (back << 28)) : (num.pokenum + (num.subnum << 16) + (gender << 24) + (back << 25) + (shiny<<26));
 }
 
 void BaseGraphicsZone::mouseMoveEvent(QMouseEvent * e)
