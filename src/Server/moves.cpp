@@ -3887,11 +3887,9 @@ struct MMStruggle : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (!b.koed(s)) {
+        if (b.gen() >= 4 && !b.koed(s)) {
             b.sendMoveMessage(127,0,s);
-
-            if (b.gen() >= 4)
-                b.inflictPercentDamage(s,25,s);
+            b.inflictPercentDamage(s,25,s);
         }
     }
 };
