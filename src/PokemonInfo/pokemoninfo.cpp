@@ -19,7 +19,7 @@ QString PokemonInfo::m_Directory;
 QMap<Pokemon::uniqueId, QString> PokemonInfo::m_Names;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Weights;
 QHash<int, QHash<quint16, QString> > PokemonInfo::m_Desc;
-QHash<quint16, QString> PokemonInfo::m_Classification;
+QHash<int, QString> PokemonInfo::m_Classification;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Height;
 
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Genders;
@@ -30,11 +30,11 @@ QHash<Pokemon::uniqueId, int> PokemonInfo::m_Ability2[2];
 QHash<Pokemon::uniqueId, PokeBaseStats> PokemonInfo::m_BaseStats;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_LevelBalance;
 QHash<Pokemon::uniqueId, PokemonMoves> PokemonInfo::m_Moves;
-QHash<quint16, quint16> PokemonInfo::m_MaxForme;
+QHash<int, quint16> PokemonInfo::m_MaxForme;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Options;
 int PokemonInfo::m_trueNumberOfPokes;
-QHash<quint16, QList<quint16> > PokemonInfo::m_Evolutions;
-QHash<quint16, quint16> PokemonInfo::m_OriginalEvos;
+QHash<int, QList<int> > PokemonInfo::m_Evolutions;
+QHash<int, int> PokemonInfo::m_OriginalEvos;
 QList<Pokemon::uniqueId> PokemonInfo::m_VisiblePokesPlainList;
 
 QString MoveInfo::m_Directory;
@@ -492,7 +492,7 @@ bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, int gen)
 
 Pokemon::uniqueId PokemonInfo::Number(const QString &pokename)
 {
-    return m_Names.key(pokename, Pokemon::uniqueId())
+    return m_Names.key(pokename, Pokemon::uniqueId());
 }
 
 int PokemonInfo::LevelBalance(const Pokemon::uniqueId &pokeid)
@@ -683,11 +683,12 @@ void PokemonInfo::loadNames()
     }
 
     // Loading weights too for some reason...
-    temp.clear(); options.clear();
+    temp.clear();
     fill_container_with_file(temp, path("poke_weight.txt"));
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString weight;
+        QString options;
         Pokemon::uniqueId id;
         bool ok = Pokemon::uniqueId::extract(current, id, options, weight);
         if(ok) {
@@ -737,7 +738,7 @@ Pokemon::uniqueId PokemonInfo::OriginalEvo(const Pokemon::uniqueId &pokeid)
 
 QList<int> PokemonInfo::Evos(int pokenum)
 {
-    return m_Evolutions.value(OriginalEvo(pokenum));
+    return m_Evolutions.value(OriginalEvo(pokenum).pokenum);
 }
 
 bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
@@ -771,7 +772,7 @@ void PokemonInfo::loadMoves()
                     bool converted;
                     int cur_move = move_list[ml_counter].toInt(&converted);
                     if(converted) {
-                        data_set->insert(cur_move);
+                        data_set.insert(cur_move);
                     }
                 }
                 // Should create an item with pokeid key
@@ -781,7 +782,7 @@ void PokemonInfo::loadMoves()
                     &moves.TMMoves[0], &moves.TMMoves[1], &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0],
                     &moves.preEvoMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1]
                 };
-                refs[i] = data_set;
+                *refs[i] = data_set;
             }
         }
     }
@@ -808,7 +809,7 @@ void PokemonInfo::makeDataConsistent()
                 m_OriginalEvos[id.pokenum] = id.pokenum;
             }
             // m_Evolutions initial filler data.
-            m_Evolutions[id.pokenum] = QList<quint16>();
+            m_Evolutions[id.pokenum] = QList<int>();
         }
         // Weight
         if(!m_Weights.contains(id)) {
@@ -851,7 +852,7 @@ void PokemonInfo::makeDataConsistent()
         ++it;
     }
     // Calculate m_Evolutions.
-    QHash<quint16, quint16>::const_iterator eit = m_OriginalEvos.constBegin();
+    QHash<int, int>::const_iterator eit = m_OriginalEvos.constBegin();
     while (eit != m_OriginalEvos.constEnd()) {
         m_Evolutions[eit.value()].append(eit.key());
         // Next.
@@ -859,7 +860,7 @@ void PokemonInfo::makeDataConsistent()
     }
 }
 
-static Pokemon::uniqueId PokemonInfo::getRandomPokemon()
+Pokemon::uniqueId PokemonInfo::getRandomPokemon()
 {
     int random = true_rand() % (NumberOfVisiblePokes());
     if(m_VisiblePokesPlainList[random] == Pokemon::NoPoke) {

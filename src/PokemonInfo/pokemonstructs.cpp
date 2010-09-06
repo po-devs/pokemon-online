@@ -1136,7 +1136,7 @@ bool Pokemon::uniqueId::extract(const QString &from, Pokemon::uniqueId &data, QS
                 if(values.size() > 1) {
                     bool ok, ok2;
                     uint num = values[0].toUInt(&ok);
-                    uint sub = values[1].toUInt(&ok);
+                    uint sub = values[1].toUInt(&ok2);
                     if(ok && ok2) {
                         remaining = poke_name;
                         data.pokenum = num;
