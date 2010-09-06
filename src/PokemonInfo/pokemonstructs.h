@@ -630,7 +630,7 @@ namespace Pokemon
         // 'data' will be modified to hold extracted data.
         // 'remaining' will be modified to hold remaining part.
         // Will return true if everything is fine. And false otherwise.
-        static bool extract(const QString &from, uniqueId &data, QString &options, QString &remaining);
+        static bool extract(const QString &raw, uniqueId &id, QString &info, QString *options = NULL);
         // Extracts short data in a "pokenum data_text" form.
         static bool extract_short(const QString &from, quint16 &pokenum, QString &remaining);
     };

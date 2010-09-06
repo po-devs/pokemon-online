@@ -1,7 +1,12 @@
+namespace Pokemon {
+    class uniqueId;
+}
+unsigned int qHash (const Pokemon::uniqueId &key);
+
 #include "movesetchecker.h"
 #include "pokemoninfo.h"
 
-QList<QList<QSet<int > > >* MoveSetChecker::legalCombinations[2];
+QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::legalCombinations[2];
 QString MoveSetChecker::dir;
 
 QString MoveSetChecker::path(const QString &arg)
@@ -12,8 +17,6 @@ QString MoveSetChecker::path(const QString &arg)
 void MoveSetChecker::init(const QString &dir)
 {
     MoveSetChecker::dir = dir;
-    legalCombinations[0] = new (QList<QList<QSet<int > > >);
-    legalCombinations[1] = new (QList<QList<QSet<int > > >);
 
     for (int gen = 3; gen <= 4; gen++) {
         QFile in(path("legal_combinations_" + QString::number(gen) + "G.txt"));
@@ -21,16 +24,22 @@ void MoveSetChecker::init(const QString &dir)
         QList<QByteArray> pokes = in.readAll().split('\n');
 
         foreach(QByteArray poke, pokes) {
-            legalCombinations[gen-3]->push_back(QList<QSet<int> >());
-            if (poke.length() > 0) {
-                QList<QByteArray> combs = poke.split('|');
-                foreach(QByteArray comb, combs) {
-                    QList<QByteArray> moves = comb.split(' ');
+            Pokemon::uniqueId id;
+            QString data;
+            if (!id.extract(QString(poke), id, data))
+                continue;
+            /* Even if the hash is empty, it proves it's here, otherwise it would be filled by the data of
+               the base forme */
+            legalCombinations[gen-3].insert(id, QList<QSet<int > >());
+            if (data.length() > 0) {
+                QStringList combs = data.split('|');
+                foreach(QString comb, combs) {
+                    QStringList moves = comb.split(' ');
                     QSet<int> toPush;
-                    foreach(QByteArray move, moves) {
+                    foreach(QString move, moves) {
                         toPush.insert(move.toInt());
                     }
-                    legalCombinations[gen-3]->back().push_back(toPush);
+                    legalCombinations[gen-3][id].push_back(toPush);
                 }
             }
         }
@@ -101,7 +110,7 @@ gen3:
 /* Used by ChainBreeding */
 bool MoveSetChecker::isAnEggMoveCombination(const Pokemon::uniqueId &pokeid, int gen, QSet<int> moves)
 {
-    foreach(QSet<int> combination, (*legalCombinations[gen-3])[pokeid]) {
+    foreach(QSet<int> combination, legalCombinations[gen-3].value(pokeid)) {
         if (combination.contains(moves))
             return true;
     }

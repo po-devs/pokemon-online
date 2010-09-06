@@ -1,3 +1,8 @@
+namespace Pokemon {
+    class uniqueId;
+}
+unsigned int qHash (const Pokemon::uniqueId &key);
+
 #include "pokemoninfo.h"
 #include "pokemonstructs.h"
 
@@ -240,9 +245,9 @@ static void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString
     while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
     {
         QString current = filestream.readLine().trimmed();
-        QString options, other_data;
+        QString other_data;
         Pokemon::uniqueId pokeid;
-        bool ok = Pokemon::uniqueId::extract(current, pokeid, options, other_data);
+        bool ok = Pokemon::uniqueId::extract(current, pokeid, other_data);
         if(ok) {
             bool converted;
             int data = other_data.toInt(&converted);
@@ -407,9 +412,9 @@ void PokemonInfo::loadHeights()
     fill_container_with_file(temp, path("height"));
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
-        QString options, height;
+        QString height;
         Pokemon::uniqueId pokeid;
-        bool ok = Pokemon::uniqueId::extract(current, pokeid, options, height);
+        bool ok = Pokemon::uniqueId::extract(current, pokeid, height);
         if(ok) m_Height[pokeid] = height;
     }
 }
@@ -633,9 +638,9 @@ void PokemonInfo::loadBaseStats()
 
     for (int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
-        QString options, text_stats;
+        QString text_stats;
         Pokemon::uniqueId id;
-        bool ok = Pokemon::uniqueId::extract(current, id, options, text_stats);
+        bool ok = Pokemon::uniqueId::extract(current, id, text_stats);
         if(ok){
             QTextStream statsstream(&text_stats, QIODevice::ReadOnly);
             int hp, att, def, spd, satt, sdef;
@@ -660,7 +665,7 @@ void PokemonInfo::loadNames()
         QString name;
         QString options;
         Pokemon::uniqueId id;
-        bool ok = Pokemon::uniqueId::extract(current, id, options, name);
+        bool ok = Pokemon::uniqueId::extract(current, id, name, &options);
         if(ok) {
             m_Names[id] = name;
             if(options.contains('H')) {
@@ -688,12 +693,10 @@ void PokemonInfo::loadNames()
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString weight;
-        QString options;
         Pokemon::uniqueId id;
-        bool ok = Pokemon::uniqueId::extract(current, id, options, weight);
-        if(ok) {
+        bool ok = Pokemon::uniqueId::extract(current, id, weight);
+        if(ok)
             m_Weights[id] = weight;
-        }
     }
 }
 
@@ -762,9 +765,9 @@ void PokemonInfo::loadMoves()
         fill_container_with_file(temp, fileNames[i]);
         for(int j = 0; j < temp.size(); j++) {
             QString current = temp[j].trimmed();
-            QString options, text_moves;
+            QString text_moves;
             Pokemon::uniqueId pokeid;
-            bool ok = Pokemon::uniqueId::extract(current, pokeid, options, text_moves);
+            bool ok = Pokemon::uniqueId::extract(current, pokeid, text_moves);
             if(ok) {
                 QStringList move_list = text_moves.split(' ');
                 QSet<int> data_set;

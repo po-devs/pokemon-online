@@ -6,7 +6,7 @@
 
 class MoveSetChecker
 {
-    static QList<QList<QSet<int > > > *legalCombinations[2];
+    static QHash<Pokemon::uniqueId, QList<QSet<int> > > legalCombinations[2];
     static QString dir;
 
     static QString path(const QString &arg);
