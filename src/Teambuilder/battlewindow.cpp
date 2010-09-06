@@ -458,7 +458,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             //Plays the battle cry when a pokemon is switched in
             if (musicPlayed())
             {
-                playCry(info().currentShallow(spot).num());
+                playCry(info().currentShallow(spot).num().pokenum);
             }
 
             if (!silent) {
@@ -616,11 +616,6 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                         if (poke == info().currentIndex[spot]) {
                             info().currentShallow(spot).num() = newform;
                         }
-                    } else if (type == AestheticForme) {
-                        quint8 newforme;
-                        in >> newforme;
-                        info().currentShallow(spot).forme() = newforme;
-                        mydisplay->updatePoke(spot);
                     }
                 }
             }
@@ -1003,7 +998,7 @@ void BattleDisplay::updateToolTip(int spot)
     }
 
     tooltip += info().currentPoke(spot).nick() + "\n";
-    int num = info().currentPoke(spot).num();
+    Pokemon::uniqueId num = info().currentPoke(spot).num();
     tooltip += TypeInfo::Name(PokemonInfo::Type1(num));
     int type2 = PokemonInfo::Type2(num);
     if (type2 != Pokemon::Curse) {

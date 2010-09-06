@@ -308,10 +308,10 @@ public:
     void mouseMoveEvent(QMouseEvent *e);
 
     /* Loads a pixmap if not loaded otherwise go see graphics */
-    QPixmap loadPixmap(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub);
+    QPixmap loadPixmap(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub);
     /* We are using a qmap to store the graphics already loaded. So the key of the pixmap
         is a combination of 2 bools, 1 quin8; and one quint16 */
-    qint32 key(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub) const;
+    quint64 key(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub) const;
     QHash<qint32, QPixmap> graphics;
     /* Current pixmaps displayed */
     QVector<QGraphicsPixmapItem *> items;
@@ -329,7 +329,7 @@ public:
 template <class T>
 void BaseGraphicsZone::switchTo(const T &poke, int spot, bool sub, int specialSprite)
 {
-    items[spot]->setPixmap(loadPixmap(specialSprite?specialSprite:poke.num(), specialSprite?0:poke.forme(), poke.shiny(),
+    items[spot]->setPixmap(loadPixmap(specialSprite?Pokemon::uniqueId(specialSprite):poke.num(), poke.shiny(),
                                       info().player(spot) == info().myself , poke.gender(), sub));
 }
 

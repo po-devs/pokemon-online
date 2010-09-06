@@ -2,6 +2,7 @@
 #define TB_ADVANCED_H
 
 #include <QtGui>
+#include "../PokemonInfo/pokemonstructs.h"
 
 class AvatarBox;
 
@@ -56,8 +57,7 @@ private slots:
     void changeHappiness(int);
     /* Do not use directly */
     void changeDV(int newval);
-    void changeAForme();
-    void changeForm();
+    void changeForme();
 public slots:
     //called by update DV and when the stat in the teambuilder is modified.
     void updateStats();
@@ -67,7 +67,7 @@ signals:
     void genderChanged();
     void levelChanged();
     void statChanged();
-    void pokeFormChanged(int newform);
+    void pokeFormeChanged(Pokemon::uniqueId newform);
 public:
     TB_Advanced(PokeTeam *poke);
 };

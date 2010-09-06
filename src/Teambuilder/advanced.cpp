@@ -135,32 +135,17 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     QMenu *m= new QMenu(bForms);
 
     if (PokemonInfo::HasFormes(poke()->num()) && PokemonInfo::AFormesShown(poke()->num())) {
-        QList<int> forms = PokemonInfo::Formes(poke()->num());
+        QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(poke()->num());
 
-        foreach(int form, forms) {
-            QAction *ac = m->addAction(PokemonInfo::Name(form),this, SLOT(changeForm()));
+        foreach(Pokemon::uniqueId forme, formes) {
+            QAction *ac = m->addAction(PokemonInfo::Name(forme),this, SLOT(changeForme()));
             ac->setCheckable(true);
-            if (form == poke()->num()) {
+            if (forme == poke()->num()) {
                 ac->setChecked(true);
             }
-            ac->setProperty("pokemonid", form);
+            ac->setProperty("pokemonid", forme.toPokeRef());
         }
 
-        bForms->setMenu(m);
-    } else if (PokemonInfo::HasAestheticFormes(poke()->num()) && PokemonInfo::AFormesShown(poke()->num())) {
-        QActionGroup *ag = new QActionGroup(m);
-        for (int i = 0; i < PokemonInfo::NumberOfAFormes(poke()->num()); i++) {
-            QString forme = PokemonInfo::AestheticDesc(poke()->num(), i);
-            if (forme != "") {
-                QAction *ac = m->addAction(forme,this, SLOT(changeAForme()));
-                ac->setCheckable(true);
-                if (i == poke()->forme()) {
-                    ac->setChecked(true);
-                }
-                ac->setProperty("forme", i);
-                ag->addAction(ac);
-            }
-        }
         bForms->setMenu(m);
     } else {
         bForms->setDisabled(true);
@@ -189,24 +174,15 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     updateStats();
 }
 
-void TB_Advanced::changeAForme()
+void TB_Advanced::changeForme()
 {
     QAction *ac = (QAction*) sender();
-    poke()->forme() = ac->property("forme").toInt();
-
-    updatePokeImage();
-    emit imageChanged();
-}
-
-void TB_Advanced::changeForm()
-{
-    QAction *ac = (QAction*) sender();
-    if (ac->property("pokemonid").toInt() == poke()->num()) {
+    if (ac->property("pokemonid").toInt() == poke()->num().toPokeRef()) {
         ac->setChecked(true);
         return;
     }
     else {
-        emit pokeFormChanged(ac->property("pokemonid").toInt());
+        emit pokeFormeChanged(Pokemon::uniqueId(ac->property("pokemonid").toInt()));
     }
 }
 

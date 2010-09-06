@@ -643,7 +643,7 @@ TeamPokeButton::TeamPokeButton(int num, int poke, int level, int item)
     changeInfos(poke, level, item);
 }
 
-void TeamPokeButton::changeInfos(int poke, int level, int item)
+void TeamPokeButton::changeInfos(Pokemon::uniqueId poke, int level, int item)
 {
     pokeIcon->setPixmap(PokemonInfo::Icon(poke));
     this->level->setText(tr("Lv. %1").arg(level));
@@ -761,7 +761,7 @@ TB_TeamBody::TB_TeamBody(TeamBuilder *parent, int gen) : m_dockAdvanced(0), m_te
         connect(pokeBody[i], SIGNAL(itemChanged(int)), SLOT(updateButton()));
         connect(pokeBody[i], SIGNAL(levelChanged()), SLOT(updateButton()));
         connect(pokeBody[i], SIGNAL(advanced(int, bool)), SLOT(advancedClicked(int, bool)));
-        connect(pokeBody[i], SIGNAL(pokeChanged(int)),SLOT(indexNumChanged(int)));
+        connect(pokeBody[i], SIGNAL(pokeChanged(Pokemon::uniqueId)),SLOT(indexNumChanged(Pokemon::uniqueId)));
     }
 
     splitter->addWidget(props);
@@ -782,7 +782,7 @@ void TB_TeamBody::changePokemonOrder(QPair<int, int>echange)
     poke2->updateNum();
 }
 
-void TB_TeamBody::changePokemonBase(int index,int pokenum)
+void TB_TeamBody::changePokemonBase(int index, Pokemon::uniqueId pokenum)
 {
     TB_PokemonBody * poke1 = pokeBody[index];
 
@@ -856,7 +856,7 @@ void TB_TeamBody::createDockAdvanced(bool sepWindow)
     }
 }
 
-void TB_TeamBody::indexNumChanged(int pokeNum)
+void TB_TeamBody::indexNumChanged(Pokemon::uniqueId pokeNum)
 {
     if(dockAdvanced())
     {
@@ -1208,7 +1208,7 @@ void TB_PokemonBody::connectWithAdvanced(TB_Advanced *ptr)
     connect(ptr, SIGNAL(genderChanged()), this, SLOT(updateGender()));
     connect(ptr, SIGNAL(genderChanged()), this, SLOT(updateImage()));
     connect(ptr, SIGNAL(statChanged()), this, SLOT(updateEVs()));
-    connect(ptr, SIGNAL(pokeFormChanged(int)), this, SLOT(changeForme(int)));
+    connect(ptr, SIGNAL(pokeFormeChanged(Pokemon::uniqueId)), this, SLOT(changeForme(Pokemon::uniqueId)));
     connect(this, SIGNAL(EVChanged(int)), ptr, SLOT(updateStat(int)));
     connect(this, SIGNAL(natureChanged()), ptr, SLOT(updateStats()));
     connect(this, SIGNAL(pokeImageChanged()), ptr, SLOT(updatePokeImage()));
@@ -1226,12 +1226,12 @@ void TB_PokemonBody::goToAdvanced()
     emit advanced(num(), sender()->property("window").toInt());
 }
 
-void TB_PokemonBody::setNum(int pokenum)
+void TB_PokemonBody::setNum(Pokemon::uniqueId pokenum)
 {
     setNum(pokenum, true);
 }
 
-void TB_PokemonBody::setNum(int pokenum, bool resetEverything)
+void TB_PokemonBody::setNum(Pokemon::uniqueId pokenum, bool resetEverything)
 {
     if (pokenum == poke()->num())
         return;
@@ -1249,7 +1249,7 @@ void TB_PokemonBody::setNum(int pokenum, bool resetEverything)
 
 void TB_PokemonBody::setPokeByNick()
 {
-    int number = PokemonInfo::Number(m_pokeedit->text());
+    Pokemon::uniqueId number = PokemonInfo::Number(m_pokeedit->text());
 
     if (number != 0) {
         setNum(number);
@@ -1282,9 +1282,9 @@ void TB_PokemonBody::updateNum()
 
 void TB_PokemonBody::updatePokeChoice()
 {
-    int original = PokemonInfo::OriginalForme(poke()->num());
+    Pokemon::uniqueId original = PokemonInfo::OriginalForme(poke()->num());
     m_pokeedit->setText(PokemonInfo::Name(original));
-    pokechoice->setCurrentCell(original, 1, QItemSelectionModel::Rows);
+    pokechoice->setCurrentCell(original.pokenum, 1, QItemSelectionModel::Rows);
     pokechoice->scrollTo(pokechoice->currentIndex(), QAbstractItemView::PositionAtCenter);
 }
 
@@ -1348,7 +1348,7 @@ void TB_PokemonBody::updateEVs()
     evchoice->updateEVs();
 }
 
-void TB_PokemonBody::changeForme(int pokenum)
+void TB_PokemonBody::changeForme(Pokemon::uniqueId pokenum)
 {
     setNum(pokenum, false);
 }
@@ -1419,7 +1419,7 @@ void TB_PokemonBody::configureMoves()
     QList<QPair<int, QString> > moves;
     QSet<int> already_loaded;
 
-    int num = poke()->num();
+    Pokemon::uniqueId num = poke()->num();
 
     QList< QSet<QPair<int, QString> > > sets;
 

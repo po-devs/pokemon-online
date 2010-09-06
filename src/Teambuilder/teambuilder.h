@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <QPair>
 
+#include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/otherwidgets.h"
 #include "centralwidget.h"
 
@@ -164,7 +165,7 @@ class TeamPokeButton : public QPushButton
 public:
     TeamPokeButton(int num, int poke=0, int level=100, int item = 0);
 
-    void changeInfos(int poke=0, int level=100, int item = 0);
+    void changeInfos(Pokemon::uniqueId poke=Pokemon::uniqueId(Pokemon::NoPoke), int level=100, int item = 0);
     int num() const {return m_num;}
 signals:
     void changePokemonOrder(QPair<int,int> exchange);
@@ -197,10 +198,10 @@ private slots:
     void changeIndex();
     void updateButton();
     void changePokemonOrder(QPair<int,int>);
-    void changePokemonBase(int slot, int num);
+    void changePokemonBase(int slot, Pokemon::uniqueId num);
     void advancedClicked(int index, bool separateWindow);
     void advancedDestroyed();
-    void indexNumChanged(int pokeNum);
+    void indexNumChanged(Pokemon::uniqueId pokeNum);
 private:
     TeamPokeButton *pokeButtons[6];
 public:
@@ -270,7 +271,7 @@ public:
     void connectWithAdvanced(TB_Advanced *ptr);
 
     void updateNum();
-    void setNum(int pokeNum, bool resetEverything);
+    void setNum(Pokemon::uniqueId, bool resetEverything);
     /* getting the pokemon of the team corresponding to the body */
     PokeTeam *poke();
     int num() const {return m_num;}
@@ -279,18 +280,18 @@ public:
     void changeGeneration(int gen);
 
 public slots:
-    void setNum(int pokeNum);
+    void setNum(Pokemon::uniqueId pokeNum);
     void setPokeByNick();
     /* slots used by advanced */
     void updateImage();
     void updateGender();
     void updateLevel();
     void updateEVs();
-    void changeForme(int pokenum);
+    void changeForme(Pokemon::uniqueId);
 
 signals:
     void moveChosen(int movenum);
-    void pokeChanged(int pokenum);
+    void pokeChanged(Pokemon::uniqueId num);
     void nicknameChanged(QString nickname);
     void advanced(int index, bool separateWindow);
     void EVChanged(int stat);
