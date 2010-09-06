@@ -11,6 +11,11 @@ BattleSituation::context & Mechanics::poke(BattleSituation &b, int player)
     return b.pokelong[player];
 }
 
+BattleSituation::BasicPokeInfo & Mechanics::fpoke(BattleSituation &b, int player)
+{
+    return b.fieldpokes[player];
+}
+
 BattleSituation::context & Mechanics::team(BattleSituation &b, int player)
 {
     return b.teamzone[player];

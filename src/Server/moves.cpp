@@ -242,16 +242,11 @@ struct MMBatonPass : public MM
             return;
 	/* first we copy the temp effects, then put them to the next poke */
 	BS::context c = poke(b, s);
-    	c.remove("Type1");
-	c.remove("Type2");
-	c.remove("Num");
         c.remove("YawnCount");
 	c.remove("Minimize");
 	c.remove("DefenseCurl");
-	c.remove("Ability");
         c.remove("AbilityArg");
         c.remove("ItemArg");
-	c.remove("Weight");
 	/* removing last resort memory */
 	c.remove("Move0Used");
 	c.remove("Move1Used");
@@ -262,7 +257,6 @@ struct MMBatonPass : public MM
 	c.remove("Move2");
 	c.remove("Move3");
         c.remove("HasMovedOnce");
-        c.remove("Forme");
         /* Removing attract */
         c.remove("AttractBy");
         foreach( int opp, b.revs(s)) {
@@ -408,7 +402,7 @@ struct MMConversion : public MM
 		return;
 	    }
 	}
-	if (poke(b,s)["Type2"].toInt() != Pokemon::Curse) {
+        if (fpoke(b,s).type2 != Pokemon::Curse) {
 	    /* It means the pokemon has two types, i.e. conversion always works */
 	    QList<int> poss;
 	    for (int i = 0; i < 4; i++) {
@@ -420,7 +414,7 @@ struct MMConversion : public MM
 	} else {
 	    QList<int> poss;
 	    for (int i = 0; i < 4; i++) {
-                if (MoveInfo::Type(b.move(s,i)) != Type::Curse && MoveInfo::Type(b.move(s,i)) != poke(b,s)["Type1"].toInt()) {
+                if (MoveInfo::Type(b.move(s,i)) != Type::Curse && MoveInfo::Type(b.move(s,i)) != fpoke(b,s).type1) {
 		    poss.push_back(b.move(s,i));
 		}
 	    }
@@ -434,8 +428,8 @@ struct MMConversion : public MM
 
     static void uas(int s, int, BS &b) {
 	int type = turn(b,s)["ConversionType"].toInt();
-	poke(b,s)["Type1"] = type;
-	poke(b,s)["Type2"] = Pokemon::Curse;
+        fpoke(b,s).type1 = type;
+        fpoke(b,s).type2 = Pokemon::Curse;
 	b.sendMoveMessage(19, 0, s, type, s);
     }
 };
@@ -461,7 +455,7 @@ struct MMConversion2 : public MM
 	/* Gets types available */
 	QList<int> poss;
 	for (int i = 0; i < TypeInfo::NumberOfTypes() - 1; i++) {
-	    if (!(poke(b,s)["Type1"].toInt() == i && poke(b,s)["Type2"].toInt() == Pokemon::Curse) && TypeInfo::Eff(attackType, i) < Type::Effective) {
+            if (!(fpoke(b,s).type1 == i && fpoke(b,s).type2 == Pokemon::Curse) && TypeInfo::Eff(attackType, i) < Type::Effective) {
 		poss.push_back(i);
 	    }
 	}
@@ -474,8 +468,8 @@ struct MMConversion2 : public MM
 
     static void uas(int s, int, BS &b) {
     	int type = turn(b,s)["Conversion2Type"].toInt();
-	poke(b,s)["Type1"] = type;
-	poke(b,s)["Type2"] = Pokemon::Curse;
+        fpoke(b,s).type1 = type;
+        fpoke(b,s).type2 = Pokemon::Curse;
 	b.sendMoveMessage(20, 0, s, type, s);
     }
 };
@@ -2345,7 +2339,7 @@ struct MMGrassKnot : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-	float weight = poke(b,t)["Weight"].toDouble();
+        float weight = fpoke(b,t).weight;
 	int bp;
 	/* I had to make some hacks due to the floating point precision, so this is a '<' here and not
 	   a '<='. Will be fixed if someone wants to do it */
@@ -4060,8 +4054,8 @@ struct MMCamouflage : public MM {
     }
 
     static void uas (int s, int, BS &b) {
-        poke(b,s)["Type1"] = Pokemon::Normal;
-        poke(b,s)["Type2"] = Pokemon::Curse;
+        fpoke(b,s).type1 = Pokemon::Normal;
+        fpoke(b,s).type2 = Pokemon::Curse;
         b.sendMoveMessage(17,0,s,0);
     }
 };
@@ -4473,17 +4467,18 @@ struct MMTransform : public MM {
     static void uas(int s, int t, BS &b) {
         QHash<QString, QVariant> &p = poke(b,s);
         /* Give new values to what needed */
-        int num = b.pokenum(t);
+        int num = b.pokenum(t).toPokeRef();
         if (num == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
             num = Pokemon::Giratina;
 
         b.sendMoveMessage(137,0,s,0,s,num);
 
-        p["Num"] = num;
-        p["Weight"] = PokemonInfo::Weight(num);
-        p["Type1"] = PokemonInfo::Type1(num);
-        p["Type2"] = PokemonInfo::Type2(num);
-        p["Ability"] = b.ability(t);
+        BS::BasicPokeInfo &po = fpoke(b,s);
+        po.id = Pokemon::uniqueId(num);
+        po.weight = PokemonInfo::Weight(num);
+        po.type1 = PokemonInfo::Type1(num);
+        po.type2 = PokemonInfo::Type2(num);
+        po.ability = b.ability(t);
 
         b.changeSprite(s, num);
 

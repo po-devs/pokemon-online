@@ -978,11 +978,11 @@ QScriptValue ScriptEngine::pokeNum(const QString &name)
             copy[i] = copy[i].toLower();
         }
     }
-    int num = PokemonInfo::Number(copy);
-    if (num == 0) {
+    Pokemon::uniqueId num = PokemonInfo::Number(copy);
+    if (num.toPokeRef() == Pokemon::NoPoke) {
         return myengine.undefinedValue();
     } else {
-        return num;
+        return num.toPokeRef();
     }
 }
 
@@ -1069,7 +1069,7 @@ QScriptValue ScriptEngine::teamPoke(int id, int index)
     if (!loggedIn(id) || index < 0 || index >= 6) {
         return myengine.undefinedValue();
     } else {
-        return myserver->player(id)->team().poke(index).num();
+        return myserver->player(id)->team().poke(index).num().toPokeRef();
     }
 }
 
