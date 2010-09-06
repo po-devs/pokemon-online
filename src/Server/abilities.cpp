@@ -162,12 +162,12 @@ struct AMColorChange : public AM {
             return;
         if ((s!=t) && type(b,t) != Pokemon::Curse) {
             int tp = type(b,t);
-            if (poke(b,s)["Type2"].toInt() == Pokemon::Curse && tp == poke(b,s)["Type1"].toInt()) {
+            if (fpoke(b,s).type2 == Pokemon::Curse && tp == fpoke(b,s).type1) {
                 return;
             }
             b.sendAbMessage(9,0,s,t,tp,tp);
-            poke(b,s)["Type1"] = tp;
-            poke(b,s)["Type2"] = Pokemon::Curse;
+            fpoke(b, s).type1 = tp;
+            fpoke(b, s).type2 = Pokemon::Curse;
         }
     }
 };
@@ -352,10 +352,12 @@ struct AMFlowerGift : public AM {
     }
 
     static void us(int s, int, BS &b) {
+        if (b.pokenum(s).pokenum != Pokemon::Cherrim)
+            return;
         if (b.weather() == BS::Sunny) {
-            if (b.forme(s) != 1) b.changeAForme(s, 1);
+            if (b.pokenum(s).subnum != 1) b.changeAForme(s, 1);
         } else {
-            if (b.forme(s) != 0) b.changeAForme(s, 0);
+            if (b.pokenum(s).subnum != 0) b.changeAForme(s, 0);
         }
     }
 
@@ -389,12 +391,12 @@ struct AMForeCast : public AM {
             tp = Type::Normal;
         }
 
-        if (poke(b,s)["Type2"].toInt() == Pokemon::Curse && tp == poke(b,s)["Type1"].toInt()) {
+        if (fpoke(b,s).type2 == Pokemon::Curse && tp == fpoke(b,s).type1) {
             return;
         }
         b.sendAbMessage(21,0,s,s,tp);
-        poke(b,s)["Type1"] = tp;
-        poke(b,s)["Type2"] = Pokemon::Curse;
+        fpoke(b,s).type1 = tp;
+        fpoke(b,s).type2 = Pokemon::Curse;
 
         if (b.pokenum(s) == Pokemon::Castform)
             b.changeAForme(s, tp == Type::Normal ? 0 : b.weather());

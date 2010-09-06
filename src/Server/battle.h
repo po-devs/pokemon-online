@@ -3,6 +3,7 @@
 
 #include <QtCore>
 #include "../PokemonInfo/battlestructs.h"
+#include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/mtrand.h"
 #include "../Utilities/contextswitch.h"
 class Player;
@@ -123,9 +124,8 @@ public:
     void koPoke(int player, int source, bool straightattack = false);
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
-    void changeForme(int player, int poke, int newform);
+    void changeForme(int player, int poke, const Pokemon::uniqueId &forme);
     void calculateTypeModStab();
-    int forme(int player);
     void changeAForme(int player, int newforme);
     void gainStatMod(int player, int stat, int bonus, bool tell = true);
     void loseStatMod(int player, int stat, int malus, int attacker);
@@ -172,7 +172,7 @@ public:
     bool hasWorkingAbility(int play, int ability);
     void acquireAbility(int play, int ability);
     int ability(int player);
-    int pokenum(int player);
+    Pokemon::uniqueId pokenum(int player);
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
     bool isSeductionPossible(int seductor, int naiveone);
@@ -199,7 +199,7 @@ public:
     BattleStats constructStats(int player);
 
     void changeTempMove(int player, int slot, int move);
-    void changeSprite(int player, int poke);
+    void changeSprite(int player, Pokemon::uniqueId newForme);
     /* Send a message to the outworld */
     enum BattleCommand
     {
@@ -409,6 +409,15 @@ public:
     context teamzone[2];
     /* Moves that affect a particular Slot (wish, ...) */
     QList<context> slotzone;
+
+    struct BasicPokeInfo {
+        Pokemon::uniqueId id;
+        float weight;
+        int type1;
+        int type2;
+        int ability;
+    };
+    QList<BasicPokeInfo> fieldpokes;
 
     /* The choice of a player, accessed by move ENCORE */
     QList<BattleChoice> choice;

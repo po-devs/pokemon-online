@@ -155,13 +155,13 @@ void Tier::fromString(const QString &s) {
             pokes = rest[0].split(',');
         }
 
-        foreach(QString poke, pokes) {
-            BannedPoke pok = BannedPoke(PokemonInfo::Number(poke.section('@',0,0).trimmed()), ItemInfo::Number(poke.section('@',1,1).trimmed()));
-            if (pok.poke != 0) {
-                bannedPokes.push_back(pok);
-                bannedPokes2.insert(pok.poke, pok);
-            }
-        }
+//        foreach(QString poke, pokes) {
+//            BannedPoke pok = BannedPoke(PokemonInfo::Number(poke.section('@',0,0).trimmed()), ItemInfo::Number(poke.section('@',1,1).trimmed()));
+//            if (pok.poke != 0) {
+//                bannedPokes.push_back(pok);
+//                bannedPokes2.insert(pok.poke, pok);
+//            }
+//        }
     }
 }
 
@@ -182,14 +182,14 @@ int Tier::count()
 }
 
 bool Tier::isBanned(const PokeBattle &p) const {
-    if (bannedPokes2.contains(p.num())) {
-        QList<BannedPoke> values = bannedPokes2.values(p.num());
-
-        foreach (BannedPoke b, values) {
-            if (b.item == 0 || b.item == p.item())
-                return true;
-        }
-    }
+//    if (bannedPokes2.contains(p.num())) {
+//        QList<BannedPoke> values = bannedPokes2.values(p.num());
+//
+//        foreach (BannedPoke b, values) {
+//            if (b.item == 0 || b.item == p.item())
+//                return true;
+//        }
+//    }
     if (parent.length() > 0 && boss != NULL) {
         return boss->tier(parent).isBanned(p);
     } else {

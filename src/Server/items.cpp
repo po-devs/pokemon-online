@@ -184,7 +184,7 @@ struct IMBoostPokeStat : public IM
 	functions["StatModifier"] = &sm;
     }
     static void sm(int s,int, BS &b) {
-        int num = b.pokenum(s);
+        int num = b.pokenum(s).pokenum;
 	QStringList args = poke(b,s)["ItemArg"].toString().split('_');
 	if(!args[0].split('/').contains(QString::number(num))) {
 	    return;
@@ -321,7 +321,7 @@ struct IMCriticalPoke : public IM
     }
 
     static void btl(int s, int, BS &b) {
-	if (poke(b,s)["Num"] == poke(b,s)["ItemArg"]) {
+        if (b.pokenum(s).pokenum == poke(b,s)["ItemArg"].toInt()) {
 	    inc(turn(b,s)["CriticalRaise"], 2);
 	}
     }
@@ -335,7 +335,7 @@ struct IMPokeTypeBoost : public IM
     static void bpm(int s, int, BS &b) {
 	QStringList args = poke(b,s)["ItemArg"].toString().split('_');
         QStringList pokes = args[0].split('/');
-        if (!pokes.contains(QString::number(b.pokenum(s))))
+        if (!pokes.contains(QString::number(b.pokenum(s).pokenum)))
 	    return;
 
 	QString type = turn(b,s)["Type"].toString();
