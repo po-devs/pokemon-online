@@ -40,8 +40,8 @@ Pokedex::Pokedex(TeamBuilder *parent)
     PokedexBody *body = new PokedexBody();
     secondCol->addWidget(body, 100);
 
-    connect(body, SIGNAL(pokeChanged(int)), bop, SLOT(changeToPokemon(int)));
-    connect(bop, SIGNAL(pokemonChanged(int)), body, SLOT(changeToPokemonFromExt(int)));
+    connect(body, SIGNAL(pokeChanged(Pokemon::uniqueId)), bop, SLOT(changeToPokemon(Pokemon::uniqueId)));
+    connect(bop, SIGNAL(pokemonChanged(Pokemon::uniqueId)), body, SLOT(changeToPokemonFromExt(Pokemon::uniqueId)));
     connect(type, SIGNAL(clicked()), SLOT(showTypeChart()));
 }
 
@@ -177,20 +177,19 @@ BigOpenPokeBall::BigOpenPokeBall()
     connect(shinyBox, SIGNAL(toggled(bool)), SLOT(updatePicture()));
 }
 
-void BigOpenPokeBall::changeToPokemon(int poke)
+void BigOpenPokeBall::changeToPokemon(Pokemon::uniqueId poke)
 {
-    forme = 0;
     currentPoke = poke;
     evo->setDisabled(!PokemonInfo::IsInEvoChain(poke));
-    formes->setDisabled(!PokemonInfo::HasAestheticFormes(poke) && !PokemonInfo::HasFormes(poke));
+    formes->setDisabled(!PokemonInfo::HasFormes(poke));
 
     update();
 }
 
 void BigOpenPokeBall::update()
 {
-    int n = currentPoke;
-    num->setText(QString("%1").arg(n));
+    Pokemon::uniqueId n = currentPoke;
+    num->setText(QString("%1").arg(n.pokenum));
     name->setText(PokemonInfo::Name(n));
     specy->setText(PokemonInfo::Classification(n));
     height->setText(tr("<b>Ht:</b> %1").arg(PokemonInfo::Height(n)));
@@ -226,40 +225,25 @@ void BigOpenPokeBall::changeToNext()
 {
     if (formes->isChecked()) {
         if (formes->isEnabled()) {
-            if (PokemonInfo::HasAestheticFormes(currentPoke)) {
-                if (forme + 1 == PokemonInfo::NumberOfAFormes(currentPoke)) {
-                    forme = 0;
-                    updatePicture();
+            QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(currentPoke);
+            for (int i = 0; i < formes.size() - 1; i++) {
+                if (formes[i] == currentPoke) {
+                    emit pokemonChanged(formes[i+1]);
                     return;
                 }
-                forme += 1;
-                if (PokemonInfo::AestheticDesc(currentPoke, forme) != "") {
-                    updatePicture();
-                    return;
-                } else {
-                    changeToNext();
-                }
-            } else {
-                QList<int> formes = PokemonInfo::Formes(currentPoke);
-                for (int i = 0; i < formes.size() - 1; i++) {
-                    if (formes[i] == currentPoke) {
-                        emit pokemonChanged(formes[i+1]);
-                        return;
-                    }
-                }
-                emit pokemonChanged(formes[0]);
-                return;
             }
+            emit pokemonChanged(formes[0]);
+            return;
         }
     } else if (evo->isChecked() && evo->isEnabled()) {
-        QList<int> formes = PokemonInfo::Evos(currentPoke);
+        QList<int> formes = PokemonInfo::Evos(currentPoke.pokenum);
         for (int i = 0; i < formes.size() - 1; i++) {
-            if (formes[i] == currentPoke) {
-                emit pokemonChanged(formes[i+1]);
+            if (formes[i] == currentPoke.pokenum) {
+                emit pokemonChanged(Pokemon::uniqueId(formes[i+1]));
                 return;
             }
         }
-        emit pokemonChanged(formes[0]);
+        emit pokemonChanged(Pokemon::uniqueId(formes[0]));
         return;
     }
 }
@@ -269,48 +253,33 @@ void BigOpenPokeBall::changeToPrevious()
 {
     if (formes->isChecked()) {
         if (formes->isEnabled()) {
-            if (PokemonInfo::HasAestheticFormes(currentPoke)) {
-                if (forme == 0) {
-                    forme = PokemonInfo::NumberOfAFormes(currentPoke) - 1;
-                    updatePicture();
+            QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(currentPoke);
+            for (int i = 1; i < formes.size(); i++) {
+                if (formes[i] == currentPoke) {
+                    emit pokemonChanged(formes[i-1]);
                     return;
                 }
-                forme -= 1;
-                if (PokemonInfo::AestheticDesc(currentPoke, forme) != "") {
-                    updatePicture();
-                    return;
-                } else {
-                    changeToPrevious();
-                }
-            } else {
-                QList<int> formes = PokemonInfo::Formes(currentPoke);
-                for (int i = 1; i < formes.size(); i++) {
-                    if (formes[i] == currentPoke) {
-                        emit pokemonChanged(formes[i-1]);
-                        return;
-                    }
-                }
-                emit pokemonChanged(formes[formes.size()-1]);
-                return;
             }
+            emit pokemonChanged(formes[formes.size()-1]);
+            return;
         }
     }else if (evo->isChecked() && evo->isEnabled()) {
-        QList<int> formes = PokemonInfo::Evos(currentPoke);
+        QList<int> formes = PokemonInfo::Evos(currentPoke.pokenum);
         for (int i = 1; i < formes.size(); i++) {
-            if (formes[i] == currentPoke) {
-                emit pokemonChanged(formes[i-1]);
+            if (formes[i] == currentPoke.pokenum) {
+                emit pokemonChanged(Pokemon::uniqueId(formes[i-1]));
                 return;
             }
         }
-        emit pokemonChanged(formes[formes.size()-1]);
+        emit pokemonChanged(Pokemon::uniqueId(formes[formes.size()-1]));
         return;
     }
 }
 
 void BigOpenPokeBall::updatePicture()
 {
-    front->changePic(PokemonInfo::Picture(currentPoke, forme, PokemonInfo::BaseGender(currentPoke),shiny(),false));
-    back->changePic(PokemonInfo::Picture(currentPoke, forme, PokemonInfo::BaseGender(currentPoke),shiny(),true));
+    front->changePic(PokemonInfo::Picture(currentPoke, PokemonInfo::BaseGender(currentPoke),shiny(),false));
+    back->changePic(PokemonInfo::Picture(currentPoke, PokemonInfo::BaseGender(currentPoke),shiny(),true));
 }
 
 bool BigOpenPokeBall::shiny() const
@@ -395,9 +364,9 @@ void PokedexBody::sortByColumn(int col)
 
 void PokedexBody::changeToPokemon(const QString &poke)
 {
-    int num = PokemonInfo::Number(poke);
+    Pokemon::uniqueId num = PokemonInfo::Number(poke);
 
-    if (num != 0 && currentPoke != num) {
+    if (num != Pokemon::uniqueId(Pokemon::NoPoke) && currentPoke != num) {
         currentPoke = num;
         emit pokeChanged(num);
 
@@ -405,11 +374,11 @@ void PokedexBody::changeToPokemon(const QString &poke)
     }
 }
 
-void PokedexBody::changeToPokemonFromExt(int poke)
+void PokedexBody::changeToPokemonFromExt(Pokemon::uniqueId poke)
 {
-    int num = poke;
+    Pokemon::uniqueId num = poke;
 
-    if (num != 0 && currentPoke != num) {
+    if (num != Pokemon::uniqueId(Pokemon::NoPoke) && currentPoke != num) {
         currentPoke = num;
         emit pokeChanged(num);
 
@@ -422,7 +391,7 @@ void PokedexBody::changePokemon()
     changeToPokemon(pokeEdit->text());
 }
 
-void PokedexBody::changeToPokemon(int poke)
+void PokedexBody::changeToPokemon(Pokemon::uniqueId poke)
 {
     pokeEdit->setText(PokemonInfo::Name(poke));
 }
@@ -442,7 +411,7 @@ void PokedexBody::openAdvancedSearch()
 
     aSearch = new AdvancedSearch();
     aSearch->show();
-    connect(aSearch, SIGNAL(pokeSelected(int)), SLOT(changeToPokemonFromExt(int)));
+    connect(aSearch, SIGNAL(pokeSelected(Pokemon::uniqueId)), SLOT(changeToPokemonFromExt(Pokemon::uniqueId)));
     connect(this, SIGNAL(destroyed()), aSearch, SLOT(close()));
 }
 
