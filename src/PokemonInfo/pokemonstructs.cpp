@@ -1123,34 +1123,39 @@ quint32 Pokemon::uniqueId::toPokeRef() const
     return pokenum + (subnum << 16);
 }
 
-bool Pokemon::uniqueId::extract(const QString &from, Pokemon::uniqueId &data, QString &options, QString &remaining)
+/* Extracts the pokenum part and data from a line of text. The pokenum part will be put in the "id" field, the
+   content of the line (without the index) in the "lineData" field. If options are given in the index, they'll
+   be put in the "options" field. */
+bool Pokemon::uniqueId::extract(const QString &from, Pokemon::uniqueId &id, QString &lineData, QString *options)
 {
-    bool result = false;
-    if(!from.isEmpty()) {
-        int space_pos = from.indexOf(' '); // 1 space delimeter (first)
-        if(space_pos != -1) {
-            QString poke_name = from.mid(space_pos + 1);
-            if(!poke_name.isEmpty()){
-                // ":" delimeter for values. pokenum:subnum:1-letter-options
-                QStringList values = from.left(space_pos).split(':');
-                if(values.size() > 1) {
-                    bool ok, ok2;
-                    uint num = values[0].toUInt(&ok);
-                    uint sub = values[1].toUInt(&ok2);
-                    if(ok && ok2) {
-                        remaining = poke_name;
-                        data.pokenum = num;
-                        data.subnum = sub;
-                        result = true;
-                        // optional: options
-                        options.clear();
-                        if(values.size() > 2) options = values[2];
-                    } // if ok
-                } // if values
-            } // if !poke_name
-        } // if space_pos
-    } // if !from
-    return result;
+    if (from.isEmpty() || from.indexOf(' ') == -1)
+        return false;
+
+   // ":" delimeter for values. pokenum:subnum:1-letter-options
+    QStringList values = from.section(' ', 0, 0).split(':');
+
+    if (values.size() < 2)
+        return false;
+
+    bool ok, ok2;
+    uint num = values[0].toUInt(&ok);
+    uint sub = values[1].toUInt(&ok2);
+
+    if (!ok || !ok2)
+        return false;
+
+    lineData = from.section(' ', 1);
+    id.pokenum = num;
+    id.subnum = sub;
+
+    // optional: options
+    if (options) {
+        options->clear();
+        if(values.size() > 2)
+            *options = values[2];
+    }
+
+    return true;
 }
 
 bool Pokemon::uniqueId::extract_short(const QString &from, quint16 &pokenum, QString &remaining)
