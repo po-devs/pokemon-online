@@ -2,6 +2,7 @@
 #define POKEDEX_H
 
 #include <QtGui>
+#include "../PokemonInfo/pokemonstructs.h"
 
 class TeamBuilder;
 class TB_PokeChoice;
@@ -31,15 +32,14 @@ public:
     void update();
     bool shiny() const;
 public slots:
-    void changeToPokemon(int poke);
+    void changeToPokemon(Pokemon::uniqueId poke);
     void updatePicture();
     void changeToNext();
     void changeToPrevious();
 signals:
-    void pokemonChanged(int);
+    void pokemonChanged(Pokemon::uniqueId);
 private:
-    int currentPoke;
-    int forme;
+    Pokemon::uniqueId currentPoke;
     QPushButton *evo, *formes;
     QLabel *num, *name;
     QLabel *specy;
@@ -61,19 +61,19 @@ class PokedexBody : public QFrame
 public:
     PokedexBody();
 
-    void changeToPokemon(int poke);
+    void changeToPokemon(Pokemon::uniqueId poke);
 public slots:
     void sortByColumn(int col);
-    void changeToPokemonFromExt(int poke);
+    void changeToPokemonFromExt(Pokemon::uniqueId);
     void openAdvancedSearch();
+signals:
+    void pokeChanged(Pokemon::uniqueId newPoke);
 private slots:
     void changeToPokemon(const QString &);
     void changePokemon();
     void changePokemonFromRow(int);
-signals:
-    void pokeChanged(int newPoke);
 private:
-    int currentPoke;
+    Pokemon::uniqueId currentPoke;
     TB_PokeChoice * pokeList;
     QLineEdit *pokeEdit;
     QPointer<AdvancedSearch> aSearch;
@@ -179,7 +179,7 @@ class AdvancedSearch : public QWidget
 public:
     AdvancedSearch();
 signals:
-    void pokeSelected(int);
+    void pokeSelected(Pokemon::uniqueId);
 private slots:
     void search();
     void pokeClicked(QModelIndex);
