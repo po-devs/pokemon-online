@@ -282,7 +282,7 @@ beforeChatMessage: function(src, message, chan) {
         return;
     }
     
-    if (sys.auth(src) < 2 && muted[src] === true && message != "!join" && message != "/rules" && message != "/join" && message != !"rules") {
+    if (sys.auth(src) < 2 && muted[src] === true && message != "!join" && message != "/rules" && message != "/join" && message != "rules") {
         sendChanMessage(src, "+Bot: You are muted");
         sys.stopEvent();
         return;
