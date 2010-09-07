@@ -112,6 +112,7 @@ QTextEdit#MainChat {
 	background-attachment: fixed;
 	background-repeat: repeat;
 	background-position: center;
+	background-color: white;
 }
 
 QLabel#Announcement {
