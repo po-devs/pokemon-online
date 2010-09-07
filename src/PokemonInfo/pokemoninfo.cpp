@@ -42,7 +42,7 @@ int PokemonInfo::m_trueNumberOfPokes;
 QHash<int, QList<int> > PokemonInfo::m_Evolutions;
 QHash<int, int> PokemonInfo::m_OriginalEvos;
 QList<Pokemon::uniqueId> PokemonInfo::m_VisiblePokesPlainList;
-QList<int> PokemonInfo::m_PreEvos;
+QHash<int, int> PokemonInfo::m_PreEvos;
 
 QString MoveInfo::m_Directory;
 QList<QString> MoveInfo::m_Names;
@@ -544,9 +544,9 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
     if (data.length()==0)
     {
         if (gen == 3) {
-            return PokemonInfo::Picture(pokenum, 4, forme, gender, shiney, back);
+            return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
         } else if (gen == 4 && gender == Pokemon::Female) {
-            return PokemonInfo::Picture(pokenum, 4, forme, Pokemon::Male, shiney, back);
+            return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, shiney, back);
         }
         return QPixmap();
     }

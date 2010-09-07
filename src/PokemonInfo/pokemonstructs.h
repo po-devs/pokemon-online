@@ -1641,6 +1641,21 @@ public:
 /* Contains / loads the graphics of a pokemon */
 class PokeGraphics
 {
+public:
+    PokeGraphics();
+    QPixmap picture(); /* just gives the already loaded picture */
+    QPixmap picture(int gender, bool shiny); /* loads a new picture if necessary, anyway gives the right picture */
+    QIcon icon();
+    QIcon icon(const Pokemon::uniqueId &pokeid);
+
+
+    void setNum(Pokemon::uniqueId num);
+    void setGen(int gen);
+    Pokemon::uniqueId num() const;
+    int gen() const;
+
+    void load(int gender, bool shiny);
+    void loadIcon(const Pokemon::uniqueId &pokeid);
 protected:
     /* This is the current implementation, but an implemenation where more than one
        image is stored can do to */
@@ -1655,20 +1670,6 @@ protected:
 
     void setUpToDate(bool uptodate);
     bool upToDate() const;
-public:
-    PokeGraphics();
-    QPixmap picture(); /* just gives the already loaded picture */
-    QPixmap picture(int gender, bool shiny); /* loads a new picture if necessary, anyway gives the right picture */
-    QIcon icon();
-    QIcon icon(const Pokemon::uniqueId &pokeid);
-
-
-    void setNum(Pokemon::uniqueId num);
-    Pokemon::uniqueId num() const;
-    int gen() const;
-
-    void load(int gender, bool shiny);
-    void loadIcon(const Pokemon::uniqueId &pokeid);
 };
 
 class PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtual public PokeGraphics

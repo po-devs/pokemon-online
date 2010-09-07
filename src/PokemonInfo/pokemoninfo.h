@@ -58,8 +58,8 @@ public:
     static QByteArray Cry(const Pokemon::uniqueId &pokeid);
     static int Type1(const Pokemon::uniqueId &pokeid);
     static int Type2(const Pokemon::uniqueId &pokeid);
-    static QPixmap Picture(const Pokemon::uniqueId &pokeid, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
-    static QPixmap Sub(bool back = false);
+    static QPixmap Picture(const Pokemon::uniqueId &pokeid, int gen = 4, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
+    static QPixmap Sub(int gen=4, bool back = false);
     static QPixmap Icon(const Pokemon::uniqueId &pokeid);
     static QSet<int> Moves(const Pokemon::uniqueId &pokeid, int gen = 4);
     static QSet<int> EggMoves(const Pokemon::uniqueId &pokeid, int gen = 4);

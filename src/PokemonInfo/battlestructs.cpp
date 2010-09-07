@@ -313,13 +313,11 @@ bool TeamBattle::invalid() const
 
 void TeamBattle::generateRandom(int gen)
 {
-    this->gen = gen;
-<<<<<<< HEAD
     QList<Pokemon::uniqueId> pokes;
     for (int i = 0; i < 6; i++) {
         while(1) {
             Pokemon::uniqueId num = PokemonInfo::getRandomPokemon();
-            if (pokes.contains(num) || num == Pokemon::NoPoke || !PokemonInfo::Exists(num, gen)) {
+            if (pokes.contains(num) || !PokemonInfo::Exists(num, gen)) {
                 continue ;
             }
             pokes.push_back(num);
