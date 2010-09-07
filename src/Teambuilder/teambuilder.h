@@ -148,8 +148,10 @@ private slots:
     void changeTrainerLose();
     void changeTrainerAvatar(int);
     void changeTrainerColor();
+    void changeTier(const QString &);
 private:
     QLineEdit *m_nick;
+    QLineEdit *m_tier;
     QPlainTextEdit *m_winMessage, *m_loseMessage, *m_trainerInfo;
     QPushButton *m_colorButton;
     AvatarBox *m_avatar;

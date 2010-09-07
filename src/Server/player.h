@@ -2,12 +2,14 @@
 #define PLAYER_H
 
 #include "../PokemonInfo/networkstructs.h"
-#include "analyze.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "playerinterface.h"
 
 class Challenge;
 class BattleSituation;
+class Analyzer;
+class QTcpSocket;
+
 /* a single player */
 /***
   WARNING! Always use deleteLater!!
@@ -23,6 +25,7 @@ class Player : public QObject, public PlayerInterface
     PROPERTY(bool, showteam);
     PROPERTY(QString, tier);
     PROPERTY(quint16, avatar);
+    PROPERTY(QString, defaultTier);
     PROPERTY(QColor, color);
     PROPERTY(bool, battleSearch);
     PROPERTY(QString, winningMessage);
@@ -58,6 +61,7 @@ public:
     int id() const;
     QString name() const;
     QString ip() const;
+    int gen() const;
 
     bool connected() const;
     bool isLoggedIn() const;
@@ -88,7 +92,7 @@ public:
     void removeChallenge(Challenge *c);
     void cancelChallenges();
     bool okForBattle() const;
-    void spectateBattle(const QString &name0, const QString &name1, int battleId, bool doubles);
+    void spectateBattle(int battleId, const BattleConfiguration &battle);
     void sendChallengeStuff(const ChallengeInfo &c);
 
     QSet<int> &getChannels() {
@@ -99,7 +103,7 @@ public:
 
     ChallengeInfo getChallengeInfo(int id); /* to get the battle info of a challenge received by that player */
 
-    void startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles);
+    void startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf);
     void battleResult(int battleid, int result, int winner, int loser);
 
     void kick();
@@ -143,9 +147,9 @@ signals:
     void joinRequested(int id, const QString &channel);
     void leaveRequested(int id, int channelid);
 public slots:
-    void loggedIn(const TeamInfo &team,bool,bool, QColor);
+    void loggedIn(TeamInfo &team,bool,bool, QColor);
     void recvMessage(int chan, const QString &mess);
-    void recvTeam(const TeamInfo &team);
+    void recvTeam(TeamInfo &team);
     void disconnected();
     void challengeStuff(const ChallengeInfo &c);
     void battleForfeited(int id);
@@ -179,7 +183,7 @@ public slots:
     void leaveRequested(int slotid);
 private:
     TeamBattle myteam;
-    Analyzer myrelay;
+    Analyzer *myrelay;
     int lockCount;
 
     int myid;
@@ -231,7 +235,7 @@ private:
     /* The channels a player is on */
     QSet<int> channels;
 
-    void assignTeam(const TeamInfo &team);
+    void assignTeam(TeamInfo &team);
     void assignNewColor(const QColor &c);
     bool testNameValidity(const QString &name);
     void loginSuccess();

@@ -7,7 +7,7 @@ Channel::Channel(const QString &name, int id, Client *parent)
 {
     /* Those will actually be gotten back by the client itself, when
        he adds the channel */
-    mymainchat = new QScrollDownTextEdit();
+    mymainchat = new QScrollDownTextBrowser();
     myplayers = new QTreeWidget();
     battleList = new QTreeWidget();
 
@@ -95,36 +95,23 @@ void Channel::showContextMenu(const QPoint &requested)
     }
 }
 
-void Channel::sortAllPlayersByTier()
+void Channel::getBackAllPlayerItems()
 {
-    foreach(QIdTreeWidgetItem *it, myplayersitems)
-    {
+    foreach(QIdTreeWidgetItem *it, myplayersitems) {
         if (it->parent())
             it->parent()->takeChild(it->parent()->indexOfChild(it));
-        else
+        else {
             myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
+        }
     }
+}
 
-    foreach(QIdTreeWidgetItem *it, mytiersitems)
-    {
-        delete myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
-    }
-
+void Channel::sortAllPlayersByTier()
+{
+    getBackAllPlayerItems();
+    myplayers->clear();
     mytiersitems.clear();
-
-    foreach(QString tier, client->getTierList()) {
-        QIdTreeWidgetItem *it = new QIdTreeWidgetItem(0, QStringList() << tier);
-        //it->setBackgroundColor("#0CA0DD");
-        //it->setColor("white");
-        QFont f = it->font(0);
-        f.setPixelSize(14);
-        it->setFont(0,f);
-        it->setText(0,tier);
-        myplayers->addTopLevelItem(it);
-        mytiersitems.insert(tier, it);
-
-    }
-    myplayers->expandAll();
+    mytiersitems = client->tierRoot.buildOnTree(myplayers);
 
     QHash<int, QIdTreeWidgetItem *>::iterator iter;
 
@@ -138,27 +125,24 @@ void Channel::sortAllPlayersByTier()
         }
     }
 
-    myplayers->headerItem()->sortChildren(0, Qt::AscendingOrder);
-    foreach(QIdTreeWidgetItem *it, mytiersitems) {
-        it->sortChildren(0, Qt::AscendingOrder);
+    /* Ugly! Remove all non used tier items*/
+    QHashIterator<QString, QTreeWidgetItem*> hash(mytiersitems);
+
+    while (hash.hasNext()) {
+        hash.next();
+        if (hash.value()->childCount() == 0) {
+            delete hash.value();
+            mytiersitems.remove(hash.key());
+        }
     }
+
+    myplayers->expandAll();
 }
 
 void Channel::sortAllPlayersNormally()
 {
-    foreach(QIdTreeWidgetItem *it, myplayersitems)
-    {
-        if (it->parent())
-            it->parent()->takeChild(it->parent()->indexOfChild(it));
-        else
-            myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
-    }
-
-    foreach(QIdTreeWidgetItem *it, mytiersitems)
-    {
-        delete myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
-    }
-
+    getBackAllPlayerItems();
+    myplayers->clear();
     mytiersitems.clear();
 
     QHash<int, QIdTreeWidgetItem *>::iterator iter;
@@ -264,8 +248,11 @@ void Channel::playerReceived(int playerid) {
     item->setColor(client->color(playerid));
 
     QString tier = client->tier(playerid);
-    if (client->sortBT && mytiersitems.contains(tier)) {
-        placeItem(item, mytiersitems.value(tier));
+    if (client->sortBT) {
+        if (mytiersitems.contains(tier))
+            placeItem(item, mytiersitems.value(tier));
+        else
+            sortAllPlayersByTier();
     } else {
         placeItem(item,NULL);
     }
@@ -306,8 +293,11 @@ void Channel::insertNewPlayer(int playerid)
     myplayersitems.insert(playerid, item);
 
     QString tier = client->tier(playerid);
-    if (client->sortBT && mytiersitems.contains(tier)) {
-        placeItem(item, mytiersitems.value(tier));
+    if (client->sortBT && client->tierList.contains(tier)) {
+        if (mytiersitems.contains(tier))
+            placeItem(item, mytiersitems.value(tier));
+        else
+            sortAllPlayersByTier();
     } else {
         placeItem(item,NULL);
     }
@@ -409,11 +399,13 @@ void Channel::removePlayer(int id) {
 
     /* Players List */
     QIdTreeWidgetItem *item = myplayersitems.take(id);
+    bool sortAll = false;
+    if (client->sortBT && item->parent() && item->parent()->childCount() == 1)
+        sortAll = true;
     if (item->parent())
         item->parent()->takeChild(item->parent()->indexOfChild(item));
     else
         myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(item));
-
     delete item;
 
     /* Battleslist */
@@ -433,6 +425,10 @@ void Channel::removePlayer(int id) {
 
     foreach(int id, dlt) {
         battles.remove(id);
+    }
+
+    if (sortAll) {
+        sortAllPlayersByTier();
     }
 }
 

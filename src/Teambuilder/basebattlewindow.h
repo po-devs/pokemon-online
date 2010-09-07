@@ -9,7 +9,7 @@
 #include <phonon/audiooutput.h>
 
 class BaseBattleDisplay;
-class QScrollDownTextEdit;
+class QScrollDownTextBrowser;
 class QClickPBar;
 
 struct BaseBattleInfo
@@ -30,6 +30,8 @@ struct BaseBattleInfo
 
     int myself;
     int opponent;
+
+    int gen;
 
     /* Opponent pokemon */
     ShallowBattlePoke pokemons[2][6];
@@ -70,6 +72,7 @@ class BaseBattleWindow : public QWidget
     PROPERTY(int, animatedHpSpot);
     PROPERTY(int, animatedHpGoal);
     PROPERTY(bool, started);
+    PROPERTY(BattleConfiguration, conf);
 public:
     BaseBattleInfo *myInfo;
     const BaseBattleInfo &info() const {
@@ -79,7 +82,11 @@ public:
         return *myInfo;
     }
 
-    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, bool doubles);
+    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf);
+
+    int gen() const {
+        return info().gen;
+    }
 
     enum BattleCommand
     {
@@ -216,8 +223,8 @@ protected:
     bool ignoreSpecs;
 
     QGridLayout *mylayout;
-    QScrollDownTextEdit *mychat;
-    QLineEdit *myline;
+    QScrollDownTextBrowser *mychat;
+	QIRCLineEdit *myline;
     BaseBattleDisplay *mydisplay;
     QPushButton *myclose, *mysend;
     Client *_mclient;

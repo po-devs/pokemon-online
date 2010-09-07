@@ -37,13 +37,11 @@ class BattleMove
 {
     PROPERTY(quint8, PP);
     PROPERTY(quint8, totalPP);
-    PROPERTY(quint8, power);
-    PROPERTY(quint8, type);
     PROPERTY(quint16, num);
 public:
     BattleMove();
 
-    void load();
+    void load(int gen);
     operator int () {return num();}
 };
 
@@ -70,7 +68,7 @@ class PokeBattle
 public:
     PokeBattle();
 
-    void init(const PokePersonal &poke);
+    void init(PokePersonal &poke);
 
     BattleMove& move(int i);
     const BattleMove& move(int i) const;
@@ -117,9 +115,9 @@ class TeamBattle
 public:
     TeamBattle();
     /* removes the invalid pokemons */
-    TeamBattle(const TeamInfo &other);
-    void init(const TeamInfo &other);
-    void generateRandom();
+    TeamBattle(TeamInfo &other);
+    void init(TeamInfo &other);
+    void generateRandom(int gen);
 
     PokeBattle& poke(int i);
     const PokeBattle& poke(int i) const;
@@ -128,6 +126,7 @@ public:
 
     QString name;
     QString info;
+    int gen;
 private:
     PokeBattle m_pokemons[6];
 };
@@ -169,7 +168,7 @@ struct BattleChoice
 
     /* returns true if the choice is valid */
     bool match(const BattleChoices &avail) const;
-    int  getChoice() const { return numSwitch; };
+    int  getChoice() const { return numSwitch; }
     bool attack() const { return !pokeSwitch; }
     bool poke() const { return pokeSwitch; }
     bool cancelled() const { return numSwitch == Cancel; }
@@ -189,6 +188,7 @@ struct ChallengeInfo
         Busy,
         Refused,
         InvalidTeam,
+        InvalidGen,
 
         ChallengeDescLast
     };
@@ -230,6 +230,16 @@ struct ChallengeInfo
         return index >= 0 && index < numberOfClauses ? clauseDescription[index] : "";
     }
 
+    /* Insensitive case search for the clause, returns -1 if not found */
+    static int clause (const QString &name) {
+        for (int i = 0; i < numberOfClauses; i++) {
+            if (clauseText[i].toLower() == name.toLower()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     quint32 clauses;
 
     qint8 dsc;
@@ -256,6 +266,8 @@ QDataStream & operator << (QDataStream &out, const ChallengeInfo &c);
 
 struct BattleConfiguration
 {
+    quint8 gen;
+    bool doubles;
     qint32 ids[2];
 
     int slot(int spot, int poke = 0) const  {
@@ -269,14 +281,14 @@ struct BattleConfiguration
 
 inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)
 {
-    in >> c.ids[0] >> c.ids[1];
+    in >> c.gen >> c.doubles >> c.ids[0] >> c.ids[1];
 
     return in;
 }
 
 inline QDataStream & operator << (QDataStream &out, const BattleConfiguration &c)
 {
-    out << c.ids[0] << c.ids[1];
+    out << c.gen << c.doubles << c.ids[0] << c.ids[1];
 
     return out;
 }

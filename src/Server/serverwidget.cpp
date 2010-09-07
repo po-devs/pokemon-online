@@ -14,7 +14,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
 #include "../Shared/config.h"
-#include "tiermachine.h"
+#include "tierwindow.h"
 #include "battlingoptions.h"
 #include "sql.h"
 #include "sqlconfig.h"
@@ -30,7 +30,7 @@ ServerWidget::ServerWidget(Server *myserver)
     mylist = new QListWidget();
     mylayout->addWidget(mylist,1,0,2,1);
 
-    mymainchat = new QScrollDownTextEdit();
+    mymainchat = new QScrollDownTextBrowser();
     mylayout->addWidget(mymainchat,1,1);
 
     myline = new QLineEdit();
@@ -204,7 +204,7 @@ void ServerWidget::openSqlConfigWindow()
 }
 
 
-QScrollDownTextEdit * ServerWidget::mainchat()
+QScrollDownTextBrowser * ServerWidget::mainchat()
 {
     return mymainchat;
 }

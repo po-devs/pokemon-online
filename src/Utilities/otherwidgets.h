@@ -93,13 +93,13 @@ public:
 private:
     int myid;
 };
-/* A textedit that scrolls down automatically, unless not down, and that
+/* A textbrowser that scrolls down automatically, unless not down, and that
    always insert the text at the end */
-class QScrollDownTextEdit : public QTextEdit
+class QScrollDownTextBrowser : public QTextBrowser
 {
     Q_OBJECT
 public:
-    QScrollDownTextEdit();
+    QScrollDownTextBrowser();
 
     void setAutoClear(bool a) {
         autoClear = a;
@@ -204,14 +204,15 @@ class QIRCLineEdit : public QLineEdit
     Q_OBJECT
 public:
     QIRCLineEdit();
+
+    void clear();
 private:
     void keyPressEvent(QKeyEvent *);
-    QList<QString> m_Inputlist1;//Stores the inputed strings,up list.
-    QList<QString> m_Inputlist2;//Stores the inputed strings,down list.
+    //QList<QString> m_Inputlist1;//Stores the inputed strings,up list.
+    //QList<QString> m_Inputlist2;//Stores the inputed strings,down list.
+    QList<QString> m_Inputlist;
+    quint16 listindex;
     //QString m_Currentline;//Stores a copy of the current text in the LineEdit.
-public slots:
-    void myTextEdited();
-    void myclear();
 };
 
 #endif // OTHERWIDGETS_H

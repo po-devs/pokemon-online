@@ -20,6 +20,9 @@ QDataStream &operator << (QDataStream &out, const TeamInfo& team)
     out << team.lose;
     out << team.win;
     out << team.avatar;
+    out << team.defaultTier;
+
+    out << team.gen;
 
     for (int i = 0; i < 6; i++)
 	out << team.pokemon(i);
@@ -34,8 +37,19 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
     in >> team.lose;
     in >> team.win;
     in >> team.avatar;
+    in >> team.defaultTier;
 
-    for (int i = 0; i < 6; i++) in >> team.pokemon(i);
+    in >> team.gen;
+
+    for (int i = 0; i < 6; i++) {
+		in >> team.pokemon(i);
+    }
+
+    if (team.gen != 3)
+        team.gen = 4;
+
+    for (int i = 0; i < 6; i++)
+        team.pokemon(i).gen() = team.gen;
 
     if (team.info.length() > 300) {
         team.info.resize(300);
@@ -86,6 +100,7 @@ QDataStream & operator >> (QDataStream &in, PlayerInfo &p)
     in >> p.avatar;
     in >> p.tier;
     in >> p.color;
+    in >> p.gen;
 
     return in;
 }
@@ -105,6 +120,7 @@ QDataStream & operator << (QDataStream &out, const PlayerInfo &p)
     out << p.avatar;
     out << p.tier;
     out << p.color;
+    out << p.gen;
 
     return out;
 }

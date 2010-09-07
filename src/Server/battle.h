@@ -22,6 +22,7 @@ class BattleSituation : public ContextCallee
     PROPERTY(bool, doubles);
     PROPERTY(int, numberOfSlots);
     PROPERTY(bool, blocked);
+    PROPERTY(int, gen);
 public:
     enum {
 	AllButPlayer = -2,
@@ -77,6 +78,7 @@ public:
     const PokeBattle &poke(int player, int poke) const;
     int currentPoke(int player) const;
     bool koed(int player) const;
+    bool wasKoed(int player) const;
     int player(int slot) const;
     /* Returns -1 if none */
     int randomOpponent(int slot) const;
@@ -170,7 +172,7 @@ public:
     void fail(int player, int move, int part=0, int type=0, int trueSource = -1);
     bool hasType(int player, int type);
     bool hasWorkingAbility(int play, int ability);
-    void acquireAbility(int play, int ability);
+    void acquireAbility(int play, int ability, bool firstTime=false);
     int ability(int player);
     Pokemon::uniqueId pokenum(int player);
     bool hasWorkingItem(int player, int item);

@@ -58,7 +58,7 @@ class BattleWindow : public BaseBattleWindow
 
     PROPERTY(BattleConfiguration, conf);
 public:
-    BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf, bool doubles);
+    BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf);
 
     BattleInfo &info() {
         return *(BattleInfo*)(&BaseBattleWindow::info());
@@ -168,7 +168,7 @@ class AttackZone : public QWidget
 {
     Q_OBJECT
 public:
-    AttackZone(const PokeBattle &poke);
+    AttackZone(const PokeBattle &poke, int gen);
 
     AbstractAttackButton *tattacks[4];
     QAbstractButton *attacks[4];
@@ -183,7 +183,7 @@ class AbstractAttackButton
 {
 public:
     //AbstractAttackButton();
-    virtual void updateAttack(const BattleMove& b, const PokeBattle &p) = 0;
+    virtual void updateAttack(const BattleMove& b, const PokeBattle &p, int gen) = 0;
 
     QAbstractButton *pointer() {
         return dynamic_cast<QAbstractButton *> (this);
@@ -197,16 +197,16 @@ class ImageAttackButton : public QImageButton, public AbstractAttackButton
 {
     Q_OBJECT
 public:
-    ImageAttackButton(const BattleMove& b, const PokeBattle &p);
-    virtual void updateAttack(const BattleMove& b, const PokeBattle &p);
+    ImageAttackButton(const BattleMove& b, const PokeBattle &p, int gen);
+    virtual void updateAttack(const BattleMove& b, const PokeBattle &p, int gen);
 };
 
 class OldAttackButton : public QPushButton, public AbstractAttackButton
 {
     Q_OBJECT
 public:
-    OldAttackButton(const BattleMove& b, const PokeBattle &p);
-    virtual void updateAttack(const BattleMove& b, const PokeBattle &p);
+    OldAttackButton(const BattleMove& b, const PokeBattle &p, int gen);
+    virtual void updateAttack(const BattleMove& b, const PokeBattle &p, int gen);
 };
 
 class PokeButton;
@@ -244,7 +244,7 @@ class TargetSelection : public QWidget
 public:
     TargetSelection(const BattleInfo &info);
 
-    void updateData(const BattleInfo &info, int move);
+    void updateData(const BattleInfo &info, int move, int gen);
 signals:
     void targetSelected(int target);
 private:

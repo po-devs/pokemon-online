@@ -25,7 +25,7 @@ TierMachine::TierMachine()
 
     ithread->start();
 
-    QFile in("tiers.txt");
+    QFile in("tiers.xml");
     in.open(QIODevice::ReadOnly);
     fromString(QString::fromUtf8(in.readAll()));
 }
@@ -56,85 +56,83 @@ void TierMachine::insertMember(QSqlQuery *q, void *m, int queryNo)
 
 void TierMachine::save()
 {
-    QFile out("tiers.txt");
+    QFile out("tiers.xml");
     out.open(QIODevice::WriteOnly);
     out.write(toString().toUtf8());
 }
 
 void TierMachine::clear()
 {
-    while (m_tiers.size() > 0) {
-        delete m_tiers.takeLast();
-    }
-
     m_tierNames.clear();
+    m_tierByNames.clear();
 }
 
 void TierMachine::fromString(const QString &s)
 {
     clear();
 
-    QStringList candidates = s.split('\n', QString::SkipEmptyParts);
+    tree.loadFromXml(s, this);
 
-    if (candidates.empty()) {
-        candidates.push_back("All=");
+    QList<Tier *> tiers = tree.gatherTiers();
+    if (tiers.empty()) {
+        Tier *t = new Tier(this, &tree.root);
+        t->changeName("All");
+        tree.root.subNodes.push_back(t);
+        tiers.push_back(t);
     }
 
+    QHash<QString, Tier *> tierNames;
 
-    foreach(QString candidate, candidates) {
-        m_tiers.push_back(new Tier(this));
-        m_tiers.back()->fromString(candidate);
-        if (m_tierNames.contains(m_tiers.back()->name())) {
-            delete m_tiers.takeLast();
-        } else {
-            m_tierNames.push_back(m_tiers.back()->name());
+    /* Removing duplicates */
+    foreach(Tier *t, tiers) {
+        if (tierNames.contains(t->name())) {
+            t->kill(); /* Destroys the tier */
+            continue;
         }
+        tierNames.insert(t->name(), t);
     }
 
-    /* Now, we just check there isn't any cyclic inheritance tree */
-    for(int i = 0; i < m_tiers.length(); i++) {
-        QSet<QString> family;
-        Tier *t = m_tiers[i];
-        family.insert(t->name());
-        while (t->parent.length() > 0) {
-            if (family.contains(t->parent)) {
-                tier(t->name()).parent.clear();
-                break;
-            }
-            family.insert(t->parent);
-            t = &tier(t->parent);
+    /* Removing useless categories */
+    tree.cleanCategories();
+    /* Getting the order right if it wasn't alraedy in the file */
+    tree.reorder();
+
+    /* Some duplicates may have been removed, so we gather the tiers again */
+    tiers = tree.gatherTiers();
+
+    foreach(Tier *t, tiers) {
+        m_tierByNames[t->name()] = t;
+        m_tierNames.push_back(t->name());
+    }
+
+    /* Doing inheritance trees */
+    foreach(Tier *t, tiers) {
+        QString banParent = t->banParentS;
+
+        if (tierNames.contains(banParent)) {
+            t->addBanParent(tierNames[banParent]);
         }
     }
 
     /* Then, we open the files and load the ladders for each tier and people */
-    for (int i =0; i < m_tiers.size(); i++) {
-        m_tiers[i]->changeId(i);
-        m_tiers[i]->loadFromFile();
+    for (int i =0; i < tiers.size(); i++) {
+        tiers[i]->changeId(i);
+        tiers[i]->loadFromFile();
     }
 
-    /* And we change the tierList variable too! */
-    tierList().clear();
-    foreach (QString tier, m_tierNames)
-    {
-        tierList() += tier + "\n";
-    }
-    if (tierList().length() > 0) {
-        tierList().resize(tierList().size()-1);
-    }
+    m_tiers = tiers;
+
+    /* Do tierList . */
+    m_tierList = tree.buildTierList();
+}
+
+QByteArray TierMachine::tierList() const {
+    return m_tierList;
 }
 
 QString TierMachine::toString() const
 {
-    QString res = "";
-
-    for(int i = 0; i < m_tiers.size(); i++) {
-        res += m_tiers[i]->toString() + "\n";
-    }
-    if (res.length() > 0) {
-        res.resize(res.size()-1);
-    }
-
-    return res;
+    return tree.toXml();
 }
 
 void TierMachine::loadMemberInMemory(const QString &name, const QString &tier, QObject *o, const char *slot)
@@ -149,32 +147,25 @@ void TierMachine::fetchRankings(const QString &name, const QVariant &data, QObje
 
 Tier &TierMachine::tier(const QString &name)
 {
-    for(int i = 0; i < m_tierNames.length(); i++) {
-        if (m_tierNames[i].compare(name, Qt::CaseInsensitive) == 0) {
-            return *m_tiers[i];
-        }
+    if (m_tierByNames.contains(name)) {
+        return *m_tierByNames[name];
     }
+
     return *m_tiers[0];
 }
 
 const Tier &TierMachine::tier(const QString &name) const
 {
-    for(int i = 0; i < m_tierNames.length(); i++) {
-        if (m_tierNames[i].compare(name, Qt::CaseInsensitive) == 0) {
-            return *m_tiers[i];
-        }
+    if (m_tierByNames.contains(name)) {
+        return *m_tierByNames[name];
     }
+
     return *m_tiers[0];
 }
 
 bool TierMachine::exists(const QString &name) const
 {
-    for(int i = 0; i < m_tierNames.length(); i++) {
-        if (m_tierNames[i].compare(name, Qt::CaseInsensitive) == 0) {
-            return true;
-        }
-    }
-    return false;
+    return m_tierByNames.contains(name);
 }
 
 bool TierMachine::isValid(const TeamBattle &t, QString tier) const
@@ -255,34 +246,15 @@ bool TierMachine::existsPlayer(const QString &name, const QString &player)
    return exists(name) && tier(name).exists(player);
 }
 
-TierWindow::TierWindow(QWidget *parent) : QWidget(parent)
-{
-    setAttribute(Qt::WA_DeleteOnClose,true);
-
-    QGridLayout *layout = new QGridLayout(this);
-
-    layout->addWidget(m_editWindow = new QPlainTextEdit(),0,0,1,2);
-    QPushButton *ok;
-    layout->addWidget(ok = new QPushButton(tr("&Done")),1,1);
-
-    m_editWindow->setPlainText(TierMachine::obj()->toString());
-
-    connect(ok, SIGNAL(clicked()), SLOT(done()));
-    connect(ok, SIGNAL(clicked()), SLOT(close()));
-}
-
-void TierWindow::done()
-{
-    TierMachine::obj()->fromString(m_editWindow->toPlainText());
-    TierMachine::obj()->save();
-
-    emit tiersChanged();
-}
-
 LoadThread *TierMachine::getThread()
 {
     /* '%' is a safety thing, in case nextLoadThreadNumber is also accessed in writing and that messes it up, at least it isn't out of bounds now */
     int n = nextLoadThreadNumber % loadThreadCount;
     nextLoadThreadNumber = (n + 1) % loadThreadCount;
     return threads + n;
+}
+
+TierTree *TierMachine::getDataTree() const
+{
+    return tree.dataClone();
 }

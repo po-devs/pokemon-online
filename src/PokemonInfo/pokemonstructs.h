@@ -1648,6 +1648,8 @@ protected:
     QIcon m_icon;
     Pokemon::uniqueId m_num;
     int m_storedgender;
+    int m_gen;
+
     bool m_storedshininess;
     bool m_uptodate;
 
@@ -1660,8 +1662,11 @@ public:
     QIcon icon();
     QIcon icon(const Pokemon::uniqueId &pokeid);
 
+
     void setNum(Pokemon::uniqueId num);
     Pokemon::uniqueId num() const;
+    int gen() const;
+
     void load(int gender, bool shiny);
     void loadIcon(const Pokemon::uniqueId &pokeid);
 };
@@ -1696,7 +1701,7 @@ protected:
 
 public:
     Team();
-    int gen() const {return m_gen;}
+    quint8 gen() const {return m_gen;}
     void setGen(int gen);
 
     const PokeTeam & poke(int index) const {return m_pokes[index];}
@@ -1706,6 +1711,7 @@ public:
 class TrainerTeam
 {
     PROPERTY(quint16, avatar);
+    PROPERTY(QString, defaultTier);
 protected:
     Team m_team;
     QString m_trainerNick;

@@ -62,7 +62,7 @@ void Registry::incomingServer()
         return;
     }
 
-    if (serverIPs.contains(ip))
+    if (ipCounter.value(ip) > 2)
     {
         printLine("A server with another IP is already there, disconnecting");
         Server *s = new Server(id, newconnection);
@@ -78,10 +78,11 @@ void Registry::incomingServer()
         return;
     }
 
-    serverIPs[ip] = id;
+    ipCounter[ip] += 1;
     servers[id] = new Server(id, newconnection);
 
     connect(servers[id], SIGNAL(nameChangedReq(int,QString)), SLOT(nameChangedAcc(int,const QString&)));
+    connect(servers[id], SIGNAL(portSet(int, int)), SLOT(portSet(int,int)));
     connect(servers[id], SIGNAL(disconnection(int)), SLOT(disconnection(int)));
 }
 
@@ -134,6 +135,19 @@ void Registry::nameChangedAcc(int id, const QString &name)
     }
 }
 
+void Registry::portSet(int id, int port, int oldport)
+{
+    Server *s = servers[id];
+
+    serverAddresses.remove(s->getAddress(oldport));
+    if (serverAddresses.contains(s->getAddress(port))) {
+        s->refuseIP();
+        s->kick();
+    }
+
+    serverAddresses.insert(s->getAddress(port));
+}
+
 void Registry::disconnection(int id)
 {
     printLine(QString("Received disconnection from id %1").arg(id));
@@ -141,7 +155,10 @@ void Registry::disconnection(int id)
         Server *s = servers[id];
         AntiDos::obj()->disconnect(s->ip(), id);
         names.remove(s->name());
-        serverIPs.remove(s->ip());
+        ipCounter[s->ip()] -= 1;
+        if (ipCounter[s->ip()] == 0)
+            ipCounter.remove(s->ip());
+        serverAddresses.remove(s->getAddress(s->port()));
         servers.remove(id);
         delete s;
     } else if (players.contains(id)) {

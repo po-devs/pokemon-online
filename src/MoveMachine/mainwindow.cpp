@@ -25,43 +25,19 @@ void MovesPerPoke::init(int poke)
 
 void PokeMovesDb::init()
 {
-//    QSet<int> thirdgen, fourthgen;
     for (int i =0; i < PokemonInfo::NumberOfPokemons(); i++) {
         MovesPerPoke p;
         p.init(i);
-//        thirdgen.unite(p.gens[0].moves[LevelMoves]).unite(p.gens[0].moves[SpecialMoves]).unite(p.gens[0].moves[EggMoves].unite(p.gens[0].moves[TutorMoves]));
-//        fourthgen.unite(p.gens[1].moves[LevelMoves]).unite(p.gens[1].moves[SpecialMoves]).unite(p.gens[1].moves[EggMoves].unite(p.gens[1].moves[TutorMoves]).unite(p.gens[1].moves[TMMoves]));
         pokes.push_back(p);
     }
 
-//    thirdgen << Move::Surf << Move::Dive << Move::Waterfall << Move::Cut << Move::RockSmash << Move::Fly << Move::Strength << Move::Whirlpool;
-//
-//    for (int i =0; i < PokemonInfo::NumberOfPokemons(); i++) {
-//        MovesPerPoke p = pokes[i];
-//
-//        if (p.gens[0].moves[LevelMoves].empty())
-//            p.gens[0].moves[TMMoves].clear();
-//        else {
-//            p.gens[0].moves[TMMoves].intersect(thirdgen);
-//        }
-//
-//        pokes[i] = p;
-//    }
-//
-//    QFile out("thirdgen.txt");
-//
-//    /* Sorting the moves */
-//    QMap<int, int> outm;
-//
-//    foreach(int move, thirdgen) {
-//        outm [move] = move;
-//    }
-//
-//    out.open(QIODevice::WriteOnly);
-//
-//    foreach(int move, outm) {
-//        out.write(QByteArray::number(move) + "\n");
-//    }
+    for (int i =0; i < PokemonInfo::NumberOfPokemons(); i++) {
+        int preEvo = PokemonInfo::PreEvo(i);
+
+        if (preEvo != 0) {
+            pokes[i].gens[0].moves[LevelMoves].unite(pokes[preEvo].gens[0].moves[LevelMoves]);
+        }
+    }
 }
 
 void PokeMovesDb::save()
@@ -84,7 +60,10 @@ void PokeMovesDb::save()
                 QString s;
                 bool start = true;
 
-                foreach(int move, pokes[p].gens[gen-3].moves[i]) {
+                QList<int> moves = pokes[p].gens[gen-3].moves[i].toList();
+                qSort(moves);
+
+                foreach(int move, moves) {
                     if (!start) {
                         s += " ";
                     } else {

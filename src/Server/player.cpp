@@ -1,16 +1,18 @@
 #include "../Shared/config.h"
+#include "../PokemonInfo/battlestructs.h"
+#include "../PokemonInfo/pokemoninfo.h"
 #include "player.h"
 #include "security.h"
 #include "challenge.h"
-#include "../PokemonInfo/battlestructs.h"
-#include "../PokemonInfo/pokemoninfo.h"
 #include "tiermachine.h"
+#include "tier.h"
 #include "waitingobject.h"
 #include "server.h"
+#include "analyze.h"
 
-
-Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
+Player::Player(QTcpSocket *sock, int id) : myid(id)
 {
+    myrelay = new Analyzer(sock, id);
     lockCount = 0;
     battleSearch() = false;
     myip = relay().ip();
@@ -21,9 +23,9 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
     myauth = 0;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
-    connect(&relay(), SIGNAL(loggedIn(TeamInfo,bool,bool,QColor)), SLOT(loggedIn(TeamInfo,bool,bool,QColor)));
+    connect(&relay(), SIGNAL(loggedIn(TeamInfo&,bool,bool,QColor)), SLOT(loggedIn(TeamInfo&,bool,bool,QColor)));
     connect(&relay(), SIGNAL(messageReceived(int, QString)), SLOT(recvMessage(int, QString)));
-    connect(&relay(), SIGNAL(teamReceived(TeamInfo)), SLOT(recvTeam(TeamInfo)));
+    connect(&relay(), SIGNAL(teamReceived(TeamInfo&)), SLOT(recvTeam(TeamInfo&)));
     connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
     connect(&relay(), SIGNAL(forfeitBattle(int)), SLOT(battleForfeited(int)));
     connect(&relay(), SIGNAL(battleMessage(int,BattleChoice)), SLOT(battleMessage(int,BattleChoice)));
@@ -57,6 +59,7 @@ Player::Player(QTcpSocket *sock, int id) : myrelay(sock, id), myid(id)
 Player::~Player()
 {
     removeWaitingTeam();
+    delete myrelay;
 }
 
 void Player::ladderChange(bool n)
@@ -110,17 +113,29 @@ void Player::changeTier(const QString &newtier)
         return;
     }
     if (!TierMachine::obj()->isValid(team(), newtier)) {
+        Tier *tier = &TierMachine::obj()->tier(newtier);
+
+        if (!tier->allowGen(team().gen)) {
+            sendMessage(tr("The generation of your team is invalid for that tier."));
+            return;
+        }
+
         QString pokeList = "";
         for(int i = 0; i < 6; i++) {
-            if (TierMachine::obj()->isBanned(team().poke(i),newtier)) {
+            if (tier->isBanned(team().poke(i))) {
                 pokeList += PokemonInfo::Name(team().poke(i).num()) + ", ";
             }
         }
         if (pokeList.length() >= 2)
             pokeList.resize(pokeList.size()-2);
 
-        sendMessage(tr("The following pokemons are banned in %1, hence you can't choose that tier: %2.").arg(newtier,pokeList));
-        return;
+        if (pokeList.size() > 0) {
+            sendMessage(tr("The following pokemons of your team are invalid (ban, level, moveset, item...) in %1, hence you can't choose that tier: %2.").arg(newtier,pokeList));
+            return;
+        } else {
+            sendMessage(tr("You have too many restricted pokemons, or simply too many pokemons for the tier %1.").arg(newtier));
+            return;
+        }
     }
     if (Server::serverIns->beforeChangeTier(id(), tier(), newtier)) {
         QString oldtier = tier();
@@ -195,10 +210,10 @@ void Player::leaveRequested(int slotid)
     emit leaveRequested(id(), slotid);
 }
 
-void Player::spectateBattle(const QString &name0, const QString &name1, int battleId, bool doubles)
+void Player::spectateBattle(int battleId, const BattleConfiguration &battle)
 {
     battlesSpectated.insert(battleId);
-    relay().notify(NetworkServ::SpectateBattle, name0, name1, qint32(battleId), doubles);
+    relay().notify(NetworkServ::SpectateBattle, qint32(battleId), battle);
 }
 
 void Player::cancelChallenges()
@@ -502,11 +517,11 @@ void Player::challengeStuff(const ChallengeInfo &c)
     if (desc == ChallengeInfo::Sent)
     {
         if (team().invalid() && ! (c.clauses & ChallengeInfo::ChallengeCup)) {
-            sendMessage("Your team is invalid, you can't challenge except for Challenge Cup!");
+            sendMessage("Your team is invalid, you can't challenge except for Challenge Cup! Try giving moves to your pokemon.");
             return;
         }
         if (challenged.size() >= 10) {
-            sendMessage("You already have challenge 10 people, you can't challenge more!");
+            sendMessage("You already have challenged 10 people, you can't challenge more!");
             return;
         }
         emit sendChallenge(this->id(), id, c);
@@ -567,9 +582,9 @@ void Player::sendChallengeStuff(const ChallengeInfo &c)
     relay().sendChallengeStuff(c);
 }
 
-void Player::startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
+void Player::startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    relay().engageBattle(battleid, this->id(), id, team, conf, doubles);
+    relay().engageBattle(battleid, this->id(), id, team, conf);
 
     cancelChallenges();
     cancelBattleSearch();
@@ -600,14 +615,19 @@ const TeamBattle & Player::team() const
     return myteam;
 }
 
+int Player::gen() const
+{
+    return team().gen;
+}
+
 Analyzer & Player::relay()
 {
-    return myrelay;
+    return *myrelay;
 }
 
 const Analyzer & Player::relay() const
 {
-    return myrelay;
+    return *myrelay;
 }
 
 bool Player::battling() const
@@ -646,6 +666,7 @@ PlayerInfo Player::bundle() const
     p.tier = tier();
     p.avatar = avatar();
     p.color = color();
+    p.gen = gen();
 
     if (showteam()) {
         for(int i = 0; i < 6; i++) {
@@ -676,7 +697,7 @@ BasicInfo Player::basicInfo() const
     return ret;
 }
 
-void Player::loggedIn(const TeamInfo &team,bool ladder, bool showteam, QColor c)
+void Player::loggedIn(TeamInfo &team,bool ladder, bool showteam, QColor c)
 {
     if (isLoggedIn())
         return;
@@ -762,7 +783,10 @@ void Player::testAuthentificationLoaded()
 
 void Player::findTierAndRating()
 {
-    tier() = TierMachine::obj()->findTier(team());
+    if (TierMachine::obj()->exists(defaultTier()) && TierMachine::obj()->isValid(team(), defaultTier()))
+        tier() = defaultTier();
+    else
+        tier() = TierMachine::obj()->findTier(team());
     findRating();
 }
 
@@ -834,12 +858,13 @@ void Player::assignNewColor(const QColor &c)
         color() = c;
 }
 
-void Player::assignTeam(const TeamInfo &team)
+void Player::assignTeam(TeamInfo &team)
 {
     avatar() = team.avatar;
     this->team() = team;
     winningMessage() = team.win;
     losingMessage() = team.lose;
+    defaultTier() = team.defaultTier;
 }
 
 void Player::changeWaitingTeam(const TeamInfo &t)
@@ -960,7 +985,7 @@ QString Player::ip() const
     return myip;
 }
 
-void Player::recvTeam(const TeamInfo &team)
+void Player::recvTeam(TeamInfo &team)
 {
     /* If the guy is not logged in, obvious. If he is battling, he could make it so the points lost are on his other team */
     if (!isLoggedIn())

@@ -146,7 +146,12 @@ struct BMPinchHP : public BMPinch
         if (arg == 10) /* oran berry */
             b.healLife(s, 10);
         else /* Sitrus Berry */
-            b.healLife(s, b.poke(s).totalLifePoints()/4);
+        {
+            if (b.gen() >= 4)
+                b.healLife(s, b.poke(s).totalLifePoints()/4);
+            else
+                b.healLife(s, 30);
+        }
     }
 };
 
@@ -173,12 +178,14 @@ struct BMAntiNormal : public BM
     }
 
     static void m3b(int s, int t, BS &b) {
-        /* Normal moves */
-        if (!b.hasSubstitute(s) && turn(b,t)["Type"].toInt() == 0) {
-            b.sendBerryMessage(4,s,0,t,b.poke(s).item(),turn(b,t)["Move"].toInt());
-            b.eatBerry(s,false);
+        if (b.gen() >= 4) {
+            /* Normal moves */
+            if (!b.hasSubstitute(s) && turn(b,t)["Type"].toInt() == 0) {
+                b.sendBerryMessage(4,s,0,t,b.poke(s).item(),turn(b,t)["Move"].toInt());
+                b.eatBerry(s,false);
 
-            turn(b,t)["Mod3Berry"] = -5;
+                turn(b,t)["Mod3Berry"] = -5;
+            }
         }
     }
 };

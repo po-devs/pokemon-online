@@ -1,5 +1,5 @@
 QT += network \
-    xml\
+    xml \
     phonon
 TARGET = Pokemon-Online
 DESTDIR = ../../bin
@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     ranking.cpp \
     pokedex.cpp \
     pluginmanager.cpp \
-    channel.cpp
+    channel.cpp \
+    tierstruct.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -52,7 +53,8 @@ HEADERS += teambuilder.h \
     pluginmanager.h \
     plugininterface.h \
     centralwidget.h \
-    channel.h
+    channel.h \
+    tierstruct.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities
@@ -65,12 +67,12 @@ TRANSLATIONS = translation_de.ts \
     translation_it.ts \
     translation_jp.ts \
     translation_ko.ts \
+    translation_pl.ts \
     translation_pt-br.ts \
     translation_ru.ts \
     translation_sv.ts \
     translation_zh-cn.ts
 RC_FILE = myapp.rc
 RESOURCES += 
-macx {
-    LIBS += -framework CoreFoundation
-}
+macx:LIBS += -framework \
+    CoreFoundation

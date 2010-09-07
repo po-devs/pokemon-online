@@ -6,7 +6,7 @@
 
 class Player;
 class Server;
-class QScrollDownTextEdit;
+class QScrollDownTextBrowser;
 
 class Registry: public QObject
 {
@@ -20,6 +20,7 @@ private slots:
     void incomingServer();
 
     void nameChangedAcc(int id, const QString &name);
+    void portSet(int id, int port, int oldport);
     void disconnection(int id);
 
     /* Called by the anti DoS */
@@ -29,14 +30,15 @@ private:
     QTcpServer forServers;
     QHash<int, Server *> servers;
     QSet<QString> names;
-    QHash<QString, int> serverIPs;
+    QSet<QString> serverAddresses;
 
     QTcpServer forPlayers;
     QHash<int, Player *> players;
 
     QSet<QString> bannedIPs;
+    QHash<QString, int> ipCounter;
 
-    QScrollDownTextEdit *mainChat;
+    QScrollDownTextBrowser *mainChat;
     int linecount;
 
     int freeid() const;

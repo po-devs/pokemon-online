@@ -2,7 +2,7 @@
 #include <QtGui>
 
 QCompactTable::QCompactTable(int row, int column)
-        : QTableWidget(row, column)
+    : QTableWidget(row, column)
 {
     verticalHeader()->setDefaultSectionSize(22);
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -78,7 +78,7 @@ static QBitmap mask(const QPixmap &p)
 #endif
 
 QImageButton::QImageButton(const QString &normal, const QString &hovered, const QString &checked)
-            : myPic(normal), myHoveredPic(hovered), lastUnderMouse(-1), pressed(false)
+    : myPic(normal), myHoveredPic(hovered), lastUnderMouse(-1), pressed(false)
 {
     setFixedSize(myPic.size());
 #if defined(WIN32) || defined(WIN64)
@@ -172,7 +172,7 @@ void QImageButton::mouseMoveEvent(QMouseEvent *)
 }
 
 QIdTreeWidgetItem::QIdTreeWidgetItem(int id, const QStringList &text)
-        : QTreeWidgetItem(0), myid(id)
+    : QTreeWidgetItem(0), myid(id)
 {
     for (int i = 0; i < text.size(); i++)
         setText(i,text[i]);
@@ -189,12 +189,12 @@ void QIdTreeWidgetItem::setColor(const QColor &c)
 }
 
 QIdListWidgetItem::QIdListWidgetItem(int id, const QString &text)
-        : QListWidgetItem(text), myid(id)
+    : QListWidgetItem(text), myid(id)
 {
 }
 
 QIdListWidgetItem::QIdListWidgetItem(int id, const QIcon &icon, const QString &text)
-        : QListWidgetItem(icon, text), myid(id)
+    : QListWidgetItem(icon, text), myid(id)
 {
 }
 
@@ -208,21 +208,22 @@ void QIdListWidgetItem::setColor(const QColor &c)
     setForeground(QBrush(c));
 }
 
-QScrollDownTextEdit::QScrollDownTextEdit()
+QScrollDownTextBrowser::QScrollDownTextBrowser()
 {
     autoClear = true;
     setReadOnly(true);
+    setOpenExternalLinks(true);
     linecount = 0;
 }
 
-void QScrollDownTextEdit::insertHtml(const QString &text)
+void QScrollDownTextBrowser::insertHtml(const QString &text)
 {
     QScrollBar * b = verticalScrollBar();
     if (linecount >= 2000 && autoClear) {
         keepLines(1000);
         moveCursor(QTextCursor::End);
         linecount = 1000;
-        QTextEdit::insertHtml(text);
+        QTextBrowser::insertHtml(text);
         b->setValue(b->maximum());
         return;
     }
@@ -230,7 +231,7 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
     int f = b->value();
     int e = b->maximum();
     moveCursor(QTextCursor::End);
-    QTextEdit::insertHtml(text);
+    QTextBrowser::insertHtml(text);
 
     if(b->value() != e)
     {
@@ -244,7 +245,7 @@ void QScrollDownTextEdit::insertHtml(const QString &text)
     linecount++;
 }
 
-void QScrollDownTextEdit::keepLines(int numberOfLines)
+void QScrollDownTextBrowser::keepLines(int numberOfLines)
 {
     setReadOnly(false);
     moveCursor(QTextCursor::Start);
@@ -259,14 +260,14 @@ void QScrollDownTextEdit::keepLines(int numberOfLines)
     setReadOnly(true);
 }
 
-void QScrollDownTextEdit::insertPlainText(const QString &text)
+void QScrollDownTextBrowser::insertPlainText(const QString &text)
 {
     QScrollBar * b = verticalScrollBar();
     if (linecount >= 2000 && autoClear) {
         keepLines(1000);
         moveCursor(QTextCursor::End);
         linecount = 1000;
-        QTextEdit::insertPlainText(text);
+        QTextBrowser::insertPlainText(text);
         b->setValue(b->maximum());
         return;
     }
@@ -275,7 +276,7 @@ void QScrollDownTextEdit::insertPlainText(const QString &text)
     int e = b->maximum();
 
     moveCursor(QTextCursor::End);
-    QTextEdit::insertPlainText(text);
+    QTextBrowser::insertPlainText(text);
 
     if(b->value() != e)
     {
@@ -291,7 +292,7 @@ void QScrollDownTextEdit::insertPlainText(const QString &text)
 
 
 QNickValidator::QNickValidator(QWidget *parent)
-        : QValidator(parent)
+    : QValidator(parent)
 {}
 
 bool QNickValidator::isBegEndChar(QChar ch) const
@@ -398,7 +399,7 @@ QSideBySide::QSideBySide(QWidget *a, QWidget *b)
 /////////////////////////////////////
 /*new button with pressed pic*/
 QImageButtonP::QImageButtonP(const QString &normal, const QString &hovered, const QString &pressed, const QString &checked)
-            : myPic(normal), myHoveredPic(hovered), myPressedPic(pressed), lastUnderMouse(-1), bpressed(false)
+    : myPic(normal), myHoveredPic(hovered), myPressedPic(pressed), lastUnderMouse(-1), bpressed(false)
 {
     setFixedSize(myPic.size());
 #if defined(WIN32) || defined(WIN64)
@@ -500,61 +501,36 @@ void QImageButtonP::mouseMoveEvent(QMouseEvent *)
 
 QIRCLineEdit::QIRCLineEdit()
 {
-    connect(this,SIGNAL(textEdited(QString)),this,SLOT(myTextEdited()));
+    listindex=0;
+    m_Inputlist.push_back("");
 }
 
 void QIRCLineEdit::keyPressEvent(QKeyEvent *e)
 {
     if(e->key() == Qt::Key_Up) {
-        if(text()==""){
-            if(m_Inputlist1.empty()){
-
-            }else{
-                setText(m_Inputlist1.last());
-                m_Inputlist1.removeLast();
-            }
-        }else if(text()!=""){
-            m_Inputlist2.append(text());
-            if(m_Inputlist1.empty()){
-                clear();
-            }else{
-                setText(m_Inputlist1.last());
-                m_Inputlist1.removeLast();
-            }
-        }
-    }else if(e->key() == Qt::Key_Down) {
-        if(text()==""){
-            if(m_Inputlist2.empty()){
-
-            }else{
-                setText(m_Inputlist2.last());
-                m_Inputlist2.removeLast();
-            }
-        }else if(text()!=""){
-            if(m_Inputlist2.empty()){
-                m_Inputlist1.append(text());
-                clear();
-            }else{
-                m_Inputlist1.append(text());
-                setText(m_Inputlist2.last());
-                m_Inputlist2.removeLast();
-            }
-        }
+        if (listindex == 0)
+            return;
+        m_Inputlist[listindex] = text();
+        listindex--;
+        setText(m_Inputlist[listindex]);
+    } else if(e->key() == Qt::Key_Down) {
+        if (listindex == m_Inputlist.size() -1)
+            return;
+        m_Inputlist[listindex] = text();
+        listindex++;
+        setText(m_Inputlist[listindex]);
     }else{
         QLineEdit::keyPressEvent(e);
     }
-
-}
-void QIRCLineEdit::myTextEdited()
-{
-    //if(!m_Inputlist2.empty()) m_Inputlist1.append(m_Currentline);
-    m_Inputlist2.clear();
 }
 
-void QIRCLineEdit::myclear()
+void QIRCLineEdit::clear()
 {
-    if(text()!=""){
-        m_Inputlist1.append(text());
-    }
+    if (text() == "")
+        return;
+
+    m_Inputlist.back() = text();
+    m_Inputlist.push_back("");
+    listindex = m_Inputlist.size() - 1;
     QLineEdit::clear();
 }

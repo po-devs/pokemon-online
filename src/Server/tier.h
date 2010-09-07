@@ -5,12 +5,18 @@
 #include <QtGui>
 #include "sql.h"
 #include "memoryholder.h"
+#include "tiernode.h"
 
 class TierMachine;
+class TierCategory;
 struct TeamBattle;
 struct PokeBattle;
 class WaitingObject;
 class LoadThread;
+class QDomElement;
+
+/* Banned sets have been removed because i was lazy to do the GUI to edit them. */
+/* If you uncomment them, they should work, but there'll be no GUI to edit them */
 
 struct MemberRating
 {
@@ -26,35 +32,40 @@ struct MemberRating
     QPair<int, int> pointChangeEstimate(int otherRating);
 };
 
-struct BannedPoke {
-    int poke;
-    int item;
 
-    BannedPoke(int poke=0, int item=0):poke(poke),item(item) {}
-};
+//struct BannedPoke {
+//    int poke;
+//    int item;
+//    QSet<int> moves;
 
-inline uint qHash(const BannedPoke &p) {
-    return qHash(p.poke + (p.item << 16));
-}
+//    BannedPoke(int poke=0, int item=0):poke(poke),item(item) {}
 
-class Tier
+//    bool isBanned(const PokeBattle &poke) const;
+//    /* This time checks if the pokemon is 'contained' within the BannedPoke,
+//       for when instead of banning pokemons you want to restrict to some pokemons,
+//       or some pokemons / movesets */
+//    bool isForcedMatch(const PokeBattle &poke) const;
+
+//    void loadFromXml(const QDomElement &elem);
+//    QDomElement & toXml(QDomElement &dest) const;
+//};
+
+//inline uint qHash(const BannedPoke &p) {
+//    return qHash(p.poke + (p.item << 16));
+//}
+
+class Tier : public TierNode
 {
     friend class TierMachine;
     friend class ScriptEngine;
+    friend class TierWindow;
 public:
     void changeName(const QString &name);
-    QString name() const;
-    void changeId(int id);
+    void changeId(int newid);
 
-    QString parent;
-    TierMachine *boss;
-    QMultiHash<int, BannedPoke> bannedPokes2; // The set is there to keep good perfs
-    QList<BannedPoke> bannedPokes; // The list is there to keep the same order
+    Tier(TierMachine *boss = NULL, TierCategory *cat = NULL);
 
-    Tier(TierMachine *boss = NULL);
-
-    void fromString(const QString &s);
-    QString toString() const;
+    QDomElement & toXml(QDomElement &dest) const;
 
     int rating(const QString &name);
 
@@ -62,7 +73,10 @@ public:
     void changeRating(const QString &player, int newRating);
     QPair<int, int> pointChangeEstimate(const QString &player, const QString &foe);
 
+    void addBanParent(Tier *t);
+
     bool isBanned(const PokeBattle &p) const;
+    bool isRestricted(const PokeBattle &p) const;
     bool isValid(const TeamBattle &t) const;
     bool exists(const QString &name);
     int ranking(const QString &name);
@@ -73,8 +87,30 @@ public:
     void fetchRankings(const QVariant &data, QObject *o, const char *slot);
     void processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w);
     void insertMember(QSqlQuery *q, void *data, int type);
+    bool allowMode(int mode) const;
+    bool allowGen(int gen) const;
+    int getClauses() const;
+
+    QString getBannedPokes() const;
+    QString getRestrictedPokes() const;
+    QString getBannedMoves() const;
+    QString getBannedItems() const;
+    void importBannedPokes(const QString &);
+    void importRestrictedPokes(const QString &);
+    void importBannedMoves(const QString &);
+    void importBannedItems(const QString &);
 
     void exportDatabase() const;
+    /* Load tier configuration */
+    void loadFromXml(const QDomElement &elem);
+    /* Load tier ladders */
+    void loadFromFile();
+    /* Kills and deletes itself, as well as from the category parent. Beware to not use any member functions after */
+    void kill();
+
+    /* Gives a dummy tier with the same data, just used as a representation or something to work on */
+    Tier *dataClone() const;
+    bool isTier() const { return true; }
 protected:
     enum QueryType {
         GetInfoOnUser,
@@ -85,11 +121,26 @@ protected:
     int id() const {
         return m_id;
     }
-
 private:
-    void loadFromFile();
+    TierMachine *boss;
+    TierCategory *node;
 
-    QString m_name;
+    bool banPokes;
+//    QMultiHash<int, BannedPoke> bannedSets; // The set is there to keep good perfs
+//    QMultiHash<int, BannedPoke> restrictedSets;
+    int maxRestrictedPokes;
+    int numberOfPokemons;
+    int maxLevel;
+    int gen;
+    QString banParentS;
+    Tier *parent;
+    QSet<int> bannedItems;
+    QSet<int> bannedMoves;
+    QSet<int> bannedPokes;
+    QSet<int> restrictedPokes;
+    int doubles; /* < 0 : singles, 0: either, > 0: doubles */
+    quint32 clauses;
+
     /* Used for table name in SQL database */
     QString sql_table;
     int m_id;
