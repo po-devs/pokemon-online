@@ -16,9 +16,7 @@ Analyzer::Analyzer(QTcpSocket *sock, int id) : mysocket(sock, id)
     QTimer *t = new QTimer(this);
     t->setInterval(30*1000);
     t->start();
-
-    connect(t, SIGNAL(timeout()), SLOT(keepAlive()));
-
+    connect(t, SIGNAL(timeout()),SLOT(keepAlive()));
     /* Only if its not registry */
     if (id != 0) {
         sock->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
@@ -51,9 +49,9 @@ void Analyzer::sendChannelMessage(int chanid, const QString &message)
     notify(ChannelMessage, qint32(chanid), message);
 }
 
-void Analyzer::engageBattle(int battleid, int , int id, const TeamBattle &team, const BattleConfiguration &conf, bool doubles)
+void Analyzer::engageBattle(int battleid, int , int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    notify(EngageBattle, qint32(battleid), qint32(0), qint32(id), team, conf, doubles);
+    notify(EngageBattle, qint32(battleid), qint32(0), qint32(id), conf, team);
 }
 
 void Analyzer::connectTo(const QString &host, quint16 port)

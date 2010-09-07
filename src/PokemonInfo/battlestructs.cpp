@@ -45,29 +45,25 @@ QString ChallengeInfo::clauseDescription[] =
 BattleMove::BattleMove()
 {
     num() = 0;
-    type() = 0;
-    power() = 0;
     PP() = 0;
     totalPP() = 0;
 }
 
-void BattleMove::load() {
-    power() = MoveInfo::Power(num());
-    PP() = MoveInfo::PP(num())*8/5; /* 3 PP-ups */
+void BattleMove::load(int gen) {
+    PP() = MoveInfo::PP(num(), gen)*8/5; /* 3 PP-ups */
     totalPP() = PP();
-    type() = MoveInfo::Type(num());
 }
 
 QDataStream & operator >> (QDataStream &in, BattleMove &mo)
 {
-    in >> mo.num() >> mo.type() >> mo.power() >> mo.PP() >> mo.totalPP();
+    in >> mo.num() >> mo.PP() >> mo.totalPP();
 
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const BattleMove &mo)
 {
-    out << mo.num() << mo.type() << mo.power() << mo.PP() << mo.totalPP();
+    out << mo.num() << mo.PP() << mo.totalPP();
 
     return out;
 }
@@ -112,28 +108,28 @@ void PokeBattle::setNormalStat(int stat, quint16 i)
     normal_stats[stat-1] = i;
 }
 
-void PokeBattle::init(const PokePersonal &poke)
+void PokeBattle::init(PokePersonal &poke)
 {
-    if (!PokemonInfo::Exists(poke.num())) {
-        num() = Pokemon::NoPoke;
+    /* Checks num, ability, moves, item */
+    poke.runCheck();
+
+    num() = poke.num();
+
+    if (num() == Pokemon::NoPoke)
         return;
-    }
+
 
     PokeGeneral p;
+    p.gen() = poke.gen();
     p.num() = poke.num();
     p.load();
 
     QNickValidator v(NULL);
 
-    num() = poke.num();
-
     happiness() = poke.happiness();
 
-    if (ItemInfo::Exists(poke.item())) {
-        item() = poke.item();
-    } else {
-        item() = 0;
-    }
+    item() = poke.item();
+    ability() = poke.ability();
 
     if (item() == Item::GriseousOrb && num() != Pokemon::Giratina_O) {
         item() = 0;
@@ -149,38 +145,26 @@ void PokeBattle::init(const PokePersonal &poke)
         gender() = GenderInfo::Default(p.genderAvail());
     }
 
-    if (p.abilities().ab1 == poke.ability() || p.abilities().ab2 == poke.ability()) {
-        ability() = poke.ability();
-    } else {
-        ability() = p.abilities().ab1;
-    }
-
     shiny() = poke.shiny();
     level() = std::min(100, std::max(int(poke.level()), 1));
 
     nature() = std::min(NatureInfo::NumberOfNatures(), std::max(0, int(poke.nature())));
 
     int curs = 0;
-    QSet<int> invalid_moves;
     QSet<int> taken_moves;
-    MoveSetChecker::isValid(num(), 4, poke.move(0),poke.move(1),poke.move(2),poke.move(3), &invalid_moves);
-
+    
     for (int i = 0; i < 4; i++) {
-        if (!invalid_moves.contains(poke.move(i))) {
-            if (!taken_moves.contains(poke.move(i))) {
-                taken_moves.insert(poke.move(i));
-		move(curs).num() = poke.move(i);
-		move(curs).load();
-		++curs;
-	    }
-	}
+        if (!taken_moves.contains(poke.move(i)) && poke.move(i) != 0) {
+            taken_moves.insert(poke.move(i));
+            move(curs).num() = poke.move(i);
+            move(curs).load(poke.gen());
+            ++curs;
+        }
     }
-    /* Even by removing the invalid moves indicated, the combination may still
-       not be valid, so we check once more */
 
-    if (move(0).num() == 0 || !MoveSetChecker::isValid(num(), 4, move(0).num(), move(1).num(), move(2).num(), move(3).num())) {
-        num() = 0;
-        return;
+    if (move(0).num() == 0) {
+		num() = 0;
+		return;
     }
 
     dvs().clear();
@@ -304,14 +288,15 @@ QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po)
     return out;
 }
 
-TeamBattle::TeamBattle()
+TeamBattle::TeamBattle() : gen(4)
 {
 }
 
-TeamBattle::TeamBattle(const TeamInfo &other)
+TeamBattle::TeamBattle(TeamInfo &other)
 {
     name = other.name;
     info = other.info;
+    gen = other.gen;
     int curs = 0;
     for (int i = 0; i < 6; i++) {
         poke(curs).init(other.pokemon(i));
@@ -326,13 +311,15 @@ bool TeamBattle::invalid() const
     return poke(0).num() == Pokemon::NoPoke;
 }
 
-void TeamBattle::generateRandom()
+void TeamBattle::generateRandom(int gen)
 {
+    this->gen = gen;
+<<<<<<< HEAD
     QList<Pokemon::uniqueId> pokes;
     for (int i = 0; i < 6; i++) {
         while(1) {
             Pokemon::uniqueId num = PokemonInfo::getRandomPokemon();
-            if (pokes.contains(num)) {
+            if (pokes.contains(num) || num == Pokemon::NoPoke || !PokemonInfo::Exists(num, gen)) {
                 continue ;
             }
             pokes.push_back(num);
@@ -344,6 +331,7 @@ void TeamBattle::generateRandom()
 
         g.num() = pokes[i];
         p.num() = pokes[i];
+        g.gen() = gen;
         g.load();
 
         p.ability() = (g.abilities().ab2 == 0 || true_rand()%2) ? g.abilities().ab1 : g.abilities().ab2;
@@ -380,7 +368,7 @@ void TeamBattle::generateRandom()
             if (moves.size() <= i) {
                 for (int j = i; j < 4; j++) {
                     p.move(j).num() = 0;
-                    p.move(j).load();
+                    p.move(j).load(gen);
                 }
                 break;
             }
@@ -389,13 +377,14 @@ void TeamBattle::generateRandom()
                 if (movesTaken.contains(movenum)) {
                     continue;
                 }
-                if(i == 3 && MoveInfo::Power(movenum) == 0 && MoveInfo::Power(movesTaken.value(0)) == 0 && MoveInfo::Power(movesTaken.value(1)) == 0 && MoveInfo::Power(movesTaken.value(2)) == 0)
+                if(i == 3 && MoveInfo::Power(movenum, gen) == 0 && MoveInfo::Power(movesTaken.value(0), gen) == 0 &&
+                   MoveInfo::Power(movesTaken.value(1), gen) == 0 && MoveInfo::Power(movesTaken.value(2), gen) == 0)
                 {
                     continue;
                 }
                 movesTaken.push_back(movenum);
                 p.move(i).num() = movenum;
-                p.move(i).load();
+                p.move(i).load(gen);
                 break;
             }
         }
@@ -405,14 +394,8 @@ void TeamBattle::generateRandom()
         else if (movesTaken.contains(Move::Frustration))
             p.happiness() = 0;
 
-        bool itemDone= false;
-        while(!itemDone)
-        {
-            p.item() = ItemInfo::Number(ItemInfo::SortedNames(4)[true_rand()%ItemInfo::NumberOfItems()]);
-            if(ItemInfo::isUseful(p.item()))
-                itemDone = true;
+        p.item() = ItemInfo::Number(ItemInfo::SortedUsefulNames(gen)[true_rand()%ItemInfo::SortedUsefulNames(gen).size()]);
 
-        }
         p.updateStats();
         p.nick() = PokemonInfo::Name(p.num());
         p.status() = Pokemon::Fine;

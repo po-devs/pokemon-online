@@ -13,4 +13,5 @@ SOURCES += usagestats.cpp
 HEADERS += usagestats.h \
     usagestats_global.h \
     ../PokemonInfo/battlestructs.h \
-    ../Server/plugininterface.h
+    ../Server/plugininterface.h \
+    ../Server/playerinterface.h

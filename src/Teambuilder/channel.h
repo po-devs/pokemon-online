@@ -5,7 +5,7 @@
 #include "../PokemonInfo/networkstructs.h"
 
 class QIdTreeWidgetItem;
-class QScrollDownTextEdit;
+class QScrollDownTextBrowser;
 class Client;
 
 class Channel : public QObject {
@@ -31,7 +31,7 @@ public:
     QTreeWidget *battlesWidget() {
         return battleList;
     }
-    QScrollDownTextEdit *mainChat() {
+    QScrollDownTextBrowser *mainChat() {
         return mymainchat;
     }
     bool hasPlayer(int player) const {
@@ -76,11 +76,11 @@ public slots:
 private:
     QTreeWidget *myplayers;
     QHash<int, QIdTreeWidgetItem *> myplayersitems;
-    QHash<QString, QIdTreeWidgetItem *> mytiersitems;
+    QHash<QString, QTreeWidgetItem *> mytiersitems;
     QTreeWidget *battleList;
     QHash<int, QIdTreeWidgetItem *> battleItems;
     QHash<qint32, Battle> battles;
-    QScrollDownTextEdit *mymainchat;
+    QScrollDownTextBrowser *mymainchat;
 
     Client *client;
 
@@ -91,6 +91,7 @@ private:
     bool readyToQuit;
 
     QIdTreeWidgetItem *item(int  id);
+    void getBackAllPlayerItems();
 };
 
 #endif // CHANNEL_H

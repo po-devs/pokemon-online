@@ -117,3 +117,8 @@ bool MoveSetChecker::isAnEggMoveCombination(const Pokemon::uniqueId &pokeid, int
 
     return false;
 }
+
+QList<QSet<int> > MoveSetChecker::combinationsFor(int pokenum, int gen)
+{
+    return (*legalCombinations)[gen-3][pokenum];
+}

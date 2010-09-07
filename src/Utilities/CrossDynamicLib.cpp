@@ -38,7 +38,7 @@ cross::DynamicLibrary::DynamicLibrary(const char* libname):
 #ifdef WIN32
 	libhandle = LoadLibrary(libname);
 #else
-	libhandle = dlopen(libname, RTLD_LOCAL);
+	libhandle = dlopen(libname, RTLD_LOCAL | RTLD_NOW);
 #endif
 	if(!libhandle)
 		throw( DynamicLibException("Library could not be loaded.") );

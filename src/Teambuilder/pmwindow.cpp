@@ -12,8 +12,8 @@ PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QS
     QGridLayout *l = new QGridLayout(this);
     this->setLayout(l);
 
-    m_mainwindow = new QScrollDownTextEdit();
-    m_textToSend = new QLineEdit();
+    m_mainwindow = new QScrollDownTextBrowser();
+    m_textToSend = new QIRCLineEdit();
 
     l->addWidget(m_mainwindow, 0,0,1,2);
     l->addWidget(m_textToSend, 1,0,1,2);

@@ -16,7 +16,7 @@ struct MoveMechanics : public Mechanics
 /* Used to tell us everything about a move */
 struct MoveEffect : public QVariantHash
 {
-    MoveEffect(int num);
+    MoveEffect(int num, int gen);
 
     static void setup(int movenum, int source, int target, BattleSituation &b);
     static void unsetup(int movenum, int source, BattleSituation &b);
