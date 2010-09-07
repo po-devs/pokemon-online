@@ -1,3 +1,8 @@
+namespace Pokemon {
+    class uniqueId;
+}
+unsigned int qHash (const Pokemon::uniqueId &key);
+
 #include <QtXml>
 #include <cmath>
 #include <ctime>
@@ -601,7 +606,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
 QString Tier::getBannedPokes() const
 {
     QStringList bannedPokesS;
-    foreach(int poke, bannedPokes) {
+    foreach(Pokemon::uniqueId poke, bannedPokes) {
         bannedPokesS.append(PokemonInfo::Name(poke));
     }
     bannedPokesS.sort();
@@ -631,7 +636,7 @@ QString Tier::getBannedMoves() const
 QString Tier::getRestrictedPokes() const
 {
     QStringList restrictedPokesS;
-    foreach(int poke, restrictedPokes) {
+    foreach(Pokemon::uniqueId poke, restrictedPokes) {
         restrictedPokesS.append(PokemonInfo::Name(poke));
     }
     restrictedPokesS.sort();
@@ -645,7 +650,7 @@ void Tier::importBannedPokes(const QString &s)
         return;
     QStringList pokes = s.split(",");
     foreach (QString poke, pokes) {
-        int num = PokemonInfo::Number(poke.trimmed());
+        Pokemon::uniqueId num = PokemonInfo::Number(poke.trimmed());
         if (num != 0)
             bannedPokes.insert(num);
     }
@@ -659,7 +664,7 @@ void Tier::importBannedItems(const QString &s)
     QStringList items = s.split(",");
     foreach (QString item, items) {
         int num = ItemInfo::Number(item.trimmed());
-        if (num != 0)
+        if (num != Pokemon::NoPoke)
             bannedItems.insert(num);
     }
 }
@@ -685,8 +690,8 @@ void Tier::importRestrictedPokes(const QString &s)
         return;
     QStringList rpokes = s.split(",");
     foreach (QString poke, rpokes) {
-        int num = PokemonInfo::Number(poke.trimmed());
-        if (num != 0)
+        Pokemon::uniqueId num = PokemonInfo::Number(poke.trimmed());
+        if (num != Pokemon::NoPoke)
             restrictedPokes.insert(num);
     }
 }

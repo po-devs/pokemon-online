@@ -339,7 +339,7 @@ void PokeGraphics::load(int gender, bool shiny)
 
     m_storedgender = gender;
     m_storedshininess = shiny;
-    m_picture = PokemonInfo::Picture(num(), gen(), forme, gender, shiny, false);
+    m_picture = PokemonInfo::Picture(num(), gender, shiny, false);
 
     setUpToDate(true);
 }
