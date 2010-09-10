@@ -194,7 +194,7 @@ public:
 signals:
     void clearTheChat();
 public slots:
-    void changeScript(const QString &script);
+    void changeScript(const QString &script, const bool triggerStartUp = false);
 
 private slots:
     void timer();
