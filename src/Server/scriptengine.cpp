@@ -25,7 +25,7 @@ ScriptEngine::ScriptEngine(Server *s) {
     changeScript(QString::fromUtf8(f.readAll()));
 }
 
-void ScriptEngine::changeScript(const QString &script)
+void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
 {
     myscript = myengine.evaluate(script);
     myengine.globalObject().setProperty("script", myscript);
@@ -34,6 +34,9 @@ void ScriptEngine::changeScript(const QString &script)
         printLine("Fatal Script Error line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + myscript.toString());
     } else {
         printLine("Script Check: OK");
+        if(triggerStartUp) {
+            serverStartUp();
+        }
     }
 }
 
