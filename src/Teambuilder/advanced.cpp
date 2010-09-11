@@ -177,7 +177,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 void TB_Advanced::changeForme()
 {
     QAction *ac = (QAction*) sender();
-    if (ac->property("pokemonid").toInt() == poke()->num().toPokeRef()) {
+    if (ac->property("pokemonid").toUInt() == poke()->num().toPokeRef()) {
         ac->setChecked(true);
         return;
     }

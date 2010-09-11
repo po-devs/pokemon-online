@@ -32,7 +32,7 @@ private:
     QByteArray data(const PokeBattle &p) const;
     void savePokemon(const PokeBattle &p, bool lead, const QString &d);
 
-    static const int bufsize = 5*sizeof(qint32)+4*sizeof(quint16);
+    static const int bufsize = 6*sizeof(qint32)+4*sizeof(quint16);
 };
 
 #endif // POKEMONONLINESTATSPLUGIN_H

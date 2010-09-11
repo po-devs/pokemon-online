@@ -245,7 +245,7 @@ struct MoveSet {
     QMap<SecondaryStuff, SecondaryStuff> options;
 
     MoveSet();
-    MoveSet(char buffer[28], int usage, int defAb);
+    MoveSet(char buffer[32], int usage, int defAb);
 
     MoveSet & operator += (const MoveSet &other) {
         usage += other.usage;
@@ -278,10 +278,10 @@ MoveSet::MoveSet(char buffer[28], int usage, int defAb)
 {
     qint32 *buf = (qint32 *) buffer;
 
-    raw.item = buf[0] & 0xFFFF;
-    num = buf[0] >> 16;
+    raw.item = buf[1];
+    num = buf[0];
 
-    if (defAb == buf[1] >> 16) {
+    if (defAb == buf[2] >> 16) {
         abilities[0] = usage;
         abilities[1] = 0;
     } else {
@@ -289,24 +289,24 @@ MoveSet::MoveSet(char buffer[28], int usage, int defAb)
         abilities[1] = usage;
     }
 
-    raw.level = buf [1] & 0xFF;
+    raw.level = buf [2] & 0xFF;
 
     SecondaryStuff s;
 
     s.usage = usage;
-    s.nature = buf[2] >> 24;
-    s.evs[0] = (buf[2] >> 16) & 0xFF;
-    s.evs[1] = (buf[2] >> 8) & 0xFF;
-    s.evs[2] = buf[2] & 0xFF;
-    s.evs[3] = buf[3] >> 16;
-    s.evs[4] = (buf[3] >> 8) & 0xFF;
-    s.evs[5] = buf[3] & 0xFF;
+    s.nature = buf[3] >> 24;
+    s.evs[0] = (buf[3] >> 16) & 0xFF;
+    s.evs[1] = (buf[3] >> 8) & 0xFF;
+    s.evs[2] = buf[3] & 0xFF;
+    s.evs[3] = buf[4] >> 16;
+    s.evs[4] = (buf[4] >> 8) & 0xFF;
+    s.evs[5] = buf[4] & 0xFF;
 
     for (int i = 0; i < 6; i++) {
-        s.dvs[i] = (buf[4] >> (5-i)*5) & 0x1F;
+        s.dvs[i] = (buf[5] >> (5-i)*5) & 0x1F;
     }
 
-    qint16 *moves = (qint16 *) (&buf[5]);
+    qint16 *moves = (qint16 *) (&buf[6]);
 
     qSort(&moves[0], &moves[4]);
 
@@ -547,22 +547,22 @@ int main(int argc, char *argv[])
         foreach(QString file, files) {
             FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "rb");
 
-            char buffer[28];
+            char buffer[32];
 
-            while (fread(buffer, sizeof(char), 28/sizeof(char), f) == 28) {
+            while (fread(buffer, sizeof(char), 32/sizeof(char), f) == 32) {
                 qint32 iusage(0), ileadusage(0);
 
                 fread(&iusage, sizeof(qint32), 1, f);
                 fread(&ileadusage, sizeof(qint32), 1, f);
 
-                int pokenum = (*((qint32*) buffer)) >> 16;
+                int pokenum = *((qint32*) buffer);
 
                 if (pokenum != 0) {
                     usage[pokenum] += iusage;
                     if (ileadusage > 0) {
                         leadUsage[pokenum] += ileadusage;
                     }
-                    buffers[pokenum].append(Bcc(QByteArray(buffer, 28), iusage, ileadusage));
+                    buffers[pokenum].append(Bcc(QByteArray(buffer, 32), iusage, ileadusage));
                 }
                 totalusage += iusage;
             }
