@@ -85,7 +85,7 @@ class ProfileTab : public QFrame
 public:
     ProfileTab();
 public slots:
-    void changeDesc (int poke);
+    void changeDesc (Pokemon::uniqueId poke);
 private:
     QLabel *hgDesc, *ssDesc, *ptDesc;
     QLabel *ab1, *ab2;
@@ -97,7 +97,7 @@ class MoveTab : public QFrame
 public:
     MoveTab();
 public slots:
-    void changePoke(int poke);
+    void changePoke(Pokemon::uniqueId poke);
 private:
     QCompactTable *moves;
 
@@ -117,12 +117,12 @@ class StatTab: public QFrame
 public:
     StatTab();
 public slots:
-    void changePoke(int poke);
+    void changePoke(Pokemon::uniqueId poke);
 private slots:
     void increaseBoost();
     void decreaseBoost();
 private:
-    int poke;
+    Pokemon::uniqueId poke;
     QLabel *min[6];
     QLabel *max[6];
     QImageButtonLR *buttons[6];

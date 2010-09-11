@@ -27,12 +27,16 @@ void MainWindow::processFiles()
 }
 
 static QString makeLine(int index, int forme, const QString &content) {
-    return QString("%1:%2 %3").arg(index).arg(forme).arg(content);
+    if (forme != -1)
+        return QString("%1:%2 %3").arg(index).arg(forme).arg(content);
+    else
+        return QString("%1 %2").arg(index).arg(content);
 }
 
 void MainWindow::processFile(const QString &filename)
 {
     bool translationFile = filename.indexOf("pokemons") != -1;
+    bool descriptionFile = filename.indexOf("description") != -1 || filename.indexOf("classification") != -1 ;
 
     QFile in(filename);
     in.open(QIODevice::ReadOnly);
@@ -48,8 +52,8 @@ void MainWindow::processFile(const QString &filename)
     QStringList output;
 
     for (int i = 0; i < lines.size(); i++) {
-        if (i <= 493) {
-            output.push_back(makeLine(i, 0, lines[i]));
+        if (i <= 493 || descriptionFile) {
+            output.push_back(makeLine(i, descriptionFile ? -1: 0, lines[i]));
         } else {
             int indexes[] = {
                 479,479,479,479,479,386,386,386,413,413,487,492

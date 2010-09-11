@@ -449,9 +449,9 @@ void PokemonInfo::loadHeights()
         QString current = temp[i].trimmed();
         QString height;
         Pokemon::uniqueId pokeid;
-        bool ok = Pokemon::uniqueId::extract(current, pokeid, height);
-        if(ok) 
-			m_Height[pokeid] = height;
+
+        if(Pokemon::uniqueId::extract(current, pokeid, height))
+            m_Height[pokeid] = height;
     }
 }
 
@@ -802,20 +802,18 @@ void PokemonInfo::loadMoves()
             QString current = temp[j].trimmed();
             QString text_moves;
             Pokemon::uniqueId pokeid;
-            bool ok = Pokemon::uniqueId::extract(current, pokeid, text_moves);
-            if(ok) {
+
+            if(Pokemon::uniqueId::extract(current, pokeid, text_moves)) {
                 QStringList move_list = text_moves.split(' ');
                 QSet<int> data_set;
                 for(int ml_counter = 0; ml_counter < move_list.size(); ml_counter++) {
-                    bool converted;
-                    int cur_move = move_list[ml_counter].toInt(&converted);
-                    if(converted) {
-                        data_set.insert(cur_move);
-                    }
+                    int move = move_list[ml_counter].toInt();
+                    if(move != 0)
+                        data_set.insert(move);
                 }
                 // Should create an item with pokeid key
                 // in m_Moves if it does not exist.
-                PokemonMoves moves = m_Moves[pokeid];
+                PokemonMoves &moves = m_Moves[pokeid];
                 QSet<int> *refs[filesize] = {
                     &moves.TMMoves[0], &moves.TMMoves[1], &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0],
                     &moves.preEvoMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1]
@@ -823,6 +821,19 @@ void PokemonInfo::loadMoves()
                 *refs[i] = data_set;
             }
         }
+    }
+
+    QHashIterator<Pokemon::uniqueId, PokemonMoves> it(m_Moves);
+    while(it.hasNext()) {
+        it.next();
+        PokemonMoves moves = it.value();
+
+        moves.regularMoves[0] = moves.TMMoves[0];
+        moves.regularMoves[0].unite(moves.levelMoves[0]).unite(moves.tutorMoves[0]);
+        moves.regularMoves[1] = moves.TMMoves[1];
+        moves.regularMoves[1].unite(moves.preEvoMoves[1]).unite(moves.levelMoves[1]).unite(moves.tutorMoves[1]);
+
+        m_Moves[it.key()] = moves;
     }
 }
 

@@ -449,7 +449,7 @@ ProfileTab::ProfileTab()
     changeDesc(1);
 }
 
-void ProfileTab::changeDesc(int poke)
+void ProfileTab::changeDesc(Pokemon::uniqueId poke)
 {
     QString hg = PokemonInfo::Desc(poke, Version::HeartGold);
     QString ss = PokemonInfo::Desc(poke, Version::SoulSilver);
@@ -538,7 +538,7 @@ StatTab::StatTab() {
     changePoke(1);
 }
 
-void StatTab::changePoke(int poke) {
+void StatTab::changePoke(Pokemon::uniqueId poke) {
     this->poke = poke;
 
     for (int i = 1; i < 6; i++) {
@@ -712,7 +712,7 @@ MoveTab::MoveTab()
     changePoke(1);
 }
 
-void MoveTab::changePoke(int poke)
+void MoveTab::changePoke(Pokemon::uniqueId poke)
 {
     moves->setSortingEnabled(false);
 
