@@ -59,7 +59,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
             QSet<int> alreadyItems[2];
             for (int i = 0; i < 6; i++) {
                 int o1 = team1.poke(i).item();
-                int o2 = team1.poke(i).item();
+                int o2 = team2.poke(i).item();
 
                 if (alreadyItems[0].contains(o1)) {
                     team1.poke(i).item() = 0;
