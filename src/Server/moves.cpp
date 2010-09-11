@@ -2126,7 +2126,7 @@ struct MMEncore : public MM
         poke(b,t)["EncoresMove"] = move;
 
         /*Changes the encored move, if no choice is off (otherwise recharging moves like blast burn would attack again,
-            and i bet something strange would also happen with charging move */
+            and i bet something strange would also happen with charging move) */
         if (!turn(b,t).contains("NoChoice")) {
             for (int i = 0; i < 4; i ++) {
                 if (b.move(t, i) == move) {
