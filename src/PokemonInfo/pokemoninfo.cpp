@@ -535,9 +535,9 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
     QString file;
 
     if (gen ==3)
-        file = QString("%1/%2%3.png").arg(pokeid.toString()).arg(back?"3Gback":"RFLG").arg(shiney?"s":"");
+        file = QString("%1/%2%3.png").arg(pokeid.toString(), back?"3Gback":"RFLG", shiney?"s":"");
     else if (gen == 4)
-        file = QString("%2/DP%3%4%5.png").arg(pokeid.toString()).arg(back?"b":"",(gender==Pokemon::Female)?"f":"m", shiney?"s":"");
+        file = QString("%1/DP%2%3%4.png").arg(pokeid.toString(), back?"b":"", (gender==Pokemon::Female)?"f":"m", shiney?"s":"");
 
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
