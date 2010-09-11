@@ -171,7 +171,7 @@ public:
     int num() const {return m_num;}
 signals:
     void changePokemonOrder(QPair<int,int> exchange);
-    void changePokemonBase(int num, int poke);
+    void changePokemonBase(int num, Pokemon::uniqueId);
 
 protected:
     static QPixmap * teamBoxBall;
@@ -238,6 +238,10 @@ public:
     TB_PokeChoice(int gen, bool missingno);
 
     void changeGen(int gen);
+signals:
+    void pokemonActivated(Pokemon::uniqueId num);
+public slots:
+    void activatedCell(int row);
 protected:
     void mousePressEvent(QMouseEvent * event);
     void mouseMoveEvent(QMouseEvent * event);

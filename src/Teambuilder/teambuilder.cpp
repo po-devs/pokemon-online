@@ -715,7 +715,7 @@ void TeamPokeButton::dropEvent(QDropEvent * event)
         if(source)
         {
             const QMimeData * data = event->mimeData();
-            emit changePokemonBase(this->num(),data->text().toInt());
+            emit changePokemonBase(this->num(), Pokemon::uniqueId(data->text().toInt()));
         }
     }
 }
@@ -768,9 +768,9 @@ TB_TeamBody::TB_TeamBody(TeamBuilder *parent, int gen) : m_dockAdvanced(0), m_te
     pokeButtons[0]->setChecked(true);
     for(int i = 0; i < 6; i++) {
         connect(pokeButtons[i], SIGNAL(clicked()), SLOT(changeIndex()));
-        connect(pokeButtons[i], SIGNAL(changePokemonBase(int,int)), SLOT(changePokemonBase(int,int)));
+        connect(pokeButtons[i], SIGNAL(changePokemonBase(int,Pokemon::uniqueId)), SLOT(changePokemonBase(int,Pokemon::uniqueId)));
         connect(pokeButtons[i], SIGNAL(changePokemonOrder(QPair<int,int>)), SLOT(changePokemonOrder(QPair<int,int>)));
-        connect(pokeBody[i], SIGNAL(pokeChanged(int)), SLOT(updateButton()));
+        connect(pokeBody[i], SIGNAL(pokeChanged(Pokemon::uniqueId)), SLOT(updateButton()));
         connect(pokeBody[i], SIGNAL(itemChanged(int)), SLOT(updateButton()));
         connect(pokeBody[i], SIGNAL(levelChanged()), SLOT(updateButton()));
         connect(pokeBody[i], SIGNAL(advanced(int, bool)), SLOT(advancedClicked(int, bool)));
@@ -921,7 +921,16 @@ TB_PokeChoice::TB_PokeChoice(int gen, bool missingno) : QCompactTable(PokemonInf
         setItem(i-!missingno, 1, new QTableWidgetItem(PokemonInfo::Name(i)));
     }
 
+    connect(this, SIGNAL(cellActivated(int,int)), SLOT(activatedCell(int)));
+
     resizeRowsToContents();
+}
+
+void TB_PokeChoice::activatedCell(int row)
+{
+    int num = item(row, 0)->text().toInt();
+
+    emit pokemonActivated(Pokemon::uniqueId(num, 0));
 }
 
 void TB_PokeChoice::changeGen(int gen)
@@ -1150,7 +1159,7 @@ void TB_PokemonBody::initPokemons(TB_PokemonBody *)
 
     connect(completer, SIGNAL(activated(QString)), this, SLOT(setPokeByNick()));
     connect(m_pokeedit, SIGNAL(returnPressed()), this, SLOT(setPokeByNick()));
-    connect(pokechoice, SIGNAL(cellActivated(int,int)), SLOT(setNum(int)));
+    connect(pokechoice, SIGNAL(pokemonActivated(Pokemon::uniqueId)), SLOT(setNum(Pokemon::uniqueId)));
 }
 
 void TB_PokemonBody::initMoves()
