@@ -577,7 +577,7 @@ QPixmap PokemonInfo::Sub(int gen, bool back)
 QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid)
 {
     QString archive = path("icons.zip");
-    QString file = QString("%1.PNG").arg(pokeid.toString());
+    QString file = QString("%1.png").arg(pokeid.toString());
 
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
     if(data.length() == 0)

@@ -350,9 +350,9 @@ PokedexBody::PokedexBody()
     tabw->addTab(st = new StatTab(), tr("STATS"));
     tabw->addTab(mt = new MoveTab(), tr("MOVES"));
 
-    connect(this, SIGNAL(pokeChanged(int)), pt, SLOT(changeDesc(int)));
-    connect(this, SIGNAL(pokeChanged(int)), st, SLOT(changePoke(int)));
-    connect(this, SIGNAL(pokeChanged(int)), mt, SLOT(changePoke(int)));
+    connect(this, SIGNAL(pokeChanged(Pokemon::uniqueId)), pt, SLOT(changeDesc(Pokemon::uniqueId)));
+    connect(this, SIGNAL(pokeChanged(Pokemon::uniqueId)), st, SLOT(changePoke(Pokemon::uniqueId)));
+    connect(this, SIGNAL(pokeChanged(Pokemon::uniqueId)), mt, SLOT(changePoke(Pokemon::uniqueId)));
 
     changeToPokemon(1);
 }
