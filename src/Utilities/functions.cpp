@@ -7,7 +7,7 @@ QString escapeHtml(const QString & toConvert)
     ret.replace("&", "&amp;");
     ret.replace("<", "&lt;");
     ret.replace(">", "&gt;");
-    ret.replace(QRegExp("\\b(http://[^\\s]+)", Qt::CaseInsensitive), "<a href='\\1'>\\1</a>");
+    ret.replace(QRegExp("\\b((?:https?|ftp)://[^\\s]+)", Qt::CaseInsensitive), "<a href='\\1'>\\1</a>");
 
     return ret;
 }
