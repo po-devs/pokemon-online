@@ -544,9 +544,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
     if (data.length()==0)
     {
         if (gen == 3) {
-            if (gender == Pokemon::Female)
-                return PokemonInfo::Picture(pokeid, 3, Pokemon::Male, shiney, back);
-            else if (shiney)
+            if (shiney)
                 return PokemonInfo::Picture(pokeid, 3, Pokemon::Male, false, back);
             else
                 return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
