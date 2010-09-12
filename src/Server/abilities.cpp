@@ -93,7 +93,7 @@ struct AMAnticipation : public AM {
             for (int i = 0; i < 4; i++) {
                 int move = b.move(t, i);
 
-                if (cool_moves.contains(move))
+                if (cool_moves.contains(move) || MoveInfo::Power(move, b.gen()) == 0)
                     continue;
 
                 if (move == Move::Explosion || move == Move::Selfdestruct || MoveInfo::isOHKO(move) ||
