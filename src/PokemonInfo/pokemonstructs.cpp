@@ -779,14 +779,16 @@ bool TrainerTeam::importFromTxt(const QString &file1)
             nickname = first[0];
         }
 
-        // alternate formes, from Shoddy :s
-        if (pokestring.indexOf('-') != -1) {
-            pokestring[pokestring.length()-1] = pokestring[pokestring.length()-1].toUpper();
+        static QStringList bef = QStringList() << "Porygonz" << "Deoxys-f" << "Deoxys-e" << "Deoxys-l";
+        static QStringList aft = QStringList() << "Porygon-Z" << "Deoxys-A" << "Deoxys-S" << "Deoxys-D";
+
+        if (bef.contains(pokestring)) {
+            pokestring = aft[bef.indexOf(pokestring)];
         }
 
-        /* Another shoddy fix */
-        if (pokestring == "Porygonz") {
-            pokestring = "Porygon-Z";
+        // alternate formes, from Shoddy :s
+        if (pokestring.indexOf('-') != -1 && pokestring.indexOf('-') <= pokestring.length() - 2) {
+            pokestring[pokestring.indexOf('-')+1] = pokestring[pokestring.indexOf('-')+1].toUpper();
         }
 
         pokenum = PokemonInfo::Number(pokestring);
