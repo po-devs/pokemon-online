@@ -38,6 +38,7 @@ QHash<Pokemon::uniqueId, PokemonMoves> PokemonInfo::m_Moves;
 QHash<int, quint16> PokemonInfo::m_MaxForme;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Options;
 int PokemonInfo::m_trueNumberOfPokes;
+QSet<Pokemon::uniqueId> PokemonInfo::m_AestheticFormes;
 
 QHash<int, QList<int> > PokemonInfo::m_Evolutions;
 QHash<int, int> PokemonInfo::m_OriginalEvos;
@@ -528,6 +529,16 @@ int PokemonInfo::Gender(const Pokemon::uniqueId &pokeid)
     return m_Genders.value(pokeid);
 }
 
+bool PokemonInfo::IsAesthetic(Pokemon::uniqueId id)
+{
+    return m_AestheticFormes.contains(id);
+}
+
+Pokemon::uniqueId PokemonInfo::NonAestheticForme(Pokemon::uniqueId id)
+{
+    return IsAesthetic(id) ? OriginalForme(id) : id;
+}
+
 QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gender, bool shiney, bool back)
 {
     QString archive = path("poke_img.zip");
@@ -872,6 +883,7 @@ void PokemonInfo::makeDataConsistent()
         // Base stats.
         if(!m_BaseStats.contains(id)) {
             m_BaseStats[id] = m_BaseStats.value(OriginalForme(id), PokeBaseStats());
+            m_AestheticFormes.insert(id);
         }
         // Moves.
         if(!m_Moves.contains(id)) {

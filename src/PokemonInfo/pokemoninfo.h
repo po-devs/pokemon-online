@@ -74,6 +74,8 @@ public:
     static bool AFormesShown(const Pokemon::uniqueId &pokeid);
     /* Standard formes: Rotom, Giratina, Deoxys, .. */
     static bool IsForme(const Pokemon::uniqueId &pokeid);
+    static bool IsAesthetic(Pokemon::uniqueId id);
+    static Pokemon::uniqueId NonAestheticForme(Pokemon::uniqueId id);
     static Pokemon::uniqueId OriginalForme(const Pokemon::uniqueId &pokeid);
     static bool HasFormes(const Pokemon::uniqueId &pokeid);
     // Will NOT return base form. Should it?
@@ -114,6 +116,10 @@ private:
     static QHash<int, QList<int> > m_Evolutions;
     static QHash<int, int> m_OriginalEvos;
     static QHash<int, int> m_PreEvos;
+    /* Tells if there is a real difference from the original forme.
+       If not, tiers will consider the pokemon as its original forme, to avoid
+       listing too many pokemons */
+    static QSet<Pokemon::uniqueId> m_AestheticFormes;
     // A number of forms a pokemon has. 0 for most cases.
     // Keep it as QHash.
     // quint16 as only pokenum matters.

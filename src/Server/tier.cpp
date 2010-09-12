@@ -162,7 +162,7 @@ bool Tier::isBanned(const PokeBattle &p) const {
     if (p.level() > maxLevel)
         return true;
     if (banPokes) {
-        if (bannedPokes.contains(p.num()))
+        if (bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num())))
             return true;
         if (bannedMoves.size() > 0) {
             for (int i = 0; i < 4; i++) {
@@ -183,7 +183,7 @@ bool Tier::isBanned(const PokeBattle &p) const {
     } else {
         /* The mode is the "restrict" mode, so instead we force the pokemons to have
            some characteristics */
-        if (bannedPokes.size() > 0 && !bannedPokes.contains(p.num()))
+        if (bannedPokes.size() > 0 && !bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num())))
             return true;
         if (bannedMoves.size() > 0) {
             for (int i = 0; i < 4; i++) {
@@ -214,7 +214,7 @@ bool Tier::isBanned(const PokeBattle &p) const {
 
 bool Tier::isRestricted(const PokeBattle &p) const
 {
-    if (restrictedPokes.contains(p.num()))
+    if (restrictedPokes.contains(PokemonInfo::NonAestheticForme(p.num())))
         return true;
 
 //    if (restrictedSets.contains(p.num())) {
