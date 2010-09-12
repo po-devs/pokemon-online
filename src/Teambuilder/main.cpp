@@ -13,9 +13,6 @@
 #include <QMainWindow>
 #include <iostream>
 #include <ctime>
-#if defined(WIN32) || defined(WIN64)
-//#include "../Utilities/otherwidgets.cpp"
-#endif
 
 #ifdef Q_OS_MACX
 #include <CoreFoundation/CFURL.h>
