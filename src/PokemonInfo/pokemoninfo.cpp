@@ -444,7 +444,7 @@ void PokemonInfo::loadEvos()
 void PokemonInfo::loadHeights()
 {
     QStringList temp;
-    fill_container_with_file(temp, path("height"));
+    fill_container_with_file(temp, path("height.txt"));
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString height;
