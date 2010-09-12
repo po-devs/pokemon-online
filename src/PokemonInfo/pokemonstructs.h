@@ -636,7 +636,6 @@ namespace Pokemon
     };
 }
 
-
 namespace Move
 {
     enum Category

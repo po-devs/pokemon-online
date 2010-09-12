@@ -124,6 +124,8 @@ TitledWidget::TitledWidget(const QString &title, QWidget *w)
 
 TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : gen3(NULL), gen4(NULL), m_team(pub_team)
 {
+    qRegisterMetaType<Pokemon::uniqueId>("Pokemon::uniqueId");
+
     setAttribute(Qt::WA_DeleteOnClose, true);
 
     resize(785,610);
@@ -1230,7 +1232,7 @@ void TB_PokemonBody::connectWithAdvanced(TB_Advanced *ptr)
     connect(ptr, SIGNAL(genderChanged()), this, SLOT(updateGender()));
     connect(ptr, SIGNAL(genderChanged()), this, SLOT(updateImage()));
     connect(ptr, SIGNAL(statChanged()), this, SLOT(updateEVs()));
-    connect(ptr, SIGNAL(pokeFormeChanged(Pokemon::uniqueId)), this, SLOT(changeForme(Pokemon::uniqueId)));
+    connect(ptr, SIGNAL(pokeFormeChanged(Pokemon::uniqueId)), this, SLOT(changeForme(Pokemon::uniqueId)), Qt::QueuedConnection);
     connect(this, SIGNAL(EVChanged(int)), ptr, SLOT(updateStat(int)));
     connect(this, SIGNAL(natureChanged()), ptr, SLOT(updateStats()));
     connect(this, SIGNAL(pokeImageChanged()), ptr, SLOT(updatePokeImage()));
