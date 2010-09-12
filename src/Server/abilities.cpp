@@ -85,11 +85,19 @@ struct AMAnticipation : public AM {
     }
 
     static void us (int s, int, BS &b) {
+        static QList<int> cool_moves = QList<int> () << Move::Counter << Move::MetalBurst << Move::MirrorCoat;
+
         QList<int> tars = b.revs(s);
         bool frightening_truth = false;
         foreach(int t, tars) {
             for (int i = 0; i < 4; i++) {
-                if (TypeInfo::Eff(MoveInfo::Type(b.move(t, i)), b.getType(s,1)) * TypeInfo::Eff(MoveInfo::Type(b.move(t, i)), b.getType(s,2)) > 4) {
+                int move = b.move(t, i);
+
+                if (cool_moves.contains(move))
+                    continue;
+
+                if (move == Move::Explosion || move == Move::Selfdestruct || MoveInfo::isOHKO(move) ||
+                    TypeInfo::Eff(MoveInfo::Type(b.move(t, i)), b.getType(s,1)) * TypeInfo::Eff(MoveInfo::Type(b.move(t, i)), b.getType(s,2)) > 4) {
                     frightening_truth = true;
                     break;
                 }
