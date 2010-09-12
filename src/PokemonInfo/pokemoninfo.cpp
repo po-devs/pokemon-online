@@ -698,16 +698,12 @@ void PokemonInfo::loadNames()
         bool ok = Pokemon::uniqueId::extract(current, id, name, &options);
         if(ok) {
             m_Names[id] = name;
-            if(options.contains('H')) {
-                if(id.subnum == 0) {
-                    // Base form cannot be hidden.
-                    options.remove('H');
-                    m_VisiblePokesPlainList.append(id);
-                }
-            }else{
+            m_Options[id] = options;
+
+            if (AFormesShown(id)) {
                 m_VisiblePokesPlainList.append(id);
             }
-            m_Options[id] = options;
+
             // Calculate a number of formes a given base pokemon have.
             quint16 max_forme = m_MaxForme.value(id.pokenum, 0);
             if(max_forme < id.subnum){
@@ -717,7 +713,7 @@ void PokemonInfo::loadNames()
         }
     }
 
-    // Loading weights too for some reason...
+    // Loading weights too for grass knot and low kick...
     temp.clear();
     fill_container_with_file(temp, path("poke_weight.txt"));
     for(int i = 0; i < temp.size(); i++) {
@@ -737,7 +733,7 @@ bool PokemonInfo::HasFormes(const Pokemon::uniqueId &pokeid)
 
 bool PokemonInfo::AFormesShown(const Pokemon::uniqueId &pokeid)
 {
-    return !m_Options.value(pokeid).contains('H');
+    return !m_Options.value(pokeid.pokenum).contains('H');
 }
 
 quint16 PokemonInfo::NumberOfAFormes(const Pokemon::uniqueId &pokeid)
@@ -758,7 +754,7 @@ Pokemon::uniqueId PokemonInfo::OriginalForme(const Pokemon::uniqueId &pokeid)
 QList<Pokemon::uniqueId> PokemonInfo::Formes(const Pokemon::uniqueId &pokeid)
 {
     QList<Pokemon::uniqueId> result;
-    for(quint16 i = 1; i <= NumberOfAFormes(pokeid); i++) {
+    for(quint16 i = 0; i <= NumberOfAFormes(pokeid); i++) {
         result.append(Pokemon::uniqueId(pokeid.pokenum, i));
     }
     return result;
