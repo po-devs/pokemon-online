@@ -544,9 +544,16 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
     if (data.length()==0)
     {
         if (gen == 3) {
-            return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
+            if (gender == Pokemon::Female)
+                return PokemonInfo::Picture(pokeid, 3, Pokemon::Male, shiney, back);
+            else if (shiney)
+                return PokemonInfo::Picture(pokeid, 3, Pokemon::Male, false, back);
+            else
+                return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
         } else if (gen == 4 && gender == Pokemon::Female) {
             return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, shiney, back);
+        } else if (gen == 4 && shiney) {
+            return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, false, back);
         }
         return QPixmap();
     }
@@ -582,6 +589,10 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid)
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
     if(data.length() == 0)
     {
+        if (IsForme(pokeid)) {
+            return Icon(OriginalForme(pokeid));
+        }
+
         qDebug() << "error loading icon";
         return QPixmap();
     }
