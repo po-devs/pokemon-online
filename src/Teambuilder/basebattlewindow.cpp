@@ -355,7 +355,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             in >> info().currentShallow(spot);
             info().pokeAlive[spot] = true;
             info().sub[spot] = false;
-            info().specialSprite[spot] = 0;
+            info().specialSprite[spot] = Pokemon::NoPoke;
             mydisplay->updatePoke(spot);
 
             //Plays the battle cry when a pokemon is switched in
@@ -735,11 +735,11 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             quint8 type;
             in >> type;
             if (type == TempSprite) {
-                int old = info().specialSprite[spot];
+                Pokemon::uniqueId old = info().specialSprite[spot];
                 in >> info().specialSprite[spot];
                 if (info().specialSprite[spot] == -1) {
                     info().lastSeenSpecialSprite[spot] = old;
-                } else if (info().specialSprite[spot] == 0) {
+                } else if (info().specialSprite[spot] == Pokemon::NoPoke) {
                     info().specialSprite[spot] = info().lastSeenSpecialSprite[spot];
                 }
                 mydisplay->updatePoke(spot);
@@ -752,6 +752,12 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                 if (poke == info().currentIndex[spot]) {
                     info().currentShallow(spot).num() = newform;
                 }
+            } else if (type == AestheticForme)
+            {
+                quint16 newforme;
+                in >> newforme;
+                info().currentShallow(spot).num().subnum = newforme;
+                mydisplay->updatePoke(spot);
             }
             break;
         }

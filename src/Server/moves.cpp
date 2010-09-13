@@ -1438,7 +1438,7 @@ struct MMCovet : public MM
     static void uas(int s,int t,BS &b)
     {
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
-            && !b.hasWorkingAbility(t, Ability::Multitype) && b.poke(s).item() == 0
+            && b.ability(t) != Ability::Multitype && b.poke(s).item() == 0
                     && b.pokenum(t) != Pokemon::Giratina_O && !ItemInfo::isMail(b.poke(s).item())
             && !ItemInfo::isMail(b.poke(t).item())) /* Sticky Hold, MultiType, Giratina_O, Mail*/
         {
@@ -1458,7 +1458,7 @@ struct MMSwitcheroo : public MM
 
     static void daf(int s, int t, BS &b) {
         if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
-            || b.hasWorkingAbility(t, Ability::Multitype) || b.pokenum(s) == Pokemon::Giratina_O || b.pokenum(t) == Pokemon::Giratina_O
+            || b.ability(t) == Ability::Multitype || b.pokenum(s) == Pokemon::Giratina_O || b.pokenum(t) == Pokemon::Giratina_O
                     || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item()))
             /* Sticky Hold, MultiType, Giratina-O, Mail */
             {
@@ -2043,7 +2043,16 @@ struct MMDoomDesire : public MM
 struct MMEmbargo : public MM
 {
     MMEmbargo() {
+        functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.ability(t) == Ability::Multitype)
+            turn(b,s)["Failed"] = true;
+        else if (poke(b,s).contains("EmbargoEnd") && poke(b,s)["EmbargoEnd"].toInt() >= b.turn()) {
+            turn(b,s)["Failed"] = true;
+        }
     }
 
     static void uas(int s, int t, BS &b) {
@@ -2283,7 +2292,13 @@ struct MMFuryCutter : public MM
 struct MMGastroAcid : public MM
 {
     MMGastroAcid() {
+        functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.ability(t) == Ability::Multitype)
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -4529,14 +4544,17 @@ struct MMTransform : public MM {
     static void uas(int s, int t, BS &b) {
         QHash<QString, QVariant> &p = poke(b,s);
         /* Give new values to what needed */
-        int num = b.pokenum(t).toPokeRef();
-        if (num == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
+        Pokemon::uniqueId num = b.pokenum(t);
+        if (num.toPokeRef() == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
             num = Pokemon::Giratina;
+        if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
+            num.subnum = ItemInfo::PlateType(b.poke(s).item());
+        }
 
-        b.sendMoveMessage(137,0,s,0,s,num);
+        b.sendMoveMessage(137,0,s,0,s,num.pokenum);
 
         BS::BasicPokeInfo &po = fpoke(b,s);
-        po.id = Pokemon::uniqueId(num);
+        po.id = num;
         po.weight = PokemonInfo::Weight(num);
         po.type1 = PokemonInfo::Type1(num);
         po.type2 = PokemonInfo::Type2(num);

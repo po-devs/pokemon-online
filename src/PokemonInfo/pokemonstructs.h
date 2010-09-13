@@ -1602,7 +1602,6 @@ class PokePersonal
     PROPERTY(bool, shiny);
     PROPERTY(quint8, happiness);
     PROPERTY(quint8, level);
-    PROPERTY(quint8, forme);
     PROPERTY(quint8, gen);
 protected:
     int m_moves[4];

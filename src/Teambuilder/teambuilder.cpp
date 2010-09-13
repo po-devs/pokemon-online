@@ -821,8 +821,7 @@ void TB_TeamBody::changeIndex()
 void TB_TeamBody::updateButton()
 {
     int i = ((TB_PokemonBody*)sender())->num();
-    pokeButtons[i]->changeInfos(trainerTeam()->team().poke(i).num(), trainerTeam()->team().poke(i).level(),
-                                trainerTeam()->team().poke(i).item());
+    pokeButtons[i]->changeInfos(trainerTeam()->team().poke(i).num(), trainerTeam()->team().poke(i).level(),trainerTeam()->team().poke(i).item());
 }
 
 void TB_TeamBody::updateTeam()
@@ -1528,19 +1527,17 @@ void TB_PokemonBody::setItem(const QString &item)
 {
     int it = ItemInfo::Number(item);
 
-    if (poke()->num() == Pokemon::Arceus) {
+    if (PokemonInfo::OriginalForme(poke()->num()) == Pokemon::Arceus) {
         int type = 0;
         if (ItemInfo::isPlate(it)) {
             type = ItemInfo::PlateType(it);
         }
 
-        if (type != poke()->forme()) {
-            poke()->forme() = type;
-            emit pokeImageChanged();
-            updateImage();
+        if (type != poke()->num().subnum) {
+            changeForme(Pokemon::uniqueId(poke()->num().pokenum, type));
         }
     }
-    if (it == Item::GriseousOrb && poke()->num() != Pokemon::Giratina)
+    if (it == Item::GriseousOrb && poke()->num().pokenum != Pokemon::Giratina)
         poke()->item() = 0;
     else {
         poke()->item() = ItemInfo::Number(item);

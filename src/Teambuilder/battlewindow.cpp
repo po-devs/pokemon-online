@@ -442,7 +442,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     case SendOut:
 	{
             info().sub[spot] = false;
-            info().specialSprite[spot] = 0;
+            info().specialSprite[spot] = Pokemon::NoPoke;
             bool silent;
 
             in >> silent;
@@ -597,27 +597,31 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                 myazones[info().currentIndex[spot]]->tattacks[slot]->updateAttack(info().tempPoke(spot).move(slot), info().tempPoke(spot), gen());
             } else {
                 if (type == TempSprite) {
-                    int old = info().specialSprite[spot];
+                    Pokemon::uniqueId old = info().specialSprite[spot];
                     in >> info().specialSprite[spot];
                     if (info().specialSprite[spot] == -1) {
                         info().lastSeenSpecialSprite[spot] = old;
-                    } else if (info().specialSprite[spot] == 0) {
+                    } else if (info().specialSprite[spot] == Pokemon::NoPoke) {
                         info().specialSprite[spot] = info().lastSeenSpecialSprite[spot];
                     }
                     mydisplay->updatePoke(spot);
-                } else {
-                    if (type == DefiniteForm) {
-                        quint8 poke;
-                        quint16 newform;
-                        in >> poke >> newform;
-                        if (spot == info().myself) {
-                            info().myteam.poke(poke).num() = newform;
-                        }
-                        info().pokemons[spot][poke].num() = newform;
-                        if (poke == info().currentIndex[spot]) {
-                            info().currentShallow(spot).num() = newform;
-                        }
+                } else if (type == DefiniteForm) {
+                    quint8 poke;
+                    quint16 newform;
+                    in >> poke >> newform;
+                    if (spot == info().myself) {
+                        info().myteam.poke(poke).num() = newform;
                     }
+                    info().pokemons[spot][poke].num() = newform;
+                    if (poke == info().currentIndex[spot]) {
+                        info().currentShallow(spot).num() = newform;
+                    }
+                } else if (type == AestheticForme)
+                {
+                    quint16 newforme;
+                    in >> newforme;
+                    info().currentShallow(spot).num().subnum = newforme;
+                    mydisplay->updatePoke(spot);
                 }
             }
             break;
