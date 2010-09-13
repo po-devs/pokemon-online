@@ -2330,14 +2330,6 @@ int BattleSituation::getType(int player, int slot)
 {
     int types[] = {fieldpokes[player].type1,fieldpokes[player].type2};
 
-    if (!pokelong[player].value("Embargoed").toBool() && ItemInfo::isPlate(poke(player).item())) {
-        //multitype
-        if (hasWorkingAbility(player, Ability::Multitype)) {
-	    types[0] = pokelong[player]["ItemArg"].toInt();
-	    types[1] = Pokemon::Curse;
-	}
-    }
-
     if (types[slot-1] == Pokemon::Flying && pokelong[player].value("Roosted").toBool())
     {
 	return Pokemon::Curse;
@@ -2730,16 +2722,6 @@ void BattleSituation::acqItem(int player, int item) {
 
 void BattleSituation::loseItem(int player)
 {
-    //No Griseous Orb -> Giratina back to its ol' self
-    if (!koed(player)) {
-        if (pokenum(player) == Pokemon::Giratina_O) {
-            changeForme(player,currentPoke(player),Pokemon::Giratina);
-        } else if (pokenum(player) == Pokemon::Arceus) {
-            if (getType(player, 1) != Type::Normal) {
-                changeAForme(player, Type::Normal);
-            }
-        }
-    }
     poke(player).item() = 0;
 }
 
@@ -2768,7 +2750,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
 void BattleSituation::changeAForme(int player, int newforme)
 {
     pokelong[player]["Forme"] = newforme;
-    notify(All, ChangeTempPoke, player, quint8(AestheticForme), quint8(newforme));
+    notify(All, ChangeTempPoke, player, quint8(AestheticForme), quint16(newforme));
 }
 
 void BattleSituation::healLife(int player, int healing)

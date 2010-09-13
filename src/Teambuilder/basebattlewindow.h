@@ -18,8 +18,8 @@ struct BaseBattleInfo
     /* name [0] = mine, name[1] = other */
     PlayerInfo pInfo[2];
     QVector<bool> sub;
-    QVector<qint16> specialSprite;
-    QVector<qint16> lastSeenSpecialSprite;
+    QVector<Pokemon::uniqueId> specialSprite;
+    QVector<Pokemon::uniqueId> lastSeenSpecialSprite;
 
     quint16 time[2];
     bool ticking[2];
@@ -308,7 +308,7 @@ public:
     BaseGraphicsZone(BaseBattleInfo *info);
     /* displays that poke */
     template <class T>
-    void switchTo(const T &poke, int spot, bool sub, int specialSprite=0);
+    void switchTo(const T &poke, int spot, bool sub, Pokemon::uniqueId specialSprite = Pokemon::NoPoke);
     /* Display blank */
     void switchToNaught(int spot);
     /* For tool tips */
@@ -334,9 +334,9 @@ public:
 
 /* Yeepee, at last templates */
 template <class T>
-void BaseGraphicsZone::switchTo(const T &poke, int spot, bool sub, int specialSprite)
+void BaseGraphicsZone::switchTo(const T &poke, int spot, bool sub, Pokemon::uniqueId specialSprite)
 {
-    items[spot]->setPixmap(loadPixmap(specialSprite?Pokemon::uniqueId(specialSprite):poke.num(), poke.shiny(),
+    items[spot]->setPixmap(loadPixmap(specialSprite != Pokemon::NoPoke ?specialSprite:poke.num(), poke.shiny(),
                                       info().player(spot) == info().myself , poke.gender(), sub));
 }
 

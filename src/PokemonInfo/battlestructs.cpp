@@ -137,6 +137,14 @@ void PokeBattle::init(PokePersonal &poke)
         num() = Pokemon::Giratina;
     }
 
+    if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus) {
+        if (ItemInfo::isPlate(item())) {
+            num().subnum = ItemInfo::PlateType(item());
+        } else {
+            num().subnum = 0;
+        }
+    }
+
     nick() = (v.validate(poke.nickname()) == QNickValidator::Acceptable && poke.nickname().length() <= 12) ? poke.nickname() : PokemonInfo::Name(num());
 
     if (GenderInfo::Possible(poke.gender(), p.genderAvail())) {
@@ -180,7 +188,7 @@ void PokeBattle::init(PokePersonal &poke)
     int sum = 0;
     for (int i = 0; i < 6; i++) {
         //Arceus
-        if (num() == Pokemon::Arceus && evs()[i] > 100) evs()[i] = 100;
+        if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus && evs()[i] > 100) evs()[i] = 100;
         sum += evs()[i];
         if (sum > 510) {
             evs()[i] -= (sum-510);
