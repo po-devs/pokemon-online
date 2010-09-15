@@ -1,0 +1,58 @@
+#ifndef THEME_H
+#define THEME_H
+
+#include <QtGui>
+
+class QImageButton;
+class QImageButtonP;
+class QImageButtonLR;
+
+class Theme {
+public:
+    enum GenderMode {
+        TeamBuilderM,
+        BattleM,
+        PokedexM
+    };
+
+    static void init(const QString &dir="Themes/Default/");
+
+    static QColor TypeColor(int typenum);
+    static QColor CategoryColor(int typenum);
+    static QColor StatusColor(int status);
+    static QColor ChatColor(int num);
+    static QPixmap StatusIcon(int status);
+    static QPixmap BattleStatusIcon(int status);
+    static QPixmap TypePicture(int type);
+    static QPixmap GenderPicture(int gender, GenderMode mode = TeamBuilderM);
+    static QString path(const QString &filename, bool defaultP = false);
+
+    static QImageButton *Button(const QString &code);
+    static QImageButtonP *PressedButton(const QString &code);
+    static QImageButtonLR *LRButton(const QString &code);
+    static void ChangePics(QImageButton *b, const QString &code);
+    static QPixmap Pic(const QString &way);
+    static QPixmap Sprite(const QString &key);
+    static QIcon Icon(const QString &key);
+    static QPixmap BlueBall();
+    static QPixmap WhiteBall();
+    static QPixmap GreyBall();
+    static QPixmap BlackBall();
+    static QPixmap OrangeBall();
+    static QPixmap FrameBall();
+
+private:
+    static QString m_Directory;
+    static QList<QColor> m_TColors;
+    static QList<QColor> m_CColors;
+    static QList<QColor> m_ChatColors;
+    static QList<QPixmap> m_TPics;
+    static QHash<int, QPixmap> m_statusIcons;
+    static QHash<int, QPixmap> m_battleIcons;
+    static void loadColors();
+    static void loadPixmaps();
+
+    static QVariant value(const QString &key, bool *def);
+};
+
+#endif // THEME_H
