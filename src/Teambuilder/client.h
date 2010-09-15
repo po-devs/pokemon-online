@@ -79,7 +79,6 @@ public:
     void removePlayer(int id);
     void removeBattleWindow(int id);
 
-    QList<QColor> chatColors;
     QList<QIcon> statusIcons;
     QIcon chatot, greychatot;
 

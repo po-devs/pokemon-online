@@ -39,8 +39,6 @@ public:
         QPushButton::setIcon(QIcon(px));
     }
 
-    static QPixmap *theicon;
-    static QPixmap *theglowedicon;
 signals:
     void pokeSwitched(int first, int second);
     void dragStarted(int num);
@@ -147,11 +145,12 @@ protected:
     void dropEvent(QDropEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
 
-    static QPixmap *selBg;
 private:
     QVector<TB_PokemonItem*> pokemons;
     int num;
     int currentPoke;
+
+    QPixmap selBg;
 };
 
 class TB_BoxContainer : public QTabWidget

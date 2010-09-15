@@ -4,6 +4,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "basebattlewindow.h"
 #include "client.h"
+#include "theme.h"
 
 BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const PlayerInfo &opp, bool doubles, int my, int op)
     : BaseBattleInfo(me, opp, doubles, my, op)
@@ -825,13 +826,13 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p, int
                HiddenPowerInfo::Type(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num());
     /*QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
     changePics(model.arg("D"), model.arg("H"), model.arg("C"));*/
-    setStyleSheet(QString("background: %1;").arg(TypeInfo::Color(type).name()));
+    setStyleSheet(QString("background: %1;").arg(Theme::TypeColor(type).name()));
 
     setToolTip(ttext);
 }
 
 ImageAttackButton::ImageAttackButton(const BattleMove &b, const PokeBattle &p, int gen)
-    : QImageButton("db/BattleWindow/Buttons/0D.png", "db/BattleWindow/Buttons/0H.png")
+    : QImageButton(Theme::path("BattleWindow/Buttons/0D.png"), Theme::path("BattleWindow/Buttons/0H.png"))
 {
     QVBoxLayout *l = new QVBoxLayout(this);
 
@@ -865,8 +866,8 @@ void ImageAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p, i
 
     int type = b.num() == Move::HiddenPower ?
                HiddenPowerInfo::Type(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num());
-    QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
-    changePics(model.arg("D"), model.arg("H"), model.arg("C"));
+    QString model = QString("BattleWindow/Buttons/%1%2.png").arg(type);
+    changePics(Theme::path(model.arg("D")), Theme::path(model.arg("H")), Theme::path(model.arg("C")));
 
     setToolTip(ttext);
 }
@@ -905,7 +906,7 @@ void PokeButton::update()
     if (status == Pokemon::Koed || status == Pokemon::Fine) {
         setStyleSheet("");
     } else {
-        setStyleSheet("background: " + StatInfo::StatusColor(status).name() + ";");
+        setStyleSheet("background: " + Theme::StatusColor(status).name() + ";");
     }
     
     updateToolTip();
@@ -1152,7 +1153,7 @@ StruggleZone::StruggleZone()
 {
     QHBoxLayout *l = new QHBoxLayout(this);
 
-    QImageButton *b = new QImageButton("db/BattleWindow/Buttons/AttackD.png", "db/BattleWindow/Buttons/AttackH.png", "db/BattleWindow/Buttons/AttackC.png");
+    QImageButton *b = Theme::Button("attack");
     l->addWidget(b, 0, Qt::AlignCenter);
 
     b->setCheckable(true);

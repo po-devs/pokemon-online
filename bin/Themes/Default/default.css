@@ -108,7 +108,7 @@ QMainWindow::separator {
 
 
 QTextEdit#MainChat {
-	background-image: url(db/mainchat.png);
+	background-image: url(Themes/Default/mainchat.png);
 	background-attachment: fixed;
 	background-repeat: repeat;
 	background-position: center;
@@ -141,7 +141,7 @@ QSlider::handle:horizontal {
 	border: 1px solid #102eb0; 
 	border-radius: 7px;*/
 	width: 14px;
-	image:url(db/Teambuilder/ScrollBall.png);
+	image:url(Themes/Default/Teambuilder/ScrollBall.png);
 	margin: -8px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
 }
 
@@ -320,9 +320,9 @@ PokeButton {
 }
 
 
-QLabel#MyTrainerBox, QLabel#OppTrainerBox {
-	height: 80px;
-	width: 80px;
+QLabel#MyTrainerBox, QLabel#OppTrainerBox, QLabel#AvatarBox {
+	height: 82px;
+	width: 82px;
 	background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #e9e8e8, stop: 0.5 #aeacac, stop: 1 #e9e8e8);
 	border-radius: 8px
 }
@@ -390,7 +390,7 @@ PokedexBody TB_PokeChoice{
 	/*background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #a1a3a7);
 	alternate-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #a1a3a7);*/
 	selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #e3e1e1, stop: 0.5 #5c5e5f);
-	background-image: url(db/Teambuilder/PokeDex/gradient.png);
+	background-image: url(Themes/Default/Teambuilder/PokeDex/gradient.png);
 	background-repeat: repeat-xy;
 	font-family: Trebuchet MS;
 	/*text-transform: uppercase;*/

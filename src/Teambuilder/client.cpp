@@ -11,6 +11,7 @@
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "channel.h"
+#include "theme.h"
 
 Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), myrelay()
 {
@@ -38,8 +39,8 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     QGridLayout *containerLayout = new QGridLayout(channelContainer);
     channels = new QListWidget();
     channels->setIconSize(QSize(24,24));
-    chatot = QIcon("db/client/chatoticon.png");
-    greychatot = QIcon("db/client/greychatot.png");
+    chatot = Theme::Icon("activechannel");
+    greychatot = Theme::Icon("idlechannel");
     containerLayout->addWidget(channels, 0, 0, 1, 2);
     containerLayout->addWidget(new QLabel(tr("Join: ")), 1, 0);
     containerLayout->addWidget(channelJoin = new QLineEdit(), 1, 1);
@@ -100,25 +101,11 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     relay().connectTo(url, port);
 
-    QFile f("db/client/chat_colors.txt");
-    f.open(QIODevice::ReadOnly);
-
-    QStringList colors = QString::fromUtf8(f.readAll()).split('\n');
-
-    if (colors.size() == 0) {
-        chatColors << Qt::black << Qt::red << Qt::gray << Qt::darkBlue << Qt::cyan << Qt::darkMagenta << Qt::darkYellow;
-    } else {
-        foreach (QString c, colors) {
-            chatColors << QColor(c);
-        }
-    }
-
-    const char * authLevels[] = {"u", "m", "a", "o"};
-    const char * statuses[] = {"Available", "Away", "Battle", "Ignore"};
+    const char * statuses[] = {"avail", "away", "battle", "ignore"};
 
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < LastStatus; j++) {
-            statusIcons << QIcon(QString("db/client/%1%2.png").arg(authLevels[i], statuses[j]));
+            statusIcons << Theme::Icon(QString("%1%2").arg(statuses[j]).arg(i));
         }
     }
 
@@ -1486,7 +1473,7 @@ void Client::teamChanged(const PlayerInfo &p) {
 QColor Client::color(int id) const
 {
     if (player(id).color.name() == "#000000") {
-        return chatColors[id % chatColors.size()];
+        return Theme::ChatColor(id);
     } else {
         return player(id).color;
     }

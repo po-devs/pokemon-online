@@ -9,16 +9,6 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 #include "../../SpecialIncludes/zip.h"
 #include "../Utilities/functions.h"
 
-PokemonInfoConfig::Config PokemonInfoConfig::_config = PokemonInfoConfig::Gui;
-
-void PokemonInfoConfig::setConfig(Config cf) {
-    _config = cf;
-}
-
-PokemonInfoConfig::Config PokemonInfoConfig::config() {
-    return _config;
-}
-
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
 QMap<Pokemon::uniqueId, QString> PokemonInfo::m_Names;
@@ -87,17 +77,14 @@ QList<int> ItemInfo::m_UsefulItems;
 QSet<int> ItemInfo::m_3rdGenItems;
 
 QList<QString> TypeInfo::m_Names;
-QList<QColor> TypeInfo::m_Colors;
 QString TypeInfo::m_Directory;
 QList<int> TypeInfo::m_TypeVsType;
 QList<int> TypeInfo::m_Categories;
-QList<QPixmap> TypeInfo::m_Pics;
 
 QList<QString> NatureInfo::m_Names;
 QString NatureInfo::m_Directory;
 
 QList<QString> CategoryInfo::m_Names;
-QList<QColor> CategoryInfo::m_Colors;
 QString CategoryInfo::m_Directory;
 
 QList<QString> AbilityInfo::m_Names;
@@ -107,8 +94,6 @@ QList<QStringList> AbilityInfo::m_Messages;
 QSet<int> AbilityInfo::m_3rdGenAbilities;
 
 QList<QString> GenderInfo::m_Names;
-QList<QPixmap> GenderInfo::m_Pictures;
-QList<QPixmap> GenderInfo::m_BattlePictures;
 QString GenderInfo::m_Directory;
 
 QString HiddenPowerInfo::m_Directory;
@@ -116,8 +101,6 @@ QString HiddenPowerInfo::m_Directory;
 QString StatInfo::m_Directory;
 QList<QString> StatInfo::m_stats;
 QList<QString> StatInfo::m_status;
-QHash<int, QPixmap> StatInfo::m_statusIcons;
-QHash<int, QPixmap> StatInfo::m_battleIcons;
 
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
@@ -181,21 +164,6 @@ static void fill_container_with_file(QList<QString> &container, const QString & 
     while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
     {
         container << filestream.readLine();
-    }
-}
-
-static void fill_container_with_file(QList<QColor> &container, const QString &filename)
-{
-    QFile file(filename);
-
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream filestream(&file);
-
-    /* discarding all the uninteresting lines, should find a more effective way */
-    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
-    {
-	container << filestream.readLine();
     }
 }
 
@@ -1645,22 +1613,11 @@ void TypeInfo::loadNames()
 {
     fill_container_with_file(m_Names, trFile(path("types")));
     fill_container_with_file(m_Categories, path("category.txt"));
-
-    if (PokemonInfoConfig::config() == PokemonInfoConfig::Gui) {
-        for (int i = 0; i < NumberOfTypes();i++) {
-            m_Pics.push_back(QPixmap(path(QString("type%1.png").arg(i))));
-        }
-    }
 }
 
 QString TypeInfo::path(const QString& file)
 {
     return m_Directory+file;
-}
-
-void TypeInfo::loadColors()
-{
-    fill_container_with_file(m_Colors, path("type_colors.txt"));
 }
 
 void TypeInfo::loadEff()
@@ -1688,7 +1645,6 @@ void TypeInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
-    loadColors();
     loadEff();
 }
 
@@ -1719,19 +1675,9 @@ QString TypeInfo::Name(int typenum)
     return m_Names[typenum];
 }
 
-QColor TypeInfo::Color(int typenum)
-{
-    return m_Colors[typenum];
-}
-
 int TypeInfo::NumberOfTypes()
 {
     return m_Names.size();
-}
-
-QPixmap TypeInfo::Picture(int type)
-{
-    return (type >= 0 && type < NumberOfTypes()) ? m_Pics[type] : QPixmap();
 }
 
 int TypeInfo::Category(int type)
@@ -1813,11 +1759,6 @@ QString CategoryInfo::path(const QString& file)
     return m_Directory+file;
 }
 
-void CategoryInfo::loadColors()
-{
-    fill_container_with_file(m_Colors, path("category_colors.txt"));
-}
-
 void CategoryInfo::init(const QString &dir)
 {
     if (NumberOfCategories() != 0)
@@ -1829,17 +1770,11 @@ void CategoryInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
-    loadColors();
 }
 
 QString CategoryInfo::Name(int catnum)
 {
     return m_Names[catnum];
-}
-
-QColor CategoryInfo::Color(int catnum)
-{
-    return m_Colors[catnum];
 }
 
 int CategoryInfo::NumberOfCategories()
@@ -1950,14 +1885,6 @@ void GenderInfo::loadNames()
     fill_container_with_file(m_Names, path("genders_en.txt"));
 }
 
-void GenderInfo::loadPixmaps()
-{
-    for (int i = 0; i < NumberOfGenders(); i++) {
-        m_Pictures << QPixmap(path(QString("gender%1.png").arg(i)));
-        m_BattlePictures << QPixmap(path(QString("battle_gender%1.png").arg(i)));
-    }
-}
-
 QString GenderInfo::path(const QString &filename)
 {
     return m_Directory + filename;
@@ -1974,17 +1901,11 @@ void GenderInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
-    loadPixmaps();
 }
 
 QString GenderInfo::Name(int abnum)
 {
     return m_Names[abnum];
-}
-
-QPixmap GenderInfo::Picture(int gender, bool battle)
-{
-    return battle ? m_BattlePictures[gender] : m_Pictures[gender];
 }
 
 int GenderInfo::Default(int genderAvail) {
@@ -2059,24 +1980,6 @@ void StatInfo::init(const QString &dir)
 
     fill_container_with_file(m_stats, trFile(path("stats")));
     fill_container_with_file(m_status, trFile(path("status")));
-
-    if (PokemonInfoConfig::config() == PokemonInfoConfig::Gui) {
-        m_statusIcons[-2] = QPixmap(path("status-2.png"));
-        m_battleIcons[-2] = QPixmap(path("battle_status-2.png"));
-
-        for (int i = 0; i < 7; i++) {
-            m_statusIcons[i] = QPixmap(path("status%1.png").arg(i));
-            m_battleIcons[i] = QPixmap(path("battle_status%1.png").arg(i));
-        }
-    }
-}
-
-QPixmap StatInfo::Icon(int status) {
-    return m_statusIcons[status];
-}
-
-QPixmap StatInfo::BattleIcon(int status) {
-    return m_battleIcons[status];
 }
 
 QString StatInfo::Stat(int stat)
@@ -2105,20 +2008,6 @@ QString StatInfo::ShortStatus(int stat)
     case 6: return "Tox";
     default:
         return "";
-    }
-}
-
-QColor StatInfo::StatusColor(int status)
-{
-    switch (status) {
-    case -2: return "#171b1a";
-    case 0: return TypeInfo::Color(Pokemon::Normal);
-    case 1: return TypeInfo::Color(Pokemon::Electric);
-    case 2: return TypeInfo::Color(Pokemon::Fire);
-    case 3: return TypeInfo::Color(Pokemon::Ice);
-    case 4: return TypeInfo::Color(Pokemon::Psychic);
-    case 5: case 6: return TypeInfo::Color(Pokemon::Poison);
-    default: return QColor();
     }
 }
 

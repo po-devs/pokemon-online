@@ -854,7 +854,7 @@ void BattleSituation::analyzeChoices()
             testWin();
         }
     } else { // gen <= 3
-        for(int i = 0; i < players.size(); i++) {
+        for(unsigned i = 0; i < players.size(); i++) {
             if (!doubles()) {
                 if (koed(0) || koed(1))
                     break;
