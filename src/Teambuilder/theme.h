@@ -16,6 +16,7 @@ public:
     };
 
     static void init(const QString &dir="Themes/Default/");
+    static void Reload(const QString &dir="Themes/Default");
 
     static QColor TypeColor(int typenum);
     static QColor CategoryColor(int typenum);
@@ -40,6 +41,7 @@ public:
     static QPixmap BlackBall();
     static QPixmap OrangeBall();
     static QPixmap FrameBall();
+    static QPixmap TrainerSprite(int num);
 
 private:
     static QString m_Directory;

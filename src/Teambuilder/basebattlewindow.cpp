@@ -925,13 +925,13 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     QLabel *mybox = new QLabel();
     mybox->setObjectName("MyTrainerBox");
     mybox->setFixedSize(82,82);
-    mybox->setPixmap(QPixmap(QString("db/Trainer Sprites/%1.png").arg(info().pInfo[info().myself].avatar)));
+    mybox->setPixmap(Theme::TrainerSprite(info().pInfo[info().myself].avatar));
     midme->addWidget(mybox);
     midzone->addWidget(zone);
     QVBoxLayout *midopp = new QVBoxLayout();
     midzone->addLayout(midopp);
     QLabel *oppbox = new QLabel();
-    oppbox->setPixmap(QPixmap(QString("db/Trainer Sprites/%1.png").arg(info().pInfo[info().opponent].avatar)));
+    oppbox->setPixmap(Theme::TrainerSprite(info().pInfo[info().opponent].avatar));
     oppbox->setObjectName("OppTrainerBox");
     oppbox->setFixedSize(82,82);
     midopp->addWidget(oppbox);
