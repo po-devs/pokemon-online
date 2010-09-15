@@ -328,6 +328,7 @@ struct MMBlastBurn : public MM
 {
     MMBlastBurn() {
         functions["UponAttackSuccessful"] = &aas;
+        functions["MoveSettings"] = &ms;
     }
 
     static void aas(int s, int, BS &b) {
@@ -336,14 +337,22 @@ struct MMBlastBurn : public MM
     }
     static void ts(int s, int, BS &b) {
 	if (poke(b, s)["BlastBurnTurn"].toInt() < b.turn() - 1) {
-	    ;
-	} else {
-	    turn(b, s)["NoChoice"] = true;
-	    turn(b, s)["TellPlayers"] = false;
-	    turn(b, s)["PossibleTargets"] = Move::None;
-	    addFunction(turn(b,s), "UponAttackSuccessful", "BlastBurn", &uas);
-	}
+            return;
+        }
+
+        turn(b, s)["NoChoice"] = true;
     }
+
+    static void ms(int s, int, BS &b) {
+        if (poke(b, s)["BlastBurnTurn"].toInt() < b.turn() - 1) {
+            return;
+        }
+
+        turn(b, s)["TellPlayers"] = false;
+        turn(b, s)["PossibleTargets"] = Move::None;
+        addFunction(turn(b,s), "UponAttackSuccessful", "BlastBurn", &uas);
+    }
+
     static void uas(int s, int, BS &b) {
 	b.sendMoveMessage(11, 0, s);
     }
@@ -1581,6 +1590,7 @@ struct MMBide : public MM
     MMBide() {
 	functions["OnSetup"] = &os;
 	functions["UponAttackSuccessful"] = &uas;
+        functions["MoveSettings"] = &ms;
     }
 
     static void uas(int s, int , BS &b) {
@@ -1600,40 +1610,46 @@ struct MMBide : public MM
 	}
     }
 
-    static void ms(int s, int, BS &b) {
+    static void btl(int s, int, BS &b) {
 	b.sendMoveMessage(9,1,s,type(b,s));
     }
 
     static void uas2(int s, int, BS &b) {
 	b.sendMoveMessage(9,0,s,type(b,s));
     }
+    static void ms(int s, int, BS &b) {
+        turn(b,s)["Power"] = 0;
+        if (!poke(b,s).contains("BideTurn"))
+            return;
+        int _turn = poke(b,s)["BideTurn"].toInt();
+        if (_turn + 2 < b.turn()) {
+            return;
+        }
 
-    static void os(int s, int, BS &b) {
-	turn(b,s)["Power"] = 0;
+        turn(b,s)["TellPlayers"] = false;
+        if (_turn +1 == b.turn()) {
+            turn(b,s)["PossibleTargets"] = Move::None;
+            turn(b,s)["Power"] = 0;
+            addFunction(turn(b,s), "UponAttackSuccessful", "Bide", &uas2);
+        } else {
+            turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
+            turn(b,s)["Power"] = 1;
+            turn(b,s)["Type"] = Pokemon::Curse;
+            addFunction(turn(b,s), "BeforeTargetList", "Bide", &btl);
+            addFunction(turn(b,s), "CustomAttackingDamage", "Bide", &ccd);
+            addFunction(turn(b,s), "DetermineAttackFailure", "Bide",&daf);
+        }
     }
 
     static void ts(int s, int, BS &b) {
 	int _turn = poke(b,s)["BideTurn"].toInt();
 	if (_turn + 2 < b.turn()) {
 	    return;
-	} else {
-	    addFunction(turn(b,s),"UponOffensiveDamageReceived", "Bide", &udi);
-	    turn(b,s)["SpeedPriority"] = 1;
-	    turn(b,s)["NoChoice"] = true;
-	    turn(b,s)["TellPlayers"] = false;
-	    if (_turn +1 == b.turn()) {
-		turn(b,s)["PossibleTargets"] = Move::None;
-		turn(b,s)["Power"] = 0;
-		addFunction(turn(b,s), "UponAttackSuccessful", "Bide", &uas2);
-	    } else {
-		turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
-		turn(b,s)["Power"] = 1;
-		turn(b,s)["Type"] = Pokemon::Curse;
-		addFunction(turn(b,s), "BeforeTargetList", "Bide", &ms);
-		addFunction(turn(b,s), "CustomAttackingDamage", "Bide", &ccd);
-		addFunction(turn(b,s), "DetermineAttackFailure", "Bide",&daf);
-	    }
-	}
+        }
+
+        addFunction(turn(b,s),"UponOffensiveDamageReceived", "Bide", &udi);
+        turn(b,s)["SpeedPriority"] = 1;
+        turn(b,s)["NoChoice"] = true;
     }
 
     static void ccd(int s, int t, BS &b) {
@@ -1682,12 +1698,7 @@ struct MMBounce : public MM
 {
     MMBounce() {
 	functions["UponAttackSuccessful"] = &uas;
-	functions["OnSetup"] = &os;
         functions["MoveSettings"] = &ms;
-    }
-
-    static void os(int s, int, BS &b) {
-	turn(b,s)["TellPlayers"] = false;
     }
 
     static void ms(int s, int, BS &b) {
@@ -1707,6 +1718,7 @@ struct MMBounce : public MM
             turn(b,s)["Accuracy"] = 0;
             turn(b,s)["PossibleTargets"] = Move::None;
             poke(b,s)["2TurnMove"] = turn(b,s)["Attack"];
+            turn(b,s)["TellPlayers"] = false;
         }
     }
 

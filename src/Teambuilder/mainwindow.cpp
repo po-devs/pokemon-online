@@ -255,4 +255,16 @@ void MainEngine::loadTeamDialog()
     }
 }
 
+void MainEngine::addStyleMenu(QMenuBar *menuBar)
+{
+    QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
+    QStringList style = QStyleFactory::keys();
+    for(QStringList::iterator i = style.begin();i!=style.end();i++)
+    {
+        menuStyle->addAction(*i,this,SLOT(changeStyle()));
+    }
+    menuStyle->addSeparator();
+    menuStyle->addAction(tr("Reload StyleSheet"), this, SLOT(loadStyleSheet()));
+}
+
 #undef MainEngineRoutine
