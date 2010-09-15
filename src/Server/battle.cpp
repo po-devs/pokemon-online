@@ -3043,13 +3043,13 @@ int BattleSituation::getStat(int player, int stat)
             callaeffects(partner, player, "PartnerStatModifier");
         }
     }
-    int ret = pokelong[player][q].toInt()*getStatBoost(player, stat)*(20+turnlong[player][q+"AbilityModifier"].toInt())/20;
+    int ret = pokelong[player][q].toInt()*getStatBoost(player, stat)*(20+turnlong[player].value(q+"AbilityModifier").toInt())/20;
 
     if (doubles()) {
-        ret = ret * (20+turnlong[player][q+"PartnerAbilityModifier"].toInt())/20;
+        ret = ret * (20+turnlong[player].value(q+"PartnerAbilityModifier").toInt())/20;
     }
 
-     ret = ret * (20+turnlong[player][q+"ItemModifier"].toInt())/20;
+     ret = ret * (20+turnlong[player].value(q+"ItemModifier").toInt())/20;
 
     if (stat == Speed && teamzone[this->player(player)].value("TailWindCount").toInt() > 0){
         ret *= 2;
