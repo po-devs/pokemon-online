@@ -1588,7 +1588,6 @@ MMAssist::FM MMAssist::forbidden_moves;
 struct MMBide : public MM
 {
     MMBide() {
-	functions["OnSetup"] = &os;
 	functions["UponAttackSuccessful"] = &uas;
         functions["MoveSettings"] = &ms;
     }

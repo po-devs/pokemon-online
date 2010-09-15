@@ -267,4 +267,9 @@ void MainEngine::addStyleMenu(QMenuBar *menuBar)
     menuStyle->addAction(tr("Reload StyleSheet"), this, SLOT(loadStyleSheet()));
 }
 
+void MainEngine::addThemeMenu(QMenuBar *m)
+{
+
+}
+
 #undef MainEngineRoutine
