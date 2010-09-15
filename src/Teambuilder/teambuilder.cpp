@@ -375,6 +375,7 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
 
     w->addStyleMenu(menuBar);
+    w->addThemeMenu(menuBar);
 
     QMenu *gen = menuBar->addMenu(tr("&Gen."));
     QActionGroup *gens = new QActionGroup(gen);
@@ -593,7 +594,7 @@ void TB_TrainerBody::changeTrainerAvatar(int newavatar)
         newavatar=1;
     m_avatarSelection->setValue(newavatar);
     trainerTeam()->avatar() = newavatar;
-    m_avatar->changePic(Theme::Pic(QString("Trainer Sprites/%1.png").arg(newavatar)));
+    m_avatar->changePic(Theme::TrainerSprite(newavatar));
 }
 
 /*********************************************/

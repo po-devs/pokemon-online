@@ -715,14 +715,10 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
     menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("Open &teamBuilder"),this,SLOT(openTeamBuilder()),Qt::CTRL+Qt::Key_T);
-    QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
-    QStringList style = QStyleFactory::keys();
-    for(QStringList::iterator i = style.begin();i!=style.end();i++)
-    {
-        menuStyle->addAction(*i,w,SLOT(changeStyle()));
-    }
-    menuStyle->addSeparator();
-    menuStyle->addAction(tr("Reload StyleSheet"), w, SLOT(loadStyleSheet()));
+
+    w->addStyleMenu(menuBar);
+    w->addThemeMenu(menuBar);
+
     QMenu * menuActions = menuBar->addMenu(tr("&Options"));
     goaway = menuActions->addAction(tr("&Idle"));
     goaway->setCheckable(true);

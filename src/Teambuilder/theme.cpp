@@ -10,6 +10,7 @@ static void fill_container_with_file(QList<QColor> &container, const QString &fi
     file.open(QIODevice::ReadOnly | QIODevice::Text);
 
     QTextStream filestream(&file);
+    container.clear();
 
     /* discarding all the uninteresting lines, should find a more effective way */
     while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
@@ -70,6 +71,14 @@ void Theme::init(const QString &dir)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
+    loadColors();
+    loadPixmaps();
+}
+
+void Theme::Reload(const QString &dir)
+{
+    m_Directory = dir;
+    QPixmapCache::clear();
     loadColors();
     loadPixmaps();
 }
@@ -250,6 +259,11 @@ QPixmap Theme::Sprite(const QString &code)
     }
 
     return pm;
+}
+
+QPixmap Theme::TrainerSprite(int num)
+{
+    return Pic(QString("Trainer Sprites/%1.png").arg(num));
 }
 
 QIcon Theme::Icon(const QString &code)
