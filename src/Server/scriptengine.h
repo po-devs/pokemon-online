@@ -187,6 +187,8 @@ public:
     Q_INVOKABLE QScriptValue type(int id);
     Q_INVOKABLE QScriptValue typeNum(const QString &typeName);
 
+    Q_INVOKABLE int hiddenPowerType(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
+
     Q_INVOKABLE QScriptValue getScript();
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
