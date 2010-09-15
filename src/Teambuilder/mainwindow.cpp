@@ -7,6 +7,7 @@
 #include "../PokemonInfo/movesetchecker.h"
 #include "pluginmanager.h"
 #include "plugininterface.h"
+#include "theme.h"
 
 MainEngine::MainEngine() : displayer(0)
 {
@@ -20,9 +21,6 @@ MainEngine::MainEngine() : displayer(0)
     if (settings.value("new_teambuilder").isNull() || settings.value("application_style").isNull()) {
         settings.setValue("application_style", "plastique");
         settings.setValue("new_teambuilder",true);
-    }
-    if (settings.value("stylesheet").isNull() || settings.value("stylesheet").toString() == "db/default.qss") {
-        settings.setValue("stylesheet", "db/default.css");
     }
 
 #ifdef Q_OS_MACX
@@ -61,12 +59,11 @@ MainEngine::MainEngine() : displayer(0)
     GenderInfo::init("db/genders/");
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
+    Theme::init();
 
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());
-    QFile stylesheet(settings.value("stylesheet").toString());
-    stylesheet.open(QIODevice::ReadOnly);
-    qApp->setStyleSheet(stylesheet.readAll());
+    loadStyleSheet();
     loadTeam(settings.value("team_location").toString());
 
     launchMenu();
@@ -116,8 +113,7 @@ void MainEngine::openPluginConfiguration()
 
 void MainEngine::loadStyleSheet()
 {
-    QSettings s;
-    QFile stylesheet(s.value("stylesheet").toString());
+    QFile stylesheet(Theme::path("default.css"));
     stylesheet.open(QIODevice::ReadOnly);
     qApp->setStyleSheet(stylesheet.readAll());
 }

@@ -42,7 +42,6 @@ public:
 
     void changePic(const QPixmap &pic);
 protected:
-    static QPixmap *background;
     QLabel *underLying;
 };
 
@@ -53,8 +52,6 @@ public:
 protected:
     Pokeballed();
     void init(QWidget *w);
-public:
-    static QPixmap *pokeball;
 };
 
 class TitledWidget : public QWidget {
@@ -174,8 +171,6 @@ signals:
     void changePokemonBase(int num, Pokemon::uniqueId);
 
 protected:
-    static QPixmap * teamBoxBall;
-
     void mouseMoveEvent(QMouseEvent *e);
     void mousePressEvent(QMouseEvent *e);
     void dragEnterEvent(QDragEnterEvent *e);

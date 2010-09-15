@@ -148,7 +148,6 @@ public:
 
     void changePic(const QPixmap &pic);
 protected:
-    static QPixmap *background;
     QLabel *underLying;
 };
 
@@ -156,7 +155,7 @@ protected:
 class PokeBallText : public QWidget
 {
 public:
-    PokeBallText(const QString &filename, const QString &text);
+    PokeBallText(const QPixmap &pic, const QString &text);
 };
 
 class TypeText : public QWidget

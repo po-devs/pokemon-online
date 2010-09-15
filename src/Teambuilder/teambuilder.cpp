@@ -7,6 +7,7 @@
 #include "mainwindow.h"
 #include "pokedex.h"
 #include "dockinterface.h"
+#include "theme.h"
 
 template <class T, class U>
         QSet<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
@@ -49,15 +50,10 @@ void TeamImporter::done()
 /**********************************/
 /**** AVATAR BOX ******************/
 /**********************************/
-QPixmap *AvatarBox::background = NULL;
-
 AvatarBox::AvatarBox(const QPixmap &pic)
 {
-    if (background == NULL)
-        background = new QPixmap("db/Teambuilder/avatarBG.png");
-
-    setPixmap(*background);
-    setFixedSize(background->size());
+    setObjectName("AvatarBox");
+    setFixedSize(82,82);
 
     underLying = new QLabel(this);
     underLying->setPixmap(pic);
@@ -75,8 +71,6 @@ void AvatarBox::changePic(const QPixmap &pic)
 /**** POKEBALLED ******************/
 /**********************************/
 
-QPixmap* Pokeballed::pokeball = NULL;
-
 Pokeballed::Pokeballed(QWidget *w) {
     init(w);
 }
@@ -87,14 +81,11 @@ Pokeballed::Pokeballed() {
 
 void Pokeballed::init(QWidget *w)
 {
-    if (pokeball == NULL)
-        pokeball = new QPixmap("db/Teambuilder/Pokeball.png");
-
     QHBoxLayout *h = new QHBoxLayout(this);
     h->setMargin(0);
 
     QLabel *icon = new QLabel();
-    icon->setPixmap(*pokeball);
+    icon->setPixmap(Theme::BlueBall());
     h->addWidget(icon);
 
     h->addWidget(w,100,Qt::AlignLeft);
@@ -144,20 +135,20 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : gen3(NULL), gen4(NULL), m_team
     vl->addLayout(upButtons, 54);
 
     /* Buttons of pokemons / trainers */
-    QImageButton * m_trainer = new QImageButton("db/Teambuilder/Buttons/TrainerNorm.png", "db/Teambuilder/Buttons/TrainerGlow.png", "db/Teambuilder/Buttons/TrainerGlow.png");
+    QImageButton * m_trainer = Theme::Button("trainer");
     upButtons->addWidget(m_trainer,0,Qt::AlignTop);
 
-    QImageButton * m_team = new QImageButton("db/Teambuilder/Buttons/TeamNorm.png", "db/Teambuilder/Buttons/TeamGlow.png", "db/Teambuilder/Buttons/TeamGlow.png");
+    QImageButton * m_team = Theme::Button("team");
     upButtons->addWidget(m_team,0,Qt::AlignTop);
 
-    QImageButton * m_box = new QImageButton("db/Teambuilder/Buttons/BoxNorm.png", "db/Teambuilder/Buttons/BoxGlow.png", "db/Teambuilder/Buttons/BoxGlow.png");
+    QImageButton * m_box = Theme::Button("box");
     upButtons->addWidget(m_box,0,Qt::AlignTop);
 
-    QImageButton * m_pokedexb = new QImageButton("db/Teambuilder/Buttons/PokedexNorm.png", "db/Teambuilder/Buttons/PokedexGlow.png", "db/Teambuilder/Buttons/PokedexGlow.png");
+    QImageButton * m_pokedexb = Theme::Button("pokedex");
     upButtons->addWidget(m_pokedexb,0,Qt::AlignTop);
 
     currentZoneLabel = new QLabel();
-    currentZoneLabel->setPixmap(QPixmap("db/Teambuilder/Labels/PokeTrainer.png"));
+    currentZoneLabel->setPixmap(Theme::Sprite("poketrainer"));
     upButtons->addWidget(currentZoneLabel,0, Qt::AlignTop);
 
     /* Starting doing the "body" */
@@ -183,16 +174,16 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : gen3(NULL), gen4(NULL), m_team
 
     QHBoxLayout *downButtons = new QHBoxLayout();
 
-    QImageButton * m_new = new QImageButton("db/Teambuilder/Buttons/NewNorm.png", "db/Teambuilder/Buttons/NewGlow.png");
+    QImageButton * m_new = Theme::Button("new");
     downButtons->addWidget(m_new, 0, Qt::AlignBottom);
 
-    QImageButton * m_load = new QImageButton("db/Teambuilder/Buttons/LoadNorm.png", "db/Teambuilder/Buttons/LoadGlow.png");
+    QImageButton * m_load = Theme::Button("load");
     downButtons->addWidget(m_load, 0, Qt::AlignBottom);
 
-    QImageButton * m_save = new QImageButton("db/Teambuilder/Buttons/SaveNorm.png", "db/Teambuilder/Buttons/SaveGlow.png");
+    QImageButton * m_save = Theme::Button("save");
     downButtons->addWidget(m_save, 0, Qt::AlignBottom);
 
-    QImageButton * m_close = new QImageButton("db/Teambuilder/Buttons/CloseNorm.png", "db/Teambuilder/Buttons/CloseGlow.png");
+    QImageButton * m_close = Theme::Button("close");
     downButtons->addWidget(m_close, 0, Qt::AlignBottom);
 
 
@@ -264,7 +255,7 @@ void TeamBuilder::changeToTeam()
     m_body->setCurrentIndex(TeamW);
     buttons[TeamW]->setChecked(true);
 
-    currentZoneLabel->setPixmap(QPixmap("db/Teambuilder/Labels/PokeTeam.png"));
+    currentZoneLabel->setPixmap(Theme::Sprite("poketeam"));
 
     for (int i = 0; i < 6; i++) {
         if (modified[i]) {
@@ -281,7 +272,7 @@ void TeamBuilder::changeToBoxes()
     m_body->setCurrentIndex(BoxesW);
     buttons[BoxesW]->setChecked(true);
 
-    currentZoneLabel->setPixmap(QPixmap("db/Teambuilder/Labels/PokeBox.png"));
+    currentZoneLabel->setPixmap(Theme::Sprite("pokebox"));
 
     updateBox();
 }
@@ -293,7 +284,7 @@ void TeamBuilder::changeToTrainer()
         m_body->setCurrentIndex(TrainerW);
 
         buttons[TrainerW]->setChecked(true);
-        currentZoneLabel->setPixmap(QPixmap("db/Teambuilder/Labels/PokeTrainer.png"));
+        currentZoneLabel->setPixmap(Theme::Sprite("poketrainer"));
     }
 }
 
@@ -303,7 +294,7 @@ void TeamBuilder::changeToPokedex()
 
     m_body->setCurrentIndex(PokedexW);
 
-    currentZoneLabel->setPixmap(QPixmap("db/Teambuilder/Labels/Pokedex.png"));
+    currentZoneLabel->setPixmap(Theme::Sprite("pokedex"));
 }
 
 void TeamBuilder::saveTeam()
@@ -533,7 +524,7 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->t
     ml->addLayout(col3,0);
 
     QLabel *ash = new QLabel();
-    ash->setPixmap(QPixmap("db/Teambuilder/Trainer/omg.png"));
+    ash->setPixmap(Theme::Sprite("ash"));
 
     col3->addWidget(ash,0,Qt::AlignBottom);
 
@@ -609,20 +600,15 @@ void TB_TrainerBody::changeTrainerAvatar(int newavatar)
         newavatar=1;
     m_avatarSelection->setValue(newavatar);
     trainerTeam()->avatar() = newavatar;
-    m_avatar->changePic(QPixmap(QString("db/Trainer Sprites/%1.png").arg(newavatar)));
+    m_avatar->changePic(Theme::Pic(QString("Trainer Sprites/%1.png").arg(newavatar)));
 }
 
 /*********************************************/
 /**************** POKE BUTTON ****************/
 /*********************************************/
 
-QPixmap *TeamPokeButton::teamBoxBall = NULL;
-
 TeamPokeButton::TeamPokeButton(int num, int poke, int level, int item)
 {
-    if (teamBoxBall == NULL)
-        teamBoxBall = new QPixmap("db/Teambuilder/Team/TeamBoxBall.png");
-
     this->m_num = num;
     setObjectName("PokeButton");
     setAcceptDrops(true);
@@ -633,8 +619,8 @@ TeamPokeButton::TeamPokeButton(int num, int poke, int level, int item)
     ml->setSpacing(2);
 
     QLabel *pokeBG = new QLabel();
-    pokeBG->setPixmap(*teamBoxBall);
-    pokeBG->setFixedSize(teamBoxBall->size());
+    pokeBG->setPixmap(Theme::FrameBall());
+    pokeBG->setFixedSize(pokeBG->pixmap()->size());
     pokeIcon = new QLabel(pokeBG);
     pokeIcon->move(7,3);
 
@@ -1321,8 +1307,8 @@ void TB_PokemonBody::updateTypes()
     int ttype1 = PokemonInfo::Type1(poke()->num());
     int ttype2 = PokemonInfo::Type2(poke()->num());
 
-    type1->setPixmap(TypeInfo::Picture(ttype1));
-    type2->setPixmap(TypeInfo::Picture(ttype2));
+    type1->setPixmap(Theme::TypePicture(ttype1));
+    type2->setPixmap(Theme::TypePicture(ttype2));
 
     if (ttype2 == Pokemon::Curse)  {
         type2->hide();
@@ -1383,7 +1369,7 @@ void TB_PokemonBody::updateImage()
 
 void TB_PokemonBody::updateGender()
 {
-    genderIcon->setPixmap(GenderInfo::Picture(poke()->gender()));
+    genderIcon->setPixmap(Theme::GenderPicture(poke()->gender(), Theme::TeamBuilderM));
 }
 
 void TB_PokemonBody::updateMoves()
@@ -1495,7 +1481,7 @@ void TB_PokemonBody::configureMoves()
 	
         /* In order to sort types accurately in the table we give them a number with an invisible font */
         int type = MoveInfo::Type(movenum);
-        witem = new QTableWidgetItem(QIcon(TypeInfo::Picture(type)), QString("%1").arg(type));
+        witem = new QTableWidgetItem(QIcon(Theme::TypePicture(type)), QString("%1").arg(type));
         witem->setFont(invisible);
 	movechoice->setItem(i, Type, witem);
 
@@ -1515,7 +1501,7 @@ void TB_PokemonBody::configureMoves()
 	movechoice->setItem(i, Pow, witem);
 
         witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(movenum, gen)));
-        witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(movenum, gen))));
+        witem->setForeground(Theme::CategoryColor(MoveInfo::Category(movenum, gen)));
         movechoice->setItem(i, Category, witem);
     }
 
@@ -1592,7 +1578,7 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
         l->addWidget(m_evs[i] = new QLineEdit("0"), i, 4, Qt::AlignLeft);
 
         if (!i==0){
-            l->addWidget(natureButtons[i-1] = new QImageButtonLR("db/Teambuilder/Team/=.png","db/Teambuilder/Team/=2.png"),i,1,Qt::AlignLeft);   
+            l->addWidget(natureButtons[i-1] = Theme::LRButton("="),i,1,Qt::AlignLeft);
             natureButtons[i-1]->setFixedWidth(20);
             natureButtons[i-1]->setFixedHeight(14);
             connect(natureButtons[i-1],SIGNAL(rightClick()),SLOT(checkNButtonR()));
@@ -1779,10 +1765,10 @@ void TB_EVManager::updateNatureButtons()
     }
     for (int j = 0; j<5;j++){
         if (j+1 == myStatUp)
-            natureButtons[j]->changePics("db/Teambuilder/Team/+.png","db/Teambuilder/Team/+hover.png");
+            Theme::ChangePics(natureButtons[j], "+");
         else if(j+1 == myStatDown)
-            natureButtons[j]->changePics("db/Teambuilder/Team/-.png","db/Teambuilder/Team/-hover.png");
+            Theme::ChangePics(natureButtons[j], "-");
         else
-            natureButtons[j]->changePics("db/Teambuilder/Team/=.png","db/Teambuilder/Team/=hover.png");
+            Theme::ChangePics(natureButtons[j], "=");
     }
 }

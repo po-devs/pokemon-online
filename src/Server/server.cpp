@@ -90,8 +90,6 @@ void Server::start(){
     printLine(tr("Starting loading pokemon database..."));
 
     /* Really useful for headless servers */
-    PokemonInfoConfig::setConfig(PokemonInfoConfig::NoGui);
-
     PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/");
     ItemInfo::init("db/items/");

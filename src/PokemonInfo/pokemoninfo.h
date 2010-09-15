@@ -7,20 +7,6 @@
 class PokeBaseStats;
 class QPixmap;
 
-class PokemonInfoConfig {
-public:
-    enum Config {
-        Gui = 0,
-        NoGui
-    };
-
-    static Config config();
-
-    static void setConfig(Config cf);
-private:
-    static Config _config;
-};
-
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
 
 struct PokemonMoves
@@ -300,11 +286,9 @@ public:
     /* Self-explainable functions */
     static QString Name(int typenum);
     static int Number(const QString &type);
-    static QColor Color(int typenum);
     static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
     static int TypeForWeather(int weather);
-    static QPixmap Picture(int type);
     static int Category(int type);
     static void modifyTypeChart(int type_attack, int type_defend, int value);
 private:
@@ -319,13 +303,10 @@ private:
 
     static QList<QString> m_Names;
     static QString m_Directory;
-    static QList<QColor> m_Colors;
     static QList<int> m_TypeVsType;
-    static QList<QPixmap> m_Pics;
     static QList<int> m_Categories;
 
     static void loadNames();
-    static void loadColors();
     static void loadEff();
     static QString path(const QString &filename);
 };
@@ -355,22 +336,19 @@ public:
 
 class CategoryInfo
 {
-private:
-    static QList<QString> m_Names;
-    static QString m_Directory;
-    static QList<QColor> m_Colors;
-
-    static void loadNames();
-    static void loadColors();
-    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/categories/");
 
     /* Self-explainable functions */
     static QString Name(int catnum);
-    static QColor Color(int catnum);
     static int NumberOfCategories();
+private:
+    static QList<QString> m_Names;
+    static QString m_Directory;
+
+    static void loadNames();
+    static QString path(const QString &filename);
 };
 
 class AbilityInfo
@@ -408,15 +386,6 @@ private:
 
 class GenderInfo
 {
-private:
-    static QList<QString> m_Names;
-    static QString m_Directory;
-    static QList<QPixmap> m_Pictures;
-    static QList<QPixmap> m_BattlePictures;
-
-    static void loadNames();
-    static void loadPixmaps();
-    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/genders/");
@@ -424,17 +393,18 @@ public:
     /* Self-explainable functions */
     static QString Name(int gender);
     static int NumberOfGenders();
-    static QPixmap Picture(int gender, bool battle = false);
     static int Default(int genderAvail);
     static bool Possible(int gender, int genderAvail);
+private:
+    static QList<QString> m_Names;
+    static QString m_Directory;
+
+    static void loadNames();
+    static QString path(const QString &filename);
 };
 
 class HiddenPowerInfo
 {
-private:
-    static QString m_Directory;
-
-    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/types/");
@@ -445,18 +415,14 @@ public:
     static int Power(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
     /* the different set of dvs (which are chosen within 30-31) that give an hidden power of that type */
     static QList<QStringList> PossibilitiesForType(int type);
+private:
+    static QString m_Directory;
+
+    static QString path(const QString &filename);
 };
 
 class StatInfo
 {
-private:
-    static QString m_Directory;
-    static QList<QString> m_stats;
-    static QList<QString> m_status;
-    static QHash<int, QPixmap> m_statusIcons;
-    static QHash<int, QPixmap> m_battleIcons;
-
-    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/stats/");
@@ -464,9 +430,12 @@ public:
     static QString Stat(int stat);
     static QString Status(int status);
     static QString ShortStatus(int status);
-    static QColor StatusColor(int status);
-    static QPixmap Icon(int status);
-    static QPixmap BattleIcon(int status);
+private:
+    static QString m_Directory;
+    static QList<QString> m_stats;
+    static QList<QString> m_status;
+
+    static QString path(const QString &filename);
 };
 
 #endif // POKEMONINFO_H

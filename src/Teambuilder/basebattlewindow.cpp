@@ -1,6 +1,7 @@
 #include "basebattlewindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
+#include "theme.h"
 
 BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, bool doubles, int myself, int opponent)
     : myself(myself), opponent(opponent)
@@ -384,7 +385,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             qint16 attack;
             in >> attack;
 
-            printHtml(tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), TypeInfo::Color(MoveInfo::Type(attack)))));
+            printHtml(tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), Theme::TypeColor(MoveInfo::Type(attack)))));
             break;
         }
     case BeginTurn:
@@ -471,9 +472,9 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             qint8 status;
             in >> status;
             if (status > 0) {
-                printHtml(toColor(tu(statusChangeMessages[status-1].arg(nick(spot))), StatInfo::StatusColor(status)));
+                printHtml(toColor(tu(statusChangeMessages[status-1].arg(nick(spot))), Theme::StatusColor(status)));
             } else if (status == -1) {
-                printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), TypeInfo::Color(Type::Ghost).name()));
+                printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), Theme::TypeColor(Type::Ghost).name()));
             }
             break;
         }
@@ -495,7 +496,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
     }
     case AlreadyStatusMessage:
         printHtml(toColor(tr("%1 is already %2.").arg(tu(nick(spot)), StatInfo::Status(info().currentShallow(spot).status())),
-                          StatInfo::StatusColor(info().currentShallow(spot).status())));
+                          Theme::StatusColor(info().currentShallow(spot).status())));
         break;
     case StatusMessage:
         {
@@ -504,34 +505,34 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             switch(status)
             {
      case FeelConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(spot)))), TypeInfo::Color(Type::Ghost).name()));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(spot)))), Theme::TypeColor(Type::Ghost).name()));
                 break;
      case HurtConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), TypeInfo::Color(Type::Ghost).name()));
+                printHtml(toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), Theme::TypeColor(Type::Ghost).name()));
                 break;
      case FreeConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("%1 snapped out its confusion!").arg(nick(spot)))), TypeInfo::Color(Type::Dark).name()));
+                printHtml(toColor(escapeHtml(tu(tr("%1 snapped out its confusion!").arg(nick(spot)))), Theme::TypeColor(Type::Dark).name()));
                 break;
      case PrevParalysed:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(spot)))), StatInfo::StatusColor(Pokemon::Paralysed)));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Paralysed)));
                 break;
      case FeelAsleep:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(spot)))), StatInfo::StatusColor(Pokemon::Asleep)));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Asleep)));
                 break;
      case FreeAsleep:
-                printHtml(toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(spot)))), TypeInfo::Color(Type::Dark).name()));
+                printHtml(toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(spot)))), Theme::TypeColor(Type::Dark).name()));
                 break;
      case HurtBurn:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(spot)))), StatInfo::StatusColor(Pokemon::Burnt)));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Burnt)));
                 break;
      case HurtPoison:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(spot)))), StatInfo::StatusColor(Pokemon::Poisoned)));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Poisoned)));
                 break;
      case PrevFrozen:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(spot)))), StatInfo::StatusColor(Pokemon::Frozen)));
+                printHtml(toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Frozen)));
                 break;
      case FreeFrozen:
-                printHtml(toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(spot)))), TypeInfo::Color(Type::Dark).name()));
+                printHtml(toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(spot)))), Theme::TypeColor(Type::Dark).name()));
                 break;
             }
         }
@@ -587,7 +588,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             mess.replace("%i", ItemInfo::Name(other));
             mess.replace("%a", AbilityInfo::Name(other));
             mess.replace("%p", PokemonInfo::Name(other));
-            printHtml(toColor(escapeHtml(tu(mess)), TypeInfo::Color(type)));
+            printHtml(toColor(escapeHtml(tu(mess)), Theme::TypeColor(type)));
             break;
         }
     case NoOpponent:
@@ -621,7 +622,8 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             in >> wstatus >> weather;
             if (weather == NormalWeather)
                 break;
-            QColor c = (weather == Hail ? TypeInfo::Color(Type::Ice) : (weather == Sunny ? TypeInfo::Color(Type::Fire) : (weather == SandStorm ? TypeInfo::Color(Type::Rock) : TypeInfo::Color(Type::Water))));
+
+            QColor c = Theme::TypeColor(TypeInfo::TypeForWeather(weather));
             switch(wstatus) {
              case EndWeather:
                 switch(weather) {
@@ -674,7 +676,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         if (type == Pokemon::Normal) {
             printLine(escapeHtml(tu(mess)));
         } else {
-            printHtml(toColor(escapeHtml(tu(mess)),TypeInfo::Color(type)));
+            printHtml(toColor(escapeHtml(tu(mess)),Theme::TypeColor(type)));
         }
         break;
     }
@@ -898,7 +900,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     foeteam->addStretch(100);
     for (int i = 0; i < 6; i++) {
         advpokeballs[i] = new QLabel();
-        advpokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
+        advpokeballs[i]->setPixmap(Theme::StatusIcon(Pokemon::Fine));
         foeteam->addWidget(advpokeballs[i],0,Qt::AlignTop);
     }
     foeteam->setSpacing(1);
@@ -948,7 +950,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     QHBoxLayout *team = new QHBoxLayout();
     for (int i = 0; i < 6; i++) {
         mypokeballs[i] = new QLabel();
-        mypokeballs[i]->setPixmap(StatInfo::Icon(Pokemon::Fine));
+        mypokeballs[i]->setPixmap(Theme::StatusIcon(Pokemon::Fine));
         team->addWidget(mypokeballs[i],0,Qt::AlignBottom);
     }
     team->setSpacing(1);
@@ -1056,9 +1058,9 @@ void BaseBattleDisplay::updatePoke(int spot)
         level[spot]->setText(tr("Lv. %1").arg(poke.level()));
         updateHp(spot);
         bars[spot]->setStyleSheet(health(poke.lifePercent()));
-        gender[spot]->setPixmap(GenderInfo::Picture(poke.gender(), true));
+        gender[spot]->setPixmap(Theme::GenderPicture(poke.gender(), Theme::BattleM));
         int status = poke.status();
-        this->status[spot]->setPixmap(StatInfo::BattleIcon(status));
+        this->status[spot]->setPixmap(Theme::BattleStatusIcon(status));
 
         if (info().player(spot) == info().myself) {
             mypokeballs[info().currentIndex[spot]]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
@@ -1068,7 +1070,7 @@ void BaseBattleDisplay::updatePoke(int spot)
     }  else {
         zone->switchToNaught(spot);
         nick[spot]->setText("");
-        this->status[spot]->setPixmap(StatInfo::BattleIcon(Pokemon::Fine));
+        this->status[spot]->setPixmap(Theme::BattleStatusIcon(Pokemon::Fine));
         gender[spot]->setPixmap(QPixmap());
         bars[spot]->setValue(0);
     }
@@ -1161,9 +1163,9 @@ void BaseBattleDisplay::updateToolTip(int spot)
 
 void BaseBattleDisplay::changeStatus(int spot, int poke, int status) {
     if (info().player(spot)==info().myself) {
-        mypokeballs[poke]->setPixmap(StatInfo::Icon(status));
+        mypokeballs[poke]->setPixmap(Theme::StatusIcon(status));
     } else {
-        advpokeballs[poke]->setPixmap(StatInfo::Icon(status));
+        advpokeballs[poke]->setPixmap(Theme::StatusIcon(status));
     }
 }
 
@@ -1181,7 +1183,7 @@ BaseGraphicsZone::BaseGraphicsZone(BaseBattleInfo *i) : mInfo(i)
     items.resize(info().numberOfSlots);
 
     scene.setSceneRect(0,0,257,145);
-    scene.addItem(new QGraphicsPixmapItem(QPixmap(QString("db/battle_fields/%1.png").arg((rand()%11)+1))));
+    scene.addItem(new QGraphicsPixmapItem(Theme::Pic(QString("battle_fields/%1.png").arg((rand()%11)+1))));
 
     for (int i = 0; i < info().numberOfSlots; i++) {
         items[i] = new QGraphicsPixmapItem();

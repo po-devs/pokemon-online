@@ -2,12 +2,13 @@
 #include "../Utilities/otherwidgets.h"
 #include "pokedex.h"
 #include "teambuilder.h"
+#include "theme.h"
 
 Pokedex::Pokedex(TeamBuilder *parent)
     : QWidget(parent)
 {
     QLabel *pokedexText = new QLabel(this);
-    pokedexText->setPixmap(QPixmap("db/Teambuilder/PokeDex/PokeDex.png"));
+    pokedexText->setPixmap(Theme::Pic("Teambuilder/PokeDex/PokeDex.png"));
     pokedexText->move(7,10);
     pokedexText->setFixedSize(pokedexText->pixmap()->size());
 
@@ -61,7 +62,7 @@ void Pokedex::showTypeChart()
 /****************************************************/
 BigOpenPokeBall::BigOpenPokeBall()
 {
-    setPixmap(QPixmap("db/Teambuilder/PokeDex/OMGHUGE.png"));
+    setPixmap(Theme::Pic("Teambuilder/PokeDex/OMGHUGE.png"));
     setFixedSize(pixmap()->size());
 
     QHBoxLayout *lll = new QHBoxLayout(this);
@@ -83,7 +84,7 @@ BigOpenPokeBall::BigOpenPokeBall()
         QHBoxLayout * row1 = new QHBoxLayout();
         rows->addLayout(row1);
         QLabel *nball = new QLabel();
-        nball->setPixmap(QPixmap("db/Teambuilder/PokeDex/NumberBall.png"));
+        nball->setPixmap(Theme::GreyBall());
         row1->addWidget(nball);
         row1->addWidget(num = new QLabel());
 
@@ -134,11 +135,11 @@ BigOpenPokeBall::BigOpenPokeBall()
         row2->setSpacing(3);
         row2->addWidget(new QLabel(tr("Gender: ")), 0, Qt::AlignLeft);
         genderN = new QLabel();
-        genderN->setPixmap(QPixmap("db/Teambuilder/PokeDex/gender0.png"));
+        genderN->setPixmap(Theme::GenderPicture(Pokemon::Neutral, Theme::PokedexM));
         genderM = new QLabel();
-        genderM->setPixmap(QPixmap("db/Teambuilder/PokeDex/gender1.png"));
+        genderM->setPixmap(Theme::GenderPicture(Pokemon::Male, Theme::PokedexM));
         genderF = new QLabel();
-        genderF->setPixmap(QPixmap("db/Teambuilder/PokeDex/gender2.png"));
+        genderF->setPixmap(Theme::GenderPicture(Pokemon::Female, Theme::PokedexM));
         row2->addStretch(100);
         row2->addWidget(genderN);
         row2->addWidget(genderM);
@@ -146,8 +147,8 @@ BigOpenPokeBall::BigOpenPokeBall()
         row2->addStretch(100);
     }
 
-    ml->addWidget(evo = new QPushButton(QIcon("db/Teambuilder/PokeDex/EvoIcon.png"), tr("&Evolution")), 2,3);
-    ml->addWidget(formes = new QPushButton(QIcon("db/Teambuilder/PokeDex/FormeIcon.png"), tr("&Other Formes")), 3,3);
+    ml->addWidget(evo = new QPushButton(QIcon(Theme::Sprite("greendisc")), tr("&Evolution")), 2,3);
+    ml->addWidget(formes = new QPushButton(QIcon(Theme::Sprite("bluedisc")), tr("&Other Formes")), 3,3);
     evo->setCheckable(true);
     evo->setChecked(true);
     formes->setCheckable(true);
@@ -157,10 +158,8 @@ BigOpenPokeBall::BigOpenPokeBall()
 
     ml->addWidget(back = new GridBox(QPixmap(),true),0,2,2,2);
 
-    QImageButton *toggleUp =
-            new QImageButton("db/Teambuilder/PokeDex/Toggle buttons/UpArrowNormal.png", "db/Teambuilder/PokeDex/Toggle Buttons/UpArrowGlow.png");
-    QImageButton *toggleDown =
-            new QImageButton("db/Teambuilder/PokeDex/Toggle buttons/DownArrowNormal.png", "db/Teambuilder/PokeDex/Toggle Buttons/DownArrowGlow.png");
+    QImageButton *toggleUp = Theme::Button("pokedexArrowU");
+    QImageButton *toggleDown = Theme::Button("pokedexArrowD");
 
     toggleUp->setParent(this);
     toggleUp->move(433, 17);
@@ -194,10 +193,10 @@ void BigOpenPokeBall::update()
     specy->setText(PokemonInfo::Classification(n));
     height->setText(tr("<b>Ht:</b> %1").arg(PokemonInfo::Height(n)));
     weight->setText(tr("<b>Wt:</b> %1 lbs").arg(PokemonInfo::WeightS(n)));
-    type1->setPixmap(TypeInfo::Picture(PokemonInfo::Type1(n)));
+    type1->setPixmap(Theme::TypePicture(PokemonInfo::Type1(n)));
     int t2 = PokemonInfo::Type2(n);
     if (t2 != Type::Curse) {
-        type2->setPixmap(TypeInfo::Picture(t2));
+        type2->setPixmap(Theme::TypePicture(t2));
         type2->show();
     } else {
         type2->hide();
@@ -300,7 +299,7 @@ PokedexBody::PokedexBody()
     col1->setMargin(5);
     hl->addLayout(col1);
     QPushButton *advSearch;
-    col1->addWidget(advSearch = new QPushButton(QIcon("db/Teambuilder/PokeDex/advsrchicon.png"), tr("&Advanced Search")));
+    col1->addWidget(advSearch = new QPushButton(QIcon(Theme::Sprite("orangedisc")), tr("&Advanced Search")));
     col1->addWidget(pokeEdit = new QLineEdit());
     pokeList = new TB_PokeChoice(4, false);
     pokeList->verticalHeader()->setDefaultSectionSize(30);
@@ -310,7 +309,7 @@ PokedexBody::PokedexBody()
     comp->setCaseSensitivity(Qt::CaseInsensitive);
     pokeEdit->setCompleter(comp);
     col1->addWidget(pokeList,100);
-    col1->addWidget(new PokeBallText("db/Teambuilder/PokeDex/Orangeball.png", tr("Sort Pokemon List")));
+    col1->addWidget(new PokeBallText(Theme::OrangeBall(), tr("Sort Pokemon List")));
 
     connect(comp, SIGNAL(activated(QString)), this, SLOT(changeToPokemon(QString)));
     connect(pokeEdit, SIGNAL(returnPressed()), SLOT(changePokemon()));
@@ -501,7 +500,7 @@ StatTab::StatTab() {
     stats->addWidget(title1 = new QLabel(tr("Base Stats")), 0, 1);
     stats->addWidget(title2 = new QLabel(tr("Min")), 0, 2);
     QLabel *icon = new QLabel();
-    icon->setPixmap(QPixmap("db/Teambuilder/Team/=.png"));
+    icon->setPixmap(Theme::Pic("Teambuilder/Team/=.png"));
     stats->addWidget(icon, 0, 3);
     stats->addWidget(title3 = new QLabel(tr("Max")), 0, 4);
 
@@ -520,7 +519,7 @@ StatTab::StatTab() {
         stats->addWidget(baseStats[i] = new QProgressBar(), i+1, 1);
         stats->addWidget(min[i] = new QLabel(), i+1, 2);
         if (i != Hp) {
-            stats->addWidget(buttons[i] = new QImageButtonLR("db/Teambuilder/Team/=.png", ""), i+1, 3);
+            stats->addWidget(buttons[i] = Theme::LRButton("="), i+1, 3);
             buttons[i]->setProperty("Stat", i);
 
             connect(buttons[i], SIGNAL(leftClick()), SLOT(increaseBoost()));
@@ -543,7 +542,7 @@ void StatTab::changePoke(Pokemon::uniqueId poke) {
 
     for (int i = 1; i < 6; i++) {
         if (boost[i] != 0)  {
-            buttons[i]->changePics("db/Teambuilder/Team/=.png", "db/Teambuilder/Team/=hover.png");
+            Theme::ChangePics(buttons[i], "=");
             boost[i] = 0;
         }
     }
@@ -627,7 +626,7 @@ void StatTab::changePoke(Pokemon::uniqueId poke) {
         int eff = TypeInfo::Eff(i,t1) * TypeInfo::Eff(i, t2);
         if (eff == 0) {
             QLabel *typePic = new QLabel();
-            typePic->setPixmap(TypeInfo::Picture(i));
+            typePic->setPixmap(Theme::TypePicture(i));
             il->addWidget(typePic, iCount/4, iCount%4, 1, 1, Qt::AlignHCenter);
             iCount += 1;
         }
@@ -651,9 +650,9 @@ void StatTab::increaseBoost()
         return;
     }
     if (boost[stat] == 0) {
-        buttons[stat]->changePics("db/Teambuilder/Team/=.png", "db/Teambuilder/Team/=hover.png");
+        Theme::ChangePics(buttons[stat], "=");
     } else if (boost[stat] == 1) {
-        buttons[stat]->changePics("db/Teambuilder/Team/+.png", "db/Teambuilder/Team/+hover.png");
+        Theme::ChangePics(buttons[stat], "+");
     }
 }
 
@@ -675,9 +674,9 @@ void StatTab::decreaseBoost()
         return;
     }
     if (boost[stat] == 0) {
-        buttons[stat]->changePics("db/Teambuilder/Team/=.png", "db/Teambuilder/Team/=hover.png");
+        Theme::ChangePics(buttons[stat], "=");
     } else if (boost[stat] == -1) {
-        buttons[stat]->changePics("db/Teambuilder/Team/-.png", "db/Teambuilder/Team/-hover.png");
+        Theme::ChangePics(buttons[stat], "-");
     }
 }
 
@@ -731,7 +730,7 @@ void MoveTab::changePoke(Pokemon::uniqueId poke)
 
         /* Invisible text used for sorting types */
         int type = MoveInfo::Type(move);
-        QTableWidgetItem *w = new QTableWidgetItem(QIcon(TypeInfo::Picture(type)), QString::number(type));
+        QTableWidgetItem *w = new QTableWidgetItem(QIcon(Theme::TypePicture(type)), QString::number(type));
         w->setFont(invisible);
         moves->setItem(i, TypeCol, w);
 
@@ -741,7 +740,7 @@ void MoveTab::changePoke(Pokemon::uniqueId poke)
         moves->setItem(i, AccCol,new QTableWidgetItem(MoveInfo::AccS(move, 4)));
 
         QTableWidgetItem *witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(move, 4)));
-        witem->setForeground(QColor(CategoryInfo::Color(MoveInfo::Category(move, 4))));
+        witem->setForeground(Theme::CategoryColor(MoveInfo::Category(move, 4)));
         moves->setItem(i, CategoryCol, witem);
     }
 
@@ -753,15 +752,10 @@ void MoveTab::changePoke(Pokemon::uniqueId poke)
 /*********** QGRIDBOX *******************************/
 /****************************************************/
 
-QPixmap *GridBox::background = NULL;
-
 GridBox::GridBox(const QPixmap &pic, bool shiftToBottom)
 {
-    if (background == NULL)
-        background = new QPixmap("db/Teambuilder/PokeDex/ImageGrid.png");
-
-    setPixmap(*background);
-    setFixedSize(background->size());
+    setPixmap(Theme::Sprite("grid"));
+    setFixedSize(pixmap()->size());
 
     underLying = new QLabel(this);
     underLying->setPixmap(pic);
@@ -780,12 +774,12 @@ void GridBox::changePic(const QPixmap &pic)
 /*********** POKEBALL TEXT ****************************/
 /*****************************************************/
 
-PokeBallText::PokeBallText(const QString &filename, const QString &text)
+PokeBallText::PokeBallText(const QPixmap &pic, const QString &text)
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
     QLabel *l = new QLabel();
-    l->setPixmap(QPixmap(filename));
+    l->setPixmap(pic);
     layout->addWidget(l);
     layout->addWidget(new QLabel(text));
     layout->addStretch(100);
@@ -803,7 +797,7 @@ TypeText::TypeText(int type, const QString &text)
     hl->setSpacing(5);
 
     QLabel *typeL = new QLabel();
-    typeL->setPixmap(TypeInfo::Picture(type));
+    typeL->setPixmap(Theme::TypePicture(type));
     QLabel *textL = new QLabel();
     textL->setText(text);
 
@@ -839,8 +833,8 @@ TypeChart::TypeChart(QWidget *parent) : QWidget(parent)
         QTableWidgetItem *t1, *t2;
         t1 = new QTableWidgetItem();
         t2 = new QTableWidgetItem();
-        t1->setIcon(QIcon(TypeInfo::Picture(i)));
-        t2->setIcon(QIcon(TypeInfo::Picture(i)));
+        t1->setIcon(QIcon(Theme::TypePicture(i)));
+        t2->setIcon(QIcon(Theme::TypePicture(i)));
 
         gl->setItem(0, i+1, t1);
         gl->setItem(i+1, 0, t2);
