@@ -89,7 +89,7 @@ void PokeBaseStats::setBaseStat(int stat, quint8 base)
 PokeGeneral::PokeGeneral()
 {
     num() = Pokemon::uniqueId();
-    gen() = 4;
+    gen() = 5;
     //default for non-bugged programs
     m_genderAvail = Pokemon::NeutralAvail;
     m_types[0] = Pokemon::Curse;
@@ -141,7 +141,7 @@ int PokeGeneral::genderAvail() const
 
 PokePersonal::PokePersonal()
 {
-    this->gen() = 4;
+    this->gen() = 5;
     reset();
 }
 
@@ -457,7 +457,7 @@ int PokeTeam::stat(int statno) const
     return PokemonInfo::FullStat(num(), nature(), statno, level(),DV(statno),EV(statno));
 }
 
-Team::Team(): m_gen(4)
+Team::Team(): m_gen(5)
 {
 }
 
@@ -728,8 +728,8 @@ bool TrainerTeam::loadFromFile(const QString &path)
         return false;
     }
     int gen = team.attribute("gen", "4").toInt();
-    if (gen != 3)
-        gen = 4;
+    if (gen != 3 && gen != 4)
+        gen = 5;
     this->team().setGen(gen);
     defaultTier() = team.attribute("defaultTier");
 
