@@ -6,7 +6,7 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 #include "movesetchecker.h"
 #include "pokemoninfo.h"
 
-QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::legalCombinations[2];
+QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::legalCombinations[3];
 QString MoveSetChecker::dir;
 
 QString MoveSetChecker::path(const QString &arg)
@@ -20,7 +20,7 @@ void MoveSetChecker::init(const QString &dir)
 
     QList<Pokemon::uniqueId> ids = PokemonInfo::AllIds();
 
-    for (int gen = 3; gen <= 4; gen++) {
+    for (int gen = 3; gen <= 5; gen++) {
         QFile in(path("legal_combinations_" + QString::number(gen) + "G.txt"));
         in.open(QIODevice::ReadOnly);
         QList<QByteArray> pokes = in.readAll().split('\n');
