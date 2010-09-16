@@ -13,7 +13,7 @@ public:
     static bool isAnEggMoveCombination(const Pokemon::uniqueId &pokeid, int gen, QSet<int> moves);
     static QList<QSet<int> > combinationsFor(Pokemon::uniqueId pokenum, int gen);
 private:
-    static QHash<Pokemon::uniqueId, QList<QSet<int> > > legalCombinations[2];
+    static QHash<Pokemon::uniqueId, QList<QSet<int> > > legalCombinations[3];
     static QString dir;
 
     static QString path(const QString &arg);

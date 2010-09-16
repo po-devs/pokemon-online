@@ -20,8 +20,8 @@ QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Height;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Genders;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type1;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type2;
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_Ability1[2];
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_Ability2[2];
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Ability1[3];
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Ability2[3];
 QHash<Pokemon::uniqueId, PokeBaseStats> PokemonInfo::m_BaseStats;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_LevelBalance;
 QHash<Pokemon::uniqueId, PokemonMoves> PokemonInfo::m_Moves;
@@ -37,13 +37,13 @@ QHash<int, int> PokemonInfo::m_PreEvos;
 
 QString MoveInfo::m_Directory;
 QList<QString> MoveInfo::m_Names;
-QVector<int> MoveInfo::m_Acc[2];
-QVector<int> MoveInfo::m_Power[2];
+QVector<int> MoveInfo::m_Acc[3];
+QVector<int> MoveInfo::m_Power[3];
 QList<QString> MoveInfo::m_SpecialEffects;
 QVector<char> MoveInfo::m_Type;
-QVector<char> MoveInfo::m_PP[2];
+QVector<char> MoveInfo::m_PP[3];
 QVector<char> MoveInfo::m_Category;
-QList<QString> MoveInfo::m_Effects[2];
+QList<QString> MoveInfo::m_Effects[3];
 QVector<char> MoveInfo::m_Critical;
 QVector<char> MoveInfo::m_EffectRate;
 QVector<bool> MoveInfo::m_Physical;
@@ -57,16 +57,16 @@ QList<QPair<char, char> > MoveInfo::m_Repeat;
 QList<QString> MoveInfo::m_Descriptions;
 QList<QString> MoveInfo::m_Details;
 QHash<QString, int> MoveInfo::m_LowerCaseMoves;
-QSet<int> MoveInfo::m_3rdGenMoves;
+QSet<int> MoveInfo::m_GenMoves[3];
 
 QString ItemInfo::m_Directory;
 QList<QString> ItemInfo::m_BerryNames;
 QList<QString> ItemInfo::m_RegItemNames;
 QHash<QString, int> ItemInfo::m_BerryNamesH;
 QHash<QString, int> ItemInfo::m_ItemNamesH;
-QList<QString> ItemInfo::m_SortedNames[2];
-QList<QString> ItemInfo::m_SortedUsefulNames[2];
-QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects[2];
+QList<QString> ItemInfo::m_SortedNames[3];
+QList<QString> ItemInfo::m_SortedUsefulNames[3];
+QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects[3];
 QList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
 QList<QStringList> ItemInfo::m_RegMessages;
 QList<QStringList> ItemInfo::m_BerryMessages;
@@ -74,7 +74,7 @@ QList<int> ItemInfo::m_Powers;
 QList<int> ItemInfo::m_BerryPowers;
 QList<int> ItemInfo::m_BerryTypes;
 QList<int> ItemInfo::m_UsefulItems;
-QSet<int> ItemInfo::m_3rdGenItems;
+QSet<int> ItemInfo::m_GenItems[3];
 
 QList<QString> TypeInfo::m_Names;
 QString TypeInfo::m_Directory;
@@ -91,7 +91,7 @@ QList<QString> AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
 QList<AbilityInfo::Effect> AbilityInfo::m_Effects;
 QList<QStringList> AbilityInfo::m_Messages;
-QSet<int> AbilityInfo::m_3rdGenAbilities;
+QSet<int> AbilityInfo::m_GenAbilities[3];
 
 QList<QString> GenderInfo::m_Names;
 QString GenderInfo::m_Directory;
@@ -350,6 +350,8 @@ void PokemonInfo::init(const QString &dir)
     fill_uid_int(m_Ability2[0], path("poke_ability2_3G.txt"));
     fill_uid_int(m_Ability1[1], path("poke_ability_4G.txt"));
     fill_uid_int(m_Ability2[1], path("poke_ability2_4G.txt"));
+    fill_uid_int(m_Ability1[2], path("poke_ability_5G.txt"));
+    fill_uid_int(m_Ability2[2], path("poke_ability2_5G.txt"));
     fill_uid_int(m_LevelBalance, path("level_balance.txt"));
     loadClassifications();
     loadHeights();
@@ -445,7 +447,11 @@ void PokemonInfo::loadDescriptions()
 
 int PokemonInfo::TrueCount(int gen)
 {
-    return gen == 4 ? m_trueNumberOfPokes : 387;
+    if (gen == 3)
+        return 387;
+    if (gen == 4)
+        return 494;
+    return m_trueNumberOfPokes;
 }
 
 int PokemonInfo::NumberOfPokemons()
@@ -515,7 +521,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
 
     if (gen ==3)
         file = QString("%1/%2%3.png").arg(pokeid.toString(), back?"3Gback":"RFLG", shiney?"s":"");
-    else if (gen == 4)
+    else
         file = QString("%1/DP%2%3%4.png").arg(pokeid.toString(), back?"b":"", (gender==Pokemon::Female)?"f":"m", shiney?"s":"");
 
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
@@ -545,7 +551,7 @@ QPixmap PokemonInfo::Sub(int gen, bool back)
 {
     QString archive = path("poke_img.zip");
 
-    QString file = QString("sub%1%2.png").arg(back?"b":"").arg(gen==4?"":"3G");
+    QString file = QString("sub%1%2.png").arg(back?"b":"").arg(gen>=4?"":"3G");
 
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
@@ -770,13 +776,15 @@ bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
 
 void PokemonInfo::loadMoves()
 {
-    static const int filesize = 11;
+    static const int filesize = 17;
 
     QString fileNames[filesize] = {
-        path("3G_tm_and_hm_moves.txt"), path("4G_tm_and_hm_moves.txt"), path("3G_egg_moves.txt"), path("3G_level_moves.txt"),
-        path("3G_tutor_moves.txt"), path("3G_special_moves.txt"), path("4G_pre_evo_moves.txt"),
-        path("4G_egg_moves.txt"), path("4G_level_moves.txt"), path("4G_tutor_moves.txt"),
-        path("4G_special_moves.txt")
+        path("3G_tm_and_hm_moves.txt"), path("3G_egg_moves.txt"), path("3G_level_moves.txt"),
+        path("3G_tutor_moves.txt"), path("3G_special_moves.txt"), path("4G_tm_and_hm_moves.txt"),
+        path("4G_pre_evo_moves.txt"), path("4G_egg_moves.txt"), path("4G_level_moves.txt"),
+        path("4G_tutor_moves.txt"), path("4G_special_moves.txt"), path("5G_tm_and_hm_moves.txt"),
+        path("5G_pre_evo_moves.txt"), path("5G_egg_moves.txt"), path("5G_level_moves.txt"),
+        path("5G_tutor_moves.txt"), path("5G_special_moves.txt")
     };
 
     for (int i = 0; i < filesize; i++) {
@@ -799,8 +807,9 @@ void PokemonInfo::loadMoves()
                 // in m_Moves if it does not exist.
                 PokemonMoves &moves = m_Moves[pokeid];
                 QSet<int> *refs[filesize] = {
-                    &moves.TMMoves[0], &moves.TMMoves[1], &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0],
-                    &moves.preEvoMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1]
+                    &moves.TMMoves[0], &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0],
+                    &moves.TMMoves[1], &moves.preEvoMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1],
+                    &moves.TMMoves[2], &moves.preEvoMoves[2], &moves.eggMoves[2], &moves.levelMoves[2], &moves.tutorMoves[2], &moves.specialMoves[2]
                 };
                 *refs[i] = data_set;
             }
@@ -1053,7 +1062,9 @@ void MoveInfo::loadNames()
         m_LowerCaseMoves.insert(m_Names[i].toLower(),i);
     }
 
-    fill_container_with_file(m_3rdGenMoves, path("gen3.txt"));
+    for (int i = 0; i < 3; i++) {
+        fill_container_with_file(m_GenMoves[i], path(QString("gen%1.txt").arg(i)));
+    }
 }
 
 void MoveInfo::loadDescriptions()
@@ -1078,8 +1089,9 @@ QString MoveInfo::DetailedDescription(int movenum)
 
 void MoveInfo::loadPPs()
 {
-    fill_container_with_file(m_PP[0], path("move_pp_3G.txt"));
-    fill_container_with_file(m_PP[1], path("move_pp.txt"));
+    for (int i = 0; i < 3; i++) {
+        fill_container_with_file(m_PP[i], path(QString("move_pp_%1G.txt")).arg(i+3));
+    }
 }
 
 void MoveInfo::loadTypes()
@@ -1094,37 +1106,25 @@ void MoveInfo::loadCategorys()
 
 void MoveInfo::loadPowers()
 {
-    QList<QString> temp;
-    fill_container_with_file(temp, path("move_power_3G.txt"));
+    for (int i = 0; i < 3; i++) {
+        QList<QString> temp;
+        fill_container_with_file(temp, path(QString("move_power_%1G.txt")).arg(i));
 
-    foreach (QString s, temp) {
-        m_Power[0].push_back(s.toInt());
-    }
-
-    temp.clear();
-
-    fill_container_with_file(temp, path("move_power.txt"));
-
-    foreach (QString s, temp) {
-        m_Power[1].push_back(s.toInt());
+        foreach (QString s, temp) {
+            m_Power[i].push_back(s.toInt());
+        }
     }
 }
 
 void MoveInfo::loadAccs()
 {
-    QList<QString> temp;
-    fill_container_with_file(temp, path("move_accuracy_3G.txt"));
+    for (int i = 0; i < 3; i++) {
+        QList<QString> temp;
+        fill_container_with_file(temp, path(QString("move_accuracy_%1G.txt")).arg(i));
 
-    foreach (QString s, temp) {
-        m_Acc[0].push_back(s.toInt());
-    }
-
-    temp.clear();
-
-    fill_container_with_file(temp, path("move_accuracy.txt"));
-
-    foreach (QString s, temp) {
-        m_Acc[1].push_back(s.toInt());
+        foreach (QString s, temp) {
+            m_Acc[i].push_back(s.toInt());
+        }
     }
 }
 
@@ -1135,18 +1135,12 @@ QString MoveInfo::path(const QString &file)
 
 QString MoveInfo::Name(int movenum)
 {
-    return Exists(movenum, 4) ? m_Names[movenum] : m_Names[0];
+    return Exists(movenum, 5) ? m_Names[movenum] : m_Names[0];
 }
 
 bool MoveInfo::Exists(int movenum, int gen)
 {
-    if (movenum < 0 || movenum >= NumberOfMoves())
-        return false;
-
-    if (gen == 4)
-        return true;
-
-    return m_3rdGenMoves.contains(movenum);
+    return m_GenMoves[gen-3].contains(movenum);
 }
 
 int MoveInfo::Power(int movenum, int gen)
@@ -1157,7 +1151,8 @@ int MoveInfo::Power(int movenum, int gen)
 bool MoveInfo::isOHKO(int movenum)
 {
     //Fissure, Guillotine, Horndrill, Sheer Cold
-    return (movenum == 133 || movenum == 166 || movenum == 186 || movenum == 353);
+    return (movenum == Move::Fissure || movenum == Move::Guillotine || movenum == Move::HornDrill
+            || movenum == Move::SheerCold);
 }
 
 int MoveInfo::Type(int movenum)
@@ -1271,20 +1266,14 @@ void MoveInfo::loadFlinchs()
 
 void MoveInfo::loadEffects()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("moveeffects.txt"));
+    for (int i = 0; i < 3; i++) {
+        QStringList temp;
+        fill_container_with_file(temp, path(QString("moveeffects_%1G.txt").arg(i+3)));
 
-    /* Removing comments, aka anything starting from '#' */
-    foreach (QString eff, temp) {
-        m_Effects[1].push_back(eff.split('#').front());
-    }
-
-    temp.clear();
-    fill_container_with_file(temp, path("moveeffects_3G.txt"));
-
-    /* Removing comments, aka anything starting from '#' */
-    foreach (QString eff, temp) {
-        m_Effects[0].push_back(eff.split('#').front());
+        /* Removing comments, aka anything starting from '#' */
+        foreach (QString eff, temp) {
+            m_Effects[i].push_back(eff.split('#').front());
+        }
     }
 }
 
@@ -1340,76 +1329,61 @@ void ItemInfo::loadNames()
     fill_container_with_file(m_BerryPowers, path("berry_pow.txt"));
     fill_container_with_file(m_BerryTypes, path("berry_type.txt"));
     fill_container_with_file(m_UsefulItems, path("item_useful.txt"));
-    fill_container_with_file(m_3rdGenItems, path("items_gen3.txt"));
 
-    QList<int> tempb;
-    fill_container_with_file(tempb, path("berries_gen3.txt"));
-    foreach(int b, tempb) {
-        m_3rdGenItems.insert(b+8000);
+    for (int i = 0; i < 3; i++) {
+        fill_container_with_file(m_GenItems[i], path(QString("items_gen%1.txt").arg(i)));
+
+        QList<int> tempb;
+        fill_container_with_file(tempb, path(QString("berries_gen%1.txt").arg(i)));
+        foreach(int b, tempb) {
+            m_GenItems[i].insert(b+8000);
+        }
     }
 
-    m_SortedNames[1] << m_RegItemNames << m_BerryNames;
-    qSort(m_SortedNames[1]);
+    m_SortedNames[2] << m_RegItemNames << m_BerryNames;
+    qSort(m_SortedNames[2]);
 
-    m_SortedUsefulNames[1] << m_BerryNames;
-
+    m_SortedUsefulNames[2] << m_BerryNames;
     for (int i = 0; i < m_RegItemNames.size(); i++) {
         if (isUseful(i))
-            m_SortedUsefulNames[1].push_back(m_RegItemNames[i]);
+            m_SortedUsefulNames[2].push_back(m_RegItemNames[i]);
     }
-    qSort(m_SortedUsefulNames[1]);
+    qSort(m_SortedUsefulNames[2]);
 
-    for (int i = 0; i < m_SortedNames[1].size(); i++) {
-        if (Exists(Number(m_SortedNames[1][i]), 3))
-            m_SortedNames[0].push_back(m_SortedNames[1][i]);
+    for (int j = 1; j >= 0; j--) {
+        for (int i = 0; i < m_SortedNames[j+1].size(); i++) {
+            if (Exists(Number(m_SortedNames[j+1][i]), j+3))
+                m_SortedNames[j].push_back(m_SortedNames[j+1][i]);
+        }
+
+        for (int i = 0; i < m_SortedUsefulNames[j+1].size(); i++) {
+            if (Exists(Number(m_SortedUsefulNames[j+1][i]), j+3))
+                m_SortedUsefulNames[j].push_back(m_SortedUsefulNames[j+1][i]);
+        }
     }
 
-    for (int i = 0; i < m_SortedUsefulNames[1].size(); i++) {
-        if (Exists(Number(m_SortedUsefulNames[1][i]), 3))
-            m_SortedUsefulNames[0].push_back(m_SortedUsefulNames[1][i]);
+    for (int i = 0; i < 3; i++) {
+        QStringList temp;
+        fill_container_with_file(temp, path("item_effects_%1G.txt").arg(i+3));
+
+        /* Removing comments, aka anything starting from '#' */
+        foreach (QString eff, temp) {
+            QStringList effects = eff.split('#').front().split('|');
+            QList<Effect> toPush;
+            foreach(QString eff, effects) {
+                std::string s = eff.toStdString();
+                size_t pos = s.find('-');
+                if (pos != std::string::npos) {
+                    toPush.push_back(Effect(atoi(s.c_str()), eff.mid(pos+1)));
+                } else {
+                    toPush.push_back(Effect(atoi(s.c_str())));
+                }
+            }
+            m_RegEffects[i].push_back(toPush);
+        }
     }
 
     QStringList temp;
-    fill_container_with_file(temp, path("item_effects.txt"));
-
-    /* Removing comments, aka anything starting from '#' */
-    foreach (QString eff, temp) {
-	QStringList effects = eff.split('#').front().split('|');
-	QList<Effect> toPush;
-	foreach(QString eff, effects) {
-	    std::string s = eff.toStdString();
-	    size_t pos = s.find('-');
-	    if (pos != std::string::npos) {
-		toPush.push_back(Effect(atoi(s.c_str()), eff.mid(pos+1)));
-	    } else {
-		toPush.push_back(Effect(atoi(s.c_str())));
-	    }
-	}
-        m_RegEffects[1].push_back(toPush);
-    }
-
-    temp.clear();
-
-    fill_container_with_file(temp, path("item_effects_3G.txt"));
-
-    /* Removing comments, aka anything starting from '#' */
-    foreach (QString eff, temp) {
-        QStringList effects = eff.split('#').front().split('|');
-        QList<Effect> toPush;
-        foreach(QString eff, effects) {
-            std::string s = eff.toStdString();
-            size_t pos = s.find('-');
-            if (pos != std::string::npos) {
-                toPush.push_back(Effect(atoi(s.c_str()), eff.mid(pos+1)));
-            } else {
-                toPush.push_back(Effect(atoi(s.c_str())));
-            }
-        }
-        m_RegEffects[0].push_back(toPush);
-    }
-
-    temp.clear();
-
     fill_container_with_file(temp, path("berry_effects.txt"));
     /* Removing comments, aka anything starting from '#' */
     foreach (QString eff, temp) {
@@ -1474,7 +1448,7 @@ QString ItemInfo::path(const QString &file)
 
 int ItemInfo::NumberOfItems()
 {
-    return m_SortedNames[4-3].size();
+    return m_SortedNames[5-3].size();
 }
 
 int ItemInfo::Power(int itemnum) {
@@ -1541,12 +1515,7 @@ QString ItemInfo::Name(int itemnum)
 
 bool ItemInfo::Exists(int itemnum, int gen)
 {
-    if ((itemnum < 8000 && itemnum >= m_RegItemNames.size()) && !(itemnum >= 8000 + m_BerryNames.size()))
-        return false;
-    if (gen == 4)
-        return true;
-
-    return m_3rdGenItems.contains(itemnum);
+    return m_GenItems[gen-3].contains(itemnum);
 }
 
 bool ItemInfo::isBerry(int itemnum)
@@ -1822,16 +1791,14 @@ void AbilityInfo::init(const QString &dir)
         m_Messages.push_back(eff.split('|'));
     }
 
-    fill_container_with_file(m_3rdGenAbilities, path("gen3.txt"));
+    for (int i = 0; i < 3; i++) {
+        fill_container_with_file(m_GenAbilities[i+3], path(QString("gen%1.txt")).arg(i+3));
+    }
 }
 
 bool AbilityInfo::Exists(int ability, int gen)
 {
-    if (ability < 0 || ability >= NumberOfAbilities())
-        return false;
-    if (gen == 4)
-        return true;
-    return m_3rdGenAbilities.contains(ability);
+    return m_GenAbilities[gen-3].contains(ability);
 }
 
 void AbilityInfo::loadEffects()
