@@ -120,6 +120,8 @@ void BaseBattleWindow::init()
     undelayOnSounds = true;
 
     musicPlayStop();
+
+    loadSettings(this);
 }
 
 bool BaseBattleWindow::musicPlayed() const
@@ -290,6 +292,12 @@ void BaseBattleWindow::closeEvent(QCloseEvent *)
     checkAndSaveLog();
     emit closedBW(battleId());
     close();
+}
+
+void BaseBattleWindow::close()
+{
+    writeSettings(this);
+    QWidget::close();
 }
 
 void BaseBattleWindow::clickClose()

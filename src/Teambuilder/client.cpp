@@ -18,7 +18,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     _mid = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder = NULL;
-    resize(1000, 700);
+    loadSettings(this, QSize(800,600));
 
     QHBoxLayout *h = new QHBoxLayout(this);
     QSplitter *s = new QSplitter(Qt::Horizontal);
@@ -118,6 +118,11 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     /* Default channel on to display messages */
     channelPlayers(0);
+}
+
+Client::~Client()
+{
+    writeSettings(this);
 }
 
 void Client::initRelay()
