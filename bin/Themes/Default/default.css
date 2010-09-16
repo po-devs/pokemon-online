@@ -320,7 +320,7 @@ PokeButton {
 }
 
 
-QLabel#MyTrainerBox, QLabel#OppTrainerBox, QLabel#AvatarBox {
+QLabel#MyTrainerBox, QLabel#OppTrainerBox /*, QLabel#AvatarBox*/ {
 	height: 82px;
 	width: 82px;
 	background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #e9e8e8, stop: 0.5 #aeacac, stop: 1 #e9e8e8);

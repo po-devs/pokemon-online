@@ -1678,6 +1678,7 @@ public:
     Pokemon::uniqueId num() const;
     void setNum(Pokemon::uniqueId num);
     void setGen(int gen);
+    int gen() const;
     void runCheck();
 
     int stat(int statno) const;
