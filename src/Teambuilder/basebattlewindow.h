@@ -200,6 +200,7 @@ public:
     bool musicPlayed() const;
     void playCry(int pokemon);
     bool hasKnowledgeOf(int player) const;
+    void close();
 
 public slots:
     void receiveInfo(QByteArray);

@@ -1,5 +1,7 @@
 #include "functions.h"
 
+#include <QtGui>
+
 QString escapeHtml(const QString & toConvert)
 {
     QString ret = toConvert;
@@ -35,4 +37,26 @@ QString slug(const QString &s)
     }
 
     return ret;
+}
+
+void writeSettings(QWidget *w)
+{
+    QSettings settings;
+
+    settings.beginGroup(w->metaObject()->className());
+    settings.setValue("size", w->size());
+    settings.setValue("pos", w->pos());
+    settings.endGroup();
+}
+
+void loadSettings(QWidget *w, const QSize &defaultSize)
+{
+    QSettings settings;
+
+    settings.beginGroup(w->metaObject()->className());
+    if (settings.contains("size") || !defaultSize.isNull())
+        w->resize(settings.value("size", defaultSize).toSize());
+    if (settings.contains("pos"))
+        w->move(settings.value("pos").toPoint());
+    settings.endGroup();
 }

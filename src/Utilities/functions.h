@@ -5,6 +5,8 @@
 #include <QColor>
 #include <ctime>
 
+class QWidget;
+
 /* Changes a string so all what is inside is converted to html.
 
     This is useful when for example you want to display html code, or when you want to avoid a value entered
@@ -94,6 +96,9 @@ inline int intlog2(unsigned x) {
 QByteArray md5_hash(const QByteArray &toHash);
 
 void createIntMapper(QObject *src, const char *signal, QObject *dest, const char *slot, int id);
+
+void writeSettings(QWidget *w);
+void loadSettings(QWidget *w, const QSize &defaultSize = QSize());
 
 QString slug(const QString &s);
 #endif // FUNCTIONS_H

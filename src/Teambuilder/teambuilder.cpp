@@ -113,13 +113,13 @@ TitledWidget::TitledWidget(const QString &title, QWidget *w)
 /***********************************/
 
 
-TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : gen3(NULL), gen4(NULL), m_team(pub_team)
+TeamBuilder::TeamBuilder(TrainerTeam *pub_team) :
+        gen3(NULL), gen4(NULL), m_team(pub_team)
 {
+    loadSettings(this, QSize(785,610));
     qRegisterMetaType<Pokemon::uniqueId>("Pokemon::uniqueId");
 
     setAttribute(Qt::WA_DeleteOnClose, true);
-
-    resize(785,610);
 
     setWindowTitle(tr("Teambuilder"));
 
@@ -463,6 +463,7 @@ void TeamBuilder::exportToTxt()
 
 TeamBuilder::~TeamBuilder()
 {
+    writeSettings(this);
 }
 
 /**************************************/

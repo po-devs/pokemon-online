@@ -71,6 +71,14 @@ void Theme::init(const QString &dir)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
+    if (QFile::exists(dir+"Fonts")) {
+        QDir d(dir + "Fonts");
+
+        foreach (QString s, d.entryList(QDir::NoDotAndDotDot | QDir::Files)) {
+            QFontDatabase::addApplicationFont(s);
+        }
+    }
+
     loadColors();
     loadPixmaps();
 }

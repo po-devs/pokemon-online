@@ -32,6 +32,7 @@ class Client : public QWidget, public CentralWidgetInterface
     Q_OBJECT
 public:
     Client(TrainerTeam *, const QString &url, const quint16 port);
+    ~Client();
 
     TrainerTeam *team();
     QMenuBar *createMenuBar(MainEngine *w);
@@ -209,6 +210,7 @@ protected:
         QPainter p(this);
         style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
     }
+
 private:
     TrainerTeam *myteam;
     QString mynick;

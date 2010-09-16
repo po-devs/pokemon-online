@@ -65,10 +65,6 @@ int main(int argc, char *argv[])
 	QApplication a(argc, argv);
         //a.installEventFilter(&HotKeyEvent);
 
-
-        QFontDatabase::addApplicationFont("LCD.tff");
-        QFontDatabase::addApplicationFont("Signshsc.tff");
-
 	/* Names to use later for QSettings */
         QCoreApplication::setApplicationName("Pokeymon-Online");
 	QCoreApplication::setOrganizationName("Dreambelievers");
@@ -83,7 +79,6 @@ int main(int argc, char *argv[])
         QTranslator translator;
         translator.load(QString("translation_") + locale);
         a.installTranslator(&translator);
-
 
         /* icon ;) */
 	a.setWindowIcon(QIcon("db/icon.png"));
