@@ -826,7 +826,7 @@ QString PokemonInfo::path(const QString &filename)
     return m_Directory + filename;
 }
 
-QList PokemonInfo::AllIds()
+QList<Pokemon::uniqueId> PokemonInfo::AllIds()
 {
     return m_Names.keys();
 }
