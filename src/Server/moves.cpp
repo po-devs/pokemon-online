@@ -252,10 +252,6 @@ struct MMBatonPass : public MM
 	c.remove("Move1Used");
 	c.remove("Move2Used");
 	c.remove("Move3Used");
-	c.remove("Move0");
-	c.remove("Move1");
-	c.remove("Move2");
-	c.remove("Move3");
         c.remove("HasMovedOnce");
         /* Removing attract */
         c.remove("AttractBy");
@@ -267,14 +263,7 @@ struct MMBatonPass : public MM
 	/* choice band etc. would force the same move
 		if on both the passed & the passer */
 	c.remove("ChoiceMemory");
-	for (int i = 1; i < 6; i++) {
-	    c.remove(QString("Stat%1").arg(i));
-	}
-        for (int i = 0; i < 6; i++) {
-            c.remove(QString("DV%1").arg(i));
-        }
 
-	c.remove("Level");
 	turn(b,s)["BatonPassData"] = c;
 	turn(b,s)["BatonPassed"] = true;
 
@@ -666,10 +655,7 @@ struct MMHiddenPower : public MM
     }
 
     static void ms(int s, int, BS &b) {
-        QList<int> dvs;
-        for (int i = 0;i < 6; i++) {
-            dvs << poke(b,s)["DV"+QString::number(i)].toInt();
-        }
+        int *dvs = fpoke(b,s).dvs;
 
         int type = HiddenPowerInfo::Type(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
         turn(b,s)["Type"] = type;
@@ -1358,7 +1344,7 @@ struct MMNightShade : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-	b.inflictDamage(t, poke(b,s)["Level"].toInt(), s, true);
+        b.inflictDamage(t, fpoke(b,s).level, s, true);
     }
 };
 
@@ -2502,7 +2488,7 @@ struct MMWeather : public MM
     static WI weather_items;
 
     static void daf(int s, int, BS &b) {
-        if (b.weather() == turn(b,s)["Weather_Arg"].toInt())
+        if (b.weather == turn(b,s)["Weather_Arg"].toInt())
             turn(b,s)["Failed"] = true;
     }
 
@@ -2569,7 +2555,7 @@ struct MMWeatherBall : public MM
     }
 
     static void ms (int s, int, BS &b) {
-	int weather = b.weather();
+        int weather = b.weather;
 
 	if (weather != BattleSituation::NormalWeather && b.isWeatherWorking(weather)) {
 	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
@@ -3389,7 +3375,7 @@ struct MMMoonlight : public MM
     }
 
     static void uas(int s, int, BS &b) {
-	int weather = b.weather();
+        int weather = b.weather;
 
 	if (weather == BattleSituation::NormalWeather || !b.isWeatherWorking(weather)) {
 	    b.sendMoveMessage(87,0,s,type(b,s));
@@ -3506,7 +3492,7 @@ struct MMPsywave : public MM
     }
 
     static void cad (int s, int t, BS &b) {
-        b.inflictDamage(t, poke(b,s)["Level"].toInt() * (5 + (b.true_rand() % 11)) / 10,s,true);
+        b.inflictDamage(t, fpoke(b,s).level * (5 + (b.true_rand() % 11)) / 10,s,true);
     }
 };
 
@@ -3533,7 +3519,7 @@ struct MMRazorWind : public MM
 		b.sendItemMessage(11,s);
 		b.disposeItem(s);
 
-                if (mv == SolarBeam && b.weather() != BS::NormalWeather && b.weather() != BS::Sunny && b.isWeatherWorking(b.weather())) {
+                if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
                     turn(b,s)["Power"] = turn(b,s)["Power"].toInt() / 2;
                 }
 	    } else {              
@@ -3555,7 +3541,7 @@ struct MMRazorWind : public MM
 	turn(b,s)["NoChoice"] = true;
         int mv = poke(b,s)["ChargingMove"].toInt();
         MoveEffect::setup(mv,s,s,b);
-        if (mv == SolarBeam && b.weather() != BS::NormalWeather && b.weather() != BS::Sunny && b.isWeatherWorking(b.weather())) {
+        if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
             turn(b,s)["Power"] = turn(b,s)["Power"].toInt() / 2;
         }
     }
@@ -4553,7 +4539,6 @@ struct MMTransform : public MM {
     }
 
     static void uas(int s, int t, BS &b) {
-        QHash<QString, QVariant> &p = poke(b,s);
         /* Give new values to what needed */
         Pokemon::uniqueId num = b.pokenum(t);
         if (num.toPokeRef() == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
@@ -4565,6 +4550,8 @@ struct MMTransform : public MM {
         b.sendMoveMessage(137,0,s,0,s,num.pokenum);
 
         BS::BasicPokeInfo &po = fpoke(b,s);
+        BS::BasicPokeInfo &pt = fpoke(b,t);
+
         po.id = num;
         po.weight = PokemonInfo::Weight(num);
         po.type1 = PokemonInfo::Type1(num);
@@ -4578,10 +4565,10 @@ struct MMTransform : public MM {
         }
 
         for (int i = 1; i < 6; i++)
-            p[QString("Stat%1").arg(i)] = poke(b,t)[QString("Stat%1").arg(i)];
+            po.stats[i] = pt.stats[i];
 
         for (int i = 0; i < 6; i++) {
-            p[QString("DV%1").arg(i)] = poke(b,t)[QString("DV%1").arg(i)];
+            po.dvs[i] = pt.dvs[i];
         }
 
         b.acquireAbility(s, b.ability(s));
