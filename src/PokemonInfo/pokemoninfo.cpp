@@ -1792,7 +1792,7 @@ void AbilityInfo::init(const QString &dir)
     }
 
     for (int i = 0; i < 3; i++) {
-        fill_container_with_file(m_GenAbilities[i+3], path(QString("gen%1.txt")).arg(i+3));
+        fill_container_with_file(m_GenAbilities[i], path(QString("gen%1.txt")).arg(i+3));
     }
 }
 
