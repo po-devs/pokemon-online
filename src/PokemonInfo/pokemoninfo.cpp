@@ -826,14 +826,18 @@ QString PokemonInfo::path(const QString &filename)
     return m_Directory + filename;
 }
 
+QList PokemonInfo::AllIds()
+{
+    return m_Names.keys();
+}
+
 void PokemonInfo::makeDataConsistent()
 {
     // Count base forms. We no longer need to save it in a file.
     m_trueNumberOfPokes = 0;
     // Also adds data to pokemon that do not have data set explicitely (some formes).
-    QMap<Pokemon::uniqueId, QString>::const_iterator it = m_Names.constBegin();
-    while (it != m_Names.constEnd()) {
-        Pokemon::uniqueId id = it.key();
+
+    foreach (Pokemon::uniqueId id, AllIds()) {
         if(id.subnum == 0) {
             // Count base forms.
             m_trueNumberOfPokes++;
@@ -882,9 +886,8 @@ void PokemonInfo::makeDataConsistent()
         if(!m_Ability2[1].contains(id)) {
             m_Ability2[1][id] = m_Ability2[1].value(OriginalForme(id), Ability::NoAbility);
         }
-        // Next.
-        ++it;
     }
+
     // Calculate m_Evolutions.
     QHash<int, int>::const_iterator eit = m_OriginalEvos.constBegin();
     while (eit != m_OriginalEvos.constEnd()) {
