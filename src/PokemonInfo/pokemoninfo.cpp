@@ -1063,7 +1063,7 @@ void MoveInfo::loadNames()
     }
 
     for (int i = 0; i < 3; i++) {
-        fill_container_with_file(m_GenMoves[i], path(QString("gen%1.txt").arg(i)));
+        fill_container_with_file(m_GenMoves[i], path(QString("gen%1.txt").arg(i+3)));
     }
 }
 
@@ -1108,7 +1108,7 @@ void MoveInfo::loadPowers()
 {
     for (int i = 0; i < 3; i++) {
         QList<QString> temp;
-        fill_container_with_file(temp, path(QString("move_power_%1G.txt")).arg(i));
+        fill_container_with_file(temp, path(QString("move_power_%1G.txt")).arg(i+3));
 
         foreach (QString s, temp) {
             m_Power[i].push_back(s.toInt());
@@ -1120,7 +1120,7 @@ void MoveInfo::loadAccs()
 {
     for (int i = 0; i < 3; i++) {
         QList<QString> temp;
-        fill_container_with_file(temp, path(QString("move_accuracy_%1G.txt")).arg(i));
+        fill_container_with_file(temp, path(QString("move_accuracy_%1G.txt")).arg(i+3));
 
         foreach (QString s, temp) {
             m_Acc[i].push_back(s.toInt());
@@ -1331,10 +1331,10 @@ void ItemInfo::loadNames()
     fill_container_with_file(m_UsefulItems, path("item_useful.txt"));
 
     for (int i = 0; i < 3; i++) {
-        fill_container_with_file(m_GenItems[i], path(QString("items_gen%1.txt").arg(i)));
+        fill_container_with_file(m_GenItems[i], path(QString("items_gen%1.txt").arg(i+3)));
 
         QList<int> tempb;
-        fill_container_with_file(tempb, path(QString("berries_gen%1.txt").arg(i)));
+        fill_container_with_file(tempb, path(QString("berries_gen%1.txt").arg(i+3)));
         foreach(int b, tempb) {
             m_GenItems[i].insert(b+8000);
         }
