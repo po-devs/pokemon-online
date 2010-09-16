@@ -18,6 +18,8 @@ void MoveSetChecker::init(const QString &dir)
 {
     MoveSetChecker::dir = dir;
 
+    QList<Pokemon::uniqueId> ids = PokemonInfo::AllIds();
+
     for (int gen = 3; gen <= 4; gen++) {
         QFile in(path("legal_combinations_" + QString::number(gen) + "G.txt"));
         in.open(QIODevice::ReadOnly);
@@ -42,6 +44,16 @@ void MoveSetChecker::init(const QString &dir)
                     legalCombinations[gen-3][id].push_back(toPush);
                 }
             }
+        }
+
+        foreach(Pokemon::uniqueId id, ids) {
+            if (!PokemonInfo::IsForme(id))
+                continue;
+            if (!legalCombinations[gen-3].contains(PokemonInfo::OriginalForme(id)))
+                continue;
+            if (legalCombinations[gen-3].contains(id))
+                continue;
+            legalCombinations[gen-3][id] = legalCombinations[gen-3][PokemonInfo::OriginalForme(id)];
         }
     }
 }

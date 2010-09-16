@@ -55,6 +55,7 @@ public:
     static QSet<int> PreEvoMoves(const Pokemon::uniqueId &pokeid, int gen = 4);
     static QSet<int> SpecialMoves(const Pokemon::uniqueId &pokeid, int gen = 4);
     static QSet<int> RegularMoves(const Pokemon::uniqueId &pokeid, int gen = 4);
+    static QList<Pokemon::uniqueId> AllIds();
     // Base form do NOT count.
     static quint16 NumberOfAFormes(const Pokemon::uniqueId &pokeid);
     static bool AFormesShown(const Pokemon::uniqueId &pokeid);
