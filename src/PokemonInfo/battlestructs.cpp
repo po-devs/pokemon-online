@@ -296,7 +296,7 @@ QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po)
     return out;
 }
 
-TeamBattle::TeamBattle() : gen(4)
+TeamBattle::TeamBattle() : gen(5)
 {
 }
 
@@ -305,6 +305,11 @@ TeamBattle::TeamBattle(TeamInfo &other)
     name = other.name;
     info = other.info;
     gen = other.gen;
+
+    if (gen < 3 || gen > 5) {
+        gen = 5;
+    }
+
     int curs = 0;
     for (int i = 0; i < 6; i++) {
         poke(curs).init(other.pokemon(i));
