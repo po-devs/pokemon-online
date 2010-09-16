@@ -180,7 +180,6 @@ public:
     bool isSeductionPossible(int seductor, int naiveone);
     int move(int player, int slot);
     bool hasMove(int player, int move);
-    int weather();
     int getType(int player, int slot);
     bool isFlying(int player);
     bool isOut(int player, int poke);
@@ -412,13 +411,22 @@ public:
     /* Moves that affect a particular Slot (wish, ...) */
     QList<context> slotzone;
 
+    int weather;
+    int weatherCount;
+
     struct BasicPokeInfo {
         Pokemon::uniqueId id;
         float weight;
         int type1;
         int type2;
         int ability;
+        int level;
+
+        int moves[4];
+        int dvs[6];
+        int stats[6];
     };
+
     QList<BasicPokeInfo> fieldpokes;
 
     /* The choice of a player, accessed by move ENCORE */

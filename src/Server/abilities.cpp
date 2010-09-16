@@ -252,7 +252,7 @@ struct AMDrizzle : public AM {
 
     static void us (int s, int , BS &b) {
         int w = poke(b,s)["AbilityArg"].toInt();
-        if (w != b.weather()) {
+        if (w != b.weather) {
             int type = (w == BS::Hail ? Type::Ice : (w == BS::Sunny ? Type::Fire : (w == BS::SandStorm ? Type::Rock : Type::Water)));
             b.sendAbMessage(14,w-1,s,s,type);
         }
@@ -363,7 +363,7 @@ struct AMFlowerGift : public AM {
     static void us(int s, int, BS &b) {
         if (b.pokenum(s).pokenum != Pokemon::Cherrim)
             return;
-        if (b.weather() == BS::Sunny) {
+        if (b.weather == BS::Sunny) {
             if (b.pokenum(s).subnum != 1) b.changeAForme(s, 1);
         } else {
             if (b.pokenum(s).subnum != 0) b.changeAForme(s, 0);
@@ -393,7 +393,7 @@ struct AMForeCast : public AM {
     }
 
     static void us(int s, int, BS &b) {
-        int tp = TypeInfo::TypeForWeather(b.weather());
+        int tp = TypeInfo::TypeForWeather(b.weather);
 
         /* Only those weathers work */
         if (tp != Type::Ice && tp != Type::Fire && tp != Type::Water) {
@@ -408,7 +408,7 @@ struct AMForeCast : public AM {
         fpoke(b,s).type2 = Pokemon::Curse;
 
         if (b.pokenum(s) == Pokemon::Castform)
-            b.changeAForme(s, tp == Type::Normal ? 0 : b.weather());
+            b.changeAForme(s, tp == Type::Normal ? 0 : b.weather);
     }
 };
 

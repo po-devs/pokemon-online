@@ -23,6 +23,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     attacked() = -1;
     attacker() = -1;
     gen() = std::max(p1.gen(), p2.gen());
+    weather = 0;
+    weatherCount = -1;
 
     /* timers for battle timeout */
     timeleft[0] = 5*60;
@@ -1136,17 +1138,17 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     fieldpokes[slot].ability = poke(slot).ability();
 
     for (int i = 0; i < 4; i++) {
-        pokelong[slot]["Move" + QString::number(i)] = poke(slot).move(i).num();
+        fieldpokes[slot].moves[i] = poke(slot).move(i).num();
     }
 
     for (int i = 1; i < 6; i++)
-        pokelong[slot][QString("Stat%1").arg(i)] = poke(slot).normalStat(i);
+        fieldpokes[slot].stats[i] = poke(slot).normalStat(i);
 
     for (int i = 0; i < 6; i++) {
-        pokelong[slot][QString("DV%1").arg(i)] = poke(slot).dvs()[i];
+        fieldpokes[slot].dvs[i] = poke(slot).dvs()[i];
     }
 
-    pokelong[slot]["Level"] = poke(slot).level();
+    fieldpokes[slot].level = poke(slot).level();
 
     /* Increase the "switch count". Switch count is used to see if the pokemon has switched
        (like for an attack like attract), it is imo more effective that other means */
@@ -1979,7 +1981,7 @@ bool BattleSituation::hasWorkingItem(int player, int it)
 
 int BattleSituation::move(int player, int slot)
 {
-    return pokelong[player]["Move"+QString::number(slot)].toInt();
+    return fieldpokes[player].moves[slot];
 }
 
 void BattleSituation::inflictRecoil(int source, int)
@@ -2245,18 +2247,11 @@ void BattleSituation::inflictStatus(int player, int status, int attacker)
     }
 }
 
-int BattleSituation::weather()
-{
-    return battlelong["Weather"].toInt();
-}
-
 void BattleSituation::callForth(int weather, int turns)
 {
-    if (weather == this->weather()) {
-        battlelong["WeatherCount"] = turns;
-    } else {
-	battlelong["WeatherCount"] = turns;
-	battlelong["Weather"] = weather;
+    weatherCount = turns;
+    if (weather != this->weather) {
+        this->weather = weather;
         foreach (int i, sortedBySpeed()) {
             callaeffects(i,i,"WeatherChange");
         }
@@ -2265,13 +2260,13 @@ void BattleSituation::callForth(int weather, int turns)
 
 void BattleSituation::endTurnWeather()
 {
-    int weather = this->weather();
+    int weather = this->weather;
 
     if (weather == NormalWeather) {
 	return;
     }
 
-    int count = battlelong["WeatherCount"].toInt() - 1;
+    int count = weatherCount - 1;
     if (count == 0) {
 	notify(All, WeatherMessage, Player1, qint8(EndWeather), qint8(weather));
 	callForth(NormalWeather, -1);
@@ -2296,13 +2291,13 @@ void BattleSituation::endTurnWeather()
 	    }
 	}
 	if (count > 0) {
-	    battlelong["WeatherCount"] = count;
+            weatherCount = count;
 	}
     }
 }
 
 bool BattleSituation::isWeatherWorking(int weather) {
-    if (this->weather() != weather)
+    if (this->weather != weather)
         return false;
 
     //Air lock & Cloud nine
@@ -2447,11 +2442,10 @@ int BattleSituation::calculateDamage(int p, int t)
 {
     callaeffects(p,t,"DamageFormulaStart");
 
-    context &player = pokelong[p];
     context &move = turnlong[p];
     PokeBattle &poke = this->poke(p);
 
-    int level = player["Level"].toInt();
+    int level = fieldpokes[p].level;
     int attack, def;
     bool crit = move["CriticalHit"].toBool();
 
@@ -2673,7 +2667,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
 void BattleSituation::changeTempMove(int player, int slot, int move)
 {
-    pokelong[player]["Move" + QString::number(slot)] = move;
+    fieldpokes[player].moves[slot] = move;
     notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
     changePP(player,slot,std::min(MoveInfo::PP(move, gen()), 5));
 }
@@ -2741,7 +2735,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         acquireAbility(player, p.ability());
 
         for (int i = 1; i < 6; i++)
-            pokelong[player][QString("Stat%1").arg(i)] = p.normalStat(i);
+            fieldpokes[player].stats[i] = p.normalStat(i);
     }
 
     notify(All, ChangeTempPoke, player, quint8(DefiniteForm), quint8(poke),newform);
@@ -3043,7 +3037,7 @@ int BattleSituation::getStat(int player, int stat)
             callaeffects(partner, player, "PartnerStatModifier");
         }
     }
-    int ret = pokelong[player][q].toInt()*getStatBoost(player, stat)*(20+turnlong[player].value(q+"AbilityModifier").toInt())/20;
+    int ret = fieldpokes[player].stats[stat]*getStatBoost(player, stat)*(20+turnlong[player].value(q+"AbilityModifier").toInt())/20;
 
     if (doubles()) {
         ret = ret * (20+turnlong[player].value(q+"PartnerAbilityModifier").toInt())/20;
