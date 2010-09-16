@@ -643,7 +643,30 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
 void PokeTeam::loadFromXml(const QDomElement &poke)
 {
     reset();
-    setNum(Pokemon::uniqueId(poke.attribute("Num",0).toInt(), poke.attribute("Forme",0).toInt()));
+
+    /* Code to import old teams which had different formes registered as different pokemon numbers */
+    if (!poke.hasAttribute("Forme")) {
+        // Old way
+        int num = poke.attribute("Num", 0).toInt();
+
+        if (num > 493) {
+            int indexes[] = {
+                479,479,479,479,479,386,386,386,413,413,487,492
+            };
+            int formes[] = {
+                1,2,3,4,5,1,2,3,1,2,1,1
+            };
+
+            int i = num - 494;
+
+            setNum(Pokemon::uniqueId(indexes[i], formes[i]));
+        } else {
+            setNum(Pokemon::uniqueId(num, 0));
+        }
+    } else {
+        setNum(Pokemon::uniqueId(poke.attribute("Num",0).toInt(), poke.attribute("Forme",0).toInt()));
+    }
+
     load();
     nickname() = poke.attribute("Nickname");
     item() = poke.attribute("Item").toInt();
