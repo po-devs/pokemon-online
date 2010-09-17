@@ -624,6 +624,7 @@ namespace Pokemon
             return (pokenum > other.pokenum) || ((pokenum == other.pokenum) && (subnum > other.subnum));
         }
         QString toString() const;
+        QString toLine(const QString &data) const;
         quint32 toPokeRef() const;
         // Separates pokenum:subnum:1-letter-options data from
         // the other part of a string.

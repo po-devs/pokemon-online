@@ -1,12 +1,18 @@
+namespace Pokemon {
+    class uniqueId;
+}
+unsigned int qHash (const Pokemon::uniqueId &key);
+
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
 
-void MoveGen::init(int gen, int pokenum)
+void MoveGen::init(int gen, Pokemon::uniqueId pokenum)
 {
     this->gen = gen;
-    this->pokenum = pokenum;
+    this->id = pokenum;
 
     moves[LevelMoves] = PokemonInfo::LevelMoves(pokenum,gen);
     moves[SpecialMoves] = PokemonInfo::SpecialMoves(pokenum,gen);
@@ -15,36 +21,41 @@ void MoveGen::init(int gen, int pokenum)
     moves[TMMoves] = PokemonInfo::TMMoves(pokenum, gen);
 }
 
-void MovesPerPoke::init(int poke)
+void MovesPerPoke::init(Pokemon::uniqueId poke)
 {
-    this->pokenum = poke;
+    this->id = poke;
 
     gens[0].init(3,poke);
     gens[1].init(4,poke);
+    gens[2].init(5,poke);
 }
 
 void PokeMovesDb::init()
 {
-    for (int i =0; i < PokemonInfo::NumberOfPokemons(); i++) {
+    foreach(Pokemon::uniqueId id, PokemonInfo::AllIds()) {
+        if (PokemonInfo::IsAesthetic(id))
+            continue;
+
         MovesPerPoke p;
-        p.init(i);
-        pokes.push_back(p);
+        p.init(id);
+        pokes[id] = p;
     }
 
-    for (int i =0; i < PokemonInfo::NumberOfPokemons(); i++) {
-        int preEvo = PokemonInfo::PreEvo(i);
+    /* Code to give evos the moves of their pre evos */
+//    for (int i =0; i < PokemonInfo::NumberOfPokemons(); i++) {
+//        int preEvo = PokemonInfo::PreEvo(i);
 
-        if (preEvo != 0) {
-            pokes[i].gens[0].moves[LevelMoves].unite(pokes[preEvo].gens[0].moves[LevelMoves]);
-        }
-    }
+//        if (preEvo != 0) {
+//            pokes[i].gens[0].moves[LevelMoves].unite(pokes[preEvo].gens[0].moves[LevelMoves]);
+//        }
+//    }
 }
 
 void PokeMovesDb::save()
 {
-    QFile files[2][5];
+    QFile files[3][5];
 
-    for (int gen = 3; gen <= 4; gen++) {
+    for (int gen = 3; gen <= 5; gen++) {
         QString genS = "db/pokes/" + QString::number(gen) + "G_";
         files[gen-3][LevelMoves].setFileName(genS + "level_moves.txt");
         files[gen-3][EggMoves].setFileName(genS + "egg_moves.txt");
@@ -52,16 +63,21 @@ void PokeMovesDb::save()
         files[gen-3][SpecialMoves].setFileName(genS + "special_moves.txt");
         files[gen-3][TMMoves].setFileName(genS + "tm_and_hm_moves.txt");
     }
-    for (int gen = 3; gen <= 4; gen++) {
+
+    QList<Pokemon::uniqueId> ids = PokemonInfo::AllIds();
+    qSort(ids);
+    for (int gen = 3; gen <= 5; gen++) {
         for (int i = 0; i < 5; i++) {
             files[gen-3][i].open(QIODevice::WriteOnly);
+            foreach (Pokemon::uniqueId id, ids) {
+                if (PokemonInfo::IsAesthetic(id) || pokes[id].gens[gen-3].moves[i].size() == 0)
+                    continue;
 
-            for (int p = 0; p < PokemonInfo::NumberOfPokemons(); p++) {
+                QList<int> moves = pokes[id].gens[gen-3].moves[i].toList();
+                qSort(moves);
+
                 QString s;
                 bool start = true;
-
-                QList<int> moves = pokes[p].gens[gen-3].moves[i].toList();
-                qSort(moves);
 
                 foreach(int move, moves) {
                     if (!start) {
@@ -72,7 +88,7 @@ void PokeMovesDb::save()
                     s += QString::number(move);
                 }
 
-                files[gen-3][i].write((s+"\n").toUtf8());
+                files[gen-3][i].write(id.toLine(s+"\n").toUtf8());
             }
             files[gen-3][i].close();
         }
@@ -85,7 +101,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->save->setShortcut(Qt::CTRL+Qt::Key_S);
-    ui->gen4->setChecked(true);
+    ui->gen5->setChecked(true);
     ui->pokeMoves->setCurrentIndex(0);
 
     currentPoke = 0;
@@ -96,6 +112,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->save, SIGNAL(triggered()), SLOT(save()));
     connect(ui->gen4, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
+    connect(ui->gen5, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
 
     /**********************
          Pokemons
@@ -170,7 +187,7 @@ void MainWindow::setPokeByNick()
     switchToPokemon(PokemonInfo::Number(ui->pokemonName->text()));
 }
 
-void MainWindow::switchToPokemon(int num)
+void MainWindow::switchToPokemon(Pokemon::uniqueId num)
 {
     currentPoke = num;
 
@@ -197,7 +214,7 @@ void MainWindow::addMoves(int gen, int cat, QListWidget *container)
 }
 
 int MainWindow::gen() {
-    return ui->gen3->isChecked() ? 3 : 4;
+    return ui->gen3->isChecked() ? 3 : (ui->gen4->isChecked() ? 4 : 5);
 }
 
 void MainWindow::moveChosen(QListWidgetItem *it)

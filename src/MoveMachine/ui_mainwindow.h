@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 29. Apr 02:08:34 2010
-**      by: Qt User Interface Compiler version 4.6.1
+** Created: Fri 17. Sep 13:12:11 2010
+**      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -42,6 +42,7 @@ public:
     QHBoxLayout *horizontalLayout;
     QRadioButton *gen3;
     QRadioButton *gen4;
+    QRadioButton *gen5;
     QTabWidget *pokeMoves;
     QWidget *tab;
     QListWidget *levelMoves;
@@ -93,6 +94,11 @@ public:
         gen4->setObjectName(QString::fromUtf8("gen4"));
 
         horizontalLayout->addWidget(gen4);
+
+        gen5 = new QRadioButton(groupBox);
+        gen5->setObjectName(QString::fromUtf8("gen5"));
+
+        horizontalLayout->addWidget(gen5);
 
         pokeMoves = new QTabWidget(centralWidget);
         pokeMoves->setObjectName(QString::fromUtf8("pokeMoves"));
@@ -166,6 +172,7 @@ public:
         groupBox->setTitle(QApplication::translate("MainWindow", "GroupBox", 0, QApplication::UnicodeUTF8));
         gen3->setText(QApplication::translate("MainWindow", "3rd Gen", 0, QApplication::UnicodeUTF8));
         gen4->setText(QApplication::translate("MainWindow", "4th Gen", 0, QApplication::UnicodeUTF8));
+        gen5->setText(QApplication::translate("MainWindow", "5th Gen", 0, QApplication::UnicodeUTF8));
         pokeMoves->setTabText(pokeMoves->indexOf(tab), QApplication::translate("MainWindow", "Level Moves", 0, QApplication::UnicodeUTF8));
         pokeMoves->setTabText(pokeMoves->indexOf(tab_2), QApplication::translate("MainWindow", "Tutor Moves", 0, QApplication::UnicodeUTF8));
         pokeMoves->setTabText(pokeMoves->indexOf(tab_3), QApplication::translate("MainWindow", "Egg Moves", 0, QApplication::UnicodeUTF8));

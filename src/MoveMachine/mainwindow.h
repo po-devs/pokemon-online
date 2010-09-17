@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QListWidgetItem>
+#include "../PokemonInfo/pokemonstructs.h"
 
 namespace Ui {
     class MainWindow;
@@ -19,25 +20,25 @@ enum {
 struct MoveGen
 {
     int gen;
-    int pokenum;
+    Pokemon::uniqueId id;
     QSet<int> moves[5];
 
-    void init(int gen, int pokenum);
+    void init(int gen, Pokemon::uniqueId id);
 };
 
 struct MovesPerPoke
 {
-    int pokenum;
-    MoveGen gens[2];
+    Pokemon::uniqueId id;
+    MoveGen gens[3];
 
-    void init(int poke);
+    void init(Pokemon::uniqueId id);
 };
 
 struct PokeMovesDb
 {
     void init();
 
-    QList<MovesPerPoke> pokes;
+    QHash<Pokemon::uniqueId, MovesPerPoke> pokes;
 
     void save();
 };
@@ -59,9 +60,9 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-    int currentPoke;
+    Pokemon::uniqueId currentPoke;
 
-    void switchToPokemon(int);
+    void switchToPokemon(Pokemon::uniqueId);
     int gen();
     PokeMovesDb database;
     void addMoves(int gen, int cat, QListWidget *container);

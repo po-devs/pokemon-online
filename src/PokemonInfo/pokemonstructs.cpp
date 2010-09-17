@@ -1180,6 +1180,12 @@ QString Pokemon::uniqueId::toString() const
     if(subnum) result.append(QString("-%1").arg(subnum));
     return result;
 }
+
+QString Pokemon::uniqueId::toLine(const QString &data) const
+{
+    return QString ("%1:%2 %3").arg(pokenum).arg(subnum).arg(data);
+}
+
 quint32 Pokemon::uniqueId::toPokeRef() const
 {
     return pokenum + (subnum << 16);
