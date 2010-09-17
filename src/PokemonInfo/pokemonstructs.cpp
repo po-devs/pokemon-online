@@ -651,7 +651,7 @@ void PokeTeam::loadFromXml(const QDomElement &poke)
     if (gen() == 4 && num > 493 && forme == 0 && !PokemonInfo::Exists(Pokemon::uniqueId(num, 0), 4)) {
         //Old way
         int indexes[] = {
-            479,479,479,479,479,386,386,386,413,413,487,492
+            479,479,479,479,479,386,386,386,413,413,492,487
         };
         int formes[] = {
             1,2,3,4,5,1,2,3,1,2,1,1

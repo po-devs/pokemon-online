@@ -121,9 +121,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pokemonList->setSelectionMode(QAbstractItemView::SingleSelection);
 
     /* Adding the poke names */
-    for (int i = 0; i < PokemonInfo::NumberOfPokemons(); i++)
+    QList<Pokemon::uniqueId> ids = PokemonInfo::AllIds();
+    qSort(ids);
+
+    foreach(Pokemon::uniqueId id, ids)
     {
-        QIdListWidgetItem *it= new QIdListWidgetItem(i, PokemonInfo::Name(i));
+        if (PokemonInfo::IsAesthetic(id))
+            continue;
+        QIdListWidgetItem *it= new QIdListWidgetItem(id.toPokeRef(), PokemonInfo::Name(id));
         ui->pokemonList->addItem(it);
     }
 
