@@ -522,7 +522,7 @@ StatTab::StatTab() {
         stats->addWidget(baseStats[i] = new QProgressBar(), i+1, 1);
         stats->addWidget(min[i] = new QLabel(), i+1, 2);
         if (i != Hp) {
-            stats->addWidget(buttons[i] = Theme::LRButton("="), i+1, 3);
+            stats->addWidget(buttons[i] = Theme::LRButton("equal"), i+1, 3);
             buttons[i]->setProperty("Stat", i);
 
             connect(buttons[i], SIGNAL(leftClick()), SLOT(increaseBoost()));
@@ -545,7 +545,7 @@ void StatTab::changePoke(Pokemon::uniqueId poke) {
 
     for (int i = 1; i < 6; i++) {
         if (boost[i] != 0)  {
-            Theme::ChangePics(buttons[i], "=");
+            Theme::ChangePics(buttons[i], "equal");
             boost[i] = 0;
         }
     }
@@ -653,9 +653,9 @@ void StatTab::increaseBoost()
         return;
     }
     if (boost[stat] == 0) {
-        Theme::ChangePics(buttons[stat], "=");
+        Theme::ChangePics(buttons[stat], "equal");
     } else if (boost[stat] == 1) {
-        Theme::ChangePics(buttons[stat], "+");
+        Theme::ChangePics(buttons[stat], "plus");
     }
 }
 
@@ -677,9 +677,9 @@ void StatTab::decreaseBoost()
         return;
     }
     if (boost[stat] == 0) {
-        Theme::ChangePics(buttons[stat], "=");
+        Theme::ChangePics(buttons[stat], "equal");
     } else if (boost[stat] == -1) {
-        Theme::ChangePics(buttons[stat], "-");
+        Theme::ChangePics(buttons[stat], "minus");
     }
 }
 
