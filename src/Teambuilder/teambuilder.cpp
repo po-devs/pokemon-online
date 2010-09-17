@@ -897,6 +897,11 @@ void TB_TeamBody::indexNumChanged(Pokemon::uniqueId pokeNum)
     {
         int index = ((TB_PokemonBody*)sender())->num();
         m_dockAdvanced->setPokemonNum(index,pokeNum);
+
+        /* When loading a team, in order to restore the index right */
+        if (index == 5 && index != body->currentIndex()) {
+            m_dockAdvanced->setCurrentPokemon(body->currentIndex());
+        }
     }
 }
 
