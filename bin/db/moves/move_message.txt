@@ -75,7 +75,7 @@ Reflect raised %ts's team defense!|Light Screen raised %ts's team special defens
 %s took aim at %f!
 %ts's team is protected from critical hits!|%ts's lucky chant wore off!
 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!
-%s cleared the field around %tf's team!
+%s cleared the field around %tf's team!|%s cleared the field!
 Magnitude %d!
 
 
