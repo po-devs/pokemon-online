@@ -95,8 +95,7 @@ private:
     static QHash<Pokemon::uniqueId, int> m_Type1[3];
     static QHash<Pokemon::uniqueId, int> m_Type2[3];
     static QHash<Pokemon::uniqueId, int> m_Genders;
-    static QHash<Pokemon::uniqueId, int> m_Ability1[3];
-    static QHash<Pokemon::uniqueId, int> m_Ability2[3];
+    static QHash<Pokemon::uniqueId, int> m_Abilities[3][3];
     static QHash<Pokemon::uniqueId, PokeBaseStats> m_BaseStats;
     static QHash<Pokemon::uniqueId, int> m_LevelBalance;
 
@@ -222,6 +221,8 @@ private:
     static void loadMoveMessages();
     static void loadDescriptions();
     static void loadDetails();
+    template <class T>
+    static void makeConsistent(T &container);
     static QString path(const QString &filename);
 };
 

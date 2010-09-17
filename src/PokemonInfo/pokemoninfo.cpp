@@ -20,8 +20,7 @@ QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Height;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Genders;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type1[3];
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type2[3];
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_Ability1[3];
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_Ability2[3];
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Abilities[3][3];
 QHash<Pokemon::uniqueId, PokeBaseStats> PokemonInfo::m_BaseStats;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_LevelBalance;
 QHash<Pokemon::uniqueId, PokemonMoves> PokemonInfo::m_Moves;
@@ -345,13 +344,15 @@ void PokemonInfo::init(const QString &dir)
     loadMoves();
 
     fill_uid_int(m_Genders, path("poke_gender.txt"));
+
     for (int i = 0; i < 3; i++) {
         int gen = i+3;
 
         fill_uid_int(m_Type1[i], path(QString("poke_type1-%1G.txt").arg(gen)));
         fill_uid_int(m_Type2[i], path(QString("poke_type2-%1G.txt").arg(gen)));
-        fill_uid_int(m_Ability1[i], path(QString("poke_ability_%1G.txt").arg(gen)));
-        fill_uid_int(m_Ability2[i], path(QString("poke_ability2_%1G.txt").arg(gen)));
+        for (int j = 0; j < 3; j++) {
+            fill_uid_int(m_Abilities[i][j], path(QString("poke_ability%1_%2G.txt").arg(j+1).arg(gen)));
+        }
     }
 
     fill_uid_int(m_LevelBalance, path("level_balance.txt"));
@@ -651,8 +652,9 @@ AbilityGroup PokemonInfo::Abilities(const Pokemon::uniqueId &pokeid, int gen)
 {
     AbilityGroup ret;
 
-    ret.ab1 = m_Ability1[gen-3].value(pokeid);
-    ret.ab2 = m_Ability2[gen-3].value(pokeid);
+    for (int i = 0; i < 3; i++) {
+        ret._ab[i] = m_Abilities[gen-3][i].value(pokeid);
+    }
 
     return ret;
 }
@@ -887,12 +889,12 @@ void PokemonInfo::makeDataConsistent()
             if (!Exists(id, gen))
                 continue;
 
-            if(!m_Ability1[i].contains(id)) {
-                m_Ability1[i][id] = m_Ability1[i].value(OriginalForme(id), Ability::NoAbility);
+            for (int j = 0; j < 3; j++) {
+                if(!m_Abilities[i][j].contains(id)) {
+                    m_Abilities[i][j][id] = m_Abilities[i][j].value(OriginalForme(id), Ability::NoAbility);
+                }
             }
-            if(!m_Ability2[i].contains(id)) {
-                m_Ability2[i][id] = m_Ability2[i].value(OriginalForme(id), Ability::NoAbility);
-            }
+
             if(!m_Type1[i].contains(id)) {
                 m_Type1[i][id] = m_Type1[i].value(OriginalForme(id), Pokemon::Normal);
             }
@@ -924,17 +926,27 @@ Pokemon::uniqueId PokemonInfo::getRandomPokemon()
     return m_VisiblePokesPlainList[random];
 }
 
+template <class Cont>
+void MoveInfo::makeConsistent(Cont &container)
+{
+    while (container.size() < NumberOfMoves()) {
+        container.push_back(typename Cont::value_type());
+    }
+}
+
 void MoveInfo::loadCritics()
 {
     QStringList temp;
     fill_container_with_file(temp, path("move_critical.txt"));
 
     foreach(QString str, temp) { m_Critical.push_back(str.toInt());}
+    makeConsistent(m_Critical);
 }
 
 void MoveInfo::loadTargets()
 {
     fill_container_with_file(m_Targets, path("move_target.txt"));
+    makeConsistent(m_Targets);
 }
 
 void MoveInfo::loadEffectRates()
@@ -943,16 +955,19 @@ void MoveInfo::loadEffectRates()
     fill_container_with_file(temp, path("move_effect_rate.txt"));
 
     foreach(QString str, temp) {m_EffectRate.push_back(str.toInt());}
+    makeConsistent(m_EffectRate);
 }
 
 void MoveInfo::loadPhysics()
 {
     fill_container_with_file(m_Physical, path("move_physical_contact.txt"));
+    makeConsistent(m_Physical);
 }
 
 void MoveInfo::loadKingRocks()
 {
     fill_container_with_file(m_KingRock, path("move_kingrock.txt"));
+    makeConsistent(m_KingRock);
 }
 
 void MoveInfo::loadRepeats()
@@ -963,6 +978,7 @@ void MoveInfo::loadRepeats()
     foreach(QString str, temp) {
 	m_Repeat.push_back(QPair<char, char>(str[0].toAscii()-'0', str[2].toAscii()-'0'));
     }
+    makeConsistent(m_Repeat);
 }
 
 void MoveInfo::loadMoveMessages()
@@ -978,6 +994,7 @@ void MoveInfo::loadMoveMessages()
 void MoveInfo::loadSpeeds()
 {
     fill_container_with_file(m_Speeds, path("move_speed_priority.txt"));
+    makeConsistent(m_Speeds);
 }
 
 void MoveInfo::loadRecoil()
@@ -986,6 +1003,7 @@ void MoveInfo::loadRecoil()
     fill_container_with_file(temp, path("move_recoil.txt"));
 
     foreach(QString str, temp) {m_Recoil.push_back(str.toInt());}
+    makeConsistent(m_Recoil);
 }
 
 int MoveInfo::Recoil(int num, int gen)
@@ -1075,11 +1093,13 @@ void MoveInfo::loadNames()
 void MoveInfo::loadDescriptions()
 {
     fill_container_with_file(m_Descriptions, trFile(path("move_description")));
+    makeConsistent(m_Descriptions);
 }
 
 void MoveInfo::loadDetails()
 {
     fill_container_with_file(m_Details, trFile(path("move_effect")));
+    makeConsistent(m_Details);
 }
 
 QString MoveInfo::Description(int movenum)
@@ -1096,17 +1116,20 @@ void MoveInfo::loadPPs()
 {
     for (int i = 0; i < 3; i++) {
         fill_container_with_file(m_PP[i], path(QString("move_pp_%1G.txt")).arg(i+3));
+        makeConsistent(m_PP[i]);
     }
 }
 
 void MoveInfo::loadTypes()
 {
     fill_container_with_file(m_Type, path("move_type.txt"));
+    makeConsistent(m_Type);
 }
 
 void MoveInfo::loadCategorys()
 {
     fill_container_with_file(m_Category, path("move_category.txt"));
+    makeConsistent(m_Category);
 }
 
 void MoveInfo::loadPowers()
@@ -1118,6 +1141,7 @@ void MoveInfo::loadPowers()
         foreach (QString s, temp) {
             m_Power[i].push_back(s.toInt());
         }
+        makeConsistent(m_Power[i]);
     }
 }
 
@@ -1129,6 +1153,7 @@ void MoveInfo::loadAccs()
 
         foreach (QString s, temp) {
             m_Acc[i].push_back(s.toInt());
+            makeConsistent(m_Acc[i]);
         }
     }
 }
@@ -1267,6 +1292,7 @@ void MoveInfo::loadFlinchs()
     foreach(QString s, temp) {
 	m_Flinch.push_back(s.toInt());
     }
+    makeConsistent(m_Flinch);
 }
 
 void MoveInfo::loadEffects()
@@ -1279,6 +1305,7 @@ void MoveInfo::loadEffects()
         foreach (QString eff, temp) {
             m_Effects[i].push_back(eff.split('#').front());
         }
+        makeConsistent(m_Effects[i]);
     }
 }
 
@@ -1290,6 +1317,7 @@ void MoveInfo::loadSpecialEffects()
     /* Removing comments, aka anything starting from '#' */
     foreach (QString eff, temp) {
 	m_SpecialEffects.push_back(eff.split('#').front());
+        makeConsistent(m_SpecialEffects);
     }
 }
 

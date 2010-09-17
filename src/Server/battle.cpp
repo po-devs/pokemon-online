@@ -2723,7 +2723,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
 {
     PokeBattle &p  = this->poke(player,poke);
     p.num() = newform;
-    p.ability() = PokemonInfo::Abilities(newform).ab1;
+    p.ability() = PokemonInfo::Abilities(newform).ab(0);
 
     for (int i = 1; i < 6; i++)
         p.setNormalStat(i,PokemonInfo::Stat(newform,i,p.level(),p.dvs()[i], p.evs()[i]));

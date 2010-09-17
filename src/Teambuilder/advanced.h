@@ -25,7 +25,7 @@ private:
     QLabel *stats[6];
     QLabel *hpower;
     QCompactTable *hpanddvchoice;
-    QRadioButton *ability1, *ability2;
+    QRadioButton *ability[3];
     QRadioButton *gender1, *gender2;
     QCheckBox *shiny;
     QSpinBox *level, *happiness;

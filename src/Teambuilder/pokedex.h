@@ -88,7 +88,7 @@ public slots:
     void changeDesc (Pokemon::uniqueId poke);
 private:
     QLabel *hgDesc, *ssDesc, *ptDesc;
-    QLabel *ab1, *ab2;
+    QLabel *abs[3];
 };
 
 class MoveTab : public QFrame

@@ -143,6 +143,50 @@ MainWindow::MainWindow(QWidget *parent) :
 //    outfile.close();
 //    exit(0);
 
+    AbilityInfo::init();
+    QFile in("db/abilities/ability_extract.txt");
+    in.open(QIODevice::ReadOnly);
+    QString s = QString::fromUtf8(in.readAll());
+    in.close();
+
+    QStringList pokes  = s.split('\n');
+
+    QStringList out[3];
+
+    for (int i = 0; i < pokes.size(); i++) {
+        QString poke = pokes[i];
+        Pokemon::uniqueId id(i+1, 0);
+
+        QStringList data = poke.split('/');
+
+        int abilities[3] = {0,0,0};
+
+        for (int j = 0; j < data.size(); j++) {
+            QString ab = data[j];
+
+            if (ab.contains(" (Dream World)"))
+            {
+                ab.replace(" (Dream World)", "");
+                abilities[2] = AbilityInfo::Number(ab);
+            } else {
+                abilities[j] = AbilityInfo::Number(ab);
+            }
+        }
+
+        for (int j = 0; j < 3; j++) {
+            out[j].push_back(id.toLine(QString::number(abilities[j])));
+        }
+    }
+
+    for (int i = 0; i < 3; i++) {
+        QFile outfile(QString("poke_ability%1.txt").arg(i+1));
+        outfile.open(QIODevice::WriteOnly);
+        outfile.write(out[i].join("\n").toUtf8());
+        outfile.close();
+    }
+
+    exit(0);
+
     connect(ui->save, SIGNAL(triggered()), SLOT(save()));
     connect(ui->gen4, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
     connect(ui->gen5, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
