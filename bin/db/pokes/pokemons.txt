@@ -552,7 +552,7 @@
 412:2 Burmy-S
 351:1 Castform-Snowy
 351:2 Castform-Rainy
-351:3 Castform-Sunny
+351:4 Castform-Sunny
 421:1 Cherrim-Sunshine
 422:1 Shellos-East
 423:1 Gastrodon-East
