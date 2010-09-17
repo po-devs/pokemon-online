@@ -110,6 +110,39 @@ MainWindow::MainWindow(QWidget *parent) :
     MoveInfo::init("db/moves/");
     database.init();
 
+//    QFile in("db/pokes/level_to_extract.txt");
+//    in.open(QIODevice::ReadOnly);
+//    QString s = QString::fromUtf8(in.readAll());
+//    in.close();
+
+//    QStringList pokes  = s.split('\n');
+//    QStringList out;
+
+//    foreach ( QString poke, pokes ) {
+//        Pokemon::uniqueId id(poke.section(':', 0, 0).toInt(), 0);
+
+//        QString data = poke.section(": ", 1);
+//        QStringList moves = data.split(", ");
+
+//        QStringList moveNums;
+
+//        foreach( QString move, moves ) {
+//            QString name = move.section(": ", 1);
+//            moveNums.push_back(QString::number(MoveInfo::Number(name)));
+//        }
+
+//        moveNums.sort();
+
+//        QString body = moveNums.join(" ");
+//        out.push_back(id.toLine(body));
+//    }
+
+//    QFile outfile("db/pokes/5G_level_moves.txt");
+//    outfile.open(QIODevice::WriteOnly);
+//    outfile.write(out.join("\n").toUtf8());
+//    outfile.close();
+//    exit(0);
+
     connect(ui->save, SIGNAL(triggered()), SLOT(save()));
     connect(ui->gen4, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
     connect(ui->gen5, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));

@@ -618,6 +618,7 @@
 553:0 Warubiaru
 554:0 Darumakka
 555:0 Hihidaruma
+555:0 Hihidaruma-D
 556:0 Marakacchi
 557:0 Ishizumai
 558:0 Iwaparesu
@@ -711,4 +712,5 @@
 646:0 Kyuremu
 647:0 Kerudio
 648:0 Meloia
-649:0 Genosekuto
+648:1 Meloia-S
+649:0 Insekuta
