@@ -1632,7 +1632,7 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
         l->addWidget(m_evs[i] = new QLineEdit("0"), i, 4, Qt::AlignLeft);
 
         if (!i==0){
-            l->addWidget(natureButtons[i-1] = Theme::LRButton("="),i,1,Qt::AlignLeft);
+            l->addWidget(natureButtons[i-1] = Theme::LRButton("equal"),i,1,Qt::AlignLeft);
             natureButtons[i-1]->setFixedWidth(20);
             natureButtons[i-1]->setFixedHeight(14);
             connect(natureButtons[i-1],SIGNAL(rightClick()),SLOT(checkNButtonR()));
@@ -1819,10 +1819,10 @@ void TB_EVManager::updateNatureButtons()
     }
     for (int j = 0; j<5;j++){
         if (j+1 == myStatUp)
-            Theme::ChangePics(natureButtons[j], "+");
+            Theme::ChangePics(natureButtons[j], "plus");
         else if(j+1 == myStatDown)
-            Theme::ChangePics(natureButtons[j], "-");
+            Theme::ChangePics(natureButtons[j], "minus");
         else
-            Theme::ChangePics(natureButtons[j], "=");
+            Theme::ChangePics(natureButtons[j], "equal");
     }
 }

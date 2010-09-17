@@ -122,43 +122,43 @@ Water Absorb
 Water Veil
 White Smoke
 Wonder Guard
-[A125]
+Encourage
 [A126]
-[A127]
-[A128]
-[A129]
-[A130]
-[A131]
+Anxiety
+Competitive Spirit
+Weak-kneed
+Cursed Body
+Healing Heart
 [A132]
-[A133]
-[A134]
-[A135]
+Broken Armour
+Heavy Metal
+Light Metal
 [A136]
 [A137]
 [A138]
 [A139]
-[A140]
+Telepathy
 [A141]
-[A142]
-[A143]
-[A144]
-[A145]
-[A146]
-[A147]
-[A148]
-[A149]
+Dustproof
+Poison Skin
+Regeneration
+Pigeon Heart
+Sand Throw
+Miracle Skin
+Analyze
+Illusion
 [A150]
-[A151]
-[A152]
-[A153]
-[A154]
+Slip Through
+Mummy
+Earthquake Spiral
+Justice Heart
 [A155]
 [A156]
-[A157]
-[A158]
-[A159]
-[A160]
+Herbivore
+Mischievous Heart
+Sand Power
+Iron Barbs
 [A161]
-[A162]
-[A163]
-[A164]
+Victory Star
+Turbo Blaze
+TeraVoltage
