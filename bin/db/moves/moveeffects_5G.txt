@@ -161,7 +161,7 @@ O[S]1+
 O[S]4+
 #Gravity
 O[M]1-1
-S[M]4+1
+S[M]1+1&4+1
 #Grudge
 #Guard swap
 #OHKO
