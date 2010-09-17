@@ -56,7 +56,7 @@ void MainWindow::processFile(const QString &filename)
             output.push_back(makeLine(i, descriptionFile ? -1: 0, lines[i]));
         } else {
             int indexes[] = {
-                479,479,479,479,479,386,386,386,413,413,487,492
+                479,479,479,479,479,386,386,386,413,413,492,487
             };
             int formes[] = {
                 1,2,3,4,5,1,2,3,1,2,1,1
