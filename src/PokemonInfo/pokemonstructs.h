@@ -1529,12 +1529,16 @@ enum Stat
 };
 
 struct AbilityGroup {
-    quint16 ab1;
-    quint16 ab2;
+    quint8 _ab[3];
 
     AbilityGroup() {
-        ab1 = 0;
-        ab2 = 0;
+        _ab[0] = 0;
+        _ab[1] = 0;
+        _ab[2] = 0;
+    }
+
+    int ab(int num) const {
+        return _ab[num];
     }
 };
 

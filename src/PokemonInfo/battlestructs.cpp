@@ -345,7 +345,11 @@ void TeamBattle::generateRandom(int gen)
         g.gen() = gen;
         g.load();
 
-        p.ability() = (g.abilities().ab2 == 0 || true_rand()%2) ? g.abilities().ab1 : g.abilities().ab2;
+        p.ability() = g.abilities().ab(true_rand()%3);
+        /* In case the pokemon has less than 3 abilities, ability 1 has 2/3 of being chosen. Fix it. */
+        if (p.ability() == 0)
+            p.ability() = g.abilities().ab(0);
+
         if (g.genderAvail() == Pokemon::MaleAndFemaleAvail) {
             p.gender() = true_rand()%2 ? Pokemon::Female : Pokemon::Male;
         } else {

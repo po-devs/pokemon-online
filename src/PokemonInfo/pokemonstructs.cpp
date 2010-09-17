@@ -203,8 +203,8 @@ void PokePersonal::runCheck()
 
     AbilityGroup ab = PokemonInfo::Abilities(num(), gen());
 
-    if (ability() != ab.ab2)
-        ability() = ab.ab1;
+    if (ability() == 0 || (ability() != ab.ab(2) && ability() != ab.ab(1)))
+        ability() = ab.ab(0);
 
     if (!ItemInfo::Exists(item(), gen())) {
         item() = 0;
@@ -384,7 +384,7 @@ int PokeGraphics::gen() const
 PokeTeam::PokeTeam()
 {
     setNum(Pokemon::uniqueId(Pokemon::NoPoke));
-    setGen(4);
+    setGen(5);
 }
 
 void PokeTeam::setNum(Pokemon::uniqueId num)
@@ -436,7 +436,7 @@ void PokeTeam::load()
     {
         gender() = Pokemon::Male;
     }
-    ability() = abilities().ab1;
+    ability() = abilities().ab(0);
     nickname() = PokemonInfo::Name(num());
     PokeGraphics::load(gender(), false);
     PokeGraphics::loadIcon(num());

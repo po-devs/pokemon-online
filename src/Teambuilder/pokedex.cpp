@@ -440,10 +440,11 @@ ProfileTab::ProfileTab()
     QLabel *abilityHeader = new QLabel(tr("Abilities"));
     abilityHeader->setObjectName("GreenHeader");
     firstCol->addWidget(abilityHeader);
-    firstCol->addWidget(ab1 = new QLabel());
-    firstCol->addWidget(ab2 = new QLabel());
-    ab1->setWordWrap(true);
-    ab2->setWordWrap(true);
+
+    for (int i = 0; i < 3; i++) {
+        firstCol->addWidget(abs[i] = new QLabel());
+        abs[i]->setWordWrap(true);
+    }
 
     changeDesc(1);
 }
@@ -468,13 +469,15 @@ void ProfileTab::changeDesc(Pokemon::uniqueId poke)
 
     AbilityGroup ab = PokemonInfo::Abilities(poke);
 
-    ab1->setText(QString("<b>%1</b> - %2").arg(AbilityInfo::Name(ab.ab1), AbilityInfo::Desc(ab.ab1)));
+    abs[0]->setText(QString("<b>%1</b> - %2").arg(AbilityInfo::Name(ab.ab(0)), AbilityInfo::Desc(ab.ab(0))));
 
-    if (ab.ab2 == 0) {
-        ab2->hide();
-    } else {
-        ab2->setText(QString("<b>%1</b> - %2").arg(AbilityInfo::Name(ab.ab2), AbilityInfo::Desc(ab.ab2)));
-        ab2->show();
+    for (int i = 1; i < 3; i++) {
+        if (ab.ab(i) == 0) {
+            abs[i]->hide();
+        } else {
+            abs[i]->show();
+            abs[i]->setText(QString("<b>%1</b> - %2").arg(AbilityInfo::Name(ab.ab(i)), AbilityInfo::Desc(ab.ab(i))));
+        }
     }
 }
 
@@ -1003,7 +1006,7 @@ void AdvancedSearch::search()
 
         {
             AbilityGroup ab = PokemonInfo::Abilities(i);
-            if (ability != 0 && ab.ab1 != ability && ab.ab2 != ability)
+            if (ability != 0 && ab.ab(0) != ability && ab.ab(1) != ability && ab.ab(2) != ability)
                 goto loopend;
             {
                 PokeBaseStats b = PokemonInfo::BaseStats(i);

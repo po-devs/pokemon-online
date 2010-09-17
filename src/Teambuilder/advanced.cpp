@@ -109,20 +109,27 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 	gender1->setEnabled(false);
     }
 
-    QGroupBox *ability = new QGroupBox(tr("&Ability"));
-    secondColumn->addWidget(ability);
-    QVBoxLayout *abilityLayout = new QVBoxLayout(ability);
+    QGroupBox *abilityB = new QGroupBox(tr("&Ability"));
+    secondColumn->addWidget(abilityB);
+    QVBoxLayout *abilityLayout = new QVBoxLayout(abilityB);
 
-    abilityLayout->addWidget(ability1=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab1)));
-    ability1->setToolTip(AbilityInfo::Desc(poke()->abilities().ab1));
-    if (poke()->abilities().ab2 != 0) {
-        abilityLayout->addWidget(ability2=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab2)));
-        ability2->setToolTip(AbilityInfo::Desc(poke()->abilities().ab2));
-	connect(ability1, SIGNAL(toggled(bool)), SLOT(changeAbility(bool)));
-	updateAbility();
+    abilityLayout->addWidget(ability[0]=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab(0))));
+    ability[0]->setToolTip(AbilityInfo::Desc(poke()->abilities().ab(0)));
+
+    if ( (poke()->abilities().ab(1) == poke()->abilities().ab(2)) && (poke()->abilities().ab(1) == 0) ) {
+        ability[0]->setChecked(true);
+        ability[0]->setEnabled(false);
     } else {
-	ability1->setChecked(true);
-	ability1->setEnabled(false);
+        for (int i = 1; i < 3; i++) {
+            if (poke()->abilities().ab(i) != 0) {
+                abilityLayout->addWidget(ability[i]=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab(i))));
+                ability[i]->setToolTip(AbilityInfo::Desc(poke()->abilities().ab(i)));
+                connect(ability[i], SIGNAL(toggled(bool)), SLOT(changeAbility(bool)));
+            } else {
+                ability[i] = 0;
+            }
+        }
+        updateAbility();
     }
 
     secondColumn->addWidget(shiny = new QCheckBox(tr("&Shiny")));
@@ -186,9 +193,14 @@ void TB_Advanced::changeForme()
     }
 }
 
-void TB_Advanced::changeAbility(bool ab1)
+void TB_Advanced::changeAbility(bool)
 {
-    poke()->ability() = ab1? poke()->abilities().ab1 : poke()->abilities().ab2;
+    for (int i = 0; i < 3; i++) {
+        if (ability[i] != NULL && ability[i]->isChecked()) {
+            poke()->ability() = poke()->abilities().ab(i);
+            break;
+        }
+    }
 }
 
 void TB_Advanced::changeShininess(bool shine)
@@ -217,11 +229,10 @@ void TB_Advanced::updatePokeImage()
 
 void TB_Advanced::updateAbility()
 {
-    if (poke()->ability() == poke()->abilities().ab1)
-    {
-	ability1->setChecked(true);
-    } else {
-	ability2->setChecked(true);
+    for (int i = 0; i < 3; i++) {
+        if (poke()->ability() == poke()->abilities().ab(i)) {
+            ability[i]->setChecked(true);
+        }
     }
 }
 

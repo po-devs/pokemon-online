@@ -12,7 +12,7 @@ Chlorophyll
 Clear Body
 Cloud Nine
 Color Change
-Compoundeyes
+CompoundEyes
 Cute Charm
 Damp
 Download
@@ -122,3 +122,43 @@ Water Absorb
 Water Veil
 White Smoke
 Wonder Guard
+[A125]
+[A126]
+[A127]
+[A128]
+[A129]
+[A130]
+[A131]
+[A132]
+[A133]
+[A134]
+[A135]
+[A136]
+[A137]
+[A138]
+[A139]
+[A140]
+[A141]
+[A142]
+[A143]
+[A144]
+[A145]
+[A146]
+[A147]
+[A148]
+[A149]
+[A150]
+[A151]
+[A152]
+[A153]
+[A154]
+[A155]
+[A156]
+[A157]
+[A158]
+[A159]
+[A160]
+[A161]
+[A162]
+[A163]
+[A164]
