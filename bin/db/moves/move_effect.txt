@@ -466,3 +466,95 @@ No effect.
 User and opponent sleep the next turn.
 May induce paralysis.
 May cause opponent to flinch.
+[E115]
+[E116]
+[E117]
+[E118]
+[E119]
+[E11A]
+[E11B]
+[E11C]
+Whenever an opposing Pokémon uses an attack with a target of "single non-user" or "single opposing Pokémon" this round and there is a Pokemon at the position of this attack's user, it is directed to the Pokemon at the position of this attack's user instead of to any other non-user of that attack. Remains effective even if user is replaced. Priority level 3. 
+[E11D]
+[E11E]
+[E11F] (100%)
+[E120]
+[E121]
+May poison opponent. (10%)
+[E122]
+[E123]
+[E124]
+[E125]
+[E126]
+[E127]
+[E142]
+Decreases opponent's Speed by 1 stage.
+[E128]
+[E129]
+[E12A]
+[E12B]
+[E12C]
+[E12D]
+[E12E]
+[E12F]
+[E130]
+[E131]
+[E132]
+[E133]
+May burn opponent. (30%)
+[E134]
+[E135]
+[E136]
+[E137]
+[E138]
+[E139]
+[E13A]
+[E13B]
+[E13D]
+[E13E]
+[E13F]
+[E140]
+[E143]
+May burn opponent.(100%)
+[E144]
+[E145]
+[E146]
+After this attack is used, if this attack is successful, if user has at least 1 HP, and if user's party has at least one non-active Pokémon and the opposing Pokemon's party has at least one unfainted Pokémon that isn't an egg, this attack causes the user to switch even if it cannot switch. (The new Pokémon becomes active immediately. Effect of Destiny Bond and Grudge takes precedence over this attack's effect.)
+May decrease opponent's Special Attack by 1 stage.
+May decrease opponent's Speed by 1 stage.
+[E120] (100%)
+[E139]
+[E147]
+Decreases opponent's Speed by 1 stage.
+Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
+Good chance for a critical hit.
+Strikes twice.
+May cause opponent to flinch.
+If this attack is successful, user gains half of HP lost by opponent due to this attack.
+[E12F]
+May decrease opponent's Defense by 1 stage.
+[E123]
+May decrease opponent's Accuracy by 1 stage.
+May cause opponent to flinch. Power is doubled if Minimize is in effect for opponent.
+[E148]
+May decrease opponent's Accuracy by 1 stage.
+[E11A]
+Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+[E151] (30%)
+Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
+Strikes twice.
+May burn opponent. (30%)
+If user is holding a Plate, this attack's type depends on the Plate held.
+[E149] (10%)
+[E11A]
+[E14A]
+May paralyze opponent. (20%)
+May burn opponent. (20%)
+May increase user's Special Attack by 1 stage.
+[E14B] (30%)
+[E14C] (30%)
+May decrease opponent's Special Attack by 1 stage.
+May cause opponent to flinch.
+[E14E]
+[E14F]
+[E150]
