@@ -42,8 +42,8 @@ public:
     static int Gender(const Pokemon::uniqueId &pokeid);
     static int BaseGender(const Pokemon::uniqueId &pokeid);
     static QByteArray Cry(const Pokemon::uniqueId &pokeid);
-    static int Type1(const Pokemon::uniqueId &pokeid);
-    static int Type2(const Pokemon::uniqueId &pokeid);
+    static int Type1(const Pokemon::uniqueId &pokeid, int gen = 5);
+    static int Type2(const Pokemon::uniqueId &pokeid, int gen = 5);
     static QPixmap Picture(const Pokemon::uniqueId &pokeid, int gen = 5, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QPixmap Sub(int gen=5, bool back = false);
     static QPixmap Icon(const Pokemon::uniqueId &pokeid);
@@ -92,8 +92,8 @@ private:
     static QHash<int, QString> m_Classification;
     static QHash<Pokemon::uniqueId, QString> m_Height;
     static QString m_Directory;
-    static QHash<Pokemon::uniqueId, int> m_Type1;
-    static QHash<Pokemon::uniqueId, int> m_Type2;
+    static QHash<Pokemon::uniqueId, int> m_Type1[3];
+    static QHash<Pokemon::uniqueId, int> m_Type2[3];
     static QHash<Pokemon::uniqueId, int> m_Genders;
     static QHash<Pokemon::uniqueId, int> m_Ability1[3];
     static QHash<Pokemon::uniqueId, int> m_Ability2[3];

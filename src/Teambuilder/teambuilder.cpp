@@ -1305,8 +1305,8 @@ void TB_PokemonBody::updateNickname()
 
 void TB_PokemonBody::updateTypes()
 {
-    int ttype1 = PokemonInfo::Type1(poke()->num());
-    int ttype2 = PokemonInfo::Type2(poke()->num());
+    int ttype1 = PokemonInfo::Type1(poke()->num(), poke()->gen());
+    int ttype2 = PokemonInfo::Type2(poke()->num(), poke()->gen());
 
     type1->setPixmap(Theme::TypePicture(ttype1));
     type2->setPixmap(Theme::TypePicture(ttype2));

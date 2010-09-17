@@ -4554,8 +4554,8 @@ struct MMTransform : public MM {
 
         po.id = num;
         po.weight = PokemonInfo::Weight(num);
-        po.type1 = PokemonInfo::Type1(num);
-        po.type2 = PokemonInfo::Type2(num);
+        po.type1 = PokemonInfo::Type1(num, b.gen());
+        po.type2 = PokemonInfo::Type2(num, b.gen());
         po.ability = b.ability(t);
 
         b.changeSprite(s, num);

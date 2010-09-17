@@ -1113,10 +1113,10 @@ void BaseBattleDisplay::updateToolTip(int spot)
     const ShallowBattlePoke &poke = info().currentShallow(spot);
 
     tooltip += poke.nick() + "\n";
-    tooltip += TypeInfo::Name(PokemonInfo::Type1(poke.num()));
+    tooltip += TypeInfo::Name(PokemonInfo::Type1(poke.num(), info().gen));
     int type2 = PokemonInfo::Type2(poke.num());
     if (type2 != Pokemon::Curse) {
-        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(poke.num()));
+        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(poke.num(), info().gen));
     }
     tooltip += "\n";
 
