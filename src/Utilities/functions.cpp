@@ -44,8 +44,8 @@ void writeSettings(QWidget *w)
     QSettings settings;
 
     settings.beginGroup(w->metaObject()->className());
-    settings.setValue("size", w->size());
-    settings.setValue("pos", w->pos());
+    settings.setValue("size", w->topLevelWidget()->size());
+    settings.setValue("pos", w->topLevelWidget()->pos());
     settings.endGroup();
 }
 
@@ -55,8 +55,8 @@ void loadSettings(QWidget *w, const QSize &defaultSize)
 
     settings.beginGroup(w->metaObject()->className());
     if (settings.contains("size") || !defaultSize.isNull())
-        w->resize(settings.value("size", defaultSize).toSize());
+        w->topLevelWidget()->resize(settings.value("size", defaultSize).toSize());
     if (settings.contains("pos"))
-        w->move(settings.value("pos").toPoint());
+        w->topLevelWidget()->move(settings.value("pos").toPoint());
     settings.endGroup();
 }

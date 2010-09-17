@@ -188,9 +188,12 @@ class TB_TeamBody: public QWidget
     Q_OBJECT
 public:
     TB_TeamBody(TeamBuilder *parent, int gen=4);
+    ~TB_TeamBody();
+
     void updateTeam();
     void updatePoke(int num);
     void changeGeneration(int gen);
+    bool isAdvancedOpen() const;
 private slots:
     void changeIndex();
     void updateButton();
@@ -199,11 +202,10 @@ private slots:
     void advancedClicked(int index, bool separateWindow);
     void advancedDestroyed();
     void indexNumChanged(Pokemon::uniqueId pokeNum);
-private:
-    TeamPokeButton *pokeButtons[6];
 public:
     TB_PokemonBody *pokeBody[6];
 private:
+    TeamPokeButton *pokeButtons[6];
     QStackedWidget *body;
 
     QSplitter *splitter;
@@ -220,6 +222,9 @@ private:
     }
 
     int gen;
+
+    void saveAdvancedState();
+    void restoreAdvancedState();
 
     friend class DockAdvanced;
 };
