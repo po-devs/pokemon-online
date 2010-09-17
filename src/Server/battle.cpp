@@ -1133,8 +1133,8 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     /* Give new values to what needed */
     fieldpokes[slot].id = poke(slot).num().toPokeRef();
     fieldpokes[slot].weight = PokemonInfo::Weight(poke(slot).num());
-    fieldpokes[slot].type1 = PokemonInfo::Type1(poke(slot).num());
-    fieldpokes[slot].type2 = PokemonInfo::Type2(poke(slot).num());
+    fieldpokes[slot].type1 = PokemonInfo::Type1(poke(slot).num(), gen());
+    fieldpokes[slot].type2 = PokemonInfo::Type2(poke(slot).num(), gen());
     fieldpokes[slot].ability = poke(slot).ability();
 
     for (int i = 0; i < 4; i++) {

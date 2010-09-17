@@ -94,8 +94,8 @@ void TB_PokemonDetail::updatePoke()
     m_num->setText(QString("[%1]").arg(num == -1 ? "X" : QString::number(num+1)));
     m_nick->setText(poke->nickname());
     m_pic->changePic(poke->picture());
-    m_type1->setPixmap(Theme::TypePicture(PokemonInfo::Type1(poke->num())));
-    m_type2->setPixmap(Theme::TypePicture(PokemonInfo::Type2(poke->num())));
+    m_type1->setPixmap(Theme::TypePicture(PokemonInfo::Type1(poke->num(), poke->gen())));
+    m_type2->setPixmap(Theme::TypePicture(PokemonInfo::Type2(poke->num(), poke->gen())));
     m_type2->setVisible(PokemonInfo::Type2(poke->num()) != Type::Curse);
     m_nature->setText(tr("Nature: %1").arg(NatureInfo::Name(poke->nature())));
     m_item->setPixmap(ItemInfo::Icon(poke->item()));

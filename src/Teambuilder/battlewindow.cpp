@@ -1005,10 +1005,10 @@ void BattleDisplay::updateToolTip(int spot)
 
     tooltip += info().currentPoke(spot).nick() + "\n";
     Pokemon::uniqueId num = info().currentPoke(spot).num();
-    tooltip += TypeInfo::Name(PokemonInfo::Type1(num));
+    tooltip += TypeInfo::Name(PokemonInfo::Type1(num, info().gen));
     int type2 = PokemonInfo::Type2(num);
     if (type2 != Pokemon::Curse) {
-        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(num));
+        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(num, info().gen));
     }
     tooltip += "\n";
 

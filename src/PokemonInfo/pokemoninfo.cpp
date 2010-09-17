@@ -18,8 +18,8 @@ QHash<int, QString> PokemonInfo::m_Classification;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Height;
 
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Genders;
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type1;
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type2;
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type1[3];
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type2[3];
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Ability1[3];
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Ability2[3];
 QHash<Pokemon::uniqueId, PokeBaseStats> PokemonInfo::m_BaseStats;
@@ -290,14 +290,14 @@ QString PokemonInfo::Height(const Pokemon::uniqueId &pokeid)
     return m_Height.value(pokeid, "0.0");
 }
 
-int PokemonInfo::Type1(const Pokemon::uniqueId &pokeid)
+int PokemonInfo::Type1(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Type1.value(pokeid);
+    return m_Type1[gen-3].value(pokeid);
 }
 
-int PokemonInfo::Type2(const Pokemon::uniqueId &pokeid)
+int PokemonInfo::Type2(const Pokemon::uniqueId &pokeid,int gen)
 {
-    return m_Type2.value(pokeid);
+    return m_Type2[gen-3].value(pokeid);
 }
 
 int PokemonInfo::calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev)
@@ -343,15 +343,17 @@ void PokemonInfo::init(const QString &dir)
     loadNames();
     loadEvos();
     loadMoves();
-    fill_uid_int(m_Type1, path("poke_type1.txt"));
-    fill_uid_int(m_Type2, path("poke_type2.txt"));
+
     fill_uid_int(m_Genders, path("poke_gender.txt"));
-    fill_uid_int(m_Ability1[0], path("poke_ability_3G.txt"));
-    fill_uid_int(m_Ability2[0], path("poke_ability2_3G.txt"));
-    fill_uid_int(m_Ability1[1], path("poke_ability_4G.txt"));
-    fill_uid_int(m_Ability2[1], path("poke_ability2_4G.txt"));
-    fill_uid_int(m_Ability1[2], path("poke_ability_5G.txt"));
-    fill_uid_int(m_Ability2[2], path("poke_ability2_5G.txt"));
+    for (int i = 0; i < 3; i++) {
+        int gen = i+3;
+
+        fill_uid_int(m_Type1[i], path(QString("poke_type1-%1G.txt").arg(gen)));
+        fill_uid_int(m_Type2[i], path(QString("poke_type2-%1G.txt").arg(gen)));
+        fill_uid_int(m_Ability1[i], path(QString("poke_ability_%1G.txt").arg(gen)));
+        fill_uid_int(m_Ability2[i], path(QString("poke_ability2_%1G.txt").arg(gen)));
+    }
+
     fill_uid_int(m_LevelBalance, path("level_balance.txt"));
     loadClassifications();
     loadHeights();
@@ -874,26 +876,28 @@ void PokemonInfo::makeDataConsistent()
         if(!m_LevelBalance.contains(id)) {
             m_LevelBalance[id] = m_LevelBalance.value(OriginalForme(id), 1);
         }
-        if(!m_Type1.contains(id)) {
-            m_Type1[id] = m_Type1.value(OriginalForme(id), Pokemon::Normal);
-        }
-        if(!m_Type2.contains(id)) {
-            m_Type2[id] = m_Type2.value(OriginalForme(id), Pokemon::Curse);
-        }
         if(!m_Genders.contains(id)) {
             m_Genders[id] = m_Genders.value(OriginalForme(id), Pokemon::NeutralAvail);
         }
-        if(!m_Ability1[0].contains(id)) {
-            m_Ability1[0][id] = m_Ability1[0].value(OriginalForme(id), Ability::NoAbility);
-        }
-        if(!m_Ability2[0].contains(id)) {
-            m_Ability2[0][id] = m_Ability2[0].value(OriginalForme(id), Ability::NoAbility);
-        }
-        if(!m_Ability1[1].contains(id)) {
-            m_Ability1[1][id] = m_Ability1[1].value(OriginalForme(id), Ability::NoAbility);
-        }
-        if(!m_Ability2[1].contains(id)) {
-            m_Ability2[1][id] = m_Ability2[1].value(OriginalForme(id), Ability::NoAbility);
+
+        for (int i = 0; i < 3; i++) {
+            int gen = i+3;
+
+            if (!Exists(id, gen))
+                continue;
+
+            if(!m_Ability1[i].contains(id)) {
+                m_Ability1[i][id] = m_Ability1[i].value(OriginalForme(id), Ability::NoAbility);
+            }
+            if(!m_Ability2[i].contains(id)) {
+                m_Ability2[i][id] = m_Ability2[i].value(OriginalForme(id), Ability::NoAbility);
+            }
+            if(!m_Type1[i].contains(id)) {
+                m_Type1[i][id] = m_Type1[i].value(OriginalForme(id), Pokemon::Normal);
+            }
+            if(!m_Type2[i].contains(id)) {
+                m_Type2[i][id] = m_Type2[i].value(OriginalForme(id), Pokemon::Curse);
+            }
         }
     }
 
