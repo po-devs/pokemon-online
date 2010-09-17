@@ -3145,20 +3145,30 @@ struct MMDefog : public MM
     static void uas (int s, int , BS &b) {
         int t = b.opponent(b.player(s));
 
-        BS::context &c = team(b,t);
+        bool clear = false;
 
-        if (c.contains("Barrier0Count") || c.contains("Barrier1Count") || c.contains("Spikes") || c.contains("ToxicSpikes")
-            || c.contains("StealthRock") || c.contains("MistCount") || c.contains("SafeGuardCount"))
-            b.sendMoveMessage(77,0,s,type(b,s),t);
+        for (int p = Player1; p < Player2; p++) {
+            if (b.gen() == 4 && p == s)
+                continue;
+            BS::context &c = team(b,p);
 
-        c.remove("Barrier0Count");
-        c.remove("Barrier1Count");
-        c.remove("Spikes");
-        c.remove("ToxicSpikes");
-        c.remove("StealthRock");
-        c.remove("MistCount");
-        c.remove("SafeGuardCount");
+            if (c.contains("Barrier0Count") || c.contains("Barrier1Count") || c.contains("Spikes") || c.contains("ToxicSpikes")
+                || c.contains("StealthRock") || c.contains("MistCount") || c.contains("SafeGuardCount")) {
+                clear = true;
 
+                c.remove("Barrier0Count");
+                c.remove("Barrier1Count");
+                c.remove("Spikes");
+                c.remove("ToxicSpikes");
+                c.remove("StealthRock");
+                c.remove("MistCount");
+                c.remove("SafeGuardCount");
+            }
+        }
+
+        if (clear) {
+            b.sendMoveMessage(77,b.gen() <= 4 ? 0 : 1, s, type(b,s), t);
+        }
     }
 };
 
