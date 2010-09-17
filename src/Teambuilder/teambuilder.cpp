@@ -116,7 +116,6 @@ TitledWidget::TitledWidget(const QString &title, QWidget *w)
 TeamBuilder::TeamBuilder(TrainerTeam *pub_team) :
         gen3(NULL), gen4(NULL), m_team(pub_team)
 {
-    loadSettings(this, QSize(785,610));
     qRegisterMetaType<Pokemon::uniqueId>("Pokemon::uniqueId");
 
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -215,6 +214,7 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) :
     connect(m_close, SIGNAL(clicked()), SIGNAL(done()));
     connect(m_boxes, SIGNAL(pokeChanged(int)), SLOT(pokeChanged(int)));
 
+    loadSettings(this, QSize(785,610));
     updateAll();
 }
 
@@ -342,11 +342,13 @@ void TeamBuilder::updateAll()
 
 void TeamBuilder::updateTeam()
 {
-    if (gen3 && gen4) {
+    if (gen3 && gen4 && gen5) {
         if (team()->gen() == 3) {
             gen3->setChecked(true);
-        } else {
+        } else if (team()->gen() == 4){
             gen4->setChecked(true);
+        } else {
+            gen5->setChecked(true);
         }
     }
     m_teamBody->updateTeam();
@@ -767,6 +769,38 @@ TB_TeamBody::TB_TeamBody(TeamBuilder *parent, int gen) : m_dockAdvanced(0), m_te
     }
 
     splitter->addWidget(props);
+
+    restoreAdvancedState();
+}
+
+TB_TeamBody::~TB_TeamBody() {
+    saveAdvancedState();
+}
+
+void TB_TeamBody::saveAdvancedState()
+{
+    QSettings settings;
+
+    if (!isAdvancedOpen())
+        settings.setValue("advanced_open", false);
+    else {
+        settings.setValue("advanced_open", true);
+        settings.setValue("advanced_separate_window", advSepWindow);
+    }
+}
+
+void TB_TeamBody::restoreAdvancedState()
+{
+    QSettings settings;
+
+    if (settings.value("advanced_open").toBool()) {
+        advancedClicked(0, settings.value("advanced_separate_window").toBool());
+    }
+}
+
+bool TB_TeamBody::isAdvancedOpen() const
+{
+    return bool(m_dockAdvanced);
 }
 
 void TB_TeamBody::changePokemonOrder(QPair<int, int>echange)
