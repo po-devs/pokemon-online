@@ -551,7 +551,7 @@
 412:2 Burmy-S
 351:1 Castform-Snowy
 351:2 Castform-Rainy
-351:3 Castform-Sunny
+351:4 Castform-Sunny
 421:1 Cherrim-Sunshine
 422:1 Shellos-East
 423:1 Gastrodon-East
@@ -617,6 +617,7 @@
 553:0 Warubiaru
 554:0 Darumakka
 555:0 Hihidaruma
+555:1 Hihidaruma-D
 556:0 Marakacchi
 557:0 Ishizumai
 558:0 Iwaparesu
@@ -710,4 +711,5 @@
 646:0 Kyuremu
 647:0 Kerudio
 648:0 Meloia
-649:0 Genosekuto
+648:1 Meloia-S
+649:0 Insekuta
