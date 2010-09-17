@@ -3142,14 +3142,13 @@ struct MMDefog : public MM
 	functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void uas (int s, int , BS &b) {
-        int t = b.opponent(b.player(s));
-
+    static void uas (int s, int t, BS &b) {
         bool clear = false;
 
-        for (int p = Player1; p < Player2; p++) {
-            if (b.gen() == 4 && p == s)
+        for (int p = BS::Player1; p < BS::Player2; p++) {
+            if (b.gen() == 4 && b.player(t) != p)
                 continue;
+
             BS::context &c = team(b,p);
 
             if (c.contains("Barrier0Count") || c.contains("Barrier1Count") || c.contains("Spikes") || c.contains("ToxicSpikes")

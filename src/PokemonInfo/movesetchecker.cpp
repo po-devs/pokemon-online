@@ -70,52 +70,30 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
     QSet<int> moves = moves2;
     moves.remove(0);
 
-    if (!PokemonInfo::Moves(pokeid, gen).contains(moves)) {
-        if (invalid_moves) {
-            *invalid_moves = moves.subtract(PokemonInfo::Moves(pokeid, gen));
-        }
-        return false;
-    }
-
-    if (gen == 3)
-        goto gen3;
-
-    /* now we know the pokemon at least know all moves */
-
-    moves.subtract(PokemonInfo::RegularMoves(pokeid,4));
-
-    if (moves.empty() || moves.size() == 1)
-        return true;
-
-    if (isAnEggMoveCombination(pokeid, 4, moves)) {
-            return true;
-    }
-
-gen3:
-    /* Now we have to go back to third gen, and not use 4 gen egg mvoes / special moves */
-    moves.subtract(PokemonInfo::RegularMoves(pokeid,3));
-
-    if (moves.empty())
-        return true;
-    if (moves.size() == 1) {
-        if (PokemonInfo::EggMoves(pokeid,3).contains(*moves.begin()) ||
-            PokemonInfo::SpecialMoves(pokeid,3).contains(*moves.begin()))
-            return true;
-        else {
+    for (int g = gen; gen >= 3; g--) {
+        if (!PokemonInfo::Moves(pokeid, g).contains(moves)) {
             if (invalid_moves) {
-                *invalid_moves = moves;
+                *invalid_moves = moves.subtract(PokemonInfo::Moves(pokeid, g));
             }
             return false;
         }
-    }
 
-    if (isAnEggMoveCombination(pokeid, 3, moves)) {
+        /* now we know the pokemon at least know all moves */
+        moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
+
+        if (moves.empty() || moves.size() == 1)
             return true;
+
+        if (isAnEggMoveCombination(pokeid, g, moves)) {
+            return true;
+        }
     }
 
+    /* The remaining moves are considered invalid */
     if (invalid_moves) {
         *invalid_moves = moves;
     }
+
     return false;
 }
 
