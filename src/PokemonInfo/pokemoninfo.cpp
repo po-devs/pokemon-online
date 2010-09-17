@@ -866,7 +866,8 @@ void PokemonInfo::makeDataConsistent()
         // Base stats.
         if(!m_BaseStats.contains(id)) {
             m_BaseStats[id] = m_BaseStats.value(OriginalForme(id), PokeBaseStats());
-            m_AestheticFormes.insert(id);
+            if (id != OriginalForme(id))
+                m_AestheticFormes.insert(id);
         }
         // Moves.
         if(!m_Moves.contains(id)) {
