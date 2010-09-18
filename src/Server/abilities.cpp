@@ -1159,6 +1159,18 @@ struct AMEarthquakeSpiral : public AM {
     }
 };
 
+struct AMHerbivore : public AM {
+    AMHerbivore() {
+        functions("UponOffensiveDamageReceived") = &uodr;
+    }
+
+    static void uodr(int s, int t, BS &b) {
+        if (type(b,t) == Pokemon::Grass) {
+            b.gainStatMod(s, Attack, 1);
+        }
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
