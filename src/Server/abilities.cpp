@@ -1220,6 +1220,24 @@ struct AMBrokenArmour : public AM {
     }
 };
 
+struct AMVitcoryStar : public AM {
+    AMFlowerGift() {
+        functions["StatModifier"] = &sm;
+        functions["PartnerStatModifier"] = &sm2;
+    }
+
+    static void sm(int s, int, BS &b) {
+        turn(b,s)["Stat7AbilityModifier"] = 10;
+    }
+
+    static void sm2(int , int t, BS &b) {
+        /* FlowerGift doesn't stack */
+        if (!b.hasWorkingAbility(t, Ability::VictoryStar)) {
+            turn(b,t)["Stat7PartnerAbilityModifier"] = 10;
+        }
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
