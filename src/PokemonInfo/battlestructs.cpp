@@ -145,7 +145,7 @@ void PokeBattle::init(PokePersonal &poke)
         }
     }
 
-    int ori = PokemonInfo::OriginalForme(num());
+    Pokemon::uniqueId ori = PokemonInfo::OriginalForme(num());
 
     if (ori == Pokemon::Castform || ori == Pokemon::Cherrim || ori == Pokemon::Hihidaruma) {
         num().subnum = 0;
