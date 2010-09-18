@@ -8,6 +8,9 @@
 #include "../Utilities/contextswitch.h"
 class Player;
 
+/* Fixme: needs some sort of cache to avoid revs() creating a list
+   each time */
+
 class BattleSituation : public ContextCallee
 {
     Q_OBJECT
@@ -172,6 +175,7 @@ public:
     void fail(int player, int move, int part=0, int type=0, int trueSource = -1);
     bool hasType(int player, int type);
     bool hasWorkingAbility(int play, int ability);
+    bool opponentsHaveWorkingAbility(int play, int ability);
     void acquireAbility(int play, int ability, bool firstTime=false);
     int ability(int player);
     Pokemon::uniqueId pokenum(int player);

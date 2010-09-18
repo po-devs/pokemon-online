@@ -466,95 +466,95 @@ X-Scissor
 Yawn
 Zap Cannon
 Zen Headbutt
-[M468]
-[M469]
-[M470]
-[M471]
-[M472]
-[M473]
-[M474]
+Claw Sharpen
+Wide Guard
+Guard Share
+Power Share
+Wonder Room
+Psycho Shock
+Venom Shock
 [M475]
 [M476]
-[M477]
-[M478]
+Telekinesis
+Magic Room
 [M479]
 [M480]
 [M481]
 [M482]
 [M483]
-[M484]
+Heavy Bomber
 [M485]
-[M486]
+Eleci Ball
 [M487]
-[M488]
+Nitro Charge
 [M489]
 [M490]
-[M491]
+Acid Bomb
 [M492]
-[M493]
+Simple Beam
 [M494]
 [M495]
 [M496]
 [M497]
 [M498]
-[M499]
-[M500]
-[M501]
-[M502]
-[M503]
+Clear Smog
+Assist Power
+Fast Guard
+Side Change
+Boiling Water
 [M504]
 [M505]
 [M506]
-[M507]
-[M508]
+Free Fall
+Gear Change
 [M509]
 [M510]
 [M511]
-[M512]
-[M513]
+Acrobat
+Mirror Type
 [M514]
 [M515]
-[M516]
+Gift Pass
 [M517]
-[M518]
-[M519]
-[M520]
-[M521]
-[M522]
+Water Oath
+Fire Oath
+Grass Oath
+Volt Change
+Bug Resistance
 [M523]
 [M524]
-[M525]
+Dragon Tail
 [M526]
-[M527]
-[M528]
-[M529]
-[M530]
-[M531]
+Eleci Net
+Wild Volt
+Drill Liner
+Double Chop
+Heart Stamp
 [M532]
 [M533]
-[M534]
-[M535]
-[M536]
+Shell Blade
+Heat Stamp
+Grass Mixer
 [M537]
-[M538]
-[M539]
-[M540]
-[M541]
+Cotton Guard
+Night Burst
+Psycho Break
+Sweep Slap
 [M542]
 Afro Break
-[M544]
+Gear Saucer
 [M545]
-[M546]
+Techno Buster
 [M547]
 [M548]
 [M549]
-[M550]
+Lightning
 [M551]
 [M552]
-[M553]
-[M554]
+Freeze Bolt
+Cold Flare
 [M555]
 [M556]
-[M557]
-[M558]
-[M559]
+V-Generate
+Cross Fire
+Cross Thunder
