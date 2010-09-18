@@ -1058,6 +1058,7 @@ struct AMWonderGuard : public AM {
 struct AMLightningRod : public AM {
     AMLightningRod() {
         functions["GeneralTargetChange"] = &gtc;
+        functions["OpponentBlock"] = &ob;
     }
 
     static void gtc(int s, int t, BS &b) {
@@ -1082,6 +1083,20 @@ struct AMLightningRod : public AM {
         } else {
             b.sendAbMessage(38,0,s,t,0,b.ability(s));
             turn(b,t)["Target"] = s;
+        }
+    }
+
+    static void ob(int s, int t, BS &b) {
+        if (b.gen() <= 4)
+            return;
+
+        int tp = type(b,t);
+
+        if (tp == poke(b,s)["AbilityArg"].toInt()) {
+            /* FIXME: MEssage */
+            b.sendAbMessage(0, 0, s, 0, tp, b.ability(s));
+            turn(b,s)[QString("Blocked%1").arg(t)] = true;
+            b.gainStatMod(s, SpAttack, 1, false);
         }
     }
 };
