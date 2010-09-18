@@ -1170,7 +1170,7 @@ struct AMHerbivore : public AM {
         if (tp == poke(b,s)["AbilityArg"].toInt()) {
             /* FIXME: MEssage */
             b.sendAbMessage(0, 0, s, 0, tp, b.ability(s));
-            turn(b,s).value(QString("Blocked%1").arg(t)) = true;
+            turn(b,s)[QString("Blocked%1").arg(t)] = true;
             b.gainStatMod(s, Attack, 1, false);
         }
     }
@@ -1221,7 +1221,7 @@ struct AMBrokenArmour : public AM {
 };
 
 struct AMVictoryStar : public AM {
-    AMFlowerGift() {
+    AMVictoryStar() {
         functions["StatModifier"] = &sm;
         functions["PartnerStatModifier"] = &sm2;
     }
