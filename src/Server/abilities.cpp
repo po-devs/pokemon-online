@@ -10,7 +10,7 @@ QHash<QString, int> AbilityEffect::nums;
 
 void AbilityEffect::activate(const QString &effect, int num, int source, int target, BattleSituation &b)
 {
-    AbilityInfo::Effect e = AbilityInfo::Effects(num);
+    AbilityInfo::Effect e = AbilityInfo::Effects(num, b.gen());
 
     if (!mechanics.contains(e.num) || !mechanics[e.num].functions.contains(effect)) {
         return;
@@ -20,7 +20,7 @@ void AbilityEffect::activate(const QString &effect, int num, int source, int tar
 
 void AbilityEffect::setup(int num, int source, BattleSituation &b, bool firstAct)
 {
-    AbilityInfo::Effect effect = AbilityInfo::Effects(num);
+    AbilityInfo::Effect effect = AbilityInfo::Effects(num, b.gen());
 
     /* if the effect is invalid or not yet implemented then no need to go further */
     if (!mechanics.contains(effect.num)) {

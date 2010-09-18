@@ -88,7 +88,7 @@ QString CategoryInfo::m_Directory;
 
 QList<QString> AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
-QList<AbilityInfo::Effect> AbilityInfo::m_Effects;
+QList<AbilityInfo::Effect> AbilityInfo::m_Effects[3];
 QList<QStringList> AbilityInfo::m_Messages;
 QSet<int> AbilityInfo::m_GenAbilities[3];
 
@@ -1836,21 +1836,23 @@ bool AbilityInfo::Exists(int ability, int gen)
 
 void AbilityInfo::loadEffects()
 {
-    QStringList m_temp;
-    fill_container_with_file(m_temp,path("ability_effects.txt"));
+    for (int i = 0; i < 3; i++) {
+        QStringList m_temp;
+        fill_container_with_file(m_temp,path("ability_effects_%1G.txt").arg(i+3));
 
-    foreach(QString str, m_temp) {
-        QStringList content = str.split('#').front().split('-');
-        if (content.size() == 1) {
-            m_Effects.push_back(Effect(content[0].toInt()));
-        } else {
-            m_Effects.push_back(Effect(content[0].toInt(), content[1].toInt()));
+        foreach(QString str, m_temp) {
+            QStringList content = str.split('#').front().split('-');
+            if (content.size() == 1) {
+                m_Effects[i].push_back(Effect(content[0].toInt()));
+            } else {
+                m_Effects[i].push_back(Effect(content[0].toInt(), content[1].toInt()));
+            }
         }
     }
 }
 
-AbilityInfo::Effect AbilityInfo::Effects(int abnum) {
-    return m_Effects[abnum];
+AbilityInfo::Effect AbilityInfo::Effects(int abnum, int gen) {
+    return m_Effects[gen-3][abnum];
 }
 
 QString AbilityInfo::Desc(int ab)
