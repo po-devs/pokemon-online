@@ -1267,7 +1267,7 @@ void BattleSituation::callseffects(int source, int target, const QString &name)
 void BattleSituation::callieffects(int source, int target, const QString &name)
 {
     //Klutz
-    if (!pokelong[source].value("Embargoed").toBool() && !hasWorkingAbility(source, Ability::Klutz))
+    if (hasWorkingItem(source, poke(source).item()))
 	ItemEffect::activate(name, poke(source).item(), source, target, *this);
 }
 
@@ -1957,11 +1957,11 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
             return false;
         }
     }
-    return pokelong[player].value("AbilityNullified").toBool() ? false : pokelong[player]["Ability"].toInt() == ab;
+    return pokelong[player].value("AbilityNullified").toBool() ? false : fieldpokes[player].ability == ab;
 }
 
 void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
-    pokelong[play]["Ability"] = ab;
+    fieldpokes[play].ability = ab;
     AbilityEffect::setup(ability(play),play,*this, firstTime);
 }
 
@@ -1976,7 +1976,19 @@ Pokemon::uniqueId BattleSituation::pokenum(int player) {
 bool BattleSituation::hasWorkingItem(int player, int it)
 {
     //Klutz
-    return poke(player).item() == it && !pokelong[player].value("Embargoed").toBool() && !hasWorkingAbility(player, Ability::Klutz);
+    return poke(player).item() == it && !pokelong[player].value("Embargoed").toBool() && !hasWorkingAbility(player, Ability::Klutz)
+            && ! (ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(Ability::Anxiety));
+}
+
+bool BattleSituation::opponentsHaveWorkingAbility(int play, int ability)
+{
+    QList<int> opponents = revs(play);
+
+    foreach(int opponent, opponents) {
+        if (hasWorkingAbility(opponent, ability))
+            return true;
+    }
+    return false;
 }
 
 int BattleSituation::move(int player, int slot)
