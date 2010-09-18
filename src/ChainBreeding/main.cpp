@@ -43,8 +43,8 @@ int main(int, char**)
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    int pokenum = 386;
-    int gen = 3;
+    int pokenum = 649;
+    int gen = 5;
 
     qDebug() << "Gen " << gen;
     qDebug() << "Pokemons: " << pokenum;
@@ -53,8 +53,8 @@ int main(int, char**)
     int count = 0;
 
     for (int i = 0; i <= pokenum; i++) {
-        QString group1(getLine("db/pokes/poke_egg_group_1.txt",i));
-        QString group2(getLine("db/pokes/poke_egg_group_2.txt",i));
+        QString group1(getLine("db/pokes/poke_egg_group_1.txt",i).split(' ').back());
+        QString group2(getLine("db/pokes/poke_egg_group_2.txt",i).split(' ').back());
 
         pokesOfGroup.insert(group1,i);
         pokesOfGroup.insert(group2,i);
