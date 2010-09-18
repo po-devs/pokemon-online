@@ -1128,6 +1128,17 @@ struct AMMinus : public AM {
     }
 };
 
+/* 5th gen abilities */
+struct AMDustProof : public AM {
+    AMDustProof() {
+        functions["WeatherSpecial"] = &ws;
+    }
+
+    static void ws(int s, int, BS &b) {
+        turn(b,s)["WeatherSpecialed"] = true;
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
