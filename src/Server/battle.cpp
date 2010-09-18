@@ -2510,7 +2510,8 @@ int BattleSituation::calculateDamage(int p, int t)
                        ? PokeFraction(1,2) : PokeFraction(1,1));
 
     /* Light screen / Reflect */
-    if (!crit && teamzone[this->player(t)].value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+    if (!crit && !hasWorkingAbility(p, Ability::SlipThrough) &&
+        teamzone[this->player(t)].value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
         if (!doubles())
             damage /= 2;
         else {
