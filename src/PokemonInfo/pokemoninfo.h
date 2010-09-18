@@ -367,7 +367,7 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int abnum);
-    static Effect Effects(int abnum);
+    static Effect Effects(int abnum, int gen);
     static int Number(const QString &ab);
     static QString Message(int ab, int part);
     static int NumberOfAbilities();
@@ -377,7 +377,7 @@ public:
 private:
     static QList<QString> m_Names;
     static QString m_Directory;
-    static QList<Effect> m_Effects;
+    static QList<Effect> m_Effects[3];
     static QList<QStringList> m_Messages;
     static QSet<int> m_GenAbilities[3];
 

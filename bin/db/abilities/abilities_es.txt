@@ -122,3 +122,42 @@ Absor. aqua
 Velo agua
 Humo blanco
 Superguarda
+[A126]
+Anxiety
+Competitive Spirit
+Weak-kneed
+Cursed Body
+Healing Heart
+[A132]
+Broken Armour
+Heavy Metal
+Light Metal
+[A136]
+[A137]
+[A138]
+[A139]
+Telepathy
+[A141]
+Dustproof
+Poison Skin
+Regeneration
+Pigeon Heart
+Sand Throw
+Miracle Skin
+Analyze
+Illusion
+[A150]
+Slip Through
+Mummy
+Earthquake Spiral
+Justice Heart
+[A155]
+[A156]
+Herbivore
+Mischievous Heart
+Sand Power
+Iron Barbs
+[A161]
+Victory Star
+Turbo Blaze
+TeraVoltage
