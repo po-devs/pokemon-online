@@ -2404,7 +2404,7 @@ void BattleSituation::changeStatus(int team, int poke, int status)
 
 void BattleSituation::gainStatMod(int player, int stat, int bonus, bool tell)
 {
-    QString path = tr("Boost%1").arg(stat);
+    QString path = QString("Boost%1").arg(stat);
     int boost = pokelong[player].value(path).toInt();
     if (boost < 6) {
         if (tell)
@@ -2413,9 +2413,9 @@ void BattleSituation::gainStatMod(int player, int stat, int bonus, bool tell)
     }
 }
 
-void BattleSituation::loseStatMod(int player, int stat, int malus, int attacker)
+void BattleSituation::loseStatMod(int player, int stat, int malus, int attacker, bool tell)
 {
-    QString path = tr("Boost%1").arg(stat);
+    QString path = QString("Boost%1").arg(stat);
     int boost = pokelong[player].value(path).toInt();
     if (boost > -6) {
         if (attacker != player) {
@@ -2429,12 +2429,24 @@ void BattleSituation::loseStatMod(int player, int stat, int malus, int attacker)
                 return;
             }
         }
-	notify(All, StatChange, player, qint8(stat), qint8(-malus));
+        if (tell)
+            notify(All, StatChange, player, qint8(stat), qint8(-malus));
 	changeStatMod(player, stat, std::max(boost-malus, -6));
     }
 }
 
-void BattleSituation::preventStatMod(int player, int attacker) {
+bool BattleSituation::hasMinimalStatMod(int player, int stat)
+{
+    return pokelong[player].value(QString("Boost%1").arg(stat)).toInt() <= -6;
+}
+
+bool BattleSituation::hasMaximalStatMod(int player, int stat)
+{
+    return pokelong[player].value(QString("Boost%1").arg(stat)).toInt() >= 6;
+}
+
+void BattleSituation::preventStatMod(int player, int attacker)
+{
     turnlong[player][QString("StatModFrom%1Prevented").arg(attacker)] = true;
     turnlong[player][QString("StatModFrom%1DPrevented").arg(attacker)] = true;
 }
