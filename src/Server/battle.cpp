@@ -1374,13 +1374,21 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     callaeffects(player,target,"StatModifier");
     callieffects(target,player,"StatModifier");
     callaeffects(target,player,"StatModifier");
+    if (doubles()) {
+        int partner = this->partner(player);
+
+        if (!koed(partner)) {
+            callaeffects(partner, player, "PartnerStatModifier");
+        }
+    }
     /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
 	due to the ever rounding down to make an int */
     acc = acc * getStatBoost(player, 7) * getStatBoost(target, 6)
-	    * (20+turnlong[player]["Stat7ItemModifier"].toInt())/20
-            * (20-turnlong[target]["Stat6ItemModifier"].toInt())/20
-            * (20+turnlong[player]["Stat7AbilityModifier"].toInt())/20
-            * (20-turnlong[target]["Stat6AbilityModifier"].toInt())/20;
+            * (20+turnlong[player].value("Stat7ItemModifier").toInt())/20
+            * (20-turnlong[target].value("Stat6ItemModifier").toInt())/20
+            * (20+turnlong[player].value("Stat7AbilityModifier").toInt())/20
+            * (20+turnlong[player].value("Stat7PartnerAbilityModifier").toInt())/20
+            * (20-turnlong[target].value("Stat6AbilityModifier").toInt())/20;
 
     if (true_rand() % 100 < unsigned(acc)) {
 	return true;
