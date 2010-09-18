@@ -1977,7 +1977,7 @@ bool BattleSituation::hasWorkingItem(int player, int it)
 {
     //Klutz
     return poke(player).item() == it && !pokelong[player].value("Embargoed").toBool() && !hasWorkingAbility(player, Ability::Klutz)
-            && ! (ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(Ability::Anxiety));
+            && ! (ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(player, Ability::Anxiety));
 }
 
 bool BattleSituation::opponentsHaveWorkingAbility(int play, int ability)
