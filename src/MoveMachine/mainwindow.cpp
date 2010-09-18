@@ -233,6 +233,7 @@ MainWindow::MainWindow(QWidget *parent) :
         QIdListWidgetItem *it= new QIdListWidgetItem(i, MoveInfo::Name(i));
         ui->moveList->addItem(it);
     }
+    ui->moveList->sortItems(Qt::AscendingOrder);
 
     connect(ui->moveList, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(moveChosen(QListWidgetItem*)));
     connect(ui->levelMoves, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(moveDeleted(QListWidgetItem*)));
