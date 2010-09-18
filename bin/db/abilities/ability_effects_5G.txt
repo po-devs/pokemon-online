@@ -94,7 +94,7 @@
 56#Solar power
 
 57#SoundProof
-58#Speed boost
+58-3#Speed boost
 59#Stall
 18-1#Static
 60#Steadfast
@@ -151,7 +151,7 @@
 
 
 
-
+58-1#Justice heart
 
 
 

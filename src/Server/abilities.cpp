@@ -904,8 +904,8 @@ struct AMSpeedBoost : public AM {
     static void et(int s, int, BS &b) {
         if (b.koed(s) && b.turn() != poke(b,s).value("SpeedBoostSetupTurn").toInt())
             return;
-        b.sendAbMessage(58,0,s);
-        b.gainStatMod(s, Speed, 1);
+        b.sendAbMessage(58,b.ability(s) == Ability::SpeedBoost ? 0 : 1,s);
+        b.gainStatMod(s, poke(b,s)["AbilityArg"].toInt(), 1);
     }
 };
 
