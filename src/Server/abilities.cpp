@@ -1171,6 +1171,22 @@ struct AMHerbivore : public AM {
     }
 };
 
+struct AMSandPower : public AM {
+    AMSandPower() {
+        function("BasePowerModifier") = &bpam;
+    }
+
+    static void bpam(int s, int, BS &b) {
+        if (b.isWeatherWorking(BS::SandStorm)) {
+            int t = type(b,s);
+
+            if (t == Type::Rock || t == Type::Steel || t == Type::Ground) {
+                turn(b,s)["BasePowerAbilityModifier"] = 10;
+            }
+        }
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
