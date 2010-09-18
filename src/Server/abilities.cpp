@@ -1192,6 +1192,16 @@ struct AMSandPower : public AM {
     }
 };
 
+struct AMJackOfAllTrades : public AM {
+    AMJackOfAllTrades() {
+        functions["DamageFormulaStart"] = &dfs;
+    }
+
+    static void dfs(int s, int, BS &b) {
+        turn(b,s)["Stab"] = 3;
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
