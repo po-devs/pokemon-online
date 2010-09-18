@@ -1139,6 +1139,16 @@ struct AMDustProof : public AM {
     }
 };
 
+struct AMMummy : public AM {
+    AMMummy() {
+        functions["UponPhysicalAssault"] = &upa;
+    }
+
+    static void upa(int, int t, BS &b) {
+        b.acquireAbility(t, Ability::Mummy);
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
