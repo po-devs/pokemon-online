@@ -2784,8 +2784,6 @@ void BattleSituation::changePokeForme(int slot, const Pokemon::uniqueId &newform
 
     PokeBattle &p  = this->poke(player,poke);
 
-    changeSprite(player, newforme);
-
     fieldpokes[player].id = newforme;
     fieldpokes[player].type1 = PokemonInfo::Type1(newforme);
     fieldpokes[player].type2 = PokemonInfo::Type2(newforme);
@@ -2793,13 +2791,13 @@ void BattleSituation::changePokeForme(int slot, const Pokemon::uniqueId &newform
     for (int i = 1; i < 6; i++)
         fieldpokes[player].stats[i] = PokemonInfo::Stat(newform,i,p.level(),p.dvs()[i], p.evs()[i]);
 
-    notify(All, ChangeTempPoke, slot, quint8(SemiDefiniteForme), newforme);
+    notify(All, ChangeTempPoke, slot, quint8(AestheticForme), quint16(newforme.subnum));
 }
 
 
 void BattleSituation::changeAForme(int player, int newforme)
 {
-    pokelong[player]["Forme"] = newforme;
+    fieldpokes[player].id.subnum = newforme;
     notify(All, ChangeTempPoke, player, quint8(AestheticForme), quint16(newforme));
 }
 

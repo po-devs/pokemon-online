@@ -264,8 +264,7 @@ public:
         TempItem,
         TempSprite,
         DefiniteForme,
-        AestheticForme,
-        SemiDefiniteForme
+        AestheticForme
     };
 
     enum WeatherM

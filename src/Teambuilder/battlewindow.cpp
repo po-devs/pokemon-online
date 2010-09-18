@@ -606,7 +606,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                         info().specialSprite[spot] = info().lastSeenSpecialSprite[spot];
                     }
                     mydisplay->updatePoke(spot);
-                } else if (type == DefiniteForm) {
+                } else if (type == DefiniteForme) {
                     quint8 poke;
                     quint16 newform;
                     in >> poke >> newform;

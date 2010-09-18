@@ -142,7 +142,7 @@ public:
         TempAbility,
         TempItem,
         TempSprite,
-        DefiniteForm,
+        DefiniteForme,
         AestheticForme
     };
 
