@@ -148,7 +148,7 @@ Sand Throw
 Miracle Skin
 Analyze
 Illusion
-[A150]
+JackOfAllTrades
 Slip Through
 Mummy
 Earthquake Spiral
@@ -162,4 +162,4 @@ Iron Barbs
 Daruma Mode
 Victory Star
 Turbo Blaze
-TeraVoltage
+TeraVoltage 
