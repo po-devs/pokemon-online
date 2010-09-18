@@ -466,95 +466,95 @@ Dark Void
 Seed Flare
 Ominous Wind
 Shadow Force
-Claw Sharpen
-Wide Guard
-Guard Share
-Power Share
-Wonder Room
-Psycho Shock
-Venom Shock
-Body Purge
-Rage Power
-Telekinesis
-Magic Room
-Strike Down
-[M480]
-Fire Burst
-Sludge Wave
-Robe of the Butterfly
-Heavy Bomber
-Synchro Noise
-Eleci Ball
-Soak
-Nitro Charge
-Coil
-Ankle Sweep
-Acid Bomb
-Trickery
-Simple Beam
-[M494]
-[M495]
-Troll
-Echo Voice
-[M498]
-Clear Smog
-Assist Power
-Fast Guard
-Side Change
-Boiling Water
-[M504]
-Heal Pulse
-Evil Eye
-Free Fall
-Gear Change
-Overhead Throw
-Complete Burn
-Stall
-Acrobat
-Mirror Type
-Retaliation
-Desperation
-Gift Pass
-Purgatory
-Water Oath
-Fire Oath
-Grass Oath
-Volt Change
-Bug Resistance
-Ground Leveling
-Freezing Breath
-Dragon Tail
-Ancient Construction
-Eleci Net
-Wild Volt
-Drill Liner
-Double Chop
-Heart Stamp
-Wood Horn
-Sacred Sword
-Shell Blade
-Heat Stamp
-Grass Mixer
-Heart Roller
-Cotton Guard
-Night Burst
-Psycho Break
-Sweep Slap
-Wind Storm
-Afro Break
-Gear Saucer
-Flame Platform
-Techno Buster
-Ancient Song
-Skin Sword
-Frozen World
-Lightning
-Blue Fire
-Fire Dance
-Freeze Bolt
-Cold Flare
-Back Out
-Icicle Polish
-V-Generate
-Cross Flame
-Cross Thunder
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559

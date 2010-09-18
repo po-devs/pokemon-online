@@ -93,6 +93,13 @@ inline int intlog2(unsigned x) {
     return i;
 }
 
+inline QByteArray getFileContent(const QString &path) {
+    QFile f(path);
+    f.open(QIODevice::ReadOnly);
+
+    return f.readAll();
+}
+
 QByteArray md5_hash(const QByteArray &toHash);
 
 void createIntMapper(QObject *src, const char *signal, QObject *dest, const char *slot, int id);
