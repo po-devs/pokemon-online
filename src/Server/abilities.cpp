@@ -1093,10 +1093,14 @@ struct AMLightningRod : public AM {
         int tp = type(b,t);
 
         if (tp == poke(b,s)["AbilityArg"].toInt()) {
-            /* FIXME: MEssage */
-            b.sendAbMessage(0, 0, s, 0, tp, b.ability(s));
             turn(b,s)[QString("Blocked%1").arg(t)] = true;
-            b.gainStatMod(s, SpAttack, 1, false);
+            if (b.hasMaximalStatMod(s, SpAttack)) {
+                b.sendAbMessage(38, 2, s, 0, tp, b.ability(s));
+            } else {
+                b.sendAbMessage(0, 0, s, 0, tp, b.ability(s));
+                b.gainStatMod(s, SpAttack, 1, false);
+                b.sendAbMessage(38, 1, s, 0, tp, b.ability(s));
+            }
         }
     }
 };
@@ -1179,10 +1183,13 @@ struct AMHerbivore : public AM {
         int tp = type(b,t);
 
         if (tp == poke(b,s)["AbilityArg"].toInt()) {
-            /* FIXME: MEssage */
-            b.sendAbMessage(0, 0, s, 0, tp, b.ability(s));
             turn(b,s)[QString("Blocked%1").arg(t)] = true;
-            b.gainStatMod(s, Attack, 1, false);
+            if (!b.hasMaximalStatMod(s, Attack)) {
+                b.sendAbMessage(68, 0, s, 0, tp, b.ability(s));
+                b.gainStatMod(s, Attack, 1, false);
+            } else {
+                b.sendAbMessage(68, 1, s, 0, tp, b.ability(s));
+            }
         }
     }
 };
@@ -1219,14 +1226,12 @@ struct AMBrokenArmour : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        /* Fixme: Ability messages */
+        b.sendAbMessage(0, 0, s, 0, Type::Steel);
         if (!b.hasMinimalStatMod(s, Defense)) {
-            b.loseStatMod(s, Defense, 1, s, false);
-            b.sendAbMessage(0, 0, 0);
+            b.loseStatMod(s, Defense, 1, s);
         }
         if (!b.hasMaximalStatMod(s, Speed)) {
-            b.gainStatMod(s, Defense, 1, false);
-            b.sendAbMessage(0, 1, 0);
+            b.gainStatMod(s, Defense, 1);
         }
     }
 };
@@ -1327,6 +1332,7 @@ void AbilityEffect::init()
     REGISTER_AB(14, Drizzle);
     REGISTER_AB(15, DrySkin);
     REGISTER_AB(16, EffectSpore);
+    REGISTER_AB(17, DustProof);
     REGISTER_AB(18, FlameBody);
     REGISTER_AB(19, FlashFire);
     REGISTER_AB(20, FlowerGift);
@@ -1356,10 +1362,12 @@ void AbilityEffect::init()
     REGISTER_AB(44, OwnTempo);
     REGISTER_AB(45, Plus);
     REGISTER_AB(46, Pressure);
+    REGISTER_AB(47, Mummy);
     REGISTER_AB(48, Reckless);
     REGISTER_AB(49, Rivalry);
     REGISTER_AB(50, RoughSkin);
     REGISTER_AB(51, SandVeil);
+    REGISTER_AB(52, EarthquakeSpiral);
     REGISTER_AB(53, ShadowTag);
     REGISTER_AB(54, ShedSkin);
     REGISTER_AB(55, SlowStart);
@@ -1373,7 +1381,14 @@ void AbilityEffect::init()
     REGISTER_AB(65, TintedLens);
     REGISTER_AB(66, Trace);
     REGISTER_AB(67, Truant);
+    REGISTER_AB(68, Herbivore);
     REGISTER_AB(69, Unburden);
     REGISTER_AB(70, VoltAbsorb);
     REGISTER_AB(71, WonderGuard);
+    REGISTER_AB(72, SandPower);
+    REGISTER_AB(73, JackOfAllTrades);
+    REGISTER_AB(74, BrokenArmour);
+    REGISTER_AB(75, VictoryStar);
+    REGISTER_AB(76, WeakKneed);
+    REGISTER_AB(77, DarumaMode);
 }
