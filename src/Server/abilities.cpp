@@ -1220,7 +1220,7 @@ struct AMBrokenArmour : public AM {
     }
 };
 
-struct AMVitcoryStar : public AM {
+struct AMVictoryStar : public AM {
     AMFlowerGift() {
         functions["StatModifier"] = &sm;
         functions["PartnerStatModifier"] = &sm2;
@@ -1234,6 +1234,21 @@ struct AMVitcoryStar : public AM {
         /* FlowerGift doesn't stack */
         if (!b.hasWorkingAbility(t, Ability::VictoryStar)) {
             turn(b,t)["Stat7PartnerAbilityModifier"] = 10;
+        }
+    }
+};
+
+struct AMWeakKneed : public AM {
+    AMWeakKneed() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm(int s, int, BS &b) {
+        if (b.poke(s).lifePoints() * 2 > b.poke(s).totalLifePoints())
+            return;
+
+        for (int i = Attack; i <= SpDefense; i++) {
+            turn(b,s)[QString("Stat%1AbilityModifier").arg(i)] = -10;
         }
     }
 };
