@@ -2814,6 +2814,7 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 
     if (straightattack && player!=source) {
 	callpeffects(player, source, "AfterKoedByStraightAttack");
+        callaeffects(source, player, "AfterKoing");
     }
 }
 

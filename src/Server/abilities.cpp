@@ -1149,6 +1149,16 @@ struct AMMummy : public AM {
     }
 };
 
+struct AMEarthquakeSpiral : public AM {
+    AMEarthquakeSpiral() {
+        functions["AfterKoing"] = &ak;
+    }
+
+    static void ak(int s, int, BS &b) {
+        b.gainStatMod(s, Attack, 1);
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
@@ -1168,6 +1178,7 @@ struct AMMummy : public AM {
     DetermineAttackPossible
     GeneralTargetChange
     PartnerStatModifier
+    AfterKoing
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
