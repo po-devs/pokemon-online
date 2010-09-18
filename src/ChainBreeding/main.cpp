@@ -240,6 +240,7 @@ int main(int, char**)
         if (newline)
             out.putChar('\n');
         ord=false;
+        out.write(QString("%1:0 ").arg(i).toUtf8());
         foreach(QSet<int> sset,legalCombinations[i]) {
             if (ord)
                 out.putChar('|');
