@@ -1161,19 +1161,24 @@ struct AMEarthquakeSpiral : public AM {
 
 struct AMHerbivore : public AM {
     AMHerbivore() {
-        functions("UponOffensiveDamageReceived") = &uodr;
+        functions["OpponentBlock"] = &uodr;
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (type(b,t) == Pokemon::Grass) {
-            b.gainStatMod(s, Attack, 1);
+        int tp = type(b,t);
+
+        if (tp == poke(b,s)["AbilityArg"].toInt()) {
+            /* FIXME: MEssage */
+            b.sendAbMessage(0, 0, s, 0, tp, b.ability(s));
+            turn(b,s).value(QString("Blocked%1").arg(t)) = true;
+            b.gainStatMod(s, Attack, 1, false);
         }
     }
 };
 
 struct AMSandPower : public AM {
     AMSandPower() {
-        function("BasePowerModifier") = &bpam;
+        functions["BasePowerModifier"] = &bpam;
     }
 
     static void bpam(int s, int, BS &b) {

@@ -122,6 +122,7 @@ Water Absorb
 Water Veil
 White Smoke
 Wonder Guard
+[A124]
 Encourage
 [A126]
 Anxiety
@@ -152,13 +153,13 @@ Slip Through
 Mummy
 Earthquake Spiral
 Justice Heart
-[A155]
+Wariness
 [A156]
 Herbivore
 Mischievous Heart
 Sand Power
 Iron Barbs
-[A161]
+Daruma Mode
 Victory Star
 Turbo Blaze
 TeraVoltage
