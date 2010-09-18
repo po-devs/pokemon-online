@@ -24,7 +24,7 @@ inline QByteArray getFileContent(const QString &path) {
     return f.readAll();
 }
 
-void makeAssociations(QByteArray a1, QByteArray a2, QHash<int, int> hash)
+void makeAssociations(QByteArray a1, QByteArray a2, QHash<int, int> & hash)
 {
     QList<QByteArray> s1 = a1.split('\n');
     QList<QByteArray> s2 = a2.split('\n');
@@ -32,17 +32,38 @@ void makeAssociations(QByteArray a1, QByteArray a2, QHash<int, int> hash)
     for (int i = 0; i < s2.size(); i++) {
         int j;
         for (j = 0; j < s1.size(); j++) {
-            if (s1[j].toLower() == s2[j].toLower()) {
+            if (s1[j].toLower() == s2[i].toLower()) {
                 hash[i] = j;
                 break;
             }
         }
 
-        if (j = s1.size()) {
-            QMessageBox::information(NULL, "Error", QString("%1 is not associated to anything").arg(s2[i]));
+        if (j == s1.size()) {
+            QMessageBox::information(NULL, "Error", QString("%1 is not associated to anything (%2, %3, %4)").arg(QString::fromUtf8(s2[i])).arg(i)
+                                     .arg(s2.size()).arg(s1.size()));
             exit(-1);
         }
     }
+}
+
+void reorderFile(const QString &name, const QHash<int, int> &order)
+{
+    QStringList content = QString::fromUtf8(getFileContent(name)).split('\n');
+    QVector<QString> content2;
+    content2.resize(content.size());
+    QStringList content3 = content2.toList();
+
+    for (int i = 0; i < content.size(); i++) {
+        if (!order.contains(i)) {
+            QMessageBox::information(NULL, "Error", QString("File %1 has extra line %2").arg(name).arg(i));
+            exit(-2);
+        }
+        content3[order[i]] = content[i];
+    }
+
+    QFile out(name);
+    out.open(QIODevice::WriteOnly);
+    out.write(content3.join("\n").toUtf8());
 }
 
 void MainWindow::processFiles()
@@ -51,7 +72,7 @@ void MainWindow::processFiles()
     QStringList files = QFileDialog::getOpenFileNames(this, "Files to procecss", "db/moves");
 
     QByteArray a1(getFileContent("db/moves/moves.txt")), a2(getFileContent("db/moves/oldmoves.txt"));
-    makeAssociation(a1, a2, Associations);
+    makeAssociations(a1, a2, Associations);
 
     foreach(QString file, files) {
         processFile(file);
@@ -104,4 +125,5 @@ void MainWindow::processFile(const QString &filename)
 //    QFile out(filename);
 //    out.open(QIODevice::WriteOnly);
 //    out.write(output.join("\n").toUtf8());
+    reorderFile(filename, Associations);
 }

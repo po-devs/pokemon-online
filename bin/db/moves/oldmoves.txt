@@ -477,24 +477,24 @@ Body Purge
 Rage Power
 Telekinesis
 Magic Room
-[M479]
+Strike Down
 [M480]
-[M481]
-[M482]
-[M483]
+Fire Burst
+Sludge Wave
+Robe of the Butterfly
 Heavy Bomber
 Synchro Noise
 Eleci Ball
-[M487]
+Soak
 Nitro Charge
-[M489]
+Coil
 Ankle Sweep
 Acid Bomb
 Trickery
 Simple Beam
 [M494]
 [M495]
-[M496]
+Troll
 Echo Voice
 [M498]
 Clear Smog
@@ -504,11 +504,11 @@ Side Change
 Boiling Water
 [M504]
 Heal Pulse
-[M506]
+Evil Eye
 Free Fall
 Gear Change
-[M509]
-[M510]
+Overhead Throw
+Complete Burn
 Stall
 Acrobat
 Mirror Type
@@ -540,10 +540,10 @@ Cotton Guard
 Night Burst
 Psycho Break
 Sweep Slap
-[M542]
+Wind Storm
 Afro Break
 Gear Saucer
-Flame Bomb
+Flame Platform
 Techno Buster
 Ancient Song
 Skin Sword
@@ -556,5 +556,5 @@ Cold Flare
 Back Out
 Icicle Polish
 V-Generate
-Cross Fire
+Cross Flame
 Cross Thunder
