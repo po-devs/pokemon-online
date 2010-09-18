@@ -1128,7 +1128,6 @@ struct AMMinus : public AM {
     }
 };
 
-
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
