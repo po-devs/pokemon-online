@@ -492,7 +492,7 @@ TB_TrainerBody::TB_TrainerBody(TeamBuilder *teambuilder) : m_team(teambuilder->t
 
     /* Avatar Selection */
     col1->addWidget(m_avatarSelection = new QSpinBox(), 5, Qt::AlignTop);
-    m_avatarSelection->setRange(1,167);
+    m_avatarSelection->setRange(1,263);
 
     //////////////// Second Column ///////////////////
     QVBoxLayout *col2 = new QVBoxLayout();
