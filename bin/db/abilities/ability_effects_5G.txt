@@ -1,4 +1,4 @@
-#17,36,38,47,52,68: free
+#
 1#Adaptability
 2#Aftermath
 
@@ -127,6 +127,11 @@
 
 
 
+76#Weak-Kneed
+
+
+
+74#Broken Armour
 
 
 
@@ -135,12 +140,7 @@
 
 
 
-
-
-
-
-
-
+17#Dustproof
 
 
 30-2#Pigeon Heart
@@ -148,19 +148,19 @@
 
 
 
+73#JackOfAllTrades
+
+47#Mummy
+52#Earthquake Spiral
+68-16#Justice Heart
 
 
+68-11#Herbivore
 
+72#Sand Power
 
-
-
-
-
-
-
-
-
-
+77#Daruma Mode
+75#Victory Star
 40#Turbo Blaze
 40#TeraVoltage
 ##

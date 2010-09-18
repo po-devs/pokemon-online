@@ -36,7 +36,7 @@
 
 
 %s's Leaf Guard prevents it from being affected by any status from the opponent!
-%s's %a took the attack!
+%s's %a took the attack!|%s's %a raised its special attack!|%s's %a made the attack useless!
 
 %s has Mold Breaker!
 %s's Motor Drive raises its speed!
@@ -66,26 +66,11 @@
 
 %s traced %f's %a!
 %s is carelessly slacking off!
-
+%s's %a raised its attack!|%s's %a made the attack useless!
 
 %s's %a absorbs the attack!|%s's %a made the attack useless!
 %s's Wonder Guard evades the attack!
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+%s lost part of its armor!
 
