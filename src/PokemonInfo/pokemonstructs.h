@@ -1316,18 +1316,18 @@ namespace Ability
         MiracleSkin,
         Analyze,
         Illusion,
-        A150,
+        JackOfAllTrades,
         SlipThrough,
         Mummy, /* - When a Pokémon makes physical contact with a Pokémon with the Mummy ability, they lose their current ability and their ability becomes Mummy until it is switched out */
         EarthquakeSpiral, /* - This ability boosts the Pokémon's Attack stat whenever it knocks out an opponent. */
         JusticeHeart, /* - Works like Speed Boost but with Attack not speed.*/
         A155,
-        A156,
+        Wariness,
         Herbivore, /* - The Pokémon's Attack stat is boosted when hit with a Grass-type attack*/
         MischievousHeart,
         SandPower, /* - The Pokémon's Rock, Steel & Ground-type moves are increased in power during Sandstorms by 50% */
         IronBarbs,
-        A161,
+        DarumaMode,
         VictoryStar, /* - Increase accuracy by 50 % of all partners and self. Like Flower Gift does with Atk/Sp Def, but doesn't need weather. */
         TurboBlaze,
         TeraVoltage
