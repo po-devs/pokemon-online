@@ -2752,27 +2752,50 @@ void BattleSituation::loseItem(int player)
     poke(player).item() = 0;
 }
 
-void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId &newform)
+void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId &newforme)
 {
     PokeBattle &p  = this->poke(player,poke);
-    p.num() = newform;
-    p.ability() = PokemonInfo::Abilities(newform).ab(0);
+    p.num() = newforme;
+    p.ability() = PokemonInfo::Abilities(newforme).ab(0);
 
     for (int i = 1; i < 6; i++)
-        p.setNormalStat(i,PokemonInfo::Stat(newform,i,p.level(),p.dvs()[i], p.evs()[i]));
+        p.setNormalStat(i,PokemonInfo::Stat(newforme,i,p.level(),p.dvs()[i], p.evs()[i]));
 
     if (poke == currentPoke(player)) {
-        changeSprite(player, newform);
+        changeSprite(player, newforme);
 
-        fieldpokes[player].id = newform;
+        fieldpokes[player].id = newforme;
         acquireAbility(player, p.ability());
 
         for (int i = 1; i < 6; i++)
             fieldpokes[player].stats[i] = p.normalStat(i);
+
+        fieldpokes[player].type1 = PokemonInfo::Type1(newforme);
+        fieldpokes[player].type2 = PokemonInfo::Type2(newforme);
     }
 
-    notify(All, ChangeTempPoke, player, quint8(DefiniteForm), quint8(poke),newform);
+    notify(All, ChangeTempPoke, player, quint8(DefiniteForm), quint8(poke),newforme);
 }
+
+void BattleSituation::changePokeForme(int slot, const Pokemon::uniqueId &newforme)
+{
+    int player = this->player(slot);
+    int poke = this->currentPoke(slot);
+
+    PokeBattle &p  = this->poke(player,poke);
+
+    changeSprite(player, newforme);
+
+    fieldpokes[player].id = newforme;
+    fieldpokes[player].type1 = PokemonInfo::Type1(newforme);
+    fieldpokes[player].type2 = PokemonInfo::Type2(newforme);
+
+    for (int i = 1; i < 6; i++)
+        fieldpokes[player].stats[i] = PokemonInfo::Stat(newform,i,p.level(),p.dvs()[i], p.evs()[i]);
+
+    notify(All, ChangeTempPoke, slot, quint8(SemiDefiniteForme), newforme);
+}
+
 
 void BattleSituation::changeAForme(int player, int newforme)
 {
