@@ -130,6 +130,7 @@ public:
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
     void changeForme(int player, int poke, const Pokemon::uniqueId &forme);
+    void changePokeForme(int slot, const Pokemon::uniqueId &forme);
     void calculateTypeModStab();
     void changeAForme(int player, int newforme);
     bool hasMinimalStatMod(int player, int stat);
@@ -262,8 +263,9 @@ public:
         TempAbility,
         TempItem,
         TempSprite,
-        DefiniteForm,
-        AestheticForme
+        DefiniteForme,
+        AestheticForme,
+        SemiDefiniteForme
     };
 
     enum WeatherM

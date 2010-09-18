@@ -393,22 +393,18 @@ struct AMForeCast : public AM {
     }
 
     static void us(int s, int, BS &b) {
-        int tp = TypeInfo::TypeForWeather(b.weather);
-
-        /* Only those weathers work */
-        if (tp != Type::Ice && tp != Type::Fire && tp != Type::Water) {
-            tp = Type::Normal;
-        }
-
-        if (fpoke(b,s).type2 == Pokemon::Curse && tp == fpoke(b,s).type1) {
+        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Castform)
             return;
-        }
-        b.sendAbMessage(21,0,s,s,tp);
-        fpoke(b,s).type1 = tp;
-        fpoke(b,s).type2 = Pokemon::Curse;
 
-        if (b.pokenum(s) == Pokemon::Castform)
-            b.changeAForme(s, tp == Type::Normal ? 0 : b.weather);
+        int weather = b.weather;
+        if (weather != BS::Hail && weather != BS::Rain && weather != BS::Sunny) {
+            weather = BS::NoWeather;
+        }
+
+        if (weather == b.poke(s).num().subnum)
+            return;
+
+        b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, weather));
     }
 };
 

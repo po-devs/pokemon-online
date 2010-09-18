@@ -145,6 +145,12 @@ void PokeBattle::init(PokePersonal &poke)
         }
     }
 
+    int ori = PokemonInfo::OriginalForme(num());
+
+    if (ori == Pokemon::Castform || ori == Pokemon::Cherrim || ori == Pokemon::Hihidaruma) {
+        num().subnum = 0;
+    }
+
     nick() = (v.validate(poke.nickname()) == QNickValidator::Acceptable && poke.nickname().length() <= 12) ? poke.nickname() : PokemonInfo::Name(num());
 
     if (GenderInfo::Possible(poke.gender(), p.genderAvail())) {
