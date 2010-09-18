@@ -753,7 +753,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                     info().specialSprite[spot] = info().lastSeenSpecialSprite[spot];
                 }
                 mydisplay->updatePoke(spot);
-            } else if (type == DefiniteForm)
+            } else if (type == DefiniteForme)
             {
                 quint8 poke;
                 quint16 newform;
