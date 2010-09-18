@@ -2831,6 +2831,7 @@ void BattleSituation::changeHp(int player, int newHp)
     notify(AllButPlayer, ChangeHp, player, quint16(poke(player).lifePercent())); /* percentage calculus */
 
     callieffects(player, player, "AfterHPChange");
+    callaeffects(player, player, "AfterHPChange");
 }
 
 void BattleSituation::koPoke(int player, int source, bool straightattack)

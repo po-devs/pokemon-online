@@ -1264,6 +1264,27 @@ struct AMWeakKneed : public AM {
     }
 };
 
+struct AMDarumaMode : public AM {
+    AMDarumaMode() {
+        functions["AfterHPChange"] = &ahpc;
+    }
+
+    static void ahpc(int s, int, BS &b) {
+        Pokemon::uniqueId num = b.poke(s).num();
+
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Hihidaruma) {
+            return;
+        }
+
+        bool daruma = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
+
+        if (daruma == num.subnum)
+            return;
+
+        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma? 1 : 0));
+    }
+};
+
 /* Events:
     UponPhysicalAssault
     DamageFormulaStart
