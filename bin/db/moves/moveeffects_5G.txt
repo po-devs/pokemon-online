@@ -1,471 +1,471 @@
 
 
-O[M]5-1
-S[M]2+2
-#Acupressure
-
-
-S[M]3+2
-
-
-S[M]5+2
-S[M]1+1&2+1&3+1&4+1&5+1
-
-#restore hp every turn
-
-
-#aromatherapy
-#assist
-#assurance
 
 
 
 
-O[M]1-1
-#avalanche, same as assurance
-
-S[M]2+2
-#baton pass
-#beat up
-S[M]1+12 #Belly Drum
-#bide
-#bind
-
-#blast burn
+#pay day
 O[S]2+
 O[S]3+
-#Block = MeanLook
 O[S]1+
 
 
-
-#like fly
-
-#break protections
-#power doubles if foes HP < 1/2
-O[M]3-1
-O[M]3-1
-#eat opponent berry
-O[M]5-1
-S[M]1+1&2+1
-
-
-S[M]4+1&5+1
-#change type depending on location
-O[M]4-2
-S[M]5+1
-S[M]4+1
-O[M]1-2
-O[S]-1+
-#same as bind
-S[M]2-1&5-1
-
-O[S]-1+
-O[S]-1+
-O[M]-3+
-#conversion
-#conversion 2
-#copycat
-S[M]2+1&5+1
-O[M]3-2
-#counter
-#steals item
-
-
-O[S]5+
-O[M]2-1
-O[M]50>2-1
-#depends on foe HP
-S[M]1+1&2+1&3-1
-
-
-O[S]4+
-S[M]2+1
-S[M]2+1&5+1
-O[M]6-1
-#destiny bond
-#detect
-#dig -- evades first turn (see bounce)
-#disable
-O[S]1+
-#dive -- evades first turn (see bounce)
-O[S]-1+
-#doom desire
-
-
-S[M]6+1
-
-
-S[M]4-2
-
-S[M]1+1&3+1
-
-#dragon rage
-
-O[S]1+
-
-#dream eater -- same as absorb
-
-O[S]-1+
-O[M]5-1
-
-
-#embargo
-O[S]2+
-#encore
-#endeavor
-#endure
-O[M]5-1
-#eruption
-#explosion
-
-
-#façade
-
-#fake out
-O[M]5-2
-#false swipe
-O[M]1-2
-#only works when protect/detect
-O[S]2+
-O[S]2+
-O[S]2+
-#bind
 #OHKO
-#Flail
-O[S]2+
-O[S]2+
-O[S]2+
-O[M]7-1
-O[M]5-1
-O[S]-1+/[M]4+1
-#Fling
+#razor wind
+S[M]1+2
+
+
+
+#whirlwind
 #Fly
-O[M]5-1
-#Focus energy
-#Focus punch
-#Follow me
-O[S]1+
-
-#Rest 1 turn
-#Vary depending on happiness
-
-#Fury Cutter
-
-#Future sight
-#Gastro acid, cancels ability
-
-#Giga impact, rest 1 turn
-O[S]1+
-#Grass knot, vary on weight
-O[S]4+
-#Gravity
-O[M]1-1
-S[M]1+1&4+1
-#Grudge
-#Guard swap
-#OHKO
-O[S]5+
-
-#Gyro Ball
-#Hail
-S[M]3-1
-S[M]2+1
-#Haze
+#bind
 
 
-#heal bell
-#heal block
-#heal order
-#healing wish
-#heart swap
-O[S]2+
-#helping hand
-#high jump kick
-#hidden power
-
-#OHKO
-S[M]1+1
-#hydro cannon
-
-#hyper beam
 
 
-O[S]4+
-#iceball
-O[S]3+
-O[S]3+
-O[S]3+
 
-
-O[M]3-1
-#imprison
-#ingrain
-S[M]2+2
-
-O[M]2-1
-#judgment
 #jump kick
 
 O[M]7-1
-#knock off
-#last resort
-O[S]2+
 
-S[M]4-2
 
-#leech seed
-O[M]2-1
+
+#OHKO
+
 O[S]1+
-#light screen
-#lock-on
+#wrap
+
+#thrash
+
+O[M]2-1
+O[S]5+
+O[S]5+
+
+O[M]2-1
+
+O[M]1-1
+#roar
 O[S]4+
-#low-kick
-#lucky chant
-#lunar dance
+O[S]-1+
+#sonic boom
+#disable
 O[M]5-1
-
-#magic coat
-
-#magma storm
-
-#magnet rise
-#magnitude
-#me first
-#mean look
-S[M]1+1
-
-
-
-
-O[M]1-2&4-2
-#metal burst
-S[M]1+1
-O[M]5-2
-S[M]1+1
-#metronome
-#milk drink
-#mimic
-#mind reader
-S[M]6+1#minimize
-
-#mirror coat
-#mirror move
-O[M]7-1
+O[S]2+
+O[S]2+
 #mist
-O[M]4-1
-#moonlight
-#morning sun
-O[M]7-1
-O[M]3-1
-#mud sport
-O[M]7-1
-O[M]7-1
-S[M]4+2
-#natural gift
-#nature power
 
-#night shade
 
-#nightmare
-O[M]7-1
-
-S[M]1+1&2+1&3+1&4+1&5+1
-#outrage
-S[M]4-2
-#pain split
-#pay day
-#pay back
-
-#perish song
-#petal dance
-
-#pluck
-O[S]6+
-O[S]5+
-O[S]5+
-O[S]5+
-O[S]5+
-O[S]5+
 
 O[S]3+
-
-#power swap
-#power trick
-
-#present
-#protect
+O[S]3+
 O[S]-1+
-#psych up
+O[M]3-1
+O[M]1-1
+#hyper beam
+
+
+
+#low-kick
+#counter
+#seismic toss
+
+
+
+#leech seed
+S[M]1+1&4+1
+
+#solarbeam
+O[S]5+
+O[S]1+
+O[S]4+
+#petal dance
+O[M]3-1
+#dragon rage
+#bind
+O[S]1+
+O[S]1+
+O[S]1+
+O[S]1+
+
+
+#OHKO
+#dig -- evades first turn (see bounce)
+O[S]6+
+O[S]-1+
 O[M]5-1
-S[M]4-2
-
-#psycho shift
-#psywave
-#punishment
-#pursuit
-
-#rage
-#rain dance
-#rapid spin
-
-#razor wind
-#recover
-#recycle
-#reflect
-S[S]1-&2-&5-&6-
-#rest
-#return
-#revenge
-#reversal
-#roar
-#roar of time
-
-O[S]-1+
+O[S]4+
+S[M]1+1
 S[M]3+2
 
-O[M]2-1
+#rage
 
-O[M]3-1
-#rock wrecker
-#role play
-
-#rollout
-#roost
-O[S]2+
-#safeguard
-#sandtomb
-O[M]7-1
-#sandstorm
-O[M]3-2
-
+#night shade
+#mimic
 O[M]2-2
-#secret power
-
-O[M]5-2
-#seismic toss
+S[M]6+1
+#recover
+S[M]2+1
+S[M]6+1#minimize
+O[M]7-
+O[S]-1+
+S[M]2+1
+S[M]2+1
+S[M]2+2
+#light screen
+#Haze
+#reflect
+#Focus energy
+#bide
+#metronome
+#mirror move
 #self destruct
-O[M]5-1
 
-#shadow force
+O[S]1+
+O[S]5+
+O[S]5+
+
+O[S]2+
+
+#same as bind
+
+#skull bash
+
+O[M]-3+
+S[M]5+2
+O[M]7-1
+#softboiled
+#high jump kick
+O[S]1+
+#dream eater -- same as absorb
+O[S]5+
+
+
+O[S]4+
+#sky attack
+#transform
+O[M]3-1
+O[S]-1+
+O[S]4+
+O[M]7-1
+#psywave
+
+S[M]2+2
+
+#explosion
+
+
+#rest
 
 
 S[M]1+1
-#ohko
+#conversion
+O[S]2+^3+^1+
+#super fang
+
+#SUBSTITUTE
+#struggle
+#sketch
+#triple kick
+#thief
+#spider web
+#mind reader
+#nightmare
+O[S]2+
+#snore
+S[M]1+1&2+1&3-1
+#Flail
+#conversion 2
+
+O[M]3-2
+#reversal
+#spite
+O[S]3+
+#protect
+
+O[M]3-2
 
 O[S]-1+
+S[M]1+12 #Belly Drum
+O[S]5+
+O[M]7-1
+O[M]7-1
+#spikes
+O[S]1+
+
+#destiny bond
+#perish song
+O[M]3-1
+#detect
+
+#lock-on
+#outrage
+#sandstorm
+
+#endure
+O[M]1-2
+#rollout
+#false swipe
+O[S]-1+/[M]1+2
+#milk drink
+O[S]1+
+#Fury Cutter
+S[M]2+1
+#mean look
+
+#sleep talk
+#heal bell
+#return
+#present
+#Vary depending on happiness
+#safeguard
+#pain split
+O[S]2+
+#magnitude
+O[S]-1+
+
+O[S]1+
+#baton pass
+#encore
+#pursuit
+#rapid spin
+O[M]6-1
+O[M]2-1
+S[M]1+1
+
+#morning sun
+#synthesis
+#moonlight
+#hidden power
+
+
+#rain dance
+#sunny day
+O[M]2-1
+#mirror coat
+#psych up
+
 S[M]1+1&2+1&3+1&4+1&5+1
-O[S]4+
-#sketch
+O[M]5-1
+#Future sight
+O[M]2-1
+#whirlpool
+#beat up
+#fake out
+#uproar
+S[M]2+1&5+1#stock pile
+#spit up
+#swallow
+O[S]2+
+#Hail
+#torment
+O[S]-1+/[M]4+1
+O[S]2+
+O[M]1-2&4-2
+#façade
+#Focus punch
+
+#Follow me
+#nature power
+S[M]5+1
+#taunt
+#helping hand
+#trick
+#role play
+#wish
+#assist
+#ingrain
+S[M]1-1&2-1
+#magic coat
+#recycle
+#revenge
+#break protections
+#yawn
+#knock off
+#endeavor
+#eruption
 #skill swap
-#skull bash
-#sky attack
+#imprison
+S[S]1-&2-&5-&6-
+#Grudge
+#Snatch
+#secret power
+#dive -- evades first turn (see bounce)
+
+#change type depending on location
+S[M]4+2
+O[M]5-1
+O[M]4-1
+O[M]1-2
+O[S]-1+
+O[S]2+
+#mud sport
+#iceball
 
 #slack off
 
-
-O[S]4+
-#sleep talk
-O[S]5+
-O[S]5+
-
-O[S]5+
-O[M]7-
-#Snatch
-#snore
-#softboiled
-#solarbeam
-#sonic boom
-
-O[S]1+
-#spider web
-
-#spikes
-#spit up
-#spite
-
-O[S]4+
-#stealth rock
-S[M]2+1
-S[M]2+1&5+1#stock pile
-
-
-
-O[M]3-1
-#struggle
-O[S]1+
-
-#SUBSTITUTE
-#sucker punch
-#sunny day
-#super fang
-S[M]1-1&2-1
-O[S]-1+
-
-O[S]-1+/[M]1+2
-#swallow
-O[S]-1+
-O[M]6-1
-
-#switcheroo
-S[M]1+2
-#synthesis
-
-S[M]4+2
-O[M]2-1
-#tailwind
-
-#taunt
-O[S]-1+
-
-#thief
-#thrash
-O[S]1+
-O[S]1+
-O[S]1+
-O[S]1+
-O[S]1+
-O[S]1+
-O[M]1-1&2-1
-#torment
 O[S]6+
-#toxic spikes
-#transform
-O[S]2+^3+^1+
-#trick
-#trick room
-#triple kick
-#trump card
-O[S]5+
-
-#u-turn
-#uproar
-
-
-
-
-O[S]1+
-
-
-O[S]-1+
-#water sport
-#water spout
+O[M]50>2-1
+#blast burn
+#hydro cannon
+S[M]1+1
 
 #weather ball
-#whirlpool
-#whirlwind
+#aromatherapy
+O[M]5-2
+
+S[M]4-2
+
+O[M]3-1
+S[M]1+1&2+1&3+1&4+1&5+1
+O[M]5-2
+O[S]4+
+O[M]1-1&2-1
+S[M]2+1&5+1
+#water spout
+O[S]-1+
+
+
+
+#sandtomb
+#ohko
+O[M]7-1
+
+
+
+S[M]2+2
+#Block = MeanLook
+S[M]1+1
+
+#Rest 1 turn
+S[M]1+1&2+1
+#like fly
+O[M]3-1
+O[S]5+
+#steals item
+O[S]1+
+
+#water sport
+S[M]4+1&5+1
+
+S[M]1+1&3+1
+
+
+O[S]-1+
+#doom desire
+S[M]4-2
+#roost
+#Gravity
+
+
+S[M]3-1
+#Gyro Ball
+#healing wish
+#power doubles if foes HP < 1/2
+#natural gift
+#only works when protect/detect
+#pluck
+#tailwind
+#Acupressure
+#metal burst
+#u-turn
+S[M]2-1&5-1
+#pay back
+#assurance
+#embargo
+#Fling
+#psycho shift
+#trump card
+#heal block
+#wring out
+#power trick
+#Gastro acid, cancels ability
+#lucky chant
+#me first
+#copycat
+#power swap
+#Guard swap
+#punishment
+#last resort
+#worry seed
+#sucker punch
+#toxic spikes
+#heart swap
+#restore hp every turn
+#magnet rise
+O[S]2+
+O[S]1+
+
+S[M]3+2
+O[S]5+
+
+
+
+
+
+
+O[M]5-1
+
+
+
+
+
+O[M]5-1
+O[M]5-1
+
+O[M]5-1
+#switcheroo
+#Giga impact, rest 1 turn
+S[M]4+2
+
+#avalanche, same as assurance
+
+
+O[S]1+
+O[S]3+
 O[S]2+
 
-#wish
-S[M]2+1
+O[M]7-1
 
-#worry seed
-#wrap
-#wring out
-
-#yawn
-O[S]1+
 #zen headbutt
+O[M]7-1
+O[M]5-1
+O[S]-1+
+O[M]6-1
+#trick room
+S[M]4-2
+O[S]1+
+O[S]2+
+S[M]4-2
+
+#rock wrecker
+O[S]5+
+O[S]5+
+
+
+
+O[M]4-2
+#stealth rock
+#Grass knot, vary on weight
+O[S]-1+
+#judgment
+#eat opponent berry
+S[M]4+1
+
+
+
+S[M]2+1&5+1
+#heal order
+
+
+#roar of time
+
+#lunar dance
+#depends on foe HP
+#magma storm
+O[S]4+
+O[M]5-2
+S[M]1+1&2+1&3+1&4+1&5+1
+#shadow force
 Claw Sharpen
 Wide Guard
 Guard Share
@@ -557,5 +557,4 @@ Back Out
 Icicle Polish
 V-Generate
 Cross Fire
-Cross Thunder
-#nothing! but gotta fill it otherwise bug
+Cross Thunder#put something else here

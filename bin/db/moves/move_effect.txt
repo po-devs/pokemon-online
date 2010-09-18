@@ -1,471 +1,471 @@
 
-User recovers half the damage inflicted.
-May lower opponent's SP. DEF one stage.
-Raises user's DEFENSE two stages.
-
-Cannot miss.
+No effect.
 Has high critical hit ratio.
-Raises user's SPEED two stages.
-Has high critical hit ratio.
-May cause opponent to flinch.
-Raises user's SP. DEF two stages.
-May raise all user's stats one stage.
-Always strikes first.
-
-No effect.
 Attacks 2-5 times in a row.
-Heals party's status problems.
-Uses a random move from another Pokémon in the team.
-
-May cause opponent to flinch.
-Has high critical hit ratio.
-Induces ATTRACT.
-Cannot miss.
-May lower opponent's ATTACK one stage.
-Power doubles if hit before the attack.
 Attacks 2-5 times in a row.
-Raises user's DEFENSE two stages.
-Switches out the user but status changes remain.
-Does additional damage for every Pokémon in trainer's team.
-Cut's half of user's maximum HP and maximizes ATTACK.
-User takes hits for 2 rounds, then strikes back.
-Traps opponent.
-May cause opponent to flinch.
-User cannot attack on the next turn.
-Has high critical hit ratio. May induce burn.
-
-Prevents the opponent from escaping.
-May induce paralysis.
-May cause opponent to flinch.
-Attacks 2-5 times in a row.
-Attacks twice in a row.
-
-User takes recoil damage.
-Destroys protective barriers.
-
-May lower opponent's SPEED one stage.
-May lower opponent's SPEED one stage.
-
-May lower opponent's SP. DEF one stage.
-Raises user's ATTACK and DEFENSE one stage.
-Always strikes first.
-Attacks 2-5 times in a row.
-Raises user's SP. ATK and SP. DEF one stage.
-User changes type depending on the location.
-
-Increases the power of the next ELECTRIC attack.
-
-Lowers opponent's ATTACK two stages.
-
-Traps opponent.
-
-Attacks 2-5 times in a row.
-May induce CONFUSION.
-May induce CONFUSION.
-May lower opponent's SPEED one stage.
-User changes type into an own move's type.
-User becomes a type resistant to opponent's last attack.
-
-Raises user's DEFENSE and SP. DEF one stage.
-Lowers opponent's SPEED two stages.
-If hit by a physical attack, deals double the damage received.
-May steal opponent's item (temporarily in trainer battles).
-Has high critical hit ratio.
-Has high critical hit ratio.
-Has high critical hit ratio. May induce poison.
-May lower opponent's DEFENSE one stage.
-May lower opponent's DEFENSE one stage.
-
-Ghost type Pokémon: User loses half their maximum HP, and the opponent gets a Nightmare. Other Pokémon types: Raises user's ATTACK and DEFENSE one stage. Lowers user's SPEED one stage.
 No effect.
-May cause opponent to flinch.
-Induces sleep.
-Raises user's DEFENSE one stage. Damage from ROLLOUT will be higher.
-Raises user's DEFENSE and SP. DEF one stage.
-
-If the user faints, the opponent will also faint.
-Evades opponents next attack; the move's accuracy drops.
-
-Disables opponent's last move.
-May induce paralysis.
-
-May induce CONFUSION.
-Damage delays 2 turns.
-Attacks twice in a row.
-Attacks twice in a row.
-Raises user's EVASIVENESS one stage.
-User takes recoil damage.
-Attacks 2-5 times in a row.
-Lowers user's SP. ATK two stages.
-No effect.
-Raises user's ATTACK and SPEED one stage.
-No effect.
-Inflicts 40 HP damage.
-May cause opponent to flinch.
-May induce paralysis.
-User recovers half the damage inflicted.
-User recovers half the damage inflicted on a sleeping opponent.
-No effect.
-May induce CONFUSION.
-May lower opponent's SP. DEF one stage.
-Hits everyone on the field.
-No effect.
-
+User gains coins after battle.
 May induce burn.
-Opponent repears the last move.
-Power rises if user's HP are less than opponent's HP.
-Survives any attack for one turn leaving at least 1 HP but move's accuracy drops.
-May lower opponent's SP. DEF one stage.
-Inflicts more damage when the user's HP is high.
-User faints.
-May cause opponent to flinch.
-Always strikes first.
-ATTACK is doubled when burned, paralyzed, or poisoned.
-Cannot miss.
-Causes opponent to flinch. Attacks first.
-Lowers opponent's SP. DEF two stages.
-Leaves the foe with at least 1 HP.
-Lowers opponent's ATTACK two stages.
-
-May induce burn.
-
-May induce burn.
-Traps opponent.
+May induce freeze.
+May induce paralysis.
+No effect.
+No effect.
 May cause one-hit KO.
-Inflicts more damage when the user's HP is down.
-May induce burn.
-May induce burn.
-
-Lowers opponent's ACCURACY one stage.
-May lower opponent's SP. DEF one stage.
-Induces CONFUSE. Raises opponent's SP. ATK two stages.
-
-The user is protected the first turn, attacks the second turn.
-May lower opponent's SP. DEF one stage.
-Increases user's critical hit rate.
-User flinches if hit before attacking.
-Opponent only attacks the user. Best used in 2VS2 battles.
-May induce paralysis.
-Resets opponent's EVASIVENESS.
-User cannot attack on the next turn.
-The less happy the user, the stronger the attack.
-Attacks 2-5 times in a row.
-Move's power raises if it hits.
-Attacks 2-5 times in a row.
-Damage delays 2 turns.
-
-User recovers half the damage inflicted.
-User cannot attack on the next turn.
-Induces paralysis
-Damage inflicted raises the heavier the opponent is.
-Induces sleep.
-
-Lowers opponent's ATTACK one stage.
-Raises user's SP. ATK one stage.
-If the user faints, deletes the PP of opponent's last move.
-
-May cause one-hit KO.
-May induce poison.
+Has high critical hit ratio.
+Raises user's ATTACK two stages.
+No effect.
 Hits even if opponent is using FLY.
-
-Causes Hailstorm for 5 rounds.
-
-Raises user's DEFENSE one stage.
-Resets all ability stages.
-
+No effect.
+Ends battle. Switches the opponent Pokï¿½mon in a trainer battle.
+The user is protected the first turn, attacks the second turn.
+Traps opponent.
+No effect.
+No effect.
 May cause opponent to flinch.
-Heals party's status problems.
-
-User recovers half the maximum HP.
-
-
-May induce burn.
-Boosts receiver's attacks. Best used in 2VS2 battles.
+Attacks twice in a row.
+No effect.
 If attack misses, user takes 1/8 HP of damage.
-Power and type depend on user's IVs.
-No effect.
-May cause one-hit KO.
-Raises user's ATTACK one stage.
-User cannot attack on the next turn.
-No effect.
-User cannot attack on the next turn.
 May cause opponent to flinch.
-No effect.
-Induces sleep.
-Uses the same move for 5 turns; move's power raises if it hits.
-May induce freeze.
-
-May induce freeze.
-Always strikes first.
-Attacks 2-5 times in a row.
-May lower opponent's SPEED one stage.
-Opponent cannot use move that user knows.
-Recovers HP every turn. User cannot switch.
-Raises user's DEFENSE two stages.
-May cause opponent to flinch.
-May lower opponent's DEFENSE one stage.
-
-If attack misses, user takes 1/8 HP of damage.
-Has high critical hit ratio.
 Lowers opponent's ACCURACY one stage.
-Knocks down opponent's held item to prevent its use.
-
+May cause opponent to flinch.
+No effect.
+Attacks 2-5 times in a row.
+May cause one-hit KO.
+No effect.
+May induce paralysis.
+Traps opponent.
+User takes recoil damage.
+User uses the same attack for 2-3 turns then becomes confused.
+User takes recoil damage.
+Lowers opponent's DEFENSE one stage.
+May induce poison.
+Attacks twice. May induce poison.
+Attacks 2-5 times in a row.
+Lowers opponent's DEFENSE one stage.
+May cause opponent to flinch.
+Lowers opponent's ATTACK one stage.
+Ends battle. Switches the opponent Pokï¿½mon in a trainer battle.
+Induces sleep.
+May induce CONFUSION.
+Inflicts 20 HP damage.
+Disables opponent's last move.
+May lower opponent's SP. DEF one stage.
 May induce burn.
-Has high critical hit ratio.
-Lowers user's SP. ATK two stages.
+May induce burn.
+Stops ability reduction.
+No effect.
+No effect.
+
+May induce freeze.
+
+May induce CONFUSION.
+May lower opponent's SPEED one stage.
+May lower opponent's ATTACK one stage.
+User cannot attack on the next turn.
+No effect.
+No effect.
+User takes recoil damage.
+Damage inflicted raises the heavier the opponent is.
+If hit by a physical attack, deals double the damage received.
+Inflicts damage equal to the user's level.
+No effect.
+User recovers half the damage inflicted.
 User recovers half the damage inflicted.
 User steals HP from the opponent every turn.
-Lowers opponent's DEFENSE one stage.
-May induce paralysis.
-Halves SP. ATK damage inflicted on user.
-Ensures that user's next move will not fail.
+Raises user's SP. ATK one stage.
+Has high critical hit ratio.
+Wait for a turn and attacks the next.
+Induces poison.
+Induces paralysis
 Induces sleep.
+User uses the same attack for 2-3 turns then becomes confused.
+Lowers opponent's SPEED one stage.
+Inflicts 40 HP damage.
+Traps opponent.
+May induce paralysis.
+May induce paralysis.
+Induces paralysis
+May induce paralysis.
+No effect.
+Hits everyone on the field.
+May cause one-hit KO.
+
+Induces severe poison.
+May induce CONFUSION.
+May lower opponent's SP. DEF one stage.
+Induces sleep.
+Raises user's ATTACK one stage.
+Raises user's SPEED two stages.
+Always strikes first.
+User's ATTACK raises if hit.
+Ends battle. Switches user in trainer battles.
+Inflicts damage equal to the user's level.
+Copies opponents last move.
+Lowers opponent's DEFENSE two stages.
+Raises user's EVASIVENESS one stage.
+User recovers half the maximum HP.
+Raises user's DEFENSE one stage.
+Raises user's EVASIVENESS one stage.
+Lowers opponent's ACCURACY one stage.
+May induce CONFUSION.
+Raises user's DEFENSE one stage.
+Raises user's DEFENSE one stage. Damage from ROLLOUT will be higher.
+Raises user's DEFENSE two stages.
+Halves SP. ATK damage inflicted on user.
+Resets all ability stages.
+Halves ATTACK damage inflicted on user.
+Increases user's critical hit rate.
+User takes hits for 2 rounds, then strikes back.
+Uses a random move.
+User does the last move used by opponent.
+User faints.
+No effect.
+May induce paralysis.
+May induce poison.
+May induce poison.
+May cause opponent to flinch.
+May induce burn.
+May cause opponent to flinch.
+Traps opponent.
+Cannot miss.
+Raises user's DEFENSE one stage and attacks next turn.
+Attacks 2-5 times in a row.
+May lower opponent's SPEED one stage.
+Raises user's SP. DEF two stages.
+Lowers opponent's ACCURACY one stage.
+User recovers half the maximum HP.
+If attack misses, user takes 1/8 HP of damage.
+Induces paralysis
+User recovers half the damage inflicted on a sleeping opponent.
+Induces poison.
+Attacks 2-5 times in a row.
+User recovers half the damage inflicted.
+Induces sleep.
+May cause opponent to flinch.
+User transforms to the opponent.
+May lower opponent's SPEED one stage.
+May induce CONFUSION.
+Induces sleep.
+Lowers opponent's ACCURACY one stage.
+Inflicts damage equal to 1 to 1.5 x user's level.
+No effect.
+Raises user's DEFENSE two stages.
+Has high critical hit ratio.
+User faints.
+Attacks 2-5 times in a row.
+Attacks twice in a row.
+User restores health, then sleeps.
+May cause opponent to flinch.
+May cause opponent to flinch.
+Raises user's ATTACK one stage.
+User changes type into an own move's type.
+May induce burn, freeze or paralysis.
+Cuts half opponent's HP.
+Has high critical hit ratio.
+Creates a decoy using 1/4 of the user's maximum HP.
+
+Copies the opponent's last move forever.
+Attacks 1-3 times in a row.
+May steal opponent's item (temporarily in trainer battles).
+Prevents the opponent from escaping.
+Ensures that user's next move will not fail.
+Inflicts 1/4 damage on a sleeping foe every turn.
+May induce burn.
+Can only be used while asleep.
+Ghost type Pokï¿½mon: User loses half their maximum HP, and the opponent gets a Nightmare. Other Pokï¿½mon types: Raises user's ATTACK and DEFENSE one stage. Lowers user's SPEED one stage.
+Inflicts more damage when the user's HP is down.
+User becomes a type resistant to opponent's last attack.
+Has high critical hit ratio.
+Lowers opponent's SPEED two stages.
+Inflicts more damage when the user's HP is down.
+Opponent's last move loses 2-5 HP.
+May induce freeze.
+Evades opponents next attack; the move's accuracy drops.
+Always strikes first.
+Lowers opponent's SPEED two stages.
+Cannot miss.
+May induce CONFUSION.
+Cut's half of user's maximum HP and maximizes ATTACK.
+May induce poison.
+May lower opponent's ACCURACY one stage.
+May lower opponent's ACCURACY one stage.
+Sets spikes that hurt the opponent upon switching.
+May induce paralysis.
+Resets opponent's EVASIVENESS.
+If the user faints, the opponent will also faint.
+All Pokï¿½mon on the field faint in 3 turns.
+May lower opponent's SPEED one stage.
+Evades opponents next attack; the move's accuracy drops.
+Attacks 2-5 times in a row.
+Ensures that user's next move will not fail.
+User uses the same attack for 2-3 turns then becomes confused.
+Causes a Sandstorm for 5 turns.
+User recovers half the damage inflicted.
+Survives any attack for one turn leaving at least 1 HP but move's accuracy drops.
+Lowers opponent's ATTACK two stages.
+Uses the same move for 5 turns; move's power raises if it hits.
+Leaves the foe with at least 1 HP.
+Induces CONFUSE. Raises opponent's ATTACK two stages.
+User recovers half the maximum HP.
+May induce paralysis.
+Move's power raises if it hits.
+May raise user's DEFENSE one stage.
+Prevents the opponent from escaping.
+Induces ATTRACT.
+Uses an own random move while asleep.
+Heals party's status problems.
+The happier the user, the stronger the attack.
+May hit or heal the user or the opponent.
+The less happy the user, the stronger the attack.
+Prevents all status problems.
+User and opponent share HP.
+May induce burn.
+Move power is random: 10/30/50/70/90/110/150.
+May induce CONFUSION.
+No effect.
+May induce paralysis.
+Switches out the user but status changes remain.
+Opponent repears the last move.
+Inflicts double damage if the opponent is switching out.
+User is becomes free from moves like Wrap, Bind and Leech Seed.
+Lowers opponent's EVASIVENESS one stage.
+May lower opponent's DEFENSE one stage.
+May raise user's ATTACK one stage.
+Cannot miss. Goes last.
+User restores HP.
+User restores HP.
+User restores HP.
+Power and type depend on user's IVs.
+Has high critical hit ratio.
+May cause opponent to flinch. Damage is doubled if opponent is using FLY.
+Causes Rain for 5 rounds.
+Causes Sunshine for 5 rounds.
+May lower opponent's DEFENSE one stage.
+Counters the foe's special attack at double the power.
+Copies opponent's stat changes.
+Always strikes first.
+May raise all user's stats one stage.
+May lower opponent's SP. DEF one stage.
+Damage delays 2 turns.
+May lower opponent's DEFENSE one stage.
+
+Does additional damage for every Pokï¿½mon in trainer's team.
+Causes opponent to flinch. Attacks first.
+User cannot sleep for 2-5 turns.
+User stockpiles power for up to 3 turns.
+Releases power from STOCKPILE.
+Absorbs power from STOCKPILE and recovers HP.
+May induce burn.
+Causes Hailstorm for 5 rounds.
+Opponent cannot use the same move in a row.
+Induces CONFUSE. Raises opponent's SP. ATK two stages.
+Induces burn.
+Lowers opponent's stats. User faints.
+ATTACK is doubled when burned, paralyzed, or poisoned.
+User flinches if hit before attacking.
+Stronger against a paralyzed opponent but also heals them.
+Opponent only attacks the user. Best used in 2VS2 battles.
+Depends on battle location.
+Increases the power of the next ELECTRIC attack.
+Opponent can only use attack moves.
+Boosts receiver's attacks. Best used in 2VS2 battles.
+User trades items with opponent.
+Copies target's ability.
+Recovers HP. Delays 1 turn.
+Uses a random move from another Pokï¿½mon in the team.
+Recovers HP every turn. User cannot switch.
+Lowers user's ATTACK and DEFENSE one stage.
+Any special move is reflected back to the attacker.
+Recycles an already used held item.
+Power doubles if hit before the attack.
+Destroys protective barriers.
+User and opponent sleep the next turn.
+Knocks down opponent's held item to prevent its use.
+Power rises if user's HP are less than opponent's HP.
+Inflicts more damage when the user's HP is high.
+Use and target trade abilities.
+Opponent cannot use move that user knows.
+Heals poisoning, paralysis, or a burn.
+If the user faints, deletes the PP of opponent's last move.
+Steals the effects of opponent's next move.
+Depends on battle location.
+
+Attacks 2-5 times in a row.
+User changes type depending on the location.
+Raises user's SP. ATK two stages.
+May lower opponent's SP. DEF one stage.
+May lower opponent's SP. ATK one stage.
+Lowers opponent's ATTACK two stages.
+Confuses all Pokï¿½mon on the field.
+Has high critical hit ratio. May induce burn.
+Lowers the power of ELECTRIC moves.
+Uses the same move for 5 turns; move's power raises if it hits.
+May cause opponent to flinch.
+User recovers half the maximum HP.
+No effect.
+May induce severe poison.
+May lower opponent's DEFENSE one stage.
+User cannot attack on the next turn.
+User cannot attack on the next turn.
+May raise user's ATTACK one stage.
+May cause opponent to flinch.
+Depends on the weather.
+Heals party's status problems.
+Lowers opponent's SP. DEF two stages.
+Has high critical hit ratio.
+Lowers user's SP. ATK two stages.
+Resets opponent's EVASIVENESS.
+May lower opponent's SPEED one stage.
+May raise all user's stats one stage.
+Lowers opponent's SP. DEF two stages.
+Induces sleep.
+Lowers opponent's ATTACK and DEFENSE one stage.
+Raises user's DEFENSE and SP. DEF one stage.
+Inflicts more damage when the user's HP is high.
+May induce CONFUSION.
+Cannot miss.
+May cause opponent to flinch.
+Hits even if opponent is using FLY.
+Traps opponent.
+May cause one-hit KO.
+May lower opponent's ACCURACY one stage.
+Attacks 2-5 times in a row.
+Cannot miss.
+Attacks 2-5 times in a row.
+Raises user's DEFENSE two stages.
+Prevents the opponent from escaping.
+Raises user's ATTACK one stage.
+No effect.
+User cannot attack on the next turn.
+Raises user's ATTACK and DEFENSE one stage.
+
+May lower opponent's SPEED one stage.
+Has high critical hit ratio. May induce poison.
+May steal opponent's item (temporarily in trainer battles).
+
+Cannot miss.
+Lowers the power of FIRE moves.
+Raises user's SP. ATK and SP. DEF one stage.
+Has high critical hit ratio.
+Raises user's ATTACK and SPEED one stage.
+Attacks 2-5 times in a row.
+Cannot miss.
+May induce CONFUSION.
+Damage delays 2 turns.
+Lowers user's SP. ATK two stages.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+May induce paralysis.
+Cannot miss.
+Raises user's SPEED two stages.
+May induce poison.
+May cause opponent to flinch.
+Has high critical hit ratio.
+No effect.
+No effect.
+May cause opponent to flinch.
+No effect.
+May lower opponent's SP. DEF one stage.
+No effect.
+May cause opponent to flinch.
+No effect.
+User recovers half the damage inflicted.
+Always strikes first.
+May lower opponent's SP. DEF one stage.
+May lower opponent's SP. DEF one stage.
+User takes recoil damage.
+May lower opponent's SP. DEF one stage.
+User trades items with opponent.
+User cannot attack on the next turn.
+Raises user's SP. ATK two stages.
+Always strikes first.
+Power doubles if hit before the attack.
+Always strikes first.
+Has high critical hit ratio.
+
+
+
+Always strikes first.
+May lower opponent's ACCURACY one stage.
+Has high critical hit ratio.
+May cause opponent to flinch.
+May lower opponent's ACCURACY one stage.
+May lower opponent's SP. DEF one stage.
+May induce CONFUSION.
+
+
+Lowers user's SP. ATK two stages.
+May induce paralysis.
+May induce burn.
+Lowers user's SP. ATK two stages.
+No effect.
+User cannot attack on the next turn.
+Has high critical hit ratio. May induce poison.
+May induce poison.
+May cause opponent to flinch.
+Cannot miss.
+Has high critical hit ratio.
+
+
 Damage inflicted raises the heavier the opponent is.
 
 
-May lower opponent's SP. DEF one stage.
+
+
+User takes recoil damage.
 Always strikes first.
-Any special move is reflected back to the attacker.
-Cannot miss.
-Traps opponent.
-Cannot miss.
-
-Move power is random: 10/30/50/70/90/110/150.
-
-Prevents the opponent from escaping.
-Raises user's ATTACK one stage.
-User recovers half the damage inflicted.
-No effect.
-No effect.
-No effect.
-Lowers opponent's stats. User faints.
-
-May raise user's ATTACK one stage.
-Lowers opponent's SP. DEF two stages.
-May raise user's ATTACK one stage.
-Uses a random move.
+Has high critical hit ratio.
+Raises user's DEFENSE and SP. DEF one stage.
 User recovers half the maximum HP.
-Copies opponents last move.
-Ensures that user's next move will not fail.
-Raises user's EVASIVENESS one stage.
 
-Counters the foe's special attack at double the power.
-User does the last move used by opponent.
-May lower opponent's ACCURACY one stage.
-Stops ability reduction.
-May lower opponent's SP. ATK one stage.
-User restores HP.
-User restores HP.
-May lower opponent's ACCURACY one stage.
-May lower opponent's SPEED one stage.
-Lowers the power of ELECTRIC moves.
-May lower opponent's ACCURACY one stage.
-May lower opponent's ACCURACY one stage.
-Raises user's SP. ATK two stages.
-
-Depends on battle location.
-May cause opponent to flinch.
-Inflicts damage equal to the user's level.
-Has high critical hit ratio.
-Inflicts 1/4 damage on a sleeping foe every turn.
-May lower opponent's ACCURACY one stage.
-Resets opponent's EVASIVENESS.
-May raise all user's stats one stage.
-User uses the same attack for 2-3 turns then becomes confused.
-Lowers user's SP. ATK two stages.
-User and opponent share HP.
-User gains coins after battle.
-
-No effect.
-All Pokémon on the field faint in 3 turns.
-User uses the same attack for 2-3 turns then becomes confused.
-Attacks 2-5 times in a row.
-
-May induce severe poison.
-Induces poison.
-May induce poison.
-May induce poison.
-Has high critical hit ratio. May induce poison.
-Induces poison.
-No effect.
-May induce freeze.
-No effect.
-
-
-No effect.
-May hit or heal the user or the opponent.
-Evades opponents next attack; the move's accuracy drops.
-May induce CONFUSION.
-Copies opponent's stat changes.
-May lower opponent's SP. DEF one stage.
-Lowers user's SP. ATK two stages.
-Has high critical hit ratio.
-
-Inflicts damage equal to 1 to 1.5 x user's level.
-
-Inflicts double damage if the opponent is switching out.
-Always strikes first.
-User's ATTACK raises if hit.
-Causes Rain for 5 rounds.
-User is becomes free from moves like Wrap, Bind and Leech Seed.
-Has high critical hit ratio.
-Has high critical hit ratio.
-User recovers half the maximum HP.
-Recycles an already used held item.
-Halves ATTACK damage inflicted on user.
-Heals poisoning, paralysis, or a burn.
-User restores health, then sleeps.
-The happier the user, the stronger the attack.
-Power doubles if hit before the attack.
-Inflicts more damage when the user's HP is down.
-Ends battle. Switches the opponent Pokémon in a trainer battle.
+Attacks twice in a row.
 User cannot attack on the next turn.
-Attacks 2-5 times in a row.
-May induce CONFUSION.
-Raises user's SPEED two stages.
-May cause opponent to flinch.
-May lower opponent's DEFENSE one stage.
-No effect.
-May lower opponent's SPEED one stage.
-User cannot attack on the next turn.
-Copies target's ability.
-May cause opponent to flinch.
-Uses the same move for 5 turns; move's power raises if it hits.
-
-May induce burn.
-Prevents all status problems.
-Traps opponent.
-Lowers opponent's ACCURACY one stage.
-Causes a Sandstorm for 5 turns.
-Lowers opponent's SPEED two stages.
-No effect.
-Lowers opponent's DEFENSE two stages.
-Depends on battle location.
-No effect.
-
-Inflicts damage equal to the user's level.
-User faints.
-May lower opponent's SP. DEF one stage.
 Has high critical hit ratio.
 
-Cannot miss.
-Always strikes first.
-Raises user's ATTACK one stage.
-May cause one-hit KO.
-Cannot miss.
-May induce CONFUSION.
+
+Traps opponent.
+Induces sleep.
+
 May raise all user's stats one stage.
-Induces sleep.
-Copies the opponent's last move forever.
-Use and target trade abilities.
-Raises user's DEFENSE one stage and attacks next turn.
-May cause opponent to flinch.
-Hits even if opponent is using FLY.
-User recovers half the maximum HP.
-No effect.
-Has high critical hit ratio.
-Induces sleep.
-Uses an own random move while asleep.
-May induce poison.
-May induce poison.
-Stronger against a paralyzed opponent but also heals them.
-May induce poison.
-Lowers opponent's ACCURACY one stage.
-Steals the effects of opponent's next move.
-Can only be used while asleep.
-User recovers half the maximum HP.
-Wait for a turn and attacks the next.
-Inflicts 20 HP damage.
-Has high critical hit ratio.
-May induce paralysis.
-Prevents the opponent from escaping.
-Attacks 2-5 times in a row.
-Sets spikes that hurt the opponent upon switching.
-Releases power from STOCKPILE.
-Opponent's last move loses 2-5 HP.
-No effect.
-Induces sleep.
 
-May raise user's DEFENSE one stage.
-User stockpiles power for up to 3 turns.
-May cause opponent to flinch.
-Has high critical hit ratio.
-No effect.
-Lowers opponent's SPEED one stage.
-
-Induces paralysis
-User takes recoil damage.
-Creates a decoy using 1/4 of the user's maximum HP.
-
-Causes Sunshine for 5 rounds.
-Cuts half opponent's HP.
-Lowers user's ATTACK and DEFENSE one stage.
-May induce CONFUSION.
-
-Induces CONFUSE. Raises opponent's ATTACK two stages.
-Absorbs power from STOCKPILE and recovers HP.
-May induce CONFUSION.
-Lowers opponent's EVASIVENESS one stage.
-Cannot miss.
-User trades items with opponent.
-Raises user's ATTACK two stages.
-User restores HP.
-No effect.
-Raises user's SP. ATK two stages.
-Lowers opponent's DEFENSE one stage.
-
-User takes recoil damage.
-Opponent can only use attack moves.
-Confuses all Pokémon on the field.
-Ends battle. Switches user in trainer battles.
-May steal opponent's item (temporarily in trainer battles).
-User uses the same attack for 2-3 turns then becomes confused.
-May induce paralysis.
-
-Induces paralysis
-May induce paralysis.
-May induce paralysis.
-May induce paralysis.
-Lowers opponent's ATTACK and DEFENSE one stage.
-Opponent cannot use the same move in a row.
-Induces severe poison.
-
-User transforms to the opponent.
-May induce burn, freeze or paralysis.
-User trades items with opponent.
-
-Attacks 1-3 times in a row.
-
-Attacks twice. May induce poison.
-May cause opponent to flinch. Damage is doubled if opponent is using FLY.
-
-User cannot sleep for 2-5 turns.
-Always strikes first.
-No effect.
-No effect.
-Cannot miss. Goes last.
-
-
-No effect.
-May induce CONFUSION.
-Lowers the power of FIRE moves.
-Inflicts more damage when the user's HP is high.
-May cause opponent to flinch.
-Depends on the weather.
-
-Ends battle. Switches the opponent Pokémon in a trainer battle.
-Induces burn.
-No effect.
-Recovers HP. Delays 1 turn.
-Raises user's DEFENSE one stage.
-User takes recoil damage.
-
-Traps opponent.
-
-No effect.
-User and opponent sleep the next turn.
-May induce paralysis.
-May cause opponent to flinch.
 [E115]
 [E116]
 [E117]
@@ -474,7 +474,7 @@ May cause opponent to flinch.
 [E11A]
 [E11B]
 [E11C]
-Whenever an opposing Pokémon uses an attack with a target of "single non-user" or "single opposing Pokémon" this round and there is a Pokemon at the position of this attack's user, it is directed to the Pokemon at the position of this attack's user instead of to any other non-user of that attack. Remains effective even if user is replaced. Priority level 3. 
+Whenever an opposing Pokï¿½mon uses an attack with a target of "single non-user" or "single opposing Pokï¿½mon" this round and there is a Pokemon at the position of this attack's user, it is directed to the Pokemon at the position of this attack's user instead of to any other non-user of that attack. Remains effective even if user is replaced. Priority level 3. 
 [E11D]
 [E11E]
 [E11F] (100%)
@@ -519,7 +519,7 @@ May burn opponent.(100%)
 [E144]
 [E145]
 [E146]
-After this attack is used, if this attack is successful, if user has at least 1 HP, and if user's party has at least one non-active Pokémon and the opposing Pokemon's party has at least one unfainted Pokémon that isn't an egg, this attack causes the user to switch even if it cannot switch. (The new Pokémon becomes active immediately. Effect of Destiny Bond and Grudge takes precedence over this attack's effect.)
+After this attack is used, if this attack is successful, if user has at least 1 HP, and if user's party has at least one non-active Pokï¿½mon and the opposing Pokemon's party has at least one unfainted Pokï¿½mon that isn't an egg, this attack causes the user to switch even if it cannot switch. (The new Pokï¿½mon becomes active immediately. Effect of Destiny Bond and Grudge takes precedence over this attack's effect.)
 May decrease opponent's Special Attack by 1 stage.
 May decrease opponent's Speed by 1 stage.
 [E120] (100%)
