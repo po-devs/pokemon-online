@@ -398,7 +398,7 @@ struct AMForeCast : public AM {
 
         int weather = b.weather;
         if (weather != BS::Hail && weather != BS::Rain && weather != BS::Sunny) {
-            weather = BS::NoWeather;
+            weather = BS::NormalWeather;
         }
 
         if (weather == b.poke(s).num().subnum)
