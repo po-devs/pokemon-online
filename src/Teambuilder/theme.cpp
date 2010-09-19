@@ -236,7 +236,6 @@ QVariant Theme::value(const QString &key, bool *def)
 {
     QSettings ini (path("pictures.ini"), QSettings::IniFormat);
     QVariant ret = ini.value(key);
-    qDebug() << ".." << ini.allKeys();
 
     if (ret.isNull()) {
         QSettings ini2 (path("pictures.ini", true), QSettings::IniFormat);
