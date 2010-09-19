@@ -37,6 +37,7 @@ MoveEffect::MoveEffect(int num, int gen, BattleSituation::BasicMoveInfo &data)
     data.recoil = MoveInfo::Recoil(num, gen);
     data.attack = num;
     data.targets = MoveInfo::Target(num, gen);
+    data.healing = MoveInfo::Healing(num, gen);
 }
 
 /* There's gonna be tons of structures inheriting it,
@@ -879,18 +880,6 @@ struct MMLeechSeed : public MM
             b.sendMoveMessage(1,2,s2,Pokemon::Poison,s);
             b.inflictDamage(s2, damage,s2,false);
         }
-    }
-};
-
-struct MMHealHalf : public MM
-{
-    MMHealHalf() {
-	functions["UponAttackSuccessful"] = &uas;
-    }
-
-    static void uas(int s, int, BS &b) {
-	b.healLife(s, b.poke(s).totalLifePoints()/2);
-	b.sendMoveMessage(60, 0, s, type(b,s));
     }
 };
 
@@ -3354,14 +3343,12 @@ struct MMMoonlight : public MM
     static void uas(int s, int, BS &b) {
         int weather = b.weather;
 
+        b.sendMoveMessage(87,0,s,type(b,s));
 	if (weather == BattleSituation::NormalWeather || !b.isWeatherWorking(weather)) {
-	    b.sendMoveMessage(87,0,s,type(b,s));
 	    b.healLife(s, b.poke(s).totalLifePoints()/2);
 	} else if (b.isWeatherWorking(BattleSituation::Sunny)) {
-	    b.sendMoveMessage(87,0,s,type(b,s));
 	    b.healLife(s, b.poke(s).totalLifePoints()*2/3);
 	} else {
-	    b.sendMoveMessage(87,0,s,type(b,s));
 	    b.healLife(s, b.poke(s).totalLifePoints()/4);
 	}
     }
@@ -3859,20 +3846,6 @@ struct MMStomp : public MM
     static void bcd(int s, int t, BS &b) {
         if (poke(b,t).value("Minimize").toBool()) {
             tmove(b, s).power = tmove(b, s).power * 2;
-        }
-    }
-};
-
-struct MMStruggle : public MM
-{
-    MMStruggle() {
-        functions["UponAttackSuccessful"] = &uas;
-    }
-
-    static void uas(int s, int, BS &b) {
-        if (b.gen() >= 4 && !b.koed(s)) {
-            b.sendMoveMessage(127,0,s);
-            b.inflictPercentDamage(s,25,s);
         }
     }
 };
@@ -4755,7 +4728,7 @@ void MoveEffect::init()
     REGISTER_MOVE(57, Weather);
     REGISTER_MOVE(58, Attract);
     REGISTER_MOVE(59, HealBlock);
-    REGISTER_MOVE(60, HealHalf);
+    //REGISTER_MOVE(60, HealHalf); Now built in, but move message still used
     REGISTER_MOVE(61, HealingWish);
     REGISTER_MOVE(62, PowerTrick);
     REGISTER_MOVE(63, HelpingHand);
@@ -4822,7 +4795,7 @@ void MoveEffect::init()
     REGISTER_MOVE(124, StealthRock);
     REGISTER_MOVE(125, StockPile);
     REGISTER_MOVE(126, Stomp);
-    REGISTER_MOVE(127, Struggle);
+    //REGISTER_MOVE(127, Struggle); - removed, but message here
     REGISTER_MOVE(128, Substitute);
     REGISTER_MOVE(129, SuckerPunch);
     REGISTER_MOVE(130, SuperFang);

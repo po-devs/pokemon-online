@@ -1823,7 +1823,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		} else {
 		    calleffects(player, target, "CustomAttackingDamage");
 		}
+
 		calleffects(player, target, "UponAttackSuccessful");
+                healDamage(player, target);
 
                 if (fieldmoves[player].contact) {
 		    if (!sub)
@@ -1874,6 +1876,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 	    applyMoveStatMods(player, target);
 	    calleffects(player, target, "UponAttackSuccessful");
+            healDamage(player, target);
 
 	    if (!koed(player))
 		calleffects(player, target, "AfterAttackSuccessful");
@@ -2845,6 +2848,22 @@ void BattleSituation::healLife(int player, int healing)
 	healing = std::min(healing, poke(player).totalLifePoints() - poke(player).lifePoints());
 	changeHp(player, poke(player).lifePoints() + healing);
     }
+}
+
+void BattleSituation::healDamage(int player, int target)
+{
+    if (koed(target) || move == Move::MorningSun || move == Move::Moonlight || move == Move::Synthesis || move == Move::Swallow)
+        return;
+
+    int healing = fieldmoves[player].healing;
+
+    if (healing > 0) {
+        sendMoveMessage(60, 0, s, type(b,s));
+        healLife(target, b.poke(target).totalLifePoints() * healing / 100);
+    } else {
+        notify(All, Recoil, target, true);
+        inflictDamage(target, b.poke(target).totalLifePoints() * healing / 100, target);
+   }
 }
 
 void BattleSituation::changeHp(int player, int newHp)
