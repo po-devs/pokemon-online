@@ -74,7 +74,6 @@ QList<QString> AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
 QList<AbilityInfo::Effect> AbilityInfo::m_Effects[3];
 QList<QStringList> AbilityInfo::m_Messages;
-QSet<int> AbilityInfo::m_GenAbilities[3];
 
 QList<QString> GenderInfo::m_Names;
 QString GenderInfo::m_Directory;
@@ -1623,22 +1622,46 @@ int NatureInfo::Number(const QString &pokename)
 
 int NatureInfo::NatureOf(int statUp, int statDown)
 {
-    return (statUp-1) * 5 + statDown-1;
+    return (ConvertStat(statUp)-1) * 5 + ConvertStat(statDown)-1;
 }
 
 int NatureInfo::Boost(int nature, int stat)
 {
-    return -(nature%5 == stat-1) + (nature/5 == stat-1);
+    return -(nature%5 == ConvertStat(stat)-1) + (nature/5 == ConvertStat(stat)-1);
+}
+
+int NatureInfo::ConvertStat(int stat)
+{
+    switch (stat) {
+    case Hp: return 0;
+    case Attack: return 1;
+    case Defense: return 2;
+    case Speed: return 3;
+    case SpAttack: return 4;
+    case SpDefense: default: return 5;
+    }
+}
+
+int NatureInfo::ConvertToStat(int stat)
+{
+    switch(stat) {
+    case 0: return Hp;
+    case 1: return Attack;
+    case 2: return Defense;
+    case 3: return Speed;
+    case 4: return SpAttack;
+    case 5: default: return SpDefense;
+    }
 }
 
 int NatureInfo::StatBoosted(int nature)
 {
-    return Boost(nature, nature/5+1) == 0 ? 0 : nature/5+1;
+    return ConvertToStat(Boost(nature, nature/5+1) == 0 ? 0 : nature/5+1);
 }
 
 int NatureInfo::StatHindered(int nature)
 {
-    return Boost(nature, (nature%5)+1) == 0 ? 0 : (nature%5)+1;
+    return ConvertToStat(Boost(nature, (nature%5)+1) == 0 ? 0 : (nature%5)+1);
 }
 
 
@@ -1711,15 +1734,11 @@ void AbilityInfo::init(const QString &dir)
     foreach (QString eff, temp) {
         m_Messages.push_back(eff.split('|'));
     }
-
-    for (int i = 0; i < 3; i++) {
-        fill_container_with_file(m_GenAbilities[i], path(QString("gen%1.txt")).arg(i+3));
-    }
 }
 
 bool AbilityInfo::Exists(int ability, int gen)
 {
-    return m_GenAbilities[gen-3].contains(ability);
+    return gen <= 3 ? ability <= Ability::AirLock : (gen ==4 ? ability <=  Ability::BadDreams : true);
 }
 
 void AbilityInfo::loadEffects()

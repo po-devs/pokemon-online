@@ -321,11 +321,6 @@ private:
 
 class NatureInfo
 {
-private:
-    static QList<QString> m_Names;
-    static QString m_Directory;
-    static void loadNames();
-    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/nature/");
@@ -340,6 +335,13 @@ public:
     static int Boost(int nature, int stat);
     static int StatBoosted(int nature);
     static int StatHindered(int nature);
+    static int ConvertStat(int stat);
+    static int ConvertToStat(int stat);
+private:
+    static QList<QString> m_Names;
+    static QString m_Directory;
+    static void loadNames();
+    static QString path(const QString &filename);
 };
 
 class CategoryInfo
@@ -385,7 +387,6 @@ private:
     static QString m_Directory;
     static QList<Effect> m_Effects[3];
     static QList<QStringList> m_Messages;
-    static QSet<int> m_GenAbilities[3];
 
     static void loadNames();
     static void loadEffects();

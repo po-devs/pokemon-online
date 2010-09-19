@@ -122,24 +122,24 @@ Reckless
 Multitype
 Flower Gift
 Bad Dreams
-[A124]
+Wicked Thief
 Encourage
-[A126]
+Perversity
 Anxiety
 Competitive Spirit
 Weak-kneed
 Cursed Body
 Healing Heart
-[A132]
+Friend Card
 Broken Armour
 Heavy Metal
 Light Metal
-[A136]
-[A137]
-[A138]
-[A139]
+Multi-Scale
+Poison Rampage
+Heat Rampage
+Harvest
 Telepathy
-[A141]
+Inconsistent
 Dustproof
 Poison Skin
 Regeneration
@@ -148,13 +148,13 @@ Sand Throw
 Miracle Skin
 Analyze
 Illusion
-JackOfAllTrades
+Eccentric
 Slip Through
 Mummy
 Earthquake Spiral
 Justice Heart
 Wariness
-[A156]
+Magic Mirror
 Herbivore
 Mischievous Heart
 Sand Power

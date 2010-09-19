@@ -45,7 +45,7 @@
 %s's Own Tempo cures its confusion!
 %s restored HP using its Poison Heal!
 %s is exerting its Pressure!
-
+%s's ability became Mummy!
 
 
 %s's Rough Skin hurts %f
