@@ -19,24 +19,24 @@ int MoveMechanics::num(const QString &name)
     }
 }
 
-MoveEffect::MoveEffect(int num, int gen)
+MoveEffect::MoveEffect(int num, int gen, BattleSituation::BasicMoveInfo &data)
 {
     /* Different steps: critical raise, number of times, ... */
-    (*this)["CriticalRaise"] = MoveInfo::CriticalRaise(num, gen);
-    (*this)["RepeatMin"] = MoveInfo::RepeatMin(num, gen);
-    (*this)["RepeatMax"] = MoveInfo::RepeatMax(num, gen);
-    (*this)["SpeedPriority"] = MoveInfo::SpeedPriority(num, gen);
-    (*this)["PhysicalContact"] = MoveInfo::PhysicalContact(num, gen);
-    (*this)["Power"] = MoveInfo::Power(num, gen);
-    (*this)["Accuracy"] = MoveInfo::Acc(num, gen);
-    (*this)["Type"] = MoveInfo::Type(num, gen);
-    (*this)["Category"] = MoveInfo::Category(num, gen);
-    (*this)["EffectRate"] = MoveInfo::EffectRate(num, gen);
+    data.critRaise = MoveInfo::CriticalRaise(num, gen);
+    data.repeatMin = MoveInfo::RepeatMin(num, gen);
+    data.repeatMax = MoveInfo::RepeatMax(num, gen);
+    data.priority = MoveInfo::SpeedPriority(num, gen);
+    data.contact = MoveInfo::PhysicalContact(num, gen);
+    data.power = MoveInfo::Power(num, gen);
+    data.accuracy = MoveInfo::Acc(num, gen);
+    data.type = MoveInfo::Type(num, gen);
+    data.category = MoveInfo::Category(num, gen);
+    data.rate = MoveInfo::EffectRate(num, gen);
     //(*this)["StatEffect"] = MoveInfo::Effect(num, gen);
-    (*this)["FlinchRate"] = MoveInfo::FlinchRate(num, gen);
-    (*this)["Recoil"] = MoveInfo::Recoil(num, gen);
-    (*this)["Attack"] = num;
-    (*this)["PossibleTargets"] = MoveInfo::Target(num, gen);
+    data.flinchRate = MoveInfo::FlinchRate(num, gen);
+    data.recoil = MoveInfo::Recoil(num, gen);
+    data.attack = num;
+    data.targets = MoveInfo::Target(num, gen);
 }
 
 /* There's gonna be tons of structures inheriting it,
@@ -46,10 +46,8 @@ typedef BattleSituation BS;
 
 void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
 {
-    MoveEffect e(num, b.gen());
-
     /* first the basic info */
-    merge(b.turnlong[source], e);
+    MoveEffect e(num, b.gen(), b.fieldmoves[source]);
 
     /* then the hard info */
     QStringList specialEffects = MoveInfo::SpecialEffect(num).split('|');
@@ -198,7 +196,7 @@ struct MMAssurance : public MM
 
     static void bcd(int s, int t, BS &b) {
         if (turn(b,t).contains("DamageTaken")) {
-	    turn(b, s)["Power"] = turn(b, s)["Power"].toInt() * 2;
+            tmove(b, s).power = tmove(b, s).power * 2;
 	}
     }
 };
@@ -211,7 +209,7 @@ struct MMAvalanche : public MM
 
     static void bcd(int s, int t, BS &b) {
 	if (turn(b,s).contains("DamageTakenBy") && turn(b,s)["DamageTakenBy"].toInt() == t) {
-	    turn(b, s)["Power"] = turn(b, s)["Power"].toInt() * 2;
+            tmove(b, s).power = tmove(b, s).power * 2;
 	}
     }
 };
@@ -337,7 +335,7 @@ struct MMBlastBurn : public MM
         }
 
         turn(b, s)["TellPlayers"] = false;
-        turn(b, s)["PossibleTargets"] = Move::User;
+        tmove(b, s).targets = Move::User;
         addFunction(turn(b,s), "UponAttackSuccessful", "BlastBurn", &uas);
     }
 
@@ -354,7 +352,7 @@ struct MMBrine : public MM
 
     static void bcd(int s, int t, BS &b) {
 	if (b.poke(t).lifePercent() <= 50) {
-	    turn(b, s)["Power"] = turn(b, s)["Power"].toInt() * 2;
+            tmove(b, s).power = tmove(b, s).power * 2;
 	}
     }
 };
@@ -372,9 +370,9 @@ struct MMCharge : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        if (poke(b,s)["Charged"] == true && turn(b, s)["Type"].toInt() == Type::Electric) {
-	    if (turn(b, s)["Power"].toInt() > 0) {
-		turn(b, s)["Power"] = turn(b, s)["Power"].toInt() * 2;
+        if (poke(b,s)["Charged"] == true && tmove(b,s).type == Type::Electric) {
+            if (tmove(b, s).power > 0) {
+                tmove(b, s).power = tmove(b, s).power * 2;
 		poke(b, s)["Charged"] = false;
 	    }
 	}
@@ -478,7 +476,7 @@ struct MMCrushGrip : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-	turn(b, s)["Power"] = turn(b, s)["Power"].toInt() * 120 * b.poke(t).lifePoints()/b.poke(t).totalLifePoints();
+        tmove(b, s).power = tmove(b, s).power * 120 * b.poke(t).lifePoints()/b.poke(t).totalLifePoints();
     }
 };
 
@@ -491,7 +489,7 @@ struct MMCurse : public MM
 
     static void ms(int s, int, BS &b) {
         if (!b.hasType(s, Pokemon::Ghost)) {
-            turn(b,s)["PossibleTargets"] = Move::User; // so that curse works even when there is no enemy.
+            tmove(b,s).targets = Move::User; // so that curse works even when there is no enemy.
         } else {
             turn(b,s)["StatEffect"] = "";
             turn(b,s)["CurseGhost"] = true;
@@ -603,7 +601,7 @@ struct MMEruption : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        turn(b,s)["Power"] = std::max(10, turn(b,s)["Power"].toInt()*150*b.poke(s).lifePoints()/b.poke(s).totalLifePoints());
+        tmove(b, s).power = std::max(10, tmove(b, s).power*150*b.poke(s).lifePoints()/b.poke(s).totalLifePoints());
     }
 };
 
@@ -616,7 +614,7 @@ struct MMFacade : public MM
     static void bcd(int s, int, BS &b) {
 	int status = b.poke(s).status();
         if (status == Pokemon::Burnt || status == Pokemon::Poisoned || status == Pokemon::DeeplyPoisoned || status == Pokemon::Paralysed) {
-	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt()*2;
+            tmove(b, s).power = tmove(b, s).power * 2;
 	}
     }
 };
@@ -657,12 +655,12 @@ struct MMHiddenPower : public MM
         int *dvs = fpoke(b,s).dvs;
 
         int type = HiddenPowerInfo::Type(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
-        turn(b,s)["Type"] = type;
-	turn(b,s)["Power"] = HiddenPowerInfo::Power(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+        tmove(b, s).type = type;
+        tmove(b, s).power = HiddenPowerInfo::Power(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
 
         /* In 3rd gen, hidden powers can be physical! */
-        if (b.gen() == 3) {
-            turn(b, s)["Category"] = TypeInfo::Category(type);
+        if (b.gen() <= 3) {
+            tmove(b, s).category = TypeInfo::Category(type);
         }
     }
 };
@@ -744,7 +742,7 @@ struct MMFlail : public MM
 	    mult = 40;
 	}
 
-	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * mult;
+        tmove(b, s).power = tmove(b, s).power * mult;
     }
 };
 
@@ -765,7 +763,7 @@ struct MMTrumpCard : public MM
          case 3: mult = 50; break;
          default: mult = 40;
         }
-	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * mult;
+        tmove(b, s).power = tmove(b, s).power * mult;
     }
 };
 
@@ -776,7 +774,7 @@ struct MMFrustration : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() *
+        tmove(b, s).power = tmove(b, s).power *
                              std::max((move(b,s) == Move::Frustration ? (255-b.poke(s).happiness()) : b.poke(s).happiness()) * 2
                                       / 5, 2);
     }
@@ -1307,8 +1305,8 @@ struct MMSubstitute : public MM
         if (ref.contains(effect) || (effect == "Curse" && b.hasType(t, Pokemon::Ghost)))
 	{
             turn(b,t)["EffectBlocked"] = true;
-            if (turn(b,t)["Power"].toInt() == 0)
-                b.sendMoveMessage(128, 2, t,0,s,turn(b,t)["Attack"].toInt());
+            if (tmove(b, s).power == 0)
+                b.sendMoveMessage(128, 2, t,0,s,move(b,t));
 	    return;
 	}
     }
@@ -1602,7 +1600,7 @@ struct MMBide : public MM
 	b.sendMoveMessage(9,0,s,type(b,s));
     }
     static void ms(int s, int, BS &b) {
-        turn(b,s)["Power"] = 0;
+        tmove(b, s).power = 0;
         if (!poke(b,s).contains("BideTurn"))
             return;
         int _turn = poke(b,s)["BideTurn"].toInt();
@@ -1612,13 +1610,13 @@ struct MMBide : public MM
 
         turn(b,s)["TellPlayers"] = false;
         if (_turn +1 == b.turn()) {
-            turn(b,s)["PossibleTargets"] = Move::User;
-            turn(b,s)["Power"] = 0;
+            tmove(b, s).targets = Move::User;
+            tmove(b, s).power = 0;
             addFunction(turn(b,s), "UponAttackSuccessful", "Bide", &uas2);
         } else {
-            turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
-            turn(b,s)["Power"] = 1;
-            turn(b,s)["Type"] = Pokemon::Curse;
+            tmove(b, s).targets = Move::ChosenTarget;
+            tmove(b, s).power = 1;
+            tmove(b, s).type = Pokemon::Curse;
             addFunction(turn(b,s), "BeforeTargetList", "Bide", &btl);
             addFunction(turn(b,s), "CustomAttackingDamage", "Bide", &ccd);
             addFunction(turn(b,s), "DetermineAttackFailure", "Bide",&daf);
@@ -1632,7 +1630,7 @@ struct MMBide : public MM
         }
 
         addFunction(turn(b,s),"UponOffensiveDamageReceived", "Bide", &udi);
-        turn(b,s)["SpeedPriority"] = 1;
+        tmove(b,s).priority = 1;
         turn(b,s)["NoChoice"] = true;
     }
 
@@ -1698,10 +1696,10 @@ struct MMBounce : public MM
                 addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
             }
         } else {
-            turn(b,s)["Power"] = 0;
-            turn(b,s)["Accuracy"] = 0;
-            turn(b,s)["PossibleTargets"] = Move::User;
-            poke(b,s)["2TurnMove"] = turn(b,s)["Attack"];
+            tmove(b, s).power = 0;
+            tmove(b, s).accuracy = 0;
+            tmove(b, s).targets = Move::User;
+            poke(b,s)["2TurnMove"] = move(b,s);
             turn(b,s)["TellPlayers"] = false;
         }
     }
@@ -1712,7 +1710,7 @@ struct MMBounce : public MM
 
             int move = poke(b,s)["2TurnMove"].toInt();
 
-            merge(turn(b,s), MoveEffect(move, b.gen()));
+            MoveEffect(move, b.gen(),b.fieldmoves[s]);
             addFunction(turn(b,s), "EvenWhenCantMove", "Bounce", &ewc);
 
             if (move == ShadowForce) {
@@ -1750,7 +1748,7 @@ struct MMBounce : public MM
         addFunction(poke(b,s), "TestEvasion", "Bounce", &dgaf);
         addFunction(poke(b,s), "TurnSettings", "Bounce", &ts);
 
-        int att = turn(b,s)["Attack"].toInt();
+        int att = move(b,s);
         /* Those moves protect from weather when in the invulnerable state */
         if (att == Move::Dig || att == Move::Dive)
             turn(b,s)["WeatherSpecialed"] = true;
@@ -1763,14 +1761,14 @@ struct MMBounce : public MM
         if (!poke(b,s).value("Invulnerable").toBool()) {
 	    return;
 	}
-        int attack = turn(b,t)["Attack"].toInt();
+        int attack = move(b,t);
 	/* Lets see if the poke is vulnerable to that one attack */
         QList<int> vuln_moves = poke(b,s)["VulnerableMoves"].value<QList<int> >();
         QList<int> vuln_mults = poke(b,s)["VulnerableMults"].value<QList<int> >();
 
 	for (int i = 0; i < vuln_moves.size(); i++) {
 	    if (vuln_moves[i] == attack) {
-                turn(b,t)["Power"] = turn(b,t)["Power"].toInt() * vuln_mults[i];
+                tmove(b, s).power = tmove(b, s).power * vuln_mults[i];
 		return;
 	    }
 	}
@@ -1791,7 +1789,7 @@ struct MMCounter : public MM
 
     static void uodr(int s, int source, BS &b) {
 
-        if (b.gen() >= 4 && turn(b, source)["Category"] != turn(b,s)["Counter_Arg"].toInt()) {
+        if (b.gen() >= 4 && tmove(b,source).category != turn(b,s)["Counter_Arg"].toInt()) {
             return;
         }
         /* In third gen, all hidden power are countered by counter but not by mirror coat */
@@ -1809,7 +1807,7 @@ struct MMCounter : public MM
 
     static void ms (int s, int, BS &b) {
         turn(b,s)["Target"] = turn(b,s)["CounterTarget"];
-	turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
+        tmove(b,s).targets = Move::ChosenTarget;
     }
 
     static void daf (int s, int, BS &b) {
@@ -1831,7 +1829,7 @@ struct MMMetalBurst : public MM
     }
 
     static void ms (int s, int, BS &b) {
-        turn(b,s)["PossibleTargets"] = Move::ChosenTarget;
+        tmove(b,s).targets = Move::ChosenTarget;
         turn(b,s)["Target"] = turn(b,s).value("DamageTakenBy").toInt();
     }
 
@@ -1995,9 +1993,9 @@ struct MMDoomDesire : public MM
     }
 
     static void ms(int s, int, BS &b) {
-	turn(b,s)["Type"] = Pokemon::Curse;
-	turn(b,s)["Power"] = 1;
-        turn(b,s)["Accuracy"] = 0;
+        tmove(b, s).type = Pokemon::Curse;
+        tmove(b, s).power = 1;
+        tmove(b, s).accuracy = 0;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -2009,11 +2007,11 @@ struct MMDoomDesire : public MM
     static void cad(int s, int t, BS &b) {
 	int move = MM::move(b,s);
 	turn(b,s)["CriticalHit"] = false;
-        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * MoveInfo::Power(move, b.gen());
+        tmove(b, s).power = tmove(b, s).power * MoveInfo::Power(move, b.gen());
         slot(b,t)["DoomDesireDamage"] = b.calculateDamage(s, t);
         slot(b,t)["DoomDesireTurn"] = b.turn() + 2;
         slot(b,t)["DoomDesireMove"] = move;
-        turn(b,s)["Accuracy"] = MoveInfo::Acc(move, b.gen());
+        tmove(b, s).accuracy = MoveInfo::Acc(move, b.gen());
         slot(b,t)["DoomDesireFailed"] = !b.testAccuracy(s,t,true);
         addFunction(slot(b,t), "EndTurn7", "DoomDesire", &et);
         b.sendMoveMessage(29, move==DoomDesire?2:1, s, type(b,s));
@@ -2127,18 +2125,18 @@ struct MMEncore : public MM
         else
             poke(b,t)["EncoresUntil"] = b.turn() + 3 + (b.true_rand()%5);
 
-        int move =  poke(b,t)["LastMoveUsed"].toInt();
-        poke(b,t)["EncoresMove"] = move;
+        int mv =  poke(b,t)["LastMoveUsed"].toInt();
+        poke(b,t)["EncoresMove"] = mv;
 
         /*Changes the encored move, if no choice is off (otherwise recharging moves like blast burn would attack again,
             and i bet something strange would also happen with charging move) */
         if (!turn(b,t).contains("NoChoice")) {
             for (int i = 0; i < 4; i ++) {
-                if (b.move(t, i) == move) {
-                    MoveEffect::unsetup(turn(b,t)["Attack"].toInt(), t, b);
+                if (b.move(t, i) == mv) {
+                    MoveEffect::unsetup(move(b,t), t, b);
                     b.choice[t].numSwitch = i;
                     b.choice[t].targetPoke = b.randomValidOpponent(t);
-                    MoveEffect::setup(move, t, s, b);
+                    MoveEffect::setup(mv, t, s, b);
                     break;
                 }
             }
@@ -2258,8 +2256,8 @@ struct MMFocusEnergy : public MM
 	addFunction(turn(b,s), "BeforeTargetList", "FocusEnergy", &btl);
     }
     static void btl(int s, int, BS &b) {
-	if (turn(b,s)["Power"].toInt() > 0) {
-            inc(turn(b,s)["CriticalRaise"], 2);
+        if (tmove(b,s).power > 0) {
+            tmove(b,s).critRaise += 2;
 	}
     }
 };
@@ -2281,7 +2279,7 @@ struct MMFuryCutter : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * (poke(b,s)["FuryCutterCount"].toInt()+1);
+        tmove(b, s).power = tmove(b, s).power * (poke(b,s)["FuryCutterCount"].toInt()+1);
     }
 };
 
@@ -2412,7 +2410,7 @@ struct MMGrassKnot : public MM
 	} else {
 	    bp = 120;
 	}
-	turn(b,s)["Power"] = bp;
+        tmove(b, s).power = bp;
     }
 };
 
@@ -2465,7 +2463,7 @@ struct MMGyroBall : public MM
 	int bp = 1 + 25 * b.getStat(t,Speed) / b.getStat(s,Speed);
 	bp = std::max(2,std::min(bp,150));
 
-	turn(b,s)["Power"] = bp;
+        tmove(b, s).power = bp;
     }
 };
 
@@ -2513,7 +2511,7 @@ struct MMBlizzard : public MM
 
     static void ms(int s, int, BS &b) {
         if (b.gen() == 4 && b.isWeatherWorking(BattleSituation::Hail)) {
-            turn(b,s)["Accuracy"] = 0;
+            tmove(b, s).accuracy = 0;
 	}
     }
 };
@@ -2526,9 +2524,9 @@ struct MMThunder : public MM
 
     static void ms(int s, int, BS &b) {
 	if (b.isWeatherWorking(BattleSituation::Rain)) {
-            turn(b,s)["Accuracy"] = 0;
+            tmove(b, s).accuracy = 0;
 	} else if (b.isWeatherWorking(BattleSituation::Sunny)) {
-	    turn(b,s)["Accuracy"] = turn(b,s)["Accuracy"].toInt() * 5 / 7;
+            tmove(b, s).accuracy = tmove(b, s).accuracy * 5 / 7;
 	}
     }
 };
@@ -2557,8 +2555,8 @@ struct MMWeatherBall : public MM
         int weather = b.weather;
 
 	if (weather != BattleSituation::NormalWeather && b.isWeatherWorking(weather)) {
-	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
-            turn(b,s)["Type"] = TypeInfo::TypeForWeather(weather);
+            tmove(b, s).power = tmove(b, s).power * 2;
+            tmove(b,s).type = TypeInfo::TypeForWeather(weather);
 	}
     }
 };
@@ -2698,7 +2696,7 @@ struct MMFling : public MM
     static void btl(int s, int, BS &b) {
         if (b.poke(s).item() != 0 && b.hasWorkingItem(s, b.poke(s).item()) && ItemInfo::Power(b.poke(s).item()) > 0) {
 	    turn(b,s)["FlingItem"] = b.poke(s).item();
-	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * ItemInfo::Power(b.poke(s).item());
+            tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
             int t = b.targetList.front();
             b.sendMoveMessage(45, 0, s, type(b,s), t, b.poke(s).item());
 	    b.disposeItem(s);
@@ -2814,9 +2812,9 @@ struct MMIceBall : public MM
             poke(b,s)["IceBallCount"] = 0;
         }
 	if (poke(b,s).contains("DefenseCurl")) {
-	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
+            tmove(b, s).power = tmove(b, s).power * 2;
 	}
-	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * (1+poke(b,s)["IceBallCount"].toInt());
+        tmove(b, s).power = tmove(b, s).power * (1+poke(b,s)["IceBallCount"].toInt());
     }
 
     static void uas(int s, int, BS &b) {
@@ -2955,7 +2953,7 @@ struct MMJudgment : public MM
     static void ms (int s, int, BS &b) {
 	int item = b.poke(s).item();
 	if (ItemInfo::isPlate(item) && b.hasWorkingItem(s, item)) {
-	    turn(b,s)["Type"] = poke(b,s)["ItemArg"];
+            tmove(b,s).type = poke(b,s)["ItemArg"].toInt();
 	}
     }
 };
@@ -3109,7 +3107,7 @@ struct MMMagicCoat : public MM
 
     static void dgaf(int s, int t, BS &b) {
         if (turn(b,t).value("MagicCoated").toBool()) {
-            if (t != s && turn(b,s)["Power"].toInt() == 0) {
+            if (t != s && tmove(b, s).power == 0) {
 		int move = MM::move(b,s);
                 if (move == TeeterDance)
                     return;
@@ -3123,7 +3121,7 @@ struct MMMagicCoat : public MM
 		    removeFunction(turn(b,t), "UponAttackSuccessful", "MagicCoat");
 
 		    MoveEffect::setup(move,t,s,b);
-                    turn(b,t)["PossibleTargets"] = Move::ChosenTarget;
+                    tmove(b,t).targets = Move::ChosenTarget;
                     turn(b,t)["Target"] = s;
 		    b.useAttack(t,move,true,false);
                     MoveEffect::unsetup(move,t,b);
@@ -3193,7 +3191,7 @@ struct MMMagnitude: public MM
          }
 
 	turn(b,s)["MagnitudeLevel"] = magn;
-	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * pow;
+        tmove(b, s).power = tmove(b, s).power * pow;
     }
 
     static void bh(int s, int t, BS &b) {
@@ -3214,7 +3212,7 @@ struct MMMeFirst : public MM
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
-	int num = turn(b,t).value("Attack").toInt();
+        int num = move(b,t);
         if (MoveInfo::Power(num, b.gen()) == 0) {
 	    turn(b,s)["Failed"] = true;
 	    return;
@@ -3447,9 +3445,9 @@ struct MMPresent : public MM
     }
 
     static void btl(int s, int, BS &b) {
-        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 40 * (b.true_rand() % 4);
-        if (turn(b,s)["Power"].toInt() == 0) {
-            turn(b,s)["Power"] = 1;
+        tmove(b, s).power = tmove(b, s).power * 40 * (b.true_rand() % 4);
+        if (tmove(b, s).power == 0) {
+            tmove(b, s).power = 1;
         }
     }
 
@@ -3528,14 +3526,14 @@ struct MMRazorWind : public MM
 		b.disposeItem(s);
 
                 if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
-                    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() / 2;
+                    tmove(b, s).power = tmove(b, s).power * 2;
                 }
 	    } else {              
 		poke(b,s)["ChargingMove"] = mv;
 		poke(b,s)["ReleaseTurn"] = b.turn() + 1;
 		turn(b,s)["TellPlayers"] = false;
-		turn(b,s)["Power"] = 0;
-                turn(b,s)["PossibleTargets"] = Move::User;
+                tmove(b, s).power = 0;
+                tmove(b, s).targets = Move::User;
 		addFunction(poke(b,s), "TurnSettings", "RazorWind", &ts);
 	    }
 	}
@@ -3550,7 +3548,7 @@ struct MMRazorWind : public MM
         int mv = poke(b,s)["ChargingMove"].toInt();
         MoveEffect::setup(mv,s,s,b);
         if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
-            turn(b,s)["Power"] = turn(b,s)["Power"].toInt() / 2;
+            tmove(b, s).power = tmove(b, s).power * 2;
         }
     }
 };
@@ -3571,7 +3569,7 @@ struct MMPunishment : public MM
 	    }
 	}
 
-	turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * std::min(60 + 20 * boostsum, 200);
+        tmove(b, s).power = tmove(b, s).power * std::min(60 + 20 * boostsum, 200);
     }
 };
 
@@ -3740,7 +3738,7 @@ struct MMSmellingSalt : public MM
 
     static void bcd(int s, int t, BS &b) {
 	if (b.poke(t).status() == turn(b,s)["SmellingSalt_Arg"].toInt()) {
-	    turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
+            tmove(b, s).power = tmove(b, s).power * 2;
 	}
     }
 
@@ -3812,11 +3810,11 @@ struct MMSnatch : public MM
             if (!turn(b,snatcher).value("Snatcher").toBool()) {
                 return;
             }
-	    if (turn(b,s)["Power"].toInt() == 0) {
+            if (tmove(b, s).power == 0) {
 		int move = MM::move(b,s);
                 /* Typically, the moves that are snatched are moves that only induce status / boost mods and nothing else,
                     therefore having no "SpecialEffect". Exceptions are stored in snatched_moves */
-                bool snatched = ( turn(b,s)["PossibleTargets"].toInt() == Move::User && MoveInfo::SpecialEffect(move).size() == 0 )|| snatched_moves.contains(move);
+                bool snatched = ( tmove(b,s).targets == Move::User && MoveInfo::SpecialEffect(move).size() == 0 )|| snatched_moves.contains(move);
 
                 if (snatched) {
                     b.fail(s,118,0,type(b,snatcher), snatcher);
@@ -3889,7 +3887,7 @@ struct MMStomp : public MM
 
     static void bcd(int s, int t, BS &b) {
         if (poke(b,t).value("Minimize").toBool()) {
-            turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
+            tmove(b, s).power = tmove(b, s).power * 2;
         }
     }
 };
@@ -3915,7 +3913,7 @@ struct MMSuckerPunch : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (turn(b,t).value("HasMoved").toBool() || turn(b,t).value("Power").toInt() == 0) {
+        if (turn(b,t).value("HasMoved").toBool() || tmove(b, t).power == 0) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -4017,9 +4015,9 @@ struct MMTripleKick : public MM {
         inc(turn(b,s)["TripleKickCount"], 1);
         int tkc = turn(b,s)["TripleKickCount"].toInt();
         if (tkc == 1) {
-            turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
+            tmove(b, s).power = tmove(b, s).power * 2;
         } else if (tkc==2) {
-            turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 3 / 2;
+            tmove(b, s).power = tmove(b, s).power * 3/2;
         }
     }
 };
@@ -4116,8 +4114,8 @@ struct MMExplosion : public MM {
             if (b.hasWorkingAbility(i, Ability::Damp) && !b.koed(i)) {
                 b.sendMoveMessage(114,0,i);
                 turn(b,s)["FaintActivationPrevented"] = true;
-                turn(b,s)["Power"] = 0;
-                turn(b,s)["PossibleTargets"] = Move::User;
+                tmove(b, s).power = 0;
+                tmove(b,s).targets = Move::User;
                 return;
             }
         }
@@ -4214,8 +4212,8 @@ struct MMBeatUp : public MM {
     }
 
     static void ms(int s, int, BS &b) {
-        turn(b,s)["Type"] = Pokemon::Curse;
-        turn(b,s)["Power"] = 1;
+        tmove(b,s).type = Pokemon::Curse;
+        tmove(b, s).power = 1;
     }
 
     static void daf(int s,int, BS&b) {
@@ -4429,7 +4427,7 @@ struct MMSpitUp : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * poke(b,s)["StockPileCount"].toInt() * 100;
+        tmove(b, s).power = tmove(b, s).power * poke(b,s)["StockPileCount"].toInt() * 100;
     }
 
     static void uas(int s, int, BS &b) {
@@ -4511,8 +4509,8 @@ struct MMNaturalGift :  public MM
 
         b.eatBerry(s);
 
-        turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * ItemInfo::BerryPower(berry);
-        turn(b,s)["Type"] = ItemInfo::BerryType(berry);
+        tmove(b, s).power = tmove(b, s).power * ItemInfo::BerryPower(berry);
+        tmove(b,s).type = ItemInfo::BerryType(berry);
         turn(b,s)["NaturalGiftOk"] = true;
     }
 };
@@ -4592,7 +4590,7 @@ struct MMPayback : public MM
     static void bcd(int s, int t, BS &b) {
         //Attack / Switch --> power *= 2
         if (turn(b,t).value("HasMoved").toBool() || turn(b,t).value("CantGetToMove").toBool()) {
-            turn(b,s)["Power"] = turn(b,s)["Power"].toInt() * 2;
+            tmove(b, s).power = tmove(b, s).power * 2;
         }
     }
 };
@@ -4680,7 +4678,7 @@ struct MMFollowMe : public MM
         if (b.koed(target) || !poke(b, target).contains("FollowMe") || b.player(s) == b.player(target))
             return;
 
-        int tarChoice = turn(b,s)["PossibleTargets"].toInt();
+        int tarChoice = tmove(b,s).targets;
         bool muliTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
 
         if (muliTar) {

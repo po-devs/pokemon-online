@@ -196,7 +196,7 @@ public:
     bool linked(int linked, QString relationShip);
     void link(int linker, int linked, QString relationShip);
     void notifySub(int player, bool sub);
-    int repeatNum(int player, context &move);
+    int repeatNum(int player);
     PokeFraction getStatBoost(int player, int stat);
     int getStat(int player, int stat);
     /* conversion for sending a message */
@@ -434,7 +434,25 @@ public:
         int stats[6];
     };
 
+    struct BasicMoveInfo {
+        int critRaise;
+        int repeatMin;
+        int repeatMax;
+        int priority;
+        bool contact;
+        int power;
+        int accuracy;
+        int type;
+        int category;
+        int rate;
+        int flinchRate;
+        int recoil;
+        int attack;
+        int targets;
+    };
+
     QList<BasicPokeInfo> fieldpokes;
+    QList<BasicMoveInfo> fieldmoves;
 
     /* The choice of a player, accessed by move ENCORE */
     QList<BattleChoice> choice;

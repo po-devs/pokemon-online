@@ -14,6 +14,7 @@ struct Mechanics
     static BattleSituation::context & slot(BattleSituation &b, int player);
     static int move(BattleSituation &b, int source);
     static int type(BattleSituation &b, int source);
+    static BattleSituation::BasicMoveInfo & tmove(BattleSituation &b, int source);
 
     typedef void (*function) (int source, int target, BattleSituation &b);
 

@@ -28,12 +28,17 @@ BattleSituation::context & Mechanics::slot(BattleSituation &b, int player)
 
 int Mechanics::type(BattleSituation &b, int source)
 {
-    return turn(b,source)["Type"].toInt();
+    return tmove(b, source).type;
 }
 
 int Mechanics::move(BattleSituation &b, int source)
 {
-    return turn(b, source)["Attack"].toInt();
+    return tmove(b, source).attack;
+}
+
+BattleSituation::BasicMoveInfo & Mechanics::tmove(BattleSituation &b, int source)
+{
+    return b.fieldmoves[source];
 }
 
 void Mechanics::addFunction(BattleSituation::context &c, const QString &effect, const QString &name, Mechanics::function f)

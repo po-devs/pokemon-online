@@ -202,7 +202,7 @@ struct IMBoostCategory : public IM
 	functions["BasePowerModifier"] = &bpm;
     }
     static void bpm(int s, int, BS &b) {
-	if (turn(b,s)["Category"] == poke(b,s)["ItemArg"]) {
+        if (tmove(b,s).category == poke(b,s)["ItemArg"]) {
 	    turn(b,s)["BasePowerItemModifier"] = 1;
 	}
     }
@@ -214,7 +214,7 @@ struct IMBoostType : public IM
 	functions["BasePowerModifier"] = &bpm;
     }
     static void bpm(int s, int, BS &b) {
-	if (turn(b,s)["Type"] == poke(b,s)["ItemArg"]) {
+        if (tmove(b,s).type == poke(b,s)["ItemArg"]) {
             if (b.gen() >= 4)
                 turn(b,s)["BasePowerItemModifier"] = 2;
             else
@@ -296,7 +296,7 @@ struct IMScopeLens : public IM
     }
 
     static void btl(int s, int, BS &b) {
-	inc(turn(b,s)["CriticalRaise"], 1);
+        tmove(b, s).critRaise += 1;
     }
 };
 
@@ -325,7 +325,7 @@ struct IMCriticalPoke : public IM
 
     static void btl(int s, int, BS &b) {
         if (b.pokenum(s).pokenum == poke(b,s)["ItemArg"].toInt()) {
-	    inc(turn(b,s)["CriticalRaise"], 2);
+            tmove(b,s).critRaise += 2;
 	}
     }
 };
@@ -341,9 +341,9 @@ struct IMPokeTypeBoost : public IM
         if (!pokes.contains(QString::number(b.pokenum(s).pokenum)))
 	    return;
 
-	QString type = turn(b,s)["Type"].toString();
+        int type = tmove(b,s).type;
 	for (int i = 1; i < args.size(); i++) {
-	    if (type == args[i])
+            if (type == args[i].toInt())
 		turn(b,s)["BasePowerItemModifier"] = 2;
 	}
     }
@@ -394,7 +394,7 @@ struct IMMetronome : public IM
 	    poke(b,s)["IMMetroCount"] = 0;
 	    return;
 	}
-	if (turn(b,s)["Power"].toInt() == 0) {
+        if (tmove(b,s).power == 0) {
 	    return;
 	}
 	if (act) {
