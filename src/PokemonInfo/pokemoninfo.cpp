@@ -502,14 +502,20 @@ Pokemon::uniqueId PokemonInfo::NonAestheticForme(Pokemon::uniqueId id)
 
 QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gender, bool shiney, bool back)
 {
-    QString archive = path("poke_img.zip");
+    QString archive;
+    if (gen <= 4)
+        archive = path("poke_img.zip");
+    else
+        archive = path("black_white.zip");
 
     QString file;
 
     if (gen ==3)
         file = QString("%1/%2%3.png").arg(pokeid.toString(), back?"3Gback":"RFLG", shiney?"s":"");
-    else
+    else if (gen == 4)
         file = QString("%1/DP%2%3%4.png").arg(pokeid.toString(), back?"b":"", (gender==Pokemon::Female)?"f":"m", shiney?"s":"");
+    else
+        file = QString("%1/%2%3%4.png").arg(pokeid.toString(), back?"back":"front", (gender==Pokemon::Female)?"f":"", shiney?"s":"");
 
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
@@ -524,6 +530,12 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
             return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, shiney, back);
         } else if (gen == 4 && shiney) {
             return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, false, back);
+        } else if (gen == 5) {
+            if (gender == Pokemon::Female) {
+                return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, shiney, back);
+            } else if (shiney) {
+                return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, false, back);
+            }
         }
         return QPixmap();
     }
