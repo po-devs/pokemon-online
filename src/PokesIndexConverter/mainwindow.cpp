@@ -146,7 +146,7 @@ void MainWindow::processFile(const QString &filename)
 //    QFile out(filename);
 //    out.open(QIODevice::WriteOnly);
 //    out.write(output.join("\n").toUtf8());
-    if (!filename.contains("/poke/"))
+    if (!filename.contains("/pokes/"))
         reorderFile(filename, Associations);
     else {
         replaceDataInFile(filename, Associations);
