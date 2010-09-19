@@ -2006,7 +2006,7 @@ int BattleSituation::move(int player, int slot)
     return fieldpokes[player].moves[slot];
 }
 
-void BattleSituation::inflictRecoil(int source, int)
+void BattleSituation::inflictRecoil(int source, int target)
 {
     //Rockhead, MagicGuard
     if (koed(source) || hasWorkingAbility(source,Ability::RockHead) || hasWorkingAbility(source,Ability::MagicGuard))
@@ -2017,8 +2017,13 @@ void BattleSituation::inflictRecoil(int source, int)
     if (recoil == 0)
         return;
 
-    notify(All, Recoil, source);
-    inflictDamage(source, turnlong[source].value("DamageInflicted").toInt()/recoil, source);
+    notify(All, Recoil, source, bool(recoil < 0), quint8(target));
+
+    if (recoil < 0) {
+        inflictDamage(source, (-turnlong[source].value("DamageInflicted").toInt()*recoil)/100, source);
+    } else {
+        healLife(source, turnlong[source].value("DamageInflicted").toInt()*recoil/100);
+    }
 }
 
 void BattleSituation::applyMoveStatMods(int player, int target)
