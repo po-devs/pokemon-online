@@ -254,7 +254,7 @@ struct IMStatusOrb : public IM
 	} else {
 	    b.sendItemMessage(19,s,1);
 	}
-        b.inflictStatus(s, status, s);
+        b.inflictStatus(s, status, s, status == Pokemon::Poisoned ? 15: 0, status == Pokemon::Poisoned ? 15: 0);
     }
 };
 

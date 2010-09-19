@@ -164,7 +164,7 @@ public:
     static int RepeatMin(int movenum, int gen);
     static int RepeatMax(int movenum, int gen);
     static int SpeedPriority(int movenum, int gen);
-    static bool PhysicalContact(int movenum, int gen);
+    static int Flags(int movenum, int gen);
     static bool Exists(int movenum, int gen);
     static bool isOHKO(int movenum, int gen);
     static int EffectRate(int movenum, int gen);
@@ -418,9 +418,9 @@ public:
     static void init(const QString &dir="db/types/");
 
     /* The type of the hidden power depending on the dvs */
-    static int Type(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
+    static int Type(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
     /* The power of the hidden power depending on the dvs */
-    static int Power(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
+    static int Power(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
     /* the different set of dvs (which are chosen within 30-31) that give an hidden power of that type */
     static QList<QStringList> PossibilitiesForType(int type);
 private:

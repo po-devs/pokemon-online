@@ -96,7 +96,7 @@ struct AMAnticipation : public AM {
                 if (cool_moves.contains(move) || MoveInfo::Power(move, b.gen()) == 0)
                     continue;
 
-                if (move == Move::Explosion || move == Move::Selfdestruct || MoveInfo::isOHKO(move) ||
+                if (move == Move::Explosion || move == Move::Selfdestruct || MoveInfo::isOHKO(move, b.gen()) ||
                     TypeInfo::Eff(MoveInfo::Type(b.move(t, i), b.gen()), b.getType(s,1))
                     * TypeInfo::Eff(MoveInfo::Type(b.move(t, i), b.gen()), b.getType(s,2)) > 4) {
                     frightening_truth = true;

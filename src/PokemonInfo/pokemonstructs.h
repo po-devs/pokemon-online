@@ -39,14 +39,14 @@ namespace Pokemon
     };
 
     enum Status {
-        Koed = -2,
+        /* Koed = -2,*/
         /* Levitated = -1,*/
         Fine = 0,
         Paralysed = 1,
         Asleep = 2,
         Frozen = 3,
         Burnt = 4,
-        Poison = 5,
+        Poisoned = 5,
         Confused = 6,
         Attracted = 7,
         Wrapped = 8,
@@ -60,6 +60,7 @@ namespace Pokemon
         Embargoed = 19,
         Requiemed = 20,
         Rooted = 21,
+        Koed = 31
     };
 
     /*
@@ -876,6 +877,24 @@ namespace Move
     };
 
     */
+
+    enum Flags
+    {
+        ContactFlag = 1,
+        ChargeFlag = 2,
+        RechargeFlag = 4,
+        ProtectableFlag = 8,
+        MagicCoatableFlag = 16,
+        SnatchableFlag = 32,
+        MemorableFlag = 64,
+        PunchFlag = 128,
+        SoundFlag = 256,
+        FlyingFlag = 512,
+        UnthawingFlag = 1024,
+        PulsingFlag = 2048,
+        HealingFlag = 4096,
+        ForcingFlag = 8192
+    };
 
     enum Target
     {
@@ -1850,7 +1869,8 @@ enum Stat
     SpDefense = 4,
     Speed = 5,
     Accuracy = 6,
-    Evasion = 7
+    Evasion = 7,
+    AllStats = 8
 };
 
 struct AbilityGroup {
@@ -1872,7 +1892,7 @@ class PokeBaseStats
 private:
     quint8 m_BaseStats[6];
 public:
-    PokeBaseStats(quint8 base_hp=80, quint8 base_att=80, quint8 base_def = 80, quint8 base_spd = 80, quint8 base_spAtt = 80, quint8 base_spDef = 80);
+    PokeBaseStats(quint8 base_hp=80, quint8 base_att=80, quint8 base_def = 80, quint8 base_spAtt = 80, quint8 base_spDef = 80, quint8 base_spd = 80);
 
     quint8 baseHp() const;
     quint8 baseAttack() const;

@@ -140,14 +140,14 @@ public:
     bool canSendPreventMessage(int defender, int attacker);
     void preventStatMod(int player, int attacker);
     /* Does not do extra operations,just a setter */
-    void changeStatus(int player, int status, bool tell = true);
+    void changeStatus(int player, int status, bool tell = true, int turns = 0);
     void changeStatus(int team, int poke, int status);
     void healStatus(int player, int status);
     void healConfused(int player);
     void healLife(int player, int healing);
     void healDamage(int player, int target);
     bool canGetStatus(int player, int status);
-    void inflictStatus(int player, int Status, int inflicter);
+    void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);
     bool isConfused(int player);
     void inflictConfused(int player, bool tell=true);
     void inflictConfusedDamage(int player);
@@ -440,7 +440,7 @@ public:
         int repeatMin;
         int repeatMax;
         int priority;
-        bool contact;
+        int flags;
         int power;
         int accuracy;
         int type;
@@ -454,6 +454,8 @@ public:
         int classification;
         int status;
         int statusKind;
+        int minTurns;
+        int maxTurns;
     };
 
     QList<BasicPokeInfo> fieldpokes;

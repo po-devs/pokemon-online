@@ -6,7 +6,7 @@
 #include <QDomNode>
 #include <QDomElement>
 
-PokeBaseStats::PokeBaseStats(quint8 base_hp, quint8 base_att, quint8 base_def, quint8 base_spd, quint8 base_spAtt, quint8 base_spDef)
+PokeBaseStats::PokeBaseStats(quint8 base_hp, quint8 base_att, quint8 base_def, quint8 base_spAtt, quint8 base_spDef, quint8 base_spd)
 {
     setBaseHp(base_hp);
     setBaseAttack(base_att);
@@ -981,7 +981,7 @@ QString TrainerTeam::exportToTxt() const
 
         ret += "EVs: ";
 
-        QString stats[] = {"HP", "Atk", "Def", "Spd", "SAtk", "SDef"};
+        QString stats[] = {"HP", "Atk", "Def", "SAtk", "SDef", "Spd"};
 
         bool started = false;
         for (int i = 0; i < 6; i++) {

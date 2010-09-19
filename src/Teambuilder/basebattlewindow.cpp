@@ -470,17 +470,19 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         {
             static const QString statusChangeMessages[6] = {
                 tr("%1 is paralyzed! It may be unable to move!"),
-                tr("%1 was burned!"),
-                tr("%1 was frozen solid!"),
                 tr("%1 fell asleep!"),
+                tr("%1 was frozen solid!"),
+                tr("%1 was burned!"),
                 tr("%1 was poisoned!"),
                 tr("%1 was badly poisoned!")
             };
 
             qint8 status;
             in >> status;
-            if (status > 0) {
-                printHtml(toColor(tu(statusChangeMessages[status-1].arg(nick(spot))), Theme::StatusColor(status)));
+            bool multipleTurns;
+            in >> multipleTurns;
+            if (status <= Pokemon::Poisoned + 1) {
+                printHtml(toColor(tu(statusChangeMessages[status-1 + (status == Pokemon::Poisoned && multipleTurns)].arg(nick(spot))), Theme::StatusColor(status)));
             } else if (status == -1) {
                 printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), Theme::TypeColor(Type::Ghost).name()));
             }
@@ -495,7 +497,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             break;
 
         if (status != -1) {
-            info().currentShallow(spot).status() = status;
+            info().currentShallow(spot).changeStatus(status);
             if (poke == info().currentIndex[spot])
                 mydisplay->updatePoke(spot);
         }

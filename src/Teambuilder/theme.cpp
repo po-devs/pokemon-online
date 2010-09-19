@@ -117,10 +117,10 @@ void Theme::loadPixmaps()
     for (int i = 0; i < TypeInfo::NumberOfTypes();i++) {
         m_TPics.push_back(Pic((QString("types/type%1.png").arg(i))));
     }
-    m_statusIcons[-2] = Pic(("status/status-2.png"));
-    m_battleIcons[-2] = Pic(("status/battle_status-2.png"));
+    m_statusIcons[Pokemon::Koed] = Pic(QString("status/status%1.png").arg(Pokemon::Koed));
+    m_battleIcons[Pokemon::Koed] = Pic(QString("status/battle_status%1.png").arg(Pokemon::Koed));
 
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 6; i++) {
         m_statusIcons[i] = Pic(QString("status/status%1.png").arg(i));
         m_battleIcons[i] = Pic(QString("status/battle_status%1.png").arg(i));
     }
@@ -169,13 +169,13 @@ QPixmap Theme::FrameBall()
 QColor Theme::StatusColor(int status)
 {
     switch (status) {
-    case -2: return "#171b1a";
-    case 0: return TypeColor(Pokemon::Normal);
-    case 1: return TypeColor(Pokemon::Electric);
-    case 2: return TypeColor(Pokemon::Fire);
-    case 3: return TypeColor(Pokemon::Ice);
-    case 4: return TypeColor(Pokemon::Psychic);
-    case 5: case 6: return TypeColor(Pokemon::Poison);
+    case Pokemon::Koed: return "#171b1a";
+    case Pokemon::Fine: return TypeColor(Pokemon::Normal);
+    case Pokemon::Paralysed: return TypeColor(Pokemon::Electric);
+    case Pokemon::Burnt: return TypeColor(Pokemon::Fire);
+    case Pokemon::Frozen: return TypeColor(Pokemon::Ice);
+    case Pokemon::Asleep: return TypeColor(Pokemon::Psychic);
+    case Pokemon::Poisoned: return TypeColor(Pokemon::Poison);
     default: return QColor();
     }
 }

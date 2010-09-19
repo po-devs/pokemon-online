@@ -174,7 +174,7 @@ struct SecondaryStuff {
 
 void SecondaryStuff::complete(Skeleton &s, bool hiddenPower) const
 {
-    static const char* stats[] = {"HP", "Atk", "Def", "Spd", "SAtk", "SDef"};
+    static const char* stats[] = {"HP", "Atk", "Def", "SAtk", "SDef", "Spd"};
 
     s.addDefaultValue("nature", NatureInfo::Name(nature));
 

@@ -187,6 +187,12 @@ void ContextCallee::yield()
 
 void ContextCallee::terminate()
 {
+    /* Fixme: find out why that can happen */
+    if (!ctx) {
+        delete this;
+        return;
+    }
+
     ctx->terminate(this);
 }
 

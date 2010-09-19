@@ -1,7 +1,6 @@
 fine
 paralysiert
-brennteinge
-froren
 schläft
+froren
+brennteinge
 vergiftet
-schwer vergiftet

@@ -44,7 +44,7 @@ struct BMStatusBerry : public BM
             goto end;
         }    /* Poison Berry */
         else if (arg == Pokemon::Poisoned) {
-            if (status == Pokemon::Poisoned || status == Pokemon::DeeplyPoisoned) {
+            if (status == Pokemon::Poisoned) {
                 goto end;
             }
         } else { /* Other Status Berry */
