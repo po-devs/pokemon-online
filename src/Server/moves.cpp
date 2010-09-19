@@ -140,35 +140,6 @@ void MoveEffect::unsetup(int num, int source, BattleSituation &b)
     *BlockTurnEffects -- poke: Called before calling effects for a turn event, to see if it's blocked. Used by Substitute
 */
 
-struct MMLeech : public MM
-{
-    MMLeech() {
-	functions["UponDamageInflicted"] = &aad;
-    }
-
-    static void aad(int s, int t, BS &b) {
-	if (!b.koed(s)) {
-	    int damage = turn(b, s)["DamageInflicted"].toInt();
-
-	    if (damage != 0) {
-		int recovered = std::max(1, damage/2);
-		int move = MM::move(b,s);
-                b.sendMoveMessage(1, move == DreamEater ? 1 :0, s, type(b,s), t);
-                if (b.hasWorkingItem(s, Item::BigRoot)) /* Big root */ {
-		    recovered = recovered * 13 / 10;
-		}
-                //Liquid Ooze
-                if (!b.hasWorkingAbility(t, Ability::LiquidOoze)) {
-                    b.healLife(s, recovered);
-                } else {
-                    b.sendMoveMessage(1,2,s,Pokemon::Poison,t);
-                    b.inflictDamage(s,recovered,s,false);
-                }
-	    }
-	}
-    }
-};
-
 struct MMAquaRing : public MM
 {
     MMAquaRing() {
@@ -4725,7 +4696,7 @@ struct MMFollowMe : public MM
 
 void MoveEffect::init()
 {
-    REGISTER_MOVE(1, Leech); /* absorb, drain punch, part dream eater, giga drain, leech life, mega drain */
+    //REGISTER_MOVE(1, Leech); /* absorb, drain punch, part dream eater, giga drain, leech life, mega drain */ <- Built -in now, but message still there
     REGISTER_MOVE(2, AquaRing);
     REGISTER_MOVE(3, AromaTherapy);
     REGISTER_MOVE(4, Assist);

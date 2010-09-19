@@ -2017,12 +2017,23 @@ void BattleSituation::inflictRecoil(int source, int target)
     if (recoil == 0)
         return;
 
-    notify(All, Recoil, source, bool(recoil < 0), quint8(target));
+    notify(All, Recoil, recoil < 0 ? source : target, bool(recoil < 0));
+
+    int damage = std::abs(recoil) * turnlong[source].value("DamageInflicted").toInt() / 100;
 
     if (recoil < 0) {
-        inflictDamage(source, (-turnlong[source].value("DamageInflicted").toInt()*recoil)/100, source);
-    } else {
-        healLife(source, turnlong[source].value("DamageInflicted").toInt()*recoil/100);
+        inflictDamage(source, damage, source, false);
+    } else  {
+        if (hasWorkingItem(s, Item::BigRoot)) /* Big root */ {
+            damage = damage * 13 / 10;
+        }
+
+        if (hasWorkingAbility(target, Ability::LiquidOoze)) {
+            sendMoveMessage(1,2,s,Pokemon::Poison,t);
+            inflictDamage(s,damage,s,false);
+        } else {
+            healLife(s, damage);
+        }
     }
 }
 

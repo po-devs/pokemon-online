@@ -623,7 +623,13 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         printLine(tu(tr("%1 flinched!").arg(nick(spot))));
         break;
     case Recoil:
-        printLine(tu(tr("%1 is hit with recoil!").arg(nick(spot))));
+        bool damage;
+        in >> damage;
+
+        if (damage)
+            printLine(tu(tr("%1 is hit with recoil!").arg(nick(spot))));
+        else
+            printLine(tu(tr("%1 had its energy drained!").arg(nick(spot))));
         break;
     case WeatherMessage: {
             qint8 wstatus, weather;
