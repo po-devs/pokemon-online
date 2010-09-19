@@ -40,7 +40,7 @@ namespace Pokemon
 
     enum Status {
         Koed = -2,
-        Levitated = -1,
+        /* Levitated = -1,*/
         Fine = 0,
         Paralysed = 1,
         Asleep = 2,

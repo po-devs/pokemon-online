@@ -929,7 +929,7 @@ struct MMRest : public MM
 	b.healLife(s, b.poke(s).totalLifePoints());
         b.sendMoveMessage(106,0,s,type(b,s));
         b.changeStatus(s, Pokemon::Asleep,false);
-        b.poke(s).sleepCount() = b.gen() <= 4 ? 2 : 3;
+        b.poke(s).statusCount() = b.gen() <= 4 ? 2 : 3;
         poke(b,s)["Rested"] = true;
     }
 };
