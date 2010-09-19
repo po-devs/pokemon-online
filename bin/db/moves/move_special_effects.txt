@@ -10,14 +10,14 @@
 
 
 
-43
+43#Guillotine
 104-0#razor wind
 
 
 
 
 107#whirlwind
-13-3_168*2_439*2_362_422
+13-3_16*2_239*2_327_87#Fly
 10#bind-inflict damage every turn
 
 
@@ -30,7 +30,7 @@
 
 
 
-43
+43#Horn Drill
 
 
 10#wrap
@@ -61,16 +61,16 @@
 
 
 
-11
+11#Hyper beam
 
 
 
-52
-22-0#counter: 0 is physical
+52#Low kick
+22-1#counter: 1 is physical
 91#seismic toss
 
-1#leech
-1#mega drain
+#1#leech
+#1#mega drain
 72#leech seed
 
 
@@ -81,15 +81,15 @@
 93#petal dance
 
 30-40#dragon rage
-10
+10#Fire spin
 
 
 
 152#Thunder
 
 
-43#OHKO
-13-1_110*2_232*2
+43#Fissure
+13-1_89*2_222*2#Dig
 
 
 
@@ -111,9 +111,9 @@
 
 154#defense curl
 
-73-1#light screen
+73-2#light screen
 149#haze
-73-0#reflect
+73-1#reflect
 46#focus energy
 9#bide
 80#metronome
@@ -126,20 +126,20 @@
 
 
 
-10
+10#Clamp
 
 104-2#skull bash
 
 
 
 
-60#softboiled
+#60#softboiled
 64#high jump kick
 
 31|1#dream eater
 
 
-1
+#1#Leech Life
 
 104-1#sky attack
 137#transform
@@ -163,7 +163,7 @@
 130#super fang
 
 8-25|128#SUBSTITUTE
-127#struggle
+#127#struggle
 111#sketch
 139#triple kick
 23#thief
@@ -180,7 +180,7 @@
 44#flail
 123#spite
 
-27
+27#Protect
 
 
 
@@ -200,13 +200,13 @@
 74#lock on
 93#outrage
 57-3#sandstorm
-1
+#1#Giga drain
 35#endure
 
 66#rollout
 41#false swipe
 
-60#healing - milk drink
+#60#healing - milk drink
 
 50#fury cutter
 
@@ -241,12 +241,12 @@
 57-2#rain dance
 57-4#sunny day
 
-22-1#mirror coat
+22-2#mirror coat
 97#psychup
 
 
 
-29
+29#Future sight
 
 10#whirlpool
 7#beat up
@@ -261,7 +261,7 @@
 
 
 37#memento
-39#fa�ade
+39#facade
 47#focus punch
 117-1#smelling salt
 48#follow me
@@ -273,7 +273,7 @@
 108#role play
 142#wish
 4#assist
-151
+151#ingrain
 
 76#magic coat
 105#recycle
@@ -289,7 +289,7 @@
 54#grudge
 118#snatch
 110#secret power
-13-2_403*2
+13-2_57*2#dive
 
 17#camouflage
 
@@ -301,12 +301,12 @@
 88-12#mud sport
 66#ice ball
 
-60#slack off
+#60#slack off
 
 
 
 11#blast burn -- one turn slacking off
-11
+11#hydro cannon
 
 
 113#weather ball
@@ -336,9 +336,9 @@
 12#block, aka mean look
 
 
-11
+11#frenzy plant
 
-13-0_168*2_439*2_362_422#bounce
+13-0_16*2_239*2_327_87#bounce
 
 
 23#covet
@@ -353,17 +353,17 @@
 
 29#doom desire
 
-150|60#roost
+150#|60#roost
 53#gravity
 84-16#16 is dark -- miracle eye
-117-4#wake up slap
+117-2#wake up slap
 
 56#gyro ball
 37|61#healing wish
 15#brine
 89#natural gift
 42#only works when protect detect
-16
+16#Pluck
 133#tailwind
 120#Acupressure
 119#metal burst
@@ -382,8 +382,8 @@
 75#lucky chant
 79#me first
 21#copycat
-55-1_4
-55-2_5#guard swap
+55-1_3#power swap
+55-2_4#guard swap
 100#punishment
 71#last resort
 143#worry seed
@@ -407,14 +407,14 @@
 
 
 
-1
+#1#Drain punch
 
 
 
 
 
 132#switcheroo
-11
+11#Giga impact
 
 
 146#avalanche
@@ -459,10 +459,102 @@
 
 11#roar of time
 
-37|61
+37|61#Lunar dance
 24#crush grip
-10
+10#magma storm
 
 
 
 13-4#shadow force
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
