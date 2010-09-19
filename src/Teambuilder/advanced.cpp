@@ -78,7 +78,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     happiness->setValue(poke()->happiness());
     connect(happiness, SIGNAL(valueChanged(int)), SLOT(changeHappiness(int)));
 
-    secondColumn->addWidget(pokeImage=new AvatarBox(),0,Qt::AlignHCenter);
+    secondColumn->addWidget(pokeImage=new QLabel(),0,Qt::AlignHCenter);
     updatePokeImage();
 
     QHBoxLayout *levellayout = new QHBoxLayout();
@@ -224,7 +224,8 @@ void TB_Advanced::changeHappiness(int x)
 
 void TB_Advanced::updatePokeImage()
 {
-    pokeImage->changePic(poke()->picture());
+    pokeImage->setFixedSize(poke()->picture().size());
+    pokeImage->setPixmap(poke()->picture());
 }
 
 void TB_Advanced::updateAbility()

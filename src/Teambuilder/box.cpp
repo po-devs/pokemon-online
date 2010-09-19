@@ -45,8 +45,8 @@ TB_PokemonDetail::TB_PokemonDetail()
     m_num->setObjectName("BigText");
     m_level->setObjectName("SmallText");
 
-    /* Avatar box! */
-    gl->addWidget(m_pic = new AvatarBox(),1,0);
+    /* Pokemon picture! */
+    gl->addWidget(m_pic = new QLabel(),1,0);
 
     /* Type / Nature / Item */
     QVBoxLayout *tnlayout = new QVBoxLayout();
@@ -93,7 +93,8 @@ void TB_PokemonDetail::updatePoke()
     m_name->setText(PokemonInfo::Name(poke->num()));
     m_num->setText(QString("[%1]").arg(num == -1 ? "X" : QString::number(num+1)));
     m_nick->setText(poke->nickname());
-    m_pic->changePic(poke->picture());
+    m_pic->setFixedSize(poke->picture().size());
+    m_pic->setPixmap(poke->picture());
     m_type1->setPixmap(Theme::TypePicture(PokemonInfo::Type1(poke->num(), poke->gen())));
     m_type2->setPixmap(Theme::TypePicture(PokemonInfo::Type2(poke->num(), poke->gen())));
     m_type2->setVisible(PokemonInfo::Type2(poke->num()) != Type::Curse);

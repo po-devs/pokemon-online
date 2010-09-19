@@ -18,7 +18,7 @@ class TB_Advanced : public QWidget
 private:
     PokeTeam *m_poke;
 
-    AvatarBox *pokeImage;
+    QLabel *pokeImage;
     /* hp means hidden power */
     QComboBox *hpchoice;
     QSpinBox *dvchoice[6];
