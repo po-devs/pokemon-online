@@ -38,6 +38,56 @@ namespace Pokemon
         Female
     };
 
+    enum Status {
+        Koed = -2,
+        Levitated = -1,
+        Fine = 0,
+        Paralysed = 1,
+        Asleep = 2,
+        Frozen = 3,
+        Burnt = 4,
+        Poison = 5,
+        Confused = 6,
+        Attracted = 7,
+        Wrapped = 8,
+        Nightmared = 9,
+        Tormented = 12,
+        Disabled = 13,
+        Drowsy = 14,
+        HealBlocked = 15,
+        Sleuthed = 17,
+        Seeded = 18,
+        Embargoed = 19,
+        Requiemed = 20,
+        Rooted = 21,
+    };
+
+    /*
+     Old status
+
+    enum Status
+    {
+        Koed = -2,
+        Fine=0,
+        Paralysed=1,
+        Burnt=2,
+        Frozen=3,
+        Asleep=4,
+        Poisoned=5,
+        DeeplyPoisoned=6
+    };
+
+    */
+
+    enum StatusKind
+    {
+        NoKind = 0,
+        SimpleKind = 1,
+        TurnKind = 2,
+        AttractKind = 3,
+        WrapKind = 4
+    };
+
     /* For simplicity issues we keep the same order as in Gender. You can assume it'll stay
    that way for next versions.
 
@@ -859,6 +909,24 @@ namespace Move
         PartnerOrUser
     };
     */
+
+    enum Classification
+    {
+        StandardMove = 0,
+        StatusInducingMove = 1,
+        StatChangingMove = 2,
+        HealingMove = 3,
+        OffensiveStatusInducingMove = 4,
+        StatAndStatusMove = 5,
+        OffensiveStatChangingMove = 6,
+        OffensiveSelfStatChangingMove = 7,
+        AbsorbingMove = 8,
+        OHKOMove = 9,
+        FieldMove = 10,
+        TeamZoneMove = 11,
+        RoaringMove = 12,
+        SpecialMove = 13
+    };
 
     enum Name
     {
@@ -1757,6 +1825,8 @@ namespace Item
     };
 }
 
+/* Old Stats
+
 enum Stat
 {
     Hp = 0,
@@ -1767,6 +1837,20 @@ enum Stat
     SpDefense,
     Evasion,
     Accuracy
+};
+
+*/
+
+enum Stat
+{
+    Hp = 0,
+    Attack = 1,
+    Defense = 2,
+    SpAttack = 3,
+    SpDefense = 4,
+    Speed = 5,
+    Accuracy = 6,
+    Evasion = 7
 };
 
 struct AbilityGroup {

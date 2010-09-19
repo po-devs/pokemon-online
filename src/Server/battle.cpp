@@ -1367,10 +1367,10 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         return ret;
     }
 
-    turnlong[player].remove("Stat7ItemModifier");
-    turnlong[player].remove("Stat7AbilityModifier");
-    turnlong[target].remove("Stat6ItemModifier");
-    turnlong[target].remove("Stat6AbilityModifier");
+    turnlong[player].remove("Stat6ItemModifier");
+    turnlong[player].remove("Stat6AbilityModifier");
+    turnlong[target].remove("Stat7ItemModifier");
+    turnlong[target].remove("Stat7AbilityModifier");
     callieffects(player,target,"StatModifier");
     callaeffects(player,target,"StatModifier");
     callieffects(target,player,"StatModifier");
@@ -1384,12 +1384,12 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
     /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
 	due to the ever rounding down to make an int */
-    acc = acc * getStatBoost(player, 7) * getStatBoost(target, 6)
-            * (20+turnlong[player].value("Stat7ItemModifier").toInt())/20
-            * (20-turnlong[target].value("Stat6ItemModifier").toInt())/20
-            * (20+turnlong[player].value("Stat7AbilityModifier").toInt())/20
-            * (20+turnlong[player].value("Stat7PartnerAbilityModifier").toInt())/20
-            * (20-turnlong[target].value("Stat6AbilityModifier").toInt())/20;
+    acc = acc * getStatBoost(player, 6) * getStatBoost(target, 7)
+            * (20+turnlong[player].value("Stat6ItemModifier").toInt())/20
+            * (20-turnlong[target].value("Stat7ItemModifier").toInt())/20
+            * (20+turnlong[player].value("Stat6AbilityModifier").toInt())/20
+            * (20+turnlong[player].value("Stat6PartnerAbilityModifier").toInt())/20
+            * (20-turnlong[target].value("Stat7AbilityModifier").toInt())/20;
 
     if (true_rand() % 100 < unsigned(acc)) {
 	return true;
@@ -2044,10 +2044,13 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 {
     bool sub = hasSubstitute(target);
 
-    QString effect = turnlong[player]["StatEffect"].value<QString>();
+    int cl= fieldmoves[player].classification;
 
     /* First we check if there's even an effect... */
-    if (effect.length() == 0) {
+    if (cl != Move::StatAndStatusMove && cl != Move::StatChangingMove && cl != Move::StatusInducingMove
+        && cl != Move::OffensiveSelfStatChangingMove && cl != Move::OffensiveStatusInducingMove
+        && cl != Move::OffensiveSelfStatChangingMove)
+    {
 	return;
     }
 
@@ -2064,6 +2067,14 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     }
 
     bool statChanges[2] = {false};
+
+    switch (cl) {
+    case Move::StatAndStatusMove:
+        /* This is only Flatter and Swagger */
+
+    }
+
+
 
     /* Splits effects between the opponent & self */
     QStringList effects = effect.split('|');

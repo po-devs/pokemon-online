@@ -146,6 +146,7 @@ public:
     static QString Name(int movenum);
     static int Type(int movenum, int gen);
     static int Category(int movenum, int gen);
+    static int Classification(int movenum, int gen);
     static int Number(const QString &movename);
     static int NumberOfMoves();
     static int FlinchRate(int movenum, int gen);
@@ -165,13 +166,14 @@ public:
     static int SpeedPriority(int movenum, int gen);
     static bool PhysicalContact(int movenum, int gen);
     static bool Exists(int movenum, int gen);
-    static bool isOHKO(int movenum);
+    static bool isOHKO(int movenum, int gen);
     static int EffectRate(int movenum, int gen);
     static int Target(int movenum, int gen);
     static int Healing(int movenum, int gen);
     static int MinTurns(int movenum, int gen);
     static int MaxTurns(int movenum, int gen);
     static int Status(int movenum, int gen);
+    static int StatusKind(int movenum, int gen);
     static QString MoveMessage(int moveeffect, int part);
     static QStringList MoveList();
     /* the status mod of a move*/
