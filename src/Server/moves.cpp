@@ -26,7 +26,7 @@ MoveEffect::MoveEffect(int num, int gen, BattleSituation::BasicMoveInfo &data)
     data.repeatMin = MoveInfo::RepeatMin(num, gen);
     data.repeatMax = MoveInfo::RepeatMax(num, gen);
     data.priority = MoveInfo::SpeedPriority(num, gen);
-    data.contact = MoveInfo::PhysicalContact(num, gen);
+    data.flags = MoveInfo::Flags(num, gen);
     data.power = MoveInfo::Power(num, gen);
     data.accuracy = MoveInfo::Acc(num, gen);
     data.type = MoveInfo::Type(num, gen);
@@ -39,8 +39,10 @@ MoveEffect::MoveEffect(int num, int gen, BattleSituation::BasicMoveInfo &data)
     data.targets = MoveInfo::Target(num, gen);
     data.healing = MoveInfo::Healing(num, gen);
     data.classification = MoveInfo::Classification(num, gen);
-    data.status = MoveInfo::Status(movenum, gen);
-    data.statusKind = MoveInfo::StatusKind(movenum, gen);
+    data.status = MoveInfo::Status(num, gen);
+    data.statusKind = MoveInfo::StatusKind(num, gen);
+    data.minTurns = MoveInfo::MinTurns(num, gen);
+    data.maxTurns = MoveInfo::MaxTurns(num, gen);
 }
 
 /* There's gonna be tons of structures inheriting it,
@@ -588,7 +590,7 @@ struct MMFacade : public MM
 
     static void bcd(int s, int, BS &b) {
 	int status = b.poke(s).status();
-        if (status == Pokemon::Burnt || status == Pokemon::Poisoned || status == Pokemon::DeeplyPoisoned || status == Pokemon::Paralysed) {
+        if (status == Pokemon::Burnt || status == Pokemon::Poisoned || status == Pokemon::Paralysed) {
             tmove(b, s).power = tmove(b, s).power * 2;
 	}
     }
@@ -1172,7 +1174,7 @@ struct MMToxicSpikes : public MM
 	switch (spikeslevel) {
          case 0: return;
          case 1: b.inflictStatus(s, Pokemon::Poisoned, s); break;
-         default: b.inflictStatus(s, Pokemon::DeeplyPoisoned, s); break;
+         default: b.inflictStatus(s, Pokemon::Poisoned, s, 15); break;
         }
     }
 };
@@ -2680,7 +2682,7 @@ struct MMFling : public MM
             } else if (!team(b, b.player(t)).contains("SafeGuardCount"))  {
                 switch (item) {
                     case Item::FlameOrb: b.inflictStatus(t, Pokemon::Burnt, s); break; /*flame orb*/
-                    case Item::ToxicOrb: b.inflictStatus(t, Pokemon::DeeplyPoisoned, s); break; /*toxic orb*/
+                case Item::ToxicOrb: b.inflictStatus(t, Pokemon::Poisoned, s, 15, 15); break; /*toxic orb*/
                     case Item::LightBall: b.inflictStatus(t, Pokemon::Paralysed, s); break; /* light ball */
                     case Item::PoisonBarb: b.inflictStatus(t, Pokemon::Poisoned, s); break; /* poison barb */
                 }

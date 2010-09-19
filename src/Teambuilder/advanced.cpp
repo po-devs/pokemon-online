@@ -47,7 +47,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     firstColumn->addWidget(dvs);
     QGridLayout *dvlayout = new QGridLayout(dvs);
     QStringList stats_l;
-    stats_l << tr("HP:") << tr("Att:") << tr("Def:") << tr("Speed:") << tr("Sp.Att:") << tr("Sp.Def:");
+    stats_l << tr("HP:") << tr("Att:") << tr("Def:") << tr("Sp.Att:") << tr("Sp.Def:") << tr("Speed:");
 
     for (int i = 0; i < 6; i++)
     {
@@ -161,7 +161,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     baselayout->addWidget(bForms);
 
     stats_l.clear();
-    stats_l << tr("HP") << tr("Att") << tr("Def") << tr("Speed") << tr("Sp Att") << tr("Sp Def");
+    stats_l << tr("HP") << tr("Att") << tr("Def") << tr("Sp Att") << tr("Sp Def") << tr("Speed");
 
     hpanddvchoice = new QCompactTable(0, 6);
 

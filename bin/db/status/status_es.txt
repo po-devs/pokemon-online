@@ -1,7 +1,6 @@
 enamorado
 paralizado
-quemado
-congelado
 dormido
+congelado
+quemado
 envenenado
-muy envenenado

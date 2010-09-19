@@ -43,7 +43,7 @@ class PokeBattle
     PROPERTY(Pokemon::uniqueId, num);
     PROPERTY(quint16, item);
     PROPERTY(quint16, ability);
-    PROPERTY(quint32, status);
+    PROPERTY(quint32, fullStatus);
     PROPERTY(qint8, statusCount);
     PROPERTY(quint8, gender);
     PROPERTY(quint8, level);
@@ -66,6 +66,8 @@ public:
     int lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
 
     void setNormalStat(int, quint16);
+    int status() const;
+    void changeStatus(int status);
 private:
     BattleMove m_moves[4];
 
@@ -79,7 +81,7 @@ QDataStream & operator << (QDataStream &out, const PokeBattle &po);
 class ShallowBattlePoke
 {
     PROPERTY(QString, nick);
-    PROPERTY(quint32, status);
+    PROPERTY(quint32, fullStatus);
     PROPERTY(Pokemon::uniqueId, num);
     PROPERTY(bool, shiny);
     PROPERTY(quint8, gender);
@@ -88,6 +90,9 @@ class ShallowBattlePoke
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);
+
+    int status() const;
+    void changeStatus(int status);
 
     void init(const PokeBattle &poke);
 };

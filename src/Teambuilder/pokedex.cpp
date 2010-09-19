@@ -512,7 +512,7 @@ StatTab::StatTab() {
     title3->setObjectName("Title");
 
     QStringList statLabels =
-            QStringList() << tr("Hit Points") << tr("Attack") << tr("Defense") << tr("Speed") << tr("Special Attack") << tr("Special Defense");
+            QStringList() << tr("Hit Points") << tr("Attack") << tr("Defense") << tr("Special Attack") << tr("Special Defense") << tr("Speed");
 
     /*QFrame *greenBG = new QFrame();
     greenBG->setObjectName("GreenBackground");

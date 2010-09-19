@@ -535,6 +535,8 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
                 return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, shiney, back);
             } else if (shiney) {
                 return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, false, back);
+            } else if (pokeid.subnum != 0) {
+                return PokemonInfo::Picture(OriginalForme(pokeid), 5, Pokemon::Male, false, back);
             }
         }
         return QPixmap();
@@ -1120,9 +1122,9 @@ int MoveInfo::SpeedPriority(int movenum, int g)
     return gen(g).priority[movenum];
 }
 
-bool MoveInfo::PhysicalContact(int movenum, int g)
+int MoveInfo::Flags(int movenum, int g)
 {
-    return gen(g).flags[movenum] & 0x1;
+    return gen(g).flags[movenum];
 }
 
 bool MoveInfo::Exists(int movenum, int g)
@@ -1838,12 +1840,12 @@ QString HiddenPowerInfo::path(const QString &filename)
     return m_Directory + filename;
 }
 
-int HiddenPowerInfo::Type(quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 speed_dv, quint8 satt_dv, quint8 sdef_dv)
+int HiddenPowerInfo::Type(quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
 {
     return (((hp_dv%2) + (att_dv%2)*2 + (def_dv%2)*4 + (speed_dv%2)*8 + (satt_dv%2)*16 + (sdef_dv%2)*32)*15)/63 + 1;
 }
 
-int HiddenPowerInfo::Power(quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 speed_dv, quint8 satt_dv, quint8 sdef_dv)
+int HiddenPowerInfo::Power(quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
 {
     return (((hp_dv%4>1) + (att_dv%4>1)*2 + (def_dv%4>1)*4 + (speed_dv%4>1)*8 + (satt_dv%4>1)*16 + (sdef_dv%4>1)*32)*40)/63 + 30;
 }

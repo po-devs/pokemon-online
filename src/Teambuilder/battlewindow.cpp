@@ -559,11 +559,11 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         mydisplay->changeStatus(spot,poke,status);
 
         if (player == info().myself) {
-            info().myteam.poke(poke).status() = status;
+            info().myteam.poke(poke).changeStatus(status);
             mypzone->pokes[poke]->update();
         }
 
-        info().currentShallow(spot).status() = status;
+        info().currentShallow(spot).changeStatus(status);
         if (poke == info().currentIndex[spot])
             mydisplay->updatePoke(spot);
 

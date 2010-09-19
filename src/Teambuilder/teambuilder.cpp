@@ -1626,7 +1626,7 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
     QGridLayout *l = new QGridLayout(this);
     l->setSpacing(0);
 
-    QString labels[6] = {tr("Hit Points:"), tr("Attack:"), tr("Defense:"), tr("Speed:"), tr("Special Attack:"), tr("Special Defense:")};
+    QString labels[6] = {tr("Hit Points:"), tr("Attack:"), tr("Defense:"), tr("Special Attack:"), tr("Special Defense:"), tr("Speed:")};
 
     for (int i = 0; i < 6; i++)
     {

@@ -1,7 +1,6 @@
 fine
 paralyzed
-burnt
-frozen
 asleep
-poisoned
+frozen
+burnt
 poisoned

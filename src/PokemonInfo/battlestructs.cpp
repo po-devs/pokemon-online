@@ -74,7 +74,7 @@ PokeBattle::PokeBattle()
     ability() = 0;
     item() = 0;
     gender() = 0;
-    status() = Pokemon::Fine;
+    fullStatus() = 0;
     lifePoints() = 0;
     totalLifePoints() = 1;
     level() = 100;
@@ -215,6 +215,21 @@ void PokeBattle::updateStats()
     }
 }
 
+int PokeBattle::status() const
+{
+    if (fullStatus() & (1 << Pokemon::Koed))
+        return Pokemon::Koed;
+    return intlog2(fullStatus() & (0x1F));
+}
+
+void PokeBattle::changeStatus(int status)
+{
+    /* Clears past status */
+    fullStatus() = fullStatus() & ~( (1 << Pokemon::Koed) | 0x1F);
+    /* Adds new status */
+    fullStatus() = fullStatus() | (1 << status);
+}
+
 QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 {
     in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.item() >> po.ability()
@@ -277,7 +292,7 @@ ShallowBattlePoke::ShallowBattlePoke(const PokeBattle &p)
 void ShallowBattlePoke::init(const PokeBattle &poke)
 {
     nick() = poke.nick();
-    status() = poke.status();
+    fullStatus() = poke.fullStatus();
     num() = poke.num();
     shiny() = poke.shiny();
     gender() = poke.gender();
@@ -288,16 +303,32 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
     level() = poke.level();
 }
 
+int ShallowBattlePoke::status() const
+{
+    if (fullStatus() & (1 << Pokemon::Koed))
+        return Pokemon::Koed;
+    return intlog2(fullStatus() & (0x1F));
+}
+
+void ShallowBattlePoke::changeStatus(int status)
+{
+    /* Clears past status */
+    fullStatus() = fullStatus() & ~( (1 << Pokemon::Koed) | 0x1F);
+    /* Adds new status */
+    fullStatus() = fullStatus() | (1 << status);
+}
+
+
 QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po)
 {
-    in >> po.num() >> po.nick() >> po.lifePercent() >> po.status() >> po.gender() >> po.shiny() >> po.level();
+    in >> po.num() >> po.nick() >> po.lifePercent() >> po.fullStatus() >> po.gender() >> po.shiny() >> po.level();
 
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po)
 {
-    out << po.num() << po.nick() << po.lifePercent() << po.status() << po.gender() << po.shiny() << po.level();
+    out << po.num() << po.nick() << po.lifePercent() << po.fullStatus() << po.gender() << po.shiny() << po.level();
 
     return out;
 }
@@ -419,7 +450,7 @@ void TeamBattle::generateRandom(int gen)
 
         p.updateStats();
         p.nick() = PokemonInfo::Name(p.num());
-        p.status() = Pokemon::Fine;
+        p.fullStatus() = 0;
         p.shiny() = !(true_rand() % 50);
     }
 }
