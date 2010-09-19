@@ -145,6 +145,7 @@ public:
     void healStatus(int player, int status);
     void healConfused(int player);
     void healLife(int player, int healing);
+    void healDamage(int player, int target);
     bool canGetStatus(int player, int status);
     void inflictStatus(int player, int Status, int inflicter);
     bool isConfused(int player);
@@ -449,6 +450,7 @@ public:
         int recoil;
         int attack;
         int targets;
+        int healing;
     };
 
     QList<BasicPokeInfo> fieldpokes;
