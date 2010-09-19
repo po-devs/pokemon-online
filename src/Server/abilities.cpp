@@ -1226,7 +1226,7 @@ struct AMBrokenArmour : public AM {
         functions["UponPhysicalAssault"] = &upa;
     }
 
-    static void upa(int s, int t, BS &b) {
+    static void upa(int s, int, BS &b) {
         b.sendAbMessage(0, 0, s, 0, Type::Steel);
         if (!b.hasMinimalStatMod(s, Defense)) {
             b.loseStatMod(s, Defense, 1, s);

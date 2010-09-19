@@ -915,6 +915,9 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     this->gen = gen;
     this->dir = QString("%1%2G/").arg(dir).arg(gen);
 
+    qDebug() << "dir is " << this->dir;
+    qDebug() << "file is " << path("pp.txt");
+
     fill_container_with_file(accuracy, path("accuracy.txt"));
     fill_container_with_file(category, path("category.txt"));
     fill_container_with_file(causedEffect, path("caused_effect.txt"));
@@ -1062,12 +1065,12 @@ QString MoveInfo::PowerS(int movenum, int gen)
 
 int MoveInfo::PP(int movenum, int g)
 {
-    return gen(movenum).pp[g];
+    return gen(g).pp[movenum];
 }
 
 int MoveInfo::Acc(int movenum, int g)
 {
-    return gen(movenum).accuracy[g];
+    return gen(g).accuracy[movenum];
 }
 
 QString MoveInfo::AccS(int movenum, int gen)
