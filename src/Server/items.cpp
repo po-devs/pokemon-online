@@ -231,7 +231,7 @@ struct IMZoomLens : public IM
 
     static void sm(int s, int t, BS &b) {
 	if (turn(b,t)["HasMoved"].toBool() == true) {
-	    turn(b,s)["Stat7ItemModifier"] = 4;
+            turn(b,s)["Stat6ItemModifier"] = 4;
 	}
     }
 };

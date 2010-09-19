@@ -1030,6 +1030,11 @@ int MoveInfo::Category(int movenum, int g)
     return gen(g).damageClass[movenum];
 }
 
+int MoveInfo::Classification(int movenum, int g)
+{
+    return gen(g).category[movenum];
+}
+
 int MoveInfo::Number(const QString &movename)
 {
     return m_LowerCaseMoves.value(movename.toLower());
@@ -1125,11 +1130,9 @@ bool MoveInfo::Exists(int movenum, int g)
     return gen(g).power.size() > movenum;
 }
 
-bool MoveInfo::isOHKO(int movenum)
+bool MoveInfo::isOHKO(int movenum, int gen)
 {
-    //Fissure, Guillotine, Horndrill, Sheer Cold
-    return (movenum == Move::Fissure || movenum == Move::Guillotine || movenum == Move::HornDrill
-            || movenum == Move::SheerCold);
+    return Classification(movenum, gen) == Move::OHKOMove;
 }
 
 int MoveInfo::EffectRate(int movenum, int g)
@@ -1158,6 +1161,11 @@ int MoveInfo::MaxTurns(int movenum, int g)
 }
 
 int MoveInfo::Status(int movenum, int g)
+{
+    return gen(g).causedEffect[movenum];
+}
+
+int MoveInfo::StatusKind(int movenum, int g)
 {
     return gen(g).status[movenum];
 }

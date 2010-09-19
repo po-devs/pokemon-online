@@ -38,6 +38,9 @@ MoveEffect::MoveEffect(int num, int gen, BattleSituation::BasicMoveInfo &data)
     data.attack = num;
     data.targets = MoveInfo::Target(num, gen);
     data.healing = MoveInfo::Healing(num, gen);
+    data.classification = MoveInfo::Classification(num, gen);
+    data.status = MoveInfo::Status(movenum, gen);
+    data.statusKind = MoveInfo::StatusKind(movenum, gen);
 }
 
 /* There's gonna be tons of structures inheriting it,

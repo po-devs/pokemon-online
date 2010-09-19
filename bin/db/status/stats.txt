@@ -1,8 +1,8 @@
 Life Points
 Attack
 Defense
-Speed
 Sp. Att.
 Sp. Def.
-Evasion
+Speed
 Accuracy
+Evasion

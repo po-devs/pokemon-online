@@ -451,6 +451,9 @@ public:
         int attack;
         int targets;
         int healing;
+        int classification;
+        int status;
+        int statusKind;
     };
 
     QList<BasicPokeInfo> fieldpokes;

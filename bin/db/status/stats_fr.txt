@@ -1,8 +1,8 @@
 PV
 Attaque
 Défense
-Vitesse
 Atk. Spé.
 Déf. Spé.
-Esquive
+Vitesse
 Précision
+Esquive

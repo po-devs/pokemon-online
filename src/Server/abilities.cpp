@@ -157,7 +157,7 @@ struct AMChlorophyll : public AM {
 
     static void sm(int s, int, BS &b) {
         if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
-            turn(b,s)["Stat3AbilityModifier"] = 20;
+            turn(b,s)["Stat5AbilityModifier"] = 20;
         }
     }
 };
@@ -188,7 +188,7 @@ struct AMCompoundEyes : public AM {
     }
 
     static void sm(int s, int , BS &b) {
-        turn(b,s)["Stat7AbilityModifier"] = 6;
+        turn(b,s)["Stat6AbilityModifier"] = 6;
     }
 };
 
@@ -374,7 +374,7 @@ struct AMFlowerGift : public AM {
     static void sm(int s, int, BS &b) {
         if (b.isWeatherWorking(BattleSituation::Sunny)) {
             turn(b,s)["Stat1AbilityModifier"] = 10;
-            turn(b,s)["Stat5AbilityModifier"] = 10;
+            turn(b,s)["Stat4AbilityModifier"] = 10;
         }
     }
 
@@ -382,7 +382,7 @@ struct AMFlowerGift : public AM {
         /* FlowerGift doesn't stack */
         if (b.isWeatherWorking(BattleSituation::Sunny) && !b.hasWorkingAbility(t, Ability::FlowerGift)) {
             turn(b,t)["Stat1PartnerAbilityModifier"] = 10;
-            turn(b,t)["Stat5PartnerAbilityModifier"] = 10;
+            turn(b,t)["Stat4PartnerAbilityModifier"] = 10;
         }
     }
 };
@@ -530,7 +530,7 @@ struct AMHustle : public AM {
     static void sm (int s, int, BS &b) {
         turn(b,s)["Stat1AbilityModifier"] = 10;
         if (tmove(b,s).category == Move::Physical) {
-            turn(b,s)["Stat7AbilityModifier"] = -4;
+            turn(b,s)["Stat6AbilityModifier"] = -4;
         }
     }
 };
@@ -778,7 +778,7 @@ struct AMSandVeil : public AM {
 
     static void sm (int s, int , BS &b) {
         if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
-            turn(b,s)["Stat6AbilityModifier"] = 4;
+            turn(b,s)["Stat7AbilityModifier"] = 4;
         }
     }
 
@@ -836,7 +836,7 @@ struct AMSlowStart : public AM {
     static void sm(int s, int, BS &b) {
         if (b.turn() <= poke(b,s)["SlowStartTurns"].toInt()) {
             turn(b,s)["Stat1AbilityModifier"] = -10;
-            turn(b,s)["Stat3AbilityModifier"] = -10;
+            turn(b,s)["Stat5AbilityModifier"] = -10;
         }
     }
 };
@@ -849,7 +849,7 @@ struct AMSolarPower : public AM {
 
     static void sm(int s, int, BS &b) {
         if (b.isWeatherWorking(BattleSituation::Sunny)) {
-            turn(b,s)["Stat4AbilityModifier"] = 10;
+            turn(b,s)["Stat3AbilityModifier"] = 10;
         }
     }
 
@@ -922,7 +922,7 @@ struct AMTangledFeet : public AM {
 
     static void sm(int s, int,  BS &b) {
         if (b.isConfused(s)) {
-            turn(b,s)["Stat6AbilityModifier"] = 10;
+            turn(b,s)["Stat7AbilityModifier"] = 10;
         }
     }
 };
@@ -1013,7 +1013,7 @@ struct AMUnburden : public AM {
 
     static void sm(int s, int, BS &b) {
         if (b.poke(s).item() == 0 && poke(b,s)["UnburdenToStartWith"].toBool()) {
-            turn(b,s)["Stat3AbilityModifier"] = 20;
+            turn(b,s)["Stat5AbilityModifier"] = 20;
         }
     }
 };
@@ -1120,7 +1120,7 @@ struct AMPlus : public AM {
             return;
         }
         if (b.hasWorkingAbility(p, Ability::Minus)) {
-            turn(b,s)["Stat4AbilityModifier"] = 10;
+            turn(b,s)["Stat3AbilityModifier"] = 10;
         }
     }
 };
@@ -1139,7 +1139,7 @@ struct AMMinus : public AM {
             return;
         }
         if (b.hasWorkingAbility(p, Ability::Plus)) {
-            turn(b,s)["Stat4AbilityModifier"] = 10;
+            turn(b,s)["Stat3AbilityModifier"] = 10;
         }
     }
 };
@@ -1244,13 +1244,13 @@ struct AMVictoryStar : public AM {
     }
 
     static void sm(int s, int, BS &b) {
-        turn(b,s)["Stat7AbilityModifier"] = 10;
+        turn(b,s)["Stat6AbilityModifier"] = 10;
     }
 
     static void sm2(int , int t, BS &b) {
         /* FlowerGift doesn't stack */
         if (!b.hasWorkingAbility(t, Ability::VictoryStar)) {
-            turn(b,t)["Stat7PartnerAbilityModifier"] = 10;
+            turn(b,t)["Stat6PartnerAbilityModifier"] = 10;
         }
     }
 };
