@@ -1,127 +1,127 @@
 (Sin Habilidad)
-Adaptable
-Resquicio
-Bucle aire
-Irascible
-Anticipación
-Trampa arena
-Mal sueño
-Armad. bat
-Mar llamas
-Clorofila
-Cuerpo puro
-Aclimatación
-Cambio color
-Ojocompuesto
-Gran encanto
-Humedad
-Descarga
-Llovidna
-Sequía
-Piel seca
-Madrugar
-Efec. espora
-Filtro
-Cuerpo llama
-Absor. fuego
-Don floral
-Predicción
-Alerta
-Cacheo
-Gula
-Agallas
-Ignífugo
-Recogemiel
-Potencia
-Entusiasmo
-Hidratación
-Corte fuerte
-Gélido
-Iluminación
-Inmunidad
-Foco interno
-Insomnio
-Intimidación
-Puño férreo
-Vista lince
-Zoquete
-Defensa hoja
-Levitación
-Pararrayos
-Flexibilidad
-Lodo líquido
-Muro mágico
-Escudo magma
-Imán
-Escama esp.
-Menos
-Rompemoldes
-Electromotor
-Multitipo
-Cura natural
-Indefenso
-Normalidad
-Despiste
-Espesura
-Ritmo propio
-Recogida
-Más
-Antídoto
-Punto tóxico
-Presión
-Energía pura
-Pies rápidos
-Cura lluvia
-Audaz
-Rivalidad
-Cabeza roca
-Piel toscosa
-Fuga
-Chorro arena
-Velo arena
-Intrépido
-Dicha
-Sombratrampa
-Mudar
-Caparazón
-Polvo escudo
-Simple
-Encadenado
-Inicio lento
-Francotirador
-Manto níveo
-Nevada
-Poder solar
-Roca sólida
-Insonorizar
-Impulso
-Rezago
-Elec. estát
-Impasible
 Hedor
-Viscosidad
-Colector
+Llovidna
+Impulso
+Armad. bat
 Robusted
-Ventosas
-Afortunado
-Enjambre
-Nado rapido
-Sincronía
-Tumbos
-Experto
-Sebo
-Cromolente
-Torrente
-Rastreo
-Ausente
-Ignorante
-Liviano
-Espír. vital
+Humedad
+Flexibilidad
+Velo arena
+Elec. estï¿½t
 Absor. elec.
 Absor. aqua
-Velo agua
-Humo blanco
+Despiste
+Aclimataciï¿½n
+Ojocompuesto
+Insomnio
+Cambio color
+Inmunidad
+Absor. fuego
+Polvo escudo
+Ritmo propio
+Ventosas
+Intimidaciï¿½n
+Sombratrampa
+Piel toscosa
 Superguarda
+Levitaciï¿½n
+Efec. espora
+Sincronï¿½a
+Cuerpo puro
+Cura natural
+Pararrayos
+Dicha
+Nado rapido
+Clorofila
+Iluminaciï¿½n
+Rastreo
+Potencia
+Punto tï¿½xico
+Foco interno
+Escudo magma
+Velo agua
+Imï¿½n
+Insonorizar
+Cura lluvia
+Chorro arena
+Presiï¿½n
+Sebo
+Madrugar
+Cuerpo llama
+Fuga
+Vista lince
+Corte fuerte
+Recogida
+Ausente
+Entusiasmo
+Gran encanto
+Mï¿½s
+Menos
+Predicciï¿½n
+Viscosidad
+Mudar
+Agallas
+Escama esp.
+Lodo lï¿½quido
+Espesura
+Mar llamas
+Torrente
+Enjambre
+Cabeza roca
+Sequï¿½a
+Trampa arena
+Espï¿½r. vital
+Humo blanco
+Energï¿½a pura
+Caparazï¿½n
+Bucle aire
+Tumbos
+Electromotor
+Rivalidad
+Impasible
+Manto nï¿½veo
+Gula
+Irascible
+Liviano
+Ignï¿½fugo
+Simple
+Piel seca
+Descarga
+Puï¿½o fï¿½rreo
+Antï¿½doto
+Adaptable
+Encadenado
+Hidrataciï¿½n
+Poder solar
+Pies rï¿½pidos
+Normalidad
+Francotirador
+Muro mï¿½gico
+Indefenso
+Rezago
+Experto
+Defensa hoja
+Zoquete
+Rompemoldes
+Afortunado
+Resquicio
+Anticipaciï¿½n
+Alerta
+Ignorante
+Cromolente
+Filtro
+Inicio lento
+Intrï¿½pido
+Colector
+Gï¿½lido
+Roca sï¿½lida
+Nevada
+Recogemiel
+Cacheo
+Audaz
+Multitipo
+Don floral
+Mal sueï¿½o
 [A126]
 Anxiety
 Competitive Spirit

@@ -56,7 +56,7 @@
 %s can't get it going because of it's Slow Start!|%s finally got its act together!
 %s lost some HP because of Solar Power!
 %s's Sound Proof blocks the attack!
-%s's Speed Boost increases its speed!
+%s's Speed Boost increases its speed!|%s's Justice Heart increases its attack!
 
 %s's SteadFast increases its speed!
 %s's Synchronize changes the status of %f!

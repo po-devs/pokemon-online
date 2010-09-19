@@ -1,127 +1,127 @@
 (Sem Abilidade)
-Adaptability
-Aftermath
-Air Lock
-Anger Point
-Anticipation
-Arena Trap
-Bad Dreams
-Battle Armor
-Blaze
-Chlorophyll
-Clear Body
-Cloud Nine
-Color Change
-Compoundeyes
-Cute Charm
-Damp
-Download
-Drizzle
-Drought
-Dry Skin
-Early Bird
-Effect Spore
-Filter
-Flame Body
-Flash Fire
-Flower Gift
-Forecast
-Forewarn
-Frisk
-Gluttony
-Guts
-Heatproof
-Honey Gather
-Huge Power
-Hustle
-Hydration
-Hyper Cutter
-Ice Body
-Illuminate
-Immunity
-Inner Focus
-Insomnia
-Intimidate
-Iron Fist
-Keen Eye
-Klutz
-Leaf Guard
-Levitate
-Lightningrod
-Limber
-Liquid Ooze
-Magic Guard
-Magma Armor
-Magnet Pull
-Marvel Scale
-Minus
-Mold Breaker
-Motor Drive
-Multitype
-Natural Cure
-No Guard
-Normalize
-Oblivious
-Overgrow
-Own Tempo
-Pickup
-Plus
-Poison Heal
-Poison Point
-Pressure
-Pure Power
-Quick Feet
-Rain Dish
-Reckless
-Rivalry
-Rock Head
-Rough Skin
-Run Away
-Sand Stream
-Sand Veil
-Scrappy
-Serene Grace
-Shadow Tag
-Shed Skin
-Shell Armor
-Shield Dust
-Simple
-Skill Link
-Slow Start
-Sniper
-Snow Cloak
-Snow Warning
-Solar Power
-Solid Rock
-Soundproof
-Speed Boost
-Stall
-Static
-Steadfast
 Stench
-Sticky Hold
-Storm Drain
+Drizzle
+Speed Boost
+Battle Armor
 Sturdy
-Suction Cups
-Super Luck
-Swarm
-Swift Swim
-Synchronize
-Tangled Feet
-Technician
-Thick Fat
-Tinted Lens
-Torrent
-Trace
-Truant
-Unaware
-Unburden
-Vital Spirit
+Damp
+Limber
+Sand Veil
+Static
 Volt Absorb
 Water Absorb
-Water Veil
-White Smoke
+Oblivious
+Cloud Nine
+Compoundeyes
+Insomnia
+Color Change
+Immunity
+Flash Fire
+Shield Dust
+Own Tempo
+Suction Cups
+Intimidate
+Shadow Tag
+Rough Skin
 Wonder Guard
+Levitate
+Effect Spore
+Synchronize
+Clear Body
+Natural Cure
+Lightningrod
+Serene Grace
+Swift Swim
+Chlorophyll
+Illuminate
+Trace
+Huge Power
+Poison Point
+Inner Focus
+Magma Armor
+Water Veil
+Magnet Pull
+Soundproof
+Rain Dish
+Sand Stream
+Pressure
+Thick Fat
+Early Bird
+Flame Body
+Run Away
+Keen Eye
+Hyper Cutter
+Pickup
+Truant
+Hustle
+Cute Charm
+Plus
+Minus
+Forecast
+Sticky Hold
+Shed Skin
+Guts
+Marvel Scale
+Liquid Ooze
+Overgrow
+Blaze
+Torrent
+Swarm
+Rock Head
+Drought
+Arena Trap
+Vital Spirit
+White Smoke
+Pure Power
+Shell Armor
+Air Lock
+Tangled Feet
+Motor Drive
+Rivalry
+Steadfast
+Snow Cloak
+Gluttony
+Anger Point
+Unburden
+Heatproof
+Simple
+Dry Skin
+Download
+Iron Fist
+Poison Heal
+Adaptability
+Skill Link
+Hydration
+Solar Power
+Quick Feet
+Normalize
+Sniper
+Magic Guard
+No Guard
+Stall
+Technician
+Leaf Guard
+Klutz
+Mold Breaker
+Super Luck
+Aftermath
+Anticipation
+Forewarn
+Unaware
+Tinted Lens
+Filter
+Slow Start
+Scrappy
+Storm Drain
+Ice Body
+Solid Rock
+Snow Warning
+Honey Gather
+Frisk
+Reckless
+Multitype
+Flower Gift
+Bad Dreams
 [A126]
 Anxiety
 Competitive Spirit
