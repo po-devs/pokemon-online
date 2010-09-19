@@ -143,6 +143,48 @@ MainWindow::MainWindow(QWidget *parent) :
 //    outfile.close();
 //    exit(0);
 
+    QFile in("db/pokes/tmmoves.txt");
+    in.open(QIODevice::ReadOnly);
+    QString s = QString::fromUtf8(in.readAll());
+    in.close();
+
+    QStringList pokes  = s.split('\n');
+    QStringList out;
+
+    foreach ( QString poke, pokes ) {
+        QString ids = poke.section(' ', 0, 0);
+        Pokemon::uniqueId id(ids.section(':', 0, 0).toInt(), ids.section(':', 1, 1).toInt());
+
+        QString data = poke.section(' ', 1);
+        QStringList moves = data.split(", ");
+
+        QStringList moveNums;
+
+        foreach( QString move, moves ) {
+            if (move.length() == 0)
+                continue;
+
+            int num = MoveInfo::Number(move);
+
+            if (num == 0) {
+                qDebug() << move;
+                exit(1);
+            }
+            moveNums.push_back(QString::number(num));
+        }
+
+        moveNums.sort();
+
+        QString body = moveNums.join(" ");
+        out.push_back(id.toLine(body));
+    }
+
+    QFile outfile("db/pokes/5G_tm_and_hm_moves.txt");
+    outfile.open(QIODevice::WriteOnly);
+    outfile.write(out.join("\n").toUtf8());
+    outfile.close();
+    exit(0);
+
 //    AbilityInfo::init();
 //    QFile in("db/abilities/ability_extract.txt");
 //    in.open(QIODevice::ReadOnly);
