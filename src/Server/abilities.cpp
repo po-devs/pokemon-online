@@ -341,7 +341,7 @@ struct AMFlashFire : public AM {
     }
 
     static void op(int s, int t, BS &b) {
-        if (type(b,t) == Pokemon::Fire && (b.gen() >= 4 || turn(b,s)["Power"].toInt() == 0) ) {
+        if (type(b,t) == Pokemon::Fire && (b.gen() >= 4 || tmove(b,t).power > 0) ) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
             if (!poke(b,s).contains("FlashFired")) {
                 b.sendAbMessage(19,0,s,s,Pokemon::Fire);
@@ -529,7 +529,7 @@ struct AMHustle : public AM {
 
     static void sm (int s, int, BS &b) {
         turn(b,s)["Stat1AbilityModifier"] = 10;
-        if (turn(b,s)["Category"].toInt() == Move::Physical) {
+        if (tmove(b,s).category == Move::Physical) {
             turn(b,s)["Stat7AbilityModifier"] = -4;
         }
     }
@@ -700,8 +700,8 @@ struct AMNormalize : public AM {
     }
 
     static void btl(int s, int, BS &b) {
-        if (turn(b,s)["Type"].toInt() != Type::Curse)
-            turn(b,s)["Type"] = Type::Normal;
+        if (tmove(b,s).type != Type::Curse)
+            tmove(b,s).type = Type::Normal;
     }
 };
 
@@ -736,7 +736,7 @@ struct AMReckless : public AM {
     static void bpm (int s, int , BS &b) {
         int mv = move(b,s);
         //Jump kicks
-        if (turn(b,s).value("Recoil").toInt() > 0 || mv == 183 || mv == 207) {
+        if (tmove(b,s).recoil < 0 || mv == Move::HiJumpKick || mv == Move::JumpKick) {
             turn(b,s)["BasePowerAbilityModifier"] = 4;
         }
     }
@@ -933,7 +933,7 @@ struct AMTechnician : public AM {
     }
 
     static void bpm(int s, int , BS &b) {
-        if (turn(b,s)["Power"].toInt() <= 60) {
+        if (tmove(b,s).power) {
             turn(b,s)["BasePowerAbilityModifier"] = 10;
         }
     }
@@ -945,7 +945,7 @@ struct AMThickFat : public AM {
     }
 
     static void bpfm (int , int t, BS &b) {
-        int tp = turn(b,t)["Type"].toInt();
+        int tp = tmove(b,t).type;
 
         if (tp == Type::Ice || tp == Type::Fire) {
             turn(b,t)["BasePowerFoeAbilityModifier"] = -10;
@@ -1024,7 +1024,7 @@ struct AMVoltAbsorb : public AM {
     }
 
     static void op(int s, int t, BS &b) {
-        if (type(b,t) == poke(b,s)["AbilityArg"].toInt() && (b.gen() >= 4 || turn(b,s)["Power"].toInt() == 0) ) {
+        if (type(b,t) == poke(b,s)["AbilityArg"].toInt() && (b.gen() >= 4 || tmove(b,t).power > 0) ) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
 
             if (b.poke(s).lifePoints() == b.poke(s).totalLifePoints()) {
@@ -1045,7 +1045,7 @@ struct AMWonderGuard : public AM {
     static void op(int s, int t, BS &b) {
         int tp = type(b,t);
         /* Fire fang always hits through Wonder Guard, at least in 4th gen... */
-        if (turn(b,t)["Power"].toInt() > 0 && tp != Pokemon::Curse && move(b, t) != Move::FireFang) {
+        if (tmove(b,t).power > 0 && tp != Pokemon::Curse && move(b, t) != Move::FireFang) {
             int mod = TypeInfo::Eff(tp, b.getType(s,1)) * TypeInfo::Eff(tp, b.getType(s,2));
 
             if (mod <= 4) {
@@ -1067,7 +1067,7 @@ struct AMLightningRod : public AM {
             return;
         }
 
-        int tarChoice = turn(b,t)["PossibleTargets"].toInt();
+        int tarChoice = tmove(b,t).targets;
         bool muliTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
 
         if (muliTar) {
@@ -1075,7 +1075,7 @@ struct AMLightningRod : public AM {
         }
 
         /* So, we make the move hit with 100 % accuracy */
-        turn(b,t)["Accuracy"] = 0;
+        tmove(b,t).accuracy = 0;
 
         turn(b,t)["TargetChanged"] = true;
 
