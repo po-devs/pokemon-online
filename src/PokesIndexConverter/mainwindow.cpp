@@ -90,9 +90,9 @@ void replaceDataInFile(const QString &name, const QHash<int, int> &data)
 void MainWindow::processFiles()
 {
 //    QStringList files = QFileDialog::getOpenFileNames(this, "Files to procecss", "db/pokes");
-    QStringList files = QFileDialog::getOpenFileNames(this, "Files to procecss", "db/moves");
+    QStringList files = QFileDialog::getOpenFileNames(this, "Files to procecss", "db/abilities");
 
-    QByteArray a1(getFileContent("db/moves/moves.txt")), a2(getFileContent("db/moves/oldmoves.txt"));
+    QByteArray a1(getFileContent("db/abilities/abilities.txt")), a2(getFileContent("db/abilities/oldabilities.txt"));
     makeAssociations(a1, a2, Associations);
 
     foreach(QString file, files) {

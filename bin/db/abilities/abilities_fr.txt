@@ -1,127 +1,127 @@
-﻿(No Ability)
-Adaptabilité
-Boom Final
-Air Lock
-Colérique
-Anticipation
-Piège
-Mauvais Rêve
-Armurebaston
-Brasier
-Chlorophylle
-Corps Sain
-Ciel Gris
-Déguisement
-Oeil Composé
-Joli Sourire
-Moiteur
-Télécharge
-Crachin
-Sécheresse
-Dry Skin
-Matinal
-Pose Spore
-Filtre
-Corps Ardent
-Torche
-Don Floral
-Meteo
-Prédiction
-Fouille
-Gloutonnerie
-Cran
-Ignifuge
-Cherche Miel
-Coloforce
-Agitation
-Hydratation
-Hyper Cutter
-Corps Gel
-Lumiattirance
-Vaccin
-Attention
-Insomnia
-Intimidation
-Poing de Fer
-Regard Vif
-Maladresse
-Feuille Garde
-Lévitation
-Paratonnerre
-Échauffement
-Suintement
-Garde Magik
-Armumagma
-Magnépiège
-Écaille Spéciale
-Minus
-Brise Moule
-Motorisé
-Multitype
-Médic Nature
-Annulle Garde
-Normalise
-Benêt
-Engrais
-Tempo Perso
-Rammassage
-Plus
-Soin Poison
-Point Poison
-Pression
-Force Pure
-Pied Véloce
-Cuvette
-Téméraire
-Rivalité
-Tête de Roc
-Peau dure
-Fuite
-Sable volant
-Voile sable
-Querelleur
-Sérénité
-Marque Ombre
-Mue
-Coque Armure
-Ecran poudre
-Simple
-Multi coups
-Début calme
-Sniper
-Rideau Neige
-Alerte Neige
-Force soleil
-Solide Roc
-Anti bruit
-Turbo
-Frein
-Static
-Impassible
+(No Ability)
 Puanteur
-Glue
-Lavabo
+Crachin
+Turbo
+Armurebaston
 Fermeté
-Ventouse
-Chanceux
-Essaim
-Glissade
-Synchro
-Tempo perso
-Technicien
-Isograisse
-Lumiteintée
-Torrent
-Calque
-Absentéisme 
-Inconscient
-Délestage
-Esprit Vital
+Moiteur
+Échauffement
+Voile sable
+Static
 Absorb Volt
 Absorb Eau
-Ignifu voile
-Ecran fumée
+Benêt
+Ciel Gris
+Oeil Composé
+Insomnia
+Déguisement
+Vaccin
+Torche
+Ecran poudre
+Tempo Perso
+Ventouse
+Intimidation
+Marque Ombre
+Peau dure
 Garde magic
+Lévitation
+Pose Spore
+Synchro
+Corps Sain
+Médic Nature
+Paratonnerre
+Sérénité
+Glissade
+Chlorophylle
+Lumiattirance
+Calque
+Coloforce
+Point Poison
+Attention
+Armumagma
+Ignifu voile
+Magnépiège
+Anti bruit
+Cuvette
+Sable volant
+Pression
+Isograisse
+Matinal
+Corps Ardent
+Fuite
+Regard Vif
+Hyper Cutter
+Rammassage
+Absentéisme 
+Agitation
+Joli Sourire
+Plus
+Minus
+Meteo
+Glue
+Mue
+Cran
+Écaille Spéciale
+Suintement
+Engrais
+Brasier
+Torrent
+Essaim
+Tête de Roc
+Sécheresse
+Piège
+Esprit Vital
+Ecran fumée
+Force Pure
+Coque Armure
+Air Lock
+Tempo perso
+Motorisé
+Rivalité
+Impassible
+Rideau Neige
+Gloutonnerie
+Colérique
+Délestage
+Ignifuge
+Simple
+Dry Skin
+Télécharge
+Poing de Fer
+Soin Poison
+Adaptabilité
+Multi coups
+Hydratation
+Force soleil
+Pied Véloce
+Normalise
+Sniper
+Garde Magik
+Annulle Garde
+Frein
+Technicien
+Feuille Garde
+Maladresse
+Brise Moule
+Chanceux
+Boom Final
+Anticipation
+Prédiction
+Inconscient
+Lumiteintée
+Filtre
+Début calme
+Querelleur
+Lavabo
+Corps Gel
+Solide Roc
+Alerte Neige
+Cherche Miel
+Fouille
+Téméraire
+Multitype
+Don Floral
+Mauvais Rêve
 [A126]
 Anxiety
 Competitive Spirit
