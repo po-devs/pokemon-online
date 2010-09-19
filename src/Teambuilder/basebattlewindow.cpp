@@ -393,7 +393,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             qint16 attack;
             in >> attack;
 
-            printHtml(tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), Theme::TypeColor(MoveInfo::Type(attack)))));
+            printHtml(tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), Theme::TypeColor(MoveInfo::Type(attack, gen())))));
             break;
         }
     case BeginTurn:

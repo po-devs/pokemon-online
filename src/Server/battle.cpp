@@ -1542,7 +1542,7 @@ void BattleSituation::testFlinch(int player, int target)
 	turnlong[target]["Flinched"] = true;
     }
 
-    if (hasWorkingItem(player, Item::KingsRock) && turnlong[player]["KingRock"].toBool()) /* King's rock */
+    if (hasWorkingItem(player, Item::KingsRock)) /* King's rock */
     {
         if (true_rand() % 100 < 10) {
 	    turnlong[target]["Flinched"] = true;
@@ -1662,7 +1662,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     targetList.clear();
     switch(Move::Target(turnlong[player]["PossibleTargets"].toInt())) {
-	case Move::None: targetList.push_back(player); break;
+    case Move::Field: case Move::TeamParty: case Move::OpposingTeam:
+    case Move::TeamSide: case Move::IndeterminateTarget: case Move::Partner:
 	case Move::User: targetList.push_back(player); break;
         case Move::Opponents: 
             targetList = sortedBySpeed();
@@ -1685,7 +1686,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
             }
             break;
-        case Move::ChosenTarget: {
+        case Move::ChosenTarget: case Move::MeFirstTarget: {
                 if (doubles()) {
                     int target = turnlong[player]["Target"].toInt();
                     if (!koed(target) && target != player) {

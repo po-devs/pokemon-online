@@ -382,7 +382,10 @@ void BattleWindow::attackButton()
     if (info().possible) {
         if (mystack->currentIndex() == TargetTab) {
             /* Doubles, move selection */
-            if (info().choices[n].struggle() || MoveInfo::Target(info().lastMove[info().currentIndex[slot]], gen()) == Move::ChosenTarget) {
+            int mv = info().lastMove[info().currentIndex[slot]];
+            int tar = MoveInfo::Target(mv,gen());
+            if (info().choices[n].struggle() || tar == Move::ChosenTarget || tar == Move::MeFirstTarget
+                || mv == Move::Curse || tar == Move::PartnerOrUser) {
                 return; //We have to wait for the guy to choose a target
             }
             info().done[n] = true;
@@ -819,11 +822,11 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p, int
     }
 
     QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nEffect: %5").arg(MoveInfo::Name(b.num()), power,
-                                                                        MoveInfo::AccS(b.num(), gen), MoveInfo::Description(b.num()),
+                                                                        MoveInfo::AccS(b.num(), gen), MoveInfo::Description(b.num(), gen),
                                                                         MoveInfo::DetailedDescription(b.num()));
 
     int type = b.num() == Move::HiddenPower ?
-               HiddenPowerInfo::Type(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num());
+               HiddenPowerInfo::Type(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num(), gen);
     /*QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
     changePics(model.arg("D"), model.arg("H"), model.arg("C"));*/
     setStyleSheet(QString("background: %1;").arg(Theme::TypeColor(type).name()));
@@ -861,11 +864,11 @@ void ImageAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p, i
     }
 
     QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nEffect: %5").arg(MoveInfo::Name(b.num()), power,
-                                                                        MoveInfo::AccS(b.num(), gen), MoveInfo::Description(b.num()),
+                                                                        MoveInfo::AccS(b.num(), gen), MoveInfo::Description(b.num(), gen),
                                                                         MoveInfo::DetailedDescription(b.num()));
 
     int type = b.num() == Move::HiddenPower ?
-               HiddenPowerInfo::Type(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num());
+               HiddenPowerInfo::Type(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num(), gen);
     QString model = QString("BattleWindow/Buttons/%1%2.png").arg(type);
     changePics(Theme::path(model.arg("D")), Theme::path(model.arg("H")), Theme::path(model.arg("C")));
 
@@ -1118,7 +1121,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
             }
         }
         break;
-    case Move::Opponents:
+    case Move::Opponents: case Move::OpposingTeam:
         for (int i = 0; i < 4; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.opponent) {
                 pokes[i]->setEnabled(true);
@@ -1126,6 +1129,15 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
             }
         }
         break;
+    case Move::TeamParty: case Move::TeamSide:
+        for (int i = 0; i < 4; i++) {
+            if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.myself) {
+                pokes[i]->setEnabled(true);
+                pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
+            }
+        }
+        break;
+    case Move::IndeterminateTarget:
     case Move::ChosenTarget:
         for (int i = 0; i < 4; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed && i != slot)
@@ -1134,14 +1146,21 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
         break;
     case Move::PartnerOrUser:
         for (int i = 0; i < 4; i++) {
-            if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.player(slot)) {
+            if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.myself) {
                 pokes[i]->setEnabled(true);
             }
         }
         break;
+    case Move::Partner:
+        for (int i = 0; i < 4; i++) {
+            if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.myself && i != slot) {
+                pokes[i]->setEnabled(true);
+            }
+        }
     case Move::User:
     case Move::RandomTarget:
-    case Move::None:
+    case Move::MeFirstTarget:
+    case Move::Field:
         pokes[slot]->setEnabled(true);
         pokes[slot]->setStyleSheet("background: #07a7c9; color: white;");
     default:

@@ -97,7 +97,8 @@ struct AMAnticipation : public AM {
                     continue;
 
                 if (move == Move::Explosion || move == Move::Selfdestruct || MoveInfo::isOHKO(move) ||
-                    TypeInfo::Eff(MoveInfo::Type(b.move(t, i)), b.getType(s,1)) * TypeInfo::Eff(MoveInfo::Type(b.move(t, i)), b.getType(s,2)) > 4) {
+                    TypeInfo::Eff(MoveInfo::Type(b.move(t, i), b.gen()), b.getType(s,1))
+                    * TypeInfo::Eff(MoveInfo::Type(b.move(t, i), b.gen()), b.getType(s,2)) > 4) {
                     frightening_truth = true;
                     break;
                 }
@@ -458,7 +459,7 @@ struct AMForeWarn : public AM {
 
         int m = poss[true_rand()%poss.size()];
 
-        b.sendAbMessage(22,0,s,s,MoveInfo::Type(m),m);
+        b.sendAbMessage(22,0,s,s,MoveInfo::Type(m, b.gen()),m);
     }
 };
 

@@ -22,18 +22,17 @@ int MoveMechanics::num(const QString &name)
 MoveEffect::MoveEffect(int num, int gen)
 {
     /* Different steps: critical raise, number of times, ... */
-    (*this)["CriticalRaise"] = MoveInfo::CriticalRaise(num);
-    (*this)["RepeatMin"] = MoveInfo::RepeatMin(num);
-    (*this)["RepeatMax"] = MoveInfo::RepeatMax(num);
-    (*this)["SpeedPriority"] = MoveInfo::SpeedPriority(num);
+    (*this)["CriticalRaise"] = MoveInfo::CriticalRaise(num, gen);
+    (*this)["RepeatMin"] = MoveInfo::RepeatMin(num, gen);
+    (*this)["RepeatMax"] = MoveInfo::RepeatMax(num, gen);
+    (*this)["SpeedPriority"] = MoveInfo::SpeedPriority(num, gen);
     (*this)["PhysicalContact"] = MoveInfo::PhysicalContact(num, gen);
-    (*this)["KingRock"] = MoveInfo::KingRock(num);
     (*this)["Power"] = MoveInfo::Power(num, gen);
     (*this)["Accuracy"] = MoveInfo::Acc(num, gen);
-    (*this)["Type"] = MoveInfo::Type(num);
+    (*this)["Type"] = MoveInfo::Type(num, gen);
     (*this)["Category"] = MoveInfo::Category(num, gen);
-    (*this)["EffectRate"] = MoveInfo::EffectRate(num);
-    (*this)["StatEffect"] = MoveInfo::Effect(num, gen);
+    (*this)["EffectRate"] = MoveInfo::EffectRate(num, gen);
+    //(*this)["StatEffect"] = MoveInfo::Effect(num, gen);
     (*this)["FlinchRate"] = MoveInfo::FlinchRate(num, gen);
     (*this)["Recoil"] = MoveInfo::Recoil(num, gen);
     (*this)["Attack"] = num;
@@ -338,7 +337,7 @@ struct MMBlastBurn : public MM
         }
 
         turn(b, s)["TellPlayers"] = false;
-        turn(b, s)["PossibleTargets"] = Move::None;
+        turn(b, s)["PossibleTargets"] = Move::User;
         addFunction(turn(b,s), "UponAttackSuccessful", "BlastBurn", &uas);
     }
 
@@ -392,7 +391,7 @@ struct MMConversion : public MM
     static void daf(int s, int, BS &b) {
 	/* First check if there's even 1 move available */
 	for (int i = 0; i < 4; i++) {
-            if (MoveInfo::Type(b.move(s,i)) != Type::Curse) {
+            if (MoveInfo::Type(b.move(s,i), b.gen()) != Type::Curse) {
 		break;
 	    }
 	    if (i == 3) {
@@ -404,22 +403,22 @@ struct MMConversion : public MM
 	    /* It means the pokemon has two types, i.e. conversion always works */
 	    QList<int> poss;
 	    for (int i = 0; i < 4; i++) {
-                if (MoveInfo::Type(b.move(s,i)) != Type::Curse) {
+                if (MoveInfo::Type(b.move(s,i), b.gen()) != Type::Curse) {
 		    poss.push_back(b.move(s,i));
 		}
 	    }
-            turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.true_rand()%poss.size()]);
+            turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.true_rand()%poss.size()], b.gen());
 	} else {
 	    QList<int> poss;
 	    for (int i = 0; i < 4; i++) {
-                if (MoveInfo::Type(b.move(s,i)) != Type::Curse && MoveInfo::Type(b.move(s,i)) != fpoke(b,s).type1) {
+                if (MoveInfo::Type(b.move(s,i), b.gen()) != Type::Curse && MoveInfo::Type(b.move(s,i), b.gen()) != fpoke(b,s).type1) {
 		    poss.push_back(b.move(s,i));
 		}
 	    }
 	    if (poss.size() == 0) {
 		turn(b, s)["Failed"] = true;
 	    } else {
-                turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.true_rand()%poss.size()]);
+                turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.true_rand()%poss.size()], b.gen());
 	    }
 	}
     }
@@ -445,7 +444,7 @@ struct MMConversion2 : public MM
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
-	int attackType = MoveInfo::Type(poke(b,s)["LastAttackToHit"].toInt());
+        int attackType = MoveInfo::Type(poke(b,s)["LastAttackToHit"].toInt(), b.gen());
         if (attackType == Type::Curse) {
 	    turn(b,s)["Failed"] = true;
 	    return;
@@ -1613,7 +1612,7 @@ struct MMBide : public MM
 
         turn(b,s)["TellPlayers"] = false;
         if (_turn +1 == b.turn()) {
-            turn(b,s)["PossibleTargets"] = Move::None;
+            turn(b,s)["PossibleTargets"] = Move::User;
             turn(b,s)["Power"] = 0;
             addFunction(turn(b,s), "UponAttackSuccessful", "Bide", &uas2);
         } else {
@@ -1669,10 +1668,10 @@ struct MMBind : public MM
                 poke(b,s).remove("TrappedBy");
                 removeFunction(poke(b,s),"EndTurn68", "Bind");
                 if (count == 0)
-                    b.sendMoveMessage(10,1,s,MoveInfo::Type(move),s,move);
+                    b.sendMoveMessage(10,1,s,MoveInfo::Type(move, b.gen()),s,move);
             } else {
                 poke(b,s)["TrappedRemainingTurns"] = count;
-                b.sendMoveMessage(10,0,s,MoveInfo::Type(move),s,move);
+                b.sendMoveMessage(10,0,s,MoveInfo::Type(move, b.gen()),s,move);
                 b.inflictDamage(s, b.poke(s).totalLifePoints()/16,s,false);
             }
         }
@@ -1701,7 +1700,7 @@ struct MMBounce : public MM
         } else {
             turn(b,s)["Power"] = 0;
             turn(b,s)["Accuracy"] = 0;
-            turn(b,s)["PossibleTargets"] = Move::None;
+            turn(b,s)["PossibleTargets"] = Move::User;
             poke(b,s)["2TurnMove"] = turn(b,s)["Attack"];
             turn(b,s)["TellPlayers"] = false;
         }
@@ -2025,11 +2024,11 @@ struct MMDoomDesire : public MM
 	{
             if (slot(b,s)["DoomDesireFailed"].toBool()) {
                 int move = slot(b,s)["DoomDesireMove"].toInt();
-                b.sendMoveMessage(29,0,s,MoveInfo::Type(move),s,move);
+                b.sendMoveMessage(29,0,s,MoveInfo::Type(move, b.gen()),s,move);
                 b.notifyFail(s);
             } else if (!b.koed(s)) {
                 int move = slot(b,s)["DoomDesireMove"].toInt();
-		b.sendMoveMessage(29,0,s,MoveInfo::Type(move),s,move);
+                b.sendMoveMessage(29,0,s,MoveInfo::Type(move, b.gen()),s,move);
                 b.inflictDamage(s,slot(b,s)["DoomDesireDamage"].toInt(), s, true, true);
 	    }
             removeFunction(slot(b,s), "EndTurn7", "DoomDesire");
@@ -3536,7 +3535,7 @@ struct MMRazorWind : public MM
 		poke(b,s)["ReleaseTurn"] = b.turn() + 1;
 		turn(b,s)["TellPlayers"] = false;
 		turn(b,s)["Power"] = 0;
-		turn(b,s)["PossibleTargets"] = Move::None;
+                turn(b,s)["PossibleTargets"] = Move::User;
 		addFunction(poke(b,s), "TurnSettings", "RazorWind", &ts);
 	    }
 	}
@@ -4118,7 +4117,7 @@ struct MMExplosion : public MM {
                 b.sendMoveMessage(114,0,i);
                 turn(b,s)["FaintActivationPrevented"] = true;
                 turn(b,s)["Power"] = 0;
-                turn(b,s)["PossibleTargets"] = Move::None;
+                turn(b,s)["PossibleTargets"] = Move::User;
                 return;
             }
         }
