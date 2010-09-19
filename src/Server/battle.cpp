@@ -96,7 +96,6 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
             }
         }
     }
-    qDebug() << "BattleSituation between " << team1.name << " and " << team2.name << " instanciated.";
 }
 
 MirrorMoveAmn amn;
@@ -107,8 +106,6 @@ BattleSituation::~BattleSituation()
     /* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
     wait();
     delete timer;
-
-    qDebug() << "BattleSituation between " << team1.name << " and " << team2.name << " finished.";
 }
 
 void BattleSituation::start(ContextSwitcher &ctx)
@@ -413,7 +410,6 @@ void BattleSituation::run()
     }
     true_rand2.seed(array, 10);
 
-    qDebug() << "BattleSituation between " << team1.name << " and " << team2.name << " begin running.";
     forever
     {
         beginTurn();
