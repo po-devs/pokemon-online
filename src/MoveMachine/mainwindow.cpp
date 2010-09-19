@@ -187,6 +187,50 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //    exit(0);
 
+    QFile in("db/pokes/egg_moves_to_extract.txt");
+    in.open(QIODevice::ReadOnly);
+    QString s = QString::fromUtf8(in.readAll());
+    in.close();
+
+    QStringList pokes  = s.split("\n-----\n");
+    QStringList out;
+
+    foreach ( QString poke, pokes ) {
+        QStringList dataX = poke.split('\n');
+        Pokemon::uniqueId id = PokemonInfo::Number(dataX[0]);
+
+        qDebug() << dataX[0];
+        if (id == Pokemon::NoPoke) {
+            exit(1);
+        }
+
+        QStringList moves = dataX;
+        moves.removeAt(0);
+
+        QStringList moveNums;
+
+        foreach( QString move, moves ) {
+            qDebug() << move;
+            int num = MoveInfo::Number(move);
+            if (num == 0) {
+                exit(2);
+            }
+            moveNums.push_back(QString::number(num));
+        }
+
+        moveNums.sort();
+
+        QString body = moveNums.join(" ");
+        out.push_back(id.toLine(body));
+    }
+
+    qDebug() << "Success";
+    QFile outfile("db/pokes/5G_egg_moves.txt");
+    outfile.open(QIODevice::WriteOnly);
+    outfile.write(out.join("\n").toUtf8());
+    outfile.close();
+    exit(0);
+
     connect(ui->save, SIGNAL(triggered()), SLOT(save()));
     connect(ui->gen4, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
     connect(ui->gen5, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
