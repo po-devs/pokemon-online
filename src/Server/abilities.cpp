@@ -1161,7 +1161,10 @@ struct AMMummy : public AM {
     }
 
     static void upa(int, int t, BS &b) {
-        b.acquireAbility(t, Ability::Mummy);
+        if (b.ability(t) != Ability::Mummy) {
+            b.sendAbMessage(47, 0, t);
+            b.acquireAbility(t, Ability::Mummy);
+        }
     }
 };
 
@@ -1211,15 +1214,15 @@ struct AMSandPower : public AM {
     }
 };
 
-struct AMJackOfAllTrades : public AM {
-    AMJackOfAllTrades() {
-        functions["DamageFormulaStart"] = &dfs;
-    }
+//struct AMJackOfAllTrades : public AM {
+//    AMJackOfAllTrades() {
+//        functions["DamageFormulaStart"] = &dfs;
+//    }
 
-    static void dfs(int s, int, BS &b) {
-        turn(b,s)["Stab"] = 3;
-    }
-};
+//    static void dfs(int s, int, BS &b) {
+//        turn(b,s)["Stab"] = 3;
+//    }
+//};
 
 struct AMBrokenArmour : public AM {
     AMBrokenArmour() {
@@ -1387,7 +1390,7 @@ void AbilityEffect::init()
     REGISTER_AB(70, VoltAbsorb);
     REGISTER_AB(71, WonderGuard);
     REGISTER_AB(72, SandPower);
-    REGISTER_AB(73, JackOfAllTrades);
+//    REGISTER_AB(73, JackOfAllTrades);
     REGISTER_AB(74, BrokenArmour);
     REGISTER_AB(75, VictoryStar);
     REGISTER_AB(76, WeakKneed);

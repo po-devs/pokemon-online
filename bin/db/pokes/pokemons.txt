@@ -618,7 +618,7 @@
 552:0 Warubiru
 553:0 Warubiaru
 554:0 Darumakka
-555:0 Hihidaruma
+555:0:H Hihidaruma
 555:1 Hihidaruma-D
 556:0 Marakacchi
 557:0 Ishizumai
