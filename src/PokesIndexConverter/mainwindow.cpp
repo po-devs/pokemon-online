@@ -66,6 +66,27 @@ void reorderFile(const QString &name, const QHash<int, int> &order)
     out.write(content3.join("\n").toUtf8());
 }
 
+void replaceDataInFile(const QString &name, const QHash<int, int> &data)
+{
+    QStringList content = QString::fromUtf8(getFileContent(name)).split('\n');
+    QStringList ret;
+
+    foreach(QString s, content) {
+        QStringList spl = s.split(' ');
+
+        for (int i = 1; i < spl.size(); i++)  {
+            if (data.contains(spl[i].toInt())) {
+                spl[i] = QString::number(data[spl[i].toInt()]);
+            }
+        }
+        ret.push_back(spl.join(" "));
+    }
+
+    QFile out(name);
+    out.open(QIODevice::WriteOnly);
+    out.write(ret.join("\n").toUtf8());
+}
+
 void MainWindow::processFiles()
 {
 //    QStringList files = QFileDialog::getOpenFileNames(this, "Files to procecss", "db/pokes");
@@ -125,5 +146,9 @@ void MainWindow::processFile(const QString &filename)
 //    QFile out(filename);
 //    out.open(QIODevice::WriteOnly);
 //    out.write(output.join("\n").toUtf8());
-    reorderFile(filename, Associations);
+    if (!filename.contains("/poke/"))
+        reorderFile(filename, Associations);
+    else {
+        replaceDataInFile(filename, Associations);
+    }
 }

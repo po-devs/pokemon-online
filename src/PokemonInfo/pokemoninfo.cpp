@@ -35,28 +35,12 @@ QList<Pokemon::uniqueId> PokemonInfo::m_VisiblePokesPlainList;
 QHash<int, int> PokemonInfo::m_PreEvos;
 
 QString MoveInfo::m_Directory;
+MoveInfo::Gen MoveInfo::gens[Version::NumberOfGens];
 QList<QString> MoveInfo::m_Names;
-QVector<int> MoveInfo::m_Acc[3];
-QVector<int> MoveInfo::m_Power[3];
-QList<QString> MoveInfo::m_SpecialEffects;
-QVector<char> MoveInfo::m_Type;
-QVector<char> MoveInfo::m_PP[3];
-QVector<char> MoveInfo::m_Category;
-QList<QString> MoveInfo::m_Effects[3];
-QVector<char> MoveInfo::m_Critical;
-QVector<char> MoveInfo::m_EffectRate;
-QVector<bool> MoveInfo::m_Physical;
-QVector<bool> MoveInfo::m_KingRock;
-QVector<char> MoveInfo::m_Speeds;
-QVector<int> MoveInfo::m_Flinch;
-QVector<int> MoveInfo::m_Recoil;
-QVector<int> MoveInfo::m_Targets;
-QList<QStringList> MoveInfo::m_MoveMessages;
-QList<QPair<char, char> > MoveInfo::m_Repeat;
-QList<QString> MoveInfo::m_Descriptions;
-QList<QString> MoveInfo::m_Details;
 QHash<QString, int> MoveInfo::m_LowerCaseMoves;
-QSet<int> MoveInfo::m_GenMoves[3];
+QList<QStringList> MoveInfo::m_MoveMessages;
+QList<QString> MoveInfo::m_Details;
+QList<QString> MoveInfo::m_SpecialEffects;
 
 QString ItemInfo::m_Directory;
 QList<QString> ItemInfo::m_BerryNames;
@@ -166,7 +150,7 @@ static void fill_container_with_file(QList<QString> &container, const QString & 
     }
 }
 
-static void fill_container_with_file(QVector<bool> &container, const QString & filename)
+static void fill_container_with_file(QVector<char> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -183,7 +167,7 @@ static void fill_container_with_file(QVector<bool> &container, const QString & f
     }
 }
 
-static void fill_container_with_file(QVector<char> &container, const QString & filename)
+static void fill_container_with_file(QVector<unsigned char> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -926,59 +910,39 @@ Pokemon::uniqueId PokemonInfo::getRandomPokemon()
     return m_VisiblePokesPlainList[random];
 }
 
-template <class Cont>
-void MoveInfo::makeConsistent(Cont &container)
+void MoveInfo::Gen::load(const QString &dir, int gen)
 {
-    while (container.size() < NumberOfMoves()) {
-        container.push_back(typename Cont::value_type());
-    }
+    this->gen = gen;
+    this->dir = QString("%1%2G/").arg(dir).arg(gen);
+
+    fill_container_with_file(accuracy, path("accuracy.txt"));
+    fill_container_with_file(category, path("category.txt"));
+    fill_container_with_file(causedEffect, path("caused_effect.txt"));
+    fill_container_with_file(critRate, path("crit_rate.txt"));
+    fill_container_with_file(damageClass, path("damage_class.txt"));
+    fill_container_with_file(effect, path("effect.txt"));
+    fill_container_with_file(effectChance, path("effect_chance.txt"));
+    fill_container_with_file(flags, path("flags.txt"));
+    fill_container_with_file(flinchChance, path("flinch_chance.txt"));
+    fill_container_with_file(healing, path("healing.txt"));
+    fill_container_with_file(maxTurns, path("max_turns.txt"));
+    fill_container_with_file(minTurns, path("min_turns.txt"));
+    fill_container_with_file(minMaxHits, path("min_max_hits.txt"));
+    fill_container_with_file(none0, path("None0.txt"));
+    fill_container_with_file(none1, path("None1.txt"));
+    fill_container_with_file(none2, path("None2.txt"));
+    fill_container_with_file(power, path("power.txt"));
+    fill_container_with_file(pp, path("pp.txt"));
+    fill_container_with_file(priority, path("priority.txt"));
+    fill_container_with_file(range, path("range.txt"));
+    fill_container_with_file(recoil, path("recoil.txt"));
+    fill_container_with_file(status, path("status.txt"));
+    fill_container_with_file(type, path("type.txt"));
 }
 
-void MoveInfo::loadCritics()
+QString MoveInfo::Gen::path(const QString &fileName)
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("move_critical.txt"));
-
-    foreach(QString str, temp) { m_Critical.push_back(str.toInt());}
-    makeConsistent(m_Critical);
-}
-
-void MoveInfo::loadTargets()
-{
-    fill_container_with_file(m_Targets, path("move_target.txt"));
-    makeConsistent(m_Targets);
-}
-
-void MoveInfo::loadEffectRates()
-{
-    QStringList temp;
-    fill_container_with_file(temp, path("move_effect_rate.txt"));
-
-    foreach(QString str, temp) {m_EffectRate.push_back(str.toInt());}
-    makeConsistent(m_EffectRate);
-}
-
-void MoveInfo::loadPhysics()
-{
-    fill_container_with_file(m_Physical, path("move_physical_contact.txt"));
-    makeConsistent(m_Physical);
-}
-
-void MoveInfo::loadKingRocks()
-{
-    fill_container_with_file(m_KingRock, path("move_kingrock.txt"));
-    makeConsistent(m_KingRock);
-}
-
-void MoveInfo::loadRepeats()
-{
-    QStringList temp;
-    fill_container_with_file(temp, path("move_repeat.txt"));
-
-    foreach(QString str, temp) {
-	m_Repeat.push_back(QPair<char, char>(str[0].toAscii()-'0', str[2].toAscii()-'0'));
-    }
-    makeConsistent(m_Repeat);
+    return dir + fileName;
 }
 
 void MoveInfo::loadMoveMessages()
@@ -989,29 +953,6 @@ void MoveInfo::loadMoveMessages()
     foreach(QString str, temp) {
 	m_MoveMessages.push_back(str.split('|'));
     }
-}
-
-void MoveInfo::loadSpeeds()
-{
-    fill_container_with_file(m_Speeds, path("move_speed_priority.txt"));
-    makeConsistent(m_Speeds);
-}
-
-void MoveInfo::loadRecoil()
-{
-    QStringList temp;
-    fill_container_with_file(temp, path("move_recoil.txt"));
-
-    foreach(QString str, temp) {m_Recoil.push_back(str.toInt());}
-    makeConsistent(m_Recoil);
-}
-
-int MoveInfo::Recoil(int num, int gen)
-{
-    if (gen < 4 && num == Move::Struggle) {
-        return 2;
-    }
-    return m_Recoil[num];
 }
 
 void MoveInfo::init(const QString &dir)
@@ -1026,30 +967,184 @@ void MoveInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
-    loadTypes();
-    loadPPs();
-    loadAccs();
-    loadPowers();
-    loadCategorys();
-    loadEffects();
-    loadRepeats();
-    loadTargets();
-    loadCritics();
-    loadPhysics();
-    loadKingRocks();
-    loadEffectRates();
-    loadSpeeds();
-    loadFlinchs();
     loadMoveMessages();
-    loadRecoil();
-    loadSpecialEffects();
-    loadDescriptions();
     loadDetails();
+    loadSpecialEffects();
+
+    for (int i = 0; i < Version::NumberOfGens; i++) {
+        gens[i].load(dir, i+1);
+    }
+}
+
+void MoveInfo::loadNames()
+{
+    fill_container_with_file(m_Names, trFile(path("moves")));
+    for (int i = 0; i < m_Names.size(); i++) {
+        m_LowerCaseMoves.insert(m_Names[i].toLower(),i);
+    }
+}
+
+void MoveInfo::loadDetails()
+{
+    fill_container_with_file(m_Details, trFile(path("move_effect")));
+}
+
+void MoveInfo::loadSpecialEffects()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("move_special_effects.txt"));
+
+    /* Removing comments, aka anything starting from '#' */
+    foreach (QString eff, temp) {
+        m_SpecialEffects.push_back(eff.split('#').front());
+    }
+}
+
+QString MoveInfo::Name(int movenum)
+{
+    return Exists(movenum, 5) ? m_Names[movenum] : m_Names[0];
+}
+
+int MoveInfo::Type(int movenum, int g)
+{
+    return gen(g).type[movenum];
+}
+
+int MoveInfo::Category(int movenum, int g)
+{
+    return gen(g).damageClass[movenum];
+}
+
+int MoveInfo::Number(const QString &movename)
+{
+    return m_LowerCaseMoves.value(movename.toLower());
 }
 
 int MoveInfo::NumberOfMoves()
 {
     return m_Names.size();
+}
+
+int MoveInfo::FlinchRate(int num, int g)
+{
+    return gen(g).flinchChance[num];
+}
+
+int MoveInfo::Recoil(int movenum, int g)
+{
+    return gen(g).recoil[movenum];
+}
+
+QString MoveInfo::Description(int movenum, int g)
+{
+    QString r = gen(g).effect[movenum];
+    r.replace("$effect_chance", QString::number(EffectRate(movenum, g)));
+
+    return r;
+}
+
+int MoveInfo::Power(int movenum, int g)
+{
+    return gen(g).power[movenum];
+}
+
+QString MoveInfo::PowerS(int movenum, int gen)
+{
+    int p = Power(movenum, gen);
+
+    if (p == 0)
+        return "--";
+    else if (p == 1)
+        return "???";
+    else
+        return QString::number(p);
+}
+
+int MoveInfo::PP(int movenum, int g)
+{
+    return gen(movenum).pp[g];
+}
+
+int MoveInfo::Acc(int movenum, int g)
+{
+    return gen(movenum).accuracy[g];
+}
+
+QString MoveInfo::AccS(int movenum, int gen)
+{
+    int acc = MoveInfo::Acc(movenum, gen);
+
+    if (acc == 101)
+        return "--";
+    else
+        return QString::number(acc);
+}
+
+int MoveInfo::CriticalRaise(int movenum, int g)
+{
+    return gen(g).critRate[movenum];
+}
+
+int MoveInfo::RepeatMin(int movenum, int g)
+{
+    return gen(g).minMaxHits[movenum] & 0xF;
+}
+
+int MoveInfo::RepeatMax(int movenum, int g)
+{
+    return gen(g).minMaxHits[movenum] >> 4;
+}
+
+int MoveInfo::SpeedPriority(int movenum, int g)
+{
+    return gen(g).priority[movenum];
+}
+
+bool MoveInfo::PhysicalContact(int movenum, int g)
+{
+    return gen(g).flags[movenum] & 0x1;
+}
+
+bool MoveInfo::Exists(int movenum, int g)
+{
+    return gen(g).power.size() > movenum;
+}
+
+bool MoveInfo::isOHKO(int movenum)
+{
+    //Fissure, Guillotine, Horndrill, Sheer Cold
+    return (movenum == Move::Fissure || movenum == Move::Guillotine || movenum == Move::HornDrill
+            || movenum == Move::SheerCold);
+}
+
+int MoveInfo::EffectRate(int movenum, int g)
+{
+    return gen(g).effectChance[movenum];
+}
+
+int MoveInfo::Target(int movenum, int g)
+{
+    return gen(g).range[movenum];
+}
+
+int MoveInfo::Healing(int movenum, int g)
+{
+    return gen(g).healing[movenum];
+}
+
+int MoveInfo::MinTurns(int movenum, int g)
+{
+    return gen(g).minTurns[movenum];
+}
+
+int MoveInfo::MaxTurns(int movenum, int g)
+{
+    return gen(g).maxTurns[movenum];
+}
+
+int MoveInfo::Status(int movenum, int g)
+{
+    return gen(g).status[movenum];
 }
 
 QString MoveInfo::MoveMessage(int moveeffect, int part)
@@ -1060,51 +1155,9 @@ QString MoveInfo::MoveMessage(int moveeffect, int part)
     return m_MoveMessages[moveeffect][part];
 }
 
-int MoveInfo::Number(const QString &movename)
-{
-    return m_LowerCaseMoves.value(movename.toLower());
-}
-
 QString MoveInfo::SpecialEffect(int movenum)
 {
     return m_SpecialEffects[movenum];
-}
-
-int MoveInfo::Target(int movenum, int gen)
-{
-    if (gen == 3 && movenum == Move::Surf)
-        return Move::Opponents;
-
-    return m_Targets[movenum];
-}
-
-void MoveInfo::loadNames()
-{
-    fill_container_with_file(m_Names, trFile(path("moves")));
-    for (int i = 0; i < m_Names.size(); i++) {
-        m_LowerCaseMoves.insert(m_Names[i].toLower(),i);
-    }
-
-    for (int i = 0; i < 3; i++) {
-        fill_container_with_file(m_GenMoves[i], path(QString("gen%1.txt").arg(i+3)));
-    }
-}
-
-void MoveInfo::loadDescriptions()
-{
-    fill_container_with_file(m_Descriptions, trFile(path("move_description")));
-    makeConsistent(m_Descriptions);
-}
-
-void MoveInfo::loadDetails()
-{
-    fill_container_with_file(m_Details, trFile(path("move_effect")));
-    makeConsistent(m_Details);
-}
-
-QString MoveInfo::Description(int movenum)
-{
-    return m_Descriptions[movenum];
 }
 
 QString MoveInfo::DetailedDescription(int movenum)
@@ -1112,214 +1165,27 @@ QString MoveInfo::DetailedDescription(int movenum)
     return m_Details[movenum];
 }
 
-void MoveInfo::loadPPs()
-{
-    for (int i = 0; i < 3; i++) {
-        fill_container_with_file(m_PP[i], path(QString("move_pp_%1G.txt")).arg(i+3));
-        makeConsistent(m_PP[i]);
-    }
-}
-
-void MoveInfo::loadTypes()
-{
-    fill_container_with_file(m_Type, path("move_type.txt"));
-    makeConsistent(m_Type);
-}
-
-void MoveInfo::loadCategorys()
-{
-    fill_container_with_file(m_Category, path("move_category.txt"));
-    makeConsistent(m_Category);
-}
-
-void MoveInfo::loadPowers()
-{
-    for (int i = 0; i < 3; i++) {
-        QList<QString> temp;
-        fill_container_with_file(temp, path(QString("move_power_%1G.txt")).arg(i+3));
-
-        foreach (QString s, temp) {
-            m_Power[i].push_back(s.toInt());
-        }
-        makeConsistent(m_Power[i]);
-    }
-}
-
-void MoveInfo::loadAccs()
-{
-    for (int i = 0; i < 3; i++) {
-        QList<QString> temp;
-        fill_container_with_file(temp, path(QString("move_accuracy_%1G.txt")).arg(i+3));
-
-        foreach (QString s, temp) {
-            m_Acc[i].push_back(s.toInt());
-            makeConsistent(m_Acc[i]);
-        }
-    }
-}
-
 QString MoveInfo::path(const QString &file)
 {
     return m_Directory+file;
 }
 
-QString MoveInfo::Name(int movenum)
-{
-    return Exists(movenum, 5) ? m_Names[movenum] : m_Names[0];
-}
 
-bool MoveInfo::Exists(int movenum, int gen)
-{
-    return m_GenMoves[gen-3].contains(movenum);
-}
+//void MoveInfo::loadEffects()
+//{
+//    for (int i = 0; i < 3; i++) {
+//        QStringList temp;
+//        fill_container_with_file(temp, path(QString("moveeffects_%1G.txt").arg(i+3)));
 
-int MoveInfo::Power(int movenum, int gen)
-{
-    return m_Power[gen-3][movenum];
-}
+//        /* Removing comments, aka anything starting from '#' */
+//        foreach (QString eff, temp) {
+//            m_Effects[i].push_back(eff.split('#').front());
+//        }
+//        makeConsistent(m_Effects[i]);
+//    }
+//}
 
-bool MoveInfo::isOHKO(int movenum)
-{
-    //Fissure, Guillotine, Horndrill, Sheer Cold
-    return (movenum == Move::Fissure || movenum == Move::Guillotine || movenum == Move::HornDrill
-            || movenum == Move::SheerCold);
-}
 
-int MoveInfo::Type(int movenum)
-{
-    return m_Type[movenum];
-}
-
-int MoveInfo::Category(int movenum, int gen)
-{
-    if (gen >= 4)
-        return m_Category[movenum];
-    else {
-        int power = MoveInfo::Power(movenum, gen);
-
-        if (power == 0) {
-            return Move::Other;
-        }
-
-        return TypeInfo::Category(Type(movenum));
-    }
-}
-
-int MoveInfo::PP(int movenum, int gen)
-{
-    return m_PP[gen-3][movenum];
-}
-
-int MoveInfo::Acc(int movenum, int gen)
-{
-    int ret = m_Acc[gen-3][movenum];
-    return ret == 0 ? 65535 : ret;
-}
-
-QString MoveInfo::AccS(int movenum, int gen)
-{
-    return m_Acc[gen-3][movenum] == 0 ? "--" : QString::number(m_Acc[gen-3][movenum]);
-}
-
-QString MoveInfo::PowerS(int movenum, int gen)
-{
-    int pow = Power(movenum, gen);
-
-    if (pow == 0) {
-        return "--";
-    } else if (pow == 1) {
-	return "???";
-    } else {
-        return QString::number(pow);
-    }
-}
-
-QString MoveInfo::Effect(int movenum, int gen)
-{
-    return m_Effects[gen-3][movenum];
-}
-
-int MoveInfo::CriticalRaise(int num)
-{
-    return m_Critical[num];
-}
-
-int MoveInfo::EffectRate(int num)
-{
-    return m_EffectRate[num];
-}
-
-bool MoveInfo::PhysicalContact(int num, int gen)
-{
-    if (gen <= 3 && num == Move::Overheat)
-        return true;
-
-    return m_Physical[num];
-}
-
-bool MoveInfo::KingRock(int num)
-{
-    return m_KingRock[num];
-}
-
-int MoveInfo::RepeatMin(int num)
-{
-    return m_Repeat[num].first;
-}
-
-int MoveInfo::RepeatMax(int num)
-{
-    return m_Repeat[num].second;
-}
-
-int MoveInfo::SpeedPriority(int num)
-{
-    return m_Speeds[num];
-}
-
-int MoveInfo::FlinchRate(int num, int gen)
-{
-    if (gen <= 3 && num == Move::Waterfall)
-        return 0;
-    return m_Flinch[num];
-}
-
-void MoveInfo::loadFlinchs()
-{
-    QStringList temp;
-    fill_container_with_file(temp, path("move_flinch.txt"));
-
-    foreach(QString s, temp) {
-	m_Flinch.push_back(s.toInt());
-    }
-    makeConsistent(m_Flinch);
-}
-
-void MoveInfo::loadEffects()
-{
-    for (int i = 0; i < 3; i++) {
-        QStringList temp;
-        fill_container_with_file(temp, path(QString("moveeffects_%1G.txt").arg(i+3)));
-
-        /* Removing comments, aka anything starting from '#' */
-        foreach (QString eff, temp) {
-            m_Effects[i].push_back(eff.split('#').front());
-        }
-        makeConsistent(m_Effects[i]);
-    }
-}
-
-void MoveInfo::loadSpecialEffects()
-{
-    QStringList temp;
-    fill_container_with_file(temp, path("move_special_effects.txt"));
-
-    /* Removing comments, aka anything starting from '#' */
-    foreach (QString eff, temp) {
-	m_SpecialEffects.push_back(eff.split('#').front());
-        makeConsistent(m_SpecialEffects);
-    }
-}
 
 QStringList MoveInfo::MoveList()
 {

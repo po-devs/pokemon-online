@@ -1243,7 +1243,7 @@ bool TB_PokemonBody::MoveList::event(QEvent * event)
         int row  = this->rowAt(helpEvent->pos().y() - horizontalHeader()->height());
         if (row != -1) {
             QToolTip::setFont(QFont("Verdana",10));
-            QToolTip::showText(helpEvent->globalPos(), MoveInfo::Description(MoveInfo::Number(item(row, TB_PokemonBody::Name)->text())));
+            QToolTip::showText(helpEvent->globalPos(), MoveInfo::Description(MoveInfo::Number(item(row, TB_PokemonBody::Name)->text()), 5));
         }
     }
     return QCompactTable::event(event);
@@ -1539,7 +1539,7 @@ void TB_PokemonBody::configureMoves()
         int movenum = pair.first;
 	
         /* In order to sort types accurately in the table we give them a number with an invisible font */
-        int type = MoveInfo::Type(movenum);
+        int type = MoveInfo::Type(movenum, gen);
         witem = new QTableWidgetItem(QIcon(Theme::TypePicture(type)), QString("%1").arg(type));
         witem->setFont(invisible);
 	movechoice->setItem(i, Type, witem);

@@ -144,13 +144,13 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int movenum);
-    static int Type(int movenum);
+    static int Type(int movenum, int gen);
     static int Category(int movenum, int gen);
     static int Number(const QString &movename);
     static int NumberOfMoves();
     static int FlinchRate(int movenum, int gen);
     static int Recoil(int movenum, int gen);
-    static QString Description(int movenum);
+    static QString Description(int movenum, int gen);
     static QString DetailedDescription(int movenum);
     static int Power(int movenum, int gen);
     /* gives the power of a move in the form of a string */
@@ -159,70 +159,74 @@ public:
     static int Acc(int movenum, int gen);
     /* gives the accuracy of a move in the form of a string */
     static QString AccS(int movenum, int gen);
-    /* the status mod of a move*/
-    static QString Effect(int movenum, int gen);
-    static QString SpecialEffect(int movenum);
-    static int CriticalRaise(int movenum);
-    static int RepeatMin(int movenum);
-    static int RepeatMax(int movenum);
-    static int SpeedPriority(int movenum);
+    static int CriticalRaise(int movenum, int gen);
+    static int RepeatMin(int movenum, int gen);
+    static int RepeatMax(int movenum, int gen);
+    static int SpeedPriority(int movenum, int gen);
     static bool PhysicalContact(int movenum, int gen);
-    static bool KingRock(int movenum);
     static bool Exists(int movenum, int gen);
     static bool isOHKO(int movenum);
-    static int EffectRate(int movenum);
+    static int EffectRate(int movenum, int gen);
     static int Target(int movenum, int gen);
+    static int Healing(int movenum, int gen);
+    static int MinTurns(int movenum, int gen);
+    static int MaxTurns(int movenum, int gen);
+    static int Status(int movenum, int gen);
     static QString MoveMessage(int moveeffect, int part);
     static QStringList MoveList();
-
+    /* the status mod of a move*/
+    //static QString Effect(int movenum, int gen);
+    static QString SpecialEffect(int movenum);
 private:
     static QList<QString> m_Names;
-    static QSet<int> m_GenMoves[3];
-    static QVector<int> m_Power[3];
-    static QVector<int> m_Acc[3];
-    static QList<QString> m_Effects[3];
-    static QList<QString> m_SpecialEffects;
-    static QList<QStringList> m_MoveMessages;
-    static QVector<char> m_Type;
-    static QVector<char> m_PP[3];
-    static QVector<char> m_Category;
-    static QVector<char> m_Critical;
-    static QVector<char> m_EffectRate;
-    static QVector<bool> m_Physical;
-    static QVector<bool> m_KingRock;
-    static QVector<char> m_Speeds;
-    static QVector<int> m_Flinch;
-    static QVector<int> m_Recoil;
-    static QVector<int> m_Targets;
-    static QList<QPair<char, char> > m_Repeat;
-    static QList<QString> m_Descriptions;
-    static QList<QString> m_Details;
     static QHash<QString, int> m_LowerCaseMoves;
+    static QList<QStringList> m_MoveMessages;
+    static QList<QString> m_Details;
+    static QList<QString> m_SpecialEffects;
+
+    struct Gen {
+        void load(const QString &path, int gen);
+        QString path(const QString &fileName);
+
+        int gen;
+        QString dir;
+
+        QVector<char> accuracy;
+        QVector<char> category;
+        QVector<char> causedEffect;
+        QVector<char> critRate;
+        QVector<char> damageClass;
+        QStringList effect;
+        QVector<char> effectChance;
+        QVector<int> flags;
+        QVector<char> flinchChance;
+        QVector<char> healing;
+        QVector<char> maxTurns;
+        QVector<char> minTurns;
+        QVector<char> minMaxHits;
+        QVector<int> none0;
+        QVector<int> none1;
+        QVector<int> none2;
+        QVector<unsigned char> power;
+        QVector<char> pp;
+        QVector<char> priority;
+        QVector<char> range;
+        QVector<char> recoil;
+        QVector<char> status;
+        QVector<char> type;
+    };
 
     static QString m_Directory;
+    static Gen gens[Version::NumberOfGens];
+    static const Gen & gen(int gen) {
+        return gens[gen-1];
+    }
 
     static void loadNames();
-    static void loadPPs();
-    static void loadTypes();
-    static void loadCategorys();
-    static void loadPowers();
-    static void loadAccs();
-    static void loadEffects();
-    static void loadCritics();
-    static void loadEffectRates();
-    static void loadPhysics();
-    static void loadKingRocks();
-    static void loadRepeats();
-    static void loadSpeeds();
-    static void loadTargets();
-    static void loadFlinchs();
-    static void loadRecoil();
-    static void loadSpecialEffects();
     static void loadMoveMessages();
-    static void loadDescriptions();
     static void loadDetails();
-    template <class T>
-    static void makeConsistent(T &container);
+    static void loadSpecialEffects();
+
     static QString path(const QString &filename);
 };
 

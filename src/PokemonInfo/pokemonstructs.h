@@ -14,6 +14,11 @@ namespace Version
         SoulSilver = 15,
         HeartGold = 16
     };
+
+    enum {
+        LastGen = 4,
+        NumberOfGens = 5
+    };
 }
 
 namespace Pokemon
@@ -797,11 +802,43 @@ namespace Move
 {
     enum Category
     {
+        Other,
+        Physical,
+        Special
+    };
+
+    /*
+     Old:
+
+    enum Category
+    {
         Physical,
         Special,
         Other
     };
 
+    */
+
+    enum Target
+    {
+        ChosenTarget = 0,
+        PartnerOrUser = 1,
+        Partner = 2,
+        MeFirstTarget = 3,
+        AllButSelf = 4,
+        Opponents = 5,
+        TeamParty = 6,
+        User = 7,
+        All = 8,
+        RandomTarget = 9,
+        Field = 10,
+        OpposingTeam = 11,
+        TeamSide = 12,
+        IndeterminateTarget = 13
+    };
+
+    /*
+     Old:
     enum Target
     {
 	None = -1,
@@ -813,6 +850,7 @@ namespace Move
         AllButSelf,
         PartnerOrUser
     };
+    */
 
     enum Name
     {
