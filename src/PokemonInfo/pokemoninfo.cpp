@@ -358,45 +358,6 @@ void PokemonInfo::loadClassifications()
         if(ok) m_Classification[pokenum] = description;
     }
 }
-void PokemonInfo::loadEvos()
-{
-   	QStringList temp;
-    fill_container_with_file(temp, "evolutions.txt");
-    for(int i = 0; i < temp.size(); i++) {
-        QString current = temp[i].trimmed();
-		if (current.length() == 0)
-			continue;
-
-        QString preEvoS;
-        quint16 pokenum;
-        bool ok = Pokemon::uniqueId::extract_short(current, pokenum, preEvoS);
-        if(ok) {
-            int preEvo = preEvoS.toInt();
-			int i = pokenum;
-
-            int orEvo = m_OriginalEvos[preEvo] == 0 ? preEvo : m_OriginalEvos[preEvo];
-            m_OriginalEvos[i] = orEvo;
-            m_PreEvos[i] = preEvo;
-            m_OriginalEvos[orEvo] = orEvo;
-
-            if (!m_Evolutions.contains(orEvo)) {
-                m_Evolutions[orEvo].push_back(orEvo);
-            }
-
-            if (m_Evolutions.contains(i)) {
-                m_Evolutions[orEvo].append(m_Evolutions[i]);
-
-                foreach (int poke, m_Evolutions[i]) {
-                    m_OriginalEvos[poke] = orEvo;
-                }
-
-                m_Evolutions.remove(i);
-            } else {
-                m_Evolutions[orEvo].push_back(i);
-            }
-        }
-    }
-}
 
 void PokemonInfo::loadHeights()
 {
@@ -762,17 +723,17 @@ Pokemon::uniqueId PokemonInfo::OriginalEvo(const Pokemon::uniqueId &pokeid)
 
 int PokemonInfo::PreEvo(int pokenum)
 {
-    return m_OriginalEvos[pokenum];
+    return m_PreEvos.value(pokenum);
 }
 
 QList<int> PokemonInfo::Evos(int pokenum)
 {
-    return m_Evolutions.value(OriginalEvo(pokenum).pokenum);
+    return m_Evolutions.value(OriginalEvo(Pokemon::uniqueId(pokenum, 0)).pokenum);
 }
 
 bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
 {
-    return OriginalEvo(pokeid).pokenum != pokeid.pokenum;
+    return Evos(pokeid.pokenum).size() > 1;
 }
 
 void PokemonInfo::loadMoves()
@@ -841,6 +802,58 @@ QList<Pokemon::uniqueId> PokemonInfo::AllIds()
     return m_Names.keys();
 }
 
+void PokemonInfo::loadEvos()
+{
+    QHash<int, QList<int> > &evos = m_Evolutions;
+
+    foreach(QByteArray s, getFileContent(path("evos.txt")).split('\n')) {
+        QList<QByteArray> evs = s.split(' ');
+        int num = evs[0].toInt();
+
+        /* It's normal to start from 0 */
+        foreach(QByteArray ev, evs) {
+            int n = ev.toInt();
+
+            if (n != num)
+                m_PreEvos[n] = num;
+
+            evos[num].push_back(n);
+        }
+    }
+
+    QHash<int, QList<int> > copy = evos;
+
+    QHashIterator<int, QList<int> > it(copy);
+
+    while (it.hasNext()) {
+        it.next();
+
+        if (!evos.contains(it.key()))
+            continue;
+
+        QList<int> res;
+
+        foreach(int ev, evos[it.key()]) {
+            res.push_back(ev);
+
+            if (ev != it.key() && evos.contains(ev)) {
+                foreach(int ev2, evos[ev]) {
+                    if (ev2 != ev)
+                        res.push_back(ev2);
+                }
+
+                evos.remove(ev);
+            }
+        }
+
+        evos[it.key()] = res;
+
+        foreach(int x, res) {
+            m_OriginalEvos[x] = it.key();
+        }
+    }
+}
+
 void PokemonInfo::makeDataConsistent()
 {
     // Count base forms. We no longer need to save it in a file.
@@ -856,7 +869,7 @@ void PokemonInfo::makeDataConsistent()
                 m_OriginalEvos[id.pokenum] = id.pokenum;
             }
             // m_Evolutions initial filler data.
-            m_Evolutions[id.pokenum] = QList<int>();
+            m_Evolutions[id.pokenum] = QList<int>() << id.pokenum;
         }
         // Weight
         if(!m_Weights.contains(id)) {
@@ -899,14 +912,6 @@ void PokemonInfo::makeDataConsistent()
                 m_Type2[i][id] = m_Type2[i].value(OriginalForme(id), Pokemon::Curse);
             }
         }
-    }
-
-    // Calculate m_Evolutions.
-    QHash<int, int>::const_iterator eit = m_OriginalEvos.constBegin();
-    while (eit != m_OriginalEvos.constEnd()) {
-        m_Evolutions[eit.value()].append(eit.key());
-        // Next.
-        ++eit;
     }
 }
 

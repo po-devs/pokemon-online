@@ -179,10 +179,11 @@ MainWindow::MainWindow(QWidget *parent) :
 //        out.push_back(id.toLine(body));
 //    }
 
-    QFile outfile("db/pokes/5G_tm_and_hm_moves.txt");
-    outfile.open(QIODevice::WriteOnly);
-    outfile.write(out.join("\n").toUtf8());
-    outfile.close();
+//    QFile outfile("db/pokes/5G_tm_and_hm_moves.txt");
+//    outfile.open(QIODevice::WriteOnly);
+//    outfile.write(out.join("\n").toUtf8());
+//    outfile.close();
+//    exit(0);
     exit(0);
 
 //    AbilityInfo::init();

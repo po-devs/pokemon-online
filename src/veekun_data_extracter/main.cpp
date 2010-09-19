@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     PokemonInfo::init();
 
     QDomDocument doc("doc");
-    QFile in("raw_dump.txt");
+    QFile in("raw dump 2.txt");
     in.open(QIODevice::ReadOnly);
 
     QString msg;
@@ -83,6 +83,8 @@ int main(int argc, char *argv[])
 
         QString beginning = data.at(0).toElement().text();
 
+        qDebug() << beginning;
+
         int num = PokemonInfo::Number(beginning).pokenum;
 
         if (num == 0) {
@@ -92,8 +94,6 @@ int main(int argc, char *argv[])
         QStringList evos;
 
         for (int i = 3; i < data.size(); i+=3) {
-            QDomNode n = data.at(i);
-
             QString beginning = data.at(i).toElement().text();
 
             int num = PokemonInfo::Number(beginning).pokenum;
@@ -112,6 +112,8 @@ int main(int argc, char *argv[])
 
         next = next.nextSiblingElement("tr");
     }
+
+    file.close();
 
     qDebug() << "Finished!";
     QCoreApplication a(argc, argv);
