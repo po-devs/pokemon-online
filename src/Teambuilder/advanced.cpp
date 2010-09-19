@@ -121,7 +121,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
         ability[0]->setEnabled(false);
     } else {
         for (int i = 1; i < 3; i++) {
-            if (poke()->abilities().ab(i) != 0) {
+            if (poke()->abilities().ab(i) != 0 && poke()->abilities().ab(i) != poke()->abilities().ab(0)) {
                 abilityLayout->addWidget(ability[i]=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab(i))));
                 ability[i]->setToolTip(AbilityInfo::Desc(poke()->abilities().ab(i)));
                 connect(ability[i], SIGNAL(toggled(bool)), SLOT(changeAbility(bool)));

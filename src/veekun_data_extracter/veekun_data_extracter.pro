@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += core xml
-QT       -= gui
 
 DESTDIR = ../../bin
 
@@ -15,5 +14,7 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-
+LIBS += -L../../bin \
+    -lpokemonlib \
+    -lutilities
 SOURCES += main.cpp
