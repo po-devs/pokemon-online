@@ -19,6 +19,14 @@ namespace Version
         LastGen = 4,
         NumberOfGens = 5
     };
+
+    static const int avatarSize[] = {
+        0,
+        0,
+        64,
+        80,
+        96
+    };
 }
 
 namespace Pokemon

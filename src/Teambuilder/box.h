@@ -3,7 +3,6 @@
 #include <QtGui>
 
 class PokeTeam;
-class AvatarBox;
 class Team;
 class TeamBuilder;
 
@@ -22,7 +21,7 @@ private:
     QLabel *m_name, *m_nick, *m_num, *m_gender, *m_level, *m_type1, *m_type2, *m_nature, *m_item;
     QLabel *m_moves[4];
 
-    AvatarBox *m_pic;
+    QLabel *m_pic;
 };
 
 class PokemonBoxButton : public QPushButton
