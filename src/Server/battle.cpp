@@ -575,9 +575,9 @@ void BattleSituation::endTurnStatus(int player)
                 healLife(player, poke(player).totalLifePoints()/8);
             } else {
                 notify(All, StatusMessage, player, qint8(HurtPoison));
-                inflictDamage(player, poke(player).totalLifePoints()*(pokelong[player]["ToxicCount"].toInt()+1)/16, player);
+                inflictDamage(player, poke(player).totalLifePoints()*(poke(player).statusCoutn() + 1)/16, player);
+                poke(player).statusCount() = std::min(poke(player).statusCount()+1, 14);
             }
-            pokelong[player]["ToxicCount"] = std::min(pokelong[player]["ToxicCount"].toInt()+1, 14);
             break;
         case Pokemon::Poisoned:
             //PoisonHeal
@@ -1445,9 +1445,9 @@ bool BattleSituation::testStatus(int player)
     }
 
     if (poke(player).status() == Pokemon::Asleep) {
-        if (poke(player).sleepCount() > 0) {
+        if (poke(player).statusCount() > 0) {
             //Early bird
-            poke(player).sleepCount() -= 1 + hasWorkingAbility(player, Ability::EarlyBird);
+            poke(player).statusCount() -= 1 + hasWorkingAbility(player, Ability::EarlyBird);
             notify(All, StatusMessage, player, qint8(FeelAsleep));
             if (!turnlong[player].value("SleepingMove").toBool())
                 return false;
@@ -2206,7 +2206,11 @@ void BattleSituation::inflictConfused(int player, bool tell)
     //OwnTempo
     if (!pokelong[player]["Confused"].toBool() && !hasWorkingAbility(player,Ability::OwnTempo)) {
 	pokelong[player]["Confused"] = true;
-        pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 1;
+        if (gen() <= 4)
+            pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 1;
+        else
+            pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 2;
+
         if (tell)
             notify(All, StatusChange, player, qint8(-1));
 
@@ -2419,7 +2423,10 @@ void BattleSituation::changeStatus(int player, int status, bool tell)
     notify(All, AbsStatusChange, player, qint8(currentPoke(player)), qint8(status));
     poke(player).status() = status;
     if (status == Pokemon::Asleep) {
-        poke(player).sleepCount() = (true_rand() % 4) +1;
+        if (gen() <= 4)
+            poke(player).statusCount() = (true_rand() % 4) +1;
+        else
+            poke(player).statusCount() = (true_rand() % 3) +2;
     }
     if (status == Pokemon::DeeplyPoisoned) {
 	pokelong[player]["ToxicCount"] = 0;
