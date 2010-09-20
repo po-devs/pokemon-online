@@ -659,7 +659,7 @@ struct AMIronFist : public AM {
     }
 
     static void bpm (int s, int , BS &b) {
-        if (fmove(b,s).flags & Move::PunchFlag) {
+        if (tmove(b,s).flags & Move::PunchFlag) {
             turn(b,s)["BasePowerAbilityModifier"] = 4;
         }
     }
@@ -875,7 +875,7 @@ struct AMSoundProof : public AM {
     }
 
     static void ob(int s, int t, BS &b) {
-        if (fmove(b,t).flags & Move::SoundFlag) {
+        if (tmove(b,t).flags & Move::SoundFlag) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
             b.sendAbMessage(57,0,s);
         }
@@ -1302,7 +1302,7 @@ struct AMWickedThief : public AM
                             && b.pokenum(t) != Pokemon::Giratina_O && !ItemInfo::isMail(b.poke(t).item()))
             {
             /* Fixme: Ability message */
-            b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
+            b.sendMoveMessage(23,(move(b,s)==Move::Covet)?0:1,s,type(b,s),t,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
         }
@@ -1316,12 +1316,12 @@ struct AMEncourage : public AM
     }
 
     static void bpm(int s, int, BS &b) {
-        int cl = fmove(b,s).classification;
+        int cl = tmove(b,s).classification;
 
         if (cl != Move::OffensiveStatChangingMove && cl != Move::OffensiveStatusInducingMove)
             return;
 
-        fmove(b,s).classification = Move::StandardMove;
+        tmove(b,s).classification = Move::StandardMove;
         turn(b,s)["BasePowerAbilityModifier"] = 10;
     }
 };
