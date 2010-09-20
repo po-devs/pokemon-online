@@ -36,7 +36,7 @@
 
 66#Trace
 27#Huge Power
-33-5#Poison Point
+18-5#Poison Point
 12#Inner focus
 33-3#Magma Armor
 33-4#Water Veil
@@ -70,7 +70,7 @@
 
 14-4#Drought
 5#Arena Trap
-
+33-2#Vital Spirit
 31#WhiteSmoke
 27#Pure Power
 

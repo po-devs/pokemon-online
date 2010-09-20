@@ -176,6 +176,7 @@ QColor Theme::StatusColor(int status)
     case Pokemon::Frozen: return TypeColor(Pokemon::Ice);
     case Pokemon::Asleep: return TypeColor(Pokemon::Psychic);
     case Pokemon::Poisoned: return TypeColor(Pokemon::Poison);
+    case Pokemon::Confused: return TypeColor(Pokemon::Ghost);
     default: return QColor();
     }
 }

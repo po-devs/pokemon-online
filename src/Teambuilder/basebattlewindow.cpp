@@ -505,9 +505,13 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         break;
     }
     case AlreadyStatusMessage:
-        printHtml(toColor(tr("%1 is already %2.").arg(tu(nick(spot)), StatInfo::Status(info().currentShallow(spot).status())),
-                          Theme::StatusColor(info().currentShallow(spot).status())));
+        {
+        quint8 status;
+        in >> status;
+        printHtml(toColor(tr("%1 is already %2.").arg(tu(nick(spot)), StatInfo::Status(status)),
+                          Theme::StatusColor(status)));
         break;
+    }
     case StatusMessage:
         {
             qint8 status;

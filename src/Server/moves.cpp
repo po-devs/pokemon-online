@@ -43,9 +43,9 @@ MoveEffect::MoveEffect(int num, int gen, BattleSituation::BasicMoveInfo &data)
     data.statusKind = MoveInfo::StatusKind(num, gen);
     data.minTurns = MoveInfo::MinTurns(num, gen);
     data.maxTurns = MoveInfo::MaxTurns(num, gen);
-    data.effect1 = MoveInfo::Effect1(num, gen);
-    data.effect2 = MoveInfo::Effect2(num, gen);
-    data.effect3 = MoveInfo::Effect3(num, gen);
+    data.statAffected = MoveInfo::StatAffected(num, gen);
+    data.boostOfStat = MoveInfo::BoostOfStat(num, gen);
+    data.rateOfStat = MoveInfo::RateOfStat(num, gen);
 }
 
 /* There's gonna be tons of structures inheriting it,

@@ -4,3 +4,4 @@ dormindo
 congelado
 queimado
 envenenado
+confused

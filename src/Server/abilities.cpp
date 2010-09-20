@@ -593,12 +593,43 @@ struct AMIceBody : public AM {
 struct AMInsomnia : public AM {
     AMInsomnia() {
         functions["UponSetup"] = &us;
+        functions["PreventStatChange"] = &psc;
     }
 
-    static void us(int s, int , BS &b) {
+    static void us(int s, int, BS &b) {
         if (b.poke(s).status() == poke(b,s)["AbilityArg"].toInt()) {
             b.sendAbMessage(33,0,s,s,Pokemon::Dark,b.ability(s));
             b.healStatus(s, b.poke(s).status());
+        }
+    }
+
+    static void psc(int s, int t, BS &b) {
+        if (turn(b,s)["StatModType"].toString() == "Status" && turn(b,s)["StatusInflicted"].toInt() == poke(b,s)["AbilityArg"].toInt()) {
+            if (b.canSendPreventSMessage(s,t))
+                b.sendAbMessage(33,turn(b,s)["StatusInflicted"].toInt(),s,s,0,b.ability(s));
+            b.preventStatMod(s,t);
+        }
+    }
+};
+
+struct AMOwnTempo : public AM {
+    AMOwnTempo() {
+        functions["UponSetup"] = &us;
+        functions["PreventStatChange"] = &psc;
+    }
+
+    static void us(int s, int, BS &b) {
+        if (b.isConfused(s)) {
+            b.sendAbMessage(44,0,s);
+            b.healConfused(s);
+        }
+    }
+
+    static void psc(int s, int t, BS &b) {
+        if (turn(b,s)["StatModType"].toString() == "Status" && turn(b,s)["StatusInflicted"].toInt() == Pokemon::Confused) {
+            if (b.canSendPreventSMessage(s,t))
+                b.sendAbMessage(44,1,s,s,0,b.ability(s));
+            b.preventStatMod(s,t);
         }
     }
 };
@@ -702,19 +733,6 @@ struct AMNormalize : public AM {
     static void btl(int s, int, BS &b) {
         if (tmove(b,s).type != Type::Curse)
             tmove(b,s).type = Type::Normal;
-    }
-};
-
-struct AMOwnTempo : public AM {
-    AMOwnTempo() {
-        functions["UponSetup"] = &us;
-    }
-
-    static void us(int s, int, BS &b) {
-        if (b.isConfused(s)) {
-            b.sendAbMessage(44,0,s);
-            b.healConfused(s);
-        }
     }
 };
 
