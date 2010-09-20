@@ -2389,7 +2389,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
         }
     }
 
-    changeStatus(player, status, true, minTurns + true_rand() % (maxTurns - minTurns));
+    changeStatus(player, status, true, minTurns + true_rand() % (maxTurns - minTurns + 1));
     if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_S) {
         changeForme(player, currentPoke(player), Pokemon::Shaymin_S);
     }

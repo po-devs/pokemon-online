@@ -793,15 +793,13 @@ struct MMPerishSong : public MM
 	functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void uas(int, int, BS &b) {
-        foreach (int t, b.sortedBySpeed()) {
-            //SoundProof
-            if (poke(b,t).contains("PerishSongCount") || b.koed(t)) {
-		continue;
-	    }
-            addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
-            poke(b, t)["PerishSongCount"] = b.gen() <= 4 ? 3 : 4;
-	}
+    static void uas(int s, int t, BS &b) {
+        if (poke(b,t).contains("PerishSongCount") || b.koed(t)) {
+            return;
+        }
+        addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
+        poke(b, t)["PerishSongCount"] = fmove(b,s).minTurns;
+
 	b.sendMoveMessage(95);
     }
 
@@ -1614,7 +1612,9 @@ struct MMBind : public MM
 
     static void uas (int s, int t, BS &b) {
         b.link(s, t, "Trapped");
-        poke(b,t)["TrappedRemainingTurns"] = b.poke(s).item() == Item::GripClaw ? 5 : (b.true_rand()%4) + 2; /* Grip claw = 5 turns */
+        BS::BasicMoveInfo &fm = fmove(b,s);
+        poke(b,t)["TrappedRemainingTurns"] = b.poke(s).item() == Item::GripClaw ?
+                                             fm.maxTurns : (b.true_rand()%fm.maxTurns+1-fm.minTurns) + fm.minTurns; /* Grip claw = max turns */
 	poke(b,t)["TrappedMove"] = move(b,s);
         addFunction(poke(b,t), "EndTurn68", "Bind", &et);
     }
