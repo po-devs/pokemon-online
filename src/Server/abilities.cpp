@@ -1261,9 +1261,7 @@ struct AMWeakKneed : public AM {
         if (b.poke(s).lifePoints() * 2 > b.poke(s).totalLifePoints())
             return;
 
-        for (int i = Attack; i <= SpDefense; i++) {
-            turn(b,s)[QString("Stat%1AbilityModifier").arg(i)] = -10;
-        }
+        turn(b,s)["Stat1AbilityModifier"] = -10;
     }
 };
 
@@ -1445,6 +1443,20 @@ struct AMTelepathy : public AM {
 
             //fixme: message
             b.sendAbMessage(0,0,s,s,Move::Psychic);
+        }
+    }
+};
+
+struct AMRegeneration : public AM {
+    AMRegeneration() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us(int s, int, BS &b) {
+        if (!b.poke(s).isFull()) {
+            b.healLife(s, b.poke(s).lifePoints() * 30 / 100);
+            //fixme: ab message
+            b.sendAbMessage(0, 0, s);
         }
     }
 };
