@@ -810,7 +810,7 @@ void BattleSituation::analyzeChoices()
             switches.push_back(i);
         else {
             if (gen() >= 5) {
-                callaeffects(player, player, "PriorityChoice");
+                callaeffects(i, i, "PriorityChoice");
             }
             priorities[fieldmoves[i].priority].push_back(i);
         }

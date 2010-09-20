@@ -1415,6 +1415,41 @@ struct AMMultiScale : public AM
     }
 };
 
+struct AMHeatRampage : public AM
+{
+    AMHeatRampage() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm (int s, int, BS &b) {
+        int st = poke(b,s)["AbilityArg"].toInt();
+
+        if (b.poke(s).status() == st) {
+            if (st == Pokemon::Burnt) {
+                turn(b,s)[QString("Stat%1AbilityModifier").arg(SpAttack)] = 10;
+            } else {
+                turn(b,s)[QString("Stat%1AbilityModifier").arg(Attack)] = 10;
+            }
+        }
+    }
+};
+
+struct AMTelepathy : public AM {
+    AMTelepathy() {
+        functions["OpponentBlock"] = &op;
+    }
+
+    static void op(int s, int t, BS &b) {
+        if (tmove(b,t).power > 0 && b.player(t) == b.player(s)) {
+            turn(b,s)[QString("Block%1").arg(t)] = true;
+
+            //fixme: message
+            b.sendAbMessage(0,0,s,s,Move::Psychic);
+        }
+    }
+};
+
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange

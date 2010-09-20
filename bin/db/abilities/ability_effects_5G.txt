@@ -135,8 +135,8 @@
 
 
 
-
-
+#Poison Rampage
+#Heat Rampage
 
 
 
@@ -148,7 +148,7 @@
 
 
 
-#73#JackOfAllTrades
+
 
 47#Mummy
 52#Earthquake Spiral

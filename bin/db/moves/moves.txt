@@ -478,7 +478,7 @@ Rage Power
 Telekinesis
 Magic Room
 Strike Down
-[M480]
+Judo Throw
 Fire Burst
 Sludge Wave
 Robe of the Butterfly
@@ -492,17 +492,17 @@ Ankle Sweep
 Acid Bomb
 Trickery
 Simple Beam
-[M494]
-[M495]
+Assemble Crew
+You First
 Troll
 Echo Voice
-[M498]
+Payment Plan
 Clear Smog
 Assist Power
 Fast Guard
 Side Change
 Boiling Water
-[M504]
+Shell Crack
 Heal Pulse
 Evil Eye
 Free Fall
