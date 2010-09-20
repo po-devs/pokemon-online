@@ -98,8 +98,6 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     }
 }
 
-MirrorMoveAmn amn;
-
 BattleSituation::~BattleSituation()
 {
     terminate();
@@ -1744,7 +1742,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     foreach(int target, targetList) {
         attacked() = target;
-	if (player != target && !specialOccurence && !amn.contains(attack)) {
+        if (player != target && !specialOccurence && (fieldmoves[player].flags & Move::MemorableFlag) ) {
 	    pokelong[target]["MirrorMoveMemory"] = attack;
 	}
 
