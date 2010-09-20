@@ -57,7 +57,7 @@ void PokeMovesDb::init()
             pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[LevelMoves]);
             pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TutorMoves]);
             pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TMMoves]);
-            pokes[i].gens[2].moves[EggMoves].unite(pokes[preEvo].gens[2].moves[LevelMoves]);
+            pokes[i].gens[2].moves[EggMoves].unite(pokes[preEvo].gens[2].moves[EggMoves]);
         }
     }
 }
