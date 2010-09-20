@@ -562,13 +562,7 @@ QByteArray PokemonInfo::Cry(const Pokemon::uniqueId &pokeid)
 
 QSet<int> PokemonInfo::Moves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    QSet<int> moves;
-    moves.unite(RegularMoves(pokeid,3)).unite(SpecialMoves(pokeid,3)).unite(EggMoves(pokeid,3));
-
-    if (gen >= 4)
-        moves.unite(SpecialMoves(pokeid,4)).unite(RegularMoves(pokeid, 4)).unite(EggMoves(pokeid,4));
-
-    return moves;
+    return m_Moves.value(pokeid).genMoves[gen-3];
 }
 
 QSet<int> PokemonInfo::RegularMoves(const Pokemon::uniqueId &pokeid, int gen)
@@ -783,6 +777,16 @@ void PokemonInfo::loadMoves()
         it.next();
         PokemonMoves moves = it.value();
 
+        for (int i = 0; i < 3; i++) {
+            moves.regularMoves[i] = moves.TMMoves[i];
+            moves.regularMoves[i].unite(moves.preEvoMoves[i]).unite(moves.levelMoves[i]).unite(moves.tutorMoves[i]);
+            moves.genMoves[i] = moves.regularMoves[i];
+            moves.genMoves[i].unite(moves.specialMoves[i]).unite(moves.eggMoves[i]);
+
+            if (i > 0) {
+                moves.genMoves[i].unite(moves.genMoves[i-1]);
+            }
+        }
         moves.regularMoves[0] = moves.TMMoves[0];
         moves.regularMoves[0].unite(moves.levelMoves[0]).unite(moves.tutorMoves[0]);
         moves.regularMoves[1] = moves.TMMoves[1];
