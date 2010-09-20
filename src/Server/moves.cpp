@@ -4577,6 +4577,24 @@ struct MMFollowMe : public MM
     }
 };
 
+struct MMGuardShare : public MM
+{
+    MMGuardShare() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        int stat = turn(b,s)["GuardShare_Arg"].toInt();
+
+        //fixme: message
+        //fixme: guard share, power share
+        b.sendMoveMessage(0, 0, s, type(b,s), t, stat);
+        int avstat = (fpoke(b, s).stats[stat] + fpoke(b, t).stats[stat]) / 2;
+        fpoke(b,s).stats[stat] = avstat;
+        fpoke(b,t).stats[stat] = avstat;
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail

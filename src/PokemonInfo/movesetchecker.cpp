@@ -59,34 +59,56 @@ void MoveSetChecker::init(const QString &dir)
 }
 
 bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, int move1, int move2, int move3, int move4, int ability,
-                             QSet<int> *invalid_moves) {
+                             QSet<int> *invalid_moves, QString *error) {
     QSet<int> moves;
     moves << move1 << move2 << move3 << move4;
 
-    return isValid(pokeid, gen, moves, ability, invalid_moves);
+    return isValid(pokeid, gen, moves, ability, invalid_moves, error);
 }
 
+static QString getCombinationS(const QSet<int> &invalid_moves) {
+    QString s;
+    bool comma(false);
+    foreach(int move, invalid_moves) {
+        if (comma)
+            s += ", ";
+        comma = true;
+        s += MoveInfo::Name(move);
+    }
+    return s;
+}
 
-bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSet<int> &moves2, int ability, QSet<int> *invalid_moves) {
+bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSet<int> &moves2, int ability, QSet<int> *invalid_moves,
+                             QString *error) {
     QSet<int> moves = moves2;
     moves.remove(0);
 
     for (int g = gen; g >= 3; g--) {
+        if (!PokemonInfo::Moves(pokeid, g).contains(moves)) {
+            moves.subtract(PokemonInfo::Moves(pokeid, g));
+            if (invalid_moves) {
+                *invalid_moves = moves;
+            }
+            if (error) {
+                *error = QObject::tr("%1 can't learn the following moves: %2.")
+                         .arg(PokemonInfo::Name(pokeid), getCombinationS(moves));
+            }
+            return false;
+        }
         if (g == 5) {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid);
 
             if (ability != ab.ab(0) && ability != ab.ab(1) && !PokemonInfo::RegularMoves(pokeid, gen).contains(moves)) {
+                moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
                 if (invalid_moves) {
-                    *invalid_moves = moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
+                    *invalid_moves = moves;
+                }
+                if (error) {
+                    *error = QObject::tr("%1 can't learn the following moves at the same time as having the Dream World ability %2: %3.")
+                             .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
                 }
                 return false;
             }
-        }
-        if (!PokemonInfo::Moves(pokeid, g).contains(moves)) {
-            if (invalid_moves) {
-                *invalid_moves = moves.subtract(PokemonInfo::Moves(pokeid, g));
-            }
-            return false;
         }
 
         /* now we know the pokemon at least know all moves */
@@ -103,6 +125,13 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
     /* The remaining moves are considered invalid */
     if (invalid_moves) {
         *invalid_moves = moves;
+    }
+    if (error) {
+        if (moves.size() == 1) {
+            *error = QObject::tr("%1 can't learn %2 with moves from older generations.").arg(PokemonInfo::Name(pokeid), MoveInfo::Name(*moves.begin()));
+        } else {
+            *error = QObject::tr("%1 can't learn the following move combination: %2.").arg(PokemonInfo::Name(pokeid), getCombinationS(moves));
+        }
     }
 
     return false;

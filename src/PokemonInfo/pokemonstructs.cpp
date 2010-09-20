@@ -160,21 +160,9 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
 
     if (check) {
         QSet<int> invalid_moves;
-        if (!MoveSetChecker::isValid(num(), gen(), m_moves[0],m_moves[1],m_moves[2],m_moves[3],ability(),&invalid_moves)) {
-            m_moves[moveSlot] =0;
-            if (invalid_moves.size() == 1)
-                throw QObject::tr("%1 can't learn %2 with moves from the third gen.").arg(nickname()).arg(MoveInfo::Name(*invalid_moves.begin()));
-            else {
-                QString s;
-                bool comma(false);
-                foreach(int move, invalid_moves) {
-                    if (comma)
-                        s += ", ";
-                    comma = true;
-                    s += MoveInfo::Name(move);
-                }
-                throw QObject::tr("%1 can't learn the combination of %2.").arg(nickname(), s);
-            }
+        QString error;
+        if (!MoveSetChecker::isValid(num(), gen(), m_moves[0],m_moves[1],m_moves[2],m_moves[3],ability(),&invalid_moves, &error)) {
+            throw error;
         }
     }
 }
