@@ -1147,17 +1147,17 @@ int MoveInfo::EffectRate(int movenum, int g)
     return gen(g).effectChance[movenum];
 }
 
-quint32 MoveInfo::StatAffected(int movenum, int gen)
+quint32 MoveInfo::StatAffected(int movenum, int g)
 {
     return gen(g).none0[movenum];
 }
 
-quint32 MoveInfo::BoostOfStat(int movenum, int gen)
+quint32 MoveInfo::BoostOfStat(int movenum, int g)
 {
     return gen(g).none1[movenum];
 }
 
-quint32 MoveInfo::RateOfStat(int movenum, int gen)
+quint32 MoveInfo::RateOfStat(int movenum, int g)
 {
     return gen(g).none2[movenum];
 }

@@ -2080,8 +2080,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         if (!stat)
             break;
 
-        char increase = (fm.effect2 & (0xFF << i)) >> i;
-        char rate = (fm.effect3 & (0xFF << i)) >> i;
+        char increase = (fm.boostOfStat & (0xFF << i)) >> i;
+        char rate = (fm.rateOfStat & (0xFF << i)) >> i;
 
         if (increase < 0 && target != player && sub) {
             if (rate == 0 && cl != Move::OffensiveStatusInducingMove) {
@@ -2102,7 +2102,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         }
 
         if (increase > 0) {
-            if (stat == Move::AllStats) {
+            if (stat == AllStats) {
                 for (int i = 1; i <= 5; i++) {
                     gainStatMod(target, i, increase);
                 }
@@ -2618,7 +2618,7 @@ void BattleSituation::preventStatMod(int player, int attacker)
 
 bool BattleSituation::canSendPreventMessage(int defender, int attacker) {
     return attacking() || (!turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
-            fieldmoves[attacker].effect3 == 0);
+            fieldmoves[attacker].rateOfStat== 0);
 }
 
 bool BattleSituation::canSendPreventSMessage(int defender, int attacker) {
