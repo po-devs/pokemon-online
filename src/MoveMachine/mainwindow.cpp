@@ -42,9 +42,8 @@ void PokeMovesDb::init()
         pokes[id] = p;
     }
 
-    exit(0);
     /* Code to give evos the moves of their pre evos */
-    for (int i =0; i < PokemonInfo::NumberOfPokemons(); i++) {
+    for (int i =0; i < PokemonInfo::TrueCount(5); i++) {
         int preEvo = PokemonInfo::PreEvo(i);
 
         if (preEvo != 0) {
