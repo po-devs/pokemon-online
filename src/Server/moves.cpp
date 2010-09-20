@@ -561,7 +561,7 @@ struct MMDetect : public MM
 	    return;
 	}
 
-        if (! (tmove(b, s) & Move::ProtectableFlag) ) {
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
 	    return;
 	}
 
