@@ -3377,6 +3377,10 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
         boost = std::max(std::min(boost*2, 6),-6);
     }
 
+    if (hasWorkingAbility(player, Ability::Perversity)) {
+        boost = -boost;
+    }
+
     /* Boost is 1 if boost == 0,
        (2+boost)/2 if boost > 0;
        2/(2+boost) otherwise */
