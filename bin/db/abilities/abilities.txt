@@ -131,7 +131,7 @@ Weak-kneed
 Cursed Body
 Healing Heart
 Friend Card
-Broken Armour
+Broken Armor
 Heavy Metal
 Light Metal
 Multi-Scale

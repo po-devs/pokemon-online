@@ -1977,6 +1977,16 @@ int BattleSituation::ability(int player) {
     return fieldpokes[player].ability;
 }
 
+int BattleSituation::weight(int player) {
+    if (hasWorkingAbility(player, Ability::HeavyMetal)) {
+        return fieldpokes[player].weight * 2;
+    } else if (hasWorkingAbility(player, Ability::LightMetal)) {
+        return fieldpokes[player].weight / 2;
+    } else {
+        return fieldpokes[player].weight;
+    }
+}
+
 Pokemon::uniqueId BattleSituation::pokenum(int player) {
     return fieldpokes[player].id;
 }
