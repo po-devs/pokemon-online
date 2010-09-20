@@ -1333,6 +1333,13 @@ QScriptValue ScriptEngine::teamPokeDV(int id, int index, int stat)
     }
 }
 
+void ScriptEngine::setTeamPokeDV(int id, int slot, int stat, int newValue)
+{
+    if(loggedIn(id) && slot >=0 && slot <=5 && stat >=0 && stat <= 5 && newValue >= 0 && newValue <= 31) {
+        myserver->player(id)->team().poke(slot).dvs()[stat] = newValue;
+    }
+}
+
 QScriptValue ScriptEngine::getFileContent(const QString &fileName)
 {
     QFile out(fileName);
