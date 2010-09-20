@@ -1453,7 +1453,7 @@ bool BattleSituation::testStatus(int player)
     }
     if (poke(player).status() == Pokemon::Frozen)
     {
-        if (true_rand() % 255 > 51)
+        if (true_rand() % 255 > 51 && (!fieldmoves[player].flags & Move::UnthawingFlag) )
         {
             notify(All, StatusMessage, player, qint8(PrevFrozen));
             return false;
