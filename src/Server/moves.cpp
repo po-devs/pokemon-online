@@ -3730,45 +3730,6 @@ struct MMSnatch : public MM
         b.sendMoveMessage(118,1,s,type(b,s));
     }
 
-    /*	* All self-affecting stat ups (including Belly Drum and Defense Curl, but excluding Curse)
-
-    * Aromatherapy
-    * BellyDrum
-    * Camouflage
-    * Charge
-    * Defense Curl
-    * Heal Bell
-    * Heal Order
-    * Ingrain
-    * Light Screen
-    * Milk Drink
-    * Minimize
-    * Mist
-    * Moonlight
-    * Morning Sun
-    * Psych Up
-    * Recover
-    * Reflect
-    * Refresh
-    * Rest
-    * Roost
-    * Safeguard
-    * Slack Off
-    * Softboiled
-    * Stockpile
-    * Substitute
-    * Swallow
-    * Synthesis
-    * Tailwind
-    */
-    struct SM : public QSet<int> {
-        SM() { (*this) << Aromatherapy << BellyDrum << Camouflage << DefenseCurl << HealBell << HealOrder << Ingrain << LightScreen
-               << MilkDrink << Minimize << Mist << Moonlight << MorningSun << PsychUp << Recover << Reflect << Refresh << Rest
-               << Roost << Safeguard << SlackOff << Softboiled << Stockpile << Substitute << Submission << Swallow << Synthesis << Tailwind; }
-    };
-
-    static SM snatched_moves;
-
     static void dgaf(int s, int , BS &b) {
 	if (b.battlelong.contains("Snatcher")) {
             int snatcher = b.battlelong["Snatcher"].toInt();
@@ -3778,29 +3739,25 @@ struct MMSnatch : public MM
             if (!turn(b,snatcher).value("Snatcher").toBool()) {
                 return;
             }
-            if (tmove(b, s).power == 0) {
-		int move = MM::move(b,s);
-                /* Typically, the moves that are snatched are moves that only induce status / boost mods and nothing else,
-                    therefore having no "SpecialEffect". Exceptions are stored in snatched_moves */
-                bool snatched = ( tmove(b,s).targets == Move::User && MoveInfo::SpecialEffect(move).size() == 0 )|| snatched_moves.contains(move);
 
-                if (snatched) {
-                    b.fail(s,118,0,type(b,snatcher), snatcher);
-		    /* Now Snatching ... */
-		    removeFunction(turn(b,snatcher), "UponAttackSuccessful", "Snatch");
-		    turn(b,snatcher).remove("Snatcher");
-		    b.battlelong.remove("Snatcher");
-		    MoveEffect::setup(move,snatcher,s,b);
-		    b.useAttack(snatcher,move,true);
-                    MoveEffect::unsetup(move,snatcher,b);
-                }
-	    }
+            int move = MM::move(b,s);
+            /* Typically, the moves that are snatched are moves that only induce status / boost mods and nothing else,
+                therefore having no "SpecialEffect". Exceptions are stored in snatched_moves */
+            bool snatched = fmove(b,s).flags & Move::SnatchableFlag;
+
+            if (snatched) {
+                b.fail(s,118,0,type(b,snatcher), snatcher);
+                /* Now Snatching ... */
+                removeFunction(turn(b,snatcher), "UponAttackSuccessful", "Snatch");
+                turn(b,snatcher).remove("Snatcher");
+                b.battlelong.remove("Snatcher");
+                MoveEffect::setup(move,snatcher,s,b);
+                b.useAttack(snatcher,move,true);
+                MoveEffect::unsetup(move,snatcher,b);
+            }
 	}
     }
 };
-
-MMSnatch::SM MMSnatch::snatched_moves;
-
 
 struct MMSpite : public MM
 {
