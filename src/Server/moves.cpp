@@ -560,12 +560,11 @@ struct MMDetect : public MM
 	if (!turn(b,t)["DetectUsed"].toBool()) {
 	    return;
 	}
-        int attack = move(b,s);
-	/* Curse, Feint, Psychup, Role Play, Transform */
-        if (attack == Curse || attack == Feint || attack == PsychUp || attack == RolePlay || attack == Transform || attack == ShadowForce
-            || attack == DoomDesire || attack == FutureSight) {
+
+        if (! (fmove(b, s) & Move::ProtectableFlag) ) {
 	    return;
 	}
+
         /* Mind Reader */
         if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
             return;
