@@ -1041,20 +1041,38 @@ struct MMRoar : public MM
     }
 
     static void daf(int s, int t, BS &b) {
+        /* Roar, Whirlwind test phazing here */
+        if (tmove(b,s).power == 0)
+            testPhazing(s, t, b, true);
+    }
+
+    static bool testPhazing(int s, int t, BS &b, bool verbose) {
         int target = b.player(t);
-	/* ingrain & suction cups */
+
+        /* ingrain & suction cups */
         if (poke(b,t).value("Rooted").toBool()) {
-            b.fail(s, 107, 1, Pokemon::Grass,t);
+            if (verbose)
+                b.fail(s, 107, 1, Pokemon::Grass,t);
+            return false;
         } else if (b.hasWorkingAbility(t,Ability::SuctionCups)) {
-            b.fail(s, 107, 0, 0, t);
+            if (verbose)
+                b.fail(s, 107, 0, 0, t);
+            return false;
         } else{
             if (b.countBackUp(target) == 0) {
-		turn(b,s)["Failed"] = true;
-	    }
-	}
+                if (verbose)
+                    turn(b,s)["Failed"] = true;
+                return false;
+            }
+        }
+        return true;
     }
 
     static void uas(int s, int t, BS &b) {
+        /* Dragon tail, Judo Throw only test phazing here */
+        if (tmove(b,s).power > 0 && !testPhazing(s, t, b, false))
+            return;
+
 	QList<int> switches;
         int target = b.player(t);
 	for (int i = 0; i < 6; i++) {
@@ -2360,7 +2378,7 @@ struct MMGrassKnot : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        float weight = b.weight(s);
+        float weight = b.weight(turb(b,s)["GrassKnot_Arg"].toInt() == 0 ? s : t);
 	int bp;
 	/* I had to make some hacks due to the floating point precision, so this is a '<' here and not
 	   a '<='. Will be fixed if someone wants to do it */
@@ -2427,7 +2445,9 @@ struct MMGyroBall : public MM
     }
 
     static void bcd (int s, int t, BS &b) {
-	int bp = 1 + 25 * b.getStat(t,Speed) / b.getStat(s,Speed);
+        bool speed = turn(b,s)["GyroBall_Arg"].toInt() == 1;
+
+        int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
 	bp = std::max(2,std::min(bp,150));
 
         tmove(b, s).power = bp;
@@ -3679,14 +3699,19 @@ struct MMSmellingSalt : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-	if (b.poke(t).status() == turn(b,s)["SmellingSalt_Arg"].toInt()) {
+        int st = turn(b,s)["SmellingSalt_Arg"].toInt();
+        if (st == 0 || b.poke(t).status() == st) {
             tmove(b, s).power = tmove(b, s).power * 2;
 	}
     }
 
     static void aas(int s, int t, BS &b) {
 	if (!b.koed(t)) {
-	    b.healStatus(t,turn(b,s)["SmellingSalt_Arg"].toInt());
+            int status = turn(b,s)["SmellingSalt_Arg"].toInt();
+
+            /* Venom Shock doesn't heal, as well as Evil Eye */
+            if (status != Pokemon::Poisoned && status != 0)
+                b.healStatus(t, status);
 	}
     }
 };
@@ -3921,8 +3946,9 @@ struct MMWorrySeed : public MM {
     }
 
     static void uas(int s, int t, BS &b) {
-        b.acquireAbility(t, Ability::Insomnia); //Insomnia
-        b.sendMoveMessage(143,0,s,Pokemon::Grass,t);
+        int ab = turn(b,s)["WorrySeed_Arg"].toInt();
+        b.acquireAbility(t, ab); //Insomnia
+        b.sendMoveMessage(143,0,s,type(b,s),t,ab);
     }
 };
 
@@ -4594,6 +4620,89 @@ struct MMGuardShare : public MM
         fpoke(b,t).stats[stat] = avstat;
     }
 };
+
+struct MMMagicRoom : public MM {
+    MMMagicRoom() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int
+    static void uas(int s, int, BS &b) {
+        if (b.battlelong.value("MagicRoomCount").toInt() > 0) {
+            //fixme: message
+            b.sendMoveMessage(0,1,s,Pokemon::Psychic);
+            b.battlelong.remove("MagicRoomCount");
+            removeFunction(b.battlelong, "EndTurn9", "MagicRoom");
+        } else {
+            //fixme: message
+            b.sendMoveMessage(0,0,s,Pokemon::Psychic);
+            b.battlelong["MagicRoomCount"] = 5;
+            addFunction(b.battlelong, "EndTurn9", "MagicRoom", &et);
+        }
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(b.battlelong["MagicRoomCount"], -1);
+        if (b.battlelong["MagicRoomCount"].toInt() == 0) {
+            //fixme: message
+            b.sendMoveMessage(0,1,s,Pokemon::Psychic);
+            b.battlelong.remove("MagicRoomCount");
+        }
+    }
+};
+
+struct MMSoak : public MM {
+    MMSoak() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.hasType(t, Pokemon::Water))
+            turn(b,s)["Failed"] = true;
+    }
+
+    static void uas(int, int t, BS &b) {
+        fpoke(b, t).type1 = Pokemon::Water;
+        fpoke(b, t).type2 = Pokemon::Curse;
+        //fixme: message
+        b.sendMoveMessage(0, 0, t, Pokemon::Water, t);
+    }
+};
+
+struct MMAssembleCrew : public MM {
+    MMAssembleCrew() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.ability(t) == Ability::Multitype) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas(int s, int t, BS &b) {
+        b.acquireAbility(t, b.ability(s));
+        //fixme: message
+        b.sendMoveMessage(0,0,s,type(b,s),t,b.ability(s));
+    }
+};
+
+struct MMShellCrack : public MM {
+    MMShellCrack() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        b.loseStatMod(s, Defense, 1, s);
+        b.loseStatMod(s, SpDefense, 1, s);
+        b.gainStatMod(s, Attack, 1);
+        b.gainStatMod(s, SpAttack, 1);
+        b.gainStatMod(s, Speed, 1);
+    }
+};
+
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage

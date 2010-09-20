@@ -65,7 +65,7 @@
 
 
 
-52#Low kick
+52-1#Low kick, 1 is target
 22-1#counter: 1 is physical
 91#seismic toss
 
@@ -358,7 +358,7 @@
 84-16#16 is dark -- miracle eye
 117-2#wake up slap
 
-56#gyro ball
+56-0#gyro ball. 0 is to tell it's up to us to be slow
 37|61#healing wish
 15#brine
 89#natural gift
@@ -386,7 +386,7 @@
 55-2_4#guard swap
 100#punishment
 71#last resort
-143#worry seed
+143-15#worry seed
 129#sucker punch
 136#toxic spikes
 55-1_2_3_4_5_6_7#heart swap -- reverses all stat with foe
@@ -445,7 +445,7 @@
 
 101#Captivate
 124#stealth rock
-52#grass knot
+52-1#grass knot, 1 is target
 147#chatter
 69#judgment
 16#like pluck
@@ -472,6 +472,42 @@
 
 
 
+117-5#Venom Shock
+
+48#Rage power
+
+
+
+
+
+
+
+52-0#HeavyBomber, 0 is self
+
+56-1#Eleci Ball. 1 is to tell it's up to us to be fast
+
+
+
+
+
+
+143-86#Simple Beam
+
+
+
+
+
+
+
+
+
+
+
+
+117-0#Evil Eye
+
+
+107#Overhead Throw
 
 
 
@@ -487,43 +523,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+107#Dragon Tail
 
 
 

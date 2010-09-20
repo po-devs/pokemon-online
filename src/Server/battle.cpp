@@ -2001,7 +2001,8 @@ bool BattleSituation::hasWorkingItem(int player, int it)
 {
     //Klutz
     return poke(player).item() == it && !pokelong[player].value("Embargoed").toBool() && !hasWorkingAbility(player, Ability::Klutz)
-            && ! (ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(player, Ability::Anxiety));
+            && battlelong.value("MagicRoomCount").toInt() == 0
+            && !(ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(player, Ability::Anxiety));
 }
 
 bool BattleSituation::opponentsHaveWorkingAbility(int play, int ability)
@@ -2665,15 +2666,16 @@ int BattleSituation::calculateDamage(int p, int t)
     int attack, def;
     bool crit = move["CriticalHit"].toBool();
 
+    int attackused = move["MoveChosen"].toInt();
+
     int cat = fieldmoves[p].category;
     if (cat == Move::Physical) {
 	attack = getStat(p, Attack);
 	def = getStat(t, Defense);
     } else {
 	attack = getStat(p, SpAttack);
-	def = getStat(t, SpDefense);
+        def = getStat(t, attackused == Move::PsychoShock ? Defense : SpDefense);
     }
-    int attackused = move["MoveChosen"].toInt();
 
     if (attackused == Move::Explosion || attackused == Move::Selfdestruct) /* explosion / selfdestruct */
 	def/=2;
@@ -3413,7 +3415,9 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
 
     if (attacker != -1 && attacked != -1) {
         //Unaware
-        if (attacker != player && attacked == player && hasWorkingAbility(attacker, Ability::Unaware) && (stat == SpDefense || stat == Defense)) {
+        if (attacker != player && attacked == player) {
+            if ( (hasWorkingAbility(attacker, Ability::Unaware) || fieldmoves[attacker].attack == Move::PaymentPlan )
+                && (stat == SpDefense || stat == Defense)) {
             boost = 0;
         } else if (attacker == player && attacked != player && hasWorkingAbility(attacked, Ability::Unaware) && (stat == SpAttack || stat == Attack)) {
             boost = 0;
