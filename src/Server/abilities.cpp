@@ -651,7 +651,7 @@ struct AMLeafGuard  : public AM {
 
     static void psc(int s, int t, BS &b) {
         if (b.isWeatherWorking(BattleSituation::Sunny) && turn(b,s)["StatModType"].toString() == "Status") {
-            if (b.canSendPreventMessage(s,t))
+            if (b.canSendPreventSMessage(s,t))
                 b.sendAbMessage(37,0,s,s,0,b.ability(s));
             b.preventStatMod(s,t);
         }

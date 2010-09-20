@@ -169,6 +169,9 @@ public:
     static bool Exists(int movenum, int gen);
     static bool isOHKO(int movenum, int gen);
     static int EffectRate(int movenum, int gen);
+    static quint32 Effect1(int movenum, int gen);
+    static quint32 Effect2(int movenum, int gen);
+    static quint32 Effect3(int movenum, int gen);
     static int Target(int movenum, int gen);
     static int Healing(int movenum, int gen);
     static int MinTurns(int movenum, int gen);

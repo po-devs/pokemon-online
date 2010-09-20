@@ -43,6 +43,9 @@ MoveEffect::MoveEffect(int num, int gen, BattleSituation::BasicMoveInfo &data)
     data.statusKind = MoveInfo::StatusKind(num, gen);
     data.minTurns = MoveInfo::MinTurns(num, gen);
     data.maxTurns = MoveInfo::MaxTurns(num, gen);
+    data.effect1 = MoveInfo::Effect1(num, gen);
+    data.effect2 = MoveInfo::Effect2(num, gen);
+    data.effect3 = MoveInfo::Effect3(num, gen);
 }
 
 /* There's gonna be tons of structures inheriting it,
@@ -3388,8 +3391,10 @@ struct MMNightMare : public MM
     }
 
     static void asc(int s, int, BS &b) {
-	removeFunction(poke(b,s),"AfterStatusChange", "NightMare");
-        removeFunction(poke(b,s),"EndTurn64", "NightMare");
+        if (b.poke(s) != Pokemon::Asleep) {
+            removeFunction(poke(b,s),"AfterStatusChange", "NightMare");
+            removeFunction(poke(b,s),"EndTurn64", "NightMare");
+        }
     }
 
     static void et(int s, int, BS &b) {
@@ -4223,7 +4228,7 @@ struct MMOutrage : public MM
             poke(b,s).remove("OutrageMove");
             poke(b,s).remove("LastOutrage");
             b.sendMoveMessage(93,0,s,type(b,s));
-            b.inflictConfused(s);
+            b.inflictConfused(s, s, false);
         }
     }
 
