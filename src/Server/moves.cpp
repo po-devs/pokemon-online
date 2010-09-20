@@ -3065,23 +3065,14 @@ struct MMMagicCoat : public MM
 	b.sendMoveMessage(76,0,s,Pokemon::Psychic);
     }
 
-    /* Bounced move that are "special" */
-    struct BM : public QSet<int> {
-        BM() { (*this) << Attract << Block << GastroAcid << LeechSeed << MeanLook << SpiderWeb << WorrySeed << Yawn; }
-    };
-
-    static BM bounced_moves;
-
     static void dgaf(int s, int t, BS &b) {
         if (turn(b,t).value("MagicCoated").toBool()) {
-            if (t != s && tmove(b, s).power == 0) {
-		int move = MM::move(b,s);
-                if (move == TeeterDance)
-                    return;
+            if (t != s) {
+                int move = MM::move(b,s);
 
 		/* Typically, the moves that are bounced back are moves that only induce status / boost mods and nothing else,
 		    therefore having no "SpecialEffect". Exceptions are stored in bounced_moves */
-                bool bounced = MoveInfo::SpecialEffect(move).size() == 0|| bounced_moves.contains(move);
+                bool bounced = fmove(b, s).flags & Move::MagicCoatableFlag;
                 if (bounced) {
 		    b.fail(s,76,1,Pokemon::Psychic);
 		    /* Now Bouncing back ... */
@@ -3097,8 +3088,6 @@ struct MMMagicCoat : public MM
 	}
     }
 };
-
-MMMagicCoat::BM MMMagicCoat::bounced_moves;
 
 struct MMDefog : public MM
 {
