@@ -1296,11 +1296,13 @@ void BattleSituation::sendBack(int player, bool silent)
     }
 
     if (!koed(player)) {
-        /* Natural cure bypasses gastro acid (but not role play/skill swap),
+        /* Natural cure bypasses gastro acid (tested in 4th gen, but not role play/skill swap),
            so we don't check if the ability is working, and just make a test
-           directly */
+           directly. Let's do this with regeneration too, though not tested. */
         if (ability(player) == Ability::NaturalCure) {
             healStatus(player, poke(player).status());
+        } else if (ability(player) == Ability::Regeneration) {
+            healLife(player, poke(player).totalLifePoints()/3);
         }
 	changeCurrentPoke(player, -1);
     }
