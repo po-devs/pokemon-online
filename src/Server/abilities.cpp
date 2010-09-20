@@ -874,27 +874,14 @@ struct AMSoundProof : public AM {
         functions["OpponentBlock"] = &ob;
     }
 
-    struct SoundMoves : public QSet<int> {
-        SoundMoves() {
-            (*this) << Move::GrassWhistle << Move::Growl << Move::HyperVoice << Move::MetalSound <<
-                    Move::Roar << Move::RoarOfTime << Move::Sing << Move::SonicBoom << Move::SonicBoom << Move::Supersonic <<
-                    Move::Screech << Move::Snore << Move::Uproar << Move::BugBuzz << Move::HealBell << Move::Chatter ;
-        }
-    };
-
-    static SoundMoves SM;
-
     static void ob(int s, int t, BS &b) {
-        int mv = move(b,t);
-
-        if (SM.contains(mv)) {
+        if (fmove(b,t).flags & Move::SoundFlag) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
             b.sendAbMessage(57,0,s);
         }
     }
 };
 
-AMSoundProof::SoundMoves AMSoundProof::SM;
 
 struct AMSpeedBoost : public AM {
     AMSpeedBoost() {
