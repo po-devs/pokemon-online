@@ -867,9 +867,9 @@ void PokemonInfo::makeDataConsistent()
             // Original evolutions.
             if(!m_OriginalEvos.contains(id.pokenum)) {
                 m_OriginalEvos[id.pokenum] = id.pokenum;
+                // m_Evolutions initial filler data.
+                m_Evolutions[id.pokenum] = QList<int>() << id.pokenum;
             }
-            // m_Evolutions initial filler data.
-            m_Evolutions[id.pokenum] = QList<int>() << id.pokenum;
         }
         // Weight
         if(!m_Weights.contains(id)) {
