@@ -658,22 +658,12 @@ struct AMIronFist : public AM {
         functions["BasePowerModifier"] = &bpm;
     }
 
-    struct PunchingMoves : public QSet<int> {
-        PunchingMoves() {
-            (*this) << 50 << 61 << 91 << 105 << 108 << 131 << 145 << 171 << 197 << 226 << 238 << 244 << 350 << 362 << 426;
-        }
-    };
-
-    static PunchingMoves PM;
-
     static void bpm (int s, int , BS &b) {
-        if (PM.contains(move(b,s))) {
+        if (fmove(b,s).flags & Move::PunchFlag) {
             turn(b,s)["BasePowerAbilityModifier"] = 4;
         }
     }
 };
-
-AMIronFist::PunchingMoves AMIronFist::PM;
 
 struct AMLeafGuard  : public AM {
     AMLeafGuard() {
