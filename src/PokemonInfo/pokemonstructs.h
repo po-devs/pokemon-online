@@ -893,7 +893,7 @@ namespace Move
         UnthawingFlag = 1024,
         PulsingFlag = 2048,
         HealingFlag = 4096,
-        ForcingFlag = 8192
+        MischievousFlag = 8192
     };
 
     enum Target
