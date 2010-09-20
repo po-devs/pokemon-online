@@ -2063,6 +2063,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 //    }
 
     bool statChange = false;
+    bool negativeStatChange = false;
 
     if (cl == Move::OffensiveSelfStatChangingMove) {
         target = player;
@@ -2111,6 +2112,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
             /* If we are blocked by a secondary effect, let's stop here */
             if (!loseStatMod(target, stat, -increase, player))
                 return;
+            negativeStatChange = true;
         }
 
         statChange = true;
@@ -2118,6 +2120,9 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
     if (statChange == true) {
         callieffects(target, player, "AfterStatChange");
+        if (target != player && negativeStatChange && gen() >= 5) {
+            callaeffects(target, player, "AfterNegativeStatChange");
+        }
     }
 
     /* Now Status */
@@ -2328,6 +2333,9 @@ bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker,
 
         if (this->attacker() != attacker) {
             callieffects(player, attacker, "AfterStatChange");
+            if (player != attacker) {
+                callaeffects(player, attacker, "AfterNegativeStatChange");
+            }
         }
     } else {
         //fixme: can't decrease message
