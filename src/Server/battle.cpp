@@ -2039,38 +2039,115 @@ void BattleSituation::inflictRecoil(int source, int target)
 
 void BattleSituation::applyMoveStatMods(int player, int target)
 {
-    //bool sub = hasSubstitute(target);
+    bool sub = hasSubstitute(target);
 
-    int cl= fieldmoves[player].classification;
+    BasicMoveInfo &fm = fieldmoves[player];
+    int cl= fm.classification;
 
     /* First we check if there's even an effect... */
     if (cl != Move::StatAndStatusMove && cl != Move::StatChangingMove && cl != Move::StatusInducingMove
         && cl != Move::OffensiveSelfStatChangingMove && cl != Move::OffensiveStatusInducingMove
-        && cl != Move::OffensiveSelfStatChangingMove)
+        && cl != Move::OffensiveStatChangingMove)
     {
 	return;
+    }
+
+//    /* Then we check if the effect hits */
+//    int randnum = true_rand() % 100;
+//    /* Serene Grace */
+//    if (hasWorkingAbility(player,Ability::SereneGrace)) {
+//        randnum /= 2;
+//    }
+//    int maxtogo = fieldmoves[player].rate;
+
+//    if (maxtogo != 0 && randnum > maxtogo) {
+//	return;
+//    }
+
+    bool statChange = false;
+
+    if (cl == Move::OffensiveSelfStatChangingMove) {
+        target = player;
+    }
+
+    if (koed(target))
+        return;
+
+    /* Doing Stat Changes */
+    for (int i = 3; i >= 0; i--) {
+        char stat = (fm.effect1 & (0xFF << i)) >> i;
+
+        if (!stat)
+            break;
+
+        char increase = (fm.effect2 & (0xFF << i)) >> i;
+        char rate = (fm.effect3 & (0xFF << i)) >> i;
+
+        if (increase < 0 && target != player && sub) {
+            if (rate == 0 && cl != Move::OffensiveStatusInducingMove) {
+                sendMoveMessage(128, 2, player,0,target, fieldmoves[player].attack);
+            }
+            return;
+        }
+
+        /* Then we check if the effect hits */
+        int randnum = true_rand() % 100;
+        /* Serene Grace */
+        if (hasWorkingAbility(player,Ability::SereneGrace)) {
+            rate *= 2;
+        }
+
+        if (rate != 0 && randnum > rate) {
+            continue;
+        }
+
+        if (increase > 0) {
+            gainStatMod(target, stat, increase);
+        } else {
+            /* If we are blocked by a secondary effect, let's stop here */
+            if (!loseStatMod(target, stat, -increase, player))
+                return;
+        }
+
+        statChange = true;
+    }
+
+    if (statChange == true) {
+        callieffects(target, player, "AfterStatChange");
+    }
+
+    /* Now Status */
+
+    if (cl != Move::StatAndStatusMove && cl != Move::StatusInducingMove && cl != Move::OffensiveStatusInducingMove)
+        return;
+
+    if (fm.statusKind > Pokemon::Confused)
+        return; // Other status effects than status and confusion are, on PO, dealt as special moves. Should probably be changed
+
+    int rate = fm.rate;
+
+    if (target != player && sub) {
+        if (rate == 0 && cl != Move::OffensiveStatChangingMove) {
+            sendMoveMessage(128, 2, player,0,target, fieldmoves[player].attack);
+        }
+        return;
     }
 
     /* Then we check if the effect hits */
     int randnum = true_rand() % 100;
     /* Serene Grace */
     if (hasWorkingAbility(player,Ability::SereneGrace)) {
-        randnum /= 2;
-    }
-    int maxtogo = fieldmoves[player].rate;
-
-    if (maxtogo != 0 && randnum > maxtogo) {
-	return;
+        rate *= 2;
     }
 
-    bool statChanges[2] = {false};
-
-    switch (cl) {
-    case Move::StatAndStatusMove:
-        /* This is only Flatter and Swagger */
-    default:
+    if (rate != 0 && randnum > rate) {
         return;
     }
+
+    if (fm.status == Pokemon::Confused)
+        inflictConfused(target, player, true);
+    else
+        inflictStatus(target, fm.statusKind, player, fm.minTurns, fm.maxTurns);
 
 
 
@@ -2111,15 +2188,15 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 //	    /* Now the kind of change itself */
 //            bool statusChange = effect.midRef(0,3) == "[S]"; /* otherwise it's stat change */
 
-//            if(!self && !statusChange && teamzone[this->player(targeted)].value("MistCount").toInt() > 0) {
-//                sendMoveMessage(86, 2, player,Pokemon::Ice,target, fieldmoves[player].attack);
-//		continue;
-//	    }
+    //            if(!self && !statusChange && teamzone[this->player(targeted)].value("MistCount").toInt() > 0) {
+    //                sendMoveMessage(86, 2, player,Pokemon::Ice,target, fieldmoves[player].attack);
+    //		continue;
+    //	    }
 
-//            if(!self && statusChange && teamzone[this->player(targeted)].value("SafeGuardCount").toInt() > 0) {
-//                sendMoveMessage(109, 2, player,Pokemon::Psychic,target, fieldmoves[player].attack);
-//		continue;
-//	    }
+    //            if(!self && statusChange && teamzone[this->player(targeted)].value("SafeGuardCount").toInt() > 0) {
+    //                sendMoveMessage(109, 2, player,Pokemon::Psychic,target, fieldmoves[player].attack);
+    //		continue;
+    //	    }
     
 //            QStringList possibilities = effect.mid(3).split('^');
     
@@ -2186,34 +2263,12 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 //	    }
 //	}
 //    }
-    if (statChanges[0] == true && !koed(player)) {
-	callieffects(target,player,"AfterStatChange");
-    }
-    if (statChanges[1] == true && !koed(player)) {
-	callieffects(player,player,"AfterStatChange");
-    }
+
 }
 
 void BattleSituation::healConfused(int player)
 {
     pokelong[player]["Confused"] = false;
-}
-
-void BattleSituation::inflictConfused(int player, bool tell)
-{
-    //OwnTempo
-    if (!pokelong[player]["Confused"].toBool() && !hasWorkingAbility(player,Ability::OwnTempo)) {
-	pokelong[player]["Confused"] = true;
-        if (gen() <= 4)
-            pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 1;
-        else
-            pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 2;
-
-        if (tell)
-            notify(All, StatusChange, player, qint8(-1));
-
-        callieffects(player, player,"AfterStatusChange");
-    }
 }
 
 bool BattleSituation::isConfused(int player)
@@ -2240,10 +2295,49 @@ bool BattleSituation::canGetStatus(int player, int status) {
     }
 }
 
+bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker, bool tell)
+{
+    if (attacker != player) {
+        QString q = QString("StatModFrom%1Prevented").arg(attacker);
+        turnlong[player].remove(q);
+        turnlong[player]["StatModType"] = QString("Stat");
+        turnlong[player]["StatModded"] = stat;
+        turnlong[player]["StatModification"] = -malus;
+        callaeffects(player, attacker, "PreventStatChange");
+        if (turnlong[player].contains(q)) {
+            return false;
+        }
+
+        if(teamzone[this->player(player)].value("MistCount").toInt() > 0) {
+            if (canSendPreventMessage(player, attacker))
+                sendMoveMessage(86, 2, player,Pokemon::Ice,player, fieldmoves[attacker].attack);
+            return false;
+        }
+    }
+
+    QString path = QString("Boost%1").arg(stat);
+    int boost = pokelong[player].value(path).toInt();
+    if (boost > -6) {
+        if (tell)
+            notify(All, StatChange, player, qint8(stat), qint8(-malus));
+        changeStatMod(player, stat, std::max(boost-malus, -6));
+
+        if (this->attacker() != attacker) {
+            callieffects(player, attacker, "AfterStatChange");
+        }
+    } else {
+        //fixme: can't decrease message
+    }
+
+    return true;
+}
+
+
 void BattleSituation::inflictStatus(int player, int status, int attacker, int minTurns, int maxTurns)
 {
+    //fixme: mist + intimidate
     if (poke(player).status() != Pokemon::Fine) {
-        if (this->attacker() == attacker && fieldmoves[attacker].power == 0) {
+        if (this->attacker() == attacker && canSendPreventSMessage(player, attacker)) {
             if (poke(player).status() == status)
                 notify(All, AlreadyStatusMessage, player);
             else
@@ -2255,50 +2349,90 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
         sendMoveMessage(141,4,player);
         return;
     }
-    if (canGetStatus(player,status)) {
-        if (attacker != player) {
-            QString q = QString("StatModFrom%1Prevented").arg(attacker);
-            turnlong[player].remove(q);
-            turnlong[player]["StatModType"] = QString("Status");
-            turnlong[player]["StatusInflicted"] = status;
-            callaeffects(player, attacker, "PreventStatChange");
-            if (turnlong[player].contains(q)) {
-                return;
-            }
+    if (attacker != player) {
+        QString q = QString("StatModFrom%1Prevented").arg(attacker);
+        turnlong[player].remove(q);
+        turnlong[player]["StatModType"] = QString("Status");
+        turnlong[player]["StatusInflicted"] = status;
+        callaeffects(player, attacker, "PreventStatChange");
+        if (turnlong[player].contains(q)) {
+            return;
+        }
 
-            if (status == Pokemon::Asleep)
-            {
-                if (sleepClause() && currentForcedSleepPoke[this->player(player)] != -1) {
-                    notifyClause(ChallengeInfo::SleepClause, true);
-                    return;
-                } else {
-                    currentForcedSleepPoke[this->player(player)] = currentPoke(player);
-                }
-            } else if (status == Pokemon::Frozen)
-            {
-                if (clauses() & ChallengeInfo::FreezeClause) {
-                    for (int i = 0; i < 6; i++) {
-                        if (poke(this->player(player),i).status() == Pokemon::Frozen) {
-                            notifyClause(ChallengeInfo::FreezeClause);
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-        changeStatus(player, status, true, minTurns + true_rand() % (maxTurns - minTurns));
-        if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_S) {
-            changeForme(player, currentPoke(player), Pokemon::Shaymin_S);
-        }
-        if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
-            && hasWorkingAbility(player, Ability::Synchronize)) //Synchronize
-        {
-            sendAbMessage(61,0,player,attacker);
-            // Toxic becomes normal poison upon poisoning
-            inflictStatus(attacker, status, player);
+        if(teamzone[this->player(player)].value("SafeGuardCount").toInt() > 0) {
+            sendMoveMessage(109, 2, player,Pokemon::Psychic, player, fieldmoves[player].attack);
+            return;
         }
     }
+
+    if (status == Pokemon::Asleep)
+    {
+        if (sleepClause() && currentForcedSleepPoke[this->player(player)] != -1) {
+            notifyClause(ChallengeInfo::SleepClause, true);
+            return;
+        } else {
+            currentForcedSleepPoke[this->player(player)] = currentPoke(player);
+        }
+    } else if (status == Pokemon::Frozen)
+    {
+        if (clauses() & ChallengeInfo::FreezeClause) {
+            for (int i = 0; i < 6; i++) {
+                if (poke(this->player(player),i).status() == Pokemon::Frozen) {
+                    notifyClause(ChallengeInfo::FreezeClause);
+                    return;
+                }
+            }
+        }
+    }
+
+    changeStatus(player, status, true, minTurns + true_rand() % (maxTurns - minTurns));
+    if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_S) {
+        changeForme(player, currentPoke(player), Pokemon::Shaymin_S);
+    }
+    if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
+        && hasWorkingAbility(player, Ability::Synchronize)) //Synchronize
+    {
+        sendAbMessage(61,0,player,attacker);
+        inflictStatus(attacker, status, player);
+    }
 }
+
+void BattleSituation::inflictConfused(int player, int attacker, bool tell)
+{
+    //fixme: insomnia/owntempo/...
+    if (pokelong[player].value("Confused").toBool()) {
+        if (this->attacker() == attacker && canSendPreventSMessage(player, attacker))
+            notify(All, AlreadyStatusMessage, player);
+    }
+
+    if (attacker != player) {
+        QString q = QString("StatModFrom%1Prevented").arg(attacker);
+        turnlong[player].remove(q);
+        turnlong[player]["StatModType"] = QString("Status");
+        turnlong[player]["StatusInflicted"] = Pokemon::Confused;
+        callaeffects(player, attacker, "PreventStatChange");
+        if (turnlong[player].contains(q)) {
+            return;
+        }
+
+        if(teamzone[this->player(player)].value("SafeGuardCount").toInt() > 0) {
+            sendMoveMessage(109, 2, player,Pokemon::Psychic, player, fieldmoves[attacker].attack);
+            return;
+        }
+    }
+
+    pokelong[player]["Confused"] = true;
+    if (gen() <= 4)
+        pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 1;
+    else
+        pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 2;
+
+    if (tell)
+        notify(All, StatusChange, player, qint8(-1));
+
+    callieffects(player, player,"AfterStatusChange");
+}
+
 
 void BattleSituation::callForth(int weather, int turns)
 {
@@ -2460,28 +2594,6 @@ void BattleSituation::gainStatMod(int player, int stat, int bonus, bool tell)
     }
 }
 
-void BattleSituation::loseStatMod(int player, int stat, int malus, int attacker, bool tell)
-{
-    QString path = QString("Boost%1").arg(stat);
-    int boost = pokelong[player].value(path).toInt();
-    if (boost > -6) {
-        if (attacker != player) {
-            QString q = QString("StatModFrom%1Prevented").arg(attacker);
-            turnlong[player].remove(q);
-            turnlong[player]["StatModType"] = QString("Stat");
-            turnlong[player]["StatModded"] = stat;
-            turnlong[player]["StatModification"] = -malus;
-            callaeffects(player, attacker, "PreventStatChange");
-            if (turnlong[player].contains(q)) {
-                return;
-            }
-        }
-        if (tell)
-            notify(All, StatChange, player, qint8(stat), qint8(-malus));
-	changeStatMod(player, stat, std::max(boost-malus, -6));
-    }
-}
-
 bool BattleSituation::hasMinimalStatMod(int player, int stat)
 {
     return pokelong[player].value(QString("Boost%1").arg(stat)).toInt() <= -6;
@@ -2500,7 +2612,12 @@ void BattleSituation::preventStatMod(int player, int attacker)
 
 bool BattleSituation::canSendPreventMessage(int defender, int attacker) {
     return attacking() || (!turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
-            fieldmoves[attacker].power == 0);
+            fieldmoves[attacker].effect3 == 0);
+}
+
+bool BattleSituation::canSendPreventSMessage(int defender, int attacker) {
+    return attacking() || (!turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
+            fieldmoves[attacker].rate == 0);
 }
 
 void BattleSituation::changeStatMod(int player, int stat, int newstat)

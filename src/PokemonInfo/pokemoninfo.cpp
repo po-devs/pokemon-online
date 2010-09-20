@@ -1147,6 +1147,21 @@ int MoveInfo::EffectRate(int movenum, int g)
     return gen(g).effectChance[movenum];
 }
 
+quint32 MoveInfo::Effect1(int movenum, int gen)
+{
+    return gen(g).none0[movenum];
+}
+
+quint32 MoveInfo::Effect2(int movenum, int gen)
+{
+    return gen(g).none1[movenum];
+}
+
+quint32 MoveInfo::Effect3(int movenum, int gen)
+{
+    return gen(g).none2[movenum];
+}
+
 int MoveInfo::Target(int movenum, int g)
 {
     return gen(g).range[movenum];

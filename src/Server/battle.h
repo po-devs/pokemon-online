@@ -136,8 +136,10 @@ public:
     bool hasMinimalStatMod(int player, int stat);
     bool hasMaximalStatMod(int player, int stat);
     void gainStatMod(int player, int stat, int bonus, bool tell = true);
-    void loseStatMod(int player, int stat, int malus, int attacker, bool tell=true);
+    /* Returns false if blocked */
+    bool loseStatMod(int player, int stat, int malus, int attacker, bool tell=true);
     bool canSendPreventMessage(int defender, int attacker);
+    bool canSendPreventSMessage(int defender, int attacker);
     void preventStatMod(int player, int attacker);
     /* Does not do extra operations,just a setter */
     void changeStatus(int player, int status, bool tell = true, int turns = 0);
@@ -149,7 +151,7 @@ public:
     bool canGetStatus(int player, int status);
     void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);
     bool isConfused(int player);
-    void inflictConfused(int player, bool tell=true);
+    void inflictConfused(int player, int source, bool tell=true);
     void inflictConfusedDamage(int player);
     void inflictRecoil(int source, int target);
     void inflictDamage(int player, int damage, int source, bool straightattack = false, bool goForSub = false);
@@ -436,26 +438,29 @@ public:
     };
 
     struct BasicMoveInfo {
-        int critRaise;
-        int repeatMin;
-        int repeatMax;
-        int priority;
+        char critRaise;
+        char repeatMin;
+        char repeatMax;
+        char priority;
         int flags;
-        int power;
-        int accuracy;
-        int type;
-        int category;
-        int rate;
-        int flinchRate;
-        int recoil;
+        int power; /* unsigned char in the game, but can be raised by effects */
+        int accuracy; /* Same */
+        char type;
+        char category;
+        int rate; /* Same */
+        char flinchRate;
+        char recoil;
         int attack;
-        int targets;
-        int healing;
-        int classification;
-        int status;
-        int statusKind;
-        int minTurns;
-        int maxTurns;
+        char targets;
+        char healing;
+        char classification;
+        char status;
+        char statusKind;
+        char minTurns;
+        char maxTurns;
+        quint32 effect1;
+        quint32 effect2;
+        quint32 effect3;
     };
 
     QList<BasicPokeInfo> fieldpokes;
