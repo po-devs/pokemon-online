@@ -913,8 +913,6 @@ void PokemonInfo::makeDataConsistent()
             }
         }
     }
-
-    qDebug() << m_PreEvos;
 }
 
 Pokemon::uniqueId PokemonInfo::getRandomPokemon()
