@@ -471,7 +471,7 @@ struct MMCurse : public MM
         if (!b.hasType(s, Pokemon::Ghost)) {
             tmove(b,s).targets = Move::User; // so that curse works even when there is no enemy.
         } else {
-            fmove(b,s).classification = Move::SpecialMove;
+            tmove(b,s).classification = Move::SpecialMove;
             turn(b,s)["CurseGhost"] = true;
         }
     }
@@ -561,7 +561,7 @@ struct MMDetect : public MM
 	    return;
 	}
 
-        if (! (fmove(b, s) & Move::ProtectableFlag) ) {
+        if (! (tmove(b, s) & Move::ProtectableFlag) ) {
 	    return;
 	}
 
@@ -798,7 +798,7 @@ struct MMPerishSong : public MM
             return;
         }
         addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
-        poke(b, t)["PerishSongCount"] = fmove(b,s).minTurns;
+        poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns;
 
 	b.sendMoveMessage(95);
     }
@@ -1612,7 +1612,7 @@ struct MMBind : public MM
 
     static void uas (int s, int t, BS &b) {
         b.link(s, t, "Trapped");
-        BS::BasicMoveInfo &fm = fmove(b,s);
+        BS::BasicMoveInfo &fm = tmove(b,s);
         poke(b,t)["TrappedRemainingTurns"] = b.poke(s).item() == Item::GripClaw ?
                                              fm.maxTurns : (b.true_rand()%fm.maxTurns+1-fm.minTurns) + fm.minTurns; /* Grip claw = max turns */
 	poke(b,t)["TrappedMove"] = move(b,s);
@@ -3058,7 +3058,7 @@ struct MMMagicCoat : public MM
 
 		/* Typically, the moves that are bounced back are moves that only induce status / boost mods and nothing else,
 		    therefore having no "SpecialEffect". Exceptions are stored in bounced_moves */
-                bool bounced = fmove(b, s).flags & Move::MagicCoatableFlag;
+                bool bounced = tmove(b, s).flags & Move::MagicCoatableFlag;
                 if (bounced) {
 		    b.fail(s,76,1,Pokemon::Psychic);
 		    /* Now Bouncing back ... */
@@ -3717,7 +3717,7 @@ struct MMSnatch : public MM
             int move = MM::move(b,s);
             /* Typically, the moves that are snatched are moves that only induce status / boost mods and nothing else,
                 therefore having no "SpecialEffect". Exceptions are stored in snatched_moves */
-            bool snatched = fmove(b,s).flags & Move::SnatchableFlag;
+            bool snatched = tmove(b,s).flags & Move::SnatchableFlag;
 
             if (snatched) {
                 b.fail(s,118,0,type(b,snatcher), snatcher);
@@ -4085,9 +4085,9 @@ struct MMSecretPower : public MM {
     }
 
     static void ms(int s, int, BS &b) {
-        fmove(b,s).classification = Move::OffensiveStatusInducingMove;
-        fmove(b,s).status = Pokemon::Paralysed;
-        fmove(b,s).rate = 30;
+        tmove(b,s).classification = Move::OffensiveStatusInducingMove;
+        tmove(b,s).status = Pokemon::Paralysed;
+        tmove(b,s).rate = 30;
     }
 };
 
