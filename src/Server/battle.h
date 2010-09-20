@@ -458,9 +458,9 @@ public:
         char statusKind;
         char minTurns;
         char maxTurns;
-        quint32 effect1;
-        quint32 effect2;
-        quint32 effect3;
+        quint32 statAffected;
+        quint32 boostOfStat;
+        quint32 rateOfStat;
     };
 
     QList<BasicPokeInfo> fieldpokes;

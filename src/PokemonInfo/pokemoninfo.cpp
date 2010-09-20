@@ -1147,17 +1147,17 @@ int MoveInfo::EffectRate(int movenum, int g)
     return gen(g).effectChance[movenum];
 }
 
-quint32 MoveInfo::Effect1(int movenum, int gen)
+quint32 MoveInfo::StatAffected(int movenum, int gen)
 {
     return gen(g).none0[movenum];
 }
 
-quint32 MoveInfo::Effect2(int movenum, int gen)
+quint32 MoveInfo::BoostOfStat(int movenum, int gen)
 {
     return gen(g).none1[movenum];
 }
 
-quint32 MoveInfo::Effect3(int movenum, int gen)
+quint32 MoveInfo::RateOfStat(int movenum, int gen)
 {
     return gen(g).none2[movenum];
 }
@@ -1934,14 +1934,14 @@ QString StatInfo::Status(int stat)
 QString StatInfo::ShortStatus(int stat)
 {
     switch (stat) {
-    case -2: return "Ko";
-    case 0: return "";
-    case 1: return "Par";
-    case 2: return "Brn";
-    case 3: return "Frz";
-    case 4: return "Slp";
-    case 5: return "Psn";
-    case 6: return "Tox";
+    case Pokemon::Koed: return "Ko";
+    case Pokemon::Fine: return "";
+    case Pokemon::Paralysed: return "Par";
+    case Pokemon::Asleep: return "Slp";
+    case Pokemon::Frozen: return "Frz";
+    case Pokemon::Burnt: return "Brn";
+    case Pokemon::Poisoned: return "Psn";
+    case Pokemon::Confused: return "Cfs";
     default:
         return "";
     }

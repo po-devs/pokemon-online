@@ -4,3 +4,4 @@ asleep
 frozen
 burnt
 poisoned
+confused

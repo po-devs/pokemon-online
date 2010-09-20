@@ -2075,7 +2075,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
     /* Doing Stat Changes */
     for (int i = 3; i >= 0; i--) {
-        char stat = (fm.effect1 & (0xFF << i)) >> i;
+        char stat = (fm.statAffected & (0xFF << i)) >> i;
 
         if (!stat)
             break;
@@ -2102,7 +2102,13 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         }
 
         if (increase > 0) {
-            gainStatMod(target, stat, increase);
+            if (stat == Move::AllStats) {
+                for (int i = 1; i <= 5; i++) {
+                    gainStatMod(target, i, increase);
+                }
+            } else {
+                gainStatMod(target, stat, increase);
+            }
         } else {
             /* If we are blocked by a secondary effect, let's stop here */
             if (!loseStatMod(target, stat, -increase, player))
@@ -2339,7 +2345,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
     if (poke(player).status() != Pokemon::Fine) {
         if (this->attacker() == attacker && canSendPreventSMessage(player, attacker)) {
             if (poke(player).status() == status)
-                notify(All, AlreadyStatusMessage, player);
+                notify(All, AlreadyStatusMessage, player, quint8(poke(player).status()));
             else
                 notify(All, Failed, player);
         }
@@ -2402,7 +2408,7 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
     //fixme: insomnia/owntempo/...
     if (pokelong[player].value("Confused").toBool()) {
         if (this->attacker() == attacker && canSendPreventSMessage(player, attacker))
-            notify(All, AlreadyStatusMessage, player);
+            notify(All, AlreadyStatusMessage, player, quint8(Pokemon::Confused));
     }
 
     if (attacker != player) {

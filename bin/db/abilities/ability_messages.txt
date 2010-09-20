@@ -31,7 +31,7 @@
 %s's %a prevents its stat from being lowered!
 %s's %a prevented its stats from being lowered!
 %s's %a heals it!
-%s's %a cures it!
+%s's %a cures it!|%s didn't get paralyzed because of its %a!|%s stayed awake because of its %a!|%s didn't get frozen because of its %a!|%s didn't get burnt because of its %a!|%s didn't get poisoned because of its %a!
 %s intimidates %f!|%f's substitute suppressed %s's Intimidate!
 
 
@@ -42,7 +42,7 @@
 %s's Motor Drive raises its speed!
 
 
-%s's Own Tempo cures its confusion!
+%s's Own Tempo cures its confusion!|%s's Own Tempo prevented it from getting confused!
 %s restored HP using its Poison Heal!
 %s is exerting its Pressure!
 %s's ability became Mummy!
