@@ -43,8 +43,8 @@ int main(int, char**)
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    int pokenum = 386;
-    int gen = 3;
+    int pokenum = 649;
+    int gen = 5;
 
     qDebug() << "Gen " << gen;
     qDebug() << "Pokemons: " << pokenum;
