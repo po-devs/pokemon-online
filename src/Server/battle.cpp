@@ -3415,8 +3415,8 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
         //Unaware
         if (attacker != player && attacked == player) {
             if ( (hasWorkingAbility(attacker, Ability::Unaware) || fieldmoves[attacker].attack == Move::PaymentPlan )
-                && (stat == SpDefense || stat == Defense)) {
-            boost = 0;
+                && (stat == SpDefense || stat == Defense))
+                boost = 0;
         } else if (attacker == player && attacked != player && hasWorkingAbility(attacked, Ability::Unaware) && (stat == SpAttack || stat == Attack)) {
             boost = 0;
         }
