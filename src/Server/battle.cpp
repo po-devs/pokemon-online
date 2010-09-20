@@ -808,8 +808,12 @@ void BattleSituation::analyzeChoices()
     foreach(int i, playersByOrder) {
 	if (choice[i].poke())
             switches.push_back(i);
-	else
+        else {
+            if (gen() >= 5) {
+                callaeffects(player, player, "PriorityChoice");
+            }
             priorities[fieldmoves[i].priority].push_back(i);
+        }
     }
 
     foreach(int player, switches) {
@@ -2701,7 +2705,7 @@ int BattleSituation::calculateDamage(int p, int t)
     move.remove("BasePowerFoeAbilityModifier");
     callaeffects(p,t,"BasePowerModifier");
     callaeffects(t,p,"BasePowerFoeModifier");
-    power = power * (20+move["BasePowerAbilityModifier"].toInt())/20 * (20+move["BasePowerFoeAbilityModifier"].toInt())/20;
+    power = power * (20+move.value("BasePowerAbilityModifier").toInt())/20 * (20+move.value("BasePowerFoeAbilityModifier").toInt())/20;
 
     int damage = ((((level * 2 / 5) + 2) * power * attack / 50) / def);
     //Guts, burn

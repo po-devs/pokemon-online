@@ -1390,7 +1390,33 @@ struct AMEccentric : public AM
     }
 };
 
+struct AMMischievousHeart : public AM
+{
+    AMMischievousHeart() {
+        functions["PriorityChoice"] = &pc;
+    }
+
+    static void pc(int s, int, BS &b) {
+        if (tmove(b,s).flags & Move::MischievousFlag)
+            tmove(b,s).priority = 1;
+    }
+};
+
+struct AMMultiScale : public AM
+{
+    AMMultiScale() {
+        functions["BasePowerFoeModifier"] = &bpfm;
+    }
+
+    static void bpfm(int s, int t, BS &b) {
+        if (b.poke(s).isFull()) {
+            turn(b,t)["BasePowerFoeAbilityModifier"] = -10;
+        }
+    }
+};
+
 /* Events:
+    PriorityChoice
     AfterNegativeStatChange
     UponPhysicalAssault
     DamageFormulaStart
