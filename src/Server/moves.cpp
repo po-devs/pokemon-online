@@ -2498,20 +2498,6 @@ struct MMThunder : public MM
     }
 };
 
-struct MMUnThawing : public MM
-{
-    MMUnThawing() {
-	functions["EvenWhenCantMove"] = &ewcm;
-    }
-
-    static void ewcm(int s, int, BS &b) {
-	if (b.poke(s).status() == Pokemon::Frozen) {
-	    b.notify(BattleSituation::All, BattleSituation::StatusMessage, s, qint8(BattleSituation::FreeFrozen));
-	    b.healStatus(s, Pokemon::Frozen);
-	}
-    }
-};
-
 struct MMWeatherBall : public MM
 {
     MMWeatherBall() {
@@ -4778,7 +4764,7 @@ void MoveEffect::init()
     REGISTER_MOVE(150, Roost);
     REGISTER_MOVE(151, Ingrain);
     REGISTER_MOVE(152, Thunder);
-    REGISTER_MOVE(153, UnThawing);
+    //REGISTER_MOVE(153, UnThawing);
     REGISTER_MOVE(154, DefenseCurl);
 }
 
