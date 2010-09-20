@@ -56,6 +56,11 @@ int main(int, char**)
         QString group1(getLine("db/pokes/poke_egg_group_1.txt",i).split(' ').back());
         QString group2(getLine("db/pokes/poke_egg_group_2.txt",i).split(' ').back());
 
+        if (group1.toInt() != 0)
+            group1 = "";
+        if (group2.toInt() != 0)
+            group2 = "";
+
         pokesOfGroup.insert(group1,i);
         pokesOfGroup.insert(group2,i);
     }
@@ -75,6 +80,16 @@ int main(int, char**)
         qDebug() << "Doing poke " << PokemonInfo::Name(i);
         legalCombinations.push_back(QSet<QSet<int> > ());
 
+        QString groups[2] = {getLine("db/pokes/poke_egg_group_1.txt",i).split(' ').back(),
+                             getLine("db/pokes/poke_egg_group_2.txt",i).split(' ').back()};
+        if (groups[0].toInt() != 0)
+            groups[0] = "";
+        if (groups[1].toInt() != 0)
+            groups[1] = "";
+
+        if (groups[0] == "" && groups[1] == "")
+            continue;
+
         QSet<int> eggMoves = PokemonInfo::EggMoves(i, gen);
         QSet<int> regularMoves = PokemonInfo::RegularMoves(i, gen);
 
@@ -82,9 +97,6 @@ int main(int, char**)
         foreach(int move, regularMoves) {
             eggMoves.remove(move);
         }
-
-        QString groups[2] = {getLine("db/pokes/poke_egg_group_1.txt",i),
-                             getLine("db/pokes/poke_egg_group_2.txt",i)};
 
         /* All egg moves combinations */
         QSet<QSet<int> > allCombinations;
