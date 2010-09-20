@@ -19,6 +19,7 @@ void MoveGen::init(int gen, Pokemon::uniqueId pokenum)
     moves[EggMoves] = PokemonInfo::EggMoves(pokenum,gen);
     moves[TutorMoves] = PokemonInfo::TutorMoves(pokenum,gen);
     moves[TMMoves] = PokemonInfo::TMMoves(pokenum, gen);
+    moves[PreEvoMoves] = PokemonInfo::PreEvoMoves(pokenum, gen);
 }
 
 void MovesPerPoke::init(Pokemon::uniqueId poke)
@@ -41,19 +42,30 @@ void PokeMovesDb::init()
         pokes[id] = p;
     }
 
+    exit(0);
     /* Code to give evos the moves of their pre evos */
-//    for (int i =0; i < PokemonInfo::NumberOfPokemons(); i++) {
-//        int preEvo = PokemonInfo::PreEvo(i);
+    for (int i =0; i < PokemonInfo::NumberOfPokemons(); i++) {
+        int preEvo = PokemonInfo::PreEvo(i);
 
-//        if (preEvo != 0) {
-//            pokes[i].gens[0].moves[LevelMoves].unite(pokes[preEvo].gens[0].moves[LevelMoves]);
-//        }
-//    }
+        if (preEvo != 0) {
+            pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[LevelMoves]);
+            pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[PreEvoMoves]);
+            pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[LevelMoves]);
+            pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[TutorMoves]);
+            pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[TMMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[LevelMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[PreEvoMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[LevelMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TutorMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TMMoves]);
+            pokes[i].gens[2].moves[EggMoves].unite(pokes[preEvo].gens[2].moves[LevelMoves]);
+        }
+    }
 }
 
 void PokeMovesDb::save()
 {
-    QFile files[3][5];
+    QFile files[3][6];
 
     for (int gen = 3; gen <= 5; gen++) {
         QString genS = "db/pokes/" + QString::number(gen) + "G_";
@@ -62,12 +74,13 @@ void PokeMovesDb::save()
         files[gen-3][TutorMoves].setFileName(genS + "tutor_moves.txt");
         files[gen-3][SpecialMoves].setFileName(genS + "special_moves.txt");
         files[gen-3][TMMoves].setFileName(genS + "tm_and_hm_moves.txt");
+        files[gen-3][PreEvoMoves].setFileName(genS + "pre_evo_moves.txt");
     }
 
     QList<Pokemon::uniqueId> ids = PokemonInfo::AllIds();
     qSort(ids);
     for (int gen = 3; gen <= 5; gen++) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             files[gen-3][i].open(QIODevice::WriteOnly);
             foreach (Pokemon::uniqueId id, ids) {
                 if (PokemonInfo::IsAesthetic(id) || pokes[id].gens[gen-3].moves[i].size() == 0)
@@ -184,7 +197,6 @@ MainWindow::MainWindow(QWidget *parent) :
 //    outfile.write(out.join("\n").toUtf8());
 //    outfile.close();
 //    exit(0);
-    exit(0);
 
 //    AbilityInfo::init();
 //    QFile in("db/abilities/ability_extract.txt");
