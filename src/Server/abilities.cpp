@@ -1326,7 +1326,23 @@ struct AMEncourage : public AM
     }
 };
 
+struct AMCompetitiveSpirit : public AM
+{
+    AMCompetitiveSpirit() {
+        functions["AfterNegativeStatChange"] = &ansc;
+    }
+
+    static void ansc(int s, int, BS &b) {
+        if (b.hasMaximalStatMod(s, Attack))
+            return;
+        /* Fix me : ability message */
+        b.sendAbMessage(0);
+        b.gainStatMod(s, Attack, 1, false);
+    }
+};
+
 /* Events:
+    AfterNegativeStatChange
     UponPhysicalAssault
     DamageFormulaStart
     UponOffensiveDamageReceived
