@@ -141,7 +141,7 @@ Poison spikes were scattered all around the feet of %tf's team!|The poison spike
 
 %s caused an uproar!|%s is making an uproar!|%s calmed down!|%s woke up!|%s stays awake because of the uproar!
 %q's wish came true!
-%f now has insomnia!
+%f now has %a!
 %s made %f feel drowsy!|%s yawns!|%s's %a made it ineffective!
 
 
