@@ -2378,7 +2378,7 @@ struct MMGrassKnot : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        float weight = b.weight(turb(b,s)["GrassKnot_Arg"].toInt() == 0 ? s : t);
+        float weight = b.weight(turn(b,s)["GrassKnot_Arg"].toInt() == 0 ? s : t);
 	int bp;
 	/* I had to make some hacks due to the floating point precision, so this is a '<' here and not
 	   a '<='. Will be fixed if someone wants to do it */
