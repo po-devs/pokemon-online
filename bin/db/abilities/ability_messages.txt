@@ -48,7 +48,7 @@
 %s's ability became Mummy!
 
 
-%s's Rough Skin hurts %f
+%s's %a hurts %f
 
 
 

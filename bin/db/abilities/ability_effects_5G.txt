@@ -158,7 +158,7 @@
 68-11#Herbivore
 
 72#Sand Power
-
+50#Iron Barb
 77#Daruma Mode
 75#Victory Star
 40#Turbo Blaze

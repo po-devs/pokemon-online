@@ -772,7 +772,7 @@ struct AMRoughSkin : public AM {
 
     static void upa( int s, int t, BS &b) {
         if (!b.koed(t)) {
-            b.sendAbMessage(50,0,s,t);
+            b.sendAbMessage(50,0,s,t,0,b.ability(s));
             b.inflictDamage(t,b.poke(t).totalLifePoints()/8,s,false);
         }
     }
