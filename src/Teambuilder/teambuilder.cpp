@@ -323,6 +323,7 @@ void TeamBuilder::newTeam()
     if (QMessageBox::question(this, tr("New Team"), tr("You sure?"), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
         for (int i = 0; i < 6; i++) {
             team()->poke(i) = PokeTeam();
+            team()->poke(i).setGen(trainerTeam()->team().gen());
         }
         updateTeam();
     }

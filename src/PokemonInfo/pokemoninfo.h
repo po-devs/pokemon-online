@@ -20,6 +20,7 @@ struct PokemonMoves
     QSet<int> eggMoves[3];
     QSet<int> specialMoves[3];
     QSet<int> tutorMoves[3];
+    QSet<int> genMoves[3];
 };
 
 
