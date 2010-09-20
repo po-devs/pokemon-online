@@ -471,7 +471,7 @@ struct MMCurse : public MM
         if (!b.hasType(s, Pokemon::Ghost)) {
             tmove(b,s).targets = Move::User; // so that curse works even when there is no enemy.
         } else {
-            turn(b,s)["StatEffect"] = "";
+            fmove(b,s).classification = Move::SpecialMove;
             turn(b,s)["CurseGhost"] = true;
         }
     }
@@ -1395,9 +1395,9 @@ struct MMCovet : public MM
     static void uas(int s,int t,BS &b)
     {
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
-            && b.ability(t) != Ability::Multitype && b.poke(s).item() == 0
-                    && b.pokenum(t) != Pokemon::Giratina_O && !ItemInfo::isMail(b.poke(s).item())
-            && !ItemInfo::isMail(b.poke(t).item())) /* Sticky Hold, MultiType, Giratina_O, Mail*/
+            && b.ability(t) != Ability::Multitype && !b.hasWorkingAbility(s, Ability::Multitype)
+            && b.pokenum(s) != Pokemon::Giratina_O && b.poke(s).item() == 0
+                    && b.pokenum(t) != Pokemon::Giratina_O && !ItemInfo::isMail(b.poke(t).item())) /* Sticky Hold, MultiType, Giratina_O, Mail*/
         {
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
 	    b.acqItem(s, b.poke(t).item());
@@ -4099,7 +4099,9 @@ struct MMSecretPower : public MM {
     }
 
     static void ms(int s, int, BS &b) {
-        turn(b,s)["StatEffect"] = "O[S]1+";
+        fmove(b,s).classification = Move::OffensiveStatusInducingMove;
+        fmove(b,s).status = Pokemon::Paralysed;
+        fmove(b,s).rate = 30;
     }
 };
 

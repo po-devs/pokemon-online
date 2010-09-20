@@ -882,7 +882,6 @@ struct AMSoundProof : public AM {
     }
 };
 
-
 struct AMSpeedBoost : public AM {
     AMSpeedBoost() {
         functions["OnSetup"] = &os;
@@ -1286,6 +1285,44 @@ struct AMDarumaMode : public AM {
             return;
 
         b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma? 1 : 0));
+    }
+};
+
+struct AMWickedThief : public AM
+{
+    AMWickedThief() {
+        functions["UponPhysicalAssault"] = &upa;
+    }
+
+    /* Ripped off from Covet */
+    static void upa(int s, int t, BS &b) {
+        if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
+                    && b.ability(t) != Ability::Multitype && !b.hasWorkingAbility(s, Ability::Multitype)
+                    && b.pokenum(s) != Pokemon::Giratina_O && b.poke(s).item() == 0
+                            && b.pokenum(t) != Pokemon::Giratina_O && !ItemInfo::isMail(b.poke(t).item()))
+            {
+            /* Fixme: Ability message */
+            b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
+            b.acqItem(s, b.poke(t).item());
+            b.loseItem(t);
+        }
+    }
+};
+
+struct AMEncourage : public AM
+{
+    AMEncourage() {
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    static void bpm(int s, int, BS &b) {
+        int cl = fmove(b,s).classification;
+
+        if (cl != Move::OffensiveStatChangingMove && cl != Move::OffensiveStatusInducingMove)
+            return;
+
+        fmove(b,s).classification = Move::StandardMove;
+        turn(b,s)["BasePowerAbilityModifier"] = 10;
     }
 };
 
