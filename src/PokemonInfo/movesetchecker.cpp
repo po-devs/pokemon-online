@@ -58,19 +58,30 @@ void MoveSetChecker::init(const QString &dir)
     }
 }
 
-bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, int move1, int move2, int move3, int move4, QSet<int> *invalid_moves) {
+bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, int move1, int move2, int move3, int move4, int ability,
+                             QSet<int> *invalid_moves) {
     QSet<int> moves;
     moves << move1 << move2 << move3 << move4;
 
-    return isValid(pokeid, gen, moves, invalid_moves);
+    return isValid(pokeid, gen, moves, ability, invalid_moves);
 }
 
 
-bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSet<int> &moves2, QSet<int> *invalid_moves) {
+bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSet<int> &moves2, int ability, QSet<int> *invalid_moves) {
     QSet<int> moves = moves2;
     moves.remove(0);
 
-    for (int g = gen; gen >= 3; g--) {
+    for (int g = gen; g >= 3; g--) {
+        if (g == 5) {
+            AbilityGroup ab = PokemonInfo::Abilities(pokeid);
+
+            if (ability != ab.ab(0) && ability != ab.ab(1) && !PokemonInfo::RegularMoves(pokeid, gen).contains(moves)) {
+                if (invalid_moves) {
+                    *invalid_moves = moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
+                }
+                return false;
+            }
+        }
         if (!PokemonInfo::Moves(pokeid, g).contains(moves)) {
             if (invalid_moves) {
                 *invalid_moves = moves.subtract(PokemonInfo::Moves(pokeid, g));

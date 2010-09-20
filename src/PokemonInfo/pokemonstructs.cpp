@@ -160,7 +160,7 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
 
     if (check) {
         QSet<int> invalid_moves;
-        if (!MoveSetChecker::isValid(num(), gen(), m_moves[0],m_moves[1],m_moves[2],m_moves[3],&invalid_moves)) {
+        if (!MoveSetChecker::isValid(num(), gen(), m_moves[0],m_moves[1],m_moves[2],m_moves[3],ability(),&invalid_moves)) {
             m_moves[moveSlot] =0;
             if (invalid_moves.size() == 1)
                 throw QObject::tr("%1 can't learn %2 with moves from the third gen.").arg(nickname()).arg(MoveInfo::Name(*invalid_moves.begin()));
@@ -188,7 +188,7 @@ void PokePersonal::runCheck()
 
     QSet<int> invalidMoves;
 
-    MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), &invalidMoves);
+    MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), &invalidMoves);
 
     while (invalidMoves.size() > 0) {
         for (int i = 0; i < 4; i++) {
@@ -198,7 +198,7 @@ void PokePersonal::runCheck()
         }
         invalidMoves.clear();
 
-        MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), &invalidMoves);
+        MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), &invalidMoves);
     }
 
     AbilityGroup ab = PokemonInfo::Abilities(num(), gen());
