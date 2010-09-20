@@ -3391,7 +3391,7 @@ struct MMNightMare : public MM
     }
 
     static void asc(int s, int, BS &b) {
-        if (b.poke(s) != Pokemon::Asleep) {
+        if (b.poke(s).status() != Pokemon::Asleep) {
             removeFunction(poke(b,s),"AfterStatusChange", "NightMare");
             removeFunction(poke(b,s),"EndTurn64", "NightMare");
         }
