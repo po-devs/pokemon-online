@@ -1341,6 +1341,55 @@ struct AMCompetitiveSpirit : public AM
     }
 };
 
+struct AMEccentric : public AM
+{
+    AMEccentric() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us(int s, int , BS &b) {
+        int t = b.randomOpponent(s);
+
+        if (t == -1)
+            return;
+
+        /* Ripped off from Transform */
+        /* Give new values to what needed */
+        Pokemon::uniqueId num = b.pokenum(t);
+        if (num.toPokeRef() == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
+            num = Pokemon::Giratina;
+        if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
+            num.subnum = ItemInfo::PlateType(b.poke(s).item());
+        }
+
+        b.sendMoveMessage(137,0,s,0,s,num.pokenum);
+
+        BS::BasicPokeInfo &po = fpoke(b,s);
+        BS::BasicPokeInfo &pt = fpoke(b,t);
+
+        po.id = num;
+        po.weight = PokemonInfo::Weight(num);
+        po.type1 = PokemonInfo::Type1(num, b.gen());
+        po.type2 = PokemonInfo::Type2(num, b.gen());
+        po.ability = b.ability(t);
+
+        b.changeSprite(s, num);
+
+        for (int i = 0; i < 4; i++) {
+            b.changeTempMove(s,i,b.move(t,i));
+        }
+
+        for (int i = 1; i < 6; i++)
+            po.stats[i] = pt.stats[i];
+
+        for (int i = 0; i < 6; i++) {
+            po.dvs[i] = pt.dvs[i];
+        }
+
+        b.acquireAbility(s, b.ability(s));
+    }
+};
+
 /* Events:
     AfterNegativeStatChange
     UponPhysicalAssault
