@@ -162,4 +162,4 @@ Iron Barbs
 Daruma Mode
 Victory Star
 Turbo Blaze
-TeraVoltage 
+TeraVoltage

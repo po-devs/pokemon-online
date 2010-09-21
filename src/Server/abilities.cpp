@@ -1229,7 +1229,7 @@ struct AMBrokenArmour : public AM {
             b.inflictStatMod(s, Defense, -1, s);
         }
         if (!b.hasMaximalStatMod(s, Speed)) {
-            b.inflictStatMod(s, Attack, 1, s);
+            b.inflictStatMod(s, Speed, 1, s);
         }
     }
 };
