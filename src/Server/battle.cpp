@@ -1980,7 +1980,9 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
     if (attacking()) {
         // Mold Breaker
-        if (player == attacked() && player != attacker() && hasWorkingAbility(attacker(), Ability::MoldBreaker)) {
+        if (player == attacked() && player != attacker() &&
+            (hasWorkingAbility(attacker(), ability(attacker()))
+            &&( ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVoltage ||  ability(attacker()) == Ability::TurboBlaze))) {
             return false;
         }
     }

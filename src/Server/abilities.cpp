@@ -698,7 +698,7 @@ struct AMMoldBreaker : public AM {
     }
 
     static void us (int s, int, BS &b) {
-        b.sendAbMessage(40,0,s);
+        b.sendAbMessage(40,0,s,s,0,b.ability(s));
     }
 };
 
