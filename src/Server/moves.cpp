@@ -122,6 +122,8 @@ void MoveEffect::unsetup(int num, int source, BattleSituation &b)
             }
         }
     }
+
+    b.fieldmoves[source].classification = Move::StandardMove;
 }
 
 /* List of events:
@@ -580,7 +582,7 @@ struct MMEruption : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        tmove(b, s).power = std::max(10, tmove(b, s).power*150*b.poke(s).lifePoints()/b.poke(s).totalLifePoints());
+        tmove(b, s).power = std::max(10, tmove(b, s).power*b.poke(s).lifePoints()/b.poke(s).totalLifePoints());
     }
 };
 
@@ -3183,6 +3185,7 @@ struct MMMagnitude: public MM
 struct MMMeFirst : public MM
 {
     MMMeFirst() {
+        functions["MoveSettings"] = &ms;
 	functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
     }
@@ -4145,7 +4148,6 @@ struct MMBeatUp : public MM {
 
     static void ms(int s, int, BS &b) {
         tmove(b,s).type = Pokemon::Curse;
-        tmove(b, s).power = 1;
     }
 
     static void daf(int s,int, BS&b) {
