@@ -387,7 +387,7 @@ public:
     /* This time the pokelong effects */
     void callpeffects(int source, int target, const QString &name);
     /* this time the general battle effects (imprison, ..) */
-    void callbeffects(int source, int target, const QString &name);
+    void callbeffects(int source, int target, const QString &name, bool stopOnFail = false);
     /* The team zone effects */
     void callzeffects(int source, int target, const QString &name);
     /* The slot effects */

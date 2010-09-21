@@ -1222,7 +1222,7 @@ void BattleSituation::callpeffects(int source, int target, const QString &name)
     }
 }
 
-void BattleSituation::callbeffects(int source, int target, const QString &name)
+void BattleSituation::callbeffects(int source, int target, const QString &name, bool stopOnFail)
 {
     if (battlelong.contains("Effect_" + name)) {
         QSet<QString> &effects = *battlelong.value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
@@ -1232,6 +1232,9 @@ void BattleSituation::callbeffects(int source, int target, const QString &name)
 
             if (f)
                 f(source, target, *this);
+
+            if (stopOnFail && testFail(source))
+                return;
 	}
     }
 }
@@ -1760,7 +1763,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player,target,"AttackSomehowFailed");
 	    continue;
 	}
-        callbeffects(player, target, "DetermineGeneralAttackFailure");
+        callbeffects(player, target, "DetermineGeneralAttackFailure", true);
         if (testFail(player)) {
             calleffects(player,target,"AttackSomehowFailed");
             continue;
@@ -1852,9 +1855,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             turnlong[target]["HadSubstitute"] = false;
         } else {
             callpeffects(player, target, "DetermineAttackFailure");
-	    if (testFail(player))
-		continue;
-	    callbeffects(player, target, "DetermineGeneralAttackFailure");
 	    if (testFail(player))
 		continue;
 	    calleffects(player, target, "DetermineAttackFailure");

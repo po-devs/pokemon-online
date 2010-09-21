@@ -1461,7 +1461,45 @@ struct AMRegeneration : public AM {
     }
 };
 
+struct AMMagicMirror : public AM {
+    AMMagicMirror() {
 
+    }
+};
+
+//struct MMMagicCoat : public MM
+//{
+//    MMMagicCoat() {
+//	functions["UponAttackSuccessful"] = &uas;
+//    }
+
+//    static void uas (int s, int, BS &b) {
+//	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "MagicCoat", &dgaf);
+//	turn(b,s)["MagicCoated"] = true;
+//	b.sendMoveMessage(76,0,s,Pokemon::Psychic);
+//    }
+
+//    static void dgaf(int s, int t, BS &b) {
+//        if (turn(b,t).value("MagicCoated").toBool()) {
+//            if (t != s) {
+//                int move = MM::move(b,s);
+
+//                bool bounced = tmove(b, s).flags & Move::MagicCoatableFlag;
+//                if (bounced) {
+//		    b.fail(s,76,1,Pokemon::Psychic);
+//		    /* Now Bouncing back ... */
+//		    removeFunction(turn(b,t), "UponAttackSuccessful", "MagicCoat");
+
+//		    MoveEffect::setup(move,t,s,b);
+//                    tmove(b,t).targets = tmove(b,s).target;
+//                    turn(b,t)["Target"] = s;
+//		    b.useAttack(t,move,true,false);
+//                    MoveEffect::unsetup(move,t,b);
+//		}
+//	    }
+//	}
+//    }
+//};
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
