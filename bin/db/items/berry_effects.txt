@@ -1,7 +1,7 @@
 1-1#Cheri
-1-4#Chesto
+1-2#Chesto
 1-5#Pecha
-1-2#Rawst
+1-4#Rawst
 1-3#Aspear
 2#Leppa
 3-10#pinch Oran 
@@ -52,9 +52,9 @@
 5#Reduces normal type attacks
 7-1#pinch attack
 7-2#pinch def
-7-3#pinch speed
+7-5#pinch speed
 7-4#pinch sp def
-7-5#pinch sp attack
+7-3#pinch sp attack
 8#pinch raises Critical hit ratio berry
 9#pinch Starf berry
 6#Anti super effective: gain hp after being hit by a super effective attack
