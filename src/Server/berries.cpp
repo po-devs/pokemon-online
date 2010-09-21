@@ -236,7 +236,7 @@ struct BMPinchStat : public BMPinch
 
         int arg = poke(b,s)["ItemArg"].toInt();
         b.sendBerryMessage(7,s,0,s,berry, arg);
-        b.gainStatMod(s, arg, 1, s, false);
+        b.inflictStatMod(s, arg, 1, s, false);
     }
 };
 
@@ -303,7 +303,7 @@ struct BMStarf : public BMPinch
             return;
 
         int stat = (b.true_rand()%5) +1;
-        b.gainStatMod(s, stat, 2, s, false);
+        b.inflictStatMod(s, stat, 2, s, false);
         b.sendBerryMessage(9,s,0,s,berry, stat);
     }
 };

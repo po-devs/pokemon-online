@@ -137,7 +137,7 @@ public:
     bool hasMaximalStatMod(int player, int stat);
     bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell = true, bool *negative = NULL);
 private:
-    bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
+    bool inflictStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
     /* Returns false if blocked */
     bool loseStatMod(int player, int stat, int malus, int attacker, bool tell=true);
 public:

@@ -74,7 +74,7 @@ struct AMAngerPoint : public AM {
     static void uodr(int s, int t, BS &b) {
         if (!b.koed(s) && s != t && turn(b,t)["CriticalHit"].toBool()) {
             b.sendAbMessage(3,0,s);
-            b.gainStatMod(s,Attack,12,s);
+            b.inflictStatMod(s,Attack,12,s);
         }
     }
 };
@@ -239,9 +239,9 @@ struct AMDownload : public AM {
         b.sendAbMessage(13,0,s);
 
         if (t==-1|| b.getStat(t, Defense) > b.getStat(t, SpDefense)) {
-            b.gainStatMod(s, SpAttack,1,s);
+            b.inflictStatMod(s, SpAttack,1,s);
         } else {
-            b.gainStatMod(s, Attack,1, s);
+            b.inflictStatMod(s, Attack,1, s);
         }
     }
 };
@@ -710,7 +710,7 @@ struct AMMotorDrive : public AM {
         if (type(b,t) == Type::Electric) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
             b.sendAbMessage(41,0,s,s,Pokemon::Electric);
-            b.gainStatMod(s,Speed,1,s);
+            b.inflictStatMod(s,Speed,1,s);
         }
     }
 };
@@ -896,7 +896,7 @@ struct AMSpeedBoost : public AM {
         if (b.koed(s) && b.turn() != poke(b,s).value("SpeedBoostSetupTurn").toInt())
             return;
         b.sendAbMessage(58,b.ability(s) == Ability::SpeedBoost ? 0 : 1,s);
-        b.gainStatMod(s, poke(b,s)["AbilityArg"].toInt(), 1, s);
+        b.inflictStatMod(s, poke(b,s)["AbilityArg"].toInt(), 1, s);
     }
 };
 
@@ -1093,7 +1093,7 @@ struct AMLightningRod : public AM {
                 b.sendAbMessage(38, 2, s, 0, tp, b.ability(s));
             } else {
                 b.sendAbMessage(0, 0, s, 0, tp, b.ability(s));
-                b.gainStatMod(s, SpAttack, 1, s, false);
+                b.inflictStatMod(s, SpAttack, 1, s, false);
                 b.sendAbMessage(38, 1, s, 0, tp, b.ability(s));
             }
         }
@@ -1168,7 +1168,7 @@ struct AMEarthquakeSpiral : public AM {
     }
 
     static void ak(int s, int, BS &b) {
-        b.gainStatMod(s, Attack, 1, s);
+        b.inflictStatMod(s, Attack, 1, s);
     }
 };
 
@@ -1184,7 +1184,7 @@ struct AMHerbivore : public AM {
             turn(b,s)[QString("Blocked%1").arg(t)] = true;
             if (!b.hasMaximalStatMod(s, Attack)) {
                 b.sendAbMessage(68, 0, s, 0, tp, b.ability(s));
-                b.gainStatMod(s, Attack, 1, s, false);
+                b.inflictStatMod(s, Attack, 1, s, false);
             } else {
                 b.sendAbMessage(68, 1, s, 0, tp, b.ability(s));
             }
@@ -1229,7 +1229,7 @@ struct AMBrokenArmour : public AM {
             b.inflictStatMod(s, Defense, -1, s);
         }
         if (!b.hasMaximalStatMod(s, Speed)) {
-            b.gainStatMod(s, Defense, 1, s);
+            b.inflictStatMod(s, Defense, 1, s);
         }
     }
 };
@@ -1335,7 +1335,7 @@ struct AMCompetitiveSpirit : public AM
             return;
         /* Fix me : ability message */
         b.sendAbMessage(0);
-        b.gainStatMod(s, Attack, 1, s, false);
+        b.inflictStatMod(s, Attack, 1, s, false);
     }
 };
 
