@@ -3099,7 +3099,6 @@ struct MMMagicCoat : public MM
 
         int move = MM::move(b,s);
 
-        //fixme: message
         b.fail(s,76,b.hasWorkingAbility(t, Ability::MagicMirror) ? 2 : 1,Pokemon::Psychic);
         /* Now Bouncing back ... */
         BS::context ctx = turn(b,target);
@@ -4630,12 +4629,11 @@ struct MMGuardShare : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        //fixme: message
         QStringList stats = turn(b,s)["GuardShare_Arg"].toString().split('_');
 
+        b.sendMoveMessage(155, move(b,s) == Move::PowerShare ? 0 : 1, s, type(b,s), t, stat);
         foreach(QString statS, stats) {
             int stat = statS.toInt();
-            b.sendMoveMessage(0, 0, s, type(b,s), t, stat);
             int avstat = (fpoke(b, s).stats[stat] + fpoke(b, t).stats[stat]) / 2;
             fpoke(b,s).stats[stat] = avstat;
             fpoke(b,t).stats[stat] = avstat;
@@ -4648,16 +4646,14 @@ struct MMMagicRoom : public MM {
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int
+    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
         if (b.battlelong.value("MagicRoomCount").toInt() > 0) {
-            //fixme: message
-            b.sendMoveMessage(0,1,s,Pokemon::Psychic);
+            b.sendMoveMessage(156,1,s,Pokemon::Psychic);
             b.battlelong.remove("MagicRoomCount");
             removeFunction(b.battlelong, "EndTurn9", "MagicRoom");
         } else {
-            //fixme: message
-            b.sendMoveMessage(0,0,s,Pokemon::Psychic);
+            b.sendMoveMessage(156,0,s,Pokemon::Psychic);
             b.battlelong["MagicRoomCount"] = 5;
             addFunction(b.battlelong, "EndTurn9", "MagicRoom", &et);
         }
@@ -4666,8 +4662,7 @@ struct MMMagicRoom : public MM {
     static void et(int s, int, BS &b) {
         inc(b.battlelong["MagicRoomCount"], -1);
         if (b.battlelong["MagicRoomCount"].toInt() == 0) {
-            //fixme: message
-            b.sendMoveMessage(0,1,s,Pokemon::Psychic);
+            b.sendMoveMessage(156,1,s,Pokemon::Psychic);
             b.battlelong.remove("MagicRoomCount");
         }
     }
@@ -4687,8 +4682,7 @@ struct MMSoak : public MM {
     static void uas(int, int t, BS &b) {
         fpoke(b, t).type1 = Pokemon::Water;
         fpoke(b, t).type2 = Pokemon::Curse;
-        //fixme: message
-        b.sendMoveMessage(0, 0, t, Pokemon::Water, t);
+        b.sendMoveMessage(157, 0, t, Pokemon::Water, t);
     }
 };
 
@@ -4706,8 +4700,7 @@ struct MMAssembleCrew : public MM {
 
     static void uas(int s, int t, BS &b) {
         b.acquireAbility(t, b.ability(s));
-        //fixme: message
-        b.sendMoveMessage(0,0,s,type(b,s),t,b.ability(s));
+        b.sendMoveMessage(158,0,s,type(b,s),t,b.ability(s));
     }
 };
 
@@ -4732,8 +4725,7 @@ struct MMIncinerate : public MM {
 
     static void uas(int s, int t, BS &b) {
         if (ItemInfo::isBerry(b.poke(t).item())) {
-            //fixme: message
-            b.sendMoveMessage(0, 0, s, Type::Fire, t);
+            b.sendMoveMessage(160, 0, s, Type::Fire, t, b.item(t));
             b.disposeItem(t);
         }
     }
@@ -4769,8 +4761,7 @@ struct MMGiftPass : public MM {
 
     static void uas(int s, int t, BS &b)
     {
-        //fixme: message
-        b.sendMoveMessage(0,0,s,type(b,s),t,b.poke(s).item());
+        b.sendMoveMessage(162,0,s,type(b,s),t,b.poke(s).item());
         b.acqItem(t, b.poke(s).item());
         b.loseItem(s);
     }

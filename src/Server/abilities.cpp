@@ -1300,8 +1300,7 @@ struct AMWickedThief : public AM
                     && b.pokenum(s) != Pokemon::Giratina_O && b.poke(s).item() == 0
                             && b.pokenum(t) != Pokemon::Giratina_O && !ItemInfo::isMail(b.poke(t).item()))
             {
-            /* Fixme: Ability message */
-            b.sendMoveMessage(23,(move(b,s)==Move::Covet)?0:1,s,type(b,s),t,b.poke(t).item());
+            b.sendAbMessage(78, 0,s,t,0,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
         }
@@ -1335,7 +1334,7 @@ struct AMCompetitiveSpirit : public AM
         if (b.hasMaximalStatMod(s, Attack))
             return;
         /* Fix me : ability message */
-        b.sendAbMessage(0);
+        b.sendAbMessage(80, 0, s);
         b.inflictStatMod(s, Attack, 2, s, false);
     }
 };
@@ -1361,7 +1360,7 @@ struct AMEccentric : public AM
             num.subnum = ItemInfo::PlateType(b.poke(s).item());
         }
 
-        b.sendMoveMessage(137,0,s,0,s,num.pokenum);
+        b.sendAbMessage(81,0,s,s,0,num.pokenum);
 
         BS::BasicPokeInfo &po = fpoke(b,s);
         BS::BasicPokeInfo &pt = fpoke(b,t);
@@ -1442,8 +1441,7 @@ struct AMTelepathy : public AM {
         if (tmove(b,t).power > 0 && b.player(t) == b.player(s)) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
 
-            //fixme: message
-            b.sendAbMessage(0,0,s,s,Move::Psychic);
+            b.sendAbMessage(85,0,s,t,Move::Psychic);
         }
     }
 };
@@ -1456,8 +1454,7 @@ struct AMRegeneration : public AM {
     static void us(int s, int, BS &b) {
         if (!b.poke(s).isFull()) {
             b.healLife(s, b.poke(s).lifePoints() * 30 / 100);
-            //fixme: ab message
-            b.sendAbMessage(0, 0, s);
+            b.sendAbMessage(86, 0, s);
         }
     }
 };
@@ -1498,7 +1495,6 @@ struct AMMagicMirror : public AM
 
         int move = AM::move(b,s);
 
-        //fixme: message
         b.fail(s,76,b.hasWorkingAbility(t, Ability::MagicMirror) ? 2 : 1,Pokemon::Psychic);
         /* Now Bouncing back ... */
         BS::context ctx = turn(b,target);
@@ -1621,4 +1617,15 @@ void AbilityEffect::init()
     REGISTER_AB(75, VictoryStar);
     REGISTER_AB(76, WeakKneed);
     REGISTER_AB(77, DarumaMode);
+    //
+    REGISTER_AB(78, WickedThief);
+    REGISTER_AB(79, Encourage);
+    REGISTER_AB(80, CompetitiveSpirit);
+    REGISTER_AB(81, Eccentric);
+    REGISTER_AB(82, MischievousHeart);
+    REGISTER_AB(83, MultiScale);
+    REGISTER_AB(84, HeatRampage);
+    REGISTER_AB(85, Telepathy);
+    REGISTER_AB(86, Regeneration);
+    REGISTER_AB(87, MagicMirror);
 }
