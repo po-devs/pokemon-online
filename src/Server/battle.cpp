@@ -1756,7 +1756,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     foreach(int target, targetList) {
         attacked() = target;
-        if (player != target && !specialOccurence && (fieldmoves[player].flags & Move::MemorableFlag) ) {
+        if (!specialOccurence && (fieldmoves[player].flags & Move::MemorableFlag) ) {
 	    pokelong[target]["MirrorMoveMemory"] = attack;
 	}
 
