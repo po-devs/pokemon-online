@@ -830,8 +830,10 @@ struct MMHaze : public MM
        So we keep it an all target move until the execution,
        where we handle this differently. */
     static void btl(int s, int, BS &b) {
-        b.targetList.clear();
-        b.targetList.push_back(s);
+        if (b.gen() < 5) {
+            b.targetList.clear();
+            b.targetList.push_back(s);
+        }
     }
 
     static void uas(int , int , BS &b) {
