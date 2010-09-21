@@ -1926,7 +1926,7 @@ void StatInfo::init(const QString &dir)
 
 QString StatInfo::Stat(int stat)
 {
-    if (stat >= 0 && stat <= Accuracy)
+    if (stat >= 0 && stat <= Evasion)
         return m_stats[stat];
     else
         return "";

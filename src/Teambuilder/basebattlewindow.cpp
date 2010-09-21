@@ -629,6 +629,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         printLine(tu(tr("%1 flinched!").arg(nick(spot))));
         break;
     case Recoil:
+        {
         bool damage;
         in >> damage;
 
@@ -637,6 +638,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         else
             printLine(tu(tr("%1 had its energy drained!").arg(nick(spot))));
         break;
+    }
     case WeatherMessage: {
             qint8 wstatus, weather;
             in >> wstatus >> weather;
@@ -862,7 +864,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     l->addLayout(firstLine);
 
     QLabel* oppPoke = new QLabel();
-    oppPoke->setPixmap(QPixmap("db/BattleWindow/NewPokeBar.png"));
+    oppPoke->setPixmap(Theme::Sprite("hpbar"));
     oppPoke->setFixedSize(oppPoke->pixmap()->size());
     firstLine->addWidget(oppPoke);
 
@@ -905,7 +907,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
         barL->setMargin(0);
         barL->setSpacing(0);
         QLabel *HPIcon = new QLabel();
-        HPIcon->setPixmap(QPixmap("db/BattleWindow/HP.png"));
+        HPIcon->setPixmap(Theme::Sprite("hpsquare"));
         HPIcon->setFixedSize(HPIcon->pixmap()->size());
         barL->addWidget(HPIcon);
         bars[slot] = new QClickPBar();
@@ -984,7 +986,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     lastLine->addLayout(myTeamAndName);
 
     QLabel* myPoke = new QLabel();
-    myPoke->setPixmap(QPixmap("db/BattleWindow/NewPokeBar.png"));
+    myPoke->setPixmap(Theme::Sprite("hpbar"));
     myPoke->setFixedSize(myPoke->pixmap()->size());
     lastLine->addWidget(myPoke);
 
@@ -1027,7 +1029,7 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
         barL->setMargin(0);
         barL->setSpacing(0);
         QLabel *HPIcon = new QLabel();
-        HPIcon->setPixmap(QPixmap("db/BattleWindow/HP.png"));
+        HPIcon->setPixmap(Theme::Sprite("hpsquare"));
         HPIcon->setFixedSize(HPIcon->pixmap()->size());
         barL->addWidget(HPIcon);
         bars[slot] = new QClickPBar();
