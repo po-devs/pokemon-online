@@ -277,8 +277,8 @@ void BigOpenPokeBall::changeToPrevious()
 
 void BigOpenPokeBall::updatePicture()
 {
-    front->changePic(PokemonInfo::Picture(currentPoke, 4, PokemonInfo::BaseGender(currentPoke),shiny(),false));
-    back->changePic(PokemonInfo::Picture(currentPoke, 4, PokemonInfo::BaseGender(currentPoke),shiny(),true));
+    front->changePic(PokemonInfo::Picture(currentPoke, 5, PokemonInfo::BaseGender(currentPoke),shiny(),false));
+    back->changePic(PokemonInfo::Picture(currentPoke, 5, PokemonInfo::BaseGender(currentPoke),shiny(),true));
 }
 
 bool BigOpenPokeBall::shiny() const
@@ -301,7 +301,7 @@ PokedexBody::PokedexBody()
     QPushButton *advSearch;
     col1->addWidget(advSearch = new QPushButton(QIcon(Theme::Sprite("orangedisc")), tr("&Advanced Search")));
     col1->addWidget(pokeEdit = new QLineEdit());
-    pokeList = new TB_PokeChoice(4, false);
+    pokeList = new TB_PokeChoice(5, false);
     pokeList->verticalHeader()->setDefaultSectionSize(30);
     QCompleter *comp = new QCompleter(pokeEdit);
     comp->setModel(pokeList->model());
@@ -908,9 +908,12 @@ AdvancedSearch::AdvancedSearch()
 
     abilityCb = new QComboBox();
     v->addWidget(abilityCb);
-    for (int i =0; i < AbilityInfo::NumberOfAbilities(); i++) {
-        abilityCb->addItem(AbilityInfo::Name(i));
+    QStringList abs;
+    for (int i = 0; i < AbilityInfo::NumberOfAbilities(); i++) {
+        abs.push_back(AbilityInfo::Name(i));
     }
+    abs.sort();
+    abilityCb->addItems(abs);
     col1->addWidget(abilities);
 
     QGroupBox *statB = new QGroupBox(tr("Base Stats"));
@@ -977,7 +980,7 @@ void AdvancedSearch::search()
     if (typeBoxes[1]->isChecked()) {
         types.push_back(typeCb[1]->currentIndex());
     }
-    ability = abilityCb->currentIndex();
+    ability = AbilityInfo::Number(abilityCb->currentText());
     for(int i = 0; i < 4; i++) {
         moves.insert(MoveInfo::Number(move[i]->text()));
     }
