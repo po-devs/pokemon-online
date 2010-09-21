@@ -951,7 +951,7 @@ struct MMBellyDrum : public MM
     static void uas(int s, int, BS &b) {
         if (move(b,s) == Move::BellyDrum) {
             b.sendMoveMessage(8,1,s,type(b,s));
-            b.gainStatMod(s,Attack,12,false);
+            b.inflictStatMod(s,Attack,12, s, false);
         }
         b.changeHp(s, b.poke(s).lifePoints() - std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1));
     }
@@ -3477,7 +3477,7 @@ struct MMRazorWind : public MM
             b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
             /* Skull bash */
             if (mv == SkullBash) {
-                b.gainStatMod(s,Defense,1);
+                b.inflictStatMod(s,Defense,1);
             }
 
             if (b.hasWorkingItem(s, Item::PowerHerb)) {
@@ -3553,7 +3553,7 @@ struct MMRage : public MM
         if (!b.koed(s) && poke(b,s)["LastMoveUsed"] == Move::Rage) {
             poke(b,s)["RageBuilt"] = true;
             if (poke(b,s)[QString("Boost%1").arg(Attack)].toInt() < 6) {
-                b.gainStatMod(s, Attack, 1,false);
+                b.inflictStatMod(s, Attack, 1,false);
                 b.sendMoveMessage(102, 0, s);
             }
         }
@@ -4535,7 +4535,7 @@ struct MMAcupressure : public MM
         }
         if (stats.empty())
             return;
-        b.gainStatMod(t, stats[b.true_rand()%stats.size()], 2);
+        b.inflictStatMod(t, stats[b.true_rand()%stats.size()], 2);
     }
 };
 
@@ -4692,12 +4692,12 @@ struct MMShellCrack : public MM {
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void uas(int s, int t, BS &b) {
-        b.loseStatMod(s, Defense, 1, s);
-        b.loseStatMod(s, SpDefense, 1, s);
-        b.gainStatMod(s, Attack, 1);
-        b.gainStatMod(s, SpAttack, 1);
-        b.gainStatMod(s, Speed, 1);
+    static void uas(int s, int , BS &b) {
+        b.inflictStatMod(s, Defense, -1, s);
+        b.inflictStatMod(s, SpDefense, -1, s);
+        b.inflictStatMod(s, Attack, 1, s);
+        b.inflictStatMod(s, SpAttack, 1, s);
+        b.inflictStatMod(s, Speed, 1, s);
     }
 };
 

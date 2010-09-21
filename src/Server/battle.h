@@ -135,9 +135,12 @@ public:
     void changeAForme(int player, int newforme);
     bool hasMinimalStatMod(int player, int stat);
     bool hasMaximalStatMod(int player, int stat);
-    void gainStatMod(int player, int stat, int bonus, bool tell = true);
+    bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell = true, bool *negative = NULL);
+private:
+    bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
     /* Returns false if blocked */
     bool loseStatMod(int player, int stat, int malus, int attacker, bool tell=true);
+public:
     bool canSendPreventMessage(int defender, int attacker);
     bool canSendPreventSMessage(int defender, int attacker);
     void preventStatMod(int player, int attacker);
