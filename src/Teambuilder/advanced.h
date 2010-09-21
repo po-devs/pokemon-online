@@ -67,6 +67,7 @@ signals:
     void genderChanged();
     void levelChanged();
     void statChanged();
+    void abilityChanged();
     void pokeFormeChanged(Pokemon::uniqueId newform);
 public:
     TB_Advanced(PokeTeam *poke);

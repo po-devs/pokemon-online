@@ -1253,6 +1253,7 @@ bool TB_PokemonBody::MoveList::event(QEvent * event)
 
 void TB_PokemonBody::connectWithAdvanced(TB_Advanced *ptr)
 {
+    connect(ptr, SIGNAL(abilityChanged()), this, SLOT(updateAbility()));
     connect(ptr, SIGNAL(levelChanged()), this, SLOT(updateLevel()));
     connect(ptr, SIGNAL(imageChanged()), this, SLOT(updateImage()));
     connect(ptr, SIGNAL(genderChanged()), this, SLOT(updateGender()));
@@ -1413,6 +1414,14 @@ void TB_PokemonBody::updateImage()
 void TB_PokemonBody::updateGender()
 {
     genderIcon->setPixmap(Theme::GenderPicture(poke()->gender(), Theme::TeamBuilderM));
+}
+
+void TB_PokemonBody::updateAbility()
+{
+    /* Abilities may ruin move combinations, for example dream world abilities (implemented)
+       or 4th gen abilities with 3rd gen moves on first stage evos (non implemented) */
+    poke()->runCheck();
+    updateMoves();
 }
 
 void TB_PokemonBody::updateMoves()
@@ -1611,6 +1620,7 @@ void TB_PokemonBody::setNature(int nature)
 void TB_PokemonBody::editNature(int up, int down)
 {
     setNature(NatureInfo::NatureOf(up,down));
+    emit natureChanged();
     updateNature();
 }
 

@@ -293,6 +293,7 @@ public slots:
     void updateGender();
     void updateLevel();
     void updateEVs();
+    void updateAbility();
     void changeForme(Pokemon::uniqueId);
 
 signals:
