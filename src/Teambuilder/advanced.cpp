@@ -198,6 +198,7 @@ void TB_Advanced::changeAbility(bool)
     for (int i = 0; i < 3; i++) {
         if (ability[i] != NULL && ability[i]->isChecked()) {
             poke()->ability() = poke()->abilities().ab(i);
+            emit abilityChanged();
             break;
         }
     }
