@@ -1336,7 +1336,7 @@ struct AMCompetitiveSpirit : public AM
             return;
         /* Fix me : ability message */
         b.sendAbMessage(0);
-        b.inflictStatMod(s, Attack, 1, s, false);
+        b.inflictStatMod(s, Attack, 2, s, false);
     }
 };
 
