@@ -422,8 +422,10 @@ void BattleSituation::beginTurn()
 {
     turn() += 1;
     /* Resetting temporary variables */
-    for (int i = 0; i < numberOfSlots(); i++)
+    for (int i = 0; i < numberOfSlots(); i++) {
         turnlong[i].clear();
+        fieldmoves[i].reset();
+    }
 
     for (int i = 0; i < numberOfSlots(); i++) {
         callpeffects(i, i, "TurnSettings");
@@ -2103,14 +2105,14 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     }
 
     /* Doing Stat Changes */
-    for (int i = 3; i >= 0; i--) {
-        char stat = (fm.statAffected & (0xFF << i)) >> i;
+    for (int i = 2; i >= 0; i--) {
+        char stat = fm.statAffected >> (i*8);
 
         if (!stat)
             break;
 
-        char increase = (fm.boostOfStat & (0xFF << i)) >> i;
-        char rate = (fm.rateOfStat & (0xFF << i)) >> i;
+        char increase = fm.boostOfStat >> (i*8);
+        char rate = fm.rateOfStat >> (i*8);
 
         if (increase < 0 && target != player && sub) {
             if (rate == 0 && cl != Move::OffensiveStatusInducingMove) {
@@ -2947,7 +2949,7 @@ void BattleSituation::healDamage(int player, int target)
     if (healing > 0) {
         sendMoveMessage(60, 0, player, fieldmoves[player].type);
         healLife(target, poke(target).totalLifePoints() * healing / 100);
-    } else {
+    } else if (healing < 0){
         notify(All, Recoil, target, true);
         inflictDamage(target, poke(target).totalLifePoints() * healing / 100, target);
    }
@@ -3473,4 +3475,9 @@ bool BattleSituation::isThereUproar()
     }
 
     return false;
+}
+
+void BattleSituation::BasicMoveInfo::reset()
+{
+    memset(this, 0, sizeof(*this));
 }

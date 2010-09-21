@@ -468,6 +468,8 @@ public:
         quint32 statAffected;
         quint32 boostOfStat;
         quint32 rateOfStat;
+
+        void reset();
     };
 
     QList<BasicPokeInfo> fieldpokes;

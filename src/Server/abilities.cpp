@@ -1093,7 +1093,6 @@ struct AMLightningRod : public AM {
             if (b.hasMaximalStatMod(s, SpAttack)) {
                 b.sendAbMessage(38, 2, s, 0, tp, b.ability(s));
             } else {
-                b.sendAbMessage(0, 0, s, 0, tp, b.ability(s));
                 b.inflictStatMod(s, SpAttack, 1, s, false);
                 b.sendAbMessage(38, 1, s, 0, tp, b.ability(s));
             }
@@ -1225,12 +1224,12 @@ struct AMBrokenArmour : public AM {
     }
 
     static void upa(int s, int, BS &b) {
-        b.sendAbMessage(0, 0, s, 0, Type::Steel);
+        b.sendAbMessage(74, 0, s, 0, Type::Steel);
         if (!b.hasMinimalStatMod(s, Defense)) {
             b.inflictStatMod(s, Defense, -1, s);
         }
         if (!b.hasMaximalStatMod(s, Speed)) {
-            b.inflictStatMod(s, Defense, 1, s);
+            b.inflictStatMod(s, Attack, 1, s);
         }
     }
 };
