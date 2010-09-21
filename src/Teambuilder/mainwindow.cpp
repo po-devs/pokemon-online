@@ -59,30 +59,6 @@ MainEngine::MainEngine() : displayer(0)
     StatInfo::init("db/status/");
     Theme::init(settings.value("theme").toString());
 
-    QStringList f = QString::fromUtf8(getFileContent("toConvert.txt")).split('\n');
-    QStringList out;
-    foreach(QString s, f) {
-        if (!s.contains(':'))
-            continue;
-        QString numS = s.section(' ', 1);
-        numS.remove('.');
-
-        int num = int(float(numS.toInt())/2.2046);
-        QString ret = QString::number(num);
-        ret.insert(ret.size()-1, '.');
-
-        if (ret[0] == '.') {
-            ret.insert(0, '0');
-        }
-        out.push_back(s.section(' ', 0, 0) + " " + ret);
-    }
-
-    QFile outf("ww.txt");
-    outf.open(QIODevice::WriteOnly);
-    outf.write(out.join("\n").toUtf8());
-    outf.close();
-    exit(0);
-
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());
     loadStyleSheet();
