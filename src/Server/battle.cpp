@@ -1431,7 +1431,8 @@ void BattleSituation::testCritical(int player, int target)
 	case 1: minch = 6; break;
 	case 2: minch = 12; break;
 	case 3: minch = 16; break;
-	case 4: default: minch = 24; break;
+        case 4: case 5: minch = 24; break;
+        case 6: default: minch = 48;
     }
 
     bool critical = randnum<minch;
@@ -2591,7 +2592,7 @@ int BattleSituation::calculateDamage(int p, int t)
 	def = getStat(t, Defense);
     } else {
 	attack = getStat(p, SpAttack);
-        def = getStat(t, attackused == Move::PsychoShock ? Defense : SpDefense);
+        def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SkinSword) ? Defense : SpDefense);
     }
 
     if (attackused == Move::Explosion || attackused == Move::Selfdestruct) /* explosion / selfdestruct */
@@ -3329,7 +3330,8 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     if (attacker != -1 && attacked != -1) {
         //Unaware
         if (attacker != player && attacked == player) {
-            if ( (hasWorkingAbility(attacker, Ability::Unaware) || fieldmoves[attacker].attack == Move::PaymentPlan )
+            if ( (hasWorkingAbility(attacker, Ability::Unaware) || fieldmoves[attacker].attack == Move::PaymentPlan
+                  || fieldmoves[attacker].attack == Move::SacredSword)
                 && (stat == SpDefense || stat == Defense))
                 boost = 0;
         } else if (attacker == player && attacked != player && hasWorkingAbility(attacked, Ability::Unaware) && (stat == SpAttack || stat == Attack)) {
