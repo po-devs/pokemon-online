@@ -1,10 +1,10 @@
 
 
 
-1-6_2#bright powder
+1-7_2#bright powder
 2|1-1_10#choice band
-2|1-3_10#choice scarf
-2|1-4_10#choice specs
+2|1-5_10#choice scarf
+2|1-3_10#choice specs
 
 
 4#focus band
@@ -16,13 +16,13 @@
 12#Leftovers
 
 
-8-132_10_2_5#Metal Powder
+8-132_10_2_4#Metal Powder
 9-0#Muscle Band 
 10-13#Odd Incense 
 
 #11#Power Herb
 
-8-132_20_3#Quick Powder
+8-132_20_5#Quick Powder
 
 
 10-5#Rock Incense 
@@ -36,7 +36,7 @@
 
 10-10#Wave Incense 
 3#white herb
-1-7_2#Wide Lens 
+1-6_2#Wide Lens 
 9-1#Wise Glasses 
 
 15#Zoom Lens
@@ -58,7 +58,7 @@
 10-9#charcoal
 
 
-8-366_20_5#deepseascale
+8-366_20_4#deepseascale
 
 10-15#Dragon Scale
 
@@ -90,7 +90,7 @@
 
 
 21#Life Orb
-8-25_20_1_4#Light Ball
+8-25_20_1_3#Light Ball
 
 
 10-12#Magnet
@@ -129,7 +129,7 @@
 
 
 
-8-380/381_10_4_5#Soul Dew
+8-380/381_10_3_4#Soul Dew
 10-7#Spell Tag
 
 
@@ -182,7 +182,7 @@
 23#Razor Claw 
 
 28#Sticky Barb
-8-366_20_4#Deepseatooth
+8-366_20_3#Deepseatooth
 29-15|10-15#Draco Plate
 29-16|10-16#Dread Plate 
 29-4|10-4#Earth Plate 
@@ -210,8 +210,8 @@
 
 
 
-1-3_-10#Iron Ball
-27-487/505_15_7#Lustrous Orb
+1-5_-10#Iron Ball
+27-487_15_7#Griseous Orb
 31#Air Mail
 31#Bloom Mail
 31#Brick Mail
