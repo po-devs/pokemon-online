@@ -832,7 +832,7 @@ struct MMHaze : public MM
        So we keep it an all target move until the execution,
        where we handle this differently. */
     static void btl(int s, int, BS &b) {
-        if (tmove(b,t).power == 0) {
+        if (tmove(b,s).power == 0) {
             b.targetList.clear();
             b.targetList.push_back(s);
         }
@@ -3185,7 +3185,6 @@ struct MMMagnitude: public MM
 struct MMMeFirst : public MM
 {
     MMMeFirst() {
-        functions["MoveSettings"] = &ms;
 	functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
     }
@@ -4633,7 +4632,7 @@ struct MMGuardShare : public MM
     static void uas(int s, int t, BS &b) {
         QStringList stats = turn(b,s)["GuardShare_Arg"].toString().split('_');
 
-        b.sendMoveMessage(155, move(b,s) == Move::PowerShare ? 0 : 1, s, type(b,s), t, stat);
+        b.sendMoveMessage(155, move(b,s) == Move::PowerShare ? 0 : 1, s, type(b,s), t);
         foreach(QString statS, stats) {
             int stat = statS.toInt();
             int avstat = (fpoke(b, s).stats[stat] + fpoke(b, t).stats[stat]) / 2;
@@ -4727,7 +4726,7 @@ struct MMIncinerate : public MM {
 
     static void uas(int s, int t, BS &b) {
         if (ItemInfo::isBerry(b.poke(t).item())) {
-            b.sendMoveMessage(160, 0, s, Type::Fire, t, b.item(t));
+            b.sendMoveMessage(160, 0, s, Type::Fire, t, b.poke(t).item());
             b.disposeItem(t);
         }
     }
