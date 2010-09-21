@@ -192,7 +192,7 @@ void BigOpenPokeBall::update()
     name->setText(PokemonInfo::Name(n));
     specy->setText(PokemonInfo::Classification(n));
     height->setText(tr("<b>Ht:</b> %1").arg(PokemonInfo::Height(n)));
-    weight->setText(tr("<b>Wt:</b> %1 lbs").arg(PokemonInfo::WeightS(n)));
+    weight->setText(tr("<b>Wt:</b> %1 kg").arg(PokemonInfo::WeightS(n)));
     type1->setPixmap(Theme::TypePicture(PokemonInfo::Type1(n)));
     int t2 = PokemonInfo::Type2(n);
     if (t2 != Type::Curse) {
@@ -763,9 +763,9 @@ GridBox::GridBox(const QPixmap &pic, bool shiftToBottom)
     underLying = new QLabel(this);
     underLying->setPixmap(pic);
     if (shiftToBottom)
-        underLying->move(7,7);
+        underLying->move(7-8,7-16);
     else
-        underLying->move(7,3);
+        underLying->move(7-8,3-16);
 }
 
 void GridBox::changePic(const QPixmap &pic)
