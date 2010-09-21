@@ -2497,7 +2497,7 @@ struct MMBlizzard : public MM
     }
 
     static void ms(int s, int, BS &b) {
-        if (b.gen() == 4 && b.isWeatherWorking(BattleSituation::Hail)) {
+        if (b.gen() >= 4 && b.isWeatherWorking(BattleSituation::Hail)) {
             tmove(b, s).accuracy = 0;
 	}
     }
@@ -4712,7 +4712,7 @@ struct MMShellCrack : public MM {
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void uas(int s, int , BS &b) {
+    static void uas(int s, int, BS &b) {
         b.inflictStatMod(s, Defense, -1, s);
         b.inflictStatMod(s, SpDefense, -1, s);
         b.inflictStatMod(s, Attack, 1, s);
@@ -4721,6 +4721,68 @@ struct MMShellCrack : public MM {
     }
 };
 
+struct MMIncinerate : public MM {
+    MMIncinerate() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        if (ItemInfo::isBerry(b.poke(t).item())) {
+            //fixme: message
+            b.sendMoveMessage(0, 0, s, Type::Fire, t);
+            b.disposeItem(t);
+        }
+    }
+};
+
+struct MMDeperation : public MM {
+    MMDesperation() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        b.inflictDamage(t, b.poke(s).lifePoints(), s, true);
+    }
+};
+
+struct MMGiftPass : public MM {
+    MMGiftPass() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b)
+    {
+        if (!b.koed(t) && b.poke(s).item() != 0
+            && b.ability(s) != Ability::Multitype && !b.hasWorkingAbility(s, Ability::Multitype)
+            && b.pokenum(s) != Pokemon::Giratina_O && b.poke(t).item() == 0
+                    && !ItemInfo::isMail(b.poke(s).item())) {
+            //ok
+        } else {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas(int s, int t, BS &b)
+    {
+        //fixme: message
+        b.sendMoveMessage(0,0,s,type(b,s),t,b.poke(s).item());
+        b.acqItem(t, b.poke(s).item());
+        b.loseItem(s);
+    }
+};
+
+struct MMWindStorm : public MM {
+    MMWindStorm() {
+        functions["MoveSettings"] = &ms;
+    }
+
+    static void ms(int s, int, BS &b) {
+        if (b.weather != BS::NormalWeather && b.isWeatherWorking(b.weather)) {
+            tmove(b, s).accuracy += 30;
+        }
+    }
+};
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage

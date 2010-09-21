@@ -518,7 +518,7 @@
 
 
 
-
+140#U-turn
 
 
 
@@ -533,6 +533,9 @@
 
 
 
+52-0#Heat Stamp, 0 is self
+
+126#Heart roller
 
 
 
@@ -541,10 +544,7 @@
 
 
 
-
-
-
-
+69#Techno buster
 
 
 
