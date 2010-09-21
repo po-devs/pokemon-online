@@ -1481,12 +1481,12 @@ struct AMMagicMirror : public AM
             return;
         }
         int target = -1;
-        if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(turn(b,t), Ability::MagicMirror)) ) {
+        if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) ) {
             target = t;
         } else {
             /* Entry hazards */
             foreach(int t, b.revs(s)) {
-                if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(turn(b,t), Ability::MagicMirror)) {
+                if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) {
                     target = t;
                     break;
                 }
@@ -1509,7 +1509,7 @@ struct AMMagicMirror : public AM
         turn(b,target)["Target"] = s;
         b.battlelong["CoatingAttackNow"] = true;
         b.useAttack(target,move,true,false);
-        b.battlelong.remove("CoatingAttackNow") = true;
+        b.battlelong.remove("CoatingAttackNow");
 
         /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
             and don't cause any such data to be stored in that memory */

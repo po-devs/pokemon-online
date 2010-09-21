@@ -1477,7 +1477,7 @@ bool BattleSituation::testStatus(int player)
         //SteadFast
         if (hasWorkingAbility(player, Ability::Steadfast)) {
             sendAbMessage(60,0,player);
-            inflictStatMod(player, Speed, 1, s);
+            inflictStatMod(player, Speed, 1, player);
         }
         return false;
     }
@@ -2081,7 +2081,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 	return;
     }
 
-    if ( (cl == Move::OffensiveStatChangingMove || cl == Move::OffensiveStatusInducingMove)&& hasWorkingAbility(targeted, Ability::ShieldDust)) {
+    if ( (cl == Move::OffensiveStatChangingMove || cl == Move::OffensiveStatusInducingMove)&& hasWorkingAbility(target, Ability::ShieldDust)) {
 //        sendAbMessage(24,0,targeted,0,Pokemon::Bug);
         applyingMoveStatMods = false;
         return;
@@ -2131,10 +2131,10 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         if (increase > 0) {
             if (stat == AllStats) {
                 for (int i = 1; i <= 5; i++) {
-                    inflictStatMod(target, i, increase, s);
+                    inflictStatMod(target, i, increase, player);
                 }
             } else {
-                inflictStatMod(target, stat, increase, s);
+                inflictStatMod(target, stat, increase, player);
             }
         } else {
             /* If we are blocked by a secondary effect, let's stop here */
@@ -2236,7 +2236,7 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
         return loseStatMod(player, stat, -mod, attacker, tell);
 }
 
-bool BattleSituation::gainStatMod(int player, int stat, int bonus, bool tell, bool priv)
+bool BattleSituation::gainStatMod(int player, int stat, int bonus, int , bool tell)
 {
     QString path = QString("Boost%1").arg(stat);
     int boost = pokelong[player].value(path).toInt();

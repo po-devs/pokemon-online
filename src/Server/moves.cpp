@@ -3080,12 +3080,12 @@ struct MMMagicCoat : public MM
             return;
         }
         int target = -1;
-        if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(turn(b,t), Ability::MagicMirror)) ) {
+        if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) ) {
             target = t;
         } else {
             /* Entry hazards */
             foreach(int t, b.revs(s)) {
-                if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(turn(b,t), Ability::MagicMirror)) {
+                if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) {
                     target = t;
                     break;
                 }
@@ -3108,7 +3108,7 @@ struct MMMagicCoat : public MM
         turn(b,target)["Target"] = s;
         b.battlelong["CoatingAttackNow"] = true;
         b.useAttack(target,move,true,false);
-        b.battlelong.remove("CoatingAttackNow") = true;
+        b.battlelong.remove("CoatingAttackNow");
 
         /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
             and don't cause any such data to be stored in that memory */
@@ -3497,7 +3497,7 @@ struct MMRazorWind : public MM
             b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
             /* Skull bash */
             if (mv == SkullBash) {
-                b.inflictStatMod(s,Defense,1);
+                b.inflictStatMod(s,Defense,1, s);
             }
 
             if (b.hasWorkingItem(s, Item::PowerHerb)) {
@@ -4555,7 +4555,7 @@ struct MMAcupressure : public MM
         }
         if (stats.empty())
             return;
-        b.inflictStatMod(t, stats[b.true_rand()%stats.size()], 2);
+        b.inflictStatMod(t, stats[b.true_rand()%stats.size()], 2, t);
     }
 };
 
