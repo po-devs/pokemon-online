@@ -1034,7 +1034,13 @@ int MoveInfo::Type(int movenum, int g)
 
 int MoveInfo::Category(int movenum, int g)
 {
-    return gen(g).damageClass[movenum];
+    if (g >= 4)
+        return gen(g).damageClass[movenum];
+
+    if (Power(movenum) == 0)
+        return Move::Other;
+
+    return TypeInfo::Category(Type(movenum, g));
 }
 
 int MoveInfo::Classification(int movenum, int g)
