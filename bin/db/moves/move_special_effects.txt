@@ -468,15 +468,15 @@
 13-4#shadow force
 
 
-
-
+155-2_4#Guard Share
+155-1_3#Power Share
 
 
 117-5#Venom Shock
 
 48#Rage power
 
-
+156#Magic Room
 
 
 
@@ -485,13 +485,14 @@
 52-0#HeavyBomber, 0 is self
 
 56-1#Eleci Ball. 1 is to tell it's up to us to be fast
-
+157#Soak
 
 
 
 
 
 143-86#Simple Beam
+158#Assemble Crew
 
 
 
@@ -501,20 +502,19 @@
 
 
 
-
-
+159#Shell Crack
 
 117-0#Evil Eye
 
 
 107#Overhead Throw
+160#Complete Burn
 
 
 
 
-
-
-
+37|161#Desperation
+162#Gift Pass
 
 
 
@@ -540,7 +540,7 @@
 
 
 
-
+163#Wind Storm
 
 
 

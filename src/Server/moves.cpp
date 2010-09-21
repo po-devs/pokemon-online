@@ -4628,14 +4628,16 @@ struct MMGuardShare : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        int stat = turn(b,s)["GuardShare_Arg"].toInt();
-
         //fixme: message
-        //fixme: guard share, power share
-        b.sendMoveMessage(0, 0, s, type(b,s), t, stat);
-        int avstat = (fpoke(b, s).stats[stat] + fpoke(b, t).stats[stat]) / 2;
-        fpoke(b,s).stats[stat] = avstat;
-        fpoke(b,t).stats[stat] = avstat;
+        QStringList stats = turn(b,s)["GuardShare_Arg"].toString().split('_');
+
+        foreach(QString statS, stats) {
+            int stat = statS.toInt();
+            b.sendMoveMessage(0, 0, s, type(b,s), t, stat);
+            int avstat = (fpoke(b, s).stats[stat] + fpoke(b, t).stats[stat]) / 2;
+            fpoke(b,s).stats[stat] = avstat;
+            fpoke(b,t).stats[stat] = avstat;
+        }
     }
 };
 
@@ -4735,7 +4737,7 @@ struct MMIncinerate : public MM {
     }
 };
 
-struct MMDeperation : public MM {
+struct MMDesperation : public MM {
     MMDesperation() {
         functions["UponAttackSuccessful"] = &uas;
     }
@@ -4973,5 +4975,14 @@ void MoveEffect::init()
     REGISTER_MOVE(152, Thunder);
     //REGISTER_MOVE(153, UnThawing);
     REGISTER_MOVE(154, DefenseCurl);
+    REGISTER_MOVE(155, GuardShare);
+    REGISTER_MOVE(156, MagicRoom);
+    REGISTER_MOVE(157, Soak);
+    REGISTER_MOVE(158, AssembleCrew);
+    REGISTER_MOVE(159, ShellCrack);
+    REGISTER_MOVE(160, Incinerate);
+    REGISTER_MOVE(161, Desperation);
+    REGISTER_MOVE(162, GiftPass);
+    REGISTER_MOVE(163, WindStorm);
 }
 
