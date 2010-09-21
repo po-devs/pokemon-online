@@ -429,6 +429,8 @@ public:
     int weather;
     int weatherCount;
 
+    bool applyingMoveStatMods;
+
     struct BasicPokeInfo {
         Pokemon::uniqueId id;
         float weight;

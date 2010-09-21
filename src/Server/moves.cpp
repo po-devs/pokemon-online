@@ -3066,7 +3066,7 @@ struct MMMagicCoat : public MM
     }
 
     static void uas (int s, int, BS &b) {
-	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "MagicCoat", &dgaf);
+        addFunction(b.battlelong, "DetermineGeneralAttackFailure2", "MagicCoat", &dgaf);
 	turn(b,s)["MagicCoated"] = true;
 	b.sendMoveMessage(76,0,s,Pokemon::Psychic);
     }
@@ -3080,12 +3080,12 @@ struct MMMagicCoat : public MM
             return;
         }
         int target = -1;
-        if (t != s && turn(b,t).value("MagicCoated").toBool()) {
+        if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(turn(b,t), Ability::MagicMirror)) ) {
             target = t;
         } else {
             /* Entry hazards */
             foreach(int t, b.revs(s)) {
-                if (turn(b,t).value("MagicCoated").toBool()) {
+                if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(turn(b,t), Ability::MagicMirror)) {
                     target = t;
                     break;
                 }
@@ -3097,17 +3097,23 @@ struct MMMagicCoat : public MM
 
         int move = MM::move(b,s);
 
-        b.fail(s,76,1,Pokemon::Psychic);
+        //fixme: message
+        b.fail(s,76,b.hasWorkingAbility(t, Ability::MagicMirror) ? 2 : 1,Pokemon::Psychic);
         /* Now Bouncing back ... */
-        removeFunction(turn(b,target), "UponAttackSuccessful", "MagicCoat");
+        BS::context ctx = turn(b,target);
+        BS::BasicMoveInfo info = tmove(b,s);
 
+        turn(b,target).clear();
         MoveEffect::setup(move,target,s,b);
-        tmove(b,t).targets = tmove(b,s).target;
         turn(b,target)["Target"] = s;
         b.battlelong["CoatingAttackNow"] = true;
         b.useAttack(target,move,true,false);
         b.battlelong.remove("CoatingAttackNow") = true;
-        MoveEffect::unsetup(move,t,b);
+
+        /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
+            and don't cause any such data to be stored in that memory */
+        turn(b,target) = ctx;
+        tmove(b,s) = info;
     }
 };
 

@@ -1,4 +1,5 @@
 #include "abilities.h"
+#include "moves.h" //For magic mirror.
 #include "../PokemonInfo/pokemoninfo.h"
 
 typedef AbilityMechanics AM;
@@ -1461,53 +1462,61 @@ struct AMRegeneration : public AM {
     }
 };
 
-struct AMMagicMirror : public AM {
+struct AMMagicMirror : public AM
+{
     AMMagicMirror() {
+        functions["UponSetup"] = &uas;
+    }
 
+    static void uas (int s, int, BS &b) {
+        addFunction(b.battlelong, "DetermineGeneralAttackFailure2", "MagicCoat", &dgaf);
+    }
+
+    static void dgaf(int s, int t, BS &b) {
+        bool bounced = tmove(b, s).flags & Move::MagicCoatableFlag;
+        if (!bounced)
+            return;
+        /* Don't double bounce something */
+        if (b.battlelong.contains("CoatingAttackNow")) {
+            return;
+        }
+        int target = -1;
+        if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(turn(b,t), Ability::MagicMirror)) ) {
+            target = t;
+        } else {
+            /* Entry hazards */
+            foreach(int t, b.revs(s)) {
+                if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(turn(b,t), Ability::MagicMirror)) {
+                    target = t;
+                    break;
+                }
+            }
+        }
+
+        if (target == -1)
+            return;
+
+        int move = AM::move(b,s);
+
+        //fixme: message
+        b.fail(s,76,b.hasWorkingAbility(t, Ability::MagicMirror) ? 2 : 1,Pokemon::Psychic);
+        /* Now Bouncing back ... */
+        BS::context ctx = turn(b,target);
+        BS::BasicMoveInfo info = tmove(b,s);
+
+        turn(b,target).clear();
+        MoveEffect::setup(move,target,s,b);
+        turn(b,target)["Target"] = s;
+        b.battlelong["CoatingAttackNow"] = true;
+        b.useAttack(target,move,true,false);
+        b.battlelong.remove("CoatingAttackNow") = true;
+
+        /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
+            and don't cause any such data to be stored in that memory */
+        turn(b,target) = ctx;
+        tmove(b,s) = info;
     }
 };
-
-//struct MMMagicCoat : public MM
-//{
-//    MMMagicCoat() {
-//	functions["UponAttackSuccessful"] = &uas;
-//    }
-
-//    static void uas (int s, int, BS &b) {
-//	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "MagicCoat", &dgaf);
-//	turn(b,s)["MagicCoated"] = true;
-//	b.sendMoveMessage(76,0,s,Pokemon::Psychic);
-//    }
-
-//    static void dgaf(int s, int t, BS &b) {
-//        if (turn(b,t).value("MagicCoated").toBool()) {
-//            /* Don't double bounce something */
-//            if (b.battlelong.value("CoatingPlayer") == s && b.battlelong.value("CoatingTurn") == b.turn()
-//                && b.battlelong.value("CoatingAttackCount") == b.attackCount()) {
-//                return;
-//            }
-//            if (t != s) {
-//                int move = MM::move(b,s);
-
-//                bool bounced = tmove(b, s).flags & Move::MagicCoatableFlag;
-//                if (bounced) {
-//		    b.fail(s,76,1,Pokemon::Psychic);
-//		    /* Now Bouncing back ... */
-//                    b.battlelong["CoatingPlayer"] = t;
-//                    b.battlelong["CoatingTurn"] = b.turn();
-//                    b.battlelong["CoatingAttackCount"] = b.attackCount();
-//		    removeFunction(turn(b,t), "UponAttackSuccessful", "MagicCoat");
-
-//		    MoveEffect::setup(move,t,s,b);
-//                    tmove(b,t).targets = tmove(b,s).target;
-//                    turn(b,t)["Target"] = s;
-//		    b.useAttack(t,move,true,false);
-//                    MoveEffect::unsetup(move,t,b);
-//		}
-//	    }
-//	}
-//    }
-//};
 
 /* Events:
     PriorityChoice
