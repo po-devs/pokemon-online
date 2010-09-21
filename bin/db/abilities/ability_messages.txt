@@ -74,3 +74,14 @@
 
 %s lost part of its armor!
 
+
+
+%s stole %f's %i!
+
+%s's Competitive Spirit sharply raised its Attack!
+%s transformed into %p!
+
+
+
+%s avoided %t's attack thanks to its Telepathy!
+%s regains health with its Regeneration!

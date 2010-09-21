@@ -122,11 +122,11 @@
 
 20#Flower Gift
 6#Bad Dreams
+78#Wicked Thief
+79#Encourage
 
 
-
-
-
+80#Competitive Spirit
 76#Weak-Kneed
 
 
@@ -134,29 +134,29 @@
 74#Broken Armour
 
 
+83#Multi Scale
+84-5#Poison Rampage
+84-4#Heat Rampage
 
-#Poison Rampage
-#Heat Rampage
-
-
+85#Telepathy
 
 17#Dustproof
 18-5#Poison Skin
-
+86#Regeneration
 30-2#Pigeon Heart
 8-3#Sand Throw
 
 
 
-
+81#Eccentric
 
 47#Mummy
 52#Earthquake Spiral
 68-16#Justice Heart
 
-
+87#Magic Mirror
 68-11#Herbivore
-
+82#Mischievous Heart
 72#Sand Power
 50#Iron Barb
 77#Daruma Mode

@@ -74,7 +74,7 @@ It doesn't affect %s...|%f was seeded!|%s's health is sapped by leech seed.
 Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's reflect wore off!|%ts's light screen wore off!
 %s took aim at %f!
 %ts's team is protected from critical hits!|%ts's lucky chant wore off!
-%s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!
+%s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!|%s's %m was bounced back by Magic Mirror!
 %s cleared the field around %tf's team!|%s cleared the field!
 Magnitude %d!
 
@@ -153,4 +153,14 @@ All stat changes were elimnated!
 
 
 
+%s and %f had their power shared!|%s and %f had their defenses shared!
+%s cancelled the items' effects!|The items are now working again!
+%s became of the Water type!
+%f gained %a!
 
+%f's %i burned!
+
+%s gave %f its %i!
+
+
+#
