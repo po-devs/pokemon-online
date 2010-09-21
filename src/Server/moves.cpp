@@ -3072,24 +3072,42 @@ struct MMMagicCoat : public MM
     }
 
     static void dgaf(int s, int t, BS &b) {
-        if (turn(b,t).value("MagicCoated").toBool()) {
-            if (t != s) {
-                int move = MM::move(b,s);
+        bool bounced = tmove(b, s).flags & Move::MagicCoatableFlag;
+        if (!bounced)
+            return;
+        /* Don't double bounce something */
+        if (b.battlelong.contains("CoatingAttackNow")) {
+            return;
+        }
+        int target = -1;
+        if (t != s && turn(b,t).value("MagicCoated").toBool()) {
+            target = t;
+        } else {
+            /* Entry hazards */
+            foreach(int t, b.revs(s)) {
+                if (turn(b,t).value("MagicCoated").toBool()) {
+                    target = t;
+                    break;
+                }
+            }
+        }
 
-                bool bounced = tmove(b, s).flags & Move::MagicCoatableFlag;
-                if (bounced) {
-		    b.fail(s,76,1,Pokemon::Psychic);
-		    /* Now Bouncing back ... */
-		    removeFunction(turn(b,t), "UponAttackSuccessful", "MagicCoat");
+        if (target == -1)
+            return;
 
-		    MoveEffect::setup(move,t,s,b);
-                    tmove(b,t).targets = tmove(b,s).target;
-                    turn(b,t)["Target"] = s;
-		    b.useAttack(t,move,true,false);
-                    MoveEffect::unsetup(move,t,b);
-		}
-	    }
-	}
+        int move = MM::move(b,s);
+
+        b.fail(s,76,1,Pokemon::Psychic);
+        /* Now Bouncing back ... */
+        removeFunction(turn(b,target), "UponAttackSuccessful", "MagicCoat");
+
+        MoveEffect::setup(move,target,s,b);
+        tmove(b,t).targets = tmove(b,s).target;
+        turn(b,target)["Target"] = s;
+        b.battlelong["CoatingAttackNow"] = true;
+        b.useAttack(target,move,true,false);
+        b.battlelong.remove("CoatingAttackNow") = true;
+        MoveEffect::unsetup(move,t,b);
     }
 };
 

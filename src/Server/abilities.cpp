@@ -1481,6 +1481,11 @@ struct AMMagicMirror : public AM {
 
 //    static void dgaf(int s, int t, BS &b) {
 //        if (turn(b,t).value("MagicCoated").toBool()) {
+//            /* Don't double bounce something */
+//            if (b.battlelong.value("CoatingPlayer") == s && b.battlelong.value("CoatingTurn") == b.turn()
+//                && b.battlelong.value("CoatingAttackCount") == b.attackCount()) {
+//                return;
+//            }
 //            if (t != s) {
 //                int move = MM::move(b,s);
 
@@ -1488,6 +1493,9 @@ struct AMMagicMirror : public AM {
 //                if (bounced) {
 //		    b.fail(s,76,1,Pokemon::Psychic);
 //		    /* Now Bouncing back ... */
+//                    b.battlelong["CoatingPlayer"] = t;
+//                    b.battlelong["CoatingTurn"] = b.turn();
+//                    b.battlelong["CoatingAttackCount"] = b.attackCount();
 //		    removeFunction(turn(b,t), "UponAttackSuccessful", "MagicCoat");
 
 //		    MoveEffect::setup(move,t,s,b);
@@ -1500,6 +1508,7 @@ struct AMMagicMirror : public AM {
 //	}
 //    }
 //};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange

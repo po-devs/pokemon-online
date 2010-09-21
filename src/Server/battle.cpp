@@ -427,6 +427,7 @@ void BattleSituation::beginTurn()
     for (int i = 0; i < numberOfSlots(); i++) {
         callpeffects(i, i, "TurnSettings");
     }
+    attackCount() = 0;
 
     requestChoices();
 
@@ -718,6 +719,7 @@ void BattleSituation::analyzeChoice(int slot)
     int player = this->player(slot);
 
     stopClock(player, true);
+    attackCount() += 1;
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice[slot].attack()) {
         turnlong[slot]["Target"] = choice[slot].target();
@@ -1571,6 +1573,9 @@ bool BattleSituation::attacking()
 
 void BattleSituation::useAttack(int player, int move, bool specialOccurence, bool tellPlayers)
 {
+    int oldAttacker = attacker();
+    int oldAttacked = attacked();
+
     attacker() = player;
 
     int attack;
@@ -1903,8 +1908,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
     calleffects(player, player, "AfterAttackFinished");
 
-    attacker() = -1;
-    attacked() = -1;
+    attacker() = oldAttacker;
+    attacked() = oldAttacked;
 }
 
 void BattleSituation::notifyHits(int number)
