@@ -3076,8 +3076,6 @@ struct MMMagicCoat : public MM
             if (t != s) {
                 int move = MM::move(b,s);
 
-		/* Typically, the moves that are bounced back are moves that only induce status / boost mods and nothing else,
-		    therefore having no "SpecialEffect". Exceptions are stored in bounced_moves */
                 bool bounced = tmove(b, s).flags & Move::MagicCoatableFlag;
                 if (bounced) {
 		    b.fail(s,76,1,Pokemon::Psychic);
@@ -3085,7 +3083,7 @@ struct MMMagicCoat : public MM
 		    removeFunction(turn(b,t), "UponAttackSuccessful", "MagicCoat");
 
 		    MoveEffect::setup(move,t,s,b);
-                    tmove(b,t).targets = Move::ChosenTarget;
+                    tmove(b,t).targets = tmove(b,s).target;
                     turn(b,t)["Target"] = s;
 		    b.useAttack(t,move,true,false);
                     MoveEffect::unsetup(move,t,b);
