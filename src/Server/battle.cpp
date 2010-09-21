@@ -23,6 +23,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     attacked() = -1;
     attacker() = -1;
     gen() = std::max(p1.gen(), p2.gen());
+    applyingMoveStatMods = false;
     weather = 0;
     weatherCount = -1;
 
@@ -1768,7 +1769,15 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player,target,"AttackSomehowFailed");
 	    continue;
 	}
+        //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
+        /* Protect, ... */
         callbeffects(player, target, "DetermineGeneralAttackFailure", true);
+        if (testFail(player)) {
+            calleffects(player,target,"AttackSomehowFailed");
+            continue;
+        }
+        /* Coats */
+        callbeffects(player, target, "DetermineGeneralAttackFailure2", true);
         if (testFail(player)) {
             calleffects(player,target,"AttackSomehowFailed");
             continue;
@@ -2057,6 +2066,7 @@ void BattleSituation::inflictRecoil(int source, int target)
 
 void BattleSituation::applyMoveStatMods(int player, int target)
 {
+    applyingMoveStatMods = true;
     bool sub = hasSubstitute(target);
 
     BasicMoveInfo &fm = fieldmoves[player];
@@ -2067,11 +2077,13 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         && cl != Move::OffensiveSelfStatChangingMove && cl != Move::OffensiveStatusInducingMove
         && cl != Move::OffensiveStatChangingMove)
     {
+        applyingMoveStatMods = false;
 	return;
     }
 
     if ( (cl == Move::OffensiveStatChangingMove || cl == Move::OffensiveStatusInducingMove)&& hasWorkingAbility(targeted, Ability::ShieldDust)) {
 //        sendAbMessage(24,0,targeted,0,Pokemon::Bug);
+        applyingMoveStatMods = false;
         return;
     }
 
@@ -2082,8 +2094,10 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         target = player;
     }
 
-    if (koed(target))
+    if (koed(target)) {
+        applyingMoveStatMods = false;
         return;
+    }
 
     /* Doing Stat Changes */
     for (int i = 3; i >= 0; i--) {
@@ -2099,6 +2113,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
             if (rate == 0 && cl != Move::OffensiveStatusInducingMove) {
                 sendMoveMessage(128, 2, player,0,target, fieldmoves[player].attack);
             }
+            applyingMoveStatMods = false;
             return;
         }
 
@@ -2140,11 +2155,15 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
     /* Now Status */
 
-    if (cl != Move::StatAndStatusMove && cl != Move::StatusInducingMove && cl != Move::OffensiveStatusInducingMove)
+    if (cl != Move::StatAndStatusMove && cl != Move::StatusInducingMove && cl != Move::OffensiveStatusInducingMove) {
+        applyingMoveStatMods = false;
         return;
+    }
 
-    if (fm.statusKind > Pokemon::Confused)
+    if (fm.statusKind > Pokemon::Confused) {
+        applyingMoveStatMods = false;
         return; // Other status effects than status and confusion are, on PO, dealt as special moves. Should probably be changed
+    }
 
     int rate = fm.rate;
 
@@ -2152,6 +2171,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         if (rate == 0 && cl != Move::OffensiveStatChangingMove) {
             sendMoveMessage(128, 2, player,0,target, fieldmoves[player].attack);
         }
+        applyingMoveStatMods = false;
         return;
     }
 
@@ -2163,6 +2183,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     }
 
     if (rate != 0 && randnum > rate) {
+        applyingMoveStatMods = false;
         return;
     }
 
@@ -2170,6 +2191,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         inflictConfused(target, player, true);
     else
         inflictStatus(target, fm.statusKind, player, fm.minTurns, fm.maxTurns);
+
+    applyingMoveStatMods = false;
 }
 
 void BattleSituation::healConfused(int player)
@@ -2253,7 +2276,7 @@ bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker,
             notify(All, StatChange, player, qint8(stat), qint8(-malus));
         changeStatMod(player, stat, std::max(boost-malus, -6));
 
-        if (this->attacker() != attacker) {
+        if (!applyingMoveStatMods) {
             callieffects(player, attacker, "AfterStatChange");
             if (player != attacker) {
                 callaeffects(player, attacker, "AfterNegativeStatChange");
