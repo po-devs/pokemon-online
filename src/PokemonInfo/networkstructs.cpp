@@ -45,8 +45,8 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
 		in >> team.pokemon(i);
     }
 
-    if (team.gen != 3)
-        team.gen = 4;
+    if (team.gen != 3 && team.gen != 4)
+        team.gen = 5;
 
     for (int i = 0; i < 6; i++)
         team.pokemon(i).gen() = team.gen;

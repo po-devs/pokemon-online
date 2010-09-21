@@ -1210,6 +1210,18 @@ BaseGraphicsZone::BaseGraphicsZone(BaseBattleInfo *i) : mInfo(i)
         scene.addItem(items[i]);
     }
 
+    int size = Version::avatarSize[info().gen-1];
+
+    if (!info().doubles) {
+        items[info().slot(info().myself)]->setPos(50 - size/2, 146 - size);
+        items[info().slot(info().opponent)]->setPos(184- size/2, 96 - size);
+    } else {
+        items[info().slot(info().myself)]->setPos(0, 146-size);
+        items[info().slot(info().opponent)]->setPos(257-140, 96 - size);
+        items[info().slot(info().myself,1)]->setPos(80, 146-size);
+        items[info().slot(info().opponent,1)]->setPos(257-80, 96 - size);
+    }
+/*
     if (info().gen >= 4) {
         if (!info().doubles) {
             items[info().slot(info().myself)]->setPos(10, 145-79);
@@ -1231,6 +1243,7 @@ BaseGraphicsZone::BaseGraphicsZone(BaseBattleInfo *i) : mInfo(i)
             items[info().slot(info().opponent,1)]->setPos(257-80, 95 - 63);
         }
     }
+*/
 }
 
 void BaseGraphicsZone::switchToNaught(int spot)

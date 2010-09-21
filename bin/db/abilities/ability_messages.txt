@@ -38,7 +38,7 @@
 %s's Leaf Guard prevents it from being affected by any status from the opponent!
 %s's %a took the attack!|%s's %a raised its special attack!|%s's %a made the attack useless!
 
-%s has Mold Breaker!
+%s has %a!
 %s's Motor Drive raises its speed!
 
 
