@@ -1474,7 +1474,7 @@ bool BattleSituation::testStatus(int player)
         //SteadFast
         if (hasWorkingAbility(player, Ability::Steadfast)) {
             sendAbMessage(60,0,player);
-            gainStatMod(player, Speed, 1, s);
+            inflictStatMod(player, Speed, 1, s);
         }
         return false;
     }
@@ -2111,10 +2111,10 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         if (increase > 0) {
             if (stat == AllStats) {
                 for (int i = 1; i <= 5; i++) {
-                    gainStatMod(target, i, increase, s);
+                    inflictStatMod(target, i, increase, s);
                 }
             } else {
-                gainStatMod(target, stat, increase, s);
+                inflictStatMod(target, stat, increase, s);
             }
         } else {
             /* If we are blocked by a secondary effect, let's stop here */
@@ -2203,9 +2203,9 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
         *negative = !pos;
 
     if (pos)
-        return gainStatsMod(player, stat, mod, attacker, tell);
+        return gainStatMod(player, stat, mod, attacker, tell);
     else
-        return loseStatsMod(player, stat, -mod, attacker, tell);
+        return loseStatMod(player, stat, -mod, attacker, tell);
 }
 
 bool BattleSituation::gainStatMod(int player, int stat, int bonus, bool tell, bool priv)
