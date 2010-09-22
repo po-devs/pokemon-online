@@ -826,6 +826,27 @@ void ScriptEngine::timer()
     t->deleteLater();
 }
 
+void ScriptEngine::delayedCall(const QScriptValue &func, int delay)
+{
+    if (delay <= 0) return;
+    if (func.isFunction()) {
+        QTimer *t = new QTimer(this);
+        timerEventsFunc[t] = func;
+        t->setSingleShot(true);
+        t->start(delay*1000);
+        connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+    }
+}
+
+void ScriptEngine::timerFunc()
+{
+    QTimer *t = (QTimer*) sender();
+    timerEventsFunc[t].call();
+    timerEvents.remove(t);
+    t->deleteLater();
+}
+
+
 QScriptValue ScriptEngine::eval(const QString &script)
 {
     return myengine.evaluate(script);
