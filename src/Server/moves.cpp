@@ -800,7 +800,7 @@ struct MMPerishSong : public MM
             return;
         }
         addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
-        poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns-1 + b.true_rand()(tmove(b,s).maxTurns+1-tmove(b,s).maxTurns);
+        poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns-1 + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns));
 
 	b.sendMoveMessage(95);
     }
@@ -935,7 +935,7 @@ struct MMRest : public MM
 	b.healLife(s, b.poke(s).totalLifePoints());
         b.sendMoveMessage(106,0,s,type(b,s));
         b.changeStatus(s, Pokemon::Asleep,false);
-        b.poke(s).statusCount() = tmove(b,s).minTurns-1 + b.true_rand()(tmove(b,s).maxTurns+1-tmove(b,s).maxTurns);
+        b.poke(s).statusCount() = tmove(b,s).minTurns-1 + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns));
         poke(b,s)["Rested"] = true;
     }
 };
@@ -4782,6 +4782,24 @@ struct MMWindStorm : public MM {
     }
 };
 
+struct MMRefresh : public MM {
+    MMRefresh() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.poke(s).status() != 0) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas(int s, int, BS &b) {
+        b.healStatus(s, 0);
+        b.sendMoveMessage(164, 0, s);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -4980,5 +4998,6 @@ void MoveEffect::init()
     REGISTER_MOVE(161, Desperation);
     REGISTER_MOVE(162, GiftPass);
     REGISTER_MOVE(163, WindStorm);
+    REGISTER_MOVE(164, Refresh);
 }
 
