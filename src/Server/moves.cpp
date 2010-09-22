@@ -470,7 +470,7 @@ struct MMCurse : public MM
         if (!b.hasType(s, Pokemon::Ghost)) {
             tmove(b,s).targets = Move::User; // so that curse works even when there is no enemy.
             tmove(b,s).classification = Move::StatChangingMove;
-            tmove(b,s).statAffected = (Attack << 16 + Defense << 8 + Speed);
+            tmove(b,s).statAffected = (Attack << 16) + (Defense << 8) + Speed;
             tmove(b,s).boostOfStat = (1 << 16) + (1 << 8) + (uchar(-1));
         } else {
             tmove(b,s).classification = Move::SpecialMove;
@@ -2994,11 +2994,11 @@ struct MMTeamBarrier : public MM
     }
 
     static void et(int s, int, BS &b) {
-	int counts[] = {team(b,s).value("Barrier0Count").toInt(), team(b,s).value("Barrier1Count").toInt()};
+        int counts[] = {team(b,s).value("Barrier1Count").toInt(), team(b,s).value("Barrier2Count").toInt()};
 
 	for (int i = 0; i < 2; i++) {
 	    if (counts[i] != 0) {
-		team(b,s)["Barrier" + QString::number(i) + "Count"] = counts[i] - 1;
+                team(b,s)["Barrier" + QString::number(i+1) + "Count"] = counts[i] - 1;
 		if (counts[i] == 1) {
                     b.sendMoveMessage(73, 4+i,s,Pokemon::Psychic);
 		}
