@@ -2948,7 +2948,7 @@ void BattleSituation::healDamage(int player, int target)
         healLife(target, poke(target).totalLifePoints() * healing / 100);
     } else if (healing < 0){
         notify(All, Recoil, target, true);
-        inflictDamage(target, poke(target).totalLifePoints() * healing / 100, target);
+        inflictDamage(target, -poke(target).totalLifePoints() * healing / 100, target);
    }
 }
 
