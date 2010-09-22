@@ -800,7 +800,7 @@ struct MMPerishSong : public MM
             return;
         }
         addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
-        poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns;
+        poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns-1 + b.true_rand()(tmove(b,s).maxTurns+1-tmove(b,s).maxTurns);
 
 	b.sendMoveMessage(95);
     }
@@ -935,7 +935,7 @@ struct MMRest : public MM
 	b.healLife(s, b.poke(s).totalLifePoints());
         b.sendMoveMessage(106,0,s,type(b,s));
         b.changeStatus(s, Pokemon::Asleep,false);
-        b.poke(s).statusCount() = b.gen() <= 4 ? 2 : 3;
+        b.poke(s).statusCount() = tmove(b,s).minTurns-1 + b.true_rand()(tmove(b,s).maxTurns+1-tmove(b,s).maxTurns);
         poke(b,s)["Rested"] = true;
     }
 };
