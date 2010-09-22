@@ -235,7 +235,7 @@ void PokePersonal::controlEVs(int stat)
 
 void PokePersonal::setEV(int stat, quint8 val)
 {
-    if (num() == Pokemon::Arceus && val > 100) //Arceus
+    if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus && val > 100) //Arceus
     {
         val = 100;
     }
