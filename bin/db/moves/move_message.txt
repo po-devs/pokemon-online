@@ -161,6 +161,6 @@ All stat changes were elimnated!
 %f's %i burned!
 
 %s gave %f its %i!
-
+%s's status cleared!
 
 #

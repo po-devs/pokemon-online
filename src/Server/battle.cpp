@@ -2212,7 +2212,7 @@ bool BattleSituation::isConfused(int player)
 
 void BattleSituation::healStatus(int player, int status)
 {
-    if (poke(player).status() == status) {
+    if (poke(player).status() == status || status == 0) {
 	changeStatus(player, Pokemon::Fine);
     }
 }
