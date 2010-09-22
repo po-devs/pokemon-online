@@ -473,17 +473,16 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                 tr("%1 fell asleep!"),
                 tr("%1 was frozen solid!"),
                 tr("%1 was burned!"),
-                tr("%1 was poisoned!"),
-                tr("%1 was badly poisoned!")
+                tr("%1 was poisoned!")
             };
 
             qint8 status;
             in >> status;
             bool multipleTurns;
             in >> multipleTurns;
-            if (status <= Pokemon::Poisoned + 1) {
+            if (status > Pokemon::Fine && status <= Pokemon::Poisoned) {
                 printHtml(toColor(tu(statusChangeMessages[status-1 + (status == Pokemon::Poisoned && multipleTurns)].arg(nick(spot))), Theme::StatusColor(status)));
-            } else if (status == -1) {
+            } else if (status == Pokemon::Confused) {
                 printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), Theme::TypeColor(Type::Ghost).name()));
             }
             break;
