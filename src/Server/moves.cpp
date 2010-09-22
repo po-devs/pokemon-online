@@ -4302,16 +4302,18 @@ struct MMStockPile : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (b.gen() >= 4) {
-            if (poke(b,s)["Boost2"].toInt() <= 5) {
-                inc(poke(b,s)["StockPileDef"],1);
-            }
-            if (poke(b,s)["Boost5"].toInt() <= 5) {
-                inc(poke(b,s)["StockPileSDef"], 1);
-            }
-        }
         inc(poke(b,s)["StockPileCount"], 1);
         b.sendMoveMessage(125,0,s,0,s,poke(b,s)["StockPileCount"].toInt());
+        if (b.gen() >= 4) {
+            if (!b.hasMaximalStatMod(s, Defense)) {
+                inc(poke(b,s)["StockPileDef"],1);
+                b.inflictStatMod(s, Defense, 1, s);
+            }
+            if (!b.hasMaximalStatMod(s, SpDefense)) {
+                inc(poke(b,s)["StockPileSDef"], 1);
+                b.inflictStatMod(s, SpDefense, 1, s);
+            }
+        }
     }
 };
 
@@ -4331,7 +4333,7 @@ struct MMSwallow: public MM
     static void uas(int s, int, BS &b) {
         if (b.gen() >= 4) {
             b.changeStatMod(s,Defense,poke(b,s)["Boost2"].toInt() - poke(b,s)["StockPileDef"].toInt());
-            b.changeStatMod(s,SpDefense,poke(b,s)["Boost5"].toInt() - poke(b,s)["StockPileSDef"].toInt());
+            b.changeStatMod(s,SpDefense,poke(b,s)["Boost4"].toInt() - poke(b,s)["StockPileSDef"].toInt());
             poke(b,s)["StockPileDef"] = 0;
             poke(b,s)["StockPileSDef"] = 0;
         }
@@ -4366,7 +4368,7 @@ struct MMSpitUp : public MM
     static void uas(int s, int, BS &b) {
         if (b.gen() >= 4) {
             b.changeStatMod(s,Defense,poke(b,s)["Boost2"].toInt() - poke(b,s)["StockPileDef"].toInt());
-            b.changeStatMod(s,SpDefense,poke(b,s)["Boost5"].toInt() - poke(b,s)["StockPileSDef"].toInt());
+            b.changeStatMod(s,SpDefense,poke(b,s)["Boost4"].toInt() - poke(b,s)["StockPileSDef"].toInt());
             poke(b,s)["StockPileDef"] = 0;
             poke(b,s)["StockPileSDef"] = 0;
         }
