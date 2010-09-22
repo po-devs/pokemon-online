@@ -69,7 +69,7 @@
 
 
 
-19-2#Flame Orb
+19-4#Flame Orb
 
 
 
@@ -139,7 +139,7 @@
 
 
 
-19-6#Toxic Orb 
+19-5#Toxic Orb 
 10-13#Twistedspoon
 
 

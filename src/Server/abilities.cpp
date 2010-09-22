@@ -33,7 +33,7 @@ void AbilityEffect::setup(int num, int source, BattleSituation &b, bool firstAct
     QString activationkey = QString("Ability%1SetUp").arg(effect.num);
 
     /* In gen 3, intimidate/insomnia/... aren't triggered by Trace */
-    if (b.pokelong[source].value(activationkey) != b.pokelong[source]["SwitchCount"].toInt() && (b.gen() == 4 || firstAct)) {
+    if (b.pokelong[source].value(activationkey) != b.pokelong[source]["SwitchCount"].toInt() && (b.gen() >= 4 || firstAct)) {
         b.pokelong[source][activationkey] = b.pokelong[source]["SwitchCount"].toInt();
         activate("UponSetup", num, source, source, b);
     }
@@ -894,7 +894,7 @@ struct AMSpeedBoost : public AM {
     }
 
     static void et(int s, int, BS &b) {
-        if (b.koed(s) && b.turn() != poke(b,s).value("SpeedBoostSetupTurn").toInt())
+        if (b.koed(s) || b.turn() == poke(b,s).value("SpeedBoostSetupTurn").toInt())
             return;
         b.sendAbMessage(58,b.ability(s) == Ability::SpeedBoost ? 0 : 1,s);
         b.inflictStatMod(s, poke(b,s)["AbilityArg"].toInt(), 1, s);
