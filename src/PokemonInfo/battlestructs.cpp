@@ -219,13 +219,13 @@ int PokeBattle::status() const
 {
     if (fullStatus() & (1 << Pokemon::Koed))
         return Pokemon::Koed;
-    return intlog2(fullStatus() & (0x1F));
+    return intlog2(fullStatus() & (0x3F));
 }
 
 void PokeBattle::changeStatus(int status)
 {
     /* Clears past status */
-    fullStatus() = fullStatus() & ~( (1 << Pokemon::Koed) | 0x1F);
+    fullStatus() = fullStatus() & ~( (1 << Pokemon::Koed) | 0x3F);
     /* Adds new status */
     fullStatus() = fullStatus() | (1 << status);
 }
@@ -307,13 +307,13 @@ int ShallowBattlePoke::status() const
 {
     if (fullStatus() & (1 << Pokemon::Koed))
         return Pokemon::Koed;
-    return intlog2(fullStatus() & (0x1F));
+    return intlog2(fullStatus() & (0x3F));
 }
 
 void ShallowBattlePoke::changeStatus(int status)
 {
     /* Clears past status */
-    fullStatus() = fullStatus() & ~( (1 << Pokemon::Koed) | 0x1F);
+    fullStatus() = fullStatus() & ~( (1 << Pokemon::Koed) | 0x3F);
     /* Adds new status */
     fullStatus() = fullStatus() | (1 << status);
 }

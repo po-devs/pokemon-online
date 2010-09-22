@@ -1391,7 +1391,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
     /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
 	due to the ever rounding down to make an int */
-    acc = acc * getStatBoost(player, 6) * getStatBoost(target, 7)
+    acc = acc * getStatBoost(player, Accuracy) * getStatBoost(target, Evasion)
             * (20+turnlong[player].value("Stat6ItemModifier").toInt())/20
             * (20-turnlong[target].value("Stat7ItemModifier").toInt())/20
             * (20+turnlong[player].value("Stat6AbilityModifier").toInt())/20
@@ -3353,7 +3353,7 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
 
     if (stat <= 5) {
         return PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
-    } else if (stat == 7) {
+    } else if (stat == Accuracy) {
 	/* Accuracy */
         return PokeFraction(std::max(3+boost, 3), std::max(3-boost, 3));
     } else {

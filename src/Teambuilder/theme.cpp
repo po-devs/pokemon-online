@@ -75,7 +75,7 @@ void Theme::init(const QString &dir)
         QDir d(dir + "Fonts");
 
         foreach (QString s, d.entryList(QDir::NoDotAndDotDot | QDir::Files)) {
-            QFontDatabase::addApplicationFont(s);
+            QFontDatabase::addApplicationFont(d.absoluteFilePath(s));
         }
     }
 

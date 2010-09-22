@@ -296,7 +296,6 @@ struct MMBlastBurn : public MM
 {
     MMBlastBurn() {
         functions["UponAttackSuccessful"] = &aas;
-        functions["MoveSettings"] = &ms;
     }
 
     static void aas(int s, int, BS &b) {
@@ -309,13 +308,11 @@ struct MMBlastBurn : public MM
         }
 
         turn(b, s)["NoChoice"] = true;
+
+        addFunction(turn(b,s), "MoveSettings", "BlastBurn", &ms);
     }
 
     static void ms(int s, int, BS &b) {
-        if (poke(b, s)["BlastBurnTurn"].toInt() < b.turn() - 1) {
-            return;
-        }
-
         turn(b, s)["TellPlayers"] = false;
         tmove(b, s).targets = Move::User;
         addFunction(turn(b,s), "UponAttackSuccessful", "BlastBurn", &uas);
