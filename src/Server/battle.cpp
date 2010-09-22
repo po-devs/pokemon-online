@@ -2327,6 +2327,9 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
         }
     }
 
+    if (!canGetStatus(player, status))
+        return;
+
     if (status == Pokemon::Asleep)
     {
         if (sleepClause() && currentForcedSleepPoke[this->player(player)] != -1) {

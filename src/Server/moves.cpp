@@ -3463,7 +3463,7 @@ struct MMPsychoShift : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-	if (b.poke(s).status() == Pokemon::Fine || b.poke(t).status() != Pokemon::Fine)
+        if (b.poke(s).status() == Pokemon::Fine || b.poke(t).status() != Pokemon::Fine || !b.canGetStatus(t, b.poke(s).status()))
 	    turn(b,s)["Failed"] = true;
     }
 
