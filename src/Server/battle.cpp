@@ -2195,7 +2195,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     if (fm.status == Pokemon::Confused)
         inflictConfused(target, player, true);
     else
-        inflictStatus(target, fm.statusKind, player, fm.minTurns, fm.maxTurns);
+        inflictStatus(target, fm.status, player, fm.minTurns, fm.maxTurns);
 
     applyingMoveStatMods = false;
 }
