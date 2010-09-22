@@ -2987,7 +2987,7 @@ struct MMTeamBarrier : public MM
 	}
 	int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
 
-        b.sendMoveMessage(73,cat+b.doubles()*2,s,type(b,s));
+        b.sendMoveMessage(73,(cat-1)+b.doubles()*2,s,type(b,s));
         team(b,source)["Barrier" + QString::number(cat) + "Count"] = nturn;
 
         addFunction(team(b,source), "EndTurn", "TeamBarrier", &et);
