@@ -2384,10 +2384,7 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
     }
 
     pokelong[player]["Confused"] = true;
-    if (gen() <= 4)
-        pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 1;
-    else
-        pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 2;
+    pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 1;
 
     if (tell)
         notify(All, StatusChange, player, qint8(-1));
