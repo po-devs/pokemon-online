@@ -800,7 +800,7 @@ struct MMPerishSong : public MM
             return;
         }
         addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
-        poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns-1 + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns));
+        poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns));
 
 	b.sendMoveMessage(95);
     }
