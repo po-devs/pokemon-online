@@ -1520,7 +1520,7 @@ struct AMHarvest : public AM
     }
 
     static void et(int s, int, BS &b) {
-        if (poke(b,s).contains("BerryUsed") && poke(b,s).item() == 0) {
+        if (poke(b,s).contains("BerryUsed") && b.poke(s).item() == 0) {
             int item = poke(b,s)["BerryUsed"].toInt();
 
             poke(b,s).remove("BerryUsed");
