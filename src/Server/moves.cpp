@@ -935,7 +935,7 @@ struct MMRest : public MM
 	b.healLife(s, b.poke(s).totalLifePoints());
         b.sendMoveMessage(106,0,s,type(b,s));
         b.changeStatus(s, Pokemon::Asleep,false);
-        b.poke(s).statusCount() = tmove(b,s).minTurns-1 + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns));
+        b.poke(s).statusCount() = 2;
         poke(b,s)["Rested"] = true;
     }
 };
@@ -2628,18 +2628,9 @@ struct MMHealBlock: public MM
 	}
     }
 
-    struct FM : public QSet<int> {
-	FM() {
-	    /* Heal Order, Milk Drink, Moonlight, Morning Sun, Recover, Rest, Roost, Slack Off, Softboiled, Swallow, Synthesis, and Wish; */
-            (*this) << HealOrder << MilkDrink << Moonlight << MorningSun << Rest << Recover << Roost << SlackOff << Softboiled << Swallow
-                    << Synthesis << Wish;
-	}
-    };
-    static FM forbidden_moves;
-
     static void msp(int s, int, BS &b) {
 	for (int i = 0; i < 4; i++) {
-	    if (forbidden_moves.contains(b.move(s,i))) {
+            if (MoveInfo::Flags(b.move(s, i), b.gen()) & Move::HealingFlag) {
 		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
 	    }
 	}
@@ -2647,14 +2638,12 @@ struct MMHealBlock: public MM
 
     static void mp(int s, int, BS &b) {
         int mv = move(b,s);
-        if(forbidden_moves.contains(mv)) {
+        if(tmove(b,s).flags & Move::HealingFlag) {
 	    turn(b,s)["ImpossibleToMove"] = true;
             b.sendMoveMessage(59,1,s,Type::Psychic,s,mv);
 	}
     }
 };
-
-MMHealBlock::FM MMHealBlock::forbidden_moves;
 
 struct MMFling : public MM
 {

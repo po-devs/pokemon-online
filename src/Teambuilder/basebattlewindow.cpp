@@ -473,7 +473,8 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                 tr("%1 fell asleep!"),
                 tr("%1 was frozen solid!"),
                 tr("%1 was burned!"),
-                tr("%1 was poisoned!")
+                tr("%1 was poisoned!"),
+                tr("%1 was badly poisoned!")
             };
 
             qint8 status;
@@ -1269,7 +1270,7 @@ QPixmap BaseGraphicsZone::loadPixmap(Pokemon::uniqueId num, bool shiny, bool bac
 
 quint64 BaseGraphicsZone::key(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub) const
 {
-    return sub ? ((1 << 27) + (back << 28)) : (num.pokenum + (num.subnum << 16) + (gender << 24) + (back << 25) + (shiny<<26));
+    return sub ? ((1 << 27) + (back << 28)) : (num.pokenum + (num.subnum << 16) + (gender << 24) + (back << 26) + (shiny<<27));
 }
 
 void BaseGraphicsZone::mouseMoveEvent(QMouseEvent * e)

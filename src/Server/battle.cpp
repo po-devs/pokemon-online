@@ -2390,7 +2390,7 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
     pokelong[player]["ConfusedCount"] = (true_rand() % 4) + 1;
 
     if (tell)
-        notify(All, StatusChange, player, qint8(-1));
+        notify(All, StatusChange, player, qint8(Pokemon::Confused));
 
     callieffects(player, player,"AfterStatusChange");
 }
