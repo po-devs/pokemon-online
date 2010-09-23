@@ -8,6 +8,7 @@ typedef BattleSituation BS;
 struct BMStatusBerry : public BM
 {
     BMStatusBerry() {
+        functions["UponSetup"] = &asc;
         functions["AfterStatusChange"] = &asc;
     }
 
@@ -41,6 +42,8 @@ struct BMStatusBerry : public BM
 
         /* LumBerry */
         if (arg == 0) {
+            if (status == Pokemon::Fine)
+                return;
             goto end;
         }    /* Poison Berry */
         else if (arg == Pokemon::Poisoned) {
@@ -65,6 +68,7 @@ struct BMStatusBerry : public BM
 struct BMLeppa : public BM
 {
     BMLeppa() {
+        functions["UponSetup"] = &tp;
         functions["BeforeEnding"] = &appl;
     }
 
@@ -123,6 +127,7 @@ struct BMPinch : public BM
 struct BMPinchHP : public BMPinch
 {
     BMPinchHP() {
+        functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
     }
@@ -212,6 +217,7 @@ struct BMSuperHP : public BM
 struct BMPinchStat : public BMPinch
 {
     BMPinchStat() {
+        functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
     }
@@ -243,6 +249,7 @@ struct BMPinchStat : public BMPinch
 struct BMCriticalPinch : public BMPinch
 {
     BMCriticalPinch() {
+        functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
     }
@@ -282,6 +289,7 @@ struct BMCriticalPinch : public BMPinch
 struct BMStarf : public BMPinch
 {
     BMStarf() {
+        functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
     }
