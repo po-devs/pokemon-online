@@ -137,7 +137,7 @@
 83#Multi Scale
 84-5#Poison Rampage
 84-4#Heat Rampage
-
+88#Harvest
 85#Telepathy
 
 17#Dustproof
