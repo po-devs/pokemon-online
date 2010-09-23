@@ -842,7 +842,7 @@ void ScriptEngine::timerFunc()
 {
     QTimer *t = (QTimer*) sender();
     timerEventsFunc[t].call();
-    timerEvents.remove(t);
+    timerEventsFunc.remove(t);
     t->deleteLater();
 }
 
