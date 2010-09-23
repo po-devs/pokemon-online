@@ -2859,7 +2859,7 @@ void BattleSituation::disposeItem(int  player) {
 void BattleSituation::eatBerry(int player, bool show) {
     if (show && !turnlong[player].value("BugBiter").toBool())
         sendItemMessage(8000,player,0, 0, poke(player).item());
-    poke(b,s)["BerryUsed"] = poke(player).item();
+    pokelong[player]["BerryUsed"] = poke(player).item();
     disposeItem(player);
 }
 
