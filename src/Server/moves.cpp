@@ -1196,7 +1196,7 @@ struct MMToxicSpikes : public MM
 	switch (spikeslevel) {
          case 0: return;
          case 1: b.inflictStatus(s, Pokemon::Poisoned, s); break;
-         default: b.inflictStatus(s, Pokemon::Poisoned, s, 15); break;
+         default: b.inflictStatus(s, Pokemon::Poisoned, s, 15, 15); break;
         }
     }
 };
@@ -4704,9 +4704,9 @@ struct MMShellCrack : public MM {
     static void uas(int s, int, BS &b) {
         b.inflictStatMod(s, Defense, -1, s);
         b.inflictStatMod(s, SpDefense, -1, s);
-        b.inflictStatMod(s, Attack, 1, s);
-        b.inflictStatMod(s, SpAttack, 1, s);
-        b.inflictStatMod(s, Speed, 1, s);
+        b.inflictStatMod(s, Attack, 2, s);
+        b.inflictStatMod(s, SpAttack, 2, s);
+        b.inflictStatMod(s, Speed, 2, s);
     }
 };
 

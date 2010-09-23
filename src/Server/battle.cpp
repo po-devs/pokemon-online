@@ -576,7 +576,7 @@ void BattleSituation::endTurnStatus(int player)
                 if (poke(player).statusCount() == 0)
                     inflictDamage(player, poke(player).totalLifePoints()/8, player);
                 else {
-                    inflictDamage(player, poke(player).totalLifePoints() * (16-poke(player).statusCount()) / 16, player);
+                    inflictDamage(player, poke(player).totalLifePoints() * (15-poke(player).statusCount()) / 16, player);
                     poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
                 }
             }
@@ -2350,7 +2350,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
         }
     }
 
-    changeStatus(player, status, true, minTurns-1 + true_rand() % (maxTurns - minTurns + 1));
+    changeStatus(player, status, true, minTurns == 0 ? 0 : minTurns-1 + true_rand() % (maxTurns - minTurns + 1));
     if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_S) {
         changeForme(player, currentPoke(player), Pokemon::Shaymin_S);
     }
