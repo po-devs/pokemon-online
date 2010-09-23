@@ -1513,6 +1513,23 @@ struct AMMagicMirror : public AM
     }
 };
 
+struct AMHarvest : public AM
+{
+    AMHarvest() {
+        functions["EndTurn62"] = &et;
+    }
+
+    static void et(int s, int, BS &b) {
+        if (poke(b,s).contains("BerryUsed") && poke(b,s).item() == 0) {
+            int item = poke(b,s)["BerryUsed"].toInt();
+
+            poke(b,s).remove("BerryUsed");
+            b.sendAbMessage(88, 0, s, 0, 0, item);
+            b.acqItem(s, item);
+        }
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -1627,4 +1644,5 @@ void AbilityEffect::init()
     REGISTER_AB(85, Telepathy);
     REGISTER_AB(86, Regeneration);
     REGISTER_AB(87, MagicMirror);
+    REGISTER_AB(88, Harvest);
 }

@@ -472,7 +472,7 @@ void BattleSituation::endTurn()
         /* Ingrain, aquaring */
         callpeffects(player, player, "EndTurn60");
 
-        /* Speed boost, shed skin */
+        /* Speed boost, shed skin, ?Harvest? */
         callaeffects(player,player, "EndTurn62");
 
 //        if (koed(player)) <-- cannot be koed
@@ -2859,6 +2859,7 @@ void BattleSituation::disposeItem(int  player) {
 void BattleSituation::eatBerry(int player, bool show) {
     if (show && !turnlong[player].value("BugBiter").toBool())
         sendItemMessage(8000,player,0, 0, poke(player).item());
+    poke(b,s)["BerryUsed"] = poke(player).item();
     disposeItem(player);
 }
 

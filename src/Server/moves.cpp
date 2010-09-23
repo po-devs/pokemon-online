@@ -231,6 +231,7 @@ struct MMBatonPass : public MM
 	c.remove("Move1Used");
 	c.remove("Move2Used");
 	c.remove("Move3Used");
+        c.remove("BerryUsed");
         c.remove("HasMovedOnce");
         /* Removing attract */
         c.remove("AttractBy");
@@ -4765,7 +4766,7 @@ struct MMWindStorm : public MM {
     }
 
     static void ms(int s, int, BS &b) {
-        if (b.weather != BS::NormalWeather && b.isWeatherWorking(b.weather)) {
+        if (b.isWeatherWorking(b.weather)) {
             tmove(b, s).accuracy += 30;
         }
     }
