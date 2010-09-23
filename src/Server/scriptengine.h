@@ -98,7 +98,10 @@ public:
     Q_INVOKABLE void clearChat();
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
+    /* Accepts string as 1st parameter. */
     Q_INVOKABLE void callLater(const QString &s, int delay);
+    /* Accepts function as 1st parameter. */
+    Q_INVOKABLE void delayedCall(const QScriptValue &func, int delay);
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
     Q_INVOKABLE void setPA(const QString &name);
@@ -201,6 +204,7 @@ public slots:
 
 private slots:
     void timer();
+    void timerFunc();
     void webCall_replyFinished(QNetworkReply* reply);
     void synchronousWebCall_replyFinished(QNetworkReply* reply);
     
