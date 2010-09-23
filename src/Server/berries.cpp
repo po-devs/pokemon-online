@@ -68,7 +68,7 @@ struct BMStatusBerry : public BM
 struct BMLeppa : public BM
 {
     BMLeppa() {
-        functions["UponSetup"] = &tp;
+        functions["UponSetup"] = &appl;
         functions["BeforeEnding"] = &appl;
     }
 
