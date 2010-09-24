@@ -43,8 +43,8 @@ int main(int, char**)
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    int pokenum = 386;
-    int gen = 3;
+    int pokenum = 649;
+    int gen = 5;
 
     qDebug() << "Gen " << gen;
     qDebug() << "Pokemons: " << pokenum;
@@ -203,7 +203,7 @@ int main(int, char**)
                        part from the regular moves of the father. Otherwise, all regular moves
                         are removed and the remaining moves are in copy and tested to see if the
                         father could learn them legally */
-                    if (copy.empty() || MoveSetChecker::isAnEggMoveCombination(poke, gen, copy)) {
+                    if (copy.empty() || MoveSetChecker::isValid(poke, gen, copy)) {
                         legalCombinations[i].insert(combination);
                         /* we remove it to avoid doing it again */
                         allCombinations.remove(combination);

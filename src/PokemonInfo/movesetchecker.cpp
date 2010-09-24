@@ -100,7 +100,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
         if (g < 5) {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid);
 
-            if (ability != ab.ab(0) && ability != ab.ab(1)) {
+            if (ability != ab.ab(0) && ability != ab.ab(1) && ability != 0) {
                 if (invalid_moves) {
                     *invalid_moves = moves;
                 }
