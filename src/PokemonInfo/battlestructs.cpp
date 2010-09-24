@@ -147,7 +147,7 @@ void PokeBattle::init(PokePersonal &poke)
 
     Pokemon::uniqueId ori = PokemonInfo::OriginalForme(num());
 
-    if (ori == Pokemon::Castform || ori == Pokemon::Cherrim || ori == Pokemon::Hihidaruma) {
+    if (ori == Pokemon::Castform || ori == Pokemon::Cherrim || ori == Pokemon::Hihidaruma || ori == Pokemon::Meloia) {
         num().subnum = 0;
     }
 
@@ -194,7 +194,7 @@ void PokeBattle::init(PokePersonal &poke)
     int sum = 0;
     for (int i = 0; i < 6; i++) {
         //Arceus
-        if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus && evs()[i] > 100) evs()[i] = 100;
+        if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus && evs()[i] > 100 && p.gen() < 5) evs()[i] = 100;
         sum += evs()[i];
         if (sum > 510) {
             evs()[i] -= (sum-510);

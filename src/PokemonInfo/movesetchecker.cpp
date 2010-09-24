@@ -84,6 +84,8 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
     moves.remove(0);
 
     for (int g = gen; g >= 3; g--) {
+        if (!PokemonInfo::Exists(pokeid, g))
+            break;
         if (!PokemonInfo::Moves(pokeid, g).contains(moves)) {
             moves.subtract(PokemonInfo::Moves(pokeid, g));
             if (invalid_moves) {
@@ -95,16 +97,15 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             }
             return false;
         }
-        if (g == 5) {
+        if (g < 5) {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid);
 
-            if (ability != ab.ab(0) && ability != ab.ab(1) && !PokemonInfo::RegularMoves(pokeid, gen).contains(moves)) {
-                moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
+            if (ability != ab.ab(0) && ability != ab.ab(1)) {
                 if (invalid_moves) {
                     *invalid_moves = moves;
                 }
                 if (error) {
-                    *error = QObject::tr("%1 can't learn the following moves at the same time as having the Dream World ability %2: %3.")
+                    *error = QObject::tr("%1 can't learn the following moves from older generations at the same time as having the Dream World ability %2: %3.")
                              .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
                 }
                 return false;

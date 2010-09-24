@@ -4797,6 +4797,19 @@ struct MMMemento : public MM {
     }
 };
 
+struct MMAncientSong : public MM
+{
+    MMAncientSong() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        if (b.poke(s).num() != Pokemon::Meloia)
+            return;
+        b.changePokeForme(s, Pokemon::Meloia_S);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -4997,5 +5010,6 @@ void MoveEffect::init()
     REGISTER_MOVE(163, WindStorm);
     REGISTER_MOVE(164, Refresh);
     REGISTER_MOVE(165, Memento);
+    REGISTER_MOVE(166, AncientSong);
 }
 
