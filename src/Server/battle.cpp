@@ -2301,7 +2301,9 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
 {
     //fixme: mist + intimidate
     if (poke(player).status() != Pokemon::Fine) {
-        if (this->attacker() == attacker && canSendPreventSMessage(player, attacker)) {
+        if (this->attacker() == attacker &&
+            (fieldmoves[attacker].category == Move::StatusInducingMove ||
+             fieldmoves[attacker].category == Move::StatAndStatusMove) && canSendPreventSMessage(player, attacker)) {
             if (poke(player).status() == status)
                 notify(All, AlreadyStatusMessage, player, quint8(poke(player).status()));
             else
