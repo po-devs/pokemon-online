@@ -12,6 +12,8 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
+#include "../Shared/config.h"
+
 class Server;
 class ChallengeInfo;
 
@@ -194,6 +196,9 @@ public:
     Q_INVOKABLE int hiddenPowerType(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
 
     Q_INVOKABLE QScriptValue getScript();
+
+    Q_INVOKABLE int pokeType1(int id, int gen = GEN_MAX);
+    Q_INVOKABLE int pokeType2(int id, int gen = GEN_MAX);
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
