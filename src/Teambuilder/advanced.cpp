@@ -232,7 +232,7 @@ void TB_Advanced::updatePokeImage()
 void TB_Advanced::updateAbility()
 {
     for (int i = 0; i < 3; i++) {
-        if (poke()->ability() == poke()->abilities().ab(i)) {
+        if (poke()->ability() == poke()->abilities().ab(i) && ability[i]) {
             ability[i]->setChecked(true);
         }
     }

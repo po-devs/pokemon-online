@@ -495,7 +495,8 @@ struct AMGuts : public AM {
             make it activated) */
         if (b.poke(s).status() != Pokemon::Fine) {
             if (b.gen() > 3 || b.ability(s) == Ability::MarvelScale || b.poke(s).status() != Pokemon::Asleep || !poke(b,s).value("Rested").toBool()) {
-                turn(b,s)[QString("Stat%1AbilityModifier").arg(poke(b,s)["AbilityArg"].toInt())] = 10;
+                int arg = poke(b,s)["AbilityArg"].toInt();
+                turn(b,s)[QString("Stat%1AbilityModifier").arg(arg)] = 10;
             }
         }
     }
@@ -1319,7 +1320,7 @@ struct AMEncourage : public AM
             return;
 
         tmove(b,s).classification = Move::StandardMove;
-        turn(b,s)["BasePowerAbilityModifier"] = 10;
+        turn(b,s)["BasePowerAbilityModifier"] = 6;
     }
 };
 
@@ -1441,19 +1442,6 @@ struct AMTelepathy : public AM {
             turn(b,s)[QString("Block%1").arg(t)] = true;
 
             b.sendAbMessage(85,0,s,t,Move::Psychic);
-        }
-    }
-};
-
-struct AMRegeneration : public AM {
-    AMRegeneration() {
-        functions["UponSetup"] = &us;
-    }
-
-    static void us(int s, int, BS &b) {
-        if (!b.poke(s).isFull()) {
-            b.healLife(s, b.poke(s).lifePoints() * 30 / 100);
-            b.sendAbMessage(86, 0, s);
         }
     }
 };
@@ -1653,7 +1641,7 @@ void AbilityEffect::init()
     REGISTER_AB(83, MultiScale);
     REGISTER_AB(84, HeatRampage);
     REGISTER_AB(85, Telepathy);
-    REGISTER_AB(86, Regeneration);
+    //REGISTER_AB(86, Regeneration);
     REGISTER_AB(87, MagicMirror);
     REGISTER_AB(88, Harvest);
     REGISTER_AB(89, CloudNine);

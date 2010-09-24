@@ -1313,6 +1313,8 @@ void BattleSituation::sendBack(int player, bool silent)
            directly. */
         if (ability(player) == Ability::NaturalCure) {
             healStatus(player, poke(player).status());
+        } else if (ability(player) == Ability::Regeneration) {
+            healLife(player, poke(player).totalLifePoints() / 3);
         }
 	changeCurrentPoke(player, -1);
     }
@@ -2111,8 +2113,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         if (!stat)
             break;
 
-        char increase = fm.boostOfStat >> (i*8);
-        char rate = fm.rateOfStat >> (i*8);
+        char increase = char (fm.boostOfStat >> (i*8));
+        int rate = char (fm.rateOfStat >> (i*8));
 
         if (increase < 0 && target != player && sub) {
             if (rate == 0 && cl != Move::OffensiveStatusInducingMove) {
@@ -2238,7 +2240,7 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
     if (pos)
         return gainStatMod(player, stat, std::abs(mod), attacker, tell);
     else
-        return loseStatMod(player, stat, -std::abs(mod), attacker, tell);
+        return loseStatMod(player, stat, std::abs(mod), attacker, tell);
 }
 
 bool BattleSituation::gainStatMod(int player, int stat, int bonus, int , bool tell)

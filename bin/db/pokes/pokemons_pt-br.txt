@@ -718,6 +718,6 @@
 645:0 Randorosu
 646:0 Kyuremu
 647:0 Kerudio
-648:0 Meloia
+648:0:H Meloia
 648:1 Meloia-S
 649:0 Insekuta
