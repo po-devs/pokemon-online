@@ -1043,6 +1043,7 @@ struct MMRoar : public MM
     MMRoar() {
 	functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
+        functions["AfterAttackFinished"] = &aaf;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -1076,6 +1077,14 @@ struct MMRoar : public MM
     static void uas(int s, int t, BS &b) {
         /* Dragon tail, Judo Throw only test phazing here */
         if (tmove(b,s).power > 0 && !testPhazing(s, t, b, false))
+            return;
+
+        turn(b,s)["RoarSuccess"] = true;
+        return;
+    }
+
+    static void aaf(int s, int t, BS &b) {
+        if (!turn(b,s).contains("RoarSuccess"))
             return;
 
 	QList<int> switches;
@@ -1256,25 +1265,6 @@ struct MMSubstitute : public MM
 	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
     }
 
-    struct Blocked4G : public QSet<QString> {
-        Blocked4G() {
-            (*this) << "Acupressure" << "Bind" << "Block" << "Covet" << "Embargo" << "GastroAcid" << "Grudge" << "HealBlock" << "KnockOff"
-                    << "LeechSeed" << "LockOn" << "Mimic" << "PsychoShift" << "Sketch" << "Switcheroo" << "Trick" << "WorrySeed" << "Yawn" << "PainSplit"
-                    << "BugBite";
-        }
-    };
-
-    static Blocked4G block4;
-
-    struct Blocked3G : public QSet<QString> {
-        Blocked3G() {
-            (*this) << "Bind" << "Block" << "Covet" << "Grudge" << "KnockOff" << "LeechSeed" << "LockOn" << "Mimic" << "Sketch" << "WorrySeed"
-                    << "PainSplit" << "Switcheroo";
-        }
-    };
-
-    static Blocked3G block3;
-
     static void bte(int s, int t, BS &b) {
         if (s == t || s==-1) {
 	    return;
@@ -1285,12 +1275,12 @@ struct MMSubstitute : public MM
         if (turn(b,t)["TurnEffectCalled"].toString() == "DetermineAttackFailure") {
             return;
         }
+        if (!b.attacking())
+            return;
 
         QString effect = turn(b,t)["EffectActivated"].toString();
 
-        QSet<QString> &ref = * (b.gen() <= 3 ? dynamic_cast<QSet<QString>* > (&block3) : dynamic_cast<QSet<QString>* > (&block4));
-
-        if (ref.contains(effect) || (effect == "Curse" && b.hasType(t, Pokemon::Ghost)))
+        if ( !(move(b,t) & Move::MischievousFlag) || (effect == "Curse" && b.hasType(t, Pokemon::Ghost)))
 	{
             turn(b,t)["EffectBlocked"] = true;
             if (tmove(b, s).power == 0)
@@ -1299,9 +1289,6 @@ struct MMSubstitute : public MM
 	}
     }
 };
-
-MMSubstitute::Blocked3G MMSubstitute::block3;
-MMSubstitute::Blocked4G MMSubstitute::block4;
 
 struct MMFocusPunch : public MM
 {
@@ -4137,6 +4124,8 @@ struct MMBeatUp : public MM {
 
     static void ms(int s, int, BS &b) {
         tmove(b,s).type = Pokemon::Curse;
+        tmove(b,s).minTurns = 0;
+        tmove(b,s).maxTurns = 0;
     }
 
     static void daf(int s,int, BS&b) {
@@ -4686,7 +4675,7 @@ struct MMAssembleCrew : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype) {
+        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Truant) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -4787,6 +4776,24 @@ struct MMRefresh : public MM {
     static void uas(int s, int, BS &b) {
         b.healStatus(s, 0);
         b.sendMoveMessage(164, 0, s);
+    }
+};
+
+struct MMMemento : public MM {
+    MMMemento() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.hasMinimalStatMod(t, Attack) && b.hasMinimalStatMod(t, SpAttack)) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas(int s, int t, BS &b) {
+        b.inflictStatMod(t, Attack, -2, s);
+        b.inflictStatMod(t, SpAttack, -2, s);
     }
 };
 
@@ -4989,5 +4996,6 @@ void MoveEffect::init()
     REGISTER_MOVE(162, GiftPass);
     REGISTER_MOVE(163, WindStorm);
     REGISTER_MOVE(164, Refresh);
+    REGISTER_MOVE(165, Memento);
 }
 

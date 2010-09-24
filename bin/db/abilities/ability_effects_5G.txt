@@ -11,7 +11,7 @@
 70-12#Volt absorb
 70-10#Water absorb
 
-
+89#Cloud Nine
 10#CompoundEyes
 33-2#Insomnia
 9#Color change
@@ -74,7 +74,7 @@
 31#WhiteSmoke
 27#Pure Power
 
-
+89#Air Lock
 62#Tangled Feet
 41#Motor Drive
 49#Rivalry
