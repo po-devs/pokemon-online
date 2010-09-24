@@ -1489,3 +1489,25 @@ QScriptValue ScriptEngine::getScript()
 {
     return myscript;
 }
+
+int ScriptEngine::pokeType1(int id, int gen)
+{
+    int result = Pokemon::Curse;
+    if((gen >= GEN_MIN) && (gen <= GEN_MAX)) {
+        result = PokemonInfo::Type1(Pokemon::uniqueId(id), gen);
+    }else{
+        warn("pokeType1", "generation is not supported.");
+    }
+    return result;
+}
+
+int ScriptEngine::pokeType2(int id, int gen)
+{
+    int result = Pokemon::Curse;
+    if((gen >= GEN_MIN) && (gen <= GEN_MAX)) {
+        result = PokemonInfo::Type2(Pokemon::uniqueId(id), gen);
+    }else{
+        warn("pokeType2", "generation is not supported.");
+    }
+    return result;
+}
