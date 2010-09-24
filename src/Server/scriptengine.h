@@ -216,6 +216,7 @@ private:
     QList<QScriptString> playerArrays;
 
     QHash<QTimer*,QString> timerEvents;
+    QHash<QTimer*,QScriptValue> timerEventsFunc;
     QHash<QNetworkReply*,QString> webCallEvents;
 
     void startStopEvent() {stopevents.push_back(false);}
