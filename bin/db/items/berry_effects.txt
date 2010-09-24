@@ -53,8 +53,8 @@
 7-1#pinch attack
 7-2#pinch def
 7-5#pinch speed
+7-3#pinch sp att
 7-4#pinch sp def
-7-3#pinch sp attack
 8#pinch raises Critical hit ratio berry
 9#pinch Starf berry
 6#Anti super effective: gain hp after being hit by a super effective attack
