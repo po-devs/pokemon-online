@@ -1089,7 +1089,7 @@ struct AMLightningRod : public AM {
         int tp = type(b,t);
 
         if (tp == poke(b,s)["AbilityArg"].toInt()) {
-            turn(b,s)[QString("Blocked%1").arg(t)] = true;
+            turn(b,s)[QString("Block%1").arg(t)] = true;
             if (b.hasMaximalStatMod(s, SpAttack)) {
                 b.sendAbMessage(38, 2, s, 0, tp, b.ability(s));
             } else {
@@ -1394,7 +1394,7 @@ struct AMMischievousHeart : public AM
     }
 
     static void pc(int s, int, BS &b) {
-        if (tmove(b,s).flags & Move::MischievousFlag)
+        if (tmove(b,s).power == 0 && tmove(b,s).priority == 0)
             tmove(b,s).priority = 1;
     }
 };
@@ -1530,6 +1530,17 @@ struct AMHarvest : public AM
     }
 };
 
+struct AMCloudNine : public AM {
+    AMCloudNine() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us (int s, int, BS &b) {
+        if (b.gen() >= 5)
+            b.sendAbMessage(40,0,s,s,0,b.ability(s));
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -1645,4 +1656,5 @@ void AbilityEffect::init()
     REGISTER_AB(86, Regeneration);
     REGISTER_AB(87, MagicMirror);
     REGISTER_AB(88, Harvest);
+    REGISTER_AB(89, CloudNine);
 }

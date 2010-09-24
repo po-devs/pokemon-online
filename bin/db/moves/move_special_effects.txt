@@ -260,7 +260,7 @@
 135#torment
 
 
-37#memento
+37|165#memento
 39#facade
 47#focus punch
 117-1#smelling salt

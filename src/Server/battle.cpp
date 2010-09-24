@@ -2236,9 +2236,9 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
         *negative = !pos;
 
     if (pos)
-        return gainStatMod(player, stat, mod, attacker, tell);
+        return gainStatMod(player, stat, std::abs(mod), attacker, tell);
     else
-        return loseStatMod(player, stat, -mod, attacker, tell);
+        return loseStatMod(player, stat, -std::abs(mod), attacker, tell);
 }
 
 bool BattleSituation::gainStatMod(int player, int stat, int bonus, int , bool tell)
@@ -2599,7 +2599,7 @@ int BattleSituation::calculateDamage(int p, int t)
         def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SkinSword) ? Defense : SpDefense);
     }
 
-    if (attackused == Move::Explosion || attackused == Move::Selfdestruct) /* explosion / selfdestruct */
+    if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct) && gen() <= 4) /* explosion / selfdestruct */
 	def/=2;
 
     int stab = move["Stab"].toInt();
