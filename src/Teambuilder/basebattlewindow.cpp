@@ -694,7 +694,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         //            mess.replace("%d", QString::number(other));
         mess.replace("%i", ItemInfo::Name(other));
         mess.replace("%a", AbilityInfo::Name(other));
-        //            mess.replace("%p", PokemonInfo::Name(other));
+        mess.replace("%p", PokemonInfo::Name(other));
         if (type == Pokemon::Normal) {
             printLine(escapeHtml(tu(mess)));
         } else {
