@@ -1083,7 +1083,8 @@ struct MMRoar : public MM
         return;
     }
 
-    static void aaf(int s, int t, BS &b) {
+    static void aaf(int s, int, BS &b) {
+        t = turn(b,s)["Target"].toInt();
         if (!turn(b,s).contains("RoarSuccess"))
             return;
 
