@@ -87,3 +87,5 @@
 %s regains health with its Regeneration!
 
 %s's gained a %i thanks to its Harvest!
+
+%s's Miracle Skin protected it from status!
