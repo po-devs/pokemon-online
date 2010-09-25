@@ -1084,7 +1084,7 @@ struct MMRoar : public MM
     }
 
     static void aaf(int s, int, BS &b) {
-        t = turn(b,s)["Target"].toInt();
+        int t = turn(b,s)["Target"].toInt();
         if (!turn(b,s).contains("RoarSuccess"))
             return;
 
@@ -1281,7 +1281,7 @@ struct MMSubstitute : public MM
 
         QString effect = turn(b,t)["EffectActivated"].toString();
 
-        if ( !(move(b,t) & Move::MischievousFlag) || (effect == "Curse" && b.hasType(t, Pokemon::Ghost)))
+        if ( !(tmove(b,t).flags & Move::MischievousFlag) || (effect == "Curse" && b.hasType(t, Pokemon::Ghost)))
 	{
             turn(b,t)["EffectBlocked"] = true;
             if (tmove(b, s).power == 0)
