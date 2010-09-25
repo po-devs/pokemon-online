@@ -1193,12 +1193,13 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
         QSet<QString> &effects = *turnlong[source].value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
-	    turnlong[source]["EffectBlocked"] = false;
-	    turnlong[source]["EffectActivated"] = effect;
-            callpeffects(target, source, "BlockTurnEffects");
-	    if (turnlong[source]["EffectBlocked"].toBool() == true) {
-		continue;
-	    }
+            //Old code used for substitute
+//	    turnlong[source]["EffectBlocked"] = false;
+//	    turnlong[source]["EffectActivated"] = effect;
+//            callpeffects(target, source, "BlockTurnEffects");
+//	    if (turnlong[source]["EffectBlocked"].toBool() == true) {
+//		continue;
+//	    }
 
             MoveMechanics::function f = turnlong[source].value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
@@ -1892,14 +1893,19 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 continue;
             }
 
+            if (hasSubstitute(target) && !(fieldmoves[player].flags & Move::MischievousFlag))
+            {
+                b.sendMoveMessage(128, 2, t,0,s,move(b,t));
+                return;
+            }
+
 	    calleffects(player, target, "BeforeHitting");
 
 	    applyMoveStatMods(player, target);
 	    calleffects(player, target, "UponAttackSuccessful");
             healDamage(player, target);
 
-	    if (!koed(player))
-		calleffects(player, target, "AfterAttackSuccessful");
+            calleffects(player, target, "AfterAttackSuccessful");
 	}
         if (fieldmoves[player].type == Type::Fire && poke(target).status() == Pokemon::Frozen) {
 	    notify(All, StatusMessage, target, qint8(FreeFrozen));

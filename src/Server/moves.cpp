@@ -1265,30 +1265,6 @@ struct MMSubstitute : public MM
         b.notifySub(s,true);
 	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
     }
-
-    static void bte(int s, int t, BS &b) {
-        if (s == t || s==-1) {
-	    return;
-	}
-        if (!b.hasSubstitute(s)) {
-	    return;
-	}
-        if (turn(b,t)["TurnEffectCalled"].toString() == "DetermineAttackFailure") {
-            return;
-        }
-        if (!b.attacking())
-            return;
-
-        QString effect = turn(b,t)["EffectActivated"].toString();
-
-        if ( !(tmove(b,t).flags & Move::MischievousFlag) || (effect == "Curse" && b.hasType(t, Pokemon::Ghost)))
-	{
-            turn(b,t)["EffectBlocked"] = true;
-            if (tmove(b, s).power == 0)
-                b.sendMoveMessage(128, 2, t,0,s,move(b,t));
-	    return;
-	}
-    }
 };
 
 struct MMFocusPunch : public MM
@@ -1382,12 +1358,12 @@ struct MMAttract : public MM
 struct MMKnockOff : public MM
 {
     MMKnockOff() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void uas(int s,int t,BS &b)
     {
-        if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && !b.hasWorkingAbility(t, Ability::Multitype)
+        if (!b.hasSubstitute(t) && !b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && !b.hasWorkingAbility(t, Ability::Multitype)
             && b.poke(t).num() != Pokemon::Giratina_O) /* Sticky Hold, MultiType, Giratina-O */
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
@@ -1405,7 +1381,7 @@ struct MMCovet : public MM
 
     static void uas(int s,int t,BS &b)
     {
-        if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
+        if (!b.hasSubstitute(t) && !b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
             && b.ability(t) != Ability::Multitype && !b.hasWorkingAbility(s, Ability::Multitype)
             && b.pokenum(s) != Pokemon::Giratina_O && b.poke(s).item() == 0
                     && b.pokenum(t) != Pokemon::Giratina_O && !ItemInfo::isMail(b.poke(t).item())) /* Sticky Hold, MultiType, Giratina_O, Mail*/
@@ -1622,10 +1598,12 @@ struct MMBind : public MM
     }
 
     static void uas (int s, int t, BS &b) {
+        if (b.hasSubstitute(t))
+            return;
         b.link(s, t, "Trapped");
         BS::BasicMoveInfo &fm = tmove(b,s);
         poke(b,t)["TrappedRemainingTurns"] = b.poke(s).item() == Item::GripClaw ?
-                                             fm.maxTurns : (b.true_rand()%fm.maxTurns+1-fm.minTurns) + fm.minTurns; /* Grip claw = max turns */
+                                             fm.maxTurns - 1 : (b.true_rand()%fm.maxTurns+1-fm.minTurns) + fm.minTurns - 1; /* Grip claw = max turns */
 	poke(b,t)["TrappedMove"] = move(b,s);
         addFunction(poke(b,t), "EndTurn68", "Bind", &et);
     }
@@ -3698,6 +3676,9 @@ struct MMSmellingSalt : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
+        if (b.hasSubstitute(t))
+            return;
+
         int st = turn(b,s)["SmellingSalt_Arg"].toInt();
         if ( (st == 0 && b.poke(t).status() != Pokemon::Fine) || b.poke(t).status() == st) {
             tmove(b, s).power = tmove(b, s).power * 2;
@@ -3705,7 +3686,7 @@ struct MMSmellingSalt : public MM
     }
 
     static void aas(int s, int t, BS &b) {
-	if (!b.koed(t)) {
+        if (!b.koed(t) && !b.hasSubstitute(t)) {
             int status = turn(b,s)["SmellingSalt_Arg"].toInt();
 
             /* Venom Shock doesn't heal, as well as Evil Eye */
