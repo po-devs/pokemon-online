@@ -1594,12 +1594,13 @@ void TB_PokemonBody::setItem(const QString &item)
             changeForme(Pokemon::uniqueId(poke()->num().pokenum, type));
         }
     }
-    if (it == Item::GriseousOrb && poke()->num().pokenum != Pokemon::Giratina)
+    if (it == Item::GriseousOrb && poke()->num().pokenum != Pokemon::Giratina && gen <= 4)
         poke()->item() = 0;
     else {
         poke()->item() = ItemInfo::Number(item);
         if (poke()->item() == Item::GriseousOrb) {
-            changeForme(Pokemon::Giratina_O);
+            if (poke()->num() == Pokemon::Giratina)
+                changeForme(Pokemon::Giratina_O);
         } else if (poke()->num() == Pokemon::Giratina_O) {
             changeForme(Pokemon::Giratina);
         }
