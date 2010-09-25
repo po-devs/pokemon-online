@@ -1854,7 +1854,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 			callieffects(target, player, "UponPhysicalAssault");
                     callaeffects(target,player,"UponPhysicalAssault");
 		}
-                calleaffects(target, player, "UponBeingHit");
+                callaeffects(target, player, "UponBeingHit");
 
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
 		applyMoveStatMods(player, target);
@@ -1893,9 +1893,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 continue;
             }
 
-            if (hasSubstitute(target) && !(fieldmoves[player].flags & Move::MischievousFlag))
+            if (target != player && hasSubstitute(target) && !(fieldmoves[player].flags & Move::MischievousFlag))
             {
-                b.sendMoveMessage(128, 2, t,0,s,move(b,t));
+                sendMoveMessage(128, 2, player,0,target, fieldmoves[player].attack);
                 return;
             }
 

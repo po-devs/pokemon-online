@@ -1263,7 +1263,7 @@ struct MMSubstitute : public MM
 	poke(b,s)["SubstituteLife"] = b.poke(s).totalLifePoints()/4;
         b.sendMoveMessage(128,4,s);
         b.notifySub(s,true);
-	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
+//	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
     }
 };
 
