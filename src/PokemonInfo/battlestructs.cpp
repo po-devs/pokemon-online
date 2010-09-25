@@ -131,7 +131,7 @@ void PokeBattle::init(PokePersonal &poke)
     item() = poke.item();
     ability() = poke.ability();
 
-    if (item() == Item::GriseousOrb && num() != Pokemon::Giratina_O) {
+    if (item() == Item::GriseousOrb && num() != Pokemon::Giratina_O && p.gen() <= 4) {
         item() = 0;
     } else if (num() == Pokemon::Giratina_O && item() != Item::GriseousOrb) {
         num() = Pokemon::Giratina;

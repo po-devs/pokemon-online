@@ -1388,7 +1388,7 @@ struct MMKnockOff : public MM
     static void uas(int s,int t,BS &b)
     {
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && !b.hasWorkingAbility(t, Ability::Multitype)
-            && b.poke(t).item() != Item::GriseousOrb) /* Sticky Hold, MultiType, Giratina-O */
+            && b.poke(t).num() != Pokemon::Giratina_O) /* Sticky Hold, MultiType, Giratina-O */
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
@@ -4518,7 +4518,7 @@ struct MMAcupressure : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.hasSubstitute(s)) {
+        if (b.hasSubstitute(t) && (t!=s || b.gen() <= 4)) {
             b.failSilently(s);
             b.sendMoveMessage(128, 2, t, 0, s, Move::Acupressure);
         }
