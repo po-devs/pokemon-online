@@ -1853,6 +1853,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 			callieffects(target, player, "UponPhysicalAssault");
                     callaeffects(target,player,"UponPhysicalAssault");
 		}
+                calleaffects(target, player, "UponBeingHit");
+
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
 		applyMoveStatMods(player, target);
 

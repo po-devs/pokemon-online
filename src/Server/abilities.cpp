@@ -1221,11 +1221,11 @@ struct AMSandPower : public AM {
 
 struct AMBrokenArmour : public AM {
     AMBrokenArmour() {
-        functions["UponPhysicalAssault"] = &upa;
+        functions["UponBeingHit"] = &upa;
     }
 
     static void upa(int s, int, BS &b) {
-        b.sendAbMessage(74, 0, s, 0, Type::Steel);
+        b.sendAbMessage(74, 0, s, 0);
         if (!b.hasMinimalStatMod(s, Defense)) {
             b.inflictStatMod(s, Defense, -1, s);
         }
@@ -1529,6 +1529,20 @@ struct AMCloudNine : public AM {
     }
 };
 
+struct AMMiracleSkin : public AM {
+    AMMiracleSkin() {
+        functions["PreventStatChange"] = &psc;
+    }
+
+    static void psc(int s, int t, BS &b) {
+        if (turn(b,s)["StatModType"].toString() == "Status") {
+            if (b.canSendPreventSMessage(s,t))
+                b.sendAbMessage(90,0,s);
+            b.preventStatMod(s,t);
+        }
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -1645,4 +1659,5 @@ void AbilityEffect::init()
     REGISTER_AB(87, MagicMirror);
     REGISTER_AB(88, Harvest);
     REGISTER_AB(89, CloudNine);
+    REGISTER_AB(90, MiracleSkin);
 }
