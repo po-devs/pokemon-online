@@ -1364,7 +1364,7 @@ struct MMKnockOff : public MM
     static void uas(int s,int t,BS &b)
     {
         if (!b.hasSubstitute(t) && !b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && !b.hasWorkingAbility(t, Ability::Multitype)
-            && b.poke(t).num() != Pokemon::Giratina_O) /* Sticky Hold, MultiType, Giratina-O */
+            && b.poke(t).num().pokenum != Pokemon::Giratina) /* Sticky Hold, MultiType, Giratina-O */
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
@@ -1383,8 +1383,8 @@ struct MMCovet : public MM
     {
         if (!b.hasSubstitute(t) && !b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
             && b.ability(t) != Ability::Multitype && !b.hasWorkingAbility(s, Ability::Multitype)
-            && b.pokenum(s) != Pokemon::Giratina_O && b.poke(s).item() == 0
-                    && b.pokenum(t) != Pokemon::Giratina_O && !ItemInfo::isMail(b.poke(t).item())) /* Sticky Hold, MultiType, Giratina_O, Mail*/
+            && b.pokenum(s).pokenum != Pokemon::Giratina && b.poke(s).item() == 0
+                    && b.pokenum(t).pokenum != Pokemon::Giratina && !ItemInfo::isMail(b.poke(t).item())) /* Sticky Hold, MultiType, Giratina_O, Mail*/
         {
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
 	    b.acqItem(s, b.poke(t).item());
@@ -1402,7 +1402,7 @@ struct MMSwitcheroo : public MM
 
     static void daf(int s, int t, BS &b) {
         if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
-            || b.ability(t) == Ability::Multitype || b.pokenum(s) == Pokemon::Giratina_O || b.pokenum(t) == Pokemon::Giratina_O
+            || b.ability(t) == Ability::Multitype || b.pokenum(s).pokenum == Pokemon::Giratina || b.pokenum(t).pokenum == Pokemon::Giratina
                     || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item()))
             /* Sticky Hold, MultiType, Giratina-O, Mail */
             {
@@ -4722,7 +4722,7 @@ struct MMGiftPass : public MM {
     {
         if (!b.koed(t) && b.poke(s).item() != 0
             && b.ability(s) != Ability::Multitype && !b.hasWorkingAbility(s, Ability::Multitype)
-            && b.pokenum(s) != Pokemon::Giratina_O && b.poke(t).item() == 0
+            && b.pokenum(s).pokenum != Pokemon::Giratina && b.poke(t).item() == 0 && b.pokenum(t).pokenum != Pokemon::Giratina
                     && !ItemInfo::isMail(b.poke(s).item())) {
             //ok
         } else {
