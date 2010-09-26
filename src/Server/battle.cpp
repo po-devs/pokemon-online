@@ -726,7 +726,7 @@ void BattleSituation::analyzeChoice(int slot)
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice[slot].attack()) {
         turnlong[slot]["Target"] = choice[slot].target();
-        if (!wasKoed(slot) && !turnlong[slot].value("HasMoved").toBool() && !turnlong[slot].value("CantGetToMove").toBool()) {
+        if (!wasKoed(slot)) {
             if (turnlong[slot].contains("NoChoice"))
                 /* Automatic move */
                 useAttack(slot, pokelong[slot]["LastSpecialMoveUsed"].toInt(), true);
@@ -850,7 +850,8 @@ void BattleSituation::analyzeChoices()
        cf custap berry */
     if (gen() >= 4) {
         foreach(int p, players) {
-            analyzeChoice(p);
+            if (!turnlong[p].value("HasMoved").toBool() && !turnlong[p].value("CantGetToMove").toBool())
+                analyzeChoice(p);
             testWin();
         }
     } else { // gen <= 3
@@ -862,7 +863,8 @@ void BattleSituation::analyzeChoices()
                 requestSwitchIns();
             }
 
-            analyzeChoice(players[i]);
+            if (!turnlong[players[i]].value("HasMoved").toBool() && !turnlong[players[i]].value("CantGetToMove").toBool())
+                analyzeChoice(players[i]);
             testWin();
         }
     }
