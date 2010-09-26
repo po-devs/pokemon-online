@@ -1866,6 +1866,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 		if (!sub && !koed(target))
 		    testFlinch(player, target);
+
+                attackCount() += 1;
             }
 
             if (hit) {
@@ -2764,8 +2766,11 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	return;
     }
 
-    if (straightattack)
+    if (straightattack) {
+        //Sturdy in gen 5
+        callaeffects(player, source, "BeforeTakingDamage");
 	callieffects(player, source, "BeforeTakingDamage");
+    }
 
     if (damage == 0) {
 	damage = 1;
@@ -2782,11 +2787,14 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
         bool survivalItem = false;
 
-        if (hp <= 0 && (straightattack && ((turnlong[player].contains("CannotBeKoedBy") && turnlong[player]["CannotBeKoedBy"].toInt() == source)
-                                            || (turnlong[player].value("CannotBeKoed").toBool() && source != player)))) {
-	    damage = poke(player).lifePoints() - 1;
-	    hp = 1;
-            survivalItem = true;
+        if (hp <= 0 && straightattack) {
+            if  (   (turnlong[player].contains("CannotBeKoedAt") && turnlong[player]["CannotBeKoedAt"].toInt() == attackCount())
+                    (turnlong[player].contains("CannotBeKoedBy") && turnlong[player]["CannotBeKoedBy"].toInt() == source)
+                                            || (turnlong[player].value("CannotBeKoed").toBool() && source != player)) {
+                damage = poke(player).lifePoints() - 1;
+                hp = 1;
+                survivalItem = true;
+            }
 	}
 
 	if (hp <= 0) {
@@ -2801,8 +2809,13 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
             /* Endure & Focus Sash */
             if (survivalItem) {
-                callieffects(player, source, "UponSelfSurvival");
-                calleffects(player, source, "UponSelfSurvival");
+                //Gen 5: sturdy
+                if (turnlong[player].contains("CannotBeKoedAt") && turnlong[player]["CannotBeKoedAt"].toInt() == attackCount())
+                    callaeffects(player, source, "UponSelfSurvival");
+                else if (turnlong[player].contains("CannotBeKoedBy") && turnlong[player]["CannotBeKoedBy"].toInt() == source)
+                    callieffects(player, source, "UponSelfSurvival");
+                else
+                    calleffects(player, source, "UponSelfSurvival");
             }
 	}
     }

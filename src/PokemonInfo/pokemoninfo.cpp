@@ -1504,8 +1504,8 @@ int ItemInfo::Number(const QString &itemname)
     }
 }
 
-float PokemonInfo::Weight(const Pokemon::uniqueId &pokeid) {
-    return (m_Weights.value(pokeid).toFloat()-0.002f); /* the -0.02 is just a trick to compensate the poor precision of floats, for moves like grass knot */
+int PokemonInfo::Weight(const Pokemon::uniqueId &pokeid) {
+    return QString(m_Weights.value(pokeid)).remove('.').toInt();
 }
 
 QString PokemonInfo::WeightS(const Pokemon::uniqueId &pokeid)

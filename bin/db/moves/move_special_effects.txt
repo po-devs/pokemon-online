@@ -65,7 +65,7 @@
 
 
 
-52-1#Low kick, 1 is target
+52#Low kick
 22-1#counter: 1 is physical
 91#seismic toss
 
@@ -445,7 +445,7 @@
 
 101#Captivate
 124#stealth rock
-52-1#grass knot, 1 is target
+52#grass knot
 147#chatter
 69#judgment
 16#like pluck
@@ -482,7 +482,7 @@
 
 
 
-52-0#HeavyBomber, 0 is self
+167#HeavyBomber
 
 56-1#Eleci Ball. 1 is to tell it's up to us to be fast
 157#Soak
@@ -533,7 +533,7 @@
 
 
 
-52-0#Heat Stamp, 0 is self
+167#Heat Stamp
 
 126#Heart roller
 
