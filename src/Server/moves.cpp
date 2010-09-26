@@ -2194,7 +2194,7 @@ struct MMFalseSwipe : public MM
 	functions["BeforeCalculatingDamage"] = &bcd;
     }
     static void bcd(int s, int t, BS &b) {
-	turn(b,t)["CannotBeKoedBy"] = s;
+        turn(b,t)["CannotBeKoedBy"] = s;
     }
 };
 
@@ -2349,19 +2349,19 @@ struct MMGrassKnot : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        float weight = b.weight(turn(b,s)["GrassKnot_Arg"].toInt() == 0 ? s : t);
+        int weight = b.weight(t);
 	int bp;
 	/* I had to make some hacks due to the floating point precision, so this is a '<' here and not
 	   a '<='. Will be fixed if someone wants to do it */
-	if (weight < 10.0f) {
+        if (weight <= 100) {
 	    bp = 20;
-	} else if (weight < 25.0f) {
+        } else if (weight <= 250) {
 	    bp = 40;
-	} else if (weight < 50.0f) {
+        } else if (weight <= 500) {
 	    bp = 60;
-	} else if (weight < 100.0f) {
+        } else if (weight <= 1000) {
 	    bp = 80;
-	} else if (weight < 200.0f) {
+        } else if (weight <= 2000) {
 	    bp = 100;
 	} else {
 	    bp = 120;
@@ -2528,7 +2528,10 @@ struct MMHealingWish : public MM
         if (!turn(b,s).contains("HealingWishSuccess"))
             return;
         addFunction(turn(b,s), "AfterSwitchIn", "HealingWish", &asi);
-        b.requestSwitch(s);
+
+        /* On gen 5 and further, the pokemon is switched at the end of the turn */
+        if (b.gen() <= 4)
+            b.requestSwitch(s);
     }
 
     static void asi(int s, int, BS &b) {
@@ -3641,12 +3644,16 @@ struct MMSleepTalk : public MM
     static void daf(int s, int, BS &b) {
 	b.callpeffects(s, s, "MovesPossible");
 	QList<int> mp;
-	for (int i = 0; i < 4; i++) {
+
+        for (int i = 0; i < 4; i++) {
             /* Sleep talk can work on 0 PP moves but not on disabled moves*/
-            if (turn(b, s).value("Move" + QString::number(i) + "Blocked").toBool() == false && !forbidden_moves.contains(b.move(s,i))) {
-		mp.push_back(i);
-	    }
-	}
+            /* On gen 5 it can work several times behind a choice band, so i allowed disabled moves, as
+               choice band blocks moves the same way, but it needs to be cross checked. */
+            if ( (b.gen() >= 5 || turn(b, s).value("Move" + QString::number(i) + "Blocked").toBool() == false)
+                && !forbidden_moves.contains(b.move(s,i))) {
+                mp.push_back(i);
+            }
+        }
 
 	if (mp.size() == 0) {
 	    turn(b,s)["Failed"] = true;
@@ -4792,6 +4799,32 @@ struct MMAncientSong : public MM
     }
 };
 
+struct MMHeavyBomber : public MM
+{
+    MMHeavyBomber() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int t, BS &b) {
+        int ratio = b.weight(s) / b.weight(t);
+
+        int bp = 0;
+        if (ratio >= 5) {
+            bp = 120;
+        } else if (ratio == 4) {
+            bp = 100;
+        } else if (ratio == 3) {
+            bp = 80;
+        } else if (ratio == 2) {
+            bp = 60;
+        } else {
+            bp = 40;
+        }
+
+        tmove(b,s).power *= ratio;
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -4993,5 +5026,6 @@ void MoveEffect::init()
     REGISTER_MOVE(164, Refresh);
     REGISTER_MOVE(165, Memento);
     REGISTER_MOVE(166, AncientSong);
+    REGISTER_MOVE(167, HeavyBomber);
 }
 

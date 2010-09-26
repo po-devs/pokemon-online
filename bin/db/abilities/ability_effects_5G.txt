@@ -3,7 +3,7 @@
 14-2#Drizzle
 58-5#Speed boost
 
-
+91#Sturdy
 
 33-1#Limber
 51-3#Sandveil

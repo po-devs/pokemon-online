@@ -1543,6 +1543,24 @@ struct AMMiracleSkin : public AM {
     }
 };
 
+/* 5th gen sturdy only */
+struct AMSturdy : public AM {
+    AMSturdy() {
+        functions["BeforeTakingDamage"] = &btd;
+        functions["UponSelfSurvival"] = &uss;
+    }
+
+    static void btd(int s, int, BS &b) {
+        if (b.poke(s).isFull()) {
+            turn(b,s)["CannotBeKoedAt"] = b.attackCount();
+        }
+    }
+
+    static void uss(int s, int , BS &b) {
+        b.sendAbMessage(91, 0, s);
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -1660,4 +1678,5 @@ void AbilityEffect::init()
     REGISTER_AB(88, Harvest);
     REGISTER_AB(89, CloudNine);
     REGISTER_AB(90, MiracleSkin);
+    REGISTER_AB(91, Sturdy);
 }

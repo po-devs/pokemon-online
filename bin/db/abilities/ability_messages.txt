@@ -89,3 +89,4 @@
 %s's gained a %i thanks to its Harvest!
 
 %s's Miracle Skin protected it from status!
+%s held on thanks to Sturdy!

@@ -39,7 +39,7 @@ public:
     static int LevelBalance(const Pokemon::uniqueId &pokeid);
     static QString WeightS(const Pokemon::uniqueId &pokeid);
     static QString Classification(const Pokemon::uniqueId &pokeid);
-    static float Weight(const Pokemon::uniqueId &pokeid);
+    static int Weight(const Pokemon::uniqueId &pokeid);
     static int Gender(const Pokemon::uniqueId &pokeid);
     static int BaseGender(const Pokemon::uniqueId &pokeid);
     static QByteArray Cry(const Pokemon::uniqueId &pokeid);
