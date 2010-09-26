@@ -2788,9 +2788,9 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         bool survivalItem = false;
 
         if (hp <= 0 && straightattack) {
-            if  (   (turnlong[player].contains("CannotBeKoedAt") && turnlong[player]["CannotBeKoedAt"].toInt() == attackCount())
-                    (turnlong[player].contains("CannotBeKoedBy") && turnlong[player]["CannotBeKoedBy"].toInt() == source)
-                                            || (turnlong[player].value("CannotBeKoed").toBool() && source != player)) {
+            if  (   (turnlong[player].contains("CannotBeKoedAt") && turnlong[player]["CannotBeKoedAt"].toInt() == attackCount()) ||
+                    (turnlong[player].contains("CannotBeKoedBy") && turnlong[player]["CannotBeKoedBy"].toInt() == source) ||
+                    (turnlong[player].value("CannotBeKoed").toBool() && source != player)) {
                 damage = poke(player).lifePoints() - 1;
                 hp = 1;
                 survivalItem = true;
