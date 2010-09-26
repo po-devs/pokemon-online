@@ -80,7 +80,6 @@ public:
     const PokeBattle &poke(int player) const;
     PokeBattle &poke(int player, int poke);
     const PokeBattle &poke(int player, int poke) const;
-    int currentPoke(int player) const;
     bool koed(int player) const;
     bool wasKoed(int player) const;
     int player(int slot) const;
@@ -89,7 +88,7 @@ public:
     /* Returns a koed one if none */
     int randomValidOpponent(int slot) const;
     int slot(int player, int poke = 0) const;
-    void changeCurrentPoke(int player, int poke);
+    int slotNum(int slot) const;
     int countAlive(int player) const;
     int countBackUp(int player) const;
 
@@ -189,6 +188,7 @@ public:
     void acquireAbility(int play, int ability, bool firstTime=false);
     int ability(int player);
     int weight(int player);
+    int currentInternalId(int slot) const;
     Pokemon::uniqueId pokenum(int player);
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
@@ -365,7 +365,6 @@ private:
 
     TeamBattle team1, team2;
 
-    QList<int> mycurrentpoke; /* -1 for koed */
     /* timers */
     QAtomicInt timeleft[2];
     QAtomicInt startedAt[2];

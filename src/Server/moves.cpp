@@ -1368,7 +1368,7 @@ struct MMKnockOff : public MM
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
-            b.battlelong[QString("KnockedOff%1%2").arg(t).arg(b.currentPoke(t))] = true;
+            b.battlelong[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
 	}
     }
 };
@@ -1409,7 +1409,8 @@ struct MMSwitcheroo : public MM
 	    turn(b,s)["Failed"] = true;
 	}
         /* Knock off */
-        if (b.battlelong.value(QString("KnockedOff%1%2").arg(t).arg(b.currentPoke(t))).toBool() || b.battlelong.value(QString("KnockedOff%1%2").arg(s).arg(b.currentPoke(s))).toBool()) {
+        if (b.battlelong.value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()
+            || b.battlelong.value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -3979,7 +3980,7 @@ struct MMYawn : public MM {
                 } else {
                     b.inflictStatus(s, Pokemon::Asleep, s);
                     if (b.sleepClause() && b.poke(s).status() == Pokemon::Asleep) {
-                        b.currentForcedSleepPoke[b.player(s)] = b.currentPoke(s);
+                        b.currentForcedSleepPoke[b.player(s)] = b.currentInternalId(s);
                     }
                 }
             }

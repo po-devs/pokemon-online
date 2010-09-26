@@ -44,7 +44,6 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     p2.addBattle(publicId());
 
     for (int i = 0; i < numberOfSlots(); i++) {
-        mycurrentpoke.push_back(-1);
         options.push_back(BattleChoices());
         slotzone.push_back(context());
         pokelong.push_back(context());
@@ -189,6 +188,11 @@ int BattleSituation::slot(int player, int poke) const
     return player + poke*2;
 }
 
+int BattleSituation::slotNum(int slot) const
+{
+    return slot/2;
+}
+
 bool BattleSituation::acceptSpectator(int id, bool authed) const
 {
     QMutexLocker m(&spectatorMutex);
@@ -250,7 +254,7 @@ void BattleSituation::addSpectator(Player *p)
         for (int k = 0; k < numberOfSlots()/ 2; k++) {
             int s = slot(i,k);
             if (!koed(s)) {
-                notify(key, SendOut, s, false, quint8(currentPoke(s)), opoke(i, currentPoke(s)));
+                notify(key, SendOut, s, false, quint8(0), opoke(i, s));
                 notify(key, ChangeTempPoke,s, quint8(TempSprite),pokenum(s));
             }
         }
@@ -370,17 +374,12 @@ PokeBattle & BattleSituation::poke(int player, int poke)
 
 const PokeBattle &BattleSituation::poke(int slot) const
 {
-    return team(player(slot)).poke(currentPoke(slot));
+    return team(player(slot)).poke(slot/2);
 }
 
 PokeBattle &BattleSituation::poke(int slot)
 {
-    return team(player(slot)).poke(currentPoke(slot));
-}
-
-int BattleSituation::currentPoke(int player) const
-{
-    return mycurrentpoke[player];
+    return team(player(slot)).poke(slot/2);
 }
 
 /* The battle loop !! */
@@ -660,12 +659,12 @@ void BattleSituation::notifyInfos()
 
 bool BattleSituation::koed(int player) const
 {
-    return currentPoke(player) == -1 || poke(player).ko();
+    return poke(player).ko();
 }
 
 bool BattleSituation::wasKoed(int player) const
 {
-    return currentPoke(player) == -1 || turnlong[player].contains("WasKoed");
+    return turnlong[player].contains("WasKoed");
 }
 
 BattleChoices BattleSituation::createChoice(int slot)
@@ -936,9 +935,9 @@ bool BattleSituation::validChoice(const BattleChoice &b)
     return true;
 }
 
-bool BattleSituation::isOut(int player, int poke)
+bool BattleSituation::isOut(int, int poke)
 {
-    return doubles() ? (currentPoke(slot(player, 0)) == poke || currentPoke(slot(player, 1)) == poke ) : (currentPoke(slot(player)) == poke);
+    return doubles() ? poke < 2 : poke == 0;
 }
 
 void BattleSituation::storeChoice(const BattleChoice &b)
@@ -952,6 +951,10 @@ bool BattleSituation::allChoicesOkForPlayer(int player)
     return doubles () ? (hasChoice[slot(player, 0)] == false && hasChoice[slot(player, 1)] == false) : (hasChoice[slot(player)] == false);
 }
 
+int BattleSituation::currentInternalId(int slot) const
+{
+    return team(this->player(slot)).internalId(poke(slot));
+}
 
 bool BattleSituation::allChoicesSet()
 {
@@ -1119,14 +1122,15 @@ void BattleSituation::spectatingChat(int id, const QString &str)
 void BattleSituation::sendPoke(int slot, int pok, bool silent)
 {
     int player = this->player(slot);
+    int snum = slotNum(slot);
 
     if (poke(player,pok).num() == Pokemon::Giratina_O && poke(player,pok).item() != Item::GriseousOrb)
         changeForme(player,pok,Pokemon::Giratina);
     
-    changeCurrentPoke(slot, pok);
-
     notify(player, SendOut, slot, silent, ypoke(player, pok));
     notify(AllButPlayer, SendOut, slot, silent, quint8(pok), opoke(player, pok));
+
+    team(player).switchPokemon(snum, pok);
 
     /* reset temporary variables */
     pokelong[slot].clear();
@@ -1137,11 +1141,11 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     fieldpokes[slot].type2 = PokemonInfo::Type2(poke(slot).num(), gen());
     fieldpokes[slot].ability = poke(slot).ability();
 
-    if (poke(player, pok).statusCount() > 0) {
-        if (poke(player, pok).status() == Pokemon::Poisoned)
-            poke(player, pok).statusCount() = 15;
-        else if (poke(player, pok).status() != Pokemon::Asleep)
-            poke(player, pok).statusCount() = 0;
+    if (poke(slot).statusCount() > 0) {
+        if (poke(slot).status() == Pokemon::Poisoned)
+            poke(slot).statusCount() = 14;
+        else if (poke(slot).status() != Pokemon::Asleep)
+            poke(slot).statusCount() = 0;
     }
 
     for (int i = 0; i < 4; i++) {
@@ -1161,8 +1165,8 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
        (like for an attack like attract), it is imo more effective that other means */
     inc(slotzone[slot]["SwitchCount"], 1);
 
-    if (poke(player,pok).num() == Pokemon::Arceus && ItemInfo::isPlate(poke(player,pok).item())) {
-        int type = ItemInfo::PlateType(poke(player,pok).item());
+    if (poke(slot).num() == Pokemon::Arceus && ItemInfo::isPlate(poke(slot).item())) {
+        int type = ItemInfo::PlateType(poke(slot).item());
         
         if (type != Type::Normal) {
             changeAForme(slot, type);
@@ -1319,7 +1323,6 @@ void BattleSituation::sendBack(int player, bool silent)
         } else if (ability(player) == Ability::Regeneration) {
             healLife(player, poke(player).totalLifePoints() / 3);
         }
-	changeCurrentPoke(player, -1);
     }
 }
 
@@ -2352,7 +2355,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
             notifyClause(ChallengeInfo::SleepClause, true);
             return;
         } else {
-            currentForcedSleepPoke[this->player(player)] = currentPoke(player);
+            currentForcedSleepPoke[this->player(player)] = currentInternalId(player);
         }
     } else if (status == Pokemon::Frozen)
     {
@@ -2368,7 +2371,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
 
     changeStatus(player, status, true, minTurns == 0 ? 0 : minTurns-1 + true_rand() % (maxTurns - minTurns + 1));
     if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_S) {
-        changeForme(player, currentPoke(player), Pokemon::Shaymin_S);
+        changeForme(this->player(player), slotNum(player), Pokemon::Shaymin_S);
     }
     if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
         && hasWorkingAbility(player, Ability::Synchronize)) //Synchronize
@@ -2523,13 +2526,13 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
     }
 
     //Sleep clause
-    if (status != Pokemon::Asleep && currentForcedSleepPoke[this->player(player)] == currentPoke(player)) {
+    if (status != Pokemon::Asleep && currentForcedSleepPoke[this->player(player)] == currentInternalId(player)) {
         currentForcedSleepPoke[this->player(player)] = -1;
     }
 
     if (tell)
         notify(All, StatusChange, player, qint8(status));
-    notify(All, AbsStatusChange, player, qint8(currentPoke(player)), qint8(status), turns > 0);
+    notify(All, AbsStatusChange, this->player(player), qint8(this->slotNum(player)), qint8(status), turns > 0);
     poke(player).changeStatus(status);
     if (turns != 0)
         poke(player).statusCount() = turns;
@@ -2550,12 +2553,12 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
 void BattleSituation::changeStatus(int team, int poke, int status)
 {
     if (isOut(team, poke)) {
-        changeStatus(currentPoke(slot(team,0)) == poke ? slot(team,0) : slot(team,1), status);
+        changeStatus(slot(team, poke), status);
     } else {
         this->poke(team, poke).changeStatus(status);
         notify(All, AbsStatusChange, team, qint8(poke), qint8(status));
         //Sleep clause
-        if (status != Pokemon::Asleep && currentForcedSleepPoke[team] == poke) {
+        if (status != Pokemon::Asleep && currentForcedSleepPoke[team] == currentInternalId(slot(team, poke))) {
             currentForcedSleepPoke[team] = -1;
         }
     }
@@ -2911,35 +2914,33 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
     for (int i = 1; i < 6; i++)
         p.setNormalStat(i,PokemonInfo::Stat(newforme,i,p.level(),p.dvs()[i], p.evs()[i]));
 
-    if (poke == currentPoke(player)) {
-        changeSprite(player, newforme);
+    if (isOut(player, poke)) {
+        int slot = this->slot(player, poke);
+        changeSprite(slot, newforme);
 
-        fieldpokes[player].id = newforme;
-        acquireAbility(player, p.ability());
+        fieldpokes[slot].id = newforme;
+        acquireAbility(slot, p.ability());
 
         for (int i = 1; i < 6; i++)
-            fieldpokes[player].stats[i] = p.normalStat(i);
+            fieldpokes[slot].stats[i] = p.normalStat(i);
 
-        fieldpokes[player].type1 = PokemonInfo::Type1(newforme);
-        fieldpokes[player].type2 = PokemonInfo::Type2(newforme);
+        fieldpokes[slot].type1 = PokemonInfo::Type1(newforme);
+        fieldpokes[slot].type2 = PokemonInfo::Type2(newforme);
     }
 
-    notify(All, ChangeTempPoke, player, quint8(DefiniteForme), quint8(poke),newforme);
+    notify(All, ChangeTempPoke, player, quint8(DefiniteForme), quint8(poke), newforme);
 }
 
 void BattleSituation::changePokeForme(int slot, const Pokemon::uniqueId &newforme)
 {
-    int player = this->player(slot);
-    int poke = this->currentPoke(slot);
+    PokeBattle &p  = this->poke(slot);
 
-    PokeBattle &p  = this->poke(player,poke);
-
-    fieldpokes[player].id = newforme;
-    fieldpokes[player].type1 = PokemonInfo::Type1(newforme);
-    fieldpokes[player].type2 = PokemonInfo::Type2(newforme);
+    fieldpokes[slot].id = newforme;
+    fieldpokes[slot].type1 = PokemonInfo::Type1(newforme);
+    fieldpokes[slot].type2 = PokemonInfo::Type2(newforme);
 
     for (int i = 1; i < 6; i++)
-        fieldpokes[player].stats[i] = PokemonInfo::Stat(newforme,i,p.level(),p.dvs()[i], p.evs()[i]);
+        fieldpokes[slot].stats[i] = PokemonInfo::Stat(newforme,i,p.level(),p.dvs()[i], p.evs()[i]);
 
     notify(All, ChangeTempPoke, slot, quint8(AestheticForme), quint16(newforme.subnum));
 }
@@ -3146,8 +3147,8 @@ int BattleSituation::countAlive(int player) const
 int BattleSituation::countBackUp(int player) const
 {
     int count = 0;
-    for (int i = 0; i < 6; i++) {
-        if (poke(player, i).num() != 0 && !poke(player, i).ko() && currentPoke(slot(player)) != i && (!doubles() || currentPoke(slot(player, true)) != i)) {
+    for (int i = doubles() ? 2 : 1; i < 6; i++) {
+        if (poke(player, i).num() != 0 && !poke(player, i).ko()) {
             count += 1;
         }
     }
@@ -3209,11 +3210,6 @@ void BattleSituation::testWin()
         }
         exit();
     }
-}
-
-void BattleSituation::changeCurrentPoke(int player, int poke)
-{
-    mycurrentpoke[player] = poke;
 }
 
 void BattleSituation::changePP(int player, int move, int PP)
