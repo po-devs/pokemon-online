@@ -494,7 +494,7 @@ Trickery
 Simple Beam
 Assemble Crew
 You First
-Troll
+Sing A Round
 Echo Voice
 Payment Plan
 Clear Smog
@@ -540,7 +540,7 @@ Cotton Guard
 Night Burst
 Psycho Break
 Sweep Slap
-Wind Storm
+Gale
 Afro Break
 Gear Saucer
 Flame Platform

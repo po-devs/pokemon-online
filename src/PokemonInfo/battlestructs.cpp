@@ -335,10 +335,17 @@ QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po)
 
 TeamBattle::TeamBattle() : gen(5)
 {
+    for (int i = 0; i < 6; i++) {
+        m_indexes[i] = i;
+    }
 }
 
 TeamBattle::TeamBattle(TeamInfo &other)
 {
+    for (int i = 0; i < 6; i++) {
+        m_indexes[i] = i;
+    }
+
     name = other.name;
     info = other.info;
     gen = other.gen;
@@ -354,6 +361,12 @@ TeamBattle::TeamBattle(TeamInfo &other)
             ++curs;
         }
     }
+}
+
+void TeamBattle::switchPokemon(int pok1, int pok2)
+{
+    m_indexes[pok1] = pok2;
+    m_indexes[pok2] = pok1;
 }
 
 bool TeamBattle::invalid() const
@@ -457,18 +470,22 @@ void TeamBattle::generateRandom(int gen)
 
 PokeBattle & TeamBattle::poke(int i)
 {
-    if (i >= 0 && i < 6)
-        return m_pokemons[i];
-    else
-        return m_pokemons[0];
+    return m_pokemons[m_indexes[i]];
 }
 
 const PokeBattle & TeamBattle::poke(int i) const
 {
-    if (i >= 0 && i < 6)
-        return m_pokemons[i];
-    else
-        return m_pokemons[0];
+    return m_pokemons[m_indexes[i]];
+}
+
+int TeamBattle::internalId(const PokeBattle &p) const
+{
+    for (int i = 0; i < 6; i++) {
+        if (m_pokemons + i == &p)
+            return i;
+    }
+
+    return 0;
 }
 
 QDataStream & operator >> (QDataStream &in, TeamBattle &te)

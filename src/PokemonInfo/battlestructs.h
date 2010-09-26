@@ -106,11 +106,16 @@ public:
     TeamBattle();
     /* removes the invalid pokemons */
     TeamBattle(TeamInfo &other);
+
     void init(TeamInfo &other);
     void generateRandom(int gen);
 
     PokeBattle& poke(int i);
     const PokeBattle& poke(int i) const;
+
+    int internalId(const PokeBattle &p) const;
+
+    void switchPokemon(int pok1, int pok2);
 
     bool invalid() const;
 
@@ -119,6 +124,7 @@ public:
     int gen;
 private:
     PokeBattle m_pokemons[6];
+    int m_indexes[6];
 };
 
 QDataStream & operator >> (QDataStream &in, TeamBattle &te);
