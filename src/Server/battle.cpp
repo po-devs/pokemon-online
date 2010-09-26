@@ -3243,9 +3243,14 @@ void BattleSituation::gainPP(int player, int move, int gain)
 
 int BattleSituation::getStat(int player, int stat)
 {
+    /* Not sure on the order here... haha. */
     /* Attack and defense switched */
     if (pokelong[player].contains("PowerTricked") && (stat == 1 || stat == 2)) {
         stat = 3 - stat;
+    }
+    /* Wonder room: attack & sp attack switched, 5th gen */
+    if (battlelong.contains("WonderRoomCount") && (stat == 2 || stat == 4)) {
+        stat = 6 - stat;
     }
     QString q = "Stat"+QString::number(stat);
     turnlong[player].remove(q+"AbilityModifier");

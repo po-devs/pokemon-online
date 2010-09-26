@@ -467,10 +467,10 @@
 
 13-4#shadow force
 
-
+169#Wide guard
 155-2_4#Guard Share
 155-1_3#Power Share
-
+168#Wonder Room
 
 117-5#Venom Shock
 
@@ -499,7 +499,7 @@
 
 149#Clear Smog
 
-
+170#Fast Guard
 
 
 159#Shell Crack

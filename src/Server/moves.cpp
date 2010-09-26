@@ -4825,6 +4825,107 @@ struct MMHeavyBomber : public MM
     }
 };
 
+struct MMWonderRoom : public MM {
+    MMWonderRoom() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
+    static void uas(int s, int, BS &b) {
+        if (b.battlelong.value("WonderRoomCount").toInt() > 0) {
+            b.sendMoveMessage(168,1,s,Pokemon::Psychic);
+            b.battlelong.remove("WonderRoomCount");
+            removeFunction(b.battlelong, "EndTurn9", "WonderRoom");
+        } else {
+            b.sendMoveMessage(168,0,s,Pokemon::Psychic);
+            b.battlelong["WonderRoomCount"] = 5;
+            addFunction(b.battlelong, "EndTurn9", "WonderRoom", &et);
+        }
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(b.battlelong["WonderRoomCount"], -1);
+        if (b.battlelong["WonderRoomCount"].toInt() == 0) {
+            b.sendMoveMessage(168,1,s,Pokemon::Psychic);
+            b.battlelong.remove("WonderRoomCount");
+        }
+    }
+};
+
+struct MMWideGuard : public MM
+{
+    MMWideGuard() {
+        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        addFunction(b.battlelong, "DetermineGeneralAttackFailure", "WideGuard", &dgaf);
+        team(b,b.player(s))["WideGuardUsed"] = b.turn();
+        b.sendMoveMessage(169, 0, s, Pokemon::Normal);
+    }
+
+    static void dgaf(int s, int t, BS &b) {
+        if (s == t || t == -1 || b.player(s) == b.player(t)) {
+            return;
+        }
+        if (!team(b,t).contains("WideGuardUsed") || team(b,t)["WideGuardUsed"].toInt() != b.turn()) {
+            return;
+        }
+
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            return;
+        }
+
+        if (tmove(b,s).targets != Move::Opponents && tmove(b,s).targets != Move::All && tmove(b,s).targets != Move::AllButSelf) {
+            return;
+        }
+
+        /* Mind Reader */
+        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+            return;
+        /* All other moves fail */
+        b.fail(s, 169, 0, Pokemon::Normal, t);
+    }
+};
+
+struct MMFastGuard : public MM
+{
+    MMFastGuard() {
+        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        addFunction(b.battlelong, "DetermineGeneralAttackFailure", "FastGuard", &dgaf);
+        team(b,b.player(s))["FastGuardUsed"] = b.turn();
+        b.sendMoveMessage(170, 0, s, Pokemon::Normal);
+    }
+
+    static void dgaf(int s, int t, BS &b) {
+        if (s == t || t == -1) {
+            return;
+        }
+        if (!team(b,t).contains("FastGuardUsed") || team(b,t)["FastGuardUsed"].toInt() != b.turn()) {
+            return;
+        }
+
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            return;
+        }
+
+        if (tmove(b,s).priority <= 0) {
+            return;
+        }
+
+        /* Mind Reader */
+        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+            return;
+        /* All other moves fail */
+        b.fail(s, 170, 0, Pokemon::Normal, t);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5027,5 +5128,8 @@ void MoveEffect::init()
     REGISTER_MOVE(165, Memento);
     REGISTER_MOVE(166, AncientSong);
     REGISTER_MOVE(167, HeavyBomber);
+    REGISTER_MOVE(168, WonderRoom);
+    REGISTER_MOVE(169, WideGuard);
+    REGISTER_MOVE(170, FastGuard);
 }
 
