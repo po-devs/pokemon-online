@@ -487,6 +487,11 @@ int TeamBattle::internalId(const PokeBattle &p) const
     return 0;
 }
 
+const PokeBattle &TeamBattle::getByInternalId(int i) const
+{
+    return m_pokemons[i];
+}
+
 QDataStream & operator >> (QDataStream &in, TeamBattle &te)
 {
     for (int i = 0; i < 6; i++) {
