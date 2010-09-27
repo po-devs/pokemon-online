@@ -147,7 +147,7 @@
 8-3#Sand Throw
 90#Miracle Skin
 
-
+92#Illusion
 81#Eccentric
 
 47#Mummy

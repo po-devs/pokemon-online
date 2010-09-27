@@ -1128,7 +1128,18 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
         changeForme(player,pok,Pokemon::Giratina);
     
     notify(player, SendOut, slot, silent, ypoke(player, pok));
-    notify(AllButPlayer, SendOut, slot, silent, quint8(pok), opoke(player, pok));
+
+    int pokNumShown = pok;
+    if (poke(player, pok).ability() == Ability::Illusion) {
+        for (int i = 5; i >= 0; i++) {
+            if (poke(player, i).num() != 0) {
+                pokNumShown = i;
+                break;
+            }
+        }
+    }
+
+    notify(AllButPlayer, SendOut, slot, silent, quint8(pok), opoke(player, pokNumShown));
 
     team(player).switchPokemon(snum, pok);
 
@@ -1862,7 +1873,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 			callieffects(target, player, "UponPhysicalAssault");
                     callaeffects(target,player,"UponPhysicalAssault");
 		}
-                callaeffects(target, player, "UponBeingHit");
+
+                if (!sub)
+                    callaeffects(target, player, "UponBeingHit");
 
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
 		applyMoveStatMods(player, target);
@@ -1932,8 +1945,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             battlelong["LastMoveSuccessfullyUsed"] = attack;
     }
 
-    callieffects(player, player, "AfterTargetList");
+
     end:
+    /* In gen 4, choice items are there - they lock even if the move had no target possible.
+       If in gen 5 its the contrary, then call it before the label for gen 5. */
+    callieffects(player, player, "AfterTargetList");
     callieffects(player, player, "BeforeEnding");
     calleffects(player, player, "BeforeEnding");
     trueend:
