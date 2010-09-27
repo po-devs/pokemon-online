@@ -1172,6 +1172,10 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
         fieldpokes[slot].dvs[i] = poke(slot).dvs()[i];
     }
 
+    for (int i = 0; i < 8; i++) {
+        fieldpokes[slot].boosts[i] = 0;
+    }
+
     fieldpokes[slot].level = poke(slot).level();
 
     /* Increase the "switch count". Switch count is used to see if the pokemon has switched
@@ -2036,7 +2040,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
 
 void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
     if (!pokelong[play].value("AbilityNullified").toBool())
-        callaeffects(slot, slot, "UponBeingHit");
+        callaeffects(play, play, "UponBeingHit");
 
     fieldpokes[play].ability = ab;
 
@@ -2298,8 +2302,7 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
 
 bool BattleSituation::gainStatMod(int player, int stat, int bonus, int , bool tell)
 {
-    QString path = QString("Boost%1").arg(stat);
-    int boost = pokelong[player].value(path).toInt();
+    int boost = fieldpokes[player].boosts[stat];
     if (boost < 6) {
         if (tell)
             notify(All, StatChange, player, qint8(stat), qint8(bonus));
@@ -2329,8 +2332,7 @@ bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker,
         }
     }
 
-    QString path = QString("Boost%1").arg(stat);
-    int boost = pokelong[player].value(path).toInt();
+    int boost = fieldpokes[player].boosts[stat];
     if (boost > -6) {
         if (tell)
             notify(All, StatChange, player, qint8(stat), qint8(-malus));
@@ -2604,12 +2606,12 @@ void BattleSituation::changeStatus(int team, int poke, int status)
 
 bool BattleSituation::hasMinimalStatMod(int player, int stat)
 {
-    return pokelong[player].value(QString("Boost%1").arg(stat)).toInt() <= -6;
+    return fieldpokes[player].boosts[stat]  <= -6;
 }
 
 bool BattleSituation::hasMaximalStatMod(int player, int stat)
 {
-    return pokelong[player].value(QString("Boost%1").arg(stat)).toInt() >= 6;
+    return fieldpokes[player].boosts[stat]  >= 6;
 }
 
 void BattleSituation::preventStatMod(int player, int attacker)
@@ -2630,8 +2632,7 @@ bool BattleSituation::canSendPreventSMessage(int defender, int attacker) {
 
 void BattleSituation::changeStatMod(int player, int stat, int newstat)
 {
-    QString path = tr("Boost%1").arg(stat);
-    pokelong[player][path] = newstat;
+    fieldpokes[player].boosts[stat] = newstat;
 }
 
 int BattleSituation::calculateDamage(int p, int t)
@@ -3402,7 +3403,7 @@ void BattleSituation::failSilently(int player)
 
 PokeFraction BattleSituation::getStatBoost(int player, int stat)
 {
-    int boost = pokelong[player].value(QString("Boost%1").arg(stat)).toInt();
+    int boost = fieldpokes[player].boosts[stat];
 
     if (hasWorkingAbility(player,Ability::Simple)) {
         boost = std::max(std::min(boost*2, 6),-6);
@@ -3494,7 +3495,7 @@ BattleDynamicInfo BattleSituation::constructInfo(int slot)
     int player = this->player(slot);
 
     for (int i = 0; i < 7; i++) {
-        ret.boosts[i] = pokelong[slot].value("Boost" + QString::number(i+1)).toInt();
+        ret.boosts[i] = fieldpokes[slot].boosts[i];
     }
 
     ret.flags = 0;
