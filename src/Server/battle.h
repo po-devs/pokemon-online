@@ -164,6 +164,7 @@ public:
     void eatBerry(int player, bool show=true);
     void acqItem(int player, int item);
     void loseItem(int player);
+    void loseAbility(int player);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
