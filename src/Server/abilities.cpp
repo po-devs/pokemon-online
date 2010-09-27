@@ -1561,6 +1561,25 @@ struct AMSturdy : public AM {
     }
 };
 
+struct AMIllusion : public AM {
+    AMIllusion() {
+        functions["UponSetup"] = &us;
+        functions["UponBeingHit"] = &ubh;
+    }
+
+    static void us(int s, int, BS &b) {
+        poke(b, s)["Illusioned"] = true;
+    }
+
+    static void ubh(int s, int, BS &b) {
+        if (!poke(b,s).contains("Illusioned"))
+            return;
+        /* Bad!! But this is such a peculiar ability, I'll allow this. */
+        b.notify(BS::AllButPlayer, BS::SendOut, s, true, quint8(b.slotNum(s)), b.opoke(b.player(s), b.slotNum(s)));
+        poke(b,s).remove("Illusioned");
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -1679,4 +1698,5 @@ void AbilityEffect::init()
     REGISTER_AB(89, CloudNine);
     REGISTER_AB(90, MiracleSkin);
     REGISTER_AB(91, Sturdy);
+    REGISTER_AB(92, Illusion);
 }
