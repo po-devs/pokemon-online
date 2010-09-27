@@ -464,7 +464,7 @@ struct MMCurse : public MM
 {
     MMCurse() {
         functions["MoveSettings"] = &ms;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void ms(int s, int, BS &b) {
@@ -678,7 +678,7 @@ struct MMOHKO : public MM
 {
     MMOHKO() {
 	functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["CustomAttackingDamage"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -776,7 +776,7 @@ struct MMSuperFang : public MM
 struct MMPainSplit : public MM
 {
     MMPainSplit() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -794,16 +794,22 @@ struct MMPerishSong : public MM
 {
     MMPerishSong() {
 	functions["UponAttackSuccessful"] = &uas;
+        functions["MoveSettings"] = &ms;
+    }
+
+    static void ms(int s, int, BS &b) {
+        tmove(b,s).targets = Move::User;
     }
 
     static void uas(int s, int t, BS &b) {
-        if (poke(b,t).contains("PerishSongCount") || b.koed(t)) {
-            return;
+        for (int t = 0; t < b.numberOfSlots(); t++) {
+            if (poke(b,t).contains("PerishSongCount") || b.koed(t)) {
+                return;
+            }
+            addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
+            poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns));
         }
-        addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
-        poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns));
-
-	b.sendMoveMessage(95);
+        b.sendMoveMessage(95);
     }
 
     static void et(int s, int, BS &b) {
@@ -855,7 +861,7 @@ struct MMLeechSeed : public MM
 {
     MMLeechSeed() {
 	functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -997,7 +1003,7 @@ struct MMBlock : public MM
 {
     MMBlock() {
         functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf (int s, int t, BS &b) {
@@ -1042,7 +1048,7 @@ struct MMRoar : public MM
 {
     MMRoar() {
 	functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
         functions["AfterAttackFinished"] = &aaf;
     }
 
@@ -1320,7 +1326,7 @@ struct MMAttract : public MM
 {
     MMAttract() {
 	functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -1358,12 +1364,12 @@ struct MMAttract : public MM
 struct MMKnockOff : public MM
 {
     MMKnockOff() {
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int s,int t,BS &b)
     {
-        if (!b.hasSubstitute(t) && !b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && !b.hasWorkingAbility(t, Ability::Multitype)
+        if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && !b.hasWorkingAbility(t, Ability::Multitype)
             && b.poke(t).num().pokenum != Pokemon::Giratina) /* Sticky Hold, MultiType, Giratina-O */
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
@@ -1376,12 +1382,12 @@ struct MMKnockOff : public MM
 struct MMCovet : public MM
 {
     MMCovet() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int s,int t,BS &b)
     {
-        if (!b.hasSubstitute(t) && !b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
+        if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
             && b.ability(t) != Ability::Multitype && !b.hasWorkingAbility(s, Ability::Multitype)
             && b.pokenum(s).pokenum != Pokemon::Giratina && b.poke(s).item() == 0
                     && b.pokenum(t).pokenum != Pokemon::Giratina && !ItemInfo::isMail(b.poke(t).item())) /* Sticky Hold, MultiType, Giratina_O, Mail*/
@@ -1396,7 +1402,7 @@ struct MMCovet : public MM
 struct MMSwitcheroo : public MM
 {
     MMSwitcheroo() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
 	functions["DetermineAttackFailure"] = &daf;
     }
 
@@ -1486,12 +1492,12 @@ struct MMAssist : public MM
     };
     static FM forbidden_moves;
 
-    static void uas(int s, int t, BS &b)
+    static void uas(int s, int, BS &b)
     {
 	removeFunction(turn(b,s), "UponAttackSuccessful", "Assist");
 	removeFunction(turn(b,s), "DetermineAttackFailure", "Assist");
 	int attack = turn(b,s)["AssistMove"].toInt();
-	MoveEffect::setup(attack, s, t, b);
+        MoveEffect::setup(attack, s, s, b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
 	b.useAttack(s, turn(b,s)["AssistMove"].toInt(), true);
         MoveEffect::unsetup(attack, s, b);
@@ -1595,12 +1601,10 @@ struct MMBide : public MM
 struct MMBind : public MM
 {
     MMBind() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas (int s, int t, BS &b) {
-        if (b.hasSubstitute(t))
-            return;
         b.link(s, t, "Trapped");
         BS::BasicMoveInfo &fm = tmove(b,s);
         poke(b,t)["TrappedRemainingTurns"] = b.poke(s).item() == Item::GripClaw ?
@@ -1807,7 +1811,7 @@ struct MMMetalBurst : public MM
 struct MMTaunt : public MM
 {
     MMTaunt() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
         functions["DetermineAttackFailure"]=  &daf;
     }
 
@@ -1872,7 +1876,7 @@ struct MMDisable : public MM
 {
     MMDisable() {
 	functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b)
@@ -1995,7 +1999,7 @@ struct MMEmbargo : public MM
 {
     MMEmbargo() {
         functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -2025,7 +2029,7 @@ struct MMEncore : public MM
 {
     MMEncore() {
 	functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     struct FM : public QSet<int>
@@ -2244,7 +2248,7 @@ struct MMGastroAcid : public MM
 {
     MMGastroAcid() {
         functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -2398,7 +2402,7 @@ struct MMGrudge : public MM
 struct MMBoostSwap : public MM
 {
     MMBoostSwap() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -2573,7 +2577,7 @@ struct MMHealBlock: public MM
 {
     MMHealBlock() {
         functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
     static void daf(int s, int t, BS &b) {
         if (poke(b,t).value("HealBlockCount").toInt() > 0) {
@@ -2620,7 +2624,7 @@ struct MMFling : public MM
 {
     MMFling() {
 	functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
 	functions["BeforeTargetList"] = &btl;
     }
 
@@ -2641,8 +2645,6 @@ struct MMFling : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        if (b.hasSubstitute(t))
-            return;
 	int item = turn(b,s)["FlingItem"].toInt();
         if (!ItemInfo::isBerry(item)) {
             if (item == Item::WhiteHerb || item == Item::MentalHerb) {
@@ -2985,7 +2987,7 @@ struct MMBrickBreak : public MM
 struct MMLockOn : public MM
 {
     MMLockOn() {
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -3203,7 +3205,7 @@ struct MMMimic : public MM
 {
     MMMimic() {
 	functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     struct FailedMoves : public QSet<int> {
@@ -3355,7 +3357,7 @@ struct MMMudSport : public MM
 struct MMNightMare : public MM
 {
     MMNightMare() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int, int t, BS &b) {
@@ -3403,7 +3405,7 @@ struct MMPresent : public MM
 struct MMPsychup : public MM
 {
     MMPsychup() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas (int s, int t, BS &b ) {
@@ -3419,7 +3421,7 @@ struct MMPsychoShift : public MM
 {
     MMPsychoShift() {
 	functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -3582,7 +3584,7 @@ struct MMSketch : public MM
 {
     MMSketch() {
 	functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -3694,7 +3696,7 @@ struct MMSmellingSalt : public MM
     }
 
     static void aas(int s, int t, BS &b) {
-        if (!b.koed(t) && !b.hasSubstitute(t)) {
+        if (!b.koed(t)) {
             int status = turn(b,s)["SmellingSalt_Arg"].toInt();
 
             /* Venom Shock doesn't heal, as well as Evil Eye */
@@ -3750,7 +3752,7 @@ struct MMSpite : public MM
 {
     MMSpite(){
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf (int s, int t, BS &b) {
@@ -3841,7 +3843,7 @@ struct MMTailWind : public MM {
 struct MMTorment : public MM {
     MMTorment() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -3923,7 +3925,7 @@ struct MMTripleKick : public MM {
 struct MMWorrySeed : public MM {
     MMWorrySeed() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -3943,7 +3945,7 @@ struct MMWorrySeed : public MM {
 struct MMYawn : public MM {
     MMYawn() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -4053,7 +4055,7 @@ struct MMNaturePower : public MM
 struct MMRolePlay : public MM {
     MMRolePlay() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -4072,7 +4074,7 @@ struct MMRolePlay : public MM {
 struct MMSkillSwap : public MM {
     MMSkillSwap() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -4349,7 +4351,7 @@ struct MMSpitUp : public MM
 struct MMBugBite : public MM
 {
     MMBugBite() {
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -4445,7 +4447,7 @@ struct MMRecycle : public MM {
 
 struct MMTransform : public MM {
     MMTransform() {
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -4503,7 +4505,7 @@ struct MMAcupressure : public MM
 {
     MMAcupressure() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -4536,7 +4538,7 @@ struct MMHelpingHand : public MM
 {
     MMHelpingHand() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int, BS &b) {
@@ -4597,7 +4599,7 @@ struct MMFollowMe : public MM
 struct MMGuardShare : public MM
 {
     MMGuardShare() {
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -4643,7 +4645,7 @@ struct MMMagicRoom : public MM {
 struct MMSoak : public MM {
     MMSoak() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -4661,7 +4663,7 @@ struct MMSoak : public MM {
 struct MMAssembleCrew : public MM {
     MMAssembleCrew() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -4692,7 +4694,7 @@ struct MMShellCrack : public MM {
 
 struct MMIncinerate : public MM {
     MMIncinerate() {
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -4705,7 +4707,7 @@ struct MMIncinerate : public MM {
 
 struct MMDesperation : public MM {
     MMDesperation() {
-        functions["UponAttackSuccessful"] = &uas;
+        functions["CustomAttackingDamage"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -4716,7 +4718,7 @@ struct MMDesperation : public MM {
 struct MMGiftPass : public MM {
     MMGiftPass() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b)
@@ -4772,7 +4774,7 @@ struct MMRefresh : public MM {
 struct MMMemento : public MM {
     MMMemento() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
