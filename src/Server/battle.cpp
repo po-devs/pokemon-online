@@ -2039,6 +2039,13 @@ void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
     AbilityEffect::setup(ability(play),play,*this, firstTime);
 }
 
+void BattleSituation::loseAbility(int slot)
+{
+    /* Evil Hack to make illusion pokemons go back to normal */
+    if (pokelong[slot].contains("IllusionTarget"))
+        callaeffects(slot, slot, "UponBeingHit");
+}
+
 int BattleSituation::ability(int player) {
     return fieldpokes[player].ability;
 }
