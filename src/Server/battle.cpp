@@ -1852,6 +1852,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		}
 
 		calleffects(player, target, "UponAttackSuccessful");
+                if (!hasSubstitute(target))
+                    calleffects(player, target, "OnFoeOnAttack");
+
                 healDamage(player, target);
 
                 if (fieldmoves[player].flags & Move::ContactFlag) {
@@ -1910,6 +1913,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 	    applyMoveStatMods(player, target);
 	    calleffects(player, target, "UponAttackSuccessful");
+            calleffects(player, target, "OnFoeOnAttack");
             healDamage(player, target);
 
             calleffects(player, target, "AfterAttackSuccessful");
