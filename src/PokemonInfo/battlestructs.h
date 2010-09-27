@@ -114,6 +114,7 @@ public:
     const PokeBattle& poke(int i) const;
 
     int internalId(const PokeBattle &p) const;
+    const PokeBattle &getByInternalId(int i) const;
 
     void switchPokemon(int pok1, int pok2);
 

@@ -254,8 +254,12 @@ void BattleSituation::addSpectator(Player *p)
         for (int k = 0; k < numberOfSlots()/ 2; k++) {
             int s = slot(i,k);
             if (!koed(s)) {
-                notify(key, SendOut, s, false, quint8(0), opoke(i, s));
-                notify(key, ChangeTempPoke,s, quint8(TempSprite),pokenum(s));
+                notify(key, SendOut, s, true, quint8(0), opoke(s, i, k));
+                /* Not clean. A pokemon with illusion could always have mimiced transform and then transformed... */
+                if (!pokelong[s].contains("IllusionTarget"))
+                    notify(key, ChangeTempPoke,s, quint8(TempSprite), pokenum(s));
+                if (hasSubstitute(s))
+                    notify(key, Substitute, s, hasSubstitute(s));
             }
         }
     }
@@ -1126,25 +1130,23 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     if (poke(player,pok).num() == Pokemon::Giratina_O && poke(player,pok).item() != Item::GriseousOrb)
         changeForme(player,pok,Pokemon::Giratina);
-    
-    notify(player, SendOut, slot, silent, ypoke(player, pok));
 
-    int pokNumShown = pok;
+    /* reset temporary variables */
+    pokelong[slot].clear();
+
     if (poke(player, pok).ability() == Ability::Illusion) {
         for (int i = 5; i >= 0; i++) {
-            if (poke(player, i).num() != 0) {
-                pokNumShown = i;
+            if (poke(player, i).num() != 0 && !poke(player, i).ko()) {
+                pokelong[slot]["IllusionTarget"] = team(player).internalId(team(player).poke(i));
                 break;
             }
         }
     }
 
-    notify(AllButPlayer, SendOut, slot, silent, quint8(pok), opoke(player, pokNumShown));
+    notify(All, SendOut, slot, silent, quint8(pok), opoke(slot, player, pok));
 
     team(player).switchPokemon(snum, pok);
 
-    /* reset temporary variables */
-    pokelong[slot].clear();
     /* Give new values to what needed */
     fieldpokes[slot].id = poke(slot).num().toPokeRef();
     fieldpokes[slot].weight = PokemonInfo::Weight(poke(slot).num());
@@ -1305,9 +1307,6 @@ void BattleSituation::callaeffects(int source, int target, const QString &name)
 
 void BattleSituation::sendBack(int player, bool silent)
 {
-    if (!silent)
-        notify(All, SendBack, player);
-
     /* Just calling pursuit directly here, forgive me for this */
     if (!turnlong[player].value("BatonPassed").toBool()) {
         QList<int> opps = revs(player);
@@ -1324,6 +1323,9 @@ void BattleSituation::sendBack(int player, bool silent)
             }
         }
     }
+
+    if (!silent)
+        notify(All, SendBack, player);
 
     if (!koed(player)) {
         /* Natural cure bypasses gastro acid (tested in 4th gen, but not role play/skill swap),
@@ -2017,6 +2019,10 @@ void BattleSituation::calculateTypeModStab()
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
+    /* Yes, illusion breaks when hit by mold breaker, right? */
+    if (ab == Ability::Illusion)
+        return true;
+
     if (attacking()) {
         // Mold Breaker
         if (player == attacked() && player != attacker() &&
@@ -3307,6 +3313,22 @@ int BattleSituation::getStat(int player, int stat)
     }
 
     return ret;
+}
+
+ShallowBattlePoke BattleSituation::opoke(int slot, int player, int i) const
+{
+    if (pokelong[slot].contains("IllusionTarget")) {
+        int illusioner = pokelong[slot].value("IllusionTarget").toInt();
+
+        ShallowBattlePoke p = poke(player, i);
+        p.num() = poke(player, illusioner).num();
+        p.nick() = poke(player, illusioner).nick();
+        p.gender() = poke(player, illusioner).gender();
+
+        return p;
+    } else {
+        return poke(player, i);
+    }
 }
 
 void BattleSituation::sendMoveMessage(int move, int part, int src, int type, int foe, int other, const QString &q)

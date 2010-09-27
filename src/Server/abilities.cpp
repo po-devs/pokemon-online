@@ -1563,20 +1563,15 @@ struct AMSturdy : public AM {
 
 struct AMIllusion : public AM {
     AMIllusion() {
-        functions["UponSetup"] = &us;
         functions["UponBeingHit"] = &ubh;
     }
 
-    static void us(int s, int, BS &b) {
-        poke(b, s)["Illusioned"] = true;
-    }
-
     static void ubh(int s, int, BS &b) {
-        if (!poke(b,s).contains("Illusioned"))
+        if (!poke(b,s).contains("IllusionTarget"))
             return;
+        poke(b,s).remove("IllusionTarget");
         /* Bad!! But this is such a peculiar ability, I'll allow this. */
-        b.notify(BS::AllButPlayer, BS::SendOut, s, true, quint8(b.slotNum(s)), b.opoke(b.player(s), b.slotNum(s)));
-        poke(b,s).remove("Illusioned");
+        b.notify(BS::All, BS::SendOut, s, true, quint8(b.slotNum(s)), b.opoke(s, b.player(s), b.slotNum(s)));
     }
 };
 

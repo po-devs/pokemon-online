@@ -446,6 +446,9 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
 
             if (player == info().myself) {
                 switchTo(prevIndex, spot, true);
+
+                if (!in.atEnd())
+                    in >> info().currentShallow(spot);
 	    } else {
                 in >> info().currentShallow(spot);
                 info().pokeAlive[spot] = true;
