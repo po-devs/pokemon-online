@@ -14,7 +14,6 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, bool
         pokeAlive.push_back(false);
         specialSprite.push_back(0);
         lastSeenSpecialSprite.push_back(0);
-        currentIndex.push_back(i/2);
         statChanges.push_back(BattleDynamicInfo());
     }
 
@@ -359,8 +358,10 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
     case SendOut:
         {
             bool silent;
+            quint8 prevIndex;
             in >> silent;
-            in >> info().currentIndex[spot];
+            in >> prevIndex;
+            info().switchPoke(spot, prevIndex);
             in >> info().currentShallow(spot);
             info().pokeAlive[spot] = true;
             info().sub[spot] = false;
@@ -497,9 +498,9 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             break;
 
         if (status != -1) {
-            info().currentShallow(spot).changeStatus(status);
-            if (poke == info().currentIndex[spot])
-                mydisplay->updatePoke(spot);
+            info().pokemons[spot][poke].changeStatus(status);
+            if (info().isOut(spot, poke))
+                mydisplay->updatePoke(info().slot(spot, poke));
         }
         mydisplay->changeStatus(spot,poke,status);
         break;
@@ -773,8 +774,8 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
                 quint16 newform;
                 in >> poke >> newform;
                 info().pokemons[spot][poke].num() = newform;
-                if (poke == info().currentIndex[spot]) {
-                    info().currentShallow(spot).num() = newform;
+                if (info().isOut(spot, poke)) {
+                    info().currentShallow(info().slot(spot, poke)).num() = newform;
                 }
             } else if (type == AestheticForme)
             {
@@ -1085,9 +1086,9 @@ void BaseBattleDisplay::updatePoke(int spot)
         this->status[spot]->setPixmap(Theme::BattleStatusIcon(status));
 
         if (info().player(spot) == info().myself) {
-            mypokeballs[info().currentIndex[spot]]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
+            mypokeballs[info().slotNum(spot)]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
         } else {
-            advpokeballs[info().currentIndex[spot]]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
+            advpokeballs[info().slotNum(spot)]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
         }
     }  else {
         zone->switchToNaught(spot);

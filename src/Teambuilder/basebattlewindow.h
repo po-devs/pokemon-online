@@ -36,13 +36,12 @@ struct BaseBattleInfo
     /* Opponent pokemon */
     ShallowBattlePoke pokemons[2][6];
     QVector<bool> pokeAlive;
-    QVector<quint8> currentIndex;
 
     ShallowBattlePoke &currentShallow(int spot) {
-        return pokemons[player(spot)][currentIndex[spot]];
+        return pokemons[player(spot)][slotNum(spot)];
     }
     const ShallowBattlePoke &currentShallow(int spot) const {
-        return pokemons[player(spot)][currentIndex[spot]];
+        return pokemons[player(spot)][slotNum(spot)];
     }
 
     QString name(int x) const {
@@ -55,6 +54,19 @@ struct BaseBattleInfo
 
     int player(int slot) const {
         return slot %2;
+    }
+
+    int slotNum(int slot) const {
+        return slot / 2;
+    }
+
+    bool isOut(int , int poke) const {
+        return doubles ? poke < 2 : poke == 0;
+    }
+
+    virtual void switchPoke(int spot, int poke) {
+        std::swap(currentShallow(spot), pokemons[player(spot)][poke]);
+        pokeAlive[spot] = true;
     }
 
     /* Stat boosts & team status */

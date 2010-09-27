@@ -1242,13 +1242,13 @@ struct AMVictoryStar : public AM {
     }
 
     static void sm(int s, int, BS &b) {
-        turn(b,s)["Stat6AbilityModifier"] = 10;
+        turn(b,s)["Stat6AbilityModifier"] = 2;
     }
 
     static void sm2(int , int t, BS &b) {
         /* FlowerGift doesn't stack */
         if (!b.hasWorkingAbility(t, Ability::VictoryStar)) {
-            turn(b,t)["Stat6PartnerAbilityModifier"] = 10;
+            turn(b,t)["Stat6PartnerAbilityModifier"] = 2;
         }
     }
 };

@@ -428,8 +428,11 @@ bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, int gen)
         {
         case 3:
             return pokeid.pokenum <= 386;
+        case 4:
+            return pokeid.pokenum <= 493;
+        default:
+            return true;
         }
-        return true;
     }else{
         return false;
     }
