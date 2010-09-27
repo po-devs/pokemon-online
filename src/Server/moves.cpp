@@ -669,7 +669,7 @@ struct MMFeint : public MM
     static void daf(int s, int t, BS &b) {
 	if (turn(b, t)["DetectUsed"].toBool() == true) {
 	    turn(b, t)["DetectUsed"] = false;
-	} else {
+        } else if (b.gen() <= 4){
 	    turn(b, s)["Failed"] = true;
 	}
     }
@@ -1822,11 +1822,14 @@ struct MMTaunt : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        if (b.gen() >= 4) {
+        if (b.gen() <= 3) {
+            poke(b,t)["TauntsUntil"] = b.turn() + 1;
+        } else if (b.gen() == 4) {
             poke(b,t)["TauntsUntil"] = b.turn() + 2 + (b.true_rand()%3);
         } else {
-            poke(b,t)["TauntsUntil"] = b.turn() + 1;
+            poke(b,t)["TauntsUntil"] = b.turn() + 2;
         }
+
 	addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
         addFunction(poke(b,t), "MovePossible", "Taunt", &mp);
         addFunction(poke(b,t), "EndTurn611", "Taunt", &et);
@@ -2084,8 +2087,10 @@ struct MMEncore : public MM
     static void uas (int s, int t, BS &b) {
         if (b.gen() <= 3)
             poke(b,t)["EncoresUntil"] = b.turn() + 1 + (b.true_rand()%5);
-        else
+        else if (b.gen() == 4)
             poke(b,t)["EncoresUntil"] = b.turn() + 3 + (b.true_rand()%5);
+        else
+            poke(b,t)["EncoresUntil"] = b.turn() + 2;
 
         int mv =  poke(b,t)["LastMoveUsed"].toInt();
         poke(b,t)["EncoresMove"] = mv;
@@ -3828,7 +3833,7 @@ struct MMTailWind : public MM {
     static void uas(int s, int, BS &b){
         b.sendMoveMessage(133,0,s,Pokemon::Flying);
         int source = b.player(s);
-        team(b,source)["TailWindCount"] = 3;
+        team(b,source)["TailWindCount"] = b.gen() <= 4 ? 3 : 4;
         addFunction(team(b,source), "EndTurn", "TailWind", &et);
     }
 
@@ -4204,7 +4209,11 @@ struct MMUproar : public MM {
 
     static void uas(int s,int, BS &b) {
         if (poke(b,s).value("UproarUntil").toInt() < b.turn() || !turn(b,s).value("UproarBefore").toBool()) {
-            poke(b,s)["UproarUntil"] = b.turn() + 1 + (b.true_rand() % 4);
+            if (b.gen() <= 4)
+                poke(b,s)["UproarUntil"] = b.turn() + 1 + (b.true_rand() % 4);
+            else
+                poke(b,s)["UproarUntil"] = b.turn() + 2;
+
             b.sendMoveMessage(141,0,s);
             foreach (int i, b.sortedBySpeed()) {
                 if (b.poke(i).status() == Pokemon::Asleep) {
