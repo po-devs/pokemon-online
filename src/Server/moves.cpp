@@ -2259,7 +2259,8 @@ struct MMGastroAcid : public MM
 
     static void uas(int s, int t, BS &b) {
         b.sendMoveMessage(51,0,s,type(b,s),t,b.ability(t));
-	poke(b,t)["AbilityNullified"] = true;
+        b.loseAbility(t);
+        poke(b,t)["AbilityNullified"] = true;
     }
 };
 

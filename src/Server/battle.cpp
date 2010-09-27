@@ -2035,8 +2035,13 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
 }
 
 void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
+    if (!pokelong[play].value("AbilityNullified").toBool())
+        callaeffects(slot, slot, "UponBeingHit");
+
     fieldpokes[play].ability = ab;
-    AbilityEffect::setup(ability(play),play,*this, firstTime);
+
+    if (!pokelong[play].value("AbilityNullified").toBool())
+        AbilityEffect::setup(ability(play),play,*this, firstTime);
 }
 
 void BattleSituation::loseAbility(int slot)
