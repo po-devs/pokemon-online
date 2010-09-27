@@ -476,9 +476,9 @@ struct IMWhiteHerb : public IM
     static void as(int s, int, BS &b) {
 	bool act = false;
 	for (int i = 1; i <= 7; i++) {
-	    if (poke(b,s)["Boost" + QString::number(i)].toInt() < 0) {
+            if (fpoke(b,s).boosts[i] < 0) {
 		act = true;
-		poke(b,s)["Boost"+ QString::number(i)] = 0;
+                fpoke(b,s).boosts[i] = 0;
 	    }
 	}
 	if (act) {

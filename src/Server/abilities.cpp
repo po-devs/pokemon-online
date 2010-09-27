@@ -1384,6 +1384,10 @@ struct AMEccentric : public AM
             po.dvs[i] = pt.dvs[i];
         }
 
+        for (int i = 0; i < 8; i++) {
+            po.boosts[i] = pt.boosts[i];
+        }
+
         b.acquireAbility(s, b.ability(s));
     }
 };

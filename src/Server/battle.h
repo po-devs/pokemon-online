@@ -442,6 +442,8 @@ public:
         int moves[4];
         int dvs[6];
         int stats[6];
+        //The boost in HP is useless but avoids headaches
+        int boosts[8];
     };
 
     struct BasicMoveInfo {

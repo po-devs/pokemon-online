@@ -852,7 +852,7 @@ struct MMHaze : public MM
         foreach (int p, b.sortedBySpeed())
         {
             for (int i = 1; i <= 7; i++) {
-                poke(b,p)["Boost"+QString::number(i)] = 0;
+                fpoke(b,p).boosts[i] = 0;
             }
         }
     }
@@ -2410,7 +2410,7 @@ struct MMBoostSwap : public MM
     static void uas(int s, int t, BS &b) {
         QStringList args = turn(b,s)["BoostSwap_Arg"].toString().split('_');
 	foreach(QString str, args) {
-	    std::swap(poke(b,s)["Boost"+str], poke(b,t)["Boost"+str]);
+            std::swap(fpoke(b,s).boosts[str.toInt()], fpoke(b,t).boosts[str.toInt()]);
 	}
 	b.sendMoveMessage(55,0,s,type(b,s),t);
     }
@@ -3413,8 +3413,7 @@ struct MMPsychup : public MM
     static void uas (int s, int t, BS &b ) {
 	b.sendMoveMessage(97,0,s,type(b,s),t);
 	for (int i = 1; i <= 7; i++) {
-	    QString boost = "Boost" + QString::number(i);
-	    poke(b,s)[boost] = poke(b,t)[boost];
+            fpoke(b,s).boosts[i] = fpoke(b,t).boosts[i];
 	}
     }
 };
@@ -3510,7 +3509,7 @@ struct MMPunishment : public MM
 	int boostsum = 0;
 
 	for (int i = 1; i <= 7; i++) {
-	    int temp = poke(b,t)["Boost" + QString::number(i)].toInt();
+            int temp = fpoke(b,t).boosts[i];
 	    if (temp > 0) {
 		boostsum += temp;
 	    }
@@ -3539,7 +3538,7 @@ struct MMRage : public MM
     static void uodr(int s, int, BS &b) {
         if (!b.koed(s) && poke(b,s)["LastMoveUsed"] == Move::Rage) {
             poke(b,s)["RageBuilt"] = true;
-            if (poke(b,s)[QString("Boost%1").arg(Attack)].toInt() < 6) {
+            if (!b.hasMaximalStatMod(s, Attack)) {
                 b.inflictStatMod(s, Attack, 1,false);
                 b.sendMoveMessage(102, 0, s);
             }
@@ -4305,17 +4304,17 @@ struct MMSwallow: public MM
 
     static void uas(int s, int, BS &b) {
         if (b.gen() >= 4) {
-            b.changeStatMod(s,Defense,poke(b,s)["Boost2"].toInt() - poke(b,s)["StockPileDef"].toInt());
-            b.changeStatMod(s,SpDefense,poke(b,s)["Boost4"].toInt() - poke(b,s)["StockPileSDef"].toInt());
-            poke(b,s)["StockPileDef"] = 0;
-            poke(b,s)["StockPileSDef"] = 0;
+            b.changeStatMod(s,Defense,fpoke(b,s).boosts[Defense] - poke(b,s)["StockPileDef"].toInt());
+            b.changeStatMod(s,SpDefense,fpoke(b,s).boosts[SpDefense] - poke(b,s)["StockPileSDef"].toInt());
+            poke(b,s).remove("StockPileDef");
+            poke(b,s).remove("StockPileSDef");
         }
         switch (poke(b,s)["StockPileCount"].toInt()) {
         case 1: b.healLife(s, b.poke(s).totalLifePoints()/4); break;
         case 2: b.healLife(s, b.poke(s).totalLifePoints()/2); break;
         case 3: default: b.healLife(s, b.poke(s).totalLifePoints()); break;
         }
-        poke(b,s)["StockPileCount"] = 0;
+        poke(b,s).remove("StockPileCount");
         b.sendMoveMessage(131,0,s);
     }
 };
@@ -4340,12 +4339,12 @@ struct MMSpitUp : public MM
 
     static void uas(int s, int, BS &b) {
         if (b.gen() >= 4) {
-            b.changeStatMod(s,Defense,poke(b,s)["Boost2"].toInt() - poke(b,s)["StockPileDef"].toInt());
-            b.changeStatMod(s,SpDefense,poke(b,s)["Boost4"].toInt() - poke(b,s)["StockPileSDef"].toInt());
-            poke(b,s)["StockPileDef"] = 0;
-            poke(b,s)["StockPileSDef"] = 0;
+            b.changeStatMod(s,Defense,fpoke(b,s).boosts[Defense] - poke(b,s)["StockPileDef"].toInt());
+            b.changeStatMod(s,SpDefense,fpoke(b,s).boosts[SpDefense] - poke(b,s)["StockPileSDef"].toInt());
+            poke(b,s).remove("StockPileDef");
+            poke(b,s).remove("StockPileSDef");
         }
-        poke(b,s)["StockPileCount"] = 0;
+        poke(b,s).remove("StockPileCount");
         b.sendMoveMessage(122,0,s);
     }
 };
@@ -4485,6 +4484,10 @@ struct MMTransform : public MM {
             po.dvs[i] = pt.dvs[i];
         }
 
+        for (int i = 0; i < 8; i++) {
+            po.boosts[i] = pt.boosts[i];
+        }
+
         b.acquireAbility(s, b.ability(s));
     }
 };
@@ -4515,8 +4518,8 @@ struct MMAcupressure : public MM
             b.failSilently(s);
             b.sendMoveMessage(128, 2, t, 0, s, Move::Acupressure);
         }
-        for (int i = Attack; i <= Accuracy; i++) {
-            if (poke(b,t)[QString("Boost%1").arg(i)].toInt() < 6) {
+        for (int i = Attack; i <= Evasion; i++) {
+            if (fpoke(b,t).boosts[i] < 6) {
                 return;
             }
         }
@@ -4526,7 +4529,7 @@ struct MMAcupressure : public MM
     static void uas(int , int t, BS &b) {
         QVector<int> stats;
         for (int i = Attack; i <= Accuracy; i++) {
-            if (poke(b,t)[QString("Boost%1").arg(i)].toInt() < 6) {
+            if (fpoke(b,t).boosts[i] < 6) {
                 stats.push_back(i);
             }
         }
