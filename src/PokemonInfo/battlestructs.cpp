@@ -365,8 +365,7 @@ TeamBattle::TeamBattle(TeamInfo &other)
 
 void TeamBattle::switchPokemon(int pok1, int pok2)
 {
-    m_indexes[pok1] = pok2;
-    m_indexes[pok2] = pok1;
+    std::swap(m_indexes[pok1],m_indexes[pok2]);
 }
 
 bool TeamBattle::invalid() const

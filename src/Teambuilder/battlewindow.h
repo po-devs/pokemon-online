@@ -45,6 +45,17 @@ public:
         return spot / 2;
     }
 
+    virtual void switchPoke(int spot, int poke, bool own) {
+        if (!own) {
+            BaseBattleInfo::switchPoke(spot, poke);
+            return;
+        }
+        myteam.switchPokemon(number(spot), poke);
+        currentShallow(spot) = myteam.poke(number(spot));
+        tempPoke(spot) = myteam.poke(number(spot));
+        pokeAlive[spot] = true;
+    }
+
     int lastMove[6];
 };
 
@@ -74,8 +85,8 @@ public:
     };
 
     enum {
-        TargetTab = 6,
-        StruggleTab = 7
+        TargetTab = 2,
+        StruggleTab = 3
     };
 
     TeamBattle &team();
@@ -130,7 +141,7 @@ private:
     QStackedWidget *mystack;
     QTabWidget *mytab;
     QListWidget *myspecs;
-    AttackZone *myazones[6];
+    AttackZone *myazones[2];
     StruggleZone *szone;
     TargetSelection *tarZone;
     QList<QButtonGroup*> mybgroups;
@@ -231,6 +242,7 @@ class PokeButton : public QPushButton
     Q_OBJECT
 public:
     PokeButton(const PokeBattle &p);
+    void changePokemon(const PokeBattle &p);
     void update();
     void updateToolTip();
 private:

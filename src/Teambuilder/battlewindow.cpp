@@ -39,12 +39,12 @@ PokeBattle &BattleInfo::tempPoke(int spot)
 
 const PokeBattle & BattleInfo::currentPoke(int spot) const
 {
-    return myteam.poke(currentIndex[spot]);
+    return myteam.poke(slotNum(spot));
 }
 
 PokeBattle & BattleInfo::currentPoke(int spot)
 {
-    return myteam.poke(currentIndex[spot]);
+    return myteam.poke(slotNum(spot));
 }
 
 BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf)
@@ -78,15 +78,15 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     mytab->addTab(myspecs = new QListWidget(), tr("Spectators"));
     myspecs->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 2; i++) {
         myazones[i] = new AttackZone(team.poke(i), gen());
-	mystack->addWidget(myazones[i]);
+        mystack->addWidget(myazones[i]);
         mybgroups.append(new QButtonGroup());
         for (int j = 0; j < 4; j ++) {
             myazones[i]->attacks[j]->setCheckable(true);
             mybgroups.value(i)->addButton(myazones[i]->attacks[j],j);
         }
-	connect(myazones[i], SIGNAL(clicked(int)), SLOT(attackClicked(int)));
+        connect(myazones[i], SIGNAL(clicked(int)), SLOT(attackClicked(int)));
     }
 
     if (info().doubles) {
@@ -164,20 +164,21 @@ void BattleWindow::emitCancel()
 
 void BattleWindow::switchTo(int pokezone, int spot, bool forced)
 {
-    if (info().currentIndex[spot] != pokezone || forced) {
-        info().currentIndex[spot] = pokezone;
-        info().currentShallow(spot) = info().myteam.poke(pokezone);
-        info().pokeAlive[spot] = info().currentShallow(spot).status() != Pokemon::Koed;
-        info().tempPoke(spot) = info().currentPoke(spot);
+    int snum = info().slotNum(spot);
+
+    if (snum != pokezone || forced) {
+        info().switchPoke(spot, pokezone, true);
+        mypzone->pokes[snum]->changePokemon(info().myteam.poke(snum));
+        mypzone->pokes[pokezone]->changePokemon(info().myteam.poke(pokezone));
     }
 
-    mystack->setCurrentIndex(pokezone);
+    mystack->setCurrentIndex(info().number(spot));
     mytab->setCurrentIndex(MoveTab);
 
     mydisplay->updatePoke(spot);
 
-    for (int i = 0; i<4; i++) {
-        myazones[info().currentIndex[spot]]->tattacks[i]->updateAttack(info().tempPoke(spot).move(i), info().tempPoke(spot), gen());
+    for (int i = 0; i< 4; i++) {
+        myazones[info().number(spot)]->tattacks[i]->updateAttack(info().tempPoke(spot).move(i), info().tempPoke(spot), gen());
     }
 }
 
@@ -205,18 +206,11 @@ void BattleWindow::clickClose()
 
 void BattleWindow::switchToPokeZone()
 {
-    int slot = info().currentSlot;
-
-    if (info().currentIndex[slot] < 0 || info().currentIndex[slot] > 5) {
+    // Go back to the attack zone if the window is on the switch zone
+    if (mytab->currentIndex() == PokeTab) {
+        mytab->setCurrentIndex(MoveTab);
+    } else {
         mytab->setCurrentIndex(PokeTab);
-    }
-    else {
-	// Go back to the attack zone if the window is on the switch zone
-        if (mytab->currentIndex() == PokeTab) {
-            mytab->setCurrentIndex(MoveTab);
-	} else {
-            mytab->setCurrentIndex(PokeTab);
-	}
     }
 }
 
@@ -229,7 +223,7 @@ void BattleWindow::attackClicked(int zone)
     int slot = info().currentSlot;
 
     if (zone != -1) //struggle
-        info().lastMove[info().currentIndex[slot]] = zone;
+        info().lastMove[info().number(slot)] = zone;
     if (info().possible) {
         info().choice[info().number(slot)] = BattleChoice(false, zone, slot);
         info().choice[info().number(slot)].targetPoke = info().slot(info().opponent);
@@ -260,8 +254,8 @@ void BattleWindow::switchClicked(int zone)
     } else {
         if (!info().choices[info().number(slot)].switchAllowed)
             return;
-        if (zone == info().currentIndex[slot]) {
-            switchTo(info().currentIndex[slot], slot, false);
+        if (zone == info().number(slot)) {
+            switchTo(info().number(slot), slot, false);
 	} else {
             info().choice[info().number(slot)] = BattleChoice(true, zone, slot);
             info().done[info().number(slot)] = true;
@@ -284,7 +278,7 @@ void BattleWindow::goToNextChoice()
             if (info().choices[n].attacksAllowed == false && info().choices[n].switchAllowed == true)
                 mytab->setCurrentIndex(PokeTab);
             else {
-                switchTo(info().currentIndex[slot], slot, false);
+                switchTo(info().number(slot), slot, false);
             }
 
             /* moves first */
@@ -293,18 +287,18 @@ void BattleWindow::goToNextChoice()
                 if (info().choices[n].attacksAllowed == false) {
                     myattack->setEnabled(false);
                     for (int i = 0; i < 4; i ++) {
-                        myazones[info().currentIndex[slot]]->attacks[i]->setEnabled(false);
+                        myazones[info().number(slot)]->attacks[i]->setEnabled(false);
                     }
                 } else {
                     myattack->setEnabled(true);
                     for (int i = 0; i < 4; i ++) {
-                        myazones[info().currentIndex[slot]]->attacks[i]->setEnabled(info().choices[n].attackAllowed[i]);
+                        myazones[info().number(slot)]->attacks[i]->setEnabled(info().choices[n].attackAllowed[i]);
                     }
 
                     if (info().choices[n].struggle()) {
                         mystack->setCurrentWidget(szone);
                     } else {
-                        mystack->setCurrentWidget(myazones[info().currentIndex[slot]]);
+                        mystack->setCurrentWidget(myazones[info().number(slot)]);
                     }
                 }
             }
@@ -318,13 +312,10 @@ void BattleWindow::goToNextChoice()
                     mypzone->pokes[i]->setEnabled(team().poke(i).num() != 0 && team().poke(i).lifePoints() > 0);
                 }
 
-                /* In doubles, whatever happens, you can't switch to your partner */
                 if (info().doubles) {
-                    int rev = !n;
-                    int oslot = info().slot(info().myself, rev);
-                    if (info().currentIndex[oslot] >= 0 && info().currentIndex[oslot] < 5) {
-                        mypzone->pokes[info().currentIndex[oslot]]->setEnabled(false);
-                    }
+                    /* In doubles, whatever happens, you can't switch to your partner */
+                    mypzone->pokes[0]->setEnabled(false);
+                    mypzone->pokes[1]->setEnabled(false);
 
                     /* Also, you can't switch to a pokemon you've chosen before */
                     for (int i = 0; i < info().available.size(); i++) {
@@ -354,7 +345,7 @@ void BattleWindow::goToNextChoice()
 void BattleWindow::disableAll()
 {
     mypzone->setEnabled(false);
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 2; i++)
         myazones[i]->setEnabled(false);
     if (info().doubles)
         tarZone->setEnabled(false);
@@ -363,7 +354,7 @@ void BattleWindow::disableAll()
 void BattleWindow::enableAll()
 {
     mypzone->setEnabled(true);
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 2; i++)
         myazones[i]->setEnabled(true);
     if (info().doubles)
         tarZone->setEnabled(true);
@@ -382,7 +373,7 @@ void BattleWindow::attackButton()
     if (info().possible) {
         if (mystack->currentIndex() == TargetTab) {
             /* Doubles, move selection */
-            int mv = info().lastMove[info().currentIndex[slot]];
+            int mv = info().lastMove[info().number(slot)];
             int tar = MoveInfo::Target(mv,gen());
             if (info().choices[n].struggle() || tar == Move::ChosenTarget || tar == Move::MeFirstTarget
                 || mv == Move::Curse || tar == Move::PartnerOrUser) {
@@ -402,8 +393,8 @@ void BattleWindow::attackButton()
                     goToNextChoice();
                 }
             } else {
-                if (info().choices[n].attackAllowed[info().lastMove[info().currentIndex[slot]]]) {
-                    attackClicked(info().lastMove[info().currentIndex[slot]]);
+                if (info().choices[n].attackAllowed[info().lastMove[info().number(slot)]]) {
+                    attackClicked(info().lastMove[info().number(slot)]);
                 }
                 else
                     for (int i = 0; i < 4; i++) {
@@ -448,12 +439,13 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             info().sub[spot] = false;
             info().specialSprite[spot] = Pokemon::NoPoke;
             bool silent;
+            quint8 prevIndex;
 
             in >> silent;
-            in >> info().currentIndex[spot];
+            in >> prevIndex;
 
             if (player == info().myself) {
-                switchTo(info().currentIndex[spot], spot, true);
+                switchTo(prevIndex, spot, true);
 	    } else {
                 in >> info().currentShallow(spot);
                 info().pokeAlive[spot] = true;
@@ -495,8 +487,8 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
 	    //Think to check for crash if currentIndex != -1, move > 3
             info().currentPoke(spot).move(move).PP() = PP;
             info().tempPoke(spot).move(move).PP() = PP;
-            myazones[info().currentIndex[spot]]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
-            mypzone->pokes[info().currentIndex[spot]]->updateToolTip();
+            myazones[info().number(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
+            mypzone->pokes[info().number(spot)]->updateToolTip();
 
             break;
 	}
@@ -530,7 +522,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     case Ko:
         {
            if (player==info().myself) {
-                mypzone->pokes[info().currentIndex[spot]]->setEnabled(false); //crash!!
+                mypzone->pokes[info().number(spot)]->setEnabled(false); //crash!!
             }
             BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
             break;
@@ -564,8 +556,8 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         }
 
         info().currentShallow(spot).changeStatus(status);
-        if (poke == info().currentIndex[spot])
-            mydisplay->updatePoke(spot);
+        if (info().isOut(player, poke))
+            mydisplay->updatePoke(info().slot(player, poke));
 
         break;
     }
@@ -598,7 +590,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                 in >> slot >> move;
                 info().tempPoke(spot).move(slot).num() = move;
                 info().tempPoke(spot).move(slot).load(gen());
-                myazones[info().currentIndex[spot]]->tattacks[slot]->updateAttack(info().tempPoke(spot).move(slot), info().tempPoke(spot), gen());
+                myazones[info().number(slot)]->tattacks[slot]->updateAttack(info().tempPoke(spot).move(slot), info().tempPoke(spot), gen());
             } else {
                 if (type == TempSprite) {
                     Pokemon::uniqueId old = info().specialSprite[spot];
@@ -617,8 +609,8 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                         info().myteam.poke(poke).num() = newform;
                     }
                     info().pokemons[spot][poke].num() = newform;
-                    if (poke == info().currentIndex[spot]) {
-                        info().currentShallow(spot).num() = newform;
+                    if (info().isOut(player, poke)) {
+                        info().currentShallow(info().slot(player, spot)).num() = newform;
                     }
                 } else if (type == AestheticForme)
                 {
@@ -675,7 +667,7 @@ void BattleWindow::animateHPBar()
         info().currentPoke(spot).lifePoints() = goal;
         info().tempPoke(spot).lifePoints() = goal;
         info().currentShallow(spot).lifePercent() = info().tempPoke(spot).lifePercent();
-        mypzone->pokes[info().currentIndex[spot]]->update();
+        mypzone->pokes[info().number(spot)]->update();
         mydisplay->updatePoke(spot);
         undelay();
         return;
@@ -696,7 +688,7 @@ void BattleWindow::animateHPBar()
     info().currentPoke(spot).lifePoints() = newHp;
     info().tempPoke(spot).lifePoints() = newHp;
     info().currentShallow(spot).lifePercent() = info().tempPoke(spot).lifePercent();
-    mypzone->pokes[info().currentIndex[spot]]->update();
+    mypzone->pokes[info().number(spot)]->update();
 
     //Recursive call to update the hp bar 30msecs later
     QTimer::singleShot(30, this, SLOT(animateHPBar()));
@@ -725,12 +717,12 @@ void BattleWindow::updateChoices()
         if (info().choices[0].attacksAllowed == false) {
 	    myattack->setEnabled(false);
             for (int i = 0; i < 4; i ++) {
-                myazones[info().currentIndex[info().player(info().myself)]]->attacks[i]->setEnabled(false);
+                myazones[0]->attacks[i]->setEnabled(false);
 	    }
 	} else {
 	    myattack->setEnabled(true);
 	    for (int i = 0; i < 4; i ++) {
-                myazones[info().currentIndex[info().player(info().myself)]]->attacks[i]->setEnabled(info().choices[0].attackAllowed[i]);
+                myazones[0]->attacks[i]->setEnabled(info().choices[0].attackAllowed[i]);
 	    }
 	}
     }
@@ -896,6 +888,16 @@ PokeButton::PokeButton(const PokeBattle &p)
     : p(&p)
 {
     setIconSize(QSize(32,32));
+    setIcon(PokemonInfo::Icon(p.num()));
+    update();
+
+    updateToolTip();
+}
+
+void PokeButton::changePokemon(const PokeBattle &p)
+{
+    this->p = &p;
+
     setIcon(PokemonInfo::Icon(p.num()));
     update();
 
