@@ -1691,7 +1691,12 @@ struct MMBounce : public MM
     }
 
     static void ewc(int s, int, BS &b) {
-	poke(b,s)["Invulnerable"] = false;
+        poke(b,s)["Invulnerable"] = false;
+        /* If the foe caught us while we were digging, we don't come back on earth
+           when we fail to move. */
+        if (b.linked("FreeFalled")) {
+            return;
+        }
         b.changeSprite(s, 0);
 
         if (poke(b,s).contains("FreeFalledPokemon")) {
