@@ -167,7 +167,7 @@ All stat changes were elimnated!
 
 
 %s swapped the defenses of all the pokemon!|The defenses of the pokemon went back to normal!
-%s protected his team against all-out moves!
 %ts's team is protected by Wide Guard!
 %ts's team is protected by Fast Guard!
+%s is being sent back!
 #

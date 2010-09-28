@@ -976,6 +976,7 @@ struct AMTrace : public AM {
         //Multitype
         if (b.hasWorkingAbility(t, ab) && ab != Ability::Multitype && ab !=  Ability::Trace) {
             b.sendAbMessage(66,0,s,t,0,ab);
+            b.loseAbility(s);
             b.acquireAbility(s, ab);
         }
     }
@@ -1158,6 +1159,7 @@ struct AMMummy : public AM {
     static void upa(int, int t, BS &b) {
         if (b.ability(t) != Ability::Mummy) {
             b.sendAbMessage(47, 0, t);
+            b.loseAbility(t);
             b.acquireAbility(t, Ability::Mummy);
         }
     }
@@ -1369,7 +1371,6 @@ struct AMEccentric : public AM
         po.weight = PokemonInfo::Weight(num);
         po.type1 = PokemonInfo::Type1(num, b.gen());
         po.type2 = PokemonInfo::Type2(num, b.gen());
-        po.ability = b.ability(t);
 
         b.changeSprite(s, num);
 
@@ -1388,7 +1389,8 @@ struct AMEccentric : public AM
             po.boosts[i] = pt.boosts[i];
         }
 
-        b.acquireAbility(s, b.ability(s));
+        b.loseAbility(s);
+        b.acquireAbility(s, b.ability(t));
     }
 };
 

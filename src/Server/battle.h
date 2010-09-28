@@ -216,6 +216,7 @@ public:
     BattleStats constructStats(int player);
 
     void changeTempMove(int player, int slot, int move);
+    void changeDefMove(int player, int slot, int move);
     void changeSprite(int player, Pokemon::uniqueId newForme);
     /* Send a message to the outworld */
     enum BattleCommand
@@ -273,7 +274,8 @@ public:
         TempItem,
         TempSprite,
         DefiniteForme,
-        AestheticForme
+        AestheticForme,
+        DefMove
     };
 
     enum WeatherM

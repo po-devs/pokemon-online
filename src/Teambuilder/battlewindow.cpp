@@ -587,13 +587,18 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         {
             quint8 type;
             in >> type;
-            if (type == TempMove) {
+            if (type == TempMove || type == DefMove) {
                 quint8 slot;
                 quint16 move;
                 in >> slot >> move;
                 info().tempPoke(spot).move(slot).num() = move;
                 info().tempPoke(spot).move(slot).load(gen());
-                myazones[info().number(slot)]->tattacks[slot]->updateAttack(info().tempPoke(spot).move(slot), info().tempPoke(spot), gen());
+                myazones[info().number(spot)]->tattacks[slot]->updateAttack(info().tempPoke(spot).move(slot), info().tempPoke(spot), gen());
+
+                if (type == DefMove) {
+                    info().myteam.poke(info().number(spot)).move(slot).num() = move;
+                    info().myteam.poke(info().number(spot)).move(slot).load(gen());
+                }
             } else {
                 if (type == TempSprite) {
                     Pokemon::uniqueId old = info().specialSprite[spot];

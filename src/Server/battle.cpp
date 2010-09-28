@@ -1314,8 +1314,13 @@ void BattleSituation::sendBack(int player, bool silent)
     /* Just calling pursuit directly here, forgive me for this */
     if (!turnlong[player].value("BatonPassed").toBool()) {
         QList<int> opps = revs(player);
+        bool notified = false;
         foreach(int opp, opps) {
             if (fieldmoves[opp].attack == Move::Pursuit && !turnlong[opp]["HasMoved"].toBool()) {
+                if (!notified) {
+                    notified = true;
+                    sendMoveMessage(171, 0, player);
+                }
                 fieldmoves[opp].power = fieldmoves[opp].power * 2;
                 choice[opp].targetPoke = player;
                 analyzeChoice(opp);
@@ -2039,9 +2044,6 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
 }
 
 void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
-    if (!pokelong[play].value("AbilityNullified").toBool())
-        callaeffects(play, play, "UponBeingHit");
-
     fieldpokes[play].ability = ab;
 
     if (!pokelong[play].value("AbilityNullified").toBool())
@@ -2050,9 +2052,10 @@ void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
 
 void BattleSituation::loseAbility(int slot)
 {
-    /* Evil Hack to make illusion pokemons go back to normal */
-    if (pokelong[slot].contains("IllusionTarget"))
-        callaeffects(slot, slot, "UponBeingHit");
+    if (!pokelong[slot].value("AbilityNullified").toBool())
+        /* Evil Hack to make illusion pokemons go back to normal */
+        if (pokelong[slot].contains("IllusionTarget"))
+            callaeffects(slot, slot, "UponBeingHit");
 }
 
 int BattleSituation::ability(int player) {
@@ -2894,6 +2897,15 @@ void BattleSituation::changeTempMove(int player, int slot, int move)
     fieldpokes[player].moves[slot] = move;
     notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
     changePP(player,slot,std::min(MoveInfo::PP(move, gen()), 5));
+}
+
+void BattleSituation::changeDefMove(int player, int slot, int move)
+{
+    poke(player).move(slot).num() = move;
+    poke(player).move(slot).load(gen());
+    fieldpokes[player].moves[slot] = move;
+    notify(this->player(player), ChangeTempPoke, player, quint8(DefMove), quint8(slot), quint16(move));
+    changePP(player,slot,poke(player).move(slot).totalPP());
 }
 
 void BattleSituation::changeSprite(int player, Pokemon::uniqueId newForme)

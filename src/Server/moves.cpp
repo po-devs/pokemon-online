@@ -3605,10 +3605,8 @@ struct MMSketch : public MM
 	int mv = poke(b,t)["LastMoveUsed"].toInt();
 	b.sendMoveMessage(111,0,s,type(b,s),t,mv);
 	int slot = poke(b,s)["MoveSlot"].toInt();
-	b.poke(s).move(slot).num() = mv;
-        b.poke(s).move(slot).load(b.gen());
-	b.changePP(s,slot,2);
-	b.changePP(s,slot,b.poke(s).move(slot).totalPP());
+        b.changeDefMove(s, slot, mv);
+
     }
 };
 
@@ -3943,6 +3941,7 @@ struct MMWorrySeed : public MM {
 
     static void uas(int s, int t, BS &b) {
         int ab = turn(b,s)["WorrySeed_Arg"].toInt();
+        b.loseAbility(t);
         b.acquireAbility(t, ab); //Insomnia
         b.sendMoveMessage(143,0,s,type(b,s),t,ab);
     }
@@ -4073,6 +4072,7 @@ struct MMRolePlay : public MM {
 
     static void uas(int s, int t, BS &b) {
         b.sendMoveMessage(108,0,s,Pokemon::Psychic,t,b.ability(t));
+        b.loseAbility(s);
         b.acquireAbility(s, b.ability(t));
     }
 };
@@ -4096,7 +4096,9 @@ struct MMSkillSwap : public MM {
         int sab = b.ability(s);
 
         b.sendMoveMessage(112,0,s,Pokemon::Psychic,t);
+        b.loseAbility(s);
         b.acquireAbility(s, tab);
+        b.loseAbility(t);
         b.acquireAbility(t, sab);
     }
 };
@@ -4478,7 +4480,6 @@ struct MMTransform : public MM {
         po.weight = PokemonInfo::Weight(num);
         po.type1 = PokemonInfo::Type1(num, b.gen());
         po.type2 = PokemonInfo::Type2(num, b.gen());
-        po.ability = b.ability(t);
 
         b.changeSprite(s, num);
 
@@ -4497,7 +4498,8 @@ struct MMTransform : public MM {
             po.boosts[i] = pt.boosts[i];
         }
 
-        b.acquireAbility(s, b.ability(s));
+        b.loseAbility(s);
+        b.acquireAbility(s, b.ability(t));
     }
 };
 
@@ -4687,6 +4689,7 @@ struct MMAssembleCrew : public MM {
     }
 
     static void uas(int s, int t, BS &b) {
+        b.loseAbility(t);
         b.acquireAbility(t, b.ability(s));
         b.sendMoveMessage(158,0,s,type(b,s),t,b.ability(s));
     }
@@ -5148,5 +5151,6 @@ void MoveEffect::init()
     REGISTER_MOVE(168, WonderRoom);
     REGISTER_MOVE(169, WideGuard);
     REGISTER_MOVE(170, FastGuard);
+    //Pursuit
 }
 
