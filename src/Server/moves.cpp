@@ -985,6 +985,8 @@ struct MMWish : public MM
     static void uas(int s, int, BS &b) {
         slot(b,s)["WishTurn"] = b.turn() + 1;
         slot(b,s)["Wisher"] = b.poke(s).nick();
+        if (b.gen() >= 5)
+            slot(b,s)["WishHeal"] = std::max(b.poke(s).totalLifePoints()/2, 1);
         addFunction(slot(b,s), "EndTurn2", "Wish", &et);
     }
 
@@ -995,7 +997,9 @@ struct MMWish : public MM
 	}
         if (!b.koed(s)) {
             b.sendMoveMessage(142, 0, 0, 0, 0, 0, slot(b,s)["Wisher"].toString());
-	    b.healLife(s, b.poke(s).totalLifePoints()/2);
+
+            int life = b.gen() >= 5 ? slot(b, s)["WishHeal"].toInt() : b.poke(s).totalLifePoints()/2;
+            b.healLife(s, life);
 	}
     }
 };
@@ -1697,7 +1701,7 @@ struct MMBounce : public MM
         poke(b,s)["Invulnerable"] = false;
         /* If the foe caught us while we were digging, we don't come back on earth
            when we fail to move. */
-        if (b.linked("FreeFalled")) {
+        if (b.linked(s, "FreeFalled")) {
             return;
         }
         b.changeSprite(s, 0);
@@ -4985,6 +4989,118 @@ struct MMFastGuard : public MM
     }
 };
 
+struct MMMirrorType : public MM
+{
+    MMMirrorType() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        b.sendMoveMessage(172,0,s,type(b,s),t);
+        fpoke(b,s).type1 = fpoke(b,t).type1;
+        fpoke(b,s).type2 = fpoke(b,t).type2;
+    }
+};
+
+struct MMAcrobat : public MM
+{
+    MMAcrobat() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int, BS &b) {
+        if (b.poke(s).item() == 0) {
+            tmove(b,s).power *= 2;
+        }
+    }
+};
+
+struct MMTelekinesis : public MM
+{
+    MMTelekinesis() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        if (poke(b,t).value("LevitatedCount").toInt() > 0) {
+            b.sendMoveMessage(174, 1, t);
+            poke(b,t).remove("LevitatedCount");
+        } else {
+            b.sendMoveMessage(174, 0, s, type(b,s), t);
+            poke(b,t)["LevitatedCount"] = 3;
+            addFunction(poke(b,t), "EndTurn60", "Telekinesis", &et);
+        }
+    }
+
+    static void et(int s, int , BS &b) {
+        if (poke(b,s).value("LevitatedCount").toInt() <= 1) {
+            poke(b,s).remove("LevitatedCount");
+            removeFunction(poke(b,s), "EndTurn60", "Telekinesis");
+            b.sendMoveMessage(174, 1, s);
+        }
+    }
+};
+
+struct MMStrikeDown : public MM
+{
+    MMStrikeDown() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        b.sendMoveMessage(175, 0, s, type(b,s), t);
+        poke(b,t)["StruckDown"] = true;
+    }
+};
+
+struct MMYouFirst : public MM
+{
+    MMYouFirst() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (turn(b,t).value("HasMoved").toBool() || turn(b,t).value("CantGetToMove").toBool())
+            turn(b,s)["Failed"] = true;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        /* Possible crash cause... If t is in the wrong place in the list. If DetermineAttackFailure didn't do its job correctly. */
+        int buf = b.speedsVector[b.currentSlot + 1];
+        b.speedsVector[b.currentSlot+1] = t;
+        for (unsigned i = b.currentSlot + 2; i < b.speedsVector.size(); i++) {
+            if (buf != t) {
+                std::swap(b.speedsVector[i], buf);
+            } else {
+                break;
+            }
+        }
+    }
+};
+
+struct MMStall : public MM
+{
+    MMStall() {
+        functions["DetermineAttackFailure"] = &MMYouFirst::daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        /* Possible crash cause... If t is in the wrong place in the list. If DetermineAttackFailure didn't do its job correctly. */
+        int buf = b.speedsVector.back();
+        b.speedsVector.back() = t;
+
+        for (int i = b.speedsVector.size() - 2; i > b.currentSlot; i--) {
+            if (buf != t) {
+                std::swap(b.speedsVector[i], buf);
+            } else {
+                break;
+            }
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5191,5 +5307,11 @@ void MoveEffect::init()
     REGISTER_MOVE(169, WideGuard);
     REGISTER_MOVE(170, FastGuard);
     //Pursuit
+    REGISTER_MOVE(172, MirrorType);
+    REGISTER_MOVE(173, Acrobat);
+    REGISTER_MOVE(174, Telekinesis);
+    REGISTER_MOVE(175, StrikeDown);
+    REGISTER_MOVE(176, YouFirst);
+    REGISTER_MOVE(177, Stall);
 }
 

@@ -428,6 +428,10 @@ public:
     /* Moves that affect a particular Slot (wish, ...) */
     QList<context> slotzone;
 
+    /* The players ordered by speed are stored there */
+    std::vector<int> speedsVector;
+    int currentSlot;
+
     int weather;
     int weatherCount;
 
