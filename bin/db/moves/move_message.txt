@@ -170,4 +170,8 @@ All stat changes were elimnated!
 %ts's team is protected by Wide Guard!
 %ts's team is protected by Fast Guard!
 %s is being sent back!
+%s copied %f's types!
+
+%s made %f float in the air!|%s is no longer under the effect of telekinesis!
+%s knocked %f on the ground!
 #

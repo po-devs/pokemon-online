@@ -830,7 +830,8 @@ void BattleSituation::analyzeChoices()
     }
 
     std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
-    std::vector<int> players;
+    std::vector<int> &players = speedsVector;
+    players.clear();
 
     for (it = priorities.begin(); it != priorities.end(); ++it) {
 	/* There's another priority system: Ability stall, and Item lagging tail */
@@ -852,7 +853,8 @@ void BattleSituation::analyzeChoices()
     /* The loop is separated, cuz all TurnOrders must be called at the beggining of the turn,
        cf custap berry */
     if (gen() >= 4) {
-        foreach(int p, players) {
+        for(currentSlot = 0; currentSlot < players.size(); currentSlot += 1) {
+            int p = players[currentSlot];
             if (!turnlong[p].value("HasMoved").toBool() && !turnlong[p].value("CantGetToMove").toBool())
                 analyzeChoice(p);
             testWin();
@@ -1385,7 +1387,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         return false;
     }
 
-    if (acc == 0 || acc == 101) {
+    if (acc == 0 || acc == 101 || pokelong[target].value("LevitatedCount").toInt() > 0) {
 	return true;
     }
 
@@ -2547,9 +2549,11 @@ int BattleSituation::getType(int player, int slot)
 bool BattleSituation::isFlying(int player)
 {
     return !battlelong.value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) && !pokelong[player].value("Rooted").toBool() &&
-           !pokelong[player].value("Roosted").toBool() && (hasWorkingAbility(player, Ability::Levitate)
-                                                           || hasType(player, Pokemon::Flying)
-                                                           || pokelong[player].value("MagnetRiseCount").toInt() > 0);
+           !pokelong[player].value("Roosted").toBool() && !pokelong[player].value("StruckDown").toBool() &&
+           (hasWorkingAbility(player, Ability::Levitate)
+           || hasType(player, Pokemon::Flying)
+           || pokelong[player].value("MagnetRiseCount").toInt() > 0
+           || pokelong[player].value("LevitatedCount").toInt() > 0);
 }
 
 bool BattleSituation::hasSubstitute(int player)

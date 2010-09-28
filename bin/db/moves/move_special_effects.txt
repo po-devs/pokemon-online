@@ -475,9 +475,9 @@
 117-5#Venom Shock
 
 48#Rage power
-
+174#Telekinesis
 156#Magic Room
-
+175#Strike Down
 
 
 
@@ -493,7 +493,7 @@
 
 143-86#Simple Beam
 158#Assemble Crew
-
+176#You First
 
 
 
@@ -509,9 +509,9 @@
 
 107#Overhead Throw
 160#Complete Burn
-
-
-
+177#Stall
+173#Acrobat
+172#Mirror Type
 
 37|161#Desperation
 162#Gift Pass
