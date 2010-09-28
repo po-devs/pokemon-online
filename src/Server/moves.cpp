@@ -1646,10 +1646,9 @@ struct MMBounce : public MM
     }
 
     static void ms(int s, int, BS &b) {
-        QStringList args = turn(b,s)["Bounce_Arg"].toString().split('_');
-        b.sendMoveMessage(13,args[0].toInt(),s,type(b,s));
-
         if (b.hasWorkingItem(s, Item::PowerHerb)) {
+            QStringList args = turn(b,s)["Bounce_Arg"].toString().split('_');
+            b.sendMoveMessage(13,args[0].toInt(),s,type(b,s));
             b.sendItemMessage(11,s);
             b.disposeItem(s);
 
@@ -1660,7 +1659,9 @@ struct MMBounce : public MM
         } else {
             tmove(b, s).power = 0;
             tmove(b, s).accuracy = 0;
-            tmove(b, s).targets = Move::User;
+            if (move(b,s) != Move::FreeFall)
+                tmove(b, s).targets = Move::User;
+
             poke(b,s)["2TurnMove"] = move(b,s);
             turn(b,s)["TellPlayers"] = false;
         }
@@ -1692,10 +1693,19 @@ struct MMBounce : public MM
     static void ewc(int s, int, BS &b) {
 	poke(b,s)["Invulnerable"] = false;
         b.changeSprite(s, 0);
+
+        if (poke(b,s).contains("FreeFalledPokemon")) {
+            int t = poke(b,s)["FreeFalledPokemon"].toInt();
+            b.changeSprite(t, 0);
+            poke(b,t).remove("FreeFalledBy");
+        }
     }
 
-    static void uas(int s, int, BS &b) {
+    static void uas(int s, int t, BS &b) {
 	QStringList args = turn(b,s)["Bounce_Arg"].toString().split('_');
+
+        b.sendMoveMessage(13,args[0].toInt(),s,type(b,s), t);
+
 	QList<int> vuln_moves, vuln_mult;
 	for (int i = 1; i < args.size(); i++)
 	{
@@ -1714,9 +1724,22 @@ struct MMBounce : public MM
         /* Those moves protect from weather when in the invulnerable state */
         if (att == Move::Dig || att == Move::Dive)
             turn(b,s)["WeatherSpecialed"] = true;
+        if (att == Move::FreeFall) {
+            b.link(s, t, "FreeFalled");
+            poke(b,s)["FreeFalledPokemon"] = t;
+            b.changeSprite(t, -1);
+            addFunction(poke(b,t), "TestEvasion", "Bounce", &dgaf);
+            addFunction(poke(b,t), "DetermineAttackPossible", "Bounce", &dap);
+            addFunction(poke(b,s), "AfterBeingKoed", "Bounce", &ewc);
+        }
     }
 
     static void dgaf(int s, int t, BS &b) {
+        if (b.linked(s, "FreeFalled")) {
+            turn(b,s)["EvadeAttack"] = true;
+            return;
+        }
+
 	if (s == t || t == -1) {
 	    return;
 	}
@@ -1737,6 +1760,14 @@ struct MMBounce : public MM
 
 	/* All other moves fail */
         turn(b,s)["EvadeAttack"] = true;
+    }
+
+    static void dap(int s, int, BS &b) {
+        if (b.linked(s, "FreeFalled")) {
+            b.sendMoveMessage(s, 6, s);
+            turn(b,s) ["ImpossibleToMove"] = true;
+            return;
+        }
     }
 };
 

@@ -11,7 +11,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 %s was hurt by %m!|%s is freed from %m!|%f became trapped by swirling magma!
 %s must recharge!
 %f can no longer escape!
-%s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!
+%s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!|%s took %f in the air!|%s can't attack while in the air!
 %s shattered %tf's team protections!
 
 %s stole and ate %f's %i!

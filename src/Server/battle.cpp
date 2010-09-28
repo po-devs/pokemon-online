@@ -1641,12 +1641,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     //Just for truant
     callaeffects(player, player, "DetermineAttackPossible");
-    if (turnlong[player]["ImpossibleToMove"].toBool() == true) {
+    if (turnlong[player].value("ImpossibleToMove").toBool() == true) {
         goto trueend;
     }
 
     callpeffects(player, player, "DetermineAttackPossible");
-    if (turnlong[player]["ImpossibleToMove"].toBool() == true) {
+    if (turnlong[player].value("ImpossibleToMove").toBool() == true) {
         goto trueend;
     }
 
@@ -3079,6 +3079,10 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 	callpeffects(player, source, "AfterKoedByStraightAttack");
         callaeffects(source, player, "AfterKoing");
     }
+
+    /* For free fall */
+    if (gen() >= 5)
+        callpeffects(player, player, "AfterBeingKoed");
 }
 
 void BattleSituation::requestSwitchIns()
