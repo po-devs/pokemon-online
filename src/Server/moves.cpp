@@ -1678,6 +1678,9 @@ struct MMBounce : public MM
 
             if (move == ShadowForce) {
                 addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
+            } else if (move == FreeFall) {
+                /* FreeFall sure-hits the foe once it caught it... */
+                tmove(b,s).accuracy = 0;
             }
         }
         removeFunction(poke(b,s), "TurnSettings", "Bounce");
