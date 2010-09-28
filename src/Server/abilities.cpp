@@ -1581,6 +1581,26 @@ struct AMIllusion : public AM {
     }
 };
 
+//struct AMJusticeHeart : public AM {
+//    AMJusticeHeart() {
+//        functions["UponBeingHit"] = &ubh;
+//    }
+
+//    static void uodr(int s, int t, BS &b) {
+//        int tp = type(b,t);
+
+//        if (tp == poke(b,s)["AbilityArg"].toInt()) {
+//            turn(b,s)[QString("Blocked%1").arg(t)] = true;
+//            if (!b.hasMaximalStatMod(s, Attack)) {
+//                b.sendAbMessage(68, 0, s, 0, tp, b.ability(s));
+//                b.inflictStatMod(s, Attack, 1, s, false);
+//            } else {
+//                b.sendAbMessage(68, 1, s, 0, tp, b.ability(s));
+//            }
+//        }
+//    }
+//};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange

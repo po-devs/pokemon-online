@@ -290,7 +290,7 @@
 289:0 Letarking
 290:0 Nincada
 291:0 Ninjask
-292:0 Ninjatom
+292:0:1 Ninjatom
 293:0 Flurmel
 294:0 Krakeelo
 295:0 Krawumms
