@@ -290,7 +290,7 @@
 289:0 Slaking
 290:0 Nincada
 291:0 Ninjask
-292:0 Shedinja
+292:0:1 Shedinja
 293:0 Whismur
 294:0 Loudred
 295:0 Exploud

@@ -290,7 +290,7 @@
 289:0 Monaflemit
 290:0 Ningale
 291:0 Ninjask
-292:0 Munja
+292:0:1 Munja
 293:0 Chuchmur
 294:0 Ramboum
 295:0 Brouhabam
