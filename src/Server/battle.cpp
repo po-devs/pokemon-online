@@ -466,6 +466,14 @@ void BattleSituation::endTurn()
 
     testWin();
 
+    if (gen() >= 5) {
+        /* Oath combo moves */
+        callzeffects(Player1, Player1, "EndTurn3");
+        callzeffects(Player2, Player2, "EndTurn3");
+    }
+
+    testWin();
+
     callbeffects(Player1,Player1,"EndTurn5");
 
     foreach (int player, players) {
@@ -478,8 +486,8 @@ void BattleSituation::endTurn()
         /* Speed boost, shed skin, ?Harvest? */
         callaeffects(player,player, "EndTurn62");
 
-//        if (koed(player)) <-- cannot be koed
-//            continue;
+        //        if (koed(player)) <-- cannot be koed
+        //            continue;
 
         /* Lefties, black sludge */
         callieffects(player, player, "EndTurn63");
@@ -564,26 +572,26 @@ void BattleSituation::endTurnStatus(int player)
 
     switch(poke(player).status())
     {
-        case Pokemon::Burnt:
-            notify(All, StatusMessage, player, qint8(HurtBurn));
-            //HeatProof: burn does only 1/16
-            inflictDamage(player, poke(player).totalLifePoints()/(8*(1+hasWorkingAbility(player,Ability::Heatproof))), player);
-            break;
-        case Pokemon::Poisoned:
-            //PoisonHeal
-            if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-                sendAbMessage(45,0,player,0,Pokemon::Poison);
-                healLife(player, poke(player).totalLifePoints()/8);
-            } else {
-                notify(All, StatusMessage, player, qint8(HurtPoison));
-                if (poke(player).statusCount() == 0)
-                    inflictDamage(player, poke(player).totalLifePoints()/8, player);
-                else {
-                    inflictDamage(player, poke(player).totalLifePoints() * (15-poke(player).statusCount()) / 16, player);
-                    poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
-                }
+    case Pokemon::Burnt:
+        notify(All, StatusMessage, player, qint8(HurtBurn));
+        //HeatProof: burn does only 1/16
+        inflictDamage(player, poke(player).totalLifePoints()/(8*(1+hasWorkingAbility(player,Ability::Heatproof))), player);
+        break;
+    case Pokemon::Poisoned:
+        //PoisonHeal
+        if (hasWorkingAbility(player, Ability::PoisonHeal)) {
+            sendAbMessage(45,0,player,0,Pokemon::Poison);
+            healLife(player, poke(player).totalLifePoints()/8);
+        } else {
+            notify(All, StatusMessage, player, qint8(HurtPoison));
+            if (poke(player).statusCount() == 0)
+                inflictDamage(player, poke(player).totalLifePoints()/8, player);
+            else {
+                inflictDamage(player, poke(player).totalLifePoints() * (15-poke(player).statusCount()) / 16, player);
+                poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
             }
-            break;
+        }
+        break;
     }
 }
 
@@ -855,7 +863,7 @@ void BattleSituation::analyzeChoices()
     if (gen() >= 4) {
         for(currentSlot = 0; currentSlot < players.size(); currentSlot += 1) {
             int p = players[currentSlot];
-            if (!turnlong[p].value("HasMoved").toBool() && !turnlong[p].value("CantGetToMove").toBool())
+            if (!hasMoved(p))
                 analyzeChoice(p);
             testWin();
         }
@@ -868,11 +876,16 @@ void BattleSituation::analyzeChoices()
                 requestSwitchIns();
             }
 
-            if (!turnlong[players[i]].value("HasMoved").toBool() && !turnlong[players[i]].value("CantGetToMove").toBool())
+            if (!hasMoved(i))
                 analyzeChoice(players[i]);
             testWin();
         }
     }
+}
+
+bool BattleSituation::hasMoved(int p)
+{
+    return turnlong[p].value("HasMoved").toBool() || turnlong[p].value("CantGetToMove").toBool();
 }
 
 void BattleSituation::notifySub(int player, bool sub)
@@ -1219,12 +1232,12 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
 
         foreach(QString effect, effects) {
             //Old code used for substitute
-//	    turnlong[source]["EffectBlocked"] = false;
-//	    turnlong[source]["EffectActivated"] = effect;
-//            callpeffects(target, source, "BlockTurnEffects");
-//	    if (turnlong[source]["EffectBlocked"].toBool() == true) {
-//		continue;
-//	    }
+            //	    turnlong[source]["EffectBlocked"] = false;
+            //	    turnlong[source]["EffectActivated"] = effect;
+            //            callpeffects(target, source, "BlockTurnEffects");
+            //	    if (turnlong[source]["EffectBlocked"].toBool() == true) {
+            //		continue;
+            //	    }
 
             MoveMechanics::function f = turnlong[source].value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
@@ -1361,8 +1374,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
             like EQ on dig need their boost even if lock on */
 
     if (pokelong[player].contains("LockedOn") && pokelong[player].value("LockedOnEnd").toInt() >= turn()
-            && pokelong[player].value("LockedOn") == target &&
-                    pokelong[player].value("LockedOnCount").toInt() == slotzone[target]["SwitchCount"].toInt()) {
+        && pokelong[player].value("LockedOn") == target &&
+                pokelong[player].value("LockedOnCount").toInt() == slotzone[target]["SwitchCount"].toInt()) {
         return true;
     }
 
@@ -1424,11 +1437,11 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
 	due to the ever rounding down to make an int */
     acc = acc * getStatBoost(player, Accuracy) * getStatBoost(target, Evasion)
-            * (20+turnlong[player].value("Stat6ItemModifier").toInt())/20
-            * (20-turnlong[target].value("Stat7ItemModifier").toInt())/20
-            * (20+turnlong[player].value("Stat6AbilityModifier").toInt())/20
-            * (20+turnlong[player].value("Stat6PartnerAbilityModifier").toInt())/20
-            * (20-turnlong[target].value("Stat7AbilityModifier").toInt())/20;
+          * (20+turnlong[player].value("Stat6ItemModifier").toInt())/20
+          * (20-turnlong[target].value("Stat7ItemModifier").toInt())/20
+          * (20+turnlong[player].value("Stat6AbilityModifier").toInt())/20
+          * (20+turnlong[player].value("Stat6PartnerAbilityModifier").toInt())/20
+          * (20-turnlong[target].value("Stat7AbilityModifier").toInt())/20;
 
     if (true_rand() % 100 < unsigned(acc)) {
 	return true;
@@ -1461,12 +1474,12 @@ void BattleSituation::testCritical(int player, int target)
     }
 
     switch(craise) {
-	case 0: minch = 3; break;
-	case 1: minch = 6; break;
-	case 2: minch = 12; break;
-	case 3: minch = 16; break;
-        case 4: case 5: minch = 24; break;
-        case 6: default: minch = 48;
+    case 0: minch = 3; break;
+    case 1: minch = 6; break;
+    case 2: minch = 12; break;
+    case 3: minch = 16; break;
+    case 4: case 5: minch = 24; break;
+    case 6: default: minch = 48;
     }
 
     bool critical = randnum<minch;
@@ -1623,7 +1636,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         if (gen() >= 4 && turnlong[player].value("QuickClawed").toBool()) {
             //The message only shows up if it's not the last pokemon to move
             for (int i = 0; i < numberOfSlots(); i++) {
-                if (!turnlong[i].value("HasMoved").toBool() && !turnlong[i].value("CantGetToMove").toBool() && !koed(i) && i != player) {
+                if (!hasMoved(i) && !koed(i) && i != player) {
                     sendItemMessage(17, player);
                     break;
                 }
@@ -1708,28 +1721,28 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     switch(Move::Target(fieldmoves[player].targets)) {
     case Move::Field: case Move::TeamParty: case Move::OpposingTeam:
     case Move::TeamSide: case Move::IndeterminateTarget: case Move::Partner:
-	case Move::User: targetList.push_back(player); break;
-        case Move::Opponents: 
-            targetList = sortedBySpeed();
-            for (unsigned i = 0; i < targetList.size(); i++) {
-                if (this->player(targetList[i]) == this->player(player) ) {
-                    targetList.erase(targetList.begin()+i, targetList.begin() + i + 1);
-                    i--;
-                }
+    case Move::User: targetList.push_back(player); break;
+    case Move::Opponents:
+        targetList = sortedBySpeed();
+        for (unsigned i = 0; i < targetList.size(); i++) {
+            if (this->player(targetList[i]) == this->player(player) ) {
+                targetList.erase(targetList.begin()+i, targetList.begin() + i + 1);
+                i--;
             }
-            break;
+        }
+        break;
         case Move::All:
-            targetList = sortedBySpeed();
-            break;
+        targetList = sortedBySpeed();
+        break;
         case Move::AllButSelf:
-            targetList = sortedBySpeed();
-            for (unsigned i = 0; i < targetList.size(); i++) {
-                if (targetList[i] == player) {
-                    targetList.erase(targetList.begin()+i, targetList.begin() + i + 1);
-                    i--;
-                }
+        targetList = sortedBySpeed();
+        for (unsigned i = 0; i < targetList.size(); i++) {
+            if (targetList[i] == player) {
+                targetList.erase(targetList.begin()+i, targetList.begin() + i + 1);
+                i--;
             }
-            break;
+        }
+        break;
         case Move::ChosenTarget: case Move::MeFirstTarget: {
                 if (doubles()) {
                     int target = turnlong[player]["Target"].toInt();
@@ -1764,7 +1777,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
             }
             break;
-    }
+        }
 
     if (!specialOccurence && !turnlong[player].contains("NoChoice")) {
         //Pressure
@@ -1923,8 +1936,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                  ((type == Type::Fire && hasType(target, Type::Fire)) ||
                   (type == Type::Poison && (hasType(target, Type::Poison))) ||
                   ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::Smog || attack == Move::Will_O_Wisp)
-                                       && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0
-                                       && !pokelong[target].value(QString("%1Sleuthed").arg(type)).toBool()))){
+                   && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0
+                   && !pokelong[target].value(QString("%1Sleuthed").arg(type)).toBool()))){
                 notify(All, Failed, player);
                 continue;
             }
@@ -1952,10 +1965,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     if (!specialOccurence && attack != Move::Struggle) {
-            battlelong["LastMoveSuccesfullyUsed"] = attack;
-            pokelong[player]["LastMoveSuccessfullyUsed"] = attack;
-            pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
-            battlelong["LastMoveSuccessfullyUsed"] = attack;
+        battlelong["LastMoveSuccesfullyUsed"] = attack;
+        pokelong[player]["LastMoveSuccessfullyUsed"] = attack;
+        pokelong[player]["LastMoveSuccessfullyUsedTurn"] = turn();
+        battlelong["LastMoveSuccessfullyUsed"] = attack;
     }
 
 
@@ -2038,7 +2051,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
         // Mold Breaker
         if (player == attacked() && player != attacker() &&
             (hasWorkingAbility(attacker(), ability(attacker()))
-            &&( ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVoltage ||  ability(attacker()) == Ability::TurboBlaze))) {
+             &&( ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVoltage ||  ability(attacker()) == Ability::TurboBlaze))) {
             return false;
         }
     }
@@ -2151,7 +2164,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     }
 
     if ( (cl == Move::OffensiveStatChangingMove || cl == Move::OffensiveStatusInducingMove)&& hasWorkingAbility(target, Ability::ShieldDust)) {
-//        sendAbMessage(24,0,targeted,0,Pokemon::Bug);
+        //        sendAbMessage(24,0,targeted,0,Pokemon::Bug);
         applyingMoveStatMods = false;
         return;
     }
@@ -2188,8 +2201,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
         /* Then we check if the effect hits */
         int randnum = true_rand() % 100;
-        /* Serene Grace */
-        if (hasWorkingAbility(player,Ability::SereneGrace)) {
+        /* Serene Grace, Rainbow */
+        if (hasWorkingAbility(player,Ability::SereneGrace) || teamzone[this->player(player)].value("RainbowCount").toInt() > 0) {
             rate *= 2;
         }
 
@@ -2246,8 +2259,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
     /* Then we check if the effect hits */
     int randnum = true_rand() % 100;
-    /* Serene Grace */
-    if (hasWorkingAbility(player,Ability::SereneGrace)) {
+    /* Serene Grace, Rainbow */
+    if (hasWorkingAbility(player,Ability::SereneGrace) || teamzone[this->player(player)].value("RainbowCount").toInt() > 0) {
         rate *= 2;
     }
 
@@ -2420,7 +2433,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
     }
     if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
         && hasWorkingAbility(player, Ability::Synchronize)) //Synchronize
-    {
+        {
         sendAbMessage(61,0,player,attacker);
         inflictStatus(attacker, status, player);
     }
@@ -2497,7 +2510,7 @@ void BattleSituation::endTurnWeather()
             foreach (int i, players) {
                 callaeffects(i,i,"WeatherSpecial");
                 if (!turnlong[i].contains("WeatherSpecialed") && (weather == Hail || weather == SandStorm) &&!immuneTypes.contains(getType(i,1))
-                        && !immuneTypes.contains(getType(i,2)) && !hasWorkingAbility(i, Ability::MagicGuard)) {
+                    && !immuneTypes.contains(getType(i,2)) && !hasWorkingAbility(i, Ability::MagicGuard)) {
 		    notify(All, WeatherMessage, i, qint8(HurtWeather),qint8(weather));
 		    inflictDamage(i, poke(i).totalLifePoints()/16, i, false);
 		}
@@ -2549,11 +2562,11 @@ int BattleSituation::getType(int player, int slot)
 bool BattleSituation::isFlying(int player)
 {
     return !battlelong.value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) && !pokelong[player].value("Rooted").toBool() &&
-           !pokelong[player].value("Roosted").toBool() && !pokelong[player].value("StruckDown").toBool() &&
-           (hasWorkingAbility(player, Ability::Levitate)
-           || hasType(player, Pokemon::Flying)
-           || pokelong[player].value("MagnetRiseCount").toInt() > 0
-           || pokelong[player].value("LevitatedCount").toInt() > 0);
+            !pokelong[player].value("Roosted").toBool() && !pokelong[player].value("StruckDown").toBool() &&
+            (hasWorkingAbility(player, Ability::Levitate)
+             || hasType(player, Pokemon::Flying)
+             || pokelong[player].value("MagnetRiseCount").toInt() > 0
+             || pokelong[player].value("LevitatedCount").toInt() > 0);
 }
 
 bool BattleSituation::hasSubstitute(int player)
@@ -2629,12 +2642,12 @@ void BattleSituation::preventStatMod(int player, int attacker)
 
 bool BattleSituation::canSendPreventMessage(int defender, int attacker) {
     return attacking() || (!turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
-            fieldmoves[attacker].rateOfStat== 0);
+                           fieldmoves[attacker].rateOfStat== 0);
 }
 
 bool BattleSituation::canSendPreventSMessage(int defender, int attacker) {
     return attacking() || (!turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
-            fieldmoves[attacker].rate == 0);
+                           fieldmoves[attacker].rate == 0);
 }
 
 void BattleSituation::changeStatMod(int player, int stat, int newstat)
@@ -2662,6 +2675,12 @@ int BattleSituation::calculateDamage(int p, int t)
     } else {
 	attack = getStat(p, SpAttack);
         def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SkinSword) ? Defense : SpDefense);
+    }
+
+    /* Used by Oaths to use a special attack, the sum of both */
+    if (move.contains("AttackStat")) {
+        attack = move.value("AttackStat").toInt();
+        move.remove("AttackStat");
     }
 
     if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct) && gen() <= 4) /* explosion / selfdestruct */
@@ -2700,7 +2719,7 @@ int BattleSituation::calculateDamage(int p, int t)
     //Guts, burn
     damage = damage * (
             (poke.status() == Pokemon::Burnt && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts))
-                       ? PokeFraction(1,2) : PokeFraction(1,1));
+            ? PokeFraction(1,2) : PokeFraction(1,1));
 
     /* Light screen / Reflect */
     if (!crit && !hasWorkingAbility(p, Ability::SlipThrough) &&
@@ -3036,7 +3055,7 @@ void BattleSituation::healDamage(int player, int target)
     } else if (healing < 0){
         notify(All, Recoil, target, true);
         inflictDamage(player, -poke(target).totalLifePoints() * healing / 100, target);
-   }
+    }
 }
 
 void BattleSituation::changeHp(int player, int newHp)
@@ -3296,7 +3315,7 @@ void BattleSituation::gainPP(int player, int move, int gain)
     notify(this->player(player), ChangePP, player, quint8(move), poke(player).move(move).PP());
 }
 
-int BattleSituation::getStat(int player, int stat)
+int BattleSituation::getStat(int player, int stat, int purityLevel)
 {
     /* Not sure on the order here... haha. */
     /* Attack and defense switched */
@@ -3311,7 +3330,11 @@ int BattleSituation::getStat(int player, int stat)
     turnlong[player].remove(q+"AbilityModifier");
     turnlong[player].remove(q+"PartnerAbilityModifier");
     turnlong[player].remove(q+"ItemModifier");
-    callieffects(player, player, "StatModifier");
+
+    /* If the stat is a bit pure, we remove the item effect */
+    if (purityLevel == 0)
+        callieffects(player, player, "StatModifier");
+
     callaeffects(player, player, "StatModifier");
 
     if (doubles()) {
@@ -3327,15 +3350,15 @@ int BattleSituation::getStat(int player, int stat)
         ret = ret * (20+turnlong[player].value(q+"PartnerAbilityModifier").toInt())/20;
     }
 
-     ret = ret * (20+turnlong[player].value(q+"ItemModifier").toInt())/20;
+    ret = ret * (20+turnlong[player].value(q+"ItemModifier").toInt())/20;
 
-    if (stat == Speed && teamzone[this->player(player)].value("TailWindCount").toInt() > 0){
-        ret *= 2;
-    }
-
-    //QuickFeet
-    if (stat == Speed && poke(player).status() == Pokemon::Paralysed && !hasWorkingAbility(player, Ability::QuickFeet)) {
-	ret /= 4;
+    if (stat == Speed) {
+        if (teamzone[this->player(player)].value("TailWindCount").toInt() > 0)
+            ret *= 2;
+        if (teamzone[this->player(player)].value("SwampCount").toInt() > 0)
+            ret /= 2;
+        if (poke(player).status() == Pokemon::Paralysed && !hasWorkingAbility(player, Ability::QuickFeet))
+            ret /= 4;
     }
 
     if (gen() >= 4 && stat == SpDefense && isWeatherWorking(SandStorm) && hasType(player,Pokemon::Rock))

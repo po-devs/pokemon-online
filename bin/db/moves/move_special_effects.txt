@@ -516,9 +516,9 @@
 37|161#Desperation
 162#Gift Pass
 
-
-
-
+180#Water Oath
+178#Fire Oath
+179#Grass Oath
 140#Volt Change
 
 
