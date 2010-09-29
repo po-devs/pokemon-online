@@ -118,7 +118,7 @@
 9#bide
 80#metronome
 85#mirror move
-37|114#self destruct--def reduction is not in that file but in the program
+37#self destruct
 
 
 
@@ -151,7 +151,7 @@
 82#Splash
 
 
-37|114#explosion 37 is losing hp, def reduction is hardencoded, 114 is damp
+37#explosion
 
 
 106#rest
