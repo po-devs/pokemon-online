@@ -1150,7 +1150,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     pokelong[slot].clear();
 
     if (poke(player, pok).ability() == Ability::Illusion) {
-        for (int i = 5; i >= 0; i++) {
+        for (int i = 5; i >= 0; i--) {
             if (poke(player, i).num() != 0 && !poke(player, i).ko()) {
                 pokelong[slot]["IllusionTarget"] = team(player).internalId(team(player).poke(i));
                 break;
@@ -2641,12 +2641,12 @@ void BattleSituation::preventStatMod(int player, int attacker)
 }
 
 bool BattleSituation::canSendPreventMessage(int defender, int attacker) {
-    return attacking() || (!turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
+    return attacking() && (!turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
                            fieldmoves[attacker].rateOfStat== 0);
 }
 
 bool BattleSituation::canSendPreventSMessage(int defender, int attacker) {
-    return attacking() || (!turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
+    return attacking() && (!turnlong[defender].contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
                            fieldmoves[attacker].rate == 0);
 }
 
@@ -3587,7 +3587,7 @@ BattleDynamicInfo BattleSituation::constructInfo(int slot)
     int player = this->player(slot);
 
     for (int i = 0; i < 7; i++) {
-        ret.boosts[i] = fieldpokes[slot].boosts[i];
+        ret.boosts[i] = fieldpokes[slot].boosts[i-1];
     }
 
     ret.flags = 0;
