@@ -289,6 +289,7 @@ public:
     BaseBattleDisplay(BaseBattleInfo &i);
 
     virtual void updatePoke(int spot);
+    virtual void updatePoke(int player, int index);
     virtual void updateHp(int spot);
     virtual void updateToolTip(int spot);
     void changeStatus(int spot, int poke, int status);

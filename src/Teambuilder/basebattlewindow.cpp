@@ -366,7 +366,11 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             info().pokeAlive[spot] = true;
             info().sub[spot] = false;
             info().specialSprite[spot] = Pokemon::NoPoke;
+
             mydisplay->updatePoke(spot);
+
+            mydisplay->updatePoke(info().player(spot), info().slotNum(spot));
+            mydisplay->updatePoke(info().player(spot), prevIndex);
 
             //Plays the battle cry when a pokemon is switched in
             if (musicPlayed())
@@ -1097,6 +1101,19 @@ void BaseBattleDisplay::updatePoke(int spot)
         gender[spot]->setPixmap(QPixmap());
         bars[spot]->setValue(0);
     }
+}
+
+void BaseBattleDisplay::updatePoke(int player, int index)
+{
+    ShallowBattlePoke &poke = info().pokemons[player][index];
+
+    if (player == info().myself) {
+        mypokeballs[index]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
+    } else {
+        advpokeballs[index]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
+    }
+
+    changeStatus(player, index, poke.status());
 }
 
 void BaseBattleDisplay::updateHp(int spot)

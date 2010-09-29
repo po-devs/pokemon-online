@@ -46,14 +46,13 @@ public:
     }
 
     virtual void switchPoke(int spot, int poke, bool own) {
+        BaseBattleInfo::switchPoke(spot, poke);
         if (!own) {
-            BaseBattleInfo::switchPoke(spot, poke);
             return;
         }
         myteam.switchPokemon(number(spot), poke);
         currentShallow(spot) = myteam.poke(number(spot));
         tempPoke(spot) = myteam.poke(number(spot));
-        pokeAlive[spot] = true;
     }
 
     int lastMove[6];

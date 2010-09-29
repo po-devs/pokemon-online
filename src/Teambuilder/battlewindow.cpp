@@ -450,10 +450,14 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                 if (!in.atEnd())
                     in >> info().currentShallow(spot);
 	    } else {
+                info().switchPoke(spot, prevIndex, false);
                 in >> info().currentShallow(spot);
                 info().pokeAlive[spot] = true;
                 mydisplay->updatePoke(spot);
             }
+
+            mydisplay->updatePoke(info().player(spot), info().slotNum(spot));
+            mydisplay->updatePoke(info().player(spot), prevIndex);
 
             //Plays the battle cry when a pokemon is switched in
             if (musicPlayed())
