@@ -246,7 +246,7 @@ struct MMBatonPass : public MM
         for(int i = 0; i < 8; i++) {
             boosts.push_back(fpoke(b,s).boosts[i]);
         }
-        turn(b,s)["BatonPassBoosts"] = boosts;
+        turn(b,s)["BatonPassBoosts"] = QVariant::fromValue(boosts);
 
 	/* choice band etc. would force the same move
 		if on both the passed & the passer */
@@ -4153,8 +4153,8 @@ struct MMBeatUp : public MM {
 
     static void ms(int s, int, BS &b) {
         tmove(b,s).type = Pokemon::Curse;
-        tmove(b,s).minTurns = 0;
-        tmove(b,s).maxTurns = 0;
+        tmove(b,s).repeatMin = 0;
+        tmove(b,s).repeatMax = 0;
     }
 
     static void daf(int s,int, BS&b) {
