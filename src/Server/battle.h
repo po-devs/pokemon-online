@@ -162,6 +162,8 @@ public:
     void inflictSubDamage(int player, int damage, int source);
     void disposeItem(int player);
     void eatBerry(int player, bool show=true);
+    /* Eats a berry, not caring about the item the pokemon has, etc. */
+    void devourBerry(int player, int berry, int target);
     void acqItem(int player, int item);
     void loseItem(int player);
     void loseAbility(int player);

@@ -1581,6 +1581,12 @@ struct AMIllusion : public AM {
     }
 };
 
+struct AMPickUp : public AM {
+    AMPickUp() {
+
+    }
+};
+
 //struct AMJusticeHeart : public AM {
 //    AMJusticeHeart() {
 //        functions["UponBeingHit"] = &ubh;

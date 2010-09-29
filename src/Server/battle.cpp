@@ -2961,10 +2961,59 @@ void BattleSituation::disposeItem(int  player) {
 }
 
 void BattleSituation::eatBerry(int player, bool show) {
+    int berry = poke(player).item();
+
     if (show && !turnlong[player].value("BugBiter").toBool())
-        sendItemMessage(8000,player,0, 0, poke(player).item());
-    pokelong[player]["BerryUsed"] = poke(player).item();
+        sendItemMessage(8000,player,0, 0, berry);
     disposeItem(player);
+
+    if (gen() >= 5) {
+        foreach(int p, sortedBySpeed()) {
+            if (hasWorkingAbility(p, Ability::Pickup) && poke(p).item() == 0 && p != player) {
+                if (pokelong[player].contains("PickupUsed") && pokelong[player].value("PickupUsed").toInt() == turn())
+                    continue;
+                pokelong[player]["PickupUsed"] = turn();
+                devourBerry(p, berry, p);
+                return;
+            }
+        }
+
+        pokelong[player]["BerryUsed"] = berry;
+    }
+}
+
+void BattleSituation::devourBerry(int s, int berry, int t)
+{
+    int sitem = poke(s).item();
+    poke(s).item() =0;
+
+    /* Setting up the conditions so berries work properly */
+    turnlong[s]["BugBiter"] = true; // for testPinch of pinch berries to return true
+    QVariant tempItemStorage = pokelong[s]["ItemArg"];
+    pokelong[s].remove("ItemArg");
+    acqItem(s, berry);
+
+    /* Finding the function to call :P */
+    QList<ItemInfo::Effect> l = ItemInfo::Effects(berry, gen());
+
+    foreach(ItemInfo::Effect e, l) { /* Ripped from items.cpp (ItemEffect::activate, with some changes) */
+        if (!ItemEffect::mechanics.contains(e.num)) {
+            continue;
+        }
+        foreach (Mechanics::function f, ItemEffect::mechanics[e.num].functions) {
+            f(s, t, *this);
+
+            //Some berries have 2 functions for pinch testing... so quitting after one used up the berry
+            if (poke(s).item() == 0) {
+                break;
+            }
+        }
+    }
+
+    /* Restoring initial conditions */
+    pokelong[s]["ItemArg"] = tempItemStorage;
+    turnlong[s].remove("BugBiter");
+    poke(s).item() = sitem;
 }
 
 void BattleSituation::acqItem(int player, int item) {
