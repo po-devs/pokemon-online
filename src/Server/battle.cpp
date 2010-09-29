@@ -1915,6 +1915,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 attackCount() += 1;
             }
 
+            if (koed(target))
+                notify(All, Ko, target);
+
             if (hit) {
                 notifyHits(i);
             }
@@ -3144,7 +3147,9 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 
     changeStatus(player,Pokemon::Koed);
 
-    notify(All, Ko, player);
+    if (!attacking() || attacked() != player)
+        notify(All, Ko, player);
+
     //useful for third gen
     turnlong[player]["WasKoed"] = true;
 
