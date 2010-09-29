@@ -1575,8 +1575,6 @@ struct AMIllusion : public AM {
     static void ubh(int s, int, BS &b) {
         if (!poke(b,s).contains("IllusionTarget"))
             return;
-        if (b.koed(s))
-            return;
         poke(b,s).remove("IllusionTarget");
         /* Bad!! But this is such a peculiar ability, I'll allow this. */
         b.notify(BS::All, BS::SendOut, s, true, quint8(b.slotNum(s)), b.opoke(s, b.player(s), b.slotNum(s)));
