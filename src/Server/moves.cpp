@@ -241,6 +241,13 @@ struct MMBatonPass : public MM
                 poke(b, opp).remove("AttractBy");
         }
 
+        QList<int> boosts;
+
+        for(int i = 0; i < 8; i++) {
+            boosts.push_back(fpoke(b,s).boosts[i]);
+        }
+        turn(b,s)["BatonPassBoosts"] = boosts;
+
 	/* choice band etc. would force the same move
 		if on both the passed & the passer */
 	c.remove("ChoiceMemory");
@@ -258,6 +265,12 @@ struct MMBatonPass : public MM
 	}
 	turn(b,s)["BatonPassed"] = false;
 	merge(poke(b,s), turn(b,s)["BatonPassData"].value<BS::context>());
+
+        QList<int> boosts = turn(b,s)["BatonPassBoosts"].value<QList<int> >();
+        for (int i = 0; i < 8; i++) {
+            fpoke(b,s).boosts[i] += boosts[i];
+        }
+
         //and we decrease the switch count associated, so attract & co still work
         inc(slot(b,s)["SwitchCount"], -1);
 

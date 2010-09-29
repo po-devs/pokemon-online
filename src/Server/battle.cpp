@@ -3588,7 +3588,7 @@ BattleDynamicInfo BattleSituation::constructInfo(int slot)
     int player = this->player(slot);
 
     for (int i = 0; i < 7; i++) {
-        ret.boosts[i] = fieldpokes[slot].boosts[i-1];
+        ret.boosts[i] = fieldpokes[slot].boosts[i+1];
     }
 
     ret.flags = 0;
