@@ -2712,35 +2712,8 @@ struct MMFling : public MM
                 }
             }
         } else {
-            int sitem = b.poke(t).item();
-
-            /* Setting up the conditions so berries work properly */
-            turn(b,t)["BugBiter"] = true; // for testPinch of pinch berries to return true
-            QVariant tempItemStorage = poke(b,t)["ItemArg"];
-            poke(b,t)["ItemArg"] = poke(b,s)["ItemArg"];
-
             b.sendMoveMessage(16,0,t,type(b,s),t,item);
-
-            /* Finding the function to call :P */
-            QList<ItemInfo::Effect> l = ItemInfo::Effects(item, b.gen());
-
-            foreach(ItemInfo::Effect e, l) { /* Ripped from items.cpp (ItemEffect::activate, with some changes) */
-                if (!ItemEffect::mechanics.contains(e.num)) {
-                    continue;
-                }
-                foreach (function f, ItemEffect::mechanics[e.num].functions) {
-                    f(t, s, b);
-                    if (b.poke(t).item() == 0)
-                        break;
-                }
-            }
-
-            /* Restoring initial conditions */
-            poke(b,t)["ItemArg"] = tempItemStorage;
-            turn(b,t).remove("BugBiter");
-
-            /* in case the item was "eaten" as a berry */
-            b.poke(t).item() = sitem;
+            b.devourBerry(t, item, s);
         }
     }
 };
@@ -4413,38 +4386,9 @@ struct MMBugBite : public MM
         int item = b.poke(t).item();
         if (!ItemInfo::isBerry(item))
             return;
-        int sitem = b.poke(s).item();
-        b.poke(s).item() = item;
-        b.disposeItem(t);
-
-        /* Setting up the conditions so berries work properly */
-        turn(b,s)["BugBiter"] = true; // for testPinch of pinch berries to return true
-        QVariant tempItemStorage = poke(b,s)["ItemArg"];
-        poke(b,s)["ItemArg"] = poke(b,t)["ItemArg"];
 
         b.sendMoveMessage(16,0,s,type(b,s),t,item);
-
-        /* Finding the function to call :P */
-        QList<ItemInfo::Effect> l = ItemInfo::Effects(item, b.gen());
-
-        foreach(ItemInfo::Effect e, l) { /* Ripped from items.cpp (ItemEffect::activate, with some changes) */
-            if (!ItemEffect::mechanics.contains(e.num)) {
-                continue;
-            }
-            foreach (function f, ItemEffect::mechanics[e.num].functions) {
-                f(s, t, b);
-
-                //Some berries have 2 functions for pinch testing... so quitting after one used up the berry
-                if (b.poke(s).item() == 0) {
-                    break;
-                }
-            }
-        }
-
-        /* Restoring initial conditions */
-        poke(b,s)["ItemArg"] = tempItemStorage;
-        turn(b,s).remove("BugBiter");
-        b.poke(s).item() = sitem;
+        b.devourBerry(s, item, t);
     }
 };
 
