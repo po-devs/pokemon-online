@@ -522,6 +522,9 @@ struct MMDestinyBond : public MM
     }
 
     static void akbsa(int s, int t, BS &b) {
+        if (koed(t))
+            return;
+
 	int trn = poke(b,s)["DestinyBondTurn"].toInt();
 
 	if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool() )) {
@@ -664,12 +667,23 @@ struct MMHiddenPower : public MM
 struct MMFaintUser : public MM
 {
     MMFaintUser() {
-        functions["BeforeEnding"] = &ms;
+        functions["MoveSettings"] = &ms;
     }
 
     static void ms(int s, int, BS &b) {
-        if (!turn(b,s).value("FaintActivationPrevented").toBool() && !b.koed(s))
-            b.koPoke(s, s);
+        if (move(b,s) == Move::Explosion || move(b,s) == Move::Selfdestruct) {
+            //Damp
+            foreach (int i, b.sortedBySpeed()) {
+                if (b.hasWorkingAbility(i, Ability::Damp) && !b.koed(i)) {
+                    b.sendMoveMessage(114,0,i);
+                    tmove(b, s).power = 0;
+                    tmove(b,s).targets = Move::User;
+                    return;
+                }
+            }
+        }
+
+        b.koPoke(s, s);
     }
 };
 
@@ -4038,25 +4052,6 @@ struct MMCaptivate : public MM {
     }
 };
 
-struct MMExplosion : public MM {
-    MMExplosion() {
-        functions["MoveSettings"] = &ms;
-    }
-
-    static void ms(int s, int , BS &b) {
-        //Damp
-        foreach (int i, b.sortedBySpeed()) {
-            if (b.hasWorkingAbility(i, Ability::Damp) && !b.koed(i)) {
-                b.sendMoveMessage(114,0,i);
-                turn(b,s)["FaintActivationPrevented"] = true;
-                tmove(b, s).power = 0;
-                tmove(b,s).targets = Move::User;
-                return;
-            }
-        }
-    }
-};
-
 struct MMCamouflage : public MM {
     MMCamouflage() {
         functions["UponAttackSuccessful"] = &uas;
@@ -5449,7 +5444,7 @@ void MoveEffect::init()
     REGISTER_MOVE(111, Sketch);
     REGISTER_MOVE(112, SkillSwap);
     REGISTER_MOVE(113, WeatherBall);
-    REGISTER_MOVE(114, Explosion);
+    //REGISTER_MOVE(114, Explosion);
     REGISTER_MOVE(115, SleepingUser);
     REGISTER_MOVE(116, SleepTalk);
     REGISTER_MOVE(117, SmellingSalt);

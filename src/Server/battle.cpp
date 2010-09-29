@@ -1915,12 +1915,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 attackCount() += 1;
             }
 
-            if (koed(target))
+
+            if (gen() >= 5 && koed(target))
                 notify(All, Ko, target);
 
             if (hit) {
                 notifyHits(i);
             }
+
+            if (gen() <= 4 && koed(target))
+                notify(All, Ko, target);
 
             if (!koed(player)) {
                 calleffects(player, target, "AfterAttackSuccessful");
@@ -1974,15 +1978,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         battlelong["LastMoveSuccessfullyUsed"] = attack;
     }
 
-
     end:
     /* In gen 4, choice items are there - they lock even if the move had no target possible.
        If in gen 5 its the contrary, then call it before the label for gen 5. */
     callieffects(player, player, "AfterTargetList");
-    callieffects(player, player, "BeforeEnding");
-    calleffects(player, player, "BeforeEnding");
     trueend:
     pokelong[player]["HasMovedOnce"] = true;
+
+    if (gen() <= 4 && koed(player))
+        notify(All, Ko, player);
+
     /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
     calleffects(player, player, "AfterAttackFinished");
 
@@ -3147,7 +3152,7 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 
     changeStatus(player,Pokemon::Koed);
 
-    if (!attacking() || attacked() != player)
+    if (!attacking() || (gen() >= 5 && (player == source || attacked() != player)) )
         notify(All, Ko, player);
 
     //useful for third gen

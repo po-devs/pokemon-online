@@ -64,10 +64,12 @@ struct BMLeppa : public BM
 {
     BMLeppa() {
         functions["UponSetup"] = &appl;
-        functions["BeforeEnding"] = &appl;
+        functions["AfterTargetList"] = &appl;
     }
 
     static void appl(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
         int minmove = 0;
         int minPP = 100;
         bool init = false;
