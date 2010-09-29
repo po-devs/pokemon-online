@@ -90,3 +90,4 @@
 
 %s's Miracle Skin protected it from status!
 %s held on thanks to Sturdy!
+%s picked up the %i!

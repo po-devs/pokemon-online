@@ -1583,12 +1583,6 @@ struct AMIllusion : public AM {
     }
 };
 
-struct AMPickUp : public AM {
-    AMPickUp() {
-
-    }
-};
-
 //struct AMJusticeHeart : public AM {
 //    AMJusticeHeart() {
 //        functions["UponBeingHit"] = &ubh;
@@ -1728,4 +1722,5 @@ void AbilityEffect::init()
     REGISTER_AB(90, MiracleSkin);
     REGISTER_AB(91, Sturdy);
     REGISTER_AB(92, Illusion);
+    //pickup
 }

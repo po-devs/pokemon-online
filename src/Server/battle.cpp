@@ -2973,6 +2973,7 @@ void BattleSituation::eatBerry(int player, bool show) {
                 if (pokelong[player].contains("PickupUsed") && pokelong[player].value("PickupUsed").toInt() == turn())
                     continue;
                 pokelong[player]["PickupUsed"] = turn();
+                sendAbMessage(92, 0, p, 0, 0, berry);
                 devourBerry(p, berry, p);
                 return;
             }
