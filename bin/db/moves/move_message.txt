@@ -174,4 +174,9 @@ All stat changes were elimnated!
 
 %s made %f float in the air!|%s is no longer under the effect of telekinesis!
 %s knocked %f on the ground!
+
+
+%s prepares its %m!|%s and %f attack together!|%ts's team is standing on a burning field!|%s takes damage from the fire
+%s prepares its %m!|%s and %f attack together!|%ts's team is floundering in a swamp!
+%s prepares its %m!|%s and %f attack together!|%ts's team is under an amplifying rainbow!
 #

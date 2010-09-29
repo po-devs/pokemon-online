@@ -199,7 +199,8 @@ public:
     int getType(int player, int slot);
     bool isFlying(int player);
     bool isOut(int player, int poke);
-    bool hasSubstitute(int player);
+    bool hasSubstitute(int slot);
+    bool hasMoved(int slot);
     void requestSwitchIns();
     void requestSwitch(int player);
     bool linked(int linked, QString relationShip);
@@ -207,7 +208,8 @@ public:
     void notifySub(int player, bool sub);
     int repeatNum(int player);
     PokeFraction getStatBoost(int player, int stat);
-    int getStat(int player, int stat);
+    /* "Pure" stat is without items */
+    int getStat(int player, int stat, int purityLevel = 0);
     /* conversion for sending a message */
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */
     ShallowBattlePoke opoke(int slot, int play, int i) const; /* aka 'opp poke', or what you need to know if it's your opponent's poke */
@@ -430,7 +432,7 @@ public:
 
     /* The players ordered by speed are stored there */
     std::vector<int> speedsVector;
-    int currentSlot;
+    unsigned int currentSlot;
 
     int weather;
     int weatherCount;

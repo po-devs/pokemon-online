@@ -529,7 +529,7 @@ struct MMDetect : public MM
         /* Detect / Protects fail if all others already moved */
         bool fail = true;
         for (int t = 0;  t < b.numberOfSlots() ; t++) {
-            if (!turn(b,t).value("HasMoved").toBool() && !turn(b,t).value("CantGetToMove").toBool() && !b.koed(t) && s!=t) {
+            if (!b.hasMoved(t) && !b.koed(t) && s!=t) {
                 fail = false;
                 break;
             }
@@ -4554,7 +4554,7 @@ struct MMPayback : public MM
 
     static void bcd(int s, int t, BS &b) {
         //Attack / Switch --> power *= 2
-        if (turn(b,t).value("HasMoved").toBool() || turn(b,t).value("CantGetToMove").toBool()) {
+        if (b.hasMoved(t)) {
             tmove(b, s).power = tmove(b, s).power * 2;
         }
     }
@@ -5061,7 +5061,7 @@ struct MMYouFirst : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (turn(b,t).value("HasMoved").toBool() || turn(b,t).value("CantGetToMove").toBool())
+        if (b.hasMoved(t))
             turn(b,s)["Failed"] = true;
     }
 
@@ -5091,7 +5091,7 @@ struct MMStall : public MM
         int buf = b.speedsVector.back();
         b.speedsVector.back() = t;
 
-        for (int i = b.speedsVector.size() - 2; i > b.currentSlot; i--) {
+        for (int i = b.speedsVector.size() - 2; i > signed(b.currentSlot); i--) {
             if (buf != t) {
                 std::swap(b.speedsVector[i], buf);
             } else {
@@ -5100,6 +5100,249 @@ struct MMStall : public MM
         }
     }
 };
+
+struct MMFireOath : public MM
+{
+    MMFireOath() {
+        functions["MoveSettings"] = &ms;
+        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void ms(int s, int, BS &b) {
+        for (int i = 0; i < b.numberOfSlots(); i++) {
+            if (b.player(i) != b.player(s) || b.koed(i))
+                continue;
+            if (turn(b,i).contains("MadeAnOath") && turn(b,i)["MadeAnOath"] != Pokemon::Fire) {
+                /* Here you go with the special effect */
+                turn(b,s)["OathEffectActivater"] = i;//ref here
+                return;
+            }
+        }
+        /* No one made a combo for us, sad! Let's see if someone WILL make a combo for us */
+        for (int i = 0; i < b.numberOfSlots(); i++) {
+            if (b.player(i) != b.player(s) || b.koed(i))
+                continue;
+            if (!b.hasMoved(i) && (tmove(b,i).attack == Move::WaterOath || tmove(b,i).attack == Move::GrassOath) ){
+                /* Here we pledge our oath */
+                turn(b,s)["MadeAnOath"] = Pokemon::Fire;
+                b.sendMoveMessage(178, 0, s, Pokemon::Fire, 0, move(b,s));
+                tmove(b,s).power = 0;
+                tmove(b,s).targets = Move::User;
+                turn(b,s)["TellPlayers"] = false;
+                return;
+            }
+        }
+
+        /* Otherwise it's just the standard oath... */
+    }
+
+    static void bcd(int s, int, BS &b) {
+        if (!turn(b,s).contains("OathEffectActivater"))
+            return;
+
+        //ref here
+        int i = turn(b,s)["OathEffectActivater"].toInt();
+
+        b.sendMoveMessage(178, 1, s, 0, i);
+        turn(b,s)["AttackStat"] = b.getStat(s, SpAttack) + b.getStat(i, SpAttack, 1);
+        tmove(b,s).power *= 2;
+    }
+
+    static void uas(int s, int t, BS &b);
+
+    static void makeABurningField(int t, BS &b) {
+        if (team(b, t).value("BurningFieldCount").toInt() > 0)
+            return;
+
+        b.sendMoveMessage(178, 2, t, Pokemon::Fire);
+        team(b,t)["BurningFieldCount"] = 5;
+        addFunction(team(b,t), "EndTurn3", "FireOath", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(team(b,s)["BurningFieldCount"], -1);
+
+        if (team(b,s).value("BurningFieldCount").toInt() <= 0) {
+            team(b,s).remove("BurningFieldCount");
+            removeFunction(team(b,s), "EndTurn3", "FireOath");
+            return;
+        }
+
+        std::vector<int> vect = b.sortedBySpeed();
+
+        foreach(int t, vect) {
+            if (b.player(t) != s && !b.koed(t))
+                continue;
+            b.sendMoveMessage(178, 3, t, Pokemon::Fire);
+            b.inflictDamage(t, b.poke(t).totalLifePoints()/8, t);
+        }
+    }
+};
+
+struct MMGrassOath : public MM
+{
+    MMGrassOath() {
+        functions["MoveSettings"] = &ms;
+        functions["BeforeCalculatingDamage"] = &MMFireOath::bcd;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void ms(int s, int, BS &b) {
+        for (int i = 0; i < b.numberOfSlots(); i++) {
+            if (b.player(i) != b.player(s) || b.koed(i))
+                continue;
+            if (turn(b,i).contains("MadeAnOath") && turn(b,i)["MadeAnOath"] != Pokemon::Grass) {
+                /* Here you go with the special effect */
+                turn(b,s)["OathEffectActivater"] = i;//ref here
+                return;
+            }
+        }
+        /* No one made a combo for us, sad! Let's see if someone WILL make a combo for us */
+        for (int i = 0; i < b.numberOfSlots(); i++) {
+            if (b.player(i) != b.player(s) || b.koed(i))
+                continue;
+            if (!b.hasMoved(i) && (tmove(b,i).attack == Move::FireOath || tmove(b,i).attack == Move::WaterOath) ){
+                /* Here we pledge our oath */
+                turn(b,s)["MadeAnOath"] = Pokemon::Grass;
+                b.sendMoveMessage(179, 0, s, Pokemon::Grass, 0, move(b,s));
+                tmove(b,s).power = 0;
+                tmove(b,s).targets = Move::User;
+                turn(b,s)["TellPlayers"] = false;
+                return;
+            }
+        }
+
+        /* Otherwise it's just the standard oath... */
+    }
+
+    static void uas(int s, int t, BS &b);
+
+    static void makeASwamp(int t, BS &b) {
+        if (team(b, t).value("SwampCount").toInt() > 0)
+            return;
+
+        b.sendMoveMessage(179, 2, t, Pokemon::Grass);
+        team(b,t)["SwampCount"] = 5;
+        addFunction(team(b,t), "EndTurn3", "GrassOath", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(team(b,s)["SwampCount"], -1);
+
+        if (team(b,s).value("SwampCount").toInt() <= 0) {
+            team(b,s).remove("SwampCount");
+            removeFunction(team(b,s), "EndTurn3", "GrassOath");
+            return;
+        }
+    }
+};
+
+struct MMWaterOath : public MM
+{
+    MMWaterOath() {
+        functions["MoveSettings"] = &ms;
+        functions["BeforeCalculatingDamage"] = &MMFireOath::bcd;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void ms(int s, int, BS &b) {
+        for (int i = 0; i < b.numberOfSlots(); i++) {
+            if (b.player(i) != b.player(s) || b.koed(i))
+                continue;
+            if (turn(b,i).contains("MadeAnOath") && turn(b,i)["MadeAnOath"] != Pokemon::Water) {
+                /* Here you go with the special effect */
+                turn(b,s)["OathEffectActivater"] = i;//ref here
+                return;
+            }
+        }
+        /* No one made a combo for us, sad! Let's see if someone WILL make a combo for us */
+        for (int i = 0; i < b.numberOfSlots(); i++) {
+            if (b.player(i) != b.player(s) || b.koed(i))
+                continue;
+            if (!b.hasMoved(i) && (tmove(b,i).attack == Move::FireOath || tmove(b,i).attack == Move::GrassOath) ){
+                /* Here we pledge our oath */
+                turn(b,s)["MadeAnOath"] = Pokemon::Water;
+                b.sendMoveMessage(180, 0, s, Pokemon::Water, 0, move(b,s));
+                tmove(b,s).power = 0;
+                tmove(b,s).targets = Move::User;
+                turn(b,s)["TellPlayers"] = false;
+                return;
+            }
+        }
+
+        /* Otherwise it's just the standard oath... */
+    }
+
+    static void makeARainbow(int t, BS &b) {
+        if (team(b, t).value("RainbowCount").toInt() > 0)
+            return;
+
+        b.sendMoveMessage(180, 2, t, Pokemon::Water);
+        team(b,t)["RainbowCount"] = 5;
+        addFunction(team(b,t), "EndTurn3", "WaterOath", &et);
+    }
+
+    static void uas(int s, int t, BS &b) {
+        if (!turn(b,s).contains("OathEffectActivater"))
+            return;
+
+        //ref here
+        int i = turn(b,s)["OathEffectActivater"].toInt();
+
+        if (turn(b,i)["MadeAnOath"] == Pokemon::Fire) {
+            makeARainbow(b.player(t), b);
+        } else {
+            MMGrassOath::makeASwamp(b.player(t), b);
+        }
+
+        turn(b,i).remove("MadeAnOath");
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(team(b,s)["RainbowCount"], -1);
+
+        if (team(b,s).value("RainbowCount").toInt() <= 0) {
+            team(b,s).remove("RainbowCount");
+            removeFunction(team(b,s), "EndTurn3", "WaterOath");
+            return;
+        }
+    }
+};
+
+void MMFireOath::uas(int s, int t, BS &b)
+{
+    if (!turn(b,s).contains("OathEffectActivater"))
+        return;
+
+    //ref here
+    int i = turn(b,s)["OathEffectActivater"].toInt();
+
+    if (turn(b,i)["MadeAnOath"] == Pokemon::Water) {
+        MMWaterOath::makeARainbow(b.player(t), b);
+    } else {
+        makeABurningField(b.player(t), b);
+    }
+
+    turn(b,i).remove("MadeAnOath");
+}
+
+void MMGrassOath::uas(int s, int t, BS &b)
+{
+    if (!turn(b,s).contains("OathEffectActivater"))
+        return;
+
+    //ref here
+    int i = turn(b,s)["OathEffectActivater"].toInt();
+
+    if (turn(b,i)["MadeAnOath"] == Pokemon::Water) {
+        makeASwamp(b.player(t), b);
+    } else {
+        MMFireOath::makeABurningField(b.player(t), b);
+    }
+
+    turn(b,i).remove("MadeAnOath");
+}
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -5313,5 +5556,7 @@ void MoveEffect::init()
     REGISTER_MOVE(175, StrikeDown);
     REGISTER_MOVE(176, YouFirst);
     REGISTER_MOVE(177, Stall);
+    REGISTER_MOVE(178, FireOath);
+    REGISTER_MOVE(179, GrassOath);
+    REGISTER_MOVE(180, WaterOath);
 }
-
