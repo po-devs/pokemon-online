@@ -501,7 +501,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         if (poke < 0 || poke >= 6)
             break;
 
-        if (status != -1) {
+        if (status != Pokemon::Confused) {
             info().pokemons[spot][poke].changeStatus(status);
             if (info().isOut(spot, poke))
                 mydisplay->updatePoke(info().slot(spot, poke));

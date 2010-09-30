@@ -667,7 +667,7 @@ struct MMHiddenPower : public MM
 struct MMFaintUser : public MM
 {
     MMFaintUser() {
-        functions["MoveSettings"] = &ms;
+        functions["AfterTellingPlayers"] = &ms;
     }
 
     static void ms(int s, int, BS &b) {
@@ -1118,13 +1118,15 @@ struct MMRoar : public MM
             return;
 
         turn(b,s)["RoarSuccess"] = true;
+        turn(b,s)["RoarTarget"] = t;
         return;
     }
 
     static void aaf(int s, int, BS &b) {
-        int t = turn(b,s)["Target"].toInt();
         if (!turn(b,s).contains("RoarSuccess"))
             return;
+
+        int t = turn(b,s)["RoarTarget"].toInt();
 
 	QList<int> switches;
         int target = b.player(t);
@@ -1690,8 +1692,11 @@ struct MMBounce : public MM
         } else {
             tmove(b, s).power = 0;
             tmove(b, s).accuracy = 0;
-            if (move(b,s) != Move::FreeFall)
+            if (move(b,s) != Move::FreeFall) {
                 tmove(b, s).targets = Move::User;
+                tmove(b, s).status = 0;
+                tmove(b, s).statAffected = 0;
+            }
 
             poke(b,s)["2TurnMove"] = move(b,s);
             turn(b,s)["TellPlayers"] = false;
@@ -4719,11 +4724,16 @@ struct MMIncinerate : public MM {
 
 struct MMDesperation : public MM {
     MMDesperation() {
+        functions["MoveSettings"] = &ms;
         functions["CustomAttackingDamage"] = &uas;
     }
 
+    static void ms(int s, int, BS &b) {
+        turn(b,s)["PreviousHP"] = b.poke(s).lifePoints();
+    }
+
     static void uas(int s, int t, BS &b) {
-        b.inflictDamage(t, b.poke(s).lifePoints(), s, true);
+        b.inflictDamage(t, turn(b,s)["PreviousHP"].toInt(), s, true);
     }
 };
 
@@ -4929,7 +4939,10 @@ struct MMFastGuard : public MM
             return;
         }
 
-        if (tmove(b,s).priority <= 0) {
+        /* Mischievous heart looks at the priority ofthe move, the raw one.
+           If the priority was altered by Mischievous heart or whatever,
+           that doesn't matter */
+        if (MoveInfo::SpeedPriority(tmove(b,s).attack, b.gen()) <= 0) {
             return;
         }
 
@@ -5296,6 +5309,33 @@ void MMGrassOath::uas(int s, int t, BS &b)
     turn(b,i).remove("MadeAnOath");
 }
 
+struct MMEchoVoice : public MM
+{
+    MMEchoVoice() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int, BS &b) {
+        int count = 1;
+        if (b.battlelong.contains("EchoVoiceTurn")) {
+            if (b.battlelong["EchoVoiceTurn"].toInt() == b.turn() - 1) {
+                count = b.battlelong["EchoVoiceCount"].toInt() + 1;
+            } else if (b.battlelong["EchoVoiceTurn"].toInt() == b.turn()) {
+                count = b.battlelong["EchoVoiceCount"].toInt();
+            }
+        }
+
+        if (count > 5) {
+            count = 5;
+        }
+
+        b.battlelong["EchoVoiceCount"] = count;
+        b.battlelong["EchoVoiceTurn"] = b.turn();
+
+        tmove(b,s).power *= count;
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5511,4 +5551,5 @@ void MoveEffect::init()
     REGISTER_MOVE(178, FireOath);
     REGISTER_MOVE(179, GrassOath);
     REGISTER_MOVE(180, WaterOath);
+    REGISTER_MOVE(181, EchoVoice);
 }

@@ -309,14 +309,17 @@ struct IMLifeOrb : public IM
     }
 
     static void udi(int s, int t, BS &b) {
-	if (s == t)
+        if (s == t)
 	    return; /* life orb doesn't recoil with self damage */
 	if (b.koed(s))
 	    return;
 
-	if (turn(b,t).contains("DamageTakenBy") && turn(b,t)["DamageTakenBy"].toInt() == s) {
+        /* In gen 4, it does not damage the user if the foe has a substitute. In gen 5, it does */
+        if (b.gen() <= 4 && turn(b,t).contains("DamageTakenBy") && turn(b,t)["DamageTakenBy"].toInt() == s) {
             turn(b,s)["ActivateLifeOrb"] = true;
-	}
+        } else if (b.gen() >= 5 && turn(b,s).contains("DamageInflicted")) {
+            turn(b,s)["ActivateLifeOrb"] = true;
+        }
     }
 
     static void atl(int s, int, BS &b) {
