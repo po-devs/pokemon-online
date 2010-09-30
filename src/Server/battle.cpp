@@ -1979,8 +1979,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     end:
-    /* In gen 4, choice items are there - they lock even if the move had no target possible.
-       If in gen 5 its the contrary, then call it before the label for gen 5. */
+    /* In gen 4, choice items are there - they lock even if the move had no target possible.  */
     callieffects(player, player, "AfterTargetList");
     trueend:
     pokelong[player]["HasMovedOnce"] = true;

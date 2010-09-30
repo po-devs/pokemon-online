@@ -81,6 +81,7 @@ struct IMChoiceItem : public IM
     IMChoiceItem() {
         functions["UponSetup"] = &us;
 	functions["MovesPossible"] = &mp;
+        functions["BeforeTargetList"] = &btl;
 	functions["AfterTargetList"] = &atl;
     }
 
@@ -115,7 +116,17 @@ struct IMChoiceItem : public IM
 	}
     }
 
+    static void btl(int s, int, BS &b) {
+        if (b.gen() < 5)
+            return;
+        /* Last move used is here not to take "special occurence" moves */
+        poke(b,s)["ChoiceMemory"] = poke(b,s)["LastMoveUsed"];
+    }
+
     static void atl(int s, int, BS &b) {
+        if (b.gen() > 4)
+            return;
+        /* Last move used is here not to take "special occurence" moves */
 	poke(b,s)["ChoiceMemory"] = poke(b,s)["LastMoveUsed"];
     }
 };

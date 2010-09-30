@@ -1227,6 +1227,9 @@ struct AMBrokenArmour : public AM {
     }
 
     static void upa(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
+
         b.sendAbMessage(74, 0, s, 0);
         if (!b.hasMinimalStatMod(s, Defense)) {
             b.inflictStatMod(s, Defense, -1, s);
