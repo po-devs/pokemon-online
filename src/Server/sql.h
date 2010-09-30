@@ -19,7 +19,7 @@ public:
     static void createSQLConnection(const QString &name = QString())
     {
         QMutexLocker m(&mutex);
-        QSettings s;
+        QSettings s("config");
         databaseType = s.value("sql_driver").toInt();
 
         QString driver;

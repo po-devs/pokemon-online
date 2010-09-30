@@ -4,7 +4,7 @@
 
 PluginManager::PluginManager()
 {
-    QSettings s;
+    QSettings s("config");
 
     QStringList plugins = s.value("plugins").toStringList();
     plugins = plugins.toSet().toList(); /* Remove duplicates */
@@ -101,7 +101,7 @@ void PluginManager::freePlugin(int index)
 
 void PluginManager::updateSavedList()
 {
-    QSettings s;
+    QSettings s("config");
     s.setValue("plugins", filenames);
 }
 

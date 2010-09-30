@@ -57,7 +57,7 @@ void Server::start(){
 
     srand(time(NULL));
 
-    QSettings s;
+    QSettings s("config");
 
     if (!s.contains("sql_driver")) {
         s.setValue("sql_driver", SQLCreator::SQLite);
@@ -190,7 +190,7 @@ int Server::addChannel(const QString &name, int playerid) {
 
     if (channelids.size() == 0) {
         /* Time to add the default channel */
-        QSettings s;
+        QSettings s("config");
         chanName = s.value("mainchanname").toString();
         if (!Channel::validName(chanName)) {
             static const char* places [] = {
@@ -329,7 +329,7 @@ void Server::removeChannel(int channelid) {
 
 void Server::loadRatedBattlesSettings()
 {
-    QSettings s;
+    QSettings s("config");
     allowRatedWithSameIp = !s.value("battles_with_same_ip_unrated").toBool();
     diffIpsForRatedBattles = s.value("rated_battles_memory_number").toInt();
 }
