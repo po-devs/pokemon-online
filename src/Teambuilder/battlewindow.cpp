@@ -1111,7 +1111,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
     int slot = info.currentSlot;
 
     for (int i = 0; i < 4; i++) {
-        pokes[i]->setText(info.currentShallow(slot).status() == Pokemon::Koed ? "" : info.currentShallow(i).nick());
+        pokes[i]->setText(info.currentShallow(i).status() == Pokemon::Koed ? "" : info.currentShallow(i).nick());
         pokes[i]->setIcon(PokemonInfo::Icon(info.currentShallow(i).num()));
         pokes[i]->setDisabled(true);
         pokes[i]->setChecked(false);

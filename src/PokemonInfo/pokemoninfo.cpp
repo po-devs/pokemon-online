@@ -183,6 +183,23 @@ static void fill_container_with_file(QVector<unsigned char> &container, const QS
     }
 }
 
+static void fill_container_with_file(QVector<signed char> &container, const QString & filename)
+{
+    QFile file(filename);
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream filestream(&file);
+
+    /* discarding all the uninteresting lines, should find a more effective way */
+    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+    {
+        int var;
+        filestream >> var;
+        container << var;
+    }
+}
+
 static void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString &filename)
 {
     QFile file(filename);

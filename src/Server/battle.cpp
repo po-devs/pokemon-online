@@ -1708,6 +1708,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         notify(All, UseAttack, player, qint16(attack));
     }
 
+    calleffects(player, player, "AfterTellingPlayers");
+
     /* Lightning Rod & Storm Drain */
     foreach(int poke, sortedBySpeed()) {
         if (poke != player) {
@@ -2249,7 +2251,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         return;
     }
 
-    if (fm.statusKind > Pokemon::Confused) {
+    if (fm.statusKind > Pokemon::Confused || fm.status == 0) {
         applyingMoveStatMods = false;
         return; // Other status effects than status and confusion are, on PO, dealt as special moves. Should probably be changed
     }
