@@ -152,7 +152,7 @@
 
 47#Mummy
 52#Earthquake Spiral
-68-16#Justice Heart
+94#Justice Heart
 
 87#Magic Mirror
 68-11#Herbivore
