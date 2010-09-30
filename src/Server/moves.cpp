@@ -522,7 +522,7 @@ struct MMDestinyBond : public MM
     }
 
     static void akbsa(int s, int t, BS &b) {
-        if (koed(t))
+        if (b.koed(t))
             return;
 
 	int trn = poke(b,s)["DestinyBondTurn"].toInt();

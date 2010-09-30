@@ -1581,25 +1581,25 @@ struct AMIllusion : public AM {
     }
 };
 
-//struct AMJusticeHeart : public AM {
-//    AMJusticeHeart() {
-//        functions["UponBeingHit"] = &ubh;
-//    }
+struct AMJusticeHeart : public AM {
+    AMJusticeHeart() {
+        functions["UponBeingHit"] = &ubh;
+    }
 
-//    static void uodr(int s, int t, BS &b) {
-//        int tp = type(b,t);
+    static void ubh(int s, int t, BS &b) {
+        if (b.koed(s))
+            return;
 
-//        if (tp == poke(b,s)["AbilityArg"].toInt()) {
-//            turn(b,s)[QString("Blocked%1").arg(t)] = true;
-//            if (!b.hasMaximalStatMod(s, Attack)) {
-//                b.sendAbMessage(68, 0, s, 0, tp, b.ability(s));
-//                b.inflictStatMod(s, Attack, 1, s, false);
-//            } else {
-//                b.sendAbMessage(68, 1, s, 0, tp, b.ability(s));
-//            }
-//        }
-//    }
-//};
+        int tp = type(b,t);
+
+        if (tp == poke(b,s)["AbilityArg"].toInt()) {
+            if (!b.hasMaximalStatMod(s, Attack)) {
+                b.sendAbMessage(68, 0, s, 0, tp, b.ability(s));
+                b.inflictStatMod(s, Attack, 1, s, false);
+            }
+        }
+    }
+};
 
 /* Events:
     PriorityChoice
@@ -1721,4 +1721,5 @@ void AbilityEffect::init()
     REGISTER_AB(91, Sturdy);
     REGISTER_AB(92, Illusion);
     //pickup
+    REGISTER_AB(94, JusticeHeart);
 }
