@@ -1184,7 +1184,7 @@ struct AMHerbivore : public AM {
         int tp = type(b,t);
 
         if (tp == poke(b,s)["AbilityArg"].toInt()) {
-            turn(b,s)[QString("Blocked%1").arg(t)] = true;
+            turn(b,s)[QString("Block%1").arg(t)] = true;
             if (!b.hasMaximalStatMod(s, Attack)) {
                 b.sendAbMessage(68, 0, s, 0, tp, b.ability(s));
                 b.inflictStatMod(s, Attack, 1, s, false);
