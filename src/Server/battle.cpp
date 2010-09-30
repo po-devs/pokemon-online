@@ -1872,7 +1872,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    bool hit = num > 1;
 
             int i;
-            for (i = 0; i < num && !koed(target); i++) {
+            for (i = 0; i < num && !koed(target) && (i==0 || !koed(player)); i++) {
                 turnlong[target]["HadSubstitute"] = false;
 		bool sub = hasSubstitute(target);
                 turnlong[target]["HadSubstitute"] = sub;
