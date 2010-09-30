@@ -17,7 +17,7 @@ SQLConfigWindow::SQLConfigWindow()
     desc->setWordWrap(true);
     v->addWidget(desc);
 
-    QSettings s;
+    QSettings s("config");
 
     b = new QComboBox();
     b->addItem("SQLite");
@@ -75,7 +75,7 @@ void SQLConfigWindow::changeEnabled()
 
 void SQLConfigWindow::apply()
 {
-    QSettings s;
+    QSettings s("config");
 
     s.setValue("sql_driver", b->currentIndex());
     s.setValue("sql_db_name", name->text());

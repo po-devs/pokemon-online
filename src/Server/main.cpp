@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     //default: show a window
     bool showWindow = true;
 
-    QSettings s;
+    QSettings s("config");
 
     //parse commandline arguments
     for(int i = 0; i < argc; i++){

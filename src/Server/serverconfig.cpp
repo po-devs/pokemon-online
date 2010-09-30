@@ -8,7 +8,7 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 
     QFormLayout *l = new QFormLayout(this);
 
-    QSettings settings;
+    QSettings settings("config");
 
     serverPrivate = new QComboBox;
     serverPrivate->addItem("Public");
@@ -68,7 +68,7 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 
 void ServerWindow::apply()
 {
-    QSettings settings;
+    QSettings settings("config");
     settings.setValue("server_private", serverPrivate->currentIndex());
     settings.setValue("server_name", serverName->text());
     settings.setValue("server_description", serverDesc->toPlainText());
