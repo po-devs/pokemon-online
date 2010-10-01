@@ -1511,3 +1511,23 @@ int ScriptEngine::pokeType2(int id, int gen)
     }
     return result;
 }
+
+void ScriptEngine::modifyMovePower(int moveNum, unsigned char power, int gen)
+{
+    MoveInfo::setPower(moveNum, power, gen);
+}
+
+void ScriptEngine::modifyMoveAccuracy(int moveNum, char accuracy, int gen)
+{
+    MoveInfo::setAccuracy(moveNum, accuracy, gen);
+}
+
+void ScriptEngine::modifyMovePP(int moveNum, char pp, int gen)
+{
+    MoveInfo::setPP(moveNum, pp, gen);
+}
+
+void ScriptEngine::modifyMovePriority(int moveNum, signed char priority, int gen)
+{
+    MoveInfo::setPriority(moveNum, priority, gen);
+}
