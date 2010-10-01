@@ -484,7 +484,7 @@
 
 167#HeavyBomber
 
-56-1#Eleci Ball. 1 is to tell it's up to us to be fast
+182#Eleci Ball
 157#Soak
 
 
@@ -495,7 +495,7 @@
 158#Assemble Crew
 176#You First
 
-
+181#Echo Voice
 
 149#Clear Smog
 

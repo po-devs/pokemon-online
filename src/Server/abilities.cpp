@@ -1491,7 +1491,7 @@ struct AMMagicMirror : public AM
 
         int move = AM::move(b,s);
 
-        b.fail(s,76,b.hasWorkingAbility(t, Ability::MagicMirror) ? 2 : 1,Pokemon::Psychic);
+        b.fail(s,76,b.hasWorkingAbility(target, Ability::MagicMirror) ? 2 : 1,Pokemon::Psychic);
         /* Now Bouncing back ... */
         BS::context ctx = turn(b,target);
         BS::BasicMoveInfo info = tmove(b,s);

@@ -4769,8 +4769,8 @@ struct MMWindStorm : public MM {
     }
 
     static void ms(int s, int, BS &b) {
-        if (b.isWeatherWorking(b.weather)) {
-            tmove(b, s).accuracy += 30;
+        if (b.isWeatherWorking(BS::Rain)) {
+            tmove(b, s).accuracy = 0;
         }
     }
 };
@@ -4846,7 +4846,7 @@ struct MMHeavyBomber : public MM
             bp = 40;
         }
 
-        tmove(b,s).power *= ratio;
+        tmove(b,s).power *= bp;
     }
 };
 
@@ -5336,6 +5336,32 @@ struct MMEchoVoice : public MM
     }
 };
 
+struct MMEleciBall : public MM
+{
+    MMEleciBall() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int t, BS &b) {
+        int ratio = b.getStat(s, Speed) / b.getStat(t, Speed);
+
+        int bp = 0;
+        if (ratio >= 5) {
+            bp = 150;
+        } else if (ratio == 4) {
+            bp = 120;
+        } else if (ratio == 3) {
+            bp = 100;
+        } else if (ratio == 2) {
+            bp = 80;
+        } else {
+            bp = 60;
+        }
+
+        tmove(b,s).power *= bp;
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5552,4 +5578,5 @@ void MoveEffect::init()
     REGISTER_MOVE(179, GrassOath);
     REGISTER_MOVE(180, WaterOath);
     REGISTER_MOVE(181, EchoVoice);
+    REGISTER_MOVE(182, EleciBall)
 }
