@@ -1,5 +1,5 @@
-#!/bin/bash
-old=`pwd`
-cd /usr/share/pokemon-online
-./pokemon-online
-cd $old
+#!/bin/sh
+POPATH=~/code/pokemon/bin
+export LD_LIBRARY_PATH="$POPATH:$LD_LIBRARY_PATH"
+cd "$POPATH"
+exec ./Pokemon-Online
