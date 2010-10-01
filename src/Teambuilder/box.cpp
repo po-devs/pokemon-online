@@ -47,6 +47,7 @@ TB_PokemonDetail::TB_PokemonDetail()
 
     /* Pokemon picture! */
     gl->addWidget(m_pic = new QLabel(),1,0);
+    m_pic->setObjectName("PokemonPicture");
 
     /* Type / Nature / Item */
     QVBoxLayout *tnlayout = new QVBoxLayout();

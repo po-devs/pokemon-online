@@ -1084,6 +1084,8 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, 
     a->setProperty("window", 1);
     advanced->setMenu(m);
 
+    pokeImage->setObjectName("PokemonPicture");
+
     box22->addWidget(pokename = new QLabel(),0,Qt::AlignTop);
     pokename->setObjectName("NormalText");
     QHBoxLayout *hlevel = new QHBoxLayout();
