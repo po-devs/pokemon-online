@@ -79,6 +79,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     connect(happiness, SIGNAL(valueChanged(int)), SLOT(changeHappiness(int)));
 
     secondColumn->addWidget(pokeImage=new QLabel(),0,Qt::AlignHCenter);
+    pokeImage->setObjectName("PokemonPicture");
     updatePokeImage();
 
     QHBoxLayout *levellayout = new QHBoxLayout();
