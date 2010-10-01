@@ -1405,7 +1405,7 @@ struct AMMischievousHeart : public AM
 
     static void pc(int s, int, BS &b) {
         if (tmove(b,s).power == 0 && tmove(b,s).priority == 0)
-            tmove(b,s).priority = 1;
+            tmove(b,s).priority += 1;
     }
 };
 
@@ -1494,7 +1494,7 @@ struct AMMagicMirror : public AM
         b.fail(s,76,b.hasWorkingAbility(target, Ability::MagicMirror) ? 2 : 1,Pokemon::Psychic);
         /* Now Bouncing back ... */
         BS::context ctx = turn(b,target);
-        BS::BasicMoveInfo info = tmove(b,s);
+        BS::BasicMoveInfo info = tmove(b,target);
 
         turn(b,target).clear();
         MoveEffect::setup(move,target,s,b);
@@ -1506,7 +1506,7 @@ struct AMMagicMirror : public AM
         /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
             and don't cause any such data to be stored in that memory */
         turn(b,target) = ctx;
-        tmove(b,s) = info;
+        tmove(b,target) = info;
     }
 };
 

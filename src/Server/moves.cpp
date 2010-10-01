@@ -3121,7 +3121,7 @@ struct MMMagicCoat : public MM
         b.fail(s,76,b.hasWorkingAbility(t, Ability::MagicMirror) ? 2 : 1,Pokemon::Psychic);
         /* Now Bouncing back ... */
         BS::context ctx = turn(b,target);
-        BS::BasicMoveInfo info = tmove(b,s);
+        BS::BasicMoveInfo info = tmove(b,target);
 
         turn(b,target).clear();
         MoveEffect::setup(move,target,s,b);
@@ -3133,7 +3133,7 @@ struct MMMagicCoat : public MM
         /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
             and don't cause any such data to be stored in that memory */
         turn(b,target) = ctx;
-        tmove(b,s) = info;
+        tmove(b,target) = info;
     }
 };
 
