@@ -1983,3 +1983,23 @@ QString StatInfo::path(const QString &filename)
 {
     return m_Directory + filename;
 }
+
+void MoveInfo::setPower(int movenum, unsigned char power, int moveGen)
+{
+    gen(moveGen).power[movenum] = power;
+}
+
+void MoveInfo::setAccuracy(int movenum, char accuracy, int moveGen)
+{
+    gen(moveGen).accuracy[movenum] = accuracy;
+}
+
+void MoveInfo::setPP(int movenum, char pp, int moveGen)
+{
+    gen(moveGen).pp[movenum] = pp;
+}
+
+void MoveInfo::setPriority(int movenum, signed char priority, int moveGen)
+{
+    gen(moveGen).priority[movenum] = priority;
+}
