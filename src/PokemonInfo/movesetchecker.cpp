@@ -112,10 +112,10 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             }
         }
 
-        /* now we know the pokemon at least know all moves */
+        /* now we know the pokemon at least knows all moves */
         moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
 
-        if (moves.empty() || moves.size() == 1)
+        if (moves.empty() || (moves.size() == 1 && PokemonInfo::HasMoveInGen(pokeid, *moves.begin(), g)))
             return true;
 
         if (isAnEggMoveCombination(pokeid, g, moves)) {

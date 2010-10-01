@@ -559,19 +559,19 @@ void ScriptEngine::changePokeMove(int id, int pslot, int mslot, int move)
 
 void ScriptEngine::saveVal(const QString &key, const QVariant &val)
 {
-    QSettings s("config");
+    QSettings s;
     s.setValue("Script_"+key, val);
 }
 
 QScriptValue ScriptEngine::getVal(const QString &key)
 {
-    QSettings s("config");
+    QSettings s;
     return s.value("Script_"+key).toString();
 }
 
 void ScriptEngine::removeVal(const QString &key)
 {
-    QSettings s("config");
+    QSettings s;
     s.remove("Script_"+key);
 }
 

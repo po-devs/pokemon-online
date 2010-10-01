@@ -48,6 +48,7 @@ public:
     static QPixmap Picture(const Pokemon::uniqueId &pokeid, int gen = 5, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QPixmap Sub(int gen=5, bool back = false);
     static QPixmap Icon(const Pokemon::uniqueId &pokeid);
+    static bool HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, int gen = 5);
     static QSet<int> Moves(const Pokemon::uniqueId &pokeid, int gen = 5);
     static QSet<int> EggMoves(const Pokemon::uniqueId &pokeid, int gen = 5);
     static QSet<int> LevelMoves(const Pokemon::uniqueId &pokeid, int gen = 5);
