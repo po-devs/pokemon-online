@@ -4,10 +4,11 @@ QString escapeHtml(const QString & toConvert)
 {
     QString ret = toConvert;
 
-    ret.replace("&", "&amp;");
     ret.replace("<", "&lt;");
     ret.replace(">", "&gt;");
-    ret.replace(QRegExp("\\b((?:https?|ftp)://[^\\s]+)", Qt::CaseInsensitive), "<a href='\\1'>\\1</a>");
+    ret.replace(QRegExp("\\b((?:https?|ftp)://\\S+)", Qt::CaseInsensitive), "<a href='\\1'>\\1</a>");
+    /* Don't replace amps within URLs */
+    ret.replace(QRegExp("&(?!(?:[^\\s<]*</a>|[lg]t))"), "&amp;");
 
     return ret;
 }
