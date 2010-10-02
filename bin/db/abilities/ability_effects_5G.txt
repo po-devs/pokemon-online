@@ -139,7 +139,7 @@
 84-4#Heat Rampage
 88#Harvest
 85#Telepathy
-
+95#Inconsistent
 17#Dustproof
 18-5#Poison Skin
 86#Regeneration
