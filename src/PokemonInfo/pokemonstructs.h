@@ -824,7 +824,7 @@ namespace Pokemon
     {
     public:
         quint16 pokenum;
-        quint16 subnum;
+        quint8 subnum;
         uniqueId() : pokenum(0), subnum(0) {}
         uniqueId(int num, int subnum) : pokenum(num), subnum(subnum) {}
         uniqueId(const uniqueId &id) { pokenum = id.pokenum; subnum = id.subnum; }
