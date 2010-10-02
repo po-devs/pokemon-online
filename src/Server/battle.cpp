@@ -1841,7 +1841,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             continue;
         }
 
-        if (fieldmoves[player].power > 0)
+        if (fieldmoves[player].power <= 0)
         {
             calculateTypeModStab();
 

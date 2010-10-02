@@ -235,29 +235,29 @@
 #Pumice Stone
 34#Rugged Helmet
 35#Balloon
-
+38#Red Card
 
 
 36-10#Bulb
 36-12#Rechargeable battery
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+39#Escape Button
+37-9#Fire Jewel
+37-10#Water Jewel
+37-12#Electric Jewel
+37-11#Grass Jewel
+37-14#Ice Jewel
+37-1#Fight Jewel
+37-3#Poison Jewel
+37-4#Earth Jewel
+37-2#Flight Jewel
+37-13#Psychic Jewel
+37-6#Bug Jewel
+37-5#Rock Jewel
+37-7#Ghost Jewel
+37-15#Dragon Jewel
+37-16#Dark Jewel
+37-8#Steel Jewel
+37-0#Normal Jewel
 
 
 
