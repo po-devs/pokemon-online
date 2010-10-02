@@ -5422,6 +5422,26 @@ struct MMACapella : public MM
     }
 };
 
+struct MMAssistPower : public  MM
+{
+    MMAssistPower() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int, BS &b) {
+        int boostsum = 0;
+
+        for (int i = 1; i <= 7; i++) {
+            int temp = fpoke(b,s).boosts[i];
+            if (temp > 0) {
+                boostsum += temp;
+            }
+        }
+
+        tmove(b, s).power = tmove(b, s).power * (1 + boostsum);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5641,4 +5661,5 @@ void MoveEffect::init()
     REGISTER_MOVE(182, EleciBall);
     REGISTER_MOVE(183, TechnoBuster);
     REGISTER_MOVE(184, ACapella);
+    REGISTER_MOVE(185, AssistPower);
 }

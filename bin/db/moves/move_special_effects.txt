@@ -498,7 +498,7 @@
 181#Echo Voice
 
 149#Clear Smog
-
+185#Assist Power
 170#Fast Guard
 
 
