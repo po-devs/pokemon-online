@@ -66,7 +66,7 @@ public:
         return clauses() & ChallengeInfo::OHKOClause;
     }
 
-    void notifyClause(int clause, bool active = true);
+    void notifyClause(int clause);
 
     void removeSpectator(int id);
 
@@ -108,6 +108,8 @@ public:
     std::vector<int> sortedBySpeed();
 
     /* Commands for the battle situation */
+    void rearrangeTeams();
+    void engageBattle();
     void beginTurn();
     void endTurn();
     void endTurnStatus(int player);
@@ -272,7 +274,8 @@ public:
         EndMessage,
         PointEstimate,
         StartChoices,
-        Avoid
+        Avoid,
+        RearrangeTeam
     };
 
     enum ChangeTempPoke {

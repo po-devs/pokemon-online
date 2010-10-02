@@ -730,14 +730,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             break;
     case Clause:
         {
-            bool inBattle;
-            in >> inBattle;
-
-            if (inBattle) {
-                printLine(ChallengeInfo::battleText(truespot));
-            } else {
-                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(truespot));
-            }
+            printLine(ChallengeInfo::battleText(truespot));
             break;
         }
     case Rated:
@@ -745,6 +738,13 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             bool rated;
             in >> rated;
             printHtml(toBoldColor(tr("Rule: "), Qt::blue) + (rated? tr("Rated") : tr("Unrated")));
+
+            for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+                if (conf().clauses & (1 << i)) {
+                    printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(i));
+                }
+            }
+
             break;
         }
     case TierSection:

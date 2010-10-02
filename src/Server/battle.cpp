@@ -36,7 +36,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     rated() = c.rated;
     doubles() = c.mode == ChallengeInfo::Doubles;
     numberOfSlots() = doubles() ? 4 : 2;
-    if (rated())
+    if (p1.tier() == p2.tier())
         tier() = p1.tier();
     currentForcedSleepPoke[0] = -1;
     currentForcedSleepPoke[1] = -1;
@@ -119,9 +119,10 @@ void BattleSituation::start(ContextSwitcher &ctx)
 
     notify(All, BlankMessage,0);
 
-    if (rated()) {
+    if (tier().length()>0)
         notify(All, TierSection, Player1, tier());
 
+    if (rated()) {
         QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(team1.name, team2.name, tier());
         QPair<int,int> secondChange = TierMachine::obj()->pointChangeEstimate(team2.name, team1.name, tier());
 
@@ -131,18 +132,22 @@ void BattleSituation::start(ContextSwitcher &ctx)
 
     notify(All, Rated, Player1, rated());
 
-    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        //False for saying this is not in battle message but rule message
-        if (clauses() & (1 << i))
-            notify(All, Clause, i, false);
-    }
-
-
     notify(All, BlankMessage,0);
 
     /* Beginning of the battle! */
     turn() = 0; /* here for Truant */
 
+    blocked() = false;
+
+    timer = new QBasicTimer();
+    /* We are only warned of new events every 5 seconds */
+    timer->start(5000,this);
+
+    ContextCallee::start(ctx);
+}
+
+void BattleSituation::engageBattle()
+{
     sendPoke(slot(Player1), 0);
     sendPoke(slot(Player2), 0);
     if (doubles()) {
@@ -162,14 +167,6 @@ void BattleSituation::start(ContextSwitcher &ctx)
     for (int i = 0; i< numberOfSlots(); i++) {
         hasChoice[i] = false;
     }
-
-    blocked() = false;
-
-    timer = new QBasicTimer();
-    /* We are only warned of new events every 5 seconds */
-    timer->start(5000,this);
-
-    ContextCallee::start(ctx);
 }
 
 int BattleSituation::spot(int id) const
@@ -203,9 +200,9 @@ bool BattleSituation::acceptSpectator(int id, bool authed) const
     return !(clauses() & ChallengeInfo::DisallowSpectator);
 }
 
-void BattleSituation::notifyClause(int clause, bool active)
+void BattleSituation::notifyClause(int clause)
 {
-    notify(All, Clause,active? intlog2(clause) : clause, active);
+    notify(All, Clause, clause);
 }
 
 void BattleSituation::addSpectator(Player *p)
@@ -228,16 +225,10 @@ void BattleSituation::addSpectator(Player *p)
     }
     spectators[key] = id;
 
-    notify(key, Rated, Player1, rated());
-    if (rated())
+    if (tier().length() > 0)
         notify(key, TierSection, Player1, tier());
 
-    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        //False for saying this is not in battle message but rule message
-        if (clauses() & (1 << i))
-            notify(key, Clause, i, false);
-    }
-
+    notify(key, Rated, Player1, rated());
 
     foreach (int specId, spectators) {
         if (specId != id)
@@ -412,6 +403,12 @@ void BattleSituation::run()
     }
     true_rand2.seed(array, 10);
 
+    if (clauses() & ChallengeInfo::RearrangeTeams) {
+        rearrangeTeams();
+    }
+
+    engageBattle();
+
     forever
     {
         beginTurn();
@@ -419,6 +416,13 @@ void BattleSituation::run()
         endTurn();
     }
 
+}
+
+void BattleSituation::rearrangeTeams()
+{
+    /* Here we'll give the possibility to rearrange teams */
+    notify(Player1,RearrangeTeam,Player2,ShallowShownTeam(team(Player2)));
+    notify(Player2,RearrangeTeam,Player1,ShallowShownTeam(team(Player1)));
 }
 
 void BattleSituation::beginTurn()
@@ -1841,7 +1845,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             continue;
         }
 
-        if (fieldmoves[player].power <= 0)
+        if (fieldmoves[player].power > 0)
         {
             calculateTypeModStab();
 
@@ -2427,7 +2431,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
     if (status == Pokemon::Asleep)
     {
         if (sleepClause() && currentForcedSleepPoke[this->player(player)] != -1) {
-            notifyClause(ChallengeInfo::SleepClause, true);
+            notifyClause(ChallengeInfo::SleepClause);
             return;
         } else {
             currentForcedSleepPoke[this->player(player)] = currentInternalId(player);
@@ -3345,7 +3349,7 @@ void BattleSituation::testWin()
     if (time1 == 0 || time2 == 0) {
         notify(All,ClockStop,Player1,quint16(time1));
         notify(All,ClockStop,Player2,quint16(time2));
-        notifyClause(ChallengeInfo::NoTimeOut,true);
+        notifyClause(ChallengeInfo::NoTimeOut);
         if (time1 == 0 && time2 ==0) {
             notify(All, BattleEnd, Player1, qint8(Tie));
             emit battleFinished(publicId(), Tie, id(Player1), id(Player2));
@@ -3600,6 +3604,7 @@ BattleConfiguration BattleSituation::configuration() const
     ret.ids[1] = id(1);
     ret.gen = gen();
     ret.doubles = doubles();
+    ret.clauses = clauses();
 
     return ret;
 }

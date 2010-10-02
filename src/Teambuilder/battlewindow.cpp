@@ -444,8 +444,6 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             in >> silent;
             in >> prevIndex;
 
-            printLine(QString("%1 replacing %2").arg(prevIndex).arg(info().slotNum(spot)));
-
             if (player == info().myself) {
                 switchTo(prevIndex, spot, true);
 
@@ -557,8 +555,6 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         if (poke < 0 || poke >= 6)
             break;
 
-        printLine(QString("Poke %1 has status %2").arg(poke).arg(status));
-
         mydisplay->changeStatus(spot,poke,status);
 
         if (player == info().myself) {
@@ -644,6 +640,12 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             in >> first >> second;
 
             printHtml(toBoldColor(tr("Variation: "), Qt::blue) + QString("+%1, %2").arg(int(first)).arg(int(second)));
+            break;
+        }
+    case RearrangeTeam:
+        {
+            ShallowShownTeam t;
+            in >> t;
             break;
         }
     default:

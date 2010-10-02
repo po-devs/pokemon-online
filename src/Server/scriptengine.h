@@ -80,6 +80,7 @@ public:
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void clearPass(const QString &name);
     Q_INVOKABLE void changeAuth(int id, int auth);
+    Q_INVOKABLE void changeDbAuth(const QString &name, int auth);
     Q_INVOKABLE void changeAway(int id, bool away);
     Q_INVOKABLE void changeRating(const QString& name, const QString& tier, int newRating);
     Q_INVOKABLE void changePokeLevel(int id, int slot, int level);
@@ -135,6 +136,7 @@ public:
     Q_INVOKABLE QScriptValue away(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
     Q_INVOKABLE QScriptValue dbAuth(const QString &name);
+    Q_INVOKABLE QScriptValue dbAuths();
     Q_INVOKABLE QScriptValue dbIp(const QString &name);
     Q_INVOKABLE QScriptValue dbLastOn(const QString &name);
     Q_INVOKABLE bool dbRegistered(const QString &name);

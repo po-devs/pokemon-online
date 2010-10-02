@@ -581,7 +581,7 @@ void Server::changeAuth(const QString &name, int auth) {
 
         emit player_authchange(id, authedName(id));
         if (SecurityManager::member(name).authority() != auth) {
-            SecurityManager::setauth(name, auth);
+            SecurityManager::setAuth(name, auth);
         }
         sendPlayer(id);
     }

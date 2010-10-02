@@ -89,7 +89,7 @@ public:
     static void ban(const QString &name);
     static void unban(const QString &name);
     static void IPunban(const QString &ip);
-    static void setauth(const QString &name, int auth);
+    static void setAuth(const QString &name, int auth);
     static void clearPass(const QString &name);
     static void updateMemberInDatabase(const Member &m, bool add);
     static int maxAuth(const QString &ip);
@@ -100,6 +100,7 @@ public:
 
     static QStringList membersForIp(const QString &ip);
     static QHash<QString, QString> banList();
+    static QStringList authList();
 
     /* Exports the whole database to members.txt. Done in the main thread (and please call it
        only from there), so hangs the server */

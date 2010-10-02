@@ -496,6 +496,11 @@ void ScriptEngine::changeAuth(int id, int auth)
     }
 }
 
+void ScriptEngine::changeDbAuth(const QString &name, int auth)
+{
+    SecurityManager::setAuth(name, auth);
+}
+
 void ScriptEngine::changeAway(int id, bool away)
 {
     if (testPlayer("changeAway(id, away)", id)) {
@@ -868,6 +873,19 @@ QScriptValue ScriptEngine::dbAuth(const QString &name)
     } else {
         return SecurityManager::member(name).auth;
     }
+}
+
+QScriptValue ScriptEngine::dbAuths()
+{
+    QStringList sl = SecurityManager::authList();
+
+    QScriptValue ret = myengine.newArray(sl.count());
+
+    for (int i = 0; i < sl.size(); i++) {
+        ret.setProperty(i, sl[i]);
+    }
+
+    return ret;
 }
 
 QScriptValue ScriptEngine::dbIp(const QString &name)

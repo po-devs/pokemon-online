@@ -66,7 +66,6 @@ class BattleWindow : public BaseBattleWindow
 {
     Q_OBJECT
 
-    PROPERTY(BattleConfiguration, conf);
 public:
     BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf);
 
