@@ -1268,6 +1268,7 @@ struct AMWeakKneed : public AM {
             return;
 
         turn(b,s)["Stat1AbilityModifier"] = -10;
+        turn(b,s)["Stat3AbilityModifier"] = -10;
     }
 };
 
