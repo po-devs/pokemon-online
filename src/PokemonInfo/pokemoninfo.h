@@ -187,6 +187,10 @@ public:
     /* the status mod of a move*/
     //static QString Effect(int movenum, int gen);
     static QString SpecialEffect(int movenum);
+    static void setPower(int movenum, unsigned char power, int moveGen);
+    static void setAccuracy(int movenum, char accuracy, int moveGen);
+    static void setPP(int movenum, char pp, int moveGen);
+    static void setPriority(int movenum, signed char priority, int moveGen);
 private:
     static QList<QString> m_Names;
     static QHash<QString, int> m_LowerCaseMoves;
@@ -229,7 +233,7 @@ private:
 
     static QString m_Directory;
     static Gen gens[Version::NumberOfGens];
-    static const Gen & gen(int gen) {
+    static Gen & gen(int gen) {
         return gens[gen-1];
     }
 
