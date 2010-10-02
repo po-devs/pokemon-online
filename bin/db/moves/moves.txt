@@ -474,87 +474,87 @@ Wonder Room
 Psycho Shock
 Venom Shock
 Body Purge
-Rage Power
+Anger Powder
 Telekinesis
 Magic Room
-Strike Down
+Knock Down
 Mountain Storm
-Fire Burst
-Sludge Wave
+Flame Burst
+Slime Wave
 Butterfly Dance
 Heavy Bomber
 Synchro Noise
-Eleci Ball
-Soak
+Electric Ball
+Submersion
 Nitro Charge
-Coil
+Snake Coil
 Ankle Sweep
 Acid Bomb
 Trickery
 Simple Beam
-Assemble Crew
-You First
-Sing A Round
+Befriend
+After You
+A Capella
 Echo Voice
-Payment Plan
+Repayment
 Clear Smog
 Assist Power
 Fast Guard
 Side Change
-Boiling Water
-Shell Crack
-Heal Pulse
+Boil Over
+Shell Smash
+Healing Wave
 Evil Eye
-Free Fall
+Freefall
 Gear Change
 Overhead Throw
-Complete Burn
-Stall
+Incinerate
+Postpone
 Acrobat
 Mirror Type
-Retaliation
-Desperation
+Retribution
+Death Gambit
 Gift Pass
-Purgatory
-Water Oath
-Fire Oath
-Grass Oath
+purgatory
+Water Realm
+Fire Realm
+Grass Realm
 Volt Change
-Bug Resistance
-Ground Leveling
-Freezing Breath
+Bug Repellant
+Level Field
+Ice Breath
 Dragon Tail
 Cheer Up
-Eleci Net
-Wild Volt
+Electric Net
+Wild bolt
 Drill Liner
 Double Chop
 Heart Stamp
 Wood Horn
-Sacred Sword
+Holy Sword
 Shell Blade
 Heat Stamp
 Grass Mixer
-Heart Roller
+Hard Roller
 Cotton Guard
 Night Burst
 Psycho Break
 Sweep Slap
-Gale
+Hurricane
 Afro Break
 Gear Saucer
-Flame Platform
+Kaendan
 Techno Buster
 Ancient Song
 Mystery Sword
 Frozen World
-Lightning
-Blue Fire
-Fire Dance
-Freeze Bolt
+Lightning Strike
+Blue Flame
+Flame Dance
+Freezebolt
 Cold Flare
-Back Out
-Icicle Polish
+Back out
+Icicle drop
 V-Generate
 Cross Flame
 Cross Thunder
