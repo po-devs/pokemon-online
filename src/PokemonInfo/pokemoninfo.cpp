@@ -31,6 +31,7 @@ QSet<Pokemon::uniqueId> PokemonInfo::m_AestheticFormes;
 
 QHash<int, QList<int> > PokemonInfo::m_Evolutions;
 QHash<int, int> PokemonInfo::m_OriginalEvos;
+QHash<int, QList<int> > PokemonInfo::m_DirectEvos;
 QList<Pokemon::uniqueId> PokemonInfo::m_VisiblePokesPlainList;
 QHash<int, int> PokemonInfo::m_PreEvos;
 
@@ -751,6 +752,11 @@ QList<int> PokemonInfo::Evos(int pokenum)
     return m_Evolutions.value(OriginalEvo(Pokemon::uniqueId(pokenum, 0)).pokenum);
 }
 
+bool PokemonInfo::HasEvolutions(int pokenum)
+{
+    return m_DirectEvos.contains(pokenum);
+}
+
 bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
 {
     return Evos(pokeid.pokenum).size() > 1;
@@ -849,6 +855,12 @@ void PokemonInfo::loadEvos()
 
             evos[num].push_back(n);
         }
+    }
+
+    m_DirectEvos = evos;
+
+    foreach(int key, m_DirectEvos.keys()) {
+        m_DirectEvos[key].removeOne(key);
     }
 
     QHash<int, QList<int> > copy = evos;
@@ -1504,6 +1516,11 @@ bool ItemInfo::isPlate(int itemnum)
     return (itemnum >= 185 && itemnum <= 202 && itemnum != 190 && itemnum != 200);
 }
 
+bool ItemInfo::isCassette(int itemnum)
+{
+    return itemnum == Item::AquaCassette || itemnum == Item::BlazeCassette || itemnum == Item::FreezeCassette || itemnum == Item::LightningCassette;
+}
+
 bool ItemInfo::isMail(int itemnum)
 {
     return (itemnum >= 214 && itemnum <= 226);
@@ -1517,6 +1534,11 @@ bool ItemInfo::isUseful(int itemnum)
 int ItemInfo::PlateType(int itemnum)
 {
     return Effects(itemnum, 4).front().args.toInt();
+}
+
+int ItemInfo::CassetteType(int itemnum)
+{
+    return Effects(itemnum, 5).front().args.toInt();
 }
 
 int ItemInfo::Number(const QString &itemname)
@@ -1712,12 +1734,12 @@ int NatureInfo::ConvertToStat(int stat)
 
 int NatureInfo::StatBoosted(int nature)
 {
-    return ConvertToStat(Boost(nature, nature/5+1) == 0 ? 0 : nature/5+1);
+    return Boost(nature, ConvertToStat(nature/5+1)) == 0 ? 0 : ConvertToStat(nature/5+1);
 }
 
 int NatureInfo::StatHindered(int nature)
 {
-    return ConvertToStat(Boost(nature, (nature%5)+1) == 0 ? 0 : (nature%5)+1);
+    return Boost(nature, ConvertToStat((nature%5)+1)) == 0 ? 0 : ConvertToStat((nature%5)+1);
 }
 
 

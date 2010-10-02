@@ -444,6 +444,8 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             in >> silent;
             in >> prevIndex;
 
+            printLine(QString("%1 replacing %2").arg(prevIndex).arg(info().slotNum(spot)));
+
             if (player == info().myself) {
                 switchTo(prevIndex, spot, true);
 

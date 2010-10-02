@@ -70,6 +70,7 @@ public:
     // Will NOT return base form. Should it?
     static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid);
     static QList<int> Evos(int pokenum);
+    static bool HasEvolutions(int pokenum);
 
     // Will always return base form (subnum 0).
     static Pokemon::uniqueId OriginalEvo(const Pokemon::uniqueId &pokeid);
@@ -104,6 +105,7 @@ private:
     static QHash<int, QList<int> > m_Evolutions;
     static QHash<int, int> m_OriginalEvos;
     static QHash<int, int> m_PreEvos;
+    static QHash<int, QList<int> > m_DirectEvos;
     /* Tells if there is a real difference from the original forme.
        If not, tiers will consider the pokemon as its original forme, to avoid
        listing too many pokemons */
@@ -255,9 +257,11 @@ public:
     static bool Exists(int itemnum, int gen=5);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
+    static bool isCassette(int itemnum);
     static bool isMail(int itemnum);
     static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
+    static int CassetteType(int itemnum);
     static QList<QString> SortedNames(int gen);
     static QList<QString> SortedUsefulNames(int gen);
     static QList<Effect> Effects(int item, int gen);
