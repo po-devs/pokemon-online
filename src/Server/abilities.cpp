@@ -886,7 +886,7 @@ struct AMSoundProof : public AM {
 
 struct AMSpeedBoost : public AM {
     AMSpeedBoost() {
-        functions["OnSetup"] = &os;
+        functions["UponSetup"] = &os;
         functions["EndTurn62"] = &et;
     }
 
