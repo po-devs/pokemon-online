@@ -1357,6 +1357,7 @@ struct AMEccentric : public AM
         if (t == -1)
             return;
 
+        poke(b,s)["Transformed"] = true;
         /* Ripped off from Transform */
         /* Give new values to what needed */
         Pokemon::uniqueId num = b.pokenum(t);
