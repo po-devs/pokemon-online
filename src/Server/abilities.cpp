@@ -1462,7 +1462,7 @@ struct AMMagicMirror : public AM
         functions["UponSetup"] = &uas;
     }
 
-    static void uas (int s, int, BS &b) {
+    static void uas (int, int, BS &b) {
         addFunction(b.battlelong, "DetermineGeneralAttackFailure2", "MagicCoat", &dgaf);
     }
 
@@ -1602,6 +1602,40 @@ struct AMJusticeHeart : public AM {
                 b.inflictStatMod(s, Attack, 1, s, false);
             }
         }
+    }
+};
+
+struct AMInconsistent : public AM {
+    AMInconsistent() {
+        functions["EndTurn62"] = &et;
+    }
+
+    static void et(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
+        QList<int> raisableStats = QList<int>();
+        for (int i = Attack; i <= Evasion; i++) {
+            if (!b.hasMaximalStatMod(s, i))
+                raisableStats.push_back(i);
+        }
+        if (raisableStats.empty())
+            return;
+        int randomStat = raisableStats[b.true_rand()%raisableStats.size()];
+
+        b.sendAbMessage(95,0,s,0, 0, randomStat);
+        b.inflictStatMod(s, randomStat, 2, s, false);
+
+        raisableStats.clear();
+        for (int i = Attack; i <= Evasion; i++) {
+            if (!b.hasMinimalStatMod(s, i) && i != randomStat)
+                raisableStats.push_back(i);
+        }
+        if (raisableStats.empty())
+            return;
+        randomStat = raisableStats[b.true_rand()%raisableStats.size()];
+
+        b.sendAbMessage(95,1,s,0, 0, randomStat);
+        b.inflictStatMod(s, randomStat, -1, s, false);
     }
 };
 

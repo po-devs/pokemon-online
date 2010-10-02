@@ -517,6 +517,62 @@ struct IMBerryJuice : public IM
     }
 };
 
+struct IMEvolutionStone : public IM
+{
+    IMEvolutionStone() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm(int s, int, BS &b) {
+        if (PokemonInfo::HasEvolutions(b.poke(s).num().pokenum)) {
+            turn(b,s)["Stat2ItemModifier"] = 10;
+            turn(b,s)["Stat4ItemModifier"] = 10;
+        }
+    }
+};
+
+struct IMRuggedHelmet : public IM
+{
+    IMRuggedHelmet() {
+        functions["UponPhysicalAssault"] = &upa;
+    }
+
+    static void upa( int s, int t, BS &b) {
+        if (!b.koed(t)) {
+            b.sendItemMessage(34,s,0,t);
+            b.inflictDamage(t,b.poke(t).totalLifePoints()/6,s,false);
+        }
+    }
+};
+
+struct IMBalloon : public IM
+{
+    IMBalloon() {
+        functions["UponBeginHit"] = &upbi;
+    }
+
+    static void upbi(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
+        b.sendItemMessage(35,s,0);
+        b.disposeItem(s);;
+    }
+};
+
+struct IMBulb : public IM
+{
+    IMBulb() {
+        functions["UponBeingHit"] = &ubh;
+    }
+
+    static void ubh(int s, int t, BS &b) {
+        if (!b.koed(s) && type(b,t) == poke(b,s)["ItemArg"].toInt() && !b.hasMaximalStatMod(s, SpAttack)) {
+            b.sendItemMessage(36, s, 0, t, b.poke(s).item());
+            b.disposeItem(s);
+            b.inflictStatMod(s, SpAttack, 1, s, false);
+        }
+    }
+};
 
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
@@ -545,6 +601,10 @@ void ItemEffect::init()
     REGISTER_ITEM(26, CriticalPoke);
     REGISTER_ITEM(27, PokeTypeBoost);
     REGISTER_ITEM(28, StickyBarb);
+    REGISTER_ITEM(33, EvolutionStone);
+    REGISTER_ITEM(34, RuggedHelmet);
+    REGISTER_ITEM(35, Balloon);
+    REGISTER_ITEM(36, Bulb);
 
     initBerries();
 }

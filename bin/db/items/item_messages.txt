@@ -29,3 +29,9 @@
 
 %s is hurt by its Sticky Barb!
 
+
+
+
+%f is hurt by %s's Rugged Helmet!
+%s's Balloon popped!
+%s's %i raised its Speciall Attack!
