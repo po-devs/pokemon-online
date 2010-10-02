@@ -131,7 +131,7 @@ public:
     void changeStatMod(int player, int stat, int newstatmod);
     void changeForme(int player, int poke, const Pokemon::uniqueId &forme);
     void changePokeForme(int slot, const Pokemon::uniqueId &forme);
-    void calculateTypeModStab();
+    void calculateTypeModStab(int orPlayer = -1, int orTarget = -1);
     void changeAForme(int player, int newforme);
     bool hasMinimalStatMod(int player, int stat);
     bool hasMaximalStatMod(int player, int stat);
@@ -175,6 +175,9 @@ public:
     bool isThereUproar();
     void addUproarer(int player);
     void removeUproarer(int player);
+    //Change turn order, use it carefully when you know those are correct values
+    void makePokemonNext(int player);
+    void makePokemonLast(int player);
 
     int calculateDamage(int player, int target);
     void applyMoveStatMods(int player, int target);

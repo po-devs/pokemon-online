@@ -1902,8 +1902,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     callaeffects(target,player,"UponPhysicalAssault");
 		}
 
-                if (!sub)
+                if (!sub) {
                     callaeffects(target, player, "UponBeingHit");
+                    callieffects(target, player, "UponBeingHit");
+                }
 
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
 		applyMoveStatMods(player, target);
@@ -2010,10 +2012,10 @@ bool BattleSituation::hasMove(int player, int move) {
     return false;
 }
 
-void BattleSituation::calculateTypeModStab()
+void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
 {
-    int player = attacker();
-    int target = attacked();
+    int player = orPlayer == - 1 ? attacker() : orPlayer;
+    int target = orTarget == - 1 ? attacked() : orTarget;
 
     int type = fieldmoves[player].type; /* move type */
     int typeadv[] = {getType(target, 1), getType(target, 2)};
@@ -2027,7 +2029,7 @@ void BattleSituation::calculateTypeModStab()
                 typemod *= 2;
                 continue;
             }
-            if (pokelong[target].value(QString::number(typeadv[i])+"Sleuthed").toBool()) {
+            if (pokelong[target].value(QString::number(typeadv[i])+"Sleuthed").toBool() || hasWorkingItem(target, Item::BullsEye)) {
                 typemod *= 2;
                 continue;
             }
@@ -2055,6 +2057,8 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
     /* Yes, illusion breaks when hit by mold breaker, right? */
     if (ab == Ability::Illusion)
         return true;
+    if (ability(player) != ab)
+        return false;
 
     if (attacking()) {
         // Mold Breaker
@@ -2064,7 +2068,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
             return false;
         }
     }
-    return pokelong[player].value("AbilityNullified").toBool() ? false : fieldpokes[player].ability == ab;
+    return !pokelong[player].value("AbilityNullified").toBool();
 }
 
 void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
@@ -2087,13 +2091,17 @@ int BattleSituation::ability(int player) {
 }
 
 int BattleSituation::weight(int player) {
+    int ret = fieldpokes[player].weight;
     if (hasWorkingAbility(player, Ability::HeavyMetal)) {
-        return fieldpokes[player].weight * 2;
+        ret *= 2;
     } else if (hasWorkingAbility(player, Ability::LightMetal)) {
-        return fieldpokes[player].weight / 2;
-    } else {
-        return fieldpokes[player].weight;
+        ret /= 2;
     }
+    if (hasWorkingItem(player, Item::PumiceStone)) {
+        ret /= 2;
+    }
+
+    return ret;
 }
 
 Pokemon::uniqueId BattleSituation::pokenum(int player) {
@@ -2573,6 +2581,7 @@ bool BattleSituation::isFlying(int player)
     return !battlelong.value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) && !pokelong[player].value("Rooted").toBool() &&
             !pokelong[player].value("Roosted").toBool() && !pokelong[player].value("StruckDown").toBool() &&
             (hasWorkingAbility(player, Ability::Levitate)
+             || hasWorkingItem(player, Item::Balloon)
              || hasType(player, Pokemon::Flying)
              || pokelong[player].value("MagnetRiseCount").toInt() > 0
              || pokelong[player].value("LevitatedCount").toInt() > 0);
@@ -2662,6 +2671,33 @@ bool BattleSituation::canSendPreventSMessage(int defender, int attacker) {
 void BattleSituation::changeStatMod(int player, int stat, int newstat)
 {
     fieldpokes[player].boosts[stat] = newstat;
+}
+
+void BattleSituation::makePokemonNext(int t)
+{
+    int buf = speedsVector[currentSlot + 1];
+    speedsVector[currentSlot+1] = t;
+    for (unsigned i = currentSlot + 2; i < speedsVector.size(); i++) {
+        if (buf != t) {
+            std::swap(speedsVector[i], buf);
+        } else {
+            break;
+        }
+    }
+}
+
+void BattleSituation::makePokemonLast(int t)
+{
+    int buf = speedsVector.back();
+    speedsVector.back() = t;
+
+    for (int i = speedsVector.size() - 2; i > signed(currentSlot); i--) {
+        if (buf != t) {
+            std::swap(speedsVector[i], buf);
+        } else {
+            break;
+        }
+    }
 }
 
 int BattleSituation::calculateDamage(int p, int t)
@@ -3471,8 +3507,6 @@ void BattleSituation::sendAbMessage(int move, int part, int src, int foe, int ty
         notify(All, AbilityMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe), qint16(other));
     }
 }
-
-
 
 void BattleSituation::sendItemMessage(int move, int src, int part, int foe, int berry, int stat)
 {
