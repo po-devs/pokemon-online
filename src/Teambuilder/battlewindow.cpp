@@ -557,6 +557,8 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         if (poke < 0 || poke >= 6)
             break;
 
+        printLine(QString("Poke %1 has status %2").arg(poke).arg(status));
+
         mydisplay->changeStatus(spot,poke,status);
 
         if (player == info().myself) {
@@ -564,7 +566,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             mypzone->pokes[poke]->update();
         }
 
-        info().currentShallow(spot).changeStatus(status);
+        info().pokemons[player][poke].changeStatus(status);
         if (info().isOut(player, poke))
             mydisplay->updatePoke(info().slot(player, poke));
 

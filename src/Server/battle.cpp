@@ -2392,8 +2392,8 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
     //fixme: mist + intimidate
     if (poke(player).status() != Pokemon::Fine) {
         if (this->attacker() == attacker &&
-            (fieldmoves[attacker].category == Move::StatusInducingMove ||
-             fieldmoves[attacker].category == Move::StatAndStatusMove) && canSendPreventSMessage(player, attacker)) {
+            (fieldmoves[attacker].classification == Move::StatusInducingMove ||
+             fieldmoves[attacker].classification == Move::StatAndStatusMove) && canSendPreventSMessage(player, attacker)) {
             if (poke(player).status() == status)
                 notify(All, AlreadyStatusMessage, player, quint8(poke(player).status()));
             else
@@ -3473,10 +3473,12 @@ ShallowBattlePoke BattleSituation::opoke(int slot, int player, int i) const
     if (pokelong[slot].contains("IllusionTarget")) {
         int illusioner = pokelong[slot].value("IllusionTarget").toInt();
 
+        const PokeBattle &p2 = team(player).getByInternalId(illusioner);
+
         ShallowBattlePoke p = poke(player, i);
-        p.num() = poke(player, illusioner).num();
-        p.nick() = poke(player, illusioner).nick();
-        p.gender() = poke(player, illusioner).gender();
+        p.num() = p2.num();
+        p.nick() = p2.nick();
+        p.gender() = p2.gender();
 
         return p;
     } else {

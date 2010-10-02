@@ -5413,8 +5413,9 @@ struct MMACapella : public MM
         team(b,source)["CapellaTurn"] = b.turn();
 
         for (int i = b.currentSlot + 1; i < signed(b.speedsVector.size()); i++) {
-            if (b.player(i) == b.player(s) && tmove(b,i).attack == Move::Troll) {
-                b.makePokemonNext(i);
+            int p = b.speedsVector[i];
+            if (b.player(p) == b.player(s) && tmove(b,p).attack == Move::Troll) {
+                b.makePokemonNext(p);
                 return;
             }
         }
