@@ -13,7 +13,8 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("Item Clause"),
     QObject::tr("Challenge Cup"),
     QObject::tr("No Timeout"),
-    QObject::tr("Species Clause")
+    QObject::tr("Species Clause"),
+    QObject::tr("Rearrange Teams")
 };
 
 QString ChallengeInfo::clauseBattleText[] =
@@ -26,6 +27,7 @@ QString ChallengeInfo::clauseBattleText[] =
     QObject::tr(""),
     QObject::tr(""),
     QObject::tr("The battle ended by timeout."),
+    QObject::tr(""),
     QObject::tr("")
 };
 
@@ -39,7 +41,8 @@ QString ChallengeInfo::clauseDescription[] =
     QObject::tr("No more than one of the same items is allowed per team."),
     QObject::tr("Random teams are given to trainers."),
     QObject::tr("No time limit for playing."),
-    QObject::tr("One player cannot have more than one of the same pokemon per team.")
+    QObject::tr("One player cannot have more than one of the same pokemon per team."),
+    QObject::tr("At the beginning of the battle, you can see the opponent's team and rearrange yours accordingly.")
 };
 
 BattleMove::BattleMove()
@@ -505,6 +508,54 @@ QDataStream & operator << (QDataStream &out, const TeamBattle &te)
 {
     for (int i = 0; i < 6; i++) {
 	out << te.poke(i);
+    }
+
+    return out;
+}
+
+ShallowShownPoke::ShallowShownPoke()
+{
+
+}
+
+void ShallowShownPoke::init(const PokeBattle &b)
+{
+    item = b.item() != 0;
+    num = b.num();
+    level = b.level();
+    gender = b.gender();
+}
+
+QDataStream & operator >> (QDataStream &in, ShallowShownPoke &po) {
+    in >> po.num >> po.level >> po.gender >> po.item;
+
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const ShallowShownPoke &po) {
+    out << po.num << po.level << po.gender << po.item;
+
+    return out;
+}
+
+ShallowShownTeam::ShallowShownTeam(const TeamBattle &t)
+{
+    for (int i = 0; i < 6; i++) {
+        pokemons[i].init(t.poke(i));
+    }
+}
+
+QDataStream & operator >> (QDataStream &in, ShallowShownTeam &po) {
+    for (int i = 0; i < 6; i++) {
+        in >> po.poke(i);
+    }
+
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const ShallowShownTeam &po) {
+    for (int i = 0; i < 6; i++) {
+        out << po.poke(i);
     }
 
     return out;

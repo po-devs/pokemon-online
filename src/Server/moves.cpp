@@ -4047,7 +4047,7 @@ struct MMYawn : public MM {
             b.fail(s, 144, 2, 0, t);
         }
         if (b.sleepClause() && b.currentForcedSleepPoke[b.player(t)] != -1) {
-            b.notifyClause(ChallengeInfo::SleepClause, true);
+            b.notifyClause(ChallengeInfo::SleepClause);
             turn(b,s)["Failed"] = true;
         }
     }
@@ -4066,7 +4066,7 @@ struct MMYawn : public MM {
         } else {
             if (b.poke(s).status() == Pokemon::Fine) {
                 if (b.sleepClause() && b.currentForcedSleepPoke[b.player(s)] != -1) {
-                    b.notifyClause(ChallengeInfo::SleepClause, true);
+                    b.notifyClause(ChallengeInfo::SleepClause);
                 } else {
                     b.inflictStatus(s, Pokemon::Asleep, s);
                     if (b.sleepClause() && b.poke(s).status() == Pokemon::Asleep) {

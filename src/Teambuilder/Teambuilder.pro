@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     pluginmanager.cpp \
     channel.cpp \
     tierstruct.cpp \
-    theme.cpp
+    theme.cpp \
+    rearrangewindow.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -56,7 +57,8 @@ HEADERS += teambuilder.h \
     centralwidget.h \
     channel.h \
     tierstruct.h \
-    theme.h
+    theme.h \
+    rearrangewindow.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities

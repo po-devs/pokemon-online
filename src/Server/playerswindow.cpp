@@ -110,7 +110,7 @@ void PlayersWindow::unban()
 void PlayersWindow::user()
 {
     QString name = currentName();
-    SecurityManager::setauth(name, 0);
+    SecurityManager::setAuth(name, 0);
     mytable->item(mytable->currentRow(), 1)->setText("User");
     emit authChanged(name,0);
 }
@@ -118,7 +118,7 @@ void PlayersWindow::user()
 void PlayersWindow::mod()
 {
     QString name = currentName();
-    SecurityManager::setauth(name, 1);
+    SecurityManager::setAuth(name, 1);
     mytable->item(mytable->currentRow(), 1)->setText("Mod");
     emit authChanged(name,1);
 }
@@ -126,7 +126,7 @@ void PlayersWindow::mod()
 void PlayersWindow::admin()
 {
     QString name = currentName();
-    SecurityManager::setauth(name, 2);
+    SecurityManager::setAuth(name, 2);
     mytable->item(mytable->currentRow(), 1)->setText("Admin");
     emit authChanged(name,2);
 }
@@ -134,7 +134,7 @@ void PlayersWindow::admin()
 void PlayersWindow::owner()
 {
     QString name = currentName();
-    SecurityManager::setauth(name, 3);
+    SecurityManager::setAuth(name, 3);
     mytable->item(mytable->currentRow(), 1)->setText("Owner");
     emit authChanged(name,3);
 }

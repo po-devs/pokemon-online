@@ -131,6 +131,40 @@ private:
 QDataStream & operator >> (QDataStream &in, TeamBattle &te);
 QDataStream & operator << (QDataStream &out, const TeamBattle &te);
 
+struct ShallowShownPoke
+{
+public:
+    ShallowShownPoke();
+    void init(const PokeBattle &b);
+
+    bool item;
+    Pokemon::uniqueId num;
+    quint8 level;
+    quint8 gender;
+};
+
+QDataStream & operator >> (QDataStream &in, ShallowShownPoke &po);
+QDataStream & operator << (QDataStream &out, const ShallowShownPoke &po);
+
+class ShallowShownTeam
+{
+public:
+    ShallowShownTeam(){};
+    ShallowShownTeam(const TeamBattle &t);
+
+    ShallowShownPoke &poke(int index) {
+        return pokemons[index];
+    }
+    const ShallowShownPoke &poke(int index) const {
+        return pokemons[index];
+    }
+private:
+    ShallowShownPoke pokemons[6];
+};
+
+QDataStream & operator >> (QDataStream &in, ShallowShownTeam &po);
+QDataStream & operator << (QDataStream &out, const ShallowShownTeam &po);
+
 struct BattleChoices
 {
     /* Sets everything to true */
@@ -200,7 +234,8 @@ struct ChallengeInfo
         ItemClause = 32,
         ChallengeCup = 64,
         NoTimeOut = 128,
-        SpeciesClause = 256
+        SpeciesClause = 256,
+        RearrangeTeams = 512
     };
 
     enum Mode
@@ -209,7 +244,7 @@ struct ChallengeInfo
         Doubles
     };
 
-    static const int numberOfClauses = 9;
+    static const int numberOfClauses = 10;
 
     static QString clauseText[numberOfClauses];
     static QString clauseBattleText[numberOfClauses];
@@ -266,6 +301,7 @@ struct BattleConfiguration
     quint8 gen;
     bool doubles;
     qint32 ids[2];
+    quint32 clauses;
 
     int slot(int spot, int poke = 0) const  {
         return spot + poke*2;
@@ -278,14 +314,14 @@ struct BattleConfiguration
 
 inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)
 {
-    in >> c.gen >> c.doubles >> c.ids[0] >> c.ids[1];
+    in >> c.gen >> c.doubles >> c.ids[0] >> c.ids[1] >> c.clauses;
 
     return in;
 }
 
 inline QDataStream & operator << (QDataStream &out, const BattleConfiguration &c)
 {
-    out << c.gen << c.doubles << c.ids[0] << c.ids[1];
+    out << c.gen << c.doubles << c.ids[0] << c.ids[1] << c.clauses;
 
     return out;
 }

@@ -146,7 +146,8 @@ public:
         EndMessage,
         PointEstimate,
         MakeYourChoice,
-        Avoid
+        Avoid,
+        RearrangeTeam
     };
 
     enum TempPokeChange {
