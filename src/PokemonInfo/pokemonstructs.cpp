@@ -628,7 +628,7 @@ bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *cho
     return res;
 }
 
-void PokeTeam::loadFromXml(const QDomElement &poke)
+void PokeTeam::loadFromXml(const QDomElement &poke, int version)
 {
     reset();
 
@@ -652,10 +652,15 @@ void PokeTeam::loadFromXml(const QDomElement &poke)
         setNum(Pokemon::uniqueId(num, forme));
     }
 
+    bool outdated = gen() < 5 && version < 1;
+
     load();
     nickname() = poke.attribute("Nickname");
     item() = poke.attribute("Item").toInt();
     ability() = poke.attribute("Ability").toInt();
+    if (outdated) {
+        ability() = AbilityInfo::ConvertFromOldAbility(ability());
+    }
     nature() = poke.attribute("Nature").toInt();
     gender() = poke.attribute("Gender").toInt();
     shiny() = QVariant(poke.attribute("Shiny")).toBool();
@@ -667,7 +672,11 @@ void PokeTeam::loadFromXml(const QDomElement &poke)
     QDomElement moveElement = poke.firstChildElement("Move");
     while(!moveElement.isNull())
     {
-        setMove(moveElement.text().toInt(),cptMove,false);
+        int movenum = moveElement.text().toInt();
+        if (gen() < 5 && version < 1) {
+            movenum = MoveInfo::ConvertFromOldMove(movenum);
+        }
+        setMove(movenum,cptMove,false);
         cptMove++;
         moveElement = moveElement.nextSiblingElement("Move");
     }
@@ -675,7 +684,7 @@ void PokeTeam::loadFromXml(const QDomElement &poke)
     QDomElement DVElement = poke.firstChildElement("DV");
     while(!DVElement.isNull())
     {
-        setDV(cptDV,DVElement.text().toInt());
+        setDV(outdated ? NatureInfo::ConvertToStat(cptDV) : cptDV,DVElement.text().toInt());
         cptDV++;
         DVElement = DVElement.nextSiblingElement("DV");
     }
@@ -683,7 +692,7 @@ void PokeTeam::loadFromXml(const QDomElement &poke)
     QDomElement EVElement = poke.firstChildElement("EV");
     while(!EVElement.isNull())
     {
-        setEV(cptEV,EVElement.text().toInt());
+        setEV(outdated ? NatureInfo::ConvertToStat(cptEV) : cptEV,EVElement.text().toInt());
         cptEV++;
         EVElement = EVElement.nextSiblingElement("EV");
     }
@@ -715,6 +724,7 @@ bool TrainerTeam::loadFromFile(const QString &path)
         QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
         return false;
     }
+    int version = team.attribute("version", "0").toInt();
     int gen = team.attribute("gen", "4").toInt();
     if (gen != 3 && gen != 4)
         gen = 5;
@@ -738,7 +748,7 @@ bool TrainerTeam::loadFromFile(const QString &path)
     int cpt = 0;
     while(!poke.isNull())
     {
-        this->team().poke(cpt).loadFromXml(poke);
+        this->team().poke(cpt).loadFromXml(poke, version);
 
         cpt++;
         poke = poke.nextSiblingElement("Pokemon");

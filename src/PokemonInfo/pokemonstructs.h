@@ -2224,7 +2224,7 @@ public:
     QPixmap picture();
     QIcon icon();
 
-    void loadFromXml(const QDomElement &el);
+    void loadFromXml(const QDomElement &el, int version);
     QDomElement & toXml(QDomElement &dest) const;
 };
 

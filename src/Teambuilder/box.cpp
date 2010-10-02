@@ -309,6 +309,7 @@ void PokemonBox::save()
 
     QDomElement box = doc.createElement("Box");
     box.setAttribute("Num", num);
+    box.setAttribute("Version", 1);
     doc.appendChild(box);
 
     for(int i = 0; i < pokemons.size(); i++) {
@@ -362,6 +363,7 @@ void PokemonBox::load()
         if (slot.attribute("Num").toInt() < 0 || slot.attribute("Num").toInt() > pokemons.size())
             break;
         int num = slot.attribute("Num").toInt();
+        int version = slot.attribute("Version", "0").toInt();
 
         if (pokemons[num] != NULL)
             break;
@@ -372,7 +374,9 @@ void PokemonBox::load()
             break;
 
         PokeTeam p;
-        p.loadFromXml(poke);
+        if (version == 0 && poke.attribute("Num").toInt() < 505)
+            p.setGen(4);
+        p.loadFromXml(poke, version);
 
         addPokemon(p,num);
 

@@ -181,6 +181,7 @@ public:
     static int MaxTurns(int movenum, int gen);
     static int Status(int movenum, int gen);
     static int StatusKind(int movenum, int gen);
+    static int ConvertFromOldMove(int oldmovenum);
     static QString MoveMessage(int moveeffect, int part);
     static QStringList MoveList();
     /* the status mod of a move*/
@@ -192,6 +193,7 @@ private:
     static QList<QStringList> m_MoveMessages;
     static QList<QString> m_Details;
     static QList<QString> m_SpecialEffects;
+    static QList<int> m_OldMoves;
 
     struct Gen {
         void load(const QString &path, int gen);
@@ -391,11 +393,13 @@ public:
     static QString Desc(int abnum);
     static QString EffectDesc(int abnum);
     static bool Exists(int ability, int gen);
+    static int ConvertFromOldAbility(int oldability);
 private:
     static QList<QString> m_Names;
     static QString m_Directory;
     static QList<Effect> m_Effects[3];
     static QList<QStringList> m_Messages;
+    static QList<int> m_OldAbilities;
 
     static void loadNames();
     static void loadEffects();

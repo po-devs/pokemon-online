@@ -42,6 +42,7 @@ QHash<QString, int> MoveInfo::m_LowerCaseMoves;
 QList<QStringList> MoveInfo::m_MoveMessages;
 QList<QString> MoveInfo::m_Details;
 QList<QString> MoveInfo::m_SpecialEffects;
+QList<int> MoveInfo::m_OldMoves;
 
 QString ItemInfo::m_Directory;
 QList<QString> ItemInfo::m_BerryNames;
@@ -75,6 +76,7 @@ QList<QString> AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
 QList<AbilityInfo::Effect> AbilityInfo::m_Effects[3];
 QList<QStringList> AbilityInfo::m_Messages;
+QList<int> AbilityInfo::m_OldAbilities;
 
 QList<QString> GenderInfo::m_Names;
 QString GenderInfo::m_Directory;
@@ -1031,6 +1033,8 @@ void MoveInfo::init(const QString &dir)
     loadDetails();
     loadSpecialEffects();
 
+    fill_container_with_file(m_OldMoves, path("oldmoves.txt"));
+
     for (int i = 0; i < Version::NumberOfGens; i++) {
         gens[i].load(dir, i+1);
     }
@@ -1068,6 +1072,11 @@ QString MoveInfo::Name(int movenum)
 int MoveInfo::Type(int movenum, int g)
 {
     return gen(g).type[movenum];
+}
+
+int MoveInfo::ConvertFromOldMove(int oldmovenum)
+{
+    return m_OldMoves[oldmovenum];
 }
 
 int MoveInfo::Category(int movenum, int g)
@@ -1809,6 +1818,7 @@ void AbilityInfo::init(const QString &dir)
 
     QStringList temp;
     fill_container_with_file(temp, path("ability_messages.txt"));
+    fill_container_with_file(m_OldAbilities, path("oldabilities.txt"));
     foreach (QString eff, temp) {
         m_Messages.push_back(eff.split('|'));
     }
@@ -1850,6 +1860,10 @@ QString AbilityInfo::EffectDesc(int abnum)
     return get_line(trFile(path("ability_battledesc")), abnum);
 }
 
+int AbilityInfo::ConvertFromOldAbility(int oldability)
+{
+    return m_OldAbilities[oldability];
+}
 
 int AbilityInfo::Number(const QString &pokename)
 {

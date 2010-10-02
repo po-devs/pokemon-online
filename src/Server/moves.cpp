@@ -1119,6 +1119,7 @@ struct MMRoar : public MM
 
         turn(b,s)["RoarSuccess"] = true;
         turn(b,s)["RoarTarget"] = t;
+        turn(b,s)["RoarSwitchCount"] = slot(b,t)["SwitchCount"].toInt();
         return;
     }
 
@@ -1127,6 +1128,9 @@ struct MMRoar : public MM
             return;
 
         int t = turn(b,s)["RoarTarget"].toInt();
+
+        if (turn(b,s)["RoarSwitchCount"] != slot(b,t)["SwitchCount"])
+            return;
 
 	QList<int> switches;
         int target = b.player(t);

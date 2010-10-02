@@ -574,6 +574,113 @@ struct IMBulb : public IM
     }
 };
 
+struct IMJewel : public IM
+{
+    IMJewel() {
+        functions["BeforeTagetList"] = &btl;
+    }
+
+    static void btl(int s, int, BS &b) {
+        if (tmove(b,s).power <= 1) {
+            return;
+        }
+        if (tmove(b,s).type != poke(b,s)["ItemArg"].toInt())
+            return;
+        b.sendItemMessage(37, s, 0, 0, b.poke(s).item(), move(b,s));
+        tmove(b,s).power = tmove(b,s).power * 3 / 2;
+        b.disposeItem(s);
+    }
+};
+
+struct IMRedCard : public IM
+{
+    IMRedCard() {
+        functions["UponBeingHit"] = &ubh;
+    }
+
+    static void ubh(int s, int t, BS &b) {
+        if (b.koed(s))
+            return;
+
+        addFunction(turn(b,t), "AfterAttackFinished", "RedCard", &aaf);
+        turn(b,t)["RedCardUser"] = s;
+        turn(b,t)["RedCardCount"] = slot(b,t)["SwitchCount"];
+        turn(b,t)["RedCardGiverCount"] = slot(b,s)["SwitchCount"];
+
+        return;
+    }
+
+    static void aaf(int t, int, BS &b) {
+        if (turn(b,t)["RedCardCount"] != slot(b,t)["SwitchCount"])
+            return;
+        int s = turn(b,t)["RedCardUser"].toInt();
+        if (b.koed(s) || turn(b,t)["RedCardOffenderCount"] != slot(b,s)["SwitchCount"])
+            return;
+        if (!b.hasWorkingItem(s, Item::RedCard))
+            return;
+
+        int target = b.player(t);
+        if (b.countBackUp(target) == 0) {
+            return;
+        }
+
+        b.sendItemMessage(38, s, 0, t);
+        b.disposeItem(s);
+
+        /* ingrain & suction cups */
+        if (poke(b,t).value("Rooted").toBool()) {
+            b.sendMoveMessage(107, 1, s, Pokemon::Grass,t);
+            return;
+        } else if (b.hasWorkingAbility(t,Ability::SuctionCups)) {
+            b.sendMoveMessage(107, 0, s, 0,t);
+            return;
+        }
+
+        QList<int> switches;
+
+        for (int i = 0; i < 6; i++) {
+            if (!b.isOut(target, i) && !b.poke(target,i).ko()) {
+                switches.push_back(i);
+            }
+        }
+        b.sendBack(t, true);
+        b.sendPoke(t, switches[b.true_rand()%switches.size()], true);
+        b.sendMoveMessage(107,2,s,0,t);
+        b.callEntryEffects(t);
+    }
+};
+
+struct IMEscapeButton : public IM
+{
+    IMEscapeButton() {
+        functions["UponBeingHit"] = &ubh;
+    }
+
+    static void ubh(int s, int t, BS &b) {
+        if (b.koed(s))
+            return;
+        turn(b,s)["EscapeButtonActivated"] = true;
+        turn(b,s)["EscapeButtonCount"] = slot(b,s)["SwitchCount"];
+
+        addFunction(turn(b,t), "AfterAttackFinished", "EscapeButton", &aaf);
+    }
+
+    static void aaf(int, int, BS &b) {
+        foreach(int p, b.sortedBySpeed()) {
+            if (!b.hasWorkingItem(p, Item::EscapeButton))
+                return;
+            if (!turn(b,p).contains("EscapeButtonActivated"))
+                continue;
+            if (turn(b,p)["EscapeButtonCount"] != slot(b,p)["SwitchCount"])
+                return;
+
+            b.sendItemMessage(39, p, 0);
+            b.disposeItem(p);
+            b.requestSwitch(p);
+        }
+    }
+};
+
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
 void ItemEffect::init()
@@ -605,6 +712,9 @@ void ItemEffect::init()
     REGISTER_ITEM(34, RuggedHelmet);
     REGISTER_ITEM(35, Balloon);
     REGISTER_ITEM(36, Bulb);
+    REGISTER_ITEM(37, Jewel);
+    REGISTER_ITEM(38, RedCard);
+    REGISTER_ITEM(39, EscapeButton);
 
     initBerries();
 }
