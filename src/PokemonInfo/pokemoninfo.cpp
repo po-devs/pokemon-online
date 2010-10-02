@@ -590,8 +590,8 @@ QSet<int> PokemonInfo::Moves(const Pokemon::uniqueId &pokeid, int gen)
 
 bool PokemonInfo::HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, int gen)
 {
-    return m_Moves[pokeid].regularMoves[gen].contains(move) || m_Moves[pokeid].specialMoves[gen].contains(move)
-            || m_Moves[pokeid].eggMoves[gen].contains(move);
+    return m_Moves[pokeid].regularMoves[gen-3].contains(move) || m_Moves[pokeid].specialMoves[gen-3].contains(move)
+            || m_Moves[pokeid].eggMoves[gen-3].contains(move);
 }
 
 QSet<int> PokemonInfo::RegularMoves(const Pokemon::uniqueId &pokeid, int gen)
