@@ -93,3 +93,4 @@
 
 %s picked up the %i!
 %s's Justice Heart raises its attack!
+%s's Inconsistent sharply raises its %st!|%s's Inconsistent lowers its %st!

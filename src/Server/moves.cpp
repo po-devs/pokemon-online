@@ -829,7 +829,7 @@ struct MMPerishSong : public MM
         tmove(b,s).targets = Move::User;
     }
 
-    static void uas(int s, int t, BS &b) {
+    static void uas(int s, int, BS &b) {
         for (int t = 0; t < b.numberOfSlots(); t++) {
             if (poke(b,t).contains("PerishSongCount") || b.koed(t)) {
                 return;
@@ -2046,13 +2046,22 @@ struct MMDoomDesire : public MM
 
     static void cad(int s, int t, BS &b) {
 	int move = MM::move(b,s);
-	turn(b,s)["CriticalHit"] = false;
-        tmove(b, s).power = tmove(b, s).power * MoveInfo::Power(move, b.gen());
-        slot(b,t)["DoomDesireDamage"] = b.calculateDamage(s, t);
+
         slot(b,t)["DoomDesireTurn"] = b.turn() + 2;
         slot(b,t)["DoomDesireMove"] = move;
         tmove(b, s).accuracy = MoveInfo::Acc(move, b.gen());
         slot(b,t)["DoomDesireFailed"] = !b.testAccuracy(s,t,true);
+        if (b.gen() <= 4) {
+            turn(b,s)["CriticalHit"] = false;
+            tmove(b, s).power = tmove(b, s).power * MoveInfo::Power(move, b.gen());
+            slot(b,t)["DoomDesireDamage"] = b.calculateDamage(s, t);
+        } else {
+            slot(b,s)["DoomDesireAttack"] = b.getStat(s, SpAttack);
+            tmove(b, s).type = MoveInfo::Type(tmove(b,s).attack, b.gen());
+            b.calculateTypeModStab();
+            tmove(b, s).type = Pokemon::Curse;
+            slot(b,s)["DoomDesireStab"] = turn(b,s)["Stab"].toInt();
+        }
         addFunction(slot(b,t), "EndTurn7", "DoomDesire", &et);
         b.sendMoveMessage(29, move==DoomDesire?2:1, s, type(b,s));
     }
@@ -2060,6 +2069,8 @@ struct MMDoomDesire : public MM
     static void et (int s, int, BS &b) {
         if (b.turn() == slot(b,s).value("DoomDesireTurn"))
 	{
+            removeFunction(slot(b,s), "EndTurn7", "DoomDesire");
+
             if (slot(b,s)["DoomDesireFailed"].toBool()) {
                 int move = slot(b,s)["DoomDesireMove"].toInt();
                 b.sendMoveMessage(29,0,s,MoveInfo::Type(move, b.gen()),s,move);
@@ -2067,9 +2078,29 @@ struct MMDoomDesire : public MM
             } else if (!b.koed(s)) {
                 int move = slot(b,s)["DoomDesireMove"].toInt();
                 b.sendMoveMessage(29,0,s,MoveInfo::Type(move, b.gen()),s,move);
-                b.inflictDamage(s,slot(b,s)["DoomDesireDamage"].toInt(), s, true, true);
+
+                if (b.gen() <= 4) {
+                    b.inflictDamage(s,slot(b,s)["DoomDesireDamage"].toInt(), s, true, true);
+                } else {
+                    MoveEffect e(move, b.gen(), tmove(b,s));
+
+                    b.calculateTypeModStab(s, s);
+
+                    int typemod = turn(b,s)["TypeMod"].toInt();
+                    if (typemod == 0) {
+                        /* If it's ineffective we just say it */
+                        b.notify(All, BS::Effective, s, quint8(typemod));
+                        return;
+                    }
+                    turn(b,s)["Stab"] = slot(b,s)["DoomDesireStab"];
+                    turn(b,s)["AttackStat"] = slot(b,s)["DoomDesireAttack"];
+                    turn(b,s)["CriticalHit"] = false;
+
+                    int damage = b.calculateDamage(s, s);
+                    b.notify(All, BS::Effective, s, quint8(typemod));
+                    b.inflictDamage(s, damage, s, true, true);
+                }
 	    }
-            removeFunction(slot(b,s), "EndTurn7", "DoomDesire");
 	}
     }
 };
@@ -5030,17 +5061,9 @@ struct MMYouFirst : public MM
             turn(b,s)["Failed"] = true;
     }
 
-    static void uas(int s, int t, BS &b) {
+    static void uas(int, int t, BS &b) {
         /* Possible crash cause... If t is in the wrong place in the list. If DetermineAttackFailure didn't do its job correctly. */
-        int buf = b.speedsVector[b.currentSlot + 1];
-        b.speedsVector[b.currentSlot+1] = t;
-        for (unsigned i = b.currentSlot + 2; i < b.speedsVector.size(); i++) {
-            if (buf != t) {
-                std::swap(b.speedsVector[i], buf);
-            } else {
-                break;
-            }
-        }
+        b.makePokemonNext(t);
     }
 };
 
@@ -5051,18 +5074,9 @@ struct MMStall : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void uas(int s, int t, BS &b) {
+    static void uas(int, int t, BS &b) {
         /* Possible crash cause... If t is in the wrong place in the list. If DetermineAttackFailure didn't do its job correctly. */
-        int buf = b.speedsVector.back();
-        b.speedsVector.back() = t;
-
-        for (int i = b.speedsVector.size() - 2; i > signed(b.currentSlot); i--) {
-            if (buf != t) {
-                std::swap(b.speedsVector[i], buf);
-            } else {
-                break;
-            }
-        }
+        b.makePokemonLast(t);
     }
 };
 
@@ -5362,6 +5376,52 @@ struct MMEleciBall : public MM
     }
 };
 
+struct MMTechnoBuster : public MM
+{
+    MMTechnoBuster() {
+        functions["MoveSettings"] = &ms;
+    }
+
+    static void ms (int s, int, BS &b) {
+        int item = b.poke(s).item();
+        if (ItemInfo::isCassette(item) && b.hasWorkingItem(s, item)) {
+            tmove(b,s).type = poke(b,s)["ItemArg"].toInt();
+        }
+    }
+};
+
+struct MMACapella : public MM
+{
+    MMACapella() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void bcd(int s, int, BS &b) {
+        int source = b.player(s);
+
+        if (!team(b,source).contains("CapellaTurn") || team(b,source)["CappellaTurn"].toInt() != b.turn()) {
+            return;
+        }
+
+        tmove(b, s).power *= 2;
+    }
+
+    static void uas(int s, int, BS &b) {
+        int source = b.player(s);
+
+        team(b,source)["CapellaTurn"] = b.turn();
+
+        for (int i = b.currentSlot + 1; i < signed(b.speedsVector.size()); i++) {
+            int p = b.speedsVector[i];
+            if (b.player(p) == b.player(s) && tmove(b,p).attack == Move::Troll) {
+                b.makePokemonNext(p);
+                return;
+            }
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5578,5 +5638,7 @@ void MoveEffect::init()
     REGISTER_MOVE(179, GrassOath);
     REGISTER_MOVE(180, WaterOath);
     REGISTER_MOVE(181, EchoVoice);
-    REGISTER_MOVE(182, EleciBall)
+    REGISTER_MOVE(182, EleciBall);
+    REGISTER_MOVE(183, TechnoBuster);
+    REGISTER_MOVE(184, ACapella);
 }
