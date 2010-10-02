@@ -67,7 +67,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
     QWidget *container = new QWidget(this);
-    container->setGeometry(QRect(322,157,136,136));
+    container->setGeometry(QRect(322,150,140,150));
     QVBoxLayout *clausesL= new QVBoxLayout(container);
     clausesL->setSpacing(0);
 
