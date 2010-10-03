@@ -617,8 +617,8 @@
 616
 617
 618 Indeterminate
-619 Humanshape
-620 Humanshape
+619 HumanShape
+620 HumanShape
 621 Monster
 622
 623

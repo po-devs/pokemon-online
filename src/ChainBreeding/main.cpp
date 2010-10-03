@@ -199,6 +199,7 @@ int main(int, char**)
                             copy.remove(move);
                         }
                     }
+
                     /* Now then, if copy.size() is 0 then all moves in the combination are
                        part from the regular moves of the father. Otherwise, all regular moves
                         are removed and the remaining moves are in copy and tested to see if the
