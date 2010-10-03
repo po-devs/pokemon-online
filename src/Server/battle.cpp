@@ -2173,6 +2173,14 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     bool sub = hasSubstitute(target);
 
     BasicMoveInfo &fm = fieldmoves[player];
+
+    /* Moves with 0 power that came until here bypass sub,
+       so we make the function think there's no sub to
+       be more simple. */
+    if (fm.power == 0) {
+        sub = false;
+    }
+
     int cl= fm.classification;
 
     /* First we check if there's even an effect... */
