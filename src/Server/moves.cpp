@@ -1,4 +1,5 @@
 #include "moves.h"
+#include "miscmoves.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "items.h"
 
@@ -1954,79 +1955,6 @@ struct MMTaunt : public MM
         if (MoveInfo::Power(move, b.gen()) == 0) {
 	    turn(b,s)["ImpossibleToMove"] = true;
 	    b.sendMoveMessage(134,0,s,Pokemon::Dark,s,move);
-	}
-    }
-};
-
-struct MMDisable : public MM
-{
-    MMDisable() {
-	functions["DetermineAttackFailure"] = &daf;
-        functions["OnFoeOnAttack"] = &uas;
-    }
-
-    static void daf(int s, int t, BS &b)
-    {
-	if (poke(b,t).contains("DisablesUntil") && poke(b,t).value("DisablesUntil").toInt() >= b.turn())
-	{
-	    turn(b,s)["Failed"] = true;
-	    return;
-	}
-        if (!poke(b,t).contains("LastMoveUsedTurn")) {
-	    turn(b,s)["Failed"] = true;
-	    return;
-	}
-        int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
-	if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
-	    turn(b,s)["Failed"] = true;
-	    return;
-	}
-        int move = poke(b,t)["LastMoveUsed"].toInt();
-    	int sl = -1;
-	for (int i = 0; i < 4; i++) {
-	    if (b.move(t, i) == move) {
-		sl = i;
-	    }
-	}
-	if (sl == -1 || b.poke(s).move(sl).PP() == 0 ) {
-	    turn(b,s)["Failed"] = true;
-	    return;
-	}
-    }
-
-    static void uas (int s, int t, BS &b) {
-        int mv = poke(b,t)["LastMoveUsed"].toInt();
-        poke(b,t)["DisablesUntil"] = b.turn() + 3 + (b.true_rand()%4);
-        poke(b,t)["DisabledMove"] = mv;
-	addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
-        addFunction(poke(b,t), "MovePossible", "Disable", &mp);
-        addFunction(poke(b,t), "EndTurn611", "Disable", &et);
-        b.sendMoveMessage(28,0,s,0,t,mv);
-    }
-
-    static void et (int s, int, BS &b)
-    {
-	int tt = poke(b,s)["DisablesUntil"].toInt();
-	if (tt <= b.turn()) {
-	    removeFunction(poke(b,s), "MovesPossible", "Disable");
-            removeFunction(poke(b,s), "MovePossible", "Disable");
-            removeFunction(poke(b,s), "EndTurn611", "Disable");
-	    b.sendMoveMessage(28,2,s);
-	}
-    }
-
-    static void msp(int s, int, BS &b) {
-        int mv = poke(b,s)["DisabledMove"].toInt();
-        for (int i = 0 ; i < 4; i++) {
-            if (b.move(s, i) == mv)
-                turn(b,s)[QString("Move%1Blocked").arg(i)] = true;
-        }
-    }
-
-    static void mp(int s, int, BS &b) {
-        if(move(b,s) == poke(b,s)["DisabledMove"]) {
-	    turn(b,s)["ImpossibleToMove"] = true;
-	    b.sendMoveMessage(28,1,s,0,s,b.move(s,poke(b,s)["MoveSlot"].toInt()));
 	}
     }
 };
@@ -5449,6 +5377,35 @@ struct MMAssistPower : public  MM
     }
 };
 
+struct MMSynchroNoise : public MM
+{
+    MMSynchroNoise() {
+        functions["BeforeTargetList"] = &btl;
+    }
+
+    static void btl(int s, int, BS &b) {
+        std::vector <int> newList;
+
+        for(unsigned x = 0; x < b.targetList.size(); x++) {
+            int target = b.targetList[x];
+            if (b.hasType(target, b.getType(s, 1)) || b.hasType(target, b.getType(s, 2))) {
+                newList.push_back(target);
+            }
+        }
+
+        if (newList.size() == 0)
+            newList.push_back(s);
+
+        b.targetList = newList;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (s == t) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5669,4 +5626,5 @@ void MoveEffect::init()
     REGISTER_MOVE(183, TechnoBuster);
     REGISTER_MOVE(184, ACapella);
     REGISTER_MOVE(185, AssistPower);
+    REGISTER_MOVE(186, SynchroNoise);
 }
