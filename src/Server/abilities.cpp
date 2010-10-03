@@ -1597,7 +1597,7 @@ struct AMJusticeHeart : public AM {
 
         int tp = type(b,t);
 
-        if (tp == poke(b,s)["AbilityArg"].toInt()) {
+        if (tp == Pokemon::Dark) {
             if (!b.hasMaximalStatMod(s, Attack)) {
                 b.sendAbMessage(68, 0, s, 0, tp, b.ability(s));
                 b.inflictStatMod(s, Attack, 1, s, false);
