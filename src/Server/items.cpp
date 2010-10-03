@@ -548,14 +548,14 @@ struct IMRuggedHelmet : public IM
 struct IMBalloon : public IM
 {
     IMBalloon() {
-        functions["UponBeginHit"] = &upbi;
+        functions["UponBeingHit"] = &upbi;
     }
 
     static void upbi(int s, int, BS &b) {
         if (b.koed(s))
             return;
         b.sendItemMessage(35,s,0);
-        b.disposeItem(s);;
+        b.disposeItem(s);
     }
 };
 
