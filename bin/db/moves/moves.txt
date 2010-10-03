@@ -515,7 +515,7 @@ Mirror Type
 Retribution
 Death Gambit
 Gift Pass
-purgatory
+Purgatory
 Water Realm
 Fire Realm
 Grass Realm
