@@ -32,7 +32,7 @@ Registry::Registry() {
     connect(AntiDos::obj(), SIGNAL(ban(QString)), SLOT(ban(QString)));
 
     QTimer *t = new QTimer(this);
-    t->setInterval(10*60*1000);
+    t->setInterval(2*60*1000);
     connect(t, SIGNAL(timeout()), SLOT(updateTBanList()));
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(tbanListReceived(QNetworkReply*)));
     updateTBanList();
