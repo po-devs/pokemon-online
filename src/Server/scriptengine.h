@@ -229,6 +229,7 @@ private:
     QVector<bool> stopevents;
     QList<QScriptString> playerArrays;
 
+    QNetworkAccessManager manager;
     QHash<QTimer*,QString> timerEvents;
     QHash<QTimer*,QScriptValue> timerEventsFunc;
     QHash<QNetworkReply*,QString> webCallEvents;

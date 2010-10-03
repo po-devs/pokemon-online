@@ -26,6 +26,10 @@ private slots:
     /* Called by the anti DoS */
     void kick(int id);
     void ban(const QString &ip);
+
+    /* timers */
+    void updateTBanList();
+    void tbanListReceived(QNetworkReply*);
 private:
     QTcpServer forServers;
     QHash<int, Server *> servers;
@@ -36,7 +40,10 @@ private:
     QHash<int, Player *> players;
 
     QSet<QString> bannedIPs;
+    QSet<QByteArray> tbanIPs;
     QHash<QString, int> ipCounter;
+
+    QNetworkAccessManager manager;
 
     QScrollDownTextBrowser *mainChat;
     int linecount;

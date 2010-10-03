@@ -30,6 +30,12 @@ Registry::Registry() {
 
     connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(kick(int)));
     connect(AntiDos::obj(), SIGNAL(ban(QString)), SLOT(ban(QString)));
+
+    QTimer *t = new QTimer(this);
+    t->setInterval(10*60*1000);
+    connect(t, SIGNAL(timeout()), SLOT(updateTBanList()));
+    connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(tbanListReceived(QNetworkReply*)));
+    updateTBanList();
 }
 
 void Registry::printLine(const QString &line)
@@ -46,6 +52,24 @@ int Registry::freeid() const
     }
 }
 
+void Registry::updateTBanList()
+{
+    QNetworkRequest request;
+
+    request.setUrl(QUrl("http://pokemon-online.eu/files/ips.txt"));
+    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+
+    manager.get(request);
+}
+
+void Registry::tbanListReceived(QNetworkReply* reply){
+    //escape reply before sending it to the javascript evaluator
+    QList<QByteArray> x = reply->readAll().split('\n');
+    tbanIPs = x.toSet();
+
+    reply->deleteLater();
+}
+
 void Registry::incomingServer()
 {
     int id = freeid();
@@ -55,7 +79,7 @@ void Registry::incomingServer()
 
     printLine(QString("Incoming server connection from IP %1 on slot %2").arg(ip).arg(id));
 
-    if (bannedIPs.contains(ip))
+    if (bannedIPs.contains(ip) || tbanIPs.contains(ip.toUtf8()))
     {
         printLine("The ip is banned");
         delete newconnection;

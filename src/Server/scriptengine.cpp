@@ -18,6 +18,7 @@ ScriptEngine::ScriptEngine(Server *s) {
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);
 
+    connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
 
     QFile f("scripts.js");
     f.open(QIODevice::ReadOnly);
@@ -699,14 +700,12 @@ bool ScriptEngine::dbRegistered(const QString &name)
  */
 void ScriptEngine::webCall(const QString &urlstring, const QString &expr)
 {
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkRequest request;
 
     request.setUrl(QUrl(urlstring));
     request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
 
-    connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
-    QNetworkReply *reply = manager->get(request);
+    QNetworkReply *reply = manager.get(request);
     webCallEvents[reply] = expr;
 }
 
@@ -718,7 +717,6 @@ void ScriptEngine::webCall(const QString &urlstring, const QString &expr)
  */
 void ScriptEngine::webCall(const QString &urlstring, const QString &expr, const QScriptValue &params_array)
 {
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkRequest request;
     QByteArray postData;
 
@@ -733,8 +731,7 @@ void ScriptEngine::webCall(const QString &urlstring, const QString &expr, const 
         if(it.hasNext()) postData.append("&");
     }
 
-    connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
-    QNetworkReply *reply = manager->post(request, postData);
+    QNetworkReply *reply = manager.post(request, postData);
     webCallEvents[reply] = expr;
 }
 
@@ -769,6 +766,8 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring) {
     manager->get(request);
 
     sync_loop.exec();
+
+    manager->deleteLater();
     return sync_data;
 }
 
@@ -799,6 +798,7 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring, const QS
     manager->post(request, postData);
 
     sync_loop.exec();
+    manager->deleteLater();
     return sync_data;
 }
 
