@@ -2263,7 +2263,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         return;
     }
 
-    if (fm.statusKind > Pokemon::Confused || fm.status == 0) {
+    if (fm.status > Pokemon::Confused || fm.status == 0) {
         applyingMoveStatMods = false;
         return; // Other status effects than status and confusion are, on PO, dealt as special moves. Should probably be changed
     }
