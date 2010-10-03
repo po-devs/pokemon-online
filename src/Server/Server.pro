@@ -5,6 +5,7 @@ QT += network \
     script \
     xml \
     sql
+
 TARGET = Server
 DESTDIR = ../../bin
 TEMPLATE = app
