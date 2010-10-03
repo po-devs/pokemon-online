@@ -40,7 +40,7 @@ private:
     QHash<int, Player *> players;
 
     QSet<QString> bannedIPs;
-    QSet<QByteArray> tbanIPs;
+    QSet<QString> tbanIPs;
     QHash<QString, int> ipCounter;
 
     QNetworkAccessManager manager;

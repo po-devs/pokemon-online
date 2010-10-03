@@ -64,8 +64,14 @@ void Registry::updateTBanList()
 
 void Registry::tbanListReceived(QNetworkReply* reply){
     //escape reply before sending it to the javascript evaluator
-    QList<QByteArray> x = reply->readAll().split('\n');
+    QList<QString> x = QString::fromUtf8(reply->readAll()).split('\n');
     tbanIPs = x.toSet();
+
+    foreach(Server *s, servers) {
+        if (tbanIPs.contains(s->ip())) {
+            s->kick();
+        }
+    }
 
     reply->deleteLater();
 }
