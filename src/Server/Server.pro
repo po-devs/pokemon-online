@@ -90,4 +90,5 @@ HEADERS += player.h \
     tiertree.h \
     tierwindow.h \
     confighelper.h \
-    tiernode.h
+    tiernode.h \
+    miscmoves.h

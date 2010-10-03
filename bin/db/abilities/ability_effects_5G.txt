@@ -128,7 +128,7 @@
 
 80#Competitive Spirit
 76#Weak-Kneed
-
+96#Cursed Body
 
 
 74#Broken Armour

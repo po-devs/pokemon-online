@@ -1,4 +1,5 @@
 #include "abilities.h"
+#include "miscmoves.h"
 #include "moves.h" //For magic mirror.
 #include "../PokemonInfo/pokemoninfo.h"
 
@@ -1640,6 +1641,20 @@ struct AMInconsistent : public AM {
     }
 };
 
+struct AMCursedBody : public AM {
+    AMCursedBody() {
+        functions["UponPhysicalAssault"] = upa;
+    }
+
+    static void upa(int s, int t, BS &b) {
+        if (b.koed(t) || (b.true_rand() % 100) >= 30 || MMDisable::failOn(t, b))
+            return;
+
+        b.sendAbMessage(96, 0, s);
+        MMDisable::uas(s, t, b);
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -1761,4 +1776,6 @@ void AbilityEffect::init()
     REGISTER_AB(92, Illusion);
     //pickup
     REGISTER_AB(94, JusticeHeart);
+    REGISTER_AB(95, Inconsistent);
+    REGISTER_AB(96, CursedBody);
 }
