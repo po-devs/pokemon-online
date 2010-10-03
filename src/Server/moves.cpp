@@ -1669,7 +1669,10 @@ struct MMBind : public MM
             } else {
                 poke(b,s)["TrappedRemainingTurns"] = count;
                 b.sendMoveMessage(10,0,s,MoveInfo::Type(move, b.gen()),s,move);
-                b.inflictDamage(s, b.poke(s).totalLifePoints()/16,s,false);
+
+                int trapper = poke(b,s)["TrappedBy"].toInt();
+
+                b.inflictDamage(s, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::PressureBand) ? 8 : 16),s,false);
             }
         }
     }
