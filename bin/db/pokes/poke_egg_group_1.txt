@@ -530,14 +530,14 @@
 529 Ground
 530 Ground
 531 Fairy
-532 Humanshape
-533 Humanshape
-534 Humanshape
+532 HumanShape
+533 HumanShape
+534 HumanShape
 535 Water 1
 536 Water 1
 537 Water 1
-538 Humanshape
-539 Humanshape
+538 HumanShape
+539 HumanShape
 540 Bug
 541 Bug
 542 Bug
@@ -565,16 +565,16 @@
 564 Water 1
 565 Water 1
 566 Flying
-567 Flyinh
+567 Flying
 568 Mineral
 569 Mineral
 570 Ground
 571 Ground
 572 Ground
 573 Ground
-574 Humanshape
-575 Humanshape
-576 Humanshape
+574 HumanShape
+575 HumanShape
+576 HumanShape
 577 Indeterminate
 578 Indeterminate
 579 Indeterminate
@@ -603,8 +603,8 @@
 602 Indeterminate
 603 Indeterminate
 604 Indeterminate
-605 Humanshape
-606 Humanshape
+605 HumanShape
+606 HumanShape
 607 Indeterminate
 608 Indeterminate
 609 Indeterminate
@@ -622,8 +622,8 @@
 621 Dragon
 622 Mineral
 623 Mineral
-624 Humanshape
-625 Humanshape
+624 HumanShape
+625 HumanShape
 626 Ground
 627 Flying
 628 Flying
