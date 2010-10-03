@@ -3066,10 +3066,10 @@ struct MMBrickBreak : public MM
     }
     static void bh(int s, int t, BS &b) {
         int opp = b.player(t);
-        if (team(b,opp).value("Barrier0Count").toInt() > 0 || team(b,opp).value("Barrier1Count").toInt() > 0) {
+        if (team(b,opp).value("Barrier1Count").toInt() > 0 || team(b,opp).value("Barrier2Count").toInt() > 0) {
 	    b.sendMoveMessage(14,0,s,Pokemon::Fighting);
-            team(b,opp)["Barrier0Count"] = 0;
             team(b,opp)["Barrier1Count"] = 0;
+            team(b,opp)["Barrier2Count"] = 0;
 	}
     }
 };
