@@ -13,7 +13,7 @@ BattlingOptionsWindow::BattlingOptionsWindow()
     fl->addLayout(new QSideBySide(new QLabel(tr("Number of battles between rated battles against the same IP")), diffIps = new QSpinBox(this)));
     fl->addWidget(apply = new QPushButton(tr("&Apply")));
 
-    QSettings s("config");
+    QSettings s("config", QSettings::IniFormat);
     sameIp->setChecked(s.value("battles_with_same_ip_unrated").toBool());
     diffIps->setValue(s.value("rated_battles_memory_number").toInt());
 
@@ -22,7 +22,7 @@ BattlingOptionsWindow::BattlingOptionsWindow()
 
 void BattlingOptionsWindow::applyChanges()
 {
-    QSettings s("config");
+    QSettings s("config", QSettings::IniFormat);
 
     s.setValue("battles_with_same_ip_unrated", sameIp->isChecked());
     s.setValue("rated_battles_memory_number", diffIps->value());
