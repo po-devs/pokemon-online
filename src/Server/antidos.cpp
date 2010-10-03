@@ -6,7 +6,7 @@ AntiDosWindow::AntiDosWindow()
 
     QFormLayout *mylayout = new QFormLayout(this);
 
-    QSettings settings("config");
+    QSettings settings("config", QSettings::IniFormat);
 
     QSpinBox *mppip = new QSpinBox();
     mppip->setRange(1,8);
@@ -65,7 +65,7 @@ void AntiDosWindow::apply()
     obj->ban_after_x_kicks = ban_after_x_kicks->value();
     obj->on = aDosOn->isChecked();
 
-    QSettings settings("config");
+    QSettings settings("config", QSettings::IniFormat);
     /* initializing the default init values if not there */
 
     settings.setValue("max_people_per_ip", obj->max_people_per_ip);
@@ -84,7 +84,7 @@ AntiDos::AntiDos() {
 }
 
 void AntiDos::init() {
-    QSettings settings("config");
+    QSettings settings("config", QSettings::IniFormat);
     /* initializing the default init values if not there */
     if (settings.value("max_people_per_ip").isNull()) {
         settings.setValue("max_people_per_ip", 2);
