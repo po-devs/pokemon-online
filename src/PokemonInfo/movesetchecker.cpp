@@ -84,8 +84,6 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
     moves.remove(0);
 
     for (int g = gen; g >= 3; g--) {
-        if (!PokemonInfo::Exists(pokeid, g))
-            break;
         if (!PokemonInfo::Moves(pokeid, g).contains(moves)) {
             moves.subtract(PokemonInfo::Moves(pokeid, g));
             if (invalid_moves) {
