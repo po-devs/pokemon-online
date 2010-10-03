@@ -199,7 +199,6 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
     switch (command) {
     case Login:
         {
-            qDebug() << "Login received";
             if (mysocket.id() != 0) {
                 TeamInfo team;
                 bool ladder, show_team;
@@ -208,7 +207,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
                 emit loggedIn(team,ladder,show_team,c);
             } else
                 emit accepted(); // for registry;
-            qDebug() << "Login end";
+
             break;
         }
         /* If used, would be used to dial with the server directly */

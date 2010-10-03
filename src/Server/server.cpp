@@ -353,7 +353,7 @@ void Server::connectToRegistry()
 
     QTcpSocket * s = new QTcpSocket(NULL);
     //New port for fifth gen servers
-    s->connectToHost("127.0.0.1", 5083);
+    s->connectToHost("pokemon-online.dynalias.net", 5083);
 
     connect(s, SIGNAL(connected()), this, SLOT(regConnected()));
     connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(regConnectionError()));
