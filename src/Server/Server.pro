@@ -101,5 +101,5 @@ HEADERS += mainwindow.h \
 
 CONFIG(nogui) {
     QT -= gui
-    DEFINES += QT_NO_GUI
+    DEFINES += PO_NO_GUI
 }

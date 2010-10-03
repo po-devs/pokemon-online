@@ -1,4 +1,4 @@
-#ifndef QT_NO_GUI
+#ifndef PO_NO_GUI
 # include <QtGui/QApplication>
 # include "mainwindow.h"
 #else
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
 
     try{
         int i = -1;
-#ifndef QT_NO_GUI
+#ifndef PO_NO_GUI
         if(showWindow == false){
 #endif
             qDebug() << "Server is running in headless mode";
@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
             i = b.exec();
             qDebug() << "Returned with status " << i;
 
-#ifndef QT_NO_GUI
+#ifndef PO_NO_GUI
         } else {
             qDebug() << "Server is running in windowed mode";
             QApplication a(argc, argv);
