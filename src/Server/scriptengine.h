@@ -208,6 +208,8 @@ public:
     Q_INVOKABLE void modifyMovePriority(int moveNum, signed char priority, int gen = GEN_MAX);
    
     Q_INVOKABLE QScriptValue banList();
+    Q_INVOKABLE void ban(QString name);
+    Q_INVOKABLE void unban(QString name);
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
