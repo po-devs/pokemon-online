@@ -548,7 +548,12 @@ struct IMRuggedHelmet : public IM
 struct IMBalloon : public IM
 {
     IMBalloon() {
+        functions["UponSetup"] = &us;
         functions["UponBeingHit"] = &upbi;
+    }
+
+    static void us(int s, int, BS &b) {
+        b.sendItemMessage(35, s, 1);
     }
 
     static void upbi(int s, int, BS &b) {

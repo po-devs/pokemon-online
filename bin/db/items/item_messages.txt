@@ -33,7 +33,7 @@
 
 
 %f is hurt by %s's Rugged Helmet!
-%s's Balloon popped!
+%s's Balloon popped!|%s is floating on a balloon!
 %s's %i raised its Special Attack!
 %s's %i raised %m's power!
 %s used its Red Card on %f!
