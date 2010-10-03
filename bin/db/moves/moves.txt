@@ -554,7 +554,7 @@ Flame Dance
 Freezebolt
 Cold Flare
 Back out
-Icicle drop
+Icicle Drop
 V-Generate
 Cross Flame
 Cross Thunder
