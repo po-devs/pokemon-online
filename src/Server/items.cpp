@@ -619,7 +619,7 @@ struct IMRedCard : public IM
         if (turn(b,t)["RedCardCount"] != slot(b,t)["SwitchCount"])
             return;
         int s = turn(b,t)["RedCardUser"].toInt();
-        if (b.koed(s) || turn(b,t)["RedCardOffenderCount"] != slot(b,s)["SwitchCount"])
+        if (b.koed(s) || turn(b,t)["RedCardGiverCount"] != slot(b,s)["SwitchCount"])
             return;
         if (!b.hasWorkingItem(s, Item::RedCard))
             return;
@@ -671,18 +671,28 @@ struct IMEscapeButton : public IM
     }
 
     static void aaf(int, int, BS &b) {
-        foreach(int p, b.sortedBySpeed()) {
+        std::vector<int> speeds = b.sortedBySpeed();
+
+        for (signed i = 0; i < speeds.size(); i++) {
+            int p = speeds[i];
             if (!b.hasWorkingItem(p, Item::EscapeButton))
-                return;
+                continue;
             if (!turn(b,p).contains("EscapeButtonActivated"))
                 continue;
             if (turn(b,p)["EscapeButtonCount"] != slot(b,p)["SwitchCount"])
-                return;
+                continue;
 
             b.sendItemMessage(39, p, 0);
             b.disposeItem(p);
             b.requestSwitch(p);
         }
+    }
+};
+
+/* Needs a function in order for its Item argument to be registered */
+struct IMCassette : public IM {
+    IMCassette() {
+
     }
 };
 
@@ -713,6 +723,7 @@ void ItemEffect::init()
     REGISTER_ITEM(26, CriticalPoke);
     REGISTER_ITEM(27, PokeTypeBoost);
     REGISTER_ITEM(28, StickyBarb);
+    REGISTER_ITEM(32, Cassette);
     REGISTER_ITEM(33, EvolutionStone);
     REGISTER_ITEM(34, RuggedHelmet);
     REGISTER_ITEM(35, Balloon);

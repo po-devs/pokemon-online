@@ -5349,7 +5349,9 @@ struct MMTechnoBuster : public MM
 
     static void ms (int s, int, BS &b) {
         int item = b.poke(s).item();
-        if (ItemInfo::isCassette(item) && b.hasWorkingItem(s, item)) {
+        if (!ItemInfo::isCassette(item))
+            return;
+        if (b.hasWorkingItem(s, item)) {
             tmove(b,s).type = poke(b,s)["ItemArg"].toInt();
         }
     }
