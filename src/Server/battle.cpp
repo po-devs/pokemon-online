@@ -3426,15 +3426,23 @@ void BattleSituation::gainPP(int player, int move, int gain)
 
 int BattleSituation::getStat(int player, int stat, int purityLevel)
 {
-    /* Not sure on the order here... haha. */
-    /* Attack and defense switched */
-    if (pokelong[player].contains("PowerTricked") && (stat == 1 || stat == 2)) {
-        stat = 3 - stat;
+    int baseStat = 0;
+    //Trickery
+    if (stat == Attack && turnlong[player].contains("CustomAttackStat")) {
+        baseStat = turnlong[player]["CustomAttackStat"].toInt();
+    } else {
+        /* Not sure on the order here... haha. */
+        /* Attack and defense switched */
+        if (pokelong[player].contains("PowerTricked") && (stat == 1 || stat == 2)) {
+            stat = 3 - stat;
+        }
+        /* Wonder room: attack & sp attack switched, 5th gen */
+        if (battlelong.contains("WonderRoomCount") && (stat == 2 || stat == 4)) {
+            stat = 6 - stat;
+        }
+        baseStat = fieldpokes[player].stats[stat];
     }
-    /* Wonder room: attack & sp attack switched, 5th gen */
-    if (battlelong.contains("WonderRoomCount") && (stat == 2 || stat == 4)) {
-        stat = 6 - stat;
-    }
+
     QString q = "Stat"+QString::number(stat);
     turnlong[player].remove(q+"AbilityModifier");
     turnlong[player].remove(q+"PartnerAbilityModifier");
@@ -3453,7 +3461,7 @@ int BattleSituation::getStat(int player, int stat, int purityLevel)
             callaeffects(partner, player, "PartnerStatModifier");
         }
     }
-    int ret = fieldpokes[player].stats[stat]*getStatBoost(player, stat)*(20+turnlong[player].value(q+"AbilityModifier").toInt())/20;
+    int ret = baseStat*getStatBoost(player, stat)*(20+turnlong[player].value(q+"AbilityModifier").toInt())/20;
 
     if (doubles()) {
         ret = ret * (20+turnlong[player].value(q+"PartnerAbilityModifier").toInt())/20;
