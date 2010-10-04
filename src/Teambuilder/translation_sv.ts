@@ -4,62 +4,62 @@
 <context>
     <name>AdvancedSearch</name>
     <message>
-        <location filename="pokedex.cpp" line="920"/>
+        <location filename="pokedex.cpp" line="886"/>
         <source>Types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="924"/>
+        <location filename="pokedex.cpp" line="890"/>
         <source>Type 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="925"/>
+        <location filename="pokedex.cpp" line="891"/>
         <source>Type 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="940"/>
+        <location filename="pokedex.cpp" line="906"/>
         <source>Ability</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="950"/>
+        <location filename="pokedex.cpp" line="919"/>
         <source>Base Stats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="955"/>
+        <location filename="pokedex.cpp" line="924"/>
         <source> </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="956"/>
+        <location filename="pokedex.cpp" line="925"/>
         <source>&gt;=</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="957"/>
+        <location filename="pokedex.cpp" line="926"/>
         <source>=</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="958"/>
+        <location filename="pokedex.cpp" line="927"/>
         <source>&lt;=</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="968"/>
+        <location filename="pokedex.cpp" line="937"/>
         <source>Moves</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="982"/>
+        <location filename="pokedex.cpp" line="951"/>
         <source>&amp;Search !</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="985"/>
+        <location filename="pokedex.cpp" line="954"/>
         <source>&amp;Results</source>
         <translation type="unfinished"></translation>
     </message>
@@ -67,12 +67,12 @@
 <context>
     <name>Analyzer</name>
     <message>
-        <location filename="analyze.cpp" line="250"/>
+        <location filename="analyze.cpp" line="249"/>
         <source>The server requires insecure authentification.</source>
         <translation>Servern kräver osäker validering.</translation>
     </message>
     <message>
-        <location filename="analyze.cpp" line="407"/>
+        <location filename="analyze.cpp" line="405"/>
         <source>Protocol error: unknown command received -- maybe an update for the program is available</source>
         <translation>Protokollfel: okänt kommando mottaget -- det kan finnas en programuppdatering tillgänglig</translation>
     </message>
@@ -101,28 +101,30 @@ Effekt: %5</translation>
 <context>
     <name>BaseBattleDisplay</name>
     <message>
-        <location filename="basebattlewindow.cpp" line="1053"/>
+        <location filename="basebattlewindow.cpp" line="1086"/>
         <source>Lv. %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="1061"/>
-        <location filename="basebattlewindow.cpp" line="1063"/>
+        <location filename="basebattlewindow.cpp" line="1094"/>
+        <location filename="basebattlewindow.cpp" line="1096"/>
+        <location filename="basebattlewindow.cpp" line="1112"/>
+        <location filename="basebattlewindow.cpp" line="1114"/>
         <source>%1 lv %2 -- %3%</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="1139"/>
+        <location filename="basebattlewindow.cpp" line="1185"/>
         <source>Spikes level %1</source>
         <translation>Spikes nivå %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="1147"/>
+        <location filename="basebattlewindow.cpp" line="1193"/>
         <source>Toxic Spikes level %1</source>
         <translation>Toxic Spikes nivå %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="1153"/>
+        <location filename="basebattlewindow.cpp" line="1199"/>
         <source>Stealth Rock</source>
         <translation></translation>
     </message>
@@ -130,167 +132,167 @@ Effekt: %5</translation>
 <context>
     <name>BaseBattleWindow</name>
     <message>
-        <location filename="basebattlewindow.cpp" line="36"/>
+        <location filename="basebattlewindow.cpp" line="39"/>
         <source>Battle between %1 and %2 is underway!</source>
         <translation>Strid mellan %1 och %2 inleds!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="72"/>
+        <location filename="basebattlewindow.cpp" line="75"/>
         <source>Battle between %1 and %2</source>
         <translation>Strid mellan %1 och %2</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="78"/>
+        <location filename="basebattlewindow.cpp" line="81"/>
         <source>Save log</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="79"/>
+        <location filename="basebattlewindow.cpp" line="82"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="80"/>
+        <location filename="basebattlewindow.cpp" line="83"/>
         <source>&amp;Close</source>
         <translation>&amp;Stäng</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="93"/>
+        <location filename="basebattlewindow.cpp" line="96"/>
         <source>C&amp;hat</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="94"/>
+        <location filename="basebattlewindow.cpp" line="97"/>
         <source>&amp;Ignore Spectators</source>
         <translation>&amp;Ignorera åskådare</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="219"/>
+        <location filename="basebattlewindow.cpp" line="224"/>
         <source>%1&apos;s %2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="368"/>
+        <location filename="basebattlewindow.cpp" line="385"/>
         <source>%1 sent out %2! (%3)</source>
         <translation>%1 skickade ut %2 (%3)</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="370"/>
+        <location filename="basebattlewindow.cpp" line="387"/>
         <source>%1 sent out %2!</source>
         <translation>%1 skickade ut %2!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="376"/>
+        <location filename="basebattlewindow.cpp" line="393"/>
         <source>%1 called %2 back!</source>
         <translation>%1 återkallade %2!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="384"/>
+        <location filename="basebattlewindow.cpp" line="401"/>
         <source>%1 used %2!</source>
         <translation>%1 använde %2!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="392"/>
+        <location filename="basebattlewindow.cpp" line="409"/>
         <source>Start of turn %1</source>
         <translation>Början av omgång %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="412"/>
+        <location filename="basebattlewindow.cpp" line="429"/>
         <source>%1 fainted!</source>
         <translation>%1 svimmade!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="419"/>
+        <location filename="basebattlewindow.cpp" line="436"/>
         <source>Hit %1 times!</source>
         <translation>Träffade %1 gång(er)!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="428"/>
+        <location filename="basebattlewindow.cpp" line="445"/>
         <source>It had no effect!</source>
         <translation>Den hade ingen effekt!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="432"/>
+        <location filename="basebattlewindow.cpp" line="449"/>
         <source>It&apos;s not very effective...</source>
         <translation>Den är inte särskilt effektiv...</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="436"/>
+        <location filename="basebattlewindow.cpp" line="453"/>
         <source>It&apos;s super effective!</source>
         <translation>Den är super effektiv!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="443"/>
+        <location filename="basebattlewindow.cpp" line="460"/>
         <source>A critical hit!</source>
         <translation>En ordentlig fullträff!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="446"/>
+        <location filename="basebattlewindow.cpp" line="463"/>
         <source>The attack of %1 missed!</source>
         <translation>%1s attack missade!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="449"/>
+        <location filename="basebattlewindow.cpp" line="466"/>
         <source>%1 avoided the attack!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="455"/>
+        <location filename="basebattlewindow.cpp" line="472"/>
         <source>%1&apos;s %2 %3%4!</source>
         <translation>%1s %2 %3%4!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="455"/>
+        <location filename="basebattlewindow.cpp" line="472"/>
         <source>sharply </source>
         <translation>skarperligen</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="455"/>
+        <location filename="basebattlewindow.cpp" line="472"/>
         <source>rose</source>
         <translation>ökade</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="455"/>
+        <location filename="basebattlewindow.cpp" line="472"/>
         <source>fell</source>
         <translation>sjönk</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="460"/>
+        <location filename="basebattlewindow.cpp" line="477"/>
         <source>%1 is paralyzed! It may be unable to move!</source>
         <translation>%1 är paralyserad! Den kan bli oförmögen att agera!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="461"/>
+        <location filename="basebattlewindow.cpp" line="480"/>
         <source>%1 was burned!</source>
         <translation>%1 blev brännskadad!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="462"/>
+        <location filename="basebattlewindow.cpp" line="479"/>
         <source>%1 was frozen solid!</source>
         <translation>%1 blev frusen!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="463"/>
+        <location filename="basebattlewindow.cpp" line="478"/>
         <source>%1 fell asleep!</source>
         <translation>%1 somnade!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="464"/>
+        <location filename="basebattlewindow.cpp" line="481"/>
         <source>%1 was poisoned!</source>
         <translation>%1 blev förgiftad!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="465"/>
+        <location filename="basebattlewindow.cpp" line="482"/>
         <source>%1 was badly poisoned!</source>
         <translation>%1 blev svårt förgiftad!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="473"/>
+        <location filename="basebattlewindow.cpp" line="492"/>
         <source>%1 became confused!</source>
         <translation>%1 blev förvirrad!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="494"/>
+        <location filename="basebattlewindow.cpp" line="516"/>
         <source>%1 is already %2.</source>
         <translation type="unfinished">%1 är redan %2! {1 ?} {2.?}</translation>
     </message>
@@ -299,62 +301,62 @@ Effekt: %5</translation>
         <translation type="obsolete">%1 är redan %2!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="504"/>
+        <location filename="basebattlewindow.cpp" line="527"/>
         <source>%1 is confused!</source>
         <translation>%1 är förvirrad!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="507"/>
+        <location filename="basebattlewindow.cpp" line="530"/>
         <source>It hurt itself in its confusion!</source>
         <translation>Den skadade sig i sin förvirring!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="510"/>
+        <location filename="basebattlewindow.cpp" line="533"/>
         <source>%1 snapped out its confusion!</source>
         <translation>%1 kom ur sin förvirring!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="513"/>
+        <location filename="basebattlewindow.cpp" line="536"/>
         <source>%1 is paralyzed! It can&apos;t move!</source>
         <translation>%1 är paralyserad! Den kan inte agera!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="516"/>
+        <location filename="basebattlewindow.cpp" line="539"/>
         <source>%1 is fast asleep!</source>
         <translation>%1 sover fortfarande!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="519"/>
+        <location filename="basebattlewindow.cpp" line="542"/>
         <source>%1 woke up!</source>
         <translation>%1 vaknade!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="522"/>
+        <location filename="basebattlewindow.cpp" line="545"/>
         <source>%1 is hurt by its burn!</source>
         <translation>%1s brännskador värker!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="525"/>
+        <location filename="basebattlewindow.cpp" line="548"/>
         <source>%1 is hurt by poison!</source>
         <translation>%1s förgiftning värker!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="528"/>
+        <location filename="basebattlewindow.cpp" line="551"/>
         <source>%1 is frozen solid!</source>
         <translation>%1 är frusen!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="531"/>
+        <location filename="basebattlewindow.cpp" line="554"/>
         <source>%1 thawed out!</source>
         <translation>%1 tinade!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="537"/>
+        <location filename="basebattlewindow.cpp" line="560"/>
         <source>But it failed!</source>
         <translation>Men det misslyckades!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="591"/>
+        <location filename="basebattlewindow.cpp" line="614"/>
         <source>But there was no target...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -363,113 +365,118 @@ Effekt: %5</translation>
         <translation type="obsolete">Men det saknas ett Pokémon mål!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="611"/>
+        <location filename="basebattlewindow.cpp" line="634"/>
         <source>%1 flinched!</source>
         <translation>%1 vek undan!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="614"/>
+        <location filename="basebattlewindow.cpp" line="642"/>
         <source>%1 is hit with recoil!</source>
         <translation>%1 skadas av rekylen!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="625"/>
+        <location filename="basebattlewindow.cpp" line="644"/>
+        <source>%1 had its energy drained!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="basebattlewindow.cpp" line="657"/>
         <source>The hail subsided!</source>
         <translation>Haglet avtog!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="626"/>
+        <location filename="basebattlewindow.cpp" line="658"/>
         <source>The sandstorm subsided!</source>
         <translation>Sandstormen avtog!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="627"/>
+        <location filename="basebattlewindow.cpp" line="659"/>
         <source>The sunlight faded!</source>
         <translation>Solskenet tonade bort!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="628"/>
+        <location filename="basebattlewindow.cpp" line="660"/>
         <source>The rain stopped!</source>
         <translation>Regnet upphörde!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="632"/>
+        <location filename="basebattlewindow.cpp" line="664"/>
         <source>%1 is buffeted by the hail!</source>
         <translation>%1 tar en stöt av haglet!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="633"/>
+        <location filename="basebattlewindow.cpp" line="665"/>
         <source>%1 is buffeted by the sandstorm!</source>
         <translation>%1 tar en stöt av sandstormen!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="637"/>
+        <location filename="basebattlewindow.cpp" line="669"/>
         <source>Hail continues to fall!</source>
         <translation>Haglet fortsätter falla!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="638"/>
+        <location filename="basebattlewindow.cpp" line="670"/>
         <source>The sandstorm rages!</source>
         <translation>Sandstormen blåser!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="639"/>
+        <location filename="basebattlewindow.cpp" line="671"/>
         <source>The sunlight is strong!</source>
         <translation>Solljuset är intensivt!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="640"/>
+        <location filename="basebattlewindow.cpp" line="672"/>
         <source>Rain continues to fall!</source>
         <translation>Det fortsätter regna!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="649"/>
+        <location filename="basebattlewindow.cpp" line="681"/>
         <source>%1 lost %2% of its health!</source>
         <translation>%1 tappade %2% av dess hälsa!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="689"/>
+        <location filename="basebattlewindow.cpp" line="722"/>
         <source>Tie between %1 and %2!</source>
         <translation>Oavgjort mellan %1 och %2!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="691"/>
+        <location filename="basebattlewindow.cpp" line="724"/>
         <source>%1 won the battle!</source>
         <translation>%1 vann striden!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="706"/>
-        <location filename="basebattlewindow.cpp" line="714"/>
+        <location filename="basebattlewindow.cpp" line="740"/>
+        <location filename="basebattlewindow.cpp" line="744"/>
         <source>Rule: </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="714"/>
+        <location filename="basebattlewindow.cpp" line="740"/>
         <source>Rated</source>
         <translation>Graderad</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="714"/>
+        <location filename="basebattlewindow.cpp" line="740"/>
         <source>Unrated</source>
         <translation>Ograderad</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="721"/>
+        <location filename="basebattlewindow.cpp" line="754"/>
         <source>Tier: </source>
         <translation>Klass: </translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="775"/>
+        <location filename="basebattlewindow.cpp" line="808"/>
         <source>Unknown command received, are you up to date?</source>
         <translation>Okänt kommando mottaget. Är du uppdaterad?</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="794"/>
+        <location filename="basebattlewindow.cpp" line="827"/>
         <source>%1 is watching the battle.</source>
         <translation>%1 tittar på och följer striden.</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="794"/>
+        <location filename="basebattlewindow.cpp" line="827"/>
         <source>%1 stopped watching the battle.</source>
         <translation>%1 slutade följa striden.</translation>
     </message>
@@ -477,12 +484,12 @@ Effekt: %5</translation>
 <context>
     <name>BaseChallengeWindow</name>
     <message>
-        <location filename="challenge.cpp" line="57"/>
+        <location filename="challenge.cpp" line="56"/>
         <source>Singles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="challenge.cpp" line="58"/>
+        <location filename="challenge.cpp" line="57"/>
         <source>Doubles</source>
         <translation type="unfinished"></translation>
     </message>
@@ -490,17 +497,17 @@ Effekt: %5</translation>
 <context>
     <name>BattleDisplay</name>
     <message>
-        <location filename="battlewindow.cpp" line="1044"/>
+        <location filename="battlewindow.cpp" line="1068"/>
         <source>Spikes level %1</source>
         <translation>Spikes nivå %1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1052"/>
+        <location filename="battlewindow.cpp" line="1076"/>
         <source>Toxic Spikes level %1</source>
         <translation>Toxic Spikes nivå %1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1058"/>
+        <location filename="battlewindow.cpp" line="1082"/>
         <source>Stealth Rock</source>
         <translation></translation>
     </message>
@@ -508,32 +515,32 @@ Effekt: %5</translation>
 <context>
     <name>BattleFinder</name>
     <message>
-        <location filename="client.cpp" line="1619"/>
+        <location filename="client.cpp" line="1630"/>
         <source>Force rated battles</source>
         <translation>Endast graderade matcher</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1620"/>
+        <location filename="client.cpp" line="1631"/>
         <source>Force same tier</source>
         <translation>Endast i samma klass</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1621"/>
+        <location filename="client.cpp" line="1632"/>
         <source>Double battle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1624"/>
+        <location filename="client.cpp" line="1635"/>
         <source>Only battle players with a max rating difference of </source>
         <translation>Möt bara spelare med max graderingsdiffrential av </translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1629"/>
+        <location filename="client.cpp" line="1640"/>
         <source>Find Battle</source>
         <translation>Hitta match</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1630"/>
+        <location filename="client.cpp" line="1641"/>
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
@@ -541,100 +548,100 @@ Effekt: %5</translation>
 <context>
     <name>BattleWindow</name>
     <message>
-        <location filename="battlewindow.cpp" line="64"/>
+        <location filename="battlewindow.cpp" line="66"/>
         <source>Battling against %1</source>
         <translation>Strider mot %1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="66"/>
+        <location filename="battlewindow.cpp" line="68"/>
         <source>&amp;Forfeit</source>
         <translation>&amp;Ge upp</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="68"/>
+        <location filename="battlewindow.cpp" line="70"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Avbryt</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="69"/>
-        <location filename="battlewindow.cpp" line="117"/>
+        <location filename="battlewindow.cpp" line="71"/>
+        <location filename="battlewindow.cpp" line="119"/>
         <source>&amp;Attack</source>
         <translation>&amp;Attackera</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="70"/>
+        <location filename="battlewindow.cpp" line="72"/>
         <source>&amp;Switch Pokemon</source>
         <oldsource>&amp;Switch PokÃ©mon</oldsource>
         <translation type="unfinished">&amp;Byt Pokémon</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="74"/>
+        <location filename="battlewindow.cpp" line="76"/>
         <source>&amp;Moves</source>
         <translation>&amp;Drag</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="75"/>
+        <location filename="battlewindow.cpp" line="77"/>
         <source>&amp;Pokemon</source>
         <oldsource>&amp;PokÃ©mon</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="76"/>
+        <location filename="battlewindow.cpp" line="78"/>
         <source>Spectators</source>
         <translation>Åskådare</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="109"/>
+        <location filename="battlewindow.cpp" line="111"/>
         <source>Battle between %1 and %2 started!</source>
         <translation>Matchen mellan %1 och %2 är igång!</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="119"/>
+        <location filename="battlewindow.cpp" line="121"/>
         <source>&amp;Go Back</source>
         <translation>&amp;Återgå</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="127"/>
+        <location filename="battlewindow.cpp" line="129"/>
         <source>the foe&apos;s %1</source>
         <translation>motståndarens %1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="199"/>
+        <location filename="battlewindow.cpp" line="202"/>
         <source>Losing your battle</source>
         <translation>Förlora striden</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="199"/>
+        <location filename="battlewindow.cpp" line="202"/>
         <source>Do you mean to forfeit?</source>
         <translation>Vill du ge upp?</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="467"/>
+        <location filename="battlewindow.cpp" line="471"/>
         <source>%1 sent out %2! (%3)</source>
         <translation>%1 kallade ut %2! (%3)</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="469"/>
+        <location filename="battlewindow.cpp" line="473"/>
         <source>%1 sent out %2!</source>
         <translation>%1 kallade ut %2!</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="539"/>
+        <location filename="battlewindow.cpp" line="543"/>
         <source>%1 lost %2 HP! (%3% of its health)</source>
         <translation>%1 tappade %2 HP! (%3% av sin hälsa)</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="541"/>
+        <location filename="battlewindow.cpp" line="545"/>
         <source>%1 lost %2% of its health!</source>
         <translation>%1 tappade %2% av sin hälsa!</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="570"/>
+        <location filename="battlewindow.cpp" line="574"/>
         <source>&amp;Close</source>
         <translation>&amp;Stäng</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="634"/>
+        <location filename="battlewindow.cpp" line="642"/>
         <source>Variation: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -642,45 +649,45 @@ Effekt: %5</translation>
 <context>
     <name>BigOpenPokeBall</name>
     <message>
-        <location filename="pokedex.cpp" line="125"/>
+        <location filename="pokedex.cpp" line="126"/>
         <source>Type: </source>
         <translation>Element: </translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="135"/>
+        <location filename="pokedex.cpp" line="136"/>
         <source>Gender: </source>
         <translation>Kön: </translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="149"/>
+        <location filename="pokedex.cpp" line="150"/>
         <source>&amp;Evolution</source>
         <translation>&amp;Utveckling</translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="150"/>
+        <location filename="pokedex.cpp" line="151"/>
         <source>&amp;Other Formes</source>
         <translation>&amp;Alternativa former</translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="172"/>
+        <location filename="pokedex.cpp" line="171"/>
         <source>Shiny</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="196"/>
+        <location filename="pokedex.cpp" line="194"/>
         <source>&lt;b&gt;Ht:&lt;/b&gt; %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="197"/>
-        <source>&lt;b&gt;Wt:&lt;/b&gt; %1 lbs</source>
+        <location filename="pokedex.cpp" line="195"/>
+        <source>&lt;b&gt;Wt:&lt;/b&gt; %1 kg</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ChallengeWindow</name>
     <message>
-        <location filename="challenge.cpp" line="138"/>
+        <location filename="challenge.cpp" line="137"/>
         <source>%1&apos;s Info</source>
         <translation>%1s info</translation>
     </message>
@@ -688,7 +695,7 @@ Effekt: %5</translation>
 <context>
     <name>ChallengedWindow</name>
     <message>
-        <location filename="challenge.cpp" line="180"/>
+        <location filename="challenge.cpp" line="179"/>
         <source>%1 challenged you!</source>
         <translation>%1 utmanade dig!</translation>
     </message>
@@ -761,53 +768,53 @@ Effekt: %5</translation>
         <translation type="unfinished">&amp;Bannlys</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="195"/>
+        <location filename="channel.cpp" line="179"/>
         <source>Battle between %1 and %2 started.</source>
         <translation type="unfinished">Match mellan %1 och %2 påbörjas.</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="200"/>
-        <location filename="channel.cpp" line="204"/>
+        <location filename="channel.cpp" line="184"/>
+        <location filename="channel.cpp" line="188"/>
         <source>Battling against %1</source>
         <translation type="unfinished">Strider mot %1</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="240"/>
+        <location filename="channel.cpp" line="224"/>
         <source>%1 forfeited against %2.</source>
         <translation type="unfinished">%1 gav upp mot %2.</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="242"/>
+        <location filename="channel.cpp" line="226"/>
         <source>%1 and %2 tied.</source>
         <translation type="unfinished">%1 och %2 avslutade oavgjort.</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="244"/>
+        <location filename="channel.cpp" line="228"/>
         <source>%1 won against %2.</source>
         <translation type="unfinished">%1 vann över %2.</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="331"/>
+        <location filename="channel.cpp" line="321"/>
         <source>%1 joined the channel.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="356"/>
+        <location filename="channel.cpp" line="346"/>
         <source>%1 left the channel.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="362"/>
+        <location filename="channel.cpp" line="352"/>
         <source>&lt;i&gt;You are not in the channel anymore&lt;/i&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="371"/>
+        <location filename="channel.cpp" line="361"/>
         <source>&lt;i&gt;Unkown command received: %1. Maybe the client should be updated?&lt;/i&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="401"/>
+        <location filename="channel.cpp" line="391"/>
         <source>%1 logged out.</source>
         <translation type="unfinished">%1 loggade ut.</translation>
     </message>
@@ -815,22 +822,22 @@ Effekt: %5</translation>
 <context>
     <name>Client</name>
     <message>
-        <location filename="client.cpp" line="71"/>
+        <location filename="client.cpp" line="78"/>
         <source>&amp;Find Battle</source>
         <translation>&amp;Hitta match</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="72"/>
+        <location filename="client.cpp" line="79"/>
         <source>&amp;Register</source>
         <translation>&amp;Registrera</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="73"/>
+        <location filename="client.cpp" line="80"/>
         <source>&amp;Exit</source>
         <translation>&amp;Avsluta</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="74"/>
+        <location filename="client.cpp" line="81"/>
         <source>&amp;Send</source>
         <translation>&amp;Skicka</translation>
     </message>
@@ -871,7 +878,7 @@ Effekt: %5</translation>
         <translation type="obsolete">&amp;Bannlys</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="708"/>
+        <location filename="client.cpp" line="720"/>
         <source>&amp;File</source>
         <translation>&amp;Arkiv</translation>
     </message>
@@ -884,17 +891,15 @@ Effekt: %5</translation>
         <translation type="obsolete">Öppna &amp;TeamBuilder</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="711"/>
         <source>&amp;Style</source>
-        <translation>&amp;Stil</translation>
+        <translation type="obsolete">&amp;Stil</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="718"/>
         <source>Reload StyleSheet</source>
-        <translation>Ladda om StyleSheet</translation>
+        <translation type="obsolete">Ladda om StyleSheet</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="719"/>
+        <location filename="client.cpp" line="727"/>
         <source>&amp;Options</source>
         <translation>&amp;Inställningar</translation>
     </message>
@@ -924,7 +929,7 @@ Effekt: %5</translation>
         <translation type="obsolete">&amp;Matcher</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="763"/>
+        <location filename="client.cpp" line="771"/>
         <source>Save &amp;Battle Logs</source>
         <translation>Spara &amp;matchloggar</translation>
     </message>
@@ -933,7 +938,7 @@ Effekt: %5</translation>
         <translation type="obsolete">Ändra &amp;Loggmapp</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="777"/>
+        <location filename="client.cpp" line="785"/>
         <source>Animate HP Bar</source>
         <translation>Animera HP-skala</translation>
     </message>
@@ -950,133 +955,133 @@ Effekt: %5</translation>
         <translation type="obsolete">&amp;Utmana</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="30"/>
+        <location filename="client.cpp" line="35"/>
         <source>Players</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="31"/>
+        <location filename="client.cpp" line="36"/>
         <source>Battles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="33"/>
+        <location filename="client.cpp" line="38"/>
         <source>Channels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="40"/>
+        <location filename="client.cpp" line="45"/>
         <source>Join: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="615"/>
+        <location filename="client.cpp" line="627"/>
         <source>&amp;Cancel Find Battle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="709"/>
+        <location filename="client.cpp" line="721"/>
         <source>&amp;Load team</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="710"/>
+        <location filename="client.cpp" line="722"/>
         <source>Open &amp;teamBuilder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="720"/>
+        <location filename="client.cpp" line="728"/>
         <source>&amp;Idle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="727"/>
+        <location filename="client.cpp" line="735"/>
         <source>&amp;Show team</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="732"/>
+        <location filename="client.cpp" line="740"/>
         <source>Enable &amp;ladder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="737"/>
+        <location filename="client.cpp" line="745"/>
         <source>&amp;Enable player events</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="743"/>
+        <location filename="client.cpp" line="751"/>
         <source>Enable &amp;timestamps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="749"/>
+        <location filename="client.cpp" line="757"/>
         <source>Enable timestamps in &amp;PMs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="754"/>
+        <location filename="client.cpp" line="762"/>
         <source>Sort players by &amp;tiers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="760"/>
+        <location filename="client.cpp" line="768"/>
         <source>&amp;Tiers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="762"/>
+        <location filename="client.cpp" line="770"/>
         <source>&amp;Battle options</source>
         <comment>Menu</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="768"/>
+        <location filename="client.cpp" line="776"/>
         <source>Change &amp;log folder ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="770"/>
+        <location filename="client.cpp" line="778"/>
         <source>&amp;Enable sounds (Testing! Remove if problems with the sim)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="775"/>
+        <location filename="client.cpp" line="783"/>
         <source>Change &amp;music folder ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="782"/>
+        <location filename="client.cpp" line="790"/>
         <source>Old school buttons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="796"/>
+        <location filename="client.cpp" line="804"/>
         <source>%1 was kicked by the server!</source>
         <translation>%1 blev avvisad från servern!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="798"/>
+        <location filename="client.cpp" line="806"/>
         <source>%1 kicked %2!</source>
         <translation>%1 avvisade %2!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="807"/>
+        <location filename="client.cpp" line="815"/>
         <source>%1 was banned by the server!</source>
         <translation>%1 blev bannlyst från servern!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="809"/>
+        <location filename="client.cpp" line="817"/>
         <source>%1 banned %2!</source>
         <translation>%1 bannlyste %2!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="818"/>
+        <location filename="client.cpp" line="826"/>
         <source>Enter your password</source>
         <translation>Skriv ditt lösenord</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="819"/>
+        <location filename="client.cpp" line="827"/>
         <source>Enter the password for your current name.
 
 It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
@@ -1085,29 +1090,29 @@ It is advised to use a slightly different password for each server. (The server 
 Det är rekommenderat att använda ett aningen annorlunda lösenord för varje server. (Servern kan bara se det i krypterad form, men ändå...)</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="911"/>
+        <location filename="client.cpp" line="917"/>
         <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
 
 http://www.pokemon-online.eu/downloads.php for updates.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="838"/>
+        <location filename="client.cpp" line="846"/>
         <source>Battle Music Directory</source>
         <translation type="unfinished">Katalog för stridsmusik</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="848"/>
+        <location filename="client.cpp" line="856"/>
         <source>Battle Logs Directory</source>
         <translation>Katalog för stridslogg</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="903"/>
+        <location filename="client.cpp" line="909"/>
         <source>Your client version (%2) doesn&apos;t match with the server&apos;s (%1).</source>
         <translation>Din klientversion (%2) matchar inte serverns (%1).</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="911"/>
+        <location filename="client.cpp" line="917"/>
         <source>Old Version</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1132,37 +1137,42 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <translation type="obsolete">%1 vann över %2.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1187"/>
+        <location filename="client.cpp" line="1193"/>
         <source>&amp;Find battle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1205"/>
+        <location filename="client.cpp" line="1211"/>
         <source>%1 refused your challenge.</source>
         <translation>%1 nekade din utmaning.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1210"/>
+        <location filename="client.cpp" line="1216"/>
         <source>%1 is busy.</source>
         <translation>%1 är upptagen.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1215"/>
+        <location filename="client.cpp" line="1221"/>
         <source>%1 cancelled their challenge.</source>
         <translation>%1 hävde utmaningen.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1220"/>
+        <location filename="client.cpp" line="1226"/>
         <source>%1 has an invalid team.</source>
         <translation>%1 har ett ogiltigt lag.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1233"/>
+        <location filename="client.cpp" line="1231"/>
+        <source>%1 has a different gen than yours.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="1244"/>
         <source>%1 is idling.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1235"/>
+        <location filename="client.cpp" line="1246"/>
         <source>%1 is active and ready for battles.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1175,17 +1185,17 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <translation type="obsolete">%1 är tillbaka.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1290"/>
+        <location filename="client.cpp" line="1301"/>
         <source>Error while connected to server -- Received error nÂ°%1: %2</source>
         <translation>Fel inträffade under anslutningen mot servern -- Mottaget fel n°%1: %2</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1295"/>
+        <location filename="client.cpp" line="1306"/>
         <source>Connected to Server!</source>
         <translation>Uppkopplad mot servern!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1305"/>
+        <location filename="client.cpp" line="1316"/>
         <source>Disconnected from Server!</source>
         <translation>Nedkopplad från servern!</translation>
     </message>
@@ -1198,27 +1208,27 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <translation type="obsolete">%1 loggade ut.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1452"/>
+        <location filename="client.cpp" line="1463"/>
         <source>%1 changed teams and is now known as %2.</source>
         <translation>%1 bytte lag och är nu känd som %2.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1457"/>
+        <location filename="client.cpp" line="1468"/>
         <source>%1 changed teams.</source>
         <translation>%1 bytte lag.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1522"/>
+        <location filename="client.cpp" line="1533"/>
         <source>You can&apos;t change teams while battling, so your nick was kept.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1568"/>
+        <location filename="client.cpp" line="1579"/>
         <source>You ignored %1.</source>
         <translation>Du ignorerade %1.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1575"/>
+        <location filename="client.cpp" line="1586"/>
         <source>You stopped ignoring %1.</source>
         <translation>Du slutade ignorera %1.</translation>
     </message>
@@ -1403,12 +1413,12 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
 <context>
     <name>ImageAttackButton</name>
     <message>
-        <location filename="battlewindow.cpp" line="849"/>
+        <location filename="battlewindow.cpp" line="863"/>
         <source>PP %1/%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="862"/>
+        <location filename="battlewindow.cpp" line="876"/>
         <source>%1
 
 Power: %2
@@ -1430,66 +1440,81 @@ Effekt: %5</translation>
 <context>
     <name>MainEngine</name>
     <message>
-        <location filename="mainwindow.cpp" line="82"/>
+        <location filename="mainwindow.cpp" line="84"/>
         <source>Plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="83"/>
+        <location filename="mainwindow.cpp" line="85"/>
         <source>Plugin Manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="182"/>
+        <location filename="mainwindow.cpp" line="183"/>
         <source>Impossible to go online</source>
         <translation>Omöjligt att ansluta</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="182"/>
+        <location filename="mainwindow.cpp" line="183"/>
         <source>You haven&apos;t set your name yet. Do so in the teambuilder.</source>
         <translation>Du har inte valt ett namn än. Gör det i teambuildern.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="223"/>
+        <location filename="mainwindow.cpp" line="246"/>
         <source>Language Change</source>
         <translation>Ändra språk</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="223"/>
+        <location filename="mainwindow.cpp" line="246"/>
         <source>Restart the application to see the changes.</source>
         <translation>Starta om applikationen för att ändringarna ska ta effekt.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="287"/>
+        <source>&amp;Style</source>
+        <translation type="unfinished">&amp;Stil</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="305"/>
+        <source>Reload StyleSheet</source>
+        <translation type="unfinished">Ladda om StyleSheet</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="310"/>
+        <source>&amp;Theme</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MoveTab</name>
     <message>
-        <location filename="pokedex.cpp" line="728"/>
+        <location filename="pokedex.cpp" line="699"/>
         <source>Type</source>
         <translation type="unfinished">Element</translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="728"/>
+        <location filename="pokedex.cpp" line="699"/>
         <source>Name</source>
         <comment>AttackName</comment>
         <translation type="unfinished">Namn</translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="728"/>
+        <location filename="pokedex.cpp" line="699"/>
         <source>PP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="728"/>
+        <location filename="pokedex.cpp" line="699"/>
         <source>Pow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="728"/>
+        <location filename="pokedex.cpp" line="699"/>
         <source>Acc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="728"/>
+        <location filename="pokedex.cpp" line="699"/>
         <source>Category</source>
         <translation type="unfinished">Kategori</translation>
     </message>
@@ -1497,12 +1522,12 @@ Effekt: %5</translation>
 <context>
     <name>OldAttackButton</name>
     <message>
-        <location filename="battlewindow.cpp" line="807"/>
+        <location filename="battlewindow.cpp" line="821"/>
         <source>PP %1/%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="820"/>
+        <location filename="battlewindow.cpp" line="834"/>
         <source>%1
 
 Power: %2
@@ -1577,7 +1602,7 @@ Drag:
 --%8</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="917"/>
+        <location filename="battlewindow.cpp" line="941"/>
         <source>%1 lv %2
 
 Item:%3
@@ -1594,12 +1619,12 @@ Moves:
 <context>
     <name>Pokedex</name>
     <message>
-        <location filename="pokedex.cpp" line="24"/>
+        <location filename="pokedex.cpp" line="25"/>
         <source>&amp;Type Chart</source>
         <translation>&amp;Elementmatris</translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="25"/>
+        <location filename="pokedex.cpp" line="26"/>
         <source>&amp;Damage Calculator</source>
         <translation>&amp;Skadekalkylator</translation>
     </message>
@@ -1607,32 +1632,32 @@ Moves:
 <context>
     <name>PokedexBody</name>
     <message>
-        <location filename="pokedex.cpp" line="334"/>
+        <location filename="pokedex.cpp" line="302"/>
         <source>&amp;Advanced Search</source>
         <translation>&amp;Avancerad sökning</translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="344"/>
+        <location filename="pokedex.cpp" line="312"/>
         <source>Sort Pokemon List</source>
         <translation>Sortera Pokémonlista</translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="355"/>
+        <location filename="pokedex.cpp" line="323"/>
         <source>A-Z</source>
         <translation>A-Ö</translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="380"/>
+        <location filename="pokedex.cpp" line="348"/>
         <source>PROFILE</source>
         <translation>PROFIL</translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="381"/>
+        <location filename="pokedex.cpp" line="349"/>
         <source>STATS</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="382"/>
+        <location filename="pokedex.cpp" line="350"/>
         <source>MOVES</source>
         <translation>DRAG</translation>
     </message>
@@ -1640,14 +1665,14 @@ Moves:
 <context>
     <name>PokemonBox</name>
     <message>
-        <location filename="box.cpp" line="497"/>
+        <location filename="box.cpp" line="492"/>
         <source>The box is full!</source>
         <translation>Boxen är full!</translation>
     </message>
     <message>
-        <location filename="box.cpp" line="509"/>
-        <location filename="box.cpp" line="517"/>
-        <location filename="box.cpp" line="526"/>
+        <location filename="box.cpp" line="504"/>
+        <location filename="box.cpp" line="512"/>
+        <location filename="box.cpp" line="521"/>
         <source>There is no pokemon there!</source>
         <translation>Det finns ingen Pokémon där!</translation>
     </message>
@@ -1655,7 +1680,7 @@ Moves:
 <context>
     <name>PokemonBoxButton</name>
     <message>
-        <location filename="box.cpp" line="123"/>
+        <location filename="box.cpp" line="118"/>
         <source>PokÃ©mon &amp;%1</source>
         <translation>Pokémon &amp;%1</translation>
     </message>
@@ -1663,27 +1688,27 @@ Moves:
 <context>
     <name>ProfileTab</name>
     <message>
-        <location filename="pokedex.cpp" line="457"/>
+        <location filename="pokedex.cpp" line="425"/>
         <source>Description</source>
         <translation>Beskrivning</translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="472"/>
+        <location filename="pokedex.cpp" line="440"/>
         <source>Abilities</source>
         <translation>Förmågor</translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="489"/>
+        <location filename="pokedex.cpp" line="458"/>
         <source>&lt;b&gt;Soul Silver:&lt;/b&gt; %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="490"/>
+        <location filename="pokedex.cpp" line="459"/>
         <source>&lt;b&gt;Heart Gold:&lt;/b&gt; %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="491"/>
+        <location filename="pokedex.cpp" line="460"/>
         <source>&lt;b&gt;Platinum:&lt;/b&gt; %1</source>
         <translation></translation>
     </message>
@@ -1823,12 +1848,12 @@ Moves:
         <translation type="obsolete">Fel inträffade när laget skulle hämtas</translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemonstructs.h" line="1706"/>
+        <location filename="../PokemonInfo/pokemonstructs.h" line="2282"/>
         <source>Team/trainer.tp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemonstructs.h" line="1707"/>
+        <location filename="../PokemonInfo/pokemonstructs.h" line="2283"/>
         <source>Team/</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1866,7 +1891,7 @@ Moves:
 <context>
     <name>ServerChoice</name>
     <message>
-        <location filename="serverchoice.cpp" line="20"/>
+        <location filename="serverchoice.cpp" line="19"/>
         <source>Server Name</source>
         <translation>Servernamn</translation>
     </message>
@@ -1875,17 +1900,17 @@ Moves:
         <translation type="obsolete">Spelare/Max spelare</translation>
     </message>
     <message>
-        <location filename="serverchoice.cpp" line="20"/>
+        <location filename="serverchoice.cpp" line="19"/>
         <source>Advanced connection</source>
         <translation>Avancerad anslutning</translation>
     </message>
     <message>
-        <location filename="serverchoice.cpp" line="20"/>
+        <location filename="serverchoice.cpp" line="19"/>
         <source>Players / Max</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="serverchoice.cpp" line="139"/>
+        <location filename="serverchoice.cpp" line="145"/>
         <source>Disconnected from the registry: %1</source>
         <translation>Nedkopplad från registret: %1</translation>
     </message>
@@ -1893,67 +1918,67 @@ Moves:
 <context>
     <name>StatTab</name>
     <message>
-        <location filename="pokedex.cpp" line="527"/>
+        <location filename="pokedex.cpp" line="498"/>
         <source>Statistics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="532"/>
+        <location filename="pokedex.cpp" line="503"/>
         <source>Base Stats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="533"/>
+        <location filename="pokedex.cpp" line="504"/>
         <source>Min</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="537"/>
+        <location filename="pokedex.cpp" line="508"/>
         <source>Max</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="544"/>
+        <location filename="pokedex.cpp" line="515"/>
         <source>Hit Points</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="544"/>
+        <location filename="pokedex.cpp" line="515"/>
         <source>Attack</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="544"/>
+        <location filename="pokedex.cpp" line="515"/>
         <source>Defense</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="544"/>
+        <location filename="pokedex.cpp" line="515"/>
         <source>Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="544"/>
+        <location filename="pokedex.cpp" line="515"/>
         <source>Special Attack</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="544"/>
+        <location filename="pokedex.cpp" line="515"/>
         <source>Special Defense</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="619"/>
+        <location filename="pokedex.cpp" line="590"/>
         <source>Weakness</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="635"/>
+        <location filename="pokedex.cpp" line="606"/>
         <source>Resistance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="pokedex.cpp" line="651"/>
+        <location filename="pokedex.cpp" line="622"/>
         <source>Immunity</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2016,79 +2041,79 @@ Moves:
         <translation>Lycklighet</translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="86"/>
+        <location filename="advanced.cpp" line="87"/>
         <source>&amp;Level</source>
         <translation>&amp;Nivå</translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="96"/>
+        <location filename="advanced.cpp" line="97"/>
         <source>&amp;Gender</source>
         <translation>&amp;Kön</translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="102"/>
-        <location filename="advanced.cpp" line="107"/>
+        <location filename="advanced.cpp" line="103"/>
+        <location filename="advanced.cpp" line="108"/>
         <source>Male</source>
         <translation>Hane</translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="103"/>
-        <location filename="advanced.cpp" line="107"/>
+        <location filename="advanced.cpp" line="104"/>
+        <location filename="advanced.cpp" line="108"/>
         <source>Female</source>
         <translation>Hona</translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="107"/>
+        <location filename="advanced.cpp" line="108"/>
         <source>Neutral</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="112"/>
+        <location filename="advanced.cpp" line="113"/>
         <source>&amp;Ability</source>
         <translation>&amp;Förmåga</translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="128"/>
+        <location filename="advanced.cpp" line="136"/>
         <source>&amp;Shiny</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="134"/>
+        <location filename="advanced.cpp" line="142"/>
         <source>Alternate Formes</source>
         <translation>Alternativa former</translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="172"/>
+        <location filename="advanced.cpp" line="165"/>
         <source>HP</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="172"/>
+        <location filename="advanced.cpp" line="165"/>
         <source>Att</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="172"/>
+        <location filename="advanced.cpp" line="165"/>
         <source>Def</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="172"/>
+        <location filename="advanced.cpp" line="165"/>
         <source>Speed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="172"/>
+        <location filename="advanced.cpp" line="165"/>
         <source>Sp Att</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="172"/>
+        <location filename="advanced.cpp" line="165"/>
         <source>Sp Def</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="advanced.cpp" line="282"/>
+        <location filename="advanced.cpp" line="272"/>
         <source>Fatal error in TB_Advanced::stat(QObject *) : the pointer provided does not correspond to any dvchoice</source>
         <translation>Fel inträffade i TB_Advanced::stat(QObject *) : de distrubierade värdena stämmer inte överens med DV</translation>
     </message>
@@ -2096,32 +2121,32 @@ Moves:
 <context>
     <name>TB_EVManager</name>
     <message>
-        <location filename="teambuilder.cpp" line="1571"/>
+        <location filename="teambuilder.cpp" line="1643"/>
         <source>Hit Points:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1571"/>
+        <location filename="teambuilder.cpp" line="1643"/>
         <source>Attack:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1571"/>
+        <location filename="teambuilder.cpp" line="1643"/>
         <source>Defense:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1571"/>
+        <location filename="teambuilder.cpp" line="1643"/>
         <source>Speed:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1571"/>
+        <location filename="teambuilder.cpp" line="1643"/>
         <source>Special Attack:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1571"/>
+        <location filename="teambuilder.cpp" line="1643"/>
         <source>Special Defense:</source>
         <translation></translation>
     </message>
@@ -2129,32 +2154,31 @@ Moves:
 <context>
     <name>TB_Menu</name>
     <message>
-        <location filename="menu.cpp" line="10"/>
+        <location filename="menu.cpp" line="12"/>
         <source>Menu</source>
         <translation>Meny</translation>
     </message>
     <message>
-        <location filename="menu.cpp" line="35"/>
+        <location filename="menu.cpp" line="36"/>
         <source>&amp;File</source>
         <translation>&amp;Arkiv</translation>
     </message>
     <message>
-        <location filename="menu.cpp" line="36"/>
+        <location filename="menu.cpp" line="37"/>
         <source>&amp;Load Team</source>
         <translation>&amp;Hämta lag</translation>
     </message>
     <message>
-        <location filename="menu.cpp" line="37"/>
+        <location filename="menu.cpp" line="38"/>
         <source>&amp;Quit</source>
         <translation>&amp;Avsluta</translation>
     </message>
     <message>
-        <location filename="menu.cpp" line="38"/>
         <source>&amp;Style</source>
-        <translation>&amp;Stil</translation>
+        <translation type="obsolete">&amp;Stil</translation>
     </message>
     <message>
-        <location filename="menu.cpp" line="44"/>
+        <location filename="menu.cpp" line="43"/>
         <source>&amp;Language</source>
         <translation>&amp;Språk</translation>
     </message>
@@ -2162,37 +2186,37 @@ Moves:
 <context>
     <name>TB_PokemonBody</name>
     <message>
-        <location filename="teambuilder.cpp" line="991"/>
+        <location filename="teambuilder.cpp" line="1041"/>
         <source>&amp;Nickname</source>
         <translation>&amp;Smeknamn</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1001"/>
+        <location filename="teambuilder.cpp" line="1051"/>
         <source>&amp;Item</source>
         <translation>&amp;Föremål</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1006"/>
+        <location filename="teambuilder.cpp" line="1056"/>
         <source>&amp;Import</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1010"/>
+        <location filename="teambuilder.cpp" line="1060"/>
         <source>&amp;Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1025"/>
+        <location filename="teambuilder.cpp" line="1075"/>
         <source>PokÃ©mon %1</source>
         <translation>Pokémon %1</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1029"/>
+        <location filename="teambuilder.cpp" line="1079"/>
         <source>&amp;Advanced</source>
         <translation>&amp;Avancerat</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1031"/>
+        <location filename="teambuilder.cpp" line="1081"/>
         <source>Side Window</source>
         <translation>Sidofönster</translation>
     </message>
@@ -2201,179 +2225,221 @@ Moves:
         <translation type="obsolete">Separat fönster</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1033"/>
+        <location filename="teambuilder.cpp" line="1083"/>
         <source>New Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1046"/>
-        <location filename="teambuilder.cpp" line="1175"/>
+        <location filename="teambuilder.cpp" line="1098"/>
+        <location filename="teambuilder.cpp" line="1227"/>
         <source>Type</source>
         <translation>Element</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1055"/>
+        <location filename="teambuilder.cpp" line="1107"/>
         <source>N&amp;ature</source>
         <translation>N&amp;atur</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1175"/>
+        <location filename="teambuilder.cpp" line="1227"/>
         <source>Name</source>
         <comment>AttackName</comment>
         <translation>Namn</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1175"/>
+        <location filename="teambuilder.cpp" line="1227"/>
         <source>Learning</source>
         <translation>Inlärning</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1175"/>
+        <location filename="teambuilder.cpp" line="1227"/>
         <source>PP</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1175"/>
+        <location filename="teambuilder.cpp" line="1227"/>
         <source>Pow</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1175"/>
+        <location filename="teambuilder.cpp" line="1227"/>
         <source>Acc</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1175"/>
+        <location filename="teambuilder.cpp" line="1227"/>
         <source>Category</source>
         <translation>Kategori</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1261"/>
+        <location filename="teambuilder.cpp" line="1314"/>
         <source>Lv. %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1392"/>
-        <location filename="teambuilder.cpp" line="1407"/>
+        <location filename="teambuilder.cpp" line="1455"/>
+        <location filename="teambuilder.cpp" line="1470"/>
         <source>Error</source>
         <translation>Fel</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1427"/>
-        <location filename="teambuilder.cpp" line="1434"/>
+        <location filename="teambuilder.cpp" line="1490"/>
+        <location filename="teambuilder.cpp" line="1497"/>
+        <location filename="teambuilder.cpp" line="1510"/>
         <source>TM/HM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1428"/>
+        <location filename="teambuilder.cpp" line="1491"/>
         <source>Tutor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1429"/>
-        <location filename="teambuilder.cpp" line="1436"/>
+        <location filename="teambuilder.cpp" line="1492"/>
+        <location filename="teambuilder.cpp" line="1499"/>
+        <location filename="teambuilder.cpp" line="1512"/>
         <source>Level</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1430"/>
-        <location filename="teambuilder.cpp" line="1437"/>
+        <location filename="teambuilder.cpp" line="1493"/>
+        <location filename="teambuilder.cpp" line="1500"/>
+        <location filename="teambuilder.cpp" line="1513"/>
         <source>Pre Evo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1431"/>
-        <location filename="teambuilder.cpp" line="1438"/>
+        <location filename="teambuilder.cpp" line="1494"/>
+        <location filename="teambuilder.cpp" line="1501"/>
+        <location filename="teambuilder.cpp" line="1514"/>
         <source>Breeding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1432"/>
-        <location filename="teambuilder.cpp" line="1439"/>
+        <location filename="teambuilder.cpp" line="1495"/>
+        <location filename="teambuilder.cpp" line="1502"/>
+        <location filename="teambuilder.cpp" line="1515"/>
         <source>Special</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1435"/>
+        <location filename="teambuilder.cpp" line="1498"/>
+        <location filename="teambuilder.cpp" line="1511"/>
         <source>Move Tutor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1440"/>
+        <location filename="teambuilder.cpp" line="1503"/>
+        <location filename="teambuilder.cpp" line="1522"/>
         <source>3G TM/HM</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1441"/>
+        <location filename="teambuilder.cpp" line="1504"/>
+        <location filename="teambuilder.cpp" line="1523"/>
         <source>3G Tutor</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1442"/>
+        <location filename="teambuilder.cpp" line="1505"/>
+        <location filename="teambuilder.cpp" line="1524"/>
         <source>3G Level</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1443"/>
+        <location filename="teambuilder.cpp" line="1506"/>
+        <location filename="teambuilder.cpp" line="1525"/>
         <source>3G Pre Evo</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1444"/>
+        <location filename="teambuilder.cpp" line="1507"/>
+        <location filename="teambuilder.cpp" line="1526"/>
         <source>3G Breeding</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1445"/>
+        <location filename="teambuilder.cpp" line="1508"/>
+        <location filename="teambuilder.cpp" line="1527"/>
         <source>3G Special</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="1516"/>
+        <source>4G TM/HM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="1517"/>
+        <source>4G Move Tutor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="1518"/>
+        <source>4G Level</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="1519"/>
+        <source>4G Pre Evo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="1520"/>
+        <source>4G Breeding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="1521"/>
+        <source>4G Special</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>TB_PokemonBoxes</name>
     <message>
-        <location filename="box.cpp" line="667"/>
+        <location filename="box.cpp" line="662"/>
         <source>Change Order</source>
         <translation>Ändra ordning</translation>
     </message>
     <message>
-        <location filename="box.cpp" line="674"/>
+        <location filename="box.cpp" line="669"/>
         <source>&amp;Store</source>
         <translation>&amp;Lagra</translation>
     </message>
     <message>
-        <location filename="box.cpp" line="675"/>
+        <location filename="box.cpp" line="670"/>
         <source>&amp;Withdraw</source>
         <translation>&amp;Återkalla</translation>
     </message>
     <message>
-        <location filename="box.cpp" line="676"/>
+        <location filename="box.cpp" line="671"/>
         <source>Switc&amp;h</source>
         <translation>Växl&amp;a</translation>
     </message>
     <message>
-        <location filename="box.cpp" line="677"/>
+        <location filename="box.cpp" line="672"/>
         <source>Dele&amp;te</source>
         <translation>&amp;Radera</translation>
     </message>
     <message>
-        <location filename="box.cpp" line="691"/>
+        <location filename="box.cpp" line="686"/>
         <source>BOX &amp;%1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="box.cpp" line="726"/>
+        <location filename="box.cpp" line="721"/>
         <source>Full Box</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="box.cpp" line="737"/>
+        <location filename="box.cpp" line="732"/>
         <source>Empty Box</source>
         <translation>Tom Box</translation>
     </message>
     <message>
-        <location filename="box.cpp" line="759"/>
-        <location filename="box.cpp" line="780"/>
+        <location filename="box.cpp" line="754"/>
+        <location filename="box.cpp" line="775"/>
         <source>Box Empty</source>
         <translation>Boxen är tom</translation>
     </message>
@@ -2381,22 +2447,22 @@ Moves:
 <context>
     <name>TB_PokemonDetail</name>
     <message>
-        <location filename="box.cpp" line="63"/>
+        <location filename="box.cpp" line="65"/>
         <source>Item: </source>
         <translation>Föremål: </translation>
     </message>
     <message>
-        <location filename="box.cpp" line="72"/>
+        <location filename="box.cpp" line="74"/>
         <source>Moves:</source>
         <translation>Drag:</translation>
     </message>
     <message>
-        <location filename="box.cpp" line="99"/>
+        <location filename="box.cpp" line="102"/>
         <source>Nature: %1</source>
         <translation>Natur: %1</translation>
     </message>
     <message>
-        <location filename="box.cpp" line="102"/>
+        <location filename="box.cpp" line="105"/>
         <source>Lv. %1</source>
         <translation></translation>
     </message>
@@ -2404,37 +2470,42 @@ Moves:
 <context>
     <name>TB_TrainerBody</name>
     <message>
-        <location filename="teambuilder.cpp" line="493"/>
+        <location filename="teambuilder.cpp" line="492"/>
         <source>Avatar</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="504"/>
+        <location filename="teambuilder.cpp" line="503"/>
         <source>Trainer &amp;Name</source>
         <translation>Tränar&amp;namn</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="509"/>
+        <location filename="teambuilder.cpp" line="511"/>
         <source>Name Color</source>
         <translation>Namnfärg</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="509"/>
+        <location filename="teambuilder.cpp" line="511"/>
         <source>Change &amp;Color</source>
         <translation>Byt &amp;färg</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="516"/>
+        <source>Team Tier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="520"/>
         <source>Trainer I&amp;nformation</source>
         <translation>Tränari&amp;nformation</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="519"/>
+        <location filename="teambuilder.cpp" line="523"/>
         <source>&amp;Winning Message</source>
         <translation>&amp;Vinnarmeddelande</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="520"/>
+        <location filename="teambuilder.cpp" line="524"/>
         <source>L&amp;osing Message</source>
         <translation>&amp;Förlorarmeddelande</translation>
     </message>
@@ -2442,22 +2513,22 @@ Moves:
 <context>
     <name>TeamBuilder</name>
     <message>
-        <location filename="teambuilder.cpp" line="129"/>
+        <location filename="teambuilder.cpp" line="123"/>
         <source>Teambuilder</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="328"/>
+        <location filename="teambuilder.cpp" line="323"/>
         <source>New Team</source>
         <translation>Nytt lag</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="328"/>
+        <location filename="teambuilder.cpp" line="323"/>
         <source>You sure?</source>
         <translation>Är du säker?</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="374"/>
+        <location filename="teambuilder.cpp" line="372"/>
         <source>&amp;File</source>
         <translation>&amp;Arkiv</translation>
     </message>
@@ -2466,13 +2537,13 @@ Moves:
         <translation type="obsolete">&amp;Nytt lag</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="375"/>
+        <location filename="teambuilder.cpp" line="373"/>
         <source>&amp;New team</source>
         <oldsource>&amp;Save Team</oldsource>
         <translation type="unfinished">&amp;Spara lag</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="376"/>
+        <location filename="teambuilder.cpp" line="374"/>
         <source>&amp;Save team</source>
         <oldsource>&amp;Load Team</oldsource>
         <translation type="unfinished">&amp;Hämta lag</translation>
@@ -2482,62 +2553,65 @@ Moves:
         <translation type="obsolete">&amp;Imporera från Txt</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="377"/>
+        <location filename="teambuilder.cpp" line="375"/>
         <source>&amp;Load team</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="378"/>
+        <location filename="teambuilder.cpp" line="376"/>
         <source>&amp;Import from text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="379"/>
+        <location filename="teambuilder.cpp" line="377"/>
         <source>&amp;Export to text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="380"/>
+        <location filename="teambuilder.cpp" line="378"/>
         <source>&amp;Quit</source>
         <translation>&amp;Avsluta</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="381"/>
         <source>&amp;Style</source>
-        <translation>&amp;Stil</translation>
+        <translation type="obsolete">&amp;Stil</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="388"/>
         <source>Reload StyleSheet</source>
-        <translation>Ladda om StyleSheet</translation>
+        <translation type="obsolete">Ladda om StyleSheet</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="391"/>
+        <location filename="teambuilder.cpp" line="383"/>
         <source>&amp;Gen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="393"/>
+        <location filename="teambuilder.cpp" line="385"/>
         <source>Advance (&amp;3rd gen)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="394"/>
+        <location filename="teambuilder.cpp" line="386"/>
         <source>HGSS (&amp;4th gen)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="410"/>
+        <location filename="teambuilder.cpp" line="387"/>
+        <source>B/W (&amp;5th gen)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="408"/>
         <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="411"/>
+        <location filename="teambuilder.cpp" line="409"/>
         <source>&amp;Show all items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="412"/>
+        <location filename="teambuilder.cpp" line="410"/>
         <source>&amp;Full Screen (for netbook users ONLY)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2549,19 +2623,19 @@ Moves:
 <context>
     <name>TeamImporter</name>
     <message>
-        <location filename="teambuilder.cpp" line="28"/>
+        <location filename="teambuilder.cpp" line="29"/>
         <source>Paste your exported team from Netbattle Supremacy / Shoddy Battle
 Your language needs to be set to English to import English teams.</source>
         <translation>Klistra in ditt exporterade lag från Netbattle Supremacy / Shoddy Battle
 Ditt språk måste vara inställt på Engelska för att importera engelska lag.</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="34"/>
+        <location filename="teambuilder.cpp" line="35"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Avbryt</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="35"/>
+        <location filename="teambuilder.cpp" line="36"/>
         <source>&amp;Done</source>
         <translation>&amp;Klar</translation>
     </message>
@@ -2569,12 +2643,12 @@ Ditt språk måste vara inställt på Engelska för att importera engelska lag.<
 <context>
     <name>TeamPokeButton</name>
     <message>
-        <location filename="teambuilder.cpp" line="628"/>
+        <location filename="teambuilder.cpp" line="633"/>
         <source>PokÃ©mon &amp;%1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="637"/>
+        <location filename="teambuilder.cpp" line="642"/>
         <source>Item</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2583,7 +2657,7 @@ Ditt språk måste vara inställt på Engelska för att importera engelska lag.<
         <translation type="obsolete">föremål</translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="649"/>
+        <location filename="teambuilder.cpp" line="654"/>
         <source>Lv. %1</source>
         <translation></translation>
     </message>
@@ -2591,7 +2665,7 @@ Ditt språk måste vara inställt på Engelska för att importera engelska lag.<
 <context>
     <name>TypeChart</name>
     <message>
-        <location filename="pokedex.cpp" line="867"/>
+        <location filename="pokedex.cpp" line="833"/>
         <source>A \ D</source>
         <translation type="unfinished"></translation>
     </message>
