@@ -431,17 +431,30 @@ struct MMConversion2 : public MM
 	functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void daf(int s, int, BS &b) {
-	if (!poke(b,s).contains("LastAttackToHit"))
-	{
-	    turn(b,s)["Failed"] = true;
-	    return;
-	}
-        int attackType = MoveInfo::Type(poke(b,s)["LastAttackToHit"].toInt(), b.gen());
+    static void daf(int s, int t, BS &b) {
+        int attackType;
+        if (b.gen() <= 4) {
+            if (!poke(b,s).contains("LastAttackToHit"))
+            {
+                turn(b,s)["Failed"] = true;
+                return;
+            }
+
+            attackType = MoveInfo::Type(poke(b,s)["LastAttackToHit"].toInt(), b.gen());
+        } else {
+            if (!poke(b,t).contains("LastSpecialMoveUsed")) {
+                turn(b,s)["Failed"] = true;
+                return;
+            }
+
+            attackType = MoveInfo::Type(poke(b,s)["LastSpecialMoveUsed"].toInt(), b.gen());
+        }
+
         if (attackType == Type::Curse) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
+
 	/* Gets types available */
 	QList<int> poss;
 	for (int i = 0; i < TypeInfo::NumberOfTypes() - 1; i++) {
