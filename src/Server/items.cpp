@@ -582,7 +582,7 @@ struct IMBulb : public IM
 struct IMJewel : public IM
 {
     IMJewel() {
-        functions["BeforeTagetList"] = &btl;
+        functions["BeforeTargetList"] = &btl;
     }
 
     static void btl(int s, int, BS &b) {
