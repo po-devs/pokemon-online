@@ -63,7 +63,8 @@ LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities
 FORMS += controlpanel.ui
-TRANSLATIONS = translation_de.ts \
+TRANSLATIONS = translation_cz.ts \
+    translation_de.ts \
     translation_es.ts \
     translation_fi.ts \
     translation_fr.ts \
