@@ -1560,3 +1560,13 @@ QScriptValue ScriptEngine::banList()
     }
     return result;
 }
+
+void ScriptEngine::ban(QString name)
+{
+    SecurityManager::ban(name);
+}
+
+void ScriptEngine::unban(QString name)
+{
+    SecurityManager::unban(name);
+}
