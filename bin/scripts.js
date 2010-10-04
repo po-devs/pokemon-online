@@ -243,7 +243,7 @@ afterLogIn : function(src) {
     floodCount[src] = 0;
     impersonation[src] = undefined;
 	
-	if (sys.auth(src) > 0) 
+	if (sys.auth(src) > 0 && sys.auth(src) <= 3) 
 		sys.putInChannel(src, staffchannel);
     
     this.afterChangeTeam(src);
