@@ -4860,7 +4860,8 @@ struct MMWideGuard : public MM
         if (s == t || t == -1 || b.player(s) == b.player(t)) {
             return;
         }
-        if (!team(b,t).contains("WideGuardUsed") || team(b,t)["WideGuardUsed"].toInt() != b.turn()) {
+        int target = b.player(t);
+        if (!team(b,target).contains("WideGuardUsed") || team(b,target)["WideGuardUsed"].toInt() != b.turn()) {
             return;
         }
 
@@ -4897,7 +4898,8 @@ struct MMFastGuard : public MM
         if (s == t || t == -1) {
             return;
         }
-        if (!team(b,t).contains("FastGuardUsed") || team(b,t)["FastGuardUsed"].toInt() != b.turn()) {
+        int target = b.player(t);
+        if (!team(b,target).contains("FastGuardUsed") || team(b,target)["FastGuardUsed"].toInt() != b.turn()) {
             return;
         }
 
