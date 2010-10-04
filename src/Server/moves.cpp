@@ -5438,6 +5438,17 @@ struct MMSynchroNoise : public MM
     }
 };
 
+struct MMTrickery : public MM
+{
+    MMTrickery() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int t, BS &b) {
+        turn(b,s)["CustomAttackStat"] = fpoke(b,t).stats[Attack];
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5659,4 +5670,5 @@ void MoveEffect::init()
     REGISTER_MOVE(184, ACapella);
     REGISTER_MOVE(185, AssistPower);
     REGISTER_MOVE(186, SynchroNoise);
+    REGISTER_MOVE(187, Trickery);
 }
