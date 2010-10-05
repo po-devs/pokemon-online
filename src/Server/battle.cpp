@@ -3424,12 +3424,10 @@ void BattleSituation::gainPP(int player, int move, int gain)
     notify(this->player(player), ChangePP, player, quint8(move), poke(player).move(move).PP());
 }
 
-int BattleSituation::getStat(int player, int stat, int purityLevel)
+int BattleSituation::getBoostedStat(int player, int stat)
 {
-    int baseStat = 0;
-    //Trickery
     if (stat == Attack && turnlong[player].contains("CustomAttackStat")) {
-        baseStat = turnlong[player]["CustomAttackStat"].toInt();
+        return turnlong[player]["CustomAttackStat"].toInt();
     } else {
         /* Not sure on the order here... haha. */
         /* Attack and defense switched */
@@ -3440,8 +3438,13 @@ int BattleSituation::getStat(int player, int stat, int purityLevel)
         if (battlelong.contains("WonderRoomCount") && (stat == 2 || stat == 4)) {
             stat = 6 - stat;
         }
-        baseStat = fieldpokes[player].stats[stat];
+        return; fieldpokes[player].stats[stat] *getStatBoost(player, stat);
     }
+}
+
+int BattleSituation::getStat(int player, int stat, int purityLevel)
+{
+    int baseStat = getBoostedStat(player, stat);
 
     QString q = "Stat"+QString::number(stat);
     turnlong[player].remove(q+"AbilityModifier");
@@ -3461,7 +3464,7 @@ int BattleSituation::getStat(int player, int stat, int purityLevel)
             callaeffects(partner, player, "PartnerStatModifier");
         }
     }
-    int ret = baseStat*getStatBoost(player, stat)*(20+turnlong[player].value(q+"AbilityModifier").toInt())/20;
+    int ret = baseStat*(20+turnlong[player].value(q+"AbilityModifier").toInt())/20;
 
     if (doubles()) {
         ret = ret * (20+turnlong[player].value(q+"PartnerAbilityModifier").toInt())/20;

@@ -217,6 +217,7 @@ public:
     PokeFraction getStatBoost(int player, int stat);
     /* "Pure" stat is without items */
     int getStat(int player, int stat, int purityLevel = 0);
+    int getBoostedStat(int player, int stat);
     /* conversion for sending a message */
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */
     ShallowBattlePoke opoke(int slot, int play, int i) const; /* aka 'opp poke', or what you need to know if it's your opponent's poke */
