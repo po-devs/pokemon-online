@@ -512,7 +512,7 @@
 177#Stall
 173#Acrobat
 172#Mirror Type
-
+188#Retaliation
 37|161#Desperation
 162#Gift Pass
 

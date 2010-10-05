@@ -5455,6 +5455,19 @@ struct MMTrickery : public MM
     }
 };
 
+struct MMRetribution : public MM
+{
+    MMRetribution() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int, BS &b) {
+        if (team(b, b.player(s)).contains("LastKoedTurn") && team(b, b.player(s))["LastKoedTurn"].toInt() == b.turn() - 1) {
+            tmove(b,s).power *= 2;
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5677,4 +5690,5 @@ void MoveEffect::init()
     REGISTER_MOVE(185, AssistPower);
     REGISTER_MOVE(186, SynchroNoise);
     REGISTER_MOVE(187, Trickery);
+    REGISTER_MOVE(188, Retaliation);
 }

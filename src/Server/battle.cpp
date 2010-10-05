@@ -3232,6 +3232,11 @@ void BattleSituation::requestSwitchIns()
         if (!koedPlayers.contains(player(i)) && koed(i) && countBackUp(player(i)) > 0) {
             koedPlayers.insert(player(i));
             koedPokes.insert(i);
+
+            if (gen() >= 5) {
+                /* For Get Even. */
+                teamzone[player(i)]["LastKoedTurn"] = turn();
+            }
         }
     }
 
