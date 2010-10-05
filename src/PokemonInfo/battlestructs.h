@@ -45,6 +45,7 @@ class PokeBattle
     PROPERTY(quint16, ability);
     PROPERTY(quint32, fullStatus);
     PROPERTY(qint8, statusCount);
+    PROPERTY(qint8, oriStatusCount);
     PROPERTY(quint8, gender);
     PROPERTY(quint8, level);
     PROPERTY(quint8, nature);

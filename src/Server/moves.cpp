@@ -985,6 +985,7 @@ struct MMRest : public MM
         b.sendMoveMessage(106,0,s,type(b,s));
         b.changeStatus(s, Pokemon::Asleep,false);
         b.poke(s).statusCount() = 2;
+        b.poke(s).oriStatusCount() = 2;
         poke(b,s)["Rested"] = true;
     }
 };

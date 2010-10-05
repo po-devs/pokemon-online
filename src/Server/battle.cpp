@@ -1178,6 +1178,8 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
             poke(slot).statusCount() = 14;
         else if (poke(slot).status() != Pokemon::Asleep)
             poke(slot).statusCount() = 0;
+        else
+            poke(slot).statusCount() = poke(slot).oriStatusCount();
     }
 
     for (int i = 0; i < 4; i++) {
@@ -2630,7 +2632,8 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
         if (gen() <= 4) {
             poke(player).statusCount() = 1 + (true_rand()) % 4;
         } else {
-            poke(player).statusCount() = 2 + (true_rand()) % 3;
+            poke(player).statusCount() = 1 + (true_rand()) % 3;
+            poke(player).oriStatusCount() = poke(player).statusCount();
         }
     }
     else {
