@@ -673,7 +673,7 @@ struct IMEscapeButton : public IM
     static void aaf(int, int, BS &b) {
         std::vector<int> speeds = b.sortedBySpeed();
 
-        for (signed i = 0; i < speeds.size(); i++) {
+        for (unsigned i = 0; i < speeds.size(); i++) {
             int p = speeds[i];
             if (!b.hasWorkingItem(p, Item::EscapeButton))
                 continue;
