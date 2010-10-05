@@ -42,7 +42,32 @@ init : function() {
         tourchannel = sys.createChannel("Tournaments");
 		channelTopics[tourchannel] = "Welcome to the tournament channel, where tournaments are held! type /join to join a tour in its signup phase! type /viewround to see the progress of an ongoing tournament!";
     }
-	
+	    rules = [ "",
+    "*** Rules ***",
+"",
+"Rule #1 - Do Not Abuse CAPS:",
+"- The occasional word in CAPS is acceptable, however repeated use is not.",
+"Rule #2 - No Flooding the Chat:",
+"- Please do not post a large amount of short messages when you can easily post one or two long messages.",
+"Rule #3 - Do not Challenge Spam:",
+"- If a person refuses your challenge, this means they do not want to battle you. Find someone else to battle with.",
+"Rule #4 - Don't ask for battles in the main chat:",
+"- There is a 'Find Battle' tab that you can use to find a battle immediately. If after a while you cannot find a match, then you can ask for one in the chat.",
+"Rule #5 - No Trolling/Flaming/Insulting of Any kind:",
+"- Behaving stupidly and excessive vulgarity will not be tolerated",
+"Rule #6 - Be Respectable of Each Others Cultures:",
+"- Not everyone speaks the same language. This server is not an English-Only Server. Do not tell someone to only speak a certain language.",
+"Rule #7 - No Advertising:",
+"- There will be absolutely no advertising on the server.",
+"Rule #8 - No Obscene or Pornographic Content Allowed:",
+"- This includes links, texts, images, and any other kind of media. This will result in a instant ban.",
+"Rule #9 - Do not ask for Auth:",
+"- Authority is given upon merit. By asking you have pretty much eliminated your chances at becoming an Auth in the future.",
+"Rule #10 - Do not Insult Auth:",
+"- Insulting Auth will result in immediate punishment. ",
+"Rule #11 - Don't spoil Black & White:",
+"- Some people prefer to wait for the release of the game in US and want to enjoy it.",
+""    ];
     if (typeof(varsCreated) != 'undefined')
         return;
 
@@ -69,31 +94,7 @@ init : function() {
     lineCount = 0;
     tourmode = 0;
     border = "»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»:";
-   
-    rules = [ "",
-    "*** Rules ***",
-"",
-"Rule #1 - Do Not Abuse CAPS:",
-"- The occasional word in CAPS is acceptable, however repeated use is not.",
-"Rule #2 - No Flooding the Chat:",
-"- Please do not post a large amount of short messages when you can easily post one or two long messages.",
-"Rule #3 - Do not Challenge Spam:",
-"- If a person refuses your challenge, this means they do not want to battle you. Find someone else to battle with.",
-"Rule #4 - Don't ask for battles in the main chat:",
-"- There is a 'Find Battle' tab that you can use to find a battle immediately. If after a while you cannot find a match, then you can ask for one in the chat.",
-"Rule #5 - No Trolling/Flaming/Insulting of Any kind:",
-"- Behaving stupidly and excessive vulgarity will not be tolerated",
-"Rule #6 - Be Respectable of Each Others Cultures:",
-"- Not everyone speaks the same language. This server is not an English-Only Server. Do not tell someone to only speak a certain language.",
-"Rule #7 - No Advertising:",
-"- There will be absolutely no advertising on the server.",
-"Rule #8 - No Obscene or Pornographic Content Allowed:",
-"- This includes links, texts, images, and any other kind of media. This will result in a instant ban.",
-"Rule #9 - Do not ask for Auth:",
-"- Authority is given upon merit. By asking you have pretty much eliminated your chances at becoming an Auth in the future.",
-"Rule #10 - Do not Insult Auth:",
-"- Insulting Auth will result in immediate punishment. ",
-""    ];
+  
 
     pokeNatures = [];
     
@@ -236,14 +237,12 @@ afterLogIn : function(src) {
         sys.sendMessage(src, "");
     }
 
-    sys.sendMessage(src, "");
-
     caps[src] = 0;
     timeCount[src] = parseInt(sys.time());
     floodCount[src] = 0;
     impersonation[src] = undefined;
 	
-	if (sys.auth(src) > 0) 
+	if (sys.auth(src) > 0 && sys.auth(src) <= 3) 
 		sys.putInChannel(src, staffchannel);
     
     this.afterChangeTeam(src);
@@ -282,7 +281,7 @@ beforeChatMessage: function(src, message, chan) {
         return;
     }
     
-    if (sys.auth(src) < 2 && muted[src] === true && message != "!join" && message != "/rules" && message != "/join" && message != "rules") {
+    if (sys.auth(src) < 2 && muted[src] === true && message != "!join" && message != "/rules" && message != "/join" && message != "!rules") {
         sendChanMessage(src, "+Bot: You are muted");
         sys.stopEvent();
         return;
@@ -293,7 +292,7 @@ beforeChatMessage: function(src, message, chan) {
             sys.clearChat();
             lastMemUpdate = parseInt(sys.time());
         }
-        print("Command -- " + sys.name(src) + ": " + message);
+
         sys.stopEvent();
         var command;
         var commandData;
