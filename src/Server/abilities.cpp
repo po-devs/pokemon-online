@@ -1655,6 +1655,21 @@ struct AMCursedBody : public AM {
     }
 };
 
+struct AMSelfConscious : public AM {
+    AMSelfConscious() {
+        functions["UponBeingHit"] = &ubh;
+    }
+
+    static void ubh(int s, int t, BS &b) {
+        int tp = type(b,t);
+
+        if ((tp == Type::Bug || tp == Type::Ghost || tp == Type::Dark) && !b.hasMaximalStatMod(s, Speed)) {
+            b.sendAbMessage(97,0,s);
+            b.gainStatMod(s, Speed, 1, s, false);
+        }
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -1778,4 +1793,5 @@ void AbilityEffect::init()
     REGISTER_AB(94, JusticeHeart);
     REGISTER_AB(95, Inconsistent);
     REGISTER_AB(96, CursedBody);
+    REGISTER_AB(97, SelfConscious);
 }
