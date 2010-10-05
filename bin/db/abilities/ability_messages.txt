@@ -95,4 +95,4 @@
 %s's Justice Heart raises its attack!
 %s's Inconsistent sharply raises its %st!|%s's Inconsistent lowers its %st!
 %s's Cursed Body activates!
-%s's raises its Speed in fear!
+%s's raised its Speed in fear!
