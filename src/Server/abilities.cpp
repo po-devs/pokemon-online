@@ -1665,7 +1665,7 @@ struct AMSelfConscious : public AM {
 
         if ((tp == Type::Bug || tp == Type::Ghost || tp == Type::Dark) && !b.hasMaximalStatMod(s, Speed)) {
             b.sendAbMessage(97,0,s);
-            b.gainStatMod(s, Speed, 1, s, false);
+            b.inflictStatMod(s, Speed, 1, s, false);
         }
     }
 };

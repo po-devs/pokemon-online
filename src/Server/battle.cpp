@@ -3441,7 +3441,7 @@ int BattleSituation::getBoostedStat(int player, int stat)
         if (battlelong.contains("WonderRoomCount") && (stat == 2 || stat == 4)) {
             stat = 6 - stat;
         }
-        return; fieldpokes[player].stats[stat] *getStatBoost(player, stat);
+        return fieldpokes[player].stats[stat] *getStatBoost(player, stat);
     }
 }
 

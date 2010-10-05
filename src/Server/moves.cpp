@@ -1144,7 +1144,7 @@ struct MMRoar : public MM
 
         int t = turn(b,s)["RoarTarget"].toInt();
 
-        if (turn(b,s)["RoarSwitchCount"] != slot(b,t)["SwitchCount"])
+        if (turn(b,s)["RoarSwitchCount"] != slot(b,t)["SwitchCount"] || b.koed(t))
             return;
 
 	QList<int> switches;
@@ -5447,7 +5447,7 @@ struct MMTrickery : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        turn(b,s)["CustomAttackStat"] = b.getBoostedStat(t);
+        turn(b,s)["CustomAttackStat"] = b.getBoostedStat(t, Attack);
     }
 
     static void aad(int s, int, BS &b) {
