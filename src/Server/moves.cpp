@@ -3208,7 +3208,7 @@ struct MMMeFirst : public MM
 	    return;
 	}
         int num = move(b,t);
-        if (MoveInfo::Power(num, b.gen()) == 0) {
+        if (MoveInfo::Power(num, b.gen()) == 0 || num == Move::MeFirst) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
