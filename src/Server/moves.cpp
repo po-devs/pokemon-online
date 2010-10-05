@@ -1181,7 +1181,7 @@ struct MMSpikes : public MM
     }
 
     static void usi(int p, int slot, BS &b) {
-        int spikeslevel = team(b,p).value("Spikes").toInt();
+        int spikeslevel = team(b,p+2).value("Spikes").toInt();
         if (spikeslevel <= 0 || b.koed(slot) || b.isFlying(slot) || b.hasWorkingAbility(slot, Ability::MagicGuard)) {
 	    return;
 	}
