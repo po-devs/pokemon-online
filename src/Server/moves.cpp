@@ -5442,10 +5442,15 @@ struct MMTrickery : public MM
 {
     MMTrickery() {
         functions["BeforeCalculatingDamage"] = &bcd;
+        functions["AfterAttackFinished"] = &aad;
     }
 
     static void bcd(int s, int t, BS &b) {
-        turn(b,s)["CustomAttackStat"] = fpoke(b,t).stats[Attack];
+        turn(b,s)["CustomAttackStat"] = b.getBoostedStat(t);
+    }
+
+    static void aad(int s, int, BS &b) {
+        turn(b,s).remove("CustomAttackStat");
     }
 };
 
