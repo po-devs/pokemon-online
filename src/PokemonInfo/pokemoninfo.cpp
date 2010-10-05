@@ -1378,7 +1378,7 @@ QString ItemInfo::Name(int itemnum)
 
 bool ItemInfo::Exists(int itemnum, int gen)
 {
-    if ((itemnum < 8000 && itemnum >= m_RegItemNames.size()) && !(itemnum >= 8000 + m_BerryNames.size()))
+    if ((itemnum < 8000 && itemnum >= m_RegItemNames.size()) || (itemnum >= 8000 + m_BerryNames.size()))
         return false;
     if (gen == 4)
         return true;
