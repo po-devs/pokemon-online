@@ -109,6 +109,8 @@ public:
     void changeCurrent(const PokeTeam &poke) throw (QString);
     void changeCurrentSpot(int newspot);
 
+    QString getName() const;
+    void setName(const QString &name);
     bool isFull() const;
     bool isEmpty() const;
     int freeSpot() const;
@@ -148,6 +150,7 @@ private:
     QVector<TB_PokemonItem*> pokemons;
     int num;
     int currentPoke;
+    QString name;
 
     QPixmap selBg;
 };
@@ -178,6 +181,7 @@ public slots:
     void switchWithinTeam(int poke1, int poke2);
     void switchBoxTeam(int box, int boxslot, int teamslot);
     void showPoke(PokeTeam *poke);
+    void editBoxName();
 signals:
     void pokeChanged(int poke);
 protected:
