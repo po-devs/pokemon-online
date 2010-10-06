@@ -110,6 +110,7 @@ public slots:
     void clickClose();
     void emitCancel();
     void switchToPokeZone();
+    void sendRearrangedTeam();
 signals:
     void forfeit(int battleid);
 protected:
@@ -286,7 +287,7 @@ public slots:
 private:
     TeamBattle *myteam;
 
-    QPushButton *buttons[6];
+    QToolButton *buttons[6];
 };
 
 #endif // BATTLEWINDOW_H
