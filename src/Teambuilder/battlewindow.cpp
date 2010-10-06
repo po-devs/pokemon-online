@@ -158,7 +158,7 @@ void BattleWindow::emitCancel()
     if (info().possible) {
         cancel();
     } else {
-        emit battleCommand(battleId(), BattleChoice(false, BattleChoice::Cancel, ownSlot()));
+        emit battleCommand(battleId(), BattleChoice(ownSlot(), CancelChoice()));
     }
 }
 
@@ -186,7 +186,7 @@ void BattleWindow::targetChosen(int i)
 {
     int n = info().number(info().currentSlot);
 
-    info().choice[n].targetPoke = i;
+    info().choice[n].setTarget(i);
     info().done[n] = true;
 
     goToNextChoice();
@@ -225,8 +225,11 @@ void BattleWindow::attackClicked(int zone)
     if (zone != -1) //struggle
         info().lastMove[info().number(slot)] = zone;
     if (info().possible) {
-        info().choice[info().number(slot)] = BattleChoice(false, zone, slot);
-        info().choice[info().number(slot)].targetPoke = info().slot(info().opponent);
+        BattleChoice &b = info().choice[info().number(slot)];
+        b = BattleChoice(slot, AttackChoice());
+        b.setAttackSlot(zone);
+        b.setTarget(info().slot(info().opponent));
+
         if (!info().doubles) {
             info().done[info().number(slot)] = true;
             goToNextChoice();
@@ -257,7 +260,9 @@ void BattleWindow::switchClicked(int zone)
         if (zone == info().number(slot)) {
             switchTo(info().number(slot), slot, false);
 	} else {
-            info().choice[info().number(slot)] = BattleChoice(true, zone, slot);
+            BattleChoice &b = info().choice[info().number(slot)];
+            b = BattleChoice(slot, SwitchChoice());
+            b.setPokeSlot(zone);
             info().done[info().number(slot)] = true;
             goToNextChoice();
 	}
@@ -319,8 +324,8 @@ void BattleWindow::goToNextChoice()
 
                     /* Also, you can't switch to a pokemon you've chosen before */
                     for (int i = 0; i < info().available.size(); i++) {
-                        if (info().available[i] && info().done[i] && info().choice[i].poke()) {
-                            mypzone->pokes[info().choice[i].numSwitch]->setEnabled(false);
+                        if (info().available[i] && info().done[i] && info().choice[i].switchChoice()) {
+                            mypzone->pokes[info().choice[i].pokeSlot()]->setEnabled(false);
                         }
                     }
                 }
@@ -388,7 +393,10 @@ void BattleWindow::attackButton()
                 if (info().doubles) {
                     attackClicked(-1);
                 } else {
-                    info().choice[n] = BattleChoice(false, -1, slot, info().slot(info().opponent));
+                    BattleChoice &b = info().choice[n];
+                    b = BattleChoice(slot, AttackChoice());
+                    b.setAttackSlot(-1);
+                    b.setTarget(info().slot(info().opponent));
                     info().done[n] = true;
                     goToNextChoice();
                 }
@@ -646,6 +654,8 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         {
             ShallowShownTeam t;
             in >> t;
+
+            openRearrangeWindow(t);
             break;
         }
     default:
@@ -758,6 +768,14 @@ void BattleWindow::updateChoices()
 	myattack->setEnabled(false);
 	myswitch->setEnabled(false);
     }
+}
+
+void BattleWindow::openRearrangeWindow(const ShallowShownTeam &t)
+{
+    RearrangeWindow *r = new RearrangeWindow(info().myteam, t);
+    r->setParent(this, Qt::Window);
+    r->move(x() + (width()-r->width())/2, y() + (height()-r->height())/2);
+    r->show();
 }
 
 TeamBattle &BattleWindow::team()
@@ -1198,4 +1216,81 @@ StruggleZone::StruggleZone()
     b->setCheckable(true);
 
     connect(b, SIGNAL(clicked()), this, SIGNAL(attackClicked()));
+}
+
+/******************************************************************************/
+/******************** REARRANGE WINDOW ****************************************/
+/******************************************************************************/
+
+RearrangeWindow::RearrangeWindow(TeamBattle &t, const ShallowShownTeam &op)
+{
+    setAttribute(Qt::WA_DeleteOnClose);
+
+    myteam = &t;
+
+    QVBoxLayout *v = new QVBoxLayout(this);
+
+    v->addWidget(new QLabel(tr("You can rearrange your team by clicking on your pokemon before the battle.")));
+
+    QHBoxLayout *h1 = new QHBoxLayout();
+    for (int i = 0; i < 6; i++) {
+        QPushButton *p = new QPushButton();
+        p->setIcon(PokemonInfo::Icon(t.poke(i).num()));
+        p->setIconSize(QSize(32,32));
+        p->setFlat(true);
+        if (t.poke(i).num() != Pokemon::NoPoke)
+            p->setCheckable(true);
+        connect(p, SIGNAL(toggled(bool)), SLOT(runExchanges()));
+
+        h1->addWidget(p, 0, Qt::AlignCenter);
+
+        buttons[i] = p;
+    }
+    v->addLayout(h1);
+
+    v->addWidget(new QLabel(tr("Team of your opponent:")));
+
+    QHBoxLayout *h2 = new QHBoxLayout();
+    for (int i = 0; i < 6; i++) {
+        QLabel *l = new QLabel();
+        l->setPixmap(PokemonInfo::Icon(op.poke(i).num));
+
+        h2->addWidget(l, 0, Qt::AlignCenter);
+    }
+    v->addLayout(h2);
+
+    QPushButton *doneButton, *forfeitButton;
+    QHBoxLayout *h3 = new QHBoxLayout();
+    h3->addStretch();
+    h3->addWidget(doneButton = new QPushButton(tr("Done")));
+    h3->addWidget(forfeitButton = new QPushButton(tr("Forfeit")));
+    h3->addStretch();
+    v->addLayout(h3);
+
+    connect(doneButton, SIGNAL(clicked()), SIGNAL(done()));
+    connect(forfeitButton, SIGNAL(clicked()), SIGNAL(forfeit()));
+
+    show();
+}
+
+void RearrangeWindow::runExchanges()
+{
+    int check1 = -1;
+    for (int i = 0; i < 6; i++) {
+        if (buttons[i]->isChecked()) {
+            check1 = i;
+            break;
+        }
+    }
+    if (check1 == -1)
+        return;
+    for (int i = check1+1; i < 6; i++) {
+        if (buttons[i]->isChecked()) {
+            myteam->switchPokemon(check1, i);
+            buttons[check1]->setIcon(PokemonInfo::Icon(myteam->poke(check1).num()));
+            buttons[check1]->setChecked(false);
+            buttons[i]->setIcon(PokemonInfo::Icon(myteam->poke(i).num()));
+            buttons[i]->setChecked(false);
+        }
+    }
 }

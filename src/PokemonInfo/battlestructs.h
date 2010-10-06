@@ -150,7 +150,7 @@ QDataStream & operator << (QDataStream &out, const ShallowShownPoke &po);
 class ShallowShownTeam
 {
 public:
-    ShallowShownTeam(){};
+    ShallowShownTeam(){}
     ShallowShownTeam(const TeamBattle &t);
 
     ShallowShownPoke &poke(int index) {
@@ -187,24 +187,110 @@ struct BattleChoices
 QDataStream & operator >> (QDataStream &in, BattleChoices &po);
 QDataStream & operator << (QDataStream &out, const BattleChoices &po);
 
-struct BattleChoice
+enum ChoiceType {
+    CancelType,
+    AttackType,
+    SwitchType,
+    RearrangeType,
+};
+
+struct CancelChoice {
+};
+
+struct AttackChoice {
+    qint8 attackSlot;
+    qint8 attackTarget;
+};
+
+struct SwitchChoice {
+    qint8 pokeSlot;
+};
+
+struct RearrangeChoice {
+    qint8 pokeIndexes[6];
+};
+
+union ChoiceUnion
 {
-    static const int Cancel = -10;
+    CancelChoice cancel;
+    AttackChoice attack;
+    SwitchChoice switching;
+    RearrangeChoice rearrange;
+};
 
-    BattleChoice(bool pokeSwitch = false, qint8 numSwitch = 0, quint8 numslot=0, quint8 target=0);
+struct BattleChoice {
+    quint8 type;
+    quint8 playerSlot;
+    ChoiceUnion choice;
 
-    bool pokeSwitch; /* True if poke switch, false if attack switch */
-    qint8 numSwitch; /* The num of the poke or the attack to use, -1 for Struggle, -10 for move cancelled */
-    quint8 targetPoke; /* The targetted pokemon */
-    quint8 numSlot;
+    BattleChoice(){}
+    BattleChoice(int slot, const CancelChoice &c) {
+        choice.cancel = c;
+        playerSlot = slot;
+        type = CancelType;
+    }
+    BattleChoice(int slot, const AttackChoice &c) {
+        choice.attack = c;
+        type = AttackType;
+        playerSlot = slot;
+    }
+    BattleChoice(int slot, const SwitchChoice &c) {
+        choice.switching = c;
+        type = SwitchType;
+        playerSlot = slot;
+    }
+    BattleChoice(int slot, const RearrangeChoice &c) {
+        choice.rearrange = c;
+        type = RearrangeType;
+        playerSlot = slot;
+    }
 
-    /* returns true if the choice is valid */
+    bool attackingChoice() const {
+        return type == AttackType;
+    }
+
+    bool switchChoice() const {
+        return type == SwitchType;
+    }
+
+    bool cancelled() const {
+        return type == CancelType;
+    }
+
+    bool rearrangeChoice() const {
+        return type == RearrangeType;
+    }
+
+    int target() const {
+        return choice.attack.attackTarget;
+    }
+
+    int attackSlot() const {
+        return choice.attack.attackSlot;
+    }
+
+    int pokeSlot() const {
+        return choice.switching.pokeSlot;
+    }
+
+    /* The person who's making the choice */
+    int slot() const {
+        return playerSlot;
+    }
+
+    void setTarget(int target) {
+        choice.attack.attackTarget = target;
+    }
+
+    void setAttackSlot(int slot) {
+        choice.attack.attackSlot = slot;
+    }
+
+    void setPokeSlot(int slot) {
+        choice.switching.pokeSlot = slot;
+    }
+
     bool match(const BattleChoices &avail) const;
-    int  getChoice() const { return numSwitch; }
-    bool attack() const { return !pokeSwitch; }
-    bool poke() const { return pokeSwitch; }
-    bool cancelled() const { return numSwitch == Cancel; }
-    int target() const {return targetPoke; }
 };
 
 QDataStream & operator >> (QDataStream &in, BattleChoice &po);
