@@ -14,7 +14,8 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("Challenge Cup"),
     QObject::tr("No Timeout"),
     QObject::tr("Species Clause"),
-    QObject::tr("Rearrange Teams")
+    QObject::tr("Rearrange Teams"),
+    QObject::tr("Self-KO Clause")
 };
 
 QString ChallengeInfo::clauseBattleText[] =
@@ -27,6 +28,7 @@ QString ChallengeInfo::clauseBattleText[] =
     QObject::tr(""),
     QObject::tr(""),
     QObject::tr("The battle ended by timeout."),
+    QObject::tr(""),
     QObject::tr(""),
     QObject::tr("")
 };
@@ -42,7 +44,8 @@ QString ChallengeInfo::clauseDescription[] =
     QObject::tr("Random teams are given to trainers."),
     QObject::tr("No time limit for playing."),
     QObject::tr("One player cannot have more than one of the same pokemon per team."),
-    QObject::tr("At the beginning of the battle, you can see the opponent's team and rearrange yours accordingly.")
+    QObject::tr("At the beginning of the battle, you can see the opponent's team and rearrange yours accordingly."),
+    QObject::tr("The one who causes a tie (Recoil, Explosion, Destinybond, ...) loses the battle.")
 };
 
 BattleMove::BattleMove()

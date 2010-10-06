@@ -310,6 +310,7 @@ void PokemonBox::save()
     QDomElement box = doc.createElement("Box");
     box.setAttribute("Num", num);
     box.setAttribute("Version", "1");
+    box.setAttribute("Name", getName());
     doc.appendChild(box);
 
     for(int i = 0; i < pokemons.size(); i++) {
@@ -350,6 +351,8 @@ void PokemonBox::load()
     QFile in(QString(boxpath + "/Box %1.box").arg(QChar('A'+getNum())));
     in.open(QIODevice::ReadOnly);
 
+    name =  QString("Box %1").arg(QChar('A'+getNum()));
+
     if(!doc.setContent(&in))
     {
         return ;
@@ -360,6 +363,8 @@ void PokemonBox::load()
         return;
     QDomElement slot = box.firstChildElement("Slot");
     int version = box.attribute("Version", "0").toInt();
+    name =  box.attribute("Name", name);
+
     while (!slot.isNull()) {
         if (slot.attribute("Num").toInt() < 0 || slot.attribute("Num").toInt() > pokemons.size())
             break;
@@ -617,6 +622,16 @@ int PokemonBox::calculateSpot(const QPoint &graphViewPos)
     }
 }
 
+QString PokemonBox::getName() const
+{
+    return name;
+}
+
+void PokemonBox::setName(const QString &name)
+{
+    this->name = name;
+}
+
 /****************************************************************/
 /******************* TB_BoxContainer ****************************/
 /****************************************************************/
@@ -663,13 +678,14 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
 
     QVBoxLayout *thirdColumn = new QVBoxLayout();
     firstline->addLayout(thirdColumn);
-    QPushButton *bstore, *bwithdraw, *bswitch, *bdelete;
+    QPushButton *bstore, *bwithdraw, *bswitch, *bdelete, *bboxname;
 
     thirdColumn->addStretch(100);
     thirdColumn->addWidget(bstore = new QPushButton(tr("&Store")));
     thirdColumn->addWidget(bwithdraw = new QPushButton(tr("&Withdraw")));
     thirdColumn->addWidget(bswitch = new QPushButton(tr("Switc&h")));
     thirdColumn->addWidget(bdelete = new QPushButton(tr("Dele&te")));
+    thirdColumn->addWidget(bboxname = new QPushButton(tr("&Edit Box Name...")));
     thirdColumn->addStretch(100);
 
     firstline->addStretch(100);
@@ -683,7 +699,8 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
     secondline->addWidget(m_boxes = new TB_BoxContainer(), 100);
 
     for (unsigned i = 0; i < sizeof(boxes)/sizeof(PokemonBox*); i++) {
-        m_boxes->addTab(boxes[i] = new PokemonBox(i), Theme::WhiteBall(), tr("BOX &%1").arg(QChar('A'+i)));
+        boxes[i] = new PokemonBox(i);
+        m_boxes->addTab(boxes[i], Theme::WhiteBall(), boxes[i]->getName());
         connect(boxes[i],SIGNAL(switchWithTeam(int,int,int)),SLOT(switchBoxTeam(int,int,int)));
         connect(boxes[i], SIGNAL(show(PokeTeam*)), SLOT(showPoke(PokeTeam*)));
     }
@@ -702,8 +719,22 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
     connect(bwithdraw, SIGNAL(clicked()), SLOT(withdraw()));
     connect(bdelete, SIGNAL(clicked()), SLOT(deleteP()));
     connect(bswitch, SIGNAL(clicked()), SLOT(switchP()));
+    connect(bboxname, SIGNAL(clicked()), SLOT(editBoxName()));
 }
 
+void TB_PokemonBoxes::editBoxName()
+{
+    bool ok;
+    PokemonBox *box = currentBox();
+    QString text = QInputDialog::getText(this, tr("Edit Box Name"),
+                                         tr("Enter the new name for the box #%1:").arg(box->getNum()+1), QLineEdit::Normal,
+                                          box->getName(), &ok);
+    if (ok && !text.isEmpty()) {
+         box->setName(text);
+         m_boxes->setTabText(box->getNum(), text);
+         box->save();
+     }
+}
 
 void TB_PokemonBoxes::changeCurrentTeamPokemon(int newpoke)
 {
