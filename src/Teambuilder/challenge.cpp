@@ -52,18 +52,18 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     pinfo->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
     battleMode = new QComboBox(this);
-    battleMode->move(18,270);
+    battleMode->move(18,271);
     battleMode->addItem(tr("Singles"));
     battleMode->addItem(tr("Doubles"));
 
     QLabel *ladder = new QLabel(toColor(p.rating == -1 ? "unknown" : QString::number(p.rating), grey),this);
     ladder->setFont(treb);
-    ladder->setGeometry(100,148,83,18);
+    ladder->setGeometry(224,144,83,18);
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
-    QLabel *tier = new QLabel(toBoldColor(p.tier, Qt::white),this);
+    QLabel *tier = new QLabel(QString("<b>%1</b>").arg(p.tier),this);
     tier->setFont(QFont("Trebuchet MS", 10, QFont::Bold));
-    tier->setGeometry(203,148,94,18);
+    tier->setGeometry(116,144,94,18);
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
     QWidget *container = new QWidget(this);
