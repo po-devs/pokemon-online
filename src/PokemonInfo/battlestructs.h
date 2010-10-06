@@ -118,6 +118,12 @@ public:
     const PokeBattle &getByInternalId(int i) const;
 
     void switchPokemon(int pok1, int pok2);
+    template<class T>
+    void setIndexes(T indexes[6]) {
+        for (int i = 0; i < 6; i++) {
+            m_indexes[i] = indexes[i];
+        }
+    }
 
     bool invalid() const;
 

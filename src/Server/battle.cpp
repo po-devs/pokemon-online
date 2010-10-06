@@ -407,6 +407,8 @@ void BattleSituation::run()
         rearrangeTeams();
     }
 
+    rearrangeTime() = false;
+
     engageBattle();
 
     forever
@@ -420,9 +422,25 @@ void BattleSituation::run()
 
 void BattleSituation::rearrangeTeams()
 {
+    rearrangeTime() = true;
     /* Here we'll give the possibility to rearrange teams */
     notify(Player1,RearrangeTeam,Player2,ShallowShownTeam(team(Player2)));
     notify(Player2,RearrangeTeam,Player1,ShallowShownTeam(team(Player1)));
+
+    for (int player = Player1; player <= Player2; player++) {
+        couldMove[player] = true;
+        hasChoice[player] = true;
+
+        startClock(player);
+    }
+
+    yield();
+
+    for (int player = Player1; player <= Player2; player++) {
+        team(player).setIndexes(choice[slot(player)].choice.rearrange.pokeIndexes);
+
+        startClock(player);
+    }
 }
 
 void BattleSituation::beginTurn()
@@ -608,7 +626,7 @@ bool BattleSituation::requestChoice(int slot, bool acquire, bool custom)
     }
 
     if (turnlong[slot].contains("NoChoice") && !koed(slot)) {
-	return false;
+        return false;
     }
 
     couldMove[slot] = true;
@@ -901,7 +919,7 @@ void BattleSituation::notifySub(int player, bool sub)
 
 bool BattleSituation::canCancel(int player)
 {
-    return blocked() && (couldMove[slot(player,0)] || (doubles() && couldMove[slot(player, 1)]));
+    return blocked() && !rearrangeTime() && (couldMove[slot(player,0)] || (doubles() && couldMove[slot(player, 1)]));
 }
 
 void BattleSituation::cancel(int player)
@@ -921,7 +939,14 @@ void BattleSituation::cancel(int player)
 
 bool BattleSituation::validChoice(const BattleChoice &b)
 {
-    if (!couldMove[b.slot()] || !hasChoice[b.slot()] || !b.match(options[b.slot()])) {
+    if (!couldMove[b.slot()] || !hasChoice[b.slot()]) {
+        return false;
+    }
+
+    if (rearrangeTime()) {
+        if (!b.rearrangeChoice())
+            return false;
+    } else if (!b.match(options[b.slot()])) {
         return false;
     }
 
@@ -942,6 +967,7 @@ bool BattleSituation::validChoice(const BattleChoice &b)
         }
         return true;
     }
+
     if (b.attackingChoice()){
         /* It's an attack, we check the target is valid */
         if (b.attackSlot() == -1) {
@@ -958,6 +984,25 @@ bool BattleSituation::validChoice(const BattleChoice &b)
                     return false;
             }
         }
+        return true;
+    }
+
+    if (b.rearrangeChoice()) {
+        bool used[6] = {false};
+
+        /* Checks all the 6 indexes are different */
+        for (int i = 0; i < 6; i++) {
+            int x = b.choice.rearrange.pokeIndexes[i];
+
+            if (x < 0 || x >= 6)
+                return false;
+
+            if (used[x])
+                return false;
+
+            used[x] = true;
+        }
+
         return true;
     }
 

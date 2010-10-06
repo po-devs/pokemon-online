@@ -27,6 +27,7 @@ class BattleSituation : public ContextCallee
     PROPERTY(bool, blocked);
     PROPERTY(int, gen);
     PROPERTY(int, attackCount);
+    PROPERTY(bool, rearrangeTime);
 public:
     enum {
 	AllButPlayer = -2,

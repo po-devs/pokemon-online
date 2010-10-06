@@ -773,9 +773,25 @@ void BattleWindow::updateChoices()
 void BattleWindow::openRearrangeWindow(const ShallowShownTeam &t)
 {
     RearrangeWindow *r = new RearrangeWindow(info().myteam, t);
-    r->setParent(this, Qt::Window);
+    r->setParent(this, Qt::Window | Qt::Dialog);
     r->move(x() + (width()-r->width())/2, y() + (height()-r->height())/2);
     r->show();
+    r->move(x() + (width()-r->width())/2, y() + (height()-r->height())/2);
+
+    connect(r, SIGNAL(forfeit()), SLOT(clickClose()));
+    connect(r, SIGNAL(done()), SLOT(sendRearrangedTeam()));
+    connect(r, SIGNAL(done()), r, SLOT(close()));
+}
+
+void BattleWindow::sendRearrangedTeam()
+{
+    RearrangeChoice r;
+
+    for (int i = 0; i < 6; i++)
+        r.pokeIndexes[i] = info().myteam.internalId(info().myteam.poke(i));
+
+    BattleChoice c = BattleChoice(info().slot(info().myself), r);
+    sendChoice(c);
 }
 
 TeamBattle &BattleWindow::team()
@@ -1234,10 +1250,10 @@ RearrangeWindow::RearrangeWindow(TeamBattle &t, const ShallowShownTeam &op)
 
     QHBoxLayout *h1 = new QHBoxLayout();
     for (int i = 0; i < 6; i++) {
-        QPushButton *p = new QPushButton();
+        QToolButton *p = new QToolButton();
         p->setIcon(PokemonInfo::Icon(t.poke(i).num()));
         p->setIconSize(QSize(32,32));
-        p->setFlat(true);
+        p->setAutoRaise(true);
         if (t.poke(i).num() != Pokemon::NoPoke)
             p->setCheckable(true);
         connect(p, SIGNAL(toggled(bool)), SLOT(runExchanges()));
