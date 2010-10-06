@@ -739,7 +739,7 @@ void BattleSituation::analyzeChoice(int slot)
     stopClock(player, true);
     attackCount() += 1;
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
-    if (choice[slot].attack()) {
+    if (choice[slot].attackingChoice()) {
         turnlong[slot]["Target"] = choice[slot].target();
         if (!wasKoed(slot)) {
             if (turnlong[slot].contains("NoChoice"))
@@ -750,15 +750,17 @@ void BattleSituation::analyzeChoice(int slot)
                     MoveEffect::setup(Move::Struggle,slot,0,*this);
                     useAttack(slot, Move::Struggle, true);
                 } else {
-                    useAttack(slot, choice[slot].numSwitch);
+                    useAttack(slot, choice[slot].attackSlot());
                 }
             }
 	}
-    } else {
+    } else if (choice[slot].switchChoice()){
         if (!koed(slot)) { /* if the pokemon isn't ko, it IS sent back */
             sendBack(slot);
 	}
-        sendPoke(slot, choice[slot].numSwitch);
+        sendPoke(slot, choice[slot].pokeSlot());
+    } else {
+        /* FATAL§ FATAL§ */
     }
     notify(All, BlankMessage, Player1);
 }
@@ -815,8 +817,8 @@ void BattleSituation::analyzeChoices()
 {
     /* If there's no choice then the effects are already taken care of */
     for (int i = 0; i < numberOfSlots(); i++) {
-        if (!turnlong[i].contains("NoChoice") && choice[i].attack() && !options[i].struggle()) {
-            MoveEffect::setup(move(i,choice[i].numSwitch), i, i, *this);
+        if (!turnlong[i].contains("NoChoice") && choice[i].attackingChoice() && !options[i].struggle()) {
+            MoveEffect::setup(move(i,choice[i].pokeSlot()), i, i, *this);
         }
     }
 
@@ -826,7 +828,7 @@ void BattleSituation::analyzeChoices()
     std::vector<int> playersByOrder = sortedBySpeed();
 
     foreach(int i, playersByOrder) {
-	if (choice[i].poke())
+        if (choice[i].switchChoice())
             switches.push_back(i);
         else {
             if (gen() >= 5) {
@@ -919,43 +921,47 @@ void BattleSituation::cancel(int player)
 
 bool BattleSituation::validChoice(const BattleChoice &b)
 {
-    if (!couldMove[b.numSlot] || !hasChoice[b.numSlot] || !b.match(options[b.numSlot])) {
+    if (!couldMove[b.slot()] || !hasChoice[b.slot()] || !b.match(options[b.slot()])) {
         return false;
     }
 
-    int player = this->player(b.numSlot);
+    int player = this->player(b.slot());
 
     /* If it's a switch, we check the receiving poke valid, if it's a move, we check the target */
-    if (b.poke()) {
-        if (isOut(player, b.numSwitch) || poke(player, b.numSwitch).ko()) {
+    if (b.switchChoice()) {
+        if (isOut(player, b.pokeSlot()) || poke(player, b.pokeSlot()).ko()) {
             return false;
         }
         /* Let's also check another switch hasn't been made to the same poke */
-        for (int i = 0; i < numberOfSlots() / 2; i++) {
+        for (int i = 0; i < numberOfSlots(); i++) {
             int p2 = this->player(i);
-            if (i != b.numSlot && p2 == player && couldMove[i] && hasChoice[i] == false && choice[i].poke() && choice[i].numSwitch == b.numSwitch) {
+            if (i != b.slot() && p2 == player && couldMove[i] && hasChoice[i] == false && choice[i].switchChoice()
+                && choice[i].pokeSlot() == b.pokeSlot()) {
                 return false;
             }
         }
-    } else {
+        return true;
+    }
+    if (b.attackingChoice()){
         /* It's an attack, we check the target is valid */
-        if (b.numSwitch == -1) {
-            if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.numSlot || koed(b.target()))
+        if (b.attackSlot() == -1) {
+            if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.slot() || koed(b.target()))
                 return false;
         } else {
-            int target = MoveInfo::Target(move(b.numSlot, b.numSwitch), gen());
+            int target = MoveInfo::Target(move(b.slot(), b.attackSlot()), gen());
 
             if (target == Move::ChosenTarget) {
-                if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.numSlot || koed(b.target()))
+                if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.slot() || koed(b.target()))
                     return false;
             } else if (doubles() && target == Move::PartnerOrUser) {
-                if (b.target() < 0 || b.target() >= numberOfSlots() || this->player(b.target()) != this->player(b.numSlot) || koed(b.target()))
+                if (b.target() < 0 || b.target() >= numberOfSlots() || this->player(b.target()) != this->player(b.slot()) || koed(b.target()))
                     return false;
             }
         }
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 bool BattleSituation::isOut(int, int poke)
@@ -965,8 +971,8 @@ bool BattleSituation::isOut(int, int poke)
 
 void BattleSituation::storeChoice(const BattleChoice &b)
 {
-    choice[b.numSlot] = b;
-    hasChoice[b.numSlot] = false;
+    choice[b.slot()] = b;
+    hasChoice[b.slot()] = false;
 }
 
 bool BattleSituation::allChoicesOkForPlayer(int player)
@@ -1013,13 +1019,13 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
         }
     }
 
-    if (b.numSlot < 0 || b.numSlot >= numberOfSlots()) {
+    if (b.slot() < 0 || b.slot() >= numberOfSlots()) {
         return;
     }
 
-    if (player != this->player(b.numSlot)) {
+    if (player != this->player(b.slot())) {
         /* W00T! He tried to impersonate the other! Bad Guy! */
-        notify(player, BattleChat, opponent(player), QString("Say, are you trying to hack this game? Beware, i'll report you and have you banned!"));
+        //notify(player, BattleChat, opponent(player), QString("Say, are you trying to hack this game? Beware, i'll report you and have you banned!"));
         return;
     }
 
@@ -1343,7 +1349,7 @@ void BattleSituation::sendBack(int player, bool silent)
                     sendMoveMessage(171, 0, player);
                 }
                 fieldmoves[opp].power = fieldmoves[opp].power * 2;
-                choice[opp].targetPoke = player;
+                choice[opp].setTarget(player);
                 analyzeChoice(opp);
 
                 if (koed(player)) {

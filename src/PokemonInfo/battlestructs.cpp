@@ -14,7 +14,7 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("Challenge Cup"),
     QObject::tr("No Timeout"),
     QObject::tr("Species Clause"),
-    QObject::tr("Not Implemented")
+    QObject::tr("Rearrange Teams")
 };
 
 QString ChallengeInfo::clauseBattleText[] =
@@ -605,53 +605,81 @@ QDataStream & operator << (QDataStream &out, const BattleChoices &po)
     return out;
 }
 
-BattleChoice::BattleChoice(bool pokeSwitch, qint8 numSwitch, quint8 numSlot, quint8 target)
-        : pokeSwitch(pokeSwitch), numSwitch(numSwitch), targetPoke(target), numSlot(numSlot)
-{
-}
-
 /* Tests if the attack chosen is allowed */
 bool BattleChoice::match(const BattleChoices &avail) const
 {
-    if (!avail.attacksAllowed && attack()) {
+    if (!avail.attacksAllowed && attackingChoice()) {
 	return false;
     }
-    if (!avail.switchAllowed && poke()) {
+    if (!avail.switchAllowed && switchChoice()) {
 	return false;
+    }
+    if (rearrangeChoice()) {
+        return false;
     }
 
-    if (attack()) {
-	if (avail.struggle() != (numSwitch == -1))
+    if (attackingChoice()) {
+        if (avail.struggle() != (attackSlot() == -1))
 	    return false;
 	if (!avail.struggle()) {
-	    if (numSwitch < 0 || numSwitch > 3) {
+            if (attackSlot() < 0 || attackSlot() > 3) {
 		//Crash attempt!!
 		return false;
 	    }
-	    return avail.attackAllowed[numSwitch];
+            return avail.attackAllowed[attackSlot()];
 	}
 	return true;
     }
-    if (poke()) {
-	if (numSwitch < 0 || numSwitch > 5) {
+
+    if (switchChoice()) {
+        if (pokeSlot() < 0 || pokeSlot() > 5) {
 	    //Crash attempt!!
 	    return false;
 	}
 	return true;
     }
-    //Never reached
-    return true; // but avoids warnings anyway
+
+    //Reached if the type is not known
+    return false;
 }
 
 QDataStream & operator >> (QDataStream &in, BattleChoice &po)
 {
-    in >> po.numSlot >> po.pokeSwitch >> po.numSwitch >> po.targetPoke;
+    in >> po.playerSlot >> po.type;
+
+    switch (po.type) {
+    case CancelType:
+        break;
+    case SwitchType:
+        in >> po.choice.switching.pokeSlot;
+    case AttackType:
+        in >> po.choice.attack.attackSlot >> po.choice.attack.attackTarget;
+    case RearrangeType:
+        for (int i = 0; i < 6; i++) {
+            in >> po.choice.rearrange.pokeIndexes[i];
+        }
+    }
+
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const BattleChoice &po)
 {
-    out << po.numSlot << po.pokeSwitch << po.numSwitch << po.targetPoke;
+    out << po.playerSlot << po.type;
+
+    switch (po.type) {
+    case CancelType:
+        break;
+    case SwitchType:
+        out << po.choice.switching.pokeSlot;
+    case AttackType:
+        out << po.choice.attack.attackSlot << po.choice.attack.attackTarget;
+    case RearrangeType:
+        for (int i = 0; i < 6; i++) {
+            out << po.choice.rearrange.pokeIndexes[i];
+        }
+    }
+
     return out;
 }
 

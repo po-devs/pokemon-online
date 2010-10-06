@@ -2044,6 +2044,7 @@ struct MMDoomDesire : public MM
                     turn(b,s)["Stab"] = slot(b,s)["DoomDesireStab"];
                     turn(b,s)["AttackStat"] = slot(b,s)["DoomDesireAttack"];
                     turn(b,s)["CriticalHit"] = false;
+                    tmove(b,s).power = MoveInfo::Power(move, b.gen());
 
                     int damage = b.calculateDamage(s, s);
                     b.notify(All, BS::Effective, s, quint8(typemod));
@@ -2152,12 +2153,12 @@ struct MMEncore : public MM
 
         /*Changes the encored move, if no choice is off (otherwise recharging moves like blast burn would attack again,
             and i bet something strange would also happen with charging move) */
-        if (!turn(b,t).contains("NoChoice")) {
+        if (!turn(b,t).contains("NoChoice") && b.choice[t].attackingChoice()) {
             for (int i = 0; i < 4; i ++) {
                 if (b.move(t, i) == mv) {
                     MoveEffect::unsetup(move(b,t), t, b);
-                    b.choice[t].numSwitch = i;
-                    b.choice[t].targetPoke = b.randomValidOpponent(t);
+                    b.choice[t].setAttackSlot(i);
+                    b.choice[t].setTarget(b.randomValidOpponent(t));
                     MoveEffect::setup(mv, t, s, b);
                     break;
                 }
@@ -5690,5 +5691,5 @@ void MoveEffect::init()
     REGISTER_MOVE(185, AssistPower);
     REGISTER_MOVE(186, SynchroNoise);
     REGISTER_MOVE(187, Trickery);
-    REGISTER_MOVE(188, Retaliation);
+    REGISTER_MOVE(188, Retribution);
 }

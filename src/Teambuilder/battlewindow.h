@@ -136,6 +136,8 @@ private:
     void disableAll();
     void enableAll();
 
+    void openRearrangeWindow(const ShallowShownTeam &t);
+
     QStackedWidget *mystack;
     QTabWidget *mytab;
     QListWidget *myspecs;
@@ -271,5 +273,20 @@ signals:
     void attackClicked();
 };
 
+class RearrangeWindow : public QWidget
+{
+    Q_OBJECT
+public:
+    RearrangeWindow(TeamBattle &t, const ShallowShownTeam &op);
+signals:
+    void forfeit();
+    void done();
+public slots:
+    void runExchanges();
+private:
+    TeamBattle *myteam;
+
+    QPushButton *buttons[6];
+};
 
 #endif // BATTLEWINDOW_H
