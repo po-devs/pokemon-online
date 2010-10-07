@@ -544,6 +544,9 @@ struct MMDestinyBond : public MM
 	if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool() )) {
 	    b.sendMoveMessage(26, 0, s, Pokemon::Ghost, t);
 	    b.koPoke(t, s, false);
+
+            /* Self KO clause! */
+            b.selfKoer() = s;
 	}
     }
 };
@@ -850,6 +853,7 @@ struct MMPerishSong : public MM
             }
             addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
             poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns)) - 1;
+            poke(b, t)["PerishSonger"] = s;
         }
         b.sendMoveMessage(95);
     }
@@ -866,6 +870,7 @@ struct MMPerishSong : public MM
 	    poke(b,s)["PerishSongCount"] = count - 1;
         } else if (!b.hasWorkingAbility(s,Ability::Soundproof)){ //SoundProof
 	    b.koPoke(s,s,false);
+            b.selfKoer() = poke(b,s)["PerishSonger"];
 	}
     }
 };

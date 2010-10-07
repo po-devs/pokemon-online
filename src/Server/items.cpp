@@ -326,6 +326,11 @@ struct IMLifeOrb : public IM
         if (turn(b,s).value("ActivateLifeOrb").toBool() && !b.hasWorkingAbility(s, Ability::MagicGuard)) {
             //b.sendItemMessage(21,s);
             b.inflictDamage(s,b.poke(s).totalLifePoints()/10,s);
+
+            /* Self KO Clause */
+            if (b.koed(s)) {
+                b.selfKoer() = s;
+            }
         }
     }
 };

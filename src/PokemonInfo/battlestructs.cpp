@@ -14,7 +14,7 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("Challenge Cup"),
     QObject::tr("No Timeout"),
     QObject::tr("Species Clause"),
-    QObject::tr("Rearrange Teams"),
+    QObject::tr("Wifi Battle"),
     QObject::tr("Self-KO Clause")
 };
 
@@ -30,7 +30,7 @@ QString ChallengeInfo::clauseBattleText[] =
     QObject::tr("The battle ended by timeout."),
     QObject::tr(""),
     QObject::tr(""),
-    QObject::tr("")
+    QObject::tr("The Self-KO clause prevented acted as a tiebreaker.")
 };
 
 QString ChallengeInfo::clauseDescription[] =
