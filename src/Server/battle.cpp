@@ -22,6 +22,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     loseMessage[1] = p2.losingMessage();
     attacked() = -1;
     attacker() = -1;
+    selfKoer() = -1;
     gen() = std::max(p1.gen(), p2.gen());
     applyingMoveStatMods = false;
     weather = 0;
@@ -890,6 +891,7 @@ void BattleSituation::analyzeChoices()
             if (!hasMoved(p))
                 analyzeChoice(p);
             testWin();
+            selfKoer() = -1;
         }
     } else { // gen <= 3
         for(unsigned i = 0; i < players.size(); i++) {
@@ -903,6 +905,7 @@ void BattleSituation::analyzeChoices()
             if (!hasMoved(i))
                 analyzeChoice(players[i]);
             testWin();
+            selfKoer() = -1;
         }
     }
 }
@@ -2206,6 +2209,11 @@ void BattleSituation::inflictRecoil(int source, int target)
 
     if (recoil < 0) {
         inflictDamage(source, damage, source, false);
+
+        /* Self KO Clause! */
+        if (koed(source)) {
+            selfKoer() = source;
+        }
     } else  {
         if (hasWorkingItem(source, Item::BigRoot)) /* Big root */ {
             damage = damage * 13 / 10;
@@ -3274,6 +3282,7 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 void BattleSituation::requestSwitchIns()
 {
     testWin();
+    selfKoer() = -1;
 
     QSet<int> koedPlayers;
     QSet<int> koedPokes;
@@ -3441,14 +3450,23 @@ void BattleSituation::testWin()
         notify(All,ClockStop,Player1,time1);
         notify(All,ClockStop,Player2,time2);
         if (c1 + c2 == 0) {
+            if (selfKoer() =! -1) {
+                notifyClause(ChallengeInfo::SelfKO);
+                if (player(selfKoer()) == Player1)
+                    goto player2win;
+                else
+                    goto player1win;
+            }
             notify(All, BattleEnd, Player1, qint8(Tie));
             emit battleFinished(publicId(), Tie, id(Player1), id(Player2));
         } else if (c1 == 0) {
+            player2win:
             notify(All, BattleEnd, Player2, qint8(Win));
             notify(All, EndMessage, Player2, winMessage[Player2]);
             notify(All, EndMessage, Player1, loseMessage[Player1]);
             emit battleFinished(publicId(), Win, id(Player2), id(Player1));
         } else {
+            player1win:
             notify(All, BattleEnd, Player1, qint8(Win));
             notify(All, EndMessage, Player1, winMessage[Player1]);
             notify(All, EndMessage, Player2, loseMessage[Player2]);
