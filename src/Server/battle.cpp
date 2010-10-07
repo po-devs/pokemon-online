@@ -159,9 +159,9 @@ void BattleSituation::engageBattle()
 {
     for (int i = 0; i < numberOfSlots()/2; i++) {
         if (!poke(Player1, i).ko())
-            sendPoke(slot(Player1), i);
+            sendPoke(slot(Player1, i), i);
         if (!poke(Player2, i).ko())
-            sendPoke(slot(Player2), i);
+            sendPoke(slot(Player2, i), i);
     }
 
     /* For example, if two pokemons are brought out
@@ -3490,7 +3490,7 @@ void BattleSituation::testWin()
         notify(All,ClockStop,Player1,time1);
         notify(All,ClockStop,Player2,time2);
         if (c1 + c2 == 0) {
-            if (selfKoer() =! -1) {
+            if (selfKoer() != -1) {
                 notifyClause(ChallengeInfo::SelfKO);
                 if (player(selfKoer()) == Player1)
                     goto player2win;

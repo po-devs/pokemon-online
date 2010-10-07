@@ -78,7 +78,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     mytab->addTab(myspecs = new QListWidget(), tr("Spectators"));
     myspecs->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 3; i++) {
         myazones[i] = new AttackZone(team.poke(i), gen());
         mystack->addWidget(myazones[i]);
         mybgroups.append(new QButtonGroup());
