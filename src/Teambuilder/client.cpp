@@ -1286,9 +1286,9 @@ void Client::sendChallenge(int id)
         clauses |= s.value("clause_"+ChallengeInfo::clause(i)).toBool() ? (1 << i) : 0;
     }
 
-    bool doubles = s.value("challenge_with_doubles").toBool();
+    int mode = s.value("challenge_with_doubles").toInt();
 
-    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Sent, id, clauses,doubles));
+    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Sent, id, clauses, mode));
 }
 
 void Client::clearChallenge()
