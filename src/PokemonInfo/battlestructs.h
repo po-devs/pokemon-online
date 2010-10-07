@@ -335,7 +335,9 @@ struct ChallengeInfo
     enum Mode
     {
         Singles,
-        Doubles
+        Doubles,
+        Triples,
+        Rotation
     };
 
     static const int numberOfClauses = 11;
@@ -393,7 +395,7 @@ QDataStream & operator << (QDataStream &out, const ChallengeInfo &c);
 struct BattleConfiguration
 {
     quint8 gen;
-    bool doubles;
+    quint8 mode;
     qint32 ids[2];
     quint32 clauses;
 
@@ -408,14 +410,14 @@ struct BattleConfiguration
 
 inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)
 {
-    in >> c.gen >> c.doubles >> c.ids[0] >> c.ids[1] >> c.clauses;
+    in >> c.gen >> c.mode >> c.ids[0] >> c.ids[1] >> c.clauses;
 
     return in;
 }
 
 inline QDataStream & operator << (QDataStream &out, const BattleConfiguration &c)
 {
-    out << c.gen << c.doubles << c.ids[0] << c.ids[1] << c.clauses;
+    out << c.gen << c.mode << c.ids[0] << c.ids[1] << c.clauses;
 
     return out;
 }

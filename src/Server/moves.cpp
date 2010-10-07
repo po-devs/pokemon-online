@@ -870,7 +870,7 @@ struct MMPerishSong : public MM
 	    poke(b,s)["PerishSongCount"] = count - 1;
         } else if (!b.hasWorkingAbility(s,Ability::Soundproof)){ //SoundProof
 	    b.koPoke(s,s,false);
-            b.selfKoer() = poke(b,s)["PerishSonger"];
+            b.selfKoer() = poke(b,s)["PerishSonger"].toInt();
 	}
     }
 };
@@ -2990,7 +2990,7 @@ struct MMTeamBarrier : public MM
 	}
 	int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
 
-        b.sendMoveMessage(73,(cat-1)+b.doubles()*2,s,type(b,s));
+        b.sendMoveMessage(73,(cat-1)+b.multiples()*2,s,type(b,s));
         team(b,source)["Barrier" + QString::number(cat) + "Count"] = nturn;
 
         addFunction(team(b,source), "EndTurn", "TeamBarrier", &et);
@@ -4554,19 +4554,10 @@ struct MMAcupressure : public MM
 struct MMHelpingHand : public MM
 {
     MMHelpingHand() {
-        functions["DetermineAttackFailure"] = &daf;
         functions["OnFoeOnAttack"] = &uas;
     }
 
-    static void daf(int s, int, BS &b) {
-        if (!b.doubles() || b.koed(b.partner(s))) {
-            turn(b,s)["Failed"] = true;
-        }
-    }
-
-    static void uas(int s, int , BS &b) {
-        int p = b.partner(s);
-
+    static void uas(int s, int p, BS &b) {
         b.sendMoveMessage(63, 0, s, type(b,s), p);
         turn(b,p)["HelpingHanded"] = true;
     }
