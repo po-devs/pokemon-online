@@ -215,8 +215,11 @@ private:
 
     int numberOfPlayersLoggedIn;
 
+public:
     bool allowRatedWithSameIp;
+    bool allowThroughChallenge;
     int diffIpsForRatedBattles;
+private:
     QHash<QString, QList<QString> > lastRatedIps;
 
     ScriptEngine *myengine;

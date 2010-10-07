@@ -14,6 +14,7 @@ public slots:
     void applyChanges();
 private:
     QCheckBox *sameIp;
+    QCheckBox *allowCRated;
     QSpinBox *diffIps;
 };
 
