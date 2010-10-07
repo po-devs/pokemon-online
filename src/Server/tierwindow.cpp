@@ -161,8 +161,9 @@ void TierWindow::openTierEdit(Tier *t)
     items = t->getBannedItems();
     restrPokemons = t->getRestrictedPokes();
 
-    helper->addConfigHelper(new ConfigCombo<int>("Doubles in Find Battle", t->doubles, QStringList() << "Force" << "Allow" << "Forbid",
-                                                 QList<int>() << 1 << 0 << (-1) ));
+    helper->addConfigHelper(new ConfigCombo<int>("Battle Mode in Find Battle", t->mode, QStringList() << "Any" << "Singles" << "Doubles" << "Triples" << "Rotation Battles",
+                                                 QList<int>() << -1 << ChallengeInfo::Singles << ChallengeInfo::Doubles << ChallengeInfo::Triples
+                                                 << ChallengeInfo::Rotation));
 
     int clauses = t->clauses;
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {

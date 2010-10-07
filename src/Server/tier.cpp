@@ -489,7 +489,7 @@ void Tier::loadFromXml(const QDomElement &elem)
     maxLevel = elem.attribute("maxLevel", "100").toInt();
     numberOfPokemons = elem.attribute("numberOfPokemons", "6").toInt();
     maxRestrictedPokes = elem.attribute("numberOfRestricted", "1").toInt();
-    doubles = elem.attribute("doubles", "0").toInt();
+    mode = elem.attribute("mode", "0").toInt();
     displayOrder = elem.attribute("displayOrder", "0").toInt();
 
     clauses = 0;
@@ -556,7 +556,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
     dest.setAttribute("maxLevel", maxLevel);
     dest.setAttribute("numberOfPokemons", numberOfPokemons);
     dest.setAttribute("numberOfRestricted", maxRestrictedPokes);
-    dest.setAttribute("doubles", doubles);
+    dest.setAttribute("mode", mode);
     dest.setAttribute("displayOrder", displayOrder);
     dest.setAttribute("moves", getBannedMoves());
     dest.setAttribute("items", getBannedItems());
@@ -768,7 +768,7 @@ Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), m_coun
     maxLevel = 100;
     numberOfPokemons = 6;
     maxRestrictedPokes = 1;
-    doubles = 0;
+    mode = ChallengeInfo::Singles;
     displayOrder = 0;
 
     clauses = 0;
@@ -793,15 +793,11 @@ LoadThread * Tier::getThread()
 
 bool Tier::allowMode(int mode) const
 {
-    if (doubles == 0) {
+    if (this->mode < 0) {
         return true;
     }
 
-    if (mode && doubles >= 1)
-        return true;
-    if (!mode && doubles <= -1)
-        return true;
-    return false;
+    return this->mode == mode;
 }
 
 bool Tier::allowGen(int gen) const
@@ -833,7 +829,7 @@ Tier *Tier::dataClone() const
     t.bannedMoves = bannedMoves;
     t.bannedPokes = bannedPokes;
     t.restrictedPokes = restrictedPokes;
-    t.doubles = doubles;
+    t.mode = mode;
     t.displayOrder = displayOrder;
     t.clauses = clauses;
 

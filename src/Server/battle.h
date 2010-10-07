@@ -22,7 +22,7 @@ class BattleSituation : public ContextCallee
     PROPERTY(quint32, clauses);
     PROPERTY(int, attacker);
     PROPERTY(int, attacked);
-    PROPERTY(bool, doubles);
+    PROPERTY(int, mode);
     PROPERTY(int, numberOfSlots);
     PROPERTY(bool, blocked);
     PROPERTY(int, gen);
@@ -93,6 +93,15 @@ public:
     int slotNum(int slot) const;
     int countAlive(int player) const;
     int countBackUp(int player) const;
+    bool multiples() const {
+        return mode() != ChallengeInfo::Singles && mode() != ChallengeInfo::Rotation;
+    }
+    bool arePartners(int p1, int p2) const {
+        return player(p1) == player(p2);
+    }
+    int numberPerSide() const {
+        return numberOfSlots()/2;
+    }
 
     /* Starts the battle -- use the time before to connect signals / slots */
     void start(ContextSwitcher &ctx);

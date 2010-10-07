@@ -35,8 +35,16 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     timeStopped[1] = true;
     clauses() = c.clauses;
     rated() = c.rated;
-    doubles() = c.mode == ChallengeInfo::Doubles;
-    numberOfSlots() = doubles() ? 4 : 2;
+    mode() = c.mode;
+
+    if (mode() == ChallengeInfo::Doubles) {
+        numberOfSlots() = 4;
+    } else if (mode() == ChallengeInfo::Triples) {
+        numberOfSlots() = 6;
+    } else {
+        numberOfSlots() = 2;
+    }
+
     if (p1.tier() == p2.tier())
         tier() = p1.tier();
     currentForcedSleepPoke[0] = -1;
@@ -149,13 +157,11 @@ void BattleSituation::start(ContextSwitcher &ctx)
 
 void BattleSituation::engageBattle()
 {
-    sendPoke(slot(Player1), 0);
-    sendPoke(slot(Player2), 0);
-    if (doubles()) {
-        if (!poke(Player1, 1).ko())
-            sendPoke(slot(Player1, 1), 1);
-        if (!poke(Player2, 1).ko())
-            sendPoke(slot(Player2, 1), 1);
+    for (int i = 0; i < numberOfSlots()/2; i++) {
+        if (!poke(Player1, i).ko())
+            sendPoke(slot(Player1), i);
+        if (!poke(Player2, i).ko())
+            sendPoke(slot(Player2), i);
     }
 
     /* For example, if two pokemons are brought out
@@ -327,11 +333,11 @@ QList<int> BattleSituation::revs(int p) const
     int player = this->player(p);
     int opp = opponent(player);
     QList<int> ret;
-    if (!koed(slot(opp)))
-        ret.push_back(slot(opp));
-    if (doubles() && !koed(slot(opp, 1))) {
-        ret.push_back(slot(opp, 1));
+    for (int i = 0; i < numberPerSide(); i++) {
+        if (!koed(slot(opp, i)))
+            ret.push_back(slot(opp, i));
     }
+
     return ret;
 }
 
@@ -341,9 +347,8 @@ QList<int> BattleSituation::allRevs(int p) const
     int player = this->player(p);
     int opp = opponent(player);
     QList<int> ret;
-    ret.push_back(slot(opp));
-    if (doubles()) {
-        ret.push_back(slot(opp, true));
+    for (int i = 0; i < numberPerSide(); i++) {
+        ret.push_back(slot(opp, i));
     }
     return ret;
 }
@@ -895,7 +900,7 @@ void BattleSituation::analyzeChoices()
         }
     } else { // gen <= 3
         for(unsigned i = 0; i < players.size(); i++) {
-            if (!doubles()) {
+            if (!multiples()) {
                 if (koed(0) || koed(1))
                     break;
             } else {
@@ -922,19 +927,25 @@ void BattleSituation::notifySub(int player, bool sub)
 
 bool BattleSituation::canCancel(int player)
 {
-    return blocked() && !rearrangeTime() && (couldMove[slot(player,0)] || (doubles() && couldMove[slot(player, 1)]));
+    if (!blocked() || rearrangeTime())
+        return false;
+
+    for (int i = 0; i < numberOfSlots()/2; i++) {
+        if (couldMove[slot(player,i)])
+            return true;
+    }
+
+    return false;
 }
 
 void BattleSituation::cancel(int player)
 {
     notify(player, CancelMove, player);
 
-    if (couldMove[slot(player, 0)]) {
-        hasChoice[slot(player, 0)] = true;
-    }
-
-    if (doubles() && couldMove[slot(player, 1)]) {
-        hasChoice[slot(player, 1)] = true;
+    for (int i = 0; i < numberOfSlots()/2; i++) {
+        if (couldMove[slot(player, i)]) {
+            hasChoice[slot(player, i)] = true;
+        }
     }
 
     startClock(player,false);
@@ -982,8 +993,11 @@ bool BattleSituation::validChoice(const BattleChoice &b)
             if (target == Move::ChosenTarget) {
                 if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.slot() || koed(b.target()))
                     return false;
-            } else if (doubles() && target == Move::PartnerOrUser) {
-                if (b.target() < 0 || b.target() >= numberOfSlots() || this->player(b.target()) != this->player(b.slot()) || koed(b.target()))
+            } else if (multiples() && target == Move::PartnerOrUser) {
+                if (b.target() < 0 || b.target() >= numberOfSlots() || !arePartners(b.target(), b.slot()) || koed(b.target()))
+                    return false;
+            } else if (multiples() && target == Move::Partner) {
+                if (b.target() < 0 || b.target() >= numberOfSlots() || !arePartners(b.target(), b.slot()) || koed(b.target()))
                     return false;
             }
         }
@@ -991,6 +1005,9 @@ bool BattleSituation::validChoice(const BattleChoice &b)
     }
 
     if (b.rearrangeChoice()) {
+        if (slotNum(b.slot()) != 0)
+            return false;
+
         bool used[6] = {false};
 
         /* Checks all the 6 indexes are different */
@@ -1014,7 +1031,7 @@ bool BattleSituation::validChoice(const BattleChoice &b)
 
 bool BattleSituation::isOut(int, int poke)
 {
-    return doubles() ? poke < 2 : poke == 0;
+    return poke < numberOfSlots()/2;
 }
 
 void BattleSituation::storeChoice(const BattleChoice &b)
@@ -1025,7 +1042,11 @@ void BattleSituation::storeChoice(const BattleChoice &b)
 
 bool BattleSituation::allChoicesOkForPlayer(int player)
 {
-    return doubles () ? (hasChoice[slot(player, 0)] == false && hasChoice[slot(player, 1)] == false) : (hasChoice[slot(player)] == false);
+    for (int i = 0; i <= numberOfSlots()/2; i++) {
+        if (hasChoice[slot(player, i)] != false)
+            return false;
+    }
+    return true;
 }
 
 int BattleSituation::currentInternalId(int slot) const
@@ -1487,11 +1508,10 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     callaeffects(player,target,"StatModifier");
     callieffects(target,player,"StatModifier");
     callaeffects(target,player,"StatModifier");
-    if (doubles()) {
-        int partner = this->partner(player);
-
-        if (!koed(partner)) {
-            callaeffects(partner, player, "PartnerStatModifier");
+    if (multiples()) {
+        for (int partner = 0; partner < numberOfSlots(); partner++) {
+            if (partner != player && arePartners(partner, player) && !koed(partner))
+                callaeffects(partner, player, "PartnerStatModifier");
         }
     }
     /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
@@ -1782,7 +1802,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     targetList.clear();
     switch(Move::Target(fieldmoves[player].targets)) {
     case Move::Field: case Move::TeamParty: case Move::OpposingTeam:
-    case Move::TeamSide: case Move::IndeterminateTarget: case Move::Partner:
+    case Move::TeamSide: case Move::IndeterminateTarget:
     case Move::User: targetList.push_back(player); break;
     case Move::Opponents:
         targetList = sortedBySpeed();
@@ -1806,7 +1826,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
         break;
         case Move::ChosenTarget: case Move::MeFirstTarget: {
-                if (doubles()) {
+                if (multiples()) {
                     int target = turnlong[player]["Target"].toInt();
                     if (!koed(target) && target != player) {
                         targetList.push_back(target);
@@ -1827,18 +1847,38 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 break;
             }
         case Move::PartnerOrUser:
-            if (!doubles()) {
+            if (!multiples()) {
                 targetList.push_back(player);
             } else {
                 /* Acupressure can be called with sleep talk, so the target needs to be checked */
                 int target = turnlong[player]["Target"].toInt();
-                if (!koed(target) && this->player(target) == this->player(player)) {
+                if (!koed(target) && arePartners(target, player)) {
                     targetList.push_back(target);
                 } else {
                     targetList.push_back(randomValidOpponent(randomValidOpponent(player)));
                 }
             }
             break;
+        case Move::Partner:
+            {
+                int target = turnlong[player]["Target"].toInt();
+
+                if (!koed(target) && arePartners(target, player)) {
+                    targetList.push_back(target);
+                } else {
+                    for (int i = 0; i < numberOfSlots(); i++) {
+                        if (arePartners(i, player) && i!=player && !koed(i)) {
+                            targetList.push_back(i);
+                        }
+                    }
+                    if (targetList.size() == 0) {
+                        int randp = targetList[true_rand()%targetList.size()];
+                        targetList.clear();
+                        targetList.push_back(randp);
+                    }
+                }
+                break;
+            }
         }
 
     if (!specialOccurence && !turnlong[player].contains("NoChoice")) {
@@ -2843,7 +2883,7 @@ int BattleSituation::calculateDamage(int p, int t)
     /* Light screen / Reflect */
     if (!crit && !hasWorkingAbility(p, Ability::SlipThrough) &&
         teamzone[this->player(t)].value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
-        if (!doubles())
+        if (!multiples())
             damage /= 2;
         else {
             damage = damage * 2 / 3;
@@ -2851,7 +2891,7 @@ int BattleSituation::calculateDamage(int p, int t)
     }
     /* Damage reduction in doubles, which occur only
        if there's more than one alive target. */
-    if (doubles()) {
+    if (multiples()) {
         /* In gen 3, attacks that hit everyone don't have reduced damage */
         if (gen() >= 4 || (fieldmoves[p].targets != Move::All && fieldmoves[p].targets != Move::AllButSelf) ) {
             if (attackused == Move::Explosion || attackused == Move::Selfdestruct) {
@@ -3402,7 +3442,7 @@ int BattleSituation::countAlive(int player) const
 int BattleSituation::countBackUp(int player) const
 {
     int count = 0;
-    for (int i = doubles() ? 2 : 1; i < 6; i++) {
+    for (int i = numberOfSlots()/2; i < 6; i++) {
         if (poke(player, i).num() != 0 && !poke(player, i).ko()) {
             count += 1;
         }
@@ -3534,16 +3574,16 @@ int BattleSituation::getStat(int player, int stat, int purityLevel)
 
     callaeffects(player, player, "StatModifier");
 
-    if (doubles()) {
-        int partner = this->partner(player);
-
-        if (!koed(partner)) {
+    if (multiples()) {
+        for (int partner = 0; partner < numberOfSlots(); partner++) {
+            if (partner == player || !arePartners(partner, player) || koed(partner))
+                continue;
             callaeffects(partner, player, "PartnerStatModifier");
         }
     }
     int ret = baseStat*(20+turnlong[player].value(q+"AbilityModifier").toInt())/20;
 
-    if (doubles()) {
+    if (multiples()) {
         ret = ret * (20+turnlong[player].value(q+"PartnerAbilityModifier").toInt())/20;
     }
 
@@ -3699,7 +3739,7 @@ BattleConfiguration BattleSituation::configuration() const
     ret.ids[0] = id(0);
     ret.ids[1] = id(1);
     ret.gen = gen();
-    ret.doubles = doubles();
+    ret.mode = mode();
     ret.clauses = clauses();
 
     return ret;

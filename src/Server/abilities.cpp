@@ -35,9 +35,9 @@ void AbilityEffect::setup(int num, int source, BattleSituation &b, bool firstAct
 
     /* In gen 3, intimidate/insomnia/... aren't triggered by Trace */
     if (b.pokelong[source].value(activationkey) != b.pokelong[source]["SwitchCount"].toInt() && (b.gen() >= 4 || firstAct)) {
-        b.pokelong[source][activationkey] = b.pokelong[source]["SwitchCount"].toInt();
         activate("UponSetup", num, source, source, b);
-    }
+        b.pokelong[source][activationkey] = b.pokelong[source]["SwitchCount"].toInt();
+     }
 }
 
 struct AMAdaptability : public AM {
@@ -1109,15 +1109,17 @@ struct AMPlus : public AM {
     }
 
     static void sm(int s, int, BS &b) {
-        if (!b.doubles()) {
+        if (!b.multiples()) {
             return;
         }
-        int p = b.partner(s);
-        if (b.koed(p)) {
-            return;
-        }
-        if (b.hasWorkingAbility(p, Ability::Minus)) {
-            turn(b,s)["Stat3AbilityModifier"] = 10;
+        for (int i = 0; i <= b.numberOfSlots(); i++) {
+            if (!b.arePartners(i, s) || i==s || b.koed(i)) {
+                continue;
+            }
+            if (b.hasWorkingAbility(i, Ability::Minus)) {
+                turn(b,s)["Stat3AbilityModifier"] = 10;
+                return;
+            }
         }
     }
 };
@@ -1127,16 +1129,19 @@ struct AMMinus : public AM {
         functions["StatModifier"] = &sm;
     }
 
+
     static void sm(int s, int, BS &b) {
-        if (!b.doubles()) {
+        if (!b.multiples()) {
             return;
         }
-        int p = b.partner(s);
-        if (b.koed(p)) {
-            return;
-        }
-        if (b.hasWorkingAbility(p, Ability::Plus)) {
-            turn(b,s)["Stat3AbilityModifier"] = 10;
+        for (int i = 0; i <= b.numberOfSlots(); i++) {
+            if (!b.arePartners(i, s) || i==s || b.koed(i)) {
+                continue;
+            }
+            if (b.hasWorkingAbility(i, Ability::Minus)) {
+                turn(b,s)["Stat3AbilityModifier"] = 10;
+                return;
+            }
         }
     }
 };
