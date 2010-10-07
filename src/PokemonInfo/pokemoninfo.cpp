@@ -500,6 +500,12 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
     else
         file = QString("%1/%2%3%4.png").arg(pokeid.toString(), back?"back":"front", (gender==Pokemon::Female)?"f":"", shiney?"s":"");
 
+    QPixmap ret;
+
+    if (QPixmapCache::find(archive+file, &ret)) {
+        return ret;
+    }
+
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
     if (data.length()==0)
@@ -522,10 +528,9 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
                 return PokemonInfo::Picture(OriginalForme(pokeid), 5, Pokemon::Male, false, back);
             }
         }
-        return QPixmap();
+        return ret;
     }
 
-    QPixmap ret;
     ret.loadFromData(data, "png");
 
     return ret;
@@ -537,12 +542,18 @@ QPixmap PokemonInfo::Sub(int gen, bool back)
 
     QString file = QString("sub%1%2.png").arg(back?"b":"").arg(gen>=4?"":"3G");
 
+    QPixmap ret;
+
+    if (QPixmapCache::find(archive+file, &ret)) {
+        return ret;
+    }
+
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
     if (data.length()==0)
-        return QPixmap();
+        return ret;
 
-    QPixmap ret;
+
     ret.loadFromData(data, "png");
 
     return ret;
@@ -553,6 +564,12 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid)
     QString archive = path("icons.zip");
     QString file = QString("%1.png").arg(pokeid.toString());
 
+    QPixmap p;
+
+    if (QPixmapCache::find(archive+file, &p)) {
+        return p;
+    }
+
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
     if(data.length() == 0)
     {
@@ -561,9 +578,9 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid)
         }
 
         qDebug() << "error loading icon";
-        return QPixmap();
+        return p;
     }
-    QPixmap p;
+
     p.loadFromData(data,"png");
     return p;
 }
@@ -1476,8 +1493,10 @@ int ItemInfo::BerryType(int itemnum)
 
 QPixmap ItemInfo::Icon(int itemnum)
 {
+    QPixmap ret;
+
     if (itemnum == 0)
-        return QPixmap();
+        return ret;
 
     QString archive = path("Items.zip");
     if (isBerry(itemnum)) {
@@ -1487,15 +1506,42 @@ QPixmap ItemInfo::Icon(int itemnum)
 
     QString file = QString("%1.png").arg(itemnum);
 
+    if (QPixmapCache::find(archive+file, &ret)) {
+        return ret;
+    }
+
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
     if(data.length() == 0)
     {
         qDebug() << "error loading icon";
         return QPixmap();
     }
-    QPixmap p;
-    p.loadFromData(data,"png");
-    return p;
+
+    ret.loadFromData(data,"png");
+    return ret;
+}
+
+QPixmap ItemInfo::HeldItem()
+{
+    QPixmap ret;
+
+    QString archive = path("Items.zip");
+
+    QString file = QString("helditem.png");
+
+    if (QPixmapCache::find(archive+file, &ret)) {
+        return ret;
+    }
+
+    QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
+    if(data.length() == 0)
+    {
+        qDebug() << "error loading held item icon";
+        return QPixmap();
+    }
+
+    ret.loadFromData(data,"png");
+    return ret;
 }
 
 QString ItemInfo::Name(int itemnum)

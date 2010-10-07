@@ -274,11 +274,15 @@ signals:
     void attackClicked();
 };
 
+class RearrangeLayout;
+
 class RearrangeWindow : public QWidget
 {
     Q_OBJECT
 public:
     RearrangeWindow(TeamBattle &t, const ShallowShownTeam &op);
+
+
 signals:
     void forfeit();
     void done();
@@ -288,6 +292,20 @@ private:
     TeamBattle *myteam;
 
     QToolButton *buttons[6];
+    RearrangeLayout *layouts[6];
+};
+
+class RearrangeLayout : public QVBoxLayout
+{
+public:
+    RearrangeLayout(QWidget *parent, const Pokemon::uniqueId &pokenum, int level, int gender, bool item);
+
+    void update(const Pokemon::uniqueId &pokenum, int level, int gender, bool item);
+
+    static QPixmap getFullIcon(Pokemon::uniqueId num, bool item, int gender);
+private:
+    QLabel *levelLabel;
+    QLabel *pokemonPicture;
 };
 
 #endif // BATTLEWINDOW_H
