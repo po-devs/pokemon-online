@@ -792,6 +792,11 @@ void BattleWindow::sendRearrangedTeam()
 
     BattleChoice c = BattleChoice(info().slot(info().myself), r);
     sendChoice(c);
+
+    /* If the team was rearranged... */
+    for (int i = 0; i < 6; i++) {
+        mypzone->pokes[i]->changePokemon(info().myteam.poke(i));
+    }
 }
 
 TeamBattle &BattleWindow::team()
@@ -1251,17 +1256,18 @@ RearrangeWindow::RearrangeWindow(TeamBattle &t, const ShallowShownTeam &op)
     QHBoxLayout *h1 = new QHBoxLayout();
     for (int i = 0; i < 6; i++) {
         QToolButton *p = new QToolButton();
-        p->setIcon(PokemonInfo::Icon(t.poke(i).num()));
-        p->setIconSize(QSize(32,32));
+        p->setFixedSize(70,70);
+        RearrangeLayout *l = new RearrangeLayout(p, t.poke(i).num(), t.poke(i).level(), t.poke(i).gender(), t.poke(i).item());
         p->setAutoRaise(true);
         if (t.poke(i).num() != Pokemon::NoPoke)
             p->setCheckable(true);
         connect(p, SIGNAL(toggled(bool)), SLOT(runExchanges()));
 
         h1->addWidget(p, 0, Qt::AlignCenter);
-
         buttons[i] = p;
+        layouts[i] = l;
     }
+
     v->addLayout(h1);
 
     v->addWidget(new QLabel(tr("Team of your opponent:")));
@@ -1269,7 +1275,8 @@ RearrangeWindow::RearrangeWindow(TeamBattle &t, const ShallowShownTeam &op)
     QHBoxLayout *h2 = new QHBoxLayout();
     for (int i = 0; i < 6; i++) {
         QLabel *l = new QLabel();
-        l->setPixmap(PokemonInfo::Icon(op.poke(i).num));
+        l->setFixedSize(70,70);
+        new RearrangeLayout(l, op.poke(i).num, op.poke(i).level, op.poke(i).gender, op.poke(i).item);
 
         h2->addWidget(l, 0, Qt::AlignCenter);
     }
@@ -1303,10 +1310,50 @@ void RearrangeWindow::runExchanges()
     for (int i = check1+1; i < 6; i++) {
         if (buttons[i]->isChecked()) {
             myteam->switchPokemon(check1, i);
-            buttons[check1]->setIcon(PokemonInfo::Icon(myteam->poke(check1).num()));
             buttons[check1]->setChecked(false);
-            buttons[i]->setIcon(PokemonInfo::Icon(myteam->poke(i).num()));
             buttons[i]->setChecked(false);
+
+            PokeBattle &p1 = myteam->poke(check1);
+            layouts[check1]->update(p1.num(), p1.level(), p1.gender(), p1.item());
+            PokeBattle &p2 = myteam->poke(i);
+            layouts[i]->update(p2.num(), p2.level(), p2.gender(), p2.item());
         }
     }
+}
+
+RearrangeLayout::RearrangeLayout(QWidget *parent, const Pokemon::uniqueId &pokenum, int level, int gender, bool item)
+    : QVBoxLayout(parent)
+{
+    addWidget(pokemonPicture = new QLabel(), 0, Qt::AlignCenter);
+    addWidget(levelLabel = new QLabel(), 0, Qt::AlignCenter);
+    setSpacing(2);
+
+    pokemonPicture->setObjectName("PokemonPicture");
+    levelLabel->setObjectName("LevelLabel");
+
+    update(pokenum, level, gender, item);
+}
+
+void RearrangeLayout::update(const Pokemon::uniqueId &pokenum, int level, int gender, bool item)
+{
+    pokemonPicture->setPixmap(getFullIcon(pokenum, item, gender));
+    pokemonPicture->setFixedSize(pokemonPicture->pixmap()->size());
+
+    levelLabel->setText(tr("Lv. %1").arg(level));
+}
+
+QPixmap RearrangeLayout::getFullIcon(Pokemon::uniqueId num, bool item, int gender)
+{
+    QPixmap poke = PokemonInfo::Icon(num);
+
+    QPainter painter(&poke);
+    if (item) {
+        QPixmap helditem = ItemInfo::HeldItem();
+        painter.drawPixmap(20, 22, helditem);
+    }
+
+    QPixmap genderIcon = Theme::GenderPicture(gender, Theme::IngameM);
+    painter.drawPixmap(32-genderIcon.width(), 3, genderIcon);
+
+    return poke;
 }

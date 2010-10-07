@@ -12,7 +12,8 @@ public:
     enum GenderMode {
         TeamBuilderM,
         BattleM,
-        PokedexM
+        PokedexM,
+        IngameM
     };
 
     static void init(const QString &dir="Themes/Default/");

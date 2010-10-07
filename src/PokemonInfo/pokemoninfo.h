@@ -278,6 +278,7 @@ public:
     static int BerryPower(int itemnum);
     static int BerryType(int itemnum);
     static QPixmap Icon(int itemnum);
+    static QPixmap HeldItem();
 private:
     static QList<QString> m_BerryNames;
     static QList<QString> m_RegItemNames;

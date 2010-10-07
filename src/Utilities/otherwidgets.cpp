@@ -215,9 +215,7 @@ QScrollDownTextBrowser::QScrollDownTextBrowser()
     setOpenExternalLinks(true);
     linecount = 0;
     // Take standard menu, add clear to it, save for later use.
-    menu = createStandardContextMenu();
-    QAction *action = menu->addAction(tr("Clear"));
-    connect(action, SIGNAL(triggered()), this, SLOT(clear()));
+    menu = NULL;
 }
 
 void QScrollDownTextBrowser::insertHtml(const QString &text)
@@ -296,6 +294,13 @@ void QScrollDownTextBrowser::insertPlainText(const QString &text)
 
 void QScrollDownTextBrowser::contextMenuEvent(QContextMenuEvent *event)
 {
+    if (menu) {
+        menu->deleteLater();
+    }
+    menu = createStandardContextMenu();
+    menu->setParent(this);
+    QAction *action = menu->addAction(tr("Clear"));
+    connect(action, SIGNAL(triggered()), this, SLOT(clear()));
     menu->exec(event->globalPos());
 }
 
