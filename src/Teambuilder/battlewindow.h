@@ -16,7 +16,7 @@ class StruggleZone;
 class BattleInfo : public BaseBattleInfo
 {
 public:
-    BattleInfo(const TeamBattle &myteam, const PlayerInfo &me, const PlayerInfo &opp, bool doubles, int myself, int oppo);
+    BattleInfo(const TeamBattle &myteam, const PlayerInfo &me, const PlayerInfo &opp, int mode, int myself, int oppo);
 
     /* Possible choices */
     bool possible;
@@ -83,8 +83,8 @@ public:
     };
 
     enum {
-        TargetTab = 2,
-        StruggleTab = 3
+        TargetTab = 3,
+        StruggleTab = 4
     };
 
     TeamBattle &team();
@@ -142,7 +142,7 @@ private:
     QStackedWidget *mystack;
     QTabWidget *mytab;
     QListWidget *myspecs;
-    AttackZone *myazones[2];
+    AttackZone *myazones[3];
     StruggleZone *szone;
     TargetSelection *tarZone;
     QList<QButtonGroup*> mybgroups;

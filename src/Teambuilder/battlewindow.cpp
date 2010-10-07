@@ -6,8 +6,8 @@
 #include "client.h"
 #include "theme.h"
 
-BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const PlayerInfo &opp, bool doubles, int my, int op)
-    : BaseBattleInfo(me, opp, doubles, my, op)
+BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const PlayerInfo &opp, int mode, int my, int op)
+    : BaseBattleInfo(me, opp, mode, my, op)
 {
     possible = false;
     myteam = team;
@@ -54,7 +54,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
 
     conf() = _conf;
 
-    myInfo = new BattleInfo(team, me, opponent, conf().doubles, conf().spot(me.id), conf().spot(opponent.id));
+    myInfo = new BattleInfo(team, me, opponent, conf().mode, conf().spot(me.id), conf().spot(opponent.id));
     info().gen = conf().gen;
 
     mydisplay = new BattleDisplay(info());
@@ -89,7 +89,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
         connect(myazones[i], SIGNAL(clicked(int)), SLOT(attackClicked(int)));
     }
 
-    if (info().doubles) {
+    if (info().multiples()) {
         mystack->addWidget(tarZone = new TargetSelection(info()));
         connect(tarZone, SIGNAL(targetSelected(int)), SLOT(targetChosen(int)));
     } else {
@@ -230,7 +230,7 @@ void BattleWindow::attackClicked(int zone)
         b.setAttackSlot(zone);
         b.setTarget(info().slot(info().opponent));
 
-        if (!info().doubles) {
+        if (!info().multiples()) {
             info().done[info().number(slot)] = true;
             goToNextChoice();
         } else {
@@ -317,10 +317,11 @@ void BattleWindow::goToNextChoice()
                     mypzone->pokes[i]->setEnabled(team().poke(i).num() != 0 && team().poke(i).lifePoints() > 0);
                 }
 
-                if (info().doubles) {
+                if (info().multiples()) {
                     /* In doubles, whatever happens, you can't switch to your partner */
-                    mypzone->pokes[0]->setEnabled(false);
-                    mypzone->pokes[1]->setEnabled(false);
+                    for (int i = 0; i < info().numberOfSlots/2; i++) {
+                        mypzone->pokes[i]->setEnabled(false);
+                    }
 
                     /* Also, you can't switch to a pokemon you've chosen before */
                     for (int i = 0; i < info().available.size(); i++) {
@@ -350,18 +351,18 @@ void BattleWindow::goToNextChoice()
 void BattleWindow::disableAll()
 {
     mypzone->setEnabled(false);
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 3; i++)
         myazones[i]->setEnabled(false);
-    if (info().doubles)
+    if (info().multiples())
         tarZone->setEnabled(false);
 }
 
 void BattleWindow::enableAll()
 {
     mypzone->setEnabled(true);
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 3; i++)
         myazones[i]->setEnabled(true);
-    if (info().doubles)
+    if (info().multiples())
         tarZone->setEnabled(true);
 }
 
@@ -390,7 +391,7 @@ void BattleWindow::attackButton()
             //We go with the last move, struggle, or the first possible move
             if (info().choices[n].struggle()) {
                 /* Struggle! */
-                if (info().doubles) {
+                if (info().multiples()) {
                     attackClicked(-1);
                 } else {
                     BattleChoice &b = info().choice[n];
@@ -1005,9 +1006,8 @@ BattleDisplay::BattleDisplay(BattleInfo &i)
         mypokeballs[i]->setToolTip(info().myteam.poke(i).nick());
     }
 
-    updatePoke(info().slot(info().myself));
-    if (info().doubles) {
-        updatePoke(info().slot(info().myself, 1));
+    for (int i = 0; i < info().numberOfSlots/2; i++) {
+        updatePoke(info().slot(info().myself, i));
     }
 }
 
@@ -1154,8 +1154,9 @@ TargetSelection::TargetSelection(const BattleInfo &info)
 void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
 {
     int slot = info.currentSlot;
+    int num = info.numberOfSlots;
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < num; i++) {
         pokes[i]->setText(info.currentShallow(i).status() == Pokemon::Koed ? "" : info.currentShallow(i).nick());
         pokes[i]->setIcon(PokemonInfo::Icon(info.currentShallow(i).num()));
         pokes[i]->setDisabled(true);
@@ -1165,7 +1166,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
 
     switch (Move::Target(MoveInfo::Target(move, gen))) {
     case Move::All:
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < num; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed) {
                 pokes[i]->setEnabled(true);
                 pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
@@ -1173,7 +1174,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
         }
         break;
     case Move::AllButSelf:
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < num; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed && i != slot) {
                 pokes[i]->setEnabled(true);
                 pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
@@ -1181,7 +1182,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
         }
         break;
     case Move::Opponents: case Move::OpposingTeam:
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < num; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.opponent) {
                 pokes[i]->setEnabled(true);
                 pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
@@ -1189,7 +1190,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
         }
         break;
     case Move::TeamParty: case Move::TeamSide:
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < num; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.myself) {
                 pokes[i]->setEnabled(true);
                 pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
@@ -1198,20 +1199,20 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
         break;
     case Move::IndeterminateTarget:
     case Move::ChosenTarget:
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < num; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed && i != slot)
                 pokes[i]->setEnabled(true);
         }
         break;
     case Move::PartnerOrUser:
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < num; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.myself) {
                 pokes[i]->setEnabled(true);
             }
         }
         break;
     case Move::Partner:
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < num; i++) {
             if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.myself && i != slot) {
                 pokes[i]->setEnabled(true);
             }

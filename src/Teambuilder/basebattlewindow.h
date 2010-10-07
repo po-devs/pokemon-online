@@ -14,7 +14,7 @@ class QClickPBar;
 
 struct BaseBattleInfo
 {
-    BaseBattleInfo(const PlayerInfo & me, const PlayerInfo &opp, bool doubles, int myself=0, int opponent=1);
+    BaseBattleInfo(const PlayerInfo & me, const PlayerInfo &opp, int mode, int myself=0, int opponent=1);
     /* name [0] = mine, name[1] = other */
     PlayerInfo pInfo[2];
     QVector<bool> sub;
@@ -25,7 +25,7 @@ struct BaseBattleInfo
     bool ticking[2];
     int startingTime[2];
 
-    bool doubles;
+    int mode;
     int numberOfSlots;
 
     int myself;
@@ -61,7 +61,11 @@ struct BaseBattleInfo
     }
 
     bool isOut(int , int poke) const {
-        return doubles ? poke < 2 : poke == 0;
+        return poke < numberOfSlots/2;
+    }
+
+    bool multiples() const {
+        return mode == ChallengeInfo::Doubles || mode == ChallengeInfo::Triples;
     }
 
     virtual void switchPoke(int spot, int poke) {

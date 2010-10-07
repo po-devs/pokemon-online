@@ -3,11 +3,17 @@
 #include "../Utilities/otherwidgets.h"
 #include "theme.h"
 
-BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, bool doubles, int myself, int opponent)
+BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int mode, int myself, int opponent)
     : myself(myself), opponent(opponent)
 {
-    this->doubles=  doubles;
-    this->numberOfSlots = doubles?4:2;
+    this->mode =  mode;
+    if (mode == ChallengeInfo::Doubles) {
+        numberOfSlots = 4;
+    } else if (mode == ChallengeInfo::Triples) {
+        numberOfSlots = 6;
+    } else {
+        numberOfSlots = 2;
+    }
 
     for (int i = 0; i < numberOfSlots; i++) {
         sub.push_back(false);
@@ -30,7 +36,7 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
         delayed(0), ignoreSpecs(false)
 {
     this->conf() = conf;
-    myInfo = new BaseBattleInfo(me, opponent, conf.doubles);
+    myInfo = new BaseBattleInfo(me, opponent, conf.mode);
     info().gen = conf.gen;
     mydisplay = new BaseBattleDisplay(info());
 
@@ -1233,38 +1239,16 @@ BaseGraphicsZone::BaseGraphicsZone(BaseBattleInfo *i) : mInfo(i)
 
     int size = Version::avatarSize[info().gen-1];
 
-    if (!info().doubles) {
+    if (!info().multiples()) {
         items[info().slot(info().myself)]->setPos(50 - size/2, 146 - size);
         items[info().slot(info().opponent)]->setPos(184- size/2, 96 - size);
     } else {
-        items[info().slot(info().myself)]->setPos(0, 146-size);
-        items[info().slot(info().opponent)]->setPos(257-140, 96 - size);
-        items[info().slot(info().myself,1)]->setPos(80, 146-size);
-        items[info().slot(info().opponent,1)]->setPos(257-80, 96 - size);
-    }
-/*
-    if (info().gen >= 4) {
-        if (!info().doubles) {
-            items[info().slot(info().myself)]->setPos(10, 145-79);
-            items[info().slot(info().opponent)]->setPos(257-105, 95 - 79);
-        } else {
-            items[info().slot(info().myself)]->setPos(0, 145-79);
-            items[info().slot(info().opponent)]->setPos(257-140, 95 - 79);
-            items[info().slot(info().myself,1)]->setPos(80, 145-79);
-            items[info().slot(info().opponent,1)]->setPos(257-80, 95 - 79);
-        }
-    } else if (info().gen <= 3) {
-        if (!info().doubles) {
-            items[info().slot(info().myself)]->setPos(10+8, 145-63);
-            items[info().slot(info().opponent)]->setPos(257-105+8, 95 - 63);
-        } else {
-            items[info().slot(info().myself)]->setPos(0, 145-63);
-            items[info().slot(info().opponent)]->setPos(257-140, 95 - 63);
-            items[info().slot(info().myself,1)]->setPos(80, 145-63);
-            items[info().slot(info().opponent,1)]->setPos(257-80, 95 - 63);
+        for (int i = 0; i < info().numberOfSlots/2; i++) {
+            items[info().slot(info().myself, i)]->setPos(i*60, 146-size);
+            int base = 257-80-(info().numberOfSlots/2 - 1)*60;
+            items[info().slot(info().opponent, i)]->setPos(base+i*60, 96 - size);
         }
     }
-*/
 }
 
 void BaseGraphicsZone::switchToNaught(int spot)
