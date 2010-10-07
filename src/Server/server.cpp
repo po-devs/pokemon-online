@@ -332,6 +332,7 @@ void Server::loadRatedBattlesSettings()
     QSettings s("config", QSettings::IniFormat);
     allowRatedWithSameIp = !s.value("battles_with_same_ip_unrated").toBool();
     diffIpsForRatedBattles = s.value("rated_battles_memory_number").toInt();
+    allowThroughChallenge = s.value("rated_battle_through_challenge").toInt();
 }
 
 void Server::connectToRegistry()
