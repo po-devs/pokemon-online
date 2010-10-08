@@ -1870,7 +1870,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     QVector<int> possibilities;
 
                     for (int i = 0; i < numberOfSlots(); i++) {
-                        if (player(i) != this->player(player) && canTarget(attack, player, i) && !koed(i)) {
+                        if (this->player(i) != this->player(player) && canTarget(attack, player, i) && !koed(i)) {
                             possibilities.push_back(i);
                         }
                     }
