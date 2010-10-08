@@ -1221,7 +1221,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
     case Move::ChosenTarget:
         for (int i = 0; i < num; i++) {
             if (i != slot &&
-                ((MoveInfo::Flags(num, gen) & Move::PulsingFlag) || info.areAdjacent(i, slot)))
+                ((MoveInfo::Flags(move, gen) & Move::PulsingFlag) || info.areAdjacent(i, slot)))
                 pokes[i]->setEnabled(true);
         }
         break;
