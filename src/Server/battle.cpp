@@ -1817,7 +1817,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 QVector<int> trueTargets;
 
                 for (int i = 0; i < numberOfSlots()/2; i++) {
-                    if (areAdjacent(slot(target, i), player) && !koed(i))
+                    if (areAdjacent(slot(target, i), player) && !koed(slot(target,i)))
                         trueTargets.push_back(slot(target, i));
                     if (trueTargets.size() >= 2)
                         break;
@@ -2185,7 +2185,7 @@ void BattleSituation::makeTargetList(const QVector<int> &base)
 {
     targetList = sortedBySpeed();
     for (unsigned i = 0; i < targetList.size(); i++) {
-        if (!base.contains(i)) {
+        if (!base.contains(targetList[i])) {
             targetList.erase(targetList.begin()+i, targetList.begin() + i + 1);
             i--;
         }

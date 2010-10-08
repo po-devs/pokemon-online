@@ -1163,7 +1163,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
     int num = info.numberOfSlots;
 
     for (int i = 0; i < num; i++) {
-        if (info.currentShallow(i).status()) {
+        if (info.currentShallow(i).status() == Pokemon::Koed) {
             pokes[i]->setText("");
             pokes[i]->setIcon(QIcon());
         } else {
