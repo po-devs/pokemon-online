@@ -985,19 +985,21 @@ bool BattleSituation::validChoice(const BattleChoice &b)
     if (b.attackingChoice()){
         /* It's an attack, we check the target is valid */
         if (b.attackSlot() == -1) {
-            if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.slot() || koed(b.target()))
+            if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.slot())
                 return false;
         } else {
-            int target = MoveInfo::Target(move(b.slot(), b.attackSlot()), gen());
+            int attack = move(b.slot(), b.attackSlot());
+            int target = MoveInfo::Target(attack, gen());
 
             if (target == Move::ChosenTarget) {
-                if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.slot() || koed(b.target()))
+                if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.slot())
                     return false;
             } else if (multiples() && target == Move::PartnerOrUser) {
-                if (b.target() < 0 || b.target() >= numberOfSlots() || !arePartners(b.target(), b.slot()) || koed(b.target()))
+                if (b.target() < 0 || b.target() >= numberOfSlots() || !arePartners(b.target(), b.slot()) || !canTarget(attack, b.slot(), b.target()))
                     return false;
             } else if (multiples() && target == Move::Partner) {
-                if (b.target() < 0 || b.target() >= numberOfSlots() || !arePartners(b.target(), b.slot()) || koed(b.target()))
+                if (b.target() < 0 || b.target() >= numberOfSlots() || !arePartners(b.target(), b.slot()) || !canTarget(attack, b.slot(), b.target())
+                    || b.slot() == b.target())
                     return false;
             }
         }
@@ -1800,35 +1802,62 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     callbeffects(player,player, "GeneralTargetChange");
 
     targetList.clear();
-    switch(Move::Target(fieldmoves[player].targets)) {
-    case Move::Field: case Move::TeamParty: case Move::OpposingTeam:
-    case Move::TeamSide: case Move::IndeterminateTarget:
-    case Move::User: targetList.push_back(player); break;
-    case Move::Opponents:
-        targetList = sortedBySpeed();
-        for (unsigned i = 0; i < targetList.size(); i++) {
-            if (this->player(targetList[i]) == this->player(player) ) {
-                targetList.erase(targetList.begin()+i, targetList.begin() + i + 1);
-                i--;
+
+    {
+        int target = turnlong[player]["Target"].toInt();
+
+        switch(Move::Target(fieldmoves[player].targets)) {
+        case Move::Field: case Move::TeamParty: case Move::OpposingTeam:
+        case Move::TeamSide: case Move::IndeterminateTarget:
+        case Move::User: targetList.push_back(player); break;
+        case Move::Opponents: {
+                if (!areAdjacent(player, target)) {
+                    target = player;
+                }
+                QVector<int> trueTargets;
+
+                for (int i = 0; i < numberOfSlots()/2; i++) {
+                    if (areAdjacent(slot(target, i), player) && !koed(i))
+                        trueTargets.push_back(slot(target, i));
+                    if (trueTargets.size() >= 2)
+                        break;
+                }
+                makeTargetList(trueTargets);
+                break;
             }
-        }
-        break;
-        case Move::All:
-        targetList = sortedBySpeed();
-        break;
-        case Move::AllButSelf:
-        targetList = sortedBySpeed();
-        for (unsigned i = 0; i < targetList.size(); i++) {
-            if (targetList[i] == player) {
-                targetList.erase(targetList.begin()+i, targetList.begin() + i + 1);
-                i--;
+        case Move::All: {
+                if (!areAdjacent(player, target)) {
+                    target = player;
+                }
+                QVector<int> trueTargets;
+
+                for (int i = 0; i < numberOfSlots(); i++) {
+                    if (areAdjacent(i, player) && !koed(i))
+                        trueTargets.push_back(i);
+                    if (trueTargets.size() >= 4)
+                        break;
+                }
+                makeTargetList(trueTargets);
+                break;
             }
-        }
-        break;
+        case Move::AllButSelf: {
+                if (!areAdjacent(player, target)) {
+                    target = player;
+                }
+                QVector<int> trueTargets;
+
+                for (int i = 0; i < numberOfSlots(); i++) {
+                    if (areAdjacent(i, player) && i != player && !koed(i))
+                        trueTargets.push_back(i);
+                    if (trueTargets.size() >= 4)
+                        break;
+                }
+                makeTargetList(trueTargets);
+                break;
+            }
         case Move::ChosenTarget: case Move::MeFirstTarget: {
                 if (multiples()) {
-                    int target = turnlong[player]["Target"].toInt();
-                    if (!koed(target) && target != player) {
+                    if (!koed(target) && target != player && canTarget(attack, player, target)) {
                         targetList.push_back(target);
                         break;
                     }
@@ -1838,11 +1867,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         case Move::RandomTarget :
             {
                 if (!turnlong[player].contains("TargetChanged")) {
-                    int randomOpponent = this->randomOpponent(player);
-                    if (randomOpponent != - 1)
-                        targetList.push_back(randomOpponent);
+                    QVector<int> possibilities;
+
+                    for (int i = 0; i < numberOfSlots(); i++) {
+                        if (player(i) != this->player(player) && canTarget(attack, player, i) && !koed(i)) {
+                            possibilities.push_back(i);
+                        }
+                    }
+                    if (possibilities.size() > 0) {
+                        targetList.push_back(possibilities[true_rand()%possibilities.size()]);
+                    }
                 } else {
-                    targetList.push_back(turnlong[player]["Target"].toInt());
+                    targetList.push_back(target);
                 }
                 break;
             }
@@ -1851,35 +1887,31 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 targetList.push_back(player);
             } else {
                 /* Acupressure can be called with sleep talk, so the target needs to be checked */
-                int target = turnlong[player]["Target"].toInt();
-                if (!koed(target) && arePartners(target, player)) {
+                if (!koed(target) && arePartners(target, player) && areAdjacent(player, target)) {
                     targetList.push_back(target);
                 } else {
-                    targetList.push_back(randomValidOpponent(randomValidOpponent(player)));
+                    targetList.push_back(player);
                 }
             }
             break;
-        case Move::Partner:
-            {
-                int target = turnlong[player]["Target"].toInt();
-
-                if (!koed(target) && arePartners(target, player)) {
-                    targetList.push_back(target);
-                } else {
-                    for (int i = 0; i < numberOfSlots(); i++) {
-                        if (arePartners(i, player) && i!=player && !koed(i)) {
-                            targetList.push_back(i);
-                        }
-                    }
-                    if (targetList.size() == 0) {
-                        int randp = targetList[true_rand()%targetList.size()];
-                        targetList.clear();
-                        targetList.push_back(randp);
+            case Move::Partner:
+            if (!koed(target) && arePartners(target, player) && areAdjacent(target, player)) {
+                targetList.push_back(target);
+            } else {
+                for (int i = 0; i < numberOfSlots(); i++) {
+                    if (arePartners(i, player) && i!=player && !koed(i) && areAdjacent(i, player)) {
+                        targetList.push_back(i);
                     }
                 }
-                break;
+                if (targetList.size() == 0) {
+                    int randp = targetList[true_rand()%targetList.size()];
+                    targetList.clear();
+                    targetList.push_back(randp);
+                }
             }
+            break;
         }
+    }
 
     if (!specialOccurence && !turnlong[player].contains("NoChoice")) {
         //Pressure
@@ -1911,10 +1943,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 	turnlong[player]["Failed"] = false;
 	turnlong[player]["FailingMessage"] = true;
-	if (target != -1 && koed(target)) {
-            calleffects(player,target,"AttackSomehowFailed");
-	    continue;
-	}
+
 	if (target != player && !testAccuracy(player, target)) {
             calleffects(player,target,"AttackSomehowFailed");
 	    continue;
@@ -2150,6 +2179,17 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
 
     turnlong[player]["Stab"] = stab;
     turnlong[player]["TypeMod"] = typemod; /* is attack effective? or not? etc. */
+}
+
+void BattleSituation::makeTargetList(const QVector<int> &base)
+{
+    targetList = sortedBySpeed();
+    for (unsigned i = 0; i < targetList.size(); i++) {
+        if (!base.contains(i)) {
+            targetList.erase(targetList.begin()+i, targetList.begin() + i + 1);
+            i--;
+        }
+    }
 }
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
@@ -3448,6 +3488,20 @@ int BattleSituation::countBackUp(int player) const
         }
     }
     return count;
+}
+
+bool BattleSituation::canTarget(int attack, int attacker, int defender) const
+{
+    if (MoveInfo::Flags(attack, gen()) & Move::PulsingFlag) {
+        return true;
+    }
+
+    return areAdjacent(attacker, defender);
+}
+
+bool BattleSituation::areAdjacent(int attacker, int defender) const
+{
+    return std::abs(slotNum(attacker)-slotNum(defender)) <= 1;
 }
 
 void BattleSituation::testWin()
