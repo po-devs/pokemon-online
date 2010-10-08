@@ -1814,13 +1814,15 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 if (!areAdjacent(player, target)) {
                     target = player;
                 }
+                int opp = opponent(this->player(player));
                 QVector<int> trueTargets;
 
                 for (int i = 0; i < numberOfSlots()/2; i++) {
-                    if (areAdjacent(slot(target, i), player) && !koed(slot(target,i)))
-                        trueTargets.push_back(slot(target, i));
-                    if (trueTargets.size() >= 2)
+                    if (i > 1 && slotNum(target) <= 1) {
                         break;
+                    }
+                    if (areAdjacent(slot(opp, i), target) && areAdjacent(slot(opp, i), player) && !koed(slot(opp,i)))
+                        trueTargets.push_back(slot(opp, i));
                 }
                 makeTargetList(trueTargets);
                 break;
@@ -1832,10 +1834,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 QVector<int> trueTargets;
 
                 for (int i = 0; i < numberOfSlots(); i++) {
-                    if (areAdjacent(i, player) && !koed(i))
-                        trueTargets.push_back(i);
-                    if (trueTargets.size() >= 4)
+                    if (slotNum(i) > 1 && slotNum(target) <= 1) {
                         break;
+                    }
+                    if (areAdjacent(i, target) && areAdjacent(i, player) && !koed(i))
+                        trueTargets.push_back(i);
                 }
                 makeTargetList(trueTargets);
                 break;
@@ -1847,10 +1850,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 QVector<int> trueTargets;
 
                 for (int i = 0; i < numberOfSlots(); i++) {
-                    if (areAdjacent(i, player) && i != player && !koed(i))
-                        trueTargets.push_back(i);
-                    if (trueTargets.size() >= 4)
+                    if (slotNum(i) > 1 && slotNum(target) <= 1) {
                         break;
+                    }
+                    if (areAdjacent(i, target) && areAdjacent(i, player) && i != player && !koed(i))
+                        trueTargets.push_back(i);
                 }
                 makeTargetList(trueTargets);
                 break;
@@ -3606,8 +3610,8 @@ int BattleSituation::getBoostedStat(int player, int stat)
             stat = 3 - stat;
         }
         /* Wonder room: attack & sp attack switched, 5th gen */
-        if (battlelong.contains("WonderRoomCount") && (stat == 2 || stat == 4)) {
-            stat = 6 - stat;
+        if (battlelong.contains("WonderRoomCount") && (stat == 2 || stat == 3)) {
+            stat = 5 - stat;
         }
         return fieldpokes[player].stats[stat] *getStatBoost(player, stat);
     }
