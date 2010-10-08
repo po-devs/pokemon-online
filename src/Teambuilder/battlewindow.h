@@ -45,6 +45,8 @@ public:
         return spot / 2;
     }
 
+    bool areAdjacent (int poke1, int poke2) const;
+
     virtual void switchPoke(int spot, int poke, bool own) {
         BaseBattleInfo::switchPoke(spot, poke);
         if (!own) {
@@ -261,7 +263,7 @@ public:
 signals:
     void targetSelected(int target);
 private:
-    QPushButton * pokes[4];
+    QPushButton * pokes[6];
 };
 
 class StruggleZone : public QWidget

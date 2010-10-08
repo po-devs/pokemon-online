@@ -93,6 +93,8 @@ public:
     int slotNum(int slot) const;
     int countAlive(int player) const;
     int countBackUp(int player) const;
+    bool canTarget(int attack, int attacker, int defender) const;
+    bool areAdjacent(int attacker, int defender) const;
     bool multiples() const {
         return mode() != ChallengeInfo::Singles && mode() != ChallengeInfo::Rotation;
     }
@@ -132,6 +134,7 @@ public:
     void useAttack(int player, int attack, bool specialOccurence = false, bool notify = true);
     /* Returns true or false if an attack is going on or not */
     bool attacking();
+    void makeTargetList(const QVector<int> &base);
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);
     /* Sends a poke back to his pokeball (not koed) */

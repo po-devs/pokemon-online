@@ -1,10 +1,10 @@
 #include "battlewindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
-#include <iostream>
 #include "../Utilities/otherwidgets.h"
 #include "basebattlewindow.h"
 #include "client.h"
 #include "theme.h"
+#include <cstdlib>
 
 BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const PlayerInfo &opp, int mode, int my, int op)
     : BaseBattleInfo(me, opp, mode, my, op)
@@ -30,6 +30,11 @@ BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const Playe
     }
 
     memset(lastMove, 0, sizeof(lastMove));
+}
+
+bool BattleInfo::areAdjacent(int poke1, int poke2) const
+{
+    return std::abs(slotNum(poke1)-slotNum(poke2)) <= 1;
 }
 
 PokeBattle &BattleInfo::tempPoke(int spot)
@@ -236,7 +241,8 @@ void BattleWindow::attackClicked(int zone)
         } else {
             int move = zone == -1 ? int(Move::Struggle) : info().tempPoke(slot).move(zone);
             int target = MoveInfo::Target(move, gen());
-            if (target == Move::ChosenTarget || target == Move::PartnerOrUser) {
+            /* Triples still require to choose the target */
+            if (target == Move::ChosenTarget || target == Move::PartnerOrUser || info().numberOfSlots > 4) {
                 tarZone->updateData(info(), move, gen());
                 mystack->setCurrentIndex(TargetTab);
             } else {
@@ -1137,7 +1143,7 @@ TargetSelection::TargetSelection(const BattleInfo &info)
     QButtonGroup *bg = new QButtonGroup(this);
     bg->setExclusive(false);
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < info.numberOfSlots; i++) {
         bool opp = info.player(i) == info.opponent;
 
         gl->addWidget(pokes[i] = new QPushButton(), !opp, info.number(i));
@@ -1157,8 +1163,13 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
     int num = info.numberOfSlots;
 
     for (int i = 0; i < num; i++) {
-        pokes[i]->setText(info.currentShallow(i).status() == Pokemon::Koed ? "" : info.currentShallow(i).nick());
-        pokes[i]->setIcon(PokemonInfo::Icon(info.currentShallow(i).num()));
+        if (info.currentShallow(i).status()) {
+            pokes[i]->setText("");
+            pokes[i]->setIcon(QIcon());
+        } else {
+            pokes[i]->setText(info.currentShallow(i).nick());
+            pokes[i]->setIcon(PokemonInfo::Icon(info.currentShallow(i).num()));
+        }
         pokes[i]->setDisabled(true);
         pokes[i]->setChecked(false);
         pokes[i]->setStyleSheet("");
@@ -1167,7 +1178,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
     switch (Move::Target(MoveInfo::Target(move, gen))) {
     case Move::All:
         for (int i = 0; i < num; i++) {
-            if (info.currentShallow(i).status() != Pokemon::Koed) {
+            if (info.areAdjacent(i, slot)) {
                 pokes[i]->setEnabled(true);
                 pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
             }
@@ -1175,15 +1186,23 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
         break;
     case Move::AllButSelf:
         for (int i = 0; i < num; i++) {
-            if (info.currentShallow(i).status() != Pokemon::Koed && i != slot) {
+            if (i != slot && info.areAdjacent(i, slot)) {
                 pokes[i]->setEnabled(true);
                 pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
             }
         }
         break;
-    case Move::Opponents: case Move::OpposingTeam:
+    case Move::Opponents:
         for (int i = 0; i < num; i++) {
-            if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.opponent) {
+            if (info.player(i) == info.opponent && info.areAdjacent(i, slot)) {
+                pokes[i]->setEnabled(true);
+                pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
+            }
+        }
+        break;
+    case Move::OpposingTeam:
+        for (int i = 0; i < num; i++) {
+            if (info.player(i) == info.opponent) {
                 pokes[i]->setEnabled(true);
                 pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
             }
@@ -1191,35 +1210,36 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
         break;
     case Move::TeamParty: case Move::TeamSide:
         for (int i = 0; i < num; i++) {
-            if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.myself) {
+            if (info.player(i) == info.myself) {
                 pokes[i]->setEnabled(true);
                 pokes[i]->setStyleSheet("background: #07a7c9; color: white;");
             }
         }
         break;
     case Move::IndeterminateTarget:
+    case Move::MeFirstTarget:
     case Move::ChosenTarget:
         for (int i = 0; i < num; i++) {
-            if (info.currentShallow(i).status() != Pokemon::Koed && i != slot)
+            if (i != slot &&
+                ((MoveInfo::Flags(num, gen) & Move::PulsingFlag) || info.areAdjacent(i, slot)))
                 pokes[i]->setEnabled(true);
         }
         break;
     case Move::PartnerOrUser:
         for (int i = 0; i < num; i++) {
-            if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.myself) {
+            if (info.player(i) == info.myself && info.areAdjacent(i, slot)) {
                 pokes[i]->setEnabled(true);
             }
         }
         break;
     case Move::Partner:
         for (int i = 0; i < num; i++) {
-            if (info.currentShallow(i).status() != Pokemon::Koed && info.player(i) == info.myself && i != slot) {
+            if (info.player(i) == info.myself && i != slot  && info.areAdjacent(i, slot)) {
                 pokes[i]->setEnabled(true);
             }
         }
     case Move::User:
     case Move::RandomTarget:
-    case Move::MeFirstTarget:
     case Move::Field:
         pokes[slot]->setEnabled(true);
         pokes[slot]->setStyleSheet("background: #07a7c9; color: white;");
