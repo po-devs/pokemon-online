@@ -4599,6 +4599,10 @@ struct MMFollowMe : public MM
             return;
         }
 
+        if (!b.canTarget(move(b,s), s, tar)) {
+            return;
+        }
+
         turn(b,s)["TargetChanged"] = true;
         turn(b,s)["Target"] = target;
     }
