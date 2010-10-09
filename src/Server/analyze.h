@@ -71,7 +71,9 @@ namespace NetworkServ
         RemoveChannel,
         AddChannel,
         ChannelMessage,
-        ChanNameChange
+        ChanNameChange,
+        HtmlMessage,
+        ChannelHtml
     };
 
     enum ProtocolError
@@ -98,6 +100,8 @@ public:
     /* functions called by the server */
     void sendMessage(const QString &message);
     void sendChannelMessage(int chanid, const QString &message);
+    void sendHtmlMessage(const QString &message);
+    void sendHtmlChannelMessage(int chanid, const QString &message);
     void requestLogIn();
     void sendPlayer(const PlayerInfo &p);
     void sendPlayers(const QList<PlayerInfo> &p);
