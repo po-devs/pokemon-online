@@ -1282,6 +1282,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
                 pokes[i]->setEnabled(true);
             }
         }
+        break;
     case Move::User:
     case Move::RandomTarget:
     case Move::Field:
