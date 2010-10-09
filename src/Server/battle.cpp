@@ -206,7 +206,7 @@ bool BattleSituation::acceptSpectator(int id, bool authed) const
 
 void BattleSituation::notifyClause(int clause)
 {
-    notify(All, Clause, clause);
+    notify(All, Clause, intlog2(clause));
 }
 
 void BattleSituation::addSpectator(Player *p)

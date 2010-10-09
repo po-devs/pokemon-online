@@ -700,6 +700,7 @@ struct MMFaintUser : public MM
             }
         }
 
+        b.selfKoer() = s;
         b.koPoke(s, s);
     }
 };
