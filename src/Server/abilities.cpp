@@ -35,8 +35,8 @@ void AbilityEffect::setup(int num, int source, BattleSituation &b, bool firstAct
 
     /* In gen 3, intimidate/insomnia/... aren't triggered by Trace */
     if (AM::poke(b, source).value(activationkey) != AM::poke(b, source)["SwitchCount"].toInt() && (b.gen() >= 4 || firstAct)) {
-        activate("UponSetup", num, source, source, b);
         AM::poke(b, source)[activationkey] = AM::poke(b, source)["SwitchCount"].toInt();
+        activate("UponSetup", num, source, source, b);
      }
 }
 
@@ -1119,7 +1119,7 @@ struct AMPlus : public AM {
         if (!b.multiples()) {
             return;
         }
-        for (int i = 0; i <= b.numberOfSlots(); i++) {
+        for (int i = 0; i < b.numberOfSlots(); i++) {
             if (!b.arePartners(i, s) || i==s || b.koed(i)) {
                 continue;
             }
@@ -1141,7 +1141,7 @@ struct AMMinus : public AM {
         if (!b.multiples()) {
             return;
         }
-        for (int i = 0; i <= b.numberOfSlots(); i++) {
+        for (int i = 0; i < b.numberOfSlots(); i++) {
             if (!b.arePartners(i, s) || i==s || b.koed(i)) {
                 continue;
             }
