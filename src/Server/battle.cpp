@@ -605,7 +605,7 @@ void BattleSituation::endTurn()
         }
     }
 
-    /* Slow Start */
+    /* Slow Start , Healing Heart */
     foreach (int player, sortedBySpeed()) {
         callaeffects(player,player, "EndTurn20.");
     }
