@@ -1689,6 +1689,18 @@ struct AMSelfConscious : public AM {
     }
 };
 
+struct AMAnalyze : public AM {
+    AMAnalyze() {
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    static void bpm(int s,int,BS&b) {
+        if (b.speedsVector.back() == s) {
+            turn(b,s)["BasePowerModifier"] = 6;
+        }
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -1813,4 +1825,5 @@ void AbilityEffect::init()
     REGISTER_AB(95, Inconsistent);
     REGISTER_AB(96, CursedBody);
     REGISTER_AB(97, SelfConscious);
+    REGISTER_AB(98, Analyze);
 }
