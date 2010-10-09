@@ -3,27 +3,27 @@
 
 BattleSituation::context & Mechanics::turn(BattleSituation &b, int player)
 {
-    return b.turnlong[player];
+    return b.turnMemory(player);
 }
 
 BattleSituation::context & Mechanics::poke(BattleSituation &b, int player)
 {
-    return b.pokelong[player];
+    return b.pokeMemory(player);
 }
 
 BattleSituation::BasicPokeInfo & Mechanics::fpoke(BattleSituation &b, int player)
 {
-    return b.fieldpokes[player];
+    return b.fpoke(player);
 }
 
 BattleSituation::context & Mechanics::team(BattleSituation &b, int player)
 {
-    return b.teamzone[player];
+    return b.teamMemory(player);
 }
 
 BattleSituation::context & Mechanics::slot(BattleSituation &b, int player)
 {
-    return b.slotzone[player];
+    return b.slotMemory(player);
 }
 
 int Mechanics::type(BattleSituation &b, int source)
@@ -38,7 +38,7 @@ int Mechanics::move(BattleSituation &b, int source)
 
 BattleSituation::BasicMoveInfo & Mechanics::tmove(BattleSituation &b, int source)
 {
-    return b.fieldmoves[source];
+    return b.tmove(source);
 }
 
 void Mechanics::addFunction(BattleSituation::context &c, const QString &effect, const QString &name, Mechanics::function f)

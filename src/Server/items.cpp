@@ -33,7 +33,7 @@ void ItemEffect::setup(int num, int source, BattleSituation &b)
 
 	//dun remove the test
 	if (effect.args.size() > 0) {
-	    b.pokelong[source]["ItemArg"] = effect.args;
+            IM::poke(b,source)["ItemArg"] = effect.args;
 	}
     }
 

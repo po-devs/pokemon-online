@@ -261,6 +261,12 @@ void BattleWindow::switchClicked(int zone)
     {
 	switchToPokeZone();
     } else {
+        if (info().mode == ChallengeInfo::Triples && slot != 1) {
+            BattleChoice &b = info().choice[info().number(slot)];
+            b = BattleChoice(slot, MoveToCenterChoice());
+            info().done[info().number(slot)] = true;
+            goToNextChoice();
+        }
         if (!info().choices[info().number(slot)].switchAllowed)
             return;
         if (zone == info().number(slot)) {
@@ -286,10 +292,14 @@ void BattleWindow::goToNextChoice()
 
             info().currentSlot = slot;
 
+            myswitch->setText(tr("&Switch Pokemon"));
             if (info().choices[n].attacksAllowed == false && info().choices[n].switchAllowed == true)
                 mytab->setCurrentIndex(PokeTab);
             else {
                 switchTo(info().number(slot), slot, false);
+                if (info().mode == ChallengeInfo::Triples && i != 1) {
+                    myswitch->setText(tr("&Shift to centre"));
+                }
             }
 
             /* moves first */
