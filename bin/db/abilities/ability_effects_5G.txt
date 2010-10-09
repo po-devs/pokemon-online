@@ -129,8 +129,8 @@
 80#Competitive Spirit
 76#Weak-Kneed
 96#Cursed Body
-
-
+99#Healing Heart
+100#Friend Card
 74#Broken Armour
 
 

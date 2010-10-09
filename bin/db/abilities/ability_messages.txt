@@ -96,3 +96,5 @@
 %s's Inconsistent sharply raises its %st!|%s's Inconsistent lowers its %st!
 %s's Cursed Body activates!
 %s raised its Speed in fear!
+
+%s's Healing Heart cured %f's status!

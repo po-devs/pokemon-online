@@ -1696,7 +1696,51 @@ struct AMAnalyze : public AM {
 
     static void bpm(int s,int,BS&b) {
         if (b.speedsVector.back() == s) {
-            turn(b,s)["BasePowerModifier"] = 6;
+            turn(b,s)["BasePowerAbilityModifier"] = 6;
+        }
+    }
+};
+
+struct AMHealingHeart : public AM {
+    AMHealingHeart() {
+        functions["EndTurn20."] = &et;
+    }
+
+    static void et(int s, int, BS &b) {
+        if (!b.multiples()) {
+            return;
+        }
+
+        if (b.true_rand() % 100 > 30) {
+            return;
+        }
+
+        std::list<int> partners;
+        for (int i = 0; i < b.numberOfSlots();i++) {
+            if (b.areAdjacent(i, s) && i!=s && b.arePartners(i, s) && !b.koed(i) && b.poke(i).status() != Pokemon::Fine) {
+                partners.push_back(i);
+            }
+        }
+
+        if (partners.size() == 0)
+            return;
+
+        int p = partners[b.true_rand() % partners.size()];
+
+        b.sendAbMessage(99, s0, s, p);
+        b.healStatus(p, b.poke(p).status());
+    }
+};
+
+struct AMFriendCard : public AM
+{
+    AMFriendCard() {
+        functions["BasePowerAbilityModifier"] = &bpm;
+    }
+
+    static void bpm(int s, int t, BS &b) {
+        if (b.arePartners(s, t)) {
+            turn(b,s)["BasePowerModifier"] = -5;
         }
     }
 };
@@ -1826,4 +1870,6 @@ void AbilityEffect::init()
     REGISTER_AB(96, CursedBody);
     REGISTER_AB(97, SelfConscious);
     REGISTER_AB(98, Analyze);
+    REGISTER_AB(99, HealingHeart);
+    REGISTER_AB(100, FriendCard);
 }
