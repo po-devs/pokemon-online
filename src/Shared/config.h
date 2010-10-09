@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define VERSION QString("0.9.90")
+#define VERSION QString("0.9.91")
 
 // Minimum Generation supported.
 static const int GEN_MIN = 3;

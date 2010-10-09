@@ -132,7 +132,8 @@ void Client::initRelay()
     connect(relay, SIGNAL(protocolError(int, QString)), SLOT(errorFromNetwork(int, QString)));
     connect(relay, SIGNAL(connected()), SLOT(connected()));
     connect(relay, SIGNAL(disconnected()), SLOT(disconnected()));
-    connect(relay, SIGNAL(messageReceived(QString)), SLOT(messageReceived(QString)));
+    connect(relay, SIGNAL(messageReceived(QString)), SLOT(printLine(QString)));
+    connect(relay, SIGNAL(htmlMessageReceived(QString)), SLOT(printHtml(QString)));
     connect(relay, SIGNAL(playerReceived(PlayerInfo)), SLOT(playerReceived(PlayerInfo)));
     connect(relay, SIGNAL(teamChanged(PlayerInfo)), SLOT(teamChanged(PlayerInfo)));
     connect(relay, SIGNAL(playerLogin(PlayerInfo)), SLOT(playerLogin(PlayerInfo)));
@@ -894,11 +895,6 @@ void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
 bool Client::battling() const
 {
     return mybattles.size() > 0;
-}
-
-void Client::messageReceived(const QString &mess)
-{
-    printLine(mess);
 }
 
 void Client::versionDiff(const QString &a, const QString &b)

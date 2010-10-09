@@ -736,9 +736,9 @@ void Server::sendBattleCommand(int publicId, int id, const QByteArray &comm)
     }
 }
 
-void Server::sendMessage(int id, const QString &message)
+void Server::sendMessage(int id, const QString &message, bool html)
 {
-    player(id)->sendMessage(message);
+    player(id)->sendMessage(message, html);
 }
 
 void Server::sendServerMessage(const QString &message)
@@ -1490,25 +1490,25 @@ int Server::id(const QString &name) const
     return mynames.value(name.toLower());
 }
 
-void Server::sendAll(const QString &message, bool chatMessage)
+void Server::sendAll(const QString &message, bool chatMessage, bool html)
 {
     if (printLine(message, chatMessage, true)) {
         foreach (Player *p, myplayers)
             if (p->isLoggedIn())
-                p->sendMessage(message);
+                p->sendMessage(message, html);
     }
 }
 
-void Server::sendChannelMessage(int channel, const QString &message, bool chat)
+void Server::sendChannelMessage(int channel, const QString &message, bool chat, bool html)
 {
     printLine(QString("[#%1] %2").arg(this->channel(channel).name, message), chat, true);
     foreach (Player *p, this->channel(channel).players)
-        p->sendChanMessage(channel, message);
+        p->sendChanMessage(channel, message, html);
 }
 
-void Server::sendChannelMessage(int id, int chanid, const QString &message)
+void Server::sendChannelMessage(int id, int chanid, const QString &message, bool html)
 {
-    player(id)->sendChanMessage(chanid, message);
+    player(id)->sendChanMessage(chanid, message, html);
 }
 
 int Server::freeid() const
