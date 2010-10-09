@@ -29,14 +29,14 @@ void AbilityEffect::setup(int num, int source, BattleSituation &b, bool firstAct
         return;
     }
 
-    b.pokelong[source]["AbilityArg"] = effect.arg;
+    AM::poke(b, source)["AbilityArg"] = effect.arg;
 
     QString activationkey = QString("Ability%1SetUp").arg(effect.num);
 
     /* In gen 3, intimidate/insomnia/... aren't triggered by Trace */
-    if (b.pokelong[source].value(activationkey) != b.pokelong[source]["SwitchCount"].toInt() && (b.gen() >= 4 || firstAct)) {
+    if (AM::poke(b, source).value(activationkey) != AM::poke(b, source)["SwitchCount"].toInt() && (b.gen() >= 4 || firstAct)) {
         activate("UponSetup", num, source, source, b);
-        b.pokelong[source][activationkey] = b.pokelong[source]["SwitchCount"].toInt();
+        AM::poke(b, source)[activationkey] = AM::poke(b, source)["SwitchCount"].toInt();
      }
 }
 
@@ -1470,7 +1470,7 @@ struct AMMagicMirror : public AM
     }
 
     static void uas (int, int, BS &b) {
-        addFunction(b.battlelong, "DetermineGeneralAttackFailure2", "MagicCoat", &dgaf);
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure2", "MagicCoat", &dgaf);
     }
 
     static void dgaf(int s, int t, BS &b) {
@@ -1478,7 +1478,7 @@ struct AMMagicMirror : public AM
         if (!bounced)
             return;
         /* Don't double bounce something */
-        if (b.battlelong.contains("CoatingAttackNow")) {
+        if (b.battleMemory().contains("CoatingAttackNow")) {
             return;
         }
         int target = -1;
@@ -1507,9 +1507,9 @@ struct AMMagicMirror : public AM
         turn(b,target).clear();
         MoveEffect::setup(move,target,s,b);
         turn(b,target)["Target"] = s;
-        b.battlelong["CoatingAttackNow"] = true;
+        b.battleMemory()["CoatingAttackNow"] = true;
         b.useAttack(target,move,true,false);
-        b.battlelong.remove("CoatingAttackNow");
+        b.battleMemory().remove("CoatingAttackNow");
 
         /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
             and don't cause any such data to be stored in that memory */

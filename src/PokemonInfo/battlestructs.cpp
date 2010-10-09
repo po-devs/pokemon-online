@@ -611,7 +611,7 @@ QDataStream & operator << (QDataStream &out, const BattleChoices &po)
 /* Tests if the attack chosen is allowed */
 bool BattleChoice::match(const BattleChoices &avail) const
 {
-    if (!avail.attacksAllowed && attackingChoice()) {
+    if (!avail.attacksAllowed && (attackingChoice() || moveToCenterChoice())) {
 	return false;
     }
     if (!avail.switchAllowed && switchChoice()) {
@@ -642,6 +642,10 @@ bool BattleChoice::match(const BattleChoices &avail) const
 	return true;
     }
 
+    if (moveToCenterChoice()) {
+        return true;
+    }
+
     //Reached if the type is not known
     return false;
 }
@@ -652,6 +656,7 @@ QDataStream & operator >> (QDataStream &in, BattleChoice &po)
 
     switch (po.type) {
     case CancelType:
+    case CenterMoveType:
         break;
     case SwitchType:
         in >> po.choice.switching.pokeSlot;
@@ -672,6 +677,7 @@ QDataStream & operator << (QDataStream &out, const BattleChoice &po)
 
     switch (po.type) {
     case CancelType:
+    case CenterMoveType:
         break;
     case SwitchType:
         out << po.choice.switching.pokeSlot;

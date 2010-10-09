@@ -57,7 +57,7 @@ typedef BattleSituation BS;
 void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
 {
     /* first the basic info */
-    MoveEffect e(num, b.gen(), b.fieldmoves[source]);
+    MoveEffect e(num, b.gen(), MM::tmove(b,source));
 
     /* then the hard info */
     QStringList specialEffects = MoveInfo::SpecialEffect(num).split('|');
@@ -79,14 +79,14 @@ void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
 
 	size_t pos = s.find('-');
 	if (pos != std::string::npos) {
-	    b.turnlong[source][n+"_Arg"] = specialEffectS.mid(pos+1);
+            MM::turn(b,source)[n+"_Arg"] = specialEffectS.mid(pos+1);
 	}
 
 	for(i = m.functions.begin(); i != m.functions.end(); ++i) {
 	    if (i.key() == "OnSetup") {
 		i.value()(source,target,b);
 	    } else {
-		Mechanics::addFunction(b.turnlong[source], i.key(), n, i.value());
+                Mechanics::addFunction(MM::turn(b,source), i.key(), n, i.value());
 	    }
 	}
     }
@@ -119,12 +119,12 @@ void MoveEffect::unsetup(int num, int source, BattleSituation &b)
             if (i.key() == "OnSetup") {
                 ;
             } else {
-                Mechanics::removeFunction(b.turnlong[source], i.key(), n);
+                Mechanics::removeFunction(MM::turn(b,source), i.key(), n);
             }
         }
     }
 
-    b.fieldmoves[source].classification = Move::StandardMove;
+    MM::tmove(b,source).classification = Move::StandardMove;
 }
 
 /* List of events:
@@ -585,7 +585,7 @@ struct MMDetect : public MM
     }
 
     static void uas(int s, int, BS &b) {
-	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Detect", &dgaf);
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Detect", &dgaf);
 	turn(b,s)["DetectUsed"] = true;
         b.sendMoveMessage(27, 0, s, Pokemon::Normal);
     }
@@ -1432,7 +1432,7 @@ struct MMKnockOff : public MM
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
-            b.battlelong[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
+            b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
 	}
     }
 };
@@ -1473,8 +1473,8 @@ struct MMSwitcheroo : public MM
 	    turn(b,s)["Failed"] = true;
 	}
         /* Knock off */
-        if (b.battlelong.value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()
-            || b.battlelong.value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()) {
+        if (b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()
+            || b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -1514,10 +1514,10 @@ struct MMCopycat : public MM
 
     static void daf(int s, int, BS &b) {
 	/* First check if there's even 1 move available */
-        if (!b.battlelong.contains("LastMoveSuccessfullyUsed") || b.battlelong["LastMoveSuccessfullyUsed"].toInt() == Copycat) {
+        if (!b.battleMemory().contains("LastMoveSuccessfullyUsed") || b.battleMemory()["LastMoveSuccessfullyUsed"].toInt() == Copycat) {
 	    turn(b,s)["Failed"] = true;
 	} else {
-	    turn(b,s)["CopycatMove"] = b.battlelong["LastMoveSuccessfullyUsed"];
+            turn(b,s)["CopycatMove"] = b.battleMemory()["LastMoveSuccessfullyUsed"];
 	}
     }
 
@@ -1736,7 +1736,7 @@ struct MMBounce : public MM
 
             int move = poke(b,s)["2TurnMove"].toInt();
 
-            MoveEffect(move, b.gen(),b.fieldmoves[s]);
+            MoveEffect(move, b.gen(),tmove(b,s));
             addFunction(turn(b,s), "EvenWhenCantMove", "Bounce", &ewc);
 
             if (move == ShadowForce) {
@@ -2158,12 +2158,12 @@ struct MMEncore : public MM
 
         /*Changes the encored move, if no choice is off (otherwise recharging moves like blast burn would attack again,
             and i bet something strange would also happen with charging move) */
-        if (!turn(b,t).contains("NoChoice") && b.choice[t].attackingChoice()) {
+        if (!turn(b,t).contains("NoChoice") && b.choice(t).attackingChoice()) {
             for (int i = 0; i < 4; i ++) {
                 if (b.move(t, i) == mv) {
                     MoveEffect::unsetup(move(b,t), t, b);
-                    b.choice[t].setAttackSlot(i);
-                    b.choice[t].setTarget(b.randomValidOpponent(t));
+                    b.choice(t).setAttackSlot(i);
+                    b.choice(t).setTarget(b.randomValidOpponent(t));
                     MoveEffect::setup(mv, t, s, b);
                     break;
                 }
@@ -2338,14 +2338,14 @@ struct MMGravity : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.battlelong.value("Gravity").toBool()) {
+        if (b.battleMemory().value("Gravity").toBool()) {
             turn(b,s)["Failed"] = true;
         }
     }
 
     static void uas(int s, int, BS &b) {
-	b.battlelong["Gravity"] = true;
-        b.battlelong["GravityCount"] = 5;
+        b.battleMemory()["Gravity"] = true;
+        b.battleMemory()["GravityCount"] = 5;
 	b.sendMoveMessage(53,0,s,type(b,s));
 
         std::vector<int> list = b.sortedBySpeed();
@@ -2362,21 +2362,21 @@ struct MMGravity : public MM
                 b.sendMoveMessage(53,3, p, Type::Psychic, s, poke(b,p)["2TurnMove"].toInt());
             }
         }
-        addFunction(b.battlelong, "EndTurn5", "Gravity", &et);
-        addFunction(b.battlelong, "MovesPossible", "Gravity", &msp);
-        addFunction(b.battlelong, "MovePossible", "Gravity", &mp);
+        addFunction(b.battleMemory(), "EndTurn5", "Gravity", &et);
+        addFunction(b.battleMemory(), "MovesPossible", "Gravity", &msp);
+        addFunction(b.battleMemory(), "MovePossible", "Gravity", &mp);
     }
 
     static void et(int s, int, BS &b) {
-	if (b.battlelong.value("Gravity").toBool()) {
-            int count = b.battlelong["GravityCount"].toInt() - 1;
+        if (b.battleMemory().value("Gravity").toBool()) {
+            int count = b.battleMemory()["GravityCount"].toInt() - 1;
 	    if (count <= 0) {
 		b.sendMoveMessage(53,1,s,Pokemon::Psychic);
-                removeFunction(b.battlelong, "EndTurn5", "Gravity");
-                removeFunction(b.battlelong, "MovesPossible", "Gravity");
-		b.battlelong["Gravity"] = false;
+                removeFunction(b.battleMemory(), "EndTurn5", "Gravity");
+                removeFunction(b.battleMemory(), "MovesPossible", "Gravity");
+                b.battleMemory()["Gravity"] = false;
             } else {
-                b.battlelong["GravityCount"] = count;
+                b.battleMemory()["GravityCount"] = count;
             }
 	}
     }
@@ -2389,7 +2389,7 @@ struct MMGravity : public MM
     static FM forbidden_moves;
 
     static void mp (int s, int, BS &b) {
-        if (!b.battlelong.value("Gravity").toBool()) {
+        if (!b.battleMemory().value("Gravity").toBool()) {
             return;
         }
 
@@ -2401,7 +2401,7 @@ struct MMGravity : public MM
     }
 
     static void msp (int s, int , BS &b) {
-        if (!b.battlelong.value("Gravity").toBool()) {
+        if (!b.battleMemory().value("Gravity").toBool()) {
             return;
         }
 
@@ -2850,8 +2850,8 @@ struct MMImprison : public MM
     }
 
     static void uas(int s, int, BS &b) {
-	addFunction(b.battlelong, "MovePossible", "Imprison", &mp);
-	addFunction(b.battlelong, "MovesPossible", "Imprison", &msp);
+        addFunction(b.battleMemory(), "MovePossible", "Imprison", &mp);
+        addFunction(b.battleMemory(), "MovesPossible", "Imprison", &msp);
 	poke(b,s)["Imprisoner"] = true;
 	b.sendMoveMessage(67,0,s,type(b,s));
     }
@@ -3088,7 +3088,7 @@ struct MMMagicCoat : public MM
     }
 
     static void uas (int s, int, BS &b) {
-        addFunction(b.battlelong, "DetermineGeneralAttackFailure2", "MagicCoat", &dgaf);
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure2", "MagicCoat", &dgaf);
 	turn(b,s)["MagicCoated"] = true;
 	b.sendMoveMessage(76,0,s,Pokemon::Psychic);
     }
@@ -3098,7 +3098,7 @@ struct MMMagicCoat : public MM
         if (!bounced)
             return;
         /* Don't double bounce something */
-        if (b.battlelong.contains("CoatingAttackNow")) {
+        if (b.battleMemory().contains("CoatingAttackNow")) {
             return;
         }
         int target = -1;
@@ -3127,9 +3127,9 @@ struct MMMagicCoat : public MM
         turn(b,target).clear();
         MoveEffect::setup(move,target,s,b);
         turn(b,target)["Target"] = s;
-        b.battlelong["CoatingAttackNow"] = true;
+        b.battleMemory()["CoatingAttackNow"] = true;
         b.useAttack(target,move,true,false);
-        b.battlelong.remove("CoatingAttackNow");
+        b.battleMemory().remove("CoatingAttackNow");
 
         /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
             and don't cause any such data to be stored in that memory */
@@ -3406,7 +3406,7 @@ struct MMMudSport : public MM
         b.sendMoveMessage(88, move == MudSport ? 0 : 1, s, type(b,s));
         int type = turn(b,s)["MudSport_Arg"].toInt();
 	poke(b,s)["Sported" + QString::number(type)] = true;
-	b.battlelong["Sported"+ QString::number(type)] = s;
+        b.battleMemory()["Sported"+ QString::number(type)] = s;
     }
 };
 
@@ -3766,15 +3766,15 @@ struct MMSnatch : public MM
     }
 
     static void uas (int s, int, BS &b) {
-	addFunction(b.battlelong, "DetermineGeneralAttackFailure", "Snatch", &dgaf);
-	b.battlelong["Snatcher"] = s;
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Snatch", &dgaf);
+        b.battleMemory()["Snatcher"] = s;
 	turn(b,s)["Snatcher"] = true;
         b.sendMoveMessage(118,1,s,type(b,s));
     }
 
     static void dgaf(int s, int , BS &b) {
-	if (b.battlelong.contains("Snatcher")) {
-            int snatcher = b.battlelong["Snatcher"].toInt();
+        if (b.battleMemory().contains("Snatcher")) {
+            int snatcher = b.battleMemory()["Snatcher"].toInt();
             if (b.player(s) == b.player(snatcher)) {
                 return;
             }
@@ -3792,7 +3792,7 @@ struct MMSnatch : public MM
                 /* Now Snatching ... */
                 removeFunction(turn(b,snatcher), "UponAttackSuccessful", "Snatch");
                 turn(b,snatcher).remove("Snatcher");
-                b.battlelong.remove("Snatcher");
+                b.battleMemory().remove("Snatcher");
                 MoveEffect::setup(move,snatcher,s,b);
                 b.useAttack(snatcher,move,true);
                 MoveEffect::unsetup(move,snatcher,b);
@@ -3927,22 +3927,22 @@ struct MMTrickRoom : public MM {
     }
 
     static void uas(int s, int, BS &b) {
-        if (b.battlelong.value("TrickRoomCount").toInt() > 0) {
+        if (b.battleMemory().value("TrickRoomCount").toInt() > 0) {
             b.sendMoveMessage(138,1,s,Pokemon::Psychic);
-            b.battlelong.remove("TrickRoomCount");
-            removeFunction(b.battlelong, "EndTurn9", "TrickRoom");
+            b.battleMemory().remove("TrickRoomCount");
+            removeFunction(b.battleMemory(), "EndTurn9", "TrickRoom");
         } else {
             b.sendMoveMessage(138,0,s,Pokemon::Psychic);
-            b.battlelong["TrickRoomCount"] = 5;
-            addFunction(b.battlelong, "EndTurn9", "TrickRoom", &et);
+            b.battleMemory()["TrickRoomCount"] = 5;
+            addFunction(b.battleMemory(), "EndTurn9", "TrickRoom", &et);
         }
     }
 
     static void et(int s, int, BS &b) {
-        inc(b.battlelong["TrickRoomCount"], -1);
-        if (b.battlelong["TrickRoomCount"].toInt() == 0) {
+        inc(b.battleMemory()["TrickRoomCount"], -1);
+        if (b.battleMemory()["TrickRoomCount"].toInt() == 0) {
             b.sendMoveMessage(138,1,s,Pokemon::Psychic);
-            b.battlelong.remove("TrickRoomCount");
+            b.battleMemory().remove("TrickRoomCount");
         }
     }
 };
@@ -4580,7 +4580,7 @@ struct MMFollowMe : public MM
             why we need a switch count, or that */
         poke(b,s)["FollowMe"] = true;
 
-        addFunction(b.battlelong, "GeneralTargetChange", "FollowMe", &gtc);
+        addFunction(b.battleMemory(), "GeneralTargetChange", "FollowMe", &gtc);
     }
 
     static void gtc(int s, int, BS &b) {
@@ -4634,22 +4634,22 @@ struct MMMagicRoom : public MM {
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
-        if (b.battlelong.value("MagicRoomCount").toInt() > 0) {
+        if (b.battleMemory().value("MagicRoomCount").toInt() > 0) {
             b.sendMoveMessage(156,1,s,Pokemon::Psychic);
-            b.battlelong.remove("MagicRoomCount");
-            removeFunction(b.battlelong, "EndTurn9", "MagicRoom");
+            b.battleMemory().remove("MagicRoomCount");
+            removeFunction(b.battleMemory(), "EndTurn9", "MagicRoom");
         } else {
             b.sendMoveMessage(156,0,s,Pokemon::Psychic);
-            b.battlelong["MagicRoomCount"] = 5;
-            addFunction(b.battlelong, "EndTurn9", "MagicRoom", &et);
+            b.battleMemory()["MagicRoomCount"] = 5;
+            addFunction(b.battleMemory(), "EndTurn9", "MagicRoom", &et);
         }
     }
 
     static void et(int s, int, BS &b) {
-        inc(b.battlelong["MagicRoomCount"], -1);
-        if (b.battlelong["MagicRoomCount"].toInt() == 0) {
+        inc(b.battleMemory()["MagicRoomCount"], -1);
+        if (b.battleMemory()["MagicRoomCount"].toInt() == 0) {
             b.sendMoveMessage(156,1,s,Pokemon::Psychic);
-            b.battlelong.remove("MagicRoomCount");
+            b.battleMemory().remove("MagicRoomCount");
         }
     }
 };
@@ -4853,22 +4853,22 @@ struct MMWonderRoom : public MM {
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
-        if (b.battlelong.value("WonderRoomCount").toInt() > 0) {
+        if (b.battleMemory().value("WonderRoomCount").toInt() > 0) {
             b.sendMoveMessage(168,1,s,Pokemon::Psychic);
-            b.battlelong.remove("WonderRoomCount");
-            removeFunction(b.battlelong, "EndTurn9", "WonderRoom");
+            b.battleMemory().remove("WonderRoomCount");
+            removeFunction(b.battleMemory(), "EndTurn9", "WonderRoom");
         } else {
             b.sendMoveMessage(168,0,s,Pokemon::Psychic);
-            b.battlelong["WonderRoomCount"] = 5;
-            addFunction(b.battlelong, "EndTurn9", "WonderRoom", &et);
+            b.battleMemory()["WonderRoomCount"] = 5;
+            addFunction(b.battleMemory(), "EndTurn9", "WonderRoom", &et);
         }
     }
 
     static void et(int s, int, BS &b) {
-        inc(b.battlelong["WonderRoomCount"], -1);
-        if (b.battlelong["WonderRoomCount"].toInt() == 0) {
+        inc(b.battleMemory()["WonderRoomCount"], -1);
+        if (b.battleMemory()["WonderRoomCount"].toInt() == 0) {
             b.sendMoveMessage(168,1,s,Pokemon::Psychic);
-            b.battlelong.remove("WonderRoomCount");
+            b.battleMemory().remove("WonderRoomCount");
         }
     }
 };
@@ -4881,7 +4881,7 @@ struct MMWideGuard : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battlelong, "DetermineGeneralAttackFailure", "WideGuard", &dgaf);
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "WideGuard", &dgaf);
         team(b,b.player(s))["WideGuardUsed"] = b.turn();
         b.sendMoveMessage(169, 0, s, Pokemon::Normal);
     }
@@ -4919,7 +4919,7 @@ struct MMFastGuard : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battlelong, "DetermineGeneralAttackFailure", "FastGuard", &dgaf);
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "FastGuard", &dgaf);
         team(b,b.player(s))["FastGuardUsed"] = b.turn();
         b.sendMoveMessage(170, 0, s, Pokemon::Normal);
     }
@@ -5298,11 +5298,11 @@ struct MMEchoVoice : public MM
 
     static void bcd(int s, int, BS &b) {
         int count = 1;
-        if (b.battlelong.contains("EchoVoiceTurn")) {
-            if (b.battlelong["EchoVoiceTurn"].toInt() == b.turn() - 1) {
-                count = b.battlelong["EchoVoiceCount"].toInt() + 1;
-            } else if (b.battlelong["EchoVoiceTurn"].toInt() == b.turn()) {
-                count = b.battlelong["EchoVoiceCount"].toInt();
+        if (b.battleMemory().contains("EchoVoiceTurn")) {
+            if (b.battleMemory()["EchoVoiceTurn"].toInt() == b.turn() - 1) {
+                count = b.battleMemory()["EchoVoiceCount"].toInt() + 1;
+            } else if (b.battleMemory()["EchoVoiceTurn"].toInt() == b.turn()) {
+                count = b.battleMemory()["EchoVoiceCount"].toInt();
             }
         }
 
@@ -5310,8 +5310,8 @@ struct MMEchoVoice : public MM
             count = 5;
         }
 
-        b.battlelong["EchoVoiceCount"] = count;
-        b.battlelong["EchoVoiceTurn"] = b.turn();
+        b.battleMemory()["EchoVoiceCount"] = count;
+        b.battleMemory()["EchoVoiceTurn"] = b.turn();
 
         tmove(b,s).power *= count;
     }

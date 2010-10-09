@@ -139,6 +139,7 @@ public:
     void changeHp(int player, int newHp);
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player, bool silent = false);
+    void shiftSpots(int spot1, int spot2, bool silent = false);
     void notifyHits(int number);
     void sendPoke(int player, int poke, bool silent = false);
     void callEntryEffects(int player);
@@ -290,7 +291,8 @@ public:
         PointEstimate,
         StartChoices,
         Avoid,
-        RearrangeTeam
+        RearrangeTeam,
+        SpotShifting
     };
 
     enum ChangeTempPoke {
@@ -430,29 +432,6 @@ public:
 
     void emitCommand(int player, int players, const QByteArray &data);
 public:
-    /**************************************/
-    /*** VIVs: very important variables ***/
-    /**************************************/
-    /* Those variable are used throughout the battle to describe the situation.
-       These are 'dynamic', in contrary to 'static'. For exemple when a pokemon
-       is switched in, its type and ability and moves are stored in there, taken
-       from their 'static' value that are in the TeamBattle struct. Then they
-       can be changed (like with ability swap) but when the poke is sent back then
-       back in the dynamic value is restored to the static one. */
-
-    /* Variables that are reset when the poke is switched out.
-	Like for exemple a Requiem one... */
-    QList<context> pokelong;
-    /* Variables that are reset every turn right before everything else happens
-	at the very beginning of a turn */
-    QList<context> turnlong;
-    /* General things like last move ever used, etc. */
-    context battlelong;
-    /* Moves that affect a team */
-    context teamzone[2];
-    /* Moves that affect a particular Slot (wish, ...) */
-    QList<context> slotzone;
-
     /* The players ordered by speed are stored there */
     std::vector<int> speedsVector;
     unsigned int currentSlot;
@@ -504,12 +483,105 @@ public:
 
         void reset();
     };
+private:
+    /**************************************/
+    /*** VIVs: very important variables ***/
+    /**************************************/
+    /* Those variable are used throughout the battle to describe the situation.
+       These are 'dynamic', in contrary to 'static'. For exemple when a pokemon
+       is switched in, its type and ability and moves are stored in there, taken
+       from their 'static' value that are in the TeamBattle struct. Then they
+       can be changed (like with ability swap) but when the poke is sent back then
+       back in the dynamic value is restored to the static one. */
 
-    QList<BasicPokeInfo> fieldpokes;
-    QList<BasicMoveInfo> fieldmoves;
+    struct PokeContext {
+        /* Variables that are reset when the poke is switched out.
+            Like for exemple a Requiem one... */
+        context pokelong;
+        /* Variables that are reset every turn right before everything else happens
+            at the very beginning of a turn */
+        context turnlong;
 
-    /* The choice of a player, accessed by move ENCORE */
-    QList<BattleChoice> choice;
+        /* Structs containing raw information */
+        BasicPokeInfo fieldpoke;
+        BasicMoveInfo fieldmove;
+
+        /* The choice of a player, accessed by move ENCORE */
+        BattleChoice choice;
+    };
+
+    /* General things like last move ever used, etc. */
+    context battlelong;
+    /* Moves that affect a team */
+    context teamzone[2];
+    /* Moves that affect a particular Slot (wish, ...) */
+    QList<context> slotzone;
+
+    QList<PokeContext> contexts;
+public:
+    context &battleMemory() {
+        return battlelong;
+    }
+
+    context &teamMemory(int player) {
+        return teamzone[player];
+    }
+
+    context &slotMemory(int slot) {
+        return slotzone[slot];
+    }
+
+    context &turnMemory(int slot) {
+        return contexts[slot].turnlong;
+    }
+
+    context &pokeMemory(int slot) {
+        return contexts[slot].pokelong;
+    }
+
+    BasicMoveInfo &tmove(int slot) {
+        return contexts[slot].fieldmove;
+    }
+
+    BasicPokeInfo &fpoke(int slot) {
+        return contexts[slot].fieldpoke;
+    }
+
+    BattleChoice &choice(int slot) {
+        return contexts[slot].choice;
+    }
+
+    const context &battleMemory() const {
+        return battlelong;
+    }
+
+    const context &teamMemory(int player) const {
+        return teamzone[player];
+    }
+
+    const context &slotMemory(int slot) const {
+        return slotzone[slot];
+    }
+
+    const context &turnMemory(int slot) const {
+        return contexts[slot].turnlong;
+    }
+
+    const context &pokeMemory(int slot) const {
+        return contexts[slot].pokelong;
+    }
+
+    const BasicMoveInfo &tmove(int slot) const {
+        return contexts[slot].fieldmove;
+    }
+
+    const BasicPokeInfo &fpoke(int slot) const {
+        return contexts[slot].fieldpoke;
+    }
+
+    const BattleChoice &choice(int slot) const {
+        return contexts[slot].choice;
+    }
 
     /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
     // Public because used by Yawn
@@ -522,6 +594,8 @@ public:
     }
 private:
     QHash<int,int> spectators;
+    /* Used when pokemon shift slots */
+    QVector<int> indexes;
 public:
     const QHash<int, int> &getSpectators() const {
         QMutexLocker m(&spectatorMutex);
