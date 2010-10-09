@@ -579,6 +579,32 @@ void BattleSituation::endTurn()
 
     requestSwitchIns();
 
+    /* Now, in triples, if pokemon are on far ends they're
+       put back to the center */
+    if (mode() == ChallengeInfo::Triples) {
+        if (countAlive(Player1) == 1 && countAlive(Player2) == 1) {
+            int p1(0);
+            for (int i = 0; i < numberOfSlots(); i++) {
+                if (!koed(i)) {
+                    p1 = i;
+                    break;
+                }
+            }
+            int p2(0);
+            for (int i = p1+1; i < numberOfSlots(); i++) {
+                if (!koed(i)) {
+                    p2 = i;
+                    break;
+                }
+            }
+
+            if (!areAdjacent(p1, p2)) {
+                shiftSpots(p1, slot(player(p1), 1));
+                shiftSpots(p2, slot(player(p2), 1));
+            }
+        }
+    }
+
     /* Slow Start */
     foreach (int player, sortedBySpeed()) {
         callaeffects(player,player, "EndTurn20.");
