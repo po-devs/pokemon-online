@@ -72,7 +72,9 @@ namespace NetworkCli
         RemoveChannel,
         AddChannel = 50,
         ChannelMessage,
-        ChanNameChange
+        ChanNameChange,
+        HtmlMessage,
+        HtmlChannel
     };
 
     enum ProtocolError
@@ -121,6 +123,7 @@ signals:
     void disconnected();
     /* Message to appear in all the mainchats */
     void messageReceived(const QString &mess);
+    void htmlMessageReceived(const QString &mess);
     /* Command specific to a channel */
     void channelCommandReceived(int command, int channel, QDataStream *stream);
     /* player from the players list */

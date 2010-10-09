@@ -63,7 +63,9 @@ public:
 
     /* Functions called in scripts */
     Q_INVOKABLE void sendAll(const QString &mess);
+    Q_INVOKABLE void sendHtmlAll(const QString &mess);
     Q_INVOKABLE void sendAll(const QString &mess, int channel);
+    Q_INVOKABLE void sendHtmlAll(const QString &mess, int channel);
     Q_INVOKABLE void kick(int id);
     Q_INVOKABLE void kick(int playerid, int chanid);
     Q_INVOKABLE void putInChannel(int playerid, int chanid);
@@ -76,6 +78,8 @@ public:
     Q_INVOKABLE void shutDown();
     Q_INVOKABLE void sendMessage(int id, const QString &mess);
     Q_INVOKABLE void sendMessage(int id, const QString &mess, int channel);
+    Q_INVOKABLE void sendHtmlMessage(int id, const QString &mess);
+    Q_INVOKABLE void sendHtmlMessage(int id, const QString &mess, int channel);
     /* Print on the server. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void clearPass(const QString &name);
