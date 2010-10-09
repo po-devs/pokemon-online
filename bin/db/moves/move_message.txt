@@ -179,4 +179,14 @@ All stat changes were elimnated!
 %s prepares its %m!|%s and %f attack together!|%ts's team is standing on a burning field!|%s takes damage from the fire
 %s prepares its %m!|%s and %f attack together!|%ts's team is floundering in a swamp!
 %s prepares its %m!|%s and %f attack together!|%ts's team is under an amplifying rainbow!
+
+
+
+
+
+
+
+
+
+%s exchanged its spot with %f!
 #
