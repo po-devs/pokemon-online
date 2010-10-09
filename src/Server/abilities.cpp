@@ -1715,7 +1715,7 @@ struct AMHealingHeart : public AM {
             return;
         }
 
-        std::list<int> partners;
+        std::vector<int> partners;
         for (int i = 0; i < b.numberOfSlots();i++) {
             if (b.areAdjacent(i, s) && i!=s && b.arePartners(i, s) && !b.koed(i) && b.poke(i).status() != Pokemon::Fine) {
                 partners.push_back(i);
@@ -1727,7 +1727,7 @@ struct AMHealingHeart : public AM {
 
         int p = partners[b.true_rand() % partners.size()];
 
-        b.sendAbMessage(99, s0, s, p);
+        b.sendAbMessage(99, 0, s, p);
         b.healStatus(p, b.poke(p).status());
     }
 };
