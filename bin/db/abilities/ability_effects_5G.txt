@@ -129,8 +129,8 @@
 80#Competitive Spirit
 76#Weak-Kneed
 96#Cursed Body
-
-
+99#Healing Heart
+100#Friend Card
 74#Broken Armour
 
 
@@ -146,7 +146,7 @@
 30-2#Pigeon Heart
 8-3#Sand Throw
 90#Miracle Skin
-
+98#Analyze
 92#Illusion
 81#Eccentric
 

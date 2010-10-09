@@ -22,10 +22,10 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("theme", "Themes/Default/");
 
 #ifdef Q_OS_MACX
-    setDefaultValue("team_location", QDir::homePath() + "/Documents/trainer.tp");
+    setDefaultValue("team_location_v2", QDir::homePath() + "/Documents/trainer.tp");
     setDefaultValue("battle_logs_directory", QDir::homePath() + "/Documents/Pokemon-Online Logs/");
 #else
-    setDefaultValue("team_location", "Team/trainer.tp");
+    setDefaultValue("team_location_v2", "Team/trainer.tp");
     setDefaultValue("battle_logs_directory", "Logs/");
 #endif
     setDefaultValue("battle_music_directory", "Music/Battle/");
@@ -69,7 +69,7 @@ MainEngine::MainEngine() : displayer(0)
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());
     loadStyleSheet();
-    loadTeam(settings.value("team_location").toString());
+    loadTeam(settings.value("team_location_v2").toString());
 
     launchMenu();
 }
@@ -277,8 +277,8 @@ void MainEngine::loadTeamDialog()
     QSettings settings;
     QString newLocation;
 
-    if (loadTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
-        settings.setValue("team_location", newLocation);
+    if (loadTTeamDialog(*trainerTeam(), settings.value("team_location_v2").toString(), &newLocation)) {
+        settings.setValue("team_location_v2", newLocation);
     }
 }
 

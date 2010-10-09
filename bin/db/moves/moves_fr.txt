@@ -466,95 +466,95 @@ Trou Noir
 Fulmigraine
 Vent Mauvais
 Revenant
-[M468]
-[M469]
-[M470]
-[M471]
-[M472]
-[M473]
-[M474]
-[M475]
-[M476]
-[M477]
-[M478]
-[M479]
-[M480]
-[M481]
-[M482]
-[M483]
-[M484]
-[M485]
-[M486]
-[M487]
-[M488]
-[M489]
-[M490]
-[M491]
-[M492]
-[M493]
-[M494]
-[M495]
-[M496]
-[M497]
-[M498]
-[M499]
-[M500]
-[M501]
-[M502]
-[M503]
-[M504]
-[M505]
-[M506]
-[M507]
-[M508]
-[M509]
-[M510]
-[M511]
-[M512]
-[M513]
-[M514]
-[M515]
-[M516]
-[M517]
-[M518]
-[M519]
-[M520]
-[M521]
-[M522]
-[M523]
-[M524]
-[M525]
-[M526]
-[M527]
-[M528]
-[M529]
-[M530]
-[M531]
-[M532]
-[M533]
-[M534]
-[M535]
-[M536]
-[M537]
-[M538]
-[M539]
-[M540]
-[M541]
-[M542]
+Claw Sharpen
+Wide Guard
+Guard Share
+Power Share
+Wonder Room
+Psycho Shock
+Venom Shock
+Body Purge
+Anger Powder
+Telekinesis
+Magic Room
+Knock Down
+Mountain Storm
+Flame Burst
+Slime Wave
+Butterfly Dance
+Heavy Bomber
+Synchro Noise
+Electric Ball
+Submersion
+Nitro Charge
+Snake Coil
+Ankle Sweep
+Acid Bomb
+Trickery
+Simple Beam
+Befriend
+After You
+A Capella
+Echo Voice
+Repayment
+Clear Smog
+Assist Power
+Fast Guard
+Side Change
+Boil Over
+Shell Smash
+Healing Wave
+Evil Eye
+Freefall
+Gear Change
+Overhead Throw
+Incinerate
+Postpone
+Acrobat
+Mirror Type
+Retribution
+Death Gambit
+Gift Pass
+Purgatory
+Water Realm
+Fire Realm
+Grass Realm
+Volt Change
+Bug Repellant
+Level Field
+Ice Breath
+Dragon Tail
+Cheer Up
+Electric Net
+Wild bolt
+Drill Liner
+Double Chop
+Heart Stamp
+Wood Horn
+Holy Sword
+Shell Blade
+Heat Stamp
+Grass Mixer
+Hard Roller
+Cotton Guard
+Night Burst
+Psycho Break
+Sweep Slap
+Hurricane
 Afro Break
-[M544]
-[M545]
-[M546]
-[M547]
-[M548]
-[M549]
-[M550]
-[M551]
-[M552]
-[M553]
-[M554]
-[M555]
-[M556]
-[M557]
-[M558]
-[M559]
+Gear Saucer
+Kaendan
+Techno Buster
+Ancient Song
+Mystery Sword
+Frozen World
+Lightning Strike
+Blue Flame
+Flame Dance
+Freezebolt
+Cold Flare
+Back out
+Icicle Drop
+V-Generate
+Cross Flame
+Cross Thunder

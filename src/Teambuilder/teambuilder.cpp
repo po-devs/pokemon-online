@@ -302,8 +302,8 @@ void TeamBuilder::saveTeam()
     QSettings settings;
     QString newLocation;
 
-    if (saveTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
-        settings.setValue("team_location", newLocation);
+    if (saveTTeamDialog(*trainerTeam(), settings.value("team_location_v2").toString(), &newLocation)) {
+        settings.setValue("team_location_v2", newLocation);
     }
 }
 
@@ -312,8 +312,8 @@ void TeamBuilder::loadTeam()
     QSettings settings;
     QString newLocation;
 
-    if (loadTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
-        settings.setValue("team_location", newLocation);
+    if (loadTTeamDialog(*trainerTeam(), settings.value("team_location_v2").toString(), &newLocation)) {
+        settings.setValue("team_location_v2", newLocation);
         updateAll();
     }
 }

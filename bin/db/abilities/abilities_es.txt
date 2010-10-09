@@ -122,22 +122,24 @@ Audaz
 Multitipo
 Don floral
 Mal sue�o
-[A126]
+Wicked Thief
+Encourage
+Perversity
 Anxiety
 Competitive Spirit
 Weak-kneed
 Cursed Body
 Healing Heart
-[A132]
-Broken Armour
+Friend Card
+Broken Armor
 Heavy Metal
 Light Metal
-[A136]
-[A137]
-[A138]
-[A139]
+Multi-Scale
+Poison Rampage
+Heat Rampage
+Harvest
 Telepathy
-[A141]
+Inconsistent
 Dustproof
 Poison Skin
 Regeneration
@@ -146,18 +148,18 @@ Sand Throw
 Miracle Skin
 Analyze
 Illusion
-[A150]
+Eccentric
 Slip Through
 Mummy
 Earthquake Spiral
 Justice Heart
-[A155]
-[A156]
+Frightened
+Magic Mirror
 Herbivore
 Mischievous Heart
 Sand Power
 Iron Barbs
-[A161]
+Daruma Mode
 Victory Star
 Turbo Blaze
 TeraVoltage
