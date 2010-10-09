@@ -1155,6 +1155,19 @@ QScriptValue ScriptEngine::indexOfTeamPoke(int id, int pokenum)
     return myengine.undefinedValue();
 }
 
+bool ScriptEngine::hasDreamWorldAbility(int id, int index)
+{
+    if (!loggedIn(id) || index < 0 || index >= 6) {
+        return myengine.undefinedValue();
+    } else {
+        PokeBattle &p = myserver->player(id)->team().poke(index);
+
+        AbilityGroup ag = PokemonInfo::Abilities(p.num(), 5);
+
+        return p.ability() != ag.ab(0) && p.ability() != ag.ab(1);
+    }
+}
+
 QScriptValue ScriptEngine::teamPokeMove(int id, int pokeindex, int moveindex)
 {
     if (!loggedIn(id) || pokeindex < 0 || moveindex < 0 || pokeindex >= 6 || moveindex >= 4) {
