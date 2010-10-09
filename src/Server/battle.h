@@ -227,6 +227,7 @@ public:
     void requestSwitch(int player);
     bool linked(int linked, QString relationShip);
     void link(int linker, int linked, QString relationShip);
+    int linker(int linked, QString relationShip);
     void notifySub(int player, bool sub);
     int repeatNum(int player);
     PokeFraction getStatBoost(int player, int stat);
@@ -589,6 +590,14 @@ public:
 
     const BattleChoice &choice(int slot) const {
         return getContext(slot).choice;
+    }
+
+    int getInternalId(int slot) const {
+        return indexes[slot];
+    }
+
+    int fromInternalId(int id) const {
+        return indexes.indexOf(id);
     }
 
     /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */

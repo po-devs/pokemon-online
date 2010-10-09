@@ -814,6 +814,7 @@ void BattleSituation::shiftSpots(int spot1, int spot2, bool silent)
     team(p).switchPokemon(sl1, sl2);
 
     std::swap(indexes[spot1], indexes[spot2]);
+    std::swap(slotMemory(spot1)["SwitchCount"], slotMemory(spot2)["SwitchCount"]);
 }
 
 inline bool comparePair(const std::pair<int,int> & x, const std::pair<int,int> & y) {
@@ -3499,15 +3500,20 @@ bool BattleSituation::linked(int linked, QString relationShip)
     if (!pokeMemory(linked).contains(relationShip + "By"))
         return false;
 
-    int linker = pokeMemory(linked)[relationShip + "By"].toInt();
+    int linker = this->linker(linked, relationShip);
 
     return  !koed(linker) && slotMemory(linker)["SwitchCount"].toInt() == pokeMemory(linked)[relationShip + "Count"].toInt();
 }
 
 void BattleSituation::link(int linker, int linked, QString relationShip)
 {
-    pokeMemory(linked)[relationShip+"By"] = linker;
+    pokeMemory(linked)[relationShip+"By"] = getInternalId(linker);
     pokeMemory(linked)[relationShip+"Count"] = slotMemory(linker)["SwitchCount"].toInt();
+}
+
+int BattleSituation::linker(int linked, QString relationShip)
+{
+    return fromInternalId(pokeMemory(linked)[relationShip + "By"].toInt());
 }
 
 int BattleSituation::countAlive(int player) const
