@@ -5474,9 +5474,9 @@ struct MMFireBurst : public MM
     MMFireBurst() {
         functions["UponAttackSuccessful"] = &uas;
     }
-    static void uas(int, int t, BS &b) {
+    static void uas(int s, int t, BS &b) {
         for (int i = 0; i < b.numberOfSlots(); i++) {
-            if (b.arePartners(i, t) && i!=t && b.areAdjacent(i, t) && !b.hasWorkingAbility(i)) {
+            if (b.arePartners(i, t) && i!=t && b.areAdjacent(i, t) && !b.hasWorkingAbility(i, Ability::MagicGuard)) {
                 b.inflictDamage(i, b.poke(i).totalLifePoints()/16, s, false);
             }
         }
