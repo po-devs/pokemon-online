@@ -1037,14 +1037,20 @@ void Player::spectatingRequested(int id)
     emit spectatingRequested(this->id(), id);
 }
 
-void Player::sendMessage(const QString &mess)
+void Player::sendMessage(const QString &mess, bool html)
 {
-    relay().sendMessage(mess);
+    if (!html)
+        relay().sendMessage(mess);
+    else
+        relay().sendHtmlMessage(mess);
 }
 
-void Player::sendChanMessage(int channel, const QString &mess)
+void Player::sendChanMessage(int channel, const QString &mess, bool html)
 {
-    relay().sendChannelMessage(channel, mess);
+    if (!html)
+        relay().sendChannelMessage(channel, mess);
+    else
+        relay().sendHtmlChannelMessage(channel, mess);
 }
 
 void Player::tUnban(QString name)

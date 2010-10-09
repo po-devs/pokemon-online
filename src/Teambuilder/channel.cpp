@@ -325,6 +325,11 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
 
         in >> message;
         printLine(message);
+    } else if (command == NetworkCli::HtmlChannel) {
+        QString message;
+
+        in >> message;
+        printHtml(message);
     } else if (command == NetworkCli::BattleList) {
         QHash<qint32, Battle> battles;
         in >> battles;

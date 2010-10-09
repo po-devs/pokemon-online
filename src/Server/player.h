@@ -53,8 +53,8 @@ public:
     BasicInfo basicInfo() const;
 
     /* Sends a message to the player */
-    void sendMessage(const QString &mess);
-    void sendChanMessage(int channel, const QString &mess);
+    void sendMessage(const QString &mess, bool html=false);
+    void sendChanMessage(int channel, const QString &mess, bool html=false);
 
     bool hasSentCommand(int commandid) const;
 

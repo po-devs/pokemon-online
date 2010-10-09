@@ -440,6 +440,34 @@ void ScriptEngine::sendMessage(int id, const QString &mess, int channel)
     }
 }
 
+void ScriptEngine::sendHtmlAll(const QString &mess)
+{
+    myserver->sendAll(mess, false, true);
+}
+
+void ScriptEngine::sendHtmlAll(const QString &mess, int channel)
+{
+    if (testChannel("sendAll(mess, channel)", channel)) {
+        myserver->sendChannelMessage(channel, mess, false, true);
+    }
+}
+
+void ScriptEngine::sendHtmlMessage(int id, const QString &mess)
+{
+    if (testPlayer("sendMessage(id, mess)", id)) {
+        myserver->sendMessage(id, mess, true);
+    }
+}
+
+void ScriptEngine::sendHtmlMessage(int id, const QString &mess, int channel)
+{
+    if (testChannel("sendMessage(id, mess, channel)", channel) && testPlayer("sendMessage(id, mess, channel)", id) &&
+        testPlayerInChannel("sendMessage(id, mess, channel)", id, channel))
+    {
+        myserver->sendChannelMessage(id, channel, mess, true);
+    }
+}
+
 void ScriptEngine::kick(int id)
 {
     if (testPlayer("kick(id)", id)) {

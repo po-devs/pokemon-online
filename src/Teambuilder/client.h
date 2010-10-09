@@ -37,8 +37,6 @@ public:
     TrainerTeam *team();
     QMenuBar *createMenuBar(MainEngine *w);
 
-    void printLine(const QString &line);
-    void printHtml(const QString &html);
     /* Prints a line to all the channels which have that player */
     void printLine(int playerid, const QString &line);
     void cancelFindBattle(bool verbose=true);
@@ -98,7 +96,8 @@ public slots:
     void connected();
     void disconnected();
     /* message received from the server */
-    void messageReceived(const QString & mess);
+    void printLine(const QString &line);
+    void printHtml(const QString &html);
     /* sends what's in the line edit */
     void sendText();
     void playerLogin(const PlayerInfo &p);
