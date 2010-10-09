@@ -73,6 +73,16 @@ struct BaseBattleInfo
         pokeAlive[spot] = true;
     }
 
+    virtual void switchOnSide(int player, int s1, int s2) {
+        int pk1 = slot(player, s1);
+        int pk2 = slot(player, s2);
+        std::swap(currentShallow(pk1), currentShallow(pk2));
+        std::swap(pokeAlive[pk1], pokeAlive[pk2]);
+        std::swap(sub[pk1], sub[pk2]);
+        std::swap(specialSprite[pk1], specialSprite[pk2]);
+        std::swap(lastSeenSpecialSprite[pk1], lastSeenSpecialSprite[pk2]);
+    }
+
     /* Stat boosts & team status */
     QList<BattleDynamicInfo> statChanges;
 };
@@ -151,7 +161,8 @@ public:
         PointEstimate,
         MakeYourChoice,
         Avoid,
-        RearrangeTeam
+        RearrangeTeam,
+        SpotShifts
     };
 
     enum TempPokeChange {
