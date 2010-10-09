@@ -725,6 +725,12 @@ bool TrainerTeam::loadFromFile(const QString &path)
         return false;
     }
     int version = team.attribute("version", "0").toInt();
+
+    if (version > 1) {
+        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team, the client is outdated."));
+        return false;
+    }
+
     int gen = team.attribute("gen", "4").toInt();
     if (gen != 3 && gen != 4)
         gen = 5;
