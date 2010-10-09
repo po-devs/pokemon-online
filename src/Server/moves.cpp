@@ -5469,6 +5469,42 @@ struct MMRetribution : public MM
     }
 };
 
+struct MMFireBurst : public MM
+{
+    MMFireBurst() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+    static void uas(int s, int t, BS &b) {
+        for (int i = 0; i < b.numberOfSlots(); i++) {
+            if (b.arePartners(i, t) && i!=t && b.areAdjacent(i, t) && !b.hasWorkingAbility(i, Ability::MagicGuard)) {
+                b.inflictDamage(i, b.poke(i).totalLifePoints()/16, s, false);
+            }
+        }
+    }
+};
+
+struct MMSideChange : public MM
+{
+    MMSideChange() {
+        functions["MoveSettings"] = &ms;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void ms(int s, int, BS &b) {
+        /* Those will trigger an invalid target,
+           and so the battle will choose a random target.
+
+           That's a bit of a hack but i made sure it's fine */
+        tmove(b,s).targets = Move::Partner;
+        turn(b,s)["Target"] = s;
+    }
+
+    static void uas (int s, int t, BS &b) {
+        b.shiftSpots(s, t, true);
+        b.sendMoveMessage(190, 0, s, type(b, s), t);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5692,4 +5728,6 @@ void MoveEffect::init()
     REGISTER_MOVE(186, SynchroNoise);
     REGISTER_MOVE(187, Trickery);
     REGISTER_MOVE(188, Retribution);
+    REGISTER_MOVE(189, FireBurst);
+    REGISTER_MOVE(190, SideChange);
 }
