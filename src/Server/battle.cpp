@@ -802,6 +802,18 @@ void BattleSituation::shiftSpots(int spot1, int spot2, bool silent)
     int p = player(spot1);
 
     notify(All, SpotShifting, p, qint8(sl1), qint8(sl2), silent);
+
+    for (unsigned i = 0; i < speedsVector.size(); i++) {
+        if (speedsVector[i] == spot1) {
+            speedsVector[i] = spot2;
+        } else if (speedsVector[i] == spot2) {
+            speedsVector[i] = spot1;
+        }
+    }
+
+    team(p).switchPokemon(sl1, sl2);
+
+    std::swap(indexes[spot1], indexes[spot2]);
 }
 
 inline bool comparePair(const std::pair<int,int> & x, const std::pair<int,int> & y) {
@@ -1840,8 +1852,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 QVector<int> trueTargets;
 
                 for (int i = 0; i < numberOfSlots()/2; i++) {
-                    if (i > 1 && slotNum(target) <= 1) {
-                        break;
+                    if (i > 1) {
+                        if (slotNum(target) < 1 || (slotNum(target) == 1 && slotNum(player) == 1))
+                            break;
                     }
                     if (areAdjacent(slot(opp, i), target) && areAdjacent(slot(opp, i), player) && !koed(slot(opp,i)))
                         trueTargets.push_back(slot(opp, i));
@@ -1856,8 +1869,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 QVector<int> trueTargets;
 
                 for (int i = 0; i < numberOfSlots(); i++) {
-                    if (slotNum(i) > 1 && slotNum(target) <= 1) {
-                        break;
+                    if (slotNum(i) > 1) {
+                        if (slotNum(target) < 1 || (slotNum(target) == 1 && slotNum(player) == 1))
+                            break;
                     }
                     if (areAdjacent(i, target) && areAdjacent(i, player) && !koed(i))
                         trueTargets.push_back(i);
@@ -1872,8 +1886,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 QVector<int> trueTargets;
 
                 for (int i = 0; i < numberOfSlots(); i++) {
-                    if (slotNum(i) > 1 && slotNum(target) <= 1) {
-                        break;
+                    if (slotNum(i) > 1) {
+                        if (slotNum(target) < 1 || (slotNum(target) == 1 && slotNum(player) == 1))
+                            break;
                     }
                     if (areAdjacent(i, target) && areAdjacent(i, player) && i != player && !koed(i))
                         trueTargets.push_back(i);
@@ -2641,6 +2656,7 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
     if (pokeMemory(player).value("Confused").toBool()) {
         if (this->attacker() == attacker && canSendPreventSMessage(player, attacker))
             notify(All, AlreadyStatusMessage, player, quint8(Pokemon::Confused));
+        return;
     }
 
     if (attacker != player) {

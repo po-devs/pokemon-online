@@ -211,6 +211,15 @@ void BattleWindow::clickClose()
 
 void BattleWindow::switchToPokeZone()
 {
+    int n = info().number(info().currentSlot);
+    if (sender() && info().mode == ChallengeInfo::Triples && n != 1) {
+        BattleChoice &b = info().choice[n];
+        b = BattleChoice(info().currentSlot, MoveToCenterChoice());
+        info().done[n] = true;
+        goToNextChoice();
+
+        return;
+    }
     // Go back to the attack zone if the window is on the switch zone
     if (mytab->currentIndex() == PokeTab) {
         mytab->setCurrentIndex(MoveTab);
@@ -261,12 +270,6 @@ void BattleWindow::switchClicked(int zone)
     {
 	switchToPokeZone();
     } else {
-        if (info().mode == ChallengeInfo::Triples && slot != 1) {
-            BattleChoice &b = info().choice[info().number(slot)];
-            b = BattleChoice(slot, MoveToCenterChoice());
-            info().done[info().number(slot)] = true;
-            goToNextChoice();
-        }
         if (!info().choices[info().number(slot)].switchAllowed)
             return;
         if (zone == info().number(slot)) {
@@ -673,6 +676,37 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             in >> t;
 
             openRearrangeWindow(t);
+            break;
+        }
+    case SpotShifts:
+        {
+            qint8 s1, s2;
+            bool silent;
+
+            in >> s1 >> s2 >> silent;
+
+            if (!silent) {
+                if (info().currentShallow(info().slot(spot, s2)).status() == Pokemon::Koed) {
+                    printLine(tr("%1 shifted spots to the middle!").arg(tu(nick(info().slot(spot, s1)))));
+                } else {
+                    printLine(tr("%1 shifted spots with %2!").arg(tu(nick(info().slot(spot, s1))), nick(info().slot(spot, s2))));
+                }
+            }
+
+            info().switchOnSide(spot, s1, s2);
+
+            int pk1 = info().slot(spot, s1);
+            int pk2 = info().slot(spot, s2);
+            mydisplay->updatePoke(pk1);
+            mydisplay->updatePoke(pk2);
+
+            mydisplay->updatePoke(info().player(spot), s1);
+            mydisplay->updatePoke(info().player(spot), s2);
+
+            mypzone->pokes[s1]->changePokemon(info().myteam.poke(s1));
+            mypzone->pokes[s2]->changePokemon(info().myteam.poke(s2));
+
+            delay(500);
             break;
         }
     default:

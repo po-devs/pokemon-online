@@ -155,11 +155,18 @@ struct AMBlaze : public AM {
 struct AMChlorophyll : public AM {
     AMChlorophyll() {
         functions["StatModifier"] = &sm;
+        functions["WeatherSpecial"] = &ws;
     }
 
     static void sm(int s, int, BS &b) {
         if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
             turn(b,s)["Stat5AbilityModifier"] = 20;
+        }
+    }
+
+    static void ws(int s, int, BS &b) {
+        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
+            turn(b,s)["WeatherSpecialed"] = true;
         }
     }
 };
@@ -1204,6 +1211,7 @@ struct AMHerbivore : public AM {
 struct AMSandPower : public AM {
     AMSandPower() {
         functions["BasePowerModifier"] = &bpam;
+        functions["WeatherSpecial"] = &ws;
     }
 
     static void bpam(int s, int, BS &b) {
@@ -1213,6 +1221,12 @@ struct AMSandPower : public AM {
             if (t == Type::Rock || t == Type::Steel || t == Type::Ground) {
                 turn(b,s)["BasePowerAbilityModifier"] = 10;
             }
+        }
+    }
+
+    static void ws(int s, int, BS &b) {
+        if (b.isWeatherWorking(BS::SandStorm)) {
+            turn(b,s)["WeatherSpecialed"] = true;
         }
     }
 };

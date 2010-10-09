@@ -531,24 +531,32 @@ public:
         return slotzone[slot];
     }
 
+    PokeContext &getContext(int slot) {
+        return contexts[indexes[slot]];
+    }
+
+    const PokeContext &getContext(int slot) const {
+        return contexts[indexes[slot]];
+    }
+
     context &turnMemory(int slot) {
-        return contexts[slot].turnlong;
+        return getContext(slot).turnlong;
     }
 
     context &pokeMemory(int slot) {
-        return contexts[slot].pokelong;
+        return getContext(slot).pokelong;
     }
 
     BasicMoveInfo &tmove(int slot) {
-        return contexts[slot].fieldmove;
+        return getContext(slot).fieldmove;
     }
 
     BasicPokeInfo &fpoke(int slot) {
-        return contexts[slot].fieldpoke;
+        return getContext(slot).fieldpoke;
     }
 
     BattleChoice &choice(int slot) {
-        return contexts[slot].choice;
+        return getContext(slot).choice;
     }
 
     const context &battleMemory() const {
@@ -564,23 +572,23 @@ public:
     }
 
     const context &turnMemory(int slot) const {
-        return contexts[slot].turnlong;
+        return getContext(slot).turnlong;
     }
 
     const context &pokeMemory(int slot) const {
-        return contexts[slot].pokelong;
+        return getContext(slot).pokelong;
     }
 
     const BasicMoveInfo &tmove(int slot) const {
-        return contexts[slot].fieldmove;
+        return getContext(slot).fieldmove;
     }
 
     const BasicPokeInfo &fpoke(int slot) const {
-        return contexts[slot].fieldpoke;
+        return getContext(slot).fieldpoke;
     }
 
     const BattleChoice &choice(int slot) const {
-        return contexts[slot].choice;
+        return getContext(slot).choice;
     }
 
     /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */

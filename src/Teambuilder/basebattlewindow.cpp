@@ -810,6 +810,34 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             info().ticking[spot] = false;
             break;
         }
+    case SpotShifts:
+        {
+            qint8 s1, s2;
+            bool silent;
+
+            in >> s1 >> s2 >> silent;
+
+            if (!silent) {
+                if (info().currentShallow(info().slot(spot, s2)).status() == Pokemon::Koed) {
+                    printLine(tr("%1 shifted spots to the middle!").arg(tu(nick(info().slot(spot, s1)))));
+                } else {
+                    printLine(tr("%1 shifted spots with %2!").arg(tu(nick(info().slot(spot, s1))), nick(info().slot(spot, s2))));
+                }
+            }
+
+            info().switchOnSide(spot, s1, s2);
+
+            int pk1 = info().slot(spot, s1);
+            int pk2 = info().slot(spot, s2);
+            mydisplay->updatePoke(pk1);
+            mydisplay->updatePoke(pk2);
+
+            mydisplay->updatePoke(info().player(spot), s1);
+            mydisplay->updatePoke(info().player(spot), s2);
+
+            delay(500);
+            break;
+        }
     default:
         printLine("<i>" + tr("Unknown command received, are you up to date?") + "</i>");
         break;

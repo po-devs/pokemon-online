@@ -258,7 +258,7 @@ struct BattleChoice {
     }
     BattleChoice(int slot, const MoveToCenterChoice &c) {
         choice.move = c;
-        type = RearrangeType;
+        type = CenterMoveType;
         playerSlot = slot;
     }
 
