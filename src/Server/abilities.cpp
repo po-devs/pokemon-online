@@ -226,7 +226,7 @@ struct AMCuteCharm : public AM {
         if (turn(b,s).value("HasPassedStatus").toBool())
             return;
         if (b.linked(s, "Attract")) {
-            int seducer = poke(b,s)["AttractBy"].toInt();
+            int seducer = b.linker(s, "Attract");
 
             b.sendMoveMessage(58,0,s,0,seducer);
             if (b.true_rand() % 2 == 0) {

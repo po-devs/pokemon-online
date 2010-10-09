@@ -919,16 +919,15 @@ struct MMLeechSeed : public MM
 
     static void uas(int s, int t, BS &b) {
         addFunction(poke(b,t), "EndTurn64", "LeechSeed", &et);
-	poke(b,t)["SeedSource"] = s;
+        b.link(s, t, "Seeding");
 	b.sendMoveMessage(72, 1, s, Pokemon::Grass, t);
     }
 
     static void et(int s, int, BS &b) {
-        if (b.koed(s) || b.hasWorkingAbility(s, Ability::MagicGuard))
+        if (b.koed(s) || b.hasWorkingAbility(s, Ability::MagicGuard) || !b.linked(s, "Seeding"))
 	    return;
-        int s2 = poke(b,s)["SeedSource"].toInt();
-        if (b.koed(s2))
-            return;
+
+        int s2 = b.linker(s, "SeedSource");
 
         int damage = std::min(int(b.poke(s).lifePoints()), std::max(b.poke(s).totalLifePoints() / 8, 1));
         
@@ -1408,7 +1407,7 @@ struct MMAttract : public MM
         if (turn(b,s).value("HasPassedStatus").toBool())
             return;
         if (b.linked(s, "Attract")) {
-            int seducer = poke(b,s)["AttractBy"].toInt();
+            int seducer = b.linker(s, "Attract");
 
             b.sendMoveMessage(58,0,s,0,seducer);
             if (b.true_rand() % 2 == 0) {
@@ -1690,7 +1689,7 @@ struct MMBind : public MM
                 poke(b,s)["TrappedRemainingTurns"] = count;
                 b.sendMoveMessage(10,0,s,MoveInfo::Type(move, b.gen()),s,move);
 
-                int trapper = poke(b,s)["TrappedBy"].toInt();
+                int trapper = b.linker(s, "Trapped");
 
                 b.inflictDamage(s, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::PressureBand) ? 8 : 16),s,false);
             }
