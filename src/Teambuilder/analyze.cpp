@@ -171,7 +171,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit messageReceived(mess);
 	    break;
 	}
-    case SendHtml: {
+    case HtmlMessage: {
             QString mess;
             in >> mess;
             emit htmlMessageReceived(mess);
