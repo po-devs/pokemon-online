@@ -479,7 +479,7 @@
 156#Magic Room
 175#Strike Down
 
-
+189#Flame Burst
 
 
 167#HeavyBomber
@@ -500,7 +500,7 @@
 149#Clear Smog
 185#Assist Power
 170#Fast Guard
-
+190#Side Change
 
 159#Shell Crack
 

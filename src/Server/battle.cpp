@@ -1872,52 +1872,31 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         case Move::TeamSide: case Move::IndeterminateTarget:
         case Move::User: targetList.push_back(player); break;
         case Move::Opponents: {
-                if (!areAdjacent(player, target)) {
-                    target = player;
-                }
                 int opp = opponent(this->player(player));
                 QVector<int> trueTargets;
 
                 for (int i = 0; i < numberOfSlots()/2; i++) {
-                    if (i > 1) {
-                        if (slotNum(target) < 1 || (slotNum(target) == 1 && slotNum(player) == 1))
-                            break;
-                    }
-                    if (areAdjacent(slot(opp, i), target) && areAdjacent(slot(opp, i), player) && !koed(slot(opp,i)))
+                    if (areAdjacent(slot(opp, i), player) && !koed(slot(opp,i)))
                         trueTargets.push_back(slot(opp, i));
                 }
                 makeTargetList(trueTargets);
                 break;
             }
         case Move::All: {
-                if (!areAdjacent(player, target)) {
-                    target = player;
-                }
                 QVector<int> trueTargets;
 
                 for (int i = 0; i < numberOfSlots(); i++) {
-                    if (slotNum(i) > 1) {
-                        if (slotNum(target) < 1 || (slotNum(target) == 1 && slotNum(player) == 1))
-                            break;
-                    }
-                    if (areAdjacent(i, target) && areAdjacent(i, player) && !koed(i))
+                    if (areAdjacent(i, player) && !koed(i))
                         trueTargets.push_back(i);
                 }
                 makeTargetList(trueTargets);
                 break;
             }
         case Move::AllButSelf: {
-                if (!areAdjacent(player, target)) {
-                    target = player;
-                }
                 QVector<int> trueTargets;
 
                 for (int i = 0; i < numberOfSlots(); i++) {
-                    if (slotNum(i) > 1) {
-                        if (slotNum(target) < 1 || (slotNum(target) == 1 && slotNum(player) == 1))
-                            break;
-                    }
-                    if (areAdjacent(i, target) && areAdjacent(i, player) && i != player && !koed(i))
+                    if (areAdjacent(i, player) && !koed(i) && i != player)
                         trueTargets.push_back(i);
                 }
                 makeTargetList(trueTargets);
@@ -1963,7 +1942,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
             break;
             case Move::Partner:
-            if (!koed(target) && arePartners(target, player) && areAdjacent(target, player)) {
+            if (!koed(target) && arePartners(target, player) && areAdjacent(target, player) && target != player) {
                 targetList.push_back(target);
             } else {
                 for (int i = 0; i < numberOfSlots(); i++) {
