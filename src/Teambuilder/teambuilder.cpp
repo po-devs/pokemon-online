@@ -1074,7 +1074,8 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, 
     QLabel *lw;
     box21->addWidget(lw= new QLabel(tr("Pokémon %1").arg(num+1)), 10, Qt::AlignTop);
     lw->setObjectName("NormalText");
-    box21->addWidget(pokeImage = new QLabel(),0);
+    box21->addWidget(pokeImage = new QToolButton(),0);
+    pokeImage->setAutoRaise(true);
     QPushButton *advanced;
     box21->addWidget(advanced = new QPushButton(tr("&Advanced")), 10, Qt::AlignBottom);
     QMenu *m = new QMenu(advanced);
@@ -1409,8 +1410,8 @@ void TB_PokemonBody::changeForme(Pokemon::uniqueId pokenum)
 void TB_PokemonBody::updateImage()
 {
     QPixmap picture = poke()->picture();
-    pokeImage->setFixedSize(picture.size());
-    pokeImage->setPixmap(picture);
+    pokeImage->setIconSize(picture.size());
+    pokeImage->setIcon(picture);
 }
 
 void TB_PokemonBody::updateGender()
