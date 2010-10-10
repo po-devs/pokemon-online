@@ -1555,10 +1555,12 @@ struct MMAssist : public MM
 	removeFunction(turn(b,s), "UponAttackSuccessful", "Assist");
 	removeFunction(turn(b,s), "DetermineAttackFailure", "Assist");
 	int attack = turn(b,s)["AssistMove"].toInt();
+        BS::BasicMoveInfo info = tmove(b,s);
         MoveEffect::setup(attack, s, s, b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
 	b.useAttack(s, turn(b,s)["AssistMove"].toInt(), true);
         MoveEffect::unsetup(attack, s, b);
+        tmove(b,s) = info;
     }
 
     static void daf(int s, int, BS &b)
@@ -3247,10 +3249,12 @@ struct MMMetronome : public MM
             bool correctMove = !b.hasMove(s,move) && !MMAssist::forbidden_moves.contains(move) && MoveInfo::Exists(move, b.gen());
 
             if (correctMove) {
+                BS::BasicMoveInfo info = tmove(b,s);
 		MoveEffect::setup(move,s,t,b);
                 turn(b,s)["Target"] = b.randomValidOpponent(s);
 		b.useAttack(s,move,true,true);
                 MoveEffect::unsetup(move, s, b);
+                tmove(b,s) = info;
 		break;
 	    }
 	}
@@ -3341,10 +3345,12 @@ struct MMMirrorMove : public MM
 	removeFunction(turn(b,s), "UponAttackSuccessful", "MirrorMove");
 
 	int move = poke(b,s)["MirrorMoveMemory"].toInt();
+        BS::BasicMoveInfo info = tmove(b,s);
         MoveEffect::setup(move,s,s,b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
 	b.useAttack(s,move,true,true);
         MoveEffect::unsetup(move,s,b);
+        tmove(b,s) = info;
     }
 };
 
@@ -3722,10 +3728,12 @@ struct MMSleepTalk : public MM
 	removeFunction(turn(b,s), "DetermineAttackFailure", "SleepTalk");
 	removeFunction(turn(b,s), "UponAttackSuccessful", "SleepTalk");
 	int mv = turn(b,s)["SleepTalkedMove"].toInt();
+        BS::BasicMoveInfo info = tmove(b,s);
         MoveEffect::setup(mv,s,s,b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
 	b.useAttack(s, mv, true);
         MoveEffect::unsetup(mv,s,b);
+        tmove(b,s) = info;
     }
 };
 
