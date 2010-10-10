@@ -1875,7 +1875,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
         switch(Move::Target(tmove(player).targets)) {
         case Move::Field: case Move::TeamParty: case Move::OpposingTeam:
-        case Move::TeamSide: case Move::IndeterminateTarget:
+        case Move::TeamSide:
         case Move::User: targetList.push_back(player); break;
         case Move::Opponents: {
                 int opp = opponent(this->player(player));
@@ -1908,6 +1908,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 makeTargetList(trueTargets);
                 break;
             }
+        case Move::IndeterminateTarget:
         case Move::ChosenTarget: case Move::MeFirstTarget: {
                 if (multiples()) {
                     if (!koed(target) && target != player && canTarget(attack, player, target)) {
