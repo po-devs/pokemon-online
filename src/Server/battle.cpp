@@ -1309,46 +1309,48 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     team(player).switchPokemon(snum, pok);
 
+    PokeBattle &p = poke(slot);
+
     /* Give new values to what needed */
-    fpoke(slot).id = poke(slot).num().toPokeRef();
-    fpoke(slot).weight = PokemonInfo::Weight(poke(slot).num());
-    fpoke(slot).type1 = PokemonInfo::Type1(poke(slot).num(), gen());
-    fpoke(slot).type2 = PokemonInfo::Type2(poke(slot).num(), gen());
+    fpoke(slot).id = p.num().toPokeRef();
+    fpoke(slot).weight = PokemonInfo::Weight(p.num());
+    fpoke(slot).type1 = PokemonInfo::Type1(p.num(), gen());
+    fpoke(slot).type2 = PokemonInfo::Type2(p.num(), gen());
     fpoke(slot).ability = poke(slot).ability();
 
-    if (poke(slot).statusCount() > 0) {
-        if (poke(slot).status() == Pokemon::Poisoned)
-            poke(slot).statusCount() = 14;
-        else if (poke(slot).status() != Pokemon::Asleep)
-            poke(slot).statusCount() = 0;
+    if (p.statusCount() > 0) {
+        if (p.status() == Pokemon::Poisoned)
+            p.statusCount() = 14;
+        else if (p.status() != Pokemon::Asleep)
+            p.statusCount() = 0;
     }
-    if (poke(slot).status() == Pokemon::Asleep && gen() >= 5) {
-        poke(slot).statusCount() = poke(slot).oriStatusCount();
+    if (p.status() == Pokemon::Asleep && gen() >= 5) {
+        p.statusCount() = p.oriStatusCount();
     }
 
     for (int i = 0; i < 4; i++) {
-        fpoke(slot).moves[i] = poke(slot).move(i).num();
+        fpoke(slot).moves[i] = p.move(i).num();
     }
 
     for (int i = 1; i < 6; i++)
-        fpoke(slot).stats[i] = poke(slot).normalStat(i);
+        fpoke(slot).stats[i] = p.normalStat(i);
 
     for (int i = 0; i < 6; i++) {
-        fpoke(slot).dvs[i] = poke(slot).dvs()[i];
+        fpoke(slot).dvs[i] = p.dvs()[i];
     }
 
     for (int i = 0; i < 8; i++) {
         fpoke(slot).boosts[i] = 0;
     }
 
-    fpoke(slot).level = poke(slot).level();
+    fpoke(slot).level = p.level();
 
     /* Increase the "switch count". Switch count is used to see if the pokemon has switched
        (like for an attack like attract), it is imo more effective that other means */
     inc(slotMemory(slot)["SwitchCount"], 1);
 
-    if (poke(slot).num() == Pokemon::Arceus && ItemInfo::isPlate(poke(slot).item())) {
-        int type = ItemInfo::PlateType(poke(slot).item());
+    if (p.num() == Pokemon::Arceus && ItemInfo::isPlate(p.item())) {
+        int type = ItemInfo::PlateType(p.item());
         
         if (type != Type::Normal) {
             changeAForme(slot, type);
@@ -1357,7 +1359,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     turnMemory(slot)["CantGetToMove"] = true;
 
-    ItemEffect::setup(poke(slot).item(),slot,*this);
+    ItemEffect::setup(p.item(),slot,*this);
 
     calleffects(slot, slot, "UponSwitchIn");
     callseffects(slot, slot, "UponSwitchIn");
@@ -1912,6 +1914,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         case Move::ChosenTarget: case Move::MeFirstTarget: {
                 if (multiples()) {
                     if (!koed(target) && target != player && canTarget(attack, player, target)) {
+                        targetList.push_back(target);
+                        break;
+                    }
+                } else {
+                    if (!koed(target) && target != player) {
                         targetList.push_back(target);
                         break;
                     }
@@ -2825,8 +2832,11 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
         notify(All, StatusChange, player, qint8(status));
     notify(All, AbsStatusChange, this->player(player), qint8(this->slotNum(player)), qint8(status), turns > 0);
     poke(player).changeStatus(status);
-    if (turns != 0)
+    if (turns != 0) {
         poke(player).statusCount() = turns;
+        if (status == Pokemon::Asleep)
+            poke(player).oriStatusCount() = poke(player).statusCount();
+    }
     else if (status == Pokemon::Asleep) {
         if (gen() <= 4) {
             poke(player).statusCount() = 1 + (true_rand()) % 4;
