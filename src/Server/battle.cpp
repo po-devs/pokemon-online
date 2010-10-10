@@ -1105,7 +1105,7 @@ void BattleSituation::storeChoice(const BattleChoice &b)
 
 bool BattleSituation::allChoicesOkForPlayer(int player)
 {
-    for (int i = 0; i <= numberOfSlots()/2; i++) {
+    for (int i = 0; i < numberOfSlots()/2; i++) {
         if (hasChoice[slot(player, i)] != false)
             return false;
     }
@@ -1953,7 +1953,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                         targetList.push_back(i);
                     }
                 }
-                if (targetList.size() == 0) {
+                if (targetList.size() > 0) {
                     int randp = targetList[true_rand()%targetList.size()];
                     targetList.clear();
                     targetList.push_back(randp);
