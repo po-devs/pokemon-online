@@ -1294,6 +1294,8 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     if (poke(player, pok).ability() == Ability::Illusion) {
         for (int i = 5; i >= 0; i--) {
             if (poke(player, i).num() != 0 && !poke(player, i).ko()) {
+                if (i == pok)
+                    break;
                 pokeMemory(slot)["IllusionTarget"] = team(player).internalId(team(player).poke(i));
                 break;
             }
@@ -1316,8 +1318,9 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
             poke(slot).statusCount() = 14;
         else if (poke(slot).status() != Pokemon::Asleep)
             poke(slot).statusCount() = 0;
-        else
-            poke(slot).statusCount() = poke(slot).oriStatusCount();
+    }
+    if (poke(slot).status() == Pokemon::Asleep && gen() >= 5) {
+        poke(slot).statusCount() = poke(slot).oriStatusCount();
     }
 
     for (int i = 0; i < 4; i++) {
