@@ -1283,9 +1283,9 @@ struct MMRapidSpin : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (poke(b,s).contains("SeedSource")) {
+        if (b.linked(s, "Seeding")) {
             b.sendMoveMessage(103,1,s);
-            poke(b,s).remove("SeedSource");
+            poke(b,s).remove("SeedingBy");
             removeFunction(poke(b,s), "EndTurn64", "LeechSeed");
         }
         int source = b.player(s);
@@ -4613,7 +4613,7 @@ struct MMFollowMe : public MM
             return;
         }
 
-        if (!b.canTarget(move(b,s), s, tar)) {
+        if (!b.canTarget(move(b,s), s, target)) {
             return;
         }
 

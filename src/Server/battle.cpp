@@ -2412,6 +2412,11 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         if (!stat)
             break;
 
+        if (stat == Evasion && (clauses() & ChallengeInfo::EvasionClause)) {
+            notifyClause(ChallengeInfo::EvasionClause);
+            continue;
+        }
+
         char increase = char (fm.boostOfStat >> (i*8));
         int rate = char (fm.rateOfStat >> (i*8));
 
@@ -3604,7 +3609,7 @@ void BattleSituation::testWin()
         notify(All,ClockStop,Player1,time1);
         notify(All,ClockStop,Player2,time2);
         if (c1 + c2 == 0) {
-            if (selfKoer() != -1) {
+            if ((clauses() & ChallengeInfo::SelfKO) && selfKoer() != -1) {
                 notifyClause(ChallengeInfo::SelfKO);
                 if (player(selfKoer()) == Player1)
                     goto player2win;
