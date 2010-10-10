@@ -895,8 +895,11 @@ void BattleSituation::analyzeChoices()
 {
     /* If there's no choice then the effects are already taken care of */
     for (int i = 0; i < numberOfSlots(); i++) {
-        if (!turnMemory(i).contains("NoChoice") && choice(i).attackingChoice() && !options[i].struggle()) {
-            MoveEffect::setup(move(i,choice(i).pokeSlot()), i, i, *this);
+        if (!turnMemory(i).contains("NoChoice") && choice(i).attackingChoice()) {
+            if (!options[i].struggle())
+                MoveEffect::setup(move(i,choice(i).pokeSlot()), i, i, *this);
+            else
+                MoveEffect::setup(Move::Struggle, i, i, *this);
         }
     }
 
