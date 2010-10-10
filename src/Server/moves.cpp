@@ -3231,6 +3231,7 @@ struct MMMeFirst : public MM
     static void uas(int s, int t, BS &b) {
 	removeFunction(turn(b,s), "DetermineAttackFailure", "MeFirst");
 	removeFunction(turn(b,s), "UponAttackSuccessful", "MeFirst");
+        removeFunction(turn(b,s), "MoveSettings", "MeFirst");
 	int move = turn(b,s)["MeFirstAttack"].toInt();
 	MoveEffect::setup(move,s,t,b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
