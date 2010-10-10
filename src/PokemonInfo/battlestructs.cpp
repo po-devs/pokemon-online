@@ -30,7 +30,7 @@ QString ChallengeInfo::clauseBattleText[] =
     QObject::tr("The battle ended by timeout."),
     QObject::tr(""),
     QObject::tr(""),
-    QObject::tr("The Self-KO clause prevented acted as a tiebreaker.")
+    QObject::tr("The Self-KO Clause acted as a tiebreaker.")
 };
 
 QString ChallengeInfo::clauseDescription[] =

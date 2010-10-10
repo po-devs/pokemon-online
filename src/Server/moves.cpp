@@ -913,7 +913,7 @@ struct MMLeechSeed : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-	if (b.hasType(t, Pokemon::Grass) || (poke(b,t).contains("SeedSource"))) {
+        if (b.hasType(t, Pokemon::Grass) || (b.linked(t, "Seeding"))) {
             b.fail(s, 72,0,Pokemon::Grass,t);
 	}
     }
@@ -928,7 +928,7 @@ struct MMLeechSeed : public MM
         if (b.koed(s) || b.hasWorkingAbility(s, Ability::MagicGuard) || !b.linked(s, "Seeding"))
 	    return;
 
-        int s2 = b.linker(s, "SeedSource");
+        int s2 = b.linker(s, "Seeding");
 
         int damage = std::min(int(b.poke(s).lifePoints()), std::max(b.poke(s).totalLifePoints() / 8, 1));
         
