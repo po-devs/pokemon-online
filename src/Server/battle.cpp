@@ -1108,7 +1108,7 @@ void BattleSituation::storeChoice(const BattleChoice &b)
 
 bool BattleSituation::allChoicesOkForPlayer(int player)
 {
-    for (int i = 0; i <= numberOfSlots()/2; i++) {
+    for (int i = 0; i < numberOfSlots()/2; i++) {
         if (hasChoice[slot(player, i)] != false)
             return false;
     }

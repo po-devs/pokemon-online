@@ -1649,7 +1649,7 @@ struct MMBide : public MM
         }
 
         addFunction(turn(b,s),"UponOffensiveDamageReceived", "Bide", &udi);
-        tmove(b,s).priority = 1;
+        MoveEffect::setup(Move::Bide, s, s, b);
         turn(b,s)["NoChoice"] = true;
     }
 
@@ -4417,6 +4417,7 @@ struct MMBugBite : public MM
 
         b.sendMoveMessage(16,0,s,type(b,s),t,item);
         b.devourBerry(s, item, t);
+        b.disposeItem(t);
     }
 };
 
