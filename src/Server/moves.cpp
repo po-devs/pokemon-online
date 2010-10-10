@@ -3205,8 +3205,13 @@ struct MMMagnitude: public MM
 struct MMMeFirst : public MM
 {
     MMMeFirst() {
+        functions["MoveSettings"] = &ms;
 	functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void ms(int s, int, BS &b) {
+        tmove(b,s).power = 0;
     }
 
     static void daf(int s, int t, BS &b) {
