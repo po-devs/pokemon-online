@@ -322,7 +322,7 @@ private:
     TB_PokeChoice *pokechoice;
     QComboBox *itemchoice;
     QComboBox *naturechoice;
-    QLabel *pokeImage;
+    QToolButton *pokeImage;
     QLabel *genderIcon, *level, *type1, *type2, *pokename, *itemicon;
     int m_num;
 
