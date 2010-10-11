@@ -908,35 +908,36 @@ struct MMHaze : public MM
 struct MMLeechSeed : public MM
 {
     MMLeechSeed() {
-	functions["DetermineAttackFailure"] = &daf;
-        functions["OnFoeOnAttack"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.hasType(t, Pokemon::Grass) || (b.linked(t, "Seeding"))) {
+        if (b.hasType(t, Pokemon::Grass) || (poke(b,t).contains("SeedSource"))) {
             b.fail(s, 72,0,Pokemon::Grass,t);
-	}
+        }
     }
 
     static void uas(int s, int t, BS &b) {
         addFunction(poke(b,t), "EndTurn64", "LeechSeed", &et);
-        b.link(s, t, "Seeding");
-	b.sendMoveMessage(72, 1, s, Pokemon::Grass, t);
+        poke(b,t)["SeedSource"] = s;
+        b.sendMoveMessage(72, 1, s, Pokemon::Grass, t);
     }
 
     static void et(int s, int, BS &b) {
-        if (b.koed(s) || b.hasWorkingAbility(s, Ability::MagicGuard) || !b.linked(s, "Seeding"))
-	    return;
-
-        int s2 = b.linker(s, "Seeding");
+        if (b.koed(s) || b.hasWorkingAbility(s, Ability::MagicGuard))
+            return;
+        int s2 = poke(b,s)["SeedSource"].toInt();
+        if (b.koed(s2))
+            return;
 
         int damage = std::min(int(b.poke(s).lifePoints()), std::max(b.poke(s).totalLifePoints() / 8, 1));
-        
-	b.sendMoveMessage(72, 2, s, Pokemon::Grass);
-	b.inflictDamage(s, damage, s, false);
 
-	if (b.koed(s2))
-	    return;
+        b.sendMoveMessage(72, 2, s, Pokemon::Grass);
+        b.inflictDamage(s, damage, s, false);
+
+        if (b.koed(s2))
+            return;
         if (!b.hasWorkingAbility(s, Ability::LiquidOoze))
             b.healLife(s2, damage);
         else {
@@ -1279,13 +1280,13 @@ struct MMToxicSpikes : public MM
 struct MMRapidSpin : public MM
 {
     MMRapidSpin() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void uas(int s, int, BS &b) {
-        if (b.linked(s, "Seeding")) {
+        if (poke(b,s).contains("SeedSource")) {
             b.sendMoveMessage(103,1,s);
-            poke(b,s).remove("SeedingBy");
+            poke(b,s).remove("SeedSource");
             removeFunction(poke(b,s), "EndTurn64", "LeechSeed");
         }
         int source = b.player(s);
@@ -1308,6 +1309,7 @@ struct MMRapidSpin : public MM
         }
     }
 };
+
 
 struct MMSubstitute : public MM
 {
