@@ -128,6 +128,7 @@ public:
     void endTurnStatus(int player);
     void endTurnWeather();
     void callForth(int weather, int turns);
+    void setupLongWeather(int weather);
     /* Attack... */
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
 	represent the moveslot but rather than that it represents the move num, plus PP will not be lost */

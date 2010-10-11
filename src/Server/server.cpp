@@ -1116,6 +1116,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id);
     mybattles.insert(id, battle);
     battleList.insert(id, Battle(id1, id2));
+    myengine->battleSetup(id1, id2, id); // dispatch script event
 
     Player *p1 (player(id1)), *p2 (player(id2));
 
@@ -1157,6 +1158,12 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     connect(battle, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int, int,int,int)));
 
     pluginManager->battleStarting(p1, p2, c);
+
+    // Check for set weather.
+    int dominantWeather = battle->weather;
+    if(dominantWeather != BattleSituation::NormalWeather) {
+        battle->sendMoveMessage(57, dominantWeather - 1, 0, TypeInfo::TypeForWeather(dominantWeather));
+    }
 
     battle->start(battleThread);
 
@@ -1550,4 +1557,13 @@ Player * Server::player(int id) const
     if (!myplayers.contains(id))
         qDebug() << "Fatal! player called for non existing ID " << id;
     return myplayers.value(id);
+}
+
+BattleSituation * Server::getBattle(int battleId) const
+{
+    if(mybattles.contains(battleId)) {
+        return mybattles.value(battleId);
+    }else{
+        return NULL;
+    }
 }

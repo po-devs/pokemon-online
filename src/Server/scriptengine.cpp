@@ -7,6 +7,7 @@
 #include "tier.h"
 #include "scriptengine.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "battle.h"
 
 ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
@@ -1610,4 +1611,49 @@ void ScriptEngine::ban(QString name)
 void ScriptEngine::unban(QString name)
 {
     SecurityManager::unban(name);
+}
+
+void ScriptEngine::battleSetup(int src, int dest, int battleId)
+{
+    makeEvent("battleSetup", src, dest, battleId);
+}
+
+void ScriptEngine::prepareWeather(int battleId, int weatherId)
+{
+    if((weatherId >= 0) && (weatherId <= 4)) {
+        BattleSituation * battle = myserver->getBattle(battleId);
+        if (battle) {
+            battle->setupLongWeather(weatherId);
+        }else{
+            warn("prepareWeather", "can't find a battle with specified id.");
+        }
+    }
+}
+
+QScriptValue ScriptEngine::weatherNum(const QString &weatherName)
+{
+    QString weatherSimplified = weatherName.toLower();
+    bool found = false;
+    int i = 0;
+    while(i <= 4) {
+        if(weatherSimplified == TypeInfo::weatherName(i)) {
+            found = true;
+            break;
+        }
+        ++i;
+    }
+    if (found) {
+        return i;
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::weather(int weatherId)
+{
+    if (weatherId >= 0  && weatherId < 4) {
+        return TypeInfo::weatherName(weatherId);
+    } else {
+        return myengine.undefinedValue();
+    }
 }
