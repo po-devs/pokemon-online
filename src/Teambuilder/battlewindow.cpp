@@ -1388,6 +1388,12 @@ void RearrangeWindow::runExchanges()
     }
 }
 
+void RearrangeWindow::closeEvent(QCloseEvent *)
+{
+    emit done();
+    close();
+}
+
 RearrangeLayout::RearrangeLayout(QWidget *parent, const Pokemon::uniqueId &pokenum, int level, int gender, bool item)
     : QVBoxLayout(parent)
 {
