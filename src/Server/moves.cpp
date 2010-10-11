@@ -237,6 +237,7 @@ struct MMBatonPass : public MM
         c.remove("HasMovedOnce");
         /* Removing attract */
         c.remove("AttractBy");
+        c.remove("Transformed");
         foreach( int opp, b.revs(s)) {
             if (b.linked(opp, "Attract"))
                 poke(b, opp).remove("AttractBy");
@@ -4479,7 +4480,13 @@ struct MMRecycle : public MM {
 
 struct MMTransform : public MM {
     MMTransform() {
+        functions["DetermineAttackFailure"] = &daf;
         functions["OnFoeOnAttack"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (poke(b,t).contains("Transformed"))
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -4520,6 +4527,8 @@ struct MMTransform : public MM {
 
         b.loseAbility(s);
         b.acquireAbility(s, b.ability(t));
+
+        poke(b,s)["Transformed"] = true;
     }
 };
 
