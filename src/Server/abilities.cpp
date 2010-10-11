@@ -1377,6 +1377,9 @@ struct AMEccentric : public AM
         if (t == -1)
             return;
 
+        if (poke(b,t).contains("Transformed"))
+            return;
+
         poke(b,s)["Transformed"] = true;
         /* Ripped off from Transform */
         /* Give new values to what needed */
