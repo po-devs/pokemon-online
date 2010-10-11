@@ -1544,10 +1544,10 @@ struct MMAssist : public MM
     struct FM : public QSet<int>
     {
 	FM() {
-            (*this) << NoMove << Assist << Chatter << Copycat << Counter << Covet << DestinyBond
-                    << Detect << Endure << Feint << FocusPunch << FollowMe << HelpingHand << MeFirst
-                    << Metronome << Mimic << MirrorCoat << MirrorMove << Protect << Sketch << SleepTalk
-                    << Snatch << Struggle << Switcheroo << Thief << Trick;
+            (*this) << NoMove << Assist << Chatter << Copycat << Counter << Covet << DestinyBond << Detect
+                    << DragonTail << Endure << FastGuard << Feint << FocusPunch << FollowMe << HelpingHand << MeFirst
+                    << Metronome << Mimic << MirrorCoat << MirrorMove << OverheadThrow << Protect  << RagePower
+                    << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick << WideGuard;
 	}
     };
     static FM forbidden_moves;
