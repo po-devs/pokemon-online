@@ -299,12 +299,13 @@ class RearrangeWindow : public QWidget
 public:
     RearrangeWindow(TeamBattle &t, const ShallowShownTeam &op);
 
-
 signals:
     void forfeit();
     void done();
 public slots:
     void runExchanges();
+protected:
+    void closeEvent(QCloseEvent *);
 private:
     TeamBattle *myteam;
 
