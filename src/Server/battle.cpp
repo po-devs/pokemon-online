@@ -2090,12 +2090,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		    if (!sub)
 			callieffects(target, player, "UponPhysicalAssault");
                     callaeffects(target,player,"UponPhysicalAssault");
-		}
+                }
 
                 if (!sub) {
                     callaeffects(target, player, "UponBeingHit");
-                    callieffects(target, player, "UponBeingHit");
                 }
+                callieffects(target, player, "UponBeingHit");
 
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
 		applyMoveStatMods(player, target);
