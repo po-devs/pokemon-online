@@ -1755,7 +1755,7 @@ struct MMBounce : public MM
             } else if (move == FreeFall) {
                 /* FreeFall sure-hits the foe once it caught it... */
                 tmove(b,s).accuracy = 0;
-                addFunction(turn(b,t), "BeforeCalculatingDamage", "Bounce", &bcd);
+                addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &bcd);
             }
         }
         removeFunction(poke(b,s), "TurnSettings", "Bounce");
