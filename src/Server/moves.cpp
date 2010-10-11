@@ -237,6 +237,7 @@ struct MMBatonPass : public MM
         c.remove("HasMovedOnce");
         /* Removing attract */
         c.remove("AttractBy");
+        c.remove("Transformed");
         foreach( int opp, b.revs(s)) {
             if (b.linked(opp, "Attract"))
                 poke(b, opp).remove("AttractBy");
@@ -1705,8 +1706,14 @@ struct MMBind : public MM
 struct MMBounce : public MM
 {
     MMBounce() {
+        functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
         functions["MoveSettings"] = &ms;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.hasSubstitute(t) && move(b,s) == Move::FreeFall)
+            turn(b,s)["Failed"] = true;
     }
 
     static void ms(int s, int, BS &b) {
@@ -1748,9 +1755,18 @@ struct MMBounce : public MM
             } else if (move == FreeFall) {
                 /* FreeFall sure-hits the foe once it caught it... */
                 tmove(b,s).accuracy = 0;
+                addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &bcd);
             }
         }
         removeFunction(poke(b,s), "TurnSettings", "Bounce");
+    }
+
+    /* Called with freefall */
+    static void bcd (int s, int t, BS &b) {
+        /* Airbourne targets don't receive damage */
+        if (b.isFlying(t)) {
+            tmove(b,s).power = 1;
+        }
     }
 
     /* Only called with Shadow Force, breaks protect */
@@ -2764,7 +2780,9 @@ struct MMJumpKick : public MM
 	turn(b,s)["TypeMod"] = typemod;
         turn(b,s)["Stab"] = b.hasType(s, Type::Fighting) ? 3 : 2;
         int damage;
-        if (b.gen() >= 4)
+        if (b.gen() >= 5)
+            damage = std::min(b.calculateDamage(s,t)/2, b.poke(s).totalLifePoints()/2);
+        if (b.gen() == 4)
             damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
         else
             damage = std::min(b.calculateDamage(s,t)/8, b.poke(t).totalLifePoints()/2);
@@ -4477,16 +4495,25 @@ struct MMRecycle : public MM {
 
 struct MMTransform : public MM {
     MMTransform() {
+        functions["DetermineAttackFailure"] = &daf;
         functions["OnFoeOnAttack"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (poke(b,t).contains("Transformed") || (b.hasWorkingAbility(t, Ability::Illusion) && poke(b,t).contains("IllusionTarget")))
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas(int s, int t, BS &b) {
         /* Give new values to what needed */
         Pokemon::uniqueId num = b.pokenum(t);
-        if (num.toPokeRef() == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
-            num = Pokemon::Giratina;
-        if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
-            num.subnum = ItemInfo::PlateType(b.poke(s).item());
+
+        if (b.gen() <= 4) {
+            if (num.toPokeRef() == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
+                num = Pokemon::Giratina;
+            if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
+                num.subnum = ItemInfo::PlateType(b.poke(s).item());
+            }
         }
 
         b.sendMoveMessage(137,0,s,0,s,num.pokenum);
@@ -4518,6 +4545,8 @@ struct MMTransform : public MM {
 
         b.loseAbility(s);
         b.acquireAbility(s, b.ability(t));
+
+        poke(b,s)["Transformed"] = true;
     }
 };
 
@@ -5029,7 +5058,9 @@ struct MMStrikeDown : public MM
 
     static void uas(int s, int t, BS &b) {
         b.sendMoveMessage(175, 0, s, type(b,s), t);
-        poke(b,t)["StruckDown"] = true;
+
+        if (!poke(b,t).value("Roosted").toBool())
+            poke(b,t)["StruckDown"] = true;
     }
 };
 
@@ -5503,20 +5534,38 @@ struct MMFireBurst : public MM
 struct MMSideChange : public MM
 {
     MMSideChange() {
-        functions["MoveSettings"] = &ms;
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void ms(int s, int, BS &b) {
-        /* Those will trigger an invalid target,
-           and so the battle will choose a random target.
+    static void daf(int s, int , BS &b) {
+        if (!b.multiples()) {
+            turn(b,s)["Failed"] = true;
+            return;
+        }
+        if (b.slotNum(s) != 0 && b.slotNum(s) != b.numberPerSide()-1) {
+            turn(b,s)["Failed"] = true;
+            return;
+        }
 
-           That's a bit of a hack but i made sure it's fine */
-        tmove(b,s).targets = Move::Partner;
-        turn(b,s)["Target"] = s;
+        int t;
+
+        if (b.slotNum(s) == 0) {
+            t = b.slot(b.player(s), b.numberPerSide()-1);
+        } else {
+            t = b.slot(b.player(s), 0);
+        }
+
+        if (b.koed(t)) {
+            turn(b,s)["Failed"] = true;
+            return;
+        }
+
+        turn(b,s)["SideChangeTarget"] = t;
     }
 
-    static void uas (int s, int t, BS &b) {
+    static void uas (int s, int, BS &b) {
+        int t = turn(b, s)["SideChangeTarget"].toInt();
         b.shiftSpots(s, t, true);
         b.sendMoveMessage(190, 0, s, type(b, s), t);
     }
