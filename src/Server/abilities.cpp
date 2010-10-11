@@ -982,7 +982,8 @@ struct AMTrace : public AM {
 
         int ab = b.ability(t);
         //Multitype
-        if (b.hasWorkingAbility(t, ab) && ab != Ability::Multitype && ab !=  Ability::Trace) {
+        if (b.hasWorkingAbility(t, ab) && ab != Ability::Multitype && ab !=  Ability::Trace
+            && !(ab == Ability::Illusion && poke(b,t).contains("IllusionTarget"))) {
             b.sendAbMessage(66,0,s,t,0,ab);
             b.loseAbility(s);
             b.acquireAbility(s, ab);
@@ -1378,6 +1379,9 @@ struct AMEccentric : public AM
             return;
 
         if (poke(b,t).contains("Transformed"))
+            return;
+
+        if (b.hasWorkingAbility(t,  Ability::Illusion) && poke(b,t).contains("IllusionTarget"))
             return;
 
         poke(b,s)["Transformed"] = true;
