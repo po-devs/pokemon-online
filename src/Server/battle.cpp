@@ -2679,7 +2679,7 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
 {
     //fixme: insomnia/owntempo/...
     if (pokeMemory(player).value("Confused").toBool()) {
-        if (this->attacker() == attacker && canSendPreventSMessage(player, attacker))
+        if (this->attacker() == attacker && attacked != player && canSendPreventSMessage(player, attacker))
             notify(All, AlreadyStatusMessage, player, quint8(Pokemon::Confused));
         return;
     }
@@ -2698,6 +2698,8 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
             sendMoveMessage(109, 2, player,Pokemon::Psychic, player, tmove(attacker).attack);
             return;
         }
+    } else if (hasWorkingAbility(s, Ability::OwnTempo)) {
+        return;
     }
 
     pokeMemory(player)["Confused"] = true;

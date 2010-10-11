@@ -2764,7 +2764,9 @@ struct MMJumpKick : public MM
 	turn(b,s)["TypeMod"] = typemod;
         turn(b,s)["Stab"] = b.hasType(s, Type::Fighting) ? 3 : 2;
         int damage;
-        if (b.gen() >= 4)
+        if (b.gen() >= 5)
+            damage = std::min(b.calculateDamage(s,t)/2, b.poke(s).totalLifePoints()/2);
+        if (b.gen() == 4)
             damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
         else
             damage = std::min(b.calculateDamage(s,t)/8, b.poke(t).totalLifePoints()/2);
