@@ -2679,7 +2679,7 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
 {
     //fixme: insomnia/owntempo/...
     if (pokeMemory(player).value("Confused").toBool()) {
-        if (this->attacker() == attacker && attacked != player && canSendPreventSMessage(player, attacker))
+        if (this->attacker() == attacker && attacker != player && canSendPreventSMessage(player, attacker))
             notify(All, AlreadyStatusMessage, player, quint8(Pokemon::Confused));
         return;
     }
