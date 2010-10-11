@@ -2698,7 +2698,7 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
             sendMoveMessage(109, 2, player,Pokemon::Psychic, player, tmove(attacker).attack);
             return;
         }
-    } else if (hasWorkingAbility(s, Ability::OwnTempo)) {
+    } else if (hasWorkingAbility(player, Ability::OwnTempo)) {
         return;
     }
 
