@@ -372,7 +372,7 @@ int PokeGraphics::gen() const
 PokeTeam::PokeTeam()
 {
     setNum(Pokemon::uniqueId(Pokemon::NoPoke));
-    setGen(5);
+    setGen(GEN_MAX);
 }
 
 void PokeTeam::setNum(Pokemon::uniqueId num)
@@ -445,7 +445,7 @@ int PokeTeam::stat(int statno) const
     return PokemonInfo::FullStat(num(), nature(), statno, level(),DV(statno),EV(statno));
 }
 
-Team::Team(): m_gen(5)
+Team::Team(): m_gen(GEN_MAX)
 {
 }
 
@@ -673,7 +673,7 @@ void PokeTeam::loadFromXml(const QDomElement &poke, int version)
     while(!moveElement.isNull())
     {
         int movenum = moveElement.text().toInt();
-        if (gen() < 5 && version < 1) {
+        if (outdated) {
             movenum = MoveInfo::ConvertFromOldMove(movenum);
         }
         setMove(movenum,cptMove,false);
@@ -731,9 +731,9 @@ bool TrainerTeam::loadFromFile(const QString &path)
         return false;
     }
 
-    int gen = team.attribute("gen", "4").toInt();
-    if (gen != 3 && gen != 4)
-        gen = 5;
+    int gen = team.attribute("gen", QString::number(GEN_MAX)).toInt();
+    if (gen < GEN_MIN || gen > GEN_MAX)
+        gen = GEN_MAX;
     this->team().setGen(gen);
     defaultTier() = team.attribute("defaultTier");
 

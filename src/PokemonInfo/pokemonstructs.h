@@ -7,6 +7,15 @@
 
 class QDomElement;
 
+// Minimum Generation compatible with breeding
+static const int BREEDING_MIN = 3;
+// Minimum Generation supported.
+static const int GEN_MIN = 3;
+// Maximum Generation supported.
+static const int GEN_MAX = 5;
+// Number of gens
+static const int NUMBER_GENS = (GEN_MAX-GEN_MIN+1);
+
 namespace Version
 {
     enum {

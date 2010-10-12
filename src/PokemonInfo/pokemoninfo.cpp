@@ -18,9 +18,9 @@ QHash<int, QString> PokemonInfo::m_Classification;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Height;
 
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Genders;
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type1[3];
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type2[3];
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_Abilities[3][3];
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type1[NUMBER_GENS];
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type2[NUMBER_GENS];
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_Abilities[NUMBER_GENS][3];
 QHash<Pokemon::uniqueId, PokeBaseStats> PokemonInfo::m_BaseStats;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_LevelBalance;
 QHash<Pokemon::uniqueId, PokemonMoves> PokemonInfo::m_Moves;
@@ -49,9 +49,9 @@ QList<QString> ItemInfo::m_BerryNames;
 QList<QString> ItemInfo::m_RegItemNames;
 QHash<QString, int> ItemInfo::m_BerryNamesH;
 QHash<QString, int> ItemInfo::m_ItemNamesH;
-QList<QString> ItemInfo::m_SortedNames[3];
-QList<QString> ItemInfo::m_SortedUsefulNames[3];
-QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects[3];
+QList<QString> ItemInfo::m_SortedNames[NUMBER_GENS];
+QList<QString> ItemInfo::m_SortedUsefulNames[NUMBER_GENS];
+QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects[NUMBER_GENS];
 QList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
 QList<QStringList> ItemInfo::m_RegMessages;
 QList<QStringList> ItemInfo::m_BerryMessages;
@@ -59,7 +59,7 @@ QList<int> ItemInfo::m_Powers;
 QList<int> ItemInfo::m_BerryPowers;
 QList<int> ItemInfo::m_BerryTypes;
 QList<int> ItemInfo::m_UsefulItems;
-QSet<int> ItemInfo::m_GenItems[3];
+QSet<int> ItemInfo::m_GenItems[NUMBER_GENS];
 
 QList<QString> TypeInfo::m_Names;
 QString TypeInfo::m_Directory;
@@ -74,7 +74,7 @@ QString CategoryInfo::m_Directory;
 
 QList<QString> AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
-QList<AbilityInfo::Effect> AbilityInfo::m_Effects[3];
+QList<AbilityInfo::Effect> AbilityInfo::m_Effects[NUMBER_GENS];
 QList<QStringList> AbilityInfo::m_Messages;
 QList<int> AbilityInfo::m_OldAbilities;
 
@@ -1083,7 +1083,7 @@ void MoveInfo::loadSpecialEffects()
 
 QString MoveInfo::Name(int movenum)
 {
-    return Exists(movenum, 5) ? m_Names[movenum] : m_Names[0];
+    return Exists(movenum, GEN_MAX) ? m_Names[movenum] : m_Names[0];
 }
 
 int MoveInfo::Type(int movenum, int g)
@@ -1462,7 +1462,7 @@ QString ItemInfo::path(const QString &file)
 
 int ItemInfo::NumberOfItems()
 {
-    return m_SortedNames[5-3].size();
+    return m_SortedNames[GEN_MAX-GEN_MIN].size();
 }
 
 int ItemInfo::Power(int itemnum) {
@@ -1588,12 +1588,12 @@ bool ItemInfo::isUseful(int itemnum)
 
 int ItemInfo::PlateType(int itemnum)
 {
-    return Effects(itemnum, 4).front().args.toInt();
+    return Effects(itemnum, GEN_MAX).front().args.toInt();
 }
 
 int ItemInfo::CassetteType(int itemnum)
 {
-    return Effects(itemnum, 5).front().args.toInt();
+    return Effects(itemnum, GEN_MAX).front().args.toInt();
 }
 
 int ItemInfo::Number(const QString &itemname)
@@ -1626,12 +1626,12 @@ int PokemonInfo::BaseGender(const Pokemon::uniqueId &pokeid)
 
 QList<QString> ItemInfo::SortedNames(int gen)
 {
-    return m_SortedNames[gen-3];
+    return m_SortedNames[gen-GEN_MIN];
 }
 
 QList<QString> ItemInfo::SortedUsefulNames(int gen)
 {
-    return m_SortedUsefulNames[gen-3];
+    return m_SortedUsefulNames[gen-GEN_MIN];
 }
 
 void TypeInfo::loadNames()
@@ -1893,7 +1893,7 @@ void AbilityInfo::loadEffects()
 }
 
 AbilityInfo::Effect AbilityInfo::Effects(int abnum, int gen) {
-    return m_Effects[gen-3][abnum];
+    return m_Effects[gen-GEN_MIN][abnum];
 }
 
 QString AbilityInfo::Desc(int ab)
