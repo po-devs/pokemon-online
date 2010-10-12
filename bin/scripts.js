@@ -38,14 +38,13 @@ init : function() {
 	
 	var dwlist = ["Munna", "Mushaana", "Darumakka", "Hihidaruma", "Eevee", "Umbreon", "Jolteon", "Vaporeon", "Flareon", "Espeon", "Leafeon", "Glaceon"];
 	dwpokemons = [];
-	
-	if (typeof(varsCreated) != 'undefined')
-        return;
-		
 	for(var dwpok in dwpokemons) {
 		dwpokemons.push(sys.pokeNum(dwlist[i]));
 	}
 	
+	if (typeof(varsCreated) != 'undefined')
+        return;
+
 	if (sys.existChannel("Tournaments")) { 
         tourchannel = sys.channelId("Tournaments");
     } else {
