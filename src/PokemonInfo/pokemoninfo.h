@@ -13,14 +13,14 @@ struct PokemonMoves
 {
     //QSet<int> moves;
     /* All moves except egg & special */
-    QSet<int> regularMoves[3];
-    QSet<int> TMMoves[3];
-    QSet<int> preEvoMoves[3];
-    QSet<int> levelMoves[3];
-    QSet<int> eggMoves[3];
-    QSet<int> specialMoves[3];
-    QSet<int> tutorMoves[3];
-    QSet<int> genMoves[3];
+    QSet<int> regularMoves[NUMBER_GENS];
+    QSet<int> TMMoves[NUMBER_GENS];
+    QSet<int> preEvoMoves[NUMBER_GENS];
+    QSet<int> levelMoves[NUMBER_GENS];
+    QSet<int> eggMoves[NUMBER_GENS];
+    QSet<int> specialMoves[NUMBER_GENS];
+    QSet<int> tutorMoves[NUMBER_GENS];
+    QSet<int> genMoves[NUMBER_GENS];
 };
 
 
@@ -31,7 +31,7 @@ public:
     static void init(const QString &dir="db/pokes/");
 
     /* Self-explainable functions */
-    static int TrueCount(int gen=5); // pokes without counting forms
+    static int TrueCount(int gen=GEN_MAX); // pokes without counting forms
     static int NumberOfPokemons(); // base + all forms.
     static int NumberOfVisiblePokes(); // base + visible forms.
     static QString Name(const Pokemon::uniqueId &pokeid);
@@ -43,20 +43,20 @@ public:
     static int Gender(const Pokemon::uniqueId &pokeid);
     static int BaseGender(const Pokemon::uniqueId &pokeid);
     static QByteArray Cry(const Pokemon::uniqueId &pokeid);
-    static int Type1(const Pokemon::uniqueId &pokeid, int gen = 5);
-    static int Type2(const Pokemon::uniqueId &pokeid, int gen = 5);
-    static QPixmap Picture(const Pokemon::uniqueId &pokeid, int gen = 5, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
+    static int Type1(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static int Type2(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QPixmap Picture(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QPixmap Sub(int gen=5, bool back = false);
     static QPixmap Icon(const Pokemon::uniqueId &pokeid);
-    static bool HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, int gen = 5);
-    static QSet<int> Moves(const Pokemon::uniqueId &pokeid, int gen = 5);
-    static QSet<int> EggMoves(const Pokemon::uniqueId &pokeid, int gen = 5);
-    static QSet<int> LevelMoves(const Pokemon::uniqueId &pokeid, int gen = 5);
-    static QSet<int> TutorMoves(const Pokemon::uniqueId &pokeid, int gen = 5);
-    static QSet<int> TMMoves(const Pokemon::uniqueId &pokeid, int gen = 5);
-    static QSet<int> PreEvoMoves(const Pokemon::uniqueId &pokeid, int gen = 5);
-    static QSet<int> SpecialMoves(const Pokemon::uniqueId &pokeid, int gen = 5);
-    static QSet<int> RegularMoves(const Pokemon::uniqueId &pokeid, int gen = 5);
+    static bool HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, int gen = GEN_MAX);
+    static QSet<int> Moves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> EggMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> LevelMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> TutorMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> TMMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> PreEvoMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> SpecialMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> RegularMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
     static QList<Pokemon::uniqueId> AllIds();
     // Base form do NOT count.
     static quint16 NumberOfAFormes(const Pokemon::uniqueId &pokeid);
@@ -77,8 +77,8 @@ public:
     static int PreEvo(int pokenum);
     static bool IsInEvoChain(const Pokemon::uniqueId &pokeid);
     static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
-    static bool Exists(const Pokemon::uniqueId &pokeid, int gen=5);
-    static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, int gen=5);
+    static bool Exists(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static int Stat(const Pokemon::uniqueId &pokeid, int stat, int level, quint8 dv, quint8 ev);
     static int FullStat(const Pokemon::uniqueId &pokeid, int nature, int stat, int level, quint8 dv, quint8 ev);
     static QString Desc(const Pokemon::uniqueId &pokeid, int cartridge);
@@ -95,10 +95,10 @@ private:
     static QHash<int, QString> m_Classification;
     static QHash<Pokemon::uniqueId, QString> m_Height;
     static QString m_Directory;
-    static QHash<Pokemon::uniqueId, int> m_Type1[3];
-    static QHash<Pokemon::uniqueId, int> m_Type2[3];
+    static QHash<Pokemon::uniqueId, int> m_Type1[NUMBER_GENS];
+    static QHash<Pokemon::uniqueId, int> m_Type2[NUMBER_GENS];
     static QHash<Pokemon::uniqueId, int> m_Genders;
-    static QHash<Pokemon::uniqueId, int> m_Abilities[3][3];
+    static QHash<Pokemon::uniqueId, int> m_Abilities[NUMBER_GENS][3];
     static QHash<Pokemon::uniqueId, PokeBaseStats> m_BaseStats;
     static QHash<Pokemon::uniqueId, int> m_LevelBalance;
 
@@ -260,7 +260,7 @@ public:
     /* Self-explainable functions */
     static int NumberOfItems();
     static QString Name(int itemnum);
-    static bool Exists(int itemnum, int gen=5);
+    static bool Exists(int itemnum, int gen=GEN_MAX);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
     static bool isCassette(int itemnum);
@@ -284,10 +284,10 @@ private:
     static QList<QString> m_RegItemNames;
     static QHash<QString, int> m_BerryNamesH;
     static QHash<QString, int> m_ItemNamesH;
-    static QList<QString> m_SortedNames[3];
-    static QList<QString> m_SortedUsefulNames[3];
+    static QList<QString> m_SortedNames[NUMBER_GENS];
+    static QList<QString> m_SortedUsefulNames[NUMBER_GENS];
     static QString m_Directory;
-    static QList<QList<Effect> > m_RegEffects[3];
+    static QList<QList<Effect> > m_RegEffects[NUMBER_GENS];
     static QList<QList<Effect> > m_BerryEffects;
     static QList<QStringList> m_RegMessages;
     static QList<QStringList> m_BerryMessages;
@@ -295,7 +295,7 @@ private:
     static QList<int> m_BerryPowers;
     static QList<int> m_BerryTypes;
     static QList<int> m_UsefulItems;
-    static QSet<int> m_GenItems[3];
+    static QSet<int> m_GenItems[NUMBER_GENS];
 
     static void loadNames();
     static QString path(const QString &filename);
@@ -402,7 +402,7 @@ public:
 private:
     static QList<QString> m_Names;
     static QString m_Directory;
-    static QList<Effect> m_Effects[3];
+    static QList<Effect> m_Effects[NUMBER_GENS];
     static QList<QStringList> m_Messages;
     static QList<int> m_OldAbilities;
 

@@ -485,7 +485,7 @@ void Tier::loadFromXml(const QDomElement &elem)
     banParentS = elem.attribute("banParent");
     parent = NULL;
     changeName(elem.attribute("name"));
-    gen = elem.attribute("gen", "5").toInt();
+    gen = elem.attribute("gen", QString::number(GEN_MAX)).toInt();
     maxLevel = elem.attribute("maxLevel", "100").toInt();
     numberOfPokemons = elem.attribute("numberOfPokemons", "6").toInt();
     maxRestrictedPokes = elem.attribute("numberOfRestricted", "1").toInt();
@@ -764,7 +764,7 @@ void Tier::importRestrictedPokes(const QString &s)
 Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), m_count(-1), last_count_time(0), holder(1000) {
     banPokes = true;
     parent = NULL;
-    gen = 5;
+    gen = GEN_MAX;
     maxLevel = 100;
     numberOfPokemons = 6;
     maxRestrictedPokes = 1;

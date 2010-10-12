@@ -1378,7 +1378,7 @@ struct AMEccentric : public AM
         if (t == -1)
             return;
 
-        if (poke(b,t).contains("Transformed"))
+        if (poke(b,t).contains("Transformed") || b.hasSubstitute(t))
             return;
 
         if (b.hasWorkingAbility(t,  Ability::Illusion) && poke(b,t).contains("IllusionTarget"))

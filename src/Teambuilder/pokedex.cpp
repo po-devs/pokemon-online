@@ -301,7 +301,7 @@ PokedexBody::PokedexBody()
     QPushButton *advSearch;
     col1->addWidget(advSearch = new QPushButton(QIcon(Theme::Sprite("orangedisc")), tr("&Advanced Search")));
     col1->addWidget(pokeEdit = new QLineEdit());
-    pokeList = new TB_PokeChoice(5, false);
+    pokeList = new TB_PokeChoice(GEN_MAX, false);
     pokeList->verticalHeader()->setDefaultSectionSize(30);
     QCompleter *comp = new QCompleter(pokeEdit);
     comp->setModel(pokeList->model());
@@ -732,18 +732,18 @@ void MoveTab::changePoke(Pokemon::uniqueId poke)
         int move = *it;
 
         /* Invisible text used for sorting types */
-        int type = MoveInfo::Type(move, 5);
+        int type = MoveInfo::Type(move, GEN_MAX);
         QTableWidgetItem *w = new QTableWidgetItem(QIcon(Theme::TypePicture(type)), QString::number(type));
         w->setFont(invisible);
         moves->setItem(i, TypeCol, w);
 
         moves->setItem(i, NameCol,new QTableWidgetItem(MoveInfo::Name(move)));
-        moves->setItem(i, PPCol,new QTableWidgetItem(QString::number(MoveInfo::PP(move, 5))));
-        moves->setItem(i, PowerCol,new QTableWidgetItem(MoveInfo::PowerS(move, 5)));
-        moves->setItem(i, AccCol,new QTableWidgetItem(MoveInfo::AccS(move, 5)));
+        moves->setItem(i, PPCol,new QTableWidgetItem(QString::number(MoveInfo::PP(move, GEN_MAX))));
+        moves->setItem(i, PowerCol,new QTableWidgetItem(MoveInfo::PowerS(move, GEN_MAX)));
+        moves->setItem(i, AccCol,new QTableWidgetItem(MoveInfo::AccS(move, GEN_MAX)));
 
-        QTableWidgetItem *witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(move, 5)));
-        witem->setForeground(Theme::CategoryColor(MoveInfo::Category(move, 5)));
+        QTableWidgetItem *witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(move, GEN_MAX)));
+        witem->setForeground(Theme::CategoryColor(MoveInfo::Category(move, GEN_MAX)));
         moves->setItem(i, CategoryCol, witem);
     }
 
