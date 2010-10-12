@@ -55,7 +55,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     battleMode->move(18,271);
     battleMode->addItem(tr("Singles"));
     battleMode->addItem(tr("Doubles"));
-    battleMode->addItem(tr("Triples"));
+    //battleMode->addItem(tr("Triples"));
 
     QLabel *ladder = new QLabel(toColor(p.rating == -1 ? "unknown" : QString::number(p.rating), grey),this);
     ladder->setFont(treb);

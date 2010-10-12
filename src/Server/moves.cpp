@@ -3580,7 +3580,7 @@ struct MMRazorWind : public MM
         int mv = poke(b,s)["ChargingMove"].toInt();
         MoveEffect::setup(mv,s,s,b);
         if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
-            tmove(b, s).power = tmove(b, s).power * 2;
+            tmove(b, s).power = tmove(b, s).power / 2;
         }
     }
 };
