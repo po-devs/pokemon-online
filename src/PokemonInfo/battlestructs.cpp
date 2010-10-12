@@ -339,7 +339,7 @@ QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po)
     return out;
 }
 
-TeamBattle::TeamBattle() : gen(5)
+TeamBattle::TeamBattle() : gen(GEN_MAX)
 {
     for (int i = 0; i < 6; i++) {
         m_indexes[i] = i;
@@ -356,8 +356,8 @@ TeamBattle::TeamBattle(TeamInfo &other)
     info = other.info;
     gen = other.gen;
 
-    if (gen < 3 || gen > 5) {
-        gen = 5;
+    if (gen < GEN_MIN || gen > GEN_MAX) {
+        gen = GEN_MAX;
     }
 
     int curs = 0;

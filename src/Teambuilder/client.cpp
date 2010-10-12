@@ -663,9 +663,9 @@ void Client::loadTeam()
     QSettings settings;
     QString newLocation;
 
-    if (loadTTeamDialog(*myteam, settings.value("team_location_v2").toString(), &newLocation))
+    if (loadTTeamDialog(*myteam, settings.value("team_location").toString(), &newLocation))
     {
-        settings.setValue("team_location_v2", newLocation);
+        settings.setValue("team_location", newLocation);
         changeTeam();
     }
 }

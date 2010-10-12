@@ -3,9 +3,4 @@
 
 #define VERSION QString("0.9.91")
 
-// Minimum Generation supported.
-static const int GEN_MIN = 3;
-// Maximum Generation supported.
-static const int GEN_MAX = 5;
-
 #endif // CONFIG_H

@@ -12,7 +12,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
-#include "../Shared/config.h"
+#include "../PokemonInfo/pokemonstructs.h"
 
 class Server;
 class ChallengeInfo;

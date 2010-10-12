@@ -302,8 +302,8 @@ void TeamBuilder::saveTeam()
     QSettings settings;
     QString newLocation;
 
-    if (saveTTeamDialog(*trainerTeam(), settings.value("team_location_v2").toString(), &newLocation)) {
-        settings.setValue("team_location_v2", newLocation);
+    if (saveTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
+        settings.setValue("team_location", newLocation);
     }
 }
 
@@ -312,8 +312,8 @@ void TeamBuilder::loadTeam()
     QSettings settings;
     QString newLocation;
 
-    if (loadTTeamDialog(*trainerTeam(), settings.value("team_location_v2").toString(), &newLocation)) {
-        settings.setValue("team_location_v2", newLocation);
+    if (loadTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
+        settings.setValue("team_location", newLocation);
         updateAll();
     }
 }
@@ -384,21 +384,21 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     QActionGroup *gens = new QActionGroup(gen);
     gen3 = gen->addAction(tr("Advance (&3rd gen)"),this,SLOT(genChanged()));
     gen4 = gen->addAction(tr("HGSS (&4th gen)"), this, SLOT(genChanged()));
-    gen5 = gen->addAction(tr("B/W (&5th gen)"), this, SLOT(genChanged()));
+    //gen5 = gen->addAction(tr("B/W (&5th gen)"), this, SLOT(genChanged()));
 
     gen3->setCheckable(true);
     gen4->setCheckable(true);
-    gen5->setCheckable(true);
+    //gen5->setCheckable(true);
     gen3->setProperty("gen", 3);
     gen4->setProperty("gen", 4);
-    gen5->setProperty("gen", 5);
+    //gen5->setProperty("gen", 5);
 
     if (team()->gen() == 3) {
         gen3->setChecked(true);
     } else if (team()->gen() == 4) {
         gen4->setChecked(true);
     } else {
-        gen5->setChecked(true);
+        //gen5->setChecked(true);
     }
 
     gens->addAction(gen3);
@@ -1507,7 +1507,7 @@ void TB_PokemonBody::configureMoves()
         << map_container_with_value(PokemonInfo::PreEvoMoves(num,3), tr("3G Pre Evo"))
         << map_container_with_value(PokemonInfo::EggMoves(num,3), tr("3G Breeding"))
         << map_container_with_value(PokemonInfo::SpecialMoves(num,3), tr("3G Special"));
-    } else {
+    } else if (gen <= GEN_MAX) {
         sets << map_container_with_value(PokemonInfo::TMMoves(num, 5), tr("TM/HM"))
         << map_container_with_value(PokemonInfo::TutorMoves(num, 5), tr("Move Tutor"))
         << map_container_with_value(PokemonInfo::LevelMoves(num, 5), tr("Level"))
