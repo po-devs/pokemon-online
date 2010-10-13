@@ -1683,6 +1683,18 @@ int TypeInfo::TypeForWeather(int weather) {
     }
 }
 
+QString TypeInfo::weatherName(int weather)
+{
+    // Supposed to be lowercase and unique.
+    switch(weather) {
+        case Hail: return "hailstorm";
+        case Rain: return "rain";
+        case SandStorm: return "sandstorm";
+        case Sunny: return "sunny";
+        default: return "normal";
+    }
+}
+
 int TypeInfo::Eff(int type_attack, int type_defend)
 {
     return m_TypeVsType[type_attack * NumberOfTypes() + type_defend];

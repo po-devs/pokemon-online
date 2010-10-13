@@ -2723,6 +2723,12 @@ void BattleSituation::callForth(int weather, int turns)
     }
 }
 
+void BattleSituation::setupLongWeather(int weather)
+{
+    weatherCount = -1;
+    this->weather = weather;
+}
+
 void BattleSituation::endTurnWeather()
 {
     int weather = this->weather;
