@@ -60,6 +60,7 @@ public:
     void afterPlayerKick(int src, int dest);
     bool beforePlayerBan(int src, int dest);
     void afterPlayerBan(int src, int dest);
+    void battleSetup(int src, int dest, int battleId);
 
     /* Functions called in scripts */
     Q_INVOKABLE void sendAll(const QString &mess);
@@ -215,6 +216,10 @@ public:
     Q_INVOKABLE QScriptValue banList();
     Q_INVOKABLE void ban(QString name);
     Q_INVOKABLE void unban(QString name);
+
+    Q_INVOKABLE void prepareWeather(int battleId, int weatherId);
+    Q_INVOKABLE QScriptValue weatherNum(const QString &weatherName);
+    Q_INVOKABLE QScriptValue weather(int weatherId);
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 

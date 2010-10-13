@@ -71,6 +71,8 @@ public:
 
     static Server *serverIns;
 
+    BattleSituation * getBattle(int battleId) const;
+
 signals:
     void chatmessage(const QString &name);
     void servermessage(const QString &name);
