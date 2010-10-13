@@ -4933,7 +4933,7 @@ struct MMWideGuard : public MM
     }
 
     static void dgaf(int s, int t, BS &b) {
-        if (s == t || t == -1 || b.player(s) == b.player(t)) {
+        if (s == t || t == -1) {
             return;
         }
         int target = b.player(t);
