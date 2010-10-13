@@ -609,9 +609,9 @@ void saveTTeamDialog(const TrainerTeam &team, QObject *receiver, const char *slo
     TeamSaver *t = new TeamSaver(const_cast<TrainerTeam*>(&team));
     t->setParent(f);
 
+    QObject::connect(f, SIGNAL(fileSelected(QString)), t, SLOT(fileNameReceived(QString)));
     if (receiver)
         QObject::connect(f, SIGNAL(fileSelected(QString)), receiver, slot);
-    QObject::connect(f, SIGNAL(fileSelected(QString)), t, SLOT(fileNameReceived(QString)));
 }
 
 void loadTTeamDialog(TrainerTeam &team, QObject *receiver, const char *slot)
@@ -628,9 +628,9 @@ void loadTTeamDialog(TrainerTeam &team, QObject *receiver, const char *slot)
     TeamSaver *t = new TeamSaver(&team);
     t->setParent(f);
 
+    QObject::connect(f, SIGNAL(fileSelected(QString)), t, SLOT(fileNameReceivedL(QString)));
     if (receiver)
         QObject::connect(f, SIGNAL(fileSelected(QString)), receiver, slot);
-    QObject::connect(f, SIGNAL(fileSelected(QString)), t, SLOT(fileNameReceivedL(QString)));
 }
 
 void PokeTeam::loadFromXml(const QDomElement &poke, int version)
