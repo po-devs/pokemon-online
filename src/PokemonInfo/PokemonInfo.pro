@@ -6,12 +6,14 @@ SOURCES += pokemonstructs.cpp \
     pokemoninfo.cpp \
     networkstructs.cpp \
     movesetchecker.cpp \
-    battlestructs.cpp
+    battlestructs.cpp \
+    teamsaver.cpp
 HEADERS += pokemonstructs.h \
     pokemoninfo.h \
     networkstructs.h \
     movesetchecker.h \
-    battlestructs.h
+    battlestructs.h \
+    teamsaver.h
 LIBS += -L../../bin \
     -lutilities \
     -lzip

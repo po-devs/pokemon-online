@@ -274,12 +274,7 @@ void MainEngine::loadTeam(const QString &path)
 
 void MainEngine::loadTeamDialog()
 {
-    QSettings settings;
-    QString newLocation;
-
-    if (loadTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
-        settings.setValue("team_location", newLocation);
-    }
+    loadTTeamDialog(*trainerTeam());
 }
 
 void MainEngine::addStyleMenu(QMenuBar *menuBar)
