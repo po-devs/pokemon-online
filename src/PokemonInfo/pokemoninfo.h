@@ -315,6 +315,7 @@ public:
     static int TypeForWeather(int weather);
     static int Category(int type);
     static void modifyTypeChart(int type_attack, int type_defend, int value);
+    static QString weatherName(int weather);
 private:
     enum Weather
     {
