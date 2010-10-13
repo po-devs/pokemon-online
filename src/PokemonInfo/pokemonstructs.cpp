@@ -731,7 +731,7 @@ bool TrainerTeam::loadFromFile(const QString &path)
         return false;
     }
 
-    int gen = team.attribute("gen", QString::number(GEN_MAX)).toInt();
+    int gen = team.attribute("gen", "4").toInt();
     if (gen < GEN_MIN || gen > GEN_MAX)
         gen = GEN_MAX;
     this->team().setGen(gen);

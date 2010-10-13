@@ -384,21 +384,21 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     QActionGroup *gens = new QActionGroup(gen);
     gen3 = gen->addAction(tr("Advance (&3rd gen)"),this,SLOT(genChanged()));
     gen4 = gen->addAction(tr("HGSS (&4th gen)"), this, SLOT(genChanged()));
-    //gen5 = gen->addAction(tr("B/W (&5th gen)"), this, SLOT(genChanged()));
+    gen5 = gen->addAction(tr("B/W (&5th gen)"), this, SLOT(genChanged()));
 
     gen3->setCheckable(true);
     gen4->setCheckable(true);
-    //gen5->setCheckable(true);
+    gen5->setCheckable(true);
     gen3->setProperty("gen", 3);
     gen4->setProperty("gen", 4);
-    //gen5->setProperty("gen", 5);
+    gen5->setProperty("gen", 5);
 
     if (team()->gen() == 3) {
         gen3->setChecked(true);
     } else if (team()->gen() == 4) {
         gen4->setChecked(true);
     } else {
-        //gen5->setChecked(true);
+        gen5->setChecked(true);
     }
 
     gens->addAction(gen3);

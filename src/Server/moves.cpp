@@ -2030,11 +2030,11 @@ struct MMDoomDesire : public MM
             tmove(b, s).power = tmove(b, s).power * MoveInfo::Power(move, b.gen());
             slot(b,t)["DoomDesireDamage"] = b.calculateDamage(s, t);
         } else {
-            slot(b,s)["DoomDesireAttack"] = b.getStat(s, SpAttack);
+            slot(b,t)["DoomDesireAttack"] = b.getStat(s, SpAttack);
             tmove(b, s).type = MoveInfo::Type(tmove(b,s).attack, b.gen());
             b.calculateTypeModStab();
             tmove(b, s).type = Pokemon::Curse;
-            slot(b,s)["DoomDesireStab"] = turn(b,s)["Stab"].toInt();
+            slot(b,t)["DoomDesireStab"] = turn(b,s)["Stab"].toInt();
         }
         addFunction(slot(b,t), "EndTurn7", "DoomDesire", &et);
         b.sendMoveMessage(29, move==DoomDesire?2:1, s, type(b,s));
@@ -2072,7 +2072,7 @@ struct MMDoomDesire : public MM
                     tmove(b,s).power = MoveInfo::Power(move, b.gen());
 
                     int damage = b.calculateDamage(s, s);
-                    b.notify(All, BS::Effective, s, quint8(typemod));
+                    b.notify(BS::All, BS::Effective, s, quint8(typemod));
                     b.inflictDamage(s, damage, s, true, true);
                 }
 	    }

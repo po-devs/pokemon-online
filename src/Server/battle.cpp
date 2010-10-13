@@ -1955,7 +1955,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
             }
             break;
-            case Move::Partner:
+        case Move::Partner:
             if (!koed(target) && arePartners(target, player) && areAdjacent(target, player) && target != player) {
                 targetList.push_back(target);
             } else {
@@ -2937,7 +2937,7 @@ int BattleSituation::calculateDamage(int p, int t)
     int attack, def;
     bool crit = move["CriticalHit"].toBool();
 
-    int attackused = move["MoveChosen"].toInt();
+    int attackused = tmove(p).attack;
 
     int cat = tmove(p).category;
     if (cat == Move::Physical) {
