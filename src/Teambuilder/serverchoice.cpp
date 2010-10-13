@@ -6,7 +6,7 @@
 ServerChoice::ServerChoice()
 {
     registry_connection = new Analyzer(true);
-    registry_connection->connectTo("pokemon-online.dynalias.net", 5091);
+    registry_connection->connectTo("pokemon-online.dynalias.net", 5081);
     registry_connection->setParent(this);
 
     connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
