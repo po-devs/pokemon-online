@@ -1,6 +1,7 @@
 #include "pokemonstructs.h"
 #include "pokemoninfo.h"
 #include "movesetchecker.h"
+#include "teamsaver.h"
 
 #include <QDomDocument>
 #include <QDomNode>
@@ -595,37 +596,41 @@ bool TrainerTeam::saveToFile(const QString &path) const
     return true;
 }
 
-bool saveTTeamDialog(const TrainerTeam &team, const QString &defaultPath, QString *chosenPath)
+void saveTTeamDialog(const TrainerTeam &team, QObject *receiver, const char *slot)
 {
-    QString location = QFileDialog::getSaveFileName(0,QObject::tr("Saving the Team"),defaultPath, QObject::tr("Team(*.tp)"));
-    if(location.isEmpty())
-    {
-        //Maybe the user hit "Cancel"
-        return false;
-    }
-    if (chosenPath) {
-        *chosenPath = location;
-    }
+    QSettings s;
+    QString defaultPath = s.value("team_location", "Team/trainer.tp").toString();
+    QFileDialog *f = new QFileDialog(NULL, QObject::tr("Saving the Team"),defaultPath, QObject::tr("Team(*.tp)"));
+    f->setWindowFlags(Qt::Window);
+    f->setAttribute(Qt::WA_DeleteOnClose);
+    f->setAcceptMode(QFileDialog::AcceptSave);
+    f->show();
 
-    int res = team.saveToFile(location);
+    TeamSaver *t = new TeamSaver(const_cast<TrainerTeam*>(&team));
+    t->setParent(f);
 
-    return res;
+    if (receiver)
+        QObject::connect(f, SIGNAL(fileSelected(QString)), receiver, slot);
+    QObject::connect(f, SIGNAL(fileSelected(QString)), t, SLOT(fileNameReceived(QString)));
 }
 
-bool loadTTeamDialog(TrainerTeam &team, const QString &defaultPath, QString *chosenPath)
+void loadTTeamDialog(TrainerTeam &team, QObject *receiver, const char *slot)
 {
-    QString location = QFileDialog::getOpenFileName(0,QObject::tr("Loading the Team"),defaultPath, QObject::tr("Team(*.tp)"));
-    if(location.isEmpty())
-    {
-        //Maybe the user hit "Cancel"
-        return false;
-    }
-    if (chosenPath) {
-        *chosenPath = location;
-    }
-    int res = team.loadFromFile(location);
+    QSettings s;
+    QString defaultPath = s.value("team_location", "Team/trainer.tp").toString();
+    QFileDialog *f = new QFileDialog(NULL, QObject::tr("Loading the Team"),defaultPath, QObject::tr("Team(*.tp)"));
+    f->setWindowFlags(Qt::Window);
+    f->setAttribute(Qt::WA_DeleteOnClose);
+    f->setAcceptMode(QFileDialog::AcceptOpen);
+    f->setFileMode(QFileDialog::ExistingFile);
+    f->show();
 
-    return res;
+    TeamSaver *t = new TeamSaver(&team);
+    t->setParent(f);
+
+    if (receiver)
+        QObject::connect(f, SIGNAL(fileSelected(QString)), receiver, slot);
+    QObject::connect(f, SIGNAL(fileSelected(QString)), t, SLOT(fileNameReceivedL(QString)));
 }
 
 void PokeTeam::loadFromXml(const QDomElement &poke, int version)

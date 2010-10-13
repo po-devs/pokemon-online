@@ -299,23 +299,12 @@ void TeamBuilder::changeToPokedex()
 
 void TeamBuilder::saveTeam()
 {
-    QSettings settings;
-    QString newLocation;
-
-    if (saveTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
-        settings.setValue("team_location", newLocation);
-    }
+    saveTTeamDialog(*trainerTeam());
 }
 
 void TeamBuilder::loadTeam()
 {
-    QSettings settings;
-    QString newLocation;
-
-    if (loadTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
-        settings.setValue("team_location", newLocation);
-        updateAll();
-    }
+    loadTTeamDialog(*trainerTeam(), this, SLOT(updateAll()));
 }
 
 void TeamBuilder::newTeam()
