@@ -42,11 +42,11 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
     in >> team.gen;
 
     for (int i = 0; i < 6; i++) {
-	in >> team.pokemon(i);
+		in >> team.pokemon(i);
     }
 
-    if (team.gen != 3)
-        team.gen = 4;
+    if (team.gen < GEN_MIN || team.gen > GEN_MAX)
+        team.gen = GEN_MAX;
 
     for (int i = 0; i < 6; i++)
         team.pokemon(i).gen() = team.gen;

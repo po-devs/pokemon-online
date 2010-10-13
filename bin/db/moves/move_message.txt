@@ -11,7 +11,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 %s was hurt by %m!|%s is freed from %m!|%f became trapped by swirling magma!
 %s must recharge!
 %f can no longer escape!
-%s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!
+%s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!|%s took %f in the air!|%s can't attack while in the air!
 %s shattered %tf's team protections!
 
 %s stole and ate %f's %i!
@@ -74,8 +74,8 @@ It doesn't affect %s...|%f was seeded!|%s's health is sapped by leech seed.
 Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's reflect wore off!|%ts's light screen wore off!
 %s took aim at %f!
 %ts's team is protected from critical hits!|%ts's lucky chant wore off!
-%s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!
-%s cleared the field around %tf's team!
+%s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!|%s's %m was bounced back by Magic Mirror!
+%s cleared the field around %tf's team!|%s cleared the field!
 Magnitude %d!
 
 
@@ -141,7 +141,7 @@ Poison spikes were scattered all around the feet of %tf's team!|The poison spike
 
 %s caused an uproar!|%s is making an uproar!|%s calmed down!|%s woke up!|%s stays awake because of the uproar!
 %q's wish came true!
-%f now has insomnia!
+%f now has %a!
 %s made %f feel drowsy!|%s yawns!|%s's %a made it ineffective!
 
 
@@ -153,4 +153,40 @@ All stat changes were elimnated!
 
 
 
+%s and %f had their power shared!|%s and %f had their defenses shared!
+%s cancelled the items' effects!|The items are now working again!
+%s became of the Water type!
+%f gained %a!
 
+%f's %i burned!
+
+%s gave %f its %i!
+%s's status cleared!
+
+
+
+
+%s swapped the Sp. Attack and the Defense of all the pokemon!|The Sp. Attack and Defense of the pokemon went back to normal!
+%ts's team is protected by Wide Guard!
+%ts's team is protected by Fast Guard!
+%s is being sent back!
+%s copied %f's types!
+
+%s made %f float in the air!|%s is no longer under the effect of telekinesis!
+%s knocked %f on the ground!
+
+
+%s prepares its %m!|%s and %f attack together!|%ts's team is standing on a burning field!|%s takes damage from the fire
+%s prepares its %m!|%s and %f attack together!|%ts's team is floundering in a swamp!
+%s prepares its %m!|%s and %f attack together!|%ts's team is under an amplifying rainbow!
+
+
+
+
+
+
+
+
+
+%s exchanged its spot with %f!
+#

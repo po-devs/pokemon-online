@@ -12,6 +12,8 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
+#include "../PokemonInfo/pokemonstructs.h"
+
 class Server;
 class ChallengeInfo;
 
@@ -58,10 +60,13 @@ public:
     void afterPlayerKick(int src, int dest);
     bool beforePlayerBan(int src, int dest);
     void afterPlayerBan(int src, int dest);
+    void battleSetup(int src, int dest, int battleId);
 
     /* Functions called in scripts */
     Q_INVOKABLE void sendAll(const QString &mess);
+    Q_INVOKABLE void sendHtmlAll(const QString &mess);
     Q_INVOKABLE void sendAll(const QString &mess, int channel);
+    Q_INVOKABLE void sendHtmlAll(const QString &mess, int channel);
     Q_INVOKABLE void kick(int id);
     Q_INVOKABLE void kick(int playerid, int chanid);
     Q_INVOKABLE void putInChannel(int playerid, int chanid);
@@ -74,10 +79,13 @@ public:
     Q_INVOKABLE void shutDown();
     Q_INVOKABLE void sendMessage(int id, const QString &mess);
     Q_INVOKABLE void sendMessage(int id, const QString &mess, int channel);
+    Q_INVOKABLE void sendHtmlMessage(int id, const QString &mess);
+    Q_INVOKABLE void sendHtmlMessage(int id, const QString &mess, int channel);
     /* Print on the server. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void clearPass(const QString &name);
     Q_INVOKABLE void changeAuth(int id, int auth);
+    Q_INVOKABLE void changeDbAuth(const QString &name, int auth);
     Q_INVOKABLE void changeAway(int id, bool away);
     Q_INVOKABLE void changeRating(const QString& name, const QString& tier, int newRating);
     Q_INVOKABLE void changePokeLevel(int id, int slot, int level);
@@ -98,7 +106,10 @@ public:
     Q_INVOKABLE void clearChat();
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
+    /* Accepts string as 1st parameter. */
     Q_INVOKABLE void callLater(const QString &s, int delay);
+    /* Accepts function as 1st parameter. */
+    Q_INVOKABLE void delayedCall(const QScriptValue &func, int delay);
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
     Q_INVOKABLE void setPA(const QString &name);
@@ -130,6 +141,7 @@ public:
     Q_INVOKABLE QScriptValue away(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
     Q_INVOKABLE QScriptValue dbAuth(const QString &name);
+    Q_INVOKABLE QScriptValue dbAuths();
     Q_INVOKABLE QScriptValue dbIp(const QString &name);
     Q_INVOKABLE QScriptValue dbLastOn(const QString &name);
     Q_INVOKABLE bool dbRegistered(const QString &name);
@@ -162,6 +174,7 @@ public:
     Q_INVOKABLE QScriptValue teamPoke(int id, int index);
     Q_INVOKABLE bool hasTeamPoke(int id, int pokemonnum);
     Q_INVOKABLE QScriptValue indexOfTeamPoke(int id, int pokenum);
+    Q_INVOKABLE bool hasDreamWorldAbility(int id, int slot);
 
     Q_INVOKABLE QScriptValue teamPokeMove(int id, int pokeindex, int moveindex);
     Q_INVOKABLE bool hasTeamPokeMove(int id, int pokeindex, int movenum);
@@ -174,6 +187,7 @@ public:
     Q_INVOKABLE QScriptValue teamPokeNature(int id, int slot);
     Q_INVOKABLE QScriptValue teamPokeEV(int id, int slot, int stat);
     Q_INVOKABLE QScriptValue teamPokeDV(int id, int slot, int stat);
+    Q_INVOKABLE void setTeamPokeDV(int id, int slot, int stat, int newValue);
 
     Q_INVOKABLE int numPlayers();
     Q_INVOKABLE bool loggedIn(int id);
@@ -187,17 +201,36 @@ public:
     Q_INVOKABLE QScriptValue type(int id);
     Q_INVOKABLE QScriptValue typeNum(const QString &typeName);
 
+    Q_INVOKABLE int hiddenPowerType(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
+
     Q_INVOKABLE QScriptValue getScript();
+
+    Q_INVOKABLE int pokeType1(int id, int gen = GEN_MAX);
+    Q_INVOKABLE int pokeType2(int id, int gen = GEN_MAX);
+
+    Q_INVOKABLE void modifyMovePower(int moveNum, unsigned char power, int gen = GEN_MAX);
+    Q_INVOKABLE void modifyMoveAccuracy(int moveNum, char accuracy, int gen = GEN_MAX);
+    Q_INVOKABLE void modifyMovePP(int moveNum, char pp, int gen = GEN_MAX);
+    Q_INVOKABLE void modifyMovePriority(int moveNum, signed char priority, int gen = GEN_MAX);
+   
+    Q_INVOKABLE QScriptValue banList();
+    Q_INVOKABLE void ban(QString name);
+    Q_INVOKABLE void unban(QString name);
+
+    Q_INVOKABLE void prepareWeather(int battleId, int weatherId);
+    Q_INVOKABLE QScriptValue weatherNum(const QString &weatherName);
+    Q_INVOKABLE QScriptValue weather(int weatherId);
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
 signals:
     void clearTheChat();
 public slots:
-    void changeScript(const QString &script);
+    void changeScript(const QString &script, const bool triggerStartUp = false);
 
 private slots:
     void timer();
+    void timerFunc();
     void webCall_replyFinished(QNetworkReply* reply);
     void synchronousWebCall_replyFinished(QNetworkReply* reply);
     
@@ -208,7 +241,9 @@ private:
     QVector<bool> stopevents;
     QList<QScriptString> playerArrays;
 
+    QNetworkAccessManager manager;
     QHash<QTimer*,QString> timerEvents;
+    QHash<QTimer*,QScriptValue> timerEventsFunc;
     QHash<QNetworkReply*,QString> webCallEvents;
 
     void startStopEvent() {stopevents.push_back(false);}

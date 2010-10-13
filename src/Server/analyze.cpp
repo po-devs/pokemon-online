@@ -49,6 +49,16 @@ void Analyzer::sendChannelMessage(int chanid, const QString &message)
     notify(ChannelMessage, qint32(chanid), message);
 }
 
+void Analyzer::sendHtmlMessage(const QString &message)
+{
+    notify(HtmlMessage, message);
+}
+
+void Analyzer::sendHtmlChannelMessage(int chanid, const QString &message)
+{
+    notify(ChannelHtml, qint32(chanid), message);
+}
+
 void Analyzer::engageBattle(int battleid, int , int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
     notify(EngageBattle, qint32(battleid), qint32(0), qint32(id), conf, team);
@@ -199,7 +209,6 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
     switch (command) {
     case Login:
         {
-            qDebug() << "Login received";
             if (mysocket.id() != 0) {
                 TeamInfo team;
                 bool ladder, show_team;
@@ -208,7 +217,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
                 emit loggedIn(team,ladder,show_team,c);
             } else
                 emit accepted(); // for registry;
-            qDebug() << "Login end";
+
             break;
         }
         /* If used, would be used to dial with the server directly */

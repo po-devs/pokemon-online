@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "theme.h"
 #include "mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
@@ -7,7 +8,7 @@
 
 TB_Menu::TB_Menu()
 {
-    setPixmap(QPixmap("db/menu/menu_background.png"));
+    setPixmap(Theme::Sprite("menubackground"));
     setWindowTitle(tr("Menu"));
 
 
@@ -17,10 +18,10 @@ TB_Menu::TB_Menu()
     layout->setMargin(0);
     layout->setSpacing(0);
 
-    layout->addWidget(teambuilder = new QImageButtonP("db/menu/Teambuilder0.png", "db/menu/Teambuilder1.png", "db/menu/Teambuilder2.png"), 0, Qt::AlignCenter);
-    layout->addWidget(online = new QImageButtonP("db/menu/GoOnline0.png", "db/menu/GoOnline1.png", "db/menu/GoOnline2.png"), 0, Qt::AlignCenter);
-    layout->addWidget(credits = new QImageButtonP("db/menu/Credits0.png", "db/menu/Credits1.png", "db/menu/Credits2.png"), 0, Qt::AlignCenter);
-    layout->addWidget(exit = new QImageButtonP("db/menu/Quit0.png", "db/menu/Quit1.png", "db/menu/Quit2.png"), 0, Qt::AlignCenter);
+    layout->addWidget(teambuilder = Theme::PressedButton("teambuilder"), 0, Qt::AlignCenter);
+    layout->addWidget(online = Theme::PressedButton("goonline"), 0, Qt::AlignCenter);
+    layout->addWidget(credits = Theme::PressedButton("credits"), 0, Qt::AlignCenter);
+    layout->addWidget(exit = Theme::PressedButton("quit"), 0, Qt::AlignCenter);
 
     connect (teambuilder, SIGNAL(clicked()), SIGNAL(goToTeambuilder()));
     connect (online, SIGNAL(clicked()), SIGNAL(goToOnline()));
@@ -31,16 +32,14 @@ TB_Menu::TB_Menu()
 QMenuBar * TB_Menu::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();
-    menuBar->setStyleSheet("QMenuBar{background-image:url(db/menu/menu_background.png);}");
+    menuBar->setStyleSheet("QMenuBar{background-image:url(" + Theme::path("menu/menubackground.png") + ";}");
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
     menuFichier->addAction(tr("&Load Team"),w,SLOT(loadTeamDialog()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
-    QMenu *menuStyle = menuBar->addMenu(tr("&Style"));
-    QStringList style = QStyleFactory::keys();
-    for(QStringList::iterator i = style.begin();i!=style.end();i++)
-    {
-        menuStyle->addAction(*i,w,SLOT(changeStyle()));
-    }
+
+    w->addStyleMenu(menuBar);
+    w->addThemeMenu(menuBar);
+
     QMenu *langMenu = menuBar->addMenu(tr("&Language"));
     QFile in ("languages.txt");
     in.open(QIODevice::ReadOnly);

@@ -5,24 +5,10 @@
 
 #include <QtCore>
 #include "../Utilities/functions.h"
+#include "pokemoninfo.h"
 
 class TeamInfo;
 class PokePersonal;
-
-namespace Pokemon
-{
-    enum Status
-    {
-	Koed = -2,
-	Fine=0,
-	Paralysed=1,
-	Burnt=2,
-	Frozen=3,
-	Asleep=4,
-	Poisoned=5,
-	DeeplyPoisoned=6
-    };
-}
 
 enum BattleResult
 {
@@ -54,14 +40,14 @@ class PokeBattle
     PROPERTY(QList<int>, evs);
     PROPERTY(quint16, lifePoints);
     PROPERTY(quint16, totalLifePoints);
-    PROPERTY(quint16, num);
+    PROPERTY(Pokemon::uniqueId, num);
     PROPERTY(quint16, item);
     PROPERTY(quint16, ability);
-    PROPERTY(qint8, status);
-    PROPERTY(qint8, sleepCount);
+    PROPERTY(quint32, fullStatus);
+    PROPERTY(qint8, statusCount);
+    PROPERTY(qint8, oriStatusCount);
     PROPERTY(quint8, gender);
     PROPERTY(quint8, level);
-    PROPERTY(quint8, forme);
     PROPERTY(quint8, nature);
     PROPERTY(quint8, happiness);
     PROPERTY(bool, shiny);
@@ -76,11 +62,13 @@ public:
     quint16 normalStat(int stat) const;
     void updateStats();
 
-    bool ko() const {return lifePoints() == 0 || num() == 0 || status() == Pokemon::Koed;}
+    bool ko() const {return lifePoints() == 0 || num() == Pokemon::NoPoke || status() == Pokemon::Koed;}
     bool isFull() const { return lifePoints() == totalLifePoints(); }
     int lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
 
     void setNormalStat(int, quint16);
+    int status() const;
+    void changeStatus(int status);
 private:
     BattleMove m_moves[4];
 
@@ -94,16 +82,18 @@ QDataStream & operator << (QDataStream &out, const PokeBattle &po);
 class ShallowBattlePoke
 {
     PROPERTY(QString, nick);
-    PROPERTY(qint8, status);
-    PROPERTY(quint16, num);
+    PROPERTY(quint32, fullStatus);
+    PROPERTY(Pokemon::uniqueId, num);
     PROPERTY(bool, shiny);
     PROPERTY(quint8, gender);
     PROPERTY(quint8, lifePercent);
     PROPERTY(quint8, level);
-    PROPERTY(quint8, forme);
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);
+
+    int status() const;
+    void changeStatus(int status);
 
     void init(const PokeBattle &poke);
 };
@@ -117,11 +107,23 @@ public:
     TeamBattle();
     /* removes the invalid pokemons */
     TeamBattle(TeamInfo &other);
+
     void init(TeamInfo &other);
     void generateRandom(int gen);
 
     PokeBattle& poke(int i);
     const PokeBattle& poke(int i) const;
+
+    int internalId(const PokeBattle &p) const;
+    const PokeBattle &getByInternalId(int i) const;
+
+    void switchPokemon(int pok1, int pok2);
+    template<class T>
+    void setIndexes(T indexes[6]) {
+        for (int i = 0; i < 6; i++) {
+            m_indexes[i] = indexes[i];
+        }
+    }
 
     bool invalid() const;
 
@@ -130,10 +132,45 @@ public:
     int gen;
 private:
     PokeBattle m_pokemons[6];
+    int m_indexes[6];
 };
 
 QDataStream & operator >> (QDataStream &in, TeamBattle &te);
 QDataStream & operator << (QDataStream &out, const TeamBattle &te);
+
+struct ShallowShownPoke
+{
+public:
+    ShallowShownPoke();
+    void init(const PokeBattle &b);
+
+    bool item;
+    Pokemon::uniqueId num;
+    quint8 level;
+    quint8 gender;
+};
+
+QDataStream & operator >> (QDataStream &in, ShallowShownPoke &po);
+QDataStream & operator << (QDataStream &out, const ShallowShownPoke &po);
+
+class ShallowShownTeam
+{
+public:
+    ShallowShownTeam(){}
+    ShallowShownTeam(const TeamBattle &t);
+
+    ShallowShownPoke &poke(int index) {
+        return pokemons[index];
+    }
+    const ShallowShownPoke &poke(int index) const {
+        return pokemons[index];
+    }
+private:
+    ShallowShownPoke pokemons[6];
+};
+
+QDataStream & operator >> (QDataStream &in, ShallowShownTeam &po);
+QDataStream & operator << (QDataStream &out, const ShallowShownTeam &po);
 
 struct BattleChoices
 {
@@ -156,24 +193,125 @@ struct BattleChoices
 QDataStream & operator >> (QDataStream &in, BattleChoices &po);
 QDataStream & operator << (QDataStream &out, const BattleChoices &po);
 
-struct BattleChoice
+enum ChoiceType {
+    CancelType,
+    AttackType,
+    SwitchType,
+    RearrangeType,
+    CenterMoveType
+};
+
+struct CancelChoice {
+};
+
+struct AttackChoice {
+    qint8 attackSlot;
+    qint8 attackTarget;
+};
+
+struct SwitchChoice {
+    qint8 pokeSlot;
+};
+
+struct RearrangeChoice {
+    qint8 pokeIndexes[6];
+};
+
+struct MoveToCenterChoice {
+
+};
+
+union ChoiceUnion
 {
-    static const int Cancel = -10;
+    CancelChoice cancel;
+    AttackChoice attack;
+    SwitchChoice switching;
+    RearrangeChoice rearrange;
+    MoveToCenterChoice move;
+};
 
-    BattleChoice(bool pokeSwitch = false, qint8 numSwitch = 0, quint8 numslot=0, quint8 target=0);
+struct BattleChoice {
+    quint8 type;
+    quint8 playerSlot;
+    ChoiceUnion choice;
 
-    bool pokeSwitch; /* True if poke switch, false if attack switch */
-    qint8 numSwitch; /* The num of the poke or the attack to use, -1 for Struggle, -10 for move cancelled */
-    quint8 targetPoke; /* The targetted pokemon */
-    quint8 numSlot;
+    BattleChoice(){}
+    BattleChoice(int slot, const CancelChoice &c) {
+        choice.cancel = c;
+        playerSlot = slot;
+        type = CancelType;
+    }
+    BattleChoice(int slot, const AttackChoice &c) {
+        choice.attack = c;
+        type = AttackType;
+        playerSlot = slot;
+    }
+    BattleChoice(int slot, const SwitchChoice &c) {
+        choice.switching = c;
+        type = SwitchType;
+        playerSlot = slot;
+    }
+    BattleChoice(int slot, const RearrangeChoice &c) {
+        choice.rearrange = c;
+        type = RearrangeType;
+        playerSlot = slot;
+    }
+    BattleChoice(int slot, const MoveToCenterChoice &c) {
+        choice.move = c;
+        type = CenterMoveType;
+        playerSlot = slot;
+    }
 
-    /* returns true if the choice is valid */
+    bool attackingChoice() const {
+        return type == AttackType;
+    }
+
+    bool switchChoice() const {
+        return type == SwitchType;
+    }
+
+    bool moveToCenterChoice() const {
+        return type == CenterMoveType;
+    }
+
+    bool cancelled() const {
+        return type == CancelType;
+    }
+
+    bool rearrangeChoice() const {
+        return type == RearrangeType;
+    }
+
+    int target() const {
+        return choice.attack.attackTarget;
+    }
+
+    int attackSlot() const {
+        return choice.attack.attackSlot;
+    }
+
+    int pokeSlot() const {
+        return choice.switching.pokeSlot;
+    }
+
+    /* The person who's making the choice */
+    int slot() const {
+        return playerSlot;
+    }
+
+    void setTarget(int target) {
+        choice.attack.attackTarget = target;
+    }
+
+    void setAttackSlot(int slot) {
+        choice.attack.attackSlot = slot;
+    }
+
+    void setPokeSlot(int slot) {
+        choice.switching.pokeSlot = slot;
+    }
+
     bool match(const BattleChoices &avail) const;
-    int  getChoice() const { return numSwitch; }
-    bool attack() const { return !pokeSwitch; }
-    bool poke() const { return pokeSwitch; }
-    bool cancelled() const { return numSwitch == Cancel; }
-    int target() const {return targetPoke; }
 };
 
 QDataStream & operator >> (QDataStream &in, BattleChoice &po);
@@ -204,16 +342,20 @@ struct ChallengeInfo
         ItemClause = 32,
         ChallengeCup = 64,
         NoTimeOut = 128,
-        SpeciesClause = 256
+        SpeciesClause = 256,
+        RearrangeTeams = 512,
+        SelfKO = 1024
     };
 
     enum Mode
     {
         Singles,
-        Doubles
+        Doubles,
+        Triples,
+        Rotation
     };
 
-    static const int numberOfClauses = 9;
+    static const int numberOfClauses = 11;
 
     static QString clauseText[numberOfClauses];
     static QString clauseBattleText[numberOfClauses];
@@ -268,8 +410,9 @@ QDataStream & operator << (QDataStream &out, const ChallengeInfo &c);
 struct BattleConfiguration
 {
     quint8 gen;
-    bool doubles;
+    quint8 mode;
     qint32 ids[2];
+    quint32 clauses;
 
     int slot(int spot, int poke = 0) const  {
         return spot + poke*2;
@@ -282,14 +425,14 @@ struct BattleConfiguration
 
 inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)
 {
-    in >> c.gen >> c.doubles >> c.ids[0] >> c.ids[1];
+    in >> c.gen >> c.mode >> c.ids[0] >> c.ids[1] >> c.clauses;
 
     return in;
 }
 
 inline QDataStream & operator << (QDataStream &out, const BattleConfiguration &c)
 {
-    out << c.gen << c.doubles << c.ids[0] << c.ids[1];
+    out << c.gen << c.mode << c.ids[0] << c.ids[1] << c.clauses;
 
     return out;
 }

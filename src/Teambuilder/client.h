@@ -32,12 +32,11 @@ class Client : public QWidget, public CentralWidgetInterface
     Q_OBJECT
 public:
     Client(TrainerTeam *, const QString &url, const quint16 port);
+    ~Client();
 
     TrainerTeam *team();
     QMenuBar *createMenuBar(MainEngine *w);
 
-    void printLine(const QString &line);
-    void printHtml(const QString &html);
     /* Prints a line to all the channels which have that player */
     void printLine(int playerid, const QString &line);
     void cancelFindBattle(bool verbose=true);
@@ -79,7 +78,6 @@ public:
     void removePlayer(int id);
     void removeBattleWindow(int id);
 
-    QList<QColor> chatColors;
     QList<QIcon> statusIcons;
     QIcon chatot, greychatot;
 
@@ -98,7 +96,8 @@ public slots:
     void connected();
     void disconnected();
     /* message received from the server */
-    void messageReceived(const QString & mess);
+    void printLine(const QString &line);
+    void printHtml(const QString &html);
     /* sends what's in the line edit */
     void sendText();
     void playerLogin(const PlayerInfo &p);
@@ -210,6 +209,7 @@ protected:
         QPainter p(this);
         style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
     }
+
 private:
     TrainerTeam *myteam;
     QString mynick;

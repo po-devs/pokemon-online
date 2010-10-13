@@ -33,7 +33,7 @@ public:
 //////////////////////////////////////////////////////////////////////////
 
 cross::DynamicLibrary::DynamicLibrary(const char* libname):
-	libhandle(NULL)
+        libhandle(NULL)
 {
 #ifdef WIN32
 	libhandle = LoadLibrary(libname);

@@ -57,7 +57,7 @@ void Server::start(){
 
     srand(time(NULL));
 
-    QSettings s;
+    QSettings s("config", QSettings::IniFormat);
 
     if (!s.contains("sql_driver")) {
         s.setValue("sql_driver", SQLCreator::SQLite);
@@ -90,8 +90,6 @@ void Server::start(){
     printLine(tr("Starting loading pokemon database..."));
 
     /* Really useful for headless servers */
-    PokemonInfoConfig::setConfig(PokemonInfoConfig::NoGui);
-
     PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/");
     ItemInfo::init("db/items/");
@@ -192,7 +190,7 @@ int Server::addChannel(const QString &name, int playerid) {
 
     if (channelids.size() == 0) {
         /* Time to add the default channel */
-        QSettings s;
+        QSettings s("config", QSettings::IniFormat);
         chanName = s.value("mainchanname").toString();
         if (!Channel::validName(chanName)) {
             static const char* places [] = {
@@ -331,9 +329,10 @@ void Server::removeChannel(int channelid) {
 
 void Server::loadRatedBattlesSettings()
 {
-    QSettings s;
+    QSettings s("config", QSettings::IniFormat);
     allowRatedWithSameIp = !s.value("battles_with_same_ip_unrated").toBool();
     diffIpsForRatedBattles = s.value("rated_battles_memory_number").toInt();
+    allowThroughChallenge = s.value("rated_battle_through_challenge").toInt();
 }
 
 void Server::connectToRegistry()
@@ -583,7 +582,7 @@ void Server::changeAuth(const QString &name, int auth) {
 
         emit player_authchange(id, authedName(id));
         if (SecurityManager::member(name).authority() != auth) {
-            SecurityManager::setauth(name, auth);
+            SecurityManager::setAuth(name, auth);
         }
         sendPlayer(id);
     }
@@ -737,9 +736,9 @@ void Server::sendBattleCommand(int publicId, int id, const QByteArray &comm)
     }
 }
 
-void Server::sendMessage(int id, const QString &message)
+void Server::sendMessage(int id, const QString &message, bool html)
 {
-    player(id)->sendMessage(message);
+    player(id)->sendMessage(message, html);
 }
 
 void Server::sendServerMessage(const QString &message)
@@ -1117,6 +1116,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id);
     mybattles.insert(id, battle);
     battleList.insert(id, Battle(id1, id2));
+    myengine->battleSetup(id1, id2, id); // dispatch script event
 
     Player *p1 (player(id1)), *p2 (player(id2));
 
@@ -1158,6 +1158,12 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     connect(battle, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int, int,int,int)));
 
     pluginManager->battleStarting(p1, p2, c);
+
+    // Check for set weather.
+    int dominantWeather = battle->weather;
+    if(dominantWeather != BattleSituation::NormalWeather) {
+        battle->sendMoveMessage(57, dominantWeather - 1, 0, TypeInfo::TypeForWeather(dominantWeather));
+    }
 
     battle->start(battleThread);
 
@@ -1491,25 +1497,25 @@ int Server::id(const QString &name) const
     return mynames.value(name.toLower());
 }
 
-void Server::sendAll(const QString &message, bool chatMessage)
+void Server::sendAll(const QString &message, bool chatMessage, bool html)
 {
     if (printLine(message, chatMessage, true)) {
         foreach (Player *p, myplayers)
             if (p->isLoggedIn())
-                p->sendMessage(message);
+                p->sendMessage(message, html);
     }
 }
 
-void Server::sendChannelMessage(int channel, const QString &message, bool chat)
+void Server::sendChannelMessage(int channel, const QString &message, bool chat, bool html)
 {
     printLine(QString("[#%1] %2").arg(this->channel(channel).name, message), chat, true);
     foreach (Player *p, this->channel(channel).players)
-        p->sendChanMessage(channel, message);
+        p->sendChanMessage(channel, message, html);
 }
 
-void Server::sendChannelMessage(int id, int chanid, const QString &message)
+void Server::sendChannelMessage(int id, int chanid, const QString &message, bool html)
 {
-    player(id)->sendChanMessage(chanid, message);
+    player(id)->sendChanMessage(chanid, message, html);
 }
 
 int Server::freeid() const
@@ -1551,4 +1557,13 @@ Player * Server::player(int id) const
     if (!myplayers.contains(id))
         qDebug() << "Fatal! player called for non existing ID " << id;
     return myplayers.value(id);
+}
+
+BattleSituation * Server::getBattle(int battleId) const
+{
+    if(mybattles.contains(battleId)) {
+        return mybattles.value(battleId);
+    }else{
+        return NULL;
+    }
 }

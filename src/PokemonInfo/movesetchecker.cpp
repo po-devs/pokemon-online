@@ -1,7 +1,12 @@
+namespace Pokemon {
+    class uniqueId;
+}
+unsigned int qHash (const Pokemon::uniqueId &key);
+
 #include "movesetchecker.h"
 #include "pokemoninfo.h"
 
-QList<QList<QSet<int > > >* MoveSetChecker::legalCombinations[2];
+QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::legalCombinations[NUMBER_GENS];
 QString MoveSetChecker::dir;
 
 QString MoveSetChecker::path(const QString &arg)
@@ -12,96 +17,129 @@ QString MoveSetChecker::path(const QString &arg)
 void MoveSetChecker::init(const QString &dir)
 {
     MoveSetChecker::dir = dir;
-    legalCombinations[0] = new (QList<QList<QSet<int > > >);
-    legalCombinations[1] = new (QList<QList<QSet<int > > >);
 
-    for (int gen = 3; gen <= 4; gen++) {
+    QList<Pokemon::uniqueId> ids = PokemonInfo::AllIds();
+
+    for (int gen = GEN_MIN; gen <= GEN_MAX; gen++) {
         QFile in(path("legal_combinations_" + QString::number(gen) + "G.txt"));
         in.open(QIODevice::ReadOnly);
         QList<QByteArray> pokes = in.readAll().split('\n');
 
         foreach(QByteArray poke, pokes) {
-            legalCombinations[gen-3]->push_back(QList<QSet<int> >());
-            if (poke.length() > 0) {
-                QList<QByteArray> combs = poke.split('|');
-                foreach(QByteArray comb, combs) {
-                    QList<QByteArray> moves = comb.split(' ');
+            Pokemon::uniqueId id;
+            QString data;
+            if (!id.extract(QString(poke), id, data))
+                continue;
+            /* Even if the hash is empty, it proves it's here, otherwise it would be filled by the data of
+               the base forme */
+            legalCombinations[gen-GEN_MIN].insert(id, QList<QSet<int > >());
+            if (data.length() > 0) {
+                QStringList combs = data.split('|');
+                foreach(QString comb, combs) {
+                    QStringList moves = comb.split(' ');
                     QSet<int> toPush;
-                    foreach(QByteArray move, moves) {
+                    foreach(QString move, moves) {
                         toPush.insert(move.toInt());
                     }
-                    legalCombinations[gen-3]->back().push_back(toPush);
+                    legalCombinations[gen-GEN_MIN][id].push_back(toPush);
                 }
             }
         }
+
+        foreach(Pokemon::uniqueId id, ids) {
+            if (!PokemonInfo::IsForme(id))
+                continue;
+            if (!legalCombinations[gen-GEN_MIN].contains(PokemonInfo::OriginalForme(id)))
+                continue;
+            if (legalCombinations[gen-GEN_MIN].contains(id))
+                continue;
+            legalCombinations[gen-GEN_MIN][id] = legalCombinations[gen-GEN_MIN][PokemonInfo::OriginalForme(id)];
+        }
     }
 }
 
-bool MoveSetChecker::isValid(int pokenum, int gen, int move1, int move2, int move3, int move4, QSet<int> *invalid_moves) {
+bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, int move1, int move2, int move3, int move4, int ability,
+                             QSet<int> *invalid_moves, QString *error) {
     QSet<int> moves;
     moves << move1 << move2 << move3 << move4;
 
-    return isValid(pokenum, gen, moves, invalid_moves);
+    return isValid(pokeid, gen, moves, ability, invalid_moves, error);
 }
 
+static QString getCombinationS(const QSet<int> &invalid_moves) {
+    QString s;
+    bool comma(false);
+    foreach(int move, invalid_moves) {
+        if (comma)
+            s += ", ";
+        comma = true;
+        s += MoveInfo::Name(move);
+    }
+    return s;
+}
 
-bool MoveSetChecker::isValid(int pokenum, int gen, const QSet<int> &moves2, QSet<int> *invalid_moves) {
+bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSet<int> &moves2, int ability, QSet<int> *invalid_moves,
+                             QString *error) {
     QSet<int> moves = moves2;
     moves.remove(0);
 
-    if (!PokemonInfo::Moves(pokenum, gen).contains(moves)) {
-        if (invalid_moves) {
-            *invalid_moves = moves.subtract(PokemonInfo::Moves(pokenum, gen));
-        }
-        return false;
-    }
-
-    if (gen == 3)
-        goto gen3;
-
-    /* now we know the pokemon at least know all moves */
-
-    moves.subtract(PokemonInfo::RegularMoves(pokenum,4));
-
-    if (moves.empty() || moves.size() == 1)
-        return true;
-
-    if (isAnEggMoveCombination(pokenum, 4, moves)) {
-            return true;
-    }
-
-gen3:
-    /* Now we have to go back to third gen, and not use 4 gen egg mvoes / special moves */
-    moves.subtract(PokemonInfo::RegularMoves(pokenum,3));
-
-    if (moves.empty())
-        return true;
-    if (moves.size() == 1) {
-        if (PokemonInfo::EggMoves(pokenum,3).contains(*moves.begin()) ||
-            PokemonInfo::SpecialMoves(pokenum,3).contains(*moves.begin()))
-            return true;
-        else {
+    for (int g = gen; g >= GEN_MIN; g--) {
+        if (!PokemonInfo::Moves(pokeid, g).contains(moves)) {
+            moves.subtract(PokemonInfo::Moves(pokeid, g));
             if (invalid_moves) {
                 *invalid_moves = moves;
             }
+            if (error) {
+                *error = QObject::tr("%1 can't learn the following moves: %2.")
+                         .arg(PokemonInfo::Name(pokeid), getCombinationS(moves));
+            }
             return false;
+        }
+        if (g < 5) {
+            AbilityGroup ab = PokemonInfo::Abilities(pokeid);
+
+            if (ability != ab.ab(0) && ability != ab.ab(1) && ability != 0) {
+                if (invalid_moves) {
+                    *invalid_moves = moves;
+                }
+                if (error) {
+                    *error = QObject::tr("%1 can't learn the following moves from older generations at the same time as having the Dream World ability %2: %3.")
+                             .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
+                }
+                return false;
+            }
+        }
+
+        /* now we know the pokemon at least knows all moves */
+        moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
+
+        if (moves.empty() || (moves.size() == 1 && PokemonInfo::HasMoveInGen(pokeid, *moves.begin(), g)))
+            return true;
+
+        if (isAnEggMoveCombination(pokeid, g, moves)) {
+            return true;
         }
     }
 
-    if (isAnEggMoveCombination(pokenum, 3, moves)) {
-            return true;
-    }
-
+    /* The remaining moves are considered invalid */
     if (invalid_moves) {
         *invalid_moves = moves;
     }
+    if (error) {
+        if (moves.size() == 1) {
+            *error = QObject::tr("%1 can't learn %2 with moves from older generations.").arg(PokemonInfo::Name(pokeid), MoveInfo::Name(*moves.begin()));
+        } else {
+            *error = QObject::tr("%1 can't learn the following move combination: %2.").arg(PokemonInfo::Name(pokeid), getCombinationS(moves));
+        }
+    }
+
     return false;
 }
 
 /* Used by ChainBreeding */
-bool MoveSetChecker::isAnEggMoveCombination(int pokenum, int gen, QSet<int> moves)
+bool MoveSetChecker::isAnEggMoveCombination(const Pokemon::uniqueId &pokeid, int gen, QSet<int> moves)
 {
-    foreach(QSet<int> combination, (*legalCombinations[gen-3])[pokenum]) {
+    foreach(QSet<int> combination, legalCombinations[gen-GEN_MIN].value(pokeid)) {
         if (combination.contains(moves))
             return true;
     }
@@ -109,7 +147,7 @@ bool MoveSetChecker::isAnEggMoveCombination(int pokenum, int gen, QSet<int> move
     return false;
 }
 
-QList<QSet<int> > MoveSetChecker::combinationsFor(int pokenum, int gen)
+QList<QSet<int> > MoveSetChecker::combinationsFor(Pokemon::uniqueId pokenum, int gen)
 {
-    return (*legalCombinations)[gen-3][pokenum];
+    return legalCombinations[gen-GEN_MIN].value(pokenum);
 }

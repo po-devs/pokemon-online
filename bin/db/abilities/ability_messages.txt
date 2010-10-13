@@ -31,24 +31,24 @@
 %s's %a prevents its stat from being lowered!
 %s's %a prevented its stats from being lowered!
 %s's %a heals it!
-%s's %a cures it!
+%s's %a cures it!|%s didn't get paralyzed because of its %a!|%s stayed awake because of its %a!|%s didn't get frozen because of its %a!|%s didn't get burnt because of its %a!|%s didn't get poisoned because of its %a!
 %s intimidates %f!|%f's substitute suppressed %s's Intimidate!
 
 
 %s's Leaf Guard prevents it from being affected by any status from the opponent!
-%s's %a took the attack!
+%s's %a took the attack!|%s's %a raised its special attack!|%s's %a made the attack useless!
 
-%s has Mold Breaker!
+%s has %a!
 %s's Motor Drive raises its speed!
 
 
-%s's Own Tempo cures its confusion!
+%s's Own Tempo cures its confusion!|%s's Own Tempo prevented it from getting confused!
 %s restored HP using its Poison Heal!
 %s is exerting its Pressure!
+%s's ability became Mummy!
 
 
-
-%s's Rough Skin hurts %f
+%s's %a hurts %f
 
 
 
@@ -56,7 +56,7 @@
 %s can't get it going because of it's Slow Start!|%s finally got its act together!
 %s lost some HP because of Solar Power!
 %s's Sound Proof blocks the attack!
-%s's Speed Boost increases its speed!
+%s's Speed Boost increases its speed!|%s's Justice Heart increases its attack!
 
 %s's SteadFast increases its speed!
 %s's Synchronize changes the status of %f!
@@ -66,26 +66,35 @@
 
 %s traced %f's %a!
 %s is carelessly slacking off!
-
+%s's %a raised its attack!|%s's %a made the attack useless!
 
 %s's %a absorbs the attack!|%s's %a made the attack useless!
 %s's Wonder Guard evades the attack!
 
 
+%s lost part of its armor!
 
 
 
+%s stole %f's %i!
+
+%s's Competitive Spirit sharply raised its Attack!
+%s transformed into %p!
 
 
 
+%s avoided %t's attack thanks to its Telepathy!
+%s regains health with its Regeneration!
 
+%s's gained a %i thanks to its Harvest!
 
+%s's Miracle Skin protected it from status!
+%s held on thanks to Sturdy!
 
+%s picked up the %i!
+%s's Justice Heart raises its attack!
+%s's Inconsistent sharply raises its %st!|%s's Inconsistent lowers its %st!
+%s's Cursed Body activates!
+%s raised its Speed in fear!
 
-
-
-
-
-
-
-
+%s's Healing Heart cured %f's status!

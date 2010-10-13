@@ -1,8 +1,8 @@
 PS
 Ataque
 Defensa
-Velocidad
 At.Esp
 Def.Esp
-Evasión
+Velocidad
 Precisión
+Evasión

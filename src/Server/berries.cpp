@@ -8,6 +8,7 @@ typedef BattleSituation BS;
 struct BMStatusBerry : public BM
 {
     BMStatusBerry() {
+        functions["UponSetup"] = &asc;
         functions["AfterStatusChange"] = &asc;
     }
 
@@ -41,12 +42,9 @@ struct BMStatusBerry : public BM
 
         /* LumBerry */
         if (arg == 0) {
+            if (status == Pokemon::Fine)
+                return;
             goto end;
-        }    /* Poison Berry */
-        else if (arg == Pokemon::Poisoned) {
-            if (status == Pokemon::Poisoned || status == Pokemon::DeeplyPoisoned) {
-                goto end;
-            }
         } else { /* Other Status Berry */
             if (status == arg) {
                 goto end;
@@ -65,10 +63,13 @@ struct BMStatusBerry : public BM
 struct BMLeppa : public BM
 {
     BMLeppa() {
-        functions["BeforeEnding"] = &appl;
+        functions["UponSetup"] = &appl;
+        functions["AfterTargetList"] = &appl;
     }
 
     static void appl(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
         int minmove = 0;
         int minPP = 100;
         bool init = false;
@@ -123,6 +124,7 @@ struct BMPinch : public BM
 struct BMPinchHP : public BMPinch
 {
     BMPinchHP() {
+        functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
     }
@@ -132,7 +134,7 @@ struct BMPinchHP : public BMPinch
            but only after side effects applied. At that time, the battle thread will call
            the effect "TestPinch"
         */
-        if (b.attacked() == s && turn(b,b.attacker())["Power"].toInt() > 0)
+        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
             return;
         tp(s, s, b);
     }
@@ -162,7 +164,7 @@ struct BMAntiSuperEffective : public BM
     }
 
     static void m3b(int s, int t, BS &b) {
-        if (!b.hasSubstitute(s) && turn(b,t)["TypeMod"].toInt() > 4 && turn(b,t)["Type"].toInt() == poke(b,s)["ItemArg"].toInt()) {
+        if (!b.hasSubstitute(s) && turn(b,t)["TypeMod"].toInt() > 4 && tmove(b,t).type == poke(b,s)["ItemArg"].toInt()) {
             b.sendBerryMessage(4,s,0,t,b.poke(s).item(),move(b,t));
             b.eatBerry(s,false);
 
@@ -180,8 +182,8 @@ struct BMAntiNormal : public BM
     static void m3b(int s, int t, BS &b) {
         if (b.gen() >= 4) {
             /* Normal moves */
-            if (!b.hasSubstitute(s) && turn(b,t)["Type"].toInt() == 0) {
-                b.sendBerryMessage(4,s,0,t,b.poke(s).item(),turn(b,t)["Move"].toInt());
+            if (!b.hasSubstitute(s) && tmove(b,t).type == 0) {
+                b.sendBerryMessage(4,s,0,t,b.poke(s).item(),move(b,t));
                 b.eatBerry(s,false);
 
                 turn(b,t)["Mod3Berry"] = -5;
@@ -212,6 +214,7 @@ struct BMSuperHP : public BM
 struct BMPinchStat : public BMPinch
 {
     BMPinchStat() {
+        functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
     }
@@ -221,7 +224,7 @@ struct BMPinchStat : public BMPinch
            but only after side effects applied. At that time, the battle thread will call
            the effect "TestPinch"
         */
-        if (b.attacked() == s && turn(b,b.attacker())["Power"].toInt() > 0)
+        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
             return;
         tp(s, s, b);
     }
@@ -236,13 +239,14 @@ struct BMPinchStat : public BMPinch
 
         int arg = poke(b,s)["ItemArg"].toInt();
         b.sendBerryMessage(7,s,0,s,berry, arg);
-        b.gainStatMod(s, arg, 1,false);
+        b.inflictStatMod(s, arg, 1, s, false);
     }
 };
 
 struct BMCriticalPinch : public BMPinch
 {
     BMCriticalPinch() {
+        functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
     }
@@ -252,7 +256,7 @@ struct BMCriticalPinch : public BMPinch
            but only after side effects applied. At that time, the battle thread will call
            the effect "TestPinch"
         */
-        if (b.attacked() == s && turn(b,b.attacker())["Power"].toInt() > 0)
+        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
             return;
         tp(s, s, b);
     }
@@ -273,8 +277,8 @@ struct BMCriticalPinch : public BMPinch
         addFunction(turn(b,s), "BeforeTargetList", "FocusEnergy", &btl);
     }
     static void btl(int s, int, BS &b) {
-        if (turn(b,s)["Power"].toInt() > 0) {
-            inc(turn(b,s)["CriticalRaise"], 2);
+        if (tmove(b,b.attacker()).power > 0) {
+            tmove(b,s).critRaise += 2;
         }
     }
 };
@@ -282,6 +286,7 @@ struct BMCriticalPinch : public BMPinch
 struct BMStarf : public BMPinch
 {
     BMStarf() {
+        functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
     }
@@ -291,7 +296,7 @@ struct BMStarf : public BMPinch
            but only after side effects applied. At that time, the battle thread will call
            the effect "TestPinch"
         */
-        if (b.attacked() == s && turn(b,b.attacker())["Power"].toInt() > 0)
+        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
             return;
         tp(s, s, b);
     }
@@ -303,7 +308,7 @@ struct BMStarf : public BMPinch
             return;
 
         int stat = (b.true_rand()%5) +1;
-        b.gainStatMod(s, stat, 2,false);
+        b.inflictStatMod(s, stat, 2, s, false);
         b.sendBerryMessage(9,s,0,s,berry, stat);
     }
 };
@@ -346,7 +351,7 @@ struct BMBerryRecoil : public BM
 
     static void uodr(int s, int t, BS &b) {
         //Magic Guard
-        if (turn(b,t)["Category"].toInt() != poke(b,s)["ItemArg"].toInt() || b.koed(t) || b.hasWorkingAbility(t, Ability::MagicGuard)) {
+        if (tmove(b,s).category != poke(b,s)["ItemArg"].toInt() || b.koed(t) || b.hasWorkingAbility(t, Ability::MagicGuard)) {
             return;
         }
         b.eatBerry(s);

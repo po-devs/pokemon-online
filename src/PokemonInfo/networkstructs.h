@@ -77,7 +77,7 @@ public:
     qint8 auth;
     quint8 flags;
     qint16 rating;
-    qint16 pokes[6];
+    Pokemon::uniqueId pokes[6];
     quint16 avatar;
     QString tier;
     QColor color;

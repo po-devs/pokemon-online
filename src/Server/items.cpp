@@ -33,7 +33,7 @@ void ItemEffect::setup(int num, int source, BattleSituation &b)
 
 	//dun remove the test
 	if (effect.args.size() > 0) {
-	    b.pokelong[source]["ItemArg"] = effect.args;
+            IM::poke(b,source)["ItemArg"] = effect.args;
 	}
     }
 
@@ -79,8 +79,18 @@ struct IMLeftOvers : public IM
 struct IMChoiceItem : public IM
 {
     IMChoiceItem() {
+        functions["UponSetup"] = &us;
 	functions["MovesPossible"] = &mp;
+        functions["BeforeTargetList"] = &btl;
 	functions["AfterTargetList"] = &atl;
+    }
+
+    static void us(int s, int, BS &b) {
+        /* In gens after 5, the user is not locked anymore
+           even after tricking with a foe */
+        if (b.gen() >= 5) {
+            poke(b,s).remove("ChoiceMemory");
+        }
     }
 
     static void mp(int s, int, BS &b) {
@@ -106,7 +116,17 @@ struct IMChoiceItem : public IM
 	}
     }
 
+    static void btl(int s, int, BS &b) {
+        if (b.gen() < 5)
+            return;
+        /* Last move used is here not to take "special occurence" moves */
+        poke(b,s)["ChoiceMemory"] = poke(b,s)["LastMoveUsed"];
+    }
+
     static void atl(int s, int, BS &b) {
+        if (b.gen() > 4)
+            return;
+        /* Last move used is here not to take "special occurence" moves */
 	poke(b,s)["ChoiceMemory"] = poke(b,s)["LastMoveUsed"];
     }
 };
@@ -132,8 +152,10 @@ struct IMFocusBand : public IM
 
     static void btd(int s, int t, BS &b) {
         if (b.true_rand() % 10 == 0) {
-	    turn(b,s)["CannotBeKoedBy"] = t;
-	}
+            turn(b,s)["CannotBeKoedBy"] = t;
+        } else if (b.gen() >= 5){
+            turn(b,s).remove("CannotBeKoedBy");
+        }
     }
 
     static void uodr(int s, int t, BS &b) {
@@ -142,6 +164,14 @@ struct IMFocusBand : public IM
         if (turn(b,s).contains("CannotBeKoedBy") && turn(b,s)["CannotBeKoedBy"].toInt() == t && b.poke(s).lifePoints() == 1) {
 	    b.sendItemMessage(4, s);
 	}
+
+        /* future: if another thing touches CannotBeKoedBy, make sure focus sash doesn't remove it when it shouldn't.
+           Focus band is ok because you can't have 2 items at once */
+        /* list of other effects: false swipe, focus band */
+        /* In gen 5, focus sash doesn't block all the hits of a multi hit attack */
+        if (b.gen() >= 5) {
+            turn(b,s).remove("CannotBeKoedBy");
+        }
     }
 };
 
@@ -154,7 +184,7 @@ struct IMFocusSash : public IM
 
     static void btd(int s, int t, BS &b) {
 	if(b.poke(s).isFull()) {
-	    turn(b,s)["CannotBeKoedBy"] = t;
+            turn(b,s)["CannotBeKoedBy"] = t;
 	}
     }
 
@@ -164,6 +194,14 @@ struct IMFocusSash : public IM
         if (turn(b,s).contains("CannotBeKoedBy") && turn(b,s)["CannotBeKoedBy"].toInt() == t && b.poke(s).lifePoints() == 1) {
 	    b.sendItemMessage(5, s);
 	    b.disposeItem(s);
+
+            /* future: if another thing touches CannotBeKoedBy, make sure focus sash doesn't remove it when it shouldn't.
+               Focus band is ok because you can't have 2 items at once */
+            /* list of other effects: false swipe, focus band */
+            /* In gen 5, focus sash doesn't block all the hits of a multi hit attack */
+            if (b.gen() >= 5) {
+                turn(b,s).remove("CannotBeKoedBy");
+            }
 	}
     }
 };
@@ -184,7 +222,7 @@ struct IMBoostPokeStat : public IM
 	functions["StatModifier"] = &sm;
     }
     static void sm(int s,int, BS &b) {
-        int num = b.pokenum(s);
+        int num = b.pokenum(s).pokenum;
 	QStringList args = poke(b,s)["ItemArg"].toString().split('_');
 	if(!args[0].split('/').contains(QString::number(num))) {
 	    return;
@@ -202,7 +240,7 @@ struct IMBoostCategory : public IM
 	functions["BasePowerModifier"] = &bpm;
     }
     static void bpm(int s, int, BS &b) {
-	if (turn(b,s)["Category"] == poke(b,s)["ItemArg"]) {
+        if (tmove(b,s).category == poke(b,s)["ItemArg"]) {
 	    turn(b,s)["BasePowerItemModifier"] = 1;
 	}
     }
@@ -214,7 +252,7 @@ struct IMBoostType : public IM
 	functions["BasePowerModifier"] = &bpm;
     }
     static void bpm(int s, int, BS &b) {
-	if (turn(b,s)["Type"] == poke(b,s)["ItemArg"]) {
+        if (tmove(b,s).type == poke(b,s)["ItemArg"]) {
             if (b.gen() >= 4)
                 turn(b,s)["BasePowerItemModifier"] = 2;
             else
@@ -231,7 +269,7 @@ struct IMZoomLens : public IM
 
     static void sm(int s, int t, BS &b) {
 	if (turn(b,t)["HasMoved"].toBool() == true) {
-	    turn(b,s)["Stat7ItemModifier"] = 4;
+            turn(b,s)["Stat6ItemModifier"] = 4;
 	}
     }
 };
@@ -254,7 +292,7 @@ struct IMStatusOrb : public IM
 	} else {
 	    b.sendItemMessage(19,s,1);
 	}
-        b.inflictStatus(s, status, s);
+        b.inflictStatus(s, status, s, status == Pokemon::Poisoned ? 15: 0, status == Pokemon::Poisoned ? 15: 0);
     }
 };
 
@@ -271,20 +309,28 @@ struct IMLifeOrb : public IM
     }
 
     static void udi(int s, int t, BS &b) {
-	if (s == t)
+        if (s == t)
 	    return; /* life orb doesn't recoil with self damage */
 	if (b.koed(s))
 	    return;
 
-	if (turn(b,t).contains("DamageTakenBy") && turn(b,t)["DamageTakenBy"].toInt() == s) {
+        /* In gen 4, it does not damage the user if the foe has a substitute. In gen 5, it does */
+        if (b.gen() <= 4 && turn(b,t).contains("DamageTakenBy") && turn(b,t)["DamageTakenBy"].toInt() == s) {
             turn(b,s)["ActivateLifeOrb"] = true;
-	}
+        } else if (b.gen() >= 5 && turn(b,s).contains("DamageInflicted")) {
+            turn(b,s)["ActivateLifeOrb"] = true;
+        }
     }
 
     static void atl(int s, int, BS &b) {
         if (turn(b,s).value("ActivateLifeOrb").toBool() && !b.hasWorkingAbility(s, Ability::MagicGuard)) {
             //b.sendItemMessage(21,s);
             b.inflictDamage(s,b.poke(s).totalLifePoints()/10,s);
+
+            /* Self KO Clause */
+            if (b.koed(s)) {
+                b.selfKoer() = s;
+            }
         }
     }
 };
@@ -296,7 +342,7 @@ struct IMScopeLens : public IM
     }
 
     static void btl(int s, int, BS &b) {
-	inc(turn(b,s)["CriticalRaise"], 1);
+        tmove(b, s).critRaise += 1;
     }
 };
 
@@ -324,8 +370,8 @@ struct IMCriticalPoke : public IM
     }
 
     static void btl(int s, int, BS &b) {
-	if (poke(b,s)["Num"] == poke(b,s)["ItemArg"]) {
-	    inc(turn(b,s)["CriticalRaise"], 2);
+        if (b.pokenum(s).pokenum == poke(b,s)["ItemArg"].toInt()) {
+            tmove(b,s).critRaise += 2;
 	}
     }
 };
@@ -338,12 +384,12 @@ struct IMPokeTypeBoost : public IM
     static void bpm(int s, int, BS &b) {
 	QStringList args = poke(b,s)["ItemArg"].toString().split('_');
         QStringList pokes = args[0].split('/');
-        if (!pokes.contains(QString::number(b.pokenum(s))))
+        if (!pokes.contains(QString::number(b.pokenum(s).pokenum)))
 	    return;
 
-	QString type = turn(b,s)["Type"].toString();
+        int type = tmove(b,s).type;
 	for (int i = 1; i < args.size(); i++) {
-	    if (type == args[i])
+            if (type == args[i].toInt())
 		turn(b,s)["BasePowerItemModifier"] = 2;
 	}
     }
@@ -394,7 +440,7 @@ struct IMMetronome : public IM
 	    poke(b,s)["IMMetroCount"] = 0;
 	    return;
 	}
-	if (turn(b,s)["Power"].toInt() == 0) {
+        if (tmove(b,s).power == 0) {
 	    return;
 	}
 	if (act) {
@@ -449,9 +495,9 @@ struct IMWhiteHerb : public IM
     static void as(int s, int, BS &b) {
 	bool act = false;
 	for (int i = 1; i <= 7; i++) {
-	    if (poke(b,s)["Boost" + QString::number(i)].toInt() < 0) {
+            if (fpoke(b,s).boosts[i] < 0) {
 		act = true;
-		poke(b,s)["Boost"+ QString::number(i)] = 0;
+                fpoke(b,s).boosts[i] = 0;
 	    }
 	}
 	if (act) {
@@ -476,6 +522,184 @@ struct IMBerryJuice : public IM
     }
 };
 
+struct IMEvolutionStone : public IM
+{
+    IMEvolutionStone() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm(int s, int, BS &b) {
+        if (PokemonInfo::HasEvolutions(b.poke(s).num().pokenum)) {
+            turn(b,s)["Stat2ItemModifier"] = 10;
+            turn(b,s)["Stat4ItemModifier"] = 10;
+        }
+    }
+};
+
+struct IMRuggedHelmet : public IM
+{
+    IMRuggedHelmet() {
+        functions["UponPhysicalAssault"] = &upa;
+    }
+
+    static void upa( int s, int t, BS &b) {
+        if (!b.koed(t)) {
+            b.sendItemMessage(34,s,0,t);
+            b.inflictDamage(t,b.poke(t).totalLifePoints()/6,s,false);
+        }
+    }
+};
+
+struct IMBalloon : public IM
+{
+    IMBalloon() {
+        functions["UponSetup"] = &us;
+        functions["UponBeingHit"] = &upbi;
+    }
+
+    static void us(int s, int, BS &b) {
+        b.sendItemMessage(35, s, 1);
+    }
+
+    static void upbi(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
+        b.sendItemMessage(35,s,0);
+        b.disposeItem(s);
+    }
+};
+
+struct IMBulb : public IM
+{
+    IMBulb() {
+        functions["UponBeingHit"] = &ubh;
+    }
+
+    static void ubh(int s, int t, BS &b) {
+        if (!b.koed(s) && type(b,t) == poke(b,s)["ItemArg"].toInt() && !b.hasMaximalStatMod(s, SpAttack)) {
+            b.sendItemMessage(36, s, 0, t, b.poke(s).item());
+            b.disposeItem(s);
+            b.inflictStatMod(s, SpAttack, 1, s, false);
+        }
+    }
+};
+
+struct IMJewel : public IM
+{
+    IMJewel() {
+        functions["BeforeTargetList"] = &btl;
+    }
+
+    static void btl(int s, int, BS &b) {
+        if (tmove(b,s).power <= 1) {
+            return;
+        }
+        if (tmove(b,s).type != poke(b,s)["ItemArg"].toInt())
+            return;
+        b.sendItemMessage(37, s, 0, 0, b.poke(s).item(), move(b,s));
+        tmove(b,s).power = tmove(b,s).power * 3 / 2;
+        b.disposeItem(s);
+    }
+};
+
+struct IMRedCard : public IM
+{
+    IMRedCard() {
+        functions["UponBeingHit"] = &ubh;
+    }
+
+    static void ubh(int s, int t, BS &b) {
+        if (b.koed(s))
+            return;
+
+        addFunction(turn(b,t), "AfterAttackFinished", "RedCard", &aaf);
+        turn(b,t)["RedCardUser"] = s;
+        turn(b,t)["RedCardCount"] = slot(b,t)["SwitchCount"];
+        turn(b,t)["RedCardGiverCount"] = slot(b,s)["SwitchCount"];
+
+        return;
+    }
+
+    static void aaf(int t, int, BS &b) {
+        if (turn(b,t)["RedCardCount"] != slot(b,t)["SwitchCount"])
+            return;
+        int s = turn(b,t)["RedCardUser"].toInt();
+        if (b.koed(s) || turn(b,t)["RedCardGiverCount"] != slot(b,s)["SwitchCount"])
+            return;
+        if (!b.hasWorkingItem(s, Item::RedCard))
+            return;
+
+        int target = b.player(t);
+        if (b.countBackUp(target) == 0) {
+            return;
+        }
+
+        b.sendItemMessage(38, s, 0, t);
+        b.disposeItem(s);
+
+        /* ingrain & suction cups */
+        if (poke(b,t).value("Rooted").toBool()) {
+            b.sendMoveMessage(107, 1, s, Pokemon::Grass,t);
+            return;
+        } else if (b.hasWorkingAbility(t,Ability::SuctionCups)) {
+            b.sendMoveMessage(107, 0, s, 0,t);
+            return;
+        }
+
+        QList<int> switches;
+
+        for (int i = 0; i < 6; i++) {
+            if (!b.isOut(target, i) && !b.poke(target,i).ko()) {
+                switches.push_back(i);
+            }
+        }
+        b.sendBack(t, true);
+        b.sendPoke(t, switches[b.true_rand()%switches.size()], true);
+        b.sendMoveMessage(107,2,s,0,t);
+        b.callEntryEffects(t);
+    }
+};
+
+struct IMEscapeButton : public IM
+{
+    IMEscapeButton() {
+        functions["UponBeingHit"] = &ubh;
+    }
+
+    static void ubh(int s, int t, BS &b) {
+        if (b.koed(s) || b.hasSubstitute(s))
+            return;
+        turn(b,s)["EscapeButtonActivated"] = true;
+        turn(b,s)["EscapeButtonCount"] = slot(b,s)["SwitchCount"];
+
+        addFunction(turn(b,t), "AfterAttackFinished", "EscapeButton", &aaf);
+    }
+
+    static void aaf(int, int, BS &b) {
+        std::vector<int> speeds = b.sortedBySpeed();
+
+        for (unsigned i = 0; i < speeds.size(); i++) {
+            int p = speeds[i];
+            if (!b.hasWorkingItem(p, Item::EscapeButton))
+                continue;
+            if (!turn(b,p).contains("EscapeButtonActivated"))
+                continue;
+            if (turn(b,p)["EscapeButtonCount"] != slot(b,p)["SwitchCount"])
+                continue;
+
+            b.sendItemMessage(39, p, 0);
+            b.disposeItem(p);
+            b.requestSwitch(p);
+        }
+    }
+};
+
+/* Needs a function in order for its Item argument to be registered */
+struct IMCassette : public IM {
+    IMCassette() {
+
+    }
+};
 
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
@@ -504,6 +728,14 @@ void ItemEffect::init()
     REGISTER_ITEM(26, CriticalPoke);
     REGISTER_ITEM(27, PokeTypeBoost);
     REGISTER_ITEM(28, StickyBarb);
+    REGISTER_ITEM(32, Cassette);
+    REGISTER_ITEM(33, EvolutionStone);
+    REGISTER_ITEM(34, RuggedHelmet);
+    REGISTER_ITEM(35, Balloon);
+    REGISTER_ITEM(36, Bulb);
+    REGISTER_ITEM(37, Jewel);
+    REGISTER_ITEM(38, RedCard);
+    REGISTER_ITEM(39, EscapeButton);
 
     initBerries();
 }

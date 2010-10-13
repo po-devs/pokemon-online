@@ -2,9 +2,11 @@
 #define DOCKINTERFACE_H
 
 #include <QtGui>
+#include "../PokemonInfo/pokemonstructs.h"
 
 class QStackedWidget;
 class TB_TeamBody;
+
 class DockAdvanced : public QStackedWidget
 {
     Q_OBJECT
@@ -15,7 +17,7 @@ class DockAdvanced : public QStackedWidget
 
  public slots:
     void setCurrentPokemon(int index);
-    void setPokemonNum(int indexStack,int pokeNum);
+    void setPokemonNum(int indexStack, Pokemon::uniqueId);
 
  private:
     TB_TeamBody * m_builder;

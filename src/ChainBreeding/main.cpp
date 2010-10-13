@@ -43,8 +43,8 @@ int main(int, char**)
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    int pokenum = 386;
-    int gen = 3;
+    int pokenum = 649;
+    int gen = 5;
 
     qDebug() << "Gen " << gen;
     qDebug() << "Pokemons: " << pokenum;
@@ -53,8 +53,13 @@ int main(int, char**)
     int count = 0;
 
     for (int i = 0; i <= pokenum; i++) {
-        QString group1(getLine("db/pokes/poke_egg_group_1.txt",i));
-        QString group2(getLine("db/pokes/poke_egg_group_2.txt",i));
+        QString group1(getLine("db/pokes/poke_egg_group_1.txt",i).section(' ', 1));
+        QString group2(getLine("db/pokes/poke_egg_group_2.txt",i).section(' ', 1));
+
+        if (group1.toInt() != 0)
+            group1 = "";
+        if (group2.toInt() != 0)
+            group2 = "";
 
         pokesOfGroup.insert(group1,i);
         pokesOfGroup.insert(group2,i);
@@ -75,6 +80,16 @@ int main(int, char**)
         qDebug() << "Doing poke " << PokemonInfo::Name(i);
         legalCombinations.push_back(QSet<QSet<int> > ());
 
+        QString groups[2] = {getLine("db/pokes/poke_egg_group_1.txt",i).section(' ', 1),
+                             getLine("db/pokes/poke_egg_group_2.txt",i).section(' ', 1)};
+        if (groups[0].toInt() != 0)
+            groups[0] = "";
+        if (groups[1].toInt() != 0)
+            groups[1] = "";
+
+        if (groups[0] == "" && groups[1] == "")
+            continue;
+
         QSet<int> eggMoves = PokemonInfo::EggMoves(i, gen);
         QSet<int> regularMoves = PokemonInfo::RegularMoves(i, gen);
 
@@ -83,47 +98,65 @@ int main(int, char**)
             eggMoves.remove(move);
         }
 
-        QString groups[2] = {getLine("db/pokes/poke_egg_group_1.txt",i),
-                             getLine("db/pokes/poke_egg_group_2.txt",i)};
+        eggMoves.remove(0);
+
+        if (eggMoves.size() == 0)
+            continue;
 
         /* All egg moves combinations */
         QSet<QSet<int> > allCombinations;
 
         QList<int> toList = eggMoves.toList();
 
-        /* Brute force to without recursion for the heck of it to get all combinations (non ordered, of course)*/
-        QVector<int> currentVect;
+        QList<QSet<int> > combinations = MoveSetChecker::combinationsFor(i, gen);
+        allCombinations = combinations.toSet();
 
-        currentVect.resize(1);
-
-        while (currentVect.size() < toList.size()) {
-            currentVect.push_back(0);
-            for (int i = 0; i < currentVect.size(); i++) {
-                currentVect[i] = i;
+        foreach(int move, toList) {
+            foreach(int move2, toList) {
+                if (move != move2)
+                    allCombinations.insert(QSet<int> () << move << move2);
             }
-
-            int posInVect = 0;
-            while(posInVect != -1) {
-                QSet<int> toPush;
-                for (int j = 0; j < currentVect.size(); j++) {
-                    toPush.insert(toList[currentVect[j]]);
-                }
-                allCombinations.insert(toPush);
-                /* on to the next */
-                posInVect = currentVect.size()-1;
-                while (posInVect != -1 && currentVect[posInVect] == toList.size()-(currentVect.size()-posInVect)) {
-                    posInVect--;
-                }
-                if (posInVect >= 0) {
-                    currentVect[posInVect]++;
-                    posInVect++;
-                    while(posInVect < currentVect.size()) {
-                        currentVect[posInVect] = currentVect[posInVect-1] + 1;
-                        posInVect++;
-                    }
+            foreach(QSet<int> combination, combinations) {
+                if (!combination.contains(move)) {
+                    combination.insert(move);
+                    allCombinations.insert(combination);
                 }
             }
         }
+
+//        /* Brute force to without recursion for the heck of it to get all combinations (non ordered, of course)*/
+//        QVector<int> currentVect;
+
+//        currentVect.resize(1);
+
+//        while (currentVect.size() < toList.size()) {
+//            currentVect.push_back(0);
+//            for (int i = 0; i < currentVect.size(); i++) {
+//                currentVect[i] = i;
+//            }
+
+//            int posInVect = 0;
+//            while(posInVect != -1) {
+//                QSet<int> toPush;
+//                for (int j = 0; j < currentVect.size(); j++) {
+//                    toPush.insert(toList[currentVect[j]]);
+//                }
+//                allCombinations.insert(toPush);
+//                /* on to the next */
+//                posInVect = currentVect.size()-1;
+//                while (posInVect != -1 && currentVect[posInVect] == toList.size()-(currentVect.size()-posInVect)) {
+//                    posInVect--;
+//                }
+//                if (posInVect >= 0) {
+//                    currentVect[posInVect]++;
+//                    posInVect++;
+//                    while(posInVect < currentVect.size()) {
+//                        currentVect[posInVect] = currentVect[posInVect-1] + 1;
+//                        posInVect++;
+//                    }
+//                }
+//            }
+//        }
 
         /* Saves up time */
         foreach(QSet<int> combination, allCombinations) {
@@ -166,11 +199,12 @@ int main(int, char**)
                             copy.remove(move);
                         }
                     }
+
                     /* Now then, if copy.size() is 0 then all moves in the combination are
                        part from the regular moves of the father. Otherwise, all regular moves
                         are removed and the remaining moves are in copy and tested to see if the
                         father could learn them legally */
-                    if (copy.empty() || MoveSetChecker::isAnEggMoveCombination(poke, gen, copy)) {
+                    if (copy.empty() || MoveSetChecker::isValid(poke, gen, copy)) {
                         legalCombinations[i].insert(combination);
                         /* we remove it to avoid doing it again */
                         allCombinations.remove(combination);
@@ -216,34 +250,51 @@ int main(int, char**)
         /* Removing all "sub-lists" (like, if 3 moves form a combination, then
            2 too) to spare some space. Pokemons that have all 4 moves available are
             happy with that! */
-        QSet<QSet<int> > copy = legalCombinations[i];
-        foreach(QSet<int> s, copy) {
-            if (s.size() <= 2) {
-                continue;
-            }
-            foreach (int move, s) {
-                QSet<int> s2 = s;
-                s2.remove(move);
-                legalCombinations[i].remove(s2);
+        foreach(QSet<int> s, legalCombinations[i]) {
+            foreach(QSet<int> s2, legalCombinations[i]) {
+                if (s2.size() != s.size() && s2.contains(s)) {
+                    legalCombinations[i].remove(s);
+                }
             }
         }
+
+        //BIGGEST MISTAKE EVER
+//        /* Uniting all sets that have a size of 4 or bigger, as those sets ... */
+//        QSet<int> united;
+//        foreach(QSet<int> s, legalCombinations[i]) {
+//            if (s.size() < 4)
+//                continue;
+//            united.unite(s);
+//            legalCombinations[i].remove(s);
+//        }
+//        if (united.size() > 0)
+//            legalCombinations[i].insert(united);
     }
 
     /* Now we proudly save the obtained combinations */
 
-    QFile out("legal_combinations_" +QString::number(gen) + "G.txt");
+    QFile out("db/pokes/legal_combinations_" +QString::number(gen) + "G.txt");
     out.open(QIODevice::WriteOnly);
 
     bool space, ord, newline;
     newline = false;
     for (int i = 0; i <= pokenum; i++) {
+        if (legalCombinations[i].size() == 0)
+            continue;
+
         if (newline)
             out.putChar('\n');
         ord=false;
+        out.write(QString("%1:0 ").arg(i).toUtf8());
         foreach(QSet<int> sset,legalCombinations[i]) {
+            sset.remove(0);
+            if (sset.size() == 0)
+                continue;
+
             if (ord)
                 out.putChar('|');
             space = false;
+
             foreach(int val, sset) {
                 if (space)
                     out.putChar(' ');

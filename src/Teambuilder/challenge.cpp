@@ -3,11 +3,12 @@
 #include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "theme.h"
 
 BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &windowTitle, const QString &buttonOk, const QString &buttonNo, QWidget *parent)
         : emitOnClose(true)
 {
-    setPixmap(QPixmap("db/Challenge Window/ChallengeBG.png"));
+    setPixmap(Theme::Sprite("challengebg"));
     setFixedSize(pixmap()->size());
 
     setParent(parent);
@@ -25,9 +26,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
 
     QLabel *trainerPic = new QLabel(this);
     trainerPic->move(13,85);
-    QPixmap px (QString("db/Trainer Sprites/%1.png").arg(p.avatar));
-    if (px.isNull())
-        px = QString("db/Trainer Sprites/%1.png").arg(167);
+    QPixmap px = Theme::Pic(QString("Trainer Sprites/%1.png").arg(p.avatar));
     trainerPic->setPixmap(px);
 
     bool hidden = p.pokes[0]==0;
@@ -35,7 +34,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     if (hidden) {
         QLabel *hiddenTeam = new QLabel(this);
         hiddenTeam->move(163,82);
-        hiddenTeam->setPixmap(QPixmap("db/Challenge Window/HiddenInnerBall.png"));
+        hiddenTeam->setPixmap(Theme::Sprite("hiddenteam"));
     } else {
         for (int i = 0; i < 6; i++) {
             QLabel *icon = new QLabel(this);
@@ -53,23 +52,24 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     pinfo->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
     battleMode = new QComboBox(this);
-    battleMode->move(18,270);
+    battleMode->move(18,271);
     battleMode->addItem(tr("Singles"));
     battleMode->addItem(tr("Doubles"));
+    //battleMode->addItem(tr("Triples"));
 
     QLabel *ladder = new QLabel(toColor(p.rating == -1 ? "unknown" : QString::number(p.rating), grey),this);
     ladder->setFont(treb);
-    ladder->setGeometry(100,148,83,18);
+    ladder->setGeometry(224,144,83,18);
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
-    QLabel *tier = new QLabel(toBoldColor(p.tier, Qt::white),this);
+    QLabel *tier = new QLabel(QString("<b>%1</b>").arg(p.tier),this);
     tier->setFont(QFont("Trebuchet MS", 10, QFont::Bold));
-    tier->setGeometry(203,148,94,18);
+    tier->setGeometry(116,144,94,18);
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
     QWidget *container = new QWidget(this);
-    container->setGeometry(QRect(322,157,136,136));
-    QVBoxLayout *clausesL= new QVBoxLayout(container);
+    container->setGeometry(QRect(322,138,140,172));
+    QVBoxLayout *clausesL = new QVBoxLayout(container);
     clausesL->setSpacing(0);
 
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
@@ -86,11 +86,11 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     w->setParent(this);
 
     QImageButton *goback;
-    goback = new QImageButton("db/Challenge Window/Buttons/" + buttonNo + "ButtonNormal.png", "db/Challenge Window/Buttons/" + buttonNo + "ButtonGlow.png");
+    goback = Theme::Button(buttonNo);
     goback->setParent(this);
     goback->move(182,330);
 
-    challenge_b = new QImageButton("db/Challenge Window/Buttons/" + buttonOk + "ButtonNormal.png", "db/Challenge Window/Buttons/" + buttonOk + "ButtonGlow.png");
+    challenge_b = Theme::Button(buttonOk);
     challenge_b->setParent(this);
     challenge_b->move(25,330);
 
@@ -135,7 +135,7 @@ void BaseChallengeWindow::onCancel()
 }
 
 ChallengeWindow::ChallengeWindow(const PlayerInfo &p, QWidget *parent)
-        : BaseChallengeWindow(p, tr("%1's Info"), "Chall", "GoBack", parent)
+        : BaseChallengeWindow(p, tr("%1's Info"), "chall", "goback", parent)
 {
     QSettings s;
 
@@ -177,7 +177,7 @@ void ChallengeWindow::keyPressEvent(QKeyEvent *event)
 }
 
 ChallengedWindow::ChallengedWindow(const PlayerInfo &p, const ChallengeInfo &c, QWidget *parent)
-        : BaseChallengeWindow(p, tr("%1 challenged you!"), "Accept", "Decline", parent)
+        : BaseChallengeWindow(p, tr("%1 challenged you!"), "accept", "decline", parent)
 {
     quint32 clauses = c.clauses;
 

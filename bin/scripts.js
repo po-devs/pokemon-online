@@ -36,13 +36,22 @@ init : function() {
 	if (typeof(channelTopics) == 'undefined')
 		channelTopics = [];
 	
+	var dwlist = ["Munna", "Mushaana", "Darumakka", "Hihidaruma", "Eevee", "Umbreon", "Jolteon", "Vaporeon", "Flareon", "Espeon", "Leafeon", "Glaceon"];
+	dwpokemons = [];
+	for(var dwpok in dwpokemons) {
+		dwpokemons.push(sys.pokeNum(dwlist[i]));
+	}
+	
+	if (typeof(varsCreated) != 'undefined')
+        return;
+
 	if (sys.existChannel("Tournaments")) { 
         tourchannel = sys.channelId("Tournaments");
     } else {
         tourchannel = sys.createChannel("Tournaments");
 		channelTopics[tourchannel] = "Welcome to the tournament channel, where tournaments are held! type /join to join a tour in its signup phase! type /viewround to see the progress of an ongoing tournament!";
     }
-	    rules = [ "",
+	rules = [ "",
     "*** Rules ***",
 "",
 "Rule #1 - Do Not Abuse CAPS:",
@@ -68,8 +77,6 @@ init : function() {
 "Rule #11 - Don't spoil Black & White:",
 "- Some people prefer to wait for the release of the game in US and want to enjoy it.",
 ""    ];
-    if (typeof(varsCreated) != 'undefined')
-        return;
 
     battlesStopped = false;
 	channelUsers = [];
@@ -271,6 +278,10 @@ afterChangeTeam : function(src)
             }
         }
     }
+	var tier = sys.tier(src);
+		if (tier != "Dream World" && tier != "Full Dream World") {
+			this.dreamWorldAbilitiesCheck(src, false);
+		}
 }
 
 ,
@@ -281,11 +292,17 @@ beforeChatMessage: function(src, message, chan) {
         return;
     }
     
-    if (sys.auth(src) < 2 && muted[src] === true && message != "!join" && message != "/rules" && message != "/join" && message != "!rules") {
+    if (sys.auth(src) < 3 && muted[src] === true && message != "!join" && message != "/rules" && message != "/join" && message != "!rules") {
         sendChanMessage(src, "+Bot: You are muted");
         sys.stopEvent();
         return;
     }
+
+	if (message != message.replace(/[\u0300-\u036F]/gi,'')) {
+		sys.stopEvent();
+		return; 
+	}
+	
 
     if ((message[0] == '/' || message[0] == '!') && message.length > 1) {
         if (parseInt(sys.time()) - lastMemUpdate > 500) {
@@ -814,7 +831,7 @@ beforeChatMessage: function(src, message, chan) {
             sys.removeVal("muted_*" + sys.ip(tar));
             return;
         }
-        if (sys.auth(src) < 2) {
+        if (sys.auth(src) < 3) {
             return;
         }
         /** Admin Commands **/
@@ -1264,6 +1281,15 @@ beforeChallengeIssued : function (src, dest, clauses, rated, mode) {
 
     this.eventMovesCheck(src);
     this.eventMovesCheck(dest);
+	
+	if (sys.tier(src) == sys.tier(dest)) {
+		var tier = sys.tier(src);
+		
+		if (tier != "Dream World" && tier != "Full Dream World") {
+			this.dreamWorldAbilitiesCheck(src,true);
+			this.dreamWorldAbilitiesCheck(dest,true);
+		}		
+	}
 }
 
 ,
@@ -1275,13 +1301,22 @@ beforeBattleMatchup : function(src,dest,clauses,rated)
         return;
     }
 
-    this.eventMovesCheck(src);
-    this.eventMovesCheck(dest);
-    
     if (tourmode == 2 && (this.isInTourney(sys.name(src)) || this.isInTourney(sys.name(dest)) )) {
         sys.stopEvent();
         return;
     }
+	
+	this.eventMovesCheck(src);
+    this.eventMovesCheck(dest);
+	
+	if (sys.tier(src) == sys.tier(dest)) {
+		var tier = sys.tier(src);
+		
+		if (tier != "Dream World" && tier != "Full Dream World") {
+			this.dreamWorldAbilitiesCheck(src,true);
+			this.dreamWorldAbilitiesCheck(dest,true);
+		}		
+	}
 }
 ,
 
@@ -1300,6 +1335,29 @@ eventMovesCheck : function(src)
             }
         }
     }
+}
+,
+
+
+dreamWorldAbilitiesCheck : function(src, se) {
+	for (var i = 0; i < 6; i++) {
+		var x = sys.teamPoke(src, i);
+		
+		if (x != 0 && dwpokemons.indexOf(x) == -1 && sys.hasDreamWorldAbility(src, i)) {
+			if (se)
+				sys.sendMessage(src, "+CheckBot: " + sys.pokemon(x) + " is not allowed with a Dream World ability in this tier. Change it in the teambuilder.");
+			if (sys.tier(src) == "Wifi") {
+				sys.changeTier(src, "Dream World");
+			} else if (sys.tier(src) == "Full Wifi") {
+				sys.changeTier(src, "Full Dream World");
+			} else 	{
+				if (se)
+					sys.changePokeNum(src, i, 0);
+			}
+			if (se)
+				sys.stopEvent();
+		}
+	}
 }
 
 })

@@ -1,5 +1,4 @@
 #include "battlestructs.h"
-#include "pokemoninfo.h"
 #include "networkstructs.h"
 #include "movesetchecker.h"
 #include "../Utilities/otherwidgets.h"
@@ -14,7 +13,9 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("Item Clause"),
     QObject::tr("Challenge Cup"),
     QObject::tr("No Timeout"),
-    QObject::tr("Species Clause")
+    QObject::tr("Species Clause"),
+    QObject::tr("Wifi Battle"),
+    QObject::tr("Self-KO Clause")
 };
 
 QString ChallengeInfo::clauseBattleText[] =
@@ -27,7 +28,9 @@ QString ChallengeInfo::clauseBattleText[] =
     QObject::tr(""),
     QObject::tr(""),
     QObject::tr("The battle ended by timeout."),
-    QObject::tr("")
+    QObject::tr(""),
+    QObject::tr(""),
+    QObject::tr("The Self-KO Clause acted as a tiebreaker.")
 };
 
 QString ChallengeInfo::clauseDescription[] =
@@ -40,7 +43,9 @@ QString ChallengeInfo::clauseDescription[] =
     QObject::tr("No more than one of the same items is allowed per team."),
     QObject::tr("Random teams are given to trainers."),
     QObject::tr("No time limit for playing."),
-    QObject::tr("One player cannot have more than one of the same pokemon per team.")
+    QObject::tr("One player cannot have more than one of the same pokemon per team."),
+    QObject::tr("At the beginning of the battle, you can see the opponent's team and rearrange yours accordingly."),
+    QObject::tr("The one who causes a tie (Recoil, Explosion, Destinybond, ...) loses the battle.")
 };
 
 BattleMove::BattleMove()
@@ -71,16 +76,15 @@ QDataStream & operator << (QDataStream &out, const BattleMove &mo)
 
 PokeBattle::PokeBattle()
 {
-    num() = 0;
+    num() = Pokemon::NoPoke;
     ability() = 0;
     item() = 0;
     gender() = 0;
-    status() = Pokemon::Fine;
+    fullStatus() = 0;
     lifePoints() = 0;
     totalLifePoints() = 1;
     level() = 100;
     happiness() = 255;
-    forme() = 0;
 
     for (int i = 0; i < 6; i++) {
         dvs() << 31;
@@ -117,8 +121,9 @@ void PokeBattle::init(PokePersonal &poke)
 
     num() = poke.num();
 
-    if (num() == 0)
+    if (num() == Pokemon::NoPoke)
         return;
+
 
     PokeGeneral p;
     p.gen() = poke.gen();
@@ -129,28 +134,35 @@ void PokeBattle::init(PokePersonal &poke)
 
     happiness() = poke.happiness();
 
-    forme() = 0;
-
-    if (PokemonInfo::HasAestheticFormes(num()) && PokemonInfo::AFormesShown(num())) {
-        if (PokemonInfo::NumberOfAFormes(num()) > poke.forme())
-            forme() = poke.forme();
-    }
-
     item() = poke.item();
     ability() = poke.ability();
 
-    if (item() == Item::GriseousOrb && num() != Pokemon::Giratina_O) {
+    if (item() == Item::GriseousOrb && num() != Pokemon::Giratina_O && p.gen() <= 4) {
         item() = 0;
     } else if (num() == Pokemon::Giratina_O && item() != Item::GriseousOrb) {
         num() = Pokemon::Giratina;
     }
 
+    if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus) {
+        if (ItemInfo::isPlate(item())) {
+            num().subnum = ItemInfo::PlateType(item());
+        } else {
+            num().subnum = 0;
+        }
+    }
+
+    Pokemon::uniqueId ori = PokemonInfo::OriginalForme(num());
+
+    if (ori == Pokemon::Castform || ori == Pokemon::Cherrim || ori == Pokemon::Hihidaruma || ori == Pokemon::Meloia) {
+        num().subnum = 0;
+    }
+
     nick() = (v.validate(poke.nickname()) == QNickValidator::Acceptable && poke.nickname().length() <= 12) ? poke.nickname() : PokemonInfo::Name(num());
 
     if (GenderInfo::Possible(poke.gender(), p.genderAvail())) {
-	gender() = poke.gender();
+        gender() = poke.gender();
     } else {
-	gender() = GenderInfo::Default(p.genderAvail());
+        gender() = GenderInfo::Default(p.genderAvail());
     }
 
     shiny() = poke.shiny();
@@ -171,8 +183,8 @@ void PokeBattle::init(PokePersonal &poke)
     }
 
     if (move(0).num() == 0) {
-	num() = 0;
-	return;
+		num() = 0;
+		return;
     }
 
     dvs().clear();
@@ -188,13 +200,12 @@ void PokeBattle::init(PokePersonal &poke)
     int sum = 0;
     for (int i = 0; i < 6; i++) {
         //Arceus
-        if (num() == Pokemon::Arceus && evs()[i] > 100)
-            evs()[i] = 100;
+        if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus && evs()[i] > 100 && p.gen() < 5) evs()[i] = 100;
         sum += evs()[i];
-	if (sum > 510) {
+        if (sum > 510) {
             evs()[i] -= (sum-510);
-	    sum = 510;
-	}
+            sum = 510;
+        }
     }
 
     updateStats();
@@ -210,9 +221,24 @@ void PokeBattle::updateStats()
     }
 }
 
+int PokeBattle::status() const
+{
+    if (fullStatus() & (1 << Pokemon::Koed))
+        return Pokemon::Koed;
+    return intlog2(fullStatus() & (0x3F));
+}
+
+void PokeBattle::changeStatus(int status)
+{
+    /* Clears past status */
+    fullStatus() = fullStatus() & ~( (1 << Pokemon::Koed) | 0x3F);
+    /* Adds new status */
+    fullStatus() = fullStatus() | (1 << status);
+}
+
 QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 {
-    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.forme() >> po.item() >> po.ability()
+    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.item() >> po.ability()
             >> po.happiness();
 
     for (int i = 0; i < 5; i++) {
@@ -238,7 +264,7 @@ QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 
 QDataStream & operator << (QDataStream &out, const PokeBattle &po)
 {
-    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.forme() << po.item() << po.ability()
+    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.item() << po.ability()
             << po.happiness();
 
     for (int i = 0; i < 5; i++) {
@@ -272,7 +298,7 @@ ShallowBattlePoke::ShallowBattlePoke(const PokeBattle &p)
 void ShallowBattlePoke::init(const PokeBattle &poke)
 {
     nick() = poke.nick();
-    status() = poke.status();
+    fullStatus() = poke.fullStatus();
     num() = poke.num();
     shiny() = poke.shiny();
     gender() = poke.gender();
@@ -281,55 +307,85 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
 	lifePercent() = 1;
     }
     level() = poke.level();
-    forme() = poke.forme();
 }
+
+int ShallowBattlePoke::status() const
+{
+    if (fullStatus() & (1 << Pokemon::Koed))
+        return Pokemon::Koed;
+    return intlog2(fullStatus() & (0x3F));
+}
+
+void ShallowBattlePoke::changeStatus(int status)
+{
+    /* Clears past status */
+    fullStatus() = fullStatus() & ~( (1 << Pokemon::Koed) | 0x3F);
+    /* Adds new status */
+    fullStatus() = fullStatus() | (1 << status);
+}
+
 
 QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po)
 {
-    in >> po.num() >> po.nick() >> po.lifePercent() >> po.status() >> po.gender() >> po.shiny() >> po.level() >> po.forme();
+    in >> po.num() >> po.nick() >> po.lifePercent() >> po.fullStatus() >> po.gender() >> po.shiny() >> po.level();
 
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po)
 {
-    out << po.num() << po.nick() << po.lifePercent() << po.status() << po.gender() << po.shiny() << po.level() << po.forme();
+    out << po.num() << po.nick() << po.lifePercent() << po.fullStatus() << po.gender() << po.shiny() << po.level();
 
     return out;
 }
 
-TeamBattle::TeamBattle() : gen(4)
+TeamBattle::TeamBattle() : gen(GEN_MAX)
 {
+    for (int i = 0; i < 6; i++) {
+        m_indexes[i] = i;
+    }
 }
 
 TeamBattle::TeamBattle(TeamInfo &other)
 {
+    for (int i = 0; i < 6; i++) {
+        m_indexes[i] = i;
+    }
+
     name = other.name;
     info = other.info;
     gen = other.gen;
+
+    if (gen < GEN_MIN || gen > GEN_MAX) {
+        gen = GEN_MAX;
+    }
+
     int curs = 0;
     for (int i = 0; i < 6; i++) {
-	poke(curs).init(other.pokemon(i));
-	if (poke(curs).num() != 0) {
-	    ++curs;
-	}
+        poke(curs).init(other.pokemon(i));
+        if (poke(curs).num() != 0) {
+            ++curs;
+        }
     }
+}
+
+void TeamBattle::switchPokemon(int pok1, int pok2)
+{
+    std::swap(m_indexes[pok1],m_indexes[pok2]);
 }
 
 bool TeamBattle::invalid() const
 {
-    return poke(0).num() == 0;
+    return poke(0).num() == Pokemon::NoPoke;
 }
 
 void TeamBattle::generateRandom(int gen)
 {
-    this->gen = gen;
-
-    QList<int> pokes;
+    QList<Pokemon::uniqueId> pokes;
     for (int i = 0; i < 6; i++) {
         while(1) {
-            int num = true_rand() % PokemonInfo::NumberOfPokemons();
-            if (pokes.contains(num) || num == 0 || !PokemonInfo::Exists(num, gen)) {
+            Pokemon::uniqueId num = PokemonInfo::getRandomPokemon();
+            if (pokes.contains(num) || !PokemonInfo::Exists(num, gen)) {
                 continue ;
             }
             pokes.push_back(num);
@@ -344,7 +400,11 @@ void TeamBattle::generateRandom(int gen)
         g.gen() = gen;
         g.load();
 
-        p.ability() = (g.abilities().ab2 == 0 || true_rand()%2) ? g.abilities().ab1 : g.abilities().ab2;
+        p.ability() = g.abilities().ab(true_rand()%3);
+        /* In case the pokemon has less than 3 abilities, ability 1 has 2/3 of being chosen. Fix it. */
+        if (p.ability() == 0)
+            p.ability() = g.abilities().ab(0);
+
         if (g.genderAvail() == Pokemon::MaleAndFemaleAvail) {
             p.gender() = true_rand()%2 ? Pokemon::Female : Pokemon::Male;
         } else {
@@ -352,7 +412,6 @@ void TeamBattle::generateRandom(int gen)
         }
         p.nature() = true_rand()%NatureInfo::NumberOfNatures();
 
-        p.forme() = 0;
         p.level() = PokemonInfo::LevelBalance(p.num());
 
         PokePersonal p2;
@@ -409,25 +468,34 @@ void TeamBattle::generateRandom(int gen)
 
         p.updateStats();
         p.nick() = PokemonInfo::Name(p.num());
-        p.status() = Pokemon::Fine;
+        p.fullStatus() = 0;
         p.shiny() = !(true_rand() % 50);
     }
 }
 
 PokeBattle & TeamBattle::poke(int i)
 {
-    if (i >= 0 && i < 6)
-	return m_pokemons[i];
-    else
-	return m_pokemons[0];
+    return m_pokemons[m_indexes[i]];
 }
 
 const PokeBattle & TeamBattle::poke(int i) const
 {
-    if (i >= 0 && i < 6)
-	return m_pokemons[i];
-    else
-	return m_pokemons[0];
+    return m_pokemons[m_indexes[i]];
+}
+
+int TeamBattle::internalId(const PokeBattle &p) const
+{
+    for (int i = 0; i < 6; i++) {
+        if (m_pokemons + i == &p)
+            return i;
+    }
+
+    return 0;
+}
+
+const PokeBattle &TeamBattle::getByInternalId(int i) const
+{
+    return m_pokemons[i];
 }
 
 QDataStream & operator >> (QDataStream &in, TeamBattle &te)
@@ -443,6 +511,54 @@ QDataStream & operator << (QDataStream &out, const TeamBattle &te)
 {
     for (int i = 0; i < 6; i++) {
 	out << te.poke(i);
+    }
+
+    return out;
+}
+
+ShallowShownPoke::ShallowShownPoke()
+{
+
+}
+
+void ShallowShownPoke::init(const PokeBattle &b)
+{
+    item = b.item() != 0;
+    num = b.num();
+    level = b.level();
+    gender = b.gender();
+}
+
+QDataStream & operator >> (QDataStream &in, ShallowShownPoke &po) {
+    in >> po.num >> po.level >> po.gender >> po.item;
+
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const ShallowShownPoke &po) {
+    out << po.num << po.level << po.gender << po.item;
+
+    return out;
+}
+
+ShallowShownTeam::ShallowShownTeam(const TeamBattle &t)
+{
+    for (int i = 0; i < 6; i++) {
+        pokemons[i].init(t.poke(i));
+    }
+}
+
+QDataStream & operator >> (QDataStream &in, ShallowShownTeam &po) {
+    for (int i = 0; i < 6; i++) {
+        in >> po.poke(i);
+    }
+
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const ShallowShownTeam &po) {
+    for (int i = 0; i < 6; i++) {
+        out << po.poke(i);
     }
 
     return out;
@@ -492,53 +608,87 @@ QDataStream & operator << (QDataStream &out, const BattleChoices &po)
     return out;
 }
 
-BattleChoice::BattleChoice(bool pokeSwitch, qint8 numSwitch, quint8 numSlot, quint8 target)
-        : pokeSwitch(pokeSwitch), numSwitch(numSwitch), targetPoke(target), numSlot(numSlot)
-{
-}
-
 /* Tests if the attack chosen is allowed */
 bool BattleChoice::match(const BattleChoices &avail) const
 {
-    if (!avail.attacksAllowed && attack()) {
+    if (!avail.attacksAllowed && (attackingChoice() || moveToCenterChoice())) {
 	return false;
     }
-    if (!avail.switchAllowed && poke()) {
+    if (!avail.switchAllowed && switchChoice()) {
 	return false;
+    }
+    if (rearrangeChoice()) {
+        return false;
     }
 
-    if (attack()) {
-	if (avail.struggle() != (numSwitch == -1))
+    if (attackingChoice()) {
+        if (avail.struggle() != (attackSlot() == -1))
 	    return false;
 	if (!avail.struggle()) {
-	    if (numSwitch < 0 || numSwitch > 3) {
+            if (attackSlot() < 0 || attackSlot() > 3) {
 		//Crash attempt!!
 		return false;
 	    }
-	    return avail.attackAllowed[numSwitch];
+            return avail.attackAllowed[attackSlot()];
 	}
 	return true;
     }
-    if (poke()) {
-	if (numSwitch < 0 || numSwitch > 5) {
+
+    if (switchChoice()) {
+        if (pokeSlot() < 0 || pokeSlot() > 5) {
 	    //Crash attempt!!
 	    return false;
 	}
 	return true;
     }
-    //Never reached
-    return true; // but avoids warnings anyway
+
+    if (moveToCenterChoice()) {
+        return true;
+    }
+
+    //Reached if the type is not known
+    return false;
 }
 
 QDataStream & operator >> (QDataStream &in, BattleChoice &po)
 {
-    in >> po.numSlot >> po.pokeSwitch >> po.numSwitch >> po.targetPoke;
+    in >> po.playerSlot >> po.type;
+
+    switch (po.type) {
+    case CancelType:
+    case CenterMoveType:
+        break;
+    case SwitchType:
+        in >> po.choice.switching.pokeSlot;
+    case AttackType:
+        in >> po.choice.attack.attackSlot >> po.choice.attack.attackTarget;
+    case RearrangeType:
+        for (int i = 0; i < 6; i++) {
+            in >> po.choice.rearrange.pokeIndexes[i];
+        }
+    }
+
     return in;
 }
 
 QDataStream & operator << (QDataStream &out, const BattleChoice &po)
 {
-    out << po.numSlot << po.pokeSwitch << po.numSwitch << po.targetPoke;
+    out << po.playerSlot << po.type;
+
+    switch (po.type) {
+    case CancelType:
+    case CenterMoveType:
+        break;
+    case SwitchType:
+        out << po.choice.switching.pokeSlot;
+    case AttackType:
+        out << po.choice.attack.attackSlot << po.choice.attack.attackTarget;
+    case RearrangeType:
+        for (int i = 0; i < 6; i++) {
+            out << po.choice.rearrange.pokeIndexes[i];
+        }
+    }
+
     return out;
 }
 

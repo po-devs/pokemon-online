@@ -38,13 +38,14 @@ public:
     QString name(int id) const;
     QString authedName(int id) const;
     /* Sends a broadcast message to all the players */
-    void sendAll(const QString &message, bool chatMessage = false);
+    void sendAll(const QString &message, bool chatMessage = false, bool html=false);
     /* Send a broadcast to one player */
-    void sendMessage(int id, const QString &message);
+    void sendMessage(int id, const QString &message, bool html=false);
     /* Sends to the whole channel */
-    void sendChannelMessage(int channel, const QString &message, bool chat = false);
+    void sendChannelMessage(int channel, const QString &message, bool chat = false, bool html=false);
     /* Sends to a particular guy in the channel */
-    void sendChannelMessage(int id, int chanid, const QString &message);
+    void sendChannelMessage(int id, int chanid, const QString &message, bool html=false);
+
     void sendBattlesList(int id, int chanid);
     /* Sends the login of the player to everybody but the player */
     void sendLogin(int id);
@@ -69,6 +70,8 @@ public:
     void sendServerMessage(const QString &message);
 
     static Server *serverIns;
+
+    BattleSituation * getBattle(int battleId) const;
 
 signals:
     void chatmessage(const QString &name);
@@ -215,8 +218,11 @@ private:
 
     int numberOfPlayersLoggedIn;
 
+public:
     bool allowRatedWithSameIp;
+    bool allowThroughChallenge;
     int diffIpsForRatedBattles;
+private:
     QHash<QString, QList<QString> > lastRatedIps;
 
     ScriptEngine *myengine;

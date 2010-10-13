@@ -214,6 +214,8 @@ QScrollDownTextBrowser::QScrollDownTextBrowser()
     setReadOnly(true);
     setOpenExternalLinks(true);
     linecount = 0;
+    // Take standard menu, add clear to it, save for later use.
+    menu = NULL;
 }
 
 void QScrollDownTextBrowser::insertHtml(const QString &text)
@@ -290,6 +292,23 @@ void QScrollDownTextBrowser::insertPlainText(const QString &text)
     linecount++;
 }
 
+void QScrollDownTextBrowser::contextMenuEvent(QContextMenuEvent *event)
+{
+    if (menu) {
+        menu->deleteLater();
+    }
+    menu = createStandardContextMenu();
+    menu->setParent(this);
+    QAction *action = menu->addAction(tr("Clear"));
+    connect(action, SIGNAL(triggered()), this, SLOT(clear()));
+    menu->exec(event->globalPos());
+}
+
+void QScrollDownTextBrowser::clear()
+{
+    QTextBrowser::clear(); // Call parent.
+    linecount = 0;
+}
 
 QNickValidator::QNickValidator(QWidget *parent)
     : QValidator(parent)

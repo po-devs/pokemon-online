@@ -2,6 +2,7 @@
 #define TB_ADVANCED_H
 
 #include <QtGui>
+#include "../PokemonInfo/pokemonstructs.h"
 
 class AvatarBox;
 
@@ -17,14 +18,14 @@ class TB_Advanced : public QWidget
 private:
     PokeTeam *m_poke;
 
-    AvatarBox *pokeImage;
+    QLabel *pokeImage;
     /* hp means hidden power */
     QComboBox *hpchoice;
     QSpinBox *dvchoice[6];
     QLabel *stats[6];
     QLabel *hpower;
     QCompactTable *hpanddvchoice;
-    QRadioButton *ability1, *ability2;
+    QRadioButton *ability[3];
     QRadioButton *gender1, *gender2;
     QCheckBox *shiny;
     QSpinBox *level, *happiness;
@@ -56,8 +57,7 @@ private slots:
     void changeHappiness(int);
     /* Do not use directly */
     void changeDV(int newval);
-    void changeAForme();
-    void changeForm();
+    void changeForme();
 public slots:
     //called by update DV and when the stat in the teambuilder is modified.
     void updateStats();
@@ -67,7 +67,8 @@ signals:
     void genderChanged();
     void levelChanged();
     void statChanged();
-    void pokeFormChanged(int newform);
+    void abilityChanged();
+    void pokeFormeChanged(Pokemon::uniqueId newform);
 public:
     TB_Advanced(PokeTeam *poke);
 };

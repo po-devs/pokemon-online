@@ -11,13 +11,14 @@
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "channel.h"
+#include "theme.h"
 
 Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), myrelay()
 {
     _mid = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder = NULL;
-    resize(1000, 700);
+    loadSettings(this, QSize(800,600));
 
     QHBoxLayout *h = new QHBoxLayout(this);
     QSplitter *s = new QSplitter(Qt::Horizontal);
@@ -38,8 +39,8 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     QGridLayout *containerLayout = new QGridLayout(channelContainer);
     channels = new QListWidget();
     channels->setIconSize(QSize(24,24));
-    chatot = QIcon("db/client/chatoticon.png");
-    greychatot = QIcon("db/client/greychatot.png");
+    chatot = Theme::Icon("activechannel");
+    greychatot = Theme::Icon("idlechannel");
     containerLayout->addWidget(channels, 0, 0, 1, 2);
     containerLayout->addWidget(new QLabel(tr("Join: ")), 1, 0);
     containerLayout->addWidget(channelJoin = new QLineEdit(), 1, 1);
@@ -100,25 +101,11 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     relay().connectTo(url, port);
 
-    QFile f("db/client/chat_colors.txt");
-    f.open(QIODevice::ReadOnly);
-
-    QStringList colors = QString::fromUtf8(f.readAll()).split('\n');
-
-    if (colors.size() == 0) {
-        chatColors << Qt::black << Qt::red << Qt::gray << Qt::darkBlue << Qt::cyan << Qt::darkMagenta << Qt::darkYellow;
-    } else {
-        foreach (QString c, colors) {
-            chatColors << QColor(c);
-        }
-    }
-
-    const char * authLevels[] = {"u", "m", "a", "o"};
-    const char * statuses[] = {"Available", "Away", "Battle", "Ignore"};
+    const char * statuses[] = {"avail", "away", "battle", "ignore"};
 
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < LastStatus; j++) {
-            statusIcons << QIcon(QString("db/client/%1%2.png").arg(authLevels[i], statuses[j]));
+            statusIcons << Theme::Icon(QString("%1%2").arg(statuses[j]).arg(i));
         }
     }
 
@@ -133,6 +120,11 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     channelPlayers(0);
 }
 
+Client::~Client()
+{
+    writeSettings(this);
+}
+
 void Client::initRelay()
 {
     Analyzer *relay = &this->relay();
@@ -140,7 +132,8 @@ void Client::initRelay()
     connect(relay, SIGNAL(protocolError(int, QString)), SLOT(errorFromNetwork(int, QString)));
     connect(relay, SIGNAL(connected()), SLOT(connected()));
     connect(relay, SIGNAL(disconnected()), SLOT(disconnected()));
-    connect(relay, SIGNAL(messageReceived(QString)), SLOT(messageReceived(QString)));
+    connect(relay, SIGNAL(messageReceived(QString)), SLOT(printLine(QString)));
+    connect(relay, SIGNAL(htmlMessageReceived(QString)), SLOT(printHtml(QString)));
     connect(relay, SIGNAL(playerReceived(PlayerInfo)), SLOT(playerReceived(PlayerInfo)));
     connect(relay, SIGNAL(teamChanged(PlayerInfo)), SLOT(teamChanged(PlayerInfo)));
     connect(relay, SIGNAL(playerLogin(PlayerInfo)), SLOT(playerLogin(PlayerInfo)));
@@ -667,14 +660,7 @@ void Client::removePM(int id)
 
 void Client::loadTeam()
 {
-    QSettings settings;
-    QString newLocation;
-
-    if (loadTTeamDialog(*myteam, settings.value("team_location").toString(), &newLocation))
-    {
-        settings.setValue("team_location", newLocation);
-        changeTeam();
-    }
+    loadTTeamDialog(*team(), this, SLOT(changeTeam()));
 }
 
 void Client::sendText()
@@ -728,14 +714,10 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
     menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("Open &teamBuilder"),this,SLOT(openTeamBuilder()),Qt::CTRL+Qt::Key_T);
-    QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
-    QStringList style = QStyleFactory::keys();
-    for(QStringList::iterator i = style.begin();i!=style.end();i++)
-    {
-        menuStyle->addAction(*i,w,SLOT(changeStyle()));
-    }
-    menuStyle->addSeparator();
-    menuStyle->addAction(tr("Reload StyleSheet"), w, SLOT(loadStyleSheet()));
+
+    w->addStyleMenu(menuBar);
+    w->addThemeMenu(menuBar);
+
     QMenu * menuActions = menuBar->addMenu(tr("&Options"));
     goaway = menuActions->addAction(tr("&Idle"));
     goaway->setCheckable(true);
@@ -906,11 +888,6 @@ void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
 bool Client::battling() const
 {
     return mybattles.size() > 0;
-}
-
-void Client::messageReceived(const QString &mess)
-{
-    printLine(mess);
 }
 
 void Client::versionDiff(const QString &a, const QString &b)
@@ -1298,9 +1275,9 @@ void Client::sendChallenge(int id)
         clauses |= s.value("clause_"+ChallengeInfo::clause(i)).toBool() ? (1 << i) : 0;
     }
 
-    bool doubles = s.value("challenge_with_doubles").toBool();
+    int mode = s.value("challenge_with_doubles").toInt();
 
-    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Sent, id, clauses,doubles));
+    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Sent, id, clauses, mode));
 }
 
 void Client::clearChallenge()
@@ -1486,7 +1463,7 @@ void Client::teamChanged(const PlayerInfo &p) {
 QColor Client::color(int id) const
 {
     if (player(id).color.name() == "#000000") {
-        return chatColors[id % chatColors.size()];
+        return Theme::ChatColor(id);
     } else {
         return player(id).color;
     }

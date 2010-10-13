@@ -1,8 +1,4 @@
 #156 is free
-1#leech
-
-
-120#Acupressure
 
 
 
@@ -11,87 +7,118 @@
 
 
 
-2#restore hp every turn
 
 
-3#aromatherapy
-4#assist
-5#assurance
+
+43#Guillotine
+104-0#razor wind
 
 
-58#attract
 
 
-146#avalanche
-
-
-6#baton pass
-7#beat up
-8-50#belly drum
-9#bide
+107#whirlwind
+13-3_16*2_239*2_327_87#Fly
 10#bind-inflict damage every turn
 
-11#blast burn -- one turn slacking off
+
+126#stomp
+
+
+64#jump kick
+
+
+
+
+
+43#Horn Drill
+
+
+10#wrap
+
+93#thrash
+
+
+
+
+
+
+
+
+107#roar
+
+
+30-20#sonic boom
+28#disable
+
+
+
+86#mist
+
+
+
 
 38#blizzard
-12#block, aka mean look
 
 
 
-
-13-0_168*2_439*2_362_422#bounce
-
-14#brick break
-15#brine
-
-
-16#like pluck
+11#Hyper beam
 
 
 
+52#Low kick
+22-1#counter: 1 is physical
+91#seismic toss
+
+#1#leech
+#1#mega drain
+72#leech seed
 
 
-17#camouflage
-101#Captivate
-18#charge
-
-
-147#chatter
-10
+104-3#solar beam
 
 
 
+93#petal dance
+
+30-40#dragon rage
+10#Fire spin
 
 
-19#conversion
-20#conversion2
-21#copycat
+
+152#Thunder
 
 
-22-0#counter: 0 is physical
-23#covet
+43#Fissure
+13-1_89*2_222*2#Dig
 
 
 
 
 
-24#crush grip
-25#curse
+
+
+102#rage
+
+91#night shade
+81#mimic
+
+
+60#recover
+
+83#minimize
 
 
 
 154#defense curl
 
-77#defog
-26#destiny bond
-27#detect
-13-1_110*2_232*2
-28#disable
-
-13-2_403*2
-
-29#doom desire
-
+73-2#light screen
+149#haze
+73-1#reflect
+46#focus energy
+9#bide
+80#metronome
+85#mirror move
+37#self destruct
 
 
 
@@ -99,370 +126,435 @@
 
 
 
+10#Clamp
 
-30-40#dragon rage
+104-2#skull bash
 
 
-1
+
+
+#60#softboiled
+64#high jump kick
+
 31|1#dream eater
 
 
+#1#Leech Life
+
+104-1#sky attack
+137#transform
 
 
 
-32#embargo
 
-33#encore
-34#endeavor
-35#endure
-
-36#eruption
-37|114#explosion 37 is losing hp, def reduction is hardencoded, 114 is damp
+99#psywave
+82#Splash
 
 
-39#façade
+37#explosion
 
-40#fake out
 
-41#false swipe
-
-42#only works when protect detect
+106#rest
 
 
 
-10
-43#OHKO
-44#flail
+19#conversion
+
+130#super fang
+
+8-25|128#SUBSTITUTE
+#127#struggle
+111#sketch
+139#triple kick
+23#thief
+12#spider web.
+74#Mind reader
+31|92#nightmare
 153#flame wheel
+115#snore
+25#curse
+44#flail
+20#conversion2
 
-153#flareBlitz
+
+44#flail
+123#spite
+
+27#Protect
 
 
 
-45#fling
-13-3_168*2_439*2_362_422
 
-46#focus energy
-47#focus punch
-48#follow me
+8-50#belly drum
+
+
+
+121#spikes
 
 84-7#7 is ghost -- fore sight
-11
-49-1#frustration
+26#destiny bond
+95#perish song
+
+27#detect
+
+74#lock on
+93#outrage
+57-3#sandstorm
+#1#Giga drain
+35#endure
+
+66#rollout
+41#false swipe
+
+#60#healing - milk drink
 
 50#fury cutter
 
-29
-51#gastro acid
-1
-11
-
-52#grass knot
-
-53#gravity
-
-
-54#grudge
-55-2_5#guard swap
-43
-
-
-56#gyro ball
-57-1#hail
-
-
-149#haze
-
-
+12#mean look
+58#attract
+115|116#115 = works only if asleep, 116 is sleep talk
 3#heal bell
-59#heal block
-60#heal order--healing
-37|61#healing wish
-55-1_2_3_4_5_6_7#heart swap -- reverses all stat with foe
+49-0#return
+96#present
+49-1#frustration
+109#safeguard
+94#pain split
+153#sacred fire
+78#magnitude
 
-63#helping hand
-64#high jump kick
+
+
+6#baton pass
+33#encore
+
+103#rapid spin
+
+
+
+
+87#morning sun
+87#synthesis
+87#moon light
 65#hidden power
 
-43
 
-11
+57-2#rain dance
+57-4#sunny day
 
-11
-
-
-
-66#ice ball
-
-
-
-
-
-
-67#imprison
-151
-
-
-
-69#judgment
-64#jump kick
-
-
-70#knock off
-71#last resort
-
-
-
-1
-72#leech seed
-
-
-73-1#light screen
-74#lock on
-
-52
-75#lucky chant
-37|61
-
-
-76#magic coat
-
-10
-
-68#magnet rise
-78#magnitude
-79#me first
-12#mean look
-
-1#mega drain
-
-
-
-37#memento
-119#metal burst
-
-
-
-80#metronome
-60#healing - milk drink
-81#mimic
-74#Mind reader
-83#minimize
-84-16#16 is dark -- miracle eye
-22-1#mirror coat
-85#mirror move
-
-86#mist
-
-87#moon light
-87#morning sun
-
-
-88-12#mud sport
-
-
-
-89#natural gift
-90#nature power
-
-91#night shade
-
-31|92#nightmare
-
-84-7#odor sleuth
-
-93#outrage
-
-94#pain split
-
-145#payback
-
-95#perish song
-93#petal dance
-
-16
-
-
-
-
-
-
-
-
-
-55-1_4
-62#power trick
-
-96#present
-27
-
+22-2#mirror coat
 97#psychup
 
 
 
-98#psycho shift
-99#psywave
-100#punishment
+29#Future sight
+
+10#whirlpool
+7#beat up
+40#fake out
+141#uproar
+125#stock pile
+122#spit up
+131#swallow
+
+57-1#hail
+135#torment
 
 
-102#rage
-57-2#rain dance
-103#rapid spin
+37|165#memento
+39#facade
+47#focus punch
+117-1#smelling salt
+48#follow me
+90#nature power
+18#charge
+134#taunt
+63#helping hand
+132#trick
+108#role play
+142#wish
+4#assist
+151#ingrain
 
-104-0#razor wind
-60#recover
+76#magic coat
 105#recycle
-73-0#reflect
-
-106#rest
-49-0#return
 146#revenge
-44#flail
-107#roar
-11#roar of time
+14#brick break
+144#yawn
+70#knock off
+34#endeavor
+36#eruption
+112#skill swap
+67#imprison
+164#Refresh
+54#grudge
+118#snatch
+110#secret power
+13-2_57*2#dive
+
+17#camouflage
 
 
+
+
+
+
+88-12#mud sport
+66#ice ball
+
+#60#slack off
+
+
+
+11#blast burn -- one turn slacking off
+11#hydro cannon
+
+
+113#weather ball
+3#aromatherapy
+
+
+
+84-7#odor sleuth
+
+
+
+
+
+
+36#water spout
+
+
+
+
+10#sand tomb
+43#sheer cold
+
+
+
+
+
+12#block, aka mean look
+
+
+11#frenzy plant
+
+13-0_16*2_239*2_327_87#bounce
+
+
+23#covet
+
+
+88-9#water sport
+
+
+
+
+
+
+29#doom desire
+
+150#|60#roost
+53#gravity
+84-16#16 is dark -- miracle eye
+117-2#wake up slap
+
+56-0#gyro ball. 0 is to tell it's up to us to be slow
+37|61#healing wish
+15#brine
+89#natural gift
+42#only works when protect detect
+16#Pluck
+133#tailwind
+120#Acupressure
+119#metal burst
+140#U-turn
+
+145#payback
+5#assurance
+32#embargo
+45#fling
+98#psycho shift
+148#trump card
+59#heal block
+24#wring out
+62#power trick
+51#gastro acid
+75#lucky chant
+79#me first
+21#copycat
+55-1_3#power swap
+55-2_4#guard swap
+100#punishment
+71#last resort
+143-15#worry seed
+129#sucker punch
+136#toxic spikes
+55-1_2_3_4_5_6_7#heart swap -- reverses all stat with foe
+2#restore hp every turn
+68#magnet rise
+153#flareBlitz
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#1#Drain punch
+
+
+
+
+
+132#switcheroo
+11#Giga impact
+
+
+146#avalanche
+
+
+
+
+
+
+
+
+#nothing but gotta fill the line
+
+
+
+77#defog
+138#trick room
 
 
 
 
 
 11#rock wrecker
-108#role play
-
-66#rollout
-150|60#roost
-153#sacred fire
-109#safeguard
-10#sand tomb
-
-57-3#sandstorm
 
 
 
-110#secret power
 
 
-91#seismic toss
-37|114#self destruct--def reduction is not in that file but in the program
+101#Captivate
+124#stealth rock
+52#grass knot
+147#chatter
+69#judgment
+16#like pluck
+
+
+
+
+
+60#heal order--healing
+
+
+11#roar of time
+
+37|61#Lunar dance
+24#crush grip
+10#magma storm
+
 
 
 13-4#shadow force
 
+169#Wide guard
+155-2_4#Guard Share
+155-1_3#Power Share
+168#Wonder Room
+
+117-5#Venom Shock
+
+48#Rage power
+174#Telekinesis
+156#Magic Room
+175#Strike Down
+
+189#Flame Burst
 
 
-43#sheer cold
-
-
-
-
-111#sketch
-112#skill swap
-104-2#skull bash
-104-1#sky attack
-
-60#slack off
-
-
-
-115|116#115 = works only if asleep, 116 is sleep talk
-
-
-117-1#smelling salt
-
-
-118#snatch
-115#snore
-60#softboiled
-104-3#solar beam
-30-20#sonic boom
-
-
-12#spider web.
-
-121#spikes
-122#spit up
-123#spite
-82#Splash
-
-124#stealth rock
-
-125#stock pile
-126#stomp
-
-
-
-127#struggle
-
-
-8-25|128#SUBSTITUTE
-129#sucker punch
-57-4#sunny day
-130#super fang
+167#HeavyBomber
+186#Synchro Noise
+182#Eleci Ball
+157#Soak
 
 
 
 
-131#swallow
+187#Trickery
+143-86#Simple Beam
+158#Assemble Crew
+176#You First
+184#A Capella
+181#Echo Voice
+
+149#Clear Smog
+185#Assist Power
+170#Fast Guard
+190#Side Change
+
+159#Shell Crack
+
+117-0#Evil Eye
+13-5_16*2_239*2_327_87#Free Fall
+
+107#Overhead Throw
+160#Complete Burn
+177#Stall
+173#Acrobat
+172#Mirror Type
+188#Retaliation
+37|161#Desperation
+162#Gift Pass
+
+180#Water Oath
+178#Fire Oath
+179#Grass Oath
+140#Volt Change
 
 
 
-132#switcheroo
-
-87#synthesis
-
-
-
-133#tailwind
-
-134#taunt
-
-
-23#thief
-93#thrash
-152#Thunder
+107#Dragon Tail
 
 
 
 
 
 
-135#torment
-
-136#toxic spikes
-137#transform
-
-132#trick
-138#trick room
-139#triple kick
-148#trump card
 
 
-140#U-turn
-141#uproar
+
+167#Heat Stamp
+
+126#Heart roller
 
 
 
 
-
-117-4#wake up slap
-
-
-88-9#water sport
-36#water spout
-
-113#weather ball
-10#whirlpool
-107#whirlwind
+163#Wind Storm
 
 
-142#wish
+
+183#Techno buster
+166#Ancient Song
 
 
-143#worry seed
-10#wrap
-24#wring out
 
-144#yawn
 
-#nothing but gotta fill the line
+
+
+
+
+
+
+
+#

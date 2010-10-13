@@ -32,14 +32,14 @@ void DockAdvanced::setCurrentPokemon(int index)
     setCurrentIndex(index);
 }
 
-void DockAdvanced::setPokemonNum(int indexStack,int pokeNum)
+void DockAdvanced::setPokemonNum(int indexStack, Pokemon::uniqueId pokeNum)
 {
     QWidget * w = widget(indexStack);
     removeWidget(w);
     delete w;
     TB_Advanced * adv = new TB_Advanced(&m_builder->trainerTeam()->team().poke(indexStack));
     insertWidget(indexStack,adv);
-    if(pokeNum ==0)
+    if(pokeNum.toPokeRef() == Pokemon::NoPoke)
     {
         adv->setHidden(true);
     }
