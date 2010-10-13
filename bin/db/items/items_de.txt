@@ -211,6 +211,7 @@ Steinknochen
 Wurzelfossil
 Kopffossil
 Eisenkugel
+Griseous Orb
 Air Mail
 Bloom Mail
 Brick Mail
@@ -224,3 +225,80 @@ Snow Mail
 Space Mail
 Steel Mail
 Tunnel Mail
+Aqua Cassette
+Lightning Cassette
+Blaze Cassette
+Freeze Cassette
+Heart Sweets
+Clean Scale
+Evolution Stone
+Pumice Stone
+Rugged Helmet
+Balloon
+Red Card
+Bull's Eye
+Pressure Band
+Bulb
+Rechargeable Battery
+Escape Button
+Fire Jewel
+Water Jewel
+Electric Jewel
+Grass Jewel
+Ice Jewel
+Fight Jewel
+Poison Jewel
+Earth Jewel
+Flight Jewel
+Psychic Jewel
+Bug jewel
+Rock Jewel
+Ghost Jewel
+Dragon Jewel
+Dark Jewel
+Steel Jewel
+Normal Jewel
+Strength Wing
+Power Wing
+Resistance Wing
+Wisdom Wing
+Mind Wing
+Instant Wing
+Beautiful Wing
+Dream Ball
+Fragrant Mushroom
+Huge Gold Orb
+Round Pearl
+Comet Piece
+Ancient Bronze Coin
+Ancient Silver Coin
+Ancient Gold Coin
+Ancient Vase
+Ancient Bracelet
+Ancient Statue
+Ancient Crown
+Hiun Ice-cream
+Dire Hit 2
+X Speed 2
+X Special 2
+X Sp. Def 2
+X Defend 2
+X Attack 2
+X Accuracy 2
+X Speed 3
+X Special 3
+X Sp. Def 3
+X Defend 3
+X Attack 3
+X Accuracy 3
+X Speed 6
+X Special 6
+X Sp. Def 6
+X Defend 6
+X Attack 6
+X Accuracy 6
+Skill Call
+Item Drop
+Item Call
+Flat Call
+Dire Hit 3

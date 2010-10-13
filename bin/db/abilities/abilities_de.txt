@@ -1,124 +1,165 @@
-(Keine Fähigkeit)
-Anpassung
-Finalschlag
-Klimaschutz
-Kurzschluss
-Vorahnung
-Auswegslos
-Alptraum
-Kampfpanzer
-Großbrand
-Chlorophyll
-Neutraltorso
-Wolke Sieben
-Farbwechsel
-Facettenauge
-Charmebolzen
-Feuchtigkeit
-Download
-Niesel
-Dürre
-Trockenheit
-Frühwecker
-Sporenwirt
-Filter
-Flammkörper
-Feuerfänger
-Pflanzengabe
-Prognose
-Vorwarnung
-Schnüffler
-Völlerei
-Adrenalin
-Hitzeschutz
-Honigmaul
-Kraftkoloss
-Übereifer
-Hydration
-Scherenmacht
-Eishaut
-Erleuchtung
-Immunität
-Konzentrator
-Insomnia
-Bedroher
-Eisenfaust
-Adlerauge
-Tollpatsch
-Floraschild
-Schwebe
-Blitzfänger
-Flexibilität
-Kloakensoße
-Magieschild
-Magmapanzer
-Magnetfalle
-Notschutz
-Minus
-Überbrückung
-Starthilfe
-Variabilität
-Innere Kraft
-Schildlos
-Regulierung
-Dösigkeit
-Notdünger
-Tempomacher
-Mitnahme
-Plus
-Aufheber
-Giftdorn
-Erzwinger
-Mentalkraft
-Rasanz
-Regenguss
-Achtlos
-Rivalität
-Steinhaupt
-Rauhaut
-Angsthase
-Sandsturm
-Sandschleier
-Rauflust
-Edelmut
-Wegsperre
-Expidermis
-Panzerhaut
-Puderabwehr
-Wankelmut
-Wertelink
-Saumselig
-Superschütze
-Schneemantel
-Hagelalarm
-Solarkraft
-Felskern
-Lärmschutz
-Temposchub
-Zeitspiel
-Statik
-Felsenfest
+(Keine Fï¿½higkeit)
 Duftnote
-Werehalter
-Sturmsog
+Niesel
+Temposchub
+Kampfpanzer
 Robustheit
-Saugnapf
-Glückspilz
-Hexaplaga
-Wassertempo
-Synchro
-Fußangel
-Techniker
-Speckschicht
-Aufwertung
-Sturzbach
-Fährte
-Schnarchnase
-Unkenntnis
-Entlastung
-Munterkeit
+Feuchtigkeit
+Flexibilitï¿½t
+Sandschleier
+Statik
 Voltabsorber
 H2O-Absorber
-Aquahülle
-Pulverrauch
+Dï¿½sigkeit
+Wolke Sieben
+Facettenauge
+Insomnia
+Farbwechsel
+Immunitï¿½t
+Feuerfï¿½nger
+Puderabwehr
+Tempomacher
+Saugnapf
+Bedroher
+Wegsperre
+Rauhaut
 Wunderwache
+Schwebe
+Sporenwirt
+Synchro
+Neutraltorso
+Innere Kraft
+Blitzfï¿½nger
+Edelmut
+Wassertempo
+Chlorophyll
+Erleuchtung
+Fï¿½hrte
+Kraftkoloss
+Giftdorn
+Konzentrator
+Magmapanzer
+Aquahï¿½lle
+Magnetfalle
+Lï¿½rmschutz
+Regenguss
+Sandsturm
+Erzwinger
+Speckschicht
+Frï¿½hwecker
+Flammkï¿½rper
+Angsthase
+Adlerauge
+Scherenmacht
+Mitnahme
+Schnarchnase
+ï¿½bereifer
+Charmebolzen
+Plus
+Minus
+Prognose
+Werehalter
+Expidermis
+Adrenalin
+Notschutz
+Kloakensoï¿½e
+Notdï¿½nger
+Groï¿½brand
+Sturzbach
+Hexaplaga
+Steinhaupt
+Dï¿½rre
+Auswegslos
+Munterkeit
+Pulverrauch
+Mentalkraft
+Panzerhaut
+Klimaschutz
+Fuï¿½angel
+Starthilfe
+Rivalitï¿½t
+Felsenfest
+Schneemantel
+Vï¿½llerei
+Kurzschluss
+Entlastung
+Hitzeschutz
+Wankelmut
+Trockenheit
+Download
+Eisenfaust
+Aufheber
+Anpassung
+Wertelink
+Hydration
+Solarkraft
+Rasanz
+Regulierung
+Superschï¿½tze
+Magieschild
+Schildlos
+Zeitspiel
+Techniker
+Floraschild
+Tollpatsch
+ï¿½berbrï¿½ckung
+Glï¿½ckspilz
+Finalschlag
+Vorahnung
+Vorwarnung
+Unkenntnis
+Aufwertung
+Filter
+Saumselig
+Rauflust
+Sturmsog
+Eishaut
+Felskern
+Hagelalarm
+Honigmaul
+Schnï¿½ffler
+Achtlos
+Variabilitï¿½t
+Pflanzengabe
+Alptraum
+Wicked Thief
+Encourage
+Perversity
+Anxiety
+Competitive Spirit
+Weak-kneed
+Cursed Body
+Healing Heart
+Friend Card
+Broken Armor
+Heavy Metal
+Light Metal
+Multi-Scale
+Poison Rampage
+Heat Rampage
+Harvest
+Telepathy
+Inconsistent
+Dustproof
+Poison Skin
+Regeneration
+Pigeon Heart
+Sand Throw
+Miracle Skin
+Analyze
+Illusion
+Eccentric
+Slip Through
+Mummy
+Earthquake Spiral
+Justice Heart
+Frightened
+Magic Mirror
+Herbivore
+Mischievous Heart
+Sand Power
+Iron Barbs
+Daruma Mode
+Victory Star
+Turbo Blaze
+TeraVoltage

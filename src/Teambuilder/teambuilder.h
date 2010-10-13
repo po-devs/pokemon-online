@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <QPair>
 
+#include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/otherwidgets.h"
 #include "centralwidget.h"
 
@@ -41,7 +42,6 @@ public:
 
     void changePic(const QPixmap &pic);
 protected:
-    static QPixmap *background;
     QLabel *underLying;
 };
 
@@ -52,8 +52,6 @@ public:
 protected:
     Pokeballed();
     void init(QWidget *w);
-public:
-    static QPixmap *pokeball;
 };
 
 class TitledWidget : public QWidget {
@@ -113,7 +111,7 @@ private:
     TB_TeamBody *m_teamBody;
     TB_PokemonBoxes *m_boxes;
     Pokedex *m_pokedex;
-    QAction *gen3, *gen4;
+    QAction *gen3, *gen4, *gen5;
 
     QImageButton *buttons[LastW];
     QLabel *currentZoneLabel;
@@ -166,15 +164,13 @@ class TeamPokeButton : public QPushButton
 public:
     TeamPokeButton(int num, int poke=0, int level=100, int item = 0);
 
-    void changeInfos(int poke=0, int level=100, int item = 0);
+    void changeInfos(Pokemon::uniqueId poke=Pokemon::uniqueId(Pokemon::NoPoke), int level=100, int item = 0);
     int num() const {return m_num;}
 signals:
     void changePokemonOrder(QPair<int,int> exchange);
-    void changePokemonBase(int num, int poke);
+    void changePokemonBase(int num, Pokemon::uniqueId);
 
 protected:
-    static QPixmap * teamBoxBall;
-
     void mouseMoveEvent(QMouseEvent *e);
     void mousePressEvent(QMouseEvent *e);
     void dragEnterEvent(QDragEnterEvent *e);
@@ -192,22 +188,24 @@ class TB_TeamBody: public QWidget
     Q_OBJECT
 public:
     TB_TeamBody(TeamBuilder *parent, int gen=4);
+    ~TB_TeamBody();
+
     void updateTeam();
     void updatePoke(int num);
     void changeGeneration(int gen);
+    bool isAdvancedOpen() const;
 private slots:
     void changeIndex();
     void updateButton();
     void changePokemonOrder(QPair<int,int>);
-    void changePokemonBase(int slot, int num);
+    void changePokemonBase(int slot, Pokemon::uniqueId num);
     void advancedClicked(int index, bool separateWindow);
     void advancedDestroyed();
-    void indexNumChanged(int pokeNum);
-private:
-    TeamPokeButton *pokeButtons[6];
+    void indexNumChanged(Pokemon::uniqueId pokeNum);
 public:
     TB_PokemonBody *pokeBody[6];
 private:
+    TeamPokeButton *pokeButtons[6];
     QStackedWidget *body;
 
     QSplitter *splitter;
@@ -225,6 +223,9 @@ private:
 
     int gen;
 
+    void saveAdvancedState();
+    void restoreAdvancedState();
+
     friend class DockAdvanced;
 };
 
@@ -237,6 +238,10 @@ public:
     TB_PokeChoice(int gen, bool missingno);
 
     void changeGen(int gen);
+signals:
+    void pokemonActivated(Pokemon::uniqueId num);
+public slots:
+    void activatedCell(int row);
 protected:
     void mousePressEvent(QMouseEvent * event);
     void mouseMoveEvent(QMouseEvent * event);
@@ -272,7 +277,7 @@ public:
     void connectWithAdvanced(TB_Advanced *ptr);
 
     void updateNum();
-    void setNum(int pokeNum, bool resetEverything);
+    void setNum(Pokemon::uniqueId, bool resetEverything);
     /* getting the pokemon of the team corresponding to the body */
     PokeTeam *poke();
     int num() const {return m_num;}
@@ -281,18 +286,19 @@ public:
     void changeGeneration(int gen);
 
 public slots:
-    void setNum(int pokeNum);
+    void setNum(Pokemon::uniqueId pokeNum);
     void setPokeByNick();
     /* slots used by advanced */
     void updateImage();
     void updateGender();
     void updateLevel();
     void updateEVs();
-    void changeForme(int pokenum);
+    void updateAbility();
+    void changeForme(Pokemon::uniqueId);
 
 signals:
     void moveChosen(int movenum);
-    void pokeChanged(int pokenum);
+    void pokeChanged(Pokemon::uniqueId num);
     void nicknameChanged(QString nickname);
     void advanced(int index, bool separateWindow);
     void EVChanged(int stat);
@@ -316,7 +322,7 @@ private:
     TB_PokeChoice *pokechoice;
     QComboBox *itemchoice;
     QComboBox *naturechoice;
-    AvatarBox *pokeImage;
+    QToolButton *pokeImage;
     QLabel *genderIcon, *level, *type1, *type2, *pokename, *itemicon;
     int m_num;
 

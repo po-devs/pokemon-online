@@ -1,11 +1,10 @@
 #include "serverchoice.h"
 #include "../Utilities/otherwidgets.h"
+#include "../Utilities/functions.h"
 #include "analyze.h"
 
 ServerChoice::ServerChoice()
 {
-    resize(500,450);
-
     registry_connection = new Analyzer(true);
     registry_connection->connectTo("pokemon-online.dynalias.net", 5081);
     registry_connection->setParent(this);
@@ -54,6 +53,13 @@ ServerChoice::ServerChoice()
 
     hl->addWidget(cancel);
     hl->addWidget(ok);
+
+    loadSettings(this, QSize(500, 450));
+}
+
+ServerChoice::~ServerChoice()
+{
+    writeSettings(this);
 }
 
 void ServerChoice::regServerChosen(int row)

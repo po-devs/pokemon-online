@@ -47,7 +47,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     firstColumn->addWidget(dvs);
     QGridLayout *dvlayout = new QGridLayout(dvs);
     QStringList stats_l;
-    stats_l << tr("HP:") << tr("Att:") << tr("Def:") << tr("Speed:") << tr("Sp.Att:") << tr("Sp.Def:");
+    stats_l << tr("HP:") << tr("Att:") << tr("Def:") << tr("Sp.Att:") << tr("Sp.Def:") << tr("Speed:");
 
     for (int i = 0; i < 6; i++)
     {
@@ -78,7 +78,8 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     happiness->setValue(poke()->happiness());
     connect(happiness, SIGNAL(valueChanged(int)), SLOT(changeHappiness(int)));
 
-    secondColumn->addWidget(pokeImage=new AvatarBox(),0,Qt::AlignHCenter);
+    secondColumn->addWidget(pokeImage=new QLabel(),0,Qt::AlignHCenter);
+    pokeImage->setObjectName("PokemonPicture");
     updatePokeImage();
 
     QHBoxLayout *levellayout = new QHBoxLayout();
@@ -109,20 +110,27 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
 	gender1->setEnabled(false);
     }
 
-    QGroupBox *ability = new QGroupBox(tr("&Ability"));
-    secondColumn->addWidget(ability);
-    QVBoxLayout *abilityLayout = new QVBoxLayout(ability);
+    QGroupBox *abilityB = new QGroupBox(tr("&Ability"));
+    secondColumn->addWidget(abilityB);
+    QVBoxLayout *abilityLayout = new QVBoxLayout(abilityB);
 
-    abilityLayout->addWidget(ability1=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab1)));
-    ability1->setToolTip(AbilityInfo::Desc(poke()->abilities().ab1));
-    if (poke()->abilities().ab2 != 0) {
-        abilityLayout->addWidget(ability2=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab2)));
-        ability2->setToolTip(AbilityInfo::Desc(poke()->abilities().ab2));
-	connect(ability1, SIGNAL(toggled(bool)), SLOT(changeAbility(bool)));
-	updateAbility();
+    abilityLayout->addWidget(ability[0]=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab(0))));
+    ability[0]->setToolTip(AbilityInfo::Desc(poke()->abilities().ab(0)));
+
+    if ( (poke()->abilities().ab(1) == poke()->abilities().ab(2)) && (poke()->abilities().ab(1) == 0) ) {
+        ability[0]->setChecked(true);
+        ability[0]->setEnabled(false);
     } else {
-	ability1->setChecked(true);
-	ability1->setEnabled(false);
+        for (int i = 1; i < 3; i++) {
+            if (poke()->abilities().ab(i) != 0 && poke()->abilities().ab(i) != poke()->abilities().ab(0)) {
+                abilityLayout->addWidget(ability[i]=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab(i))));
+                ability[i]->setToolTip(AbilityInfo::Desc(poke()->abilities().ab(i)));
+                connect(ability[i], SIGNAL(toggled(bool)), SLOT(changeAbility(bool)));
+            } else {
+                ability[i] = 0;
+            }
+        }
+        updateAbility();
     }
 
     secondColumn->addWidget(shiny = new QCheckBox(tr("&Shiny")));
@@ -135,32 +143,17 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     QMenu *m= new QMenu(bForms);
 
     if (PokemonInfo::HasFormes(poke()->num()) && PokemonInfo::AFormesShown(poke()->num())) {
-        QList<int> forms = PokemonInfo::Formes(poke()->num());
+        QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(poke()->num());
 
-        foreach(int form, forms) {
-            QAction *ac = m->addAction(PokemonInfo::Name(form),this, SLOT(changeForm()));
+        foreach(Pokemon::uniqueId forme, formes) {
+            QAction *ac = m->addAction(PokemonInfo::Name(forme),this, SLOT(changeForme()));
             ac->setCheckable(true);
-            if (form == poke()->num()) {
+            if (forme == poke()->num()) {
                 ac->setChecked(true);
             }
-            ac->setProperty("pokemonid", form);
+            ac->setProperty("pokemonid", forme.toPokeRef());
         }
 
-        bForms->setMenu(m);
-    } else if (PokemonInfo::HasAestheticFormes(poke()->num()) && PokemonInfo::AFormesShown(poke()->num())) {
-        QActionGroup *ag = new QActionGroup(m);
-        for (int i = 0; i < PokemonInfo::NumberOfAFormes(poke()->num()); i++) {
-            QString forme = PokemonInfo::AestheticDesc(poke()->num(), i);
-            if (forme != "") {
-                QAction *ac = m->addAction(forme,this, SLOT(changeAForme()));
-                ac->setCheckable(true);
-                if (i == poke()->forme()) {
-                    ac->setChecked(true);
-                }
-                ac->setProperty("forme", i);
-                ag->addAction(ac);
-            }
-        }
         bForms->setMenu(m);
     } else {
         bForms->setDisabled(true);
@@ -169,7 +162,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     baselayout->addWidget(bForms);
 
     stats_l.clear();
-    stats_l << tr("HP") << tr("Att") << tr("Def") << tr("Speed") << tr("Sp Att") << tr("Sp Def");
+    stats_l << tr("HP") << tr("Att") << tr("Def") << tr("Sp Att") << tr("Sp Def") << tr("Speed");
 
     hpanddvchoice = new QCompactTable(0, 6);
 
@@ -189,30 +182,27 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     updateStats();
 }
 
-void TB_Advanced::changeAForme()
+void TB_Advanced::changeForme()
 {
     QAction *ac = (QAction*) sender();
-    poke()->forme() = ac->property("forme").toInt();
-
-    updatePokeImage();
-    emit imageChanged();
-}
-
-void TB_Advanced::changeForm()
-{
-    QAction *ac = (QAction*) sender();
-    if (ac->property("pokemonid").toInt() == poke()->num()) {
+    if (ac->property("pokemonid").toUInt() == poke()->num().toPokeRef()) {
         ac->setChecked(true);
         return;
     }
     else {
-        emit pokeFormChanged(ac->property("pokemonid").toInt());
+        emit pokeFormeChanged(Pokemon::uniqueId(ac->property("pokemonid").toInt()));
     }
 }
 
-void TB_Advanced::changeAbility(bool ab1)
+void TB_Advanced::changeAbility(bool)
 {
-    poke()->ability() = ab1? poke()->abilities().ab1 : poke()->abilities().ab2;
+    for (int i = 0; i < 3; i++) {
+        if (ability[i] != NULL && ability[i]->isChecked()) {
+            poke()->ability() = poke()->abilities().ab(i);
+            emit abilityChanged();
+            break;
+        }
+    }
 }
 
 void TB_Advanced::changeShininess(bool shine)
@@ -236,16 +226,16 @@ void TB_Advanced::changeHappiness(int x)
 
 void TB_Advanced::updatePokeImage()
 {
-    pokeImage->changePic(poke()->picture());
+    pokeImage->setFixedSize(poke()->picture().size());
+    pokeImage->setPixmap(poke()->picture());
 }
 
 void TB_Advanced::updateAbility()
 {
-    if (poke()->ability() == poke()->abilities().ab1)
-    {
-	ability1->setChecked(true);
-    } else {
-	ability2->setChecked(true);
+    for (int i = 0; i < 3; i++) {
+        if (poke()->ability() == poke()->abilities().ab(i) && ability[i]) {
+            ability[i]->setChecked(true);
+        }
     }
 }
 

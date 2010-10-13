@@ -100,6 +100,7 @@ class QScrollDownTextBrowser : public QTextBrowser
     Q_OBJECT
 public:
     QScrollDownTextBrowser();
+    ~QScrollDownTextBrowser() { delete menu; };
 
     void setAutoClear(bool a) {
         autoClear = a;
@@ -108,9 +109,16 @@ public:
     void insertPlainText(const QString &text);
     void keepLines(int numberOfLines);
 
+public slots:
+    void clear(); // Overriden to make linecount zero.
+
 private:
     int linecount;
     bool autoClear;
+
+protected:
+    void contextMenuEvent(QContextMenuEvent *event);
+    QMenu *menu;
 };
 
 /* validator for the nicks */

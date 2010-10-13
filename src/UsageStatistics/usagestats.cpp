@@ -37,15 +37,16 @@ QByteArray PokemonOnlineStatsPlugin::data(const PokeBattle &p) const {
     /* Constructs 28 bytes of raw data representing the pokemon */
     qint32 *a = (qint32*)ret.data();
     
-    a[0] = (p.num() << 16) + p.item();
-    a[1] = (p.ability() << 16) + (p.gender() << 8) + p.level();
-    a[2] = (p.nature() << 24) + (norm(p.evs()[0]) << 16) + (norm(p.evs()[1]) << 8) + norm(p.evs()[2]);
-    a[3] = (norm(p.evs()[3]) << 16) + (norm(p.evs()[4]) << 8) + norm(p.evs()[5]);
-    a[4] = (p.dvs()[0] << 25) + (p.dvs()[1] << 20) + (p.dvs()[2] << 15) + (p.dvs()[3] << 10) + (p.dvs()[4] << 5) + p.dvs()[5];
+    a[0] = (p.num().toPokeRef());
+    a[1] = (p.item());
+    a[2] = (p.ability() << 16) + (p.gender() << 8) + p.level();
+    a[3] = (p.nature() << 24) + (norm(p.evs()[0]) << 16) + (norm(p.evs()[1]) << 8) + norm(p.evs()[2]);
+    a[4] = (norm(p.evs()[3]) << 16) + (norm(p.evs()[4]) << 8) + norm(p.evs()[5]);
+    a[5] = (p.dvs()[0] << 25) + (p.dvs()[1] << 20) + (p.dvs()[2] << 15) + (p.dvs()[3] << 10) + (p.dvs()[4] << 5) + p.dvs()[5];
 
     /* Here the moves are sorted because we don't want to have different
        movesets when moves are in a different order */
-    quint16 *moves = (quint16*) (a + 5);
+    quint16 *moves = (quint16*) (a + 6);
     moves[0] = p.move(0).num();
     moves[1] = p.move(1).num();
     moves[2] = p.move(2).num();

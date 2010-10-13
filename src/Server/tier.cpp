@@ -1,3 +1,8 @@
+namespace Pokemon {
+    class uniqueId;
+}
+unsigned int qHash (const Pokemon::uniqueId &key);
+
 #include <QtXml>
 #include <cmath>
 #include <ctime>
@@ -157,7 +162,7 @@ bool Tier::isBanned(const PokeBattle &p) const {
     if (p.level() > maxLevel)
         return true;
     if (banPokes) {
-        if (bannedPokes.contains(p.num()))
+        if (bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num())))
             return true;
         if (bannedMoves.size() > 0) {
             for (int i = 0; i < 4; i++) {
@@ -178,7 +183,7 @@ bool Tier::isBanned(const PokeBattle &p) const {
     } else {
         /* The mode is the "restrict" mode, so instead we force the pokemons to have
            some characteristics */
-        if (bannedPokes.size() > 0 && !bannedPokes.contains(p.num()))
+        if (bannedPokes.size() > 0 && !bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num())))
             return true;
         if (bannedMoves.size() > 0) {
             for (int i = 0; i < 4; i++) {
@@ -209,7 +214,7 @@ bool Tier::isBanned(const PokeBattle &p) const {
 
 bool Tier::isRestricted(const PokeBattle &p) const
 {
-    if (restrictedPokes.contains(p.num()))
+    if (restrictedPokes.contains(PokemonInfo::NonAestheticForme(p.num())))
         return true;
 
 //    if (restrictedSets.contains(p.num())) {
@@ -480,11 +485,11 @@ void Tier::loadFromXml(const QDomElement &elem)
     banParentS = elem.attribute("banParent");
     parent = NULL;
     changeName(elem.attribute("name"));
-    gen = elem.attribute("gen", "4").toInt();
+    gen = elem.attribute("gen", QString::number(GEN_MAX)).toInt();
     maxLevel = elem.attribute("maxLevel", "100").toInt();
     numberOfPokemons = elem.attribute("numberOfPokemons", "6").toInt();
     maxRestrictedPokes = elem.attribute("numberOfRestricted", "1").toInt();
-    doubles = elem.attribute("doubles", "0").toInt();
+    mode = elem.attribute("mode", "0").toInt();
     displayOrder = elem.attribute("displayOrder", "0").toInt();
 
     clauses = 0;
@@ -551,7 +556,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
     dest.setAttribute("maxLevel", maxLevel);
     dest.setAttribute("numberOfPokemons", numberOfPokemons);
     dest.setAttribute("numberOfRestricted", maxRestrictedPokes);
-    dest.setAttribute("doubles", doubles);
+    dest.setAttribute("mode", mode);
     dest.setAttribute("displayOrder", displayOrder);
     dest.setAttribute("moves", getBannedMoves());
     dest.setAttribute("items", getBannedItems());
@@ -601,7 +606,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
 QString Tier::getBannedPokes() const
 {
     QStringList bannedPokesS;
-    foreach(int poke, bannedPokes) {
+    foreach(Pokemon::uniqueId poke, bannedPokes) {
         bannedPokesS.append(PokemonInfo::Name(poke));
     }
     bannedPokesS.sort();
@@ -631,7 +636,7 @@ QString Tier::getBannedMoves() const
 QString Tier::getRestrictedPokes() const
 {
     QStringList restrictedPokesS;
-    foreach(int poke, restrictedPokes) {
+    foreach(Pokemon::uniqueId poke, restrictedPokes) {
         restrictedPokesS.append(PokemonInfo::Name(poke));
     }
     restrictedPokesS.sort();
@@ -645,7 +650,7 @@ void Tier::importBannedPokes(const QString &s)
         return;
     QStringList pokes = s.split(",");
     foreach (QString poke, pokes) {
-        int num = PokemonInfo::Number(poke.trimmed());
+        Pokemon::uniqueId num = PokemonInfo::Number(poke.trimmed());
         if (num != 0)
             bannedPokes.insert(num);
     }
@@ -659,7 +664,7 @@ void Tier::importBannedItems(const QString &s)
     QStringList items = s.split(",");
     foreach (QString item, items) {
         int num = ItemInfo::Number(item.trimmed());
-        if (num != 0)
+        if (num != Pokemon::NoPoke)
             bannedItems.insert(num);
     }
 }
@@ -685,8 +690,8 @@ void Tier::importRestrictedPokes(const QString &s)
         return;
     QStringList rpokes = s.split(",");
     foreach (QString poke, rpokes) {
-        int num = PokemonInfo::Number(poke.trimmed());
-        if (num != 0)
+        Pokemon::uniqueId num = PokemonInfo::Number(poke.trimmed());
+        if (num != Pokemon::NoPoke)
             restrictedPokes.insert(num);
     }
 }
@@ -759,11 +764,11 @@ void Tier::importRestrictedPokes(const QString &s)
 Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), m_count(-1), last_count_time(0), holder(1000) {
     banPokes = true;
     parent = NULL;
-    gen = 4;
+    gen = GEN_MAX;
     maxLevel = 100;
     numberOfPokemons = 6;
     maxRestrictedPokes = 1;
-    doubles = 0;
+    mode = ChallengeInfo::Singles;
     displayOrder = 0;
 
     clauses = 0;
@@ -788,15 +793,11 @@ LoadThread * Tier::getThread()
 
 bool Tier::allowMode(int mode) const
 {
-    if (doubles == 0) {
+    if (this->mode < 0) {
         return true;
     }
 
-    if (mode && doubles >= 1)
-        return true;
-    if (!mode && doubles <= -1)
-        return true;
-    return false;
+    return this->mode == mode;
 }
 
 bool Tier::allowGen(int gen) const
@@ -828,7 +829,7 @@ Tier *Tier::dataClone() const
     t.bannedMoves = bannedMoves;
     t.bannedPokes = bannedPokes;
     t.restrictedPokes = restrictedPokes;
-    t.doubles = doubles;
+    t.mode = mode;
     t.displayOrder = displayOrder;
     t.clauses = clauses;
 

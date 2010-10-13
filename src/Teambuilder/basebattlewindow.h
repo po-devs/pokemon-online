@@ -14,18 +14,18 @@ class QClickPBar;
 
 struct BaseBattleInfo
 {
-    BaseBattleInfo(const PlayerInfo & me, const PlayerInfo &opp, bool doubles, int myself=0, int opponent=1);
+    BaseBattleInfo(const PlayerInfo & me, const PlayerInfo &opp, int mode, int myself=0, int opponent=1);
     /* name [0] = mine, name[1] = other */
     PlayerInfo pInfo[2];
     QVector<bool> sub;
-    QVector<qint16> specialSprite;
-    QVector<qint16> lastSeenSpecialSprite;
+    QVector<Pokemon::uniqueId> specialSprite;
+    QVector<Pokemon::uniqueId> lastSeenSpecialSprite;
 
     quint16 time[2];
     bool ticking[2];
     int startingTime[2];
 
-    bool doubles;
+    int mode;
     int numberOfSlots;
 
     int myself;
@@ -36,13 +36,12 @@ struct BaseBattleInfo
     /* Opponent pokemon */
     ShallowBattlePoke pokemons[2][6];
     QVector<bool> pokeAlive;
-    QVector<quint8> currentIndex;
 
     ShallowBattlePoke &currentShallow(int spot) {
-        return pokemons[player(spot)][currentIndex[spot]];
+        return pokemons[player(spot)][slotNum(spot)];
     }
     const ShallowBattlePoke &currentShallow(int spot) const {
-        return pokemons[player(spot)][currentIndex[spot]];
+        return pokemons[player(spot)][slotNum(spot)];
     }
 
     QString name(int x) const {
@@ -55,6 +54,33 @@ struct BaseBattleInfo
 
     int player(int slot) const {
         return slot %2;
+    }
+
+    int slotNum(int slot) const {
+        return slot / 2;
+    }
+
+    bool isOut(int , int poke) const {
+        return poke < numberOfSlots/2;
+    }
+
+    bool multiples() const {
+        return mode == ChallengeInfo::Doubles || mode == ChallengeInfo::Triples;
+    }
+
+    virtual void switchPoke(int spot, int poke) {
+        std::swap(currentShallow(spot), pokemons[player(spot)][poke]);
+        pokeAlive[spot] = true;
+    }
+
+    virtual void switchOnSide(int player, int s1, int s2) {
+        int pk1 = slot(player, s1);
+        int pk2 = slot(player, s2);
+        std::swap(currentShallow(pk1), currentShallow(pk2));
+        std::swap(pokeAlive[pk1], pokeAlive[pk2]);
+        std::swap(sub[pk1], sub[pk2]);
+        std::swap(specialSprite[pk1], specialSprite[pk2]);
+        std::swap(lastSeenSpecialSprite[pk1], lastSeenSpecialSprite[pk2]);
     }
 
     /* Stat boosts & team status */
@@ -134,7 +160,9 @@ public:
         EndMessage,
         PointEstimate,
         MakeYourChoice,
-        Avoid
+        Avoid,
+        RearrangeTeam,
+        SpotShifts
     };
 
     enum TempPokeChange {
@@ -142,8 +170,9 @@ public:
         TempAbility,
         TempItem,
         TempSprite,
-        DefiniteForm,
-        AestheticForme
+        DefiniteForme,
+        AestheticForme,
+        DefMove
     };
 
     enum WeatherM
@@ -200,6 +229,7 @@ public:
     bool musicPlayed() const;
     void playCry(int pokemon);
     bool hasKnowledgeOf(int player) const;
+    void close();
 
 public slots:
     void receiveInfo(QByteArray);
@@ -275,6 +305,7 @@ public:
     BaseBattleDisplay(BaseBattleInfo &i);
 
     virtual void updatePoke(int spot);
+    virtual void updatePoke(int player, int index);
     virtual void updateHp(int spot);
     virtual void updateToolTip(int spot);
     void changeStatus(int spot, int poke, int status);
@@ -308,17 +339,17 @@ public:
     BaseGraphicsZone(BaseBattleInfo *info);
     /* displays that poke */
     template <class T>
-    void switchTo(const T &poke, int spot, bool sub, int specialSprite=0);
+    void switchTo(const T &poke, int spot, bool sub, Pokemon::uniqueId specialSprite = Pokemon::NoPoke);
     /* Display blank */
     void switchToNaught(int spot);
     /* For tool tips */
     void mouseMoveEvent(QMouseEvent *e);
 
     /* Loads a pixmap if not loaded otherwise go see graphics */
-    QPixmap loadPixmap(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub);
+    QPixmap loadPixmap(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub);
     /* We are using a qmap to store the graphics already loaded. So the key of the pixmap
         is a combination of 2 bools, 1 quin8; and one quint16 */
-    qint32 key(quint16 num, quint8 forme, bool shiny, bool back, quint8 gender, bool sub) const;
+    quint64 key(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub) const;
     QHash<qint32, QPixmap> graphics;
     /* Current pixmaps displayed */
     QVector<QGraphicsPixmapItem *> items;
@@ -334,9 +365,9 @@ public:
 
 /* Yeepee, at last templates */
 template <class T>
-void BaseGraphicsZone::switchTo(const T &poke, int spot, bool sub, int specialSprite)
+void BaseGraphicsZone::switchTo(const T &poke, int spot, bool sub, Pokemon::uniqueId specialSprite)
 {
-    items[spot]->setPixmap(loadPixmap(specialSprite?specialSprite:poke.num(), specialSprite?0:poke.forme(), poke.shiny(),
+    items[spot]->setPixmap(loadPixmap(specialSprite != Pokemon::NoPoke ?specialSprite:poke.num(), poke.shiny(),
                                       info().player(spot) == info().myself , poke.gender(), sub));
 }
 

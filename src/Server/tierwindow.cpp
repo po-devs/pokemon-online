@@ -145,8 +145,8 @@ void TierWindow::openTierEdit(Tier *t)
         helper->addConfigHelper(new ConfigCombo<QString>("Parent Tier", t->banParentS, parents, parents));
     }
 
-    helper->addConfigHelper(new ConfigCombo<int>("Generation", t->gen, QStringList() << "Any" << "3rd Gen" << "4th Gen",
-                            QList<int> () << 0 << 3 << 4));
+    helper->addConfigHelper(new ConfigCombo<int>("Generation", t->gen, QStringList() << "Any" << "3rd Gen" << "4th Gen" << "5th Gen",
+                            QList<int> () << 0 << 3 << 4 << 5));
     helper->addConfigHelper(new ConfigCheck("Ban pokemon/moves/items (uncheck to restrict the choice to them instead)", t->banPokes));
     helper->addConfigHelper(new ConfigSpin("Max number of pokemon", t->numberOfPokemons, 1, 6));
     helper->addConfigHelper(new ConfigText("Pokemon", pokemons));
@@ -161,8 +161,10 @@ void TierWindow::openTierEdit(Tier *t)
     items = t->getBannedItems();
     restrPokemons = t->getRestrictedPokes();
 
-    helper->addConfigHelper(new ConfigCombo<int>("Doubles in Find Battle", t->doubles, QStringList() << "Force" << "Allow" << "Forbid",
-                                                 QList<int>() << 1 << 0 << (-1) ));
+    helper->addConfigHelper(new ConfigCombo<int>("Battle Mode in Find Battle", t->mode, QStringList() << "Any" << "Singles" << "Doubles" /* << "Triples" */
+                                                 << "Rotation Battles",
+                                                 QList<int>() << -1 << ChallengeInfo::Singles << ChallengeInfo::Doubles /* << ChallengeInfo::Triples */
+                                                 << ChallengeInfo::Rotation));
 
     int clauses = t->clauses;
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {

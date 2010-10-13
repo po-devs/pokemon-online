@@ -25,13 +25,16 @@ public:
     void loadTeam(const QString &path);
     template<class T>
     void setDefaultValue(const QString &key, T value);
+
+    void addStyleMenu(QMenuBar *m);
+    void addThemeMenu(QMenuBar *m);
+    void changeTheme(const QString &theme);
 public slots:
     void launchMenu();
     void launchCredits();
     void launchTeamBuilder();
     void goOnline(const QString &url, const quint16 port);
     void launchServerChoice();
-    void changeStyle();
     void changeLanguage();
     void updateMenuBar();
     void openPluginManager();
@@ -43,6 +46,8 @@ public slots:
 private slots:
     /* Relies on ((QAction*)(sender()))->text() */
     void openPluginConfiguration();
+    void changeStyle();
+    void changeTheme();
 private:
     QMainWindow *displayer;
     PluginManager *pluginManager;

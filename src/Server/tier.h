@@ -136,9 +136,9 @@ private:
     Tier *parent;
     QSet<int> bannedItems;
     QSet<int> bannedMoves;
-    QSet<int> bannedPokes;
-    QSet<int> restrictedPokes;
-    int doubles; /* < 0 : singles, 0: either, > 0: doubles */
+    QSet<Pokemon::uniqueId> bannedPokes;
+    QSet<Pokemon::uniqueId> restrictedPokes;
+    int mode; /* < 0 : any, otherwise specific mode */
     quint32 clauses;
 
     /* Used for table name in SQL database */

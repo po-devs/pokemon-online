@@ -7,6 +7,7 @@
 #include "../PokemonInfo/movesetchecker.h"
 #include "pluginmanager.h"
 #include "plugininterface.h"
+#include "theme.h"
 
 MainEngine::MainEngine() : displayer(0)
 {
@@ -17,13 +18,8 @@ MainEngine::MainEngine() : displayer(0)
 
     QSettings settings;
     /* initializing the default init values if not there */
-    if (settings.value("new_teambuilder").isNull() || settings.value("application_style").isNull()) {
-        settings.setValue("application_style", "plastique");
-        settings.setValue("new_teambuilder",true);
-    }
-    if (settings.value("stylesheet").isNull() || settings.value("stylesheet").toString() == "db/default.qss") {
-        settings.setValue("stylesheet", "db/default.css");
-    }
+    setDefaultValue("application_style", "plastique");
+    setDefaultValue("theme", "Themes/Default/");
 
 #ifdef Q_OS_MACX
     setDefaultValue("team_location", QDir::homePath() + "/Documents/trainer.tp");
@@ -61,12 +57,18 @@ MainEngine::MainEngine() : displayer(0)
     GenderInfo::init("db/genders/");
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
+    Theme::init(settings.value("theme").toString());
+
+    QStringList moves;
+    for (int i = 0; i < MoveInfo::NumberOfMoves(); i++) {
+        if (MoveInfo::Flags(i, 5) & Move::MischievousFlag) {
+            moves.push_back(MoveInfo::Name(i));
+        }
+    }
 
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());
-    QFile stylesheet(settings.value("stylesheet").toString());
-    stylesheet.open(QIODevice::ReadOnly);
-    qApp->setStyleSheet(stylesheet.readAll());
+    loadStyleSheet();
     loadTeam(settings.value("team_location").toString());
 
     launchMenu();
@@ -116,8 +118,7 @@ void MainEngine::openPluginConfiguration()
 
 void MainEngine::loadStyleSheet()
 {
-    QSettings s;
-    QFile stylesheet(s.value("stylesheet").toString());
+    QFile stylesheet(Theme::path("default.css"));
     stylesheet.open(QIODevice::ReadOnly);
     qApp->setStyleSheet(stylesheet.readAll());
 }
@@ -193,8 +194,7 @@ void MainEngine::launchServerChoice()
 void MainEngine::changeStyle()
 {
     QAction * a = qobject_cast<QAction *>(sender());
-    if(!a)
-    {
+    if(!a) {
         return;
     }
     QString style = a->text();
@@ -202,6 +202,29 @@ void MainEngine::changeStyle()
     QSettings setting;
     setting.setValue("application_style",style);
 }
+
+void MainEngine::changeTheme()
+{
+    QAction * a = qobject_cast<QAction *>(sender());
+    if(!a) {
+        return;
+    }
+    QString theme = a->text();
+
+    changeTheme(theme);
+}
+
+void MainEngine::changeTheme(const QString &theme)
+{
+    QSettings settings;
+
+    QString fullTheme = "Themes/" + theme + "/";
+    settings.setValue("theme", fullTheme);
+
+    Theme::Reload(fullTheme);
+    loadStyleSheet();
+}
+
 
 void MainEngine::changeLanguage()
 {
@@ -251,11 +274,50 @@ void MainEngine::loadTeam(const QString &path)
 
 void MainEngine::loadTeamDialog()
 {
-    QSettings settings;
-    QString newLocation;
+    loadTTeamDialog(*trainerTeam());
+}
 
-    if (loadTTeamDialog(*trainerTeam(), settings.value("team_location").toString(), &newLocation)) {
-        settings.setValue("team_location", newLocation);
+void MainEngine::addStyleMenu(QMenuBar *menuBar)
+{
+    QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
+    QStringList style = QStyleFactory::keys();
+    QActionGroup *ag = new QActionGroup(menuBar);
+
+    QSettings settings;
+    QString curStyle = settings.value("application_style").toString();
+
+    foreach(QString s , style) {
+        QAction *ac = menuStyle->addAction(s,this,SLOT(changeStyle()));
+        ac->setCheckable(true);
+
+        if (s == curStyle) {
+            ac->setChecked(true);
+        }
+        ag->addAction(ac);
+    }
+
+    menuStyle->addSeparator();
+    menuStyle->addAction(tr("Reload StyleSheet"), this, SLOT(loadStyleSheet()));
+}
+
+void MainEngine::addThemeMenu(QMenuBar *menuBar)
+{
+    QMenu *themeMenu = menuBar->addMenu(tr("&Theme"));
+
+    QDir d("Themes");
+
+    QList<QFileInfo> dirs = d.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+
+    QSettings s;
+    QString theme = s.value("theme").toString().section('/', -2, -2);
+
+    QActionGroup *ag = new QActionGroup(themeMenu);
+    foreach(QFileInfo f, dirs) {
+        QAction *ac = themeMenu->addAction(f.baseName(), this, SLOT(changeTheme()));
+        ac->setCheckable(true);
+        if (ac->text() == theme)
+            ac->setChecked(true);
+        ag->addAction(ac);
     }
 }
 

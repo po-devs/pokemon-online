@@ -524,6 +524,9 @@ void Player::challengeStuff(const ChallengeInfo &c)
             sendMessage("You already have challenged 10 people, you can't challenge more!");
             return;
         }
+        if (c.mode < 0 || c.mode > ChallengeInfo::Rotation) {
+            sendMessage("You must challenge to a correct mode");
+        }
         emit sendChallenge(this->id(), id, c);
     } else {
         if (desc == ChallengeInfo::Accepted && !okForBattle()) {
@@ -569,6 +572,11 @@ void Player::findBattle(const FindBattleData& f)
     if (team().invalid())
     {
         sendMessage("Your team is invalid, you can't find battles!");
+        return;
+    }
+
+    if (f.mode < 0 || f.mode > ChallengeInfo::Rotation) {
+        sendMessage("You're tring to find a battle with an invalid mode.");
         return;
     }
 
@@ -1029,14 +1037,20 @@ void Player::spectatingRequested(int id)
     emit spectatingRequested(this->id(), id);
 }
 
-void Player::sendMessage(const QString &mess)
+void Player::sendMessage(const QString &mess, bool html)
 {
-    relay().sendMessage(mess);
+    if (!html)
+        relay().sendMessage(mess);
+    else
+        relay().sendHtmlMessage(mess);
 }
 
-void Player::sendChanMessage(int channel, const QString &mess)
+void Player::sendChanMessage(int channel, const QString &mess, bool html)
 {
-    relay().sendChannelMessage(channel, mess);
+    if (!html)
+        relay().sendChannelMessage(channel, mess);
+    else
+        relay().sendHtmlChannelMessage(channel, mess);
 }
 
 void Player::tUnban(QString name)

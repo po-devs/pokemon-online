@@ -174,7 +174,7 @@ struct SecondaryStuff {
 
 void SecondaryStuff::complete(Skeleton &s, bool hiddenPower) const
 {
-    static const char* stats[] = {"HP", "Atk", "Def", "Spd", "SAtk", "SDef"};
+    static const char* stats[] = {"HP", "Atk", "Def", "SAtk", "SDef", "Spd"};
 
     s.addDefaultValue("nature", NatureInfo::Name(nature));
 
@@ -237,7 +237,7 @@ struct RawSet {
 };
 
 struct MoveSet {
-    quint16 abilities[2];
+    quint16 abilities[3];
     quint16 usage;
     quint16 num;
     RawSet raw;
@@ -245,13 +245,14 @@ struct MoveSet {
     QMap<SecondaryStuff, SecondaryStuff> options;
 
     MoveSet();
-    MoveSet(char buffer[28], int usage, int defAb);
+    MoveSet(char buffer[32], int usage, AbilityGroup abs);
 
     MoveSet & operator += (const MoveSet &other) {
         usage += other.usage;
 
         abilities[0] += other.abilities[0];
         abilities[1] += other.abilities[1];
+        abilities[2] += other.abilities[2];
 
         foreach(const SecondaryStuff &option, other.options) {
             if (options.contains(option)) {
@@ -273,40 +274,41 @@ MoveSet::MoveSet()
 {
 }
 
-MoveSet::MoveSet(char buffer[28], int usage, int defAb)
+MoveSet::MoveSet(char buffer[28], int usage, AbilityGroup abs)
     : usage(usage)
 {
     qint32 *buf = (qint32 *) buffer;
 
-    raw.item = buf[0] & 0xFFFF;
-    num = buf[0] >> 16;
+    raw.item = buf[1];
+    num = buf[0];
 
-    if (defAb == buf[1] >> 16) {
-        abilities[0] = usage;
-        abilities[1] = 0;
-    } else {
-        abilities[0] = 0;
-        abilities[1] = usage;
+    int ab = buf[2] >> 16;
+    for (int i = 0;i < 3; i++) {
+        if (ab == abs.ab(i)) {
+            abilities[i] = usage;
+        } else {
+            abilities[i] = 0;
+        }
     }
 
-    raw.level = buf [1] & 0xFF;
+    raw.level = buf [2] & 0xFF;
 
     SecondaryStuff s;
 
     s.usage = usage;
-    s.nature = buf[2] >> 24;
-    s.evs[0] = (buf[2] >> 16) & 0xFF;
-    s.evs[1] = (buf[2] >> 8) & 0xFF;
-    s.evs[2] = buf[2] & 0xFF;
-    s.evs[3] = buf[3] >> 16;
-    s.evs[4] = (buf[3] >> 8) & 0xFF;
-    s.evs[5] = buf[3] & 0xFF;
+    s.nature = buf[3] >> 24;
+    s.evs[0] = (buf[3] >> 16) & 0xFF;
+    s.evs[1] = (buf[3] >> 8) & 0xFF;
+    s.evs[2] = buf[3] & 0xFF;
+    s.evs[3] = buf[4] >> 16;
+    s.evs[4] = (buf[4] >> 8) & 0xFF;
+    s.evs[5] = buf[4] & 0xFF;
 
     for (int i = 0; i < 6; i++) {
-        s.dvs[i] = (buf[4] >> (5-i)*5) & 0x1F;
+        s.dvs[i] = (buf[5] >> (5-i)*5) & 0x1F;
     }
 
-    qint16 *moves = (qint16 *) (&buf[5]);
+    qint16 *moves = (qint16 *) (&buf[6]);
 
     qSort(&moves[0], &moves[4]);
 
@@ -327,15 +329,32 @@ bool MoveSet::hasHiddenPower() const {
 void MoveSet::complete(Skeleton &m) const
 {
     AbilityGroup ab = PokemonInfo::Abilities(num);
-    int tot = abilities[0] + abilities[1];
+    int tot = abilities[0] + abilities[1] + abilities[2];
 
     m.addDefaultValue("pokemon", PokemonInfo::Name(num));
     m.addDefaultValue("item", ItemInfo::Name(raw.item));
     m.addDefaultValue("level", raw.level);
-    m.addDefaultValue("abilities", abilities[0]*abilities[1] == 0 ? (abilities[0] == 0 ? AbilityInfo::Name(ab.ab2) : AbilityInfo::Name(ab.ab1))
-        : QString("%1 (%2 %) / %3 (%4 %)").arg(AbilityInfo::Name(ab.ab1)).arg(double(100*abilities[0])/tot,0,'f',1)
-        .arg(AbilityInfo::Name(ab.ab2)).arg(double(100*abilities[1])/tot,0,'f',1).toUtf8());
 
+    QMap<int, int> abs;
+
+    for (int i = 0; i < 3; i++) {
+        if (abilities[i] != 0) {
+            abs[i] = abilities[i];
+        }
+    }
+
+    if (abs.size() == 1) {
+        int key = abs.begin().key();
+        m.addDefaultValue("abilities", AbilityInfo::Name(ab.ab(key)));
+    } else {
+        QStringList abs2;
+        for (int i = 0; i < 3; i++) {
+            if (abs.contains(i)) {
+                abs2.push_back(QString("%1 (%2 %)").arg(AbilityInfo::Name(ab.ab(i))).arg(double(100*abilities[i])/tot,0,'f',1));
+            }
+        }
+        m.addDefaultValue("abilities", abs2.join(" / "));
+    }
 
     QMultiMap<int, SecondaryStuff> usageMap;
     foreach(const SecondaryStuff &s, options)  {
@@ -399,17 +418,19 @@ struct GlobalThings {
         totalItems = 0;
         totalMoves = 0;
         abilities[0] = 0;
-        abilities[1] = 1;
+        abilities[1] = 0;
+        abilities[2] = 0;
     }
 };
 
-void addMoveset(QMap<RawSet, MoveSet> &container, char *buffer, int usage, int defAb, GlobalThings &globals) {
+void addMoveset(QMap<RawSet, MoveSet> &container, char *buffer, int usage, AbilityGroup defAb, GlobalThings &globals) {
     if (usage == 0)
         return;
     MoveSet m = MoveSet(buffer, usage, defAb);
 
     globals.abilities[0] += m.abilities[0];
     globals.abilities[1] += m.abilities[1];
+    globals.abilities[2] += m.abilities[2];
     globals.items[m.raw.item] += m.usage;
     globals.totalItems += m.usage;
 
@@ -488,7 +509,6 @@ int main(int argc, char *argv[])
     (void) argc;
     (void) argv;
 
-    PokemonInfoConfig::setConfig(PokemonInfoConfig::NoGui);
     PokemonInfo::init("db/pokes/");
     MoveInfo::init("db/moves/");
     AbilityInfo::init("db/abilities/");
@@ -547,22 +567,22 @@ int main(int argc, char *argv[])
         foreach(QString file, files) {
             FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "rb");
 
-            char buffer[28];
+            char buffer[32];
 
-            while (fread(buffer, sizeof(char), 28/sizeof(char), f) == 28) {
+            while (fread(buffer, sizeof(char), 32/sizeof(char), f) == 32) {
                 qint32 iusage(0), ileadusage(0);
 
                 fread(&iusage, sizeof(qint32), 1, f);
                 fread(&ileadusage, sizeof(qint32), 1, f);
 
-                int pokenum = (*((qint32*) buffer)) >> 16;
+                int pokenum = *((qint32*) buffer);
 
                 if (pokenum != 0) {
                     usage[pokenum] += iusage;
                     if (ileadusage > 0) {
                         leadUsage[pokenum] += ileadusage;
                     }
-                    buffers[pokenum].append(Bcc(QByteArray(buffer, 28), iusage, ileadusage));
+                    buffers[pokenum].append(Bcc(QByteArray(buffer, 32), iusage, ileadusage));
                 }
                 totalusage += iusage;
             }
@@ -624,7 +644,8 @@ int main(int argc, char *argv[])
             QMap<RawSet, MoveSet> movesets;
             QMap<RawSet, MoveSet> leadsets;
             GlobalThings globals;
-            int defAb = PokemonInfo::Abilities(pokemon).ab1;
+
+            AbilityGroup defAb = PokemonInfo::Abilities(pokemon);
 
             foreach(Bcc b, buffers[pokemon]) {
                 char *buffer = b.buffer.data();
@@ -649,12 +670,15 @@ int main(int argc, char *argv[])
             parseGlobals(s, globals.moves, globals.totalMoves, "globalmove", "move", &MoveInfo::Name);
             parseGlobals(s, globals.items, globals.totalItems, "globalitem", "item", &ItemInfo::Name);
             QHash<int, int> abilities;
-            abilities[defAb] = globals.abilities[0];
+            abilities[defAb.ab(0)] = globals.abilities[0];
             int totAbilities = globals.abilities[0];
-            if (globals.abilities[1] > 0 && PokemonInfo::Abilities(pokemon).ab2 != 0) {
-                abilities[PokemonInfo::Abilities(pokemon).ab2] = globals.abilities[1];
-                totAbilities += globals.abilities[1];
+            for (int i = 1; i < 3; i++) {
+                if (globals.abilities[i] > 0 && PokemonInfo::Abilities(pokemon).ab(i) != 0) {
+                    abilities[defAb.ab(i)] = globals.abilities[i];
+                    totAbilities += globals.abilities[i];
+                }
             }
+
             parseGlobals(s, abilities, totAbilities, "globalability", "ability", &AbilityInfo::Name);
 
             QFile pokef(outDir.absoluteFilePath("%1.html").arg(pokemon));

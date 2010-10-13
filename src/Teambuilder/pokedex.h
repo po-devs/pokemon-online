@@ -2,6 +2,7 @@
 #define POKEDEX_H
 
 #include <QtGui>
+#include "../PokemonInfo/pokemonstructs.h"
 
 class TeamBuilder;
 class TB_PokeChoice;
@@ -31,15 +32,14 @@ public:
     void update();
     bool shiny() const;
 public slots:
-    void changeToPokemon(int poke);
+    void changeToPokemon(Pokemon::uniqueId poke);
     void updatePicture();
     void changeToNext();
     void changeToPrevious();
 signals:
-    void pokemonChanged(int);
+    void pokemonChanged(Pokemon::uniqueId);
 private:
-    int currentPoke;
-    int forme;
+    Pokemon::uniqueId currentPoke;
     QPushButton *evo, *formes;
     QLabel *num, *name;
     QLabel *specy;
@@ -61,19 +61,19 @@ class PokedexBody : public QFrame
 public:
     PokedexBody();
 
-    void changeToPokemon(int poke);
+    void changeToPokemon(Pokemon::uniqueId poke);
 public slots:
     void sortByColumn(int col);
-    void changeToPokemonFromExt(int poke);
+    void changeToPokemonFromExt(Pokemon::uniqueId);
     void openAdvancedSearch();
+signals:
+    void pokeChanged(Pokemon::uniqueId newPoke);
 private slots:
     void changeToPokemon(const QString &);
     void changePokemon();
     void changePokemonFromRow(int);
-signals:
-    void pokeChanged(int newPoke);
 private:
-    int currentPoke;
+    Pokemon::uniqueId currentPoke;
     TB_PokeChoice * pokeList;
     QLineEdit *pokeEdit;
     QPointer<AdvancedSearch> aSearch;
@@ -85,10 +85,10 @@ class ProfileTab : public QFrame
 public:
     ProfileTab();
 public slots:
-    void changeDesc (int poke);
+    void changeDesc (Pokemon::uniqueId poke);
 private:
     QLabel *hgDesc, *ssDesc, *ptDesc;
-    QLabel *ab1, *ab2;
+    QLabel *abs[3];
 };
 
 class MoveTab : public QFrame
@@ -97,7 +97,7 @@ class MoveTab : public QFrame
 public:
     MoveTab();
 public slots:
-    void changePoke(int poke);
+    void changePoke(Pokemon::uniqueId poke);
 private:
     QCompactTable *moves;
 
@@ -117,12 +117,12 @@ class StatTab: public QFrame
 public:
     StatTab();
 public slots:
-    void changePoke(int poke);
+    void changePoke(Pokemon::uniqueId poke);
 private slots:
     void increaseBoost();
     void decreaseBoost();
 private:
-    int poke;
+    Pokemon::uniqueId poke;
     QLabel *min[6];
     QLabel *max[6];
     QImageButtonLR *buttons[6];
@@ -148,7 +148,6 @@ public:
 
     void changePic(const QPixmap &pic);
 protected:
-    static QPixmap *background;
     QLabel *underLying;
 };
 
@@ -156,7 +155,7 @@ protected:
 class PokeBallText : public QWidget
 {
 public:
-    PokeBallText(const QString &filename, const QString &text);
+    PokeBallText(const QPixmap &pic, const QString &text);
 };
 
 class TypeText : public QWidget
@@ -179,7 +178,7 @@ class AdvancedSearch : public QWidget
 public:
     AdvancedSearch();
 signals:
-    void pokeSelected(int);
+    void pokeSelected(Pokemon::uniqueId);
 private slots:
     void search();
     void pokeClicked(QModelIndex);

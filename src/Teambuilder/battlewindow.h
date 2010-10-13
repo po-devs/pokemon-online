@@ -16,7 +16,7 @@ class StruggleZone;
 class BattleInfo : public BaseBattleInfo
 {
 public:
-    BattleInfo(const TeamBattle &myteam, const PlayerInfo &me, const PlayerInfo &opp, bool doubles, int myself, int oppo);
+    BattleInfo(const TeamBattle &myteam, const PlayerInfo &me, const PlayerInfo &opp, int mode, int myself, int oppo);
 
     /* Possible choices */
     bool possible;
@@ -45,6 +45,33 @@ public:
         return spot / 2;
     }
 
+    bool areAdjacent (int poke1, int poke2) const;
+
+    virtual void switchPoke(int spot, int poke, bool own) {
+        BaseBattleInfo::switchPoke(spot, poke);
+        if (!own) {
+            return;
+        }
+        myteam.switchPokemon(number(spot), poke);
+        currentShallow(spot) = myteam.poke(number(spot));
+        tempPoke(spot) = myteam.poke(number(spot));
+    }
+
+    virtual void switchOnSide(int player, int s1, int s2) {
+        int pk1 = slot(player, s1);
+        int pk2 = slot(player, s2);
+        std::swap(currentShallow(pk1), currentShallow(pk2));
+        std::swap(pokeAlive[pk1], pokeAlive[pk2]);
+        std::swap(sub[pk1], sub[pk2]);
+        std::swap(specialSprite[pk1], specialSprite[pk2]);
+        std::swap(lastSeenSpecialSprite[pk1], lastSeenSpecialSprite[pk2]);
+        if (player == myself) {
+            myteam.switchPokemon(s1, s2);
+            tempPoke(pk1) = myteam.poke(s1);
+            tempPoke(pk2) = myteam.poke(s2);
+        }
+    }
+
     int lastMove[6];
 };
 
@@ -56,7 +83,6 @@ class BattleWindow : public BaseBattleWindow
 {
     Q_OBJECT
 
-    PROPERTY(BattleConfiguration, conf);
 public:
     BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf);
 
@@ -74,8 +100,8 @@ public:
     };
 
     enum {
-        TargetTab = 6,
-        StruggleTab = 7
+        TargetTab = 3,
+        StruggleTab = 4
     };
 
     TeamBattle &team();
@@ -101,6 +127,7 @@ public slots:
     void clickClose();
     void emitCancel();
     void switchToPokeZone();
+    void sendRearrangedTeam();
 signals:
     void forfeit(int battleid);
 protected:
@@ -127,10 +154,12 @@ private:
     void disableAll();
     void enableAll();
 
+    void openRearrangeWindow(const ShallowShownTeam &t);
+
     QStackedWidget *mystack;
     QTabWidget *mytab;
     QListWidget *myspecs;
-    AttackZone *myazones[6];
+    AttackZone *myazones[3];
     StruggleZone *szone;
     TargetSelection *tarZone;
     QList<QButtonGroup*> mybgroups;
@@ -231,6 +260,7 @@ class PokeButton : public QPushButton
     Q_OBJECT
 public:
     PokeButton(const PokeBattle &p);
+    void changePokemon(const PokeBattle &p);
     void update();
     void updateToolTip();
 private:
@@ -248,7 +278,7 @@ public:
 signals:
     void targetSelected(int target);
 private:
-    QPushButton * pokes[4];
+    QPushButton * pokes[6];
 };
 
 class StruggleZone : public QWidget
@@ -261,5 +291,39 @@ signals:
     void attackClicked();
 };
 
+class RearrangeLayout;
+
+class RearrangeWindow : public QWidget
+{
+    Q_OBJECT
+public:
+    RearrangeWindow(TeamBattle &t, const ShallowShownTeam &op);
+
+signals:
+    void forfeit();
+    void done();
+public slots:
+    void runExchanges();
+protected:
+    void closeEvent(QCloseEvent *);
+private:
+    TeamBattle *myteam;
+
+    QToolButton *buttons[6];
+    RearrangeLayout *layouts[6];
+};
+
+class RearrangeLayout : public QVBoxLayout
+{
+public:
+    RearrangeLayout(QWidget *parent, const Pokemon::uniqueId &pokenum, int level, int gender, bool item);
+
+    void update(const Pokemon::uniqueId &pokenum, int level, int gender, bool item);
+
+    static QPixmap getFullIcon(Pokemon::uniqueId num, bool item, int gender);
+private:
+    QLabel *levelLabel;
+    QLabel *pokemonPicture;
+};
 
 #endif // BATTLEWINDOW_H

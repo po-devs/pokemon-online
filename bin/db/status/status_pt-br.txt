@@ -1,7 +1,7 @@
 normal
 paralizado
-queimado
-congelado
 dormindo
+congelado
+queimado
 envenenado
-profundamente envenenado
+confused

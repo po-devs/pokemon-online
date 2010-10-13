@@ -1,5 +1,6 @@
 #include "teambuilder.h"
 #include "box.h"
+#include "theme.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include <QtXml>
@@ -24,7 +25,7 @@ TB_PokemonDetail::TB_PokemonDetail()
     gl->addLayout(nicklayout, 0,0);
 
     QLabel *whitePokeball = new QLabel();
-    whitePokeball->setPixmap(QPixmap("db/Teambuilder/Box/Whiteball.png"));
+    whitePokeball->setPixmap(Theme::WhiteBall());
     nicklayout->addWidget(whitePokeball,0,0);
     nicklayout->addWidget(m_name = new QLabel(),0,1);
     nicklayout->addWidget(m_nick = new QLabel(),1,0,1,2);
@@ -44,8 +45,9 @@ TB_PokemonDetail::TB_PokemonDetail()
     m_num->setObjectName("BigText");
     m_level->setObjectName("SmallText");
 
-    /* Avatar box! */
-    gl->addWidget(m_pic = new AvatarBox(),1,0);
+    /* Pokemon picture! */
+    gl->addWidget(m_pic = new QLabel(),1,0);
+    m_pic->setObjectName("PokemonPicture");
 
     /* Type / Nature / Item */
     QVBoxLayout *tnlayout = new QVBoxLayout();
@@ -92,13 +94,14 @@ void TB_PokemonDetail::updatePoke()
     m_name->setText(PokemonInfo::Name(poke->num()));
     m_num->setText(QString("[%1]").arg(num == -1 ? "X" : QString::number(num+1)));
     m_nick->setText(poke->nickname());
-    m_pic->changePic(poke->picture());
-    m_type1->setPixmap(TypeInfo::Picture(PokemonInfo::Type1(poke->num())));
-    m_type2->setPixmap(TypeInfo::Picture(PokemonInfo::Type2(poke->num())));
+    m_pic->setFixedSize(poke->picture().size());
+    m_pic->setPixmap(poke->picture());
+    m_type1->setPixmap(Theme::TypePicture(PokemonInfo::Type1(poke->num(), poke->gen())));
+    m_type2->setPixmap(Theme::TypePicture(PokemonInfo::Type2(poke->num(), poke->gen())));
     m_type2->setVisible(PokemonInfo::Type2(poke->num()) != Type::Curse);
     m_nature->setText(tr("Nature: %1").arg(NatureInfo::Name(poke->nature())));
     m_item->setPixmap(ItemInfo::Icon(poke->item()));
-    m_gender->setPixmap(GenderInfo::Picture(poke->gender(), false));
+    m_gender->setPixmap(Theme::GenderPicture(poke->gender()));
     m_level->setText(tr("Lv. %1").arg(poke->level()));
 
     for (int i = 0; i < 4; i++) {
@@ -110,18 +113,10 @@ void TB_PokemonDetail::updatePoke()
 /************** PokemonBoxButton ********************************/
 /****************************************************************/
 
-QPixmap *PokemonBoxButton::theicon = NULL;
-QPixmap *PokemonBoxButton::theglowedicon = NULL;
-
 PokemonBoxButton::PokemonBoxButton(int num) : num(num)
 {
-    if (theicon == NULL)
-        theicon = new QPixmap("db/Teambuilder/Box/WhiteBall.png");
-    if (theglowedicon == NULL)
-        theglowedicon = new QPixmap("db/Teambuilder/Box/WhiteBallGlow.png");
-
     setText(tr("Pokémon &%1").arg(num+1));
-    setIcon(*theicon);
+    setIcon(Theme::WhiteBall());
     setCheckable(true);
     setAcceptDrops(true);
 }
@@ -297,14 +292,10 @@ void TB_PokemonItem::startDrag()
 /******************** TB_PokemonBox *****************************/
 /****************************************************************/
 
-QPixmap * PokemonBox::selBg = NULL;
-
 PokemonBox::PokemonBox(int num) : num(num), currentPoke(0)
 {
-    if (selBg == NULL)
-        selBg = new QPixmap("db/Teambuilder/Box/smallBox.png");
-
     pokemons.resize(30);
+    selBg = Theme::Sprite("smallbox");
 
     setScene(new QGraphicsScene(this));
     setSceneRect(0,0,width()-10,160);
@@ -318,6 +309,8 @@ void PokemonBox::save()
 
     QDomElement box = doc.createElement("Box");
     box.setAttribute("Num", num);
+    box.setAttribute("Version", "1");
+    box.setAttribute("Name", getName());
     doc.appendChild(box);
 
     for(int i = 0; i < pokemons.size(); i++) {
@@ -358,6 +351,8 @@ void PokemonBox::load()
     QFile in(QString(boxpath + "/Box %1.box").arg(QChar('A'+getNum())));
     in.open(QIODevice::ReadOnly);
 
+    name =  QString("Box %1").arg(QChar('A'+getNum()));
+
     if(!doc.setContent(&in))
     {
         return ;
@@ -367,6 +362,9 @@ void PokemonBox::load()
     if (box.isNull())
         return;
     QDomElement slot = box.firstChildElement("Slot");
+    int version = box.attribute("Version", "0").toInt();
+    name =  box.attribute("Name", name);
+
     while (!slot.isNull()) {
         if (slot.attribute("Num").toInt() < 0 || slot.attribute("Num").toInt() > pokemons.size())
             break;
@@ -381,7 +379,9 @@ void PokemonBox::load()
             break;
 
         PokeTeam p;
-        p.loadFromXml(poke);
+        if (version == 0 && poke.attribute("Num").toInt() < 505)
+            p.setGen(4);
+        p.loadFromXml(poke, version);
 
         addPokemon(p,num);
 
@@ -394,11 +394,11 @@ void PokemonBox::drawBackground(QPainter *painter, const QRectF &rect)
     QGraphicsView::drawBackground(painter, rect);
 
     if (currentPoke != -1) {
-        QPointF selBGPos = calculatePos(currentPoke, selBg->size());
-        QRectF intersection = rect.intersect(QRectF(selBGPos, selBg->size()));
+        QPointF selBGPos = calculatePos(currentPoke, selBg.size());
+        QRectF intersection = rect.intersect(QRectF(selBGPos, selBg.size()));
         QRectF srcRect = QRectF(std::max(qreal(0), intersection.x()-selBGPos.x()), std::max(qreal(0), intersection.y()-selBGPos.y()),
-                                selBg->size().width(), selBg->size().height());
-        painter->drawPixmap(intersection, *selBg, srcRect);
+                                selBg.width(), selBg.height());
+        painter->drawPixmap(intersection, selBg, srcRect);
     }
 }
 
@@ -569,8 +569,8 @@ void PokemonBox::changeCurrentSpot(int newspot)
         return;
 
     /* You could test for -1s to optimize perfs */
-    updateScene(QList<QRectF>() << QRectF(calculatePos(currentPoke, selBg->size()), selBg->size())
-                                    << QRectF(calculatePos(newspot, selBg->size()), selBg->size()));
+    updateScene(QList<QRectF>() << QRectF(calculatePos(currentPoke, selBg.size()), selBg.size())
+                                    << QRectF(calculatePos(newspot, selBg.size()), selBg.size()));
 
     currentPoke = newspot;
 }
@@ -622,6 +622,16 @@ int PokemonBox::calculateSpot(const QPoint &graphViewPos)
     }
 }
 
+QString PokemonBox::getName() const
+{
+    return name;
+}
+
+void PokemonBox::setName(const QString &name)
+{
+    this->name = name;
+}
+
 /****************************************************************/
 /******************* TB_BoxContainer ****************************/
 /****************************************************************/
@@ -668,13 +678,14 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
 
     QVBoxLayout *thirdColumn = new QVBoxLayout();
     firstline->addLayout(thirdColumn);
-    QPushButton *bstore, *bwithdraw, *bswitch, *bdelete;
+    QPushButton *bstore, *bwithdraw, *bswitch, *bdelete, *bboxname;
 
     thirdColumn->addStretch(100);
     thirdColumn->addWidget(bstore = new QPushButton(tr("&Store")));
     thirdColumn->addWidget(bwithdraw = new QPushButton(tr("&Withdraw")));
     thirdColumn->addWidget(bswitch = new QPushButton(tr("Switc&h")));
     thirdColumn->addWidget(bdelete = new QPushButton(tr("Dele&te")));
+    thirdColumn->addWidget(bboxname = new QPushButton(tr("&Edit Box Name...")));
     thirdColumn->addStretch(100);
 
     firstline->addStretch(100);
@@ -688,7 +699,8 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
     secondline->addWidget(m_boxes = new TB_BoxContainer(), 100);
 
     for (unsigned i = 0; i < sizeof(boxes)/sizeof(PokemonBox*); i++) {
-        m_boxes->addTab(boxes[i] = new PokemonBox(i), *PokemonBoxButton::theicon, tr("BOX &%1").arg(QChar('A'+i)));
+        boxes[i] = new PokemonBox(i);
+        m_boxes->addTab(boxes[i], Theme::WhiteBall(), boxes[i]->getName());
         connect(boxes[i],SIGNAL(switchWithTeam(int,int,int)),SLOT(switchBoxTeam(int,int,int)));
         connect(boxes[i], SIGNAL(show(PokeTeam*)), SLOT(showPoke(PokeTeam*)));
     }
@@ -707,8 +719,22 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
     connect(bwithdraw, SIGNAL(clicked()), SLOT(withdraw()));
     connect(bdelete, SIGNAL(clicked()), SLOT(deleteP()));
     connect(bswitch, SIGNAL(clicked()), SLOT(switchP()));
+    connect(bboxname, SIGNAL(clicked()), SLOT(editBoxName()));
 }
 
+void TB_PokemonBoxes::editBoxName()
+{
+    bool ok;
+    PokemonBox *box = currentBox();
+    QString text = QInputDialog::getText(this, tr("Edit Box Name"),
+                                         tr("Enter the new name for the box #%1:").arg(box->getNum()+1), QLineEdit::Normal,
+                                          box->getName(), &ok);
+    if (ok && !text.isEmpty()) {
+         box->setName(text);
+         m_boxes->setTabText(box->getNum(), text);
+         box->save();
+     }
+}
 
 void TB_PokemonBoxes::changeCurrentTeamPokemon(int newpoke)
 {

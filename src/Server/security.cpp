@@ -113,7 +113,7 @@ void SecurityManager::loadMembers()
     if (SQLCreator::databaseType == SQLCreator::MySQL) {
         query.exec("select name, ip from trainers where banned=1");
     }
-	else {
+        else {
         query.exec("select name, ip from trainers where banned='true'");
     }
 
@@ -200,6 +200,21 @@ QHash<QString, QString> SecurityManager::banList()
     return bannedMembers;
 }
 
+QStringList SecurityManager::authList()
+{
+    QSqlQuery q;
+    q.setForwardOnly(true);
+
+    q.exec("select name from trainers where auth>0");
+
+    QStringList ret;
+    while (q.next()) {
+        ret.push_back(q.value(0).toString());
+    }
+
+    return ret;
+}
+
 void SecurityManager::create(const QString &name, const QString &date, const QString &ip) {
     Member m(name.toLower(), date.toAscii(), 0, false, "", "", ip.toAscii());
     holder.addMemberInMemory(m);
@@ -254,7 +269,7 @@ void SecurityManager::IPunban(const QString &ip)
     bannedIPs.remove(ip);
 }
 
-void SecurityManager::setauth(const QString &name, int auth) {
+void SecurityManager::setAuth(const QString &name, int auth) {
     if (exist(name)) {
         Member m = member(name);
         m.setAuth(auth);

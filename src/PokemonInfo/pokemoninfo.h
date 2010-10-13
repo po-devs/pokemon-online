@@ -7,33 +7,20 @@
 class PokeBaseStats;
 class QPixmap;
 
-class PokemonInfoConfig {
-public:
-    enum Config {
-        Gui = 0,
-        NoGui
-    };
-
-    static Config config();
-
-    static void setConfig(Config cf);
-private:
-    static Config _config;
-};
-
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
 
 struct PokemonMoves
 {
     //QSet<int> moves;
     /* All moves except egg & special */
-    QSet<int> regularMoves[2];
-    QSet<int> TMMoves[2];
-    QSet<int> preEvoMoves[2];
-    QSet<int> levelMoves[2];
-    QSet<int> eggMoves[2];
-    QSet<int> specialMoves[2];
-    QSet<int> tutorMoves[2];
+    QSet<int> regularMoves[NUMBER_GENS];
+    QSet<int> TMMoves[NUMBER_GENS];
+    QSet<int> preEvoMoves[NUMBER_GENS];
+    QSet<int> levelMoves[NUMBER_GENS];
+    QSet<int> eggMoves[NUMBER_GENS];
+    QSet<int> specialMoves[NUMBER_GENS];
+    QSet<int> tutorMoves[NUMBER_GENS];
+    QSet<int> genMoves[NUMBER_GENS];
 };
 
 
@@ -44,85 +31,110 @@ public:
     static void init(const QString &dir="db/pokes/");
 
     /* Self-explainable functions */
-    static int TrueCount(int gen=4); // pokes without counting forms
-    static int NumberOfPokemons();
-    static QString Name(int pokenum);
-    static int Number(const QString &pokename);
-    static int LevelBalance(int pokenum);
-    static QString WeightS(int pokenum);
-    static QString Classification(int pokenum);
-    static float Weight(int pokenum);
-    static int Gender(int pokenum);
-    static int BaseGender(int pokenum);
-    static QByteArray Cry(int pokenum);
-    static int Type1(int pokenum);
-    static int Type2(int pokenum);
-    static QPixmap Picture(int pokenum, int gen = 4, int forme = 0, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
-    static QPixmap Sub(int gen = 4, bool back = false);
-    static QPixmap Icon(int index);
-    static QSet<int> Moves(int pokenum, int gen = 4);
-    static QSet<int> EggMoves(int pokenum, int gen = 4);
-    static QSet<int> LevelMoves(int pokenum, int gen = 4);
-    static QSet<int> TutorMoves(int pokenum, int gen = 4);
-    static QSet<int> TMMoves(int pokenum, int gen = 4);
-    static QSet<int> PreEvoMoves(int pokenum, int gen = 4);
-    static QSet<int> SpecialMoves(int pokenum, int gen = 4);
-    static QSet<int> RegularMoves(int pokenum, int gen = 4);
-    /* Aesthetic formes are formes that are just a small variation of
-       a poke and not a new poke. (Shaymin-S is a new poke compared to Shaymin imo).
-
-       Some are chosable, like Shellos or Unown formes, some not, like Castform formes,
-       as Castform only changes in battle.
-       */
-    static bool HasAestheticFormes(int pokenum);
-    static int NumberOfAFormes(int pokenum);
-    static bool AFormesShown(int pokenum);
-    static int AestheticFormeId(int pokenum);
-    static QString AestheticDesc(int pokenum, int forme);
+    static int TrueCount(int gen=GEN_MAX); // pokes without counting forms
+    static int NumberOfPokemons(); // base + all forms.
+    static int NumberOfVisiblePokes(); // base + visible forms.
+    static QString Name(const Pokemon::uniqueId &pokeid);
+    static Pokemon::uniqueId Number(const QString &pokename);
+    static int LevelBalance(const Pokemon::uniqueId &pokeid);
+    static QString WeightS(const Pokemon::uniqueId &pokeid);
+    static QString Classification(const Pokemon::uniqueId &pokeid);
+    static int Weight(const Pokemon::uniqueId &pokeid);
+    static int Gender(const Pokemon::uniqueId &pokeid);
+    static int BaseGender(const Pokemon::uniqueId &pokeid);
+    static QByteArray Cry(const Pokemon::uniqueId &pokeid);
+    static int Type1(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static int Type2(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QPixmap Picture(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
+    static QPixmap Sub(int gen=5, bool back = false);
+    static QPixmap Icon(const Pokemon::uniqueId &pokeid);
+    static bool HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, int gen = GEN_MAX);
+    static QSet<int> Moves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> EggMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> LevelMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> TutorMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> TMMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> PreEvoMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> SpecialMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> RegularMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QList<Pokemon::uniqueId> AllIds();
+    // Base form do NOT count.
+    static quint16 NumberOfAFormes(const Pokemon::uniqueId &pokeid);
+    static bool AFormesShown(const Pokemon::uniqueId &pokeid);
     /* Standard formes: Rotom, Giratina, Deoxys, .. */
-    static bool IsForme(int pokenum);
-    static int OriginalForme(int pokenum);
-    static bool HasFormes(int pokenum);
-    static QList<int> Formes(int pokenum);
+    static bool IsForme(const Pokemon::uniqueId &pokeid);
+    static bool IsAesthetic(Pokemon::uniqueId id);
+    static Pokemon::uniqueId NonAestheticForme(Pokemon::uniqueId id);
+    static Pokemon::uniqueId OriginalForme(const Pokemon::uniqueId &pokeid);
+    static bool HasFormes(const Pokemon::uniqueId &pokeid);
+    // Will NOT return base form. Should it?
+    static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid);
     static QList<int> Evos(int pokenum);
-    static int OriginalEvo(int pokenum);
+    static bool HasEvolutions(int pokenum);
+
+    // Will always return base form (subnum 0).
+    static Pokemon::uniqueId OriginalEvo(const Pokemon::uniqueId &pokeid);
     static int PreEvo(int pokenum);
-    static bool IsInEvoChain(int pokenum);
-    static PokeBaseStats BaseStats(int pokenum);
-    static bool Exists(int pokenum, int gen=4);
-    static AbilityGroup Abilities(int pokenum, int gen=4);
-    static int Stat(int poke, int stat, int level, quint8 dv, quint8 ev);
-    static int FullStat(int poke, int nature, int stat, int level, quint8 dv, quint8 ev);
-    static QString Desc(int poke, int cartridge);
-    static QString Height(int poke);
+    static bool IsInEvoChain(const Pokemon::uniqueId &pokeid);
+    static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
+    static bool Exists(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static int Stat(const Pokemon::uniqueId &pokeid, int stat, int level, quint8 dv, quint8 ev);
+    static int FullStat(const Pokemon::uniqueId &pokeid, int nature, int stat, int level, quint8 dv, quint8 ev);
+    static QString Desc(const Pokemon::uniqueId &pokeid, int cartridge);
+    static QString Height(const Pokemon::uniqueId &pokeid);
+    // Will NOT return Missingno.
+    static Pokemon::uniqueId getRandomPokemon();
 private:
-    static QList<QString> m_Names;
-    static QList<QString> m_Weights;
+    // m_Names is a base.
+    // It is assumed that anything that is not there do not exist at all.
+    // Is a map because we need it to be sorted.
+    static QMap<Pokemon::uniqueId, QString> m_Names;
+    static QHash<Pokemon::uniqueId, QString> m_Weights;
+    static QHash<int, QHash<quint16, QString> > m_Desc;
+    static QHash<int, QString> m_Classification;
+    static QHash<Pokemon::uniqueId, QString> m_Height;
     static QString m_Directory;
-    static QList<int> m_Type1;
-    static QList<int> m_Type2;
-    static QList<int> m_Genders;
-    static QList<int> m_Ability1[2];
-    static QList<int> m_Ability2[2];
-    static QList<PokeBaseStats> m_BaseStats;
-    static QList<int> m_LevelBalance;
-    /* That is NOT multi-threaded! */
-    static QHash<int,QList<int> > m_AlternateFormes;
-    static QHash<int,QList<int> > m_Evolutions;
-    static QList<int> m_OriginalEvos;
-    static QList<int> m_PreEvos;
-    /* First and last aesthetic forme */
-    static QHash<int, QPair<int, int> > m_AestheticFormes;
-    static QHash<int, bool> m_AestheticFormesHidden;
-    static QHash<int, QString> m_AestheticFormesDescs;
-    static QList<PokemonMoves> m_Moves;
+    static QHash<Pokemon::uniqueId, int> m_Type1[NUMBER_GENS];
+    static QHash<Pokemon::uniqueId, int> m_Type2[NUMBER_GENS];
+    static QHash<Pokemon::uniqueId, int> m_Genders;
+    static QHash<Pokemon::uniqueId, int> m_Abilities[NUMBER_GENS][3];
+    static QHash<Pokemon::uniqueId, PokeBaseStats> m_BaseStats;
+    static QHash<Pokemon::uniqueId, int> m_LevelBalance;
+
+    static QHash<int, QList<int> > m_Evolutions;
+    static QHash<int, int> m_OriginalEvos;
+    static QHash<int, int> m_PreEvos;
+    static QHash<int, QList<int> > m_DirectEvos;
+    /* Tells if there is a real difference from the original forme.
+       If not, tiers will consider the pokemon as its original forme, to avoid
+       listing too many pokemons */
+    static QSet<Pokemon::uniqueId> m_AestheticFormes;
+    // A number of forms a pokemon has. 0 for most cases.
+    // Keep it as QHash.
+    // quint16 as only pokenum matters.
+    static QHash<int, quint16> m_MaxForme;
+    static QHash<Pokemon::uniqueId, PokemonMoves> m_Moves;
+    // Holds 1-letter options.
+    // Sample use: if(m_Options.value(pokeid).contains('H')) whatever();
+    // Values for pokemons.txt:
+    // 1 - always 1 HP.
+    // H - hidden form(e).
+    static QHash<Pokemon::uniqueId, QString> m_Options;
+
     static int m_trueNumberOfPokes;
+    // To get random pokemon faster.
+    static QList<Pokemon::uniqueId> m_VisiblePokesPlainList;
 
     static void loadNames();
-    static void loadFormes();
     static void loadEvos();
     static void loadBaseStats();
     static void loadMoves();
+    static void loadClassifications();
+    static void loadHeights();
+    static void loadDescriptions();
+    // Call this after loading all data.
+    static void makeDataConsistent();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
     static QString path(const QString &filename);
     static int calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev);
@@ -136,13 +148,14 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int movenum);
-    static int Type(int movenum);
+    static int Type(int movenum, int gen);
     static int Category(int movenum, int gen);
+    static int Classification(int movenum, int gen);
     static int Number(const QString &movename);
     static int NumberOfMoves();
     static int FlinchRate(int movenum, int gen);
     static int Recoil(int movenum, int gen);
-    static QString Description(int movenum);
+    static QString Description(int movenum, int gen);
     static QString DetailedDescription(int movenum);
     static int Power(int movenum, int gen);
     /* gives the power of a move in the form of a string */
@@ -151,68 +164,84 @@ public:
     static int Acc(int movenum, int gen);
     /* gives the accuracy of a move in the form of a string */
     static QString AccS(int movenum, int gen);
-    /* the status mod of a move*/
-    static QString Effect(int movenum, int gen);
-    static QString SpecialEffect(int movenum);
-    static int CriticalRaise(int movenum);
-    static int RepeatMin(int movenum);
-    static int RepeatMax(int movenum);
-    static int SpeedPriority(int movenum);
-    static bool PhysicalContact(int movenum, int gen);
-    static bool KingRock(int movenum);
+    static int CriticalRaise(int movenum, int gen);
+    static int RepeatMin(int movenum, int gen);
+    static int RepeatMax(int movenum, int gen);
+    static int SpeedPriority(int movenum, int gen);
+    static int Flags(int movenum, int gen);
     static bool Exists(int movenum, int gen);
-    static bool isOHKO(int movenum);
-    static int EffectRate(int movenum);
+    static bool isOHKO(int movenum, int gen);
+    static int EffectRate(int movenum, int gen);
+    static quint32 StatAffected(int movenum, int gen);
+    static quint32 BoostOfStat(int movenum, int gen);
+    static quint32 RateOfStat(int movenum, int gen);
     static int Target(int movenum, int gen);
+    static int Healing(int movenum, int gen);
+    static int MinTurns(int movenum, int gen);
+    static int MaxTurns(int movenum, int gen);
+    static int Status(int movenum, int gen);
+    static int StatusKind(int movenum, int gen);
+    static int ConvertFromOldMove(int oldmovenum);
     static QString MoveMessage(int moveeffect, int part);
     static QStringList MoveList();
-
+    /* the status mod of a move*/
+    //static QString Effect(int movenum, int gen);
+    static QString SpecialEffect(int movenum);
+    static void setPower(int movenum, unsigned char power, int moveGen);
+    static void setAccuracy(int movenum, char accuracy, int moveGen);
+    static void setPP(int movenum, char pp, int moveGen);
+    static void setPriority(int movenum, signed char priority, int moveGen);
 private:
     static QList<QString> m_Names;
-    static QSet<int> m_3rdGenMoves;
-    static QVector<int> m_Power[2];
-    static QVector<int> m_Acc[2];
-    static QList<QString> m_Effects[2];
-    static QList<QString> m_SpecialEffects;
-    static QList<QStringList> m_MoveMessages;
-    static QVector<char> m_Type;
-    static QVector<char> m_PP[2];
-    static QVector<char> m_Category;
-    static QVector<char> m_Critical;
-    static QVector<char> m_EffectRate;
-    static QVector<bool> m_Physical;
-    static QVector<bool> m_KingRock;
-    static QVector<char> m_Speeds;
-    static QVector<int> m_Flinch;
-    static QVector<int> m_Recoil;
-    static QVector<int> m_Targets;
-    static QList<QPair<char, char> > m_Repeat;
-    static QList<QString> m_Descriptions;
-    static QList<QString> m_Details;
     static QHash<QString, int> m_LowerCaseMoves;
+    static QList<QStringList> m_MoveMessages;
+    static QList<QString> m_Details;
+    static QList<QString> m_SpecialEffects;
+    static QList<int> m_OldMoves;
+
+    struct Gen {
+        void load(const QString &path, int gen);
+        QString path(const QString &fileName);
+
+        int gen;
+        QString dir;
+
+        QVector<char> accuracy;
+        QVector<char> category;
+        QVector<char> causedEffect;
+        QVector<char> critRate;
+        QVector<char> damageClass;
+        QStringList effect;
+        QVector<char> effectChance;
+        QVector<int> flags;
+        QVector<char> flinchChance;
+        QVector<signed char> healing;
+        QVector<char> maxTurns;
+        QVector<char> minTurns;
+        QVector<char> minMaxHits;
+        QVector<long> none0;
+        QVector<long> none1;
+        QVector<long> none2;
+        QVector<unsigned char> power;
+        QVector<char> pp;
+        QVector<signed char> priority;
+        QVector<char> range;
+        QVector<signed char> recoil;
+        QVector<char> status;
+        QVector<char> type;
+    };
 
     static QString m_Directory;
+    static Gen gens[Version::NumberOfGens];
+    static Gen & gen(int gen) {
+        return gens[gen-1];
+    }
 
     static void loadNames();
-    static void loadPPs();
-    static void loadTypes();
-    static void loadCategorys();
-    static void loadPowers();
-    static void loadAccs();
-    static void loadEffects();
-    static void loadCritics();
-    static void loadEffectRates();
-    static void loadPhysics();
-    static void loadKingRocks();
-    static void loadRepeats();
-    static void loadSpeeds();
-    static void loadTargets();
-    static void loadFlinchs();
-    static void loadRecoil();
-    static void loadSpecialEffects();
     static void loadMoveMessages();
-    static void loadDescriptions();
     static void loadDetails();
+    static void loadSpecialEffects();
+
     static QString path(const QString &filename);
 };
 
@@ -231,12 +260,14 @@ public:
     /* Self-explainable functions */
     static int NumberOfItems();
     static QString Name(int itemnum);
-    static bool Exists(int itemnum, int gen=4);
+    static bool Exists(int itemnum, int gen=GEN_MAX);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
+    static bool isCassette(int itemnum);
     static bool isMail(int itemnum);
     static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
+    static int CassetteType(int itemnum);
     static QList<QString> SortedNames(int gen);
     static QList<QString> SortedUsefulNames(int gen);
     static QList<Effect> Effects(int item, int gen);
@@ -247,15 +278,16 @@ public:
     static int BerryPower(int itemnum);
     static int BerryType(int itemnum);
     static QPixmap Icon(int itemnum);
+    static QPixmap HeldItem();
 private:
     static QList<QString> m_BerryNames;
     static QList<QString> m_RegItemNames;
     static QHash<QString, int> m_BerryNamesH;
     static QHash<QString, int> m_ItemNamesH;
-    static QList<QString> m_SortedNames[2];
-    static QList<QString> m_SortedUsefulNames[2];
+    static QList<QString> m_SortedNames[NUMBER_GENS];
+    static QList<QString> m_SortedUsefulNames[NUMBER_GENS];
     static QString m_Directory;
-    static QList<QList<Effect> > m_RegEffects[2];
+    static QList<QList<Effect> > m_RegEffects[NUMBER_GENS];
     static QList<QList<Effect> > m_BerryEffects;
     static QList<QStringList> m_RegMessages;
     static QList<QStringList> m_BerryMessages;
@@ -263,7 +295,7 @@ private:
     static QList<int> m_BerryPowers;
     static QList<int> m_BerryTypes;
     static QList<int> m_UsefulItems;
-    static QSet<int> m_3rdGenItems;
+    static QSet<int> m_GenItems[NUMBER_GENS];
 
     static void loadNames();
     static QString path(const QString &filename);
@@ -278,13 +310,12 @@ public:
     /* Self-explainable functions */
     static QString Name(int typenum);
     static int Number(const QString &type);
-    static QColor Color(int typenum);
     static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
     static int TypeForWeather(int weather);
-    static QPixmap Picture(int type);
     static int Category(int type);
     static void modifyTypeChart(int type_attack, int type_defend, int value);
+    static QString weatherName(int weather);
 private:
     enum Weather
     {
@@ -297,24 +328,16 @@ private:
 
     static QList<QString> m_Names;
     static QString m_Directory;
-    static QList<QColor> m_Colors;
     static QList<int> m_TypeVsType;
-    static QList<QPixmap> m_Pics;
     static QList<int> m_Categories;
 
     static void loadNames();
-    static void loadColors();
     static void loadEff();
     static QString path(const QString &filename);
 };
 
 class NatureInfo
 {
-private:
-    static QList<QString> m_Names;
-    static QString m_Directory;
-    static void loadNames();
-    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/nature/");
@@ -329,26 +352,30 @@ public:
     static int Boost(int nature, int stat);
     static int StatBoosted(int nature);
     static int StatHindered(int nature);
+    static int ConvertStat(int stat);
+    static int ConvertToStat(int stat);
+private:
+    static QList<QString> m_Names;
+    static QString m_Directory;
+    static void loadNames();
+    static QString path(const QString &filename);
 };
 
 class CategoryInfo
 {
-private:
-    static QList<QString> m_Names;
-    static QString m_Directory;
-    static QList<QColor> m_Colors;
-
-    static void loadNames();
-    static void loadColors();
-    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/categories/");
 
     /* Self-explainable functions */
     static QString Name(int catnum);
-    static QColor Color(int catnum);
     static int NumberOfCategories();
+private:
+    static QList<QString> m_Names;
+    static QString m_Directory;
+
+    static void loadNames();
+    static QString path(const QString &filename);
 };
 
 class AbilityInfo
@@ -365,19 +392,20 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int abnum);
-    static Effect Effects(int abnum);
+    static Effect Effects(int abnum, int gen);
     static int Number(const QString &ab);
     static QString Message(int ab, int part);
     static int NumberOfAbilities();
     static QString Desc(int abnum);
     static QString EffectDesc(int abnum);
     static bool Exists(int ability, int gen);
+    static int ConvertFromOldAbility(int oldability);
 private:
     static QList<QString> m_Names;
     static QString m_Directory;
-    static QList<Effect> m_Effects;
+    static QList<Effect> m_Effects[NUMBER_GENS];
     static QList<QStringList> m_Messages;
-    static QSet<int> m_3rdGenAbilities;
+    static QList<int> m_OldAbilities;
 
     static void loadNames();
     static void loadEffects();
@@ -386,15 +414,6 @@ private:
 
 class GenderInfo
 {
-private:
-    static QList<QString> m_Names;
-    static QString m_Directory;
-    static QList<QPixmap> m_Pictures;
-    static QList<QPixmap> m_BattlePictures;
-
-    static void loadNames();
-    static void loadPixmaps();
-    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/genders/");
@@ -402,39 +421,36 @@ public:
     /* Self-explainable functions */
     static QString Name(int gender);
     static int NumberOfGenders();
-    static QPixmap Picture(int gender, bool battle = false);
     static int Default(int genderAvail);
     static bool Possible(int gender, int genderAvail);
+private:
+    static QList<QString> m_Names;
+    static QString m_Directory;
+
+    static void loadNames();
+    static QString path(const QString &filename);
 };
 
 class HiddenPowerInfo
 {
-private:
-    static QString m_Directory;
-
-    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/types/");
 
     /* The type of the hidden power depending on the dvs */
-    static int Type(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
+    static int Type(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
     /* The power of the hidden power depending on the dvs */
-    static int Power(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
+    static int Power(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
     /* the different set of dvs (which are chosen within 30-31) that give an hidden power of that type */
     static QList<QStringList> PossibilitiesForType(int type);
+private:
+    static QString m_Directory;
+
+    static QString path(const QString &filename);
 };
 
 class StatInfo
 {
-private:
-    static QString m_Directory;
-    static QList<QString> m_stats;
-    static QList<QString> m_status;
-    static QHash<int, QPixmap> m_statusIcons;
-    static QHash<int, QPixmap> m_battleIcons;
-
-    static QString path(const QString &filename);
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/stats/");
@@ -442,9 +458,12 @@ public:
     static QString Stat(int stat);
     static QString Status(int status);
     static QString ShortStatus(int status);
-    static QColor StatusColor(int status);
-    static QPixmap Icon(int status);
-    static QPixmap BattleIcon(int status);
+private:
+    static QString m_Directory;
+    static QList<QString> m_stats;
+    static QList<QString> m_status;
+
+    static QString path(const QString &filename);
 };
 
 #endif // POKEMONINFO_H

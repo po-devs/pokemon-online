@@ -61,6 +61,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QRadioButton" name="gen5">
+       <property name="text">
+        <string>5th Gen</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QTabWidget" name="pokeMoves">

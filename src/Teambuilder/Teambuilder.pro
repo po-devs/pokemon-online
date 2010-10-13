@@ -24,7 +24,9 @@ SOURCES += main.cpp \
     pokedex.cpp \
     pluginmanager.cpp \
     channel.cpp \
-    tierstruct.cpp
+    tierstruct.cpp \
+    theme.cpp \
+    rearrangewindow.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -54,12 +56,15 @@ HEADERS += teambuilder.h \
     plugininterface.h \
     centralwidget.h \
     channel.h \
-    tierstruct.h
+    tierstruct.h \
+    theme.h \
+    rearrangewindow.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities
 FORMS += controlpanel.ui
-TRANSLATIONS = translation_de.ts \
+TRANSLATIONS = translation_cz.ts \
+    translation_de.ts \
     translation_es.ts \
     translation_fi.ts \
     translation_fr.ts \

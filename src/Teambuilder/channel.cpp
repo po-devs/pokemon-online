@@ -325,6 +325,11 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
 
         in >> message;
         printLine(message);
+    } else if (command == NetworkCli::HtmlChannel) {
+        QString message;
+
+        in >> message;
+        printHtml(message);
     } else if (command == NetworkCli::BattleList) {
         QHash<qint32, Battle> battles;
         in >> battles;
@@ -485,7 +490,7 @@ void Channel::printLine(const QString &line)
             QColor color = client->color(id);
 
             if (client->auth(id) > 0 && client->auth(id) <= 3) {
-                mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "+<i><b>" + escapeHtml(beg) + ":</i></b></span>" + escapeHtml(end) + "<br />");
+                mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "+<i><b>" + escapeHtml(beg) + ":</b></i></span>" + escapeHtml(end) + "<br />");
             }
             else if (id == ownId()) {
                 mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");

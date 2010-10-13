@@ -3,9 +3,13 @@
 
 #include <QtCore>
 #include "../PokemonInfo/battlestructs.h"
+#include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/mtrand.h"
 #include "../Utilities/contextswitch.h"
 class Player;
+
+/* Fixme: needs some sort of cache to avoid revs() creating a list
+   each time */
 
 class BattleSituation : public ContextCallee
 {
@@ -18,10 +22,13 @@ class BattleSituation : public ContextCallee
     PROPERTY(quint32, clauses);
     PROPERTY(int, attacker);
     PROPERTY(int, attacked);
-    PROPERTY(bool, doubles);
+    PROPERTY(int, mode);
     PROPERTY(int, numberOfSlots);
     PROPERTY(bool, blocked);
     PROPERTY(int, gen);
+    PROPERTY(int, attackCount);
+    PROPERTY(bool, rearrangeTime);
+    PROPERTY(int, selfKoer);
 public:
     enum {
 	AllButPlayer = -2,
@@ -61,7 +68,7 @@ public:
         return clauses() & ChallengeInfo::OHKOClause;
     }
 
-    void notifyClause(int clause, bool active = true);
+    void notifyClause(int clause);
 
     void removeSpectator(int id);
 
@@ -75,7 +82,6 @@ public:
     const PokeBattle &poke(int player) const;
     PokeBattle &poke(int player, int poke);
     const PokeBattle &poke(int player, int poke) const;
-    int currentPoke(int player) const;
     bool koed(int player) const;
     bool wasKoed(int player) const;
     int player(int slot) const;
@@ -84,9 +90,20 @@ public:
     /* Returns a koed one if none */
     int randomValidOpponent(int slot) const;
     int slot(int player, int poke = 0) const;
-    void changeCurrentPoke(int player, int poke);
+    int slotNum(int slot) const;
     int countAlive(int player) const;
     int countBackUp(int player) const;
+    bool canTarget(int attack, int attacker, int defender) const;
+    bool areAdjacent(int attacker, int defender) const;
+    bool multiples() const {
+        return mode() != ChallengeInfo::Singles && mode() != ChallengeInfo::Rotation;
+    }
+    bool arePartners(int p1, int p2) const {
+        return player(p1) == player(p2);
+    }
+    int numberPerSide() const {
+        return numberOfSlots()/2;
+    }
 
     /* Starts the battle -- use the time before to connect signals / slots */
     void start(ContextSwitcher &ctx);
@@ -104,45 +121,58 @@ public:
     std::vector<int> sortedBySpeed();
 
     /* Commands for the battle situation */
+    void rearrangeTeams();
+    void engageBattle();
     void beginTurn();
     void endTurn();
     void endTurnStatus(int player);
     void endTurnWeather();
     void callForth(int weather, int turns);
+    void setupLongWeather(int weather);
     /* Attack... */
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
 	represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
     void useAttack(int player, int attack, bool specialOccurence = false, bool notify = true);
     /* Returns true or false if an attack is going on or not */
     bool attacking();
+    void makeTargetList(const QVector<int> &base);
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player, bool silent = false);
+    void shiftSpots(int spot1, int spot2, bool silent = false);
     void notifyHits(int number);
     void sendPoke(int player, int poke, bool silent = false);
     void callEntryEffects(int player);
     void koPoke(int player, int source, bool straightattack = false);
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstatmod);
-    void changeForme(int player, int poke, int newform);
-    void calculateTypeModStab();
-    int forme(int player);
+    void changeForme(int player, int poke, const Pokemon::uniqueId &forme);
+    void changePokeForme(int slot, const Pokemon::uniqueId &forme);
+    void calculateTypeModStab(int orPlayer = -1, int orTarget = -1);
     void changeAForme(int player, int newforme);
-    void gainStatMod(int player, int stat, int bonus, bool tell = true);
-    void loseStatMod(int player, int stat, int malus, int attacker);
+    bool hasMinimalStatMod(int player, int stat);
+    bool hasMaximalStatMod(int player, int stat);
+    bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell = true, bool *negative = NULL);
+private:
+    bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
+    /* Returns false if blocked */
+    bool loseStatMod(int player, int stat, int malus, int attacker, bool tell=true);
+public:
     bool canSendPreventMessage(int defender, int attacker);
+    bool canSendPreventSMessage(int defender, int attacker);
     void preventStatMod(int player, int attacker);
     /* Does not do extra operations,just a setter */
-    void changeStatus(int player, int status, bool tell = true);
+    void changeStatus(int player, int status, bool tell = true, int turns = 0);
     void changeStatus(int team, int poke, int status);
     void healStatus(int player, int status);
     void healConfused(int player);
     void healLife(int player, int healing);
+    void healDamage(int player, int target);
     bool canGetStatus(int player, int status);
-    void inflictStatus(int player, int Status, int inflicter);
+    void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);
     bool isConfused(int player);
-    void inflictConfused(int player, bool tell=true);
+    void inflictConfused(int player, int source, bool tell=true);
     void inflictConfusedDamage(int player);
     void inflictRecoil(int source, int target);
     void inflictDamage(int player, int damage, int source, bool straightattack = false, bool goForSub = false);
@@ -150,8 +180,11 @@ public:
     void inflictSubDamage(int player, int damage, int source);
     void disposeItem(int player);
     void eatBerry(int player, bool show=true);
+    /* Eats a berry, not caring about the item the pokemon has, etc. */
+    void devourBerry(int player, int berry, int target);
     void acqItem(int player, int item);
     void loseItem(int player);
+    void loseAbility(int player);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
     void losePP(int player, int move, int loss);
@@ -160,6 +193,9 @@ public:
     bool isThereUproar();
     void addUproarer(int player);
     void removeUproarer(int player);
+    //Change turn order, use it carefully when you know those are correct values
+    void makePokemonNext(int player);
+    void makePokemonLast(int player);
 
     int calculateDamage(int player, int target);
     void applyMoveStatMods(int player, int target);
@@ -172,36 +208,43 @@ public:
     void fail(int player, int move, int part=0, int type=0, int trueSource = -1);
     bool hasType(int player, int type);
     bool hasWorkingAbility(int play, int ability);
+    bool opponentsHaveWorkingAbility(int play, int ability);
     void acquireAbility(int play, int ability, bool firstTime=false);
     int ability(int player);
-    int pokenum(int player);
+    int weight(int player);
+    int currentInternalId(int slot) const;
+    Pokemon::uniqueId pokenum(int player);
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
     bool isSeductionPossible(int seductor, int naiveone);
     int move(int player, int slot);
     bool hasMove(int player, int move);
-    int weather();
     int getType(int player, int slot);
     bool isFlying(int player);
     bool isOut(int player, int poke);
-    bool hasSubstitute(int player);
+    bool hasSubstitute(int slot);
+    bool hasMoved(int slot);
     void requestSwitchIns();
     void requestSwitch(int player);
     bool linked(int linked, QString relationShip);
     void link(int linker, int linked, QString relationShip);
+    int linker(int linked, QString relationShip);
     void notifySub(int player, bool sub);
-    int repeatNum(int player, context &move);
+    int repeatNum(int player);
     PokeFraction getStatBoost(int player, int stat);
-    int getStat(int player, int stat);
+    /* "Pure" stat is without items */
+    int getStat(int player, int stat, int purityLevel = 0);
+    int getBoostedStat(int player, int stat);
     /* conversion for sending a message */
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */
-    ShallowBattlePoke opoke(int play, int i) const { return ShallowBattlePoke(poke(play, i));} /* aka 'opp poke', or what you need to know if it's your opponent's poke */
+    ShallowBattlePoke opoke(int slot, int play, int i) const; /* aka 'opp poke', or what you need to know if it's your opponent's poke */
     BattleDynamicInfo constructInfo(int player);
     void notifyInfos();
     BattleStats constructStats(int player);
 
     void changeTempMove(int player, int slot, int move);
-    void changeSprite(int player, int poke);
+    void changeDefMove(int player, int slot, int move);
+    void changeSprite(int player, Pokemon::uniqueId newForme);
     /* Send a message to the outworld */
     enum BattleCommand
     {
@@ -249,7 +292,9 @@ public:
         EndMessage,
         PointEstimate,
         StartChoices,
-        Avoid
+        Avoid,
+        RearrangeTeam,
+        SpotShifting
     };
 
     enum ChangeTempPoke {
@@ -257,8 +302,9 @@ public:
         TempAbility,
         TempItem,
         TempSprite,
-        DefiniteForm,
-        AestheticForme
+        DefiniteForme,
+        AestheticForme,
+        DefMove
     };
 
     enum WeatherM
@@ -351,7 +397,6 @@ private:
 
     TeamBattle team1, team2;
 
-    QList<int> mycurrentpoke; /* -1 for koed */
     /* timers */
     QAtomicInt timeleft[2];
     QAtomicInt startedAt[2];
@@ -377,7 +422,7 @@ public:
     /* This time the pokelong effects */
     void callpeffects(int source, int target, const QString &name);
     /* this time the general battle effects (imprison, ..) */
-    void callbeffects(int source, int target, const QString &name);
+    void callbeffects(int source, int target, const QString &name, bool stopOnFail = false);
     /* The team zone effects */
     void callzeffects(int source, int target, const QString &name);
     /* The slot effects */
@@ -389,6 +434,58 @@ public:
 
     void emitCommand(int player, int players, const QByteArray &data);
 public:
+    /* The players ordered by speed are stored there */
+    std::vector<int> speedsVector;
+    unsigned int currentSlot;
+
+    int weather;
+    int weatherCount;
+
+    bool applyingMoveStatMods;
+
+    struct BasicPokeInfo {
+        Pokemon::uniqueId id;
+        float weight;
+        int type1;
+        int type2;
+        int ability;
+        int level;
+
+        int moves[4];
+        int dvs[6];
+        int stats[6];
+        //The boost in HP is useless but avoids headaches
+        int boosts[8];
+    };
+
+    struct BasicMoveInfo {
+        char critRaise;
+        char repeatMin;
+        char repeatMax;
+        char priority;
+        int flags;
+        int power; /* unsigned char in the game, but can be raised by effects */
+        int accuracy; /* Same */
+        char type;
+        char category;
+        int rate; /* Same */
+        char flinchRate;
+        char recoil;
+        int attack;
+        char targets;
+        char healing;
+        char classification;
+        char status;
+        char statusKind;
+        char minTurns;
+        char maxTurns;
+        quint32 statAffected;
+        quint32 boostOfStat;
+        quint32 rateOfStat;
+
+        void reset();
+    };
+private:
     /**************************************/
     /*** VIVs: very important variables ***/
     /**************************************/
@@ -399,12 +496,22 @@ public:
        can be changed (like with ability swap) but when the poke is sent back then
        back in the dynamic value is restored to the static one. */
 
-    /* Variables that are reset when the poke is switched out.
-	Like for exemple a Requiem one... */
-    QList<context> pokelong;
-    /* Variables that are reset every turn right before everything else happens
-	at the very beginning of a turn */
-    QList<context> turnlong;
+    struct PokeContext {
+        /* Variables that are reset when the poke is switched out.
+            Like for exemple a Requiem one... */
+        context pokelong;
+        /* Variables that are reset every turn right before everything else happens
+            at the very beginning of a turn */
+        context turnlong;
+
+        /* Structs containing raw information */
+        BasicPokeInfo fieldpoke;
+        BasicMoveInfo fieldmove;
+
+        /* The choice of a player, accessed by move ENCORE */
+        BattleChoice choice;
+    };
+
     /* General things like last move ever used, etc. */
     context battlelong;
     /* Moves that affect a team */
@@ -412,8 +519,87 @@ public:
     /* Moves that affect a particular Slot (wish, ...) */
     QList<context> slotzone;
 
-    /* The choice of a player, accessed by move ENCORE */
-    QList<BattleChoice> choice;
+    QList<PokeContext> contexts;
+public:
+    context &battleMemory() {
+        return battlelong;
+    }
+
+    context &teamMemory(int player) {
+        return teamzone[player];
+    }
+
+    context &slotMemory(int slot) {
+        return slotzone[slot];
+    }
+
+    PokeContext &getContext(int slot) {
+        return contexts[indexes[slot]];
+    }
+
+    const PokeContext &getContext(int slot) const {
+        return contexts[indexes[slot]];
+    }
+
+    context &turnMemory(int slot) {
+        return getContext(slot).turnlong;
+    }
+
+    context &pokeMemory(int slot) {
+        return getContext(slot).pokelong;
+    }
+
+    BasicMoveInfo &tmove(int slot) {
+        return getContext(slot).fieldmove;
+    }
+
+    BasicPokeInfo &fpoke(int slot) {
+        return getContext(slot).fieldpoke;
+    }
+
+    BattleChoice &choice(int slot) {
+        return getContext(slot).choice;
+    }
+
+    const context &battleMemory() const {
+        return battlelong;
+    }
+
+    const context &teamMemory(int player) const {
+        return teamzone[player];
+    }
+
+    const context &slotMemory(int slot) const {
+        return slotzone[slot];
+    }
+
+    const context &turnMemory(int slot) const {
+        return getContext(slot).turnlong;
+    }
+
+    const context &pokeMemory(int slot) const {
+        return getContext(slot).pokelong;
+    }
+
+    const BasicMoveInfo &tmove(int slot) const {
+        return getContext(slot).fieldmove;
+    }
+
+    const BasicPokeInfo &fpoke(int slot) const {
+        return getContext(slot).fieldpoke;
+    }
+
+    const BattleChoice &choice(int slot) const {
+        return getContext(slot).choice;
+    }
+
+    int getInternalId(int slot) const {
+        return indexes[slot];
+    }
+
+    int fromInternalId(int id) const {
+        return indexes.indexOf(id);
+    }
 
     /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
     // Public because used by Yawn
@@ -426,6 +612,8 @@ public:
     }
 private:
     QHash<int,int> spectators;
+    /* Used when pokemon shift slots */
+    QVector<int> indexes;
 public:
     const QHash<int, int> &getSpectators() const {
         QMutexLocker m(&spectatorMutex);

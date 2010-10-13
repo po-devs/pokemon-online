@@ -19,7 +19,7 @@ Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection)
     connect(&socket(), SIGNAL(error(QAbstractSocket::SocketError)), SLOT(error()));
 
     /* Commands that will be redirected to channels */
-    channelCommands << BattleList << JoinChannel << LeaveChannel << ChannelBattle << ChannelMessage;
+    channelCommands << BattleList << JoinChannel << LeaveChannel << ChannelBattle << ChannelMessage << HtmlChannel;
 }
 
 void Analyzer::login(const FullInfo &team)
@@ -171,6 +171,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    emit messageReceived(mess);
 	    break;
 	}
+    case HtmlMessage: {
+            QString mess;
+            in >> mess;
+            emit htmlMessageReceived(mess);
+            break;
+        }
     case KeepAlive: {
             notify(KeepAlive);
             break;

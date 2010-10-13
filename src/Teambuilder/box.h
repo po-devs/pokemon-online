@@ -3,7 +3,6 @@
 #include <QtGui>
 
 class PokeTeam;
-class AvatarBox;
 class Team;
 class TeamBuilder;
 
@@ -22,7 +21,7 @@ private:
     QLabel *m_name, *m_nick, *m_num, *m_gender, *m_level, *m_type1, *m_type2, *m_nature, *m_item;
     QLabel *m_moves[4];
 
-    AvatarBox *m_pic;
+    QLabel *m_pic;
 };
 
 class PokemonBoxButton : public QPushButton
@@ -39,8 +38,6 @@ public:
         QPushButton::setIcon(QIcon(px));
     }
 
-    static QPixmap *theicon;
-    static QPixmap *theglowedicon;
 signals:
     void pokeSwitched(int first, int second);
     void dragStarted(int num);
@@ -112,6 +109,8 @@ public:
     void changeCurrent(const PokeTeam &poke) throw (QString);
     void changeCurrentSpot(int newspot);
 
+    QString getName() const;
+    void setName(const QString &name);
     bool isFull() const;
     bool isEmpty() const;
     int freeSpot() const;
@@ -147,11 +146,13 @@ protected:
     void dropEvent(QDropEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
 
-    static QPixmap *selBg;
 private:
     QVector<TB_PokemonItem*> pokemons;
     int num;
     int currentPoke;
+    QString name;
+
+    QPixmap selBg;
 };
 
 class TB_BoxContainer : public QTabWidget
@@ -180,6 +181,7 @@ public slots:
     void switchWithinTeam(int poke1, int poke2);
     void switchBoxTeam(int box, int boxslot, int teamslot);
     void showPoke(PokeTeam *poke);
+    void editBoxName();
 signals:
     void pokeChanged(int poke);
 protected:

@@ -16,6 +16,7 @@ class ServerChoice : public QWidget, public CentralWidgetInterface
     Q_OBJECT
 public:
     ServerChoice();
+    ~ServerChoice();
 
 public slots:
     void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port);

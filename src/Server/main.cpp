@@ -1,7 +1,12 @@
-#include <QtGui/QApplication>
+#ifndef PO_NO_GUI
+# include <QtGui/QApplication>
+# include "mainwindow.h"
+#else
+# include <QtCore/QCoreApplication>
+#endif
+
 #include <cstdio>
 #include <exception>
-#include "mainwindow.h"
 #include "server.h"
 #include "consolereader.h"
 
@@ -38,7 +43,7 @@ int main(int argc, char *argv[])
     //default: show a window
     bool showWindow = true;
 
-    QSettings s;
+    QSettings s("config", QSettings::IniFormat);
 
     //parse commandline arguments
     for(int i = 0; i < argc; i++){
@@ -109,8 +114,9 @@ int main(int argc, char *argv[])
 
     try{
         int i = -1;
+#ifndef PO_NO_GUI
         if(showWindow == false){
-
+#endif
             qDebug() << "Server is running in headless mode";
             qDebug() << "Notice that it is not possible (yet) to configure the server in headless mode!";
             qDebug() << "Please change the configuration manually or in windowed mode.";
@@ -131,6 +137,7 @@ int main(int argc, char *argv[])
             i = b.exec();
             qDebug() << "Returned with status " << i;
 
+#ifndef PO_NO_GUI
         } else {
             qDebug() << "Server is running in windowed mode";
             QApplication a(argc, argv);
@@ -139,7 +146,7 @@ int main(int argc, char *argv[])
             w.show();
             i = a.exec();
         }
-
+#endif
         qDebug() << "Returned with status " << i;
 
     } catch (const std::exception &e) {
