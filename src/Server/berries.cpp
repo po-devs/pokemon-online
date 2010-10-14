@@ -109,7 +109,7 @@ struct BMPinch : public BM
             return true;
         }
         //Gluttony
-        if (b.hasWorkingAbility(s, 30))
+        if (b.hasWorkingAbility(s, Ability::Gluttony))
             ratio = 2;
 
         bool ret = b.poke(s).lifePoints()*ratio <= b.poke(s).totalLifePoints() && !b.koed(s);
