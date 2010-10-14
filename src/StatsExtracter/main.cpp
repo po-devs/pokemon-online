@@ -387,12 +387,12 @@ void MoveSet::complete(Skeleton &m) const
 
 static QString getImageLink(int pokemon)
 {
-    return QString("%1/DP%2.png").arg(pokemon).arg(PokemonInfo::Gender(pokemon) == Pokemon::FemaleAvail ? "f" : "m");
+    return QString("%1/front%2.png").arg(pokemon).arg(PokemonInfo::Gender(pokemon) == Pokemon::FemaleAvail ? "f" : "m");
 }
 
 static QString getIconLink(int pokemon)
 {
-    return QString("%1.PNG").arg(pokemon);
+    return QString("%1.png").arg(pokemon);
 }
 
 struct Bcc {
