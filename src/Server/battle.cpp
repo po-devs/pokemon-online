@@ -268,6 +268,7 @@ void BattleSituation::removeSpectator(int id)
     spectatorMutex.unlock();
 
     notify(All, Spectating, 0, false, qint32(id));
+    qDebug() << "End removing a specatator";
 }
 
 int BattleSituation::id(int spot) const
