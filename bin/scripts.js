@@ -41,7 +41,8 @@ init : function() {
 	"Sunkern", "Sunflora", "Hoppip", "Skiploom", "Jumpluff", "Lickitung", "Lickylicky", "Ponyta", "Rapidash",
 	"Exeggcute", "Exeggutor", "Farfetch'd", "Nidoran-F", "Nidorina", "Nidoqueen", "Stantler", "Oddish", "Gloom", "Vileplume",
    "Bidoof", "Mareep", "Flaaffy", "Ampharos", "Doduo", "Dodrio", "Tangela", "Tangrowth", "Surskit", "Masquerain",
-	"Igglybuff", "Jigglypuff", "Wigglytuff"];
+	"Igglybuff", "Jigglypuff", "Wigglytuff", "Bidoof", "Bibarel", "Kangaskhan", "Lotad", "Lombre", "Ludicolo", "Poochyena", 
+	"Mightyena", "Rattata", "Rattatac", "Shinx", "Luxio", "Luxray", "Taillow", "Swellow"];
 	dwpokemons = [];
 	for(var dwpok in dwpokemons) {
 		dwpokemons.push(sys.pokeNum(dwlist[i]));
