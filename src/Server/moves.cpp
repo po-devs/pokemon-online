@@ -2766,11 +2766,11 @@ struct MMJumpKick : public MM
 	int typemod;
 	int typeadv[] = {b.getType(t, 1), b.getType(t, 2)};
 	int type = MM::type(b,s);
-	if (typeadv[0] == Pokemon::Ghost) {
+        if (typeadv[0] == Type::Ghost) {
             if (b.gen() <= 3)
                 return;
 	    typemod = TypeInfo::Eff(type, typeadv[1]);
-	} else if (typeadv[1] == Pokemon::Ghost) {
+        } else if (typeadv[1] == Type::Ghost) {
             if (b.gen() <= 3)
                 return;
 	    typemod = TypeInfo::Eff(type, typeadv[0]);
@@ -2782,7 +2782,7 @@ struct MMJumpKick : public MM
         int damage;
         if (b.gen() >= 5)
             damage = std::min(b.calculateDamage(s,t)/2, b.poke(s).totalLifePoints()/2);
-        if (b.gen() == 4)
+        else if (b.gen() == 4)
             damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
         else
             damage = std::min(b.calculateDamage(s,t)/8, b.poke(t).totalLifePoints()/2);
