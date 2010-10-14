@@ -113,7 +113,7 @@ void Registry::incomingServer()
     servers[id] = new Server(id, newconnection);
 
     connect(servers[id], SIGNAL(nameChangedReq(int,QString)), SLOT(nameChangedAcc(int,const QString&)));
-    connect(servers[id], SIGNAL(portSet(int, int)), SLOT(portSet(int,int)));
+    connect(servers[id], SIGNAL(portSet(int, int, int)), SLOT(portSet(int,int,int)));
     connect(servers[id], SIGNAL(disconnection(int)), SLOT(disconnection(int)));
 }
 
