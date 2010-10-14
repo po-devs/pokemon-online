@@ -5571,6 +5571,18 @@ struct MMSideChange : public MM
     }
 };
 
+struct MMGrowth : public MM
+{
+    MMGrowth() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        if (b.gen() >= 5 && b.isWeatherWorking(BS::Sunny))
+            tmove(b,s).boostOfStat *= 2;
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5796,4 +5808,5 @@ void MoveEffect::init()
     REGISTER_MOVE(188, Retribution);
     REGISTER_MOVE(189, FireBurst);
     REGISTER_MOVE(190, SideChange);
+    REGISTER_MOVE(191, Growth);
 }
