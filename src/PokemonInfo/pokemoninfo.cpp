@@ -986,9 +986,9 @@ void PokemonInfo::makeDataConsistent()
     }
 }
 
-Pokemon::uniqueId PokemonInfo::getRandomPokemon()
+Pokemon::uniqueId PokemonInfo::getRandomPokemon(int gen)
 {
-    int total = TrueCount();
+    int total = TrueCount(gen);
     int random = true_rand() % total;
     if((random == 0) && (total > 1)) random = 1;
     Pokemon::uniqueId poke(random, 0);
