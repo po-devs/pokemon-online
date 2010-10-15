@@ -20,7 +20,10 @@ void Network::manageError(QAbstractSocket::SocketError err)
 void Network::close() {
     stillValid = false;
     if (socket()) {
+        socket()->disconnect();
         socket()->disconnectFromHost();
+        socket()->deleteLater();
+        emit disconnected();
         mysocket = NULL;
     }
 }
