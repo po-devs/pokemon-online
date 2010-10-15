@@ -604,6 +604,9 @@ void saveTTeamDialog(const TrainerTeam &team, QObject *receiver, const char *slo
     f->setWindowFlags(Qt::Window);
     f->setAttribute(Qt::WA_DeleteOnClose);
     f->setAcceptMode(QFileDialog::AcceptSave);
+#if defined(Q_OS_MAC)
+    f->setOption(QFileDialog::DontUseNativeDialog);
+#endif
     f->show();
 
     TeamSaver *t = new TeamSaver(const_cast<TrainerTeam*>(&team));
