@@ -1553,6 +1553,10 @@ void Server::atServerShutDown() {
     myengine->serverShutDown();
 }
 
+void Server::setAnnouncement(int &id, const QString &html) {
+    if (player(id)->isLoggedIn())
+            player(id)->relay().notify(NetworkServ::Announcement, html);;
+}
 
 Player * Server::player(int id) const
 {
