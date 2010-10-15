@@ -40,7 +40,7 @@ init : function() {
  "Bellsprout", "Weepinbell", "Victreebel", "Nidoran-M", "Nidorino", "Nidoking", "Sentret", "Furret",
 	"Sunkern", "Sunflora", "Hoppip", "Skiploom", "Jumpluff", "Lickitung", "Lickylicky", "Ponyta", "Rapidash",
 	"Exeggcute", "Exeggutor", "Farfetch'd", "Nidoran-F", "Nidorina", "Nidoqueen", "Stantler", "Oddish", "Gloom", "Vileplume",
-   "Bidoof", "Mareep", "Flaaffy", "Ampharos", "Doduo", "Dodrio", "Tangela", "Tangrowth", "Surskit", "Masquerain",
+   "Mareep", "Flaaffy", "Ampharos", "Doduo", "Dodrio", "Tangela", "Tangrowth", "Surskit", "Masquerain",
 	"Igglybuff", "Jigglypuff", "Wigglytuff", "Bidoof", "Bibarel", "Kangaskhan", "Lotad", "Lombre", "Ludicolo", "Poochyena", 
 	"Mightyena", "Rattata", "Rattatac", "Shinx", "Luxio", "Luxray", "Taillow", "Swellow"];
 	dwpokemons = [];
