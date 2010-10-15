@@ -4,6 +4,7 @@
 Network::Network(QTcpSocket *sock, int id) : mysocket(sock), commandStarted(false), myid(id), stillValid(true)
 {
     connect(socket(), SIGNAL(readyRead()), this, SLOT(onReceipt()));
+    connect(socket(), SIGNAL(disconnected()), this, SLOT(onDisconnect()));
     connect(socket(), SIGNAL(disconnected()), this, SIGNAL(disconnected()));
     connect(socket(), SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(manageError(QAbstractSocket::SocketError)));
     /* SO THE SOCKET IS SAFELY DELETED LATER WHEN DISCONNECTED! */
@@ -20,8 +21,12 @@ void Network::manageError(QAbstractSocket::SocketError err)
 void Network::close() {
     stillValid = false;
     if (socket()) {
-        socket()->disconnectFromHost();
+        QTcpSocket *sock = mysocket;
         mysocket = NULL;
+        sock->disconnect();
+        sock->disconnectFromHost();
+        sock->deleteLater();
+        emit disconnected();
     }
 }
 

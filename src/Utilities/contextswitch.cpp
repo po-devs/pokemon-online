@@ -9,6 +9,7 @@ ContextSwitcher::ContextSwitcher() : current_context(NULL), context_to_delete(NU
 
 ContextSwitcher::~ContextSwitcher()
 {
+    qDebug() << "Deleting a context switcher ";
     /* Normally, all contexts should have disappeared before though */
     foreach (ContextCallee *x, contexts) {
         delete x;
@@ -17,6 +18,7 @@ ContextSwitcher::~ContextSwitcher()
 
     //to suppress "no effect" warning
     (void) coro_destroy(&main_context);
+    qDebug() << "End Deleting a context switcher ";
 }
 
 void ContextSwitcher::run()
@@ -189,7 +191,8 @@ void ContextCallee::terminate()
 {
     /* Fixme: find out why that can happen */
     if (!ctx) {
-        delete this;
+        qDebug() << "Critical terminate w/o starting";
+        deleteLater();
         return;
     }
 

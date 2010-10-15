@@ -67,8 +67,9 @@ public:
     static Pokemon::uniqueId NonAestheticForme(Pokemon::uniqueId id);
     static Pokemon::uniqueId OriginalForme(const Pokemon::uniqueId &pokeid);
     static bool HasFormes(const Pokemon::uniqueId &pokeid);
-    // Will NOT return base form. Should it?
+    // Will NOT return base form.
     static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid);
+    static QList<Pokemon::uniqueId> VisibleFormes(const Pokemon::uniqueId &pokeid);
     static QList<int> Evos(int pokenum);
     static bool HasEvolutions(int pokenum);
 

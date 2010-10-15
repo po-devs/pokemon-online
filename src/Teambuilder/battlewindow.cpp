@@ -251,7 +251,7 @@ void BattleWindow::attackClicked(int zone)
             int move = zone == -1 ? int(Move::Struggle) : info().tempPoke(slot).move(zone);
             int target = MoveInfo::Target(move, gen());
             /* Triples still require to choose the target */
-            if (target == Move::ChosenTarget || target == Move::PartnerOrUser || target == Move::MeFirstTarget || target == Move::IndeterminateTarget
+            if (target == Move::ChosenTarget || target == Move::PartnerOrUser || target == Move::Partner || target == Move::MeFirstTarget || target == Move::IndeterminateTarget
                 || info().numberOfSlots > 4) {
                 tarZone->updateData(info(), move, gen());
                 mystack->setCurrentIndex(TargetTab);

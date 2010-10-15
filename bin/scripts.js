@@ -36,22 +36,19 @@ init : function() {
 	if (typeof(channelTopics) == 'undefined')
 		channelTopics = [];
 	
-	var dwlist = ["Munna", "Mushaana", "Darumakka", "Hihidaruma", "Eevee", "Umbreon", "Jolteon", "Vaporeon", "Flareon", "Espeon", "Leafeon", "Glaceon"];
+	var dwlist = ["Munna", "Mushaana", "Darumakka", "Hihidaruma", "Eevee", "Umbreon", "Jolteon", "Vaporeon", "Flareon", "Espeon", "Leafeon", "Glaceon",
+ "Bellsprout", "Weepinbell", "Victreebel", "Nidoran-M", "Nidorino", "Nidoking", "Sentret", "Furret",
+	"Sunkern", "Sunflora", "Hoppip", "Skiploom", "Jumpluff", "Lickitung", "Lickylicky", "Ponyta", "Rapidash",
+	"Exeggcute", "Exeggutor", "Farfetch'd", "Nidoran-F", "Nidorina", "Nidoqueen", "Stantler", "Oddish", "Gloom", "Vileplume",
+   "Mareep", "Flaaffy", "Ampharos", "Doduo", "Dodrio", "Tangela", "Tangrowth", "Surskit", "Masquerain",
+	"Igglybuff", "Jigglypuff", "Wigglytuff", "Bidoof", "Bibarel", "Kangaskhan", "Lotad", "Lombre", "Ludicolo", "Poochyena", 
+	"Mightyena", "Rattata", "Rattatac", "Shinx", "Luxio", "Luxray", "Taillow", "Swellow"];
 	dwpokemons = [];
 	for(var dwpok in dwpokemons) {
 		dwpokemons.push(sys.pokeNum(dwlist[i]));
 	}
-	
-	if (typeof(varsCreated) != 'undefined')
-        return;
 
-	if (sys.existChannel("Tournaments")) { 
-        tourchannel = sys.channelId("Tournaments");
-    } else {
-        tourchannel = sys.createChannel("Tournaments");
-		channelTopics[tourchannel] = "Welcome to the tournament channel, where tournaments are held! type /join to join a tour in its signup phase! type /viewround to see the progress of an ongoing tournament!";
-    }
-	rules = [ "",
+rules = [ "",
     "*** Rules ***",
 "",
 "Rule #1 - Do Not Abuse CAPS:",
@@ -73,11 +70,19 @@ init : function() {
 "Rule #9 - Do not ask for Auth:",
 "- Authority is given upon merit. By asking you have pretty much eliminated your chances at becoming an Auth in the future.",
 "Rule #10 - Do not Insult Auth:",
-"- Insulting Auth will result in immediate punishment. ",
-"Rule #11 - Don't spoil Black & White:",
-"- Some people prefer to wait for the release of the game in US and want to enjoy it.",
-""    ];
+"- Insulting Auth will result in immediate punishment. "   ];
 
+	
+	if (typeof(varsCreated) != 'undefined')
+        return;
+
+	if (sys.existChannel("Tournaments")) { 
+        tourchannel = sys.channelId("Tournaments");
+    } else {
+        tourchannel = sys.createChannel("Tournaments");
+		channelTopics[tourchannel] = "Welcome to the tournament channel, where tournaments are held! type /join to join a tour in its signup phase! type /viewround to see the progress of an ongoing tournament!";
+    }
+	
     battlesStopped = false;
 	channelUsers = [];
 	channelTopics = [];

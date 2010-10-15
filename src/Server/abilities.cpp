@@ -937,7 +937,7 @@ struct AMTechnician : public AM {
     }
 
     static void bpm(int s, int , BS &b) {
-        if (tmove(b,s).power) {
+        if (tmove(b,s).power <= 60) {
             turn(b,s)["BasePowerAbilityModifier"] = 10;
         }
     }
