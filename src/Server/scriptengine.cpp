@@ -1657,3 +1657,8 @@ QScriptValue ScriptEngine::weather(int weatherId)
         return myengine.undefinedValue();
     }
 }
+
+void ScriptEngine::setAnnouncement(int id, const QString &html) {
+    if (testPlayer("setAnnouncment(id, html)", id)) {
+        myserver->setAnnouncement(id, html); }
+    }
