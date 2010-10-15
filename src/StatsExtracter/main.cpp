@@ -409,7 +409,7 @@ struct Bcc {
 struct GlobalThings {
     QHash<int, int> moves;
     QHash<int, int> items;
-    int abilities[2];
+    int abilities[3];
 
     int totalMoves;
     int totalItems;
