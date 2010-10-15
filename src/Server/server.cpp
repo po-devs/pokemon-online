@@ -669,7 +669,7 @@ void Server::loggedIn(int id, const QString &name)
         } else {
             printLine(tr("Name %1 already in use, disconnecting player %2").arg(name).arg(id));
             sendMessage(id, QString("Another with the name %1 is already logged in").arg(name));
-            removePlayer(id);
+            silentKick(id);
             return;
         }
     }
@@ -680,7 +680,7 @@ void Server::loggedIn(int id, const QString &name)
         emit player_authchange(id, authedName(id));
 
         if(!myengine->beforeLogIn(id) || !playerExist(id)) {
-            removePlayer(id);
+            silentKick(id);
             return;
         }
 
