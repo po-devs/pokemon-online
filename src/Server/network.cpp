@@ -20,11 +20,12 @@ void Network::manageError(QAbstractSocket::SocketError err)
 void Network::close() {
     stillValid = false;
     if (socket()) {
-        socket()->disconnect();
-        socket()->disconnectFromHost();
-        socket()->deleteLater();
-        emit disconnected();
+        QTcpSocket *sock = mysocket;
         mysocket = NULL;
+        sock->disconnect();
+        sock->disconnectFromHost();
+        sock->deleteLater();
+        emit disconnected();
     }
 }
 
