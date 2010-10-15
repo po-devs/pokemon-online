@@ -968,7 +968,7 @@ void BattleSituation::analyzeChoices()
                 requestSwitchIns();
             }
 
-            if (!hasMoved(i))
+            if (!hasMoved(players[i]))
                 analyzeChoice(players[i]);
             testWin();
             selfKoer() = -1;
