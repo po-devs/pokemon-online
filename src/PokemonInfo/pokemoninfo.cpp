@@ -756,6 +756,16 @@ QList<Pokemon::uniqueId> PokemonInfo::Formes(const Pokemon::uniqueId &pokeid)
     return result;
 }
 
+QList<Pokemon::uniqueId> PokemonInfo::VisibleFormes(const Pokemon::uniqueId &pokeid)
+{
+    QList<Pokemon::uniqueId> result;
+    for(quint16 i = 0; i <= NumberOfAFormes(pokeid); i++) {
+        Pokemon::uniqueId poke(pokeid.pokenum, i);
+        if(AFormesShown(poke)) result.append(poke);
+    }
+    return result;
+}
+
 Pokemon::uniqueId PokemonInfo::OriginalEvo(const Pokemon::uniqueId &pokeid)
 {
     return Pokemon::uniqueId(m_OriginalEvos.value(pokeid.pokenum), 0);
@@ -978,15 +988,17 @@ void PokemonInfo::makeDataConsistent()
 
 Pokemon::uniqueId PokemonInfo::getRandomPokemon()
 {
-    int random = true_rand() % (NumberOfVisiblePokes());
-    if(m_VisiblePokesPlainList[random] == Pokemon::NoPoke) {
-        if(random == (NumberOfVisiblePokes() - 1)) {
-            random--;
-        }else{
-            random++;
-        };
+    int total = TrueCount();
+    int random = true_rand() % total;
+    if((random == 0) && (total > 1)) random = 1;
+    Pokemon::uniqueId poke(random, 0);
+    if(HasFormes(poke)) {
+        QList<Pokemon::uniqueId> formesList = VisibleFormes(poke);
+        /* The pokemon doesn't always have visible formes */
+        if (formesList.count() > 0)
+            poke = formesList.value(true_rand() %  formesList.count());
     }
-    return m_VisiblePokesPlainList[random];
+    return Pokemon::uniqueId(poke);
 }
 
 void MoveInfo::Gen::load(const QString &dir, int gen)

@@ -385,14 +385,14 @@ void MoveSet::complete(Skeleton &m) const
     m.addDefaultValue("move4", MoveInfo::Name(raw.moves[3]));
 }
 
-static QString getImageLink(int pokemon)
+static QString getImageLink(const Pokemon::uniqueId &pokemon)
 {
-    return QString("%1/DP%2.png").arg(pokemon).arg(PokemonInfo::Gender(pokemon) == Pokemon::FemaleAvail ? "f" : "m");
+    return QString("%1/front%2.png").arg(pokemon.toString()).arg(PokemonInfo::Gender(pokemon) == Pokemon::FemaleAvail ? "f" : "");
 }
 
-static QString getIconLink(int pokemon)
+static QString getIconLink(const Pokemon::uniqueId& pokemon)
 {
-    return QString("%1.PNG").arg(pokemon);
+    return QString("%1.png").arg(pokemon.toString());
 }
 
 struct Bcc {
