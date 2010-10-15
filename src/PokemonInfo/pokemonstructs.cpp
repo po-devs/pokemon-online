@@ -575,6 +575,7 @@ bool TrainerTeam::saveToFile(const QString &path) const
     QDomElement Team = document.createElement("Team");
     Team.setAttribute("gen", team().gen());
     Team.setAttribute("defaultTier", defaultTier());
+    Team.setAttribute("version", 1);
     document.appendChild(Team);
     QDomElement trainer = document.createElement("Trainer");
     Team.appendChild(trainer);
