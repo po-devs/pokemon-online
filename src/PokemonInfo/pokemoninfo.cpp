@@ -994,7 +994,9 @@ Pokemon::uniqueId PokemonInfo::getRandomPokemon()
     Pokemon::uniqueId poke(random, 0);
     if(HasFormes(poke)) {
         QList<Pokemon::uniqueId> formesList = VisibleFormes(poke);
-        poke = formesList.value(true_rand() %  formesList.count());
+        /* The pokemon doesn't always have visible formes */
+        if (formesList.count() > 0)
+            poke = formesList.value(true_rand() %  formesList.count());
     }
     return Pokemon::uniqueId(poke);
 }
