@@ -283,11 +283,14 @@ MoveSet::MoveSet(char buffer[28], int usage, AbilityGroup abs)
     num = buf[0];
 
     int ab = buf[2] >> 16;
-    for (int i = 0;i < 3; i++) {
+
+    for (int i = 0; i < 3; i++) {
+        abilities[i] = 0;
+    }
+    for (int i = 0; i < 3; i++) {
         if (ab == abs.ab(i)) {
             abilities[i] = usage;
-        } else {
-            abilities[i] = 0;
+            break;
         }
     }
 
