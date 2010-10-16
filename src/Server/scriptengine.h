@@ -111,6 +111,7 @@ public:
     Q_INVOKABLE void clearChat();
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
+    Q_INVOKABLE void deleteFile(const QString &fileName);
     /* Accepts string as 1st parameter. */
     Q_INVOKABLE void callLater(const QString &s, int delay);
     /* Accepts function as 1st parameter. */
