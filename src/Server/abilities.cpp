@@ -1009,16 +1009,11 @@ struct AMTruant : public AM {
 
 struct AMUnburden : public AM {
     AMUnburden() {
-        functions["UponSetup"] = &us;
         functions["StatModifier"] = &sm;
     }
 
-    static void us(int s, int, BS &b) {
-        poke(b,s)["UnburdenToStartWith"] = b.poke(s).item() != 0;
-    }
-
     static void sm(int s, int, BS &b) {
-        if (b.poke(s).item() == 0 && poke(b,s)["UnburdenToStartWith"].toBool()) {
+        if (b.poke(s).item() == 0 && poke(b,s).value("HadItem").toBool()) {
             turn(b,s)["Stat5AbilityModifier"] = 20;
         }
     }
