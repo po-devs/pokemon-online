@@ -1524,7 +1524,7 @@ ScriptWindow::ScriptWindow()
     QFile f("scripts.js");
     f.open(QIODevice::ReadOnly);
 
-    myedit->setText(QString::fromUtf8(f.readAll()));
+    myedit->setPlainText(QString::fromUtf8(f.readAll()));
     myedit->setFont(QFont("Courier New", 10));
     myedit->setLineWrapMode(QTextEdit::NoWrap);
     myedit->setTabStopWidth(25);
