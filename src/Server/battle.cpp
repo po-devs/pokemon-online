@@ -3942,8 +3942,14 @@ BattleStats BattleSituation::constructStats(int player)
 {
     BattleStats ret;
 
-    for (int i = 0; i < 5; i++) {
-        ret.stats[i] = getStat(player, i+1);
+    if (pokeMemory(p).contains("Transformed")) {
+        for (int i = 0; i < 5; i++) {
+            ret.stats[i] = -1;
+        }
+    } else {
+        for (int i = 0; i < 5; i++) {
+            ret.stats[i] = getStat(player, i+1);
+        }
     }
 
     return ret;

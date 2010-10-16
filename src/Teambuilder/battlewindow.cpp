@@ -1126,7 +1126,13 @@ void BattleDisplay::updateToolTip(int spot)
     tooltip += "\n";
 
     for (int i = 0; i < 5; i++) {
-        tooltip += "\n" + stats[i] + ": " + QString::number(info().mystats[info().number(spot)].stats[i]);
+        tooltip += "\n" + stats[i] + ": ";
+        int stat = info().mystats[info().number(spot)].stats[i];
+        if (stat == -1) {
+            tooltip += "???";
+        } else {
+            tooltip += QString::number(stat);
+        }
         int boost = info().statChanges[spot].boosts[i];
         if (boost > 0) {
             tooltip += QString("(+%1)").arg(boost);
