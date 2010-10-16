@@ -3170,7 +3170,7 @@ struct MMDefog : public MM
         bool clear = false;
 
 
-        BS::context &c = team(b,t);
+        BS::context &c = team(b,b.player(t));
 
         if (c.contains("Barrier0Count") || c.contains("Barrier1Count") || c.contains("Spikes") || c.contains("ToxicSpikes")
             || c.contains("StealthRock") || c.contains("MistCount") || c.contains("SafeGuardCount")) {
