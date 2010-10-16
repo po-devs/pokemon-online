@@ -274,8 +274,10 @@ struct MMBatonPass : public MM
             fpoke(b,s).boosts[i] += boosts[i];
         }
 
-        //and we decrease the switch count associated, so attract & co still work
-        inc(slot(b,s)["SwitchCount"], -1);
+        if (b.gen() <= 4) {
+            //and we decrease the switch count associated, so mean look & co still work
+            inc(slot(b,s)["SwitchCount"], -1);
+        }
 
         if (poke(b,s).value("Substitute").toBool()) {
             b.notifySub(s,true);
