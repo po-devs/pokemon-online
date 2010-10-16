@@ -6,6 +6,7 @@
 #endif
 
 #include <cstdio>
+#include <signal.h>
 #include <exception>
 #include "server.h"
 #include "consolereader.h"
@@ -111,6 +112,11 @@ int main(int argc, char *argv[])
     quint16 serverPort = quint16(s.value("server_port").toInt());
     Server * myserver;
     myserver = new Server(serverPort);
+
+#ifndef WIN32
+    /* Occurs on some specific platform, so ignoring it ;_; */
+    signal(SIGPIPE, SIG_IGN);
+#endif
 
     try{
         int i = -1;
