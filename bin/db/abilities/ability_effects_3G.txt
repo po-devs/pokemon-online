@@ -47,7 +47,7 @@
 46#Pressure
 64#Thick fat
 
-18-2#Flame Body
+18-4#Flame Body
 
 30-7#Keen Eye
 30-1#Hyper Cutter
