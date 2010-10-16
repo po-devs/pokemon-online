@@ -1658,7 +1658,19 @@ QScriptValue ScriptEngine::weather(int weatherId)
     }
 }
 
-void ScriptEngine::setAnnouncement(int id, const QString &html) {
-    if (testPlayer("setAnnouncment(id, html)", id)) {
+void ScriptEngine::setAnnouncement(const QString &html, int id) {
+    if (testPlayer("setAnnouncment(html, id)", id)) {
         myserver->setAnnouncement(id, html); }
+    }
+void ScriptEngine::setAnnouncement(const QString &html) {
+        myserver->setAllAnnouncement(html);
+    }
+
+void ScriptEngine::changeAnnouncement(const QString &html) {
+        QSettings settings("config", QSettings::IniFormat);
+        settings.setValue("server_announcement", html);
+        myserver->announcementChanged(html);
+    }
+QScriptValue ScriptEngine::getAnnouncement() {
+        return myserver->serverAnnouncement;
     }
