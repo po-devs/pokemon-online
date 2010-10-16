@@ -232,6 +232,7 @@ struct MMBatonPass : public MM
 	c.remove("Move0Used");
 	c.remove("Move1Used");
 	c.remove("Move2Used");
+        c.remove("HadItem");
 	c.remove("Move3Used");
         c.remove("BerryUsed");
         c.remove("HasMovedOnce");
