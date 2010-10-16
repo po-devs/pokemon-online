@@ -462,6 +462,12 @@ void Server::changeScript(const QString &script)
     myengine->changeScript(script);
 }
 
+void Server::setAllAnnouncement(const QString &html) {
+    foreach(Player *p, myplayers) {
+        p->relay().notify(NetworkServ::Announcement, html);
+    }
+}
+
 void Server::announcementChanged(const QString &announcement)
 {
     if (announcement == serverAnnouncement)
