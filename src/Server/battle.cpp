@@ -3942,7 +3942,7 @@ BattleStats BattleSituation::constructStats(int player)
 {
     BattleStats ret;
 
-    if (pokeMemory(p).contains("Transformed")) {
+    if (pokeMemory(player).contains("Transformed")) {
         for (int i = 0; i < 5; i++) {
             ret.stats[i] = -1;
         }
