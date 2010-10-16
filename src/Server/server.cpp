@@ -704,7 +704,7 @@ void Server::loggedIn(int id, const QString &name)
 
         /* Makes the player join the default channel */
         joinChannel(id, 0);
-        sendMessage(id, tr("Welcome Message: The updates are now available at www.pokemon-online.eu. Report any bug on the forums."));
+        sendMessage(id, tr("<font color=blue><b>Welcome Message:</b></font> The updates are available at <a href=\"http://pokemon-online.eu/\">pokemon-online.eu</a>. Report any bugs on the forum."),true);
 
         myengine->afterLogIn(id);
     } else { /* if already logged in */
