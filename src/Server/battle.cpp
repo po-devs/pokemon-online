@@ -1317,7 +1317,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     fpoke(slot).weight = PokemonInfo::Weight(p.num());
     fpoke(slot).type1 = PokemonInfo::Type1(p.num(), gen());
     fpoke(slot).type2 = PokemonInfo::Type2(p.num(), gen());
-    fpoke(slot).ability = poke(slot).ability();
+    fpoke(slot).ability = p.ability();
 
     if (p.statusCount() > 0) {
         if (p.status() == Pokemon::Poisoned)
@@ -1613,7 +1613,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
 void BattleSituation::testCritical(int player, int target)
 {
     /* Shell armor, Battle Armor */
-    if (hasWorkingAbility(target, 8) || hasWorkingAbility(target, 85) || teamMemory(this->player(target)).value("LuckyChantCount").toInt() > 0) {
+    if (hasWorkingAbility(target, Ability::ShellArmor)
+        || hasWorkingAbility(target, Ability::BattleArmor) || teamMemory(this->player(target)).value("LuckyChantCount").toInt() > 0) {
 	return;
     }
 
