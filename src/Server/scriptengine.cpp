@@ -712,6 +712,18 @@ void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
     out.write(content.toUtf8());
 }
 
+void ScriptEngine::deleteFile(const QString &fileName)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::WriteOnly)) {
+        printLine("Script Warning in sys.deleteFile(filename): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.remove();
+}
+
 void ScriptEngine::clearChat()
 {
     emit clearTheChat();
