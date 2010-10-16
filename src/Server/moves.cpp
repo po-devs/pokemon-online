@@ -4824,7 +4824,7 @@ struct MMRefresh : public MM {
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.poke(s).status() != 0) {
+        if (b.poke(s).status() == Pokemon::Fine) {
             turn(b,s)["Failed"] = true;
         }
     }
