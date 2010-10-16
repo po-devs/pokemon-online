@@ -87,8 +87,9 @@ int main(int, char**)
         if (groups[1].toInt() != 0)
             groups[1] = "";
 
-        if (groups[0] == "" && groups[1] == "")
-            continue;
+        //Removed because event combinations need to be preserved
+//        if (groups[0] == "" && groups[1] == "")
+//            continue;
 
         QSet<int> eggMoves = PokemonInfo::EggMoves(i, gen);
         QSet<int> regularMoves = PokemonInfo::RegularMoves(i, gen);
