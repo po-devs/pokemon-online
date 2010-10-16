@@ -5574,7 +5574,7 @@ struct MMSideChange : public MM
 struct MMGrowth : public MM
 {
     MMGrowth() {
-        functions["UponAttackSuccessful"] = &uas;
+        functions["BeforeHitting"] = &uas;
     }
 
     static void uas(int s, int, BS &b) {
