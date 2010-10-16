@@ -71,6 +71,7 @@ public:
     Q_INVOKABLE void kick(int playerid, int chanid);
     Q_INVOKABLE void putInChannel(int playerid, int chanid);
     Q_INVOKABLE QScriptValue createChannel(const QString &channame);
+    Q_INVOKABLE void setAnnouncement(int id, const QString &html);
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
        If called in 'beforeChallengeIssued', the challenge won't be issued.
