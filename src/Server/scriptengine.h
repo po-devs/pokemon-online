@@ -72,6 +72,7 @@ public:
     Q_INVOKABLE void putInChannel(int playerid, int chanid);
     Q_INVOKABLE QScriptValue createChannel(const QString &channame);
     Q_INVOKABLE QScriptValue getAnnouncement();
+    Q_INVOKABLE QScriptValue getColor(int id);
     Q_INVOKABLE void setAnnouncement(const QString &html, int id);
     Q_INVOKABLE void setAnnouncement(const QString &html);
     Q_INVOKABLE void changeAnnouncement(const QString &html);

@@ -954,6 +954,15 @@ QScriptValue ScriptEngine::away(int id)
     }
 }
 
+QScriptValue ScriptEngine::getColor(int id)
+{
+    if (!myserver->playerLoggedIn(id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->color().name();
+    }
+}
+
 QScriptValue ScriptEngine::tier(int id)
 {
     if (!myserver->playerLoggedIn(id)) {
