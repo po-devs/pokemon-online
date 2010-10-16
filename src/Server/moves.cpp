@@ -200,7 +200,7 @@ struct MMAvalanche : public MM
 struct MMBatonPass : public MM
 {
     MMBatonPass() {
-	functions["DetermineAttackSuccessful"] = &daf;
+        functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
         // the function has to be in that list when called by metronome, so it can be unsetup
         functions["AfterAttackFinished"] = &aaf;
