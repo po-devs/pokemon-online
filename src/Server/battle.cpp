@@ -3314,7 +3314,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
     p.ability() = PokemonInfo::Abilities(newforme).ab(0);
 
     for (int i = 1; i < 6; i++)
-        p.setNormalStat(i,PokemonInfo::Stat(newforme,i,p.level(),p.dvs()[i], p.evs()[i]));
+        p.setNormalStat(i,PokemonInfo::FullStat(newforme,p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
 
     if (isOut(player, poke)) {
         int slot = this->slot(player, poke);
@@ -3342,7 +3342,7 @@ void BattleSituation::changePokeForme(int slot, const Pokemon::uniqueId &newform
     fpoke(slot).type2 = PokemonInfo::Type2(newforme);
 
     for (int i = 1; i < 6; i++)
-        fpoke(slot).stats[i] = PokemonInfo::Stat(newforme,i,p.level(),p.dvs()[i], p.evs()[i]);
+        fpoke(slot).stats[i] = PokemonInfo::FullStat(newforme,p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]);
 
     notify(All, ChangeTempPoke, slot, quint8(AestheticForme), quint16(newforme.subnum));
 }
