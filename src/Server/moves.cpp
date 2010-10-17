@@ -4116,7 +4116,14 @@ struct MMNaturePower : public MM
     static void uas(int s, int, BS &b) {
         removeFunction(turn(b,s), "UponAttackSuccessful", "NaturePower");
 
-        int move = TriAttack;
+        int move;
+        if (b.gen() == 3) {
+            move = Swift;
+        } else if (b.gen() == 4) {
+            move = TriAttack;
+        } else {
+            move = Earthquake;
+        }
         MoveEffect::setup(move,s,s,b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
         b.useAttack(s,move,true,true);
