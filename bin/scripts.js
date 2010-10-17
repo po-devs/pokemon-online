@@ -209,7 +209,7 @@ afterLogIn : function(src) {
         return;
     }
    /* Armonio*/
-    if ( sys.ip(src).substr(0, 7) == "125.60." || sys.ip(src).substr(0,9) == "151.60.19") {
+    if (sys.ip(src).substr(0,8) == "151.60.1") {
         sys.kick(src);
         return;
     }
