@@ -1338,10 +1338,11 @@ struct AMEncourage : public AM
     static void bpm(int s, int, BS &b) {
         int cl = tmove(b,s).classification;
 
-        if (cl != Move::OffensiveStatChangingMove && cl != Move::OffensiveStatusInducingMove)
+        if (cl != Move::OffensiveStatChangingMove && cl != Move::OffensiveStatusInducingMove && tmove(b,s).flinchRate == 0)
             return;
 
         tmove(b,s).classification = Move::StandardMove;
+        tmove(b,s).flinchRate = 0;
         turn(b,s)["BasePowerAbilityModifier"] = 6;
     }
 };
