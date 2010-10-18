@@ -3281,12 +3281,12 @@ void BattleSituation::devourBerry(int s, int berry, int t)
             continue;
         }
         foreach (Mechanics::function f, ItemEffect::mechanics[e.num].functions) {
-            f(s, t, *this);
-
             //Some berries have 2 functions for pinch testing... so quitting after one used up the berry
             if (poke(s).item() == 0) {
                 break;
             }
+
+            f(s, t, *this);
         }
     }
 
