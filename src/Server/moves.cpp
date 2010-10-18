@@ -5069,7 +5069,7 @@ struct MMStrikeDown : public MM
     static void uas(int s, int t, BS &b) {
         b.sendMoveMessage(175, 0, s, type(b,s), t);
 
-        if (!poke(b,t).value("Roosted").toBool())
+        if (b.isFlying(t))
             poke(b,t)["StruckDown"] = true;
     }
 };
