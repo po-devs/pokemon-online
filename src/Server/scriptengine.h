@@ -71,6 +71,11 @@ public:
     Q_INVOKABLE void kick(int playerid, int chanid);
     Q_INVOKABLE void putInChannel(int playerid, int chanid);
     Q_INVOKABLE QScriptValue createChannel(const QString &channame);
+    Q_INVOKABLE QScriptValue getAnnouncement();
+    Q_INVOKABLE QScriptValue getColor(int id);
+    Q_INVOKABLE void setAnnouncement(const QString &html, int id);
+    Q_INVOKABLE void setAnnouncement(const QString &html);
+    Q_INVOKABLE void changeAnnouncement(const QString &html);
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
        If called in 'beforeChallengeIssued', the challenge won't be issued.
@@ -106,6 +111,7 @@ public:
     Q_INVOKABLE void clearChat();
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
+    Q_INVOKABLE void deleteFile(const QString &fileName);
     /* Accepts string as 1st parameter. */
     Q_INVOKABLE void callLater(const QString &s, int delay);
     /* Accepts function as 1st parameter. */

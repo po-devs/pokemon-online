@@ -1317,7 +1317,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     fpoke(slot).weight = PokemonInfo::Weight(p.num());
     fpoke(slot).type1 = PokemonInfo::Type1(p.num(), gen());
     fpoke(slot).type2 = PokemonInfo::Type2(p.num(), gen());
-    fpoke(slot).ability = poke(slot).ability();
+    fpoke(slot).ability = p.ability();
 
     if (p.statusCount() > 0) {
         if (p.status() == Pokemon::Poisoned)
@@ -1613,7 +1613,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
 void BattleSituation::testCritical(int player, int target)
 {
     /* Shell armor, Battle Armor */
-    if (hasWorkingAbility(target, 8) || hasWorkingAbility(target, 85) || teamMemory(this->player(target)).value("LuckyChantCount").toInt() > 0) {
+    if (hasWorkingAbility(target, Ability::ShellArmor)
+        || hasWorkingAbility(target, Ability::BattleArmor) || teamMemory(this->player(target)).value("LuckyChantCount").toInt() > 0) {
 	return;
     }
 
@@ -2808,7 +2809,7 @@ int BattleSituation::getType(int player, int slot)
 bool BattleSituation::isFlying(int player)
 {
     return !battleMemory().value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) && !pokeMemory(player).value("Rooted").toBool() &&
-            !pokeMemory(player).value("Roosted").toBool() && !pokeMemory(player).value("StruckDown").toBool() &&
+            !pokeMemory(player).value("StruckDown").toBool() &&
             (hasWorkingAbility(player, Ability::Levitate)
              || hasWorkingItem(player, Item::Balloon)
              || hasType(player, Pokemon::Flying)
@@ -3314,7 +3315,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
     p.ability() = PokemonInfo::Abilities(newforme).ab(0);
 
     for (int i = 1; i < 6; i++)
-        p.setNormalStat(i,PokemonInfo::Stat(newforme,i,p.level(),p.dvs()[i], p.evs()[i]));
+        p.setNormalStat(i,PokemonInfo::FullStat(newforme,p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
 
     if (isOut(player, poke)) {
         int slot = this->slot(player, poke);
@@ -3342,7 +3343,7 @@ void BattleSituation::changePokeForme(int slot, const Pokemon::uniqueId &newform
     fpoke(slot).type2 = PokemonInfo::Type2(newforme);
 
     for (int i = 1; i < 6; i++)
-        fpoke(slot).stats[i] = PokemonInfo::Stat(newforme,i,p.level(),p.dvs()[i], p.evs()[i]);
+        fpoke(slot).stats[i] = PokemonInfo::FullStat(newforme,p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]);
 
     notify(All, ChangeTempPoke, slot, quint8(AestheticForme), quint16(newforme.subnum));
 }
@@ -3372,16 +3373,19 @@ void BattleSituation::healDamage(int player, int target)
 {
     int attack = tmove(player).attack;
 
-    if (koed(target) || attack == Move::MorningSun || attack == Move::Moonlight || attack == Move::Synthesis || attack == Move::Swallow)
+    if (attack == Move::MorningSun || attack == Move::Moonlight || attack == Move::Synthesis || attack == Move::Swallow)
         return;
 
     int healing = tmove(player).healing;
 
+    if ((healing > 0 && koed(target)) || (healing < 0 && koed(player)))
+        return;
+
     if (healing > 0) {
-        sendMoveMessage(60, 0, player, tmove(player).type);
-        healLife(player, poke(target).totalLifePoints() * healing / 100);
+        sendMoveMessage(60, 0, target, tmove(player).type);
+        healLife(target, poke(target).totalLifePoints() * healing / 100);
     } else if (healing < 0){
-        notify(All, Recoil, target, true);
+        notify(All, Recoil, player, true);
         inflictDamage(player, -poke(target).totalLifePoints() * healing / 100, target);
     }
 }
@@ -3942,8 +3946,14 @@ BattleStats BattleSituation::constructStats(int player)
 {
     BattleStats ret;
 
-    for (int i = 0; i < 5; i++) {
-        ret.stats[i] = getStat(player, i+1);
+    if (pokeMemory(player).contains("Transformed")) {
+        for (int i = 0; i < 5; i++) {
+            ret.stats[i] = -1;
+        }
+    } else {
+        for (int i = 0; i < 5; i++) {
+            ret.stats[i] = getStat(player, i+1);
+        }
     }
 
     return ret;

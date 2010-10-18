@@ -64,6 +64,8 @@ public:
     bool beforePlayerAway(int src, bool away);
     void afterPlayerAway(int src, bool away);
     void disconnectFromRegistry();
+    void setAnnouncement(int &id, const QString &html);
+    void setAllAnnouncement(const QString &html);
     /* Force Rated 1 and Force Rated 2 is to ignore the ladder on / off factor for those two */
     bool canHaveRatedBattle(int id1, int id2, int mode, bool forceRated1 = false, bool forceRated2 = false);
 

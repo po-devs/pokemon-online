@@ -622,7 +622,7 @@ void loadTTeamDialog(TrainerTeam &team, QObject *receiver, const char *slot)
 {
     QSettings s;
     QString defaultPath = s.value("team_location", "Team/trainer.tp").toString();
-    QFileDialog *f = new QFileDialog(NULL, QObject::tr("Loading the Team"),defaultPath, QObject::tr("Team(*.tp)"));
+    QFileDialog *f = new QFileDialog(NULL, QObject::tr("Loading the Team"),defaultPath);
     f->setWindowFlags(Qt::Window);
     f->setAttribute(Qt::WA_DeleteOnClose);
     f->setAcceptMode(QFileDialog::AcceptOpen);

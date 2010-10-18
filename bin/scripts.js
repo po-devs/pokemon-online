@@ -44,8 +44,8 @@ init : function() {
 	"Igglybuff", "Jigglypuff", "Wigglytuff", "Bidoof", "Bibarel", "Kangaskhan", "Lotad", "Lombre", "Ludicolo", "Poochyena", 
 	"Mightyena", "Rattata", "Rattatac", "Shinx", "Luxio", "Luxray", "Taillow", "Swellow"];
 	dwpokemons = [];
-	for(var dwpok in dwpokemons) {
-		dwpokemons.push(sys.pokeNum(dwlist[i]));
+	for(var dwpok in dwlist) {
+		dwpokemons.push(sys.pokeNum(dwlist[dwpok]));
 	}
 
 rules = [ "",
@@ -209,7 +209,7 @@ afterLogIn : function(src) {
         return;
     }
    /* Armonio*/
-    if ( sys.ip(src).substr(0, 7) == "125.60." || sys.ip(src).substr(0,9) == "151.60.19") {
+    if (sys.ip(src).substr(0,8) == "151.60.1") {
         sys.kick(src);
         return;
     }

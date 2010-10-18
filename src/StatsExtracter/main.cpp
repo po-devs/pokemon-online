@@ -283,11 +283,14 @@ MoveSet::MoveSet(char buffer[28], int usage, AbilityGroup abs)
     num = buf[0];
 
     int ab = buf[2] >> 16;
-    for (int i = 0;i < 3; i++) {
+
+    for (int i = 0; i < 3; i++) {
+        abilities[i] = 0;
+    }
+    for (int i = 0; i < 3; i++) {
         if (ab == abs.ab(i)) {
             abilities[i] = usage;
-        } else {
-            abilities[i] = 0;
+            break;
         }
     }
 
@@ -387,7 +390,7 @@ void MoveSet::complete(Skeleton &m) const
 
 static QString getImageLink(const Pokemon::uniqueId &pokemon)
 {
-    return QString("%1/front%2.png").arg(pokemon.toString()).arg(PokemonInfo::Gender(pokemon) == Pokemon::FemaleAvail ? "f" : "");
+    return QString("%1/front.png").arg(pokemon.toString());
 }
 
 static QString getIconLink(const Pokemon::uniqueId& pokemon)
@@ -409,7 +412,7 @@ struct Bcc {
 struct GlobalThings {
     QHash<int, int> moves;
     QHash<int, int> items;
-    int abilities[2];
+    int abilities[3];
 
     int totalMoves;
     int totalItems;
