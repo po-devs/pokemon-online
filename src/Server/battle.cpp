@@ -3373,16 +3373,19 @@ void BattleSituation::healDamage(int player, int target)
 {
     int attack = tmove(player).attack;
 
-    if (koed(target) || attack == Move::MorningSun || attack == Move::Moonlight || attack == Move::Synthesis || attack == Move::Swallow)
+    if (attack == Move::MorningSun || attack == Move::Moonlight || attack == Move::Synthesis || attack == Move::Swallow)
         return;
 
     int healing = tmove(player).healing;
+
+    if ((healing > 0 && koed(target)) || (healing < 0 && koed(player)))
+        return;
 
     if (healing > 0) {
         sendMoveMessage(60, 0, target, tmove(player).type);
         healLife(target, poke(target).totalLifePoints() * healing / 100);
     } else if (healing < 0){
-        notify(All, Recoil, target, true);
+        notify(All, Recoil, player, true);
         inflictDamage(player, -poke(target).totalLifePoints() * healing / 100, target);
     }
 }
