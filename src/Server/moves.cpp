@@ -5473,6 +5473,7 @@ struct MMSynchroNoise : public MM
 {
     MMSynchroNoise() {
         functions["BeforeTargetList"] = &btl;
+        functions["DetermineAttackFailure"] = &daf;
     }
 
     static void btl(int s, int, BS &b) {
@@ -5480,6 +5481,8 @@ struct MMSynchroNoise : public MM
 
         for(unsigned x = 0; x < b.targetList.size(); x++) {
             int target = b.targetList[x];
+            if (target == s)
+                continue;
             if (b.hasType(target, b.getType(s, 1)) || b.hasType(target, b.getType(s, 2))) {
                 newList.push_back(target);
             }
