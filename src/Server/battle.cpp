@@ -2809,7 +2809,7 @@ int BattleSituation::getType(int player, int slot)
 bool BattleSituation::isFlying(int player)
 {
     return !battleMemory().value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) && !pokeMemory(player).value("Rooted").toBool() &&
-            !pokeMemory(player).value("Roosted").toBool() && !pokeMemory(player).value("StruckDown").toBool() &&
+            !pokeMemory(player).value("StruckDown").toBool() &&
             (hasWorkingAbility(player, Ability::Levitate)
              || hasWorkingItem(player, Item::Balloon)
              || hasType(player, Pokemon::Flying)
