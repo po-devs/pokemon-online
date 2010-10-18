@@ -363,6 +363,11 @@ beforeChatMessage: function(src, message, chan) {
             if (sys.auth(src) < 2)
                 return;
             sendChanMessage(src, "*** Admin Commands ***");
+            sendChanMessage(src, "/megauser[off] xxx: Tourney powers.");
+            sendChanMessage(src, "/memorydump: To see the state of the memory.");
+            if (sys.auth(src) < 3)
+                return;
+            sendChanMessage(src, "*** Owner Commands ***");
             sendChanMessage(src, "/changeRating [player] -- [tier] -- [rating]: to change the rating of a rating abuser");
             sendChanMessage(src, "/stopBattles: to stop all new battles. When you want to close the server, do that");
             sendChanMessage(src, "/siggaban : to ban sigga.");
@@ -371,9 +376,7 @@ beforeChatMessage: function(src, message, chan) {
             sendChanMessage(src, "/impOff : to stop impersonating.");
             sendChanMessage(src, "/changeAuth [auth] [person]: to play the mega admin");
             sendChanMessage(src, "/setPA paname: to add a new pa, use with scripting caution");
-            sendChanMessage(src, "/megauser[off] xxx: Tourney powers.");
             sendChanMessage(src, "/showteam xxx: To help people who have problems with event moves or invalid teams.");
-            sendChanMessage(src, "/memorydump: To see the state of the memory.");
             return;
         }
 		
@@ -836,6 +839,35 @@ beforeChatMessage: function(src, message, chan) {
             sys.removeVal("muted_*" + sys.ip(tar));
             return;
         }
+        if (sys.auth(src) < 2) {
+            return;
+        }
+        if (command == "memorydump") {
+            sendChanMessage(src, sys.memoryDump());
+            return;
+        }
+        if (command == "megauser") {
+            if (tar != "undefined") {
+                megaUser[tar] = true;
+                sys.sendAll("+Bot: " + sys.name(tar) + " was megausered.");
+                megausers += "*" + sys.name(tar) + "*";
+                sys.saveVal("megausers", megausers);
+            }
+            return;
+        }
+        if (command == "megauseroff") {
+            if (tar != undefined) {
+                megaUser[tar] = false;
+                sys.sendAll("+Bot: " + sys.name(tar) + " was removed megauser.");
+                megausers = megausers.split("*" + sys.name(tar) + "*").join("");
+                sys.saveVal("megausers", megausers);
+            } else {
+                sys.sendAll("+Bot: " + commandData + " was removed megauser.");
+                megausers = megausers.split("*" + commandData + "*").join("");
+                sys.saveVal("megausers", megausers);
+            }
+            return;
+        }
         if (sys.auth(src) < 3) {
             return;
         }
@@ -877,32 +909,6 @@ beforeChatMessage: function(src, message, chan) {
         if (command == "imp") {
             impersonation[src] = commandData;
             sendChanMessage(src, "+Bot: Now you are " + impersonation[src] + "!");
-            return;
-        }
-        if (command == "memorydump") {
-            sendChanMessage(src, sys.memoryDump());
-            return;
-        }
-        if (command == "megauser") {
-            if (tar != "undefined") {
-                megaUser[tar] = true;
-                sys.sendAll("+Bot: " + sys.name(tar) + " was megausered.");
-                megausers += "*" + sys.name(tar) + "*";
-                sys.saveVal("megausers", megausers);
-            }
-            return;
-        }
-        if (command == "megauseroff") {
-            if (tar != undefined) {
-                megaUser[tar] = false;
-                sys.sendAll("+Bot: " + sys.name(tar) + " was removed megauser.");
-                megausers = megausers.split("*" + sys.name(tar) + "*").join("");
-                sys.saveVal("megausers", megausers);
-            } else {
-                sys.sendAll("+Bot: " + commandData + " was removed megauser.");
-                megausers = megausers.split("*" + commandData + "*").join("");
-                sys.saveVal("megausers", megausers);
-            }
             return;
         }
         if (command == "setpa") {
