@@ -200,7 +200,7 @@ struct MMAvalanche : public MM
 struct MMBatonPass : public MM
 {
     MMBatonPass() {
-	functions["DetermineAttackSuccessful"] = &daf;
+        functions["DetermineAttackFailure"] = &daf;
 	functions["UponAttackSuccessful"] = &uas;
         // the function has to be in that list when called by metronome, so it can be unsetup
         functions["AfterAttackFinished"] = &aaf;
@@ -232,6 +232,7 @@ struct MMBatonPass : public MM
 	c.remove("Move0Used");
 	c.remove("Move1Used");
 	c.remove("Move2Used");
+        c.remove("HadItem");
 	c.remove("Move3Used");
         c.remove("BerryUsed");
         c.remove("HasMovedOnce");
@@ -273,8 +274,10 @@ struct MMBatonPass : public MM
             fpoke(b,s).boosts[i] += boosts[i];
         }
 
-        //and we decrease the switch count associated, so attract & co still work
-        inc(slot(b,s)["SwitchCount"], -1);
+        if (b.gen() <= 4) {
+            //and we decrease the switch count associated, so mean look & co still work
+            inc(slot(b,s)["SwitchCount"], -1);
+        }
 
         if (poke(b,s).value("Substitute").toBool()) {
             b.notifySub(s,true);
@@ -3170,7 +3173,7 @@ struct MMDefog : public MM
         bool clear = false;
 
 
-        BS::context &c = team(b,t);
+        BS::context &c = team(b,b.player(t));
 
         if (c.contains("Barrier0Count") || c.contains("Barrier1Count") || c.contains("Spikes") || c.contains("ToxicSpikes")
             || c.contains("StealthRock") || c.contains("MistCount") || c.contains("SafeGuardCount")) {
@@ -4113,7 +4116,14 @@ struct MMNaturePower : public MM
     static void uas(int s, int, BS &b) {
         removeFunction(turn(b,s), "UponAttackSuccessful", "NaturePower");
 
-        int move = TriAttack;
+        int move;
+        if (b.gen() == 3) {
+            move = Swift;
+        } else if (b.gen() == 4) {
+            move = TriAttack;
+        } else {
+            move = Earthquake;
+        }
         MoveEffect::setup(move,s,s,b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
         b.useAttack(s,move,true,true);
@@ -4824,7 +4834,7 @@ struct MMRefresh : public MM {
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.poke(s).status() != 0) {
+        if (b.poke(s).status() == Pokemon::Fine) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -5059,7 +5069,7 @@ struct MMStrikeDown : public MM
     static void uas(int s, int t, BS &b) {
         b.sendMoveMessage(175, 0, s, type(b,s), t);
 
-        if (!poke(b,t).value("Roosted").toBool())
+        if (b.isFlying(t))
             poke(b,t)["StruckDown"] = true;
     }
 };
@@ -5574,7 +5584,7 @@ struct MMSideChange : public MM
 struct MMGrowth : public MM
 {
     MMGrowth() {
-        functions["UponAttackSuccessful"] = &uas;
+        functions["BeforeHitting"] = &uas;
     }
 
     static void uas(int s, int, BS &b) {

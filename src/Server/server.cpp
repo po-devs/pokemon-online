@@ -462,6 +462,12 @@ void Server::changeScript(const QString &script)
     myengine->changeScript(script);
 }
 
+void Server::setAllAnnouncement(const QString &html) {
+    foreach(Player *p, myplayers) {
+        p->relay().notify(NetworkServ::Announcement, html);
+    }
+}
+
 void Server::announcementChanged(const QString &announcement)
 {
     if (announcement == serverAnnouncement)
@@ -669,7 +675,7 @@ void Server::loggedIn(int id, const QString &name)
         } else {
             printLine(tr("Name %1 already in use, disconnecting player %2").arg(name).arg(id));
             sendMessage(id, QString("Another with the name %1 is already logged in").arg(name));
-            removePlayer(id);
+            silentKick(id);
             return;
         }
     }
@@ -679,14 +685,19 @@ void Server::loggedIn(int id, const QString &name)
         mynames.insert(name.toLower(), id);
         emit player_authchange(id, authedName(id));
 
-        if(!myengine->beforeLogIn(id) || !playerExist(id)) {
-            removePlayer(id);
-            return;
-        }
-
         Player *p = player(id);
 
         p->changeState(Player::LoggedIn, true);
+
+        if(!myengine->beforeLogIn(id) && playerExist(id)) {
+            mynames.remove(name.toLower());
+            p->changeState(Player::LoggedIn, false);
+            silentKick(id);
+            return;
+        }
+        if (!playerExist(id))
+            return;
+
         p->relay().sendLogin(p->bundle());
 
         if (serverAnnouncement.length() > 0)
@@ -698,7 +709,7 @@ void Server::loggedIn(int id, const QString &name)
 
         /* Makes the player join the default channel */
         joinChannel(id, 0);
-        sendMessage(id, tr("Welcome Message: The updates are now available at www.pokemon-online.eu. Report any bug on the forums."));
+        sendMessage(id, tr("<font color=blue><b>Welcome Message:</b></font> The updates are available at <a href=\"http://pokemon-online.eu/\">pokemon-online.eu</a>. Report any bugs on the forum."),true);
 
         myengine->afterLogIn(id);
     } else { /* if already logged in */
@@ -1168,6 +1179,8 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     battle->start(battleThread);
 
     myengine->afterBattleStarted(id1,id2,c);
+
+    qDebug() << "After battle started";
 }
 
 bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool force2)
@@ -1551,6 +1564,10 @@ void Server::atServerShutDown() {
     myengine->serverShutDown();
 }
 
+void Server::setAnnouncement(int &id, const QString &html) {
+    if (player(id)->isLoggedIn())
+            player(id)->relay().notify(NetworkServ::Announcement, html);;
+}
 
 Player * Server::player(int id) const
 {

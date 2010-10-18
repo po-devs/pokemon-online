@@ -712,6 +712,18 @@ void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
     out.write(content.toUtf8());
 }
 
+void ScriptEngine::deleteFile(const QString &fileName)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::WriteOnly)) {
+        printLine("Script Warning in sys.deleteFile(filename): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.remove();
+}
+
 void ScriptEngine::clearChat()
 {
     emit clearTheChat();
@@ -951,6 +963,15 @@ QScriptValue ScriptEngine::away(int id)
         return myengine.undefinedValue();
     } else {
         return myserver->player(id)->away();
+    }
+}
+
+QScriptValue ScriptEngine::getColor(int id)
+{
+    if (!myserver->playerLoggedIn(id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->color().name();
     }
 }
 
@@ -1524,7 +1545,7 @@ ScriptWindow::ScriptWindow()
     QFile f("scripts.js");
     f.open(QIODevice::ReadOnly);
 
-    myedit->setText(QString::fromUtf8(f.readAll()));
+    myedit->setPlainText(QString::fromUtf8(f.readAll()));
     myedit->setFont(QFont("Courier New", 10));
     myedit->setLineWrapMode(QTextEdit::NoWrap);
     myedit->setTabStopWidth(25);
@@ -1657,3 +1678,20 @@ QScriptValue ScriptEngine::weather(int weatherId)
         return myengine.undefinedValue();
     }
 }
+
+void ScriptEngine::setAnnouncement(const QString &html, int id) {
+    if (testPlayer("setAnnouncment(html, id)", id)) {
+        myserver->setAnnouncement(id, html); }
+    }
+void ScriptEngine::setAnnouncement(const QString &html) {
+        myserver->setAllAnnouncement(html);
+    }
+
+void ScriptEngine::changeAnnouncement(const QString &html) {
+        QSettings settings("config", QSettings::IniFormat);
+        settings.setValue("server_announcement", html);
+        myserver->announcementChanged(html);
+    }
+QScriptValue ScriptEngine::getAnnouncement() {
+        return myserver->serverAnnouncement;
+    }

@@ -384,8 +384,8 @@ void TeamBattle::generateRandom(int gen)
     QList<Pokemon::uniqueId> pokes;
     for (int i = 0; i < 6; i++) {
         while(1) {
-            Pokemon::uniqueId num = PokemonInfo::getRandomPokemon();
-            if (pokes.contains(num) || !PokemonInfo::Exists(num, gen)) {
+            Pokemon::uniqueId num = PokemonInfo::getRandomPokemon(gen);
+            if (pokes.contains(num)) {
                 continue ;
             }
             pokes.push_back(num);

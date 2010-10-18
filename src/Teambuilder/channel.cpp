@@ -504,8 +504,15 @@ void Channel::printLine(const QString &line)
     }
 }
 
+/* By Ixion. If  client->showTS is true, then timestamps
+   are inserted where the <timestamp /> tag is. Otherwise,
+   they are simply removed */
 void Channel::printHtml(const QString &str)
 {
-    mainChat()->insertHtml(str + "<br />");
+    QString timeStr = "";
+    if(client->showTS)
+        timeStr = "(" + QTime::currentTime().toString() + ") ";
+    QRegExp rx("<timestamp */ *>");
+    mainChat()->insertHtml(QString(str).replace( rx, timeStr ) + "<br />");
     emit activated(this);
 }

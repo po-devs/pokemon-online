@@ -13,6 +13,6 @@ page{{
 }}
 
 tier{{
-	<p class='tier'><a href='{tier}/index.html'>Tier {tier}</a></p>
 	<img src='poke_img/{imagelink}' />
+	<p class='tier'><a href='{tier}/index.html'>Tier {tier}</a></p>
 }}
