@@ -685,14 +685,19 @@ void Server::loggedIn(int id, const QString &name)
         mynames.insert(name.toLower(), id);
         emit player_authchange(id, authedName(id));
 
-        if(!myengine->beforeLogIn(id) || !playerExist(id)) {
-            silentKick(id);
-            return;
-        }
-
         Player *p = player(id);
 
         p->changeState(Player::LoggedIn, true);
+
+        if(!myengine->beforeLogIn(id) && playerExist(id)) {
+            mynames.remove(name.toLower());
+            p->changeState(Player::LoggedIn, false);
+            silentKick(id);
+            return;
+        }
+        if (!playerExist(id))
+            return;
+
         p->relay().sendLogin(p->bundle());
 
         if (serverAnnouncement.length() > 0)

@@ -2809,7 +2809,7 @@ int BattleSituation::getType(int player, int slot)
 bool BattleSituation::isFlying(int player)
 {
     return !battleMemory().value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) && !pokeMemory(player).value("Rooted").toBool() &&
-            !pokeMemory(player).value("Roosted").toBool() && !pokeMemory(player).value("StruckDown").toBool() &&
+            !pokeMemory(player).value("StruckDown").toBool() &&
             (hasWorkingAbility(player, Ability::Levitate)
              || hasWorkingItem(player, Item::Balloon)
              || hasType(player, Pokemon::Flying)
@@ -3373,16 +3373,19 @@ void BattleSituation::healDamage(int player, int target)
 {
     int attack = tmove(player).attack;
 
-    if (koed(target) || attack == Move::MorningSun || attack == Move::Moonlight || attack == Move::Synthesis || attack == Move::Swallow)
+    if (attack == Move::MorningSun || attack == Move::Moonlight || attack == Move::Synthesis || attack == Move::Swallow)
         return;
 
     int healing = tmove(player).healing;
+
+    if ((healing > 0 && koed(target)) || (healing < 0 && koed(player)))
+        return;
 
     if (healing > 0) {
         sendMoveMessage(60, 0, target, tmove(player).type);
         healLife(target, poke(target).totalLifePoints() * healing / 100);
     } else if (healing < 0){
-        notify(All, Recoil, target, true);
+        notify(All, Recoil, player, true);
         inflictDamage(player, -poke(target).totalLifePoints() * healing / 100, target);
     }
 }
