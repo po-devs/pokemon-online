@@ -295,10 +295,11 @@ struct MMUTurn : public MM
 
     static void uas(int s, int, BS &b) {
         turn(b,s)["UTurnSuccess"] = true;
+        turn(b,s)["UTurnCount"] = slot(b,s)["SwitchCount"];
     }
 
     static void aas(int s, int, BS &b) {
-        if (!turn(b,s).contains("UTurnSuccess")) {
+        if (!turn(b,s).contains("UTurnSuccess") || slot(b,s)["SwitchCount"] != turn(b,s)["UTurnCount"]) {
             return;
         }
         if (b.countAlive(s) <= 1) {
