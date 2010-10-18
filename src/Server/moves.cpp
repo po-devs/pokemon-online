@@ -295,10 +295,11 @@ struct MMUTurn : public MM
 
     static void uas(int s, int, BS &b) {
         turn(b,s)["UTurnSuccess"] = true;
+        turn(b,s)["UTurnCount"] = slot(b,s)["SwitchCount"];
     }
 
     static void aas(int s, int, BS &b) {
-        if (!turn(b,s).contains("UTurnSuccess")) {
+        if (!turn(b,s).contains("UTurnSuccess") || slot(b,s)["SwitchCount"] != turn(b,s)["UTurnCount"]) {
             return;
         }
         if (b.countAlive(s) <= 1) {
@@ -3724,7 +3725,7 @@ struct MMSleepTalk : public MM
 	    /*
     * That and any move the user cannot choose for use, including moves with zero PP
 */
-            (*this) << Assist << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
+            (*this) << NoMove << Assist << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
                     << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce <<
                     SkullBash << SkyAttack << SleepTalk << SolarBeam << RazorWind << Uproar;
 	}
@@ -5473,6 +5474,7 @@ struct MMSynchroNoise : public MM
 {
     MMSynchroNoise() {
         functions["BeforeTargetList"] = &btl;
+        functions["DetermineAttackFailure"] = &daf;
     }
 
     static void btl(int s, int, BS &b) {
@@ -5480,6 +5482,7 @@ struct MMSynchroNoise : public MM
 
         for(unsigned x = 0; x < b.targetList.size(); x++) {
             int target = b.targetList[x];
+
             if (b.hasType(target, b.getType(s, 1)) || b.hasType(target, b.getType(s, 2))) {
                 newList.push_back(target);
             }
