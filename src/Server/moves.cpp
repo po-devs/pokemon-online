@@ -3725,7 +3725,7 @@ struct MMSleepTalk : public MM
 	    /*
     * That and any move the user cannot choose for use, including moves with zero PP
 */
-            (*this) << Assist << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
+            (*this) << NoMove << Assist << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
                     << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce <<
                     SkullBash << SkyAttack << SleepTalk << SolarBeam << RazorWind << Uproar;
 	}
