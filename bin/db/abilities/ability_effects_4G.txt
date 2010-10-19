@@ -1,7 +1,7 @@
 #17,36,38,47,52,68: free
 
 14-2#Drizzle
-58#Speed boost
+58-5#Speed boost
 
 
 
