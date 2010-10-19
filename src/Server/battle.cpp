@@ -2123,6 +2123,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 notifyHits(hitcount);
             }
 
+            if (gen() >= 5 && !koed(target)) {
+                callaeffects(target, player, "AfterBeingPlumetted");
+            }
+
             if (gen() <= 4 && koed(target))
                 notify(All, Ko, target);
 
