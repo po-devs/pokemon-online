@@ -3048,7 +3048,7 @@ struct MMTeamBarrier : public MM
 struct MMBrickBreak : public MM
 {
     MMBrickBreak() {
-	functions["BeforeHitting"] = &bh;
+        functions["BeforeCalculatingDamage"] = &bh;
         functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -3208,7 +3208,7 @@ struct MMMagnitude: public MM
 {
     MMMagnitude() {
         functions["BeforeTargetList"] = &bcd;
-	functions["BeforeHitting"] = &bh;
+        functions["BeforeCalculatingDamage"] = &bh;
     }
 
     static void bcd(int s, int, BS &b) {
@@ -3996,7 +3996,7 @@ struct MMTrickRoom : public MM {
 
 struct MMTripleKick : public MM {
     MMTripleKick() {
-        functions["BeforeHitting"] = &bh;
+        functions["BeforeCalculatingDamage"] = &bh;
         functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -4204,12 +4204,18 @@ struct MMBeatUp : public MM {
         functions["MoveSettings"] = &ms;
         functions["DetermineAttackFailure"] = &daf;
         functions["CustomAttackingDamage"] = &cad;
+        functions["BeforeHitting"] = &bh;
     }
 
     static void ms(int s, int, BS &b) {
         tmove(b,s).type = Pokemon::Curse;
-        tmove(b,s).repeatMin = 0;
-        tmove(b,s).repeatMax = 0;
+
+        if (b.gen() <= 4) {
+            tmove(b,s).repeatMin = 0;
+            tmove(b,s).repeatMax = 0;
+        } else {
+            tmove(b,s).power = 10;
+        }
     }
 
     static void daf(int s,int, BS&b) {
@@ -4239,6 +4245,14 @@ struct MMBeatUp : public MM {
             }
             if (b.koed(t))
                 return;
+        }
+    }
+
+    static void bh(int s, int, BS &b) {
+        if (b.poke(s, b.repeatCount()).status() != Pokemon::Fine) {
+            turn(b,s)["HitCancelled"] = true;
+        } else {
+            turn(b,s)["AttackStat"] = b.poke(s, b.repeatCount()).normalStat(Attack);
         }
     }
 };

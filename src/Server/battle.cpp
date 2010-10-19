@@ -2060,24 +2060,28 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		continue;
 	    }
 
-	    calleffects(player, target, "BeforeHitting");
-
             int num = repeatNum(player);
 	    bool hit = num > 1;
 
-            int i;
-            for (i = 0; i < num && !koed(target) && (i==0 || !koed(player)); i++) {
+            int hitcount = 0;
+            for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()++) {
                 turnMemory(target)["HadSubstitute"] = false;
 		bool sub = hasSubstitute(target);
                 turnMemory(target)["HadSubstitute"] = sub;
 
-                if (tmove(player).power > 1 && i == 0)
+                if (tmove(player).power > 1 && repeatCount() == 0)
                     notify(All, Effective, target, quint8(typemod));
 
                 if (tmove(player).power > 1) {
 		    testCritical(player, target);
+                    calleffects(player, target, "BeforeHitting");
+                    if (turnMemory(player).contains("HitCancelled")) {
+                        turnMemory(player).remove("HitCancelled");
+                        continue;
+                    }
 		    int damage = calculateDamage(player, target);
 		    inflictDamage(target, damage, player, true);
+                    hitcount += 1;
 		} else {
 		    calleffects(player, target, "CustomAttackingDamage");
 		}
@@ -2116,7 +2120,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 notify(All, Ko, target);
 
             if (hit) {
-                notifyHits(i);
+                notifyHits(hitcount);
             }
 
             if (gen() <= 4 && koed(target))
