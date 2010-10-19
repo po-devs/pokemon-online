@@ -1197,9 +1197,18 @@ struct MMSpikes : public MM
         if (spikeslevel <= 0 || b.koed(slot) || b.isFlying(slot) || b.hasWorkingAbility(slot, Ability::MagicGuard)) {
 	    return;
 	}
-	int n = (spikeslevel+1);
+        int n;
+        switch (spikeslevel) {
+        case 1:
+            n = 6; break;
+        case 2:
+            n = (b.gen() <= 4) ? 9 : 8; break;
+        case 3:
+            n = 12; break;
+        }
+
         b.sendMoveMessage(121,1,slot);
-        b.inflictDamage(slot, b.poke(slot).totalLifePoints()*n/16, slot);
+        b.inflictDamage(slot, b.poke(slot).totalLifePoints()*n/(16*3), slot);
     }
 };
 
