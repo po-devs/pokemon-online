@@ -4578,7 +4578,8 @@ struct MMPayback : public MM
 
     static void bcd(int s, int t, BS &b) {
         //Attack / Switch --> power *= 2
-        if (b.hasMoved(t)) {
+        //In gen 5, switch doesn't increase the power
+        if ( (b.gen() <= 4 && b.hasMoved(t)) || (b.gen() >= 5 && turn(b,t).value("HasMoved").toBool())) {
             tmove(b, s).power = tmove(b, s).power * 2;
         }
     }

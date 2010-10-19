@@ -1242,8 +1242,8 @@ struct AMBrokenArmour : public AM {
         functions["UponBeingHit"] = &upa;
     }
 
-    static void upa(int s, int, BS &b) {
-        if (b.koed(s))
+    static void upa(int s, int t, BS &b) {
+        if (b.koed(s) || tmove(b,t).category != Move::Physical)
             return;
 
         b.sendAbMessage(74, 0, s, 0);
