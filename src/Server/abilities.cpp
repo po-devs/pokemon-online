@@ -174,11 +174,26 @@ struct AMChlorophyll : public AM {
 struct AMColorChange : public AM {
     AMColorChange() {
         functions["UponOffensiveDamageReceived"] = &uodr;
+        functions["AfterBeingPlumetted"] = &abp;
     }
 
     static void uodr(int s, int t, BS &b) {
+        if (b.gen() > 4)
+            return;
         if (b.koed(s))
             return;
+        if ((s!=t) && type(b,t) != Pokemon::Curse) {
+            int tp = type(b,t);
+            if (fpoke(b,s).type2 == Pokemon::Curse && tp == fpoke(b,s).type1) {
+                return;
+            }
+            b.sendAbMessage(9,0,s,t,tp,tp);
+            fpoke(b, s).type1 = tp;
+            fpoke(b, s).type2 = Pokemon::Curse;
+        }
+    }
+
+    static void abp(int s, int t, BS &b) {
         if ((s!=t) && type(b,t) != Pokemon::Curse) {
             int tp = type(b,t);
             if (fpoke(b,s).type2 == Pokemon::Curse && tp == fpoke(b,s).type1) {
