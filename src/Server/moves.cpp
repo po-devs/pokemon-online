@@ -5513,7 +5513,7 @@ struct MMSynchroNoise : public MM
     }
 
     static void btl(int s, int t, BS &b) {
-        if (b.hasType(target, b.getType(s, 1)) || (b.getType(s, 2) != Pokemon::Curse && b.hasType(target, b.getType(s, 2)))) {
+        if (b.hasType(t, b.getType(s, 1)) || (b.getType(s, 2) != Pokemon::Curse && b.hasType(t, b.getType(s, 2)))) {
 
         } else {
             turn(b,s)["TypeMod"] = 0;
