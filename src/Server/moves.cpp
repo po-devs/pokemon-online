@@ -4534,8 +4534,8 @@ struct MMRecycle : public MM {
 
         int item = team(b,source)["RecyclableItem"].toInt();
         b.sendMoveMessage(105,0,s,0,s,item);
-        b.acqItem(s, item);
         team(b,source).remove("RecyclableItem");
+        b.acqItem(s, item);
     }
 };
 
