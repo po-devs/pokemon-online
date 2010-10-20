@@ -633,7 +633,11 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             mess.replace("%f", nick(foe));
             mess.replace("%i", ItemInfo::Name(berry));
             mess.replace("%m", MoveInfo::Name(other));
-            printLine(tu(mess));
+            /* Balloon gets a really special treatment */
+            if (item == 35)
+                printHtml(QString("<b>%1</b>").arg(escapeHtml(tu(mess))));
+            else
+                printLine(tu(mess));
             break;
         }
     case Flinch:
