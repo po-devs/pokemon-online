@@ -577,8 +577,18 @@ struct IMBulb : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (!b.koed(s) && type(b,t) == poke(b,s)["ItemArg"].toInt() && !b.hasMaximalStatMod(s, SpAttack)) {
-            b.sendItemMessage(36, s, 0, t, b.poke(s).item());
+        if (!b.koed(s) && type(b,t) == poke(b,s)["ItemArg"].toInt()) {
+            int stat;
+            if (b.poke(s).item() == Item::RechargeableBattery) {
+                if (b.hasMaximalStatMod(s, Attack))
+                    return;
+                stat = Attack;
+            } else {
+                if (b.hasMaximalStatMod(s, SpAttack))
+                    return;
+                stat = SpAttack;
+            }
+            b.sendItemMessage(36, s, 0, t, b.poke(s).item(), stat);
             b.disposeItem(s);
             b.inflictStatMod(s, SpAttack, 1, s, false);
         }
