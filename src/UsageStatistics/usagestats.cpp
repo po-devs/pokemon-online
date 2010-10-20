@@ -76,7 +76,15 @@ void PokemonOnlineStatsPlugin::battleStarting(PlayerInterface *p1, PlayerInterfa
         const TeamBattle &team = players[i]->team();
 
         for (int j = 0; j < 6; j++) {
-            savePokemon(team.poke(j), j==0, existingDirs[tier]);
+            bool lead = false;
+            if (!(c.clauses & ChallengeInfo::RearrangeTeams)) {
+                if (c.mode == ChallengeInfo::Singles) {
+                    lead = j == 0;
+                } else if (c.mode == ChallengeInfo::Doubles) {
+                    lead = j <= 1;
+                }
+            }
+            savePokemon(team.poke(j), lead, existingDirs[tier]);
         }
     }
 }

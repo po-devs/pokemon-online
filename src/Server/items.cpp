@@ -196,15 +196,14 @@ struct IMFocusSash : public IM
         if (turn(b,s).contains("CannotBeKoedBy") && turn(b,s)["CannotBeKoedBy"].toInt() == t && b.poke(s).lifePoints() == 1) {
 	    b.sendItemMessage(5, s);
 	    b.disposeItem(s);
-
-            /* future: if another thing touches CannotBeKoedBy, make sure focus sash doesn't remove it when it shouldn't.
-               Focus band is ok because you can't have 2 items at once */
-            /* list of other effects: false swipe, focus band */
-            /* In gen 5, focus sash doesn't block all the hits of a multi hit attack */
-            if (b.gen() >= 5) {
-                turn(b,s).remove("CannotBeKoedBy");
-            }
 	}
+        /* future: if another thing touches CannotBeKoedBy, make sure focus sash doesn't remove it when it shouldn't.
+           Focus band is ok because you can't have 2 items at once */
+        /* list of other effects: false swipe, focus band */
+        /* In gen 5, focus sash doesn't block all the hits of a multi hit attack */
+        if (b.gen() >= 5) {
+            turn(b,s).remove("CannotBeKoedBy");
+        }
     }
 };
 

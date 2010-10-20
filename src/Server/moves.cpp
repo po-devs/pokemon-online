@@ -985,8 +985,7 @@ struct MMRest : public MM
 
     static void daf(int s, int, BS &b) {
         // Insomnia, Vital Spirit, Uproar
-        if (b.poke(s).status() == Pokemon::Asleep || b.poke(s).isFull() || b.hasWorkingAbility(s,Ability::Insomnia)
-            || b.hasWorkingAbility(s,Ability::VitalSpirit) || b.isThereUproar()) {
+        if (b.poke(s).status() == Pokemon::Asleep || b.canGetStatus(s, Pokemon::Asleep) || b.poke(s).isFull()) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -1197,9 +1196,18 @@ struct MMSpikes : public MM
         if (spikeslevel <= 0 || b.koed(slot) || b.isFlying(slot) || b.hasWorkingAbility(slot, Ability::MagicGuard)) {
 	    return;
 	}
-	int n = (spikeslevel+1);
+        int n = 0;
+        switch (spikeslevel) {
+        case 1:
+            n = 6; break;
+        case 2:
+            n = (b.gen() <= 4) ? 9 : 8; break;
+        case 3:
+            n = 12; break;
+        }
+
         b.sendMoveMessage(121,1,slot);
-        b.inflictDamage(slot, b.poke(slot).totalLifePoints()*n/16, slot);
+        b.inflictDamage(slot, b.poke(slot).totalLifePoints()*n/(16*3), slot);
     }
 };
 
@@ -1286,9 +1294,22 @@ struct MMRapidSpin : public MM
 {
     MMRapidSpin() {
         functions["UponAttackSuccessful"] = &uas;
+        functions["AfterAttackSuccessful"] = &aas;
     }
 
     static void uas(int s, int, BS &b) {
+        if (b.gen() > 4)
+            return;
+        exc(s,b);
+    }
+
+    static void aas(int s, int, BS &b) {
+        if (b.gen() < 5)
+            return;
+        exc(s,b);
+    }
+
+    static void exc(int s, BS &b) {
         if (poke(b,s).contains("SeedSource")) {
             b.sendMoveMessage(103,1,s);
             poke(b,s).remove("SeedSource");
@@ -3039,7 +3060,7 @@ struct MMTeamBarrier : public MM
 struct MMBrickBreak : public MM
 {
     MMBrickBreak() {
-	functions["BeforeHitting"] = &bh;
+        functions["BeforeCalculatingDamage"] = &bh;
         functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -3199,7 +3220,7 @@ struct MMMagnitude: public MM
 {
     MMMagnitude() {
         functions["BeforeTargetList"] = &bcd;
-	functions["BeforeHitting"] = &bh;
+        functions["BeforeCalculatingDamage"] = &bh;
     }
 
     static void bcd(int s, int, BS &b) {
@@ -3987,7 +4008,7 @@ struct MMTrickRoom : public MM {
 
 struct MMTripleKick : public MM {
     MMTripleKick() {
-        functions["BeforeHitting"] = &bh;
+        functions["BeforeCalculatingDamage"] = &bh;
         functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -4195,12 +4216,18 @@ struct MMBeatUp : public MM {
         functions["MoveSettings"] = &ms;
         functions["DetermineAttackFailure"] = &daf;
         functions["CustomAttackingDamage"] = &cad;
+        functions["BeforeHitting"] = &bh;
     }
 
     static void ms(int s, int, BS &b) {
         tmove(b,s).type = Pokemon::Curse;
-        tmove(b,s).repeatMin = 0;
-        tmove(b,s).repeatMax = 0;
+
+        if (b.gen() <= 4) {
+            tmove(b,s).repeatMin = 0;
+            tmove(b,s).repeatMax = 0;
+        } else {
+            tmove(b,s).power = 10;
+        }
     }
 
     static void daf(int s,int, BS&b) {
@@ -4230,6 +4257,14 @@ struct MMBeatUp : public MM {
             }
             if (b.koed(t))
                 return;
+        }
+    }
+
+    static void bh(int s, int, BS &b) {
+        if (b.poke(s, b.repeatCount()).status() != Pokemon::Fine) {
+            turn(b,s)["HitCancelled"] = true;
+        } else {
+            turn(b,s)["AttackStat"] = b.poke(s, b.repeatCount()).normalStat(Attack);
         }
     }
 };
@@ -4569,7 +4604,8 @@ struct MMPayback : public MM
 
     static void bcd(int s, int t, BS &b) {
         //Attack / Switch --> power *= 2
-        if (b.hasMoved(t)) {
+        //In gen 5, switch doesn't increase the power
+        if ( (b.gen() <= 4 && b.hasMoved(t)) || (b.gen() >= 5 && turn(b,t).value("HasMoved").toBool())) {
             tmove(b, s).power = tmove(b, s).power * 2;
         }
     }
@@ -5473,30 +5509,14 @@ struct MMAssistPower : public  MM
 struct MMSynchroNoise : public MM
 {
     MMSynchroNoise() {
-        functions["BeforeTargetList"] = &btl;
-        functions["DetermineAttackFailure"] = &daf;
+        functions["BeforeCalculatingDamage"] = &btl;
     }
 
-    static void btl(int s, int, BS &b) {
-        std::vector <int> newList;
+    static void btl(int s, int t, BS &b) {
+        if (b.hasType(t, b.getType(s, 1)) || (b.getType(s, 2) != Pokemon::Curse && b.hasType(t, b.getType(s, 2)))) {
 
-        for(unsigned x = 0; x < b.targetList.size(); x++) {
-            int target = b.targetList[x];
-
-            if (b.hasType(target, b.getType(s, 1)) || b.hasType(target, b.getType(s, 2))) {
-                newList.push_back(target);
-            }
-        }
-
-        if (newList.size() == 0)
-            newList.push_back(s);
-
-        b.targetList = newList;
-    }
-
-    static void daf(int s, int t, BS &b) {
-        if (s == t) {
-            turn(b,s)["Failed"] = true;
+        } else {
+            turn(b,s)["TypeMod"] = 0;
         }
     }
 };
