@@ -1196,7 +1196,7 @@ struct MMSpikes : public MM
         if (spikeslevel <= 0 || b.koed(slot) || b.isFlying(slot) || b.hasWorkingAbility(slot, Ability::MagicGuard)) {
 	    return;
 	}
-        int n;
+        int n = 0;
         switch (spikeslevel) {
         case 1:
             n = 6; break;
