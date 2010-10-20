@@ -1294,9 +1294,22 @@ struct MMRapidSpin : public MM
 {
     MMRapidSpin() {
         functions["UponAttackSuccessful"] = &uas;
+        functions["AfterAttackSuccessful"] = &aas;
     }
 
     static void uas(int s, int, BS &b) {
+        if (b.gen() > 4)
+            return;
+        exc(s,b);
+    }
+
+    static void aas(int s, int, BS &b) {
+        if (b.gen() < 5)
+            return;
+        exc(s,b);
+    }
+
+    static void exc(int s, BS &b) {
         if (poke(b,s).contains("SeedSource")) {
             b.sendMoveMessage(103,1,s);
             poke(b,s).remove("SeedSource");
