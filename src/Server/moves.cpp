@@ -5497,30 +5497,14 @@ struct MMAssistPower : public  MM
 struct MMSynchroNoise : public MM
 {
     MMSynchroNoise() {
-        functions["BeforeTargetList"] = &btl;
-        functions["DetermineAttackFailure"] = &daf;
+        functions["BeforeCalculatingDamage"] = &btl;
     }
 
-    static void btl(int s, int, BS &b) {
-        std::vector <int> newList;
+    static void btl(int s, int t, BS &b) {
+        if (b.hasType(target, b.getType(s, 1)) || (b.getType(s, 2) != Pokemon::Curse && b.hasType(target, b.getType(s, 2)))) {
 
-        for(unsigned x = 0; x < b.targetList.size(); x++) {
-            int target = b.targetList[x];
-
-            if (b.hasType(target, b.getType(s, 1)) || b.hasType(target, b.getType(s, 2))) {
-                newList.push_back(target);
-            }
-        }
-
-        if (newList.size() == 0)
-            newList.push_back(s);
-
-        b.targetList = newList;
-    }
-
-    static void daf(int s, int t, BS &b) {
-        if (s == t) {
-            turn(b,s)["Failed"] = true;
+        } else {
+            turn(b,s)["TypeMod"] = 0;
         }
     }
 };
