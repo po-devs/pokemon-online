@@ -3308,14 +3308,17 @@ void BattleSituation::devourBerry(int s, int berry, int t)
 
 void BattleSituation::acqItem(int player, int item) {
     if (poke(player).item() != 0)
-        loseItem(player);
+        loseItem(player, false);
     poke(player).item() = item;
     ItemEffect::setup(poke(player).item(),player,*this);
 }
 
-void BattleSituation::loseItem(int player)
+void BattleSituation::loseItem(int player, bool real)
 {
     poke(player).item() = 0;
+    if (real && hasWorkingAbility(player, Ability::Unburden)) {
+        pokeMemory(player)["Unburdened"] = true;
+    }
 }
 
 void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId &newforme)
