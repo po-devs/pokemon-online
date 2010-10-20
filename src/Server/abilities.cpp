@@ -1586,7 +1586,7 @@ struct AMMiracleSkin : public AM {
     }
 
     static void psc(int s, int t, BS &b) {
-        if (turn(b,s)["StatModType"].toString() == "Status") {
+        if (turn(b,s)["StatModType"].toString() == "Status" && b.true_rand() % 2) {
             if (b.canSendPreventSMessage(s,t))
                 b.sendAbMessage(90,0,s);
             b.preventStatMod(s,t);
