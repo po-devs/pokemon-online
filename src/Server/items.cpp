@@ -37,7 +37,8 @@ void ItemEffect::setup(int num, int source, BattleSituation &b)
 	}
     }
 
-    IM::poke(b,source)["HadItem"] = true;
+    if (num != 0)
+        IM::poke(b,source)["HadItem"] = true;
 
     activate("UponSetup", num, source, source, b);
 }
