@@ -2541,9 +2541,11 @@ void BattleSituation::healStatus(int player, int status)
 }
 
 bool BattleSituation::canGetStatus(int player, int status) {
+    if (hasWorkingAbility(player, Ability::LeafGuard) && isWeatherWorking(Sunny))
+        return false;
     switch (status) {
     case Pokemon::Paralysed: return !hasWorkingAbility(player, Ability::Limber);
-    case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit);
+    case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit) && !isThereUproar();
     case Pokemon::Burnt: return !hasType(player, Pokemon::Fire) && !hasWorkingAbility(player, Ability::WaterVeil);
     case Pokemon::Poisoned: return !hasType(player, Pokemon::Poison) && !hasType(player, Pokemon::Steel) && !hasWorkingAbility(player, Ability::Immunity);
     case Pokemon::Frozen: return !isWeatherWorking(Sunny) && !hasType(player, Pokemon::Ice) && !hasWorkingAbility(player, Ability::MagmaArmor);

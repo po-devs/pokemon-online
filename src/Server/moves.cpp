@@ -985,8 +985,7 @@ struct MMRest : public MM
 
     static void daf(int s, int, BS &b) {
         // Insomnia, Vital Spirit, Uproar
-        if (b.poke(s).status() == Pokemon::Asleep || b.poke(s).isFull() || b.hasWorkingAbility(s,Ability::Insomnia)
-            || b.hasWorkingAbility(s,Ability::VitalSpirit) || b.isThereUproar()) {
+        if (b.poke(s).status() == Pokemon::Asleep || b.canGetStatus(s, Pokemon::Asleep) || b.poke(s).isFull()) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
