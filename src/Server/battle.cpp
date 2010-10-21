@@ -2156,7 +2156,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag))
             {
                 sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
-                return;
+                continue;
             }
 
 	    calleffects(player, target, "BeforeHitting");
