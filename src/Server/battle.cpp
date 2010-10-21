@@ -1700,7 +1700,7 @@ bool BattleSituation::testStatus(int player)
 
     if (poke(player).status() == Pokemon::Paralysed) {
         //MagicGuard
-        if (!hasWorkingAbility(player, Ability::MagicGuard) && true_rand() % 4 == 0) {
+        if ( (gen() > 4 || !hasWorkingAbility(player, Ability::MagicGuard)) && true_rand() % 4 == 0) {
             notify(All, StatusMessage, player, qint8(PrevParalysed));
             return false;
         }
