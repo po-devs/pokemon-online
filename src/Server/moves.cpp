@@ -4852,18 +4852,6 @@ struct MMGiftPass : public MM {
     }
 };
 
-struct MMWindStorm : public MM {
-    MMWindStorm() {
-        functions["MoveSettings"] = &ms;
-    }
-
-    static void ms(int s, int, BS &b) {
-        if (b.isWeatherWorking(BS::Rain)) {
-            tmove(b, s).accuracy = 0;
-        }
-    }
-};
-
 struct MMRefresh : public MM {
     MMRefresh() {
         functions["DetermineAttackFailure"] = &daf;
@@ -5813,7 +5801,7 @@ void MoveEffect::init()
     REGISTER_MOVE(160, Incinerate);
     REGISTER_MOVE(161, Desperation);
     REGISTER_MOVE(162, GiftPass);
-    REGISTER_MOVE(163, WindStorm);
+    //REGISTER_MOVE(163, WindStorm);
     REGISTER_MOVE(164, Refresh);
     REGISTER_MOVE(165, Memento);
     REGISTER_MOVE(166, AncientSong);
