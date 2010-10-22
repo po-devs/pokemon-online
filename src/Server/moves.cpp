@@ -733,7 +733,7 @@ struct MMOHKO : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void cas(int s, int t, BS &b) {
+    static void cad(int s, int t, BS &b) {
         turn(b,s)["CustomDamage"] = b.poke(t).totalLifePoints();
     }
 
