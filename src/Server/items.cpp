@@ -37,8 +37,6 @@ void ItemEffect::setup(int num, int source, BattleSituation &b)
 	}
     }
 
-    IM::poke(b,source)["HadItem"] = true;
-
     activate("UponSetup", num, source, source, b);
 }
 
@@ -196,15 +194,14 @@ struct IMFocusSash : public IM
         if (turn(b,s).contains("CannotBeKoedBy") && turn(b,s)["CannotBeKoedBy"].toInt() == t && b.poke(s).lifePoints() == 1) {
 	    b.sendItemMessage(5, s);
 	    b.disposeItem(s);
-
-            /* future: if another thing touches CannotBeKoedBy, make sure focus sash doesn't remove it when it shouldn't.
-               Focus band is ok because you can't have 2 items at once */
-            /* list of other effects: false swipe, focus band */
-            /* In gen 5, focus sash doesn't block all the hits of a multi hit attack */
-            if (b.gen() >= 5) {
-                turn(b,s).remove("CannotBeKoedBy");
-            }
 	}
+        /* future: if another thing touches CannotBeKoedBy, make sure focus sash doesn't remove it when it shouldn't.
+           Focus band is ok because you can't have 2 items at once */
+        /* list of other effects: false swipe, focus band */
+        /* In gen 5, focus sash doesn't block all the hits of a multi hit attack */
+        if (b.gen() >= 5) {
+            turn(b,s).remove("CannotBeKoedBy");
+        }
     }
 };
 
@@ -578,8 +575,18 @@ struct IMBulb : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (!b.koed(s) && type(b,t) == poke(b,s)["ItemArg"].toInt() && !b.hasMaximalStatMod(s, SpAttack)) {
-            b.sendItemMessage(36, s, 0, t, b.poke(s).item());
+        if (!b.koed(s) && type(b,t) == poke(b,s)["ItemArg"].toInt()) {
+            int stat;
+            if (b.poke(s).item() == Item::RechargeableBattery) {
+                if (b.hasMaximalStatMod(s, Attack))
+                    return;
+                stat = Attack;
+            } else {
+                if (b.hasMaximalStatMod(s, SpAttack))
+                    return;
+                stat = SpAttack;
+            }
+            b.sendItemMessage(36, s, 0, t, b.poke(s).item(), stat);
             b.disposeItem(s);
             b.inflictStatMod(s, SpAttack, 1, s, false);
         }

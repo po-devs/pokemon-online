@@ -1,7 +1,7 @@
 #17,36,38,47,52,68: free
 
 14-2#Drizzle
-58#Speed boost
+58-5#Speed boost
 
 
 
@@ -13,7 +13,7 @@
 
 
 10#CompoundEyes
-33-4#Insomnia
+33-2#Insomnia
 9#Color change
 
 19#Flash Fire
@@ -36,10 +36,10 @@
 
 66#Trace
 27#Huge Power
-33-5#Poison Point
+18-5#Poison Point
 12#Inner focus
 33-3#Magma Armor
-33-2#Water Veil
+33-4#Water Veil
 39#Magnet Pull
 57#SoundProof
 32-2#Rain Dish
@@ -70,7 +70,7 @@
 
 14-4#Drought
 5#Arena Trap
-
+33-2#Vital Spirit
 31#WhiteSmoke
 27#Pure Power
 
