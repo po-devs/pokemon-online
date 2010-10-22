@@ -729,11 +729,15 @@ struct MMOHKO : public MM
 {
     MMOHKO() {
 	functions["DetermineAttackFailure"] = &daf;
-        functions["CustomAttackingDamage"] = &uas;
+        functions["CustomAttackingDamage"] = &cad;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void cas(int s, int t, BS &b) {
+        turn(b,s)["CustomDamage"] = b.poke(t).totalLifePoints();
     }
 
     static void uas(int s, int t, BS &b) {
-	b.inflictDamage(t, b.poke(t).totalLifePoints(), s, true);
         if (b.koed(t)) {
             b.sendMoveMessage(43,1,s,type(b,s));
         }
@@ -820,7 +824,7 @@ struct MMSuperFang : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        b.inflictDamage(t,b.poke(t).lifePoints()/2, s, true);
+        turn(b,s)["CustomDamage"] = b.poke(t).lifePoints()/2;
     }
 };
 
@@ -1385,7 +1389,7 @@ struct MMNightShade : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        b.inflictDamage(t, fpoke(b,s).level, s, true);
+        turn(b,s)["CustomDamage"] = fpoke(b,s).level;
     }
 };
 
@@ -1527,8 +1531,8 @@ struct MMDragonRage : public MM
 	functions["CustomAttackingDamage"] = &uas;
     }
 
-    static void uas(int s, int t, BS &b) {
-	b.inflictDamage(t, turn(b,s)["DragonRage_Arg"].toInt(), s, true);
+    static void uas(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] =  turn(b,s)["DragonRage_Arg"];
     }
 };
 
@@ -1682,7 +1686,7 @@ struct MMBide : public MM
     }
 
     static void ccd(int s, int t, BS &b) {
-	b.inflictDamage(t, 2*poke(b,s)["BideDamageCount"].toInt(),s,true);
+        turn(b,s)["CustomDamage"] = 2*poke(b,s)["BideDamageCount"].toInt();
     }
 };
 
@@ -1925,7 +1929,7 @@ struct MMCounter : public MM
     }
 
     static void cad(int s, int t, BS &b) {
-	b.inflictDamage(t, turn(b,s)["CounterDamage"].toInt(), s, true);
+        turn(b,s)["CustomDamage"] = turn(b,s)["CounterDamage"].toInt();
     }
 };
 
@@ -1952,7 +1956,7 @@ struct MMMetalBurst : public MM
     }
 
     static void cad(int s, int t, BS &b) {
-        b.inflictDamage(t, turn(b,s)["CounterDamage"].toInt(), s, true);
+        turn(b,s)["CustomDamage"] = turn(b,s)["CounterDamage"];
     }
 };
 
@@ -2269,7 +2273,7 @@ struct MMEndeavor : public MM
     }
 
     static void cad(int s, int t, BS &b) {
-	b.inflictDamage(t, b.poke(t).lifePoints()-b.poke(s).lifePoints(),s,true);
+        turn(b,s)["CustomDamage"] = b.poke(t).lifePoints()-b.poke(s).lifePoints();
     }
 };
 
@@ -3554,8 +3558,8 @@ struct MMPsywave : public MM
 	functions["CustomAttackingDamage"] = &cad;
     }
 
-    static void cad (int s, int t, BS &b) {
-        b.inflictDamage(t, fpoke(b,s).level * (5 + (b.true_rand() % 11)) / 10,s,true);
+    static void cad (int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = fpoke(b,s).level * (5 + (b.true_rand() % 11)) / 10;
     }
 };
 
