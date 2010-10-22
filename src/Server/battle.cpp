@@ -1700,7 +1700,7 @@ bool BattleSituation::testStatus(int player)
 
     if (poke(player).status() == Pokemon::Paralysed) {
         //MagicGuard
-        if (!hasWorkingAbility(player, Ability::MagicGuard) && true_rand() % 4 == 0) {
+        if ( (gen() > 4 || !hasWorkingAbility(player, Ability::MagicGuard)) && true_rand() % 4 == 0) {
             notify(All, StatusMessage, player, qint8(PrevParalysed));
             return false;
         }
@@ -2060,24 +2060,28 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		continue;
 	    }
 
-	    calleffects(player, target, "BeforeHitting");
-
             int num = repeatNum(player);
 	    bool hit = num > 1;
 
-            int i;
-            for (i = 0; i < num && !koed(target) && (i==0 || !koed(player)); i++) {
+            int hitcount = 0;
+            for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()++) {
                 turnMemory(target)["HadSubstitute"] = false;
 		bool sub = hasSubstitute(target);
                 turnMemory(target)["HadSubstitute"] = sub;
 
-                if (tmove(player).power > 1 && i == 0)
+                if (tmove(player).power > 1 && repeatCount() == 0)
                     notify(All, Effective, target, quint8(typemod));
 
                 if (tmove(player).power > 1) {
 		    testCritical(player, target);
+                    calleffects(player, target, "BeforeHitting");
+                    if (turnMemory(player).contains("HitCancelled")) {
+                        turnMemory(player).remove("HitCancelled");
+                        continue;
+                    }
 		    int damage = calculateDamage(player, target);
 		    inflictDamage(target, damage, player, true);
+                    hitcount += 1;
 		} else {
 		    calleffects(player, target, "CustomAttackingDamage");
 		}
@@ -2116,7 +2120,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 notify(All, Ko, target);
 
             if (hit) {
-                notifyHits(i);
+                notifyHits(hitcount);
+            }
+
+            if (gen() >= 5 && !koed(target)) {
+                callaeffects(target, player, "AfterBeingPlumetted");
             }
 
             if (gen() <= 4 && koed(target))
@@ -2148,7 +2156,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag))
             {
                 sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
-                return;
+                continue;
             }
 
 	    calleffects(player, target, "BeforeHitting");
@@ -2533,9 +2541,11 @@ void BattleSituation::healStatus(int player, int status)
 }
 
 bool BattleSituation::canGetStatus(int player, int status) {
+    if (hasWorkingAbility(player, Ability::LeafGuard) && isWeatherWorking(Sunny))
+        return false;
     switch (status) {
     case Pokemon::Paralysed: return !hasWorkingAbility(player, Ability::Limber);
-    case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit);
+    case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit) && !isThereUproar();
     case Pokemon::Burnt: return !hasType(player, Pokemon::Fire) && !hasWorkingAbility(player, Ability::WaterVeil);
     case Pokemon::Poisoned: return !hasType(player, Pokemon::Poison) && !hasType(player, Pokemon::Steel) && !hasWorkingAbility(player, Ability::Immunity);
     case Pokemon::Frozen: return !isWeatherWorking(Sunny) && !hasType(player, Pokemon::Ice) && !hasWorkingAbility(player, Ability::MagmaArmor);
@@ -3281,12 +3291,12 @@ void BattleSituation::devourBerry(int s, int berry, int t)
             continue;
         }
         foreach (Mechanics::function f, ItemEffect::mechanics[e.num].functions) {
-            f(s, t, *this);
-
             //Some berries have 2 functions for pinch testing... so quitting after one used up the berry
             if (poke(s).item() == 0) {
                 break;
             }
+
+            f(s, t, *this);
         }
     }
 
@@ -3298,14 +3308,17 @@ void BattleSituation::devourBerry(int s, int berry, int t)
 
 void BattleSituation::acqItem(int player, int item) {
     if (poke(player).item() != 0)
-        loseItem(player);
+        loseItem(player, false);
     poke(player).item() = item;
     ItemEffect::setup(poke(player).item(),player,*this);
 }
 
-void BattleSituation::loseItem(int player)
+void BattleSituation::loseItem(int player, bool real)
 {
     poke(player).item() = 0;
+    if (real && hasWorkingAbility(player, Ability::Unburden)) {
+        pokeMemory(player)["Unburdened"] = true;
+    }
 }
 
 void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId &newforme)

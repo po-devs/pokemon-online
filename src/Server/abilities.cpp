@@ -174,11 +174,26 @@ struct AMChlorophyll : public AM {
 struct AMColorChange : public AM {
     AMColorChange() {
         functions["UponOffensiveDamageReceived"] = &uodr;
+        functions["AfterBeingPlumetted"] = &abp;
     }
 
     static void uodr(int s, int t, BS &b) {
+        if (b.gen() > 4)
+            return;
         if (b.koed(s))
             return;
+        if ((s!=t) && type(b,t) != Pokemon::Curse) {
+            int tp = type(b,t);
+            if (fpoke(b,s).type2 == Pokemon::Curse && tp == fpoke(b,s).type1) {
+                return;
+            }
+            b.sendAbMessage(9,0,s,t,tp,tp);
+            fpoke(b, s).type1 = tp;
+            fpoke(b, s).type2 = Pokemon::Curse;
+        }
+    }
+
+    static void abp(int s, int t, BS &b) {
         if ((s!=t) && type(b,t) != Pokemon::Curse) {
             int tp = type(b,t);
             if (fpoke(b,s).type2 == Pokemon::Curse && tp == fpoke(b,s).type1) {
@@ -592,10 +607,12 @@ struct AMIceBody : public AM {
     }
 
     static void ws(int s, int, BS &b) {
-        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt()) && !b.poke(s).isFull()) {
+        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
             turn(b,s)["WeatherSpecialed"] = true; //to prevent being hit by the weather
-            b.sendAbMessage(32,0,s,s,TypeInfo::TypeForWeather(poke(b,s)["AbilityArg"].toInt()),b.ability(s));
-            b.healLife(s, b.poke(s).totalLifePoints()/16);
+            if (!b.poke(s).isFull()) {
+                b.sendAbMessage(32,0,s,s,TypeInfo::TypeForWeather(poke(b,s)["AbilityArg"].toInt()),b.ability(s));
+                b.healLife(s, b.poke(s).totalLifePoints()/16);
+            }
         }
     }
 };
@@ -1013,7 +1030,7 @@ struct AMUnburden : public AM {
     }
 
     static void sm(int s, int, BS &b) {
-        if (b.poke(s).item() == 0 && poke(b,s).value("HadItem").toBool()) {
+        if (b.poke(s).item() == 0 && poke(b,s).value("Unburdened").toBool()) {
             turn(b,s)["Stat5AbilityModifier"] = 20;
         }
     }
@@ -1242,8 +1259,8 @@ struct AMBrokenArmour : public AM {
         functions["UponBeingHit"] = &upa;
     }
 
-    static void upa(int s, int, BS &b) {
-        if (b.koed(s))
+    static void upa(int s, int t, BS &b) {
+        if (b.koed(s) || tmove(b,t).category != Move::Physical)
             return;
 
         b.sendAbMessage(74, 0, s, 0);
@@ -1569,7 +1586,7 @@ struct AMMiracleSkin : public AM {
     }
 
     static void psc(int s, int t, BS &b) {
-        if (turn(b,s)["StatModType"].toString() == "Status") {
+        if (turn(b,s)["StatModType"].toString() == "Status" && b.true_rand() % 2) {
             if (b.canSendPreventSMessage(s,t))
                 b.sendAbMessage(90,0,s);
             b.preventStatMod(s,t);
