@@ -1388,7 +1388,7 @@ struct MMNightShade : public MM
 	functions["CustomAttackingDamage"] = &uas;
     }
 
-    static void uas(int s, int t, BS &b) {
+    static void uas(int s, int, BS &b) {
         turn(b,s)["CustomDamage"] = fpoke(b,s).level;
     }
 };
@@ -1685,7 +1685,7 @@ struct MMBide : public MM
         turn(b,s)["NoChoice"] = true;
     }
 
-    static void ccd(int s, int t, BS &b) {
+    static void ccd(int s, int, BS &b) {
         turn(b,s)["CustomDamage"] = 2*poke(b,s)["BideDamageCount"].toInt();
     }
 };
@@ -1928,7 +1928,7 @@ struct MMCounter : public MM
             turn(b,s)["Failed"] = true;
     }
 
-    static void cad(int s, int t, BS &b) {
+    static void cad(int s, int, BS &b) {
         turn(b,s)["CustomDamage"] = turn(b,s)["CounterDamage"].toInt();
     }
 };
@@ -1955,7 +1955,7 @@ struct MMMetalBurst : public MM
         turn(b,s)["CounterDamage"] = dam * 3 / 2;
     }
 
-    static void cad(int s, int t, BS &b) {
+    static void cad(int s, int, BS &b) {
         turn(b,s)["CustomDamage"] = turn(b,s)["CounterDamage"];
     }
 };
