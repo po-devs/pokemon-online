@@ -772,6 +772,10 @@ BattleChoices BattleSituation::createChoice(int slot)
         }
     }
 
+    if (linked(slot, "FreeFalled")) {
+        ret.switchAllowed = false;
+    }
+
     return ret;
 }
 

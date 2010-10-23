@@ -1884,7 +1884,7 @@ struct MMBounce : public MM
 
     static void dap(int s, int, BS &b) {
         if (b.linked(s, "FreeFalled")) {
-            b.sendMoveMessage(s, 6, s);
+            b.sendMoveMessage(13, 6, s);
             turn(b,s) ["ImpossibleToMove"] = true;
             return;
         }
