@@ -322,7 +322,8 @@ struct IMLifeOrb : public IM
     }
 
     static void atl(int s, int, BS &b) {
-        if (turn(b,s).value("ActivateLifeOrb").toBool() && !b.hasWorkingAbility(s, Ability::MagicGuard)) {
+        if (turn(b,s).value("ActivateLifeOrb").toBool() && !turn(b,s).value("NoLifeOrbActivation").toBool()
+            && !b.hasWorkingAbility(s, Ability::MagicGuard)) {
             //b.sendItemMessage(21,s);
             b.inflictDamage(s,b.poke(s).totalLifePoints()/10,s);
 
