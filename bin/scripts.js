@@ -284,7 +284,7 @@ afterChangeTeam : function(src)
         }
     }
 	var tier = sys.tier(src);
-		if (tier != "Dream World" && tier != "Full Dream World") {
+		if (tier != "Dream World" && tier != "Full Dream World" && tier != "Triples") {
 			this.dreamWorldAbilitiesCheck(src, false);
 		}
 }
@@ -1296,7 +1296,7 @@ beforeChallengeIssued : function (src, dest, clauses, rated, mode) {
 	if (sys.tier(src) == sys.tier(dest)) {
 		var tier = sys.tier(src);
 		
-		if (tier != "Dream World" && tier != "Full Dream World") {
+		if (tier != "Dream World" && tier != "Full Dream World" && tier != "Triples") {
 			this.dreamWorldAbilitiesCheck(src,true);
 			this.dreamWorldAbilitiesCheck(dest,true);
 		}		
@@ -1323,7 +1323,7 @@ beforeBattleMatchup : function(src,dest,clauses,rated)
 	if (sys.tier(src) == sys.tier(dest)) {
 		var tier = sys.tier(src);
 		
-		if (tier != "Dream World" && tier != "Full Dream World") {
+		if (tier != "Dream World" && tier != "Full Dream World" && tier != "Triples") {
 			this.dreamWorldAbilitiesCheck(src,true);
 			this.dreamWorldAbilitiesCheck(dest,true);
 		}		
