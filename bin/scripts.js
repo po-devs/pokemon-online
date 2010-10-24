@@ -84,8 +84,8 @@ rules = [ "",
     }
 	
     battlesStopped = false;
-	channelUsers = [];
-	channelTopics = [];
+	 channelUsers = [];
+ 	 channelTopics = [];
 		
     sys.setPA("forceSameTier");
     sys.setPA("megaUser");
@@ -101,7 +101,7 @@ rules = [ "",
     sys.setPA("caps");
     sys.setPA("timeCount");
     sys.setPA("floodCount");
-	maxPlayersOnline = 0;
+	 maxPlayersOnline = 0;
     
     lineCount = 0;
     tourmode = 0;
@@ -284,7 +284,7 @@ afterChangeTeam : function(src)
         }
     }
 	var tier = sys.tier(src);
-		if (tier != "Dream World" && tier != "Full Dream World" && tier != "Triples") {
+		if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "Triples") {
 			this.dreamWorldAbilitiesCheck(src, false);
 		}
 }
@@ -1296,7 +1296,7 @@ beforeChallengeIssued : function (src, dest, clauses, rated, mode) {
 	if (sys.tier(src) == sys.tier(dest)) {
 		var tier = sys.tier(src);
 		
-		if (tier != "Dream World" && tier != "Full Dream World" && tier != "Triples") {
+		if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "Triples") {
 			this.dreamWorldAbilitiesCheck(src,true);
 			this.dreamWorldAbilitiesCheck(dest,true);
 		}		
@@ -1323,7 +1323,7 @@ beforeBattleMatchup : function(src,dest,clauses,rated)
 	if (sys.tier(src) == sys.tier(dest)) {
 		var tier = sys.tier(src);
 		
-		if (tier != "Dream World" && tier != "Full Dream World" && tier != "Triples") {
+		if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "Triples") {
 			this.dreamWorldAbilitiesCheck(src,true);
 			this.dreamWorldAbilitiesCheck(dest,true);
 		}		
@@ -1359,8 +1359,8 @@ dreamWorldAbilitiesCheck : function(src, se) {
 				sys.sendMessage(src, "+CheckBot: " + sys.pokemon(x) + " is not allowed with a Dream World ability in this tier. Change it in the teambuilder.");
 			if (sys.tier(src) == "Wifi") {
 				sys.changeTier(src, "Dream World");
-			} else if (sys.tier(src) == "Full Wifi") {
-				sys.changeTier(src, "Full Dream World");
+			} else if (sys.tier(src) == "Wifi Ubers") {
+				sys.changeTier(src, "Dream World Ubers");
 			} else 	{
 				if (se)
 					sys.changePokeNum(src, i, 0);
