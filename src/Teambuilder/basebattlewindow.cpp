@@ -724,16 +724,16 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         break;
     case BattleEnd:
     {
-            printLine("");
-            qint8 res;
-            in >> res;
-            battleEnded = true;
-            if (res == Tie) {
-                printHtml(toBoldColor(tr("Tie between %1 and %2!").arg(name(info().myself), name(info().opponent)), Qt::blue));
-            } else {
-                printHtml(toBoldColor(tr("%1 won the battle!").arg(name(spot)), Qt::blue));
-            }
-            break;
+        printLine("");
+        qint8 res;
+        in >> res;
+        battleEnded = true;
+        if (res == Tie) {
+            printHtml(toBoldColor(tr("Tie between %1 and %2!").arg(name(info().myself), name(info().opponent)), Qt::blue));
+        } else {
+            printHtml(toBoldColor(tr("%1 won the battle!").arg(name(spot)), Qt::blue));
+        }
+        break;
     }
     case BlankMessage:
             printLine("");

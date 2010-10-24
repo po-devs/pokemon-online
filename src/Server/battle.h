@@ -184,7 +184,7 @@ public:
     /* Eats a berry, not caring about the item the pokemon has, etc. */
     void devourBerry(int player, int berry, int target);
     void acqItem(int player, int item);
-    void loseItem(int player);
+    void loseItem(int player, bool real = true);
     void loseAbility(int player);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
