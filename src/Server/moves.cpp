@@ -1793,7 +1793,7 @@ struct MMBounce : public MM
     /* Called with freefall */
     static void bcd (int s, int t, BS &b) {
         /* Airbourne targets don't receive damage */
-        if (b.isFlying(t)) {
+        if (b.hasType(t, Type::Flying)) {
             tmove(b,s).power = 1;
         }
     }
