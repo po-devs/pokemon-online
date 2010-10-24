@@ -729,11 +729,15 @@ struct MMOHKO : public MM
 {
     MMOHKO() {
 	functions["DetermineAttackFailure"] = &daf;
-        functions["CustomAttackingDamage"] = &uas;
+        functions["CustomAttackingDamage"] = &cad;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void cad(int s, int t, BS &b) {
+        turn(b,s)["CustomDamage"] = b.poke(t).totalLifePoints();
     }
 
     static void uas(int s, int t, BS &b) {
-	b.inflictDamage(t, b.poke(t).totalLifePoints(), s, true);
         if (b.koed(t)) {
             b.sendMoveMessage(43,1,s,type(b,s));
         }
@@ -820,7 +824,7 @@ struct MMSuperFang : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        b.inflictDamage(t,b.poke(t).lifePoints()/2, s, true);
+        turn(b,s)["CustomDamage"] = b.poke(t).lifePoints()/2;
     }
 };
 
@@ -1384,8 +1388,8 @@ struct MMNightShade : public MM
 	functions["CustomAttackingDamage"] = &uas;
     }
 
-    static void uas(int s, int t, BS &b) {
-        b.inflictDamage(t, fpoke(b,s).level, s, true);
+    static void uas(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = fpoke(b,s).level;
     }
 };
 
@@ -1527,8 +1531,8 @@ struct MMDragonRage : public MM
 	functions["CustomAttackingDamage"] = &uas;
     }
 
-    static void uas(int s, int t, BS &b) {
-	b.inflictDamage(t, turn(b,s)["DragonRage_Arg"].toInt(), s, true);
+    static void uas(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] =  turn(b,s)["DragonRage_Arg"];
     }
 };
 
@@ -1681,8 +1685,8 @@ struct MMBide : public MM
         turn(b,s)["NoChoice"] = true;
     }
 
-    static void ccd(int s, int t, BS &b) {
-	b.inflictDamage(t, 2*poke(b,s)["BideDamageCount"].toInt(),s,true);
+    static void ccd(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = 2*poke(b,s)["BideDamageCount"].toInt();
     }
 };
 
@@ -1880,7 +1884,7 @@ struct MMBounce : public MM
 
     static void dap(int s, int, BS &b) {
         if (b.linked(s, "FreeFalled")) {
-            b.sendMoveMessage(s, 6, s);
+            b.sendMoveMessage(13, 6, s);
             turn(b,s) ["ImpossibleToMove"] = true;
             return;
         }
@@ -1924,8 +1928,8 @@ struct MMCounter : public MM
             turn(b,s)["Failed"] = true;
     }
 
-    static void cad(int s, int t, BS &b) {
-	b.inflictDamage(t, turn(b,s)["CounterDamage"].toInt(), s, true);
+    static void cad(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = turn(b,s)["CounterDamage"].toInt();
     }
 };
 
@@ -1951,8 +1955,8 @@ struct MMMetalBurst : public MM
         turn(b,s)["CounterDamage"] = dam * 3 / 2;
     }
 
-    static void cad(int s, int t, BS &b) {
-        b.inflictDamage(t, turn(b,s)["CounterDamage"].toInt(), s, true);
+    static void cad(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = turn(b,s)["CounterDamage"];
     }
 };
 
@@ -2269,7 +2273,7 @@ struct MMEndeavor : public MM
     }
 
     static void cad(int s, int t, BS &b) {
-	b.inflictDamage(t, b.poke(t).lifePoints()-b.poke(s).lifePoints(),s,true);
+        turn(b,s)["CustomDamage"] = b.poke(t).lifePoints()-b.poke(s).lifePoints();
     }
 };
 
@@ -3554,8 +3558,8 @@ struct MMPsywave : public MM
 	functions["CustomAttackingDamage"] = &cad;
     }
 
-    static void cad (int s, int t, BS &b) {
-        b.inflictDamage(t, fpoke(b,s).level * (5 + (b.true_rand() % 11)) / 10,s,true);
+    static void cad (int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = fpoke(b,s).level * (5 + (b.true_rand() % 11)) / 10;
     }
 };
 
@@ -4852,18 +4856,6 @@ struct MMGiftPass : public MM {
     }
 };
 
-struct MMWindStorm : public MM {
-    MMWindStorm() {
-        functions["MoveSettings"] = &ms;
-    }
-
-    static void ms(int s, int, BS &b) {
-        if (b.isWeatherWorking(BS::Rain)) {
-            tmove(b, s).accuracy = 0;
-        }
-    }
-};
-
 struct MMRefresh : public MM {
     MMRefresh() {
         functions["DetermineAttackFailure"] = &daf;
@@ -5813,7 +5805,7 @@ void MoveEffect::init()
     REGISTER_MOVE(160, Incinerate);
     REGISTER_MOVE(161, Desperation);
     REGISTER_MOVE(162, GiftPass);
-    REGISTER_MOVE(163, WindStorm);
+    //REGISTER_MOVE(163, WindStorm);
     REGISTER_MOVE(164, Refresh);
     REGISTER_MOVE(165, Memento);
     REGISTER_MOVE(166, AncientSong);

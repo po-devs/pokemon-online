@@ -17,7 +17,7 @@
 
 
 107#whirlwind
-13-3_16*2_239*2_327_87#Fly
+13-3_16*2_239*2_327_87_542#Fly
 10#bind-inflict damage every turn
 
 
@@ -338,7 +338,7 @@
 
 11#frenzy plant
 
-13-0_16*2_239*2_327_87#bounce
+13-0_16*2_239*2_327_87_542#bounce
 
 
 23#covet
@@ -505,7 +505,7 @@
 159#Shell Crack
 
 117-0#Evil Eye
-13-5_16*2_239*2_327_87#Free Fall
+13-5_16*2_239*2_327_87_542#Free Fall
 
 107#Overhead Throw
 160#Complete Burn
@@ -540,7 +540,7 @@
 
 
 
-163#Wind Storm
+152#Wind Storm
 
 
 

@@ -772,6 +772,10 @@ BattleChoices BattleSituation::createChoice(int slot)
         }
     }
 
+    if (linked(slot, "FreeFalled")) {
+        ret.switchAllowed = false;
+    }
+
     return ret;
 }
 
@@ -1700,7 +1704,7 @@ bool BattleSituation::testStatus(int player)
 
     if (poke(player).status() == Pokemon::Paralysed) {
         //MagicGuard
-        if (!hasWorkingAbility(player, Ability::MagicGuard) && true_rand() % 4 == 0) {
+        if ( (gen() > 4 || !hasWorkingAbility(player, Ability::MagicGuard)) && true_rand() % 4 == 0) {
             notify(All, StatusMessage, player, qint8(PrevParalysed));
             return false;
         }
@@ -2064,6 +2068,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    bool hit = num > 1;
 
             int hitcount = 0;
+            bool hitting = false;
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()++) {
                 turnMemory(target)["HadSubstitute"] = false;
 		bool sub = hasSubstitute(target);
@@ -2082,8 +2087,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		    int damage = calculateDamage(player, target);
 		    inflictDamage(target, damage, player, true);
                     hitcount += 1;
+                    hitting = true;
 		} else {
+                    turnMemory(player).remove("CustomDamage");
 		    calleffects(player, target, "CustomAttackingDamage");
+
+                    if (turnMemory(player).contains("CustomDamage")) {
+                        int damage = turnMemory(player).value("CustomDamage").toInt();
+                        inflictDamage(target, damage, player, true);
+                        hitting = true;
+                    }
 		}
 
 		calleffects(player, target, "UponAttackSuccessful");
@@ -2092,16 +2105,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
                 healDamage(player, target);
 
-                if (tmove(player).flags & Move::ContactFlag) {
-		    if (!sub)
-			callieffects(target, player, "UponPhysicalAssault");
-                    callaeffects(target,player,"UponPhysicalAssault");
-                }
+                if (hitting) {
+                    if (tmove(player).flags & Move::ContactFlag) {
+                        if (!sub)
+                            callieffects(target, player, "UponPhysicalAssault");
+                        callaeffects(target,player,"UponPhysicalAssault");
+                    }
 
-                if (!sub) {
-                    callaeffects(target, player, "UponBeingHit");
+                    if (!sub) {
+                        callaeffects(target, player, "UponBeingHit");
+                    }
+                    callieffects(target, player, "UponBeingHit");
                 }
-                callieffects(target, player, "UponBeingHit");
 
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
 		applyMoveStatMods(player, target);
@@ -2156,7 +2171,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag))
             {
                 sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
-                return;
+                continue;
             }
 
 	    calleffects(player, target, "BeforeHitting");
@@ -3308,14 +3323,17 @@ void BattleSituation::devourBerry(int s, int berry, int t)
 
 void BattleSituation::acqItem(int player, int item) {
     if (poke(player).item() != 0)
-        loseItem(player);
+        loseItem(player, false);
     poke(player).item() = item;
     ItemEffect::setup(poke(player).item(),player,*this);
 }
 
-void BattleSituation::loseItem(int player)
+void BattleSituation::loseItem(int player, bool real)
 {
     poke(player).item() = 0;
+    if (real && hasWorkingAbility(player, Ability::Unburden)) {
+        pokeMemory(player)["Unburdened"] = true;
+    }
 }
 
 void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId &newforme)
