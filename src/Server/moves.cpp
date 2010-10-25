@@ -1814,10 +1814,11 @@ struct MMBounce : public MM
         }
         b.changeSprite(s, 0);
 
-        if (poke(b,s).contains("FreeFalledPokemon")) {
-            int t = poke(b,s)["FreeFalledPokemon"].toInt();
+        if (b.linked(s, "FreeFalledPokemon")) {
+            int t = b.linker(s, "FreeFalledPokemon");;
             b.changeSprite(t, 0);
             poke(b,t).remove("FreeFalledBy");
+            poke(b,s).remove("FreeFalledPokemonBy");
         }
     }
 
@@ -1846,7 +1847,7 @@ struct MMBounce : public MM
             turn(b,s)["WeatherSpecialed"] = true;
         if (att == Move::FreeFall) {
             b.link(s, t, "FreeFalled");
-            poke(b,s)["FreeFalledPokemon"] = t;
+            b.link(t, s, "FreeFalledPokemon");
             b.changeSprite(t, -1);
             addFunction(poke(b,t), "TestEvasion", "Bounce", &dgaf);
             addFunction(poke(b,t), "DetermineAttackPossible", "Bounce", &dap);
