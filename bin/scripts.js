@@ -36,7 +36,7 @@ init : function() {
 	if (typeof(channelTopics) == 'undefined')
 		channelTopics = [];
 	
-	var dwlist = ["Munna", "Mushaana", "Darumakka", "Hihidaruma", "Eevee", "Umbreon", "Jolteon", "Vaporeon", "Flareon", "Espeon", "Leafeon", "Glaceon",
+	var dwlist = ["Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle", "Wartortle", "Blastoise","Munna", "Mushaana", "Darumakka", "Hihidaruma", "Eevee", "Umbreon", "Jolteon", "Vaporeon", "Flareon", "Espeon", "Leafeon", "Glaceon",
  "Bellsprout", "Weepinbell", "Victreebel", "Nidoran-M", "Nidorino", "Nidoking", "Sentret", "Furret",
 	"Sunkern", "Sunflora", "Hoppip", "Skiploom", "Jumpluff", "Lickitung", "Lickylicky", "Ponyta", "Rapidash",
 	"Exeggcute", "Exeggutor", "Farfetch'd", "Nidoran-F", "Nidorina", "Nidoqueen", "Stantler", "Oddish", "Gloom", "Vileplume",
