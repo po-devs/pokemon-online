@@ -1651,7 +1651,7 @@ void BattleSituation::testCritical(int player, int target)
 bool BattleSituation::testStatus(int player)
 {
     /* The second test is for abilities like Magic Mirror to not test status, because technically they are using an attack */
-    if (turnMemory(player).value("HasPassedStatus") == true || b.battleMemory().contains("CoatingAttackNow")) {
+    if (turnMemory(player).value("HasPassedStatus") == true || battleMemory().contains("CoatingAttackNow")) {
         return true;
     }
 
