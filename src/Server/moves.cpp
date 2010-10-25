@@ -4953,9 +4953,10 @@ struct MMWonderRoom : public MM {
 
     static void et(int s, int, BS &b) {
         inc(b.battleMemory()["WonderRoomCount"], -1);
-        if (b.battleMemory()["WonderRoomCount"].toInt() == 0) {
+        if (b.battleMemory()["WonderRoomCount"].toInt() <= 0) {
             b.sendMoveMessage(168,1,s,Pokemon::Psychic);
             b.battleMemory().remove("WonderRoomCount");
+            removeFunction(b.battleMemory(), "EndTurn9", "WonderRoom");
         }
     }
 };
