@@ -1793,7 +1793,7 @@ struct MMBounce : public MM
     /* Called with freefall */
     static void bcd (int s, int t, BS &b) {
         /* Airbourne targets don't receive damage */
-        if (b.isFlying(t)) {
+        if (b.hasType(t, Type::Flying)) {
             tmove(b,s).power = 1;
         }
     }
@@ -1814,10 +1814,11 @@ struct MMBounce : public MM
         }
         b.changeSprite(s, 0);
 
-        if (poke(b,s).contains("FreeFalledPokemon")) {
-            int t = poke(b,s)["FreeFalledPokemon"].toInt();
+        if (b.linked(s, "FreeFalledPokemon")) {
+            int t = b.linker(s, "FreeFalledPokemon");;
             b.changeSprite(t, 0);
             poke(b,t).remove("FreeFalledBy");
+            poke(b,s).remove("FreeFalledPokemonBy");
         }
     }
 
@@ -1846,7 +1847,7 @@ struct MMBounce : public MM
             turn(b,s)["WeatherSpecialed"] = true;
         if (att == Move::FreeFall) {
             b.link(s, t, "FreeFalled");
-            poke(b,s)["FreeFalledPokemon"] = t;
+            b.link(t, s, "FreeFalledPokemon");
             b.changeSprite(t, -1);
             addFunction(poke(b,t), "TestEvasion", "Bounce", &dgaf);
             addFunction(poke(b,t), "DetermineAttackPossible", "Bounce", &dap);
@@ -2792,29 +2793,31 @@ struct MMJumpKick : public MM
     }
 
     static void asf(int s, int t, BS &b) {
-	int typemod;
-	int typeadv[] = {b.getType(t, 1), b.getType(t, 2)};
-	int type = MM::type(b,s);
-        if (typeadv[0] == Type::Ghost) {
-            if (b.gen() <= 3)
-                return;
-	    typemod = TypeInfo::Eff(type, typeadv[1]);
-        } else if (typeadv[1] == Type::Ghost) {
-            if (b.gen() <= 3)
-                return;
-	    typemod = TypeInfo::Eff(type, typeadv[0]);
-	} else {
-	    typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
-	}
-	turn(b,s)["TypeMod"] = typemod;
-        turn(b,s)["Stab"] = b.hasType(s, Type::Fighting) ? 3 : 2;
         int damage;
         if (b.gen() >= 5)
-            damage = std::min(b.calculateDamage(s,t)/2, b.poke(s).totalLifePoints()/2);
-        else if (b.gen() == 4)
-            damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
-        else
-            damage = std::min(b.calculateDamage(s,t)/8, b.poke(t).totalLifePoints()/2);
+            damage = b.poke(s).totalLifePoints()/2;
+        else {
+            int typemod;
+            int typeadv[] = {b.getType(t, 1), b.getType(t, 2)};
+            int type = MM::type(b,s);
+            if (typeadv[0] == Type::Ghost) {
+                if (b.gen() <= 3)
+                    return;
+                typemod = TypeInfo::Eff(type, typeadv[1]);
+            } else if (typeadv[1] == Type::Ghost) {
+                if (b.gen() <= 3)
+                    return;
+                typemod = TypeInfo::Eff(type, typeadv[0]);
+            } else {
+                typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
+            }
+            turn(b,s)["TypeMod"] = typemod;
+            turn(b,s)["Stab"] = b.hasType(s, Type::Fighting) ? 3 : 2;
+            if (b.gen() == 4)
+                damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
+            else
+                damage = std::min(b.calculateDamage(s,t)/8, b.poke(t).totalLifePoints()/2);
+        }
         b.sendMoveMessage(64,0,s,Type::Fighting);
 	b.inflictDamage(s, damage, s, true);
     }
@@ -4951,9 +4954,10 @@ struct MMWonderRoom : public MM {
 
     static void et(int s, int, BS &b) {
         inc(b.battleMemory()["WonderRoomCount"], -1);
-        if (b.battleMemory()["WonderRoomCount"].toInt() == 0) {
+        if (b.battleMemory()["WonderRoomCount"].toInt() <= 0) {
             b.sendMoveMessage(168,1,s,Pokemon::Psychic);
             b.battleMemory().remove("WonderRoomCount");
+            removeFunction(b.battleMemory(), "EndTurn9", "WonderRoom");
         }
     }
 };
