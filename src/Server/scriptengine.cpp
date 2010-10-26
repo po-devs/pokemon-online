@@ -555,6 +555,11 @@ void ScriptEngine::changeTier(int id, const QString &tier)
     }
 }
 
+void ScriptEngine::reloadTiers()
+{
+    TierMachine::obj()->load();
+}
+
 void ScriptEngine::changePokeItem(int id, int slot, int item)
 {
     if (!testPlayer("changePokeItem(id, slot, item)", id) || !testRange("changePokeItem(id, slot, item)", slot, 0, 5))

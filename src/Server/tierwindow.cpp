@@ -83,8 +83,6 @@ void TierWindow::done()
 {
     TierMachine::obj()->fromString(dataTree->toXml());
     TierMachine::obj()->save();
-
-    emit tiersChanged();
 }
 
 void TierWindow::openCategoryEdit(TierCategory *c)
