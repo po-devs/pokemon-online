@@ -25,9 +25,16 @@ TierMachine::TierMachine()
 
     ithread->start();
 
+    load();
+}
+
+void TierMachine::load()
+{
     QFile in("tiers.xml");
     in.open(QIODevice::ReadOnly);
     fromString(QString::fromUtf8(in.readAll()));
+
+    emit tiersChanged();
 }
 
 void TierMachine::processQuery(QSqlQuery *q, const QVariant &data, int queryNo, WaitingObject *w)
