@@ -543,7 +543,7 @@ struct IMRuggedHelmet : public IM
     }
 
     static void upa( int s, int t, BS &b) {
-        if (!b.koed(t)) {
+        if (!b.koed(t) && !b.hasWorkingAbility(t, Ability::MagicGuard)) {
             b.sendItemMessage(34,s,0,t);
             b.inflictDamage(t,b.poke(t).totalLifePoints()/6,s,false);
         }
