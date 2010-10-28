@@ -183,8 +183,6 @@ void ServerWidget::openTiersWindow()
     TierWindow *w = new TierWindow();
 
     w->show();
-
-    connect(w, SIGNAL(tiersChanged()), server, SLOT(tiersChanged()));
 }
 
 void ServerWidget::openBattleConfigWindow()

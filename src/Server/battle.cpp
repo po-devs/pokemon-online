@@ -772,6 +772,10 @@ BattleChoices BattleSituation::createChoice(int slot)
         }
     }
 
+    if (linked(slot, "FreeFalled")) {
+        ret.switchAllowed = false;
+    }
+
     return ret;
 }
 
@@ -1646,7 +1650,8 @@ void BattleSituation::testCritical(int player, int target)
 
 bool BattleSituation::testStatus(int player)
 {
-    if (turnMemory(player).value("HasPassedStatus") == true) {
+    /* The second test is for abilities like Magic Mirror to not test status, because technically they are using an attack */
+    if (turnMemory(player).value("HasPassedStatus") == true || battleMemory().contains("CoatingAttackNow")) {
         return true;
     }
 
@@ -2064,6 +2069,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 	    bool hit = num > 1;
 
             int hitcount = 0;
+            bool hitting = false;
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()++) {
                 turnMemory(target)["HadSubstitute"] = false;
 		bool sub = hasSubstitute(target);
@@ -2082,8 +2088,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 		    int damage = calculateDamage(player, target);
 		    inflictDamage(target, damage, player, true);
                     hitcount += 1;
+                    hitting = true;
 		} else {
+                    turnMemory(player).remove("CustomDamage");
 		    calleffects(player, target, "CustomAttackingDamage");
+
+                    if (turnMemory(player).contains("CustomDamage")) {
+                        int damage = turnMemory(player).value("CustomDamage").toInt();
+                        inflictDamage(target, damage, player, true);
+                        hitting = true;
+                    }
 		}
 
 		calleffects(player, target, "UponAttackSuccessful");
@@ -2092,16 +2106,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
                 healDamage(player, target);
 
-                if (tmove(player).flags & Move::ContactFlag) {
-		    if (!sub)
-			callieffects(target, player, "UponPhysicalAssault");
-                    callaeffects(target,player,"UponPhysicalAssault");
-                }
+                if (hitting) {
+                    if (tmove(player).flags & Move::ContactFlag) {
+                        if (!sub)
+                            callieffects(target, player, "UponPhysicalAssault");
+                        callaeffects(target,player,"UponPhysicalAssault");
+                    }
 
-                if (!sub) {
-                    callaeffects(target, player, "UponBeingHit");
+                    if (!sub) {
+                        callaeffects(target, player, "UponBeingHit");
+                    }
+                    callieffects(target, player, "UponBeingHit");
                 }
-                callieffects(target, player, "UponBeingHit");
 
 		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
 		applyMoveStatMods(player, target);

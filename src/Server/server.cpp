@@ -116,6 +116,7 @@ void Server::start(){
     }
 
     TierMachine::init();
+    connect(TierMachine::obj(), SIGNAL(tiersChanged()), SLOT(tiersChanged()));
 
     AntiDos::obj()->init();
 

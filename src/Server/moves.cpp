@@ -729,11 +729,15 @@ struct MMOHKO : public MM
 {
     MMOHKO() {
 	functions["DetermineAttackFailure"] = &daf;
-        functions["CustomAttackingDamage"] = &uas;
+        functions["CustomAttackingDamage"] = &cad;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void cad(int s, int t, BS &b) {
+        turn(b,s)["CustomDamage"] = b.poke(t).totalLifePoints();
     }
 
     static void uas(int s, int t, BS &b) {
-	b.inflictDamage(t, b.poke(t).totalLifePoints(), s, true);
         if (b.koed(t)) {
             b.sendMoveMessage(43,1,s,type(b,s));
         }
@@ -820,7 +824,7 @@ struct MMSuperFang : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        b.inflictDamage(t,b.poke(t).lifePoints()/2, s, true);
+        turn(b,s)["CustomDamage"] = b.poke(t).lifePoints()/2;
     }
 };
 
@@ -1384,8 +1388,8 @@ struct MMNightShade : public MM
 	functions["CustomAttackingDamage"] = &uas;
     }
 
-    static void uas(int s, int t, BS &b) {
-        b.inflictDamage(t, fpoke(b,s).level, s, true);
+    static void uas(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = fpoke(b,s).level;
     }
 };
 
@@ -1527,8 +1531,8 @@ struct MMDragonRage : public MM
 	functions["CustomAttackingDamage"] = &uas;
     }
 
-    static void uas(int s, int t, BS &b) {
-	b.inflictDamage(t, turn(b,s)["DragonRage_Arg"].toInt(), s, true);
+    static void uas(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] =  turn(b,s)["DragonRage_Arg"];
     }
 };
 
@@ -1681,8 +1685,8 @@ struct MMBide : public MM
         turn(b,s)["NoChoice"] = true;
     }
 
-    static void ccd(int s, int t, BS &b) {
-	b.inflictDamage(t, 2*poke(b,s)["BideDamageCount"].toInt(),s,true);
+    static void ccd(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = 2*poke(b,s)["BideDamageCount"].toInt();
     }
 };
 
@@ -1789,7 +1793,7 @@ struct MMBounce : public MM
     /* Called with freefall */
     static void bcd (int s, int t, BS &b) {
         /* Airbourne targets don't receive damage */
-        if (b.isFlying(t)) {
+        if (b.hasType(t, Type::Flying)) {
             tmove(b,s).power = 1;
         }
     }
@@ -1810,10 +1814,11 @@ struct MMBounce : public MM
         }
         b.changeSprite(s, 0);
 
-        if (poke(b,s).contains("FreeFalledPokemon")) {
-            int t = poke(b,s)["FreeFalledPokemon"].toInt();
+        if (b.linked(s, "FreeFalledPokemon")) {
+            int t = b.linker(s, "FreeFalledPokemon");;
             b.changeSprite(t, 0);
             poke(b,t).remove("FreeFalledBy");
+            poke(b,s).remove("FreeFalledPokemonBy");
         }
     }
 
@@ -1842,7 +1847,7 @@ struct MMBounce : public MM
             turn(b,s)["WeatherSpecialed"] = true;
         if (att == Move::FreeFall) {
             b.link(s, t, "FreeFalled");
-            poke(b,s)["FreeFalledPokemon"] = t;
+            b.link(t, s, "FreeFalledPokemon");
             b.changeSprite(t, -1);
             addFunction(poke(b,t), "TestEvasion", "Bounce", &dgaf);
             addFunction(poke(b,t), "DetermineAttackPossible", "Bounce", &dap);
@@ -1880,7 +1885,7 @@ struct MMBounce : public MM
 
     static void dap(int s, int, BS &b) {
         if (b.linked(s, "FreeFalled")) {
-            b.sendMoveMessage(s, 6, s);
+            b.sendMoveMessage(13, 6, s);
             turn(b,s) ["ImpossibleToMove"] = true;
             return;
         }
@@ -1924,8 +1929,8 @@ struct MMCounter : public MM
             turn(b,s)["Failed"] = true;
     }
 
-    static void cad(int s, int t, BS &b) {
-	b.inflictDamage(t, turn(b,s)["CounterDamage"].toInt(), s, true);
+    static void cad(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = turn(b,s)["CounterDamage"].toInt();
     }
 };
 
@@ -1951,8 +1956,8 @@ struct MMMetalBurst : public MM
         turn(b,s)["CounterDamage"] = dam * 3 / 2;
     }
 
-    static void cad(int s, int t, BS &b) {
-        b.inflictDamage(t, turn(b,s)["CounterDamage"].toInt(), s, true);
+    static void cad(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = turn(b,s)["CounterDamage"];
     }
 };
 
@@ -2269,7 +2274,7 @@ struct MMEndeavor : public MM
     }
 
     static void cad(int s, int t, BS &b) {
-	b.inflictDamage(t, b.poke(t).lifePoints()-b.poke(s).lifePoints(),s,true);
+        turn(b,s)["CustomDamage"] = b.poke(t).lifePoints()-b.poke(s).lifePoints();
     }
 };
 
@@ -2788,29 +2793,31 @@ struct MMJumpKick : public MM
     }
 
     static void asf(int s, int t, BS &b) {
-	int typemod;
-	int typeadv[] = {b.getType(t, 1), b.getType(t, 2)};
-	int type = MM::type(b,s);
-        if (typeadv[0] == Type::Ghost) {
-            if (b.gen() <= 3)
-                return;
-	    typemod = TypeInfo::Eff(type, typeadv[1]);
-        } else if (typeadv[1] == Type::Ghost) {
-            if (b.gen() <= 3)
-                return;
-	    typemod = TypeInfo::Eff(type, typeadv[0]);
-	} else {
-	    typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
-	}
-	turn(b,s)["TypeMod"] = typemod;
-        turn(b,s)["Stab"] = b.hasType(s, Type::Fighting) ? 3 : 2;
         int damage;
         if (b.gen() >= 5)
-            damage = std::min(b.calculateDamage(s,t)/2, b.poke(s).totalLifePoints()/2);
-        else if (b.gen() == 4)
-            damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
-        else
-            damage = std::min(b.calculateDamage(s,t)/8, b.poke(t).totalLifePoints()/2);
+            damage = b.poke(s).totalLifePoints()/2;
+        else {
+            int typemod;
+            int typeadv[] = {b.getType(t, 1), b.getType(t, 2)};
+            int type = MM::type(b,s);
+            if (typeadv[0] == Type::Ghost) {
+                if (b.gen() <= 3)
+                    return;
+                typemod = TypeInfo::Eff(type, typeadv[1]);
+            } else if (typeadv[1] == Type::Ghost) {
+                if (b.gen() <= 3)
+                    return;
+                typemod = TypeInfo::Eff(type, typeadv[0]);
+            } else {
+                typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
+            }
+            turn(b,s)["TypeMod"] = typemod;
+            turn(b,s)["Stab"] = b.hasType(s, Type::Fighting) ? 3 : 2;
+            if (b.gen() == 4)
+                damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
+            else
+                damage = std::min(b.calculateDamage(s,t)/8, b.poke(t).totalLifePoints()/2);
+        }
         b.sendMoveMessage(64,0,s,Type::Fighting);
 	b.inflictDamage(s, damage, s, true);
     }
@@ -3554,8 +3561,8 @@ struct MMPsywave : public MM
 	functions["CustomAttackingDamage"] = &cad;
     }
 
-    static void cad (int s, int t, BS &b) {
-        b.inflictDamage(t, fpoke(b,s).level * (5 + (b.true_rand() % 11)) / 10,s,true);
+    static void cad (int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = fpoke(b,s).level * (5 + (b.true_rand() % 11)) / 10;
     }
 };
 
@@ -4947,9 +4954,10 @@ struct MMWonderRoom : public MM {
 
     static void et(int s, int, BS &b) {
         inc(b.battleMemory()["WonderRoomCount"], -1);
-        if (b.battleMemory()["WonderRoomCount"].toInt() == 0) {
+        if (b.battleMemory()["WonderRoomCount"].toInt() <= 0) {
             b.sendMoveMessage(168,1,s,Pokemon::Psychic);
             b.battleMemory().remove("WonderRoomCount");
+            removeFunction(b.battleMemory(), "EndTurn9", "WonderRoom");
         }
     }
 };

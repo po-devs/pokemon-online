@@ -29,6 +29,7 @@ public:
 
     TierMachine();
 
+    void load();
     void clear();
     void save();
 
@@ -60,7 +61,8 @@ public:
     TierTree *getDataTree() const;
 
     static const int playersByPage = 40;
-
+signals:
+    void tiersChanged();
 public slots:
     void processQuery(QSqlQuery*,const QVariant &,int,WaitingObject*);
     void insertMember(QSqlQuery*,void *,int);
