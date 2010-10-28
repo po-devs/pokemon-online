@@ -18,8 +18,6 @@ public:
     void openCategoryEdit(TierCategory *c);
 public slots:
     void editingRequested(QTreeWidgetItem *item);
-signals:
-    void tiersChanged();
 private slots:
     void done();
     void updateTier();

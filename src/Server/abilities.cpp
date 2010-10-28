@@ -1361,6 +1361,9 @@ struct AMEncourage : public AM
         tmove(b,s).classification = Move::StandardMove;
         tmove(b,s).flinchRate = 0;
         turn(b,s)["BasePowerAbilityModifier"] = 6;
+
+        /* Ugly, to tell life orb not to activate =/ */
+        turn(b,s)["NoLifeOrbActivation"] = true;
     }
 };
 

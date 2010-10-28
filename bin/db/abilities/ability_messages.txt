@@ -83,7 +83,7 @@
 
 
 
-%s avoided %t's attack thanks to its Telepathy!
+%s avoided %f's attack thanks to its Telepathy!
 %s regains health with its Regeneration!
 
 %s's gained a %i thanks to its Harvest!
