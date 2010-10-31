@@ -91,7 +91,7 @@ void Channel::showContextMenu(const QPoint &requested)
             }
         }
 
-        menu->exec(client->mapToGlobal(requested));
+        menu->exec(myplayers->mapToGlobal(requested));
     }
 }
 
