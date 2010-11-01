@@ -218,7 +218,7 @@ public:
     Q_INVOKABLE void modifyMovePower(int moveNum, unsigned char power, int gen = GEN_MAX);
     Q_INVOKABLE void modifyMoveAccuracy(int moveNum, char accuracy, int gen = GEN_MAX);
     Q_INVOKABLE void modifyMovePP(int moveNum, char pp, int gen = GEN_MAX);
-    Q_INVOKABLE void modifyMovePriority(int moveNum, signed char priority, int gen = GEN_MAX);
+    Q_INVOKABLE void modifyMovePriority(int moveNum, qint8 priority, int gen = GEN_MAX);
    
     Q_INVOKABLE QScriptValue banList();
     Q_INVOKABLE void ban(QString name);
