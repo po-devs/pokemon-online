@@ -24,8 +24,9 @@ void Network::close() {
         QTcpSocket *sock = mysocket;
         mysocket = NULL;
         sock->disconnect();
+        connect(sock, SIGNAL(disconnected()), sock, SLOT(deleteLater()));
         sock->disconnectFromHost();
-        sock->deleteLater();
+
         emit disconnected();
     }
 }

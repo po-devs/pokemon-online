@@ -183,6 +183,7 @@ public slots:
     void showPlayerEvents(bool);
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
+    void movePlayerList(bool);
     void ignoreServerVersion(bool);
     void versionDiff(const QString &a, const QString &b);
     void tierListReceived(const QByteArray &array);
