@@ -714,8 +714,6 @@ void Player::loggedIn(TeamInfo &team,bool ladder, bool showteam, QColor c)
     relay().notify(NetworkServ::VersionControl, VERSION);
 
     if (!testNameValidity(team.name)) {
-        sendMessage("Invalid name");
-        kick();
         return;
     }
 
@@ -1020,6 +1018,9 @@ void Player::recvTeam(TeamInfo &team)
         findTierAndRating();
         return;
     }
+
+    if (!testNameValidity(team.name))
+        return;
 
     changeWaitingTeam(team);
     testAuthentification(team.name);

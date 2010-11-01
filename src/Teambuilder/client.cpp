@@ -118,6 +118,13 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     /* Default channel on to display messages */
     channelPlayers(0);
+
+    /* move player tab to right if user has selected it 
+     * this needs to be done at the end of this function to work properly 
+     */
+    if (settings.value("user_list_at_right").toBool()) {
+        s->addWidget(mytab);
+    }
 }
 
 Client::~Client()
@@ -759,6 +766,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     sortByTier->setChecked(s.value("sort_players_by_tier").toBool());
     sortBT = sortByTier->isChecked();
 
+    QAction *list_right = menuActions->addAction(tr("Move player list to &right"));
+    list_right->setCheckable(true);
+    connect(list_right, SIGNAL(triggered(bool)), SLOT(movePlayerList(bool)));
+    list_right->setChecked(s.value("user_list_at_right").toBool());
+
     mytiermenu = menuBar->addMenu(tr("&Tiers"));
 
     QMenu *battleMenu = menuBar->addMenu(tr("&Battle options", "Menu"));
@@ -958,6 +970,21 @@ void Client::sortPlayersCountingTiers(bool byTier)
     } else {
         foreach(Channel *c, mychannels)
             c->sortAllPlayersNormally();
+    }
+}
+
+void Client::movePlayerList(bool right)
+{
+    QSettings s;
+    s.setValue("user_list_at_right", right);
+
+    QWidget *mytab = playersW->parentWidget()->parentWidget();
+    QWidget *chatcontainer = mainChat->parentWidget();
+    QSplitter *splitter = reinterpret_cast<QSplitter*>( mytab->parentWidget() );
+    if (right) {
+        splitter->addWidget(mytab); 
+    } else {
+        splitter->addWidget(chatcontainer); 
     }
 }
 
