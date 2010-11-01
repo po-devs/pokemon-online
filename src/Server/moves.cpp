@@ -4820,16 +4820,14 @@ struct MMIncinerate : public MM {
 
 struct MMDesperation : public MM {
     MMDesperation() {
-        functions["MoveSettings"] = &ms;
         functions["CustomAttackingDamage"] = &uas;
     }
 
-    static void ms(int s, int, BS &b) {
-        turn(b,s)["PreviousHP"] = b.poke(s).lifePoints();
-    }
-
     static void uas(int s, int t, BS &b) {
-        b.inflictDamage(t, turn(b,s)["PreviousHP"].toInt(), s, true);
+        int hp = b.poke(s).lifePoints();
+        b.selfKoer() = s;
+        b.koPoke(s, s);
+        b.inflictDamage(t, hp, s, true);
     }
 };
 
