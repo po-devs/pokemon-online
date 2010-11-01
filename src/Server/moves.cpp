@@ -2304,9 +2304,8 @@ struct MMEndure : public MM
     }
 
     static void uodr(int s, int, BS &b) {
-	if (b.poke(s).lifePoints() == 1) {
-	    b.sendMoveMessage(35,0,s);
-	}
+        turn(b,s)["SurviveReason"] = true;
+        b.sendMoveMessage(35,0,s);
     }
 };
 
@@ -2314,9 +2313,15 @@ struct MMFalseSwipe : public MM
 {
     MMFalseSwipe() {
 	functions["BeforeCalculatingDamage"] = &bcd;
+        functions["UponSelfSurvival"] = &uss;
     }
+
     static void bcd(int s, int t, BS &b) {
         turn(b,t)["CannotBeKoedBy"] = s;
+    }
+
+    static void uss(int s, int, BS &b) {
+        turn(b,s)["SurviveReason"] = true;
     }
 };
 

@@ -1612,6 +1612,7 @@ struct AMSturdy : public AM {
 
     static void uss(int s, int , BS &b) {
         b.sendAbMessage(91, 0, s);
+        turn(b,s)["SurviveReason"] = true;
     }
 };
 
