@@ -3185,10 +3185,22 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
                 //Gen 5: sturdy
                 if (turnMemory(player).contains("CannotBeKoedAt") && turnMemory(player)["CannotBeKoedAt"].toInt() == attackCount())
                     callaeffects(player, source, "UponSelfSurvival");
-                else if (turnMemory(player).contains("CannotBeKoedBy") && turnMemory(player)["CannotBeKoedBy"].toInt() == source)
-                    callieffects(player, source, "UponSelfSurvival");
-                else
+
+                if (turnMemory(player).contains("SurviveReason"))
+                    goto end;
+
+                //If it's not an ability it may be false swipe or endure
+                if (turnMemory(player).contains("CannotBeKoedAt") && turnMemory(player)["CannotBeKoedAt"].toInt() == attackCount())
                     calleffects(player, source, "UponSelfSurvival");
+
+                if (turnMemory(player).contains("SurviveReason"))
+                    goto end;
+
+                //Or, ultimately, it's an item
+                callieffects(player, source, "UponSelfSurvival");
+
+                end:
+                turnMemory(player).remove("SurviveReason");
             }
 	}
     }

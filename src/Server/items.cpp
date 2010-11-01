@@ -152,26 +152,19 @@ struct IMFocusBand : public IM
 
     static void btd(int s, int t, BS &b) {
         if (b.true_rand() % 10 == 0) {
-            turn(b,s)["CannotBeKoedBy"] = t;
-        } else if (b.gen() >= 5){
-            turn(b,s).remove("CannotBeKoedBy");
+            if (b.gen() <= 4)
+                turn(b,s)["CannotBeKoedBy"] = t;
+            else
+                turn(b,s)["CannotBeKoedAt"] = b.attackCount();
         }
     }
 
     static void uodr(int s, int t, BS &b) {
 	if (b.koed(s))
 	    return;
-        if (turn(b,s).contains("CannotBeKoedBy") && turn(b,s)["CannotBeKoedBy"].toInt() == t && b.poke(s).lifePoints() == 1) {
-	    b.sendItemMessage(4, s);
-	}
 
-        /* future: if another thing touches CannotBeKoedBy, make sure focus sash doesn't remove it when it shouldn't.
-           Focus band is ok because you can't have 2 items at once */
-        /* list of other effects: false swipe, focus band */
-        /* In gen 5, focus sash doesn't block all the hits of a multi hit attack */
-        if (b.gen() >= 5) {
-            turn(b,s).remove("CannotBeKoedBy");
-        }
+        b.sendItemMessage(4, s);
+        turn(b,s)["SurviveReason"] = true;
     }
 };
 
@@ -179,29 +172,26 @@ struct IMFocusSash : public IM
 {
     IMFocusSash() {
 	functions["BeforeTakingDamage"] = &btd;
-        functions["UponSelfSurvival"] = &uodr;
+        functions["UponSelfSurvival"] = &uss;
     }
 
     static void btd(int s, int t, BS &b) {
 	if(b.poke(s).isFull()) {
-            turn(b,s)["CannotBeKoedBy"] = t;
+            if (b.gen() <= 4)
+                turn(b,s)["CannotBeKoedBy"] = t;
+            else
+                turn(b,s)["CannotBeKoedAt"] = b.attackCount();
 	}
     }
 
-    static void uodr(int s, int t, BS &b) {
+    static void uss(int s, int, BS &b) {
         if (b.koed(s))
 	    return;
-        if (turn(b,s).contains("CannotBeKoedBy") && turn(b,s)["CannotBeKoedBy"].toInt() == t && b.poke(s).lifePoints() == 1) {
-	    b.sendItemMessage(5, s);
-	    b.disposeItem(s);
-	}
-        /* future: if another thing touches CannotBeKoedBy, make sure focus sash doesn't remove it when it shouldn't.
-           Focus band is ok because you can't have 2 items at once */
-        /* list of other effects: false swipe, focus band */
-        /* In gen 5, focus sash doesn't block all the hits of a multi hit attack */
-        if (b.gen() >= 5) {
-            turn(b,s).remove("CannotBeKoedBy");
-        }
+
+        b.sendItemMessage(5, s);
+        b.disposeItem(s);
+
+        turn(b,s)["SurviveReason"] = true;
     }
 };
 
