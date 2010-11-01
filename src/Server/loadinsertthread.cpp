@@ -4,7 +4,7 @@
 
 void LoadThread::run()
 {
-    QString dbname = QString::number(int(QThread::currentThreadId()));
+    QString dbname = QString::number(long(QThread::currentThreadId()));
 
     SQLCreator::createSQLConnection(dbname);
     QSqlDatabase db = QSqlDatabase::database(dbname);
