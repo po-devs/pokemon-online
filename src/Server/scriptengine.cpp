@@ -1613,7 +1613,7 @@ void ScriptEngine::modifyMovePP(int moveNum, char pp, int gen)
     MoveInfo::setPP(moveNum, pp, gen);
 }
 
-void ScriptEngine::modifyMovePriority(int moveNum, signed char priority, int gen)
+void ScriptEngine::modifyMovePriority(int moveNum, qint8 priority, int gen)
 {
     MoveInfo::setPriority(moveNum, priority, gen);
 }
