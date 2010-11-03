@@ -228,6 +228,8 @@ public:
     Q_INVOKABLE QScriptValue weatherNum(const QString &weatherName);
     Q_INVOKABLE QScriptValue weather(int weatherId);
 
+    Q_INVOKABLE int teamPokeAbility(int id, int slot);
+
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
 signals:
