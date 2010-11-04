@@ -27,10 +27,6 @@ int main(int argc, char *argv[])
 
     QCoreApplication a(argc, argv);
 
-    /* Names to use later for QSettings */
-    QCoreApplication::setApplicationName("Registry for Pokeymon-Online");
-    QCoreApplication::setOrganizationName("Dreambelievers");
-
     MainWindow w;
     return a.exec();
 }
