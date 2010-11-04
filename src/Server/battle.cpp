@@ -3728,17 +3728,20 @@ int BattleSituation::getBoostedStat(int player, int stat)
 {
     if (stat == Attack && turnMemory(player).contains("CustomAttackStat")) {
         return turnMemory(player)["CustomAttackStat"].toInt();
-    } else {
+    } else if (stat == Attack && turnMemory(player).contains("UnboostedAttackStat")) {
+        return turnMemory(player)["UnboostedAttackStat"].toInt() * getStatBoost(player, Attack);
+    } else{
+        int givenStat = stat;
         /* Not sure on the order here... haha. */
         /* Attack and defense switched */
         if (pokeMemory(player).contains("PowerTricked") && (stat == 1 || stat == 2)) {
-            stat = 3 - stat;
+            givenStat = 3 - stat;
         }
         /* Wonder room: attack & sp attack switched, 5th gen */
         if (battleMemory().contains("WonderRoomCount") && (stat == 2 || stat == 3)) {
             stat = 5 - stat;
         }
-        return fpoke(player).stats[stat] *getStatBoost(player, stat);
+        return fpoke(player).stats[givenStat] *getStatBoost(player, stat);
     }
 }
 
