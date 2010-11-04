@@ -1700,3 +1700,12 @@ void ScriptEngine::changeAnnouncement(const QString &html) {
 QScriptValue ScriptEngine::getAnnouncement() {
         return myserver->serverAnnouncement;
     }
+
+int ScriptEngine::teamPokeAbility(int id, int slot)
+{
+    if (!loggedIn(id) || slot < 0 || slot >= 6) {
+        return Ability::NoAbility;
+    } else {
+        return myserver->player(id)->team().poke(slot).ability();
+    }
+}
