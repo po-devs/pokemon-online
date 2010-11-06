@@ -213,6 +213,7 @@ private:
 
     Network mysocket;
     QMutex mutex;
+    bool pingedBack;
 };
 
 template<class T>
