@@ -3118,11 +3118,20 @@ int BattleSituation::repeatNum(int player)
     if (min == max) {
 	return min;
     } else if (min == 2 && max == 5) {
-        switch (rand () % 8) {
-        case 0: case 1: case 2: return 2;
-        case 3: case 4: case 5: return 3;
-        case 6: return 4;
-        case 7: default: return 5;
+        if (gen() <= 4) {
+            switch (rand () % 8) {
+            case 0: case 1: case 2: return 2;
+            case 3: case 4: case 5: return 3;
+            case 6: return 4;
+            case 7: default: return 5;
+            }
+        } else {
+            switch (rand () % 6) {
+            case 0: case 1:  return 2;
+            case 2: case 3:  return 3;
+            case 4: return 4;
+            case 5: default: return 5;
+            }
         }
     } else {
         return min + (true_rand() % (max-min));
