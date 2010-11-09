@@ -49,7 +49,7 @@ void ScriptEngine::setPA(const QString &name)
         return;
 
     playerArrays.push_back(str);
-    QScriptValue pa = myengine.newArray();
+    QScriptValue pa = myengine.newObject();
 
     myengine.globalObject().setProperty(name, pa);
 }
