@@ -301,7 +301,8 @@ public slots:
 signals:
     void findBattle(const FindBattleData&);
 private:
-    QCheckBox *sameTier, *rated, *rangeOn, *doubles;
+    QCheckBox *sameTier, *rated, *rangeOn;
+    QComboBox *mode;
     QCheckBox *clauses[ChallengeInfo::numberOfClauses];
     QLineEdit *range;
 };
