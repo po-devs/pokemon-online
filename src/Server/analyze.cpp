@@ -6,7 +6,7 @@
 
 using namespace NetworkServ;
 
-Analyzer::Analyzer(QTcpSocket *sock, int id) : mysocket(sock, id)
+Analyzer::Analyzer(QTcpSocket *sock, int id) : mysocket(sock, id), pingedBack(true)
 {
     connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
     connect(&socket(), SIGNAL(isFull(QByteArray)), this, SLOT(commandReceived(QByteArray)));
@@ -35,6 +35,10 @@ Analyzer::~Analyzer()
 
 void Analyzer::keepAlive()
 {
+    if (!pingedBack) {
+        emit disconnected();
+    }
+    pingedBack = false;
     /* Seems that the keep alive option doesn't work on all computers */
     notify(KeepAlive);
 }
@@ -274,6 +278,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         emit forfeitBattle(id);
         break;
     case KeepAlive:
+        pingedBack = true;
         break;
     case Register:
         if (mysocket.id() != 0)

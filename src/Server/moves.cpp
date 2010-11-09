@@ -859,7 +859,7 @@ struct MMPerishSong : public MM
     static void uas(int s, int, BS &b) {
         for (int t = 0; t < b.numberOfSlots(); t++) {
             if (poke(b,t).contains("PerishSongCount") || b.koed(t)) {
-                return;
+                continue;
             }
             addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
             poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns)) - 1;
@@ -4276,7 +4276,8 @@ struct MMBeatUp : public MM {
         if (b.poke(s, b.repeatCount()).status() != Pokemon::Fine) {
             turn(b,s)["HitCancelled"] = true;
         } else {
-            turn(b,s)["AttackStat"] = b.poke(s, b.repeatCount()).normalStat(Attack);
+            tmove(b,s).power = 5 + (PokemonInfo::BaseStats(fpoke(b,s).id).baseAttack()/10);
+            turn(b,s)["UnboostedAttackStat"] = b.poke(s, b.repeatCount()).normalStat(Attack);
         }
     }
 };

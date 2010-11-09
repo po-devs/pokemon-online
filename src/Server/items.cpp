@@ -316,6 +316,7 @@ struct IMLifeOrb : public IM
             && !b.hasWorkingAbility(s, Ability::MagicGuard)) {
             //b.sendItemMessage(21,s);
             b.inflictDamage(s,b.poke(s).totalLifePoints()/10,s);
+            turn(b,s)["NoLifeOrbActivation"] = true;
 
             /* Self KO Clause */
             if (b.koed(s)) {
