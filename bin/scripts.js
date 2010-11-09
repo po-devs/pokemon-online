@@ -42,7 +42,7 @@ init : function() {
 	"Exeggcute", "Exeggutor", "Farfetch'd", "Nidoran-F", "Nidorina", "Nidoqueen", "Stantler", "Oddish", "Gloom", "Vileplume",
    "Mareep", "Flaaffy", "Ampharos", "Doduo", "Dodrio", "Tangela", "Tangrowth", "Surskit", "Masquerain",
 	"Igglybuff", "Jigglypuff", "Wigglytuff", "Bidoof", "Bibarel", "Kangaskhan", "Lotad", "Lombre", "Ludicolo", "Poochyena", 
-	"Mightyena", "Rattata", "Rattatac", "Shinx", "Luxio", "Luxray", "Taillow", "Swellow"];
+	"Mightyena", "Rattata", "Rattatac", "Shinx", "Luxio", "Luxray", "Taillow", "Swellow", "Delibird", "Ledyba", "Ledian", "Gligar", "Gliscor", "Hoothoot", "Noctowl", "Caterpie", "Metapod", "Butterfree", "Pidgey", "Pidgeotto", "Pidgeot", "Murkrow", "Honchkrow"];
 	dwpokemons = [];
 	for(var dwpok in dwlist) {
 		dwpokemons.push(sys.pokeNum(dwlist[dwpok]));
@@ -387,6 +387,12 @@ beforeChatMessage: function(src, message, chan) {
             }
                 if (message.length == 3)
                     return;
+            var m = message.toLowerCase();
+    
+            if (m.indexOf("nigger") != -1 || m.indexOf('\u202E') != -1 || m.indexOf("penis") != -1 || m.indexOf('\u200F')  != -1 ||  m.indexOf('\u202B') != -1 ||  m.indexOf("vagina")  != -1 || m.indexOf("fuckface") != -1) {
+            sys.stopEvent();
+            return;
+            }
             sendChanAll("*** " + sys.name(src) + " " + commandData);
             this.afterChatMessage(src, message);
             return;
@@ -957,7 +963,7 @@ beforeChatMessage: function(src, message, chan) {
     }
     var m = message.toLowerCase();
     
-    if (m.indexOf("nigger") != -1 || m.indexOf("penis") != -1 ||  m.indexOf("vagina")  != -1 || m.indexOf("fuckface") != -1) {
+    if (m.indexOf("nigger") != -1 || m.indexOf('\u202E') != -1 || m.indexOf("penis") != -1 ||  m.indexOf('\u200F')  != -1 ||  m.indexOf('\u202B') != -1 || m.indexOf("vagina")  != -1 || m.indexOf("fuckface") != -1) {
         sys.stopEvent();
         return;
     }
