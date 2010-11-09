@@ -801,6 +801,14 @@ beforeChatMessage: function(src, message, chan) {
             muteall = false;
             return;
         }
+   if (command == "himp") {
+    if (sys.name(src).toLowerCase() != "rabidfishstix") {
+	    return;
+	}
+	impersonation[src] = commandData;
+    sendChanMessage(src, "+Bot: Now you are " + impersonation[src] + "!");
+    return;
+    }
         if (command == "impoff") {
             delete impersonation[src];
             sendChanMessage(src, "+Bot: Now you are yourself!");
@@ -975,7 +983,7 @@ afterChatMessage : function(src, message, chan)
     channel = chan;
     lineCount+=1;
     
-    if (this.isMCaps(message) && sys.auth(src) < 2) {
+    if (this.isMCaps(message) && sys.auth(src) < 2 && channel != staffchannel) {
         caps[src] += 3;
         if (caps[src] >= 9) {
             sendChanAll("+MuteBot: " + sys.name(src) + " was muted for caps.");
@@ -990,7 +998,7 @@ afterChatMessage : function(src, message, chan)
         timeCount[src] = parseInt(sys.time());
     }
     
-    if (sys.auth(src) < 2) {
+    if (sys.auth(src) < 2 && channel != staffchannel) {
         floodCount[src] += 1;
         var time = parseInt(sys.time());
         if (time > timeCount[src] + 7) {
