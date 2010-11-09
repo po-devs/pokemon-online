@@ -1371,7 +1371,7 @@ dreamWorldAbilitiesCheck : function(src, se) {
 		if (x != 0 && dwpokemons.indexOf(x) == -1 && sys.hasDreamWorldAbility(src, i)) {
 			if (se)
 				sys.sendMessage(src, "+CheckBot: " + sys.pokemon(x) + " is not allowed with a Dream World ability in this tier. Change it in the teambuilder.");
-			if (sys.tier(src) == "Wifi") {
+			if (sys.tier(src) == "Wifi" && sys.hasLegalTeamForTier(src, "Dream World")) {
 				sys.changeTier(src, "Dream World");
 			} else if (sys.tier(src) == "Wifi Ubers") {
 				sys.changeTier(src, "Dream World Ubers");
