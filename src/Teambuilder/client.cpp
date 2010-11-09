@@ -1645,11 +1645,12 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
     QPushButton *ok, *cancel;
     ml->addWidget(rated = new QCheckBox(tr("Force rated battles")));
     ml->addWidget(sameTier = new QCheckBox(tr("Force same tier")));
-    ml->addWidget(doubles = new QCheckBox(tr("Double battle")));
     QHBoxLayout *sub2 = new QHBoxLayout();
     ml->addLayout(sub2);
     sub2->addWidget(rangeOn = new QCheckBox(tr("Only battle players with a max rating difference of ")));
     sub2->addWidget(range = new QLineEdit());
+    ml->addWidget(mode = new QComboBox());
+    mode->addItems(QStringList() << tr("Singles") << tr("Doubles") << tr("Triples") /*<< tr("Rotation")*/);
 
     QHBoxLayout *hl = new QHBoxLayout();
     ml->addLayout(hl);
@@ -1660,7 +1661,7 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
 
     rated->setChecked(s.value("find_battle_force_rated").toBool());
     sameTier->setChecked(s.value("find_battle_same_tier").toBool());
-    doubles->setChecked(s.value("find_battle_mode").toBool());
+    mode->setCurrentIndex(s.value("find_battle_mode").toInt());
     rangeOn->setChecked(s.value("find_battle_range_on").toBool());
     range->setText(QString::number(s.value("find_battle_range").toInt()));
     changeEnabled();
@@ -1685,14 +1686,14 @@ void BattleFinder::throwChallenge()
     s.setValue("find_battle_same_tier", sameTier->isChecked());
     s.setValue("find_battle_range_on", rangeOn->isChecked());
     s.setValue("find_battle_range", range->text().toInt());
-    s.setValue("find_battle_mode", doubles->isChecked());
+    s.setValue("find_battle_mode", mode->currentIndex());
 
     FindBattleData d;
     d.rated = rated->isChecked();
     d.sameTier = sameTier->isChecked();
     d.range = range->text().toInt();
     d.ranged = rangeOn->isChecked();
-    d.mode = doubles->isChecked();
+    d.mode = mode->currentIndex();
 
     emit findBattle(d);
 }
