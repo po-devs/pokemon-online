@@ -1355,7 +1355,9 @@ struct AMEncourage : public AM
     static void bpm(int s, int, BS &b) {
         int cl = tmove(b,s).classification;
 
-        if (cl != Move::OffensiveStatChangingMove && cl != Move::OffensiveStatusInducingMove && tmove(b,s).flinchRate == 0)
+        /* Self stat changing moves like nitro charge/ancient power are boosted, but not moves like close combat/super power */
+        if (cl != Move::OffensiveStatChangingMove && cl != Move::OffensiveStatusInducingMove && tmove(b,s).flinchRate == 0
+            && (cl != Move::OffensiveSelfStatChangingMove || ((signed char)(tmove(b,s).boostOfStat >> 16)) < 0))
             return;
 
         tmove(b,s).classification = Move::StandardMove;
