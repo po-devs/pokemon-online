@@ -12,12 +12,18 @@
 ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
     myserver = s;
+    mySessionDataFactory = new SessionDataFactory(&myengine);
 
     QScriptValue sys = myengine.newQObject(this);
     myengine.globalObject().setProperty("sys", sys);
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);
+    myengine.globalObject().setProperty(
+        "SESSION",
+        myengine.newQObject(mySessionDataFactory),
+        QScriptValue::ReadOnly | QScriptValue::Undeletable
+    );
 
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
 
@@ -27,10 +33,17 @@ ScriptEngine::ScriptEngine(Server *s) {
     changeScript(QString::fromUtf8(f.readAll()));
 }
 
+ScriptEngine::~ScriptEngine()
+{
+    delete mySessionDataFactory;
+}
+
 void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
 {
+    mySessionDataFactory->disableAll();
     myscript = myengine.evaluate(script);
     myengine.globalObject().setProperty("script", myscript);
+    mySessionDataFactory->handleInitialState();
 
     if (myscript.isError()) {
         printLine("Fatal Script Error line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + myscript.toString());
@@ -179,6 +192,7 @@ bool ScriptEngine::beforeLogIn(int src)
 
 void ScriptEngine::afterLogIn(int src)
 {
+    mySessionDataFactory->handleUserLogIn(src);
     makeEvent("afterLogIn", src);
 }
 
@@ -189,6 +203,7 @@ bool ScriptEngine::beforeChannelCreated(int channelid, const QString &channelnam
 
 void ScriptEngine::afterChannelCreated(int channelid, const QString &channelname, int playerid)
 {
+    mySessionDataFactory->handleChannelCreate(channelid);
     makeEvent("afterChannelCreated", channelid, channelname, playerid);
 }
 
@@ -200,6 +215,7 @@ bool ScriptEngine::beforeChannelDestroyed(int channelid)
 void ScriptEngine::afterChannelDestroyed(int channelid)
 {
     makeEvent("afterChannelDestroyed", channelid);
+    mySessionDataFactory->handleChannelDestroy(channelid);
 }
 
 bool ScriptEngine::beforeChannelJoin(int playerid, int channelid)
@@ -374,6 +390,8 @@ void ScriptEngine::afterLogOut(int src)
             myengine.globalObject().property(pa).setProperty(src, QScriptValue());
         }
     }
+
+    mySessionDataFactory->handleUserLogOut(src);
 }
 
 bool ScriptEngine::beforePlayerKick(int src, int dest)
