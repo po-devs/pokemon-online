@@ -2,7 +2,7 @@
 
 SessionDataFactory::SessionDataFactory(QScriptEngine *engineLink) :
         engine(engineLink), userFactoryEnabled(false), channelFactoryEnabled(false),
-        initialStateHandled(false)
+        initialStateHandled(false), globalFactoryEnabled(false)
 {
 }
 
@@ -24,7 +24,7 @@ void SessionDataFactory::registerChannelFactory(QScriptValue factoryFunction)
 
 void SessionDataFactory::handleUserLogIn(int user_id)
 {
-    if (isUserFactoryEnabled()) {
+    if (userFactoryEnabled) {
         QScriptValue dataObject = engine->newObject();
         userFactoryFunction.call(dataObject, QScriptValueList() << user_id);
         userFactoryStorage[user_id] = dataObject;
@@ -33,14 +33,14 @@ void SessionDataFactory::handleUserLogIn(int user_id)
 
 void SessionDataFactory::handleUserLogOut(int user_id)
 {
-    if (isUserFactoryEnabled()) {
+    if (userFactoryEnabled) {
         userFactoryStorage.remove(user_id);
     }
 }
 
 void SessionDataFactory::handleChannelCreate(int channel_id)
 {
-    if (isChannelFactoryEnabled()) {
+    if (channelFactoryEnabled) {
         QScriptValue dataObject = engine->newObject();
         channelFactoryFunction.call(dataObject, QScriptValueList() << channel_id);
         channelFactoryStorage[channel_id] = dataObject;
@@ -49,14 +49,14 @@ void SessionDataFactory::handleChannelCreate(int channel_id)
 
 void SessionDataFactory::handleChannelDestroy(int channel_id)
 {
-    if (isChannelFactoryEnabled()) {
+    if (channelFactoryEnabled) {
         channelFactoryStorage.remove(channel_id);
     }
 }
 
 QScriptValue SessionDataFactory::users(int id)
 {
-    if (isUserFactoryEnabled()) {
+    if (userFactoryEnabled) {
         return userFactoryStorage.value(id, engine->undefinedValue());
     }else{
         return engine->undefinedValue();
@@ -65,7 +65,7 @@ QScriptValue SessionDataFactory::users(int id)
 
 QScriptValue SessionDataFactory::channels(int id)
 {
-    if (isChannelFactoryEnabled()) {
+    if (channelFactoryEnabled) {
         return channelFactoryStorage.value(id, engine->undefinedValue());
     }else{
         return engine->undefinedValue();
@@ -77,5 +77,53 @@ void SessionDataFactory::handleInitialState()
     if (!initialStateHandled) {
         handleChannelCreate(0);
         initialStateHandled = true;
+        if (globalFactoryEnabled) {
+            globalFactoryStorage = engine->newObject();
+            globalFactoryFunction.call(globalFactoryStorage, QScriptValueList() << currentScriptId);
+        }
+    }
+}
+
+void SessionDataFactory::disableAll()
+{
+    userFactoryEnabled = false;
+    channelFactoryEnabled = false;
+    globalFactoryEnabled = false;
+}
+
+void SessionDataFactory::clearAll()
+{
+    disableAll();
+    userFactoryFunction = QScriptValue();
+    channelFactoryFunction = QScriptValue();
+    globalFactoryFunction = QScriptValue();
+    globalFactoryStorage = QScriptValue();
+    userFactoryStorage.clear();
+    channelFactoryStorage.clear();
+    initialStateHandled = false;
+}
+
+void SessionDataFactory::identifyScriptAs(QString scriptId)
+{
+    if (scriptId.isEmpty() || (currentScriptId != scriptId)) {
+        clearAll();
+    }
+    currentScriptId = scriptId;
+}
+
+void SessionDataFactory::registerGlobalFactory(QScriptValue factoryFunction)
+{
+    if (factoryFunction.isFunction()) {
+        globalFactoryFunction = factoryFunction;
+        globalFactoryEnabled = true;
+    }
+}
+
+QScriptValue SessionDataFactory::global()
+{
+    if (globalFactoryEnabled) {
+        return globalFactoryStorage;
+    }else{
+        return engine->undefinedValue();
     }
 }
