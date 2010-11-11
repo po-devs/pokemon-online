@@ -43,7 +43,6 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     mySessionDataFactory->disableAll();
     myscript = myengine.evaluate(script);
     myengine.globalObject().setProperty("script", myscript);
-    mySessionDataFactory->handleInitialState();
 
     if (myscript.isError()) {
         printLine("Fatal Script Error line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + myscript.toString());
@@ -53,6 +52,27 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
             serverStartUp();
         }
     }
+
+    mySessionDataFactory->handleInitialState();
+    if (mySessionDataFactory->isRefillNeeded()) {
+        // Refill player session info if session data is no longer valid.
+        QList<int> keys = myserver->myplayers.keys();
+        for (int i = 0; i < keys.size(); i++) {
+            mySessionDataFactory->handleUserLogIn(keys[i]);
+        }
+        // Refill channels as well.
+        keys = myserver->channels.keys();
+        for (int i = 0; i < keys.size(); i++) {
+            int current_channel = keys[i];
+            // Default channel is already there.
+            if (current_channel != 0) {
+                mySessionDataFactory->handleChannelCreate(current_channel);
+            }
+        }
+
+        mySessionDataFactory->refillDone();
+    }
+    // Error check?
 }
 
 void ScriptEngine::setPA(const QString &name)
