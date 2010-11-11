@@ -2,7 +2,7 @@
 
 SessionDataFactory::SessionDataFactory(QScriptEngine *engineLink) :
         engine(engineLink), userFactoryEnabled(false), channelFactoryEnabled(false),
-        initialStateHandled(false), globalFactoryEnabled(false)
+        initialStateHandled(false), globalFactoryEnabled(false), refillNeeded(false)
 {
 }
 
@@ -107,6 +107,7 @@ void SessionDataFactory::identifyScriptAs(QString scriptId)
 {
     if (scriptId.isEmpty() || (currentScriptId != scriptId)) {
         clearAll();
+        refillNeeded = true;
     }
     currentScriptId = scriptId;
 }
@@ -126,4 +127,14 @@ QScriptValue SessionDataFactory::global()
     }else{
         return engine->undefinedValue();
     }
+}
+
+bool SessionDataFactory::isRefillNeeded()
+{
+    return refillNeeded;
+}
+
+void SessionDataFactory::refillDone()
+{
+    refillNeeded = false;
 }

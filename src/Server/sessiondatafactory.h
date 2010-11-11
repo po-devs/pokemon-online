@@ -16,6 +16,8 @@ public:
     void handleChannelCreate(int channel_id);
     void handleChannelDestroy(int channel_id);
     void handleInitialState();
+    bool isRefillNeeded();
+    void refillDone(); // called by external code to signal that refilling is done.
 
     Q_INVOKABLE void registerUserFactory(QScriptValue factoryFunction);
     Q_INVOKABLE void registerChannelFactory(QScriptValue factoryFunction);
@@ -39,6 +41,7 @@ private:
     QScriptValue globalFactoryFunction;
     QScriptValue globalFactoryStorage;
     bool globalFactoryEnabled;
+    bool refillNeeded;
 };
 
 #endif // SESSIONDATAFACTORY_H
