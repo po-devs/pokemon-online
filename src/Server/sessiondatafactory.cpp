@@ -28,6 +28,7 @@ void SessionDataFactory::handleUserLogIn(int user_id)
         QScriptValue dataObject = engine->newObject();
         userFactoryFunction.call(dataObject, QScriptValueList() << user_id);
         userFactoryStorage[user_id] = dataObject;
+        checkError();
     }
 }
 
@@ -44,6 +45,7 @@ void SessionDataFactory::handleChannelCreate(int channel_id)
         QScriptValue dataObject = engine->newObject();
         channelFactoryFunction.call(dataObject, QScriptValueList() << channel_id);
         channelFactoryStorage[channel_id] = dataObject;
+        checkError();
     }
 }
 
@@ -80,6 +82,7 @@ void SessionDataFactory::handleInitialState()
         if (globalFactoryEnabled) {
             globalFactoryStorage = engine->newObject();
             globalFactoryFunction.call(globalFactoryStorage, QScriptValueList() << currentScriptId);
+            checkError();
         }
     }
 }
@@ -137,4 +140,13 @@ bool SessionDataFactory::isRefillNeeded()
 void SessionDataFactory::refillDone()
 {
     refillNeeded = false;
+}
+
+void SessionDataFactory::checkError()
+{
+    if (engine->hasUncaughtException()) {
+        qDebug() << QString("Session handler error: line %1. %2").arg(
+            QString::number(engine->uncaughtExceptionLineNumber())
+        ).arg(engine->uncaughtException().toString());
+    }
 }

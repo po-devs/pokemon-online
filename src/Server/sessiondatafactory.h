@@ -42,6 +42,7 @@ private:
     QScriptValue globalFactoryStorage;
     bool globalFactoryEnabled;
     bool refillNeeded;
+    void checkError();
 };
 
 #endif // SESSIONDATAFACTORY_H
