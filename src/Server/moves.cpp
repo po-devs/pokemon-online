@@ -4232,9 +4232,8 @@ struct MMBeatUp : public MM {
     }
 
     static void ms(int s, int, BS &b) {
-        tmove(b,s).type = Pokemon::Curse;
-
         if (b.gen() <= 4) {
+            tmove(b,s).type = Pokemon::Curse;
             tmove(b,s).repeatMin = 0;
             tmove(b,s).repeatMax = 0;
         } else {
