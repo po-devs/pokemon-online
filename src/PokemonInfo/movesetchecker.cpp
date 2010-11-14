@@ -113,6 +113,21 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
         /* now we know the pokemon at least knows all moves */
         moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
 
+
+        /* If there's a pre evo move and an old gen move, you must check the pre evo has the combination in the old gen */
+        QSet<int> moves3 = moves;
+        moves3.subtract(PokemonInfo::PreEvoMoves(pokeid,g));
+
+        if (moves3.size() != moves.size()) {
+            if (moves3.empty() || (moves3.size() == 1 && PokemonInfo::HasMoveInGen(pokeid, *moves3.begin(), g)))
+                return true;
+
+            int pokemon = PokemonInfo::PreEvo(pokeid.pokenum);
+
+            if (isValid(pokemon, g, moves3))
+                return true;
+        }
+
         if (moves.empty() || (moves.size() == 1 && PokemonInfo::HasMoveInGen(pokeid, *moves.begin(), g)))
             return true;
 
