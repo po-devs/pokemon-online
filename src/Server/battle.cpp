@@ -2328,6 +2328,9 @@ int BattleSituation::weight(int player) {
         ret /= 2;
     }
 
+    if (ret == 0)
+        ret = 1;
+
     return ret;
 }
 
