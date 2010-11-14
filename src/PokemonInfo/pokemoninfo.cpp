@@ -602,43 +602,43 @@ QByteArray PokemonInfo::Cry(const Pokemon::uniqueId &pokeid)
 
 QSet<int> PokemonInfo::Moves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves.value(pokeid).genMoves[gen-3];
+    return m_Moves.value(pokeid).genMoves[gen-GEN_MIN];
 }
 
 bool PokemonInfo::HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, int gen)
 {
-    return m_Moves[pokeid].regularMoves[gen-3].contains(move) || m_Moves[pokeid].specialMoves[gen-3].contains(move)
-            || m_Moves[pokeid].eggMoves[gen-3].contains(move);
+    return m_Moves[pokeid].regularMoves[gen-GEN_MIN].contains(move) || m_Moves[pokeid].specialMoves[gen-GEN_MIN].contains(move)
+                || m_Moves[pokeid].eggMoves[gen-GEN_MIN].contains(move) || m_Moves[pokeid].preEvoMoves[gen-GEN_MIN].contains(move);
 }
 
 QSet<int> PokemonInfo::RegularMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves.value(pokeid).regularMoves[gen-3];
+    return m_Moves.value(pokeid).regularMoves[gen-GEN_MIN];
 }
 
 QSet<int> PokemonInfo::EggMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves.value(pokeid).eggMoves[gen-3];
+    return m_Moves.value(pokeid).eggMoves[gen-GEN_MIN];
 }
 
 QSet<int> PokemonInfo::LevelMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves.value(pokeid).levelMoves[gen-3];
+    return m_Moves.value(pokeid).levelMoves[gen-GEN_MIN];
 }
 
 QSet<int> PokemonInfo::TutorMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves.value(pokeid).tutorMoves[gen-3];
+    return m_Moves.value(pokeid).tutorMoves[gen-GEN_MIN];
 }
 
 QSet<int> PokemonInfo::TMMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves.value(pokeid).TMMoves[gen-3];
+    return m_Moves.value(pokeid).TMMoves[gen-GEN_MIN];
 }
 
 QSet<int> PokemonInfo::SpecialMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves.value(pokeid).specialMoves[gen-3];
+    return m_Moves.value(pokeid).specialMoves[gen-GEN_MIN];
 }
 
 QSet<int> PokemonInfo::PreEvoMoves(const Pokemon::uniqueId &pokeid, int gen)
@@ -651,7 +651,7 @@ AbilityGroup PokemonInfo::Abilities(const Pokemon::uniqueId &pokeid, int gen)
     AbilityGroup ret;
 
     for (int i = 0; i < 3; i++) {
-        ret._ab[i] = m_Abilities[gen-3][i].value(pokeid);
+        ret._ab[i] = m_Abilities[gen-GEN_MIN][i].value(pokeid);
     }
 
     return ret;
@@ -840,18 +840,14 @@ void PokemonInfo::loadMoves()
 
         for (int i = 0; i < 3; i++) {
             moves.regularMoves[i] = moves.TMMoves[i];
-            moves.regularMoves[i].unite(moves.preEvoMoves[i]).unite(moves.levelMoves[i]).unite(moves.tutorMoves[i]);
+            moves.regularMoves[i].unite(moves.levelMoves[i]).unite(moves.tutorMoves[i]);
             moves.genMoves[i] = moves.regularMoves[i];
-            moves.genMoves[i].unite(moves.specialMoves[i]).unite(moves.eggMoves[i]);
+            moves.genMoves[i].unite(moves.specialMoves[i]).unite(moves.eggMoves[i]).unite(moves.preEvoMoves[i]);
 
             if (i > 0) {
                 moves.genMoves[i].unite(moves.genMoves[i-1]);
             }
         }
-        moves.regularMoves[0] = moves.TMMoves[0];
-        moves.regularMoves[0].unite(moves.levelMoves[0]).unite(moves.tutorMoves[0]);
-        moves.regularMoves[1] = moves.TMMoves[1];
-        moves.regularMoves[1].unite(moves.preEvoMoves[1]).unite(moves.levelMoves[1]).unite(moves.tutorMoves[1]);
 
         m_Moves[it.key()] = moves;
     }

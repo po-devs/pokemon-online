@@ -31,10 +31,9 @@ SOURCES += main.cpp \
     moves.cpp \
     channel.cpp \
     tiertree.cpp \
-    tiermachine.cpp
-
-!CONFIG(nogui) {
-SOURCES += mainwindow.cpp \
+    tiermachine.cpp \
+    sessiondatafactory.cpp
+!CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
     serverwidget.cpp \
@@ -42,8 +41,6 @@ SOURCES += mainwindow.cpp \
     tierwindow.cpp \
     serverconfig.cpp \
     confighelper.cpp
-}
-
 LIBS += -L../../bin \
     -lutilities \
     -lpokemonlib
@@ -84,10 +81,9 @@ HEADERS += player.h \
     ../Utilities/coro.h \
     ../Utilities/contextswitch.h \
     ../Utilities/mtrand.h \
-    miscmoves.h
-
-!CONFIG(nogui) {
-HEADERS += mainwindow.h \
+    miscmoves.h \
+    sessiondatafactory.h
+!CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
     ../Utilities/functions.h \
@@ -97,9 +93,7 @@ HEADERS += mainwindow.h \
     sqlconfig.h \
     tierwindow.h \
     confighelper.h
-}
-
-CONFIG(nogui) {
+CONFIG(nogui) { 
     QT -= gui
     DEFINES += PO_NO_GUI
 }
