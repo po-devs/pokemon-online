@@ -1921,7 +1921,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 QVector<int> trueTargets;
 
                 for (int i = 0; i < numberOfSlots()/2; i++) {
-                    if (areAdjacent(slot(tp, i), player) && !koed(slot(tp, i)) && i != slot(tp, i))
+                    if (areAdjacent(slot(tp, i), player) && !koed(slot(tp, i)) && player != slot(tp, i))
                         trueTargets.push_back(slot(tp, i));
                 }
                 for (int i = 0; i < numberOfSlots()/2; i++) {
