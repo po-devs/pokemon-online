@@ -163,6 +163,7 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
         QSet<int> invalid_moves;
         QString error;
         if (!MoveSetChecker::isValid(num(), gen(), m_moves[0],m_moves[1],m_moves[2],m_moves[3],ability(),&invalid_moves, &error)) {
+            m_moves[moveSlot] = Move::NoMove;
             throw error;
         }
     }

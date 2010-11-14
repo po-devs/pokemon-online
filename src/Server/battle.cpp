@@ -1898,22 +1898,37 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 break;
             }
         case Move::All: {
+                int tp = this->player(player);
+                int to = opponent(tp);
+
                 QVector<int> trueTargets;
 
-                for (int i = 0; i < numberOfSlots(); i++) {
-                    if (areAdjacent(i, player) && !koed(i))
-                        trueTargets.push_back(i);
+                for (int i = 0; i < numberOfSlots()/2; i++) {
+                    if (areAdjacent(slot(tp, i), player) && !koed(slot(tp, i)))
+                        trueTargets.push_back(slot(tp, i));
+                }
+                for (int i = 0; i < numberOfSlots()/2; i++) {
+                    if (areAdjacent(slot(to, i), player) && !koed(slot(to, i)))
+                        trueTargets.push_back(slot(to, i));
                 }
                 makeTargetList(trueTargets);
                 break;
             }
         case Move::AllButSelf: {
+                int tp = this->player(player);
+                int to = opponent(tp);
+
                 QVector<int> trueTargets;
 
-                for (int i = 0; i < numberOfSlots(); i++) {
-                    if (areAdjacent(i, player) && !koed(i) && i != player)
-                        trueTargets.push_back(i);
+                for (int i = 0; i < numberOfSlots()/2; i++) {
+                    if (areAdjacent(slot(tp, i), player) && !koed(slot(tp, i)) && i != slot(tp, i))
+                        trueTargets.push_back(slot(tp, i));
                 }
+                for (int i = 0; i < numberOfSlots()/2; i++) {
+                    if (areAdjacent(slot(to, i), player) && !koed(slot(to, i)))
+                        trueTargets.push_back(slot(to, i));
+                }
+
                 makeTargetList(trueTargets);
                 break;
             }
@@ -2270,6 +2285,8 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
 
 void BattleSituation::makeTargetList(const QVector<int> &base)
 {
+    if (gen() >= 5)
+        return;
     targetList = sortedBySpeed();
     for (unsigned i = 0; i < targetList.size(); i++) {
         if (!base.contains(targetList[i])) {
@@ -3046,11 +3063,18 @@ int BattleSituation::calculateDamage(int p, int t)
             if (attackused == Move::Explosion || attackused == Move::Selfdestruct) {
                 damage = damage * 3 / 4;
             } else {
-                foreach (int tar, targetList) {
-                    if (tar != t && !koed(tar)) {
-                        damage = damage * 3/4;
-                        break;
+                /* In gen 4, if an attack koed all previous pokemon, the last pokemon
+                   would eat it at full power. Not in gen 5 */
+                if (gen() <= 4) {
+                    foreach (int tar, targetList) {
+                        if (tar != t && !koed(tar)) {
+                            damage = damage * 3/4;
+                            break;
+                        }
                     }
+                } else {
+                    if (targetList.size() > 1)
+                        damage = damage * 3/4;
                 }
             }
         }
@@ -3752,6 +3776,7 @@ int BattleSituation::getBoostedStat(int player, int stat)
         /* Wonder room: attack & sp attack switched, 5th gen */
         if (battleMemory().contains("WonderRoomCount") && (stat == 2 || stat == 3)) {
             stat = 5 - stat;
+            givenStat = 5 - givenStat;
         }
         return fpoke(player).stats[givenStat] *getStatBoost(player, stat);
     }

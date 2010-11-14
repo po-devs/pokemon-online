@@ -37,6 +37,7 @@ void Analyzer::keepAlive()
 {
     if (!pingedBack) {
         //emit disconnected();
+        //return;
     }
     pingedBack = false;
     /* Seems that the keep alive option doesn't work on all computers */
