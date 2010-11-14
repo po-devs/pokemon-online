@@ -13,6 +13,7 @@
 #include <QNetworkReply>
 
 #include "../PokemonInfo/pokemonstructs.h"
+#include "sessiondatafactory.h"
 
 class Server;
 class ChallengeInfo;
@@ -22,6 +23,7 @@ class ScriptEngine : public QObject
     Q_OBJECT
 public:
     ScriptEngine(Server *s);
+    ~ScriptEngine();
 
     /* Events */
     bool beforeChatMessage(int src, const QString &message, int channel);
@@ -249,6 +251,7 @@ private:
     QScriptValue myscript;
     QVector<bool> stopevents;
     QList<QScriptString> playerArrays;
+    SessionDataFactory *mySessionDataFactory;
 
     QNetworkAccessManager manager;
     QHash<QTimer*,QString> timerEvents;
