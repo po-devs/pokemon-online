@@ -2285,8 +2285,10 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
 
 void BattleSituation::makeTargetList(const QVector<int> &base)
 {
-    if (gen() >= 5)
+    if (gen() >= 5) {
+        targetList = base.toStdVector();
         return;
+    }
     targetList = sortedBySpeed();
     for (unsigned i = 0; i < targetList.size(); i++) {
         if (!base.contains(targetList[i])) {
@@ -2344,6 +2346,9 @@ int BattleSituation::weight(int player) {
     if (hasWorkingItem(player, Item::PumiceStone)) {
         ret /= 2;
     }
+
+    if (ret == 0)
+        ret = 1;
 
     return ret;
 }
