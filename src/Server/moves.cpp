@@ -908,13 +908,22 @@ struct MMHaze : public MM
         }
     }
 
-    static void uas(int , int , BS &b) {
-        b.sendMoveMessage(149);
+    static void uas(int s, int t, BS &b) {
 
-        foreach (int p, b.sortedBySpeed())
-        {
+        if (tmove(b,s).power == 0) {
+            b.sendMoveMessage(149);
+
+            foreach (int p, b.sortedBySpeed())
+            {
+                for (int i = 1; i <= 7; i++) {
+                    fpoke(b,p).boosts[i] = 0;
+                }
+            }
+        }
+        else {
+            b.sendMoveMessage(149, 1, s, type(b,s), t);
             for (int i = 1; i <= 7; i++) {
-                fpoke(b,p).boosts[i] = 0;
+                fpoke(b,t).boosts[i] = 0;
             }
         }
     }
