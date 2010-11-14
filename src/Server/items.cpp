@@ -159,7 +159,7 @@ struct IMFocusBand : public IM
         }
     }
 
-    static void uodr(int s, int t, BS &b) {
+    static void uodr(int s, int, BS &b) {
 	if (b.koed(s))
 	    return;
 
