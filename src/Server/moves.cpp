@@ -4804,14 +4804,14 @@ struct MMShellCrack : public MM {
     static void uas(int s, int, BS &b) {
         /* So that white herbs restore both negative boosts,
            the boolean is introduced and item effect called later */
-        applyingMoveStatMods = true;
+        b.applyingMoveStatMods = true;
         b.inflictStatMod(s, Defense, -1, s);
         b.inflictStatMod(s, SpDefense, -1, s);
         b.inflictStatMod(s, Attack, 2, s);
         b.inflictStatMod(s, SpAttack, 2, s);
         b.inflictStatMod(s, Speed, 2, s);
-        applyingMoveStatMods = false;
-        callieffects(s, s, "AfterStatChange");
+        b.applyingMoveStatMods = false;
+        b.callieffects(s, s, "AfterStatChange");
     }
 };
 
@@ -5030,7 +5030,7 @@ struct MMFastGuard : public MM
             return;
         }
 
-        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) && tmove(b,s).attack != Move::Feint ) {
             return;
         }
 
