@@ -752,7 +752,7 @@ struct MMOHKO : public MM
 	    turn(b,s)["Failed"] = true;
             return;
 	}
-        if (b.gen() <= 4 && b.hasWorkingAbility(t, Ability::Sturdy)) {
+        if (b.hasWorkingAbility(t, Ability::Sturdy)) {
             b.fail(s,43,0,type(b,s));
         }
     }
