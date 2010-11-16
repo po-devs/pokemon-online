@@ -900,7 +900,7 @@ void BattleSituation::analyzeChoices()
 {
     /* If there's no choice then the effects are already taken care of */
     for (int i = 0; i < numberOfSlots(); i++) {
-        if (!turnMemory(i).contains("NoChoice") && choice(i).attackingChoice()) {
+        if (!koed(i) && !turnMemory(i).contains("NoChoice") && choice(i).attackingChoice()) {
             if (!options[i].struggle())
                 MoveEffect::setup(move(i,choice(i).pokeSlot()), i, i, *this);
             else
@@ -1364,8 +1364,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     turnMemory(slot)["CantGetToMove"] = true;
 
-    ItemEffect::setup(p.item(),slot,*this);
-
     calleffects(slot, slot, "UponSwitchIn");
     callseffects(slot, slot, "UponSwitchIn");
     callzeffects(player, slot, "UponSwitchIn");
@@ -1374,6 +1372,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 void BattleSituation::callEntryEffects(int player)
 {
     if (!koed(player)) {
+        ItemEffect::setup(poke(player).item(), player, *this);
         acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
     }
