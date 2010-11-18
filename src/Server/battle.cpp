@@ -2466,12 +2466,13 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         if (!stat)
             break;
 
-        if (stat == Evasion && (clauses() & ChallengeInfo::EvasionClause)) {
+        char increase = char (fm.boostOfStat >> (i*8));
+
+        if (stat == Evasion && increase > 0 && (clauses() & ChallengeInfo::EvasionClause)) {
             notifyClause(ChallengeInfo::EvasionClause);
             continue;
         }
 
-        char increase = char (fm.boostOfStat >> (i*8));
         int rate = char (fm.rateOfStat >> (i*8));
 
         if (increase < 0 && target != player && sub) {
