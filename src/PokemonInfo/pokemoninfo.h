@@ -172,6 +172,7 @@ public:
     static int Flags(int movenum, int gen);
     static bool Exists(int movenum, int gen);
     static bool isOHKO(int movenum, int gen);
+    static bool FlinchByKingRock(int movenum);
     static int EffectRate(int movenum, int gen);
     static quint32 StatAffected(int movenum, int gen);
     static quint32 BoostOfStat(int movenum, int gen);
@@ -199,6 +200,7 @@ private:
     static QList<QString> m_Details;
     static QList<QString> m_SpecialEffects;
     static QList<int> m_OldMoves;
+    static QList<bool> m_KingRock;
 
     struct Gen {
         void load(const QString &path, int gen);
