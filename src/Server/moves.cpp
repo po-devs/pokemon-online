@@ -1572,10 +1572,12 @@ struct MMCopycat : public MM
         removeFunction(turn(b,s), "UponAttackSuccessful", "Copycat");
         removeFunction(turn(b,s), "DetermineAttackFailure", "Copycat");
 	int attack = turn(b,s)["CopycatMove"].toInt();
+        BS::BasicMoveInfo info = tmove(b,s);
 	MoveEffect::setup(attack, s, t, b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
-	b.useAttack(s, turn(b,s)["CopycatMove"].toInt(), true);
+        b.useAttack(s, attack, true);
         MoveEffect::unsetup(attack, s, b);
+        tmove(b,s) = info;
     }
 };
 
