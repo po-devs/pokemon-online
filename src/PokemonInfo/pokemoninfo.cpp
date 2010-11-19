@@ -43,6 +43,7 @@ QList<QStringList> MoveInfo::m_MoveMessages;
 QList<QString> MoveInfo::m_Details;
 QList<QString> MoveInfo::m_SpecialEffects;
 QList<int> MoveInfo::m_OldMoves;
+QList<bool> MoveInfo::m_KingRock;
 
 QString ItemInfo::m_Directory;
 QList<QString> ItemInfo::m_BerryNames;
@@ -1059,6 +1060,7 @@ void MoveInfo::init(const QString &dir)
     loadSpecialEffects();
 
     fill_container_with_file(m_OldMoves, path("oldmoves.txt"));
+    fill_container_with_file(m_KingRock, path("king_rock.txt"));
 
     for (int i = 0; i < Version::NumberOfGens; i++) {
         gens[i].load(dir, i+1);
@@ -1118,6 +1120,11 @@ int MoveInfo::Category(int movenum, int g)
 int MoveInfo::Classification(int movenum, int g)
 {
     return gen(g).category[movenum];
+}
+
+bool MoveInfo::FlinchByKingRock(int movenum)
+{
+    return m_KingRock[movenum];
 }
 
 int MoveInfo::Number(const QString &movename)
