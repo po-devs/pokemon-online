@@ -3930,7 +3930,8 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
                       || tmove(attacker).attack == Move::SacredSword)&& (stat == SpDefense || stat == Defense)) {
                 boost = 0;
             }
-        } else if (attacker == player && attacked != player && hasWorkingAbility(attacked, Ability::Unaware) && (stat == SpAttack || stat == Attack)) {
+        } else if (attacker == player && attacked != player && hasWorkingAbility(attacked, Ability::Unaware) &&
+                   (stat == SpAttack || stat == Attack || stat == Accuracy)) {
             boost = 0;
         }
         //Critical hit
