@@ -1854,7 +1854,7 @@ struct MMBounce : public MM
 	}
 	poke(b,s)["Invulnerable"] = true;
 	poke(b,s)["VulnerableMoves"].setValue(vuln_moves);
-	poke(b,s)["VulnerableMults"].setValue(vuln_mult);
+        poke(b,s)["VulnerableMults"].setValue(vuln_mult);
         b.changeSprite(s, -1);
         addFunction(poke(b,s), "TestEvasion", "Bounce", &dgaf);
         addFunction(poke(b,s), "TurnSettings", "Bounce", &ts);
@@ -1870,6 +1870,8 @@ struct MMBounce : public MM
             addFunction(poke(b,t), "TestEvasion", "Bounce", &dgaf);
             addFunction(poke(b,t), "DetermineAttackPossible", "Bounce", &dap);
             addFunction(poke(b,s), "AfterBeingKoed", "Bounce", &ewc);
+            poke(b,t)["VulnerableMoves"].setValue(vuln_moves);
+            poke(b,t)["VulnerableMults"].setValue(vuln_mult);
         }
     }
 
