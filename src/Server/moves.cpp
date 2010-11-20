@@ -3668,7 +3668,7 @@ struct MMRage : public MM
 
     static void uas(int s, int, BS &b) {
         addFunction(poke(b,s), "UponOffensiveDamageReceived", "Rage", &uodr);
-        if (poke(b,s).contains("RageBuilt") && poke(b,s)["LastMoveUsed"] == Move::Rage) {
+        if (poke(b,s).contains("RageBuilt") && poke(b,s)["AnyLastMoveUsed"] == Move::Rage) {
             poke(b,s).remove("AttractBy");
             b.healConfused(s);
             poke(b,s).remove("Tormented");
@@ -3677,7 +3677,7 @@ struct MMRage : public MM
     }
 
     static void uodr(int s, int, BS &b) {
-        if (!b.koed(s) && poke(b,s)["LastMoveUsed"] == Move::Rage) {
+        if (!b.koed(s) && poke(b,s)["AnyLastMoveUsed"] == Move::Rage) {
             poke(b,s)["RageBuilt"] = true;
             if (!b.hasMaximalStatMod(s, Attack)) {
                 b.inflictStatMod(s, Attack, 1,false);
