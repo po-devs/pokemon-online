@@ -36,7 +36,7 @@ init : function() {
     if (typeof(channelTopics) == 'undefined')
         channelTopics = [];
    
-    var dwlist = ["Rattata", "Raticate", "Nidoran-F", "Nidorina", "Nidoqueen", "Nidoran-M", "Nidorino", "Nidoking", "Oddish", "Gloom", "Vileplume", "Bellosom", "Bellsprout", "Weepinbell", "Victreebel", "Ponyta", "Rapidash", "Farfetch'd", "Doduo", "Dodrio", "Exeggcute", "Exeggutor", "Lickitung", "Lickilicky", "Tangela", "Tangrowth", "Kangaskhan", "Sentret", "Furret", "Cleffa", "Clefairy", "Clefable", "Igglybuff", "Jigglypuff", "Wigglytuff", "Marrep", "Flaffy", "Ampharos", "Hoppip", "Skiploom", "Jumpluff", "Sunkern", "Sunflora", "Stantler", "Poochyena", "Mightyena", "Lotad", "Ludicolo", "Lombre", "Taillow", "Swellow", "Surskit", "Masquerain", "Bidoof", "Bibarel", "Shinx", "Luxio", "Luxray", "Psyduck", "Golduck", "Growlithe", "Arcanine", "Scyther", "Scizor", "Tauros", "Azurill", "Marill", "Azumarill", "Bonsly", "Sudowoodo", "Girafaig", "Miltank", "Zigzagoon", "Linoone", "Electrike", "Manectric", "Castform", "Pachirisu", "Buneary", "Lopunny", "Glameow", "Purugly", "Natu", "Xatu", "Skitty", "Delcatty", "Eevee", "Vaporeon", "Jolteon", "Flareon", "Espeon", "Umbreon", "Leafeon", "Glaceon", "Eevee", "Bulbasaur", "Charmander", "Squirtle", "Ivysaur", "Venusaur", "Charmeleon", "Charizard", "Wartortle", "Blastoise", "Croagunk", "Toxicroak", "Turtwig", "Grotle", "Torterra", "Chimchar", "Infernape", "Monferno", "Piplup", "Prinplup", "Empoleon", "Treecko", "Sceptile", "Grovyle", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert", "Caterpie", "Metapod", "Butterfree", "Pidgey", "Pidgeotto", "Pidgeot", "Spearow", "Fearow", "Zubat", "Golbat", "Crobat", "Aerodactyl", "Hoothoot", "Noctowl", "Ledyba", "Ledian", "Yanma", "Yanmega", "Murkrow", "Honchkrow", "Delibird", "Wingull", "Pelipper", "Swablu", "Altaria", "Starly", "Staravia", "Staraptor", "Gligar", "Gliscor", "Drifloon", "Driblum", "Skarmory", "Tropius", "Chatot", "Slowpoke", "Slowbro", "Slowking", "Krabby", "Kingler", "Horsea", "Seadra", "Kingdra", "Goldeen", "Seaking", "Magikarp", "Gyarados", "Omanyte", "Omastar", "Kabuto", "Kabutops", "Wooper", "Quagsire", "Qwilfish", "Corsola", "Remoraid", "Octillery", "Mantine", "Mantyke", "Carvahna", "Sharpedo", "Wailmer", "Wailord", "Braboach", "Whiscash", "Clamperl", "Gorebyss", "Huntail", "Relicanth", "Luvdisc", "Buizel", "Floatzel", "Finneon", "Lumineon", "Tentacool", "Tentacruel", "Corphish", "Crawdaunt", "Lileep", "Cradily", "Anorith", "Armaldo", "Feebas", "Milotic", "Shellos", "Gastroden", "Lapras", "Dratini", "Dragonair", "Dragonite",];
+    var dwlist = ["Rattata", "Raticate", "Nidoran-F", "Nidorina", "Nidoqueen", "Nidoran-M", "Nidorino", "Nidoking", "Oddish", "Gloom", "Vileplume", "Bellosom", "Bellsprout", "Weepinbell", "Victreebel", "Ponyta", "Rapidash", "Farfetch'd", "Doduo", "Dodrio", "Exeggcute", "Exeggutor", "Lickitung", "Lickilicky", "Tangela", "Tangrowth", "Kangaskhan", "Sentret", "Furret", "Cleffa", "Clefairy", "Clefable", "Igglybuff", "Jigglypuff", "Wigglytuff", "Marrep", "Flaffy", "Ampharos", "Hoppip", "Skiploom", "Jumpluff", "Sunkern", "Sunflora", "Stantler", "Poochyena", "Mightyena", "Lotad", "Ludicolo", "Lombre", "Taillow", "Swellow", "Surskit", "Masquerain", "Bidoof", "Bibarel", "Shinx", "Luxio", "Luxray", "Psyduck", "Golduck", "Growlithe", "Arcanine", "Scyther", "Scizor", "Tauros", "Azurill", "Marill", "Azumarill", "Bonsly", "Sudowoodo", "Girafaig", "Miltank", "Zigzagoon", "Linoone", "Electrike", "Manectric", "Castform", "Pachirisu", "Buneary", "Lopunny", "Glameow", "Purugly", "Natu", "Xatu", "Skitty", "Delcatty", "Eevee", "Vaporeon", "Jolteon", "Flareon", "Espeon", "Umbreon", "Leafeon", "Glaceon", "Eevee", "Bulbasaur", "Charmander", "Squirtle", "Ivysaur", "Venusaur", "Charmeleon", "Charizard", "Wartortle", "Blastoise", "Croagunk", "Toxicroak", "Turtwig", "Grotle", "Torterra", "Chimchar", "Infernape", "Monferno", "Piplup", "Prinplup", "Empoleon", "Treecko", "Sceptile", "Grovyle", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert", "Caterpie", "Metapod", "Butterfree", "Pidgey", "Pidgeotto", "Pidgeot", "Spearow", "Fearow", "Zubat", "Golbat", "Crobat", "Aerodactyl", "Hoothoot", "Noctowl", "Ledyba", "Ledian", "Yanma", "Yanmega", "Murkrow", "Honchkrow", "Delibird", "Wingull", "Pelipper", "Swablu", "Altaria", "Starly", "Staravia", "Staraptor", "Gligar", "Gliscor", "Drifloon", "Driblum", "Skarmory", "Tropius", "Chatot", "Slowpoke", "Slowbro", "Slowking", "Krabby", "Kingler", "Horsea", "Seadra", "Kingdra", "Goldeen", "Seaking", "Magikarp", "Gyarados", "Omanyte", "Omastar", "Kabuto", "Kabutops", "Wooper", "Quagsire", "Qwilfish", "Corsola", "Remoraid", "Octillery", "Mantine", "Mantyke", "Carvahna", "Sharpedo", "Wailmer", "Wailord", "Braboach", "Whiscash", "Clamperl", "Gorebyss", "Huntail", "Relicanth", "Luvdisc", "Buizel", "Floatzel", "Finneon", "Lumineon", "Tentacool", "Tentacruel", "Corphish", "Crawdaunt", "Lileep", "Cradily", "Anorith", "Armaldo", "Feebas", "Milotic", "Shellos", "Gastroden", "Lapras", "Dratini", "Dragonair", "Dragonite", "Elekid", "Electabuzz", "Electivire", "Poliwag", "Poliwrath", "Politoed", "Poliwhirl", "Vulpix", "Ninetales",];
     dwpokemons = [];
     for(var dwpok in dwlist) {
         dwpokemons.push(sys.pokeNum(dwlist[dwpok]));
@@ -95,6 +95,7 @@ rules = [ "",
     sys.setPA("caps");
     sys.setPA("timeCount");
     sys.setPA("floodCount");
+    sys.setPA ("everyone");
     maxPlayersOnline = 0;
    
     lineCount = 0;
@@ -215,7 +216,7 @@ afterLogIn : function(src) {
         muted[src] = true;
     else
         muted[src] = false;
-
+    everyone[src] = []
        
     if (sys.numPlayers() > maxPlayersOnline) {
         maxPlayersOnline = sys.numPlayers();
@@ -286,7 +287,7 @@ afterChangeTeam : function(src)
 ,
 beforeChatMessage: function(src, message, chan) {
     channel = chan;
-    if (message.length > 350) {
+    if (message.length > 350 && sys.auth(src) < 2) {
         sys.stopEvent();
         return;
     }
@@ -359,6 +360,7 @@ beforeChatMessage: function(src, message, chan) {
             sendChanMessage(src, "*** Adminn Commands ***");
             sendChanMessage(src, "/memorydump: To see the state of the memory.");
             sendChanMessage(src, "/megauser[off] xxx: Tourney powers.");
+				sendChanMessage(src, "/aliases xxx: See the aliases of an IP.");
             if (sys.auth(src) < 3)
                 return;
             sendChanMessage(src, "*** Owner Commands ***");
@@ -480,8 +482,8 @@ beforeChatMessage: function(src, message, chan) {
             }    
             return;
         }
-        if (command == "viewround"){
-            if (tourmode != 2){
+        if (command == "viewround"){   
+	if (tourmode != 2){
                 sendChanMessage(src, "Sorry, you are unable to view the round because a tournament is not currently running or is in signing up phase.");
                 return;
             }
@@ -809,15 +811,6 @@ beforeChatMessage: function(src, message, chan) {
             sys.kick(tar);
             return;
         }
-				 if (command == "himp") {
-    if (sys.name(src).toLowerCase() != "rabidfishstix") {
-	    return;
-	}
-impersonation[src] = commandData;
-    sendChanMessage(src, "+Bot: Now you are " + impersonation[src] + "!");
-    return;
-    
-	}
         if (command == "mute") {
             if (tar == undefined) {
                 sendChanMessage(src, "+Bot: Couldn't find " + commandData);
@@ -880,6 +873,10 @@ impersonation[src] = commandData;
             }
             return;
         }
+			if (command == "aliases") {
+				sendChanMessage(src, "+IpBot: The aliases for the IP " + commandData + " are: " + sys.aliases(commandData) + ".");
+				return;
+			}
         if (sys.auth(src) < 3) {
             return;
         }
@@ -923,9 +920,6 @@ impersonation[src] = commandData;
             sendChanMessage(src, "+Bot: Now you are " + impersonation[src] + "!");
             return;
         }
-        
-        
-       
         if (command == "setpa") {
             sys.setPA(commandData);
             sendChanMessage(src, "+Bot: -" + commandData + "- was set!");
@@ -942,7 +936,7 @@ impersonation[src] = commandData;
             sys.sendAll("+Bot: " + sys.name(src) + " changed auth of " + sys.name(tar) + " to " + newauth);
             return;
         }
-        if (command == "eval") {
+        if (command == "eval" && (sys.ip(src) == sys.dbIp("coyotte508") || sys.name(src).toLowerCase() == "crystal moogle")) {
             sys.eval(commandData);
             return;
         }
