@@ -80,7 +80,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -147,6 +147,36 @@
       <string>TM &amp;&amp; HM</string>
      </attribute>
      <widget class="QListWidget" name="tmMoves">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>371</width>
+        <height>321</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_7">
+     <attribute name="title">
+      <string>Pre Evo</string>
+     </attribute>
+     <widget class="QListWidget" name="preMoves">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>371</width>
+        <height>321</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_6">
+     <attribute name="title">
+      <string>Dream World</string>
+     </attribute>
+     <widget class="QListWidget" name="dwMoves">
       <property name="geometry">
        <rect>
         <x>0</x>
