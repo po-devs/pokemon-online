@@ -900,7 +900,7 @@ void BattleSituation::analyzeChoices()
 {
     /* If there's no choice then the effects are already taken care of */
     for (int i = 0; i < numberOfSlots(); i++) {
-        if (!turnMemory(i).contains("NoChoice") && choice(i).attackingChoice()) {
+        if (!koed(i) && !turnMemory(i).contains("NoChoice") && choice(i).attackingChoice()) {
             if (!options[i].struggle())
                 MoveEffect::setup(move(i,choice(i).pokeSlot()), i, i, *this);
             else
@@ -1364,8 +1364,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     turnMemory(slot)["CantGetToMove"] = true;
 
-    ItemEffect::setup(p.item(),slot,*this);
-
     calleffects(slot, slot, "UponSwitchIn");
     callseffects(slot, slot, "UponSwitchIn");
     callzeffects(player, slot, "UponSwitchIn");
@@ -1374,6 +1372,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 void BattleSituation::callEntryEffects(int player)
 {
     if (!koed(player)) {
+        ItemEffect::setup(poke(player).item(), player, *this);
         acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
     }
@@ -1754,7 +1753,7 @@ void BattleSituation::testFlinch(int player, int target)
         turnMemory(target)["Flinched"] = true;
     }
 
-    if (hasWorkingItem(player, Item::KingsRock)) /* King's rock */
+    if (tmove(player).kingRock && hasWorkingItem(player, Item::KingsRock)) /* King's rock */
     {
         if (true_rand() % 100 < 10) {
             turnMemory(target)["Flinched"] = true;
@@ -1846,15 +1845,15 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
         pokeMemory(player)["LastMoveUsed"] = attack;
         pokeMemory(player)["LastMoveUsedTurn"] = turn();
+        pokeMemory(player)["AnyLastMoveUsed"] = attack;
     } else if (attack != 0 && pokeMemory(player).value("LastMoveUsedTurn").toInt() != turn() && attack != Move::Struggle) {
 	/* Recharge moves have their attack as 0 on the recharge turn : Blast Burn , ...
 	  So that's why attack is tested against 0. */
 	/* Those are needed for when a choiced move is used, or torment is used, and for example
 		the foe used Assit + Fly or simply fly. */
         if (attack != Move::Struggle) {
-            pokeMemory(player)["LastMoveUsed"] = attack;
+            pokeMemory(player)["AnyLastMoveUsed"] = attack;
         }
-        pokeMemory(player)["LastMoveUsedTurn"] = turn();
     }
 
     //For metronome calling fly / sky attack / ...
@@ -2467,12 +2466,13 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         if (!stat)
             break;
 
-        if (stat == Evasion && (clauses() & ChallengeInfo::EvasionClause)) {
+        char increase = char (fm.boostOfStat >> (i*8));
+
+        if (stat == Evasion && increase > 0 && (clauses() & ChallengeInfo::EvasionClause)) {
             notifyClause(ChallengeInfo::EvasionClause);
             continue;
         }
 
-        char increase = char (fm.boostOfStat >> (i*8));
         int rate = char (fm.rateOfStat >> (i*8));
 
         if (increase < 0 && target != player && sub) {
@@ -3923,11 +3923,15 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     if (attacker != -1 && attacked != -1) {
         //Unaware
         if (attacker != player && attacked == player) {
-            if ( (hasWorkingAbility(attacker, Ability::Unaware) || tmove(attacker).attack == Move::PaymentPlan
-                  || tmove(attacker).attack == Move::SacredSword)
-                && (stat == SpDefense || stat == Defense))
+            if (hasWorkingAbility(attacker, Ability::Unaware) && (stat == SpDefense || stat == Defense || stat == Evasion)) {
                 boost = 0;
-        } else if (attacker == player && attacked != player && hasWorkingAbility(attacked, Ability::Unaware) && (stat == SpAttack || stat == Attack)) {
+            }
+            else if ((tmove(attacker).attack == Move::PaymentPlan
+                      || tmove(attacker).attack == Move::SacredSword)&& (stat == SpDefense || stat == Defense)) {
+                boost = 0;
+            }
+        } else if (attacker == player && attacked != player && hasWorkingAbility(attacked, Ability::Unaware) &&
+                   (stat == SpAttack || stat == Attack || stat == Accuracy)) {
             boost = 0;
         }
         //Critical hit

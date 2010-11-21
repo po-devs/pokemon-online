@@ -64,7 +64,7 @@ void PokeMovesDb::init()
 
 void PokeMovesDb::save()
 {
-    QFile files[3][6];
+    QFile files[3][7];
 
     for (int gen = 3; gen <= 5; gen++) {
         QString genS = "db/pokes/" + QString::number(gen) + "G_";
@@ -74,12 +74,13 @@ void PokeMovesDb::save()
         files[gen-3][SpecialMoves].setFileName(genS + "special_moves.txt");
         files[gen-3][TMMoves].setFileName(genS + "tm_and_hm_moves.txt");
         files[gen-3][PreEvoMoves].setFileName(genS + "pre_evo_moves.txt");
+        files[gen-3][DreamWorldMoves].setFileName(genS + "dw_moves.txt");
     }
 
     QList<Pokemon::uniqueId> ids = PokemonInfo::AllIds();
     qSort(ids);
     for (int gen = 3; gen <= 5; gen++) {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < (gen == 5 ? 7 : 6); i++) {
             files[gen-3][i].open(QIODevice::WriteOnly);
             foreach (Pokemon::uniqueId id, ids) {
                 if (PokemonInfo::IsAesthetic(id) || pokes[id].gens[gen-3].moves[i].size() == 0)
@@ -339,6 +340,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->eggMoves, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(moveDeleted(QListWidgetItem*)));
     connect(ui->tutorMoves, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(moveDeleted(QListWidgetItem*)));
     connect(ui->tmMoves, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(moveDeleted(QListWidgetItem*)));
+    connect(ui->dwMoves, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(moveDeleted(QListWidgetItem*)));
 }
 
 MainWindow::~MainWindow()
@@ -381,6 +383,8 @@ void MainWindow::switchToPokemon(Pokemon::uniqueId num)
     addMoves(gen, SpecialMoves, ui->specialMoves);
     addMoves(gen, TutorMoves, ui->tutorMoves);
     addMoves(gen, TMMoves, ui->tmMoves);
+    addMoves(gen, PreEvoMoves, ui->preMoves);
+    addMoves(gen, DreamWorldMoves, ui->dwMoves);
 }
 
 void MainWindow::addMoves(int gen, int cat, QListWidget *container)
@@ -439,6 +443,10 @@ void MainWindow::moveDeleted(QListWidgetItem *it)
         cat = SpecialMoves;
     } else if (container == ui->tmMoves) {
         cat = TMMoves;
+    } else if (container == ui->preMoves) {
+        cat = PreEvoMoves;
+    } else if (container == ui->dwMoves) {
+        cat = DreamWorldMoves;
     }
 
     QSet<int> &moves = database.pokes[currentPoke].gens[gen()-3].moves[cat];

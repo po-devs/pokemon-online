@@ -21,6 +21,7 @@ struct PokemonMoves
     QSet<int> specialMoves[NUMBER_GENS];
     QSet<int> tutorMoves[NUMBER_GENS];
     QSet<int> genMoves[NUMBER_GENS];
+    QSet<int> dreamWorldMoves;
 };
 
 
@@ -57,6 +58,7 @@ public:
     static QSet<int> PreEvoMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
     static QSet<int> SpecialMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
     static QSet<int> RegularMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static QSet<int> dreamWorldMoves(const Pokemon::uniqueId &pokeid);
     static QList<Pokemon::uniqueId> AllIds();
     // Base form do NOT count.
     static quint16 NumberOfAFormes(const Pokemon::uniqueId &pokeid);
@@ -172,6 +174,7 @@ public:
     static int Flags(int movenum, int gen);
     static bool Exists(int movenum, int gen);
     static bool isOHKO(int movenum, int gen);
+    static bool FlinchByKingRock(int movenum);
     static int EffectRate(int movenum, int gen);
     static quint32 StatAffected(int movenum, int gen);
     static quint32 BoostOfStat(int movenum, int gen);
@@ -199,6 +202,7 @@ private:
     static QList<QString> m_Details;
     static QList<QString> m_SpecialEffects;
     static QList<int> m_OldMoves;
+    static QVector<bool> m_KingRock;
 
     struct Gen {
         void load(const QString &path, int gen);
