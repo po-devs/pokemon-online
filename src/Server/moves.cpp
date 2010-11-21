@@ -47,6 +47,7 @@ MoveEffect::MoveEffect(int num, int gen, BattleSituation::BasicMoveInfo &data)
     data.statAffected = MoveInfo::StatAffected(num, gen);
     data.boostOfStat = MoveInfo::BoostOfStat(num, gen);
     data.rateOfStat = MoveInfo::RateOfStat(num, gen);
+    data.kingRock = MoveInfo::FlinchByKingRock(num);
 }
 
 /* There's gonna be tons of structures inheriting it,
@@ -752,7 +753,7 @@ struct MMOHKO : public MM
 	    turn(b,s)["Failed"] = true;
             return;
 	}
-        if (b.gen() <= 4 && b.hasWorkingAbility(t, Ability::Sturdy)) {
+        if (b.hasWorkingAbility(t, Ability::Sturdy)) {
             b.fail(s,43,0,type(b,s));
         }
     }
@@ -849,11 +850,17 @@ struct MMPerishSong : public MM
 {
     MMPerishSong() {
 	functions["UponAttackSuccessful"] = &uas;
-        functions["MoveSettings"] = &ms;
+        functions["BeforeTargetList"] = &btl;
     }
 
-    static void ms(int s, int, BS &b) {
-        tmove(b,s).targets = Move::User;
+    /* Perish Song is a move that affects all, and is affected by pressure.
+       So we keep it an all target move until the execution,
+       where we handle this differently. */
+    static void btl(int s, int, BS &b) {
+        if (tmove(b,s).power == 0) {
+            b.targetList.clear();
+            b.targetList.push_back(s);
+        }
     }
 
     static void uas(int s, int, BS &b) {
@@ -902,13 +909,22 @@ struct MMHaze : public MM
         }
     }
 
-    static void uas(int , int , BS &b) {
-        b.sendMoveMessage(149);
+    static void uas(int s, int t, BS &b) {
 
-        foreach (int p, b.sortedBySpeed())
-        {
+        if (tmove(b,s).power == 0) {
+            b.sendMoveMessage(149);
+
+            foreach (int p, b.sortedBySpeed())
+            {
+                for (int i = 1; i <= 7; i++) {
+                    fpoke(b,p).boosts[i] = 0;
+                }
+            }
+        }
+        else {
+            b.sendMoveMessage(149, 1, s, type(b,s), t);
             for (int i = 1; i <= 7; i++) {
-                fpoke(b,p).boosts[i] = 0;
+                fpoke(b,t).boosts[i] = 0;
             }
         }
     }
@@ -1557,10 +1573,12 @@ struct MMCopycat : public MM
         removeFunction(turn(b,s), "UponAttackSuccessful", "Copycat");
         removeFunction(turn(b,s), "DetermineAttackFailure", "Copycat");
 	int attack = turn(b,s)["CopycatMove"].toInt();
+        BS::BasicMoveInfo info = tmove(b,s);
 	MoveEffect::setup(attack, s, t, b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
-	b.useAttack(s, turn(b,s)["CopycatMove"].toInt(), true);
+        b.useAttack(s, attack, true);
         MoveEffect::unsetup(attack, s, b);
+        tmove(b,s) = info;
     }
 };
 
@@ -1836,7 +1854,7 @@ struct MMBounce : public MM
 	}
 	poke(b,s)["Invulnerable"] = true;
 	poke(b,s)["VulnerableMoves"].setValue(vuln_moves);
-	poke(b,s)["VulnerableMults"].setValue(vuln_mult);
+        poke(b,s)["VulnerableMults"].setValue(vuln_mult);
         b.changeSprite(s, -1);
         addFunction(poke(b,s), "TestEvasion", "Bounce", &dgaf);
         addFunction(poke(b,s), "TurnSettings", "Bounce", &ts);
@@ -1852,6 +1870,8 @@ struct MMBounce : public MM
             addFunction(poke(b,t), "TestEvasion", "Bounce", &dgaf);
             addFunction(poke(b,t), "DetermineAttackPossible", "Bounce", &dap);
             addFunction(poke(b,s), "AfterBeingKoed", "Bounce", &ewc);
+            poke(b,t)["VulnerableMoves"].setValue(vuln_moves);
+            poke(b,t)["VulnerableMults"].setValue(vuln_mult);
         }
     }
 
@@ -3650,7 +3670,7 @@ struct MMRage : public MM
 
     static void uas(int s, int, BS &b) {
         addFunction(poke(b,s), "UponOffensiveDamageReceived", "Rage", &uodr);
-        if (poke(b,s).contains("RageBuilt") && poke(b,s)["LastMoveUsed"] == Move::Rage) {
+        if (poke(b,s).contains("RageBuilt") && poke(b,s)["AnyLastMoveUsed"] == Move::Rage) {
             poke(b,s).remove("AttractBy");
             b.healConfused(s);
             poke(b,s).remove("Tormented");
@@ -3659,7 +3679,7 @@ struct MMRage : public MM
     }
 
     static void uodr(int s, int, BS &b) {
-        if (!b.koed(s) && poke(b,s)["LastMoveUsed"] == Move::Rage) {
+        if (!b.koed(s) && poke(b,s)["AnyLastMoveUsed"] == Move::Rage) {
             poke(b,s)["RageBuilt"] = true;
             if (!b.hasMaximalStatMod(s, Attack)) {
                 b.inflictStatMod(s, Attack, 1,false);

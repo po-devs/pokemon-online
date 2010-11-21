@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri 17. Sep 13:12:11 2010
+** Created: Sun 21. Nov 15:14:01 2010
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -54,6 +54,10 @@ public:
     QListWidget *specialMoves;
     QWidget *tab_5;
     QListWidget *tmMoves;
+    QWidget *tab_7;
+    QListWidget *preMoves;
+    QWidget *tab_6;
+    QListWidget *dwMoves;
     QListWidget *moveList;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -133,6 +137,18 @@ public:
         tmMoves->setObjectName(QString::fromUtf8("tmMoves"));
         tmMoves->setGeometry(QRect(0, 0, 371, 321));
         pokeMoves->addTab(tab_5, QString());
+        tab_7 = new QWidget();
+        tab_7->setObjectName(QString::fromUtf8("tab_7"));
+        preMoves = new QListWidget(tab_7);
+        preMoves->setObjectName(QString::fromUtf8("preMoves"));
+        preMoves->setGeometry(QRect(0, 0, 371, 321));
+        pokeMoves->addTab(tab_7, QString());
+        tab_6 = new QWidget();
+        tab_6->setObjectName(QString::fromUtf8("tab_6"));
+        dwMoves = new QListWidget(tab_6);
+        dwMoves->setObjectName(QString::fromUtf8("dwMoves"));
+        dwMoves->setGeometry(QRect(0, 0, 371, 321));
+        pokeMoves->addTab(tab_6, QString());
         moveList = new QListWidget(centralWidget);
         moveList->setObjectName(QString::fromUtf8("moveList"));
         moveList->setGeometry(QRect(430, 20, 301, 651));
@@ -155,7 +171,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        pokeMoves->setCurrentIndex(4);
+        pokeMoves->setCurrentIndex(5);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -178,6 +194,8 @@ public:
         pokeMoves->setTabText(pokeMoves->indexOf(tab_3), QApplication::translate("MainWindow", "Egg Moves", 0, QApplication::UnicodeUTF8));
         pokeMoves->setTabText(pokeMoves->indexOf(tab_4), QApplication::translate("MainWindow", "Special", 0, QApplication::UnicodeUTF8));
         pokeMoves->setTabText(pokeMoves->indexOf(tab_5), QApplication::translate("MainWindow", "TM && HM", 0, QApplication::UnicodeUTF8));
+        pokeMoves->setTabText(pokeMoves->indexOf(tab_7), QApplication::translate("MainWindow", "Pre Evo", 0, QApplication::UnicodeUTF8));
+        pokeMoves->setTabText(pokeMoves->indexOf(tab_6), QApplication::translate("MainWindow", "Dream World", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

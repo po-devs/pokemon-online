@@ -43,6 +43,7 @@ QList<QStringList> MoveInfo::m_MoveMessages;
 QList<QString> MoveInfo::m_Details;
 QList<QString> MoveInfo::m_SpecialEffects;
 QList<int> MoveInfo::m_OldMoves;
+QVector<bool> MoveInfo::m_KingRock;
 
 QString ItemInfo::m_Directory;
 QList<QString> ItemInfo::m_BerryNames;
@@ -153,6 +154,23 @@ static void fill_container_with_file(QList<QString> &container, const QString & 
 }
 
 static void fill_container_with_file(QVector<char> &container, const QString & filename)
+{
+    QFile file(filename);
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream filestream(&file);
+
+    /* discarding all the uninteresting lines, should find a more effective way */
+    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+    {
+        int var;
+        filestream >> var;
+        container << var;
+    }
+}
+
+static void fill_container_with_file(QVector<bool> &container, const QString & filename)
 {
     QFile file(filename);
 
@@ -646,6 +664,11 @@ QSet<int> PokemonInfo::PreEvoMoves(const Pokemon::uniqueId &pokeid, int gen)
     return m_Moves.value(pokeid).preEvoMoves[gen-3];
 }
 
+QSet<int> PokemonInfo::dreamWorldMoves(const Pokemon::uniqueId &pokeid)
+{
+    return m_Moves.value(pokeid).dreamWorldMoves;
+}
+
 AbilityGroup PokemonInfo::Abilities(const Pokemon::uniqueId &pokeid, int gen)
 {
     AbilityGroup ret;
@@ -793,7 +816,7 @@ bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
 
 void PokemonInfo::loadMoves()
 {
-    static const int filesize = 17;
+    static const int filesize = 18;
 
     QString fileNames[filesize] = {
         path("3G_tm_and_hm_moves.txt"), path("3G_egg_moves.txt"), path("3G_level_moves.txt"),
@@ -801,7 +824,7 @@ void PokemonInfo::loadMoves()
         path("4G_pre_evo_moves.txt"), path("4G_egg_moves.txt"), path("4G_level_moves.txt"),
         path("4G_tutor_moves.txt"), path("4G_special_moves.txt"), path("5G_tm_and_hm_moves.txt"),
         path("5G_pre_evo_moves.txt"), path("5G_egg_moves.txt"), path("5G_level_moves.txt"),
-        path("5G_tutor_moves.txt"), path("5G_special_moves.txt")
+        path("5G_tutor_moves.txt"), path("5G_special_moves.txt"), path("5G_dw_moves.txt")
     };
 
     for (int i = 0; i < filesize; i++) {
@@ -826,7 +849,8 @@ void PokemonInfo::loadMoves()
                 QSet<int> *refs[filesize] = {
                     &moves.TMMoves[0], &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0],
                     &moves.TMMoves[1], &moves.preEvoMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1],
-                    &moves.TMMoves[2], &moves.preEvoMoves[2], &moves.eggMoves[2], &moves.levelMoves[2], &moves.tutorMoves[2], &moves.specialMoves[2]
+                    &moves.TMMoves[2], &moves.preEvoMoves[2], &moves.eggMoves[2], &moves.levelMoves[2], &moves.tutorMoves[2], &moves.specialMoves[2],
+                    &moves.dreamWorldMoves
                 };
                 *refs[i] = data_set;
             }
@@ -843,6 +867,10 @@ void PokemonInfo::loadMoves()
             moves.regularMoves[i].unite(moves.levelMoves[i]).unite(moves.tutorMoves[i]);
             moves.genMoves[i] = moves.regularMoves[i];
             moves.genMoves[i].unite(moves.specialMoves[i]).unite(moves.eggMoves[i]).unite(moves.preEvoMoves[i]);
+
+            if (i == 3) {
+                moves.genMoves[i].unite(moves.dreamWorldMoves);
+            }
 
             if (i > 0) {
                 moves.genMoves[i].unite(moves.genMoves[i-1]);
@@ -1059,6 +1087,7 @@ void MoveInfo::init(const QString &dir)
     loadSpecialEffects();
 
     fill_container_with_file(m_OldMoves, path("oldmoves.txt"));
+    fill_container_with_file(m_KingRock, path("king_rock.txt"));
 
     for (int i = 0; i < Version::NumberOfGens; i++) {
         gens[i].load(dir, i+1);
@@ -1118,6 +1147,11 @@ int MoveInfo::Category(int movenum, int g)
 int MoveInfo::Classification(int movenum, int g)
 {
     return gen(g).category[movenum];
+}
+
+bool MoveInfo::FlinchByKingRock(int movenum)
+{
+    return m_KingRock[movenum];
 }
 
 int MoveInfo::Number(const QString &movename)
