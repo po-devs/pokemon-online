@@ -15,14 +15,15 @@ enum {
     EggMoves,
     SpecialMoves,
     TMMoves,
-    PreEvoMoves
+    PreEvoMoves,
+    DreamWorldMoves
 };
 
 struct MoveGen
 {
     int gen;
     Pokemon::uniqueId id;
-    QSet<int> moves[6];
+    QSet<int> moves[7];
 
     void init(int gen, Pokemon::uniqueId id);
 };
