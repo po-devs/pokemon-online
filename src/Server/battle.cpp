@@ -3773,9 +3773,9 @@ int BattleSituation::getBoostedStat(int player, int stat)
             givenStat = 3 - stat;
         }
         /* Wonder room: attack & sp attack switched, 5th gen */
-        if (battleMemory().contains("WonderRoomCount") && (stat == 2 || stat == 3)) {
-            stat = 5 - stat;
-            givenStat = 5 - givenStat;
+        if (battleMemory().contains("WonderRoomCount") && (stat == 2 || stat == 4)) {
+            stat = 6 - stat;
+            givenStat = 6 - givenStat;
         }
         return fpoke(player).stats[givenStat] *getStatBoost(player, stat);
     }
