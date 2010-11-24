@@ -1373,7 +1373,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 void BattleSituation::callEntryEffects(int player)
 {
     if (!koed(player)) {
-        pokeMemory(slot).remove("BeforeSetups");
+        pokeMemory(player).remove("BeforeSetups");
         ItemEffect::setup(poke(player).item(), player, *this);
         acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
@@ -2469,11 +2469,6 @@ void BattleSituation::applyMoveStatMods(int player, int target)
             break;
 
         char increase = char (fm.boostOfStat >> (i*8));
-
-        if (stat == Evasion && increase > 0 && (clauses() & ChallengeInfo::EvasionClause)) {
-            notifyClause(ChallengeInfo::EvasionClause);
-            continue;
-        }
 
         int rate = char (fm.rateOfStat >> (i*8));
 
