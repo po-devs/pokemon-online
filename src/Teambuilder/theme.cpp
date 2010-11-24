@@ -54,7 +54,7 @@ QString Theme::path(const QString& file, bool def)
             return test;
     }
 
-    return "Themes/Default/" + file;
+    return ("Themes/" DEFAULT_PO_THEME "/") + file;
 }
 
 void Theme::loadColors()
