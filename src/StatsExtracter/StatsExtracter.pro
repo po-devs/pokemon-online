@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT +=
+QT += gui
 TARGET = StatsExtracter
 DESTDIR = ../../bin
 
