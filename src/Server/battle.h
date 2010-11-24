@@ -65,9 +65,6 @@ public:
     bool sleepClause() const {
         return clauses() & ChallengeInfo::SleepClause;
     }
-    bool OHKOClause() const {
-        return clauses() & ChallengeInfo::OHKOClause;
-    }
 
     void notifyClause(int clause);
 

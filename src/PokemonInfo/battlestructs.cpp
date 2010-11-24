@@ -7,8 +7,6 @@ QString ChallengeInfo::clauseText[] =
 {
     QObject::tr("Sleep Clause"),
     QObject::tr("Freeze Clause"),
-    QObject::tr("Evasion Clause"),
-    QObject::tr("OHKO Clause"),
     QObject::tr("Disallow Spects"),
     QObject::tr("Item Clause"),
     QObject::tr("Challenge Cup"),
@@ -22,8 +20,6 @@ QString ChallengeInfo::clauseBattleText[] =
 {
     QObject::tr("Sleep Clause prevented the sleep inducing effect of the move from working."),
     QObject::tr("Freeze Clause prevented the freezing effect of the move from working."),
-    QObject::tr("Evasion Clause prevented the evasion increase of the move."),
-    QObject::tr("OHKO Clause prevented the One Hit KO from happening."),
     QObject::tr(""),
     QObject::tr(""),
     QObject::tr(""),
@@ -37,8 +33,6 @@ QString ChallengeInfo::clauseDescription[] =
 {
     QObject::tr("You can not put more than one Pokemon of the opposing team to sleep at the same time."),
     QObject::tr("You can not freeze more than one Pokemon of the opposing team at the same time."),
-    QObject::tr("You can't use evasion moves like Double Team."),
-    QObject::tr("You can't use One Hit KO moves like Fissure."),
     QObject::tr("Nobody can watch your battle."),
     QObject::tr("No more than one of the same items is allowed per team."),
     QObject::tr("Random teams are given to trainers."),

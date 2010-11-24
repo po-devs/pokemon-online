@@ -745,10 +745,6 @@ struct MMOHKO : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.OHKOClause()) {
-            turn(b,s)["Failed"] = true;
-            b.notifyClause(ChallengeInfo::OHKOClause);
-        }
 	if (b.poke(s).level() < b.poke(t).level()) {
 	    turn(b,s)["Failed"] = true;
             return;
