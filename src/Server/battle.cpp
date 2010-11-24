@@ -1363,6 +1363,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     }
 
     turnMemory(slot)["CantGetToMove"] = true;
+    pokeMemory(slot)["BeforeSetups"] = true;
 
     calleffects(slot, slot, "UponSwitchIn");
     callseffects(slot, slot, "UponSwitchIn");
@@ -1372,6 +1373,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 void BattleSituation::callEntryEffects(int player)
 {
     if (!koed(player)) {
+        pokeMemory(slot).remove("BeforeSetups");
         ItemEffect::setup(poke(player).item(), player, *this);
         acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
@@ -2360,7 +2362,7 @@ bool BattleSituation::hasWorkingItem(int player, int it)
 {
     //Klutz
     return poke(player).item() == it && !pokeMemory(player).value("Embargoed").toBool() && !hasWorkingAbility(player, Ability::Klutz)
-            && battleMemory().value("MagicRoomCount").toInt() == 0
+            && battleMemory().value("MagicRoomCount").toInt() == 0 && !pokeMemory(player).contains("BeforeSetups")
             && !(ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(player, Ability::Anxiety));
 }
 
