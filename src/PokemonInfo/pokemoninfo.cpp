@@ -366,8 +366,8 @@ void PokemonInfo::init(const QString &dir)
 
     fill_uid_int(m_Genders, path("poke_gender.txt"));
 
-    for (int i = 0; i < 3; i++) {
-        int gen = i+3;
+    for (int i = 0; i < NUMBER_GENS; i++) {
+        int gen = i+GEN_MIN;
 
         fill_uid_int(m_Type1[i], path(QString("poke_type1-%1G.txt").arg(gen)));
         fill_uid_int(m_Type2[i], path(QString("poke_type2-%1G.txt").arg(gen)));
@@ -862,13 +862,13 @@ void PokemonInfo::loadMoves()
         it.next();
         PokemonMoves moves = it.value();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < NUMBER_GENS; i++) {
             moves.regularMoves[i] = moves.TMMoves[i];
             moves.regularMoves[i].unite(moves.levelMoves[i]).unite(moves.tutorMoves[i]);
             moves.genMoves[i] = moves.regularMoves[i];
             moves.genMoves[i].unite(moves.specialMoves[i]).unite(moves.eggMoves[i]).unite(moves.preEvoMoves[i]);
 
-            if (i == 3) {
+            if (i == 5 - GEN_MIN) {
                 moves.genMoves[i].unite(moves.dreamWorldMoves);
             }
 
