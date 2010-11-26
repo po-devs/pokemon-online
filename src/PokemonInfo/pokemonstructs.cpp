@@ -879,9 +879,9 @@ bool TrainerTeam::importFromTxt(const QString &file1)
             int evnum = ev2[0].toInt();
             int stat = 0;
 
-            if (ev2[1] == "SDef")
+            if (ev2[1] == "SDef" || ev2[1] == "SpDef")
                 stat = SpDefense;
-            else if (ev2[1] == "SAtk")
+            else if (ev2[1] == "SAtk" || ev2[1] == "SpAtk")
                 stat = SpAttack;
             else if (ev2[1] == "Spd")
                 stat = Speed;
