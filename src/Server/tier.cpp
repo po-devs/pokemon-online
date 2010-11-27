@@ -159,8 +159,6 @@ void Tier::addBanParent(Tier *t)
 }
 
 bool Tier::isBanned(const PokeBattle &p) const {
-    if (p.level() > maxLevel)
-        return true;
     if (banPokes) {
         if (bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num())))
             return true;
@@ -276,8 +274,8 @@ bool Tier::isValid(const TeamBattle &t)  const
 
             count += 1;
 
-            if (count > numberOfPokemons) {
-                return false;
+            if (count >= numberOfPokemons) {
+                break;
             }
         }
     }
