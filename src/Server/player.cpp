@@ -965,7 +965,7 @@ void Player::hashReceived(const QString &_hash) {
 
             loginSuccess();
         } else {
-            emit info(id(), tr("authentification failed for %1").arg(waiting_name));
+            emit info(id(), tr("authentication failed for %1").arg(waiting_name));
             kick();
             return;
         }

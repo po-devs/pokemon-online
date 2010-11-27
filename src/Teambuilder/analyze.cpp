@@ -252,7 +252,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             in >> salt;
 
             if (salt.length() < 6 || strlen((" " + salt).toUtf8().data()) < 7)
-                emit protocolError(5080, tr("The server requires insecure authentification."));
+                emit protocolError(5080, tr("The server requires insecure authentication."));
             emit passRequired(salt);
             break;
         }

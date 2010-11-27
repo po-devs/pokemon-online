@@ -1357,7 +1357,7 @@ void Server::recvTeam(int id, const QString &_name)
 
     Player *source = player(id);
 
-    /* Normally all checks have been made to ensure the authentification is right and the
+    /* Normally all checks have been made to ensure the authentication is right and the
        name isn't taken.
 
        That's done by calling loggedIn() before to test some things if needed.
