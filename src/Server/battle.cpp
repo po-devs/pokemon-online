@@ -15,12 +15,12 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
 {
     publicId() = id;
-    pluginManager() = p;
+    pluginManager = p;
     timer = NULL;
     myid[0] = p1.id();
     myid[1] = p2.id();
-    player1() = &p1;
-    player2() = &p2;
+    player1 = &p1;
+    player2 = &p2;
     winMessage[0] = p1.winningMessage();
     winMessage[1] = p2.winningMessage();
     loseMessage[0] = p1.losingMessage();
@@ -166,7 +166,7 @@ void BattleSituation::engageBattle()
         t.fixTeam(team2);
     }
 
-    p->battleStarting(p1(), p2(), clauses(), rated());
+    pluginManager->battleStarting(player1, player2, clauses(), rated());
 
     for (int i = 0; i < numberOfSlots()/2; i++) {
         if (!poke(Player1, i).ko())
