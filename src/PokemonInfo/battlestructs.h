@@ -125,6 +125,8 @@ public:
         }
     }
 
+    void resetIndexes();
+
     bool invalid() const;
 
     QString name;
