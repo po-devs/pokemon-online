@@ -1,0 +1,17 @@
+INPUT(
+./debug\main.o
+./debug\mainwindow.o
+./debug\registry.o
+./debug\server.o
+./debug\player.o
+./debug\analyze.o
+./debug\network.o
+./debug\antidos.o
+./debug\moc_mainwindow.o
+./debug\moc_registry.o
+./debug\moc_server.o
+./debug\moc_player.o
+./debug\moc_analyze.o
+./debug\moc_network.o
+./debug\moc_antidos.o
+);

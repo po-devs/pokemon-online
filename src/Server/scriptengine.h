@@ -151,7 +151,9 @@ public:
     Q_INVOKABLE QScriptValue ip(int id); 
     Q_INVOKABLE QScriptValue dbAuth(const QString &name);
     Q_INVOKABLE QScriptValue dbAuths();
+    Q_INVOKABLE QScriptValue dbAll();
     Q_INVOKABLE QScriptValue dbIp(const QString &name);
+    Q_INVOKABLE QScriptValue dbDelete(const QString &name);
     Q_INVOKABLE QScriptValue dbLastOn(const QString &name);
     Q_INVOKABLE bool dbRegistered(const QString &name);
     Q_INVOKABLE QScriptValue tier(int id);
