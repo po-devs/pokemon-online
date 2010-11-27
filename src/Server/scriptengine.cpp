@@ -8,6 +8,7 @@
 #include "scriptengine.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "battle.h"
+#include <QRegExp>
 
 ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
@@ -972,12 +973,35 @@ QScriptValue ScriptEngine::dbAuths()
     return ret;
 }
 
+QScriptValue ScriptEngine::dbAll()
+{
+    QStringList sl = SecurityManager::userList();
+
+    QScriptValue ret = myengine.newArray(sl.count());
+
+    for (int i = 0; i < sl.size(); i++) {
+        ret.setProperty(i, sl[i]);
+    }
+
+    return ret;
+}
+
 QScriptValue ScriptEngine::dbIp(const QString &name)
 {
     if (!SecurityManager::exist(name)) {
         return myengine.undefinedValue();
     } else {
         return QString(SecurityManager::member(name).ip);
+    }
+}
+
+QScriptValue ScriptEngine::dbDelete(const QString &name)
+{
+    if (!SecurityManager::exist(name)) {
+        return myengine.undefinedValue();
+    } else {
+        SecurityManager::deleteUser(name);
+        return myengine.undefinedValue();
     }
 }
 

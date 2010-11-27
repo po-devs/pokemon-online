@@ -214,6 +214,30 @@ QStringList SecurityManager::authList()
 
     return ret;
 }
+QStringList SecurityManager::userList()
+{
+    QSqlQuery q;
+    q.setForwardOnly(true);
+
+    q.exec("select name from trainers");
+
+    QStringList ret;
+    while (q.next()) {
+        ret.push_back(q.value(0).toString());
+    }
+
+    return ret;
+}
+
+void SecurityManager::deleteUser(const QString &name)
+{
+    QSqlQuery q;
+    q.setForwardOnly(true);
+    //QRegExp regex1("\\");
+    QRegExp regex2("'");
+    QRegExp regex3("\n");
+    q.exec("delete from trainers where name='" + QString(name).replace( regex2, "''" ).replace( regex3, "\\n" ) + "'");
+}
 
 void SecurityManager::create(const QString &name, const QString &date, const QString &ip) {
     Member m(name.toLower(), date.toAscii(), 0, false, "", "", ip.toAscii());

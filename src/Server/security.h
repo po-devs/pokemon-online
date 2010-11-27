@@ -101,6 +101,8 @@ public:
     static QStringList membersForIp(const QString &ip);
     static QHash<QString, QString> banList();
     static QStringList authList();
+    static QStringList userList();
+    static void deleteUser(const QString &name);
 
     /* Exports the whole database to members.txt. Done in the main thread (and please call it
        only from there), so hangs the server */

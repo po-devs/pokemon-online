@@ -1,0 +1,17 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\registry.o
+./release\server.o
+./release\player.o
+./release\analyze.o
+./release\network.o
+./release\antidos.o
+./release\moc_mainwindow.o
+./release\moc_registry.o
+./release\moc_server.o
+./release\moc_player.o
+./release\moc_analyze.o
+./release\moc_network.o
+./release\moc_antidos.o
+);
