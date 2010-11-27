@@ -1419,6 +1419,11 @@ void Server::spectatingRequested(int id, int idOfBattle)
         sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
         return;
     }
+    if (!myengine->beforeSpectateBattle(id, battle->id(0),battle->id(1))) {
+        sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
+        myengine->afterSpectateBattle(id, battle->id(0),battle->id(1));
+        return;
+    }
 
     Player *source = player(id);
     Player *p1(player(battle->id(0))), *p2(player(battle->id(1)));
