@@ -1,3 +1,6 @@
+#include <ctime> /* for random numbers, time(NULL) needed */
+#include <map>
+#include <algorithm>
 #include "battle.h"
 #include "player.h"
 #include "../PokemonInfo/pokemoninfo.h"
@@ -5,17 +8,18 @@
 #include "items.h"
 #include "abilities.h"
 #include "tiermachine.h"
-#include <ctime> /* for random numbers, time(NULL) needed */
-#include <map>
-#include <algorithm>
+#include "pluginmanager.h"
 
-BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id)
+BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *p)
     : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
 {
     publicId() = id;
+    pluginManager() = p;
     timer = NULL;
     myid[0] = p1.id();
     myid[1] = p2.id();
+    player1() = &p1;
+    player2() = &p2;
     winMessage[0] = p1.winningMessage();
     winMessage[1] = p2.winningMessage();
     loseMessage[0] = p1.losingMessage();
@@ -154,6 +158,8 @@ void BattleSituation::start(ContextSwitcher &ctx)
 
 void BattleSituation::engageBattle()
 {
+    p->battleStarting(p1(), p2(), clauses(), rated());
+
     for (int i = 0; i < numberOfSlots()/2; i++) {
         if (!poke(Player1, i).ko())
             sendPoke(slot(Player1, i), i);

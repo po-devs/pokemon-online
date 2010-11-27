@@ -6,7 +6,9 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/mtrand.h"
 #include "../Utilities/contextswitch.h"
+
 class Player;
+class PluginManager;
 
 /* Fixme: needs some sort of cache to avoid revs() creating a list
    each time */
@@ -30,6 +32,9 @@ class BattleSituation : public ContextCallee
     PROPERTY(bool, rearrangeTime);
     PROPERTY(int, selfKoer);
     PROPERTY(int, repeatCount);
+    PROPERTY(Player*, player1);
+    PROPERTY(Player*, player2);
+    PROPERTY(PluginManager*, pluginManager);
 public:
     enum {
 	AllButPlayer = -2,
@@ -43,7 +48,7 @@ public:
     };
     typedef QVariantHash context;
 
-    BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id);
+    BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, PluginManager *p);
     ~BattleSituation();
 
     const TeamBattle &pubteam(int id);
