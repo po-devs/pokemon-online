@@ -29,7 +29,7 @@ public:
     }
 
     /* For plugins that needs to know (like some stat gathering plugins =) ) */
-    virtual void battleStarting(PlayerInterface *, PlayerInterface *, const ChallengeInfo &, bool) {
+    virtual void battleStarting(PlayerInterface *, PlayerInterface *, int, unsigned int &, bool) {
     }
 };
 
