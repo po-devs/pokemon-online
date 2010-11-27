@@ -32,6 +32,12 @@ ScriptEngine::ScriptEngine(Server *s) {
     f.open(QIODevice::ReadOnly);
 
     changeScript(QString::fromUtf8(f.readAll()));
+
+    QTimer *tt = new QTimer(this);
+    timerEvents[tt] = QString("if (typeof script == 'object' && typeof script.step == 'function') { script.step(); }");
+    tt->setSingleShot(false);
+    tt->start(1000);
+    connect(tt, SIGNAL(timeout()), SLOT(timer_step()));
 }
 
 ScriptEngine::~ScriptEngine()
@@ -906,6 +912,20 @@ void ScriptEngine::callLater(const QString &expr, int delay)
     connect(t, SIGNAL(timeout()), SLOT(timer()));
 }
 
+void ScriptEngine::callQuickly(const QString &expr, int delay)
+{
+    if (delay <= 0) {
+        return;
+    }
+
+    QTimer *t = new QTimer(this);
+
+    timerEvents[t] = expr;
+    t->setSingleShot(true);
+    t->start(delay);
+    connect(t, SIGNAL(timeout()), SLOT(timer()));
+}
+
 void ScriptEngine::timer()
 {
     QTimer *t = (QTimer*) sender();
@@ -914,6 +934,11 @@ void ScriptEngine::timer()
 
     timerEvents.remove(t);
     t->deleteLater();
+}
+void ScriptEngine::timer_step()
+{
+    QTimer *t = (QTimer*) sender();
+    eval(timerEvents[t]);
 }
 
 void ScriptEngine::delayedCall(const QScriptValue &func, int delay)

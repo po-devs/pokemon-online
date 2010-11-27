@@ -117,6 +117,7 @@ public:
     Q_INVOKABLE void deleteFile(const QString &fileName);
     /* Accepts string as 1st parameter. */
     Q_INVOKABLE void callLater(const QString &s, int delay);
+    Q_INVOKABLE void callQuickly(const QString &s, int delay);
     /* Accepts function as 1st parameter. */
     Q_INVOKABLE void delayedCall(const QScriptValue &func, int delay);
     /* Evaluates the script given in parameter */
@@ -243,6 +244,7 @@ public slots:
 
 private slots:
     void timer();
+    void timer_step();
     void timerFunc();
     void webCall_replyFinished(QNetworkReply* reply);
     void synchronousWebCall_replyFinished(QNetworkReply* reply);
