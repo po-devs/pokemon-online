@@ -32,9 +32,10 @@ class BattleSituation : public ContextCallee
     PROPERTY(bool, rearrangeTime);
     PROPERTY(int, selfKoer);
     PROPERTY(int, repeatCount);
-    PROPERTY(Player*, player1);
-    PROPERTY(Player*, player2);
-    PROPERTY(PluginManager*, pluginManager);
+
+    Player* player1;
+    Player* player2;
+    PluginManager* pluginManager;
 public:
     enum {
 	AllButPlayer = -2,
