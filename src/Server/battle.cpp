@@ -8,6 +8,7 @@
 #include "items.h"
 #include "abilities.h"
 #include "tiermachine.h"
+#include "tier.h"
 #include "pluginmanager.h"
 
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *p)
@@ -158,6 +159,13 @@ void BattleSituation::start(ContextSwitcher &ctx)
 
 void BattleSituation::engageBattle()
 {
+    if (tier().length() != 0) {
+        Tier &t = TierMachine::tier(tier());
+
+        t.fixTeam(team1);
+        t.fixTeam(team2);
+    }
+
     p->battleStarting(p1(), p2(), clauses(), rated());
 
     for (int i = 0; i < numberOfSlots()/2; i++) {
@@ -448,6 +456,10 @@ void BattleSituation::rearrangeTeams()
 
     for (int player = Player1; player <= Player2; player++) {
         team(player).setIndexes(choice(slot(player)).choice.rearrange.pokeIndexes);
+
+        if (tier().length() > 0 && !TierMachine::isValid(team(player), tier())) {
+            team(player).resetIndexes();
+        }
 
         startClock(player);
     }

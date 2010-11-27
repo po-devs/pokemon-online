@@ -342,9 +342,7 @@ TeamBattle::TeamBattle() : gen(GEN_MAX)
 
 TeamBattle::TeamBattle(TeamInfo &other)
 {
-    for (int i = 0; i < 6; i++) {
-        m_indexes[i] = i;
-    }
+    resetIndexes();
 
     name = other.name;
     info = other.info;
@@ -360,6 +358,13 @@ TeamBattle::TeamBattle(TeamInfo &other)
         if (poke(curs).num() != 0) {
             ++curs;
         }
+    }
+}
+
+void TeamBattle::resetIndexes()
+{
+    for (int i = 0; i < 6; i++) {
+        m_indexes[i] = i;
     }
 }
 

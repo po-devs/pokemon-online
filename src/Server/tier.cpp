@@ -283,6 +283,20 @@ bool Tier::isValid(const TeamBattle &t)  const
     return true;
 }
 
+void Tier::fixTeam(TeamBattle &t) const
+{
+    for (int i = 0; i < 6; i ++) {
+        if (i > numberOfPokemons) {
+            t.poke(i).num() = 0;
+            continue;
+        }
+        if (t.poke(i).level() > maxLevel) {
+            t.poke(i).level() = maxLevel;
+            t.poke(i).updateStats();
+        }
+    }
+}
+
 void Tier::changeRating(const QString &player, int newRating)
 {
     MemberRating m = member(player);
