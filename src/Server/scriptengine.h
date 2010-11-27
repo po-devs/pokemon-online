@@ -26,6 +26,10 @@ public:
     ~ScriptEngine();
 
     /* Events */
+
+    bool beforeSpectateBattle(int src, int p1, int p2);
+    void afterSpectateBattle(int src, int p1, int p2);
+
     bool beforeChatMessage(int src, const QString &message, int channel);
     void afterChatMessage(int src, const QString &message, int channel);
     bool beforeNewMessage(const QString &message);
@@ -78,11 +82,13 @@ public:
     Q_INVOKABLE void setAnnouncement(const QString &html, int id);
     Q_INVOKABLE void setAnnouncement(const QString &html);
     Q_INVOKABLE void changeAnnouncement(const QString &html);
+
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
        If called in 'beforeChallengeIssued', the challenge won't be issued.
        */
     Q_INVOKABLE void stopEvent();
+
     Q_INVOKABLE void shutDown();
     Q_INVOKABLE void sendMessage(int id, const QString &mess);
     Q_INVOKABLE void sendMessage(int id, const QString &mess, int channel);
