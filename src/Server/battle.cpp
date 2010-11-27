@@ -166,7 +166,7 @@ void BattleSituation::engageBattle()
         t.fixTeam(team2);
     }
 
-    pluginManager->battleStarting(player1, player2, clauses(), rated());
+    pluginManager->battleStarting(player1, player2, mode(), clauses(), rated());
 
     for (int i = 0; i < numberOfSlots()/2; i++) {
         if (!poke(Player1, i).ko())

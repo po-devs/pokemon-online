@@ -138,10 +138,10 @@ ServerPlugin * PluginManager::plugin(const QString &name) const
     return NULL;
 }
 
-void PluginManager::battleStarting(PlayerInterface *p1, PlayerInterface *p2, const ChallengeInfo &c)
+void PluginManager::battleStarting(PlayerInterface *p1, PlayerInterface *p2, int mode, unsigned int &clauses, bool rated)
 {
     foreach(ServerPlugin *s, plugins) {
-        s->battleStarting(p1, p2, c);
+        s->battleStarting(p1, p2, mode, clauses, rated);
     }
 }
 
