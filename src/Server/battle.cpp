@@ -160,7 +160,7 @@ void BattleSituation::start(ContextSwitcher &ctx)
 void BattleSituation::engageBattle()
 {
     if (tier().length() != 0) {
-        Tier &t = TierMachine::tier(tier());
+        Tier &t = TierMachine::obj()->tier(tier());
 
         t.fixTeam(team1);
         t.fixTeam(team2);
@@ -457,7 +457,7 @@ void BattleSituation::rearrangeTeams()
     for (int player = Player1; player <= Player2; player++) {
         team(player).setIndexes(choice(slot(player)).choice.rearrange.pokeIndexes);
 
-        if (tier().length() > 0 && !TierMachine::isValid(team(player), tier())) {
+        if (tier().length() > 0 && !TierMachine::obj()->isValid(team(player), tier())) {
             team(player).resetIndexes();
         }
 
