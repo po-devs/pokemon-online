@@ -59,11 +59,11 @@ void MoveSetChecker::init(const QString &dir)
 }
 
 bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, int move1, int move2, int move3, int move4, int ability,
-                             QSet<int> *invalid_moves, QString *error) {
+                             int gender, QSet<int> *invalid_moves, QString *error) {
     QSet<int> moves;
     moves << move1 << move2 << move3 << move4;
 
-    return isValid(pokeid, gen, moves, ability, invalid_moves, error);
+    return isValid(pokeid, gen, moves, ability, gender, invalid_moves, error);
 }
 
 static QString getCombinationS(const QSet<int> &invalid_moves) {
@@ -78,8 +78,8 @@ static QString getCombinationS(const QSet<int> &invalid_moves) {
     return s;
 }
 
-bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSet<int> &moves2, int ability, QSet<int> *invalid_moves,
-                             QString *error) {
+bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSet<int> &moves2, int ability, int gender,
+                             QSet<int> *invalid_moves, QString *error) {
     QSet<int> moves = moves2;
     moves.remove(0);
 
@@ -113,7 +113,6 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
         /* now we know the pokemon at least knows all moves */
         moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
 
-
         /* If there's a pre evo move and an old gen move, you must check the pre evo has the combination in the old gen */
         QSet<int> moves3 = moves;
         moves3.subtract(PokemonInfo::PreEvoMoves(pokeid,g));
@@ -124,7 +123,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
 
             int pokemon = PokemonInfo::PreEvo(pokeid.pokenum);
 
-            if (isValid(pokemon, g, moves3))
+            if (isValid(pokemon, g, moves))
                 return true;
         }
 
@@ -133,6 +132,16 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
 
         if (isAnEggMoveCombination(pokeid, g, moves)) {
             return true;
+        }
+
+        if (g == 5) {
+            AbilityGroup ab = PokemonInfo::Abilities(pokeid);
+
+            if (ability == ab.ab(2) && (gender != Pokemon::Female || PokemonInfo::Gender(pokeid) == Pokemon::FemaleAvail)) {
+                if (PokemonInfo::dreamWorldMoves(pokeid).contains(moves)) {
+                    return true;
+                }
+            }
         }
     }
 

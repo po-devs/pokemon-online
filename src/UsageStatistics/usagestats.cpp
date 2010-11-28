@@ -56,11 +56,11 @@ QByteArray PokemonOnlineStatsPlugin::data(const PokeBattle &p) const {
     return ret;
 }
 
-void PokemonOnlineStatsPlugin::battleStarting(PlayerInterface *p1, PlayerInterface *p2, const ChallengeInfo &c)
+void PokemonOnlineStatsPlugin::battleStarting(PlayerInterface *p1, PlayerInterface *p2, int mode, unsigned int &clauses, bool)
 {
     /* We only keep track of battles between players of the same tier
        and not CC battles */
-    if (p1->tier() != p2->tier() || c.clauses & ChallengeInfo::ChallengeCup)
+    if (p1->tier() != p2->tier() || clauses & ChallengeInfo::ChallengeCup)
         return;
 
     QString tier = p1->tier();
@@ -77,13 +77,15 @@ void PokemonOnlineStatsPlugin::battleStarting(PlayerInterface *p1, PlayerInterfa
 
         for (int j = 0; j < 6; j++) {
             bool lead = false;
-            if (!(c.clauses & ChallengeInfo::RearrangeTeams)) {
-                if (c.mode == ChallengeInfo::Singles) {
-                    lead = j == 0;
-                } else if (c.mode == ChallengeInfo::Doubles) {
-                    lead = j <= 1;
-                }
+
+            if (mode == ChallengeInfo::Singles) {
+                lead = j == 0;
+            } else if (mode == ChallengeInfo::Doubles) {
+                lead = j <= 1;
+            } else if (mode == ChallengeInfo::Triples) {
+                lead = j <= 2;
             }
+
             savePokemon(team.poke(j), lead, existingDirs[tier]);
         }
     }

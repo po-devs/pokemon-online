@@ -1406,6 +1406,9 @@ void TB_PokemonBody::updateImage()
 
 void TB_PokemonBody::updateGender()
 {
+    /* Gender may ruin move combinations, for example with dream world moves */
+    poke()->runCheck();
+    updateMoves();
     genderIcon->setPixmap(Theme::GenderPicture(poke()->gender(), Theme::TeamBuilderM));
 }
 
@@ -1503,6 +1506,7 @@ void TB_PokemonBody::configureMoves()
         << map_container_with_value(PokemonInfo::LevelMoves(num, 5), tr("Level"))
         << map_container_with_value(PokemonInfo::PreEvoMoves(num, 5), tr("Pre Evo"))
         << map_container_with_value(PokemonInfo::EggMoves(num, 5), tr("Breeding"))
+        << map_container_with_value(PokemonInfo::dreamWorldMoves(num), tr("Dream World"))
         << map_container_with_value(PokemonInfo::SpecialMoves(num, 5), tr("Special"))
         << map_container_with_value(PokemonInfo::TMMoves(num, 4), tr("4G TM/HM"))
         << map_container_with_value(PokemonInfo::TutorMoves(num, 4), tr("4G Move Tutor"))

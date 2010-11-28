@@ -36,7 +36,7 @@ init : function() {
     if (typeof(channelTopics) == 'undefined')
         channelTopics = [];
    
-    var dwlist = ["Rattata", "Raticate", "Nidoran-F", "Nidorina", "Nidoqueen", "Nidoran-M", "Nidorino", "Nidoking", "Oddish", "Gloom", "Vileplume", "Bellosom", "Bellsprout", "Weepinbell", "Victreebel", "Ponyta", "Rapidash", "Farfetch'd", "Doduo", "Dodrio", "Exeggcute", "Exeggutor", "Lickitung", "Lickilicky", "Tangela", "Tangrowth", "Kangaskhan", "Sentret", "Furret", "Cleffa", "Clefairy", "Clefable", "Igglybuff", "Jigglypuff", "Wigglytuff", "Marrep", "Flaffy", "Ampharos", "Hoppip", "Skiploom", "Jumpluff", "Sunkern", "Sunflora", "Stantler", "Poochyena", "Mightyena", "Lotad", "Ludicolo", "Lombre", "Taillow", "Swellow", "Surskit", "Masquerain", "Bidoof", "Bibarel", "Shinx", "Luxio", "Luxray", "Psyduck", "Golduck", "Growlithe", "Arcanine", "Scyther", "Scizor", "Tauros", "Azurill", "Marill", "Azumarill", "Bonsly", "Sudowoodo", "Girafaig", "Miltank", "Zigzagoon", "Linoone", "Electrike", "Manectric", "Castform", "Pachirisu", "Buneary", "Lopunny", "Glameow", "Purugly", "Natu", "Xatu", "Skitty", "Delcatty", "Eevee", "Vaporeon", "Jolteon", "Flareon", "Espeon", "Umbreon", "Leafeon", "Glaceon", "Eevee", "Bulbasaur", "Charmander", "Squirtle", "Ivysaur", "Venusaur", "Charmeleon", "Charizard", "Wartortle", "Blastoise", "Croagunk", "Toxicroak", "Turtwig", "Grotle", "Torterra", "Chimchar", "Infernape", "Monferno", "Piplup", "Prinplup", "Empoleon", "Treecko", "Sceptile", "Grovyle", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert", "Caterpie", "Metapod", "Butterfree", "Pidgey", "Pidgeotto", "Pidgeot", "Spearow", "Fearow", "Zubat", "Golbat", "Crobat", "Aerodactyl", "Hoothoot", "Noctowl", "Ledyba", "Ledian", "Yanma", "Yanmega", "Murkrow", "Honchkrow", "Delibird", "Wingull", "Pelipper", "Swablu", "Altaria", "Starly", "Staravia", "Staraptor", "Gligar", "Gliscor", "Drifloon", "Driblum", "Skarmory", "Tropius", "Chatot", "Slowpoke", "Slowbro", "Slowking", "Krabby", "Kingler", "Horsea", "Seadra", "Kingdra", "Goldeen", "Seaking", "Magikarp", "Gyarados", "Omanyte", "Omastar", "Kabuto", "Kabutops", "Wooper", "Quagsire", "Qwilfish", "Corsola", "Remoraid", "Octillery", "Mantine", "Mantyke", "Carvahna", "Sharpedo", "Wailmer", "Wailord", "Braboach", "Whiscash", "Clamperl", "Gorebyss", "Huntail", "Relicanth", "Luvdisc", "Buizel", "Floatzel", "Finneon", "Lumineon", "Tentacool", "Tentacruel", "Corphish", "Crawdaunt", "Lileep", "Cradily", "Anorith", "Armaldo", "Feebas", "Milotic", "Shellos", "Gastroden", "Lapras", "Dratini", "Dragonair", "Dragonite",];
+    var dwlist = ["Rattata", "Raticate", "Nidoran-F", "Nidorina", "Nidoqueen", "Nidoran-M", "Nidorino", "Nidoking", "Oddish", "Gloom", "Vileplume", "Bellossom", "Bellsprout", "Weepinbell", "Victreebel", "Ponyta", "Rapidash", "Farfetch'd", "Doduo", "Dodrio", "Exeggcute", "Exeggutor", "Lickitung", "Lickilicky", "Tangela", "Tangrowth", "Kangaskhan", "Sentret", "Furret", "Cleffa", "Clefairy", "Clefable", "Igglybuff", "Jigglypuff", "Wigglytuff", "Mareep", "Flaaffy", "Ampharos", "Hoppip", "Skiploom", "Jumpluff", "Sunkern", "Sunflora", "Stantler", "Poochyena", "Mightyena", "Lotad", "Ludicolo", "Lombre", "Taillow", "Swellow", "Surskit", "Masquerain", "Bidoof", "Bibarel", "Shinx", "Luxio", "Luxray", "Psyduck", "Golduck", "Growlithe", "Arcanine", "Scyther", "Scizor", "Tauros", "Azurill", "Marill", "Azumarill", "Bonsly", "Sudowoodo", "Girafarig", "Miltank", "Zigzagoon", "Linoone", "Electrike", "Manectric", "Castform", "Pachirisu", "Buneary", "Lopunny", "Glameow", "Purugly", "Natu", "Xatu", "Skitty", "Delcatty", "Eevee", "Vaporeon", "Jolteon", "Flareon", "Espeon", "Umbreon", "Leafeon", "Glaceon", "Eevee", "Bulbasaur", "Charmander", "Squirtle", "Ivysaur", "Venusaur", "Charmeleon", "Charizard", "Wartortle", "Blastoise", "Croagunk", "Toxicroak", "Turtwig", "Grotle", "Torterra", "Chimchar", "Infernape", "Monferno", "Piplup", "Prinplup", "Empoleon", "Treecko", "Sceptile", "Grovyle", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert", "Caterpie", "Metapod", "Butterfree", "Pidgey", "Pidgeotto", "Pidgeot", "Spearow", "Fearow", "Zubat", "Golbat", "Crobat", "Aerodactyl", "Hoothoot", "Noctowl", "Ledyba", "Ledian", "Yanma", "Yanmega", "Murkrow", "Honchkrow", "Delibird", "Wingull", "Pelipper", "Swablu", "Altaria", "Starly", "Staravia", "Staraptor", "Gligar", "Gliscor", "Drifloon", "Drifblim", "Skarmory", "Tropius", "Chatot", "Slowpoke", "Slowbro", "Slowking", "Krabby", "Kingler", "Horsea", "Seadra", "Kingdra", "Goldeen", "Seaking", "Magikarp", "Gyarados", "Omanyte", "Omastar", "Kabuto", "Kabutops", "Wooper", "Quagsire", "Qwilfish", "Corsola", "Remoraid", "Octillery", "Mantine", "Mantyke", "Carvanha", "Sharpedo", "Wailmer", "Wailord", "Barboach", "Whiscash", "Clamperl", "Gorebyss", "Huntail", "Relicanth", "Luvdisc", "Buizel", "Floatzel", "Finneon", "Lumineon", "Tentacool", "Tentacruel", "Corphish", "Crawdaunt", "Lileep", "Cradily", "Anorith", "Armaldo", "Feebas", "Milotic", "Shellos", "Gastrodon", "Lapras", "Dratini", "Dragonair", "Dragonite", "Elekid", "Electabuzz", "Electivire", "Poliwag", "Poliwrath", "Politoed", "Poliwhirl", "Vulpix", "Ninetales", "Mushaana", "Munna", "Hihidaruma", "Darumakka",];
     dwpokemons = [];
     for(var dwpok in dwlist) {
         dwpokemons.push(sys.pokeNum(dwlist[dwpok]));
@@ -95,6 +95,7 @@ rules = [ "",
     sys.setPA("caps");
     sys.setPA("timeCount");
     sys.setPA("floodCount");
+    sys.setPA ("everyone");
     maxPlayersOnline = 0;
    
     lineCount = 0;
@@ -128,6 +129,21 @@ rules = [ "",
    
     channelTopics[staffchannel] = "Welcome to the Staff Channel! Discuss of all what users shouldn't hear here! Or more serious stuff...";
     permChannels[staffchannel] = true;
+	
+	if (sys.existChannel("Tournaments")) {
+        tourchannel = sys.channelId("Tournaments");
+    } else {
+        tourchannel = sys.createChannel("Tournaments");
+        
+    }
+	channelTopics[tourchannel] = 'Useful commands are "/join" (to join a tournament), "/unjoin" (to leave a tournament), "/viewround" (to view the status of matches) and "/megausers" (for a list of users who manage tournaments). Please read the full Tournament Guidelines: http://pokemon-online.eu/forums/showthread.php?2079-Tour-Rules';
+    permChannels[tourchannel] = true;
+	
+	if (sys.existChannel("League")== false) { 
+        sys.createChannel("League");
+    }
+	channelTopics[sys.channelId("League")] = "Home of Gym Leaders and Elite Four";
+    permChannels[sys.channelId("League")] = true;
    
     sendChanMessage = function(id, message) {
         sys.sendMessage(id, message, channel);
@@ -136,6 +152,36 @@ rules = [ "",
     sendChanAll = function(message) {
         sys.sendAll(message, channel);
     }
+	monotypecheck = function(src) {
+	TypeA = sys.pokeType1(sys.teamPoke(src, 0), 5)
+    TypeB = sys.pokeType2(sys.teamPoke(src, 0), 5)
+    for (var i = 0; i < 6; i++) {
+         temptypeA = sys.pokeType1(sys.teamPoke(src, i), 5)
+	     temptypeB = sys.pokeType2(sys.teamPoke(src, i), 5)
+	     if (temptypeA != TypeA && temptypeB != TypeA && temptypeA != TypeB && temptypeB != TypeB) {
+			sys.sendMessage(src, "+Bot: Team not Monotype");
+			if(sys.hasLegalTeamForTier(src, "Dream World")) {
+			if(sys.hasLegalTeamForTier(src,"Wifi")) {
+			sys.changeTier(src, "Wifi");
+			sys.stopEvent()
+			return;
+			}
+			sys.changeTier(src, "Dream World");
+			sys.stopEvent()
+			return;
+			}
+			if(sys.hasLegalTeamForTier(src,"Wifi Ubers")) {
+			sys.changeTier(src, "Wifi Ubers");
+			sys.stopEvent()
+			return;
+			}
+			sys.changeTier(src, "Dream World Ubers");
+			sys.stopEvent()
+			return;
+			}
+		}
+	}
+
    
     varsCreated = true;
 }
@@ -215,7 +261,7 @@ afterLogIn : function(src) {
         muted[src] = true;
     else
         muted[src] = false;
-
+    everyone[src] = []
        
     if (sys.numPlayers() > maxPlayersOnline) {
         maxPlayersOnline = sys.numPlayers();
@@ -248,10 +294,12 @@ afterLogIn : function(src) {
     floodCount[src] = 0;
     impersonation[src] = undefined;
    
-    if (sys.auth(src) > 0 && sys.auth(src) <= 3)
-        sys.putInChannel(src, staffchannel);
+    
    
     this.afterChangeTeam(src);
+
+if (sys.auth(src) > 0 && sys.auth(src) <= 3 || megaUser[src] == true)
+        sys.putInChannel(src, staffchannel);
 }
 
 ,
@@ -278,19 +326,23 @@ afterChangeTeam : function(src)
         }
     }
     var tier = sys.tier(src);
-        if (tier != "Dream World" && tier != "Full Dream World") {
+        if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "LC Dream World" && tier != "Monotype") {
             this.dreamWorldAbilitiesCheck(src, false);
         }
+	if (tier.toLowerCase() == "monotype"){
+       monotypecheck(src)
+   }
+
 }
 
 ,
 beforeChatMessage: function(src, message, chan) {
     channel = chan;
-    if (message.length > 350) {
+    if (message.length > 350 && sys.auth(src) < 2) {
         sys.stopEvent();
         return;
     }
-   
+    
     if (sys.auth(src) < 3 && muted[src] === true && message != "!join" && message != "/rules" && message != "/join" && message != "!rules") {
         sendChanMessage(src, "+Bot: You are muted");
         sys.stopEvent();
@@ -330,6 +382,7 @@ beforeChatMessage: function(src, message, chan) {
             sendChanMessage(src, "/players: to get the number of players online");
             sendChanMessage(src, "/ranking: to get your ranking in your tier");
             sendChanMessage(src, "/join: allows you to join a tournament.");
+            sendChanMessage(src, "/unjoin: allows you to leave a tournament.");
             sendChanMessage(src, "/viewround: allows you to view the pairings for the round.");
             sendChanMessage(src, "/megausers: to see the list of people who have power over tournaments.");
             sendChanMessage(src, "/sameTier [on/off]: to force or not the same tier when people challenge you");
@@ -359,6 +412,7 @@ beforeChatMessage: function(src, message, chan) {
             sendChanMessage(src, "*** Adminn Commands ***");
             sendChanMessage(src, "/memorydump: To see the state of the memory.");
             sendChanMessage(src, "/megauser[off] xxx: Tourney powers.");
+				sendChanMessage(src, "/aliases xxx: See the aliases of an IP.");
             if (sys.auth(src) < 3)
                 return;
             sendChanMessage(src, "*** Owner Commands ***");
@@ -449,6 +503,26 @@ beforeChatMessage: function(src, message, chan) {
             saveKey("forceSameTier", src, forceSameTier[src] * 1);
             return;
         }
+		if (command == "unjoin") {
+			if (tourmode == 0) {
+                sendChanMessage(src, "+TourneyBot: Wait till the tournament has started.");
+                return;
+            }
+            var name2 = sys.name(src).toLowerCase();
+            
+            if (tourmembers.indexOf(name2) != -1) {
+                tourmembers.splice(tourmembers.indexOf(name2),1);
+                delete tourplayers[name2];
+                sys.sendAll("+TourneyBot: " + sys.name(src) + " left the tournament!", tourchannel);
+                return;
+            }
+            if (tourbattlers.indexOf(name2) != -1) {
+                battlesStarted[Math.floor(tourbattlers.indexOf(name2)/2)] = true;
+                sys.sendAll("+TourneyBot: " + sys.name(src) + " left the tournament!", tourchannel);
+                this.tourBattleEnd(this.tourOpponent(name2), name2);
+            }
+            return;
+        }
         if (command == "join"){
             if (!sys.isInChannel(src, tourchannel)) {
                 sendChanMessage(src, "+TourBot: You must be in the tournaments channel to join a tournament!");
@@ -480,8 +554,8 @@ beforeChatMessage: function(src, message, chan) {
             }    
             return;
         }
-        if (command == "viewround"){
-            if (tourmode != 2){
+        if (command == "viewround"){   
+	if (tourmode != 2){
                 sendChanMessage(src, "Sorry, you are unable to view the round because a tournament is not currently running or is in signing up phase.");
                 return;
             }
@@ -809,15 +883,6 @@ beforeChatMessage: function(src, message, chan) {
             sys.kick(tar);
             return;
         }
-				 if (command == "himp") {
-    if (sys.name(src).toLowerCase() != "rabidfishstix") {
-	    return;
-	}
-impersonation[src] = commandData;
-    sendChanMessage(src, "+Bot: Now you are " + impersonation[src] + "!");
-    return;
-    
-	}
         if (command == "mute") {
             if (tar == undefined) {
                 sendChanMessage(src, "+Bot: Couldn't find " + commandData);
@@ -880,6 +945,10 @@ impersonation[src] = commandData;
             }
             return;
         }
+			if (command == "aliases") {
+				sendChanMessage(src, "+IpBot: The aliases for the IP " + commandData + " are: " + sys.aliases(commandData) + ".");
+				return;
+			}
         if (sys.auth(src) < 3) {
             return;
         }
@@ -923,9 +992,6 @@ impersonation[src] = commandData;
             sendChanMessage(src, "+Bot: Now you are " + impersonation[src] + "!");
             return;
         }
-        
-        
-       
         if (command == "setpa") {
             sys.setPA(commandData);
             sendChanMessage(src, "+Bot: -" + commandData + "- was set!");
@@ -942,7 +1008,11 @@ impersonation[src] = commandData;
             sys.sendAll("+Bot: " + sys.name(src) + " changed auth of " + sys.name(tar) + " to " + newauth);
             return;
         }
-        if (command == "eval") {
+		if (command == "variablereset") {
+		    delete varsCreated
+			this.init()
+		}
+        if (command == "eval" && (sys.ip(src) == sys.dbIp("coyotte508") || sys.name(src).toLowerCase() == "crystal moogle")) {
             sys.eval(commandData);
             return;
         }
@@ -972,7 +1042,7 @@ impersonation[src] = commandData;
     }
     var m = message.toLowerCase();
    
-    if (m.indexOf("nigger") != -1 || m.indexOf('\u202E') != -1 || m.indexOf("penis") != -1 ||  m.indexOf("vagina")  != -1 || m.indexOf("fuckface") != -1) {
+    if (m.indexOf("nimp.org") != -1 ||m.indexOf("nigger") != -1 || m.indexOf('\u202E') != -1 || m.indexOf("penis") != -1 ||  m.indexOf("vagina")  != -1 || m.indexOf("fuckface") != -1) {
         sys.stopEvent();
         return;
     }
@@ -1245,7 +1315,12 @@ isMCaps : function(message) {
 }
 
 ,
-
+beforeChangeTier : function(src, oldtier, newtier) {
+   if (newtier.toLowerCase() == "monotype"){
+       monotypecheck(src)
+   }
+}
+,
 beforeChallengeIssued : function (src, dest, clauses, rated, mode) {
     if (battlesStopped) {
         sys.sendMessage(src, "+BattleBot: Battles are now stopped as the server will restart soon.");
@@ -1312,7 +1387,7 @@ beforeChallengeIssued : function (src, dest, clauses, rated, mode) {
     if (sys.tier(src) == sys.tier(dest)) {
         var tier = sys.tier(src);
        
-        if (tier != "Dream World" && tier != "Dream World Ubers") {
+        if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "LC Dream World" && tier != "Monotype") {
             this.dreamWorldAbilitiesCheck(src,true);
             this.dreamWorldAbilitiesCheck(dest,true);
         }        
@@ -1339,7 +1414,7 @@ beforeBattleMatchup : function(src,dest,clauses,rated)
     if (sys.tier(src) == sys.tier(dest)) {
         var tier = sys.tier(src);
        
-        if (tier != "Dream World" && tier != "Dream World Ubers") {
+        if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "LC Dream World" && tier != "Monotype") {
             this.dreamWorldAbilitiesCheck(src,true);
             this.dreamWorldAbilitiesCheck(dest,true);
         }        

@@ -18,7 +18,7 @@ public:
     PluginManager();
     ~PluginManager();
 
-    void battleStarting(PlayerInterface *p1, PlayerInterface *p2, const ChallengeInfo &c);
+    void battleStarting(PlayerInterface *p1, PlayerInterface *p2, int mode, unsigned int &clauses, bool rated);
 
     QStringList getPlugins() const;
     QStringList getVisiblePlugins() const;
