@@ -7,6 +7,8 @@ class QImageButton;
 class QImageButtonP;
 class QImageButtonLR;
 
+#define DEFAULT_PO_THEME "Dratini Dreams"
+
 class Theme {
 public:
     enum GenderMode {
@@ -16,8 +18,8 @@ public:
         IngameM
     };
 
-    static void init(const QString &dir="Themes/Default/");
-    static void Reload(const QString &dir="Themes/Default");
+    static void init(const QString &dir="Themes/" DEFAULT_PO_THEME "/");
+    static void Reload(const QString &dir="Themes/" DEFAULT_PO_THEME);
 
     static QColor TypeColor(int typenum);
     static QColor CategoryColor(int typenum);

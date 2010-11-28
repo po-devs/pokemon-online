@@ -21,7 +21,7 @@ public:
 
     QString pluginName() const;
 
-    void battleStarting(PlayerInterface *p1, PlayerInterface *p2, const ChallengeInfo &c);
+    void battleStarting(PlayerInterface *p1, PlayerInterface *p2, int mode, unsigned int &c, bool rated);
     bool hasConfigurationWidget() const;
 
 private:

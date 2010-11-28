@@ -1,3 +1,6 @@
+#include <ctime> /* for random numbers, time(NULL) needed */
+#include <map>
+#include <algorithm>
 #include "battle.h"
 #include "player.h"
 #include "../PokemonInfo/pokemoninfo.h"
@@ -5,17 +8,19 @@
 #include "items.h"
 #include "abilities.h"
 #include "tiermachine.h"
-#include <ctime> /* for random numbers, time(NULL) needed */
-#include <map>
-#include <algorithm>
+#include "tier.h"
+#include "pluginmanager.h"
 
-BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id)
+BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *p)
     : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
 {
     publicId() = id;
+    pluginManager = p;
     timer = NULL;
     myid[0] = p1.id();
     myid[1] = p2.id();
+    player1 = &p1;
+    player2 = &p2;
     winMessage[0] = p1.winningMessage();
     winMessage[1] = p2.winningMessage();
     loseMessage[0] = p1.losingMessage();
@@ -114,15 +119,6 @@ BattleSituation::~BattleSituation()
 
 void BattleSituation::start(ContextSwitcher &ctx)
 {
-    for (int i = 0; i < 6; i++) {
-        if (poke(Player1,i).ko()) {
-            changeStatus(Player1, i, Pokemon::Koed);
-        }
-        if (poke(Player2,i).ko()) {
-            changeStatus(Player2, i, Pokemon::Koed);
-        }
-    }
-
     notify(All, BlankMessage,0);
 
     if (tier().length()>0)
@@ -154,6 +150,24 @@ void BattleSituation::start(ContextSwitcher &ctx)
 
 void BattleSituation::engageBattle()
 {
+    if (tier().length() != 0) {
+        Tier &t = TierMachine::obj()->tier(tier());
+
+        t.fixTeam(team1);
+        t.fixTeam(team2);
+
+        for (int i = 0; i < 6; i++) {
+            if (poke(Player1,i).ko()) {
+                changeStatus(Player1, i, Pokemon::Koed);
+            }
+            if (poke(Player2,i).ko()) {
+                changeStatus(Player2, i, Pokemon::Koed);
+            }
+        }
+    }
+
+    pluginManager->battleStarting(player1, player2, mode(), clauses(), rated());
+
     for (int i = 0; i < numberOfSlots()/2; i++) {
         if (!poke(Player1, i).ko())
             sendPoke(slot(Player1, i), i);
@@ -992,8 +1006,10 @@ void BattleSituation::notifySub(int player, bool sub)
 
 bool BattleSituation::canCancel(int player)
 {
-    if (!blocked() || rearrangeTime())
+    if (!blocked())
         return false;
+    if (rearrangeTime())
+        return true;
 
     for (int i = 0; i < numberOfSlots()/2; i++) {
         if (couldMove[slot(player,i)])
@@ -1005,11 +1021,15 @@ bool BattleSituation::canCancel(int player)
 
 void BattleSituation::cancel(int player)
 {
-    notify(player, CancelMove, player);
+    if (rearrangeTime()) {
+        notify(player,RearrangeTeam,opponent(player),ShallowShownTeam(team(opponent(player))));
+    } else {
+        notify(player, CancelMove, player);
 
-    for (int i = 0; i < numberOfSlots()/2; i++) {
-        if (couldMove[slot(player, i)]) {
-            hasChoice[slot(player, i)] = true;
+        for (int i = 0; i < numberOfSlots()/2; i++) {
+            if (couldMove[slot(player, i)]) {
+                hasChoice[slot(player, i)] = true;
+            }
         }
     }
 
@@ -1092,6 +1112,17 @@ bool BattleSituation::validChoice(const BattleChoice &b)
                 return false;
 
             used[x] = true;
+        }
+
+        if (tier().length() > 0) {
+            team(player).setIndexes(b.choice.rearrange.pokeIndexes);
+            if (!TierMachine::obj()->isValid(team(player), tier())) {
+                team(player).resetIndexes();
+                return false;
+            } else {
+                team(player).resetIndexes();
+                return true;
+            }
         }
 
         return true;
@@ -1373,7 +1404,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 void BattleSituation::callEntryEffects(int player)
 {
     if (!koed(player)) {
-        pokeMemory(slot).remove("BeforeSetups");
+        pokeMemory(player).remove("BeforeSetups");
         ItemEffect::setup(poke(player).item(), player, *this);
         acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
@@ -2348,8 +2379,8 @@ int BattleSituation::weight(int player) {
         ret /= 2;
     }
 
-    if (ret == 0)
-        ret = 1;
+//    if (ret == 0)
+//        ret = 1;
 
     return ret;
 }
@@ -2469,11 +2500,6 @@ void BattleSituation::applyMoveStatMods(int player, int target)
             break;
 
         char increase = char (fm.boostOfStat >> (i*8));
-
-        if (stat == Evasion && increase > 0 && (clauses() & ChallengeInfo::EvasionClause)) {
-            notifyClause(ChallengeInfo::EvasionClause);
-            continue;
-        }
 
         int rate = char (fm.rateOfStat >> (i*8));
 
@@ -3778,9 +3804,9 @@ int BattleSituation::getBoostedStat(int player, int stat)
             givenStat = 3 - stat;
         }
         /* Wonder room: attack & sp attack switched, 5th gen */
-        if (battleMemory().contains("WonderRoomCount") && (stat == 2 || stat == 3)) {
-            stat = 5 - stat;
-            givenStat = 5 - givenStat;
+        if (battleMemory().contains("WonderRoomCount") && (stat == 2 || stat == 4)) {
+            stat = 6 - stat;
+            givenStat = 6 - givenStat;
         }
         return fpoke(player).stats[givenStat] *getStatBoost(player, stat);
     }
