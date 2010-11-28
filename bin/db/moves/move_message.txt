@@ -147,7 +147,7 @@ Poison spikes were scattered all around the feet of %tf's team!|The poison spike
 
 
 
-All stat changes were eliminated!|%f's stat changes were eliminated!
+All stat changes were elimnated!
 %s landed on the ground!
 %s planted its roots!|%s absorbed nutrients with its roots!
 
@@ -166,7 +166,7 @@ All stat changes were eliminated!|%f's stat changes were eliminated!
 
 
 
-%s swapped the Sp. Def. and the Defense of all the pokemon!|The Sp. Def and Defense of the pokemon went back to normal!
+%s swapped the Sp. Attack and the Defense of all the pokemon!|The Sp. Attack and Defense of the pokemon went back to normal!
 %ts's team is protected by Wide Guard!
 %ts's team is protected by Fast Guard!
 %s is being sent back!
