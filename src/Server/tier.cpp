@@ -286,7 +286,7 @@ bool Tier::isValid(const TeamBattle &t)  const
 void Tier::fixTeam(TeamBattle &t) const
 {
     for (int i = 0; i < 6; i ++) {
-        if (i > numberOfPokemons) {
+        if (i >= numberOfPokemons) {
             t.poke(i).num() = 0;
             continue;
         }

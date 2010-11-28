@@ -119,15 +119,6 @@ BattleSituation::~BattleSituation()
 
 void BattleSituation::start(ContextSwitcher &ctx)
 {
-    for (int i = 0; i < 6; i++) {
-        if (poke(Player1,i).ko()) {
-            changeStatus(Player1, i, Pokemon::Koed);
-        }
-        if (poke(Player2,i).ko()) {
-            changeStatus(Player2, i, Pokemon::Koed);
-        }
-    }
-
     notify(All, BlankMessage,0);
 
     if (tier().length()>0)
@@ -164,6 +155,15 @@ void BattleSituation::engageBattle()
 
         t.fixTeam(team1);
         t.fixTeam(team2);
+
+        for (int i = 0; i < 6; i++) {
+            if (poke(Player1,i).ko()) {
+                changeStatus(Player1, i, Pokemon::Koed);
+            }
+            if (poke(Player2,i).ko()) {
+                changeStatus(Player2, i, Pokemon::Koed);
+            }
+        }
     }
 
     pluginManager->battleStarting(player1, player2, mode(), clauses(), rated());
@@ -456,10 +456,6 @@ void BattleSituation::rearrangeTeams()
 
     for (int player = Player1; player <= Player2; player++) {
         team(player).setIndexes(choice(slot(player)).choice.rearrange.pokeIndexes);
-
-        if (tier().length() > 0 && !TierMachine::obj()->isValid(team(player), tier())) {
-            team(player).resetIndexes();
-        }
 
         startClock(player);
     }
@@ -1010,8 +1006,10 @@ void BattleSituation::notifySub(int player, bool sub)
 
 bool BattleSituation::canCancel(int player)
 {
-    if (!blocked() || rearrangeTime())
+    if (!blocked())
         return false;
+    if (rearrangeTime())
+        return true;
 
     for (int i = 0; i < numberOfSlots()/2; i++) {
         if (couldMove[slot(player,i)])
@@ -1023,11 +1021,15 @@ bool BattleSituation::canCancel(int player)
 
 void BattleSituation::cancel(int player)
 {
-    notify(player, CancelMove, player);
+    if (rearrangeTime()) {
+        notify(player,RearrangeTeam,opponent(player),ShallowShownTeam(team(opponent(player))));
+    } else {
+        notify(player, CancelMove, player);
 
-    for (int i = 0; i < numberOfSlots()/2; i++) {
-        if (couldMove[slot(player, i)]) {
-            hasChoice[slot(player, i)] = true;
+        for (int i = 0; i < numberOfSlots()/2; i++) {
+            if (couldMove[slot(player, i)]) {
+                hasChoice[slot(player, i)] = true;
+            }
         }
     }
 
@@ -1110,6 +1112,17 @@ bool BattleSituation::validChoice(const BattleChoice &b)
                 return false;
 
             used[x] = true;
+        }
+
+        if (tier().length() > 0) {
+            team(player).setIndexes(b.choice.rearrange.pokeIndexes);
+            if (!TierMachine::obj()->isValid(team(player), tier())) {
+                team(player).resetIndexes();
+                return false;
+            } else {
+                team(player).resetIndexes();
+                return true;
+            }
         }
 
         return true;
