@@ -290,10 +290,6 @@ void Tier::fixTeam(TeamBattle &t) const
             t.poke(i).num() = 0;
             continue;
         }
-        if (t.poke(i).level() > maxLevel) {
-            t.poke(i).level() = maxLevel;
-            t.poke(i).updateStats();
-        }
     }
 }
 
@@ -822,6 +818,11 @@ bool Tier::allowGen(int gen) const
 int Tier::getClauses() const
 {
     return clauses;
+}
+
+int Tier::getMaxLevel() const
+{
+    return maxLevel;
 }
 
 Tier *Tier::dataClone() const
