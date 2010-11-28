@@ -216,7 +216,7 @@ void ScriptEngine::serverStartUp()
     evaluate(myscript.property("serverStartUp").call(myscript, QScriptValueList()));
 }
 
-void ScriptEngine::step_event()
+void ScriptEngine::stepEvent()
 {
     evaluate(myscript.property("step").call(myscript, QScriptValueList()));
 }
@@ -952,7 +952,7 @@ void ScriptEngine::timer()
 
 void ScriptEngine::timer_step()
 {
-    this->step_event();
+    this->stepEvent();
 }
 
 void ScriptEngine::delayedCall(const QScriptValue &func, int delay)
