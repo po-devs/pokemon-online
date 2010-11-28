@@ -334,7 +334,7 @@ void BattleWindow::goToNextChoice()
             } else {
                 myswitch->setEnabled(true);
                 for (int i = 0; i < 6; i++) {
-                    mypzone->pokes[i]->setEnabled(team().poke(i).num() != 0 && team().poke(i).lifePoints() > 0);
+                    mypzone->pokes[i]->setEnabled(team().poke(i).num() != 0 && team().poke(i).lifePoints() > 0 && team().poke(i).status() != Pokemon::Koed);
                 }
 
                 if (info().multiples()) {
@@ -832,7 +832,7 @@ void BattleWindow::openRearrangeWindow(const ShallowShownTeam &t)
 
     connect(r, SIGNAL(forfeit()), SLOT(clickClose()));
     connect(r, SIGNAL(done()), SLOT(sendRearrangedTeam()));
-    connect(r, SIGNAL(done()), r, SLOT(close()));
+    connect(r, SIGNAL(done()), r, SLOT(deleteLater()));
 }
 
 void BattleWindow::sendRearrangedTeam()
