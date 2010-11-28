@@ -33,11 +33,10 @@ ScriptEngine::ScriptEngine(Server *s) {
 
     changeScript(QString::fromUtf8(f.readAll()));
 
-    QTimer *tt = new QTimer(this);
-    timerEvents[tt] = QString("if (typeof script == 'object' && typeof script.step == 'function') { script.step(); }");
-    tt->setSingleShot(false);
-    tt->start(1000);
-    connect(tt, SIGNAL(timeout()), SLOT(timer_step()));
+    QTimer *step_timer = new QTimer(this);
+    step_timer->setSingleShot(false);
+    step_timer->start(1000);
+    connect(step_timer, SIGNAL(timeout()), SLOT(timer_step()));
 }
 
 ScriptEngine::~ScriptEngine()
@@ -215,6 +214,11 @@ void ScriptEngine::afterNewMessage(const QString &message)
 void ScriptEngine::serverStartUp()
 {
     evaluate(myscript.property("serverStartUp").call(myscript, QScriptValueList()));
+}
+
+void ScriptEngine::step_event()
+{
+    evaluate(myscript.property("step").call(myscript, QScriptValueList()));
 }
 
 void ScriptEngine::serverShutDown()
@@ -945,10 +949,10 @@ void ScriptEngine::timer()
     timerEvents.remove(t);
     t->deleteLater();
 }
+
 void ScriptEngine::timer_step()
 {
-    QTimer *t = (QTimer*) sender();
-    eval(timerEvents[t]);
+    this->step_event();
 }
 
 void ScriptEngine::delayedCall(const QScriptValue &func, int delay)
@@ -1797,7 +1801,14 @@ void ScriptEngine::changeAnnouncement(const QString &html) {
 QScriptValue ScriptEngine::getAnnouncement() {
         return myserver->serverAnnouncement;
     }
-
+/* Causes crash...
+void ScriptEngine::setTimer(int milisec) {
+    if (milisec <= 0)
+        return;
+    step_timer->stop();
+    step_timer->start(ms);
+    }
+*/
 int ScriptEngine::teamPokeAbility(int id, int slot)
 {
     if (!loggedIn(id) || slot < 0 || slot >= 6) {
