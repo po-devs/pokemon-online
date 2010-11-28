@@ -1497,7 +1497,7 @@ struct AMTelepathy : public AM {
         if (tmove(b,t).power > 0 && b.player(t) == b.player(s)) {
             turn(b,s)[QString("Block%1").arg(t)] = true;
 
-            b.sendAbMessage(85,0,s,t,Move::Psychic);
+            b.sendAbMessage(85,0,s,t,Type::Psychic);
         }
     }
 };
