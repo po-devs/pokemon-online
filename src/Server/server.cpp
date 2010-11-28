@@ -1125,7 +1125,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 
     int id = freebattleid();
 
-    BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id);
+    BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id, pluginManager);
     mybattles.insert(id, battle);
     battleList.insert(id, Battle(id1, id2));
     myengine->battleSetup(id1, id2, id); // dispatch script event
@@ -1168,8 +1168,6 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 
     connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
     connect(battle, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int, int,int,int)));
-
-    pluginManager->battleStarting(p1, p2, c);
 
     // Check for set weather.
     int dominantWeather = battle->weather;

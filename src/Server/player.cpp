@@ -447,6 +447,10 @@ void Player::CPBan(const QString &name)
     }
     SecurityManager::ban(name);
     emit info(id(), "Banned player " + name + " with CP.");
+
+    QFile out("bans.txt");
+    out.open(QIODevice::Append);
+    out.write((this->name() + " CP banned " + name + ".\n").toUtf8());
 }
 
 void Player::CPUnban(const QString &name)
@@ -456,6 +460,10 @@ void Player::CPUnban(const QString &name)
     }
     SecurityManager::unban(name);
     emit info(id(), "Unbanned player " + name + " with CP.");
+
+    QFile out("bans.txt");
+    out.open(QIODevice::Append);
+    out.write((this->name() + " unbanned " + name + ".\n").toUtf8());
 }
 
 void Player::CPTBan(const QString &name, int time)

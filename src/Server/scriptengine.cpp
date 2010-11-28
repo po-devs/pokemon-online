@@ -649,7 +649,7 @@ void ScriptEngine::changePokeMove(int id, int pslot, int mslot, int move)
 {
     if (!testPlayer("", id) || !testRange("", pslot, 0, 5) || !testRange("", mslot, 0, 4))
         return;
-    if (!MoveInfo::Exists(move, 4))
+    if (!MoveInfo::Exists(move, GEN_MAX))
         return;
     Player *p = myserver->player(id);
     p->team().poke(pslot).move(mslot).num() = move;

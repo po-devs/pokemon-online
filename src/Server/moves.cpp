@@ -47,6 +47,7 @@ MoveEffect::MoveEffect(int num, int gen, BattleSituation::BasicMoveInfo &data)
     data.statAffected = MoveInfo::StatAffected(num, gen);
     data.boostOfStat = MoveInfo::BoostOfStat(num, gen);
     data.rateOfStat = MoveInfo::RateOfStat(num, gen);
+    data.kingRock = MoveInfo::FlinchByKingRock(num);
 }
 
 /* There's gonna be tons of structures inheriting it,
@@ -744,10 +745,6 @@ struct MMOHKO : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.OHKOClause()) {
-            turn(b,s)["Failed"] = true;
-            b.notifyClause(ChallengeInfo::OHKOClause);
-        }
 	if (b.poke(s).level() < b.poke(t).level()) {
 	    turn(b,s)["Failed"] = true;
             return;
@@ -1572,10 +1569,12 @@ struct MMCopycat : public MM
         removeFunction(turn(b,s), "UponAttackSuccessful", "Copycat");
         removeFunction(turn(b,s), "DetermineAttackFailure", "Copycat");
 	int attack = turn(b,s)["CopycatMove"].toInt();
+        BS::BasicMoveInfo info = tmove(b,s);
 	MoveEffect::setup(attack, s, t, b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
-	b.useAttack(s, turn(b,s)["CopycatMove"].toInt(), true);
+        b.useAttack(s, attack, true);
         MoveEffect::unsetup(attack, s, b);
+        tmove(b,s) = info;
     }
 };
 
@@ -1851,7 +1850,7 @@ struct MMBounce : public MM
 	}
 	poke(b,s)["Invulnerable"] = true;
 	poke(b,s)["VulnerableMoves"].setValue(vuln_moves);
-	poke(b,s)["VulnerableMults"].setValue(vuln_mult);
+        poke(b,s)["VulnerableMults"].setValue(vuln_mult);
         b.changeSprite(s, -1);
         addFunction(poke(b,s), "TestEvasion", "Bounce", &dgaf);
         addFunction(poke(b,s), "TurnSettings", "Bounce", &ts);
@@ -1867,6 +1866,8 @@ struct MMBounce : public MM
             addFunction(poke(b,t), "TestEvasion", "Bounce", &dgaf);
             addFunction(poke(b,t), "DetermineAttackPossible", "Bounce", &dap);
             addFunction(poke(b,s), "AfterBeingKoed", "Bounce", &ewc);
+            poke(b,t)["VulnerableMoves"].setValue(vuln_moves);
+            poke(b,t)["VulnerableMults"].setValue(vuln_mult);
         }
     }
 
@@ -3665,7 +3666,7 @@ struct MMRage : public MM
 
     static void uas(int s, int, BS &b) {
         addFunction(poke(b,s), "UponOffensiveDamageReceived", "Rage", &uodr);
-        if (poke(b,s).contains("RageBuilt") && poke(b,s)["LastMoveUsed"] == Move::Rage) {
+        if (poke(b,s).contains("RageBuilt") && poke(b,s)["AnyLastMoveUsed"] == Move::Rage) {
             poke(b,s).remove("AttractBy");
             b.healConfused(s);
             poke(b,s).remove("Tormented");
@@ -3674,7 +3675,7 @@ struct MMRage : public MM
     }
 
     static void uodr(int s, int, BS &b) {
-        if (!b.koed(s) && poke(b,s)["LastMoveUsed"] == Move::Rage) {
+        if (!b.koed(s) && poke(b,s)["AnyLastMoveUsed"] == Move::Rage) {
             poke(b,s)["RageBuilt"] = true;
             if (!b.hasMaximalStatMod(s, Attack)) {
                 b.inflictStatMod(s, Attack, 1,false);

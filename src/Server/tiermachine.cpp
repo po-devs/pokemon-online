@@ -131,6 +131,8 @@ void TierMachine::fromString(const QString &s)
 
     /* Do tierList . */
     m_tierList = tree.buildTierList();
+
+    emit tiersChanged();
 }
 
 QByteArray TierMachine::tierList() const {

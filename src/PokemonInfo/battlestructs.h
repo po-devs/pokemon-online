@@ -125,6 +125,8 @@ public:
         }
     }
 
+    void resetIndexes();
+
     bool invalid() const;
 
     QString name;
@@ -336,15 +338,13 @@ struct ChallengeInfo
     {
         SleepClause = 1,
         FreezeClause = 2,
-        EvasionClause = 4,
-        OHKOClause = 8,
-        DisallowSpectator = 16,
-        ItemClause = 32,
-        ChallengeCup = 64,
-        NoTimeOut = 128,
-        SpeciesClause = 256,
-        RearrangeTeams = 512,
-        SelfKO = 1024
+        DisallowSpectator = 4,
+        ItemClause = 8,
+        ChallengeCup = 16,
+        NoTimeOut = 32,
+        SpeciesClause = 64,
+        RearrangeTeams = 128,
+        SelfKO = 256
     };
 
     enum Mode
@@ -355,7 +355,7 @@ struct ChallengeInfo
         Rotation
     };
 
-    static const int numberOfClauses = 11;
+    static const int numberOfClauses = 9;
 
     static QString clauseText[numberOfClauses];
     static QString clauseBattleText[numberOfClauses];
