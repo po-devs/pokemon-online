@@ -29,6 +29,7 @@ public:
 
     bool beforeSpectateBattle(int src, int p1, int p2);
     void afterSpectateBattle(int src, int p1, int p2);
+    void step_event();
 
     bool beforeChatMessage(int src, const QString &message, int channel);
     void afterChatMessage(int src, const QString &message, int channel);
@@ -82,6 +83,8 @@ public:
     Q_INVOKABLE void setAnnouncement(const QString &html, int id);
     Q_INVOKABLE void setAnnouncement(const QString &html);
     Q_INVOKABLE void changeAnnouncement(const QString &html);
+
+    // Q_INVOKABLE void setTimer(int ms); // Causes crash
 
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
@@ -259,6 +262,7 @@ private:
     Server *myserver;
     QScriptEngine myengine;
     QScriptValue myscript;
+    QTimer * step_timer;
     QVector<bool> stopevents;
     QList<QScriptString> playerArrays;
     SessionDataFactory *mySessionDataFactory;
