@@ -107,6 +107,23 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
             }
         }
     }
+
+    if (tier().length() > 0) {
+        int maxLevel = TierMachine::obj()->tier(tier()).getMaxLevel();
+
+        if (maxLevel < 100) {
+            for (int i = 0; i < 6; i ++) {
+                if (team1.poke(i).level() > maxLevel) {
+                    team1.poke(i).level() = maxLevel;
+                    team1.poke(i).updateStats();
+                }
+                if (team2.poke(i).level() > maxLevel) {
+                    team2.poke(i).level() = maxLevel;
+                    team2.poke(i).updateStats();
+                }
+            }
+        }
+    }
 }
 
 BattleSituation::~BattleSituation()

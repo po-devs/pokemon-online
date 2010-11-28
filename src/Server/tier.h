@@ -90,6 +90,7 @@ public:
     bool allowMode(int mode) const;
     bool allowGen(int gen) const;
     int getClauses() const;
+    int getMaxLevel() const;
     void fixTeam(TeamBattle &t) const;
 
     QString getBannedPokes() const;
