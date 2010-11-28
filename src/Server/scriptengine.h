@@ -29,7 +29,7 @@ public:
 
     bool beforeSpectateBattle(int src, int p1, int p2);
     void afterSpectateBattle(int src, int p1, int p2);
-    void step_event();
+    void stepEvent();
 
     bool beforeChatMessage(int src, const QString &message, int channel);
     void afterChatMessage(int src, const QString &message, int channel);
