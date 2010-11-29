@@ -1520,7 +1520,7 @@ void BattleSituation::callseffects(int source, int target, const QString &name)
 void BattleSituation::callieffects(int source, int target, const QString &name)
 {
     //Klutz
-    if (hasWorkingItem(source, poke(source).item()))
+    if (hasWorkingItem(source, poke(source).item()) && !pokeMemory(source).contains("BeforeSetups"))
 	ItemEffect::activate(name, poke(source).item(), source, target, *this);
 }
 
@@ -2410,7 +2410,7 @@ bool BattleSituation::hasWorkingItem(int player, int it)
 {
     //Klutz
     return poke(player).item() == it && !pokeMemory(player).value("Embargoed").toBool() && !hasWorkingAbility(player, Ability::Klutz)
-            && battleMemory().value("MagicRoomCount").toInt() == 0 && !pokeMemory(player).contains("BeforeSetups")
+            && battleMemory().value("MagicRoomCount").toInt() == 0
             && !(ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(player, Ability::Anxiety));
 }
 
