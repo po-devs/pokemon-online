@@ -5636,6 +5636,29 @@ struct MMGrowth : public MM
     }
 };
 
+struct MMTriAttack : public MM
+{
+    MMTriAttack() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        if (b.true_rand() % 5 != 0)
+            return;
+
+        int status;
+        switch (b.true_rand() %3) {
+        case 0: status = Pokemon::Paralysed;
+        case 1: status = Pokemon::Burnt;
+        case 2: default: status = Pokemon::Frozen;
+        }
+
+        if (b.canGetStatus(t, status)) {
+            b.inflictStatus(t, status, s);
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5862,4 +5885,5 @@ void MoveEffect::init()
     REGISTER_MOVE(189, FireBurst);
     REGISTER_MOVE(190, SideChange);
     REGISTER_MOVE(191, Growth);
+    REGISTER_MOVE(192, TriAttack);
 }
