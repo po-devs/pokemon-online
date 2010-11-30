@@ -300,7 +300,7 @@ struct AMDrySkin : public AM {
 
     static void oa(int s, int t, BS &b) {
         if (type(b,t) == Pokemon::Water) {
-            turn(b,s)[QString("Block%1").arg(t)] = true;
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             b.sendAbMessage(15,0,s,s,Pokemon::Water);
             b.healLife(s, b.poke(s).totalLifePoints()/4);
         }
@@ -366,7 +366,7 @@ struct AMFlashFire : public AM {
 
     static void op(int s, int t, BS &b) {
         if (type(b,t) == Pokemon::Fire && (b.gen() >= 4 || tmove(b,t).power > 0) ) {
-            turn(b,s)[QString("Block%1").arg(t)] = true;
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             if (!poke(b,s).contains("FlashFired")) {
                 b.sendAbMessage(19,0,s,s,Pokemon::Fire);
                 poke(b,s)["FlashFired"] = true;
@@ -735,7 +735,7 @@ struct AMMotorDrive : public AM {
 
     static void op(int s, int t, BS &b) {
         if (type(b,t) == Type::Electric) {
-            turn(b,s)[QString("Block%1").arg(t)] = true;
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             b.sendAbMessage(41,0,s,s,Pokemon::Electric);
             b.inflictStatMod(s,Speed,1,s);
         }
@@ -903,7 +903,7 @@ struct AMSoundProof : public AM {
 
     static void ob(int s, int t, BS &b) {
         if (tmove(b,t).flags & Move::SoundFlag) {
-            turn(b,s)[QString("Block%1").arg(t)] = true;
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             b.sendAbMessage(57,0,s);
         }
     }
@@ -1043,7 +1043,7 @@ struct AMVoltAbsorb : public AM {
 
     static void op(int s, int t, BS &b) {
         if (type(b,t) == poke(b,s)["AbilityArg"].toInt() && (b.gen() >= 4 || tmove(b,t).power > 0) ) {
-            turn(b,s)[QString("Block%1").arg(t)] = true;
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
 
             if (b.poke(s).lifePoints() == b.poke(s).totalLifePoints()) {
                 b.sendAbMessage(70,1,s,s,type(b,t), b.ability(s));
@@ -1068,7 +1068,7 @@ struct AMWonderGuard : public AM {
 
             if (mod <= 4) {
                 b.sendAbMessage(71,0,s);
-                turn(b,s)[QString("Block%1").arg(t)] = true;
+                turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             }
         }
     }
@@ -1112,7 +1112,7 @@ struct AMLightningRod : public AM {
         int tp = type(b,t);
 
         if (tp == poke(b,s)["AbilityArg"].toInt()) {
-            turn(b,s)[QString("Block%1").arg(t)] = true;
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             if (b.hasMaximalStatMod(s, SpAttack)) {
                 b.sendAbMessage(38, 2, s, 0, tp, b.ability(s));
             } else {
@@ -1210,7 +1210,7 @@ struct AMHerbivore : public AM {
         int tp = type(b,t);
 
         if (tp == poke(b,s)["AbilityArg"].toInt()) {
-            turn(b,s)[QString("Block%1").arg(t)] = true;
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             if (!b.hasMaximalStatMod(s, Attack)) {
                 b.sendAbMessage(68, 0, s, 0, tp, b.ability(s));
                 b.inflictStatMod(s, Attack, 1, s, false);
@@ -1495,7 +1495,7 @@ struct AMTelepathy : public AM {
 
     static void op(int s, int t, BS &b) {
         if (tmove(b,t).power > 0 && b.player(t) == b.player(s)) {
-            turn(b,s)[QString("Block%1").arg(t)] = true;
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
 
             b.sendAbMessage(85,0,s,t,Type::Psychic);
         }

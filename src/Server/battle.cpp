@@ -2097,7 +2097,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         if (target != player) {
             callaeffects(target,player,"OpponentBlock");
         }
-        if (turnMemory(target).contains(QString("Block%1").arg(player))) {
+        if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
             calleffects(player,target,"AttackSomehowFailed");
             continue;
         }
