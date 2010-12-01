@@ -1817,3 +1817,17 @@ int ScriptEngine::teamPokeAbility(int id, int slot)
         return myserver->player(id)->team().poke(slot).ability();
     }
 }
+
+void ScriptEngine::changeName(int playerId, QString newName)
+{
+    if (!loggedIn(playerId)) return;
+    myserver->player(playerId)->setName(newName);
+    myserver->sendPlayer(playerId);
+}
+
+void ScriptEngine::changeInfo(int playerId, QString newInfo)
+{
+    if (!loggedIn(playerId)) return;
+    myserver->player(playerId)->setInfo(newInfo);
+    myserver->sendPlayer(playerId);
+}
