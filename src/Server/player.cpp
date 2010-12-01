@@ -297,6 +297,10 @@ void Player::setName(const QString &newname)  {
     team().name = newname;
 }
 
+void Player::setInfo(const QString &newInfo)  {
+    team().info = newInfo;
+}
+
 void Player::kick() {
     relay().close();
 }
