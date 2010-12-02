@@ -181,6 +181,7 @@ public:
     Q_INVOKABLE bool hasLegalTeamForTier(int id, const QString &tier);
     Q_INVOKABLE void changeName(int playerId, QString newName);
     Q_INVOKABLE void changeInfo(int playerId, QString newInfo);
+    Q_INVOKABLE QScriptValue info(int playerId);
 
     Q_INVOKABLE QScriptValue pokemon(int num);
     Q_INVOKABLE QScriptValue pokeNum(const QString &name);

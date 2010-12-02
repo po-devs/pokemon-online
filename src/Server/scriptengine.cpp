@@ -1831,3 +1831,12 @@ void ScriptEngine::changeInfo(int playerId, QString newInfo)
     myserver->player(playerId)->setInfo(newInfo);
     myserver->sendPlayer(playerId);
 }
+
+QScriptValue ScriptEngine::info(int playerId)
+{
+    if (loggedIn(playerId)) {
+        return myserver->player(playerId)->team().info;
+    }else{
+        return myengine.undefinedValue();
+    }
+}
