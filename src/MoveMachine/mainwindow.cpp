@@ -20,6 +20,8 @@ void MoveGen::init(int gen, Pokemon::uniqueId pokenum)
     moves[TutorMoves] = PokemonInfo::TutorMoves(pokenum,gen);
     moves[TMMoves] = PokemonInfo::TMMoves(pokenum, gen);
     moves[PreEvoMoves] = PokemonInfo::PreEvoMoves(pokenum, gen);
+    if (gen == 5)
+        moves[DreamWorldMoves] = PokemonInfo::dreamWorldMoves(pokenum);
 }
 
 void MovesPerPoke::init(Pokemon::uniqueId poke)
