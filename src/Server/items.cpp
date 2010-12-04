@@ -582,7 +582,7 @@ struct IMBulb : public IM
             }
             b.sendItemMessage(36, s, 0, t, b.poke(s).item(), stat);
             b.disposeItem(s);
-            b.inflictStatMod(s, SpAttack, 1, s, false);
+            b.inflictStatMod(s, stat, 1, s, false);
         }
     }
 };
@@ -590,10 +590,13 @@ struct IMBulb : public IM
 struct IMJewel : public IM
 {
     IMJewel() {
-        functions["BeforeTargetList"] = &btl;
+        functions["BasePowerModifier"] = &btl;
     }
 
     static void btl(int s, int, BS &b) {
+        /* Not Clean: First target will have the attack's power
+           increased at the base power item modifier place, next
+           targets will have it increased from the get go */
         if (tmove(b,s).power <= 1) {
             return;
         }
@@ -601,6 +604,7 @@ struct IMJewel : public IM
             return;
         b.sendItemMessage(37, s, 0, 0, b.poke(s).item(), move(b,s));
         tmove(b,s).power = tmove(b,s).power * 3 / 2;
+        turn(b,s)["BasePowerItemModifier"] = 5;
         b.disposeItem(s);
     }
 };

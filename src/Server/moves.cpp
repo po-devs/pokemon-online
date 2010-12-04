@@ -3307,6 +3307,7 @@ struct MMMeFirst : public MM
         removeFunction(turn(b,s), "MoveSettings", "MeFirst");
 	int move = turn(b,s)["MeFirstAttack"].toInt();
 	MoveEffect::setup(move,s,t,b);
+        tmove(b,s).power = tmove(b,s).power * 3 / 2;
         turn(b,s)["Target"] = b.randomValidOpponent(s);
 	b.useAttack(s,move,true,true);
         MoveEffect::unsetup(move,s,b);
@@ -4661,7 +4662,7 @@ struct MMAcupressure : public MM
 
     static void uas(int , int t, BS &b) {
         QVector<int> stats;
-        for (int i = Attack; i <= Accuracy; i++) {
+        for (int i = Attack; i <= Evasion; i++) {
             if (fpoke(b,t).boosts[i] < 6) {
                 stats.push_back(i);
             }
