@@ -4610,9 +4610,9 @@ struct MMTransform : public MM {
         for (int i = 1; i < 6; i++)
             po.stats[i] = pt.stats[i];
 
-        for (int i = 0; i < 6; i++) {
-            po.dvs[i] = pt.dvs[i];
-        }
+//        for (int i = 0; i < 6; i++) {
+//            po.dvs[i] = pt.dvs[i];
+//        }
 
         for (int i = 0; i < 8; i++) {
             po.boosts[i] = pt.boosts[i];
