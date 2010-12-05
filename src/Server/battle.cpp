@@ -2067,6 +2067,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     callieffects(player, player, "BeforeTargetList");
     calleffects(player, player, "BeforeTargetList");
 
+    /* Here because of jewels :( */
+    turnMemory(player).remove("BasePowerItemModifier");
+
     foreach(int target, targetList) {
         attacked() = target;
         if (!specialOccurence && (tmove(player).flags & Move::MemorableFlag) ) {
@@ -3072,7 +3075,6 @@ int BattleSituation::calculateDamage(int p, int t)
         power = power * 3 / 2;
     }
 
-    move.remove("BasePowerItemModifier");
     callieffects(p,t,"BasePowerModifier");
     power = power * (10+move["BasePowerItemModifier"].toInt())/10;
 

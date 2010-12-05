@@ -594,16 +594,12 @@ struct IMJewel : public IM
     }
 
     static void btl(int s, int, BS &b) {
-        /* Not Clean: First target will have the attack's power
-           increased at the base power item modifier place, next
-           targets will have it increased from the get go */
         if (tmove(b,s).power <= 1) {
             return;
         }
         if (tmove(b,s).type != poke(b,s)["ItemArg"].toInt())
             return;
         b.sendItemMessage(37, s, 0, 0, b.poke(s).item(), move(b,s));
-        tmove(b,s).power = tmove(b,s).power * 3 / 2;
         turn(b,s)["BasePowerItemModifier"] = 5;
         b.disposeItem(s);
     }
