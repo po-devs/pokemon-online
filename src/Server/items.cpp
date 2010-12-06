@@ -348,7 +348,7 @@ struct IMShellBell : public IM
     static void udi(int s, int t, BS &b) {
 	if (s==t)
 	    return;
-	if (b.koed(s))
+        if (b.koed(s) || b.hasWorkingAbility(s, Ability::Encourage))
 	    return;
 
 	b.sendItemMessage(24, s);
@@ -612,7 +612,7 @@ struct IMRedCard : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(s))
+        if (b.koed(s) || b.hasWorkingAbility(t, Ability::Encourage))
             return;
 
         addFunction(turn(b,t), "AfterAttackFinished", "RedCard", &aaf);
@@ -670,7 +670,7 @@ struct IMEscapeButton : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(s) || b.hasSubstitute(s))
+        if (b.koed(s) || b.hasSubstitute(s) || b.hasWorkingAbility(s, Ability::Encourage))
             return;
         turn(b,s)["EscapeButtonActivated"] = true;
         turn(b,s)["EscapeButtonCount"] = slot(b,s)["SwitchCount"];
