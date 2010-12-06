@@ -750,7 +750,7 @@ struct MMOHKO : public MM
             return;
 	}
         if (b.hasWorkingAbility(t, Ability::Sturdy)) {
-            b.fail(s,43,0,type(b,s));
+            b.fail(t,43,0,type(b,s));
         }
     }
 };
@@ -2775,6 +2775,8 @@ struct MMFling : public MM
 
     static void btl(int s, int, BS &b) {
         if (b.poke(s).item() != 0 && b.hasWorkingItem(s, b.poke(s).item()) && ItemInfo::Power(b.poke(s).item()) > 0) {
+            if (b.gen() >= 5 && b.hasWorkingAbility(s, Ability::Klutz))
+                return;
 	    turn(b,s)["FlingItem"] = b.poke(s).item();
             tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
             int t = b.targetList.front();

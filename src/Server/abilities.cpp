@@ -798,7 +798,7 @@ struct AMRoughSkin : public AM {
     }
 
     static void upa( int s, int t, BS &b) {
-        if (!b.koed(t)) {
+        if (!b.koed(t) && !b.hasWorkingAbility(t, Ability::MagicGuard)) {
             b.sendAbMessage(50,0,s,t,0,b.ability(s));
             b.inflictDamage(t,b.poke(t).totalLifePoints()/8,s,false);
         }
@@ -1063,7 +1063,7 @@ struct AMWonderGuard : public AM {
     static void op(int s, int t, BS &b) {
         int tp = type(b,t);
         /* Fire fang always hits through Wonder Guard, at least in 4th gen... */
-        if (tmove(b,t).power > 0 && tp != Pokemon::Curse && move(b, t) != Move::FireFang) {
+        if (tmove(b,t).power > 0 && tp != Pokemon::Curse && (b.gen() >= 5 || move(b, t) != Move::FireFang)) {
             int mod = TypeInfo::Eff(tp, b.getType(s,1)) * TypeInfo::Eff(tp, b.getType(s,2));
 
             if (mod <= 4) {
