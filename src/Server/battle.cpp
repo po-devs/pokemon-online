@@ -2896,7 +2896,10 @@ int BattleSituation::getType(int player, int slot)
 
     if (types[slot-1] == Pokemon::Flying && pokeMemory(player).value("Roosted").toBool())
     {
-	return Pokemon::Curse;
+        if (types[1] == Pokemon::Curse && gen() >= 5)
+            return Pokemon::Normal;
+        else
+            return Pokemon::Curse;
     }
 
     return types[slot-1];
