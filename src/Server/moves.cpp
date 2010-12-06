@@ -5488,7 +5488,7 @@ struct MMACapella : public MM
     static void bcd(int s, int, BS &b) {
         int source = b.player(s);
 
-        if (!team(b,source).contains("CapellaTurn") || team(b,source)["CappellaTurn"].toInt() != b.turn()) {
+        if (!team(b,source).contains("CapellaTurn") || team(b,source)["CapellaTurn"].toInt() != b.turn()) {
             return;
         }
 
