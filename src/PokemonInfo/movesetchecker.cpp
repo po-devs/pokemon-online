@@ -138,7 +138,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             AbilityGroup ab = PokemonInfo::Abilities(pokeid);
 
             if (ability == ab.ab(2) && (gender != Pokemon::Female || PokemonInfo::Gender(pokeid) == Pokemon::FemaleAvail)) {
-                if (PokemonInfo::dreamWorldMoves(pokeid).contains(moves)) {
+                if (moves.size() == 1 && PokemonInfo::dreamWorldMoves(pokeid).contains(moves)) {
                     return true;
                 }
             }
