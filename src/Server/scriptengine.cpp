@@ -1851,3 +1851,11 @@ void ScriptEngine::modifyPokeAbility(int id, int slot, int ability, int gen)
         );
     }
 }
+
+void ScriptEngine::changePokeAbility(int id, int slot, int ability)
+{
+    if (!testPlayer("changePokeAbility", id) || !testRange("changePokeAbility", slot, 0, 5)) {
+        return;
+    }
+    myserver->player(id)->team().poke(slot).ability() = ability;
+}

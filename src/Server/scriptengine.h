@@ -247,6 +247,7 @@ public:
 
     Q_INVOKABLE int teamPokeAbility(int id, int slot);
     Q_INVOKABLE void modifyPokeAbility(int id, int slot, int ability, int gen = GEN_MAX);
+    Q_INVOKABLE void changePokeAbility(int id, int slot, int ability);
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
