@@ -246,6 +246,7 @@ public:
     Q_INVOKABLE QScriptValue weather(int weatherId);
 
     Q_INVOKABLE int teamPokeAbility(int id, int slot);
+    Q_INVOKABLE void modifyPokeAbility(int id, int slot, int ability, int gen = GEN_MAX);
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
