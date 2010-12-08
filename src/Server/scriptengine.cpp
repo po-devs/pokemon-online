@@ -1840,3 +1840,14 @@ QScriptValue ScriptEngine::info(int playerId)
         return myengine.undefinedValue();
     }
 }
+
+void ScriptEngine::modifyPokeAbility(int id, int slot, int ability, int gen)
+{
+    bool res = PokemonInfo::modifyAbility(Pokemon::uniqueId(id), slot, ability, gen);
+    if (!res) {
+        warn(
+            "modifyPokeAbility",
+            QString("slot out of range or pokemon do not exist in gen %1.").arg(QString::number(gen))
+        );
+    }
+}
