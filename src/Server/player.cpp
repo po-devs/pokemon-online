@@ -466,24 +466,24 @@ void Player::CPUnban(const QString &name)
     out.write((this->name() + " unbanned " + name + ".\n").toUtf8());
 }
 
-void Player::CPTBan(const QString &name, int time)
-{
-    if (auth() < 1) {
-        return; //INVALID BEHAVIOR
-    }
-    int maxAuth = SecurityManager::maxAuth(SecurityManager::ip(name));
-    if (maxAuth >= auth()) {
-        sendMessage(name + " has authority " + maxAuth + " under another nick.");
-        return;
-    }
-    /* Checking the time boundaries */
-    time = std::max(1, std::min(time, 1440));
-    SecurityManager::ban(name);
-    TempBan *tBan = new TempBan(name,time);
-    tBan->start();
-    connect(tBan,SIGNAL(end(QString)),this,SLOT(tUnban(QString)));
-    emit info(id(), "Temporarily Banned player " + name + " with CP for " + int(time) + " minutes.");
-}
+//void Player::CPTBan(const QString &name, int time)
+//{
+//    if (auth() < 1) {
+//        return; //INVALID BEHAVIOR
+//    }
+//    int maxAuth = SecurityManager::maxAuth(SecurityManager::ip(name));
+//    if (maxAuth >= auth()) {
+//        sendMessage(name + " has authority " + maxAuth + " under another nick.");
+//        return;
+//    }
+//    /* Checking the time boundaries */
+//    time = std::max(1, std::min(time, 1440));
+//    SecurityManager::ban(name);
+//    TempBan *tBan = new TempBan(name,time);
+//    tBan->start();
+//    connect(tBan,SIGNAL(end(QString)),this,SLOT(tUnban(QString)));
+//    emit info(id(), "Temporarily Banned player " + name + " with CP for " + int(time) + " minutes.");
+//}
 
 void Player::playerKick(int p) {
     if (!isLoggedIn()) {
