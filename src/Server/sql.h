@@ -53,6 +53,10 @@ public:
             db.setUserName(s.value("sql_db_user").toString());
             db.setPassword(s.value("sql_db_pass").toString());
         }
+		
+        if (databaseType == MySQL) {
+            db.setConnectOptions("MYSQL_OPT_RECONNECT=1");
+        }
 
         if (!db.open() && name=="") {
             throw (QString("Unable to establish a database connection.") + db.lastError().text());
