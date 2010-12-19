@@ -1411,7 +1411,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     }
 
     turnMemory(slot)["CantGetToMove"] = true;
-    pokeMemory(slot)["BeforeSetups"] = true;
 
     calleffects(slot, slot, "UponSwitchIn");
     callseffects(slot, slot, "UponSwitchIn");
@@ -1421,7 +1420,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 void BattleSituation::callEntryEffects(int player)
 {
     if (!koed(player)) {
-        pokeMemory(player).remove("BeforeSetups");
         ItemEffect::setup(poke(player).item(), player, *this);
         acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
@@ -1430,7 +1428,6 @@ void BattleSituation::callEntryEffects(int player)
 
 void BattleSituation::calleffects(int source, int target, const QString &name)
 {
-
     if (turnMemory(source).contains("Effect_" + name)) {
         turnMemory(source)["TurnEffectCall"] = true;
         turnMemory(source)["TurnEffectCalled"] = name;
@@ -1520,7 +1517,7 @@ void BattleSituation::callseffects(int source, int target, const QString &name)
 void BattleSituation::callieffects(int source, int target, const QString &name)
 {
     //Klutz
-    if (hasWorkingItem(source, poke(source).item()) && !pokeMemory(source).contains("BeforeSetups"))
+    if (hasWorkingItem(source, poke(source).item()))
 	ItemEffect::activate(name, poke(source).item(), source, target, *this);
 }
 

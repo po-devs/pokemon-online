@@ -3964,7 +3964,13 @@ struct MMSuckerPunch : public MM
 
 struct MMTailWind : public MM {
     MMTailWind(){
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int , BS &b) {
+        if (team(b,s).contains("TailWindCount"))
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas(int s, int, BS &b){
@@ -3978,6 +3984,7 @@ struct MMTailWind : public MM {
         inc(team(b,s)["TailWindCount"], -1);
         if (team(b,s)["TailWindCount"].toInt() == 0) {
             removeFunction(team(b,s), "EndTurn", "TailWind");
+            team(b,s).remove("TailWindCount");
             b.sendMoveMessage(133,1,s,Pokemon::Flying);
         }
     }
