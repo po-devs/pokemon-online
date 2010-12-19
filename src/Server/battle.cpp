@@ -2432,13 +2432,14 @@ int BattleSituation::move(int player, int slot)
 
 void BattleSituation::inflictRecoil(int source, int target)
 {
-    //Rockhead, MagicGuard
-    if (koed(source) || hasWorkingAbility(source,Ability::RockHead) || hasWorkingAbility(source,Ability::MagicGuard))
-        return;
-
     int recoil = tmove(source).recoil;
 
     if (recoil == 0)
+        return;
+
+    //Rockhead, MagicGuard
+    if (koed(source) ||
+        (recoil < 0 && (hasWorkingAbility(source,Ability::RockHead) || hasWorkingAbility(source,Ability::MagicGuard))))
         return;
 
     notify(All, Recoil, recoil < 0 ? source : target, bool(recoil < 0));

@@ -51,12 +51,17 @@ struct MMDisable : public MM
 
     static void uas (int s, int t, BS &b) {
         int mv = poke(b,t)["LastMoveUsed"].toInt();
-        poke(b,t)["DisablesUntil"] = b.turn() + 3 + (b.true_rand()%4);
-        poke(b,t)["DisabledMove"] = mv;
-        addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
-        addFunction(poke(b,t), "MovePossible", "Disable", &mp);
-        addFunction(poke(b,t), "EndTurn611", "Disable", &et);
         b.sendMoveMessage(28,0,s,0,t,mv);
+        if (b.gen() >= 5 && b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
+            b.sendItemMessage(7,s);
+            b.disposeItem(t);
+        } else {
+            poke(b,t)["DisablesUntil"] = b.turn() + 3 + (b.true_rand()%4);
+            poke(b,t)["DisabledMove"] = mv;
+            addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
+            addFunction(poke(b,t), "MovePossible", "Disable", &mp);
+            addFunction(poke(b,t), "EndTurn611", "Disable", &et);
+        }
     }
 
     static void et (int s, int, BS &b)
@@ -66,6 +71,7 @@ struct MMDisable : public MM
             removeFunction(poke(b,s), "MovesPossible", "Disable");
             removeFunction(poke(b,s), "MovePossible", "Disable");
             removeFunction(poke(b,s), "EndTurn611", "Disable");
+            poke(b,s).remove("DisablesUntil");
             b.sendMoveMessage(28,2,s);
         }
     }
