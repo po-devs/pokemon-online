@@ -3184,11 +3184,12 @@ struct MMMagicCoat : public MM
             target = t;
         } else {
             /* Entry hazards */
-            foreach(int t, b.revs(s)) {
-                if ((turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) &&
-                    std::find(b.targetList.begin(), b.targetList.end(), t) != b.targetList.end()) {
-                    target = t;
-                    break;
+            if (tmove(b,s).target == Move::OpposingTeam) {
+                foreach(int t, b.revs(s)) {
+                    if ((turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror))) {
+                        target = t;
+                        break;
+                    }
                 }
             }
         }
