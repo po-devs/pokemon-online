@@ -3179,12 +3179,14 @@ struct MMMagicCoat : public MM
             return;
         }
         int target = -1;
+
         if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) ) {
             target = t;
         } else {
             /* Entry hazards */
             foreach(int t, b.revs(s)) {
-                if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) {
+                if ((turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) &&
+                    std::find(b.targetList.begin(), b.targetList.end(), t) != b.targetList.end()) {
                     target = t;
                     break;
                 }
