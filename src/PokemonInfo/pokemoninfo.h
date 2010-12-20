@@ -174,6 +174,7 @@ public:
     static int Flags(int movenum, int gen);
     static bool Exists(int movenum, int gen);
     static bool isOHKO(int movenum, int gen);
+    static bool isHM(int movenum, int gen);
     static bool FlinchByKingRock(int movenum);
     static int EffectRate(int movenum, int gen);
     static quint32 StatAffected(int movenum, int gen);
@@ -234,6 +235,7 @@ private:
         QVector<signed char> recoil;
         QVector<char> status;
         QVector<char> type;
+        QSet<int> HMs;
     };
 
     static QString m_Directory;

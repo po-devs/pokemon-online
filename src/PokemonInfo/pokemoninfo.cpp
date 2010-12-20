@@ -1053,6 +1053,16 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     fill_container_with_file(recoil, path("recoil.txt"));
     fill_container_with_file(status, path("status.txt"));
     fill_container_with_file(type, path("type.txt"));
+
+    if (gen == 3) {
+        HMs << Move::Cut << Move::Flash << Move::Surf << Move::RockSmash << Move::Strength << Move::Dive
+                << Move::Waterfall << Move::Fly;
+    } else if (gen == 4) {
+        HMs << Move::Cut << Move::Surf << Move::RockSmash << Move::Strength
+                << Move::Waterfall << Move::Fly;
+    } else if (gen == 5) {
+        HMs << Move::Cut << Move::Surf << Move::Dive << Move::Waterfall << Move::Fly << Move::Strength;
+    }
 }
 
 QString MoveInfo::Gen::path(const QString &fileName)
@@ -1252,6 +1262,11 @@ bool MoveInfo::Exists(int movenum, int g)
 bool MoveInfo::isOHKO(int movenum, int gen)
 {
     return Classification(movenum, gen) == Move::OHKOMove;
+}
+
+bool MoveInfo::isHM(int movenum, int gen)
+{
+    return gen(g).HMs.contains(movenum);
 }
 
 int MoveInfo::EffectRate(int movenum, int g)
