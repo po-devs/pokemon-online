@@ -1098,25 +1098,8 @@ bool BattleSituation::validChoice(const BattleChoice &b)
 
     if (b.attackingChoice()){
         /* It's an attack, we check the target is valid */
-        if (b.attackSlot() == -1) {
-            if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.slot())
-                return false;
-        } else {
-            int attack = move(b.slot(), b.attackSlot());
-            int target = MoveInfo::Target(attack, gen());
-
-            if (target == Move::ChosenTarget) {
-                if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.slot())
-                    return false;
-            } else if (multiples() && target == Move::PartnerOrUser) {
-                if (b.target() < 0 || b.target() >= numberOfSlots() || !arePartners(b.target(), b.slot()) || !canTarget(attack, b.slot(), b.target()))
-                    return false;
-            } else if (multiples() && target == Move::Partner) {
-                if (b.target() < 0 || b.target() >= numberOfSlots() || !arePartners(b.target(), b.slot()) || !canTarget(attack, b.slot(), b.target())
-                    || b.slot() == b.target())
-                    return false;
-            }
-        }
+        if (b.target() < 0 || b.target() >= numberOfSlots())
+            return false;
         return true;
     }
 
@@ -1165,6 +1148,10 @@ void BattleSituation::storeChoice(const BattleChoice &b)
 {
     choice(b.slot()) = b;
     hasChoice[b.slot()] = false;
+
+    /* If the move is encored, a random target is picked. */
+    if (pokeMemory(b.slot()).contains("EncoresUntil") && pokeMemory(b.slot()).value("EncoresUntil").toInt() >= b.turn())
+        choice(b.slot()).choice.attack.attackTarget = b.slot();
 }
 
 bool BattleSituation::allChoicesOkForPlayer(int player)
