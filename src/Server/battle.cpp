@@ -172,14 +172,14 @@ void BattleSituation::engageBattle()
 
         t.fixTeam(team1);
         t.fixTeam(team2);
+    }
 
-        for (int i = 0; i < 6; i++) {
-            if (poke(Player1,i).ko()) {
-                changeStatus(Player1, i, Pokemon::Koed);
-            }
-            if (poke(Player2,i).ko()) {
-                changeStatus(Player2, i, Pokemon::Koed);
-            }
+    for (int i = 0; i < 6; i++) {
+        if (poke(Player1,i).ko()) {
+            changeStatus(Player1, i, Pokemon::Koed);
+        }
+        if (poke(Player2,i).ko()) {
+            changeStatus(Player2, i, Pokemon::Koed);
         }
     }
 
@@ -2134,7 +2134,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             int hitcount = 0;
             bool hitting = false;
-            for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()++) {
+            for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
                 turnMemory(target)["HadSubstitute"] = false;
 		bool sub = hasSubstitute(target);
                 turnMemory(target)["HadSubstitute"] = sub;
@@ -3079,6 +3079,10 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     callieffects(p,t,"BasePowerModifier");
+    /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
+    if (attack == Move::Acrobat && poke(player).item() == Item::NoItem) {
+        power *= 2;
+    }
     power = power * (10+move["BasePowerItemModifier"].toInt())/10;
 
     QString sport = "Sported" + QString::number(type);
@@ -3092,6 +3096,7 @@ int BattleSituation::calculateDamage(int p, int t)
     callaeffects(t,p,"BasePowerFoeModifier");
     power = power * (20+move.value("BasePowerAbilityModifier").toInt())/20 * (20+move.value("BasePowerFoeAbilityModifier").toInt())/20;
 
+    power = std::max(power, 65535);
     int damage = ((std::max(((level * 2 / 5) + 2) * power, 65535) * attack / 50) / def);
     //Guts, burn
     damage = damage * (
