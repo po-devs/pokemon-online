@@ -1040,6 +1040,7 @@ void BattleSituation::cancel(int player)
 {
     if (rearrangeTime()) {
         notify(player,RearrangeTeam,opponent(player),ShallowShownTeam(team(opponent(player))));
+        hasChoice[slot(player, 0)] = true;
     } else {
         notify(player, CancelMove, player);
 
