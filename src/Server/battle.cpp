@@ -3061,7 +3061,7 @@ int BattleSituation::calculateDamage(int p, int t)
         move.remove("AttackStat");
     }
 
-    attack = std::max(attack, 65535);
+    attack = std::min(attack, 65535);
 
     if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct) && gen() <= 4) /* explosion / selfdestruct */
 	def/=2;
@@ -3098,8 +3098,8 @@ int BattleSituation::calculateDamage(int p, int t)
     callaeffects(t,p,"BasePowerFoeModifier");
     power = power * (20+move.value("BasePowerAbilityModifier").toInt())/20 * (20+move.value("BasePowerFoeAbilityModifier").toInt())/20;
 
-    power = std::max(power, 65535);
-    int damage = ((std::max(((level * 2 / 5) + 2) * power, 65535) * attack / 50) / def);
+    power = std::min(power, 65535);
+    int damage = ((std::min(((level * 2 / 5) + 2) * power, 65535) * attack / 50) / def);
     //Guts, burn
     damage = damage * (
             (poke.status() == Pokemon::Burnt && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts))
