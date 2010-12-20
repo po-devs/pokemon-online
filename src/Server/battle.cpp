@@ -877,6 +877,13 @@ void BattleSituation::shiftSpots(int spot1, int spot2, bool silent)
 
     std::swap(indexes[spot1], indexes[spot2]);
     std::swap(slotMemory(spot1)["SwitchCount"], slotMemory(spot2)["SwitchCount"]);
+
+    if (attacking()) {
+        if (attacked() == spot2) {
+            attacked() = spot1;
+        }
+        attacker() = spot2;
+    }
 }
 
 inline bool comparePair(const std::pair<int,int> & x, const std::pair<int,int> & y) {
@@ -1429,10 +1436,12 @@ void BattleSituation::callEntryEffects(int player)
 
 void BattleSituation::calleffects(int source, int target, const QString &name)
 {
-    if (turnMemory(source).contains("Effect_" + name)) {
-        turnMemory(source)["TurnEffectCall"] = true;
-        turnMemory(source)["TurnEffectCalled"] = name;
-        QSet<QString> &effects = *turnMemory(source).value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
+    //battleChat(id(0), QString("Effect %1 from %2 to %3 called.").arg(name).arg(source).arg(target));
+    context &turn = turnMemory(source);
+    if (turn.contains("Effect_" + name)) {
+        turn["TurnEffectCall"] = true;
+        turn["TurnEffectCalled"] = name;
+        QSet<QString> &effects = *turn.value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
             //Old code used for substitute
@@ -1443,12 +1452,12 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
             //		continue;
             //	    }
 
-            MoveMechanics::function f = turnMemory(source).value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
+            MoveMechanics::function f = turn.value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
             if (f)
                 f(source, target, *this);
 	}
-        turnMemory(source)["TurnEffectCall"] = false;
+        turn["TurnEffectCall"] = false;
     }
 }
 
@@ -2244,6 +2253,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 	    applyMoveStatMods(player, target);
 	    calleffects(player, target, "UponAttackSuccessful");
+            /* Side change may switch player & target */
+            if (attacker() != player) {
+                player = attacker();
+                target = attacked();
+            }
             calleffects(player, target, "OnFoeOnAttack");
             healDamage(player, target);
 
@@ -3081,7 +3095,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
     callieffects(p,t,"BasePowerModifier");
     /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
-    if (attack == Move::Acrobat && poke(player).item() == Item::NoItem) {
+    if (attack == Move::Acrobat && poke.item() == Item::NoItem) {
         power *= 2;
     }
     power = power * (10+move["BasePowerItemModifier"].toInt())/10;

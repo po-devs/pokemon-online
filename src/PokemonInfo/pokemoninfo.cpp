@@ -1264,7 +1264,7 @@ bool MoveInfo::isOHKO(int movenum, int gen)
     return Classification(movenum, gen) == Move::OHKOMove;
 }
 
-bool MoveInfo::isHM(int movenum, int gen)
+bool MoveInfo::isHM(int movenum, int g)
 {
     return gen(g).HMs.contains(movenum);
 }

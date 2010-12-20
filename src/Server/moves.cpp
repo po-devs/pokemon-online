@@ -5650,8 +5650,8 @@ struct MMSideChange : public MM
 
     static void uas (int s, int, BS &b) {
         int t = turn(b, s)["SideChangeTarget"].toInt();
-        b.shiftSpots(s, t, true);
         b.sendMoveMessage(190, 0, s, type(b, s), t);
+        b.shiftSpots(s, t, true);
     }
 };
 
