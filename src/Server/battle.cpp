@@ -1150,7 +1150,7 @@ void BattleSituation::storeChoice(const BattleChoice &b)
     hasChoice[b.slot()] = false;
 
     /* If the move is encored, a random target is picked. */
-    if (pokeMemory(b.slot()).contains("EncoresUntil") && pokeMemory(b.slot()).value("EncoresUntil").toInt() >= b.turn())
+    if (pokeMemory(b.slot()).contains("EncoresUntil") && pokeMemory(b.slot()).value("EncoresUntil").toInt() >= turn())
         choice(b.slot()).choice.attack.attackTarget = b.slot();
 }
 

@@ -836,7 +836,10 @@ void Player::acquireRoughKnowledgeOf(Player *other) {
 void Player::findRating()
 {
     lock();
-    TierMachine::obj()->loadMemberInMemory(name(), tier(), this, SLOT(ratingLoaded()));
+    if (waiting_name.length() > 0)
+        TierMachine::obj()->loadMemberInMemory(waiting_name, tier(), this, SLOT(ratingLoaded()));
+    else
+        TierMachine::obj()->loadMemberInMemory(name(), tier(), this, SLOT(ratingLoaded()));
 }
 
 void Player::addChannel(int chanid)
@@ -852,7 +855,7 @@ void Player::removeChannel(int chanid)
 void Player::ratingLoaded()
 {
     unlock();
-    rating() = TierMachine::obj()->rating(name(), tier());
+    rating() = TierMachine::obj()->rating(waiting_name.length() > 0 ? waiting_name : name(), tier());
 
     if (ontologin) {
         ontologin = false;
