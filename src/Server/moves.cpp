@@ -3984,7 +3984,7 @@ struct MMTailWind : public MM {
     }
 
     static void daf(int s, int , BS &b) {
-        if (team(b,s).contains("TailWindCount"))
+        if (team(b,b.player(s)).contains("TailWindCount"))
             turn(b,s)["Failed"] = true;
     }
 
