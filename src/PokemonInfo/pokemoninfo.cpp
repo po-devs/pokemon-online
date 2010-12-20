@@ -1059,7 +1059,7 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
                 << Move::Waterfall << Move::Fly;
     } else if (gen == 4) {
         HMs << Move::Cut << Move::Surf << Move::RockSmash << Move::Strength
-                << Move::Waterfall << Move::Fly;
+                << Move::Waterfall << Move::Fly << Move::RockClimb;
     } else if (gen == 5) {
         HMs << Move::Cut << Move::Surf << Move::Dive << Move::Waterfall << Move::Fly << Move::Strength;
     }
