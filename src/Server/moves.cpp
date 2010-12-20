@@ -5109,18 +5109,18 @@ struct MMMirrorType : public MM
     }
 };
 
-struct MMAcrobat : public MM
-{
-    MMAcrobat() {
-        functions["BeforeCalculatingDamage"] = &bcd;
-    }
-
-    static void bcd(int s, int, BS &b) {
-        if (b.poke(s).item() == 0) {
-            tmove(b,s).power *= 2;
-        }
-    }
-};
+//struct MMAcrobat : public MM
+//{
+//    MMAcrobat() {
+//        functions["BeforeCalculatingDamage"] = &bcd;
+//    }
+//
+//    static void bcd(int s, int, BS &b) {
+//        if (b.poke(s).item() == 0) {
+//            tmove(b,s).power *= 2;
+//        }
+//    }
+//};
 
 struct MMTelekinesis : public MM
 {
@@ -5897,7 +5897,7 @@ void MoveEffect::init()
     REGISTER_MOVE(170, FastGuard);
     //Pursuit
     REGISTER_MOVE(172, MirrorType);
-    REGISTER_MOVE(173, Acrobat);
+    //REGISTER_MOVE(173, Acrobat);
     REGISTER_MOVE(174, Telekinesis);
     REGISTER_MOVE(175, StrikeDown);
     REGISTER_MOVE(176, YouFirst);
