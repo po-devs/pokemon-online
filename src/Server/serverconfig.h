@@ -17,6 +17,7 @@ signals:
     void announcementChanged(const QString &ann);
     void maxChanged(int num);
     void logSavingChanged(bool logSaving);
+    void useChannelFileLogChanged(bool useChannelFileLog);
     void latencyChanged(bool lowDelay);
 private slots:
     void apply();
@@ -29,6 +30,7 @@ private:
     QSpinBox *serverPlayerMax;
     QSpinBox *serverPort;
     QCheckBox *saveLogs;
+    QCheckBox *channelFileLog;
     QCheckBox *lowLatency;
 };
 

@@ -98,6 +98,7 @@ public slots:
     void mainChanChanged(const QString &mainChan);
     void regPrivacyChanged(const int &priv);
     void logSavingChanged(bool logging);
+    void useChannelFileLogChanged(bool logging);
     void TCPDelayChanged(bool lowTCP);
     void nameTaken();
     void ipRefused();
@@ -150,7 +151,7 @@ private:
     QString serverName, serverDesc, serverAnnouncement;
     quint16 serverPrivate, serverPlayerMax,serverPort;
     bool showLogMessages;
-    bool useExtendedChatLogs;
+    bool useChannelFileLog;
     bool lowTCPDelay;
 
     quint16 numPlayers() {

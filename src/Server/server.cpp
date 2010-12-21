@@ -145,11 +145,11 @@ void Server::start(){
 
     loadRatedBattlesSettings();
 	
-    if (s.value("logs_chat_use_extended").isNull()) {
-        s.setValue("logs_chat_use_extended", false);
+    if (s.value("logs_channel_files").isNull()) {
+        s.setValue("logs_channel_files", false);
     }
 	
-    useExtendedChatLogs = s.value("logs_chat_use_extended").toBool();
+    useChannelFileLog = s.value("logs_channel_files").toBool();
 
     /*
       The timer for clearing the last rated battles memory, set to 3 hours
@@ -1050,6 +1050,14 @@ void Server::logSavingChanged(bool logging)
     printLine("Logging changed", false, true);
 }
 
+void Server::useChannelFileLogChanged(bool logging)
+{
+    if (useChannelFileLog == logging)
+        return;
+    useChannelFileLog = logging;
+    printLine("Extended Chat Logging changed", false, true);
+}
+
 void Server::TCPDelayChanged(bool lowTCP)
 {
     if (lowTCPDelay == lowTCP)
@@ -1531,7 +1539,7 @@ void Server::sendAll(const QString &message, bool chatMessage, bool html)
 
 void Server::sendChannelMessage(int channel, const QString &message, bool chat, bool html)
 {
-    if(useExtendedChatLogs) {
+    if(useChannelFileLog) {
 	    this->channel(channel).log(message);
     }
     printLine(QString("[#%1] %2").arg(this->channel(channel).name, message), chat, true);
