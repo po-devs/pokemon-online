@@ -48,6 +48,7 @@ void writeSettings(QWidget *w)
     settings.beginGroup(w->metaObject()->className());
     settings.setValue("size", w->topLevelWidget()->size());
     settings.setValue("pos", w->topLevelWidget()->pos());
+    settings.setValue("maximized", w->topLevelWidget()->isMaximized());
     settings.endGroup();
 }
 
@@ -60,5 +61,7 @@ void loadSettings(QWidget *w, const QSize &defaultSize)
         w->topLevelWidget()->resize(settings.value("size", defaultSize).toSize());
     if (settings.contains("pos"))
         w->topLevelWidget()->move(settings.value("pos").toPoint());
+    if (settings.contains("maximized") && settings.value("maximized").toBool())
+        w->topLevelWidget()->setWindowState(Qt::WindowMaximized);
     settings.endGroup();
 }
