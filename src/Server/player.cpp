@@ -35,7 +35,7 @@ Player::Player(QTcpSocket *sock, int id) : myid(id)
     connect(&relay(), SIGNAL(kick(int)), SLOT(playerKick(int)));
     connect(&relay(), SIGNAL(ban(int)), SLOT(playerBan(int)));
     connect(&relay(), SIGNAL(banRequested(QString)), SLOT(CPBan(QString)));
-    connect(&relay(), SIGNAL(tempBanRequested(QString,int)), SLOT(CPTBan(QString,int)));
+    //connect(&relay(), SIGNAL(tempBanRequested(QString,int)), SLOT(CPTBan(QString,int)));
     connect(&relay(), SIGNAL(unbanRequested(QString)), SLOT(CPUnban(QString)));
     connect(&relay(), SIGNAL(PMsent(int,QString)), SLOT(receivePM(int,QString)));
     connect(&relay(), SIGNAL(getUserInfo(QString)), SLOT(userInfoAsked(QString)));
@@ -836,7 +836,10 @@ void Player::acquireRoughKnowledgeOf(Player *other) {
 void Player::findRating()
 {
     lock();
-    TierMachine::obj()->loadMemberInMemory(name(), tier(), this, SLOT(ratingLoaded()));
+    if (waiting_name.length() > 0)
+        TierMachine::obj()->loadMemberInMemory(waiting_name, tier(), this, SLOT(ratingLoaded()));
+    else
+        TierMachine::obj()->loadMemberInMemory(name(), tier(), this, SLOT(ratingLoaded()));
 }
 
 void Player::addChannel(int chanid)
@@ -852,7 +855,7 @@ void Player::removeChannel(int chanid)
 void Player::ratingLoaded()
 {
     unlock();
-    rating() = TierMachine::obj()->rating(name(), tier());
+    rating() = TierMachine::obj()->rating(waiting_name.length() > 0 ? waiting_name : name(), tier());
 
     if (ontologin) {
         ontologin = false;

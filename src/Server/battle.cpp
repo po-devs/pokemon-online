@@ -172,14 +172,14 @@ void BattleSituation::engageBattle()
 
         t.fixTeam(team1);
         t.fixTeam(team2);
+    }
 
-        for (int i = 0; i < 6; i++) {
-            if (poke(Player1,i).ko()) {
-                changeStatus(Player1, i, Pokemon::Koed);
-            }
-            if (poke(Player2,i).ko()) {
-                changeStatus(Player2, i, Pokemon::Koed);
-            }
+    for (int i = 0; i < 6; i++) {
+        if (poke(Player1,i).ko()) {
+            changeStatus(Player1, i, Pokemon::Koed);
+        }
+        if (poke(Player2,i).ko()) {
+            changeStatus(Player2, i, Pokemon::Koed);
         }
     }
 
@@ -877,6 +877,13 @@ void BattleSituation::shiftSpots(int spot1, int spot2, bool silent)
 
     std::swap(indexes[spot1], indexes[spot2]);
     std::swap(slotMemory(spot1)["SwitchCount"], slotMemory(spot2)["SwitchCount"]);
+
+    if (attacking()) {
+        if (attacked() == spot2) {
+            attacked() = spot1;
+        }
+        attacker() = spot2;
+    }
 }
 
 inline bool comparePair(const std::pair<int,int> & x, const std::pair<int,int> & y) {
@@ -1040,6 +1047,7 @@ void BattleSituation::cancel(int player)
 {
     if (rearrangeTime()) {
         notify(player,RearrangeTeam,opponent(player),ShallowShownTeam(team(opponent(player))));
+        hasChoice[slot(player, 0)] = true;
     } else {
         notify(player, CancelMove, player);
 
@@ -1090,25 +1098,8 @@ bool BattleSituation::validChoice(const BattleChoice &b)
 
     if (b.attackingChoice()){
         /* It's an attack, we check the target is valid */
-        if (b.attackSlot() == -1) {
-            if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.slot())
-                return false;
-        } else {
-            int attack = move(b.slot(), b.attackSlot());
-            int target = MoveInfo::Target(attack, gen());
-
-            if (target == Move::ChosenTarget) {
-                if (b.target() < 0 || b.target() >= numberOfSlots() || b.target() == b.slot())
-                    return false;
-            } else if (multiples() && target == Move::PartnerOrUser) {
-                if (b.target() < 0 || b.target() >= numberOfSlots() || !arePartners(b.target(), b.slot()) || !canTarget(attack, b.slot(), b.target()))
-                    return false;
-            } else if (multiples() && target == Move::Partner) {
-                if (b.target() < 0 || b.target() >= numberOfSlots() || !arePartners(b.target(), b.slot()) || !canTarget(attack, b.slot(), b.target())
-                    || b.slot() == b.target())
-                    return false;
-            }
-        }
+        if (b.target() < 0 || b.target() >= numberOfSlots())
+            return false;
         return true;
     }
 
@@ -1157,6 +1148,10 @@ void BattleSituation::storeChoice(const BattleChoice &b)
 {
     choice(b.slot()) = b;
     hasChoice[b.slot()] = false;
+
+    /* If the move is encored, a random target is picked. */
+    if (pokeMemory(b.slot()).contains("EncoresUntil") && pokeMemory(b.slot()).value("EncoresUntil").toInt() >= turn())
+        choice(b.slot()).choice.attack.attackTarget = b.slot();
 }
 
 bool BattleSituation::allChoicesOkForPlayer(int player)
@@ -1411,7 +1406,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     }
 
     turnMemory(slot)["CantGetToMove"] = true;
-    pokeMemory(slot)["BeforeSetups"] = true;
 
     calleffects(slot, slot, "UponSwitchIn");
     callseffects(slot, slot, "UponSwitchIn");
@@ -1421,7 +1415,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 void BattleSituation::callEntryEffects(int player)
 {
     if (!koed(player)) {
-        pokeMemory(player).remove("BeforeSetups");
         ItemEffect::setup(poke(player).item(), player, *this);
         acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
@@ -1430,11 +1423,12 @@ void BattleSituation::callEntryEffects(int player)
 
 void BattleSituation::calleffects(int source, int target, const QString &name)
 {
-
-    if (turnMemory(source).contains("Effect_" + name)) {
-        turnMemory(source)["TurnEffectCall"] = true;
-        turnMemory(source)["TurnEffectCalled"] = name;
-        QSet<QString> &effects = *turnMemory(source).value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
+    //battleChat(id(0), QString("Effect %1 from %2 to %3 called.").arg(name).arg(source).arg(target));
+    context &turn = turnMemory(source);
+    if (turn.contains("Effect_" + name)) {
+        turn["TurnEffectCall"] = true;
+        turn["TurnEffectCalled"] = name;
+        QSet<QString> &effects = *turn.value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
             //Old code used for substitute
@@ -1445,12 +1439,12 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
             //		continue;
             //	    }
 
-            MoveMechanics::function f = turnMemory(source).value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
+            MoveMechanics::function f = turn.value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
             if (f)
                 f(source, target, *this);
 	}
-        turnMemory(source)["TurnEffectCall"] = false;
+        turn["TurnEffectCall"] = false;
     }
 }
 
@@ -1520,7 +1514,7 @@ void BattleSituation::callseffects(int source, int target, const QString &name)
 void BattleSituation::callieffects(int source, int target, const QString &name)
 {
     //Klutz
-    if (hasWorkingItem(source, poke(source).item()) && !pokeMemory(source).contains("BeforeSetups"))
+    if (hasWorkingItem(source, poke(source).item()))
 	ItemEffect::activate(name, poke(source).item(), source, target, *this);
 }
 
@@ -2137,7 +2131,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             int hitcount = 0;
             bool hitting = false;
-            for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()++) {
+            for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
                 turnMemory(target)["HadSubstitute"] = false;
 		bool sub = hasSubstitute(target);
                 turnMemory(target)["HadSubstitute"] = sub;
@@ -2246,6 +2240,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
 	    applyMoveStatMods(player, target);
 	    calleffects(player, target, "UponAttackSuccessful");
+            /* Side change may switch player & target */
+            if (attacker() != player) {
+                player = attacker();
+                target = attacked();
+            }
             calleffects(player, target, "OnFoeOnAttack");
             healDamage(player, target);
 
@@ -2435,13 +2434,14 @@ int BattleSituation::move(int player, int slot)
 
 void BattleSituation::inflictRecoil(int source, int target)
 {
-    //Rockhead, MagicGuard
-    if (koed(source) || hasWorkingAbility(source,Ability::RockHead) || hasWorkingAbility(source,Ability::MagicGuard))
-        return;
-
     int recoil = tmove(source).recoil;
 
     if (recoil == 0)
+        return;
+
+    //Rockhead, MagicGuard
+    if (koed(source) ||
+        (recoil < 0 && (hasWorkingAbility(source,Ability::RockHead) || hasWorkingAbility(source,Ability::MagicGuard))))
         return;
 
     notify(All, Recoil, recoil < 0 ? source : target, bool(recoil < 0));
@@ -3061,6 +3061,8 @@ int BattleSituation::calculateDamage(int p, int t)
         move.remove("AttackStat");
     }
 
+    attack = std::min(attack, 65535);
+
     if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct) && gen() <= 4) /* explosion / selfdestruct */
 	def/=2;
 
@@ -3079,6 +3081,10 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     callieffects(p,t,"BasePowerModifier");
+    /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
+    if (attack == Move::Acrobat && poke.item() == Item::NoItem) {
+        power *= 2;
+    }
     power = power * (10+move["BasePowerItemModifier"].toInt())/10;
 
     QString sport = "Sported" + QString::number(type);
@@ -3092,7 +3098,8 @@ int BattleSituation::calculateDamage(int p, int t)
     callaeffects(t,p,"BasePowerFoeModifier");
     power = power * (20+move.value("BasePowerAbilityModifier").toInt())/20 * (20+move.value("BasePowerFoeAbilityModifier").toInt())/20;
 
-    int damage = ((((level * 2 / 5) + 2) * power * attack / 50) / def);
+    power = std::min(power, 65535);
+    int damage = ((std::min(((level * 2 / 5) + 2) * power, 65535) * attack / 50) / def);
     //Guts, burn
     damage = damage * (
             (poke.status() == Pokemon::Burnt && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts))
