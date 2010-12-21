@@ -89,7 +89,8 @@ void ServerWindow::apply()
     emit privacyChanged(serverPrivate->currentIndex());
     emit logSavingChanged(saveLogs->isChecked());
     emit useChannelFileLogChanged(channelFileLog->isChecked());
-    emit mainChanChanged(mainChan->text());
+    if (mainChan->text().length() > 0)
+        emit mainChanChanged(mainChan->text());
     emit latencyChanged(lowLatency->isChecked());
     close();
 }
