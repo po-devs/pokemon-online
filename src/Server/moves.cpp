@@ -750,7 +750,7 @@ struct MMOHKO : public MM
             return;
 	}
         if (b.hasWorkingAbility(t, Ability::Sturdy)) {
-            b.fail(t,43,0,type(b,s));
+            b.fail(s,43,0,type(b,s),t);
         }
     }
 };
@@ -1990,18 +1990,24 @@ struct MMTaunt : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        if (b.gen() <= 3) {
-            poke(b,t)["TauntsUntil"] = b.turn() + 1;
-        } else if (b.gen() == 4) {
-            poke(b,t)["TauntsUntil"] = b.turn() + 2 + (b.true_rand()%3);
-        } else {
-            poke(b,t)["TauntsUntil"] = b.turn() + 2;
-        }
+        b.sendMoveMessage(134,1,s,Pokemon::Dark,t);
 
-	addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
-        addFunction(poke(b,t), "MovePossible", "Taunt", &mp);
-        addFunction(poke(b,t), "EndTurn611", "Taunt", &et);
-	b.sendMoveMessage(134,1,s,Pokemon::Dark,t);
+        if (b.gen() >= 5 && b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
+            b.sendItemMessage(7,s);
+            b.disposeItem(t);
+        } else {
+            addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
+            addFunction(poke(b,t), "MovePossible", "Taunt", &mp);
+            addFunction(poke(b,t), "EndTurn611", "Taunt", &et);
+
+            if (b.gen() <= 3) {
+                poke(b,t)["TauntsUntil"] = b.turn() + 1;
+            } else if (b.gen() == 4) {
+                poke(b,t)["TauntsUntil"] = b.turn() + 2 + (b.true_rand()%3);
+            } else {
+                poke(b,t)["TauntsUntil"] = b.turn() + 2;
+            }
+        }
     }
 
     static void et(int s, int, BS &b)
@@ -2212,32 +2218,37 @@ struct MMEncore : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        if (b.gen() <= 3)
-            poke(b,t)["EncoresUntil"] = b.turn() + 1 + (b.true_rand()%5);
-        else if (b.gen() == 4)
-            poke(b,t)["EncoresUntil"] = b.turn() + 3 + (b.true_rand()%5);
-        else
-            poke(b,t)["EncoresUntil"] = b.turn() + 2;
+        b.sendMoveMessage(33,1,s,0,t);
+        if (b.gen() >= 5 && b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
+            b.sendItemMessage(7,s);
+            b.disposeItem(t);
+        } else {
+            if (b.gen() <= 3)
+                poke(b,t)["EncoresUntil"] = b.turn() + 1 + (b.true_rand()%5);
+            else if (b.gen() == 4)
+                poke(b,t)["EncoresUntil"] = b.turn() + 3 + (b.true_rand()%5);
+            else
+                poke(b,t)["EncoresUntil"] = b.turn() + 2;
 
-        int mv =  poke(b,t)["LastMoveUsed"].toInt();
-        poke(b,t)["EncoresMove"] = mv;
+            int mv =  poke(b,t)["LastMoveUsed"].toInt();
+            poke(b,t)["EncoresMove"] = mv;
 
-        /*Changes the encored move, if no choice is off (otherwise recharging moves like blast burn would attack again,
-            and i bet something strange would also happen with charging move) */
-        if (!turn(b,t).contains("NoChoice") && b.choice(t).attackingChoice()) {
-            for (int i = 0; i < 4; i ++) {
-                if (b.move(t, i) == mv) {
-                    MoveEffect::unsetup(move(b,t), t, b);
-                    b.choice(t).setAttackSlot(i);
-                    b.choice(t).setTarget(b.randomValidOpponent(t));
-                    MoveEffect::setup(mv, t, s, b);
-                    break;
+            /*Changes the encored move, if no choice is off (otherwise recharging moves like blast burn would attack again,
+                and i bet something strange would also happen with charging move) */
+            if (!turn(b,t).contains("NoChoice") && b.choice(t).attackingChoice()) {
+                for (int i = 0; i < 4; i ++) {
+                    if (b.move(t, i) == mv) {
+                        MoveEffect::unsetup(move(b,t), t, b);
+                        b.choice(t).setAttackSlot(i);
+                        b.choice(t).setTarget(b.randomValidOpponent(t));
+                        MoveEffect::setup(mv, t, s, b);
+                        break;
+                    }
                 }
             }
+            addFunction(poke(b,t), "MovesPossible", "Encore", &msp);
+            addFunction(poke(b,t), "EndTurn611", "Encore", &et);
         }
-	addFunction(poke(b,t), "MovesPossible", "Encore", &msp);
-        addFunction(poke(b,t), "EndTurn611", "Encore", &et);
-        b.sendMoveMessage(33,1,s,0,t);
     }
 
     static void et (int s, int, BS &b)
@@ -2260,6 +2271,7 @@ struct MMEncore : public MM
 	if (tt <= b.turn()) {
 	    removeFunction(poke(b,s), "MovesPossible", "Encore");
             removeFunction(poke(b,s), "EndTurn611", "Encore");
+            poke(b,s).remove("EncoresUntil");
 	    b.sendMoveMessage(33,0,s);
 	}
     }
@@ -3179,14 +3191,17 @@ struct MMMagicCoat : public MM
             return;
         }
         int target = -1;
+
         if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) ) {
             target = t;
         } else {
             /* Entry hazards */
-            foreach(int t, b.revs(s)) {
-                if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) {
-                    target = t;
-                    break;
+            if (tmove(b,s).targets == Move::OpposingTeam) {
+                foreach(int t, b.revs(s)) {
+                    if ((turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror))) {
+                        target = t;
+                        break;
+                    }
                 }
             }
         }
@@ -3964,7 +3979,13 @@ struct MMSuckerPunch : public MM
 
 struct MMTailWind : public MM {
     MMTailWind(){
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int , BS &b) {
+        if (team(b,b.player(s)).contains("TailWindCount"))
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas(int s, int, BS &b){
@@ -3978,6 +3999,7 @@ struct MMTailWind : public MM {
         inc(team(b,s)["TailWindCount"], -1);
         if (team(b,s)["TailWindCount"].toInt() == 0) {
             removeFunction(team(b,s), "EndTurn", "TailWind");
+            team(b,s).remove("TailWindCount");
             b.sendMoveMessage(133,1,s,Pokemon::Flying);
         }
     }
@@ -3995,9 +4017,14 @@ struct MMTorment : public MM {
     }
 
     static void uas (int s, int t, BS &b) {
-        poke(b,t)["Tormented"] = true;
-        addFunction(poke(b,t), "MovesPossible", "Torment", &msp);
         b.sendMoveMessage(135,0,s,Pokemon::Dark,t);
+        if (b.gen() >= 5 && b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
+            b.sendItemMessage(7,s);
+            b.disposeItem(t);
+        } else {
+            poke(b,t)["Tormented"] = true;
+            addFunction(poke(b,t), "MovesPossible", "Torment", &msp);
+        }
     }
 
     static void msp(int s, int, BS &b) {
@@ -5082,18 +5109,18 @@ struct MMMirrorType : public MM
     }
 };
 
-struct MMAcrobat : public MM
-{
-    MMAcrobat() {
-        functions["BeforeCalculatingDamage"] = &bcd;
-    }
-
-    static void bcd(int s, int, BS &b) {
-        if (b.poke(s).item() == 0) {
-            tmove(b,s).power *= 2;
-        }
-    }
-};
+//struct MMAcrobat : public MM
+//{
+//    MMAcrobat() {
+//        functions["BeforeCalculatingDamage"] = &bcd;
+//    }
+//
+//    static void bcd(int s, int, BS &b) {
+//        if (b.poke(s).item() == 0) {
+//            tmove(b,s).power *= 2;
+//        }
+//    }
+//};
 
 struct MMTelekinesis : public MM
 {
@@ -5623,8 +5650,8 @@ struct MMSideChange : public MM
 
     static void uas (int s, int, BS &b) {
         int t = turn(b, s)["SideChangeTarget"].toInt();
-        b.shiftSpots(s, t, true);
         b.sendMoveMessage(190, 0, s, type(b, s), t);
+        b.shiftSpots(s, t, true);
     }
 };
 
@@ -5870,7 +5897,7 @@ void MoveEffect::init()
     REGISTER_MOVE(170, FastGuard);
     //Pursuit
     REGISTER_MOVE(172, MirrorType);
-    REGISTER_MOVE(173, Acrobat);
+    //REGISTER_MOVE(173, Acrobat);
     REGISTER_MOVE(174, Telekinesis);
     REGISTER_MOVE(175, StrikeDown);
     REGISTER_MOVE(176, YouFirst);

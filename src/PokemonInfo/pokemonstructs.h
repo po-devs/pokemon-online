@@ -2229,6 +2229,8 @@ public:
 
     /* load various data from the pokenum */
     void load();
+    /* loads but without changing what's valid already */
+    void loadQuietly();
     /* display automatically the right picture */
     QPixmap picture();
     QIcon icon();

@@ -1160,8 +1160,7 @@ void TB_PokemonBody::changeGeneration(int gen)
     pokechoice->changeGen(gen);
 
     poke()->setGen(gen);
-    poke()->load();
-    poke()->runCheck();
+    poke()->loadQuietly();
 
     updateNum();
 

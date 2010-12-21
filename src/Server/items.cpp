@@ -466,15 +466,46 @@ struct IMMentalHerb : public IM
     }
 
     static void as(int s, int, BS &b) {
+        bool used = false;
 	if (poke(b,s).contains("AttractedTo")) {
 	    int seducer = poke(b,s)["AttractedTo"].toInt();
 	    if (poke(b,seducer).contains("Attracted") && poke(b,seducer)["Attracted"].toInt() == s) {
-		b.sendItemMessage(7,s);
 		removeFunction(poke(b,s), "DetermineAttackPossible", "Attract");
 		poke(b,s).remove("AttractedTo");
-		b.disposeItem(s);
+                used = true;
 	    }
 	}
+        if (b.gen() >= 5) {
+            if (poke(b,s).contains("TauntsUntil")) {
+                removeFunction(poke(b,s), "MovesPossible", "Taunt");
+                removeFunction(poke(b,s), "MovePossible", "Taunt");
+                removeFunction(poke(b,s), "EndTurn611", "Taunt");
+                poke(b,s).remove("TauntsUntil");
+                used = true;
+            }
+            if (poke(b,s).contains("Tormented")) {
+                removeFunction(poke(b,s), "MovesPossible", "Torment");
+                poke(b,s).remove("Tormented");
+                used = true;
+            }
+            if (poke(b,s).contains("EncoresUntil")) {
+                removeFunction(poke(b,s), "MovesPossible", "Encore");
+                removeFunction(poke(b,s), "EndTurn611", "Encore");
+                poke(b,s).remove("EncoresUntil");
+                used = true;
+            }
+            if (poke(b,s).contains("DisablesUntil")) {
+                removeFunction(poke(b,s), "MovesPossible", "Disable");
+                removeFunction(poke(b,s), "MovePossible", "Disable");
+                removeFunction(poke(b,s), "EndTurn611", "Disable");
+                poke(b,s).remove("DisablesUntil");
+                used = true;
+            }
+        }
+        if (used) {
+            b.sendItemMessage(7,s);
+            b.disposeItem(s);
+        }
     }
 };
 

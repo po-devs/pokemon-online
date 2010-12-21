@@ -176,6 +176,23 @@ void PokePersonal::runCheck()
         return;
     }
 
+    AbilityGroup ab = PokemonInfo::Abilities(num(), gen());
+
+    if (ability() == 0 || (ability() != ab.ab(2) && ability() != ab.ab(1)))
+        ability() = ab.ab(0);
+
+    if (!ItemInfo::Exists(item(), gen())) {
+        item() = 0;
+    }
+
+    int avail = PokemonInfo::Gender(num());
+
+    if (avail != Pokemon::MaleAndFemaleAvail) {
+        gender() = avail;
+    } else if (gender() == Pokemon::Neutral){
+        gender() = Pokemon::Male;
+    }
+
     QSet<int> invalidMoves;
 
     MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), gender(),&invalidMoves);
@@ -189,15 +206,6 @@ void PokePersonal::runCheck()
         invalidMoves.clear();
 
         MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), gender(), &invalidMoves);
-    }
-
-    AbilityGroup ab = PokemonInfo::Abilities(num(), gen());
-
-    if (ability() == 0 || (ability() != ab.ab(2) && ability() != ab.ab(1)))
-        ability() = ab.ab(0);
-
-    if (!ItemInfo::Exists(item(), gen())) {
-        item() = 0;
     }
 }
 
@@ -428,6 +436,15 @@ void PokeTeam::load()
     }
     ability() = abilities().ab(0);
     nickname() = PokemonInfo::Name(num());
+    PokeGraphics::load(gender(), false);
+    PokeGraphics::loadIcon(num());
+}
+
+void PokeTeam::loadQuietly()
+{
+    PokeGeneral::load();
+    /*set the default gender & ability */
+    runCheck();
     PokeGraphics::load(gender(), false);
     PokeGraphics::loadIcon(num());
 }

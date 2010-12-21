@@ -143,6 +143,16 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
                 }
             }
         }
+
+        foreach(int move, moves) {
+            if (g > 3 && MoveInfo::isHM(move, g-1)) {
+                if (error) {
+                    *error = QObject::tr("%1 can't have HM %2 inherited from past generations.").arg(PokemonInfo::Name(pokeid), MoveInfo::Name(move));
+                }
+
+                return false;
+            }
+        }
     }
 
     /* The remaining moves are considered invalid */
