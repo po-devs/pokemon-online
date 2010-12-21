@@ -150,6 +150,7 @@ private:
     QString serverName, serverDesc, serverAnnouncement;
     quint16 serverPrivate, serverPlayerMax,serverPort;
     bool showLogMessages;
+    bool useExtendedChatLogs;
     bool lowTCPDelay;
 
     quint16 numPlayers() {
