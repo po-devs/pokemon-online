@@ -3,7 +3,7 @@
 
 QNickValidator *Channel::checker = NULL;
 
-Channel::Channel(const QString &name) : name(name), day(0) {
+Channel::Channel(const QString &name) : name(name), logDay(0) {
     QDir d("");
     if(!d.exists("logs/chat/" + name)) {
         d.mkpath("logs/chat/" + name);
@@ -11,13 +11,13 @@ Channel::Channel(const QString &name) : name(name), day(0) {
 }
 
 void Channel::log(const QString &message) {
-    if(!logfile.isOpen() || day != QDate::currentDate().day()) {
+    if(!logfile.isOpen() || logDay != QDate::currentDate().day()) {
         if(logfile.isOpen()) {
             logfile.close();
         }
         QString date = QDate::currentDate().toString("yyyy-MM-dd");
         QString filename = "logs/chat/"+name+"/"+date+".txt";
-        day = QDate::currentDate().day();
+        logDay = QDate::currentDate().day();
         logfile.setFileName(filename);
         logfile.open(QFile::WriteOnly | QFile::Append | QFile::Text);
     }
