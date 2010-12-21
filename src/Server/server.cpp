@@ -144,6 +144,12 @@ void Server::start(){
     }
 
     loadRatedBattlesSettings();
+	
+    if (s.value("logs_chat_use_extended").isNull()) {
+        s.setValue("logs_chat_use_extended", false);
+    }
+	
+    useExtendedChatLogs = s.value("logs_chat_use_extended").toBool();
 
     /*
       The timer for clearing the last rated battles memory, set to 3 hours
@@ -1525,6 +1531,9 @@ void Server::sendAll(const QString &message, bool chatMessage, bool html)
 
 void Server::sendChannelMessage(int channel, const QString &message, bool chat, bool html)
 {
+    if(useExtendedChatLogs) {
+	    this->channel(channel).log(message);
+    }
     printLine(QString("[#%1] %2").arg(this->channel(channel).name, message), chat, true);
     foreach (Player *p, this->channel(channel).players)
         p->sendChanMessage(channel, message, html);

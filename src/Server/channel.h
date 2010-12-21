@@ -11,14 +11,18 @@ struct Channel {
     QString name;
     QSet<Player *> players;
     QHash<int, Battle> battleList;
+    QFile logfile;
 
     Channel(const QString &name);
+    ~Channel();
 
     /* other properties can be added later,
        such as mode, ops, topic... */
 
     static bool validName(const QString &name);
     static QNickValidator *checker;
+
+    void log(const QString &message);
 };
 
 #endif // CHANNEL_H
