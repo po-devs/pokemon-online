@@ -3082,7 +3082,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
     callieffects(p,t,"BasePowerModifier");
     /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
-    if (attack == Move::Acrobat && poke.item() == Item::NoItem) {
+    if (attackused == Move::Acrobat && poke.item() == Item::NoItem) {
         power *= 2;
     }
     power = power * (10+move["BasePowerItemModifier"].toInt())/10;
