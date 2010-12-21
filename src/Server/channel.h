@@ -12,6 +12,7 @@ struct Channel {
     QSet<Player *> players;
     QHash<int, Battle> battleList;
     QFile logfile;
+    int logDay;
 
     Channel(const QString &name);
     ~Channel();
