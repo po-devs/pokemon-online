@@ -5155,10 +5155,10 @@ struct MMStrikeDown : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        b.sendMoveMessage(175, 0, s, type(b,s), t);
-
-        if (b.isFlying(t))
+        if (b.isFlying(t)) {
+            b.sendMoveMessage(175, 0, s, type(b,s), t);
             poke(b,t)["StruckDown"] = true;
+        }
     }
 };
 
