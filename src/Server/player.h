@@ -83,6 +83,7 @@ public:
     int auth() const;
     void setAuth (int newAuth);
     void setName (const QString & newName);
+    void setInfo(const QString &newInfo);
     const QSet<int> & getBattles() const {
         return battles;
     }

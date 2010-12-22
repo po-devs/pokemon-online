@@ -179,6 +179,9 @@ public:
     /* returns a state of the memory, useful to check for memory leaks and memory usage */
     Q_INVOKABLE QScriptValue memoryDump();
     Q_INVOKABLE bool hasLegalTeamForTier(int id, const QString &tier);
+    Q_INVOKABLE void changeName(int playerId, QString newName);
+    Q_INVOKABLE void changeInfo(int playerId, QString newInfo);
+    Q_INVOKABLE QScriptValue info(int playerId);
 
     Q_INVOKABLE QScriptValue pokemon(int num);
     Q_INVOKABLE QScriptValue pokeNum(const QString &name);
@@ -243,6 +246,8 @@ public:
     Q_INVOKABLE QScriptValue weather(int weatherId);
 
     Q_INVOKABLE int teamPokeAbility(int id, int slot);
+    Q_INVOKABLE void modifyPokeAbility(int id, int slot, int ability, int gen = GEN_MAX);
+    Q_INVOKABLE void changePokeAbility(int id, int slot, int ability);
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
