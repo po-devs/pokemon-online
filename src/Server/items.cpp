@@ -36,8 +36,6 @@ void ItemEffect::setup(int num, int source, BattleSituation &b)
             IM::poke(b,source)["ItemArg"] = effect.args;
 	}
     }
-
-    activate("UponSetup", num, source, source, b);
 }
 
 struct IMBlackSludge : public IM

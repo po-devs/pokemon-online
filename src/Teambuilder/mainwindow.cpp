@@ -131,6 +131,7 @@ void MainEngine::loadStyleSheet()
     displayer->setWindowTitle(tr("Pokemon Online")); \
     displayer->setCentralWidget(widget);\
     displayer->setMenuBar(widget->createMenuBar(this));\
+    loadSettings(widget, widget->defaultSize());\
     displayer->show();
 
 void MainEngine::launchMenu()

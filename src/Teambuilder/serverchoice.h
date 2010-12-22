@@ -18,6 +18,10 @@ public:
     ServerChoice();
     ~ServerChoice();
 
+    QSize defaultSize() {
+        return QSize(500, 450);
+    }
+
 public slots:
     void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port);
 signals:

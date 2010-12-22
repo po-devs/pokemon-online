@@ -73,6 +73,10 @@ public:
     /* Create a menu bar to give to the main window */
     QMenuBar *createMenuBar(MainEngine *w);
 
+    QSize defaultSize() {
+        return  QSize(785,610);
+    }
+
 public slots:
     void saveTeam();
     void loadTeam();

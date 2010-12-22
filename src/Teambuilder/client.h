@@ -60,6 +60,9 @@ public:
     void changeName(int player, const QString &name);
     /* Resets fade away counter */
     void refreshPlayer(int id);
+    QSize defaultSize() {
+        return QSize(800,600);
+    }
 
     enum Status {
         Available = 0,

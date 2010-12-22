@@ -18,7 +18,6 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     _mid = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder = NULL;
-    loadSettings(this, QSize(800,600));
 
     QHBoxLayout *h = new QHBoxLayout(this);
     QSplitter *s = new QSplitter(Qt::Horizontal);

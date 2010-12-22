@@ -53,8 +53,6 @@ ServerChoice::ServerChoice()
 
     hl->addWidget(cancel);
     hl->addWidget(ok);
-
-    loadSettings(this, QSize(500, 450));
 }
 
 ServerChoice::~ServerChoice()
