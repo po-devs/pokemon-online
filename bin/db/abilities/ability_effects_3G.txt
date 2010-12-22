@@ -93,7 +93,7 @@
 
 29#Hydration
 56#Solar power
-25-3#Quick Feet
+25-5#Quick Feet
 43#Normalize
 
 
