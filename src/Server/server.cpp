@@ -1540,7 +1540,7 @@ void Server::sendAll(const QString &message, bool chatMessage, bool html)
 void Server::sendChannelMessage(int channel, const QString &message, bool chat, bool html)
 {
     if(useChannelFileLog) {
-	    this->channel(channel).log(message);
+        this->channel(channel).log(message);
     }
     printLine(QString("[#%1] %2").arg(this->channel(channel).name, message), chat, true);
     foreach (Player *p, this->channel(channel).players)
