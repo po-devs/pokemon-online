@@ -1439,8 +1439,8 @@ struct MMAttract : public MM
 
     static void uas (int s, int t, BS &b) {
 	b.sendMoveMessage(58,1,s,0,t);
-        if (b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
-	    b.sendItemMessage(7,s);
+        if (b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
+            b.sendItemMessage(7,t);
 	    b.disposeItem(t);
         } else {
             b.link(s, t, "Attract");
@@ -1992,8 +1992,8 @@ struct MMTaunt : public MM
     static void uas (int s, int t, BS &b) {
         b.sendMoveMessage(134,1,s,Pokemon::Dark,t);
 
-        if (b.gen() >= 5 && b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
-            b.sendItemMessage(7,s);
+        if (b.gen() >= 5 && b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
+            b.sendItemMessage(7,t);
             b.disposeItem(t);
         } else {
             addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
@@ -2219,8 +2219,8 @@ struct MMEncore : public MM
 
     static void uas (int s, int t, BS &b) {
         b.sendMoveMessage(33,1,s,0,t);
-        if (b.gen() >= 5 && b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
-            b.sendItemMessage(7,s);
+        if (b.gen() >= 5 && b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
+            b.sendItemMessage(7,t);
             b.disposeItem(t);
         } else {
             if (b.gen() <= 3)
@@ -4018,8 +4018,8 @@ struct MMTorment : public MM {
 
     static void uas (int s, int t, BS &b) {
         b.sendMoveMessage(135,0,s,Pokemon::Dark,t);
-        if (b.gen() >= 5 && b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
-            b.sendItemMessage(7,s);
+        if (b.gen() >= 5 && b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
+            b.sendItemMessage(7,t);
             b.disposeItem(t);
         } else {
             poke(b,t)["Tormented"] = true;
