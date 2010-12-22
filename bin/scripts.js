@@ -107,8 +107,8 @@ var mafia = new function() {
 		if (sys.playersOfChannel(mafiachan).length < 25) {
 			sys.sendAll("", 0);
 			sys.sendAll("*** ************************************************************************************", 0);
-			sys.sendAll("±Game: " + sys.name(src) + " started a game!", 0);
-			sys.sendAll("±Game: Type /Join to enter the game!", 0);
+			sys.sendAll("±Game: " + sys.name(src) + " started a mafia game!", 0);
+			sys.sendAll("±Game: Go in the Mafia Channel and type /Join to enter the game!", 0);
 			sys.sendAll("*** ************************************************************************************", 0);
 			sys.sendAll("", 0);
 		}
@@ -450,7 +450,7 @@ var mafia = new function() {
                 sys.sendAll("No one was voted off! :", mafiachan);
                 sys.sendAll("*** ************************************************************************************", mafiachan);
             } else {
-                sys.sendAll("±Game: You all decided to remove " + downed + ", the " + mafia.tr(mafia.role(downed)) + ", from the game!", mafiachan);
+                sys.sendAll("±Game: " + downed + " (" + mafia.tr(mafia.role(downed)) + ") was removed from the game!", mafiachan);
                 mafia.removePlayer(downed);
                
                 if (mafia.testWin())
@@ -647,6 +647,10 @@ var mafia = new function() {
                 this.players.push(name);
 				this.ips.push(sys.ip(src));
                 sys.sendAll("±Game: " + name + " joined the game !", mafiachan);
+				
+				if (this.players.length == 30) {
+					this.ticks = 1;
+				}
                 return;
             }
         } else if (this.state == "night") {
