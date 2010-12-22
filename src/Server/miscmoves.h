@@ -52,8 +52,8 @@ struct MMDisable : public MM
     static void uas (int s, int t, BS &b) {
         int mv = poke(b,t)["LastMoveUsed"].toInt();
         b.sendMoveMessage(28,0,s,0,t,mv);
-        if (b.gen() >= 5 && b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
-            b.sendItemMessage(7,s);
+        if (b.gen() >= 5 && b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
+            b.sendItemMessage(7,t);
             b.disposeItem(t);
         } else {
             poke(b,t)["DisablesUntil"] = b.turn() + 3 + (b.true_rand()%4);

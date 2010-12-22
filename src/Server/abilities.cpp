@@ -227,8 +227,8 @@ struct AMCuteCharm : public AM {
             && !b.linked(t, "Attract"))
         {
             b.sendMoveMessage(58,1,s,0,t);
-            if (b.hasWorkingItem(s, Item::MentalHerb)) /* mental herb*/ {
-                b.sendItemMessage(7,s);
+            if (b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
+                b.sendItemMessage(7,t);
                 b.disposeItem(t);
             } else {
                 b.link(s, t, "Attract");
