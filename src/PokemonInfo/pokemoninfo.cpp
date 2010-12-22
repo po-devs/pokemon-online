@@ -1025,6 +1025,16 @@ Pokemon::uniqueId PokemonInfo::getRandomPokemon(int gen)
     return Pokemon::uniqueId(poke);
 }
 
+bool PokemonInfo::modifyAbility(const Pokemon::uniqueId &pokeid, int slot, int ability, int gen)
+{
+    if ((slot >= 0) && (slot <= 2) && Exists(pokeid, gen)) {
+        m_Abilities[gen - GEN_MIN][slot][pokeid] = ability;
+        return true;
+    }else{
+        return false;
+    }
+}
+
 void MoveInfo::Gen::load(const QString &dir, int gen)
 {
     this->gen = gen;

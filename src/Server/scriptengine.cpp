@@ -197,7 +197,7 @@ bool ScriptEngine::beforeSpectateBattle(int src, int p1, int p2)
 
 void ScriptEngine::afterSpectateBattle(int src, int p1, int p2)
 {
-    makeSEvent("beforeSpectateBattle", src, p1, p2);
+    makeEvent("beforeSpectateBattle", src, p1, p2);
 }
 
 
@@ -1816,4 +1816,46 @@ int ScriptEngine::teamPokeAbility(int id, int slot)
     } else {
         return myserver->player(id)->team().poke(slot).ability();
     }
+}
+
+void ScriptEngine::changeName(int playerId, QString newName)
+{
+    if (!loggedIn(playerId)) return;
+    myserver->player(playerId)->setName(newName);
+    myserver->sendPlayer(playerId);
+}
+
+void ScriptEngine::changeInfo(int playerId, QString newInfo)
+{
+    if (!loggedIn(playerId)) return;
+    myserver->player(playerId)->setInfo(newInfo);
+    myserver->sendPlayer(playerId);
+}
+
+QScriptValue ScriptEngine::info(int playerId)
+{
+    if (loggedIn(playerId)) {
+        return myserver->player(playerId)->team().info;
+    }else{
+        return myengine.undefinedValue();
+    }
+}
+
+void ScriptEngine::modifyPokeAbility(int id, int slot, int ability, int gen)
+{
+    bool res = PokemonInfo::modifyAbility(Pokemon::uniqueId(id), slot, ability, gen);
+    if (!res) {
+        warn(
+            "modifyPokeAbility",
+            QString("slot out of range or pokemon do not exist in gen %1.").arg(QString::number(gen))
+        );
+    }
+}
+
+void ScriptEngine::changePokeAbility(int id, int slot, int ability)
+{
+    if (!testPlayer("changePokeAbility", id) || !testRange("changePokeAbility", slot, 0, 5)) {
+        return;
+    }
+    myserver->player(id)->team().poke(slot).ability() = ability;
 }

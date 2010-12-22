@@ -88,6 +88,8 @@ public:
     static QString Height(const Pokemon::uniqueId &pokeid);
     // Will NOT return Missingno.
     static Pokemon::uniqueId getRandomPokemon(int gen=GEN_MAX);
+
+    static bool modifyAbility(const Pokemon::uniqueId &pokeid, int slot, int ability, int gen = GEN_MAX);
 private:
     // m_Names is a base.
     // It is assumed that anything that is not there do not exist at all.
