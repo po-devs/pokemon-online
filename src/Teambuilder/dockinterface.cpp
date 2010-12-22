@@ -7,20 +7,20 @@
 //class dockAdvanced
 DockAdvanced::DockAdvanced(TB_TeamBody * builder): m_builder(builder)
 {
-    setAttribute(Qt::WA_DeleteOnClose);
+setAttribute(Qt::WA_DeleteOnClose);
 
-    setWindowIcon(QIcon("db/icon.png"));
-    setWindowTitle(tr("Advanced Options"));
+setWindowIcon(QIcon("db/icon.png"));
+setWindowTitle(tr("Advanced Options"));
 
-    for(int i= 0; i<6;i++)
-    {
-        PokeTeam * p = &m_builder->trainerTeam()->team().poke(i);
-        TB_Advanced * stack = new TB_Advanced(p);
-        addWidget(stack);
-        TB_PokemonBody *body = builder->pokeBody[i];
+for(int i= 0; i<6;i++)
+{
+    PokeTeam * p = &m_builder->trainerTeam()->team().poke(i);
+    TB_Advanced * stack = new TB_Advanced(p);
+    addWidget(stack);
+    TB_PokemonBody *body = builder->pokeBody[i];
 
-        body->connectWithAdvanced(stack);
-    }
+    body->connectWithAdvanced(stack);
+}
 }
 
 DockAdvanced::~DockAdvanced()

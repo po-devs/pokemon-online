@@ -465,25 +465,23 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     {
     case SendOut:
 	{
-            info().sub[spot] = false;
-            info().specialSprite[spot] = Pokemon::NoPoke;
+            if (player != info().myself) {
+                BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
+                break;
+            }
+
             bool silent;
             quint8 prevIndex;
-
             in >> silent;
             in >> prevIndex;
 
-            if (player == info().myself) {
-                switchTo(prevIndex, spot, true);
+            info().sub[spot] = false;
+            info().specialSprite[spot] = Pokemon::NoPoke;
 
-                if (!in.atEnd())
-                    in >> info().currentShallow(spot);
-	    } else {
-                info().switchPoke(spot, prevIndex, false);
+            switchTo(prevIndex, spot, true);
+
+            if (!in.atEnd())
                 in >> info().currentShallow(spot);
-                info().pokeAlive[spot] = true;
-                mydisplay->updatePoke(spot);
-            }
 
             mydisplay->updatePoke(info().player(spot), info().slotNum(spot));
             mydisplay->updatePoke(info().player(spot), prevIndex);

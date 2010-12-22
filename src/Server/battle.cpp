@@ -1407,6 +1407,8 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     turnMemory(slot)["CantGetToMove"] = true;
 
+    ItemEffect::setup(poke(player).item(), player, *this);
+
     calleffects(slot, slot, "UponSwitchIn");
     callseffects(slot, slot, "UponSwitchIn");
     callzeffects(player, slot, "UponSwitchIn");
@@ -1415,7 +1417,14 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 void BattleSituation::callEntryEffects(int player)
 {
     if (!koed(player)) {
-        ItemEffect::setup(poke(player).item(), player, *this);
+        /* Various problems with item setting up are:
+           - WhiteHerb restoring baton pass stats
+           - Chesto Berry not having an argument and curing Toxic Spikes
+           - Choice Scarf not activating right at weather starting
+
+           So All those must be taken in account when changing something to
+           how the items are set up. */
+        callieffects(player, player, "UponSetup");
         acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
     }
@@ -3434,6 +3443,7 @@ void BattleSituation::acqItem(int player, int item) {
         loseItem(player, false);
     poke(player).item() = item;
     ItemEffect::setup(poke(player).item(),player,*this);
+    callieffects(player, player, "UponSetup");
 }
 
 void BattleSituation::loseItem(int player, bool real)

@@ -125,8 +125,6 @@ void BaseBattleWindow::init()
     undelayOnSounds = true;
 
     musicPlayStop();
-
-    loadSettings(this);
 }
 
 bool BaseBattleWindow::musicPlayed() const
@@ -367,12 +365,13 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             quint8 prevIndex;
             in >> silent;
             in >> prevIndex;
-            info().switchPoke(spot, prevIndex);
-            in >> info().currentShallow(spot);
-            info().pokeAlive[spot] = true;
+
             info().sub[spot] = false;
             info().specialSprite[spot] = Pokemon::NoPoke;
 
+            info().switchPoke(spot, prevIndex);
+            in >> info().currentShallow(spot);
+            info().pokeAlive[spot] = true;
             mydisplay->updatePoke(spot);
 
             mydisplay->updatePoke(info().player(spot), info().slotNum(spot));

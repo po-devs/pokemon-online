@@ -62,6 +62,6 @@ void loadSettings(QWidget *w, const QSize &defaultSize)
     if (settings.contains("pos"))
         w->topLevelWidget()->move(settings.value("pos").toPoint());
     if (settings.contains("maximized") && settings.value("maximized").toBool())
-        w->topLevelWidget()->setWindowState(Qt::WindowMaximized);
+        w->topLevelWidget()->showMaximized();
     settings.endGroup();
 }
