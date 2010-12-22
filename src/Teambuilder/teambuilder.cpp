@@ -214,6 +214,8 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) :
     connect(m_close, SIGNAL(clicked()), SIGNAL(done()));
     connect(m_boxes, SIGNAL(pokeChanged(int)), SLOT(pokeChanged(int)));
 
+    loadSettings(this, defaultSize());
+
     updateAll();
 }
 

@@ -108,6 +108,8 @@ void BaseBattleWindow::init()
     connect(myclose, SIGNAL(clicked()), SLOT(clickClose()));
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
+    
+    loadSettings(this, defaultSize());
 
     audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
     mediaObject = new Phonon::MediaObject(this);
