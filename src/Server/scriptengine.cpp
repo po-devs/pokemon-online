@@ -544,6 +544,15 @@ void ScriptEngine::kick(int id, int chanid)
     }
 }
 
+void ScriptEngine::updatePlayer(int playerid)
+{
+    /* Updates all the info of the player to the other players
+       (mainly if you changed their team and want it to show in the challenge window) */)
+    if (testPlayer("updatePlayer(playerid)", playerid)) {
+        myserver->sendPlayer(playerid);
+    }
+}
+
 void ScriptEngine::putInChannel(int id, int chanid)
 {
     if (!testPlayer("putInChannel(id, chanid)", id) || !testChannel("putInChannel(id, chanid)", chanid)) {
@@ -619,25 +628,25 @@ void ScriptEngine::reloadTiers()
     TierMachine::obj()->load();
 }
 
-void ScriptEngine::changePokeItem(int id, int slot, int item)
+void ScriptEngine::eItem(int id, int slot, int item)
 {
-    if (!testPlayer("changePokeItem(id, slot, item)", id) || !testRange("changePokeItem(id, slot, item)", slot, 0, 5))
+    if (!testPlayer("eItem(id, slot, item)", id) || !testRange("eItem(id, slot, item)", slot, 0, 5))
         return;
     if (!ItemInfo::Exists(item))
         return;
     myserver->player(id)->team().poke(slot).item() = item;
 }
 
-void ScriptEngine::changePokeNum(int id, int slot, int num)
+void ScriptEngine::eNum(int id, int slot, int num)
 {
-    if (!testPlayer("changePokeNum(id, slot, item)", id) || !testRange("changePokeNum(id, slot, num)", slot, 0, 5))
+    if (!testPlayer("eNum(id, slot, item)", id) || !testRange("eNum(id, slot, num)", slot, 0, 5))
         return;
     if (!PokemonInfo::Exists(num, 4))
         return;
     myserver->player(id)->team().poke(slot).num() = num;
 }
 
-void ScriptEngine::changePokeLevel(int id, int slot, int level)
+void ScriptEngine::eLevel(int id, int slot, int level)
 {
     if (!testPlayer("", id) || !testRange("", slot, 0, 5) || !testRange("", level, 1, 100))
         return;
@@ -645,7 +654,7 @@ void ScriptEngine::changePokeLevel(int id, int slot, int level)
     myserver->player(id)->team().poke(slot).updateStats();
 }
 
-void ScriptEngine::changePokeMove(int id, int pslot, int mslot, int move)
+void ScriptEngine::eMove(int id, int pslot, int mslot, int move)
 {
     if (!testPlayer("", id) || !testRange("", pslot, 0, 5) || !testRange("", mslot, 0, 4))
         return;
@@ -1852,9 +1861,9 @@ void ScriptEngine::modifyPokeAbility(int id, int slot, int ability, int gen)
     }
 }
 
-void ScriptEngine::changePokeAbility(int id, int slot, int ability)
+void ScriptEngine::eAbility(int id, int slot, int ability)
 {
-    if (!testPlayer("changePokeAbility", id) || !testRange("changePokeAbility", slot, 0, 5)) {
+    if (!testPlayer("eAbility", id) || !testRange("eAbility", slot, 0, 5)) {
         return;
     }
     myserver->player(id)->team().poke(slot).ability() = ability;
