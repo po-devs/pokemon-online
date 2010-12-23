@@ -76,6 +76,8 @@ public:
     Q_INVOKABLE void sendHtmlAll(const QString &mess, int channel);
     Q_INVOKABLE void kick(int id);
     Q_INVOKABLE void kick(int playerid, int chanid);
+    /* If you edited his team, updates it for the rest of the world */
+    Q_INVOKABLE void updatePlayer(int playerid);
     Q_INVOKABLE void putInChannel(int playerid, int chanid);
     Q_INVOKABLE QScriptValue createChannel(const QString &channame);
     Q_INVOKABLE QScriptValue getAnnouncement();
