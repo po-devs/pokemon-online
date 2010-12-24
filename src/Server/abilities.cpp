@@ -324,17 +324,18 @@ struct AMEffectSpore : public AM {
 
     static void upa(int s, int t, BS &b) {
         if (b.poke(t).status() == Pokemon::Fine && b.true_rand() % 100 < 30) {
-            if (b.true_rand() % 3 == 0) {
+            switch (b.true_rand() % 3) {
+            case 0:
                 if (b.canGetStatus(t,Pokemon::Asleep)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Grass);
                     b.inflictStatus(t, Pokemon::Asleep,s);
-                }
-            } else if (b.true_rand() % 1 == 0) {
+                } break;
+            case 1:
                 if (b.canGetStatus(t,Pokemon::Paralysed)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Electric);
                     b.inflictStatus(t, Pokemon::Paralysed,s);
-                }
-            } else {
+                } break;
+            default:
                 if (b.canGetStatus(t,Pokemon::Poisoned)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Poison);
                     b.inflictStatus(t, Pokemon::Poisoned,s);
