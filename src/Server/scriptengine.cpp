@@ -673,9 +673,9 @@ void ScriptEngine::changePokeGender(int id, int pokeslot, int gender)
     p->team().poke(pokeslot).gender() = gender;
 }
 
-void ScriptEngine::changePokeName(int id, const QString &name)
+void ScriptEngine::changePokeName(int id, int pokeslot, const QString &name)
 {
-    if (!testPlayer("changePokeName(id, name)", id))
+    if (!testPlayer("changePokeName(id, pokeslot, name)", id)|| !testRange("changePokeName(id, pokeslot, name)", pokeslot, 0, 5))
         return;
     Player *p = myserver->player(id);
     p->team().poke(pokeslot).nick() = name;
