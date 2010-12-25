@@ -111,6 +111,7 @@ public:
     Q_INVOKABLE void changePokeItem(int id, int slot, int item);
     Q_INVOKABLE void changePokeMove(int id, int pokeslot, int moveslot, int move);
     Q_INVOKABLE void changePokeGender(int id, int pokeslot, int gender);
+    Q_INVOKABLE void changePokeName(int id, int pokeslot, const QString &name);
     Q_INVOKABLE void changeTier(int id, const QString &tier);
     Q_INVOKABLE void reloadTiers();
     /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */

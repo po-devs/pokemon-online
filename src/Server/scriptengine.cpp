@@ -547,7 +547,7 @@ void ScriptEngine::kick(int id, int chanid)
 void ScriptEngine::updatePlayer(int playerid)
 {
     /* Updates all the info of the player to the other players
-       (mainly if you changed their team and want it to show in the challenge window) */)
+       (mainly if you changed their team and want it to show in the challenge window) */
     if (testPlayer("updatePlayer(playerid)", playerid)) {
         myserver->sendPlayer(playerid);
     }
