@@ -1885,7 +1885,7 @@ void ScriptEngine::changePokeAbility(int id, int slot, int ability)
     myserver->player(id)->team().poke(slot).ability() = ability;
 }
 
-QScriptValue ScriptEngine::teamPokeAbilityAvailable(int poke, int slot, int gen)
+QScriptValue ScriptEngine::pokeAbilityAvailable(int poke, int slot, int gen)
 {
     Pokemon::uniqueId pokemon(poke);
     if (
