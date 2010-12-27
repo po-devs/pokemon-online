@@ -1884,3 +1884,16 @@ void ScriptEngine::changePokeAbility(int id, int slot, int ability)
     }
     myserver->player(id)->team().poke(slot).ability() = ability;
 }
+
+QScriptValue ScriptEngine::teamPokeAbilityAvailable(int poke, int slot, int gen)
+{
+    Pokemon::uniqueId pokemon(poke);
+    if (
+            PokemonInfo::Exists(pokemon, gen)
+            && (slot >= 0) && (slot <= 2)
+            && (gen >= GEN_MIN) && (gen <= GEN_MAX)
+    ) {
+        return PokemonInfo::Abilities(pokemon, gen).ab(slot);
+    }
+    return myengine.undefinedValue();
+}
