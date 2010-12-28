@@ -1181,11 +1181,7 @@ QScriptValue ScriptEngine::id(const QString &name)
 
 QScriptValue ScriptEngine::pokemon(int num)
 {
-    if (num < 0 || num >= PokemonInfo::NumberOfPokemons()) {
-        return myengine.undefinedValue();
-    } else {
-        return PokemonInfo::Name(num);
-    }
+    return PokemonInfo::Name(num);
 }
 
 QScriptValue ScriptEngine::pokeNum(const QString &name)
