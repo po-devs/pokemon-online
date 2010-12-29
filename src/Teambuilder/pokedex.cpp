@@ -191,7 +191,7 @@ void BigOpenPokeBall::update()
     num->setText(QString("%1").arg(n.pokenum));
     name->setText(PokemonInfo::Name(n));
     specy->setText(PokemonInfo::Classification(n));
-    height->setText(tr("<b>Ht:</b> %1").arg(PokemonInfo::Height(n)));
+    height->setText(tr("<b>Ht:</b> %1 m").arg(PokemonInfo::Height(n)));
     weight->setText(tr("<b>Wt:</b> %1 kg").arg(PokemonInfo::WeightS(n)));
     type1->setPixmap(Theme::TypePicture(PokemonInfo::Type1(n)));
     int t2 = PokemonInfo::Type2(n);
