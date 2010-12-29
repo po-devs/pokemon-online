@@ -1891,3 +1891,29 @@ QScriptValue ScriptEngine::pokeAbilityAvailable(int poke, int slot, int gen)
     }
     return myengine.undefinedValue();
 }
+
+void ScriptEngine::changePokeHappiness(int id, int slot, int value)
+{
+    if (!testPlayer("changePokeHappiness", id)
+        || !testRange("changePokeHappiness", slot, 0, 5)
+        || !testRange("changePokeHappiness", value, 0, 255)) {
+        return;
+    }
+    myserver->player(id)->team().poke(slot).happiness() = value;
+}
+
+void ScriptEngine::changePokeShine(int id, int slot, bool value)
+{
+    if (!testPlayer("changePokeShine", id) || !testRange("changePokeShine", slot, 0, 5)) {
+        return;
+    }
+    myserver->player(id)->team().poke(slot).shiny() = value;
+}
+
+QScriptValue ScriptEngine::teamPokeGender(int id, int slot)
+{
+    if (!testPlayer("teamPokeGender", id) || !testRange("teamPokeGender", slot, 0, 5)) {
+        return myengine.undefinedValue();
+    }
+    return myserver->player(id)->team().poke(slot).gender();
+}
