@@ -453,7 +453,7 @@ struct MMConversion2 : public MM
                 return;
             }
 
-            attackType = MoveInfo::Type(poke(b,s)["LastSpecialMoveUsed"].toInt(), b.gen());
+            attackType = MoveInfo::Type(poke(b,t)["LastSpecialMoveUsed"].toInt(), b.gen());
         }
 
         if (attackType == Type::Curse) {
