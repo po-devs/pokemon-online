@@ -892,7 +892,7 @@ struct MMHaze : public MM
 {
     MMHaze() {
         functions["BeforeTargetList"] = &btl;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     /* Haze is a move that affects all, and is affected by pressure.
@@ -5151,11 +5151,11 @@ struct MMTelekinesis : public MM
 struct MMStrikeDown : public MM
 {
     MMStrikeDown() {
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
-        if (b.isFlying(t) && !b.hasSubstitute(t)) {
+        if (b.isFlying(t)) {
             b.sendMoveMessage(175, 0, s, type(b,s), t);
             poke(b,t)["StruckDown"] = true;
         }
