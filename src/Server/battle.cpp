@@ -1407,7 +1407,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     turnMemory(slot)["CantGetToMove"] = true;
 
-    ItemEffect::setup(poke(player).item(), player, *this);
+    ItemEffect::setup(poke(slot).item(), slot, *this);
 
     calleffects(slot, slot, "UponSwitchIn");
     callseffects(slot, slot, "UponSwitchIn");
