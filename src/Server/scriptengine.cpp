@@ -1181,11 +1181,7 @@ QScriptValue ScriptEngine::id(const QString &name)
 
 QScriptValue ScriptEngine::pokemon(int num)
 {
-    if (num < 0 || num >= PokemonInfo::NumberOfPokemons()) {
-        return myengine.undefinedValue();
-    } else {
-        return PokemonInfo::Name(num);
-    }
+    return PokemonInfo::Name(num);
 }
 
 QScriptValue ScriptEngine::pokeNum(const QString &name)
@@ -1883,4 +1879,41 @@ void ScriptEngine::changePokeAbility(int id, int slot, int ability)
         return;
     }
     myserver->player(id)->team().poke(slot).ability() = ability;
+}
+
+QScriptValue ScriptEngine::pokeAbilityAvailable(int poke, int slot, int gen)
+{
+    Pokemon::uniqueId pokemon(poke);
+    if (PokemonInfo::Exists(pokemon, gen)
+        && (slot >= 0) && (slot <= 2)
+        && (gen >= GEN_MIN) && (gen <= GEN_MAX)) {
+        return PokemonInfo::Abilities(pokemon, gen).ab(slot);
+    }
+    return myengine.undefinedValue();
+}
+
+void ScriptEngine::changePokeHappiness(int id, int slot, int value)
+{
+    if (!testPlayer("changePokeHappiness", id)
+        || !testRange("changePokeHappiness", slot, 0, 5)
+        || !testRange("changePokeHappiness", value, 0, 255)) {
+        return;
+    }
+    myserver->player(id)->team().poke(slot).happiness() = value;
+}
+
+void ScriptEngine::changePokeShine(int id, int slot, bool value)
+{
+    if (!testPlayer("changePokeShine", id) || !testRange("changePokeShine", slot, 0, 5)) {
+        return;
+    }
+    myserver->player(id)->team().poke(slot).shiny() = value;
+}
+
+QScriptValue ScriptEngine::teamPokeGender(int id, int slot)
+{
+    if (!testPlayer("teamPokeGender", id) || !testRange("teamPokeGender", slot, 0, 5)) {
+        return myengine.undefinedValue();
+    }
+    return myserver->player(id)->team().poke(slot).gender();
 }
