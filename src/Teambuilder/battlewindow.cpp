@@ -920,8 +920,12 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p, int
         power = MoveInfo::PowerS(b.num(), gen);
     }
 
-    QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nEffect: %5").arg(MoveInfo::Name(b.num()), power,
+    QString moveCategory;
+    moveCategory = CategoryInfo::Name(MoveInfo::Category(b.num(), gen));
+
+    QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nCategory: %5\n\nEffect: %6").arg(MoveInfo::Name(b.num()), power,
                                                                         MoveInfo::AccS(b.num(), gen), MoveInfo::Description(b.num(), gen),
+                                                                        moveCategory,
                                                                         MoveInfo::DetailedDescription(b.num()));
 
     int type = b.num() == Move::HiddenPower ?

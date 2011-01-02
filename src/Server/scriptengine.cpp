@@ -1910,10 +1910,27 @@ void ScriptEngine::changePokeShine(int id, int slot, bool value)
     myserver->player(id)->team().poke(slot).shiny() = value;
 }
 
+void ScriptEngine::changePokeNature(int id, int slot, int nature)
+{
+    if(!testPlayer("changePokeNature(id, slot, forme)", id) || !testRange("changePokeNature(id, slot, forme)",slot, 0, 15))
+        return;
+      // Ugly, we don't have NatureInfo::Exists(nature) or we do?
+    myserver->player(id)->team().poke(slot).nature() = nature;
+}
+
 QScriptValue ScriptEngine::teamPokeGender(int id, int slot)
 {
     if (!testPlayer("teamPokeGender", id) || !testRange("teamPokeGender", slot, 0, 5)) {
         return myengine.undefinedValue();
     }
     return myserver->player(id)->team().poke(slot).gender();
+}
+
+QScriptValue ScriptEngine::teamPokeNick(int id, int index)
+{
+    if(!loggedIn(id) || index < 1 ||index >= 6) {
+        return myengine.undefinedValue();
+    }else{
+        return myserver->player(id)->team().poke(index).nick();
+    }
 }
