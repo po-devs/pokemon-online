@@ -46,8 +46,6 @@ void TierNode::buildFromRaw(QByteArray raw)
 
 TierNode * TierNode::moveInTree(TierNode *lastNode, int levelDiff)
 {
-    qDebug() << "Moving " << levelDiff << " from " << lastNode->name;
-
     if (levelDiff == 0)
         return lastNode;
 
