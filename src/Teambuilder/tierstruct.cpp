@@ -39,13 +39,15 @@ void TierNode::buildFromRaw(QByteArray raw)
         stream >> name;
 
         TierNode *n = new TierNode(name);
-        n->parent = this;
+        n->parent = lastNode;
         lastNode->subNodes.push_back(n);
     }
 }
 
 TierNode * TierNode::moveInTree(TierNode *lastNode, int levelDiff)
 {
+    qDebug() << "Moving " << levelDiff << " from " << lastNode->name;
+
     if (levelDiff == 0)
         return lastNode;
 
