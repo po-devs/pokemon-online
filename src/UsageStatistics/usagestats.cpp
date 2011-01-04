@@ -60,10 +60,15 @@ void PokemonOnlineStatsPlugin::battleStarting(PlayerInterface *p1, PlayerInterfa
 {
     /* We only keep track of battles between players of the same tier
        and not CC battles */
-    if (p1->tier() != p2->tier() || clauses & ChallengeInfo::ChallengeCup)
+    if (clauses & ChallengeInfo::ChallengeCup)
         return;
 
     QString tier = p1->tier();
+
+    if (p1->tier() != p2->tier()) {
+        tier = QString("Mixed Tiers Gen %1").arg(p1->team().gen);
+    }
+
     if (!existingDirs.contains(tier)) {
         QDir d;
         d.mkdir(QString("usage_stats/raw/%1").arg(tier));
