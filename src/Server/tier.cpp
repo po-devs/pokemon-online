@@ -493,6 +493,9 @@ void Tier::loadFromXml(const QDomElement &elem)
     banParentS = elem.attribute("banParent");
     parent = NULL;
     changeName(elem.attribute("name"));
+    if (elem.hasAttribute("table_name")) {
+        sql_table = elem.attribute("table_name");
+    }
     gen = elem.attribute("gen", QString::number(GEN_MAX)).toInt();
     maxLevel = elem.attribute("maxLevel", "100").toInt();
     numberOfPokemons = elem.attribute("numberOfPokemons", "6").toInt();
@@ -552,6 +555,7 @@ void Tier::loadFromXml(const QDomElement &elem)
 
 QDomElement & Tier::toXml(QDomElement &dest) const {
     dest.setAttribute("name", name());
+    dest.setAttribute("table_name", sql_table);
 
     if (banPokes) {
         dest.setAttribute("banMode", "ban");
