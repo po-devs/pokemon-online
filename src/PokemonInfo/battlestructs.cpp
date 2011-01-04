@@ -162,7 +162,7 @@ void PokeBattle::init(PokePersonal &poke)
     shiny() = poke.shiny();
     level() = std::min(100, std::max(int(poke.level()), 1));
 
-    nature() = std::min(NatureInfo::NumberOfNatures(), std::max(0, int(poke.nature())));
+    nature() = std::min(NatureInfo::NumberOfNatures() - 1, std::max(0, int(poke.nature())));
 
     int curs = 0;
     QSet<int> taken_moves;
