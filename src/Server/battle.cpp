@@ -2239,7 +2239,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 continue;
             }
 
-            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag))
+            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower)
             {
                 sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
                 continue;
