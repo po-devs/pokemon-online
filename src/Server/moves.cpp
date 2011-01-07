@@ -4956,9 +4956,9 @@ struct MMAncientSong : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (fpoke(b,s).id() == Pokemon::Meloia)
+        if (fpoke(b,s).id == Pokemon::Meloia)
             b.changePokeForme(s, Pokemon::Meloia_S);
-        else if (fpoke(b,s).id() == Pokemon::Meloia_S)
+        else if (fpoke(b,s).id == Pokemon::Meloia_S)
             b.changePokeForme(s, Pokemon::Meloia);
     }
 };
