@@ -1,5 +1,6 @@
 #include <QtNetwork>
 #include <ctime> /* for random numbers, time(NULL) needed */
+#include <algorithm>
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/movesetchecker.h"
@@ -1221,6 +1222,8 @@ bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool fo
         return false;
     t = &TierMachine::obj()->tier(p2->tier());
     if (!t->allowMode(mode))
+        return false;
+    if (std::abs(p1->rating()-p2->rating()) > 300)
         return false;
     return true;
 }
