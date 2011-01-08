@@ -1689,10 +1689,10 @@ struct AMInconsistent : public AM {
 
 struct AMCursedBody : public AM {
     AMCursedBody() {
-        functions["UponPhysicalAssault"] = upa;
+        functions["UponBeingHit"] = ubh;
     }
 
-    static void upa(int s, int t, BS &b) {
+    static void ubh(int s, int t, BS &b) {
         if (b.koed(t) || (b.true_rand() % 100) >= 30 || MMDisable::failOn(t, b))
             return;
 
