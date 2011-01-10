@@ -959,6 +959,10 @@ struct MMLeechSeed : public MM
 
         if (b.koed(s2))
             return;
+
+        if (b.hasWorkingItem(s2, Item::BigRoot)) {
+            damage = damage * 13 / 10;
+        }
         if (!b.hasWorkingAbility(s, Ability::LiquidOoze))
             b.healLife(s2, damage);
         else {
