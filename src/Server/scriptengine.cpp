@@ -7,6 +7,7 @@
 #include "tier.h"
 #include "scriptengine.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/movesetchecker.h"
 #include "battle.h"
 #include <QRegExp>
 
@@ -1342,6 +1343,17 @@ bool ScriptEngine::hasDreamWorldAbility(int id, int index)
         AbilityGroup ag = PokemonInfo::Abilities(p.num(), 5);
 
         return p.ability() != ag.ab(0) && p.ability() != ag.ab(1);
+    }
+}
+
+bool ScriptEngine::compatibleAsDreamWorldEvent(int id, int index)
+{
+    if (!loggedIn(id) || index < 0 || index >= 6) {
+        return false;
+    } else {
+        PokeBattle &p = myserver->player(id)->team().poke(index);
+
+        return MoveSetChecker::isValid(p.num(),5,p.move(0).num(),p.move(1).num(),p.move(2).num(),p.move(3).num(),p.ability(),p.gender(),true);
     }
 }
 

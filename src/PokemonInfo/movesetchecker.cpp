@@ -59,11 +59,11 @@ void MoveSetChecker::init(const QString &dir)
 }
 
 bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, int move1, int move2, int move3, int move4, int ability,
-                             int gender, QSet<int> *invalid_moves, QString *error) {
+                             int gender, bool maledw, QSet<int> *invalid_moves, QString *error) {
     QSet<int> moves;
     moves << move1 << move2 << move3 << move4;
 
-    return isValid(pokeid, gen, moves, ability, gender, invalid_moves, error);
+    return isValid(pokeid, gen, moves, ability, gender, maledw, invalid_moves, error);
 }
 
 static QString getCombinationS(const QSet<int> &invalid_moves) {
@@ -79,7 +79,7 @@ static QString getCombinationS(const QSet<int> &invalid_moves) {
 }
 
 bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSet<int> &moves2, int ability, int gender,
-                             QSet<int> *invalid_moves, QString *error) {
+                             bool maledw, QSet<int> *invalid_moves, QString *error) {
     QSet<int> moves = moves2;
     moves.remove(0);
 
@@ -123,16 +123,25 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
 
             int pokemon = PokemonInfo::PreEvo(pokeid.pokenum);
 
-            if (isValid(pokemon, g, moves))
+            if (isValid(pokemon, g, moves,ability,gender,maledw))
                 return true;
         }
 
-        if (moves.empty() || (moves.size() == 1 && PokemonInfo::HasMoveInGen(pokeid, *moves.begin(), g)))
+
+        if (moves.empty())
             return true;
 
-        if (isAnEggMoveCombination(pokeid, g, moves)) {
-            return true;
+        if (!maledw) {
+            if (moves.size() == 1 && PokemonInfo::HasMoveInGen(pokeid, *moves.begin(), g)) {
+                return true;
+            }
+
+            if (isAnEggMoveCombination(pokeid, g, moves)) {
+                return true;
+            }
         }
+
+
 
         if (g == 5) {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid);

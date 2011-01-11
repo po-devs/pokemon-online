@@ -203,6 +203,7 @@ public:
     Q_INVOKABLE bool hasTeamPoke(int id, int pokemonnum);
     Q_INVOKABLE QScriptValue indexOfTeamPoke(int id, int pokenum);
     Q_INVOKABLE bool hasDreamWorldAbility(int id, int slot);
+    Q_INVOKABLE bool compatibleAsDreamWorldEvent(int id, int slot);
 
     Q_INVOKABLE QScriptValue teamPokeMove(int id, int pokeindex, int moveindex);
     Q_INVOKABLE bool hasTeamPokeMove(int id, int pokeindex, int movenum);
