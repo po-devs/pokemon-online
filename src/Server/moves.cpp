@@ -1394,7 +1394,8 @@ struct MMFocusPunch : public MM
     }
 
     static void os(int s, int, BS &b) {
-	b.sendMoveMessage(47,1,s,Pokemon::Fighting);
+        if (b.poke(s).status() != Pokemon::Frozen && b.poke(s).status() != Pokemon::Paralysed)
+            b.sendMoveMessage(47,1,s,Pokemon::Fighting);
     }
 };
 
