@@ -316,10 +316,21 @@ struct BMStarf : public BMPinch
 struct BMBerryLock : public BMPinch
 {
     BMBerryLock() {
-        functions["BeforeTargetList"] = &btl;
+        functions["AfterHPChange"] = &ahpc;
+        functions["TestPinch"] = &tp;
     }
 
-    static void btl(int s, int, BS &b) {
+    static void ahpc(int s, int, BS &b) {
+        /* Those berries don't activate immediately when attacked by offensive moves,
+           but only after side effects applied. At that time, the battle thread will call
+           the effect "TestPinch"
+        */
+        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
+            return;
+        tp(s, s, b);
+    }
+
+    static void tp(int s, int, BS &b) {
         if (!testpinch(s, s, b,4))
             return;
 
