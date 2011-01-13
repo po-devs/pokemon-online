@@ -1572,7 +1572,7 @@ void BattleSituation::sendBack(int player, bool silent)
     }
 }
 
-bool BattleSituation::testAccuracy(int player, int target, bool silent)
+bool BattleSituation::testAccuracy(int player, int target, int attack, bool silent)
 {
     int acc = tmove(player).accuracy;
     int tarChoice = tmove(player).targets;
@@ -1588,9 +1588,13 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         return true;
     }
 
+    //OHKO
+    int move  = turnMemory(player)["MoveChosen"].toInt();
+
     if (pokeMemory(player).value("BerryLock").toBool()) {
         pokeMemory(player).remove("BerryLock");
-        return true;
+        if (gen() <= 4 || !MoveInfo::isOHKO(move, gen()))
+            return true;
     }
 
     //No Guard
@@ -1612,9 +1616,6 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     if (acc == 0 || acc == 101 || pokeMemory(target).value("LevitatedCount").toInt() > 0) {
 	return true;
     }
-
-    //OHKO
-    int move  = turnMemory(player)["MoveChosen"].toInt();
 
     if (MoveInfo::isOHKO(move, gen())) {
         bool ret = (true_rand() % 100) < unsigned (30 + poke(player).level() - poke(target).level());
@@ -2082,7 +2083,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         turnMemory(player)["Failed"] = false;
         turnMemory(player)["FailingMessage"] = true;
 
-	if (target != player && !testAccuracy(player, target)) {
+        if (target != player && !testAccuracy(player, target)) {
             calleffects(player,target,"AttackSomehowFailed");
 	    continue;
 	}
