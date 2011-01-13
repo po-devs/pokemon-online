@@ -110,6 +110,10 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             }
         }
 
+        if (maledw && gender == Pokemon::Female) {
+            return false;
+        }
+
         /* now we know the pokemon at least knows all moves */
         moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
 
