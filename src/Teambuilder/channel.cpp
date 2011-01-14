@@ -508,8 +508,7 @@ void Channel::printHtml(const QString &str)
 {
     QRegExp id(QString("<\\s*([0-9]+)\\s*>"));
     if (str.contains(id) && client->isIgnored(id.cap(1).toInt())){
-            return;
-        }
+        return;
     }
     if (!QApplication::activeWindow()) {
         if (str.contains(QRegExp(QString("<ping */ *>"),Qt::CaseInsensitive))) {
