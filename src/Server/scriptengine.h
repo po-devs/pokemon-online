@@ -85,6 +85,7 @@ public:
     Q_INVOKABLE void setAnnouncement(const QString &html, int id);
     Q_INVOKABLE void setAnnouncement(const QString &html);
     Q_INVOKABLE void changeAnnouncement(const QString &html);
+    Q_INVOKABLE void makeServerPublic(bool isPublic);
 
     // Q_INVOKABLE void setTimer(int ms); // Causes crash
 
