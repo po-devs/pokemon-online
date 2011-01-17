@@ -246,7 +246,7 @@ int Tier::ranking(const QString &name)
     q.exec();
 
     if (q.next())
-        return q.value(0).toInt();
+        return q.value(0).toInt() +1;
     else
         return -1;
 }
