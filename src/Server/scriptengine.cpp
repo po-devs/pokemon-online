@@ -1831,6 +1831,12 @@ void ScriptEngine::changeAnnouncement(const QString &html) {
         settings.setValue("server_announcement", html);
         myserver->announcementChanged(html);
     }
+
+void ScriptEngine::makeServerPublic(bool isPublic)
+{
+    myserver->regPrivacyChanged(!isPublic);
+}
+
 QScriptValue ScriptEngine::getAnnouncement() {
         return myserver->serverAnnouncement;
     }
