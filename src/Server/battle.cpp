@@ -1572,7 +1572,7 @@ void BattleSituation::sendBack(int player, bool silent)
     }
 }
 
-bool BattleSituation::testAccuracy(int player, int target, int attack, bool silent)
+bool BattleSituation::testAccuracy(int player, int target, bool silent)
 {
     int acc = tmove(player).accuracy;
     int tarChoice = tmove(player).targets;
