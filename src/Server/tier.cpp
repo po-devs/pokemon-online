@@ -493,7 +493,7 @@ void Tier::loadFromXml(const QDomElement &elem)
     banParentS = elem.attribute("banParent");
     parent = NULL;
     changeName(elem.attribute("name"));
-    if (elem.hasAttribute("tableName")) {
+    if (elem.hasAttribute("tableName") && elem.attribute("tableName").length() > 0) {
         sql_table = elem.attribute("tableName");
     }
     gen = elem.attribute("gen", QString::number(GEN_MAX)).toInt();
