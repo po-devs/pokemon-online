@@ -2562,8 +2562,9 @@ void BattleSituation::applyMoveStatMods(int player, int target)
             }
         } else {
             /* If we are blocked by a secondary effect, let's stop here */
-            if (!inflictStatMod(target, stat, increase, player))
-                return;
+            if (!inflictStatMod(target, stat, increase, player)) {
+                //return; or not, hyper cutter blocks only a part of tickle
+            }
             negativeStatChange = true;
         }
 
