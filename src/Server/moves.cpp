@@ -1760,8 +1760,10 @@ struct MMBounce : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.hasSubstitute(t) && move(b,s) == Move::FreeFall)
+        if (b.hasSubstitute(t) && move(b,s) == Move::FreeFall) {
+            b.notify(All, BS::UseAttack, s, qint16(Move::FreeFall));
             turn(b,s)["Failed"] = true;
+        }
     }
 
     static void ms(int s, int, BS &b) {
