@@ -127,7 +127,18 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
 
             int pokemon = PokemonInfo::PreEvo(pokeid.pokenum);
 
-            if (isValid(pokemon, g, moves,ability,gender,maledw))
+            int ab2;
+            AbilityGroup ab = PokemonInfo::Abilities(pokeid);
+            if (ability == ab.ab(0)) {
+                ab2 = PokemonInfo::Abilities(pokemon, g).ab(0);
+            } else if (ability == ab.ab(1)) {
+                ab2 = PokemonInfo::Abilities(pokemon, g).ab(1);
+            } else if (ability == ab.ab(2)) {
+                ab2 = PokemonInfo::Abilities(pokemon, g).ab(2);
+            } else {
+                ab2 = 0;
+            }
+            if (isValid(pokemon, g, moves,ab2,gender,maledw))
                 return true;
         }
 
