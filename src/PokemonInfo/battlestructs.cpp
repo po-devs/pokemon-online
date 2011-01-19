@@ -430,6 +430,7 @@ void TeamBattle::generateRandom(int gen)
 
         QList<int> moves = g.moves().toList();
         QList<int> movesTaken;
+        bool off = false;
         for (int i = 0; i < 4; i++) {
             /* If there are no other moves possible,
                sets the remaining moves to 0 and exit the loop
@@ -446,9 +447,10 @@ void TeamBattle::generateRandom(int gen)
                 if (movesTaken.contains(movenum)) {
                     continue;
                 }
-                if(i == 3 && MoveInfo::Power(movenum, gen) == 0 && MoveInfo::Power(movesTaken.value(0), gen) == 0 &&
-                   MoveInfo::Power(movesTaken.value(1), gen) == 0 && MoveInfo::Power(movesTaken.value(2), gen) == 0)
-                {
+                if (MoveInfo::Power(movenum, gen) > 0 && movenum != Move::NaturalGift && movenum != Move::Snore && movenum != Move::Fling
+                    && !MoveInfo::isOHKO(movenum, gen))
+                    off = true;
+                if(i == 3 && !off) {
                     continue;
                 }
                 movesTaken.push_back(movenum);
