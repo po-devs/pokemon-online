@@ -122,9 +122,6 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
         moves3.subtract(PokemonInfo::PreEvoMoves(pokeid,g));
 
         if (moves3.size() != moves.size()) {
-            if (moves3.empty() || (moves3.size() == 1 && PokemonInfo::HasMoveInGen(pokeid, *moves3.begin(), g)))
-                return true;
-
             int pokemon = PokemonInfo::PreEvo(pokeid.pokenum);
 
             int ab2;
