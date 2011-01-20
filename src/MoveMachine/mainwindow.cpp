@@ -44,24 +44,32 @@ void PokeMovesDb::init()
         pokes[id] = p;
     }
 
-//    /* Code to give evos the moves of their pre evos */
-//    for (int i =0; i < PokemonInfo::TrueCount(5); i++) {
-//        int preEvo = PokemonInfo::PreEvo(i);
+    /* Code to give evos the moves of their pre evos */
+    for (int i =0; i < PokemonInfo::TrueCount(5); i++) {
+        int preEvo = PokemonInfo::PreEvo(i);
 
-//        if (preEvo != 0) {
-//            pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[LevelMoves]);
-//            pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[PreEvoMoves]);
-//            pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[LevelMoves]);
-//            pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[TutorMoves]);
-//            pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[TMMoves]);
-//            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[LevelMoves]);
-//            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[PreEvoMoves]);
-//            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[LevelMoves]);
-//            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TutorMoves]);
-//            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TMMoves]);
-//            pokes[i].gens[2].moves[EggMoves].unite(pokes[preEvo].gens[2].moves[EggMoves]);
-//        }
-//    }
+        if (preEvo != 0) {
+            pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[LevelMoves]);
+            pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[PreEvoMoves]);
+            pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[SpecialMoves]);
+            pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[LevelMoves]);
+            pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[TutorMoves]);
+            pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[TMMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[LevelMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[SpecialMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[PreEvoMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[LevelMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TutorMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TMMoves]);
+            pokes[i].gens[1].moves[PreEvoMoves].unite(pokes[preEvo].gens[1].moves[LevelMoves]);
+            pokes[i].gens[1].moves[PreEvoMoves].unite(pokes[preEvo].gens[1].moves[SpecialMoves]);
+            pokes[i].gens[1].moves[PreEvoMoves].unite(pokes[preEvo].gens[1].moves[PreEvoMoves]);
+            pokes[i].gens[1].moves[PreEvoMoves].subtract(pokes[i].gens[1].moves[LevelMoves]);
+            pokes[i].gens[1].moves[PreEvoMoves].subtract(pokes[i].gens[1].moves[TutorMoves]);
+            pokes[i].gens[1].moves[PreEvoMoves].subtract(pokes[i].gens[1].moves[TMMoves]);
+            //pokes[i].gens[2].moves[EggMoves].unite(pokes[preEvo].gens[2].moves[EggMoves]);
+        }
+    }
 }
 
 void PokeMovesDb::save()
