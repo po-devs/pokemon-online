@@ -5677,7 +5677,7 @@ struct MMGrowth : public MM
 struct MMTriAttack : public MM
 {
     MMTriAttack() {
-        functions["UponAttackSuccessful"] = &uas;
+        functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
