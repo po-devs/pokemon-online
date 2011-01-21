@@ -264,6 +264,7 @@ public:
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
+    Q_INVOKABLE void inflictStatus(int battleId, bool toFirstPlayer, int slot, int status);
 signals:
     void clearTheChat();
 public slots:
