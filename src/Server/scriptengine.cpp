@@ -1970,3 +1970,11 @@ void ScriptEngine::inflictStatus(int battleId, bool toFirstPlayer, int slot, int
         warn("inflictStatus", "can't find a battle with specified id.");
     }
 }
+
+void ScriptEngine::modifyPokeStat(int poke, int stat, quint8 value)
+{
+    bool res = PokemonInfo::modifyBaseStat(Pokemon::uniqueId(poke), stat, value);
+    if (!res) {
+        warn("modifyPokeStat", "unable to modify.");
+    }
+}
