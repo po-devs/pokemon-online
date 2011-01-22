@@ -265,6 +265,7 @@ public:
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
     Q_INVOKABLE void inflictStatus(int battleId, bool toFirstPlayer, int slot, int status);
+    Q_INVOKABLE void modifyPokeStat(int poke, int stat, quint8 value);
 signals:
     void clearTheChat();
 public slots:
