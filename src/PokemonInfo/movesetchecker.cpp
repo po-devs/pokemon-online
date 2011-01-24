@@ -14,6 +14,36 @@ QString MoveSetChecker::path(const QString &arg)
     return dir + arg;
 }
 
+void MoveSetChecker::loadCombinations(const QString &file, int gen)
+{
+    QFile in(file);
+    in.open(QIODevice::ReadOnly);
+    QList<QByteArray> pokes = in.readAll().split('\n');
+
+    foreach(QByteArray poke, pokes) {
+        Pokemon::uniqueId id;
+        QString data;
+        if (!id.extract(QString(poke), id, data))
+            continue;
+        /* Even if the hash is empty, it proves it's here, otherwise it would be filled by the data of
+           the base forme */
+        if (!legalCombinations[gen-GEN_MIN].contains(id))
+            legalCombinations[gen-GEN_MIN].insert(id, QList<QSet<int > >());
+
+        if (data.length() > 0) {
+            QStringList combs = data.split('|');
+            foreach(QString comb, combs) {
+                QStringList moves = comb.split(' ');
+                QSet<int> toPush;
+                foreach(QString move, moves) {
+                    toPush.insert(move.toInt());
+                }
+                legalCombinations[gen-GEN_MIN][id].push_back(toPush);
+            }
+        }
+    }
+}
+
 void MoveSetChecker::init(const QString &dir)
 {
     MoveSetChecker::dir = dir;
@@ -21,30 +51,11 @@ void MoveSetChecker::init(const QString &dir)
     QList<Pokemon::uniqueId> ids = PokemonInfo::AllIds();
 
     for (int gen = GEN_MIN; gen <= GEN_MAX; gen++) {
-        QFile in(path("legal_combinations_" + QString::number(gen) + "G.txt"));
-        in.open(QIODevice::ReadOnly);
-        QList<QByteArray> pokes = in.readAll().split('\n');
+        /* Egg move combinations */
+        loadCombinations(path("legal_combinations_" + QString::number(gen) + "G.txt"), gen);
 
-        foreach(QByteArray poke, pokes) {
-            Pokemon::uniqueId id;
-            QString data;
-            if (!id.extract(QString(poke), id, data))
-                continue;
-            /* Even if the hash is empty, it proves it's here, otherwise it would be filled by the data of
-               the base forme */
-            legalCombinations[gen-GEN_MIN].insert(id, QList<QSet<int > >());
-            if (data.length() > 0) {
-                QStringList combs = data.split('|');
-                foreach(QString comb, combs) {
-                    QStringList moves = comb.split(' ');
-                    QSet<int> toPush;
-                    foreach(QString move, moves) {
-                        toPush.insert(move.toInt());
-                    }
-                    legalCombinations[gen-GEN_MIN][id].push_back(toPush);
-                }
-            }
-        }
+        /* Event move combinations */
+        loadCombinations(path("event_combinations_" + QString::number(gen) + "G.txt"), gen);
 
         foreach(Pokemon::uniqueId id, ids) {
             if (!PokemonInfo::IsForme(id))
