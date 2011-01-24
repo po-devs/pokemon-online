@@ -8,6 +8,7 @@ class MoveSetChecker
 {
 public:
     static void init(const QString &dir);
+    static void loadCombinations(const QString &file, int gen);
     static bool isValid(const Pokemon::uniqueId &pokeid, int gen, const QSet<int> &moves, int ability = 0, int gender = 0,
                         bool maledw = false, QSet<int> *invalid_moves=NULL, QString *error = NULL);
     static bool isValid(const Pokemon::uniqueId &pokeid, int gen, int move1,int move2, int move3, int move4, int ability = 0, int gender = 0,
