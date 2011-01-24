@@ -7,6 +7,8 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 #include "pokemoninfo.h"
 
 QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::legalCombinations[NUMBER_GENS];
+QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::eventCombinations[NUMBER_GENS];
+QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::breedingCombinations[NUMBER_GENS];
 QString MoveSetChecker::dir;
 
 QString MoveSetChecker::path(const QString &arg)
@@ -14,7 +16,7 @@ QString MoveSetChecker::path(const QString &arg)
     return dir + arg;
 }
 
-void MoveSetChecker::loadCombinations(const QString &file, int gen)
+void MoveSetChecker::loadCombinations(const QString &file, int gen, QHash<Pokemon::uniqueId, QList<QSet<int> > > *set)
 {
     QFile in(file);
     in.open(QIODevice::ReadOnly);
@@ -29,6 +31,7 @@ void MoveSetChecker::loadCombinations(const QString &file, int gen)
            the base forme */
         if (!legalCombinations[gen-GEN_MIN].contains(id))
             legalCombinations[gen-GEN_MIN].insert(id, QList<QSet<int > >());
+        set[gen-GEN_MIN].insert(id, QList<QSet<int > >());
 
         if (data.length() > 0) {
             QStringList combs = data.split('|');
@@ -39,6 +42,7 @@ void MoveSetChecker::loadCombinations(const QString &file, int gen)
                     toPush.insert(move.toInt());
                 }
                 legalCombinations[gen-GEN_MIN][id].push_back(toPush);
+                set[gen-GEN_MIN][id].push_back(toPush);
             }
         }
     }
@@ -52,10 +56,10 @@ void MoveSetChecker::init(const QString &dir)
 
     for (int gen = GEN_MIN; gen <= GEN_MAX; gen++) {
         /* Egg move combinations */
-        loadCombinations(path("legal_combinations_" + QString::number(gen) + "G.txt"), gen);
+        loadCombinations(path("legal_combinations_" + QString::number(gen) + "G.txt"), gen, breedingCombinations);
 
         /* Event move combinations */
-        loadCombinations(path("event_combinations_" + QString::number(gen) + "G.txt"), gen);
+        loadCombinations(path("event_combinations_" + QString::number(gen) + "G.txt"), gen, eventCombinations);
 
         foreach(Pokemon::uniqueId id, ids) {
             if (!PokemonInfo::IsForme(id))
@@ -216,4 +220,9 @@ bool MoveSetChecker::isAnEggMoveCombination(const Pokemon::uniqueId &pokeid, int
 QList<QSet<int> > MoveSetChecker::combinationsFor(Pokemon::uniqueId pokenum, int gen)
 {
     return legalCombinations[gen-GEN_MIN].value(pokenum);
+}
+
+QHash<Pokemon::uniqueId, QList<QSet<int> > > MoveSetChecker::eventCombinationsOf(int gen)
+{
+    return eventCombinations[gen-GEN_MIN];
 }
