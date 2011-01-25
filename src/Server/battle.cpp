@@ -849,7 +849,7 @@ void BattleSituation::analyzeChoice(int slot)
             shiftSpots(slot, target);
         }
     } else {
-        /* FATAL§ FATAL§ */
+        /* FATAL FATAL */
     }
     notify(All, BlankMessage, Player1);
 }
