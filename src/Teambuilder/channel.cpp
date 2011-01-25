@@ -219,7 +219,7 @@ void Channel::battleEnded(int battleid, int res, int winner, int loser)
         delete battleItems.take(battleid);
     }
 
-    if (client->showPEvents || winner == ownId() || loser == ownId()) {
+    if (client->showPEvents || winner == ownId() || loser == ownId() || client->mySpectatingBattles.contains(battleid)) {
         if (res == Forfeit) {
             printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)));
         } else if (res == Tie) {

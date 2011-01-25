@@ -19,7 +19,7 @@ MainEngine::MainEngine() : displayer(0)
     QSettings settings;
     /* initializing the default init values if not there */
     setDefaultValue("application_style", "plastique");
-    setDefaultValue("theme_new", "Themes/Dratini Dreams/");
+    setDefaultValue("theme_1", "Themes/G6/");
 
 #ifdef Q_OS_MACX
     setDefaultValue("team_location", QDir::homePath() + "/Documents/trainer.tp");
@@ -57,7 +57,7 @@ MainEngine::MainEngine() : displayer(0)
     GenderInfo::init("db/genders/");
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
-    Theme::init(settings.value("theme_new").toString());
+    Theme::init(settings.value("theme_1").toString());
 
     QStringList moves;
     for (int i = 0; i < MoveInfo::NumberOfMoves(); i++) {
@@ -220,7 +220,7 @@ void MainEngine::changeTheme(const QString &theme)
     QSettings settings;
 
     QString fullTheme = "Themes/" + theme + "/";
-    settings.setValue("theme_new", fullTheme);
+    settings.setValue("theme_1", fullTheme);
 
     Theme::Reload(fullTheme);
     loadStyleSheet();
@@ -310,7 +310,7 @@ void MainEngine::addThemeMenu(QMenuBar *menuBar)
     QList<QFileInfo> dirs = d.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
 
     QSettings s;
-    QString theme = s.value("theme_new").toString().section('/', -2, -2);
+    QString theme = s.value("theme_1").toString().section('/', -2, -2);
 
     QActionGroup *ag = new QActionGroup(themeMenu);
     foreach(QFileInfo f, dirs) {
