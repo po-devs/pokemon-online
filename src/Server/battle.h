@@ -456,6 +456,7 @@ public:
         int level;
 
         int moves[4];
+        int pps[4];
         int dvs[6];
         int stats[6];
         //The boost in HP is useless but avoids headaches

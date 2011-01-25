@@ -3808,7 +3808,10 @@ void BattleSituation::testWin()
 
 void BattleSituation::changePP(int player, int move, int PP)
 {
-    poke(player).move(move).PP() = PP;
+    fpoke(player).pps[move] = PP;
+
+    if (fpoke(player).moves[move] == poke(player).move(move).num())
+        poke(player).move(move).PP() = PP;
 
     notify(this->player(player), ChangePP, player, quint8(move), poke(player).move(move).PP());
 }
