@@ -17,6 +17,7 @@ public:
     static bool isAnEggMoveCombination(const Pokemon::uniqueId &pokeid, int gen, QSet<int> moves);
     static QList<QSet<int> > combinationsFor(Pokemon::uniqueId pokenum, int gen);
     static QHash<Pokemon::uniqueId, QList<QSet<int> > > eventCombinationsOf(int gen);
+    static QHash<Pokemon::uniqueId, QList<QSet<int> > > breedingCombinationsOf(int gen);
 private:
     static QHash<Pokemon::uniqueId, QList<QSet<int> > > legalCombinations[NUMBER_GENS];
     static QHash<Pokemon::uniqueId, QList<QSet<int> > > breedingCombinations[NUMBER_GENS];

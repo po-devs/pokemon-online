@@ -1,3 +1,9 @@
+namespace Pokemon {
+    class uniqueId;
+}
+unsigned int qHash (const Pokemon::uniqueId &key);
+
+
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/movesetchecker.h"
 #include <algorithm>
@@ -43,8 +49,8 @@ int main(int, char**)
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    int pokenum = 649;
     int gen = 5;
+    int pokenum = PokemonInfo::TrueCount(gen);
 
     qDebug() << "Gen " << gen;
     qDebug() << "Pokemons: " << pokenum;
@@ -74,6 +80,8 @@ int main(int, char**)
     foreach(QString s, pokesOfGroup.keys().toSet()) {
         qDebug() << "Group " << s;;
     }
+
+    QHash<Pokemon::uniqueId, QList<QSet<int> > > oldC = MoveSetChecker::breedingCombinationsOf(gen);
 
     for (int i = 0; i<= pokenum; i++)
     {
@@ -109,7 +117,7 @@ int main(int, char**)
 
         QList<int> toList = eggMoves.toList();
 
-        QList<QSet<int> > combinations = MoveSetChecker::combinationsFor(i, gen);
+        QList<QSet<int> > combinations = oldC[i];
         allCombinations = combinations.toSet();
 
         foreach(int move, toList) {
@@ -167,7 +175,7 @@ int main(int, char**)
             }
         }
         /* Adding all the combinations of special moves */
-        legalCombinations[i].unite(MoveSetChecker::combinationsFor(i, gen).toSet());
+        legalCombinations[i].unite(combinations.toSet());
 
         for(int c = 0;c < 2; c++) {
             if (groups[c].trimmed().length() == 0) {
@@ -200,7 +208,6 @@ int main(int, char**)
                             copy.remove(move);
                         }
                     }
-
                     /* Now then, if copy.size() is 0 then all moves in the combination are
                        part from the regular moves of the father. Otherwise, all regular moves
                         are removed and the remaining moves are in copy and tested to see if the
