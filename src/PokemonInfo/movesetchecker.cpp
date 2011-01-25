@@ -226,3 +226,8 @@ QHash<Pokemon::uniqueId, QList<QSet<int> > > MoveSetChecker::eventCombinationsOf
 {
     return eventCombinations[gen-GEN_MIN];
 }
+
+QHash<Pokemon::uniqueId, QList<QSet<int> > > MoveSetChecker::breedingCombinationsOf(int gen)
+{
+    return breedingCombinations[gen-GEN_MIN];
+}
