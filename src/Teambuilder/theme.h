@@ -7,7 +7,7 @@ class QImageButton;
 class QImageButtonP;
 class QImageButtonLR;
 
-#define DEFAULT_PO_THEME "Dratini Dreams"
+#define DEFAULT_PO_THEME "Classic"
 
 class Theme {
 public:

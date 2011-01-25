@@ -30,6 +30,8 @@ class QExposedTabWidget;
 class Client : public QWidget, public CentralWidgetInterface
 {
     Q_OBJECT
+
+    friend class Channel;
 public:
     Client(TrainerTeam *, const QString &url, const quint16 port);
     ~Client();

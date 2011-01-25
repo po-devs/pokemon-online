@@ -192,7 +192,7 @@ int main(int, char**)
                 //We get the regular moves of that poke
                 QSet<int> regularMoves = PokemonInfo::RegularMoves(poke, gen);
                 //And now the "special moves" of that poke.
-                QSet<int> specialMoves = PokemonInfo::EggMoves(poke,gen).unite(PokemonInfo::SpecialMoves(poke,gen));
+                QSet<int> specialMoves = PokemonInfo::EggMoves(poke,gen).unite(PokemonInfo::SpecialMoves(poke,gen)).unite(PokemonInfo::PreEvoMoves(poke, gen));
 
                 /* And now, we assume that the poke can inherit only 1 special move of the father and any number of regular moves.
                    Of course that may not be true, and some poke given in events have many eggmoves or egg moves
