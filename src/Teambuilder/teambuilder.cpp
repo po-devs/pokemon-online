@@ -561,6 +561,7 @@ void TB_TrainerBody::updateTrainer()
     m_nick->setText(trainerTeam()->trainerNick());
     m_winMessage->setPlainText(trainerTeam()->trainerWin());
     m_loseMessage->setPlainText(trainerTeam()->trainerLose());
+    m_tier->setText(trainerTeam()->defaultTier());
     changeTrainerAvatar(trainerTeam()->avatar());
 }
 
