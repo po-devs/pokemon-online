@@ -2164,3 +2164,13 @@ void MoveInfo::setPriority(int movenum, signed char priority, int moveGen)
 {
     gen(moveGen).priority[movenum] = priority;
 }
+
+bool PokemonInfo::modifyBaseStat(const Pokemon::uniqueId &pokeid, int stat, quint8 value)
+{
+    if ((stat >= Hp) && (stat <= Speed) && Exists(pokeid)) {
+        m_BaseStats[pokeid].setBaseStat(stat, value);
+        return true;
+    }else{
+        return false;
+    }
+}
