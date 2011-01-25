@@ -90,6 +90,7 @@ public:
     static Pokemon::uniqueId getRandomPokemon(int gen=GEN_MAX);
 
     static bool modifyAbility(const Pokemon::uniqueId &pokeid, int slot, int ability, int gen = GEN_MAX);
+    static bool modifyBaseStat(const Pokemon::uniqueId &pokeid, int stat, quint8 value);
 private:
     // m_Names is a base.
     // It is assumed that anything that is not there do not exist at all.
