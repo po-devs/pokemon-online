@@ -339,6 +339,17 @@ int Tier::rating(const QString &name)
     }
 }
 
+int Tier::ratedBattles(const QString &name)
+{
+    if (!holder.isInMemory(name))
+        loadMemberInMemory(name);
+    if (exists(name)) {
+        return holder.member(name).matches;
+    } else {
+        return 0;
+    }
+}
+
 void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
 {
     QString n2 = name.toLower();
