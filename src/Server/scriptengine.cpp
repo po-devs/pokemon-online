@@ -1966,3 +1966,29 @@ QScriptValue ScriptEngine::teamPokeNick(int id, int index)
         return myserver->player(id)->team().poke(index).nick();
     }
 }
+
+void ScriptEngine::inflictStatus(int battleId, bool toFirstPlayer, int slot, int status)
+{
+    if (!testRange("inflictStatus", status, Pokemon::Fine, Pokemon::Koed)
+        || !testRange("inflictStatus", slot, 0, 5)) {
+        return;
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if (battle) {
+        if (toFirstPlayer) {
+            battle->changeStatus(0, slot, status);
+        }else{
+            battle->changeStatus(1, slot, status);
+        }
+    }else{
+        warn("inflictStatus", "can't find a battle with specified id.");
+    }
+}
+
+void ScriptEngine::modifyPokeStat(int poke, int stat, quint8 value)
+{
+    bool res = PokemonInfo::modifyBaseStat(Pokemon::uniqueId(poke), stat, value);
+    if (!res) {
+        warn("modifyPokeStat", "unable to modify.");
+    }
+}
