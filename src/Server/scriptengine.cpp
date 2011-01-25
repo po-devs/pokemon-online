@@ -1122,12 +1122,26 @@ QScriptValue ScriptEngine::ranking(int id)
     return ranking(p->name(), p->tier());
 }
 
+QScriptValue ScriptEngine::ratedBattles(int id)
+{
+    Player *p = myserver->player(id);
+    return ratedBattles(p->name(), p->tier());
+}
+
 QScriptValue ScriptEngine::ranking(const QString &name, const QString &tier)
 {
     if (!TierMachine::obj()->existsPlayer(tier, name)) {
         return myengine.undefinedValue();
     }
     return TierMachine::obj()->ranking(name, tier);
+}
+
+QScriptValue ScriptEngine::ratedBattles(const QString &name, const QString &tier)
+{
+    if (!TierMachine::obj()->existsPlayer(tier, name)) {
+        return 0;
+    }
+    return TierMachine::obj()->tier(tier).ratedBattles(name);
 }
 
 QScriptValue ScriptEngine::totalPlayersByTier(const QString &tier)
