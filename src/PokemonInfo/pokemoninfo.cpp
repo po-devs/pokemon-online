@@ -816,11 +816,11 @@ bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
 
 void PokemonInfo::loadMoves()
 {
-    static const int filesize = 18;
+    static const int filesize = 19;
 
     QString fileNames[filesize] = {
         path("3G_tm_and_hm_moves.txt"), path("3G_egg_moves.txt"), path("3G_level_moves.txt"),
-        path("3G_tutor_moves.txt"), path("3G_special_moves.txt"), path("4G_tm_and_hm_moves.txt"),
+        path("3G_tutor_moves.txt"), path("3G_special_moves.txt"), path("3G_pre_evo_moves.txt"), path("4G_tm_and_hm_moves.txt"),
         path("4G_pre_evo_moves.txt"), path("4G_egg_moves.txt"), path("4G_level_moves.txt"),
         path("4G_tutor_moves.txt"), path("4G_special_moves.txt"), path("5G_tm_and_hm_moves.txt"),
         path("5G_pre_evo_moves.txt"), path("5G_egg_moves.txt"), path("5G_level_moves.txt"),
@@ -847,7 +847,7 @@ void PokemonInfo::loadMoves()
                 // in m_Moves if it does not exist.
                 PokemonMoves &moves = m_Moves[pokeid];
                 QSet<int> *refs[filesize] = {
-                    &moves.TMMoves[0], &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0],
+                    &moves.TMMoves[0], &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0], &moves.preEvoMoves[0],
                     &moves.TMMoves[1], &moves.preEvoMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1],
                     &moves.TMMoves[2], &moves.preEvoMoves[2], &moves.eggMoves[2], &moves.levelMoves[2], &moves.tutorMoves[2], &moves.specialMoves[2],
                     &moves.dreamWorldMoves
