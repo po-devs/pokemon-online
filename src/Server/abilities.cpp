@@ -1233,7 +1233,7 @@ struct AMSandPower : public AM {
             int t = type(b,s);
 
             if (t == Type::Rock || t == Type::Steel || t == Type::Ground) {
-                turn(b,s)["BasePowerAbilityModifier"] = 10;
+                turn(b,s)["BasePowerAbilityModifier"] = 6;
             }
         }
     }
