@@ -61,6 +61,12 @@ public:
     TierTree *getDataTree() const;
 
     static const int playersByPage = 40;
+
+    int alt_expiration;
+    int hours_per_period;
+    int percent_per_period;
+    int max_saved_periods;
+    int max_percent_decay;
 signals:
     void tiersChanged();
 public slots:

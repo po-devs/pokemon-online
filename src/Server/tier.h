@@ -23,12 +23,23 @@ struct MemberRating
     QString name;
     int matches;
     int rating;
+    int displayed_rating;
+    int last_check_time;
+    int bonus_time;
 
-    MemberRating(const QString &name="", int matches=0, int rating=1000) : name(name.toLower()), matches(matches), rating(rating) {
+    MemberRating(const QString &name="", int matches=0, int rating=1000, int displayed_rating = 1000,
+                 int last_check_time = -1, int bonus_time = 0) : name(name.toLower()), matches(matches), rating(rating),
+                   displayed_rating(displayed_rating), bonus_time(bonus_time) {
+        if (last_check_time == -1) {
+            this->last_check_time = time(NULL);
+        } else {
+            this->last_check_time = last_check_time;
+        }
     }
 
     QString toString() const;
     void changeRating(int other, bool win);
+    void calculateDisplayedRating();
     QPair<int, int> pointChangeEstimate(int otherRating);
 };
 
