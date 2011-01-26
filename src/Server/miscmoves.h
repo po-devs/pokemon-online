@@ -42,7 +42,7 @@ struct MMDisable : public MM
             }
         }
 
-        if (sl == -1 || b.poke(t).move(sl).PP() == 0 ) {
+        if (sl == -1 || b.PP(t, sl) == 0 ) {
             return true;
         }
 
