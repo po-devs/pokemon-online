@@ -504,8 +504,10 @@ Pokemon::uniqueId PokemonInfo::NonAestheticForme(Pokemon::uniqueId id)
 QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gender, bool shiney, bool back)
 {
     QString archive;
-    if (gen <= 4)
-        archive = path("poke_img.zip");
+    if (gen == 3)
+        archive = path("advance.zip");
+    else if (gen == 4)
+        archive = path("hgss.zip");
     else
         archive = path("black_white.zip");
 
