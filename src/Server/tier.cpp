@@ -4,6 +4,7 @@ namespace Pokemon {
 unsigned int qHash (const Pokemon::uniqueId &key);
 
 #include <QtXml>
+#include <QtSql/QSqlRecord>
 #include <cmath>
 #include <ctime>
 #include "../PokemonInfo/pokemoninfo.h"
@@ -18,15 +19,53 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 QString MemberRating::toString() const
 {
     return name + "%" + QString::number(matches) + "%" +
-            QString::number(rating) + "\n";
+            QString::number(rating) + "%" + QString::number(displayed_rating) + "%" +
+            QString::number(last_check_time) + "%" + QString::number(bonus_time) + "\n";
 }
 
+/* Explanations here: http://pokemon-online.eu/forums/showthread.php?3045-How-to-change-the-rating-system-to-include-auto-decrease
+   and here: http://pokemon-online.eu/forums/showthread.php?4189-New-Rating-system&p=40368#post40368 */
 void MemberRating::changeRating(int opponent_rating, bool win)
 {
     QPair<int,int> change = pointChangeEstimate(opponent_rating);
 
     matches += 1;
     rating = rating + (win ? change.first : change.second);
+
+    const int hpp = TierMachine::obj()->hours_per_period;
+    const int msp = TierMachine::obj()->max_saved_periods;
+    const int mpd = TierMachine::obj()->max_percent_decay;
+    const int ppp = TierMachine::obj()->percent_per_period;
+
+    bonus_time = bonus_time + (hpp* 3600);
+
+    if (bonus_time > msp * hpp * 3600)
+        bonus_time = msp * hpp * 3600;
+    else if (bonus_time < 0 && ((-bonus_time)/(hpp*3600)*ppp) > mpd) {
+        bonus_time = - ((mpd/ppp)+1) * hpp * 3600;
+    }
+
+}
+
+void MemberRating::calculateDisplayedRating()
+{
+    int cur_time = time(NULL);
+    int diff = cur_time - last_check_time;
+    last_check_time = cur_time;
+
+    bonus_time = bonus_time - diff;
+
+    if (bonus_time > 0)
+        displayed_rating = rating;
+    else {
+        int percent =  (bonus_time/(TierMachine::obj()->hours_per_period*3600))*TierMachine::obj()->percent_per_period;
+
+        if (percent > TierMachine::obj()->max_percent_decay) {
+            percent = TierMachine::obj()->max_percent_decay;
+        }
+
+        displayed_rating = 1000 + (rating-1000) * (100 - percent) / 100;
+    }
 }
 
 QPair<int, int> MemberRating::pointChangeEstimate(int opponent_rating)
@@ -69,21 +108,39 @@ void Tier::loadFromFile()
 
     query.exec(QString("select * from %1 limit 1").arg(sql_table));
 
-    if (!query.next()) {
+    int count = query.record().count();
+
+    /* That's an outdated database, before decaying ratings were introduced */
+    if (count == 4) {
+        /* Outdated database */
+        QSqlDatabase::database().transaction();
+        query.exec(QString("alter table %1 add column displayed_rating int").arg(sql_table));
+        query.exec(QString("alter table %1 add column last_check_time int").arg(sql_table));
+        query.exec(QString("alter table %1 add column bonus_time int").arg(sql_table));
+        query.exec(QString("update %1 set bonus_time=0").arg(sql_table));
+        query.exec(QString("update %1 set displayed_rating=rating").arg(sql_table));
+        query.exec(QString("update %1 set last_check_time=%2").arg(sql_table).arg(QString::number(time(NULL))));
+        query.exec(QString("drop index tierrating_index"));
+        query.exec(QString("drop index tiername_index"));
+        query.exec(QString("create index %1_tiername_index on %1 (name)").arg(sql_table));
+        query.exec(QString("create index %1_tierrating_index on %1 (displayed_rating)").arg(sql_table));
+
+        QSqlDatabase::database().commit();
+    } else if (!query.next()) {
         if (SQLCreator::databaseType == SQLCreator::PostGreSQL) {
             /* The only way to have an auto increment field with PostGreSQL is to my knowledge using the serial type */
-            query.exec(QString("create table %1 (id serial, name varchar(20), rating int, matches int, primary key(id))").arg(sql_table));
+            query.exec(QString("create table %1 (id serial, name varchar(20), rating int, displayed_rating int, last_check_time int, bonus_time int, matches int, primary key(id))").arg(sql_table));
         } else if (SQLCreator::databaseType == SQLCreator::MySQL){
-            query.exec(QString("create table %1 (id integer auto_increment, name varchar(20) unique, rating int, matches int, primary key(id))").arg(sql_table));
+            query.exec(QString("create table %1 (id integer auto_increment, name varchar(20) unique, rating int, displayed_rating int, last_check_time int, bonus_time int, matches int, primary key(id))").arg(sql_table));
         } else if (SQLCreator::databaseType == SQLCreator::SQLite){
             /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
-            query.exec(QString("create table %1 (id integer primary key autoincrement, name varchar(20) unique, rating int, matches int)").arg(sql_table));
+            query.exec(QString("create table %1 (id integer primary key autoincrement, name varchar(20) unique, rating int, displayed_rating int, last_check_time int, bonus_time int, matches int)").arg(sql_table));
         } else {
             throw QString("Using a not supported database");
         }
 
-        query.exec(QString("create index tiername_index on %1 (name)").arg(sql_table));
-        query.exec(QString("create index tierrating_index on %1 (rating)").arg(sql_table));
+        query.exec(QString("create index %1_tiername_index on %1 (name)").arg(sql_table));
+        query.exec(QString("create index %1_tierrating_index on %1 (displayed_rating)").arg(sql_table));
 
         Server::print(QString("Importing old database for tier %1 to table %2").arg(name(), sql_table));
 
@@ -94,24 +151,48 @@ void Tier::loadFromFile()
 
         clock_t t = clock();
 
-        query.prepare(QString("insert into %1(name, rating, matches) values (:name, :rating, :matches)").arg(sql_table));
+        if (members.size() > 0) {
+            int count = members[0].split('%').size();
 
-        QSqlDatabase::database().transaction();
+            QSqlDatabase::database().transaction();
+            if (count == 3) {
+                query.prepare(QString("insert into %1(name, rating, matches) values (:name, :rating, :matches)").arg(sql_table));
 
-        foreach(QString member, members) {
-            QString m2 = member.toLower();
-            QStringList mmr = m2.split('%');
-            if (mmr.size() != 3)
-                continue;
+                foreach(QString member, members) {
+                    QString m2 = member.toLower();
+                    QStringList mmr = m2.split('%');
+                    if (mmr.size() != 3)
+                        continue;
 
-            query.bindValue(":name", mmr[0]);
-            query.bindValue(":matches", mmr[1].toInt());
-            query.bindValue(":rating", mmr[2].toInt());
+                    query.bindValue(":name", mmr[0]);
+                    query.bindValue(":matches", mmr[1].toInt());
+                    query.bindValue(":rating", mmr[2].toInt());
 
-            query.exec();
+                    query.exec();
+                }
+            } else if (count == 6) {
+                query.prepare(QString("insert into %1(name, rating, displayed_rating, last_check_time, bonus_time, matches) "
+                                      "values (:name, :rating, :displayed_rating, :last_check_time, :bonus_time, :matches)").arg(sql_table));
+
+                foreach(QString member, members) {
+                    QString m2 = member.toLower();
+                    QStringList mmr = m2.split('%');
+                    if (mmr.size() != 3)
+                        continue;
+
+                    query.bindValue(":name", mmr[0]);
+                    query.bindValue(":matches", mmr[1].toInt());
+                    query.bindValue(":rating", mmr[2].toInt());
+                    query.bindValue(":displayed_rating", mmr[3].toInt());
+                    query.bindValue(":last_check_time", mmr[4].toInt());
+                    query.bindValue(":bonus_time", mmr[5].toInt());
+
+                    query.exec();
+                }
+            }
+
+            QSqlDatabase::database().commit();
         }
-        
-        QSqlDatabase::database().commit();
 
         t = clock() - t;
 
@@ -333,7 +414,7 @@ int Tier::rating(const QString &name)
     if (!holder.isInMemory(name))
         loadMemberInMemory(name);
     if (exists(name)) {
-        return holder.member(name).rating;
+        return holder.member(name).displayed_rating;
     } else {
         return 1000;
     }
@@ -409,10 +490,10 @@ void Tier::exportDatabase() const
     QSqlQuery q;
     q.setForwardOnly(true);
 
-    q.exec(QString("select name, matches, rating from %1 order by name asc").arg(sql_table));
+    q.exec(QString("select name, matches, rating, displayed_rating, last_check_time, bonus_time from %1 order by name asc").arg(sql_table));
 
     while (q.next()) {
-        MemberRating m(q.value(0).toString(), q.value(1).toInt(), q.value(2).toInt());
+        MemberRating m(q.value(0).toString(), q.value(1).toInt(), q.value(2).toInt(), q.value(3).toInt(), q.value(4).toInt(), q.value(5).toInt());
         out.write(m.toString().toUtf8());
     }
 
@@ -423,13 +504,13 @@ void Tier::exportDatabase() const
 void Tier::processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w)
 {
     if (type == GetInfoOnUser) {
-        q->prepare(QString("select matches, rating from %1 where name=? limit 1").arg(sql_table));
+        q->prepare(QString("select matches, rating, displayed_rating, last_check_time, bonus_time from %1 where name=? limit 1").arg(sql_table));
         q->addBindValue(name);
         q->exec();
         if (!q->next()) {
             holder.addNonExistant(name.toString());
         } else {
-            MemberRating m(name.toString(), q->value(0).toInt(), q->value(1).toInt());
+            MemberRating m(name.toString(), q->value(0).toInt(), q->value(1).toInt(), q->value(2).toInt(), q->value(3).toInt(), q->value(4).toInt());
             holder.addMemberInMemory(m);
         }
         q->finish();
@@ -445,9 +526,9 @@ void Tier::processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObj
         }
 
         if (SQLCreator::databaseType == SQLCreator::PostGreSQL)
-            q->prepare(QString("select name, rating from %1 order by rating desc, name asc offset ? limit ?").arg(sql_table));
+            q->prepare(QString("select name, displayed_rating from %1 order by rating desc, name asc offset ? limit ?").arg(sql_table));
         else
-            q->prepare(QString("select name, rating from %1 order by rating desc, name asc limit ?, ?").arg(sql_table));
+            q->prepare(QString("select name, displayed_rating from %1 order by rating desc, name asc limit ?, ?").arg(sql_table));
 
         q->addBindValue((p-1)*TierMachine::playersByPage);
         q->addBindValue(TierMachine::playersByPage);
@@ -471,13 +552,18 @@ void Tier::insertMember(QSqlQuery *q, void *data, int update)
     MemberRating *m = (MemberRating*) data;
 
     if (update)
-        q->prepare(QString("update %1 set matches=:matches, rating=:rating where name=:name").arg(sql_table));
+        q->prepare(QString("update %1 set matches=:matches, rating=:rating, displayed_rating=:displayed_rating, last_check_time=:last_check_time,"
+                           "bonus_time=:bonus_time where name=:name").arg(sql_table));
     else
-        q->prepare(QString("insert into %1(name, matches, rating) values(:name, :matches, :rating)").arg(sql_table));
+        q->prepare(QString("insert into %1(name, matches, rating, displayed_rating, last_check_time, bonus_time)"
+                           "values(:name, :matches, :rating, :displayed_rating, :last_check_time, :bonus_time)").arg(sql_table));
 
     q->bindValue(":name", m->name);
     q->bindValue(":matches", m->matches);
     q->bindValue(":rating", m->rating);
+    q->bindValue(":displayed_rating", m->displayed_rating);
+    q->bindValue(":last_check_time", m->last_check_time);
+    q->bindValue(":bonus_time", m->bonus_time);
 
     q->exec();
     q->finish();
