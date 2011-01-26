@@ -78,17 +78,17 @@ struct BMLeppa : public BM
             if (b.move(s, i) == 0) {
                 continue;
             }
-            if (b.poke(s).move(i).PP() == 0) {
+            if (b.PP(s, i) == 0) {
                 zeroPP = true;
                 init = true;
                 minmove = i;
                 minPP = 0;
                 break;
             }
-            if (b.poke(s).move(i).PP() < minPP && b.poke(s).move(i).PP() < b.poke(s).move(i).totalPP()) {
+            if (b.PP(s, i) < minPP && b.PP(s, i) < b.poke(s).move(i).totalPP()) {
                 minmove = i;
                 init = true;
-                minPP = b.poke(s).move(i).PP();
+                minPP = b.PP(s, i);
             }
         }
             

@@ -222,6 +222,7 @@ public:
     bool isWeatherWorking(int weather);
     bool isSeductionPossible(int seductor, int naiveone);
     int move(int player, int slot);
+    int PP(int player, int slot) const;
     bool hasMove(int player, int move);
     int getType(int player, int slot);
     bool isFlying(int player);
@@ -308,7 +309,8 @@ public:
         TempSprite,
         DefiniteForme,
         AestheticForme,
-        DefMove
+        DefMove,
+        TempPP
     };
 
     enum WeatherM
@@ -456,8 +458,8 @@ public:
         int level;
 
         int moves[4];
-        int pps[4];
-        int dvs[6];
+        quint8 pps[4];
+        quint8 dvs[6];
         int stats[6];
         //The boost in HP is useless but avoids headaches
         int boosts[8];

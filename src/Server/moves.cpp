@@ -674,7 +674,7 @@ struct MMHiddenPower : public MM
     }
 
     static void ms(int s, int, BS &b) {
-        int *dvs = fpoke(b,s).dvs;
+        quint8 *dvs = fpoke(b,s).dvs;
 
         int type = HiddenPowerInfo::Type(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
         tmove(b, s).type = type;
@@ -788,7 +788,7 @@ struct MMTrumpCard : public MM
 
     static void bcd(int s, int, BS &b)
     {
-	int n = b.poke(s).move(poke(b,s)["MoveSlot"].toInt()).PP();
+        int n = b.PP(s,poke(b,s)["MoveSlot"].toInt());
 	int mult;
 	switch(n) {
          case 0: mult = 200; break;
@@ -2219,7 +2219,7 @@ struct MMEncore : public MM
 		sl = i;
 	    }
 	}
-        if (sl == -1 || b.poke(t).move(sl).PP() == 0 ) {
+        if (sl == -1 || b.PP(t,sl) == 0 ) {
 	    turn(b,s)["Failed"] = true;
 	    return;
 	}
@@ -2265,7 +2265,7 @@ struct MMEncore : public MM
             return;
     	for (int i = 0; i < 4; i++) {
 	    if (b.move(s,i) == poke(b,s)["EncoresMove"].toInt()) {
-		if (b.poke(s).move(i).PP() <= 0) {
+                if (b.PP(s,i) <= 0) {
 		    removeFunction(poke(b,s), "MovesPossible", "Encore");
                     removeFunction(poke(b,s), "EndTurn611", "Encore");
 		    poke(b,s)["EncoresUntil"] = b.turn();
@@ -3932,7 +3932,7 @@ struct MMSpite : public MM
             return;
         }
         int slot = poke(b,t)["MoveSlot"].toInt();
-        if (b.poke(t).move(slot).PP() == 0) {
+        if (b.PP(t,slot) == 0) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -5698,6 +5698,40 @@ struct MMTriAttack : public MM
     }
 };
 
+struct MMCrossThunder : public MM
+{
+    MMCrossThunder() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void bcd(int s, int, BS &b) {
+        if (b.battleMemory().value("CrossFlame", -1) == b.turn())
+            tmove(b,s).power *= 2;
+    }
+
+    static void uas(int, int, BS &b) {
+        b.battleMemory()["CrossThunder"] = b.turn();
+    }
+};
+
+struct MMCrossFlame : public MM
+{
+    MMCrossFlame() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void bcd(int s, int, BS &b) {
+        if (b.battleMemory().value("CrossThunder", -1) == b.turn())
+            tmove(b,s).power *= 2;
+    }
+
+    static void uas(int, int, BS &b) {
+        b.battleMemory()["CrossFlame"] = b.turn();
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -5925,4 +5959,6 @@ void MoveEffect::init()
     REGISTER_MOVE(190, SideChange);
     REGISTER_MOVE(191, Growth);
     REGISTER_MOVE(192, TriAttack);
+    REGISTER_MOVE(193, CrossFlame);
+    REGISTER_MOVE(194, CrossThunder);
 }
