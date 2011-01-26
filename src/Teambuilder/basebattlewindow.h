@@ -172,7 +172,8 @@ public:
         TempSprite,
         DefiniteForme,
         AestheticForme,
-        DefMove
+        DefMove,
+        TempPP
     };
 
     enum WeatherM

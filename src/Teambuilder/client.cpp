@@ -1268,7 +1268,7 @@ void Client::awayChanged(int id, bool away)
 
 bool Client::busy() const
 {
-    return battling() || away();
+    return away();
 }
 
 bool Client::away() const

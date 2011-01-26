@@ -812,7 +812,12 @@ BattleChoices BattleSituation::createChoice(int slot)
 
 bool BattleSituation::isMovePossible(int player, int move)
 {
-    return (poke(player).move(move).PP() > 0 && turnMemory(player)["Move" + QString::number(move) + "Blocked"].toBool() == false);
+    return (PP(player, move) > 0 && turnMemory(player)["Move" + QString::number(move) + "Blocked"].toBool() == false);
+}
+
+int BattleSituation::PP(int player, int slot) const
+{
+    return fpoke(player).pps[slot];
 }
 
 void BattleSituation::analyzeChoice(int slot)
@@ -1378,6 +1383,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     for (int i = 0; i < 4; i++) {
         fpoke(slot).moves[i] = p.move(i).num();
+        fpoke(slot).pps[i] = p.move(i).PP();
     }
 
     for (int i = 1; i < 6; i++)
@@ -3810,15 +3816,18 @@ void BattleSituation::changePP(int player, int move, int PP)
 {
     fpoke(player).pps[move] = PP;
 
-    if (fpoke(player).moves[move] == poke(player).move(move).num())
+    if (fpoke(player).moves[move] == poke(player).move(move).num()) {
         poke(player).move(move).PP() = PP;
-
-    notify(this->player(player), ChangePP, player, quint8(move), poke(player).move(move).PP());
+        notify(this->player(player), ChangePP, player, quint8(move), fpoke(player).pps[move]);
+    }
+    else {
+        notify(this->player(player), ChangeTempPoke, player, quint8(TempPP), quint8(move), fpoke(player).pps[move]);
+    }
 }
 
 void BattleSituation::losePP(int player, int move, int loss)
 {
-    int PP = poke(player).move(move).PP();
+    int PP = this->PP(player, move);
 
     PP = std::max(PP-loss, 0);
     changePP(player, move, PP);
@@ -3826,7 +3835,7 @@ void BattleSituation::losePP(int player, int move, int loss)
 
 void BattleSituation::gainPP(int player, int move, int gain)
 {
-    int PP = poke(player).move(move).PP();
+    int PP = this->PP(player, move);
 
     PP = std::min(PP+gain, int(poke(player).move(move).totalPP()));
     changePP(player, move, PP);
