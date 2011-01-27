@@ -30,6 +30,7 @@ public:
     TierMachine();
 
     void load();
+    void loadDecaySettings();
     void clear();
     void save();
 

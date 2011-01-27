@@ -12,10 +12,14 @@ signals:
     void settingsChanged();
 public slots:
     void applyChanges();
+    void updateLabel();
 private:
     QCheckBox *sameIp;
     QCheckBox *allowCRated;
     QSpinBox *diffIps;
+
+    QLabel *desc;
+    QSpinBox *months, *percent, *hours, *periods, *max_decay;
 };
 
 #endif // BATTLINGOPTIONS_H

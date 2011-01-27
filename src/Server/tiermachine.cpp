@@ -11,13 +11,7 @@ void TierMachine::init()
 
 TierMachine::TierMachine()
 {
-    QSettings s("config", QSettings::IniFormat);
-
-    alt_expiration = std::max(s.value("ladder_months_expiration", 3).toInt(), 1);
-    hours_per_period = std::max(s.value("ladder_period_duration", 24).toInt(), 1);
-    percent_per_period = std::max(s.value("ladder_percent_per_period", 5).toInt(), 1);
-    max_saved_periods = std::max(s.value("ladder_bonus_time", 3).toInt(), 1);
-    max_percent_decay = std::min(s.value("ladder_max_decay", 50).toInt(), 100);
+    loadDecaySettings();
 
     threads = new LoadThread[loadThreadCount];
 
@@ -34,6 +28,17 @@ TierMachine::TierMachine()
     ithread->start();
 
     load();
+}
+
+void TierMachine::loadDecaySettings()
+{
+    QSettings s("config", QSettings::IniFormat);
+
+    alt_expiration = std::max(s.value("ladder_months_expiration", 3).toInt(), 1);
+    hours_per_period = std::max(s.value("ladder_period_duration", 24).toInt(), 1);
+    percent_per_period = std::max(s.value("ladder_percent_per_period", 5).toInt(), 1);
+    max_saved_periods = std::max(s.value("ladder_bonus_time", 3).toInt(), 1);
+    max_percent_decay = std::min(s.value("ladder_max_decay", 50).toInt(), 100);
 }
 
 void TierMachine::load()
