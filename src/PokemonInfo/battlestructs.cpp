@@ -659,12 +659,15 @@ QDataStream & operator >> (QDataStream &in, BattleChoice &po)
         break;
     case SwitchType:
         in >> po.choice.switching.pokeSlot;
+        break;
     case AttackType:
         in >> po.choice.attack.attackSlot >> po.choice.attack.attackTarget;
+        break;
     case RearrangeType:
         for (int i = 0; i < 6; i++) {
             in >> po.choice.rearrange.pokeIndexes[i];
         }
+        break;
     }
 
     return in;
@@ -680,12 +683,15 @@ QDataStream & operator << (QDataStream &out, const BattleChoice &po)
         break;
     case SwitchType:
         out << po.choice.switching.pokeSlot;
+        break;
     case AttackType:
         out << po.choice.attack.attackSlot << po.choice.attack.attackTarget;
+        break;
     case RearrangeType:
         for (int i = 0; i < 6; i++) {
             out << po.choice.rearrange.pokeIndexes[i];
         }
+        break;
     }
 
     return out;
