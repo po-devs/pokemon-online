@@ -48,8 +48,6 @@ namespace Pokemon
     };
 
     enum Status {
-        /* Koed = -2,*/
-        /* Levitated = -1,*/
         Fine = 0,
         Paralysed = 1,
         Asleep = 2,
@@ -71,23 +69,6 @@ namespace Pokemon
         Rooted = 21,
         Koed = 31
     };
-
-    /*
-     Old status
-
-    enum Status
-    {
-        Koed = -2,
-        Fine=0,
-        Paralysed=1,
-        Burnt=2,
-        Frozen=3,
-        Asleep=4,
-        Poisoned=5,
-        DeeplyPoisoned=6
-    };
-
-    */
 
     enum StatusKind
     {
