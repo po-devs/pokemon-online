@@ -65,7 +65,7 @@ void MemberRating::calculateDisplayedRating()
     if (bonus_time > 0)
         displayed_rating = rating;
     else {
-        int percent =  -(bonus_time/(hpp*3600))*TierMachine::obj()->percent_per_period;
+        int percent =  ((-bonus_time)/(hpp*3600))*TierMachine::obj()->percent_per_period;
 
         if (percent > TierMachine::obj()->max_percent_decay) {
             percent = TierMachine::obj()->max_percent_decay;
