@@ -65,7 +65,7 @@ void MemberRating::calculateDisplayedRating()
     if (bonus_time > 0)
         displayed_rating = rating;
     else {
-        int percent =  (bonus_time/(hpp*3600))*TierMachine::obj()->percent_per_period;
+        int percent =  -(bonus_time/(hpp*3600))*TierMachine::obj()->percent_per_period;
 
         if (percent > TierMachine::obj()->max_percent_decay) {
             percent = TierMachine::obj()->max_percent_decay;
@@ -146,6 +146,8 @@ void Tier::loadFromFile()
             throw QString("Using a not supported database");
         }
 
+        query.exec(QString("drop index %1_tiername_index").arg(sql_table));
+        query.exec(QString("drop index %1_tierrating_index").arg(sql_table));
         query.exec(QString("create index %1_tiername_index on %1 (name)").arg(sql_table));
         query.exec(QString("create index %1_tierrating_index on %1 (displayed_rating)").arg(sql_table));
 
@@ -157,14 +159,15 @@ void Tier::loadFromFile()
         QStringList members = QString::fromUtf8(in.readAll()).split('\n');
 
         clock_t t = clock();
+        int current_time = time(NULL);
 
         if (members.size() > 0) {
             int count = members[0].split('%').size();
 
             QSqlDatabase::database().transaction();
+            query.prepare(QString("insert into %1(name, rating, displayed_rating, last_check_time, bonus_time, matches) "
+                                    "values (:name, :rating, :displayed_rating, :last_check_time, :bonus_time, :matches)").arg(sql_table));
             if (count == 3) {
-                query.prepare(QString("insert into %1(name, rating, matches) values (:name, :rating, :matches)").arg(sql_table));
-
                 foreach(QString member, members) {
                     QString m2 = member.toLower();
                     QStringList mmr = m2.split('%');
@@ -174,17 +177,17 @@ void Tier::loadFromFile()
                     query.bindValue(":name", mmr[0]);
                     query.bindValue(":matches", mmr[1].toInt());
                     query.bindValue(":rating", mmr[2].toInt());
+                    query.bindValue(":displayed_rating", mmr[2].toInt());
+                    query.bindValue(":last_check_time", current_time);
+                    query.bindValue(":bonus_time", 0);
 
                     query.exec();
                 }
             } else if (count == 6) {
-                query.prepare(QString("insert into %1(name, rating, displayed_rating, last_check_time, bonus_time, matches) "
-                                      "values (:name, :rating, :displayed_rating, :last_check_time, :bonus_time, :matches)").arg(sql_table));
-
                 foreach(QString member, members) {
                     QString m2 = member.toLower();
                     QStringList mmr = m2.split('%');
-                    if (mmr.size() != 3)
+                    if (mmr.size() != 6)
                         continue;
 
                     query.bindValue(":name", mmr[0]);
@@ -994,7 +997,8 @@ void Tier::processDailyRun()
     query.finish();
 
     foreach(QString name, names) {
-        insertMember(&query, &holder.member(name), true);
+        MemberRating m = holder.member(name);
+        insertMember(&query, &m, true);
     }
 
     /* After updating all, deleting the old members */
@@ -1002,9 +1006,13 @@ void Tier::processDailyRun()
     query.prepare(QString("select name from %1 where bonus_time<%2").arg(sql_table).arg(min_bonus_time));
     query.exec();
 
+    int count = 0;
+
     while (query.next()) {
         holder.removeMemberInMemory(query.value(0).toString());
+        count ++;
     }
+    Server::print(QString("%1 alts removed from the ladder.").arg(count));
 
     query.prepare(QString("delete from %1 where bonus_time<%2").arg(sql_table).arg(min_bonus_time));
     query.exec();

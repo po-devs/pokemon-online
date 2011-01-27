@@ -118,6 +118,8 @@ void Server::start(){
 
     TierMachine::init();
     connect(TierMachine::obj(), SIGNAL(tiersChanged()), SLOT(tiersChanged()));
+    connect(TierMachine::obj(), SIGNAL(dailyRunBegin()), SLOT(dailyRunStart()));
+    connect(TierMachine::obj(), SIGNAL(dailyRunEnd()), SLOT(dailyRunEnd()));
 
     AntiDos::obj()->init();
 
@@ -169,6 +171,12 @@ void Server::start(){
     /* Adds the main channel */
     addChannel();
 
+    /* Processes the daily run */
+    TierMachine::obj()->processDailyRun();
+    QTimer *t2= new QTimer(this);
+    connect(t2, SIGNAL(timeout()), TierMachine::obj(), SLOT(processDailyRun()));
+    t->start(24*3600*1000);
+
     myengine = new ScriptEngine(this);
     myengine->serverStartUp();
 
@@ -186,6 +194,16 @@ void Server::print(const QString &line)
 QTcpServer * Server::server()
 {
     return myserver;
+}
+
+void Server::dailyRunStart()
+{
+    sendAll("The server is updating all the ratings, as it does daily. It may take a bit of time.");
+}
+
+void Server::dailyRunEnd()
+{
+    sendAll("All ratings updated!");
 }
 
 int Server::addChannel(const QString &name, int playerid) {
