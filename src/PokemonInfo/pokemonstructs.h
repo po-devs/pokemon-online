@@ -857,18 +857,6 @@ namespace Move
         Special
     };
 
-    /*
-     Old:
-
-    enum Category
-    {
-        Physical,
-        Special,
-        Other
-    };
-
-    */
-
     enum Flags
     {
         ContactFlag = 1,
@@ -904,21 +892,6 @@ namespace Move
         TeamSide = 12,
         IndeterminateTarget = 13
     };
-
-    /*
-     Old:
-    enum Target
-    {
-	None = -1,
-	User,
-	ChosenTarget,
-	RandomTarget,
-	Opponents,
-	All,
-        AllButSelf,
-        PartnerOrUser
-    };
-    */
 
     enum Classification
     {
@@ -2018,22 +1991,6 @@ namespace Item
         DireHit3
     };
 }
-
-/* Old Stats
-
-enum Stat
-{
-    Hp = 0,
-    Attack,
-    Defense,
-    Speed,
-    SpAttack,
-    SpDefense,
-    Evasion,
-    Accuracy
-};
-
-*/
 
 enum Stat
 {
