@@ -14,9 +14,9 @@ using namespace Move;
 int MoveMechanics::num(const QString &name)
 {
     if (!MoveEffect::nums.contains(name)) {
-	return 0;
+        return 0;
     } else {
-	return MoveEffect::nums[name];
+        return MoveEffect::nums[name];
     }
 }
 
@@ -64,32 +64,32 @@ void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
     QStringList specialEffects = MoveInfo::SpecialEffect(num).split('|');
 
     foreach (QString specialEffectS, specialEffects) {
-	std::string s = specialEffectS.toStdString();
+        std::string s = specialEffectS.toStdString();
 
-	int specialEffect = atoi(s.c_str());
+        int specialEffect = atoi(s.c_str());
 
-	/* if the effect is invalid or not yet implemented then no need to go further */
-	if (!mechanics.contains(specialEffect)) {
-            break;
-	}
+        /* if the effect is invalid or not yet implemented then no need to go further */
+        if (!mechanics.contains(specialEffect)) {
+                break;
+        }
 
-	MoveMechanics &m = mechanics[specialEffect];
-	QString &n = names[specialEffect];
+        MoveMechanics &m = mechanics[specialEffect];
+        QString &n = names[specialEffect];
 
-	QHash<QString, MoveMechanics::function>::iterator i;
+        QHash<QString, MoveMechanics::function>::iterator i;
 
-	size_t pos = s.find('-');
-	if (pos != std::string::npos) {
-            MM::turn(b,source)[n+"_Arg"] = specialEffectS.mid(pos+1);
-	}
+        size_t pos = s.find('-');
+        if (pos != std::string::npos) {
+                MM::turn(b,source)[n+"_Arg"] = specialEffectS.mid(pos+1);
+        }
 
-	for(i = m.functions.begin(); i != m.functions.end(); ++i) {
-	    if (i.key() == "OnSetup") {
-		i.value()(source,target,b);
-	    } else {
+        for(i = m.functions.begin(); i != m.functions.end(); ++i) {
+            if (i.key() == "OnSetup") {
+                i.value()(source,target,b);
+            } else {
                 Mechanics::addFunction(MM::turn(b,source), i.key(), n, i.value());
-	    }
-	}
+            }
+        }
     }
 }
 
@@ -156,45 +156,45 @@ void MoveEffect::unsetup(int num, int source, BattleSituation &b)
 struct MMAquaRing : public MM
 {
     MMAquaRing() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void uas(int s, int, BS &b) {
         addFunction(poke(b,s), "EndTurn60", "AquaRing", &et);
-	b.sendMoveMessage(2, 0, s, type(b,s));
+        b.sendMoveMessage(2, 0, s, type(b,s));
     }
 
     static void et(int s, int, BS &b) {
-	if (!b.koed(s) && !b.poke(s).isFull()) {
-	    b.healLife(s, b.poke(s).totalLifePoints()/16);
-	    b.sendMoveMessage(2, 1, s, Pokemon::Water);
-	}
+        if (!b.koed(s) && !b.poke(s).isFull()) {
+            b.healLife(s, b.poke(s).totalLifePoints()/16);
+            b.sendMoveMessage(2, 1, s, Pokemon::Water);
+        }
     }
 };
 
 struct MMAssurance : public MM
 {
     MMAssurance() {
-	functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BeforeCalculatingDamage"] = &bcd;
     }
 
     static void bcd(int s, int t, BS &b) {
         if (turn(b,t).contains("DamageTaken")) {
             tmove(b, s).power = tmove(b, s).power * 2;
-	}
+        }
     }
 };
 
 struct MMAvalanche : public MM
 {
     MMAvalanche() {
-	functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BeforeCalculatingDamage"] = &bcd;
     }
 
     static void bcd(int s, int t, BS &b) {
-	if (turn(b,s).contains("DamageTakenBy") && turn(b,s)["DamageTakenBy"].toInt() == t) {
+        if (turn(b,s).contains("DamageTakenBy") && turn(b,s)["DamageTakenBy"].toInt() == t) {
             tmove(b, s).power = tmove(b, s).power * 2;
-	}
+        }
     }
 };
 
@@ -202,15 +202,15 @@ struct MMBatonPass : public MM
 {
     MMBatonPass() {
         functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
         // the function has to be in that list when called by metronome, so it can be unsetup
         functions["AfterAttackFinished"] = &aaf;
     }
 
     static void daf(int s, int, BS &b) {
         if (b.countBackUp(b.player(s)) == 0) {
-	    turn(b,s)["Failed"] =true;
-	}
+            turn(b,s)["Failed"] =true;
+        }
     }
 
     static void uas(int s, int, BS &b)
@@ -221,20 +221,20 @@ struct MMBatonPass : public MM
     static void aaf(int s, int, BS &b) {
         if (!turn(b,s).contains("BatonPassSuccess"))
             return;
-	/* first we copy the temp effects, then put them to the next poke */
-	BS::context c = poke(b, s);
+        /* first we copy the temp effects, then put them to the next poke */
+        BS::context c = poke(b, s);
         c.remove("YawnCount");
-	c.remove("Minimize");
-	c.remove("DefenseCurl");
+        c.remove("Minimize");
+        c.remove("DefenseCurl");
         c.remove("AbilityArg");
         c.remove("ItemArg");
         c.remove("Illusioned");
-	/* removing last resort memory */
-	c.remove("Move0Used");
-	c.remove("Move1Used");
-	c.remove("Move2Used");
+        /* removing last resort memory */
+        c.remove("Move0Used");
+        c.remove("Move1Used");
+        c.remove("Move2Used");
         c.remove("HadItem");
-	c.remove("Move3Used");
+        c.remove("Move3Used");
         c.remove("BerryUsed");
         c.remove("HasMovedOnce");
         /* Removing attract */
@@ -252,23 +252,23 @@ struct MMBatonPass : public MM
         }
         turn(b,s)["BatonPassBoosts"] = QVariant::fromValue(boosts);
 
-	/* choice band etc. would force the same move
-		if on both the passed & the passer */
-	c.remove("ChoiceMemory");
+        /* choice band etc. would force the same move
+            if on both the passed & the passer */
+        c.remove("ChoiceMemory");
 
-	turn(b,s)["BatonPassData"] = c;
-	turn(b,s)["BatonPassed"] = true;
+        turn(b,s)["BatonPassData"] = c;
+        turn(b,s)["BatonPassed"] = true;
 
         addFunction(turn(b,s), "UponSwitchIn", "BatonPass", &usi);
-	b.requestSwitch(s);
+        b.requestSwitch(s);
     }
 
     static void usi(int s, int, BS &b) {
-	if (turn(b,s)["BatonPassed"].toBool() == false) {
-	    return;
-	}
-	turn(b,s)["BatonPassed"] = false;
-	merge(poke(b,s), turn(b,s)["BatonPassData"].value<BS::context>());
+        if (turn(b,s)["BatonPassed"].toBool() == false) {
+            return;
+        }
+        turn(b,s)["BatonPassed"] = false;
+        merge(poke(b,s), turn(b,s)["BatonPassData"].value<BS::context>());
 
         QList<int> boosts = turn(b,s)["BatonPassBoosts"].value<QList<int> >();
         for (int i = 0; i < 8; i++) {
@@ -321,11 +321,11 @@ struct MMBlastBurn : public MM
     }
 
     static void aas(int s, int, BS &b) {
-	addFunction(poke(b, s), "TurnSettings", "BlastBurn", &ts);
-	poke(b, s)["BlastBurnTurn"] = b.turn();
+        addFunction(poke(b, s), "TurnSettings", "BlastBurn", &ts);
+        poke(b, s)["BlastBurnTurn"] = b.turn();
     }
     static void ts(int s, int, BS &b) {
-	if (poke(b, s)["BlastBurnTurn"].toInt() < b.turn() - 1) {
+        if (poke(b, s)["BlastBurnTurn"].toInt() < b.turn() - 1) {
             return;
         }
 
@@ -348,85 +348,85 @@ struct MMBlastBurn : public MM
 struct MMBrine : public MM
 {
     MMBrine() {
-	functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BeforeCalculatingDamage"] = &bcd;
     }
 
     static void bcd(int s, int t, BS &b) {
-	if (b.poke(t).lifePercent() <= 50) {
+        if (b.poke(t).lifePercent() <= 50) {
             tmove(b, s).power = tmove(b, s).power * 2;
-	}
+        }
     }
 };
 
 struct MMCharge : public MM
 {
     MMCharge() {
-	functions["UponAttackSuccessful"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void uas(int s, int, BS &b) {
-	poke(b, s)["Charged"] = true;
-	addFunction(poke(b,s), "BeforeCalculatingDamage", "Charge", &bcd);
-	b.sendMoveMessage(18, 0, s, type(b,s));
+        poke(b, s)["Charged"] = true;
+        addFunction(poke(b,s), "BeforeCalculatingDamage", "Charge", &bcd);
+        b.sendMoveMessage(18, 0, s, type(b,s));
     }
 
     static void bcd(int s, int, BS &b) {
         if (poke(b,s)["Charged"] == true && tmove(b,s).type == Type::Electric) {
             if (tmove(b, s).power > 0) {
                 tmove(b, s).power = tmove(b, s).power * 2;
-		poke(b, s)["Charged"] = false;
-	    }
-	}
+                poke(b, s)["Charged"] = false;
+            }
+        }
     }
 };
 
 struct MMConversion : public MM
 {
     MMConversion() {
-	functions["DetermineAttackFailure"] = &daf;
-	functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void daf(int s, int, BS &b) {
-	/* First check if there's even 1 move available */
-	for (int i = 0; i < 4; i++) {
+        /* First check if there's even 1 move available */
+        for (int i = 0; i < 4; i++) {
             if (MoveInfo::Type(b.move(s,i), b.gen()) != Type::Curse) {
-		break;
-	    }
-	    if (i == 3) {
-		turn(b, s)["Failed"] = true;
-		return;
-	    }
-	}
+                break;
+            }
+            if (i == 3) {
+                turn(b, s)["Failed"] = true;
+                return;
+            }
+        }
         if (fpoke(b,s).type2 != Pokemon::Curse) {
-	    /* It means the pokemon has two types, i.e. conversion always works */
-	    QList<int> poss;
-	    for (int i = 0; i < 4; i++) {
+            /* It means the pokemon has two types, i.e. conversion always works */
+            QList<int> poss;
+            for (int i = 0; i < 4; i++) {
                 if (MoveInfo::Type(b.move(s,i), b.gen()) != Type::Curse) {
-		    poss.push_back(b.move(s,i));
-		}
-	    }
+                    poss.push_back(b.move(s,i));
+                }
+            }
             turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.true_rand()%poss.size()], b.gen());
-	} else {
-	    QList<int> poss;
-	    for (int i = 0; i < 4; i++) {
+        } else {
+            QList<int> poss;
+            for (int i = 0; i < 4; i++) {
                 if (MoveInfo::Type(b.move(s,i), b.gen()) != Type::Curse && MoveInfo::Type(b.move(s,i), b.gen()) != fpoke(b,s).type1) {
-		    poss.push_back(b.move(s,i));
-		}
-	    }
-	    if (poss.size() == 0) {
-		turn(b, s)["Failed"] = true;
-	    } else {
+                    poss.push_back(b.move(s,i));
+                }
+            }
+            if (poss.size() == 0) {
+                turn(b, s)["Failed"] = true;
+            } else {
                 turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.true_rand()%poss.size()], b.gen());
-	    }
-	}
+            }
+        }
     }
 
     static void uas(int s, int, BS &b) {
-	int type = turn(b,s)["ConversionType"].toInt();
+        int type = turn(b,s)["ConversionType"].toInt();
         fpoke(b,s).type1 = type;
         fpoke(b,s).type2 = Pokemon::Curse;
-	b.sendMoveMessage(19, 0, s, type, s);
+        b.sendMoveMessage(19, 0, s, type, s);
     }
 };
 

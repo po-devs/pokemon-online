@@ -1480,32 +1480,32 @@ namespace Type
 {
     enum Effectiveness
     {
-	Ineffective = 0,
-	NotEffective = 1,
-	Effective = 2,
-	SuperEffective = 4
+        Ineffective = 0,
+        NotEffective = 1,
+        Effective = 2,
+        SuperEffective = 4
     };
 
     enum Type
     {
-	Normal = 0,
-	Fighting,
-	Flying,
-	Poison,
-	Ground,
-	Rock,
-	Bug,
-	Ghost,
-	Steel,
-	Fire,
-	Water,
-	Grass,
-	Electric,
-	Psychic,
-	Ice,
-	Dragon,
-	Dark,
-	Curse = 17
+        Normal = 0,
+        Fighting,
+        Flying,
+        Poison,
+        Ground,
+        Rock,
+        Bug,
+        Ghost,
+        Steel,
+        Fire,
+        Water,
+        Grass,
+        Electric,
+        Psychic,
+        Ice,
+        Dragon,
+        Dark,
+        Curse = 17
     };
 }
 
