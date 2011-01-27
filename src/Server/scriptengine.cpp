@@ -943,13 +943,13 @@ void ScriptEngine::callLater(const QString &expr, int delay)
     if (delay <= 0) {
         return;
     }
-
-    QTimer *t = new QTimer(this);
+	//qDebug() << "Call Later in " << delay << expr;
+    QTimer *t = new QTimer();
 
     timerEvents[t] = expr;
     t->setSingleShot(true);
     t->start(delay*1000);
-    connect(t, SIGNAL(timeout()), SLOT(timer()));
+    connect(t, SIGNAL(timeout()), SLOT(timer()), Qt::DirectConnection);
 }
 
 void ScriptEngine::callQuickly(const QString &expr, int delay)
@@ -968,8 +968,9 @@ void ScriptEngine::callQuickly(const QString &expr, int delay)
 
 void ScriptEngine::timer()
 {
+	//qDebug() << "timer()";
     QTimer *t = (QTimer*) sender();
-
+	//qDebug() << timerEvents[t];
     eval(timerEvents[t]);
 
     timerEvents.remove(t);
