@@ -204,6 +204,13 @@ void Server::dailyRunStart()
 void Server::dailyRunEnd()
 {
     sendAll("All ratings updated!");
+
+    /* Updating ratings of the players online */
+    foreach(Player *p, myplayers) {
+        if (p->isLoggedIn()) {
+            p->findRating();
+        }
+    }
 }
 
 int Server::addChannel(const QString &name, int playerid) {
