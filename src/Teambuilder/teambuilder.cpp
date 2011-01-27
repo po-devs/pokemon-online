@@ -1460,6 +1460,12 @@ void TB_PokemonBody::setMove(int movenum)
     try {
         int slot = poke()->addMove(movenum,true);
 	m_moves[slot]->setText(MoveInfo::Name(movenum));
+
+        if (movenum == Move::Return) {
+            poke()->happiness() = 255;
+        } else if (movenum == Move::Frustration) {
+            poke()->happiness() = 0;
+        }
     } catch (QString &expr)
     {
 	QMessageBox::critical(this, tr("Error"), expr);
