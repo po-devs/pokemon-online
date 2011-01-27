@@ -69,9 +69,14 @@ public:
     int max_percent_decay;
 signals:
     void tiersChanged();
+    void dailyRunBegin();
+    void dailyRunEnd();
 public slots:
     void processQuery(QSqlQuery*,const QVariant &,int,WaitingObject*);
     void insertMember(QSqlQuery*,void *,int);
+    /* Processes the daily run in which ratings are updated.
+       Be aware that it may take long. I may thread it in the future. */
+    void processDailyRun();
 private:
     QList<Tier*> m_tiers;
     QHash<QString, Tier*> m_tierByNames;

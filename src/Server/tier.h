@@ -115,6 +115,7 @@ public:
     void importBannedItems(const QString &);
 
     void exportDatabase() const;
+    void processDailyRun();
     /* Load tier configuration */
     void loadFromXml(const QDomElement &elem);
     /* Load tier ladders */

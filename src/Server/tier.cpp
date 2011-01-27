@@ -55,10 +55,17 @@ void MemberRating::calculateDisplayedRating()
 
     bonus_time = bonus_time - diff;
 
+    const int hpp = TierMachine::obj()->hours_per_period;
+    const int msp = TierMachine::obj()->max_saved_periods;
+    if (bonus_time > msp * hpp * 3600)
+        bonus_time = msp * hpp * 3600;
+
+    /* We don't do a min check on the time, in order to let alts be 3 months old and get deleted.*/
+
     if (bonus_time > 0)
         displayed_rating = rating;
     else {
-        int percent =  (bonus_time/(TierMachine::obj()->hours_per_period*3600))*TierMachine::obj()->percent_per_period;
+        int percent =  (bonus_time/(hpp*3600))*TierMachine::obj()->percent_per_period;
 
         if (percent > TierMachine::obj()->max_percent_decay) {
             percent = TierMachine::obj()->max_percent_decay;
@@ -950,4 +957,64 @@ Tier *Tier::dataClone() const
     t.m_name = m_name;
 
     return ret;
+}
+
+void Tier::processDailyRun()
+{
+    QSqlQuery query;
+
+    query.setForwardOnly(true);
+
+    Server::print(QString("Running Daily Run for tier %1").arg(name()));
+
+    clock_t t = clock();
+
+    QSqlDatabase::database().transaction();
+
+    query.prepare(QString("select name, matches, rating, displayed_rating, last_check_time, bonus_time from %1").arg(sql_table));
+    query.exec();
+
+    QStringList names;
+
+    while (query.next()) {
+        QString name = query.value(0).toString();
+        names.push_back(name);
+        if (!holder.isInMemory(name)) {
+            MemberRating m(query.value(0).toString(), query.value(1).toInt(), query.value(2).toInt(), query.value(3).toInt(),
+                           query.value(4).toInt(), query.value(5).toInt());
+            m.calculateDisplayedRating();
+            holder.addMemberInMemory(m);
+        } else {
+            MemberRating m = holder.member(name);
+            m.calculateDisplayedRating();
+            holder.addMemberInMemory(m);
+        }
+    }
+
+    query.finish();
+
+    foreach(QString name, names) {
+        insertMember(&query, &holder.member(name), true);
+    }
+
+    /* After updating all, deleting the old members */
+    int min_bonus_time = -TierMachine::obj()->alt_expiration * 3600 * 24 * 30;
+    query.prepare(QString("select name from %1 where bonus_time<%2").arg(sql_table).arg(min_bonus_time));
+    query.exec();
+
+    while (query.next()) {
+        holder.removeMemberInMemory(query.value(0).toString());
+    }
+
+    query.prepare(QString("delete from %1 where bonus_time<%2").arg(sql_table).arg(min_bonus_time));
+    query.exec();
+
+    holder.cleanCache();
+
+    QSqlDatabase::database().commit();
+
+    t = clock() - t;
+
+    Server::print(QString::number(float(t)/CLOCKS_PER_SEC) + " secs");
+    Server::print(query.lastError().text());
 }

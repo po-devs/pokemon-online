@@ -275,3 +275,14 @@ TierTree *TierMachine::getDataTree() const
 {
     return tree.dataClone();
 }
+
+void TierMachine::processDailyRun()
+{
+    emit dailyRunBegin();
+
+    for(int i = 0; i < m_tiers.size(); i++) {
+        m_tiers[i]->processDailyRun();
+    }
+
+    emit dailyRunEnd();
+}

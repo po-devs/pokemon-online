@@ -125,6 +125,8 @@ public:
     /* Export the SQL databases to old style txt files */
     Q_INVOKABLE void exportMemberDatabase();
     Q_INVOKABLE void exportTierDatabase();
+    /* Updates the rankings. Very time consuming, be aware... ! */
+    Q_INVOKABLE void updateRatings();
     Q_INVOKABLE void clearChat();
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
