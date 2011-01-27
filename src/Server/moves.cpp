@@ -1931,7 +1931,7 @@ struct MMCounter : public MM
             return;
         }
         /* In third gen, all hidden power are countered by counter but not by mirror coat */
-        if (b.gen() <= 3 && TypeInfo::Category(MoveInfo::Type(move(b, source))) != turn(b,s)["Counter_Arg"].toInt()) {
+        if (b.gen() <= 3 && TypeInfo::Category(MoveInfo::Type(move(b, source), b.gen())) != turn(b,s)["Counter_Arg"].toInt()) {
             return;
         }
 

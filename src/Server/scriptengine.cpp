@@ -1992,3 +1992,8 @@ void ScriptEngine::modifyPokeStat(int poke, int stat, quint8 value)
         warn("modifyPokeStat", "unable to modify.");
     }
 }
+
+void ScriptEngine::updateRatings()
+{
+    TierMachine::obj()->processDailyRun();
+}
