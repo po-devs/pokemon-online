@@ -312,12 +312,12 @@ QString PokemonInfo::Height(const Pokemon::uniqueId &pokeid)
 
 int PokemonInfo::Type1(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Type1[gen-3].value(pokeid);
+    return m_Type1[gen-GEN_MIN].value(pokeid);
 }
 
 int PokemonInfo::Type2(const Pokemon::uniqueId &pokeid,int gen)
 {
-    return m_Type2[gen-3].value(pokeid);
+    return m_Type2[gen-GEN_MIN].value(pokeid);
 }
 
 int PokemonInfo::calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev)
@@ -371,8 +371,11 @@ void PokemonInfo::init(const QString &dir)
 
         fill_uid_int(m_Type1[i], path(QString("poke_type1-%1G.txt").arg(gen)));
         fill_uid_int(m_Type2[i], path(QString("poke_type2-%1G.txt").arg(gen)));
-        for (int j = 0; j < 3; j++) {
-            fill_uid_int(m_Abilities[i][j], path(QString("poke_ability%1_%2G.txt").arg(j+1).arg(gen)));
+
+        if (gen >= 3) {
+            for (int j = 0; j < 3; j++) {
+                fill_uid_int(m_Abilities[i][j], path(QString("poke_ability%1_%2G.txt").arg(j+1).arg(gen)));
+            }
         }
     }
 
@@ -1520,7 +1523,7 @@ QList<ItemInfo::Effect> ItemInfo::Effects(int item, int gen)
     if (!Exists(item)) {
 	return QList<ItemInfo::Effect>();
     } else {
-        return isBerry(item) ? m_BerryEffects[item-8000] : m_RegEffects[gen-3][item];
+        return isBerry(item) ? m_BerryEffects[item-8000] : m_RegEffects[gen-GEN_MIN][item];
     }
 }
 
