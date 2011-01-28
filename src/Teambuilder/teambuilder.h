@@ -115,7 +115,7 @@ private:
     TB_TeamBody *m_teamBody;
     TB_PokemonBoxes *m_boxes;
     Pokedex *m_pokedex;
-    QAction *gen3, *gen4, *gen5;
+    QAction *gens[NUMBER_GENS];
 
     QImageButton *buttons[LastW];
     QLabel *currentZoneLabel;
