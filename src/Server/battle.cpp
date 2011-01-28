@@ -3518,8 +3518,6 @@ void BattleSituation::changeAForme(int player, int newforme)
 
 void BattleSituation::healLife(int player, int healing)
 {
-    if ((pokeMemory(player).value("TurnEffectCall").toBool() || pokeMemory(player).value("PokeEffectCall").toBool()) && pokeMemory(player).value("HealBlockCount").toInt() > 0)
-	return;
     if (healing == 0) {
 	healing = 1;
     }
