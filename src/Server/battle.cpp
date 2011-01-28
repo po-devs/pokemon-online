@@ -812,7 +812,7 @@ BattleChoices BattleSituation::createChoice(int slot)
 
 bool BattleSituation::isMovePossible(int player, int move)
 {
-    return (PP(player, move) > 0 && turnMemory(player)["Move" + QString::number(move) + "Blocked"].toBool() == false);
+    return (PP(player, move) > 0 && turnMemory(player).value("Move" + QString::number(move) + "Blocked").toBool() == false);
 }
 
 int BattleSituation::PP(int player, int slot) const
