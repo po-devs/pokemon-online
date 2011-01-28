@@ -113,9 +113,10 @@ TitledWidget::TitledWidget(const QString &title, QWidget *w)
 /***********************************/
 
 
-TeamBuilder::TeamBuilder(TrainerTeam *pub_team) :
-        gen3(NULL), gen4(NULL), m_team(pub_team)
+TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
 {
+    gens[0] = NULL;
+
     qRegisterMetaType<Pokemon::uniqueId>("Pokemon::uniqueId");
 
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -333,14 +334,8 @@ void TeamBuilder::updateAll()
 
 void TeamBuilder::updateTeam()
 {
-    if (gen3 && gen4 && gen5) {
-        if (team()->gen() == 3) {
-            gen3->setChecked(true);
-        } else if (team()->gen() == 4){
-            gen4->setChecked(true);
-        } else {
-            gen5->setChecked(true);
-        }
+    if (gens[0]) {
+        gens[team()->gen()-GEN_MIN]->setChecked(true);
     }
     m_teamBody->updateTeam();
 }
@@ -372,28 +367,18 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
 
     QMenu *gen = menuBar->addMenu(tr("&Gen."));
     QActionGroup *gens = new QActionGroup(gen);
-    gen3 = gen->addAction(tr("Advance (&3rd gen)"),this,SLOT(genChanged()));
-    gen4 = gen->addAction(tr("HGSS (&4th gen)"), this, SLOT(genChanged()));
-    gen5 = gen->addAction(tr("B/W (&5th gen)"), this, SLOT(genChanged()));
 
-    gen3->setCheckable(true);
-    gen4->setCheckable(true);
-    gen5->setCheckable(true);
-    gen3->setProperty("gen", 3);
-    gen4->setProperty("gen", 4);
-    gen5->setProperty("gen", 5);
+    QString genStrings[] = {tr("RBY (&1st gen)"), tr("GSC (&2nd gen)"), tr("Advance (&3rd gen)"),
+                            tr("HGSS (&4th gen)"),tr("B/W (&5th gen)")};
 
-    if (team()->gen() == 3) {
-        gen3->setChecked(true);
-    } else if (team()->gen() == 4) {
-        gen4->setChecked(true);
-    } else {
-        gen5->setChecked(true);
+    for (int i = 0; i < NUMBER_GENS; i++) {
+        this->gens[i] = gen->addAction(genStrings[i], this, SLOT(genChanged()));
+        this->gens[i]->setCheckable(true);
+        this->gens[i]->setProperty("gen", i + GEN_MIN);
+        gens->addAction(this->gens[i]);
     }
 
-    gens->addAction(gen3);
-    gens->addAction(gen4);
-    gens->addAction(gen5);
+    this->gens[team()->gen()-GEN_MIN]->setChecked(true);
 
     QMenu *view = menuBar->addMenu(tr("&View"));
     QAction *items = view->addAction(tr("&Show all items"));

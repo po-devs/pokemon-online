@@ -7,10 +7,8 @@
 
 class QDomElement;
 
-// Minimum Generation compatible with breeding
-static const int BREEDING_MIN = 3;
 // Minimum Generation supported.
-static const int GEN_MIN = 3;
+static const int GEN_MIN = 1;
 // Maximum Generation supported.
 static const int GEN_MAX = 5;
 // Number of gens
@@ -30,8 +28,8 @@ namespace Version
     };
 
     static const int avatarSize[] = {
-        0,
-        0,
+        56,
+        60,
         64,
         80,
         96

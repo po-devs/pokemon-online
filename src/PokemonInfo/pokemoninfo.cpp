@@ -432,6 +432,10 @@ void PokemonInfo::loadDescriptions()
 
 int PokemonInfo::TrueCount(int gen)
 {
+    if (gen == 1)
+        return 152;
+    if (gen == 2)
+        return 252;
     if (gen == 3)
         return 387;
     if (gen == 4)
@@ -462,15 +466,7 @@ bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, int gen)
 {
     if(m_Names.contains(pokeid))
     {
-        switch(gen)
-        {
-        case 3:
-            return pokeid.pokenum <= 386;
-        case 4:
-            return pokeid.pokenum <= 493;
-        default:
-            return true;
-        }
+        return pokeid.pokenum < TrueCount(gen);
     }else{
         return false;
     }
@@ -504,7 +500,12 @@ Pokemon::uniqueId PokemonInfo::NonAestheticForme(Pokemon::uniqueId id)
 QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gender, bool shiney, bool back)
 {
     QString archive;
-    if (gen == 3)
+
+    if (gen == 1)
+        archive = path("rby.zip");
+    else if (gen == 2)
+        archive = path("gsc.zip");
+    else if (gen == 3)
         archive = path("advance.zip");
     else if (gen == 4)
         archive = path("hgss.zip");
@@ -513,7 +514,11 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
 
     QString file;
 
-    if (gen ==3)
+    if (gen == 1)
+        file = QString("%1/%2").arg(pokeid.toString(), back?"GBRYback.png":"Y.gif");
+    else if (gen == 2)
+        file = QString("%1/%2").arg(pokeid.toString(), back?"GSCback%3.png":"CRI%3.gif").arg(shiney?"s":"");
+    else if (gen ==3)
         file = QString("%1/%2%3.png").arg(pokeid.toString(), back?"3Gback":"RFLG", shiney?"s":"");
     else if (gen == 4)
         file = QString("%1/DP%2%3%4.png").arg(pokeid.toString(), back?"b":"", (gender==Pokemon::Female)?"f":"m", shiney?"s":"");
