@@ -225,6 +225,11 @@ int TierMachine::rating(const QString &name, const QString &tier)
     return this->tier(tier).rating(name);
 }
 
+int TierMachine::inner_rating(const QString &name, const QString &tier)
+{
+    return this->tier(tier).inner_rating(name);
+}
+
 int TierMachine::ranking(const QString &name, const QString &tier)
 {
     return this->tier(tier).ranking(name);

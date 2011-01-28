@@ -50,6 +50,7 @@ public:
     void fetchRankings(const QString &tier, const QVariant &data, QObject *o, const char *slot);
 
     int rating(const QString &name, const QString &tier);
+    int inner_rating(const QString &name, const QString &tier);
     int ranking(const QString &name, const QString &tier);
     int count (const QString &tier);
     void changeRating(const QString &winner, const QString &loser, const QString &tier);

@@ -1679,20 +1679,20 @@ void BattleFinder::changeEnabled()
 
 void BattleFinder::throwChallenge()
 {
-    QSettings s;
-
-    s.setValue("find_battle_force_rated", rated->isChecked());
-    s.setValue("find_battle_same_tier", sameTier->isChecked());
-    s.setValue("find_battle_range_on", rangeOn->isChecked());
-    s.setValue("find_battle_range", range->text().toInt());
-    s.setValue("find_battle_mode", mode->currentIndex());
-
     FindBattleData d;
     d.rated = rated->isChecked();
     d.sameTier = sameTier->isChecked();
-    d.range = range->text().toInt();
+    d.range = std::max(range->text().toInt(), 200);
     d.ranged = rangeOn->isChecked();
     d.mode = mode->currentIndex();
+
+    QSettings s;
+
+    s.setValue("find_battle_force_rated", d.rated);
+    s.setValue("find_battle_same_tier", d.sameTier);
+    s.setValue("find_battle_range_on", d.ranged);
+    s.setValue("find_battle_range", d.range);
+    s.setValue("find_battle_mode", d.mode);
 
     emit findBattle(d);
 }
