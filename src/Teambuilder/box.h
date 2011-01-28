@@ -97,7 +97,9 @@ class PokemonBox : public QGraphicsView
 {
     Q_OBJECT
 public:
-    PokemonBox(int num);
+    PokemonBox(int num, const QString &file);
+    /* Deletes the file associated */
+    void destroyData();
 
     void addPokemon(const PokeTeam &poke, int slot = -1) throw (QString);
 
@@ -111,6 +113,7 @@ public:
 
     QString getName() const;
     void setName(const QString &name);
+    void reName(const QString &name);
     bool isFull() const;
     bool isEmpty() const;
     int freeSpot() const;
@@ -120,11 +123,16 @@ public:
     int getNum() const {
         return num;
     }
+    void setNum(int num) {
+        this->num = num;
+    }
 
     int getNumOf(const TB_PokemonItem*) const;
 
     void save();
     void load();
+
+    static QString getBoxPath();
 signals:
     void switchWithTeam(int box,int boxslot,int teamslot);
     void show(PokeTeam *team);
@@ -149,6 +157,7 @@ protected:
 private:
     QVector<TB_PokemonItem*> pokemons;
     int num;
+
     int currentPoke;
     QString name;
 
@@ -182,6 +191,8 @@ public slots:
     void switchBoxTeam(int box, int boxslot, int teamslot);
     void showPoke(PokeTeam *poke);
     void editBoxName();
+    void newBox();
+    void deleteBox();
 signals:
     void pokeChanged(int poke);
 protected:
@@ -192,11 +203,15 @@ private:
     Team *m_team;
     int currentPoke;
     TB_BoxContainer *m_boxes;
-    PokemonBox * boxes[26];
+    QList<PokemonBox*> boxes;
 
     PokemonBox *currentBox() {
         return boxes[m_boxes->currentIndex()];
     }
+
+    bool existBox(const QString &name) const;
+    void addBox(const QString &name);
+    void deleteBox(int num);
 };
 
 #endif // BOX_H

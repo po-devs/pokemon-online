@@ -292,7 +292,7 @@ void TB_PokemonItem::startDrag()
 /******************** TB_PokemonBox *****************************/
 /****************************************************************/
 
-PokemonBox::PokemonBox(int num) : num(num), currentPoke(0)
+PokemonBox::PokemonBox(int num, const QString &file) : num(num), currentPoke(0)
 {
     pokemons.resize(30);
     selBg = Theme::Sprite("smallbox");
@@ -300,7 +300,16 @@ PokemonBox::PokemonBox(int num) : num(num), currentPoke(0)
     setScene(new QGraphicsScene(this));
     setSceneRect(0,0,width()-10,160);
 
+    QFileInfo f(file);
+    name = f.baseName();
+
     load();
+}
+
+void PokemonBox::destroyData()
+{
+    QDir d(getBoxPath());
+    d.remove(getName()+".box");
 }
 
 void PokemonBox::save()
@@ -310,7 +319,6 @@ void PokemonBox::save()
     QDomElement box = doc.createElement("Box");
     box.setAttribute("Num", num);
     box.setAttribute("Version", "1");
-    box.setAttribute("Name", getName());
     doc.appendChild(box);
 
     for(int i = 0; i < pokemons.size(); i++) {
@@ -322,15 +330,8 @@ void PokemonBox::save()
             slot.appendChild(pokemons[i]->poke->toXml(pokemon));
         }
     }
-#if defined(Q_OS_MAC)
-    QString boxpath = QString(QDir::homePath() + "/Library/Application Support/Pokemon Online/Boxes");
-    if(!QDir::home().exists(boxpath)) {
-        QDir::home().mkpath(boxpath);
-    }
-#else
-    QString boxpath = QString("Boxes");
-#endif
-    QFile out(QString(boxpath + "/Box %1.box").arg(QChar('A'+getNum())));
+
+    QFile out(QString(getBoxPath() + "/%1.box").arg(getName()));
     out.open(QIODevice::WriteOnly);
     QTextStream str(&out);
     doc.save(str,4);
@@ -340,18 +341,8 @@ void PokemonBox::load()
 {
     QDomDocument doc;
 
-#if defined(Q_OS_MAC)
-    QString boxpath = QString(QDir::homePath() + "/Library/Application Support/Pokemon Online/Boxes");
-    if(!QDir::home().exists(boxpath)) {
-        QDir::home().mkpath(boxpath);
-    }
-#else
-    QString boxpath = QString("Boxes");
-#endif
-    QFile in(QString(boxpath + "/Box %1.box").arg(QChar('A'+getNum())));
+    QFile in(QString(getBoxPath() + "/%1.box").arg(getName()));
     in.open(QIODevice::ReadOnly);
-
-    name =  QString("Box %1").arg(QChar('A'+getNum()));
 
     if(!doc.setContent(&in))
     {
@@ -363,7 +354,6 @@ void PokemonBox::load()
         return;
     QDomElement slot = box.firstChildElement("Slot");
     int version = box.attribute("Version", "0").toInt();
-    name =  box.attribute("Name", name);
 
     while (!slot.isNull()) {
         if (slot.attribute("Num").toInt() < 0 || slot.attribute("Num").toInt() > pokemons.size())
@@ -632,6 +622,29 @@ void PokemonBox::setName(const QString &name)
     this->name = name;
 }
 
+QString PokemonBox::getBoxPath()
+{
+#if defined(Q_OS_MAC)
+    QString boxpath = QString(QDir::homePath() + "/Library/Application Support/Pokemon Online/Boxes");
+    if(!QDir::home().exists(boxpath)) {
+        QDir::home().mkpath(boxpath);
+    }
+#else
+    QString boxpath = QString("Boxes");
+#endif
+
+    return boxpath;
+}
+
+void PokemonBox::reName(const QString &name)
+{
+    QDir d(getBoxPath());
+
+    /* Updates the file in which the pokemon are stored */
+    d.rename(getName()+".box", name+".box");
+    setName(name);
+}
+
 /****************************************************************/
 /******************* TB_BoxContainer ****************************/
 /****************************************************************/
@@ -678,14 +691,16 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
 
     QVBoxLayout *thirdColumn = new QVBoxLayout();
     firstline->addLayout(thirdColumn);
-    QPushButton *bstore, *bwithdraw, *bswitch, *bdelete, *bboxname;
+    QPushButton *bstore, *bwithdraw, /* *bswitch, */ *bdelete, *bboxname, *addbox, *deletebox;
 
     thirdColumn->addStretch(100);
     thirdColumn->addWidget(bstore = new QPushButton(tr("&Store")));
     thirdColumn->addWidget(bwithdraw = new QPushButton(tr("&Withdraw")));
-    thirdColumn->addWidget(bswitch = new QPushButton(tr("Switc&h")));
+    //thirdColumn->addWidget(bswitch = new QPushButton(tr("Switc&h")));
     thirdColumn->addWidget(bdelete = new QPushButton(tr("Dele&te")));
     thirdColumn->addWidget(bboxname = new QPushButton(tr("&Edit Box Name...")));
+    thirdColumn->addWidget(addbox = new QPushButton(tr("&Add New Box")));
+    thirdColumn->addWidget(deletebox = new QPushButton(tr("&Delete Current Box")));
     thirdColumn->addStretch(100);
 
     firstline->addStretch(100);
@@ -698,11 +713,16 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
 
     secondline->addWidget(m_boxes = new TB_BoxContainer(), 100);
 
-    for (unsigned i = 0; i < sizeof(boxes)/sizeof(PokemonBox*); i++) {
-        boxes[i] = new PokemonBox(i);
-        m_boxes->addTab(boxes[i], Theme::WhiteBall(), boxes[i]->getName());
-        connect(boxes[i],SIGNAL(switchWithTeam(int,int,int)),SLOT(switchBoxTeam(int,int,int)));
-        connect(boxes[i], SIGNAL(show(PokeTeam*)), SLOT(showPoke(PokeTeam*)));
+    QDir directory = QDir(PokemonBox::getBoxPath());
+
+    QStringList files = directory.entryList(QStringList() << "*.box", QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Name);
+
+    if (files.size() == 0) {
+        files.push_back("First Box.box");
+    }
+
+    foreach (QString file, files) {
+        addBox(file);
     }
 
     m_details->changePoke(&m_team->poke(0),0);
@@ -718,8 +738,10 @@ TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
     connect(bstore, SIGNAL(clicked()), SLOT(store()));
     connect(bwithdraw, SIGNAL(clicked()), SLOT(withdraw()));
     connect(bdelete, SIGNAL(clicked()), SLOT(deleteP()));
-    connect(bswitch, SIGNAL(clicked()), SLOT(switchP()));
+    //connect(bswitch, SIGNAL(clicked()), SLOT(switchP()));
     connect(bboxname, SIGNAL(clicked()), SLOT(editBoxName()));
+    connect(addbox, SIGNAL(clicked()), SLOT(newBox()));
+    connect(deletebox, SIGNAL(clicked()), SLOT(deleteBox()));
 }
 
 void TB_PokemonBoxes::editBoxName()
@@ -727,13 +749,67 @@ void TB_PokemonBoxes::editBoxName()
     bool ok;
     PokemonBox *box = currentBox();
     QString text = QInputDialog::getText(this, tr("Edit Box Name"),
-                                         tr("Enter the new name for the box #%1:").arg(box->getNum()+1), QLineEdit::Normal,
+                                         tr("Enter the new name for the box %1:").arg(box->getName()), QLineEdit::Normal,
                                           box->getName(), &ok);
-    if (ok && !text.isEmpty()) {
-         box->setName(text);
+    if (ok && !text.isEmpty() && !existBox(text) && text.toStdWString().find_first_of(L"\\/:\"?*|<>.") == std::wstring::npos) {
+         box->reName(text);
          m_boxes->setTabText(box->getNum(), text);
-         box->save();
      }
+}
+
+void TB_PokemonBoxes::newBox()
+{
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("New Box"),
+                                         tr("Enter the new name for the new box:"), QLineEdit::Normal,
+                                          tr("New Box"), &ok);
+    if (ok && !text.isEmpty() && !existBox(text) && text.toStdWString().find_first_of(L"\\/:\"?*|<>.") == std::wstring::npos) {
+         addBox(text);
+     }
+}
+
+bool TB_PokemonBoxes::existBox(const QString &name) const
+{
+    foreach(PokemonBox *box, boxes) {
+        if (box->getName() == name)
+            return true;
+    }
+
+    return false;
+}
+
+void TB_PokemonBoxes::addBox(const QString &name)
+{
+    PokemonBox *box = new PokemonBox(boxes.size(), name);
+    boxes.push_back(box);
+    box->setParent(this);
+    m_boxes->addTab(box, Theme::WhiteBall(), box->getName());
+    connect(box,SIGNAL(switchWithTeam(int,int,int)),SLOT(switchBoxTeam(int,int,int)));
+    connect(box, SIGNAL(show(PokeTeam*)), SLOT(showPoke(PokeTeam*)));
+}
+
+void TB_PokemonBoxes::deleteBox()
+{
+    if (boxes.size() <= 1)
+        return;
+
+    int res = QMessageBox::question(this, tr("Destroying a box"), tr("Do you want to delete box %1?").arg(currentBox()->getName()), QMessageBox::Yes | QMessageBox::No);
+
+    if (res == QMessageBox::Yes) {
+        deleteBox(currentBox()->getNum());
+    }
+}
+
+void TB_PokemonBoxes::deleteBox(int num)
+{
+    boxes[num]->destroyData();
+
+    delete boxes[num];
+    boxes.removeAt(num);
+
+    for (int i = num; i < boxes.size(); i++) {
+        boxes[i]->setNum(i);
+    }
 }
 
 void TB_PokemonBoxes::changeCurrentTeamPokemon(int newpoke)
