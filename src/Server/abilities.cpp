@@ -223,7 +223,7 @@ struct AMCuteCharm : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if (!b.koed(t) && b.isSeductionPossible(s,t) && b.true_rand() % 100 < 30
+        if (!b.koed(s) && !b.koed(t) && b.isSeductionPossible(s,t) && b.true_rand() % 100 < 30
             && !b.linked(t, "Attract"))
         {
             b.sendMoveMessage(58,1,s,0,t);
