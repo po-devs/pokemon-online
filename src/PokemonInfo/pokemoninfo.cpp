@@ -668,7 +668,7 @@ QSet<int> PokemonInfo::SpecialMoves(const Pokemon::uniqueId &pokeid, int gen)
 
 QSet<int> PokemonInfo::PreEvoMoves(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_Moves.value(pokeid).preEvoMoves[gen-3];
+    return m_Moves.value(pokeid).preEvoMoves[gen-GEN_MIN];
 }
 
 QSet<int> PokemonInfo::dreamWorldMoves(const Pokemon::uniqueId &pokeid)
@@ -823,15 +823,24 @@ bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
 
 void PokemonInfo::loadMoves()
 {
-    static const int filesize = 19;
+    static const int filesize = 29;
 
     QString fileNames[filesize] = {
+        path("1G_tm_and_hm_moves.txt"), path("1G_level_moves.txt"),
+        path("1G_special_moves.txt"), path("1G_pre_evo_moves.txt"),
+
+        path("2G_tm_and_hm_moves.txt"), path("2G_egg_moves.txt"), path("2G_level_moves.txt"),
+        path("2G_tutor_moves.txt"), path("2G_special_moves.txt"), path("2G_pre_evo_moves.txt"),
+
         path("3G_tm_and_hm_moves.txt"), path("3G_egg_moves.txt"), path("3G_level_moves.txt"),
-        path("3G_tutor_moves.txt"), path("3G_special_moves.txt"), path("3G_pre_evo_moves.txt"), path("4G_tm_and_hm_moves.txt"),
-        path("4G_pre_evo_moves.txt"), path("4G_egg_moves.txt"), path("4G_level_moves.txt"),
-        path("4G_tutor_moves.txt"), path("4G_special_moves.txt"), path("5G_tm_and_hm_moves.txt"),
-        path("5G_pre_evo_moves.txt"), path("5G_egg_moves.txt"), path("5G_level_moves.txt"),
-        path("5G_tutor_moves.txt"), path("5G_special_moves.txt"), path("5G_dw_moves.txt")
+        path("3G_tutor_moves.txt"), path("3G_special_moves.txt"), path("3G_pre_evo_moves.txt"),
+
+        path("4G_tm_and_hm_moves.txt"), path("4G_pre_evo_moves.txt"), path("4G_egg_moves.txt"),
+        path("4G_level_moves.txt"), path("4G_tutor_moves.txt"), path("4G_special_moves.txt"),
+
+        path("5G_tm_and_hm_moves.txt"), path("5G_pre_evo_moves.txt"), path("5G_egg_moves.txt"),
+        path("5G_level_moves.txt"), path("5G_tutor_moves.txt"), path("5G_special_moves.txt"),
+        path("5G_dw_moves.txt")
     };
 
     for (int i = 0; i < filesize; i++) {
@@ -854,9 +863,11 @@ void PokemonInfo::loadMoves()
                 // in m_Moves if it does not exist.
                 PokemonMoves &moves = m_Moves[pokeid];
                 QSet<int> *refs[filesize] = {
-                    &moves.TMMoves[0], &moves.eggMoves[0], &moves.levelMoves[0], &moves.tutorMoves[0], &moves.specialMoves[0], &moves.preEvoMoves[0],
-                    &moves.TMMoves[1], &moves.preEvoMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1],
-                    &moves.TMMoves[2], &moves.preEvoMoves[2], &moves.eggMoves[2], &moves.levelMoves[2], &moves.tutorMoves[2], &moves.specialMoves[2],
+                    &moves.TMMoves[0], &moves.levelMoves[0], &moves.specialMoves[0], &moves.preEvoMoves[0],
+                    &moves.TMMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1], &moves.preEvoMoves[1],
+                    &moves.TMMoves[2], &moves.eggMoves[2], &moves.levelMoves[2], &moves.tutorMoves[2], &moves.specialMoves[2], &moves.preEvoMoves[2],
+                    &moves.TMMoves[3], &moves.preEvoMoves[3], &moves.eggMoves[3], &moves.levelMoves[3], &moves.tutorMoves[3], &moves.specialMoves[3],
+                    &moves.TMMoves[4], &moves.preEvoMoves[4], &moves.eggMoves[4], &moves.levelMoves[4], &moves.tutorMoves[4], &moves.specialMoves[4],
                     &moves.dreamWorldMoves
                 };
                 *refs[i] = data_set;

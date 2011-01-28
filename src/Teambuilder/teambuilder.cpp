@@ -1472,7 +1472,23 @@ void TB_PokemonBody::configureMoves()
 
     QList< QSet<QPair<int, QString> > > sets;
 
-    if (gen == 3) {
+    if (gen == 1) {
+        sets << map_container_with_value(PokemonInfo::TMMoves(num,1), tr("TM/HM"))
+        << map_container_with_value(PokemonInfo::LevelMoves(num,1), tr("Level"))
+        << map_container_with_value(PokemonInfo::PreEvoMoves(num,1), tr("Pre Evo"))
+        << map_container_with_value(PokemonInfo::SpecialMoves(num,1), tr("Special"));
+    } else if (gen == 2) {
+        sets << map_container_with_value(PokemonInfo::TMMoves(num,2), tr("TM/HM"))
+        << map_container_with_value(PokemonInfo::TutorMoves(num,2), tr("Tutor"))
+        << map_container_with_value(PokemonInfo::LevelMoves(num,2), tr("Level"))
+        << map_container_with_value(PokemonInfo::PreEvoMoves(num,2), tr("Pre Evo"))
+        << map_container_with_value(PokemonInfo::EggMoves(num,2), tr("Breeding"))
+        << map_container_with_value(PokemonInfo::SpecialMoves(num,2), tr("Special"))
+        << map_container_with_value(PokemonInfo::TMMoves(num,1), tr("TM/HM"))
+        << map_container_with_value(PokemonInfo::LevelMoves(num,1), tr("Level"))
+        << map_container_with_value(PokemonInfo::PreEvoMoves(num,1), tr("Pre Evo"))
+        << map_container_with_value(PokemonInfo::SpecialMoves(num,1), tr("Special"));
+    } else if (gen == 3) {
         sets << map_container_with_value(PokemonInfo::TMMoves(num, 3), tr("TM/HM"))
         << map_container_with_value(PokemonInfo::TutorMoves(num,3), tr("Tutor"))
         << map_container_with_value(PokemonInfo::LevelMoves(num,3), tr("Level"))
