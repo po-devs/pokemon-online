@@ -79,6 +79,7 @@ public:
     QDomElement & toXml(QDomElement &dest) const;
 
     int rating(const QString &name);
+    int inner_rating(const QString &name);
     int ratedBattles(const QString &name);
 
     void changeRating(const QString &winner, const QString &loser);

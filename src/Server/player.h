@@ -21,6 +21,7 @@ class Player : public QObject, public PlayerInterface
     Q_OBJECT
 
     PROPERTY(int, rating);
+    PROPERTY(int, inner_rating);
     PROPERTY(bool, ladder);
     PROPERTY(bool, showteam);
     PROPERTY(QString, tier);

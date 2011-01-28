@@ -1010,10 +1010,10 @@ void Server::findBattle(int id, const FindBattleData &f)
 
         /* Then the range thing */
         if (f.ranged)
-            if (p1->rating() - f.range > p2->rating() || p1->rating() + f.range < p2->rating() )
+            if (p1->inner_rating() - f.range > p2->inner_rating() || p1->inner_rating() + f.range < p2->inner_rating() )
                 continue;
         if (data->ranged)
-            if (p1->rating() - data->range > p2->rating() || p1->rating() + data->range < p2->rating() )
+            if (p1->inner_rating() - data->range > p2->inner_rating() || p1->inner_rating() + data->range < p2->inner_rating() )
                 continue;
 
         //We have a match!
@@ -1250,7 +1250,7 @@ bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool fo
     t = &TierMachine::obj()->tier(p2->tier());
     if (!t->allowMode(mode))
         return false;
-    if (std::abs(p1->rating()-p2->rating()) > 300)
+    if (std::abs(p1->inner_rating()-p2->inner_rating()) > 300)
         return false;
     return true;
 }
@@ -1285,6 +1285,8 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
             TierMachine::obj()->changeRating(winn, lose, tier);
             pw->rating() = TierMachine::obj()->rating(winn, tier);
             pl->rating() = TierMachine::obj()->rating(lose, tier);
+            pw->inner_rating() = TierMachine::obj()->inner_rating(winn, tier);
+            pl->inner_rating() = TierMachine::obj()->inner_rating(lose, tier);
             sendPlayer(winner);
             sendPlayer(loser);
         }

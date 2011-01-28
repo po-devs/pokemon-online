@@ -713,6 +713,9 @@ QDataStream & operator >> (QDataStream &in, FindBattleData &f)
     f.sameTier = f.rated || flags & 0x2;
     f.ranged = f.sameTier && flags & 0x4;
 
+    if (f.range < 200)
+        f.range = 200;
+
     return in;
 }
 

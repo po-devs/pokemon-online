@@ -406,6 +406,8 @@ void Tier::changeRating(const QString &w, const QString &l)
     int oldwin = win.rating;
     win.changeRating(los.rating, true);
     los.changeRating(oldwin, false);
+    win.calculateDisplayedRating();
+    los.calculateDisplayedRating();
 
     updateMember(win, addw);
     updateMember(los, addl);
@@ -425,6 +427,17 @@ int Tier::rating(const QString &name)
         loadMemberInMemory(name);
     if (exists(name)) {
         return holder.member(name).displayed_rating;
+    } else {
+        return 1000;
+    }
+}
+
+int Tier::inner_rating(const QString &name)
+{
+    if (!holder.isInMemory(name))
+        loadMemberInMemory(name);
+    if (exists(name)) {
+        return holder.member(name).rating;
     } else {
         return 1000;
     }
