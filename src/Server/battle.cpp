@@ -2347,7 +2347,14 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
         typemod = 0;
     }
 
-    int stab = 2 + (type==typepok[0] || type==typepok[1]);
+    int stab;
+    if(type == Type::Curse) {
+        // Not only Curse -- PO also has Struggle and second type
+        // of single-typed pkmn as the ???-type
+        stab = 2;
+    }else{
+        stab = 2 + (type==typepok[0] || type==typepok[1]);
+    }
 
     turnMemory(player)["Stab"] = stab;
     turnMemory(player)["TypeMod"] = typemod; /* is attack effective? or not? etc. */
