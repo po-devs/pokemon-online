@@ -5679,9 +5679,16 @@ struct MMTriAttack : public MM
 
         int status;
         switch (b.true_rand() %3) {
-        case 0: status = Pokemon::Paralysed;
-        case 1: status = Pokemon::Burnt;
-        case 2: default: status = Pokemon::Frozen;
+            case 0:
+                status = Pokemon::Paralysed;
+                break;
+            case 1:
+                status = Pokemon::Burnt;
+                break;
+            case 2:
+            default:
+                status = Pokemon::Frozen;
+                break;
         }
 
         if (b.canGetStatus(t, status)) {
