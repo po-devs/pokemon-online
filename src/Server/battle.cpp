@@ -207,11 +207,11 @@ void BattleSituation::engageBattle()
 int BattleSituation::spot(int id) const
 {
     if (myid[0] == id) {
-	return 0;
+        return 0;
     } else if (myid[1] == id) {
-	return 1;
+        return 1;
     } else {
-	return -1;
+        return -1;
     }
 }
 
@@ -319,8 +319,7 @@ int BattleSituation::player(int slot) const
 int BattleSituation::randomOpponent(int slot) const
 {
     QList<int> opps = revs(slot);
-    if (opps.empty())
-        return -1;
+    if (opps.empty()) return -1;
 
     return opps[true_rand()%opps.size()];
 }
@@ -337,18 +336,18 @@ int BattleSituation::randomValidOpponent(int slot) const
 TeamBattle &BattleSituation::team(int spot)
 {
     if (spot == 0) {
-	return team1;
+        return team1;
     } else {
-	return team2;
+        return team2;
     }
 }
 
 const TeamBattle &BattleSituation::team(int spot) const
 {
     if (spot == 0) {
-	return team1;
+        return team1;
     } else {
-	return team2;
+        return team2;
     }
 }
 
@@ -363,8 +362,9 @@ QList<int> BattleSituation::revs(int p) const
     int opp = opponent(player);
     QList<int> ret;
     for (int i = 0; i < numberPerSide(); i++) {
-        if (!koed(slot(opp, i)))
+        if (!koed(slot(opp, i))) {
             ret.push_back(slot(opp, i));
+        }
     }
 
     return ret;
@@ -779,19 +779,19 @@ BattleChoices BattleSituation::createChoice(int slot)
 
     for (int i = 0; i < 4; i++) {
         if (!isMovePossible(slot,i)) {
-	    ret.attackAllowed[i] = false;
-	}
+            ret.attackAllowed[i] = false;
+        }
     }
 
-    if (!hasWorkingItem(slot, Item::ShedShell)) /* Shed Shell */
-    {
+    if (!hasWorkingItem(slot, Item::ShedShell)) {
+        /* Shed Shell */
         if (linked(slot, "Blocked") || linked(slot, "Trapped")) {
             ret.switchAllowed = false;
-	}
+        }
 
         if (pokeMemory(slot).contains("Rooted")) {
-	    ret.switchAllowed = false;
-	}
+            ret.switchAllowed = false;
+        }
 
         QList<int> opps = revs(slot);
         foreach(int opp, opps){
@@ -841,10 +841,11 @@ void BattleSituation::analyzeChoice(int slot)
                     useAttack(slot, choice(slot).attackSlot());
                 }
             }
-	}
+        }
     } else if (choice(slot).switchChoice()){
         if (!koed(slot)) { /* if the pokemon isn't ko, it IS sent back */
             sendBack(slot);
+<<<<<<< HEAD:src/Server/battle.cpp
 
             /* In gen 4 & previous, pursuit doesn't allow you to choose a new pokemon.
                In 5th gen, it's like a normal KO */
@@ -854,6 +855,10 @@ void BattleSituation::analyzeChoice(int slot)
             sendPoke(slot, choice(slot).pokeSlot());
         }
 
+=======
+        }
+        sendPoke(slot, choice(slot).pokeSlot());
+>>>>>>> encukou:src/Server/battle.cpp
     } else if (choice(slot).moveToCenterChoice()) {
         if (!wasKoed(slot)) {
             int target = this->slot(player, 1);
@@ -861,7 +866,11 @@ void BattleSituation::analyzeChoice(int slot)
             shiftSpots(slot, target);
         }
     } else {
+<<<<<<< HEAD:src/Server/battle.cpp
         /* FATAL FATAL */
+=======
+        /* FATAL� FATAL� */
+>>>>>>> encukou:src/Server/battle.cpp
     }
     notify(All, BlankMessage, Player1);
 }
@@ -978,7 +987,7 @@ void BattleSituation::analyzeChoices()
     }
 
     foreach(int player, switches) {
-	analyzeChoice(player);
+        analyzeChoice(player);
         callEntryEffects(player);
     }
 
@@ -987,7 +996,7 @@ void BattleSituation::analyzeChoices()
     players.clear();
 
     for (it = priorities.begin(); it != priorities.end(); ++it) {
-	/* There's another priority system: Ability stall, and Item lagging tail */
+        /* There's another priority system: Ability stall, and Item lagging tail */
         std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
 
         foreach (int player, it->second) {
@@ -1412,7 +1421,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     if (p.num() == Pokemon::Arceus && ItemInfo::isPlate(p.item())) {
         int type = ItemInfo::PlateType(p.item());
-        
+
         if (type != Type::Normal) {
             changeAForme(slot, type);
         }
@@ -1445,7 +1454,6 @@ void BattleSituation::callEntryEffects(int player)
 
 void BattleSituation::calleffects(int source, int target, const QString &name)
 {
-    //battleChat(id(0), QString("Effect %1 from %2 to %3 called.").arg(name).arg(source).arg(target));
     context &turn = turnMemory(source);
     if (turn.contains("Effect_" + name)) {
         turn["TurnEffectCall"] = true;
@@ -1453,19 +1461,11 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
         QSet<QString> &effects = *turn.value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
-            //Old code used for substitute
-            //	    turnMemory(source)["EffectBlocked"] = false;
-            //	    turnMemory(source)["EffectActivated"] = effect;
-            //            callpeffects(target, source, "BlockTurnEffects");
-            //	    if (turnMemory(source)["EffectBlocked"].toBool() == true) {
-            //		continue;
-            //	    }
-
             MoveMechanics::function f = turn.value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
             if (f)
                 f(source, target, *this);
-	}
+        }
         turn["TurnEffectCall"] = false;
     }
 }
@@ -1481,7 +1481,7 @@ void BattleSituation::callpeffects(int source, int target, const QString &name)
 
             /* If a pokemons dies from leechseed,its status changes, and so nightmare function would be removed
                but still be in the foreach, causing a crash */
-            if (f)
+            if(f)
                 f(source, target, *this);
         }
         turnMemory(source)["PokeEffectCall"] = false;
@@ -1493,15 +1493,13 @@ void BattleSituation::callbeffects(int source, int target, const QString &name, 
     if (battleMemory().contains("Effect_" + name)) {
         QSet<QString> &effects = *battleMemory().value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
-	foreach(QString effect, effects) {
+        foreach(QString effect, effects) {
             MoveMechanics::function f = battleMemory().value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
-            if (f)
-                f(source, target, *this);
+            if(f) f(source, target, *this);
 
-            if (stopOnFail && testFail(source))
-                return;
-	}
+            if(stopOnFail && testFail(source)) return;
+        }
     }
 }
 
@@ -1510,12 +1508,12 @@ void BattleSituation::callzeffects(int source, int target, const QString &name)
     if (teamMemory(source).contains("Effect_" + name)) {
         QSet<QString> &effects = *teamMemory(source).value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
-	foreach(QString effect, effects) {
+        foreach(QString effect, effects) {
             MoveMechanics::function f = teamMemory(source).value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
 
             if (f)
                 f(source, target, *this);
-	}
+        }
     }
 }
 
@@ -1536,8 +1534,9 @@ void BattleSituation::callseffects(int source, int target, const QString &name)
 void BattleSituation::callieffects(int source, int target, const QString &name)
 {
     //Klutz
-    if (hasWorkingItem(source, poke(source).item()))
-	ItemEffect::activate(name, poke(source).item(), source, target, *this);
+    if (hasWorkingItem(source, poke(source).item())) {
+        ItemEffect::activate(name, poke(source).item(), source, target, *this);
+    }
 }
 
 void BattleSituation::callaeffects(int source, int target, const QString &name)
@@ -1627,7 +1626,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
 
     if (acc == 0 || acc == 101 || pokeMemory(target).value("LevitatedCount").toInt() > 0) {
-	return true;
+        return true;
     }
 
     if (MoveInfo::isOHKO(move, gen())) {
@@ -1657,7 +1656,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         }
     }
     /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
-	due to the ever rounding down to make an int */
+        due to the ever rounding down to make an int */
     acc = acc * getStatBoost(player, Accuracy) * getStatBoost(target, Evasion)
           * (20+turnMemory(player).value("Stat6ItemModifier").toInt())/20
           * (20-turnMemory(target).value("Stat7ItemModifier").toInt())/20
@@ -1675,8 +1674,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
                 notify(All, Miss, player);
             }
         }
-	calleffects(player,target,"MissAttack");
-	return false;
+        calleffects(player,target,"MissAttack");
+        return false;
     }
 }
 
@@ -1685,7 +1684,7 @@ void BattleSituation::testCritical(int player, int target)
     /* Shell armor, Battle Armor */
     if (hasWorkingAbility(target, Ability::ShellArmor)
         || hasWorkingAbility(target, Ability::BattleArmor) || teamMemory(this->player(target)).value("LuckyChantCount").toInt() > 0) {
-	return;
+        return;
     }
 
     int randnum = true_rand() % 48;
@@ -1820,11 +1819,11 @@ void BattleSituation::testFlinch(int player, int target)
         turnMemory(target)["Flinched"] = true;
     }
 
-    if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench))) /* King's rock */
-    {
+    if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench))) {
+        /* King's rock */
         if (true_rand() % 100 < 10) {
             turnMemory(target)["Flinched"] = true;
-	}
+        }
     }
 }
 
@@ -1832,9 +1831,9 @@ bool BattleSituation::testFail(int player)
 {
     if (turnMemory(player)["Failed"].toBool() == true) {
         if (turnMemory(player)["FailingMessage"].toBool()) {
-	    notify(All, Failed, player);
-	}
-	return true;
+            notify(All, Failed, player);
+        }
+        return true;
     }
     return false;
 }
@@ -1854,7 +1853,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     int attack;
 
     if (specialOccurence) {
-	attack = move;
+        attack = move;
     } else {
         //Quick claw, special case
         if (gen() >= 4 && turnMemory(player).value("QuickClawed").toBool()) {
@@ -1866,7 +1865,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
             }
         }
-	attack = this->move(player,move);
+        attack = this->move(player,move);
         pokeMemory(player)["MoveSlot"] = move;
     }
 
@@ -1914,10 +1913,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         pokeMemory(player)["LastMoveUsedTurn"] = turn();
         pokeMemory(player)["AnyLastMoveUsed"] = attack;
     } else if (attack != 0 && pokeMemory(player).value("LastMoveUsedTurn").toInt() != turn() && attack != Move::Struggle) {
-	/* Recharge moves have their attack as 0 on the recharge turn : Blast Burn , ...
-	  So that's why attack is tested against 0. */
-	/* Those are needed for when a choiced move is used, or torment is used, and for example
-		the foe used Assit + Fly or simply fly. */
+        /* Recharge moves have their attack as 0 on the recharge turn : Blast Burn , ...
+            So that's why attack is tested against 0. */
+        /* Those are needed for when a choiced move is used, or torment is used, and for example
+            the foe used Assit + Fly or simply fly. */
         if (attack != Move::Struggle) {
             pokeMemory(player)["AnyLastMoveUsed"] = attack;
         }
@@ -2091,15 +2090,15 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         attacked() = target;
         if (!specialOccurence && (tmove(player).flags & Move::MemorableFlag) ) {
             pokeMemory(target)["MirrorMoveMemory"] = attack;
-	}
+        }
 
         turnMemory(player)["Failed"] = false;
         turnMemory(player)["FailingMessage"] = true;
 
         if (target != player && !testAccuracy(player, target)) {
             calleffects(player,target,"AttackSomehowFailed");
-	    continue;
-	}
+            continue;
+        }
         //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
         /* Protect, ... */
         callbeffects(player, target, "DetermineGeneralAttackFailure", true);
@@ -2132,59 +2131,60 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             int typemod = turnMemory(player)["TypeMod"].toInt();
             if (typemod == 0) {
-		/* If it's ineffective we just say it */
-		notify(All, Effective, target, quint8(typemod));
-		calleffects(player,target,"AttackSomehowFailed");
-		continue;
-	    }
+                /* If it's ineffective we just say it */
+                notify(All, Effective, target, quint8(typemod));
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
 
-	    callpeffects(player, target, "DetermineAttackFailure");
-	    if (testFail(player)) {
-		calleffects(player,target,"AttackSomehowFailed");
-		continue;
-	    }
-	    calleffects(player, target, "DetermineAttackFailure");
-	    if (testFail(player)){
-		calleffects(player,target,"AttackSomehowFailed");
-		continue;
-	    }
+            callpeffects(player, target, "DetermineAttackFailure");
+            if (testFail(player)) {
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
+            calleffects(player, target, "DetermineAttackFailure");
+            if (testFail(player)){
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
 
             int num = repeatNum(player);
-	    bool hit = num > 1;
+            bool hit = num > 1;
 
             int hitcount = 0;
             bool hitting = false;
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
                 turnMemory(target)["HadSubstitute"] = false;
-		bool sub = hasSubstitute(target);
+                bool sub = hasSubstitute(target);
                 turnMemory(target)["HadSubstitute"] = sub;
 
-                if (tmove(player).power > 1 && repeatCount() == 0)
+                if (tmove(player).power > 1 && repeatCount() == 0) {
                     notify(All, Effective, target, quint8(typemod));
+                }
 
                 if (tmove(player).power > 1) {
-		    testCritical(player, target);
+                    testCritical(player, target);
                     calleffects(player, target, "BeforeHitting");
                     if (turnMemory(player).contains("HitCancelled")) {
                         turnMemory(player).remove("HitCancelled");
                         continue;
                     }
-		    int damage = calculateDamage(player, target);
-		    inflictDamage(target, damage, player, true);
+                    int damage = calculateDamage(player, target);
+                    inflictDamage(target, damage, player, true);
                     hitcount += 1;
                     hitting = true;
-		} else {
+                } else {
                     turnMemory(player).remove("CustomDamage");
-		    calleffects(player, target, "CustomAttackingDamage");
+                    calleffects(player, target, "CustomAttackingDamage");
 
                     if (turnMemory(player).contains("CustomDamage")) {
                         int damage = turnMemory(player).value("CustomDamage").toInt();
                         inflictDamage(target, damage, player, true);
                         hitting = true;
                     }
-		}
+                }
 
-		calleffects(player, target, "UponAttackSuccessful");
+                calleffects(player, target, "UponAttackSuccessful");
                 if (!hasSubstitute(target))
                     calleffects(player, target, "OnFoeOnAttack");
 
@@ -2203,14 +2203,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     callieffects(target, player, "UponBeingHit");
                 }
 
-		/* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
-		applyMoveStatMods(player, target);
+                /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
+                applyMoveStatMods(player, target);
 
                 /* For berries that activate after taking damage */
                 callieffects(target, player, "TestPinch");
 
-		if (!sub && !koed(target))
-		    testFlinch(player, target);
+                if (!sub && !koed(target)) testFlinch(player, target);
 
                 attackCount() += 1;
             }
@@ -2237,11 +2236,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             turnMemory(target)["HadSubstitute"] = false;
         } else {
             callpeffects(player, target, "DetermineAttackFailure");
-	    if (testFail(player))
-		continue;
-	    calleffects(player, target, "DetermineAttackFailure");
-	    if (testFail(player))
-		continue;
+            if (testFail(player)) continue;
+            calleffects(player, target, "DetermineAttackFailure");
+            if (testFail(player)) continue;
             int type = tmove(player).type; /* move type */
             if ( target != player &&
                  ((type == Type::Fire && hasType(target, Type::Fire)) ||
@@ -2253,16 +2250,15 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 continue;
             }
 
-            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower)
-            {
+            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower) {
                 sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
                 continue;
             }
 
-	    calleffects(player, target, "BeforeHitting");
+            calleffects(player, target, "BeforeHitting");
 
-	    applyMoveStatMods(player, target);
-	    calleffects(player, target, "UponAttackSuccessful");
+            applyMoveStatMods(player, target);
+            calleffects(player, target, "UponAttackSuccessful");
             /* Side change may switch player & target */
             if (attacker() != player) {
                 player = attacker();
@@ -2272,11 +2268,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             healDamage(player, target);
 
             calleffects(player, target, "AfterAttackSuccessful");
-	}
+        }
         if (tmove(player).type == Type::Fire && poke(target).status() == Pokemon::Frozen) {
-	    notify(All, StatusMessage, target, qint8(FreeFrozen));
-	    healStatus(target, Pokemon::Frozen);
-	}
+            notify(All, StatusMessage, target, qint8(FreeFrozen));
+            healStatus(target, Pokemon::Frozen);
+        }
         pokeMemory(target)["LastAttackToHit"] = attack;
     }
 
@@ -3087,15 +3083,16 @@ int BattleSituation::calculateDamage(int p, int t)
 
     attack = std::min(attack, 65535);
 
-    if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct) && gen() <= 4) /* explosion / selfdestruct */
-	def/=2;
+    if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct) && gen() <= 4) {
+        /* explosion / selfdestruct */
+        def/=2;
+    }
 
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
     int randnum = true_rand() % (255-217) + 217;
     //Spit Up
-    if (attackused == Move::SpitUp)
-        randnum = 255;
+    if (attackused == Move::SpitUp) randnum = 255;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
     int power = tmove(p).power;
     int type = tmove(p).type;
