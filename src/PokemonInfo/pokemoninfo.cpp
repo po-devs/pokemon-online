@@ -1009,8 +1009,8 @@ void PokemonInfo::makeDataConsistent()
             m_Genders[id] = m_Genders.value(OriginalForme(id), Pokemon::NeutralAvail);
         }
 
-        for (int i = 0; i < 3; i++) {
-            int gen = i+3;
+        for (int gen = GEN_MIN; gen <= GEN_MAX; gen++) {
+            int i = gen-GEN_MIN;
 
             if (!Exists(id, gen))
                 continue;
@@ -1432,7 +1432,7 @@ void ItemInfo::loadNames()
     fill_container_with_file(m_BerryTypes, path("berry_type.txt"));
     fill_container_with_file(m_UsefulItems, path("item_useful.txt"));
 
-    for (int i = GEN_MIN; i < GEN_MAX; i++) {
+    for (int i = GEN_MIN_ITEMS; i <= GEN_MAX; i++) {
         fill_container_with_file(m_GenItems[i], path(QString("items_gen%1.txt").arg(i)));
 
         QList<int> tempb;
@@ -1442,31 +1442,34 @@ void ItemInfo::loadNames()
         }
     }
 
-    m_SortedNames[2] << m_RegItemNames << m_BerryNames;
-    qSort(m_SortedNames[2]);
+    int mg = GEN_MAX - GEN_MIN;
 
-    m_SortedUsefulNames[2] << m_BerryNames;
+    m_SortedNames[mg] << m_RegItemNames << m_BerryNames;
+    qSort(m_SortedNames[mg]);
+
+    m_SortedUsefulNames[mg] << m_BerryNames;
     for (int i = 0; i < m_RegItemNames.size(); i++) {
         if (isUseful(i))
-            m_SortedUsefulNames[2].push_back(m_RegItemNames[i]);
+            m_SortedUsefulNames[mg].push_back(m_RegItemNames[i]);
     }
-    qSort(m_SortedUsefulNames[2]);
+    qSort(m_SortedUsefulNames[mg]);
 
-    for (int j = 1; j >= 0; j--) {
-        for (int i = 0; i < m_SortedNames[j+1].size(); i++) {
-            if (Exists(Number(m_SortedNames[j+1][i]), j+3))
-                m_SortedNames[j].push_back(m_SortedNames[j+1][i]);
+    for (int j = GEN_MAX-1; j >= GEN_MIN_ITEMS; j--) {
+        int g = j-GEN_MIN;
+        for (int i = 0; i < m_SortedNames[g+1].size(); i++) {
+            if (Exists(Number(m_SortedNames[g+1][i]), j))
+                m_SortedNames[g].push_back(m_SortedNames[g+1][i]);
         }
 
-        for (int i = 0; i < m_SortedUsefulNames[j+1].size(); i++) {
-            if (Exists(Number(m_SortedUsefulNames[j+1][i]), j+3))
-                m_SortedUsefulNames[j].push_back(m_SortedUsefulNames[j+1][i]);
+        for (int i = 0; i < m_SortedUsefulNames[g+1].size(); i++) {
+            if (Exists(Number(m_SortedUsefulNames[g+1][i]), j))
+                m_SortedUsefulNames[g].push_back(m_SortedUsefulNames[g+1][i]);
         }
     }
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = GEN_MIN_ITEMS; i <= GEN_MAX; i++) {
         QStringList temp;
-        fill_container_with_file(temp, path("item_effects_%1G.txt").arg(i+3));
+        fill_container_with_file(temp, path("item_effects_%1G.txt").arg(i));
 
         /* Removing comments, aka anything starting from '#' */
         foreach (QString eff, temp) {
@@ -1481,7 +1484,7 @@ void ItemInfo::loadNames()
                     toPush.push_back(Effect(atoi(s.c_str())));
                 }
             }
-            m_RegEffects[i].push_back(toPush);
+            m_RegEffects[i-GEN_MIN].push_back(toPush);
         }
     }
 
@@ -1977,16 +1980,16 @@ bool AbilityInfo::Exists(int ability, int gen)
 
 void AbilityInfo::loadEffects()
 {
-    for (int i = 0; i < 3; i++) {
+    for (int i = GEN_MIN_ABILITIES; i <= GEN_MAX; i++) {
         QStringList m_temp;
-        fill_container_with_file(m_temp,path("ability_effects_%1G.txt").arg(i+3));
+        fill_container_with_file(m_temp,path("ability_effects_%1G.txt").arg(i));
 
         foreach(QString str, m_temp) {
             QStringList content = str.split('#').front().split('-');
             if (content.size() == 1) {
-                m_Effects[i].push_back(Effect(content[0].toInt()));
+                m_Effects[i-GEN_MIN].push_back(Effect(content[0].toInt()));
             } else {
-                m_Effects[i].push_back(Effect(content[0].toInt(), content[1].toInt()));
+                m_Effects[i-GEN_MIN].push_back(Effect(content[0].toInt(), content[1].toInt()));
             }
         }
     }
