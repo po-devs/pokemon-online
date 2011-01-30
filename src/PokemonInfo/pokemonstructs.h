@@ -46,8 +46,6 @@ namespace Pokemon
     };
 
     enum Status {
-        /* Koed = -2,*/
-        /* Levitated = -1,*/
         Fine = 0,
         Paralysed = 1,
         Asleep = 2,
@@ -69,23 +67,6 @@ namespace Pokemon
         Rooted = 21,
         Koed = 31
     };
-
-    /*
-     Old status
-
-    enum Status
-    {
-        Koed = -2,
-        Fine=0,
-        Paralysed=1,
-        Burnt=2,
-        Frozen=3,
-        Asleep=4,
-        Poisoned=5,
-        DeeplyPoisoned=6
-    };
-
-    */
 
     enum StatusKind
     {
@@ -874,18 +855,6 @@ namespace Move
         Special
     };
 
-    /*
-     Old:
-
-    enum Category
-    {
-        Physical,
-        Special,
-        Other
-    };
-
-    */
-
     enum Flags
     {
         ContactFlag = 1,
@@ -921,21 +890,6 @@ namespace Move
         TeamSide = 12,
         IndeterminateTarget = 13
     };
-
-    /*
-     Old:
-    enum Target
-    {
-	None = -1,
-	User,
-	ChosenTarget,
-	RandomTarget,
-	Opponents,
-	All,
-        AllButSelf,
-        PartnerOrUser
-    };
-    */
 
     enum Classification
     {
@@ -1524,32 +1478,32 @@ namespace Type
 {
     enum Effectiveness
     {
-	Ineffective = 0,
-	NotEffective = 1,
-	Effective = 2,
-	SuperEffective = 4
+        Ineffective = 0,
+        NotEffective = 1,
+        Effective = 2,
+        SuperEffective = 4
     };
 
     enum Type
     {
-	Normal = 0,
-	Fighting,
-	Flying,
-	Poison,
-	Ground,
-	Rock,
-	Bug,
-	Ghost,
-	Steel,
-	Fire,
-	Water,
-	Grass,
-	Electric,
-	Psychic,
-	Ice,
-	Dragon,
-	Dark,
-	Curse = 17
+        Normal = 0,
+        Fighting,
+        Flying,
+        Poison,
+        Ground,
+        Rock,
+        Bug,
+        Ghost,
+        Steel,
+        Fire,
+        Water,
+        Grass,
+        Electric,
+        Psychic,
+        Ice,
+        Dragon,
+        Dark,
+        Curse = 17
     };
 }
 
@@ -2035,22 +1989,6 @@ namespace Item
         DireHit3
     };
 }
-
-/* Old Stats
-
-enum Stat
-{
-    Hp = 0,
-    Attack,
-    Defense,
-    Speed,
-    SpAttack,
-    SpDefense,
-    Evasion,
-    Accuracy
-};
-
-*/
 
 enum Stat
 {
