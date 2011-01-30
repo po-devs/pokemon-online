@@ -330,7 +330,7 @@ int Tier::ranking(const QString &name)
     int r = rating(name);
     QSqlQuery q;
     q.setForwardOnly(true);
-    q.prepare(QString("select count(*) from %1 where (rating>:r1 or (rating=:r2 and name<=:name))").arg(sql_table));
+    q.prepare(QString("select count(*) from %1 where (displayed_rating>:r1 or (displayed_rating=:r2 and name<=:name))").arg(sql_table));
     q.bindValue(":r1", r);
     q.bindValue(":r2", r);
     q.bindValue(":name", name);
@@ -549,9 +549,9 @@ void Tier::processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObj
         }
 
         if (SQLCreator::databaseType == SQLCreator::PostGreSQL)
-            q->prepare(QString("select name, displayed_rating from %1 order by rating desc, name asc offset ? limit ?").arg(sql_table));
+            q->prepare(QString("select name, displayed_rating from %1 order by displayed_rating desc, name asc offset ? limit ?").arg(sql_table));
         else
-            q->prepare(QString("select name, displayed_rating from %1 order by rating desc, name asc limit ?, ?").arg(sql_table));
+            q->prepare(QString("select name, displayed_rating from %1 order by displayed_rating desc, name asc limit ?, ?").arg(sql_table));
 
         q->addBindValue((p-1)*TierMachine::playersByPage);
         q->addBindValue(TierMachine::playersByPage);
