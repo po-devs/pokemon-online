@@ -1432,11 +1432,11 @@ void ItemInfo::loadNames()
     fill_container_with_file(m_BerryTypes, path("berry_type.txt"));
     fill_container_with_file(m_UsefulItems, path("item_useful.txt"));
 
-    for (int i = 0; i < 3; i++) {
-        fill_container_with_file(m_GenItems[i], path(QString("items_gen%1.txt").arg(i+3)));
+    for (int i = GEN_MIN; i < GEN_MAX; i++) {
+        fill_container_with_file(m_GenItems[i], path(QString("items_gen%1.txt").arg(i)));
 
         QList<int> tempb;
-        fill_container_with_file(tempb, path(QString("berries_gen%1.txt").arg(i+3)));
+        fill_container_with_file(tempb, path(QString("berries_gen%1.txt").arg(i)));
         foreach(int b, tempb) {
             m_GenItems[i].insert(b+8000);
         }
