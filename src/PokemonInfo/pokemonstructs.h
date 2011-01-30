@@ -9,6 +9,8 @@ class QDomElement;
 
 // Minimum Generation supported.
 static const int GEN_MIN = 1;
+static const int GEN_MIN_ITEMS = 2;
+static const int GEN_MIN_ABILITIES = 3;
 // Maximum Generation supported.
 static const int GEN_MAX = 5;
 // Number of gens
