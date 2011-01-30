@@ -175,7 +175,7 @@ void Server::start(){
     TierMachine::obj()->processDailyRun();
     QTimer *t2= new QTimer(this);
     connect(t2, SIGNAL(timeout()), TierMachine::obj(), SLOT(processDailyRun()));
-    t->start(24*3600*1000);
+    t2->start(24*3600*1000);
 
     myengine = new ScriptEngine(this);
     myengine->serverStartUp();
