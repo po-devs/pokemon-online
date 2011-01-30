@@ -2550,7 +2550,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         /* Then we check if the effect hits */
         int randnum = true_rand() % 100;
         /* Serene Grace, Rainbow */
-        if (hasWorkingAbility(player,Ability::SereneGrace) || teamMemory(this->player(player)).value("RainbowCount").toInt() > 0) {
+        if (hasWorkingAbility(player,Ability::SereneGrace) || teamMemory(this->player(target)).value("RainbowCount").toInt() > 0) {
             rate *= 2;
         }
 
