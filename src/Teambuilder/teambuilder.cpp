@@ -1025,7 +1025,7 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, 
     hitem->addWidget(itemchoice = new QComboBox());
     hitem->addWidget(itemicon = new QLabel());
     itemicon->setFixedSize(24,24);
-    box1->addWidget(new TitledWidget(tr("&Item"), itemw));
+    box1->addWidget(itemlabel = new TitledWidget(tr("&Item"), itemw));
 
     box1->addSpacerItem(new QSpacerItem(0,6));
 
@@ -1081,7 +1081,6 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, 
     htype->addWidget(type2 = new QLabel());
     box22->addLayout(htype);
 
-    QLabel *nature;
     box22->addWidget(nature = new QLabel(tr("N&ature")));
     box22->addWidget(naturechoice = new QComboBox());
     nature->setBuddy(naturechoice);
@@ -1153,6 +1152,24 @@ void TB_PokemonBody::changeGeneration(int gen)
 
     QSettings s;
     reloadItems(s.value("show_all_items").toBool());
+
+    if (gen == 1) {
+        itemchoice->hide();
+        genderIcon->hide();
+        itemlabel->hide();
+    } else {
+        itemchoice->show();
+        genderIcon->show();
+        itemlabel->show();
+    }
+
+    if (gen <= 2) {
+        naturechoice->hide();
+        nature->hide();
+    } else {
+        naturechoice->show();
+        nature->show();
+    }
 }
 
 void TB_PokemonBody::initPokemons(TB_PokemonBody *)

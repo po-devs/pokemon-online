@@ -326,6 +326,7 @@ private:
     TB_PokeChoice *pokechoice;
     QComboBox *itemchoice;
     QComboBox *naturechoice;
+    QLabel *nature;
     QToolButton *pokeImage;
     QLabel *genderIcon, *level, *type1, *type2, *pokename, *itemicon;
     int m_num;
@@ -341,6 +342,7 @@ private:
     QLineEdit *m_moves[4];
     QLineEdit *m_nick;
     QLineEdit *m_pokeedit;
+    TitledWidget *itemlabel;
     TB_EVManager *evchoice;
 
     int m_index;

@@ -176,10 +176,14 @@ void PokePersonal::runCheck()
         return;
     }
 
-    AbilityGroup ab = PokemonInfo::Abilities(num(), gen());
+    if (gen() <= 2) {
+        ability() = 0;
+    } else {
+        AbilityGroup ab = PokemonInfo::Abilities(num(), gen());
 
-    if (ability() == 0 || (ability() != ab.ab(2) && ability() != ab.ab(1)))
-        ability() = ab.ab(0);
+        if (ability() == 0 || (ability() != ab.ab(2) && ability() != ab.ab(1)))
+            ability() = ab.ab(0);
+    }
 
     if (!ItemInfo::Exists(item(), gen())) {
         item() = 0;
