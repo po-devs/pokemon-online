@@ -5685,12 +5685,12 @@ struct MMTriAttack : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        if (hasWorkingAbility(t, Ability::ShieldDust))
+        if (b.hasWorkingAbility(t, Ability::ShieldDust))
             return;
 
         bool boost = b.hasWorkingAbility(s, Ability::SereneGrace) ||  team(b, b.player(t)).value("RainbowCount").toInt();
 
-        if (b.true_rand() % 5 > 0+boost)
+        if (b.true_rand() % 5 > unsigned(0+boost))
             return;
 
         int status;
