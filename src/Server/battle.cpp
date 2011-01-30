@@ -843,22 +843,16 @@ void BattleSituation::analyzeChoice(int slot)
             }
         }
     } else if (choice(slot).switchChoice()){
-        if (!koed(slot)) { /* if the pokemon isn't ko, it IS sent back */
+        if (!koed(slot)) /* if the pokemon isn't ko, it IS sent back */
             sendBack(slot);
-<<<<<<< HEAD:src/Server/battle.cpp
 
-            /* In gen 4 & previous, pursuit doesn't allow you to choose a new pokemon.
-               In 5th gen, it's like a normal KO */
-            if (gen() <= 4 || !koed(slot))
+        /* In gen 4 & previous, pursuit doesn't allow you to choose a new pokemon.
+           In 5th gen, it's like a normal KO */
+        if (gen() <= 4 || !koed(slot)) {
                 sendPoke(slot, choice(slot).pokeSlot());
         } else {
             sendPoke(slot, choice(slot).pokeSlot());
         }
-
-=======
-        }
-        sendPoke(slot, choice(slot).pokeSlot());
->>>>>>> encukou:src/Server/battle.cpp
     } else if (choice(slot).moveToCenterChoice()) {
         if (!wasKoed(slot)) {
             int target = this->slot(player, 1);
@@ -866,11 +860,7 @@ void BattleSituation::analyzeChoice(int slot)
             shiftSpots(slot, target);
         }
     } else {
-<<<<<<< HEAD:src/Server/battle.cpp
         /* FATAL FATAL */
-=======
-        /* FATAL� FATAL� */
->>>>>>> encukou:src/Server/battle.cpp
     }
     notify(All, BlankMessage, Player1);
 }
@@ -3125,6 +3115,16 @@ int BattleSituation::calculateDamage(int p, int t)
     callaeffects(p,t,"BasePowerModifier");
     callaeffects(t,p,"BasePowerFoeModifier");
     power = power * (20+move.value("BasePowerAbilityModifier").toInt())/20 * (20+move.value("BasePowerFoeAbilityModifier").toInt())/20;
+
+    int oppPlayer = this->player(t);
+
+    for (int i = 0; i < numberPerSide(); i++) {
+        int sl = slot(oppPlayer, i);
+
+        if (!koed(sl) && sl != t && hasWorkingAbility(sl, Ability::FriendGuard)) {
+            power = power * 3 / 4;
+        }
+    }
 
     power = std::min(power, 65535);
     int damage = ((std::min(((level * 2 / 5) + 2) * power, 65535) * attack / 50) / def);

@@ -1643,7 +1643,7 @@ namespace Ability
         Weak_kneed,
         CursedBody,
         HealingHeart,
-        FriendCard,
+        FriendGuard,
         BrokenArmour,
         HeavyMetal,
         LightMetal,

@@ -1759,9 +1759,9 @@ struct AMHealingHeart : public AM {
     }
 };
 
-struct AMFriendCard : public AM
+struct AMFriendGuard : public AM
 {
-    AMFriendCard() {
+    AMFriendGuard() {
         functions["BasePowerAbilityModifier"] = &bpm;
     }
 
@@ -1898,5 +1898,5 @@ void AbilityEffect::init()
     REGISTER_AB(97, SelfConscious);
     REGISTER_AB(98, Analyze);
     REGISTER_AB(99, HealingHeart);
-    REGISTER_AB(100, FriendCard);
+    REGISTER_AB(100, FriendGuard);
 }
