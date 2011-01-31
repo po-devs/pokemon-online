@@ -288,11 +288,7 @@ TierTree *TierMachine::getDataTree() const
 
 void TierMachine::processDailyRun()
 {
-    emit dailyRunBegin();
-
     for(int i = 0; i < m_tiers.size(); i++) {
         m_tiers[i]->processDailyRun();
     }
-
-    emit dailyRunEnd();
 }

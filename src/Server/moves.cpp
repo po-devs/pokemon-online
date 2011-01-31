@@ -4085,7 +4085,7 @@ struct MMTripleKick : public MM {
         int count = 1;
         if (b.testAccuracy(s, t, true)) {
             count += 1;
-            if (b.testAccuracy(s, t), true) {
+            if (b.testAccuracy(s, t, true)) {
                 count += 1;
             }
         }

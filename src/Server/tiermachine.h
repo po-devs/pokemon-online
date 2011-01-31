@@ -71,8 +71,6 @@ public:
     int max_percent_decay;
 signals:
     void tiersChanged();
-    void dailyRunBegin();
-    void dailyRunEnd();
 public slots:
     void processQuery(QSqlQuery*,const QVariant &,int,WaitingObject*);
     void insertMember(QSqlQuery*,void *,int);
