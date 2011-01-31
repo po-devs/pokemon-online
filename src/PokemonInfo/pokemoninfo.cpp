@@ -1434,10 +1434,10 @@ void ItemInfo::loadNames()
 
     for (int g = GEN_MIN_ITEMS; g <= GEN_MAX; g++) {
         int i = g-GEN_MIN;
-        fill_container_with_file(m_GenItems[i], path(QString("items_gen%1.txt").arg(i)));
+        fill_container_with_file(m_GenItems[i], path(QString("items_gen%1.txt").arg(g)));
 
         QList<int> tempb;
-        fill_container_with_file(tempb, path(QString("berries_gen%1.txt").arg(i)));
+        fill_container_with_file(tempb, path(QString("berries_gen%1.txt").arg(g)));
         foreach(int b, tempb) {
             m_GenItems[i].insert(b+8000);
         }

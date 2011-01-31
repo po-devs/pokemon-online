@@ -399,10 +399,12 @@ void TeamBattle::generateRandom(int gen)
         g.gen() = gen;
         g.load();
 
-        p.ability() = g.abilities().ab(true_rand()%3);
-        /* In case the pokemon has less than 3 abilities, ability 1 has 2/3 of being chosen. Fix it. */
-        if (p.ability() == 0)
-            p.ability() = g.abilities().ab(0);
+        if (gen >= GEN_MIN_ABILITIES) {
+            p.ability() = g.abilities().ab(true_rand()%3);
+            /* In case the pokemon has less than 3 abilities, ability 1 has 2/3 of being chosen. Fix it. */
+            if (p.ability() == 0)
+                p.ability() = g.abilities().ab(0);
+        }
 
         if (g.genderAvail() == Pokemon::MaleAndFemaleAvail) {
             p.gender() = true_rand()%2 ? Pokemon::Female : Pokemon::Male;
@@ -466,7 +468,8 @@ void TeamBattle::generateRandom(int gen)
         else if (movesTaken.contains(Move::Frustration))
             p.happiness() = 0;
 
-        p.item() = ItemInfo::Number(ItemInfo::SortedUsefulNames(gen)[true_rand()%ItemInfo::SortedUsefulNames(gen).size()]);
+        if (gen >= GEN_MIN_ITEMS)
+            p.item() = ItemInfo::Number(ItemInfo::SortedUsefulNames(gen)[true_rand()%ItemInfo::SortedUsefulNames(gen).size()]);
 
         p.updateStats();
         p.nick() = PokemonInfo::Name(p.num());
