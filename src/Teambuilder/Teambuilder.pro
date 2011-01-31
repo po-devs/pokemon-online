@@ -75,6 +75,7 @@ TRANSLATIONS = translation_cz.ts \
     translation_pl.ts \
     translation_pt-br.ts \
     translation_ru.ts \
+    translation_th.ts \
     translation_sv.ts \
     translation_zh-cn.ts
 RC_FILE = myapp.rc

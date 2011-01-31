@@ -198,6 +198,12 @@ void Server::processDailyRun()
 {
     sendAll("The server is updating all the ratings, as it does daily. It may take a bit of time.");
 
+    /* Running delayed as otherwise the message would be sent after the lag, not before */
+    QTimer::singleShot(1000, this, SLOT(updateRatings()));
+}
+
+void Server::updateRatings()
+{
     TierMachine::obj()->processDailyRun();
 
     sendAll("All ratings updated!");
