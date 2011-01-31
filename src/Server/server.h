@@ -138,11 +138,11 @@ public slots:
     void awayChanged(int src, bool away);
     void sendPlayer(int id);
     void tiersChanged();
-    void dailyRunStart();
-    void dailyRunEnd();
     void findBattle(int id,const FindBattleData &f);
     void cancelSearch(int id);
     void loadRatedBattlesSettings();
+
+    void processDailyRun();
 
     void atServerShutDown();
 private:

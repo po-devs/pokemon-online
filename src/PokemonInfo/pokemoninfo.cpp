@@ -1432,7 +1432,8 @@ void ItemInfo::loadNames()
     fill_container_with_file(m_BerryTypes, path("berry_type.txt"));
     fill_container_with_file(m_UsefulItems, path("item_useful.txt"));
 
-    for (int i = GEN_MIN_ITEMS; i <= GEN_MAX; i++) {
+    for (int g = GEN_MIN_ITEMS; g <= GEN_MAX; g++) {
+        int i = g-GEN_MIN;
         fill_container_with_file(m_GenItems[i], path(QString("items_gen%1.txt").arg(i)));
 
         QList<int> tempb;
