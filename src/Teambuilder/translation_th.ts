@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ru_RU">
+<TS version="2.0" language="th_TH">
 <context>
     <name>AdvancedSearch</name>
     <message>
@@ -241,8 +241,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="487"/>
-        <source>%1 was burned!</source>
+        <location filename="basebattlewindow.cpp" line="485"/>
+        <source>%1 fell asleep!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -251,8 +251,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="485"/>
-        <source>%1 fell asleep!</source>
+        <location filename="basebattlewindow.cpp" line="487"/>
+        <source>%1 was burned!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -437,6 +437,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="basebattlewindow.cpp" line="827"/>
+        <source>%1 shifted spots to the middle!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="basebattlewindow.cpp" line="829"/>
         <source>%1 shifted spots with %2!</source>
         <translation type="unfinished"></translation>
@@ -563,7 +568,6 @@
         <location filename="battlewindow.cpp" line="77"/>
         <location filename="battlewindow.cpp" line="299"/>
         <source>&amp;Switch Pokemon</source>
-        <oldsource>&amp;Switch PokÃ©mon</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -574,7 +578,6 @@
     <message>
         <location filename="battlewindow.cpp" line="82"/>
         <source>&amp;Pokemon</source>
-        <oldsource>&amp;PokÃ©mon</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -683,7 +686,6 @@
     <message>
         <location filename="pokedex.cpp" line="194"/>
         <source>&lt;b&gt;Ht:&lt;/b&gt; %1 m</source>
-        <oldsource>&lt;b&gt;Ht:&lt;/b&gt; %1</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -830,26 +832,6 @@
 <context>
     <name>Client</name>
     <message>
-        <location filename="client.cpp" line="77"/>
-        <source>&amp;Find Battle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="78"/>
-        <source>&amp;Register</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="79"/>
-        <source>&amp;Exit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="80"/>
-        <source>&amp;Send</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="client.cpp" line="34"/>
         <source>Players</source>
         <translation type="unfinished"></translation>
@@ -867,6 +849,26 @@
     <message>
         <location filename="client.cpp" line="44"/>
         <source>Join: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="77"/>
+        <source>&amp;Find Battle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="78"/>
+        <source>&amp;Register</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="79"/>
+        <source>&amp;Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="80"/>
+        <source>&amp;Send</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -930,6 +932,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="client.cpp" line="768"/>
+        <source>Move player list to &amp;right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="client.cpp" line="773"/>
         <source>&amp;Tiers</source>
         <translation type="unfinished"></translation>
@@ -938,6 +945,11 @@
         <location filename="client.cpp" line="775"/>
         <source>&amp;Battle options</source>
         <comment>Menu</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="776"/>
+        <source>Save &amp;Battle Logs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -956,23 +968,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="795"/>
-        <source>Old school buttons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="776"/>
-        <source>Save &amp;Battle Logs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="client.cpp" line="768"/>
-        <source>Move player list to &amp;right</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="client.cpp" line="790"/>
         <source>Animate HP Bar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="795"/>
+        <source>Old school buttons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1668,17 +1670,17 @@ Moves:
     </message>
     <message>
         <location filename="pokedex.cpp" line="515"/>
-        <source>Speed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="pokedex.cpp" line="515"/>
         <source>Special Attack</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="pokedex.cpp" line="515"/>
         <source>Special Defense</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="pokedex.cpp" line="515"/>
+        <source>Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1736,17 +1738,17 @@ Moves:
     </message>
     <message>
         <location filename="advanced.cpp" line="50"/>
-        <source>Speed:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="advanced.cpp" line="50"/>
         <source>Sp.Att:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="advanced.cpp" line="50"/>
         <source>Sp.Def:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="advanced.cpp" line="50"/>
+        <source>Speed:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1813,17 +1815,17 @@ Moves:
     </message>
     <message>
         <location filename="advanced.cpp" line="165"/>
-        <source>Speed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="advanced.cpp" line="165"/>
         <source>Sp Att</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="advanced.cpp" line="165"/>
         <source>Sp Def</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="advanced.cpp" line="165"/>
+        <source>Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1851,17 +1853,17 @@ Moves:
     </message>
     <message>
         <location filename="teambuilder.cpp" line="1663"/>
-        <source>Speed:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="teambuilder.cpp" line="1663"/>
         <source>Special Attack:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="1663"/>
         <source>Special Defense:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="1663"/>
+        <source>Speed:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1999,12 +2001,6 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1499"/>
-        <location filename="teambuilder.cpp" line="1510"/>
-        <source>Tutor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="teambuilder.cpp" line="1494"/>
         <location filename="teambuilder.cpp" line="1500"/>
         <location filename="teambuilder.cpp" line="1505"/>
@@ -2025,14 +2021,6 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="teambuilder.cpp" line="1502"/>
-        <location filename="teambuilder.cpp" line="1513"/>
-        <location filename="teambuilder.cpp" line="1520"/>
-        <location filename="teambuilder.cpp" line="1533"/>
-        <source>Breeding</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="teambuilder.cpp" line="1496"/>
         <location filename="teambuilder.cpp" line="1503"/>
         <location filename="teambuilder.cpp" line="1507"/>
@@ -2040,6 +2028,20 @@ Moves:
         <location filename="teambuilder.cpp" line="1521"/>
         <location filename="teambuilder.cpp" line="1535"/>
         <source>Special</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="1499"/>
+        <location filename="teambuilder.cpp" line="1510"/>
+        <source>Tutor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="1502"/>
+        <location filename="teambuilder.cpp" line="1513"/>
+        <location filename="teambuilder.cpp" line="1520"/>
+        <location filename="teambuilder.cpp" line="1533"/>
+        <source>Breeding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2138,6 +2140,11 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="box.cpp" line="700"/>
+        <source>Dele&amp;te</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="box.cpp" line="701"/>
         <source>&amp;Edit Box Name...</source>
         <translation type="unfinished"></translation>
@@ -2181,11 +2188,6 @@ Moves:
     <message>
         <location filename="box.cpp" line="796"/>
         <source>Do you want to delete box %1?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="box.cpp" line="700"/>
-        <source>Dele&amp;te</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2330,17 +2332,17 @@ Moves:
     </message>
     <message>
         <location filename="teambuilder.cpp" line="371"/>
-        <source>Advance (&amp;3rd gen)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="teambuilder.cpp" line="371"/>
         <source>RBY (&amp;1st gen)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="371"/>
         <source>GSC (&amp;2nd gen)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="teambuilder.cpp" line="371"/>
+        <source>Advance (&amp;3rd gen)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

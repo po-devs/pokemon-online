@@ -143,6 +143,7 @@ public slots:
     void loadRatedBattlesSettings();
 
     void processDailyRun();
+    void updateRatings();
 
     void atServerShutDown();
 private:
