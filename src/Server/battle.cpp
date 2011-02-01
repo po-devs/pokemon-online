@@ -2205,8 +2205,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
 
 
-            if (gen() >= 5 && koed(target))
+            if (gen() >= 5 && koed(target)) {
+                changeStatus(player,Pokemon::Koed);
                 notify(All, Ko, target);
+            }
 
             if (hit) {
                 notifyHits(hitcount);
@@ -2216,8 +2218,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 callaeffects(target, player, "AfterBeingPlumetted");
             }
 
-            if (gen() <= 4 && koed(target))
+            if (gen() <= 4 && koed(target)) {
                 notify(All, Ko, target);
+                changeStatus(player,Pokemon::Koed);
+            }
 
             if (!koed(player)) {
                 calleffects(player, target, "AfterAttackSuccessful");
@@ -2279,8 +2283,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     trueend:
     pokeMemory(player)["HasMovedOnce"] = true;
 
-    if (gen() <= 4 && koed(player))
+    if (gen() <= 4 && koed(player)) {
+        changeStatus(player,Pokemon::Koed);
         notify(All, Ko, player);
+    }
 
     /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
     calleffects(player, player, "AfterAttackFinished");
@@ -3588,10 +3594,10 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
         notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
     }
 
-    changeStatus(player,Pokemon::Koed);
-
-    if (!attacking() || (gen() >= 5 && (player == source || attacked() != player)) )
+    if (!attacking() || tmove(attacker()).power == 0 || (gen() >= 5 && (player == source || attacked() != player)) ) {
+        changeStatus(player,Pokemon::Koed);
         notify(All, Ko, player);
+    }
 
     //useful for third gen
     turnMemory(player)["WasKoed"] = true;
