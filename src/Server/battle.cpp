@@ -3986,8 +3986,7 @@ void BattleSituation::sendBerryMessage(int move, int src, int part, int foe, int
 
 void BattleSituation::fail(int player, int move, int part, int type, int trueSource)
 {
-    turnMemory(player)["FailingMessage"] = false;
-    turnMemory(player)["Failed"] = true;
+    failSilently(player);
     sendMoveMessage(move, part, trueSource != -1? trueSource : player, type, player,turnMemory(player)["MoveChosen"].toInt());
 }
 
