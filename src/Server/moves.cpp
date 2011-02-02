@@ -4812,6 +4812,7 @@ struct MMMagicRoom : public MM {
         if (b.battleMemory()["MagicRoomCount"].toInt() == 0) {
             b.sendMoveMessage(156,1,s,Pokemon::Psychic);
             b.battleMemory().remove("MagicRoomCount");
+            removeFunction(b.battleMemory(), "EndTurn9", "MagicRoom");
         }
     }
 };
