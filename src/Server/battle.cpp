@@ -10,7 +10,7 @@
 #include "tiermachine.h"
 #include "tier.h"
 #include "pluginmanager.h"
-#include "../Teambuilder/theme.h"
+#include "theme.h"
 
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *p)
     : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
@@ -129,7 +129,9 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
 
 BattleSituation::~BattleSituation()
 {
-    battleLog.close();
+    if(useBattleLog) {
+        battleLog.close();
+    }
     terminate();
     /* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
     wait();
@@ -143,19 +145,19 @@ QString BattleSituation::getBattleLogFilename() const
 
 void BattleSituation::start(ContextSwitcher &ctx)
 {
-    QString date = QDate::currentDate().toString("yyyy-MM-dd");
-    QString time = QTime::currentTime().toString("hh:mm:ss");
-    QString id0 = QString::number(myid[0]);
-    QString id1 = QString::number(myid[1]);
+	if(useBattleLog) {
+		QString date = QDate::currentDate().toString("yyyy-MM-dd");
+		QString time = QTime::currentTime().toString("hh:mm:ss");
+		QString id0 = QString::number(myid[0]);
+		QString id1 = QString::number(myid[1]);
 
-    qDebug() << "logs/battles/" + date + "/" + time + "-" + id0 + "-" + id1;
-
-    QDir d("");
-    if(!d.exists("logs/battles/" + date)) {
-        d.mkpath("logs/battles/" + date);
+		QDir d("");
+		if(!d.exists("logs/battles/" + date)) {
+			d.mkpath("logs/battles/" + date);
+		}
+		battleLog.setFileName(QString("logs/battles/%1/%2-%3-%4").arg(date, time, id0, id1));
+		battleLog.open(QIODevice::WriteOnly);
     }
-    battleLog.setFileName("logs/battles/" + date + "/" + time + "-" + id0 + "-" + id1);
-    battleLog.open(QIODevice::WriteOnly);
 
     appendBattleLog("BattleStart", toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(player1->name(), player2->name()));
 
@@ -4504,7 +4506,14 @@ void BattleSituation::BasicMoveInfo::reset()
 
 void BattleSituation::appendBattleLog(const QString &command, const QString &message)
 {
-    QString log("<div class=\""+command+"\">" + message + "</div>\n");
-    battleLog.write( log.toUtf8() );
-    battleLog.flush();
+    if(useBattleLog) {
+        QString log("<div class=\""+command+"\">" + message + "</div>\n");
+        battleLog.write( log.toUtf8() );
+        battleLog.flush();
+    }
+}
+
+void BattleSituation::setLogging(const bool logging)
+{
+	useBattleLog = logging;
 }
