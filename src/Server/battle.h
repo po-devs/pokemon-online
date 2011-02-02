@@ -158,6 +158,8 @@ public:
     bool hasMinimalStatMod(int player, int stat);
     bool hasMaximalStatMod(int player, int stat);
     bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell = true, bool *negative = NULL);
+    void setLogging(bool logging);
+    QString getBattleLogFilename() const;
 private:
     bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
     /* Returns false if blocked */
@@ -376,6 +378,9 @@ private:
     void storeChoice(const BattleChoice &b);
     bool allChoicesOkForPlayer(int player);
     bool allChoicesSet();
+
+    void appendBattleLog(const QString &command, const QString &message);
+    QString name(int id);
 signals:
     /* Due to threading issue, and the signal not being direct,
        The battle might already be deleted when the signal is received.
@@ -412,6 +417,9 @@ private:
     int myid[2];
     QString winMessage[2];
     QString loseMessage[2];
+
+    bool useBattleLog;
+    QFile battleLog;
 protected:
     void timerEvent(QTimerEvent *);
 

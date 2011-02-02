@@ -18,6 +18,7 @@ signals:
     void maxChanged(int num);
     void logSavingChanged(bool logSaving);
     void useChannelFileLogChanged(bool useChannelFileLog);
+    void useBattleFileLogChanged(bool useBattleFileLog);
     void latencyChanged(bool lowDelay);
 private slots:
     void apply();
@@ -31,6 +32,7 @@ private:
     QSpinBox *serverPort;
     QCheckBox *saveLogs;
     QCheckBox *channelFileLog;
+    QCheckBox *battleFileLog;
     QCheckBox *lowLatency;
 };
 

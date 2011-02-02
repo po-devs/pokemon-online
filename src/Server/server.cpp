@@ -149,8 +149,11 @@ void Server::start(){
     if (s.value("logs_channel_files").isNull()) {
         s.setValue("logs_channel_files", false);
     }
-	
+    if (s.value("logs_battle_files").isNull()) {
+        s.setValue("logs_battle_files", false);
+    }
     useChannelFileLog = s.value("logs_channel_files").toBool();
+    useBattleFileLog = s.value("logs_battle_files").toBool();
 
     /*
       The timer for clearing the last rated battles memory, set to 3 hours
@@ -1086,7 +1089,15 @@ void Server::useChannelFileLogChanged(bool logging)
     if (useChannelFileLog == logging)
         return;
     useChannelFileLog = logging;
-    printLine("Extended Chat Logging changed", false, true);
+    printLine("Channel File Logging changed", false, true);
+}
+
+void Server::useBattleFileLogChanged(bool logging)
+{
+    if (useBattleFileLog == logging)
+        return;
+    useBattleFileLog = logging;
+    printLine("Battle File Logging changed", false, true);
 }
 
 void Server::TCPDelayChanged(bool lowTCP)
@@ -1220,6 +1231,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
         battle->sendMoveMessage(57, dominantWeather - 1, 0, TypeInfo::TypeForWeather(dominantWeather));
     }
 
+    battle->setLogging(useBattleFileLog);
     battle->start(battleThread);
 
     myengine->afterBattleStarted(id1,id2,c);
