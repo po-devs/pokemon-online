@@ -4,4 +4,4 @@ PO_DIR=`dirname "$PO_BIN"`
 
 export LD_LIBRARY_PATH="$PO_DIR:$LD_LIBRARY_PATH"
 cd "$PO_DIR"
-exec ./Server
+exec ./Server $*
