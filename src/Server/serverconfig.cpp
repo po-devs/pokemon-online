@@ -53,11 +53,11 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 
     l->addRow("Extended Logging: ", saveLogs = new QCheckBox("Show all player events and all logging"));
     saveLogs->setChecked(settings.value("show_log_messages").toBool());
-	
+
     l->addRow("File Logging for Channels: ", channelFileLog = new QCheckBox("Save channel messages to daily rotating log files"));
     channelFileLog->setChecked(settings.value("logs_channel_files").toBool());
 
-	l->addRow("File Logging for Battle: ", battleFileLog = new QCheckBox("Save battle logs to files"));
+    l->addRow("File Logging for Battle: ", battleFileLog = new QCheckBox("Save battle logs to files"));
     battleFileLog->setChecked(settings.value("logs_battle_files").toBool());
 
     l->addRow("Low Latency: ", lowLatency = new QCheckBox("Sacrifices bandwith for latency (look up Nagle's algorithm)"));
@@ -83,7 +83,7 @@ void ServerWindow::apply()
     settings.setValue("server_announcement", serverAnnouncement->toPlainText());
     settings.setValue("show_log_messages", saveLogs->isChecked());
     settings.setValue("logs_channel_files", channelFileLog->isChecked());
-	settings.setValue("logs_battle_files", channelFileLog->isChecked());
+    settings.setValue("logs_battle_files", channelFileLog->isChecked());
     settings.setValue("mainchanname", mainChan->text());
     settings.setValue("low_TCP_delay", lowLatency->isChecked());
     emit descChanged(serverDesc->toPlainText());
@@ -93,7 +93,7 @@ void ServerWindow::apply()
     emit privacyChanged(serverPrivate->currentIndex());
     emit logSavingChanged(saveLogs->isChecked());
     emit useChannelFileLogChanged(channelFileLog->isChecked());
-	emit useBattleFileLogChanged(battleFileLog->isChecked());
+    emit useBattleFileLogChanged(battleFileLog->isChecked());
     if (mainChan->text().length() > 0)
         emit mainChanChanged(mainChan->text());
     emit latencyChanged(lowLatency->isChecked());

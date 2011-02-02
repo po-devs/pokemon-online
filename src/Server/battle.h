@@ -158,7 +158,7 @@ public:
     bool hasMinimalStatMod(int player, int stat);
     bool hasMaximalStatMod(int player, int stat);
     bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell = true, bool *negative = NULL);
-	void setLogging(bool logging);
+    void setLogging(bool logging);
     QString getBattleLogFilename() const;
 private:
     bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);

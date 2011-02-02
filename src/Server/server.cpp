@@ -149,7 +149,7 @@ void Server::start(){
     if (s.value("logs_channel_files").isNull()) {
         s.setValue("logs_channel_files", false);
     }
-	if (s.value("logs_battle_files").isNull()) {
+    if (s.value("logs_battle_files").isNull()) {
         s.setValue("logs_battle_files", false);
     }
     useChannelFileLog = s.value("logs_channel_files").toBool();
