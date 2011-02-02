@@ -98,6 +98,7 @@ public slots:
     void mainChanChanged(const QString &mainChan);
     void regPrivacyChanged(const int &priv);
     void logSavingChanged(bool logging);
+    void useBattleFileLogChanged(bool logging);
     void useChannelFileLogChanged(bool logging);
     void TCPDelayChanged(bool lowTCP);
     void nameTaken();
@@ -154,6 +155,7 @@ private:
     QString serverName, serverDesc, serverAnnouncement;
     quint16 serverPrivate, serverPlayerMax,serverPort;
     bool showLogMessages;
+    bool useBattleFileLog;
     bool useChannelFileLog;
     bool lowTCPDelay;
 
