@@ -2645,7 +2645,7 @@ int BattleSituation::move(int player, int slot)
 
 void BattleSituation::inflictRecoil(int source, int target)
 {
-    int recoil = tmove(source).recoil;
+    double recoil = tmove(source).recoil;
 
     if (recoil == 0)
         return;
@@ -2666,7 +2666,10 @@ void BattleSituation::inflictRecoil(int source, int target)
             appendBattleLog("Recoil", tu(tr("%1 had its energy drained!").arg(poke(who).nick())));
     }
 
-    int damage = std::abs(recoil) * turnMemory(source).value("DamageInflicted").toInt() / 100;
+    // "33" means one-third
+    if (recoil == -33) recoil = -100 / 3.;
+
+    int damage = std::abs(int(recoil * turnMemory(source).value("DamageInflicted").toInt() / 100));
 
     if (recoil < 0) {
         inflictDamage(source, damage, source, false);
