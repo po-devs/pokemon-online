@@ -73,6 +73,8 @@ public:
     }
 
     void notifyClause(int clause);
+    void notifyMiss(bool multitar, int player, int target);
+    void notifyKO(int player);
 
     void removeSpectator(int id);
 
