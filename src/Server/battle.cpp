@@ -148,7 +148,7 @@ void BattleSituation::start(ContextSwitcher &ctx)
 {
     if(useBattleLog) {
         QString date = QDate::currentDate().toString("yyyy-MM-dd");
-        QString time = QTime::currentTime().toString("hh:mm:ss");
+        QString time = QTime::currentTime().toString("hh'h'mm'm'ss's'");
         QString id0 = QString::number(myid[0]);
         QString id1 = QString::number(myid[1]);
 
