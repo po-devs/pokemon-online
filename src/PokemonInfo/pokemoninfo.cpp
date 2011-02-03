@@ -1085,6 +1085,14 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     fill_container_with_file(status, path("status.txt"));
     fill_container_with_file(type, path("type.txt"));
 
+    /* Not needed because HM pokemon can be traded between gens got gen 1 & 2*/
+//    if (gen == 1) {
+//        HMs << Move::Cut << Move::Flash << Move::Surf << Move::Strength <<Move::Fly;
+//    } else if (gen == 2) {
+//        HMs << Move::Cut << Move::Flash << Move::Surf << Move::Strength << Move::Whirlpool
+//                        << Move::Waterfall << Move::Fly;
+//    }
+
     if (gen == 3) {
         HMs << Move::Cut << Move::Flash << Move::Surf << Move::RockSmash << Move::Strength << Move::Dive
                 << Move::Waterfall << Move::Fly;
