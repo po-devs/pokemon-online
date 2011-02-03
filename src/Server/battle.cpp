@@ -346,6 +346,8 @@ void BattleSituation::addSpectator(Player *p)
             }
         }
     }
+
+    notifyInfos(key);
 }
 
 void BattleSituation::removeSpectator(int id)
@@ -813,14 +815,14 @@ void BattleSituation::requestChoices()
     /* Now all the players gonna do is analyzeChoice(int player) */
 }
 
-void BattleSituation::notifyInfos()
+void BattleSituation::notifyInfos(int tosend)
 {
     for (int p = 0; p < numberOfSlots(); p++) {
         if (!koed(p)) {
             BattleStats stats = constructStats(p);
             notify(player(p), DynamicStats, p, stats);
             BattleDynamicInfo infos = constructInfo(p);
-            notify(All, DynamicInfo, p, infos);
+            notify(tosend, DynamicInfo, p, infos);
         }
     }
 }
