@@ -140,7 +140,8 @@ BattleSituation::~BattleSituation()
 
 QString BattleSituation::getBattleLogFilename() const
 {
-    return battleLog.fileName();
+    QFileInfo info(battleLog);
+    return info.absoluteFilePath();
 }
 
 void BattleSituation::start(ContextSwitcher &ctx)
