@@ -48,23 +48,37 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
+      <widget class="QRadioButton" name="gen1">
+       <property name="text">
+        <string>Gen 1</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="gen2">
+       <property name="text">
+        <string>Gen 2</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QRadioButton" name="gen3">
        <property name="text">
-        <string>3rd Gen</string>
+        <string>Gen 3</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QRadioButton" name="gen4">
        <property name="text">
-        <string>4th Gen</string>
+        <string>Gen 4</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QRadioButton" name="gen5">
        <property name="text">
-        <string>5th Gen</string>
+        <string>Gen 5</string>
        </property>
       </widget>
      </item>

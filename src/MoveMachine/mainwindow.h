@@ -31,7 +31,7 @@ struct MoveGen
 struct MovesPerPoke
 {
     Pokemon::uniqueId id;
-    MoveGen gens[3];
+    MoveGen gens[5];
 
     void init(Pokemon::uniqueId id);
 };

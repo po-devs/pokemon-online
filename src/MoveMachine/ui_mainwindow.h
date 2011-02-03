@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun 21. Nov 15:14:01 2010
+** Created: Thu 3. Feb 17:08:25 2011
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -40,6 +40,8 @@ public:
     QLineEdit *pokemonName;
     QGroupBox *groupBox;
     QHBoxLayout *horizontalLayout;
+    QRadioButton *gen1;
+    QRadioButton *gen2;
     QRadioButton *gen3;
     QRadioButton *gen4;
     QRadioButton *gen5;
@@ -89,6 +91,16 @@ public:
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        gen1 = new QRadioButton(groupBox);
+        gen1->setObjectName(QString::fromUtf8("gen1"));
+
+        horizontalLayout->addWidget(gen1);
+
+        gen2 = new QRadioButton(groupBox);
+        gen2->setObjectName(QString::fromUtf8("gen2"));
+
+        horizontalLayout->addWidget(gen2);
+
         gen3 = new QRadioButton(groupBox);
         gen3->setObjectName(QString::fromUtf8("gen3"));
 
@@ -186,9 +198,11 @@ public:
         save->setWhatsThis(QString());
 #endif // QT_NO_WHATSTHIS
         groupBox->setTitle(QApplication::translate("MainWindow", "GroupBox", 0, QApplication::UnicodeUTF8));
-        gen3->setText(QApplication::translate("MainWindow", "3rd Gen", 0, QApplication::UnicodeUTF8));
-        gen4->setText(QApplication::translate("MainWindow", "4th Gen", 0, QApplication::UnicodeUTF8));
-        gen5->setText(QApplication::translate("MainWindow", "5th Gen", 0, QApplication::UnicodeUTF8));
+        gen1->setText(QApplication::translate("MainWindow", "Gen 1", 0, QApplication::UnicodeUTF8));
+        gen2->setText(QApplication::translate("MainWindow", "Gen 2", 0, QApplication::UnicodeUTF8));
+        gen3->setText(QApplication::translate("MainWindow", "Gen 3", 0, QApplication::UnicodeUTF8));
+        gen4->setText(QApplication::translate("MainWindow", "Gen 4", 0, QApplication::UnicodeUTF8));
+        gen5->setText(QApplication::translate("MainWindow", "Gen 5", 0, QApplication::UnicodeUTF8));
         pokeMoves->setTabText(pokeMoves->indexOf(tab), QApplication::translate("MainWindow", "Level Moves", 0, QApplication::UnicodeUTF8));
         pokeMoves->setTabText(pokeMoves->indexOf(tab_2), QApplication::translate("MainWindow", "Tutor Moves", 0, QApplication::UnicodeUTF8));
         pokeMoves->setTabText(pokeMoves->indexOf(tab_3), QApplication::translate("MainWindow", "Egg Moves", 0, QApplication::UnicodeUTF8));
