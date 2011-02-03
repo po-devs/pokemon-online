@@ -1501,10 +1501,10 @@ void TB_PokemonBody::configureMoves()
         << map_container_with_value(PokemonInfo::PreEvoMoves(num,2), tr("Pre Evo"))
         << map_container_with_value(PokemonInfo::EggMoves(num,2), tr("Breeding"))
         << map_container_with_value(PokemonInfo::SpecialMoves(num,2), tr("Special"))
-        << map_container_with_value(PokemonInfo::TMMoves(num,1), tr("TM/HM"))
-        << map_container_with_value(PokemonInfo::LevelMoves(num,1), tr("Level"))
-        << map_container_with_value(PokemonInfo::PreEvoMoves(num,1), tr("Pre Evo"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num,1), tr("Special"));
+        << map_container_with_value(PokemonInfo::TMMoves(num,1), tr("1G TM/HM"))
+        << map_container_with_value(PokemonInfo::LevelMoves(num,1), tr("1G Level"))
+        << map_container_with_value(PokemonInfo::PreEvoMoves(num,1), tr("1G Pre Evo"))
+        << map_container_with_value(PokemonInfo::SpecialMoves(num,1), tr("1G Special"));
     } else if (gen == 3) {
         sets << map_container_with_value(PokemonInfo::TMMoves(num, 3), tr("TM/HM"))
         << map_container_with_value(PokemonInfo::TutorMoves(num,3), tr("Tutor"))

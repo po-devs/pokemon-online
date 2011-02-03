@@ -28,9 +28,11 @@ void MovesPerPoke::init(Pokemon::uniqueId poke)
 {
     this->id = poke;
 
-    gens[0].init(3,poke);
-    gens[1].init(4,poke);
-    gens[2].init(5,poke);
+    gens[0].init(1,poke);
+    gens[1].init(2,poke);
+    gens[2].init(3,poke);
+    gens[3].init(4,poke);
+    gens[4].init(5,poke);
 }
 
 void PokeMovesDb::init()
@@ -53,20 +55,32 @@ void PokeMovesDb::init()
             pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[PreEvoMoves]);
             pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[SpecialMoves]);
             pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[LevelMoves]);
-            pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[TutorMoves]);
             pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[TMMoves]);
-            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[LevelMoves]);
-            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[SpecialMoves]);
-            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[PreEvoMoves]);
-            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[LevelMoves]);
-            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TutorMoves]);
-            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TMMoves]);
             pokes[i].gens[1].moves[PreEvoMoves].unite(pokes[preEvo].gens[1].moves[LevelMoves]);
             pokes[i].gens[1].moves[PreEvoMoves].unite(pokes[preEvo].gens[1].moves[SpecialMoves]);
             pokes[i].gens[1].moves[PreEvoMoves].unite(pokes[preEvo].gens[1].moves[PreEvoMoves]);
             pokes[i].gens[1].moves[PreEvoMoves].subtract(pokes[i].gens[1].moves[LevelMoves]);
             pokes[i].gens[1].moves[PreEvoMoves].subtract(pokes[i].gens[1].moves[TutorMoves]);
             pokes[i].gens[1].moves[PreEvoMoves].subtract(pokes[i].gens[1].moves[TMMoves]);
+            pokes[i].gens[1].moves[EggMoves].unite(pokes[preEvo].gens[1].moves[EggMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[LevelMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[SpecialMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[PreEvoMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[LevelMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TutorMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TMMoves]);
+            pokes[i].gens[3].moves[PreEvoMoves].unite(pokes[preEvo].gens[3].moves[LevelMoves]);
+            pokes[i].gens[3].moves[PreEvoMoves].unite(pokes[preEvo].gens[3].moves[SpecialMoves]);
+            pokes[i].gens[3].moves[PreEvoMoves].unite(pokes[preEvo].gens[3].moves[PreEvoMoves]);
+            pokes[i].gens[3].moves[PreEvoMoves].subtract(pokes[i].gens[3].moves[LevelMoves]);
+            pokes[i].gens[3].moves[PreEvoMoves].subtract(pokes[i].gens[3].moves[TutorMoves]);
+            pokes[i].gens[3].moves[PreEvoMoves].subtract(pokes[i].gens[3].moves[TMMoves]);
+            pokes[i].gens[4].moves[PreEvoMoves].unite(pokes[preEvo].gens[4].moves[LevelMoves]);
+            pokes[i].gens[4].moves[PreEvoMoves].unite(pokes[preEvo].gens[4].moves[SpecialMoves]);
+            pokes[i].gens[4].moves[PreEvoMoves].unite(pokes[preEvo].gens[4].moves[PreEvoMoves]);
+            pokes[i].gens[4].moves[PreEvoMoves].subtract(pokes[i].gens[4].moves[LevelMoves]);
+            pokes[i].gens[4].moves[PreEvoMoves].subtract(pokes[i].gens[4].moves[TutorMoves]);
+            pokes[i].gens[4].moves[PreEvoMoves].subtract(pokes[i].gens[4].moves[TMMoves]);
             //pokes[i].gens[2].moves[EggMoves].unite(pokes[preEvo].gens[2].moves[EggMoves]);
         }
     }
@@ -74,29 +88,29 @@ void PokeMovesDb::init()
 
 void PokeMovesDb::save()
 {
-    QFile files[3][7];
+    QFile files[5][7];
 
-    for (int gen = 3; gen <= 5; gen++) {
+    for (int gen = 1; gen <= 5; gen++) {
         QString genS = "db/pokes/" + QString::number(gen) + "G_";
-        files[gen-3][LevelMoves].setFileName(genS + "level_moves.txt");
-        files[gen-3][EggMoves].setFileName(genS + "egg_moves.txt");
-        files[gen-3][TutorMoves].setFileName(genS + "tutor_moves.txt");
-        files[gen-3][SpecialMoves].setFileName(genS + "special_moves.txt");
-        files[gen-3][TMMoves].setFileName(genS + "tm_and_hm_moves.txt");
-        files[gen-3][PreEvoMoves].setFileName(genS + "pre_evo_moves.txt");
-        files[gen-3][DreamWorldMoves].setFileName(genS + "dw_moves.txt");
+        files[gen-1][LevelMoves].setFileName(genS + "level_moves.txt");
+        files[gen-1][EggMoves].setFileName(genS + "egg_moves.txt");
+        files[gen-1][TutorMoves].setFileName(genS + "tutor_moves.txt");
+        files[gen-1][SpecialMoves].setFileName(genS + "special_moves.txt");
+        files[gen-1][TMMoves].setFileName(genS + "tm_and_hm_moves.txt");
+        files[gen-1][PreEvoMoves].setFileName(genS + "pre_evo_moves.txt");
+        files[gen-1][DreamWorldMoves].setFileName(genS + "dw_moves.txt");
     }
 
     QList<Pokemon::uniqueId> ids = PokemonInfo::AllIds();
     qSort(ids);
-    for (int gen = 3; gen <= 5; gen++) {
+    for (int gen = 1; gen <= 5; gen++) {
         for (int i = 0; i < (gen == 5 ? 7 : 6); i++) {
-            files[gen-3][i].open(QIODevice::WriteOnly);
+            files[gen-1][i].open(QIODevice::WriteOnly);
             foreach (Pokemon::uniqueId id, ids) {
-                if (PokemonInfo::IsAesthetic(id) || pokes[id].gens[gen-3].moves[i].size() == 0)
+                if (PokemonInfo::IsAesthetic(id) || pokes[id].gens[gen-1].moves[i].size() == 0)
                     continue;
 
-                QList<int> moves = pokes[id].gens[gen-3].moves[i].toList();
+                QList<int> moves = pokes[id].gens[gen-1].moves[i].toList();
                 qSort(moves);
 
                 QString s;
@@ -111,9 +125,9 @@ void PokeMovesDb::save()
                     s += QString::number(move);
                 }
 
-                files[gen-3][i].write(id.toLine(s+"\n").toUtf8());
+                files[gen-1][i].write(id.toLine(s+"\n").toUtf8());
             }
-            files[gen-3][i].close();
+            files[gen-1][i].close();
         }
     }
 }
@@ -297,6 +311,9 @@ MainWindow::MainWindow(QWidget *parent) :
 //    exit(0);
 
     connect(ui->save, SIGNAL(triggered()), SLOT(save()));
+    connect(ui->gen1, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
+    connect(ui->gen2, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
+    connect(ui->gen3, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
     connect(ui->gen4, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
     connect(ui->gen5, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
 
@@ -401,7 +418,7 @@ void MainWindow::addMoves(int gen, int cat, QListWidget *container)
 {
     container->clear();
 
-    foreach(int move, database.pokes[currentPoke].gens[gen-3].moves[cat]) {
+    foreach(int move, database.pokes[currentPoke].gens[gen-1].moves[cat]) {
         container->addItem(new QIdListWidgetItem(move, MoveInfo::Name(move)));
     }
 
@@ -409,7 +426,7 @@ void MainWindow::addMoves(int gen, int cat, QListWidget *container)
 }
 
 int MainWindow::gen() {
-    return ui->gen3->isChecked() ? 3 : (ui->gen4->isChecked() ? 4 : 5);
+    return ui->gen1->isChecked() ? 1 : (ui->gen2->isChecked() ? 2 : (ui->gen3->isChecked() ? 3 : (ui->gen4->isChecked() ? 4 : 5)));
 }
 
 void MainWindow::moveChosen(QListWidgetItem *it)
@@ -417,7 +434,7 @@ void MainWindow::moveChosen(QListWidgetItem *it)
     int movenum = ((QIdListWidgetItem *)it)->id();
     int cat = ui->pokeMoves->currentIndex();
 
-    QSet<int> &moves = database.pokes[currentPoke].gens[gen()-3].moves[cat];
+    QSet<int> &moves = database.pokes[currentPoke].gens[gen()-1].moves[cat];
 
     if (moves.contains(movenum)) {
         return;
@@ -459,7 +476,7 @@ void MainWindow::moveDeleted(QListWidgetItem *it)
         cat = DreamWorldMoves;
     }
 
-    QSet<int> &moves = database.pokes[currentPoke].gens[gen()-3].moves[cat];
+    QSet<int> &moves = database.pokes[currentPoke].gens[gen()-1].moves[cat];
 
     moves.remove(((QIdListWidgetItem*)it)->id());
     addMoves(gen(), cat, container);
