@@ -248,7 +248,7 @@ public:
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */
     ShallowBattlePoke opoke(int slot, int play, int i) const; /* aka 'opp poke', or what you need to know if it's your opponent's poke */
     BattleDynamicInfo constructInfo(int player);
-    void notifyInfos();
+    void notifyInfos(int player = All);
     BattleStats constructStats(int player);
 
     void changeTempMove(int player, int slot, int move);
