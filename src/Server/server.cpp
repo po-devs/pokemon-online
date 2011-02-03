@@ -1305,7 +1305,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
             sendPlayer(winner);
             sendPlayer(loser);
         }
-        myengine->beforeBattleEnded(winner, loser, desc);
+        myengine->beforeBattleEnded(winner, loser, desc, battleid);
 
         ++lastDataId;
         foreach(int chanid, pw->getChannels()) {

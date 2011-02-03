@@ -399,13 +399,13 @@ QString battleDesc[3] = {
     "tie"
 };
 
-void ScriptEngine::beforeBattleEnded(int src, int dest, int desc)
+void ScriptEngine::beforeBattleEnded(int src, int dest, int desc, int battleid)
 {
     if (!myscript.property("beforeBattleEnded", QScriptValue::ResolveLocal).isValid())
         return;
     if (desc < 0 || desc > 2)
         return;
-    evaluate(myscript.property("beforeBattleEnded").call(myscript, QScriptValueList() << src << dest << battleDesc[desc]));
+    evaluate(myscript.property("beforeBattleEnded").call(myscript, QScriptValueList() << src << dest << battleDesc[desc] << battleid));
 }
 
 void ScriptEngine::afterBattleEnded(int src, int dest, int desc)
@@ -1791,6 +1791,17 @@ void ScriptEngine::unban(QString name)
 void ScriptEngine::battleSetup(int src, int dest, int battleId)
 {
     makeEvent("battleSetup", src, dest, battleId);
+}
+
+QString ScriptEngine::getBattleLogFileName(int battleId)
+{
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if (battle) {
+        return battle->getBattleLogFilename();
+    }else{
+        warn("getBattleLogFileName", "can't find a battle with specified id.");
+        return QString();
+    }
 }
 
 void ScriptEngine::prepareWeather(int battleId, int weatherId)

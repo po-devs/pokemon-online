@@ -59,7 +59,7 @@ public:
     void afterBattleMatchup(int src, int dest, const ChallengeInfo &desc);
     void beforeBattleStarted(int src, int dest, const ChallengeInfo &desc);
     void afterBattleStarted(int winner, int loser, const ChallengeInfo &desc);
-    void beforeBattleEnded(int winner, int loser, int desc);
+    QString beforeBattleEnded(int winner, int loser, int desc, int battleid);
     void afterBattleEnded(int winner, int loser, int desc);
     bool beforePlayerAway(int src, bool away);
     void afterPlayerAway(int src, bool away);
@@ -254,6 +254,8 @@ public:
     Q_INVOKABLE void prepareWeather(int battleId, int weatherId);
     Q_INVOKABLE QScriptValue weatherNum(const QString &weatherName);
     Q_INVOKABLE QScriptValue weather(int weatherId);
+
+    Q_INVOKABLE void getBattleLogFileName(int battleid);
 
     Q_INVOKABLE int teamPokeAbility(int id, int slot);
     Q_INVOKABLE void modifyPokeAbility(int id, int slot, int ability, int gen = GEN_MAX);
