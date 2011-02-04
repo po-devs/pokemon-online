@@ -714,12 +714,15 @@ void BattleSituation::notifyFail(int p)
 
 void BattleSituation::endTurnStatus(int player)
 {
-    if (koed(player) || hasWorkingAbility(player, Ability::MagicGuard))
+    if (koed(player))
         return;
 
     switch(poke(player).status())
     {
     case Pokemon::Burnt:
+        if (hasWorkingAbility(player, Ability::MagicGuard))
+            return;
+
         notify(All, StatusMessage, player, qint8(HurtBurn));
 
         if (useBattleLog)
@@ -733,6 +736,12 @@ void BattleSituation::endTurnStatus(int player)
             sendAbMessage(45,0,player,0,Pokemon::Poison);
             healLife(player, poke(player).totalLifePoints()/8);
         } else {
+            if (hasWorkingAbility(player, Ability::MagicGuard)) {
+                /* Toxic still increases under magic guard */
+                if (poke(player).statusCount() != 0)
+                    poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
+                return;
+            }
             notify(All, StatusMessage, player, qint8(HurtPoison));
 
             if (useBattleLog)
