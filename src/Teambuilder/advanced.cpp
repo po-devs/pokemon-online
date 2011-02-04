@@ -49,7 +49,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     firstColumn->addWidget(dvs);
     QGridLayout *dvlayout = new QGridLayout(dvs);
     QStringList stats_l;
-    stats_l << tr("HP:") << tr("Att:") << tr("Def:") << tr("Sp.Att:") << tr("Sp.Def:") << tr("Speed:");
+    stats_l << tr("HP:") << tr("Att:") << tr("Def:") << (gen() == 1 ? tr("Special:", "Stat") : tr("Sp.Att:")) << tr("Sp.Def:") << tr("Speed:");
 
     for (int i = 0; i < 6; i++)
     {
@@ -61,12 +61,22 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
         dvlayout->addWidget(l, i, 0);
         dvlayout->addWidget(s, i, 1);
 
-	dvchoice[i]->setRange(0,31);
+        dvchoice[i]->setRange(0, gen() <= 2 ? 15 : 31);
 	dvchoice[i]->setAccelerated(true);
 	connect(dvchoice[i], SIGNAL(valueChanged(int)), SLOT(changeDV(int)));
 
+        if (gen() <= 2 && i == Hp) {
+            dvchoice[i]->setDisabled(true);
+        }
+
 	dvlayout->addWidget((stats[i]=new QLabel()), i, 2);
         stats[i]->setObjectName("BigText");
+
+        if (gen() == 1 && i == SpDefense) {
+            l->hide();
+            stats[i]->hide();
+            s->hide();
+        }
     }
 
     if (gen() >= 2) {
@@ -139,15 +149,13 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
         }
     }
 
-    if (gen() >= 2) {
+    if (gen() >= 3) {
         secondColumn->addWidget(shiny = new QCheckBox(tr("&Shiny")));
         if (poke()->shiny()) {
             shiny->setChecked(true);
         }
         connect(shiny, SIGNAL(toggled(bool)), SLOT(changeShininess(bool)));
-    }
 
-    if (gen() >= 3) {
         QPushButton *bForms = new QPushButton(tr("Alternate Formes"));
         QMenu *m= new QMenu(bForms);
 
@@ -169,9 +177,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
         }
 
         baselayout->addWidget(bForms);
-    }
 
-    if (gen() >= 2) {
         stats_l.clear();
         stats_l << tr("HP") << tr("Att") << tr("Def") << tr("Sp Att") << tr("Sp Def") << tr("Speed");
 
@@ -269,7 +275,21 @@ void TB_Advanced::changeDV(int stat, int newval)
     if (poke()->DV(stat) != newval)
     {
 	poke()->setDV(stat, newval);
-	updateDV(stat);
+
+        /* Making Sp Atk and Sp Def coordinated in gen 2 */
+        if (gen() == 2 && (stat == SpDefense || stat == SpAttack)) {
+            updateDV(SpDefense);
+            updateDV(SpAttack);
+        } else {
+            updateDV(stat);
+        }
+
+        if (gen() <= 2) {
+            updateDV(Hp);
+            changeShininess(poke()->shiny());
+            changeGender(poke()->gender());
+        }
+
 	updateHiddenPower();
     }
 }
@@ -317,7 +337,7 @@ void TB_Advanced::changeLevel(int level)
 
 void TB_Advanced::updateHiddenPower()
 {
-    if (gen() < 2)
+    if (gen() <= 1)
         return;
 
     hpower->setText(QString::number(calculateHiddenPowerPower()));
@@ -330,6 +350,9 @@ void TB_Advanced::updateHiddenPower()
 
 void TB_Advanced::updateHpAndDvChoice()
 {
+    if (gen() <= 2)
+        return;
+
     int type = currentHiddenPower();
 
     QList<QStringList> hpAndDvVals = HiddenPowerInfo::PossibilitiesForType(type);
@@ -362,22 +385,30 @@ const PokeTeam * TB_Advanced::poke() const
 
 int TB_Advanced::calculateHiddenPowerPower() const
 {
-    return HiddenPowerInfo::Power(poke()->DV(0), poke()->DV(1), poke()->DV(2), poke()->DV(3), poke()->DV(4), poke()->DV(5));
+    return HiddenPowerInfo::Power(poke()->gen(), poke()->DV(0), poke()->DV(1), poke()->DV(2), poke()->DV(3), poke()->DV(4), poke()->DV(5));
 }
 
 int TB_Advanced::calculateHiddenPowerType() const
 {
-    return HiddenPowerInfo::Type(poke()->DV(0), poke()->DV(1), poke()->DV(2), poke()->DV(3), poke()->DV(4), poke()->DV(5));
+    return HiddenPowerInfo::Type(poke()->gen(), poke()->DV(0), poke()->DV(1), poke()->DV(2), poke()->DV(3), poke()->DV(4), poke()->DV(5));
 }
 
 void TB_Advanced::changeHiddenPower(int newtype)
 {
-    if (newtype+1 == calculateHiddenPowerType())
+    newtype += 1;
+    if (newtype == calculateHiddenPowerType())
 	return;
 
-    updateHpAndDvChoice();
-    //We pick the first possible set of DVs (defaulted as the 'best' possible one)
-    changeDVsAccordingToHP(0);
+    if (gen() >= 3) {
+        updateHpAndDvChoice();
+        //We pick the first possible set of DVs (defaulted as the 'best' possible one)
+        changeDVsAccordingToHP(0);
+    } else {
+        QPair<quint8,quint8> dvs = HiddenPowerInfo::AttDefDVsForGen2(newtype);
+
+        changeDV(Attack, dvs.first);
+        changeDV(Defense, dvs.second);
+    }
 }
 
 void TB_Advanced::changeDVsAccordingToHP(int row)

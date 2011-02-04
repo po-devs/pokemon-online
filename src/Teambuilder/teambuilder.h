@@ -371,23 +371,6 @@ private:
 class TB_EVManager : public QWidget
 {
     Q_OBJECT
-private:
-    QSlider *m_sliders[6];
-    QLabel *m_stats[6];
-    QLineEdit *m_evs[6];
-    QSlider *m_mainSlider;
-    PokeTeam *m_poke;
-    QLabel * m_mainLabel;
-    QImageButtonLR *natureButtons[5];
-
-    PokeTeam *poke();
-    QSlider *slider(int stat);
-    const QSlider *slider(int stat) const;
-    QLineEdit *evLabel(int stat);
-    const QLineEdit *evLabel(int stat) const;
-    QLabel *statLabel(int stat);
-    /* the reverse of slider(int), evlabel(int) */
-    int stat(QObject *sender) const;
 public:
     TB_EVManager(PokeTeam *poke);
 
@@ -401,6 +384,7 @@ public:
     void updateEV(int stat);
     void updateMain();
     void updateNatureButtons();
+    void changeGen(int);
 public slots:
     void changeEV(int newvalue);
     void changeEV(const QString &newvalue);
@@ -409,6 +393,26 @@ public slots:
 signals:
     void EVChanged(int stat);
     void natureChanged(int up, int down);
+private:
+    QSlider *m_sliders[6];
+    QLabel *m_stats[6];
+    QLabel *m_descs[6];
+    QLineEdit *m_evs[6];
+    QSlider *m_mainSlider;
+    PokeTeam *m_poke;
+    QLabel * m_mainLabel;
+    QImageButtonLR *natureButtons[5];
+
+    PokeTeam *poke();
+    const PokeTeam *poke() const;
+    QSlider *slider(int stat);
+    const QSlider *slider(int stat) const;
+    QLineEdit *evLabel(int stat);
+    const QLineEdit *evLabel(int stat) const;
+    QLabel *statLabel(int stat);
+    /* the reverse of slider(int), evlabel(int) */
+    int stat(QObject *sender) const;
+    int gen() const;
 };
 
 

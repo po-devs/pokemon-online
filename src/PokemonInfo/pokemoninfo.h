@@ -40,6 +40,7 @@ public:
     static int LevelBalance(const Pokemon::uniqueId &pokeid);
     static QString WeightS(const Pokemon::uniqueId &pokeid);
     static QString Classification(const Pokemon::uniqueId &pokeid);
+    static int GenderRate(const Pokemon::uniqueId &pokeid);
     static int Weight(const Pokemon::uniqueId &pokeid);
     static int Gender(const Pokemon::uniqueId &pokeid);
     static int BaseGender(const Pokemon::uniqueId &pokeid);
@@ -99,6 +100,7 @@ private:
     static QHash<Pokemon::uniqueId, QString> m_Weights;
     static QHash<int, QHash<quint16, QString> > m_Desc;
     static QHash<int, QString> m_Classification;
+    static QHash<int, int> m_GenderRates;
     static QHash<Pokemon::uniqueId, QString> m_Height;
     static QString m_Directory;
     static QHash<Pokemon::uniqueId, int> m_Type1[NUMBER_GENS];
@@ -137,6 +139,7 @@ private:
     static void loadBaseStats();
     static void loadMoves();
     static void loadClassifications();
+    static void loadGenderRates();
     static void loadHeights();
     static void loadDescriptions();
     // Call this after loading all data.
@@ -448,11 +451,13 @@ public:
     static void init(const QString &dir="db/types/");
 
     /* The type of the hidden power depending on the dvs */
-    static int Type(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
+    static int Type(int gen, quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
     /* The power of the hidden power depending on the dvs */
-    static int Power(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
+    static int Power(int gen, quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
     /* the different set of dvs (which are chosen within 30-31) that give an hidden power of that type */
     static QList<QStringList> PossibilitiesForType(int type);
+
+    static QPair<quint8,quint8> AttDefDVsForGen2(int type);
 private:
     static QString m_Directory;
 

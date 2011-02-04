@@ -1174,6 +1174,8 @@ void TB_PokemonBody::changeGeneration(int gen)
         naturechoice->show();
         nature->show();
     }
+
+    evchoice->changeGen(gen);
 }
 
 void TB_PokemonBody::initPokemons(TB_PokemonBody *)
@@ -1497,14 +1499,14 @@ void TB_PokemonBody::configureMoves()
         sets << map_container_with_value(PokemonInfo::TMMoves(num,1), tr("TM/HM"))
         << map_container_with_value(PokemonInfo::LevelMoves(num,1), tr("Level"))
         << map_container_with_value(PokemonInfo::PreEvoMoves(num,1), tr("Pre Evo"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num,1), tr("Special"));
+        << map_container_with_value(PokemonInfo::SpecialMoves(num,1), tr("Special", "Learning"));
     } else if (gen == 2) {
         sets << map_container_with_value(PokemonInfo::TMMoves(num,2), tr("TM/HM"))
         << map_container_with_value(PokemonInfo::TutorMoves(num,2), tr("Tutor"))
         << map_container_with_value(PokemonInfo::LevelMoves(num,2), tr("Level"))
         << map_container_with_value(PokemonInfo::PreEvoMoves(num,2), tr("Pre Evo"))
         << map_container_with_value(PokemonInfo::EggMoves(num,2), tr("Breeding"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num,2), tr("Special"))
+        << map_container_with_value(PokemonInfo::SpecialMoves(num,2), tr("Special", "Learning"))
         << map_container_with_value(PokemonInfo::TMMoves(num,1), tr("1G TM/HM"))
         << map_container_with_value(PokemonInfo::LevelMoves(num,1), tr("1G Level"))
         << map_container_with_value(PokemonInfo::PreEvoMoves(num,1), tr("1G Pre Evo"))
@@ -1515,14 +1517,14 @@ void TB_PokemonBody::configureMoves()
         << map_container_with_value(PokemonInfo::LevelMoves(num,3), tr("Level"))
         << map_container_with_value(PokemonInfo::PreEvoMoves(num,3), tr("Pre Evo"))
         << map_container_with_value(PokemonInfo::EggMoves(num,3), tr("Breeding"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num,3), tr("Special"));
+        << map_container_with_value(PokemonInfo::SpecialMoves(num,3), tr("Special", "Learning"));
     } else if (gen == 4) {
         sets << map_container_with_value(PokemonInfo::TMMoves(num, 4), tr("TM/HM"))
         << map_container_with_value(PokemonInfo::TutorMoves(num, 4), tr("Move Tutor"))
         << map_container_with_value(PokemonInfo::LevelMoves(num, 4), tr("Level"))
         << map_container_with_value(PokemonInfo::PreEvoMoves(num, 4), tr("Pre Evo"))
         << map_container_with_value(PokemonInfo::EggMoves(num, 4), tr("Breeding"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num, 4), tr("Special"))
+        << map_container_with_value(PokemonInfo::SpecialMoves(num, 4), tr("Special", "Learning"))
         << map_container_with_value(PokemonInfo::TMMoves(num, 3), tr("3G TM/HM"))
         << map_container_with_value(PokemonInfo::TutorMoves(num,3), tr("3G Tutor"))
         << map_container_with_value(PokemonInfo::LevelMoves(num,3), tr("3G Level"))
@@ -1536,7 +1538,7 @@ void TB_PokemonBody::configureMoves()
         << map_container_with_value(PokemonInfo::PreEvoMoves(num, 5), tr("Pre Evo"))
         << map_container_with_value(PokemonInfo::EggMoves(num, 5), tr("Breeding"))
         << map_container_with_value(PokemonInfo::dreamWorldMoves(num), tr("Dream World"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num, 5), tr("Special"))
+        << map_container_with_value(PokemonInfo::SpecialMoves(num, 5), tr("Special", "Learning"))
         << map_container_with_value(PokemonInfo::TMMoves(num, 4), tr("4G TM/HM"))
         << map_container_with_value(PokemonInfo::TutorMoves(num, 4), tr("4G Move Tutor"))
         << map_container_with_value(PokemonInfo::LevelMoves(num, 4), tr("4G Level"))
@@ -1664,13 +1666,13 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
     QGridLayout *l = new QGridLayout(this);
     l->setSpacing(0);
 
-    QString labels[6] = {tr("Hit Points:"), tr("Attack:"), tr("Defense:"), tr("Special Attack:"), tr("Special Defense:"), tr("Speed:")};
+    QString labels[6] = {tr("Hit Points:"), tr("Attack:"), tr("Defense:"), tr("Special Attack:")
+                         , tr("Special Defense:"), tr("Speed:")};
 
     for (int i = 0; i < 6; i++)
     {
-        QLabel *lab;
-        l->addWidget(lab = new QLabel(labels[i]), i, 0, Qt::AlignLeft);
-        lab->setObjectName("SmallText");
+        l->addWidget(m_descs[i] = new QLabel(labels[i]), i, 0, Qt::AlignLeft);
+        m_descs[i]->setObjectName("SmallText");
         l->addWidget(m_stats[i] = new QLabel(), i, 2, Qt::AlignLeft);
         m_stats[i]->setObjectName("SmallText");
         l->addWidget(m_sliders[i] = new QSlider(Qt::Horizontal), i, 3);
@@ -1689,7 +1691,6 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
         m_evs[i]->setFixedWidth(35);
         connect(slider(i),SIGNAL(valueChanged(int)),SLOT(changeEV(int)));
         connect(m_evs[i], SIGNAL(textChanged(QString)), SLOT(changeEV(QString)));
-
     }
 
     l->addWidget(m_mainSlider = new QSlider(Qt::Horizontal), 6, 0, 1, 4);
@@ -1698,11 +1699,44 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
     m_mainSlider->setEnabled(false);
     m_mainSlider->setRange(0,510);
 
+    changeGen(gen());
+
     /*Setting the vals */
     updateEVs();
 }
 
+void TB_EVManager::changeGen(int)
+{
+    if (gen() <= 1) {
+        m_stats[SpDefense]->hide();
+        m_sliders[SpDefense]->hide();
+        m_evs[SpDefense]->hide();
+        m_descs[SpDefense]->hide();
+        natureButtons[SpDefense-1]->hide();
+        m_descs[SpAttack]->setText(tr("Special:", "Stat"));
+    } else {
+        m_stats[SpDefense]->show();
+        m_sliders[SpDefense]->show();
+        m_evs[SpDefense]->show();
+        m_descs[SpDefense]->show();
+        natureButtons[SpDefense-1]->show();
+        m_descs[SpAttack]->setText(tr("Special Attack:"));
+    }
+    if (gen() <= 2) {
+        m_mainLabel->hide();
+        m_mainSlider->hide();
+    } else {
+        m_mainLabel->show();
+        m_mainSlider->show();
+    }
+}
+
 PokeTeam * TB_EVManager::poke()
+{
+    return m_poke;
+}
+
+const PokeTeam * TB_EVManager::poke() const
 {
     return m_poke;
 }
@@ -1755,9 +1789,13 @@ void TB_EVManager::changeEV(const QString &newvalue)
 
     poke()->setEV(mstat, std::max(std::min(newvalue.toInt(), 255), 0));
 
-
     slider(mstat)->blockSignals(true);
     updateEV(mstat);
+
+    if (gen() == 2 && (mstat == SpAttack || mstat == SpDefense)) {
+        updateEV(SpAttack+SpDefense-mstat);
+    }
+
     updateMain();
     slider(mstat)->blockSignals(false);
 
@@ -1787,6 +1825,8 @@ void TB_EVManager::changeEV(int newvalue)
 
 void TB_EVManager::checkNButtonL()
 {
+    if (gen() <= 2)
+        return;
     int loc = 0;
     for (int i = 0; i < 5; i++)
         if (sender() == natureButtons[i])
@@ -1808,6 +1848,8 @@ void TB_EVManager::checkNButtonL()
 
 void TB_EVManager::checkNButtonR()
 {
+    if (gen() <= 2)
+        return;
     int loc = 0;
     for (int i = 0; i < 5; i++)
         if (sender() == natureButtons[i])
@@ -1838,8 +1880,16 @@ void TB_EVManager::updateEV(int stat)
     statLabel(stat)->setText(toColor(QString::number(poke()->stat(stat)), colors[poke()->natureBoost(stat)+1]));
 }
 
+int TB_EVManager::gen() const
+{
+    return poke()->gen();
+}
+
 void TB_EVManager::updateMain()
 {
+    if (gen() <= 2)
+        return;
+
     m_mainSlider->setValue(510 - poke()->EVSum());
     m_mainLabel->setText(QString::number(510 - poke()->EVSum()));
 }

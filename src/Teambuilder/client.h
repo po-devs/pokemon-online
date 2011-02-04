@@ -198,6 +198,7 @@ public slots:
     /* Ignored */
     void removeIgnore(int);
     void ignore(int);
+    void ignore(int, bool);
     /* Teambuilder slots */
     void openTeamBuilder();
     void changeTeam();
