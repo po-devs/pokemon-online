@@ -628,7 +628,7 @@ struct IMJewel : public IM
 
         /* Doom Desire & Future sight don't have their jewel attacking right away,
            only when it hits, and then b.attacking() is false */
-        if (tmove(b,s).num == Move::FutureSight || tmove(b,s).num == Move::DoomDesire) {
+        if (tmove(b,s).attack == Move::FutureSight || tmove(b,s).attack == Move::DoomDesire) {
             if (b.attacking())
                 return;
         }

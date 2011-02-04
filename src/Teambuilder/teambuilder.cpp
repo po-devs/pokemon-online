@@ -848,6 +848,10 @@ void TB_TeamBody::changeGeneration(int gen)
     for(int i = 0; i < 6; i++) {
         pokeBody[i]->changeGeneration(gen);
     }
+
+    if (dockAdvanced()) {
+        dockAdvanced()->changeGeneration(gen);
+    }
 }
 
 void TB_TeamBody::createDockAdvanced(bool sepWindow)

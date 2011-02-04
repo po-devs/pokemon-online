@@ -15,6 +15,8 @@ class DockAdvanced : public QStackedWidget
     DockAdvanced(TB_TeamBody * builder);
     ~DockAdvanced();
 
+    void changeGeneration(int gen);
+
  public slots:
     void setCurrentPokemon(int index);
     void setPokemonNum(int indexStack, Pokemon::uniqueId);
