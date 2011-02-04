@@ -178,6 +178,7 @@ void PokePersonal::runCheck()
 
     if (gen() <= 2) {
         ability() = 0;
+        nature() = 0;
     } else {
         AbilityGroup ab = PokemonInfo::Abilities(num(), gen());
 
@@ -185,8 +186,26 @@ void PokePersonal::runCheck()
             ability() = ab.ab(0);
     }
 
+    if (gen() == 2)
+        controlGender();
+
     if (!ItemInfo::Exists(item(), gen())) {
         item() = 0;
+    }
+
+    for (int i = 0; i < 6; i++)
+        controlEVs(i);
+
+    if (gen() <= 2) {
+        for (int i = 0; i < 6; i++) {
+            if (DV(i) >= 15)
+                setDV(i, 15);
+        }
+    }
+
+    if (gen() == 2) {
+        setEV(SpDefense, EV(SpAttack));
+        setDV(SpDefense, DV(SpAttack));
     }
 
     int avail = PokemonInfo::Gender(num());
@@ -233,6 +252,9 @@ bool PokePersonal::hasMove(int moveNum)
 
 void PokePersonal::controlEVs(int stat)
 {
+    if (gen() <= 2)
+        return;
+
     int sum = EVSum();
 
     //if overflow we set it back to the limit
@@ -253,7 +275,14 @@ void PokePersonal::setEV(int stat, quint8 val)
     {
         val = 100;
     }
-    m_EVs[stat] = val;
+
+    if (gen() == 2 && (stat == SpAttack || stat == SpDefense)) {
+        m_EVs[SpAttack] = val;
+        m_EVs[SpDefense] = val;
+    } else {
+        m_EVs[stat] = val;
+    }
+
     controlEVs(stat);
 }
 
@@ -264,7 +293,42 @@ quint8 PokePersonal::DV(int stat) const
 
 void PokePersonal::setDV(int stat, quint8 val)
 {
-    m_DVs[stat] = val;
+    if (gen() == 2 && (stat == SpAttack || stat == SpDefense)) {
+        m_DVs[SpAttack] = val;
+        m_DVs[SpDefense] = val;
+    } else {
+        m_DVs[stat] = val;
+    }
+
+    if (gen() == 2) {
+        controlHPDV();
+        controlShininess();
+        if (stat == Attack)
+            controlGender();
+    }
+}
+
+void PokePersonal::controlShininess()
+{
+    shiny() = DV(Defense) == 10 && DV(Speed) == 10 && DV(SpAttack) == 10 && DV(Attack) % 4 >= 2;
+}
+
+void PokePersonal::controlGender()
+{
+    if (PokemonInfo::Gender(num()) == Pokemon::MaleAndFemaleAvail) {
+        int rate = PokemonInfo::GenderRate(num());
+
+        if (DV(Attack) < (8-rate) * 2) {
+            gender() = Pokemon::Female;
+        } else {
+            gender() = Pokemon::Male;
+        }
+    }
+}
+
+void PokePersonal::controlHPDV()
+{
+    m_DVs[Hp] = ((DV(Attack) & 1) << 3) + ((DV(Defense) & 1) << 2) + ((DV(Speed) & 1) << 1) + (DV(SpAttack) & 1);
 }
 
 int PokePersonal::EVSum() const
@@ -302,8 +366,14 @@ void PokePersonal::reset()
     item() = 0;
 
     for (int i = 0; i < 6; i ++) {
-        m_DVs[i] = 31;
-        m_EVs[i] = 0;
+        if (gen() >= 3) {
+            m_EVs[i] = 0;
+            m_DVs[i] = 31;
+        }
+        else {
+            m_EVs[i] = 255;
+            m_DVs[i] = 15;
+        }
     }
 }
 
@@ -924,9 +994,17 @@ bool TrainerTeam::importFromTxt(const QString &file1)
                 int type = TypeInfo::Number(move.section('[',1,1).section(']',0,0));
                 if (type != 0) {
                     move = move.section('[',0,0).trimmed();
-                    QStringList dvs = HiddenPowerInfo::PossibilitiesForType(type)[0];
-                    for(int i =0;i < dvs.size(); i++) {
-                        p.setDV(i, dvs[i].toInt());
+
+                    if (p.gen() >= 3) {
+                        QStringList dvs = HiddenPowerInfo::PossibilitiesForType(type)[0];
+                        for(int i =0;i < dvs.size(); i++) {
+                            p.setDV(i, dvs[i].toInt());
+                        }
+                    } else {
+                        QPair<quint8,quint8> dvs = HiddenPowerInfo::AttDefDVsForGen2(type);
+
+                        p.setDV(Attack, dvs.first);
+                        p.setDV(Defense, dvs.second);
                     }
                 }
             }
@@ -1046,7 +1124,7 @@ QString TrainerTeam::exportToTxt() const
             if (p.move(i) != 0) {
                 ret += "- " + MoveInfo::Name(p.move(i)) ;
                 if (p.move(i) == Move::HiddenPower) {
-                    ret += " [" + TypeInfo::Name(HiddenPowerInfo::Type(p.DV(0), p.DV(1), p.DV(2), p.DV(3), p.DV(4), p.DV(5))) + "]";
+                    ret += " [" + TypeInfo::Name(HiddenPowerInfo::Type(p.gen(), p.DV(0), p.DV(1), p.DV(2), p.DV(3), p.DV(4), p.DV(5))) + "]";
                 }
                 ret += "\n";
             }

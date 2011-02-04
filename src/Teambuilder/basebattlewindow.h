@@ -345,6 +345,8 @@ public:
     void switchToNaught(int spot);
     /* For tool tips */
     void mouseMoveEvent(QMouseEvent *e);
+    /* Updates the position of an item */
+    void updatePos(int spot);
 
     /* Loads a pixmap if not loaded otherwise go see graphics */
     QPixmap loadPixmap(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub);
@@ -368,8 +370,9 @@ public:
 template <class T>
 void BaseGraphicsZone::switchTo(const T &poke, int spot, bool sub, Pokemon::uniqueId specialSprite)
 {
-    items[spot]->setPixmap(loadPixmap(specialSprite != Pokemon::NoPoke ?specialSprite:poke.num(), poke.shiny(),
+    items[spot]->setPixmap(loadPixmap(specialSprite != Pokemon::NoPoke ? specialSprite:poke.num(), poke.shiny(),
                                       info().player(spot) == info().myself , poke.gender(), sub));
+    updatePos(spot);
 }
 
 #endif // BASEBATTLEWINDOW_H

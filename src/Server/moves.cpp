@@ -676,9 +676,9 @@ struct MMHiddenPower : public MM
     static void ms(int s, int, BS &b) {
         quint8 *dvs = fpoke(b,s).dvs;
 
-        int type = HiddenPowerInfo::Type(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+        int type = HiddenPowerInfo::Type(b.gen(), dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
         tmove(b, s).type = type;
-        tmove(b, s).power = HiddenPowerInfo::Power(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+        tmove(b, s).power = HiddenPowerInfo::Power(b.gen(), dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
 
         /* In 3rd gen, hidden powers can be physical! */
         if (b.gen() <= 3) {

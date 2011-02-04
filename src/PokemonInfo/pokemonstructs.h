@@ -2111,6 +2111,9 @@ public:
 
     quint8 DV(int stat) const;
     void setDV(int stat, quint8 DV);
+    void controlHPDV();
+    void controlShininess();
+    void controlGender();
 
     quint8 EV(int stat) const;
     int EVSum() const;

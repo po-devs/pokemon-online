@@ -65,3 +65,24 @@ void loadSettings(QWidget *w, const QSize &defaultSize)
         w->topLevelWidget()->showMaximized();
     settings.endGroup();
 }
+
+void cropImage(QImage &p)
+{
+    uchar * scanline = p.scanLine(0);
+
+    uchar buffer[p.bytesPerLine()];
+    memcpy(buffer, scanline, p.bytesPerLine());
+
+    int c = 0;
+    while (memcmp(p.scanLine(-c-1+p.height()), buffer, p.bytesPerLine()) == 0 && (-c-1+p.height() >= 0)) {
+        c++;
+    }
+
+    for (int k = p.height() - 1; k - c >= 0; k--) {
+        memcpy(p.scanLine(k), p.scanLine(k-c), p.bytesPerLine());
+    }
+
+    for (int k = 0; k < c; k++) {
+        memcpy(p.scanLine(k), buffer, p.bytesPerLine());
+    }
+}

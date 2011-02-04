@@ -1673,9 +1673,9 @@ QScriptValue ScriptEngine::typeNum(const QString &typeName)
     }
 }
 
-int ScriptEngine::hiddenPowerType(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv)
+int ScriptEngine::hiddenPowerType(int gen, quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv)
 {
-    return HiddenPowerInfo::Type(hpdv, attdv, defdv, spddv, sattdv, sdefdv);
+    return HiddenPowerInfo::Type(gen, hpdv, attdv, defdv, spddv, sattdv, sdefdv);
 }
 
 ScriptWindow::ScriptWindow()

@@ -494,6 +494,7 @@ void Client::startPM(int id)
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
     connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int)), this, SLOT(removePM(int)));
+    connect(p, SIGNAL(ignore(int,bool)), this, SLOT(ignore(int, bool)));
 
     mypms[id] = p;
 }
@@ -1591,13 +1592,25 @@ void Client::requestTempBan(const QString &name, int time)
 
 void Client::ignore(int id)
 {
+    if (myIgnored.contains(id))
+        return;
     printLine(id, tr("You ignored %1.").arg(name(id)));
     myIgnored.append(id);
     updateState(id);
 }
 
+void Client::ignore(int id, bool ign)
+{
+    if (ign)
+        ignore(id);
+    else
+        removeIgnore(id);
+}
+
 void Client::removeIgnore(int id)
 {
+    if (!myIgnored.contains(id))
+        return;
     printLine(id, tr("You stopped ignoring %1.").arg(name(id)));
     myIgnored.removeOne(id);
     updateState(id);
