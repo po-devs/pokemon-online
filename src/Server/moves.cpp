@@ -1742,11 +1742,14 @@ struct MMBind : public MM
                     b.sendMoveMessage(10,1,s,MoveInfo::Type(move, b.gen()),s,move);
             } else {
                 poke(b,s)["TrappedRemainingTurns"] = count;
-                b.sendMoveMessage(10,0,s,MoveInfo::Type(move, b.gen()),s,move);
 
-                int trapper = b.linker(s, "Trapped");
+                if (!b.hasWorkingAbility(s, Ability::MagicGuard)) {
+                    b.sendMoveMessage(10,0,s,MoveInfo::Type(move, b.gen()),s,move);
 
-                b.inflictDamage(s, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::PressureBand) ? 8 : 16),s,false);
+                    int trapper = b.linker(s, "Trapped");
+
+                    b.inflictDamage(s, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::PressureBand) ? 8 : 16),s,false);
+                }
             }
         }
     }
@@ -2095,6 +2098,7 @@ struct MMDoomDesire : public MM
             b.calculateTypeModStab();
             tmove(b, s).type = Pokemon::Curse;
             slot(b,t)["DoomDesireStab"] = turn(b,s)["Stab"].toInt();
+            slot(b,t)["DoomDesireId"] = b.team(b.player(s)).internalId(b.poke(s));
         }
         addFunction(slot(b,t), "EndTurn7", "DoomDesire", &et);
         b.sendMoveMessage(29, move==DoomDesire?2:1, s, type(b,s));
@@ -2131,9 +2135,19 @@ struct MMDoomDesire : public MM
                     turn(b,s)["CriticalHit"] = false;
                     tmove(b,s).power = MoveInfo::Power(move, b.gen());
 
+                    int t = b.opponent(b.player(s));
+                    int doomuser = s;
+
+                    for (int i = 0; i < b.numberPerSide(); i++) {
+                        if (b.team(t).internalId(b.poke(t, i)) == slot(b,s).value("DoomDesireId").toInt()) {
+                            doomuser = b.slot(t, i);
+                            break;
+                        }
+                    }
+
                     int damage = b.calculateDamage(s, s);
                     b.notify(BS::All, BS::Effective, s, quint8(typemod));
-                    b.inflictDamage(s, damage, s, true, true);
+                    b.inflictDamage(s, damage, doomuser, true, true);
                 }
 	    }
 	}
