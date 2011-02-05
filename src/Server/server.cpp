@@ -1235,8 +1235,6 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     battle->start(battleThread);
 
     myengine->afterBattleStarted(id1,id2,c);
-
-    qDebug() << "After battle started";
 }
 
 bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool force2)

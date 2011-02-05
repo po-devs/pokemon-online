@@ -156,11 +156,18 @@ void MoveEffect::unsetup(int num, int source, BattleSituation &b)
 struct MMAquaRing : public MM
 {
     MMAquaRing() {
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (poke(b,s).contains("AquaRinged"))
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas(int s, int, BS &b) {
         addFunction(poke(b,s), "EndTurn60", "AquaRing", &et);
+        poke(b,s)["AquaRinged"] = true;
         b.sendMoveMessage(2, 0, s, type(b,s));
     }
 
