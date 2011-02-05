@@ -1309,6 +1309,33 @@ QScriptValue ScriptEngine::abilityNum(const QString &ability)
     return AbilityInfo::Number(ability);
 }
 
+QScriptValue ScriptEngine::genderNum(QString genderName)
+{
+    if(genderName.toLower() == "genderless") {
+        return 0;
+    }
+    if(genderName.toLower() == "male") {
+        return 1;
+    }
+    if(genderName.toLower() == "female") {
+        return 2;
+    }
+    return "";
+}
+
+QString ScriptEngine::gender(int genderNum)
+{
+    switch(genderNum) {
+        case 0:
+            return "genderless";
+        case 1:
+            return "male";
+        case 2:
+            return "female";
+    }
+    return "";
+}
+
 QScriptValue ScriptEngine::teamPoke(int id, int index)
 {
     if (!loggedIn(id) || index < 0 || index >= 6) {
@@ -2017,4 +2044,259 @@ void ScriptEngine::modifyPokeStat(int poke, int stat, quint8 value)
 void ScriptEngine::updateRatings()
 {
     TierMachine::obj()->processDailyRun();
+}
+
+QScriptValue ScriptEngine::battlePokenum(int battleId, bool toFirstPlayer, int slot)
+{
+    if ( slot < 0 || slot >= 6 ) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataPokenum(0, slot);
+        }else{
+            return battle->getBattleDataPokenum(1, slot);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleNature(int battleId, bool toFirstPlayer, int slot)
+{
+    if ( slot < 0 || slot >= 6 ) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataNature(0, slot);
+        }else{
+            return battle->getBattleDataNature(1, slot);
+        }
+    }else{
+        return 0;
+    }
+}
+
+ QScriptValue ScriptEngine::battleGender(int battleId, bool toFirstPlayer, int slot)
+{
+    if ( slot < 0 || slot >= 6 ) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataGender(0, slot);
+        }else{
+            return battle->getBattleDataGender(1, slot);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleDVs(int battleId, bool toFirstPlayer, int slot, int stat)
+{
+    if ( slot < 0 || slot >= 6 || stat < 0 || stat >= 6) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataDVs(0, slot, stat);
+        }else{
+            return battle->getBattleDataDVs(1, slot, stat);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleEVs(int battleId, bool toFirstPlayer, int slot, int stat)
+{
+    if ( slot < 0 || slot >= 6 || stat < 0 || stat >= 6) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataEVs(0, slot, stat);
+        }else{
+            return battle->getBattleDataEVs(1, slot, stat);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleShiny(int battleId, bool toFirstPlayer, int slot)
+{
+    if ( slot < 0 || slot >= 6 ) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataShiny(0, slot);
+        }else{
+            return battle->getBattleDataShiny(1, slot);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleLevel(int battleId, bool toFirstPlayer, int slot)
+{
+    if ( slot < 0 || slot >= 6 ) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataLevel(0, slot);
+        }else{
+            return battle->getBattleDataLevel(1, slot);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleNickname(int battleId, bool toFirstPlayer, int slot)
+{
+    if ( slot < 0 || slot >= 6 ) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataNickname(0, slot);
+        }else{
+            return battle->getBattleDataNickname(1, slot);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleItem(int battleId, bool toFirstPlayer, int slot)
+{
+    if ( slot < 0 || slot >= 6 ) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataItem(0, slot);
+        }else{
+            return battle->getBattleDataItem(1, slot);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleStatus(int battleId, bool toFirstPlayer, int slot)
+{
+    if ( slot < 0 || slot >= 6 ) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataStatus(0, slot);
+        }else{
+            return battle->getBattleDataStatus(1, slot);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleHP(int battleId, bool toFirstPlayer, int slot)
+{
+    if ( slot < 0 || slot >= 6 ) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataHP(0, slot);
+        }else{
+            return battle->getBattleDataHP(1, slot);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleMaxHP(int battleId, bool toFirstPlayer, int slot)
+{
+    if ( slot < 0 || slot >= 6 ) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataMaxHP(0, slot);
+        }else{
+            return battle->getBattleDataMaxHP(1, slot);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleMoveSlot(int battleId, bool toFirstPlayer, int slot, int moveSlot)
+{
+    if ( slot < 0 || slot >= 6 || moveSlot < 0 || moveSlot >= 4) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataMoveSlot(0, slot, moveSlot);
+        }else{
+            return battle->getBattleDataMoveSlot(1, slot, moveSlot);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleMovePP(int battleId, bool toFirstPlayer, int slot, int moveSlot)
+{
+    if ( slot < 0 || slot >= 6 || moveSlot < 0 || moveSlot >= 4) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataMovePP(0, slot, moveSlot);
+        }else{
+            return battle->getBattleDataMovePP(1, slot, moveSlot);
+        }
+    }else{
+        return 0;
+    }
+}
+
+QScriptValue ScriptEngine::battleMoveMaxPP(int battleId, bool toFirstPlayer, int slot, int moveSlot)
+{
+    if ( slot < 0 || slot >= 6 || moveSlot < 0 || moveSlot >= 4) {
+        return myengine.undefinedValue();
+    }
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if(battle) {
+        if(toFirstPlayer) {
+            return battle->getBattleDataMoveMaxPP(0, slot, moveSlot);
+        }else{
+            return battle->getBattleDataMoveMaxPP(1, slot, moveSlot);
+        }
+    }else{
+        return 0;
+    }
 }
