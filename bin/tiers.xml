@@ -14,7 +14,7 @@
  </category>
  <category displayOrder="2" name="GSC">
   <tier pokemons="" restrictedPokemons="" tableName="tier_ubersgsc" banMode="ban" maxLevel="100" mode="0" displayOrder="0" gen="2" moves="" items="" banParent="" name="Ubers GSC" numberOfPokemons="6" numberOfRestricted="1" clauses="Sleep Clause,Species Clause"/>
-  <tier pokemons="Celebi, Ho-Oh, Lugia, Mew, Mewtwo" restrictedPokemons="" tableName="tier_ougsc" banMode="ban" maxLevel="100" mode="0" displayOrder="2" gen="5" moves="" items="" banParent="Ubers GSC" name="OU GSC" numberOfPokemons="6" numberOfRestricted="1" clauses="Sleep Clause,Species Clause"/>
+  <tier pokemons="Celebi, Ho-Oh, Lugia, Mew, Mewtwo" restrictedPokemons="" tableName="tier_ougsc" banMode="ban" maxLevel="100" mode="0" displayOrder="2" gen="2" moves="" items="" banParent="Ubers GSC" name="OU GSC" numberOfPokemons="6" numberOfRestricted="1" clauses="Sleep Clause,Species Clause"/>
  </category>
  <category displayOrder="3" name="Advance">
   <tier pokemons="" restrictedPokemons="" tableName="tier_uberdoublesadv" banMode="ban" maxLevel="100" mode="1" displayOrder="-2" gen="3" moves="" items="" banParent="" name="Uber Doubles Adv" numberOfPokemons="6" numberOfRestricted="1" clauses="Sleep Clause,Species Clause"/>

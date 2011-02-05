@@ -1177,6 +1177,15 @@ QScriptValue ScriptEngine::ip(int id)
     }
 }
 
+QScriptValue ScriptEngine::gen(int id)
+{
+    if (!myserver->playerLoggedIn(id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->gen();
+    }
+}
+
 QScriptValue ScriptEngine::name(int id)
 {
     if (!myserver->playerExist(id)) {

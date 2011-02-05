@@ -2662,6 +2662,8 @@ littleCupCheck : function(src, se) {
 }
 ,
 dreamWorldAbilitiesCheck : function(src, se) {
+	 if (sys.gen(src) <= 4)
+			return;
     for (var i = 0; i < 6; i++) {
         var x = sys.teamPoke(src, i);
         if (x != 0 && sys.hasDreamWorldAbility(src, i) && (dwpokemons.indexOf(x) == -1 || (breedingpokemons.indexOf(x) != -1 && sys.compatibleAsDreamWorldEvent(src, i) != true))) {

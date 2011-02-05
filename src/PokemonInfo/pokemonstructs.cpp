@@ -881,8 +881,7 @@ bool TrainerTeam::importFromTxt(const QString &file1)
 
         QStringList first = pokeDetail[0].split('@');
         PokeTeam &p = team().poke(i);
-
-        p = PokeTeam();
+        p.reset();
 
         Pokemon::uniqueId pokenum;
         QString nickname;
@@ -948,46 +947,48 @@ bool TrainerTeam::importFromTxt(const QString &file1)
         p.item() = item;
 
 
-        QStringList ability = pokeDetail[1].split(':');
+        if (p.gen() >= 3) {
+            QStringList ability = pokeDetail[1].split(':');
 
-        if (ability.size() < 2)
-            continue;
+            if (ability.size() < 2)
+                continue;
 
-        int abnum = AbilityInfo::Number(ability[1].trimmed());
-        if (abnum != 0) {
-            p.ability() = abnum;
+            int abnum = AbilityInfo::Number(ability[1].trimmed());
+            if (abnum != 0) {
+                p.ability() = abnum;
+            }
+
+            if (!pokeDetail[2].contains(": "))
+                continue;
+
+            QStringList evList = pokeDetail[2].split(": ")[1].split("/");
+
+            foreach(QString ev, evList) {
+                QStringList ev2 = ev.trimmed().split(' ');
+                if (ev2.length() < 2)
+                    break;
+                int evnum = ev2[0].toInt();
+                int stat = 0;
+
+                if (ev2[1] == "SDef" || ev2[1] == "SpDef")
+                    stat = SpDefense;
+                else if (ev2[1] == "SAtk" || ev2[1] == "SpAtk")
+                    stat = SpAttack;
+                else if (ev2[1] == "Spd")
+                    stat = Speed;
+                else if (ev2[1] == "Def")
+                    stat = Defense;
+                else if (ev2[1] == "Atk")
+                    stat = Attack;
+                else
+                    stat = Hp;
+
+                p.setEV(stat, unsigned(evnum)%255);
+            }
+
+            p.nature() = NatureInfo::Number(pokeDetail[3].section(' ', 0, 0));
         }
-
-        if (!pokeDetail[2].contains(": "))
-            continue;
-
-        QStringList evList = pokeDetail[2].split(": ")[1].split("/");
-
-        foreach(QString ev, evList) {
-            QStringList ev2 = ev.trimmed().split(' ');
-            if (ev2.length() < 2)
-                break;
-            int evnum = ev2[0].toInt();
-            int stat = 0;
-
-            if (ev2[1] == "SDef" || ev2[1] == "SpDef")
-                stat = SpDefense;
-            else if (ev2[1] == "SAtk" || ev2[1] == "SpAtk")
-                stat = SpAttack;
-            else if (ev2[1] == "Spd")
-                stat = Speed;
-            else if (ev2[1] == "Def")
-                stat = Defense;
-            else if (ev2[1] == "Atk")
-                stat = Attack;
-            else
-                stat = Hp;
-
-            p.setEV(stat, unsigned(evnum)%255);
-        }
-
-        p.nature() = NatureInfo::Number(pokeDetail[3].section(' ', 0, 0));
-        for (int i = 4; i < pokeDetail.size() && i < 8; i++) {
+        for (int i = 4-3*(p.gen() <= 2); i < pokeDetail.size() && i < 8-3*(p.gen() <= 2); i++) {
             QString move = pokeDetail[i].section('-',1).trimmed();
 
             if (move.contains('[')) {
@@ -1009,7 +1010,7 @@ bool TrainerTeam::importFromTxt(const QString &file1)
                 }
             }
             int moveNum = MoveInfo::Number(move);
-            p.setMove(moveNum,i-4,false);
+            p.setMove(moveNum,i-4+3*(p.gen() <= 2),false);
 
             if (moveNum == Move::Return) {
                 p.happiness() = 255;
@@ -1090,35 +1091,37 @@ QString TrainerTeam::exportToTxt() const
 
         ret += " @ " + ItemInfo::Name(p.item()) + "\n";
 
-        ret += "Trait: " + AbilityInfo::Name(p.ability()) + "\n";
+        if (p.gen() >= 3) {
+            ret += "Trait: " + AbilityInfo::Name(p.ability()) + "\n";
 
-        ret += "EVs: ";
+            ret += "EVs: ";
 
-        QString stats[] = {"HP", "Atk", "Def", "SAtk", "SDef", "Spd"};
+            QString stats[] = {"HP", "Atk", "Def", "SAtk", "SDef", "Spd"};
 
-        bool started = false;
-        for (int i = 0; i < 6; i++) {
-            if (p.EV(i) != 0) {
-                if (started) {
-                    ret += " / ";
+            bool started = false;
+            for (int i = 0; i < 6; i++) {
+                if (p.EV(i) != 0) {
+                    if (started) {
+                        ret += " / ";
+                    }
+                    started = true;
+
+                    ret += QString ("%1 %2").arg(p.EV(i)).arg(stats[i]);
                 }
-                started = true;
-
-                ret += QString ("%1 %2").arg(p.EV(i)).arg(stats[i]);
             }
+
+            ret += "\n";
+
+            ret += NatureInfo::Name(p.nature()) + " Nature";
+
+            int up = NatureInfo::StatBoosted(p.nature());
+
+            if (up != 0) {
+                int down = NatureInfo::StatHindered(p.nature());
+                ret += " (+" + stats[up] + ", -" + stats[down] + ")";
+            }
+            ret += "\n";
         }
-
-        ret += "\n";
-
-        ret += NatureInfo::Name(p.nature()) + " Nature";
-
-        int up = NatureInfo::StatBoosted(p.nature());
-
-        if (up != 0) {
-            int down = NatureInfo::StatHindered(p.nature());
-            ret += " (+" + stats[up] + ", -" + stats[down] + ")";
-        }
-        ret += "\n";
 
         for (int i = 0; i < 4; i++) {
             if (p.move(i) != 0) {
