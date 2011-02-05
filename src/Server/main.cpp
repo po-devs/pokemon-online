@@ -1,4 +1,6 @@
+#ifndef WIN32
 #include "main.h"
+#endif
 
 #ifndef PO_NO_GUI
 # include <QtGui/QApplication>
@@ -10,7 +12,10 @@
 #include <cstdio>
 #include <iostream>
 #include <signal.h>
+
+#ifndef WIN32
 #include <execinfo.h>
+#endif
 #include "server.h"
 #include "consolereader.h"
 
@@ -37,11 +42,11 @@ void myMessageOutput(QtMsgType type, const char *msg)
 
 int main(int argc, char *argv[])
 {
-    set_terminate( stacktrace ); 
-
 #ifdef WIN32
     freopen("logs.txt", "a", stderr);
     qInstallMsgHandler(myMessageOutput);
+#else
+    set_terminate( stacktrace );
 #endif
 
     /* Names to use later for QSettings */
@@ -175,6 +180,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+#ifndef WIN32
 void stacktrace() 
 { 
     cout << "----------------------------------------------" << endl;
@@ -189,3 +195,4 @@ void stacktrace()
     cout << "----------------------------------------------" << endl; 
     // exit(1); 
 }
+#endif
