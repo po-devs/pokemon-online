@@ -566,6 +566,14 @@ void BattleSituation::endTurn()
 {
     testWin();
 
+    /* In Gen 1 & 2, end turn effects don't happen after koing a pokemon */
+    if (gen() <= 2) {
+        if (koed(0) || koed(1)) {
+            requestSwitchIns();
+            return;
+        }
+    }
+
     /* Gen3 switches pokemons in before endturn effects */
     if (gen() == 3)
         requestSwitchIns();
