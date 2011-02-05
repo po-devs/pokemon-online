@@ -13,7 +13,7 @@ var mafia = new function() {
                     mafia2: "Italian Mafia", vigilante: "Vigilante", spy: "Spy", godfather: "Godfather"};
     this.roleDescs = {
         villager: "You dont have any special commands during the night! Vote to remove people in the day!",
-        inspector: "Type /Inspect [name] to find his identity!",
+        inspector: "Type /Inspect [name] to find his/her identity!",
         bodyguard: "Type /Protect [name] to protect someone!",
         mafia: "Type /Kill [name] to  kill someone! (try not to kill your partner)",
         werewolf: "Type /Kill [name] to  kill someone!",
@@ -104,7 +104,7 @@ var mafia = new function() {
 	    sys.sendAll("*** ************************************************************************************", mafiachan);
         sys.sendAll("", mafiachan);
 		
-		if (sys.playersOfChannel(mafiachan).length < 25) {
+		if (sys.playersOfChannel(mafiachan).length < 20) {
 			sys.sendAll("", 0);
 			sys.sendAll("*** ************************************************************************************", 0);
 			sys.sendAll("±Game: " + sys.name(src) + " started a mafia game!", 0);
@@ -549,7 +549,7 @@ var mafia = new function() {
             "±Game: 12-30 Players",
             "*** *********************************************************************** ***",
             "±Role: Mayor",
-            "±Ability: The Mayor has no command during the night but his vote counts as 2.",
+            "±Ability: The Mayor has no command during the night but his/her vote counts as 2.",
             "±Game: 10-30 Players",
             "*** *********************************************************************** ***",
             "±Role: Spy",
@@ -557,11 +557,11 @@ var mafia = new function() {
             "±Game: 13-30 Players",
             "*** *********************************************************************** ***",
             "±Role: Vigilante",
-            "±Ability: The Vigilante can kill a person during the night! He strikes after The French Canadian and Italian Mafia.",
+            "±Ability: The Vigilante can kill a person during the night! He/she strikes after The French Canadian and Italian Mafia.",
             "±Game: 20-30 Players",
             "*** *********************************************************************** ***",
             "±Role: Godfather",
-            "±Ability: The Godfather can kill 2 people during the night! He strikes Last!",
+            "±Ability: The Godfather can kill 2 people during the night! He/she strikes Last!",
             "±Game: 20-30 Players",
             "*** *********************************************************************** ***",
             ""
@@ -575,11 +575,15 @@ var mafia = new function() {
             "±Rule: No Spamming / flooding ",
             "±Rule: No insulting- especially not auth. ",
             "±Rule: No asking for auth.",
-            "",
+			"±Rule: No trolling.",
+			"",
             "     Game Rules: ",
-            "±Rule: Do NEVER quote any of the Bots.",
+            "±Rule: Do not quote any of the Bots.",
             "±Rule: Do not quit the game before you are dead.",
             "±Rule: Do not talk once your dead or voted off. ",
+			"±Rule: Do not use a hard to type name.",
+			"±Rule: Do not group together to ruin the game",
+			"±Rule: DO NOT REVEAL YOUR PARTNER IF YOU ARE MAFIA, OR KILL THEM",
             "",
             "±Game: Disobey them and you will be banned/muted/kicked according to the mod/admin's wish!",
             ""
@@ -634,7 +638,7 @@ var mafia = new function() {
                     if (name[x] != ' ' && name[x] != '.' && (code < 'a'.charCodeAt(0) || code > 'z'.charCodeAt(0))
                         && (code < 'A'.charCodeAt(0) || code > 'Z'.charCodeAt(0)) && name[x] != '_' && name[x] !='<' && name[x] != '>' && (code < '0'.charCodeAt(0) || code > '9'.charCodeAt(0)))
                     {
-                        sys.sendMessage(src, "±Name: You're not allowed to have the following charater in your name: " + name[x] + ".", mafiachan);
+                        sys.sendMessage(src, "±Name: You're not allowed to have the following character in your name: " + name[x] + ".", mafiachan);
                         sys.sendMessage(src, "±Rule: You must change it if you want to join!", mafiachan);
                         return;
                     }
@@ -666,6 +670,7 @@ var mafia = new function() {
                     sys.sendMessage(src, "±Hint: Nope, this wont work... You can't target yourself!", mafiachan);
                     return;
                 }
+				
                 var role = this.role(name);
                
                 sys.sendMessage(src, "±Game: You have chosen to " + command + " " + commandData + "!", mafiachan);
@@ -710,6 +715,10 @@ var mafia = new function() {
                 }
                 sys.sendAll("±Game:" + sys.name(src) + " voted for " + commandData + "!", mafiachan);
                 this.votes[sys.name(src)] = commandData;
+
+		if (mafia.ticks < 8) {
+			mafia.ticks = 8;
+		}
                 return;
             }
         }
@@ -778,6 +787,32 @@ serverStartUp : function() {
 init : function() {
     lastMemUpdate = 0;
 	this.startStepEvent();
+	
+	var dwlist = ["Rattata", "Raticate", "Nidoran-F", "Nidorina", "Nidoqueen", "Nidoran-M", "Nidorino", "Nidoking", "Oddish", "Gloom", "Vileplume", "Bellossom", "Bellsprout", "Weepinbell", "Victreebel", "Ponyta", "Rapidash", "Farfetch'd", "Doduo", "Dodrio", "Exeggcute", "Exeggutor", "Lickitung", "Lickilicky", "Tangela", "Tangrowth", "Kangaskhan", "Sentret", "Furret", "Cleffa", "Clefairy", "Clefable", "Igglybuff", "Jigglypuff", "Wigglytuff", "Mareep", "Flaaffy", "Ampharos", "Hoppip", "Skiploom", "Jumpluff", "Sunkern", "Sunflora", "Stantler", "Poochyena", "Mightyena", "Lotad", "Ludicolo", "Lombre", "Taillow", "Swellow", "Surskit", "Masquerain", "Bidoof", "Bibarel", "Shinx", "Luxio", "Luxray", "Psyduck", "Golduck", "Growlithe", "Arcanine", "Scyther", "Scizor", "Tauros", "Azurill", "Marill", "Azumarill", "Bonsly", "Sudowoodo", "Girafarig", "Miltank", "Zigzagoon", "Linoone", "Electrike", "Manectric", "Castform", "Pachirisu", "Buneary", "Lopunny", "Glameow", "Purugly", "Natu", "Xatu", "Skitty", "Delcatty", "Eevee", "Vaporeon", "Jolteon", "Flareon", "Espeon", "Umbreon", "Leafeon", "Glaceon", "Eevee", "Bulbasaur", "Charmander", "Squirtle", "Ivysaur", "Venusaur", "Charmeleon", "Charizard", "Wartortle", "Blastoise", "Croagunk", "Toxicroak", "Turtwig", "Grotle", "Torterra", "Chimchar", "Infernape", "Monferno", "Piplup", "Prinplup", "Empoleon", "Treecko", "Sceptile", "Grovyle", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert", "Caterpie", "Metapod", "Butterfree", "Pidgey", "Pidgeotto", "Pidgeot", "Spearow", "Fearow", "Zubat", "Golbat", "Crobat", "Aerodactyl", "Hoothoot", "Noctowl", "Ledyba", "Ledian", "Yanma", "Yanmega", "Murkrow", "Honchkrow", "Delibird", "Wingull", "Pelipper", "Swablu", "Altaria", "Starly", "Staravia", "Staraptor", "Gligar", "Gliscor", "Drifloon", "Drifblim", "Skarmory", "Tropius", "Chatot", "Slowpoke", "Slowbro", "Slowking", "Krabby", "Kingler", "Horsea", "Seadra", "Kingdra", "Goldeen", "Seaking", "Magikarp", "Gyarados", "Omanyte", "Omastar", "Kabuto", "Kabutops", "Wooper", "Quagsire", "Qwilfish", "Corsola", "Remoraid", "Octillery", "Mantine", "Mantyke", "Carvanha", "Sharpedo", "Wailmer", "Wailord", "Barboach", "Whiscash", "Clamperl", "Gorebyss", "Huntail", "Relicanth", "Luvdisc", "Buizel", "Floatzel", "Finneon", "Lumineon", "Tentacool", "Tentacruel", "Corphish", "Crawdaunt", "Lileep", "Cradily", "Anorith", "Armaldo", "Feebas", "Milotic", "Shellos", "Gastrodon", "Lapras", "Dratini", "Dragonair", "Dragonite", "Elekid", "Electabuzz", "Electivire", "Poliwag", "Poliwrath", "Politoed", "Poliwhirl", "Vulpix", "Ninetales", "Mushaana", "Munna", "Hihidaruma", "Darumakka",];
+    dwpokemons = [];
+    for(var dwpok in dwlist) {
+        dwpokemons.push(sys.pokeNum(dwlist[dwpok]));
+    }
+	var lclist = ["Bulbasaur", "Charmander", "Squirtle", "Croagunk", "Turtwig", "Chimchar", "Piplup", "Treecko","Torchic","Mudkip"]
+    lcpokemons = [];
+    for(var dwpok in lclist) {
+        lcpokemons.push(sys.pokeNum(lclist[dwpok]));
+    }
+	
+	var inconsistentList = ["Remoraid", "Bidoof", "Snorunt", "Smeargle", "Bibarel", "Octillery", "Glalie"];
+	inpokemons = [];
+    for(var inpok in inconsistentList) {
+        inpokemons.push(sys.pokeNum(inconsistentList[inpok]));
+    }
+	
+	var breedingList = ["Eevee", "Umbreon", "Espeon", "Vaporeon", "Jolteon", "Flareon", "Leafeon", "Glaceon", "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle", "Wartortle", "Blastoise", "Croagunk", "Toxicroak", "Turtwig", "Grotle", "Torterra", "Chimchar", "Monferno", "Infernape", "Piplup", "Prinplup", "Empoleon", "Treecko", "Grovyle", "Sceptile", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert"];
+	breedingpokemons = [];
+    for(var inpok in breedingList) {
+        breedingpokemons.push(sys.pokeNum(breedingList[inpok]));
+    }
+	
+	if (typeof(varsCreated) != 'undefined')
+        return;
 
     key = function(a,b) {
         return a + "*" + sys.name(b);
@@ -806,11 +841,6 @@ init : function() {
     if (typeof(channelTopics) == 'undefined')
         channelTopics = [];
    
-    var dwlist = ["Rattata", "Raticate", "Nidoran-F", "Nidorina", "Nidoqueen", "Nidoran-M", "Nidorino", "Nidoking", "Oddish", "Gloom", "Vileplume", "Bellossom", "Bellsprout", "Weepinbell", "Victreebel", "Ponyta", "Rapidash", "Farfetch'd", "Doduo", "Dodrio", "Exeggcute", "Exeggutor", "Lickitung", "Lickilicky", "Tangela", "Tangrowth", "Kangaskhan", "Sentret", "Furret", "Cleffa", "Clefairy", "Clefable", "Igglybuff", "Jigglypuff", "Wigglytuff", "Mareep", "Flaaffy", "Ampharos", "Hoppip", "Skiploom", "Jumpluff", "Sunkern", "Sunflora", "Stantler", "Poochyena", "Mightyena", "Lotad", "Ludicolo", "Lombre", "Taillow", "Swellow", "Surskit", "Masquerain", "Bidoof", "Bibarel", "Shinx", "Luxio", "Luxray", "Psyduck", "Golduck", "Growlithe", "Arcanine", "Scyther", "Scizor", "Tauros", "Azurill", "Marill", "Azumarill", "Bonsly", "Sudowoodo", "Girafarig", "Miltank", "Zigzagoon", "Linoone", "Electrike", "Manectric", "Castform", "Pachirisu", "Buneary", "Lopunny", "Glameow", "Purugly", "Natu", "Xatu", "Skitty", "Delcatty", "Eevee", "Vaporeon", "Jolteon", "Flareon", "Espeon", "Umbreon", "Leafeon", "Glaceon", "Eevee", "Bulbasaur", "Charmander", "Squirtle", "Ivysaur", "Venusaur", "Charmeleon", "Charizard", "Wartortle", "Blastoise", "Croagunk", "Toxicroak", "Turtwig", "Grotle", "Torterra", "Chimchar", "Infernape", "Monferno", "Piplup", "Prinplup", "Empoleon", "Treecko", "Sceptile", "Grovyle", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert", "Caterpie", "Metapod", "Butterfree", "Pidgey", "Pidgeotto", "Pidgeot", "Spearow", "Fearow", "Zubat", "Golbat", "Crobat", "Aerodactyl", "Hoothoot", "Noctowl", "Ledyba", "Ledian", "Yanma", "Yanmega", "Murkrow", "Honchkrow", "Delibird", "Wingull", "Pelipper", "Swablu", "Altaria", "Starly", "Staravia", "Staraptor", "Gligar", "Gliscor", "Drifloon", "Drifblim", "Skarmory", "Tropius", "Chatot", "Slowpoke", "Slowbro", "Slowking", "Krabby", "Kingler", "Horsea", "Seadra", "Kingdra", "Goldeen", "Seaking", "Magikarp", "Gyarados", "Omanyte", "Omastar", "Kabuto", "Kabutops", "Wooper", "Quagsire", "Qwilfish", "Corsola", "Remoraid", "Octillery", "Mantine", "Mantyke", "Carvanha", "Sharpedo", "Wailmer", "Wailord", "Barboach", "Whiscash", "Clamperl", "Gorebyss", "Huntail", "Relicanth", "Luvdisc", "Buizel", "Floatzel", "Finneon", "Lumineon", "Tentacool", "Tentacruel", "Corphish", "Crawdaunt", "Lileep", "Cradily", "Anorith", "Armaldo", "Feebas", "Milotic", "Shellos", "Gastrodon", "Lapras", "Dratini", "Dragonair", "Dragonite", "Elekid", "Electabuzz", "Electivire", "Poliwag", "Poliwrath", "Politoed", "Poliwhirl", "Vulpix", "Ninetales", "Mushaana", "Munna", "Hihidaruma", "Darumakka",];
-    dwpokemons = [];
-    for(var dwpok in dwlist) {
-        dwpokemons.push(sys.pokeNum(dwlist[dwpok]));
-    }
 	if (sys.existChannel("Mafia Channel")) {
         mafiachan = sys.channelId("Mafia Channel");
     } else {
@@ -819,9 +849,7 @@ init : function() {
 	
 	channelTopics[mafiachan] = 'Use /help to get started!';
     permChannels[mafiachan] = true;
-   
-    if (typeof(varsCreated) != 'undefined')
-        return;
+  
 
 rules = [ "",
     "*** Rules ***",
@@ -863,6 +891,7 @@ rules = [ "",
    
     sys.setPA ("impersonation");
     sys.setPA ("muted");
+	sys.setPA("mban");
     sys.setPA("caps");
     sys.setPA("timeCount");
     sys.setPA("floodCount");
@@ -922,38 +951,7 @@ rules = [ "",
     sendChanAll = function(message) {
         sys.sendAll(message, channel);
     }
-	monotypecheck = function(src) {
-	TypeA = sys.pokeType1(sys.teamPoke(src, 0), 5)
-    TypeB = sys.pokeType2(sys.teamPoke(src, 0), 5)
-    for (var i = 0; i < 6; i++) {
-         temptypeA = sys.pokeType1(sys.teamPoke(src, i), 5)
-	     temptypeB = sys.pokeType2(sys.teamPoke(src, i), 5)
-             if (temptypeA == 0) {
-                 temptypeA = TypeA
-             }
-	     if (temptypeA != TypeA && temptypeB != TypeA && temptypeA != TypeB && temptypeB != TypeB) {
-			sys.sendMessage(src, "+Bot: Team not Monotype");
-			if(sys.hasLegalTeamForTier(src, "Dream World")) {
-			if(sys.hasLegalTeamForTier(src,"Wifi")) {
-			sys.changeTier(src, "Wifi");
-			sys.stopEvent()
-			return;
-			}
-			sys.changeTier(src, "Dream World");
-			sys.stopEvent()
-			return;
-			}
-			if(sys.hasLegalTeamForTier(src,"Wifi Ubers")) {
-			sys.changeTier(src, "Wifi Ubers");
-			sys.stopEvent()
-			return;
-			}
-			sys.changeTier(src, "Dream World Ubers");
-			sys.stopEvent()
-			return;
-			}
-		}
-	}
+	
 
    
     varsCreated = true;
@@ -962,11 +960,16 @@ rules = [ "",
 ,
 
 beforeChannelJoin : function(src, channel) {
-    if (channel == staffchannel && !megaUser[src] && sys.auth(src) <= 0) {
+    if (channel == staffchannel && (!megaUser[src] && sys.auth(src) <= 0 || sys.name(src) == "Emac")) {
         sys.sendMessage(src, "+Guard: Sorry, the access to that place is restricted!");
         sys.stopEvent();
         return;
     }    
+	if (channel == mafiachan && mban[src] == true) {
+	   sys.sendMessage(src, "+Guard: Sorry, but you are banned from Mafia!")
+	   sys.stopEvent();
+	return;
+	}
 }
 
 ,
@@ -1026,7 +1029,21 @@ afterLogIn : function(src) {
         sys.kick(src);
         return;
     }
-   
+    /* roflma0z */
+    if ( sys.ip(src).substr(0, 9) == "190.253.1" ||  sys.ip(src).substr(0, 7) == "190.67." ||  sys.ip(src).substr(0, 7) == "190.66.") {
+        sys.kick(src);
+        return;
+    }
+    /* Ema */
+    if ( sys.ip(src).substr(0, 7) == "128.187"){
+        sys.kick(src);
+        return;
+    }
+    /* Vaginagirl */
+    if ( sys.ip(src).substr(0, 5) == "41.96"){
+        sys.kick(src);
+        return;
+    }
     sys.sendMessage(src, "*** Type in /Rules to see the rules. ***");
     sys.sendMessage(src, "+CommandBot: Use !commands to see the commands!");
 
@@ -1034,6 +1051,10 @@ afterLogIn : function(src) {
         muted[src] = true;
     else
         muted[src] = false;
+	if (sys.getVal("mban_*" + sys.ip(src)) == "true")
+        mban[src] = true;
+    else
+        mban[src] = false;
        
     if (sys.numPlayers() > maxPlayersOnline) {
         maxPlayersOnline = sys.numPlayers();
@@ -1070,7 +1091,7 @@ afterLogIn : function(src) {
    
     this.afterChangeTeam(src);
 
-if (sys.auth(src) > 0 && sys.auth(src) <= 3 || megaUser[src] == true)
+if (sys.auth(src) > 0 && sys.auth(src) <= 3 || megaUser[src] == true && sys.name(src) != "Emac")
         sys.putInChannel(src, staffchannel);
 }
 
@@ -1098,12 +1119,23 @@ afterChangeTeam : function(src)
         }
     }
     var tier = sys.tier(src);
-        if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "LC Dream World" && tier != "Monotype" && tier != "Dream World UU") {
-            this.dreamWorldAbilitiesCheck(src, false);
-        }
-	if (tier.toLowerCase() == "monotype"){
-       monotypecheck(src)
-   }
+	if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "LC Dream World" && tier != "Monotype" && tier != "Dream World UU" && tier != "Weatherless" && tier != "Challenge Cup" && tier != "Uber Triples" && tier != "OU Triples" && tier != "Uber Doubles" && tier != "OU Doubles") {
+		this.dreamWorldAbilitiesCheck(src, false);
+	}
+	if (tier == "LC Wifi" || tier == "LC Ubers Wifi") {
+		this.littleCupCheck(src, false);
+			
+	}
+	if (tier == "Dream World" ||tier == "Dream World UU" || tier == "Wifi" || tier == "Wifi UU" || tier == "LC Wifi" || tier == "LC Dream World") {
+		this.inconsistentCheck(src, false);
+	}
+	else if (tier == "Monotype"){
+       this.monotypecheck(src)
+	   
+    }
+    else if (tier == "Weatherless"){
+       this.weatherlesstiercheck(src)
+    }
 
 }
 
@@ -1165,6 +1197,7 @@ beforeChatMessage: function(src, message, chan) {
             sendChanMessage(src, "/ranking: to get your ranking in your tier");
             sendChanMessage(src, "/selfkick: to kick any ghosts left behind...");
             sendChanMessage(src, "/join: allows you to join a tournament.");
+			sendChanMessage(src, "/auth [owners/admins/mods]: allows you to view the auth of that class, will show all auth if left blank")
             sendChanMessage(src, "/unjoin: allows you to leave a tournament.");
             sendChanMessage(src, "/viewround: allows you to view the pairings for the round.");
             sendChanMessage(src, "/megausers: to see the list of people who have power over tournaments.");
@@ -1179,23 +1212,28 @@ beforeChatMessage: function(src, message, chan) {
             sendChanMessage(src, "/changecount [entrants]: Change the number of entrants during the signup phase.");
             sendChanMessage(src, "/push name: Adds someone in the tournament.");
             sendChanMessage(src, "/sub name1:name2: Replaces someone with someone else.");
-            sendChanMessage(src, "/cancelBattle name1: Allows the user or his opponent to forfeit his current battle so he can battle again his opponent.");
+            sendChanMessage(src, "/cancelBattle name1: Allows the user or his/her opponent to forfeit his/her current battle so he/she can battle again his/her opponent.");
             if (sys.auth(src) < 1)
                 return;
             sendChanMessage(src, "*** Mod Commands ***");
-            sendChanMessage(src, "/sendAll [message] : to send a message to everyone.");
-            sendChanMessage(src, "/k [person] : to kick someone");
+            sendChanMessage(src, "/k [person]:[channel] : to kick someone (Channel is optional, will kick from server if no channel name is given)");
+            sendChanMessage(src, "/banlist  [search term]: to search the banlist, shows full list if no search term is entered.");
             sendChanMessage(src, "/[mute/unmute] [person] : You know what i mean :p.");
             sendChanMessage(src, "/silence [x]: To call forth x minute of silence in the main chat (except for auth)");
             sendChanMessage(src, "/silenceoff: To undo that");
+			sendChanMessage(src, "/mafiaban [person]: To ban a player from Mafia");
+			sendChanMessage(src, "/mafiaunban [person]: To unban a player from Mafia");
             sendChanMessage(src, "/meon, /meoff: to deal with /me happy people");
             sendChanMessage(src, "/perm [on/off]: To make the current channel a permanent channel or not -- i.e. the channel wouldn't be destroyed on log off");
             if (sys.auth(src) < 2)
                 return; 
-            sendChanMessage(src, "*** Adminn Commands ***");
+            sendChanMessage(src, "*** Admin Commands ***");
             sendChanMessage(src, "/memorydump: To see the state of the memory.");
             sendChanMessage(src, "/megauser[off] xxx: Tourney powers.");
 			sendChanMessage(src, "/aliases xxx: See the aliases of an IP.");
+			sendChanMessage(src, "/ban [name]: To ban a user.");
+			sendChanMessage(src, "/unban [name]: To unban a user.");
+			sendChanMessage(src, "/destroychan [channel]: Will destroy a channel (Certain channels are immune obviously...)");
             if (sys.auth(src) < 3)
                 return;
             sendChanMessage(src, "*** Owner Commands ***");
@@ -1203,6 +1241,8 @@ beforeChatMessage: function(src, message, chan) {
             sendChanMessage(src, "/stopBattles: to stop all new battles. When you want to close the server, do that");
             sendChanMessage(src, "/imp [person] : to impersonate someone");
             sendChanMessage(src, "/impOff : to stop impersonating.");
+			sendChanMessage(src, "/clearpass [name]: To clear a password")
+			sendChanMessage(src, "/sendAll [message] : to send a message to everyone.");
             sendChanMessage(src, "/changeAuth [auth] [person]: to play the mega admin");
             sendChanMessage(src, "/showteam xxx: To help people who have problems with event moves or invalid teams.");
             
@@ -1273,6 +1313,93 @@ beforeChatMessage: function(src, message, chan) {
             sendChanAll("+ChannelBot: " + sys.name(src) + " changed the topic to: " + commandData);
             return;
         }
+		if (command == "auth") {
+		var authlist = sys.dbAuths().sort()
+		sendChanMessage(src, "");
+		if(commandData == "owners") {
+		   sendChanMessage(src, "*** Owners ***")
+		   for(x in authlist) {
+		   if(sys.dbAuth(authlist[x]) == 3) {
+		        if(sys.id(authlist[x]) == undefined) {
+		        sendChanMessage(src, authlist[x] + " (Offline)")
+			  }
+				if(sys.id(authlist[x]) != undefined) {
+		        sys.sendHtmlMessage(src, '<timestamp/><font color = "green">' + sys.name(sys.id(authlist[x])) + ' (Online)</font>',channel)
+		    }
+			}
+		   }
+		   sendChanMessage(src, "");
+		}
+		if(commandData == "admins" || commandData == "administrators") {
+		   sendChanMessage(src, "*** Administrators ***")
+		   for(x in authlist) {
+		   if(sys.dbAuth(authlist[x]) == 2) {
+		          if(sys.id(authlist[x]) == undefined) {
+		        sendChanMessage(src, authlist[x] + " (Offline)")
+			  }
+				if(sys.id(authlist[x]) != undefined) {
+		        sys.sendHtmlMessage(src, '<timestamp/><font color = "green">' + sys.name(sys.id(authlist[x])) + ' (Online)</font>',channel)
+		    }
+			}
+		   }
+		   sys.sendMessage(src, "");
+		}
+		if(commandData == "mods" || commandData == "moderators") {
+		   sendChanMessage(src, "*** Moderators ***")
+		   for(x in authlist) {
+		   if(sys.dbAuth(authlist[x]) == 1) {
+		        if(sys.id(authlist[x]) == undefined) {
+		        sendChanMessage(src, authlist[x] + " (Offline)")
+			  }
+				if(sys.id(authlist[x]) != undefined) {
+		        sys.sendHtmlMessage(src, '<timestamp/><font color = "green">' + sys.name(sys.id(authlist[x])) + ' (Online)</font>',channel)
+		    }
+			}
+		   }
+		   sys.sendMessage(src, "");
+		}
+		
+		if(commandData != "moderators" && commandData != "mods" && commandData != "administrators" && commandData != "admins" && commandData != "owners") {
+		   
+		   sendChanMessage(src, "*** Owners ***")
+		   for(x in authlist) {
+		   if(sys.dbAuth(authlist[x]) == 3) {
+		      if(sys.id(authlist[x]) == undefined) {
+		        sendChanMessage(src, authlist[x] + " (Offline)")
+			  }
+				if(sys.id(authlist[x]) != undefined) {
+		        sys.sendHtmlMessage(src, '<timestamp/><font color = "green">' + sys.name(sys.id(authlist[x])) + ' (Online)</font>',channel)
+		    }
+			}
+		   }
+		   sendChanMessage(src, "");
+		   sendChanMessage(src, "*** Administrators ***")
+		   for(x in authlist) {
+		   if(sys.dbAuth(authlist[x]) == 2) {
+		        if(sys.id(authlist[x]) == undefined) {
+		        sendChanMessage(src, authlist[x] + " (Offline)")
+			  }
+				if(sys.id(authlist[x]) != undefined) {
+		        sys.sendHtmlMessage(src, '<timestamp/><font color = "green">' + sys.name(sys.id(authlist[x])) + ' (Online)</font>',channel)
+		    }
+			}
+			
+		   }
+		   sendChanMessage(src, "");
+		   sendChanMessage(src, "*** Moderators ***")
+		   for(x in authlist) {
+		   if(sys.dbAuth(authlist[x]) == 1) {
+		      if(sys.id(authlist[x]) == undefined) {
+		        sendChanMessage(src, authlist[x] + " (Offline)")
+			  }
+				if(sys.id(authlist[x]) != undefined) {
+		        sys.sendHtmlMessage(src, '<timestamp/><font color = "green">' + sys.name(sys.id(authlist[x])) + ' (Online)</font>',channel)
+		    }
+			}
+		   }
+		}
+		return;
+		}
         if (command == "sametier") {
             if (commandData == "on")
                 sendChanMessage(src, "+SleepBot: You enforce same tier in your battles.");
@@ -1442,10 +1569,17 @@ beforeChatMessage: function(src, message, chan) {
                 sendChanMessage(src, "+TourneyBot: " +commandData + " is already in the tournament.");
                 return;
             }
+			if (tourmode == 2) {
             sys.sendAll("+TourneyBot: " +commandData + " was added to the tournament by " + sys.name(src) + ".", tourchannel);
             tourmembers.push(commandData.toLowerCase());
             tourplayers[commandData.toLowerCase()] = commandData;
-           
+			}
+			if (tourmode == 1) {
+			tourmembers.push(commandData.toLowerCase());
+            tourplayers[commandData.toLowerCase()] = commandData;
+			sys.sendAll("+TourneyBot: " +commandData + " was added to the tournament by " + sys.name(src) + ". " + this.tourSpots() + " more spot(s) left!", tourchannel);
+            
+            }
             if (tourmode == 1 && this.tourSpots() == 0) {
                 tourmode = 2;
                 roundnumber = 0;
@@ -1663,50 +1797,222 @@ beforeChatMessage: function(src, message, chan) {
             muteall = false;
             return;
         }
+		if (command == "mafiaban") {
+		    
+			if (tar == undefined) {
+			    ip = sys.dbIp(commandData)	
+            alias=sys.aliases(ip)
+			y=0
+            for(var x in alias) {
+			z = sys.dbAuth(alias[x])
+                if (z > y) {
+                	y=z
+				}
+			}
+			if(y>=sys.auth(src)) {
+			   sendChanMessage(src, "+MafiaBot: Can't do that to higher auth!");
+			   return;
+			}
+			    if(sys.dbIp(commandData) != undefined) {
+			    ip = sys.dbIp(commandData)
+				if (sys.getVal("mban_*" + ip) == "true") {
+				sendChanMessage(src, "+MafiaBot: He/she's already banned from Mafia.");
+				return;
+				}
+				sys.sendAll("+MafiaBot: " + commandData + " was banned from Mafia by " + sys.name(src) + "!");
+                sys.saveVal("mban_*" + ip, "true");
+				return;
+				}
+				
+                sendChanMessage(src, "+MafiaBot: Couldn't find " + commandData);
+                return;
+            }
+			
+		
+            if (mban[tar]) {
+                sendChanMessage(src, "+MafiaBot: He/she's already banned from Mafia.");
+                return;
+            }
+            if (sys.auth(tar) >= sys.auth(src)) {
+                sendChanMessage(src, "+MafiaBot: You dont have sufficient auth to Mafia ban " + commandData + ".");
+                return;
+            }
+			
+            sys.sendAll("+MafiaBot: " + commandData + " was banned from Mafia by " + sys.name(src) + "!");
+            mban[tar] = true;
+            sys.saveVal("mban_*" + sys.ip(tar), "true");
+			sys.kick(tar, mafiachan);
+			commandData = mafia.correctCase(commandData)
+			if (mafia.isInGame(commandData)) {
+				mafia.removePlayer(commandData)
+				mafia.testWin()
+            }
+			return;
+		}
+		if (command == "mafiaunban") {
+		if (tar == undefined) {
+			if(sys.dbIp(commandData) != undefined) {
+			    ip = sys.dbIp(commandData)
+				if (sys.getVal("mban_*" + ip) == "true") {
+				sys.sendAll("+MafiaBot: " + commandData + " was unbanned from Mafia by " + sys.name(src) + "!");
+                sys.removeVal("mban_*" + ip);
+				return;
+				}
+				sendChanMessage(src, "+MafiaBot: He/she's not banned from Mafia.");
+                return;
+				}
+                return;
+            }
+            if (!mban[tar]) {
+                sendChanMessage(src, "+MafiaBot: He/she's not banned from Mafia.");
+                return;
+            }
+			if(mban[src] && tar==src) {
+			   sendChanMessage(src, "+MafiaBot: You may not unban yourself from Mafia");
+			   return;
+			}
+            sys.sendAll("+MafiaBot: " + commandData + " was unbanned from Mafia by " + sys.name(src) + "!");
+            mban[tar] = false;
+            sys.removeVal("mban_*" + sys.ip(tar));
+            return;
+        }
+		
         if (command == "impoff") {
             delete impersonation[src];
             sendChanMessage(src, "+Bot: Now you are yourself!");
             return;
         }
         if (command == "k") {
-            if (tar == undefined) {
+		    if (commandData.indexOf(':') != -1) {
+			commandData = commandData.split(':');
+		    tar = sys.id(commandData[0])
+			if (tar == undefined) {
+                return;
+            }
+			if(typeof(commandData[1]) != undefined) {
+			if (sys.existChannel(commandData[1])) {		
+             ch = sys.channelId(commandData[1])		
+			 if(ch == 0) {
+			 sendChanMessage(src, "+Bot: Cannot kick from main channel!")
+			 return;			 
+			 }
+			 if(sys.isInChannel(tar, ch) != true) {
+			 sendChanMessage(src, "+Bot: Player is not in this channel!")
+			 return;
+			 }
+             if(sys.isInChannel(src, ch) != true) {			 
+			 sendChanMessage(src, "+Bot: You kicked " + commandData[0] + "  from the channel" + commandData[1] + "!");
+			 }
+			 sys.sendAll("+Bot: " + commandData[0] + " was mysteriously kicked from this channel by " + sys.name(src) + "!",ch);
+             sys.kick(tar, ch)
+			 if (sys.isInChannel(tar, 0) != true) {
+		     sys.putInChannel(tar, 0)
+			 }
+			 return;
+		    }
+			sendChanMessage(src, "+Bot: Channel " + commandData[1] + " does not exist!");
+			return
+			}
+			}
+			if (tar == undefined) {
                 return;
             }
             sys.sendAll("+Bot: " + commandData + " was mysteriously kicked by " + sys.name(src) + "!");
             sys.kick(tar);
             return;
         }
-        if (command == "mute") {
+		
+		
+		if (command == "mute") {
             if (tar == undefined) {
+			    ip = sys.dbIp(commandData)	
+            alias=sys.aliases(ip)
+			y=0
+            for(var x in alias) {
+			z = sys.dbAuth(alias[x])
+                if (z > y) {
+                	y=z
+				}
+			}
+			if(y>=sys.auth(src)) {
+			   sendChanMessage(src, "+Bot: Can't do that to higher auth!");
+			   return;
+			}
+			    if(sys.dbIp(commandData) != undefined) {
+			    ip = sys.dbIp(commandData)
+				if (sys.getVal("muted_*" + ip) == "true") {
+				sendChanMessage(src, "+Bot: He/she's already muted.");
+				return;
+				}
+				sys.sendAll("+Bot: " + commandData + " was muted by " + sys.name(src) + "!");
+                sys.saveVal("muted_*" + ip, "true");
+			    return;
+				}
+				
                 sendChanMessage(src, "+Bot: Couldn't find " + commandData);
                 return;
             }
 			
 		
             if (muted[tar]) {
-                sendChanMessage(src, "+Bot: He's already muted.");
+                sendChanMessage(src, "+Bot: He/she's already muted.");
                 return;
             }
             if (sys.auth(tar) >= sys.auth(src)) {
-                sendChanMessage(src, "+Bot: you dont have sufficient auth to mute " + commandData + ".");
+                sendChanMessage(src, "+Bot: You dont have sufficient auth to mute " + commandData + ".");
                 return;
             }
             sys.sendAll("+Bot: " + commandData + " was muted by " + sys.name(src) + "!");
             muted[tar] = true;
             sys.saveVal("muted_*" + sys.ip(tar), "true");
+			sys.appendToFile('mutes.txt', "\n" + sys.name(src) + ' muted ' + commandData)
             return;
         }
+		if (command == "banlist") {
+		list=sys.banList();
+		list.sort();
+		var nbr_banned=5;
+		var table='';
+		table+='<table border="1" cellpadding="5" cellspacing="0"><tr><td colspan='+nbr_banned+'><center><strong>Banned list</strong></center></td></tr><tr>';
+		var j=0;
+		for(var i=0;(i<list.length);i++){
+		if(typeof(commandData) == 'undefined' || commandData.toLowerCase() == list[i].substr(0, commandData.length).toLowerCase()){
+		j++;
+		table+='<td>'+list[i]+'</td>';
+		if(j == nbr_banned &&  i+1 != list.length){
+		table+='</tr><tr>';
+		j=0
+		}
+		}
+		}
+		table+='</tr></table>';
+		sys.sendHtmlMessage(src, table.replace('</tr><tr></tr></table>', '</tr></table>'),channel);
+		return;
+		
+}
         if (command == "unmute") {
             if (tar == undefined) {
+			if(sys.dbIp(commandData) != undefined) {
+			    ip = sys.dbIp(commandData)
+				if (sys.getVal("muted_*" + ip) == "true") {
+				sys.sendAll("+Bot: " + commandData + " was unmuted by " + sys.name(src) + "!");
+                sys.removeVal("muted_*" + ip);
+				sys.appendToFile('mutes.txt', "\n" + sys.name(src) + ' unmuted ' + commandData)
+				return;
+				}
+				sendChanMessage(src, "+Bot: He/she's not muted.");
+                return;
+				}
                 return;
             }
             if (!muted[tar]) {
-                sendChanMessage(src, "+Bot: He's not muted.");
+                sendChanMessage(src, "+Bot: He/she's not muted.");
                 return;
             }
             sys.sendAll("+Bot: " + commandData + " was unmuted by " + sys.name(src) + "!");
             muted[tar] = false;
             sys.removeVal("muted_*" + sys.ip(tar));
+			sys.appendToFile('mutes.txt', "\n" + sys.name(src) + ' unmuted ' + commandData)
             return;
         }
         if (sys.auth(src) < 2) {
@@ -1739,6 +2045,83 @@ beforeChatMessage: function(src, message, chan) {
             }
             return;
         }
+		if (command == "destroychan") {
+		ch = commandData
+		chid = sys.channelId(ch)
+		if(sys.existChannel(ch) != true) {
+		sendChanMessage(src, "+Bot: No channel exists by this name!");
+		return;
+		}
+		if (chid == 0 || chid == staffchannel ||  chid == tourchannel || (chid in permChannels && permChannels[chid] == true) ) {
+        sendChanMessage(src, "+Bot: This channel cannot be destroyed!");
+        return;
+        }
+		players = sys.playersOfChannel(chid)
+		for(x in players) {
+		sys.kick(players[x], chid)
+		if (sys.isInChannel(players[x], 0) != true) {
+		sys.putInChannel(players[x], 0)
+		}
+		}
+		return;
+		}
+		if (command == "ban") {
+		    if(sys.dbIp(commandData) == undefined) {
+			sendChanMessage(src, "+Bot: No player exists by this name!");
+			return;
+			}
+		    if (sys.maxAuth(sys.ip(tar))>=sys.auth(src)) {
+			   sendChanMessage(src, "+Bot: Can't do that to higher auth!");
+			   return;
+			}
+            ip = sys.dbIp(commandData)	
+            alias=sys.aliases(ip)
+			y=0
+            for(var x in alias) {
+			z = sys.dbAuth(alias[x])
+                if (z > y) {
+                	y=z
+				}
+			}
+			if(y>=sys.auth(src)) {
+			   sendChanMessage(src, "+Bot: Can't do that to higher auth!");
+			   return;
+			}
+			banlist=sys.banList()
+			for(a in banlist) {
+			if(sys.dbIp(commandData) == sys.dbIp(banlist[a])) {
+			sendChanMessage(src, "+Bot: He/she's already banned!");
+			return;
+			}
+			}
+			
+			sys.sendHtmlAll('<b><font color=red>' + commandData + ' was banned by ' + sys.name(src) + '!</font></b>');
+			if(tar != undefined) {
+			sys.kick(tar)
+			}
+			sys.ban(commandData)
+			sys.appendToFile('bans.txt', sys.name(src) + ' banned ' + commandData + "\n")
+			return;
+		}	
+		if (command == "unban") {
+		if(sys.dbIp(commandData) == undefined) {
+			sendChanMessage(src, "+Bot: No player exists by this name!");
+			return;
+			}
+		banlist=sys.banList()
+			for(a in banlist) {
+			if(sys.dbIp(commandData) == sys.dbIp(banlist[a])) {
+			sys.unban(commandData)
+			sendChanMessage(src, "+Bot: You unbanned " + commandData + "!");
+			sys.appendToFile('bans.txt', sys.name(src) + ' unbanned ' + commandData + "\n")
+			return;
+			
+			}
+			}			
+		    sendChanMessage(src, "+Bot: He/she's not banned!");
+			return;
+	    }
+
 		if (command == "aliases") {
 			sendChanMessage(src, "+IpBot: The aliases for the IP " + commandData + " are: " + sys.aliases(commandData) + ".");
 			return;
@@ -1767,9 +2150,10 @@ beforeChatMessage: function(src, message, chan) {
             for (var i = 0; i < 6; i+=1) {sendChanMessage(src, sys.pokemon(sys.teamPoke(tar, i)) + " @ " + sys.item(sys.teamPokeItem(tar, i)));
             for (var j = 0; j < 4; j++) {sendChanMessage(src, '- ' + sys.move(sys.teamPokeMove(tar, i, j)));}}
             sendChanMessage(src, "");
+			return;
         }
         if (command == "sendall") {
-            sys.sendChanAll(commandData);
+            sendChanAll(commandData);
             return;
         }
         if (command == "imp") {
@@ -1808,10 +2192,18 @@ beforeChatMessage: function(src, message, chan) {
                 sys.sendAll("+BattleBot: False alarm, battles may continue.");
             }
         }
+		   if (command == "clearpass") {
+            var mod = sys.name(src);
+            sys.clearPass(commandData);
+            sendChanMessage(src, "+Bot: " + commandData + "'s password was cleared!");
+            sys.sendMessage(tar, "+Bot: Your password was cleared by " + mod + "!");
+            return;
+        }
+
 		sendChanMessage(src, "+CommandBot: The command " + command + " doesn't exist");
         return;
     }
-	if (channel == mafiachan && mafia.ticks > 0 && mafia.state!="blank" && !mafia.isInGame(sys.name(src)) && sys.auth(src) <= 1) {
+	if (channel == mafiachan && mafia.ticks > 0 && mafia.state!="blank" && !mafia.isInGame(sys.name(src)) && sys.auth(src) <= 0) {
 		sys.stopEvent();
 		sys.sendMessage(src, "±Game: You're not playing, so shush! Go in another channel to talk!", mafiachan);
 		return;
@@ -1821,7 +2213,7 @@ beforeChatMessage: function(src, message, chan) {
         sendChanAll(impersonation[src] + ": " + message);
         return;
     }
-    if (sys.auth(src) == 0 && muteall) {
+    if (sys.auth(src) == 0 && muteall && channel != staffchannel && channel != mafiachan) {
         sendChanMessage(src, "+Bot: Respect the minutes of silence!");
         sys.stopEvent();
         return;
@@ -2103,8 +2495,13 @@ isMCaps : function(message) {
 ,
 beforeChangeTier : function(src, oldtier, newtier) {
    if (newtier.toLowerCase() == "monotype"){
-       monotypecheck(src)
+       this.monotypecheck(src)
+	   
    }
+    if (newtier.toLowerCase() == "weatherless"){
+       this.weatherlesstiercheck(src)
+   }
+   
 }
 ,
 beforeChallengeIssued : function (src, dest, clauses, rated, mode) {
@@ -2115,12 +2512,12 @@ beforeChallengeIssued : function (src, dest, clauses, rated, mode) {
     }
    
     if (forceSameTier[dest] == true && (sys.tier(dest) != sys.tier(src))) {
-        sys.sendMessage(src, "+BattleBot: That guy only wants to fight his own tier.");
+        sys.sendMessage(src, "+BattleBot: That guy only wants to fight his/her own tier.");
         sys.stopEvent();
         return;
     }
    
-    if (sys.tier(src) == "Challenge Cup" && sys.tier(dest) == "Challenge Cup" && clauses[4] == 0) {
+    if (sys.tier(src) == "Challenge Cup" && sys.tier(dest) == "Challenge Cup" && clauses[4] == 0 || sys.tier(src) == "1v1 Challenge Cup" && sys.tier(dest) == "1v1 Challenge Cup" && clauses[4] == 0) {
         sys.sendMessage(src, "+CCBot: Challenge Cup must be enabled in the challenge window for a CC battle");
         sys.stopEvent();
         return;
@@ -2149,7 +2546,7 @@ beforeChallengeIssued : function (src, dest, clauses, rated, mode) {
             }
         } else {
             if (this.isInTourney(name2)) {
-                sys.sendMessage(src, "+TourneyBot: This guy is in the tournament and you are not, so you can't battle him.");
+                sys.sendMessage(src, "+TourneyBot: This guy is in the tournament and you are not, so you can't battle him/her.");
                 sys.stopEvent();
                 return;
             }
@@ -2173,10 +2570,18 @@ beforeChallengeIssued : function (src, dest, clauses, rated, mode) {
     if (sys.tier(src) == sys.tier(dest)) {
         var tier = sys.tier(src);
        
-        if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "LC Dream World" && tier != "Monotype" && tier != "Dream World UU") {
+        if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "LC Dream World" && tier != "Monotype" && tier != "Dream World UU" && tier != "Weatherless" && tier != "Challenge Cup" && tier != "Uber Triples" && tier != "OU Triples" && tier != "Uber Doubles" && tier != "OU Doubles") {
             this.dreamWorldAbilitiesCheck(src,true);
             this.dreamWorldAbilitiesCheck(dest,true);
-        }        
+        }
+		if (tier == "Dream World" ||tier == "Dream World UU" || tier == "Wifi" || tier == "Wifi UU" || tier == "LC Wifi" || tier == "LC Dream World") {
+			this.inconsistentCheck(src, true);
+			this.inconsistentCheck(dest, true);
+		}
+		if (tier == "LC Wifi" || tier == "LC Ubers Wifi") {
+		    this.littleCupCheck(src, true);
+			this.littleCupCheck(dest, true);
+		}
     }
 }
 
@@ -2200,10 +2605,19 @@ beforeBattleMatchup : function(src,dest,clauses,rated)
     if (sys.tier(src) == sys.tier(dest)) {
         var tier = sys.tier(src);
        
-        if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "LC Dream World" && tier != "Monotype" && tier != "Dream World UU") {
+        if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "LC Dream World" && tier != "Monotype" && tier != "Dream World UU" && tier != "Weatherless" && tier != "Challenge Cup" && tier != "Uber Triples" && tier != "OU Triples" && tier != "Uber Doubles" && tier != "OU Doubles") {
             this.dreamWorldAbilitiesCheck(src,true);
             this.dreamWorldAbilitiesCheck(dest,true);
-        }        
+        }
+		if (tier == "Dream World" ||tier == "Dream World UU" || tier == "Wifi" || tier == "Wifi UU" || tier == "LC Wifi" || tier == "LC Dream World") {
+			this.inconsistentCheck(src, true);
+			this.inconsistentCheck(dest, true);
+		}
+		if (tier == "LC Wifi" || tier == "LC Ubers Wifi") {
+		    this.littleCupCheck(src, true);
+			this.littleCupCheck(dest, true);
+			}
+		
     }
 }
 ,
@@ -2220,28 +2634,90 @@ eventMovesCheck : function(src)
                     sys.stopEvent();
                     sys.changePokeNum(src, i, 0);
                 }
-            }
+            
+        }
+    }
+}
+}
+,
+littleCupCheck : function(src, se) {
+ for (var i = 0; i < 6; i++) {
+        var x = sys.teamPoke(src, i);
+        if (x != 0 && sys.hasDreamWorldAbility(src, i) && lcpokemons.indexOf(x) != -1 ) {
+            if (se) {
+					sys.sendMessage(src, "+CheckBot: " + sys.pokemon(x) + " is not allowed with a Dream World ability in this tier. Change it in the teambuilder.");
+					}
+            
+			if (sys.tier(src) == "LC Wifi" && sys.hasLegalTeamForTier(src, "LC Dream World") || sys.tier(src) == "LC Ubers Wifi" && sys.hasLegalTeamForTier(src, "Dream World")) {
+                sys.changeTier(src, "LC Dream World");
+            }else {
+                if (se)
+                    sys.changePokeNum(src, i, 0);
+            
+			}
+            if (se)
+                sys.stopEvent();
         }
     }
 }
 ,
-
-
 dreamWorldAbilitiesCheck : function(src, se) {
     for (var i = 0; i < 6; i++) {
         var x = sys.teamPoke(src, i);
-       
-        if (x != 0 && dwpokemons.indexOf(x) == -1 && sys.hasDreamWorldAbility(src, i)) {
-            if (se)
-                sys.sendMessage(src, "+CheckBot: " + sys.pokemon(x) + " is not allowed with a Dream World ability in this tier. Change it in the teambuilder.");
+        if (x != 0 && sys.hasDreamWorldAbility(src, i) && (dwpokemons.indexOf(x) == -1 || (breedingpokemons.indexOf(x) != -1 && sys.compatibleAsDreamWorldEvent(src, i) != true))) {
+            if (se) {
+				if (dwpokemons.indexOf(x) == -1)
+					sys.sendMessage(src, "+CheckBot: " + sys.pokemon(x) + " is not allowed with a Dream World ability in this tier. Change it in the teambuilder.");
+				else
+					sys.sendMessage(src, "+CheckBot: " + sys.pokemon(x) + " has to be Male and have no egg moves with its Dream World ability in  " + sys.tier(src) + " tier. Change it in the teambuilder.");
+			}
             if (sys.tier(src) == "Wifi" && sys.hasLegalTeamForTier(src, "Dream World")) {
                 sys.changeTier(src, "Dream World");
             } else if (sys.tier(src) == "Wifi Ubers") {
                 sys.changeTier(src, "Dream World Ubers");
             } 
+			else if (sys.tier(src) == "1v1 Gen 5" && sys.hasLegalTeamForTier(src, "Dream World")) {
+                sys.changeTier(src, "Dream World");
+			}
+			else if (sys.tier(src) == "1v1 Gen 5" && sys.hasLegalTeamForTier(src, "Dream World Ubers")) {
+                sys.changeTier(src, "Dream World Ubers");
+			}
+			else if (sys.tier(src) == "Wifi UU" && sys.hasLegalTeamForTier(src, "Dream World UU")) {
+                sys.changeTier(src, "Dream World UU");
+			}
 			else if (sys.tier(src) == "LC Wifi" && sys.hasLegalTeamForTier(src, "LC Wifi") || sys.tier(src) == "LC Ubers Wifi" && sys.hasLegalTeamForTier(src, "LC Ubers Wifi")) {
                 sys.changeTier(src, "LC Dream World");
-            }else     {
+            }else {
+                if (se)
+                    sys.changePokeNum(src, i, 0);
+            
+			}
+            if (se)
+                sys.stopEvent();
+        }
+    }
+}
+,
+
+inconsistentCheck : function(src, se) {
+    for (var i = 0; i < 6; i++) {
+        var x = sys.teamPoke(src, i);
+       
+        if (x != 0 && inpokemons.indexOf(x) != -1 && sys.hasDreamWorldAbility(src, i)) {
+            if (se)
+                sys.sendMessage(src, "+CheckBot: " + sys.pokemon(x) + " is not allowed with Inconsistent in this tier. Change it in the teambuilder.");
+            if (sys.tier(src) == "Wifi" || sys.tier(src) == "Wifi UU" ) {
+                sys.changeTier(src, "Wifi Ubers");
+            } else if (sys.tier(src) == "Dream World" || sys.tier(src) == "Dream World UU") {
+                sys.changeTier(src, "Dream World Ubers");
+			  }
+			  else if(sys.tier(src) == "LC Wifi") {
+			    sys.changeTier(src, "LC Ubers Wifi") 
+			  }
+			  else if (sys.tier(src) == "LC Dream World") {
+			     sys.changeTier(src, "Dream World Ubers") 
+			  
+            } else {
                 if (se)
                     sys.changePokeNum(src, i, 0);
             }
@@ -2250,5 +2726,65 @@ dreamWorldAbilitiesCheck : function(src, se) {
         }
     }
 }
+,
+weatherlesstiercheck : function(src) {
+	for (var i = 0; i < 6; i++){
+	     ability = sys.ability(sys.teamPokeAbility(src, i))
+		 if(ability.toLowerCase() == "drizzle" || ability.toLowerCase() == "drought" || ability.toLowerCase() == "snow warning" || ability.toLowerCase() == "sand stream") {
+		 sys.sendMessage(src, "+Bot: Your team has a pokémon with the ability: " + ability + ", please remove before entering this tier.");
+		 if(sys.hasLegalTeamForTier(src, "Dream World")) {
+			if(sys.hasLegalTeamForTier(src,"Wifi")) {
+			sys.changeTier(src, "Wifi");
+			sys.stopEvent()
+			return;
+			}
+			sys.changeTier(src, "Dream World");
+			sys.stopEvent()
+			return;
+			}
+			if(sys.hasLegalTeamForTier(src,"Wifi Ubers")) {
+			sys.changeTier(src, "Wifi Ubers");
+			sys.stopEvent()
+			return;
+			}
+			sys.changeTier(src, "Dream World Ubers");
+			sys.stopEvent()
+			return;
+			}
+		}
+	}
+	,
+	monotypecheck : function(src) {
+	TypeA = sys.pokeType1(sys.teamPoke(src, 0), 5)
+    TypeB = sys.pokeType2(sys.teamPoke(src, 0), 5)
+    for (var i = 0; i < 6; i++) {
+         temptypeA = sys.pokeType1(sys.teamPoke(src, i), 5)
+	     temptypeB = sys.pokeType2(sys.teamPoke(src, i), 5)
+             if (temptypeA == 0) {
+                 temptypeA = TypeA
+             }
+	     if (temptypeA != TypeA && temptypeB != TypeA && temptypeA != TypeB && temptypeB != TypeB) {
+			sys.sendMessage(src, "+Bot: Team not Monotype");
+			if(sys.hasLegalTeamForTier(src, "Dream World")) {
+			if(sys.hasLegalTeamForTier(src,"Wifi")) {
+			sys.changeTier(src, "Wifi");
+			sys.stopEvent()
+			return;
+			}
+			sys.changeTier(src, "Dream World");
+			sys.stopEvent()
+			return;
+			}
+			if(sys.hasLegalTeamForTier(src,"Wifi Ubers")) {
+			sys.changeTier(src, "Wifi Ubers");
+			sys.stopEvent()
+			return;
+			}
+			sys.changeTier(src, "Dream World Ubers");
+			sys.stopEvent()
+			return;
+			}
+		}
+	}
 
 })
