@@ -1,3 +1,5 @@
+#include "main.h"
+
 #ifndef PO_NO_GUI
 # include <QtGui/QApplication>
 # include "mainwindow.h"
@@ -6,10 +8,13 @@
 #endif
 
 #include <cstdio>
+#include <iostream>
 #include <signal.h>
-#include <exception>
+#include <execinfo.h>
 #include "server.h"
 #include "consolereader.h"
+
+using namespace std;
 
 void myMessageOutput(QtMsgType type, const char *msg)
 {
@@ -32,6 +37,8 @@ void myMessageOutput(QtMsgType type, const char *msg)
 
 int main(int argc, char *argv[])
 {
+    set_terminate( stacktrace ); 
+
 #ifdef WIN32
     freopen("logs.txt", "a", stderr);
     qInstallMsgHandler(myMessageOutput);
@@ -166,4 +173,19 @@ int main(int argc, char *argv[])
     }
 
     return 0;
+}
+
+void stacktrace() 
+{ 
+    cout << "----------------------------------------------" << endl;
+    void *trace_elems[100]; 
+    int trace_elem_count(backtrace( trace_elems, 100 )); 
+    char **stack_syms(backtrace_symbols( trace_elems, trace_elem_count )); 
+    for ( int i = 0 ; i < trace_elem_count ; ++i ) 
+    { 
+        cout << stack_syms[i] << endl; 
+    } 
+    free( stack_syms );
+    cout << "----------------------------------------------" << endl; 
+    // exit(1); 
 }
