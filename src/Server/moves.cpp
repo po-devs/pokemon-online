@@ -947,7 +947,7 @@ struct MMLeechSeed : public MM
     }
 
     static void et(int s, int, BS &b) {
-        if (b.gen() <= 2 && poke(b,t).value("LeechSeedTurn").toInt() == b.turn())
+        if (b.gen() <= 2 && poke(b,s).value("LeechSeedTurn").toInt() == b.turn())
             return;
 
         if (b.koed(s) || b.hasWorkingAbility(s, Ability::MagicGuard))
