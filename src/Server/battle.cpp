@@ -1501,7 +1501,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     if (p.statusCount() > 0) {
         if (p.status() == Pokemon::Poisoned)
-            p.statusCount() = 14;
+            p.statusCount() = gen() <= 2 ? 0 : 14;
         else if (p.status() != Pokemon::Asleep)
             p.statusCount() = 0;
     }
@@ -4300,6 +4300,10 @@ int BattleSituation::getStat(int player, int stat, int purityLevel)
 
     if (ret == 0) {
 	ret = 1;
+    }
+
+    if (gen() <= 2 && ret >= 1000) {
+        ret = 999;
     }
 
     return ret;

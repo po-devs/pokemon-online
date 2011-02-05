@@ -942,10 +942,14 @@ struct MMLeechSeed : public MM
     static void uas(int s, int t, BS &b) {
         addFunction(poke(b,t), "EndTurn64", "LeechSeed", &et);
         poke(b,t)["SeedSource"] = s;
+        poke(b,t)["LeechSeedTurn"] = b.turn();
         b.sendMoveMessage(72, 1, s, Pokemon::Grass, t);
     }
 
     static void et(int s, int, BS &b) {
+        if (b.gen() <= 2 && poke(b,t).value("LeechSeedTurn").toInt() == b.turn())
+            return;
+
         if (b.koed(s) || b.hasWorkingAbility(s, Ability::MagicGuard))
             return;
         int s2 = poke(b,s)["SeedSource"].toInt();
@@ -1005,7 +1009,7 @@ struct MMRest : public MM
 
     static void daf(int s, int, BS &b) {
         // Insomnia, Vital Spirit, Uproar
-        if (b.poke(s).status() == Pokemon::Asleep || !b.canGetStatus(s, Pokemon::Asleep) || b.poke(s).isFull()) {
+        if ( (b.gen() >= 3 && b.poke(s).status() == Pokemon::Asleep) || !b.canGetStatus(s, Pokemon::Asleep) || b.poke(s).isFull()) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -1136,6 +1140,16 @@ struct MMRoar : public MM
     }
 
     static bool testPhazing(int s, int t, BS &b, bool verbose) {
+        if (b.gen() == 1) {
+            turn(b,s)["Failed"] = true;
+            return false;
+        }
+
+        if (b.gen() == 2 && !b.hasMoved(t)) {
+            turn(b,s)["Failed"] = true;
+            return false;
+        }
+
         int target = b.player(t);
 
         /* ingrain & suction cups */
@@ -1199,7 +1213,7 @@ struct MMSpikes : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (team(b,b.opponent(b.player(s))).value("Spikes").toInt() >= 3) {
+        if (team(b,b.opponent(b.player(s))).value("Spikes").toInt() >= 1 + 2*(b.gen() >= 3)) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -2245,7 +2259,9 @@ struct MMEncore : public MM
             b.sendItemMessage(7,t);
             b.disposeItem(t);
         } else {
-            if (b.gen() <= 3)
+            if (b.gen() == 2)
+                poke(b,t)["EncoresUntil"] = b.turn() + 1 + (b.true_rand()%4);
+            else if (b.gen() == 3)
                 poke(b,t)["EncoresUntil"] = b.turn() + 1 + (b.true_rand()%5);
             else if (b.gen() == 4)
                 poke(b,t)["EncoresUntil"] = b.turn() + 3 + (b.true_rand()%5);
@@ -3959,8 +3975,11 @@ struct MMSpite : public MM
         int slot = poke(b,t)["MoveSlot"].toInt();
         if (b.gen() >= 4)
             b.losePP(t, slot, 4);
-        else
+        else if (b.gen() == 3)
             b.losePP(t, slot, 2 + (b.true_rand()%4) );
+        else if (b.gen() == 2)
+            b.losePP(t, slot, 1 + (b.true_rand()%5) );
+
         b.sendMoveMessage(123,0,s,Pokemon::Ghost,t,b.move(t,slot));
     }
 };
