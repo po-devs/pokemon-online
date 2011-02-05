@@ -586,7 +586,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
 
 QPixmap PokemonInfo::Sub(int gen, bool back)
 {
-    QString archive = path("poke_img.zip");
+    QString archive = path("hgss.zip");
 
     QString file = QString("sub%1%2.png").arg(back?"b":"").arg(gen>=4?"":"3G");
 

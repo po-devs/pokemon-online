@@ -1549,7 +1549,8 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     turnMemory(slot)["CantGetToMove"] = true;
 
-    ItemEffect::setup(poke(slot).item(), slot, *this);
+    if (gen() >= 2)
+        ItemEffect::setup(poke(slot).item(), slot, *this);
 
     calleffects(slot, slot, "UponSwitchIn");
     callseffects(slot, slot, "UponSwitchIn");
@@ -1567,7 +1568,8 @@ void BattleSituation::callEntryEffects(int player)
            So All those must be taken in account when changing something to
            how the items are set up. */
         callieffects(player, player, "UponSetup");
-        acquireAbility(player, poke(player).ability(), true);
+        if (gen() >= 3)
+            acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
     }
 }
@@ -1653,6 +1655,8 @@ void BattleSituation::callseffects(int source, int target, const QString &name)
 
 void BattleSituation::callieffects(int source, int target, const QString &name)
 {
+    if (gen() <= 1)
+        return;
     //Klutz
     if (hasWorkingItem(source, poke(source).item())) {
         ItemEffect::activate(name, poke(source).item(), source, target, *this);
@@ -1661,6 +1665,8 @@ void BattleSituation::callieffects(int source, int target, const QString &name)
 
 void BattleSituation::callaeffects(int source, int target, const QString &name)
 {
+    if (gen() <= 2)
+        return;
     if (hasWorkingAbility(source, ability(source)))
         AbilityEffect::activate(name, ability(source), source, target, *this);
 }
@@ -3826,7 +3832,9 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         changeSprite(slot, newforme);
 
         fpoke(slot).id = newforme;
-        acquireAbility(slot, p.ability());
+
+        if (gen() >= 3)
+            acquireAbility(slot, p.ability());
 
         for (int i = 1; i < 6; i++)
             fpoke(slot).stats[i] = p.normalStat(i);
