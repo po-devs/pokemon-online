@@ -1048,7 +1048,7 @@ struct MMBellyDrum : public MM
 
             /* Odd bug with crystal & stadium 2 */
             if (b.gen() == 2 && move(b,s) == Move::BellyDrum) {
-                b.gainStatMod(s, Attack, 2, s);
+                b.inflictStatMod(s, Attack, 2, s);
             }
 	}
     }
