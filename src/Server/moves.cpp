@@ -871,7 +871,7 @@ struct MMPerishSong : public MM
             if (poke(b,t).contains("PerishSongCount") || b.koed(t)) {
                 continue;
             }
-            if (b.hasWorkingAbility(t, Ability::Soundproof)) {
+            if (b.hasWorkingAbility(t, Ability::Soundproof) && b.gen() >= 5) {
                 b.sendAbMessage(57,0,s);
                 continue;
             }
