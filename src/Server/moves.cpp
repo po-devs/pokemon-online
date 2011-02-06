@@ -1041,6 +1041,11 @@ struct MMBellyDrum : public MM
     static void daf(int s, int, BS &b) {
         if (b.poke(s).lifePoints() <= std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1)) {
 	    b.fail(s, 8);
+
+            /* Odd bug with crystal & stadium 2 */
+            if (b.gen() == 2 && move(b,s) == Move::BellyDrum) {
+                b.gainStatMod(s, Attack, 2, s);
+            }
 	}
     }
     static void uas(int s, int, BS &b) {
