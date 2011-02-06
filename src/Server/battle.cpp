@@ -3919,11 +3919,6 @@ void BattleSituation::healLife(int player, int healing)
 
 void BattleSituation::healDamage(int player, int target)
 {
-    int attack = tmove(player).attack;
-
-    if (attack == Move::MorningSun || attack == Move::Moonlight || attack == Move::Synthesis || attack == Move::Swallow)
-        return;
-
     int healing = tmove(player).healing;
 
     if ((healing > 0 && koed(target)) || (healing < 0 && koed(player)))
@@ -3931,7 +3926,13 @@ void BattleSituation::healDamage(int player, int target)
 
     if (healing > 0) {
         sendMoveMessage(60, 0, target, tmove(player).type);
-        healLife(target, poke(target).totalLifePoints() * healing / 100);
+
+        int damage = poke(target).totalLifePoints() * healing / 100;
+
+        if (gen() >= 5 && damage * 100 / healing < poke(target).totalLifePoints())
+            damage += 1;
+
+        healLife(target, damage);
     } else if (healing < 0){
         /* Struggle: actually recoil damage */
         notify(All, Recoil, player, true);
