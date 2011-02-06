@@ -131,6 +131,7 @@ public:
     void engageBattle();
     void beginTurn();
     void endTurn();
+    void personalEndTurn(int source);
     void endTurnStatus(int player);
     void endTurnWeather();
     void callForth(int weather, int turns);
@@ -451,6 +452,7 @@ public:
     std::vector<int> targetList;
     /* Calls the effects of source reacting to name */
     void calleffects(int source, int target, const QString &name);
+    void calle6effects(int source);
     /* This time the pokelong effects */
     void callpeffects(int source, int target, const QString &name);
     /* this time the general battle effects (imprison, ..) */

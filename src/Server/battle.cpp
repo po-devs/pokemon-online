@@ -580,12 +580,14 @@ void BattleSituation::endTurn()
 
     std::vector<int> players = sortedBySpeed();
 
-    callzeffects(Player1, Player1, "EndTurn");
-    callzeffects(Player2, Player2, "EndTurn");
+    if (gen() >= 3) {
+        callzeffects(Player1, Player1, "EndTurn");
+        callzeffects(Player2, Player2, "EndTurn");
 
-    foreach (int player, players) {
-        /* Wish */
-        callseffects(player,player, "EndTurn2");
+        foreach (int player, players) {
+            /* Wish */
+            callseffects(player,player, "EndTurn2");
+        }
     }
 
     endTurnWeather();
@@ -602,79 +604,29 @@ void BattleSituation::endTurn()
 
     callbeffects(Player1,Player1,"EndTurn5");
 
-    foreach (int player, players) {
-        if (koed(player))
-            continue;
-
-        /* Ingrain, aquaring */
-        callpeffects(player, player, "EndTurn60");
-
-        /* Speed boost, shed skin, ?Harvest? */
-        callaeffects(player,player, "EndTurn62");
-
-        //        if (koed(player)) <-- cannot be koed
-        //            continue;
-
-        /* Lefties, black sludge */
-        callieffects(player, player, "EndTurn63");
-
-        if (koed(player)) {
-            continue;
+    if (gen() >= 3) {
+        foreach (int player, players) {
+            calle6effects(player);
         }
 
-        /* Leech Seed, Nightmare. Warning: Leech Seed and rapid spin are linked */
-        callpeffects(player, player, "EndTurn64");
 
-        endTurnStatus(player);
+        testWin();
 
-        if (koed(player)) {
-            continue;
+        foreach (int player, players) {
+            /* Doom Desire */
+            callseffects(player,player, "EndTurn7");
         }
 
-        /* Status orbs */
-        callieffects(player, player, "EndTurn66");
+        testWin();
 
-        /* Trapping moves damage and Curse. Warning: Rapid spin and trapping moves are linked */
-        callpeffects(player, player, "EndTurn68");
+        foreach (int player, players) {
+            /* Perish Song */
+            callpeffects(player,player, "EndTurn8");
+        }
 
-        if (koed(player))
-            continue;
-
-        /* Bad dreams -- on others */
-        callaeffects(player,player, "EndTurn69");
-
-        /* Outrage, Uproar */
-        callpeffects(player, player, "EndTurn610");
-
-        /* Disable, taunt, encore, magnet rise, heal block, embargo */
-        callpeffects(player, player, "EndTurn611");
-
-        /* Roost */
-        callpeffects(player, player, "EndTurn");
-
-        /* Yawn */
-        callpeffects(player, player, "EndTurn617");
-
-        /* Sticky barb */
-        callieffects(player, player, "EndTurn618");
+        testWin();
     }
 
-    testWin();
-
-
-    foreach (int player, players) {
-        /* Doom Desire */
-        callseffects(player,player, "EndTurn7");
-    }
-
-    testWin();
-
-    foreach (int player, players) {
-        /* Perish Song */
-        callpeffects(player,player, "EndTurn8");
-    }
-
-    testWin();
 
     callbeffects(Player1,Player1,"EndTurn9");
 
@@ -710,6 +662,81 @@ void BattleSituation::endTurn()
     foreach (int player, sortedBySpeed()) {
         callaeffects(player,player, "EndTurn20.");
     }
+}
+
+void BattleSituation::personalEndTurn(int player)
+{
+    calle6effects(player);
+
+    testWin();
+
+    /* Doom Desire */
+    callseffects(player,player, "EndTurn7");
+
+    testWin();
+
+    /* Perish Song */
+    callpeffects(player,player, "EndTurn8");
+
+    testWin();
+}
+
+void BattleSituation::calle6effects(int player)
+{
+    if (koed(player))
+        return;
+
+    /* Ingrain, aquaring */
+    callpeffects(player, player, "EndTurn60");
+
+    /* Speed boost, shed skin, ?Harvest? */
+    callaeffects(player,player, "EndTurn62");
+
+    //        if (koed(player)) <-- cannot be koed
+    //            continue;
+
+    /* Lefties, black sludge */
+    callieffects(player, player, "EndTurn63");
+
+    if (koed(player)) {
+        return;
+    }
+
+    /* Leech Seed, Nightmare. Warning: Leech Seed and rapid spin are linked */
+    callpeffects(player, player, "EndTurn64");
+
+    endTurnStatus(player);
+
+    if (koed(player)) {
+        return;
+    }
+
+    /* Status orbs */
+    callieffects(player, player, "EndTurn66");
+
+    /* Trapping moves damage and Curse. Warning: Rapid spin and trapping moves are linked */
+    callpeffects(player, player, "EndTurn68");
+
+    if (koed(player))
+        return;
+
+    /* Bad dreams -- on others */
+    callaeffects(player,player, "EndTurn69");
+
+    /* Outrage, Uproar */
+    callpeffects(player, player, "EndTurn610");
+
+    /* Disable, taunt, encore, magnet rise, heal block, embargo */
+    callpeffects(player, player, "EndTurn611");
+
+    /* Roost */
+    callpeffects(player, player, "EndTurn");
+
+    /* Yawn */
+    callpeffects(player, player, "EndTurn617");
+
+    /* Sticky barb */
+    callieffects(player, player, "EndTurn618");
 }
 
 void BattleSituation::notifyFail(int p)
@@ -1125,8 +1152,19 @@ void BattleSituation::analyzeChoices()
                 requestSwitchIns();
             }
 
-            if (!hasMoved(players[i]))
+            if (!hasMoved(players[i])) {
                 analyzeChoice(players[i]);
+
+                if (!multiples() && (koed(0) || koed(1))) {
+                    testWin();
+                    selfKoer() = -1;
+                    break;
+                }
+
+                if (gen() <= 2) {
+                    personalEndTurn(players[i]);
+                }
+            }
             testWin();
             selfKoer() = -1;
         }
