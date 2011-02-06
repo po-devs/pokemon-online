@@ -871,6 +871,10 @@ struct MMPerishSong : public MM
             if (poke(b,t).contains("PerishSongCount") || b.koed(t)) {
                 continue;
             }
+            if (b.hasWorkingAbility(t, Ability::Soundproof)) {
+                b.sendAbMessage(57,0,s);
+                continue;
+            }
             addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
             poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns)) - 1;
             poke(b, t)["PerishSonger"] = s;
