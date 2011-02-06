@@ -3589,6 +3589,9 @@ int BattleSituation::calculateDamage(int p, int t)
 
     damage = damage * (10 + turnMemory(p).value("Mod3Berry").toInt())/ 10;
 
+    if (gen() == 2)
+        damage += 1;
+
     return damage;
 }
 
