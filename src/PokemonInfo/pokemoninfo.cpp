@@ -913,7 +913,7 @@ void PokemonInfo::loadMoves()
                 moves.genMoves[i].unite(moves.dreamWorldMoves);
             }
 
-            if (i > 0) {
+            if (i > 0 && i+GEN_MIN != 3) {
                 moves.genMoves[i].unite(moves.genMoves[i-1]);
             }
         }
