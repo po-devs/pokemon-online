@@ -41,15 +41,15 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
 
     in >> team.gen;
 
-    for (int i = 0; i < 6; i++) {
-		in >> team.pokemon(i);
-    }
-
     if (team.gen < GEN_MIN || team.gen > GEN_MAX)
         team.gen = GEN_MAX;
 
     for (int i = 0; i < 6; i++)
         team.pokemon(i).gen() = team.gen;
+
+    for (int i = 0; i < 6; i++) {
+        in >> team.pokemon(i);
+    }
 
     if (team.info.length() > 300) {
         team.info.resize(300);

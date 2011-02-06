@@ -116,11 +116,11 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
             for (int i = 0; i < 6; i ++) {
                 if (team1.poke(i).level() > maxLevel) {
                     team1.poke(i).level() = maxLevel;
-                    team1.poke(i).updateStats();
+                    team1.poke(i).updateStats(gen());
                 }
                 if (team2.poke(i).level() > maxLevel) {
                     team2.poke(i).level() = maxLevel;
-                    team2.poke(i).updateStats();
+                    team2.poke(i).updateStats(gen());
                 }
             }
         }
@@ -566,28 +566,18 @@ void BattleSituation::endTurn()
 {
     testWin();
 
-    /* In Gen 1 & 2, end turn effects don't happen after koing a pokemon */
-    if (gen() <= 2) {
-        if (koed(0) || koed(1)) {
-            requestSwitchIns();
-            return;
-        }
-    }
-
     /* Gen3 switches pokemons in before endturn effects */
-    if (gen() == 3)
+    if (gen() <= 3)
         requestSwitchIns();
 
     std::vector<int> players = sortedBySpeed();
 
-    if (gen() >= 3) {
-        callzeffects(Player1, Player1, "EndTurn");
-        callzeffects(Player2, Player2, "EndTurn");
+    callzeffects(Player1, Player1, "EndTurn");
+    callzeffects(Player2, Player2, "EndTurn");
 
-        foreach (int player, players) {
-            /* Wish */
-            callseffects(player,player, "EndTurn2");
-        }
+    foreach (int player, players) {
+        /* Wish */
+        callseffects(player,player, "EndTurn2");
     }
 
     endTurnWeather();
@@ -604,28 +594,25 @@ void BattleSituation::endTurn()
 
     callbeffects(Player1,Player1,"EndTurn5");
 
-    if (gen() >= 3) {
-        foreach (int player, players) {
-            calle6effects(player);
-        }
-
-
-        testWin();
-
-        foreach (int player, players) {
-            /* Doom Desire */
-            callseffects(player,player, "EndTurn7");
-        }
-
-        testWin();
-
-        foreach (int player, players) {
-            /* Perish Song */
-            callpeffects(player,player, "EndTurn8");
-        }
-
-        testWin();
+    foreach (int player, players) {
+        calle6effects(player);
     }
+
+    testWin();
+
+    foreach (int player, players) {
+        /* Doom Desire */
+        callseffects(player,player, "EndTurn7");
+    }
+
+    testWin();
+
+    foreach (int player, players) {
+        /* Perish Song */
+        callpeffects(player,player, "EndTurn8");
+    }
+
+    testWin();
 
 
     callbeffects(Player1,Player1,"EndTurn9");
@@ -666,17 +653,10 @@ void BattleSituation::endTurn()
 
 void BattleSituation::personalEndTurn(int player)
 {
-    calle6effects(player);
-
-    testWin();
-
-    /* Doom Desire */
-    callseffects(player,player, "EndTurn7");
-
-    testWin();
-
-    /* Perish Song */
-    callpeffects(player,player, "EndTurn8");
+    endTurnStatus(player);
+    callpeffects(player, player, "EndTurn681");
+    /* Leech Seed, Nightmare. Warning: Leech Seed and rapid spin are linked */
+    callpeffects(player, player, "EndTurn64");
 
     testWin();
 }
@@ -702,10 +682,12 @@ void BattleSituation::calle6effects(int player)
         return;
     }
 
-    /* Leech Seed, Nightmare. Warning: Leech Seed and rapid spin are linked */
-    callpeffects(player, player, "EndTurn64");
+    if (gen() >= 3) {
+        /* Leech Seed, Nightmare. Warning: Leech Seed and rapid spin are linked */
+        callpeffects(player, player, "EndTurn64");
 
-    endTurnStatus(player);
+        endTurnStatus(player);
+    }
 
     if (koed(player)) {
         return;
@@ -714,8 +696,12 @@ void BattleSituation::calle6effects(int player)
     /* Status orbs */
     callieffects(player, player, "EndTurn66");
 
-    /* Trapping moves damage and Curse. Warning: Rapid spin and trapping moves are linked */
+    /* Trapping moves damage. Warning: Rapid spin and trapping moves are linked */
     callpeffects(player, player, "EndTurn68");
+    if (gen() >= 3) {
+        /* Curse */
+        callpeffects(player, player, "EndTurn681");
+    }
 
     if (koed(player))
         return;
@@ -3873,7 +3859,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
     p.ability() = PokemonInfo::Abilities(newforme).ab(0);
 
     for (int i = 1; i < 6; i++)
-        p.setNormalStat(i,PokemonInfo::FullStat(newforme,p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
+        p.setNormalStat(i,PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
 
     if (isOut(player, poke)) {
         int slot = this->slot(player, poke);
@@ -3903,7 +3889,7 @@ void BattleSituation::changePokeForme(int slot, const Pokemon::uniqueId &newform
     fpoke(slot).type2 = PokemonInfo::Type2(newforme);
 
     for (int i = 1; i < 6; i++)
-        fpoke(slot).stats[i] = PokemonInfo::FullStat(newforme,p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]);
+        fpoke(slot).stats[i] = PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]);
 
     notify(All, ChangeTempPoke, slot, quint8(AestheticForme), quint16(newforme.subnum));
 }

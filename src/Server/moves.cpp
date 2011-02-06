@@ -523,7 +523,7 @@ struct MMCurse : public MM
     static void uas(int s, int t, BS &b) {
 	if (turn(b,s)["CurseGhost"].toBool() == true) {
             b.inflictPercentDamage(s, 50, s);
-            addFunction(poke(b,t), "EndTurn68", "Cursed", &et);
+            addFunction(poke(b,t), "EndTurn681", "Cursed", &et);
 	    b.sendMoveMessage(25, 0, s, Pokemon::Curse, t);
 	}
     }
@@ -3299,12 +3299,12 @@ struct MMDefog : public MM
 
         BS::context &c = team(b,b.player(t));
 
-        if (c.contains("Barrier0Count") || c.contains("Barrier1Count") || c.contains("Spikes") || c.contains("ToxicSpikes")
+        if (c.contains("Barrier1Count") || c.contains("Barrier2Count") || c.contains("Spikes") || c.contains("ToxicSpikes")
             || c.contains("StealthRock") || c.contains("MistCount") || c.contains("SafeGuardCount")) {
             clear = true;
 
-            c.remove("Barrier0Count");
             c.remove("Barrier1Count");
+            c.remove("Barrier2Count");
             c.remove("Spikes");
             c.remove("ToxicSpikes");
             c.remove("StealthRock");
@@ -3544,7 +3544,6 @@ struct MMMoonlight : public MM
     static void uas(int s, int, BS &b) {
         int weather = b.weather;
 
-        b.sendMoveMessage(87,0,s,type(b,s));
 	if (weather == BattleSituation::NormalWeather || !b.isWeatherWorking(weather)) {
             tmove(b,s).healing = 50;
 	} else if (b.isWeatherWorking(BattleSituation::Sunny)) {
@@ -4383,11 +4382,11 @@ struct MMBeatUp : public MM {
 
     static void cad(int s, int t, BS &b) {
         int source = b.player(s);
-        int def = PokemonInfo::Stat(b.poke(t).num(),Defense,b.poke(t).level(),0,0);
+        int def = PokemonInfo::Stat(b.poke(t).num(), b.gen(), Defense,b.poke(t).level(),0,0);
         for (int i = 0; i < 6; i++) {
             PokeBattle &p = b.poke(source,i);
             if (p.status() == Pokemon::Fine) {
-                int att = PokemonInfo::Stat(p.num(),Attack,p.level(),0,0);
+                int att = PokemonInfo::Stat(p.num(), b.gen(), Attack,p.level(),0,0);
                 int damage = (((((p.level() * 2 / 5) + 2) * 10 * att / 50) / def) + 2) * (b.true_rand() % (255-217) + 217)*100/255/100;
                 b.sendMoveMessage(7,0,s,Pokemon::Dark,t,0,p.nick());
                 if (b.hasSubstitute(t))

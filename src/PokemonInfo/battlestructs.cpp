@@ -204,16 +204,16 @@ void PokeBattle::init(PokePersonal &poke)
         }
     }
 
-    updateStats();
+    updateStats(p.gen());
 }
 
-void PokeBattle::updateStats()
+void PokeBattle::updateStats(int gen)
 {
-    totalLifePoints() = std::max(PokemonInfo::FullStat(num(), nature(), Hp, level(), dvs()[Hp], evs()[Hp]),1);
+    totalLifePoints() = std::max(PokemonInfo::FullStat(num(), gen, nature(), Hp, level(), dvs()[Hp], evs()[Hp]),1);
     lifePoints() = totalLifePoints();
 
     for (int i = 0; i < 5; i++) {
-        normal_stats[i] = PokemonInfo::FullStat(num(), nature(), i+1, level(), dvs()[i+1], evs()[i+1]);
+        normal_stats[i] = PokemonInfo::FullStat(num(), gen, nature(), i+1, level(), dvs()[i+1], evs()[i+1]);
     }
 }
 
@@ -484,7 +484,7 @@ void TeamBattle::generateRandom(int gen)
         if (gen >= GEN_MIN_ITEMS)
             p.item() = ItemInfo::Number(ItemInfo::SortedUsefulNames(gen)[true_rand()%ItemInfo::SortedUsefulNames(gen).size()]);
 
-        p.updateStats();
+        p.updateStats(gen);
         p.nick() = PokemonInfo::Name(p.num());
         p.fullStatus() = 0;
         p.shiny() = !(true_rand() % 50);

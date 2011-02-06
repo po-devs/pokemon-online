@@ -535,7 +535,7 @@ QIcon PokeTeam::icon()
 
 int PokeTeam::stat(int statno) const
 {
-    return PokemonInfo::FullStat(num(), nature(), statno, level(),DV(statno),EV(statno));
+    return PokemonInfo::FullStat(num(), gen(), nature(), statno, level(),DV(statno),EV(statno));
 }
 
 Team::Team(): m_gen(GEN_MAX)

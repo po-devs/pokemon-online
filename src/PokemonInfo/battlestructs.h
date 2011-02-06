@@ -60,7 +60,7 @@ public:
     const BattleMove& move(int i) const;
 
     quint16 normalStat(int stat) const;
-    void updateStats();
+    void updateStats(int gen);
 
     bool ko() const {return lifePoints() == 0 || num() == Pokemon::NoPoke || status() == Pokemon::Koed;}
     bool isFull() const { return lifePoints() == totalLifePoints(); }

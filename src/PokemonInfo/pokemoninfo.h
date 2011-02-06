@@ -83,8 +83,8 @@ public:
     static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
     static bool Exists(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
-    static int Stat(const Pokemon::uniqueId &pokeid, int stat, int level, quint8 dv, quint8 ev);
-    static int FullStat(const Pokemon::uniqueId &pokeid, int nature, int stat, int level, quint8 dv, quint8 ev);
+    static int Stat(const Pokemon::uniqueId &pokeid, int gen, int stat, int level, quint8 dv, quint8 ev);
+    static int FullStat(const Pokemon::uniqueId &pokeid, int gen, int nature, int stat, int level, quint8 dv, quint8 ev);
     static QString Desc(const Pokemon::uniqueId &pokeid, int cartridge);
     static QString Height(const Pokemon::uniqueId &pokeid);
     // Will NOT return Missingno.
@@ -146,7 +146,7 @@ private:
     static void makeDataConsistent();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
     static QString path(const QString &filename);
-    static int calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev);
+    static int calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint8 ev);
 };
 
 class MoveInfo

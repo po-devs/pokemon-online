@@ -576,8 +576,8 @@ void StatTab::changePoke(Pokemon::uniqueId poke) {
                                     " background-color: %2;"
                                     "}").arg(bg, color));
 
-        min[i]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(i > 1 ? 1 : 2, i), i, 100, 31, 0)));
-        max[i]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(i, i > 1 ? 1 : 2), i, 100, 31, 252)));
+        min[i]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, 5, NatureInfo::NatureOf(i > 1 ? 1 : 2, i), i, 100, 31, 0)));
+        max[i]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, 5, NatureInfo::NatureOf(i, i > 1 ? 1 : 2), i, 100, 31, 252)));
     }
 
     int t1 = PokemonInfo::Type1(poke);
@@ -646,8 +646,8 @@ void StatTab::increaseBoost()
 
     boost[stat] += 1;
 
-    min[stat]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(stat > 1 ? 1 : 2, stat), stat, 100, 31, 0) * std::max(2, 2+boost[stat]) / std::max(2, 2-boost[stat])));
-    max[stat]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(stat, stat > 1 ? 1 : 2), stat, 100, 31, 252) * std::max(2, 2+boost[stat]) / std::max(2, 2-boost[stat])));
+    min[stat]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, 5, NatureInfo::NatureOf(stat > 1 ? 1 : 2, stat), stat, 100, 31, 0) * std::max(2, 2+boost[stat]) / std::max(2, 2-boost[stat])));
+    max[stat]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, 5, NatureInfo::NatureOf(stat, stat > 1 ? 1 : 2), stat, 100, 31, 252) * std::max(2, 2+boost[stat]) / std::max(2, 2-boost[stat])));
 
     if (boost[stat] < 0) {
         return;
@@ -670,8 +670,8 @@ void StatTab::decreaseBoost()
 
     boost[stat] -= 1;
 
-    min[stat]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(stat > 1 ? 1 : 2, stat), stat, 100, 31, 0) * std::max(2, 2+boost[stat]) / std::max(2, 2-boost[stat])));
-    max[stat]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, NatureInfo::NatureOf(stat, stat > 1 ? 1 : 2), stat, 100, 31, 252) * std::max(2, 2+boost[stat]) / std::max(2, 2-boost[stat])));
+    min[stat]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, 5, NatureInfo::NatureOf(stat > 1 ? 1 : 2, stat), stat, 100, 31, 0) * std::max(2, 2+boost[stat]) / std::max(2, 2-boost[stat])));
+    max[stat]->setText(QString("%1").arg(PokemonInfo::FullStat(poke, 5, NatureInfo::NatureOf(stat, stat > 1 ? 1 : 2), stat, 100, 31, 252) * std::max(2, 2+boost[stat]) / std::max(2, 2-boost[stat])));
 
     if (boost[stat] > 0) {
         return;

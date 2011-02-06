@@ -651,8 +651,9 @@ void ScriptEngine::changePokeLevel(int id, int slot, int level)
 {
     if (!testPlayer("changePokeLevel(id, slot, level)", id) || !testRange("changePokeLevel(id, slot, level)", slot, 0, 5) || !testRange("changePokeLevel(id, slot, level)", level, 1, 100))
         return;
-    myserver->player(id)->team().poke(slot).level() = level;
-    myserver->player(id)->team().poke(slot).updateStats();
+    Player *p = myserver->player(id);
+    p->team().poke(slot).level() = level;
+    p->team().poke(slot).updateStats(p->gen());
 }
 
 void ScriptEngine::changePokeMove(int id, int pslot, int mslot, int move)
