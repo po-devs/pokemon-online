@@ -3736,11 +3736,28 @@ struct MMPunishment : public MM
 struct MMRage : public MM
 {
     MMRage() {
+        functions["OnSetup"] = &os;
+        functions["MoveSettings"] = &ms;
 	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void os(int s, int, BS &b) {
+        if (b.gen() != 2)
+            return;
+
+        if (poke(b,s).value("AnyLastMoveUsed") != Move::Rage)
+            poke(b,s)["RagePower"] = 0;
+    }
+
+    static void ms(int s, int, BS &b) {
+        if (b.gen() == 2) {
+            tmove(b,s).power *= 1 + poke(b,s).value("RagePower").toInt();
+        }
     }
 
     static void uas(int s, int, BS &b) {
         addFunction(poke(b,s), "UponOffensiveDamageReceived", "Rage", &uodr);
+
         if (poke(b,s).contains("RageBuilt") && poke(b,s)["AnyLastMoveUsed"] == Move::Rage) {
             poke(b,s).remove("AttractBy");
             b.healConfused(s);
@@ -3752,9 +3769,16 @@ struct MMRage : public MM
     static void uodr(int s, int, BS &b) {
         if (!b.koed(s) && poke(b,s)["AnyLastMoveUsed"] == Move::Rage) {
             poke(b,s)["RageBuilt"] = true;
-            if (!b.hasMaximalStatMod(s, Attack)) {
-                b.inflictStatMod(s, Attack, 1,false);
-                b.sendMoveMessage(102, 0, s);
+            if (b.gen() != 2) {
+                if (!b.hasMaximalStatMod(s, Attack)) {
+                    b.inflictStatMod(s, Attack, 1,false);
+                    b.sendMoveMessage(102, 0, s);
+                }
+            } else {
+                if (poke(b,s).value("RagePower").toInt() < 5) {
+                    inc(poke(b,s)["RagePower"], 1);
+                    b.sendMoveMessage(102, 0, s);
+                }
             }
         }
 
