@@ -1125,6 +1125,8 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, 
     connect(m_nick, SIGNAL(textEdited(QString)), SLOT(setNick(QString)));
     connect(m_nick, SIGNAL(textChanged(QString)),this,SLOT(setNick(QString)));
     connect(evchoice, SIGNAL(natureChanged(int, int)),SLOT(editNature(int,int)));
+
+    changeGeneration(poke()->gen());
 }
 
 void TB_PokemonBody::initItems()

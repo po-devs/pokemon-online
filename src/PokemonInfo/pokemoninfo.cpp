@@ -326,12 +326,12 @@ int PokemonInfo::Type2(const Pokemon::uniqueId &pokeid,int gen)
     return m_Type2[gen-GEN_MIN].value(pokeid);
 }
 
-int PokemonInfo::calc_stat(quint8 basestat, int level, quint8 dv, quint8 ev)
+int PokemonInfo::calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint8 ev)
 {
-    return ((2*basestat + dv+ ev/4)*level)/100 + 5;
+    return ((2*basestat + dv * (1 + (gen <= 2) ) + ev/4)*level)/100 + 5;
 }
 
-int PokemonInfo::Stat(const Pokemon::uniqueId &pokeid, int stat, int level, quint8 dv, quint8 ev)
+int PokemonInfo::Stat(const Pokemon::uniqueId &pokeid, int gen, int stat, int level, quint8 dv, quint8 ev)
 {
     quint8 basestat = PokemonInfo::BaseStats(pokeid).baseStat(stat);
     if (stat == Hp) {
@@ -339,19 +339,19 @@ int PokemonInfo::Stat(const Pokemon::uniqueId &pokeid, int stat, int level, quin
         if(m_Options.value(pokeid).contains('1')) {
             return 1;
         }else{
-            return calc_stat(basestat, level, dv, ev) + level + 5;
+            return calc_stat(gen, basestat, level, dv, ev) + level + 5;
         }
     }
-	return calc_stat(basestat, level, dv, ev);
+        return calc_stat(gen, basestat, level, dv, ev);
 }
 
-int PokemonInfo::FullStat(const Pokemon::uniqueId &pokeid, int nature, int stat, int level, quint8 dv, quint8 ev)
+int PokemonInfo::FullStat(const Pokemon::uniqueId &pokeid, int gen, int nature, int stat, int level, quint8 dv, quint8 ev)
 {
     if (stat == Hp) {
-        return Stat(pokeid, stat, level, dv, ev);
+        return Stat(pokeid, gen, stat, level, dv, ev);
     }
     else {
-        return Stat(pokeid, stat, level, dv, ev) * (10+NatureInfo::Boost(nature, stat)) / 10;
+        return Stat(pokeid, gen, stat, level, dv, ev) * (10+NatureInfo::Boost(nature, stat)) / 10;
     }
 }
 
@@ -540,7 +540,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
     if (gen == 1)
         file = QString("%1/%2").arg(pokeid.toString(), back?"GBRYback.png":"Y.gif");
     else if (gen == 2)
-        file = QString("%1/%2").arg(pokeid.toString(), back?"GSCback%3.png":"CRI%3.gif").arg(shiney?"s":"");
+        file = QString("%1/%2.png").arg(pokeid.toString(), back?"GSCback%3":"S%3").arg(shiney?"s":"");
     else if (gen ==3)
         file = QString("%1/%2%3.png").arg(pokeid.toString(), back?"3Gback":"RFLG", shiney?"s":"");
     else if (gen == 4)
@@ -579,14 +579,18 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
         return ret;
     }
 
-    ret.loadFromData(data, "png");
+    ret.loadFromData(data, file.section(".", -1).toAscii().data());
 
     return ret;
 }
 
 QPixmap PokemonInfo::Sub(int gen, bool back)
 {
-    QString archive = path("hgss.zip");
+    QString archive;
+    if (gen <= 3)
+        archive = path("advance.zip");
+    else
+        archive = path("hgss.zip");
 
     QString file = QString("sub%1%2.png").arg(back?"b":"").arg(gen>=4?"":"3G");
 
