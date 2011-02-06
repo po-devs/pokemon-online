@@ -3546,11 +3546,11 @@ struct MMMoonlight : public MM
 
         b.sendMoveMessage(87,0,s,type(b,s));
 	if (weather == BattleSituation::NormalWeather || !b.isWeatherWorking(weather)) {
-	    b.healLife(s, b.poke(s).totalLifePoints()/2);
+            tmove(b,s).healing = 50;
 	} else if (b.isWeatherWorking(BattleSituation::Sunny)) {
-	    b.healLife(s, b.poke(s).totalLifePoints()*2/3);
+            tmove(b,s).healing = 66;
 	} else {
-	    b.healLife(s, b.poke(s).totalLifePoints()/4);
+            tmove(b,s).healing = 25;
 	}
     }
 };
@@ -4549,9 +4549,9 @@ struct MMSwallow: public MM
             poke(b,s).remove("StockPileSDef");
         }
         switch (poke(b,s)["StockPileCount"].toInt()) {
-        case 1: b.healLife(s, b.poke(s).totalLifePoints()/4); break;
-        case 2: b.healLife(s, b.poke(s).totalLifePoints()/2); break;
-        case 3: default: b.healLife(s, b.poke(s).totalLifePoints()); break;
+        case 1: tmove(b,s).healing = 25; break;
+        case 2: tmove(b,s).healing = 50; break;
+        case 3: default: tmove(b,s).healing = 100; break;
         }
         poke(b,s).remove("StockPileCount");
         b.sendMoveMessage(131,0,s);
