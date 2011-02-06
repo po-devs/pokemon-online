@@ -982,10 +982,13 @@ void BattleSituation::analyzeChoice(int slot)
     } else {
         /* FATAL FATAL */
     }
-    notify(All, BlankMessage, Player1);
 
-    if (useBattleLog)
-        appendBattleLog("BlankMessage", "");
+    if (gen() >= 3) {
+        notify(All, BlankMessage, Player1);
+
+        if (useBattleLog)
+            appendBattleLog("BlankMessage", "");
+    }
 }
 
 void BattleSituation::shiftSpots(int spot1, int spot2, bool silent)
@@ -1163,6 +1166,10 @@ void BattleSituation::analyzeChoices()
 
                 if (gen() <= 2) {
                     personalEndTurn(players[i]);
+                    notify(All, BlankMessage, Player1);
+
+                    if (useBattleLog)
+                        appendBattleLog("BlankMessage", "");
                 }
             }
             testWin();
