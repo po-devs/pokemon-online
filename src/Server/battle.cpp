@@ -3935,14 +3935,19 @@ void BattleSituation::healDamage(int player, int target)
         return;
 
     if (healing > 0) {
-        sendMoveMessage(60, 0, target, tmove(player).type);
+        if(poke(target).lifePoints() < poke(target).totalLifePoints()) {
+            sendMoveMessage(60, 0, target, tmove(player).type);
 
-        int damage = poke(target).totalLifePoints() * healing / 100;
+            int damage = poke(target).totalLifePoints() * healing / 100;
 
-        if (gen() >= 5 && damage * 100 / healing < poke(target).totalLifePoints())
-            damage += 1;
+            if (gen() >= 5 && damage * 100 / healing < poke(target).totalLifePoints())
+                damage += 1;
 
-        healLife(target, damage);
+            healLife(target, damage);
+        }else{
+            // No HP to heal
+            notifyFail(player);
+        }
     } else if (healing < 0){
         /* Struggle: actually recoil damage */
         notify(All, Recoil, player, true);
