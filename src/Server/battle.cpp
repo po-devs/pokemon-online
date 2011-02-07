@@ -4540,9 +4540,13 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
         }
         //Critical hit
         if (turnMemory(attacker).value("CriticalHit").toBool()) {
-            if ((stat == Attack || stat == SpAttack) && boost < 0) {
-                boost = 0;
-            } else if ((stat == Defense || stat == SpDefense) && boost > 0) {
+            if (gen() >= 3) {
+                if ((stat == Attack || stat == SpAttack) && boost < 0) {
+                    boost = 0;
+                } else if ((stat == Defense || stat == SpDefense) && boost > 0) {
+                    boost = 0;
+                }
+            } else {
                 boost = 0;
             }
         }
