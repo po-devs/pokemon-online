@@ -2699,7 +2699,7 @@ int BattleSituation::move(int player, int slot)
 
 void BattleSituation::inflictRecoil(int source, int target)
 {
-    int recoil = tmove(source).recoil;
+    double recoil = tmove(source).recoil;
 
     if (recoil == 0)
         return;
@@ -2720,7 +2720,10 @@ void BattleSituation::inflictRecoil(int source, int target)
             appendBattleLog("Recoil", tu(tr("%1 had its energy drained!").arg(poke(who).nick())));
     }
 
-    int damage = std::abs(recoil) * turnMemory(source).value("DamageInflicted").toInt() / 100;
+    // "33" means one-third
+    if (recoil == -33) recoil = -100 / 3.;
+
+    int damage = std::abs(int(recoil * turnMemory(source).value("DamageInflicted").toInt() / 100));
 
     if (recoil < 0) {
         inflictDamage(source, damage, source, false);
@@ -3921,14 +3924,19 @@ void BattleSituation::healDamage(int player, int target)
         return;
 
     if (healing > 0) {
-        sendMoveMessage(60, 0, target, tmove(player).type);
+        if(poke(target).lifePoints() < poke(target).totalLifePoints()) {
+            sendMoveMessage(60, 0, target, tmove(player).type);
 
-        int damage = poke(target).totalLifePoints() * healing / 100;
+            int damage = poke(target).totalLifePoints() * healing / 100;
 
-        if (gen() >= 5 && damage * 100 / healing < poke(target).totalLifePoints())
-            damage += 1;
+            if (gen() >= 5 && damage * 100 / healing < poke(target).totalLifePoints())
+                damage += 1;
 
-        healLife(target, damage);
+            healLife(target, damage);
+        }else{
+            // No HP to heal
+            notifyFail(player);
+        }
     } else if (healing < 0){
         /* Struggle: actually recoil damage */
         notify(All, Recoil, player, true);
