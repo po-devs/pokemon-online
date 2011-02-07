@@ -810,6 +810,8 @@ init : function() {
     for(var inpok in breedingList) {
         breedingpokemons.push(sys.pokeNum(breedingList[inpok]));
     }
+
+    bannedGSC = [sys.moveNum("Perish Song"), sys.moveNum("Hypnosis"), sys.moveNum("Mean Look")];
 	
 	if (typeof(varsCreated) != 'undefined')
         return;
@@ -1106,6 +1108,7 @@ afterChangeTeam : function(src)
         megaUser[src] = true;
     else megaUser[src] = false;
    
+	if (sys.gen(src) >= 4) {
     for (var i = 0; i < 6; i++) {
         var poke = sys.teamPoke(src, i);
         if (poke in pokeNatures) {
@@ -1118,6 +1121,18 @@ afterChangeTeam : function(src)
             }
         }
     }
+   }
+
+   if (sys.gen(src) == 2) {
+		for (var i = 0; i <= 6; i++) {
+			if (sys.hasTeamPokeMove(src, i, bannedGSC[0]) 
+				&& sys.hasTeamPokeMove(src, i, bannedGSC[1])
+				&& sys.hasTeamPokeMove(src, i, bannedGSC[2])) {
+	         sys.sendMessage(src, "+CheckBot: PerishTrapSleep is banned in GSC.");
+				sys.changePokeNum(src, i, 0);
+			}
+		}
+	}
     var tier = sys.tier(src);
 	if (tier != "Dream World" && tier != "Dream World Ubers" && tier != "LC Dream World" && tier != "Monotype" && tier != "Dream World UU" && tier != "Weatherless" && tier != "Challenge Cup" && tier != "Uber Triples" && tier != "OU Triples" && tier != "Uber Doubles" && tier != "OU Doubles") {
 		this.dreamWorldAbilitiesCheck(src, false);
