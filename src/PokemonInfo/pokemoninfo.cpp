@@ -335,7 +335,7 @@ int PokemonInfo::Stat(const Pokemon::uniqueId &pokeid, int gen, int stat, int le
 {
     quint8 basestat = PokemonInfo::BaseStats(pokeid).baseStat(stat);
     if (stat == Hp) {
-        /* Formely direct check for Shedinja */
+        /* Formerly direct check for Shedinja */
         if(m_Options.value(pokeid).contains('1')) {
             return 1;
         }else{

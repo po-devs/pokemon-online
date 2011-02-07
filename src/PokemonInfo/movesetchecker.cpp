@@ -117,7 +117,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             }
             return false;
         }
-        if (g < 5) {
+        if (g < 5 && g >= 3) {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid);
 
             if (ability != ab.ab(0) && ability != ab.ab(1) && ability != 0) {
@@ -138,6 +138,38 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
 
         /* now we know the pokemon at least knows all moves */
         moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
+
+        /* In gen 2 we must allow tradebacks. For that we need movesets without gen 2
+           egg moves or special moves */
+        if (g == 2) {
+            if (PokemonInfo::Exists(pokeid, 1)) {
+                bool ok = true;
+                foreach(int move, moves) {
+                    if (!MoveInfo::Exists(move, 1)) {
+                        ok = false;
+                        break;
+                    }
+                }
+
+                if (isValid(pokeid, g, moves))
+                    return true;
+            } else {
+                int preevo = PokemonInfo::PreEvo(pokeid.pokenum);
+
+                if (preevo != 0 && PokemonInfo::Exists(preevo, 1)) {
+                    bool ok = true;
+                    foreach(int move, moves) {
+                        if (!MoveInfo::Exists(move, 1)) {
+                            ok = false;
+                            break;
+                        }
+                    }
+
+                    if (isValid(preevo, g, moves))
+                        return true;
+                }
+            }
+        }
 
         /* If there's a pre evo move and an old gen move, you must check the pre evo has the combination in the old gen */
         QSet<int> moves3 = moves;
