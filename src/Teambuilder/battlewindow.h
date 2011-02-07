@@ -67,8 +67,7 @@ public:
         std::swap(lastSeenSpecialSprite[pk1], lastSeenSpecialSprite[pk2]);
         if (player == myself) {
             myteam.switchPokemon(s1, s2);
-            tempPoke(pk1) = myteam.poke(s1);
-            tempPoke(pk2) = myteam.poke(s2);
+            std::swap(tempPoke(pk1), tempPoke(pk2));
         }
     }
 

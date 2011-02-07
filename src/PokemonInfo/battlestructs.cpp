@@ -183,7 +183,7 @@ void PokeBattle::init(PokePersonal &poke)
 
     dvs().clear();
     for (int i = 0; i < 6; i++) {
-        dvs() << std::min(std::max(poke.DV(i), quint8(0)),quint8(31));
+        dvs() << std::min(std::max(poke.DV(i), quint8(0)),quint8(p.gen() <= 2? 15: 31));
     }
 
     evs().clear();
@@ -191,14 +191,16 @@ void PokeBattle::init(PokePersonal &poke)
         evs() << std::min(std::max(poke.EV(i), quint8(0)), quint8(255));
     }
 
-    int sum = 0;
-    for (int i = 0; i < 6; i++) {
-        //Arceus
-        if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus && evs()[i] > 100 && p.gen() < 5) evs()[i] = 100;
-        sum += evs()[i];
-        if (sum > 510) {
-            evs()[i] -= (sum-510);
-            sum = 510;
+    if (p.gen() >= 3) {
+        int sum = 0;
+        for (int i = 0; i < 6; i++) {
+            //Arceus
+            if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus && evs()[i] > 100 && p.gen() < 5) evs()[i] = 100;
+            sum += evs()[i];
+            if (sum > 510) {
+                evs()[i] -= (sum-510);
+                sum = 510;
+            }
         }
     }
 
@@ -406,23 +408,34 @@ void TeamBattle::generateRandom(int gen)
                 p.ability() = g.abilities().ab(0);
         }
 
+
         if (g.genderAvail() == Pokemon::MaleAndFemaleAvail) {
             p.gender() = true_rand()%2 ? Pokemon::Female : Pokemon::Male;
         } else {
             p.gender() = g.genderAvail();
         }
-        p.nature() = true_rand()%NatureInfo::NumberOfNatures();
+
+        if (gen > 2) {
+            p.nature() = true_rand()%NatureInfo::NumberOfNatures();
+        }
 
         p.level() = PokemonInfo::LevelBalance(p.num());
 
         PokePersonal p2;
 
         for (int i = 0; i < 6; i++) {
-            p2.setDV(i, true_rand() % 32);
+            p2.setDV(i, true_rand() % (gen <= 2 ? 16 : 32));
         }
-        while (p2.EVSum() < 510) {
-            int stat = true_rand() % 6;
-            p2.setEV(stat, std::min(int(p2.EV(stat)) + (true_rand()%255), long(255)));
+
+        if (gen <= 2) {
+            for (int i = 0; i < 6; i++) {
+                p2.setEV(i, 255);
+            }
+        } else {
+            while (p2.EVSum() < 510) {
+                int stat = true_rand() % 6;
+                p2.setEV(stat, std::min(int(p2.EV(stat)) + (true_rand()%255), long(255)));
+            }
         }
 
         p.dvs().clear();

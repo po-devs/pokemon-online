@@ -25,8 +25,10 @@ signals:
     void messageEntered(int id, const QString &mess);
     void challengeSent(int id);
     void destroyed(int id);
+    void ignore(int id, bool);
 public slots:
     void sendMessage();
+    void ignore(bool);
 private:
     QString m_name;
     QString m_ownName;

@@ -619,10 +619,20 @@ struct IMBulb : public IM
 struct IMJewel : public IM
 {
     IMJewel() {
-        functions["BasePowerModifier"] = &btl;
+        functions["BasePowerModifier"] = &bpm;
     }
 
-    static void btl(int s, int, BS &b) {
+    static void bpm(int s, int t, BS &b) {
+        if (s == t)
+            return;
+
+        /* Doom Desire & Future sight don't have their jewel attacking right away,
+           only when it hits, and then b.attacking() is false */
+        if (tmove(b,s).attack == Move::FutureSight || tmove(b,s).attack == Move::DoomDesire) {
+            if (b.attacking())
+                return;
+        }
+
         if (tmove(b,s).power <= 1) {
             return;
         }

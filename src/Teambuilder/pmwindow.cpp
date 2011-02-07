@@ -19,7 +19,8 @@ PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QS
     l->addWidget(m_textToSend, 1,0,1,2);
 
     m_challenge = new QPushButton(tr("&Challenge"));
-    m_send = new QPushButton(tr("&Send"));
+    m_send = new QPushButton(tr("&Ignore"));
+    m_send->setCheckable(true);
 
     l->addWidget(m_challenge,2,0);
     l->addWidget(m_send,2,1);
@@ -27,7 +28,7 @@ PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QS
     printLine(content, false);
 
     connect(m_textToSend, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
-    connect(m_send, SIGNAL(clicked()), this, SLOT(sendMessage()));
+    connect(m_send, SIGNAL(toggled(bool)), this, SLOT(ignore(bool)));
 
     QSignalMapper *s = new QSignalMapper(this);
     s->setMapping(m_challenge, id);
@@ -88,6 +89,11 @@ void PMWindow::sendMessage()
             }
         }
     }
+}
+
+void PMWindow::ignore(bool yes)
+{
+    emit ignore(id(), yes);
 }
 
 void PMWindow::disable()

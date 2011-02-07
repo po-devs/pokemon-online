@@ -100,7 +100,7 @@ class QScrollDownTextBrowser : public QTextBrowser
     Q_OBJECT
 public:
     QScrollDownTextBrowser();
-    ~QScrollDownTextBrowser() { delete menu; };
+    ~QScrollDownTextBrowser() { delete menu; }
 
     void setAutoClear(bool a) {
         autoClear = a;

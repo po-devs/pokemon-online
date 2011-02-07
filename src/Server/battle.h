@@ -131,6 +131,7 @@ public:
     void engageBattle();
     void beginTurn();
     void endTurn();
+    void personalEndTurn(int source);
     void endTurnStatus(int player);
     void endTurnWeather();
     void callForth(int weather, int turns);
@@ -254,6 +255,22 @@ public:
     void changeTempMove(int player, int slot, int move);
     void changeDefMove(int player, int slot, int move);
     void changeSprite(int player, Pokemon::uniqueId newForme);
+
+    int getBattleDataPokenum(int player, int slot);
+    int getBattleDataNature(int player, int slot);
+    int getBattleDataGender(int player, int slot);
+    int getBattleDataDVs(int player, int slot, int stat);
+    int getBattleDataEVs(int player, int slot, int stat);
+    int getBattleDataShiny(int player, int slot);
+    int getBattleDataLevel(int player, int slot);
+    QString getBattleDataNickname(int player, int slot);
+    int getBattleDataItem(int player, int slot);
+    int getBattleDataStatus(int player, int slot);
+    int getBattleDataHP(int player, int slot);
+    int getBattleDataMaxHP(int player, int slot);
+    int getBattleDataMoveSlot(int player, int slot, int moveSlot);
+    int getBattleDataMovePP(int player, int slot, int moveSlot);
+    int getBattleDataMoveMaxPP(int player, int slot, int moveSlot);
     /* Send a message to the outworld */
     enum BattleCommand
     {
@@ -435,6 +452,7 @@ public:
     std::vector<int> targetList;
     /* Calls the effects of source reacting to name */
     void calleffects(int source, int target, const QString &name);
+    void calle6effects(int source);
     /* This time the pokelong effects */
     void callpeffects(int source, int target, const QString &name);
     /* this time the general battle effects (imprison, ..) */

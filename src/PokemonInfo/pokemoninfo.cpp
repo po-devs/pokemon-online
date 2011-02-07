@@ -15,6 +15,7 @@ QMap<Pokemon::uniqueId, QString> PokemonInfo::m_Names;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Weights;
 QHash<int, QHash<quint16, QString> > PokemonInfo::m_Desc;
 QHash<int, QString> PokemonInfo::m_Classification;
+QHash<int, int> PokemonInfo::m_GenderRates;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Height;
 
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Genders;
@@ -305,6 +306,11 @@ QString PokemonInfo::Classification(const Pokemon::uniqueId &pokeid)
     return m_Classification.value(pokeid.pokenum, "");
 }
 
+int PokemonInfo::GenderRate(const Pokemon::uniqueId &pokeid)
+{
+    return m_GenderRates.value(pokeid.pokenum,4);
+}
+
 QString PokemonInfo::Height(const Pokemon::uniqueId &pokeid)
 {
     return m_Height.value(pokeid, "0.0");
@@ -381,6 +387,7 @@ void PokemonInfo::init(const QString &dir)
 
     fill_uid_int(m_LevelBalance, path("level_balance.txt"));
     loadClassifications();
+    loadGenderRates();
     loadHeights();
     loadDescriptions();
     loadBaseStats();
@@ -397,6 +404,19 @@ void PokemonInfo::loadClassifications()
         quint16 pokenum;
         bool ok = Pokemon::uniqueId::extract_short(current, pokenum, description);
         if(ok) m_Classification[pokenum] = description;
+    }
+}
+
+void PokemonInfo::loadGenderRates()
+{
+    QStringList temp;
+    fill_container_with_file(temp, path("gender_rate.txt"));
+    for(int i = 0; i < temp.size(); i++) {
+        QString current = temp[i].trimmed();
+        QString description;
+        quint16 pokenum;
+        bool ok = Pokemon::uniqueId::extract_short(current, pokenum, description);
+        if(ok) m_GenderRates[pokenum] = description.toInt();
     }
 }
 
@@ -566,7 +586,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
 
 QPixmap PokemonInfo::Sub(int gen, bool back)
 {
-    QString archive = path("poke_img.zip");
+    QString archive = path("hgss.zip");
 
     QString file = QString("sub%1%2.png").arg(back?"b":"").arg(gen>=4?"":"3G");
 
@@ -893,7 +913,7 @@ void PokemonInfo::loadMoves()
                 moves.genMoves[i].unite(moves.dreamWorldMoves);
             }
 
-            if (i > 0) {
+            if (i > 0 && i+GEN_MIN != 3) {
                 moves.genMoves[i].unite(moves.genMoves[i-1]);
             }
         }
@@ -1084,6 +1104,14 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     fill_container_with_file(recoil, path("recoil.txt"));
     fill_container_with_file(status, path("status.txt"));
     fill_container_with_file(type, path("type.txt"));
+
+    /* Not needed because HM pokemon can be traded between gens got gen 1 & 2*/
+//    if (gen == 1) {
+//        HMs << Move::Cut << Move::Flash << Move::Surf << Move::Strength <<Move::Fly;
+//    } else if (gen == 2) {
+//        HMs << Move::Cut << Move::Flash << Move::Surf << Move::Strength << Move::Whirlpool
+//                        << Move::Waterfall << Move::Fly;
+//    }
 
     if (gen == 3) {
         HMs << Move::Cut << Move::Flash << Move::Surf << Move::RockSmash << Move::Strength << Move::Dive
@@ -2098,14 +2126,20 @@ QString HiddenPowerInfo::path(const QString &filename)
     return m_Directory + filename;
 }
 
-int HiddenPowerInfo::Type(quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
+int HiddenPowerInfo::Type(int gen, quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
 {
-    return (((hp_dv%2) + (att_dv%2)*2 + (def_dv%2)*4 + (speed_dv%2)*8 + (satt_dv%2)*16 + (sdef_dv%2)*32)*15)/63 + 1;
+    if (gen >= 3)
+        return (((hp_dv%2) + (att_dv%2)*2 + (def_dv%2)*4 + (speed_dv%2)*8 + (satt_dv%2)*16 + (sdef_dv%2)*32)*15)/63 + 1;
+    else
+        return (att_dv%4)*4+(def_dv%4)+1;
 }
 
-int HiddenPowerInfo::Power(quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
+int HiddenPowerInfo::Power(int gen, quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
 {
-    return (((hp_dv%4>1) + (att_dv%4>1)*2 + (def_dv%4>1)*4 + (speed_dv%4>1)*8 + (satt_dv%4>1)*16 + (sdef_dv%4>1)*32)*40)/63 + 30;
+    if (gen >= 3)
+        return (((hp_dv%4>1) + (att_dv%4>1)*2 + (def_dv%4>1)*4 + (speed_dv%4>1)*8 + (satt_dv%4>1)*16 + (sdef_dv%4>1)*32)*40)/63 + 30;
+    else
+        return (((satt_dv>>3) + (speed_dv>>3)*2 + (def_dv>>3)*4 + (att_dv>>3)*8)*5+ std::min(int(satt_dv),3))/2 + 31;
 }
 
 QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type)
@@ -2120,6 +2154,11 @@ QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type)
         ret.push_back(line.split(' '));
 
     return ret;
+}
+
+QPair<quint8, quint8> HiddenPowerInfo::AttDefDVsForGen2(int type)
+{
+    return QPair<quint8, quint8>(12+ (type-1)/4, 12 + ((type-1)%4));
 }
 
 void StatInfo::init(const QString &dir)
