@@ -29,3 +29,13 @@
 
 %s由于附针而受到了伤害！|%s由于%f的附针而受到了伤害！|附针依附在了%s的身上！
 
+
+
+
+%f is hurt by %s's Rugged Helmet!
+%s's Balloon popped!|%s is floating on a balloon!
+%s's %i raised its %st!
+%s's %i raised %m's power!
+%s used its Red Card on %f!
+%s used its Escape Button!
+%s Berserk Gene activated!|%s's Attack went way up!

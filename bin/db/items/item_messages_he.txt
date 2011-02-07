@@ -27,5 +27,15 @@
 
 
 
-%s is hurt by its Sticky Barb!|%s is hurt by %f's sticky Barb!|The Sticky Barb is now attached to %s!
+%s is hurt by its Sticky Barb!
 
+
+
+
+%f is hurt by %s's Rugged Helmet!
+%s's Balloon popped!|%s is floating on a balloon!
+%s's %i raised its %st!
+%s's %i raised %m's power!
+%s used its Red Card on %f!
+%s used its Escape Button!
+%s Berserk Gene activated!|%s's Attack went way up!
