@@ -136,6 +136,11 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             return false;
         }
 
+        if (pokeid == Pokemon::Cloyster) {
+            int a;
+            a = 2;
+            a += 1;
+        }
         /* now we know the pokemon at least knows all moves */
         moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
 
@@ -151,12 +156,12 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
                     }
                 }
 
-                if (isValid(pokeid, g, moves))
-                    return true;
+                if (ok)
+                    moves.subtract(PokemonInfo::RegularMoves(pokeid, 1));
             } else {
                 int preevo = PokemonInfo::PreEvo(pokeid.pokenum);
 
-                if (preevo != 0 && PokemonInfo::Exists(preevo, 1)) {
+                if (preevo != 0 &&  preevo != pokeid.pokenum && PokemonInfo::Exists(preevo, 1)) {
                     bool ok = true;
                     foreach(int move, moves) {
                         if (!MoveInfo::Exists(move, 1)) {
@@ -165,7 +170,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
                         }
                     }
 
-                    if (isValid(preevo, g, moves))
+                    if (ok && isValid(preevo, 2, moves))
                         return true;
                 }
             }
