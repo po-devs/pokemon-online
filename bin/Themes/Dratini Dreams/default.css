@@ -151,7 +151,7 @@ QSlider::handle:horizontal {
 	border: 1px solid #102eb0; 
 	border-radius: 7px;*/
 	width: 14px;
-	image:url(Themes/Dratini Dreams/Teambuilder/ScrollBall.png);
+	image:url(Themes/Classic/Teambuilder/ScrollBall.png);
 	margin: -8px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
 }
 

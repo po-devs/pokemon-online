@@ -334,7 +334,7 @@ void TeamBuilder::updateAll()
 
 void TeamBuilder::updateTeam()
 {
-    if (gens[0]) {
+    if (gens[team()->gen()-GEN_MIN]) {
         gens[team()->gen()-GEN_MIN]->setChecked(true);
     }
     m_teamBody->updateTeam();
