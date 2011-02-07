@@ -1037,11 +1037,28 @@ void PokeButton::update()
 void PokeButton::updateToolTip()
 {
     const PokeBattle &p = *(this->p);
-    QString tooltip = tr("%1 lv %2\n\nItem:%3\nAbility:%4\n\nMoves:\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP\n--%8 - %12 PP")
-                      .arg(PokemonInfo::Name(p.num()), QString::number(p.level()), ItemInfo::Name(p.item()),
-                      AbilityInfo::Name(p.ability()), MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
-                      MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num())).arg(p.move(0).PP()).arg(p.move(1).PP())
-                      .arg(p.move(2).PP()).arg(p.move(3).PP());
+    QString tooltip;
+    if (p.ability() != 0) {
+        tooltip = tr("%1 lv %2\n\nItem:%3\nAbility:%4\n\nMoves:\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP\n--%8 - %12 PP")
+                          .arg(PokemonInfo::Name(p.num()), QString::number(p.level()), ItemInfo::Name(p.item()),
+                          AbilityInfo::Name(p.ability()), MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
+                          MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num())).arg(p.move(0).PP()).arg(p.move(1).PP())
+                          .arg(p.move(2).PP()).arg(p.move(3).PP());
+    } else if (p.ability() == 0) {
+        if (p.item() != 0) {
+            tooltip = tr("%1 lv %2\n\nItem:%3\n\n\nMoves:\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP\n--%8 - %12 PP")
+                              .arg(PokemonInfo::Name(p.num()), QString::number(p.level()), ItemInfo::Name(p.item()),
+                              MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
+                              MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num())).arg(p.move(0).PP()).arg(p.move(1).PP())
+                              .arg(p.move(2).PP()).arg(p.move(3).PP());
+        } else {
+            tooltip = tr("%1 lv %2\n\nMoves:\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP\n--%8 - %12 PP")
+                              .arg(PokemonInfo::Name(p.num()), QString::number(p.level()),
+                              MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
+                              MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num())).arg(p.move(0).PP()).arg(p.move(1).PP())
+                              .arg(p.move(2).PP()).arg(p.move(3).PP());
+        }
+    }
     setToolTip(tooltip);
 }
 

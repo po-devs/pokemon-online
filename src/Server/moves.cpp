@@ -1721,6 +1721,7 @@ struct MMBide : public MM
             addFunction(turn(b,s), "CustomAttackingDamage", "Bide", &ccd);
             addFunction(turn(b,s), "DetermineAttackFailure", "Bide",&daf);
             removeFunction(poke(b,s), "TurnSettings", "Bide");
+            removeFunction(turn(b,s), "UponAttackSuccessful", "Bide");
         }
     }
 
