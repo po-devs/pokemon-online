@@ -302,3 +302,4 @@ Item Drop
 Item Call
 Flat Call
 Dire Hit 3
+Gene Berserk

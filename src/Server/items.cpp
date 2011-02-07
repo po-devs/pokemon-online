@@ -743,6 +743,19 @@ struct IMCassette : public IM {
     }
 };
 
+struct IMBerserkGene : public IM {
+    IMBerserkGene() {
+        functions["OnSetup"] = &os;
+    }
+
+    static void os(int s, int, BS &b) {
+        b.sendItemMessage(40, s, 0);
+        b.sendItemMessage(40, s, 1);
+        b.inflictStatMod(s, Attack, 12, s, false);
+        b.inflictConfused(s,s);
+    }
+};
+
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
 void ItemEffect::init()
@@ -778,6 +791,7 @@ void ItemEffect::init()
     REGISTER_ITEM(37, Jewel);
     REGISTER_ITEM(38, RedCard);
     REGISTER_ITEM(39, EscapeButton);
+    REGISTER_ITEM(40, BerserkGene);
 
     initBerries();
 }

@@ -1988,7 +1988,8 @@ namespace Item
         ItemDrop,
         ItemCall,
         FlatCall,
-        DireHit3
+        DireHit3,
+        BerserkGene
     };
 }
 

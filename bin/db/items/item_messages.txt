@@ -38,3 +38,4 @@
 %s's %i raised %m's power!
 %s used its Red Card on %f!
 %s used its Escape Button!
+%s Berserk Gene activated!|%s's Attack went way up!

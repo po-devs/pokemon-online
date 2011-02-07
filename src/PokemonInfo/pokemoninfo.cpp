@@ -1498,6 +1498,13 @@ void ItemInfo::loadNames()
             if (Exists(Number(m_SortedUsefulNames[g+1][i]), j))
                 m_SortedUsefulNames[g].push_back(m_SortedUsefulNames[g+1][i]);
         }
+
+        if (j == 2) {
+            m_SortedNames[g].push_back(ItemInfo::Name(Item::BerserkGene));
+            m_SortedUsefulNames[g].push_back(ItemInfo::Name(Item::BerserkGene));
+            qSort(m_SortedNames[g]);
+            qSort(m_SortedUsefulNames[g]);
+        }
     }
 
     for (int i = GEN_MIN_ITEMS; i <= GEN_MAX; i++) {
