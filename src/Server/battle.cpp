@@ -2721,7 +2721,7 @@ void BattleSituation::inflictRecoil(int source, int target)
     }
 
     // "33" means one-third
-    if (recoil == -33) recoil = -100 / 3.;
+    //if (recoil == -33) recoil = -100 / 3.; -- commented out until ingame confirmation
 
     int damage = std::abs(int(recoil * turnMemory(source).value("DamageInflicted").toInt() / 100));
 
@@ -3276,7 +3276,8 @@ int BattleSituation::getType(int player, int slot)
 
 bool BattleSituation::isFlying(int player)
 {
-    return !battleMemory().value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) && !pokeMemory(player).value("Rooted").toBool() &&
+    return !battleMemory().value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) &&
+            (gen() <= 3 || !pokeMemory(player).value("Rooted").toBool()) &&
             !pokeMemory(player).value("StruckDown").toBool() &&
             (hasWorkingAbility(player, Ability::Levitate)
              || hasWorkingItem(player, Item::Balloon)
