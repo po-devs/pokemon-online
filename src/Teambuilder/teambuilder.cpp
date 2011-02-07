@@ -115,7 +115,8 @@ TitledWidget::TitledWidget(const QString &title, QWidget *w)
 
 TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
 {
-    gens[0] = NULL;
+    for (int i = 0; i < NUMBER_GENS; i++)
+        gens[i] = NULL;
 
     qRegisterMetaType<Pokemon::uniqueId>("Pokemon::uniqueId");
 
