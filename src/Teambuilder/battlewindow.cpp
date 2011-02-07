@@ -921,7 +921,7 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p, int
     } else if (b.num() == Move::Frustration) {
         power = QString("%1").arg(std::max(( (255-p.happiness()) * 2 / 5),1));
     } else if (b.num() == Move::HiddenPower) {
-        power = QString("%1").arg(HiddenPowerInfo::Power(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]));
+        power = QString("%1").arg(HiddenPowerInfo::Power(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]));
     } else {
         power = MoveInfo::PowerS(b.num(), gen);
     }
@@ -935,7 +935,7 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p, int
                                                                         MoveInfo::DetailedDescription(b.num()));
 
     int type = b.num() == Move::HiddenPower ?
-               HiddenPowerInfo::Type(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num(), gen);
+               HiddenPowerInfo::Type(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num(), gen);
     /*QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
     changePics(model.arg("D"), model.arg("H"), model.arg("C"));*/
     setStyleSheet(QString("background: %1;").arg(Theme::TypeColor(type).name()));
@@ -967,7 +967,7 @@ void ImageAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p, i
     } else if (b.num() == Move::Frustration) {
         power = QString("%1").arg(std::max(( (255-p.happiness()) * 2 / 5),1));
     } else if (b.num() == Move::HiddenPower) {
-        power = QString("%1").arg(HiddenPowerInfo::Power(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]));
+        power = QString("%1").arg(HiddenPowerInfo::Power(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]));
     } else {
         power = MoveInfo::PowerS(b.num(), gen);
     }
@@ -977,7 +977,7 @@ void ImageAttackButton::updateAttack(const BattleMove &b, const PokeBattle &p, i
                                                                         MoveInfo::DetailedDescription(b.num()));
 
     int type = b.num() == Move::HiddenPower ?
-               HiddenPowerInfo::Type(p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num(), gen);
+               HiddenPowerInfo::Type(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num(), gen);
     QString model = QString("BattleWindow/Buttons/%1%2.png").arg(type);
     changePics(Theme::path(model.arg("D")), Theme::path(model.arg("H")), Theme::path(model.arg("C")));
 

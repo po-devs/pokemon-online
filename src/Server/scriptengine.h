@@ -166,6 +166,7 @@ public:
     Q_INVOKABLE QScriptValue battling(int id);
     Q_INVOKABLE QScriptValue away(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
+    Q_INVOKABLE QScriptValue gen(int id);
     Q_INVOKABLE QScriptValue dbAuth(const QString &name);
     Q_INVOKABLE QScriptValue dbAuths();
     Q_INVOKABLE QScriptValue dbAll();
@@ -202,6 +203,8 @@ public:
     Q_INVOKABLE QScriptValue natureNum(const QString &nature);
     Q_INVOKABLE QScriptValue ability(int num);
     Q_INVOKABLE QScriptValue abilityNum(const QString &nature);
+    Q_INVOKABLE QScriptValue genderNum(QString genderName);
+    Q_INVOKABLE QString gender(int genderNum);
 
     Q_INVOKABLE QScriptValue teamPokeLevel(int id, int slot);
     Q_INVOKABLE QScriptValue teamPoke(int id, int index);
@@ -235,7 +238,7 @@ public:
     Q_INVOKABLE QScriptValue type(int id);
     Q_INVOKABLE QScriptValue typeNum(const QString &typeName);
 
-    Q_INVOKABLE int hiddenPowerType(quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
+    Q_INVOKABLE int hiddenPowerType(int gen, quint8 hpdv, quint8 attdv, quint8 defdv, quint8 spddv, quint8 sattdv, quint8 sdefdv);
 
     Q_INVOKABLE QScriptValue getScript();
 
@@ -272,6 +275,23 @@ public:
 
     Q_INVOKABLE void inflictStatus(int battleId, bool toFirstPlayer, int slot, int status);
     Q_INVOKABLE void modifyPokeStat(int poke, int stat, quint8 value);
+
+    Q_INVOKABLE QScriptValue battlePokenum(int battleId, bool toFirstPlayer, int pokeSlot);
+    Q_INVOKABLE QScriptValue battleNature(int battleId, bool toFirstPlayer, int pokeSlot);
+    Q_INVOKABLE QScriptValue battleGender(int battleId, bool toFirstPlayer, int pokeSlot);
+    Q_INVOKABLE QScriptValue battleDVs(int battleId, bool toFirstPlayer, int pokeSlot, int stat);
+    Q_INVOKABLE QScriptValue battleEVs(int battleId, bool toFirstPlayer, int pokeSlot, int stat);
+    Q_INVOKABLE QScriptValue battleShiny(int battleId, bool toFirstPlayer, int pokeSlot);
+    Q_INVOKABLE QScriptValue battleLevel(int battleId, bool toFirstPlayer, int pokeSlot);
+    Q_INVOKABLE QScriptValue battleNickname(int battleId, bool toFirstPlayer, int pokeSlot);
+    Q_INVOKABLE QScriptValue battleItem(int battleId, bool toFirstPlayer, int pokeSlot);
+    Q_INVOKABLE QScriptValue battleStatus(int battleId, bool toFirstPlayer, int pokeSlot);
+    Q_INVOKABLE QScriptValue battleHP(int battleId, bool toFirstPlayer, int pokeSlot);
+    Q_INVOKABLE QScriptValue battleMaxHP(int battleId, bool toFirstPlayer, int pokeSlot);
+    Q_INVOKABLE QScriptValue battleMoveSlot(int battleId, bool toFirstPlayer, int pokeSlot, int moveSlot);
+    Q_INVOKABLE QScriptValue battleMovePP(int battleId, bool toFirstPlayer, int pokeSlot, int moveSlot);
+    Q_INVOKABLE QScriptValue battleMoveMaxPP(int battleId, bool toFirstPlayer, int pokeSlot, int moveSlot);
+
 signals:
     void clearTheChat();
 public slots:

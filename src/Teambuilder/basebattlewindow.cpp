@@ -1284,6 +1284,29 @@ BaseGraphicsZone::BaseGraphicsZone(BaseBattleInfo *i) : mInfo(i)
     }
 }
 
+void BaseGraphicsZone::updatePos(int spot)
+{
+    int player = info().player(spot);
+
+    int width = items[spot]->pixmap().width();
+    int height = items[spot]->pixmap().height();
+
+    if (player == info().myself) {
+        if (!info().multiples()) {
+            items[spot]->setPos(50 - width/2, 146 - height);
+        } else {
+            items[spot]->setPos(info().slotNum(spot)*60, 146-height);
+        }
+    } else {
+        if (!info().multiples()) {
+            items[spot]->setPos(184 - width/2, 96 - height);
+        } else {
+            int base = 257-80-(info().numberOfSlots/2 - 1)*60;
+            items[spot]->setPos(base + info().slotNum(spot)*60, 96-height);
+        }
+    }
+}
+
 void BaseGraphicsZone::switchToNaught(int spot)
 {
     items[spot]->setPixmap(QPixmap());
@@ -1294,11 +1317,18 @@ QPixmap BaseGraphicsZone::loadPixmap(Pokemon::uniqueId num, bool shiny, bool bac
     quint64 key = this->key(num, shiny, back, gender, sub);
 
     if (!graphics.contains(key)) {
+        QPixmap p;
         if (sub) {
-            graphics.insert(key, PokemonInfo::Sub(info().gen, back));
+            p = PokemonInfo::Sub(info().gen, back);
         } else {
-            graphics.insert(key, PokemonInfo::Picture(num, info().gen, gender, shiny, back));
+            p = PokemonInfo::Picture(num, info().gen, gender, shiny, back);
         }
+
+        QImage img = p.toImage();
+        cropImage(img);
+        p = QPixmap::fromImage(img);
+
+        graphics.insert(key, p);
     }
 
     return graphics[key];

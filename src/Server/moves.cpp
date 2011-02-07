@@ -156,11 +156,18 @@ void MoveEffect::unsetup(int num, int source, BattleSituation &b)
 struct MMAquaRing : public MM
 {
     MMAquaRing() {
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (poke(b,s).contains("AquaRinged"))
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas(int s, int, BS &b) {
         addFunction(poke(b,s), "EndTurn60", "AquaRing", &et);
+        poke(b,s)["AquaRinged"] = true;
         b.sendMoveMessage(2, 0, s, type(b,s));
     }
 
@@ -676,9 +683,9 @@ struct MMHiddenPower : public MM
     static void ms(int s, int, BS &b) {
         quint8 *dvs = fpoke(b,s).dvs;
 
-        int type = HiddenPowerInfo::Type(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+        int type = HiddenPowerInfo::Type(b.gen(), dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
         tmove(b, s).type = type;
-        tmove(b, s).power = HiddenPowerInfo::Power(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+        tmove(b, s).power = HiddenPowerInfo::Power(b.gen(), dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
 
         /* In 3rd gen, hidden powers can be physical! */
         if (b.gen() <= 3) {
@@ -864,6 +871,10 @@ struct MMPerishSong : public MM
             if (poke(b,t).contains("PerishSongCount") || b.koed(t)) {
                 continue;
             }
+            if (b.hasWorkingAbility(t, Ability::Soundproof) && b.gen() >= 5) {
+                b.sendAbMessage(57,0,s);
+                continue;
+            }
             addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
             poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns)) - 1;
             poke(b, t)["PerishSonger"] = s;
@@ -942,10 +953,14 @@ struct MMLeechSeed : public MM
     static void uas(int s, int t, BS &b) {
         addFunction(poke(b,t), "EndTurn64", "LeechSeed", &et);
         poke(b,t)["SeedSource"] = s;
+        poke(b,t)["LeechSeedTurn"] = b.turn();
         b.sendMoveMessage(72, 1, s, Pokemon::Grass, t);
     }
 
     static void et(int s, int, BS &b) {
+        if (b.gen() <= 2 && poke(b,s).value("LeechSeedTurn").toInt() == b.turn())
+            return;
+
         if (b.koed(s) || b.hasWorkingAbility(s, Ability::MagicGuard))
             return;
         int s2 = poke(b,s)["SeedSource"].toInt();
@@ -1005,7 +1020,7 @@ struct MMRest : public MM
 
     static void daf(int s, int, BS &b) {
         // Insomnia, Vital Spirit, Uproar
-        if (b.poke(s).status() == Pokemon::Asleep || !b.canGetStatus(s, Pokemon::Asleep) || b.poke(s).isFull()) {
+        if ( (b.gen() >= 3 && b.poke(s).status() == Pokemon::Asleep) || !b.canGetStatus(s, Pokemon::Asleep) || b.poke(s).isFull()) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -1030,6 +1045,11 @@ struct MMBellyDrum : public MM
     static void daf(int s, int, BS &b) {
         if (b.poke(s).lifePoints() <= std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1)) {
 	    b.fail(s, 8);
+
+            /* Odd bug with crystal & stadium 2 */
+            if (b.gen() == 2 && move(b,s) == Move::BellyDrum) {
+                b.inflictStatMod(s, Attack, 2, s);
+            }
 	}
     }
     static void uas(int s, int, BS &b) {
@@ -1136,6 +1156,16 @@ struct MMRoar : public MM
     }
 
     static bool testPhazing(int s, int t, BS &b, bool verbose) {
+        if (b.gen() == 1) {
+            turn(b,s)["Failed"] = true;
+            return false;
+        }
+
+        if (b.gen() == 2 && !b.hasMoved(t)) {
+            turn(b,s)["Failed"] = true;
+            return false;
+        }
+
         int target = b.player(t);
 
         /* ingrain & suction cups */
@@ -1199,7 +1229,7 @@ struct MMSpikes : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (team(b,b.opponent(b.player(s))).value("Spikes").toInt() >= 3) {
+        if (team(b,b.opponent(b.player(s))).value("Spikes").toInt() >= 1 + 2*(b.gen() >= 3)) {
 	    turn(b,s)["Failed"] = true;
 	}
     }
@@ -1742,11 +1772,14 @@ struct MMBind : public MM
                     b.sendMoveMessage(10,1,s,MoveInfo::Type(move, b.gen()),s,move);
             } else {
                 poke(b,s)["TrappedRemainingTurns"] = count;
-                b.sendMoveMessage(10,0,s,MoveInfo::Type(move, b.gen()),s,move);
 
-                int trapper = b.linker(s, "Trapped");
+                if (!b.hasWorkingAbility(s, Ability::MagicGuard)) {
+                    b.sendMoveMessage(10,0,s,MoveInfo::Type(move, b.gen()),s,move);
 
-                b.inflictDamage(s, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::PressureBand) ? 8 : 16),s,false);
+                    int trapper = b.linker(s, "Trapped");
+
+                    b.inflictDamage(s, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::PressureBand) ? 8 : 16),s,false);
+                }
             }
         }
     }
@@ -2095,6 +2128,7 @@ struct MMDoomDesire : public MM
             b.calculateTypeModStab();
             tmove(b, s).type = Pokemon::Curse;
             slot(b,t)["DoomDesireStab"] = turn(b,s)["Stab"].toInt();
+            slot(b,t)["DoomDesireId"] = b.team(b.player(s)).internalId(b.poke(s));
         }
         addFunction(slot(b,t), "EndTurn7", "DoomDesire", &et);
         b.sendMoveMessage(29, move==DoomDesire?2:1, s, type(b,s));
@@ -2131,9 +2165,19 @@ struct MMDoomDesire : public MM
                     turn(b,s)["CriticalHit"] = false;
                     tmove(b,s).power = MoveInfo::Power(move, b.gen());
 
+                    int t = b.opponent(b.player(s));
+                    int doomuser = s;
+
+                    for (int i = 0; i < b.numberPerSide(); i++) {
+                        if (b.team(t).internalId(b.poke(t, i)) == slot(b,s).value("DoomDesireId").toInt()) {
+                            doomuser = b.slot(t, i);
+                            break;
+                        }
+                    }
+
                     int damage = b.calculateDamage(s, s);
                     b.notify(BS::All, BS::Effective, s, quint8(typemod));
-                    b.inflictDamage(s, damage, s, true, true);
+                    b.inflictDamage(s, damage, doomuser, true, true);
                 }
 	    }
 	}
@@ -2231,7 +2275,9 @@ struct MMEncore : public MM
             b.sendItemMessage(7,t);
             b.disposeItem(t);
         } else {
-            if (b.gen() <= 3)
+            if (b.gen() == 2)
+                poke(b,t)["EncoresUntil"] = b.turn() + 1 + (b.true_rand()%4);
+            else if (b.gen() == 3)
                 poke(b,t)["EncoresUntil"] = b.turn() + 1 + (b.true_rand()%5);
             else if (b.gen() == 4)
                 poke(b,t)["EncoresUntil"] = b.turn() + 3 + (b.true_rand()%5);
@@ -3500,11 +3546,11 @@ struct MMMoonlight : public MM
 
         b.sendMoveMessage(87,0,s,type(b,s));
 	if (weather == BattleSituation::NormalWeather || !b.isWeatherWorking(weather)) {
-	    b.healLife(s, b.poke(s).totalLifePoints()/2);
+            tmove(b,s).healing = 50;
 	} else if (b.isWeatherWorking(BattleSituation::Sunny)) {
-	    b.healLife(s, b.poke(s).totalLifePoints()*2/3);
+            tmove(b,s).healing = 66;
 	} else {
-	    b.healLife(s, b.poke(s).totalLifePoints()/4);
+            tmove(b,s).healing = 25;
 	}
     }
 };
@@ -3690,11 +3736,28 @@ struct MMPunishment : public MM
 struct MMRage : public MM
 {
     MMRage() {
+        functions["OnSetup"] = &os;
+        functions["MoveSettings"] = &ms;
 	functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void os(int s, int, BS &b) {
+        if (b.gen() != 2)
+            return;
+
+        if (poke(b,s).value("AnyLastMoveUsed") != Move::Rage)
+            poke(b,s)["RagePower"] = 0;
+    }
+
+    static void ms(int s, int, BS &b) {
+        if (b.gen() == 2) {
+            tmove(b,s).power *= 1 + poke(b,s).value("RagePower").toInt();
+        }
     }
 
     static void uas(int s, int, BS &b) {
         addFunction(poke(b,s), "UponOffensiveDamageReceived", "Rage", &uodr);
+
         if (poke(b,s).contains("RageBuilt") && poke(b,s)["AnyLastMoveUsed"] == Move::Rage) {
             poke(b,s).remove("AttractBy");
             b.healConfused(s);
@@ -3706,9 +3769,16 @@ struct MMRage : public MM
     static void uodr(int s, int, BS &b) {
         if (!b.koed(s) && poke(b,s)["AnyLastMoveUsed"] == Move::Rage) {
             poke(b,s)["RageBuilt"] = true;
-            if (!b.hasMaximalStatMod(s, Attack)) {
-                b.inflictStatMod(s, Attack, 1,false);
-                b.sendMoveMessage(102, 0, s);
+            if (b.gen() != 2) {
+                if (!b.hasMaximalStatMod(s, Attack)) {
+                    b.inflictStatMod(s, Attack, 1,false);
+                    b.sendMoveMessage(102, 0, s);
+                }
+            } else {
+                if (poke(b,s).value("RagePower").toInt() < 5) {
+                    inc(poke(b,s)["RagePower"], 1);
+                    b.sendMoveMessage(102, 0, s);
+                }
             }
         }
 
@@ -3945,8 +4015,11 @@ struct MMSpite : public MM
         int slot = poke(b,t)["MoveSlot"].toInt();
         if (b.gen() >= 4)
             b.losePP(t, slot, 4);
-        else
+        else if (b.gen() == 3)
             b.losePP(t, slot, 2 + (b.true_rand()%4) );
+        else if (b.gen() == 2)
+            b.losePP(t, slot, 1 + (b.true_rand()%5) );
+
         b.sendMoveMessage(123,0,s,Pokemon::Ghost,t,b.move(t,slot));
     }
 };
@@ -4500,9 +4573,9 @@ struct MMSwallow: public MM
             poke(b,s).remove("StockPileSDef");
         }
         switch (poke(b,s)["StockPileCount"].toInt()) {
-        case 1: b.healLife(s, b.poke(s).totalLifePoints()/4); break;
-        case 2: b.healLife(s, b.poke(s).totalLifePoints()/2); break;
-        case 3: default: b.healLife(s, b.poke(s).totalLifePoints()); break;
+        case 1: tmove(b,s).healing = 25; break;
+        case 2: tmove(b,s).healing = 50; break;
+        case 3: default: tmove(b,s).healing = 100; break;
         }
         poke(b,s).remove("StockPileCount");
         b.sendMoveMessage(131,0,s);

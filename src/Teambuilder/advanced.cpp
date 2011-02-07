@@ -20,34 +20,36 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     uplayout->addLayout(firstColumn,1);
     uplayout->addLayout(secondColumn,0);
 
-    QGroupBox *hiddenpower = new QGroupBox(tr("&Hidden Power"));
-    firstColumn->addWidget(hiddenpower);
-    QGridLayout *hidpower = new QGridLayout(hiddenpower);
+    if (gen() >= 2) {
+        QGroupBox *hiddenpower = new QGroupBox(tr("&Hidden Power"));
+        firstColumn->addWidget(hiddenpower);
+        QGridLayout *hidpower = new QGridLayout(hiddenpower);
 
-    QLabel * l_type = new QLabel(tr("&Type:"));
-    l_type->setObjectName("SmallText");
-    hpchoice = new QComboBox();
-    l_type->setBuddy(hpchoice);
-    hidpower->addWidget(l_type, 0, 0);
-    hidpower->addWidget(hpchoice, 0, 1);
-    QLabel *l_power;
-    hidpower->addWidget(l_power=new QLabel(tr("Power:")), 1,0);
-    l_power->setObjectName("SmallText");
-    hpower = new QLabel();
-    hpower->setObjectName("SmallText");
-    hidpower->addWidget(hpower,1,1);
+        QLabel * l_type = new QLabel(tr("&Type:"));
+        l_type->setObjectName("SmallText");
+        hpchoice = new QComboBox();
+        l_type->setBuddy(hpchoice);
+        hidpower->addWidget(l_type, 0, 0);
+        hidpower->addWidget(hpchoice, 0, 1);
+        QLabel *l_power;
+        hidpower->addWidget(l_power=new QLabel(tr("Power:")), 1,0);
+        l_power->setObjectName("SmallText");
+        hpower = new QLabel();
+        hpower->setObjectName("SmallText");
+        hidpower->addWidget(hpower,1,1);
 
-    for (int i = 1; i < TypeInfo::NumberOfTypes() - 1; i++)
-    {
-	hpchoice->addItem(TypeInfo::Name(i));
+        for (int i = 1; i < TypeInfo::NumberOfTypes() - 1; i++)
+        {
+            hpchoice->addItem(TypeInfo::Name(i));
+        }
+        connect(hpchoice, SIGNAL(activated(int)), SLOT(changeHiddenPower(int)));
     }
-    connect(hpchoice, SIGNAL(activated(int)), SLOT(changeHiddenPower(int)));
 
     QGroupBox *dvs = new QGroupBox(tr("&DVs"));
     firstColumn->addWidget(dvs);
     QGridLayout *dvlayout = new QGridLayout(dvs);
     QStringList stats_l;
-    stats_l << tr("HP:") << tr("Att:") << tr("Def:") << tr("Sp.Att:") << tr("Sp.Def:") << tr("Speed:");
+    stats_l << tr("HP:") << tr("Att:") << tr("Def:") << (gen() == 1 ? tr("Special:", "Stat") : tr("Sp.Att:")) << tr("Sp.Def:") << tr("Speed:");
 
     for (int i = 0; i < 6; i++)
     {
@@ -59,24 +61,36 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
         dvlayout->addWidget(l, i, 0);
         dvlayout->addWidget(s, i, 1);
 
-	dvchoice[i]->setRange(0,31);
+        dvchoice[i]->setRange(0, gen() <= 2 ? 15 : 31);
 	dvchoice[i]->setAccelerated(true);
 	connect(dvchoice[i], SIGNAL(valueChanged(int)), SLOT(changeDV(int)));
 
+        if (gen() <= 2 && i == Hp) {
+            dvchoice[i]->setDisabled(true);
+        }
+
 	dvlayout->addWidget((stats[i]=new QLabel()), i, 2);
         stats[i]->setObjectName("BigText");
+
+        if (gen() == 1 && i == SpDefense) {
+            l->hide();
+            stats[i]->hide();
+            s->hide();
+        }
     }
 
-    QHBoxLayout *happLayout = new QHBoxLayout();
-    firstColumn->addLayout(happLayout);
-    QLabel *happLabel = new QLabel(tr("Happiness"));
-    happLabel->setObjectName("BigText");
-    happLayout->addWidget(happLabel);
-    happLayout->addWidget(happiness = new QSpinBox());
-    happiness->setRange(0, 255);
-    happiness->setFixedWidth(50);
-    happiness->setValue(poke()->happiness());
-    connect(happiness, SIGNAL(valueChanged(int)), SLOT(changeHappiness(int)));
+    if (gen() >= 2) {
+        QHBoxLayout *happLayout = new QHBoxLayout();
+        firstColumn->addLayout(happLayout);
+        QLabel *happLabel = new QLabel(tr("Happiness"));
+        happLabel->setObjectName("BigText");
+        happLayout->addWidget(happLabel);
+        happLayout->addWidget(happiness = new QSpinBox());
+        happiness->setRange(0, 255);
+        happiness->setFixedWidth(50);
+        happiness->setValue(poke()->happiness());
+        connect(happiness, SIGNAL(valueChanged(int)), SLOT(changeHappiness(int)));
+    }
 
     secondColumn->addWidget(pokeImage=new QLabel(),0,Qt::AlignHCenter);
     pokeImage->setObjectName("PokemonPicture");
@@ -94,88 +108,92 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     level->setAccelerated(true);
     connect(level, SIGNAL(valueChanged(int)), SLOT(changeLevel(int)));
 
-    QGroupBox *gender = new QGroupBox(tr("&Gender"));
-    QVBoxLayout *genderLayout = new QVBoxLayout(gender);
-    secondColumn->addWidget(gender);
+    if (gen() >= 3) {
+        QGroupBox *gender = new QGroupBox(tr("&Gender"));
+        QVBoxLayout *genderLayout = new QVBoxLayout(gender);
+        secondColumn->addWidget(gender);
 
-    if (poke()->genderAvail() == Pokemon::MaleAndFemaleAvail)
-    {
-	genderLayout->addWidget(gender1 = new QRadioButton(tr("Male")));
-	genderLayout->addWidget(gender2 = new QRadioButton(tr("Female")));
-	connect(gender1, SIGNAL(toggled(bool)), SLOT(changeGender(bool)));
-	updateGender();
-    } else {
-	genderLayout->addWidget(gender1 = new QRadioButton( poke()->gender() == Pokemon::Neutral ? tr("Neutral") : (poke()->gender() == Pokemon::Female ? tr("Female") : tr("Male"))));
-	gender1->setChecked(true);
-	gender1->setEnabled(false);
-    }
-
-    QGroupBox *abilityB = new QGroupBox(tr("&Ability"));
-    secondColumn->addWidget(abilityB);
-    QVBoxLayout *abilityLayout = new QVBoxLayout(abilityB);
-
-    abilityLayout->addWidget(ability[0]=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab(0))));
-    ability[0]->setToolTip(AbilityInfo::Desc(poke()->abilities().ab(0)));
-
-    if ( (poke()->abilities().ab(1) == poke()->abilities().ab(2)) && (poke()->abilities().ab(1) == 0) ) {
-        ability[0]->setChecked(true);
-        ability[0]->setEnabled(false);
-    } else {
-        for (int i = 1; i < 3; i++) {
-            if (poke()->abilities().ab(i) != 0 && poke()->abilities().ab(i) != poke()->abilities().ab(0)) {
-                abilityLayout->addWidget(ability[i]=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab(i))));
-                ability[i]->setToolTip(AbilityInfo::Desc(poke()->abilities().ab(i)));
-                connect(ability[i], SIGNAL(toggled(bool)), SLOT(changeAbility(bool)));
-            } else {
-                ability[i] = 0;
-            }
-        }
-        updateAbility();
-    }
-
-    secondColumn->addWidget(shiny = new QCheckBox(tr("&Shiny")));
-    if (poke()->shiny()) {
-	shiny->setChecked(true);
-    }
-    connect(shiny, SIGNAL(toggled(bool)), SLOT(changeShininess(bool)));
-
-    QPushButton *bForms = new QPushButton(tr("Alternate Formes"));
-    QMenu *m= new QMenu(bForms);
-
-    if (PokemonInfo::HasFormes(poke()->num()) && PokemonInfo::AFormesShown(poke()->num())) {
-        QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(poke()->num());
-
-        foreach(Pokemon::uniqueId forme, formes) {
-            QAction *ac = m->addAction(PokemonInfo::Name(forme),this, SLOT(changeForme()));
-            ac->setCheckable(true);
-            if (forme == poke()->num()) {
-                ac->setChecked(true);
-            }
-            ac->setProperty("pokemonid", forme.toPokeRef());
+        if (poke()->genderAvail() == Pokemon::MaleAndFemaleAvail)
+        {
+            genderLayout->addWidget(gender1 = new QRadioButton(tr("Male")));
+            genderLayout->addWidget(gender2 = new QRadioButton(tr("Female")));
+            connect(gender1, SIGNAL(toggled(bool)), SLOT(changeGender(bool)));
+            updateGender();
+        } else {
+            genderLayout->addWidget(gender1 = new QRadioButton( poke()->gender() == Pokemon::Neutral ? tr("Neutral") : (poke()->gender() == Pokemon::Female ? tr("Female") : tr("Male"))));
+            gender1->setChecked(true);
+            gender1->setEnabled(false);
         }
 
-        bForms->setMenu(m);
-    } else {
-        bForms->setDisabled(true);
+        QGroupBox *abilityB = new QGroupBox(tr("&Ability"));
+        secondColumn->addWidget(abilityB);
+        QVBoxLayout *abilityLayout = new QVBoxLayout(abilityB);
+
+        abilityLayout->addWidget(ability[0]=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab(0))));
+        ability[0]->setToolTip(AbilityInfo::Desc(poke()->abilities().ab(0)));
+
+        if ( (poke()->abilities().ab(1) == poke()->abilities().ab(2)) && (poke()->abilities().ab(1) == 0) ) {
+            ability[0]->setChecked(true);
+            ability[0]->setEnabled(false);
+        } else {
+            for (int i = 1; i < 3; i++) {
+                if (poke()->abilities().ab(i) != 0 && poke()->abilities().ab(i) != poke()->abilities().ab(0)) {
+                    abilityLayout->addWidget(ability[i]=new QRadioButton(AbilityInfo::Name(poke()->abilities().ab(i))));
+                    ability[i]->setToolTip(AbilityInfo::Desc(poke()->abilities().ab(i)));
+                    connect(ability[i], SIGNAL(toggled(bool)), SLOT(changeAbility(bool)));
+                } else {
+                    ability[i] = 0;
+                }
+            }
+            updateAbility();
+        }
     }
 
-    baselayout->addWidget(bForms);
+    if (gen() >= 3) {
+        secondColumn->addWidget(shiny = new QCheckBox(tr("&Shiny")));
+        if (poke()->shiny()) {
+            shiny->setChecked(true);
+        }
+        connect(shiny, SIGNAL(toggled(bool)), SLOT(changeShininess(bool)));
 
-    stats_l.clear();
-    stats_l << tr("HP") << tr("Att") << tr("Def") << tr("Sp Att") << tr("Sp Def") << tr("Speed");
+        QPushButton *bForms = new QPushButton(tr("Alternate Formes"));
+        QMenu *m= new QMenu(bForms);
 
-    hpanddvchoice = new QCompactTable(0, 6);
+        if (PokemonInfo::HasFormes(poke()->num()) && PokemonInfo::AFormesShown(poke()->num())) {
+            QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(poke()->num());
 
-    baselayout->addWidget(hpanddvchoice,Qt::AlignCenter);
+            foreach(Pokemon::uniqueId forme, formes) {
+                QAction *ac = m->addAction(PokemonInfo::Name(forme),this, SLOT(changeForme()));
+                ac->setCheckable(true);
+                if (forme == poke()->num()) {
+                    ac->setChecked(true);
+                }
+                ac->setProperty("pokemonid", forme.toPokeRef());
+            }
 
-    hpanddvchoice->horizontalHeader()->setStretchLastSection(true);
-    hpanddvchoice->setHorizontalHeaderLabels(stats_l);
+            bForms->setMenu(m);
+        } else {
+            bForms->setDisabled(true);
+        }
 
-    for (int i = 0; i < 6; i++) {
-        hpanddvchoice->horizontalHeader()->resizeSection(i, 44);
+        baselayout->addWidget(bForms);
+
+        stats_l.clear();
+        stats_l << tr("HP") << tr("Att") << tr("Def") << tr("Sp Att") << tr("Sp Def") << tr("Speed");
+
+        hpanddvchoice = new QCompactTable(0, 6);
+
+        baselayout->addWidget(hpanddvchoice,Qt::AlignCenter);
+
+        hpanddvchoice->horizontalHeader()->setStretchLastSection(true);
+        hpanddvchoice->setHorizontalHeaderLabels(stats_l);
+
+        for (int i = 0; i < 6; i++) {
+            hpanddvchoice->horizontalHeader()->resizeSection(i, 44);
+        }
+
+        connect(hpanddvchoice, SIGNAL(cellActivated(int,int)), SLOT(changeDVsAccordingToHP(int)));
     }
-
-    connect(hpanddvchoice, SIGNAL(cellActivated(int,int)), SLOT(changeDVsAccordingToHP(int)));
 
     updateDVs();
     updateHiddenPower();
@@ -257,9 +275,28 @@ void TB_Advanced::changeDV(int stat, int newval)
     if (poke()->DV(stat) != newval)
     {
 	poke()->setDV(stat, newval);
-	updateDV(stat);
+
+        /* Making Sp Atk and Sp Def coordinated in gen 2 */
+        if (gen() == 2 && (stat == SpDefense || stat == SpAttack)) {
+            updateDV(SpDefense);
+            updateDV(SpAttack);
+        } else {
+            updateDV(stat);
+        }
+
+        if (gen() <= 2) {
+            updateDV(Hp);
+            changeShininess(poke()->shiny());
+            changeGender(poke()->gender());
+        }
+
 	updateHiddenPower();
     }
+}
+
+int TB_Advanced::gen() const
+{
+    return m_poke->gen();
 }
 
 int TB_Advanced::stat(QObject *dvchoiceptr)
@@ -300,6 +337,9 @@ void TB_Advanced::changeLevel(int level)
 
 void TB_Advanced::updateHiddenPower()
 {
+    if (gen() <= 1)
+        return;
+
     hpower->setText(QString::number(calculateHiddenPowerPower()));
 
     int type = calculateHiddenPowerType();
@@ -310,6 +350,9 @@ void TB_Advanced::updateHiddenPower()
 
 void TB_Advanced::updateHpAndDvChoice()
 {
+    if (gen() <= 2)
+        return;
+
     int type = currentHiddenPower();
 
     QList<QStringList> hpAndDvVals = HiddenPowerInfo::PossibilitiesForType(type);
@@ -342,22 +385,30 @@ const PokeTeam * TB_Advanced::poke() const
 
 int TB_Advanced::calculateHiddenPowerPower() const
 {
-    return HiddenPowerInfo::Power(poke()->DV(0), poke()->DV(1), poke()->DV(2), poke()->DV(3), poke()->DV(4), poke()->DV(5));
+    return HiddenPowerInfo::Power(poke()->gen(), poke()->DV(0), poke()->DV(1), poke()->DV(2), poke()->DV(3), poke()->DV(4), poke()->DV(5));
 }
 
 int TB_Advanced::calculateHiddenPowerType() const
 {
-    return HiddenPowerInfo::Type(poke()->DV(0), poke()->DV(1), poke()->DV(2), poke()->DV(3), poke()->DV(4), poke()->DV(5));
+    return HiddenPowerInfo::Type(poke()->gen(), poke()->DV(0), poke()->DV(1), poke()->DV(2), poke()->DV(3), poke()->DV(4), poke()->DV(5));
 }
 
 void TB_Advanced::changeHiddenPower(int newtype)
 {
-    if (newtype+1 == calculateHiddenPowerType())
+    newtype += 1;
+    if (newtype == calculateHiddenPowerType())
 	return;
 
-    updateHpAndDvChoice();
-    //We pick the first possible set of DVs (defaulted as the 'best' possible one)
-    changeDVsAccordingToHP(0);
+    if (gen() >= 3) {
+        updateHpAndDvChoice();
+        //We pick the first possible set of DVs (defaulted as the 'best' possible one)
+        changeDVsAccordingToHP(0);
+    } else {
+        QPair<quint8,quint8> dvs = HiddenPowerInfo::AttDefDVsForGen2(newtype);
+
+        changeDV(Attack, dvs.first);
+        changeDV(Defense, dvs.second);
+    }
 }
 
 void TB_Advanced::changeDVsAccordingToHP(int row)

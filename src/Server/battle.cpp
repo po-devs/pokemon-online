@@ -566,18 +566,28 @@ void BattleSituation::endTurn()
 {
     testWin();
 
+    /* In Gen 1 & 2, end turn effects don't happen after koing a pokemon */
+    if (gen() <= 2) {
+        if (koed(0) || koed(1)) {
+            requestSwitchIns();
+            return;
+        }
+    }
+
     /* Gen3 switches pokemons in before endturn effects */
     if (gen() == 3)
         requestSwitchIns();
 
     std::vector<int> players = sortedBySpeed();
 
-    callzeffects(Player1, Player1, "EndTurn");
-    callzeffects(Player2, Player2, "EndTurn");
+    if (gen() >= 3) {
+        callzeffects(Player1, Player1, "EndTurn");
+        callzeffects(Player2, Player2, "EndTurn");
 
-    foreach (int player, players) {
-        /* Wish */
-        callseffects(player,player, "EndTurn2");
+        foreach (int player, players) {
+            /* Wish */
+            callseffects(player,player, "EndTurn2");
+        }
     }
 
     endTurnWeather();
@@ -594,79 +604,29 @@ void BattleSituation::endTurn()
 
     callbeffects(Player1,Player1,"EndTurn5");
 
-    foreach (int player, players) {
-        if (koed(player))
-            continue;
-
-        /* Ingrain, aquaring */
-        callpeffects(player, player, "EndTurn60");
-
-        /* Speed boost, shed skin, ?Harvest? */
-        callaeffects(player,player, "EndTurn62");
-
-        //        if (koed(player)) <-- cannot be koed
-        //            continue;
-
-        /* Lefties, black sludge */
-        callieffects(player, player, "EndTurn63");
-
-        if (koed(player)) {
-            continue;
+    if (gen() >= 3) {
+        foreach (int player, players) {
+            calle6effects(player);
         }
 
-        /* Leech Seed, Nightmare. Warning: Leech Seed and rapid spin are linked */
-        callpeffects(player, player, "EndTurn64");
 
-        endTurnStatus(player);
+        testWin();
 
-        if (koed(player)) {
-            continue;
+        foreach (int player, players) {
+            /* Doom Desire */
+            callseffects(player,player, "EndTurn7");
         }
 
-        /* Status orbs */
-        callieffects(player, player, "EndTurn66");
+        testWin();
 
-        /* Trapping moves damage and Curse. Warning: Rapid spin and trapping moves are linked */
-        callpeffects(player, player, "EndTurn68");
+        foreach (int player, players) {
+            /* Perish Song */
+            callpeffects(player,player, "EndTurn8");
+        }
 
-        if (koed(player))
-            continue;
-
-        /* Bad dreams -- on others */
-        callaeffects(player,player, "EndTurn69");
-
-        /* Outrage, Uproar */
-        callpeffects(player, player, "EndTurn610");
-
-        /* Disable, taunt, encore, magnet rise, heal block, embargo */
-        callpeffects(player, player, "EndTurn611");
-
-        /* Roost */
-        callpeffects(player, player, "EndTurn");
-
-        /* Yawn */
-        callpeffects(player, player, "EndTurn617");
-
-        /* Sticky barb */
-        callieffects(player, player, "EndTurn618");
+        testWin();
     }
 
-    testWin();
-
-
-    foreach (int player, players) {
-        /* Doom Desire */
-        callseffects(player,player, "EndTurn7");
-    }
-
-    testWin();
-
-    foreach (int player, players) {
-        /* Perish Song */
-        callpeffects(player,player, "EndTurn8");
-    }
-
-    testWin();
 
     callbeffects(Player1,Player1,"EndTurn9");
 
@@ -704,6 +664,81 @@ void BattleSituation::endTurn()
     }
 }
 
+void BattleSituation::personalEndTurn(int player)
+{
+    calle6effects(player);
+
+    testWin();
+
+    /* Doom Desire */
+    callseffects(player,player, "EndTurn7");
+
+    testWin();
+
+    /* Perish Song */
+    callpeffects(player,player, "EndTurn8");
+
+    testWin();
+}
+
+void BattleSituation::calle6effects(int player)
+{
+    if (koed(player))
+        return;
+
+    /* Ingrain, aquaring */
+    callpeffects(player, player, "EndTurn60");
+
+    /* Speed boost, shed skin, ?Harvest? */
+    callaeffects(player,player, "EndTurn62");
+
+    //        if (koed(player)) <-- cannot be koed
+    //            continue;
+
+    /* Lefties, black sludge */
+    callieffects(player, player, "EndTurn63");
+
+    if (koed(player)) {
+        return;
+    }
+
+    /* Leech Seed, Nightmare. Warning: Leech Seed and rapid spin are linked */
+    callpeffects(player, player, "EndTurn64");
+
+    endTurnStatus(player);
+
+    if (koed(player)) {
+        return;
+    }
+
+    /* Status orbs */
+    callieffects(player, player, "EndTurn66");
+
+    /* Trapping moves damage and Curse. Warning: Rapid spin and trapping moves are linked */
+    callpeffects(player, player, "EndTurn68");
+
+    if (koed(player))
+        return;
+
+    /* Bad dreams -- on others */
+    callaeffects(player,player, "EndTurn69");
+
+    /* Outrage, Uproar */
+    callpeffects(player, player, "EndTurn610");
+
+    /* Disable, taunt, encore, magnet rise, heal block, embargo */
+    callpeffects(player, player, "EndTurn611");
+
+    /* Roost */
+    callpeffects(player, player, "EndTurn");
+
+    /* Yawn */
+    callpeffects(player, player, "EndTurn617");
+
+    /* Sticky barb */
+    callieffects(player, player, "EndTurn618");
+}
+
 void BattleSituation::notifyFail(int p)
 {
     notify(All, Failed, p);
@@ -714,12 +749,15 @@ void BattleSituation::notifyFail(int p)
 
 void BattleSituation::endTurnStatus(int player)
 {
-    if (koed(player) || hasWorkingAbility(player, Ability::MagicGuard))
+    if (koed(player))
         return;
 
     switch(poke(player).status())
     {
     case Pokemon::Burnt:
+        if (hasWorkingAbility(player, Ability::MagicGuard))
+            return;
+
         notify(All, StatusMessage, player, qint8(HurtBurn));
 
         if (useBattleLog)
@@ -733,6 +771,12 @@ void BattleSituation::endTurnStatus(int player)
             sendAbMessage(45,0,player,0,Pokemon::Poison);
             healLife(player, poke(player).totalLifePoints()/8);
         } else {
+            if (hasWorkingAbility(player, Ability::MagicGuard)) {
+                /* Toxic still increases under magic guard */
+                if (poke(player).statusCount() != 0)
+                    poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
+                return;
+            }
             notify(All, StatusMessage, player, qint8(HurtPoison));
 
             if (useBattleLog)
@@ -938,10 +982,13 @@ void BattleSituation::analyzeChoice(int slot)
     } else {
         /* FATAL FATAL */
     }
-    notify(All, BlankMessage, Player1);
 
-    if (useBattleLog)
-        appendBattleLog("BlankMessage", "");
+    if (gen() >= 3) {
+        notify(All, BlankMessage, Player1);
+
+        if (useBattleLog)
+            appendBattleLog("BlankMessage", "");
+    }
 }
 
 void BattleSituation::shiftSpots(int spot1, int spot2, bool silent)
@@ -1108,8 +1155,23 @@ void BattleSituation::analyzeChoices()
                 requestSwitchIns();
             }
 
-            if (!hasMoved(players[i]))
+            if (!hasMoved(players[i])) {
                 analyzeChoice(players[i]);
+
+                if (!multiples() && (koed(0) || koed(1))) {
+                    testWin();
+                    selfKoer() = -1;
+                    break;
+                }
+
+                if (gen() <= 2) {
+                    personalEndTurn(players[i]);
+                    notify(All, BlankMessage, Player1);
+
+                    if (useBattleLog)
+                        appendBattleLog("BlankMessage", "");
+                }
+            }
             testWin();
             selfKoer() = -1;
         }
@@ -1492,7 +1554,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     if (p.statusCount() > 0) {
         if (p.status() == Pokemon::Poisoned)
-            p.statusCount() = 14;
+            p.statusCount() = gen() <= 2 ? 0 : 14;
         else if (p.status() != Pokemon::Asleep)
             p.statusCount() = 0;
     }
@@ -1532,7 +1594,8 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     turnMemory(slot)["CantGetToMove"] = true;
 
-    ItemEffect::setup(poke(slot).item(), slot, *this);
+    if (gen() >= 2)
+        ItemEffect::setup(poke(slot).item(), slot, *this);
 
     calleffects(slot, slot, "UponSwitchIn");
     callseffects(slot, slot, "UponSwitchIn");
@@ -1550,7 +1613,8 @@ void BattleSituation::callEntryEffects(int player)
            So All those must be taken in account when changing something to
            how the items are set up. */
         callieffects(player, player, "UponSetup");
-        acquireAbility(player, poke(player).ability(), true);
+        if (gen() >= 3)
+            acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
     }
 }
@@ -1636,6 +1700,8 @@ void BattleSituation::callseffects(int source, int target, const QString &name)
 
 void BattleSituation::callieffects(int source, int target, const QString &name)
 {
+    if (gen() <= 1)
+        return;
     //Klutz
     if (hasWorkingItem(source, poke(source).item())) {
         ItemEffect::activate(name, poke(source).item(), source, target, *this);
@@ -1644,6 +1710,8 @@ void BattleSituation::callieffects(int source, int target, const QString &name)
 
 void BattleSituation::callaeffects(int source, int target, const QString &name)
 {
+    if (gen() <= 2)
+        return;
     if (hasWorkingAbility(source, ability(source)))
         AbilityEffect::activate(name, ability(source), source, target, *this);
 }
@@ -3524,6 +3592,9 @@ int BattleSituation::calculateDamage(int p, int t)
 
     damage = damage * (10 + turnMemory(p).value("Mod3Berry").toInt())/ 10;
 
+    if (gen() == 2)
+        damage += 1;
+
     return damage;
 }
 
@@ -3812,7 +3883,9 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         changeSprite(slot, newforme);
 
         fpoke(slot).id = newforme;
-        acquireAbility(slot, p.ability());
+
+        if (gen() >= 3)
+            acquireAbility(slot, p.ability());
 
         for (int i = 1; i < 6; i++)
             fpoke(slot).stats[i] = p.normalStat(i);
@@ -3859,19 +3932,25 @@ void BattleSituation::healLife(int player, int healing)
 
 void BattleSituation::healDamage(int player, int target)
 {
-    int attack = tmove(player).attack;
-
-    if (attack == Move::MorningSun || attack == Move::Moonlight || attack == Move::Synthesis || attack == Move::Swallow)
-        return;
-
     int healing = tmove(player).healing;
 
     if ((healing > 0 && koed(target)) || (healing < 0 && koed(player)))
         return;
 
     if (healing > 0) {
-        sendMoveMessage(60, 0, target, tmove(player).type);
-        healLife(target, poke(target).totalLifePoints() * healing / 100);
+        if(poke(target).lifePoints() < poke(target).totalLifePoints()) {
+            sendMoveMessage(60, 0, target, tmove(player).type);
+
+            int damage = poke(target).totalLifePoints() * healing / 100;
+
+            if (gen() >= 5 && damage * 100 / healing < poke(target).totalLifePoints())
+                damage += 1;
+
+            healLife(target, damage);
+        }else{
+            // No HP to heal
+            notifyFail(player);
+        }
     } else if (healing < 0){
         /* Struggle: actually recoil damage */
         notify(All, Recoil, player, true);
@@ -4296,6 +4375,10 @@ int BattleSituation::getStat(int player, int stat, int purityLevel)
 	ret = 1;
     }
 
+    if (gen() <= 2 && ret >= 1000) {
+        ret = 999;
+    }
+
     return ret;
 }
 
@@ -4626,4 +4709,80 @@ void BattleSituation::appendBattleLog(const QString &command, const QString &mes
 void BattleSituation::setLogging(const bool logging)
 {
     useBattleLog = logging;
+}
+
+int BattleSituation::getBattleDataPokenum(int player, int slot)
+{
+    return poke(player, slot).num().pokenum;
+
+}
+
+int BattleSituation::getBattleDataNature(int player, int slot)
+{
+    return poke(player, slot).nature();
+}
+
+int BattleSituation::getBattleDataGender(int player, int slot)
+{
+    return poke(player, slot).gender();
+}
+
+int BattleSituation::getBattleDataDVs(int player, int slot, int stat)
+{
+    return poke(player, slot).dvs()[stat];
+}
+
+int BattleSituation::getBattleDataEVs(int player, int slot, int stat)
+{
+    return poke(player, slot).evs()[stat];
+}
+
+int BattleSituation::getBattleDataShiny(int player, int slot)
+{
+    return poke(player, slot).shiny();
+}
+
+int BattleSituation::getBattleDataLevel(int player, int slot)
+{
+    return poke(player, slot).level();
+}
+
+QString BattleSituation::getBattleDataNickname(int player, int slot)
+{
+    return poke(player, slot).nick();
+}
+
+int BattleSituation::getBattleDataItem(int player, int slot)
+{
+    return poke(player, slot).item();
+}
+
+int BattleSituation::getBattleDataStatus(int player, int slot)
+{
+    return poke(player, slot).status();
+}
+
+int BattleSituation::getBattleDataHP(int player, int slot)
+{
+    return poke(player, slot).lifePoints();
+}
+
+int BattleSituation::getBattleDataMaxHP(int player, int slot)
+{
+    return poke(player, slot).totalLifePoints();
+}
+
+int BattleSituation::getBattleDataMoveSlot(int player, int slot, int moveSlot)
+{
+    return poke(player, slot).move(moveSlot).num();
+}
+
+int BattleSituation::getBattleDataMovePP(int player, int slot, int moveSlot)
+{
+    return poke(player, slot).move(moveSlot).PP();
+}
+
+int BattleSituation::getBattleDataMoveMaxPP(int player, int slot, int moveSlot)
+{
+    return poke(player, slot).move(moveSlot).totalPP();
 }

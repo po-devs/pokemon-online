@@ -96,7 +96,8 @@ struct BMLeppa : public BM
         if (init && (zeroPP || turn(b,s).value("BugBiter").toBool())) {
             b.eatBerry(s);
             b.sendBerryMessage(2,s,0,0,0,b.move(s,minmove));
-            b.gainPP(s,minmove,10);
+
+            b.gainPP(s,minmove,b.gen() <= 2 ? 5 : 10);
         }
     }
 };
