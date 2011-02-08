@@ -1102,6 +1102,7 @@ void BattleSituation::analyzeChoices()
 
     foreach(int player, switches) {
         analyzeChoice(player);
+        callEntryEffects(player);
         if (gen() <= 2) {
             personalEndTurn(players[i]);
             notify(All, BlankMessage, Player1);
@@ -1109,7 +1110,6 @@ void BattleSituation::analyzeChoices()
             if (useBattleLog)
                 appendBattleLog("BlankMessage", "");
         }
-        callEntryEffects(player);
     }
 
     std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
