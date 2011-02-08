@@ -38,4 +38,4 @@ Hitze-Orb von %s wurde aktiviert !|Toxik-Orb von %s wurde aktiviert !
 %s's %i raised %m's power!
 %s used its Red Card on %f!
 %s used its Escape Button!
-%s Berserk Gene activated!|%s's Attack went way up!
+%s's Berserk Gene activated!|%s's Attack went way up!

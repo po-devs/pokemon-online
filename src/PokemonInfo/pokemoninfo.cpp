@@ -1563,7 +1563,7 @@ void ItemInfo::loadNames()
 
 QList<ItemInfo::Effect> ItemInfo::Effects(int item, int gen)
 {
-    if (!Exists(item)) {
+    if (!Exists(item, gen)) {
 	return QList<ItemInfo::Effect>();
     } else {
         return isBerry(item) ? m_BerryEffects[item-8000] : m_RegEffects[gen-GEN_MIN][item];
@@ -1677,7 +1677,7 @@ QPixmap ItemInfo::HeldItem()
 
 QString ItemInfo::Name(int itemnum)
 {
-    if (!Exists(itemnum)) {
+    if ( itemnum < 0 || (itemnum < 8000 && m_RegItemNames.size() <= itemnum) || (itemnum >= 8000 && m_BerryNames.size() + 8000 <= itemnum) ) {
 	return 0;
     }
     if (itemnum < 8000) {

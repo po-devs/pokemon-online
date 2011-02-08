@@ -136,11 +136,6 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             return false;
         }
 
-        if (pokeid == Pokemon::Cloyster) {
-            int a;
-            a = 2;
-            a += 1;
-        }
         /* now we know the pokemon at least knows all moves */
         moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
 
