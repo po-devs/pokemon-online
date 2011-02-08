@@ -2301,7 +2301,7 @@ QScriptValue ScriptEngine::battleMoveMaxPP(int battleId, bool toFirstPlayer, int
     }
 }
 
-void ScriptEngine::forceBattle(int player1, int player2, int clauses, int mode)
+void ScriptEngine::forceBattle(int player1, int player2, int clauses, int mode, bool is_rated)
 {
     if (!loggedIn(player1) || !loggedIn(player2)) {
         warn("forceBattle", "player is not online.");
@@ -2314,6 +2314,7 @@ void ScriptEngine::forceBattle(int player1, int player2, int clauses, int mode)
     ChallengeInfo c;
     c.clauses = clauses;
     c.mode = mode;
+    c.rated = is_rated;
    
     myserver->startBattle(player1, player2, c);
 }
