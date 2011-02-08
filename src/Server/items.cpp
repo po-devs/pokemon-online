@@ -747,7 +747,7 @@ struct IMBerserkGene : public IM {
     static void os(int s, int, BS &b) {
         b.sendItemMessage(40, s, 0);
         b.sendItemMessage(40, s, 1);
-        b.inflictStatMod(s, Attack, 12, s, false);
+        b.inflictStatMod(s, Attack, 2, s, false);
         b.inflictConfused(s,s);
     }
 };
