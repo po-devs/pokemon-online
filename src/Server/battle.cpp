@@ -971,13 +971,14 @@ void BattleSituation::analyzeChoice(int slot)
         /* FATAL FATAL */
     }
 
-    if (gen() <= 2)
-        personalEndTurn(players[i]);
+    if (gen() >= 3) {
+        notify(All, BlankMessage, Player1);
 
-    notify(All, BlankMessage, Player1);
+        if (useBattleLog)
+            appendBattleLog("BlankMessage", "");
+    } else {
 
-    if (useBattleLog)
-        appendBattleLog("BlankMessage", "");
+    }
 }
 
 void BattleSituation::shiftSpots(int spot1, int spot2, bool silent)
@@ -1101,6 +1102,13 @@ void BattleSituation::analyzeChoices()
 
     foreach(int player, switches) {
         analyzeChoice(player);
+        if (gen() <= 2) {
+            personalEndTurn(players[i]);
+            notify(All, BlankMessage, Player1);
+
+            if (useBattleLog)
+                appendBattleLog("BlankMessage", "");
+        }
         callEntryEffects(player);
     }
 
@@ -1151,6 +1159,14 @@ void BattleSituation::analyzeChoices()
                     testWin();
                     selfKoer() = -1;
                     break;
+                }
+
+                if (gen() <= 2) {
+                    personalEndTurn(players[i]);
+                    notify(All, BlankMessage, Player1);
+
+                    if (useBattleLog)
+                        appendBattleLog("BlankMessage", "");
                 }
             }
             testWin();
