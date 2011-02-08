@@ -1840,6 +1840,8 @@ int TypeInfo::Number(const QString &pokename)
 
 QString TypeInfo::Name(int typenum)
 {
+    if (typenum >= m_Names.size())
+        return Name(0);
     return m_Names[typenum];
 }
 
