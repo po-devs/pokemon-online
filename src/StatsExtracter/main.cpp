@@ -169,10 +169,10 @@ struct SecondaryStuff {
         return *this;
     }
 
-    void complete(Skeleton &s, bool hiddenPower) const;
+    void complete(Skeleton &s, bool hiddenPower, bool newgen) const;
 };
 
-void SecondaryStuff::complete(Skeleton &s, bool hiddenPower) const
+void SecondaryStuff::complete(Skeleton &s, bool hiddenPower, bool newgen) const
 {
     static const char* stats[] = {"HP", "Atk", "Def", "SAtk", "SDef", "Spd"};
 
@@ -206,7 +206,7 @@ void SecondaryStuff::complete(Skeleton &s, bool hiddenPower) const
     }
 
     if (hiddenPower) {
-        int type = HiddenPowerInfo::Type(dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+        int type = HiddenPowerInfo::Type(newgen ? 3 : 2, dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
         QString name = TypeInfo::Name(type);
 
         s.addDefaultValue("hiddenpower", QString("[<span class='%1'>%2</span>]").arg(name.toLower(), name));
@@ -241,6 +241,7 @@ struct MoveSet {
     quint16 usage;
     quint16 num;
     RawSet raw;
+    quint8 gen;
 
     QMap<SecondaryStuff, SecondaryStuff> options;
 
@@ -287,11 +288,17 @@ MoveSet::MoveSet(char buffer[28], int usage, AbilityGroup abs)
     for (int i = 0; i < 3; i++) {
         abilities[i] = 0;
     }
-    for (int i = 0; i < 3; i++) {
-        if (ab == abs.ab(i)) {
-            abilities[i] = usage;
-            break;
+
+    if (ab != 0) {
+        for (int i = 0; i < 3; i++) {
+            if (ab == abs.ab(i)) {
+                abilities[i] = usage;
+                break;
+            }
         }
+        gen = 3;
+    } else {
+        gen = 2;
     }
 
     raw.level = buf [2] & 0xFF;
@@ -346,17 +353,19 @@ void MoveSet::complete(Skeleton &m) const
         }
     }
 
-    if (abs.size() == 1) {
-        int key = abs.begin().key();
-        m.addDefaultValue("abilities", AbilityInfo::Name(ab.ab(key)));
-    } else {
-        QStringList abs2;
-        for (int i = 0; i < 3; i++) {
-            if (abs.contains(i)) {
-                abs2.push_back(QString("%1 (%2 %)").arg(AbilityInfo::Name(ab.ab(i))).arg(double(100*abilities[i])/tot,0,'f',1));
+    if (gen >= 3) {
+        if (abs.size() == 1) {
+            int key = abs.begin().key();
+            m.addDefaultValue("abilities", AbilityInfo::Name(ab.ab(key)));
+        } else {
+            QStringList abs2;
+            for (int i = 0; i < 3; i++) {
+                if (abs.contains(i)) {
+                    abs2.push_back(QString("%1 (%2 %)").arg(AbilityInfo::Name(ab.ab(i))).arg(double(100*abilities[i])/tot,0,'f',1));
+                }
             }
+            m.addDefaultValue("abilities", abs2.join(" / "));
         }
-        m.addDefaultValue("abilities", abs2.join(" / "));
     }
 
     QMultiMap<int, SecondaryStuff> usageMap;
@@ -373,13 +382,13 @@ void MoveSet::complete(Skeleton &m) const
     s.addDefaultValue("percentage", QString::number(double(100*it.value().usage)/usage, 'f', 1));
 
     bool hp = hasHiddenPower();
-    it.value().complete(s, hp);
+    it.value().complete(s, hp, gen >= 3);
 
     while (it.hasPrevious()) {
         it.previous();
         Skeleton &s = m.appendChild("statset");
         s.addDefaultValue("percentage", QString::number(double(100*it.value().usage)/usage, 'f', 1));
-        it.value().complete(s, hp);
+        it.value().complete(s, hp, gen >= 3);
     }
 
     m.addDefaultValue("move1", MoveInfo::Name(raw.moves[0]));
@@ -682,7 +691,9 @@ int main(int argc, char *argv[])
                 }
             }
 
-            parseGlobals(s, abilities, totAbilities, "globalability", "ability", &AbilityInfo::Name);
+            if (totAbilities > 0) {
+                parseGlobals(s, abilities, totAbilities, "globalability", "ability", &AbilityInfo::Name);
+            }
 
             QFile pokef(outDir.absoluteFilePath("%1.html").arg(pokemon));
             pokef.open(QIODevice::WriteOnly);
