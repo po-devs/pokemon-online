@@ -653,6 +653,8 @@ void BattleSituation::endTurn()
 
 void BattleSituation::personalEndTurn(int player)
 {
+    if (koed(player))
+        return;
     endTurnStatus(player);
     callpeffects(player, player, "EndTurn681");
     /* Leech Seed, Nightmare. Warning: Leech Seed and rapid spin are linked */
@@ -969,12 +971,13 @@ void BattleSituation::analyzeChoice(int slot)
         /* FATAL FATAL */
     }
 
-    if (gen() >= 3) {
-        notify(All, BlankMessage, Player1);
+    if (gen() <= 2)
+        personalEndTurn(players[i]);
 
-        if (useBattleLog)
-            appendBattleLog("BlankMessage", "");
-    }
+    notify(All, BlankMessage, Player1);
+
+    if (useBattleLog)
+        appendBattleLog("BlankMessage", "");
 }
 
 void BattleSituation::shiftSpots(int spot1, int spot2, bool silent)
@@ -1148,14 +1151,6 @@ void BattleSituation::analyzeChoices()
                     testWin();
                     selfKoer() = -1;
                     break;
-                }
-
-                if (gen() <= 2) {
-                    personalEndTurn(players[i]);
-                    notify(All, BlankMessage, Player1);
-
-                    if (useBattleLog)
-                        appendBattleLog("BlankMessage", "");
                 }
             }
             testWin();
