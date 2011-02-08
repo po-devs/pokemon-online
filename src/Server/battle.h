@@ -400,6 +400,7 @@ private:
 
     void appendBattleLog(const QString &command, const QString &message);
     QString name(int id);
+    QString nick(int slot);
 signals:
     /* Due to threading issue, and the signal not being direct,
        The battle might already be deleted when the signal is received.
