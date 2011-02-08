@@ -2805,7 +2805,7 @@ struct MMHealBlock: public MM
     static void uas(int s, int t, BS &b) {
 	poke(b,t)["HealBlockCount"] = 5;
         addFunction(poke(b,t), "EndTurn611", "HealBlock", &et);
-	addFunction(turn(b,t), "MovePossible", "HealBlock", &mp);
+        addFunction(poke(b,t), "MovePossible", "HealBlock", &mp);
 	addFunction(poke(b,t), "MovesPossible", "HealBlock", &msp);
 	b.sendMoveMessage(59,0,s,type(b,s),t);
     }
@@ -2817,6 +2817,7 @@ struct MMHealBlock: public MM
             b.sendMoveMessage(59,2,s,Type::Psychic);
             removeFunction(poke(b,s), "EndTurn611", "HealBlock");
 	    removeFunction(poke(b,s), "MovesPossible", "HealBlock");
+            removeFunction(poke(b,s), "MovePossible", "HealBlock");
 	}
     }
 
