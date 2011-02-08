@@ -84,11 +84,7 @@ struct IMChoiceItem : public IM
     }
 
     static void us(int s, int, BS &b) {
-        /* In gens after 5, the user is not locked anymore
-           even after tricking with a foe */
-        if (b.gen() >= 5) {
-            poke(b,s).remove("ChoiceMemory");
-        }
+        poke(b,s).remove("ChoiceMemory");
     }
 
     static void mp(int s, int, BS &b) {
@@ -745,7 +741,7 @@ struct IMCassette : public IM {
 
 struct IMBerserkGene : public IM {
     IMBerserkGene() {
-        functions["OnSetup"] = &os;
+        functions["UponSetup"] = &os;
     }
 
     static void os(int s, int, BS &b) {
