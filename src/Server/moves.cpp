@@ -1050,7 +1050,15 @@ struct MMBellyDrum : public MM
             if (b.gen() == 2 && move(b,s) == Move::BellyDrum) {
                 b.inflictStatMod(s, Attack, 2, s);
             }
-	}
+        } else if (move(b,s) == Move::BellyDrum) {
+            if (b.hasMaximalStatMod(s, Attack)) {
+                turn(b,s)["Failed"] = true;
+            } else if (b.gen() <= 2) {
+                if (b.getStat(s, Attack) == 999) {
+                    turn(b,s)["Failed"] = true;
+                }
+            }
+        }
     }
     static void uas(int s, int, BS &b) {
         if (move(b,s) == Move::BellyDrum) {
