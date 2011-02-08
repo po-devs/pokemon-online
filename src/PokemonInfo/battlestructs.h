@@ -352,7 +352,9 @@ struct ChallengeInfo
         Singles,
         Doubles,
         Triples,
-        Rotation
+        Rotation,
+        ModeFirst = Singles,
+        ModeLast = Rotation
     };
 
     static const int numberOfClauses = 9;
