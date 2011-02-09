@@ -1119,7 +1119,7 @@ void BattleSituation::analyzeChoices()
         analyzeChoice(player);
         callEntryEffects(player);
         if (gen() <= 2) {
-            personalEndTurn(players[i]);
+            personalEndTurn(player);
             notify(All, BlankMessage, Player1);
 
             if (useBattleLog)
