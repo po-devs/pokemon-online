@@ -1904,6 +1904,15 @@ void BattleSituation::testCritical(int player, int target)
         if (useBattleLog)
             appendBattleLog("CriticalHit", toColor(tr("A critical hit!"), "#6b0000"));
     }
+
+    /* In GSC, if you don't got superior boosts in offensive than in their defensive stat, you ignore boosts, burn, and screens,
+       otherwise you ignore none of them */
+    if (gen() == 2) {
+        int stat = 1 + (tmove(player).category - 1) * 2;
+        if (fpoke(player).boosts[stat] <= fpoke(target).boosts[stat+2]) {
+            turnMemory(player)["CritIgnoresAll"] = true;
+        }
+    }
 }
 
 bool BattleSituation::testStatus(int player)
@@ -3537,12 +3546,14 @@ int BattleSituation::calculateDamage(int p, int t)
     power = std::min(power, 65535);
     int damage = ((std::min(((level * 2 / 5) + 2) * power, 65535) * attack / 50) / def);
     //Guts, burn
-    damage = damage * (
-            (poke.status() == Pokemon::Burnt && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts))
-            ? PokeFraction(1,2) : PokeFraction(1,1));
+    if (gen() != 2 || !turnMemory(p).value("CritIgnoresAll").toBool()) {
+        damage = damage * (
+                (poke.status() == Pokemon::Burnt && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts))
+                ? PokeFraction(1,2) : PokeFraction(1,1));
+    }
 
     /* Light screen / Reflect */
-    if (!crit && !hasWorkingAbility(p, Ability::SlipThrough) &&
+    if ( (!crit || (gen() == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::SlipThrough) &&
         teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
         if (!multiples())
             damage /= 2;
@@ -4582,11 +4593,8 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
                 }
             } else if (gen() == 1){
                 boost = 0;
-            } else if (gen() == 2) {
-                /* In gen 2, i made it that if attboost - defboost < 0, stat boosts are ignored. */
-                if (boost - fpoke(attacked).boosts[stat+2] < 0) {
-                    boost = 0;
-                }
+            } else if (gen() == 2 && turnMemory(attacker).value("CritIgnoresAll").toBool()) {
+                boost = 0;
             }
         }
     }
