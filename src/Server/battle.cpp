@@ -4569,8 +4569,13 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
                 } else if ((stat == Defense || stat == SpDefense) && boost > 0) {
                     boost = 0;
                 }
-            } else {
+            } else if (gen() == 1){
                 boost = 0;
+            } else if (gen() == 2) {
+                /* In gen 2, i made it that if attboost - defboost < 0, stat boosts are ignored. */
+                if (boost - fpoke(attacked).boosts[stat+2] < 0) {
+                    boost = 0;
+                }
             }
         }
     }
