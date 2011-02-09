@@ -2976,7 +2976,7 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
 bool BattleSituation::gainStatMod(int player, int stat, int bonus, int , bool tell)
 {
     int boost = fpoke(player).boosts[stat];
-    if (boost < 6) {
+    if (boost < 6 && (gen() > 2 || getStat(player, stat) < 999)) {
         if (tell)
         {
             notify(All, StatChange, player, qint8(stat), qint8(bonus));
