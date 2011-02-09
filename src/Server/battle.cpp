@@ -582,6 +582,21 @@ void BattleSituation::endTurn()
 
     endTurnWeather();
 
+    if (gen() == 2) {
+        foreach(int player, players) {
+            if (poke(player).status() == Pokemon::Frozen)
+            {
+                if (true_rand() % 255 <= 25)
+                {
+                    healStatus(player, Pokemon::Frozen);
+                    notify(All, StatusMessage, player, qint8(FreeFrozen));
+                    if (useBattleLog)
+                        appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
+                }
+            }
+        }
+    }
+
     testWin();
 
     if (gen() >= 5) {
@@ -1920,7 +1935,7 @@ bool BattleSituation::testStatus(int player)
     }
     if (poke(player).status() == Pokemon::Frozen)
     {
-        if (gen() == 1 || (true_rand() % 255 > 51 && !(tmove(player).flags & Move::UnthawingFlag)) )
+        if (gen() <=2 || (true_rand() % 255 > 51 && !(tmove(player).flags & Move::UnthawingFlag)) )
         {
             notify(All, StatusMessage, player, qint8(PrevFrozen));
             if (useBattleLog)
@@ -1931,10 +1946,6 @@ bool BattleSituation::testStatus(int player)
         notify(All, StatusMessage, player, qint8(FreeFrozen));
         if (useBattleLog)
             appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
-
-        /* In gen 2, pokemon take a full turn to unthaw */
-        if (gen() == 2)
-            return false;
     }
 
     if (turnMemory(player)["Flinched"].toBool()) {
