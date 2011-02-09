@@ -4746,8 +4746,10 @@ struct MMTransform : public MM {
             po.boosts[i] = pt.boosts[i];
         }
 
-        b.loseAbility(s);
-        b.acquireAbility(s, b.ability(t));
+        if (b.gen() >= 3) {
+            b.loseAbility(s);
+            b.acquireAbility(s, b.ability(t));
+        }
 
         poke(b,s)["Transformed"] = true;
     }

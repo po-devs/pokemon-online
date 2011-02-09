@@ -2677,6 +2677,9 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
 }
 
 void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
+    if (gen() <= 2)
+        return;
+
     fpoke(play).ability = ab;
 
     if (!pokeMemory(play).value("AbilityNullified").toBool())
