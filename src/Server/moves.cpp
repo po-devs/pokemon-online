@@ -1032,6 +1032,12 @@ struct MMRest : public MM
         b.poke(s).statusCount() = 2;
         b.poke(s).oriStatusCount() = 2;
         poke(b,s)["Rested"] = true;
+
+        /* In GSC, when you rest when asleep thanks to sleep talk,
+           sleep clause resets */
+        if (b.currentForcedSleepPoke[b.player(s)] == b.currentInternalId(s)) {
+            b.currentForcedSleepPoke[b.player(s)] = -1;
+        }
     }
 };
 
