@@ -3384,7 +3384,9 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
             poke(player).oriStatusCount() = poke(player).statusCount();
     }
     else if (status == Pokemon::Asleep) {
-        if (gen() <= 4) {
+        if (gen() == 2) {
+            poke(player).statusCount() = 1 + (true_rand()) % 6;
+        } else if (gen() <= 4) {
             poke(player).statusCount() = 1 + (true_rand()) % 4;
         } else {
             poke(player).statusCount() = 1 + (true_rand()) % 3;
