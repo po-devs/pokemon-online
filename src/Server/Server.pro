@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     theme.cpp \
     tiertree.cpp \
     tiermachine.cpp \
-    sessiondatafactory.cpp
+    sessiondatafactory.cpp \
+    sfmlsocket.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
@@ -84,7 +85,8 @@ HEADERS += player.h \
     ../Utilities/contextswitch.h \
     ../Utilities/mtrand.h \
     miscmoves.h \
-    sessiondatafactory.h
+    sessiondatafactory.h \
+    sfmlsocket.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
@@ -98,4 +100,8 @@ HEADERS += player.h \
 CONFIG(nogui) { 
     QT -= gui
     DEFINES += PO_NO_GUI
+}
+CONFIG(sfml) {
+    DEFINES += SFML_SOCKETS
+    LIBS += -lsfml-network -lsfml-system
 }

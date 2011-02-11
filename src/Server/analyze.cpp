@@ -6,25 +6,6 @@
 
 using namespace NetworkServ;
 
-Analyzer::Analyzer(QTcpSocket *sock, int id) : mysocket(sock, id), pingedBack(true)
-{
-    connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
-    connect(&socket(), SIGNAL(isFull(QByteArray)), this, SLOT(commandReceived(QByteArray)));
-    connect(&socket(), SIGNAL(_error()), this, SLOT(error()));
-    connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
-
-    QTimer *t = new QTimer(this);
-    t->setInterval(30*1000);
-    t->start();
-    connect(t, SIGNAL(timeout()),SLOT(keepAlive()));
-    /* Only if its not registry */
-    if (id != 0) {
-        sock->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
-    }
-
-    delayCount = 0;
-}
-
 Analyzer::~Analyzer()
 {
     blockSignals(true);
@@ -72,7 +53,7 @@ void Analyzer::engageBattle(int battleid, int , int id, const TeamBattle &team, 
 void Analyzer::connectTo(const QString &host, quint16 port)
 {
     connect(&socket(), SIGNAL(connected()), SIGNAL(connected()));
-    mysocket.connectToHost(host, port);
+    socket().connectToHost(host, port);
 }
 
 void Analyzer::close() {
@@ -214,7 +195,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
     switch (command) {
     case Login:
         {
-            if (mysocket.id() != 0) {
+            if (socket().id() != 0) {
                 TeamInfo team;
                 bool ladder, show_team;
                 QColor c;
@@ -282,7 +263,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         pingedBack = true;
         break;
     case Register:
-        if (mysocket.id() != 0)
+        if (socket().id() != 0)
         {
             qDebug() << "Hash received";
             emit wannaRegister();
@@ -491,14 +472,14 @@ void Analyzer::undelay()
     }
 }
 
-Network & Analyzer::socket()
+GenericNetwork & Analyzer::socket()
 {
-    return mysocket;
+    return *mysocket;
 }
 
-const Network & Analyzer::socket() const
+const GenericNetwork & Analyzer::socket() const
 {
-    return mysocket;
+    return *mysocket;
 }
 
 void Analyzer::notify(int command)
