@@ -749,6 +749,7 @@ struct IMBerserkGene : public IM {
         b.sendItemMessage(40, s, 1);
         b.inflictStatMod(s, Attack, 2, s, false);
         b.inflictConfused(s,s);
+        b.disposeItem(s);
     }
 };
 
