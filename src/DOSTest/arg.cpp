@@ -32,7 +32,7 @@ IOManager::IOManager()
     connect(a, SIGNAL(connected()), SLOT(connectionEstablished()));
     connect(a, SIGNAL(disconnected()), SLOT(goodToDelete()));
     on = true;
-    a->connectTo("84.20.150.28", 5080);
+    a->connectTo("localhost", 5080);
 }
 
 IOManager::~IOManager()
@@ -59,7 +59,7 @@ void IOManager::connectionEstablished()
     qDebug() << "Team set";
 
     QString nick;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 3; i++) {
         nick.append( char(( (rand()+clock()) %2) ? 'A' + ((rand()+clock()) % 26) : 'a' + ( (rand()+clock()) % 26)));
     }
 
@@ -69,7 +69,7 @@ void IOManager::connectionEstablished()
 
     a->login(f);
 
-    this->t.start((rand()%10 + 1)*400,this);
+    this->t.start((rand()%10 + 1)*40000,this);
     qDebug() << "End connection established";
 }
 
@@ -88,7 +88,7 @@ void IOManager::timerEvent(QTimerEvent *)
         d.ranged = false;
         d.rated = false;
         d.sameTier = false;
-        a->notify(NetworkCli::FindMatch, d);
+        a->notify(NetworkCli::FindBattle, d);
         break;
     }
     case 2:

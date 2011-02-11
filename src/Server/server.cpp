@@ -1,4 +1,5 @@
 #include <QtNetwork>
+#include "sfmlsocket.h"
 #include <ctime> /* for random numbers, time(NULL) needed */
 #include <algorithm>
 #include "../PokemonInfo/pokemoninfo.h"
@@ -35,7 +36,9 @@ Server::Server(quint16 port) : registry_connection(NULL),serverPort(port), showL
 
 Server::~Server()
 {
+#ifndef SFML_SOCKETS
     myserver->deleteLater();
+#endif
     delete pluginManager;
 }
 
@@ -53,7 +56,12 @@ void Server::start(){
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
+#ifndef SFML_SOCKETS
     myserver = new QTcpServer();
+#else
+    manager.Launch();
+    myserver = manager.createSocket();
+#endif
     pluginManager = new PluginManager();
 
     srand(time(NULL));
@@ -126,14 +134,26 @@ void Server::start(){
     battleThread.start();
     printLine(tr("Battle Thread started"));
 
-    if (!server()->listen(QHostAddress::Any, serverPort))
+    bool listenSuccess;
+
+#ifndef SFML_SOCKETS
+    listenSuccess = server()->listen(QHostAddress::Any, serverPort);
+#else
+    listenSuccess = server()->listen(serverPort);
+#endif
+
+    if (!listenSuccess)
     {
         printLine(tr("Unable to listen to port %1").arg(serverPort));
     } else {
         printLine(tr("Starting to listen to port %1").arg(serverPort));
     }
 
+#ifndef SFML_SOCKETS
     connect(server(), SIGNAL(newConnection()), SLOT(incomingConnection()));
+#else
+    connect(server(), SIGNAL(active()), SLOT(incomingConnection()));
+#endif
     connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(dosKick(int)));
     connect(AntiDos::obj(), SIGNAL(ban(QString)), SLOT(dosBan(QString)));
 
@@ -192,11 +212,17 @@ void Server::print(const QString &line)
     serverIns->printLine(line, false, true);
 }
 
+#ifndef SFML_SOCKETS
 QTcpServer * Server::server()
 {
     return myserver;
 }
-
+#else
+GenericSocket * Server::server()
+{
+    return myserver;
+}
+#endif
 void Server::processDailyRun()
 {
     sendAll("The server is updating all the ratings, as it does daily. It may take a bit of time.");
@@ -679,6 +705,7 @@ void Server::ban(int id, int src) {
 void Server::dosKick(int id) {
     if (playerExist(id)) {
         sendAll(tr("Player %1 (IP %2) is being overactive.").arg(name(id), player(id)->ip()));
+        exit(0);
     }
     silentKick(id);
 }
@@ -886,10 +913,17 @@ int Server::auth(int id) const
 
 void Server::incomingConnection()
 {
-    int id = freeid();
+    GenericSocket * newconnection = server()->nextPendingConnection();
 
-    QTcpSocket * newconnection = server()->nextPendingConnection();
+    if (!newconnection)
+        return;
+
+    int id = freeid();
+#ifndef SFML_SOCKETS
     QString ip = newconnection->peerAddress().toString();
+#else
+    QString ip = newconnection->ip();
+#endif
 
     if (numPlayers() >= serverPlayerMax && serverPlayerMax != 0){
         printLine(QString("Stopped IP %1 from logging in, server full.").arg(ip));
@@ -912,7 +946,9 @@ void Server::incomingConnection()
 
     printLine(QString("Received pending connection on slot %1 from %2").arg(id).arg(ip));
 
+#ifndef SFML_SOCKETS
     newconnection->setSocketOption(QAbstractSocket::LowDelayOption, lowTCPDelay);
+#endif
     myplayers[id] = new Player(newconnection, id);
 
     emit player_incomingconnection(id);

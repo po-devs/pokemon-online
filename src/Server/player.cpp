@@ -10,7 +10,7 @@
 #include "server.h"
 #include "analyze.h"
 
-Player::Player(QTcpSocket *sock, int id) : myid(id)
+Player::Player(GenericSocket *sock, int id) : myid(id)
 {
     myrelay = new Analyzer(sock, id);
     lockCount = 0;

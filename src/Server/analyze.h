@@ -94,7 +94,8 @@ class Analyzer : public QObject
 {
     Q_OBJECT
 public:
-    Analyzer(QTcpSocket *sock, int id);
+    template<class SocketClass>
+    Analyzer(SocketClass *sock, int id);
     ~Analyzer();
 
     /* functions called by the server */
@@ -203,18 +204,42 @@ public slots:
     void undelay();
     void keepAlive();
 private:
-    Network &socket();
-    const Network &socket() const;
+    GenericNetwork &socket();
+    const GenericNetwork &socket() const;
 
     void dealWithCommand(const QByteArray &command);
 
     QLinkedList<QByteArray> delayedCommands;
     int delayCount;
 
-    Network mysocket;
+    GenericNetwork *mysocket;
     QMutex mutex;
     bool pingedBack;
 };
+
+template<class SocketClass>
+Analyzer::Analyzer(SocketClass *sock, int id) : mysocket(new Network<SocketClass>(sock, id)), pingedBack(true)
+{
+    connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
+    connect(&socket(), SIGNAL(isFull(QByteArray)), this, SLOT(commandReceived(QByteArray)));
+    connect(&socket(), SIGNAL(_error()), this, SLOT(error()));
+    connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
+
+    socket().setParent(this);
+
+    QTimer *t = new QTimer(this);
+    t->setInterval(30*1000);
+    t->start();
+    connect(t, SIGNAL(timeout()),SLOT(keepAlive()));
+    /* Only if its not registry */
+    if (id != 0) {
+#ifndef SFML_SOCKETS
+        sock->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+#endif
+    }
+
+    delayCount = 0;
+}
 
 template<class T>
 void Analyzer::notify(int command, const T& param)

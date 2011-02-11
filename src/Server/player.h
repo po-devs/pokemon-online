@@ -4,11 +4,11 @@
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "playerinterface.h"
+#include "sfmlsocket.h"
 
 class Challenge;
 class BattleSituation;
 class Analyzer;
-class QTcpSocket;
 
 /* a single player */
 /***
@@ -44,7 +44,7 @@ public:
         Away = 4
     };
 
-    Player(QTcpSocket *sock, int id);
+    Player(GenericSocket *sock, int id);
     ~Player();
 
     /* returns all the regular info */

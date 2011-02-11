@@ -3,6 +3,7 @@
 
 #include "../Utilities/contextswitch.h"
 #include "../PokemonInfo/networkstructs.h"
+#include "sfmlsocket.h"
 #include "channel.h"
 
 #define PRINTOPT(a, b) (fprintf(stdout, "  %-25s\t%s\n", a, b))
@@ -179,7 +180,12 @@ private:
         The disavandtage is that you don't have clean ids, that are close to 0. */
     mutable int playercounter, battlecounter, channelcounter;
 
+#ifndef SFML_SOCKETS
     QTcpServer *myserver;
+#else
+    GenericSocket *myserver;
+    SocketManager manager;
+#endif
     PluginManager *pluginManager;
 
     /* storing players */
@@ -193,7 +199,11 @@ private:
     QHash<int, BattleSituation *> mybattles;
     QHash<qint32, Battle> battleList;
 
+#ifndef SFML_SOCKETS
     QTcpServer *server();
+#else
+    GenericSocket *server();
+#endif
     Player * player(int i) const;
     /* gets an id that's not used */
     int freeid() const;
