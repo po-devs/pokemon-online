@@ -20,7 +20,7 @@ SocketManager::~SocketManager() {
 
 void SocketManager::Run() {
     while (!finished) {
-        sf::Sleep(0.030);
+        sf::Sleep(0.020);
 
         foreach(SocketSQ *s, heap) {
             s->fill();
