@@ -705,7 +705,6 @@ void Server::ban(int id, int src) {
 void Server::dosKick(int id) {
     if (playerExist(id)) {
         sendAll(tr("Player %1 (IP %2) is being overactive.").arg(name(id), player(id)->ip()));
-        exit(0);
     }
     silentKick(id);
 }
