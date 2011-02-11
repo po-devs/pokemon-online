@@ -469,7 +469,6 @@ int PokemonBox::getNumOf(const TB_PokemonItem *it) const
         if (it == pokemons[i])
             return i;
     }
-    exit(0);
     return -1;
 }
 
