@@ -2747,6 +2747,7 @@ struct MMHealingWish : public MM
 
     static void btl(int s, int, BS &b) {
         turn(b,s)["HealingWishSuccess"] = true;
+        b.koPoke(s);
     }
 
     static void aaf(int s, int, BS &b) {
