@@ -359,7 +359,7 @@
 117-2#wake up slap
 
 56-0#gyro ball. 0 is to tell it's up to us to be slow
-37|61#healing wish
+61#healing wish
 15#brine
 89#natural gift
 42#only works when protect detect
@@ -459,7 +459,7 @@
 
 11#roar of time
 
-37|61#Lunar dance
+61#Lunar dance
 24#crush grip
 10#magma storm
 
