@@ -1376,8 +1376,10 @@ struct AMCompetitiveSpirit : public AM
         functions["AfterNegativeStatChange"] = &ansc;
     }
 
-    static void ansc(int s, int, BS &b) {
+    static void ansc(int s, int ts, BS &b) {
         if (b.hasMaximalStatMod(s, Attack))
+            return;
+        if (ts != -1 && b.player(ts) == b.player(s))
             return;
         /* Fix me : ability message */
         b.sendAbMessage(80, 0, s);
