@@ -1772,6 +1772,31 @@ struct AMFriendGuard : public AM
     }
 };
 
+struct AMNaturalCure : public AM {
+    AMNaturalCure () {
+        functions["UponSwitchOut"] = &uso;
+    }
+
+    static void uso (int s, int, BS &b) {
+        if (b.gen() <= 4)
+            return;
+        b.healStatus(s, b.poke(s).status());
+    }
+};
+
+struct AMRegeneration : public AM {
+    AMRegeneration() {
+        functions["UponSwitchOut"] = &us;
+    }
+
+    static void us(int s, int, BS &b) {
+        if (!b.poke(s).isFull()) {
+            b.healLife(s, b.poke(s).totalLifePoints() / 3);
+            b.sendAbMessage(86, 0, s);
+        }
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -1794,6 +1819,7 @@ struct AMFriendGuard : public AM
     GeneralTargetChange
     PartnerStatModifier
     AfterKoing
+    UponSwitchOut
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
@@ -1841,7 +1867,7 @@ void AbilityEffect::init()
     REGISTER_AB(39, MagnetPull);
     REGISTER_AB(40, MoldBreaker);
     REGISTER_AB(41, MotorDrive);
-    //Natural cure, built-in
+    REGISTER_AB(42, NaturalCure);
     REGISTER_AB(43, Normalize);
     REGISTER_AB(44, OwnTempo);
     REGISTER_AB(45, Plus);
@@ -1875,7 +1901,6 @@ void AbilityEffect::init()
     REGISTER_AB(75, VictoryStar);
     REGISTER_AB(76, WeakKneed);
     REGISTER_AB(77, DarumaMode);
-    //
     REGISTER_AB(78, WickedThief);
     REGISTER_AB(79, Encourage);
     REGISTER_AB(80, CompetitiveSpirit);
@@ -1884,7 +1909,7 @@ void AbilityEffect::init()
     REGISTER_AB(83, MultiScale);
     REGISTER_AB(84, HeatRampage);
     REGISTER_AB(85, Telepathy);
-    //REGISTER_AB(86, Regeneration);
+    REGISTER_AB(86, Regeneration);
     REGISTER_AB(87, MagicMirror);
     REGISTER_AB(88, Harvest);
     REGISTER_AB(89, CloudNine);

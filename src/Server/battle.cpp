@@ -1763,13 +1763,12 @@ void BattleSituation::sendBack(int player, bool silent)
         notify(All, SendBack, player);
 
     if (!koed(player)) {
+        callaeffects(player,player,"UponSwitchOut");
         /* Natural cure bypasses gastro acid (tested in 4th gen, but not role play/skill swap),
            so we don't check if the ability is working, and just make a test
            directly. */
-        if (ability(player) == Ability::NaturalCure) {
+        if (gen() <= 4 && ability(player) == Ability::NaturalCure) {
             healStatus(player, poke(player).status());
-        } else if (ability(player) == Ability::Regeneration) {
-            healLife(player, poke(player).totalLifePoints() / 3);
         }
     }
 }
