@@ -3944,7 +3944,7 @@ struct MMSmellingSalt : public MM
             return;
 
         int st = turn(b,s)["SmellingSalt_Arg"].toInt();
-        if ( (st == 0 && b.poke(t).status() != Pokemon::Fine) || b.poke(t).status() == st) {
+        if ( (st == 0 && b.poke(t).status() != Pokemon::Fine) || (st != 0 && b.poke(t).status() == st)) {
             tmove(b, s).power = tmove(b, s).power * 2;
 	}
     }
