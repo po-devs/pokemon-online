@@ -703,19 +703,19 @@ void ScriptEngine::removeVal(const QString &key)
 
 void ScriptEngine::saveVal(const QString &file, const QString &key, const QVariant &val)
 {
-    QSettings s(file);
+    QSettings s(file, QSettings::IniFormat);
     s.setValue("Script_"+key, val);
 }
 
 QScriptValue ScriptEngine::getVal(const QString &file, const QString &key)
 {
-    QSettings s(file);
+    QSettings s(file, QSettings::IniFormat);
     return s.value("Script_"+key).toString();
 }
 
 void ScriptEngine::removeVal(const QString &file, const QString &key)
 {
-    QSettings s(file);
+    QSettings s(file, QSettings::IniFormat);
     s.remove("Script_"+key);
 }
 
