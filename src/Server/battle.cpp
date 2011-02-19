@@ -3326,7 +3326,7 @@ bool BattleSituation::isFlying(int player)
             !pokeMemory(player).value("StruckDown").toBool() &&
             (hasWorkingAbility(player, Ability::Levitate)
              || hasWorkingItem(player, Item::Balloon)
-             || hasType(player, Pokemon::Flying)
+             || ((!attacking() || !hasWorkingItem(player, Item::BullsEye)) && hasType(player, Pokemon::Flying))
              || pokeMemory(player).value("MagnetRiseCount").toInt() > 0
              || pokeMemory(player).value("LevitatedCount").toInt() > 0);
 }
