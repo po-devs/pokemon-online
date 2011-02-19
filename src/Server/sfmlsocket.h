@@ -22,6 +22,7 @@ public:
 
     void addSocket(SocketSQ *s);
     void deleteSocket(SocketSQ *s);
+    void addSendingSocket(SocketSQ *s);
 private slots:
 private:
     sf::Mutex lock;
@@ -29,8 +30,13 @@ private:
 
     QList<SocketSQ*> socketsToRemove;
     QList<SocketSQ*> socketsToAdd;
+    QLinkedList<SocketSQ*> waitingList;
+    QLinkedList<SocketSQ*> socketsToSend;
 
     QSet<SocketSQ*> heap;
+
+    /* Causes threading issues so made private in order to not be called rashly */
+    bool existSocket(SocketSQ *s) const;
 };
 
 /* Never delete a Socket SQ directly */
@@ -69,7 +75,9 @@ private:
     SocketManager *manager;
     QString myip;
 
+    /* Only called by socket manager */
     void fill();
+    void sendData();
 
     QByteArray buffer;
     QByteArray toSend;

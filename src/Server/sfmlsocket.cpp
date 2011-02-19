@@ -20,7 +20,11 @@ SocketManager::~SocketManager() {
 
 void SocketManager::Run() {
     while (!finished) {
-        sf::Sleep(0.020);
+        sf::Sleep(0.010);
+
+        foreach(SocketSQ *s, socketsToSend) {
+            s->sendData();
+        }
 
         foreach(SocketSQ *s, heap) {
             s->fill();
@@ -35,13 +39,15 @@ void SocketManager::Run() {
         }
         if (socketsToRemove.size() > 0) {
             foreach(SocketSQ *s, socketsToRemove) {
-                if (!heap.contains(s))
+                if (!existSocket(s))
                     continue;
                 heap.remove(s);
                 s->delayDeath();
             }
             socketsToRemove.clear();
         }
+        socketsToSend = waitingList;
+        waitingList.clear();
         lock.Unlock();
     }
 
@@ -64,6 +70,17 @@ void SocketManager::deleteSocket(SocketSQ *s) {
     socketsToRemove.append(s);
 }
 
+bool SocketManager::existSocket(SocketSQ* s) const {
+    return heap.contains(s);
+}
+
+void SocketManager::addSendingSocket(SocketSQ *s) {
+    sf::Lock l(lock);
+
+    if(existSocket(s)) {
+        waitingList.append(s);
+    }
+}
 
 SocketSQ::SocketSQ(SocketManager *manager, sf::SocketTCP s) : mysock(s), manager(manager), bufCounter(0), notifiedDced(false)
 {
@@ -215,19 +232,39 @@ void SocketSQ::write(const QByteArray &b)
     else
         toSend.append(b);
 
-    sf::Socket::Status st = sock().Send(toSend.data(), toSend.size());
-
-    toSend.clear();
-
-    if (!sock().IsValid() || st == sf::Socket::Disconnected) {
-        notifiedDced = true;
-        emit disconnected();
-    }
+    sendData();
 }
 
 QString SocketSQ::ip()
 {
     return myip;
+}
+
+void SocketSQ::sendData()
+{
+    int remaining = toSend.size();
+    sf::Socket::Status st = sf::Socket::Done;
+
+    for (int counter = 0; counter < toSend.size(); counter += 3072) {
+        st = sock().Send(toSend.data()+counter, std::min(remaining, 3072));
+
+        if (st != sf::Socket::Done)
+            break;
+
+        remaining = std::max(remaining - 3072, 0);
+    }
+
+    if (remaining == 0)
+        toSend.clear();
+    else
+        toSend.remove(0, toSend.size() - remaining);
+
+    if (!sock().IsValid() || st == sf::Socket::Disconnected) {
+        notifiedDced = true;
+        emit disconnected();
+    } else if (remaining > 0) {
+        manager->addSendingSocket(this);
+    }
 }
 
 #endif
