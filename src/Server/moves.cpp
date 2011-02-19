@@ -2746,7 +2746,7 @@ struct MMHealingWish : public MM
 
     static void btl(int s, int, BS &b) {
         turn(b,s)["HealingWishSuccess"] = true;
-        b.koPoke(s,s,false);
+        b.koPoke(s,s,false); /*...*/
     }
 
     static void aaf(int s, int, BS &b) {
@@ -2754,7 +2754,7 @@ struct MMHealingWish : public MM
             return;
         addFunction(turn(b,s), "AfterSwitchIn", "HealingWish", &asi);
 
-        /* On gen 5 and further, the pokemon is switched at the end of the turn */
+        /* On gen 5 and further, the pokemon is switched at the end of the turn! */
         if (b.gen() <= 4)
             b.requestSwitch(s);
     }
