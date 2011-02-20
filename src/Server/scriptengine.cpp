@@ -2319,3 +2319,8 @@ void ScriptEngine::forceBattle(int player1, int player2, int clauses, int mode, 
    
     myserver->startBattle(player1, player2, c);
 }
+
+int ScriptEngine::getClauses(const QString &tier)
+{
+    TierMachine::obj()->tier(tier).getClauses();
+}

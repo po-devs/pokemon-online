@@ -293,6 +293,7 @@ public:
     Q_INVOKABLE QScriptValue battleMoveMaxPP(int battleId, bool toFirstPlayer, int pokeSlot, int moveSlot);
 
     Q_INVOKABLE void forceBattle(int player1, int player2, int clauses, int mode, bool is_rated = false);
+    Q_INVOKABLE int getClauses(const QString &tier);
 
 signals:
     void clearTheChat();
