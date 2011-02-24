@@ -2322,5 +2322,5 @@ void ScriptEngine::forceBattle(int player1, int player2, int clauses, int mode, 
 
 int ScriptEngine::getClauses(const QString &tier)
 {
-    TierMachine::obj()->tier(tier).getClauses();
+    return TierMachine::obj()->tier(tier).getClauses();
 }
