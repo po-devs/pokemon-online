@@ -504,8 +504,15 @@ struct MMCrushGrip : public MM
 struct MMCurse : public MM
 {
     MMCurse() {
+        functions["DetermineAttackFailure"] = &daf;
         functions["MoveSettings"] = &ms;
         functions["OnFoeOnAttack"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (turn(b,s).value("CurseGhost").toBool() && poke(b,t).value("Cursed").toBool()) {
+            turn(b,s)["Failed"] = true;
+        }
     }
 
     static void ms(int s, int, BS &b) {
@@ -524,6 +531,7 @@ struct MMCurse : public MM
 	if (turn(b,s)["CurseGhost"].toBool() == true) {
             b.inflictPercentDamage(s, 50, s);
             addFunction(poke(b,t), "EndTurn681", "Cursed", &et);
+            poke(b,t)["Cursed"] = true;
 	    b.sendMoveMessage(25, 0, s, Pokemon::Curse, t);
 	}
     }
