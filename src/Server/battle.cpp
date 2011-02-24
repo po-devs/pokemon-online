@@ -947,7 +947,6 @@ void BattleSituation::analyzeChoice(int slot)
 {
     int player = this->player(slot);
 
-    stopClock(player, true);
     attackCount() += 1;
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice(slot).attackingChoice()) {
@@ -1407,7 +1406,10 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
     if (allChoicesSet()) {
         /* Blocking any further cancels */
         for (int i = 0; i < numberOfSlots(); i++) {
-            couldMove[i] = false;
+            if (couldMove[i]) {
+                couldMove[i] = false;
+                stopClock(i, true);
+            }
         }
         schedule();
     }
