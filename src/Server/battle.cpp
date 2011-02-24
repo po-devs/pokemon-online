@@ -3848,7 +3848,7 @@ void BattleSituation::eatBerry(int player, bool show) {
                     continue;
                 pokeMemory(player)["PickupUsed"] = turn();
                 sendAbMessage(93, 0, p, 0, 0, berry);
-                acqItem(player, bery);
+                acqItem(player, berry);
                 return;
             }
         }
