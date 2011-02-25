@@ -3011,7 +3011,7 @@ struct MMImprison : public MM
 
     static void daf(int s, int, BS &b) {
         if (b.gen() >= 5)
-            return true;
+            return;
 
 	/* let's just see if there are moves to imprison */
         QList<int> foes = b.revs(s);
