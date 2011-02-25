@@ -1408,7 +1408,7 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
         for (int i = 0; i < numberOfSlots(); i++) {
             if (couldMove[i]) {
                 couldMove[i] = false;
-                stopClock(i, true);
+                stopClock(this->player(i), true);
             }
         }
         schedule();
