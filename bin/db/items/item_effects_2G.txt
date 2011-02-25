@@ -90,7 +90,7 @@
 
 
 21#Life Orb
-8-25_20_4#Light Ball
+8-25_20_3#Light Ball
 
 
 10-12#Magnet
