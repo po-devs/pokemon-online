@@ -2588,6 +2588,9 @@ struct MMGrassKnot : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
+        if (b.gen() <= 2)
+            return;
+
         int weight = b.weight(t);
 	int bp;
 	/* I had to make some hacks due to the floating point precision, so this is a '<' here and not
