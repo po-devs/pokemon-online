@@ -139,6 +139,17 @@ void Channel::sortAllPlayersByTier()
     myplayers->expandAll();
 }
 
+void Channel::placeTier(const QString &tier)
+{
+    if (mytiersitems.contains(tier))
+        return;
+
+    QTreeWidgetItem *tierItem = client->tierRoot.addTier(myplayers->invisibleRootItem(), tier);
+
+    printLine(QString("Tier item for %1: %2").arg(tier).arg(int(tierItem)));
+    mytiersitems.insert(tier, tierItem);
+}
+
 void Channel::sortAllPlayersNormally()
 {
     getBackAllPlayerItems();
@@ -237,9 +248,10 @@ void Channel::playerReceived(int playerid) {
     }
 
     QIdTreeWidgetItem *item = myplayersitems.value(playerid);
+    QTreeWidgetItem *parent = item->parent();
 
-    if (item->parent())
-        item->parent()->takeChild(item->parent()->indexOfChild(item));
+    if (parent)
+        parent->takeChild(parent->indexOfChild(item));
     else
         myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(item));
 
@@ -249,15 +261,21 @@ void Channel::playerReceived(int playerid) {
 
     QString tier = client->tier(playerid);
     if (client->sortBT) {
-        if (mytiersitems.contains(tier))
-            placeItem(item, mytiersitems.value(tier));
-        else
-            sortAllPlayersByTier();
+        if (!mytiersitems.contains(tier))
+            placeTier(tier);
+
+        placeItem(item, mytiersitems.value(tier));
     } else {
         placeItem(item,NULL);
     }
 
     updateState(playerid);
+
+    if (parent && parent->childCount() == 0 && parent->parent()) {
+        parent->parent()->takeChild(parent->parent()->indexOfChild(parent));
+        mytiersitems.remove(parent->text(0));
+        delete parent;
+    }
 }
 
 /* When a player has a name updated, change all possible places of that name */
@@ -294,15 +312,24 @@ void Channel::insertNewPlayer(int playerid)
 
     QString tier = client->tier(playerid);
     if (client->sortBT && client->tierList.contains(tier)) {
-        if (mytiersitems.contains(tier))
-            placeItem(item, mytiersitems.value(tier));
-        else
-            sortAllPlayersByTier();
+        if (!mytiersitems.contains(tier))
+            placeTier(tier);
+
+        placeItem(item, mytiersitems.value(tier));
     } else {
         placeItem(item,NULL);
     }
 
     updateState(playerid);
+}
+
+void Channel::receivePlayerList(const QVector<int> &ids)
+{
+    foreach(int id, ids) {
+        playerReceived(id);
+    }
+    if (client->sortBT)
+        myplayers->expandAll();
 }
 
 void Channel::dealWithCommand(int command, QDataStream *stream)
@@ -403,12 +430,13 @@ void Channel::removePlayer(int id) {
     ownPlayers.remove(id);
 
     /* Players List */
+
+
     QIdTreeWidgetItem *item = myplayersitems.take(id);
-    bool sortAll = false;
-    if (client->sortBT && item->parent() && item->parent()->childCount() == 1)
-        sortAll = true;
-    if (item->parent())
-        item->parent()->takeChild(item->parent()->indexOfChild(item));
+    QTreeWidgetItem *parent = item->parent();
+
+    if (parent)
+        parent->takeChild(parent->indexOfChild(item));
     else
         myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(item));
     delete item;
@@ -432,8 +460,10 @@ void Channel::removePlayer(int id) {
         battles.remove(id);
     }
 
-    if (sortAll) {
-        sortAllPlayersByTier();
+    if (parent && parent->childCount() == 0 && parent->parent()) {
+        parent->parent()->takeChild(parent->parent()->indexOfChild(parent));
+        mytiersitems.remove(parent->text(0));
+        delete parent;
     }
 }
 

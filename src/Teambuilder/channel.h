@@ -44,6 +44,7 @@ public:
     void sortAllPlayersNormally();
     void playerReceived(int playerid);
     void placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent=NULL);
+    void placeTier(const QString &tier);
     void battleStarted(int battleid, int id1, int id2);
     void battleReceived(int battleid, int id1, int id2);
     void battleEnded(int battleid, int res, int winner, int loser);
@@ -51,6 +52,7 @@ public:
     void updateState(int id);
     void removePlayer(int id);
     void insertNewPlayer(int id);
+    void receivePlayerList(const QVector<int> &ids);
 
     void makeReadyToQuit() {
         readyToQuit = true;

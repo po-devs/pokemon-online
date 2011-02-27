@@ -256,9 +256,7 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
         /* Then for some reason we aren't synchronized, but let's get it smooth */
         Channel *c = mychannels.value(chanid);
 
-        foreach(qint32 id, ids) {
-            c->playerReceived(id);
-        }
+        c->receivePlayerList(ids);
 
         return;
     }
@@ -276,9 +274,7 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
 
     mychannels[chanid] = c;
 
-    foreach(qint32 id, ids) {
-        c->playerReceived(id);
-    }
+    c->receivePlayerList(ids);
 
     connect(c, SIGNAL(quitChannel(int)), SLOT(leaveChannel(int)));
     connect(c, SIGNAL(battleReceived2(int,int,int)), this, SLOT(battleReceived(int,int,int)));
