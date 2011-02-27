@@ -1183,8 +1183,8 @@ struct AMMummy : public AM {
         functions["UponPhysicalAssault"] = &upa;
     }
 
-    static void upa(int, int t, BS &b) {
-        if (b.ability(t) != Ability::Mummy) {
+    static void upa(int s, int t, BS &b) {
+        if (!b.koed(s) && b.ability(t) != Ability::Mummy) {
             b.sendAbMessage(47, 0, t);
             b.loseAbility(t);
             b.acquireAbility(t, Ability::Mummy);
