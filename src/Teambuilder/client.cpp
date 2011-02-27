@@ -1472,12 +1472,12 @@ void Client::changeName(int player, const QString &name)
 void Client::teamChanged(const PlayerInfo &p) {
     if (showPEvents) {
         if (name(p.id) != p.team.name) {
-            printLine(tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.team.name));
+            printLine(p.id, tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.team.name));
             if (p.id == ownId()) {
                 mynick = p.team.name;
             }
         } else {
-            printLine(tr("%1 changed teams.").arg(name(p.id)));
+            printLine(p.id, tr("%1 changed teams.").arg(name(p.id)));
         }
     }
     playerReceived(p);
