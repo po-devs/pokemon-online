@@ -4,3 +4,4 @@ Mew: Synthesis + Teleport + Hypnosis
 Entei: ExtremeSpeed + Flare Blitz + Howl + Crush Claw
 Raikou: ExtremeSpeed + Aura Sphere + Weather Ball + Zap Cannon
 Suicune: Aqua Ring + ExtremeSpeed + Air Slash + Sheer Cold
+Pichu: Endeavor + Volt Tackle
