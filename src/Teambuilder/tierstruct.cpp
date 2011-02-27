@@ -108,6 +108,7 @@ QTreeWidgetItem *TierNode::addTier(QTreeWidgetItem *category, const QString &tie
             if (subNodes.value(j)->name == tier) {
                 ret = new QTreeWidgetItem(QStringList() << tier);
                 category->insertChild(i, ret);
+                break;
             }
             if (subNodes.value(j)->name == category->child(i)->text(0)) {
                 ret = subNodes.value(i)->addTier(category->child(i), tier);
@@ -120,7 +121,7 @@ QTreeWidgetItem *TierNode::addTier(QTreeWidgetItem *category, const QString &tie
     for (; !ret && j < subNodes.count(); j++) {
         if (subNodes.value(j)->name == tier) {
             ret = new QTreeWidgetItem(QStringList() << tier);
-            category->insertChild(j, ret);
+            category->addChild(ret);
         }
     }
 
