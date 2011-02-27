@@ -20,6 +20,7 @@ struct TierNode
     /* Builds on a tree and returns the tier items */
     QHash<QString, QTreeWidgetItem*> buildOnTree(QTreeWidget *tree);
     QHash<QString, QTreeWidgetItem*> buildSelf(QTreeWidgetItem *parent);
+    QTreeWidgetItem *addTier(QTreeWidgetItem *category, const QString &tier);
     QList<QAction*> buildMenu(QMenu *menu, QObject *c);
     static TierNode* moveInTree(TierNode *lastNode, int levelDiff);
 };

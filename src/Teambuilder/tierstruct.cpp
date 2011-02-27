@@ -96,6 +96,37 @@ QHash<QString, QTreeWidgetItem *> TierNode::buildSelf(QTreeWidgetItem *root)
     return ret;
 }
 
+/* Adding a tier on an already built tree is tricky. It'd be trickier if there was the possibility to have the need
+    to add categories in the proces */
+QTreeWidgetItem *TierNode::addTier(QTreeWidgetItem *category, const QString &tier)
+{
+    QTreeWidgetItem *ret = NULL;
+
+    int i(0), j(0);
+    for ( ; !ret && i < category->childCount(); i++) {
+        for ( ; !ret && j < subNodes.count(); j++) {
+            if (subNodes.value(j)->name == tier) {
+                ret = new QTreeWidgetItem(QStringList() << tier);
+                category->insertChild(i, ret);
+            }
+            if (subNodes.value(j)->name == category->child(i)->text(0)) {
+                ret = subNodes.value(i)->addTier(category->child(i), tier);
+                break;
+            }
+        }
+    }
+
+    /* In case the tier needed to be added is the last one */
+    for (; !ret && j < subNodes.count(); j++) {
+        if (subNodes.value(j)->name == tier) {
+            ret = new QTreeWidgetItem(QStringList() << tier);
+            category->insertChild(i, ret);
+        }
+    }
+
+    return ret;
+}
+
 QStringList TierNode::getTierList()
 {
     QStringList ret;
