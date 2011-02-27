@@ -120,7 +120,7 @@ QTreeWidgetItem *TierNode::addTier(QTreeWidgetItem *category, const QString &tie
     for (; !ret && j < subNodes.count(); j++) {
         if (subNodes.value(j)->name == tier) {
             ret = new QTreeWidgetItem(QStringList() << tier);
-            category->insertChild(i, ret);
+            category->insertChild(j, ret);
         }
     }
 

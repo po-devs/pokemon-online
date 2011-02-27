@@ -148,6 +148,7 @@ void Channel::placeTier(const QString &tier)
 
     printLine(QString("Tier item for %1: %2").arg(tier).arg(int(tierItem)));
     mytiersitems.insert(tier, tierItem);
+    tierItem->setExpanded(true);
 }
 
 void Channel::sortAllPlayersNormally()
@@ -271,11 +272,11 @@ void Channel::playerReceived(int playerid) {
 
     updateState(playerid);
 
-    if (parent && parent->childCount() == 0 && parent->parent()) {
-        parent->parent()->takeChild(parent->parent()->indexOfChild(parent));
-        mytiersitems.remove(parent->text(0));
-        delete parent;
-    }
+//    if (parent && parent->childCount() == 0 && parent->parent()) {
+//        parent->parent()->takeChild(parent->parent()->indexOfChild(parent));
+//        mytiersitems.remove(parent->text(0));
+//        delete parent;
+//    }
 }
 
 /* When a player has a name updated, change all possible places of that name */
@@ -328,8 +329,6 @@ void Channel::receivePlayerList(const QVector<int> &ids)
     foreach(int id, ids) {
         playerReceived(id);
     }
-    if (client->sortBT)
-        myplayers->expandAll();
 }
 
 void Channel::dealWithCommand(int command, QDataStream *stream)
