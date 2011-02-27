@@ -228,6 +228,8 @@ void Channel::battleEnded(int battleid, int res, int winner, int loser)
 
         battleList->takeTopLevelItem(battleList->indexOfTopLevelItem(battleItems[battleid]));
         delete battleItems.take(battleid);
+    } else {
+        return;
     }
 
     if (client->showPEvents || winner == ownId() || loser == ownId() || client->mySpectatingBattles.contains(battleid)) {

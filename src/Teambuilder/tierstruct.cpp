@@ -82,7 +82,10 @@ QHash<QString, QTreeWidgetItem *> TierNode::buildSelf(QTreeWidgetItem *root)
     root->addChild(it);
 
     QFont f = it->font(0);
-    f.setPixelSize(14);
+    if (!isLeaf())
+        f.setPixelSize(14);
+    else
+        f.setPixelSize(12);
     it->setFont(0,f);
 
     if (!isLeaf()) {
@@ -107,6 +110,9 @@ QTreeWidgetItem *TierNode::addTier(QTreeWidgetItem *category, const QString &tie
         for ( ; !ret && j < subNodes.count(); j++) {
             if (subNodes.value(j)->name == tier) {
                 ret = new QTreeWidgetItem(QStringList() << tier);
+                QFont f = ret->font(0);
+                f.setPixelSize(12);
+                ret->setFont(0,f);
                 category->insertChild(i, ret);
                 break;
             }
@@ -121,6 +127,9 @@ QTreeWidgetItem *TierNode::addTier(QTreeWidgetItem *category, const QString &tie
     for (; !ret && j < subNodes.count(); j++) {
         if (subNodes.value(j)->name == tier) {
             ret = new QTreeWidgetItem(QStringList() << tier);
+            QFont f = ret->font(0);
+            f.setPixelSize(12);
+            ret->setFont(0,f);
             category->addChild(ret);
         }
     }
