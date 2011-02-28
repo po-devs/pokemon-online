@@ -91,7 +91,15 @@ public:
     }
 
     /* Show player events, sort by tier, show timestamps */
-    bool showPEvents;
+    enum PlayerEvent {
+        NoEvent = 0,
+        IdleEvent = 1,
+        BattleEvent = 2,
+        ChannelEvent = 4,
+        TeamEvent = 8,
+        AnyEvent = 15
+    };
+    int showPEvents;
     bool sortBT;
     bool showTS;
     TierNode tierRoot;
@@ -185,7 +193,12 @@ public slots:
     void showTeam(bool);
     void enableLadder(bool);
     void sortPlayersCountingTiers(bool);
-    void showPlayerEvents(bool);
+    void enablePlayerEvents();
+    void disablePlayerEvents();
+    void showIdleEvents(bool);
+    void showBattleEvents(bool);
+    void showChannelEvents(bool);
+    void showTeamEvents(bool);
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
     void movePlayerList(bool);
@@ -266,6 +279,7 @@ private:
     QPointer<QMenuBar> mymenubar;
     QPointer<QMenu> mytiermenu;
     QList<QAction*> mytiers;
+    QList<QAction*> myevents;
     /* You can call the teambuilder from here too */
     QPointer<QMainWindow> myteambuilder;
 
