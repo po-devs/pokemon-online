@@ -56,6 +56,7 @@ public:
     void addEvent(int event);
     void removeEvent(int event);
     bool eventEnabled(int event);
+    void resetEvents();
 
     void makeReadyToQuit() {
         readyToQuit = true;

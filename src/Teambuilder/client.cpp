@@ -688,6 +688,9 @@ void Client::deleteCustomEvents() {
         s.beginGroup(channelNames.value(selectedChannel));
         s.remove(""); // removes all settings
     }
+    if (mychannels.contains(selectedChannel)) {
+        mychannels.value(selectedChannel)->resetEvents();
+    }
 }
 
 void Client::showPlayerEvents(bool b, int event, QString option)
