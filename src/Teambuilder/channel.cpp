@@ -26,6 +26,23 @@ Channel::Channel(const QString &name, int id, Client *parent)
     battleList->resizeColumnToContents(0);
     battleList->setIndentation(0);
 
+    events = -1;
+    QStringList eventsettings;
+    eventsettings << "show_player_events_idle" << "show_player_events_battle"
+        << "show_player_events_channel" << "show_player_events_idle";
+    QSettings s;
+    s.beginGroup("channelevents");
+    s.beginGroup(myname);
+    foreach(QString str, eventsettings) {
+        if (s.contains(str)) {
+            events = 0;
+            foreach(QString str2, eventsettings) {
+                events |= s.value(str2, false).toBool();
+            }
+            break;
+        }
+    }
+
     if(client->sortBT) {
         sortAllPlayersByTier();
     } else {
@@ -93,6 +110,8 @@ void Channel::showContextMenu(const QPoint &requested)
 
         menu->exec(myplayers->mapToGlobal(requested));
     }
+
+    item = dynamic_cast<QIdTreeWidgetItem*>(myplayers->itemAt(requested));
 }
 
 void Channel::getBackAllPlayerItems()
@@ -186,7 +205,8 @@ void Channel::battleStarted(int bid, int id1, int id2)
     if (!hasPlayer(id1) && !hasPlayer(id2))
         return;
 
-    if (client->showPEvents & Client::BattleEvent || id1 == ownId() || id2 == ownId())
+    int& showEvents = events == -1 ? client->showPEvents : events;
+    if (showEvents & Client::BattleEvent || id1 == ownId() || id2 == ownId())
         printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
 
     battleReceived(bid, id1, id2);
@@ -232,7 +252,8 @@ void Channel::battleEnded(int battleid, int res, int winner, int loser)
         return;
     }
 
-    if (client->showPEvents & Client::BattleEvent || winner == ownId() || loser == ownId() || client->mySpectatingBattles.contains(battleid)) {
+    int& showEvents = events == -1 ? client->showPEvents : events;
+    if (showEvents & Client::BattleEvent || winner == ownId() || loser == ownId() || client->mySpectatingBattles.contains(battleid)) {
         if (res == Forfeit) {
             printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)));
         } else if (res == Tie) {
@@ -336,6 +357,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
 {
     QDataStream &in = *stream;
 
+    int& showEvents = events == -1 ? client->showPEvents : events;
     if (command == NetworkCli::JoinChannel) {
         qint32 id;
         in >> id;
@@ -344,7 +366,8 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
             return;
 
         playerReceived(id);
-        if (client->showPEvents & Client::ChannelEvent) {
+ 
+        if (showEvents & Client::ChannelEvent) {
             printLine(tr("%1 joined the channel.").arg(name(id)));
         }
     } else if (command == NetworkCli::ChannelMessage) {
@@ -374,7 +397,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
     } else if (command == NetworkCli::LeaveChannel) {
         qint32 id;
         in >> id;
-        if (client->showPEvents & Client::ChannelEvent) {
+        if (showEvents & Client::ChannelEvent) {
             printLine(tr("%1 left the channel.").arg(name(id)));
         }
         /* Remove everything... */
@@ -419,7 +442,8 @@ void Channel::playerLogOut(int id) {
 
     removePlayer(id);
 
-    if (client->showPEvents & Client::ChannelEvent)
+    int& showEvents = events == -1 ? client->showPEvents : events;
+    if (showEvents & Client::ChannelEvent)
         printLine(tr("%1 logged out.").arg(name));
 }
 
@@ -552,4 +576,18 @@ void Channel::printHtml(const QString &str)
     QRegExp rx("<timestamp */ *>",Qt::CaseInsensitive);
     mainChat()->insertHtml(QString(str).replace( rx, timeStr ) + "<br />");
     emit activated(this);
+}
+
+void Channel::addEvent(int event)
+{
+    if (events == -1)
+        events = client->showPEvents;
+    events |= event;
+}
+
+void Channel::removeEvent(int event)
+{
+    if (events == -1)
+        events = client->showPEvents;
+    events &= ~event;
 }

@@ -53,6 +53,8 @@ public:
     void removePlayer(int id);
     void insertNewPlayer(int id);
     void receivePlayerList(const QVector<int> &ids);
+    void addEvent(int event);
+    void removeEvent(int event);
 
     void makeReadyToQuit() {
         readyToQuit = true;
@@ -90,6 +92,7 @@ private:
 
     QString myname;
     int myid;
+    int events;
     bool readyToQuit;
 
     QIdTreeWidgetItem *item(int  id);

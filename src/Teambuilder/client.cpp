@@ -16,6 +16,7 @@
 Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), myrelay()
 {
     _mid = -1;
+    selectedChannel = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder = NULL;
 
@@ -38,6 +39,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     QGridLayout *containerLayout = new QGridLayout(channelContainer);
     channels = new QListWidget();
     channels->setIconSize(QSize(24,24));
+    channels->setContextMenuPolicy(Qt::CustomContextMenu);
     chatot = Theme::Icon("activechannel");
     greychatot = Theme::Icon("idlechannel");
     containerLayout->addWidget(channels, 0, 0, 1, 2);
@@ -50,6 +52,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     connect(channels, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(itemJoin(QListWidgetItem*)));
     connect(channelJoin, SIGNAL(returnPressed()), this, SLOT(lineJoin()));
+    connect(channels, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showChannelsContextMenu(QPoint)));
 
     s->addWidget(mytab);
 
@@ -290,6 +293,111 @@ void Client::channelActivated(Channel *c)
             mainChat->tabBar()->setTabTextColor(i, Qt::darkGreen);
             break;
         }
+    }
+}
+
+void Client::showChannelsContextMenu(const QPoint & point)
+{
+    QIdListWidgetItem *item = dynamic_cast<QIdListWidgetItem*>(channels->itemAt(point));
+    if (item) {
+        QSettings s;
+        s.beginGroup("channelevents");
+        s.beginGroup(item->text());
+        qDebug() << item->id();
+        qDebug() << item->text();
+        qDebug() << s.childKeys();
+        QSettings globals;
+
+        QMenu *show_events = new QMenu(this);
+        showPEvents = NoEvent;
+        mychanevents.clear();
+        QAction *action;
+
+        QStringList eventsettings;
+        eventsettings << "show_player_events_idle" << "show_player_events_battle" << "show_player_events_channel" << "show_player_events_idle";
+        bool found = false;
+        foreach (QString str, eventsettings) {
+            if (s.contains(str)) {
+                found = true;
+            }
+        }
+        if (found) {
+             action = show_events->addAction(tr("Custom settings"));
+             action->setEnabled(false);
+        } else {
+             action = show_events->addAction(tr("Global settings"));
+             action->setEnabled(false);
+        }
+
+        action = show_events->addAction(tr("Enable all events"));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+        connect(action, SIGNAL(triggered()), SLOT(enablePlayerEvents()));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+
+        action = show_events->addAction(tr("Disable all events"));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+        connect(action, SIGNAL(triggered()), SLOT(disablePlayerEvents()));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+
+        show_events->addSeparator();
+
+        action = show_events->addAction(tr("Enable idle events"));
+        action->setCheckable(true);
+        action->setChecked(s.value("show_player_events_idle",
+                     globals.value("show_player_events_idle").toBool()).toBool());
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+        connect(action, SIGNAL(triggered(bool)), SLOT(showIdleEvents(bool)));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+        if(action->isChecked()) {
+            showPEvents |= IdleEvent;
+        } else {
+            showPEvents &= ~IdleEvent;
+        }
+        mychanevents.push_back(action);
+
+        action = show_events->addAction(tr("Enable battle events"));
+        action->setCheckable(true);
+        action->setChecked(s.value("show_player_events_battle",
+                     globals.value("show_player_events_battle").toBool()).toBool());
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+        connect(action, SIGNAL(triggered(bool)), SLOT(showBattleEvents(bool)));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+        if(action->isChecked()) {
+            showPEvents |= BattleEvent;
+        } else {
+            showPEvents &= ~BattleEvent;
+        }
+        mychanevents.push_back(action);
+
+        action = show_events->addAction(tr("Enable channel events"));
+        action->setCheckable(true);
+        action->setChecked(s.value("show_player_events_channel",
+                     globals.value("show_player_events_channel").toBool()).toBool());
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+        connect(action, SIGNAL(triggered(bool)), SLOT(showChannelEvents(bool)));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+        if(action->isChecked()) {
+            showPEvents |= ChannelEvent;
+        } else {
+            showPEvents &= ~ChannelEvent;
+        }
+        mychanevents.push_back(action);
+
+        action = show_events->addAction(tr("Enable team change events"));
+        action->setCheckable(true);
+        action->setChecked(s.value("show_player_events_team",
+                     globals.value("show_player_events_team").toBool()).toBool());
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+        connect(action, SIGNAL(triggered(bool)), SLOT(showTeamEvents(bool)));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+        if(action->isChecked()) {
+            showPEvents |= TeamEvent;
+        } else {
+            showPEvents &= ~TeamEvent;
+        }
+        mychanevents.push_back(action);
+
+        show_events->exec(channels->mapToGlobal(point));
     }
 }
 
@@ -543,9 +651,14 @@ void Client::enableLadder(bool b)
     relay().notify(NetworkCli::LadderChange, b);
 }
 
+void Client::setChannelSelected(int id)
+{
+    selectedChannel = id;
+}
+
 void Client::enablePlayerEvents()
 {
-    foreach(QAction *event, myevents) {
+    foreach(QAction *event, selectedChannel == -1 ? myevents : mychanevents) {
         event->setChecked(true);
     }
     showIdleEvents(true);
@@ -556,7 +669,7 @@ void Client::enablePlayerEvents()
 
 void Client::disablePlayerEvents()
 {
-    foreach(QAction *event, myevents) {
+    foreach(QAction *event, selectedChannel == -1 ? myevents : mychanevents) {
         event->setChecked(false);
     }
     showIdleEvents(false);
@@ -566,50 +679,55 @@ void Client::disablePlayerEvents()
 
 }
 
-void Client::showIdleEvents(bool b)
+void Client::showPlayerEvents(bool b, int event, QString option)
 {
     QSettings s;
-    s.setValue("show_player_events_idle", b);
-    if(b) {
-        showPEvents |= IdleEvent;
-    } else {
-        showPEvents &= ~IdleEvent;
+    if (selectedChannel != -1) {
+        s.beginGroup("channelevents");
+        foreach (QListWidgetItem *i, channels->selectedItems()) {
+            QIdListWidgetItem *item = dynamic_cast<QIdListWidgetItem*>(i);
+            if (item->id() == selectedChannel) {
+                s.beginGroup(item->text());
+                break;
+            }
+        }
     }
+    s.setValue(option, b);
+    if (selectedChannel != -1) {
+        if (mychannels.contains(selectedChannel)) {
+            if (b) {
+                mychannels.value(selectedChannel)->addEvent(event);
+            } else {
+                mychannels.value(selectedChannel)->removeEvent(event);
+            }
+        }
+    } else {
+        if (b) {
+            showPEvents |= event;
+        } else {
+            showPEvents &= ~event;
+        }
+    }
+}
+
+void Client::showIdleEvents(bool b)
+{
+    showPlayerEvents(b, IdleEvent, "show_player_events_idle");
 }
 
 void Client::showBattleEvents(bool b)
 {
-
-    QSettings s;
-    s.setValue("show_player_events_battle", b);
-    if(b) {
-        showPEvents |= BattleEvent;
-    } else {
-        showPEvents &= ~BattleEvent;
-    }
+    showPlayerEvents(b, BattleEvent, "show_player_events_battle");
 }
 
 void Client::showChannelEvents(bool b)
 {
-    QSettings s;
-    s.setValue("show_player_events_channel", b);
-    if(b) {
-        showPEvents |= ChannelEvent;
-    } else {
-        showPEvents &= ~ChannelEvent;
-    }
-
+    showPlayerEvents(b, ChannelEvent, "show_player_events_channel");
 }
 
 void Client::showTeamEvents(bool b)
 {
-    QSettings s;
-    s.setValue("show_player_events_team", b);
-    if(b) {
-        showPEvents |= TeamEvent;
-    } else {
-        showPEvents &= ~TeamEvent;
-    }
+    showPlayerEvents(b, TeamEvent, "show_player_events_team");
 }
 
 void Client::seeRanking(int id)
