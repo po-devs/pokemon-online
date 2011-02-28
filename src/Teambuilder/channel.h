@@ -55,6 +55,7 @@ public:
     void receivePlayerList(const QVector<int> &ids);
     void addEvent(int event);
     void removeEvent(int event);
+    bool eventEnabled(int event);
 
     void makeReadyToQuit() {
         readyToQuit = true;
@@ -62,6 +63,7 @@ public:
     bool isReadyToQuit() const {
         return readyToQuit;
     }
+
     void signalDisconnection();
 
     void changeName(int id, const QString &name);

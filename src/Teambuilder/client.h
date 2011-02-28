@@ -41,6 +41,7 @@ public:
 
     /* Prints a line to all the channels which have that player */
     void printLine(int playerid, const QString &line);
+    void printLine(int event, int playerid, const QString &line);
     void cancelFindBattle(bool verbose=true);
     bool playerExist(int id) const;
     QString name(int id) const;
@@ -90,6 +91,7 @@ public:
         return tierList;
     }
 
+    void printEvent(int event, int playerid, const QString &line);
     /* Show player events, sort by tier, show timestamps */
     enum PlayerEvent {
         NoEvent = 0,
@@ -197,6 +199,7 @@ public slots:
     void setChannelSelected(int);
     void enablePlayerEvents();
     void disablePlayerEvents();
+    void deleteCustomEvents();
     void showPlayerEvents(bool b, int event, QString option);
     void showIdleEvents(bool);
     void showBattleEvents(bool);
@@ -313,6 +316,8 @@ private:
 
     void initRelay();
     void changeTierChecked(const QString &newtier);
+
+    bool eventEnabled(int event);
 };
 
 class BattleFinder : public QWidget

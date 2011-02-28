@@ -205,8 +205,7 @@ void Channel::battleStarted(int bid, int id1, int id2)
     if (!hasPlayer(id1) && !hasPlayer(id2))
         return;
 
-    int& showEvents = events == -1 ? client->showPEvents : events;
-    if (showEvents & Client::BattleEvent || id1 == ownId() || id2 == ownId())
+    if (eventEnabled(Client::BattleEvent) || id1 == ownId() || id2 == ownId())
         printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
 
     battleReceived(bid, id1, id2);
@@ -252,8 +251,7 @@ void Channel::battleEnded(int battleid, int res, int winner, int loser)
         return;
     }
 
-    int& showEvents = events == -1 ? client->showPEvents : events;
-    if (showEvents & Client::BattleEvent || winner == ownId() || loser == ownId() || client->mySpectatingBattles.contains(battleid)) {
+    if (eventEnabled(Client::BattleEvent) || winner == ownId() || loser == ownId() || client->mySpectatingBattles.contains(battleid)) {
         if (res == Forfeit) {
             printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)));
         } else if (res == Tie) {
@@ -357,7 +355,6 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
 {
     QDataStream &in = *stream;
 
-    int& showEvents = events == -1 ? client->showPEvents : events;
     if (command == NetworkCli::JoinChannel) {
         qint32 id;
         in >> id;
@@ -367,7 +364,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
 
         playerReceived(id);
  
-        if (showEvents & Client::ChannelEvent) {
+        if (eventEnabled(Client::ChannelEvent)) {
             printLine(tr("%1 joined the channel.").arg(name(id)));
         }
     } else if (command == NetworkCli::ChannelMessage) {
@@ -397,7 +394,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
     } else if (command == NetworkCli::LeaveChannel) {
         qint32 id;
         in >> id;
-        if (showEvents & Client::ChannelEvent) {
+        if (eventEnabled(Client::ChannelEvent)) {
             printLine(tr("%1 left the channel.").arg(name(id)));
         }
         /* Remove everything... */
@@ -442,8 +439,7 @@ void Channel::playerLogOut(int id) {
 
     removePlayer(id);
 
-    int& showEvents = events == -1 ? client->showPEvents : events;
-    if (showEvents & Client::ChannelEvent)
+    if (eventEnabled(Client::ChannelEvent))
         printLine(tr("%1 logged out.").arg(name));
 }
 
@@ -590,4 +586,10 @@ void Channel::removeEvent(int event)
     if (events == -1)
         events = client->showPEvents;
     events &= ~event;
+}
+
+bool Channel::eventEnabled(int event)
+{
+    int& showEvents = events == -1 ? client->showPEvents : events;
+    return showEvents & event > 0;
 }
