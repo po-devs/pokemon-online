@@ -34,7 +34,10 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("play_battle_sounds", false);
     setDefaultValue("show_team",true);
     setDefaultValue("enable_ladder", true);
-    setDefaultValue("show_player_events", false);
+    setDefaultValue("show_player_events_idle", false);
+    setDefaultValue("show_player_events_battle", false);
+    setDefaultValue("show_player_events_channel", false);
+    setDefaultValue("show_player_events_team", false);
     setDefaultValue("show_timestamps", true);
     setDefaultValue("show_timestamps2", true);
     setDefaultValue("animate_hp_bar", true);

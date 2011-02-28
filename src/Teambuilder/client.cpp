@@ -543,11 +543,73 @@ void Client::enableLadder(bool b)
     relay().notify(NetworkCli::LadderChange, b);
 }
 
-void Client::showPlayerEvents(bool b)
+void Client::enablePlayerEvents()
+{
+    foreach(QAction *event, myevents) {
+        event->setChecked(true);
+    }
+    showIdleEvents(true);
+    showBattleEvents(true);
+    showChannelEvents(true);
+    showTeamEvents(true);
+}
+
+void Client::disablePlayerEvents()
+{
+    foreach(QAction *event, myevents) {
+        event->setChecked(false);
+    }
+    showIdleEvents(false);
+    showBattleEvents(false);
+    showChannelEvents(false);
+    showTeamEvents(false);
+
+}
+
+void Client::showIdleEvents(bool b)
 {
     QSettings s;
-    s.setValue("show_player_events", b);
-    showPEvents = b;
+    s.setValue("show_player_events_idle", b);
+    if(b) {
+        showPEvents |= IdleEvent;
+    } else {
+        showPEvents &= ~IdleEvent;
+    }
+}
+
+void Client::showBattleEvents(bool b)
+{
+
+    QSettings s;
+    s.setValue("show_player_events_battle", b);
+    if(b) {
+        showPEvents |= BattleEvent;
+    } else {
+        showPEvents &= ~BattleEvent;
+    }
+}
+
+void Client::showChannelEvents(bool b)
+{
+    QSettings s;
+    s.setValue("show_player_events_channel", b);
+    if(b) {
+        showPEvents |= ChannelEvent;
+    } else {
+        showPEvents &= ~ChannelEvent;
+    }
+
+}
+
+void Client::showTeamEvents(bool b)
+{
+    QSettings s;
+    s.setValue("show_player_events_team", b);
+    if(b) {
+        showPEvents |= TeamEvent;
+    } else {
+        showPEvents &= ~TeamEvent;
+    }
 }
 
 void Client::seeRanking(int id)
@@ -739,11 +801,61 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(ladd, SIGNAL(triggered(bool)), SLOT(enableLadder(bool)));
     ladd->setChecked(s.value("enable_ladder").toBool());
 
-    QAction *show_events = menuActions->addAction(tr("&Enable player events"));
-    show_events->setCheckable(true);
-    connect(show_events, SIGNAL(triggered(bool)), SLOT(showPlayerEvents(bool)));
-    show_events->setChecked(s.value("show_player_events").toBool());
-    showPEvents = show_events->isChecked();
+    QMenu* show_events = menuActions->addMenu(tr("Player events"));
+    showPEvents = NoEvent;
+
+    QAction *action;
+    action = show_events->addAction(tr("Enable all events"));
+    connect(action, SIGNAL(triggered()), SLOT(enablePlayerEvents()));
+
+    action = show_events->addAction(tr("Disable all events"));
+    connect(action, SIGNAL(triggered()), SLOT(disablePlayerEvents()));
+
+    show_events->addSeparator();
+
+    action = show_events->addAction(tr("Enable idle events"));
+    action->setCheckable(true);
+    action->setChecked(s.value("show_player_events_idle").toBool());
+    connect(action, SIGNAL(triggered(bool)), SLOT(showIdleEvents(bool)));
+    if(action->isChecked()) {
+        showPEvents |= IdleEvent;
+    } else {
+        showPEvents &= ~IdleEvent;
+    }
+    myevents.push_back(action);
+
+    action = show_events->addAction(tr("Enable battle events"));
+    action->setCheckable(true);
+    action->setChecked(s.value("show_player_events_battle").toBool());
+    connect(action, SIGNAL(triggered(bool)), SLOT(showBattleEvents(bool)));
+    if(action->isChecked()) {
+        showPEvents |= BattleEvent;
+    } else {
+        showPEvents &= ~BattleEvent;
+    }
+    myevents.push_back(action);
+
+    action = show_events->addAction(tr("Enable channel events"));
+    action->setCheckable(true);
+    action->setChecked(s.value("show_player_events_channel").toBool());
+    connect(action, SIGNAL(triggered(bool)), SLOT(showChannelEvents(bool)));
+    if(action->isChecked()) {
+        showPEvents |= ChannelEvent;
+    } else {
+        showPEvents &= ~ChannelEvent;
+    }
+    myevents.push_back(action);
+
+    action = show_events->addAction(tr("Enable team change events"));
+    action->setCheckable(true);
+    action->setChecked(s.value("show_player_events_team").toBool());
+    connect(action, SIGNAL(triggered(bool)), SLOT(showTeamEvents(bool)));
+    if(action->isChecked()) {
+        showPEvents |= TeamEvent;
+    } else {
+        showPEvents &= ~TeamEvent;
+    }
+    myevents.push_back(action);
 
     QAction * show_ts = menuActions->addAction(tr("Enable &timestamps"));
     show_ts->setCheckable(true);
@@ -1251,7 +1363,7 @@ void Client::challengeStuff(const ChallengeInfo &c)
 
 void Client::awayChanged(int id, bool away)
 {
-    if (showPEvents) {
+    if (showPEvents & IdleEvent) {
         if (away) {
             printLine(tr("%1 is idling.").arg(name(id)));
         } else {
@@ -1470,7 +1582,7 @@ void Client::changeName(int player, const QString &name)
 }
 
 void Client::teamChanged(const PlayerInfo &p) {
-    if (showPEvents) {
+    if (showPEvents & TeamEvent) {
         if (name(p.id) != p.team.name) {
             printLine(p.id, tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.team.name));
             if (p.id == ownId()) {

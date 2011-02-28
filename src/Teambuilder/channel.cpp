@@ -186,7 +186,7 @@ void Channel::battleStarted(int bid, int id1, int id2)
     if (!hasPlayer(id1) && !hasPlayer(id2))
         return;
 
-    if (client->showPEvents || id1 == ownId() || id2 == ownId())
+    if (client->showPEvents & Client::BattleEvent || id1 == ownId() || id2 == ownId())
         printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
 
     battleReceived(bid, id1, id2);
@@ -232,7 +232,7 @@ void Channel::battleEnded(int battleid, int res, int winner, int loser)
         return;
     }
 
-    if (client->showPEvents || winner == ownId() || loser == ownId() || client->mySpectatingBattles.contains(battleid)) {
+    if (client->showPEvents & Client::BattleEvent || winner == ownId() || loser == ownId() || client->mySpectatingBattles.contains(battleid)) {
         if (res == Forfeit) {
             printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)));
         } else if (res == Tie) {
@@ -344,7 +344,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
             return;
 
         playerReceived(id);
-        if (client->showPEvents) {
+        if (client->showPEvents & Client::ChannelEvent) {
             printLine(tr("%1 joined the channel.").arg(name(id)));
         }
     } else if (command == NetworkCli::ChannelMessage) {
@@ -374,7 +374,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
     } else if (command == NetworkCli::LeaveChannel) {
         qint32 id;
         in >> id;
-        if (client->showPEvents) {
+        if (client->showPEvents & Client::ChannelEvent) {
             printLine(tr("%1 left the channel.").arg(name(id)));
         }
         /* Remove everything... */
@@ -419,7 +419,7 @@ void Channel::playerLogOut(int id) {
 
     removePlayer(id);
 
-    if (client->showPEvents)
+    if (client->showPEvents & Client::ChannelEvent)
         printLine(tr("%1 logged out.").arg(name));
 }
 
