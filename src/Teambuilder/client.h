@@ -144,6 +144,7 @@ public slots:
     void lineJoin();
     void firstChannelChanged(int tabindex);
     void channelActivated(Channel *c);
+    void showChannelsContextMenu(const QPoint & point);
     /* battle... */
     void battleStarted(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf);
     void battleStarted(int battleid, int id1, int id2);
@@ -193,8 +194,10 @@ public slots:
     void showTeam(bool);
     void enableLadder(bool);
     void sortPlayersCountingTiers(bool);
+    void setChannelSelected(int);
     void enablePlayerEvents();
     void disablePlayerEvents();
+    void showPlayerEvents(bool b, int event, QString option);
     void showIdleEvents(bool);
     void showBattleEvents(bool);
     void showChannelEvents(bool);
@@ -273,6 +276,7 @@ private:
 
     bool findingBattle;
     int _mid;
+    int selectedChannel;
 
     QString serverVersion;
 
@@ -280,6 +284,7 @@ private:
     QPointer<QMenu> mytiermenu;
     QList<QAction*> mytiers;
     QList<QAction*> myevents;
+    QList<QAction*> mychanevents;
     /* You can call the teambuilder from here too */
     QPointer<QMainWindow> myteambuilder;
 
