@@ -20,6 +20,9 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder = NULL;
 
+    /* different events */
+    eventlist << "show_player_events_idle" << "show_player_events_battle" << "show_player_events_channel" << "show_player_events_team";
+
     QHBoxLayout *h = new QHBoxLayout(this);
     QSplitter *s = new QSplitter(Qt::Horizontal);
     s->setStyle(QStyleFactory::create("Plastique"));
@@ -204,6 +207,10 @@ QIcon Client::statusIcon(int auth, Status status) const
     return statusIcons[auth*LastStatus+status];
 }
 
+QStringList const& Client::eventSettings() const {
+    return eventlist;
+}
+
 void Client::battleListActivated(QTreeWidgetItem *it)
 {
     QIdTreeWidgetItem *i;
@@ -310,10 +317,8 @@ void Client::showChannelsContextMenu(const QPoint & point)
         mychanevents.clear();
         QAction *action;
 
-        QStringList eventsettings;
-        eventsettings << "show_player_events_idle" << "show_player_events_battle" << "show_player_events_channel" << "show_player_events_idle";
         bool found = false;
-        foreach (QString str, eventsettings) {
+        foreach (QString str, eventSettings()) {
             if (s.contains(str)) {
                 found = true;
             }
@@ -708,6 +713,13 @@ void Client::showPlayerEvents(bool b, int event, QString option)
             } else {
                 mychannels.value(selectedChannel)->removeEvent(event);
             }
+        }
+        /* make sure every setting is saved */
+        QSettings globals;
+        foreach (QString str, eventSettings()) {
+           if (!s.contains(str)) {
+               s.setValue(str, globals.value(str).toBool());
+           }
         }
     } else {
         if (b) {

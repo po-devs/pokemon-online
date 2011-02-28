@@ -27,16 +27,13 @@ Channel::Channel(const QString &name, int id, Client *parent)
     battleList->setIndentation(0);
 
     events = -1;
-    QStringList eventsettings;
-    eventsettings << "show_player_events_idle" << "show_player_events_battle"
-        << "show_player_events_channel" << "show_player_events_idle";
     QSettings s;
     s.beginGroup("channelevents");
     s.beginGroup(myname);
-    foreach(QString str, eventsettings) {
+    foreach(QString str, client->eventSettings()) {
         if (s.contains(str)) {
             events = 0;
-            foreach(QString str2, eventsettings) {
+            foreach(QString str2, client->eventSettings()) {
                 events |= s.value(str2, false).toBool();
             }
             break;

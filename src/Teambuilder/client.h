@@ -224,6 +224,7 @@ public slots:
     /* Automatic removal of players in memory */
     void fadeAway();
     void registerPermPlayer(int id);
+    QStringList const& eventSettings() const;
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
@@ -290,6 +291,7 @@ private:
     QList<QAction*> mychanevents;
     /* You can call the teambuilder from here too */
     QPointer<QMainWindow> myteambuilder;
+    QStringList eventlist;
 
     QPointer<ControlPanel> myCP;
     QPointer<RankingDialog> myRanking;
