@@ -302,10 +302,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
     if (item) {
         QSettings s;
         s.beginGroup("channelevents");
-        s.beginGroup(item->text());
-        qDebug() << item->id();
-        qDebug() << item->text();
-        qDebug() << s.childKeys();
+        s.beginGroup(channelNames.value(item->id()));
         QSettings globals;
 
         QMenu *show_events = new QMenu(this);
@@ -322,12 +319,17 @@ void Client::showChannelsContextMenu(const QPoint & point)
             }
         }
         if (found) {
-             action = show_events->addAction(tr("Custom settings"));
-             action->setEnabled(false);
+            action = show_events->addAction(tr("Custom settings"));
+            action->setEnabled(false);
+            action = show_events->addAction(tr("Use global"));
+            createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+            connect(action, SIGNAL(triggered()), SLOT(deleteCustomEvents()));
+            createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
         } else {
-             action = show_events->addAction(tr("Global settings"));
-             action->setEnabled(false);
+            action = show_events->addAction(tr("Global settings"));
+            action->setEnabled(false);
         }
+        show_events->addSeparator();
 
         action = show_events->addAction(tr("Enable all events"));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
@@ -679,18 +681,21 @@ void Client::disablePlayerEvents()
 
 }
 
+void Client::deleteCustomEvents() {
+    QSettings s;
+    if (selectedChannel != -1) {
+        s.beginGroup("channelevents");
+        s.beginGroup(channelNames.value(selectedChannel));
+        s.remove(""); // removes all settings
+    }
+}
+
 void Client::showPlayerEvents(bool b, int event, QString option)
 {
     QSettings s;
     if (selectedChannel != -1) {
         s.beginGroup("channelevents");
-        foreach (QListWidgetItem *i, channels->selectedItems()) {
-            QIdListWidgetItem *item = dynamic_cast<QIdListWidgetItem*>(i);
-            if (item->id() == selectedChannel) {
-                s.beginGroup(item->text());
-                break;
-            }
-        }
+        s.beginGroup(channelNames.value(selectedChannel));
     }
     s.setValue(option, b);
     if (selectedChannel != -1) {
@@ -1481,12 +1486,10 @@ void Client::challengeStuff(const ChallengeInfo &c)
 
 void Client::awayChanged(int id, bool away)
 {
-    if (showPEvents & IdleEvent) {
-        if (away) {
-            printLine(tr("%1 is idling.").arg(name(id)));
-        } else {
-            printLine(tr("%1 is active and ready for battles.").arg(name(id)));
-        }
+    if (away) {
+        printLine(IdleEvent, id, tr("%1 is idling.").arg(name(id)));
+    } else {
+        printLine(IdleEvent, id, tr("%1 is active and ready for battles.").arg(name(id)));
     }
 
     playerInfo(id).changeState(PlayerInfo::Away, away);
@@ -1700,15 +1703,13 @@ void Client::changeName(int player, const QString &name)
 }
 
 void Client::teamChanged(const PlayerInfo &p) {
-    if (showPEvents & TeamEvent) {
-        if (name(p.id) != p.team.name) {
-            printLine(p.id, tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.team.name));
-            if (p.id == ownId()) {
-                mynick = p.team.name;
-            }
-        } else {
-            printLine(p.id, tr("%1 changed teams.").arg(name(p.id)));
+    if (name(p.id) != p.team.name) {
+        printLine(TeamEvent, p.id, tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.team.name));
+        if (p.id == ownId()) {
+            mynick = p.team.name;
         }
+    } else {
+        printLine(TeamEvent, p.id, tr("%1 changed teams.").arg(name(p.id)));
     }
     playerReceived(p);
 }
@@ -1862,6 +1863,14 @@ void Client::printLine(int playerid, const QString &line)
 {
     foreach(Channel *c, mychannels) {
         if (c->hasPlayer(playerid))
+            c->printLine(line);
+    }
+}
+
+void Client::printLine(int event, int playerid, const QString &line)
+{
+    foreach(Channel *c, mychannels) {
+        if (c->hasPlayer(playerid) && c->eventEnabled(event))
             c->printLine(line);
     }
 }
