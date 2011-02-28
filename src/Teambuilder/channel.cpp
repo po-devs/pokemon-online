@@ -593,3 +593,8 @@ bool Channel::eventEnabled(int event)
     int& showEvents = events == -1 ? client->showPEvents : events;
     return showEvents & event > 0;
 }
+
+void Channel::resetEvents()
+{
+    events = -1;
+}
