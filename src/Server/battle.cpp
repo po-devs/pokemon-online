@@ -2478,11 +2478,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 attackCount() += 1;
             }
 
-
-            if (gen() >= 5 && koed(target)) {
-                notifyKO(target);
-            }
-
             if (hit) {
                 notifyHits(hitcount);
             }
@@ -4038,7 +4033,7 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
         }
     }
 
-    if (!attacking() || tmove(attacker()).power == 0 || (gen() >= 5 && (player == source || attacked() != player)) ) {
+    if (!attacking() || tmove(attacker()).power == 0 || gen() == 5) {
         notifyKO(player);
     }
 
