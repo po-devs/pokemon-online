@@ -588,7 +588,7 @@ void Channel::removeEvent(int event)
 bool Channel::eventEnabled(int event)
 {
     int& showEvents = events == -1 ? client->showPEvents : events;
-    return showEvents & event > 0;
+    return (showEvents & event) > 0;
 }
 
 void Channel::resetEvents()

@@ -899,7 +899,7 @@ struct MMPerishSong : public MM
         b.sendMoveMessage(95,1,s,0,0,count);
 	if (count > 0) {
 	    poke(b,s)["PerishSongCount"] = count - 1;
-        } else if (!b.hasWorkingAbility(s,Ability::Soundproof)){ //SoundProof
+        } else {
 	    b.koPoke(s,s,false);
             b.selfKoer() = poke(b,s)["PerishSonger"].toInt();
 	}
