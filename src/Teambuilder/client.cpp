@@ -698,6 +698,33 @@ void Client::deleteCustomEvents() {
     }
 }
 
+void Client::setEventsForChannel(QString const& channel)
+{
+    int id = channelByNames[channel.toLower()];
+    QSettings s;
+    s.beginGroup("channelevents");
+    if (s.childGroups().indexOf(channel) > -1) {
+        s.beginGroup(channel);
+        if (mychannels.contains(id)) {
+            Channel *c = mychannels.value(id);
+            int event = 1; /* trusts that eventSettings() returns 
+                the list in order */
+            foreach (QString str, eventSettings()) {
+                if (s.value(str).toBool()) {
+                    c->addEvent(event);
+                } else {
+                    c->removeEvent(event);
+                }
+                event *= 2;
+            }
+        }
+    } else {
+        if (mychannels.contains(id)) {
+            mychannels.value(id)->resetEvents();
+        }
+    }
+}
+
 void Client::showPlayerEvents(bool b, int event, QString option)
 {
     QSettings s;

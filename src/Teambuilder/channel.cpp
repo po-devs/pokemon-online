@@ -27,18 +27,8 @@ Channel::Channel(const QString &name, int id, Client *parent)
     battleList->setIndentation(0);
 
     events = -1;
-    QSettings s;
-    s.beginGroup("channelevents");
-    s.beginGroup(myname);
-    foreach(QString str, client->eventSettings()) {
-        if (s.contains(str)) {
-            events = 0;
-            foreach(QString str2, client->eventSettings()) {
-                events |= s.value(str2, false).toBool();
-            }
-            break;
-        }
-    }
+    restoreEventSettings();
+    
 
     if(client->sortBT) {
         sortAllPlayersByTier();
@@ -57,6 +47,11 @@ Channel::~Channel()
 
 int Channel::ownId() const {
     return client->ownId();
+}
+
+void Channel::setName(const QString &name) {
+    myname = name;
+    restoreEventSettings();
 }
 
 void Channel::showContextMenu(const QPoint &requested)
@@ -594,4 +589,9 @@ bool Channel::eventEnabled(int event)
 void Channel::resetEvents()
 {
     events = -1;
+}
+
+void Channel::restoreEventSettings()
+{
+    client->setEventsForChannel(myname);
 }
