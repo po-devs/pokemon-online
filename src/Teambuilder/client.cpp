@@ -313,7 +313,6 @@ void Client::showChannelsContextMenu(const QPoint & point)
         QSettings globals;
 
         QMenu *show_events = new QMenu(this);
-        showPEvents = NoEvent;
         mychanevents.clear();
         QAction *action;
 
@@ -355,11 +354,6 @@ void Client::showChannelsContextMenu(const QPoint & point)
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
         connect(action, SIGNAL(triggered(bool)), SLOT(showIdleEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
-        if(action->isChecked()) {
-            showPEvents |= IdleEvent;
-        } else {
-            showPEvents &= ~IdleEvent;
-        }
         mychanevents.push_back(action);
 
         action = show_events->addAction(tr("Enable battle events"));
@@ -369,11 +363,6 @@ void Client::showChannelsContextMenu(const QPoint & point)
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
         connect(action, SIGNAL(triggered(bool)), SLOT(showBattleEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
-        if(action->isChecked()) {
-            showPEvents |= BattleEvent;
-        } else {
-            showPEvents &= ~BattleEvent;
-        }
         mychanevents.push_back(action);
 
         action = show_events->addAction(tr("Enable channel events"));
@@ -383,11 +372,6 @@ void Client::showChannelsContextMenu(const QPoint & point)
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
         connect(action, SIGNAL(triggered(bool)), SLOT(showChannelEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
-        if(action->isChecked()) {
-            showPEvents |= ChannelEvent;
-        } else {
-            showPEvents &= ~ChannelEvent;
-        }
         mychanevents.push_back(action);
 
         action = show_events->addAction(tr("Enable team change events"));
@@ -397,11 +381,6 @@ void Client::showChannelsContextMenu(const QPoint & point)
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
         connect(action, SIGNAL(triggered(bool)), SLOT(showTeamEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
-        if(action->isChecked()) {
-            showPEvents |= TeamEvent;
-        } else {
-            showPEvents &= ~TeamEvent;
-        }
         mychanevents.push_back(action);
 
         show_events->exec(channels->mapToGlobal(point));
@@ -698,30 +677,26 @@ void Client::deleteCustomEvents() {
     }
 }
 
-void Client::setEventsForChannel(QString const& channel)
+int Client::getEventsForChannel(QString const& channel)
 {
-    int id = channelByNames[channel.toLower()];
     QSettings s;
     s.beginGroup("channelevents");
     if (s.childGroups().indexOf(channel) > -1) {
         s.beginGroup(channel);
-        if (mychannels.contains(id)) {
-            Channel *c = mychannels.value(id);
-            int event = 1; /* trusts that eventSettings() returns 
+        int ret = 0;
+        int event = 1; /* trusts that eventSettings() returns 
                 the list in order */
-            foreach (QString str, eventSettings()) {
-                if (s.value(str).toBool()) {
-                    c->addEvent(event);
-                } else {
-                    c->removeEvent(event);
-                }
-                event *= 2;
+        foreach (QString str, eventSettings()) {
+            if (s.value(str).toBool()) {
+                ret |= event;
+            } else {
+                ret &= ~event;
             }
+            event *= 2;
         }
+        return ret;
     } else {
-        if (mychannels.contains(id)) {
-            mychannels.value(id)->resetEvents();
-        }
+        return -1;
     }
 }
 

@@ -593,5 +593,5 @@ void Channel::resetEvents()
 
 void Channel::restoreEventSettings()
 {
-    client->setEventsForChannel(myname);
+    events = client->getEventsForChannel(myname);
 }

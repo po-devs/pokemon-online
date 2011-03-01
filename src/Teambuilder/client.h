@@ -200,7 +200,7 @@ public slots:
     void enablePlayerEvents();
     void disablePlayerEvents();
     void deleteCustomEvents();
-    void setEventsForChannel(QString const& channel);
+    int getEventsForChannel(QString const& channel);
     void showPlayerEvents(bool b, int event, QString option);
     void showIdleEvents(bool);
     void showBattleEvents(bool);
