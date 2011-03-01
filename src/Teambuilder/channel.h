@@ -21,9 +21,7 @@ public:
     QString name() const {
         return myname;
     }
-    void setName(const QString &name) {
-        myname = name;
-    }
+    void setName(const QString &name);
 
     QTreeWidget *playersWidget() {
         return myplayers;
@@ -57,6 +55,7 @@ public:
     void removeEvent(int event);
     bool eventEnabled(int event);
     void resetEvents();
+    void restoreEventSettings();
 
     void makeReadyToQuit() {
         readyToQuit = true;
