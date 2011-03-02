@@ -1624,6 +1624,7 @@ struct AMSturdy : public AM {
 struct AMIllusion : public AM {
     AMIllusion() {
         functions["UponBeingHit"] = &ubh;
+        functions["BeforeBeingKoed"] = &ubh;
     }
 
     static void ubh(int s, int, BS &b) {

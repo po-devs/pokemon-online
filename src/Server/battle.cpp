@@ -4034,6 +4034,7 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     }
 
     if (!attacking() || tmove(attacker()).power == 0 || gen() == 5) {
+        callaeffects(player, source, "BeforeBeingKoed");
         notifyKO(player);
     }
 
