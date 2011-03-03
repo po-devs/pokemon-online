@@ -466,95 +466,95 @@ Dark Void
 Seed Flare
 Ominous Wind
 Shadow Force
-Claw Sharpen
+Hone Claws
 Wide Guard
-Guard Share
-Power Share
+Guard Split
+Power Split
 Wonder Room
-Psycho Shock
-Venom Shock
-Body Purge
-Anger Powder
+Psyshock
+Venoshock
+Autotomize
+Rage Powder
 Telekinesis
 Magic Room
-Knock Down
-Mountain Storm
+Smack Down
+Storm Throw
 Flame Burst
-Slime Wave
-Butterfly Dance
-Heavy Bomber
-Synchro Noise
-Electric Ball
-Submersion
-Nitro Charge
-Snake Coil
-Ankle Sweep
-Acid Bomb
-Trickery
+Sludge Wave
+Quiver Dance
+Heavy Slam
+Synchronoise
+Electro Ball
+Soak
+Flame Charge
+Coil
+Low Sweep
+Acid Spray
+Foul Play
 Simple Beam
-Befriend
+Entrainment
 After You
-A Capella
-Echo Voice
-Repayment
+Round
+Echoed Voice
+Chip Away
 Clear Smog
-Assist Power
-Fast Guard
-Side Change
-Boil Over
+Stored Power
+Quick Guard
+Ally Switch
+Scald
 Shell Smash
-Healing Wave
-Evil Eye
-Freefall
-Gear Change
-Overhead Throw
+Heal Pulse
+Hex
+Sky Drop
+Shift Gear
+Circle Throw
 Incinerate
-Postpone
-Acrobat
-Mirror Type
-Retribution
-Death Gambit
-Gift Pass
-Purgatory
-Water Realm
-Fire Realm
-Grass Realm
-Volt Change
-Bug Repellant
-Level Field
-Ice Breath
+Quash
+Acrobatics
+Reflect Type
+Retaliate
+Final Gambit
+Bestow
+Inferno
+Water Pledge
+Fire Pledge
+Grass Pledge
+Volt Switch
+Struggle Bug
+Bulldoze
+Frost Breath
 Dragon Tail
-Cheer Up
-Electric Net
-Wild bolt
-Drill Liner
-Double Chop
+Work Up
+Electroweb
+Wild Charge
+Drill Run
+Dual Chop
 Heart Stamp
-Wood Horn
-Holy Sword
-Shell Blade
-Heat Stamp
-Grass Mixer
-Hard Roller
+Horn Leech
+Sacred Sword
+Razor Shell
+Heat Crash
+Leaf Tornado
+Steamroller
 Cotton Guard
-Night Burst
-Psycho Break
-Sweep Slap
+Night Daze
+Psystrike
+Tail Slap
 Hurricane
-Afro Break
-Gear Saucer
-Kaendan
-Techno Buster
-Ancient Song
-Mystery Sword
-Frozen World
-Lightning Strike
-Blue Flame
-Flame Dance
-Freezebolt
-Cold Flare
-Bark out
-Icicle Drop
-V-Generate
-Cross Flame
-Cross Thunder
+Head Charge
+Gear Grind
+Searing Shot
+Techno Blast
+Relic Song
+Secret Sword
+Glaciate
+Bolt Strike
+Blue Flare
+Fiery Dance
+Freeze Shock
+Ice Burn
+Snarl
+Icicle Crash
+V-create
+Fusion Flare
+Fusion Bolt

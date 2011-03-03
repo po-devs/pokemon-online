@@ -229,55 +229,55 @@ Aqua Cassette
 Lightning Cassette
 Blaze Cassette
 Freeze Cassette
-Heart Sweets
-Clean Scale
-Evolution Stone
-Pumice Stone
-Rugged Helmet
-Balloon
+Sweet Heart
+Prism Scale
+Eviolite
+Float Stone
+Rocky Helmet
+Air Balloon
 Red Card
-Bull's Eye
-Pressure Band
-Bulb
-Rechargeable Battery
-Escape Button
-Fire Jewel
-Water Jewel
-Electric Jewel
-Grass Jewel
-Ice Jewel
-Fight Jewel
-Poison Jewel
-Earth Jewel
-Flight Jewel
-Psychic Jewel
-Bug jewel
-Rock Jewel
-Ghost Jewel
-Dragon Jewel
-Dark Jewel
-Steel Jewel
-Normal Jewel
-Strength Wing
-Power Wing
-Resistance Wing
-Wisdom Wing
-Mind Wing
-Instant Wing
-Beautiful Wing
+Ring Target
+Binding Band
+Absorb Bulb
+Cell Battery
+Eject Button
+Fire Gem
+Water Gem
+Electric Gem
+Grass Gem
+Ice Gem
+Fight Gem
+Poison Gem
+Earth Gem
+Flight Gem
+Psychic Gem
+Bug Gem
+Rock Gem
+Ghost Gem
+Dragon Gem
+Dark Gem
+Steel Gem
+Normal Gem
+Health Wing
+Muscle Wing
+Resist Wing
+Genius Wing
+Clever Wing
+Swift Wing
+Pretty Wing
 Dream Ball
-Fragrant Mushroom
-Huge Gold Orb
-Round Pearl
-Comet Piece
-Ancient Bronze Coin
-Ancient Silver Coin
-Ancient Gold Coin
-Ancient Vase
-Ancient Bracelet
-Ancient Statue
-Ancient Crown
-Hiun Ice-cream
+BalmMushroom
+Big Nugget
+Pearl String
+Comet Shard
+Relic Copper
+Relic Silver
+Relice Gold
+Relic Vase
+Relic Band
+Relic Statue
+Relic Crown
+Casteliacone
 Dire Hit 2
 X Speed 2
 X Special 2
@@ -297,9 +297,9 @@ X Sp. Def 6
 X Defend 6
 X Attack 6
 X Accuracy 6
-Skill Call
+Ability Urge
 Item Drop
-Item Call
-Flat Call
+Item Urge
+Reset Urge
 Dire Hit 3
 Berserk Gene
