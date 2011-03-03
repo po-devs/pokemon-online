@@ -2467,6 +2467,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     callieffects(target, player, "UponBeingHit");
                 }
 
+                if (koed(target))
+                    callaeffects(player, target, "AfterKoing");
+
                 /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
                 applyMoveStatMods(player, target);
 
@@ -4043,7 +4046,6 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 
     if (straightattack && player!=source) {
 	callpeffects(player, source, "AfterKoedByStraightAttack");
-        callaeffects(source, player, "AfterKoing");
     }
 
     /* For free fall */
