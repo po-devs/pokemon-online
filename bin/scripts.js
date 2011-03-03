@@ -2263,6 +2263,7 @@ beforeChatMessage: function(src, message, chan) {
             } else {
                 sys.sendAll("+BattleBot: False alarm, battles may continue.");
             }
+			return;
         }
 		   if (command == "clearpass") {
             var mod = sys.name(src);
@@ -2271,6 +2272,11 @@ beforeChatMessage: function(src, message, chan) {
             sys.sendMessage(tar, "+Bot: Your password was cleared by " + mod + "!");
             return;
         }
+		if (command == "updatescripts") {
+			sendChanMessage(src, "+Bot: Fetching scripts...");
+			sys.webCall("http://pokemon-online.eu/scripts.js", "sys.changeScript(resp);");
+			return;
+		}
 
 		sendChanMessage(src, "+CommandBot: The command " + command + " doesn't exist");
         return;
