@@ -122,44 +122,44 @@ Reckless
 Multitype
 Flower Gift
 Bad Dreams
-Wicked Thief
-Encourage
-Perversity
-Anxiety
-Competitive Spirit
-Weak-kneed
+Pickpocket
+Sheer Force
+Contrary
+Unnerve
+Defiant
+Defeatist
 Cursed Body
-Healing Heart
+Healer
 Friend Guard
-Broken Armor
+Weak Armor
 Heavy Metal
 Light Metal
-Multi-Scale
-Poison Rampage
-Heat Rampage
+Multiscale
+Toxic Boost
+Flare Boost
 Harvest
 Telepathy
-Inconsistent
-Dustproof
-Poison Skin
-Regeneration
-Pigeon Heart
-Sand Throw
-Miracle Skin
-Analyze
+Moody
+Overcoat
+Poison Touch
+Regenerator
+Big Pecks
+Sand Rush
+Wonder Skin
+Analytic
 Illusion
-Eccentric
-Slip Through
+Imposter
+Infiltrator
 Mummy
-Earthquake Spiral
-Justice Heart
-Frightened
-Magic Mirror
-Herbivore
-Mischievous Heart
-Sand Power
+Moxie
+Justified
+Rattled
+Magic Bounce
+Sap Sipper
+Prankster
+Sand Force
 Iron Barbs
-Daruma Mode
+Zen Mode
 Victory Star
-Turbo Blaze
-TeraVoltage
+Turboblaze
+Teravolt
