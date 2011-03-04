@@ -1088,7 +1088,7 @@ afterLogIn : function(src) {
 	if (sys.getVal("mban_*" + sys.ip(src)) == "true")
         SESSION.users(src).mban = true;
     else
-        SESSION.users(src).mban = false;
+        SESSION.users(src).mban = false;    
        
     if (sys.numPlayers() > maxPlayersOnline) {
         maxPlayersOnline = sys.numPlayers();
@@ -1199,11 +1199,11 @@ beforeChatMessage: function(src, message, chan) {
         sys.stopEvent();
         return;
     }
-
-    if (message != message.replace(/[u0300-u036F]/gi,'')) {
+    if (message != message.replace(/[\u0300-\u036F]/gi,'')) {
         sys.stopEvent();
         return;
     }
+
 
     if ((message[0] == '/' || message[0] == '!') && message.length > 1) {
         if (parseInt(sys.time()) - lastMemUpdate > 500) {
