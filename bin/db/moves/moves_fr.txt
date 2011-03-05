@@ -466,95 +466,95 @@ Trou Noir
 Fulmigraine
 Vent Mauvais
 Revenant
-Claw Sharpen
-Wide Guard
-Guard Share
-Power Share
-Wonder Room
-Psycho Shock
-Venom Shock
-Body Purge
-Anger Powder
-Telekinesis
-Magic Room
-Knock Down
-Mountain Storm
-Flame Burst
-Slime Wave
-Butterfly Dance
-Heavy Bomber
-Synchro Noise
-Electric Ball
-Submersion
-Nitro Charge
-Snake Coil
-Ankle Sweep
-Acid Bomb
-Trickery
-Simple Beam
-Befriend
-After You
-A Capella
-Echo Voice
-Repayment
-Clear Smog
-Assist Power
-Fast Guard
-Side Change
-Boil Over
-Shell Smash
-Healing Wave
+Aiguisage
+Garde Large
+PartageGarde
+PartageForce
+Zone Étrange
+Choc Psy
+Choc Venin
+Allègement
+PoudreFureur
+Lévikinésie
+Zone Magique
+Anti-Air
+Yama Arashi
+Rebondifeu
+Cradovague
+Papillodance
+Tacle lourd
+Synchropeine
+Boule Élek
+Détrempage
+Nitrocharge
+Enroulement
+Balayette
+Bombe acide
+Tricherie
+Rayon simple
+Ten-danse
+Après Vous
+Chant Canon
+Echo
+Vengeance
+Bain de Smog
+ForceAjoutée
+Prévention
+Interversion
+Ebullition
+Exuviation
+Vibra Soin
 Evil Eye
-Freefall
-Gear Change
-Overhead Throw
-Incinerate
-Postpone
-Acrobat
-Mirror Type
-Retribution
-Death Gambit
-Gift Pass
-Purgatory
-Water Realm
-Fire Realm
-Grass Realm
-Volt Change
-Bug Repellant
-Level Field
-Ice Breath
-Dragon Tail
-Cheer Up
-Electric Net
-Wild bolt
-Drill Liner
-Double Chop
-Heart Stamp
-Wood Horn
-Holy Sword
-Shell Blade
-Heat Stamp
-Grass Mixer
-Hard Roller
-Cotton Guard
-Night Burst
-Psycho Break
-Sweep Slap
-Hurricane
-Afro Break
-Gear Saucer
+Chute Libre
+Chgt Vitesse
+Projection
+Calcination
+À la Queue
+Acrobatie
+Ten-danse
+Chatiment
+Tout ou Rien
+Passe-Cadeau
+Feu d'Enfer
+Aire d'eau
+Aire de Feu
+Aire d'Herbe
+ChangeÉclair
+Survinsecte
+Piétisol
+Souffle Glacé
+Draco-Queue
+Rengorgement
+Toile Élek
+Eclair Fou
+Tunnelier
+Double Baffe
+Crèvecoeur
+Encornebois
+Lame Sainte
+Coquilame
+Tacle Feu
+Phytomixeur
+Bulldoboule
+Cotogarde
+Explonuit
+Frappe Psy
+Plumo-Queue
+Vent Violent
+Peignée
+Chgt Vitesse
 Kaendan
-Techno Buster
-Ancient Song
-Mystery Sword
-Frozen World
-Lightning Strike
-Blue Flame
-Flame Dance
-Freezebolt
-Cold Flare
-Bark out
-Icicle Drop
-V-Generate
-Cross Flame
-Cross Thunder
+TechnoBuster
+ChantAntique
+Lame Ouinte
+Aire Glacière
+ChargeFoudre
+Flamme Bleue
+Danse du Feu
+Éclair Gelé
+Feu glacé
+Aboiement
+Chute Glace
+CoupVictoire
+Flamme Croix
+Éclair Croix

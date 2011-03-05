@@ -465,16 +465,16 @@ This attack's power is equal to int((opponent's current HP)*120/max(1,opponent's
 Puts opponent to sleep.
 May decrease opponent's Special Defense by 2 stages.
 May increase user's Attack, Defense, Speed, Special Attack, and Special Defense by 1 stage. (10%)
-Two-turn attack. [While user is using this attack, attacks with an accuracy check will miss the user [unsure here]]. Ignores effect of Protect or Detect.
+Two-turn attack, invulnerable first turn. Ignores effect of Protect or Detect.
 Raises Atk and Acc 1 stage.
-Protects your team from an attack that would hit all of your Pokemon. Will begin to fail if used in succession.
+Protects your team from an attack that would hit all of your Pokemon. Willfail if used in succession.
 Averages the user's and target's Def and SpDef.
 Averages the user's and target's Atk and SpAtk.
 All Def and SpD swapped for 5 turns.
 Calculate's damage with the target's Def stat.
- doubles if Target is poisoned.
+Doubles power if Target is poisoned.
 Sharply raises Speed.
-Whenever an opposing Pokémon uses an attack with a target of "single non-user" or "single opposing Pokémon" this round and there is a Pokemon at the position of this attack's user, it is directed to the Pokemon at the position of this attack's user instead of to any other non-user of that attack. Remains effective even if user is replaced. Priority level 3.
+Draws the opponent's attacks at yourself.
 Makes Target easier to hit for 3 turns.
 Negates all held items for 5 turns.
 Makes Flying opponents succeptible to Ground moves. (100%)
@@ -516,10 +516,10 @@ Deals more damage if teammate was KO'd last turn.
 KOs the user and deals damage to the opponent equal to the HP it lost.
 Gives user's item to Target if it has to item.
 May burn opponent. (100%)
-If used with Fire Oath, creates rainbow that may cause Confusion
-If used with Grass Oath, creates burning field that causes damage every turn
-If used with Water Oath, creates swamp that lowers Speed of all targets.
-After this attack is used, if this attack is successful, if user has at least 1 HP, and if user's party has at least one non-active Pokémon and the opposing Pokemon's party has at least one unfainted Pokémon that isn't an egg, this attack causes the user to switch even if it cannot switch. (The new Pokémon becomes active immediately. Effect of Destiny Bond and Grudge takes precedence over this attack's effect.)
+If used with Fire Pledge, creates rainbow that may cause Confusion
+If used with Grass Pledge, creates burning field that causes damage every turn
+If used with Water Pledge, creates swamp that lowers Speed of all targets.
+Switch to another Pokémon
 May decrease opponent's Special Attack by 1 stage.
 May decrease opponent's Speed by 1 stage.
 Critical Hit (100%)
@@ -544,7 +544,7 @@ Increases Accuracy during Weather. (30%)
 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
 Strikes twice.
 May burn opponent. (30%)
-If user is holding a Plate, this attack's type depends on the Plate held.
+If user is holding a Plate, this attack's type depends on the Cassette held.
 May put Target to sleep (10%)
 Causes physical damage.
 Sharply lower target's speed.
@@ -556,5 +556,5 @@ May Burn the opponent. (30%)
 May decrease opponent's Special Attack by 1 stage.
 May cause opponent to flinch.
 Deals damage to allies on either side of the user.
-increases if used after Cross Thunder.
-increases if used after Cross Fire.
+Increases if used after Cross Thunder.
+Increases if used after Cross Fire.
