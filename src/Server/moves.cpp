@@ -1227,7 +1227,7 @@ struct MMRoar : public MM
     }
 
     static void aaf(int s, int, BS &b) {
-        if (!turn(b,s).contains("RoarSuccess"))
+        if (!turn(b,s).contains("RoarSuccess") || b.koed(s))
             return;
 
         int t = turn(b,s)["RoarTarget"].toInt();
@@ -1534,8 +1534,9 @@ struct MMKnockOff : public MM
 
     static void uas(int s,int t,BS &b)
     {
-        if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && !b.hasWorkingAbility(t, Ability::Multitype)
-            && b.poke(t).num().pokenum != Pokemon::Giratina) /* Sticky Hold, MultiType, Giratina-O */
+        if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && (!b.hasWorkingAbility(t, Ability::Multitype) ||
+                                                                                                    b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item()))
+            && b.poke(t).item() != Item::GriseousOrb) /* Sticky Hold, MultiType, Giratina-O */
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
@@ -1553,9 +1554,10 @@ struct MMCovet : public MM
     static void uas(int s,int t,BS &b)
     {
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
-            && b.ability(t) != Ability::Multitype && !b.hasWorkingAbility(s, Ability::Multitype)
+            && (!b.hasWorkingAbility(t, Ability::Multitype) || b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item()))
+            && !b.hasWorkingAbility(s, Ability::Multitype)
             && b.pokenum(s).pokenum != Pokemon::Giratina && b.poke(s).item() == 0
-                    && b.pokenum(t).pokenum != Pokemon::Giratina && !ItemInfo::isMail(b.poke(t).item())) /* Sticky Hold, MultiType, Giratina_O, Mail*/
+                    && b.poke(t).item() != Item::GriseousOrb && !ItemInfo::isMail(b.poke(t).item())) /* Sticky Hold, MultiType, Giratina_O, Mail*/
         {
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
 	    b.acqItem(s, b.poke(t).item());
@@ -1573,7 +1575,8 @@ struct MMSwitcheroo : public MM
 
     static void daf(int s, int t, BS &b) {
         if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
-            || b.ability(t) == Ability::Multitype || b.pokenum(s).pokenum == Pokemon::Giratina || b.pokenum(t).pokenum == Pokemon::Giratina
+            || (b.ability(t) == Ability::Multitype && b.gen() <= 4 || ItemInfo::isPlate(b.poke(t).item()))
+            || b.poke(s).item() == Item::GriseousOrb || b.poke(t).item() == Item::GriseousOrb
                     || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item()))
             /* Sticky Hold, MultiType, Giratina-O, Mail */
             {
