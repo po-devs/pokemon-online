@@ -1507,7 +1507,8 @@ void Server::spectatingRequested(int id, int idOfBattle)
         return; // Invalid behavior
     }
     BattleSituation *battle = mybattles.value(idOfBattle);
-    if (!battle->acceptSpectator(id, auth(id) > 0)) {
+    bool forced_allow = myengine->attemptToSpectateBattle(id, battle->id(0), battle->id(1));
+    if (!battle->acceptSpectator(id, (auth(id) > 0) || forced_allow)) {
         sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
         return;
     }
