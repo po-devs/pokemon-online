@@ -2324,3 +2324,8 @@ int ScriptEngine::getClauses(const QString &tier)
 {
     return TierMachine::obj()->tier(tier).getClauses();
 }
+
+bool ScriptEngine::attemptToSpectateBattle(int src, int p1, int p2)
+{
+    return makeSEvent("attemptToSpectateBattle", src, p1, p2);
+}
