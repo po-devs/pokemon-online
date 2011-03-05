@@ -466,128 +466,96 @@ Induces sleep to both opponents
 Lowers foe's SP.DEF
 May raise all user's stats one stage
 Disappears the first turn and attacks the second, foe cannot protect
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Raises Atk and Acc 1 stage.
+Protects your team from an attack that would hit all of your Pokemon. Willfail if used in succession.
+Averages the user's and target's Def and SpDef.
+Averages the user's and target's Atk and SpAtk.
+All Def and SpD swapped for 5 turns.
+Calculate's damage with the target's Def stat.
+Doubles power if Target is poisoned.
+Sharply raises Speed.
+Draws the opponent's attacks at yourself.
+Makes Target easier to hit for 3 turns.
+Negates all held items for 5 turns.
+Makes Flying opponents succeptible to Ground moves. (100%)
+Forces the target to switch.
+Hits all targets.
+May poison opponent. (10%)
+Raises SpA, SpD, and Speed by 1 stage.
+The heavier the user is, the more damage it deals.
+Deals more damage if Target is the same type as User.
+Has a higher Base Power the higher your speed is compared to the target.
+Turns the target into the Water type.
+May raise the user's Spe.
+Raises the user's Atk, Def, and Acc.
+Decreases opponent's Speed by 1 stage.
+Sharply lowers Special Defense.
+The higher the Target's attack stat, the more damage it deals.
+Makes the target's Ability become Simple.
+Makes Target's ability the same as User's.
+Makes the target move immediately after the user.
+Raises Base Power the more Pokemon you have with the attack.
+Deals more damage if used every turn.
+Target's stat changes doesn't affect this move.
+Resets all stat changes.
+The more the User's stats are raised, the more damage this attack deals.
+Protects your team from priority moves. Will fail if used in succession.
+Switch position with an Ally.
+May burn opponent. (30%)
+Raises Atk, SpAtk, and Spe but lowers Def and SpDef.
+Recovers 50% of an ally's HP.
+Doubles in power if the target has a status ailment.
+Picks up the target on the first turn and drops them on the second.
+Increases the user's Atk 1 stage and Spe 2 stages.
+Forces the target to switch.
+Removes the target's Berry.
+Forces Target to move last
+Allows the user to hit the opposite opponent in a Triple Battle.
+Changes target's ability the same as the user's ability.
+Deals more damage if teammate was KO'd last turn.
+KOs the user and deals damage to the opponent equal to the HP it lost.
+Gives user's item to Target if it has to item.
+May burn opponent. (100%)
+If used with Fire Pledge, creates rainbow that may cause Confusion
+If used with Grass Pledge, creates burning field that causes damage every turn
+If used with Water Pledge, creates swamp that lowers Speed of all targets.
+Switch to another Pokémon
+May decrease opponent's Special Attack by 1 stage.
+May decrease opponent's Speed by 1 stage.
+Critical Hit (100%)
+Forces the target to switch.
+Raises the user's Atk and SpAtk.
+Decreases opponent's Speed by 1 stage.
+Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
+Good chance for a critical hit.
+Strikes twice.
+May cause opponent to flinch.
+If this attack is successful, user gains half of HP lost by opponent due to this attack.
+Target's stat changes doesn't affect this move.
+May decrease opponent's Defense by 1 stage.
+The heavier the User is, the more damage it deals.
+May decrease opponent's Accuracy by 1 stage.
+May cause opponent to flinch. Power is doubled if Minimize is in effect for opponent.
+Sharply raises Defense.
+May decrease opponent's Accuracy by 1 stage.
+Deals damage based on the target's Def.
+Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+Increases Accuracy during Weather. (30%)
+Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
+Strikes twice.
+May burn opponent. (30%)
+If user is holding a Plate, this attack's type depends on the Cassette held.
+May put Target to sleep (10%)
+Causes physical damage.
+Sharply lower target's speed.
+May paralyze opponent. (20%)
+May burn opponent. (20%)
+May increase user's Special Attack by 1 stage.
+May Paralyze the opponent. (30%)
+May Burn the opponent. (30%)
+May decrease opponent's Special Attack by 1 stage.
+May cause opponent to flinch.
+Deals damage to allies on either side of the user.
+Increases if used after Cross Thunder.
+Increases if used after Cross Fire.
 .

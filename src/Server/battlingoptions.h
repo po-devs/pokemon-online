@@ -20,6 +20,7 @@ private:
 
     QLabel *desc;
     QSpinBox *months, *percent, *hours, *periods, *max_decay;
+    QCheckBox *processOnStartUp;
 };
 
 #endif // BATTLINGOPTIONS_H

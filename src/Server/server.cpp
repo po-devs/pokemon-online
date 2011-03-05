@@ -193,7 +193,8 @@ void Server::start(){
     addChannel();
 
     /* Processes the daily run */
-    TierMachine::obj()->processDailyRun();
+    if (s.value("process_ratings_on_startup", true).toBool())
+        TierMachine::obj()->processDailyRun();
     QTimer *t2= new QTimer(this);
     connect(t2, SIGNAL(timeout()), this, SLOT(processDailyRun()));
     t2->start(24*3600*1000);

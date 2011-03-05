@@ -3,18 +3,18 @@ Puanteur
 Crachin
 Turbo
 Armurebaston
-FermetÃ©
+Fermeté
 Moiteur
-Ã‰chauffement
+Échauffement
 Voile sable
 Static
 Absorb Volt
 Absorb Eau
-BenÃªt
+Benêt
 Ciel Gris
-Oeil ComposÃ©
+Oeil Composé
 Insomnia
-DÃ©guisement
+Déguisement
 Vaccin
 Torche
 Ecran poudre
@@ -24,13 +24,13 @@ Intimidation
 Marque Ombre
 Peau dure
 Garde magic
-LÃ©vitation
+Lévitation
 Pose Spore
 Synchro
 Corps Sain
-MÃ©dic Nature
+Médic Nature
 Paratonnerre
-SÃ©rÃ©nitÃ©
+Sérénité
 Glissade
 Chlorophylle
 Lumiattirance
@@ -40,7 +40,7 @@ Point Poison
 Attention
 Armumagma
 Ignifu voile
-MagnÃ©piÃ¨ge
+Magnépiège
 Anti bruit
 Cuvette
 Sable volant
@@ -52,7 +52,7 @@ Fuite
 Regard Vif
 Hyper Cutter
 Rammassage
-AbsentÃ©isme 
+Absentéisme 
 Agitation
 Joli Sourire
 Plus
@@ -61,39 +61,39 @@ Meteo
 Glue
 Mue
 Cran
-Ã‰caille SpÃ©ciale
+Écaille Spéciale
 Suintement
 Engrais
 Brasier
 Torrent
 Essaim
-TÃªte de Roc
-SÃ©cheresse
-PiÃ¨ge
+Tête de Roc
+Sécheresse
+Piège
 Esprit Vital
-Ecran fumÃ©e
+Ecran fumée
 Force Pure
 Coque Armure
 Air Lock
 Tempo perso
-MotorisÃ©
-RivalitÃ©
+Motorisé
+Rivalité
 Impassible
 Rideau Neige
 Gloutonnerie
-ColÃ©rique
-DÃ©lestage
+Colérique
+Délestage
 Ignifuge
 Simple
 Dry Skin
-TÃ©lÃ©charge
+Télécharge
 Poing de Fer
 Soin Poison
-AdaptabilitÃ©
+Adaptabilité
 Multi coups
 Hydratation
 Force soleil
-Pied VÃ©loce
+Pied Véloce
 Normalise
 Sniper
 Garde Magik
@@ -106,11 +106,11 @@ Brise Moule
 Chanceux
 Boom Final
 Anticipation
-PrÃ©diction
+Prédiction
 Inconscient
-LumiteintÃ©e
+Lumiteintée
 Filtre
-DÃ©but calme
+Début calme
 Querelleur
 Lavabo
 Corps Gel
@@ -118,48 +118,48 @@ Solide Roc
 Alerte Neige
 Cherche Miel
 Fouille
-TÃ©mÃ©raire
+Téméraire
 Multitype
 Don Floral
-Mauvais RÃªve
-Wicked Thief
-Encourage
-Perversity
-Anxiety
-Competitive Spirit
-Weak-kneed
-Cursed Body
-Healing Heart
-Friend Guard
-Broken Armor
+Mauvais Rêve
+Pickpocket
+Sans Limite
+Contestation
+Tension
+Acharné
+Défaitiste
+Corps Maudit
+Cœur Soin
+Garde amie
+Armurouillée
 Heavy Metal
 Light Metal
-Multi-Scale
-Poison Rampage
-Heat Rampage
-Harvest
-Telepathy
-Inconsistent
-Dustproof
-Poison Skin
-Regeneration
-Pigeon Heart
-Sand Throw
-Miracle Skin
-Analyze
+Multécaille
+Rage Poison
+Rage Brûlure
+Récolte
+Télépathe
+Lunatique
+Envelocape
+Toxitouche
+Régé-Force
+Coeur de coq
+Baigne Sable
+Peau Miracle
+Analyste
 Illusion
-Eccentric
-Slip Through
-Mummy
-Earthquake Spiral
-Justice Heart
-Frightened
-Magic Mirror
+Imposteur
+Infiltration
+Momie
+Impudence
+Cœur Noble
+Phobique
+Miroir Magik
 Herbivore
-Mischievous Heart
-Sand Power
-Iron Barbs
-Daruma Mode
-Victory Star
-Turbo Blaze
-TeraVoltage
+Farceur
+Force Sable
+Épine de Fer
+Mode Transe
+Victorieux
+TurboBrasier
+Téra-Voltage

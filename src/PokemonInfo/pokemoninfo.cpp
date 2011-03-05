@@ -1177,7 +1177,7 @@ void MoveInfo::loadNames()
 
 void MoveInfo::loadDetails()
 {
-    fill_container_with_file(m_Details, trFile(path("move_effect")));
+    fill_container_with_file(m_Details, trFile(path("move_description")));
 }
 
 void MoveInfo::loadSpecialEffects()

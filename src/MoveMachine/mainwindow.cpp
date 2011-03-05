@@ -314,6 +314,41 @@ MainWindow::MainWindow(QWidget *parent) :
 //    outfile.close();
 //    exit(0);
 
+//    TypeInfo::init();
+//    CategoryInfo::init();
+//    QFile out("importStuff.txt");
+//    out.open(QIODevice::WriteOnly);
+//    out.write("Title, Free Text\n");
+//    for (int i = 0; i <MoveInfo::NumberOfMoves(); i++) {
+//        qDebug() << "move " << i;
+//        out.putChar('"');
+//        out.write("Data:");
+//        out.write(MoveInfo::Name(i).toUtf8());
+//        out.putChar('"');
+//        out.write(", ");
+//        out.putChar('"');
+//        QString s =QString(
+//"<includeonly>{{{{{format}}}|\n"
+//"type=%1|pow=%2|acc=%3|pp=%4|class=%5|description=%6|gen=%7|\n"
+//"{{{1|}}}}}</includeonly>\n"
+//"<noinclude>{{MoveTable}}\n"
+//"{{MoveTable/Line|move={{PAGENAME}}}}\n"
+//"{{MoveTable/Footer}}</noinclude>"
+//).arg(TypeInfo::Name(MoveInfo::Type(i,5)).toLower(), MoveInfo::PowerS(i,5), MoveInfo::AccS(i,5), QString::number(MoveInfo::PP(i,5))
+//      , CategoryInfo::Name(MoveInfo::Category(i, 5)).toLower(), MoveInfo::DetailedDescription(i));
+//        for (int g = 1; g <=5; g++) {
+//            if (MoveInfo::Exists(i, g)) {
+//                s = s.arg(g);
+//                break;
+//            }
+//        }
+//        out.write(s.toUtf8());
+//        out.putChar('"');
+//        out.putChar('\n');
+//    }
+//    out.close();
+//    exit(0);
+
     connect(ui->save, SIGNAL(triggered()), SLOT(save()));
     connect(ui->gen1, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
     connect(ui->gen2, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));

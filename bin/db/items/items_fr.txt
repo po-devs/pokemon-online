@@ -225,81 +225,81 @@ Snow Mail
 Space Mail
 Steel Mail
 Tunnel Mail
-Aqua Cassette
-Lightning Cassette
-Blaze Cassette
-Freeze Cassette
-Heart Sweets
-Clean Scale
-Evolution Stone
-Pumice Stone
-Rugged Helmet
-Balloon
-Red Card
-Bull's Eye
-Pressure Band
-Bulb
-Rechargeable Battery
-Escape Button
-Fire Jewel
-Water Jewel
-Electric Jewel
-Grass Jewel
-Ice Jewel
-Fight Jewel
-Poison Jewel
-Earth Jewel
-Flight Jewel
-Psychic Jewel
-Bug jewel
-Rock Jewel
-Ghost Jewel
-Dragon Jewel
-Dark Jewel
-Steel Jewel
-Normal Jewel
+Module Aqua
+Module Choc
+Module Pyro
+Modul Cryo
+Chococoeurs
+Bel'écaille
+Evoluroc
+Pierrallégée
+Casque Brut
+Ballon
+Carte Rouge
+Pt de Mire
+B. Étreinte
+Bulbe
+Pile
+Bouton Fuite
+Joyau Feu
+Joyau Eau
+Joyau Electrique
+Joyau Plante
+Joyau Glace
+Joyau Combat
+Joyau Poison
+Joyau Sol
+Joyau Vol
+Joyau Psy
+Joyau Insecte
+Joyau Roche
+Joyau Spectre
+Joyau Dragon
+Joyau Ténèbre
+Joyau Acier
+Joyau Normal
 Strength Wing
-Power Wing
-Resistance Wing
-Wisdom Wing
-Mind Wing
-Instant Wing
-Beautiful Wing
-Dream Ball
-Fragrant Mushroom
-Huge Gold Orb
-Round Pearl
-Comet Piece
-Ancient Bronze Coin
-Ancient Silver Coin
-Ancient Gold Coin
-Ancient Vase
-Ancient Bracelet
-Ancient Statue
-Ancient Crown
-Hiun Ice-cream
-Dire Hit 2
-X Speed 2
-X Special 2
-X Sp. Def 2
-X Defend 2
-X Attack 2
-X Accuracy 2
-X Speed 3
-X Special 3
-X Sp. Def 3
-X Defend 3
-X Attack 3
-X Accuracy 3
-X Speed 6
-X Special 6
-X Sp. Def 6
-X Defend 6
-X Attack 6
-X Accuracy 6
-Skill Call
-Item Drop
-Item Call
+Aile Force
+Aile Armure
+Aile Esprit
+Aile Mental
+Aile Sprint
+Jolie Aile
+Rêve Ball
+Champi Suave
+Max Pépite
+Perles triple
+Morc. Comète
+Vieux Sou
+Vieil Ecu
+Vieux Ducat
+Vieux Vase
+Vieux Bijou
+Vieux Santon
+Vieux Tortil
+Glace Volute
+Muscle 2
+X Vitesse 2
+X Att.Spé 2
+X Def.Spé 2
+X Defense 2
+X Attaque 2
+X Précision 2
+X Vitesse 3
+X Att.Spé 3
+X Def.Spé 3
+X Defense 3
+X Attaque 3
+X Précision 3
+X Vitesse 6
+X Att.Spé 6
+X Def.Spé 6
+X Defense 6
+X Attaque 6
+X Précision 6
+Appel Cap.Spé
+Jette Objet
+Appel Objet
 Flat Call
 Dire Hit 3
 Gene Berserk

@@ -1535,7 +1535,7 @@ struct MMKnockOff : public MM
     static void uas(int s,int t,BS &b)
     {
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && (!b.hasWorkingAbility(t, Ability::Multitype) ||
-                                                                                                    b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item()))
+                                                                                                    (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
             && b.poke(t).item() != Item::GriseousOrb) /* Sticky Hold, MultiType, Giratina-O */
 	{
 	    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
@@ -1554,7 +1554,7 @@ struct MMCovet : public MM
     static void uas(int s,int t,BS &b)
     {
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
-            && (!b.hasWorkingAbility(t, Ability::Multitype) || b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item()))
+            && (!b.hasWorkingAbility(t, Ability::Multitype) || (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
             && !b.hasWorkingAbility(s, Ability::Multitype)
             && b.pokenum(s).pokenum != Pokemon::Giratina && b.poke(s).item() == 0
                     && b.poke(t).item() != Item::GriseousOrb && !ItemInfo::isMail(b.poke(t).item())) /* Sticky Hold, MultiType, Giratina_O, Mail*/
@@ -1575,7 +1575,7 @@ struct MMSwitcheroo : public MM
 
     static void daf(int s, int t, BS &b) {
         if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
-            || (b.ability(t) == Ability::Multitype && b.gen() <= 4 || ItemInfo::isPlate(b.poke(t).item()))
+            || (b.ability(t) == Ability::Multitype && (b.gen() <= 4 || ItemInfo::isPlate(b.poke(t).item())))
             || b.poke(s).item() == Item::GriseousOrb || b.poke(t).item() == Item::GriseousOrb
                     || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item()))
             /* Sticky Hold, MultiType, Giratina-O, Mail */

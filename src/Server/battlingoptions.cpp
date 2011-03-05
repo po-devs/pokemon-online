@@ -24,6 +24,7 @@ BattlingOptionsWindow::BattlingOptionsWindow()
     hl->addWidget(periods = new QSpinBox());
     hl->addWidget(months = new QSpinBox());
     fl->addLayout(hl);
+    fl->addWidget(processOnStartUp = new QCheckBox(tr("Process Ratings on Server Startup")));
     percent->setSuffix(" %");
     hours->setSuffix(" hours");
     max_decay->setSuffix(" %");
@@ -53,6 +54,7 @@ BattlingOptionsWindow::BattlingOptionsWindow()
     sameIp->setChecked(s.value("battles_with_same_ip_unrated").toBool());
     diffIps->setValue(s.value("rated_battles_memory_number").toInt());
     allowCRated->setChecked(s.value("rated_battle_through_challenge").toBool());
+    processOnStartUp->setChecked(s.value("process_ratings_on_startup", true).toBool());
 
     updateLabel();
 
@@ -82,6 +84,7 @@ void BattlingOptionsWindow::applyChanges()
     s.setValue("ladder_percent_per_period", percent->value());
     s.setValue("ladder_bonus_time", periods->value());
     s.setValue("ladder_max_decay", max_decay->value());
+    s.setValue("process_ratings_on_startup", processOnStartUp->isChecked());
 
     emit settingsChanged();
 
