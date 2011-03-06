@@ -2324,3 +2324,15 @@ int ScriptEngine::getClauses(const QString &tier)
 {
     return TierMachine::obj()->tier(tier).getClauses();
 }
+
+bool ScriptEngine::attemptToSpectateBattle(int src, int p1, int p2)
+{
+    if (!myscript.property("attemptToSpectateBattle", QScriptValue::ResolveLocal).isValid()) {
+        return false;
+    }
+    QScriptValue res = myscript.property("attemptToSpectateBattle").call(myscript, QScriptValueList() << src << p1 << p2);
+    if (res.isError()) {
+        printLine(QString("Script Error line %1: %2").arg(myengine.uncaughtExceptionLineNumber()).arg(res.toString()));
+    }
+    return res.isString() && (res.toString().toLower() == "allow");
+}
