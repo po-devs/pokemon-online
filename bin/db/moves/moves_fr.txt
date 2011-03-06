@@ -542,7 +542,7 @@ Frappe Psy
 Plumo-Queue
 Vent Violent
 Peignée
-Chgt Vitesse
+Lancécrou
 Kaendan
 TechnoBuster
 ChantAntique
