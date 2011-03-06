@@ -598,7 +598,7 @@
 533:0 Gurdurr
 534:0 Conkeldurr
 535:0 Tympole
-536:0 Palpitoa
+536:0 Palpitoad
 537:0 Seismitoad
 538:0 Throh
 539:0 Sawk
