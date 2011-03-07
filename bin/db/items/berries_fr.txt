@@ -39,13 +39,13 @@ Baie Parma
 Baie Ratam
 Baie Nanone
 Baie Pomroz
-Baie KÃ©bia
+Baie Kébia
 Baie Jouca
 Baie Cobaba
 Baie Yapap
 Baie Panga
 Baie Charti
-Baie SÃ©dra
+Baie Sédra
 Baie Fraigo
 Baie Lampou
 Baie Babiri
@@ -59,6 +59,6 @@ Baie Lansat
 Baie Frista
 Baie Enigma
 Baie Micle
-Baie ChÃ©rim
+Baie Chérim
 Baie Jaboca
 Baie Pommo
