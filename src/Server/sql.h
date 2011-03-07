@@ -21,6 +21,7 @@ public:
         QMutexLocker m(&mutex);
         QSettings s("config", QSettings::IniFormat);
         databaseType = s.value("sql_driver").toInt();
+        databaseSchema = s.value("sql_db_schema", "").toString();
 
         QString driver;
         switch(databaseType)
@@ -58,7 +59,12 @@ public:
             db.setConnectOptions("MYSQL_OPT_RECONNECT=1");
         }
 
-        if (!db.open() && name=="") {
+        bool result = db.open();
+        // Set default schema for PostgreSQL if defined in config.
+        if (result && (databaseType == PostGreSQL) && !databaseSchema.isEmpty()) {
+            db.exec(QString("SET search_path TO %1;").arg(databaseSchema));
+        }
+        if (!result && name=="") {
             throw (QString("Unable to establish a database connection.") + db.lastError().text());
         } else if (name == "") {
             if (databaseType != MySQL)
@@ -74,6 +80,7 @@ public:
     };
 
     static int databaseType;
+    static QString databaseSchema;
     static QMutex mutex;
 };
 
