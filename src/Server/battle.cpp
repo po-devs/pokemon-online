@@ -2563,11 +2563,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         notifyKO(player);
     }
 
-    /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
-    calleffects(player, player, "AfterAttackFinished");
-
     attacker() = oldAttacker;
     attacked() = oldAttacked;
+
+    /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
+    calleffects(player, player, "AfterAttackFinished");
 }
 
 void BattleSituation::notifyKO(int player)
