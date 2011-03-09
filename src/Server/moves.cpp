@@ -880,7 +880,7 @@ struct MMPerishSong : public MM
                 continue;
             }
             if (b.hasWorkingAbility(t, Ability::Soundproof)) {
-                b.sendAbMessage(57,0,s);
+                b.sendAbMessage(57,0,t);
                 continue;
             }
             addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);

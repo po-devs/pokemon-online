@@ -98,6 +98,7 @@ class BaseBattleWindow : public QWidget
     PROPERTY(int, animatedHpSpot);
     PROPERTY(int, animatedHpGoal);
     PROPERTY(bool, started);
+    PROPERTY(bool, usePokemonNames);
     PROPERTY(BattleConfiguration, conf);
 public:
     BaseBattleInfo *myInfo;
@@ -284,7 +285,7 @@ protected:
     bool blankMessage;
     bool battleEnded;
 
-    BaseBattleWindow(){delayed=0;ignoreSpecs=false;}
+    BaseBattleWindow();
     void init();
     void checkAndSaveLog();
 
