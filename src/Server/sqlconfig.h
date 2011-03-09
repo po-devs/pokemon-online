@@ -15,7 +15,7 @@ public slots:
     void exportDatabase();
 private:
     QComboBox *b;
-    QLineEdit *host, *name, *user, *pass;
+    QLineEdit *host, *name, *user, *pass, *schema;
     QSpinBox *port;
 };
 

@@ -33,6 +33,10 @@ SQLConfigWindow::SQLConfigWindow()
     name = new QLineEdit();
     name->setText(s.value("sql_db_name").toString());
     v->addLayout(new QSideBySide(new QLabel(tr("Database name: ")), name));
+    
+    schema = new QLineEdit();
+    schema->setText(s.value("sql_db_schema", "").toString());
+    v->addLayout(new QSideBySide(new QLabel(tr("Schema: ")), schema));
 
     user = new QLineEdit();
     user->setText(s.value("sql_db_user").toString());
@@ -71,6 +75,8 @@ void SQLConfigWindow::changeEnabled()
     port->setDisabled(c);
     host->setDisabled(c);
     pass->setDisabled(c);
+    // Schema for PostgreSQL.
+    schema->setEnabled(b->currentIndex() == 1);
 }
 
 void SQLConfigWindow::apply()
@@ -83,6 +89,7 @@ void SQLConfigWindow::apply()
     s.setValue("sql_db_user", user->text());
     s.setValue("sql_db_pass", pass->text());
     s.setValue("sql_db_host", host->text());
+    s.setValue("sql_db_schema", schema->text());
 }
 
 void SQLConfigWindow::exportDatabase()
