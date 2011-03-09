@@ -39,10 +39,19 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
     myInfo = new BaseBattleInfo(me, opponent, conf.mode);
     info().gen = conf.gen;
     mydisplay = new BaseBattleDisplay(info());
+    QSettings s;
+    usePokemonNames() = s.value("use_pokemon_names").toBool();
 
     init();
     show();
     printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(name(true), name(false)));
+}
+
+BaseBattleWindow::BaseBattleWindow()
+{
+    delayed=0;ignoreSpecs=false;
+    QSettings s;
+    usePokemonNames() = s.value("use_pokemon_names").toBool();
 }
 
 void BaseBattleWindow::delay(qint64 msec, bool forceDelay)
@@ -232,7 +241,10 @@ QString BaseBattleWindow::nick(int player) const
 
 QString BaseBattleWindow::rnick(int player) const
 {
-    return info().currentShallow(player).nick();
+    if (usePokemonNames())
+        return PokemonInfo::Name(info().currentShallow(player).num());
+    else
+        return info().currentShallow(player).nick();
 }
 
 void BaseBattleWindow::animateHPBar()

@@ -1046,6 +1046,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(oldStyleButtons, SIGNAL(triggered(bool)), SLOT(changeButtonStyle(bool)));
     oldStyleButtons->setChecked(s.value("old_attack_buttons").toBool());
 
+    QAction *dontUseNicknames = battleMenu->addAction(tr("Don't show Pokémon Nicknames"));
+    dontUseNicknames->setCheckable(true);
+    connect(dontUseNicknames, SIGNAL(triggered(bool)), SLOT(changeNicknames(bool)));
+    dontUseNicknames->setChecked(s.value("use_pokemon_names").toBool());
+
     mymenubar = menuBar;
 
     return menuBar;
@@ -1118,6 +1123,12 @@ void Client::changeButtonStyle(bool old)
 {
     QSettings s;
     s.setValue("old_attack_buttons",old);
+}
+
+void Client::changeNicknames(bool old)
+{
+    QSettings s;
+    s.setValue("use_pokemon_names",old);
 }
 
 void Client::saveBattleLogs(bool save)

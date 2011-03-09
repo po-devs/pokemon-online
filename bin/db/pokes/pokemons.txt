@@ -627,7 +627,7 @@
 560:0 Scrafty
 561:0 Sigilyph
 562:0 Yamask
-563:0 Cofagrigusk
+563:0 Cofagrigus
 564:0 Tirtouga
 565:0 Carracosta
 566:0 Archen
@@ -641,7 +641,7 @@
 574:0 Gothita
 575:0 Gothorita
 576:0 Gothitelle
-577:0 Solosi
+577:0 Solosis
 578:0 Duosion
 579:0 Reuniclus
 580:0 Ducklett
