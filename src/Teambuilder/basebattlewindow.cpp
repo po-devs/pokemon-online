@@ -904,6 +904,8 @@ void BaseBattleWindow::printHtml(const QString &str)
 BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     : myInfo(&i)
 {
+    parent = NULL;
+
     QVBoxLayout *l=  new QVBoxLayout(this);
     l->setMargin(0);
 
@@ -936,7 +938,6 @@ BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
     oppl2->setSpacing(6);
 
     for (int i = 0; i < info().numberOfSlots/2; i++) {
-
         QGridLayout *inside = new QGridLayout();
         oppl2->addLayout(inside);
         inside->setMargin(0);
@@ -1130,10 +1131,17 @@ void BaseBattleDisplay::updateTimers()
 
 void BaseBattleDisplay::updatePoke(int spot)
 {
+    if (!parent) {
+        parent = dynamic_cast<BaseBattleWindow*>(QWidget::parent());
+
+        if (!parent)
+            return;
+    }
+
     if (info().pokeAlive[spot]) {
         const ShallowBattlePoke &poke = info().currentShallow(spot);
         zone->switchTo(poke, spot, info().sub[spot], info().specialSprite[spot]);
-        nick[spot]->setText(poke.nick());
+        nick[spot]->setText(parent->rnick(spot));
         level[spot]->setText(tr("Lv. %1").arg(poke.level()));
         updateHp(spot);
         bars[spot]->setStyleSheet(health(poke.lifePercent()));
@@ -1175,6 +1183,12 @@ void BaseBattleDisplay::updateHp(int spot)
 
 void BaseBattleDisplay::updateToolTip(int spot)
 {
+    if (!parent) {
+        parent = dynamic_cast<BaseBattleWindow*>(QWidget::parent());
+
+        if (!parent)
+            return;
+    }
     QString tooltip;
 
     QString stats[7] = {
@@ -1196,7 +1210,7 @@ void BaseBattleDisplay::updateToolTip(int spot)
 
     const ShallowBattlePoke &poke = info().currentShallow(spot);
 
-    tooltip += poke.nick() + "\n";
+    tooltip += parent->rnick(spot) + "\n";
     tooltip += TypeInfo::Name(PokemonInfo::Type1(poke.num(), info().gen));
     int type2 = PokemonInfo::Type2(poke.num());
     if (type2 != Pokemon::Curse) {

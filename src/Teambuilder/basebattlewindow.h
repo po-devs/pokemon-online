@@ -331,6 +331,8 @@ protected:
     /* The pokeballs to indicate how well a team is doing */
     QLabel *advpokeballs[6];
     QLabel *mypokeballs[6];
+
+    BaseBattleWindow *parent;
 };
 
 /* The graphics zone, where both pokes are displayed */
