@@ -1046,7 +1046,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(oldStyleButtons, SIGNAL(triggered(bool)), SLOT(changeButtonStyle(bool)));
     oldStyleButtons->setChecked(s.value("old_attack_buttons").toBool());
 
-    QAction *dontUseNicknames = battleMenu->addAction(tr("Don't show Pokémon Nicknames"));
+    QAction *dontUseNicknames = battleMenu->addAction(tr("Don't show Pokemon Nicknames"));
     dontUseNicknames->setCheckable(true);
     connect(dontUseNicknames, SIGNAL(triggered(bool)), SLOT(changeNicknames(bool)));
     dontUseNicknames->setChecked(s.value("use_pokemon_names").toBool());
