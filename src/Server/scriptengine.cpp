@@ -2336,3 +2336,45 @@ bool ScriptEngine::attemptToSpectateBattle(int src, int p1, int p2)
     }
     return res.isString() && (res.toString().toLower() == "allow");
 }
+
+QScriptValue ScriptEngine::getValKeys()
+{
+    QSettings s;
+    QStringList list = s.childKeys();
+    QStringList result_data;
+    
+    QStringListIterator it(list);
+    while (it.hasNext()) {
+        QString v = it.next();
+        if (v.startsWith("Script_")) {
+            result_data.append(v.mid(7));
+        }
+    }
+    int len = result_data.length();
+    QScriptValue result_array = myengine.newArray(len);
+    for (int i = 0; i < len; ++i) {
+        result_array.setProperty(i, result_data.at(i));
+    }
+    return result_array;
+}
+
+QScriptValue ScriptEngine::getValKeys(const QString &file)
+{
+    QSettings s(file, QSettings::IniFormat);
+    QStringList list = s.childKeys();
+    QStringList result_data;
+    
+    QStringListIterator it(list);
+    while (it.hasNext()) {
+        QString v = it.next();
+        if (v.startsWith("Script_")) {
+            result_data.append(v.mid(7));
+        }
+    }
+    int len = result_data.length();
+    QScriptValue result_array = myengine.newArray(len);
+    for (int i = 0; i < len; ++i) {
+        result_array.setProperty(i, result_data.at(i));
+    }
+    return result_array;
+}
