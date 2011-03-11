@@ -187,6 +187,9 @@ public:
     Q_INVOKABLE QScriptValue ladderRating(int id);
     Q_INVOKABLE QScriptValue getVal(const QString &key);
     Q_INVOKABLE QScriptValue getVal(const QString &file, const QString &key);
+    // Returns an array of Script_* key names in config.
+    Q_INVOKABLE QScriptValue getValKeys();
+    Q_INVOKABLE QScriptValue getValKeys(const QString &file);
     /* returns a state of the memory, useful to check for memory leaks and memory usage */
     Q_INVOKABLE QScriptValue memoryDump();
     Q_INVOKABLE bool hasLegalTeamForTier(int id, const QString &tier);
