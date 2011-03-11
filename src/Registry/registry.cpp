@@ -86,7 +86,7 @@ void Registry::incomingServer()
 
     printLine(QString("Incoming server connection from IP %1 on slot %2").arg(ip).arg(id));
 
-    if (bannedIPs.contains(ip) || tbanIPs.contains(ip.toUtf8()) || ip.left(9) == "71.240.14" || ip.left(6) == "63.19.")
+    if (bannedIPs.contains(ip) || tbanIPs.contains(ip.toUtf8()))
     {
         printLine("The ip is banned");
         delete newconnection;
@@ -126,7 +126,7 @@ void Registry::incomingPlayer()
 
     printLine(QString("Incoming player connection from IP %1 on slot %2").arg(ip).arg(id));
 
-    if (bannedIPs.contains(ip) || ip.left(6) == "63.19.")
+    if (bannedIPs.contains(ip))
     {
         printLine("The ip is banned");
         delete newconnection;
