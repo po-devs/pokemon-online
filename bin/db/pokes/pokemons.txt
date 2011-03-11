@@ -569,7 +569,7 @@
 504:0 Patrat
 505:0 Watchog
 506:0 Lillipup
-507:0 Herdie
+507:0 Herdier
 508:0 Stoutland
 509:0 Purrloin
 510:0 Liepard

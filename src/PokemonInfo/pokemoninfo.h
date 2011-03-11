@@ -74,6 +74,7 @@ public:
     static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid);
     static QList<Pokemon::uniqueId> VisibleFormes(const Pokemon::uniqueId &pokeid);
     static QList<int> Evos(int pokenum);
+    static QList<int> DirectEvos(int pokenum);
     static bool HasEvolutions(int pokenum);
 
     // Will always return base form (subnum 0).

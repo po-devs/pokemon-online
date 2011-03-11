@@ -2047,7 +2047,8 @@ void BattleSituation::testFlinch(int player, int target)
         turnMemory(target)["Flinched"] = true;
     }
 
-    if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench))) {
+    if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)
+        || hasWorkingItem(player, Item::RazorFang))) {
         /* King's rock */
         if (true_rand() % 100 < 10) {
             turnMemory(target)["Flinched"] = true;

@@ -2050,6 +2050,19 @@ class PokeGeneral
 {
     PROPERTY(Pokemon::uniqueId, num);
     PROPERTY(quint8, gen);
+public:
+    PokeGeneral();
+
+    const AbilityGroup &abilities() const;
+    int genderAvail() const;
+    int type1() const;
+    int type2() const;
+    const PokeBaseStats &stats() const;
+
+    const QSet<int>& moves() const;
+
+    /* loads using num() */
+    void load();
 protected:
     PokeBaseStats m_stats;
     QSet<int> m_moves;
@@ -2061,16 +2074,7 @@ protected:
     void loadTypes();
     void loadAbilities();
     void loadGenderAvail();
-public:
-    PokeGeneral();
-
-    const AbilityGroup &abilities() const;
-    int genderAvail() const;
-
-    const QSet<int>& moves() const;
-
-    /* loads using num() */
-    void load();
+    void loadStats();
 };
 
 /* Data that is unique to a pokémon */
