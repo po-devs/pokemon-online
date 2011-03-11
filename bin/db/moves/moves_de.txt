@@ -466,95 +466,95 @@ Schlummerort
 Schocksamen
 Unheilb�en
 Schemenkraft
-Claw Sharpen
-Wide Guard
-Guard Share
-Power Share
-Wonder Room
-Psycho Shock
-Venom Shock
-Body Purge
-Anger Powder
-Telekinesis
-Magic Room
-Knock Down
-Mountain Storm
-Flame Burst
-Slime Wave
-Butterfly Dance
-Heavy Bomber
-Synchro Noise
-Electric Ball
-Submersion
-Nitro Charge
-Snake Coil
-Ankle Sweep
-Acid Bomb
-Trickery
-Simple Beam
-Befriend
-After You
-A Capella
-Echo Voice
-Repayment
-Clear Smog
-Assist Power
-Fast Guard
-Side Change
-Boil Over
-Shell Smash
-Healing Wave
-Evil Eye
-Freefall
-Gear Change
-Overhead Throw
-Incinerate
-Postpone
-Acrobat
-Mirror Type
-Retribution
-Death Gambit
-Gift Pass
-Purgatory
-Water Realm
-Fire Realm
-Grass Realm
-Volt Change
-Bug Repellant
-Level Field
-Ice Breath
-Dragon Tail
-Cheer Up
-Electric Net
-Wild bolt
-Drill Liner
-Double Chop
-Heart Stamp
-Wood Horn
-Holy Sword
-Shell Blade
-Heat Stamp
-Grass Mixer
-Hard Roller
-Cotton Guard
-Night Burst
-Psycho Break
-Sweep Slap
-Hurricane
-Afro Break
-Gear Saucer
-Kaendan
-Techno Buster
-Ancient Song
-Mystery Sword
-Frozen World
-Lightning Strike
-Blue Flame
-Flame Dance
-Freezebolt
-Cold Flare
-Bark out
-Icicle Drop
-V-Generate
-Cross Flame
-Cross Thunder
+Klauenwetzer
+Rundumschutz
+Schutzteiler
+Kraftteiler
+Wunderraum
+Psychoschock
+Giftschock
+Autotomie
+Wutpulver
+Telekinese
+Magieraum
+Katapult
+Bergsturm
+Funkenflug
+Schlammwoge
+Falterreigen
+Rammboss
+Synchrolärm
+Elektroball
+Überflutung
+Nitroladung
+Einrollen
+Fußtritt
+Säurespeier
+Schmarutzer
+Wankelstrahl
+Zwango
+Galanterie
+Kanon
+Wiederhall
+Zermürben
+Klärsmog
+Kraftvorrat
+Rapidschutz
+Seitentausch
+Siedewasser
+Hausbruch
+Heilwoge
+Bürde
+Freier Fall
+Gangwechsel
+Überkopfwurf
+Einäschern
+Verzögerung
+Akrobatik
+Typenspiegel
+Heimzahlung
+Wagemut
+Offerte
+Inferno
+Wassersäulen
+Feuersäulen
+Pflanzsäulen
+Voltwechsel
+Käfertrutz
+Dampfwalze
+Eisodem
+Drachenrute
+Kraftschub
+Elektronetz
+Stromstoß
+Schlagbohrer
+Doppelhieb
+Herzstempel
+Holzgeweih
+Sanctoklinge
+Kalkklinge
+Brandstempel
+Grasmixer
+Quetschwalze
+Watteschild
+Nachtflut
+Psychostoß
+Kehrschelle
+Orkan
+Steinschädel
+Klikkdiskus
+Flammenball
+Techblaster
+Urgesang
+Mystoschwert
+Eiszeit
+Blitzschlag
+Blauflammen
+Feuerreigen
+Frostvolt
+Frosthauch
+Standpauke
+Eiszapfenhagel
+V-Generator
+Kreuzflamme
+Kreuzdonner
