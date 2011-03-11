@@ -297,7 +297,7 @@ void QScrollDownTextBrowser::contextMenuEvent(QContextMenuEvent *event)
     if (menu) {
         menu->deleteLater();
     }
-    menu = createStandardContextMenu();
+    menu = createStandardContextMenu(event->pos());
     menu->setParent(this);
     QAction *action = menu->addAction(tr("Clear"));
     connect(action, SIGNAL(triggered()), this, SLOT(clear()));
