@@ -136,6 +136,23 @@ void PokeMovesDb::save()
     }
 }
 
+QString getLine(const QString & filename, int linenum)
+{
+    QFile file(filename);
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream filestream(&file);
+
+    /* discarding all the uninteresting lines, should find a more effective way */
+    for (int i = 0; i < linenum; i++)
+    {
+        filestream.readLine();
+    }
+
+    return filestream.readLine();
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -342,6 +359,114 @@ MainWindow::MainWindow(QWidget *parent) :
 //                break;
 //            }
 //        }
+//        out.write(s.toUtf8());
+//        out.putChar('"');
+//        out.putChar('\n');
+//    }
+//    out.close();
+//    exit(0);
+
+//    PokemonInfo::init("db/pokes/");
+//    MoveInfo::init("db/moves/");
+//    TypeInfo::init("db/types/");
+//    NatureInfo::init("db/natures/");
+//    CategoryInfo::init("db/categories/");
+//    AbilityInfo::init("db/abilities/");
+//    GenderInfo::init("db/genders/");
+//    HiddenPowerInfo::init("db/types/");
+//    StatInfo::init("db/status/");
+//    QFile out("importStuff.txt");
+//    out.open(QIODevice::WriteOnly);
+//    out.write("Title, Free Text\n");
+//    for (int i = 1; i < PokemonInfo::NumberOfPokemons(); i++) {
+//        foreach (Pokemon::uniqueId id, PokemonInfo::Formes(i)) {
+//            qDebug() << "Pokemon " << PokemonInfo::Name(id);
+//            out.putChar('"');
+//            out.write("Data:");
+//            out.write(PokemonInfo::Name(id).toUtf8());
+//            out.putChar('"');
+//            out.write(", ");
+//            out.putChar('"');
+//            PokeGeneral p;
+//            p.num() = id;
+//            p.gen() = 5;
+//            p.load();
+//            qDebug() << "1";
+//            QString s =QString(
+//"<includeonly>{{{{{format}}}|\n"
+//"hp=%1|atk=%2|def=%3|satk=%4|sdef=%5|spd=%6|num=%7|type1=%8|type2=%9|ability1=%10|ability2=%11|dwability=%12|height=%13|weight=%14|"
+//"gender=%15|baby=false|dreamworld=unreleased|group1=%16|group2=%17|evochain=%18|formes=%19|id=%20\n"
+//"{{{1|}}}}}</includeonly>"
+//"<noinclude>{{Code}}"
+//"</noinclude>"
+//).arg(QString::number(p.stats().baseHp()),QString::number(p.stats().baseAttack()),QString::number(p.stats().baseDefense()),
+//      QString::number(p.stats().baseSpAttack()),QString::number(p.stats().baseSpDefense()),QString::number(p.stats().baseSpeed()),
+//      QString::number(i),TypeInfo::Name(p.type1()).toLower(), p.type2()==Type::Curse ? "" : TypeInfo::Name(p.type2()).toLower());
+//            qDebug() << "2";
+//            s = s.arg(AbilityInfo::Name(p.abilities().ab(0)), p.abilities().ab(1) == Ability::NoAbility ? "" : AbilityInfo::Name(p.abilities().ab(1)),
+//                      p.abilities().ab(2) == Ability::NoAbility ? "" : AbilityInfo::Name(p.abilities().ab(2)),
+//                      PokemonInfo::Height(id), PokemonInfo::WeightS(id), p.genderAvail() == Pokemon::Male ? "male" :
+//                      (p.genderAvail() == Pokemon::Female ? "female" : (p.genderAvail() == Pokemon::Neutral ? "neutral" : "both")));
+//            qDebug() << "3";
+//            s = s.arg(getLine("db/pokes/poke_egg_group_1.txt",i).section(' ', 1), getLine("db/pokes/poke_egg_group_2.txt",i).section(' ', 1));
+//            QStringList evoChain;
+//            evoChain.push_back(QString::number(i));
+//            if (PokemonInfo::PreEvo(i) != i && PokemonInfo::PreEvo(i) != 0) {
+//                int x = PokemonInfo::PreEvo(i);
+//                evoChain.prepend(QString::number(x));
+//                if (PokemonInfo::PreEvo(x) != x && PokemonInfo::PreEvo(x) != 0) {
+//                    int y = PokemonInfo::PreEvo(x);
+//                    evoChain.prepend(QString::number(y));
+//                }
+//            }
+//            if (PokemonInfo::HasEvolutions(i)) {
+//                int x = PokemonInfo::DirectEvos(i)[0];
+//                evoChain.append(QString::number(x));
+//                if (PokemonInfo::HasEvolutions(x)) {
+//                    int y = PokemonInfo::DirectEvos(x)[0];
+//                    evoChain.append(QString::number(y));
+//                }
+//            }
+//            QStringList formes;
+//            foreach(Pokemon::uniqueId id2,PokemonInfo::Formes(id)) {
+//                formes.append(PokemonInfo::Name(id2));
+//            }
+//            s = s.arg(evoChain.join("/"), formes.join("/"), id.toString());
+
+//            out.write(s.toUtf8());
+//            out.putChar('"');
+//            out.putChar('\n');
+//        }
+//    }
+//    out.close();
+//    exit(0);
+
+//    PokemonInfo::init("db/pokes/");
+//    MoveInfo::init("db/moves/");
+//    TypeInfo::init("db/types/");
+//    NatureInfo::init("db/natures/");
+//    CategoryInfo::init("db/categories/");
+//    AbilityInfo::init("db/abilities/");
+//    GenderInfo::init("db/genders/");
+//    HiddenPowerInfo::init("db/types/");
+//    StatInfo::init("db/status/");
+//    QFile out("importStuff.txt");
+//    out.open(QIODevice::WriteOnly);
+//    out.write("Title, Free Text\n");
+//    for (int i = 1; i < AbilityInfo::NumberOfAbilities(); i++) {
+//        out.putChar('"');
+//        out.write("Data:");
+//        out.write(AbilityInfo::Name(i).toUtf8());
+//        out.putChar('"');
+//        out.write(", ");
+//        out.putChar('"');
+//        QString s =QString(
+//"<includeonly>{{{{{format}}}|\n"
+//"description=%1|\n"
+//"{{{1|}}}}}</includeonly>"
+//"<noinclude>{{Code}}"
+//"</noinclude>"
+//).arg(AbilityInfo::Desc(i));
 //        out.write(s.toUtf8());
 //        out.putChar('"');
 //        out.putChar('\n');

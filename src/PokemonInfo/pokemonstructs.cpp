@@ -94,7 +94,7 @@ PokeGeneral::PokeGeneral()
     //default for non-bugged programs
     m_genderAvail = Pokemon::NeutralAvail;
     m_types[0] = Pokemon::Curse;
-    m_types[1] = -1;
+    m_types[1] = Pokemon::Curse;
 }
 
 
@@ -105,6 +105,8 @@ void PokeGeneral::loadMoves()
 
 void PokeGeneral::loadTypes()
 {
+    m_types[0] = PokemonInfo::Type1(num(), gen());
+    m_types[1] = PokemonInfo::Type2(num(), gen());
 }
 
 void PokeGeneral::loadAbilities()
@@ -117,12 +119,18 @@ void PokeGeneral::loadGenderAvail()
     m_genderAvail = PokemonInfo::Gender(num());
 }
 
+void PokeGeneral::loadStats()
+{
+    m_stats = PokemonInfo::BaseStats(num());
+}
+
 void PokeGeneral::load()
 {
     loadMoves();
     loadTypes();
     loadAbilities();
     loadGenderAvail();
+    loadStats();
 }
 
 const QSet<int> &PokeGeneral::moves() const
@@ -139,6 +147,22 @@ int PokeGeneral::genderAvail() const
 {
     return m_genderAvail;
 }
+
+int PokeGeneral::type1() const
+{
+    return m_types[0];
+}
+
+int PokeGeneral::type2() const
+{
+    return m_types[1];
+}
+
+const PokeBaseStats & PokeGeneral::stats() const
+{
+    return m_stats;
+}
+
 
 PokePersonal::PokePersonal()
 {

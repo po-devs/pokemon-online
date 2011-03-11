@@ -808,7 +808,8 @@ QList<Pokemon::uniqueId> PokemonInfo::Formes(const Pokemon::uniqueId &pokeid)
 {
     QList<Pokemon::uniqueId> result;
     for(quint16 i = 0; i <= NumberOfAFormes(pokeid); i++) {
-        result.append(Pokemon::uniqueId(pokeid.pokenum, i));
+        if (Exists(Pokemon::uniqueId(pokeid.pokenum, i)))
+            result.append(Pokemon::uniqueId(pokeid.pokenum, i));
     }
     return result;
 }
@@ -818,7 +819,7 @@ QList<Pokemon::uniqueId> PokemonInfo::VisibleFormes(const Pokemon::uniqueId &pok
     QList<Pokemon::uniqueId> result;
     for(quint16 i = 0; i <= NumberOfAFormes(pokeid); i++) {
         Pokemon::uniqueId poke(pokeid.pokenum, i);
-        if(AFormesShown(poke)) result.append(poke);
+        if(Exists(poke) && AFormesShown(poke)) result.append(poke);
     }
     return result;
 }
@@ -836,6 +837,11 @@ int PokemonInfo::PreEvo(int pokenum)
 QList<int> PokemonInfo::Evos(int pokenum)
 {
     return m_Evolutions.value(OriginalEvo(Pokemon::uniqueId(pokenum, 0)).pokenum);
+}
+
+QList<int> PokemonInfo::DirectEvos(int pokenum)
+{
+    return m_DirectEvos.value(pokenum);
 }
 
 bool PokemonInfo::HasEvolutions(int pokenum)
