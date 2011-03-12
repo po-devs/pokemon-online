@@ -49,7 +49,7 @@ int main(int, char**)
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    int gen = 2;
+    int gen = 5;
     int pokenum = PokemonInfo::TrueCount(gen);
 
     qDebug() << "Gen " << gen;
@@ -58,7 +58,7 @@ int main(int, char**)
 
     int count = 0;
 
-    for (int i = 0; i <= pokenum; i++) {
+    for (int i = 0; i < pokenum; i++) {
         QString group1(getLine("db/pokes/poke_egg_group_1.txt",i).section(' ', 1));
         QString group2(getLine("db/pokes/poke_egg_group_2.txt",i).section(' ', 1));
 
@@ -83,7 +83,7 @@ int main(int, char**)
 
     QHash<Pokemon::uniqueId, QList<QSet<int> > > oldC = MoveSetChecker::breedingCombinationsOf(gen);
 
-    for (int i = 0; i<= pokenum; i++)
+    for (int i = 0; i< pokenum; i++)
     {
         qDebug() << "Doing poke " << PokemonInfo::Name(i);
         legalCombinations.push_back(QSet<QSet<int> > ());
@@ -189,6 +189,12 @@ int main(int, char**)
                     continue;
                 }
 
+                /* Not losing time with Smeargle - Adding all egg moves directly */
+                if (poke == Pokemon::Smeargle) {
+                    allCombinations.clear();
+                    allCombinations.insert(PokemonInfo::EggMoves(i, gen));
+                }
+
                 //We get the regular moves of that poke
                 QSet<int> regularMoves = PokemonInfo::RegularMoves(poke, gen);
                 //And now the "special moves" of that poke.
@@ -286,7 +292,7 @@ int main(int, char**)
 
     bool space, ord, newline;
     newline = false;
-    for (int i = 0; i <= pokenum; i++) {
+    for (int i = 0; i < pokenum; i++) {
         if (legalCombinations[i].size() == 0)
             continue;
 
