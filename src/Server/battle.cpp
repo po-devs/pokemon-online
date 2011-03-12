@@ -2776,7 +2776,11 @@ void BattleSituation::inflictRecoil(int source, int target)
 
         /* Self KO Clause! */
         if (koed(source)) {
-            selfKoer() = source;
+            /* In VGC 2011 (gen 5), the user of the recoil move wins instead of losing with the Self KO Clause */
+            if (gen() <= 4)
+                selfKoer() = source;
+            else
+                selfKoer() = target;
         }
     } else  {
         if (hasWorkingItem(source, Item::BigRoot)) /* Big root */ {
