@@ -1,14 +1,14 @@
-
+﻿
 Destructor
-Golpe K�rate
-Doblebofet�n
-Pu�o Cometa
-Mega Pu�o
-D�a de Pago
-Pu�o Fuego
-Pu�o Hielo
-Pu�o Trueno
-Ara�azo
+Golpe Kárate
+Doblebofetón
+Puño Cometa
+Mega Puño
+Día de Pago
+Puño Fuego
+Puño Hielo
+Puño Trueno
+Arañazo
 Agarre
 Guillotina
 V. Cortante
@@ -20,8 +20,8 @@ Remolino
 Vuelo
 Atadura
 Portazo
-L�tigo Cepa
-Pisot�n
+Látigo Cepa
+Pisotón
 Doble Patada
 Mega Patada
 Patada Salto
@@ -33,41 +33,41 @@ Ataque Furia
 Perforador
 Placaje
 Golpe Cuerpo
-Repetici�n
+Repetición
 Derribo
 Golpe
 Doble-Filo
-L�tigo
+Látigo
 Picotazo Ven
 Doble Ataque
 Pin Misil
 Malicioso
 Mordisco
-Gru�ido
+Gruñido
 Rugido
 Canto
-Supersonico
-Bomba S�nica
-Anulaci�n
-Acido
+Supersónico
+Bomba Sónica
+Anulación
+Ácido
 Ascuas
 Lanzallamas
 Neblina
-Pistola agua
-Hidro Bomba
+Pistola Agua
+Hidrobomba
 Surf
 Rayo Hielo
 Ventisca
 Psicorrayo
 Rayo Burbuja
 Rayo Aurora
-Hiper Rayo
+Hiperrayo
 Picotazo
 Pico Taladro
-Sumisi�n
+Sumisión
 Patada Baja
 Contador
-Movimiento S�smico
+Movimiento Sísmico
 Fuerza
 Absorber
 Mega Drenado
@@ -77,10 +77,10 @@ Hoja Afilada
 Rayo Solar
 Polvo Veneno
 Paralizador
-Somn�fero
-Danza Petalo
+Somnífero
+Danza Pétalo
 Disp. Demora
-Furia Drag�n
+Furia Dragón
 Giro Fuego
 Impactrueno
 Rayo
@@ -90,22 +90,22 @@ Lanza Rocas
 Terremoto
 Fisura
 Excavar
-Toxico
-Confusi�n
-Ps�quico
+Tóxico
+Confusión
+Psíquico
 Hipnosis
-Meditaci�n
+Meditación
 Agilidad
-Ataque r�pido
+Ataque Rápido
 Rabia
 Teletransporte
 Tinieblas
-Mim�tico
+Mimético
 Chirrido
 Doble Equipo
-Recuperaci�n
+Recuperación
 Fortaleza
-Reducci�n
+Reducción
 Pantalla Humo
 Rayo Confuso
 Refugio
@@ -114,93 +114,93 @@ Barrera
 Pantalla Luz
 Niebla
 Reflejo
-Foco Energia
+Foco Energía
 Venganza
-Metronomo
+Metrónomo
 Movimiento Espejo
-Autodestrucci�n
+Autodestrucción
 Bomba Huevo
-Leng�etazo
-Poluci�n
+Lengüetazo
+Polución
 Residuos
 Hueso Palo
-LLamarada
-cascada
+Llamarada
+Cascada
 Tenaza
 Rapidez
 Cabezazo
-Clavo Ca�on
-Restricci�n
+Clavo Cañon
+Restricción
 Amnesia
-Kin�tico
+Kinético
 Amortiguador
 Patada S. Alta
 Deslumbrar
-Come Sue�os
+Come Sueños
 Gas Venenoso
 Presa
 Chupa Vidas
 Beso Amoroso
-Ataque A�reo
+Ataque Aéreo
 Transform.
 Burbujas
-Pu�o Mareo
-Spora
+Puño Mareo
+Espora
 Destello
 Psicoonda
 Salpicadura
-Armadura Acida
+Armadura Ácida
 Martillazo
-Explosi�n
+Explosión
 Golpes Furia
 Huesomerang
 Descanso
 Avalancha
 Hiper Colmillo
 Afilar
-Conversi�n
-Tri Ataque
+Conversión
+Triataque
 Superdiente
 Cuchillada
 Sustituto
 Combate
 Esquema
 Triplepatada
-ladr�n
-Telara�a
-Tel�pata
+Ladrón
+Telaraña
+Telépata
 Pesadilla
 Rueda Fuego
 Ronquido
-Maldici�n
+Maldición
 Azote
-Conversi�n 2
+Conversión 2
 Aerochorro
-Esporagod�n
-Inversi�n
+Esporagodón
+Inversión
 Rencor
 Nieve Polvo
-Protecci�n
-Ultrapu�o
+Protección
+Ultrapuño
 Cara Susto
 Finta
-Beso dulce
+Beso Dulce
 Tambor
 Bomba Lodo
-Bofet�n Lodo
-Pulpoca��n
-P�as
-Electroca��n
+Bofetón Lodo
+Pulpocañón
+Púas
+Electrocañón
 Profecia
 Mismo Destino
 Canto Mortal
 Viento Hielo
-Detecci�n
-Ataque �seo
+Detección
+Ataque Óseo
 Fijar Blanco
 Enfado
-Tormenta de arena
-Giga Drenado
+Tormenta Arena
+Gigadrenado
 Aguante
 Encanto
 Desenrollar
@@ -210,35 +210,35 @@ Batido
 Chispa
 Cortefuria
 Ala de Acero
-Mal De Ojo
-Atracci�n
-Son�mbulo
+Mal de Ojo
+Atracción
+Sonámbulo
 Campana Cura
 Retroceso
 Presente
-Frustraci�n
-Salvaguarda
+Frustración
+Velo Sagrado
 Divide Dolor
 Fuego Sagrado
 Magnitud
-Pu�o Dinamico
+Puño Dinámico
 Mega Cuerno
 Dragoaliento
 Relevo
-Otra Ved
-Persecuci�n
-Giro R�pido
+Otra Vez
+Persecución
+Giro Rápido
 Dulce Aroma
-Cola F�rrea
+Cola Férrea
 Garra Metal
 Tiro Vital
 Sol Matinal
-S�ntesis
+Síntesis
 Luz Lunar
 Poder Oculto
 Tajo Cruzado
-Cicl�n
-Danza lluvia
+Ciclón
+Danza Lluvia
 Dia Soleado
 Triturar
 Manto Espejo
@@ -246,68 +246,68 @@ Mas Psique
 Velocidad Extrema
 Poder Pasado
 Bola Sombra
-Premonici�n
+Premonición
 Golpe Roca
 Torbellino
 Paliza
 Sorpresa
 Alboroto
 Reserva
-Esacupir
+Escupir
 Tragar
-Onda �gnea
+Onda Ígnea
 Granizo
 Tormento
 Camelo
 Fuego Fatuo
 Legado
 Imagen
-Pu�o Certero
-Est�mulo
-Se�uelo
-Adaptaci�n
+Puño Certero
+Estímulo
+Señuelo
+Adaptación
 Carga
 Mofa
 Refuerzo
 Truco
-Imitaci�n
+Imitación
 Deseo
 Ayuda
 Arraigo
 Fuerza Bruta
-Capa M�gica
+Capa Mágica
 Reciclaje
 Desquite
-Demolici�n
+Demolición
 Bostezo
 Desarme
 Esfuerzo
-Erupci�n
+Erupción
 Intercambio
 Cerca
 Alivio
 Rabia
 Robo
-Da�o Secreto
+Daño Secreto
 Buceo
-Empuj�n
+Empujón
 Camuflaje
-R�faga
+Ráfaga
 Resplandor
 Bola Niebla
 Danza Pluma
 Danza Caos
-Patada �gnea
+Patada Ígnea
 Chapoteolodo
 Bola Hielo
 Brazo Pincho
 Relajo
-Vozarr�n
+Vozarrón
 Colmillo Ven.
 Garra Brutal
-Anillo �gneo
-Hidroca�on
-Pu�o Meteoro
+Anillo Ígneo
+Hidrocañon
+Puño Meteoro
 Impresionar
 Meteorobola
 Aromaterapia
@@ -317,37 +317,37 @@ Sofoco
 Rastreo
 Tumba Rocas
 Viento Plata
-Eco Met�lico
+Eco Metálico
 Silbato
 Cosquillas
-Masa C�smica
+Masa Cósmica
 Salpicar
 Doble Rayo
-Pu�o Sombra
+Puño Sombra
 Paranormal
 Gancho Alto
 Bucle Arena
 Frio Polar
 Agua Lodosa
 Recurrente
-Golpe A�reo
-Car�mbano
+Golpe Aéreo
+Carámbano
 Defensa Hierro
 Bloqueo
 Aullido
-Garra Drag�n
+Garra Dragón
 Planta Feroz
 Corpulencia
 Bote
 Disp. Lodo
 Cola Veneno
 Antojo
-Placaje El�ctrico
-Hoja Magica
+Placaje Eléctrico
+Hoja Mágica
 Hidrochorro
 Paz Mental
 Hoja Aguda
-Danza Drag�n
+Danza Dragón
 Pedrada
 Onda Voltio
 Hidropulso
@@ -364,62 +364,62 @@ Salmuera
 Don Natural
 Amago
 Picoteo
-Viento Af�n
-Acupresi�n
+Viento Afín
+Acupresión
 Repr. Metal
 Ida y Vuelta
 A Bocajarro
-Vendeta
+Vendetta
 Buena Baza
 Embargo
 Lanzamiento
 Psicocambio
 As Oculto
 Anti Cura
-Estruj�n
+Estrujón
 Truco Fuerza
 Bilis
 Conjuro
 Yo Primero
-Copi�n
-cambia Fue.
+Copión
+Cambia Fue.
 Cambia Def.
 Castigo
-�ltima Baza
+Última Baza
 Abatidoras
 Golpe Bajo
-P�as T�xicas
+Púas Tóxicas
 Cambia Almas
 Aqua Aro
-Levit�n
-Envite �gneo
+Levitón
+Envite Ígneo
 Palmeo
 Esfera Aural
 Pulimento
 Puya Nociva
 Pulso Umbrio
-Tajo Umbr�o
+Tajo Umbrío
 Aqua Cola
 Bomba Germen
-Tajo A�reo
+Tajo Aéreo
 Tijera X
 Zumbido
-Pulso Drag�n
-Carga Drag�n
+Pulso Dragón
+Carga Dragón
 Joya de Luz
-Pu�o Drenaje
+Puño Drenaje
 Onda Vacio
 Onda Certera
 Energibola
-Pagaro �sado
+Pájaro Osado
 Tierra viva
 Trapicheo
 Giga Impacto
-Maquinaci�n
-Pu�o Bala
+Maquinación
+Puño Bala
 Alud
-Canto Elado
-Garra Umbria
+Canto Helado
+Garra Umbría
 Colmillo Rayo
 Colmillo Hielo
 Colmillo Fuego
@@ -441,120 +441,120 @@ Romperrocas
 Veneno X
 Lanza Mugre
 Cabezahierro
-Bomba Im�n
+Bomba Imán
 Roca Afilada
-Seducci�n
+Seducción
 Trampa Rocas
 Hierba Lazo
-Chachara
+Cháchara
 Sentencia
 Picadura
 Rayo Carga
 Mazazo
-Aqua Jet
+Acua Jet
 Al Ataque
 A Defender
 Auxilio
 Testarazo
 Doble Golpe
-Distorsi�n
+Distorsión
 Corte Vacio
 Danza Lunar
-Agarr�n
-Lluevia �gnea
+Agarrón
+Lluvia Ígnea
 Brecha Negra
 Fogonazo
 Vien. Aciago
-Golpe Umbr�o
-Claw Sharpen
-Wide Guard
-Guard Share
-Power Share
-Wonder Room
-Psycho Shock
-Venom Shock
-Body Purge
-Anger Powder
-Telekinesis
-Magic Room
-Knock Down
-Mountain Storm
-Flame Burst
-Slime Wave
-Butterfly Dance
-Heavy Bomber
-Synchro Noise
-Electric Ball
-Submersion
-Nitro Charge
-Snake Coil
-Ankle Sweep
-Acid Bomb
-Trickery
-Simple Beam
-Befriend
-After You
-A Capella
-Echo Voice
-Repayment
-Clear Smog
-Assist Power
-Fast Guard
-Side Change
-Boil Over
-Shell Smash
-Healing Wave
-Evil Eye
-Freefall
-Gear Change
-Overhead Throw
-Incinerate
-Postpone
-Acrobat
-Mirror Type
-Retribution
-Death Gambit
-Gift Pass
-Purgatory
-Water Realm
-Fire Realm
-Grass Realm
-Volt Change
-Bug Repellant
-Level Field
-Ice Breath
-Dragon Tail
-Cheer Up
-Electric Net
-Wild bolt
-Drill Liner
-Double Chop
-Heart Stamp
-Wood Horn
-Holy Sword
-Shell Blade
-Heat Stamp
-Grass Mixer
-Hard Roller
-Cotton Guard
-Night Burst
-Psycho Break
-Sweep Slap
-Hurricane
-Afro Break
-Gear Saucer
-Kaendan
-Techno Buster
-Ancient Song
-Mystery Sword
-Frozen World
-Lightning Strike
-Blue Flame
-Flame Dance
-Freezebolt
-Cold Flare
-Bark out
-Icicle Drop
-V-Generate
-Cross Flame
-Cross Thunder
+Golpe Umbrío
+Afilagarras
+Vastaguardia
+Isoguardia
+Isofuerza
+Zona Extraña
+Psicocarga
+Cargatóxica
+Aligerar
+Polvo Ira
+Telequinesis
+Zona Mágica
+Antiaéreo
+Llave Corsé
+Pirotecnia
+Onda Tóxica
+Danza Aleteo
+Cuerpopesado
+Sincrorruido
+Bola Voltio
+Anegar
+Nitrocarga
+Enrosque
+Puntapié
+Bomba Ácida
+Juego Sucio
+Onda Simple
+Danza Amiga
+Cede Paso
+Canon
+Eco Voz
+Guardia Baja
+Nieblaclara
+Poderreserva
+Anticipo
+Cambio Banda
+Escaldar
+Rompecoraza
+Pulso Cura
+Infortunio
+Caída Libre
+Cambiomarcha
+Llave Giro
+Calcinación
+Último Lugar
+Acróbata
+Clonatipo
+Represalia
+Sacrificio
+Ofrenda
+Infierno
+Voto Agua
+Voto Fuego
+Voto Planta
+Voltiocambio
+Estoicismo
+Terratemblor
+Vaho Gélido
+Cola Dragón
+Avivar
+Electrotela
+Voltio Cruel
+Taladradora
+Golpe Bis
+Arrumaco
+Astadrenaje
+Espadasanta
+Concha Filo
+Golpe Calor
+Ciclón Hojas
+Rodillo Púas
+Rizo Algodón
+Pulso Noche
+Onda Mental
+Plumerazo
+Vendaval
+Ariete
+Rueda Doble
+Bomba Ígnea
+Tecno Shock
+Cantoarcaico
+Sablemístico
+Mundo Gélido
+At. Fulgor
+Llama Azul
+Danza Llama
+Rayo Gélido
+Llama Gélida
+Alarido
+Chuzos
+V de Fuego
+Llama Fusión
+Rayo Fusión

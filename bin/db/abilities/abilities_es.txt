@@ -1,165 +1,165 @@
-(Sin Habilidad)
+(Sin habilidad)
 Hedor
-Llovidna
+Llovizna
 Impulso
-Armad. bat
-Robusted
+Armad. Bat.
+Robustez
 Humedad
 Flexibilidad
 Velo arena
-Elec. estï¿½t
-Absor. elec.
-Absor. aqua
+Elec. Estát.
+Absor. Elec.
+Absor. Agua
 Despiste
-Aclimataciï¿½n
+Aclimatación
 Ojocompuesto
 Insomnio
-Cambio color
+Cambio Color
 Inmunidad
-Absor. fuego
-Polvo escudo
-Ritmo propio
+Absor. Fuego
+Polvo Escudo
+Ritmo Propio
 Ventosas
-Intimidaciï¿½n
+Intimidación
 Sombratrampa
-Piel toscosa
+Piel Tosca
 Superguarda
-Levitaciï¿½n
-Efec. espora
-Sincronï¿½a
-Cuerpo puro
-Cura natural
+Levitación
+Efec. Espora
+Sincronía
+Cuerpo Puro
+Cura Natural
 Pararrayos
 Dicha
-Nado rapido
+Nado Rápido
 Clorofila
-Iluminaciï¿½n
-Rastreo
+Iluminación
+Rastro
 Potencia
-Punto tï¿½xico
-Foco interno
-Escudo magma
-Velo agua
-Imï¿½n
+Punto Tóxico
+Foco Interno
+Escudo Magma
+Velo Agua
+Imán
 Insonorizar
-Cura lluvia
-Chorro arena
-Presiï¿½n
+Cura Lluvia
+Chorro Arena
+Presión
 Sebo
 Madrugar
-Cuerpo llama
+Cuerpo Llama
 Fuga
-Vista lince
-Corte fuerte
+Vista Lince
+Corte Fuerte
 Recogida
 Ausente
 Entusiasmo
-Gran encanto
-Mï¿½s
+Gran Encanto
+Más
 Menos
-Predicciï¿½n
+Predicción
 Viscosidad
 Mudar
 Agallas
-Escama esp.
-Lodo lï¿½quido
+Escama Esp.
+Lodo Líquido
 Espesura
-Mar llamas
+Mar Llamas
 Torrente
 Enjambre
-Cabeza roca
-Sequï¿½a
-Trampa arena
-Espï¿½r. vital
-Humo blanco
-Energï¿½a pura
-Caparazï¿½n
-Bucle aire
+Cabeza Roca
+Sequía
+Trampa Arena
+Espír. Vital
+Humo Blanco
+Energía Pura
+Caparazón
+Bucle Aire
 Tumbos
 Electromotor
 Rivalidad
 Impasible
-Manto nï¿½veo
+Manto Níveo
 Gula
 Irascible
 Liviano
-Ignï¿½fugo
+Ignífugo
 Simple
-Piel seca
+Piel Seca
 Descarga
-Puï¿½o fï¿½rreo
-Antï¿½doto
+Puño Férreo
+Antídoto
 Adaptable
 Encadenado
-Hidrataciï¿½n
-Poder solar
-Pies rï¿½pidos
+Hidratación
+Poder Solar
+Pies Rápidos
 Normalidad
 Francotirador
-Muro mï¿½gico
+Muro Mágico
 Indefenso
-Rezago
+Rezagado
 Experto
-Defensa hoja
+Defensa Hoja
 Zoquete
 Rompemoldes
 Afortunado
 Resquicio
-Anticipaciï¿½n
+Anticipación
 Alerta
 Ignorante
 Cromolente
 Filtro
-Inicio lento
-Intrï¿½pido
+Inicio Lento
+Intrépido
 Colector
-Gï¿½lido
-Roca sï¿½lida
+Gélido
+Roca Sólida
 Nevada
 Recogemiel
 Cacheo
 Audaz
 Multitipo
-Don floral
-Mal sueï¿½o
-Wicked Thief
-Encourage
-Perversity
-Anxiety
-Competitive Spirit
-Weak-kneed
-Cursed Body
-Healing Heart
-Friend Guard
-Broken Armor
-Heavy Metal
-Light Metal
-Multi-Scale
-Poison Rampage
-Heat Rampage
-Harvest
-Telepathy
-Inconsistent
-Dustproof
-Poison Skin
-Regeneration
-Pigeon Heart
-Sand Throw
-Miracle Skin
-Analyze
-Illusion
-Eccentric
-Slip Through
-Mummy
-Earthquake Spiral
-Justice Heart
-Frightened
-Magic Mirror
-Herbivore
-Mischievous Heart
-Sand Power
-Iron Barbs
-Daruma Mode
-Victory Star
-Turbo Blaze
-TeraVoltage
+Don Floral
+Mal Sueño
+Hurto
+Potencia Bruta
+Respondón
+Nerviosismo
+Competitivo
+Flaqueza
+Cue. Maldito
+Alma Cura
+Compiescolta
+Arm. Frágil
+Met. Pesado
+Met. Liviano
+Compensación
+Ím. Tóxico
+Ím. Ardiente
+Cosecha
+Telepatía
+Veleta
+Funda
+Toque Tóxico
+Regeneración
+Sacapecho
+Ímpetu Arena
+Piel Milagro
+Cálc. Final
+Ilusión
+Impostor
+Allanamiento
+Momia
+Autoestima
+Justiciero
+Cobardía
+Espejomágico
+Herbívoro
+Bromista
+Poder Arena
+Punta Acero
+Modo Daruma
+Tinovictoria
+Turbollama
+Terravoltaje
