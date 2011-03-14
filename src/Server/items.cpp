@@ -302,6 +302,7 @@ struct IMLifeOrb : public IM
             turn(b,s)["ActivateLifeOrb"] = true;
         } else if (b.gen() >= 5 && turn(b,s).contains("DamageInflicted")) {
             turn(b,s)["ActivateLifeOrb"] = true;
+            turn(b,s)["LOTarget"] = t;
         }
     }
 
@@ -317,10 +318,10 @@ struct IMLifeOrb : public IM
             /* Self KO Clause */
             if (b.koed(s)) {
                 /* In VGC 2011 (gen 5), the user of the Life Orb wins instead of losing with the Self KO Clause */
-                if (gen() <= 4)
+                if (b.gen() <= 4)
                     b.selfKoer() = s;
                 else
-                    b.selfKoer() = t;
+                    b.selfKoer() = turn(b,s).value("LOTarget").toInt();
             }
         }
     }
@@ -568,6 +569,11 @@ struct IMRuggedHelmet : public IM
         if (!b.koed(t) && !b.hasWorkingAbility(t, Ability::MagicGuard)) {
             b.sendItemMessage(34,s,0,t);
             b.inflictDamage(t,b.poke(t).totalLifePoints()/6,s,false);
+
+            /* In VGC 2011, the one with the rugged helmet wins */
+            if (b.koed(t)) {
+                b.selfKoer() = t;
+            }
         }
     }
 };

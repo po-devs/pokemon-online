@@ -305,10 +305,19 @@ struct BMStarf : public BMPinch
     static void tp(int s, int, BS &b) {
         int berry = b.poke(s).item();
 
+        QVector<int> stats;
+        for (int i = Attack; i <= Evasion; i++) {
+            if (fpoke(b,s).boosts[i] < 6) {
+                stats.push_back(i);
+            }
+        }
+        if (stats.empty())
+            return;
+
         if (!testpinch(s, s, b, 4))
             return;
 
-        int stat = (b.true_rand()%5) +1;
+        int stat = stats[b.true_rand()%stats.size()];
         b.inflictStatMod(s, stat, 2, s, false);
         b.sendBerryMessage(9,s,0,s,berry,stat);
     }
