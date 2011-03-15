@@ -53,7 +53,7 @@ QString ScriptDB::makeFields(const QScriptValue &properties)
         QString name = it.name().toLower();
         QString value = it.value().toString();
         // id is automatic, names should be limited, type ("value")
-        // should not contain % as we use substituions and %1 can cause issues.
+        // should not contain % as we use substitutions and %1 can cause issues.
         if ((name != "id") && (rxSafeNames.exactMatch(name) && !value.contains("%"))) {
             result += QString("%1 %2, ").arg(name, value);
         }
