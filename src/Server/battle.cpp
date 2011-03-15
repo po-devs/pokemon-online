@@ -2079,6 +2079,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 {
     int oldAttacker = attacker();
     int oldAttacked = attacked();
+    heatOfAttack() = true;
 
     attacker() = player;
 
@@ -2354,14 +2355,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             continue;
         }
 
-        if (target != player) {
-            callaeffects(target,player,"OpponentBlock");
-        }
-        if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
-            calleffects(player,target,"AttackSomehowFailed");
-            continue;
-        }
-
         if (tmove(player).power > 0)
         {
             calculateTypeModStab();
@@ -2376,6 +2369,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 notify(All, Effective, target, quint8(typemod));
                 if (useBattleLog)
                     appendBattleLog("Effective", tr("It had no effect!"));
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
+            if (target != player) {
+                callaeffects(target,player,"OpponentBlock");
+            }
+            if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
                 calleffects(player,target,"AttackSomehowFailed");
                 continue;
             }
@@ -2397,6 +2397,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             int hitcount = 0;
             bool hitting = false;
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
+                heatOfAttack() = true;
                 turnMemory(target)["HadSubstitute"] = false;
                 bool sub = hasSubstitute(target);
                 turnMemory(target)["HadSubstitute"] = sub;
@@ -2455,6 +2456,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
                 healDamage(player, target);
 
+                heatOfAttack() = false;
                 if (hitting) {
                     if (tmove(player).flags & Move::ContactFlag) {
                         if (!sub)
@@ -2465,6 +2467,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     if (!sub) {
                         callaeffects(target, player, "UponBeingHit");
                     }
+                    callaeffects(target, player, "UponOffensiveDamageReceived");
                     callieffects(target, player, "UponBeingHit");
                 }
 
@@ -2518,6 +2521,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     appendBattleLog("Failed", tr("But it failed!"));
                 continue;
             }
+            if (target != player) {
+                callaeffects(target,player,"OpponentBlock");
+            }
+            if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
 
             if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower) {
                 sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
@@ -2546,6 +2556,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
         pokeMemory(target)["LastAttackToHit"] = attack;
     }
+
+    heatOfAttack() = false;
 
     if (!specialOccurence && attack != Move::Struggle) {
         battleMemory()["LastMoveSuccesfullyUsed"] = attack;
@@ -2667,7 +2679,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
 
     if (attacking()) {
         // Mold Breaker
-        if (player == attacked() && player != attacker() &&
+        if (heatOfAttack() && player == attacked() && player != attacker() &&
             (hasWorkingAbility(attacker(), ability(attacker()))
              &&( ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVoltage ||  ability(attacker()) == Ability::TurboBlaze))) {
             return false;
@@ -3780,7 +3792,6 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	    callieffects(source,player, "UponDamageInflicted");
 	    calleffects(source, player, "UponDamageInflicted");
 	}
-        callaeffects(player, source, "UponOffensiveDamageReceived");
         if (!sub) {
             calleffects(player, source, "UponOffensiveDamageReceived");
             callpeffects(player, source, "UponOffensiveDamageReceived");

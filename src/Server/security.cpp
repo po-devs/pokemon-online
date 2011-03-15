@@ -233,10 +233,9 @@ void SecurityManager::deleteUser(const QString &name)
 {
     QSqlQuery q;
     q.setForwardOnly(true);
-    //QRegExp regex1("\\");
-    QRegExp regex2("'");
-    QRegExp regex3("\n");
-    q.exec("delete from trainers where name='" + QString(name).replace( regex2, "''" ).replace( regex3, "\\n" ) + "'");
+    q.prepare("delete from trainers where name=?");
+    q.addBindValue(name);
+    q.exec();
 }
 
 void SecurityManager::create(const QString &name, const QString &date, const QString &ip) {

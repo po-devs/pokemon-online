@@ -184,7 +184,7 @@ public:
     Q_INVOKABLE QScriptValue aliases(const QString &ip);
     Q_INVOKABLE QScriptValue totalPlayersByTier(const QString &tier);
     Q_INVOKABLE QScriptValue ladderEnabled(int id);
-    Q_INVOKABLE QScriptValue ladderRating(int id);
+    Q_INVOKABLE QScriptValue ladderRating(int id, const QString &tier = QString());
     Q_INVOKABLE QScriptValue getVal(const QString &key);
     Q_INVOKABLE QScriptValue getVal(const QString &file, const QString &key);
     // Returns an array of Script_* key names in config.

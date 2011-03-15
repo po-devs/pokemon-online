@@ -32,6 +32,7 @@ class BattleSituation : public ContextCallee
     PROPERTY(bool, rearrangeTime);
     PROPERTY(int, selfKoer);
     PROPERTY(int, repeatCount);
+    PROPERTY(bool, heatOfAttack);
 
     Player* player1;
     Player* player2;

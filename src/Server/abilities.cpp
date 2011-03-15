@@ -802,6 +802,11 @@ struct AMRoughSkin : public AM {
         if (!b.koed(t) && !b.hasWorkingAbility(t, Ability::MagicGuard)) {
             b.sendAbMessage(50,0,s,t,0,b.ability(s));
             b.inflictDamage(t,b.poke(t).totalLifePoints()/8,s,false);
+
+            /* In VGC 2011, the one with the rugged helmet wins */
+            if (b.koed(t)) {
+                b.selfKoer() = t;
+            }
         }
     }
 };

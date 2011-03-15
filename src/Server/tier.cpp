@@ -333,11 +333,11 @@ int Tier::ranking(const QString &name)
     q.prepare(QString("select count(*) from %1 where (displayed_rating>:r1 or (displayed_rating=:r2 and name<=:name))").arg(sql_table));
     q.bindValue(":r1", r);
     q.bindValue(":r2", r);
-    q.bindValue(":name", name);
+    q.bindValue(":name", name.toLower());
     q.exec();
 
     if (q.next())
-        return q.value(0).toInt() +1;
+        return q.value(0).toInt();
     else
         return -1;
 }
