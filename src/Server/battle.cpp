@@ -2079,6 +2079,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 {
     int oldAttacker = attacker();
     int oldAttacked = attacked();
+    heatOfAttack() = true;
 
     attacker() = player;
 
@@ -2396,6 +2397,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             int hitcount = 0;
             bool hitting = false;
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
+                heatOfAttack() = true;
                 turnMemory(target)["HadSubstitute"] = false;
                 bool sub = hasSubstitute(target);
                 turnMemory(target)["HadSubstitute"] = sub;
@@ -2454,6 +2456,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
                 healDamage(player, target);
 
+                heatOfAttack() = false;
                 if (hitting) {
                     if (tmove(player).flags & Move::ContactFlag) {
                         if (!sub)
@@ -2552,6 +2555,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
         pokeMemory(target)["LastAttackToHit"] = attack;
     }
+
+    heatOfAttack() = false;
 
     if (!specialOccurence && attack != Move::Struggle) {
         battleMemory()["LastMoveSuccesfullyUsed"] = attack;
@@ -2673,7 +2678,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
 
     if (attacking()) {
         // Mold Breaker
-        if (player == attacked() && player != attacker() &&
+        if (heatOfAttack() && player == attacked() && player != attacker() &&
             (hasWorkingAbility(attacker(), ability(attacker()))
              &&( ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVoltage ||  ability(attacker()) == Ability::TurboBlaze))) {
             return false;
