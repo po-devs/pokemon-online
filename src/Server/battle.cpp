@@ -2354,14 +2354,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             continue;
         }
 
-        if (target != player) {
-            callaeffects(target,player,"OpponentBlock");
-        }
-        if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
-            calleffects(player,target,"AttackSomehowFailed");
-            continue;
-        }
-
         if (tmove(player).power > 0)
         {
             calculateTypeModStab();
@@ -2376,6 +2368,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 notify(All, Effective, target, quint8(typemod));
                 if (useBattleLog)
                     appendBattleLog("Effective", tr("It had no effect!"));
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
+            if (target != player) {
+                callaeffects(target,player,"OpponentBlock");
+            }
+            if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
                 calleffects(player,target,"AttackSomehowFailed");
                 continue;
             }
@@ -2516,6 +2515,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
                 if (useBattleLog)
                     appendBattleLog("Failed", tr("But it failed!"));
+                continue;
+            }
+            if (target != player) {
+                callaeffects(target,player,"OpponentBlock");
+            }
+            if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
+                calleffects(player,target,"AttackSomehowFailed");
                 continue;
             }
 

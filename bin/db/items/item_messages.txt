@@ -1,11 +1,11 @@
 (No Item)
 
 
-%s restored its stats using white herb!
-%s hung on thanks to its focus band!
-%s hung on using its focus sash!
+%s restored its stats using White Herb!
+%s hung on thanks to its Focus Band!
+%s hung on using its Focus Sash!
 
-%s used its white herb to come back to his senses!
+%s used its Mental Herb to come back to his senses!
 
 
 
