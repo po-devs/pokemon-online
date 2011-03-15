@@ -26,6 +26,10 @@ ScriptEngine::ScriptEngine(Server *s) {
         myengine.newQObject(mySessionDataFactory),
         QScriptValue::ReadOnly | QScriptValue::Undeletable
     );
+    // DB object.
+    myScriptDB = new ScriptDB(myserver);
+    QScriptValue sysdb = myengine.newQObject(myScriptDB);
+    sys.setProperty("db", sysdb, QScriptValue::ReadOnly | QScriptValue::Undeletable);
 
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
 
