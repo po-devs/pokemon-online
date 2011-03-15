@@ -1151,12 +1151,16 @@ QScriptValue ScriptEngine::totalPlayersByTier(const QString &tier)
     return TierMachine::obj()->count(tier);
 }
 
-QScriptValue ScriptEngine::ladderRating(int id)
+QScriptValue ScriptEngine::ladderRating(int id, const QString &tier)
 {
     if (!myserver->playerLoggedIn(id)) {
         return myengine.undefinedValue();
     } else {
-        return myserver->player(id)->rating();
+        if (tier.isEmpty()) {
+            return myserver->player(id)->rating();
+        } else {
+            return TierMachine::obj()->rating(myserver->player(id)->name(), tier);
+        }
     }
 }
 

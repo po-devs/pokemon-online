@@ -473,6 +473,26 @@ MainWindow::MainWindow(QWidget *parent) :
 //    }
 //    out.close();
 //    exit(0);
+    QFile in("importStuff.txt");
+    in.open(QIODevice::ReadOnly);
+
+    QString lines = QString::fromUtf8(in.readAll());
+    in.close();
+
+    QRegExp r("evochain=([0-9]+)", Qt::CaseSensitive, QRegExp::Wildcard);
+    r.setPatternSyntax(QRegExp::RegExp2);
+    int pos = 0;
+
+    while ((pos = r.indexIn(lines, pos)) > -1) {
+        lines.replace(pos, r.matchedLength(), "evochain="+PokemonInfo::Name(r.cap(1).toInt()));
+
+        pos += r.matchedLength();
+    }
+
+    in.open(QIODevice::WriteOnly);
+    in.write(lines.toUtf8());
+    in.close();
+    exit(0);
 
     connect(ui->save, SIGNAL(triggered()), SLOT(save()));
     connect(ui->gen1, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
