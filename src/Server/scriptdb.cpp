@@ -24,13 +24,13 @@ void ScriptDB::ensureTable(const QString &tableName, const QScriptValue &propert
     QString queryString;
     switch (SQLCreator::databaseType) {
     case SQLCreator::SQLite:
-        queryString = "create table if not exists %1 (" + fields + "id integer primary key autoincrement)";
+        queryString = "create table if not exists %1 (id integer primary key autoincrement" + fields + ")";
         break;
     case SQLCreator::MySQL:
-        queryString = "create table if not exists %1 (" + fields + "id integer auto_increment, primary key(id))";
+        queryString = "create table if not exists %1 (id integer auto_increment" + fields + ", primary key(id))";
         break;
     case SQLCreator::PostGreSQL:
-        queryString = "create table %1 (" + fields + "id serial, primary key(id))";
+        queryString = "create table %1 (id serial" + fields + ", primary key(id))";
         break;
     default:
         throw QString("Using a not supported database");
@@ -55,7 +55,7 @@ QString ScriptDB::makeFields(const QScriptValue &properties)
         // id is automatic, names should be limited, type ("value")
         // should not contain % as we use substitutions and %1 can cause issues.
         if ((name != "id") && (rxSafeNames.exactMatch(name) && !value.contains("%"))) {
-            result += QString("%1 %2, ").arg(name, value);
+            result += QString(", %1 %2").arg(name, value);
         }
     }
     return result;
