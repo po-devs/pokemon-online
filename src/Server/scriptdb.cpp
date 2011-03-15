@@ -13,12 +13,12 @@ ScriptDB::ScriptDB(Server *s) : myserver(s)
 void ScriptDB::ensureTable(const QString &tableName, const QScriptValue &properties)
 {
     if (!rxSafeNames.exactMatch(tableName)) {
-        myserver->print("ensureTable: invalid table name.");
+        myserver->print("db.ensureTable: invalid table name.");
         return;
     }
     QString fields = makeFields(properties);
     if (fields.isEmpty()) {
-        myserver->print("ensureTable: cannot create table without any fields.");
+        myserver->print("db.ensureTable: cannot create table without any fields.");
         return;
     }
     QString queryString;
@@ -37,7 +37,7 @@ void ScriptDB::ensureTable(const QString &tableName, const QScriptValue &propert
     }
     QSqlQuery q;
     if (!q.exec(queryString.arg("poscript_" + tableName))) {
-        myserver->print(QString("ensureTable: creation failed. %1").arg(q.lastError().text()));
+        myserver->print(QString("db.ensureTable: creation failed. %1").arg(q.lastError().text()));
     }
 }
 
@@ -46,7 +46,6 @@ QString ScriptDB::makeFields(const QScriptValue &properties)
     if (!properties.isObject()) return QString();
     QString result = "";
     QScriptValueIterator it(properties);
-    int pos = 0;
 
     while (it.hasNext()) {
         it.next();
