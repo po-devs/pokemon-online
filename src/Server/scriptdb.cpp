@@ -59,3 +59,41 @@ QString ScriptDB::makeFields(const QScriptValue &properties)
     }
     return result;
 }
+
+void ScriptDB::insert(const QString &tableName, const QScriptValue &properties)
+{
+    if (!rxSafeNames.exactMatch(tableName)) {
+        myserver->print("db.insert: invalid table name.");
+        return;
+    }
+    if (!properties.isObject()) return;
+
+    QString fields = "";
+    QString values = "";
+    QScriptValueIterator it(properties);
+    
+    while (it.hasNext()) {
+        it.next();
+        QString name = it.name().toLower();
+        QScriptValue valueItself = it.value();
+        QString valueData = valueItself.toString();
+        if ((name != "id") && rxSafeNames.exactMatch(name)) {
+            fields = fields + name + ", ";
+            valueData.replace("'", "''");
+            if (!valueItself.isNumber() && !valueItself.isBool()) {
+                valueData = "'" + valueData + "'";
+            }
+            values = values + valueData + ", ";
+        }
+    }
+    if ((fields.length() > 0) && (values.length() > 0)) {
+        fields.chop(2);
+        values.chop(2);
+        QString queryString = "INSERT INTO poscript_" + tableName + "(" + fields + ") VALUES (" + values + ")";
+        QSqlQuery q;
+        if (!q.exec(queryString)) {
+            myserver->print(QString("db.insert: failed. %1").arg(q.lastError().text()
+                + "\nQuery string was: ") + queryString);
+        }
+    }
+}
