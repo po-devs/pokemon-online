@@ -2467,6 +2467,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     if (!sub) {
                         callaeffects(target, player, "UponBeingHit");
                     }
+                    callaeffects(player, source, "UponOffensiveDamageReceived");
                     callieffects(target, player, "UponBeingHit");
                 }
 
@@ -3791,7 +3792,6 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 	    callieffects(source,player, "UponDamageInflicted");
 	    calleffects(source, player, "UponDamageInflicted");
 	}
-        callaeffects(player, source, "UponOffensiveDamageReceived");
         if (!sub) {
             calleffects(player, source, "UponOffensiveDamageReceived");
             callpeffects(player, source, "UponOffensiveDamageReceived");
