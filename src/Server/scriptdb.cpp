@@ -4,7 +4,7 @@
 
 ScriptDB::ScriptDB(Server *s) : myserver(s)
 {
-    rxSafeNames.setPattern("[a-z_]+");
+    rxSafeNames.setPattern("[a-z_0-9]+");
 }
 
 // Properties should be a JS hash. This function will iterate over all properties
