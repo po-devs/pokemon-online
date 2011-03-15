@@ -4,6 +4,7 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QRegExp>
 #include "server.h"
 /*
     This file defines a helper function to open a connection to an
@@ -62,7 +63,12 @@ public:
         bool result = db.open();
         // Set default schema for PostgreSQL if defined in config.
         if (result && (databaseType == PostGreSQL) && !databaseSchema.isEmpty()) {
-            db.exec(QString("SET search_path TO %1;").arg(databaseSchema));
+            QRegExp rx("[a-z_0-9]+");
+            if (rx.exactMatch(databaseSchema)) {
+                db.exec(QString("SET search_path TO %1;").arg(databaseSchema));
+            } else {
+                throw(QString("Invalid schema name."));
+            }
         }
         if (!result && name=="") {
             throw (QString("Unable to establish a database connection.") + db.lastError().text());
