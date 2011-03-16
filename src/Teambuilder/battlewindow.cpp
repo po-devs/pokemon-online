@@ -129,9 +129,9 @@ void BattleWindow::changeAttackText(int i)
 QString BattleWindow::nick(int spot) const
 {
     if (player(spot) == info().myself)
-        return info().currentPoke(spot).nick();
+        return rnick(spot);
     else
-        return tr("the foe's %1").arg(info().currentShallow(spot).nick());
+        return tr("the foe's %1").arg(rnick(spot));
 }
 
 
