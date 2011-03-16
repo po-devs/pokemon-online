@@ -307,13 +307,7 @@ bool ScriptEngine::beforeChallengeIssued(int src, int dest, const ChallengeInfo 
 
     startStopEvent();
 
-    QString clauses;
-
-    for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        clauses.append('0' + ((c.clauses >> i) & 0x01));
-    }
-
-    evaluate(myscript.property("beforeChallengeIssued").call(myscript, QScriptValueList() << src << dest << clauses << c.rated << c.mode));
+    evaluate(myscript.property("beforeChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
 
     return !endStopEvent();
 }
@@ -323,13 +317,7 @@ void ScriptEngine::afterChallengeIssued(int src, int dest, const ChallengeInfo &
     if (!myscript.property("afterChallengeIssued", QScriptValue::ResolveLocal).isValid())
         return;
 
-    QString clauses;
-
-    for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        clauses.append('0' + ((c.clauses >> i) & 0x01));
-    }
-
-    evaluate(myscript.property("afterChallengeIssued").call(myscript, QScriptValueList() << src << dest << clauses << c.rated << c.mode));
+    evaluate(myscript.property("afterChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
 }
 
 bool ScriptEngine::beforeBattleMatchup(int src, int dest, const ChallengeInfo &c)
@@ -339,13 +327,7 @@ bool ScriptEngine::beforeBattleMatchup(int src, int dest, const ChallengeInfo &c
 
     startStopEvent();
 
-    QString clauses;
-
-    for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        clauses.append('0' + ((c.clauses >> i) & 0x01));
-    }
-
-    evaluate(myscript.property("beforeBattleMatchup").call(myscript, QScriptValueList() << src << dest << clauses << c.rated << c.mode));
+    evaluate(myscript.property("beforeBattleMatchup").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
 
     return !endStopEvent();
 }
@@ -355,13 +337,7 @@ void ScriptEngine::afterBattleMatchup(int src, int dest, const ChallengeInfo &c)
     if (!myscript.property("afterBattleMatchup", QScriptValue::ResolveLocal).isValid())
         return;
 
-    QString clauses;
-
-    for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        clauses.append('0' + ((c.clauses >> i) & 0x01));
-    }
-
-    evaluate(myscript.property("afterBattleMatchup").call(myscript, QScriptValueList() << src << dest << clauses << c.rated << c.mode));
+    evaluate(myscript.property("afterBattleMatchup").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
 }
 
 
@@ -370,13 +346,7 @@ void ScriptEngine::beforeBattleStarted(int src, int dest, const ChallengeInfo &c
     if (!myscript.property("beforeBattleStarted", QScriptValue::ResolveLocal).isValid())
         return;
 
-    QString clauses;
-
-    for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        clauses.append('0' + ((c.clauses >> i) & 0x01));
-    }
-
-    evaluate(myscript.property("beforeBattleStarted").call(myscript, QScriptValueList() << src << dest << clauses << c.rated << c.mode));
+    evaluate(myscript.property("beforeBattleStarted").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
 }
 
 void ScriptEngine::afterBattleStarted(int src, int dest, const ChallengeInfo &c)
@@ -384,13 +354,7 @@ void ScriptEngine::afterBattleStarted(int src, int dest, const ChallengeInfo &c)
     if (!myscript.property("afterBattleStarted", QScriptValue::ResolveLocal).isValid())
         return;
 
-    QString clauses;
-
-    for(int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        clauses.append('0' + ((c.clauses >> i) & 0x01));
-    }
-
-    evaluate(myscript.property("afterBattleStarted").call(myscript, QScriptValueList() << src << dest << clauses << c.rated << c.mode));
+    evaluate(myscript.property("afterBattleStarted").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
 }
 
 QString battleDesc[3] = {
