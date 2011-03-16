@@ -1112,7 +1112,7 @@ Vaikutus: %5</translation>
     <message>
         <location filename="client.cpp" line="892"/>
         <source>&amp;Enable sounds (Testing! Remove if problems with the sim)</source>
-        <translation>Käytä &amp;ääniä (Älä käytä jos tuottaa ongelmia)</translation>
+        <translation>Käytä &amp;ääniä (Testausvaiheessa! Älä käytä jos tuottaa ongelmia)</translation>
     </message>
     <message>
         <location filename="client.cpp" line="897"/>
@@ -1255,7 +1255,7 @@ Lataa uusi versio sivulta http://www.pokemon-online.eu/downloads.php  ..</transl
     <message>
         <location filename="client.cpp" line="1340"/>
         <source>%1 is busy.</source>
-        <translation>%1 on kiireellinen.</translation>
+        <translation>%1 on kiireinen.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1345"/>
@@ -1326,7 +1326,7 @@ Lataa uusi versio sivulta http://www.pokemon-online.eu/downloads.php  ..</transl
     <message>
         <location filename="client.cpp" line="1657"/>
         <source>You can&apos;t change teams while battling, so your nick was kept.</source>
-        <translation>Et voi vaihtaa tiimi taistellessa, joten nimi pidettiin samana.</translation>
+        <translation>Et voi vaihtaa tiimejä taistellessa, joten nimesi pidettiin samana.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1705"/>
@@ -1464,7 +1464,7 @@ Lataa uusi versio sivulta http://www.pokemon-online.eu/downloads.php  ..</transl
         <location filename="controlpanel.ui" line="301"/>
         <location filename="controlpanel.ui" line="392"/>
         <source>Unban</source>
-        <translation>Nosta banni</translation>
+        <translation>Peruuta banni</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="308"/>
@@ -1959,7 +1959,7 @@ Liikkeet:
     </message>
     <message>
         <source>One player cannot have more than one of the same pokemon per team.</source>
-        <translation type="obsolete">Pelaajalla ei voi olla monia samoja pokemonia tiimissään.</translation>
+        <translation type="obsolete">Pelaajalla ei voi olla monta samaa pokemonia tiimissään.</translation>
     </message>
     <message>
         <source>%1 already has move %2.</source>
@@ -2049,7 +2049,7 @@ Liikkeet:
     <message>
         <location filename="battlewindow.cpp" line="1352"/>
         <source>You can rearrange your team by clicking on your pokemon before the battle.</source>
-        <translation>Voi järjestellä tiimisi vetämällä pokémonit paikoilleen ennen taistelua.</translation>
+        <translation>Voit järjestellä tiimisi uudelleen vetämällä pokémonit paikoilleen ennen taistelua.</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="1371"/>
