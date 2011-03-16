@@ -110,6 +110,11 @@ void Channel::showContextMenu(const QPoint &requested)
 
 void Channel::anchorClicked(const QUrl &url)
 {
+    // Hack against Qt's bug?
+    // http://www.qtcentre.org/archive/index.php/t-2858.html
+    mymainchat->setSource(QUrl());
+    mymainchat->scrollToAnchor(QUrl().toString());
+    // study the URL scheme
     if (url.scheme()=="po") {
         if(url.path().leftRef(5) == "join/") {
             client->join(url.path().mid(5));
@@ -584,7 +589,6 @@ void Channel::printLine(const QString &line)
                 mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + end + "<br />");
             }
         }        
-
         emit activated(this);
     } else {
         mainChat()->insertPlainText( timeStr + line + "\n");
