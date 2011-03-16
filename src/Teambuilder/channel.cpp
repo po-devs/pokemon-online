@@ -112,8 +112,12 @@ void Channel::anchorClicked(const QUrl &url)
 {
     // Hack against Qt's bug?
     // http://www.qtcentre.org/archive/index.php/t-2858.html
+    int hv = mymainchat->horizontalScrollBar()->value();
+    int vv = mymainchat->verticalScrollBar()->value();
     mymainchat->setSource(QUrl());
     mymainchat->scrollToAnchor(url.toString());
+    mymainchat->horizontalScrollBar()->setValue(hv);
+    mymainchat->verticalScrollBar()->setValue(vv);
     // study the URL scheme
     if (url.scheme()=="po") {
         if(url.path().leftRef(5) == "join/") {
