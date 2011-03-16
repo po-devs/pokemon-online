@@ -58,7 +58,8 @@ HEADERS += teambuilder.h \
     channel.h \
     tierstruct.h \
     theme.h \
-    rearrangewindow.h
+    rearrangewindow.h \
+    ui_controlpanel.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities
