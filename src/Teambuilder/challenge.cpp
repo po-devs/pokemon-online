@@ -50,6 +50,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     pinfo->setWordWrap(true);
     pinfo->setFont(treb);
     pinfo->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    pinfo->setOpenExternalLinks(true);
 
     battleMode = new QComboBox(this);
     battleMode->move(18,271);
