@@ -1191,7 +1191,9 @@ void Server::playerBan(int src, int dest)
 
 void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 {
-    myengine->beforeBattleStarted(id1,id2,c);
+    int id = freebattleid();
+
+    myengine->beforeBattleStarted(id1,id2,c,id);
 
     if (!playerExist(id1) || !playerExist(id2))
         return;
@@ -1214,8 +1216,6 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
             lastIps2.pop_front();
         }
     }
-
-    int id = freebattleid();
 
     BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id, pluginManager);
     mybattles.insert(id, battle);
@@ -1270,7 +1270,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     battle->setLogging(useBattleFileLog);
     battle->start(battleThread);
 
-    myengine->afterBattleStarted(id1,id2,c);
+    myengine->afterBattleStarted(id1,id2,c,id);
 }
 
 bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool force2)
