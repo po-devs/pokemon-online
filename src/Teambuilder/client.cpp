@@ -498,6 +498,20 @@ void Client::leaveChannel(int id)
     c->deleteLater();
 }
 
+void Client::join(const QString& text)
+{
+    if (channelByNames.contains(text.toLower())) {
+        int id = channelByNames.value(text.toLower());
+
+        if (hasChannel(id)) {
+            /* No use joining the same channel twice */
+            return;
+        }
+    }
+
+    relay().notify(NetworkCli::JoinChannel, text);
+}
+
 void Client::itemJoin(QListWidgetItem *it)
 {
     QString text = it->text().trimmed();
@@ -514,16 +528,7 @@ void Client::lineJoin()
         return;
     }
 
-    if (channelByNames.contains(text.toLower())) {
-        int id = channelByNames.value(text.toLower());
-
-        if (hasChannel(id)) {
-            /* No use joining the same channel twice */
-            return;
-        }
-    }
-
-    relay().notify(NetworkCli::JoinChannel, text);
+    join(text);
 }
 
 void Client::watchBattleOf(int player)

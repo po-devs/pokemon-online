@@ -12,6 +12,8 @@ Channel::Channel(const QString &name, int id, Client *parent)
     battleList = new QTreeWidget();
 
     mymainchat->setObjectName("MainChat");
+    mymainchat->setOpenExternalLinks(false);
+    connect(mymainchat, SIGNAL(anchorClicked(QUrl)), SLOT(anchorClicked(QUrl)));
 
     myplayers->setColumnCount(1);
     myplayers->header()->hide();
@@ -104,6 +106,26 @@ void Channel::showContextMenu(const QPoint &requested)
     }
 
     item = dynamic_cast<QIdTreeWidgetItem*>(myplayers->itemAt(requested));
+}
+
+void Channel::anchorClicked(const QUrl &url)
+{
+    // Hack against Qt's bug?
+    // http://www.qtcentre.org/archive/index.php/t-2858.html
+    int hv = mymainchat->horizontalScrollBar()->value();
+    int vv = mymainchat->verticalScrollBar()->value();
+    mymainchat->setSource(QUrl());
+    mymainchat->scrollToAnchor(url.toString());
+    mymainchat->horizontalScrollBar()->setValue(hv);
+    mymainchat->verticalScrollBar()->setValue(vv);
+    // study the URL scheme
+    if (url.scheme()=="po") {
+        if(url.path().leftRef(5) == "join/") {
+            client->join(url.path().mid(5));
+        }
+    } else {
+        QDesktopServices::openUrl(url);
+    }
 }
 
 void Channel::getBackAllPlayerItems()
@@ -492,6 +514,33 @@ bool Channel::hasRemoteKnowledgeOf(int player) const
     return false;
 }
 
+QString Channel::addChannelLinks(const QString &line2)
+{
+    // make a mutable copy
+    QString line = line2;
+    /* scan for channel links */
+    int pos = 0;
+    pos = line.indexOf('#', pos);
+    while(pos != -1)
+    {
+        ++pos;
+        foreach(QString name, client->channelNames)
+        {
+            QString channelName = line.midRef(pos, name.length()).toString();
+            bool res=channelName.toLower() == name.toLower();
+            if(res)
+            {
+                QString html = QString("<a href=\"po:join/%1\">#%2</a>").arg(name, channelName);
+                line.replace(pos-1, name.length()+1, html);
+                pos += html.length()-1;
+                break;
+            }
+        }
+        pos = line.indexOf('#', pos);
+    }
+    return line;
+}
+
 void Channel::printLine(const QString &line)
 {
     QString timeStr = "";
@@ -508,38 +557,41 @@ void Channel::printLine(const QString &line)
             client->activateWindow();
         }
     }
+
     if (line.leftRef(3) == "***") {
-        mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + escapeHtml(line) + "</span><br />");
+        mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + addChannelLinks(escapeHtml(line)) + "</span><br />");
         return;
     }
+
     /* Let's add colors */
     int pos = line.indexOf(':');
     if ( pos != -1 ) {
         QString beg = line.left(pos);
         QString end = line.right(line.length()-pos-1);
+        end = addChannelLinks(escapeHtml(end));
 
         int id = client->id(beg);
 
         if (beg == "~~Server~~") {
-            mainChat()->insertHtml("<span style='color:orange'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:orange'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "<br />");
         } else if (beg == "Welcome Message") {
-            mainChat()->insertHtml("<span style='color:blue'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:blue'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "<br />");
         } else if (id == -1) {
-            mainChat()->insertHtml("<span style='color:#3daa68'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + escapeHtml(end) + "<br />");
+            mainChat()->insertHtml("<span style='color:#3daa68'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + end + "<br />");
         } else {
             if (client->isIgnored(id))
                 return;
             QColor color = client->color(id);
 
             if (client->auth(id) > 0 && client->auth(id) <= 3) {
-                mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "+<i><b>" + escapeHtml(beg) + ":</b></i></span>" + escapeHtml(end) + "<br />");
+                mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "+<i><b>" + escapeHtml(beg) + ":</b></i></span>" + end + "<br />");
             }
             else if (id == ownId()) {
-                mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+                mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + end + "<br />");
             } else {
-                mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + escapeHtml(end) + "<br />");
+                mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + end + "<br />");
             }
-        }
+        }        
         emit activated(this);
     } else {
         mainChat()->insertPlainText( timeStr + line + "\n");
