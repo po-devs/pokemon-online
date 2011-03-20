@@ -68,6 +68,7 @@ public:
 
     void changeName(int id, const QString &name);
 
+    QString addChannelLinks(const QString &line);
     void printLine(const QString &str);
     void printHtml(const QString &str);
 
@@ -79,6 +80,7 @@ signals:
     void activated(Channel *c);
 public slots:
     void showContextMenu(const QPoint &point);
+    void anchorClicked(const QUrl &url);
 private:
     QTreeWidget *myplayers;
     QHash<int, QIdTreeWidgetItem *> myplayersitems;

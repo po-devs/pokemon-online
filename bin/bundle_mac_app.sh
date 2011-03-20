@@ -28,40 +28,67 @@ fi
 [ -d $toDir/db ] && echo rm -r $toDir/db && rm -r $toDir/db
 [ -d $toDir/Themes ] && echo rm -r $toDir/db && rm -r $toDir/Themes
 
-for file in *.ttf *.txt *.qm Music db Themes
+for file in *.txt *.qm Music db database Themes
 do
 	echo cp -r $file $toDir
 	cp -r $file $toDir
 done
 fi # end of SKIP
 
+fworks=Pokemon-Online.app/Contents/Frameworks
+zlib=libz.1.dylib
+libzip=libzip.1.dylib
+pokemonlib_long=libpokemonlib.1.0.0.dylib
+pokemonlib=libpokemonlib.1.dylib
+utilities_long=libutilities.1.0.0.dylib
+utilities=libutilities.1.dylib
+
 echo macdeployqt Pokemon-Online.app
 macdeployqt Pokemon-Online.app
 
-echo Fixing additional libs
-cp libpokemonlib.1.0.0.dylib Pokemon-Online.app/Contents/Frameworks
-cp libutilities.1.0.0.dylib Pokemon-Online.app/Contents/Frameworks
-cp libzip.1.dylib Pokemon-Online.app/Contents/Frameworks
-cp libz.1.dylib Pokemon-Online.app/Contents/Frameworks
+echo Fixing additional libs..
+if [ -e $zlib ]
+then
+    echo zlib..
+    cp $zlib $fworks
+    install_name_tool -id @executable_path/../Frameworks/$zlib $fworks/$zlib
+fi
+if [ -e "$libzip" ]
+then
+    echo libzip..
+    cp "$libzip" "$fworks"
+    install_name_tool -id @executable_path/../Frameworks/"$libzip" $fworks/"$libzip"
+    path=$(otool -L "$libzip" | grep "/$zlib" | awk '{print $1}')
+    if [ -n "$path" -a ! "$path" == "/usr/lib/libz.1.dylib" ]; then
+        install_name_tool -change "$path" @executable_path/../Frameworks/"$zlib" $fworks/"$libzip"
+    fi
+else
+    echo "Warning! No libzip found, application may not be functional!"
+fi
 
-cd Pokemon-Online.app/Contents/Frameworks
-ln -sf libpokemonlib.1.0.0.dylib libpokemonlib.1.dylib
-ln -sf libutilities.1.0.0.dylib libutilities.1.dylib
+echo pokemonlib..
+if [ ! -e $pokemonlib_long ]; then
+    echo "Error! No pokemonlib found, please compile it first!"
+    exit 1
+fi
+cp $pokemonlib_long $fworks/
+ln -sf $fworks/$pokemonlib_long $pokemonlib
+install_name_tool -id @executable_path/../Frameworks/$pokemonlib $pokemonlib
+install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore $pokemonlib
+install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui $pokemonlib
+install_name_tool -change QtXml.framework/Versions/4/QtXml @executable_path/../Frameworks/QtXml.framework/Versions/4/QtXml $pokemonlib
+install_name_tool -change $utilities @executable_path/../Frameworks/$utilities $pokemonlib
 
-install_name_tool -id @executable_path/../Frameworks/libpokemonlib.1.dylib libpokemonlib.1.dylib
-install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore libpokemonlib.1.0.0.dylib
-install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui libpokemonlib.1.0.0.dylib
-install_name_tool -change QtXml.framework/Versions/4/QtXml @executable_path/../Frameworks/QtXml.framework/Versions/4/QtXml libpokemonlib.1.0.0.dylib
-install_name_tool -change libutilities.1.dylib @executable_path/../Frameworks/libutilities.1.dylib libpokemonlib.1.0.0.dylib
-install_name_tool -change /opt/local/lib/libzip.1.dylib @executable_path/../Frameworks/libzip.1.dylib libpokemonlib.1.0.0.dylib
+echo utilities..
+if [ ! -e $utilities_long ]; then
+    echo "Error! No libutilities found, please compile it first!"
+    exit 1
+fi
+cp $utilities_long $fworks
+ln -sf $fworks/$utilities_long $utilities
+install_name_tool -id @executable_path/../Frameworks/$utilities $utilities
+install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore $utilities
+install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui $utilities
 
-install_name_tool -id @executable_path/../Frameworks/libutilities.1.dylib libutilities.1.dylib
-install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore libutilities.1.0.0.dylib
-install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui libutilities.1.0.0.dylib
-
-install_name_tool -id @executable_path/../Frameworks/libzip.1.dylib libzip.1.dylib
-install_name_tool -change /opt/local/lib/libz.1.dylib @executable_path/../Frameworks/libz.1.dylib libzip.1.dylib
-
-install_name_tool -id @executable_path/../Frameworks/libz.1.dylib libz.1.dylib
 
 echo Done
