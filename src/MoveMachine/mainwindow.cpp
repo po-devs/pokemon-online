@@ -333,10 +333,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //    TypeInfo::init();
 //    CategoryInfo::init();
-//    QFile out("importStuff.txt");
+//    QFile out("importMoves.txt");
 //    out.open(QIODevice::WriteOnly);
 //    out.write("Title, Free Text\n");
-//    for (int i = 0; i <MoveInfo::NumberOfMoves(); i++) {
+//    for (int i = 1; i <MoveInfo::NumberOfMoves(); i++) {
 //        qDebug() << "move " << i;
 //        out.putChar('"');
 //        out.write("Data:");
@@ -345,12 +345,10 @@ MainWindow::MainWindow(QWidget *parent) :
 //        out.write(", ");
 //        out.putChar('"');
 //        QString s =QString(
-//"<includeonly>{{{{{format}}}|\n"
-//"type=%1|pow=%2|acc=%3|pp=%4|class=%5|description=%6|gen=%7|\n"
-//"{{{1|}}}}}</includeonly>\n"
-//"<noinclude>{{MoveTable}}\n"
-//"{{MoveTable/Line|move={{PAGENAME}}}}\n"
-//"{{MoveTable/Footer}}</noinclude>"
+//"{{{{{format}}}|\n"
+//"type=%1|pow=%2|acc=%3|pp=%4|class=%5|description=%6|gen=%7|target=%8|category=%9|flags=%10|kingrock=%11|flinch=%12|recoil=%13|healing=%14|"
+//"critrate=%15|minturns=%16|maxturns=%17|\n"
+//"{{{1|}}}}}"
 //).arg(TypeInfo::Name(MoveInfo::Type(i,5)).toLower(), MoveInfo::PowerS(i,5), MoveInfo::AccS(i,5), QString::number(MoveInfo::PP(i,5))
 //      , CategoryInfo::Name(MoveInfo::Category(i, 5)).toLower(), MoveInfo::DetailedDescription(i));
 //        for (int g = 1; g <=5; g++) {
@@ -359,6 +357,42 @@ MainWindow::MainWindow(QWidget *parent) :
 //                break;
 //            }
 //        }
+//        QString categories [] = {
+//            "Standard",
+//            "Status",
+//            "Stat Affecting",
+//            "Healing",
+//            "Damaging Status",
+//            "Stat Modifying and Status",
+//            "Damaging Stat Affecting",
+//            "Damaging and Self-Stat Modifying",
+//            "Draining",
+//            "OHKO",
+//            "Field",
+//            "Zone",
+//            "Phazing",
+//            "Special"
+//        };
+//        QString targets [] = {
+//            "Chosen",
+//            "Partner or user",
+//            "Partner",
+//            "Me First",
+//            "All others",
+//            "Opponents",
+//            "Party",
+//            "User",
+//            "All",
+//            "Random",
+//            "Field",
+//            "Opponent's Field",
+//            "Own Field",
+//            "Indeterminate"
+//        };
+//        s = s.arg(targets[MoveInfo::Target(i, 5)], categories[MoveInfo::Classification(i, 5)], QString::number(MoveInfo::Flags(i, 5)));
+//        s = s.arg(MoveInfo::FlinchByKingRock(i) ? "Yes" : "No", QString::number(MoveInfo::FlinchRate(i, 5)),
+//                  QString::number(MoveInfo::Recoil(i, 5)), QString::number(MoveInfo::Healing(i, 5)));
+//        s = s.arg(QString::number(MoveInfo::CriticalRaise(i, 5)),QString::number(MoveInfo::MinTurns(i, 5)), QString::number(MoveInfo::MaxTurns(i, 5)));
 //        out.write(s.toUtf8());
 //        out.putChar('"');
 //        out.putChar('\n');
