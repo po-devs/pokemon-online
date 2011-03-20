@@ -528,7 +528,6 @@ QString Channel::addChannelLinks(const QString &line2)
         {
             QString channelName = line.midRef(pos, name.length()).toString();
             bool res=channelName.toLower() == name.toLower();
-            qDebug() << "iterating:" << name <<" vs "<<channelName << "=" << res;
             if(res)
             {
                 QString html = QString("<a href=\"po:join/%1\">#%2</a>").arg(name, channelName);
