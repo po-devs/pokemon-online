@@ -345,20 +345,20 @@ void ScriptEngine::afterBattleMatchup(int src, int dest, const ChallengeInfo &c)
 }
 
 
-void ScriptEngine::beforeBattleStarted(int src, int dest, const ChallengeInfo &c)
+void ScriptEngine::beforeBattleStarted(int src, int dest, const ChallengeInfo &c, int id)
 {
     if (!myscript.property("beforeBattleStarted", QScriptValue::ResolveLocal).isValid())
         return;
 
-    evaluate(myscript.property("beforeBattleStarted").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
+    evaluate(myscript.property("beforeBattleStarted").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode << id));
 }
 
-void ScriptEngine::afterBattleStarted(int src, int dest, const ChallengeInfo &c)
+void ScriptEngine::afterBattleStarted(int src, int dest, const ChallengeInfo &c, int id)
 {
     if (!myscript.property("afterBattleStarted", QScriptValue::ResolveLocal).isValid())
         return;
 
-    evaluate(myscript.property("afterBattleStarted").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
+    evaluate(myscript.property("afterBattleStarted").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode << id));
 }
 
 QString battleDesc[3] = {
