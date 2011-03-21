@@ -1,5 +1,5 @@
 Exeggcute: Sweet Scent + Wish
-Lickitung: Yawn + Wish
+Lickitung: Heal Bell + Wish
 Kangaskhan: Yawn + Wish
 Farfetch'd: Yawn + Wish
 Drowzee: Belly Drum + Wish
@@ -39,4 +39,4 @@ Zapdos: Extrasensory + Metal Sound + Baton Pass
 Moltres: Extrasensory + Will-o-Wisp + Morning Sun
 Chikorita: Frenzy Plant + Ancientpower
 Cyndaquil: Blast Burn + Reversal
-Totodile: Hydro Cannon + Crunch 
+Totodile: Hydro Cannon + Crunch
