@@ -1369,7 +1369,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         } else if (desc == Tie) {
             printLine(QString("%1 and %2 tied").arg(name(winner), name(loser)));
         }
-        myengine->afterBattleEnded(winner, loser, desc);
+        myengine->afterBattleEnded(winner, loser, desc, battleid);
     }
 
 
