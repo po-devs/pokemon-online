@@ -73,7 +73,8 @@ namespace NetworkServ
         ChannelMessage,
         ChanNameChange,
         HtmlMessage,
-        ChannelHtml
+        ChannelHtml,
+        ServerName
     };
 
     enum ProtocolError

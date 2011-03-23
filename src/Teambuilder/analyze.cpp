@@ -342,6 +342,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
                 emit versionDiff(version, VERSION);
             break;
         }
+    case ServerName: {
+            QString serverName;
+            in >> serverName;
+            emit serverNameReceived(serverName);
+            break;
+       }
     case TierSelection: {
             QByteArray tierList;
             in >> tierList;

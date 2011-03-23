@@ -76,6 +76,10 @@ public:
 
     BattleSituation * getBattle(int battleId) const;
 
+    const QString &servName() {
+        return serverName;
+    }
+
 signals:
     void chatmessage(const QString &name);
     void servermessage(const QString &name);
