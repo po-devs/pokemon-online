@@ -208,11 +208,13 @@ public slots:
     void showBattleEvents(bool);
     void showChannelEvents(bool);
     void showTeamEvents(bool);
+    void toggleAutoJoin(bool);
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
     void movePlayerList(bool);
     void ignoreServerVersion(bool);
     void versionDiff(const QString &a, const QString &b);
+    void serverNameReceived(const QString &sName);
     void tierListReceived(const QByteArray &array);
     void changeTier();
     void openBattleFinder();
@@ -271,6 +273,7 @@ private:
     QHash<qint32, QString> channelNames;
     QHash<QString, qint32> channelByNames;
     QHash<qint32, Channel *> mychannels;
+    QStringList autojoinChannels;
     /* Ignore */
     QList<int> myIgnored;
 
@@ -286,6 +289,7 @@ private:
     int selectedChannel;
 
     QString serverVersion;
+    QString serverName;
 
     QPointer<QMenuBar> mymenubar;
     QPointer<QMenu> mytiermenu;

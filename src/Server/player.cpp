@@ -724,6 +724,7 @@ void Player::loggedIn(TeamInfo &team,bool ladder, bool showteam, QColor c)
 
     /* Version control, whatever happens, because the problem could be because of an old version */
     relay().notify(NetworkServ::VersionControl, VERSION);
+    relay().notify(NetworkServ::ServerName, Server::serverIns->servName());
 
     if (!testNameValidity(team.name)) {
         return;
