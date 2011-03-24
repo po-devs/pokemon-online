@@ -376,13 +376,13 @@ void ScriptEngine::beforeBattleEnded(int src, int dest, int desc, int battleid)
     evaluate(myscript.property("beforeBattleEnded").call(myscript, QScriptValueList() << src << dest << battleDesc[desc] << battleid));
 }
 
-void ScriptEngine::afterBattleEnded(int src, int dest, int desc)
+void ScriptEngine::afterBattleEnded(int src, int dest, int desc, int battleid)
 {
     if (!myscript.property("afterBattleEnded", QScriptValue::ResolveLocal).isValid())
         return;
     if (desc < 0 || desc > 2)
         return;
-    evaluate(myscript.property("afterBattleEnded").call(myscript, QScriptValueList() << src << dest << battleDesc[desc]));
+    evaluate(myscript.property("afterBattleEnded").call(myscript, QScriptValueList() << src << dest << battleDesc[desc] << battleid));
 }
 
 void ScriptEngine::beforeLogOut(int src)

@@ -74,7 +74,8 @@ namespace NetworkCli
         ChannelMessage,
         ChanNameChange,
         HtmlMessage,
-        HtmlChannel
+        HtmlChannel,
+        ServerName
     };
 
     enum ProtocolError
@@ -159,6 +160,7 @@ signals:
     void userAliasReceived(const QString &s);
     void banListReceived(const QString &n, const QString &ip);
     void versionDiff(const QString &a, const QString &b);
+    void serverNameReceived(const QString &serverName);
     /* Ranking */
     void rankingStarted(int,int,int);
     void rankingReceived(const QString&,int);
