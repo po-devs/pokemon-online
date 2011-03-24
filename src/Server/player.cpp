@@ -861,7 +861,6 @@ void Player::ratingLoaded()
 {
     unlock();
     rating() = TierMachine::obj()->rating(waiting_name.length() > 0 ? waiting_name : name(), tier());
-    inner_rating() = TierMachine::obj()->inner_rating(waiting_name.length() > 0 ? waiting_name : name(), tier());
 
     if (ontologin) {
         ontologin = false;
