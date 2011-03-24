@@ -128,6 +128,21 @@ QStringList PluginManager::getVisiblePlugins() const
     return ret;
 }
 
+QList<BattlePlugin*> PluginManager::getBattlePlugins() const
+{
+    QList<BattlePlugin*> ret;
+
+    for (int i =0; i < plugins.size(); i++) {
+        BattlePlugin *p = plugins[i]->getBattlePlugin();
+
+        if (p) {
+            ret.push_back(p);
+        }
+    }
+
+    return ret;
+}
+
 ServerPlugin * PluginManager::plugin(const QString &name) const
 {
     for (int i = 0; i < plugins.size(); i++) {
@@ -136,13 +151,6 @@ ServerPlugin * PluginManager::plugin(const QString &name) const
     }
 
     return NULL;
-}
-
-void PluginManager::battleStarting(PlayerInterface *p1, PlayerInterface *p2, int mode, unsigned int &clauses, bool rated)
-{
-    foreach(ServerPlugin *s, plugins) {
-        s->battleStarting(p1, p2, mode, clauses, rated);
-    }
 }
 
 PluginManagerWidget::PluginManagerWidget(PluginManager &pl)

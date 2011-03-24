@@ -10,13 +10,15 @@
 #include "tiermachine.h"
 #include "tier.h"
 #include "pluginmanager.h"
+#include "battlepluginstruct.h"
 #include "theme.h"
 
-BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *p)
+typedef BattlePStorage BP;
+
+BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *pluginManager)
     : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
 {
     publicId() = id;
-    pluginManager = p;
     timer = NULL;
     myid[0] = p1.id();
     myid[1] = p2.id();
@@ -125,6 +127,24 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
             }
         }
     }
+
+    buildPlugins(pluginManager);
+}
+
+void BattleSituation::buildPlugins(PluginManager *p)
+{
+    plugins = p->getBattlePlugins();
+
+    foreach(BattlePlugin *pl, plugins) {
+        calls.push_back(new BattlePStorage(pl));
+    }
+}
+
+void BattleSituation::callp(int function)
+{
+    foreach(BattlePStorage *p, calls) {
+        p->call(function, this);
+    }
 }
 
 BattleSituation::~BattleSituation()
@@ -132,6 +152,10 @@ BattleSituation::~BattleSituation()
     if(useBattleLog) {
         battleLog.close();
     }
+    foreach(BattlePStorage *p, calls) {
+        delete p;
+    }
+
     terminate();
     /* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
     wait();
@@ -233,7 +257,13 @@ void BattleSituation::engageBattle()
         }
     }
 
-    pluginManager->battleStarting(player1, player2, mode(), clauses(), rated());
+    // Check for set weather.
+    if(weather != NormalWeather) {
+        sendMoveMessage(57, weather - 1, 0, TypeInfo::TypeForWeather(weather));
+    }
+
+    /* Plugin call */
+    callp(BP::battleStarting);
 
     for (int i = 0; i < numberOfSlots()/2; i++) {
         if (!poke(Player1, i).ko())
@@ -476,7 +506,6 @@ PokeBattle &BattleSituation::poke(int slot)
 /* The battle loop !! */
 void BattleSituation::run()
 {
-
 #ifdef WIN32
     /* Under windows you need to do that, as rand is per-thread. But on linux it'd screw up the random thing and
         interfere with other battles */
@@ -2164,7 +2193,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         notify(All, UseAttack, player, qint16(attack));
         if (useBattleLog) {
             appendBattleLog("UseAttack", tr("%1 used %2!").arg(escapeHtml(
-                tu(poke(player).nick())),
+                tu(nick(player))),
                 toBoldColor(MoveInfo::Name(attack),
                 Theme::TypeColor(MoveInfo::Type(attack, gen()))
             )));

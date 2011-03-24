@@ -6,14 +6,17 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/mtrand.h"
 #include "../Utilities/contextswitch.h"
+#include "battleinterface.h"
 
 class Player;
 class PluginManager;
+class BattlePlugin;
+class BattlePStorage;
 
 /* Fixme: needs some sort of cache to avoid revs() creating a list
    each time */
 
-class BattleSituation : public ContextCallee
+class BattleSituation : public ContextCallee, public BattleInterface
 {
     Q_OBJECT
 
@@ -36,7 +39,6 @@ class BattleSituation : public ContextCallee
 
     Player* player1;
     Player* player2;
-    PluginManager* pluginManager;
 public:
     enum {
 	AllButPlayer = -2,
@@ -663,6 +665,14 @@ public:
     }
 
     struct QuitException {};
+private:
+    QList<BattlePlugin*> plugins;
+    QList<BattlePStorage*> calls;
+
+    void buildPlugins(PluginManager *p);
+    /* Calls a plugin function. the parameter is the enum of BattlePStorage
+       corresponding to the function to call */
+    void callp(int function);
 };
 
 inline void BattleSituation::notify(int player, int command, int who)

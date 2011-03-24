@@ -6,6 +6,7 @@
 class PlayerInterface;
 class ServerPlugin;
 class ChallengeInfo;
+class BattlePlugin;
 
 namespace cross {
     class DynamicLibrary;
@@ -18,10 +19,10 @@ public:
     PluginManager();
     ~PluginManager();
 
-    void battleStarting(PlayerInterface *p1, PlayerInterface *p2, int mode, unsigned int &clauses, bool rated);
-
     QStringList getPlugins() const;
     QStringList getVisiblePlugins() const;
+    QList<BattlePlugin*> getBattlePlugins() const;
+
     ServerPlugin *plugin(const QString &name) const;
 
     void addPlugin(const QString &path);

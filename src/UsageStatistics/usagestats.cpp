@@ -8,7 +8,6 @@ ServerPlugin * createPluginClass() {
 }
 
 PokemonOnlineStatsPlugin::PokemonOnlineStatsPlugin()
-    : md5(QCryptographicHash::Md5)
 {
     QDir d;
     d.mkdir("usage_stats");
@@ -21,6 +20,69 @@ QString PokemonOnlineStatsPlugin::pluginName() const
     return "Usage Statistics";
 }
 
+BattlePlugin * PokemonOnlineStatsPlugin::getBattlePlugin()
+{
+    return new PokemonOnlineStatsBattlePlugin(this);
+}
+
+bool PokemonOnlineStatsPlugin::hasConfigurationWidget() const {
+    return false;
+}
+
+/*************************/
+/*************************/
+
+PokemonOnlineStatsBattlePlugin::PokemonOnlineStatsBattlePlugin(PokemonOnlineStatsPlugin *master)
+{
+    this->master = master;
+}
+
+QHash<QString, BattlePlugin::Hook> PokemonOnlineStatsBattlePlugin::getHooks()
+{
+    QHash<QString, Hook> ret;
+
+    ret.insert("battleStarting(BattleInterface&)", (Hook)(&PokemonOnlineStatsBattlePlugin::battleStarting));
+
+    return ret;
+}
+
+void PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
+{
+    /* We only keep track of battles between players of the same tier
+       and not CC battles */
+    if (b.clauses() & ChallengeInfo::ChallengeCup)
+        return;
+
+    QString tier = b.tier();
+
+    if (tier.length() == 0) {
+        tier = QString("Mixed Tiers Gen %1").arg(b.gen());
+    }
+
+    if (!master->existingDirs.contains(tier)) {
+        QDir d;
+        d.mkdir(QString("usage_stats/raw/%1").arg(tier));
+        master->existingDirs[tier] = QString("usage_stats/raw/%1/").arg(tier);
+    }
+
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 6; j++) {
+            bool lead = false;
+
+            if (b.mode() == ChallengeInfo::Singles) {
+                lead = j == 0;
+            } else if (b.mode() == ChallengeInfo::Doubles) {
+                lead = j <= 1;
+            } else if (b.mode() == ChallengeInfo::Triples) {
+                lead = j <= 2;
+            }
+
+            savePokemon(b.poke(i,j), lead, master->existingDirs[tier]);
+        }
+    }
+}
+
+
 inline int norm(int ev) {
     return (ev/4)*4;
 }
@@ -30,11 +92,11 @@ inline int norm(int ev) {
  * speed for that crucial problem, because we access files a lot.
  */
 
-QByteArray PokemonOnlineStatsPlugin::data(const PokeBattle &p) const {
+QByteArray PokemonOnlineStatsBattlePlugin::data(const PokeBattle &p) const {
     QByteArray ret;
     ret.resize(bufsize);
 
-    /* Constructs 28 bytes of raw data representing the pokemon */
+    /* Constructs bufsize bytes of raw data representing the pokemon */
     qint32 *a = (qint32*)ret.data();
     
     a[0] = (p.num().toPokeRef());
@@ -56,47 +118,7 @@ QByteArray PokemonOnlineStatsPlugin::data(const PokeBattle &p) const {
     return ret;
 }
 
-void PokemonOnlineStatsPlugin::battleStarting(PlayerInterface *p1, PlayerInterface *p2, int mode, unsigned int &clauses, bool)
-{
-    /* We only keep track of battles between players of the same tier
-       and not CC battles */
-    if (clauses & ChallengeInfo::ChallengeCup)
-        return;
-
-    QString tier = p1->tier();
-
-    if (p1->tier() != p2->tier()) {
-        tier = QString("Mixed Tiers Gen %1").arg(p1->team().gen);
-    }
-
-    if (!existingDirs.contains(tier)) {
-        QDir d;
-        d.mkdir(QString("usage_stats/raw/%1").arg(tier));
-        existingDirs[tier] = QString("usage_stats/raw/%1/").arg(tier);
-    }
-
-    PlayerInterface *players[2] = {p1, p2};
-
-    for (int i = 0; i < 2; i++) {
-        const TeamBattle &team = players[i]->team();
-
-        for (int j = 0; j < 6; j++) {
-            bool lead = false;
-
-            if (mode == ChallengeInfo::Singles) {
-                lead = j == 0;
-            } else if (mode == ChallengeInfo::Doubles) {
-                lead = j <= 1;
-            } else if (mode == ChallengeInfo::Triples) {
-                lead = j <= 2;
-            }
-
-            savePokemon(team.poke(j), lead, existingDirs[tier]);
-        }
-    }
-}
-
-/* Basically, we take the first 2 letters of the hash of the pokemon's raw data,
+/* Basically, we take the first 3 letters of the hash of the pokemon's raw data,
    and we open that file. We then put the pokemon if it isn't already in, and
    we also open another file with those two letters + _count, in which we write
    two numbers: the usage and the lead usage of the set.
@@ -105,7 +127,7 @@ void PokemonOnlineStatsPlugin::battleStarting(PlayerInterface *p1, PlayerInterfa
    section in my opinion for big servers, and C++ file management systems are
    pretty slow.
 */
-void PokemonOnlineStatsPlugin::savePokemon(const PokeBattle &p, bool lead, const QString &d)
+void PokemonOnlineStatsBattlePlugin::savePokemon(const PokeBattle &p, bool lead, const QString &d)
 {
     QByteArray data = this->data(p);
 
@@ -151,8 +173,4 @@ void PokemonOnlineStatsPlugin::savePokemon(const PokeBattle &p, bool lead, const
     fwrite(&leadusage, sizeof(qint32), 1, raw_f);
 
     fclose(raw_f);
-}
-
-bool PokemonOnlineStatsPlugin::hasConfigurationWidget() const {
-    return false;
 }
