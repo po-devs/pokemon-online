@@ -3,6 +3,7 @@
 
 #include "usagestats_global.h"
 #include "../Server/plugininterface.h"
+#include "../Server/battleinterface.h"
 
 #include <QtCore>
 
@@ -21,18 +22,29 @@ public:
 
     QString pluginName() const;
 
-    void battleStarting(PlayerInterface *p1, PlayerInterface *p2, int mode, unsigned int &c, bool rated);
+    BattlePlugin *getBattlePlugin();
     bool hasConfigurationWidget() const;
 
-private:
+/* Private */
     QHash<QString, QString> existingDirs;
-    QCryptographicHash md5;
-
-    /* Returns a simplified version of the pokemon on 28 bytes */
-    QByteArray data(const PokeBattle &p) const;
-    void savePokemon(const PokeBattle &p, bool lead, const QString &d);
-
-    static const int bufsize = 6*sizeof(qint32)+4*sizeof(quint16);
 };
+
+class POKEMONONLINESTATSPLUGINSHARED_EXPORT PokemonOnlineStatsBattlePlugin
+    : public BattlePlugin
+{
+public:
+    PokemonOnlineStatsBattlePlugin(PokemonOnlineStatsPlugin *master);
+
+    QHash<QString, Hook> getHooks();
+
+    void battleStarting(BattleInterface &b);
+    void savePokemon(const PokeBattle &p, bool lead, const QString &d);
+private:
+    PokemonOnlineStatsPlugin *master;
+    static const int bufsize = 6*sizeof(qint32)+4*sizeof(quint16);
+    /* Returns a simplified version of the pokemon on bufsize bytes */
+    QByteArray data(const PokeBattle &p) const;
+};
+
 
 #endif // POKEMONONLINESTATSPLUGIN_H

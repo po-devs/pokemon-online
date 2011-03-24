@@ -2,6 +2,7 @@
 #define PLUGININTERFACE_H
 
 #include <QString>
+#include <QHash>
 
 /* An interface Server Plugins must follow.
    Remember that plugins are still very experimental and that this file is going to be subject to
@@ -10,6 +11,16 @@
 class QWidget;
 class PlayerInterface;
 class ChallengeInfo;
+
+class BattlePlugin
+{
+public:
+    typedef void (BattlePlugin::*Hook) ();
+
+    virtual QHash<QString, Hook> getHooks(){
+        return QHash<QString, Hook>();
+    }
+};
 
 class ServerPlugin
 {
@@ -28,8 +39,8 @@ public:
         return false;
     }
 
-    /* For plugins that needs to know (like some stat gathering plugins =) ) */
-    virtual void battleStarting(PlayerInterface *, PlayerInterface *, int, unsigned int &, bool) {
+    virtual BattlePlugin * getBattlePlugin () {
+        return NULL;
     }
 };
 

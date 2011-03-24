@@ -35,7 +35,8 @@ SOURCES += main.cpp \
     tiermachine.cpp \
     sessiondatafactory.cpp \
     sfmlsocket.cpp \
-    scriptdb.cpp
+    scriptdb.cpp \
+    battlepluginstruct.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
@@ -88,7 +89,9 @@ HEADERS += player.h \
     miscmoves.h \
     sessiondatafactory.h \
     sfmlsocket.h \
-    scriptdb.h
+    scriptdb.h \
+    battleinterface.h \
+    battlepluginstruct.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \

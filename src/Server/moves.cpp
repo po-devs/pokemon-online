@@ -4466,6 +4466,9 @@ struct MMOutrage : public MM
             addFunction(poke(b,s), "EndTurn610", "Outrage", &aas);
             poke(b,s)["OutrageMove"] = move(b,s);
         }
+        /* In gen 5, even a miss causes outrage to stop */
+        if (b.gen() >= 5)
+            poke(b,s)["LastOutrage"] = b.turn();
     }
 
     static void aas(int s, int, BS &b) {
@@ -4489,7 +4492,8 @@ struct MMOutrage : public MM
 
     static void ms(int s, int, BS &b) {
         turn(b,s)["OutrageBefore"] = poke(b,s).contains("LastOutrage") && poke(b,s)["LastOutrage"].toInt() == b.turn() - 1;
-        poke(b,s)["LastOutrage"] = b.turn();
+        if (b.gen() <= 4)
+            poke(b,s)["LastOutrage"] = b.turn();
     }
 };
 

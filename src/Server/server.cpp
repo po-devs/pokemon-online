@@ -1261,12 +1261,6 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
     connect(battle, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int, int,int,int)));
 
-    // Check for set weather.
-    int dominantWeather = battle->weather;
-    if(dominantWeather != BattleSituation::NormalWeather) {
-        battle->sendMoveMessage(57, dominantWeather - 1, 0, TypeInfo::TypeForWeather(dominantWeather));
-    }
-
     battle->setLogging(useBattleFileLog);
     battle->start(battleThread);
 
