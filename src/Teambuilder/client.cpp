@@ -124,8 +124,8 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     /* Default channel on to display messages */
     channelPlayers(0);
 
-    /* move player tab to right if user has selected it 
-     * this needs to be done at the end of this function to work properly 
+    /* move player tab to right if user has selected it
+     * this needs to be done at the end of this function to work properly
      */
     if (settings.value("user_list_at_right").toBool()) {
         s->addWidget(mytab);
@@ -166,6 +166,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(spectatingBattleMessage(int,QByteArray)), SLOT(spectatingBattleMessage(int , QByteArray)));
     connect(relay, SIGNAL(spectatingBattleFinished(int)), SLOT(stopWatching(int)));
     connect(relay, SIGNAL(versionDiff(QString, QString)), SLOT(versionDiff(QString, QString)));
+    connect(relay, SIGNAL(serverNameReceived(QString)), SLOT(serverNameReceived(QString)));
     connect(relay, SIGNAL(tierListReceived(QByteArray)), SLOT(tierListReceived(QByteArray)));
     connect(relay, SIGNAL(announcement(QString)), SLOT(announcementReceived(QString)));
     connect(relay, SIGNAL(channelsListReceived(QHash<qint32,QString>)), SLOT(channelsListReceived(QHash<qint32,QString>)));
@@ -382,6 +383,20 @@ void Client::showChannelsContextMenu(const QPoint & point)
         connect(action, SIGNAL(triggered(bool)), SLOT(showTeamEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
         mychanevents.push_back(action);
+
+        if (serverName.size() > 0) {
+            show_events->addSeparator();
+            action = show_events->addAction(tr("Auto-join"));
+            action->setCheckable(item->id() != 0); // can't disable for main channel
+            action->setChecked(item->id() == 0 ||
+                autojoinChannels.contains(channelNames.value(item->id())));
+            if (item->id() != 0) {
+                createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+                connect(action, SIGNAL(triggered(bool)), SLOT(toggleAutoJoin(bool)));
+                createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+                mychanevents.push_back(action);
+            }
+        }
 
         show_events->exec(channels->mapToGlobal(point));
     }
@@ -689,7 +704,7 @@ int Client::getEventsForChannel(QString const& channel)
     if (s.childGroups().indexOf(channel) > -1) {
         s.beginGroup(channel);
         int ret = 0;
-        int event = 1; /* trusts that eventSettings() returns 
+        int event = 1; /* trusts that eventSettings() returns
                 the list in order */
         foreach (QString str, eventSettings()) {
             if (s.value(str).toBool()) {
@@ -755,6 +770,18 @@ void Client::showChannelEvents(bool b)
 void Client::showTeamEvents(bool b)
 {
     showPlayerEvents(b, TeamEvent, "show_player_events_team");
+}
+
+void Client::toggleAutoJoin(bool b)
+{
+    QString name = channelNames.value(selectedChannel);
+    if (b) {
+        autojoinChannels.append(name);
+    } else {
+        autojoinChannels.removeAll(name);
+    }
+    QSettings s;
+    s.setValue(QString("autojoinChannels/%1").arg(serverName), autojoinChannels.join("*"));
 }
 
 void Client::seeRanking(int id)
@@ -1185,6 +1212,17 @@ void Client::versionDiff(const QString &a, const QString &b)
             if (result & QMessageBox::Ignore)
                 ignoreServerVersion(true);
         }
+    }
+}
+
+void Client::serverNameReceived(const QString &sName)
+{
+    serverName = sName;
+    QSettings settings;
+    autojoinChannels = settings.value(QString("autojoinChannels/%1").arg(serverName)).toString().split("*");
+    autojoinChannels.removeAll("");
+    foreach (QString channel, autojoinChannels) {
+        join(channel);
     }
 }
 

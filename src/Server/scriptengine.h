@@ -62,7 +62,7 @@ public:
     void beforeBattleStarted(int src, int dest, const ChallengeInfo &desc, int battleid);
     void afterBattleStarted(int winner, int loser, const ChallengeInfo &desc, int battleid);
     void beforeBattleEnded(int winner, int loser, int desc, int battleid);
-    void afterBattleEnded(int winner, int loser, int desc);
+    void afterBattleEnded(int winner, int loser, int desc, int battleid);
     bool beforePlayerAway(int src, bool away);
     void afterPlayerAway(int src, bool away);
     bool beforePlayerKick(int src, int dest);
