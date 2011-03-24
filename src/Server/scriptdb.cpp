@@ -68,32 +68,53 @@ void ScriptDB::insert(const QString &tableName, const QScriptValue &properties)
     }
     if (!properties.isObject()) return;
 
+    QScriptValueIterator it(properties);
+
+    // Preparing query.
     QString fields = "";
     QString values = "";
-    QScriptValueIterator it(properties);
-    
+    bool it_has_next = it.hasNext();
+    while (it_has_next) {
+        it.next();
+        QString name = it.name().toLower();
+        if ((name != "id") && rxSafeNames.exactMatch(name)) {
+            fields.append(name);
+            values.append("?");
+        }
+        it_has_next = it.hasNext();
+        if (it_has_next) {
+            fields.append(", ");
+            values.append(", ");
+        }
+    }
+    if (values.isEmpty()) {
+        myserver->print("db.insert: no data found.");
+        return;
+    }
+
+    // Bind and execute.
+    QString queryString = QString("INSERT INTO poscript_") + tableName + QString("(") + fields
+                          + QString(") VALUES (") + values + QString(")");
+    QSqlQuery q;
+    q.prepare(queryString);
+    it.toFront();
     while (it.hasNext()) {
         it.next();
         QString name = it.name().toLower();
-        QScriptValue valueItself = it.value();
-        QString valueData = valueItself.toString();
+        // Same condition as in the iteration above.
         if ((name != "id") && rxSafeNames.exactMatch(name)) {
-            fields = fields + name + ", ";
-            valueData.replace("'", "''");
-            if (!valueItself.isNumber() && !valueItself.isBool()) {
-                valueData = "'" + valueData + "'";
+            QScriptValue valueItself = it.value();
+            if (valueItself.isNumber()) {
+                q.addBindValue(valueItself.toNumber());
+            } else if (valueItself.isBool()) {
+                q.addBindValue(valueItself.toBool());
+            } else {
+                q.addBindValue(valueItself.toString());
             }
-            values = values + valueData + ", ";
         }
     }
-    if ((fields.length() > 0) && (values.length() > 0)) {
-        fields.chop(2);
-        values.chop(2);
-        QString queryString = "INSERT INTO poscript_" + tableName + "(" + fields + ") VALUES (" + values + ")";
-        QSqlQuery q;
-        if (!q.exec(queryString)) {
-            myserver->print(QString("db.insert: failed. %1").arg(q.lastError().text()
-                + "\nQuery string was: ") + queryString);
-        }
+    if (!q.exec()) {
+        myserver->print(QString("db.insert: failed. %1").arg(q.lastError().text()
+            + "\nQuery string was: ") + queryString);
     }
 }
