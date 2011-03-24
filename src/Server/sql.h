@@ -73,8 +73,7 @@ public:
         if (!result && name=="") {
             throw (QString("Unable to establish a database connection.") + db.lastError().text());
         } else if (name == "") {
-            if (databaseType != MySQL)
-                db.exec("vacuum");
+            if (databaseType != MySQL) db.exec("vacuum");
             throw (QString("Connection to the database established!"));
         }
     }
