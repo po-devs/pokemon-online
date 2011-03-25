@@ -53,7 +53,8 @@ struct IMBlackSludge : public IM
 		b.sendItemMessage(16,s,0);
 		b.healLife(s, b.poke(s).totalLifePoints()/16);
 	    }
-	} else if (!b.hasType(s, Pokemon::Steel)) {
+        } else
+        {
 	    b.sendItemMessage(16,s,1);
 	    b.inflictDamage(s, b.poke(s).totalLifePoints()/8,s);
 	}
