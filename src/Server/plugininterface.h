@@ -10,12 +10,13 @@
 
 class QWidget;
 class PlayerInterface;
+class BattleInterface;
 class ChallengeInfo;
 
 class BattlePlugin
 {
 public:
-    typedef void (BattlePlugin::*Hook) ();
+    typedef int (BattlePlugin::*Hook) ();
 
     virtual QHash<QString, Hook> getHooks(){
         return QHash<QString, Hook>();
@@ -39,7 +40,7 @@ public:
         return false;
     }
 
-    virtual BattlePlugin * getBattlePlugin () {
+    virtual BattlePlugin * getBattlePlugin (BattleInterface *b) {
         return NULL;
     }
 };

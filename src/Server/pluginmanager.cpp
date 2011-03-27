@@ -128,12 +128,12 @@ QStringList PluginManager::getVisiblePlugins() const
     return ret;
 }
 
-QList<BattlePlugin*> PluginManager::getBattlePlugins() const
+QList<BattlePlugin*> PluginManager::getBattlePlugins(BattleInterface *b) const
 {
     QList<BattlePlugin*> ret;
 
     for (int i =0; i < plugins.size(); i++) {
-        BattlePlugin *p = plugins[i]->getBattlePlugin();
+        BattlePlugin *p = plugins[i]->getBattlePlugin(b);
 
         if (p) {
             ret.push_back(p);

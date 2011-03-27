@@ -113,12 +113,14 @@ void ServerWidget::clearChat()
 
 void ServerWidget::openPluginConfig()
 {
-    QAction *ac = (QAction*)sender();
+    QAction *ac = dynamic_cast<QAction*>(sender());
 
     ServerPlugin *s = server->pluginManager->plugin(ac->text());
 
     if (s) {
         QWidget *config = s->getConfigurationWidget();
+
+        return;
 
         if (config) {
             config->setAttribute(Qt::WA_DeleteOnClose);

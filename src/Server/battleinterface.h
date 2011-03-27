@@ -14,6 +14,16 @@ class TeamBattle;
 class BattleInterface
 {
 public:
+    enum {
+        AllButPlayer = -2,
+        All = -1,
+        Player1,
+        Player2,
+        Slot11,
+        Slot21,
+        Slot12,
+        Slot22
+    };
 //    typedef QVariantHash context;
 
 //    virtual const int & turn() const = 0;
@@ -41,8 +51,8 @@ public:
 //    virtual int partner(int spot) const = 0;
 //    virtual QList<int> revs(int slot) const = 0;
 //    virtual QList<int> allRevs(int slot) const = 0; //returns even koed opponents
-//    /* returns the id corresponding to that spot (spot is 0 or 1) */
-//    int id(int spot) const = 0;
+    /* returns the id corresponding to that spot (spot is 0 or 1) */
+    virtual int id(int spot) const = 0;
 //    /* Return the configuration of the players (1 refer to that player, 0 to that one...) */
 //    virtual BattleConfiguration configuration() const = 0;
 
@@ -57,7 +67,7 @@ public:
 //        Use the functions above to make conversions
 //    */
 //    virtual TeamBattle &team(int player) = 0;
-//    virtual const TeamBattle &team(int player) const = 0;
+    virtual const TeamBattle &team(int player) const = 0;
 //    virtual PokeBattle &poke(int player) = 0;
 //    virtual const PokeBattle &poke(int player) const = 0;
 //    virtual PokeBattle &poke(int player, int poke) = 0;

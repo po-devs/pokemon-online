@@ -7,6 +7,7 @@ class PlayerInterface;
 class ServerPlugin;
 class ChallengeInfo;
 class BattlePlugin;
+class BattleInterface;
 
 namespace cross {
     class DynamicLibrary;
@@ -21,7 +22,7 @@ public:
 
     QStringList getPlugins() const;
     QStringList getVisiblePlugins() const;
-    QList<BattlePlugin*> getBattlePlugins() const;
+    QList<BattlePlugin*> getBattlePlugins(BattleInterface *) const;
 
     ServerPlugin *plugin(const QString &name) const;
 

@@ -84,7 +84,7 @@
 
 
 %s avoided %f's attack thanks to its Telepathy!
-%s regains health with its Regeneration!
+%s regains health with its Regenerator!
 
 %s's gained a %i thanks to its Harvest!
 
@@ -93,7 +93,7 @@
 
 %s picked up the %i!
 %s's Justice Heart raises its attack!
-%s's Inconsistent sharply raises its %st!|%s's Inconsistent lowers its %st!
+%s's Moody sharply raises its %st!|%s's Moody lowers its %st!
 %s's Cursed Body activates!
 %s raised its Speed in fear!
 

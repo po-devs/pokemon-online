@@ -502,8 +502,8 @@
 386:3 Deoxys-Vit
 413:1 Cheniselle-Sol
 413:2 Cheniselle-Acier
-487:1 Shaymin-Vol
-492:1 Giratina-Ori
+487:1 Giratina-Ori
+492:1 Shaymin-Vol
 201:1 Unown-B
 201:2 Unown-C
 201:3 Unown-D

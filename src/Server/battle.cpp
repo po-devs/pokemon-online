@@ -133,17 +133,29 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
 
 void BattleSituation::buildPlugins(PluginManager *p)
 {
-    plugins = p->getBattlePlugins();
+    plugins = p->getBattlePlugins(this);
 
     foreach(BattlePlugin *pl, plugins) {
         calls.push_back(new BattlePStorage(pl));
     }
 }
 
+void BattleSituation::removePlugin(BattlePlugin *p)
+{
+    int index = plugins.indexOf(p);
+
+    if (index != -1) {
+        plugins.removeAt(index);
+        delete calls.takeAt(index);
+    }
+}
+
 void BattleSituation::callp(int function)
 {
     foreach(BattlePStorage *p, calls) {
-        p->call(function, this);
+        if (p->call(function, this) == -1) {
+            removePlugin(p->plugin);
+        }
     }
 }
 
@@ -181,7 +193,7 @@ void BattleSituation::start(ContextSwitcher &ctx)
         if(!d.exists("logs/battles/" + date)) {
             d.mkpath("logs/battles/" + date);
         }
-        battleLog.setFileName(QString("logs/battles/%1/%2-%3-%4").arg(date, time, id0, id1));
+        battleLog.setFileName(QString("logs/battles/%1/%2-%3-%4.html").arg(date, time, id0, id1));
         battleLog.open(QIODevice::WriteOnly);
 
         appendBattleLog("BattleStart", toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(player1->name(), player2->name()));
@@ -248,6 +260,9 @@ void BattleSituation::engageBattle()
         t.fixTeam(team2);
     }
 
+    /* Plugin call */
+    callp(BP::battleStarting);
+
     for (int i = 0; i < 6; i++) {
         if (poke(Player1,i).ko()) {
             changeStatus(Player1, i, Pokemon::Koed);
@@ -261,9 +276,6 @@ void BattleSituation::engageBattle()
     if(weather != NormalWeather) {
         sendMoveMessage(57, weather - 1, 0, TypeInfo::TypeForWeather(weather));
     }
-
-    /* Plugin call */
-    callp(BP::battleStarting);
 
     for (int i = 0; i < numberOfSlots()/2; i++) {
         if (!poke(Player1, i).ko())
@@ -4700,6 +4712,7 @@ void BattleSituation::emitCommand(int slot, int players, const QByteArray &toSen
     } else {
         emit battleInfo(publicId(), qint32(id(players)), toSend);
     }
+    callp(BP::emitCommand, slot, players, toSend);
 }
 
 BattleDynamicInfo BattleSituation::constructInfo(int slot)

@@ -1,0 +1,146 @@
+#include "battlelogs.h"
+#include <QtGui>
+
+ServerPlugin * createPluginClass() {
+    return new BattleLogs();
+}
+
+BattleLogs::BattleLogs()
+{
+    QSettings s("config_battleLogs", QSettings::IniFormat);
+    saveMixedTiers = s.value("save_mixed_tiers", true).toBool();
+
+    tiers = s.value("tiers").toStringList().toSet();
+}
+
+QString BattleLogs::pluginName() const
+{
+    return "Battle Logs";
+}
+
+BattlePlugin* BattleLogs::getBattlePlugin(BattleInterface* b)
+{
+    if (b->tier().isEmpty()) {
+        if (!saveMixedTiers)
+            return NULL;
+    } else {
+        if (!tiers.contains(b->tier()))
+            return NULL;
+    }
+
+    return new BattleLogsPlugin();
+}
+
+bool BattleLogs::hasConfigurationWidget () const
+{
+    return true;
+}
+
+QWidget *BattleLogs::getConfigurationWidget()
+{
+    return new BattleLogsWidget(this);
+}
+
+/************************/
+/************************/
+/************************/
+
+BattleLogsWidget::BattleLogsWidget(BattleLogs *master)
+{
+    this->master = master;
+
+    QFormLayout *f = new QFormLayout(this);
+
+    f->addRow("Tiers to be logged (input nothing to log all tiers)", tiers = new QTextEdit());
+    f->addWidget(mixedTiers = new QCheckBox("Save battles between different tiers"));
+
+    mixedTiers->setChecked(master->saveMixedTiers);
+    tiers->setText(QStringList(master->tiers.toList()).join(", "));
+
+    QPushButton *button = new QPushButton("Done");
+    f->addRow(NULL, button);
+
+    connect(button, SIGNAL(clicked()), SLOT(done()));
+}
+
+void BattleLogsWidget::done()
+{
+    QStringList tiers = this->tiers->toPlainText().split(",");
+    for(int i = 0; i < tiers.size(); i++) {
+        tiers[i] = tiers[i].trimmed();
+    }
+
+    master->tiers = tiers.toSet();
+    master->saveMixedTiers = mixedTiers->isChecked();
+
+    QSettings s("config_battleLogs", QSettings::IniFormat);
+    s.setValue("save_mixed_tiers", mixedTiers->isChecked());
+    s.setValue("tiers", tiers);
+}
+
+/************************/
+/************************/
+/************************/
+
+BattleLogsPlugin::BattleLogsPlugin() : commands(&toSend, QIODevice::WriteOnly)
+{
+    started = false;
+    commands.setVersion(QDataStream::Qt_4_5);
+    t.start();
+}
+
+BattleLogsPlugin::~BattleLogsPlugin()
+{
+    if (!started)
+        return;
+
+    QString date = QDate::currentDate().toString("yyyy-MM-dd");
+    QString time = QTime::currentTime().toString("hh'h'mm'm'ss's'");
+    QString id0 = QString::number(id1);
+    QString id1 = QString::number(id2);
+
+    QDir d("");
+    if(!d.exists("logs/battles/" + date)) {
+        d.mkpath("logs/battles/" + date);
+    }
+
+    QFile out;
+    out.setFileName(QString("logs/battles/%1/%2-%3-%4.raw").arg(date, time, id0, id1));
+    out.open(QIODevice::WriteOnly);
+    out.write(toSend);
+    out.close();
+}
+
+QHash<QString, BattlePlugin::Hook> BattleLogsPlugin::getHooks()
+{
+    QHash<QString, Hook> ret;
+
+    ret.insert("battleStarting(BattleInterface&)", (Hook)(&BattleLogsPlugin::battleStarting));
+    ret.insert("emitCommand(BattleInterface&)", (Hook)(&BattleLogsPlugin::emitCommand));
+
+    return ret;
+}
+
+int BattleLogsPlugin::battleStarting(BattleInterface &b)
+{
+    commands << QByteArray("battle_logs_v0 0\n");
+    commands << b.team(0);
+    commands << b.team(1);
+
+    id1 = b.id(0);
+    id2 = b.id(1);
+    started = true;
+
+    return 0;
+}
+
+int BattleLogsPlugin::emitCommand(BattleInterface &, int, int players, QByteArray b)
+{
+    if (!started)
+        return 0;
+
+    if (players != BattleInterface::AllButPlayer)
+        commands << qint32(t.elapsed()) << b;
+
+    return 0;
+}

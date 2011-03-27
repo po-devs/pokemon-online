@@ -20,7 +20,7 @@ QString PokemonOnlineStatsPlugin::pluginName() const
     return "Usage Statistics";
 }
 
-BattlePlugin * PokemonOnlineStatsPlugin::getBattlePlugin()
+BattlePlugin * PokemonOnlineStatsPlugin::getBattlePlugin(BattleInterface*)
 {
     return new PokemonOnlineStatsBattlePlugin(this);
 }
@@ -46,12 +46,12 @@ QHash<QString, BattlePlugin::Hook> PokemonOnlineStatsBattlePlugin::getHooks()
     return ret;
 }
 
-void PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
+int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
 {
     /* We only keep track of battles between players of the same tier
        and not CC battles */
     if (b.clauses() & ChallengeInfo::ChallengeCup)
-        return;
+        return -1;
 
     QString tier = b.tier();
 
@@ -80,6 +80,8 @@ void PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
             savePokemon(b.poke(i,j), lead, master->existingDirs[tier]);
         }
     }
+
+    return -1; /* Means the plugin is done */
 }
 
 
