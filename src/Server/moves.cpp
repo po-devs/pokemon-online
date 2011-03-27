@@ -1,5 +1,6 @@
 #include "moves.h"
 #include "miscmoves.h"
+#include "miscabilities.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "items.h"
 
@@ -5865,6 +5866,20 @@ struct MMCrossFlame : public MM
     }
 };
 
+struct MMWillOWisp : public MM
+{
+    MMWillOWisp() {
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.hasWorkingAbility(t, Ability::FlashFire) && type(b,s) == Type::Fire) {
+            b.failSilently(s);
+            AMFlashFire::op(t, s, b);
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
@@ -6094,4 +6109,5 @@ void MoveEffect::init()
     REGISTER_MOVE(192, TriAttack);
     REGISTER_MOVE(193, CrossFlame);
     REGISTER_MOVE(194, CrossThunder);
+    REGISTER_MOVE(195, WillOWisp);
 }

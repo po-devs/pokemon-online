@@ -2,9 +2,7 @@
 #include "miscmoves.h"
 #include "moves.h" //For magic mirror.
 #include "../PokemonInfo/pokemoninfo.h"
-
-typedef AbilityMechanics AM;
-typedef BattleSituation BS;
+#include "miscabilities.h"
 
 QHash<int, AbilityMechanics> AbilityEffect::mechanics;
 QHash<int, QString> AbilityEffect::names;
@@ -355,24 +353,6 @@ struct AMFlameBody : public AM {
             if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
                 b.sendAbMessage(18,0,s,t,Pokemon::Curse,b.ability(s));
                 b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt(),s);
-            }
-        }
-    }
-};
-
-struct AMFlashFire : public AM {
-    AMFlashFire() {
-        functions["OpponentBlock"] = &op;
-    }
-
-    static void op(int s, int t, BS &b) {
-        if (type(b,t) == Pokemon::Fire && (b.gen() >= 4 || tmove(b,t).power > 0) ) {
-            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
-            if (!poke(b,s).contains("FlashFired")) {
-                b.sendAbMessage(19,0,s,s,Pokemon::Fire);
-                poke(b,s)["FlashFired"] = true;
-            } else {
-                b.sendAbMessage(19,1,s,s,Pokemon::Fire, move(b,t));
             }
         }
     }
