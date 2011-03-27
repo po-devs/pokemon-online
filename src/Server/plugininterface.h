@@ -17,6 +17,7 @@ class BattlePlugin
 {
 public:
     typedef int (BattlePlugin::*Hook) ();
+    virtual ~BattlePlugin(){}
 
     virtual QHash<QString, Hook> getHooks(){
         return QHash<QString, Hook>();

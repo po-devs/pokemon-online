@@ -76,6 +76,8 @@ void BattleLogsWidget::done()
     QSettings s("config_battleLogs", QSettings::IniFormat);
     s.setValue("save_mixed_tiers", mixedTiers->isChecked());
     s.setValue("tiers", tiers);
+
+    close();
 }
 
 /************************/
@@ -107,6 +109,7 @@ BattleLogsPlugin::~BattleLogsPlugin()
     QFile out;
     out.setFileName(QString("logs/battles/%1/%2-%3-%4.raw").arg(date, time, id0, id1));
     out.open(QIODevice::WriteOnly);
+    out.write("battle_logs_v0 0\n");
     out.write(toSend);
     out.close();
 }
@@ -116,14 +119,13 @@ QHash<QString, BattlePlugin::Hook> BattleLogsPlugin::getHooks()
     QHash<QString, Hook> ret;
 
     ret.insert("battleStarting(BattleInterface&)", (Hook)(&BattleLogsPlugin::battleStarting));
-    ret.insert("emitCommand(BattleInterface&)", (Hook)(&BattleLogsPlugin::emitCommand));
+    ret.insert("emitCommand(BattleInterface&,int,int,QByteArray)", (Hook)(&BattleLogsPlugin::emitCommand));
 
     return ret;
 }
 
 int BattleLogsPlugin::battleStarting(BattleInterface &b)
 {
-    commands << QByteArray("battle_logs_v0 0\n");
     commands << b.team(0);
     commands << b.team(1);
 
@@ -139,8 +141,9 @@ int BattleLogsPlugin::emitCommand(BattleInterface &, int, int players, QByteArra
     if (!started)
         return 0;
 
-    if (players != BattleInterface::AllButPlayer)
+    if (players != BattleInterface::AllButPlayer) {
         commands << qint32(t.elapsed()) << b;
+    }
 
     return 0;
 }
