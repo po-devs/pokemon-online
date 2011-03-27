@@ -5,11 +5,6 @@ ServerPlugin * createPluginClass() {
     return new BattleLogs();
 }
 
-QWidget *creater(void) {
-    QWidget w;
-    return NULL;
-}
-
 BattleLogs::BattleLogs()
 {
     QSettings s("config_battleLogs", QSettings::IniFormat);
@@ -43,8 +38,6 @@ bool BattleLogs::hasConfigurationWidget () const
 
 QWidget *BattleLogs::getConfigurationWidget()
 {
-    return creater();
-    return NULL;
     return new BattleLogsWidget(this);
 }
 
