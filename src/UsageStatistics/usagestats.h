@@ -22,7 +22,7 @@ public:
 
     QString pluginName() const;
 
-    BattlePlugin *getBattlePlugin();
+    BattlePlugin *getBattlePlugin(BattleInterface*);
     bool hasConfigurationWidget() const;
 
 /* Private */
@@ -37,7 +37,7 @@ public:
 
     QHash<QString, Hook> getHooks();
 
-    void battleStarting(BattleInterface &b);
+    int battleStarting(BattleInterface &b);
     void savePokemon(const PokeBattle &p, bool lead, const QString &d);
 private:
     PokemonOnlineStatsPlugin *master;

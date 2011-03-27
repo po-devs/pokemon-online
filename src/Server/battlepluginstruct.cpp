@@ -16,6 +16,12 @@ BattlePStorage::BattlePStorage(BattlePlugin *p)
         functions.remove("battleStarting(BattleInterface&)");
     }
 
+    if (functions.contains("emitCommand(BattleInterface&,int,QByteArray&")) {
+        calls[emitCommand] = functions.value("emitCommand(BattleInterface&,int,QByteArray&");
+
+        functions.remove("emitCommand(BattleInterface&,int,int,QByteArray");
+    }
+
     if (!functions.empty()) {
         /* To Do: Some way to propagate an error about unreckognized stuff, maybe cancel the plugin entirely */
     }
@@ -28,10 +34,12 @@ BattlePStorage::~BattlePStorage()
     delete plugin;
 }
 
-void BattlePStorage::call(int f, BattleInterface *b)
+int BattlePStorage::call(int f, BattleInterface *b)
 {
     if (calls[f]) {
         /* Calls the plugin member function, from the correct class, with the appropriate parameters */
-        (*plugin.*(reinterpret_cast<void (BattlePlugin::*)(BattleInterface &)>(calls[f])))(*b);
+        return (*plugin.*(reinterpret_cast<int (BattlePlugin::*)(BattleInterface &)>(calls[f])))(*b);
     }
+
+    return 0;
 }

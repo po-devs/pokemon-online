@@ -1052,7 +1052,7 @@ void Server::findBattle(int id, const FindBattleData &f)
 
         /* Then the range thing */
         if (f.ranged)
-            if (p1->rating() - f.range > p2->rating() || p1->ating() + f.range < p2->rating() )
+            if (p1->rating() - f.range > p2->rating() || p1->rating() + f.range < p2->rating() )
                 continue;
         if (data->ranged)
             if (p1->rating() - data->range > p2->rating() || p1->rating() + data->range < p2->rating() )

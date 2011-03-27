@@ -7,6 +7,7 @@
 #include "../Utilities/mtrand.h"
 #include "../Utilities/contextswitch.h"
 #include "battleinterface.h"
+#include "battlepluginstruct.h"
 
 class Player;
 class PluginManager;
@@ -40,16 +41,6 @@ class BattleSituation : public ContextCallee, public BattleInterface
     Player* player1;
     Player* player2;
 public:
-    enum {
-	AllButPlayer = -2,
-	All = -1,
-	Player1,
-        Player2,
-        Slot11,
-        Slot21,
-        Slot12,
-        Slot22
-    };
     typedef QVariantHash context;
 
     BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, PluginManager *p);
@@ -670,9 +661,19 @@ private:
     QList<BattlePStorage*> calls;
 
     void buildPlugins(PluginManager *p);
+    void removePlugin(BattlePlugin *p);
     /* Calls a plugin function. the parameter is the enum of BattlePStorage
        corresponding to the function to call */
     void callp(int function);
+
+
+    template<class T1, class T2, class T3>
+    void callp(int function, T1 arg1, T2 arg2, T3 arg3) {
+        foreach(BattlePStorage *p, calls) {
+            if (p->call(function, this, arg1, arg2, arg3) == -1)
+                removePlugin(p->plugin);
+        }
+    }
 };
 
 inline void BattleSituation::notify(int player, int command, int who)
