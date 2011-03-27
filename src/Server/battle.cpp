@@ -2550,10 +2550,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
             int type = tmove(player).type; /* move type */
+
             if ( target != player &&
-                 ((type == Type::Fire && hasType(target, Type::Fire)) ||
-                  (type == Type::Poison && (hasType(target, Type::Poison))) ||
-                  ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::Smog || attack == Move::Will_O_Wisp)
+                 ((type == Type::Poison && (hasType(target, Type::Poison))) ||
+                  ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::Smog)
                    && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0
                    && !pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()))){
                 notify(All, Failed, player);
