@@ -120,8 +120,6 @@ void ServerWidget::openPluginConfig()
     if (s) {
         QWidget *config = s->getConfigurationWidget();
 
-        return;
-
         if (config) {
             config->setAttribute(Qt::WA_DeleteOnClose);
             config->show();
