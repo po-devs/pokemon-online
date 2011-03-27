@@ -18,6 +18,8 @@
 
 extern "C" {
 BATTLELOGSSHARED_EXPORT ServerPlugin * createPluginClass(void);
+
+BATTLELOGSSHARED_EXPORT QWidget *creater(void);
 };
 
 class PokeBattle;
