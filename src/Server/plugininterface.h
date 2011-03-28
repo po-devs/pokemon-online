@@ -41,7 +41,7 @@ public:
         return false;
     }
 
-    virtual BattlePlugin * getBattlePlugin (BattleInterface *b) {
+    virtual BattlePlugin * getBattlePlugin (BattleInterface *) {
         return NULL;
     }
 };
