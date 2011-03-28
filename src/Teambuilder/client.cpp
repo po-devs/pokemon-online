@@ -1217,12 +1217,20 @@ void Client::versionDiff(const QString &a, const QString &b)
 
 void Client::serverNameReceived(const QString &sName)
 {
+    QMainWindow* mainwindow = qobject_cast<QMainWindow*>(parent());
+    QString titlebase = mainwindow->windowTitle();
+    if (serverName.size() > 0) {
+        // chop the current title to make room for the new name
+        titlebase.chop(3 + serverName.size());
+        // automatically copy settings to new name
+        QSettings settings;
+        QVariant ajc = settings.value(QString("autojoinChannels/%1").arg(serverName));
+        settings.setValue(QString("autojoinChannels/%1").arg(sName), ajc);
+    }
     serverName = sName;
-    QSettings settings;
-    autojoinChannels = settings.value(QString("autojoinChannels/%1").arg(serverName)).toString().split("*");
-    autojoinChannels.removeAll("");
-    foreach (QString channel, autojoinChannels) {
-        join(channel);
+    if (serverName.size() > 0) {
+        QString newTitle = titlebase + " - " + serverName;
+        mainwindow->setWindowTitle(newTitle);
     }
 }
 
@@ -1648,6 +1656,15 @@ void Client::playerLogin(const PlayerInfo& p)
     mynick = p.team.name;
     myplayersinfo[p.id] = p;
     mynames[p.team.name] = p.id;
+
+    if (serverName.size() > 0) {
+        QSettings settings;
+        autojoinChannels = settings.value(QString("autojoinChannels/%1").arg(serverName)).toString().split("*");
+        autojoinChannels.removeAll("");
+        foreach (QString channel, autojoinChannels) {
+            join(channel);
+        }
+    }
 }
 
 void Client::playerLogout(int id)

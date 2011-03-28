@@ -490,6 +490,11 @@ void Server::regNameChanged(const QString &name)
 
     serverName = name;
     sendAll("The name of the server changed to " + name + ".");
+    foreach (Player *p, myplayers) {
+        if (p->isLoggedIn()) {
+            p->relay().notify(NetworkServ::ServerName, name);
+        }
+    }
 
     if (registry_connection == NULL || !registry_connection->isConnected())
         return;

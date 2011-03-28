@@ -3,3 +3,6 @@ moc_*
 bin/Server
 bin/lib*.so
 bin/lib*.so.*
+
+# Ignore emacs temporary files
+*~
