@@ -897,7 +897,7 @@ bool TrainerTeam::importFromTxt(const QString &file1)
     QStringList pokes = file.split("\n\n");
 
     for (int i = 0; i < pokes.size() && i < 6; i++) {
-        QStringList pokeDetail = pokes[i].split("\n");
+        QStringList pokeDetail = pokes[i].split("\n", QString::SkipEmptyParts);
 
         if (pokeDetail.size() < 5) {
             continue;
