@@ -126,8 +126,17 @@ QHash<QString, BattlePlugin::Hook> BattleLogsPlugin::getHooks()
 
 int BattleLogsPlugin::battleStarting(BattleInterface &b)
 {
-    commands << b.team(0);
-    commands << b.team(1);
+    QByteArray team1;
+    QDataStream d1(&team1, QIODevice::WriteOnly);
+    d1.setVersion(QDataStream::Qt_4_5);
+    d1 << b.team(0);
+    commands << team1;
+
+    QByteArray team2;
+    QDataStream d2(&team2, QIODevice::WriteOnly);
+    d2.setVersion(QDataStream::Qt_4_5);
+    d2 << b.team(1);
+    commands << team2;
 
     id1 = b.id(0);
     id2 = b.id(1);
