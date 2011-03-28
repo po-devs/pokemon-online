@@ -1218,11 +1218,12 @@ void Client::versionDiff(const QString &a, const QString &b)
 void Client::serverNameReceived(const QString &sName)
 {
     serverName = sName;
-    QSettings settings;
-    autojoinChannels = settings.value(QString("autojoinChannels/%1").arg(serverName)).toString().split("*");
-    autojoinChannels.removeAll("");
-    foreach (QString channel, autojoinChannels) {
-        join(channel);
+    if (serverName.size() > 0) {
+        QMainWindow* mainwindow = qobject_cast<QMainWindow*>(parent());
+        if (mainwindow) {
+            QString newTitle = mainwindow->windowTitle()+" - "+serverName;
+            mainwindow->setWindowTitle(newTitle);
+        }
     }
 }
 
@@ -1648,6 +1649,15 @@ void Client::playerLogin(const PlayerInfo& p)
     mynick = p.team.name;
     myplayersinfo[p.id] = p;
     mynames[p.team.name] = p.id;
+
+    if (serverName.size() > 0) {
+        QSettings settings;
+        autojoinChannels = settings.value(QString("autojoinChannels/%1").arg(serverName)).toString().split("*");
+        autojoinChannels.removeAll("");
+        foreach (QString channel, autojoinChannels) {
+            join(channel);
+        }
+    }
 }
 
 void Client::playerLogout(int id)
