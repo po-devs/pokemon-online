@@ -83,7 +83,7 @@ QHash<QString, QTreeWidgetItem *> TierNode::buildSelf(QTreeWidgetItem *root)
 
     QFont f = it->font(0);
     if (!isLeaf())
-        f.setPixelSize(14);
+        f.setPixelSize(14 - (root->text(0).length() >0) );
     else
         f.setPixelSize(12);
     it->setFont(0,f);

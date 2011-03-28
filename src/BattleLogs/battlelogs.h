@@ -12,8 +12,8 @@
 
  Format for raw:
  <version> <type of saving on a byte: 0 is both fully revealed, 1 is player 1, 2 is player 2, other is spectator><line break>
- <team1>
- <team2>
+ <size of team1 (32 bits)><team1>
+ <size of team2 (32 bits)><team2>
  <timestamp (32 bits)><command (8 bits)><slot (8bits)><data (byteArray)> (from each player's point of view) */
 
 extern "C" {
