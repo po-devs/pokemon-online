@@ -3,6 +3,7 @@
 TierNode::TierNode(const QString &s) : name(s)
 {
     parent = NULL;
+    pathToTiers = NULL;
 }
 
 TierNode::~TierNode()
@@ -16,11 +17,13 @@ void TierNode::clean()
         delete n;
     }
     subNodes.clear();
+    delete pathToTiers;
 }
 
 void TierNode::buildFromRaw(QByteArray raw)
 {
     clean();
+    pathToTiers = new QHash<QString, QVector<QString> >();
 
     QDataStream stream(&raw, QIODevice::ReadOnly);
     stream.setVersion(QDataStream::Qt_4_5);
@@ -28,6 +31,8 @@ void TierNode::buildFromRaw(QByteArray raw)
     int lastLevel = 0;
     uchar currentLevel = 0;
     TierNode *lastNode = this;
+
+    QVector<QString> current;
 
     while (!stream.atEnd()) {
         stream >> currentLevel;
@@ -37,6 +42,10 @@ void TierNode::buildFromRaw(QByteArray raw)
 
         QString name;
         stream >> name;
+
+        current.resize(currentLevel);
+        (*pathToTiers)[name] = current;
+        current.push_back(name);
 
         TierNode *n = new TierNode(name);
         n->parent = lastNode;
@@ -99,40 +108,80 @@ QHash<QString, QTreeWidgetItem *> TierNode::buildSelf(QTreeWidgetItem *root)
     return ret;
 }
 
+QTreeWidgetItem *TierNode::addTier(QTreeWidgetItem *category, const QString &tier)
+{
+    if (pathToTiers == NULL || !pathToTiers->contains(tier)) {
+        /* wrongly called */
+        return NULL;
+    }
+
+    QVector<QString> path = pathToTiers->value(tier);
+
+    TierNode *moving = this;
+    while (path.size() > 0) {
+        category = moving->addNode(category, path[0]);
+        moving = moving->subNode(path[0]);
+
+        if (category == NULL || moving == NULL)
+            return NULL;
+
+        path.pop_front();
+    }
+
+    return moving->addTier(category, tier);
+}
+
+TierNode * TierNode::subNode(const QString name)
+{
+    foreach(TierNode *t, subNodes) {
+        if (t->name == name)
+            return t;
+    }
+
+    return NULL;
+}
+
 /* Adding a tier on an already built tree is tricky. It'd be trickier if there was the possibility to have the need
     to add categories in the proces */
-QTreeWidgetItem *TierNode::addTier(QTreeWidgetItem *category, const QString &tier)
+QTreeWidgetItem *TierNode::addNode(QTreeWidgetItem *category, const QString &tier)
 {
     QTreeWidgetItem *ret = NULL;
 
     int i(0), j(0);
-    for ( ; !ret && i < category->childCount(); i++) {
-        for ( ; !ret && j < subNodes.count(); j++) {
+    bool cont = true;
+
+    for ( ; cont && i < category->childCount(); i++) {
+        for ( ; j < subNodes.count(); j++) {
             if (subNodes.value(j)->name == tier) {
-                ret = new QTreeWidgetItem(QStringList() << tier);
-                QFont f = ret->font(0);
-                f.setPixelSize(12);
-                ret->setFont(0,f);
-                category->insertChild(i, ret);
+                cont = false;
                 break;
             }
             if (subNodes.value(j)->name == category->child(i)->text(0)) {
-                ret = subNodes.value(i)->addTier(category->child(i), tier);
                 break;
             }
         }
     }
 
-    /* In case the tier needed to be added is the last one */
-    for (; !ret && j < subNodes.count(); j++) {
-        if (subNodes.value(j)->name == tier) {
-            ret = new QTreeWidgetItem(QStringList() << tier);
-            QFont f = ret->font(0);
-            f.setPixelSize(12);
-            ret->setFont(0,f);
-            category->addChild(ret);
+    if (cont) {
+        for (; j < subNodes.count(); j++) {
+            if (subNodes.value(j)->name == tier) {
+                cont = false;
+                break;
+            }
         }
     }
+
+    if (cont)
+        return NULL;
+
+    ret = new QTreeWidgetItem(QStringList() << tier);
+    QFont f = ret->font(0);
+    if (!subNodes.value(j)->isLeaf())
+        f.setPixelSize(14 - (category->text(0).length() >0) );
+    else
+        f.setPixelSize(12);
+    ret->setFont(0,f);
+    category->insertChild(i, ret);
 
     return ret;
 }

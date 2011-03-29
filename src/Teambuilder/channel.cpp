@@ -144,29 +144,13 @@ void Channel::sortAllPlayersByTier()
     getBackAllPlayerItems();
     myplayers->clear();
     mytiersitems.clear();
-    mytiersitems = client->tierRoot.buildOnTree(myplayers);
 
     QHash<int, QIdTreeWidgetItem *>::iterator iter;
 
     for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
         QString tier = client->tier(iter.key());
 
-        if (mytiersitems.contains(tier)) {
-            placeItem(iter.value(), mytiersitems.value(tier));
-        } else {
-            placeItem(iter.value());
-        }
-    }
-
-    /* Ugly! Remove all non used tier items*/
-    QHashIterator<QString, QTreeWidgetItem*> hash(mytiersitems);
-
-    while (hash.hasNext()) {
-        hash.next();
-        if (hash.value()->childCount() == 0) {
-            delete hash.value();
-            mytiersitems.remove(hash.key());
-        }
+        placeItem(iter.value(), mytiersitems.value(tier));
     }
 
     myplayers->expandAll();
@@ -306,11 +290,7 @@ void Channel::playerReceived(int playerid) {
 
     updateState(playerid);
 
-    if (parent && parent->childCount() == 0 && parent->parent()) {
-        parent->parent()->takeChild(parent->parent()->indexOfChild(parent));
-        mytiersitems.remove(parent->text(0));
-        delete parent;
-    }
+    cleanTier(parent);
 }
 
 /* When a player has a name updated, change all possible places of that name */
@@ -494,10 +474,18 @@ void Channel::removePlayer(int id) {
         battles.remove(id);
     }
 
-    if (parent && parent->childCount() == 0 && parent->parent()) {
-        parent->parent()->takeChild(parent->parent()->indexOfChild(parent));
-        mytiersitems.remove(parent->text(0));
-        delete parent;
+    cleanTier(parent);
+}
+
+void Channel::cleanTier(QTreeWidgetItem *tier)
+{
+    while (tier && tier->childCount() == 0 && tier->parent()) {
+        QTreeWidgetItem *next = tier->parent();
+        tier->parent()->takeChild(tier->parent()->indexOfChild(tier));
+        mytiersitems.remove(tier->text(0));
+        next = tier->parent();
+        delete tier;
+        tier = next;
     }
 }
 
