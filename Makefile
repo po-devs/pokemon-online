@@ -37,8 +37,9 @@ utilities: src/Utilities/Utilities.pro
 pokemon-info: utilities src/PokemonInfo/PokemonInfo.pro
 	@echo "Compiling the pokemon library"
 
-battlelogs: pokemon-info src/BattleLogs/BattleLogs.pro 
-	@echo "Compiling the battlelogs plugin"
+battlelogs: pokemon-info src/BattleLogs/BattleLogs.pro ;
+usagestats: pokemon-info src/UsageStatistics/UsageStatistics.pro ;
+plugins: battlelogs usagestats ;
 
 client: pokemon-info src/Teambuilder/Teambuilder.pro
 	@echo "Compiling the client"
