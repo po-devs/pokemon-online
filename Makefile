@@ -15,7 +15,10 @@ all: client server
 %.cpp: ;
 %.o: ;
 %.h: ;
-DIRE = src/Utilities src/Teambuilder src/Server src/PokemonInfo
+DIRE = src/Utilities src/Teambuilder src/Server src/PokemonInfo			\
+src/BattleLogs src/veekun_data_extracter src/ChainBreeding src/MoveMachine	\
+src/EventCombinations src/level_balance src/UsageStatistics			\
+src/StatsExtracter src/Registry src/DOSTest src/PokesIndexConverter
 
 # Instruct make on how to convert any given .pro file to a Makefile
 # and then compile that Makefile. This expands to the correct rule for
@@ -33,6 +36,8 @@ utilities: src/Utilities/Utilities.pro
 
 pokemon-info: utilities src/PokemonInfo/PokemonInfo.pro
 	@echo "Compiling the pokemon library"
+
+battlelogs: utilities src/BattleLogs/BattleLogs.pro
 
 client: pokemon-info src/Teambuilder/Teambuilder.pro
 	@echo "Compiling the client"
