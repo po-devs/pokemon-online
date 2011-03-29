@@ -10,7 +10,7 @@ BattleLogs::BattleLogs()
     QSettings s("config_battleLogs", QSettings::IniFormat);
     saveMixedTiers = s.value("save_mixed_tiers", true).toBool();
 
-    tiers = s.value("tiers").toStringList().toSet();
+    tiers = s.value("tiers", QStringList()).toStringList().toSet();
 }
 
 QString BattleLogs::pluginName() const
@@ -65,7 +65,7 @@ BattleLogsWidget::BattleLogsWidget(BattleLogs *master)
 
 void BattleLogsWidget::done()
 {
-    QStringList tiers = this->tiers->toPlainText().split(",");
+    QStringList tiers = this->tiers->toPlainText().split(",", QString::SkipEmptyParts);
     for(int i = 0; i < tiers.size(); i++) {
         tiers[i] = tiers[i].trimmed();
     }
