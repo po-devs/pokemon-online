@@ -150,6 +150,9 @@ void Channel::sortAllPlayersByTier()
     for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
         QString tier = client->tier(iter.key());
 
+        if (!mytiersitems.contains(tier))
+            placeTier(tier);
+
         placeItem(iter.value(), mytiersitems.value(tier));
     }
 
@@ -164,7 +167,6 @@ void Channel::placeTier(const QString &tier)
     QTreeWidgetItem *tierItem = client->tierRoot.addTier(myplayers->invisibleRootItem(), tier);
 
     mytiersitems.insert(tier, tierItem);
-    tierItem->setExpanded(true);
 }
 
 void Channel::sortAllPlayersNormally()
@@ -481,9 +483,9 @@ void Channel::cleanTier(QTreeWidgetItem *tier)
 {
     while (tier && tier->childCount() == 0 && tier->parent()) {
         QTreeWidgetItem *next = tier->parent();
+        next = tier->parent();
         tier->parent()->takeChild(tier->parent()->indexOfChild(tier));
         mytiersitems.remove(tier->text(0));
-        next = tier->parent();
         delete tier;
         tier = next;
     }

@@ -128,7 +128,7 @@ QTreeWidgetItem *TierNode::addTier(QTreeWidgetItem *category, const QString &tie
         path.pop_front();
     }
 
-    return moving->addTier(category, tier);
+    return moving->addNode(category, tier);
 }
 
 TierNode * TierNode::subNode(const QString name)
@@ -150,7 +150,7 @@ QTreeWidgetItem *TierNode::addNode(QTreeWidgetItem *category, const QString &tie
     int i(0), j(0);
     bool cont = true;
 
-    for ( ; cont && i < category->childCount(); i++) {
+    for ( ; i < category->childCount(); i++) {
         for ( ; j < subNodes.count(); j++) {
             if (subNodes.value(j)->name == tier) {
                 cont = false;
@@ -160,6 +160,8 @@ QTreeWidgetItem *TierNode::addNode(QTreeWidgetItem *category, const QString &tie
                 break;
             }
         }
+        if (!cont)
+            break;
     }
 
     if (cont) {
@@ -174,6 +176,10 @@ QTreeWidgetItem *TierNode::addNode(QTreeWidgetItem *category, const QString &tie
     if (cont)
         return NULL;
 
+    if (category->childCount() > i && category->child(i)->text(0) == tier) {
+        return category->child(i);
+    }
+
     ret = new QTreeWidgetItem(QStringList() << tier);
     QFont f = ret->font(0);
     if (!subNodes.value(j)->isLeaf())
@@ -182,6 +188,7 @@ QTreeWidgetItem *TierNode::addNode(QTreeWidgetItem *category, const QString &tie
         f.setPixelSize(12);
     ret->setFont(0,f);
     category->insertChild(i, ret);
+    ret->setExpanded(true);
 
     return ret;
 }
