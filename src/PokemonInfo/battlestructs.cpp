@@ -674,6 +674,7 @@ QDataStream & operator >> (QDataStream &in, BattleChoice &po)
 
     switch (po.type) {
     case CancelType:
+    case DrawType:
     case CenterMoveType:
         break;
     case SwitchType:
@@ -699,6 +700,7 @@ QDataStream & operator << (QDataStream &out, const BattleChoice &po)
     switch (po.type) {
     case CancelType:
     case CenterMoveType:
+    case DrawType:
         break;
     case SwitchType:
         out << po.choice.switching.pokeSlot;

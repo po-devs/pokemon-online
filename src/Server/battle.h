@@ -37,6 +37,7 @@ class BattleSituation : public ContextCallee, public BattleInterface
     PROPERTY(int, selfKoer);
     PROPERTY(int, repeatCount);
     PROPERTY(bool, heatOfAttack);
+    PROPERTY(int, drawer);
 
     Player* player1;
     Player* player2;
@@ -386,6 +387,7 @@ public:
 private:
     bool canCancel(int player);
     void cancel(int player);
+    void addDraw(int player);
 
     bool validChoice(const BattleChoice &b);
     void storeChoice(const BattleChoice &b);
@@ -408,6 +410,7 @@ private:
 
     /* if battle ends, stop the battle thread */
     void testWin();
+    void endBattle(int result, int winner, int loser);
     int spectatorKey(int id) const {
         return 10000 + id;
     }

@@ -122,6 +122,7 @@ public slots:
     void switchClicked(int zone);
     void attackClicked(int zone);
     void sendMessage();
+    void offerTie();
     void attackButton();
     void clickClose();
     void emitCancel();
@@ -129,6 +130,7 @@ public slots:
     void sendRearrangedTeam();
 signals:
     void forfeit(int battleid);
+    void offerTie(int battleid);
 protected:
     void closeEvent(QCloseEvent *);
     virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);

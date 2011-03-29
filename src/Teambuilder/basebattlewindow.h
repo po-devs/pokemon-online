@@ -157,7 +157,7 @@ public:
         ClockStart = 37,
         ClockStop = 38,
         Rated,
-        TierSection,
+        TierSection = 40,
         EndMessage,
         PointEstimate,
         MakeYourChoice,
