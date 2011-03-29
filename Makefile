@@ -24,7 +24,7 @@ src/StatsExtracter src/Registry src/DOSTest src/PokesIndexConverter
 # and then compile that Makefile. This expands to the correct rule for
 # whichever directory needs making.
 define QMAKE_template
- $(1)/%.pro: $$(wildcard $(1)/*.cpp) $$(wildcard $(1)/*.h)
+ $(1)/%.pro: $(1)/Makefile $$(wildcard $(1)/*.cpp) $$(wildcard $(1)/*.h) 
 	$$(QMAKE) -makefile -o ${1}/Makefile $$@
 	$${MAKE} -C $${@D}
 endef
@@ -39,7 +39,7 @@ pokemon-info: utilities src/PokemonInfo/PokemonInfo.pro
 
 battlelogs: pokemon-info src/BattleLogs/BattleLogs.pro 
 	@echo "Compiling the battlelogs plugin"
-;
+
 client: pokemon-info src/Teambuilder/Teambuilder.pro
 	@echo "Compiling the client"
 	@echo ${install-message}
