@@ -24,7 +24,7 @@ src/StatsExtracter src/Registry src/DOSTest src/PokesIndexConverter
 # and then compile that Makefile. This expands to the correct rule for
 # whichever directory needs making.
 define QMAKE_template
- $(1)/%.pro: $(1)/Makefile $$(wildcard $(1)/*.cpp) $$(wildcard $(1)/*.h) 
+ $(1)/%.pro: Makefile $$(wildcard $(1)/*.cpp) $$(wildcard $(1)/*.h) $$(wildcard $(1)/*.o)
 	$$(QMAKE) -makefile -o ${1}/Makefile $$@
 	$${MAKE} -C $${@D}
 endef
@@ -54,8 +54,8 @@ install:
 # This should also clean up any binaries generated, but
 # we can mess with these later.
 clean:
-	rm -rf *.o 		# Remove all object files
-	rm -f src/Teambuilder/Makefile	# Remove generated makefiles
-	rm -f src/Server/Makefile
-	rm -f src/Utilities/Makefile
-	rm -f src/PokemonInfo/Makefile
+	${RM} src/*/*.o 		# Remove all object files
+	${RM} src/Teambuilder/Makefile	# Remove generated makefiles
+	${RM} src/Server/Makefile
+	${RM} src/Utilities/Makefile
+	${RM} src/PokemonInfo/Makefile
