@@ -74,6 +74,9 @@ public:
 
     void dealWithCommand(int command, QDataStream *stream);
     QHash<qint32, Battle> &getBattles();
+
+    /* removes if necessary (i.e. empty) a tier */
+    void cleanTier(QTreeWidgetItem *tier);
 signals:
     void quitChannel(int chanid);
     void battleReceived2(int battleid, int id1, int id2);

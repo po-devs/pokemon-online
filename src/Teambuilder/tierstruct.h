@@ -7,6 +7,8 @@
 struct TierNode
 {
     QList<TierNode *> subNodes;
+    /* Reflects the list of categories to go through before accessing a tier */
+    QHash<QString, QVector<QString> > *pathToTiers;
     TierNode *parent;
     QString name;
 
@@ -21,7 +23,9 @@ struct TierNode
     QHash<QString, QTreeWidgetItem*> buildOnTree(QTreeWidget *tree);
     QHash<QString, QTreeWidgetItem*> buildSelf(QTreeWidgetItem *parent);
     QTreeWidgetItem *addTier(QTreeWidgetItem *category, const QString &tier);
+    QTreeWidgetItem *addNode(QTreeWidgetItem *category, const QString &tier);
     QList<QAction*> buildMenu(QMenu *menu, QObject *c);
+    TierNode *subNode(const QString name);
     static TierNode* moveInTree(TierNode *lastNode, int levelDiff);
 };
 
