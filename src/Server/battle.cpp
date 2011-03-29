@@ -31,6 +31,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     attacked() = -1;
     attacker() = -1;
     selfKoer() = -1;
+    drawer() = -1;
     gen() = std::max(p1.gen(), p2.gen());
     applyingMoveStatMods = false;
     weather = 0;
@@ -839,6 +840,8 @@ void BattleSituation::endTurnStatus(int player)
 
 bool BattleSituation::requestChoice(int slot, bool acquire, bool custom)
 {
+    drawer() = -1;
+
     int player = this->player(slot);
 
     if (koed(slot) && countBackUp(player) == 0) {
@@ -1269,8 +1272,23 @@ void BattleSituation::cancel(int player)
             }
         }
     }
+    if (drawer() == player) {
+        drawer() = -1;
+    }
 
     startClock(player,false);
+}
+
+void BattleSituation::addDraw(int player)
+{
+    if (drawer() == -1) {
+        drawer() = player;
+        return;
+    }
+    if (drawer() != player) {
+        drawer() = -2;
+        schedule();
+    }
 }
 
 bool BattleSituation::validChoice(const BattleChoice &b)
@@ -1402,6 +1420,7 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
         return;
     }
 
+    /* Clear the queue of pending spectators */
     if (pendingSpectators.size() > 0) {
         QList<QPointer<Player> > copy = pendingSpectators;
 
@@ -1429,6 +1448,11 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
         if (canCancel(player)) {
             cancel(player);
         }
+        return;
+    }
+
+    if (b.drawChoice()) {
+        addDraw(player);
         return;
     }
 
@@ -4264,13 +4288,13 @@ bool BattleSituation::areAdjacent(int attacker, int defender) const
     return std::abs(slotNum(attacker)-slotNum(defender)) <= 1;
 }
 
-void BattleSituation::testWin()
+void BattleSituation::endBattle(int result, int winner, int loser)
 {
     int time1 = std::max(0, timeLeft(Player1));
     int time2 = std::max(0, timeLeft(Player2));
-
-    /* No one wants a battle that long xd */
-    if (turn() == 1024) {
+    notify(All,ClockStop,Player1,time1);
+    notify(All,ClockStop,Player2,time2);
+    if (result == Tie) {
         notify(All, BattleEnd, Player1, qint8(Tie));
 
         if (useBattleLog) {
@@ -4280,96 +4304,65 @@ void BattleSituation::testWin()
         emit battleFinished(publicId(), Tie, id(Player1), id(Player2));
         exit();
     }
+    if (result == Win) {
+        notify(All, BattleEnd, winner, qint8(Win));
+        notify(All, EndMessage, winner, winMessage[winner]);
+        notify(All, EndMessage, loser, loseMessage[loser]);
+        emit battleFinished(publicId(), Win, id(winner), id(loser));
+
+        if (useBattleLog) {
+            appendBattleLog("BattleEnd", toBoldColor(tr("%1 won the battle!").arg(name(winner)), Qt::blue));
+            appendBattleLog("Space", "");
+            appendBattleLog("EndMessage", QString("<span style='color:green'><b>" + escapeHtml(name(winner)) + ": </b></span>" + escapeHtml(winMessage[winner])));
+            appendBattleLog("EndMessage", QString("<span style='color:#5811b1'><b>" + escapeHtml(name(loser)) + ": </b></span>" + escapeHtml(loseMessage[loser])));
+        }
+        exit();
+    }
+}
+
+void BattleSituation::testWin()
+{
+    /* No one wants a battle that long xd */
+    if (turn() == 1024) {
+        endBattle(Tie, Player1, Player2);
+    }
+
+    /* Mutual Draw */
+    if (drawer() == -2) {
+        endBattle(Tie, Player1, Player2);
+    }
+
+    int time1 = std::max(0, timeLeft(Player1));
+    int time2 = std::max(0, timeLeft(Player2));
 
     if (time1 == 0 || time2 == 0) {
         notify(All,ClockStop,Player1,quint16(time1));
         notify(All,ClockStop,Player2,quint16(time2));
         notifyClause(ChallengeInfo::NoTimeOut);
         if (time1 == 0 && time2 ==0) {
-            notify(All, BattleEnd, Player1, qint8(Tie));
-
-            if (useBattleLog) {
-                appendBattleLog("BattleEnd", toBoldColor(tr("Tie between %1 and %2!").arg(name(Player1), name(Player2)), Qt::blue));
-                appendBattleLog("Space", "");
-            }
-            emit battleFinished(publicId(), Tie, id(Player1), id(Player2));
+            endBattle(Tie, Player1, Player2);
         } else if (time1 == 0) {
-            notify(All, BattleEnd, Player2, qint8(Win));
-            notify(All, EndMessage, Player2, winMessage[Player2]);
-            notify(All, EndMessage, Player1, loseMessage[Player1]);
-            emit battleFinished(publicId(), Win, id(Player2), id(Player1));
-
-            if (useBattleLog) {
-                appendBattleLog("BattleEnd", toBoldColor(tr("%1 won the battle!").arg(name(Player2)), Qt::blue));
-                appendBattleLog("Space", "");
-                appendBattleLog("EndMessage", QString("<span style='color:green'><b>" + escapeHtml(name(Player2)) + ": </b></span>" + escapeHtml(winMessage[Player2])));
-                appendBattleLog("EndMessage", QString("<span style='color:#5811b1'><b>" + escapeHtml(name(Player1)) + ": </b></span>" + escapeHtml(loseMessage[Player1])));
-            }
+            endBattle(Win, Player2, Player1);
         } else {
-            notify(All, BattleEnd, Player1, qint8(Win));
-            notify(All, EndMessage, Player1, winMessage[Player1]);
-            notify(All, EndMessage, Player2, loseMessage[Player2]);
-            emit battleFinished(publicId(), Win, id(Player1), id(Player2));
-
-            if (useBattleLog) {
-                appendBattleLog("BattleEnd", toBoldColor(tr("%1 won the battle!").arg(name(Player1)), Qt::blue));
-                appendBattleLog("Space", "");
-                appendBattleLog("EndMessage", QString("<span style='color:green'><b>" + escapeHtml(name(Player1)) + ": </b></span>" + escapeHtml(winMessage[Player1])));
-                appendBattleLog("EndMessage", QString("<span style='color:#5811b1'><b>" + escapeHtml(name(Player2)) + ": </b></span>" + escapeHtml(loseMessage[Player2])));
-            }
+            endBattle(Win, Player1, Player2);
         }
-        exit();
     }
 
     int c1 = countAlive(Player1);
     int c2 = countAlive(Player2);
 
     if (c1*c2==0) {
-        notify(All,ClockStop,Player1,time1);
-        notify(All,ClockStop,Player2,time2);
         if (c1 + c2 == 0) {
             if ((clauses() & ChallengeInfo::SelfKO) && selfKoer() != -1) {
                 notifyClause(ChallengeInfo::SelfKO);
-                if (player(selfKoer()) == Player1)
-                    goto player2win;
-                else
-                    goto player1win;
+                endBattle(Win, opponent(selfKoer()), selfKoer());
             }
-            notify(All, BattleEnd, Player1, qint8(Tie));
-            emit battleFinished(publicId(), Tie, id(Player1), id(Player2));
-
-            if (useBattleLog) {
-                appendBattleLog("BattleEnd", toBoldColor(tr("Tie between %1 and %2!").arg(name(Player1), name(Player2)), Qt::blue));
-                appendBattleLog("Space", "");
-            }
+            endBattle(Tie, Player1, Player2);
         } else if (c1 == 0) {
-            player2win:
-            notify(All, BattleEnd, Player2, qint8(Win));
-            notify(All, EndMessage, Player2, winMessage[Player2]);
-            notify(All, EndMessage, Player1, loseMessage[Player1]);
-            emit battleFinished(publicId(), Win, id(Player2), id(Player1));
-
-            if (useBattleLog) {
-                appendBattleLog("BattleEnd", toBoldColor(tr("%1 won the battle!").arg(name(Player2)), Qt::blue));
-                appendBattleLog("Space", "");
-                appendBattleLog("EndMessage", QString("<span style='color:green'><b>" + escapeHtml(name(Player2)) + ": </b></span>" + escapeHtml(winMessage[Player2])));
-                appendBattleLog("EndMessage", QString("<span style='color:#5811b1'><b>" + escapeHtml(name(Player1)) + ": </b></span>" + escapeHtml(loseMessage[Player1])));
-            }
+            endBattle(Win, Player2, Player1);
         } else {
-            player1win:
-            notify(All, BattleEnd, Player1, qint8(Win));
-            notify(All, EndMessage, Player1, winMessage[Player1]);
-            notify(All, EndMessage, Player2, loseMessage[Player2]);
-            emit battleFinished(publicId(), Win, id(Player1), id(Player2));
-
-            if (useBattleLog) {
-                appendBattleLog("BattleEnd", toBoldColor(tr("%1 won the battle!").arg(name(Player1)), Qt::blue));
-                appendBattleLog("Space", "");
-                appendBattleLog("EndMessage", QString("<span style='color:green'><b>" + escapeHtml(name(Player1)) + ": </b></span>" + escapeHtml(winMessage[Player1])));
-                appendBattleLog("EndMessage", QString("<span style='color:#5811b1'><b>" + escapeHtml(name(Player2)) + ": </b></span>" + escapeHtml(loseMessage[Player2])));
-            }
+            endBattle(Win, Player1, Player2);
         }
-        exit();
     }
 }
 

@@ -110,6 +110,11 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     connect(mycancel, SIGNAL(clicked()), SLOT(emitCancel()));
     connect(mytab, SIGNAL(currentChanged(int)), SLOT(changeAttackText(int)));
 
+    mysend->disconnect(this);
+    mysend->setText(tr("Suggest draw"));
+    mysend->setCheckable(true);
+    connect(mysend, SIGNAL(clicked()), SLOT(offerTie()));
+
     switchTo(0,info().slot(info().myself,0), false);
 
     show();
@@ -440,7 +445,9 @@ void BattleWindow::attackButton()
 void BattleWindow::sendChoice(const BattleChoice &b)
 {
     emit battleCommand(battleId(), b);
-    info().possible = false;
+
+    if (!b.drawChoice())
+        info().possible = false;
 }
 
 void BattleWindow::sendMessage()
@@ -456,6 +463,12 @@ void BattleWindow::sendMessage()
         }
 	myline->clear();
     }
+}
+
+void BattleWindow::offerTie()
+{
+    mysend->setDisabled(true);
+    sendChoice(BattleChoice(info().slot(info().myself), DrawChoice()));
 }
 
 void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
@@ -541,6 +554,9 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             in >> c;
             info().choices[c.numSlot/2] = c;
             info().available[c.numSlot/2] = true;
+            /* Allows to ask for draw again */
+            mysend->setEnabled(true);
+            mysend->setChecked(false);
 
 	    break;
         }
