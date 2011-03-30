@@ -66,6 +66,7 @@ public:
 
     bool started;
     int id1, id2;
+    QByteArray teams;
     QByteArray toSend;
     QDataStream commands;
     QElapsedTimer t;
