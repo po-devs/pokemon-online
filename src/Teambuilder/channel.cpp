@@ -558,9 +558,13 @@ void Channel::printLine(const QString &line)
     if ( pos != -1 ) {
         QString beg = line.left(pos);
         QString end = line.right(line.length()-pos-1);
-        end = addChannelLinks(escapeHtml(end));
-
         int id = client->id(beg);
+
+        /* Messages from players from auth 3 and less have their html escaped */
+        if (id == -1 || client->auth(id) <= 3)
+            end = escapeHtml(end);
+
+        end = addChannelLinks(end);
 
         if (beg == "~~Server~~") {
             mainChat()->insertHtml("<span style='color:orange'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "<br />");
