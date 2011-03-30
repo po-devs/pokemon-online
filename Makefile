@@ -28,7 +28,8 @@ endef
 
 $(foreach d, ${DIRE}, $(eval $(call QMAKE_template,$(d))))
 
-utilities: src/Utilities/Utilities.pro ;
+utilities: src/Utilities/Utilities.pro 
+	@echo "compiling utilities."
 
 pokemon-info: utilities src/PokemonInfo/PokemonInfo.pro ;
 
