@@ -52,3 +52,18 @@ clean:
 	${RM} src/Server/Makefile
 	${RM} src/Utilities/Makefile
 	${RM} src/PokemonInfo/Makefile
+
+strip:
+	${STRIP} bin/*.so
+	${STRIP} Pokemon-Online
+	${STRIP} Server
+
+clean-scripts:
+	${RM} bin/scripts.js
+
+clean-dlls:
+	${RM} bin/zip.dll
+	${RM} bin/zlib1.dll
+
+clean-mac-app:
+	${RM} bin/bundle_mac_app.sh
