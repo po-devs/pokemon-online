@@ -24,7 +24,7 @@ BattlePlugin* BattleLogs::getBattlePlugin(BattleInterface* b)
         if (!saveMixedTiers)
             return NULL;
     } else {
-        if (!tiers.contains(b->tier()))
+        if (!tiers.contains(b->tier()) && tiers.size() > 0)
             return NULL;
     }
 
