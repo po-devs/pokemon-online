@@ -8,7 +8,9 @@ myScript="$(pwd)/$0"
 myDir=$(dirname $myScript)
 [ $(pwd) != $myDir ] && cd $myDir
 
-toDir=Pokemon-Online.app/Contents/Resources
+function bundle_mac_app() {
+app=$1
+toDir=$app/Contents/Resources
 if [ "$1" == "--skip-resources" ] || [ "$1" == "-s" ]
 then
 	SKIP=1
@@ -35,7 +37,7 @@ do
 done
 fi # end of SKIP
 
-fworks=Pokemon-Online.app/Contents/Frameworks
+fworks=$app/Contents/Frameworks
 zlib=libz.1.dylib
 libzip=libzip.1.dylib
 pokemonlib_long=libpokemonlib.1.0.0.dylib
@@ -43,8 +45,8 @@ pokemonlib=libpokemonlib.1.dylib
 utilities_long=libutilities.1.0.0.dylib
 utilities=libutilities.1.dylib
 
-echo macdeployqt Pokemon-Online.app
-macdeployqt Pokemon-Online.app
+echo macdeployqt $app
+macdeployqt $app -verbose=0
 
 echo Fixing additional libs..
 if [ -e $zlib ]
@@ -90,5 +92,28 @@ install_name_tool -id @executable_path/../Frameworks/$utilities $utilities
 install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore $utilities
 install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui $utilities
 
+if [ $app == Server.app -a -e serverplugins ]
+then
+    for plugin in serverplugins/*.1.0.0.dylib
+    do
+        echo $plugin
+        pluginbase=$(basename $plugin)
+        install_name_tool -id @executable_path/../Frameworks/$pluginbase $plugin
+        install_name_tool -change $utilities @executable_path/../Frameworks/$utilities $plugin
+        install_name_tool -change $pokemonlib @executable_path/../Frameworks/$pokemonlib $plugin
+        install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore $plugin
+        install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui $plugin
+    done
+fi
 
 echo Done
+}
+
+if [ -d Pokemon-Online.app ]
+then
+    bundle_mac_app Pokemon-Online.app
+fi
+if [ -d Server.app ]
+then
+    bundle_mac_app Server.app
+fi
