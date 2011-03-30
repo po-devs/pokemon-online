@@ -12,14 +12,14 @@ struct PMWindow : public QWidget
     Q_OBJECT
     PROPERTY(int, id);
 public:
-    PMWindow(int id, const QString &ownName, const QString &name, const QString &content = "");
+    PMWindow(int id, const QString &ownName, const QString &name, const QString &content = "", bool html = false);
     ~PMWindow() {
         emit destroyed(id());
     }
 
     void changeName(const QString &newname);
     void changeSelf(const QString &newname);
-    void printLine(const QString &line, bool self = false);
+    void printLine(QString line, bool self = false);
     void disable();
 signals:
     void messageEntered(int id, const QString &mess);
@@ -32,6 +32,7 @@ public slots:
 private:
     QString m_name;
     QString m_ownName;
+    bool escape_html;
     QString name() const {
         return m_name;
     }
