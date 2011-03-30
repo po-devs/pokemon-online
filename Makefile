@@ -7,7 +7,7 @@ install-message="Nothing to do, run the executable in the bin folder and make su
 
 SUBDIRS = Utilities PokemonInfo Client Server
 
-all: client server
+all: client server plugins
 	@echo "Read instructions in HowToBuild.txt"
 	@echo ${install-message}
 
