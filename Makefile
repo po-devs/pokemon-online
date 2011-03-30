@@ -22,7 +22,7 @@ src/StatsExtracter src/Registry src/DOSTest src/PokesIndexConverter
 # whichever directory needs making.
 define QMAKE_template
  $(1)/%.pro: Makefile $$(wildcard $(1)/*.cpp) $$(wildcard $(1)/*.h) $$(wildcard $(1)/*.o)
-	$$(QMAKE) -makefile -o ${1}/Makefile $$@
+	$$(QMAKE) -o ${1}/Makefile $$@
 	$${MAKE} -C $${@D}
 endef
 
