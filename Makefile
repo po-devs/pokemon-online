@@ -5,7 +5,7 @@ MAKE=make
 
 install-message="Nothing to do, run the executable in the bin folder and make sure to edit your ~/.bashrc to add the path to the bin directory to LD_LIBRARY_PATH"
 
-all: client server plugins
+all: client server
 	@echo "Read instructions in HowToBuild.txt"
 	@echo ${install-message}
 
