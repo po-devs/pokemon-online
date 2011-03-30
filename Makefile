@@ -5,13 +5,10 @@ MAKE=make
 
 install-message="Nothing to do, run the executable in the bin folder and make sure to edit your ~/.bashrc to add the path to the bin directory to LD_LIBRARY_PATH"
 
-SUBDIRS = Utilities PokemonInfo Client Server
-
 all: client server
 	@echo "Read instructions in HowToBuild.txt"
 	@echo ${install-message}
 
-.SECONDARY: Makefile
 %.cpp: ;
 %.o: ;
 %.h: ;
@@ -31,22 +28,18 @@ endef
 
 $(foreach d, ${DIRE}, $(eval $(call QMAKE_template,$(d))))
 
-utilities: src/Utilities/Utilities.pro
-	@echo "Compiling the utilities library"
+utilities: src/Utilities/Utilities.pro 
+	@echo "compiling utilities."
 
-pokemon-info: utilities src/PokemonInfo/PokemonInfo.pro
-	@echo "Compiling the pokemon library"
+pokemon-info: utilities src/PokemonInfo/PokemonInfo.pro ;
 
-battlelogs: pokemon-info src/BattleLogs/BattleLogs.pro 
-	@echo "Compiling the battlelogs plugin"
+battlelogs: pokemon-info src/BattleLogs/BattleLogs.pro ;
+usagestats: pokemon-info src/UsageStatistics/UsageStatistics.pro ;
+plugins: battlelogs usagestats ;
 
-client: pokemon-info src/Teambuilder/Teambuilder.pro
-	@echo "Compiling the client"
-	@echo ${install-message}
+client: pokemon-info src/Teambuilder/Teambuilder.pro ;
 
-server:	pokemon-info src/Server/Server.pro
-	@echo "Compiling the server"
-	@echo ${install-message}
+server:	pokemon-info src/Server/Server.pro ;
 
 install:
 	@echo ${install-message}

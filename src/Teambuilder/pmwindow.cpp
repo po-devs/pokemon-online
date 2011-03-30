@@ -1,8 +1,8 @@
 #include "pmwindow.h"
 #include "../Utilities/otherwidgets.h"
 
-PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QString &content)
-    : m_ownName(ownName)
+PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QString &content, bool html)
+    : m_ownName(ownName), escape_html(!html)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
 
@@ -47,7 +47,7 @@ void PMWindow::changeSelf(const QString &newname)
     this->m_ownName = newname;
 }
 
-void PMWindow::printLine(const QString &line, bool self)
+void PMWindow::printLine(QString line, bool self)
 {
     if (line.trimmed().length() == 0)
         return;
@@ -59,10 +59,14 @@ void PMWindow::printLine(const QString &line, bool self)
     if (tt)
         timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
 
+    if (escape_html) {
+        line = escapeHtml(line);
+    }
+
     if (self) {
-        printHtml(toColor(timeStr + "<b>" + escapeHtml(m_ownName) + ": </b>", Qt::darkBlue) + escapeHtml(line));
+        printHtml(toColor(timeStr + "<b>" + escapeHtml(m_ownName) + ": </b>", Qt::darkBlue) + line);
     } else {
-        printHtml(toColor(timeStr + "<b>" + escapeHtml(name()) + ": </b>", Qt::darkGray) + escapeHtml(line));
+        printHtml(toColor(timeStr + "<b>" + escapeHtml(name()) + ": </b>", Qt::darkGray) + line);
     }
 }
 
