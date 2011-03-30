@@ -4501,7 +4501,6 @@ struct MMOutrage : public MM
 struct MMUproar : public MM {
     MMUproar() {
         functions["UponAttackSuccessful"] = &uas;
-        functions["MoveSettings"] = &ms;
     }
 
     static void uas(int s,int, BS &b) {
@@ -4528,23 +4527,14 @@ struct MMUproar : public MM {
 
 
     static void ts(int s, int, BS &b) {
-        turn(b,s)["UproarBefore"] = poke(b,s).contains("LastUproar") && poke(b,s).value("LastUproar").toInt() == b.turn()  - 1;
-        if (poke(b,s).value("UproarUntil").toInt() >= b.turn() && poke(b,s).value("LastUproar").toInt() == b.turn() - 1) {
-            turn(b,s)["NoChoice"] = true;
-            MoveEffect::setup(poke(b,s)["UproarMove"].toInt(),s,s,b);
-        }
-    }
-
-    static void ms(int s, int, BS &b) {
-        turn(b,s)["Uproared"] = true;
+        turn(b,s)["NoChoice"] = true;
+        MoveEffect::setup(poke(b,s)["UproarMove"].toInt(),s,s,b);
     }
 
     static void et(int s, int, BS &b) {
         if (b.koed(s))
             return;
-        if (!turn(b,s).contains("Uproared"))
-            return;
-        if (poke(b,s).value("UproarUntil").toInt() > b.turn()) {
+        if (poke(b,s).value("UproarUntil").toInt() > b.turn() && poke(b,s).value("LastUproar").toInt() == b.turn()) {
             b.sendMoveMessage(141,1,s);
 
             foreach (int i, b.sortedBySpeed()) {
@@ -4554,14 +4544,12 @@ struct MMUproar : public MM {
                 }
             }
         } else {
-            if (b.turn() >= poke(b,s)["UproarUntil"].toInt()) {
-                removeFunction(poke(b,s), "TurnSettings", "Uproar");
-                removeFunction(poke(b,s), "EndTurn610", "Uproar");
-                poke(b,s).remove("UproarUntil");
-                poke(b,s).remove("LastUproar");
-                b.removeUproarer(s);
-                b.sendMoveMessage(141,2,s,type(b,s));
-            }
+            removeFunction(poke(b,s), "TurnSettings", "Uproar");
+            removeFunction(poke(b,s), "EndTurn610", "Uproar");
+            poke(b,s).remove("UproarUntil");
+            poke(b,s).remove("LastUproar");
+            b.removeUproarer(s);
+            b.sendMoveMessage(141,2,s,type(b,s));
         }
     }
 };
