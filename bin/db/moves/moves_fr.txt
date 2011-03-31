@@ -496,7 +496,7 @@ Ten-danse
 Après Vous
 Chant Canon
 Echo
-Vengeance
+Chatiment
 Bain de Smog
 ForceAjoutée
 Prévention
@@ -512,7 +512,7 @@ Calcination
 À la Queue
 Acrobatie
 Ten-danse
-Chatiment
+Vengeance
 Tout ou Rien
 Passe-Cadeau
 Feu d'Enfer
