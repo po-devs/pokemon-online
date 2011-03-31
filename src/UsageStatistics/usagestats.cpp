@@ -22,7 +22,7 @@ QString PokemonOnlineStatsPlugin::pluginName() const
 
 BattlePlugin * PokemonOnlineStatsPlugin::getBattlePlugin(BattleInterface*)
 {
-    return new PokemonOnlineStatsBattlePlugin(this);
+    return new PokemonOnlineStatsBattlePlugin();
 }
 
 bool PokemonOnlineStatsPlugin::hasConfigurationWidget() const {
@@ -32,9 +32,8 @@ bool PokemonOnlineStatsPlugin::hasConfigurationWidget() const {
 /*************************/
 /*************************/
 
-PokemonOnlineStatsBattlePlugin::PokemonOnlineStatsBattlePlugin(PokemonOnlineStatsPlugin *master)
+PokemonOnlineStatsBattlePlugin::PokemonOnlineStatsBattlePlugin()
 {
-    this->master = master;
 }
 
 QHash<QString, BattlePlugin::Hook> PokemonOnlineStatsBattlePlugin::getHooks()
@@ -59,11 +58,10 @@ int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
         tier = QString("Mixed Tiers Gen %1").arg(b.gen());
     }
 
-    if (!master->existingDirs.contains(tier)) {
-        QDir d;
-        d.mkdir(QString("usage_stats/raw/%1").arg(tier));
-        master->existingDirs[tier] = QString("usage_stats/raw/%1/").arg(tier);
-    }
+
+    QString dir = QString("usage_stats/raw/%1/").arg(tier);
+    QDir d;
+    d.mkdir(dir);
 
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 6; j++) {
@@ -77,7 +75,7 @@ int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
                 lead = j <= 2;
             }
 
-            savePokemon(b.poke(i,j), lead, master->existingDirs[tier]);
+            savePokemon(b.poke(i,j), lead, dir);
         }
     }
 
