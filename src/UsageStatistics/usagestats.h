@@ -33,7 +33,7 @@ class POKEMONONLINESTATSPLUGINSHARED_EXPORT PokemonOnlineStatsBattlePlugin
     : public BattlePlugin
 {
 public:
-    PokemonOnlineStatsBattlePlugin(PokemonOnlineStatsPlugin *master);
+    PokemonOnlineStatsBattlePlugin();
 
     QHash<QString, Hook> getHooks();
 

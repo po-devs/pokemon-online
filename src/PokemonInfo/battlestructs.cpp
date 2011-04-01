@@ -480,6 +480,8 @@ void TeamBattle::generateRandom(int gen)
             p.happiness() = 255;
         else if (movesTaken.contains(Move::Frustration))
             p.happiness() = 0;
+        else
+            p.happiness() = true_rand() % 256;
 
         if (gen >= GEN_MIN_ITEMS)
             p.item() = ItemInfo::Number(ItemInfo::SortedUsefulNames(gen)[true_rand()%ItemInfo::SortedUsefulNames(gen).size()]);
