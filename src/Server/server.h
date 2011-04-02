@@ -22,7 +22,7 @@ class Challenge;
 class QTcpServer;
 class PluginManager;
 
-class Server: public ServerInterface, public QObject
+class Server: public QObject, public ServerInterface
 {
     Q_OBJECT
 

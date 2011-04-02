@@ -6,7 +6,7 @@ class PlayerInterface;
 class ServerInterface
 {
 public:
-    virtual ~ServerInterface();
+    virtual ~ServerInterface(){}
 
     virtual PlayerInterface *playeri(int id) const = 0;
 };
