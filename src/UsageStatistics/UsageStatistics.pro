@@ -14,4 +14,6 @@ HEADERS += usagestats.h \
     usagestats_global.h \
     ../PokemonInfo/battlestructs.h \
     ../Server/plugininterface.h \
-    ../Server/playerinterface.h
+    ../Server/playerinterface.h \
+    ../Server/serverinterface.h \
+    ../Server/battleinterface.h
