@@ -574,9 +574,26 @@ int main(int argc, char *argv[])
 
         QHash<int, QList<Bcc> > buffers;
 
+        QList<QPair<Pokemon::uniqueId, qint32> > ranks;
+
         fprintf(stdout, "\nDoing Tier %s\n", dir.toUtf8().data());
 
         foreach(QString file, files) {
+            if (file.length() != 3 || (file.contains('.') && file.indexOf('.') != 3)){
+                if (file == "ranks.rnk") {
+                    QFile f(file);
+                    f.open(QIODevice::ReadOnly);
+                    QByteArray content;
+
+                    content = f.readAll();
+                    QDataStream d(&content, QIODevice::ReadOnly);
+                    d.setVersion(QDataStream::Qt_4_7);
+                    d >> ranks;
+                }
+                continue;
+            }
+
+
             FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "rb");
 
             char buffer[32];
@@ -635,6 +652,21 @@ int main(int argc, char *argv[])
             childSk.addDefaultValue("pokemonlink", QString("%1.html").arg(it.value()));
             childSk.addDefaultValue("percentage", QString::number(double(100*it.key())/totalBattles,'f',2));
             childSk.addDefaultValue("pokemon", PokemonInfo::Name(it.value()));
+        }
+
+        if (ranks.size() > 0) {
+            int total = 0;
+
+            for(int i = 0; i < ranks.size(); i++) {
+                total += ranks[i].second;
+            }
+
+            QFile out(outDir.absoluteFilePath("ranked_stats.txt"));
+            out.open(QIODevice::WriteOnly);
+            for(int i = 0; i < ranks.size(); i++) {
+                QString s = QString("%1 %2 %3").arg(PokemonInfo::Name(ranks[i].first)).arg(float(ranks[i].second*6)/total).arg(ranks[i].second);
+                out.write(s.toUtf8() + "\n");
+            }
         }
 
         QFile index(outDir.absoluteFilePath("index.html"));

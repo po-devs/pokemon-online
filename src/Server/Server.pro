@@ -92,7 +92,8 @@ HEADERS += player.h \
     scriptdb.h \
     battleinterface.h \
     battlepluginstruct.h \
-    miscabilities.h
+    miscabilities.h \
+    serverinterface.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
