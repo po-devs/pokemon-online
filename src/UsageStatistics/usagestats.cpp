@@ -26,6 +26,7 @@ TierRank::TierRank(QString tier) : tier(tier)
 
     if (content.length() > 0) {
         QDataStream d(&content, QIODevice::ReadOnly);
+        d.setVersion(QDataStream::Qt_4_7);
         d >> uses;
 
         for (int i = 0; i < uses.length(); i++) {
@@ -67,6 +68,7 @@ void TierRank::writeContents()
     f.open(QIODevice::WriteOnly);
     QByteArray data;
     QDataStream d(&data, QIODevice::WriteOnly);
+    d.setVersion(QDataStream::Qt_4_7);
     d << uses;
 
     f.write(data);
