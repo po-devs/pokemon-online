@@ -11,6 +11,7 @@
 class QWidget;
 class PlayerInterface;
 class BattleInterface;
+class ServerInterface;
 class ChallengeInfo;
 
 class BattlePlugin
@@ -49,7 +50,7 @@ public:
 /* Each plugin will have to have a function like that named
    createPluginClass, that creates a ServerEngine (or a derived
     class) through new and returns it. */
-typedef ServerPlugin *(*PluginInstanceFunction) ();
+typedef ServerPlugin *(*PluginInstanceFunction) (ServerInterface *);
 
 /* Will be used like that:
 

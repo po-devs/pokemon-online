@@ -1,8 +1,9 @@
 #include "pluginmanager.h"
 #include "plugininterface.h"
+#include "server.h"
 #include "../Utilities/CrossDynamicLib.h"
 
-PluginManager::PluginManager()
+PluginManager::PluginManager(Server *ser) : server(ser)
 {
     QSettings s("config", QSettings::IniFormat);
 
@@ -27,7 +28,7 @@ PluginManager::PluginManager()
             continue;
         }
 
-        ServerPlugin *s = f();
+        ServerPlugin *s = f(server);
 
         if (!s) {
             delete l;
@@ -72,7 +73,7 @@ void PluginManager::addPlugin(const QString &path)
         return;
     }
 
-    ServerPlugin *s = f();
+    ServerPlugin *s = f(server);
 
     if (!s) {
         delete l;

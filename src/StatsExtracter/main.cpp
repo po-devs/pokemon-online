@@ -577,6 +577,9 @@ int main(int argc, char *argv[])
         fprintf(stdout, "\nDoing Tier %s\n", dir.toUtf8().data());
 
         foreach(QString file, files) {
+            if (file.length() != 3 || (file.contains('.') && file.indexOf('.') != 3))
+                continue;
+
             FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "rb");
 
             char buffer[32];
