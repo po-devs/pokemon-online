@@ -38,9 +38,6 @@ class BattleSituation : public ContextCallee, public BattleInterface
     PROPERTY(int, repeatCount);
     PROPERTY(bool, heatOfAttack);
     PROPERTY(int, drawer);
-
-    Player* player1;
-    Player* player2;
 public:
     typedef QVariantHash context;
 
@@ -59,6 +56,8 @@ public:
     int id(int spot) const;
     /* Return the configuration of the players (1 refer to that player, 0 to that one... */
     BattleConfiguration configuration() const;
+    /* Returns the rating of the beginning of a battle, of a player */
+    int rating(int spot) const;
 
     bool acceptSpectator(int id, bool authed=false) const;
     void addSpectator(Player *p);
@@ -346,6 +345,7 @@ private:
     QList<QPointer<Player> > pendingSpectators;
 
     TeamBattle team1, team2;
+    int ratings[2];
 
     /* timers */
     QAtomicInt timeleft[2];
