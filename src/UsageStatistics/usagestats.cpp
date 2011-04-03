@@ -165,7 +165,7 @@ int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
 
             savePokemon(b.poke(i,j), lead, dir);
 
-            if (master && master->server->playeri(b.id(i))->rating() > 1000) {
+            if (b.rating(i) > 1000 && master) {
                 master->addUsage(tier, b.poke(i,j).num());
             }
         }

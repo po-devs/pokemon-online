@@ -22,8 +22,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     timer = NULL;
     myid[0] = p1.id();
     myid[1] = p2.id();
-    player1 = &p1;
-    player2 = &p2;
+    ratings[0] = p1.rating();
+    ratings[1] = p2.rating();
     winMessage[0] = p1.winningMessage();
     winMessage[1] = p2.winningMessage();
     loseMessage[0] = p1.losingMessage();
@@ -197,7 +197,7 @@ void BattleSituation::start(ContextSwitcher &ctx)
         battleLog.setFileName(QString("logs/battles/%1/%2-%3-%4.html").arg(date, time, id0, id1));
         battleLog.open(QIODevice::WriteOnly);
 
-        appendBattleLog("BattleStart", toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(player1->name(), player2->name()));
+        appendBattleLog("BattleStart", toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(team1.name, team2.name));
         appendBattleLog("BlankMessage", "");
     }
 
@@ -413,6 +413,11 @@ int BattleSituation::id(int spot) const
     } else {
         return myid[spot];
     }
+}
+
+int BattleSituation::rating(int spot) const
+{
+    return ratings[spot];
 }
 
 int BattleSituation::player(int slot) const
@@ -1573,10 +1578,10 @@ void BattleSituation::spectatingChat(int id, const QString &str)
 QString BattleSituation::name(int id)
 {
     if(id == 0) {
-        return player1->name();
+        return team1.name;
     }
     else if(id == 1) {
-        return player2->name();
+        return team2.name;
     }
     else {
         return "?";
