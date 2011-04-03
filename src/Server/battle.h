@@ -251,22 +251,6 @@ public:
     void changeDefMove(int player, int slot, int move);
     void changeSprite(int player, Pokemon::uniqueId newForme);
 
-    int getBattleDataPokenum(int player, int slot);
-    int getBattleDataNature(int player, int slot);
-    int getBattleDataGender(int player, int slot);
-    int getBattleDataDVs(int player, int slot, int stat);
-    int getBattleDataEVs(int player, int slot, int stat);
-    int getBattleDataShiny(int player, int slot);
-    int getBattleDataLevel(int player, int slot);
-    QString getBattleDataNickname(int player, int slot);
-    int getBattleDataItem(int player, int slot);
-    int getBattleDataStatus(int player, int slot);
-    int getBattleDataHP(int player, int slot);
-    int getBattleDataMaxHP(int player, int slot);
-    int getBattleDataMoveSlot(int player, int slot, int moveSlot);
-    int getBattleDataMovePP(int player, int slot, int moveSlot);
-    int getBattleDataMoveMaxPP(int player, int slot, int moveSlot);
-
     enum WeatherM
     {
 	ContinueWeather,

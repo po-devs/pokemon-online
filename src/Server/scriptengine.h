@@ -281,22 +281,6 @@ public:
     Q_INVOKABLE void inflictStatus(int battleId, bool toFirstPlayer, int slot, int status);
     Q_INVOKABLE void modifyPokeStat(int poke, int stat, quint8 value);
 
-    Q_INVOKABLE QScriptValue battlePokenum(int battleId, bool toFirstPlayer, int pokeSlot);
-    Q_INVOKABLE QScriptValue battleNature(int battleId, bool toFirstPlayer, int pokeSlot);
-    Q_INVOKABLE QScriptValue battleGender(int battleId, bool toFirstPlayer, int pokeSlot);
-    Q_INVOKABLE QScriptValue battleDVs(int battleId, bool toFirstPlayer, int pokeSlot, int stat);
-    Q_INVOKABLE QScriptValue battleEVs(int battleId, bool toFirstPlayer, int pokeSlot, int stat);
-    Q_INVOKABLE QScriptValue battleShiny(int battleId, bool toFirstPlayer, int pokeSlot);
-    Q_INVOKABLE QScriptValue battleLevel(int battleId, bool toFirstPlayer, int pokeSlot);
-    Q_INVOKABLE QScriptValue battleNickname(int battleId, bool toFirstPlayer, int pokeSlot);
-    Q_INVOKABLE QScriptValue battleItem(int battleId, bool toFirstPlayer, int pokeSlot);
-    Q_INVOKABLE QScriptValue battleStatus(int battleId, bool toFirstPlayer, int pokeSlot);
-    Q_INVOKABLE QScriptValue battleHP(int battleId, bool toFirstPlayer, int pokeSlot);
-    Q_INVOKABLE QScriptValue battleMaxHP(int battleId, bool toFirstPlayer, int pokeSlot);
-    Q_INVOKABLE QScriptValue battleMoveSlot(int battleId, bool toFirstPlayer, int pokeSlot, int moveSlot);
-    Q_INVOKABLE QScriptValue battleMovePP(int battleId, bool toFirstPlayer, int pokeSlot, int moveSlot);
-    Q_INVOKABLE QScriptValue battleMoveMaxPP(int battleId, bool toFirstPlayer, int pokeSlot, int moveSlot);
-
     Q_INVOKABLE void forceBattle(int player1, int player2, int clauses, int mode, bool is_rated = false);
     Q_INVOKABLE int getClauses(const QString &tier);
 
