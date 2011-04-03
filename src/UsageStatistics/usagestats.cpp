@@ -1,18 +1,98 @@
+namespace Pokemon {
+    class uniqueId;
+}
+unsigned int qHash (const Pokemon::uniqueId &key);
+
 #include <cstdio>
 #include "usagestats.h"
 #include "../Server/playerinterface.h"
 #include "../PokemonInfo/battlestructs.h"
 
-ServerPlugin * createPluginClass() {
-    return new PokemonOnlineStatsPlugin();
+ServerPlugin * createPluginClass(ServerInterface *server) {
+    return new PokemonOnlineStatsPlugin(server);
 }
 
-PokemonOnlineStatsPlugin::PokemonOnlineStatsPlugin()
+/*************************/
+/*************************/
+
+TierRank::TierRank(QString tier) : tier(tier)
+{
+    timer = time(NULL);
+
+    QFile f("usage_stats/raw/"+tier+"/ranks.rnk");
+    f.open(QIODevice::ReadOnly);
+
+    QByteArray content = f.readAll();
+
+    if (content.length() > 0) {
+        QDataStream d(&content, QIODevice::ReadOnly);
+        d.setVersion(QDataStream::Qt_4_7);
+        d >> uses;
+
+        for (int i = 0; i < uses.length(); i++) {
+            positions[uses[i].first] = uses[i].second;
+        }
+    }
+}
+
+void TierRank::addUsage(const Pokemon::uniqueId &pokemon)
+{
+    if (!positions.contains(pokemon)) {
+        if (!PokemonInfo::IsAesthetic(pokemon)) {
+            positions.insert(pokemon, uses.size());
+            uses.push_back(QPair<Pokemon::uniqueId, int>(pokemon, 1));
+        } else {
+            TierRank::addUsage(PokemonInfo::OriginalForme(pokemon));
+        }
+    } else {
+        int pos = positions[pokemon];
+        uses[pos].second += 1;
+
+        while (pos > 0 && uses[pos-1].second < uses[pos].second) {
+            uses.swap(pos, pos-1);
+            positions[uses[pos-1].first] = pos - 1;
+            positions[uses[pos].first] = pos;
+            pos--;
+        }
+
+        /* Saves every 5 minutes */
+        if (time(NULL) - timer > 5*60) {
+            writeContents();
+        }
+    }
+}
+
+void TierRank::writeContents()
+{
+    QFile f("usage_stats/raw/"+tier+"/ranks.rnk");
+    f.open(QIODevice::WriteOnly);
+    QByteArray data;
+    QDataStream d(&data, QIODevice::WriteOnly);
+    d.setVersion(QDataStream::Qt_4_7);
+    d << uses;
+
+    f.write(data);
+    f.close();
+
+    timer = time(NULL);
+}
+
+/*************************/
+/*************************/
+
+PokemonOnlineStatsPlugin::PokemonOnlineStatsPlugin(ServerInterface *s) :server(s)
 {
     QDir d;
     d.mkdir("usage_stats");
     d.mkdir("usage_stats/raw");
     d.mkdir("usage_stats/formatted");
+}
+
+PokemonOnlineStatsPlugin::~PokemonOnlineStatsPlugin()
+{
+    foreach(TierRank t, tierRanks) {
+        t.writeContents();
+    }
 }
 
 QString PokemonOnlineStatsPlugin::pluginName() const
@@ -29,12 +109,19 @@ bool PokemonOnlineStatsPlugin::hasConfigurationWidget() const {
     return false;
 }
 
+void PokemonOnlineStatsPlugin::addUsage(QString tier, const Pokemon::uniqueId &pokemon)
+{
+    if (!tierRanks.contains(tier)) {
+        tierRanks.insert(tier, TierRank(tier));
+    }
+    tierRanks[tier].addUsage(pokemon);
+}
+
 /*************************/
 /*************************/
 
-PokemonOnlineStatsBattlePlugin::PokemonOnlineStatsBattlePlugin(PokemonOnlineStatsPlugin *master)
+PokemonOnlineStatsBattlePlugin::PokemonOnlineStatsBattlePlugin(PokemonOnlineStatsPlugin *master) : master(master)
 {
-    this->master = master;
 }
 
 QHash<QString, BattlePlugin::Hook> PokemonOnlineStatsBattlePlugin::getHooks()
@@ -59,11 +146,10 @@ int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
         tier = QString("Mixed Tiers Gen %1").arg(b.gen());
     }
 
-    if (!master->existingDirs.contains(tier)) {
-        QDir d;
-        d.mkdir(QString("usage_stats/raw/%1").arg(tier));
-        master->existingDirs[tier] = QString("usage_stats/raw/%1/").arg(tier);
-    }
+
+    QString dir = QString("usage_stats/raw/%1/").arg(tier);
+    QDir d;
+    d.mkdir(dir);
 
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 6; j++) {
@@ -77,7 +163,11 @@ int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
                 lead = j <= 2;
             }
 
-            savePokemon(b.poke(i,j), lead, master->existingDirs[tier]);
+            savePokemon(b.poke(i,j), lead, dir);
+
+            if (master && master->server->playeri(b.id(i))->rating() > 1000) {
+                master->addUsage(tier, b.poke(i,j).num());
+            }
         }
     }
 
@@ -133,7 +223,7 @@ void PokemonOnlineStatsBattlePlugin::savePokemon(const PokeBattle &p, bool lead,
 {
     QByteArray data = this->data(p);
 
-    QByteArray file = (d + QCryptographicHash::hash(data, QCryptographicHash::Md5).toHex().left(3)).toUtf8();
+    QByteArray file = (d + QCryptographicHash::hash(data, QCryptographicHash::Md5).toHex().left(3) + ".stat").toUtf8();
 
     FILE *raw_f = fopen(file.data(), "r+b");
 

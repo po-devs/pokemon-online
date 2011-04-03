@@ -1,7 +1,7 @@
 #include "battlelogs.h"
 #include <QtGui>
 
-ServerPlugin * createPluginClass() {
+ServerPlugin * createPluginClass(ServerInterface*) {
     return new BattleLogs();
 }
 
