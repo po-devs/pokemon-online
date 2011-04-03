@@ -57,6 +57,7 @@ int main(int argc, char *argv[])
     bool showWindow = true;
 
     QSettings s("config", QSettings::IniFormat);
+    QStringList ports;
 
     //parse commandline arguments
     for(int i = 0; i < argc; i++){
@@ -110,7 +111,7 @@ int main(int argc, char *argv[])
                 fprintf(stderr, "No server port provided.\n");
                 return 1;
             }
-            s.setValue("server_port", argv[i]);
+            ports.append(argv[i]);
         } else if(strcmp(argv[i], "-P") == 0 || strcmp(argv[i], "--private") == 0){
             s.setValue("server_private", 1);
         }
@@ -118,12 +119,18 @@ int main(int argc, char *argv[])
 
     fprintf(stderr, "\n-----------------------\nNew Server, starting logs\n-----------------------\n\n");
 
-    if (s.value("server_port").isNull())
-        s.setValue("server_port", 5080);
+    if (ports.isEmpty()) {
+        if (s.value("server_port").isNull())
+            s.setValue("server_port", 5080);
+    } else
+        s.setValue("server_port", ports.join(","));
 
-    quint16 serverPort = quint16(s.value("server_port").toInt());
+    QList<quint16> serverPorts;
+    foreach (QString sport, s.value("server_port").toString().split(",")) {
+        serverPorts.append(quint16(sport.toInt()));
+    }
     Server * myserver;
-    myserver = new Server(serverPort);
+    myserver = new Server(serverPorts);
 
 #ifndef WIN32
     /* Occurs on some specific platform, so ignoring it ;_; */

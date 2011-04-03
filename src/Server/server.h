@@ -30,6 +30,7 @@ class Server: public QObject, public ServerInterface
     friend class ServerWidget;
 public:
     Server(quint16 port = 5080);
+    Server(QList<quint16> ports);
     ~Server();
 
     void start();
@@ -112,7 +113,8 @@ public slots:
     void invalidName();
     void accepted();
     /* means a new connection is about to start from the TCP server */
-    void incomingConnection();
+    /* i is the number of the listening port */
+    void incomingConnection(int i);
     /* Signals received by players */
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, int chanid, const QString &mess);
@@ -159,7 +161,8 @@ private:
 
     Analyzer *registry_connection;
     QString serverName, serverDesc, serverAnnouncement;
-    quint16 serverPrivate, serverPlayerMax,serverPort;
+    quint16 serverPrivate, serverPlayerMax;
+    QList<quint16>  serverPorts;
     bool showLogMessages;
     bool useBattleFileLog;
     bool useChannelFileLog;
@@ -186,9 +189,9 @@ private:
     mutable int playercounter, battlecounter, channelcounter;
 
 #ifndef SFML_SOCKETS
-    QTcpServer *myserver;
+    QList<QTcpServer *> myservers;
 #else
-    GenericSocket *myserver;
+    QList<GenericSocket *> myservers;
     SocketManager manager;
 #endif
     PluginManager *pluginManager;
@@ -205,9 +208,9 @@ private:
     QHash<qint32, Battle> battleList;
 
 #ifndef SFML_SOCKETS
-    QTcpServer *server();
+    QTcpServer *server(int i);
 #else
-    GenericSocket *server();
+    GenericSocket *server(int i);
 #endif
     Player * player(int i) const;
     PlayerInterface * playeri(int i) const;

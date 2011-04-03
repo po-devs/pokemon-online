@@ -53,6 +53,7 @@ public:
 //    virtual QList<int> allRevs(int slot) const = 0; //returns even koed opponents
     /* returns the id corresponding to that spot (spot is 0 or 1) */
     virtual int id(int spot) const = 0;
+    virtual int rating(int spot) const = 0;
 //    /* Return the configuration of the players (1 refer to that player, 0 to that one...) */
 //    virtual BattleConfiguration configuration() const = 0;
 
