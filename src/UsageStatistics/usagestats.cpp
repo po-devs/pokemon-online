@@ -30,7 +30,7 @@ TierRank::TierRank(QString tier) : tier(tier)
         d >> uses;
 
         for (int i = 0; i < uses.length(); i++) {
-            positions[uses[i].first] = uses[i].second;
+            positions[uses[i].first] = i;
         }
     }
 }
