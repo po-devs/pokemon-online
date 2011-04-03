@@ -1594,13 +1594,12 @@ struct MMSwitcheroo : public MM
     {
 	b.sendMoveMessage(132,0,s,type(b,s),t);
 	int i1(b.poke(s).item()), i2(b.poke(t).item());
-	b.acqItem(s, i2);
-	b.acqItem(t, i1);
-
         if (i2)
             b.sendMoveMessage(132,1,s,type(b,s),t,i2);
+        b.acqItem(s, i2);
         if (i1)
             b.sendMoveMessage(132,1,t,type(b,s),s,i1);
+	b.acqItem(t, i1);
     }
 };
 
