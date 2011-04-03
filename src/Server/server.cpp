@@ -27,17 +27,27 @@
 
 Server *Server::serverIns = NULL;
 
-Server::Server(quint16 port) : registry_connection(NULL),serverPort(port), showLogMessages(true),
+Server::Server(quint16 port) : registry_connection(NULL), serverPorts(), showLogMessages(true),
     lastDataId(0), playercounter(0), battlecounter(0), channelcounter(0), numberOfPlayersLoggedIn(0),
     myengine(NULL)
 {
+    serverPorts << port;
+}
+
+Server::Server(QList<quint16> ports) : registry_connection(NULL), serverPorts(), showLogMessages(true),
+    lastDataId(0), playercounter(0), battlecounter(0), channelcounter(0), numberOfPlayersLoggedIn(0),
+    myengine(NULL)
+{
+    foreach(quint16 port, ports)
+        serverPorts << port;
 }
 
 
 Server::~Server()
 {
 #ifndef SFML_SOCKETS
-    myserver->deleteLater();
+    foreach (QTcpServer* myserver, myservers)
+        myserver->deleteLater();
 #endif
     delete pluginManager;
 }
@@ -57,12 +67,16 @@ void Server::start(){
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
 #ifndef SFML_SOCKETS
-    myserver = new QTcpServer();
+    for (int i = 0; i < serverPorts.size(); ++i) {
+        myservers.append(new QTcpServer());
+    }
 #else
     manager.Launch();
-    myserver = manager.createSocket();
+    for (int i = 0; i < serverPorts.size(); ++i) {
+        myservers.append(manager.createSocket());
+    }
 #endif
-    pluginManager = new PluginManager();
+    pluginManager = new PluginManager(this);
 
     srand(time(NULL));
 
@@ -136,24 +150,30 @@ void Server::start(){
 
     bool listenSuccess;
 
+    QSignalMapper *mymapper = new QSignalMapper(this);
+    connect(mymapper, SIGNAL(mapped(int)), SLOT(incomingConnection(int)));
+    for (int i = 0; i < serverPorts.size(); ++i) {
+        quint16 port = serverPorts.at(i);
 #ifndef SFML_SOCKETS
-    listenSuccess = server()->listen(QHostAddress::Any, serverPort);
+        listenSuccess = server(i)->listen(QHostAddress::Any, port);
 #else
-    listenSuccess = server()->listen(serverPort);
+        listenSuccess = server(i)->listen(port);
 #endif
 
-    if (!listenSuccess)
-    {
-        printLine(tr("Unable to listen to port %1").arg(serverPort));
-    } else {
-        printLine(tr("Starting to listen to port %1").arg(serverPort));
+        if (!listenSuccess)
+        {
+            printLine(tr("Unable to listen to port %1").arg(port));
+        } else {
+            printLine(tr("Starting to listen to port %1").arg(port));
+        }
+
+        mymapper->setMapping(server(i), i);
+#ifndef SFML_SOCKETS
+        connect(server(i), SIGNAL(newConnection()), mymapper, SLOT(map()));
+#else
+        connect(server(i), SIGNAL(active()), mymapper, SLOT(map()));
+#endif
     }
-
-#ifndef SFML_SOCKETS
-    connect(server(), SIGNAL(newConnection()), SLOT(incomingConnection()));
-#else
-    connect(server(), SIGNAL(active()), SLOT(incomingConnection()));
-#endif
     connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(dosKick(int)));
     connect(AntiDos::obj(), SIGNAL(ban(QString)), SLOT(dosBan(QString)));
 
@@ -214,14 +234,14 @@ void Server::print(const QString &line)
 }
 
 #ifndef SFML_SOCKETS
-QTcpServer * Server::server()
+QTcpServer * Server::server(int i)
 {
-    return myserver;
+    return myservers.at(i);
 }
 #else
-GenericSocket * Server::server()
+GenericSocket * Server::server(int i)
 {
-    return myserver;
+    return myservers.at(i);
 }
 #endif
 void Server::processDailyRun()
@@ -465,7 +485,7 @@ void Server::regConnectionError()
 void Server::regConnected()
 {
     printLine("Connected to registry! Sending server info...");
-    registry_connection->notify(NetworkServ::Login, serverName, serverDesc, quint16(AntiDos::obj()->numberOfDiffIps()), serverPlayerMax, serverPort);
+    registry_connection->notify(NetworkServ::Login, serverName, serverDesc, quint16(AntiDos::obj()->numberOfDiffIps()), serverPlayerMax, serverPorts.at(0));
     connect(registry_connection, SIGNAL(ipRefused()), SLOT(ipRefused()));
     connect(registry_connection, SIGNAL(invalidName()), SLOT(invalidName()));
     connect(registry_connection, SIGNAL(nameTaken()), SLOT(nameTaken()));
@@ -916,9 +936,9 @@ int Server::auth(int id) const
     return player(id)->auth();
 }
 
-void Server::incomingConnection()
+void Server::incomingConnection(int i)
 {
-    GenericSocket * newconnection = server()->nextPendingConnection();
+    GenericSocket * newconnection = server(i)->nextPendingConnection();
 
     if (!newconnection)
         return;
@@ -1674,6 +1694,11 @@ Player * Server::player(int id) const
     if (!myplayers.contains(id))
         qDebug() << "Fatal! player called for non existing ID " << id;
     return myplayers.value(id);
+}
+
+PlayerInterface * Server::playeri(int id) const
+{
+    return player(id);
 }
 
 BattleSituation * Server::getBattle(int battleId) const

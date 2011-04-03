@@ -2576,8 +2576,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             int type = tmove(player).type; /* move type */
 
             if ( target != player &&
-                 ((type == Type::Poison && (hasType(target, Type::Poison))) ||
-                  ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::Smog)
+                 ((Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) ||
+                  ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::PoisonGas || attack == Move::PoisonPowder)
                    && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0
                    && !pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()))){
                 notify(All, Failed, player);

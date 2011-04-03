@@ -4930,7 +4930,7 @@ struct MMSoak : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.hasType(t, Pokemon::Water))
+        if (fpoke(b, t).type1 == Pokemon::Water && fpoke(b, t).type2 == Pokemon::Curse)
             turn(b,s)["Failed"] = true;
     }
 
