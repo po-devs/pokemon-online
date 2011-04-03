@@ -1,4 +1,4 @@
-// Don't touch anything here if you don't know what you do.
+// Don't touch anything here if you don't know what you do!
 var noPlayer = '*';
 var mafia = new function() {
     this.roles1 = ["bodyguard", "mafia", "inspector", "werewolf", "hooker", "villager", "mafia",
@@ -15,15 +15,15 @@ var mafia = new function() {
         villager: "You dont have any special commands during the night! Vote to remove people in the day!",
         inspector: "Type /Inspect [name] to find his/her identity!",
         bodyguard: "Type /Protect [name] to protect someone!",
-        mafia: "Type /Kill [name] to  kill someone! (try not to kill your partner)",
+        mafia: "Type /Kill [name] to  kill someone! (Do not kill your partner)",
         werewolf: "Type /Kill [name] to  kill someone!",
         hooker: "Type /Distract [name] to distract someone! Vote to remove people in the day!",
         mayor: "You dont have any special commands during the night! Vote to remove people in the day! (your vote counts as 2)",
         spy: "You can find out who is going to get killed next!(no command for this ability) Vote to remove people in the day!",
-        godfather: "Type /Kill [name] to kill someone! You can kill 2 targets, Type /kill [name2] again to select your second target!",
-        vigilante: "Type /Kill [name] to kill someone!(dont kill the good people!)",
-        mafia1: "Type /Kill [name] to  kill someone!(Try not to kill your partner)",
-        mafia2: "Type /Kill [name] to  kill someone!(Try not to kill your partner)"
+        godfather: "Type /Kill [name] to kill someone! You can kill 2 targets, Type /Kill [name2] again to select your second target!",
+        vigilante: "Type /Kill [name] to kill someone!(Dont kill the good people!)",
+        mafia1: "Type /Kill [name] to  kill someone!(Do not kill your partner)",
+        mafia2: "Type /Kill [name] to  kill someone!(Do not kill your partner)"
     };
 	this.tr = function(string) {
         return this.translations[string];
@@ -93,7 +93,7 @@ var mafia = new function() {
     this.startGame = function(src) {
         if (mafia.state != "blank") {
             sys.sendMessage(src, "±Game: A game is going on. Wait until it's finished to start another one", mafiachan);
-			sys.sendMessage(src, "±Game: You can join the game by typing /join !", mafiachan);
+                        sys.sendMessage(src, "±Game: If the Mafia game is in its signup phase, you can join the game by typing /join !", mafiachan);
 
             return;
         }
@@ -253,7 +253,7 @@ var mafia = new function() {
             sys.sendAll("Times Up! :", mafiachan);
            
             if (mafia.players.length < 5) {
-                sys.sendAll("Well, Not Enough Players! :", mafiachan);
+                sys.sendAll("Well, not enough players! :", mafiachan);
                 sys.sendAll("You need at least 5 players to join (Current; " + mafia.players.length + ").", mafiachan);
                 sys.sendAll("*** ************************************************************************************", mafiachan);
                 mafia.clearVariables();
@@ -310,7 +310,7 @@ var mafia = new function() {
 
 
                 if (role == "werewolf") {
-					mafia.sendPlayer(hooker, "±Game: You tried to distract the Werewolf (what an idea, srsly), you were ravishly devoured, yum !");
+                                        mafia.sendPlayer(hooker, "±Game: You tried to distract the WereWolf (what an idea, srsly), you were ravishly devoured, yum!");
 					mafia.sendPlayer(player, "±Game: The Pretty Lady came to you last night! You devoured her instead !");
 					mafia.kill(hooker);
 					mafia.removeTarget(player);
@@ -499,7 +499,7 @@ var mafia = new function() {
             "±Role: WereWolf",
             "±Win: Eliminate everyone else in the game!",
             "*** *********************************************************************** ***",
-            "±Role: Good people (Inspector, Bodyguard, Hooker, Villager, Mayor, Spy, Vigilante)",
+            "±Role: Good people (Inspector, Bodyguard, Pretty Lady, Villager, Mayor, Spy, Vigilante)",
             "±Win: Eliminate the WereWolf, Mafia (French and Italian if exists) and the Godfather!",
             "*** *********************************************************************** ***",
             "±Role: French Canadian Mafia",
@@ -531,7 +531,7 @@ var mafia = new function() {
             "±Game: 5-30 Players",
             "*** *********************************************************************** ***",
             "±Role: Pretty Lady",
-            "±Ability: The Pretty Lady can distract people during the night thus cancelling their move, unless it's the WereWolf.",
+            "±Ability: The Pretty Lady can distract people during the night thus cancelling their move, unless it's the WereWolf or the Godfather.",
             "±Game: 5-30 Players",
             "*** *********************************************************************** ***",
             "±Role: Mafia",
@@ -559,11 +559,11 @@ var mafia = new function() {
             "±Game: 13-30 Players",
             "*** *********************************************************************** ***",
             "±Role: Vigilante",
-            "±Ability: The Vigilante can kill a person during the night! He/she strikes after The French Canadian and Italian Mafia.",
+            "±Ability: The Vigilante can kill a person during the night! he/she strikes after The French Canadian and Italian Mafia.",
             "±Game: 20-30 Players",
             "*** *********************************************************************** ***",
             "±Role: Godfather",
-            "±Ability: The Godfather can kill 2 people during the night! He/she strikes Last!",
+            "±Ability: The Godfather can kill 2 people during the night! he/she strikes Last!",
             "±Game: 20-30 Players",
             "*** *********************************************************************** ***",
             ""
@@ -601,7 +601,7 @@ var mafia = new function() {
             rules: [this.showRules, "To see the Rules for the Game/Server."]            
         },
         auth: {
-            end: [this.endGame, "To cancel a Mafia game!"],
+            end: [this.endGame, "To stop a Mafia game!"],
         }
     };
     this.handleCommand = function(src, message) {
@@ -2314,7 +2314,7 @@ afterChatMessage : function(src, message, chan)
     if (this.isMCaps(message) && sys.auth(src) < 2 && channel != staffchannel) {
         SESSION.users(src).caps += 3;
         if (SESSION.users(src).caps >= 9) {
-            sendChanAll("+MuteBot: " + sys.name(src) + " was muted for caps.");
+            sendChanAll("+MuteBot: " + sys.name(src) + " was muted for Caps.");
            SESSION.users(src).muted=true;
             return;
         }
