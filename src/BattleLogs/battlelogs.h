@@ -17,7 +17,7 @@
  <timestamp (32 bits)><command (8 bits)><slot (8bits)><data (byteArray)> (from each player's point of view) */
 
 extern "C" {
-BATTLELOGSSHARED_EXPORT ServerPlugin * createPluginClass(void);
+BATTLELOGSSHARED_EXPORT ServerPlugin * createPluginClass(ServerInterface*);
 };
 
 class PokeBattle;

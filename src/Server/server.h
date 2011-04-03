@@ -3,6 +3,7 @@
 
 #include "../Utilities/contextswitch.h"
 #include "../PokemonInfo/networkstructs.h"
+#include "serverinterface.h"
 #include "sfmlsocket.h"
 #include "channel.h"
 
@@ -21,7 +22,7 @@ class Challenge;
 class QTcpServer;
 class PluginManager;
 
-class Server: public QObject
+class Server: public QObject, public ServerInterface
 {
     Q_OBJECT
 
@@ -209,6 +210,7 @@ private:
     GenericSocket *server();
 #endif
     Player * player(int i) const;
+    PlayerInterface * playeri(int i) const;
     /* gets an id that's not used */
     int freeid() const;
     int freebattleid() const;

@@ -62,7 +62,7 @@ void Server::start(){
     manager.Launch();
     myserver = manager.createSocket();
 #endif
-    pluginManager = new PluginManager();
+    pluginManager = new PluginManager(this);
 
     srand(time(NULL));
 
@@ -1674,6 +1674,11 @@ Player * Server::player(int id) const
     if (!myplayers.contains(id))
         qDebug() << "Fatal! player called for non existing ID " << id;
     return myplayers.value(id);
+}
+
+PlayerInterface * Server::playeri(int id) const
+{
+    return player(id);
 }
 
 BattleSituation * Server::getBattle(int battleId) const
