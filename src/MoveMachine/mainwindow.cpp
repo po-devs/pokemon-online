@@ -55,12 +55,14 @@ void PokeMovesDb::init()
             pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[PreEvoMoves]);
             pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[SpecialMoves]);
             pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[TMMoves]);
+            pokes[i].gens[0].moves[PreEvoMoves].unite(pokes[preEvo].gens[0].moves[TutorMoves]);
             pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[LevelMoves]);
             pokes[i].gens[0].moves[PreEvoMoves].subtract(pokes[i].gens[0].moves[TMMoves]);
             pokes[i].gens[1].moves[PreEvoMoves] = pokes[preEvo].gens[1].moves[LevelMoves];
             pokes[i].gens[1].moves[PreEvoMoves].unite(pokes[preEvo].gens[1].moves[SpecialMoves]);
             pokes[i].gens[1].moves[PreEvoMoves].unite(pokes[preEvo].gens[1].moves[PreEvoMoves]);
             pokes[i].gens[1].moves[PreEvoMoves].unite(pokes[preEvo].gens[1].moves[TMMoves]);
+            pokes[i].gens[1].moves[PreEvoMoves].unite(pokes[preEvo].gens[1].moves[TutorMoves]);
             pokes[i].gens[1].moves[PreEvoMoves].subtract(pokes[i].gens[1].moves[LevelMoves]);
             pokes[i].gens[1].moves[PreEvoMoves].subtract(pokes[i].gens[1].moves[TutorMoves]);
             pokes[i].gens[1].moves[PreEvoMoves].subtract(pokes[i].gens[1].moves[TMMoves]);
@@ -69,6 +71,7 @@ void PokeMovesDb::init()
             pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[SpecialMoves]);
             pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[PreEvoMoves]);
             pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[TMMoves]);
+            pokes[i].gens[2].moves[PreEvoMoves].unite(pokes[preEvo].gens[2].moves[TutorMoves]);
             pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[LevelMoves]);
             pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TutorMoves]);
             pokes[i].gens[2].moves[PreEvoMoves].subtract(pokes[i].gens[2].moves[TMMoves]);
@@ -76,12 +79,14 @@ void PokeMovesDb::init()
             pokes[i].gens[3].moves[PreEvoMoves].unite(pokes[preEvo].gens[3].moves[SpecialMoves]);
             pokes[i].gens[3].moves[PreEvoMoves].unite(pokes[preEvo].gens[3].moves[PreEvoMoves]);
             pokes[i].gens[3].moves[PreEvoMoves].unite(pokes[preEvo].gens[3].moves[TMMoves]);
+            pokes[i].gens[3].moves[PreEvoMoves].unite(pokes[preEvo].gens[3].moves[TutorMoves]);
             pokes[i].gens[3].moves[PreEvoMoves].subtract(pokes[i].gens[3].moves[LevelMoves]);
             pokes[i].gens[3].moves[PreEvoMoves].subtract(pokes[i].gens[3].moves[TutorMoves]);
             pokes[i].gens[3].moves[PreEvoMoves].subtract(pokes[i].gens[3].moves[TMMoves]);
             pokes[i].gens[4].moves[PreEvoMoves] = pokes[preEvo].gens[4].moves[LevelMoves];
             pokes[i].gens[4].moves[PreEvoMoves].unite(pokes[preEvo].gens[4].moves[SpecialMoves]);
             pokes[i].gens[4].moves[PreEvoMoves].unite(pokes[preEvo].gens[4].moves[PreEvoMoves]);
+            pokes[i].gens[4].moves[PreEvoMoves].unite(pokes[preEvo].gens[4].moves[TutorMoves]);
             pokes[i].gens[4].moves[PreEvoMoves].subtract(pokes[i].gens[4].moves[LevelMoves]);
             pokes[i].gens[4].moves[PreEvoMoves].subtract(pokes[i].gens[4].moves[TutorMoves]);
             pokes[i].gens[4].moves[PreEvoMoves].subtract(pokes[i].gens[4].moves[TMMoves]);
@@ -507,26 +512,26 @@ MainWindow::MainWindow(QWidget *parent) :
 //    }
 //    out.close();
 //    exit(0);
-    QFile in("importStuff.txt");
-    in.open(QIODevice::ReadOnly);
+//    QFile in("importStuff.txt");
+//    in.open(QIODevice::ReadOnly);
 
-    QString lines = QString::fromUtf8(in.readAll());
-    in.close();
+//    QString lines = QString::fromUtf8(in.readAll());
+//    in.close();
 
-    QRegExp r("evochain=([0-9]+)", Qt::CaseSensitive, QRegExp::Wildcard);
-    r.setPatternSyntax(QRegExp::RegExp2);
-    int pos = 0;
+//    QRegExp r("evochain=([0-9]+)", Qt::CaseSensitive, QRegExp::Wildcard);
+//    r.setPatternSyntax(QRegExp::RegExp2);
+//    int pos = 0;
 
-    while ((pos = r.indexIn(lines, pos)) > -1) {
-        lines.replace(pos, r.matchedLength(), "evochain="+PokemonInfo::Name(r.cap(1).toInt()));
+//    while ((pos = r.indexIn(lines, pos)) > -1) {
+//        lines.replace(pos, r.matchedLength(), "evochain="+PokemonInfo::Name(r.cap(1).toInt()));
 
-        pos += r.matchedLength();
-    }
+//        pos += r.matchedLength();
+//    }
 
-    in.open(QIODevice::WriteOnly);
-    in.write(lines.toUtf8());
-    in.close();
-    exit(0);
+//    in.open(QIODevice::WriteOnly);
+//    in.write(lines.toUtf8());
+//    in.close();
+//    exit(0);
 
     connect(ui->save, SIGNAL(triggered()), SLOT(save()));
     connect(ui->gen1, SIGNAL(toggled(bool)), SLOT(setPokeByNick()));
