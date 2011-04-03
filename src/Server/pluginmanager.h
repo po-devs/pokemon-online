@@ -8,6 +8,7 @@ class ServerPlugin;
 class ChallengeInfo;
 class BattlePlugin;
 class BattleInterface;
+class Server;
 
 namespace cross {
     class DynamicLibrary;
@@ -17,7 +18,7 @@ class PluginManager
 {
     friend class PluginManagerWidget;
 public:
-    PluginManager();
+    PluginManager(Server *s);
     ~PluginManager();
 
     QStringList getPlugins() const;
@@ -32,6 +33,7 @@ private:
     QVector<cross::DynamicLibrary *> libraries;
     QVector<ServerPlugin *> plugins;
     QStringList filenames;
+    Server *server;
 
     void updateSavedList();
 };
