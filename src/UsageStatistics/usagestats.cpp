@@ -111,6 +111,7 @@ bool PokemonOnlineStatsPlugin::hasConfigurationWidget() const {
 
 void PokemonOnlineStatsPlugin::addUsage(QString tier, const Pokemon::uniqueId &pokemon)
 {
+    QMutexLocker lock(&m);
     if (!tierRanks.contains(tier)) {
         tierRanks.insert(tier, TierRank(tier));
     }
