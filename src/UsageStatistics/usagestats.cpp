@@ -15,7 +15,7 @@ ServerPlugin * createPluginClass(ServerInterface *server) {
 /*************************/
 /*************************/
 
-TierRank::TierRank(QString tier) : tier(tier)
+TierRank::TierRank(QString tier) : tier(tier), m(QMutex::Recursive)
 {
     timer = time(NULL);
 
@@ -35,8 +35,15 @@ TierRank::TierRank(QString tier) : tier(tier)
     }
 }
 
+TierRank::~TierRank()
+{
+    writeContents();
+}
+
 void TierRank::addUsage(const Pokemon::uniqueId &pokemon)
 {
+    QMutexLocker l(&m);
+
     if (!positions.contains(pokemon)) {
         if (!PokemonInfo::IsAesthetic(pokemon)) {
             positions.insert(pokemon, uses.size());
@@ -64,6 +71,8 @@ void TierRank::addUsage(const Pokemon::uniqueId &pokemon)
 
 void TierRank::writeContents()
 {
+    QMutexLocker l(&m);
+
     QFile f("usage_stats/raw/"+tier+"/ranks.rnk");
     f.open(QIODevice::WriteOnly);
     QByteArray data;
@@ -90,9 +99,6 @@ PokemonOnlineStatsPlugin::PokemonOnlineStatsPlugin(ServerInterface *s) :server(s
 
 PokemonOnlineStatsPlugin::~PokemonOnlineStatsPlugin()
 {
-    foreach(TierRank t, tierRanks) {
-        t.writeContents();
-    }
 }
 
 QString PokemonOnlineStatsPlugin::pluginName() const
@@ -100,28 +106,24 @@ QString PokemonOnlineStatsPlugin::pluginName() const
     return "Usage Statistics";
 }
 
-BattlePlugin * PokemonOnlineStatsPlugin::getBattlePlugin(BattleInterface*)
+BattlePlugin * PokemonOnlineStatsPlugin::getBattlePlugin(BattleInterface*b)
 {
-    return new PokemonOnlineStatsBattlePlugin(this);
+    if (b->tier().length() == 0)
+        return new PokemonOnlineStatsBattlePlugin(QSharedPointer<TierRank>());
+    if (!tierRanks.contains(b->tier())) {
+        tierRanks.insert(b->tier(), QSharedPointer<TierRank>(new TierRank(b->tier())));
+    }
+    return new PokemonOnlineStatsBattlePlugin(tierRanks[b->tier()]);
 }
 
 bool PokemonOnlineStatsPlugin::hasConfigurationWidget() const {
     return false;
 }
 
-void PokemonOnlineStatsPlugin::addUsage(QString tier, const Pokemon::uniqueId &pokemon)
-{
-    QMutexLocker lock(&m);
-    if (!tierRanks.contains(tier)) {
-        tierRanks.insert(tier, TierRank(tier));
-    }
-    tierRanks[tier].addUsage(pokemon);
-}
-
 /*************************/
 /*************************/
 
-PokemonOnlineStatsBattlePlugin::PokemonOnlineStatsBattlePlugin(PokemonOnlineStatsPlugin *master) : master(master)
+PokemonOnlineStatsBattlePlugin::PokemonOnlineStatsBattlePlugin(const QSharedPointer<TierRank> &t) : ranked_ptr(t)
 {
 }
 
@@ -166,8 +168,8 @@ int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
 
             savePokemon(b.poke(i,j), lead, dir);
 
-            if (b.rating(i) > 1000 && master) {
-                master->addUsage(tier, b.poke(i,j).num());
+            if (b.rating(i) > 1000 && ranked_ptr) {
+                ranked_ptr->addUsage(b.poke(i,j).num());
             }
         }
     }

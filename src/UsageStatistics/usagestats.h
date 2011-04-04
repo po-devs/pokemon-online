@@ -16,6 +16,7 @@ class PokeBattle;
 
 struct TierRank {
     explicit TierRank(QString tier="");
+    ~TierRank();
 
     int timer;
     QString tier;
@@ -25,6 +26,8 @@ struct TierRank {
 
     void addUsage(const Pokemon::uniqueId &pokemon);
     void writeContents();
+
+    QMutex m;
 };
 
 class POKEMONONLINESTATSPLUGINSHARED_EXPORT PokemonOnlineStatsPlugin
@@ -39,20 +42,16 @@ public:
     BattlePlugin *getBattlePlugin(BattleInterface*);
     bool hasConfigurationWidget() const;
 
-    void addUsage(QString tier, const Pokemon::uniqueId &pokemon);
-
 /* Private */
-    QHash<QString, TierRank> tierRanks;
+    QHash<QString, QSharedPointer<TierRank> > tierRanks;
     ServerInterface *server;
-
-    QMutex m;
 };
 
 class POKEMONONLINESTATSPLUGINSHARED_EXPORT PokemonOnlineStatsBattlePlugin
     : public BattlePlugin
 {
 public:
-    PokemonOnlineStatsBattlePlugin(PokemonOnlineStatsPlugin *master);
+    PokemonOnlineStatsBattlePlugin(const QSharedPointer<TierRank> &t);
 
     QHash<QString, Hook> getHooks();
 
@@ -62,8 +61,7 @@ private:
     static const int bufsize = 6*sizeof(qint32)+4*sizeof(quint16);
     /* Returns a simplified version of the pokemon on bufsize bytes */
     QByteArray data(const PokeBattle &p) const;
-
-    QPointer<PokemonOnlineStatsPlugin> master;
+    QSharedPointer<TierRank> ranked_ptr;
 };
 
 
