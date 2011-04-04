@@ -579,16 +579,16 @@ int main(int argc, char *argv[])
         fprintf(stdout, "\nDoing Tier %s\n", dir.toUtf8().data());
 
         foreach(QString file, files) {
-            if (file.length() != 3 || (file.contains('.') && file.indexOf('.') != 3)){
+            if (file.length() != 3 && !(file.contains('.') && file.indexOf('.') == 3)){
                 if (file == "ranks.rnk") {
-                    QFile f(file);
+                    QFile f(d.absoluteFilePath(file));
                     f.open(QIODevice::ReadOnly);
                     QByteArray content;
 
                     content = f.readAll();
-                    QDataStream d(&content, QIODevice::ReadOnly);
-                    d.setVersion(QDataStream::Qt_4_7);
-                    d >> ranks;
+                    QDataStream da(&content, QIODevice::ReadOnly);
+                    da.setVersion(QDataStream::Qt_4_7);
+                    da >> ranks;
                 }
                 continue;
             }
