@@ -664,7 +664,7 @@ int main(int argc, char *argv[])
             QFile out(outDir.absoluteFilePath("ranked_stats.txt"));
             out.open(QIODevice::WriteOnly);
             for(int i = 0; i < ranks.size(); i++) {
-                QString s = QString("%1 %2 %3").arg(PokemonInfo::Name(ranks[i].first)).arg(float(ranks[i].second*6)/total).arg(ranks[i].second);
+                QString s = QString("%1 %2 %3").arg(PokemonInfo::Name(ranks[i].first)).arg(float(ranks[i].second*6*100)/total).arg(ranks[i].second);
                 out.write(s.toUtf8() + "\n");
             }
         }
