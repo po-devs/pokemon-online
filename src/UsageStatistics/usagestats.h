@@ -44,6 +44,8 @@ public:
 /* Private */
     QHash<QString, TierRank> tierRanks;
     ServerInterface *server;
+
+    QMutex m;
 };
 
 class POKEMONONLINESTATSPLUGINSHARED_EXPORT PokemonOnlineStatsBattlePlugin
