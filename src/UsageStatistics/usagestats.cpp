@@ -99,6 +99,11 @@ PokemonOnlineStatsPlugin::PokemonOnlineStatsPlugin(ServerInterface *s) :server(s
 
 PokemonOnlineStatsPlugin::~PokemonOnlineStatsPlugin()
 {
+    foreach(TierRank *t, tierRanks) {
+        delete t;
+    }
+
+    tierRanks.clear();
 }
 
 QString PokemonOnlineStatsPlugin::pluginName() const
@@ -109,11 +114,11 @@ QString PokemonOnlineStatsPlugin::pluginName() const
 BattlePlugin * PokemonOnlineStatsPlugin::getBattlePlugin(BattleInterface*b)
 {
     if (b->tier().length() == 0)
-        return new PokemonOnlineStatsBattlePlugin(QSharedPointer<TierRank>());
+        return new PokemonOnlineStatsBattlePlugin(this, NULL);
     if (!tierRanks.contains(b->tier())) {
-        tierRanks.insert(b->tier(), QSharedPointer<TierRank>(new TierRank(b->tier())));
+        tierRanks.insert(b->tier(), new TierRank(b->tier()));
     }
-    return new PokemonOnlineStatsBattlePlugin(tierRanks[b->tier()]);
+    return new PokemonOnlineStatsBattlePlugin(this, tierRanks[b->tier()]);
 }
 
 bool PokemonOnlineStatsPlugin::hasConfigurationWidget() const {
@@ -123,8 +128,14 @@ bool PokemonOnlineStatsPlugin::hasConfigurationWidget() const {
 /*************************/
 /*************************/
 
-PokemonOnlineStatsBattlePlugin::PokemonOnlineStatsBattlePlugin(const QSharedPointer<TierRank> &t) : ranked_ptr(t)
+PokemonOnlineStatsBattlePlugin::PokemonOnlineStatsBattlePlugin(PokemonOnlineStatsPlugin *master, TierRank *t) : master(master), ranked_ptr(t)
 {
+    master->refCounter.ref();
+}
+
+PokemonOnlineStatsBattlePlugin::~PokemonOnlineStatsBattlePlugin()
+{
+    master->refCounter.deref();
 }
 
 QHash<QString, BattlePlugin::Hook> PokemonOnlineStatsBattlePlugin::getHooks()

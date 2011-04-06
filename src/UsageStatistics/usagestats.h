@@ -42,16 +42,23 @@ public:
     BattlePlugin *getBattlePlugin(BattleInterface*);
     bool hasConfigurationWidget() const;
 
+    bool isReadyForDeletion() const {
+        return refCounter == 0;
+    }
+
 /* Private */
-    QHash<QString, QSharedPointer<TierRank> > tierRanks;
+    QHash<QString, TierRank*> tierRanks;
     ServerInterface *server;
+
+    QAtomicInt refCounter;
 };
 
 class POKEMONONLINESTATSPLUGINSHARED_EXPORT PokemonOnlineStatsBattlePlugin
     : public BattlePlugin
 {
 public:
-    PokemonOnlineStatsBattlePlugin(const QSharedPointer<TierRank> &t);
+    PokemonOnlineStatsBattlePlugin(PokemonOnlineStatsPlugin *master, TierRank *t);
+    ~PokemonOnlineStatsBattlePlugin();
 
     QHash<QString, Hook> getHooks();
 
@@ -61,7 +68,8 @@ private:
     static const int bufsize = 6*sizeof(qint32)+4*sizeof(quint16);
     /* Returns a simplified version of the pokemon on bufsize bytes */
     QByteArray data(const PokeBattle &p) const;
-    QSharedPointer<TierRank> ranked_ptr;
+    PokemonOnlineStatsPlugin *master;
+    TierRank* ranked_ptr;
 };
 
 

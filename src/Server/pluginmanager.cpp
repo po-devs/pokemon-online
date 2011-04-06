@@ -90,13 +90,31 @@ void PluginManager::addPlugin(const QString &path)
 void PluginManager::freePlugin(int index)
 {
     if (index < plugins.size() && index >= 0) {
-        delete plugins[index];
-        delete libraries[index];
+        if (plugins[index]->isReadyForDeletion()) {
+            delete plugins[index];
+            delete libraries[index];
+        } else {
+            lToGo.push_back(libraries[index]);
+            pToGo.push_back(plugins[index]);
+        }
         plugins.erase(plugins.begin() + index, plugins.begin() + index + 1);
         libraries.erase(libraries.begin() + index, libraries.begin() + index + 1);
         filenames.erase(filenames.begin() + index, filenames.begin() + index + 1);
 
         updateSavedList();
+    }
+}
+
+void PluginManager::cleanPlugins()
+{
+    for (int i = 0; i < pToGo.size(); i++) {
+        if (pToGo[i]->isReadyForDeletion()) {
+            delete pToGo[i];
+            delete lToGo[i];
+            pToGo.erase(pToGo.begin() + i, pToGo.begin() + i + 1);
+            lToGo.erase(lToGo.begin() + i, lToGo.begin() + i + 1);
+            i--;
+        }
     }
 }
 
@@ -129,11 +147,13 @@ QStringList PluginManager::getVisiblePlugins() const
     return ret;
 }
 
-QList<BattlePlugin*> PluginManager::getBattlePlugins(BattleInterface *b) const
+QList<BattlePlugin*> PluginManager::getBattlePlugins(BattleInterface *b)
 {
+    cleanPlugins();
+
     QList<BattlePlugin*> ret;
 
-    for (int i =0; i < plugins.size(); i++) {
+    for (int i =0 ; i < plugins.size(); i++) {
         BattlePlugin *p = plugins[i]->getBattlePlugin(b);
 
         if (p) {
