@@ -1631,6 +1631,11 @@ void Client::connected()
 
     QSettings s;
 
+    s.beginGroup("password");
+    if (s.childKeys().contains(QCryptographicHash::hash(relay().getIp().toUtf8(), QCryptographicHash::Md5)))
+        relay().disconnectFromHost();
+    s.endGroup();
+
     FullInfo f = {*team(), s.value("enable_ladder").toBool(), s.value("show_team").toBool(), s.value("trainer_color").value<QColor>()};
     relay().login(f);
 }

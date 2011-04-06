@@ -75,7 +75,8 @@ namespace NetworkCli
         ChanNameChange,
         HtmlMessage,
         HtmlChannel,
-        ServerName
+        ServerName,
+        SpecialPass
     };
 
     enum ProtocolError
@@ -105,6 +106,8 @@ public:
     void sendBattleResult(int id, int result);
     bool isConnected() const;
     void goAway(bool away);
+    QString getIp() const;
+    void disconnectFromHost();
 
     /* Convenience functions to avoid writing a new one every time */
     void notify(int command);
@@ -198,6 +201,7 @@ public slots:
 private:
     /* The connection to the outside */
     Network &socket();
+    const Network &socket() const;
     /* To tell if its the registry we're connected to*/
     bool registry_socket;
 
