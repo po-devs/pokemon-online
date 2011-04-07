@@ -23,6 +23,7 @@ public:
         QSettings s("config", QSettings::IniFormat);
         databaseType = s.value("sql_driver").toInt();
         databaseSchema = s.value("sql_db_schema", "").toString();
+        doVacuum = s.value("sql_do_vacuum", true).toBool();
 
         QString driver;
         switch(databaseType)
@@ -73,7 +74,7 @@ public:
         if (!result && name=="") {
             throw (QString("Unable to establish a database connection.") + db.lastError().text());
         } else if (name == "") {
-            if (databaseType != MySQL) db.exec("vacuum");
+            if ((databaseType != MySQL) && (doVacuum)) db.exec("vacuum");
             throw (QString("Connection to the database established!"));
         }
     }
@@ -87,6 +88,7 @@ public:
     static int databaseType;
     static QString databaseSchema;
     static QMutex mutex;
+    static bool doVacuum;
 };
 
 #endif // SQL_H

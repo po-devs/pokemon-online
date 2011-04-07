@@ -55,6 +55,10 @@ SQLConfigWindow::SQLConfigWindow()
     port->setValue(s.value("sql_db_port").toInt());
     v->addLayout(new QSideBySide(new QLabel(tr("Port: ")), port));
 
+    doVacuum = new QCheckBox("Do VACUUM on start if possible (recommended).");
+    doVacuum->setChecked(s.value("sql_do_vacuum", true).toBool());
+    v->addWidget(doVacuum);
+
     QPushButton *exporting = new QPushButton(tr("&Export"));
     connect(exporting, SIGNAL(clicked()), SLOT(exportDatabase()));
 
@@ -90,6 +94,7 @@ void SQLConfigWindow::apply()
     s.setValue("sql_db_pass", pass->text());
     s.setValue("sql_db_host", host->text());
     s.setValue("sql_db_schema", schema->text());
+    s.setValue("sql_do_vacuum", doVacuum->isChecked());
 }
 
 void SQLConfigWindow::exportDatabase()
