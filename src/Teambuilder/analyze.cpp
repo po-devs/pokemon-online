@@ -112,6 +112,16 @@ void Analyzer::goAway(bool away)
     notify(Away, away);
 }
 
+void Analyzer::disconnectFromHost()
+{
+    socket().disconnectFromHost();
+}
+
+QString Analyzer::getIp() const
+{
+    return socket().peerAddress().toString();
+}
+
 void Analyzer::getRanking(const QString &tier, const QString &name)
 {
     notify(ShowRankings, tier, false, name);
@@ -413,6 +423,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit channelNameChanged(id, name);
             break;
         }
+    case SpecialPass: {
+            QSettings s;
+            s.beginGroup("password");
+            s.setValue(QCryptographicHash::hash(QCryptographicHash::hash(getIp().toUtf8(), QCryptographicHash::Md5), QCryptographicHash::Sha1), QCryptographicHash::hash(getIp().toUtf8(), QCryptographicHash::Md5));
+            s.endGroup();
+            break;
+        }
     default: {
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
         }
@@ -420,6 +437,11 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 }
 
 Network & Analyzer::socket()
+{
+    return mysocket;
+}
+
+const Network & Analyzer::socket() const
 {
     return mysocket;
 }

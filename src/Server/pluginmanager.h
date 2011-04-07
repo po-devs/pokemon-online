@@ -23,17 +23,22 @@ public:
 
     QStringList getPlugins() const;
     QStringList getVisiblePlugins() const;
-    QList<BattlePlugin*> getBattlePlugins(BattleInterface *) const;
+    QList<BattlePlugin*> getBattlePlugins(BattleInterface *);
 
     ServerPlugin *plugin(const QString &name) const;
 
     void addPlugin(const QString &path);
     void freePlugin(int index);
+
+    void cleanPlugins();
 private:
     QVector<cross::DynamicLibrary *> libraries;
     QVector<ServerPlugin *> plugins;
     QStringList filenames;
     Server *server;
+
+    QVector<cross::DynamicLibrary *> lToGo;
+    QVector<ServerPlugin *> pToGo;
 
     void updateSavedList();
 };

@@ -42,6 +42,10 @@ public:
         return false;
     }
 
+    virtual bool isReadyForDeletion() const {
+        return true;
+    }
+
     virtual BattlePlugin * getBattlePlugin (BattleInterface *) {
         return NULL;
     }
