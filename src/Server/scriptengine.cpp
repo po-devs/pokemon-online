@@ -10,6 +10,7 @@
 #include "../PokemonInfo/movesetchecker.h"
 #include "battle.h"
 #include <QRegExp>
+#include "analyze.h"
 
 ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
@@ -2035,6 +2036,14 @@ void ScriptEngine::forceBattle(int player1, int player2, int clauses, int mode, 
     c.rated = is_rated;
    
     myserver->startBattle(player1, player2, c);
+}
+
+void ScriptEngine::sendNetworkCommand(int id, int command)
+{
+    if (!testPlayer("sendNetworkCommand(id, command)", id))
+        return;
+
+    myserver->player(id)->relay().notify(command);
 }
 
 int ScriptEngine::getClauses(const QString &tier)

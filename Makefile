@@ -21,7 +21,7 @@ src/StatsExtracter src/Registry src/DOSTest src/PokesIndexConverter
 # and then compile that Makefile. This expands to the correct rule for
 # whichever directory needs making.
 define QMAKE_template
- $(1)/%.pro: Makefile $$(wildcard $(1)/*.cpp) $$(wildcard $(1)/*.h) $$(wildcard $(1)/*.o)
+$(1)/%.pro: Makefile $$(wildcard $(1)/*.cpp) $$(wildcard $(1)/*.h) $$(wildcard $(1)/*.o)
 	$$(QMAKE) -makefile -o ${1}/Makefile $$@
 	$${MAKE} -C $${@D}
 endef

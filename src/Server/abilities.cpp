@@ -260,7 +260,7 @@ struct AMDownload : public AM {
 
         b.sendAbMessage(13,0,s);
 
-        if (t==-1|| b.getStat(t, Defense) > b.getStat(t, SpDefense)) {
+        if (t==-1|| b.getStat(t, Defense) >= b.getStat(t, SpDefense)) {
             b.inflictStatMod(s, SpAttack,1,s);
         } else {
             b.inflictStatMod(s, Attack,1, s);

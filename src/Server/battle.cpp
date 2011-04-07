@@ -2629,10 +2629,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     heatOfAttack() = false;
 
-    if (!specialOccurence && attack != Move::Struggle) {
-        battleMemory()["LastMoveSuccesfullyUsed"] = attack;
-        pokeMemory(player)["LastMoveSuccessfullyUsed"] = attack;
-        pokeMemory(player)["LastMoveSuccessfullyUsedTurn"] = turn();
+    /* Copycat memory */
+    if ((!specialOccurence||gen() >= 5) && attack != Move::Struggle) {
         battleMemory()["LastMoveSuccessfullyUsed"] = attack;
     }
 
