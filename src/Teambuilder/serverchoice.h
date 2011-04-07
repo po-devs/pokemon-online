@@ -15,7 +15,7 @@ class ServerChoice : public QWidget, public CentralWidgetInterface
 {
     Q_OBJECT
 public:
-    ServerChoice();
+    ServerChoice(const QString &nick);
     ~ServerChoice();
 
     QSize defaultSize() {
@@ -25,7 +25,7 @@ public:
 public slots:
     void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port);
 signals:
-    void serverChosen(const QString &ip, const quint16 port);
+    void serverChosen(const QString &ip, const quint16 port, const QString &nick);
     void rejected();
 private slots:
     void showDescription(int row);
@@ -35,6 +35,7 @@ private slots:
 private:
     QCompactTable *mylist;
     QLineEdit *myAdvServer;
+    QLineEdit *myName;
     QTextBrowser *myDesc;
     Analyzer *registry_connection;
 

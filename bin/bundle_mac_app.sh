@@ -80,6 +80,12 @@ install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/..
 install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui $pokemonlib
 install_name_tool -change QtXml.framework/Versions/4/QtXml @executable_path/../Frameworks/QtXml.framework/Versions/4/QtXml $pokemonlib
 install_name_tool -change $utilities @executable_path/../Frameworks/$utilities $pokemonlib
+path=$(otool -L $pokemonlib | grep "/$libzip" | awk '{print $1}')
+if [ -n "$path" ]; then
+   install_name_tool -change $path @executable_path/../Frameworks/$libzip $pokemonlib
+else
+   echo "Error! Couldn't link to static libzip!"
+fi
 
 echo utilities..
 if [ ! -e $utilities_long ]; then
