@@ -3,7 +3,7 @@
 #include "../Utilities/functions.h"
 #include "analyze.h"
 
-ServerChoice::ServerChoice()
+ServerChoice::ServerChoice(const QString &nick)
 {
     registry_connection = new Analyzer(true);
     registry_connection->connectTo("pokemon-online.dynalias.net", 5081);
@@ -35,6 +35,9 @@ ServerChoice::ServerChoice()
     myDesc->setOpenExternalLinks(true);
     myDesc->setFixedHeight(100);
     l->addWidget(new QEntitled("Server Description", myDesc));
+
+    myName = new QLineEdit(nick);
+    l->addWidget(new QEntitled("Trainer Name", myName));
 
     QSettings settings;
     myAdvServer = new QLineEdit(settings.value("default_server").toString());
@@ -69,10 +72,10 @@ void ServerChoice::regServerChosen(int row)
     if(ip.contains(":")){
         quint16 port = ip.section(":",1,1).toInt(); //Gets port from IP:PORT
         QString fIp = ip.section(":",0,0);  //Gets IP from IP:PORT
-        emit serverChosen(fIp,port);
+        emit serverChosen(fIp,port, myName->text());
     }
     else
-        emit serverChosen(ip,5080);
+        emit serverChosen(ip,5080, myName->text());
 }
 
 void ServerChoice::advServerChosen()
@@ -84,10 +87,10 @@ void ServerChoice::advServerChosen()
     if(ip.contains(":")){
         quint16 port = ip.section(":",1,1).toInt(); //Gets port from IP:PORT
         QString fIp = ip.section(":",0,0);  //Gets IP from IP:PORT
-        emit serverChosen(fIp,port);
+        emit serverChosen(fIp,port, myName->text());
     }
     else
-        emit serverChosen(ip,5080);
+        emit serverChosen(ip,5080, myName->text());
 
 }
 

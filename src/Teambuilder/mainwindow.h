@@ -33,7 +33,7 @@ public slots:
     void launchMenu();
     void launchCredits();
     void launchTeamBuilder();
-    void goOnline(const QString &url, const quint16 port);
+    void goOnline(const QString &url, const quint16 port, const QString &name);
     void launchServerChoice();
     void changeLanguage();
     void updateMenuBar();
