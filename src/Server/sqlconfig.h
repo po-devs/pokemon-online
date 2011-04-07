@@ -17,6 +17,7 @@ private:
     QComboBox *b;
     QLineEdit *host, *name, *user, *pass, *schema;
     QSpinBox *port;
+    QCheckBox *doVacuum;
 };
 
 #endif // SQLCONFIG_H
