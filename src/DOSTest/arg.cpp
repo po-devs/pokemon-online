@@ -32,7 +32,7 @@ IOManager::IOManager()
     connect(a, SIGNAL(connected()), SLOT(connectionEstablished()));
     connect(a, SIGNAL(disconnected()), SLOT(goodToDelete()));
     on = true;
-    a->connectTo("localhost", 5080);
+    a->connectTo("nixeagle.net", 5777);
 }
 
 IOManager::~IOManager()
@@ -59,7 +59,7 @@ void IOManager::connectionEstablished()
     qDebug() << "Team set";
 
     QString nick;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         nick.append( char(( (rand()+clock()) %2) ? 'A' + ((rand()+clock()) % 26) : 'a' + ( (rand()+clock()) % 26)));
     }
 
