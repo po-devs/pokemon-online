@@ -9,7 +9,9 @@ DockAdvanced::DockAdvanced(TB_TeamBody * builder): m_builder(builder)
 {
     setAttribute(Qt::WA_DeleteOnClose);
 
+#if not defined(Q_OS_MACX)
     setWindowIcon(QIcon("db/icon.png"));
+#endif
     setWindowTitle(tr("Advanced Options"));
 
     for(int i= 0; i<6;i++)

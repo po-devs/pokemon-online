@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     freopen("stdout.txt", "a", stderr);
     qInstallMsgHandler(myMessageOutput);
 #endif
-#ifdef Q_OS_MACX
+#if defined(Q_OS_MACX)
     // On Mac, switch working directory to resources folder
     CFURLRef pluginRef = CFBundleCopyBundleURL(CFBundleGetMainBundle());
     CFStringRef macPath = CFURLCopyFileSystemPath(pluginRef, kCFURLPOSIXPathStyle);
@@ -81,7 +81,9 @@ int main(int argc, char *argv[])
         a.installTranslator(&translator);
 
         /* icon ;) */
+#if not defined(Q_OS_MACX)
 	a.setWindowIcon(QIcon("db/icon.png"));
+#endif
 
         MainEngine w;
 
