@@ -30,7 +30,7 @@ fi
 [ -d $toDir/db ] && echo rm -r $toDir/db && rm -r $toDir/db
 [ -d $toDir/Themes ] && echo rm -r $toDir/db && rm -r $toDir/Themes
 
-for file in *.txt *.qm Music db database Themes
+for file in languages.txt *.qm Music db database Themes
 do
 	echo cp -r $file $toDir
 	cp -r $file $toDir
@@ -74,15 +74,15 @@ if [ ! -e $pokemonlib_long ]; then
     exit 1
 fi
 cp $pokemonlib_long $fworks/
-ln -sf $fworks/$pokemonlib_long $pokemonlib
-install_name_tool -id @executable_path/../Frameworks/$pokemonlib $pokemonlib
-install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore $pokemonlib
-install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui $pokemonlib
-install_name_tool -change QtXml.framework/Versions/4/QtXml @executable_path/../Frameworks/QtXml.framework/Versions/4/QtXml $pokemonlib
-install_name_tool -change $utilities @executable_path/../Frameworks/$utilities $pokemonlib
+ln -sf $pokemonlib_long $fworks/$pokemonlib
+install_name_tool -id @executable_path/../Frameworks/$pokemonlib $fworks/$pokemonlib
+install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore $fworks/$pokemonlib
+install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui $fworks/$pokemonlib
+install_name_tool -change QtXml.framework/Versions/4/QtXml @executable_path/../Frameworks/QtXml.framework/Versions/4/QtXml $fworks/$pokemonlib
+install_name_tool -change $utilities @executable_path/../Frameworks/$utilities $fworks/$pokemonlib
 path=$(otool -L $pokemonlib | grep "/$libzip" | awk '{print $1}')
 if [ -n "$path" ]; then
-   install_name_tool -change $path @executable_path/../Frameworks/$libzip $pokemonlib
+   install_name_tool -change $path @executable_path/../Frameworks/$libzip $fworks/$pokemonlib
 else
    echo "Error! Couldn't link to static libzip!"
 fi
@@ -93,10 +93,10 @@ if [ ! -e $utilities_long ]; then
     exit 1
 fi
 cp $utilities_long $fworks
-ln -sf $fworks/$utilities_long $utilities
-install_name_tool -id @executable_path/../Frameworks/$utilities $utilities
-install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore $utilities
-install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui $utilities
+ln -sf $utilities_long $fworks/$utilities
+install_name_tool -id @executable_path/../Frameworks/$utilities $fworks/$utilities
+install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore $fworks/$utilities
+install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui $fworks/$utilities
 
 if [ $app == Server.app -a -e serverplugins ]
 then
@@ -122,4 +122,6 @@ fi
 if [ -d Server.app ]
 then
     bundle_mac_app Server.app
+    rm Server.app/Contents/Resources/members.txt
+    touch Server.app/Contents/Resources/members.txt
 fi
