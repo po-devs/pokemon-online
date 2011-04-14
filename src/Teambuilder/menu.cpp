@@ -32,7 +32,6 @@ TB_Menu::TB_Menu()
 QMenuBar * TB_Menu::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();
-    menuBar->setStyleSheet("QMenuBar{background-image:url(" + Theme::path("menu/menubackground.png") + ";}");
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
     menuFichier->addAction(tr("&Load Team"),w,SLOT(loadTeamDialog()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
