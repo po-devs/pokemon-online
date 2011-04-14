@@ -982,6 +982,7 @@ void Player::hashReceived(const QString &_hash) {
             loginSuccess();
         } else {
             emit info(id(), tr("authentication failed for %1").arg(waiting_name));
+            sendMessage("Wrong password for this name. If you don't know the password, please change your name.");
             kick();
             return;
         }
