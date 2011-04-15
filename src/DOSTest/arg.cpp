@@ -32,7 +32,7 @@ IOManager::IOManager()
     connect(a, SIGNAL(connected()), SLOT(connectionEstablished()));
     connect(a, SIGNAL(disconnected()), SLOT(goodToDelete()));
     on = true;
-    a->connectTo("nixeagle.net", 5777);
+    a->connectTo("nixeagle.net", 5888);
 }
 
 IOManager::~IOManager()

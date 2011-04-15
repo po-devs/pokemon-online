@@ -4358,7 +4358,7 @@ void BattleSituation::testWin()
         if (c1 + c2 == 0) {
             if ((clauses() & ChallengeInfo::SelfKO) && selfKoer() != -1) {
                 notifyClause(ChallengeInfo::SelfKO);
-                endBattle(Win, opponent(selfKoer()), selfKoer());
+                endBattle(Win, opponent(player(selfKoer())), player(selfKoer()));
             }
             endBattle(Tie, Player1, Player2);
         } else if (c1 == 0) {
