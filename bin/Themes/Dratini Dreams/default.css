@@ -6,7 +6,7 @@
 
 Client QTextEdit {
 	font-family: Tahoma;
-	size: 8px
+	/* font-size: 8px */
 }
 
 Client QTreeWidget {

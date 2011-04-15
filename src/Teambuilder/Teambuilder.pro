@@ -83,3 +83,4 @@ RC_FILE = myapp.rc
 RESOURCES += 
 macx:LIBS += -framework \
     CoreFoundation
+macx:ICON = pokemononline.icns
