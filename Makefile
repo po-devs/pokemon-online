@@ -1,5 +1,10 @@
-# Default qmake binary. Some systems have qmake-qt4 and qmake-qt3 instead.
-QMAKE=qmake
+# attempt autodetection of which qmake to use.
+ifeq ($(shell uname),darwin)
+QMAKE=qmake -spec macx-g++	# For mac OSX
+else
+QMAKE=qmake 			# For everyone else.
+endif
+
 # Default make binary. Some systems have nmake or gmake (some bsds)
 MAKE=make
 
