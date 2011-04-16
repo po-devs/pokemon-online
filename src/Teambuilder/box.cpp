@@ -638,7 +638,7 @@ QString PokemonBox::getBoxPath()
               + "/Dreambelievers/Pokemon Online/Boxes";
 #elif defined(Q_OS_WIN32)
     boxpath = QProcessEnvironment::systemEnvironment().value("APPDATA", QDir::homePath())
-              + "/Dreambelievers/Pokemon Online/Boxes";
+              + "/Pokemon Online/Boxes";
 #else
     boxpath = "Boxes";
 #endif
