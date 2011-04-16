@@ -5,6 +5,7 @@
 ScriptDB::ScriptDB(Server *s) : myserver(s)
 {
     rxSafeNames.setPattern("[a-z_0-9]+");
+    engine = myserver->getEngine();
     por_proto_qobject = new PORecordPrototype();
     por_proto = engine->newQObject(por_proto_qobject);
 }

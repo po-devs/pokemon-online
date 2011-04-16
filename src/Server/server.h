@@ -81,6 +81,8 @@ public:
     const QString &servName() {
         return serverName;
     }
+    
+    ScriptEngine* getEngine() { return myengine; }
 
 signals:
     void chatmessage(const QString &name);
