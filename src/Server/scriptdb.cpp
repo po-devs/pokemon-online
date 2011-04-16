@@ -5,6 +5,12 @@
 ScriptDB::ScriptDB(Server *s) : myserver(s)
 {
     rxSafeNames.setPattern("[a-z_0-9]+");
+    por_proto_qobject = new PORecordPrototype();
+    por_proto = engine->newQObject(por_proto_qobject);
+}
+
+ScriptDB::~ScriptDB() {
+    delete por_proto_qobject;
 }
 
 // Properties should be a JS hash. This function will iterate over all properties
@@ -117,4 +123,9 @@ void ScriptDB::insert(const QString &tableName, const QScriptValue &properties)
         myserver->print(QString("db.insert: failed. %1").arg(q.lastError().text()
             + "\nQuery string was: ") + queryString);
     }
+}
+
+void PORecordPrototype::save()
+{
+     // thisObject().blahblah
 }
