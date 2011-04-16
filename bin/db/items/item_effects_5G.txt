@@ -129,7 +129,7 @@
 
 
 
-8-380|381_10_3_4#Soul Dew
+8-380/381_10_3_4#Soul Dew
 10-7#Spell Tag
 
 
@@ -198,7 +198,7 @@
 29-10|10-10#Splash Plate 
 29-7|10-7#Spooky Plate 
 29-5|10-5#Stone Plate 
-8-104|105_20_1#Thick Club
+8-104/105_20_1#Thick Club
 29-3|10-3#Toxic Plate 
 29-12|10-12#Zap Plate
 
@@ -311,4 +311,4 @@
 
 
 
-
+#
