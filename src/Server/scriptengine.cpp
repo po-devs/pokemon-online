@@ -28,7 +28,7 @@ ScriptEngine::ScriptEngine(Server *s) {
         QScriptValue::ReadOnly | QScriptValue::Undeletable
     );
     // DB object.
-    myScriptDB = new ScriptDB(myserver);
+    myScriptDB = new ScriptDB(myserver, &myengine);
     QScriptValue sysdb = myengine.newQObject(myScriptDB);
     sys.setProperty("db", sysdb, QScriptValue::ReadOnly | QScriptValue::Undeletable);
 
