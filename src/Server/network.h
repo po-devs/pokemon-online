@@ -101,6 +101,7 @@ void Network<S>::close() {
         connect(sock, SIGNAL(disconnected()), sock, SLOT(deleteLater()));
         connect(sock, SIGNAL(disconnected()), this, SIGNAL(disconnected()));
         sock->disconnectFromHost();
+        QTimer::singleShot(500, sock, SLOT(deleteLater()));
     }
 }
 
