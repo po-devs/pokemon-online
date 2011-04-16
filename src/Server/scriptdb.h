@@ -14,6 +14,7 @@ class PORecordPrototype : public QObject, public QScriptable
 Q_OBJECT
 public:
     explicit PORecordPrototype(QObject *parent = 0) : QObject(parent) {};
+    ~PORecordPrototype() { delete por_proto_qobject; };
     Q_INVOKABLE void save();
 };
 
