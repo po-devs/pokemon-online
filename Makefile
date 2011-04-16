@@ -9,6 +9,8 @@ all: client server
 	@echo "Read instructions in HowToBuild.txt"
 	@echo ${install-message}
 
+bin/Server: pokemon-info src/Server/Server.pro ;
+
 %.cpp: ;
 %.o: ;
 %.h: ;
@@ -39,7 +41,7 @@ plugins: battlelogs usagestats ;
 
 client: pokemon-info src/Teambuilder/Teambuilder.pro ;
 
-server:	pokemon-info src/Server/Server.pro ;
+server:	bin/Server ;
 
 install:
 	@echo ${install-message}
