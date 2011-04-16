@@ -2,10 +2,9 @@
 #include "scriptdb.h"
 #include "sql.h"
 
-ScriptDB::ScriptDB(Server *s) : myserver(s)
+ScriptDB::ScriptDB(Server *s, QScriptEngine *e) : myserver(s), engine(e)
 {
     rxSafeNames.setPattern("[a-z_0-9]+");
-    engine = myserver->getEngine();
     por_proto_qobject = new PORecordPrototype();
     por_proto = engine->newQObject(por_proto_qobject);
 }

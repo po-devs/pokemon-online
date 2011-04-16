@@ -21,7 +21,7 @@ class ScriptDB : public QObject
 {
 Q_OBJECT
 public:
-    explicit ScriptDB(Server *s);
+    explicit ScriptDB(Server *s, QScriptEngine *e);
     ~ScriptDB();
     Q_INVOKABLE void ensureTable(const QString &tableName, const QScriptValue &properties);
     Q_INVOKABLE void insert(const QString &tableName, const QScriptValue &properties);
