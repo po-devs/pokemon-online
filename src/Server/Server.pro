@@ -34,7 +34,6 @@ SOURCES += main.cpp \
     tiertree.cpp \
     tiermachine.cpp \
     sessiondatafactory.cpp \
-    sfmlsocket.cpp \
     scriptdb.cpp \
     battlepluginstruct.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
@@ -110,6 +109,5 @@ CONFIG(nogui) {
 }
 CONFIG(sfml) { 
     DEFINES += SFML_SOCKETS
-    LIBS += -lsfml-network \
-        -lsfml-system
+    SOURCES += sfmlsocket.cpp
 }

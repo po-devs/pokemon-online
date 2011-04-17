@@ -2,7 +2,12 @@
 #define NETWORK_H
 
 #include <QtNetwork>
+
+#ifdef SFML_SOCKETS
 #include "sfmlsocket.h"
+#else
+typedef QTcpSocket GenericSocket;
+#endif
 
 class GenericNetwork: public QObject
 {
