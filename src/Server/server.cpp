@@ -71,9 +71,8 @@ void Server::start(){
         myservers.append(new QTcpServer());
     }
 #else
-    manager.Launch();
     for (int i = 0; i < serverPorts.size(); ++i) {
-        myservers.append(manager.createSocket());
+        myservers.append(manager.createServerSocket());
     }
 #endif
     pluginManager = new PluginManager(this);

@@ -60,7 +60,7 @@ bool Network<GenericSocket>::isConnected() const
 #ifndef SFML_SOCKETS
         return socket()->state() != QAbstractSocket::UnconnectedState;
 #else
-        return socket()->sock().IsValid();
+        return socket()->sock().is_open();
 #endif
     }
     else
