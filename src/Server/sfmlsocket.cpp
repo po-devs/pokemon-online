@@ -1,4 +1,5 @@
 #include <boost/bind.hpp>
+#include <boost/thread.hpp>
 #include "sfmlsocket.h"
 
 using boost::asio::ip::tcp;
@@ -17,10 +18,12 @@ SocketManager::~SocketManager() {
 
 void SocketManager::run() {
     while (!finished) {
+        io_service.reset();
+
         boost::system::error_code ec;
-        io_service.run_one(ec);
+        io_service.run(ec);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(2));
     }
-    ::exit(0);
 
     finished = false;
 }
@@ -187,7 +190,6 @@ void SocketSQ::writeHandler(const boost::system::error_code& ec, std::size_t byt
 
 void SocketSQ::acceptHandler(const boost::system::error_code& ec)
 {
-    ::exit(0);
     if (ec)
         return;
 

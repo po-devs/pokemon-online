@@ -73,7 +73,6 @@ void Server::start(){
     for (int i = 0; i < serverPorts.size(); ++i) {
         myservers.append(manager.createServerSocket());
     }
-    manager.start();
 #endif
     pluginManager = new PluginManager(this);
 
@@ -173,6 +172,9 @@ void Server::start(){
         connect(server(i), SIGNAL(active()), mymapper, SLOT(map()));
 #endif
     }
+#ifdef SFML_SOCKETS
+    manager.start();
+#endif
     connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(dosKick(int)));
     connect(AntiDos::obj(), SIGNAL(ban(QString)), SLOT(dosBan(QString)));
 

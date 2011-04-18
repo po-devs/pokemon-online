@@ -110,5 +110,5 @@ CONFIG(nogui) {
 CONFIG(sfml) { 
     DEFINES += SFML_SOCKETS
     SOURCES += sfmlsocket.cpp
-    LIBS += -lboost_system-mt
+    LIBS += -lboost_system-mt -lboost_date_time -lboost_thread
 }

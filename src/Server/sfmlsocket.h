@@ -21,7 +21,7 @@ public:
     SocketSQ * createServerSocket();
 
     boost::asio::io_service io_service;
-protected:
+public:
     void run();
 private slots:
 private:
