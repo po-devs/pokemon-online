@@ -50,6 +50,8 @@ void SocketManager::run() {
         }
     }
 
+    ::exit(0);
+
     finished = false;
 }
 
@@ -75,6 +77,11 @@ SocketSQ* SocketManager::createServerSocket() {
 
 SocketSQ::SocketSQ(SocketManager *manager, tcp::socket *s) : mysock(s), manager(manager), m(QMutex::Recursive), bufCounter(0), notifiedDced(false)
 {
+    if (!s) {
+        int *x=NULL;
+        *x=1;
+    }
+
     isServer = false;
     incoming = NULL;
     freeConnection = true;
@@ -83,6 +90,8 @@ SocketSQ::SocketSQ(SocketManager *manager, tcp::socket *s) : mysock(s), manager(
 
     /* Starts the receiving loop */
     readHandler(boost::system::error_code(), 0);
+
+    qDebug() << "Created " << this;
 }
 
 SocketSQ::SocketSQ(SocketManager *manager, tcp::acceptor *s) : myserver(s), manager(manager), bufCounter(0), notifiedDced(false)
@@ -103,26 +112,31 @@ SocketSQ::~SocketSQ() {
         delete incoming;
     } else {
         try {
+            qDebug() << "Canceling " << this;
             mysock->cancel();
-        } catch (...) {
+        } catch (const std::exception &e) {
+            qDebug() << "cancel exception: " << e.what();
+            throw 1;
         }
         delete mysock;
     }
+    qDebug() << "Deleted " << this;
 }
 
 bool SocketSQ::listen(quint16 port)
 {
     server().open(tcp::v4());
-    server().bind(tcp::endpoint(tcp::v4(), port));
+    try {
+        server().bind(tcp::endpoint(tcp::v4(), port));
+    }
+    catch(...) {
+           return false;
+    }
     boost::system::error_code ec;
 
     bool ret;
-    try {
-        ret = !server().listen(boost::asio::socket_base::max_connections, ec);
-    } catch(...) {
-        return false;
-    }
 
+    ret = !server().listen(boost::asio::socket_base::max_connections, ec);
     server().async_accept(*incoming, boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
 
     return ret;
@@ -141,11 +155,10 @@ SocketSQ* SocketSQ::nextPendingConnection()
         return NULL;
     SocketSQ *ret = new SocketSQ(manager, incoming);
     incoming = new tcp::socket(manager->io_service);
+    freeConnection = true;
     server().async_accept(*incoming, boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
 
     ret->myip = QString::fromStdString(endpoint.address().to_string());
-
-    freeConnection = true;
 
     return ret;
 }
@@ -188,7 +201,10 @@ int SocketSQ::bytesAvailable()
 void SocketSQ::readHandler(const boost::system::error_code& ec, std::size_t bytes_transferred)
 {
     if (ec) {
-        emit disconnected();
+        if (!notifiedDced) {
+            notifiedDced = true;
+            emit disconnected();
+        }
         return;
     }
 
@@ -205,27 +221,32 @@ void SocketSQ::readHandler(const boost::system::error_code& ec, std::size_t byte
 void SocketSQ::writeHandler(const boost::system::error_code& ec, std::size_t bytes_transferred)
 {
     if (ec) {
-        emit disconnected();;
+        if (!notifiedDced) {
+            notifiedDced = true;
+            emit disconnected();
+        }
         return;
     }
 
-    (void) bytes_transferred;
-
     QMutexLocker l(&m);
-    sending = toSend;
+
+    sending = sending.right(sending.size() - bytes_transferred) + toSend;
     toSend.clear();
 
     if (sending.size() == 0)
         return;
 
-    boost::asio::async_write(sock(), boost::asio::buffer(sending.data(), sending.size()),
+    sock().async_send(boost::asio::buffer(sending.data(), sending.size()),
                       boost::bind(&SocketSQ::writeHandler, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
 void SocketSQ::acceptHandler(const boost::system::error_code& ec)
 {
-    if (ec)
+    if (ec) {
+        boost::asio::detail::throw_error(ec);
+        server().async_accept(*incoming, boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
         return;
+    }
 
     freeConnection = false;
     emit active();
@@ -259,11 +280,14 @@ QByteArray SocketSQ::read(int length)
 
 void SocketSQ::putChar(char c)
 {
+    QMutexLocker l(&m);
     toSend.append(c);
 }
 
 void SocketSQ::write(const QByteArray &b)
 {
+    qDebug() << "Sending data with " << this;
+    QMutexLocker l(&m);
     if (toSend.length() == 0)
         toSend = b;
     else

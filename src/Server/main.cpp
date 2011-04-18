@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     freopen("logs.txt", "a", stderr);
     qInstallMsgHandler(myMessageOutput);
 #else
-    set_terminate( stacktrace );
+    //set_terminate( stacktrace );
 #endif
 
     /* Names to use later for QSettings */
@@ -174,15 +174,15 @@ int main(int argc, char *argv[])
 #endif
         qDebug() << "Returned with status " << i;
 
-    } catch (const std::exception &e) {
-        qDebug() << "Caught runtime " << e.what();
     } catch (const QString &s) {
         qDebug() << "Caught string " << s;
     } catch (const char* s) {
         qDebug() << "Caught const char*  " << s;
+    } /*catch (const std::exception &e) {
+        qDebug() << "Caught runtime " << e.what();
     } catch (...) {
         qDebug() << "Caught Exception.";
-    }
+    }*/
 
     return 0;
 }
