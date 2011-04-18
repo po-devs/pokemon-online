@@ -87,15 +87,15 @@ int main(int argc, char *argv[])
 
         MainEngine w;
 
-	return a.exec();
-    }  catch (const std::exception &e) {
+        return a.exec();
+    }  /*catch (const std::exception &e) {
         qDebug() << "Caught runtime " << e.what();
     } catch (const QString &s) {
         qDebug() << "Caught string " << s;
-    } catch (const char* s) {
+    } */catch (const char* s) {
         qDebug() << "Caught const char*  " << s;
-    } catch (...) {
+    } /*catch (...) {
         qDebug() << "Caught Exception.";
-    }
+    }*/
     return 0;
 }

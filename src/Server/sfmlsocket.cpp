@@ -21,11 +21,30 @@ void SocketManager::run() {
         io_service.reset();
 
         boost::system::error_code ec;
-        io_service.run(ec);
-        boost::this_thread::sleep(boost::posix_time::milliseconds(2));
+
+        io_service.run_one(ec);
+        io_service.run_one(ec);
+        io_service.run_one(ec);
+        io_service.run_one(ec);
+        io_service.run_one(ec);
+
+        QMutexLocker l(&m);
+
+        if (toDelete.size() > 0) {
+            foreach(QObject *s, toDelete) {
+                delete s;
+            }
+            toDelete.clear();
+        }
     }
 
     finished = false;
+}
+
+void SocketManager::deleteSocket(QObject *sock)
+{
+    QMutexLocker l(&m);
+    toDelete.push_back(sock);
 }
 
 SocketSQ* SocketManager::createSocket() {
@@ -86,12 +105,7 @@ bool SocketSQ::listen(quint16 port)
 
 void SocketSQ::deleteLater()
 {
-    if (!notifiedDced) {
-        notifiedDced = true;
-        emit disconnected();
-    }
-
-    QObject::deleteLater();
+    manager->deleteSocket(this);
 }
 
 SocketSQ* SocketSQ::nextPendingConnection()
@@ -136,11 +150,6 @@ const tcp::acceptor &SocketSQ::server() const
     return *myserver;
 }
 
-void SocketSQ::delayDeath()
-{
-    QObject::deleteLater();
-}
-
 int SocketSQ::bytesAvailable()
 {
     QMutexLocker l(&m);
@@ -154,7 +163,7 @@ int SocketSQ::bytesAvailable()
 void SocketSQ::readHandler(const boost::system::error_code& ec, std::size_t bytes_transferred)
 {
     if (ec) {
-        deleteLater();
+        emit disconnected();
         return;
     }
 
@@ -171,7 +180,7 @@ void SocketSQ::readHandler(const boost::system::error_code& ec, std::size_t byte
 void SocketSQ::writeHandler(const boost::system::error_code& ec, std::size_t bytes_transferred)
 {
     if (ec) {
-        deleteLater();
+        emit disconnected();;
         return;
     }
 
