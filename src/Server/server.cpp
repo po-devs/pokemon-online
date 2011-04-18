@@ -73,7 +73,7 @@ void Server::start(){
     for (int i = 0; i < serverPorts.size(); ++i) {
         myservers.append(manager.createServerSocket());
     }
-    //manager.start();
+    manager.start();
 #endif
     pluginManager = new PluginManager(this);
 

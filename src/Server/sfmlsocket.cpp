@@ -20,6 +20,7 @@ void SocketManager::run() {
         boost::system::error_code ec;
         io_service.run_one(ec);
     }
+    ::exit(0);
 
     finished = false;
 }
@@ -49,25 +50,35 @@ SocketSQ::SocketSQ(SocketManager *manager, tcp::acceptor *s) : myserver(s), mana
     freeConnection = true;
 
     incoming = new tcp::socket(manager->io_service);
-    server().async_accept(*incoming, endpoint,
-                          boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
 }
 
 SocketSQ::~SocketSQ() {
     if (isServer) {
+        myserver->cancel();
         delete myserver;
         delete incoming;
     } else {
+        mysock->cancel();
         delete mysock;
     }
 }
 
 bool SocketSQ::listen(quint16 port)
 {
-    server().bind(tcp::endpoint(boost::asio::ip::tcp::v4(), port));
+    server().open(tcp::v4());
+    server().bind(tcp::endpoint(tcp::v4(), port));
     boost::system::error_code ec;
 
-    return server().listen(boost::asio::socket_base::max_connections, ec);
+    bool ret;
+    try {
+        ret = !server().listen(boost::asio::socket_base::max_connections, ec);
+    } catch(...) {
+        return false;
+    }
+
+    server().async_accept(*incoming, boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
+
+    return ret;
 }
 
 void SocketSQ::deleteLater()
@@ -88,8 +99,7 @@ SocketSQ* SocketSQ::nextPendingConnection()
         return NULL;
     SocketSQ *ret = new SocketSQ(manager, incoming);
     incoming = new tcp::socket(manager->io_service);
-    server().async_accept(*incoming, endpoint,
-                          boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
+    server().async_accept(*incoming, boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
 
     ret->myip = QString::fromStdString(endpoint.address().to_string());
 
@@ -177,7 +187,9 @@ void SocketSQ::writeHandler(const boost::system::error_code& ec, std::size_t byt
 
 void SocketSQ::acceptHandler(const boost::system::error_code& ec)
 {
-    (void) ec;
+    ::exit(0);
+    if (ec)
+        return;
 
     freeConnection = false;
     emit active();

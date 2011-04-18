@@ -12,16 +12,17 @@ class SocketSQ;
 
 class SocketManager : public QThread
 {
+    Q_OBJECT
 public:
     SocketManager();
     ~SocketManager();
-
-    void run();
 
     SocketSQ * createSocket();
     SocketSQ * createServerSocket();
 
     boost::asio::io_service io_service;
+protected:
+    void run();
 private slots:
 private:
     volatile bool finished;
@@ -63,10 +64,10 @@ signals:
     void active();
     void disconnected();
 private:
-    union {
+    //union {
         boost::asio::ip::tcp::socket * mysock;
         boost::asio::ip::tcp::acceptor * myserver;
-    };
+    //};
     boost::asio::ip::tcp::endpoint endpoint;
     SocketManager *manager;
     QString myip;
