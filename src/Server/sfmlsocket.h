@@ -7,7 +7,6 @@ class QTcpSocket;
 #include <iostream>
 #include <boost/asio.hpp>
 
-
 class SocketSQ;
 
 class SocketManager : public QThread
@@ -21,11 +20,16 @@ public:
     SocketSQ * createServerSocket();
 
     boost::asio::io_service io_service;
-public:
+
+    void deleteSocket(QObject *sock);
+protected:
     void run();
 private slots:
 private:
     volatile bool finished;
+
+    QMutex m;
+    QVector<QObject *> toDelete;
 };
 
 /* Never delete a Socket SQ directly */
@@ -38,8 +42,6 @@ class SocketSQ : public QObject
     SocketSQ(SocketManager *manager, boost::asio::ip::tcp::acceptor *socket);
     ~SocketSQ();
 public:
-    void delayDeath();
-
     /* For server sockets */
     SocketSQ * nextPendingConnection();
 
