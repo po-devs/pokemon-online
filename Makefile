@@ -1,5 +1,10 @@
-# Default qmake binary. Some systems have qmake-qt4 and qmake-qt3 instead.
-QMAKE=qmake
+# attempt autodetection of which qmake to use.
+ifeq ($(shell uname),darwin)
+QMAKE=qmake -spec macx-g++	# For mac OSX
+else
+QMAKE=qmake 			# For everyone else.
+endif
+
 # Default make binary. Some systems have nmake or gmake (some bsds)
 MAKE=make
 
@@ -8,6 +13,8 @@ install-message="Nothing to do, run the executable in the bin folder and make su
 all: client server
 	@echo "Read instructions in HowToBuild.txt"
 	@echo ${install-message}
+
+bin/Server: pokemon-info src/Server/Server.pro ;
 
 %.cpp: ;
 %.o: ;
@@ -39,7 +46,7 @@ plugins: battlelogs usagestats ;
 
 client: pokemon-info src/Teambuilder/Teambuilder.pro ;
 
-server:	pokemon-info src/Server/Server.pro ;
+server:	bin/Server ;
 
 install:
 	@echo ${install-message}
