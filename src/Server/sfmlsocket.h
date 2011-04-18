@@ -21,6 +21,7 @@ public:
 
     boost::asio::io_service io_service;
 
+    void addSocket(QObject *sock);
     void deleteSocket(QObject *sock);
 protected:
     void run();
@@ -29,7 +30,9 @@ private:
     volatile bool finished;
 
     QMutex m;
+    QVector<QObject *> toAdd;
     QVector<QObject *> toDelete;
+    QSet<QObject *> heap;
 };
 
 /* Never delete a Socket SQ directly */

@@ -32,9 +32,19 @@ void SocketManager::run() {
 
         QMutexLocker l(&m);
 
+        if (toAdd.size() > 0) {
+            foreach(QObject *s, toAdd) {
+                heap.insert(s);
+            }
+            toAdd.clear();
+        }
+
         if (toDelete.size() > 0) {
             foreach(QObject *s, toDelete) {
-                delete s;
+                if (heap.contains(s)) {
+                    heap.remove(s);
+                    delete s;
+                }
             }
             toDelete.clear();
         }
@@ -47,6 +57,12 @@ void SocketManager::deleteSocket(QObject *sock)
 {
     QMutexLocker l(&m);
     toDelete.push_back(sock);
+}
+
+void SocketManager::deleteSocket(QObject *sock)
+{
+    QMutexLocker l(&m);
+    toAdd.push_back(sock);
 }
 
 SocketSQ* SocketManager::createSocket() {
@@ -63,6 +79,8 @@ SocketSQ::SocketSQ(SocketManager *manager, tcp::socket *s) : mysock(s), manager(
     incoming = NULL;
     freeConnection = true;
 
+    manager->addSocket(this);
+
     /* Starts the receiving loop */
     readHandler(boost::system::error_code(), 0);
 }
@@ -72,6 +90,8 @@ SocketSQ::SocketSQ(SocketManager *manager, tcp::acceptor *s) : myserver(s), mana
     isServer = true;
     incoming = NULL;
     freeConnection = true;
+
+    manager->addSocket(this);
 
     incoming = new tcp::socket(manager->io_service);
 }
