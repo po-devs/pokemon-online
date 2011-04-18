@@ -115,6 +115,7 @@ void Analyzer::goAway(bool away)
 void Analyzer::disconnectFromHost()
 {
     socket().disconnectFromHost();
+    socket().disconnect(this, SLOT(commandReceived(QByteArray)));
 }
 
 QString Analyzer::getIp() const

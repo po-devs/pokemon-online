@@ -22,7 +22,7 @@ private:
 public:
 	DynamicLibException(const char* what):
 		std::exception(),
-		msg(what)
+                msg(what)
 	{}
 	virtual ~DynamicLibException() throw()
 	{}

@@ -951,15 +951,22 @@ void Server::incomingConnection(int i)
     QString ip = newconnection->ip();
 #endif
 
-    if (numPlayers() >= serverPlayerMax && serverPlayerMax != 0){
+    if (numPlayers() >= serverPlayerMax && serverPlayerMax != 0) {
         printLine(QString("Stopped IP %1 from logging in, server full.").arg(ip));
-        newconnection->deleteLater();
+        Player* p = new Player(newconnection,-1);
+        connect(p, SIGNAL(disconnected(int)), p, SLOT(deleteLater()));
+        p->sendMessage("The server is full.");
+        p->kick();
         return;
     }
 
     if (SecurityManager::bannedIP(ip)) {
         printLine(QString("Banned IP %1 tried to log in.").arg(ip));
-        newconnection->deleteLater();
+        printLine(QString("Stopped IP %1 from logging in, server full.").arg(ip));
+        Player* p = new Player(newconnection,-1);
+        connect(p, SIGNAL(disconnected(int)), p, SLOT(deleteLater()));
+        p->sendMessage("You are banned.");
+        p->kick();
         return;
     }
 
