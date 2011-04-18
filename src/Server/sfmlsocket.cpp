@@ -1,3 +1,5 @@
+#ifdef SFML_SOCKETS
+
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 #include "sfmlsocket.h"
@@ -80,7 +82,10 @@ SocketSQ::~SocketSQ() {
         delete myserver;
         delete incoming;
     } else {
-        mysock->cancel();
+        try {
+            mysock->cancel();
+        } catch (...) {
+        }
         delete mysock;
     }
 }
@@ -261,3 +266,5 @@ void SocketSQ::sendData()
         return;
     }
 }
+
+#endif
