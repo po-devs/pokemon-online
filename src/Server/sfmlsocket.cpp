@@ -13,10 +13,15 @@ SocketManager::~SocketManager() {
     /* Wait till the thread finished */
     while (finished) {
     }
+}
 
-    foreach (SocketSQ *s, heap) {
-        delete s;
+void SocketManager::run() {
+    while (!finished) {
+        boost::system::error_code ec;
+        io_service.run_one(ec);
     }
+
+    finished = false;
 }
 
 SocketSQ* SocketManager::createSocket() {
@@ -27,36 +32,11 @@ SocketSQ* SocketManager::createServerSocket() {
     return new SocketSQ(this, new tcp::acceptor(io_service));
 }
 
-void SocketManager::addSocket(SocketSQ *s) {
-    QMutexLocker l(&lock);
-
-    socketsToAdd.append(s);
-}
-
-void SocketManager::deleteSocket(SocketSQ *s) {
-    QMutexLocker l(&lock);
-
-    socketsToRemove.append(s);
-}
-
-bool SocketManager::existSocket(SocketSQ* s) const {
-    return heap.contains(s);
-}
-
-void SocketManager::addSendingSocket(SocketSQ *s) {
-    QMutexLocker l(&lock);
-
-    if(existSocket(s)) {
-        waitingList.append(s);
-    }
-}
-
 SocketSQ::SocketSQ(SocketManager *manager, tcp::socket *s) : mysock(s), manager(manager), m(QMutex::Recursive), bufCounter(0), notifiedDced(false)
 {
     isServer = false;
     incoming = NULL;
     freeConnection = true;
-    manager->addSocket(this);
 
     /* Starts the receiving loop */
     readHandler(boost::system::error_code(), 0);
@@ -67,7 +47,6 @@ SocketSQ::SocketSQ(SocketManager *manager, tcp::acceptor *s) : myserver(s), mana
     isServer = true;
     incoming = NULL;
     freeConnection = true;
-    manager->addSocket(this);
 
     incoming = new tcp::socket(manager->io_service);
     server().async_accept(*incoming, endpoint,
@@ -98,7 +77,7 @@ void SocketSQ::deleteLater()
         emit disconnected();
     }
 
-    manager->deleteSocket(this);
+    QObject::deleteLater();
 }
 
 SocketSQ* SocketSQ::nextPendingConnection()

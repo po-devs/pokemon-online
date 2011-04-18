@@ -10,34 +10,21 @@ class QTcpSocket;
 
 class SocketSQ;
 
-class SocketManager
+class SocketManager : public QThread
 {
 public:
     SocketManager();
     ~SocketManager();
 
+    void run();
+
     SocketSQ * createSocket();
     SocketSQ * createServerSocket();
-
-    void addSocket(SocketSQ *s);
-    void deleteSocket(SocketSQ *s);
-    void addSendingSocket(SocketSQ *s);
 
     boost::asio::io_service io_service;
 private slots:
 private:
-    QMutex lock;
     volatile bool finished;
-
-    QList<SocketSQ*> socketsToRemove;
-    QList<SocketSQ*> socketsToAdd;
-    QLinkedList<SocketSQ*> waitingList;
-    QLinkedList<SocketSQ*> socketsToSend;
-
-    QSet<SocketSQ*> heap;
-
-    /* Causes threading issues so made private in order to not be called rashly */
-    bool existSocket(SocketSQ *s) const;
 };
 
 /* Never delete a Socket SQ directly */
@@ -105,6 +92,8 @@ private:
     boost::asio::ip::tcp::socket *incoming;
 };
 
+#ifdef SFML_SOCKETS
 typedef SocketSQ GenericSocket;
+#endif
 
 #endif // SFMLSOCKET_H

@@ -4,7 +4,13 @@
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "playerinterface.h"
+
+#ifdef SFML_SOCKETS
 #include "sfmlsocket.h"
+#else
+class QTcpSocket;
+typedef QTcpSocket GenericSocket;
+#endif
 
 class Challenge;
 class BattleSituation;
