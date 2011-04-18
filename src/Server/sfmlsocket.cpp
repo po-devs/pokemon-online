@@ -59,7 +59,7 @@ void SocketManager::deleteSocket(QObject *sock)
     toDelete.push_back(sock);
 }
 
-void SocketManager::deleteSocket(QObject *sock)
+void SocketManager::addSocket(QObject *sock)
 {
     QMutexLocker l(&m);
     toAdd.push_back(sock);
