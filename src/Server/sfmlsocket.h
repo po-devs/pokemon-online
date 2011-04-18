@@ -1,7 +1,7 @@
 #ifndef SFMLSOCKET_H
 #define SFMLSOCKET_H
 
-class QTcpSocket;
+#ifdef SFML_SOCKETS
 
 #include <QtCore>
 #include <iostream>
@@ -95,7 +95,7 @@ private:
     boost::asio::ip::tcp::socket *incoming;
 };
 
-#ifdef SFML_SOCKETS
+
 typedef SocketSQ GenericSocket;
 #endif
 
