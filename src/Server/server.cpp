@@ -1,5 +1,4 @@
 #include <QtNetwork>
-#include "sfmlsocket.h"
 #include <ctime> /* for random numbers, time(NULL) needed */
 #include <algorithm>
 #include "../PokemonInfo/pokemoninfo.h"
@@ -74,6 +73,7 @@ void Server::start(){
     for (int i = 0; i < serverPorts.size(); ++i) {
         myservers.append(manager.createServerSocket());
     }
+    //manager.start();
 #endif
     pluginManager = new PluginManager(this);
 

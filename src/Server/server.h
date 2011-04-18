@@ -4,7 +4,12 @@
 #include "../Utilities/contextswitch.h"
 #include "../PokemonInfo/networkstructs.h"
 #include "serverinterface.h"
+#ifdef SFML_SOCKETS
 #include "sfmlsocket.h"
+#else
+class QTcpSocket;
+typedef QTcpSocket GenericSocket;
+#endif
 #include "channel.h"
 
 #define PRINTOPT(a, b) (fprintf(stdout, "  %-25s\t%s\n", a, b))

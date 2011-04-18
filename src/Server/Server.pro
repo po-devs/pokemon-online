@@ -87,12 +87,12 @@ HEADERS += player.h \
     ../Utilities/mtrand.h \
     miscmoves.h \
     sessiondatafactory.h \
-    sfmlsocket.h \
     scriptdb.h \
     battleinterface.h \
     battlepluginstruct.h \
     miscabilities.h \
-    serverinterface.h
+    serverinterface.h \
+    sfmlsocket.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
@@ -110,4 +110,5 @@ CONFIG(nogui) {
 CONFIG(sfml) { 
     DEFINES += SFML_SOCKETS
     SOURCES += sfmlsocket.cpp
+    LIBS += -L/usr/local/lib -lboost_system
 }
