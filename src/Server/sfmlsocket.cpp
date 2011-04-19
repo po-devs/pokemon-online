@@ -110,6 +110,12 @@ SocketSQ::pointer SocketSQ::nextPendingConnection()
     SocketSQ::pointer ret = pointer(new SocketSQ(manager, incoming), deleteObjectLater());
     boost::system::error_code ec;
     ret->myip = QString::fromStdString(incoming->remote_endpoint(ec).address().to_string());
+
+    /* Avoids to start dead sockets */
+    if (ec) {
+        return SocketSQ::pointer();
+    }
+
     ret->start();    
 
     incoming = new tcp::socket(manager->io_service);
