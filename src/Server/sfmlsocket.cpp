@@ -108,9 +108,9 @@ SocketSQ::pointer SocketSQ::nextPendingConnection()
     if (freeConnection)
         return SocketSQ::pointer();
     SocketSQ::pointer ret = pointer(new SocketSQ(manager, incoming), deleteObjectLater());
-    ret->start();
-
-    ret->myip = QString::fromStdString(incoming->remote_endpoint().address().to_string());
+    boost::system::error_code ec;
+    ret->myip = QString::fromStdString(incoming->remote_endpoint(ec).address().to_string());
+    ret->start();    
 
     incoming = new tcp::socket(manager->io_service);
     freeConnection = true;
