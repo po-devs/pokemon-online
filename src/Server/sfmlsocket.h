@@ -39,6 +39,7 @@ public:
     void putChar(char c);
     void write(const QByteArray &b);
     bool listen(quint16 port);
+    void setLowDelay(bool lowdelay);
     /* For non server sockets, start the read feed */
     void start();
 

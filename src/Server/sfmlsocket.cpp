@@ -36,10 +36,6 @@ void SocketManager::run() {
         boost::system::error_code ec;
 
         io_service.run_one(ec);
-        io_service.run_one(ec);
-        io_service.run_one(ec);
-        io_service.run_one(ec);
-        io_service.run_one(ec);
     }
 
     finished = false;
@@ -249,6 +245,12 @@ void SocketSQ::putChar(char c)
 {
     QMutexLocker l(&m);
     toSend.append(c);
+}
+
+void SocketSQ::setLowDelay(bool lowDelay)
+{
+    boost::asio::ip::tcp::no_delay option(lowDelay);
+    sock()->set_option(option);
 }
 
 void SocketSQ::write(const QByteArray &b)
