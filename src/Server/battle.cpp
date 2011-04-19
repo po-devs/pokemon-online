@@ -138,16 +138,19 @@ void BattleSituation::buildPlugins(PluginManager *p)
 
     foreach(BattlePlugin *pl, plugins) {
         calls.push_back(new BattlePStorage(pl));
+        qDebug() << "Created battle storage " << calls.back();
     }
 }
 
 void BattleSituation::removePlugin(BattlePlugin *p)
 {
     int index = plugins.indexOf(p);
+    qDebug() << "Removing plugins at index " << index << "(this = " << this << ")";
 
     if (index != -1) {
         plugins.removeAt(index);
         delete calls.takeAt(index);
+        qDebug() << "Remaining plugin size after operation: " << calls.size();
     }
 }
 
