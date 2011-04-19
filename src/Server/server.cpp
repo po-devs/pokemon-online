@@ -165,11 +165,11 @@ void Server::start(){
             printLine(tr("Starting to listen to port %1").arg(port));
         }
 
-        mymapper->setMapping(server(i), i);
+        mymapper->setMapping(&*server(i), i);
 #ifndef SFML_SOCKETS
         connect(server(i), SIGNAL(newConnection()), mymapper, SLOT(map()));
 #else
-        connect(server(i), SIGNAL(active()), mymapper, SLOT(map()));
+        connect(&*server(i), SIGNAL(active()), mymapper, SLOT(map()));
 #endif
     }
 #ifdef SFML_SOCKETS
@@ -240,7 +240,7 @@ QTcpServer * Server::server(int i)
     return myservers.at(i);
 }
 #else
-GenericSocket * Server::server(int i)
+GenericSocket Server::server(int i)
 {
     return myservers.at(i);
 }
@@ -939,7 +939,7 @@ int Server::auth(int id) const
 
 void Server::incomingConnection(int i)
 {
-    GenericSocket * newconnection = server(i)->nextPendingConnection();
+    GenericSocket newconnection = server(i)->nextPendingConnection();
 
     if (!newconnection)
         return;
@@ -1583,7 +1583,6 @@ void Server::removePlayer(int id)
 {
     if (playerExist(id))
     {
-        qDebug() << "Starting removing player " << id;
         Player *p = player(id);
         bool loggedIn = p->isLoggedIn();
 
