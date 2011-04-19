@@ -976,6 +976,8 @@ void Server::incomingConnection(int i)
 
 #ifndef SFML_SOCKETS
     newconnection->setSocketOption(QAbstractSocket::LowDelayOption, lowTCPDelay);
+#else
+    newconnection->setLowDelay(lowTCPDelay);
 #endif
     myplayers[id] = new Player(newconnection, id);
 
