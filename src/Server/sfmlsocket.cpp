@@ -250,7 +250,7 @@ void SocketSQ::putChar(char c)
 void SocketSQ::setLowDelay(bool lowDelay)
 {
     boost::asio::ip::tcp::no_delay option(lowDelay);
-    sock()->set_option(option);
+    sock().set_option(option);
 }
 
 void SocketSQ::write(const QByteArray &b)
