@@ -4,6 +4,17 @@
 #include <boost/thread.hpp>
 #include "sfmlsocket.h"
 
+/* The deleteObjectLater destructor ensures the objects are destroyed in
+   the main thread instead of the local thread to the SocketManager.
+
+   This prevents possible calls to SocketSQ's slots to have multithreading problems */
+struct deleteObjectLater {
+    void operator () (QObject *q) {
+        q->QObject::deleteLater();
+    }
+};
+
+
 using boost::asio::ip::tcp;
 
 SocketManager::SocketManager() {
@@ -29,69 +40,24 @@ void SocketManager::run() {
         io_service.run_one(ec);
         io_service.run_one(ec);
         io_service.run_one(ec);
-
-        QMutexLocker l(&m);
-
-        if (toAdd.size() > 0) {
-            foreach(QObject *s, toAdd) {
-                heap.insert(s);
-            }
-            toAdd.clear();
-        }
-
-        if (toDelete.size() > 0) {
-            foreach(QObject *s, toDelete) {
-                if (heap.contains(s)) {
-                    heap.remove(s);
-                    delete s;
-                }
-            }
-            toDelete.clear();
-        }
     }
-
-    ::exit(0);
 
     finished = false;
 }
 
-void SocketManager::deleteSocket(QObject *sock)
-{
-    QMutexLocker l(&m);
-    toDelete.push_back(sock);
+SocketSQ::pointer SocketManager::createSocket() {
+    return SocketSQ::pointer(new SocketSQ(this, new tcp::socket(io_service)), deleteObjectLater());
 }
 
-void SocketManager::addSocket(QObject *sock)
-{
-    QMutexLocker l(&m);
-    toAdd.push_back(sock);
-}
-
-SocketSQ* SocketManager::createSocket() {
-    return new SocketSQ(this, new tcp::socket(io_service));
-}
-
-SocketSQ* SocketManager::createServerSocket() {
-    return new SocketSQ(this, new tcp::acceptor(io_service));
+SocketSQ::pointer SocketManager::createServerSocket() {
+    return SocketSQ::pointer(new SocketSQ(this, new tcp::acceptor(io_service)), deleteObjectLater());
 }
 
 SocketSQ::SocketSQ(SocketManager *manager, tcp::socket *s) : mysock(s), manager(manager), m(QMutex::Recursive), bufCounter(0), notifiedDced(false)
 {
-    if (!s) {
-        int *x=NULL;
-        *x=1;
-    }
-
     isServer = false;
     incoming = NULL;
     freeConnection = true;
-
-    manager->addSocket(this);
-
-    /* Starts the receiving loop */
-    readHandler(boost::system::error_code(), 0);
-
-    qDebug() << "Created " << this;
 }
 
 SocketSQ::SocketSQ(SocketManager *manager, tcp::acceptor *s) : myserver(s), manager(manager), bufCounter(0), notifiedDced(false)
@@ -100,27 +66,16 @@ SocketSQ::SocketSQ(SocketManager *manager, tcp::acceptor *s) : myserver(s), mana
     incoming = NULL;
     freeConnection = true;
 
-    manager->addSocket(this);
-
     incoming = new tcp::socket(manager->io_service);
 }
 
 SocketSQ::~SocketSQ() {
     if (isServer) {
-        myserver->cancel();
         delete myserver;
         delete incoming;
     } else {
-        try {
-            qDebug() << "Canceling " << this;
-            mysock->cancel();
-        } catch (const std::exception &e) {
-            qDebug() << "cancel exception: " << e.what();
-            throw 1;
-        }
         delete mysock;
     }
-    qDebug() << "Deleted " << this;
 }
 
 bool SocketSQ::listen(quint16 port)
@@ -142,25 +97,35 @@ bool SocketSQ::listen(quint16 port)
     return ret;
 }
 
+/* The function is necessary because it's overloading the base deleteLater, which we don't want
+   called until all the handlers are finished (they may not be finished even after a disconnect.
+
+   The SocketSQ is always handled with SocketSQ::pointer, so it's deleted with the shared ptr system */
 void SocketSQ::deleteLater()
 {
-    manager->deleteSocket(this);
 }
 
-SocketSQ* SocketSQ::nextPendingConnection()
+SocketSQ::pointer SocketSQ::nextPendingConnection()
 {
     if (!isServer)
-        return NULL;
+        return SocketSQ::pointer();
     if (freeConnection)
-        return NULL;
-    SocketSQ *ret = new SocketSQ(manager, incoming);
+        return SocketSQ::pointer();
+    SocketSQ::pointer ret = pointer(new SocketSQ(manager, incoming), deleteObjectLater());
+    ret->start();
+
+    ret->myip = QString::fromStdString(incoming->remote_endpoint().address().to_string());
+
     incoming = new tcp::socket(manager->io_service);
     freeConnection = true;
     server().async_accept(*incoming, boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
 
-    ret->myip = QString::fromStdString(endpoint.address().to_string());
-
     return ret;
+}
+
+void SocketSQ::start() {
+    /* Starts the receiving loop */
+    readHandler(boost::system::error_code(), 0);
 }
 
 void SocketSQ::disconnectFromHost()
@@ -208,14 +173,16 @@ void SocketSQ::readHandler(const boost::system::error_code& ec, std::size_t byte
         return;
     }
 
-    m.lock();
-    buffer.append(innerBuffer, bytes_transferred);
-    m.unlock();
+    if (bytes_transferred > 0) {
+        m.lock();
+        buffer.append(innerBuffer, bytes_transferred);
+        m.unlock();
 
-    emit active();
+        emit active();
+    }
 
     sock().async_read_some(boost::asio::buffer(innerBuffer, 10000),
-                      boost::bind(&SocketSQ::readHandler, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+                      boost::bind(&SocketSQ::readHandler, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
 void SocketSQ::writeHandler(const boost::system::error_code& ec, std::size_t bytes_transferred)
@@ -237,7 +204,7 @@ void SocketSQ::writeHandler(const boost::system::error_code& ec, std::size_t byt
         return;
 
     sock().async_send(boost::asio::buffer(sending.data(), sending.size()),
-                      boost::bind(&SocketSQ::writeHandler, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+                      boost::bind(&SocketSQ::writeHandler, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
 void SocketSQ::acceptHandler(const boost::system::error_code& ec)
@@ -286,7 +253,6 @@ void SocketSQ::putChar(char c)
 
 void SocketSQ::write(const QByteArray &b)
 {
-    qDebug() << "Sending data with " << this;
     QMutexLocker l(&m);
     if (toSend.length() == 0)
         toSend = b;

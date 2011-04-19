@@ -6,47 +6,25 @@
 #include <QtCore>
 #include <iostream>
 #include <boost/asio.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
-class SocketSQ;
-
-class SocketManager : public QThread
-{
-    Q_OBJECT
-public:
-    SocketManager();
-    ~SocketManager();
-
-    SocketSQ * createSocket();
-    SocketSQ * createServerSocket();
-
-    boost::asio::io_service io_service;
-
-    void addSocket(QObject *sock);
-    void deleteSocket(QObject *sock);
-protected:
-    void run();
-private slots:
-private:
-    volatile bool finished;
-
-    QMutex m;
-    QVector<QObject *> toAdd;
-    QVector<QObject *> toDelete;
-    QSet<QObject *> heap;
-};
+class SocketManager;
 
 /* Never delete a Socket SQ directly */
-class SocketSQ : public QObject
+class SocketSQ : public QObject, public boost::enable_shared_from_this<SocketSQ>
 {
     Q_OBJECT
     friend class SocketManager;
 
     SocketSQ(SocketManager *manager, boost::asio::ip::tcp::socket *socket);
     SocketSQ(SocketManager *manager, boost::asio::ip::tcp::acceptor *socket);
-    ~SocketSQ();
 public:
+    ~SocketSQ();
+
+    typedef boost::shared_ptr<SocketSQ> pointer;
     /* For server sockets */
-    SocketSQ * nextPendingConnection();
+    pointer nextPendingConnection();
 
     boost::asio::ip::tcp::socket &sock();
     const boost::asio::ip::tcp::socket &sock() const;
@@ -61,6 +39,8 @@ public:
     void putChar(char c);
     void write(const QByteArray &b);
     bool listen(quint16 port);
+    /* For non server sockets, start the read feed */
+    void start();
 
     bool isServer;
 public slots:
@@ -98,8 +78,28 @@ private:
     boost::asio::ip::tcp::socket *incoming;
 };
 
+class SocketManager : public QThread
+{
+    Q_OBJECT
+public:
+    SocketManager();
+    ~SocketManager();
 
-typedef SocketSQ GenericSocket;
+    SocketSQ::pointer createSocket();
+    SocketSQ::pointer createServerSocket();
+
+    boost::asio::io_service io_service;
+protected:
+    void run();
+private slots:
+private:
+    volatile bool finished;
+};
+
+typedef SocketSQ::pointer GenericSocket;
+#else
+class QTcpSocket;
+typedef QTcpSocket* GenericSocket;
 #endif
 
 #endif // SFMLSOCKET_H

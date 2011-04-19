@@ -10,7 +10,7 @@
 #include "server.h"
 #include "analyze.h"
 
-Player::Player(GenericSocket *sock, int id) : myid(id)
+Player::Player(const GenericSocket &sock, int id) : myid(id)
 {
     myrelay = new Analyzer(sock, id);
     lockCount = 0;

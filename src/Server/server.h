@@ -4,12 +4,7 @@
 #include "../Utilities/contextswitch.h"
 #include "../PokemonInfo/networkstructs.h"
 #include "serverinterface.h"
-#ifdef SFML_SOCKETS
 #include "sfmlsocket.h"
-#else
-class QTcpSocket;
-typedef QTcpSocket GenericSocket;
-#endif
 #include "channel.h"
 
 #define PRINTOPT(a, b) (fprintf(stdout, "  %-25s\t%s\n", a, b))
@@ -196,7 +191,7 @@ private:
 #ifndef SFML_SOCKETS
     QList<QTcpServer *> myservers;
 #else
-    QList<GenericSocket *> myservers;
+    QList<GenericSocket> myservers;
     SocketManager manager;
 #endif
     PluginManager *pluginManager;
@@ -215,7 +210,7 @@ private:
 #ifndef SFML_SOCKETS
     QTcpServer *server(int i);
 #else
-    GenericSocket *server(int i);
+    GenericSocket server(int i);
 #endif
     Player * player(int i) const;
     PlayerInterface * playeri(int i) const;
