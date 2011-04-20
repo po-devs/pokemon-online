@@ -950,15 +950,14 @@ void Server::incomingConnection(int i)
 #else
     QString ip = newconnection->ip();
 #endif
-
-    if (!AntiDos::obj()->connecting(ip)) {
-        /* Useless to waste lines on that especially if it is DoS'd */
-        //printLine(tr("Anti DoS manager prevented IP %1 from logging in").arg(ip));
+    if (SecurityManager::bannedIP(ip)) {
         newconnection->deleteLater();
         return;
     }
 
-    if (SecurityManager::bannedIP(ip)) {
+    if (!AntiDos::obj()->connecting(ip)) {
+        /* Useless to waste lines on that especially if it is DoS'd */
+        //printLine(tr("Anti DoS manager prevented IP %1 from logging in").arg(ip));
         newconnection->deleteLater();
         return;
     }
