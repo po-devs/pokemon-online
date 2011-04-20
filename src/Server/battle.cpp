@@ -2873,6 +2873,12 @@ void BattleSituation::inflictRecoil(int source, int target)
         if (hasWorkingAbility(target, Ability::LiquidOoze)) {
             sendMoveMessage(1,2,source,Pokemon::Poison,target);
             inflictDamage(source,damage,source,false);
+
+            /* Self KO Clause! */
+            if (koed(source)) {
+                if (gen() >= 5)
+                    selfKoer() = target;
+            }
         } else {
             if (pokeMemory(source).value("HealBlockCount").toInt() > 0) {
                 sendMoveMessage(60, 0, source);
@@ -3362,6 +3368,9 @@ void BattleSituation::endTurnWeather()
                         }
                     }
 		    inflictDamage(i, poke(i).totalLifePoints()/16, i, false);
+                    if (gen() >= 5) {
+                        testWin();
+                    }
 		}
 	    }
 	}
