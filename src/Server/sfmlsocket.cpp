@@ -111,17 +111,16 @@ SocketSQ::pointer SocketSQ::nextPendingConnection()
     boost::system::error_code ec;
     ret->myip = QString::fromStdString(incoming->remote_endpoint(ec).address().to_string());
 
+    incoming = new tcp::socket(manager->io_service);
+    freeConnection = true;
+    server().async_accept(*incoming, boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
+
     /* Avoids to start dead sockets */
     if (ec) {
         return SocketSQ::pointer();
     }
 
     ret->start();    
-
-    incoming = new tcp::socket(manager->io_service);
-    freeConnection = true;
-    server().async_accept(*incoming, boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
-
     return ret;
 }
 
