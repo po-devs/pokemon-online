@@ -191,7 +191,7 @@ private:
 #ifndef SFML_SOCKETS
     QList<QTcpServer *> myservers;
 #else
-    QList<GenericSocket *> myservers;
+    QList<GenericSocket> myservers;
     SocketManager manager;
 #endif
     PluginManager *pluginManager;
@@ -210,7 +210,7 @@ private:
 #ifndef SFML_SOCKETS
     QTcpServer *server(int i);
 #else
-    GenericSocket *server(int i);
+    GenericSocket server(int i);
 #endif
     Player * player(int i) const;
     PlayerInterface * playeri(int i) const;

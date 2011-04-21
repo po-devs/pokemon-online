@@ -1,5 +1,4 @@
 #include <QtNetwork>
-#include "sfmlsocket.h"
 #include <ctime> /* for random numbers, time(NULL) needed */
 #include <algorithm>
 #include "../PokemonInfo/pokemoninfo.h"
@@ -71,9 +70,8 @@ void Server::start(){
         myservers.append(new QTcpServer());
     }
 #else
-    manager.Launch();
     for (int i = 0; i < serverPorts.size(); ++i) {
-        myservers.append(manager.createSocket());
+        myservers.append(manager.createServerSocket());
     }
 #endif
     pluginManager = new PluginManager(this);
@@ -167,13 +165,16 @@ void Server::start(){
             printLine(tr("Starting to listen to port %1").arg(port));
         }
 
-        mymapper->setMapping(server(i), i);
+        mymapper->setMapping(&*server(i), i);
 #ifndef SFML_SOCKETS
         connect(server(i), SIGNAL(newConnection()), mymapper, SLOT(map()));
 #else
-        connect(server(i), SIGNAL(active()), mymapper, SLOT(map()));
+        connect(&*server(i), SIGNAL(active()), mymapper, SLOT(map()));
 #endif
     }
+#ifdef SFML_SOCKETS
+    manager.start();
+#endif
     connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(dosKick(int)));
     connect(AntiDos::obj(), SIGNAL(ban(QString)), SLOT(dosBan(QString)));
 
@@ -239,7 +240,7 @@ QTcpServer * Server::server(int i)
     return myservers.at(i);
 }
 #else
-GenericSocket * Server::server(int i)
+GenericSocket Server::server(int i)
 {
     return myservers.at(i);
 }
@@ -938,7 +939,7 @@ int Server::auth(int id) const
 
 void Server::incomingConnection(int i)
 {
-    GenericSocket * newconnection = server(i)->nextPendingConnection();
+    GenericSocket newconnection = server(i)->nextPendingConnection();
 
     if (!newconnection)
         return;
@@ -949,23 +950,8 @@ void Server::incomingConnection(int i)
 #else
     QString ip = newconnection->ip();
 #endif
-
-    if (numPlayers() >= serverPlayerMax && serverPlayerMax != 0) {
-        printLine(QString("Stopped IP %1 from logging in, server full.").arg(ip));
-        Player* p = new Player(newconnection,-1);
-        connect(p, SIGNAL(disconnected(int)), p, SLOT(deleteLater()));
-        p->sendMessage("The server is full.");
-        p->kick();
-        return;
-    }
-
     if (SecurityManager::bannedIP(ip)) {
-        printLine(QString("Banned IP %1 tried to log in.").arg(ip));
-        printLine(QString("Stopped IP %1 from logging in, server full.").arg(ip));
-        Player* p = new Player(newconnection,-1);
-        connect(p, SIGNAL(disconnected(int)), p, SLOT(deleteLater()));
-        p->sendMessage("You are banned.");
-        p->kick();
+        newconnection->deleteLater();
         return;
     }
 
@@ -976,10 +962,21 @@ void Server::incomingConnection(int i)
         return;
     }
 
+    if (numPlayers() >= serverPlayerMax && serverPlayerMax != 0) {
+        printLine(QString("Stopped IP %1 from logging in, server full.").arg(ip));
+        Player* p = new Player(newconnection,-1);
+        connect(p, SIGNAL(disconnected(int)), p, SLOT(deleteLater()));
+        p->sendMessage("The server is full.");
+        p->kick();
+        return;
+    }
+
     printLine(QString("Received pending connection on slot %1 from %2").arg(id).arg(ip));
 
 #ifndef SFML_SOCKETS
     newconnection->setSocketOption(QAbstractSocket::LowDelayOption, lowTCPDelay);
+#else
+    newconnection->setLowDelay(lowTCPDelay);
 #endif
     myplayers[id] = new Player(newconnection, id);
 
@@ -1587,7 +1584,6 @@ void Server::removePlayer(int id)
 {
     if (playerExist(id))
     {
-        qDebug() << "Starting removing player " << id;
         Player *p = player(id);
         bool loggedIn = p->isLoggedIn();
 

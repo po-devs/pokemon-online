@@ -59,6 +59,8 @@ struct AMAftermath : public AM {
             if (!b.hasWorkingAbility(t,Ability::Damp)){
                 b.sendAbMessage(2,0,s,t);
                 b.inflictPercentDamage(t,25,s,false);
+                if (b.koed(t) && b.gen() >= 5)
+                    b.selfKoer() = t;
             }
             else
                 b.sendAbMessage(2,1,s,t);
