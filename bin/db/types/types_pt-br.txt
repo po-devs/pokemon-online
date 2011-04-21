@@ -1,7 +1,7 @@
 Normal
 Lutador
 Voador
-Veneno
+Venenoso
 Terra
 Pedra
 Inseto

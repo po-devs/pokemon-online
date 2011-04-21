@@ -73,7 +73,7 @@
     <message>
         <location filename="analyze.cpp" line="255"/>
         <source>The server requires insecure authentication.</source>
-        <translation type="unfinished"></translation>
+        <translation>O servidor requer uma autentificação insegura.</translation>
     </message>
     <message>
         <location filename="analyze.cpp" line="411"/>
@@ -167,7 +167,7 @@ Efeito: %5</translation>
     <message>
         <location filename="basebattlewindow.cpp" line="230"/>
         <source>%1&apos;s %2</source>
-        <translation>%2 de %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="394"/>
@@ -227,7 +227,7 @@ Efeito: %5</translation>
     <message>
         <location filename="basebattlewindow.cpp" line="479"/>
         <source>%1&apos;s %2 %3%4!</source>
-        <translation type="unfinished">%2 %3%4! de %1 {1&apos;?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="479"/>
@@ -477,7 +477,7 @@ Efeito: %5</translation>
     <message>
         <location filename="basebattlewindow.cpp" line="765"/>
         <source>Tier: </source>
-        <translation type="unfinished"></translation>
+        <translation>Categoria: </translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="829"/>
@@ -505,7 +505,7 @@ Efeito: %5</translation>
     <message>
         <location filename="challenge.cpp" line="58"/>
         <source>Triples</source>
-        <translation type="unfinished"></translation>
+        <translation>Triplas</translation>
     </message>
 </context>
 <context>
@@ -536,7 +536,7 @@ Efeito: %5</translation>
     <message>
         <location filename="client.cpp" line="1646"/>
         <source>Force same tier</source>
-        <translation>Forçar mesma tier</translation>
+        <translation>Forçar mesma categoria</translation>
     </message>
     <message>
         <source>Double battle</source>
@@ -550,17 +550,17 @@ Efeito: %5</translation>
     <message>
         <location filename="client.cpp" line="1652"/>
         <source>Singles</source>
-        <translation type="unfinished">Solo</translation>
+        <translation>Solo</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1652"/>
         <source>Doubles</source>
-        <translation type="unfinished">Duplas</translation>
+        <translation>Duplas</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1652"/>
         <source>Triples</source>
-        <translation type="unfinished"></translation>
+        <translation>Triplas</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1656"/>
@@ -1115,17 +1115,17 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="client.cpp" line="762"/>
         <source>Sort players by &amp;tiers</source>
-        <translation>Organizar por &amp;tiers</translation>
+        <translation>Organizar por Ca&amp;tegorias</translation>
     </message>
     <message>
         <location filename="client.cpp" line="768"/>
         <source>Move player list to &amp;right</source>
-        <translation type="unfinished"></translation>
+        <translation>Mudar lista para a di&amp;reita</translation>
     </message>
     <message>
         <location filename="client.cpp" line="773"/>
         <source>&amp;Tiers</source>
-        <translation>&amp;Tiers</translation>
+        <translation>Ca&amp;tegorias</translation>
     </message>
     <message>
         <location filename="client.cpp" line="775"/>
@@ -1256,7 +1256,7 @@ It is recommended to update.</source>
     <message>
         <location filename="client.cpp" line="1246"/>
         <source>%1 has a different gen than yours.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 tem uma geração diferente da sua.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1259"/>
@@ -1564,12 +1564,12 @@ Efeito: %5</translation>
     <message>
         <location filename="mainwindow.cpp" line="283"/>
         <source>&amp;Style</source>
-        <translation type="unfinished">&amp;Tema</translation>
+        <translation>&amp;Tema</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="301"/>
         <source>Reload StyleSheet</source>
-        <translation type="unfinished">Recaregar StyleSheet</translation>
+        <translation>Recaregar StyleSheet</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="306"/>
@@ -1637,7 +1637,16 @@ Description: %4
 Category: %5
 
 Effect: %6</source>
-        <translation type="unfinished"></translation>
+        <translation>%1
+
+Poder: %2
+Precisão: %3
+
+Descrição: %4
+
+Categoria: %5
+
+Efeito: %6</translation>
     </message>
     <message>
         <source>%1
@@ -1992,22 +2001,22 @@ Ataques:
     <message>
         <location filename="battlewindow.cpp" line="1335"/>
         <source>You can rearrange your team by clicking on your pokemon before the battle.</source>
-        <translation type="unfinished"></translation>
+        <translation>Você pode reorganizar sua equipe, clicando em seu pokemon antes da batalha.</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="1354"/>
         <source>Team of your opponent:</source>
-        <translation type="unfinished"></translation>
+        <translation>Equipe do seu oponente:</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="1369"/>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation>Pronto</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="1370"/>
         <source>Forfeit</source>
-        <translation type="unfinished"></translation>
+        <translation>Desistir</translation>
     </message>
 </context>
 <context>
@@ -2565,48 +2574,48 @@ Ataques:
     <message>
         <location filename="box.cpp" line="701"/>
         <source>&amp;Edit Box Name...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Editar Nome do Box</translation>
     </message>
     <message>
         <location filename="box.cpp" line="702"/>
         <source>&amp;Add New Box</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Adicionar Novo Box</translation>
     </message>
     <message>
         <location filename="box.cpp" line="703"/>
         <source>&amp;Delete Current Box</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Deletar Box Atual</translation>
     </message>
     <message>
         <location filename="box.cpp" line="751"/>
         <source>Edit Box Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Editando nome do Box</translation>
     </message>
     <message>
         <location filename="box.cpp" line="752"/>
         <source>Enter the new name for the box %1:</source>
-        <translation type="unfinished"></translation>
+        <translation>Digite um novo nome para o box %1:</translation>
     </message>
     <message>
         <location filename="box.cpp" line="763"/>
         <location filename="box.cpp" line="765"/>
         <source>New Box</source>
-        <translation type="unfinished"></translation>
+        <translation>Novo Box</translation>
     </message>
     <message>
         <location filename="box.cpp" line="764"/>
         <source>Enter the new name for the new box:</source>
-        <translation type="unfinished"></translation>
+        <translation>Digite um novo nome para o novo box:</translation>
     </message>
     <message>
         <location filename="box.cpp" line="796"/>
         <source>Destroying a box</source>
-        <translation type="unfinished"></translation>
+        <translation>Destruindo um box</translation>
     </message>
     <message>
         <location filename="box.cpp" line="796"/>
         <source>Do you want to delete box %1?</source>
-        <translation type="unfinished"></translation>
+        <translation>Você deseja deletar o box %1?</translation>
     </message>
     <message>
         <source>Switc&amp;h</source>
@@ -2690,7 +2699,7 @@ Ataques:
     <message>
         <location filename="teambuilder.cpp" line="491"/>
         <source>Team Tier</source>
-        <translation type="unfinished"></translation>
+        <translation>Categoria da Equipe</translation>
     </message>
     <message>
         <location filename="teambuilder.cpp" line="495"/>
