@@ -32,6 +32,8 @@ BattlePStorage::BattlePStorage(BattlePlugin *p)
 BattlePStorage::~BattlePStorage()
 {
     delete plugin, plugin = NULL;
+
+    qDebug() << "Deleted battle storage " << this;
 }
 
 int BattlePStorage::call(int f, BattleInterface *b)

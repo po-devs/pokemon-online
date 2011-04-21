@@ -10,7 +10,7 @@
 #include "server.h"
 #include "analyze.h"
 
-Player::Player(GenericSocket *sock, int id) : myid(id)
+Player::Player(const GenericSocket &sock, int id) : myid(id)
 {
     myrelay = new Analyzer(sock, id);
     lockCount = 0;
@@ -1048,7 +1048,7 @@ void Player::spectatingRequested(int id)
     if (!isLoggedIn()) {
         return; //INVALID BEHAVIOR
     }
-    if (battlesSpectated.size() >= 2) {
+    if (battlesSpectated.size() >= 2 || (auth() >= 3 && battlesSpectated.size() >= 16)) {
         sendMessage(tr("You're already watching %1 battles!").arg(battlesSpectated.size()));
         return;
     }

@@ -36,10 +36,10 @@ public slots:
 };
 
 template <class S>
-        class Network  : public GenericNetwork
+        class Network : public GenericNetwork
 {
 public:
-    Network(S *sock, int id);
+    Network(S sock, int id);
     ~Network();
     /* Functions to reimplement:
            isValid: returns whether the socket is valid or not!
@@ -63,7 +63,7 @@ public:
     virtual void send(const QByteArray &message);
 private:
     /* internal socket */
-    QPointer<S> mysocket;
+    S mysocket;
     /* internal variables for the protocol */
     bool commandStarted;
     quint16 remainingLength;
@@ -80,8 +80,8 @@ private:
 
     QString _ip;
 
-    S *socket();
-    const S *socket() const;
+    S socket();
+    const S socket() const;
 };
 
 #include "antidos.h"
@@ -96,11 +96,13 @@ template <class S>
 void Network<S>::close() {
     stillValid = false;
     if (socket()) {
-        S *sock = mysocket;
-        mysocket = NULL;
-        connect(sock, SIGNAL(disconnected()), sock, SLOT(deleteLater()));
-        connect(sock, SIGNAL(disconnected()), this, SIGNAL(disconnected()));
+        S sock = mysocket;
+        mysocket = S();
+        sock->disconnect();
         sock->disconnectFromHost();
+        sock->deleteLater();
+
+        emit disconnected();
     }
 }
 
@@ -142,7 +144,8 @@ QString Network<S>::ip() const {
 template <class S>
 void Network<S>::onDisconnect()
 {
-    mysocket = NULL;
+    mysocket->deleteLater();
+    mysocket = S();
 }
 
 template <class S>
@@ -215,13 +218,13 @@ void Network<S>::send(const QByteArray &message)
 }
 
 template <class S>
-S * Network<S>::socket()
+S Network<S>::socket()
 {
     return mysocket;
 }
 
 template <class S>
-const S * Network<S>::socket() const
+const S Network<S>::socket() const
 {
     return mysocket;
 }

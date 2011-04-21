@@ -43,7 +43,7 @@ public:
         Away = 4
     };
 
-    Player(GenericSocket *sock, int id);
+    Player(const GenericSocket &sock, int id);
     ~Player();
 
     /* returns all the regular info */

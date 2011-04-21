@@ -97,7 +97,7 @@ class Analyzer : public QObject
     Q_OBJECT
 public:
     template<class SocketClass>
-    Analyzer(SocketClass *sock, int id);
+    Analyzer(const SocketClass &sock, int id);
     ~Analyzer();
 
     /* functions called by the server */
@@ -220,7 +220,7 @@ private:
 };
 
 template<class SocketClass>
-Analyzer::Analyzer(SocketClass *sock, int id) : mysocket(new Network<SocketClass>(sock, id)), pingedBack(true)
+Analyzer::Analyzer(const SocketClass &sock, int id) : mysocket(new Network<SocketClass>(sock, id)), pingedBack(true)
 {
     connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
     connect(&socket(), SIGNAL(isFull(QByteArray)), this, SLOT(commandReceived(QByteArray)));

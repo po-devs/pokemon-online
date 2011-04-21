@@ -1,59 +1,35 @@
 #ifndef SFMLSOCKET_H
 #define SFMLSOCKET_H
 
-class QTcpSocket;
-
 #ifdef SFML_SOCKETS
-#include <SFML/System.hpp>
-#include <SFML/Network.hpp>
+
 #include <QtCore>
+#include <iostream>
+#include <boost/asio.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
-class SocketSQ;
-
-class SocketManager : public sf::Thread
-{
-public:
-    SocketManager();
-    ~SocketManager();
-
-    virtual void Run();
-
-    SocketSQ * createSocket();
-
-    void addSocket(SocketSQ *s);
-    void deleteSocket(SocketSQ *s);
-    void addSendingSocket(SocketSQ *s);
-private slots:
-private:
-    sf::Mutex lock;
-    volatile bool finished;
-
-    QList<SocketSQ*> socketsToRemove;
-    QList<SocketSQ*> socketsToAdd;
-    QLinkedList<SocketSQ*> waitingList;
-    QLinkedList<SocketSQ*> socketsToSend;
-
-    QSet<SocketSQ*> heap;
-
-    /* Causes threading issues so made private in order to not be called rashly */
-    bool existSocket(SocketSQ *s) const;
-};
+class SocketManager;
 
 /* Never delete a Socket SQ directly */
-class SocketSQ : public QObject
+class SocketSQ : public QObject, public boost::enable_shared_from_this<SocketSQ>
 {
     Q_OBJECT
     friend class SocketManager;
 
-    SocketSQ(SocketManager *manager, sf::SocketTCP s = sf::SocketTCP());
+    SocketSQ(SocketManager *manager, boost::asio::ip::tcp::socket *socket);
+    SocketSQ(SocketManager *manager, boost::asio::ip::tcp::acceptor *socket);
 public:
-    void delayDeath();
+    ~SocketSQ();
 
+    typedef boost::shared_ptr<SocketSQ> pointer;
     /* For server sockets */
-    SocketSQ * nextPendingConnection();
+    pointer nextPendingConnection();
 
-    sf::SocketTCP &sock();
-    const sf::SocketTCP &sock() const;
+    boost::asio::ip::tcp::socket &sock();
+    const boost::asio::ip::tcp::socket &sock() const;
+    boost::asio::ip::tcp::acceptor &server();
+    const boost::asio::ip::tcp::acceptor &server() const;
     QString ip();
 
     void disconnectFromHost();
@@ -63,6 +39,9 @@ public:
     void putChar(char c);
     void write(const QByteArray &b);
     bool listen(quint16 port);
+    void setLowDelay(bool lowdelay);
+    /* For non server sockets, start the read feed */
+    void start();
 
     bool isServer;
 public slots:
@@ -71,7 +50,11 @@ signals:
     void active();
     void disconnected();
 private:
-    sf::SocketTCP mysock;
+    //union {
+        boost::asio::ip::tcp::socket * mysock;
+        boost::asio::ip::tcp::acceptor * myserver;
+    //};
+    boost::asio::ip::tcp::endpoint endpoint;
     SocketManager *manager;
     QString myip;
 
@@ -79,19 +62,45 @@ private:
     void fill();
     void sendData();
 
+    void readHandler(const boost::system::error_code& ec, std::size_t bytes_transferred);
+    void writeHandler(const boost::system::error_code& ec, std::size_t bytes_transferred);
+    void acceptHandler(const boost::system::error_code& ec);
+
+    char innerBuffer[10000];
     QByteArray buffer;
     QByteArray toSend;
-    sf::Mutex m;
+    QByteArray sending;
+    QMutex m;
+    /* From where in the buffer to start reading. Gets incremented when you read chars one by one.
+        Counter is resetted when external actually reads a chunk. */
     int bufCounter;
     volatile bool notifiedDced;
-    int mycounter;
     volatile bool freeConnection;
-    SocketSQ *incoming;
+    boost::asio::ip::tcp::socket *incoming;
 };
 
-typedef SocketSQ GenericSocket;
+class SocketManager : public QThread
+{
+    Q_OBJECT
+public:
+    SocketManager();
+    ~SocketManager();
+
+    SocketSQ::pointer createSocket();
+    SocketSQ::pointer createServerSocket();
+
+    boost::asio::io_service io_service;
+protected:
+    void run();
+private slots:
+private:
+    volatile bool finished;
+};
+
+typedef SocketSQ::pointer GenericSocket;
 #else
-typedef QTcpSocket GenericSocket;
+class QTcpSocket;
+typedef QTcpSocket* GenericSocket;
 #endif
 
 #endif // SFMLSOCKET_H

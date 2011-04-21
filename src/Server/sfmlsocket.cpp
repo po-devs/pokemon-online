@@ -1,6 +1,21 @@
 #ifdef SFML_SOCKETS
 
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
 #include "sfmlsocket.h"
+
+/* The deleteObjectLater destructor ensures the objects are destroyed in
+   the main thread instead of the local thread to the SocketManager.
+
+   This prevents possible calls to SocketSQ's slots to have multithreading problems */
+struct deleteObjectLater {
+    void operator () (QObject *q) {
+        q->QObject::deleteLater();
+    }
+};
+
+
+using boost::asio::ip::tcp;
 
 SocketManager::SocketManager() {
     finished = false;
@@ -12,138 +27,136 @@ SocketManager::~SocketManager() {
     /* Wait till the thread finished */
     while (finished) {
     }
-
-    foreach (SocketSQ *s, heap) {
-        delete s;
-    }
 }
 
-void SocketManager::Run() {
+void SocketManager::run() {
     while (!finished) {
-        sf::Sleep(0.010);
+        io_service.reset();
 
-        foreach(SocketSQ *s, socketsToSend) {
-            s->sendData();
-        }
+        boost::system::error_code ec;
 
-        foreach(SocketSQ *s, heap) {
-            s->fill();
-        }
-
-        lock.Lock();
-        if (socketsToAdd.size() > 0) {
-            foreach(SocketSQ *s, socketsToAdd) {
-                heap.insert(s);
-            }
-            socketsToAdd.clear();
-        }
-        if (socketsToRemove.size() > 0) {
-            foreach(SocketSQ *s, socketsToRemove) {
-                if (!existSocket(s))
-                    continue;
-                heap.remove(s);
-                s->delayDeath();
-            }
-            socketsToRemove.clear();
-        }
-        socketsToSend = waitingList;
-        waitingList.clear();
-        lock.Unlock();
+        io_service.run_one(ec);
     }
 
     finished = false;
 }
 
-SocketSQ* SocketManager::createSocket() {
-    return new SocketSQ(this);
+SocketSQ::pointer SocketManager::createSocket() {
+    return SocketSQ::pointer(new SocketSQ(this, new tcp::socket(io_service)), deleteObjectLater());
 }
 
-void SocketManager::addSocket(SocketSQ *s) {
-    sf::Lock l(lock);
-
-    socketsToAdd.append(s);
+SocketSQ::pointer SocketManager::createServerSocket() {
+    return SocketSQ::pointer(new SocketSQ(this, new tcp::acceptor(io_service)), deleteObjectLater());
 }
 
-void SocketManager::deleteSocket(SocketSQ *s) {
-    sf::Lock l(lock);
-
-    socketsToRemove.append(s);
-}
-
-bool SocketManager::existSocket(SocketSQ* s) const {
-    return heap.contains(s);
-}
-
-void SocketManager::addSendingSocket(SocketSQ *s) {
-    sf::Lock l(lock);
-
-    if(existSocket(s)) {
-        waitingList.append(s);
-    }
-}
-
-SocketSQ::SocketSQ(SocketManager *manager, sf::SocketTCP s) : mysock(s), manager(manager), bufCounter(0), notifiedDced(false)
+SocketSQ::SocketSQ(SocketManager *manager, tcp::socket *s) : mysock(s), manager(manager), m(QMutex::Recursive), bufCounter(0), notifiedDced(false)
 {
     isServer = false;
     incoming = NULL;
     freeConnection = true;
+}
 
-    sock().SetBlocking(false);
-    manager->addSocket(this);
+SocketSQ::SocketSQ(SocketManager *manager, tcp::acceptor *s) : myserver(s), manager(manager), bufCounter(0), notifiedDced(false)
+{
+    isServer = true;
+    incoming = NULL;
+    freeConnection = true;
+
+    incoming = new tcp::socket(manager->io_service);
+}
+
+SocketSQ::~SocketSQ() {
+    if (isServer) {
+        delete myserver;
+        delete incoming;
+    } else {
+        delete mysock;
+    }
 }
 
 bool SocketSQ::listen(quint16 port)
 {
-    isServer = true;
-    return sock().Listen(port);
-}
-
-void SocketSQ::deleteLater()
-{
-    if (!notifiedDced) {
-        notifiedDced = true;
-        emit disconnected();
+    server().open(tcp::v4());
+    try {
+        server().bind(tcp::endpoint(tcp::v4(), port));
     }
+    catch(...) {
+           return false;
+    }
+    boost::system::error_code ec;
 
-    manager->deleteSocket(this);
-}
+    bool ret;
 
-SocketSQ* SocketSQ::nextPendingConnection()
-{
-    if (!isServer)
-        return NULL;
-    if (freeConnection)
-        return NULL;
-    SocketSQ *ret = incoming;
-
-    freeConnection = true;
+    ret = !server().listen(boost::asio::socket_base::max_connections, ec);
+    server().async_accept(*incoming, boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
 
     return ret;
 }
 
+/* The function is necessary because it's overloading the base deleteLater, which we don't want
+   called until all the handlers are finished (they may not be finished even after a disconnect.
+
+   The SocketSQ is always handled with SocketSQ::pointer, so it's deleted with the shared ptr system */
+void SocketSQ::deleteLater()
+{
+}
+
+SocketSQ::pointer SocketSQ::nextPendingConnection()
+{
+    if (!isServer)
+        return SocketSQ::pointer();
+    if (freeConnection)
+        return SocketSQ::pointer();
+    SocketSQ::pointer ret = pointer(new SocketSQ(manager, incoming), deleteObjectLater());
+    boost::system::error_code ec;
+    ret->myip = QString::fromStdString(incoming->remote_endpoint(ec).address().to_string());
+
+    incoming = new tcp::socket(manager->io_service);
+    freeConnection = true;
+    server().async_accept(*incoming, boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
+
+    /* Avoids to start dead sockets */
+    if (ec) {
+        return SocketSQ::pointer();
+    }
+
+    ret->start();    
+    return ret;
+}
+
+void SocketSQ::start() {
+    /* Starts the receiving loop */
+    readHandler(boost::system::error_code(), 0);
+}
+
 void SocketSQ::disconnectFromHost()
 {
-    sock().Close();
+    sock().close();
 }
 
-sf::SocketTCP &SocketSQ::sock()
+tcp::socket &SocketSQ::sock()
 {
-    return mysock;
+    return* mysock;
 }
 
-const sf::SocketTCP &SocketSQ::sock() const
+const tcp::socket &SocketSQ::sock() const
 {
-    return mysock;
+    return *mysock;
 }
 
-void SocketSQ::delayDeath()
+tcp::acceptor &SocketSQ::server()
 {
-    QObject::deleteLater();
+    return *myserver;
+}
+
+const tcp::acceptor &SocketSQ::server() const
+{
+    return *myserver;
 }
 
 int SocketSQ::bytesAvailable()
 {
-    sf::Lock l(m);
+    QMutexLocker l(&m);
 
     if (notifiedDced)
         return 0;
@@ -151,51 +164,64 @@ int SocketSQ::bytesAvailable()
     return buffer.size()-bufCounter;
 }
 
-void SocketSQ::fill()
+void SocketSQ::readHandler(const boost::system::error_code& ec, std::size_t bytes_transferred)
 {
-    if (!isServer) {
-        m.Lock();
-
-        char buf [1024];
-        std::size_t length;
-        sf::Socket::Status st = sf::Socket::NotReady;
-        bool filled = false;
-        while (buffer.size() <= 100000 && ((st = sock().Receive (buf,1024, length)) == sf::Socket::Done)) {
-            filled = true;
-            buffer.append(buf, length);
+    if (ec) {
+        if (!notifiedDced) {
+            notifiedDced = true;
+            emit disconnected();
         }
-
-        m.Unlock();
-
-        if (!sock().IsValid() || st == sf::Socket::Disconnected) {
-            if (!notifiedDced) {
-                notifiedDced = true;
-                emit disconnected();
-            }
-        } else {
-            if (filled){
-                emit active();
-            }
-        }
-    } else {
-        if (freeConnection) {
-            sf::SocketTCP newsock;
-            sf::IPAddress ip;
-
-            if (sock().Accept(newsock,&ip) == sf::Socket::Done) {
-                incoming = new SocketSQ(manager, newsock);
-
-                incoming->myip = QString::fromStdString(ip.ToString());
-                freeConnection = false;
-
-                emit active();
-            }
-        }
+        return;
     }
+
+    if (bytes_transferred > 0) {
+        m.lock();
+        buffer.append(innerBuffer, bytes_transferred);
+        m.unlock();
+
+        emit active();
+    }
+
+    sock().async_read_some(boost::asio::buffer(innerBuffer, 10000),
+                      boost::bind(&SocketSQ::readHandler, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+}
+
+void SocketSQ::writeHandler(const boost::system::error_code& ec, std::size_t bytes_transferred)
+{
+    if (ec) {
+        if (!notifiedDced) {
+            notifiedDced = true;
+            emit disconnected();
+        }
+        return;
+    }
+
+    QMutexLocker l(&m);
+
+    sending = sending.right(sending.size() - bytes_transferred) + toSend;
+    toSend.clear();
+
+    if (sending.size() == 0)
+        return;
+
+    sock().async_send(boost::asio::buffer(sending.data(), sending.size()),
+                      boost::bind(&SocketSQ::writeHandler, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+}
+
+void SocketSQ::acceptHandler(const boost::system::error_code& ec)
+{
+    if (ec) {
+        boost::asio::detail::throw_error(ec);
+        server().async_accept(*incoming, boost::bind(&SocketSQ::acceptHandler, this, boost::asio::placeholders::error));
+        return;
+    }
+
+    freeConnection = false;
+    emit active();
 }
 
 void SocketSQ::getChar(char *ch) {
-    sf::Lock l(m);
+    QMutexLocker l(&m);
 
     if (buffer.size() - bufCounter <= 0)
         return;
@@ -207,7 +233,7 @@ void SocketSQ::getChar(char *ch) {
 
 QByteArray SocketSQ::read(int length)
 {
-    sf::Lock l(m);
+    QMutexLocker l(&m);
 
     QByteArray ret;
     if (bufCounter == 0)
@@ -222,11 +248,19 @@ QByteArray SocketSQ::read(int length)
 
 void SocketSQ::putChar(char c)
 {
+    QMutexLocker l(&m);
     toSend.append(c);
+}
+
+void SocketSQ::setLowDelay(bool lowDelay)
+{
+    boost::asio::ip::tcp::no_delay option(lowDelay);
+    sock().set_option(option);
 }
 
 void SocketSQ::write(const QByteArray &b)
 {
+    QMutexLocker l(&m);
     if (toSend.length() == 0)
         toSend = b;
     else
@@ -242,28 +276,11 @@ QString SocketSQ::ip()
 
 void SocketSQ::sendData()
 {
-    int remaining = toSend.size();
-    sf::Socket::Status st = sf::Socket::Done;
+    QMutexLocker l(&m);
 
-    for (int counter = 0; counter < toSend.size(); counter += 3072) {
-        st = sock().Send(toSend.data()+counter, std::min(remaining, 3072));
-
-        if (st != sf::Socket::Done)
-            break;
-
-        remaining = std::max(remaining - 3072, 0);
-    }
-
-    if (remaining == 0)
-        toSend.clear();
-    else
-        toSend.remove(0, toSend.size() - remaining);
-
-    if (!sock().IsValid() || st == sf::Socket::Disconnected) {
-        notifiedDced = true;
-        emit disconnected();
-    } else if (remaining > 0) {
-        manager->addSendingSocket(this);
+    if (sending.size() == 0 && toSend.size() > 0) {
+        writeHandler(boost::system::error_code(), 0);
+        return;
     }
 }
 
