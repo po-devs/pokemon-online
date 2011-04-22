@@ -195,14 +195,19 @@ QScriptValue ScriptDB::findBy(const QString &tableName, const QString &key, cons
             } else {
                 current_result = engine->nullValue();
             }
-            hash.setProperty(declaredFieldsList.at(i), current_result);
+            QString propertyName = declaredFieldsList.at(i);
+            if (propertyName == "id") {
+                hash.setProperty(propertyName, current_result, QScriptValue::ReadOnly | QScriptValue::Undeletable);
+            } else {
+                hash.setProperty(propertyName, current_result, QScriptValue::Undeletable);
+            }
         }
-        resulting_data.setProperty(current_row, hash);
+        resulting_data.setProperty(current_row, hash, QScriptValue::Undeletable);
         ++current_row;
     }
-    resulting_data.setProperty("length", QScriptValue(current_row));
+    resulting_data.setProperty("length", QScriptValue(current_row), QScriptValue::ReadOnly | QScriptValue::Undeletable);
     QScriptValue resulting_object = engine->newObject();
-    resulting_object.setProperty("data", resulting_data);
+    resulting_object.setProperty("data", resulting_data, QScriptValue::ReadOnly | QScriptValue::Undeletable);
     resulting_object.setPrototype(por_proto);
     return resulting_object;
 }
