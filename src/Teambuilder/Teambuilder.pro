@@ -78,7 +78,8 @@ TRANSLATIONS = translation_cz.ts \
     translation_ru.ts \
     translation_th.ts \
     translation_sv.ts \
-    translation_zh-cn.ts
+    translation_zh-cn.ts \
+    translation_tr.ts
 RC_FILE = myapp.rc
 RESOURCES += 
 macx:LIBS += -framework \
