@@ -969,6 +969,7 @@ void Server::incomingConnection(int i)
         p->sendMessage("The server is full.");
         AntiDos::obj()->disconnect(p->ip(), -1);
         p->kick();
+        p->deleteLater();
         return;
     }
 
