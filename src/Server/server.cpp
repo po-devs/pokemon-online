@@ -967,6 +967,7 @@ void Server::incomingConnection(int i)
         Player* p = new Player(newconnection,-1);
         connect(p, SIGNAL(disconnected(int)), p, SLOT(deleteLater()));
         p->sendMessage("The server is full.");
+        AntiDos::obj()->disconnect(p->ip(), -1);
         p->kick();
         return;
     }
