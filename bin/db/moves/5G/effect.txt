@@ -540,7 +540,7 @@ Sharply raises Defense.
 May decrease opponent's Accuracy by 1 stage.
 Deals damage based on the target's Def.
 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
-Increases Accuracy during Weather. (30%)
+May confuse opponent. (30%) Always hits during Rain Dance, reduced hits during Sunny Day. (50%)
 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
 Strikes twice.
 May burn opponent. (30%)
