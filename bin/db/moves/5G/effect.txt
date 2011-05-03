@@ -478,7 +478,7 @@ Draws the opponent's attacks at yourself.
 Makes Target easier to hit for 3 turns.
 Negates all held items for 5 turns.
 Makes Flying opponents succeptible to Ground moves. (100%)
-Forces the target to switch.
+Always scores a critical hit.
 Hits all targets.
 May poison opponent. (10%)
 Raises SpA, SpD, and Speed by 1 stage.
