@@ -148,6 +148,7 @@ void BattleSituation::removePlugin(BattlePlugin *p)
     qDebug() << "Removing plugins at index " << index << "(this = " << this << ")";
 
     if (index != -1) {
+        qDebug() << "Index is not -1";
         plugins.removeAt(index);
         delete calls.takeAt(index);
         qDebug() << "Remaining plugin size after operation: " << calls.size();
@@ -264,6 +265,7 @@ void BattleSituation::engageBattle()
         t.fixTeam(team2);
     }
 
+    qDebug() << "Engaging battle " << this << ", calling plugins";
     /* Plugin call */
     callp(BP::battleStarting);
 
