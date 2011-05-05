@@ -138,7 +138,7 @@ void BattleSituation::buildPlugins(PluginManager *p)
 
     foreach(BattlePlugin *pl, plugins) {
         calls.push_back(new BattlePStorage(pl));
-        qDebug() << "Created battle storage " << calls.back();
+        qDebug() << "Created battle storage " << calls.back() << " for battle " << this;
     }
 }
 

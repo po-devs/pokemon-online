@@ -94,8 +94,10 @@ void Network<S>::manageError(QAbstractSocket::SocketError err)
 
 template <class S>
 void Network<S>::close() {
+    qDebug() << "beginning to close a network " << this;
     stillValid = false;
     if (socket()) {
+        qDebug() << "valid socket " << this;
         S sock = mysocket;
         mysocket = S();
         sock->disconnect();
@@ -103,7 +105,11 @@ void Network<S>::close() {
         sock->deleteLater();
 
         emit disconnected();
+    } else {
+        qDebug() << "invalid socket";
     }
+
+    qDebug() << "End of closing network";
 }
 
 template <class S>
