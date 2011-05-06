@@ -150,8 +150,11 @@ QString Network<S>::ip() const {
 template <class S>
 void Network<S>::onDisconnect()
 {
-    mysocket->deleteLater();
-    mysocket = S();
+    stillValid = false;
+    if (socket()) {
+        mysocket->deleteLater();
+        mysocket = S();
+    }
 }
 
 template <class S>
