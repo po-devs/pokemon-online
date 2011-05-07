@@ -166,16 +166,17 @@ void BattleSituation::callp(int function)
 
 BattleSituation::~BattleSituation()
 {
+    qDebug() << "Deleting battle situation " << this;
+    terminate();
+    /* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
+    wait();
+
     if(useBattleLog) {
         battleLog.close();
     }
     foreach(BattlePStorage *p, calls) {
         delete p;
     }
-
-    terminate();
-    /* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
-    wait();
     delete timer;
 }
 
