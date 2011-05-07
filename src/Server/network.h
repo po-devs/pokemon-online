@@ -152,8 +152,10 @@ void Network<S>::onDisconnect()
 {
     stillValid = false;
     if (socket()) {
+        qDebug() << "Beginning onDisconnect " << this;
         mysocket->deleteLater();
         mysocket = S();
+        qDebug() << "Ending onDisconnect " << this;
     }
 }
 

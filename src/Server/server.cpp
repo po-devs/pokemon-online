@@ -1324,8 +1324,8 @@ bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool fo
     t = &TierMachine::obj()->tier(p2->tier());
     if (!t->allowMode(mode))
         return false;
-    if (std::abs(p1->rating()-p2->rating()) > 300)
-        return false;
+//    if (std::abs(p1->rating()-p2->rating()) > 300)
+//        return false;
     return true;
 }
 
