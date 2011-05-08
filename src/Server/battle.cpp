@@ -178,6 +178,7 @@ BattleSituation::~BattleSituation()
         delete p;
     }
     delete timer;
+    qDebug() << "Deleted battle situation";
 }
 
 QString BattleSituation::getBattleLogFilename() const
