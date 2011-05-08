@@ -192,8 +192,6 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
 
     in >> command;
 
-    qDebug() << "Starting to deal with command " << int(command);
-
     switch (command) {
     case Login:
         {
@@ -449,7 +447,6 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;
     }
-    qDebug() << "Ending to deal with command " << int(command);
 }
 
 void Analyzer::commandReceived(const QByteArray &command)

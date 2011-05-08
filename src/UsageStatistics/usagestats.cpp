@@ -135,7 +135,9 @@ PokemonOnlineStatsBattlePlugin::PokemonOnlineStatsBattlePlugin(PokemonOnlineStat
 
 PokemonOnlineStatsBattlePlugin::~PokemonOnlineStatsBattlePlugin()
 {
+    qDebug() << "Deleting stats plugin " << this;
     master->refCounter.deref();
+    qDebug() << "Deleted stats plugin " << this;
 }
 
 QHash<QString, BattlePlugin::Hook> PokemonOnlineStatsBattlePlugin::getHooks()
@@ -149,10 +151,13 @@ QHash<QString, BattlePlugin::Hook> PokemonOnlineStatsBattlePlugin::getHooks()
 
 int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
 {
+    qDebug() << "Battle Starting Stats " << this;
     /* We only keep track of battles between players of the same tier
        and not CC battles */
-    if (b.clauses() & ChallengeInfo::ChallengeCup)
+    if (b.clauses() & ChallengeInfo::ChallengeCup) {
+        qDebug() << "CC " << this;
         return -1;
+    }
 
     QString tier = b.tier();
 
@@ -184,6 +189,8 @@ int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
             }
         }
     }
+
+    qDebug() << "End Battle Starting Stats " << this;
 
     return -1; /* Means the plugin is done */
 }
