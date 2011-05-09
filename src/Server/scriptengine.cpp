@@ -2104,3 +2104,21 @@ QScriptValue ScriptEngine::getValKeys(const QString &file)
     }
     return result_array;
 }
+
+void ScriptEngine::changeAvatar(int playerId, quint16 avatarId)
+{
+    if (!loggedIn(playerId)) {
+        warn("changeAvatar","unknown player.");
+        return;
+    }
+    myserver->player(playerId)->avatar() = avatarId;
+    myserver->sendPlayer(playerId);
+}
+
+QScriptValue ScriptEngine::avatar(int playerId)
+{
+    if (!loggedIn(playerId)) {
+        return myengine.nullValue();
+    }
+    return myserver->player(playerId)->avatar();
+}
