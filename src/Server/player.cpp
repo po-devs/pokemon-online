@@ -54,12 +54,21 @@ Player::Player(const GenericSocket &sock, int id) : myid(id)
     connect(&relay(), SIGNAL(leaveChannel(int)), SLOT(leaveRequested(int)));
     /* To avoid threading / simulateneous calls problems, it's queued */
     connect(this, SIGNAL(unlocked()), &relay(), SLOT(undelay()),Qt::QueuedConnection);
+
+    /* Autokick after 3 minutes if still not logged in */
+    QTimer::singleShot(1000*180, this, SLOT(autoKick()));
 }
 
 Player::~Player()
 {
     removeWaitingTeam();
     delete myrelay;
+}
+
+void Player::autoKick()
+{
+    if (!isLoggedIn())
+        kick();
 }
 
 void Player::ladderChange(bool n)

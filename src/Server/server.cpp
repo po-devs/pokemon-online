@@ -967,7 +967,9 @@ void Server::incomingConnection(int i)
         Player* p = new Player(newconnection,-1);
         connect(p, SIGNAL(disconnected(int)), p, SLOT(deleteLater()));
         p->sendMessage("The server is full.");
+        AntiDos::obj()->disconnect(p->ip(), -1);
         p->kick();
+        p->deleteLater();
         return;
     }
 
@@ -1322,8 +1324,8 @@ bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool fo
     t = &TierMachine::obj()->tier(p2->tier());
     if (!t->allowMode(mode))
         return false;
-    if (std::abs(p1->rating()-p2->rating()) > 300)
-        return false;
+//    if (std::abs(p1->rating()-p2->rating()) > 300)
+//        return false;
     return true;
 }
 

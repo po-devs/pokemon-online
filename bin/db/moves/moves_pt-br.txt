@@ -1,15 +1,15 @@
-(Sem Ataque)
+
 Pound
 Karate Chop
-Doubleslap
+DoubleSlap
 Comet Punch
 Mega Punch
 Pay Day
 Fire Punch
 Ice Punch
-Thunderpunch
+ThunderPunch
 Scratch
-Vicegrip
+ViceGrip
 Guillotine
 Razor Wind
 Swords Dance
@@ -26,7 +26,7 @@ Double Kick
 Mega Kick
 Jump Kick
 Rolling Kick
-Sand-attack
+Sand-Attack
 Headbutt
 Horn Attack
 Fury Attack
@@ -36,7 +36,7 @@ Body Slam
 Wrap
 Take Down
 Thrash
-Double-edge
+Double-Edge
 Tail Whip
 Poison Sting
 Twineedle
@@ -47,7 +47,7 @@ Growl
 Roar
 Sing
 Supersonic
-Sonicboom
+SonicBoom
 Disable
 Acid
 Ember
@@ -59,7 +59,7 @@ Surf
 Ice Beam
 Blizzard
 Psybeam
-Bubblebeam
+BubbleBeam
 Aurora Beam
 Hyper Beam
 Peck
@@ -74,15 +74,15 @@ Mega Drain
 Leech Seed
 Growth
 Razor Leaf
-Solarbeam
-Poisonpowder
+SolarBeam
+PoisonPowder
 Stun Spore
 Sleep Powder
 Petal Dance
 String Shot
 Dragon Rage
 Fire Spin
-Thundershock
+ThunderShock
 Thunderbolt
 Thunder Wave
 Thunder
@@ -106,7 +106,7 @@ Double Team
 Recover
 Harden
 Minimize
-Smokescreen
+SmokeScreen
 Confuse Ray
 Withdraw
 Defense Curl
@@ -187,7 +187,7 @@ Faint Attack
 Sweet Kiss
 Belly Drum
 Sludge Bomb
-Mud-slap
+Mud-Slap
 Octazooka
 Spikes
 Zap Cannon
@@ -197,7 +197,7 @@ Perish Song
 Icy Wind
 Detect
 Bone Rush
-Lock-on
+Lock-On
 Outrage
 Sandstorm
 Giga Drain
@@ -221,9 +221,9 @@ Safeguard
 Pain Split
 Sacred Fire
 Magnitude
-Dynamicpunch
+DynamicPunch
 Megahorn
-Dragonbreath
+DragonBreath
 Baton Pass
 Encore
 Pursuit
@@ -243,8 +243,8 @@ Sunny Day
 Crunch
 Mirror Coat
 Psych Up
-Extremespeed
-Ancientpower
+ExtremeSpeed
+AncientPower
 Shadow Ball
 Future Sight
 Rock Smash
@@ -259,11 +259,11 @@ Heat Wave
 Hail
 Torment
 Flatter
-Will-o-wisp
+Will-O-Wisp
 Memento
 Facade
 Focus Punch
-Smellingsalt
+SmellingSalt
 Follow Me
 Nature Power
 Charge
@@ -295,7 +295,7 @@ Camouflage
 Tail Glow
 Luster Purge
 Mist Ball
-Featherdance
+FeatherDance
 Teeter Dance
 Blaze Kick
 Mud Sport
@@ -318,7 +318,7 @@ Odor Sleuth
 Rock Tomb
 Silver Wind
 Metal Sound
-Grasswhistle
+GrassWhistle
 Tickle
 Cosmic Power
 Water Spout
@@ -356,7 +356,7 @@ Psycho Boost
 Roost
 Gravity
 Miracle Eye
-Wake-up Slap
+Wake-Up Slap
 Hammer Arm
 Gyro Ball
 Healing Wish
@@ -402,7 +402,7 @@ Night Slash
 Aqua Tail
 Seed Bomb
 Air Slash
-X-scissor
+X-Scissor
 Bug Buzz
 Dragon Pulse
 Dragon Rush
@@ -457,7 +457,7 @@ Defend Order
 Heal Order
 Head Smash
 Double Hit
-Roar Of Time
+Roar of Time
 Spacial Rend
 Lunar Dance
 Crush Grip
@@ -466,95 +466,95 @@ Dark Void
 Seed Flare
 Ominous Wind
 Shadow Force
-Claw Sharpen
+Hone Claws
 Wide Guard
-Guard Share
-Power Share
+Guard Split
+Power Split
 Wonder Room
-Psycho Shock
-Venom Shock
-Body Purge
-Anger Powder
+Psyshock
+Venoshock
+Autotomize
+Rage Powder
 Telekinesis
 Magic Room
-Knock Down
-Mountain Storm
+Smack Down
+Storm Throw
 Flame Burst
-Slime Wave
-Butterfly Dance
-Heavy Bomber
-Synchro Noise
-Electric Ball
-Submersion
-Nitro Charge
-Snake Coil
-Ankle Sweep
-Acid Bomb
-Trickery
+Sludge Wave
+Quiver Dance
+Heavy Slam
+Synchronoise
+Electro Ball
+Soak
+Flame Charge
+Coil
+Low Sweep
+Acid Spray
+Foul Play
 Simple Beam
-Befriend
+Entrainment
 After You
-A Capella
-Echo Voice
-Repayment
+Round
+Echoed Voice
+Chip Away
 Clear Smog
-Assist Power
-Fast Guard
-Side Change
-Boil Over
+Stored Power
+Quick Guard
+Ally Switch
+Scald
 Shell Smash
-Healing Wave
-Evil Eye
-Freefall
-Gear Change
-Overhead Throw
+Heal Pulse
+Hex
+Sky Drop
+Shift Gear
+Circle Throw
 Incinerate
-Postpone
-Acrobat
-Mirror Type
-Retribution
-Death Gambit
-Gift Pass
-Purgatory
-Water Realm
-Fire Realm
-Grass Realm
-Volt Change
-Bug Repellant
-Level Field
-Ice Breath
+Quash
+Acrobatics
+Reflect Type
+Retaliate
+Final Gambit
+Bestow
+Inferno
+Water Pledge
+Fire Pledge
+Grass Pledge
+Volt Switch
+Struggle Bug
+Bulldoze
+Frost Breath
 Dragon Tail
-Cheer Up
-Electric Net
-Wild bolt
-Drill Liner
-Double Chop
+Work Up
+Electroweb
+Wild Charge
+Drill Run
+Dual Chop
 Heart Stamp
-Wood Horn
-Holy Sword
-Shell Blade
-Heat Stamp
-Grass Mixer
-Hard Roller
+Horn Leech
+Sacred Sword
+Razor Shell
+Heat Crash
+Leaf Tornado
+Steamroller
 Cotton Guard
-Night Burst
-Psycho Break
-Sweep Slap
+Night Daze
+Psystrike
+Tail Slap
 Hurricane
-Afro Break
-Gear Saucer
-Kaendan
-Techno Buster
-Ancient Song
-Mystery Sword
-Frozen World
-Lightning Strike
-Blue Flame
-Flame Dance
-Freezebolt
-Cold Flare
-Bark out
-Icicle Drop
-V-Generate
-Cross Flame
-Cross Thunder
+Head Charge
+Gear Grind
+Searing Shot
+Techno Blast
+Relic Song
+Secret Sword
+Glaciate
+Bolt Strike
+Blue Flare
+Fiery Dance
+Freeze Shock
+Ice Burn
+Snarl
+Icicle Crash
+V-create
+Fusion Flare
+Fusion Bolt

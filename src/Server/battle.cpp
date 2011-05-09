@@ -18,6 +18,7 @@ typedef BattlePStorage BP;
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *pluginManager)
     : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
 {
+    qDebug() <<"Created battlesituation " << this;
     publicId() = id;
     timer = NULL;
     myid[0] = p1.id();
@@ -138,7 +139,7 @@ void BattleSituation::buildPlugins(PluginManager *p)
 
     foreach(BattlePlugin *pl, plugins) {
         calls.push_back(new BattlePStorage(pl));
-        qDebug() << "Created battle storage " << calls.back();
+        qDebug() << "Created battle storage " << calls.back() << " for battle " << this;
     }
 }
 
@@ -148,6 +149,7 @@ void BattleSituation::removePlugin(BattlePlugin *p)
     qDebug() << "Removing plugins at index " << index << "(this = " << this << ")";
 
     if (index != -1) {
+        qDebug() << "Index is not -1";
         plugins.removeAt(index);
         delete calls.takeAt(index);
         qDebug() << "Remaining plugin size after operation: " << calls.size();
@@ -165,17 +167,19 @@ void BattleSituation::callp(int function)
 
 BattleSituation::~BattleSituation()
 {
+    qDebug() << "Deleting battle situation " << this;
+    terminate();
+    /* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
+    wait();
+
     if(useBattleLog) {
         battleLog.close();
     }
     foreach(BattlePStorage *p, calls) {
         delete p;
     }
-
-    terminate();
-    /* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
-    wait();
     delete timer;
+    qDebug() << "Deleted battle situation";
 }
 
 QString BattleSituation::getBattleLogFilename() const
@@ -264,6 +268,7 @@ void BattleSituation::engageBattle()
         t.fixTeam(team2);
     }
 
+    qDebug() << "Engaging battle " << this << ", calling plugins";
     /* Plugin call */
     callp(BP::battleStarting);
 

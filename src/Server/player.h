@@ -182,6 +182,7 @@ public slots:
     void ratingLoaded();
     void joinRequested(const QString &channel);
     void leaveRequested(int slotid);
+    void autoKick();
 private:
     TeamBattle myteam;
     Analyzer *myrelay;
