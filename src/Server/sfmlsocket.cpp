@@ -10,6 +10,7 @@
    This prevents possible calls to SocketSQ's slots to have multithreading problems */
 struct deleteObjectLater {
     void operator () (QObject *q) {
+        qDebug() << "Deleting object later " << q;
         q->QObject::deleteLater();
     }
 };
@@ -66,12 +67,14 @@ SocketSQ::SocketSQ(SocketManager *manager, tcp::acceptor *s) : myserver(s), mana
 }
 
 SocketSQ::~SocketSQ() {
+    qDebug() << "Starting to delete SocketSQ " << this;
     if (isServer) {
         delete myserver;
         delete incoming;
     } else {
         delete mysock;
     }
+    qDebug() << "Deleted SocketSQ " << this;
 }
 
 bool SocketSQ::listen(quint16 port)
