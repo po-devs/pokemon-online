@@ -382,9 +382,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             break;
         }
     case Announcement: {
-            QString ann;
+            QByteArray ann;
             in >> ann;
-            emit announcement(ann);
+            emit announcement(QString::fromUtf8(ann));
             break;
         }
     case ChannelsList: {
