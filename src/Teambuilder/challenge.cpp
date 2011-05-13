@@ -19,7 +19,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
 
     QColor grey = "#414141";
 
-    QLabel *name = new QLabel(toColor(p.team.name, grey),this);
+    QLabel *name = new QLabel(toColor(p.name, grey),this);
     name->setGeometry(54,0,290,52);
     name->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     name->setObjectName("Title");
@@ -45,7 +45,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
 
     QFont treb("Trebuchet MS", 10);
 
-    QLabel *pinfo = new QLabel(toColor(p.team.info, grey), this);
+    QLabel *pinfo = new QLabel(toColor(p.info, grey), this);
     pinfo->setGeometry(18,197,280,55);
     pinfo->setWordWrap(true);
     pinfo->setFont(treb);

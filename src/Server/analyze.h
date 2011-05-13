@@ -11,7 +11,7 @@ class BattleChoice;
 class BattleConfiguration;
 class ChallengeInfo;
 class UserInfo;
-class PlayerInfo;
+class BasicPlayerInfo;
 class FindBattleData;
 
 /* Commands to dialog with the server */
@@ -106,13 +106,13 @@ public:
     void sendHtmlMessage(const QString &message);
     void sendHtmlChannelMessage(int chanid, const QString &message);
     void requestLogIn();
-    void sendPlayer(const PlayerInfo &p);
-    void sendPlayers(const QList<PlayerInfo> &p);
+    void sendPlayer(const BasicPlayerInfo &p);
+    void sendPlayers(const QList<BasicPlayerInfo> &p);
     void sendBattleList(int chanid, const QHash<qint32, Battle> &battles);
     void sendChannelPlayers(int channelid, const QVector<qint32> &ids);
     void sendJoin(int channelid, int playerid);
     void sendChannelBattle(int chanid, int battleid, const Battle &battle);
-    void sendLogin(const PlayerInfo &p);
+    void sendLogin(const BasicPlayerInfo &p);
     void sendLogout(int num);
     bool isConnected() const;
     QString ip() const;
@@ -121,7 +121,7 @@ public:
     void sendBattleResult(qint32 battleid, quint8 res, int win, int los);
     void sendBattleCommand(qint32 battleid, const QByteArray &command);
     void sendWatchingCommand(qint32 id, const QByteArray &command);
-    void sendTeamChange(const PlayerInfo &p);
+    void sendTeamChange(const BasicPlayerInfo &p);
     void sendPM(int dest, const QString &mess);
     void sendUserInfo(const UserInfo &ui);
     void notifyBattle(qint32 battleid, qint32 id1, qint32 id2);

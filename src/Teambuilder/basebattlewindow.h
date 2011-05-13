@@ -45,7 +45,7 @@ struct BaseBattleInfo
     }
 
     QString name(int x) const {
-        return pInfo[x].team.name;
+        return pInfo[x].name;
     }
 
     int slot(int player, int poke=0) {

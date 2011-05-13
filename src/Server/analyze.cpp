@@ -69,17 +69,17 @@ void Analyzer::setLowDelay(bool lowDelay)
     socket().setLowDelay(lowDelay);
 }
 
-void Analyzer::sendPlayers(const QList<PlayerInfo> &p)
+void Analyzer::sendPlayers(const QList<BasicPlayerInfo> &p)
 {
     notify_expand(PlayersList, p);
 }
 
-void Analyzer::sendPlayer(const PlayerInfo &p)
+void Analyzer::sendPlayer(const BasicPlayerInfo &p)
 {
     notify(PlayersList, p);
 }
 
-void Analyzer::sendTeamChange(const PlayerInfo &p)
+void Analyzer::sendTeamChange(const BasicPlayerInfo &p)
 {
     notify(SendTeam, p);
 }
@@ -89,7 +89,7 @@ void Analyzer::sendPM(int dest, const QString &mess)
     notify(SendPM, qint32(dest), mess);
 }
 
-void Analyzer::sendLogin(const PlayerInfo &p)
+void Analyzer::sendLogin(const BasicPlayerInfo &p)
 {
     notify(Login, p);
 }

@@ -64,38 +64,13 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
     return in;
 }
 
-QDataStream &operator << (QDataStream &out, const BasicInfo& team)
-{
-    out << team.name;
-    out << team.info;
-
-    return out;
-}
-
-QDataStream &operator >> (QDataStream &in, BasicInfo& team)
-{
-    in >> team.name;
-    in >> team.info;
-
-    /* To avoid server overloads */
-    if (team.info.length() > 250)
-        team.info.resize(250);
-
-    return in;
-}
-
-
-QDataStream & operator >> (QDataStream &in, PlayerInfo &p)
+QDataStream & operator >> (QDataStream &in, BasicPlayerInfo &p)
 {
     in >> p.id;
-    in >> p.team;
+    in >> p.name;
     in >> p.auth;
     in >> p.flags;
     in >> p.rating;
-
-    for (int i = 0; i < 6; i++) {
-        in >> p.pokes[i];
-    }
 
     in >> p.avatar;
     in >> p.tier;
@@ -105,17 +80,13 @@ QDataStream & operator >> (QDataStream &in, PlayerInfo &p)
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const PlayerInfo &p)
+QDataStream & operator << (QDataStream &out, const BasicPlayerInfo &p)
 {
     out << p.id;
-    out << p.team;
+    out << p.name;
     out << p.auth;
     out << p.flags;
     out << p.rating;
-
-    for (int i = 0; i < 6; i++) {
-        out << p.pokes[i];
-    }
 
     out << p.avatar;
     out << p.tier;
@@ -158,4 +129,9 @@ QDataStream & operator << (QDataStream &out, const Battle &p)
     out << p.id1 << p.id2;
 
     return out;
+}
+
+PlayerInfo::PlayerInfo()
+{
+    complete = false;
 }
