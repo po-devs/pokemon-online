@@ -1433,7 +1433,7 @@ void Server::sendBattlesList(int playerid, int chanid)
 void Server::sendPlayer(int id)
 {
     Player *source = player(id);
-    PlayerInfo bundle = source->bundle();
+    BasicPlayerInfo bundle = source->bundle();
 
     ++lastDataId;
     foreach(int chanid, source->getChannels()) {
@@ -1492,7 +1492,7 @@ void Server::recvTeam(int id, const QString &_name)
         source->setName(_name);
     }
 
-    PlayerInfo bundle = source->bundle();
+    BasicPlayerInfo bundle = source->bundle();
 
     /* Sending the team change! */
     ++lastDataId;
@@ -1546,7 +1546,7 @@ void Server::spectatingRequested(int id, int idOfBattle)
     Player *source = player(id);
     Player *p1(player(battle->id(0))), *p2(player(battle->id(1)));
 
-    PlayerInfo bundle = source->bundle();
+    BasicPlayerInfo bundle = source->bundle();
 
     if (!p1->isInSameChannel(source)) {
         p1->relay().sendPlayer(bundle);

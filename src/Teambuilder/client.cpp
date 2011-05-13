@@ -1327,14 +1327,6 @@ PlayerInfo Client::player(int id) const
     return myplayersinfo.value(id);
 }
 
-BasicInfo Client::info(int id) const
-{
-    if (myplayersinfo.contains(id))
-        return myplayersinfo[id].team;
-    else
-        return BasicInfo();
-}
-
 void Client::seeInfo(QTreeWidgetItem *it)
 {
     if (dynamic_cast<QIdTreeWidgetItem*>(it))
@@ -1503,7 +1495,7 @@ void Client::removeBattleWindow(int battleid)
 QString Client::name(int id) const
 {
     if (myplayersinfo.contains(id))
-        return info(id).name;
+        return player(id).name;
     else
         return "~Unknown~";
 }
@@ -1658,9 +1650,9 @@ Analyzer &Client::relay()
 void Client::playerLogin(const PlayerInfo& p)
 {
     _mid = p.id;
-    mynick = p.team.name;
+    mynick = p.name;
     myplayersinfo[p.id] = p;
-    mynames[p.team.name] = p.id;
+    mynames[p.name] = p.id;
 
     if (serverName.size() > 0) {
         QSettings settings;
@@ -1681,7 +1673,7 @@ void Client::playerLogout(int id)
 
 void Client::removePlayer(int id)
 {
-    QString name = info(id).name;
+    QString name = this->name(id);
 
     foreach(Channel *c, mychannels) {
         if (c->hasPlayer(id))
@@ -1749,7 +1741,7 @@ QString Client::authedNick(int id) const
 {
     PlayerInfo p = player(id);
 
-    QString nick = p.team.name;
+    QString nick = p.name;
 
     return nick;
 }
@@ -1758,15 +1750,15 @@ void Client::playerReceived(const PlayerInfo &p)
 {
     if (myplayersinfo.contains(p.id)) {
         /* It's not sync perfectly, so someone who relogs can happen, that's why we do that test */
-        if (mynames.value(p.team.name) == p.id)
-            mynames.remove(info(p.id).name);
+        if (mynames.value(p.name) == p.id)
+            mynames.remove(name(id));
         myplayersinfo.remove(p.id);
     }
 
     myplayersinfo.insert(p.id, p);
     refreshPlayer(p.id);
 
-    changeName(p.id, p.team.name);
+    changeName(p.id, p.name);
 
     if (p.id == ownId()) {
         changeTierChecked(p.tier);
@@ -1776,7 +1768,7 @@ void Client::playerReceived(const PlayerInfo &p)
         if (c->hasPlayer(p.id))
             c->playerReceived(p.id);
         else
-            c->changeName(p.id, p.team.name); /* Even if the player isn't in the channel, someone in the channel could be battling him, ... */
+            c->changeName(p.id, p.name); /* Even if the player isn't in the channel, someone in the channel could be battling him, ... */
     }
 }
 
@@ -1796,10 +1788,10 @@ void Client::changeName(int player, const QString &name)
 }
 
 void Client::teamChanged(const PlayerInfo &p) {
-    if (name(p.id) != p.team.name) {
-        printLine(TeamEvent, p.id, tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.team.name));
+    if (name(p.id) != p.name) {
+        printLine(TeamEvent, p.id, tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.name));
         if (p.id == ownId()) {
-            mynick = p.team.name;
+            mynick = p.name;
         }
     } else {
         printLine(TeamEvent, p.id, tr("%1 changed teams.").arg(name(p.id)));

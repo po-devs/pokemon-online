@@ -112,7 +112,7 @@ public:
     Analyzer& relay();
     const Analyzer& relay() const;
 
-    PlayerInfo bundle() const;
+    BasicPlayerInfo bundle() const;
 
     /* A locked player will stop processing its events */
     void lock();
