@@ -13,7 +13,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
 
     setParent(parent);
 
-    setWindowTitle(windowTitle.arg(p.team.name));
+    setWindowTitle(windowTitle.arg(p.name));
 
     setAttribute(Qt::WA_DeleteOnClose, true);
 
