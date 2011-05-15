@@ -1751,7 +1751,7 @@ void Client::playerReceived(const PlayerInfo &p)
     if (myplayersinfo.contains(p.id)) {
         /* It's not sync perfectly, so someone who relogs can happen, that's why we do that test */
         if (mynames.value(p.name) == p.id)
-            mynames.remove(name(id));
+            mynames.remove(name(p.id));
         myplayersinfo.remove(p.id);
     }
 
