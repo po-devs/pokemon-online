@@ -1984,7 +1984,7 @@ void BattleSituation::testCritical(int player, int target)
             appendBattleLog("CriticalHit", toColor(tr("A critical hit!"), "#6b0000"));
     }
 
-    /* In GSC, if you don't got superior boosts in offensive than in their defensive stat, you ignore boosts, burn, and screens,
+    /* In GSC, if crit and if you don't got superior boosts in offensive than in their defensive stat, you ignore boosts, burn, and screens,
        otherwise you ignore none of them */
     if (gen() == 2) {
         int stat = 1 + (tmove(player).category - 1) * 2;
@@ -3656,7 +3656,7 @@ int BattleSituation::calculateDamage(int p, int t)
     power = std::min(power, 65535);
     int damage = ((std::min(((level * 2 / 5) + 2) * power, 65535) * attack / 50) / def);
     //Guts, burn
-    if (gen() != 2 || !turnMemory(p).value("CritIgnoresAll").toBool()) {
+    if (gen() != 2 || !crit || !turnMemory(p).value("CritIgnoresAll").toBool()) {
         damage = damage * (
                 (poke.status() == Pokemon::Burnt && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts))
                 ? PokeFraction(1,2) : PokeFraction(1,1));
