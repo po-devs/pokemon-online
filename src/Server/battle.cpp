@@ -2747,6 +2747,9 @@ void BattleSituation::makeTargetList(const QVector<int> &base)
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
+    if (gen() <= 2)
+        return false;
+
     /* Yes, illusion breaks when hit by mold breaker, right? */
     if (ab == Ability::Illusion)
         return true;
@@ -3071,6 +3074,9 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
     bool pos = (mod > 0) ^ hasWorkingAbility(player, Ability::Perversity);
     if (negative)
         *negative = !pos;
+
+    if (gen() == 5 && hasWorkingAbility(player, Ability::Simple))
+        mod *= 2;
 
     if (pos)
         return gainStatMod(player, stat, std::abs(mod), attacker, tell);
@@ -4637,7 +4643,7 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
 {
     int boost = fpoke(player).boosts[stat];
 
-    if (hasWorkingAbility(player,Ability::Simple)) {
+    if (gen() <= 4 && hasWorkingAbility(player,Ability::Simple)) {
         boost = std::max(std::min(boost*2, 6),-6);
     }
 
