@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="th_TH">
+<TS version="2.0" language="tr_TR">
 <context>
     <name>AdvancedSearch</name>
     <message>
@@ -1285,6 +1285,22 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="controlpanel.ui" line="308"/>
+        <location filename="controlpanel.ui" line="434"/>
+        <location filename="ui_controlpanel.h" line="392"/>
+        <location filename="ui_controlpanel.h" line="403"/>
+        <source>Username</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="controlpanel.ui" line="313"/>
+        <location filename="controlpanel.ui" line="439"/>
+        <location filename="ui_controlpanel.h" line="394"/>
+        <location filename="ui_controlpanel.h" line="405"/>
+        <source>Banned IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="controlpanel.ui" line="321"/>
         <location filename="controlpanel.ui" line="369"/>
         <location filename="ui_controlpanel.h" line="395"/>
@@ -1306,22 +1322,6 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <location filename="ui_controlpanel.h" line="397"/>
         <location filename="ui_controlpanel.h" line="399"/>
         <source>Ban IP ...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="controlpanel.ui" line="308"/>
-        <location filename="controlpanel.ui" line="434"/>
-        <location filename="ui_controlpanel.h" line="392"/>
-        <location filename="ui_controlpanel.h" line="403"/>
-        <source>Username</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="controlpanel.ui" line="313"/>
-        <location filename="controlpanel.ui" line="439"/>
-        <location filename="ui_controlpanel.h" line="394"/>
-        <location filename="ui_controlpanel.h" line="405"/>
-        <source>Banned IP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1856,6 +1856,12 @@ Moves:
     </message>
     <message>
         <location filename="advanced.cpp" line="52"/>
+        <source>Special:</source>
+        <comment>Stat</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="advanced.cpp" line="52"/>
         <source>Sp.Att:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1867,12 +1873,6 @@ Moves:
     <message>
         <location filename="advanced.cpp" line="52"/>
         <source>Speed:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="advanced.cpp" line="52"/>
-        <source>Special:</source>
-        <comment>Stat</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>

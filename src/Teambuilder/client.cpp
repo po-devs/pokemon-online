@@ -2033,7 +2033,7 @@ void BattleFinder::throwChallenge()
     FindBattleData d;
     d.rated = rated->isChecked();
     d.sameTier = sameTier->isChecked();
-    d.range = std::max(range->text().toInt(), 200);
+    d.range = std::max(range->text().toInt(), 100);
     d.ranged = rangeOn->isChecked();
     d.mode = mode->currentIndex();
 
