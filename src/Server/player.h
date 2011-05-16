@@ -43,7 +43,7 @@ public:
         Away = 4
     };
 
-    Player(GenericSocket *sock, int id);
+    Player(const GenericSocket &sock, int id);
     ~Player();
 
     /* returns all the regular info */
@@ -182,6 +182,7 @@ public slots:
     void ratingLoaded();
     void joinRequested(const QString &channel);
     void leaveRequested(int slotid);
+    void autoKick();
 private:
     TeamBattle myteam;
     Analyzer *myrelay;

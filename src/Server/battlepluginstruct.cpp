@@ -32,11 +32,14 @@ BattlePStorage::BattlePStorage(BattlePlugin *p)
 BattlePStorage::~BattlePStorage()
 {
     delete plugin, plugin = NULL;
+
+    qDebug() << "Deleted battle storage " << this;
 }
 
 int BattlePStorage::call(int f, BattleInterface *b)
 {
     if (calls[f]) {
+        qDebug() << "Plugin of " << this << " is " << plugin << "(Battle " << b << ")";
         /* Calls the plugin member function, from the correct class, with the appropriate parameters */
         return (*plugin.*(reinterpret_cast<int (BattlePlugin::*)(BattleInterface &)>(calls[f])))(*b);
     }
