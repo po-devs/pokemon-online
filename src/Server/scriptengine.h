@@ -197,6 +197,8 @@ public:
     Q_INVOKABLE void changeName(int playerId, QString newName);
     Q_INVOKABLE void changeInfo(int playerId, QString newInfo);
     Q_INVOKABLE QScriptValue info(int playerId);
+    Q_INVOKABLE void changeAvatar(int playerId, quint16 avatarId);
+    Q_INVOKABLE QScriptValue avatar(int playerId);
 
     Q_INVOKABLE QScriptValue pokemon(int num);
     Q_INVOKABLE QScriptValue pokeNum(const QString &name);

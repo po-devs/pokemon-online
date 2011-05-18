@@ -28,7 +28,7 @@ ScriptEngine::ScriptEngine(Server *s) {
         QScriptValue::ReadOnly | QScriptValue::Undeletable
     );
     // DB object.
-    myScriptDB = new ScriptDB(myserver);
+    myScriptDB = new ScriptDB(myserver, &myengine);
     QScriptValue sysdb = myengine.newQObject(myScriptDB);
     sys.setProperty("db", sysdb, QScriptValue::ReadOnly | QScriptValue::Undeletable);
 
@@ -2103,4 +2103,22 @@ QScriptValue ScriptEngine::getValKeys(const QString &file)
         result_array.setProperty(i, result_data.at(i));
     }
     return result_array;
+}
+
+void ScriptEngine::changeAvatar(int playerId, quint16 avatarId)
+{
+    if (!loggedIn(playerId)) {
+        warn("changeAvatar","unknown player.");
+        return;
+    }
+    myserver->player(playerId)->avatar() = avatarId;
+    myserver->sendPlayer(playerId);
+}
+
+QScriptValue ScriptEngine::avatar(int playerId)
+{
+    if (!loggedIn(playerId)) {
+        return myengine.nullValue();
+    }
+    return myserver->player(playerId)->avatar();
 }
