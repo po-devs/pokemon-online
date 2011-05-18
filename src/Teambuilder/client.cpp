@@ -513,6 +513,15 @@ void Client::leaveChannel(int id)
     c->deleteLater();
 }
 
+void Client::activateChannel(const QString& text) {
+    for (int i = 0; i < mainChat->count(); ++i) {
+        if (0 == text.compare(mainChat->tabText(i))) {
+            mainChat->setCurrentIndex(i);
+            return;
+        }
+    }
+}
+
 void Client::join(const QString& text)
 {
     if (channelByNames.contains(text.toLower())) {
@@ -526,6 +535,7 @@ void Client::join(const QString& text)
 
     relay().notify(NetworkCli::JoinChannel, text);
 }
+
 
 void Client::itemJoin(QListWidgetItem *it)
 {

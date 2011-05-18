@@ -121,7 +121,9 @@ void Channel::anchorClicked(const QUrl &url)
     // study the URL scheme
     if (url.scheme()=="po") {
         if(url.path().leftRef(5) == "join/") {
-            client->join(url.path().mid(5));
+            QString cname = url.path().mid(5);
+            client->join(cname);
+            client->activateChannel(cname);
         }
     } else {
         QDesktopServices::openUrl(url);

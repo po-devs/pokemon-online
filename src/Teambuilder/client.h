@@ -142,6 +142,7 @@ public slots:
     void removeChannel(int id);
     void leaveChannelR(int index);
     void leaveChannel(int id);
+    void activateChannel(const QString& text);
     void join(const QString& text);
     void itemJoin(QListWidgetItem *);
     void lineJoin();
