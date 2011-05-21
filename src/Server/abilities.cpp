@@ -464,7 +464,7 @@ struct AMForeWarn : public AM {
             }
         }
 
-        int m = poss[true_rand()%poss.size()];
+        int m = poss[b.true_rand()%poss.size()];
 
         b.sendAbMessage(22,0,s,s,MoveInfo::Type(m, b.gen()),m);
     }
