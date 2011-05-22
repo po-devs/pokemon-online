@@ -150,6 +150,8 @@ void Registry::incomingPlayer()
             p->sendServer(*s);
         }
     }
+    // Tell client that the server list has ended.
+    p->sendServerListEnd();
 }
 
 void Registry::nameChangedAcc(int id, const QString &name)

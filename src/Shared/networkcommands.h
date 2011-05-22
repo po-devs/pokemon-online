@@ -71,7 +71,8 @@ enum Command {
   HtmlMessage,
   HtmlChannel,
   ServerName,
-  SpecialPass
+  SpecialPass,
+  ServerListEnd              // Indicates end of transmission for registry.
 };
 
 enum ProtocolError {

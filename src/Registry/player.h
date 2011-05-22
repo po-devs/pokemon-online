@@ -18,6 +18,7 @@ public:
     Player(int id, QTcpSocket *s);
 
     void sendServer(const Server &s);
+    void sendServerListEnd(void);
     void kick();
 public slots:
     void disconnected();
