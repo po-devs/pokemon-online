@@ -630,7 +630,7 @@ Vaikutus: %5</translation>
     <message>
         <location filename="battlewindow.cpp" line="114"/>
         <source>Suggest draw</source>
-        <translation type="unfinished"></translation>
+        <translation>Ehdota tasapeliä</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="121"/>
@@ -1047,22 +1047,22 @@ Vaikutus: %5</translation>
     <message>
         <location filename="client.cpp" line="327"/>
         <source>Custom settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Omat asetukset</translation>
     </message>
     <message>
         <location filename="client.cpp" line="329"/>
         <source>Use global</source>
-        <translation type="unfinished"></translation>
+        <translation>Käytä globaalia</translation>
     </message>
     <message>
         <location filename="client.cpp" line="334"/>
         <source>Global settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Globaalit asetukset</translation>
     </message>
     <message>
         <location filename="client.cpp" line="389"/>
         <source>Auto-join</source>
-        <translation type="unfinished"></translation>
+        <translation>Liity automaattisesti</translation>
     </message>
     <message>
         <location filename="client.cpp" line="865"/>
@@ -1152,7 +1152,7 @@ Vaikutus: %5</translation>
     <message>
         <location filename="client.cpp" line="1081"/>
         <source>Don&apos;t show Pokemon Nicknames</source>
-        <translation type="unfinished"></translation>
+        <translation>Älä näytä Pokemonien lempinimiä</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1095"/>
