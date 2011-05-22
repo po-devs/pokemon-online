@@ -5801,6 +5801,9 @@ struct MMTriAttack : public MM
     static void uas(int s, int t, BS &b) {
         if (b.hasWorkingAbility(t, Ability::ShieldDust))
             return;
+        // Do not apply extra effects with Sheer Force
+        if (b.hasWorkingAbility(s, Ability::Encourage))
+            return;
 
         bool boost = b.hasWorkingAbility(s, Ability::SereneGrace) ||  team(b, b.player(t)).value("RainbowCount").toInt();
 
