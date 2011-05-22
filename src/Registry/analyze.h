@@ -12,50 +12,7 @@ class BattleConfiguration;
 /* Commands to dialog with the server */
 namespace NetworkReg
 {
-    enum Command
-    {
-        WhatAreYou = 0,
-        WhoAreYou,
-        Login,
-        Logout,
-        SendMessage,
-        PlayersList,
-        SendTeam,
-        ChallengeStuff,
-        EngageBattle,
-        BattleFinished,
-        BattleMessage = 10,
-        BattleChat,
-        KeepAlive,
-        AskForPass,
-        Register,
-        PlayerKick,
-        PlayerBan,
-        ServNumChange,
-        ServDescChange,
-        ServNameChange,
-        SendPM,
-        Away,
-        GetUserInfo,
-        GetUserAlias,
-        GetBanList,
-        CPBan,
-        CPUnban,
-        SpectateBattle,
-        SpectatingBattleMessage,
-        SpectatingBattleChat,
-        SpectatingBattleFinished,
-        LadderChange,
-        ShowTeamChange,
-        VersionControl,
-        TierSelection,
-        ServMaxChange,
-    };
-
-    enum ProtocolError
-    {
-        UnknownCommand = 0
-    };
+#include "../Shared/networkcommands.h"
 }
 
 class TeamInfo;

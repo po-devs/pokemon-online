@@ -17,71 +17,7 @@ class FindBattleData;
 /* Commands to dialog with the server */
 namespace NetworkServ
 {
-    enum Command
-    {
-	WhatAreYou = 0,
-	WhoAreYou,
-	Login,
-	Logout,
-	SendMessage,
-	PlayersList,
-	SendTeam,
-	ChallengeStuff,
-	EngageBattle,
-	BattleFinished,
-        BattleMessage = 10,
-	BattleChat,
-        KeepAlive, /* obsolete since we use a native Qt option now */
-        AskForPass,
-        Register,
-        PlayerKick,
-        PlayerBan,
-        ServNumChange,
-        ServDescChange,
-        ServNameChange,
-        SendPM = 20,
-        Away,
-        GetUserInfo,
-        GetUserAlias,
-        GetBanList,
-        CPBan,
-        CPUnban,
-        SpectateBattle,
-        SpectatingBattleMessage,
-        SpectatingBattleChat,
-        SpectatingBattleFinished = 30,
-        LadderChange,
-        ShowTeamChange,
-        VersionControl,
-        TierSelection,
-        ServMaxChange,
-        FindBattle,
-        ShowRankings,
-        Announcement,
-        CPTBan,
-        CPTUnban=40,
-        PlayerTBan,
-        GetTBanList,
-        BattleList,
-        ChannelsList,
-        ChannelPlayers,
-        JoinChannel,
-        LeaveChannel,
-        ChannelBattle,
-        RemoveChannel,
-        AddChannel=50,
-        ChannelMessage,
-        ChanNameChange,
-        HtmlMessage,
-        ChannelHtml,
-        ServerName,
-        SpecialPass
-    };
-
-    enum ProtocolError
-    {
-	UnknownCommand = 0
-    };
+#include "../Shared/networkcommands.h"
 }
 
 class TeamInfo;
