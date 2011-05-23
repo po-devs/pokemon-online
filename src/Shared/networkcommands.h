@@ -69,7 +69,7 @@ enum Command {
   ChannelMessage,
   ChanNameChange,
   HtmlMessage,
-  ChannelHtml,
+  HtmlChannel,
   ServerName,
   SpecialPass,
   ServerListEnd              // Indicates end of transmission for registry.
