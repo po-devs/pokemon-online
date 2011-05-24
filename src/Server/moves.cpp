@@ -4382,8 +4382,10 @@ struct MMSkillSwap : public MM {
         b.loseAbility(t);
         b.acquireAbility(t, sab);
 
-        b.sendMoveMessage(143,0,s,0,t,sab);
-        b.sendMoveMessage(143,0,t,0,s,tab);
+        if (gen() >= 5) {
+            b.sendMoveMessage(143,0,s,0,t,sab);
+            b.sendMoveMessage(143,0,t,0,s,tab);
+        }
     }
 };
 
