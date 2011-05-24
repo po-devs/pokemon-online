@@ -144,9 +144,9 @@ public:
     Q_INVOKABLE void unsetPA(const QString &name);
 
     /* GET call */
-    Q_INVOKABLE void webCall(const QString &urlstring, const QString &expr);
+    Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback);
     /* POST call */
-    Q_INVOKABLE void webCall(const QString &urlstring, const QString &expr, const QScriptValue &params_array);
+    Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback, const QScriptValue &params_array);
     /* synchronous GET call */
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring);
     /* synchronous POST call */
@@ -314,7 +314,7 @@ private:
     QNetworkAccessManager manager;
     QHash<QTimer*,QString> timerEvents;
     QHash<QTimer*,QScriptValue> timerEventsFunc;
-    QHash<QNetworkReply*,QString> webCallEvents;
+    QHash<QNetworkReply*,QScriptValue> webCallEvents;
 
     void startStopEvent() {stopevents.push_back(false);}
     bool endStopEvent() {
