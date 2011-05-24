@@ -799,15 +799,20 @@ bool ScriptEngine::dbRegistered(const QString &name)
  * @param urlstring web-url
  * @author Remco vd Zon
  */
-void ScriptEngine::webCall(const QString &urlstring, const QString &expr)
+void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callback)
 {
+    if (!callback.isString() && !callback.isFunction()) {
+        printLine("Script Warning in sys.webCall(urlstring, callback): callback is not a string or a function.");
+        return;
+    }
+
     QNetworkRequest request;
 
     request.setUrl(QUrl(urlstring));
     request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
 
     QNetworkReply *reply = manager.get(request);
-    webCallEvents[reply] = expr;
+    webCallEvents[reply] = callback;
 }
 
 /**
@@ -816,8 +821,13 @@ void ScriptEngine::webCall(const QString &urlstring, const QString &expr)
  * @param params_array javascript array [key]=>value.
  * @author Remco vd Zon
  */
-void ScriptEngine::webCall(const QString &urlstring, const QString &expr, const QScriptValue &params_array)
+void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callback, const QScriptValue &params_array)
 {
+    if (!callback.isString() && !callback.isFunction()) {
+        printLine("Script Warning in sys.webCall(urlstring, callback, params_array): callback is not a string or a function.");
+        return;
+    }
+    
     QNetworkRequest request;
     QByteArray postData;
 
@@ -833,21 +843,27 @@ void ScriptEngine::webCall(const QString &urlstring, const QString &expr, const 
     }
 
     QNetworkReply *reply = manager.post(request, postData);
-    webCallEvents[reply] = expr;
+    webCallEvents[reply] = callback;
 }
 
 void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
-    //escape reply before sending it to the javascript evaluator
-    QString x = reply->readAll();
-    x = x.replace(QString("\\"), QString("\\\\"));
-    x = x.replace(QString("'"), QString("\\'"));
-    x = x.replace(QString("\n"), QString("\\n"));
-    x = x.replace(QString("\r"), QString(""));
+    QScriptValue val = webCallEvents.take(reply);
+    if (val.isString()) {
+        //escape reply before sending it to the javascript evaluator
+        QString x = reply->readAll();
+        x = x.replace(QString("\\"), QString("\\\\"));
+        x = x.replace(QString("'"), QString("\\'"));
+        x = x.replace(QString("\n"), QString("\\n"));
+        x = x.replace(QString("\r"), QString(""));
 
-    //put reply in a var "resp", can be used in expr
-    // i.e. expr = 'print("The resp was: "+resp);'
-    eval( "var resp = '"+x+"';"+webCallEvents[reply] );
-    webCallEvents.remove( reply );
+        //put reply in a var "resp", can be used in expr
+        // i.e. expr = 'print("The resp was: "+resp);'
+        eval( "var resp = '"+x+"';"+val.toString());
+    } else if (val.isFunction()) {
+        QScriptValueList args;
+        args << QString(reply->readAll());
+        val.call(QScriptValue(), args); // uses globalObject as this
+    }
     reply->deleteLater();
 }
 
