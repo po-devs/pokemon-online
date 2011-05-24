@@ -736,6 +736,23 @@ struct AMNormalize : public AM {
     }
 };
 
+struct AMPoisonTouch : public AM {
+    AMPoisonTouch() {
+        functions["OnPhysicalAssault"] = &opa;
+    }
+
+    static void opa(int s, int t, BS &b) {
+        if (tmove(b,s).classification == Move::OffensiveStatChangingMove || tmove(b,s).flinchRate > 0)
+            return;
+        if (b.poke(t).status() == Pokemon::Fine && rand() % 100 < 20) {
+            if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
+                b.sendAbMessage(18,0,s,t,Pokemon::Curse,b.ability(s));
+                b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt(),s);
+            }
+        }
+    }
+};
+
 struct AMPressure : public AM {
     AMPressure() {
         functions["UponSetup"] = &us;
@@ -1791,6 +1808,7 @@ struct AMRegeneration : public AM {
     PriorityChoice
     AfterNegativeStatChange
     UponPhysicalAssault
+    OnPhysicalAssault
     DamageFormulaStart
     UponOffensiveDamageReceived
     UponSetup
@@ -1914,4 +1932,5 @@ void AbilityEffect::init()
     REGISTER_AB(98, Analyze);
     REGISTER_AB(99, HealingHeart);
     REGISTER_AB(100, FriendGuard);
+    REGISTER_AB(101, PoisonTouch);
 }
