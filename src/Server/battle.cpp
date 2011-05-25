@@ -2540,6 +2540,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                         if (!sub)
                             callieffects(target, player, "UponPhysicalAssault");
                         callaeffects(target,player,"UponPhysicalAssault");
+                        callaeffects(player,target,"OnPhysicalAssault");
                     }
 
                     if (!sub) {

@@ -69,7 +69,7 @@ void PluginManager::addPlugin(const QString &path)
 
     QFile out("plugin_address.txt");
     out.open(QIODevice::WriteOnly);
-    out.write(("Plugin loaded at " + QString::number(int(f))).toUtf8());
+    out.write(("Plugin loaded at " + QString::number(long(f))).toUtf8());
     out.close();
 
     if (!f) {

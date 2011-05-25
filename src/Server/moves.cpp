@@ -4382,8 +4382,10 @@ struct MMSkillSwap : public MM {
         b.loseAbility(t);
         b.acquireAbility(t, sab);
 
-        b.sendMoveMessage(143,0,s,0,t,sab);
-        b.sendMoveMessage(143,0,t,0,s,tab);
+        if (b.gen() >= 5) {
+            b.sendMoveMessage(143,0,s,0,t,sab);
+            b.sendMoveMessage(143,0,t,0,s,tab);
+        }
     }
 };
 
@@ -5800,6 +5802,9 @@ struct MMTriAttack : public MM
 
     static void uas(int s, int t, BS &b) {
         if (b.hasWorkingAbility(t, Ability::ShieldDust))
+            return;
+        // Do not apply extra effects with Sheer Force
+        if (b.hasWorkingAbility(s, Ability::Encourage))
             return;
 
         bool boost = b.hasWorkingAbility(s, Ability::SereneGrace) ||  team(b, b.player(t)).value("RainbowCount").toInt();
