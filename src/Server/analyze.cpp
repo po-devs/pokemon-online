@@ -42,7 +42,7 @@ void Analyzer::sendHtmlMessage(const QString &message)
 
 void Analyzer::sendHtmlChannelMessage(int chanid, const QString &message)
 {
-    notify(ChannelHtml, qint32(chanid), message);
+    notify(HtmlChannel, qint32(chanid), message);
 }
 
 void Analyzer::engageBattle(int battleid, int , int id, const TeamBattle &team, const BattleConfiguration &conf)
