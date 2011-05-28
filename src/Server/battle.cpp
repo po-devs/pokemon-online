@@ -4510,6 +4510,7 @@ ShallowBattlePoke BattleSituation::opoke(int slot, int player, int i) const
         p.num() = p2.num();
         p.nick() = p2.nick();
         p.gender() = p2.gender();
+        p.shiny() = p2.shiny();
 
         return p;
     } else {
