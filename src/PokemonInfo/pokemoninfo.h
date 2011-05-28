@@ -354,7 +354,7 @@ class NatureInfo
 {
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="db/nature/");
+    static void init(const QString &dir="db/natures/");
 
     /* Self-explainable functions */
     static QString Name(int naturenum);
