@@ -2458,6 +2458,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 continue;
             }
 
+            /* Draining moves fail against substitute in gen 2 and earlier */
+            if (gen() <= 2 && hasSubstitute(target) && tmove(player).healing > 0) {
+                turnMemory(player)["Failed"] = true;
+                testFail(player);
+                continue;
+            }
+
             callpeffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) {
                 calleffects(player,target,"AttackSomehowFailed");
