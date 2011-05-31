@@ -2458,6 +2458,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 continue;
             }
 
+            /* Draining moves fail against substitute in gen 2 and earlier */
+            if (gen() <= 2 && hasSubstitute(target) && tmove(player).healing > 0) {
+                turnMemory(player)["Failed"] = true;
+                testFail(player);
+                continue;
+            }
+
             callpeffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) {
                 calleffects(player,target,"AttackSomehowFailed");
@@ -3219,7 +3226,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
 
     changeStatus(player, status, true, minTurns == 0 ? 0 : minTurns-1 + true_rand() % (maxTurns - minTurns + 1));
     if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_S) {
-        changeForme(this->player(player), slotNum(player), Pokemon::Shaymin_S);
+        changeForme(this->player(player), slotNum(player), Pokemon::Shaymin);
     }
     if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
         && hasWorkingAbility(player, Ability::Synchronize)) //Synchronize
@@ -4510,6 +4517,7 @@ ShallowBattlePoke BattleSituation::opoke(int slot, int player, int i) const
         p.num() = p2.num();
         p.nick() = p2.nick();
         p.gender() = p2.gender();
+        p.shiny() = p2.shiny();
 
         return p;
     } else {
