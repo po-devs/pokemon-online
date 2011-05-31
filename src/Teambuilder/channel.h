@@ -69,6 +69,7 @@ public:
     void changeName(int id, const QString &name);
 
     QString addChannelLinks(const QString &line);
+    void checkFlash(const QString &haystack, const QString &needle);
     void printLine(const QString &str);
     void printHtml(const QString &str);
 
