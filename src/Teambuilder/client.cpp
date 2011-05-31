@@ -599,8 +599,6 @@ void Client::startPM(int id)
         return;
     }
 
-    activateWindow();
-
     if (mypms.contains(id)) {
         return;
     }
