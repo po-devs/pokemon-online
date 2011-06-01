@@ -253,6 +253,12 @@ struct MMBatonPass : public MM
             if (b.linked(opp, "Attract"))
                 poke(b, opp).remove("AttractBy");
         }
+        /* Removing disable */
+        c.remove("DisablesUntil");
+        c.remove("DisabledMove");
+        removeFunction(c, "MovesPossible", "Disable");
+        removeFunction(c, "MovePossible", "Disable");
+        removeFunction(c, "EndTurn611", "Disable");
 
         QList<int> boosts;
 
