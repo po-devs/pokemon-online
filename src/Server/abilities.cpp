@@ -1799,7 +1799,6 @@ struct AMRegeneration : public AM {
     static void us(int s, int, BS &b) {
         if (!b.poke(s).isFull()) {
             b.healLife(s, b.poke(s).totalLifePoints() / 3);
-            b.sendAbMessage(86, 0, s);
         }
     }
 };
