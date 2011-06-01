@@ -248,6 +248,7 @@ struct MMBatonPass : public MM
         /* Removing attract */
         c.remove("AttractBy");
         c.remove("Transformed");
+        c.remove("DisablesUntil");
         foreach( int opp, b.revs(s)) {
             if (b.linked(opp, "Attract"))
                 poke(b, opp).remove("AttractBy");
