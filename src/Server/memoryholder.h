@@ -48,6 +48,14 @@ public:
         cachedMembersMutex.unlock();
     }
 
+    /* Should only be called from the main thread */
+    void clearCache()
+    {
+        cachedMembersMutex.lock();
+        members.clear();
+        cachedMembersMutex.unlock();
+    }
+
     /* Used for debugging purposes */
     int cachedMembersCount()
     {

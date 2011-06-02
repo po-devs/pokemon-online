@@ -674,6 +674,20 @@ void Tier::loadFromXml(const QDomElement &elem)
 //    }
 }
 
+void Tier::resetLadder()
+{
+    QSqlQuery q;
+    q.setForwardOnly(true);
+
+    q.exec(QString("delete from %1").arg(sql_table));
+    clearCache();
+}
+
+void Tier::clearCache()
+{
+    holder.clearCache();
+}
+
 QDomElement & Tier::toXml(QDomElement &dest) const {
     dest.setAttribute("name", name());
     dest.setAttribute("tableName", sql_table);

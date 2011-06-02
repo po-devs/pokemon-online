@@ -247,18 +247,13 @@ struct MMBatonPass : public MM
         c.remove("HasMovedOnce");
         /* Removing attract */
         c.remove("AttractBy");
-        c.remove("Transformed");
-        c.remove("DisablesUntil");
         foreach( int opp, b.revs(s)) {
             if (b.linked(opp, "Attract"))
                 poke(b, opp).remove("AttractBy");
         }
-        /* Removing disable */
+        /* Removing Transform and disable */
+        c.remove("Transformed");
         c.remove("DisablesUntil");
-        c.remove("DisabledMove");
-        removeFunction(c, "MovesPossible", "Disable");
-        removeFunction(c, "MovePossible", "Disable");
-        removeFunction(c, "EndTurn611", "Disable");
 
         QList<int> boosts;
 

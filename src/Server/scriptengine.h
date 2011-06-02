@@ -129,6 +129,10 @@ public:
     Q_INVOKABLE void exportTierDatabase();
     /* Updates the rankings. Very time consuming, be aware... ! */
     Q_INVOKABLE void updateRatings();
+    /* Resets a tier's ladders */
+    Q_INVOKABLE void resetLadder(const QString &tier);
+    Q_INVOKABLE void synchronizeTierWithSQL(const QString &tier);
+
     Q_INVOKABLE void clearChat();
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
