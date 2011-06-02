@@ -2036,6 +2036,38 @@ void ScriptEngine::updateRatings()
     TierMachine::obj()->processDailyRun();
 }
 
+void ScriptEngine::resetLadder(const QString &tier)
+{
+    if (!TierMachine::obj()->exists(tier)) {
+        warn("resetLadder", "tier doesn't exist");
+        return;
+    }
+
+    TierMachine::obj()->tier(tier).resetLadder();
+
+    /* Updates the rating of all the players of the tier */
+    foreach(Player *p, myserver->myplayers) {
+        if (p->tier() == tier)
+            p->findRating();
+    }
+}
+
+void ScriptEngine::synchronizeTierWithSQL(const QString &tier)
+{
+    if (!TierMachine::obj()->exists(tier)) {
+        warn("resetLadder", "tier doesn't exist");
+        return;
+    }
+
+    TierMachine::obj()->tier(tier).clearCache();
+
+    /* Updates the rating of all the players of the tier */
+    foreach(Player *p, myserver->myplayers) {
+        if (p->tier() == tier)
+            p->findRating();
+    }
+}
+
 void ScriptEngine::forceBattle(int player1, int player2, int clauses, int mode, bool is_rated)
 {
     if (!loggedIn(player1) || !loggedIn(player2)) {
