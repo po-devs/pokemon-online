@@ -5172,6 +5172,15 @@ struct MMWideGuard : public MM
             return;
         }
 
+        if (team(b,target) != team(b,b.player(s)) && tmove(b,s).attack == Move::Feint) {
+            if (team(b,target).contains("WideGuardUsed")) {
+                team(b,target).remove("WideGuardUsed");
+                b.sendMoveMessage(169, 1, t, Pokemon::Normal);
+                return;
+            }
+        }
+
+
         if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
             return;
         }
@@ -5210,7 +5219,15 @@ struct MMFastGuard : public MM
             return;
         }
 
-        if (! (tmove(b, s).flags & Move::ProtectableFlag) && tmove(b,s).attack != Move::Feint ) {
+        if (team(b,target) != team(b,b.player(s)) && tmove(b,s).attack == Move::Feint) {
+            if (team(b,target).contains("FastGuardUsed")) {
+                team(b,target).remove("FastGuardUsed");
+                b.sendMoveMessage(170, 1, t, Pokemon::Normal);
+                return;
+            }
+        }
+
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) && tmove(b,s).attack != Move::Feint) {
             return;
         }
 
