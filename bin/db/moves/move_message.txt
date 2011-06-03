@@ -167,8 +167,8 @@ All stat changes were eliminated!|%f's stat changes were eliminated!
 
 
 %s swapped the Sp. Def. and the Defense of all the pokemon!|The Sp. Def and Defense of the pokemon went back to normal!
-%ts's team is protected by Wide Guard!
-%ts's team is protected by Fast Guard!
+%ts's team is protected by Wide Guard!|%ts's team Wide Guard was broken!
+%ts's team is protected by Quick Guard!|%ts's team Quick Guard was broken!
 %s is being sent back!
 %s copied %f's types!
 
