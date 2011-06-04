@@ -2313,10 +2313,8 @@ struct MMEncore : public MM
             b.sendItemMessage(7,t);
             b.disposeItem(t);
         } else {
-            if (b.gen() == 2)
+            if (b.gen() <=3)
                 poke(b,t)["EncoresUntil"] = b.turn() + 2 + (b.true_rand()%4);
-            else if (b.gen() == 3)
-                poke(b,t)["EncoresUntil"] = b.turn() + 1 + (b.true_rand()%5);
             else if (b.gen() == 4)
                 poke(b,t)["EncoresUntil"] = b.turn() + 3 + (b.true_rand()%5);
             else
