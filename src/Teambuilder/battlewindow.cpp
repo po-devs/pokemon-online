@@ -1309,7 +1309,6 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
         }
         break;
     case Move::IndeterminateTarget:
-    case Move::MeFirstTarget:
     case Move::ChosenTarget:
         for (int i = 0; i < num; i++) {
             if (i != slot &&
@@ -1320,6 +1319,14 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
     case Move::PartnerOrUser:
         for (int i = 0; i < num; i++) {
             if (info.player(i) == info.myself && info.areAdjacent(i, slot)) {
+                pokes[i]->setEnabled(true);
+            }
+        }
+        break;
+        /* Me first only allows targetting opponents but not allies */
+    case Move::MeFirstTarget:
+        for (int i = 0; i < num; i++) {
+            if (info.player(i) != info.myself && info.areAdjacent(i, slot)) {
                 pokes[i]->setEnabled(true);
             }
         }

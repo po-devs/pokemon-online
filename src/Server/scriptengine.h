@@ -129,6 +129,10 @@ public:
     Q_INVOKABLE void exportTierDatabase();
     /* Updates the rankings. Very time consuming, be aware... ! */
     Q_INVOKABLE void updateRatings();
+    /* Resets a tier's ladders */
+    Q_INVOKABLE void resetLadder(const QString &tier);
+    Q_INVOKABLE void synchronizeTierWithSQL(const QString &tier);
+
     Q_INVOKABLE void clearChat();
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
@@ -144,9 +148,9 @@ public:
     Q_INVOKABLE void unsetPA(const QString &name);
 
     /* GET call */
-    Q_INVOKABLE void webCall(const QString &urlstring, const QString &expr);
+    Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback);
     /* POST call */
-    Q_INVOKABLE void webCall(const QString &urlstring, const QString &expr, const QScriptValue &params_array);
+    Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback, const QScriptValue &params_array);
     /* synchronous GET call */
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring);
     /* synchronous POST call */
@@ -197,6 +201,8 @@ public:
     Q_INVOKABLE void changeName(int playerId, QString newName);
     Q_INVOKABLE void changeInfo(int playerId, QString newInfo);
     Q_INVOKABLE QScriptValue info(int playerId);
+    Q_INVOKABLE void changeAvatar(int playerId, quint16 avatarId);
+    Q_INVOKABLE QScriptValue avatar(int playerId);
 
     Q_INVOKABLE QScriptValue pokemon(int num);
     Q_INVOKABLE QScriptValue pokeNum(const QString &name);
@@ -312,7 +318,7 @@ private:
     QNetworkAccessManager manager;
     QHash<QTimer*,QString> timerEvents;
     QHash<QTimer*,QScriptValue> timerEventsFunc;
-    QHash<QNetworkReply*,QString> webCallEvents;
+    QHash<QNetworkReply*,QScriptValue> webCallEvents;
 
     void startStopEvent() {stopevents.push_back(false);}
     bool endStopEvent() {

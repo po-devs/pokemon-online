@@ -478,7 +478,7 @@ Draws the opponent's attacks at yourself.
 Makes Target easier to hit for 3 turns.
 Negates all held items for 5 turns.
 Makes Flying opponents succeptible to Ground moves. (100%)
-Forces the target to switch.
+Always scores a critical hit.
 Hits all targets.
 May poison opponent. (10%)
 Raises SpA, SpD, and Speed by 1 stage.
@@ -540,7 +540,7 @@ Sharply raises Defense.
 May decrease opponent's Accuracy by 1 stage.
 Deals damage based on the target's Def.
 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
-Increases Accuracy during Weather. (30%)
+May confuse opponent. (30%) Always hits during Rain Dance, reduced hits during Sunny Day. (50%)
 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
 Strikes twice.
 May burn opponent. (30%)

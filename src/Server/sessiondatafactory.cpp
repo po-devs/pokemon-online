@@ -25,8 +25,7 @@ void SessionDataFactory::registerChannelFactory(QScriptValue factoryFunction)
 void SessionDataFactory::handleUserLogIn(int user_id)
 {
     if (userFactoryEnabled) {
-        QScriptValue dataObject = engine->newObject();
-        userFactoryFunction.call(dataObject, QScriptValueList() << user_id);
+        QScriptValue dataObject = userFactoryFunction.construct(QScriptValueList() << user_id);
         userFactoryStorage[user_id] = dataObject;
         checkError();
     }
@@ -42,8 +41,7 @@ void SessionDataFactory::handleUserLogOut(int user_id)
 void SessionDataFactory::handleChannelCreate(int channel_id)
 {
     if (channelFactoryEnabled) {
-        QScriptValue dataObject = engine->newObject();
-        channelFactoryFunction.call(dataObject, QScriptValueList() << channel_id);
+        QScriptValue dataObject = channelFactoryFunction.construct(QScriptValueList() << channel_id);
         channelFactoryStorage[channel_id] = dataObject;
         checkError();
     }
@@ -80,8 +78,7 @@ void SessionDataFactory::handleInitialState()
         handleChannelCreate(0);
         initialStateHandled = true;
         if (globalFactoryEnabled) {
-            globalFactoryStorage = engine->newObject();
-            globalFactoryFunction.call(globalFactoryStorage, QScriptValueList() << currentScriptId);
+            globalFactoryStorage = globalFactoryFunction.construct(QScriptValueList() << currentScriptId);
             checkError();
         }
     }
