@@ -1056,6 +1056,12 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     sortByTier->setChecked(s.value("sort_players_by_tier").toBool());
     sortBT = sortByTier->isChecked();
 
+    QAction *sortByAuth = menuActions->addAction(tr("Sort players by auth &level"));
+    sortByAuth->setCheckable(true);
+    connect(sortByAuth, SIGNAL(triggered(bool)), SLOT(sortPlayersByAuth(bool)));
+    sortByAuth->setChecked(s.value("sort_players_by_auth").toBool());
+    sortBA = sortByAuth->isChecked();
+
     QAction *list_right = menuActions->addAction(tr("Move player list to &right"));
     list_right->setCheckable(true);
     connect(list_right, SIGNAL(triggered(bool)), SLOT(movePlayerList(bool)));
@@ -1283,6 +1289,21 @@ void Client::sortPlayersCountingTiers(bool byTier)
     sortBT = byTier;
     QSettings s;
     s.setValue("sort_players_by_tier", sortBT);
+
+    if (sortBT) {
+        foreach(Channel *c, mychannels)
+            c->sortAllPlayersByTier();
+    } else {
+        foreach(Channel *c, mychannels)
+            c->sortAllPlayersNormally();
+    }
+}
+
+void Client::sortPlayersByAuth(bool byAuth)
+{
+    sortBA = byAuth;
+    QSettings s;
+    s.setValue("sort_players_by_auth", sortBA);
 
     if (sortBT) {
         foreach(Channel *c, mychannels)
