@@ -103,6 +103,7 @@ public:
     };
     int showPEvents;
     bool sortBT;
+    bool sortBA;
     bool showTS;
     TierNode tierRoot;
     QStringList tierList;
@@ -199,6 +200,7 @@ public slots:
     void showTeam(bool);
     void enableLadder(bool);
     void sortPlayersCountingTiers(bool);
+    void sortPlayersByAuth(bool);
     void setChannelSelected(int);
     void enablePlayerEvents();
     void disablePlayerEvents();

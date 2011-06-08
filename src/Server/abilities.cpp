@@ -464,7 +464,7 @@ struct AMForeWarn : public AM {
             }
         }
 
-        int m = poss[true_rand()%poss.size()];
+        int m = poss[b.true_rand()%poss.size()];
 
         b.sendAbMessage(22,0,s,s,MoveInfo::Type(m, b.gen()),m);
     }
@@ -733,6 +733,23 @@ struct AMNormalize : public AM {
     static void btl(int s, int, BS &b) {
         if (tmove(b,s).type != Type::Curse)
             tmove(b,s).type = Type::Normal;
+    }
+};
+
+struct AMPoisonTouch : public AM {
+    AMPoisonTouch() {
+        functions["OnPhysicalAssault"] = &opa;
+    }
+
+    static void opa(int s, int t, BS &b) {
+        if (tmove(b,s).classification == Move::OffensiveStatChangingMove || tmove(b,s).flinchRate > 0)
+            return;
+        if (b.poke(t).status() == Pokemon::Fine && rand() % 100 < 20) {
+            if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
+                b.sendAbMessage(18,0,s,t,Pokemon::Curse,b.ability(s));
+                b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt(),s);
+            }
+        }
     }
 };
 
@@ -1782,7 +1799,6 @@ struct AMRegeneration : public AM {
     static void us(int s, int, BS &b) {
         if (!b.poke(s).isFull()) {
             b.healLife(s, b.poke(s).totalLifePoints() / 3);
-            b.sendAbMessage(86, 0, s);
         }
     }
 };
@@ -1791,6 +1807,7 @@ struct AMRegeneration : public AM {
     PriorityChoice
     AfterNegativeStatChange
     UponPhysicalAssault
+    OnPhysicalAssault
     DamageFormulaStart
     UponOffensiveDamageReceived
     UponSetup
@@ -1914,4 +1931,5 @@ void AbilityEffect::init()
     REGISTER_AB(98, Analyze);
     REGISTER_AB(99, HealingHeart);
     REGISTER_AB(100, FriendGuard);
+    REGISTER_AB(101, PoisonTouch);
 }

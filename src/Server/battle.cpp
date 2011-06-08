@@ -1984,7 +1984,7 @@ void BattleSituation::testCritical(int player, int target)
             appendBattleLog("CriticalHit", toColor(tr("A critical hit!"), "#6b0000"));
     }
 
-    /* In GSC, if you don't got superior boosts in offensive than in their defensive stat, you ignore boosts, burn, and screens,
+    /* In GSC, if crit and if you don't got superior boosts in offensive than in their defensive stat, you ignore boosts, burn, and screens,
        otherwise you ignore none of them */
     if (gen() == 2) {
         int stat = 1 + (tmove(player).category - 1) * 2;
@@ -2458,6 +2458,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 continue;
             }
 
+            /* Draining moves fail against substitute in gen 2 and earlier */
+            if (gen() <= 2 && hasSubstitute(target) && tmove(player).healing > 0) {
+                turnMemory(player)["Failed"] = true;
+                testFail(player);
+                continue;
+            }
+
             callpeffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) {
                 calleffects(player,target,"AttackSomehowFailed");
@@ -2540,6 +2547,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                         if (!sub)
                             callieffects(target, player, "UponPhysicalAssault");
                         callaeffects(target,player,"UponPhysicalAssault");
+                        callaeffects(player,target,"OnPhysicalAssault");
                     }
 
                     if (!sub) {
@@ -2747,6 +2755,9 @@ void BattleSituation::makeTargetList(const QVector<int> &base)
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
+    if (gen() <= 2)
+        return false;
+
     /* Yes, illusion breaks when hit by mold breaker, right? */
     if (ab == Ability::Illusion)
         return true;
@@ -3072,6 +3083,9 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
     if (negative)
         *negative = !pos;
 
+    if (gen() == 5 && hasWorkingAbility(player, Ability::Simple))
+        mod *= 2;
+
     if (pos)
         return gainStatMod(player, stat, std::abs(mod), attacker, tell);
     else
@@ -3212,7 +3226,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
 
     changeStatus(player, status, true, minTurns == 0 ? 0 : minTurns-1 + true_rand() % (maxTurns - minTurns + 1));
     if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_S) {
-        changeForme(this->player(player), slotNum(player), Pokemon::Shaymin_S);
+        changeForme(this->player(player), slotNum(player), Pokemon::Shaymin);
     }
     if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
         && hasWorkingAbility(player, Ability::Synchronize)) //Synchronize
@@ -3656,7 +3670,7 @@ int BattleSituation::calculateDamage(int p, int t)
     power = std::min(power, 65535);
     int damage = ((std::min(((level * 2 / 5) + 2) * power, 65535) * attack / 50) / def);
     //Guts, burn
-    if (gen() != 2 || !turnMemory(p).value("CritIgnoresAll").toBool()) {
+    if (gen() != 2 || !crit || !turnMemory(p).value("CritIgnoresAll").toBool()) {
         damage = damage * (
                 (poke.status() == Pokemon::Burnt && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts))
                 ? PokeFraction(1,2) : PokeFraction(1,1));
@@ -4503,6 +4517,7 @@ ShallowBattlePoke BattleSituation::opoke(int slot, int player, int i) const
         p.num() = p2.num();
         p.nick() = p2.nick();
         p.gender() = p2.gender();
+        p.shiny() = p2.shiny();
 
         return p;
     } else {
@@ -4637,7 +4652,7 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
 {
     int boost = fpoke(player).boosts[stat];
 
-    if (hasWorkingAbility(player,Ability::Simple)) {
+    if (gen() <= 4 && hasWorkingAbility(player,Ability::Simple)) {
         boost = std::max(std::min(boost*2, 6),-6);
     }
 

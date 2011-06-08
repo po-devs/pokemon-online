@@ -247,11 +247,13 @@ struct MMBatonPass : public MM
         c.remove("HasMovedOnce");
         /* Removing attract */
         c.remove("AttractBy");
-        c.remove("Transformed");
         foreach( int opp, b.revs(s)) {
             if (b.linked(opp, "Attract"))
                 poke(b, opp).remove("AttractBy");
         }
+        /* Removing Transform and disable */
+        c.remove("Transformed");
+        c.remove("DisablesUntil");
 
         QList<int> boosts;
 
@@ -2311,10 +2313,8 @@ struct MMEncore : public MM
             b.sendItemMessage(7,t);
             b.disposeItem(t);
         } else {
-            if (b.gen() == 2)
+            if (b.gen() <=3)
                 poke(b,t)["EncoresUntil"] = b.turn() + 2 + (b.true_rand()%4);
-            else if (b.gen() == 3)
-                poke(b,t)["EncoresUntil"] = b.turn() + 1 + (b.true_rand()%5);
             else if (b.gen() == 4)
                 poke(b,t)["EncoresUntil"] = b.turn() + 3 + (b.true_rand()%5);
             else
@@ -4376,10 +4376,16 @@ struct MMSkillSwap : public MM {
         int sab = b.ability(s);
 
         b.sendMoveMessage(112,0,s,Pokemon::Psychic,t);
+
         b.loseAbility(s);
         b.acquireAbility(s, tab);
         b.loseAbility(t);
         b.acquireAbility(t, sab);
+
+        if (b.gen() >= 5) {
+            b.sendMoveMessage(143,0,s,0,t,sab);
+            b.sendMoveMessage(143,0,t,0,s,tab);
+        }
     }
 };
 
@@ -5160,6 +5166,15 @@ struct MMWideGuard : public MM
             return;
         }
 
+        if (team(b,target) != team(b,b.player(s)) && tmove(b,s).attack == Move::Feint) {
+            if (team(b,target).contains("WideGuardUsed")) {
+                team(b,target).remove("WideGuardUsed");
+                b.sendMoveMessage(169, 1, t, Pokemon::Normal);
+                return;
+            }
+        }
+
+
         if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
             return;
         }
@@ -5198,7 +5213,15 @@ struct MMFastGuard : public MM
             return;
         }
 
-        if (! (tmove(b, s).flags & Move::ProtectableFlag) && tmove(b,s).attack != Move::Feint ) {
+        if (team(b,target) != team(b,b.player(s)) && tmove(b,s).attack == Move::Feint) {
+            if (team(b,target).contains("FastGuardUsed")) {
+                team(b,target).remove("FastGuardUsed");
+                b.sendMoveMessage(170, 1, t, Pokemon::Normal);
+                return;
+            }
+        }
+
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) && tmove(b,s).attack != Move::Feint) {
             return;
         }
 
@@ -5796,6 +5819,9 @@ struct MMTriAttack : public MM
 
     static void uas(int s, int t, BS &b) {
         if (b.hasWorkingAbility(t, Ability::ShieldDust))
+            return;
+        // Do not apply extra effects with Sheer Force
+        if (b.hasWorkingAbility(s, Ability::Encourage))
             return;
 
         bool boost = b.hasWorkingAbility(s, Ability::SereneGrace) ||  team(b, b.player(t)).value("RainbowCount").toInt();

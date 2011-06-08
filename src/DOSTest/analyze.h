@@ -17,57 +17,7 @@ class TrainerTeam;
 /* Commands to dialog with the server */
 namespace NetworkCli
 {
-    enum Command
-    {
-        WhatAreYou = 0,
-        WhoAreYou,
-        Login,
-        Logout,
-        SendMessage,
-        PlayersList,
-        SendTeam,
-        ChallengeStuff = 7,
-        EngageBattle,
-        BattleFinished,
-        BattleMessage = 10,
-        BattleChat,
-        KeepAlive,
-        AskForPass,
-        Register,
-        PlayerKick,
-        PlayerBan,
-        ServNumChange,
-        ServDescChange,
-        ServNameChange,
-        SendPM = 20,
-        Away,
-        GetUserInfo,
-        GetUserAlias,
-        GetBanList,
-        CPBan,
-        CPUnban,
-        SpectateBattle,
-        SpectatingBattleMessage,
-        SpectatingBattleChat,
-        SpectatingBattleFinished = 30,
-        LadderChange,
-        ShowTeamChange,
-        VersionControl,
-        TierSelection,
-        ServMaxChange,
-        FindMatch,
-        ShowRankings = 37,
-        Announcement,
-        CPTBan,
-        CPTUnban,
-        PlayerTBan,
-        GetTBanList
-    };
-
-    enum ProtocolError
-    {
-	UnknownCommand = 0
-    };
+#include "../Shared/networkcommands.h"
 }
 
 /* Analyzes the messages received from the network and emits the corresponding signals.

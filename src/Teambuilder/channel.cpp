@@ -2,6 +2,7 @@
 #include "client.h"
 #include "../Utilities/otherwidgets.h"
 
+
 Channel::Channel(const QString &name, int id, Client *parent)
     : QObject(parent), client(parent), myname(name), myid(id), readyToQuit(false)
 {
@@ -15,7 +16,8 @@ Channel::Channel(const QString &name, int id, Client *parent)
     mymainchat->setOpenExternalLinks(false);
     connect(mymainchat, SIGNAL(anchorClicked(QUrl)), SLOT(anchorClicked(QUrl)));
 
-    myplayers->setColumnCount(1);
+    myplayers->setColumnCount(2);
+    myplayers->setColumnHidden(1, true);
     myplayers->header()->hide();
     myplayers->setIconSize(QSize(18,18));
     myplayers->setIndentation(13);
@@ -155,7 +157,7 @@ void Channel::sortAllPlayersByTier()
         if (!mytiersitems.contains(tier))
             placeTier(tier);
 
-        placeItem(iter.value(), mytiersitems.value(tier));
+        placeItem(iter.value(), mytiersitems.value(tier), client->sortBA);
     }
 
     myplayers->expandAll();
@@ -180,19 +182,30 @@ void Channel::sortAllPlayersNormally()
     QHash<int, QIdTreeWidgetItem *>::iterator iter;
 
     for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
-        placeItem(iter.value(), NULL);
+        placeItem(iter.value(), NULL, client->sortBA);
     }
 }
 
-void Channel::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
+void Channel::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent, bool sortByAuth)
 {
     if(item->id() >= 0) {
         if(parent == NULL) {
             myplayers->addTopLevelItem(item);
+            if(sortByAuth) {
+                myplayers->sortItems(1,Qt::DescendingOrder);
+            }
+            else {
             myplayers->sortItems(0,Qt::AscendingOrder);
+        }
         } else {
             parent->addChild(item);
+            if(sortByAuth) {
+                parent->sortChildren(1,Qt::DescendingOrder);
+            }
+            else {
             parent->sortChildren(0,Qt::AscendingOrder);
+        }
+
         }
     }
 }
@@ -287,9 +300,10 @@ void Channel::playerReceived(int playerid) {
         if (!mytiersitems.contains(tier))
             placeTier(tier);
 
-        placeItem(item, mytiersitems.value(tier));
+        placeItem(item, mytiersitems.value(tier), client->sortBA);
     } else {
-        placeItem(item,NULL);
+        placeItem(item,NULL, client->sortBA);
+
     }
 
     updateState(playerid);
@@ -326,6 +340,7 @@ void Channel::insertNewPlayer(int playerid)
     f.setBold(true);
     item->setFont(0,f);
     item->setText(0,name(playerid));
+    item->setText(1,QString::number(client->auth(playerid)));
     item->setColor(client->color(playerid));
     myplayersitems.insert(playerid, item);
 
@@ -334,9 +349,9 @@ void Channel::insertNewPlayer(int playerid)
         if (!mytiersitems.contains(tier))
             placeTier(tier);
 
-        placeItem(item, mytiersitems.value(tier));
+        placeItem(item, mytiersitems.value(tier), client->sortBA);
     } else {
-        placeItem(item,NULL);
+        placeItem(item,NULL, client->sortBA);
     }
 
     updateState(playerid);

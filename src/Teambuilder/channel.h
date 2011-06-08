@@ -41,7 +41,7 @@ public:
     void sortAllPlayersByTier();
     void sortAllPlayersNormally();
     void playerReceived(int playerid);
-    void placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent=NULL);
+    void placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent=NULL, bool sortByAuth=true);
     void placeTier(const QString &tier);
     void battleStarted(int battleid, int id1, int id2);
     void battleReceived(int battleid, int id1, int id2);
