@@ -32,7 +32,9 @@ ScriptEngine::ScriptEngine(Server *s) {
     QScriptValue sysdb = myengine.newQObject(myScriptDB);
     sys.setProperty("db", sysdb, QScriptValue::ReadOnly | QScriptValue::Undeletable);
 
+#ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
+#endif
 
     QFile f("scripts.js");
     f.open(QIODevice::ReadOnly);
