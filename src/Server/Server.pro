@@ -112,3 +112,4 @@ CONFIG(sfml) {
     SOURCES += sfmlsocket.cpp
     LIBS += -L/usr/local/lib -lboost_system-mt
 }
+CONFIG(nowelcome):DEFINES += PO_NO_WELCOME
