@@ -1781,7 +1781,7 @@ QScriptValue ScriptEngine::teamPokeGender(int id, int slot)
 
 QScriptValue ScriptEngine::teamPokeNick(int id, int index)
 {
-    if(!loggedIn(id) || index < 1 ||index >= 6) {
+    if(!loggedIn(id) || index < 0 ||index >= 6) {
         return myengine.undefinedValue();
     }else{
         return myserver->player(id)->team().poke(index).nick();
