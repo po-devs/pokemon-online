@@ -1280,6 +1280,7 @@ void Client::tierListReceived(const QByteArray &tl)
         foreach(Channel *c, mychannels)
             c->sortAllPlayersByTier();
     }
+    emit tierListFormed(tierList);
 }
 
 void Client::sortPlayersCountingTiers(bool byTier)
@@ -1886,10 +1887,12 @@ void Client::openTeamBuilder()
     myteambuilder->show();
     myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder->setMenuBar(t->createMenuBar((MainEngine*)parent()));
+    t->setTierList(tierList);
 
     connect(this, SIGNAL(destroyed()), myteambuilder, SLOT(close()));
     connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
     connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));
+    connect(this, SIGNAL(tierListFormed(const QStringList &)), t, SLOT(setTierList(const QStringList&)));
 }
 
 void Client::changeTeam()
