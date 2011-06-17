@@ -12,7 +12,7 @@
 6#full incense
 
 6#lagging tail
-1-1#lax incense
+1-7_1#lax incense
 12#Leftovers
 
 
