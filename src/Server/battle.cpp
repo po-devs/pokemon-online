@@ -861,7 +861,8 @@ bool BattleSituation::requestChoice(int slot, bool acquire, bool custom)
         return false;
     }
 
-    if (turnMemory(slot).contains("NoChoice") && !koed(slot)) {
+    /* Custom choices bypass forced choices */
+    if (turnMemory(slot).contains("NoChoice") && !koed(slot) && !custom) {
         return false;
     }
 

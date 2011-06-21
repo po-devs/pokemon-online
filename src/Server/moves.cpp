@@ -989,7 +989,7 @@ struct MMLeechSeed : public MM
             damage = damage * 13 / 10;
         }
         if (!b.hasWorkingAbility(s, Ability::LiquidOoze)) {
-            if (poke(s2).value("HealBlockCount").toInt() > 0) {
+            if (poke(b, s2).value("HealBlockCount").toInt() > 0) {
                 b.sendMoveMessage(60, 0, s2);
             } else {
                 b.healLife(s2, damage);
@@ -3747,10 +3747,7 @@ struct MMRazorWind : public MM
     }
 
     static void ts(int s, int, BS &b) {
-	if (poke(b,s).value("ReleaseTurn").toInt() != b.turn()) {
-	    removeFunction(poke(b,s), "TurnSettings", "RazorWind");
-	    return;
-	}
+        removeFunction(poke(b,s), "TurnSettings", "RazorWind");
 	turn(b,s)["NoChoice"] = true;
         int mv = poke(b,s)["ChargingMove"].toInt();
         MoveEffect::setup(mv,s,s,b);
