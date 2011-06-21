@@ -4594,6 +4594,19 @@ struct MMStockPile : public MM
     }
 };
 
+/* Swagger fails against max attack foes in statium 2 */
+struct MMSwagger : public MM {
+    MMSwagger() {
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.gen() <= 2 && (b.getStat(t, Attack) == 999 || b.hasMaximalStatMod(t, Attack))) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+};
+
 struct MMSwallow: public MM
 {
     MMSwallow() {
@@ -6129,4 +6142,5 @@ void MoveEffect::init()
     REGISTER_MOVE(193, CrossFlame);
     REGISTER_MOVE(194, CrossThunder);
     REGISTER_MOVE(195, WillOWisp);
+    REGISTER_MOVE(196, Swagger);
 }
