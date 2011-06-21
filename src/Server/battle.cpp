@@ -1988,7 +1988,7 @@ void BattleSituation::testCritical(int player, int target)
        otherwise you ignore none of them */
     if (gen() == 2) {
         int stat = 1 + (tmove(player).category - 1) * 2;
-        if (fpoke(player).boosts[stat] <= fpoke(target).boosts[stat+2]) {
+        if (fpoke(player).boosts[stat] <= fpoke(target).boosts[stat+1]) {
             turnMemory(player)["CritIgnoresAll"] = true;
         }
     }
