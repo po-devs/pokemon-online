@@ -988,8 +988,13 @@ struct MMLeechSeed : public MM
         if (b.hasWorkingItem(s2, Item::BigRoot)) {
             damage = damage * 13 / 10;
         }
-        if (!b.hasWorkingAbility(s, Ability::LiquidOoze))
-            b.healLife(s2, damage);
+        if (!b.hasWorkingAbility(s, Ability::LiquidOoze)) {
+            if (poke(s2).value("HealBlockCount").toInt() > 0) {
+                b.sendMoveMessage(60, 0, s2);
+            } else {
+                b.healLife(s2, damage);
+            }
+        }
         else {
             b.sendMoveMessage(1,2,s2,Pokemon::Poison,s);
             b.inflictDamage(s2, damage,s2,false);
