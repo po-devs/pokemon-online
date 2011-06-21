@@ -351,6 +351,11 @@ struct IMShellBell : public IM
         if (b.koed(s) || b.hasWorkingAbility(s, Ability::Encourage))
 	    return;
 
+    if (b.poke(s).lifePoints() == b.poke(s).totalLifePoints()) {
+        // Don't heal if at full health already
+        return;
+    }
+
 	b.sendItemMessage(24, s);
 	b.healLife(s, turn(b,s)["DamageInflicted"].toInt()/8);
     }
