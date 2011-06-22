@@ -32,7 +32,9 @@ ScriptEngine::ScriptEngine(Server *s) {
     QScriptValue sysdb = myengine.newQObject(myScriptDB);
     sys.setProperty("db", sysdb, QScriptValue::ReadOnly | QScriptValue::Undeletable);
 
+#ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
+#endif
 
     QFile f("scripts.js");
     f.open(QIODevice::ReadOnly);
@@ -652,42 +654,6 @@ void ScriptEngine::changePokeName(int id, int pokeslot, const QString &name)
     p->team().poke(pokeslot).nick() = name;
 }
 
-void ScriptEngine::saveVal(const QString &key, const QVariant &val)
-{
-    QSettings s;
-    s.setValue("Script_"+key, val);
-}
-
-QScriptValue ScriptEngine::getVal(const QString &key)
-{
-    QSettings s;
-    return s.value("Script_"+key).toString();
-}
-
-void ScriptEngine::removeVal(const QString &key)
-{
-    QSettings s;
-    s.remove("Script_"+key);
-}
-
-void ScriptEngine::saveVal(const QString &file, const QString &key, const QVariant &val)
-{
-    QSettings s(file, QSettings::IniFormat);
-    s.setValue("Script_"+key, val);
-}
-
-QScriptValue ScriptEngine::getVal(const QString &file, const QString &key)
-{
-    QSettings s(file, QSettings::IniFormat);
-    return s.value("Script_"+key).toString();
-}
-
-void ScriptEngine::removeVal(const QString &file, const QString &key)
-{
-    QSettings s(file, QSettings::IniFormat);
-    s.remove("Script_"+key);
-}
-
 bool ScriptEngine::hasLegalTeamForTier(int id, const QString &tier)
 {
     if (!TierMachine::obj()->exists(tier))
@@ -743,47 +709,6 @@ void ScriptEngine::exportTierDatabase()
     TierMachine::obj()->exportDatabase();
 }
 
-int ScriptEngine::system(const QString &command)
-{
-    return ::system(command.toUtf8());
-}
-
-void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
-{
-    QFile out(fileName);
-
-    if (!out.open(QIODevice::Append)) {
-        printLine("Script Warning in sys.appendToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
-        return;
-    }
-
-    out.write(content.toUtf8());
-}
-
-void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
-{
-    QFile out(fileName);
-
-    if (!out.open(QIODevice::WriteOnly)) {
-        printLine("Script Warning in sys.writeToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
-        return;
-    }
-
-    out.write(content.toUtf8());
-}
-
-void ScriptEngine::deleteFile(const QString &fileName)
-{
-    QFile out(fileName);
-
-    if (!out.open(QIODevice::WriteOnly)) {
-        printLine("Script Warning in sys.deleteFile(filename): error when opening " + fileName + ": " + out.errorString());
-        return;
-    }
-
-    out.remove();
-}
-
 void ScriptEngine::clearChat()
 {
     emit clearTheChat();
@@ -792,136 +717,6 @@ void ScriptEngine::clearChat()
 bool ScriptEngine::dbRegistered(const QString &name)
 {
     return SecurityManager::member(name).isProtected();
-}
-
-/**
- * Function will perform a GET-Request server side
- * @param urlstring web-url
- * @author Remco vd Zon
- */
-void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callback)
-{
-    if (!callback.isString() && !callback.isFunction()) {
-        printLine("Script Warning in sys.webCall(urlstring, callback): callback is not a string or a function.");
-        return;
-    }
-
-    QNetworkRequest request;
-
-    request.setUrl(QUrl(urlstring));
-    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
-
-    QNetworkReply *reply = manager.get(request);
-    webCallEvents[reply] = callback;
-}
-
-/**
- * Function will perform a POST-Request server side
- * @param urlstring web-url
- * @param params_array javascript array [key]=>value.
- * @author Remco vd Zon
- */
-void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callback, const QScriptValue &params_array)
-{
-    if (!callback.isString() && !callback.isFunction()) {
-        printLine("Script Warning in sys.webCall(urlstring, callback, params_array): callback is not a string or a function.");
-        return;
-    }
-    
-    QNetworkRequest request;
-    QByteArray postData;
-
-    request.setUrl(QUrl(urlstring));
-    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
-
-    //parse the POST fields
-    QScriptValueIterator it(params_array);
-    while (it.hasNext()) {
-        it.next();
-        postData.append( it.name() + "=" + it.value().toString().replace(QString("&"), QString("%26"))); //encode ampersands!
-        if(it.hasNext()) postData.append("&");
-    }
-
-    QNetworkReply *reply = manager.post(request, postData);
-    webCallEvents[reply] = callback;
-}
-
-void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
-    QScriptValue val = webCallEvents.take(reply);
-    if (val.isString()) {
-        //escape reply before sending it to the javascript evaluator
-        QString x = reply->readAll();
-        x = x.replace(QString("\\"), QString("\\\\"));
-        x = x.replace(QString("'"), QString("\\'"));
-        x = x.replace(QString("\n"), QString("\\n"));
-        x = x.replace(QString("\r"), QString(""));
-
-        //put reply in a var "resp", can be used in expr
-        // i.e. expr = 'print("The resp was: "+resp);'
-        eval( "var resp = '"+x+"';"+val.toString());
-    } else if (val.isFunction()) {
-        QScriptValueList args;
-        args << QString(reply->readAll());
-        val.call(QScriptValue(), args); // uses globalObject as this
-    }
-    reply->deleteLater();
-}
-
-/**
- * Function will perform a GET-Request server side, synchronously
- * @param urlstring web-url
- * @author Remco cd Zon and Toni Fadjukoff
- */
-QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring) {
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    QNetworkRequest request;
-
-    request.setUrl(QUrl(urlstring));
-    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
-
-    connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(synchronousWebCall_replyFinished(QNetworkReply*)));
-    manager->get(request);
-
-    sync_loop.exec();
-
-    manager->deleteLater();
-    return sync_data;
-}
-
-/**
- * Function will perform a POST-Request server side, synchronously
- * @param urlstring web-url
- * @param params_array javascript array [key]=>value.
- * @author Remco vd Zon and Toni Fadjukoff
- */
-QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring, const QScriptValue &params_array)
-{
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    QNetworkRequest request;
-    QByteArray postData;
-
-    request.setUrl(QUrl(urlstring));
-    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
-
-    //parse the POST fields
-    QScriptValueIterator it(params_array);
-    while (it.hasNext()) {
-        it.next();
-        postData.append( it.name() + "=" + it.value().toString().replace(QString("&"), QString("%26"))); //encode ampersands!
-        if(it.hasNext()) postData.append("&");
-    }
-
-    connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(synchronousWebCall_replyFinished(QNetworkReply*)));
-    manager->post(request, postData);
-
-    sync_loop.exec();
-    manager->deleteLater();
-    return sync_data;
-}
-
-void ScriptEngine::synchronousWebCall_replyFinished(QNetworkReply* reply) {
-    sync_data = reply->readAll();
-    sync_loop.exit();
 }
 
 void ScriptEngine::callLater(const QString &expr, int delay)
@@ -1622,18 +1417,6 @@ void ScriptEngine::setTeamPokeDV(int id, int slot, int stat, int newValue)
     }
 }
 
-QScriptValue ScriptEngine::getFileContent(const QString &fileName)
-{
-    QFile out(fileName);
-
-    if (!out.open(QIODevice::ReadOnly)) {
-        printLine("Script Warning in sys.getFileContent(filename): error when opening " + fileName + ": " + out.errorString());
-        return myengine.undefinedValue();
-    }
-
-    return QString::fromUtf8(out.readAll());
-}
-
 int ScriptEngine::rand(int min, int max)
 {
     return (::rand()%(max-min)) + min;
@@ -1998,7 +1781,7 @@ QScriptValue ScriptEngine::teamPokeGender(int id, int slot)
 
 QScriptValue ScriptEngine::teamPokeNick(int id, int index)
 {
-    if(!loggedIn(id) || index < 1 ||index >= 6) {
+    if(!loggedIn(id) || index < 0 ||index >= 6) {
         return myengine.undefinedValue();
     }else{
         return myserver->player(id)->team().poke(index).nick();
@@ -2111,6 +1894,229 @@ bool ScriptEngine::attemptToSpectateBattle(int src, int p1, int p2)
     return res.isString() && (res.toString().toLower() == "allow");
 }
 
+void ScriptEngine::changeAvatar(int playerId, quint16 avatarId)
+{
+    if (!loggedIn(playerId)) {
+        warn("changeAvatar","unknown player.");
+        return;
+    }
+    myserver->player(playerId)->avatar() = avatarId;
+    myserver->sendPlayer(playerId);
+}
+
+QScriptValue ScriptEngine::avatar(int playerId)
+{
+    if (!loggedIn(playerId)) {
+        return myengine.nullValue();
+    }
+    return myserver->player(playerId)->avatar();
+}
+
+// Potentially unsafe functions.
+#ifndef PO_SCRIPT_SAFE_ONLY
+
+void ScriptEngine::saveVal(const QString &key, const QVariant &val)
+{
+    QSettings s;
+    s.setValue("Script_"+key, val);
+}
+
+QScriptValue ScriptEngine::getVal(const QString &key)
+{
+    QSettings s;
+    return s.value("Script_"+key).toString();
+}
+
+void ScriptEngine::removeVal(const QString &key)
+{
+    QSettings s;
+    s.remove("Script_"+key);
+}
+
+void ScriptEngine::saveVal(const QString &file, const QString &key, const QVariant &val)
+{
+    QSettings s(file, QSettings::IniFormat);
+    s.setValue("Script_"+key, val);
+}
+
+QScriptValue ScriptEngine::getVal(const QString &file, const QString &key)
+{
+    QSettings s(file, QSettings::IniFormat);
+    return s.value("Script_"+key).toString();
+}
+
+void ScriptEngine::removeVal(const QString &file, const QString &key)
+{
+    QSettings s(file, QSettings::IniFormat);
+    s.remove("Script_"+key);
+}
+
+void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::Append)) {
+        printLine("Script Warning in sys.appendToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.write(content.toUtf8());
+}
+
+void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::WriteOnly)) {
+        printLine("Script Warning in sys.writeToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.write(content.toUtf8());
+}
+
+void ScriptEngine::deleteFile(const QString &fileName)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::WriteOnly)) {
+        printLine("Script Warning in sys.deleteFile(filename): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.remove();
+}
+
+/**
+ * Function will perform a GET-Request server side
+ * @param urlstring web-url
+ * @author Remco vd Zon
+ */
+void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callback)
+{
+    if (!callback.isString() && !callback.isFunction()) {
+        printLine("Script Warning in sys.webCall(urlstring, callback): callback is not a string or a function.");
+        return;
+    }
+
+    QNetworkRequest request;
+
+    request.setUrl(QUrl(urlstring));
+    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+
+    QNetworkReply *reply = manager.get(request);
+    webCallEvents[reply] = callback;
+}
+
+/**
+ * Function will perform a POST-Request server side
+ * @param urlstring web-url
+ * @param params_array javascript array [key]=>value.
+ * @author Remco vd Zon
+ */
+void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callback, const QScriptValue &params_array)
+{
+    if (!callback.isString() && !callback.isFunction()) {
+        printLine("Script Warning in sys.webCall(urlstring, callback, params_array): callback is not a string or a function.");
+        return;
+    }
+    
+    QNetworkRequest request;
+    QByteArray postData;
+
+    request.setUrl(QUrl(urlstring));
+    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+
+    //parse the POST fields
+    QScriptValueIterator it(params_array);
+    while (it.hasNext()) {
+        it.next();
+        postData.append( it.name() + "=" + it.value().toString().replace(QString("&"), QString("%26"))); //encode ampersands!
+        if(it.hasNext()) postData.append("&");
+    }
+
+    QNetworkReply *reply = manager.post(request, postData);
+    webCallEvents[reply] = callback;
+}
+
+void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
+    QScriptValue val = webCallEvents.take(reply);
+    if (val.isString()) {
+        //escape reply before sending it to the javascript evaluator
+        QString x = reply->readAll();
+        x = x.replace(QString("\\"), QString("\\\\"));
+        x = x.replace(QString("'"), QString("\\'"));
+        x = x.replace(QString("\n"), QString("\\n"));
+        x = x.replace(QString("\r"), QString(""));
+
+        //put reply in a var "resp", can be used in expr
+        // i.e. expr = 'print("The resp was: "+resp);'
+        eval( "var resp = '"+x+"';"+val.toString());
+    } else if (val.isFunction()) {
+        QScriptValueList args;
+        args << QString(reply->readAll());
+        val.call(QScriptValue(), args); // uses globalObject as this
+    }
+    reply->deleteLater();
+}
+
+/**
+ * Function will perform a GET-Request server side, synchronously
+ * @param urlstring web-url
+ * @author Remco cd Zon and Toni Fadjukoff
+ */
+QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring) {
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QNetworkRequest request;
+
+    request.setUrl(QUrl(urlstring));
+    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(synchronousWebCall_replyFinished(QNetworkReply*)));
+    manager->get(request);
+
+    sync_loop.exec();
+
+    manager->deleteLater();
+    return sync_data;
+}
+
+/**
+ * Function will perform a POST-Request server side, synchronously
+ * @param urlstring web-url
+ * @param params_array javascript array [key]=>value.
+ * @author Remco vd Zon and Toni Fadjukoff
+ */
+QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring, const QScriptValue &params_array)
+{
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QNetworkRequest request;
+    QByteArray postData;
+
+    request.setUrl(QUrl(urlstring));
+    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+
+    //parse the POST fields
+    QScriptValueIterator it(params_array);
+    while (it.hasNext()) {
+        it.next();
+        postData.append( it.name() + "=" + it.value().toString().replace(QString("&"), QString("%26"))); //encode ampersands!
+        if(it.hasNext()) postData.append("&");
+    }
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(synchronousWebCall_replyFinished(QNetworkReply*)));
+    manager->post(request, postData);
+
+    sync_loop.exec();
+    manager->deleteLater();
+    return sync_data;
+}
+
+void ScriptEngine::synchronousWebCall_replyFinished(QNetworkReply* reply) {
+    sync_data = reply->readAll();
+    sync_loop.exit();
+}
+
 QScriptValue ScriptEngine::getValKeys()
 {
     QSettings s;
@@ -2153,20 +2159,23 @@ QScriptValue ScriptEngine::getValKeys(const QString &file)
     return result_array;
 }
 
-void ScriptEngine::changeAvatar(int playerId, quint16 avatarId)
+QScriptValue ScriptEngine::getFileContent(const QString &fileName)
 {
-    if (!loggedIn(playerId)) {
-        warn("changeAvatar","unknown player.");
-        return;
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::ReadOnly)) {
+        printLine("Script Warning in sys.getFileContent(filename): error when opening " + fileName + ": " + out.errorString());
+        return myengine.undefinedValue();
     }
-    myserver->player(playerId)->avatar() = avatarId;
-    myserver->sendPlayer(playerId);
+
+    return QString::fromUtf8(out.readAll());
 }
 
-QScriptValue ScriptEngine::avatar(int playerId)
+#endif // PO_SCRIPT_SAFE_ONLY
+
+#if !defined(PO_SCRIPT_NO_SYSTEM) && !defined(PO_SCRIPT_SAFE_ONLY)
+int ScriptEngine::system(const QString &command)
 {
-    if (!loggedIn(playerId)) {
-        return myengine.nullValue();
-    }
-    return myserver->player(playerId)->avatar();
+    return ::system(command.toUtf8());
 }
+#endif // PO_SCRIPT_NO_SYSTEM

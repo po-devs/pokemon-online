@@ -117,13 +117,6 @@ public:
     Q_INVOKABLE void changePokeName(int id, int pokeslot, const QString &name);
     Q_INVOKABLE void changeTier(int id, const QString &tier);
     Q_INVOKABLE void reloadTiers();
-    /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
-    Q_INVOKABLE void saveVal(const QString &key, const QVariant &val);
-    Q_INVOKABLE void saveVal(const QString &file, const QString &key, const QVariant &val);
-    Q_INVOKABLE void removeVal(const QString &key);
-    Q_INVOKABLE void removeVal(const QString &file, const QString &key);
-    /* Calls the underlying OS for a command */
-    Q_INVOKABLE int system(const QString &command);
     /* Export the SQL databases to old style txt files */
     Q_INVOKABLE void exportMemberDatabase();
     Q_INVOKABLE void exportTierDatabase();
@@ -134,9 +127,6 @@ public:
     Q_INVOKABLE void synchronizeTierWithSQL(const QString &tier);
 
     Q_INVOKABLE void clearChat();
-    Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
-    Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
-    Q_INVOKABLE void deleteFile(const QString &fileName);
     /* Accepts string as 1st parameter. */
     Q_INVOKABLE void callLater(const QString &s, int delay);
     Q_INVOKABLE void callQuickly(const QString &s, int delay);
@@ -146,15 +136,6 @@ public:
     Q_INVOKABLE QScriptValue eval(const QString &script);
     Q_INVOKABLE void setPA(const QString &name);
     Q_INVOKABLE void unsetPA(const QString &name);
-
-    /* GET call */
-    Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback);
-    /* POST call */
-    Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback, const QScriptValue &params_array);
-    /* synchronous GET call */
-    Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring);
-    /* synchronous POST call */
-    Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring, const QScriptValue &params_array);
 
     Q_INVOKABLE QScriptValue channelIds();
     Q_INVOKABLE QScriptValue channel(int id);
@@ -190,11 +171,6 @@ public:
     Q_INVOKABLE QScriptValue totalPlayersByTier(const QString &tier);
     Q_INVOKABLE QScriptValue ladderEnabled(int id);
     Q_INVOKABLE QScriptValue ladderRating(int id, const QString &tier = QString());
-    Q_INVOKABLE QScriptValue getVal(const QString &key);
-    Q_INVOKABLE QScriptValue getVal(const QString &file, const QString &key);
-    // Returns an array of Script_* key names in config.
-    Q_INVOKABLE QScriptValue getValKeys();
-    Q_INVOKABLE QScriptValue getValKeys(const QString &file);
     /* returns a state of the memory, useful to check for memory leaks and memory usage */
     Q_INVOKABLE QScriptValue memoryDump();
     Q_INVOKABLE bool hasLegalTeamForTier(int id, const QString &tier);
@@ -240,7 +216,6 @@ public:
     Q_INVOKABLE int numPlayers();
     Q_INVOKABLE bool loggedIn(int id);
 
-    Q_INVOKABLE QScriptValue getFileContent(const QString &path);
     Q_INVOKABLE int rand(int min, int max);
     Q_INVOKABLE long time();
     Q_INVOKABLE QScriptValue getTierList();
@@ -292,6 +267,38 @@ public:
 
     /* Internal use only */
     Q_INVOKABLE void sendNetworkCommand(int id, int command);
+    
+// Potentially unsafe functions.
+#ifndef PO_SCRIPT_SAFE_ONLY
+    /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
+    Q_INVOKABLE void saveVal(const QString &key, const QVariant &val);
+    Q_INVOKABLE void saveVal(const QString &file, const QString &key, const QVariant &val);
+    Q_INVOKABLE void removeVal(const QString &key);
+    Q_INVOKABLE void removeVal(const QString &file, const QString &key);
+    Q_INVOKABLE QScriptValue getVal(const QString &key);
+    Q_INVOKABLE QScriptValue getVal(const QString &file, const QString &key);
+    // Returns an array of Script_* key names in config.
+    Q_INVOKABLE QScriptValue getValKeys();
+    Q_INVOKABLE QScriptValue getValKeys(const QString &file);
+    // Direct file access.
+    Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
+    Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
+    Q_INVOKABLE void deleteFile(const QString &fileName);
+    Q_INVOKABLE QScriptValue getFileContent(const QString &path);
+    /* GET call */
+    Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback);
+    /* POST call */
+    Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback, const QScriptValue &params_array);
+    /* synchronous GET call */
+    Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring);
+    /* synchronous POST call */
+    Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring, const QScriptValue &params_array);
+#endif // PO_SCRIPT_SAFE_ONLY
+
+#if !defined(PO_SCRIPT_NO_SYSTEM) && !defined(PO_SCRIPT_SAFE_ONLY)
+    /* Calls the underlying OS for a command */
+    Q_INVOKABLE int system(const QString &command);
+#endif // PO_SCRIPT_NO_SYSTEM
 
 signals:
     void clearTheChat();
@@ -302,8 +309,10 @@ private slots:
     void timer();
     void timer_step();
     void timerFunc();
+#ifndef PO_SCRIPT_SAFE_ONLY
     void webCall_replyFinished(QNetworkReply* reply);
     void synchronousWebCall_replyFinished(QNetworkReply* reply);
+#endif
     
 private:
     Server *myserver;
