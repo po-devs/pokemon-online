@@ -81,6 +81,7 @@ public:
     const QString &servName() {
         return serverName;
     }
+    bool isSafeScripts() { return safeScripts; }
 
 signals:
     void chatmessage(const QString &name);
@@ -108,6 +109,7 @@ public slots:
     void useBattleFileLogChanged(bool logging);
     void useChannelFileLogChanged(bool logging);
     void TCPDelayChanged(bool lowTCP);
+    void safeScriptsChanged(bool safeScripts);
     void nameTaken();
     void ipRefused();
     void invalidName();
@@ -167,6 +169,7 @@ private:
     bool useBattleFileLog;
     bool useChannelFileLog;
     bool lowTCPDelay;
+    bool safeScripts;
 
     quint16 numPlayers() {
         return myplayers.size();

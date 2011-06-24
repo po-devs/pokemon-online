@@ -562,7 +562,11 @@ void ScriptEngine::clearPass(const QString &name)
 void ScriptEngine::changeAuth(int id, int auth)
 {
     if (testPlayer("changeAuth(id, auth)", id)) {
-        myserver->changeAuth(myserver->name(id), auth);
+        if (myserver->isSafeScripts() && ((myserver->auth(id) > 2) || (auth > 2))) {
+            warn("changeAuth", "Safe scripts option is on. Unable to change auth to/from 3 and above.");
+        } else {
+            myserver->changeAuth(myserver->name(id), auth);
+        }
     }
 }
 
