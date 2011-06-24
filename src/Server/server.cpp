@@ -101,6 +101,9 @@ void Server::start(){
     if (!s.contains("show_log_messages")) {
         s.setValue("show_log_messages", true);
     }
+    if (!s.contains("safe_scripts")) {
+        s.setValue("safe_scripts", true);
+    }
 
     try {
         SQLCreator::createSQLConnection();
@@ -209,6 +212,7 @@ void Server::start(){
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
     serverPrivate = quint16(s.value("server_private").toInt());
     lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
+    this->safeScripts = s.value("safe_scripts").toBool();
 
     /* Adds the main channel */
     addChannel();
@@ -1179,6 +1183,12 @@ void Server::TCPDelayChanged(bool lowTCP)
     foreach(Player *p, myplayers) {
         p->relay().setLowDelay(lowTCP);
     }
+}
+
+void Server::safeScriptsChanged(bool safeScripts)
+{
+    this->safeScripts = safeScripts;
+    printLine("Safe scripts setting changed", false, true);
 }
 
 void Server::info(int id, const QString &mess) {

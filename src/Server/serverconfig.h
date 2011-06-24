@@ -20,6 +20,7 @@ signals:
     void useChannelFileLogChanged(bool useChannelFileLog);
     void useBattleFileLogChanged(bool useBattleFileLog);
     void latencyChanged(bool lowDelay);
+    void safeScriptsChanged(bool safeScripts);
 private slots:
     void apply();
 private:
@@ -34,6 +35,7 @@ private:
     QCheckBox *channelFileLog;
     QCheckBox *battleFileLog;
     QCheckBox *lowLatency;
+    QCheckBox *safeScripts;
 };
 
 #endif // SERVERCONFIG_H
