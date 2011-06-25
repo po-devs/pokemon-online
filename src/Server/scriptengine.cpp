@@ -572,6 +572,13 @@ void ScriptEngine::changeAuth(int id, int auth)
 
 void ScriptEngine::changeDbAuth(const QString &name, int auth)
 {
+    if (myserver->isSafeScripts()) {
+        if (!SecurityManager::exist(name)) return;
+        if ((SecurityManager::member(name).auth > 2) || (auth > 2)) {
+            warn("changeDbAuth", "Safe scripts option is on. Unable to change auth to/from 3 and above.");
+            return;
+        }
+    }
     SecurityManager::setAuth(name, auth);
 }
 
