@@ -443,6 +443,12 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             in >> id;
             emit leaveChannel(id);
         }
+    case SetIP:
+        {
+            QString ip;
+            in >> ip;
+            emit ipChangeRequested(ip);
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;

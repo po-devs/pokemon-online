@@ -115,7 +115,6 @@ void AntiDos::init() {
     }
 
     trusted_ips = settings.value("trusted_ips").toString().split(QRegExp("\\s*,\\s*"));
-    qDebug() << trusted_ips[0];
     max_people_per_ip = settings.value("max_people_per_ip").toInt();
     max_commands_per_user = settings.value("max_commands_per_user").toInt();
     max_kb_per_user = settings.value("max_kbyte_per_user").toInt();
@@ -174,6 +173,16 @@ void AntiDos::disconnect(const QString &ip, int id)
     }
 }
 
+bool AntiDos::changeIP(const QString &newIp, const QString &oldIp)
+{
+    connectionsPerIp[oldIp]--;    
+    if (connectionsPerIp[oldIp]==0) {
+        connectionsPerIp.remove(oldIp);
+    }
+    return connecting(newIp);
+}
+
+
 int AntiDos::numberOfDiffIps()
 {
     return connectionsPerIp.count();
@@ -182,7 +191,6 @@ int AntiDos::numberOfDiffIps()
 bool AntiDos::transferBegin(int id, int length, const QString &ip)
 {
 
-    qDebug() << trusted_ips;
     /* If the IP is in the Trusted Ips list, do not do anything */
     if (trusted_ips.contains(ip)) {
         return true;
