@@ -243,7 +243,6 @@ struct MMBatonPass : public MM
         c.remove("Move2Used");
         c.remove("HadItem");
         c.remove("Move3Used");
-        c.remove("BerryUsed");
         c.remove("HasMovedOnce");
         /* Removing attract */
         c.remove("AttractBy");
