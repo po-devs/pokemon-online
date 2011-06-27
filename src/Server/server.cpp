@@ -209,6 +209,7 @@ void Server::start(){
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
     serverPrivate = quint16(s.value("server_private").toInt());
     lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
+    proxyServers = s.value("proxyservers").toString().split(",");
 
     /* Adds the main channel */
     addChannel();
@@ -394,6 +395,18 @@ void Server::leaveRequest(int playerid, int channelid)
 
     if (channel.players.size() <= 0 && channelid != 0) {
         removeChannel(channelid);
+    }
+}
+
+void Server::ipChangeRequested(int player, const QString& ip)
+{
+    if (SecurityManager::bannedIP(ip)) {
+        this->player(player)->kick();
+        return;
+    }
+    if (!AntiDos::obj()->changeIP(ip, this->player(player)->proxyIp())) {
+        this->player(player)->kick();
+        return;
     }
 }
 
@@ -1009,6 +1022,7 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(battleSearchCancelled(int)), SLOT(cancelSearch(int)));
     connect(p, SIGNAL(joinRequested(int,QString)), SLOT(joinRequest(int,QString)));
     connect(p, SIGNAL(leaveRequested(int,int)), SLOT(leaveRequest(int,int)));
+    connect(p, SIGNAL(ipChangeRequested(int,QString)), SLOT(ipChangeRequested(int,QString)));
 }
 
 void Server::awayChanged(int src, bool away)
@@ -1181,6 +1195,15 @@ void Server::TCPDelayChanged(bool lowTCP)
     }
 }
 
+void Server::proxyServersChanged(const QString &ips)
+{
+    QStringList newlist = ips.split(",");
+    if (proxyServers == newlist)
+        return;
+    proxyServers = ips.split(",");
+    printLine("Proxy Servers setting changed", false, true);
+}
+
 void Server::info(int id, const QString &mess) {
     printLine(QString("From Player %1: %2").arg(id).arg(mess));
 }
@@ -1206,7 +1229,7 @@ void Server::playerBan(int src, int dest)
     if (player(dest)->auth() >= player(src)->auth())
         return;
 
-    int maxauth = SecurityManager::maxAuth(player(dest)->relay().ip());
+    int maxauth = SecurityManager::maxAuth(player(dest)->ip());
 
     if (player(src)->auth() <= maxauth) {
         player(src)->sendMessage("That player has authority level superior or equal to yours under another nick.");
@@ -1716,3 +1739,13 @@ BattleSituation * Server::getBattle(int battleId) const
         return NULL;
     }
 }
+
+bool Server::isLegalProxyServer(const QString &ip)
+{
+    foreach (QString proxyip, proxyServers) {
+        if (ip == proxyip)
+            return true;
+    }
+    return false;
+}
+

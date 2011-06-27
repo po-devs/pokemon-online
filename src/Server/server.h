@@ -82,6 +82,8 @@ public:
         return serverName;
     }
 
+    bool isLegalProxyServer(const QString &ip);
+
 signals:
     void chatmessage(const QString &name);
     void servermessage(const QString &name);
@@ -108,6 +110,8 @@ public slots:
     void useBattleFileLogChanged(bool logging);
     void useChannelFileLogChanged(bool logging);
     void TCPDelayChanged(bool lowTCP);
+    void proxyServersChanged(const QString &ips);
+
     void nameTaken();
     void ipRefused();
     void invalidName();
@@ -132,6 +136,7 @@ public slots:
     void spectatingChat(int player, int battle, const QString &chat);
     void joinRequest(int player, const QString &chn);
     void leaveRequest(int player, int chan);
+    void ipChangeRequested(int player, const QString &ip);
     void info(int , const QString& );
 
     void kick(int i);
@@ -163,6 +168,7 @@ private:
     QString serverName, serverDesc, serverAnnouncement;
     quint16 serverPrivate, serverPlayerMax;
     QList<quint16>  serverPorts;
+    QStringList proxyServers;
     bool showLogMessages;
     bool useBattleFileLog;
     bool useChannelFileLog;
