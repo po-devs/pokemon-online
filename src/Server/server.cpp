@@ -1199,12 +1199,12 @@ void Server::TCPDelayChanged(bool lowTCP)
     }
 }
 
-<<<<<<< HEAD
 void Server::safeScriptsChanged(bool safeScripts)
 {
     this->safeScripts = safeScripts;
     printLine("Safe scripts setting changed", false, true);
-=======
+}
+
 void Server::proxyServersChanged(const QString &ips)
 {
     QStringList newlist = ips.split(",");
@@ -1212,7 +1212,6 @@ void Server::proxyServersChanged(const QString &ips)
         return;
     proxyServers = ips.split(",");
     printLine("Proxy Servers setting changed", false, true);
->>>>>>> lamperi
 }
 
 void Server::info(int id, const QString &mess) {
