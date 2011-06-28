@@ -176,6 +176,7 @@ void AntiDos::disconnect(const QString &ip, int id)
 bool AntiDos::changeIP(const QString &newIp, const QString &oldIp)
 {
     connectionsPerIp[oldIp]--;    
+    loginsPerIp[oldIp].pop(); // remove a login
     if (connectionsPerIp[oldIp]==0) {
         connectionsPerIp.remove(oldIp);
     }
