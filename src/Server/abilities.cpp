@@ -668,8 +668,8 @@ struct AMIronFist : public AM {
         functions["BasePowerModifier"] = &bpm;
     }
 
-    static void bpm (int s, int , BS &b) {
-        if (tmove(b,s).flags & Move::PunchFlag) {
+    static void bpm (int s, int t, BS &b) {
+        if (s != t && tmove(b,s).flags & Move::PunchFlag) {
             turn(b,s)["BasePowerAbilityModifier"] = 4;
         }
     }
