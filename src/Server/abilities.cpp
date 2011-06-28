@@ -1571,10 +1571,16 @@ struct AMHarvest : public AM
     }
 
     static void et(int s, int, BS &b) {
-        if (poke(b,s).contains("BerryUsed") && b.poke(s).item() == 0) {
-            int item = poke(b,s)["BerryUsed"].toInt();
+        int p = b.player(s);
+        QString harvest_key = QString("BerryUsed_%1").arg(b.team(p).internalId(b.poke(s)));
+        if (team(b,p).contains(harvest_key) && b.poke(s).item() == 0) {
+            if (!b.isWeatherWorking(BattleSituation::Sunny)) {
+                if (b.true_rand() % 2)
+                     return; // 50 % change when not sunny
+            }
+            int item = team(b,p)[harvest_key].toInt();
 
-            poke(b,s).remove("BerryUsed");
+            team(b,p).remove(harvest_key);
             b.sendAbMessage(88, 0, s, 0, 0, item);
             b.acqItem(s, item);
         }

@@ -61,6 +61,7 @@ public:
     int id() const;
     QString name() const;
     QString ip() const;
+    QString proxyIp() const;
     int gen() const;
 
     bool connected() const;
@@ -147,6 +148,7 @@ signals:
     void unlocked();
     void joinRequested(int id, const QString &channel);
     void leaveRequested(int id, int channelid);
+    void ipChangeRequested(int id, const QString &ip);
 public slots:
     void loggedIn(TeamInfo &team,bool,bool, QColor);
     void recvMessage(int chan, const QString &mess);
@@ -182,6 +184,7 @@ public slots:
     void ratingLoaded();
     void joinRequested(const QString &channel);
     void leaveRequested(int slotid);
+    void ipChangeRequested(const QString &ip);
     void autoKick();
 private:
     TeamBattle myteam;
@@ -191,6 +194,7 @@ private:
     int myid;
     int myauth;
     QString myip;
+    QString proxyip;
     bool ontologin;
     mutable int lastcommand;
 

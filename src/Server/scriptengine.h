@@ -153,6 +153,7 @@ public:
     Q_INVOKABLE QScriptValue battling(int id);
     Q_INVOKABLE QScriptValue away(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
+    Q_INVOKABLE QScriptValue proxyIp(int id); 
     Q_INVOKABLE QScriptValue gen(int id);
     Q_INVOKABLE QScriptValue dbAuth(const QString &name);
     Q_INVOKABLE QScriptValue dbAuths();
