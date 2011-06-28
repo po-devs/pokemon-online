@@ -167,6 +167,7 @@ void ServerWidget::openConfig()
     connect(w, SIGNAL(logSavingChanged(bool)), server, SLOT(logSavingChanged(bool)));
     connect(w, SIGNAL(mainChanChanged(QString)), server, SLOT(mainChanChanged(QString)));
     connect(w, SIGNAL(latencyChanged(bool)), server, SLOT(TCPDelayChanged(bool)));
+    connect(w, SIGNAL(safeScriptsChanged(bool)), server, SLOT(safeScriptsChanged(bool)));
 }
 
 void ServerWidget::openScriptWindow()
