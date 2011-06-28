@@ -15,7 +15,6 @@
  */
 
 enum Command {
-<<<<<<< HEAD
     WhatAreYou = 0,
     WhoAreYou,
     Login,
