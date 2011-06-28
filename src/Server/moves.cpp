@@ -3208,7 +3208,7 @@ struct MMBrickBreak : public MM
 {
     MMBrickBreak() {
         functions["BeforeCalculatingDamage"] = &bh;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["BeforeHitting"] = &uas;
     }
 
     static void bh(int s, int t, BS &b) {
