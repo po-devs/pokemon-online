@@ -3970,8 +3970,8 @@ void BattleSituation::eatBerry(int player, bool show) {
                 return;
             }
         }
-
-        pokeMemory(player)["BerryUsed"] = berry;
+        QString harvest_key = QString("BerryUsed_%1").arg(team(this->player(player)).internalId(poke(player)));
+        teamMemory(this->player(player))[harvest_key] = berry;
     }
 }
 

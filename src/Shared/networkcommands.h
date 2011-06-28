@@ -15,6 +15,7 @@
  */
 
 enum Command {
+<<<<<<< HEAD
     WhatAreYou = 0,
     WhoAreYou,
     Login,
@@ -72,7 +73,8 @@ enum Command {
     HtmlChannel,
     ServerName,
     SpecialPass,
-    ServerListEnd              // Indicates end of transmission for registry.
+    ServerListEnd,              // Indicates end of transmission for registry.
+    SetIP                       // Indicates that a proxy server sends the real ip of client
 };
 
 enum ProtocolError {

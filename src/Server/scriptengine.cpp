@@ -973,6 +973,15 @@ QScriptValue ScriptEngine::ip(int id)
     }
 }
 
+QScriptValue ScriptEngine::proxyIp(int id)
+{
+    if (!myserver->playerLoggedIn(id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->proxyIp();
+    }
+}
+
 QScriptValue ScriptEngine::gen(int id)
 {
     if (!myserver->playerLoggedIn(id)) {

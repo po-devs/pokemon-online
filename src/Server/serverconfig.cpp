@@ -66,6 +66,8 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     l->addRow("Safe scripts: ", safeScripts = new QCheckBox("Restricts some script functions to improve security."));
     safeScripts->setChecked(settings.value("safe_scripts").toBool());
 
+    l->addRow("Proxy Servers: ", proxyServers = new QLineEdit(settings.value("proxyservers").toString()));
+
     ok = new QPushButton("&Apply");
     cancel = new QPushButton("&Cancel");
 
@@ -90,6 +92,8 @@ void ServerWindow::apply()
     settings.setValue("mainchanname", mainChan->text());
     settings.setValue("low_TCP_delay", lowLatency->isChecked());
     settings.setValue("safe_scripts", safeScripts->isChecked());
+    settings.setValue("proxyservers", proxyServers->text());
+
     emit descChanged(serverDesc->toPlainText());
     emit nameChanged(serverName->text());
     emit maxChanged(serverPlayerMax->value());
@@ -102,5 +106,7 @@ void ServerWindow::apply()
         emit mainChanChanged(mainChan->text());
     emit latencyChanged(lowLatency->isChecked());
     emit safeScriptsChanged(safeScripts->isChecked());
+    emit proxyServersChanged(proxyServers->text());
+
     close();
 }
