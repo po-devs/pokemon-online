@@ -106,7 +106,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
         limit = 1;
 
     for (int g = gen; g >= limit; g--) {
-        if (!PokemonInfo::Moves(pokeid, g).contains(moves)) {
+        if (!PokemonInfo::Exists(pokeid, g) || !PokemonInfo::Moves(pokeid, g).contains(moves)) {
             moves.subtract(PokemonInfo::Moves(pokeid, g));
             if (invalid_moves) {
                 *invalid_moves = moves;
@@ -118,7 +118,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             return false;
         }
         if (g < 5 && g >= 3) {
-            AbilityGroup ab = PokemonInfo::Abilities(pokeid);
+            AbilityGroup ab = PokemonInfo::Abilities(pokeid, gen);
 
             if (ability != ab.ab(0) && ability != ab.ab(1) && ability != 0) {
                 if (invalid_moves) {

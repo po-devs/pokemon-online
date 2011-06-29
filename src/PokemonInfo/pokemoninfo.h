@@ -71,7 +71,7 @@ public:
     static Pokemon::uniqueId OriginalForme(const Pokemon::uniqueId &pokeid);
     static bool HasFormes(const Pokemon::uniqueId &pokeid);
     // Will NOT return base form.
-    static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid);
+    static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static QList<Pokemon::uniqueId> VisibleFormes(const Pokemon::uniqueId &pokeid);
     static QList<int> Evos(int pokenum);
     static QList<int> DirectEvos(int pokenum);

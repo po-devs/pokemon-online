@@ -171,6 +171,7 @@
 170:0 Lampi
 171:0 Lanturn
 172:0 Pichu
+172:1 Spiky Pichu
 173:0 Pii
 174:0 Fluffeluff
 175:0 Togepi

@@ -160,7 +160,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
         QMenu *m= new QMenu(bForms);
 
         if (PokemonInfo::HasFormes(poke()->num()) && PokemonInfo::AFormesShown(poke()->num())) {
-            QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(poke()->num());
+            QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(poke()->num(), gen());
 
             foreach(Pokemon::uniqueId forme, formes) {
                 QAction *ac = m->addAction(PokemonInfo::Name(forme),this, SLOT(changeForme()));
