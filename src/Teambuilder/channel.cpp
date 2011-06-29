@@ -306,7 +306,10 @@ void Channel::playerReceived(int playerid) {
             placeTier(tier);
 
         placeItem(item, mytiersitems.value(tier), client->sortBA);
-    }
+
+    } else {
+        placeItem(item, NULL, client->sortBA);
+     }
 
     updateState(playerid);
 
@@ -353,7 +356,7 @@ void Channel::insertNewPlayer(int playerid)
 
         placeItem(item, mytiersitems.value(tier), client->sortBA);
     } else {
-        placeItem(item,NULL, client->sortBA);
+        placeItem(item, NULL, client->sortBA);
     }
 
     updateState(playerid);
