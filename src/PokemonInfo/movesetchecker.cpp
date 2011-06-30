@@ -117,18 +117,39 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             }
             return false;
         }
+
         if (g < 5 && g >= 3) {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid, gen);
 
-            if (ability != ab.ab(0) && ability != ab.ab(1) && ability != 0) {
-                if (invalid_moves) {
-                    *invalid_moves = moves;
+            if (ability != 0 && ability != ab.ab(0)) {
+                if (ability != ab.ab(1)) {
+                    if (invalid_moves) {
+                        *invalid_moves = moves;
+                    }
+                    if (error) {
+                        *error = QObject::tr("%1 can't learn the following moves from older generations at the same time as having the ability %2: %3.")
+                                .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
+                    }
+                    return false;
                 }
-                if (error) {
-                    *error = QObject::tr("%1 can't learn the following moves from older generations at the same time as having the Dream World ability %2: %3.")
-                             .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
+
+                /* First stage evolutions can't have 4th gen abilities with 3rd gen moves */
+                if (g == 3 && gen > 3) {
+                    ab = PokemonInfo::Abilities(pokeid, g);
+                    if (ab.ab(1) != ability) {
+                        if (!PokemonInfo::HasPreEvo(pokeid.pokenum)) {
+                            if (invalid_moves) {
+                                *invalid_moves = moves;
+                            }
+                            if (error) {
+                                *error = QObject::tr("%1 can't learn the following moves from third generation at the same time as having the fourth generation ability %2: %3.")
+                                        .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
+                            }
+                            return false;
+                        }
+                        return isValid(PokemonInfo::PreEvo(pokeid.pokenum), g, moves, 0, gender, false, invalid_moves, error);
+                    }
                 }
-                return false;
             }
         }
 
@@ -206,8 +227,6 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
                 return true;
             }
         }
-
-
 
         if (g == 5) {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid);
