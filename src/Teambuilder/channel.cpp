@@ -297,9 +297,6 @@ void Channel::playerReceived(int playerid) {
 
     item->setColor(client->color(playerid));
 
-    if (client->sortBA) {
-        placeItem(item, NULL, client->sortBA);
-    }
     QString tier = client->tier(playerid);
     if (client->sortBT) {
         if (!mytiersitems.contains(tier))
