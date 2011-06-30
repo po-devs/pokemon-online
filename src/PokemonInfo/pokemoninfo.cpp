@@ -477,7 +477,7 @@ int PokemonInfo::NumberOfVisiblePokes() {
 
 QString PokemonInfo::Name(const Pokemon::uniqueId &pokeid)
 {
-    if(Exists(pokeid))
+    if(m_Names.contains(pokeid))
     {
         return m_Names.value(pokeid);
     }else{
@@ -487,6 +487,9 @@ QString PokemonInfo::Name(const Pokemon::uniqueId &pokeid)
 
 bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, int gen)
 {
+    if (pokeid.toPokeRef() == Pokemon::SpikyPichu) {
+        return gen == 4;
+    }
     if(m_Names.contains(pokeid))
     {
         return pokeid.pokenum < TrueCount(gen);
@@ -804,11 +807,11 @@ Pokemon::uniqueId PokemonInfo::OriginalForme(const Pokemon::uniqueId &pokeid)
     return Pokemon::uniqueId(pokeid.pokenum, 0);
 }
 
-QList<Pokemon::uniqueId> PokemonInfo::Formes(const Pokemon::uniqueId &pokeid)
+QList<Pokemon::uniqueId> PokemonInfo::Formes(const Pokemon::uniqueId &pokeid, int gen)
 {
     QList<Pokemon::uniqueId> result;
     for(quint16 i = 0; i <= NumberOfAFormes(pokeid); i++) {
-        if (Exists(Pokemon::uniqueId(pokeid.pokenum, i)))
+        if (Exists(Pokemon::uniqueId(pokeid.pokenum, i), gen))
             result.append(Pokemon::uniqueId(pokeid.pokenum, i));
     }
     return result;
@@ -833,6 +836,12 @@ int PokemonInfo::PreEvo(int pokenum)
 {
     return m_PreEvos.value(pokenum);
 }
+
+bool PokemonInfo::HasPreEvo(int pokenum)
+{
+    return m_PreEvos.contains(pokenum);
+}
+
 
 QList<int> PokemonInfo::Evos(int pokenum)
 {
