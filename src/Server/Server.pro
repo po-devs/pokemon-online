@@ -92,7 +92,8 @@ HEADERS += player.h \
     battlepluginstruct.h \
     miscabilities.h \
     serverinterface.h \
-    sfmlsocket.h
+    sfmlsocket.h \
+    ../Shared/networkcommands.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \

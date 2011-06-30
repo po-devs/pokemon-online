@@ -38,6 +38,9 @@ public:
     /* Warned that a player/IP disconnected */
     void disconnect(const QString &ip, int id);
 
+    /* Changes the shows IP of the proxy using player */
+    bool changeIP(const QString &newIp, const QString &oldIp);
+
     int numberOfDiffIps();
 signals:
     /* If rules are infriged, kick / ban the corresponding id/ip in functions

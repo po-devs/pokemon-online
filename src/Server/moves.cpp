@@ -243,7 +243,6 @@ struct MMBatonPass : public MM
         c.remove("Move2Used");
         c.remove("HadItem");
         c.remove("Move3Used");
-        c.remove("BerryUsed");
         c.remove("HasMovedOnce");
         /* Removing attract */
         c.remove("AttractBy");
@@ -2002,7 +2001,6 @@ struct MMCounter : public MM
     }
 
     static void uodr(int s, int source, BS &b) {
-
         if (b.gen() >= 4 && tmove(b,source).category != turn(b,s)["Counter_Arg"].toInt()) {
             return;
         }
@@ -2011,7 +2009,7 @@ struct MMCounter : public MM
             return;
         }
 
-        if (turn(b, s)["DamageTakenByAttack"].toInt() <= 0) {
+        if (turn(b, s).value("DamageTakenByAttack").toInt() <= 0) {
             return;
         }
 
@@ -2020,13 +2018,24 @@ struct MMCounter : public MM
     }
 
     static void ms (int s, int, BS &b) {
+        //In GSC Sleep Talk + Counter works
+        if (!turn(b,s).contains("CounterDamage") && b.gen() == 2) {
+            int t = b.slot(b.opponent(b.player(s)));
+
+            if (b.hasMoved(t) && TypeInfo::Category(MoveInfo::Type(move(b, t), 2)) == turn(b,s)["Counter_Arg"].toInt()
+                    && turn(b, s).value("DamageTakenByAttack").toInt() > 0) {
+                turn(b,s)["CounterDamage"] = 2 * turn(b,s)["DamageTakenByAttack"].toInt();
+                turn(b,s)["CounterTarget"] = t;
+            }
+        }
         turn(b,s)["Target"] = turn(b,s)["CounterTarget"];
         tmove(b,s).targets = Move::ChosenTarget;
     }
 
     static void daf (int s, int, BS &b) {
-        if (!turn(b,s).contains("CounterDamage"))
+        if (!turn(b,s).contains("CounterDamage")) {
             turn(b,s)["Failed"] = true;
+        }
     }
 
     static void cad(int s, int, BS &b) {
@@ -3208,7 +3217,7 @@ struct MMBrickBreak : public MM
 {
     MMBrickBreak() {
         functions["BeforeCalculatingDamage"] = &bh;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["BeforeHitting"] = &uas;
     }
 
     static void bh(int s, int t, BS &b) {
