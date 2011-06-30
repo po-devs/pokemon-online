@@ -52,6 +52,7 @@ Player::Player(const GenericSocket &sock, int id) : myid(id)
     connect(&relay(), SIGNAL(showRankings(QString,QString)), SLOT(getRankingsByName(QString, QString)));
     connect(&relay(), SIGNAL(joinRequested(QString)), SLOT(joinRequested(QString)));
     connect(&relay(), SIGNAL(leaveChannel(int)), SLOT(leaveRequested(int)));
+    connect(&relay(), SIGNAL(ipChangeRequested(QString)), SLOT(ipChangeRequested(QString)));
     /* To avoid threading / simulateneous calls problems, it's queued */
     connect(this, SIGNAL(unlocked()), &relay(), SLOT(undelay()),Qt::QueuedConnection);
 
@@ -217,6 +218,23 @@ void Player::leaveRequested(int slotid)
     }
 
     emit leaveRequested(id(), slotid);
+}
+
+void Player::ipChangeRequested(const QString& ip)
+{
+    if (isLoggedIn())
+        return; // only allowed before logging in
+
+    if (proxyip.size() > 0)
+        return; // Can't change twice
+
+    if (!Server::serverIns->isLegalProxyServer(myip))
+        return;
+
+    proxyip = myip;
+    myip = ip;
+
+    emit ipChangeRequested(id(), ip);
 }
 
 void Player::spectateBattle(int battleId, const BattleConfiguration &battle)
@@ -791,7 +809,7 @@ void Player::testAuthentificationLoaded()
 
         myauth = m.authority();
 
-        m.modifyIP(relay().ip().toAscii());
+        m.modifyIP(ip().toAscii());
         m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toAscii());
         SecurityManager::updateMember(m);
 
@@ -802,7 +820,7 @@ void Player::testAuthentificationLoaded()
         myauth = 0;
         rating() = 1000;
 
-        SecurityManager::create(name, QDate::currentDate().toString(Qt::ISODate), relay().ip());
+        SecurityManager::create(name, QDate::currentDate().toString(Qt::ISODate), ip());
         /* To tell the player he's not registered */
         relay().notify(NetworkServ::Register);
         loginSuccess();
@@ -982,7 +1000,7 @@ void Player::hashReceived(const QString &_hash) {
         if (hash == SecurityManager::member(waiting_name).hash) {
             SecurityManager::Member m = SecurityManager::member(waiting_name);
 
-            m.modifyIP(relay().ip().toAscii());
+            m.modifyIP(ip().toAscii());
             m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toAscii());
             m.hash = hash;
             myauth = m.authority();
@@ -1015,6 +1033,11 @@ QString Player::name() const
 QString Player::ip() const
 {
     return myip;
+}
+
+QString Player::proxyIp() const
+{
+    return proxyip;
 }
 
 void Player::recvTeam(TeamInfo &team)

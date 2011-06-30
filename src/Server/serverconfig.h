@@ -20,6 +20,9 @@ signals:
     void useChannelFileLogChanged(bool useChannelFileLog);
     void useBattleFileLogChanged(bool useBattleFileLog);
     void latencyChanged(bool lowDelay);
+    void safeScriptsChanged(bool safeScripts);
+    void proxyServersChanged(const QString &ips);
+
 private slots:
     void apply();
 private:
@@ -34,6 +37,8 @@ private:
     QCheckBox *channelFileLog;
     QCheckBox *battleFileLog;
     QCheckBox *lowLatency;
+    QCheckBox *safeScripts;
+    QLineEdit* proxyServers;
 };
 
 #endif // SERVERCONFIG_H

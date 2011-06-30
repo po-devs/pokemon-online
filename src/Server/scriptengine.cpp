@@ -562,12 +562,23 @@ void ScriptEngine::clearPass(const QString &name)
 void ScriptEngine::changeAuth(int id, int auth)
 {
     if (testPlayer("changeAuth(id, auth)", id)) {
-        myserver->changeAuth(myserver->name(id), auth);
+        if (myserver->isSafeScripts() && ((myserver->auth(id) > 2) || (auth > 2))) {
+            warn("changeAuth", "Safe scripts option is on. Unable to change auth to/from 3 and above.");
+        } else {
+            myserver->changeAuth(myserver->name(id), auth);
+        }
     }
 }
 
 void ScriptEngine::changeDbAuth(const QString &name, int auth)
 {
+    if (myserver->isSafeScripts()) {
+        if (!SecurityManager::exist(name)) return;
+        if ((SecurityManager::member(name).auth > 2) || (auth > 2)) {
+            warn("changeDbAuth", "Safe scripts option is on. Unable to change auth to/from 3 and above.");
+            return;
+        }
+    }
     SecurityManager::setAuth(name, auth);
 }
 
@@ -959,6 +970,15 @@ QScriptValue ScriptEngine::ip(int id)
         return myengine.undefinedValue();
     } else {
         return myserver->player(id)->ip();
+    }
+}
+
+QScriptValue ScriptEngine::proxyIp(int id)
+{
+    if (!myserver->playerLoggedIn(id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->proxyIp();
     }
 }
 

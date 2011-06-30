@@ -62,6 +62,11 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 
     l->addRow("Low Latency: ", lowLatency = new QCheckBox("Sacrifices bandwith for latency (look up Nagle's algorithm)"));
     lowLatency->setChecked(settings.value("low_TCP_delay").toBool());
+    
+    l->addRow("Safe scripts: ", safeScripts = new QCheckBox("Restricts some script functions to improve security."));
+    safeScripts->setChecked(settings.value("safe_scripts").toBool());
+
+    l->addRow("Proxy Servers: ", proxyServers = new QLineEdit(settings.value("proxyservers").toString()));
 
     ok = new QPushButton("&Apply");
     cancel = new QPushButton("&Cancel");
@@ -86,6 +91,9 @@ void ServerWindow::apply()
     settings.setValue("logs_battle_files", channelFileLog->isChecked());
     settings.setValue("mainchanname", mainChan->text());
     settings.setValue("low_TCP_delay", lowLatency->isChecked());
+    settings.setValue("safe_scripts", safeScripts->isChecked());
+    settings.setValue("proxyservers", proxyServers->text());
+
     emit descChanged(serverDesc->toPlainText());
     emit nameChanged(serverName->text());
     emit maxChanged(serverPlayerMax->value());
@@ -97,5 +105,8 @@ void ServerWindow::apply()
     if (mainChan->text().length() > 0)
         emit mainChanChanged(mainChan->text());
     emit latencyChanged(lowLatency->isChecked());
+    emit safeScriptsChanged(safeScripts->isChecked());
+    emit proxyServersChanged(proxyServers->text());
+
     close();
 }
