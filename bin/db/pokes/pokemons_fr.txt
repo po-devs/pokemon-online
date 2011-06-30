@@ -171,6 +171,7 @@
 170:0 Loupio
 171:0 Lanturn
 172:0 Pichu
+172:1 Spiky Pichu
 173:0 Melo
 174:0 Toudoudou
 175:0 Togepi
