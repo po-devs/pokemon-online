@@ -837,6 +837,12 @@ int PokemonInfo::PreEvo(int pokenum)
     return m_PreEvos.value(pokenum);
 }
 
+bool PokemonInfo::HasPreEvo(int pokenum)
+{
+    return m_PreEvos.contains(pokenum);
+}
+
+
 QList<int> PokemonInfo::Evos(int pokenum)
 {
     return m_Evolutions.value(OriginalEvo(Pokemon::uniqueId(pokenum, 0)).pokenum);
