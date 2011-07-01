@@ -192,6 +192,7 @@ void Channel::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent, bool s
         if(parent == NULL) {
             myplayers->addTopLevelItem(item);
             if(sortByAuth) {
+                myplayers->sortItems(0,Qt::AscendingOrder);
                 myplayers->sortItems(1,Qt::DescendingOrder);
             }
             else {
@@ -200,6 +201,7 @@ void Channel::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent, bool s
         } else {
             parent->addChild(item);
             if(sortByAuth) {
+                parent->sortChildren(0,Qt::AscendingOrder);
                 parent->sortChildren(1,Qt::DescendingOrder);
             }
             else {
@@ -301,10 +303,10 @@ void Channel::playerReceived(int playerid) {
             placeTier(tier);
 
         placeItem(item, mytiersitems.value(tier), client->sortBA);
-    } else {
-        placeItem(item,NULL, client->sortBA);
 
-    }
+    } else {
+        placeItem(item, NULL, client->sortBA);
+     }
 
     updateState(playerid);
 
@@ -351,7 +353,7 @@ void Channel::insertNewPlayer(int playerid)
 
         placeItem(item, mytiersitems.value(tier), client->sortBA);
     } else {
-        placeItem(item,NULL, client->sortBA);
+        placeItem(item, NULL, client->sortBA);
     }
 
     updateState(playerid);
