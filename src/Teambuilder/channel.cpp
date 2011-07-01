@@ -182,32 +182,27 @@ void Channel::sortAllPlayersNormally()
     QHash<int, QIdTreeWidgetItem *>::iterator iter;
 
     for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
-        placeItem(iter.value(), NULL, client->sortBA);
+        placeItem(iter.value(), NULL);
     }
 }
 
-void Channel::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent, bool sortByAuth)
+void Channel::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
 {
     if(item->id() >= 0) {
         if(parent == NULL) {
             myplayers->addTopLevelItem(item);
-            if(sortByAuth) {
-                myplayers->sortItems(0,Qt::AscendingOrder);
+
+            myplayers->sortItems(0,Qt::AscendingOrder);
+            if(client->sortBA) {
                 myplayers->sortItems(1,Qt::DescendingOrder);
             }
-            else {
-            myplayers->sortItems(0,Qt::AscendingOrder);
-        }
         } else {
             parent->addChild(item);
-            if(sortByAuth) {
-                parent->sortChildren(0,Qt::AscendingOrder);
+
+            parent->sortChildren(0,Qt::AscendingOrder);
+            if(client->sortBA) {
                 parent->sortChildren(1,Qt::DescendingOrder);
             }
-            else {
-            parent->sortChildren(0,Qt::AscendingOrder);
-        }
-
         }
     }
 }
@@ -306,7 +301,7 @@ void Channel::playerReceived(int playerid) {
 
     } else {
         placeItem(item, NULL, client->sortBA);
-     }
+    }
 
     updateState(playerid);
 
@@ -378,7 +373,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
             return;
 
         playerReceived(id);
- 
+
         if (eventEnabled(Client::ChannelEvent)) {
             printLine(tr("%1 joined the channel.").arg(name(id)));
         }

@@ -866,7 +866,7 @@ void TB_PokemonBoxes::withdraw()
 
 void TB_PokemonBoxes::setCurrentTeamPoke(PokeTeam *p)
 {
-    *currentPokeTeam() = p;
+    *currentPokeTeam() = *p;
 
     if (p->gen() != m_team->gen()) {
         p->setGen(m_team->gen());
