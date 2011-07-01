@@ -1316,7 +1316,7 @@ struct AMDarumaMode : public AM {
     }
 
     static void ahpc(int s, int, BS &b) {
-        Pokemon::uniqueId num = b.poke(s).num();
+        Pokemon::uniqueId num = fpoke(b,s).id;
 
         if (PokemonInfo::OriginalForme(num) != Pokemon::Hihidaruma) {
             return;
@@ -1327,7 +1327,7 @@ struct AMDarumaMode : public AM {
         if (daruma == num.subnum)
             return;
 
-        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma? 1 : 0));
+        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma));
     }
 };
 
