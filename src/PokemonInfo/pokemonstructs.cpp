@@ -648,6 +648,7 @@ QDomElement & PokeTeam::toXml(QDomElement &el) const
     el.setAttribute("Happiness", happiness());
     el.setAttribute("Forme", num().subnum);
     el.setAttribute("Lvl", level());
+    el.setAttribute("Gen", gen());
 
     for(int i = 0; i < 4; i++)
     {
@@ -755,6 +756,10 @@ void loadTTeamDialog(TrainerTeam &team, QObject *receiver, const char *slot)
 
 void PokeTeam::loadFromXml(const QDomElement &poke, int version)
 {
+    if (poke.hasAttribute("Gen")) {
+        setGen(poke.attribute("Gen").toInt());
+    }
+
     reset();
 
     /* Code to import old teams which had different formes registered as different pokemon numbers */
