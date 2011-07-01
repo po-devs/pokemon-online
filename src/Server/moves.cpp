@@ -1919,6 +1919,18 @@ struct MMBounce : public MM
         }
     }
 
+    static void groundStruck(int s, BS &b) {
+        poke(b,s)["Invulnerable"] = false;
+        b.changeSprite(s, 0);
+
+        if (b.linked(s, "FreeFalledPokemon")) {
+            int t = b.linker(s, "FreeFalledPokemon");;
+            b.changeSprite(t, 0);
+            poke(b,t).remove("FreeFalledBy");
+            poke(b,s).remove("FreeFalledPokemonBy");
+        }
+    }
+
     static void uas(int s, int t, BS &b) {
 	QStringList args = turn(b,s)["Bounce_Arg"].toString().split('_');
 
@@ -2543,10 +2555,12 @@ struct MMGravity : public MM
             if (b.isFlying(p)) {
                 b.sendMoveMessage(53,2,p,Type::Psychic);
             }
-            if(poke(b,p).value("Invulnerable").toBool() && (poke(b,p)["2TurnMove"].toInt()==Move::Fly || poke(b,p)["2TurnMove"].toInt() == Move::Bounce)) {
-                poke(b,p)["Invulnerable"] = false;
-                b.changeSprite(p, 0);
-                b.sendMoveMessage(53,3, p, Type::Psychic, s, poke(b,p)["2TurnMove"].toInt());
+            if(poke(b,p).value("Invulnerable").toBool()) {
+                int move = poke(b,p)["2TurnMove"].toInt();
+                if (move == Fly || move == Bounce || move == FreeFall) {
+                    MMBounce::groundStruck(p, b);
+                    b.sendMoveMessage(53,3, p, Type::Psychic, s, poke(b,p)["2TurnMove"].toInt());
+                }
             }
         }
         addFunction(b.battleMemory(), "EndTurn5", "Gravity", &et);
@@ -2570,7 +2584,7 @@ struct MMGravity : public MM
 
     struct FM : public QSet<int> {
         FM() {
-            (*this) << Bounce << Fly << JumpKick << HiJumpKick << Splash << MagnetRise;
+            (*this) << Bounce << Fly << FreeFall << JumpKick << HiJumpKick << Splash << MagnetRise;
         }
     };
     static FM forbidden_moves;
