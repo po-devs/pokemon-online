@@ -3,6 +3,18 @@ moc_*
 bin/Server
 bin/lib*.so
 bin/lib*.so.*
+*-desktop
+*-desktop/*
+*.pro.user
+bin/*.exe
+bin/config
+bin/logs.txt
+bin/pokemon
+bin/members.txt
+bin/pokemonlib.dll
+bin/utilities.dll
+bin/stdout.txt
+*.a
 
 # Ignore emacs temporary files
 *~
