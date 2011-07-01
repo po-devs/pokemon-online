@@ -389,6 +389,7 @@ void BattleWindow::goToNextChoice()
 
     myattack->setEnabled(false);
     myswitch->setEnabled(false);
+    mysend->setEnabled(false);
 
     disableAll();
 
