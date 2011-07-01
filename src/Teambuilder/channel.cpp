@@ -32,7 +32,7 @@ Channel::Channel(const QString &name, int id, Client *parent)
 
     events = -1;
     restoreEventSettings();
-    
+
 
     if(client->sortBT) {
         sortAllPlayersByTier();
@@ -157,7 +157,7 @@ void Channel::sortAllPlayersByTier()
         if (!mytiersitems.contains(tier))
             placeTier(tier);
 
-        placeItem(iter.value(), mytiersitems.value(tier), client->sortBA);
+        placeItem(iter.value(), mytiersitems.value(tier));
     }
 
     myplayers->expandAll();
@@ -297,10 +297,10 @@ void Channel::playerReceived(int playerid) {
         if (!mytiersitems.contains(tier))
             placeTier(tier);
 
-        placeItem(item, mytiersitems.value(tier), client->sortBA);
+        placeItem(item, mytiersitems.value(tier));
 
     } else {
-        placeItem(item, NULL, client->sortBA);
+        placeItem(item, NULL);
     }
 
     updateState(playerid);
@@ -346,9 +346,9 @@ void Channel::insertNewPlayer(int playerid)
         if (!mytiersitems.contains(tier))
             placeTier(tier);
 
-        placeItem(item, mytiersitems.value(tier), client->sortBA);
+        placeItem(item, mytiersitems.value(tier));
     } else {
-        placeItem(item, NULL, client->sortBA);
+        placeItem(item, NULL);
     }
 
     updateState(playerid);
@@ -599,7 +599,7 @@ void Channel::printLine(const QString &line)
             } else {
                 mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + end + "<br />");
             }
-        }        
+        }
         emit activated(this);
     } else {
         mainChat()->insertPlainText( timeStr + line + "\n");
