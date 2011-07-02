@@ -784,10 +784,17 @@ void Server::loggedIn(int id, const QString &name)
             printLine(QString("Critical Bug needing to be solved (kept a name too much in the name list: %1)").arg(name));
             mynames.remove(name.toLower());
         } else {
-            printLine(tr("Name %1 already in use, disconnecting player %2").arg(name).arg(id));
-            sendMessage(id, QString("Another with the name %1 is already logged in").arg(name));
-            silentKick(id);
-            return;
+            // If registered - kick old one (ghost), otherwise - kick new one to prevent wars.
+            if (SecurityManager::member(name).isProtected()) {
+                printLine(tr("%1: replaced by new connection.").arg(name));
+                sendMessage(ids, QString("You logged in from another client with the same name. Logging off."));
+                silentKick(ids);
+            } else {
+                printLine(tr("Name %1 already in use, disconnecting player %2").arg(name, QString::number(id)));
+                sendMessage(id, QString("Another with the name %1 is already logged in").arg(name));
+                silentKick(id);
+                return;
+            }
         }
     }
 
