@@ -1,9 +1,11 @@
 #include "items.h"
 #include "berries.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "battlecounterindex.h"
 
 typedef ItemMechanics IM;
 typedef BattleSituation BS;
+typedef BattleCounterIndex BC;
 
 QHash<int, ItemMechanics> ItemEffect::mechanics;
 QHash<int, QString> ItemEffect::names;
@@ -481,31 +483,29 @@ struct IMMentalHerb : public IM
 	    }
 	}
         if (b.gen() >= 5) {
-            if (poke(b,s).contains("TauntsUntil")) {
-                removeFunction(poke(b,s), "MovesPossible", "Taunt");
-                removeFunction(poke(b,s), "MovePossible", "Taunt");
-                removeFunction(poke(b,s), "EndTurn611", "Taunt");
-                poke(b,s).remove("TauntsUntil");
-                used = true;
-            }
             if (poke(b,s).contains("Tormented")) {
                 removeFunction(poke(b,s), "MovesPossible", "Torment");
                 poke(b,s).remove("Tormented");
                 used = true;
             }
-            if (poke(b,s).contains("EncoresUntil")) {
-                removeFunction(poke(b,s), "MovesPossible", "Encore");
-                removeFunction(poke(b,s), "EndTurn611", "Encore");
-                poke(b,s).remove("EncoresUntil");
+            if (b.counters(s).hasCounter(BC::Taunt)) {
+                removeFunction(poke(b,s), "MovesPossible", "Taunt");
+                removeFunction(poke(b,s), "MovePossible", "Taunt");
+                removeFunction(poke(b,s), "EndTurn611", "Taunt");
                 used = true;
             }
-            if (poke(b,s).contains("DisablesUntil")) {
+            if (b.counters(s).hasCounter(BC::Encore)) {
+                removeFunction(poke(b,s), "MovesPossible", "Encore");
+                removeFunction(poke(b,s), "EndTurn611", "Encore");
+                used = true;
+            }
+            if (b.counters(s).hasCounter(BC::Disable)) {
                 removeFunction(poke(b,s), "MovesPossible", "Disable");
                 removeFunction(poke(b,s), "MovePossible", "Disable");
                 removeFunction(poke(b,s), "EndTurn611", "Disable");
-                poke(b,s).remove("DisablesUntil");
                 used = true;
             }
+            b.counters(s).clear();
         }
         if (used) {
             b.sendItemMessage(7,s);

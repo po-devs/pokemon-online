@@ -8,6 +8,7 @@
 #include "../Utilities/contextswitch.h"
 #include "battleinterface.h"
 #include "battlepluginstruct.h"
+#include "battlecounters.h"
 
 class Player;
 class PluginManager;
@@ -464,6 +465,9 @@ private:
         BasicPokeInfo fieldpoke;
         BasicMoveInfo fieldmove;
 
+        /* The counters (Encore, Taun, Disable) associated with the pokemon */
+        BattleCounters counters;
+
         /* The choice of a player, accessed by move ENCORE */
         BattleChoice choice;
     };
@@ -515,6 +519,10 @@ public:
 
     BattleChoice &choice(int slot) {
         return getContext(slot).choice;
+    }
+
+    BattleCounters &counters(int slot) {
+        return getContext(slot).counters;
     }
 
     const context &battleMemory() const {

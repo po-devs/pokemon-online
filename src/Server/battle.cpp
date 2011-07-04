@@ -12,6 +12,7 @@
 #include "pluginmanager.h"
 #include "battlepluginstruct.h"
 #include "theme.h"
+#include "battlecounterindex.h"
 
 typedef BattlePStorage BP;
 
@@ -633,6 +634,11 @@ void BattleSituation::endTurn()
     foreach (int player, players) {
         /* Wish */
         callseffects(player,player, "EndTurn2");
+
+        /* Counters */
+        if (gen() < 5) {
+            counters(player).decreaseCounters();
+        }
     }
 
     endTurnWeather();
@@ -1394,7 +1400,7 @@ void BattleSituation::storeChoice(const BattleChoice &b)
     hasChoice[b.slot()] = false;
 
     /* If the move is encored, a random target is picked. */
-    if (pokeMemory(b.slot()).contains("EncoresUntil") && pokeMemory(b.slot()).value("EncoresUntil").toInt() >= turn())
+    if (counters(b.slot()).hasCounter(BattleCounterIndex::Encore))
         choice(b.slot()).choice.attack.attackTarget = b.slot();
 }
 
@@ -1614,6 +1620,9 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     /* reset temporary variables */
     pokeMemory(slot).clear();
+
+    /* Reset counters */
+    counters(slot).clear();
 
     if (poke(player, pok).ability() == Ability::Illusion) {
         for (int i = 5; i >= 0; i--) {
@@ -2182,6 +2191,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     turnMemory(player)["HasMoved"] = true;
+    if (gen() >= 5) {
+        counters(player).decreaseCounters();
+    }
 
     calleffects(player,player,"EvenWhenCantMove");
 
