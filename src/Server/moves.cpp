@@ -3,6 +3,7 @@
 #include "miscabilities.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "items.h"
+#include "battlecounterindex.h"
 
 QHash<int, MoveMechanics> MoveEffect::mechanics;
 QHash<int, QString> MoveEffect::names;
@@ -11,6 +12,7 @@ QHash<QString, int> MoveEffect::nums;
 Q_DECLARE_METATYPE(QList<int>);
 
 using namespace Move;
+typedef BattleCounterIndex BC;
 
 int MoveMechanics::num(const QString &name)
 {
@@ -252,7 +254,6 @@ struct MMBatonPass : public MM
         }
         /* Removing Transform and disable */
         c.remove("Transformed");
-        c.remove("DisablesUntil");
 
         QList<int> boosts;
 
@@ -2090,7 +2091,7 @@ struct MMTaunt : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (poke(b,t)["TauntsUntil"].toInt() >= b.turn())
+        if (b.counters(t).hasCounter(BC::Taunt))
             turn(b,s)["Failed"] = true;
     }
 
@@ -2106,11 +2107,11 @@ struct MMTaunt : public MM
             addFunction(poke(b,t), "EndTurn611", "Taunt", &et);
 
             if (b.gen() <= 3) {
-                poke(b,t)["TauntsUntil"] = b.turn() + 1;
+                b.counters(t).addCounter(BC::Taunt, 1);
             } else if (b.gen() == 4) {
-                poke(b,t)["TauntsUntil"] = b.turn() + 2 + (b.true_rand()%3);
+                b.counters(t).addCounter(BC::Taunt, 2 + (b.true_rand()%3));
             } else {
-                poke(b,t)["TauntsUntil"] = b.turn() + 2;
+                b.counters(t).addCounter(BC::Taunt, 2);
             }
         }
     }
@@ -2119,9 +2120,8 @@ struct MMTaunt : public MM
     {
         if (b.koed(s))
             return;
-        int tt = poke(b,s)["TauntsUntil"].toInt();
-        if (tt == b.turn()) {
-            poke(b,s).remove("TauntsUntil");
+
+        if (!b.counters(s).hasCounter(BC::Taunt)) {
             removeFunction(poke(b,s), "MovesPossible", "Taunt");
             removeFunction(poke(b,s), "MovePossible", "Taunt");
             removeFunction(poke(b,s), "EndTurn611", "Taunt");
@@ -2131,8 +2131,7 @@ struct MMTaunt : public MM
     }
 
     static void msp(int s, int, BS &b) {
-	int tt = poke(b,s)["TauntsUntil"].toInt();
-	if (tt < b.turn()) {
+        if (!b.counters(s).hasCounter(BC::Taunt)) {
 	    return;
 	}
 	for (int i = 0; i < 4; i++) {
@@ -2143,10 +2142,9 @@ struct MMTaunt : public MM
     }
 
     static void mp(int s, int, BS &b) {
-	int tt = poke(b,s)["TauntsUntil"].toInt();
-	if (tt < b.turn()) {
-	    return;
-	}
+        if (!b.counters(s).hasCounter(BC::Taunt)) {
+            return;
+        }
 	int move = turn(b,s)["MoveChosen"].toInt();
         if (MoveInfo::Power(move, b.gen()) == 0) {
 	    turn(b,s)["ImpossibleToMove"] = true;
@@ -2296,7 +2294,7 @@ struct MMEncore : public MM
 
     static void daf(int s, int t, BS &b)
     {
-	if (poke(b,t).contains("EncoresUntil") && poke(b,t).value("EncoresUntil").toInt() >= b.turn())
+        if (b.counters(t).hasCounter(BC::Encore))
 	{
 	    turn(b,s)["Failed"] = true;
 	    return;
@@ -2340,11 +2338,11 @@ struct MMEncore : public MM
             b.disposeItem(t);
         } else {
             if (b.gen() <=3)
-                poke(b,t)["EncoresUntil"] = b.turn() + 2 + (b.true_rand()%4);
+                b.counters(t).addCounter(BC::Encore, 2 + (b.true_rand()%4));
             else if (b.gen() == 4)
-                poke(b,t)["EncoresUntil"] = b.turn() + 3 + (b.true_rand()%5);
+                b.counters(t).addCounter(BC::Encore, 3 + (b.true_rand()%5));
             else
-                poke(b,t)["EncoresUntil"] = b.turn() + 2;
+                b.counters(t).addCounter(BC::Encore, 2);
 
             int mv =  poke(b,t)["LastMoveUsed"].toInt();
             poke(b,t)["EncoresMove"] = mv;
@@ -2383,11 +2381,9 @@ struct MMEncore : public MM
 		break;
 	    }
 	}
-	int tt = poke(b,s)["EncoresUntil"].toInt();
-	if (tt <= b.turn()) {
+        if (!b.counters(s).hasCounter(BC::Encore)) {
 	    removeFunction(poke(b,s), "MovesPossible", "Encore");
             removeFunction(poke(b,s), "EndTurn611", "Encore");
-            poke(b,s).remove("EncoresUntil");
 	    b.sendMoveMessage(33,0,s);
 	}
     }
