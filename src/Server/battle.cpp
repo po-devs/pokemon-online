@@ -1035,9 +1035,9 @@ void BattleSituation::analyzeChoice(int slot)
         /* In gen 4 & previous, pursuit doesn't allow you to choose a new pokemon.
            In 5th gen, it's like a normal KO */
         if (gen() <= 4 || !koed(slot)) {
-                sendPoke(slot, choice(slot).pokeSlot());
-        } else {
             sendPoke(slot, choice(slot).pokeSlot());
+        } else {
+            requestSwitch(slot);
         }
     } else if (choice(slot).moveToCenterChoice()) {
         if (!wasKoed(slot)) {
