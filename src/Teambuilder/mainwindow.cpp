@@ -49,7 +49,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("find_battle_range_on", true);
     setDefaultValue("find_battle_range", 200);
 
-    PokemonInfo::init("db/pokes/");
+    PokemonInfo::init("db/pokes/", FillMode::Client);
     MoveSetChecker::init("db/pokes/");
     ItemInfo::init("db/items/");
     MoveInfo::init("db/moves/");

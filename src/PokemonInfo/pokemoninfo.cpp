@@ -124,142 +124,206 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
     return ret;
 }
 
-static void fill_container_with_file(QStringList &container, const QString & filename)
-{
-    QFile file(filename);
+int fill_count_files(const QString &filename, FillMode::FillModeType m) {
+    return ((m != FillMode::NoMod) && filename.startsWith("db/pokes/")) ? 2 : 1;
+}
 
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream filestream(&file);
-
-    /* discarding all the uninteresting lines, should find a more effective way */
-    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
-    {
-        container << filestream.readLine();
+// OS specific paths.
+// Linux: XDG_CONFIG_HOME environment variable (see f.d.o. for details).
+// Windows: APPDATA environment variable.
+// Mac: somewhere in Library.
+// Other: "Mods" in current directory.
+void fill_check_mode_path(FillMode::FillModeType m, QString &filename) {
+    if (m == FillMode::Client) {
+#if defined(Q_OS_MAC)
+        filename = QDir::homePath() + "/Library/Application Support/Pokemon Online/Mods/" + filename;
+#elif defined(Q_OS_LINUX)
+        filename = QProcessEnvironment::systemEnvironment().value("XDG_CONFIG_HOME", QDir::homePath() + "/.config")
+              + "/Dreambelievers/Pokemon Online/Mods/" + filename;
+#elif defined(Q_OS_WIN32)
+        filename = QProcessEnvironment::systemEnvironment().value("APPDATA", QDir::homePath())
+              + "/Pokemon Online/Mods/" + filename;
+#else
+        filename = "Mods/" + filename;
+#endif
     }
 }
 
-static void fill_container_with_file(QList<QString> &container, const QString & filename)
+static void fill_container_with_file(QStringList &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QFile file(filename);
-
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream filestream(&file);
-
-    /* discarding all the uninteresting lines, should find a more effective way */
-    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
-    {
-        container << filestream.readLine();
+    QString files[] = { filename, "mod_" + filename };
+    fill_check_mode_path(m, files[1]);
+    int files_count = fill_count_files(filename, m);
+    for (int i = 0; i < files_count; ++i) {
+        QFile file(files[i]);
+    
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+    
+        QTextStream filestream(&file);
+    
+        /* discarding all the uninteresting lines, should find a more effective way */
+        while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+        {
+            container << filestream.readLine();
+        }
     }
 }
 
-static void fill_container_with_file(QVector<char> &container, const QString & filename)
+static void fill_container_with_file(QList<QString> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QFile file(filename);
-
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream filestream(&file);
-
-    /* discarding all the uninteresting lines, should find a more effective way */
-    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
-    {
-        int var;
-        filestream >> var;
-        container << var;
+    QString files[] = { filename, "mod_" + filename };
+    fill_check_mode_path(m, files[1]);
+    int files_count = fill_count_files(filename, m);
+    for (int i = 0; i < files_count; ++i) {
+        QFile file(files[i]);
+        
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        
+        QTextStream filestream(&file);
+        
+        /* discarding all the uninteresting lines, should find a more effective way */
+        while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+        {
+            container << filestream.readLine();
+        }
     }
 }
 
-static void fill_container_with_file(QVector<bool> &container, const QString & filename)
+static void fill_container_with_file(QVector<char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QFile file(filename);
-
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream filestream(&file);
-
-    /* discarding all the uninteresting lines, should find a more effective way */
-    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
-    {
-        int var;
-        filestream >> var;
-        container << var;
+    QString files[] = { filename, "mod_" + filename };
+    fill_check_mode_path(m, files[1]);
+    int files_count = fill_count_files(filename, m);
+    for (int i = 0; i < files_count; ++i) {
+        QFile file(files[i]);
+        
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        
+        QTextStream filestream(&file);
+        
+        /* discarding all the uninteresting lines, should find a more effective way */
+        while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+        {
+            int var;
+            filestream >> var;
+            container << var;
+        }
     }
 }
 
-static void fill_container_with_file(QVector<unsigned char> &container, const QString & filename)
+static void fill_container_with_file(QVector<bool> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QFile file(filename);
-
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream filestream(&file);
-
-    /* discarding all the uninteresting lines, should find a more effective way */
-    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
-    {
-        int var;
-        filestream >> var;
-        container << var;
+    QString files[] = { filename, "mod_" + filename };
+    fill_check_mode_path(m, files[1]);
+    int files_count = fill_count_files(filename, m);
+    for (int i = 0; i < files_count; ++i) {
+        QFile file(files[i]);
+        
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        
+        QTextStream filestream(&file);
+        
+        /* discarding all the uninteresting lines, should find a more effective way */
+        while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+        {
+            int var;
+            filestream >> var;
+            container << var;
+        }
     }
 }
 
-static void fill_container_with_file(QVector<signed char> &container, const QString & filename)
+static void fill_container_with_file(QVector<unsigned char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QFile file(filename);
-
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream filestream(&file);
-
-    /* discarding all the uninteresting lines, should find a more effective way */
-    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
-    {
-        int var;
-        filestream >> var;
-        container << var;
+    QString files[] = { filename, "mod_" + filename };
+    fill_check_mode_path(m, files[1]);
+    int files_count = fill_count_files(filename, m);
+    for (int i = 0; i < files_count; ++i) {
+        QFile file(files[i]);
+        
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        
+        QTextStream filestream(&file);
+        
+        /* discarding all the uninteresting lines, should find a more effective way */
+        while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+        {
+            int var;
+            filestream >> var;
+            container << var;
+        }
     }
 }
 
-static void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString &filename)
+static void fill_container_with_file(QVector<signed char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QFile file(filename);
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream filestream(&file);
-    /* discarding all the uninteresting lines, should find a more effective way */
-    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
-    {
-        QString current = filestream.readLine().trimmed();
-        QString other_data;
-        Pokemon::uniqueId pokeid;
-        bool ok = Pokemon::uniqueId::extract(current, pokeid, other_data);
-        if(ok) {
-            bool converted;
-            int data = other_data.toInt(&converted);
-            if(converted) {
-                container[pokeid] = data;
+    QString files[] = { filename, "mod_" + filename };
+    fill_check_mode_path(m, files[1]);
+    int files_count = fill_count_files(filename, m);
+    for (int i = 0; i < files_count; ++i) {
+        QFile file(files[i]);
+        
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        
+        QTextStream filestream(&file);
+        
+        /* discarding all the uninteresting lines, should find a more effective way */
+        while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+        {
+            int var;
+            filestream >> var;
+            container << var;
+        }
+    }
+}
+
+static void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString &filename, FillMode::FillModeType m = FillMode::NoMod)
+{
+    QString files[] = { filename, "mod_" + filename };
+    fill_check_mode_path(m, files[1]);
+    int files_count = fill_count_files(filename, m);
+    for (int i = 0; i < files_count; ++i) {
+        QFile file(files[i]);
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream filestream(&file);
+        /* discarding all the uninteresting lines, should find a more effective way */
+        while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+        {
+            QString current = filestream.readLine().trimmed();
+            QString other_data;
+            Pokemon::uniqueId pokeid;
+            bool ok = Pokemon::uniqueId::extract(current, pokeid, other_data);
+            if(ok) {
+                bool converted;
+                int data = other_data.toInt(&converted);
+                if(converted) {
+                    container[pokeid] = data;
+                }
             }
         }
     }
-
 }
 
 template <class T>
-static void fill_container_with_file(T &container, const QString & filename)
+static void fill_container_with_file(T &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QFile file(filename);
-
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream filestream(&file);
-
-    /* discarding all the uninteresting lines, should find a more effective way */
-    while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
-    {
-	typename T::value_type var;
-	filestream >> var;
-	container << var;
+    QString files[] = { filename, "mod_" + filename };
+    fill_check_mode_path(m, files[1]);
+    int files_count = fill_count_files(filename, m);
+    for (int i = 0; i < files_count; ++i) {
+        QFile file(files[i]);
+        
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        
+        QTextStream filestream(&file);
+        
+        /* discarding all the uninteresting lines, should find a more effective way */
+        while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+        {
+            typename T::value_type var;
+            filestream >> var;
+            container << var;
+        }
     }
 }
 
@@ -355,7 +419,7 @@ int PokemonInfo::FullStat(const Pokemon::uniqueId &pokeid, int gen, int nature, 
     }
 }
 
-void PokemonInfo::init(const QString &dir)
+void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode)
 {
     /* makes sure it isn't already initialized */
     if (NumberOfPokemons() != 0)
@@ -366,38 +430,38 @@ void PokemonInfo::init(const QString &dir)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    loadNames();
-    loadEvos();
-    loadMoves();
+    loadNames(mode);
+    loadEvos(mode);
+    loadMoves(mode);
 
-    fill_uid_int(m_Genders, path("poke_gender.txt"));
+    fill_uid_int(m_Genders, path("poke_gender.txt"), mode);
 
     for (int i = 0; i < NUMBER_GENS; i++) {
         int gen = i+GEN_MIN;
 
-        fill_uid_int(m_Type1[i], path(QString("poke_type1-%1G.txt").arg(gen)));
-        fill_uid_int(m_Type2[i], path(QString("poke_type2-%1G.txt").arg(gen)));
+        fill_uid_int(m_Type1[i], path(QString("poke_type1-%1G.txt").arg(gen)), mode);
+        fill_uid_int(m_Type2[i], path(QString("poke_type2-%1G.txt").arg(gen)), mode);
 
         if (gen >= 3) {
             for (int j = 0; j < 3; j++) {
-                fill_uid_int(m_Abilities[i][j], path(QString("poke_ability%1_%2G.txt").arg(j+1).arg(gen)));
+                fill_uid_int(m_Abilities[i][j], path(QString("poke_ability%1_%2G.txt").arg(j+1).arg(gen)), mode);
             }
         }
     }
 
-    fill_uid_int(m_LevelBalance, path("level_balance.txt"));
-    loadClassifications();
-    loadGenderRates();
-    loadHeights();
-    loadDescriptions();
-    loadBaseStats();
+    fill_uid_int(m_LevelBalance, path("level_balance.txt"), mode);
+    loadClassifications(mode);
+    loadGenderRates(mode);
+    loadHeights(mode);
+    loadDescriptions(mode);
+    loadBaseStats(mode);
     makeDataConsistent();
 }
 
-void PokemonInfo::loadClassifications()
+void PokemonInfo::loadClassifications(FillMode::FillModeType mode)
 {
     QStringList temp;
-    fill_container_with_file(temp, trFile(path("classification")));
+    fill_container_with_file(temp, trFile(path("classification")), mode);
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString description;
@@ -407,10 +471,10 @@ void PokemonInfo::loadClassifications()
     }
 }
 
-void PokemonInfo::loadGenderRates()
+void PokemonInfo::loadGenderRates(FillMode::FillModeType mode)
 {
     QStringList temp;
-    fill_container_with_file(temp, path("gender_rate.txt"));
+    fill_container_with_file(temp, path("gender_rate.txt"), mode);
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString description;
@@ -420,10 +484,10 @@ void PokemonInfo::loadGenderRates()
     }
 }
 
-void PokemonInfo::loadHeights()
+void PokemonInfo::loadHeights(FillMode::FillModeType mode)
 {
     QStringList temp;
-    fill_container_with_file(temp, path("height.txt"));
+    fill_container_with_file(temp, path("height.txt"), mode);
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString height;
@@ -434,14 +498,14 @@ void PokemonInfo::loadHeights()
     }
 }
 
-void PokemonInfo::loadDescriptions()
+void PokemonInfo::loadDescriptions(FillMode::FillModeType mode)
 {
     static const int CARTS_LEN = 3;
     int carts[] = { 14, 15, 16 };
     for(int i = 0; i < CARTS_LEN; i++)
     {
         QStringList temp;
-        fill_container_with_file(temp, trFile(path("description_%1").arg(carts[i])));
+        fill_container_with_file(temp, trFile(path("description_%1").arg(carts[i])), mode);
         for(int j = 0; j < temp.size(); j++) {
             QString current = temp[j].trimmed();
             QString description;
@@ -535,8 +599,14 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
         archive = path("advance.zip");
     else if (gen == 4)
         archive = path("hgss.zip");
-    else
-        archive = path("black_white.zip");
+    else {
+        // TODO: Read this number from somewhere else.
+        if (pokeid.pokenum > 649) {
+            archive = "mod_" + path("mod_sprites.zip");
+        } else {
+            archive = path("black_white.zip");
+        }
+    }
 
     QString file;
 
@@ -717,10 +787,10 @@ AbilityGroup PokemonInfo::Abilities(const Pokemon::uniqueId &pokeid, int gen)
     return ret;
 }
 
-void PokemonInfo::loadBaseStats()
+void PokemonInfo::loadBaseStats(FillMode::FillModeType mode)
 {
     QStringList temp;
-    fill_container_with_file(temp, path("poke_stats.txt"));
+    fill_container_with_file(temp, path("poke_stats.txt"), mode);
 
     for (int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
@@ -741,10 +811,10 @@ PokeBaseStats PokemonInfo::BaseStats(const Pokemon::uniqueId &pokeid)
     return m_BaseStats.value(pokeid);
 }
 
-void PokemonInfo::loadNames()
+void PokemonInfo::loadNames(FillMode::FillModeType mode)
 {
     QStringList temp;
-    fill_container_with_file(temp, trFile(path("pokemons")));
+    fill_container_with_file(temp, trFile(path("pokemons")), mode);
 
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
@@ -771,7 +841,7 @@ void PokemonInfo::loadNames()
 
     // Loading weights too for grass knot and low kick...
     temp.clear();
-    fill_container_with_file(temp, path("poke_weight.txt"));
+    fill_container_with_file(temp, path("poke_weight.txt"), mode);
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString weight;
@@ -863,7 +933,7 @@ bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
     return Evos(pokeid.pokenum).size() > 1;
 }
 
-void PokemonInfo::loadMoves()
+void PokemonInfo::loadMoves(FillMode::FillModeType mode)
 {
     static const int filesize = 29;
 
@@ -887,7 +957,7 @@ void PokemonInfo::loadMoves()
 
     for (int i = 0; i < filesize; i++) {
         QStringList temp;
-        fill_container_with_file(temp, fileNames[i]);
+        fill_container_with_file(temp, fileNames[i], mode);
         for(int j = 0; j < temp.size(); j++) {
             QString current = temp[j].trimmed();
             QString text_moves;
@@ -951,7 +1021,7 @@ QList<Pokemon::uniqueId> PokemonInfo::AllIds()
     return m_Names.keys();
 }
 
-void PokemonInfo::loadEvos()
+void PokemonInfo::loadEvos(FillMode::FillModeType mode)
 {
     QHash<int, QList<int> > &evos = m_Evolutions;
 
