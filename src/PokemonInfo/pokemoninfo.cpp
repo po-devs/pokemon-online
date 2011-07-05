@@ -686,7 +686,13 @@ QPixmap PokemonInfo::Sub(int gen, bool back)
 
 QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid)
 {
-    QString archive = path("icons.zip");
+    QString archive;
+    // TODO: Read this number from somewhere else.
+    if (pokeid.pokenum > 649) {
+        archive = "mod_" + path("mod_icons.zip");
+    } else {
+        archive = path("icons.zip");
+    }
     QString file = QString("%1.png").arg(pokeid.toString());
 
     QPixmap p;
@@ -713,7 +719,13 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid)
 QByteArray PokemonInfo::Cry(const Pokemon::uniqueId &pokeid)
 {
     quint16 num = pokeid.pokenum;
-    QString archive = path("cries.zip");
+    QString archive;
+    // TODO: Read this number from somewhere else.
+    if (pokeid.pokenum > 649) {
+        archive = "mod_" + path("mod_cries.zip");
+    } else {
+        archive = path("cries.zip");
+    }
     QString file = QString("%1.wav").arg(num).rightJustified(7, '0');
 
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
