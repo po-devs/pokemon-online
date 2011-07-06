@@ -169,6 +169,7 @@ public:
     /* Does not do extra operations,just a setter */
     void changeStatus(int player, int status, bool tell = true, int turns = 0);
     void changeStatus(int team, int poke, int status);
+    void unthaw(int player);
     void healStatus(int player, int status);
     void healConfused(int player);
     void healLife(int player, int healing);

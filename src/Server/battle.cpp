@@ -649,10 +649,7 @@ void BattleSituation::endTurn()
             {
                 if (true_rand() % 255 <= 25)
                 {
-                    healStatus(player, Pokemon::Frozen);
-                    notify(All, StatusMessage, player, qint8(FreeFrozen));
-                    if (useBattleLog)
-                        appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
+                    unthaw(player);
                 }
             }
         }
@@ -2040,10 +2037,7 @@ bool BattleSituation::testStatus(int player)
                 appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(player)))), Theme::StatusColor(Pokemon::Frozen)));
             return false;
         }
-        healStatus(player, Pokemon::Frozen);
-        notify(All, StatusMessage, player, qint8(FreeFrozen));
-        if (useBattleLog)
-            appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
+        unthaw(player);
     }
 
     if (turnMemory(player)["Flinched"].toBool()) {
@@ -2648,10 +2642,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player, target, "AfterAttackSuccessful");
         }
         if (tmove(player).type == Type::Fire && poke(target).status() == Pokemon::Frozen) {
-            notify(All, StatusMessage, target, qint8(FreeFrozen));
-            if (useBattleLog)
-                appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
-            healStatus(target, Pokemon::Frozen);
+            unthaw(target);
         }
         pokeMemory(target)["LastAttackToHit"] = attack;
     }
@@ -2678,6 +2669,14 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
     calleffects(player, player, "AfterAttackFinished");
+}
+
+void BattleSituation::unthaw(int player)
+{
+    notify(All, StatusMessage, player, qint8(FreeFrozen));
+    if (useBattleLog)
+        appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
+    healStatus(player, Pokemon::Frozen);
 }
 
 void BattleSituation::notifyKO(int player)
