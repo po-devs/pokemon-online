@@ -224,8 +224,10 @@ void Client::firstChannelChanged(int tabindex)
 {
     int chanid = channelByNames.value(mainChat->tabText(tabindex).toLower());
 
-    if (!hasChannel(chanid))
+    if (!hasChannel(chanid)) {
+        myline->setPlayers(0);
         return;
+    }
 
     Channel *c = channel(chanid);
 
@@ -234,6 +236,7 @@ void Client::firstChannelChanged(int tabindex)
 
     /* Restores the black color of a possibly activated channel */
     mainChat->tabBar()->setTabTextColor(tabindex, mainChat->tabBar()->palette().text().color());
+    myline->setPlayers(c->playersWidget()->model());
 }
 
 void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
@@ -282,6 +285,9 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
     playersW->addWidget(c->playersWidget());
     mainChat->addTab(c->mainChat(), c->name());
     battlesW->addWidget(c->battlesWidget());
+    if (mainChat->count() == 1)
+        // set tab complete for first chan
+        myline->setPlayers(c->playersWidget()->model());
 
     mychannels[chanid] = c;
 
