@@ -139,7 +139,11 @@ protected slots:
     void animateHPBar();
     void changeAttackText(int i);
     void targetChosen(int i);
+    void nullQuestion();
+    void questionButtonClicked(QAbstractButton *);
 private:
+
+    void forfeit();
 
     int idme() const {
         return info().pInfo[info().myself].id;
@@ -166,6 +170,7 @@ private:
     QList<QButtonGroup*> mybgroups;
     PokeZone *mypzone;
     QPushButton *myswitch, *myattack, *mycancel;
+    QMessageBox *question;
 };
 
 class BattleDisplay : public BaseBattleDisplay

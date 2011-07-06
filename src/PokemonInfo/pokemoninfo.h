@@ -71,15 +71,20 @@ public:
     static Pokemon::uniqueId OriginalForme(const Pokemon::uniqueId &pokeid);
     static bool HasFormes(const Pokemon::uniqueId &pokeid);
     // Will NOT return base form.
-    static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid);
+    static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static QList<Pokemon::uniqueId> VisibleFormes(const Pokemon::uniqueId &pokeid);
+    static int MinLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static int MinEggLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static int AbsoluteMinLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static QList<int> Evos(int pokenum);
     static QList<int> DirectEvos(int pokenum);
     static bool HasEvolutions(int pokenum);
 
     // Will always return base form (subnum 0).
     static Pokemon::uniqueId OriginalEvo(const Pokemon::uniqueId &pokeid);
+    //Returns 0 if no preevo
     static int PreEvo(int pokenum);
+    static bool HasPreEvo(int pokenum);
     static bool IsInEvoChain(const Pokemon::uniqueId &pokeid);
     static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
     static bool Exists(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
@@ -110,6 +115,8 @@ private:
     static QHash<Pokemon::uniqueId, int> m_Abilities[NUMBER_GENS][3];
     static QHash<Pokemon::uniqueId, PokeBaseStats> m_BaseStats;
     static QHash<Pokemon::uniqueId, int> m_LevelBalance;
+    static QHash<Pokemon::uniqueId, int> m_MinLevels[NUMBER_GENS];
+    static QHash<Pokemon::uniqueId, int> m_MinEggLevels[NUMBER_GENS];
 
     static QHash<int, QList<int> > m_Evolutions;
     static QHash<int, int> m_OriginalEvos;
@@ -141,6 +148,7 @@ private:
     static void loadMoves();
     static void loadClassifications();
     static void loadGenderRates();
+    static void loadMinLevels();
     static void loadHeights();
     static void loadDescriptions();
     // Call this after loading all data.

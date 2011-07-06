@@ -74,11 +74,11 @@ void MoveSetChecker::init(const QString &dir)
 }
 
 bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, int move1, int move2, int move3, int move4, int ability,
-                             int gender, bool maledw, QSet<int> *invalid_moves, QString *error) {
+                             int gender, int level, bool maledw, QSet<int> *invalid_moves, QString *error) {
     QSet<int> moves;
     moves << move1 << move2 << move3 << move4;
 
-    return isValid(pokeid, gen, moves, ability, gender, maledw, invalid_moves, error);
+    return isValid(pokeid, gen, moves, ability, gender, level, maledw, invalid_moves, error);
 }
 
 static QString getCombinationS(const QSet<int> &invalid_moves) {
@@ -94,7 +94,7 @@ static QString getCombinationS(const QSet<int> &invalid_moves) {
 }
 
 bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSet<int> &moves2, int ability, int gender,
-                             bool maledw, QSet<int> *invalid_moves, QString *error) {
+                             int level, bool maledw, QSet<int> *invalid_moves, QString *error) {
     QSet<int> moves = moves2;
     moves.remove(0);
 
@@ -106,7 +106,17 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
         limit = 1;
 
     for (int g = gen; g >= limit; g--) {
-        if (!PokemonInfo::Moves(pokeid, g).contains(moves)) {
+        if (PokemonInfo::AbsoluteMinLevel(pokeid, g) > level) {
+            if (invalid_moves) {
+                *invalid_moves = moves;
+            }
+            if (error) {
+                *error = QObject::tr("%1 can't learn the following moves while being at level %2: %3.")
+                         .arg(PokemonInfo::Name(pokeid), QString::number(level), getCombinationS(moves));
+            }
+            return false;
+        }
+        if (!PokemonInfo::Exists(pokeid, g) || !PokemonInfo::Moves(pokeid, g).contains(moves)) {
             moves.subtract(PokemonInfo::Moves(pokeid, g));
             if (invalid_moves) {
                 *invalid_moves = moves;
@@ -117,18 +127,43 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             }
             return false;
         }
-        if (g < 5 && g >= 3) {
-            AbilityGroup ab = PokemonInfo::Abilities(pokeid);
 
-            if (ability != ab.ab(0) && ability != ab.ab(1) && ability != 0) {
-                if (invalid_moves) {
-                    *invalid_moves = moves;
+        /* If the pokemon is underleveled, he was caught wild or from a previous gen, anyhow he couldn't have evolved from this gen */
+        bool nobreeding = PokemonInfo::MinEggLevel(pokeid, g) > level;
+
+        if (g < 5 && g >= 3) {
+            AbilityGroup ab = PokemonInfo::Abilities(pokeid, gen);
+
+            if (ability != 0 && ability != ab.ab(0)) {
+                if (ability != ab.ab(1)) {
+                    if (invalid_moves) {
+                        *invalid_moves = moves;
+                    }
+                    if (error) {
+                        *error = QObject::tr("%1 can't learn the following moves from older generations at the same time as having the ability %2: %3.")
+                                .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
+                    }
+                    return false;
                 }
-                if (error) {
-                    *error = QObject::tr("%1 can't learn the following moves from older generations at the same time as having the Dream World ability %2: %3.")
-                             .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
+
+                /* First stage evolutions can't have 4th gen abilities with 3rd gen moves */
+                if (g == 3 && gen > 3) {
+                    ab = PokemonInfo::Abilities(pokeid, g);
+                    if (ab.ab(1) != ability) {
+                        if (!PokemonInfo::HasPreEvo(pokeid.pokenum)) {
+                            if (invalid_moves) {
+                                *invalid_moves = moves;
+                            }
+                            if (error) {
+                                *error = QObject::tr("%1 can't learn the following moves from third generation at the same time as having the fourth generation ability %2: %3.")
+                                        .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
+                            }
+                            return false;
+                        }
+                        return nobreeding == false &&
+                                isValid(PokemonInfo::PreEvo(pokeid.pokenum), g, moves, 0, gender, level, false, invalid_moves, error);
+                    }
                 }
-                return false;
             }
         }
 
@@ -153,7 +188,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
 
                 if (ok)
                     moves.subtract(PokemonInfo::RegularMoves(pokeid, 1));
-            } else {
+            } else if (!nobreeding) {
                 int preevo = PokemonInfo::PreEvo(pokeid.pokenum);
 
                 if (preevo != 0 &&  preevo != pokeid.pokenum && PokemonInfo::Exists(preevo, 1)) {
@@ -171,26 +206,28 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             }
         }
 
-        /* If there's a pre evo move and an old gen move, you must check the pre evo has the combination in the old gen */
-        QSet<int> moves3 = moves;
-        moves3.subtract(PokemonInfo::PreEvoMoves(pokeid,g));
+        if (!nobreeding) {
+            /* If there's a pre evo move and an old gen move, you must check the pre evo has the combination in the old gen */
+            QSet<int> moves3 = moves;
+            moves3.subtract(PokemonInfo::PreEvoMoves(pokeid,g));
 
-        if (moves3.size() != moves.size()) {
-            int pokemon = PokemonInfo::PreEvo(pokeid.pokenum);
+            if (moves3.size() != moves.size()) {
+                int pokemon = PokemonInfo::PreEvo(pokeid.pokenum);
 
-            int ab2;
-            AbilityGroup ab = PokemonInfo::Abilities(pokeid);
-            if (ability == ab.ab(0)) {
-                ab2 = PokemonInfo::Abilities(pokemon, g).ab(0);
-            } else if (ability == ab.ab(1)) {
-                ab2 = PokemonInfo::Abilities(pokemon, g).ab(1);
-            } else if (ability == ab.ab(2)) {
-                ab2 = PokemonInfo::Abilities(pokemon, g).ab(2);
-            } else {
-                ab2 = 0;
+                int ab2;
+                AbilityGroup ab = PokemonInfo::Abilities(pokeid);
+                if (ability == ab.ab(0)) {
+                    ab2 = PokemonInfo::Abilities(pokemon, g).ab(0);
+                } else if (ability == ab.ab(1)) {
+                    ab2 = PokemonInfo::Abilities(pokemon, g).ab(1);
+                } else if (ability == ab.ab(2)) {
+                    ab2 = PokemonInfo::Abilities(pokemon, g).ab(2);
+                } else {
+                    ab2 = 0;
+                }
+                if (isValid(pokemon, g, moves,ab2,gender,level,maledw))
+                    return true;
             }
-            if (isValid(pokemon, g, moves,ab2,gender,maledw))
-                return true;
         }
 
 
@@ -198,16 +235,22 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             return true;
 
         if (!maledw) {
-            if (moves.size() == 1 && PokemonInfo::HasMoveInGen(pokeid, *moves.begin(), g)) {
-                return true;
+            if (moves.size() == 1) {
+                if (!nobreeding) {
+                    if (PokemonInfo::HasMoveInGen(pokeid, *moves.begin(), g)) {
+                        return true;
+                    }
+                } else {
+                    if (PokemonInfo::SpecialMoves(pokeid, g).contains(*moves.begin())) {
+                        return true;
+                    }
+                }
             }
 
-            if (isAnEggMoveCombination(pokeid, g, moves)) {
+            if (!nobreeding && isAnEggMoveCombination(pokeid, g, moves)) {
                 return true;
             }
         }
-
-
 
         if (g == 5) {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid);

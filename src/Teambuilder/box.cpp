@@ -371,8 +371,9 @@ void PokemonBox::load()
             break;
 
         PokeTeam p;
-        if (version == 0 && poke.attribute("Num").toInt() < 505)
+        if (version == 0 && poke.attribute("Num").toInt() < 505) {
             p.setGen(4);
+        }
         p.loadFromXml(poke, version);
 
         addPokemon(p,num);
@@ -855,11 +856,21 @@ void TB_PokemonBoxes::store()
 void TB_PokemonBoxes::withdraw()
 {
     try {
-        *currentPokeTeam() = *currentBox()->getCurrent();
+        setCurrentTeamPoke(currentBox()->getCurrent());
         updateSpot(currentPoke);
         emit pokeChanged(currentPoke);
     } catch(const QString &ex) {
         QMessageBox::information(this, tr("Empty Box"), ex);
+    }
+}
+
+void TB_PokemonBoxes::setCurrentTeamPoke(PokeTeam *p)
+{
+    *currentPokeTeam() = *p;
+
+    if (p->gen() != m_team->gen()) {
+        p->setGen(m_team->gen());
+        p->runCheck();
     }
 }
 
@@ -891,7 +902,7 @@ void TB_PokemonBoxes::switchP()
         PokeTeam *p = new PokeTeam(*currentBox()->getCurrent());
         currentBox()->changeCurrent(*currentPokeTeam());
         currentBox()->save();
-        *currentPokeTeam() = *p;
+        setCurrentTeamPoke(p);
 
         /* Don't worry, if getCurrent doesn't throw exceptions then changeCurrent doesn't.
            Hence no memory leaks */

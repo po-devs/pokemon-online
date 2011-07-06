@@ -103,7 +103,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     levellayout->addWidget(l_lvl);
     levellayout->addWidget(level = new QSpinBox());
     l_lvl->setBuddy(level);
-    level->setRange(1,100);
+    level->setRange(PokemonInfo::AbsoluteMinLevel(poke()->num(), gen()),100);
     level->setValue(poke()->level());
     level->setAccelerated(true);
     connect(level, SIGNAL(valueChanged(int)), SLOT(changeLevel(int)));
@@ -160,7 +160,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
         QMenu *m= new QMenu(bForms);
 
         if (PokemonInfo::HasFormes(poke()->num()) && PokemonInfo::AFormesShown(poke()->num())) {
-            QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(poke()->num());
+            QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(poke()->num(), gen());
 
             foreach(Pokemon::uniqueId forme, formes) {
                 QAction *ac = m->addAction(PokemonInfo::Name(forme),this, SLOT(changeForme()));

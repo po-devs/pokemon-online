@@ -668,8 +668,8 @@ struct AMIronFist : public AM {
         functions["BasePowerModifier"] = &bpm;
     }
 
-    static void bpm (int s, int , BS &b) {
-        if (tmove(b,s).flags & Move::PunchFlag) {
+    static void bpm (int s, int t, BS &b) {
+        if (s != t && tmove(b,s).flags & Move::PunchFlag) {
             turn(b,s)["BasePowerAbilityModifier"] = 4;
         }
     }
@@ -1316,7 +1316,7 @@ struct AMDarumaMode : public AM {
     }
 
     static void ahpc(int s, int, BS &b) {
-        Pokemon::uniqueId num = b.poke(s).num();
+        Pokemon::uniqueId num = fpoke(b,s).id;
 
         if (PokemonInfo::OriginalForme(num) != Pokemon::Hihidaruma) {
             return;
@@ -1327,7 +1327,7 @@ struct AMDarumaMode : public AM {
         if (daruma == num.subnum)
             return;
 
-        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma? 1 : 0));
+        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma));
     }
 };
 
@@ -1571,10 +1571,16 @@ struct AMHarvest : public AM
     }
 
     static void et(int s, int, BS &b) {
-        if (poke(b,s).contains("BerryUsed") && b.poke(s).item() == 0) {
-            int item = poke(b,s)["BerryUsed"].toInt();
+        int p = b.player(s);
+        QString harvest_key = QString("BerryUsed_%1").arg(b.team(p).internalId(b.poke(s)));
+        if (team(b,p).contains(harvest_key) && b.poke(s).item() == 0) {
+            if (!b.isWeatherWorking(BattleSituation::Sunny)) {
+                if (b.true_rand() % 2)
+                     return; // 50 % change when not sunny
+            }
+            int item = team(b,p)[harvest_key].toInt();
 
-            poke(b,s).remove("BerryUsed");
+            team(b,p).remove(harvest_key);
             b.sendAbMessage(88, 0, s, 0, 0, item);
             b.acqItem(s, item);
         }
