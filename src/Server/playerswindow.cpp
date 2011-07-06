@@ -70,6 +70,7 @@ PlayersWindow::PlayersWindow(QWidget *parent)
     QAction *a = m->addAction(tr("User"), this, SLOT(user()));
     a = m->addAction(tr("Moderator"), this, SLOT(mod()));
     a = m->addAction(tr("Administrator"), this, SLOT(admin()));
+    a = m->addAction(tr("Owner"), this, SLOT(owner()));
     _authority->setMenu(m);
 
     QPushButton *_ban = new QPushButton(tr("&Ban"));

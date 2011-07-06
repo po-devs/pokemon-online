@@ -32,7 +32,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("save_battle_logs", false);
     setDefaultValue("play_battle_music", false);
     setDefaultValue("play_battle_sounds", false);
-    setDefaultValue("show_team",true);
+    setDefaultValue("show_team", true);
     setDefaultValue("enable_ladder", true);
     setDefaultValue("show_player_events_idle", false);
     setDefaultValue("show_player_events_battle", false);

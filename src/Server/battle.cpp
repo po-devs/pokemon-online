@@ -12,6 +12,7 @@
 #include "pluginmanager.h"
 #include "battlepluginstruct.h"
 #include "theme.h"
+#include "battlecounterindex.h"
 
 typedef BattlePStorage BP;
 
@@ -633,6 +634,11 @@ void BattleSituation::endTurn()
     foreach (int player, players) {
         /* Wish */
         callseffects(player,player, "EndTurn2");
+
+        /* Counters */
+        if (gen() < 5) {
+            counters(player).decreaseCounters();
+        }
     }
 
     endTurnWeather();
@@ -643,10 +649,7 @@ void BattleSituation::endTurn()
             {
                 if (true_rand() % 255 <= 25)
                 {
-                    healStatus(player, Pokemon::Frozen);
-                    notify(All, StatusMessage, player, qint8(FreeFrozen));
-                    if (useBattleLog)
-                        appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
+                    unthaw(player);
                 }
             }
         }
@@ -861,7 +864,8 @@ bool BattleSituation::requestChoice(int slot, bool acquire, bool custom)
         return false;
     }
 
-    if (turnMemory(slot).contains("NoChoice") && !koed(slot)) {
+    /* Custom choices bypass forced choices */
+    if (turnMemory(slot).contains("NoChoice") && !koed(slot) && !custom) {
         return false;
     }
 
@@ -1028,9 +1032,9 @@ void BattleSituation::analyzeChoice(int slot)
         /* In gen 4 & previous, pursuit doesn't allow you to choose a new pokemon.
            In 5th gen, it's like a normal KO */
         if (gen() <= 4 || !koed(slot)) {
-                sendPoke(slot, choice(slot).pokeSlot());
-        } else {
             sendPoke(slot, choice(slot).pokeSlot());
+        } else {
+            requestSwitch(slot);
         }
     } else if (choice(slot).moveToCenterChoice()) {
         if (!wasKoed(slot)) {
@@ -1393,7 +1397,7 @@ void BattleSituation::storeChoice(const BattleChoice &b)
     hasChoice[b.slot()] = false;
 
     /* If the move is encored, a random target is picked. */
-    if (pokeMemory(b.slot()).contains("EncoresUntil") && pokeMemory(b.slot()).value("EncoresUntil").toInt() >= turn())
+    if (counters(b.slot()).hasCounter(BattleCounterIndex::Encore))
         choice(b.slot()).choice.attack.attackTarget = b.slot();
 }
 
@@ -1613,6 +1617,9 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     /* reset temporary variables */
     pokeMemory(slot).clear();
+
+    /* Reset counters */
+    counters(slot).clear();
 
     if (poke(player, pok).ability() == Ability::Illusion) {
         for (int i = 5; i >= 0; i--) {
@@ -1988,7 +1995,7 @@ void BattleSituation::testCritical(int player, int target)
        otherwise you ignore none of them */
     if (gen() == 2) {
         int stat = 1 + (tmove(player).category - 1) * 2;
-        if (fpoke(player).boosts[stat] <= fpoke(target).boosts[stat+2]) {
+        if (fpoke(player).boosts[stat] <= fpoke(target).boosts[stat+1]) {
             turnMemory(player)["CritIgnoresAll"] = true;
         }
     }
@@ -2030,10 +2037,7 @@ bool BattleSituation::testStatus(int player)
                 appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(player)))), Theme::StatusColor(Pokemon::Frozen)));
             return false;
         }
-        healStatus(player, Pokemon::Frozen);
-        notify(All, StatusMessage, player, qint8(FreeFrozen));
-        if (useBattleLog)
-            appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
+        unthaw(player);
     }
 
     if (turnMemory(player)["Flinched"].toBool()) {
@@ -2181,6 +2185,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     turnMemory(player)["HasMoved"] = true;
+    if (gen() >= 5) {
+        counters(player).decreaseCounters();
+    }
 
     calleffects(player,player,"EvenWhenCantMove");
 
@@ -2635,10 +2642,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player, target, "AfterAttackSuccessful");
         }
         if (tmove(player).type == Type::Fire && poke(target).status() == Pokemon::Frozen) {
-            notify(All, StatusMessage, target, qint8(FreeFrozen));
-            if (useBattleLog)
-                appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
-            healStatus(target, Pokemon::Frozen);
+            unthaw(target);
         }
         pokeMemory(target)["LastAttackToHit"] = attack;
     }
@@ -2665,6 +2669,14 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
     calleffects(player, player, "AfterAttackFinished");
+}
+
+void BattleSituation::unthaw(int player)
+{
+    notify(All, StatusMessage, player, qint8(FreeFrozen));
+    if (useBattleLog)
+        appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
+    healStatus(player, Pokemon::Frozen);
 }
 
 void BattleSituation::notifyKO(int player)
@@ -3969,8 +3981,8 @@ void BattleSituation::eatBerry(int player, bool show) {
                 return;
             }
         }
-
-        pokeMemory(player)["BerryUsed"] = berry;
+        QString harvest_key = QString("BerryUsed_%1").arg(team(this->player(player)).internalId(poke(player)));
+        teamMemory(this->player(player))[harvest_key] = berry;
     }
 }
 

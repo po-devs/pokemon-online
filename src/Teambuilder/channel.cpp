@@ -32,7 +32,7 @@ Channel::Channel(const QString &name, int id, Client *parent)
 
     events = -1;
     restoreEventSettings();
-    
+
 
     if(client->sortBT) {
         sortAllPlayersByTier();
@@ -157,7 +157,7 @@ void Channel::sortAllPlayersByTier()
         if (!mytiersitems.contains(tier))
             placeTier(tier);
 
-        placeItem(iter.value(), mytiersitems.value(tier), client->sortBA);
+        placeItem(iter.value(), mytiersitems.value(tier));
     }
 
     myplayers->expandAll();
@@ -182,30 +182,27 @@ void Channel::sortAllPlayersNormally()
     QHash<int, QIdTreeWidgetItem *>::iterator iter;
 
     for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
-        placeItem(iter.value(), NULL, client->sortBA);
+        placeItem(iter.value(), NULL);
     }
 }
 
-void Channel::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent, bool sortByAuth)
+void Channel::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
 {
     if(item->id() >= 0) {
         if(parent == NULL) {
             myplayers->addTopLevelItem(item);
-            if(sortByAuth) {
+
+            myplayers->sortItems(0,Qt::AscendingOrder);
+            if(client->sortBA) {
                 myplayers->sortItems(1,Qt::DescendingOrder);
             }
-            else {
-            myplayers->sortItems(0,Qt::AscendingOrder);
-        }
         } else {
             parent->addChild(item);
-            if(sortByAuth) {
+
+            parent->sortChildren(0,Qt::AscendingOrder);
+            if(client->sortBA) {
                 parent->sortChildren(1,Qt::DescendingOrder);
             }
-            else {
-            parent->sortChildren(0,Qt::AscendingOrder);
-        }
-
         }
     }
 }
@@ -300,10 +297,10 @@ void Channel::playerReceived(int playerid) {
         if (!mytiersitems.contains(tier))
             placeTier(tier);
 
-        placeItem(item, mytiersitems.value(tier), client->sortBA);
-    } else {
-        placeItem(item,NULL, client->sortBA);
+        placeItem(item, mytiersitems.value(tier));
 
+    } else {
+        placeItem(item, NULL);
     }
 
     updateState(playerid);
@@ -349,9 +346,9 @@ void Channel::insertNewPlayer(int playerid)
         if (!mytiersitems.contains(tier))
             placeTier(tier);
 
-        placeItem(item, mytiersitems.value(tier), client->sortBA);
+        placeItem(item, mytiersitems.value(tier));
     } else {
-        placeItem(item,NULL, client->sortBA);
+        placeItem(item, NULL);
     }
 
     updateState(playerid);
@@ -376,7 +373,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
             return;
 
         playerReceived(id);
- 
+
         if (eventEnabled(Client::ChannelEvent)) {
             printLine(tr("%1 joined the channel.").arg(name(id)));
         }
@@ -611,7 +608,7 @@ void Channel::printLine(const QString &line)
             } else {
                 mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + end + "<br />");
             }
-        }        
+        }
         emit activated(this);
     } else {
         checkFlash(line, QString("\\b%1\\b").arg(name(ownId())));

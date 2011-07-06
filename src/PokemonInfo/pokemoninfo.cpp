@@ -21,6 +21,8 @@ QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Height;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Genders;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type1[NUMBER_GENS];
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type2[NUMBER_GENS];
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_MinLevels[NUMBER_GENS];
+QHash<Pokemon::uniqueId, int> PokemonInfo::m_MinEggLevels[NUMBER_GENS];
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Abilities[NUMBER_GENS][3];
 QHash<Pokemon::uniqueId, PokeBaseStats> PokemonInfo::m_BaseStats;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_LevelBalance;
@@ -389,6 +391,7 @@ void PokemonInfo::init(const QString &dir)
     loadClassifications();
     loadGenderRates();
     loadHeights();
+    loadMinLevels();
     loadDescriptions();
     loadBaseStats();
     makeDataConsistent();
@@ -417,6 +420,27 @@ void PokemonInfo::loadGenderRates()
         quint16 pokenum;
         bool ok = Pokemon::uniqueId::extract_short(current, pokenum, description);
         if(ok) m_GenderRates[pokenum] = description.toInt();
+    }
+}
+
+void PokemonInfo::loadMinLevels()
+{
+    for (int i = 0; i < NUMBER_GENS; i++) {
+        QStringList temp;
+        fill_container_with_file(temp, path(QString("minlevels_G%1.txt").arg(GEN_MIN+i)));
+
+        for(int j = 0; j < temp.size(); j++) {
+            QString current = temp[j].trimmed();
+            QString description;
+            Pokemon::uniqueId pokeid;
+            bool ok = Pokemon::uniqueId::extract(current, pokeid, description);
+            if(ok)  {
+                QStringList eggWild = description.split('/');
+
+                m_MinLevels[i][pokeid] = eggWild.back().toInt();
+                m_MinEggLevels[i][pokeid] = eggWild.front().toInt();
+            }
+        }
     }
 }
 
@@ -477,7 +501,7 @@ int PokemonInfo::NumberOfVisiblePokes() {
 
 QString PokemonInfo::Name(const Pokemon::uniqueId &pokeid)
 {
-    if(Exists(pokeid))
+    if(m_Names.contains(pokeid))
     {
         return m_Names.value(pokeid);
     }else{
@@ -487,6 +511,9 @@ QString PokemonInfo::Name(const Pokemon::uniqueId &pokeid)
 
 bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, int gen)
 {
+    if (pokeid.toPokeRef() == Pokemon::SpikyPichu) {
+        return gen == 4;
+    }
     if(m_Names.contains(pokeid))
     {
         return pokeid.pokenum < TrueCount(gen);
@@ -804,11 +831,11 @@ Pokemon::uniqueId PokemonInfo::OriginalForme(const Pokemon::uniqueId &pokeid)
     return Pokemon::uniqueId(pokeid.pokenum, 0);
 }
 
-QList<Pokemon::uniqueId> PokemonInfo::Formes(const Pokemon::uniqueId &pokeid)
+QList<Pokemon::uniqueId> PokemonInfo::Formes(const Pokemon::uniqueId &pokeid, int gen)
 {
     QList<Pokemon::uniqueId> result;
     for(quint16 i = 0; i <= NumberOfAFormes(pokeid); i++) {
-        if (Exists(Pokemon::uniqueId(pokeid.pokenum, i)))
+        if (Exists(Pokemon::uniqueId(pokeid.pokenum, i), gen))
             result.append(Pokemon::uniqueId(pokeid.pokenum, i));
     }
     return result;
@@ -824,6 +851,42 @@ QList<Pokemon::uniqueId> PokemonInfo::VisibleFormes(const Pokemon::uniqueId &pok
     return result;
 }
 
+int PokemonInfo::MinLevel(const Pokemon::uniqueId &pokeid, int gen)
+{
+    int g = gen-GEN_MIN;
+
+    if (!m_MinLevels[g].contains(pokeid))
+        return 100;
+
+    return m_MinLevels[g][pokeid];
+}
+
+int PokemonInfo::MinEggLevel(const Pokemon::uniqueId &pokeid, int gen)
+{
+    int g = gen-GEN_MAX;
+
+    if (!m_MinLevels[g].contains(pokeid))
+        return 100;
+
+    return m_MinLevels[g][pokeid];
+}
+
+int PokemonInfo::AbsoluteMinLevel(const Pokemon::uniqueId &pokeid, int gen)
+{
+    int limit = (gen >= 3 ? 3 : GEN_MIN);
+
+    int min = 100;
+    for (int g = gen; g >= limit; g--) {
+        int level = MinLevel(pokeid, g);
+
+        if (level < min) {
+            min = level;
+        }
+    }
+
+    return min;
+}
+
 Pokemon::uniqueId PokemonInfo::OriginalEvo(const Pokemon::uniqueId &pokeid)
 {
     return Pokemon::uniqueId(m_OriginalEvos.value(pokeid.pokenum), 0);
@@ -833,6 +896,12 @@ int PokemonInfo::PreEvo(int pokenum)
 {
     return m_PreEvos.value(pokenum);
 }
+
+bool PokemonInfo::HasPreEvo(int pokenum)
+{
+    return m_PreEvos.contains(pokenum);
+}
+
 
 QList<int> PokemonInfo::Evos(int pokenum)
 {
@@ -1056,6 +1125,10 @@ void PokemonInfo::makeDataConsistent()
             }
             if(!m_Type2[i].contains(id)) {
                 m_Type2[i][id] = m_Type2[i].value(OriginalForme(id), Pokemon::Curse);
+            }
+            if (!m_MinLevels[i].contains(id)) {
+                m_MinLevels[i][id] = m_MinLevels[i].value(OriginalForme(id), 100);
+                m_MinEggLevels[i][id] = m_MinEggLevels[i].value(OriginalForme(id), 100);
             }
         }
     }

@@ -135,6 +135,7 @@ signals:
     void showRankings(const QString &tier, int page);
     void joinRequested(const QString &channel);
     void leaveChannel(int id);
+    void ipChangeRequested(const QString &ip);
 public slots:
     /* slots called by the network */
     void error();

@@ -212,6 +212,7 @@ private:
     bool existBox(const QString &name) const;
     void addBox(const QString &name);
     void deleteBox(int num);
+    void setCurrentTeamPoke(PokeTeam *p);
 };
 
 #endif // BOX_H

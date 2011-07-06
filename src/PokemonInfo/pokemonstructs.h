@@ -808,7 +808,8 @@ namespace Pokemon
         Wormadam_S = Wormadam + (2 << 16),
         Giratina_O = Giratina + (1 << 16),
         Shaymin_S = Shaymin + (1 << 16),
-        Meloia_S = Meloia + (1 << 16)
+        Meloia_S = Meloia + (1 << 16),
+        SpikyPichu = Pichu + (1 << 16)
     };
     class uniqueId
     {
