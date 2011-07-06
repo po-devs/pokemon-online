@@ -213,13 +213,18 @@ class QIRCLineEdit : public QLineEdit
 public:
     QIRCLineEdit();
 
+    void setPlayers(QAbstractItemModel *players);
     void clear();
 private:
+    bool event(QEvent *);
     void keyPressEvent(QKeyEvent *);
     //QList<QString> m_Inputlist1;//Stores the inputed strings,up list.
     //QList<QString> m_Inputlist2;//Stores the inputed strings,down list.
     QList<QString> m_Inputlist;
     quint16 listindex;
+    QCompleter *completer;
+    int completeIndex;
+    QString beginning;
     //QString m_Currentline;//Stores a copy of the current text in the LineEdit.
 };
 
