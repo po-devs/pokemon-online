@@ -128,24 +128,9 @@ int fill_count_files(const QString &filename, FillMode::FillModeType m) {
     return ((m != FillMode::NoMod) && filename.startsWith("db/pokes/")) ? 2 : 1;
 }
 
-// OS specific paths.
-// Linux: XDG_CONFIG_HOME environment variable (see f.d.o. for details).
-// Windows: APPDATA environment variable.
-// Mac: somewhere in Library.
-// Other: "Mods" in current directory.
 void fill_check_mode_path(FillMode::FillModeType m, QString &filename) {
     if (m == FillMode::Client) {
-#if defined(Q_OS_MAC)
-        filename = QDir::homePath() + "/Library/Application Support/Pokemon Online/Mods/" + filename;
-#elif defined(Q_OS_LINUX)
-        filename = QProcessEnvironment::systemEnvironment().value("XDG_CONFIG_HOME", QDir::homePath() + "/.config")
-              + "/Dreambelievers/Pokemon Online/Mods/" + filename;
-#elif defined(Q_OS_WIN32)
-        filename = QProcessEnvironment::systemEnvironment().value("APPDATA", QDir::homePath())
-              + "/Pokemon Online/Mods/" + filename;
-#else
-        filename = "Mods/" + filename;
-#endif
+        filename = PoModLocalPath + filename;
     }
 }
 
@@ -602,7 +587,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
     else {
         // TODO: Read this number from somewhere else.
         if (pokeid.pokenum > 649) {
-            archive = "mod_" + path("mod_sprites.zip");
+            archive = PoModLocalPath + "mod_" + path("mod_sprites.zip");
         } else {
             archive = path("black_white.zip");
         }
@@ -689,7 +674,7 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid)
     QString archive;
     // TODO: Read this number from somewhere else.
     if (pokeid.pokenum > 649) {
-        archive = "mod_" + path("mod_icons.zip");
+        archive = PoModLocalPath + "mod_" + path("mod_icons.zip");
     } else {
         archive = path("icons.zip");
     }
@@ -722,7 +707,7 @@ QByteArray PokemonInfo::Cry(const Pokemon::uniqueId &pokeid)
     QString archive;
     // TODO: Read this number from somewhere else.
     if (pokeid.pokenum > 649) {
-        archive = "mod_" + path("mod_cries.zip");
+        archive = PoModLocalPath + "mod_" + path("mod_cries.zip");
     } else {
         archive = path("cries.zip");
     }
