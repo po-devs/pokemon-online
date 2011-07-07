@@ -89,6 +89,7 @@ public slots:
     void importDone(const QString &text);
     void showNoFrame();
     void changeItemDisplay(bool allItems);
+    void setTierList(const QStringList &tiers);
 
 private:
     enum StackWidgets {
@@ -142,6 +143,7 @@ public:
     TB_TrainerBody(TeamBuilder *parent);
 
     void updateTrainer();
+    void setTierList(const QStringList &);
 private slots:
     void changeTrainerInfo();
     void setTrainerNick(const QString &);

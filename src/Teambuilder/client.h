@@ -236,6 +236,7 @@ public slots:
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
+    void tierListFormed(const QStringList &tiers);
 protected:
     void paintEvent(QPaintEvent *)
     {

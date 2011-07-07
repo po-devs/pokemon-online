@@ -446,6 +446,11 @@ void TeamBuilder::exportToTxt()
     exporting->resize(500,700);
 }
 
+void TeamBuilder::setTierList(const QStringList &tiers)
+{
+    m_trainerBody->setTierList(tiers);
+}
+
 TeamBuilder::~TeamBuilder()
 {
     writeSettings(this);
@@ -534,6 +539,13 @@ void TB_TrainerBody::changeTrainerColor()
         s.setValue("trainer_color", "");
         m_colorButton->setStyleSheet("");
     }
+}
+
+void TB_TrainerBody::setTierList(const QStringList &tiers) {
+    QCompleter *completer = new QCompleter(tiers, m_tier);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    completer->setCompletionMode(QCompleter::PopupCompletion);
+    m_tier->setCompleter(completer);
 }
 
 TrainerTeam * TB_TrainerBody::trainerTeam()
