@@ -183,11 +183,6 @@ void MainEngine::launchTeamBuilder()
 
 void MainEngine::launchServerChoice()
 {
-    if (trainerTeam()->trainerNick().length() == 0) {
-        QMessageBox::information(displayer, tr("Impossible to go online"), tr("You haven't set your name yet. Do so in the teambuilder."));
-        return;
-    }
-
     ServerChoice *choice = new ServerChoice(trainerTeam()->trainerNick());
     MainEngineRoutine(choice);
 
@@ -254,6 +249,12 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
 {
     if (nick.size() > 0)
         trainerTeam()->setTrainerNick(nick);
+
+    if (trainerTeam()->trainerNick().length() == 0) {
+        QMessageBox::information(displayer, tr("Impossible to go online"), tr("You haven't set your name yet. Do so in the teambuilder."));
+        return;
+    }
+
     Client * client = new Client(trainerTeam(), url, port);
     MainEngineRoutine(client);
 
