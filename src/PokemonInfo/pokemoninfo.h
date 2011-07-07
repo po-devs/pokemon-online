@@ -7,6 +7,19 @@
 class PokeBaseStats;
 class QPixmap;
 
+namespace FillMode {
+    enum FillModeType {
+        NoMod,
+        Server,
+        Client
+    };
+}
+
+// Mods are only for files in db/pokes directory.
+inline int fill_count_files(const QString &filename);
+// Will prepend filename with correct path in the system for client.
+inline void fill_check_mode_path(FillMode::FillModeType m, QString &filename);
+
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
 
 struct PokemonMoves
@@ -29,7 +42,7 @@ class PokemonInfo
 {
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="db/pokes/");
+    static void init(const QString &dir="db/pokes/", FillMode::FillModeType mode = FillMode::NoMod);
 
     /* Self-explainable functions */
     static int TrueCount(int gen=GEN_MAX); // pokes without counting forms
@@ -142,15 +155,16 @@ private:
     // To get random pokemon faster.
     static QList<Pokemon::uniqueId> m_VisiblePokesPlainList;
 
-    static void loadNames();
-    static void loadEvos();
-    static void loadBaseStats();
-    static void loadMoves();
-    static void loadClassifications();
-    static void loadGenderRates();
-    static void loadMinLevels();
-    static void loadHeights();
-    static void loadDescriptions();
+    static void loadNames(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadEvos(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadBaseStats(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadMoves(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadClassifications(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadGenderRates(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadHeights(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadDescriptions(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadMinLevels(FillMode::FillModeType mode = FillMode::NoMod);
+
     // Call this after loading all data.
     static void makeDataConsistent();
     static QSet<int> getMoves(const QString &filename, int Pokenum);

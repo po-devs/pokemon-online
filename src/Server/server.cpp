@@ -114,7 +114,7 @@ void Server::start(){
     printLine(tr("Starting loading pokemon database..."));
 
     /* Really useful for headless servers */
-    PokemonInfo::init("db/pokes/");
+    PokemonInfo::init("db/pokes/", FillMode::Server);
     MoveSetChecker::init("db/pokes/");
     ItemInfo::init("db/items/");
     MoveInfo::init("db/moves/");
