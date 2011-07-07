@@ -3636,6 +3636,9 @@ int BattleSituation::calculateDamage(int p, int t)
     if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct) && gen() <= 4) {
         /* explosion / selfdestruct */
         def/=2;
+        if (def == 0)
+            // prevent division by zero
+            def = 1;
     }
 
     int stab = move["Stab"].toInt();
