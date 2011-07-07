@@ -521,25 +521,66 @@ void QImageButtonP::mouseMoveEvent(QMouseEvent *)
 
 QIRCLineEdit::QIRCLineEdit()
 {
+    completer=0;
+    completeIndex=-1;
     listindex=0;
     m_Inputlist.push_back("");
 }
 
+void QIRCLineEdit::setPlayers(QAbstractItemModel *players)
+{
+    if (completer) {
+        delete completer;
+        completer = 0;
+    }
+    if (players) {
+        completer = new QCompleter(players);
+        completer->setCaseSensitivity(Qt::CaseInsensitive);
+    }
+}
+
+bool QIRCLineEdit::event(QEvent *e)
+{
+    if (e->type() == QEvent::KeyPress) {
+        if (static_cast<QKeyEvent*>(e)->key() == Qt::Key_Tab) {
+            if (completer) {
+                if (completeIndex == -1) {
+                    int split = text().lastIndexOf(QChar(' '));
+                    completer->setCompletionPrefix(text().mid(split+1));
+                    beginning = text().left(split+1);
+                    completeIndex = 0;
+                }
+                if (completer->setCurrentRow(completeIndex++)) {
+                    setText(beginning + completer->currentCompletion());
+                } else { // try from beginning
+                    completeIndex = 0;
+                    if (completer->setCurrentRow(completeIndex++))
+                        setText(beginning + completer->currentCompletion());
+                }
+            }
+            return true;
+        } else {
+            completeIndex = -1; // reset tab complete
+        }
+    }
+    return QLineEdit::event(e);
+}
+
 void QIRCLineEdit::keyPressEvent(QKeyEvent *e)
 {
-    if(e->key() == Qt::Key_Up) {
+    if (e->key() == Qt::Key_Up) {
         if (listindex == 0)
             return;
         m_Inputlist[listindex] = text();
         listindex--;
         setText(m_Inputlist[listindex]);
-    } else if(e->key() == Qt::Key_Down) {
+    } else if (e->key() == Qt::Key_Down) {
         if (listindex == m_Inputlist.size() -1)
             return;
         m_Inputlist[listindex] = text();
         listindex++;
         setText(m_Inputlist[listindex]);
-    }else{
+    } else {
         QLineEdit::keyPressEvent(e);
     }
 }
