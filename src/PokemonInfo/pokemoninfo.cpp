@@ -863,7 +863,7 @@ int PokemonInfo::MinLevel(const Pokemon::uniqueId &pokeid, int gen)
 
 int PokemonInfo::MinEggLevel(const Pokemon::uniqueId &pokeid, int gen)
 {
-    int g = gen-GEN_MAX;
+    int g = gen-GEN_MIN;
 
     if (!m_MinLevels[g].contains(pokeid))
         return 100;
