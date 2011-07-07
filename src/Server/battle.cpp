@@ -1026,12 +1026,13 @@ void BattleSituation::analyzeChoice(int slot)
             }
         }
     } else if (choice(slot).switchChoice()){
+        bool wasKoed = koed(slot);
         if (!koed(slot)) /* if the pokemon isn't ko, it IS sent back */
             sendBack(slot);
 
         /* In gen 4 & previous, pursuit doesn't allow you to choose a new pokemon.
            In 5th gen, it's like a normal KO */
-        if (gen() <= 4 || !koed(slot)) {
+        if (gen() <= 4 || !koed(slot) || wasKoed) {
             sendPoke(slot, choice(slot).pokeSlot());
         } else {
             requestSwitch(slot);
