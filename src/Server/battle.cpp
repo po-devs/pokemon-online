@@ -3399,7 +3399,8 @@ void BattleSituation::endTurnWeather()
                                 break;
                         }
                     }
-		    inflictDamage(i, poke(i).totalLifePoints()/16, i, false);
+            //In GSC, the damage is 1/8, otherwise 1/16
+            inflictDamage(i, poke(i).totalLifePoints()*(gen() > 2 ? 1 : 2)/16, i, false);
                     if (gen() >= 5) {
                         testWin();
                     }
