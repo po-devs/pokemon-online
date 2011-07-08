@@ -106,6 +106,20 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
         limit = 1;
 
     for (int g = gen; g >= limit; g--) {
+        if (!PokemonInfo::Exists(pokeid, g)) {
+            if (PokemonInfo::HasPreEvo(pokeid.pokenum)) {
+                return MoveSetChecker::isValid(PokemonInfo::PreEvo(pokeid.pokenum), g, moves, 0, gender, level, maledw,
+                                               invalid_moves, error);
+            }
+            if (invalid_moves) {
+                *invalid_moves = moves;
+            }
+            if (error) {
+                *error = QObject::tr("%1 can't learn the following moves while being at level %2: %3.")
+                         .arg(PokemonInfo::Name(pokeid), QString::number(level), getCombinationS(moves));
+            }
+            return false;
+        }
         if (PokemonInfo::AbsoluteMinLevel(pokeid, g) > level) {
             if (invalid_moves) {
                 *invalid_moves = moves;
@@ -116,7 +130,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
             }
             return false;
         }
-        if (!PokemonInfo::Exists(pokeid, g) || !PokemonInfo::Moves(pokeid, g).contains(moves)) {
+        if (!PokemonInfo::Moves(pokeid, g).contains(moves)) {
             moves.subtract(PokemonInfo::Moves(pokeid, g));
             if (invalid_moves) {
                 *invalid_moves = moves;

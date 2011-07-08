@@ -102,6 +102,7 @@ public:
     static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
     static bool Exists(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static int Ability(const Pokemon::uniqueId &pokeid, int slot, int gen=GEN_MAX);
     static int Stat(const Pokemon::uniqueId &pokeid, int gen, int stat, int level, quint8 dv, quint8 ev);
     static int FullStat(const Pokemon::uniqueId &pokeid, int gen, int nature, int stat, int level, quint8 dv, quint8 ev);
     static QString Desc(const Pokemon::uniqueId &pokeid, int cartridge);
