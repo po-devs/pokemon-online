@@ -62,13 +62,6 @@ MainEngine::MainEngine() : displayer(0)
     StatInfo::init("db/status/");
     Theme::init(settings.value("theme_2").toString());
 
-    QStringList moves;
-    for (int i = 0; i < MoveInfo::NumberOfMoves(); i++) {
-        if (MoveInfo::Flags(i, 5) & Move::MischievousFlag) {
-            moves.push_back(MoveInfo::Name(i));
-        }
-    }
-
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());
     loadStyleSheet();

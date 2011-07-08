@@ -831,6 +831,11 @@ AbilityGroup PokemonInfo::Abilities(const Pokemon::uniqueId &pokeid, int gen)
     return ret;
 }
 
+int PokemonInfo::Ability(const Pokemon::uniqueId &pokeid, int slot, int gen)
+{
+    return m_Abilities[gen-GEN_MIN][slot].value(pokeid);
+}
+
 void PokemonInfo::loadBaseStats(FillMode::FillModeType mode)
 {
     QStringList temp;
