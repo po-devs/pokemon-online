@@ -73,7 +73,7 @@ MainEngine::MainEngine() : displayer(0)
     QApplication::setStyle(settings.value("application_style").toString());
     loadStyleSheet();
     loadTeam(settings.value("team_location").toString());
-
+    
     launchMenu();
 }
 

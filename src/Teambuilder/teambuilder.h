@@ -100,6 +100,8 @@ private:
     };
 
 private slots:
+    void changeMod();
+    void setNoMod();
     void changeToTrainer();
     void changeToTeam();
     void changeToBoxes();
