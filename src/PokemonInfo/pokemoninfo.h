@@ -169,14 +169,14 @@ private:
     // To get random pokemon faster.
     static QList<Pokemon::uniqueId> m_VisiblePokesPlainList;
 
-    static void loadNames(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadEvos(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadBaseStats(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadMoves(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadClassifications(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadGenderRates(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadHeights(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadDescriptions(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadNames();
+    static void loadEvos();
+    static void loadBaseStats();
+    static void loadMoves();
+    static void loadClassifications();
+    static void loadGenderRates();
+    static void loadHeights();
+    static void loadDescriptions();
     // Call this after loading all data.
     static void makeDataConsistent();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
@@ -184,6 +184,7 @@ private:
     static int calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint8 ev);
     // Clears pokemon data. Call reloadMod() after that to refill data.
     static void clearData();
+    static FillMode::FillModeType m_CurrentMode;
 };
 
 class MoveInfo
