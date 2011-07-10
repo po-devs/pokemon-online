@@ -60,8 +60,8 @@ class PokemonInfo
 {
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="db/pokes/", FillMode::FillModeType mode = FillMode::NoMod);
-    static void reloadMod(FillMode::FillModeType mode = FillMode::NoMod);
+    static void init(const QString &dir="db/pokes/", FillMode::FillModeType mode = FillMode::NoMod, const QString &modName = "");
+    static void reloadMod(FillMode::FillModeType mode = FillMode::NoMod, const QString &modName = "");
 
     /* Self-explainable functions */
     static int TrueCount(int gen=GEN_MAX); // pokes without counting forms
@@ -138,6 +138,7 @@ private:
     static QHash<int, int> m_GenderRates;
     static QHash<Pokemon::uniqueId, QString> m_Height;
     static QString m_Directory;
+    static QString m_ModDirectory;
     static QHash<Pokemon::uniqueId, int> m_Type1[NUMBER_GENS];
     static QHash<Pokemon::uniqueId, int> m_Type2[NUMBER_GENS];
     static QHash<Pokemon::uniqueId, int> m_Genders;
@@ -185,6 +186,7 @@ private:
     // Clears pokemon data. Call reloadMod() after that to refill data.
     static void clearData();
     static FillMode::FillModeType m_CurrentMode;
+    static QString readModDirectory(const QString &modName);
 };
 
 class MoveInfo

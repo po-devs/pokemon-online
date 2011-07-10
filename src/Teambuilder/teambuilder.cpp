@@ -1962,13 +1962,12 @@ void TB_EVManager::updateNatureButtons()
 
 void TeamBuilder::changeMod()
 {
-    // TODO: add function to re-init those.
-    // PokemonInfo::init("db/pokes/", FillMode::Client);
-    // MoveSetChecker::init("db/pokes/");
+    // TODO: 2nd param - read from menu.
     PokemonInfo::reloadMod(FillMode::Client);
+    // TODO: MoveSetChecker::init("db/pokes/"); ?
 }
 
 void TeamBuilder::setNoMod()
 {
-    // TODO: do setNoMod().
+    PokemonInfo::reloadMod(FillMode::Client);
 }
