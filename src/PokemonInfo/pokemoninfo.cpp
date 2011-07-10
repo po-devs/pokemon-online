@@ -2381,5 +2381,16 @@ bool PokemonInfo::modifyBaseStat(const Pokemon::uniqueId &pokeid, int stat, quin
 
 QString PokemonInfo::readModDirectory(const QString &modName)
 {
-    return "";
+    QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
+    int mod_id = s_mod.value(modName + "/id", 0).toInt();
+    if (mod_id == 0) {
+        return "";
+    } else {
+        QString result = PoModLocalPath + mod_id + "/";
+        if (QDir(result).exists()) {
+            return result;
+        } else {
+            return "";
+        }
+    }
 }
