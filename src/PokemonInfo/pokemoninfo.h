@@ -61,6 +61,7 @@ class PokemonInfo
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/pokes/", FillMode::FillModeType mode = FillMode::NoMod);
+    static void reloadMod(FillMode::FillModeType mode = FillMode::NoMod);
 
     /* Self-explainable functions */
     static int TrueCount(int gen=GEN_MAX); // pokes without counting forms
@@ -181,6 +182,8 @@ private:
     static QSet<int> getMoves(const QString &filename, int Pokenum);
     static QString path(const QString &filename);
     static int calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint8 ev);
+    // Clears pokemon data. Call reloadMod() after that to refill data.
+    static void clearData();
 };
 
 class MoveInfo

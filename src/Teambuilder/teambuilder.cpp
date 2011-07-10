@@ -1965,6 +1965,7 @@ void TeamBuilder::changeMod()
     // TODO: add function to re-init those.
     // PokemonInfo::init("db/pokes/", FillMode::Client);
     // MoveSetChecker::init("db/pokes/");
+    PokemonInfo::reloadMod(FillMode::Client);
 }
 
 void TeamBuilder::setNoMod()
