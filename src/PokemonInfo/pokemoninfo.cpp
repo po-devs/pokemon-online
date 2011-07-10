@@ -11,6 +11,7 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
+QString PokemonInfo::m_ModDirectory;
 QMap<Pokemon::uniqueId, QString> PokemonInfo::m_Names;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Weights;
 QHash<int, QHash<quint16, QString> > PokemonInfo::m_Desc;
@@ -405,13 +406,15 @@ int PokemonInfo::FullStat(const Pokemon::uniqueId &pokeid, int gen, int nature, 
     }
 }
 
-void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode)
+void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode, const QString &modName)
 {
     /* makes sure it isn't already initialized */
     if (NumberOfPokemons() != 0) return;
 
     m_Directory = dir;
     m_CurrentMode = mode;
+    m_ModDirectory = readModDirectory(modName);
+    if (m_ModDirectory.isEmpty()) m_CurrentMode = FillMode::NoMod;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
@@ -420,9 +423,11 @@ void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode)
     reloadMod(mode);
 }
 
-void PokemonInfo::reloadMod(FillMode::FillModeType mode)
+void PokemonInfo::reloadMod(FillMode::FillModeType mode, const QString &modName)
 {
     m_CurrentMode = mode;
+    m_ModDirectory = readModDirectory(modName);
+    if (m_ModDirectory.isEmpty()) m_CurrentMode = FillMode::NoMod;
     clearData();
 
     loadNames();
@@ -2372,4 +2377,9 @@ bool PokemonInfo::modifyBaseStat(const Pokemon::uniqueId &pokeid, int stat, quin
     }else{
         return false;
     }
+}
+
+QString PokemonInfo::readModDirectory(const QString &modName)
+{
+    return "";
 }
