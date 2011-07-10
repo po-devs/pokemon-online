@@ -11,7 +11,6 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
-QString PokemonInfo::m_ModDirectory;
 QMap<Pokemon::uniqueId, QString> PokemonInfo::m_Names;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Weights;
 QHash<int, QHash<quint16, QString> > PokemonInfo::m_Desc;
@@ -132,7 +131,7 @@ int fill_count_files(const QString &filename, FillMode::FillModeType m) {
 
 void fill_check_mode_path(FillMode::FillModeType m, QString &filename) {
     if (m == FillMode::Client) {
-        filename = PoModLocalPath + filename;
+        filename = PoCurrentModPath + filename;
     }
 }
 
@@ -413,8 +412,8 @@ void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode, const QS
 
     m_Directory = dir;
     m_CurrentMode = mode;
-    m_ModDirectory = readModDirectory(modName);
-    if (m_ModDirectory.isEmpty()) m_CurrentMode = FillMode::NoMod;
+    PoCurrentModPath = readModDirectory(modName);
+    if (PoCurrentModPath.isEmpty()) m_CurrentMode = FillMode::NoMod;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
@@ -426,8 +425,8 @@ void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode, const QS
 void PokemonInfo::reloadMod(FillMode::FillModeType mode, const QString &modName)
 {
     m_CurrentMode = mode;
-    m_ModDirectory = readModDirectory(modName);
-    if (m_ModDirectory.isEmpty()) m_CurrentMode = FillMode::NoMod;
+    PoCurrentModPath = readModDirectory(modName);
+    if (PoCurrentModPath.isEmpty()) m_CurrentMode = FillMode::NoMod;
     clearData();
 
     loadNames();
@@ -632,7 +631,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
     else {
         // TODO: Read this number from somewhere else.
         if (pokeid.pokenum > 649) {
-            archive = PoModLocalPath + "mod_" + path("mod_sprites.zip");
+            archive = PoCurrentModPath + "mod_" + path("mod_sprites.zip");
         } else {
             archive = path("black_white.zip");
         }
@@ -719,7 +718,7 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid)
     QString archive;
     // TODO: Read this number from somewhere else.
     if (pokeid.pokenum > 649) {
-        archive = PoModLocalPath + "mod_" + path("mod_icons.zip");
+        archive = PoCurrentModPath + "mod_" + path("mod_icons.zip");
     } else {
         archive = path("icons.zip");
     }
@@ -752,7 +751,7 @@ QByteArray PokemonInfo::Cry(const Pokemon::uniqueId &pokeid)
     QString archive;
     // TODO: Read this number from somewhere else.
     if (pokeid.pokenum > 649) {
-        archive = PoModLocalPath + "mod_" + path("mod_cries.zip");
+        archive = PoCurrentModPath + "mod_" + path("mod_cries.zip");
     } else {
         archive = path("cries.zip");
     }

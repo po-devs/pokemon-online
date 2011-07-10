@@ -32,6 +32,7 @@ namespace FillMode {
         static QString PoModLocalPath = "Mods/";
 #endif
 
+        static QString PoCurrentModPath;
 
 // Mods are only for files in db/pokes directory.
 inline int fill_count_files(const QString &filename);
@@ -138,7 +139,6 @@ private:
     static QHash<int, int> m_GenderRates;
     static QHash<Pokemon::uniqueId, QString> m_Height;
     static QString m_Directory;
-    static QString m_ModDirectory;
     static QHash<Pokemon::uniqueId, int> m_Type1[NUMBER_GENS];
     static QHash<Pokemon::uniqueId, int> m_Type2[NUMBER_GENS];
     static QHash<Pokemon::uniqueId, int> m_Genders;
