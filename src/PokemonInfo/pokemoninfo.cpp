@@ -409,11 +409,18 @@ void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode)
     /* makes sure it isn't already initialized */
     if (NumberOfPokemons() != 0)
         return;
-
     m_Directory = dir;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    // Load db/pokes data.
+    reloadMod(mode);
+}
+
+void PokemonInfo::reload(FillMode::FillModeType mode)
+{
+    clearData();
 
     loadNames(mode);
     loadEvos(mode);
@@ -441,6 +448,36 @@ void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode)
     loadDescriptions(mode);
     loadBaseStats(mode);
     makeDataConsistent();
+}
+
+void PokemonInfo::clearData()
+{
+    m_Names.clear();
+    m_Options.clear();
+    m_MaxForme.clear();
+    m_VisiblePokesPlainList.clear();
+    m_Weights.clear();
+    m_Genders.clear();
+    for (int i = 0; i < NUMBER_GENS; ++i) {
+        m_Type1[i].clear();
+        m_Type2[i].clear();
+        for (int j = 0; j < 3; ++j) {
+            m_Abilities[i][j].clear();
+        }
+    }
+    m_LevelBalance.clear();
+    m_Classification.clear();
+    m_GenderRates.clear();
+    m_Height.clear();
+    m_Desc.clear();
+    m_BaseStats.clear();
+    m_Evolutions.clear();
+    m_OriginalEvos.clear();
+    m_PreEvos.clear();
+    m_DirectEvos.clear();
+    m_AestheticFormes.clear();
+    m_Moves.clear();
+    m_VisiblePokesPlainList.clear();
 }
 
 void PokemonInfo::loadClassifications(FillMode::FillModeType mode)
