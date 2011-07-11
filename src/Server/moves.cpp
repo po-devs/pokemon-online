@@ -1635,10 +1635,10 @@ struct MMCopycat : public MM
 
     static void daf(int s, int, BS &b) {
         /* First check if there's even 1 move available */
-        if (!b.battleMemory().contains("LastMoveSuccessfullyUsed") || b.battleMemory()["LastMoveSuccessfullyUsed"].toInt() == Copycat) {
+        if (!b.battleMemory().contains("LastMoveUsed") || b.battleMemory()["LastMoveUsed"].toInt() == Copycat) {
             turn(b,s)["Failed"] = true;
         } else {
-            turn(b,s)["CopycatMove"] = b.battleMemory()["LastMoveSuccessfullyUsed"];
+            turn(b,s)["CopycatMove"] = b.battleMemory()["LastMoveUsed"];
         }
     }
 
