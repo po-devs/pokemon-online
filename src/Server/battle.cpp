@@ -2414,6 +2414,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     /* Here because of jewels :( */
     turnMemory(player).remove("BasePowerItemModifier");
 
+    /* Copycat memory */
+    if ((!specialOccurence||gen() >= 5) && attack != Move::Struggle) {
+        battleMemory()["LastMoveUsed"] = attack;
+    }
+
     foreach(int target, targetList) {
         attacked() = target;
         if (!specialOccurence && (tmove(player).flags & Move::MemorableFlag) ) {
@@ -2649,11 +2654,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     heatOfAttack() = false;
-
-    /* Copycat memory */
-    if ((!specialOccurence||gen() >= 5) && attack != Move::Struggle) {
-        battleMemory()["LastMoveSuccessfullyUsed"] = attack;
-    }
 
     end:
     /* In gen 4, choice items are there - they lock even if the move had no target possible.  */
