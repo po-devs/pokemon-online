@@ -1670,6 +1670,14 @@ struct MMAssist : public MM
                               << Metronome << Mimic << MirrorCoat << MirrorMove << OverheadThrow << Protect  << RagePower
                               << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick << WideGuard;
         }
+
+        bool contains(int move, int gen=GEN_MAX) const {
+            if (move == Transform) {
+                return gen >= 5;
+            } else {
+                return QSet<int>::contains(move);
+            }
+        }
     };
     static FM forbidden_moves;
 
@@ -1695,7 +1703,7 @@ struct MMAssist : public MM
                 PokeBattle &p = b.poke(player,i);
                 for(int j = 0; j < 4; j++) {
                     int m = p.move(j);
-                    if (!forbidden_moves.contains(m))
+                    if (!forbidden_moves.contains(m, b.gen()))
                         possible_moves.push_back(m);
                 }
             }
@@ -3461,7 +3469,7 @@ struct MMMetronome : public MM
         while (1) {
             int move = b.true_rand() % MoveInfo::NumberOfMoves();
 
-            bool correctMove = !b.hasMove(s,move) && !MMAssist::forbidden_moves.contains(move) && MoveInfo::Exists(move, b.gen());
+            bool correctMove = !b.hasMove(s,move) && !MMAssist::forbidden_moves.contains(move, b.gen()) && MoveInfo::Exists(move, b.gen());
 
             if (correctMove) {
                 BS::BasicMoveInfo info = tmove(b,s);
