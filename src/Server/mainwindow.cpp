@@ -14,7 +14,6 @@ MainWindow::MainWindow(Server *myserver, QWidget *parent)
     resize(500,500);
     setMenuBar(myserverwidget->createMenuBar());
 
-    createTrayActions();
     createTrayIcon();
 
     trayIcon->show();
@@ -64,54 +63,20 @@ void MainWindow::reloadMenuBar()
 void MainWindow::createTrayIcon()
 {
     trayMenu = new QMenu(this);
-    trayMenu->addAction(playersAction);
-    trayMenu->addAction(antiDOSAction);
-    trayMenu->addAction(configAction);
-    trayMenu->addAction(scriptsAction);
-    trayMenu->addAction(battleCAction);
-    trayMenu->addAction(SQLCAction);
+    trayMenu->addAction("&Players", myserverwidget, SLOT(openPlayers()));
+    trayMenu->addAction("&Anti DoS", myserverwidget, SLOT(openAntiDos()));
+    trayMenu->addAction("&Config", myserverwidget, SLOT(openConfig()));
+    trayMenu->addAction("&Script Window", myserverwidget, SLOT(openScriptWindow()));
+    trayMenu->addAction("&Battle Config", myserverwidget, SLOT(openBattleConfigWindow()));
+    trayMenu->addAction("&SQL Config", myserverwidget, SLOT(openSqlConfigWindow()));
     trayMenu->addSeparator();
-    trayMenu->addAction(pulginsWindow);
+    trayMenu->addAction("&Plugin Manager", myserverwidget, SLOT(openPluginManager()));
     trayMenu->addSeparator();
-    trayMenu->addAction(openAction);
-    trayMenu->addAction(closeAction);
+    trayMenu->addAction("&Open", this, SLOT(openWindow()));
+    trayMenu->addAction("&Close", qApp, SLOT(quit()));
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayMenu);
     trayIcon->setIcon(QIcon("db/icon.png"));
-}
-
-void MainWindow::createTrayActions()
-{
-    playersAction = new QAction(tr("&Players"), this);
-    antiDOSAction = new QAction(tr("&Anti DoS"), this);
-    configAction = new QAction(tr("&Config"), this);
-    scriptsAction = new QAction(tr("&Script Window"), this);
-    battleCAction = new QAction(tr("&Battle Config"), this);
-    SQLCAction = new QAction(tr("&SQL Config"), this);
-
-    pulginsWindow = new QAction(tr("&Pulgin Manager"), this);
-
-    openAction = new QAction(tr("Open"), this);
-    closeAction = new QAction(tr("Close"), this);
-
-    connect(playersAction, SIGNAL(triggered()), myserverwidget, SLOT(openPlayers()));
-    connect(antiDOSAction, SIGNAL(triggered()), myserverwidget, SLOT(openAntiDos()));
-    connect(configAction, SIGNAL(triggered()), myserverwidget, SLOT(openConfig()));
-    connect(scriptsAction, SIGNAL(triggered()), myserverwidget, SLOT(openScriptWindow()));
-    connect(battleCAction, SIGNAL(triggered()), myserverwidget, SLOT(openBattleConfigWindow()));
-    connect(SQLCAction, SIGNAL(triggered()), myserverwidget, SLOT(openSqlConfigWindow()));
-
-    connect(pulginsWindow, SIGNAL(triggered()), myserverwidget, SLOT(openPluginManager()));
-
-    connect(openAction, SIGNAL(triggered()), this, SLOT(openWindow()));
-    connect(closeAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-
-    /* Note! @Latios
-      If you do show() on openAction, it'll not work. If you do showNormal() it will show but you can't resize, minimize or
-      close it.
-      If there's otherway to fix this than creating another function, please fix it. :-)!
-    */
-
 }
 
 MainWindow::~MainWindow()

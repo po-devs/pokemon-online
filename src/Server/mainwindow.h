@@ -18,7 +18,6 @@ public:
 
 public slots:
     void createTrayIcon();
-    void createTrayActions();
     void openWindow(); // Hehe, no idea of other way of doing this. Though.
     void systemTrayActivated(QSystemTrayIcon::ActivationReason reason);
     void reloadMenuBar();
@@ -31,16 +30,6 @@ private:
     ServerWidget * myserverwidget;
     QSystemTrayIcon *trayIcon;
     QMenu *trayMenu;
-
-    QAction *playersAction;
-    QAction *antiDOSAction;
-    QAction *configAction;
-    QAction *scriptsAction;
-    QAction *battleCAction;
-    QAction *SQLCAction;
-    QAction *pulginsWindow;
-    QAction *openAction;
-    QAction *closeAction;
 
 };
 
