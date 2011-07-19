@@ -149,6 +149,7 @@ public slots:
     void lineJoin();
     void firstChannelChanged(int tabindex);
     void channelActivated(Channel *c);
+    void pingActivated(Channel *c);
     void showChannelsContextMenu(const QPoint & point);
     /* battle... */
     void battleStarted(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf);
