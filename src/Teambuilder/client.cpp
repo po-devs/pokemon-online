@@ -76,7 +76,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     mainChat->setTabsClosable(true);
     /* Cancels out the effect of the splitter being Plastique */
     mainChat->setStyle(QStyleFactory::create(settings.value("application_style").toString()));
-//    layout->addWidget(myline = new QLineEdit());
+    //    layout->addWidget(myline = new QLineEdit());
     layout->addWidget(myline = new QIRCLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     layout->addLayout(buttonsLayout);
@@ -296,6 +296,7 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
     connect(c, SIGNAL(quitChannel(int)), SLOT(leaveChannel(int)));
     connect(c, SIGNAL(battleReceived2(int,int,int)), this, SLOT(battleReceived(int,int,int)));
     connect(c, SIGNAL(activated(Channel*)), this, SLOT(channelActivated(Channel*)));
+    connect(c, SIGNAL(pactivated(Channel*)), this, SLOT(pingActivated(Channel*)));
 }
 
 void Client::channelActivated(Channel *c)
@@ -304,11 +305,27 @@ void Client::channelActivated(Channel *c)
         return;
     for (int i = 0; i < mainChat->count(); i++) {
         if (mainChat->widget(i) == c->mainChat()) {
+            if (mainChat->tabBar()->tabTextColor(i) == Qt::darkRed)
+                    return;
+
             mainChat->tabBar()->setTabTextColor(i, Qt::darkGreen);
             break;
         }
     }
 }
+
+void Client::pingActivated(Channel *c)
+{
+    if (c->mainChat() == mainChat->currentWidget())
+        return;
+    for (int i = 0; i < mainChat->count(); i++) {
+        if (mainChat->widget(i) == c->mainChat()) {
+            mainChat->tabBar()->setTabTextColor(i, Qt::darkRed);
+            break;
+        }
+    }
+}
+
 
 void Client::showChannelsContextMenu(const QPoint & point)
 {
@@ -357,7 +374,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
         action = show_events->addAction(tr("Enable idle events"));
         action->setCheckable(true);
         action->setChecked(s.value("show_player_events_idle",
-                     globals.value("show_player_events_idle").toBool()).toBool());
+                                   globals.value("show_player_events_idle").toBool()).toBool());
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
         connect(action, SIGNAL(triggered(bool)), SLOT(showIdleEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
@@ -366,7 +383,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
         action = show_events->addAction(tr("Enable battle events"));
         action->setCheckable(true);
         action->setChecked(s.value("show_player_events_battle",
-                     globals.value("show_player_events_battle").toBool()).toBool());
+                                   globals.value("show_player_events_battle").toBool()).toBool());
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
         connect(action, SIGNAL(triggered(bool)), SLOT(showBattleEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
@@ -375,7 +392,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
         action = show_events->addAction(tr("Enable channel events"));
         action->setCheckable(true);
         action->setChecked(s.value("show_player_events_channel",
-                     globals.value("show_player_events_channel").toBool()).toBool());
+                                   globals.value("show_player_events_channel").toBool()).toBool());
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
         connect(action, SIGNAL(triggered(bool)), SLOT(showChannelEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
@@ -384,7 +401,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
         action = show_events->addAction(tr("Enable team change events"));
         action->setCheckable(true);
         action->setChecked(s.value("show_player_events_team",
-                     globals.value("show_player_events_team").toBool()).toBool());
+                                   globals.value("show_player_events_team").toBool()).toBool());
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
         connect(action, SIGNAL(triggered(bool)), SLOT(showTeamEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
@@ -395,7 +412,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
             action = show_events->addAction(tr("Auto-join"));
             action->setCheckable(item->id() != 0); // can't disable for main channel
             action->setChecked(item->id() == 0 ||
-                autojoinChannels.contains(channelNames.value(item->id())));
+                               autojoinChannels.contains(channelNames.value(item->id())));
             if (item->id() != 0) {
                 createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
                 connect(action, SIGNAL(triggered(bool)), SLOT(toggleAutoJoin(bool)));
@@ -753,9 +770,9 @@ void Client::showPlayerEvents(bool b, int event, QString option)
         /* make sure every setting is saved */
         QSettings globals;
         foreach (QString str, eventSettings()) {
-           if (!s.contains(str)) {
-               s.setValue(str, globals.value(str).toBool());
-           }
+            if (!s.contains(str)) {
+                s.setValue(str, globals.value(str).toBool());
+            }
         }
     } else {
         if (b) {
@@ -1506,7 +1523,7 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
     if (myplayersinfo.contains(winner))
         myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
     if (myplayersinfo.contains(loser))
-    myplayersinfo[loser].flags &= 0xFF ^ PlayerInfo::Battling;
+        myplayersinfo[loser].flags &= 0xFF ^ PlayerInfo::Battling;
 
     foreach(Battle b, battles) {
         if (myplayersinfo.contains(winner) && (b.id1 == winner || b.id2 == winner)) {
@@ -1768,8 +1785,8 @@ void Client::fadeAway()
             removePlayer(player);
         }
         continue;
-refresh:
-        refreshPlayer(player);
+        refresh:
+            refreshPlayer(player);
     }
 }
 

@@ -291,6 +291,7 @@ void Channel::playerReceived(int playerid) {
     changeName(playerid, client->name(playerid));
 
     item->setColor(client->color(playerid));
+    item->setText(1,QString::number(client->auth(playerid)));
 
     QString tier = client->tier(playerid);
     if (client->sortBT) {
@@ -547,6 +548,9 @@ QString Channel::addChannelLinks(const QString &line2)
 
 void Channel::checkFlash(const QString &haystack, const QString &needle)
 {
+    if (haystack.contains(QRegExp(needle, Qt::CaseInsensitive))) {
+        emit pactivated(this);
+    }
     /* Only activates if no window has focus */
     if (!QApplication::activeWindow()) {
         if (haystack.contains(QRegExp(needle, Qt::CaseInsensitive))) {
