@@ -3323,7 +3323,7 @@ struct MMMagicCoat : public MM
         } else {
             /* Entry hazards */
             if (tmove(b,s).targets == Move::OpposingTeam) {
-                foreach(int t, b.revs(s)) {
+                foreach(int t, b.targetList) {
                     if ((turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror))) {
                         target = t;
                         break;
