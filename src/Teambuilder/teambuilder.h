@@ -89,6 +89,7 @@ public slots:
     void importDone(const QString &text);
     void showNoFrame();
     void changeItemDisplay(bool allItems);
+    void enforceMinLevels(bool enforce);
     void setTierList(const QStringList &tiers);
 
 private:

@@ -2,6 +2,7 @@
 #include "teambuilder.h"
 #include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/movesetchecker.h"
 
 TB_Advanced::TB_Advanced(PokeTeam *_poke)
 {
@@ -103,7 +104,7 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
     levellayout->addWidget(l_lvl);
     levellayout->addWidget(level = new QSpinBox());
     l_lvl->setBuddy(level);
-    level->setRange(PokemonInfo::AbsoluteMinLevel(poke()->num(), gen()),100);
+    level->setRange(1,100);
     level->setValue(poke()->level());
     level->setAccelerated(true);
     connect(level, SIGNAL(valueChanged(int)), SLOT(changeLevel(int)));
@@ -330,7 +331,17 @@ void TB_Advanced::updateDV(int stat)
 
 void TB_Advanced::changeLevel(int level)
 {
-    poke()->level() =level;
+    if (level == poke()->level()) {
+        return;
+    }
+    if (MoveSetChecker::enforceMinLevels &&
+            PokemonInfo::AbsoluteMinLevel(poke()->num(), gen()) > level) {
+        level = PokemonInfo::AbsoluteMinLevel(poke()->num(), gen());
+        poke()->level() = level;
+        this->level->setValue(level);
+    } else {
+        poke()->level() = level;
+    }
     updateStats();
     emit levelChanged();
 }

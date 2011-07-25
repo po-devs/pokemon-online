@@ -50,7 +50,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("find_battle_range", 200);
 
     PokemonInfo::init("db/pokes/", FillMode::Client);
-    MoveSetChecker::init("db/pokes/");
+    MoveSetChecker::init("db/pokes/", settings.value("enforce_min_levels").toBool());
     ItemInfo::init("db/items/");
     MoveInfo::init("db/moves/");
     TypeInfo::init("db/types/");
@@ -61,6 +61,7 @@ MainEngine::MainEngine() : displayer(0)
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
     Theme::init(settings.value("theme_2").toString());
+    MoveSetChecker::enforceMinLevels =
 
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());

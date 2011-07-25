@@ -1,6 +1,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/pokemonstructs.h"
+#include "../PokemonInfo/movesetchecker.h"
 #include "teambuilder.h"
 #include "box.h"
 #include "advanced.h"
@@ -381,15 +382,19 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
 
     this->gens[team()->gen()-GEN_MIN]->setChecked(true);
 
-    QMenu *view = menuBar->addMenu(tr("&View"));
+    QMenu *view = menuBar->addMenu(tr("&Options"));
     QAction *items = view->addAction(tr("&Show all items"));
     view->addAction(tr("&Full Screen (for netbook users ONLY)"), this, SLOT(showNoFrame()), Qt::Key_F11);
+    QAction *forceMinLevels = view->addAction(tr("Enforce &minimum levels"));
 
-    items->setCheckable(true);
     QSettings s;
+    items->setCheckable(true);
     items->setChecked(s.value("show_all_items").toBool());
+    forceMinLevels->setCheckable(true);
+    forceMinLevels->setChecked(MoveSetChecker::enforceMinLevels);
 
     connect(items, SIGNAL(toggled(bool)), this, SLOT(changeItemDisplay(bool)));
+    connect(forceMinLevels, SIGNAL(toggled(bool)), this, SLOT(enforceMinLevels(bool)));
 
     return menuBar;
 }
@@ -401,6 +406,13 @@ void TeamBuilder::changeItemDisplay(bool b)
     for (int i = 0; i < 6; i++) {
         m_teamBody->pokeBody[i]->reloadItems(b);
     }
+}
+
+void TeamBuilder::enforceMinLevels(bool enforce)
+{
+    QSettings s;
+    s.setValue("enforce_min_levels", enforce);
+    MoveSetChecker::enforceMinLevels = enforce;
 }
 
 void TeamBuilder::showNoFrame()

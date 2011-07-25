@@ -14,6 +14,7 @@ bin/members.txt
 bin/pokemonlib.dll
 bin/utilities.dll
 bin/stdout.txt
+bin/serverplugins
 *.a
 
 # Ignore emacs temporary files
