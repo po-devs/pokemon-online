@@ -10,6 +10,7 @@ QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::legalCombinations[
 QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::eventCombinations[NUMBER_GENS];
 QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::breedingCombinations[NUMBER_GENS];
 QString MoveSetChecker::dir;
+bool MoveSetChecker::enforceMinLevels = true;
 
 QString MoveSetChecker::path(const QString &arg)
 {
@@ -48,9 +49,10 @@ void MoveSetChecker::loadCombinations(const QString &file, int gen, QHash<Pokemo
     }
 }
 
-void MoveSetChecker::init(const QString &dir)
+void MoveSetChecker::init(const QString &dir, bool enf)
 {
     MoveSetChecker::dir = dir;
+    MoveSetChecker::enforceMinLevels = enf;
 
     QList<Pokemon::uniqueId> ids = PokemonInfo::AllIds();
 
@@ -97,6 +99,9 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, int gen, const QSe
                              int level, bool maledw, QSet<int> *invalid_moves, QString *error) {
     QSet<int> moves = moves2;
     moves.remove(0);
+
+    if (!enforceMinLevels)
+        level = 100;
 
     int limit;
 

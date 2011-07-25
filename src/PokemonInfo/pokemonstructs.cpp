@@ -242,7 +242,7 @@ void PokePersonal::runCheck()
 
     int minLevel = PokemonInfo::AbsoluteMinLevel(num(), gen());
 
-    if (level() < minLevel) {
+    if (MoveSetChecker::enforceMinLevels && level() < minLevel) {
         level() = minLevel;
     }
 
