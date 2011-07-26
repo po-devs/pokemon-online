@@ -17,11 +17,7 @@ void BattleCounters::decreaseCounters() {
 
     while (it != counters.end()) {
         it.value() = it.value() - 1;
-        if (it.value() < 0) {
-            it = counters.erase(it);
-        } else {
-            ++it;
-        }
+        ++it;
     }
 }
 

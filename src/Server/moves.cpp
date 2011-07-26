@@ -2129,12 +2129,13 @@ struct MMTaunt : public MM
         if (b.koed(s))
             return;
 
-        if (!b.counters(s).hasCounter(BC::Taunt)) {
+        if (b.counters(s).counter(BC::Taunt) < 0) {
             removeFunction(poke(b,s), "MovesPossible", "Taunt");
             removeFunction(poke(b,s), "MovePossible", "Taunt");
             removeFunction(poke(b,s), "EndTurn611", "Taunt");
             if (b.gen() >= 4)
                 b.sendMoveMessage(134,2,s,Pokemon::Dark);
+            b.counters(s).removeCounter(BC::Taunt);
         }
     }
 
@@ -2383,10 +2384,11 @@ struct MMEncore : public MM
                 break;
             }
         }
-        if (!b.counters(s).hasCounter(BC::Encore)) {
+        if (b.counters(s).counter(BC::Encore) < 0) {
             removeFunction(poke(b,s), "MovesPossible", "Encore");
             removeFunction(poke(b,s), "EndTurn611", "Encore");
             b.sendMoveMessage(33,0,s);
+            b.counters(s).removeCounter(BC::Encore);
         }
     }
 
