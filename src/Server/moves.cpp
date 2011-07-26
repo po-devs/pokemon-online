@@ -2502,6 +2502,9 @@ struct MMFuryCutter : public MM
     }
 
     static void uas(int s, int, BS &b) {
+        if (b.gen() >= 5 && poke(b,s)["LastMoveUsed"].toInt() != FuryCutter) {
+            poke(b,s)["FuryCutterCount"] = 0;
+        }
         poke(b,s)["FuryCutterCount"] = std::min(poke(b,s)["FuryCutterCount"].toInt() * 2 + 1,15);
     }
 
