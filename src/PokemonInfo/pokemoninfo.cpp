@@ -1396,8 +1396,11 @@ int MoveInfo::Classification(int movenum, int g)
     return gen(g).category[movenum];
 }
 
-bool MoveInfo::FlinchByKingRock(int movenum)
+bool MoveInfo::FlinchByKingRock(int movenum, int gen)
 {
+    if (gen >= 5 && movenum == Move::BeatUp) {
+        return true;
+    }
     return m_KingRock[movenum];
 }
 

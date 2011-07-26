@@ -205,7 +205,7 @@ public:
     static bool Exists(int movenum, int gen);
     static bool isOHKO(int movenum, int gen);
     static bool isHM(int movenum, int gen);
-    static bool FlinchByKingRock(int movenum);
+    static bool FlinchByKingRock(int movenum, int gen);
     static int EffectRate(int movenum, int gen);
     static quint32 StatAffected(int movenum, int gen);
     static quint32 BoostOfStat(int movenum, int gen);
