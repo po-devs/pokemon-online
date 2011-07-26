@@ -68,11 +68,12 @@ struct MMDisable : public MM
 
     static void et (int s, int, BS &b)
     {
-        if (!b.counters(s).hasCounter(BC::Disable)) {
+        if (!b.counters(s).count(BC::Disable) < 0) {
             removeFunction(poke(b,s), "MovesPossible", "Disable");
             removeFunction(poke(b,s), "MovePossible", "Disable");
             removeFunction(poke(b,s), "EndTurn611", "Disable");
             b.sendMoveMessage(28,2,s);
+            b.counters(s).removeCounter(BC::Disable);
         }
     }
 
