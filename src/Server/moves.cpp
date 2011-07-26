@@ -50,7 +50,7 @@ MoveEffect::MoveEffect(int num, int gen, BattleSituation::BasicMoveInfo &data)
     data.statAffected = MoveInfo::StatAffected(num, gen);
     data.boostOfStat = MoveInfo::BoostOfStat(num, gen);
     data.rateOfStat = MoveInfo::RateOfStat(num, gen);
-    data.kingRock = MoveInfo::FlinchByKingRock(num);
+    data.kingRock = MoveInfo::FlinchByKingRock(num, gen);
 }
 
 /* There's gonna be tons of structures inheriting it,
