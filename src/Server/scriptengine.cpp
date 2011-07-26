@@ -624,7 +624,7 @@ void ScriptEngine::changePokeNum(int id, int slot, int num)
 {
     if (!testPlayer("changePokeNum(id, slot, item)", id) || !testRange("changePokeNum(id, slot, num)", slot, 0, 5))
         return;
-    if (!PokemonInfo::Exists(num, 4))
+    if (!PokemonInfo::Exists(num, myserver->player(id)->gen()))
         return;
     myserver->player(id)->team().poke(slot).num() = num;
 }
