@@ -2805,7 +2805,8 @@ struct MMHealingWish : public MM
     static void aaf(int s, int, BS &b) {
         if (!turn(b,s).contains("HealingWishSuccess"))
             return;
-        addFunction(turn(b,s), "AfterSwitchIn", "HealingWish", &asi);
+        /* In gen 5, it triggers before entry hazards */
+        addFunction(turn(b,s), b.gen() == 4 ? "AfterSwitchIn" : "UponSwitchIn", "HealingWish", &asi);
 
         /* On gen 5 and further, the pokemon is switched at the end of the turn! */
         if (b.gen() <= 4)
