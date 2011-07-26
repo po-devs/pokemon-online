@@ -2222,7 +2222,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     if (!specialOccurence) {
-        if (!isMovePossible(player, move)) {
+        if (PP(player, move) <= 0) {
+            /* Todo : notify of PP absence */
             goto trueend;
         }
 
