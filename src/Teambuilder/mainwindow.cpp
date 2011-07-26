@@ -49,6 +49,18 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("find_battle_range_on", true);
     setDefaultValue("find_battle_range", 200);
 
+    if (settings.value("use_socks5_proxy", false).toBool() == true) {
+        settings.beginGroup("socks5_proxy");
+        QNetworkProxy proxy;
+        proxy.setType(QNetworkProxy::Socks5Proxy);
+        proxy.setPort(settings.value("port", 27977).toInt());
+        proxy.setHostName(settings.value("host").toString());
+        proxy.setUser(settings.value("user").toString());
+        proxy.setPassword(settings.value("pass").toString());
+        settings.endGroup();
+        QNetworkProxy::setApplicationProxy(proxy);
+    }
+
     PokemonInfo::init("db/pokes/", FillMode::Client);
     MoveSetChecker::init("db/pokes/", settings.value("enforce_min_levels").toBool());
     ItemInfo::init("db/items/");
@@ -61,7 +73,6 @@ MainEngine::MainEngine() : displayer(0)
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
     Theme::init(settings.value("theme_2").toString());
-    MoveSetChecker::enforceMinLevels =
 
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());
