@@ -567,7 +567,7 @@ void Channel::printLine(const QString &line)
     }
 
     if (line.leftRef(3) == "***") {
-        checkFlash(line, QString("\\b%1\\b").arg(name(ownId())));
+        checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
         mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + addChannelLinks(escapeHtml(line)) + "</span><br />");
         return;
     }
@@ -585,7 +585,7 @@ void Channel::printLine(const QString &line)
         else
             checkFlash(end, "<ping */ *>");
 
-        checkFlash(end, QString("\\b%1\\b").arg(name(ownId())));
+        checkFlash(end, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
 
         end = addChannelLinks(end);
 
@@ -611,7 +611,7 @@ void Channel::printLine(const QString &line)
         }
         emit activated(this);
     } else {
-        checkFlash(line, QString("\\b%1\\b").arg(name(ownId())));
+        checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
         mainChat()->insertPlainText( timeStr + line + "\n");
     }
 }
