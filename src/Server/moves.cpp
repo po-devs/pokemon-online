@@ -2129,7 +2129,7 @@ struct MMTaunt : public MM
         if (b.koed(s))
             return;
 
-        if (b.counters(s).counter(BC::Taunt) < 0) {
+        if (b.counters(s).count(BC::Taunt) < 0) {
             removeFunction(poke(b,s), "MovesPossible", "Taunt");
             removeFunction(poke(b,s), "MovePossible", "Taunt");
             removeFunction(poke(b,s), "EndTurn611", "Taunt");
@@ -2384,7 +2384,7 @@ struct MMEncore : public MM
                 break;
             }
         }
-        if (b.counters(s).counter(BC::Encore) < 0) {
+        if (b.counters(s).count(BC::Encore) < 0) {
             removeFunction(poke(b,s), "MovesPossible", "Encore");
             removeFunction(poke(b,s), "EndTurn611", "Encore");
             b.sendMoveMessage(33,0,s);
