@@ -1366,7 +1366,7 @@ struct MMToxicSpikes : public MM
         if (team(b,source).value("SafeGuardCount").toInt() > 0) {
             return;
         }
-        if (b.ability(source) == Ability::MagicGuard) {
+        if (b.ability(source) == Ability::MagicGuard && b.gen() <= 4) {
             return;
         }
 
