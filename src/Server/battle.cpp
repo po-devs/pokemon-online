@@ -2605,6 +2605,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             turnMemory(target)["HadSubstitute"] = false;
         } else {
+            /* Needs to be called before DetermineAttackFailure because
+              of SapSipper/Leech Seed */
+            if (target != player) {
+                callaeffects(target,player,"OpponentBlock");
+            }
+            if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
+
             callpeffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
             calleffects(player, target, "DetermineAttackFailure");
@@ -2620,13 +2630,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
                 if (useBattleLog)
                     appendBattleLog("Failed", tr("But it failed!"));
-                continue;
-            }
-            if (target != player) {
-                callaeffects(target,player,"OpponentBlock");
-            }
-            if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
-                calleffects(player,target,"AttackSomehowFailed");
                 continue;
             }
 
