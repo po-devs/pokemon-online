@@ -4568,6 +4568,7 @@ struct MMUproar : public MM {
 
     static void ts(int s, int, BS &b) {
         turn(b,s)["NoChoice"] = true;
+        turn(b,s)["UproarBefore"] = true;
         MoveEffect::setup(poke(b,s)["UproarMove"].toInt(),s,s,b);
     }
 
