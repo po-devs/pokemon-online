@@ -1798,12 +1798,14 @@ struct MMBind : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        b.link(s, t, "Trapped");
-        BS::BasicMoveInfo &fm = tmove(b,s);
-        poke(b,t)["TrappedRemainingTurns"] = b.poke(s).item() == Item::GripClaw ?
-                    fm.maxTurns : (b.true_rand()%(fm.maxTurns+1-fm.minTurns)) + fm.minTurns; /* Grip claw = max turns */
-        poke(b,t)["TrappedMove"] = move(b,s);
-        addFunction(poke(b,t), "EndTurn68", "Bind", &et);
+        if (!b.linked(t, "Trapped")) {
+            b.link(s, t, "Trapped");
+            BS::BasicMoveInfo &fm = tmove(b,s);
+            poke(b,t)["TrappedRemainingTurns"] = b.poke(s).item() == Item::GripClaw ?
+                        fm.maxTurns : (b.true_rand()%(fm.maxTurns+1-fm.minTurns)) + fm.minTurns; /* Grip claw = max turns */
+            poke(b,t)["TrappedMove"] = move(b,s);
+            addFunction(poke(b,t), "EndTurn68", "Bind", &et);
+        }
     }
 
     static void et (int s, int, BS &b) {
