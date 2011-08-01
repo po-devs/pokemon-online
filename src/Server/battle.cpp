@@ -2421,6 +2421,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     foreach(int target, targetList) {
+        heatOfAttack() = true;
         attacked() = target;
         if (!specialOccurence && (tmove(player).flags & Move::MemorableFlag) ) {
             pokeMemory(target)["MirrorMoveMemory"] = attack;
