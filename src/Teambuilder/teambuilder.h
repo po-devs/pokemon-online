@@ -201,6 +201,7 @@ public:
     void updatePoke(int num);
     void changeGeneration(int gen);
     bool isAdvancedOpen() const;
+    void reloadItems(bool showAll);
 private slots:
     void changeIndex();
     void updateButton();
@@ -229,6 +230,8 @@ private:
     }
 
     int gen;
+
+    QStringListModel *itemsModel;
 
     void saveAdvancedState();
     void restoreAdvancedState();
@@ -280,7 +283,7 @@ class TB_PokemonBody : public QWidget
         LastColumn
     };
 public:
-    TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num, int gen=4);
+    TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num, int gen, QAbstractItemModel *itemsModel);
     void connectWithAdvanced(TB_Advanced *ptr);
 
     void updateNum();
@@ -289,8 +292,8 @@ public:
     PokeTeam *poke();
     int num() const {return m_num;}
 
-    void reloadItems(bool showAllItems);
     void changeGeneration(int gen);
+    void updateItem();
 
 public slots:
     void setNum(Pokemon::uniqueId pokeNum);
@@ -356,13 +359,11 @@ private:
 
     void initPokemons(TB_PokemonBody *copy = NULL);
     void initMoves();
-    void initItems();
 
     void configureMoves();
 
     void updateMoves();
     void updateNickname();
-    void updateItem();
     void updateNature();
     void updatePokeChoice();
     void updateTypes();
