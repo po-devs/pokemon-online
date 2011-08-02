@@ -1106,7 +1106,7 @@ QList<Pokemon::uniqueId> PokemonInfo::AllIds()
     return m_Names.keys();
 }
 
-void PokemonInfo::loadEvos(FillMode::FillModeType mode)
+void PokemonInfo::loadEvos(FillMode::FillModeType)
 {
     QHash<int, QList<int> > &evos = m_Evolutions;
 
