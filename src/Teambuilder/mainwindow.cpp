@@ -162,19 +162,28 @@ void MainEngine::launchCredits()
         return;
     }
     QDialog d_credit;
-    d_credit.setMaximumSize(800,600);
+    d_credit.setMaximumSize(800,700);
     QVBoxLayout * l = new QVBoxLayout();
+    QScrollArea *scroll = new QScrollArea();
     QLabel * credit = new QLabel();
-    //credit->setMaximumSize(800,600);
-    l->addWidget(credit);
-    credit->setAttribute(Qt::WA_DeleteOnClose,true);
+    credit->setMargin(5);
     QTextStream out(&fichier);
     credit->setText(out.readAll());
+    scroll->setWidget(credit);
+    //credit->setMaximumSize(800,600);
+    l->addWidget(scroll);
+    scroll->show();
+    credit->setAttribute(Qt::WA_DeleteOnClose,true);
+
+    scroll->adjustSize();
     //MainEngineRoutine(d_credit);
     d_credit.setLayout(l);
     d_credit.move(this->displayer->geometry().x(),this->displayer->geometry().y());
-    d_credit.setStyleSheet("background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
-                                                       "stop:0 white, stop:1 #0ca0dd);");
+    d_credit.setStyleSheet(
+                "QWidget {background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
+                                                       "stop:0 white, stop:1 #0ca0dd);}"
+                "QLabel {background:transparent}"
+                           );
     d_credit.exec();
 }
 
