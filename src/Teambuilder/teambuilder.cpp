@@ -761,6 +761,12 @@ TB_TeamBody::TB_TeamBody(TeamBuilder *parent, int gen, QAbstractItemModel *pokeM
     QStringList itemList = s.value("show_all_items").toBool() ? ItemInfo::SortedNames(gen) : ItemInfo::SortedUsefulNames(gen);
     itemsModel = new QStringListModel(itemList, this);
 
+    QStringList natures;
+    for (int i = 0; i < NatureInfo::NumberOfNatures(); i++) {
+        natures.push_back(NatureInfo::Name(i));
+    }
+    natureModel = new QStringListModel(natures, this);
+
     QWidget *props = new QWidget();
     QVBoxLayout *ml = new QVBoxLayout(props);
 
@@ -778,7 +784,8 @@ TB_TeamBody::TB_TeamBody(TeamBuilder *parent, int gen, QAbstractItemModel *pokeM
     body = new QStackedWidget();
     ml->addWidget(body);
     for (int i = 0; i < 6; i++) {
-        body->addWidget(pokeBody[i] = new TB_PokemonBody(parent, &trainerTeam()->team().poke(i), i, gen, itemsModel, pokeModel));
+        body->addWidget(pokeBody[i] = new TB_PokemonBody(parent, &trainerTeam()->team().poke(i), i, gen, itemsModel, pokeModel,
+                                                         natureModel));
     }
 
     pokeButtons[0]->setChecked(true);
@@ -986,7 +993,7 @@ TB_PokeChoice::TB_PokeChoice(QAbstractItemModel *model, bool missingno)
     verticalHeader()->hide();
     horizontalHeader()->hide();
 
-    horizontalHeader()->setDefaultSectionSize(50);
+    horizontalHeader()->setDefaultSectionSize(40);
     horizontalHeader()->setStretchLastSection(true);
 
     setDragEnabled(true);
@@ -995,7 +1002,7 @@ TB_PokeChoice::TB_PokeChoice(QAbstractItemModel *model, bool missingno)
     setModel(model);
 
     if (!missingno) {
-        hideRow(0);
+        //hideRow(0);
     }
 
     connect(this, SIGNAL(activated(QModelIndex)), SLOT(activatedCell(QModelIndex)));
@@ -1051,7 +1058,8 @@ void TB_PokeChoice::startDrag()
 /************ POKEMON BODY ********************/
 /**********************************************/
 
-TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, int gen, QAbstractItemModel *itemModel, QAbstractItemModel *pokeModel)
+TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, int gen, QAbstractItemModel *itemModel,
+                               QAbstractItemModel *pokeModel, QAbstractItemModel *natureModel)
 {
     m_poke = _poke;
     m_num = num;
@@ -1139,10 +1147,7 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, 
     box22->addWidget(naturechoice = new QComboBox());
     nature->setBuddy(naturechoice);
     nature->setObjectName("NormalText");
-    for (int i = 0; i < NatureInfo::NumberOfNatures(); i++)
-    {
-        naturechoice->addItem(NatureInfo::Name(i));
-    }
+    naturechoice->setModel(natureModel);
 
     /*** Box 3 ***/
     evchoice = new TB_EVManager(poke());  

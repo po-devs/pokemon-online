@@ -236,7 +236,7 @@ private:
 
     int gen;
 
-    QStringListModel *itemsModel;
+    QStringListModel *itemsModel, *natureModel;
     void saveAdvancedState();
     void restoreAdvancedState();
 
@@ -284,7 +284,7 @@ class TB_PokemonBody : public QWidget
     };
 public:
     TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num, int gen, QAbstractItemModel *itemsModel,
-                   QAbstractItemModel *pokeModel);
+                   QAbstractItemModel *pokeModel, QAbstractItemModel *natureModel);
     void connectWithAdvanced(TB_Advanced *ptr);
 
     void updateNum();
