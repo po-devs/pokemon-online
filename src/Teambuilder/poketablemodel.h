@@ -12,12 +12,6 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
 
     void setGen(int gen);
-
-    enum {
-        PokenumRole = Qt::UserRole+1,
-        PokenameRole,
-        PokeimageRole
-    };
 private:
     int gen;
 };

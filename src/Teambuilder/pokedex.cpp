@@ -4,6 +4,7 @@
 #include "teambuilder.h"
 #include "theme.h"
 #include "poketablemodel.h"
+#include "modelenum.h"
 
 Pokedex::Pokedex(TeamBuilder *parent, QAbstractItemModel *model)
     : QWidget(parent)
@@ -398,7 +399,7 @@ void PokedexBody::changeToPokemon(Pokemon::uniqueId poke)
 
 void PokedexBody::changePokemonFromRow(const QModelIndex &index)
 {
-    changeToPokemon(index.data(PokeTableModel::PokenameRole).toString());
+    changeToPokemon(index.data(CustomModel::PokenameRole).toString());
 }
 
 void PokedexBody::openAdvancedSearch()
