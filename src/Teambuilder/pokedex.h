@@ -16,7 +16,7 @@ class Pokedex : public QWidget
 {
     Q_OBJECT
 public:
-    Pokedex(TeamBuilder *parent);
+    Pokedex(TeamBuilder *parent, QAbstractItemModel *pokeModel);
 public slots:
     void showTypeChart();
 private:
@@ -59,7 +59,7 @@ class PokedexBody : public QFrame
         SortByAlph = 1
     };
 public:
-    PokedexBody();
+    PokedexBody(QAbstractItemModel *model);
 
     void changeToPokemon(Pokemon::uniqueId poke);
 public slots:
@@ -71,7 +71,7 @@ signals:
 private slots:
     void changeToPokemon(const QString &);
     void changePokemon();
-    void changePokemonFromRow(int);
+    void changePokemonFromRow(const QModelIndex &index);
 private:
     Pokemon::uniqueId currentPoke;
     TB_PokeChoice * pokeList;

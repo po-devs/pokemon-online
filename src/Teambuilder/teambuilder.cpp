@@ -3,6 +3,7 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/movesetchecker.h"
 #include "teambuilder.h"
+#include "poketablemodel.h"
 #include "box.h"
 #include "advanced.h"
 #include "mainwindow.h"
@@ -153,6 +154,8 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
     currentZoneLabel->setPixmap(Theme::Sprite("poketrainer"));
     upButtons->addWidget(currentZoneLabel,0, Qt::AlignTop);
 
+    pokeModel = new PokeTableModel(gen(), this);
+
     /* Starting doing the "body" */
     m_body = new QStackedWidget(this);
     m_body->layout()->setMargin(0);
@@ -162,7 +165,7 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
     m_body->addWidget(m_trainerBody);
 
     /* Team Body */
-    m_teamBody = new TB_TeamBody(this, team()->gen());
+    m_teamBody = new TB_TeamBody(this, gen(), pokeModel);
     m_body->addWidget(m_teamBody);
 
     /* Pokemon Boxes */
@@ -170,7 +173,7 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
     m_body->addWidget(m_boxes);
 
     /* Pokedex */
-    m_pokedex = new Pokedex(this);
+    m_pokedex = new Pokedex(this, pokeModel);
     m_body->addWidget(m_pokedex);
     vl->addWidget(m_body, 585-2*54);
 
@@ -222,6 +225,10 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
     updateAll();
 }
 
+int TeamBuilder::gen() const
+{
+    return team()->gen();
+}
 
 Team* TeamBuilder::team()
 {
@@ -229,6 +236,16 @@ Team* TeamBuilder::team()
 }
 
 TrainerTeam * TeamBuilder::trainerTeam()
+{
+    return m_team;
+}
+
+Team* TeamBuilder::team() const
+{
+    return & m_team->team();
+}
+
+TrainerTeam * TeamBuilder::trainerTeam() const
 {
     return m_team;
 }
@@ -249,6 +266,7 @@ void TeamBuilder::changeZone()
 void TeamBuilder::genChanged() {
     int gen = sender()->property("gen").toInt();
 
+    pokeModel->setGen(gen);
     m_teamBody->changeGeneration(gen);
 }
 
@@ -731,7 +749,7 @@ void TeamPokeButton::startDrag()
 /**************** TEAM BODY ******************/
 /*********************************************/
 
-TB_TeamBody::TB_TeamBody(TeamBuilder *parent, int gen) : m_dockAdvanced(0), m_team(parent->trainerTeam()), gen(gen)
+TB_TeamBody::TB_TeamBody(TeamBuilder *parent, int gen, QAbstractItemModel *pokeModel) : m_dockAdvanced(0), m_team(parent->trainerTeam()), gen(gen)
 {
     QHBoxLayout *hh = new QHBoxLayout(this);
     hh->setMargin(0);
@@ -760,7 +778,7 @@ TB_TeamBody::TB_TeamBody(TeamBuilder *parent, int gen) : m_dockAdvanced(0), m_te
     body = new QStackedWidget();
     ml->addWidget(body);
     for (int i = 0; i < 6; i++) {
-        body->addWidget(pokeBody[i] = new TB_PokemonBody(parent, &trainerTeam()->team().poke(i), i, gen, itemsModel));
+        body->addWidget(pokeBody[i] = new TB_PokemonBody(parent, &trainerTeam()->team().poke(i), i, gen, itemsModel, pokeModel));
     }
 
     pokeButtons[0]->setChecked(true);
@@ -883,6 +901,9 @@ void TB_TeamBody::changeGeneration(int gen)
     this->gen = gen;
     trainerTeam()->team().setGen(gen);
 
+    QSettings s;
+    reloadItems(s.value("show_all_items").toBool());
+
     for(int i = 0; i < 6; i++) {
         pokeBody[i]->changeGeneration(gen);
     }
@@ -949,52 +970,42 @@ void TB_TeamBody::advancedDestroyed()
 /************* POKEMON CHOICE *****************/
 /**********************************************/
 
-TB_PokeChoice::TB_PokeChoice(int gen, bool missingno) : QCompactTable(PokemonInfo::TrueCount(gen) - !missingno, 2)
-{
-    this->missingno = missingno;
-    this->gen = gen;
+QSize TB_PokeChoice::sizeHint() const {
+    //Overrides QTableView's size hint which is too big
+    return QWidget::sizeHint();
+}
 
+TB_PokeChoice::TB_PokeChoice(QAbstractItemModel *model, bool missingno)
+{
     setObjectName("PokeChoice");
 
-    setFixedWidth(150);
-
+    verticalHeader()->setDefaultSectionSize(22);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    setShowGrid(false);
+    verticalHeader()->hide();
     horizontalHeader()->hide();
-    horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
 
-    /* Adding the poke names */
-    for (int i = missingno ? 0 : 1; i < PokemonInfo::TrueCount(gen); i++)
-    {
-        setItem(i-!missingno, 0, new QTableWidgetItem(QString::number(i).rightJustified(3,'0')));
-        setItem(i-!missingno, 1, new QTableWidgetItem(PokemonInfo::Name(i)));
+    horizontalHeader()->setDefaultSectionSize(50);
+    horizontalHeader()->setStretchLastSection(true);
+
+    setDragEnabled(true);
+    setDragDropMode(QAbstractItemView::DragOnly);
+
+    setModel(model);
+
+    if (!missingno) {
+        hideRow(0);
     }
 
-    connect(this, SIGNAL(cellActivated(int,int)), SLOT(activatedCell(int)));
-
-    resizeRowsToContents();
+    connect(this, SIGNAL(activated(QModelIndex)), SLOT(activatedCell(QModelIndex)));
 }
 
-void TB_PokeChoice::activatedCell(int row)
+void TB_PokeChoice::activatedCell(const QModelIndex &index)
 {
-    int num = item(row, 0)->text().toInt();
+    int num = model()->data(index, PokeTableModel::PokenumRole).toInt();
 
     emit pokemonActivated(Pokemon::uniqueId(num, 0));
-}
-
-void TB_PokeChoice::changeGen(int gen)
-{
-    if (this->gen == gen)
-        return;
-
-    int oldCount = rowCount();
-    this->gen = gen;
-
-    setRowCount(PokemonInfo::TrueCount(gen) - !missingno);
-
-    /* Only update rows that are not filled */
-    for (int x = oldCount; x < rowCount(); x++) {
-        setItem(x-!missingno, 0, new QTableWidgetItem(QString::number(x).rightJustified(3,'0')));
-        setItem(x-!missingno, 1, new QTableWidgetItem(PokemonInfo::Name(x)));
-    }
 }
 
 void TB_PokeChoice::mousePressEvent(QMouseEvent *event)
@@ -1002,9 +1013,9 @@ void TB_PokeChoice::mousePressEvent(QMouseEvent *event)
     if(event->button() == Qt::LeftButton)
     {
         startPos = event->pos();
-        itemForDrag = this->itemAt(event->pos());
+        dragIndex = indexAt(event->pos());
     }
-    QCompactTable::mousePressEvent(event);
+    QTableView::mousePressEvent(event);
 }
 
 void TB_PokeChoice::mouseMoveEvent(QMouseEvent *event)
@@ -1017,22 +1028,21 @@ void TB_PokeChoice::mouseMoveEvent(QMouseEvent *event)
             startDrag();
         }
     }
-    QCompactTable::mouseMoveEvent(event);
+    QTableView::mouseMoveEvent(event);
 }
 
 void TB_PokeChoice::startDrag()
 {
     QMimeData * data = new QMimeData();
-    if(itemForDrag)
+    if(dragIndex.isValid())
     {
-        itemForDrag = item(itemForDrag->row(),0);
-
-        data->setText(itemForDrag->text());
-        data->setImageData(PokemonInfo::Picture(itemForDrag->text().toInt(), gen));
+        QVariant num = dragIndex.data(PokeTableModel::PokenumRole);
+        data->setText(num.toString());
+        data->setImageData(dragIndex.data(PokeTableModel::PokeimageRole).value<QPixmap>());
 
         QDrag * drag = new QDrag(this);
         drag->setMimeData(data);
-        drag->setPixmap(PokemonInfo::Picture(itemForDrag->text().toInt(), gen));
+        drag->setPixmap(dragIndex.data(PokeTableModel::PokeimageRole).value<QPixmap>());
         drag->exec(Qt::MoveAction);
     }
 }
@@ -1041,7 +1051,7 @@ void TB_PokeChoice::startDrag()
 /************ POKEMON BODY ********************/
 /**********************************************/
 
-TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, int gen, QAbstractItemModel *itemModel)
+TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, int gen, QAbstractItemModel *itemModel, QAbstractItemModel *pokeModel)
 {
     m_poke = _poke;
     m_num = num;
@@ -1055,7 +1065,7 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, 
     ml->addLayout(box1,0,0,2,1);
 
     box1->addWidget(new Pokeballed(m_pokeedit = new QLineEdit()));
-    box1->addWidget(pokechoice = new TB_PokeChoice(gen, true),100);
+    box1->addWidget(pokechoice = new TB_PokeChoice(pokeModel, true),100);
 
     box1->addWidget(new TitledWidget(tr("&Nickname"),m_nick = new QLineEdit()));
     m_nick->setValidator(new QNickValidator(m_nick));
@@ -1173,7 +1183,6 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, 
 void TB_PokemonBody::changeGeneration(int gen)
 {
     this->gen = gen;
-    pokechoice->changeGen(gen);
 
     poke()->setGen(gen);
     poke()->loadQuietly();
@@ -1361,7 +1370,7 @@ void TB_PokemonBody::updatePokeChoice()
 {
     Pokemon::uniqueId original = PokemonInfo::OriginalForme(poke()->num());
     m_pokeedit->setText(PokemonInfo::Name(original));
-    pokechoice->setCurrentCell(original.pokenum, 1, QItemSelectionModel::Rows);
+    pokechoice->setCurrentIndex(pokechoice->currentIndex().sibling(original.pokenum, 1));
     pokechoice->scrollTo(pokechoice->currentIndex(), QAbstractItemView::PositionAtCenter);
 }
 

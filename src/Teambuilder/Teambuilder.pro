@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     channel.cpp \
     tierstruct.cpp \
     theme.cpp \
-    rearrangewindow.cpp
+    rearrangewindow.cpp \
+    poketablemodel.cpp
 HEADERS += teambuilder.h \
     ../PokemonInfo/pokemoninfo.h \
     advanced.h \
@@ -60,7 +61,8 @@ HEADERS += teambuilder.h \
     theme.h \
     rearrangewindow.h \
     ui_controlpanel.h \
-    ../Shared/networkcommands.h
+    ../Shared/networkcommands.h \
+    poketablemodel.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities
