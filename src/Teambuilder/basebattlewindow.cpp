@@ -188,7 +188,8 @@ void BaseBattleWindow::enqueueMusic()
 
 void BaseBattleWindow::criesProblem(Phonon::State newState)
 {
-    if (newState != Phonon::PlayingState && newState != Phonon::LoadingState && undelayOnSounds) {
+    if (newState != Phonon::PlayingState && newState != Phonon::LoadingState && newState != Phonon::BufferingState
+            && undelayOnSounds) {
         undelay();
     }
 }
