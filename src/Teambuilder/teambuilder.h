@@ -17,6 +17,7 @@ class TB_EVManager;
 class DockAdvanced;
 class TB_Advanced;
 
+class PokeTableModel;
 class TrainerTeam;
 class Team;
 class PokeTeam;
@@ -69,6 +70,8 @@ public:
 
     TrainerTeam *trainerTeam();
     Team *team();
+    TrainerTeam *trainerTeam() const;
+    Team *team() const;
 
     /* Create a menu bar to give to the main window */
     QMenuBar *createMenuBar(MainEngine *w);
@@ -116,8 +119,10 @@ private:
     TB_TrainerBody *m_trainerBody;
     TB_TeamBody *m_teamBody;
     TB_PokemonBoxes *m_boxes;
+    PokeTableModel *pokeModel;
     Pokedex *m_pokedex;
     QAction *gens[NUMBER_GENS];
+    int gen() const;
 
     QImageButton *buttons[LastW];
     QLabel *currentZoneLabel;
@@ -194,7 +199,7 @@ class TB_TeamBody: public QWidget
 {
     Q_OBJECT
 public:
-    TB_TeamBody(TeamBuilder *parent, int gen=4);
+    TB_TeamBody(TeamBuilder *parent, int gen, QAbstractItemModel *pokeModel);
     ~TB_TeamBody();
 
     void updateTeam();
@@ -232,7 +237,6 @@ private:
     int gen;
 
     QStringListModel *itemsModel;
-
     void saveAdvancedState();
     void restoreAdvancedState();
 
@@ -240,18 +244,17 @@ private:
 };
 
 /* The list of pokemons */
-class TB_PokeChoice : public QCompactTable
+class TB_PokeChoice : public QTableView
 {
     Q_OBJECT
 
 public:
-    TB_PokeChoice(int gen, bool missingno);
-
-    void changeGen(int gen);
+    TB_PokeChoice(QAbstractItemModel *model, bool missingno);
+    QSize sizeHint() const;
 signals:
     void pokemonActivated(Pokemon::uniqueId num);
 public slots:
-    void activatedCell(int row);
+    void activatedCell(const QModelIndex &index);
 protected:
     void mousePressEvent(QMouseEvent * event);
     void mouseMoveEvent(QMouseEvent * event);
@@ -260,10 +263,7 @@ private:
     void startDrag();
 
     QPoint startPos;
-    QTableWidgetItem * itemForDrag;
-
-    bool missingno;
-    int gen;
+    QModelIndex dragIndex;
 };
 
 /* This is the widget displaying the pokemon's info, moves, item, ... */
@@ -283,7 +283,8 @@ class TB_PokemonBody : public QWidget
         LastColumn
     };
 public:
-    TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num, int gen, QAbstractItemModel *itemsModel);
+    TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num, int gen, QAbstractItemModel *itemsModel,
+                   QAbstractItemModel *pokeModel);
     void connectWithAdvanced(TB_Advanced *ptr);
 
     void updateNum();

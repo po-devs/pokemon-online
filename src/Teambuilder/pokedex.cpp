@@ -3,8 +3,9 @@
 #include "pokedex.h"
 #include "teambuilder.h"
 #include "theme.h"
+#include "poketablemodel.h"
 
-Pokedex::Pokedex(TeamBuilder *parent)
+Pokedex::Pokedex(TeamBuilder *parent, QAbstractItemModel *model)
     : QWidget(parent)
 {
     QLabel *pokedexText = new QLabel(this);
@@ -38,7 +39,7 @@ Pokedex::Pokedex(TeamBuilder *parent)
 
     BigOpenPokeBall *bop = new BigOpenPokeBall();
     secondCol->addWidget(bop,0,Qt::AlignRight);
-    PokedexBody *body = new PokedexBody();
+    PokedexBody *body = new PokedexBody(model);
     secondCol->addWidget(body, 100);
 
     connect(body, SIGNAL(pokeChanged(Pokemon::uniqueId)), bop, SLOT(changeToPokemon(Pokemon::uniqueId)));
@@ -289,7 +290,7 @@ bool BigOpenPokeBall::shiny() const
 /****************************************************/
 /*********** POKEDEX BODY ***************************/
 /****************************************************/
-PokedexBody::PokedexBody()
+PokedexBody::PokedexBody(QAbstractItemModel *pokeModel)
 {
     //setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QHBoxLayout *hl = new QHBoxLayout(this);
@@ -301,7 +302,7 @@ PokedexBody::PokedexBody()
     QPushButton *advSearch;
     col1->addWidget(advSearch = new QPushButton(QIcon(Theme::Sprite("orangedisc")), tr("&Advanced Search")));
     col1->addWidget(pokeEdit = new QLineEdit());
-    pokeList = new TB_PokeChoice(GEN_MAX, false);
+    pokeList = new TB_PokeChoice(pokeModel, false);
     pokeList->verticalHeader()->setDefaultSectionSize(30);
     QCompleter *comp = new QCompleter(pokeEdit);
     comp->setModel(pokeList->model());
@@ -313,7 +314,7 @@ PokedexBody::PokedexBody()
 
     connect(comp, SIGNAL(activated(QString)), this, SLOT(changeToPokemon(QString)));
     connect(pokeEdit, SIGNAL(returnPressed()), SLOT(changePokemon()));
-    connect(pokeList, SIGNAL(cellActivated(int,int)), SLOT(changePokemonFromRow(int)));
+    connect(pokeList, SIGNAL(activated(QModelIndex)), SLOT(changePokemonFromRow(QModelIndex)));
     connect(advSearch, SIGNAL(clicked()), SLOT(openAdvancedSearch()));
 
     /* Buttons at the bottom */
@@ -395,9 +396,9 @@ void PokedexBody::changeToPokemon(Pokemon::uniqueId poke)
     pokeEdit->setText(PokemonInfo::Name(poke));
 }
 
-void PokedexBody::changePokemonFromRow(int row)
+void PokedexBody::changePokemonFromRow(const QModelIndex &index)
 {
-    changeToPokemon(pokeList->item(row, SortByAlph)->text());
+    changeToPokemon(index.data(PokeTableModel::PokenameRole).toString());
 }
 
 void PokedexBody::openAdvancedSearch()

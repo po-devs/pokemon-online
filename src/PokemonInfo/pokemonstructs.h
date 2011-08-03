@@ -2257,4 +2257,6 @@ inline uint qHash(const Pokemon::uniqueId &key)
 QDataStream & operator << (QDataStream &out, const Pokemon::uniqueId &id);
 QDataStream & operator >> (QDataStream &in, Pokemon::uniqueId &id);
 
+Q_DECLARE_METATYPE(Pokemon::uniqueId);
+
 #endif // POKEMONSTRUCTS_H
