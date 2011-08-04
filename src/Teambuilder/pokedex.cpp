@@ -1,5 +1,6 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
+#include "pokemovesmodel.h"
 #include "pokedex.h"
 #include "teambuilder.h"
 #include "theme.h"
@@ -692,65 +693,30 @@ void StatTab::decreaseBoost()
 MoveTab::MoveTab()
 {
     QVBoxLayout *v = new QVBoxLayout(this);
-    moves = new QCompactTable(0, 6);
+    moves = new QTableView();
+    QSortFilterProxyModel *filter=  new QSortFilterProxyModel(this);
+    filter->setSourceModel(movesModel = new PokeMovesModel(1, GEN_MAX, this));
+    moves->setModel(filter);
+    moves->hideColumn(PokeMovesModel::Learning);
 
     v->addWidget(moves);
-    moves->setIconSize(QSize(48,19));
+    moves->setIconSize(Theme::TypePicture(Type::Normal).size());
+    moves->verticalHeader()->hide();
+    moves->setShowGrid(false);
+    moves->setSelectionBehavior(QAbstractItemView::SelectRows);
+    moves->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    QStringList move_headers;
-    move_headers << tr("Type") << tr("Name", "AttackName") << tr("PP") << tr("Pow") << tr("Acc") << tr("Category");
-    moves->setHorizontalHeaderLabels(move_headers);
-    moves->resizeRowsToContents();
     moves->horizontalHeader()->setStretchLastSection(true);
-    moves->horizontalHeader()->setResizeMode(TypeCol, QHeaderView::Fixed);
-    moves->horizontalHeader()->resizeSection(TypeCol, 54);
-    moves->horizontalHeader()->setResizeMode(PPCol, QHeaderView::Fixed);
-    moves->horizontalHeader()->resizeSection(PPCol, 25);
-    moves->horizontalHeader()->setResizeMode(PowerCol, QHeaderView::Fixed);
-    moves->horizontalHeader()->resizeSection(PowerCol, 32);
-    moves->horizontalHeader()->setResizeMode(AccCol, QHeaderView::Fixed);
-    moves->horizontalHeader()->resizeSection(AccCol, 32);
-    moves->horizontalHeader()->setResizeMode(NameCol, QHeaderView::Fixed);
-    moves->horizontalHeader()->resizeSection(NameCol, 100);
-
-    changePoke(1);
+    moves->horizontalHeader()->resizeSection(PokeMovesModel::Type, Theme::TypePicture(Type::Normal).width()+5);
+    moves->horizontalHeader()->resizeSection(PokeMovesModel::PP, 25);
+    moves->horizontalHeader()->resizeSection(PokeMovesModel::Pow, 32);
+    moves->horizontalHeader()->resizeSection(PokeMovesModel::Acc, 32);
+    moves->horizontalHeader()->resizeSection(PokeMovesModel::Name, 100);
 }
 
 void MoveTab::changePoke(Pokemon::uniqueId poke)
 {
-    moves->setSortingEnabled(false);
-
-    QSet<int> moveList = PokemonInfo::Moves(poke);
-
-    moves->setRowCount(moveList.count());
-
-    QSet<int>::iterator it = moveList.begin();
-
-
-    QFont invisible("Verdana", 0);
-
-    for (int i = 0; it != moveList.end(); ++it, ++i)
-    {
-        int move = *it;
-
-        /* Invisible text used for sorting types */
-        int type = MoveInfo::Type(move, GEN_MAX);
-        QTableWidgetItem *w = new QTableWidgetItem(QIcon(Theme::TypePicture(type)), QString::number(type));
-        w->setFont(invisible);
-        moves->setItem(i, TypeCol, w);
-
-        moves->setItem(i, NameCol,new QTableWidgetItem(MoveInfo::Name(move)));
-        moves->setItem(i, PPCol,new QTableWidgetItem(QString::number(MoveInfo::PP(move, GEN_MAX))));
-        moves->setItem(i, PowerCol,new QTableWidgetItem(MoveInfo::PowerS(move, GEN_MAX)));
-        moves->setItem(i, AccCol,new QTableWidgetItem(MoveInfo::AccS(move, GEN_MAX)));
-
-        QTableWidgetItem *witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(move, GEN_MAX)));
-        witem->setForeground(Theme::CategoryColor(MoveInfo::Category(move, GEN_MAX)));
-        moves->setItem(i, CategoryCol, witem);
-    }
-
-    moves->sortByColumn(NameCol, Qt::AscendingOrder);
-    moves->setSortingEnabled(true);
+    movesModel->setPokemon(poke, GEN_MAX);
 }
 
 /****************************************************/
@@ -813,8 +779,6 @@ TypeText::TypeText(int type, const QString &text)
 /*********************************************************/
 /*************** TYPE CHART ******************************/
 /*********************************************************/
-
-
 
 TypeChart::TypeChart(QWidget *parent) : QWidget(parent)
 {
