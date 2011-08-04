@@ -4,12 +4,14 @@
 #include "../PokemonInfo/movesetchecker.h"
 #include "teambuilder.h"
 #include "poketablemodel.h"
+#include "pokemovesmodel.h"
 #include "box.h"
 #include "advanced.h"
 #include "mainwindow.h"
 #include "pokedex.h"
 #include "dockinterface.h"
 #include "theme.h"
+#include "modelenum.h"
 
 template <class T, class U>
         QSet<QPair<typename T::value_type, U> > map_container_with_value(T container, const U & value)
@@ -1010,7 +1012,7 @@ TB_PokeChoice::TB_PokeChoice(QAbstractItemModel *model, bool missingno)
 
 void TB_PokeChoice::activatedCell(const QModelIndex &index)
 {
-    int num = model()->data(index, PokeTableModel::PokenumRole).toInt();
+    int num = model()->data(index, CustomModel::PokenumRole).toInt();
 
     emit pokemonActivated(Pokemon::uniqueId(num, 0));
 }
@@ -1043,13 +1045,13 @@ void TB_PokeChoice::startDrag()
     QMimeData * data = new QMimeData();
     if(dragIndex.isValid())
     {
-        QVariant num = dragIndex.data(PokeTableModel::PokenumRole);
+        QVariant num = dragIndex.data(CustomModel::PokenumRole);
         data->setText(num.toString());
-        data->setImageData(dragIndex.data(PokeTableModel::PokeimageRole).value<QPixmap>());
+        data->setImageData(dragIndex.data(CustomModel::PokeimageRole).value<QPixmap>());
 
         QDrag * drag = new QDrag(this);
         drag->setMimeData(data);
-        drag->setPixmap(dragIndex.data(PokeTableModel::PokeimageRole).value<QPixmap>());
+        drag->setPixmap(dragIndex.data(CustomModel::PokeimageRole).value<QPixmap>());
         drag->exec(Qt::MoveAction);
     }
 }
@@ -1064,6 +1066,8 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, 
     m_poke = _poke;
     m_num = num;
     this->gen = gen;
+
+    movesModel = new PokeMovesModel(poke()->num(), gen, this);
 
     QGridLayout *ml = new QGridLayout(this);
     ml->setMargin(0);
@@ -1161,7 +1165,7 @@ TB_PokemonBody::TB_PokemonBody(TeamBuilder *upparent, PokeTeam *_poke, int num, 
     ml->setColumnStretch(2, 100);
     box4->setSpacing(0);
 
-    movechoice = new MoveList();
+    movechoice = new MoveList(movesModel);
     box4->addWidget(movechoice, 0, 0, 1, 4);
     for (int i = 0; i < 4; i++)
     {
@@ -1232,7 +1236,7 @@ void TB_PokemonBody::initPokemons(TB_PokemonBody *)
 
 void TB_PokemonBody::initMoves()
 {
-    connect(movechoice, SIGNAL(cellActivated(int,int)), SLOT(moveEntered(int)));
+    connect(movechoice, SIGNAL(activated(QModelIndex)), SLOT(moveEntered(QModelIndex)));
     connect(this, SIGNAL(moveChosen(int)), SLOT(setMove(int)));
 
     QSignalMapper *mapper = new QSignalMapper(this);
@@ -1242,7 +1246,7 @@ void TB_PokemonBody::initMoves()
     {
         QCompleter *completer = new QCompleter(m_moves[i]);
         completer->setModel(movechoice->model());
-        completer->setCompletionColumn(Name);
+        completer->setCompletionColumn(PokeMovesModel::Name);
         completer->setCaseSensitivity(Qt::CaseInsensitive);
         completer->setCompletionMode(QCompleter::PopupCompletion);
         m_moves[i]->setCompleter(completer);
@@ -1259,37 +1263,30 @@ void TB_PokemonBody::initMoves()
     connect(mapper, SIGNAL(mapped(int)), SLOT(moveCellActivated(int)));
 }
 
-TB_PokemonBody::MoveList::MoveList() : QCompactTable(0,7)
+TB_PokemonBody::MoveList::MoveList(QAbstractItemModel *model)
 {
-    QStringList move_headers;
-    move_headers << tr("Type") << tr("Name", "AttackName") << tr("Learning") << tr("PP") << tr("Pow") << tr("Acc") << tr("Category");
-    setHorizontalHeaderLabels(move_headers);
-    resizeRowsToContents();
+    verticalHeader()->setDefaultSectionSize(22);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    setShowGrid(false);
+    verticalHeader()->hide();
+
+    setIconSize(Theme::TypePicture(Type::Normal).size());
+    QSortFilterProxyModel *filterModel = new QSortFilterProxyModel(this);
+    filterModel->setSourceModel(model);
+    setModel(filterModel);
+    //resizeRowsToContents();
     horizontalHeader()->setStretchLastSection(true);
-    horizontalHeader()->setResizeMode(PP, QHeaderView::ResizeToContents);
-    horizontalHeader()->setResizeMode(Pow, QHeaderView::ResizeToContents);
-    horizontalHeader()->setResizeMode(Acc, QHeaderView::ResizeToContents);
-    horizontalHeader()->setResizeMode(Name, QHeaderView::Fixed);
-    horizontalHeader()->resizeSection(Name, 125);
-    horizontalHeader()->setResizeMode(Type, QHeaderView::Fixed);
-    horizontalHeader()->resizeSection(Type, 54);
-    setIconSize(QSize(48,19));
+    horizontalHeader()->setResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
+    horizontalHeader()->setResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
+    horizontalHeader()->setResizeMode(PokeMovesModel::Acc, QHeaderView::ResizeToContents);
+    horizontalHeader()->setResizeMode(PokeMovesModel::Name, QHeaderView::Fixed);
+    horizontalHeader()->resizeSection(PokeMovesModel::Name, 125);
+    //horizontalHeader()->setResizeMode(PokeMovesModel::Type, QHeaderView::Fixed);
+    horizontalHeader()->resizeSection(PokeMovesModel::Type, 54);
+    setSortingEnabled(true);
+    connect(horizontalHeader(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), SLOT(sortByColumn(int)));
 }
-
-bool TB_PokemonBody::MoveList::event(QEvent * event)
-{
-    if (event->type() == QEvent::ToolTip) {
-        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
-
-        int row  = this->rowAt(helpEvent->pos().y() - horizontalHeader()->height());
-        if (row != -1) {
-            QToolTip::setFont(QFont("Verdana",10));
-            QToolTip::showText(helpEvent->globalPos(), MoveInfo::Description(MoveInfo::Number(item(row, TB_PokemonBody::Name)->text()), 5));
-        }
-    }
-    return QCompactTable::event(event);
-}
-
 
 void TB_PokemonBody::connectWithAdvanced(TB_Advanced *ptr)
 {
@@ -1354,7 +1351,7 @@ void TB_PokemonBody::updateLevel()
 
 void TB_PokemonBody::updateNum()
 {
-    configureMoves();
+    movesModel->setPokemon(poke()->num(), gen);
 
     updateMoves();
     updateLevel();
@@ -1518,132 +1515,9 @@ void TB_PokemonBody::setMove(int movenum)
     }
 }
 
-void TB_PokemonBody::moveEntered(int row)
+void TB_PokemonBody::moveEntered(const QModelIndex &index)
 {
-    emit moveChosen(MoveInfo::Number(movechoice->item(row, Name)->text()));
-}
-
-
-void TB_PokemonBody::configureMoves()
-{
-    QList<QPair<int, QString> > moves;
-    QSet<int> already_loaded;
-
-    Pokemon::uniqueId num = poke()->num();
-
-    QList< QSet<QPair<int, QString> > > sets;
-
-    if (gen == 1) {
-        sets << map_container_with_value(PokemonInfo::TMMoves(num,1), tr("TM/HM"))
-        << map_container_with_value(PokemonInfo::LevelMoves(num,1), tr("Level"))
-        << map_container_with_value(PokemonInfo::PreEvoMoves(num,1), tr("Pre Evo"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num,1), tr("Special", "Learning"));
-    } else if (gen == 2) {
-        sets << map_container_with_value(PokemonInfo::TMMoves(num,2), tr("TM/HM"))
-        << map_container_with_value(PokemonInfo::TutorMoves(num,2), tr("Tutor"))
-        << map_container_with_value(PokemonInfo::LevelMoves(num,2), tr("Level"))
-        << map_container_with_value(PokemonInfo::PreEvoMoves(num,2), tr("Pre Evo"))
-        << map_container_with_value(PokemonInfo::EggMoves(num,2), tr("Breeding"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num,2), tr("Special", "Learning"))
-        << map_container_with_value(PokemonInfo::TMMoves(num,1), tr("1G TM/HM"))
-        << map_container_with_value(PokemonInfo::LevelMoves(num,1), tr("1G Level"))
-        << map_container_with_value(PokemonInfo::PreEvoMoves(num,1), tr("1G Pre Evo"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num,1), tr("1G Special"));
-    } else if (gen == 3) {
-        sets << map_container_with_value(PokemonInfo::TMMoves(num, 3), tr("TM/HM"))
-        << map_container_with_value(PokemonInfo::TutorMoves(num,3), tr("Tutor"))
-        << map_container_with_value(PokemonInfo::LevelMoves(num,3), tr("Level"))
-        << map_container_with_value(PokemonInfo::PreEvoMoves(num,3), tr("Pre Evo"))
-        << map_container_with_value(PokemonInfo::EggMoves(num,3), tr("Breeding"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num,3), tr("Special", "Learning"));
-    } else if (gen == 4) {
-        sets << map_container_with_value(PokemonInfo::TMMoves(num, 4), tr("TM/HM"))
-        << map_container_with_value(PokemonInfo::TutorMoves(num, 4), tr("Move Tutor"))
-        << map_container_with_value(PokemonInfo::LevelMoves(num, 4), tr("Level"))
-        << map_container_with_value(PokemonInfo::PreEvoMoves(num, 4), tr("Pre Evo"))
-        << map_container_with_value(PokemonInfo::EggMoves(num, 4), tr("Breeding"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num, 4), tr("Special", "Learning"))
-        << map_container_with_value(PokemonInfo::TMMoves(num, 3), tr("3G TM/HM"))
-        << map_container_with_value(PokemonInfo::TutorMoves(num,3), tr("3G Tutor"))
-        << map_container_with_value(PokemonInfo::LevelMoves(num,3), tr("3G Level"))
-        << map_container_with_value(PokemonInfo::PreEvoMoves(num,3), tr("3G Pre Evo"))
-        << map_container_with_value(PokemonInfo::EggMoves(num,3), tr("3G Breeding"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num,3), tr("3G Special"));
-    } else if (gen <= GEN_MAX) {
-        sets << map_container_with_value(PokemonInfo::TMMoves(num, 5), tr("TM/HM"))
-        << map_container_with_value(PokemonInfo::TutorMoves(num, 5), tr("Move Tutor"))
-        << map_container_with_value(PokemonInfo::LevelMoves(num, 5), tr("Level"))
-        << map_container_with_value(PokemonInfo::PreEvoMoves(num, 5), tr("Pre Evo"))
-        << map_container_with_value(PokemonInfo::EggMoves(num, 5), tr("Breeding"))
-        << map_container_with_value(PokemonInfo::dreamWorldMoves(num), tr("Dream World"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num, 5), tr("Special", "Learning"))
-        << map_container_with_value(PokemonInfo::TMMoves(num, 4), tr("4G TM/HM"))
-        << map_container_with_value(PokemonInfo::TutorMoves(num, 4), tr("4G Move Tutor"))
-        << map_container_with_value(PokemonInfo::LevelMoves(num, 4), tr("4G Level"))
-        << map_container_with_value(PokemonInfo::PreEvoMoves(num, 4), tr("4G Pre Evo"))
-        << map_container_with_value(PokemonInfo::EggMoves(num, 4), tr("4G Breeding"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num, 4), tr("4G Special"))
-        << map_container_with_value(PokemonInfo::TMMoves(num, 3), tr("3G TM/HM"))
-        << map_container_with_value(PokemonInfo::TutorMoves(num,3), tr("3G Tutor"))
-        << map_container_with_value(PokemonInfo::LevelMoves(num,3), tr("3G Level"))
-        << map_container_with_value(PokemonInfo::PreEvoMoves(num,3), tr("3G Pre Evo"))
-        << map_container_with_value(PokemonInfo::EggMoves(num,3), tr("3G Breeding"))
-        << map_container_with_value(PokemonInfo::SpecialMoves(num,3), tr("3G Special"));
-    }
-
-    typedef QPair<int, QString> qpair;
-
-    for (int i = 0; i < sets.count(); i++) {
-        foreach(qpair pair, sets[i]) {
-            if (already_loaded.contains(pair.first))
-                continue;
-            already_loaded.insert(pair.first);
-            moves.push_back(pair);
-        }
-    }
-
-    movechoice->setRowCount(moves.size());
-    movechoice->setSortingEnabled(false);
-
-    int i = -1;
-
-    QFont invisible ("Verdana", 0);
-
-    foreach (qpair pair, moves)
-    {
-        i++;
-
-	QTableWidgetItem *witem;
-        int movenum = pair.first;
-	
-        /* In order to sort types accurately in the table we give them a number with an invisible font */
-        int type = MoveInfo::Type(movenum, gen);
-        witem = new QTableWidgetItem(QIcon(Theme::TypePicture(type)), QString("%1").arg(type));
-        witem->setFont(invisible);
-	movechoice->setItem(i, Type, witem);
-
-        witem = new QTableWidgetItem(MoveInfo::Name(movenum));
-	movechoice->setItem(i, Name, witem);
-
-        witem = new QTableWidgetItem(pair.second);
-	movechoice->setItem(i, Learning, witem);
-
-        witem = new QTableWidgetItem(QString::number(MoveInfo::PP(movenum, gen)).rightJustified(2));
-	movechoice->setItem(i, PP, witem);
-
-        witem = new QTableWidgetItem(MoveInfo::AccS(movenum, gen).rightJustified(3));
-	movechoice->setItem(i, Acc, witem);
-
-        witem = new QTableWidgetItem(MoveInfo::PowerS(movenum, gen).rightJustified(3));
-	movechoice->setItem(i, Pow, witem);
-
-        witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(movenum, gen)));
-        witem->setForeground(Theme::CategoryColor(MoveInfo::Category(movenum, gen)));
-        movechoice->setItem(i, Category, witem);
-    }
-
-    movechoice->sortItems(Name);
-    movechoice->setSortingEnabled(true);
+    emit moveChosen(index.data(CustomModel::MovenumRole).toInt());
 }
 
 void TB_PokemonBody::setItem(const QString &item)

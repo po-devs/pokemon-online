@@ -67,10 +67,10 @@ void PMWindow::printLine(QString line, bool self)
         printHtml(toColor(timeStr + "<b>" + escapeHtml(m_ownName) + ": </b>", Qt::darkBlue) + line);
     } else {
         printHtml(toColor(timeStr + "<b>" + escapeHtml(name()) + ": </b>", Qt::darkGray) + line);
-        if (!QApplication::activeWindow()) {
-            QApplication::alert(this, 10000);
-            //raise();
-        }
+//        if (!QApplication::activeWindow()) {
+//            QApplication::alert(this, 10000);
+//            //raise();
+//        }
     }
 }
 

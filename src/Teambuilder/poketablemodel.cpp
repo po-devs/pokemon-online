@@ -1,5 +1,8 @@
 #include "poketablemodel.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "modelenum.h"
+
+using namespace CustomModel;
 
 PokeTableModel::PokeTableModel(int gen, QWidget *parent) : QAbstractTableModel(parent) {
     this->gen = gen;

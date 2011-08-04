@@ -18,6 +18,7 @@ class DockAdvanced;
 class TB_Advanced;
 
 class PokeTableModel;
+class PokeMovesModel;
 class TrainerTeam;
 class Team;
 class PokeTeam;
@@ -271,17 +272,6 @@ class TB_PokemonBody : public QWidget
 {
     Q_OBJECT
 
-    enum Column
-    {
-        Type=0,
-        Name=1,
-        Learning,
-        PP,
-        Pow,
-        Acc,
-        Category,
-        LastColumn
-    };
 public:
     TB_PokemonBody(TeamBuilder *upparent, PokeTeam *poke, int num, int gen, QAbstractItemModel *itemsModel,
                    QAbstractItemModel *pokeModel, QAbstractItemModel *natureModel);
@@ -322,7 +312,7 @@ private slots:
     void setMove(int moveNum, int moveSlot);
     void setMove(int movenum);
     void moveCellActivated(int cell);
-    void moveEntered(int row);
+    void moveEntered(const QModelIndex &index);
     void setItem(const QString &item);
     void setNature(int nature);
     void goToAdvanced();
@@ -338,11 +328,9 @@ private:
     QLabel *genderIcon, *level, *type1, *type2, *pokename, *itemicon;
     int m_num;
 
-    class MoveList : public QCompactTable {
+    class MoveList : public QTableView {
     public:
-        MoveList();
-    protected:
-        bool event(QEvent *event);
+        MoveList(QAbstractItemModel *model);
     };
 
     MoveList *movechoice;
@@ -352,6 +340,7 @@ private:
     TitledWidget *itemlabel;
     TB_EVManager *evchoice;
 
+    PokeMovesModel *movesModel;
     int m_index;
     int gen;
 
@@ -360,8 +349,6 @@ private:
 
     void initPokemons(TB_PokemonBody *copy = NULL);
     void initMoves();
-
-    void configureMoves();
 
     void updateMoves();
     void updateNickname();
