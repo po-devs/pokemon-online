@@ -1,9 +1,20 @@
 #ifndef OTHERWIDGETS_H
 #define OTHERWIDGETS_H
 
-#include <QtGui>
+#include <QTableWidget>
 #include <QList>
+#include <QTreeWidgetItem>
+#include <QListWidgetItem>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QTextBrowser>
+#include <QProgressBar>
+#include <QMenu>
+#include <QLineEdit>
 
+class QVBoxLayout;
+class QLabel;
+class QCompleter;
 /*
     Those are widgets that Qt lacks, and that are to use like Qt Widgets
 */
@@ -14,6 +25,7 @@ class QCompactTable : public QTableWidget
     Q_OBJECT
 public:
     QCompactTable(int row, int column);
+    static void makeCompact(QTableView *view);
 };
 
 /* A widget that allows giving a title to another widget

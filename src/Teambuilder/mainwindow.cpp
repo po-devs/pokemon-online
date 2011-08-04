@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "menu.h"
-#include "teambuilder.h"
+#include "Teambuilder/teambuilder.h"
 #include "client.h"
 #include "serverchoice.h"
 #include "../PokemonInfo/movesetchecker.h"

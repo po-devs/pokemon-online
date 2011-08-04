@@ -2,12 +2,12 @@
 #include "../Utilities/otherwidgets.h"
 #include "pokemovesmodel.h"
 #include "pokedex.h"
-#include "teambuilder.h"
 #include "theme.h"
 #include "poketablemodel.h"
 #include "modelenum.h"
+#include "pokechoice.h"
 
-Pokedex::Pokedex(TeamBuilder *parent, QAbstractItemModel *model)
+Pokedex::Pokedex(QWidget *parent, QAbstractItemModel *model)
     : QWidget(parent)
 {
     QLabel *pokedexText = new QLabel(this);

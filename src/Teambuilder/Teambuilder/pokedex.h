@@ -4,7 +4,6 @@
 #include <QtGui>
 #include "../PokemonInfo/pokemonstructs.h"
 
-class TeamBuilder;
 class TB_PokeChoice;
 class GridBox;
 class QImageButtonLR;
@@ -17,7 +16,7 @@ class Pokedex : public QWidget
 {
     Q_OBJECT
 public:
-    Pokedex(TeamBuilder *parent, QAbstractItemModel *pokeModel);
+    Pokedex(QWidget *parent, QAbstractItemModel *pokeModel);
 public slots:
     void showTypeChart();
 private:

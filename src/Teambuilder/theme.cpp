@@ -2,6 +2,8 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
 #include <QtCore>
+#include <QFontDatabase>
+#include <QPixmapCache>
 
 static void fill_container_with_file(QList<QColor> &container, const QString &filename)
 {

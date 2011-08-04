@@ -5,12 +5,9 @@ TARGET = Pokemon-Online
 DESTDIR = ../../bin
 TEMPLATE = app
 SOURCES += main.cpp \
-    teambuilder.cpp \
-    advanced.cpp \
     menu.cpp \
     mainwindow.cpp \
     network.cpp \
-    dockinterface.cpp \
     client.cpp \
     analyze.cpp \
     serverchoice.cpp \
@@ -19,25 +16,33 @@ SOURCES += main.cpp \
     pmwindow.cpp \
     controlpanel.cpp \
     basebattlewindow.cpp \
-    box.cpp \
     ranking.cpp \
-    pokedex.cpp \
     pluginmanager.cpp \
     channel.cpp \
     tierstruct.cpp \
     theme.cpp \
     rearrangewindow.cpp \
     poketablemodel.cpp \
-    pokemovesmodel.cpp
-HEADERS += teambuilder.h \
-    ../PokemonInfo/pokemoninfo.h \
-    advanced.h \
+    pokemovesmodel.cpp \
+    Teambuilder/teambuilder.cpp \
+    Teambuilder/pokedex.cpp \
+    Teambuilder/box.cpp \
+    Teambuilder/trainerbody.cpp \
+    Teambuilder/avatarbox.cpp \
+    Teambuilder/pokeballed.cpp \
+    Teambuilder/evmanager.cpp \
+    Teambuilder/pokebody.cpp \
+    Teambuilder/advanced.cpp \
+    Teambuilder/pokechoice.cpp \
+    Teambuilder/teambody.cpp \
+    Teambuilder/teamimporter.cpp \
+    Teambuilder/dockinterface.cpp
+HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
     ../PokemonInfo/pokemonstructs.h \
     ../Utilities/otherwidgets.h \
     network.h \
-    dockinterface.h \
     client.h \
     analyze.h \
     serverchoice.h \
@@ -51,9 +56,7 @@ HEADERS += teambuilder.h \
     basebattlewindow.h \
     ../PokemonInfo/movesetchecker.h \
     ../Shared/config.h \
-    box.h \
     ranking.h \
-    pokedex.h \
     pluginmanager.h \
     plugininterface.h \
     centralwidget.h \
@@ -65,7 +68,20 @@ HEADERS += teambuilder.h \
     ../Shared/networkcommands.h \
     poketablemodel.h \
     modelenum.h \
-    pokemovesmodel.h
+    pokemovesmodel.h \
+    Teambuilder/teambuilder.h \
+    Teambuilder/pokedex.h \
+    Teambuilder/box.h \
+    Teambuilder/trainerbody.h \
+    Teambuilder/avatarbox.h \
+    Teambuilder/pokeballed.h \
+    Teambuilder/teambody.h \
+    Teambuilder/pokebody.h \
+    Teambuilder/pokechoice.h \
+    Teambuilder/evmanager.h \
+    Teambuilder/teamimporter.h \
+    Teambuilder/advanced.h \
+    Teambuilder/dockinterface.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities

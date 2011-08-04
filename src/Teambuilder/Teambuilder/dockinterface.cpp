@@ -1,8 +1,10 @@
 #include "dockinterface.h"
-#include "../Teambuilder/teambuilder.h"
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../Teambuilder/advanced.h"
-#include "../Teambuilder/mainwindow.h"
+#include "teambuilder.h"
+#include "../../PokemonInfo/pokemonstructs.h"
+#include "advanced.h"
+#include "../../Teambuilder/mainwindow.h"
+#include "teambody.h"
+#include "pokebody.h"
 
 //class dockAdvanced
 DockAdvanced::DockAdvanced(TB_TeamBody * builder): m_builder(builder)

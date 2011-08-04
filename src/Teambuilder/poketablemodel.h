@@ -5,7 +5,7 @@
 
 class PokeTableModel : public QAbstractTableModel {
 public:
-    PokeTableModel(int gen=5, QWidget *parent = NULL);
+    PokeTableModel(int gen=5, QObject *parent = NULL);
 
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;

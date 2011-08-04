@@ -14,7 +14,7 @@ QHash<typename T::value_type, U> map_container_with_value(T container, const U &
     return ret;
 }
 
-PokeMovesModel::PokeMovesModel(const Pokemon::uniqueId &id, int gen, QWidget *parent) : QAbstractTableModel(parent), id(id), gen(gen)
+PokeMovesModel::PokeMovesModel(const Pokemon::uniqueId &id, int gen, QObject *parent) : QAbstractTableModel(parent), id(id), gen(gen)
 {
     loadData();
 }
