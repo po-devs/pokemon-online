@@ -11,6 +11,7 @@ class QImageButtonLR;
 class QCompactTable;
 class TypeChart;
 class AdvancedSearch;
+class PokeMovesModel;
 
 class Pokedex : public QWidget
 {
@@ -99,16 +100,8 @@ public:
 public slots:
     void changePoke(Pokemon::uniqueId poke);
 private:
-    QCompactTable *moves;
-
-    enum {
-        TypeCol,
-        NameCol,
-        PPCol,
-        PowerCol,
-        AccCol,
-        CategoryCol
-    };
+    QTableView *moves;
+    PokeMovesModel *movesModel;
 };
 
 class StatTab: public QFrame
