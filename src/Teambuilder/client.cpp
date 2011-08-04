@@ -1,7 +1,7 @@
 #include "client.h"
 #include "mainwindow.h"
 #include "challenge.h"
-#include "teambuilder.h"
+#include "Teambuilder/teambuilder.h"
 #include "battlewindow.h"
 #include "basebattlewindow.h"
 #include "pmwindow.h"

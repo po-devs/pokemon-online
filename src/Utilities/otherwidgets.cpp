@@ -1,15 +1,29 @@
 #include "otherwidgets.h"
-#include <QtGui>
+
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QCompleter>
+#include <QBitmap>
+#include <QImage>
+#include <QHeaderView>
+#include <QPainter>
+#include <QPaintEvent>
+#include <QScrollBar>
 
 QCompactTable::QCompactTable(int row, int column)
     : QTableWidget(row, column)
 {
-    verticalHeader()->setDefaultSectionSize(22);
-    setSelectionBehavior(QAbstractItemView::SelectRows);
-    setSelectionMode(QAbstractItemView::SingleSelection);
-    setShowGrid(false);
-    verticalHeader()->hide();
+    makeCompact(this);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
+}
+
+void QCompactTable::makeCompact(QTableView *view)
+{
+    view->verticalHeader()->setDefaultSectionSize(22);
+    view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    view->setSelectionMode(QAbstractItemView::SingleSelection);
+    view->setShowGrid(false);
+    view->verticalHeader()->hide();
 }
 
 QEntitled::QEntitled(const QString &title, QWidget *widget)

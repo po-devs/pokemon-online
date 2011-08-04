@@ -4,7 +4,7 @@
 
 using namespace CustomModel;
 
-PokeTableModel::PokeTableModel(int gen, QWidget *parent) : QAbstractTableModel(parent) {
+PokeTableModel::PokeTableModel(int gen, QObject *parent) : QAbstractTableModel(parent) {
     this->gen = gen;
 }
 

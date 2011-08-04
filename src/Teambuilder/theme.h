@@ -1,7 +1,9 @@
 #ifndef THEME_H
 #define THEME_H
 
-#include <QtGui>
+#include <QColor>
+#include <QPixmap>
+#include <QIcon>
 
 class QImageButton;
 class QImageButtonP;

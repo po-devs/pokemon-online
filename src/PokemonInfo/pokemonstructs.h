@@ -1,7 +1,10 @@
 #ifndef POKEMONSTRUCTS_H
 #define POKEMONSTRUCTS_H
 
-#include <QtGui>
+#include <QString>
+#include <QSet>
+#include <QIcon>
+#include <QPixmap>
 #include <QDataStream>
 #include "../Utilities/functions.h"
 

@@ -7,7 +7,7 @@
 class PokeMovesModel : public QAbstractTableModel
 {
 public:
-    PokeMovesModel(const Pokemon::uniqueId &id, int gen, QWidget *parent=0);
+    PokeMovesModel(const Pokemon::uniqueId &id, int gen, QObject *parent=0);
     void setPokemon(const Pokemon::uniqueId &id, int gen);
 
     int rowCount(const QModelIndex &parent) const;
