@@ -5888,7 +5888,7 @@ struct MMTriAttack : public MM
             break;
         }
 
-        if (b.canGetStatus(t, status)) {
+        if (b.canGetStatus(t, status) || b.gen() <= 2) {
             b.inflictStatus(t, status, s);
         }
     }
