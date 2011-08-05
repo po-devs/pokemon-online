@@ -31,6 +31,8 @@ public:
     void setWidget(PokeBodyWidget *widget);
     void updateItem();
     void changeGeneration(int gen);
+    bool hasWidget() const;
+    QWidget *getWidget();
 public slots:
     void setNum(Pokemon::uniqueId pokeNum);
     /* slots used by advanced */

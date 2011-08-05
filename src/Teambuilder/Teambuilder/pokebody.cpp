@@ -28,6 +28,16 @@ void TB_PokemonBody::setWidget(PokeBodyWidget *widget)
     connect(widget, SIGNAL(itemChanged(int)), SLOT(setItem(int)));
 }
 
+bool TB_PokemonBody::hasWidget() const
+{
+    return widget != NULL;
+}
+
+QWidget *TB_PokemonBody::getWidget()
+{
+    return widget;
+}
+
 int TB_PokemonBody::gen()
 {
     return poke()->gen();
