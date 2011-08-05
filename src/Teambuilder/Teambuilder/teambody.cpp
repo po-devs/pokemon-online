@@ -10,6 +10,7 @@
 #include <QStringListModel>
 #include <QStackedWidget>
 #include "pokebody.h"
+#include "pokebodywidget.h"
 #include "dockinterface.h"
 
 /*********************************************/
@@ -169,8 +170,11 @@ TB_TeamBody::TB_TeamBody(QWidget *parent, TrainerTeam *team, int gen, QAbstractI
     body = new QStackedWidget();
     ml->addWidget(body);
     for (int i = 0; i < 6; i++) {
-        body->addWidget(pokeBody[i] = new TB_PokemonBody(parent, &trainerTeam()->team().poke(i), i, gen, itemsModel, pokeModel,
-                                                         natureModel));
+        pokeBody[i] = new TB_PokemonBody(&trainerTeam()->team().poke(i), i);
+        PokeBodyWidget *widget = new PokeBodyWidget(parent,gen,itemsModel,pokeModel, natureModel);
+        pokeBody[i]->setWidget(widget);
+
+        body->addWidget(widget);
     }
 
     pokeButtons[0]->setChecked(true);
@@ -181,7 +185,6 @@ TB_TeamBody::TB_TeamBody(QWidget *parent, TrainerTeam *team, int gen, QAbstractI
         connect(pokeBody[i], SIGNAL(pokeChanged(Pokemon::uniqueId)), SLOT(updateButton()));
         connect(pokeBody[i], SIGNAL(itemChanged(int)), SLOT(updateButton()));
         connect(pokeBody[i], SIGNAL(levelChanged()), SLOT(updateButton()));
-        connect(pokeBody[i], SIGNAL(advanced(int, bool)), SLOT(advancedClicked(int, bool)));
         connect(pokeBody[i], SIGNAL(pokeChanged(Pokemon::uniqueId)),SLOT(indexNumChanged(Pokemon::uniqueId)));
     }
 

@@ -6,29 +6,20 @@
 
 #include "../../PokemonInfo/pokemonstructs.h"
 
-class TeamBuilder;
-class QAbstractItemModel;
 class TB_Advanced;
 class QModelIndex;
-class QToolButton;
-class TB_PokeChoice;
-class QComboBox;
-class TitledWidget;
 class PokeTeam;
-class TB_EVManager;
-class QLineEdit;
-class QLabel;
 class PokeMovesModel;
+class PokeBodyWidget;
 
 /* This is the widget displaying the pokemon's info, moves, item, ... */
-class TB_PokemonBody : public QWidget
+class TB_PokemonBody : public QObject
 {
     Q_OBJECT
 
 public:
     /* upparent is the widget that will import/export stuff */
-    TB_PokemonBody(QWidget *upparent, PokeTeam *poke, int num, int gen, QAbstractItemModel *itemsModel,
-                   QAbstractItemModel *pokeModel, QAbstractItemModel *natureModel);
+    TB_PokemonBody(PokeTeam *poke, int num);
     void connectWithAdvanced(TB_Advanced *ptr);
 
     void updateNum();
@@ -37,25 +28,18 @@ public:
     PokeTeam *poke();
     int num() const {return m_num;}
 
-    void changeGeneration(int gen);
+    void setWidget(PokeBodyWidget *widget);
     void updateItem();
-
+    void changeGeneration(int gen);
 public slots:
     void setNum(Pokemon::uniqueId pokeNum);
-    void setPokeByNick();
     /* slots used by advanced */
-    void updateImage();
-    void updateGender();
-    void updateLevel();
-    void updateEVs();
     void updateAbility();
     void changeForme(Pokemon::uniqueId);
 
 signals:
-    void moveChosen(int movenum);
     void pokeChanged(Pokemon::uniqueId num);
     void nicknameChanged(QString nickname);
-    void advanced(int index, bool separateWindow);
     void EVChanged(int stat);
     void natureChanged();
     void itemChanged(int newItem);
@@ -65,38 +49,16 @@ signals:
 private slots:
     void setMove(int moveNum, int moveSlot);
     void setMove(int movenum);
-    void moveCellActivated(int cell);
-    void moveEntered(const QModelIndex &index);
-    void setItem(const QString &item);
+    void setItem(int);
     void setNature(int nature);
-    void goToAdvanced();
     void setNick(const QString &nick);
-    void editNature(int up, int down);
 
 private:
-    TB_PokeChoice *pokechoice;
-    QComboBox *itemchoice;
-    QComboBox *naturechoice;
-    QLabel *nature;
-    QToolButton *pokeImage;
-    QLabel *genderIcon, *level, *type1, *type2, *pokename, *itemicon;
     int m_num;
 
-    class MoveList : public QTableView {
-    public:
-        MoveList(QAbstractItemModel *model);
-    };
-
-    MoveList *movechoice;
-    QLineEdit *m_moves[4];
-    QLineEdit *m_nick;
-    QLineEdit *m_pokeedit;
-    TitledWidget *itemlabel;
-    TB_EVManager *evchoice;
-
+    PokeBodyWidget *widget;
     PokeMovesModel *movesModel;
     int m_index;
-    int gen;
 
     /* the pokemon of the team corresponding to the body */
     PokeTeam *m_poke;
@@ -105,12 +67,8 @@ private:
     void initMoves();
 
     void updateMoves();
-    void updateNickname();
-    void updateNature();
-    void updatePokeChoice();
-    void updateTypes();
 
-    bool advancedOpen();
+    int gen();
 };
 
 #endif // POKEBODY_H

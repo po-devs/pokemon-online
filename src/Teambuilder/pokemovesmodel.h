@@ -3,6 +3,7 @@
 
 #include "../PokemonInfo/pokemonstructs.h"
 #include <QAbstractTableModel>
+#include "modelenum.h"
 
 class PokeMovesModel : public QAbstractTableModel
 {

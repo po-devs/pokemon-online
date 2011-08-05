@@ -36,7 +36,8 @@ SOURCES += main.cpp \
     Teambuilder/pokechoice.cpp \
     Teambuilder/teambody.cpp \
     Teambuilder/teamimporter.cpp \
-    Teambuilder/dockinterface.cpp
+    Teambuilder/dockinterface.cpp \
+    Teambuilder/pokebodywidget.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -81,7 +82,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     Teambuilder/evmanager.h \
     Teambuilder/teamimporter.h \
     Teambuilder/advanced.h \
-    Teambuilder/dockinterface.h
+    Teambuilder/dockinterface.h \
+    Teambuilder/pokebodywidget.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities

@@ -14,13 +14,14 @@ class TB_EVManager : public QWidget
 {
     Q_OBJECT
 public:
-    TB_EVManager(PokeTeam *poke);
+    TB_EVManager(PokeTeam *poke=NULL);
 
     /* Nature selectors */
 
     int myStatUp;
     int myStatDown;
 
+    void setPokemon(PokeTeam *poke);
     void updateEVs();
     void updateEV(int stat);
     void updateMain();
