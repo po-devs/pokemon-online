@@ -70,17 +70,6 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
     m_trainerBody = new TB_TrainerBody(trainerTeam());
     m_body->addWidget(m_trainerBody);
 
-    /* Team Body */
-    m_teamBody = new TB_TeamBody(this, trainerTeam(), gen(), pokeModel);
-    m_body->addWidget(m_teamBody);
-
-    /* Pokemon Boxes */
-    m_boxes = new TB_PokemonBoxes(team());
-    m_body->addWidget(m_boxes);
-
-    /* Pokedex */
-    m_pokedex = new Pokedex(this, pokeModel);
-    m_body->addWidget(m_pokedex);
     vl->addWidget(m_body, 585-2*54);
 
     QHBoxLayout *downButtons = new QHBoxLayout();
@@ -124,11 +113,30 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
     connect(m_load, SIGNAL(clicked()), SLOT(loadTeam()));
     connect(m_save, SIGNAL(clicked()), SLOT(saveTeam()));
     connect(m_close, SIGNAL(clicked()), SIGNAL(done()));
-    connect(m_boxes, SIGNAL(pokeChanged(int)), SLOT(pokeChanged(int)));
 
     loadSettings(this, defaultSize());
 
     updateAll();
+}
+
+void TeamBuilder::initBox()
+{
+    m_boxes = new TB_PokemonBoxes(team());
+    m_body->addWidget(m_boxes);
+
+    connect(m_boxes, SIGNAL(pokeChanged(int)), SLOT(pokeChanged(int)));
+}
+
+void TeamBuilder::initPokedex()
+{
+    m_pokedex = new Pokedex(this, pokeModel);
+    m_body->addWidget(m_pokedex);
+}
+
+void TeamBuilder::initTeam()
+{
+    m_teamBody = new TB_TeamBody(this, trainerTeam(), gen(), pokeModel);
+    m_body->addWidget(m_teamBody);
 }
 
 int TeamBuilder::gen() const
@@ -173,14 +181,20 @@ void TeamBuilder::genChanged() {
     int gen = sender()->property("gen").toInt();
 
     pokeModel->setGen(gen);
-    m_teamBody->changeGeneration(gen);
+
+    if (m_teamBody) {
+        m_teamBody->changeGeneration(gen);
+    }
 }
 
 void TeamBuilder::changeToTeam()
 {
+    if (m_teamBody == NULL) {
+        initTeam();
+    }
     buttons[m_body->currentIndex()]->setChecked(false);
 
-    m_body->setCurrentIndex(TeamW);
+    m_body->setCurrentWidget(m_teamBody);
     buttons[TeamW]->setChecked(true);
 
     currentZoneLabel->setPixmap(Theme::Sprite("poketeam"));
@@ -195,9 +209,13 @@ void TeamBuilder::changeToTeam()
 
 void TeamBuilder::changeToBoxes()
 {
+    if (m_boxes == NULL) {
+        initBox();
+    }
+
     buttons[m_body->currentIndex()]->setChecked(false);
 
-    m_body->setCurrentIndex(BoxesW);
+    m_body->setCurrentWidget(m_boxes);
     buttons[BoxesW]->setChecked(true);
 
     currentZoneLabel->setPixmap(Theme::Sprite("pokebox"));
@@ -207,9 +225,9 @@ void TeamBuilder::changeToBoxes()
 
 void TeamBuilder::changeToTrainer()
 {
-    if (m_body->currentIndex() != TrainerW) {
+    if (m_body->currentWidget() != m_trainerBody) {
         buttons[m_body->currentIndex()]->setChecked(false);
-        m_body->setCurrentIndex(TrainerW);
+        m_body->setCurrentWidget(m_trainerBody);
 
         buttons[TrainerW]->setChecked(true);
         currentZoneLabel->setPixmap(Theme::Sprite("poketrainer"));
@@ -218,9 +236,13 @@ void TeamBuilder::changeToTrainer()
 
 void TeamBuilder::changeToPokedex()
 {
+    if (m_pokedex == NULL) {
+        initPokedex();
+    }
+
     buttons[m_body->currentIndex()]->setChecked(false);
 
-    m_body->setCurrentIndex(PokedexW);
+    m_body->setCurrentWidget(m_pokedex);
 
     currentZoneLabel->setPixmap(Theme::Sprite("pokedex"));
 }
@@ -263,7 +285,10 @@ void TeamBuilder::updateTeam()
     if (gens[team()->gen()-GEN_MIN]) {
         gens[team()->gen()-GEN_MIN]->setChecked(true);
     }
-    m_teamBody->updateTeam();
+
+    if (m_teamBody) {
+        m_teamBody->updateTeam();
+    }
 }
 
 void TeamBuilder::updateTrainer()
@@ -273,7 +298,9 @@ void TeamBuilder::updateTrainer()
 
 void TeamBuilder::updateBox()
 {
-    m_boxes->updateBox();
+    if (m_boxes) {
+        m_boxes->updateBox();
+    }
 }
 
 QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
@@ -327,8 +354,11 @@ void TeamBuilder::changeItemDisplay(bool b)
 {
     QSettings s;
     s.setValue("show_all_items", b);
-    for (int i = 0; i < 6; i++) {
-        m_teamBody->reloadItems(b);
+
+    if (m_teamBody) {
+        for (int i = 0; i < 6; i++) {
+            m_teamBody->reloadItems(b);
+        }
     }
 }
 
