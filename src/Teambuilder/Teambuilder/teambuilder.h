@@ -99,6 +99,10 @@ private:
     void updateTeam();
     void updateBox();
 
+    void initBox();
+    void initPokedex();
+    void initTeam();
+
     TB_TrainerBody *trainerbody();
 
     bool modified[6];
