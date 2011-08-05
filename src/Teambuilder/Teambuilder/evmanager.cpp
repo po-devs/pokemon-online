@@ -56,6 +56,12 @@ TB_EVManager::TB_EVManager(PokeTeam *_poke)
     updateEVs();
 }
 
+void TB_EVManager::setPokemon(PokeTeam *_poke)
+{
+    m_poke = _poke;
+    updateEVs();
+}
+
 void TB_EVManager::changeGen(int)
 {
     if (gen() <= 1) {
@@ -128,6 +134,10 @@ int TB_EVManager::stat(QObject *sender) const
 
 void TB_EVManager::updateEVs()
 {
+    if (!poke()) {
+        return;
+    }
+
     for (int i = 0; i < 6; i++)
         updateEV(i);
 
@@ -233,7 +243,11 @@ void TB_EVManager::updateEV(int stat)
 
 int TB_EVManager::gen() const
 {
-    return poke()->gen();
+    if (poke()) {
+        return poke()->gen();
+    } else {
+        return GEN_MAX;
+    }
 }
 
 void TB_EVManager::updateMain()
