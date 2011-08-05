@@ -135,7 +135,8 @@ void TeamPokeButton::startDrag()
 /**************** TEAM BODY ******************/
 /*********************************************/
 
-TB_TeamBody::TB_TeamBody(QWidget *parent, TrainerTeam *team, int gen, QAbstractItemModel *pokeModel) : m_dockAdvanced(0), m_team(team), gen(gen)
+TB_TeamBody::TB_TeamBody(QWidget *parent, TrainerTeam *team, int gen, QAbstractItemModel *pokeModel) :
+    m_dockAdvanced(0), m_team(team), gen(gen), pokeModel(pokeModel), upParent(parent)
 {
     QHBoxLayout *hh = new QHBoxLayout(this);
     hh->setMargin(0);
@@ -171,11 +172,12 @@ TB_TeamBody::TB_TeamBody(QWidget *parent, TrainerTeam *team, int gen, QAbstractI
     ml->addWidget(body);
     for (int i = 0; i < 6; i++) {
         pokeBody[i] = new TB_PokemonBody(&trainerTeam()->team().poke(i), i);
-        PokeBodyWidget *widget = new PokeBodyWidget(parent,gen,itemsModel,pokeModel, natureModel);
-        pokeBody[i]->setWidget(widget);
-
-        body->addWidget(widget);
     }
+
+    PokeBodyWidget *widget = new PokeBodyWidget(parent,gen,itemsModel,pokeModel, natureModel);
+    pokeBody[0]->setWidget(widget);
+
+    body->addWidget(widget);
 
     pokeButtons[0]->setChecked(true);
     for(int i = 0; i < 6; i++) {
@@ -258,7 +260,14 @@ void TB_TeamBody::changePokemonBase(int index, const Pokemon::uniqueId & pokenum
 void TB_TeamBody::changeIndex()
 {
     int num = ((TeamPokeButton*)sender())->num();
-    body->setCurrentIndex(num);
+
+    if (!pokeBody[num]->hasWidget()) {
+        PokeBodyWidget *widget = new PokeBodyWidget(upParent,gen,itemsModel,pokeModel, natureModel);
+        pokeBody[num]->setWidget(widget);
+
+        body->addWidget(widget);
+    }
+    body->setCurrentWidget(pokeBody[num]->getWidget());
 
     for (int i = 0; i < 6; i++) {
         pokeButtons[i]->setChecked(i==num);

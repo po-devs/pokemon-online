@@ -58,6 +58,9 @@ private:
     int gen;
 
     QStringListModel *itemsModel, *natureModel;
+    QAbstractItemModel *pokeModel;
+    QWidget *upParent;
+
     void saveAdvancedState();
     void restoreAdvancedState();
 
