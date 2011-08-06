@@ -6,7 +6,7 @@
 
 extern "C" {
 ClientPlugin *createPluginClass(MainEngineInterface*);
-};
+}
 
 class QRCODEPLUGINSHARED_EXPORT QRCodePlugin : public ClientPlugin {
 public:

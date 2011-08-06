@@ -3,6 +3,7 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #ifdef WIN32
 #include "../../SpecialIncludes/zlib.h"
+#include "../../SpecialIncludes/qrencode.h"
 #else
 #include <zlib.h>
 #include <qrencode.h>
