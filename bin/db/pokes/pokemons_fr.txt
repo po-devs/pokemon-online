@@ -1,4 +1,4 @@
-0:0 Missingno
+ï»¿0:0 Missingno
 1:0 Bulbizarre
 2:0 Herbizarre
 3:0 Florizarre
@@ -651,11 +651,11 @@
 583:0 Sorboul
 584:0 Sorbouboul 
 585:0 Vivaldaim
-585:1 Vivaldaim-Eté
+585:1 Vivaldaim-EtÃ©
 585:2 Vivaldaim-Automne
 585:3 Vivaldaim-Hiver
 586:0 Haydaim
-586:1 Haydaim-Eté
+586:1 Haydaim-EtÃ©
 586:2 Haydaim-Automne
 586:3 Haydaim-Hiver
 587:0 Emolga
@@ -712,11 +712,11 @@
 638:0 Kobaltium
 639:0 Terrakium
 640:0 Viridium
-641:0 Boréas
+641:0 BorÃ©as
 642:0 Fulguris
 643:0 Reshiram
 644:0 Zekrom
-645:0 Démétéros
+645:0 DÃ©mÃ©tÃ©ros
 646:0 Kyurem
 647:0 Keldeo
 648:0:H Meloetta

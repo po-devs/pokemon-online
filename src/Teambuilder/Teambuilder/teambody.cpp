@@ -17,7 +17,7 @@
 /**************** POKE BUTTON ****************/
 /*********************************************/
 
-TeamPokeButton::TeamPokeButton(int num, int poke, int level, int item)
+TeamPokeButton::TeamPokeButton(int num, Pokemon::uniqueId poke, int level, int item)
 {
     this->m_num = num;
     setObjectName("PokeButton");
@@ -164,7 +164,8 @@ TB_TeamBody::TB_TeamBody(QWidget *parent, TrainerTeam *team, int gen, QAbstractI
     buttonsl->setSpacing(1);
     ml->addLayout(buttonsl);
     for (int i = 0; i < 6; i++) {
-        buttonsl->addWidget(pokeButtons[i] = new TeamPokeButton(i));
+        const PokeTeam &poke = team->team().poke(i);
+        buttonsl->addWidget(pokeButtons[i] = new TeamPokeButton(i,poke.num(),poke.level(), poke.item()));
     }
 
     /* Body! */

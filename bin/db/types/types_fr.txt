@@ -1,4 +1,4 @@
-Normal
+ï»¿Normal
 Combat
 Vol
 Poison
@@ -14,5 +14,5 @@ Electrique
 Psy
 Glace
 Dragon
-Ténèbres
+TÃ©nÃ¨bres
 ???
