@@ -686,17 +686,8 @@ QDomElement & PokeTeam::toXml(QDomElement &el) const
     return el;
 }
 
-bool TrainerTeam::saveToFile(const QString &path) const
+void TrainerTeam::toXml(QDomDocument &document) const
 {
-    QFile file(path);
-    if(!file.open(QIODevice::WriteOnly))
-    {
-        QMessageBox::warning(0, QObject::tr("Error while saving the team"),QObject::tr("Can't create file ")+file.fileName());
-        return false;
-    }
-
-    QDomDocument document;
-
     QDomElement Team = document.createElement("Team");
     Team.setAttribute("gen", team().gen());
     Team.setAttribute("defaultTier", defaultTier());
@@ -716,6 +707,29 @@ bool TrainerTeam::saveToFile(const QString &path) const
         QDomElement pokemon = document.createElement("Pokemon");
         Team.appendChild(team().poke(i).toXml(pokemon));
     }
+}
+
+QString TrainerTeam::toXml() const
+{
+    QDomDocument document;
+
+    toXml(document);
+
+    return document.toString();
+}
+
+bool TrainerTeam::saveToFile(const QString &path) const
+{
+    QFile file(path);
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::warning(0, QObject::tr("Error while saving the team"),QObject::tr("Can't create file ")+file.fileName());
+        return false;
+    }
+
+    QDomDocument document;
+
+    toXml(document);
 
     QTextStream in(&file);
     document.save(in,4);

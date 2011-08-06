@@ -17,10 +17,16 @@ SOURCES += qrcodeplugin.cpp
 HEADERS += qrcodeplugin.h\
         QRCodePlugin_global.h
 
+windows: {
+    #on windows, qrencode is probably in that folder
+    LIBS += -L../../bin/myplugins
+}
+
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
-    -lzip
+    -lz \
+    -lqrencode
 
 symbian {
     #Symbian specific definitions
