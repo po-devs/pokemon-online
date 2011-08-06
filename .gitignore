@@ -11,8 +11,7 @@ bin/config*
 bin/logs.txt
 bin/pokemon
 bin/members.txt
-bin/pokemonlib.dll
-bin/utilities.dll
+bin/*.dll
 bin/stdout.txt
 bin/serverplugins
 bin/logs/
