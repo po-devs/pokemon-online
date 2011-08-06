@@ -1,8 +1,18 @@
 #include "pluginmanager.h"
 #include "plugininterface.h"
+#include "mainwindow.h"
 #include "../Utilities/CrossDynamicLib.h"
 
-PluginManager::PluginManager()
+#ifdef WIN32
+/* The windows API provides an easy way to load dlls which need
+  other dlls only as of 11 July 2011, and only on updated
+  windows 7/windows vista OS.
+
+  As such i'm rather editing the path variable myself*/
+static QSet<QString> additionalPathDirectories;
+#endif
+
+PluginManager::PluginManager(MainEngine *t) : engine(t)
 {
     QSettings s;
 
@@ -10,6 +20,15 @@ PluginManager::PluginManager()
     plugins = plugins.toSet().toList(); /* Remove duplicates */
 
     foreach(QString plugin, plugins) {
+#ifdef WIN32
+        QFileInfo fInfo(plugin);
+        QString dir = fInfo.absoluteDir();
+        if (!additionalPathDirectories.contains(dir)) {
+            additionalPathDirectories.insert(dir);
+
+            system(QString("path = %PATH%;").arg(dir).toAscii().constData());
+        }
+#endif
         cross::DynamicLibrary *l;
         try {
              l = new cross::DynamicLibrary(plugin.toAscii().constData());
@@ -27,7 +46,7 @@ PluginManager::PluginManager()
             continue;
         }
 
-        ClientPlugin *s = f();
+        ClientPlugin *s = f(engine);
 
         if (!s) {
             delete l;
@@ -55,11 +74,20 @@ PluginManager::~PluginManager()
 
 void PluginManager::addPlugin(const QString &path)
 {
+#ifdef WIN32
+        QFileInfo fInfo(path);
+        QString dir = fInfo.absoluteDir();
+        if (!additionalPathDirectories.contains(dir)) {
+            additionalPathDirectories.insert(dir);
+
+            system(QString("path = %PATH%;").arg(dir).toAscii().constData());
+        }
+#endif
     cross::DynamicLibrary *l;
     try {
          l = new cross::DynamicLibrary(path.toAscii().constData());
     } catch (const std::exception &e) {
-        qDebug() << "Error when loading plugin " << path <<  ": " << e.what();
+        QMessageBox::warning(NULL, QObject::tr("Pokemon Online"), QObject::tr("Error when loading plugin at %1: %2").arg(path).arg(e.what()));
         return;
     }
 
@@ -67,12 +95,13 @@ void PluginManager::addPlugin(const QString &path)
     PluginInstanceFunction f = (PluginInstanceFunction) l->GetFunction("createPluginClass");
 
     if (!f) {
+        QMessageBox::warning(NULL, QObject::tr("Pokemon Online"), QObject::tr("%1 is not a Pokemon Online plugin.").arg(path));
         delete l;
         libraries.pop_back();
         return;
     }
 
-    ClientPlugin *s = f();
+    ClientPlugin *s = f(engine);
 
     if (!s) {
         delete l;

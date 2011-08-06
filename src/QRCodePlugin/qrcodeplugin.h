@@ -4,14 +4,13 @@
 #include "QRCodePlugin_global.h"
 #include "../Teambuilder/plugininterface.h"
 
-
 extern "C" {
-ClientPlugin *createPluginClass(void);
+ClientPlugin *createPluginClass(MainEngineInterface*);
 };
 
 class QRCODEPLUGINSHARED_EXPORT QRCodePlugin : public ClientPlugin {
 public:
-    QRCodePlugin();
+    QRCodePlugin(MainEngineInterface *interface);
 
     /* The name of the option the plugin would take in the menu bar.
        Also appears as the name of the plugin */
@@ -22,6 +21,8 @@ public:
     QWidget * getConfigurationWidget();
 
     bool hasConfigurationWidget() const;
+private:
+    MainEngineInterface *interface;
 };
 
 #endif // QRCODEPLUGIN_H

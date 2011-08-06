@@ -8,12 +8,19 @@ TARGET = QRCodePlugin
 TEMPLATE = lib
 DESTDIR = ../../bin/myplugins
 
+QT += xml
+
 DEFINES += QRCODEPLUGIN_LIBRARY
 
 SOURCES += qrcodeplugin.cpp
 
 HEADERS += qrcodeplugin.h\
         QRCodePlugin_global.h
+
+LIBS += -L../../bin \
+    -lpokemonlib \
+    -lutilities \
+    -lzip
 
 symbian {
     #Symbian specific definitions

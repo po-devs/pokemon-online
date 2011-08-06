@@ -11,7 +11,7 @@
 
 MainEngine::MainEngine() : displayer(0)
 {
-    pluginManager = new PluginManager();
+    pluginManager = new PluginManager(this);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));

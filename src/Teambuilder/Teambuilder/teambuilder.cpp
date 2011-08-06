@@ -188,8 +188,7 @@ void TeamBuilder::genChanged() {
 }
 
 void TeamBuilder::changeToTeam()
-{
-    if (m_teamBody == NULL) {
+{    if (m_teamBody == NULL) {
         initTeam();
     }
     buttons[m_body->currentIndex()]->setChecked(false);

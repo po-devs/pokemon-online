@@ -64,7 +64,7 @@ class MyPlugin : public ServerPlugin
 }
 
 extern "C" {
-ServerPlugin *createPluginClass(void);
+ServerPlugin *createPluginClass(ServerInterface*);
 };
 
 ....
