@@ -304,7 +304,7 @@ void Client::channelActivated(Channel *c)
         return;
     for (int i = 0; i < mainChat->count(); i++) {
         if (mainChat->widget(i) == c->mainChat()) {
-            mainChat->tabBar()->setTabTextColor(i, Qt::darkGreen);
+            mainChat->tabBar()->setTabTextColor(i, Theme::Color("Client/channelTabActive"));
             break;
         }
     }

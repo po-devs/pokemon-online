@@ -73,6 +73,9 @@ inline QString tu(const QString &in) {
 
 inline QString toColor(const QString &mess, const QColor &col)
 {
+    if (!col.isValid()) {
+        return mess;
+    }
     return QString("<span style='color:%1'>%2</span>").arg(col.name(), mess);
 }
 
