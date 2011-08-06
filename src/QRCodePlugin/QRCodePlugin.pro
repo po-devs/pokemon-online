@@ -19,7 +19,7 @@ HEADERS += qrcodeplugin.h\
 
 windows: {
     #on windows, qrencode is probably in that folder
-    LIBS += -L../../lib/windows/
+    LIBS += -L../../bin/myplugins
 }
 
 LIBS += -L../../bin \
@@ -38,7 +38,7 @@ symbian {
     #Symbian specific definitions
     MMP_RULES += EXPORTUNFROZEN
     TARGET.UID3 = 0xEA9E7289
-    TARGET.CAPABILITY = 
+    TARGET.CAPABILITY =
     TARGET.EPOCALLOWDLLDATA = 1
     addFiles.sources = QRCodePlugin.dll
     addFiles.path = !:/sys/bin
