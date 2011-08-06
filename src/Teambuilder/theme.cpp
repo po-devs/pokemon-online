@@ -72,7 +72,7 @@ void Theme::loadColors()
     foreach(QString key, ini.allKeys()) {
         m_Colors[key] = ini.value(key).value<QColor>();
     }
-    QSettings ini2(path("colors.ini", true), QSettings::IniFormat);
+    QSettings ini2(path("colors.ini"), QSettings::IniFormat);
     foreach(QString key, ini2.allKeys()) {
         m_Colors[key] = ini2.value(key).value<QColor>();
     }
