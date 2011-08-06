@@ -190,7 +190,7 @@ PluginManagerWidget::PluginManagerWidget(PluginManager &pl)
 
     list->addItems(pl.getPlugins());
 
-    QHBoxLayout *buttons = new QHBoxLayout(this);
+    QHBoxLayout *buttons = new QHBoxLayout();
 
     v->addLayout(buttons);
 
