@@ -156,6 +156,7 @@ void PokeBodyWidget::initPokemons()
     QCompleter *completer = new QCompleter(m_pokeedit);
     completer->setModel(pokechoice->model());
     completer->setCompletionColumn(1);
+    completer->setCompletionRole(Qt::DisplayRole);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setCompletionMode(QCompleter::PopupCompletion);
     m_pokeedit->setCompleter(completer);
@@ -179,6 +180,7 @@ void PokeBodyWidget::initMoves()
         completer->setCompletionColumn(PokeMovesModel::Name);
         completer->setCaseSensitivity(Qt::CaseInsensitive);
         completer->setCompletionMode(QCompleter::PopupCompletion);
+        completer->setCompletionRole(Qt::DisplayRole);
         m_moves[i]->setCompleter(completer);
 
         connect(m_moves[i], SIGNAL(customContextMenuRequested(QPoint)), m_moves[i], SLOT(selectAll()));

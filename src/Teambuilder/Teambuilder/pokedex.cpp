@@ -309,6 +309,7 @@ PokedexBody::PokedexBody(QAbstractItemModel *pokeModel)
     QCompleter *comp = new QCompleter(pokeEdit);
     comp->setModel(pokeList->model());
     comp->setCompletionColumn(1);
+    comp->setCompletionRole(Qt::DisplayRole);
     comp->setCaseSensitivity(Qt::CaseInsensitive);
     pokeEdit->setCompleter(comp);
     col1->addWidget(pokeList,100);
