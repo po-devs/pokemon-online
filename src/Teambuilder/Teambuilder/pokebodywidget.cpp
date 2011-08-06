@@ -129,6 +129,7 @@ PokeBodyWidget::PokeBodyWidget(QWidget *upparent, int gen, QAbstractItemModel *i
     connect(m_nick, SIGNAL(textEdited(QString)), SIGNAL(nickChosen(QString)));
     connect(m_nick, SIGNAL(textChanged(QString)), SIGNAL(nickChosen(QString)));
     connect(evchoice, SIGNAL(natureChanged(int, int)),SLOT(setNature(int,int)));
+    connect(evchoice, SIGNAL(EVChanged(int)), SIGNAL(EVChanged(int)));
     connect(itemchoice, SIGNAL(activated(QString)), SLOT(setItem(const QString &)));
 
     changeGen(gen);
@@ -142,6 +143,12 @@ void PokeBodyWidget::goToAdvanced()
 void PokeBodyWidget::setWidgetNum(int num)
 {
     this->num->setText(tr("Pokémon %1").arg(num+1));
+    setProperty("num", num);
+}
+
+void PokeBodyWidget::updateEVs()
+{
+    evchoice->updateEVs();
 }
 
 void PokeBodyWidget::initPokemons()

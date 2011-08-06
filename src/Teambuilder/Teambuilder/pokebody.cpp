@@ -10,6 +10,8 @@ TB_PokemonBody::TB_PokemonBody(PokeTeam *_poke, int num) : widget(NULL)
     m_poke = _poke;
     m_num = num;
 
+    setProperty("num", num);
+
     movesModel = new PokeMovesModel(poke()->num(), gen(), this);
 }
 
@@ -26,6 +28,7 @@ void TB_PokemonBody::setWidget(PokeBodyWidget *widget)
     connect(widget, SIGNAL(moveChosen(int)), SLOT(setMove(int)));
     connect(widget, SIGNAL(moveChosen(int,int)), SLOT(setMove(int,int)));
     connect(widget, SIGNAL(itemChanged(int)), SLOT(setItem(int)));
+    connect(widget, SIGNAL(EVChanged(int)), SIGNAL(EVChanged(int)));
 }
 
 bool TB_PokemonBody::hasWidget() const
@@ -45,18 +48,37 @@ int TB_PokemonBody::gen()
 
 void TB_PokemonBody::connectWithAdvanced(TB_Advanced *ptr)
 {
-    (void) ptr;
-    //    connect(ptr, SIGNAL(abilityChanged()), this, SLOT(updateAbility()));
-    //    connect(ptr, SIGNAL(levelChanged()), this, SLOT(updateLevel()));
-    //    connect(ptr, SIGNAL(imageChanged()), this, SLOT(updateImage()));
-    //    connect(ptr, SIGNAL(genderChanged()), this, SLOT(updateGender()));
-    //    connect(ptr, SIGNAL(genderChanged()), this, SLOT(updateImage()));
-    //    connect(ptr, SIGNAL(statChanged()), this, SLOT(updateEVs()));
-    //    connect(ptr, SIGNAL(pokeFormeChanged(Pokemon::uniqueId)), this, SLOT(changeForme(Pokemon::uniqueId)), Qt::QueuedConnection);
-    //    connect(this, SIGNAL(EVChanged(int)), ptr, SLOT(updateStat(int)));
-    //    connect(this, SIGNAL(natureChanged()), ptr, SLOT(updateStats()));
-    //    connect(this, SIGNAL(pokeImageChanged()), ptr, SLOT(updatePokeImage()));
-    //    connect(ptr, SIGNAL(levelChanged()), this, SIGNAL(levelChanged()));
+    connect(ptr, SIGNAL(abilityChanged()), this, SLOT(updateAbility()));
+    connect(ptr, SIGNAL(levelChanged()), this, SLOT(updateLevel()));
+    connect(ptr, SIGNAL(imageChanged()), this, SLOT(updateImage()));
+    connect(ptr, SIGNAL(genderChanged()), this, SLOT(updateGender()));
+    connect(ptr, SIGNAL(genderChanged()), this, SLOT(updateImage()));
+    connect(ptr, SIGNAL(statChanged()), this, SLOT(updateEVs()));
+    connect(ptr, SIGNAL(pokeFormeChanged(Pokemon::uniqueId)), this, SLOT(changeForme(Pokemon::uniqueId)), Qt::QueuedConnection);
+    connect(this, SIGNAL(EVChanged(int)), ptr, SLOT(updateStat(int)));
+    connect(this, SIGNAL(natureChanged()), ptr, SLOT(updateStats()));
+    connect(this, SIGNAL(pokeImageChanged()), ptr, SLOT(updatePokeImage()));
+    connect(ptr, SIGNAL(levelChanged()), this, SIGNAL(levelChanged()));
+}
+
+void TB_PokemonBody::updateLevel()
+{
+    widget->setLevel(poke()->level());
+}
+
+void TB_PokemonBody::updateEVs()
+{
+    widget->updateEVs();
+}
+
+void TB_PokemonBody::updateImage()
+{
+    widget->setPicture(poke()->picture());
+}
+
+void TB_PokemonBody::updateGender()
+{
+    widget->setGender(poke()->gender());
 }
 
 void TB_PokemonBody::setNum(Pokemon::uniqueId pokenum)

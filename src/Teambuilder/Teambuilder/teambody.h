@@ -33,6 +33,7 @@ private slots:
     void updateButton();
     void changePokemonOrder(QPair<int,int>);
     void changePokemonBase(int slot, const Pokemon::uniqueId &num);
+    void advancedClicked(bool separateWindow);
     void advancedClicked(int index, bool separateWindow);
     void advancedDestroyed();
     void indexNumChanged(Pokemon::uniqueId pokeNum);
