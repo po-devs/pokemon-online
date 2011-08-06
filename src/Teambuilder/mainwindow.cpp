@@ -89,12 +89,14 @@ MainEngine::~MainEngine()
 
 QMenuBar *MainEngine::transformMenuBar(QMenuBar *param)
 {
-    QMenu *m = param->addMenu(tr("Plugins"));
-    m->addAction(tr("Plugin Manager"), this, SLOT(openPluginManager()));
-    m->addSeparator();
+    if (param) {
+        QMenu *m = param->addMenu(tr("Plugins"));
+        m->addAction(tr("Plugin Manager"), this, SLOT(openPluginManager()));
+        m->addSeparator();
 
-    foreach(QString plugin, pluginManager->getVisiblePlugins()) {
-        m->addAction(plugin, this, SLOT(openPluginConfiguration()));
+        foreach(QString plugin, pluginManager->getVisiblePlugins()) {
+            m->addAction(plugin, this, SLOT(openPluginConfiguration()));
+        }
     }
 
     return param;
