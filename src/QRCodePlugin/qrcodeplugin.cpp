@@ -1,11 +1,14 @@
 #include "qrcodeplugin.h"
+#include "../Teambuilder/engineinterface.h"
+#include "../PokemonInfo/pokemonstructs.h"
 #include <QLabel>
 
-ClientPlugin* createPluginClass() {
-    return new QRCodePlugin();
+ClientPlugin* createPluginClass(MainEngineInterface *interface)
+{
+    return new QRCodePlugin(interface);
 }
 
-QRCodePlugin::QRCodePlugin()
+QRCodePlugin::QRCodePlugin(MainEngineInterface *interface) : interface(interface)
 {
 }
 
@@ -21,5 +24,7 @@ QString QRCodePlugin::pluginName() const
 
 QWidget *QRCodePlugin::getConfigurationWidget()
 {
-    return new QLabel("Test Sucessful");
+    TrainerTeam *team = interface->trainerTeam();
+    QString name = team->team().poke(0).nickname();
+    return new QLabel(QObject::tr("Your first pokemon is named %1").arg(name));
 }

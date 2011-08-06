@@ -83,7 +83,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     Teambuilder/teamimporter.h \
     Teambuilder/advanced.h \
     Teambuilder/dockinterface.h \
-    Teambuilder/pokebodywidget.h
+    Teambuilder/pokebodywidget.h \
+    engineinterface.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities
