@@ -277,8 +277,8 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
 
 void MainEngine::updateMenuBar()
 {
-    displayer->setMenuBar((dynamic_cast<CentralWidgetInterface*>(displayer->centralWidget()))
-                            ->createMenuBar(this));
+    displayer->setMenuBar(transformMenuBar(dynamic_cast<CentralWidgetInterface*>(displayer->centralWidget())
+                            ->createMenuBar(this)));
 }
 
 void MainEngine::quit()

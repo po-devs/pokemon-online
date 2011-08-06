@@ -40,12 +40,12 @@ class MyPlugin : public ClientPlugin
 }
 
 extern "C" {
-ServerPlugin *createPluginClass(void);
+ClientPlugin *createPluginClass(void);
 };
 
 ....
 
-ServerPlugin *createPluginClass() {
+ClientPlugin *createPluginClass() {
     return new MyPlugin();
 }
 
