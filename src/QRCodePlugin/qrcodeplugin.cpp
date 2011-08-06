@@ -5,8 +5,11 @@
 #include "../../SpecialIncludes/zlib.h"
 #else
 #include <zlib.h>
+#include <qrencode.h>
 #endif
 #include <QLabel>
+#include <QBitmap>
+#include <QPalette>
 
 ClientPlugin* createPluginClass(MainEngineInterface *interface)
 {
@@ -59,7 +62,53 @@ QWidget *QRCodePlugin::getConfigurationWidget()
 
     int length = stream.total_out;
 
+    QRinput *input = QRinput_new();
+    QRinput_append(input, QR_MODE_8, length, bufptr);
+    QRcode *code = QRcode_encodeInput(input);
+
+    QRinput_free(input);
     free(bufptr);
 
-    return new QLabel(QObject::tr("The zipped team takes %1 bytes.").arg(length));
+    int outputlen = (code->width+7)/8*code->width;
+    uchar output[outputlen];
+    memset(output, 0, outputlen);
+
+    uchar *iterator = output;
+    uchar *initerator = code->data;
+    int cptr = 0;
+
+    /* Converts to bitmap format */
+    for (int i = 0; i < code->width; i++) {
+        for (int j = 0; j < code->width; j++) {
+
+            *iterator |= (*initerator&0x1) << cptr;
+            initerator++;
+
+            cptr++;
+            if (cptr >= 8) {
+                cptr = 0;
+                iterator++;
+            }
+        }
+
+        if (cptr != 0) {
+            cptr = 0;
+            iterator++;
+        }
+    }
+
+    QBitmap bitmap = QBitmap::fromData(QSize(code->width, code->width), output);
+    bitmap = bitmap.transformed(QTransform::fromScale(5,5));
+
+    QRcode_free(code);
+
+    QLabel *ret = new QLabel();
+    QPalette palette = ret->palette();
+    palette.setColor(QPalette::Foreground, Qt::black);
+    palette.setColor(QPalette::Background, Qt::white);
+    ret->setPalette(palette);
+    ret->setPixmap(bitmap);
+
+    ret->setMargin(20);
+    return ret;
 }
