@@ -10,7 +10,7 @@
 
 extern "C" {
 POKEMONONLINESTATSPLUGINSHARED_EXPORT ServerPlugin * createPluginClass(ServerInterface*);
-};
+}
 
 class PokeBattle;
 
