@@ -9,6 +9,7 @@
 #include "../Utilities/functions.h"
 
 class QDomElement;
+class QDomDocument;
 
 // Minimum Generation supported.
 static const int GEN_MIN = 1;
@@ -2232,6 +2233,8 @@ public:
     const QString & trainerNick() const;
 
     bool loadFromFile(const QString &path);
+    void toXml(QDomDocument &doc) const;
+    QString toXml() const;
     bool saveToFile(const QString &path) const;
     bool importFromTxt(const QString &path);
     QString exportToTxt() const;
