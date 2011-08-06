@@ -19,14 +19,20 @@ HEADERS += qrcodeplugin.h\
 
 windows: {
     #on windows, qrencode is probably in that folder
-    LIBS += -L../../bin/myplugins
+    LIBS += -L../../lib/windows/
 }
 
 LIBS += -L../../bin \
     -lpokemonlib \
-    -lutilities \
-    -lz \
-    -lqrencode
+    -lutilities
+
+windows: {
+    LIBS += -lzlib1 -lqrcodelib
+}
+
+!windows: {
+    LIBS += -lz -lqrencode
+}
 
 symbian {
     #Symbian specific definitions
