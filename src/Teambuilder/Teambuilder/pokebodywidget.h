@@ -35,6 +35,8 @@ public:
     void setGender(int gender);
     void setLevel(int level);
     void setMove(int index, int num);
+
+    void updateEVs();
 signals:
     void pokemonChosen(const Pokemon::uniqueId &id);
     void nickChosen(const QString &nick);
@@ -43,6 +45,7 @@ signals:
     void moveChosen(int slot, int move);
     void moveChosen(int move);
     void advanceMenuOpen(bool newWindow);
+    void EVChanged(int);
 private slots:
     void pokemonTextTriggered();
     void setItem(const QString &item);

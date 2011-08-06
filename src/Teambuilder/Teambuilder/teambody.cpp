@@ -263,6 +263,7 @@ void TB_TeamBody::changeIndex()
 
     if (!pokeBody[num]->hasWidget()) {
         PokeBodyWidget *widget = new PokeBodyWidget(upParent,gen,itemsModel,pokeModel, natureModel);
+        connect(widget, SIGNAL(advanceMenuOpen(bool)), SLOT(advancedClicked(bool)));
         pokeBody[num]->setWidget(widget);
 
         body->addWidget(widget);
@@ -336,18 +337,23 @@ void TB_TeamBody::createDockAdvanced(bool sepWindow)
     }
 }
 
-void TB_TeamBody::indexNumChanged(Pokemon::uniqueId pokeNum)
+void TB_TeamBody::indexNumChanged(Pokemon::uniqueId)
 {
     if(dockAdvanced())
     {
-        int index = ((TB_PokemonBody*)sender())->num();
-        m_dockAdvanced->setPokemonNum(index,pokeNum);
+        int index = sender()->property("num").toInt();
+        m_dockAdvanced->updatePokemonNum(index);
 
         /* When loading a team, in order to restore the index right */
         if (index == 5 && index != body->currentIndex()) {
-            m_dockAdvanced->setCurrentPokemon(body->currentIndex());
+            m_dockAdvanced->setCurrentPokemon(body->currentWidget()->property("num").toInt());
         }
     }
+}
+
+void TB_TeamBody::advancedClicked(bool separateWindow)
+{
+    advancedClicked(body->currentWidget()->property("num").toInt(), separateWindow);
 }
 
 void TB_TeamBody::advancedClicked(int index, bool separateWindow)

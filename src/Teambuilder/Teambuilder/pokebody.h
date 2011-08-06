@@ -37,6 +37,10 @@ public slots:
     void setNum(Pokemon::uniqueId pokeNum);
     /* slots used by advanced */
     void updateAbility();
+    void updateLevel();
+    void updateGender();
+    void updateImage();
+    void updateEVs();
     void changeForme(Pokemon::uniqueId);
 
 signals:
