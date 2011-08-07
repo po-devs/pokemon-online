@@ -598,13 +598,35 @@ struct MMDetect : public MM
         }
 
         if (poke(b,s).contains("ProtectiveMoveTurn") && poke(b,s)["ProtectiveMoveTurn"].toInt() == b.turn() - 1) {
-            if (b.true_rand()%2 == 0) {
+            if (!testSuccess(poke(b,s)["ProtectiveMoveCount"].toInt(), b)) {
                 turn(b,s)["Failed"] = true;
             } else {
                 poke(b,s)["ProtectiveMoveTurn"] = b.turn();
+                inc(poke(b,s)["ProtectiveMoveCount"]);
             }
         } else {
             poke(b,s)["ProtectiveMoveTurn"] = b.turn();
+            poke(b,s)["ProtectiveMoveCount"] = 0;
+        }
+    }
+
+    static bool testSuccess(int protectCount, BS &b) {
+        if (b.gen() <= 2) {
+            int x = 256 - (1 << (std::min(protectCount, 8)));
+
+            return (b.true_rand() & 0xFF) <= x;
+        } else if (b.gen() <= 4) {
+            int x = 1 << (std::min(protectCount, 3));
+
+            return (b.true_rand() & (x-1)) == 0;
+        } else {
+            int x = 1 << (std::min(protectCount, 8));
+
+            if (x >= 256) {
+                return b.true_rand() == 0;
+            } else {
+                return (b.true_rand() & (x-1)) == 0;
+            }
         }
     }
 
@@ -2427,20 +2449,8 @@ struct MMEndeavor : public MM
 struct MMEndure : public MM
 {
     MMEndure() {
-        functions["DetermineAttackFailure"] = &daf;
+        functions["DetermineAttackFailure"] = &MMDetect::daf;
         functions["UponAttackSuccessful"] = &uas;
-    }
-
-    static void daf(int s, int, BS &b) {
-        if (poke(b,s).contains("ProtectiveMoveTurn") && poke(b,s)["ProtectiveMoveTurn"].toInt() == b.turn() - 1) {
-            if (b.true_rand()%2 == 0) {
-                turn(b,s)["Failed"] = true;
-            } else {
-                poke(b,s)["ProtectiveMoveTurn"] = b.turn();
-            }
-        } else {
-            poke(b,s)["ProtectiveMoveTurn"] = b.turn();
-        }
     }
 
     static void uas(int s, int, BS &b) {
