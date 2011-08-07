@@ -21,7 +21,7 @@
 /***********************************/
 
 
-TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_team(pub_team)
+TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_teamBody(NULL), m_boxes(NULL), m_pokedex(NULL), m_team(pub_team)
 {
     for (int i = 0; i < NUMBER_GENS; i++)
         gens[i] = NULL;
