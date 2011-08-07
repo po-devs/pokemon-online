@@ -72,9 +72,9 @@ class TeamPokeButton : public QPushButton
 {
     Q_OBJECT
 public:
-    TeamPokeButton(int num, int poke=0, int level=100, int item = 0);
+    TeamPokeButton(int num, Pokemon::uniqueId poke=Pokemon::NoPoke, int level=100, int item = 0);
 
-    void changeInfos(Pokemon::uniqueId poke=Pokemon::uniqueId(), int level=100, int item = 0);
+    void changeInfos(Pokemon::uniqueId poke=Pokemon::NoPoke, int level=100, int item = 0);
     int num() const {return m_num;}
 signals:
     void changePokemonOrder(QPair<int,int> exchange);

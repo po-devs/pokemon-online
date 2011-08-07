@@ -5,8 +5,8 @@
 #include "../Teambuilder/plugininterface.h"
 
 extern "C" {
-ClientPlugin *createPluginClass(MainEngineInterface*);
-};
+QRCODEPLUGINSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
+}
 
 class QRCODEPLUGINSHARED_EXPORT QRCodePlugin : public ClientPlugin {
 public:

@@ -7,6 +7,7 @@
 #include <QLineEdit>
 #include "../../Utilities/otherwidgets.h"
 #include "../../PokemonInfo/pokemoninfo.h"
+#include "theme.h"
 
 TB_EVManager::TB_EVManager(PokeTeam *_poke)
 {
@@ -235,10 +236,15 @@ void TB_EVManager::updateEV(int stat)
     slider(stat)->setValue(poke()->EV(stat));
 
     /* first the color : red if the stat is hindered by the nature, black if normal, blue if the stat is enhanced */
-    QColor colors[3] = {"#fff600", Qt::white, "#00baff"};
+    QColor color;
+
+    switch (poke()->natureBoost(stat)) {
+    case -1: color = Theme::Color("Teambuilder/statHindered"); break;
+    case 1: color = Theme::Color("Teambuilder/statRaised"); break;
+    }
 
     evLabel(stat)->setText(QString::number(poke()->EV(stat)));
-    statLabel(stat)->setText(toColor(QString::number(poke()->stat(stat)), colors[poke()->natureBoost(stat)+1]));
+    statLabel(stat)->setText(toColor(QString::number(poke()->stat(stat)), color));
 }
 
 int TB_EVManager::gen() const

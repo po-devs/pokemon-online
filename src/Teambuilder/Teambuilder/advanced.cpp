@@ -3,6 +3,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/movesetchecker.h"
+#include "theme.h"
 
 TB_Advanced::TB_Advanced(PokeTeam *_poke)
 {
@@ -456,9 +457,14 @@ void TB_Advanced::updateStats()
 
 void TB_Advanced::updateStat(int stat)
 {
-    QColor colors[3] = {"#fff600", Qt::white, "#00baff"};
-    QColor mycol = colors[poke()->natureBoost(stat)+1];
-    stats[stat]->setText(toColor(QString::number(poke()->stat(stat)), mycol));
+    QColor color;
+
+    switch (poke()->natureBoost(stat)) {
+    case -1: color = Theme::Color("Teambuilder/statHindered"); break;
+    case 1: color = Theme::Color("Teambuilder/statRaised"); break;
+    }
+
+    stats[stat]->setText(toColor(QString::number(poke()->stat(stat)), color));
 }
 
 PokeTeam *TB_Advanced::poke()

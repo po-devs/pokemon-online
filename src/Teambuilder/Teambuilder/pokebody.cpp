@@ -25,6 +25,7 @@ void TB_PokemonBody::setWidget(PokeBodyWidget *widget)
     connect(widget, SIGNAL(pokemonChosen(Pokemon::uniqueId)), SLOT(setNum(Pokemon::uniqueId)));
     connect(widget, SIGNAL(nickChosen(QString)), SLOT(setNick(QString)));
     connect(widget, SIGNAL(natureChanged(int)), SLOT(setNature(int)));
+    connect(widget, SIGNAL(natureChanged(int)), SIGNAL(natureChanged()));
     connect(widget, SIGNAL(moveChosen(int)), SLOT(setMove(int)));
     connect(widget, SIGNAL(moveChosen(int,int)), SLOT(setMove(int,int)));
     connect(widget, SIGNAL(itemChanged(int)), SLOT(setItem(int)));
