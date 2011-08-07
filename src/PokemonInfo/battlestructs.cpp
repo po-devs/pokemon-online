@@ -50,7 +50,7 @@ BattleMove::BattleMove()
 }
 
 void BattleMove::load(int gen) {
-    PP() = MoveInfo::PP(num(), gen)*8/5; /* 3 PP-ups */
+    PP() = MoveInfo::PP(num(), gen)*(num() == Move::TrumpCard ? 5 :8)/5; /* 3 PP-ups */
     totalPP() = PP();
 }
 

@@ -23,6 +23,7 @@ public:
     static void init(const QString &dir="Themes/" DEFAULT_PO_THEME "/");
     static void Reload(const QString &dir="Themes/" DEFAULT_PO_THEME);
 
+    static QColor Color(const QString &code);
     static QColor TypeColor(int typenum);
     static QColor CategoryColor(int typenum);
     static QColor StatusColor(int status);
@@ -56,6 +57,7 @@ private:
     static QList<QPixmap> m_TPics;
     static QHash<int, QPixmap> m_statusIcons;
     static QHash<int, QPixmap> m_battleIcons;
+    static QHash<QString, QColor> m_Colors;
     static void loadColors();
     static void loadPixmaps();
 

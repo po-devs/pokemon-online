@@ -3,6 +3,7 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #ifdef WIN32
 #include "../../SpecialIncludes/zlib.h"
+#include "../../SpecialIncludes/qrencode.h"
 #else
 #include <zlib.h>
 #include <qrencode.h>
@@ -39,6 +40,7 @@ QWidget *QRCodePlugin::getConfigurationWidget()
     z_stream stream;
     stream.zalloc = NULL;
     stream.zfree = NULL;
+    stream.opaque = NULL;
 
     deflateInit(&stream, Z_BEST_COMPRESSION);
 
@@ -46,7 +48,7 @@ QWidget *QRCodePlugin::getConfigurationWidget()
 
     uchar *bufptr = (uchar*)malloc(mem);
 
-    stream.next_out = (Bytef*)malloc(mem);
+    stream.next_out = bufptr;
     stream.avail_out = mem;
     stream.next_in = (Bytef*)xml.constData();
     stream.avail_in = xml.length();

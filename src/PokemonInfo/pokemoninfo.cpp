@@ -596,6 +596,11 @@ bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, int gen)
     }
 }
 
+bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid)
+{
+    return m_Names.contains(pokeid);
+}
+
 Pokemon::uniqueId PokemonInfo::Number(const QString &pokename)
 {
     return m_Names.key(pokename, Pokemon::uniqueId());

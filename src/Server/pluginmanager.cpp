@@ -67,11 +67,6 @@ void PluginManager::addPlugin(const QString &path)
     libraries.push_back(l);
     PluginInstanceFunction f = (PluginInstanceFunction) l->GetFunction("createPluginClass");
 
-    QFile out("plugin_address.txt");
-    out.open(QIODevice::WriteOnly);
-    out.write(("Plugin loaded at " + QString::number(long(f))).toUtf8());
-    out.close();
-
     if (!f) {
         delete l;
         libraries.pop_back();

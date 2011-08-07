@@ -3650,9 +3650,9 @@ int BattleSituation::calculateDamage(int p, int t)
 
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
-    int randnum = true_rand() % (255-217) + 217;
+    int randnum = ((true_rand() >> 4) % 16) + 85;
     //Spit Up
-    if (attackused == Move::SpitUp) randnum = 255;
+    if (attackused == Move::SpitUp) randnum = 100;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
     int power = tmove(p).power;
     int type = tmove(p).type;
@@ -3752,7 +3752,7 @@ int BattleSituation::calculateDamage(int p, int t)
     move.remove("ItemMod2Modifier");
     callieffects(p,t,"Mod2Modifier");
     damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
-    damage = damage *randnum*100/255/100*stab/2*typemod/4;
+    damage = damage *randnum/100*stab/2*typemod/4;
 
     /* Mod 3 */
     // FILTER / SOLID ROCK
