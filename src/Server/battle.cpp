@@ -1934,7 +1934,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
           * (20-turnMemory(target).value("Stat7AbilityModifier").toInt())/20;
 
     if (true_rand() % 100 < unsigned(acc)) {
-	return true;
+        return true;
     } else {
         if (!silent) {
             notifyMiss(multiTar, player, target);
