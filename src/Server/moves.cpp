@@ -612,9 +612,9 @@ struct MMDetect : public MM
 
     static bool testSuccess(int protectCount, BS &b) {
         if (b.gen() <= 2) {
-            int x = 256 - (1 << (std::min(protectCount, 8)));
+            int x = 256 / (1 << (std::min(protectCount, 8))) - 1;
 
-            return (b.true_rand() & 0xFF) <= x;
+            return (b.true_rand() & 0xFF) < x;
         } else if (b.gen() <= 4) {
             int x = 1 << (std::min(protectCount, 3));
 
