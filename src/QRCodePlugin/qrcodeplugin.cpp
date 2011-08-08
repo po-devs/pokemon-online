@@ -65,13 +65,7 @@ QWidget *QRCodePlugin::getConfigurationWidget()
     int length = stream.total_out;
 
     QRinput *input = QRinput_new();
-    bufptr[0] = 0xF0;
-    bufptr[1] = 0xFF;
-    bufptr[2] = 0x00;
-    bufptr[3] = 0x0F;
-    QRinput_append(input, QR_MODE_8, 4, bufptr);
-    //QRinput_append(input, QR_MODE_8, length, bufptr);
-    //QRinput_append(input, QR_MODE_8, 500, (uchar*)xml.constData());
+    QRinput_append(input, QR_MODE_8, length, bufptr);
     QRcode *code = QRcode_encodeInput(input);
 
     QRinput_free(input);
