@@ -179,6 +179,7 @@ TB_TeamBody::TB_TeamBody(QWidget *parent, TrainerTeam *team, int gen, QAbstractI
     pokeBody[0]->setWidget(widget);
 
     body->addWidget(widget);
+    connect(widget, SIGNAL(advanceMenuOpen(bool)), SLOT(advancedClicked(bool)));
 
     pokeButtons[0]->setChecked(true);
     for(int i = 0; i < 6; i++) {

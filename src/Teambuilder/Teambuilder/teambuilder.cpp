@@ -6,7 +6,6 @@
 #include "poketablemodel.h"
 #include "pokemovesmodel.h"
 #include "box.h"
-#include "advanced.h"
 #include "mainwindow.h"
 #include "pokedex.h"
 #include "dockinterface.h"
