@@ -162,7 +162,7 @@ void TB_PokemonBody::changeGeneration(int gen)
     }
 }
 
-void TB_PokemonBody::setMove(int movenum, int moveslot)
+void TB_PokemonBody::setMove(int moveslot, int movenum)
 {
     try {
         poke()->setMove(movenum, moveslot,true);
