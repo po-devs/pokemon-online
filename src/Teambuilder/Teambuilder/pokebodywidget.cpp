@@ -126,6 +126,7 @@ PokeBodyWidget::PokeBodyWidget(QWidget *upparent, int gen, QAbstractItemModel *i
     initMoves();
 
     connect(naturechoice, SIGNAL(activated(int)), SIGNAL(natureChanged(int)));
+    connect(naturechoice, SIGNAL(activated(int)),evchoice, SLOT(updateNatureButtons()));
     connect(m_nick, SIGNAL(textEdited(QString)), SIGNAL(nickChosen(QString)));
     connect(m_nick, SIGNAL(textChanged(QString)), SIGNAL(nickChosen(QString)));
     connect(evchoice, SIGNAL(natureChanged(int, int)),SLOT(setNature(int,int)));
