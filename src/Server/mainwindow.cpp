@@ -83,7 +83,7 @@ MainWindow::~MainWindow()
     delete trayMenu;
 }
 
-void MainWindow::closeEvent(QCloseEvent *e)
+void MainWindow::closeEvent(QCloseEvent *)
 {
     myserverwidget->atShutDown();
     exit(0);
