@@ -2404,9 +2404,14 @@ struct MMEncore : public MM
         if (b.koed(s))
             return;
         for (int i = 0; i <= 4; i++) {
-            if (i == 4 || (b.move(s,i) == poke(b,s)["EncoresMove"].toInt() && b.PP(s,i) <= 0)) {
+            if (i == 4) {
                 b.counters(s).removeCounter(BC::Encore);
-                break;
+            } else {
+                if (b.move(s, i) == poke(b,s)["EncoresMove"].toInt()) {
+                    if (b.PP(s, i) <= 0)
+                        b.counters(s).removeCounter(BC::Encore);
+                    break;
+                }
             }
         }
         if (b.counters(s).count(BC::Encore) < 0) {
