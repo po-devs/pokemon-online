@@ -959,7 +959,8 @@ struct AMTechnician : public AM {
     }
 
     static void bpm(int s, int , BS &b) {
-        if (tmove(b,s).power <= 60) {
+        /* Pokemon::Curse is for confusion damaeg */
+        if (tmove(b,s).power <= 60 && type(b,s) != Pokemon::Curse) {
             turn(b,s)["BasePowerAbilityModifier"] = 10;
         }
     }
