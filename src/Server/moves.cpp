@@ -3487,7 +3487,9 @@ struct MMMetronome : public MM
         while (1) {
             int move = b.true_rand() % MoveInfo::NumberOfMoves();
 
-            bool correctMove = !b.hasMove(s,move) && !MMAssist::forbidden_moves.contains(move, b.gen()) && MoveInfo::Exists(move, b.gen());
+            bool correctMove = !b.hasMove(s,move) && ((b.gen() <= 4 && !MMAssist::forbidden_moves.contains(move, b.gen())) ||
+                                                      (b.gen() >= 5 && !forbidden.contains(move)))
+                    && MoveInfo::Exists(move, b.gen());
 
             if (correctMove) {
                 BS::BasicMoveInfo info = tmove(b,s);
@@ -3500,7 +3502,22 @@ struct MMMetronome : public MM
             }
         }
     }
+
+    struct MMMetroSet : public QSet<int> {
+        MMMetroSet() {
+            (*this).unite(MMAssist::forbidden_moves );
+
+            (*this) << Move::GiftPass << Move::YouFirst << Move::FreezeBolt << Move::ColdFlare
+                                                 << Move::NaturePower << Move::Stall << Move::FastGuard << Move::RagePower
+                                                 << Move::AncientSong << Move::SacredSword << Move::TechnoBuster << Move::Transform
+                                                 << Move::V_Generate << Move::WideGuard << Move::BackOut;
+        }
+    };
+
+    static MMMetroSet forbidden;
 };
+
+MMMetronome::MMMetroSet MMMetronome::forbidden;
 
 struct MMMimic : public MM
 {
