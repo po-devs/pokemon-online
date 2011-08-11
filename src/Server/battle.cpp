@@ -2416,8 +2416,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     /* Here because of jewels :( */
     turnMemory(player).remove("BasePowerItemModifier");
 
-    /* Copycat memory */
-    if ((!specialOccurence||gen() >= 5) && attack != Move::Struggle) {
+    /* Choice item memory, copycat in gen 4 and less */
+    if (!specialOccurence && attack != Move::Struggle) {
         battleMemory()["LastMoveUsed"] = attack;
     }
 
