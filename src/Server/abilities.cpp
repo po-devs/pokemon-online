@@ -1533,7 +1533,10 @@ struct AMMagicMirror : public AM
             target = t;
         } else {
             /* Entry hazards */
-            foreach(int t, b.targetList) {
+            foreach(int t, b.revs(s)) {
+                if (b.koed(t)) {
+                    continue;
+                }
                 if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) {
                     target = t;
                     break;
