@@ -2474,10 +2474,7 @@ struct MMFalseSwipe : public MM
 
     static void bcd(int s, int t, BS &b) {
         turn(b,t)["CannotBeKoedBy"] = s;
-    }
-
-    static void uss(int s, int, BS &b) {
-        turn(b,s)["SurviveReason"] = true;
+        addFunction(turn(b,t), "UponSelfSurvival", "FalseSwipe", &uss);
     }
 };
 
