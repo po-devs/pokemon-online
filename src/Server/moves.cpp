@@ -4008,7 +4008,7 @@ struct MMSmellingSalt : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        if (b.hasSubstitute(t))
+        if (b.hasSubstitute(t) && tmove(b,s).attack != Move::EvilEye)
             return;
 
         int st = turn(b,s)["SmellingSalt_Arg"].toInt();
