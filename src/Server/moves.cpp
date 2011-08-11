@@ -2469,12 +2469,15 @@ struct MMFalseSwipe : public MM
 {
     MMFalseSwipe() {
         functions["BeforeCalculatingDamage"] = &bcd;
-        functions["UponSelfSurvival"] = &uss;
     }
 
     static void bcd(int s, int t, BS &b) {
         turn(b,t)["CannotBeKoedBy"] = s;
         addFunction(turn(b,t), "UponSelfSurvival", "FalseSwipe", &uss);
+    }
+
+    static void uss(int s, int, BS &b) {
+        turn(b,s)["SurviveReason"] = true;
     }
 };
 
