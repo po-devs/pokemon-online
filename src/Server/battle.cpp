@@ -2096,6 +2096,7 @@ void BattleSituation::inflictConfusedDamage(int player)
 
     tmove(player).type = Pokemon::Curse;
     tmove(player).power = 40;
+    tmove(player).attack = Move::NoMove;
     turnMemory(player)["TypeMod"] = 4;
     turnMemory(player)["Stab"] = 2;
     tmove(player).category = Move::Physical;
