@@ -157,9 +157,15 @@ void TB_PokemonBody::setNick(const QString &nick)
 
 void TB_PokemonBody::changeGeneration(int gen)
 {
+    poke()->setGen(gen);
+    poke()->load();
+    poke()->runCheck();
+
     if (widget) {
         widget->changeGen(gen);
     }
+
+    updateNum();
 }
 
 void TB_PokemonBody::setMove(int moveslot, int movenum)

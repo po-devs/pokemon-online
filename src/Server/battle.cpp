@@ -2096,6 +2096,7 @@ void BattleSituation::inflictConfusedDamage(int player)
 
     tmove(player).type = Pokemon::Curse;
     tmove(player).power = 40;
+    tmove(player).attack = Move::NoMove;
     turnMemory(player)["TypeMod"] = 4;
     turnMemory(player)["Stab"] = 2;
     tmove(player).category = Move::Physical;
@@ -2415,8 +2416,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     /* Here because of jewels :( */
     turnMemory(player).remove("BasePowerItemModifier");
 
-    /* Copycat memory */
-    if ((!specialOccurence||gen() >= 5) && attack != Move::Struggle) {
+    /* Choice item memory, copycat in gen 4 and less */
+    if (!specialOccurence && attack != Move::Struggle) {
         battleMemory()["LastMoveUsed"] = attack;
     }
 
