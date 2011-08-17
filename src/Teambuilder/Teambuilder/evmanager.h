@@ -25,12 +25,12 @@ public:
     void updateEVs();
     void updateEV(int stat);
     void updateMain();
-    void updateNatureButtons();
     void changeGen(int);
 public slots:
     void changeEV(int newvalue);
     void changeEV(const QString &newvalue);
     void checkNButtonR();
+    void updateNatureButtons();
     void checkNButtonL();
 signals:
     void EVChanged(int stat);

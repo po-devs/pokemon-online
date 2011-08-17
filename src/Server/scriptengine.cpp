@@ -1439,6 +1439,8 @@ void ScriptEngine::setTeamPokeDV(int id, int slot, int stat, int newValue)
 
 int ScriptEngine::rand(int min, int max)
 {
+    if (min == max)
+        return min;
     return (::rand()%(max-min)) + min;
 }
 

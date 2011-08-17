@@ -1657,10 +1657,11 @@ struct MMCopycat : public MM
 
     static void daf(int s, int, BS &b) {
         /* First check if there's even 1 move available */
-        if (!b.battleMemory().contains("LastMoveUsed") || b.battleMemory()["LastMoveUsed"].toInt() == Copycat) {
+        QString key = b.gen() <= 4 ? "LastMoveUsed" : "AnyLastMoveUsed";
+        if (!b.battleMemory().contains(key) || b.battleMemory()[key].toInt() == Copycat) {
             turn(b,s)["Failed"] = true;
         } else {
-            turn(b,s)["CopycatMove"] = b.battleMemory()["LastMoveUsed"];
+            turn(b,s)["CopycatMove"] = b.battleMemory()[key];
         }
     }
 
@@ -2403,9 +2404,14 @@ struct MMEncore : public MM
         if (b.koed(s))
             return;
         for (int i = 0; i <= 4; i++) {
-            if (i == 4 || (b.move(s,i) == poke(b,s)["EncoresMove"].toInt() && b.PP(s,i) <= 0)) {
+            if (i == 4) {
                 b.counters(s).removeCounter(BC::Encore);
-                break;
+            } else {
+                if (b.move(s, i) == poke(b,s)["EncoresMove"].toInt()) {
+                    if (b.PP(s, i) <= 0)
+                        b.counters(s).removeCounter(BC::Encore);
+                    break;
+                }
             }
         }
         if (b.counters(s).count(BC::Encore) < 0) {
@@ -2469,11 +2475,11 @@ struct MMFalseSwipe : public MM
 {
     MMFalseSwipe() {
         functions["BeforeCalculatingDamage"] = &bcd;
-        functions["UponSelfSurvival"] = &uss;
     }
 
     static void bcd(int s, int t, BS &b) {
         turn(b,t)["CannotBeKoedBy"] = s;
+        addFunction(turn(b,t), "UponSelfSurvival", "FalseSwipe", &uss);
     }
 
     static void uss(int s, int, BS &b) {
@@ -3341,7 +3347,10 @@ struct MMMagicCoat : public MM
         } else {
             /* Entry hazards */
             if (tmove(b,s).targets == Move::OpposingTeam) {
-                foreach(int t, b.targetList) {
+                foreach(int t, b.revs(s)) {
+                    if (b.koed(t)) {
+                        continue;
+                    }
                     if ((turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror))) {
                         target = t;
                         break;
@@ -3487,7 +3496,9 @@ struct MMMetronome : public MM
         while (1) {
             int move = b.true_rand() % MoveInfo::NumberOfMoves();
 
-            bool correctMove = !b.hasMove(s,move) && !MMAssist::forbidden_moves.contains(move, b.gen()) && MoveInfo::Exists(move, b.gen());
+            bool correctMove = !b.hasMove(s,move) && ((b.gen() <= 4 && !MMAssist::forbidden_moves.contains(move, b.gen())) ||
+                                                      (b.gen() >= 5 && !forbidden.contains(move)))
+                    && MoveInfo::Exists(move, b.gen());
 
             if (correctMove) {
                 BS::BasicMoveInfo info = tmove(b,s);
@@ -3500,7 +3511,22 @@ struct MMMetronome : public MM
             }
         }
     }
+
+    struct MMMetroSet : public QSet<int> {
+        MMMetroSet() {
+            (*this).unite(MMAssist::forbidden_moves );
+
+            (*this) << Move::GiftPass << Move::YouFirst << Move::FreezeBolt << Move::ColdFlare
+                                                 << Move::NaturePower << Move::Stall << Move::FastGuard << Move::RagePower
+                                                 << Move::AncientSong << Move::SacredSword << Move::TechnoBuster << Move::Transform
+                                                 << Move::V_Generate << Move::WideGuard << Move::BackOut;
+        }
+    };
+
+    static MMMetroSet forbidden;
 };
+
+MMMetronome::MMMetroSet MMMetronome::forbidden;
 
 struct MMMimic : public MM
 {
@@ -4008,7 +4034,7 @@ struct MMSmellingSalt : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        if (b.hasSubstitute(t))
+        if (b.hasSubstitute(t) && tmove(b,s).attack != Move::EvilEye)
             return;
 
         int st = turn(b,s)["SmellingSalt_Arg"].toInt();

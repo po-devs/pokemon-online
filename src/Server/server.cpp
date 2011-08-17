@@ -1119,7 +1119,7 @@ void Server::findBattle(int id, const FindBattleData &f)
         //We have a match!
         ChallengeInfo c;
         c.opp = key;
-        c.rated = (p1->ladder() && p2->ladder() && p1->tier() == p2->tier()) || f.rated || data->rated;
+        c.rated =  f.rated || data->rated || (canHaveRatedBattle(p1->id(), p2->id(), f.mode, f.rated, data->rated));
         c.clauses = TierMachine::obj()->tier(p1->tier()).getClauses();
 
         c.mode = f.mode;

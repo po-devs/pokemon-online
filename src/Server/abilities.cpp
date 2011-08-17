@@ -959,7 +959,8 @@ struct AMTechnician : public AM {
     }
 
     static void bpm(int s, int , BS &b) {
-        if (tmove(b,s).power <= 60) {
+        /* Pokemon::Curse is for confusion damaeg */
+        if (tmove(b,s).power <= 60 && type(b,s) != Pokemon::Curse) {
             turn(b,s)["BasePowerAbilityModifier"] = 10;
         }
     }
@@ -1532,7 +1533,10 @@ struct AMMagicMirror : public AM
             target = t;
         } else {
             /* Entry hazards */
-            foreach(int t, b.targetList) {
+            foreach(int t, b.revs(s)) {
+                if (b.koed(t)) {
+                    continue;
+                }
                 if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) {
                     target = t;
                     break;
