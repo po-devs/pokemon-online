@@ -775,6 +775,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             QString tier;
             in >> tier;
             printHtml(toBoldColor(tr("Tier: "), Qt::blue) + tier);
+            printHtml(toBoldColor(tr("Mode: "), Qt::blue) + ChallengeInfo::modeName(info().mode));
             break;
         }
     case DynamicInfo:
