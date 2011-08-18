@@ -606,7 +606,7 @@ struct MMDetect : public MM
             }
         } else {
             poke(b,s)["ProtectiveMoveTurn"] = b.turn();
-            poke(b,s)["ProtectiveMoveCount"] = 0;
+            poke(b,s)["ProtectiveMoveCount"] = 1;
         }
     }
 
