@@ -541,7 +541,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
             printLine(tr("%1 sent out %2!").arg(name(info().player(spot)), rnick(spot)), silent);
 
         printLine(tr("%1's previous position in the team: %2.").arg(nick(spot)).arg(prevIndex), true);
-        printLine(tr("%1's life: %2/%3 HP.").arg(nick(spot), info().currentPoke(spot).lifePoints(), info().currentPoke(spot).totalLifePoints()), true);
+        printLine(tr("%1's life: %2/%3 HP.").arg(nick(spot)).arg(info().currentPoke(spot).lifePoints()).arg(info().currentPoke(spot).totalLifePoints()), true);
         printLine(tr("%1's status: %2.").arg(nick(spot), StatInfo::Status(info().currentPoke(spot).status())), true);
 
 	    break;
