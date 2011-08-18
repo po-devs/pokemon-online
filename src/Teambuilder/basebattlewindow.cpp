@@ -886,7 +886,7 @@ void BaseBattleWindow::printLine(const QString &str, bool silent)
     if (str == "") {
         blankMessage = true;
         mychat->insertHtml("");
-    } else {
+    } else if (!silent) {
         blankMessage = false;
     }
 
@@ -901,7 +901,9 @@ void BaseBattleWindow::printLine(const QString &str, bool silent)
 
 void BaseBattleWindow::printHtml(const QString &str, bool silent)
 {
-    blankMessage = false;
+    if (!silent) {
+        blankMessage = false;
+    }
 
     QString html = str + "<br />";
     if (!silent) {
