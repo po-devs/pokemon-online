@@ -115,4 +115,20 @@ void writeSettings(QWidget *w);
 void loadSettings(QWidget *w, const QSize &defaultSize = QSize());
 
 QString slug(const QString &s);
+
+template<class T>
+void setDefaultValue(const QString &key, T value)
+{
+    QSettings s;
+    if (s.value(key).isNull())
+        s.setValue(key, value);
+}
+
+template<class T>
+void setDefaultValue(QSettings &s, const QString &key, T value)
+{
+    if (s.value(key).isNull())
+        s.setValue(key, value);
+}
+
 #endif // FUNCTIONS_H

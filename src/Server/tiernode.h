@@ -32,7 +32,7 @@ struct TierNode
         return new QTreeWidgetItem(QStringList() << name());
     }
     virtual void serialize(QDataStream &stream, int level) {
-        stream << uchar (level) << name().toUtf8();
+        stream << uchar (level) << name();
     }
 
     int displayOrder;

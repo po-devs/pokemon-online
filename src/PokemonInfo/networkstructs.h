@@ -19,6 +19,13 @@ public:
 QDataStream & operator << (QDataStream & out,const TeamInfo & team);
 QDataStream & operator >> (QDataStream & in,TeamInfo & team);
 
+/* Only infos needed by other players */
+class BasicInfo
+{
+public:
+    QString name, info;
+};
+
 struct UserInfo
 {
     enum Flags {
@@ -58,15 +65,19 @@ inline QDataStream & operator >> (QDataStream &d, UserInfo &ui) {
     return d;
 }
 
+QDataStream & operator << (QDataStream & out,const BasicInfo & team);
+QDataStream & operator >> (QDataStream & in,BasicInfo & team);
+
 /* Struct representing a player's data */
-class BasicPlayerInfo
+class PlayerInfo
 {
 public:
     qint32 id;
-    QString name;
+    BasicInfo team;
     qint8 auth;
     quint8 flags;
     qint16 rating;
+    Pokemon::uniqueId pokes[6];
     quint16 avatar;
     QString tier;
     QColor color;
@@ -95,18 +106,8 @@ public:
     }
 };
 
-QDataStream & operator >> (QDataStream &in, BasicPlayerInfo &p);
-QDataStream & operator << (QDataStream &out, const BasicPlayerInfo &p);
-
-class PlayerInfo : public BasicPlayerInfo
-{
-public:
-    bool complete;
-    QString info;
-    Pokemon::uniqueId pokes[6];
-
-    PlayerInfo();
-};
+QDataStream & operator >> (QDataStream &in, PlayerInfo &p);
+QDataStream & operator << (QDataStream &out, const PlayerInfo &p);
 
 struct FullInfo
 {

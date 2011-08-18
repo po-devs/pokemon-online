@@ -702,18 +702,28 @@ bool Player::connected() const
     return relay().isConnected();
 }
 
-BasicPlayerInfo Player::bundle() const
+PlayerInfo Player::bundle() const
 {
-    BasicPlayerInfo p;
+    PlayerInfo p;
     p.auth = myauth;
     p.flags = state() | (Battling && battling());
     p.id = id();
-    p.name = name();
+    p.team = basicInfo();
     p.rating = ladder() ? rating() : -1;
     p.tier = tier();
     p.avatar = avatar();
     p.color = color();
     p.gen = gen();
+
+    if (showteam()) {
+        for(int i = 0; i < 6; i++) {
+            p.pokes[i] = team().poke(i).num();
+        }
+    } else {
+        for(int i = 0; i < 6; i++) {
+            p.pokes[i] = 0;
+        }
+    }
 
     return p;
 }

@@ -62,12 +62,4 @@ public:
     }
 };
 
-template<class T>
-void MainEngine::setDefaultValue(const QString &key, T value)
-{
-    QSettings s;
-    if (s.value(key).isNull())
-        s.setValue(key, value);
-}
-
 #endif // MAINWINDOW_H

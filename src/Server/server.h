@@ -168,7 +168,7 @@ private:
 
     Analyzer *registry_connection;
     QString serverName, serverDesc;
-    QByteArray serverAnnouncement;
+    QString serverAnnouncement;
     quint16 serverPrivate, serverPlayerMax;
     QList<quint16>  serverPorts;
     QStringList proxyServers;
