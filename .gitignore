@@ -22,6 +22,7 @@ bin/Themes/
 bin/Teams/
 bin/usage_stats/formatted/
 *.a
+bin/*
 
 # Ignore emacs temporary files
 *~

@@ -84,6 +84,8 @@ inline QString toBoldColor(const QString &mess, const QColor &col)
     return QString("<b><span style='color:%1'>%2</span></b>").arg(col.name(), mess);
 }
 
+QString cleanStringForFiles(const QString &title);
+
 inline long int true_rand() {
     return (rand() + unsigned(clock()))%RAND_MAX;
 }

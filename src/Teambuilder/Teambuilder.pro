@@ -37,7 +37,8 @@ SOURCES += main.cpp \
     Teambuilder/teambody.cpp \
     Teambuilder/teamimporter.cpp \
     Teambuilder/dockinterface.cpp \
-    Teambuilder/pokebodywidget.cpp
+    Teambuilder/pokebodywidget.cpp \
+    logmanager.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
