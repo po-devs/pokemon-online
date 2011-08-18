@@ -59,6 +59,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     question = NULL;
     this->battleId() = battleId;
     this->started() = false;
+    ownid() = me.id;
 
     conf() = _conf;
 

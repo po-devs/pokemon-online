@@ -1464,7 +1464,7 @@ void Client::battleReceived(int battleid, int id1, int id2)
 
 void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 {
-    BaseBattleWindow *battle = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf);
+    BaseBattleWindow *battle = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf, ownId());
     battle->setWindowFlags(Qt::Window);
     battle->show();
 
