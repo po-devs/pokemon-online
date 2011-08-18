@@ -253,6 +253,11 @@ void QScrollDownTextBrowser::insertHtml(const QString &text)
     moveCursor(QTextCursor::End);
     QTextBrowser::insertHtml(text);
 
+    /* If we had something highlighted, restore it */
+    if (cursor.selectionEnd() != cursor.selectionStart()) {
+        setTextCursor(cursor);
+    }
+
     if(b->value() != e)
     {
         b->setValue(f);
@@ -263,11 +268,6 @@ void QScrollDownTextBrowser::insertHtml(const QString &text)
         moveCursor(QTextCursor::End);
     }
     linecount++;
-
-    /* If we had something highlighted, restore it */
-    if (cursor.selectionEnd() != cursor.selectionStart()) {
-        setTextCursor(cursor);
-    }
 }
 
 void QScrollDownTextBrowser::keepLines(int numberOfLines)
