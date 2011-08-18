@@ -396,7 +396,7 @@ struct ChallengeInfo
     }
 
     static QString modeName(int index) {
-        return index >= ModeFirst && index < ModeLast ? modeText[index-ModeFirst] : "";
+        return index >= ModeFirst && index <= ModeLast ? modeText[index-ModeFirst] : "";
     }
 
     /* Insensitive case search for the clause, returns -1 if not found */

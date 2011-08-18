@@ -34,7 +34,7 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int 
 }
 
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf) :
-        delayed(0), ignoreSpecs(false)
+    delayed(0), ignoreSpecs(false)
 {
     this->conf() = conf;
     myInfo = new BaseBattleInfo(me, opponent, conf.mode);
@@ -140,6 +140,9 @@ void BaseBattleWindow::init()
     undelayOnSounds = true;
 
     musicPlayStop();
+
+    printLine(tr("Log belonging to %1").arg(info().name(0)), true);
+    printLine("");
 }
 
 bool BaseBattleWindow::musicPlayed() const
@@ -193,9 +196,9 @@ void BaseBattleWindow::enqueueMusic()
 void BaseBattleWindow::criesProblem(Phonon::State newState)
 {
     /* Phonon is really unundertandable, we can't use the code commented out */
-//    if ((newState == Phonon::ErrorState || newState == Phonon::StoppedState || newState == Phonon::PausedState) && undelayOnSounds) {
-//        undelay();
-//    }
+    //    if ((newState == Phonon::ErrorState || newState == Phonon::StoppedState || newState == Phonon::PausedState) && undelayOnSounds) {
+    //        undelay();
+    //    }
     if (newState != Phonon::PlayingState && newState != Phonon::LoadingState && undelayOnSounds) {
         undelay();
     }
@@ -328,7 +331,7 @@ void BaseBattleWindow::sendMessage()
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
     if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)
-        && inf[0] != char(Spectating)) {
+            && inf[0] != char(Spectating)) {
         delayedCommands.push_back(inf);
         return;
     }
@@ -366,74 +369,75 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
     switch (command)
     {
     case SendOut:
+    {
+        bool silent;
+        quint8 prevIndex;
+        in >> silent;
+        in >> prevIndex;
+
+        info().sub[spot] = false;
+        info().specialSprite[spot] = Pokemon::NoPoke;
+
+        info().switchPoke(spot, prevIndex);
+        in >> info().currentShallow(spot);
+        info().pokeAlive[spot] = true;
+        mydisplay->updatePoke(spot);
+
+        mydisplay->updatePoke(info().player(spot), info().slotNum(spot));
+        mydisplay->updatePoke(info().player(spot), prevIndex);
+
+        //Plays the battle cry when a pokemon is switched in
+        if (musicPlayed())
         {
-            bool silent;
-            quint8 prevIndex;
-            in >> silent;
-            in >> prevIndex;
-
-            info().sub[spot] = false;
-            info().specialSprite[spot] = Pokemon::NoPoke;
-
-            info().switchPoke(spot, prevIndex);
-            in >> info().currentShallow(spot);
-            info().pokeAlive[spot] = true;
-            mydisplay->updatePoke(spot);
-
-            mydisplay->updatePoke(info().player(spot), info().slotNum(spot));
-            mydisplay->updatePoke(info().player(spot), prevIndex);
-
-            //Plays the battle cry when a pokemon is switched in
-            if (musicPlayed())
-            {
-                playCry(info().currentShallow(spot).num().pokenum);
-            }
-
-
-            QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());
-            if (pokename != rnick(spot))
-                printLine(tr("%1 sent out %2! (%3)").arg(name(player(spot)), rnick(spot), pokename), silent);
-            else
-                printLine(tr("%1 sent out %2!").arg(name(player(spot)), rnick(spot)), silent);
-
-            printLine(tr("%1's previous position in the team: %2.").arg(nick(spot)).arg(prevIndex), true);
-            printLine(tr("%1's life: %2%.").arg(nick(spot)).arg(info().currentShallow(spot).lifePercent()), true);
-            printLine(tr("%1's status: %2.").arg(nick(spot), StatInfo::Status(info().currentShallow(spot).status())), true);
-
-            break;
+            playCry(info().currentShallow(spot).num().pokenum);
         }
+
+
+        QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());
+        if (pokename != rnick(spot))
+            printLine(tr("%1 sent out %2! (%3)").arg(name(player(spot)), rnick(spot), pokename), silent);
+        else
+            printLine(tr("%1 sent out %2!").arg(name(player(spot)), rnick(spot)), silent);
+
+        printLine(tr("%1's previous position in the team: %2.").arg(nick(spot)).arg(prevIndex), true);
+        printLine(tr("%1's new place on the field: %2.").arg(nick(spot)).arg(info().slotNum(spot)), true);
+        printLine(tr("%1's life: %2%.").arg(nick(spot)).arg(info().currentShallow(spot).lifePercent()), true);
+        printLine(tr("%1's status: %2.").arg(nick(spot), StatInfo::Status(info().currentShallow(spot).status())), true);
+
+        break;
+    }
     case SendBack:
         printLine(tr("%1 called %2 back!").arg(name(player(spot)), rnick(spot)));
         switchToNaught(spot);
         break;
     case UseAttack:
-        {
-            qint16 attack;
-            in >> attack;
+    {
+        qint16 attack;
+        in >> attack;
 
-            printHtml(tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), Theme::TypeColor(MoveInfo::Type(attack, gen())))));
-            break;
-        }
+        printHtml(tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), Theme::TypeColor(MoveInfo::Type(attack, gen())))));
+        break;
+    }
     case BeginTurn:
-        {
-            int turn;
-            in >> turn;
-            printLine("");
-            printHtml(toBoldColor(tr("Start of turn %1").arg(turn), Qt::blue));
-            break;
-        }
+    {
+        int turn;
+        in >> turn;
+        printLine("");
+        printHtml(toBoldColor(tr("Start of turn %1").arg(turn), Qt::blue));
+        break;
+    }
     case ChangeHp:
-        {
-            quint16 newHp;
-            in >> newHp;
+    {
+        quint16 newHp;
+        in >> newHp;
 
-            printLine(tr("%1's new HP is %2%.").arg(nick(spot)).arg(newHp), true);
+        printLine(tr("%1's new HP is %2%.").arg(nick(spot)).arg(newHp), true);
 
-            animatedHpSpot() = spot;
-            animatedHpGoal() = newHp;
-            animateHPBar();
-            break;
-        }
+        animatedHpSpot() = spot;
+        animatedHpGoal() = newHp;
+        animateHPBar();
+        break;
+    }
     case Ko:
         //Plays the battle cry when a pokemon faints
         if (musicPlayed())
@@ -445,32 +449,32 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         switchToNaught(spot);
         break;
     case Hit:
-        {
-            quint8 number;
-            in >> number;
-            printLine(tr("Hit %1 times!").arg(int(number)));
-            break;
-        }
+    {
+        quint8 number;
+        in >> number;
+        printLine(tr("Hit %1 times!").arg(int(number)));
+        break;
+    }
     case Effective:
-        {
-            quint8 eff;
-            in >> eff;
-            switch (eff) {
-     case 0:
-                printLine(tr("It had no effect!"));
-                break;
-     case 1:
-     case 2:
-                printHtml(toColor(tr("It's not very effective..."), Qt::gray));
-                break;
-     case 8:
-     case 16:
-                printHtml(toColor(tr("It's super effective!"), Qt::blue));
-     default:
-                break;
-            }
+    {
+        quint8 eff;
+        in >> eff;
+        switch (eff) {
+        case 0:
+            printLine(tr("It had no effect!"));
+            break;
+        case 1:
+        case 2:
+            printHtml(toColor(tr("It's not very effective..."), Qt::gray));
+            break;
+        case 8:
+        case 16:
+            printHtml(toColor(tr("It's super effective!"), Qt::blue));
+        default:
             break;
         }
+        break;
+    }
     case CriticalHit:
         printHtml(toColor(tr("A critical hit!"), "#6b0000"));
         break;
@@ -487,31 +491,31 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         printLine(tu(tr("%1's %2 %3%4!").arg(nick(spot), StatInfo::Stat(stat), abs(boost) > 1 ? tr("sharply ") : "", boost > 0 ? tr("rose") : tr("fell"))));
         break;
     case StatusChange:
-        {
-            static const QString statusChangeMessages[6] = {
-                tr("%1 is paralyzed! It may be unable to move!"),
-                tr("%1 fell asleep!"),
-                tr("%1 was frozen solid!"),
-                tr("%1 was burned!"),
-                tr("%1 was poisoned!"),
-                tr("%1 was badly poisoned!")
-            };
+    {
+        static const QString statusChangeMessages[6] = {
+            tr("%1 is paralyzed! It may be unable to move!"),
+            tr("%1 fell asleep!"),
+            tr("%1 was frozen solid!"),
+            tr("%1 was burned!"),
+            tr("%1 was poisoned!"),
+            tr("%1 was badly poisoned!")
+        };
 
-            qint8 status;
-            in >> status;
-            bool multipleTurns;
-            in >> multipleTurns;
-            if (status > Pokemon::Fine && status <= Pokemon::Poisoned) {
-                printHtml(toColor(tu(statusChangeMessages[status-1 + (status == Pokemon::Poisoned && multipleTurns)].arg(nick(spot))), Theme::StatusColor(status)));
-            } else if (status == Pokemon::Confused) {
-                printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), Theme::TypeColor(Type::Ghost).name()));
-            }
-            printLine(tr("%1 had its status changed to: %2.").arg(nick(spot), StatInfo::Status(status)), true);
-
-            break;
+        qint8 status;
+        in >> status;
+        bool multipleTurns;
+        in >> multipleTurns;
+        if (status > Pokemon::Fine && status <= Pokemon::Poisoned) {
+            printHtml(toColor(tu(statusChangeMessages[status-1 + (status == Pokemon::Poisoned && multipleTurns)].arg(nick(spot))), Theme::StatusColor(status)));
+        } else if (status == Pokemon::Confused) {
+            printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), Theme::TypeColor(Type::Ghost).name()));
         }
+        printLine(tr("%1 had its status changed to: %2.").arg(nick(spot), StatInfo::Status(status)), true);
+
+        break;
+    }
     case AbsStatusChange:
-        {
+    {
         qint8 poke, status;
         in >> poke >> status;
 
@@ -529,7 +533,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         break;
     }
     case AlreadyStatusMessage:
-        {
+    {
         quint8 status;
         in >> status;
         printHtml(toColor(tr("%1 is already %2.").arg(tu(nick(spot)), StatInfo::Status(status)),
@@ -537,127 +541,127 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         break;
     }
     case StatusMessage:
+    {
+        qint8 status;
+        in >> status;
+        switch(status)
         {
-            qint8 status;
-            in >> status;
-            switch(status)
-            {
-     case FeelConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(spot)))), Theme::TypeColor(Type::Ghost).name()));
-                break;
-     case HurtConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), Theme::TypeColor(Type::Ghost).name()));
-                break;
-     case FreeConfusion:
-                printHtml(toColor(escapeHtml(tu(tr("%1 snapped out its confusion!").arg(nick(spot)))), Theme::TypeColor(Type::Dark).name()));
-                break;
-     case PrevParalysed:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Paralysed)));
-                break;
-     case FeelAsleep:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Asleep)));
-                break;
-     case FreeAsleep:
-                printHtml(toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(spot)))), Theme::TypeColor(Type::Dark).name()));
-                break;
-     case HurtBurn:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Burnt)));
-                break;
-     case HurtPoison:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Poisoned)));
-                break;
-     case PrevFrozen:
-                printHtml(toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Frozen)));
-                break;
-     case FreeFrozen:
-                printHtml(toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(spot)))), Theme::TypeColor(Type::Dark).name()));
-                break;
-            }
+        case FeelConfusion:
+            printHtml(toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(spot)))), Theme::TypeColor(Type::Ghost).name()));
+            break;
+        case HurtConfusion:
+            printHtml(toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), Theme::TypeColor(Type::Ghost).name()));
+            break;
+        case FreeConfusion:
+            printHtml(toColor(escapeHtml(tu(tr("%1 snapped out its confusion!").arg(nick(spot)))), Theme::TypeColor(Type::Dark).name()));
+            break;
+        case PrevParalysed:
+            printHtml(toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Paralysed)));
+            break;
+        case FeelAsleep:
+            printHtml(toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Asleep)));
+            break;
+        case FreeAsleep:
+            printHtml(toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(spot)))), Theme::TypeColor(Type::Dark).name()));
+            break;
+        case HurtBurn:
+            printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Burnt)));
+            break;
+        case HurtPoison:
+            printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Poisoned)));
+            break;
+        case PrevFrozen:
+            printHtml(toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(spot)))), Theme::StatusColor(Pokemon::Frozen)));
+            break;
+        case FreeFrozen:
+            printHtml(toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(spot)))), Theme::TypeColor(Type::Dark).name()));
+            break;
         }
-        break;
+    }
+    break;
     case Failed:
         printLine(tr("But it failed!"));
         break;
     case BattleChat:
     case EndMessage:
-        {
-            QString message;
-            in >> message;
-            if (message=="")
-                return;
-            printHtml(QString("<span style='color:") + (spot?"#5811b1":"green") + "'><b>" + escapeHtml(name(spot)) + ": </b></span>" + escapeHtml(message));
-            break;
-        }
+    {
+        QString message;
+        in >> message;
+        if (message=="")
+            return;
+        printHtml(QString("<span style='color:") + (spot?"#5811b1":"green") + "'><b>" + escapeHtml(name(spot)) + ": </b></span>" + escapeHtml(message));
+        break;
+    }
     case Spectating:
-        {
-            bool come;
-            qint32 id;
-            in >> come >> id;
-            addSpectator(come, id);
-            break;
-        }
+    {
+        bool come;
+        qint32 id;
+        in >> come >> id;
+        addSpectator(come, id);
+        break;
+    }
     case SpectatorChat:
-        {
-            if (ignoreSpecs)
-                return;
-            qint32 id;
-            QString message;
-            in >> id >> message;
-            printHtml(toColor(client()->name(id), Qt::blue) + ": " + escapeHtml(message));
-            break;
-        }
+    {
+        if (ignoreSpecs)
+            return;
+        qint32 id;
+        QString message;
+        in >> id >> message;
+        printHtml(toColor(client()->name(id), Qt::blue) + ": " + escapeHtml(message));
+        break;
+    }
     case MoveMessage:
-        {
-            quint16 move=0;
-            uchar part=0;
-            qint8 type(0), foe(0);
-            qint16 other(0);
-            QString q;
-            in >> move >> part >> type >> foe >> other >> q;
-            QString mess = MoveInfo::MoveMessage(move,part);
-            mess.replace("%s", nick(spot));
-            mess.replace("%ts", name(player(spot)));
-            mess.replace("%tf", name(opponent(player(spot))));
-            mess.replace("%t", TypeInfo::Name(type));
-            mess.replace("%f", nick(foe));
-            mess.replace("%m", MoveInfo::Name(other));
-            mess.replace("%d", QString::number(other));
-            mess.replace("%q", q);
-            mess.replace("%i", ItemInfo::Name(other));
-            mess.replace("%a", AbilityInfo::Name(other));
-            mess.replace("%p", PokemonInfo::Name(other));
-            printHtml(toColor(escapeHtml(tu(mess)), Theme::TypeColor(type)));
-            break;
-        }
+    {
+        quint16 move=0;
+        uchar part=0;
+        qint8 type(0), foe(0);
+        qint16 other(0);
+        QString q;
+        in >> move >> part >> type >> foe >> other >> q;
+        QString mess = MoveInfo::MoveMessage(move,part);
+        mess.replace("%s", nick(spot));
+        mess.replace("%ts", name(player(spot)));
+        mess.replace("%tf", name(opponent(player(spot))));
+        mess.replace("%t", TypeInfo::Name(type));
+        mess.replace("%f", nick(foe));
+        mess.replace("%m", MoveInfo::Name(other));
+        mess.replace("%d", QString::number(other));
+        mess.replace("%q", q);
+        mess.replace("%i", ItemInfo::Name(other));
+        mess.replace("%a", AbilityInfo::Name(other));
+        mess.replace("%p", PokemonInfo::Name(other));
+        printHtml(toColor(escapeHtml(tu(mess)), Theme::TypeColor(type)));
+        break;
+    }
     case NoOpponent:
         printLine(tr("But there was no target..."));
         break;
     case ItemMessage:
-        {
-            quint16 item=0;
-            uchar part=0;
-            qint8 foe = 0;
-            qint16 other=0;
-            qint16 berry = 0;
-            in >> item >> part >> foe >> berry >> other;
-            QString mess = ItemInfo::Message(item, part);
-            mess.replace("%st", StatInfo::Stat(other));
-            mess.replace("%s", nick(spot));
-            mess.replace("%f", nick(foe));
-            mess.replace("%i", ItemInfo::Name(berry));
-            mess.replace("%m", MoveInfo::Name(other));
-            /* Balloon gets a really special treatment */
-            if (item == 35)
-                printHtml(QString("<b>%1</b>").arg(escapeHtml(tu(mess))));
-            else
-                printLine(tu(mess));
-            break;
-        }
+    {
+        quint16 item=0;
+        uchar part=0;
+        qint8 foe = 0;
+        qint16 other=0;
+        qint16 berry = 0;
+        in >> item >> part >> foe >> berry >> other;
+        QString mess = ItemInfo::Message(item, part);
+        mess.replace("%st", StatInfo::Stat(other));
+        mess.replace("%s", nick(spot));
+        mess.replace("%f", nick(foe));
+        mess.replace("%i", ItemInfo::Name(berry));
+        mess.replace("%m", MoveInfo::Name(other));
+        /* Balloon gets a really special treatment */
+        if (item == 35)
+            printHtml(QString("<b>%1</b>").arg(escapeHtml(tu(mess))));
+        else
+            printLine(tu(mess));
+        break;
+    }
     case Flinch:
         printLine(tu(tr("%1 flinched!").arg(nick(spot))));
         break;
     case Recoil:
-        {
+    {
         bool damage;
         in >> damage;
 
@@ -668,36 +672,36 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         break;
     }
     case WeatherMessage: {
-            qint8 wstatus, weather;
-            in >> wstatus >> weather;
-            if (weather == NormalWeather)
-                break;
+        qint8 wstatus, weather;
+        in >> wstatus >> weather;
+        if (weather == NormalWeather)
+            break;
 
-            QColor c = Theme::TypeColor(TypeInfo::TypeForWeather(weather));
-            switch(wstatus) {
-             case EndWeather:
-                switch(weather) {
-                case Hail: printHtml(toColor(tr("The hail subsided!"),c)); break;
-                case SandStorm: printHtml(toColor(tr("The sandstorm subsided!"),c)); break;
-                case Sunny: printHtml(toColor(tr("The sunlight faded!"),c)); break;
-                case Rain: printHtml(toColor(tr("The rain stopped!"),c)); break;
-             } break;
-             case HurtWeather:
-                switch(weather) {
-                case Hail: printHtml(toColor(tr("%1 is buffeted by the hail!").arg(tu(nick(spot))),c)); break;
-                case SandStorm: printHtml(toColor(tr("%1 is buffeted by the sandstorm!").arg(tu(nick(spot))),c)); break;
-             } break;
-             case ContinueWeather:
-                switch(weather) {
-                case Hail: printHtml(toColor(tr("Hail continues to fall!"),c)); break;
-                case SandStorm: printHtml(toColor(tr("The sandstorm rages!"),c)); break;
-                case Sunny: printHtml(toColor(tr("The sunlight is strong!"),c)); break;
-                case Rain: printHtml(toColor(tr("Rain continues to fall!"),c)); break;
-             } break;
-            }
-        } break;
+        QColor c = Theme::TypeColor(TypeInfo::TypeForWeather(weather));
+        switch(wstatus) {
+        case EndWeather:
+            switch(weather) {
+            case Hail: printHtml(toColor(tr("The hail subsided!"),c)); break;
+            case SandStorm: printHtml(toColor(tr("The sandstorm subsided!"),c)); break;
+            case Sunny: printHtml(toColor(tr("The sunlight faded!"),c)); break;
+            case Rain: printHtml(toColor(tr("The rain stopped!"),c)); break;
+            } break;
+        case HurtWeather:
+            switch(weather) {
+            case Hail: printHtml(toColor(tr("%1 is buffeted by the hail!").arg(tu(nick(spot))),c)); break;
+            case SandStorm: printHtml(toColor(tr("%1 is buffeted by the sandstorm!").arg(tu(nick(spot))),c)); break;
+            } break;
+        case ContinueWeather:
+            switch(weather) {
+            case Hail: printHtml(toColor(tr("Hail continues to fall!"),c)); break;
+            case SandStorm: printHtml(toColor(tr("The sandstorm rages!"),c)); break;
+            case Sunny: printHtml(toColor(tr("The sunlight is strong!"),c)); break;
+            case Rain: printHtml(toColor(tr("Rain continues to fall!"),c)); break;
+            } break;
+        }
+    } break;
     case StraightDamage :
-        {
+    {
         qint16 damage;
         in >> damage;
 
@@ -706,7 +710,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         break;
     }
     case AbilityMessage:
-        {
+    {
         quint16 ab=0;
         uchar part=0;
         qint8 type(0), foe(0);
@@ -749,111 +753,111 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         break;
     }
     case BlankMessage:
-            printLine("");
-            break;
+        printLine("");
+        break;
     case Clause:
-        {
-            printLine(ChallengeInfo::battleText(truespot));
-            break;
-        }
+    {
+        printLine(ChallengeInfo::battleText(truespot));
+        break;
+    }
     case Rated:
-        {
-            bool rated;
-            in >> rated;
-            printHtml(toBoldColor(tr("Rule: "), Qt::blue) + (rated? tr("Rated") : tr("Unrated")));
+    {
+        bool rated;
+        in >> rated;
+        printHtml(toBoldColor(tr("Rule: "), Qt::blue) + (rated? tr("Rated") : tr("Unrated")));
 
-            for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-                if (conf().clauses & (1 << i)) {
-                    printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(i));
-                }
+        for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+            if (conf().clauses & (1 << i)) {
+                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(i));
             }
-
-            break;
         }
+
+        break;
+    }
     case TierSection:
-        {
-            QString tier;
-            in >> tier;
-            printHtml(toBoldColor(tr("Tier: "), Qt::blue) + tier);
-            printHtml(toBoldColor(tr("Mode: "), Qt::blue) + ChallengeInfo::modeName(info().mode));
-            break;
-        }
+    {
+        QString tier;
+        in >> tier;
+        printHtml(toBoldColor(tr("Tier: "), Qt::blue) + tier);
+        printHtml(toBoldColor(tr("Mode: "), Qt::blue) + ChallengeInfo::modeName(info().mode));
+        break;
+    }
     case DynamicInfo:
-        {
-            in >> info().statChanges[spot];
-            mydisplay->updateToolTip(spot);
-            break;
-        }
+    {
+        in >> info().statChanges[spot];
+        mydisplay->updateToolTip(spot);
+        break;
+    }
     case TempPokeChange:
-        {
-            quint8 type;
-            in >> type;
-            if (type == TempSprite) {
-                Pokemon::uniqueId old = info().specialSprite[spot];
-                in >> info().specialSprite[spot];
-                if (info().specialSprite[spot] == -1) {
-                    info().lastSeenSpecialSprite[spot] = old;
-                } else if (info().specialSprite[spot] == Pokemon::NoPoke) {
-                    info().specialSprite[spot] = info().lastSeenSpecialSprite[spot];
-                }
-                mydisplay->updatePoke(spot);
-            } else if (type == DefiniteForme)
-            {
-                quint8 poke;
-                quint16 newform;
-                in >> poke >> newform;
-                info().pokemons[spot][poke].num() = newform;
-                if (info().isOut(spot, poke)) {
-                    info().currentShallow(info().slot(spot, poke)).num() = newform;
-                }
-            } else if (type == AestheticForme)
-            {
-                quint16 newforme;
-                in >> newforme;
-                info().currentShallow(spot).num().subnum = newforme;
-                mydisplay->updatePoke(spot);
+    {
+        quint8 type;
+        in >> type;
+        if (type == TempSprite) {
+            Pokemon::uniqueId old = info().specialSprite[spot];
+            in >> info().specialSprite[spot];
+            if (info().specialSprite[spot] == -1) {
+                info().lastSeenSpecialSprite[spot] = old;
+            } else if (info().specialSprite[spot] == Pokemon::NoPoke) {
+                info().specialSprite[spot] = info().lastSeenSpecialSprite[spot];
             }
-            break;
+            mydisplay->updatePoke(spot);
+        } else if (type == DefiniteForme)
+        {
+            quint8 poke;
+            quint16 newform;
+            in >> poke >> newform;
+            info().pokemons[spot][poke].num() = newform;
+            if (info().isOut(spot, poke)) {
+                info().currentShallow(info().slot(spot, poke)).num() = newform;
+            }
+        } else if (type == AestheticForme)
+        {
+            quint16 newforme;
+            in >> newforme;
+            info().currentShallow(spot).num().subnum = newforme;
+            mydisplay->updatePoke(spot);
         }
+        break;
+    }
     case ClockStart:
-        {
-            in >> info().time[spot];
-            info().startingTime[spot] = time(NULL);
-            info().ticking[spot] = true;
-            break;
-        }
+    {
+        in >> info().time[spot];
+        info().startingTime[spot] = time(NULL);
+        info().ticking[spot] = true;
+        break;
+    }
     case ClockStop:
-        {
-            in >> info().time[spot];
-            info().ticking[spot] = false;
-            break;
-        }
+    {
+        in >> info().time[spot];
+        info().ticking[spot] = false;
+        break;
+    }
     case SpotShifts:
-        {
-            qint8 s1, s2;
-            bool silent;
+    {
+        qint8 s1, s2;
+        bool silent;
 
-            in >> s1 >> s2 >> silent;
+        in >> s1 >> s2 >> silent;
 
-            if (info().currentShallow(info().slot(spot, s2)).status() == Pokemon::Koed) {
-                printLine(tr("%1 shifted spots to the middle!").arg(tu(nick(info().slot(spot, s1)))), silent);
-            } else {
-                printLine(tr("%1 shifted spots with %2!").arg(tu(nick(info().slot(spot, s1))), nick(info().slot(spot, s2))), silent);
-            }
-
-            info().switchOnSide(spot, s1, s2);
-
-            int pk1 = info().slot(spot, s1);
-            int pk2 = info().slot(spot, s2);
-            mydisplay->updatePoke(pk1);
-            mydisplay->updatePoke(pk2);
-
-            mydisplay->updatePoke(info().player(spot), s1);
-            mydisplay->updatePoke(info().player(spot), s2);
-
-            delay(500);
-            break;
+        if (info().currentShallow(info().slot(spot, s2)).status() == Pokemon::Koed) {
+            printLine(tr("%1 shifted spots to the middle!").arg(tu(nick(info().slot(spot, s1)))), silent);
+        } else {
+            printLine(tr("%1 shifted spots with %2!").arg(tu(nick(info().slot(spot, s1))), nick(info().slot(spot, s2))), silent);
         }
+
+        info().switchOnSide(spot, s1, s2);
+
+        int pk1 = info().slot(spot, s1);
+        int pk2 = info().slot(spot, s2);
+        mydisplay->updatePoke(pk1);
+        mydisplay->updatePoke(pk2);
+
+        mydisplay->updatePoke(info().player(spot), s1);
+        mydisplay->updatePoke(info().player(spot), s2);
+
+        delay(500);
+        break;
+    }
     default:
         printLine("<i>" + tr("Unknown command received, are you up to date?") + "</i>");
         break;

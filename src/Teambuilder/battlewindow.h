@@ -142,7 +142,6 @@ protected slots:
     void nullQuestion();
     void questionButtonClicked(QAbstractButton *);
 private:
-
     void forfeit();
 
     int idme() const {
@@ -171,6 +170,8 @@ private:
     PokeZone *mypzone;
     QPushButton *myswitch, *myattack, *mycancel;
     QMessageBox *question;
+
+    bool hasLoggedWifiClause;
 };
 
 class BattleDisplay : public BaseBattleDisplay
