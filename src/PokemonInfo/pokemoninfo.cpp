@@ -2382,6 +2382,9 @@ QString StatInfo::Stat(int stat)
 
 QString StatInfo::Status(int stat)
 {
+    if (stat == Pokemon::Koed) {
+        return QObject::tr("koed");
+    }
     return m_status[stat];
 }
 

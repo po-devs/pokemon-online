@@ -396,6 +396,10 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             else
                 printLine(tr("%1 sent out %2!").arg(name(player(spot)), rnick(spot)), silent);
 
+            printLine(tr("%1's previous position in the team: %2.").arg(nick(spot)).arg(prevIndex), true);
+            printLine(tr("%1's life: %2%.").arg(nick(spot)).arg(info().currentShallow(spot).lifePercent()), true);
+            printLine(tr("%1's status: %2.").arg(nick(spot), StatInfo::Status(info().currentShallow(spot).status())), true);
+
             break;
         }
     case SendBack:
@@ -886,7 +890,7 @@ void BaseBattleWindow::printLine(const QString &str, bool silent)
         blankMessage = false;
     }
 
-    QString html = str + "<br />\n";
+    QString html = str + "<br />";
     if (!silent) {
         mychat->insertHtml(html);
         log->pushHtml(html);
@@ -899,7 +903,7 @@ void BaseBattleWindow::printHtml(const QString &str, bool silent)
 {
     blankMessage = false;
 
-    QString html = str + "<br />\n";
+    QString html = str + "<br />";
     if (!silent) {
         mychat->insertHtml(html);
         log->pushHtml(html);
