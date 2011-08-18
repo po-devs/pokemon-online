@@ -258,7 +258,7 @@ void QScrollDownTextBrowser::insertHtml(const QString &text)
         setTextCursor(cursor);
     }
 
-    if(b->value() != e)
+    if(f != e)
     {
         b->setValue(f);
     }
