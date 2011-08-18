@@ -9,10 +9,12 @@ LogManager* LogManager::instance = NULL;
 Log::Log(LogType type, const QString &title)
 {
     key.type = type;
-    key.title = title + QTime::currentTime().toString("hh'h'mm") + ".html";
+    key.title = title + QDate::currentDate().toString("dd MMMM yyyy")
+                 + " at " + QTime::currentTime().toString("hh'h'mm") + ".html";
 
     started = autolog = false;
     master = NULL;
+    override = NoOverride;
     linecount = 0;
 }
 
@@ -23,7 +25,7 @@ void Log::flush()
         return;
     }
 
-    if (!master->logsType(type())) {
+    if (override == OverrideNo || (override == NoOverride && !master->logsType(type()))) {
         return;
     }
 
@@ -101,6 +103,15 @@ LogManager::LogManager()
 bool LogManager::logsType(LogType type)
 {
     return flags & (1 << type);
+}
+
+void LogManager::changeLogSaving(LogType type, bool save)
+{
+    if (type == BattleLog) {
+        QSettings s;
+        s.setValue("save_battle_logs", save);
+    }
+    flags &= (0XFFFF ^ (1 << type));
 }
 
 void LogManager::changeDirectoryForType(LogType type, const QString &directory)

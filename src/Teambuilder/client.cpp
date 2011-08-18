@@ -1,6 +1,7 @@
 #include "client.h"
 #include "mainwindow.h"
 #include "challenge.h"
+#include "logmanager.h"
 #include "Teambuilder/teambuilder.h"
 #include "battlewindow.h"
 #include "basebattlewindow.h"
@@ -1077,7 +1078,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QAction * saveLogs = battleMenu->addAction(tr("Save &Battle Logs"));
     saveLogs->setCheckable(true);
     connect(saveLogs, SIGNAL(triggered(bool)), SLOT(saveBattleLogs(bool)));
-    saveLogs->setChecked(s.value("save_battle_logs").toBool());
+    saveLogs->setChecked(LogManager::obj()->logsType(BattleLog));
 
     battleMenu->addAction(tr("Change &log folder ..."), this, SLOT(changeBattleLogFolder()));
 
@@ -1166,7 +1167,8 @@ void Client::changeMusicFolder()
 void Client::changeBattleLogFolder()
 {
     QSettings s;
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Battle Logs Directory"), s.value("battle_logs_directory").toString());
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Battle Logs Directory"),
+                                                    QDir::home().absoluteFilePath(LogManager::obj()->getDirectoryForType(BattleLog)));
 
     if (dir != "") {
         s.setValue("battle_logs_directory", dir + "/");
@@ -1187,8 +1189,7 @@ void Client::changeNicknames(bool old)
 
 void Client::saveBattleLogs(bool save)
 {
-    QSettings s;
-    s.setValue("save_battle_logs",save);
+    LogManager::obj()->changeLogSaving(BattleLog, save);
 }
 
 void Client::animateHpBar(bool save)
