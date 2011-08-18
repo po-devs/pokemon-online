@@ -40,7 +40,7 @@ void TierNode::buildFromRaw(QByteArray raw)
         lastNode = moveInTree(lastNode, currentLevel-lastLevel);
         lastLevel = currentLevel;
 
-        QByteArray name;
+        QString name;
         stream >> name;
 
         current.resize(currentLevel);
