@@ -54,6 +54,7 @@ PokeBattle & BattleInfo::currentPoke(int spot)
 
 BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf)
 {
+    question = NULL;
     this->battleId() = battleId;
     this->started() = false;
 
@@ -205,13 +206,38 @@ void BattleWindow::targetChosen(int i)
 void BattleWindow::clickClose()
 {
     if (battleEnded) {
-        emit forfeit(battleId());
+        forfeit();
         return;
     }
 
-    if (QMessageBox::question(this, tr("Losing your battle"), tr("Do you mean to forfeit?"), QMessageBox::Yes | QMessageBox::No)
-        == QMessageBox::Yes)
-        emit forfeit(battleId());
+    if (question != NULL) {
+        question->activateWindow();
+        return;
+    }
+
+    question = new QMessageBox(QMessageBox::Question,tr("Losing your battle"), tr("Do you mean to forfeit?"), QMessageBox::Yes | QMessageBox::No,this);
+    question->setAttribute(Qt::WA_DeleteOnClose, true);
+    question->show();
+
+    connect(question, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(questionButtonClicked(QAbstractButton*)));
+    connect(question, SIGNAL(destroyed()), this, SLOT(nullQuestion()));
+}
+
+void BattleWindow::forfeit() {
+    emit forfeit(battleId());
+}
+
+void BattleWindow::nullQuestion() {
+    question = NULL;
+}
+
+void BattleWindow::questionButtonClicked(QAbstractButton * b)
+{
+    QMessageBox::ButtonRole role = question->buttonRole(b);
+    if (role == QMessageBox::YesRole) {
+        forfeit();
+    }
+    question->close();
 }
 
 void BattleWindow::switchToPokeZone()
@@ -363,6 +389,7 @@ void BattleWindow::goToNextChoice()
 
     myattack->setEnabled(false);
     myswitch->setEnabled(false);
+    mysend->setEnabled(false);
 
     disableAll();
 
@@ -1309,7 +1336,6 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
         }
         break;
     case Move::IndeterminateTarget:
-    case Move::MeFirstTarget:
     case Move::ChosenTarget:
         for (int i = 0; i < num; i++) {
             if (i != slot &&
@@ -1320,6 +1346,14 @@ void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
     case Move::PartnerOrUser:
         for (int i = 0; i < num; i++) {
             if (info.player(i) == info.myself && info.areAdjacent(i, slot)) {
+                pokes[i]->setEnabled(true);
+            }
+        }
+        break;
+        /* Me first only allows targetting opponents but not allies */
+    case Move::MeFirstTarget:
+        for (int i = 0; i < num; i++) {
+            if (info.player(i) != info.myself && info.areAdjacent(i, slot)) {
                 pokes[i]->setEnabled(true);
             }
         }

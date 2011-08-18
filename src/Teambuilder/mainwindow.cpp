@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "menu.h"
-#include "teambuilder.h"
+#include "Teambuilder/teambuilder.h"
 #include "client.h"
 #include "serverchoice.h"
 #include "../PokemonInfo/movesetchecker.h"
@@ -11,7 +11,7 @@
 
 MainEngine::MainEngine() : displayer(0)
 {
-    pluginManager = new PluginManager();
+    pluginManager = new PluginManager(this);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
@@ -32,7 +32,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("save_battle_logs", false);
     setDefaultValue("play_battle_music", false);
     setDefaultValue("play_battle_sounds", false);
-    setDefaultValue("show_team",true);
+    setDefaultValue("show_team", true);
     setDefaultValue("enable_ladder", true);
     setDefaultValue("show_player_events_idle", false);
     setDefaultValue("show_player_events_battle", false);
@@ -49,8 +49,20 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue("find_battle_range_on", true);
     setDefaultValue("find_battle_range", 200);
 
-    PokemonInfo::init("db/pokes/");
-    MoveSetChecker::init("db/pokes/");
+    if (settings.value("use_socks5_proxy", false).toBool() == true) {
+        settings.beginGroup("socks5_proxy");
+        QNetworkProxy proxy;
+        proxy.setType(QNetworkProxy::Socks5Proxy);
+        proxy.setPort(settings.value("port", 27977).toInt());
+        proxy.setHostName(settings.value("host").toString());
+        proxy.setUser(settings.value("user").toString());
+        proxy.setPassword(settings.value("pass").toString());
+        settings.endGroup();
+        QNetworkProxy::setApplicationProxy(proxy);
+    }
+
+    PokemonInfo::init("db/pokes/", FillMode::Client);
+    MoveSetChecker::init("db/pokes/", settings.value("enforce_min_levels").toBool());
     ItemInfo::init("db/items/");
     MoveInfo::init("db/moves/");
     TypeInfo::init("db/types/");
@@ -61,13 +73,6 @@ MainEngine::MainEngine() : displayer(0)
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
     Theme::init(settings.value("theme_2").toString());
-
-    QStringList moves;
-    for (int i = 0; i < MoveInfo::NumberOfMoves(); i++) {
-        if (MoveInfo::Flags(i, 5) & Move::MischievousFlag) {
-            moves.push_back(MoveInfo::Name(i));
-        }
-    }
 
     /* Loading the values */
     QApplication::setStyle(settings.value("application_style").toString());
@@ -84,12 +89,14 @@ MainEngine::~MainEngine()
 
 QMenuBar *MainEngine::transformMenuBar(QMenuBar *param)
 {
-    QMenu *m = param->addMenu(tr("Plugins"));
-    m->addAction(tr("Plugin Manager"), this, SLOT(openPluginManager()));
-    m->addSeparator();
+    if (param) {
+        QMenu *m = param->addMenu(tr("Plugins"));
+        m->addAction(tr("Plugin Manager"), this, SLOT(openPluginManager()));
+        m->addSeparator();
 
-    foreach(QString plugin, pluginManager->getVisiblePlugins()) {
-        m->addAction(plugin, this, SLOT(openPluginConfiguration()));
+        foreach(QString plugin, pluginManager->getVisiblePlugins()) {
+            m->addAction(plugin, this, SLOT(openPluginConfiguration()));
+        }
     }
 
     return param;
@@ -133,7 +140,7 @@ void MainEngine::loadStyleSheet()
     displayer->resize(widget->size()); \
     displayer->setWindowTitle(tr("Pokemon Online")); \
     displayer->setCentralWidget(widget);\
-    displayer->setMenuBar(widget->createMenuBar(this));\
+    displayer->setMenuBar(transformMenuBar(widget->createMenuBar(this)));\
     loadSettings(widget, widget->defaultSize());\
     displayer->show();
 
@@ -157,19 +164,28 @@ void MainEngine::launchCredits()
         return;
     }
     QDialog d_credit;
-    d_credit.setMaximumSize(800,600);
+    d_credit.setMaximumSize(800,700);
     QVBoxLayout * l = new QVBoxLayout();
+    QScrollArea *scroll = new QScrollArea();
     QLabel * credit = new QLabel();
-    //credit->setMaximumSize(800,600);
-    l->addWidget(credit);
-    credit->setAttribute(Qt::WA_DeleteOnClose,true);
+    credit->setMargin(5);
     QTextStream out(&fichier);
     credit->setText(out.readAll());
+    scroll->setWidget(credit);
+    //credit->setMaximumSize(800,600);
+    l->addWidget(scroll);
+    scroll->show();
+    credit->setAttribute(Qt::WA_DeleteOnClose,true);
+
+    scroll->adjustSize();
     //MainEngineRoutine(d_credit);
     d_credit.setLayout(l);
     d_credit.move(this->displayer->geometry().x(),this->displayer->geometry().y());
-    d_credit.setStyleSheet("background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
-                                                       "stop:0 white, stop:1 #0ca0dd);");
+    d_credit.setStyleSheet(
+                "QWidget {background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
+                                                       "stop:0 white, stop:1 #0ca0dd);}"
+                "QLabel {background:transparent}"
+                           );
     d_credit.exec();
 }
 
@@ -183,11 +199,6 @@ void MainEngine::launchTeamBuilder()
 
 void MainEngine::launchServerChoice()
 {
-    if (trainerTeam()->trainerNick().length() == 0) {
-        QMessageBox::information(displayer, tr("Impossible to go online"), tr("You haven't set your name yet. Do so in the teambuilder."));
-        return;
-    }
-
     ServerChoice *choice = new ServerChoice(trainerTeam()->trainerNick());
     MainEngineRoutine(choice);
 
@@ -254,6 +265,12 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
 {
     if (nick.size() > 0)
         trainerTeam()->setTrainerNick(nick);
+
+    if (trainerTeam()->trainerNick().length() == 0) {
+        QMessageBox::information(displayer, tr("Impossible to go online"), tr("You haven't set your name yet. Do so in the teambuilder."));
+        return;
+    }
+
     Client * client = new Client(trainerTeam(), url, port);
     MainEngineRoutine(client);
 
@@ -262,8 +279,8 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
 
 void MainEngine::updateMenuBar()
 {
-    displayer->setMenuBar((dynamic_cast<CentralWidgetInterface*>(displayer->centralWidget()))
-                            ->createMenuBar(this));
+    displayer->setMenuBar(transformMenuBar(dynamic_cast<CentralWidgetInterface*>(displayer->centralWidget())
+                            ->createMenuBar(this)));
 }
 
 void MainEngine::quit()

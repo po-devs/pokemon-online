@@ -5,6 +5,7 @@
 #include <QtGui>
 
 class ClientPlugin;
+class MainEngine;
 
 namespace cross {
     class DynamicLibrary;
@@ -14,7 +15,7 @@ class PluginManager
 {
     friend class PluginManagerWidget;
 public:
-    PluginManager();
+    PluginManager(MainEngine *t);
     ~PluginManager();
 
     QStringList getPlugins() const;
@@ -29,6 +30,7 @@ private:
     QStringList filenames;
 
     void updateSavedList();
+    MainEngine *engine;
 };
 
 class PluginManagerWidget : public QWidget

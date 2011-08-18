@@ -177,7 +177,7 @@ class TB_PokemonBoxes : public QWidget
 {
     Q_OBJECT
 public:
-    TB_PokemonBoxes(TeamBuilder *parent);
+    TB_PokemonBoxes(Team *team);
 
     void updateBox();
     void updateSpot(int i);
@@ -212,6 +212,7 @@ private:
     bool existBox(const QString &name) const;
     void addBox(const QString &name);
     void deleteBox(int num);
+    void setCurrentTeamPoke(PokeTeam *p);
 };
 
 #endif // BOX_H

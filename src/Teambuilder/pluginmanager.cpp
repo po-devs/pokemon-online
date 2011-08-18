@@ -1,8 +1,9 @@
 #include "pluginmanager.h"
 #include "plugininterface.h"
+#include "mainwindow.h"
 #include "../Utilities/CrossDynamicLib.h"
 
-PluginManager::PluginManager()
+PluginManager::PluginManager(MainEngine *t) : engine(t)
 {
     QSettings s;
 
@@ -27,7 +28,7 @@ PluginManager::PluginManager()
             continue;
         }
 
-        ClientPlugin *s = f();
+        ClientPlugin *s = f(engine);
 
         if (!s) {
             delete l;
@@ -59,7 +60,7 @@ void PluginManager::addPlugin(const QString &path)
     try {
          l = new cross::DynamicLibrary(path.toAscii().constData());
     } catch (const std::exception &e) {
-        qDebug() << "Error when loading plugin " << path <<  ": " << e.what();
+        QMessageBox::warning(NULL, QObject::tr("Pokemon Online"), QObject::tr("Error when loading plugin at %1: %2").arg(path).arg(e.what()));
         return;
     }
 
@@ -67,12 +68,13 @@ void PluginManager::addPlugin(const QString &path)
     PluginInstanceFunction f = (PluginInstanceFunction) l->GetFunction("createPluginClass");
 
     if (!f) {
+        QMessageBox::warning(NULL, QObject::tr("Pokemon Online"), QObject::tr("%1 is not a Pokemon Online plugin.").arg(path));
         delete l;
         libraries.pop_back();
         return;
     }
 
-    ClientPlugin *s = f();
+    ClientPlugin *s = f(engine);
 
     if (!s) {
         delete l;
@@ -149,7 +151,7 @@ PluginManagerWidget::PluginManagerWidget(PluginManager &pl)
 
     list->addItems(pl.getPlugins());
 
-    QHBoxLayout *buttons = new QHBoxLayout(this);
+    QHBoxLayout *buttons = new QHBoxLayout();
 
     v->addLayout(buttons);
 

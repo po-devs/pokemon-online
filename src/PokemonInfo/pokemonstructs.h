@@ -1,11 +1,15 @@
 #ifndef POKEMONSTRUCTS_H
 #define POKEMONSTRUCTS_H
 
-#include <QtGui>
+#include <QString>
+#include <QSet>
+#include <QIcon>
+#include <QPixmap>
 #include <QDataStream>
 #include "../Utilities/functions.h"
 
 class QDomElement;
+class QDomDocument;
 
 // Minimum Generation supported.
 static const int GEN_MIN = 1;
@@ -808,7 +812,8 @@ namespace Pokemon
         Wormadam_S = Wormadam + (2 << 16),
         Giratina_O = Giratina + (1 << 16),
         Shaymin_S = Shaymin + (1 << 16),
-        Meloia_S = Meloia + (1 << 16)
+        Meloia_S = Meloia + (1 << 16),
+        SpikyPichu = Pichu + (1 << 16)
     };
     class uniqueId
     {
@@ -2228,6 +2233,8 @@ public:
     const QString & trainerNick() const;
 
     bool loadFromFile(const QString &path);
+    void toXml(QDomDocument &doc) const;
+    QString toXml() const;
     bool saveToFile(const QString &path) const;
     bool importFromTxt(const QString &path);
     QString exportToTxt() const;
@@ -2255,5 +2262,7 @@ inline uint qHash(const Pokemon::uniqueId &key)
 
 QDataStream & operator << (QDataStream &out, const Pokemon::uniqueId &id);
 QDataStream & operator >> (QDataStream &in, Pokemon::uniqueId &id);
+
+Q_DECLARE_METATYPE(Pokemon::uniqueId);
 
 #endif // POKEMONSTRUCTS_H

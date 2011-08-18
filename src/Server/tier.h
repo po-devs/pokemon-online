@@ -117,6 +117,10 @@ public:
 
     void exportDatabase() const;
     void processDailyRun();
+    /* Removes all ranking */
+    void resetLadder();
+    /* Clears the cache, forces synchronization with SQL database */
+    void clearCache();
     /* Load tier configuration */
     void loadFromXml(const QDomElement &elem);
     /* Load tier ladders */

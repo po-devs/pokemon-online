@@ -12,12 +12,12 @@
 6#full incense
 
 6#lagging tail
-1-1#lax incense
+1-7_1#lax incense
 12#Leftovers
 
 
 8-132_10_2_4#Metal Powder
-9-0#Muscle Band 
+9-1#Muscle Band
 10-13#Odd Incense 
 
 #11#Power Herb
@@ -37,7 +37,7 @@
 10-10#Wave Incense 
 3#white herb
 1-6_2#Wide Lens 
-9-1#Wise Glasses 
+9-2#Wise Glasses
 
 15#Zoom Lens
 

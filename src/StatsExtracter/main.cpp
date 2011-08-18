@@ -579,7 +579,7 @@ int main(int argc, char *argv[])
         fprintf(stdout, "\nDoing Tier %s\n", dir.toUtf8().data());
 
         foreach(QString file, files) {
-            if (file.length() != 3 && !(file.contains('.') && file.indexOf('.') == 3)){
+            if (! (file.length() == 3 || file.indexOf(".stat") != -1)){
                 if (file == "ranks.rnk") {
                     QFile f(d.absoluteFilePath(file));
                     f.open(QIODevice::ReadOnly);
@@ -606,14 +606,17 @@ int main(int argc, char *argv[])
 
                 int pokenum = *((qint32*) buffer);
 
-                if (pokenum != 0) {
+                if (pokenum != 0 && PokemonInfo::Exists(pokenum)) {
                     usage[pokenum] += iusage;
                     if (ileadusage > 0) {
                         leadUsage[pokenum] += ileadusage;
                     }
                     buffers[pokenum].append(Bcc(QByteArray(buffer, 32), iusage, ileadusage));
                 }
-                totalusage += iusage;
+                /* Avoid corrupted data , partially */
+                if (PokemonInfo::Exists(pokenum)) {
+                    totalusage += iusage;
+                }
             }
 
             fclose(f);

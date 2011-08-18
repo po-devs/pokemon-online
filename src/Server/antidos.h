@@ -13,6 +13,7 @@ public slots:
     void apply();
 private:
     QSpinBox *max_people_per_ip, *max_commands_per_user, *max_kb_per_user, *max_login_per_ip, *ban_after_x_kicks;
+    QLineEdit *trusted_ips;
     QCheckBox *aDosOn;
 };
 
@@ -37,6 +38,9 @@ public:
     /* Warned that a player/IP disconnected */
     void disconnect(const QString &ip, int id);
 
+    /* Changes the shows IP of the proxy using player */
+    bool changeIP(const QString &newIp, const QString &oldIp);
+
     int numberOfDiffIps();
 signals:
     /* If rules are infriged, kick / ban the corresponding id/ip in functions
@@ -52,6 +56,8 @@ private:
     QHash<int, size_t> sizeOfTransfers;
     QHash<QString, QList<time_t> > kicksPerIp;
     QTimer timer;
+    QStringList trusted_ips;
+
 
     static AntiDos *instance;
 

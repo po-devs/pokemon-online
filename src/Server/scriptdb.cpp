@@ -2,9 +2,15 @@
 #include "scriptdb.h"
 #include "sql.h"
 
-ScriptDB::ScriptDB(Server *s) : myserver(s)
+ScriptDB::ScriptDB(Server *s, QScriptEngine *e) : myserver(s), engine(e)
 {
     rxSafeNames.setPattern("[a-z_0-9]+");
+    por_proto_qobject = new PORecordPrototype();
+    por_proto = engine->newQObject(por_proto_qobject);
+}
+
+ScriptDB::~ScriptDB() {
+    delete por_proto_qobject;
 }
 
 // Properties should be a JS hash. This function will iterate over all properties
@@ -43,18 +49,24 @@ void ScriptDB::ensureTable(const QString &tableName, const QScriptValue &propert
 
 QString ScriptDB::makeFields(const QScriptValue &properties)
 {
+    declaredFieldsList.clear();
+    declaredFieldsList.append("id");
+    declaredFields = "id";
     if (!properties.isObject()) return QString();
     QString result = "";
     QScriptValueIterator it(properties);
-
     while (it.hasNext()) {
         it.next();
         QString name = it.name().toLower();
         QString value = it.value().toString();
         // id is automatic, names should be limited, type ("value")
         // should not contain % as we use substitutions and %1 can cause issues.
+        // TODO: check value data?
         if ((name != "id") && (rxSafeNames.exactMatch(name) && !value.contains("%"))) {
             result += QString(", %1 %2").arg(name, value);
+            declaredFieldsList.append(name);
+            declaredFields += ", ";
+            declaredFields += name;
         }
     }
     return result;
@@ -62,6 +74,10 @@ QString ScriptDB::makeFields(const QScriptValue &properties)
 
 void ScriptDB::insert(const QString &tableName, const QScriptValue &properties)
 {
+    if (isBlocked()) {
+        myserver->print("db.insert: ensureTable failed or not called. Cannot run.");
+        return;
+    }
     if (!rxSafeNames.exactMatch(tableName)) {
         myserver->print("db.insert: invalid table name.");
         return;
@@ -117,4 +133,87 @@ void ScriptDB::insert(const QString &tableName, const QScriptValue &properties)
         myserver->print(QString("db.insert: failed. %1").arg(q.lastError().text()
             + "\nQuery string was: ") + queryString);
     }
+}
+
+void PORecordPrototype::save()
+{
+     // thisObject().blahblah
+}
+
+PORecordPrototype::PORecordPrototype(QObject *parent) : QObject(parent)
+{
+    this->setObjectName("PORecord");
+}
+
+QScriptValue ScriptDB::findBy(const QString &tableName, const QString &key, const QScriptValue &value)
+{
+    if (isBlocked()) {
+        myserver->print("db.findBy: ensureTable failed or not called. Cannot run.");
+        return engine->nullValue();
+    }
+    if (!rxSafeNames.exactMatch(tableName)) {
+        myserver->print("db.findBy: invalid table name.");
+        return engine->nullValue();
+    }
+    QString real_key = key.toLower();
+    if (!rxSafeNames.exactMatch(real_key)) {
+        myserver->print("db.findBy: invalid key.");
+        return engine->nullValue();
+    }
+    QSqlQuery q;
+    q.setForwardOnly(true);
+    q.prepare("SELECT " + declaredFields + " FROM poscript_" + tableName + " WHERE " + real_key + " = ?");
+    if (value.isBool()) {
+        q.addBindValue(value.toBool());
+    } else if (value.isDate()) {
+        q.addBindValue(value.toDateTime());
+    } else if (value.isNumber()) {
+        q.addBindValue(value.toNumber());
+    } else if (value.isString()) {
+        q.addBindValue(value.toString());
+    } else {
+        myserver->print("db.findBy: invalid value.");
+        return engine->nullValue();
+    }
+    bool res = q.exec();
+    if (!res) {
+        return engine->nullValue();
+    }
+    // Shaping result for script.
+    // An array of data. Each array item = 1 row.
+    // q.size() can be -1. So...
+    QScriptValue resulting_data = engine->newArray();
+    int current_row = 0;
+    while (q.next()) {
+        // A single row in hash form.
+        QScriptValue hash = engine->newObject();
+        for (int i = 0; i < declaredFieldsList.size(); ++i) {
+            QVariant current_value = q.value(i);
+            QScriptValue current_result;
+            if (current_value.isValid()) {
+                current_result = QScriptValue(current_value.toString());
+            } else {
+                current_result = engine->nullValue();
+            }
+            QString propertyName = declaredFieldsList.at(i);
+            if (propertyName == "id") {
+                hash.setProperty(propertyName, current_result, QScriptValue::ReadOnly | QScriptValue::Undeletable);
+            } else {
+                hash.setProperty(propertyName, current_result, QScriptValue::Undeletable);
+            }
+        }
+        resulting_data.setProperty(current_row, hash, QScriptValue::Undeletable);
+        ++current_row;
+    }
+    resulting_data.setProperty("length", QScriptValue(current_row), QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    QScriptValue resulting_object = engine->newObject();
+    resulting_object.setProperty("data", resulting_data, QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    resulting_object.setPrototype(por_proto);
+    return resulting_object;
+}
+
+// Checks whether environment was set up.
+bool ScriptDB::isBlocked()
+{
+    return declaredFieldsList.size() < 2;
 }

@@ -2,6 +2,7 @@
 #include "client.h"
 #include "../Utilities/otherwidgets.h"
 
+
 Channel::Channel(const QString &name, int id, Client *parent)
     : QObject(parent), client(parent), myname(name), myid(id), readyToQuit(false)
 {
@@ -15,7 +16,8 @@ Channel::Channel(const QString &name, int id, Client *parent)
     mymainchat->setOpenExternalLinks(false);
     connect(mymainchat, SIGNAL(anchorClicked(QUrl)), SLOT(anchorClicked(QUrl)));
 
-    myplayers->setColumnCount(1);
+    myplayers->setColumnCount(2);
+    myplayers->setColumnHidden(1, true);
     myplayers->header()->hide();
     myplayers->setIconSize(QSize(18,18));
     myplayers->setIndentation(13);
@@ -30,7 +32,7 @@ Channel::Channel(const QString &name, int id, Client *parent)
 
     events = -1;
     restoreEventSettings();
-    
+
 
     if(client->sortBT) {
         sortAllPlayersByTier();
@@ -121,7 +123,9 @@ void Channel::anchorClicked(const QUrl &url)
     // study the URL scheme
     if (url.scheme()=="po") {
         if(url.path().leftRef(5) == "join/") {
-            client->join(url.path().mid(5));
+            QString cname = url.path().mid(5);
+            client->join(cname);
+            client->activateChannel(cname);
         }
     } else {
         QDesktopServices::openUrl(url);
@@ -187,10 +191,18 @@ void Channel::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
     if(item->id() >= 0) {
         if(parent == NULL) {
             myplayers->addTopLevelItem(item);
+
             myplayers->sortItems(0,Qt::AscendingOrder);
+            if(client->sortBA) {
+                myplayers->sortItems(1,Qt::DescendingOrder);
+            }
         } else {
             parent->addChild(item);
+
             parent->sortChildren(0,Qt::AscendingOrder);
+            if(client->sortBA) {
+                parent->sortChildren(1,Qt::DescendingOrder);
+            }
         }
     }
 }
@@ -286,8 +298,9 @@ void Channel::playerReceived(int playerid) {
             placeTier(tier);
 
         placeItem(item, mytiersitems.value(tier));
+
     } else {
-        placeItem(item,NULL);
+        placeItem(item, NULL);
     }
 
     updateState(playerid);
@@ -324,6 +337,7 @@ void Channel::insertNewPlayer(int playerid)
     f.setBold(true);
     item->setFont(0,f);
     item->setText(0,name(playerid));
+    item->setText(1,QString::number(client->auth(playerid)));
     item->setColor(client->color(playerid));
     myplayersitems.insert(playerid, item);
 
@@ -334,7 +348,7 @@ void Channel::insertNewPlayer(int playerid)
 
         placeItem(item, mytiersitems.value(tier));
     } else {
-        placeItem(item,NULL);
+        placeItem(item, NULL);
     }
 
     updateState(playerid);
@@ -359,7 +373,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
             return;
 
         playerReceived(id);
- 
+
         if (eventEnabled(Client::ChannelEvent)) {
             printLine(tr("%1 joined the channel.").arg(name(id)));
         }
@@ -531,6 +545,17 @@ QString Channel::addChannelLinks(const QString &line2)
     return line;
 }
 
+void Channel::checkFlash(const QString &haystack, const QString &needle)
+{
+    /* Only activates if no window has focus */
+    if (!QApplication::activeWindow()) {
+        if (haystack.contains(QRegExp(needle, Qt::CaseInsensitive))) {
+            QApplication::alert(client, 10000);
+            client->raise();
+        }
+    }
+}
+
 void Channel::printLine(const QString &line)
 {
     QString timeStr = "";
@@ -540,15 +565,9 @@ void Channel::printLine(const QString &line)
         mainChat()->insertPlainText("\n");
         return;
     }
-    /* Only activates if no window has focus */
-    if (!QApplication::activeWindow()) {
-        if (line.contains(QRegExp(QString("\\b%1\\b").arg(name(ownId())),Qt::CaseInsensitive))) {
-            client->raise();
-            client->activateWindow();
-        }
-    }
 
     if (line.leftRef(3) == "***") {
+        checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
         mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + addChannelLinks(escapeHtml(line)) + "</span><br />");
         return;
     }
@@ -563,6 +582,10 @@ void Channel::printLine(const QString &line)
         /* Messages from players from auth 3 and less have their html escaped */
         if (id == -1 || client->auth(id) <= 3)
             end = escapeHtml(end);
+        else
+            checkFlash(end, "<ping */ *>");
+
+        checkFlash(end, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
 
         end = addChannelLinks(end);
 
@@ -585,9 +608,10 @@ void Channel::printLine(const QString &line)
             } else {
                 mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + end + "<br />");
             }
-        }        
+        }
         emit activated(this);
     } else {
+        checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
         mainChat()->insertPlainText( timeStr + line + "\n");
     }
 }
@@ -598,12 +622,8 @@ void Channel::printHtml(const QString &str)
     if (str.contains(id) && client->isIgnored(id.cap(1).toInt())){
         return;
     }
-    if (!QApplication::activeWindow()) {
-        if (str.contains(QRegExp(QString("<ping */ *>"),Qt::CaseInsensitive))) {
-            client->raise();
-            client->activateWindow();
-        }
-    }
+    checkFlash(str, "<ping */ *>");
+
     QString timeStr = "";
     if(client->showTS)
         timeStr = "(" + QTime::currentTime().toString() + ") ";

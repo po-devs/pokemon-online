@@ -464,7 +464,7 @@ struct AMForeWarn : public AM {
             }
         }
 
-        int m = poss[true_rand()%poss.size()];
+        int m = poss[b.true_rand()%poss.size()];
 
         b.sendAbMessage(22,0,s,s,MoveInfo::Type(m, b.gen()),m);
     }
@@ -668,8 +668,8 @@ struct AMIronFist : public AM {
         functions["BasePowerModifier"] = &bpm;
     }
 
-    static void bpm (int s, int , BS &b) {
-        if (tmove(b,s).flags & Move::PunchFlag) {
+    static void bpm (int s, int t, BS &b) {
+        if (s != t && tmove(b,s).flags & Move::PunchFlag) {
             turn(b,s)["BasePowerAbilityModifier"] = 4;
         }
     }
@@ -733,6 +733,23 @@ struct AMNormalize : public AM {
     static void btl(int s, int, BS &b) {
         if (tmove(b,s).type != Type::Curse)
             tmove(b,s).type = Type::Normal;
+    }
+};
+
+struct AMPoisonTouch : public AM {
+    AMPoisonTouch() {
+        functions["OnPhysicalAssault"] = &opa;
+    }
+
+    static void opa(int s, int t, BS &b) {
+        if (tmove(b,s).classification == Move::OffensiveStatChangingMove || tmove(b,s).flinchRate > 0)
+            return;
+        if (b.poke(t).status() == Pokemon::Fine && rand() % 100 < 20) {
+            if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
+                b.sendAbMessage(18,0,s,t,Pokemon::Curse,b.ability(s));
+                b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt(),s);
+            }
+        }
     }
 };
 
@@ -942,7 +959,8 @@ struct AMTechnician : public AM {
     }
 
     static void bpm(int s, int , BS &b) {
-        if (tmove(b,s).power <= 60) {
+        /* Pokemon::Curse is for confusion damaeg */
+        if (tmove(b,s).power <= 60 && type(b,s) != Pokemon::Curse) {
             turn(b,s)["BasePowerAbilityModifier"] = 10;
         }
     }
@@ -1299,7 +1317,7 @@ struct AMDarumaMode : public AM {
     }
 
     static void ahpc(int s, int, BS &b) {
-        Pokemon::uniqueId num = b.poke(s).num();
+        Pokemon::uniqueId num = fpoke(b,s).id;
 
         if (PokemonInfo::OriginalForme(num) != Pokemon::Hihidaruma) {
             return;
@@ -1310,7 +1328,7 @@ struct AMDarumaMode : public AM {
         if (daruma == num.subnum)
             return;
 
-        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma? 1 : 0));
+        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma));
     }
 };
 
@@ -1516,6 +1534,9 @@ struct AMMagicMirror : public AM
         } else {
             /* Entry hazards */
             foreach(int t, b.revs(s)) {
+                if (b.koed(t)) {
+                    continue;
+                }
                 if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) {
                     target = t;
                     break;
@@ -1554,10 +1575,16 @@ struct AMHarvest : public AM
     }
 
     static void et(int s, int, BS &b) {
-        if (poke(b,s).contains("BerryUsed") && b.poke(s).item() == 0) {
-            int item = poke(b,s)["BerryUsed"].toInt();
+        int p = b.player(s);
+        QString harvest_key = QString("BerryUsed_%1").arg(b.team(p).internalId(b.poke(s)));
+        if (team(b,p).contains(harvest_key) && b.poke(s).item() == 0) {
+            if (!b.isWeatherWorking(BattleSituation::Sunny)) {
+                if (b.true_rand() % 2)
+                     return; // 50 % change when not sunny
+            }
+            int item = team(b,p)[harvest_key].toInt();
 
-            poke(b,s).remove("BerryUsed");
+            team(b,p).remove(harvest_key);
             b.sendAbMessage(88, 0, s, 0, 0, item);
             b.acqItem(s, item);
         }
@@ -1782,7 +1809,6 @@ struct AMRegeneration : public AM {
     static void us(int s, int, BS &b) {
         if (!b.poke(s).isFull()) {
             b.healLife(s, b.poke(s).totalLifePoints() / 3);
-            b.sendAbMessage(86, 0, s);
         }
     }
 };
@@ -1791,6 +1817,7 @@ struct AMRegeneration : public AM {
     PriorityChoice
     AfterNegativeStatChange
     UponPhysicalAssault
+    OnPhysicalAssault
     DamageFormulaStart
     UponOffensiveDamageReceived
     UponSetup
@@ -1914,4 +1941,5 @@ void AbilityEffect::init()
     REGISTER_AB(98, Analyze);
     REGISTER_AB(99, HealingHeart);
     REGISTER_AB(100, FriendGuard);
+    REGISTER_AB(101, PoisonTouch);
 }

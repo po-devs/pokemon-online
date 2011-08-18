@@ -30,3 +30,8 @@ void Player::sendServer(const Server &s)
     else
         m_relay->sendServer(s.name(), s.desc(), s.players(), s.ip(),s.maxPlayers(),s.port());
 }
+
+void Player::sendServerListEnd()
+{
+  m_relay->sendServerListEnd();
+}

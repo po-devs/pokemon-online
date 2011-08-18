@@ -1,9 +1,20 @@
 #ifndef OTHERWIDGETS_H
 #define OTHERWIDGETS_H
 
-#include <QtGui>
+#include <QTableWidget>
 #include <QList>
+#include <QTreeWidgetItem>
+#include <QListWidgetItem>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QTextBrowser>
+#include <QProgressBar>
+#include <QMenu>
+#include <QLineEdit>
 
+class QVBoxLayout;
+class QLabel;
+class QCompleter;
 /*
     Those are widgets that Qt lacks, and that are to use like Qt Widgets
 */
@@ -14,6 +25,7 @@ class QCompactTable : public QTableWidget
     Q_OBJECT
 public:
     QCompactTable(int row, int column);
+    static void makeCompact(QTableView *view);
 };
 
 /* A widget that allows giving a title to another widget
@@ -213,13 +225,18 @@ class QIRCLineEdit : public QLineEdit
 public:
     QIRCLineEdit();
 
+    void setPlayers(QAbstractItemModel *players);
     void clear();
 private:
+    bool event(QEvent *);
     void keyPressEvent(QKeyEvent *);
     //QList<QString> m_Inputlist1;//Stores the inputed strings,up list.
     //QList<QString> m_Inputlist2;//Stores the inputed strings,down list.
     QList<QString> m_Inputlist;
     quint16 listindex;
+    QCompleter *completer;
+    int completeIndex;
+    QString beginning;
     //QString m_Currentline;//Stores a copy of the current text in the LineEdit.
 };
 

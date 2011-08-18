@@ -7,6 +7,19 @@
 class PokeBaseStats;
 class QPixmap;
 
+namespace FillMode {
+    enum FillModeType {
+        NoMod,
+        Server,
+        Client
+    };
+}
+
+// Mods are only for files in db/pokes directory.
+inline int fill_count_files(const QString &filename);
+// Will prepend filename with correct path in the system for client.
+inline void fill_check_mode_path(FillMode::FillModeType m, QString &filename);
+
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
 
 struct PokemonMoves
@@ -29,7 +42,7 @@ class PokemonInfo
 {
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="db/pokes/");
+    static void init(const QString &dir="db/pokes/", FillMode::FillModeType mode = FillMode::NoMod);
 
     /* Self-explainable functions */
     static int TrueCount(int gen=GEN_MAX); // pokes without counting forms
@@ -71,19 +84,26 @@ public:
     static Pokemon::uniqueId OriginalForme(const Pokemon::uniqueId &pokeid);
     static bool HasFormes(const Pokemon::uniqueId &pokeid);
     // Will NOT return base form.
-    static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid);
+    static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static QList<Pokemon::uniqueId> VisibleFormes(const Pokemon::uniqueId &pokeid);
+    static int MinLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static int MinEggLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static int AbsoluteMinLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static QList<int> Evos(int pokenum);
     static QList<int> DirectEvos(int pokenum);
     static bool HasEvolutions(int pokenum);
 
     // Will always return base form (subnum 0).
     static Pokemon::uniqueId OriginalEvo(const Pokemon::uniqueId &pokeid);
+    //Returns 0 if no preevo
     static int PreEvo(int pokenum);
+    static bool HasPreEvo(int pokenum);
     static bool IsInEvoChain(const Pokemon::uniqueId &pokeid);
     static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
-    static bool Exists(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static bool Exists(const Pokemon::uniqueId &pokeid, int gen);
+    static bool Exists(const Pokemon::uniqueId &pokeid);
     static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static int Ability(const Pokemon::uniqueId &pokeid, int slot, int gen=GEN_MAX);
     static int Stat(const Pokemon::uniqueId &pokeid, int gen, int stat, int level, quint8 dv, quint8 ev);
     static int FullStat(const Pokemon::uniqueId &pokeid, int gen, int nature, int stat, int level, quint8 dv, quint8 ev);
     static QString Desc(const Pokemon::uniqueId &pokeid, int cartridge);
@@ -110,6 +130,8 @@ private:
     static QHash<Pokemon::uniqueId, int> m_Abilities[NUMBER_GENS][3];
     static QHash<Pokemon::uniqueId, PokeBaseStats> m_BaseStats;
     static QHash<Pokemon::uniqueId, int> m_LevelBalance;
+    static QHash<Pokemon::uniqueId, int> m_MinLevels[NUMBER_GENS];
+    static QHash<Pokemon::uniqueId, int> m_MinEggLevels[NUMBER_GENS];
 
     static QHash<int, QList<int> > m_Evolutions;
     static QHash<int, int> m_OriginalEvos;
@@ -135,14 +157,16 @@ private:
     // To get random pokemon faster.
     static QList<Pokemon::uniqueId> m_VisiblePokesPlainList;
 
-    static void loadNames();
-    static void loadEvos();
-    static void loadBaseStats();
-    static void loadMoves();
-    static void loadClassifications();
-    static void loadGenderRates();
-    static void loadHeights();
-    static void loadDescriptions();
+    static void loadNames(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadEvos(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadBaseStats(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadMoves(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadClassifications(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadGenderRates(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadHeights(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadDescriptions(FillMode::FillModeType mode = FillMode::NoMod);
+    static void loadMinLevels(FillMode::FillModeType mode = FillMode::NoMod);
+
     // Call this after loading all data.
     static void makeDataConsistent();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
@@ -182,7 +206,7 @@ public:
     static bool Exists(int movenum, int gen);
     static bool isOHKO(int movenum, int gen);
     static bool isHM(int movenum, int gen);
-    static bool FlinchByKingRock(int movenum);
+    static bool FlinchByKingRock(int movenum, int gen);
     static int EffectRate(int movenum, int gen);
     static quint32 StatAffected(int movenum, int gen);
     static quint32 BoostOfStat(int movenum, int gen);
@@ -354,7 +378,7 @@ class NatureInfo
 {
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="db/nature/");
+    static void init(const QString &dir="db/natures/");
 
     /* Self-explainable functions */
     static QString Name(int naturenum);

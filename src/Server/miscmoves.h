@@ -2,11 +2,13 @@
 #define MISCMOVES_H
 
 #include "moves.h"
+#include "battlecounterindex.h"
 
 /* There's gonna be tons of structures inheriting it,
     so let's do it fast */
 typedef MoveMechanics MM;
 typedef BattleSituation BS;
+typedef BattleCounterIndex BC;
 
 struct MMDisable : public MM
 {
@@ -22,7 +24,7 @@ struct MMDisable : public MM
     }
 
     static bool failOn(int t, BS &b) {
-        if (poke(b,t).contains("DisablesUntil") && poke(b,t).value("DisablesUntil").toInt() >= b.turn()) {
+        if (b.counters(t).hasCounter(BC::Disable)) {
             return true;
         }
         if (!poke(b,t).contains("LastMoveUsedTurn")) {
@@ -56,7 +58,7 @@ struct MMDisable : public MM
             b.sendItemMessage(7,t);
             b.disposeItem(t);
         } else {
-            poke(b,t)["DisablesUntil"] = b.turn() + 3 + (b.true_rand()%4);
+            b.counters(t).addCounter(BC::Disable, 3 + (b.true_rand()%4));
             poke(b,t)["DisabledMove"] = mv;
             addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
             addFunction(poke(b,t), "MovePossible", "Disable", &mp);
@@ -66,13 +68,12 @@ struct MMDisable : public MM
 
     static void et (int s, int, BS &b)
     {
-        int tt = poke(b,s)["DisablesUntil"].toInt();
-        if (tt <= b.turn()) {
+        if (!b.counters(s).count(BC::Disable) < 0) {
             removeFunction(poke(b,s), "MovesPossible", "Disable");
             removeFunction(poke(b,s), "MovePossible", "Disable");
             removeFunction(poke(b,s), "EndTurn611", "Disable");
-            poke(b,s).remove("DisablesUntil");
             b.sendMoveMessage(28,2,s);
+            b.counters(s).removeCounter(BC::Disable);
         }
     }
 

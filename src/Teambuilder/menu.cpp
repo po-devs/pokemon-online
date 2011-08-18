@@ -11,7 +11,6 @@ TB_Menu::TB_Menu()
     setPixmap(Theme::Sprite("menubackground"));
     setWindowTitle(tr("Menu"));
 
-
     QVBoxLayout *layout = new QVBoxLayout(this);
     QImageButtonP *credits,*teambuilder, *online, *exit;
 
