@@ -33,9 +33,10 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int 
     ticking[opponent] = false;
 }
 
-BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf) :
-    delayed(0), ignoreSpecs(false)
+BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
+                                   int _ownid) : delayed(0), ignoreSpecs(NoIgnore)
 {
+    ownid() = _ownid;
     this->conf() = conf;
     myInfo = new BaseBattleInfo(me, opponent, conf.mode);
     info().gen = conf.gen;
@@ -50,7 +51,7 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
 
 BaseBattleWindow::BaseBattleWindow()
 {
-    delayed=0;ignoreSpecs=false;
+    delayed=0;ignoreSpecs=NoIgnore;
     QSettings s;
     usePokemonNames() = s.value("use_pokemon_names").toBool();
 }
@@ -111,13 +112,12 @@ void BaseBattleWindow::init()
     chat->addWidget(myline = new QIRCLineEdit());
     QHBoxLayout * buttons = new QHBoxLayout();
     chat->addLayout(buttons);
-    QPushButton *myignore;
+
     buttons->addWidget(mysend = new QPushButton(tr("C&hat")));
     buttons->addWidget(myignore = new QPushButton(tr("&Ignore Spectators")));
-    myignore->setCheckable(true);
 
     connect(musicOn, SIGNAL(toggled(bool)), SLOT(musicPlayStop()));
-    connect(myignore, SIGNAL(toggled(bool)), SLOT(ignoreSpectators(bool)));
+    connect(myignore, SIGNAL(clicked()), SLOT(ignoreSpectators()));
     connect(myclose, SIGNAL(clicked()), SLOT(clickClose()));
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
@@ -359,9 +359,21 @@ bool BaseBattleWindow::hasKnowledgeOf(int player) const
     return spectators.contains(player) || client()->name(player) == name(0) || client()->name(player) == name(1);
 }
 
-void BaseBattleWindow::ignoreSpectators(bool ignore)
+void BaseBattleWindow::ignoreSpectators()
 {
-    ignoreSpecs = ignore;
+    ignoreSpecs = ignoreSpecs +1;
+    if (ignoreSpecs >= IgnoreAll) {
+        ignoreSpecs = 0;
+    }
+
+    switch (ignoreSpecs) {
+    case NoIgnore:
+        myignore->setText(tr("&Ignore spectators")); break;
+    case IgnoreSpecs:
+        myignore->setText(tr("&Ignore everybody")); break;
+    case IgnoreAll:
+        myignore->setText(tr("Stop &ignoring")); break;
+    }
 }
 
 void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
@@ -585,6 +597,8 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
     case BattleChat:
     case EndMessage:
     {
+        if (ignoreSpecs == IgnoreAll && name(spot) != client()->name(ownid()))
+            return;
         QString message;
         in >> message;
         if (message=="")
@@ -602,11 +616,11 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
     }
     case SpectatorChat:
     {
-        if (ignoreSpecs)
-            return;
         qint32 id;
         QString message;
         in >> id >> message;
+        if (id != ownid() && (ignoreSpecs != NoIgnore))
+            return;
         printHtml(toColor(client()->name(id), Qt::blue) + ": " + escapeHtml(message));
         break;
     }
