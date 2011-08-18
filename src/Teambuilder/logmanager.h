@@ -3,10 +3,20 @@
 
 #include <QHash>
 
+enum LogType {
+    BattleLog,
+    PMLog,
+    ChannelLog
+};
+
 struct LogKey
 {
-    int type;
+    LogType type;
     QString title;
+
+    bool operator ==(const LogKey &other) const {
+        return type == other.type && title == other.title;
+    }
 };
 
 inline int qHash(const LogKey &key)
@@ -14,14 +24,10 @@ inline int qHash(const LogKey &key)
     return qHash(QPair<int, QString>(key.type, key.title));
 }
 
+class LogManager;
+
 struct Log
 {
-    enum LogType {
-        Battle,
-        PM,
-        Channel
-    };
-
     bool started;
     bool autolog;
     LogManager *master;
@@ -35,6 +41,14 @@ struct Log
     void pushTxt(const QString &txt);
     void flush();
     void close();
+
+    const QString  &title() const {
+        return key.title;
+    }
+
+    const LogType &type() const {
+        return key.type;
+    }
 
     /* Private */
     void pushedData();
@@ -53,11 +67,11 @@ public:
     void deleteLog(Log *log); /* Use log->close() instead */
 
     /* Is logging enabled for those? */
-    bool logsType(Log::LogType type);
+    bool logsType(LogType type);
 
     /* Base directory for those kind of logs */
-    QString getDirectoryForType(Log::LogType type);
-    void changeDirectoryForType(Log::LogType type, const QString &directory);
+    QString getDirectoryForType(LogType type);
+    void changeDirectoryForType(LogType type, const QString &directory);
 
 private:
     LogManager();
@@ -66,7 +80,7 @@ private:
     static LogManager *instance;
 
     QHash<LogKey, Log*> logs;
-    QHash<Log::LogType, QString> directories;
+    QHash<LogType, QString> directories;
     int flags;
 };
 

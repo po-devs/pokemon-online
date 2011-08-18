@@ -117,7 +117,7 @@ void BaseBattleWindow::init()
     connect(myclose, SIGNAL(clicked()), SLOT(clickClose()));
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
-    
+
     loadSettings(this);
 
     audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
@@ -288,7 +288,7 @@ void BaseBattleWindow::checkAndSaveLog()
     if (saveLogs->isChecked()) {
         QSettings s;
 
-        QString n1(info().pInfo[0].name), n2(info().pInfo[1].name);
+        QString n1(info().pInfo[0].team.name), n2(info().pInfo[1].team.name);
 
         /* Those characters are banned in file names on windows */
         QList<QChar> bannedCh = QList<QChar> () << '"' << '/' << '\\' << ':' << '*' << '|' << '?' << '<' << '>';
@@ -1385,4 +1385,3 @@ void BaseGraphicsZone::mouseMoveEvent(QMouseEvent * e)
         }
     }
 }
-
