@@ -24,8 +24,6 @@ public:
     ~MainEngine();
 
     void loadTeam(const QString &path);
-    template<class T>
-    void setDefaultValue(const QString &key, T value);
 
     void addStyleMenu(QMenuBar *m);
     void addThemeMenu(QMenuBar *m);

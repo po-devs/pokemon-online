@@ -1,6 +1,7 @@
 #include "logmanager.h"
 #include <QDir>
 #include <QTime>
+#include <QFile>
 #include "../Utilities/functions.h"
 
 LogManager* LogManager::instance = NULL;
@@ -22,11 +23,11 @@ void Log::flush()
         return;
     }
 
-    if (!master->logsType(type)) {
+    if (!master->logsType(type())) {
         return;
     }
 
-    QString directory = master->getDirectoryForType(key.type);
+    QString directory = master->getDirectoryForType(type());
     /* For upcoming PM & Channel logs, adding the other party/channel
       to the directoy path would be a good idea */
     if(!QDir::home().exists(directory)) {
@@ -35,8 +36,8 @@ void Log::flush()
 
     QDir dir = QDir::home();
     dir.cd(directory);
-    QFile out (dir.absoluteFilePath(file);
-            out.open(started ? QIODevice::Append : QIODevice::WriteOnly);
+    QFile out (dir.absoluteFilePath(title()));
+    out.open(started ? QIODevice::Append : QIODevice::WriteOnly);
     out.write(data.toUtf8());
 
     started = true;
@@ -93,20 +94,20 @@ LogManager::LogManager()
     setDefaultValue(s, "battle_logs_directory", QDir::homePath() + "/Documents/Pokemon-Online Logs/Battles/");
     setDefaultValue(s, "save_battle_logs", false);
 
-    directories[Log::Battle] = s.value("battle_logs_directory");
-    flags |= (s.value("save_battle_logs").toBool() << Log::Battle);
+    directories[BattleLog] = s.value("battle_logs_directory").toString();
+    flags |= (s.value("save_battle_logs").toBool() << BattleLog);
 }
 
-bool LogManager::logsType(Log::LogType type)
+bool LogManager::logsType(LogType type)
 {
     return flags & (1 << type);
 }
 
-void LogManager::changeDirectoryForType(Log::LogType type, const QString &directory)
+void LogManager::changeDirectoryForType(LogType type, const QString &directory)
 {
     directories[type] = directory;
 
-    if (type == Log::Battle) {
+    if (type == BattleLog) {
         QSettings s;
         s.setValue("battle_logs_directory", directory);
     }
@@ -157,4 +158,9 @@ void LogManager::log(LogType type, const QString &title, const QString &txt)
 void LogManager::logHtml(LogType type, const QString &title, const QString &html)
 {
     getOrCreateLog(type, title)->pushHtml(html);
+}
+
+QString LogManager::getDirectoryForType(LogType type)
+{
+    return directories[type];
 }

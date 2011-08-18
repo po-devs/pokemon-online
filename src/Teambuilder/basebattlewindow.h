@@ -45,7 +45,7 @@ struct BaseBattleInfo
     }
 
     QString name(int x) const {
-        return pInfo[x].name;
+        return pInfo[x].team.name;
     }
 
     int slot(int player, int poke=0) {
@@ -256,7 +256,7 @@ protected:
 
     QGridLayout *mylayout;
     QScrollDownTextBrowser *mychat;
-	QIRCLineEdit *myline;
+    QIRCLineEdit *myline;
     BaseBattleDisplay *mydisplay;
     QPushButton *myclose, *mysend;
     Client *_mclient;

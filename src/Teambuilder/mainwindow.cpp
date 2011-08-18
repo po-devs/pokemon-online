@@ -8,6 +8,7 @@
 #include "pluginmanager.h"
 #include "plugininterface.h"
 #include "theme.h"
+#include "../Utilities/functions.h"
 
 MainEngine::MainEngine() : displayer(0)
 {
@@ -54,7 +55,7 @@ MainEngine::MainEngine() : displayer(0)
         proxy.setHostName(s.value("host").toString());
         proxy.setUser(s.value("user").toString());
         proxy.setPassword(s.value("pass").toString());
-        settings.endGroup();
+        s.endGroup();
         QNetworkProxy::setApplicationProxy(proxy);
     }
 

@@ -79,7 +79,7 @@ public:
     void seeChallenge(const ChallengeInfo &c);
 
     PlayerInfo player(int id) const;
-    PlayerInfo & playerInfo(int id);
+    BasicInfo info(int id) const;
 
     void removePlayer(int id);
     void removeBattleWindow(int id);
@@ -321,6 +321,7 @@ private:
     Analyzer myrelay;
     Analyzer & relay();
 
+    PlayerInfo & playerInfo(int id);
     void updateState(int player);
     /* Returns the challenge window displaying that player or NULL otherwise */
     BaseChallengeWindow * getChallengeWindow(int player);

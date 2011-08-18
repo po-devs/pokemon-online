@@ -13,13 +13,13 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
 
     setParent(parent);
 
-    setWindowTitle(windowTitle.arg(p.name));
+    setWindowTitle(windowTitle.arg(p.team.name));
 
     setAttribute(Qt::WA_DeleteOnClose, true);
 
     QColor grey = "#414141";
 
-    QLabel *name = new QLabel(toColor(p.name, grey),this);
+    QLabel *name = new QLabel(toColor(p.team.name, grey),this);
     name->setGeometry(54,0,290,52);
     name->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     name->setObjectName("Title");
@@ -45,7 +45,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
 
     QFont treb("Trebuchet MS", 10);
 
-    QLabel *pinfo = new QLabel(toColor(p.info, grey), this);
+    QLabel *pinfo = new QLabel(toColor(p.team.info, grey), this);
     pinfo->setGeometry(18,197,280,55);
     pinfo->setWordWrap(true);
     pinfo->setFont(treb);
@@ -130,7 +130,7 @@ void BaseChallengeWindow::onChallenge()
 void BaseChallengeWindow::onCancel()
 {
     if (id() != -1) {
-	emit cancel(id());
+    emit cancel(id());
     }
     close();
 }
