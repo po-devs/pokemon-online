@@ -76,7 +76,14 @@ void PMWindow::printLine(QString line, bool self)
 
 void PMWindow::printHtml(const QString &htmlCode)
 {
-    m_mainwindow->insertHtml(htmlCode + "<br />");
+    QSettings s;
+    bool tt = s.value("show_timestamps2").toBool();
+    QString timeStr = "";
+
+    if (tt)
+        timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
+
+    m_mainwindow->insertHtml(timeStr + htmlCode + "<br />");
 }
 
 void PMWindow::sendMessage()
