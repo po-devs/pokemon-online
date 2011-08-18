@@ -1,6 +1,9 @@
 #include "logmanager.h"
 #include <QDir>
 #include <QTime>
+#include "../Utilities/functions.h"
+
+LogManager* LogManager::instance = NULL;
 
 Log::Log(LogType type, const QString &title)
 {
@@ -33,7 +36,7 @@ void Log::flush()
     QDir dir = QDir::home();
     dir.cd(directory);
     QFile out (dir.absoluteFilePath(file);
-    out.open(started ? QIODevice::Append : QIODevice::WriteOnly);
+            out.open(started ? QIODevice::Append : QIODevice::WriteOnly);
     out.write(data.toUtf8());
 
     started = true;
@@ -41,9 +44,26 @@ void Log::flush()
     data.clear();
 }
 
-void Log::pushHtml(const QString &hmtl)
+void Log::pushHtml(const QString &html)
 {
     data += html + "\n";
+    pushedData();
+}
+
+void Log::pushTxt(const QString &txt)
+{
+    data += txt + "<br/>\n";
+    pushedData();
+}
+
+void Log::close()
+{
+    flush();
+    master->deleteLog(this);
+}
+
+void Log::pushedData()
+{
     linecount += 1;
 
     /* The reason for not checking if linecount > 100,
@@ -54,4 +74,87 @@ void Log::pushHtml(const QString &hmtl)
     if (autolog && linecount % 100 == 0) {
         flush();
     }
+}
+
+LogManager * LogManager::obj()
+{
+    if (!instance) {
+        instance = new LogManager();
+    }
+
+    return instance;
+}
+
+LogManager::LogManager()
+{
+    flags = 0;
+    QSettings s;
+
+    setDefaultValue(s, "battle_logs_directory", QDir::homePath() + "/Documents/Pokemon-Online Logs/Battles/");
+    setDefaultValue(s, "save_battle_logs", false);
+
+    directories[Log::Battle] = s.value("battle_logs_directory");
+    flags |= (s.value("save_battle_logs").toBool() << Log::Battle);
+}
+
+bool LogManager::logsType(Log::LogType type)
+{
+    return flags & (1 << type);
+}
+
+void LogManager::changeDirectoryForType(Log::LogType type, const QString &directory)
+{
+    directories[type] = directory;
+
+    if (type == Log::Battle) {
+        QSettings s;
+        s.setValue("battle_logs_directory", directory);
+    }
+}
+
+Log * LogManager::createLog(LogType type, const QString &title, bool autolog)
+{
+    Log *ret = new Log(type, title);
+    ret->master = this;
+    ret->autolog = autolog;
+
+    logs[ret->key] = ret;
+
+    return ret;
+}
+
+void LogManager::deleteLog(Log *log)
+{
+    logs.remove(log->key);
+    delete log;
+}
+
+void LogManager::close(LogType type, const QString &title)
+{
+    LogKey key = {type, title};
+
+    if (logs.contains(key)) {
+        logs[key]->close();
+    }
+}
+
+Log * LogManager::getOrCreateLog(LogType type, const QString &title)
+{
+    LogKey key = {type, title};
+
+    if (logs.contains(key)) {
+        return logs[key];
+    } else {
+        return createLog(type, title);
+    }
+}
+
+void LogManager::log(LogType type, const QString &title, const QString &txt)
+{
+    getOrCreateLog(type, title)->pushTxt(txt);
+}
+
+void LogManager::logHtml(LogType type, const QString &title, const QString &html)
+{
+    getOrCreateLog(type, title)->pushHtml(html);
 }

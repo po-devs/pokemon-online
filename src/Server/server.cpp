@@ -125,7 +125,7 @@ void Server::start(){
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
 
-    printLine(tr("Pokémon database loaded"));
+    printLine(tr("PokÃ©mon database loaded"));
 
     MoveEffect::init();
     ItemEffect::init();
@@ -189,7 +189,7 @@ void Server::start(){
     }
 
     loadRatedBattlesSettings();
-	
+
     if (s.value("logs_channel_files").isNull()) {
         s.setValue("logs_channel_files", false);
     }
@@ -208,7 +208,7 @@ void Server::start(){
 
     serverName = s.value("server_name").toString();
     serverDesc = s.value("server_description").toString();
-    serverAnnouncement = s.value("server_announcement").toString().toUtf8();
+    serverAnnouncement = s.value("server_announcement").toString();
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
     serverPrivate = quint16(s.value("server_private").toInt());
     lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
@@ -574,9 +574,8 @@ void Server::changeScript(const QString &script)
 }
 
 void Server::setAllAnnouncement(const QString &html) {
-    QByteArray conv = html.toUtf8();
     foreach(Player *p, myplayers) {
-        p->relay().notify(NetworkServ::Announcement, conv);
+        p->relay().notify(NetworkServ::Announcement, html);
     }
 }
 
@@ -585,7 +584,7 @@ void Server::announcementChanged(const QString &announcement)
     if (announcement == serverAnnouncement)
         return;
 
-    serverAnnouncement = announcement.toUtf8();
+    serverAnnouncement = announcement;
 
     printLine("Announcement changed.", false, true);
 
@@ -1475,7 +1474,7 @@ void Server::sendBattlesList(int playerid, int chanid)
 void Server::sendPlayer(int id)
 {
     Player *source = player(id);
-    BasicPlayerInfo bundle = source->bundle();
+    PlayerInfo bundle = source->bundle();
 
     ++lastDataId;
     foreach(int chanid, source->getChannels()) {
@@ -1534,7 +1533,7 @@ void Server::recvTeam(int id, const QString &_name)
         source->setName(_name);
     }
 
-    BasicPlayerInfo bundle = source->bundle();
+    PlayerInfo bundle = source->bundle();
 
     /* Sending the team change! */
     ++lastDataId;
@@ -1588,7 +1587,7 @@ void Server::spectatingRequested(int id, int idOfBattle)
     Player *source = player(id);
     Player *p1(player(battle->id(0))), *p2(player(battle->id(1)));
 
-    BasicPlayerInfo bundle = source->bundle();
+    PlayerInfo bundle = source->bundle();
 
     if (!p1->isInSameChannel(source)) {
         p1->relay().sendPlayer(bundle);
@@ -1734,7 +1733,7 @@ void Server::atServerShutDown() {
 
 void Server::setAnnouncement(int &id, const QString &html) {
     if (player(id)->isLoggedIn())
-            player(id)->relay().notify(NetworkServ::Announcement, html.toUtf8());
+            player(id)->relay().notify(NetworkServ::Announcement, html);;
 }
 
 Player * Server::player(int id) const
@@ -1766,4 +1765,3 @@ bool Server::isLegalProxyServer(const QString &ip)
     }
     return false;
 }
-

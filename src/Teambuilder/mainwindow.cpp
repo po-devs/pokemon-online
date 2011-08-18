@@ -16,53 +16,50 @@ MainEngine::MainEngine() : displayer(0)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    QSettings settings;
+    QSettings s;
     /* initializing the default init values if not there */
-    setDefaultValue("application_style", "plastique");
-    setDefaultValue("theme_2", "Themes/Dratini Dreams/");
+    setDefaultValue(s, "application_style", "plastique");
+    setDefaultValue(s, "theme_2", "Themes/Dratini Dreams/");
 
 #ifdef Q_OS_MACX
-    setDefaultValue("team_location", QDir::homePath() + "/Documents/trainer.tp");
-    setDefaultValue("battle_logs_directory", QDir::homePath() + "/Documents/Pokemon-Online Logs/");
+    setDefaultValue(s, "team_location", QDir::homePath() + "/Documents/trainer.tp");
 #else
-    setDefaultValue("team_location", "Team/trainer.tp");
-    setDefaultValue("battle_logs_directory", "Logs/");
+    setDefaultValue(s, "team_location", "Team/trainer.tp");
 #endif
-    setDefaultValue("battle_music_directory", "Music/Battle/");
-    setDefaultValue("save_battle_logs", false);
-    setDefaultValue("play_battle_music", false);
-    setDefaultValue("play_battle_sounds", false);
-    setDefaultValue("show_team", true);
-    setDefaultValue("enable_ladder", true);
-    setDefaultValue("show_player_events_idle", false);
-    setDefaultValue("show_player_events_battle", false);
-    setDefaultValue("show_player_events_channel", false);
-    setDefaultValue("show_player_events_team", false);
-    setDefaultValue("show_timestamps", true);
-    setDefaultValue("show_timestamps2", true);
-    setDefaultValue("animate_hp_bar", true);
-    setDefaultValue("sort_players_by_tier", false);
-    setDefaultValue("show_all_items", false);
+    setDefaultValue(s, "battle_music_directory", "Music/Battle/");
+    setDefaultValue(s, "play_battle_music", false);
+    setDefaultValue(s, "play_battle_sounds", false);
+    setDefaultValue(s, "show_team", true);
+    setDefaultValue(s, "enable_ladder", true);
+    setDefaultValue(s, "show_player_events_idle", false);
+    setDefaultValue(s, "show_player_events_battle", false);
+    setDefaultValue(s, "show_player_events_channel", false);
+    setDefaultValue(s, "show_player_events_team", false);
+    setDefaultValue(s, "show_timestamps", true);
+    setDefaultValue(s, "show_timestamps2", true);
+    setDefaultValue(s, "animate_hp_bar", true);
+    setDefaultValue(s, "sort_players_by_tier", false);
+    setDefaultValue(s, "show_all_items", false);
 
-    setDefaultValue("find_battle_force_rated", false);
-    setDefaultValue("find_battle_same_tier", true);
-    setDefaultValue("find_battle_range_on", true);
-    setDefaultValue("find_battle_range", 200);
+    setDefaultValue(s, "find_battle_force_rated", false);
+    setDefaultValue(s, "find_battle_same_tier", true);
+    setDefaultValue(s, "find_battle_range_on", true);
+    setDefaultValue(s, "find_battle_range", 200);
 
-    if (settings.value("use_socks5_proxy", false).toBool() == true) {
-        settings.beginGroup("socks5_proxy");
+    if (s.value("use_socks5_proxy", false).toBool() == true) {
+        s.beginGroup("socks5_proxy");
         QNetworkProxy proxy;
         proxy.setType(QNetworkProxy::Socks5Proxy);
-        proxy.setPort(settings.value("port", 27977).toInt());
-        proxy.setHostName(settings.value("host").toString());
-        proxy.setUser(settings.value("user").toString());
-        proxy.setPassword(settings.value("pass").toString());
+        proxy.setPort(s.value("port", 27977).toInt());
+        proxy.setHostName(s.value("host").toString());
+        proxy.setUser(s.value("user").toString());
+        proxy.setPassword(s.value("pass").toString());
         settings.endGroup();
         QNetworkProxy::setApplicationProxy(proxy);
     }
 
     PokemonInfo::init("db/pokes/", FillMode::Client);
-    MoveSetChecker::init("db/pokes/", settings.value("enforce_min_levels").toBool());
+    MoveSetChecker::init("db/pokes/", s.value("enforce_min_levels").toBool());
     ItemInfo::init("db/items/");
     MoveInfo::init("db/moves/");
     TypeInfo::init("db/types/");
@@ -72,12 +69,12 @@ MainEngine::MainEngine() : displayer(0)
     GenderInfo::init("db/genders/");
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
-    Theme::init(settings.value("theme_2").toString());
+    Theme::init(s.value("theme_2").toString());
 
     /* Loading the values */
-    QApplication::setStyle(settings.value("application_style").toString());
+    QApplication::setStyle(s.value("application_style").toString());
     loadStyleSheet();
-    loadTeam(settings.value("team_location").toString());
+    loadTeam(s.value("team_location").toString());
 
     launchMenu();
 }

@@ -1695,8 +1695,9 @@ void ScriptEngine::makeServerPublic(bool isPublic)
 }
 
 QScriptValue ScriptEngine::getAnnouncement() {
-        return myserver->serverAnnouncement;
-    }
+    return myserver->serverAnnouncement;
+}
+
 /* Causes crash...
 void ScriptEngine::setTimer(int milisec) {
     if (milisec <= 0)

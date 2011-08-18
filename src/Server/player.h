@@ -113,7 +113,7 @@ public:
     Analyzer& relay();
     const Analyzer& relay() const;
 
-    BasicPlayerInfo bundle() const;
+    PlayerInfo bundle() const;
 
     /* A locked player will stop processing its events */
     void lock();
@@ -269,7 +269,7 @@ public slots:
         void done();
 
 private:
-        QTimer *mytimer;       
+        QTimer *mytimer;
         QString myname;
         int mytime;
 };
