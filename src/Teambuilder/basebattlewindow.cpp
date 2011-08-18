@@ -2,6 +2,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
 #include "theme.h"
+#include "logmanager.h"
 
 BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int mode, int myself, int opponent)
     : myself(myself), opponent(opponent)
@@ -86,6 +87,9 @@ void BaseBattleWindow::init()
     blankMessage = false;
     battleEnded = false;
     started() = false;
+
+    log = LogManager::obj()->createLog(BattleLog, tr("%1 vs %2").arg(info().name(0), info().name(1) + "--"));
+    log->override = Log::OverrideNo; /* By default, no logging enabled */
 
     setWindowTitle(tr("Battle between %1 and %2").arg(name(0), name(1)));
 
@@ -267,7 +271,6 @@ void BaseBattleWindow::animateHPBar()
     //To stop the commands from being processed
     delay(0, false);
 
-
     /* We deal with % hp, 30 msecs per % */
     int life = info().currentShallow(spot).lifePercent();
 
@@ -286,26 +289,11 @@ void BaseBattleWindow::animateHPBar()
 void BaseBattleWindow::checkAndSaveLog()
 {
     if (saveLogs->isChecked()) {
-        QSettings s;
-
-        QString n1(info().pInfo[0].team.name), n2(info().pInfo[1].team.name);
-
-        /* Those characters are banned in file names on windows */
-        QList<QChar> bannedCh = QList<QChar> () << '"' << '/' << '\\' << ':' << '*' << '|' << '?' << '<' << '>';
-        foreach(QChar c, bannedCh) {
-            n1 = n1.replace(c, ' ');
-            n2 = n2.replace(c, ' ');
-        }
-
-        if(!QDir::home().exists(s.value("battle_logs_directory").toString())) {
-            QDir::home().mkpath(s.value("battle_logs_directory").toString());
-        }
-        QString file = s.value("battle_logs_directory").toString() + n1 + " vs " + n2 + "--" + QDate::currentDate().toString("dd MMMM yyyy")
-               + " at " +QTime::currentTime().toString("hh'h'mm") + ".html";
-        QFile out (file);
-        out.open(QIODevice::WriteOnly);
-        out.write(mychat->toHtml().toUtf8());
+        log->override = Log::OverrideYes;
     }
+
+    log->close();
+    log = NULL;
 }
 
 void BaseBattleWindow::closeEvent(QCloseEvent *)
@@ -402,13 +390,11 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             }
 
 
-            if (!silent) {
-                QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());
-                if (pokename != rnick(spot))
-                    printLine(tr("%1 sent out %2! (%3)").arg(name(player(spot)), rnick(spot), pokename));
-                else
-                    printLine(tr("%1 sent out %2!").arg(name(player(spot)), rnick(spot)));
-            }
+            QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());
+            if (pokename != rnick(spot))
+                printLine(tr("%1 sent out %2! (%3)").arg(name(player(spot)), rnick(spot), pokename), silent);
+            else
+                printLine(tr("%1 sent out %2!").arg(name(player(spot)), rnick(spot)), silent);
 
             break;
         }
@@ -436,6 +422,8 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         {
             quint16 newHp;
             in >> newHp;
+
+            printLine(tr("%1's new HP is %2%.").arg(nick(spot)).arg(newHp), true);
 
             animatedHpSpot() = spot;
             animatedHpGoal() = newHp;
@@ -514,6 +502,8 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
             } else if (status == Pokemon::Confused) {
                 printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), Theme::TypeColor(Type::Ghost).name()));
             }
+            printLine(tr("%1 had its status changed to: %2.").arg(nick(spot), StatInfo::Status(status)), true);
+
             break;
         }
     case AbsStatusChange:
@@ -523,6 +513,8 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
 
         if (poke < 0 || poke >= 6)
             break;
+
+        printLine(tr("Pokemon number %1 of %2 had its status changed to: %3.").arg(poke).arg(name(spot), StatInfo::Status(status)), true);
 
         if (status != Pokemon::Confused) {
             info().pokemons[spot][poke].changeStatus(status);
@@ -838,12 +830,10 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
 
             in >> s1 >> s2 >> silent;
 
-            if (!silent) {
-                if (info().currentShallow(info().slot(spot, s2)).status() == Pokemon::Koed) {
-                    printLine(tr("%1 shifted spots to the middle!").arg(tu(nick(info().slot(spot, s1)))));
-                } else {
-                    printLine(tr("%1 shifted spots with %2!").arg(tu(nick(info().slot(spot, s1))), nick(info().slot(spot, s2))));
-                }
+            if (info().currentShallow(info().slot(spot, s2)).status() == Pokemon::Koed) {
+                printLine(tr("%1 shifted spots to the middle!").arg(tu(nick(info().slot(spot, s1)))), silent);
+            } else {
+                printLine(tr("%1 shifted spots with %2!").arg(tu(nick(info().slot(spot, s1))), nick(info().slot(spot, s2))), silent);
             }
 
             info().switchOnSide(spot, s1, s2);
@@ -896,17 +886,26 @@ void BaseBattleWindow::printLine(const QString &str, bool silent)
         blankMessage = false;
     }
 
+    QString html = str + "<br />\n";
     if (!silent) {
-        mychat->insertHtml(str + "<br />");
+        mychat->insertHtml(html);
+        log->pushHtml(html);
     } else {
-        mychat->insertHtml("<!--" + str + "<br />" + "-->");
+        log->pushHtml("<!--"+html+"-->");
     }
 }
 
 void BaseBattleWindow::printHtml(const QString &str, bool silent)
 {
     blankMessage = false;
-    mychat->insertHtml(!silent ? (str + "<br />") : ("<!--" + str + "<br />" + "-->"));
+
+    QString html = str + "<br />\n";
+    if (!silent) {
+        mychat->insertHtml(html);
+        log->pushHtml(html);
+    } else {
+        log->pushHtml("<!--"+html+"-->");
+    }
 }
 
 BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)

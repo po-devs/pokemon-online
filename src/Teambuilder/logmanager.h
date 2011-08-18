@@ -34,10 +34,16 @@ struct Log
     QString data;
     LogKey key;
     int linecount;
+    enum OverRide {
+        NoOverride,
+        OverrideYes,
+        OverrideNo
+    };
+    OverRide override;
 
     Log(LogType type, const QString &title);
 
-    void pushHtml(const QString& hmtl);
+    void pushHtml(const QString& html);
     void pushTxt(const QString &txt);
     void flush();
     void close();
@@ -57,7 +63,7 @@ struct Log
 class LogManager
 {
 public:
-    LogManager* obj();
+    static LogManager* obj();
 
     Log* createLog(LogType type, const QString &title, bool autolog=false);
     void log(LogType type, const QString &title, const QString &txt);
@@ -72,6 +78,7 @@ public:
     /* Base directory for those kind of logs */
     QString getDirectoryForType(LogType type);
     void changeDirectoryForType(LogType type, const QString &directory);
+    void changeLogSaving(LogType type, bool save);
 
 private:
     LogManager();

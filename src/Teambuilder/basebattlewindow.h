@@ -11,6 +11,7 @@
 class BaseBattleDisplay;
 class QScrollDownTextBrowser;
 class QClickPBar;
+class Log;
 
 struct BaseBattleInfo
 {
@@ -284,6 +285,8 @@ protected:
 
     bool blankMessage;
     bool battleEnded;
+
+    Log *log;
 
     BaseBattleWindow();
     void init();
