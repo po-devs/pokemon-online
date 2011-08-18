@@ -1,7 +1,5 @@
 #include "networkstructs.h"
 
-
-
 PokePersonal & TeamInfo::pokemon(int num)
 {
     return m_pokes[num];

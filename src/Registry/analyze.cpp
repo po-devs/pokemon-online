@@ -100,6 +100,11 @@ void Analyzer::sendServer(const QString &name, const QString &desc, quint16 nump
     notify(PlayersList, name, desc, numplayers, ip, max, port);
 }
 
+void Analyzer::sendServerListEnd()
+{
+  notify(ServerListEnd);
+}
+
 void Analyzer::sendInvalidName()
 {
     notify(ServNameChange);

@@ -34,6 +34,10 @@ AntiDosWindow::AntiDosWindow()
     baxk->setValue(settings.value("ban_after_X_kicks").toInt());
     mylayout->addRow(tr("Bans after X antidos kicks per 15 minutes"), baxk);
 
+    trusted_ips = new QLineEdit();
+    trusted_ips->setText(settings.value("trusted_ips").toString());
+    mylayout->addRow(tr("Trusted IPs (seperated by comma)"),trusted_ips);
+
     QCheckBox *aDosOn = new QCheckBox(tr("Turn AntiDos ON"));
     aDosOn->setChecked(!settings.value("antidos_off").toBool());
     mylayout->addWidget(aDosOn);
@@ -58,6 +62,7 @@ void AntiDosWindow::apply()
 {
     AntiDos *obj = AntiDos::obj();
 
+    obj->trusted_ips = trusted_ips->text().split(QRegExp("\\s*,\\s*"));
     obj->max_people_per_ip = max_people_per_ip->value();
     obj->max_commands_per_user = max_commands_per_user->value();
     obj->max_kb_per_user = max_kb_per_user->value();
@@ -73,6 +78,7 @@ void AntiDosWindow::apply()
     settings.setValue("max_kbyte_per_user", obj->max_kb_per_user);
     settings.setValue("max_login_per_ip", obj->max_login_per_ip);
     settings.setValue("ban_after_X_kicks", obj->ban_after_x_kicks);
+    settings.setValue("trusted_ips", obj->trusted_ips.join(","));
     settings.setValue("antidos_off", !obj->on);
 
     close();
@@ -86,6 +92,9 @@ AntiDos::AntiDos() {
 void AntiDos::init() {
     QSettings settings("config", QSettings::IniFormat);
     /* initializing the default init values if not there */
+    if (settings.value("trusted_ips").isNull()) {
+        settings.setValue("trusted_ips", "127.0.0.1");
+    }
     if (settings.value("max_people_per_ip").isNull()) {
         settings.setValue("max_people_per_ip", 2);
     }
@@ -105,7 +114,7 @@ void AntiDos::init() {
         settings.setValue("antidos_off", false);
     }
 
-
+    trusted_ips = settings.value("trusted_ips").toString().split(QRegExp("\\s*,\\s*"));
     max_people_per_ip = settings.value("max_people_per_ip").toInt();
     max_commands_per_user = settings.value("max_commands_per_user").toInt();
     max_kb_per_user = settings.value("max_kbyte_per_user").toInt();
@@ -164,6 +173,17 @@ void AntiDos::disconnect(const QString &ip, int id)
     }
 }
 
+bool AntiDos::changeIP(const QString &newIp, const QString &oldIp)
+{
+    connectionsPerIp[oldIp]--;    
+    loginsPerIp[oldIp].pop_back(); // remove a login
+    if (connectionsPerIp[oldIp]==0) {
+        connectionsPerIp.remove(oldIp);
+    }
+    return connecting(newIp);
+}
+
+
 int AntiDos::numberOfDiffIps()
 {
     return connectionsPerIp.count();
@@ -171,6 +191,12 @@ int AntiDos::numberOfDiffIps()
 
 bool AntiDos::transferBegin(int id, int length, const QString &ip)
 {
+
+    /* If the IP is in the Trusted Ips list, do not do anything */
+    if (trusted_ips.contains(ip)) {
+        return true;
+    }
+
     if (transfersPerId.contains(id)) {
         QList< QPair<time_t, size_t> > &l = transfersPerId[id];
         size_t &len = sizeOfTransfers[id];
@@ -189,11 +215,13 @@ bool AntiDos::transferBegin(int id, int length, const QString &ip)
 
         l.erase(l.begin(), l.begin()+i);
 
+
         if (l.size() >= max_commands_per_user && on) {
             emit kick(id);
             addKick(ip);
             return false;
         }
+
 
         if (len + length > size_t(max_kb_per_user)*1024 && on) {
             emit kick(id);

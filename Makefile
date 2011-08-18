@@ -1,8 +1,8 @@
 # attempt autodetection of which qmake to use.
-ifeq ($(shell uname),darwin)
-QMAKE=qmake -spec macx-g++	# For mac OSX
-else
-QMAKE=qmake 			# For everyone else.
+ifeq ($(shell uname),darwin)	# For mac OSX
+QMAKE=qmake -spec macx-g++ CONFIG+="${CONFIG}"
+else				# For everyone else.
+QMAKE=qmake CONFIG+="${CONFIG}"
 endif
 
 # Default make binary. Some systems have nmake or gmake (some bsds)

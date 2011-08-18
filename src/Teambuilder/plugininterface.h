@@ -3,11 +3,12 @@
 
 #include <QString>
 
-/* An interface Server Plugins must follow.
+/* An interface Client Plugins must follow.
    Remember that plugins are still very experimental and that this file is going to be subject to
    a lot of changes... */
 
 class QWidget;
+class MainEngineInterface;
 
 class ClientPlugin
 {
@@ -28,9 +29,9 @@ public:
 };
 
 /* Each plugin will have to have a function like that named
-   createPluginClass, that creates a ServerEngine (or a derived
+   createPluginClass, that creates a ClientPlugin (or a derived
     class) through new and returns it. */
-typedef ClientPlugin *(*PluginInstanceFunction) ();
+typedef ClientPlugin *(*PluginInstanceFunction) (MainEngineInterface*);
 
 /* Will be used like that:
 
@@ -40,12 +41,12 @@ class MyPlugin : public ClientPlugin
 }
 
 extern "C" {
-ServerPlugin *createPluginClass(void);
+ClientPlugin *createPluginClass(void);
 };
 
 ....
 
-ServerPlugin *createPluginClass() {
+ClientPlugin *createPluginClass() {
     return new MyPlugin();
 }
 

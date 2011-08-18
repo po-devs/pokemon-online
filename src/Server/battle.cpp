@@ -12,6 +12,7 @@
 #include "pluginmanager.h"
 #include "battlepluginstruct.h"
 #include "theme.h"
+#include "battlecounterindex.h"
 
 typedef BattlePStorage BP;
 
@@ -633,6 +634,11 @@ void BattleSituation::endTurn()
     foreach (int player, players) {
         /* Wish */
         callseffects(player,player, "EndTurn2");
+
+        /* Counters */
+        if (gen() < 5) {
+            counters(player).decreaseCounters();
+        }
     }
 
     endTurnWeather();
@@ -643,10 +649,7 @@ void BattleSituation::endTurn()
             {
                 if (true_rand() % 255 <= 25)
                 {
-                    healStatus(player, Pokemon::Frozen);
-                    notify(All, StatusMessage, player, qint8(FreeFrozen));
-                    if (useBattleLog)
-                        appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
+                    unthaw(player);
                 }
             }
         }
@@ -861,7 +864,8 @@ bool BattleSituation::requestChoice(int slot, bool acquire, bool custom)
         return false;
     }
 
-    if (turnMemory(slot).contains("NoChoice") && !koed(slot)) {
+    /* Custom choices bypass forced choices */
+    if (turnMemory(slot).contains("NoChoice") && !koed(slot) && !custom) {
         return false;
     }
 
@@ -1022,15 +1026,16 @@ void BattleSituation::analyzeChoice(int slot)
             }
         }
     } else if (choice(slot).switchChoice()){
+        bool wasKoed = koed(slot);
         if (!koed(slot)) /* if the pokemon isn't ko, it IS sent back */
             sendBack(slot);
 
         /* In gen 4 & previous, pursuit doesn't allow you to choose a new pokemon.
            In 5th gen, it's like a normal KO */
-        if (gen() <= 4 || !koed(slot)) {
-                sendPoke(slot, choice(slot).pokeSlot());
-        } else {
+        if (gen() <= 4 || !koed(slot) || wasKoed) {
             sendPoke(slot, choice(slot).pokeSlot());
+        } else {
+            requestSwitch(slot);
         }
     } else if (choice(slot).moveToCenterChoice()) {
         if (!wasKoed(slot)) {
@@ -1393,7 +1398,7 @@ void BattleSituation::storeChoice(const BattleChoice &b)
     hasChoice[b.slot()] = false;
 
     /* If the move is encored, a random target is picked. */
-    if (pokeMemory(b.slot()).contains("EncoresUntil") && pokeMemory(b.slot()).value("EncoresUntil").toInt() >= turn())
+    if (counters(b.slot()).hasCounter(BattleCounterIndex::Encore))
         choice(b.slot()).choice.attack.attackTarget = b.slot();
 }
 
@@ -1613,6 +1618,9 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     /* reset temporary variables */
     pokeMemory(slot).clear();
+
+    /* Reset counters */
+    counters(slot).clear();
 
     if (poke(player, pok).ability() == Ability::Illusion) {
         for (int i = 5; i >= 0; i--) {
@@ -1926,7 +1934,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
           * (20-turnMemory(target).value("Stat7AbilityModifier").toInt())/20;
 
     if (true_rand() % 100 < unsigned(acc)) {
-	return true;
+        return true;
     } else {
         if (!silent) {
             notifyMiss(multiTar, player, target);
@@ -1984,11 +1992,11 @@ void BattleSituation::testCritical(int player, int target)
             appendBattleLog("CriticalHit", toColor(tr("A critical hit!"), "#6b0000"));
     }
 
-    /* In GSC, if you don't got superior boosts in offensive than in their defensive stat, you ignore boosts, burn, and screens,
+    /* In GSC, if crit and if you don't got superior boosts in offensive than in their defensive stat, you ignore boosts, burn, and screens,
        otherwise you ignore none of them */
     if (gen() == 2) {
         int stat = 1 + (tmove(player).category - 1) * 2;
-        if (fpoke(player).boosts[stat] <= fpoke(target).boosts[stat+2]) {
+        if (fpoke(player).boosts[stat] <= fpoke(target).boosts[stat+1]) {
             turnMemory(player)["CritIgnoresAll"] = true;
         }
     }
@@ -2030,10 +2038,7 @@ bool BattleSituation::testStatus(int player)
                 appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(player)))), Theme::StatusColor(Pokemon::Frozen)));
             return false;
         }
-        healStatus(player, Pokemon::Frozen);
-        notify(All, StatusMessage, player, qint8(FreeFrozen));
-        if (useBattleLog)
-            appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
+        unthaw(player);
     }
 
     if (turnMemory(player)["Flinched"].toBool()) {
@@ -2091,6 +2096,7 @@ void BattleSituation::inflictConfusedDamage(int player)
 
     tmove(player).type = Pokemon::Curse;
     tmove(player).power = 40;
+    tmove(player).attack = Move::NoMove;
     turnMemory(player)["TypeMod"] = 4;
     turnMemory(player)["Stab"] = 2;
     tmove(player).category = Move::Physical;
@@ -2181,6 +2187,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     turnMemory(player)["HasMoved"] = true;
+    if (gen() >= 5) {
+        counters(player).decreaseCounters();
+    }
 
     calleffects(player,player,"EvenWhenCantMove");
 
@@ -2214,7 +2223,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     if (!specialOccurence) {
-        if (!isMovePossible(player, move)) {
+        if (PP(player, move) <= 0) {
+            /* Todo : notify of PP absence */
             goto trueend;
         }
 
@@ -2406,7 +2416,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     /* Here because of jewels :( */
     turnMemory(player).remove("BasePowerItemModifier");
 
+    /* Choice item memory, copycat in gen 4 and less */
+    if (!specialOccurence && attack != Move::Struggle) {
+        battleMemory()["LastMoveUsed"] = attack;
+    }
+
     foreach(int target, targetList) {
+        heatOfAttack() = true;
         attacked() = target;
         if (!specialOccurence && (tmove(player).flags & Move::MemorableFlag) ) {
             pokeMemory(target)["MirrorMoveMemory"] = attack;
@@ -2455,6 +2471,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
             if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
                 calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
+
+            /* Draining moves fail against substitute in gen 2 and earlier */
+            if (gen() <= 2 && hasSubstitute(target) && tmove(player).healing > 0) {
+                turnMemory(player)["Failed"] = true;
+                testFail(player);
                 continue;
             }
 
@@ -2540,6 +2563,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                         if (!sub)
                             callieffects(target, player, "UponPhysicalAssault");
                         callaeffects(target,player,"UponPhysicalAssault");
+                        callaeffects(player,target,"OnPhysicalAssault");
                     }
 
                     if (!sub) {
@@ -2582,6 +2606,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             turnMemory(target)["HadSubstitute"] = false;
         } else {
+            /* Needs to be called before DetermineAttackFailure because
+              of SapSipper/Leech Seed */
+            if (target != player) {
+                callaeffects(target,player,"OpponentBlock");
+            }
+            if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
+
             callpeffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
             calleffects(player, target, "DetermineAttackFailure");
@@ -2597,13 +2631,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
                 if (useBattleLog)
                     appendBattleLog("Failed", tr("But it failed!"));
-                continue;
-            }
-            if (target != player) {
-                callaeffects(target,player,"OpponentBlock");
-            }
-            if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
-                calleffects(player,target,"AttackSomehowFailed");
                 continue;
             }
 
@@ -2627,20 +2654,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player, target, "AfterAttackSuccessful");
         }
         if (tmove(player).type == Type::Fire && poke(target).status() == Pokemon::Frozen) {
-            notify(All, StatusMessage, target, qint8(FreeFrozen));
-            if (useBattleLog)
-                appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
-            healStatus(target, Pokemon::Frozen);
+            unthaw(target);
         }
         pokeMemory(target)["LastAttackToHit"] = attack;
     }
 
     heatOfAttack() = false;
-
-    /* Copycat memory */
-    if ((!specialOccurence||gen() >= 5) && attack != Move::Struggle) {
-        battleMemory()["LastMoveSuccessfullyUsed"] = attack;
-    }
 
     end:
     /* In gen 4, choice items are there - they lock even if the move had no target possible.  */
@@ -2657,6 +2676,14 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
     calleffects(player, player, "AfterAttackFinished");
+}
+
+void BattleSituation::unthaw(int player)
+{
+    notify(All, StatusMessage, player, qint8(FreeFrozen));
+    if (useBattleLog)
+        appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(player)))), Theme::TypeColor(Type::Dark).name()));
+    healStatus(player, Pokemon::Frozen);
 }
 
 void BattleSituation::notifyKO(int player)
@@ -2747,6 +2774,9 @@ void BattleSituation::makeTargetList(const QVector<int> &base)
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
+    if (gen() <= 2)
+        return false;
+
     /* Yes, illusion breaks when hit by mold breaker, right? */
     if (ab == Ability::Illusion)
         return true;
@@ -3059,8 +3089,8 @@ bool BattleSituation::canGetStatus(int player, int status) {
     case Pokemon::Paralysed: return !hasWorkingAbility(player, Ability::Limber);
     case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit) && !isThereUproar();
     case Pokemon::Burnt: return !hasType(player, Pokemon::Fire) && !hasWorkingAbility(player, Ability::WaterVeil);
-    case Pokemon::Poisoned: return !hasType(player, Pokemon::Poison) && !hasType(player, Pokemon::Steel) && !hasWorkingAbility(player, Ability::Immunity);
-    case Pokemon::Frozen: return !isWeatherWorking(Sunny) && !hasType(player, Pokemon::Ice) && !hasWorkingAbility(player, Ability::MagmaArmor);
+    case Pokemon::Poisoned: return !hasType(player, Pokemon::Poison) && (gen() <= 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
+    case Pokemon::Frozen: return !isWeatherWorking(Sunny) && (gen() <= 2 || !hasType(player, Pokemon::Ice)) && !hasWorkingAbility(player, Ability::MagmaArmor);
     default:
         return false;
     }
@@ -3071,6 +3101,9 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
     bool pos = (mod > 0) ^ hasWorkingAbility(player, Ability::Perversity);
     if (negative)
         *negative = !pos;
+
+    if (gen() == 5 && hasWorkingAbility(player, Ability::Simple))
+        mod *= 2;
 
     if (pos)
         return gainStatMod(player, stat, std::abs(mod), attacker, tell);
@@ -3212,7 +3245,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
 
     changeStatus(player, status, true, minTurns == 0 ? 0 : minTurns-1 + true_rand() % (maxTurns - minTurns + 1));
     if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_S) {
-        changeForme(this->player(player), slotNum(player), Pokemon::Shaymin_S);
+        changeForme(this->player(player), slotNum(player), Pokemon::Shaymin);
     }
     if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
         && hasWorkingAbility(player, Ability::Synchronize)) //Synchronize
@@ -3372,7 +3405,8 @@ void BattleSituation::endTurnWeather()
                                 break;
                         }
                     }
-		    inflictDamage(i, poke(i).totalLifePoints()/16, i, false);
+            //In GSC, the damage is 1/8, otherwise 1/16
+            inflictDamage(i, poke(i).totalLifePoints()*(gen() > 2 ? 1 : 2)/16, i, false);
                     if (gen() >= 5) {
                         testWin();
                     }
@@ -3610,13 +3644,16 @@ int BattleSituation::calculateDamage(int p, int t)
     if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct) && gen() <= 4) {
         /* explosion / selfdestruct */
         def/=2;
+        if (def == 0)
+            // prevent division by zero
+            def = 1;
     }
 
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
-    int randnum = true_rand() % (255-217) + 217;
+    int randnum = ((true_rand() >> 4) % 16) + 85;
     //Spit Up
-    if (attackused == Move::SpitUp) randnum = 255;
+    if (attackused == Move::SpitUp) randnum = 100;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
     int power = tmove(p).power;
     int type = tmove(p).type;
@@ -3656,7 +3693,7 @@ int BattleSituation::calculateDamage(int p, int t)
     power = std::min(power, 65535);
     int damage = ((std::min(((level * 2 / 5) + 2) * power, 65535) * attack / 50) / def);
     //Guts, burn
-    if (gen() != 2 || !turnMemory(p).value("CritIgnoresAll").toBool()) {
+    if (gen() != 2 || !crit || !turnMemory(p).value("CritIgnoresAll").toBool()) {
         damage = damage * (
                 (poke.status() == Pokemon::Burnt && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts))
                 ? PokeFraction(1,2) : PokeFraction(1,1));
@@ -3716,7 +3753,7 @@ int BattleSituation::calculateDamage(int p, int t)
     move.remove("ItemMod2Modifier");
     callieffects(p,t,"Mod2Modifier");
     damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
-    damage = damage *randnum*100/255/100*stab/2*typemod/4;
+    damage = damage *randnum/100*stab/2*typemod/4;
 
     /* Mod 3 */
     // FILTER / SOLID ROCK
@@ -3955,8 +3992,8 @@ void BattleSituation::eatBerry(int player, bool show) {
                 return;
             }
         }
-
-        pokeMemory(player)["BerryUsed"] = berry;
+        QString harvest_key = QString("BerryUsed_%1").arg(team(this->player(player)).internalId(poke(player)));
+        teamMemory(this->player(player))[harvest_key] = berry;
     }
 }
 
@@ -4503,6 +4540,7 @@ ShallowBattlePoke BattleSituation::opoke(int slot, int player, int i) const
         p.num() = p2.num();
         p.nick() = p2.nick();
         p.gender() = p2.gender();
+        p.shiny() = p2.shiny();
 
         return p;
     } else {
@@ -4637,7 +4675,7 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
 {
     int boost = fpoke(player).boosts[stat];
 
-    if (hasWorkingAbility(player,Ability::Simple)) {
+    if (gen() <= 4 && hasWorkingAbility(player,Ability::Simple)) {
         boost = std::max(std::min(boost*2, 6),-6);
     }
 

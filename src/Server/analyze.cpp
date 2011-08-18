@@ -42,7 +42,7 @@ void Analyzer::sendHtmlMessage(const QString &message)
 
 void Analyzer::sendHtmlChannelMessage(int chanid, const QString &message)
 {
-    notify(ChannelHtml, qint32(chanid), message);
+    notify(HtmlChannel, qint32(chanid), message);
 }
 
 void Analyzer::engageBattle(int battleid, int , int id, const TeamBattle &team, const BattleConfiguration &conf)
@@ -442,6 +442,12 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             qint32 id;
             in >> id;
             emit leaveChannel(id);
+        }
+    case SetIP:
+        {
+            QString ip;
+            in >> ip;
+            emit ipChangeRequested(ip);
         }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));

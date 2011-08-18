@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QtGui>
+#include "engineinterface.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "centralwidget.h"
 
@@ -16,7 +17,7 @@ class PluginManager;
    All the general initialization is done here, the persistent data (i.e the team) too.
    The main window manages the sub-modules. */
 
-class MainEngine : public QObject {
+class MainEngine : public QObject, public MainEngineInterface {
     Q_OBJECT
 public:
     MainEngine();
@@ -55,6 +56,7 @@ private:
     QMenuBar* transformMenuBar(QMenuBar *param);
 
     TrainerTeam m_team;
+public:
     TrainerTeam *trainerTeam() {
         return &m_team;
     }

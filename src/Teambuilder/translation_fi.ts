@@ -499,7 +499,7 @@ Vaikutus: %5</translation>
     <message>
         <location filename="basebattlewindow.cpp" line="878"/>
         <source>%1 stopped watching the battle.</source>
-        <translation>%1 lopetti ottelun seuraamisen.</translation>
+        <translation>%1 ei enää seuraa ottelua</translation>
     </message>
 </context>
 <context>
@@ -507,17 +507,17 @@ Vaikutus: %5</translation>
     <message>
         <location filename="challenge.cpp" line="57"/>
         <source>Singles</source>
-        <translation>Yksi vastaan yksi</translation>
+        <translation>Yksi vs. yksi</translation>
     </message>
     <message>
         <location filename="challenge.cpp" line="58"/>
         <source>Doubles</source>
-        <translation>Kaksi vastaan kaksi</translation>
+        <translation>Kaksi vs. kaksi</translation>
     </message>
     <message>
         <location filename="challenge.cpp" line="59"/>
         <source>Triples</source>
-        <translation>Kolme vastaan kolme</translation>
+        <translation>Kolme vs. kolme</translation>
     </message>
 </context>
 <context>
@@ -558,17 +558,17 @@ Vaikutus: %5</translation>
     <message>
         <location filename="client.cpp" line="1993"/>
         <source>Singles</source>
-        <translation>Yksi vastaan yksi</translation>
+        <translation>Yksi vs. yksi</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1993"/>
         <source>Doubles</source>
-        <translation>Kaksi vastaan kaksi</translation>
+        <translation>Kaksi vs. kaksi</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1993"/>
         <source>Triples</source>
-        <translation>Kolme vastaan kolme</translation>
+        <translation>Kolme vs. kolme</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1997"/>
@@ -591,7 +591,7 @@ Vaikutus: %5</translation>
     <message>
         <location filename="battlewindow.cpp" line="73"/>
         <source>&amp;Forfeit</source>
-        <translation>L&amp;uovuta</translation>
+        <translation>&amp;Luovuta</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="75"/>
@@ -630,7 +630,7 @@ Vaikutus: %5</translation>
     <message>
         <location filename="battlewindow.cpp" line="114"/>
         <source>Suggest draw</source>
-        <translation type="unfinished"></translation>
+        <translation>Ehdota tasapeliä</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="121"/>
@@ -650,7 +650,7 @@ Vaikutus: %5</translation>
     <message>
         <location filename="battlewindow.cpp" line="212"/>
         <source>Losing your battle</source>
-        <translation>Olet häviämässä ottelun</translation>
+        <translation>Olet häviämässä ottelun!</translation>
     </message>
     <message>
         <location filename="battlewindow.cpp" line="212"/>
@@ -802,7 +802,7 @@ Vaikutus: %5</translation>
     <message>
         <location filename="channel.cpp" line="79"/>
         <source>&amp;Watch Battle</source>
-        <translation>&amp;Katso Ottelu</translation>
+        <translation>&amp;Katso Ottelua</translation>
     </message>
     <message>
         <location filename="channel.cpp" line="81"/>
@@ -822,7 +822,7 @@ Vaikutus: %5</translation>
     <message>
         <location filename="channel.cpp" line="95"/>
         <source>&amp;Kick</source>
-        <translation>&amp;Potki</translation>
+        <translation>&amp;Potkaise</translation>
     </message>
     <message>
         <location filename="channel.cpp" line="100"/>
@@ -1047,22 +1047,22 @@ Vaikutus: %5</translation>
     <message>
         <location filename="client.cpp" line="327"/>
         <source>Custom settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Omat asetukset</translation>
     </message>
     <message>
         <location filename="client.cpp" line="329"/>
         <source>Use global</source>
-        <translation type="unfinished"></translation>
+        <translation>Käytä globaalia</translation>
     </message>
     <message>
         <location filename="client.cpp" line="334"/>
         <source>Global settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Globaalit asetukset</translation>
     </message>
     <message>
         <location filename="client.cpp" line="389"/>
         <source>Auto-join</source>
-        <translation type="unfinished"></translation>
+        <translation>Liity automaattisesti</translation>
     </message>
     <message>
         <location filename="client.cpp" line="865"/>
@@ -1137,7 +1137,7 @@ Vaikutus: %5</translation>
     <message>
         <location filename="client.cpp" line="1064"/>
         <source>&amp;Enable sounds (Testing! Remove if problems with the sim)</source>
-        <translation>Käytä &amp;ääniä (Testausvaiheessa! Älä käytä jos tuottaa ongelmia)</translation>
+        <translation>Käytä &amp;musiikkia (Testausvaiheessa! Älä käytä jos tuottaa ongelmia)</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1069"/>
@@ -1152,7 +1152,7 @@ Vaikutus: %5</translation>
     <message>
         <location filename="client.cpp" line="1081"/>
         <source>Don&apos;t show Pokemon Nicknames</source>
-        <translation type="unfinished"></translation>
+        <translation>Älä näytä Pokemonien lempinimiä</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1095"/>

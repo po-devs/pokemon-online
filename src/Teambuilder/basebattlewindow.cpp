@@ -188,6 +188,10 @@ void BaseBattleWindow::enqueueMusic()
 
 void BaseBattleWindow::criesProblem(Phonon::State newState)
 {
+    /* Phonon is really unundertandable, we can't use the code commented out */
+//    if ((newState == Phonon::ErrorState || newState == Phonon::StoppedState || newState == Phonon::PausedState) && undelayOnSounds) {
+//        undelay();
+//    }
     if (newState != Phonon::PlayingState && newState != Phonon::LoadingState && undelayOnSounds) {
         undelay();
     }
@@ -879,7 +883,7 @@ void BaseBattleWindow::addSpectator(bool come, int id)
     printHtml(toBoldColor(mess.arg(client()->name(id)), Qt::green));
 }
 
-void BaseBattleWindow::printLine(const QString &str)
+void BaseBattleWindow::printLine(const QString &str, bool silent)
 {
     if (str == "" && blankMessage) {
         return;
@@ -892,13 +896,17 @@ void BaseBattleWindow::printLine(const QString &str)
         blankMessage = false;
     }
 
-    mychat->insertHtml(str + "<br />");
+    if (!silent) {
+        mychat->insertHtml(str + "<br />");
+    } else {
+        mychat->insertHtml("<!--" + str + "<br />" + "-->");
+    }
 }
 
-void BaseBattleWindow::printHtml(const QString &str)
+void BaseBattleWindow::printHtml(const QString &str, bool silent)
 {
     blankMessage = false;
-    mychat->insertHtml(str + "<br />");
+    mychat->insertHtml(!silent ? (str + "<br />") : ("<!--" + str + "<br />" + "-->"));
 }
 
 BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)

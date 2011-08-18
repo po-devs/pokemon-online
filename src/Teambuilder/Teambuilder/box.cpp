@@ -3,7 +3,10 @@
 #include "theme.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/pokemonstructs.h"
+#include "pokeballed.h"
 #include <QtXml>
+#include <QFile>
+#include <QDir>
 
 Q_DECLARE_METATYPE(PokemonBox*);
 
@@ -369,8 +372,9 @@ void PokemonBox::load()
             break;
 
         PokeTeam p;
-        if (version == 0 && poke.attribute("Num").toInt() < 505)
+        if (version == 0 && poke.attribute("Num").toInt() < 505) {
             p.setGen(4);
+        }
         p.loadFromXml(poke, version);
 
         addPokemon(p,num);
@@ -621,17 +625,39 @@ void PokemonBox::setName(const QString &name)
     this->name = name;
 }
 
+// OS specific paths.
+// Linux: XDG_CONFIG_HOME environment variable (see f.d.o. for details).
+// Windows: APPDATA environment variable.
+// Mac: somewhere in Library.
+// Other: "Boxes" in current directory.
 QString PokemonBox::getBoxPath()
 {
+    QString boxpath;
 #if defined(Q_OS_MAC)
-    QString boxpath = QString(QDir::homePath() + "/Library/Application Support/Pokemon Online/Boxes");
-    if(!QDir::home().exists(boxpath)) {
-        QDir::home().mkpath(boxpath);
-    }
+    boxpath = QDir::homePath() + "/Library/Application Support/Pokemon Online/Boxes";
+#elif defined(Q_OS_LINUX)
+    boxpath = QProcessEnvironment::systemEnvironment().value("XDG_CONFIG_HOME", QDir::homePath() + "/.config")
+              + "/Dreambelievers/Pokemon Online/Boxes";
+#elif defined(Q_OS_WIN32)
+    boxpath = QProcessEnvironment::systemEnvironment().value("APPDATA", QDir::homePath())
+              + "/Pokemon Online/Boxes";
 #else
-    QString boxpath = QString("Boxes");
+    boxpath = "Boxes";
 #endif
-
+    if (!QDir(boxpath).exists()) {
+        // Create if not exist.
+        QDir().mkpath(boxpath);
+        // Copy files from "./Boxes" (files from older versions or default data).
+        if (boxpath != "Boxes") {
+            QDir box_src_dir = QDir("Boxes", "*.box", QDir::NoSort, QDir::Files | QDir::NoDotAndDotDot | QDir::Readable);
+            QStringList files = box_src_dir.entryList();
+            QStringListIterator files_it(files);
+            while (files_it.hasNext()) {
+                QString current_file = files_it.next();
+                QFile::copy(box_src_dir.filePath(current_file), boxpath + "/" + current_file);
+            }
+        }
+    }
     return boxpath;
 }
 
@@ -676,9 +702,9 @@ void TB_BoxContainer::dragMoveEvent(QDragMoveEvent *event)
 /******************** TB_PokemonBoxes ***************************/
 /****************************************************************/
 
-TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
+TB_PokemonBoxes::TB_PokemonBoxes(Team *_team)
 {
-    m_team = parent->team();
+    m_team = _team;
     currentPoke = 0;
     QVBoxLayout * ml = new QVBoxLayout(this);
     QHBoxLayout *firstline = new QHBoxLayout();
@@ -831,11 +857,21 @@ void TB_PokemonBoxes::store()
 void TB_PokemonBoxes::withdraw()
 {
     try {
-        *currentPokeTeam() = *currentBox()->getCurrent();
+        setCurrentTeamPoke(currentBox()->getCurrent());
         updateSpot(currentPoke);
         emit pokeChanged(currentPoke);
     } catch(const QString &ex) {
         QMessageBox::information(this, tr("Empty Box"), ex);
+    }
+}
+
+void TB_PokemonBoxes::setCurrentTeamPoke(PokeTeam *p)
+{
+    *currentPokeTeam() = *p;
+
+    if (p->gen() != m_team->gen()) {
+        p->setGen(m_team->gen());
+        p->runCheck();
     }
 }
 
@@ -867,7 +903,7 @@ void TB_PokemonBoxes::switchP()
         PokeTeam *p = new PokeTeam(*currentBox()->getCurrent());
         currentBox()->changeCurrent(*currentPokeTeam());
         currentBox()->save();
-        *currentPokeTeam() = *p;
+        setCurrentTeamPoke(p);
 
         /* Don't worry, if getCurrent doesn't throw exceptions then changeCurrent doesn't.
            Hence no memory leaks */

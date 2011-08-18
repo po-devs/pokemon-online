@@ -103,6 +103,7 @@ public:
     };
     int showPEvents;
     bool sortBT;
+    bool sortBA;
     bool showTS;
     TierNode tierRoot;
     QStringList tierList;
@@ -142,6 +143,7 @@ public slots:
     void removeChannel(int id);
     void leaveChannelR(int index);
     void leaveChannel(int id);
+    void activateChannel(const QString& text);
     void join(const QString& text);
     void itemJoin(QListWidgetItem *);
     void lineJoin();
@@ -198,6 +200,7 @@ public slots:
     void showTeam(bool);
     void enableLadder(bool);
     void sortPlayersCountingTiers(bool);
+    void sortPlayersByAuth(bool);
     void setChannelSelected(int);
     void enablePlayerEvents();
     void disablePlayerEvents();
@@ -233,6 +236,7 @@ public slots:
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
+    void tierListFormed(const QStringList &tiers);
 protected:
     void paintEvent(QPaintEvent *)
     {
