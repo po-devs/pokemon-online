@@ -601,6 +601,7 @@ int main(int argc, char *argv[])
             fprintf(stdout, "Usage: ./StatsExtracter [[options]]\n");
             fprintf(stdout, "Options:\n");
             PRINTOPT("-m, --merge [TIER1] [TIER2]", "Merge the files of Tier1 into Tier2. It's advised to have the stats off during that time.");
+            PRINTOPT("-t, --tier [TIER]", "Process the given tier, instead of processing all tiers.");
             PRINTOPT("-h, --help", "Displays this help.");
             fprintf(stdout, "\n");
             return 0;   //exit app
