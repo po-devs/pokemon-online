@@ -1,8 +1,3 @@
-namespace Pokemon {
-    class uniqueId;
-}
-unsigned int qHash (const Pokemon::uniqueId &key);
-
 #include <QPixmapCache>
 
 #include "pokemoninfo.h"
