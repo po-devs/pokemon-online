@@ -671,8 +671,9 @@ int main(int argc, char *argv[])
                 }
 
                 QMapIterator<int, Pokemon::uniqueId> it(reverseUsage);
-                while (it.hasNext()) {
-                    it.next();
+                it.toBack();
+                while (it.hasPrevious()) {
+                    it.previous();
                     finalranks.push_back(QPair<Pokemon::uniqueId, int>(it.value(), it.key()));
                 }
 
