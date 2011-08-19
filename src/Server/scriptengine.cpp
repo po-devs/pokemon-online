@@ -1880,6 +1880,10 @@ void ScriptEngine::forceBattle(int player1, int player2, int clauses, int mode, 
         warn("forceBattle", "player is not online.");
         return;
     }
+    if (player1 == player2) {
+        warn("forceBattle", "player1 == player2");
+        return;
+    }
     if (!testRange("forceBattle", mode, ChallengeInfo::ModeFirst, ChallengeInfo::ModeLast)) {
         return;
     }
