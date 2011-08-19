@@ -64,9 +64,9 @@ void PMWindow::printLine(QString line, bool self)
     }
 
     if (self) {
-        printHtml(toColor(timeStr + "<b>" + escapeHtml(m_ownName) + ": </b>", Qt::darkBlue) + line);
+        printHtml(toColor(timeStr + "<b>" + escapeHtml(m_ownName) + ": </b>", Qt::darkBlue) + line, false);
     } else {
-        printHtml(toColor(timeStr + "<b>" + escapeHtml(name()) + ": </b>", Qt::darkGray) + line);
+        printHtml(toColor(timeStr + "<b>" + escapeHtml(name()) + ": </b>", Qt::darkGray) + line, false);
 //        if (!QApplication::activeWindow()) {
 //            QApplication::alert(this, 10000);
 //            //raise();
@@ -74,13 +74,13 @@ void PMWindow::printLine(QString line, bool self)
     }
 }
 
-void PMWindow::printHtml(const QString &htmlCode)
+void PMWindow::printHtml(const QString &htmlCode, bool timestamps)
 {
     QSettings s;
     bool tt = s.value("show_timestamps2").toBool();
     QString timeStr = "";
 
-    if (tt)
+    if (tt && timestamps)
         timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
 
     m_mainwindow->insertHtml(timeStr + htmlCode + "<br />");
