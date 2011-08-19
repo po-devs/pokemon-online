@@ -114,7 +114,7 @@ void BaseBattleWindow::init()
     chat->addLayout(buttons);
 
     buttons->addWidget(mysend = new QPushButton(tr("C&hat")));
-    buttons->addWidget(myignore = new QPushButton(tr("&Ignore Spectators")));
+    buttons->addWidget(myignore = new QPushButton(tr("&Ignore spectators")));
 
     connect(musicOn, SIGNAL(toggled(bool)), SLOT(musicPlayStop()));
     connect(myignore, SIGNAL(clicked()), SLOT(ignoreSpectators()));
@@ -142,7 +142,7 @@ void BaseBattleWindow::init()
     musicPlayStop();
 
     printLine(tr("Log belonging to %1").arg(info().name(0)), true);
-    printLine("");
+    printLine("", true);
 }
 
 bool BaseBattleWindow::musicPlayed() const
@@ -362,7 +362,7 @@ bool BaseBattleWindow::hasKnowledgeOf(int player) const
 void BaseBattleWindow::ignoreSpectators()
 {
     ignoreSpecs = ignoreSpecs +1;
-    if (ignoreSpecs >= IgnoreAll) {
+    if (ignoreSpecs > IgnoreAll) {
         ignoreSpecs = 0;
     }
 
