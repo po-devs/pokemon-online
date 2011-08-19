@@ -86,6 +86,11 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     buttonsLayout->addWidget(myexit = new QPushButton(tr("&Exit")));
     buttonsLayout->addWidget(mysender = new QPushButton(tr("&Send")));
 
+    findMatch->setObjectName("FindBattle");
+    myregister->setObjectName("Register");
+    myexit->setObjectName("Exit");
+    mysender->setObjectName("Send");
+
     QPalette pal = palette();
     pal.setColor(QPalette::AlternateBase, Qt::blue);
     pal.setColor(QPalette::Base, Qt::blue);
