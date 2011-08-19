@@ -379,6 +379,10 @@ struct ChallengeInfo
     static QString clauseBattleText[numberOfClauses];
     static QString clauseDescription[numberOfClauses];
 
+    static const int numberOfModes = ModeLast-ModeFirst+1;
+
+    static QString modeText[numberOfModes];
+
     static QString clause(int index) {
         return index >= 0 && index < numberOfClauses ? clauseText[index] : "";
     }
@@ -389,6 +393,10 @@ struct ChallengeInfo
 
     static QString description(int index) {
         return index >= 0 && index < numberOfClauses ? clauseDescription[index] : "";
+    }
+
+    static QString modeName(int index) {
+        return index >= ModeFirst && index <= ModeLast ? modeText[index-ModeFirst] : "";
     }
 
     /* Insensitive case search for the clause, returns -1 if not found */

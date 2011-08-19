@@ -55,9 +55,11 @@ PokeBattle & BattleInfo::currentPoke(int spot)
 
 BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf)
 {
+    hasLoggedWifiClause = false;
     question = NULL;
     this->battleId() = battleId;
     this->started() = false;
+    ownid() = me.id;
 
     conf() = _conf;
 
@@ -884,6 +886,31 @@ void BattleWindow::updateChoices()
 
 void BattleWindow::openRearrangeWindow(const ShallowShownTeam &t)
 {
+    if (!hasLoggedWifiClause) {
+        hasLoggedWifiClause = true;
+
+        QStringList mynames, oppnames;
+
+        for (int i = 0; i < 6; i++) {
+            Pokemon::uniqueId id = info().myteam.poke(i).num();
+
+            if (id != Pokemon::NoPoke) {
+                mynames.push_back(PokemonInfo::Name(id));
+            }
+        }
+        for (int i = 0; i < 6; i++) {
+            Pokemon::uniqueId id = t.poke(i).num;
+
+            if (id != Pokemon::NoPoke) {
+                oppnames.push_back(PokemonInfo::Name(id));
+            }
+        }
+
+        printLine(toBoldColor(tr("Your team: "), Qt::blue) + mynames.join(" / "));
+        printLine(toBoldColor(tr("Opponent's team: "), Qt::blue) + oppnames.join(" / "));
+        printLine("");
+    }
+
     RearrangeWindow *r = new RearrangeWindow(info().myteam, t);
     r->setParent(this, Qt::Window | Qt::Dialog);
     r->move(x() + (width()-r->width())/2, y() + (height()-r->height())/2);

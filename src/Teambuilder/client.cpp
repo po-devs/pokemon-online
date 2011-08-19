@@ -86,6 +86,11 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     buttonsLayout->addWidget(myexit = new QPushButton(tr("&Exit")));
     buttonsLayout->addWidget(mysender = new QPushButton(tr("&Send")));
 
+    findMatch->setObjectName("FindBattle");
+    myregister->setObjectName("Register");
+    myexit->setObjectName("Exit");
+    mysender->setObjectName("Send");
+
     QPalette pal = palette();
     pal.setColor(QPalette::AlternateBase, Qt::blue);
     pal.setColor(QPalette::Base, Qt::blue);
@@ -1464,7 +1469,7 @@ void Client::battleReceived(int battleid, int id1, int id2)
 
 void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 {
-    BaseBattleWindow *battle = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf);
+    BaseBattleWindow *battle = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf, ownId());
     battle->setWindowFlags(Qt::Window);
     battle->show();
 

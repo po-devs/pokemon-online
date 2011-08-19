@@ -42,6 +42,14 @@ QString ChallengeInfo::clauseDescription[] =
     QObject::tr("The one who causes a tie (Recoil, Explosion, Destinybond, ...) loses the battle.")
 };
 
+QString ChallengeInfo::modeText[] =
+{
+    QObject::tr("Singles", "Mode"),
+    QObject::tr("Doubles", "Mode"),
+    QObject::tr("Triples", "Mode"),
+    QObject::tr("Rotation", "Mode")
+};
+
 BattleMove::BattleMove()
 {
     num() = 0;

@@ -37,7 +37,7 @@ private:
         return m_name;
     }
 
-    void printHtml(const QString &htmlCode);
+    void printHtml(const QString &htmlCode, bool timestamps=true);
 
     QScrollDownTextBrowser *m_mainwindow;
     QIRCLineEdit *m_textToSend;
