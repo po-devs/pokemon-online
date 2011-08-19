@@ -586,7 +586,7 @@ int main(int argc, char *argv[])
 
     //parse commandline arguments
     for(int i = 0; i < argc; i++){
-        if(strcmp( argv[i], "-d") == 0 || strcmp(argv[i], "--desc") == 0){
+        if(strcmp( argv[i], "-m") == 0 || strcmp(argv[i], "--merge") == 0){
             if (++i == argc || ++i == argc){
                 fprintf(stderr, "Not enough tiers for merge provided.\n");
                 return 1;
