@@ -583,6 +583,7 @@ int main(int argc, char *argv[])
     bool standardUsage = true;
 
     QList<QPair<QString, QString> > merges;
+    QStringList tiers;
 
     //parse commandline arguments
     for(int i = 0; i < argc; i++){
@@ -603,6 +604,12 @@ int main(int argc, char *argv[])
             PRINTOPT("-h, --help", "Displays this help.");
             fprintf(stdout, "\n");
             return 0;   //exit app
+        } else if(strcmp( argv[i], "-t") == 0 || strcmp( argv[i], "--tier") == 0){
+            if (++i == argc){
+                fprintf(stderr, "No tier provided.\n");
+                return 1;
+            }
+            tiers.push_back(argv[i]);
         }
     }
 
@@ -693,7 +700,7 @@ int main(int argc, char *argv[])
         fprintf(stdout, "Merge done!\n");
     }
 
-    if (!standardUsage) {
+    if (!standardUsage && tiers.size() == 0) {
         return 0;
     }
 
@@ -723,6 +730,10 @@ int main(int argc, char *argv[])
 #endif
 
     QStringList dirs = d.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+    if (tiers.size() > 0) {
+        dirs = tiers;
+    }
 
     QList<QPair<QString, int> > mostUsedPokemon;
 
