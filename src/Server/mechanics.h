@@ -16,7 +16,7 @@ struct Mechanics
     static int type(BattleSituation &b, int source);
     static BattleSituation::BasicMoveInfo & tmove(BattleSituation &b, int source);
 
-    typedef void (*function) (int source, int target, BattleSituation &b);
+    typedef BattleSituation::MechanicsFunction function;
 
     QHash<QString, function> functions;
 
