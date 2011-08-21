@@ -924,6 +924,8 @@ void BattleSituation::endTurn()
             VoidFunction f = ownEndFunctions[ownBracket].second;
             (this->*f)();
             ownBracket++;
+
+            testWin();
         }
 
         priorityBracket b = endTurnEffects[i];
@@ -934,6 +936,7 @@ void BattleSituation::endTurn()
             if (flags == FieldEffect) {
                 QString effect = bracketToEffect[b];
                 callbeffects(Player1, Player1, effect);
+                continue;
             }
         }
 
@@ -991,6 +994,8 @@ void BattleSituation::endTurn()
                 }
             }
         }
+
+        continue;
     }
     while (ownBracket < ownEndFunctions.size()) {
         VoidFunction f = ownEndFunctions[ownBracket].second;
