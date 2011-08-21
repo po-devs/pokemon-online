@@ -618,6 +618,102 @@ void BattleSituation::beginTurn()
     analyzeChoices();
 }
 
+void BattleSituation::getVectorRef(priorityBracket b)
+{
+    int i;
+    for (i = 0; i < endTurnEffects.size(); i++) {
+        if (b <= endTurnEffects[i]) {
+            break;
+        }
+    }
+
+    if (i == endTurnEffects.size() || b < endTurnEffects[i]) {
+        endTurnEffects.insert(i, b);
+        bracketToEffect[b] = QString("EndTurn%1.%2").arg(b.bracket).arg(b.priority);
+    }
+}
+
+void BattleSituation::addEndTurnEffect(EffectType type, int slot, int bracket, int priority,
+                                       const QString &function, MechanicsFunction f, IntFunction f2)
+{
+    priorityBracket b(bracket, priority);
+
+    getVectorRef(b);
+    bracketType[b] = type;
+
+    QString effect = bracketToEffect[b];
+
+    if (f && !effectToBracket.contains(function)) {
+        effectToBracket[function] = b;
+    }
+
+    switch(type) {
+    case PokeEffect:
+        Mechanics::addFunction(pokeMemory(slot), effect, function, f);
+        break;
+    case SlotEffect:
+        Mechanics::addFunction(slotMemory(slot), effect, function, f);
+        break;
+    case TurnEffect:
+        Mechanics::addFunction(turnMemory(slot), effect, function, f);
+        break;
+    case ZoneEffect:
+        Mechanics::addFunction(teamMemory(slot), effect, function, f);
+        break;
+    case FieldEffect:
+        Mechanics::addFunction(battleMemory(), effect, function, f);
+        break;
+    case AbilityEffect:
+    case ItemEffect:
+        break;
+    case OwnEffect:
+        ownSEndFunctions[b] = f2;
+        break;
+    };
+
+    bracketCount[b] += 1;
+}
+
+/*
+  Note: in the end turn loop, when a pokemon is koed,
+  sometimes this function doesn't get called and so trailing
+  effects are kept in the vector. Not such a big deal but meh.
+  */
+void BattleSituation::removeEndTurnEffect(EffectType type, int slot, const QString &function)
+{
+    priorityBracket b = effectToBracket[function];
+    QString effect = bracketToEffect[b];
+
+    switch(type) {
+    case PokeEffect:
+        Mechanics::removeFunction(pokeMemory(slot), effect, function);
+        break;
+    case SlotEffect:
+        Mechanics::removeFunction(slotMemory(slot), effect, function);
+        break;
+    case TurnEffect:
+        Mechanics::removeFunction(turnMemory(slot), effect, function);
+        break;
+    case ZoneEffect:
+        Mechanics::removeFunction(teamMemory(slot), effect, function);
+        break;
+    case FieldEffect:
+        Mechanics::removeFunction(battleMemory(), effect, function);
+        break;
+    case AbilityEffect:
+    case ItemEffect:
+    case OwnEffect:
+        /* Error ?!! */
+        break;
+    };
+
+    bracketCount[b] -= 1;
+
+    if (bracketCount[b] <= 0) {
+        effectToBracket.remove(function);
+    }
+}
+
 void BattleSituation::endTurn()
 {
     testWin();
@@ -626,25 +722,17 @@ void BattleSituation::endTurn()
     if (gen() <= 3)
         requestSwitchIns();
 
-    std::vector<int> players = sortedBySpeed();
+    speedsVector = sortedBySpeed();
 
-    callzeffects(Player1, Player1, "EndTurn");
-    callzeffects(Player2, Player2, "EndTurn");
-
-    foreach (int player, players) {
-        /* Wish */
-        callseffects(player,player, "EndTurn2");
-
+    foreach (int player, speedsVector) {
         /* Counters */
         if (gen() < 5) {
             counters(player).decreaseCounters();
         }
     }
 
-    endTurnWeather();
-
     if (gen() == 2) {
-        foreach(int player, players) {
+        foreach(int player, speedsVector) {
             if (poke(player).status() == Pokemon::Frozen)
             {
                 if (true_rand() % 255 <= 25)
@@ -655,41 +743,102 @@ void BattleSituation::endTurn()
         }
     }
 
-    testWin();
+    int i, ownBracket(0);
 
-    if (gen() >= 5) {
-        /* Oath combo moves */
-        callzeffects(Player1, Player1, "EndTurn3");
-        callzeffects(Player2, Player2, "EndTurn3");
+    for (i = 0; i < endTurnEffects.size(); i++) {
+        while (ownBracket < ownEndFunctions.size() && ownEndFunctions[ownBracket].first <= endTurnEffects[i].bracket) {
+            VoidFunction f = ownEndFunctions[ownBracket].second;
+            (this->*f)();
+            ownBracket++;
+        }
+
+        priorityBracket b = endTurnEffects[i];
+
+        if (b.priority == 0) {
+            int flags = bracketType[b];
+
+            if (flags == ZoneEffect || flags == FieldEffect) {
+                QString effect = bracketToEffect[b];
+
+                if (flags == ZoneEffect) {
+                    callzeffects(Player1, Player1, effect);
+                    callzeffects(Player2, Player2, effect);
+
+                    continue;
+                }
+
+                if (flags == FieldEffect) {
+                    callbeffects(Player1, Player1, effect);
+
+                    continue;
+                }
+            }
+        }
+
+        int beginning = i;
+        for (i = beginning; i < endTurnEffects.size() && endTurnEffects[i].bracket == b.bracket; i++) {
+
+        }
+        i -= 1;
+
+        for(int z = 0; z < speedsVector.size(); z++) {
+            int player = speedsVector[z];
+
+            if (koed(player)) {
+                continue;
+            }
+            for (int j = beginning; j <= i; j++) {
+                priorityBracket b = endTurnEffects[j];
+                QString effect = bracketToEffect[b];
+                int flags = bracketType[b];
+
+                /* TODO: make a vector of function pointers with those in,
+                  allowing to automate the calling process instead of doing
+                  plenty of if */
+                if (flags == ItemEffect) {
+                    callieffects(player, player, effect);
+                } else if (flags == AbilityEffect) {
+                    callaeffects(player, player, effect);
+                } else if (flags == SlotEffect) {
+                    callseffects(player, player, effect);
+                } else if (flags == PokeEffect) {
+                    callpeffects(player, player, effect);
+                } else if (flags == TurnEffect) {
+                    calleffects(player, player, effect);
+                } else if (flags == OwnEffect) {
+                    IntFunction f = ownSEndFunctions[b];
+                    (this->*f)(player);
+                }
+
+                if (koed(player)) {
+                    speedsVector.erase(speedsVector.begin()+z, speedsVector.begin()+z+1);
+                    z -= 1;
+                    break;
+                }
+            }
+        }
+    }
+    while (ownBracket < ownEndFunctions.size()) {
+        VoidFunction f = ownEndFunctions[ownBracket].second;
+        (this->*f)();
+        ownBracket++;
     }
 
-    testWin();
+    /* Remove all useless end turn brackets */
+    for (int i = endTurnEffects.size()-1; i >= 0; i--) {
+        priorityBracket b = endTurnEffects[i];
 
-    callbeffects(Player1,Player1,"EndTurn5");
-
-    foreach (int player, players) {
-        calle6effects(player);
+        if (bracketCount[b] <= 0) {
+            bracketCount.remove(b);
+            bracketToEffect.remove(b);
+            bracketType.remove(b);
+            endTurnEffects.remove(i);
+        }
     }
+}
 
-    testWin();
-
-    foreach (int player, players) {
-        /* Doom Desire */
-        callseffects(player,player, "EndTurn7");
-    }
-
-    testWin();
-
-    foreach (int player, players) {
-        /* Perish Song */
-        callpeffects(player,player, "EndTurn8");
-    }
-
-    testWin();
-
-
-    callbeffects(Player1,Player1,"EndTurn9");
-
+void BattleSituation::requestEndOfTurnSwitchIns()
+{
     requestSwitchIns();
 
     /* Now, in triples, if pokemon are on far ends they're
@@ -718,10 +867,7 @@ void BattleSituation::endTurn()
         }
     }
 
-    /* Slow Start , Healing Heart */
-    foreach (int player, sortedBySpeed()) {
-        callaeffects(player,player, "EndTurn20.");
-    }
+    speedsVector = sortedBySpeed();
 }
 
 void BattleSituation::personalEndTurn(int player)
@@ -734,70 +880,6 @@ void BattleSituation::personalEndTurn(int player)
     callpeffects(player, player, "EndTurn64");
 
     testWin();
-}
-
-void BattleSituation::calle6effects(int player)
-{
-    if (koed(player))
-        return;
-
-    /* Ingrain, aquaring */
-    callpeffects(player, player, "EndTurn60");
-
-    /* Speed boost, shed skin, ?Harvest? */
-    callaeffects(player,player, "EndTurn62");
-
-    //        if (koed(player)) <-- cannot be koed
-    //            continue;
-
-    /* Lefties, black sludge */
-    callieffects(player, player, "EndTurn63");
-
-    if (koed(player)) {
-        return;
-    }
-
-    if (gen() >= 3) {
-        /* Leech Seed, Nightmare. Warning: Leech Seed and rapid spin are linked */
-        callpeffects(player, player, "EndTurn64");
-
-        endTurnStatus(player);
-    }
-
-    if (koed(player)) {
-        return;
-    }
-
-    /* Status orbs */
-    callieffects(player, player, "EndTurn66");
-
-    /* Trapping moves damage. Warning: Rapid spin and trapping moves are linked */
-    callpeffects(player, player, "EndTurn68");
-    if (gen() >= 3) {
-        /* Curse */
-        callpeffects(player, player, "EndTurn681");
-    }
-
-    if (koed(player))
-        return;
-
-    /* Bad dreams -- on others */
-    callaeffects(player,player, "EndTurn69");
-
-    /* Outrage, Uproar */
-    callpeffects(player, player, "EndTurn610");
-
-    /* Disable, taunt, encore, magnet rise, heal block, embargo */
-    callpeffects(player, player, "EndTurn611");
-
-    /* Roost */
-    callpeffects(player, player, "EndTurn");
-
-    /* Yawn */
-    callpeffects(player, player, "EndTurn617");
-
-    /* Sticky barb */
-    callieffects(player, player, "EndTurn618");
 }
 
 void BattleSituation::notifyFail(int p)
@@ -3388,8 +3470,7 @@ void BattleSituation::endTurnWeather()
             } else {
                 immuneTypes << Pokemon::Rock << Pokemon::Ground << Pokemon::Steel;
             }
-            std::vector<int> players = sortedBySpeed();
-            foreach (int i, players) {
+            foreach (int i, speedsVector) {
                 callaeffects(i,i,"WeatherSpecial");
                 if (!turnMemory(i).contains("WeatherSpecialed") && (weather == Hail || weather == SandStorm) &&!immuneTypes.contains(getType(i,1))
                         && !immuneTypes.contains(getType(i,2)) && !hasWorkingAbility(i, Ability::MagicGuard)) {

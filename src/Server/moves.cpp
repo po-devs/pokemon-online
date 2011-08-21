@@ -2201,6 +2201,10 @@ struct MMDoomDesire : public MM
         tmove(b, s).accuracy = 0;
     }
 
+    static QString effectName(int gen) {
+        return gen <= 4 ? "EndTurn7": "EndTurn2";
+    }
+
     static void daf(int s, int t, BS &b) {
         if (slot(b,t).contains("DoomDesireTurn") && slot(b,t)["DoomDesireTurn"].toInt() >= b.turn()) {
             turn(b,s)["Failed"] = true;
@@ -2226,14 +2230,14 @@ struct MMDoomDesire : public MM
             slot(b,t)["DoomDesireStab"] = turn(b,s)["Stab"].toInt();
             slot(b,t)["DoomDesireId"] = b.team(b.player(s)).internalId(b.poke(s));
         }
-        addFunction(slot(b,t), "EndTurn7", "DoomDesire", &et);
+        addFunction(slot(b,t), effectName(b.gen()), "DoomDesire", &et);
         b.sendMoveMessage(29, move==DoomDesire?2:1, s, type(b,s));
     }
 
     static void et (int s, int, BS &b) {
         if (b.turn() == slot(b,s).value("DoomDesireTurn"))
         {
-            removeFunction(slot(b,s), "EndTurn7", "DoomDesire");
+            removeFunction(slot(b,s), effectName(b.gen()), "DoomDesire");
 
             if (slot(b,s)["DoomDesireFailed"].toBool()) {
                 int move = slot(b,s)["DoomDesireMove"].toInt();
