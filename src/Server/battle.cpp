@@ -621,6 +621,27 @@ void BattleSituation::beginTurn()
 
 void BattleSituation::initializeEndTurnFunctions()
 {
+    /* Gen 2:
+       1 Future Sight (non-leader first)
+       2 Sandstorm/Sunny Day/Rain Dance
+       3 Multi-turn attacks
+       4 Perish Song
+       5 Recover with Leftovers
+       6 Check if defrosted
+       7.0 Check end of Reflect/Light Screen
+       7.2 Safeguard
+       7.3 Mist
+       8 Check for condition based on Berry (for both players)
+       9 Check end of Encore
+       10 Switch-ins
+    */
+    if (gen() <= 2) {
+        ownEndFunctions.push_back(QPair<int, VoidFunction>(2, &BattleSituation::endTurnWeather));
+        ownEndFunctions.push_back(QPair<int, VoidFunction>(6, &BattleSituation::endTurnDefrost));
+        ownEndFunctions.push_back(QPair<int, VoidFunction>(10, &BattleSituation::requestEndOfTurnSwitchIns));
+
+        addEndTurnEffect(ItemEffect, 5, 0); /* Black Sludge, Leftovers */
+    }
     /* Gen 4:
     1.0 Reflect wears off: "your team's reflect wore off"
     1.1 Light Screen wears off: "your team's light screen wore off"
@@ -672,18 +693,14 @@ void BattleSituation::initializeEndTurnFunctions()
     11.0 Healing Heart
     12.0 Slow start
     */
-
-    if (gen() <= 4) {
+    else if (gen() <= 4) {
         ownEndFunctions.push_back(QPair<int, VoidFunction>(3, &BattleSituation::endTurnWeather));
         ownEndFunctions.push_back(QPair<int, VoidFunction>(10, &BattleSituation::requestEndOfTurnSwitchIns));
 
         addEndTurnEffect(AbilityEffect, 6, 2); /* Shed Skin, Speed Boost */
         addEndTurnEffect(ItemEffect, 6, 3); /* Black Sludge, Leftovers */
 
-        /* In gen 2, status is on switch in or attack, not at the end of the turn */
-        if (gen() > 2) {
-            addEndTurnEffect(OwnEffect, 6, 5, 0, "", NULL, &BattleSituation::endTurnStatus);
-        }
+        addEndTurnEffect(OwnEffect, 6, 5, 0, "", NULL, &BattleSituation::endTurnStatus);
 
         addEndTurnEffect(ItemEffect, 6, 7); /* Orbs */
         addEndTurnEffect(ItemEffect, 6, 19); /* Sticky Barb */
@@ -900,18 +917,6 @@ void BattleSituation::endTurn()
         }
     }
 
-    if (gen() == 2) {
-        foreach(int player, speedsVector) {
-            if (poke(player).status() == Pokemon::Frozen)
-            {
-                if (true_rand() % 255 <= 25)
-                {
-                    unthaw(player);
-                }
-            }
-        }
-    }
-
     int i, ownBracket(0);
 
     for (i = 0; i < endTurnEffects.size(); i++) {
@@ -1002,6 +1007,19 @@ void BattleSituation::endTurn()
             bracketToEffect.remove(b);
             bracketType.remove(b);
             endTurnEffects.remove(i);
+        }
+    }
+}
+
+void BattleSituation::endTurnDefrost()
+{
+    foreach(int player, speedsVector) {
+        if (poke(player).status() == Pokemon::Frozen)
+        {
+            if (true_rand() % 255 <= 25)
+            {
+                unthaw(player);
+            }
         }
     }
 }

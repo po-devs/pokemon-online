@@ -909,7 +909,7 @@ struct MMPerishSong : public MM
     }
 
     static ::bracket bracket(int gen) {
-        return gen <= 4 ? makeBracket(8, 0) : makeBracket(20, 0) ;
+        return gen <= 2 ? makeBracket(4,0) : gen <= 4 ? makeBracket(8, 0) : makeBracket(20, 0) ;
     }
 
     static void uas(int s, int, BS &b) {
@@ -1851,7 +1851,7 @@ struct MMBind : public MM
     }
 
     static ::bracket bracket(int gen) {
-        return gen <= 4 ? makeBracket(6, 9) : makeBracket(11, 0) ;
+        return gen <= 2 ? makeBracket(3,0) : gen <= 4 ? makeBracket(6, 9) : makeBracket(11, 0) ;
     }
 
     static void uas (int s, int t, BS &b) {
@@ -2246,7 +2246,7 @@ struct MMDoomDesire : public MM
     }
 
     static ::bracket bracket(int gen) {
-        return gen <= 4 ? makeBracket(7, 0) : makeBracket(3, 0) ;
+        return gen <= 2 ? makeBracket(1, 0) : gen <= 4 ? makeBracket(7, 0) : makeBracket(3, 0) ;
     }
 
     static void cad(int s, int t, BS &b) {
@@ -2373,7 +2373,7 @@ struct MMEncore : public MM
     static FM forbidden_moves;
 
     static ::bracket bracket(int gen) {
-        return gen <= 4 ? makeBracket(6, 13) : makeBracket(13, 0) ;
+        return gen <= 2 ? makeBracket(9, 0) : gen <= 4 ? makeBracket(6, 13) : makeBracket(13, 0) ;
     }
 
     static void daf(int s, int t, BS &b)
@@ -3282,7 +3282,7 @@ struct MMTeamBarrier : public MM
     }
 
     static ::bracket bracket(int gen) {
-        return gen <= 4 ? makeBracket(1, 0) : makeBracket(21, 0) ;
+        return gen <= 2 ? makeBracket(7, 0) : gen <= 4 ? makeBracket(1, 0) : makeBracket(21, 0) ;
     }
 
     static void uas(int s, int, BS &b) {
@@ -3699,7 +3699,7 @@ struct MMMist : public MM
     }
 
     static ::bracket bracket(int gen) {
-        return gen <= 4 ? makeBracket(1, 2) : makeBracket(21, 3) ;
+        return gen <= 2 ? makeBracket(7, 3) : gen <= 4 ? makeBracket(1, 2) : makeBracket(21, 3) ;
     }
 
     static void uas(int s, int, BS &b) {
@@ -3982,7 +3982,7 @@ struct MMSafeGuard : public MM
     }
 
     static ::bracket bracket(int gen) {
-        return gen <= 4 ? makeBracket(1, 3) : makeBracket(21, 2);
+        return gen <= 2 ? makeBracket(7, 2) : gen <= 4 ? makeBracket(1, 3) : makeBracket(21, 2);
     }
 
     static void daf(int s, int, BS &b) {
@@ -4642,7 +4642,7 @@ struct MMOutrage : public MM
             addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
             addFunction(poke(b,s), "MoveSettings", "Outrage", &ms);
 
-            if (b.gen() <= 4) {
+            if (b.gen() <= 4 && b.gen() >= 3) {
                 b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "Outrage", &aas);
             } else {
                 addFunction(turn(b, s), "AfterAttackSuccessfull", "Outrage", &aas);
