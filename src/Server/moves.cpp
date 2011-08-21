@@ -5471,11 +5471,18 @@ struct MMMirrorType : public MM
 struct MMTelekinesis : public MM
 {
     MMTelekinesis() {
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
     }
 
     static ::bracket bracket(int) {
         return makeBracket(16, 0) ;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (poke(b,t).contains("LevitatedCount")) {
+            turn(b,s)["Failed"] = true;
+        }
     }
 
     static void uas(int s, int t, BS &b) {
@@ -5490,11 +5497,12 @@ struct MMTelekinesis : public MM
     }
 
     static void et(int s, int , BS &b) {
-        if (poke(b,s).value("LevitatedCount").toInt() <= 1) {
+        inc(poke(b,s)["LevitatedCount"], -1);
+        if (poke(b,s).value("LevitatedCount").toInt() == 0) {
             poke(b,s).remove("LevitatedCount");
             b.removeEndTurnEffect(BS::PokeEffect, s, "Telekinesis");
             b.sendMoveMessage(174, 1, s);
-        }
+        };
     }
 };
 
