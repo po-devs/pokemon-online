@@ -8,8 +8,9 @@
 QHash<int, MoveMechanics> MoveEffect::mechanics;
 QHash<int, QString> MoveEffect::names;
 QHash<QString, int> MoveEffect::nums;
+typedef BS::priorityBracket bracket;
 
-Q_DECLARE_METATYPE(QList<int>);
+Q_DECLARE_METATYPE(QList<int>)
 
 using namespace Move;
 typedef BattleCounterIndex BC;
@@ -168,8 +169,12 @@ struct MMAquaRing : public MM
             turn(b,s)["Failed"] = true;
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 1) : makeBracket(6, 0) ;
+    }
+
     static void uas(int s, int, BS &b) {
-        addFunction(poke(b,s), "EndTurn60", "AquaRing", &et);
+        b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "AquaRing", &et);
         poke(b,s)["AquaRinged"] = true;
         b.sendMoveMessage(2, 0, s, type(b,s));
     }
@@ -530,10 +535,14 @@ struct MMCurse : public MM
         }
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 8) : makeBracket(10, 0) ;
+    }
+
     static void uas(int s, int t, BS &b) {
         if (turn(b,s)["CurseGhost"].toBool() == true) {
             b.inflictPercentDamage(s, 50, s);
-            addFunction(poke(b,t), "EndTurn681", "Cursed", &et);
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Cursed", &et);
             poke(b,t)["Cursed"] = true;
             b.sendMoveMessage(25, 0, s, Pokemon::Curse, t);
         }
@@ -899,6 +908,10 @@ struct MMPerishSong : public MM
         }
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(8, 0) : makeBracket(20, 0) ;
+    }
+
     static void uas(int s, int, BS &b) {
         for (int t = 0; t < b.numberOfSlots(); t++) {
             if (poke(b,t).contains("PerishSongCount") || b.koed(t)) {
@@ -908,7 +921,7 @@ struct MMPerishSong : public MM
                 b.sendAbMessage(57,0,t);
                 continue;
             }
-            addFunction(poke(b,t), "EndTurn8", "PerishSong", &et);
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "PerishSong", &et);
             poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns)) - 1;
             poke(b, t)["PerishSonger"] = s;
         }
@@ -982,8 +995,12 @@ struct MMLeechSeed : public MM
         }
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 4) : makeBracket(8, 0) ;
+    }
+
     static void uas(int s, int t, BS &b) {
-        addFunction(poke(b,t), "EndTurn64", "LeechSeed", &et);
+        b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "LeechSeed", &et);
         poke(b,t)["SeedSource"] = s;
         poke(b,t)["LeechSeedTurn"] = b.turn();
         b.sendMoveMessage(72, 1, s, Pokemon::Grass, t);
@@ -1040,11 +1057,15 @@ struct MMRoost : public MM
             turn(b,s)["Failed"] = true;
     }
 
+    static ::bracket bracket(int) {
+        return makeBracket(40, 0);
+    }
+
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(150,0,s,Pokemon::Flying);
 
         poke(b,s)["Roosted"] = true;
-        addFunction(poke(b,s), "EndTurn", "Roost", &et);
+        b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "Roost", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -1136,12 +1157,16 @@ struct MMWish : public MM
         }
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(2, 0) : makeBracket(4, 0) ;
+    }
+
     static void uas(int s, int, BS &b) {
         slot(b,s)["WishTurn"] = b.turn() + 1;
         slot(b,s)["Wisher"] = b.poke(s).nick();
         if (b.gen() >= 5)
             slot(b,s)["WishHeal"] = std::max(b.poke(s).totalLifePoints()/2, 1);
-        addFunction(slot(b,s), "EndTurn2", "Wish", &et);
+        b.addEndTurnEffect(BS::SlotEffect, bracket(b.gen()), s, "Wish", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -1155,6 +1180,7 @@ struct MMWish : public MM
             int life = b.gen() >= 5 ? slot(b, s)["WishHeal"].toInt() : b.poke(s).totalLifePoints()/2;
             b.healLife(s, life);
         }
+        b.removeEndTurnEffect(BS::SlotEffect, s, "Wish");
     }
 };
 
@@ -1183,6 +1209,10 @@ struct MMIngrain : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 0) : makeBracket(7, 0) ;
+    }
+
     static void daf(int s, int , BS &b) {
         if (poke(b,s)["Rooted"].toBool() == true) {
             turn(b,s)["Failed"] = true;
@@ -1192,7 +1222,7 @@ struct MMIngrain : public MM
     static void uas(int s, int, BS &b) {
         poke(b,s)["Rooted"] = true;
         b.sendMoveMessage(151,0,s,Pokemon::Grass);
-        addFunction(poke(b,s), "EndTurn60", "Ingrain", &et);
+        b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "Ingrain", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -1425,7 +1455,7 @@ struct MMRapidSpin : public MM
         if (poke(b,s).contains("SeedSource")) {
             b.sendMoveMessage(103,1,s);
             poke(b,s).remove("SeedSource");
-            removeFunction(poke(b,s), "EndTurn64", "LeechSeed");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "LeechSeed");
         }
         int source = b.player(s);
         if (team(b,source).contains("Spikes")) {
@@ -1820,6 +1850,10 @@ struct MMBind : public MM
         functions["OnFoeOnAttack"] = &uas;
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 9) : makeBracket(11, 0) ;
+    }
+
     static void uas (int s, int t, BS &b) {
         if (!b.linked(t, "Trapped")) {
             b.link(s, t, "Trapped");
@@ -1827,7 +1861,7 @@ struct MMBind : public MM
             poke(b,t)["TrappedRemainingTurns"] = b.poke(s).item() == Item::GripClaw ?
                         fm.maxTurns : (b.true_rand()%(fm.maxTurns+1-fm.minTurns)) + fm.minTurns; /* Grip claw = max turns */
             poke(b,t)["TrappedMove"] = move(b,s);
-            addFunction(poke(b,t), "EndTurn68", "Bind", &et);
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Bind", &et);
         }
     }
 
@@ -1838,12 +1872,12 @@ struct MMBind : public MM
         if (!b.koed(s)) {
             if (!b.linked(s, "Trapped")) {
                 poke(b,s).remove("TrappedBy");
-                removeFunction(poke(b,s),"EndTurn68", "Bind");
+                b.removeEndTurnEffect(BS::PokeEffect, s, "Bind");
                 return;
             }
             if (count <= 0) {
                 poke(b,s).remove("TrappedBy");
-                removeFunction(poke(b,s),"EndTurn68", "Bind");
+                b.removeEndTurnEffect(BS::PokeEffect, s, "Bind");
                 if (count == 0)
                     b.sendMoveMessage(10,1,s,MoveInfo::Type(move, b.gen()),s,move);
             } else {
@@ -2128,6 +2162,10 @@ struct MMTaunt : public MM
             turn(b,s)["Failed"] = true;
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 14) : makeBracket(12, 0) ;
+    }
+
     static void uas (int s, int t, BS &b) {
         b.sendMoveMessage(134,1,s,Pokemon::Dark,t);
 
@@ -2137,7 +2175,7 @@ struct MMTaunt : public MM
         } else {
             addFunction(poke(b,t), "MovesPossible", "Taunt", &msp);
             addFunction(poke(b,t), "MovePossible", "Taunt", &mp);
-            addFunction(poke(b,t), "EndTurn611", "Taunt", &et);
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Taunt", &et);
 
             if (b.gen() <= 3) {
                 b.counters(t).addCounter(BC::Taunt, 1);
@@ -2157,7 +2195,7 @@ struct MMTaunt : public MM
         if (b.counters(s).count(BC::Taunt) < 0) {
             removeFunction(poke(b,s), "MovesPossible", "Taunt");
             removeFunction(poke(b,s), "MovePossible", "Taunt");
-            removeFunction(poke(b,s), "EndTurn611", "Taunt");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "Taunt");
             if (b.gen() >= 4)
                 b.sendMoveMessage(134,2,s,Pokemon::Dark);
             b.counters(s).removeCounter(BC::Taunt);
@@ -2201,14 +2239,14 @@ struct MMDoomDesire : public MM
         tmove(b, s).accuracy = 0;
     }
 
-    static QString effectName(int gen) {
-        return gen <= 4 ? "EndTurn7": "EndTurn2";
-    }
-
     static void daf(int s, int t, BS &b) {
         if (slot(b,t).contains("DoomDesireTurn") && slot(b,t)["DoomDesireTurn"].toInt() >= b.turn()) {
             turn(b,s)["Failed"] = true;
         }
+    }
+
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(7, 0) : makeBracket(3, 0) ;
     }
 
     static void cad(int s, int t, BS &b) {
@@ -2230,14 +2268,14 @@ struct MMDoomDesire : public MM
             slot(b,t)["DoomDesireStab"] = turn(b,s)["Stab"].toInt();
             slot(b,t)["DoomDesireId"] = b.team(b.player(s)).internalId(b.poke(s));
         }
-        addFunction(slot(b,t), effectName(b.gen()), "DoomDesire", &et);
+        b.addEndTurnEffect(BS::SlotEffect, bracket(b.gen()), t, "DoomDesire", &et);
         b.sendMoveMessage(29, move==DoomDesire?2:1, s, type(b,s));
     }
 
     static void et (int s, int, BS &b) {
         if (b.turn() == slot(b,s).value("DoomDesireTurn"))
         {
-            removeFunction(slot(b,s), effectName(b.gen()), "DoomDesire");
+            b.removeEndTurnEffect(BS::SlotEffect, s, "DoomDesire");
 
             if (slot(b,s)["DoomDesireFailed"].toBool()) {
                 int move = slot(b,s)["DoomDesireMove"].toInt();
@@ -2299,17 +2337,21 @@ struct MMEmbargo : public MM
         }
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 17) : makeBracket(18, 0) ;
+    }
+
     static void uas(int s, int t, BS &b) {
         b.sendMoveMessage(32,0,s,type(b,s),t);
         poke(b,t)["Embargoed"] = true;
         poke(b,t)["EmbargoEnd"] = b.turn() + 4;
-        addFunction(poke(b,t), "EndTurn611", "Embargo", &et);
+        b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Embargo", &et);
     }
 
     static void et(int s, int , BS &b) {
         if (poke(b,s).value("Embargoed").toBool() && poke(b,s)["EmbargoEnd"].toInt() <= b.turn()) {
             b.sendMoveMessage(32,1,s,0);
-            removeFunction(poke(b,s), "EndTurn611", "Embargo");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "Embargo");
         }
     }
 };
@@ -2329,6 +2371,10 @@ struct MMEncore : public MM
         }
     };
     static FM forbidden_moves;
+
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 13) : makeBracket(13, 0) ;
+    }
 
     static void daf(int s, int t, BS &b)
     {
@@ -2399,7 +2445,7 @@ struct MMEncore : public MM
                 }
             }
             addFunction(poke(b,t), "MovesPossible", "Encore", &msp);
-            addFunction(poke(b,t), "EndTurn611", "Encore", &et);
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Encore", &et);
         }
     }
 
@@ -2420,7 +2466,7 @@ struct MMEncore : public MM
         }
         if (b.counters(s).count(BC::Encore) < 0) {
             removeFunction(poke(b,s), "MovesPossible", "Encore");
-            removeFunction(poke(b,s), "EndTurn611", "Encore");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "Encore");
             b.sendMoveMessage(33,0,s);
             b.counters(s).removeCounter(BC::Encore);
         }
@@ -2567,6 +2613,10 @@ struct MMGravity : public MM
         }
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(22, 0) : makeBracket(5, 0) ;
+    }
+
     static void uas(int s, int, BS &b) {
         b.battleMemory()["Gravity"] = true;
         b.battleMemory()["GravityCount"] = 5;
@@ -2588,7 +2638,8 @@ struct MMGravity : public MM
                 }
             }
         }
-        addFunction(b.battleMemory(), "EndTurn5", "Gravity", &et);
+
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "Gravity", &et);
         addFunction(b.battleMemory(), "MovesPossible", "Gravity", &msp);
         addFunction(b.battleMemory(), "MovePossible", "Gravity", &mp);
     }
@@ -2598,7 +2649,7 @@ struct MMGravity : public MM
             int count = b.battleMemory()["GravityCount"].toInt() - 1;
             if (count <= 0) {
                 b.sendMoveMessage(53,1,s,Pokemon::Psychic);
-                removeFunction(b.battleMemory(), "EndTurn5", "Gravity");
+                b.removeEndTurnEffect(BS::FieldEffect, 0, "Gravity");
                 removeFunction(b.battleMemory(), "MovesPossible", "Gravity");
                 b.battleMemory()["Gravity"] = false;
             } else {
@@ -2887,9 +2938,13 @@ struct MMHealBlock: public MM
         }
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 16) : makeBracket(17, 0) ;
+    }
+
     static void uas(int s, int t, BS &b) {
         poke(b,t)["HealBlockCount"] = 5;
-        addFunction(poke(b,t), "EndTurn611", "HealBlock", &et);
+        b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "HealBlock", &et);
         addFunction(poke(b,t), "MovePossible", "HealBlock", &mp);
         addFunction(poke(b,t), "MovesPossible", "HealBlock", &msp);
         b.sendMoveMessage(59,0,s,type(b,s),t);
@@ -2900,7 +2955,7 @@ struct MMHealBlock: public MM
 
         if (count == 0) {
             b.sendMoveMessage(59,2,s,Type::Psychic);
-            removeFunction(poke(b,s), "EndTurn611", "HealBlock");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "HealBlock");
             removeFunction(poke(b,s), "MovesPossible", "HealBlock");
             removeFunction(poke(b,s), "MovePossible", "HealBlock");
         }
@@ -3150,10 +3205,14 @@ struct MMMagnetRise : public MM
         }
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 15) : makeBracket(15, 0) ;
+    }
+
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(68,0,s,Pokemon::Electric);
         poke(b,s)["MagnetRiseCount"] = 5;
-        addFunction(poke(b,s), "EndTurn611", "MagnetRise", &et);
+        b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "MagnetRise", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -3162,7 +3221,7 @@ struct MMMagnetRise : public MM
 
         if (count == 0 && !b.koed(s)) {
             b.sendMoveMessage(68,1,s, Type::Electric);
-            removeFunction(poke(b,s), "EndTurn611", "MagnetRise");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "MagnetRise");
         }
     }
 };
@@ -3222,6 +3281,10 @@ struct MMTeamBarrier : public MM
         }
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(1, 0) : makeBracket(21, 0) ;
+    }
+
     static void uas(int s, int, BS &b) {
         int source = b.player(s);
 
@@ -3236,7 +3299,7 @@ struct MMTeamBarrier : public MM
         b.sendMoveMessage(73,(cat-1)+b.multiples()*2,s,type(b,s));
         team(b,source)["Barrier" + QString::number(cat) + "Count"] = nturn;
 
-        addFunction(team(b,source), "EndTurn", "TeamBarrier", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), 0, "TeamBarrier", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -3304,13 +3367,17 @@ struct MMLuckyChant : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(1, 5) : makeBracket(21, 5) ;
+    }
+
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(75,0,s,type(b,s));
 
         int source = b.player(s);
 
         team(b,source)["LuckyChantCount"] = 5;
-        addFunction(team(b,source), "EndTurn", "LuckyChant", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), source, "LuckyChant", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -3319,7 +3386,7 @@ struct MMLuckyChant : public MM
 
         if (count == 0) {
             b.sendMoveMessage(75,1,s);
-            removeFunction(team(b,s), "EndTurn", "LuckyChant");
+            b.removeEndTurnEffect(BS::ZoneEffect, s, "LuckyChant");
         }
     }
 };
@@ -3631,12 +3698,16 @@ struct MMMist : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(1, 2) : makeBracket(21, 3) ;
+    }
+
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(86,0,s,Pokemon::Ice);
         int source = b.player(s);
 
         team(b,source)["MistCount"] = 5;
-        addFunction(team(b,source), "EndTurn", "Mist", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), s, "Mist", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -3648,6 +3719,7 @@ struct MMMist : public MM
         int count = team(b,s)["MistCount"].toInt();
         if (count == 0) {
             b.sendMoveMessage(86,1,s,Pokemon::Ice);
+            b.removeEndTurnEffect(BS::ZoneEffect, s, "Mist");
         }
     }
 };
@@ -3692,17 +3764,21 @@ struct MMNightMare : public MM
         functions["OnFoeOnAttack"] = &uas;
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 6) : makeBracket(9, 1) ;
+    }
+
     static void uas(int, int t, BS &b) {
         b.sendMoveMessage(92, 0, t, Pokemon::Ghost);
         poke(b,t)["HavingNightmares"] = true;
         addFunction(poke(b,t),"AfterStatusChange", "NightMare", &asc);
-        addFunction(poke(b,t),"EndTurn64", "NightMare", &et);
+        b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "NightMare", &et);
     }
 
     static void asc(int s, int, BS &b) {
         if (b.poke(s).status() != Pokemon::Asleep) {
             removeFunction(poke(b,s),"AfterStatusChange", "NightMare");
-            removeFunction(poke(b,s),"EndTurn64", "NightMare");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "NightMare");
         }
     }
 
@@ -3905,6 +3981,10 @@ struct MMSafeGuard : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(1, 3) : makeBracket(21, 2);
+    }
+
     static void daf(int s, int, BS &b) {
         int source = b.player(s);
         if (team(b,source).value("SafeGuardCount").toInt() > 0)
@@ -3915,7 +3995,7 @@ struct MMSafeGuard : public MM
         int source = b.player(s);
         b.sendMoveMessage(109,0,s,type(b,s));
         team(b,source)["SafeGuardCount"] = 5;
-        addFunction(team(b,source), "EndTurn", "SafeGuard", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), source, "SafeGuard", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -3928,6 +4008,7 @@ struct MMSafeGuard : public MM
         int count = team(b,source)["SafeGuardCount"].toInt();
         if (count == 0) {
             b.sendMoveMessage(109,1,s,Pokemon::Psychic);
+            b.removeEndTurnEffect(BS::ZoneEffect, source, "SafeGuard");
         }
     }
 };
@@ -4180,6 +4261,10 @@ struct MMTailWind : public MM {
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(1, 4) : makeBracket(21, 4) ;
+    }
+
     static void daf(int s, int , BS &b) {
         if (team(b,b.player(s)).contains("TailWindCount"))
             turn(b,s)["Failed"] = true;
@@ -4189,13 +4274,13 @@ struct MMTailWind : public MM {
         b.sendMoveMessage(133,0,s,Pokemon::Flying);
         int source = b.player(s);
         team(b,source)["TailWindCount"] = b.gen() <= 4 ? 3 : 4;
-        addFunction(team(b,source), "EndTurn", "TailWind", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), source, "TailWind", &et);
     }
 
     static void et(int s, int, BS &b) {
         inc(team(b,s)["TailWindCount"], -1);
         if (team(b,s)["TailWindCount"].toInt() == 0) {
-            removeFunction(team(b,s), "EndTurn", "TailWind");
+            b.removeEndTurnEffect(BS::ZoneEffect, s, "TailWind");
             team(b,s).remove("TailWindCount");
             b.sendMoveMessage(133,1,s,Pokemon::Flying);
         }
@@ -4240,15 +4325,19 @@ struct MMTrickRoom : public MM {
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(9, 0) : makeBracket(26, 0) ;
+    }
+
     static void uas(int s, int, BS &b) {
         if (b.battleMemory().value("TrickRoomCount").toInt() > 0) {
             b.sendMoveMessage(138,1,s,Pokemon::Psychic);
             b.battleMemory().remove("TrickRoomCount");
-            removeFunction(b.battleMemory(), "EndTurn9", "TrickRoom");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "TrickRoom");
         } else {
             b.sendMoveMessage(138,0,s,Pokemon::Psychic);
             b.battleMemory()["TrickRoomCount"] = 5;
-            addFunction(b.battleMemory(), "EndTurn9", "TrickRoom", &et);
+            b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "TrickRoom", &et);
         }
     }
 
@@ -4332,10 +4421,14 @@ struct MMYawn : public MM {
         }
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 18) : makeBracket(19, 0) ;
+    }
+
     static void uas(int s, int t, BS &b) {
         b.sendMoveMessage(144,0,s,Pokemon::Normal,t);
         poke(b,t)["YawnCount"] = 2;
-        addFunction(poke(b,t), "EndTurn617", "Yawn", &et);
+        b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Yawn", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -4354,7 +4447,7 @@ struct MMYawn : public MM {
                     }
                 }
             }
-            removeFunction(poke(b,s),"EndTurn617", "Yawn");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "Yawn");
             poke(b,s).remove("YawnCount");
         }
     }
@@ -4537,6 +4630,10 @@ struct MMOutrage : public MM
         functions["MoveSettings"] = &ms;
     }
 
+    static ::bracket bracket(int) {
+        return makeBracket(6, 11);
+    }
+
     static void uas(int s, int, BS &b) {
         // Asleep is for Sleep Talk
         if ( (!turn(b,s)["OutrageBefore"].toBool() || poke(b,s).value("OutrageUntil").toInt() < b.turn())
@@ -4544,7 +4641,13 @@ struct MMOutrage : public MM
             poke(b,s)["OutrageUntil"] = b.turn() +  1 + (b.true_rand() % 2);
             addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
             addFunction(poke(b,s), "MoveSettings", "Outrage", &ms);
-            addFunction(poke(b,s), "EndTurn610", "Outrage", &aas);
+
+            if (b.gen() <= 4) {
+                b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "Outrage", &aas);
+            } else {
+                addFunction(turn(b, s), "AfterAttackSuccessfull", "Outrage", &aas);
+            }
+
             poke(b,s)["OutrageMove"] = move(b,s);
         }
         /* In gen 5, even a miss causes outrage to stop */
@@ -4555,7 +4658,7 @@ struct MMOutrage : public MM
     static void aas(int s, int, BS &b) {
         if (poke(b,s).contains("OutrageUntil") && b.turn() == poke(b,s)["OutrageUntil"].toInt() && poke(b,s)["LastOutrage"] == b.turn()) {
             removeFunction(poke(b,s), "TurnSettings", "Outrage");
-            removeFunction(poke(b,s), "EndTurn610", "Outrage");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "Outrage");
             poke(b,s).remove("OutrageUntil");
             poke(b,s).remove("OutrageMove");
             poke(b,s).remove("LastOutrage");
@@ -4583,6 +4686,10 @@ struct MMUproar : public MM {
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    static ::bracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 11) : makeBracket(26, 0) ;
+    }
+
     static void uas(int s,int, BS &b) {
         if (poke(b,s).value("UproarUntil").toInt() < b.turn() || !turn(b,s).value("UproarBefore").toBool()) {
             if (b.gen() <= 4)
@@ -4598,7 +4705,7 @@ struct MMUproar : public MM {
                 }
             }
             b.addUproarer(s);
-            addFunction(poke(b,s), "EndTurn610", "Uproar", &et);
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "Uproar", &et);
             addFunction(poke(b,s), "TurnSettings", "Uproar", &ts);
             poke(b,s)["UproarMove"] = move(b,s);
         }
@@ -4626,7 +4733,7 @@ struct MMUproar : public MM {
             }
         } else {
             removeFunction(poke(b,s), "TurnSettings", "Uproar");
-            removeFunction(poke(b,s), "EndTurn610", "Uproar");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "Uproar");
             poke(b,s).remove("UproarUntil");
             poke(b,s).remove("LastUproar");
             b.removeUproarer(s);
@@ -4994,16 +5101,20 @@ struct MMMagicRoom : public MM {
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    static ::bracket bracket(int) {
+        return makeBracket(25, 0) ;
+    }
+
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
         if (b.battleMemory().value("MagicRoomCount").toInt() > 0) {
             b.sendMoveMessage(156,1,s,Pokemon::Psychic);
             b.battleMemory().remove("MagicRoomCount");
-            removeFunction(b.battleMemory(), "EndTurn9", "MagicRoom");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "MagicRoom");
         } else {
             b.sendMoveMessage(156,0,s,Pokemon::Psychic);
             b.battleMemory()["MagicRoomCount"] = 5;
-            addFunction(b.battleMemory(), "EndTurn9", "MagicRoom", &et);
+            b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "MagicRoom", &et);
         }
     }
 
@@ -5012,7 +5123,7 @@ struct MMMagicRoom : public MM {
         if (b.battleMemory()["MagicRoomCount"].toInt() == 0) {
             b.sendMoveMessage(156,1,s,Pokemon::Psychic);
             b.battleMemory().remove("MagicRoomCount");
-            removeFunction(b.battleMemory(), "EndTurn9", "MagicRoom");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "MagicRoom");
         }
     }
 };
@@ -5201,9 +5312,15 @@ struct MMHeavyBomber : public MM
     }
 };
 
+
+
 struct MMWonderRoom : public MM {
     MMWonderRoom() {
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static ::bracket bracket(int) {
+        return makeBracket(24, 0) ;
     }
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
@@ -5211,11 +5328,11 @@ struct MMWonderRoom : public MM {
         if (b.battleMemory().value("WonderRoomCount").toInt() > 0) {
             b.sendMoveMessage(168,1,s,Pokemon::Psychic);
             b.battleMemory().remove("WonderRoomCount");
-            removeFunction(b.battleMemory(), "EndTurn9", "WonderRoom");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "WonderRoom");
         } else {
             b.sendMoveMessage(168,0,s,Pokemon::Psychic);
             b.battleMemory()["WonderRoomCount"] = 5;
-            addFunction(b.battleMemory(), "EndTurn9", "WonderRoom", &et);
+            b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "WonderRoom", &et);
         }
     }
 
@@ -5224,7 +5341,7 @@ struct MMWonderRoom : public MM {
         if (b.battleMemory()["WonderRoomCount"].toInt() <= 0) {
             b.sendMoveMessage(168,1,s,Pokemon::Psychic);
             b.battleMemory().remove("WonderRoomCount");
-            removeFunction(b.battleMemory(), "EndTurn9", "WonderRoom");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "WonderRoom");
         }
     }
 };
@@ -5357,6 +5474,10 @@ struct MMTelekinesis : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    static ::bracket bracket(int) {
+        return makeBracket(16, 0) ;
+    }
+
     static void uas(int s, int t, BS &b) {
         if (poke(b,t).value("LevitatedCount").toInt() > 0) {
             b.sendMoveMessage(174, 1, t);
@@ -5364,14 +5485,14 @@ struct MMTelekinesis : public MM
         } else {
             b.sendMoveMessage(174, 0, s, type(b,s), t);
             poke(b,t)["LevitatedCount"] = 3;
-            addFunction(poke(b,t), "EndTurn60", "Telekinesis", &et);
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Telekinesis", &et);
         }
     }
 
     static void et(int s, int , BS &b) {
         if (poke(b,s).value("LevitatedCount").toInt() <= 1) {
             poke(b,s).remove("LevitatedCount");
-            removeFunction(poke(b,s), "EndTurn60", "Telekinesis");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "Telekinesis");
             b.sendMoveMessage(174, 1, s);
         }
     }
@@ -5472,13 +5593,17 @@ struct MMFireOath : public MM
 
     static void uas(int s, int t, BS &b);
 
+    static ::bracket bracket(int) {
+        return makeBracket(5, 0) ;
+    }
+
     static void makeABurningField(int t, BS &b) {
         if (team(b, t).value("BurningFieldCount").toInt() > 0)
             return;
 
         b.sendMoveMessage(178, 2, t, Pokemon::Fire);
         team(b,t)["BurningFieldCount"] = 5;
-        addFunction(team(b,t), "EndTurn3", "FireOath", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), t, "FireOath", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -5486,7 +5611,7 @@ struct MMFireOath : public MM
 
         if (team(b,s).value("BurningFieldCount").toInt() <= 0) {
             team(b,s).remove("BurningFieldCount");
-            removeFunction(team(b,s), "EndTurn3", "FireOath");
+            b.removeEndTurnEffect(BS::ZoneEffect, s, "FireOath");
             return;
         }
 
@@ -5539,13 +5664,17 @@ struct MMGrassOath : public MM
 
     static void uas(int s, int t, BS &b);
 
+    static ::bracket bracket(int) {
+        return  makeBracket(21, 6) ;
+    }
+
     static void makeASwamp(int t, BS &b) {
         if (team(b, t).value("SwampCount").toInt() > 0)
             return;
 
         b.sendMoveMessage(179, 2, t, Pokemon::Grass);
         team(b,t)["SwampCount"] = 5;
-        addFunction(team(b,t), "EndTurn3", "GrassOath", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), t, "GrassOath", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -5553,7 +5682,7 @@ struct MMGrassOath : public MM
 
         if (team(b,s).value("SwampCount").toInt() <= 0) {
             team(b,s).remove("SwampCount");
-            removeFunction(team(b,s), "EndTurn3", "GrassOath");
+            b.removeEndTurnEffect(BS::ZoneEffect, s, "GrassOath");
             return;
         }
     }
@@ -5595,13 +5724,17 @@ struct MMWaterOath : public MM
         /* Otherwise it's just the standard oath... */
     }
 
+    static ::bracket bracket(int) {
+        return makeBracket(21, 6) ;
+    }
+
     static void makeARainbow(int t, BS &b) {
         if (team(b, t).value("RainbowCount").toInt() > 0)
             return;
 
         b.sendMoveMessage(180, 2, t, Pokemon::Water);
         team(b,t)["RainbowCount"] = 5;
-        addFunction(team(b,t), "EndTurn3", "WaterOath", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), t, "WaterOath", &et);
     }
 
     static void uas(int s, int t, BS &b) {
@@ -5625,7 +5758,7 @@ struct MMWaterOath : public MM
 
         if (team(b,s).value("RainbowCount").toInt() <= 0) {
             team(b,s).remove("RainbowCount");
-            removeFunction(team(b,s), "EndTurn3", "WaterOath");
+            b.removeEndTurnEffect(BS::ZoneEffect, s, "WaterOath");
             return;
         }
     }

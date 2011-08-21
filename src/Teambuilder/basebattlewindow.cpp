@@ -46,6 +46,8 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
 
     init();
     show();
+    printLine(tr("Log belonging to %1").arg(client()->name(ownid())), true);
+    printLine("", true);
     printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(name(true), name(false)));
 }
 
@@ -140,9 +142,6 @@ void BaseBattleWindow::init()
     undelayOnSounds = true;
 
     musicPlayStop();
-
-    printLine(tr("Log belonging to %1").arg(info().name(0)), true);
-    printLine("", true);
 }
 
 bool BaseBattleWindow::musicPlayed() const
