@@ -69,9 +69,6 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     mydisplay = new BattleDisplay(info());
     BaseBattleWindow::init();
 
-    printLine(tr("Log belonging to %1").arg(info().name(info().myself)), true);
-    printLine("", true);
-
     QSettings s;
     saveLogs->setChecked(s.value("save_battle_logs").toBool());
     log->override = saveLogs->isChecked() ? Log::OverrideYes : Log::OverrideNo;
@@ -126,6 +123,10 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     switchTo(0,info().slot(info().myself,0), false);
 
     show();
+
+    printLine(tr("Log belonging to %1").arg(info().name(info().myself)), true);
+    printLine("", true);
+
     printHtml(toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(name(1), name(0)));
 
     disableAll();
