@@ -51,6 +51,10 @@ struct MMDisable : public MM
         return false;
     }
 
+    static BS::priorityBracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 12) : makeBracket(14, 0) ;
+    }
+
     static void uas (int s, int t, BS &b) {
         int mv = poke(b,t)["LastMoveUsed"].toInt();
         b.sendMoveMessage(28,0,s,0,t,mv);
@@ -62,7 +66,7 @@ struct MMDisable : public MM
             poke(b,t)["DisabledMove"] = mv;
             addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
             addFunction(poke(b,t), "MovePossible", "Disable", &mp);
-            addFunction(poke(b,t), "EndTurn611", "Disable", &et);
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Disable");
         }
     }
 
@@ -71,7 +75,7 @@ struct MMDisable : public MM
         if (!b.counters(s).count(BC::Disable) < 0) {
             removeFunction(poke(b,s), "MovesPossible", "Disable");
             removeFunction(poke(b,s), "MovePossible", "Disable");
-            removeFunction(poke(b,s), "EndTurn611", "Disable");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "Disable");
             b.sendMoveMessage(28,2,s);
             b.counters(s).removeCounter(BC::Disable);
         }
