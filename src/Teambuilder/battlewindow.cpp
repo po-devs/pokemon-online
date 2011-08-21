@@ -69,6 +69,9 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     mydisplay = new BattleDisplay(info());
     BaseBattleWindow::init();
 
+    printLine(tr("Log belonging to %1").arg(info().name(info().myself)), true);
+    printLine("", true);
+
     QSettings s;
     saveLogs->setChecked(s.value("save_battle_logs").toBool());
     log->override = saveLogs->isChecked() ? Log::OverrideYes : Log::OverrideNo;
