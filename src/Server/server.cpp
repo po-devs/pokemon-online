@@ -1702,7 +1702,7 @@ int Server::freeid() const
 {
     do {
         ++playercounter;
-    } while (myplayers.contains(playercounter) || playercounter == 0); /* 0 is reserved */
+    } while (myplayers.contains(playercounter) || playercounter == 0 || playercounter == -1); /* 0, -1 are reserved */
 
     return playercounter;
 }
