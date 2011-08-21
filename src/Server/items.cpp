@@ -67,7 +67,8 @@ struct IMBlackSludge : public IM
 struct IMLeftOvers : public IM
 {
     IMLeftOvers() {
-        functions["EndTurn6.3"] = &et; /* Gen 4 */
+        functions["EndTurn5.0"] = &et; /* Gen 2 */
+        functions["EndTurn6.3"] = &et; /* Gen 3,4 */
         functions["EndTurn5.2"] = &et; /* Gen 5 */
     }
 

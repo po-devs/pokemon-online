@@ -129,6 +129,7 @@ public:
     void personalEndTurn(int source);
     void endTurnStatus(int player);
     void endTurnWeather();
+    void endTurnDefrost();
     void callForth(int weather, int turns);
     void setupLongWeather(int weather);
     /* Attack... */
