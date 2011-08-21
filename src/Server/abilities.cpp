@@ -126,7 +126,8 @@ struct AMArenaTrap : public AM {
 
 struct AMBadDreams : public AM {
     AMBadDreams() {
-        functions["EndTurn69"] = &et;
+        functions["EndTurn6.10"] = &et; /* Gen 4 */
+        functions["EndTurn26.1"] = &et; /* Gen 5 */
     }
 
     static void et (int s, int, BS &b) {
@@ -842,7 +843,8 @@ struct AMShadowTag : public AM {
 
 struct AMShedSkin : public AM {
     AMShedSkin() {
-        functions["EndTurn62"] = &et;
+        functions["EndTurn6.2"] = &et; /* Gen 4 */
+        functions["EndTurn5.1"] = &et; /* Gen 5 */
     }
 
     static void et(int s, int, BS &b) {
@@ -858,7 +860,8 @@ struct AMShedSkin : public AM {
 struct AMSlowStart : public AM {
     AMSlowStart() {
         functions["UponSetup"] = &us;
-        functions["EndTurn20."] = &et;
+        functions["EndTurn12.0"] = &et; /* gen 4 */
+        functions["EndTurn29.0"] = &et; /* gen 5 */
         functions["StatModifier"] = &sm;
     }
 
@@ -917,7 +920,8 @@ struct AMSoundProof : public AM {
 struct AMSpeedBoost : public AM {
     AMSpeedBoost() {
         functions["UponSetup"] = &os;
-        functions["EndTurn62"] = &et;
+        functions["EndTurn6.2"] = &et; /* Gen 4 */
+        functions["EndTurn26.1"] = &et; /* Gen 5 */
     }
 
     static void os(int s, int, BS &b) {
@@ -1571,7 +1575,7 @@ struct AMMagicMirror : public AM
 struct AMHarvest : public AM
 {
     AMHarvest() {
-        functions["EndTurn62"] = &et;
+        functions["EndTurn26.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -1672,7 +1676,7 @@ struct AMJusticeHeart : public AM {
 
 struct AMInconsistent : public AM {
     AMInconsistent() {
-        functions["EndTurn62"] = &et;
+        functions["EndTurn26.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -1747,7 +1751,7 @@ struct AMAnalyze : public AM {
 
 struct AMHealingHeart : public AM {
     AMHealingHeart() {
-        functions["EndTurn20."] = &et;
+        functions["EndTurn5.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {

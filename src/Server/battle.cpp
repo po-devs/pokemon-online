@@ -299,7 +299,7 @@ void BattleSituation::engageBattle()
     std::vector<int> pokes = sortedBySpeed();
 
     foreach(int p, pokes)
-        callEntryEffects(p);;
+        callEntryEffects(p);
 
     for (int i = 0; i< numberOfSlots(); i++) {
         hasChoice[i] = false;
@@ -561,6 +561,8 @@ void BattleSituation::run()
 
     rearrangeTime() = false;
 
+    initializeEndTurnFunctions();
+
     engageBattle();
 
     forever
@@ -569,7 +571,6 @@ void BattleSituation::run()
 
         endTurn();
     }
-
 }
 
 void BattleSituation::rearrangeTeams()
@@ -618,6 +619,165 @@ void BattleSituation::beginTurn()
     analyzeChoices();
 }
 
+void BattleSituation::initializeEndTurnFunctions()
+{
+    /* Gen 4:
+    1.0 Reflect wears off: "your team's reflect wore off"
+    1.1 Light Screen wears off: "your team's light screen wore off"
+    1.2 Mist wears off: "your team's mist wore off"
+    1.3 Safeguard fades: "your team is no longer protected by safeguard"
+    1.4 Tailwind ends: "your team's tailwind petered out"
+    1.5 Lucky Chant: your team's lucky chant wore off"
+
+    2.0 Wish: "pokemon's wish came true"
+
+    3.0 Hail, Rain, Sandstorm, or Sun message
+
+    4.0 Dry Skin, Hydration, Ice Body, Rain Dish
+
+    5.0 Gravity
+
+    6.0 Ingrain
+    6.1 Aqua Ring
+    6.2 Speed Boost, Shed Skin
+    6.3 Black Sludge, Leftovers: "pokémon restored a little HP using its leftovers"
+    6.4 Leech Seed: "pokémon's health is sapped by leech seed"
+    6.5 Burn, Poison Heal, Poison: "pokémon is hurt by poison"
+    6.6 Nightmare
+    6.7 Flame Orb activation, Toxic Orb activation
+    6.8 Curse (from a Ghost)
+    6.9 Bind, Clamp, Fire Spin, Magma Storm, Sand Tomb, Whirlpool, Wrap
+    6.10 Bad Dreams Damage
+    6.11 End of Outrage, Petal Dance, Thrash, Uproar: "pokémon caused an uproar" & "pokémon calmed down"
+    6.12 Disable ends: "pokémon is no longer disabled"
+    6.13 Encore ends
+    6.14 Taunt wears off
+    6.15 Magnet Rise
+    6.16 Heal Block: "the foe pokémon's heal block wore off"
+    6.17 Embargo
+    6.18 Yawn
+    6.19 Sticky Barb
+
+    7.0 Doom Desire, Future Sight
+
+    8.0 Perish Song
+
+    9.0 Trick Room
+
+    10.0 Pokemon is switched in (if previous Pokemon fainted)
+    10.1 Toxic Spikes
+    10.2 Spikes
+    10.3 Stealth Rock
+
+    11.0 Healing Heart
+    12.0 Slow start
+    */
+
+    if (gen() <= 4) {
+        ownEndFunctions.push_back(QPair<int, VoidFunction>(3, &BattleSituation::endTurnWeather));
+        ownEndFunctions.push_back(QPair<int, VoidFunction>(10, &BattleSituation::requestEndOfTurnSwitchIns));
+
+        addEndTurnEffect(AbilityEffect, 6, 2); /* Shed Skin, Speed Boost */
+        addEndTurnEffect(ItemEffect, 6, 3); /* Black Sludge, Leftovers */
+
+        /* In gen 2, status is on switch in or attack, not at the end of the turn */
+        if (gen() > 2) {
+            addEndTurnEffect(OwnEffect, 6, 5, 0, "", NULL, &BattleSituation::endTurnStatus);
+        }
+
+        addEndTurnEffect(ItemEffect, 6, 7); /* Orbs */
+        addEndTurnEffect(ItemEffect, 6, 19); /* Sticky Barb */
+
+        addEndTurnEffect(AbilityEffect, 12, 0); /* Slow Start */
+    } else {
+        /* 1.0 weather ends
+
+        2.0 Sandstorm damage, Hail damage, Rain Dish, Dry Skin, Ice Body
+
+        3.0 Future Sight, Doom Desire
+
+        4.0 Wish
+
+        5.0 Fire Pledge + Grass Pledge damage
+        5.1 Shed Skin, Hydration, Healer
+        5.2 Leftovers, Black Sludge
+
+        6.0 Aqua Ring
+
+        7.0 Ingrain
+
+        8.0 Leech Seed
+
+        9.0 (bad) poison damage, burn damage, Poison Heal
+        9.1 Nightmare
+
+        10.0 Curse (from a Ghost-type)
+
+        11.0 Bind, Wrap, Fire Spin, Clamp, Whirlpool, Sand Tomb, Magma Storm
+
+        12.0 Taunt ends
+
+        13.0 Encore ends
+
+        14.0 Disable ends, Cursed Body ends
+
+        15.0 Magnet Rise ends
+
+        16.0 Telekinesis ends
+
+        17.0 Heal Block ends
+
+        18.0 Embargo ends
+
+        19.0 Yawn
+
+        20.0 Perish Song
+
+        21.0 Reflect ends
+        21.1 Light Screen ends
+        21.2 Safeguard ends
+        21.3 Mist ends
+        21.4 Tailwind ends
+        21.5 Lucky Chant ends
+        21.6 Water Pledge + Fire Pledge ends, Fire Pledge + Grass Pledge ends, Grass Pledge + Water Pledge ends
+
+        22.0 Gravity ends
+
+        23.0 Trick Room ends
+
+        24.0 Wonder Room ends
+
+        25.0 Magic Room ends
+
+        26.0 Uproar message
+        26.1 Speed Boost, Bad Dreams, Harvest, Moody
+        26.2 Toxic Orb activation, Flame Orb activation, Sticky Barb
+
+        27.0 Zen Mode
+
+        28.0 Pokémon is switched in (if previous Pokémon fainted)
+        28.1 Healing Wish, Lunar Dance
+        28.2 Spikes, Toxic Spikes, Stealth Rock (hurt in the order they are first used)
+
+        29.0 Slow Start
+        */
+        ownEndFunctions.push_back(QPair<int, VoidFunction>(1, &BattleSituation::endTurnWeather));
+        ownEndFunctions.push_back(QPair<int, VoidFunction>(28, &BattleSituation::requestEndOfTurnSwitchIns));
+
+        addEndTurnEffect(AbilityEffect, 5, 1); /* Shed skin, Hydration, Healer */
+        addEndTurnEffect(ItemEffect, 5, 2); /* Leftovers, Black sludge */
+
+        addEndTurnEffect(OwnEffect, 9, 0, 0, "", NULL, &BattleSituation::endTurnStatus);
+
+        addEndTurnEffect(AbilityEffect, 26, 1); /* Speed Boost, Bad Dreams, Harvest, Moody */
+        addEndTurnEffect(AbilityEffect, 26, 2); /* Orbs, sticky barb */
+
+        addEndTurnEffect(AbilityEffect, 27, 0); /* Daruma Mode */
+
+        addEndTurnEffect(AbilityEffect, 29, 0); /* Slow Start */
+    }
+}
+
 void BattleSituation::getVectorRef(priorityBracket b)
 {
     int i;
@@ -633,7 +793,13 @@ void BattleSituation::getVectorRef(priorityBracket b)
     }
 }
 
-void BattleSituation::addEndTurnEffect(EffectType type, int slot, int bracket, int priority,
+void BattleSituation::addEndTurnEffect(EffectType type, priorityBracket bracket, int slot,
+                                       const QString &function, MechanicsFunction f, IntFunction f2)
+{
+    addEndTurnEffect(type, bracket.bracket, bracket.priority, slot, function, f, f2);
+}
+
+void BattleSituation::addEndTurnEffect(EffectType type, int bracket, int priority, int slot,
                                        const QString &function, MechanicsFunction f, IntFunction f2)
 {
     priorityBracket b(bracket, priority);
@@ -678,6 +844,9 @@ void BattleSituation::addEndTurnEffect(EffectType type, int slot, int bracket, i
   Note: in the end turn loop, when a pokemon is koed,
   sometimes this function doesn't get called and so trailing
   effects are kept in the vector. Not such a big deal but meh.
+
+  Also if several effects share the same bracket, only one will have its
+  function removed
   */
 void BattleSituation::removeEndTurnEffect(EffectType type, int slot, const QString &function)
 {
@@ -757,21 +926,9 @@ void BattleSituation::endTurn()
         if (b.priority == 0) {
             int flags = bracketType[b];
 
-            if (flags == ZoneEffect || flags == FieldEffect) {
+            if (flags == FieldEffect) {
                 QString effect = bracketToEffect[b];
-
-                if (flags == ZoneEffect) {
-                    callzeffects(Player1, Player1, effect);
-                    callzeffects(Player2, Player2, effect);
-
-                    continue;
-                }
-
-                if (flags == FieldEffect) {
-                    callbeffects(Player1, Player1, effect);
-
-                    continue;
-                }
+                callbeffects(Player1, Player1, effect);
             }
         }
 
@@ -780,6 +937,8 @@ void BattleSituation::endTurn()
 
         }
         i -= 1;
+
+        bool side1(false), side2(false);
 
         for(int z = 0; z < speedsVector.size(); z++) {
             int player = speedsVector[z];
@@ -808,6 +967,16 @@ void BattleSituation::endTurn()
                 } else if (flags == OwnEffect) {
                     IntFunction f = ownSEndFunctions[b];
                     (this->*f)(player);
+                } else if (flags == ZoneEffect) {
+                    int p = this->player(player);
+
+                    if (p == Player1 && !side1) {
+                        side1 = true;
+                        callzeffects(p, p, effect);
+                    } else if (p == Player2 && !side2) {
+                        side2 = true;
+                        callzeffects(p, p, effect);
+                    }
                 }
 
                 if (koed(player)) {

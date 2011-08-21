@@ -43,7 +43,8 @@ void ItemEffect::setup(int num, int source, BattleSituation &b)
 struct IMBlackSludge : public IM
 {
     IMBlackSludge() {
-        functions["EndTurn63"] = &et;
+        functions["EndTurn6.3"] = &et; /* Gen 4 */
+        functions["EndTurn5.2"] = &et; /* Gen 5 */
     }
 
     static void et(int s, int, BS &b) {
@@ -66,7 +67,8 @@ struct IMBlackSludge : public IM
 struct IMLeftOvers : public IM
 {
     IMLeftOvers() {
-        functions["EndTurn63"] = &et;
+        functions["EndTurn6.3"] = &et; /* Gen 4 */
+        functions["EndTurn5.2"] = &et; /* Gen 5 */
     }
 
     static void et(int s, int, BS &b) {
@@ -263,7 +265,8 @@ struct IMZoomLens : public IM
 struct IMStatusOrb : public IM
 {
     IMStatusOrb() {
-        functions["EndTurn66"] = &et;
+        functions["EndTurn6.7"] = &et; /* Gen 4 */
+        functions["EndTurn26.2"] = &et; /* Gen 5 */
     }
 
     static void et(int s, int, BS &b) {
@@ -398,7 +401,8 @@ struct IMPokeTypeBoost : public IM
 struct IMStickyBarb : public IM
 {
     IMStickyBarb() {
-        functions["EndTurn618"] = &et;
+        functions["EndTurn6.19"] = &et; /* Gen 4 */
+        functions["EndTurn26.2"] = &et; /* Gen 5 */
         functions["UponPhysicalAssault"] = &upa;
     }
 
@@ -491,18 +495,18 @@ struct IMMentalHerb : public IM
             if (b.counters(s).hasCounter(BC::Taunt)) {
                 removeFunction(poke(b,s), "MovesPossible", "Taunt");
                 removeFunction(poke(b,s), "MovePossible", "Taunt");
-                removeFunction(poke(b,s), "EndTurn611", "Taunt");
+                b.removeEndTurnEffect(BS::PokeEffect, s, "Taunt");
                 used = true;
             }
             if (b.counters(s).hasCounter(BC::Encore)) {
                 removeFunction(poke(b,s), "MovesPossible", "Encore");
-                removeFunction(poke(b,s), "EndTurn611", "Encore");
+                b.removeEndTurnEffect(BS::PokeEffect, s, "Encore");
                 used = true;
             }
             if (b.counters(s).hasCounter(BC::Disable)) {
                 removeFunction(poke(b,s), "MovesPossible", "Disable");
                 removeFunction(poke(b,s), "MovePossible", "Disable");
-                removeFunction(poke(b,s), "EndTurn611", "Disable");
+                b.removeEndTurnEffect(BS::PokeEffect, s, "Disable");
                 used = true;
             }
             b.counters(s).clear();

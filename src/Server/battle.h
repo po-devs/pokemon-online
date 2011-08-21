@@ -530,11 +530,15 @@ private:
     QVector<QPair<int, VoidFunction> > ownEndFunctions;
     typedef void (BattleSituation::*IntFunction)(int);
     QHash<priorityBracket, IntFunction> ownSEndFunctions;
+
+    void initializeEndTurnFunctions();
 public:
     typedef void (*MechanicsFunction) (int source, int target, BattleSituation &b);
 
-    void addEndTurnEffect(EffectType type, int slot, int priorityBracket, int priority, const QString &effect, MechanicsFunction f,
-                          IntFunction f2 = NULL);
+    void addEndTurnEffect(EffectType type, int bracket, int priority, int slot = 0, const QString &effect = QString(),
+                            MechanicsFunction f=NULL,IntFunction f2 = NULL);
+    void addEndTurnEffect(EffectType type, priorityBracket bracket, int slot = 0, const QString &effect = QString(),
+                            MechanicsFunction f=NULL,IntFunction f2 = NULL);
     void removeEndTurnEffect(EffectType type, int slot, const QString &effect);
 
     context &battleMemory() {
