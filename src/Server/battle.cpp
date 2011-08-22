@@ -2941,7 +2941,7 @@ end:
 trueend:
     pokeMemory(player)["HasMovedOnce"] = true;
 
-    if (gen() <= 4 && koed(player)) {
+    if (gen() <= 4 && koed(player) && tmove(player).power > 0) {
         notifyKO(player);
     }
 
