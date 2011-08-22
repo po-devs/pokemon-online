@@ -3707,7 +3707,7 @@ struct MMMist : public MM
         int source = b.player(s);
 
         team(b,source)["MistCount"] = 5;
-        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), s, "Mist", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), source, "Mist", &et);
     }
 
     static void et(int s, int, BS &b) {
