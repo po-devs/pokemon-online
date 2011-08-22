@@ -2389,7 +2389,7 @@ void BattleSituation::testFlinch(int player, int target)
 
     if (hasWorkingAbility(target, Ability::InnerFocus)) {
         if (rate == 100) {
-            sendAbMessage(12,0,player);
+            sendAbMessage(12,0,target);
         }
         return;
     }
