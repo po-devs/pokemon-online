@@ -2507,14 +2507,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         pokeMemory(player)["LastMoveUsed"] = attack;
         pokeMemory(player)["LastMoveUsedTurn"] = turn();
         pokeMemory(player)["AnyLastMoveUsed"] = attack;
-    } else if (attack != 0 && pokeMemory(player).value("LastMoveUsedTurn").toInt() != turn() && attack != Move::Struggle) {
+        battleMemory()["AnyLastMoveUsed"] = attack;
+    } else if (attack != 0 && attack != Move::Struggle) {
         /* Recharge moves have their attack as 0 on the recharge turn : Blast Burn , ...
             So that's why attack is tested against 0. */
-        /* Those are needed for when a choiced move is used, or torment is used, and for example
-            the foe used Assit + Fly or simply fly. */
-        if (attack != Move::Struggle) {
-            pokeMemory(player)["AnyLastMoveUsed"] = attack;
-        }
+        pokeMemory(player)["AnyLastMoveUsed"] = attack;
+        battleMemory()["AnyLastMoveUsed"] = attack;
     }
 
     //For metronome calling fly / sky attack / ...
