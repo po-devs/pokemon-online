@@ -3299,7 +3299,7 @@ struct MMTeamBarrier : public MM
         b.sendMoveMessage(73,(cat-1)+b.multiples()*2,s,type(b,s));
         team(b,source)["Barrier" + QString::number(cat) + "Count"] = nturn;
 
-        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), 0, "TeamBarrier", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), source, "TeamBarrier", &et);
     }
 
     static void et(int s, int, BS &b) {
