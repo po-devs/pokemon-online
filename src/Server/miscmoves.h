@@ -72,7 +72,7 @@ struct MMDisable : public MM
 
     static void et (int s, int, BS &b)
     {
-        if (!b.counters(s).count(BC::Disable) < 0) {
+        if (b.counters(s).count(BC::Disable) < 0) {
             removeFunction(poke(b,s), "MovesPossible", "Disable");
             removeFunction(poke(b,s), "MovePossible", "Disable");
             b.removeEndTurnEffect(BS::PokeEffect, s, "Disable");
