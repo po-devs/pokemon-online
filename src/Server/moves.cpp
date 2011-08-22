@@ -2614,7 +2614,7 @@ struct MMGravity : public MM
     }
 
     static ::bracket bracket(int gen) {
-        return gen <= 4 ? makeBracket(22, 0) : makeBracket(5, 0) ;
+        return gen <= 4 ? makeBracket(5, 0) : makeBracket(22, 0) ;
     }
 
     static void uas(int s, int, BS &b) {
@@ -4326,7 +4326,7 @@ struct MMTrickRoom : public MM {
     }
 
     static ::bracket bracket(int gen) {
-        return gen <= 4 ? makeBracket(9, 0) : makeBracket(26, 0) ;
+        return gen <= 4 ? makeBracket(9, 0) : makeBracket(23, 0) ;
     }
 
     static void uas(int s, int, BS &b) {
