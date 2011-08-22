@@ -4645,7 +4645,7 @@ struct MMOutrage : public MM
             if (b.gen() <= 4 && b.gen() >= 3) {
                 b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "Outrage", &aas);
             } else {
-                addFunction(turn(b, s), "AfterAttackSuccessfull", "Outrage", &aas);
+                addFunction(turn(b, s), "AfterAttackSuccessful", "Outrage", &aas);
             }
 
             poke(b,s)["OutrageMove"] = move(b,s);
