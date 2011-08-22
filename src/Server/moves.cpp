@@ -1681,17 +1681,21 @@ struct MMDragonRage : public MM
 struct MMCopycat : public MM
 {
     MMCopycat() {
+        functions["EvenWhenCantMove"] = &ewcm;
         functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    static void ewcm(int s, int, BS &b) {
+        QString key = b.gen() <= 4 ? "LastMoveUsed" : "AnyLastMoveUsed";
+        turn(b,s)["CopycatMove"] = b.battleMemory().value(key).toInt();
+    }
+
     static void daf(int s, int, BS &b) {
         /* First check if there's even 1 move available */
-        QString key = b.gen() <= 4 ? "LastMoveUsed" : "AnyLastMoveUsed";
-        if (!b.battleMemory().contains(key) || b.battleMemory()[key].toInt() == Copycat) {
+        int move = turn(b,s)["CopycatMove"].toInt();
+        if (move == 0 || move == Copycat) {
             turn(b,s)["Failed"] = true;
-        } else {
-            turn(b,s)["CopycatMove"] = b.battleMemory()[key];
         }
     }
 
