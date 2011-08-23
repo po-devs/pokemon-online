@@ -111,7 +111,7 @@ public:
         return *myInfo;
     }
 
-    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf, int ownid);
+    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf, int ownid, Client *client);
 
     int gen() const {
         return info().gen;

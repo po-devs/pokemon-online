@@ -1422,7 +1422,7 @@ void Client::seeChallenge(const ChallengeInfo &c)
 void Client::battleStarted(int battleId, int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
     cancelFindBattle(false);
-    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf);
+    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf, this);
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
     mybattle->setWindowFlags(Qt::Window);
     mybattle->client() = this;
@@ -1469,7 +1469,7 @@ void Client::battleReceived(int battleid, int id1, int id2)
 
 void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 {
-    BaseBattleWindow *battle = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf, ownId());
+    BaseBattleWindow *battle = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf, ownId(), this);
     battle->setWindowFlags(Qt::Window);
     battle->show();
 
