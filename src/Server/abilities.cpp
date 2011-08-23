@@ -308,7 +308,7 @@ struct AMDrySkin : public AM {
     }
 
     static void ws (int s, int , BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Rain)) {
+        if (b.isWeatherWorking(BattleSituation::Rain) && !b.poke(s).isFull()) {
             b.sendAbMessage(15,0,s,s,Pokemon::Water);
             b.healLife(s, b.poke(s).totalLifePoints()/8);
         } else if (b.isWeatherWorking(BattleSituation::Sunny)) {
