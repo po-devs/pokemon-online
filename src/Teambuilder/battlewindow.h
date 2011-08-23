@@ -83,7 +83,8 @@ class BattleWindow : public BaseBattleWindow
     Q_OBJECT
 
 public:
-    BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf);
+    BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf,
+                 Client *client);
 
     BattleInfo &info() {
         return *(BattleInfo*)(&BaseBattleWindow::info());

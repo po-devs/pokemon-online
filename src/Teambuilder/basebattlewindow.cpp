@@ -34,7 +34,7 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int 
 }
 
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
-                                   int _ownid) : delayed(0), ignoreSpecs(NoIgnore)
+                                   int _ownid, Client *client) : delayed(0), ignoreSpecs(NoIgnore), _mclient(client)
 {
     ownid() = _ownid;
     this->conf() = conf;
@@ -46,8 +46,10 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
 
     init();
     show();
-    printLine(tr("Log belonging to %1").arg(client()->name(ownid())), true);
-    printLine("", true);
+    if (client) {
+        printLine(tr("Log belonging to %1").arg(client->name(ownid())), true);
+        printLine("", true);
+    }
     printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(name(true), name(false)));
 }
 

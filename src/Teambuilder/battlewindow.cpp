@@ -53,13 +53,15 @@ PokeBattle & BattleInfo::currentPoke(int spot)
     return myteam.poke(slotNum(spot));
 }
 
-BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf)
+BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf,
+                           Client *client)
 {
     hasLoggedWifiClause = false;
     question = NULL;
     this->battleId() = battleId;
     this->started() = false;
     ownid() = me.id;
+    _mclient = client;
 
     conf() = _conf;
 
