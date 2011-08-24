@@ -8,6 +8,7 @@
 #include "../Utilities/contextswitch.h"
 #include "battleinterface.h"
 #include "battlepluginstruct.h"
+#include "battlecounters.h"
 
 class Player;
 class PluginManager;
@@ -128,6 +129,7 @@ public:
     void personalEndTurn(int source);
     void endTurnStatus(int player);
     void endTurnWeather();
+    void endTurnDefrost();
     void callForth(int weather, int turns);
     void setupLongWeather(int weather);
     /* Attack... */
@@ -168,6 +170,7 @@ public:
     /* Does not do extra operations,just a setter */
     void changeStatus(int player, int status, bool tell = true, int turns = 0);
     void changeStatus(int team, int poke, int status);
+    void unthaw(int player);
     void healStatus(int player, int status);
     void healConfused(int player);
     void healLife(int player, int healing);
@@ -229,6 +232,7 @@ public:
     bool hasSubstitute(int slot);
     bool hasMoved(int slot);
     void requestSwitchIns();
+    void requestEndOfTurnSwitchIns();
     void requestSwitch(int player);
     bool linked(int linked, QString relationShip);
     void link(int linker, int linked, QString relationShip);
@@ -372,7 +376,6 @@ public:
     std::vector<int> targetList;
     /* Calls the effects of source reacting to name */
     void calleffects(int source, int target, const QString &name);
-    void calle6effects(int source);
     /* This time the pokelong effects */
     void callpeffects(int source, int target, const QString &name);
     /* this time the general battle effects (imprison, ..) */
@@ -441,6 +444,16 @@ public:
 
         void reset();
     };
+    enum EffectType {
+        TurnEffect,
+        PokeEffect,
+        SlotEffect,
+        ItemEffect,
+        AbilityEffect,
+        ZoneEffect,
+        FieldEffect,
+        OwnEffect
+    } ;
 private:
     /**************************************/
     /*** VIVs: very important variables ***/
@@ -464,6 +477,9 @@ private:
         BasicPokeInfo fieldpoke;
         BasicMoveInfo fieldmove;
 
+        /* The counters (Encore, Taun, Disable) associated with the pokemon */
+        BattleCounters counters;
+
         /* The choice of a player, accessed by move ENCORE */
         BattleChoice choice;
     };
@@ -476,7 +492,56 @@ private:
     QList<context> slotzone;
 
     QList<PokeContext> contexts;
+
 public:
+    struct priorityBracket {
+        quint8 bracket;
+        quint8 priority;
+
+        priorityBracket(quint8 b=0, quint8 p=0) : bracket(b), priority(p) {
+
+        }
+
+        operator int() const {
+            return (this->bracket << 8) | priority;
+        }
+
+        bool operator <= (const priorityBracket &b) const {
+            return this->bracket < b.bracket || (this->bracket==b.bracket && priority <= b.priority);
+        }
+
+        bool operator == (const priorityBracket &b) const {
+            return this->bracket == b.bracket && priority == b.priority;
+        }
+
+        bool operator < (const priorityBracket &b) const {
+            return this->bracket < b.bracket || (this->bracket == b.bracket && priority < b.priority);
+        }
+    };
+private:
+    QVector<priorityBracket> endTurnEffects;
+    QHash<QString, priorityBracket> effectToBracket;
+    QHash<priorityBracket, int> bracketCount;
+    QHash<priorityBracket, int> bracketType;
+    QHash<priorityBracket, QString> bracketToEffect;
+
+    void getVectorRef(priorityBracket b);
+
+    typedef void (BattleSituation::*VoidFunction)();
+    QVector<QPair<int, VoidFunction> > ownEndFunctions;
+    typedef void (BattleSituation::*IntFunction)(int);
+    QHash<priorityBracket, IntFunction> ownSEndFunctions;
+
+    void initializeEndTurnFunctions();
+public:
+    typedef void (*MechanicsFunction) (int source, int target, BattleSituation &b);
+
+    void addEndTurnEffect(EffectType type, int bracket, int priority, int slot = 0, const QString &effect = QString(),
+                            MechanicsFunction f=NULL,IntFunction f2 = NULL);
+    void addEndTurnEffect(EffectType type, priorityBracket bracket, int slot = 0, const QString &effect = QString(),
+                            MechanicsFunction f=NULL,IntFunction f2 = NULL);
+    void removeEndTurnEffect(EffectType type, int slot, const QString &effect);
+
     context &battleMemory() {
         return battlelong;
     }
@@ -515,6 +580,10 @@ public:
 
     BattleChoice &choice(int slot) {
         return getContext(slot).choice;
+    }
+
+    BattleCounters &counters(int slot) {
+        return getContext(slot).counters;
     }
 
     const context &battleMemory() const {

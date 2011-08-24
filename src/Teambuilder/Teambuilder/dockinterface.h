@@ -1,10 +1,9 @@
 #ifndef DOCKINTERFACE_H
 #define DOCKINTERFACE_H
 
-#include <QtGui>
+#include <QStackedWidget>
 #include "../PokemonInfo/pokemonstructs.h"
 
-class QStackedWidget;
 class TB_TeamBody;
 
 class DockAdvanced : public QStackedWidget
@@ -16,13 +15,16 @@ class DockAdvanced : public QStackedWidget
     ~DockAdvanced();
 
     void changeGeneration(int gen);
+    void createAdvanced(int index);
 
  public slots:
     void setCurrentPokemon(int index);
-    void setPokemonNum(int indexStack, Pokemon::uniqueId);
+    void updatePokemonNum(int indexStack);
 
  private:
     TB_TeamBody * m_builder;
+
+    QWidget *advanced[6];
 
 };
 

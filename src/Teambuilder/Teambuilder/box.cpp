@@ -3,6 +3,7 @@
 #include "theme.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/pokemonstructs.h"
+#include "pokeballed.h"
 #include <QtXml>
 #include <QFile>
 #include <QDir>
@@ -701,9 +702,9 @@ void TB_BoxContainer::dragMoveEvent(QDragMoveEvent *event)
 /******************** TB_PokemonBoxes ***************************/
 /****************************************************************/
 
-TB_PokemonBoxes::TB_PokemonBoxes(TeamBuilder *parent) : QWidget(parent)
+TB_PokemonBoxes::TB_PokemonBoxes(Team *_team)
 {
-    m_team = parent->team();
+    m_team = _team;
     currentPoke = 0;
     QVBoxLayout * ml = new QVBoxLayout(this);
     QHBoxLayout *firstline = new QHBoxLayout();

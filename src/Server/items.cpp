@@ -1,9 +1,11 @@
 #include "items.h"
 #include "berries.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "battlecounterindex.h"
 
 typedef ItemMechanics IM;
 typedef BattleSituation BS;
+typedef BattleCounterIndex BC;
 
 QHash<int, ItemMechanics> ItemEffect::mechanics;
 QHash<int, QString> ItemEffect::names;
@@ -14,10 +16,10 @@ void ItemEffect::activate(const QString &effect, int num, int source, int target
     QList<ItemInfo::Effect> l = ItemInfo::Effects(num, b.gen());
 
     foreach(ItemInfo::Effect e, l) {
-	if (!mechanics.contains(e.num) || !mechanics[e.num].functions.contains(effect)) {
-	    continue;
-	}
-	mechanics[e.num].functions[effect](source, target, b);
+        if (!mechanics.contains(e.num) || !mechanics[e.num].functions.contains(effect)) {
+            continue;
+        }
+        mechanics[e.num].functions[effect](source, target, b);
     }
 }
 
@@ -26,52 +28,55 @@ void ItemEffect::setup(int num, int source, BattleSituation &b)
     QList<ItemInfo::Effect> effects = ItemInfo::Effects(num, b.gen());
 
     foreach(ItemInfo::Effect effect, effects) {
-	/* if the effect is invalid or not yet implemented then no need to go further */
-	if (!mechanics.contains(effect.num)) {
-	    continue;
+        /* if the effect is invalid or not yet implemented then no need to go further */
+        if (!mechanics.contains(effect.num)) {
+            continue;
         }
 
-	//dun remove the test
-	if (effect.args.size() > 0) {
+        //dun remove the test
+        if (effect.args.size() > 0) {
             IM::poke(b,source)["ItemArg"] = effect.args;
-	}
+        }
     }
 }
 
 struct IMBlackSludge : public IM
 {
     IMBlackSludge() {
-        functions["EndTurn63"] = &et;
+        functions["EndTurn6.3"] = &et; /* Gen 4 */
+        functions["EndTurn5.2"] = &et; /* Gen 5 */
     }
 
     static void et(int s, int, BS &b) {
         if(b.koed(s) || b.hasWorkingAbility(s, Ability::MagicGuard)) {
-	    return;
-	}
-	if(b.hasType(s, Pokemon::Poison)) {
-	    if (!b.poke(s).isFull()) {
-		b.sendItemMessage(16,s,0);
-		b.healLife(s, b.poke(s).totalLifePoints()/16);
-	    }
+            return;
+        }
+        if(b.hasType(s, Pokemon::Poison)) {
+            if (!b.poke(s).isFull()) {
+                b.sendItemMessage(16,s,0);
+                b.healLife(s, b.poke(s).totalLifePoints()/16);
+            }
         } else
         {
-	    b.sendItemMessage(16,s,1);
-	    b.inflictDamage(s, b.poke(s).totalLifePoints()/8,s);
-	}
+            b.sendItemMessage(16,s,1);
+            b.inflictDamage(s, b.poke(s).totalLifePoints()/8,s);
+        }
     }
 };
 
 struct IMLeftOvers : public IM
 {
     IMLeftOvers() {
-        functions["EndTurn63"] = &et;
+        functions["EndTurn5.0"] = &et; /* Gen 2 */
+        functions["EndTurn6.3"] = &et; /* Gen 3,4 */
+        functions["EndTurn5.2"] = &et; /* Gen 5 */
     }
 
     static void et(int s, int, BS &b) {
-	if (!b.poke(s).isFull()) {
-	    b.sendItemMessage(12,s);
-	    b.healLife(s, b.poke(s).totalLifePoints()/16);
-	}
+        if (!b.poke(s).isFull()) {
+            b.sendItemMessage(12,s);
+            b.healLife(s, b.poke(s).totalLifePoints()/16);
+        }
     }
 };
 
@@ -79,9 +84,9 @@ struct IMChoiceItem : public IM
 {
     IMChoiceItem() {
         functions["UponSetup"] = &us;
-	functions["MovesPossible"] = &mp;
+        functions["MovesPossible"] = &mp;
         functions["BeforeTargetList"] = &btl;
-	functions["AfterTargetList"] = &atl;
+        functions["AfterTargetList"] = &atl;
     }
 
     static void us(int s, int, BS &b) {
@@ -89,26 +94,26 @@ struct IMChoiceItem : public IM
     }
 
     static void mp(int s, int, BS &b) {
-	if (!poke(b,s).contains("ChoiceMemory")) {
-	    return;
-	}
-	int mem = poke(b,s)["ChoiceMemory"].toInt();
-	int index=-1;
-	for (int i = 0; i < 4; i++) {
-	    if (mem  == b.move(s, i)) {
-		index = i;
-		break;
-	    }
-	}
+        if (!poke(b,s).contains("ChoiceMemory")) {
+            return;
+        }
+        int mem = poke(b,s)["ChoiceMemory"].toInt();
+        int index=-1;
+        for (int i = 0; i < 4; i++) {
+            if (mem  == b.move(s, i)) {
+                index = i;
+                break;
+            }
+        }
         /* Happens for example when using metronome + fly, and is correct in regard
            to the ingame behavior */
         if (index == -1)
             return;
-	for (int i = 0; i < 4; i++) {
-	    if (index != i) {
-		turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
-	    }
-	}
+        for (int i = 0; i < 4; i++) {
+            if (index != i) {
+                turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
+            }
+        }
     }
 
     static void btl(int s, int, BS &b) {
@@ -122,26 +127,26 @@ struct IMChoiceItem : public IM
         if (b.gen() > 4)
             return;
         /* Last move used is here not to take "special occurence" moves */
-	poke(b,s)["ChoiceMemory"] = poke(b,s)["LastMoveUsed"];
+        poke(b,s)["ChoiceMemory"] = poke(b,s)["LastMoveUsed"];
     }
 };
 
 struct IMStatModifier : public IM
 {
     IMStatModifier() {
-	functions["StatModifier"] = &sm;
+        functions["StatModifier"] = &sm;
     }
 
     static void sm(int s, int, BS &b) {
-	QString args = poke(b,s)["ItemArg"].toString();
-	turn(b,s)["Stat" + args.left(1) + "ItemModifier"] = args.mid(2).toInt();
+        QString args = poke(b,s)["ItemArg"].toString();
+        turn(b,s)["Stat" + args.left(1) + "ItemModifier"] = args.mid(2).toInt();
     }
 };
 
 struct IMFocusBand : public IM
 {
     IMFocusBand() {
-	functions["BeforeTakingDamage"] = &btd;
+        functions["BeforeTakingDamage"] = &btd;
         functions["UponSelfSurvival"] = &uodr;
     }
 
@@ -155,8 +160,8 @@ struct IMFocusBand : public IM
     }
 
     static void uodr(int s, int, BS &b) {
-	if (b.koed(s))
-	    return;
+        if (b.koed(s))
+            return;
 
         b.sendItemMessage(4, s);
         turn(b,s)["SurviveReason"] = true;
@@ -166,22 +171,22 @@ struct IMFocusBand : public IM
 struct IMFocusSash : public IM
 {
     IMFocusSash() {
-	functions["BeforeTakingDamage"] = &btd;
+        functions["BeforeTakingDamage"] = &btd;
         functions["UponSelfSurvival"] = &uss;
     }
 
     static void btd(int s, int t, BS &b) {
-	if(b.poke(s).isFull()) {
+        if(b.poke(s).isFull()) {
             if (b.gen() <= 4)
                 turn(b,s)["CannotBeKoedBy"] = t;
             else
                 turn(b,s)["CannotBeKoedAt"] = b.attackCount();
-	}
+        }
     }
 
     static void uss(int s, int, BS &b) {
         if (b.koed(s))
-	    return;
+            return;
 
         b.sendItemMessage(5, s);
         b.disposeItem(s);
@@ -193,47 +198,47 @@ struct IMFocusSash : public IM
 struct IMLagging : public IM
 {
     IMLagging() {
-	functions["TurnOrder"] = &tu;
+        functions["TurnOrder"] = &tu;
     }
     static void tu (int s, int, BS &b) {
-	turn(b,s)["TurnOrder"] = -2;
+        turn(b,s)["TurnOrder"] = -2;
     }
 };
 
 struct IMBoostPokeStat : public IM
 {
     IMBoostPokeStat() {
-	functions["StatModifier"] = &sm;
+        functions["StatModifier"] = &sm;
     }
     static void sm(int s,int, BS &b) {
         int num = b.pokenum(s).pokenum;
-	QStringList args = poke(b,s)["ItemArg"].toString().split('_');
-	if(!args[0].split('/').contains(QString::number(num))) {
-	    return;
-	}
-	int boost = args[1].toInt();
-	for (int i = 2; i < args.size(); i++) {
-	    turn(b,s)["Stat" + args[i] + "ItemModifier"] = boost;
-	}
+        QStringList args = poke(b,s)["ItemArg"].toString().split('_');
+        if(!args[0].split('/').contains(QString::number(num))) {
+            return;
+        }
+        int boost = args[1].toInt();
+        for (int i = 2; i < args.size(); i++) {
+            turn(b,s)["Stat" + args[i] + "ItemModifier"] = boost;
+        }
     }
 };
 
 struct IMBoostCategory : public IM
 {
     IMBoostCategory() {
-	functions["BasePowerModifier"] = &bpm;
+        functions["BasePowerModifier"] = &bpm;
     }
     static void bpm(int s, int, BS &b) {
         if (tmove(b,s).category == poke(b,s)["ItemArg"]) {
-	    turn(b,s)["BasePowerItemModifier"] = 1;
-	}
+            turn(b,s)["BasePowerItemModifier"] = 1;
+        }
     }
 };
 
 struct IMBoostType : public IM
 {
     IMBoostType() {
-	functions["BasePowerModifier"] = &bpm;
+        functions["BasePowerModifier"] = &bpm;
     }
     static void bpm(int s, int, BS &b) {
         if (tmove(b,s).type == poke(b,s)["ItemArg"]) {
@@ -241,41 +246,42 @@ struct IMBoostType : public IM
                 turn(b,s)["BasePowerItemModifier"] = 2;
             else
                 turn(b,s)["BasePowerItemModifier"] = 1;
-	}
+        }
     }
 };
 
 struct IMZoomLens : public IM
 {
     IMZoomLens() {
-	functions["StatModifier"] = &sm;
+        functions["StatModifier"] = &sm;
     }
 
     static void sm(int s, int t, BS &b) {
-	if (turn(b,t)["HasMoved"].toBool() == true) {
+        if (turn(b,t)["HasMoved"].toBool() == true) {
             turn(b,s)["Stat6ItemModifier"] = 4;
-	}
+        }
     }
 };
 
 struct IMStatusOrb : public IM
 {
     IMStatusOrb() {
-        functions["EndTurn66"] = &et;
+        functions["EndTurn6.7"] = &et; /* Gen 4 */
+        functions["EndTurn26.2"] = &et; /* Gen 5 */
     }
 
     static void et(int s, int, BS &b) {
-	if (b.poke(s).status() != Pokemon::Fine) {
-	    return;
-	}
+        if (b.poke(s).status() != Pokemon::Fine) {
+            return;
+        }
         int status = poke(b,s)["ItemArg"].toInt();
         if (!b.canGetStatus(s, status))
             return;
         if (status == Pokemon::Burnt) {
-	    b.sendItemMessage(19,s,0);
-	} else {
-	    b.sendItemMessage(19,s,1);
-	}
+            b.sendItemMessage(19,s,0);
+        } else {
+            b.sendItemMessage(19,s,1);
+        }
         b.inflictStatus(s, status, s, status == Pokemon::Poisoned ? 15: 0, status == Pokemon::Poisoned ? 15: 0);
     }
 };
@@ -283,20 +289,20 @@ struct IMStatusOrb : public IM
 struct IMLifeOrb : public IM
 {
     IMLifeOrb() {
-	functions["Mod2Modifier"] = &m2m;
-	functions["UponDamageInflicted"] = &udi;
+        functions["Mod2Modifier"] = &m2m;
+        functions["UponDamageInflicted"] = &udi;
         functions["AfterTargetList"] = &atl;
     }
 
     static void m2m(int s, int, BS &b) {
-	turn(b,s)["ItemMod2Modifier"] = 3;
+        turn(b,s)["ItemMod2Modifier"] = 3;
     }
 
     static void udi(int s, int t, BS &b) {
         if (s == t)
-	    return; /* life orb doesn't recoil with self damage */
-	if (b.koed(s))
-	    return;
+            return; /* life orb doesn't recoil with self damage */
+        if (b.koed(s))
+            return;
 
         /* In gen 4, it does not damage the user if the foe has a substitute. In gen 5, it does */
         if (b.gen() <= 4 && turn(b,t).contains("DamageTakenBy") && turn(b,t)["DamageTakenBy"].toInt() == s) {
@@ -309,7 +315,7 @@ struct IMLifeOrb : public IM
 
     static void atl(int s, int, BS &b) {
         if (turn(b,s).value("ActivateLifeOrb").toBool() && !turn(b,s).value("NoLifeOrbActivation").toBool()
-            && !b.hasWorkingAbility(s, Ability::MagicGuard)) {
+                && !b.hasWorkingAbility(s, Ability::MagicGuard)) {
             if (b.gen() >= 5)
                 b.sendItemMessage(21,s);
 
@@ -331,7 +337,7 @@ struct IMLifeOrb : public IM
 struct IMScopeLens : public IM
 {
     IMScopeLens() {
-	functions["BeforeTargetList"] = &btl;
+        functions["BeforeTargetList"] = &btl;
     }
 
     static void btl(int s, int, BS &b) {
@@ -342,125 +348,126 @@ struct IMScopeLens : public IM
 struct IMShellBell : public IM
 {
     IMShellBell() {
-	functions["UponDamageInflicted"] = &udi;
+        functions["UponDamageInflicted"] = &udi;
     }
 
     static void udi(int s, int t, BS &b) {
-	if (s==t)
-	    return;
+        if (s==t)
+            return;
         if (b.koed(s) || b.hasWorkingAbility(s, Ability::Encourage))
-	    return;
+            return;
 
-    if (b.poke(s).lifePoints() == b.poke(s).totalLifePoints()) {
-        // Don't heal if at full health already
-        return;
-    }
+        if (b.poke(s).lifePoints() == b.poke(s).totalLifePoints()) {
+            // Don't heal if at full health already
+            return;
+        }
 
-	b.sendItemMessage(24, s);
-	b.healLife(s, turn(b,s)["DamageInflicted"].toInt()/8);
+        b.sendItemMessage(24, s);
+        b.healLife(s, turn(b,s)["DamageInflicted"].toInt()/8);
     }
 };
 
 struct IMCriticalPoke : public IM
 {
     IMCriticalPoke() {
-	functions["BeforeTargetList"] = &btl;
+        functions["BeforeTargetList"] = &btl;
     }
 
     static void btl(int s, int, BS &b) {
         if (b.pokenum(s).pokenum == poke(b,s)["ItemArg"].toInt()) {
             tmove(b,s).critRaise += 2;
-	}
+        }
     }
 };
 
 struct IMPokeTypeBoost : public IM
 {
     IMPokeTypeBoost() {
-	functions["BasePowerModifier"] = &bpm;
+        functions["BasePowerModifier"] = &bpm;
     }
     static void bpm(int s, int, BS &b) {
-	QStringList args = poke(b,s)["ItemArg"].toString().split('_');
+        QStringList args = poke(b,s)["ItemArg"].toString().split('_');
         QStringList pokes = args[0].split('/');
         if (!pokes.contains(QString::number(b.pokenum(s).pokenum)))
-	    return;
+            return;
 
         int type = tmove(b,s).type;
-	for (int i = 1; i < args.size(); i++) {
+        for (int i = 1; i < args.size(); i++) {
             if (type == args[i].toInt())
-		turn(b,s)["BasePowerItemModifier"] = 2;
-	}
+                turn(b,s)["BasePowerItemModifier"] = 2;
+        }
     }
 };
 
 struct IMStickyBarb : public IM
 {
     IMStickyBarb() {
-        functions["EndTurn618"] = &et;
-	functions["UponPhysicalAssault"] = &upa;
+        functions["EndTurn6.19"] = &et; /* Gen 4 */
+        functions["EndTurn26.2"] = &et; /* Gen 5 */
+        functions["UponPhysicalAssault"] = &upa;
     }
 
     static void et(int s, int, BS &b) {
         if (b.hasWorkingAbility(s, Ability::MagicGuard))
             return;
 
-	b.sendItemMessage(29,s,0);
-	b.inflictDamage(s, b.poke(s).totalLifePoints()/8,s);
+        b.sendItemMessage(29,s,0);
+        b.inflictDamage(s, b.poke(s).totalLifePoints()/8,s);
     }
 
     static void upa(int s, int t, BS &b) {
-	if (!b.koed(t) && b.poke(t).item() == 0) {
-	    b.poke(t).item() = b.poke(s).item();
-	    b.disposeItem(s);
-	}
+        if (!b.koed(t) && b.poke(t).item() == 0) {
+            b.poke(t).item() = b.poke(s).item();
+            b.disposeItem(s);
+        }
     }
 };
 
 struct IMMetronome : public IM
 {
     IMMetronome() {
-	functions["BeforeTargetList"] = &btl;
-	functions["Mod2Modifier"] = &m2m;
+        functions["BeforeTargetList"] = &btl;
+        functions["Mod2Modifier"] = &m2m;
     }
 
     static void btl(int s, int, BS &b) {
-	if (turn(b,s).contains("NoChoice")) {
-	    /* multiple turn move */
-	    return;
-	}
-	int count = poke(b,s)["IMMetroCount"].toInt();
-	int lslot = poke(b,s)["IMLastMoveSlot"].toInt();
-	int slot = poke(b,s)["MoveSlot"].toInt();
-	bool act = poke(b,s)["IMMetroActivating"].toBool();
-	poke(b,s)["IMLastMoveSlot"] = slot;
-	poke(b,s)["IMMetroActivating"] = true;
-	if (slot != lslot) {
-	    poke(b,s)["IMMetroCount"] = 0;
-	    return;
-	}
+        if (turn(b,s).contains("NoChoice")) {
+            /* multiple turn move */
+            return;
+        }
+        int count = poke(b,s)["IMMetroCount"].toInt();
+        int lslot = poke(b,s)["IMLastMoveSlot"].toInt();
+        int slot = poke(b,s)["MoveSlot"].toInt();
+        bool act = poke(b,s)["IMMetroActivating"].toBool();
+        poke(b,s)["IMLastMoveSlot"] = slot;
+        poke(b,s)["IMMetroActivating"] = true;
+        if (slot != lslot) {
+            poke(b,s)["IMMetroCount"] = 0;
+            return;
+        }
         if (tmove(b,s).power == 0) {
-	    return;
-	}
-	if (act) {
-	    poke(b,s)["IMMetroCount"] = std::min(10, count+1);
-	}
+            return;
+        }
+        if (act) {
+            poke(b,s)["IMMetroCount"] = std::min(10, count+1);
+        }
     }
 
     static void m2m(int s, int, BS &b) {
-	 turn(b,s)["ItemMod2Modifier"] = poke(b,s)["IMMetroCount"];
+        turn(b,s)["ItemMod2Modifier"] = poke(b,s)["IMMetroCount"];
     }
 };
 
 struct IMQuickClaw : public IM
 {
     IMQuickClaw() {
-	functions["TurnOrder"] = &tu;
+        functions["TurnOrder"] = &tu;
     }
     static void tu(int s, int, BS &b) {
         if (b.true_rand() % 5 == 0) {
-	    turn(b,s)["TurnOrder"] = 2;
+            turn(b,s)["TurnOrder"] = 2;
             turn(b,s)["QuickClawed"] = true;
-	}
+        }
     }
 };
 
@@ -472,40 +479,38 @@ struct IMMentalHerb : public IM
 
     static void as(int s, int, BS &b) {
         bool used = false;
-	if (poke(b,s).contains("AttractedTo")) {
-	    int seducer = poke(b,s)["AttractedTo"].toInt();
-	    if (poke(b,seducer).contains("Attracted") && poke(b,seducer)["Attracted"].toInt() == s) {
-		removeFunction(poke(b,s), "DetermineAttackPossible", "Attract");
-		poke(b,s).remove("AttractedTo");
-                used = true;
-	    }
-	}
-        if (b.gen() >= 5) {
-            if (poke(b,s).contains("TauntsUntil")) {
-                removeFunction(poke(b,s), "MovesPossible", "Taunt");
-                removeFunction(poke(b,s), "MovePossible", "Taunt");
-                removeFunction(poke(b,s), "EndTurn611", "Taunt");
-                poke(b,s).remove("TauntsUntil");
+        if (poke(b,s).contains("AttractedTo")) {
+            int seducer = poke(b,s)["AttractedTo"].toInt();
+            if (poke(b,seducer).contains("Attracted") && poke(b,seducer)["Attracted"].toInt() == s) {
+                removeFunction(poke(b,s), "DetermineAttackPossible", "Attract");
+                poke(b,s).remove("AttractedTo");
                 used = true;
             }
+        }
+        if (b.gen() >= 5) {
             if (poke(b,s).contains("Tormented")) {
                 removeFunction(poke(b,s), "MovesPossible", "Torment");
                 poke(b,s).remove("Tormented");
                 used = true;
             }
-            if (poke(b,s).contains("EncoresUntil")) {
-                removeFunction(poke(b,s), "MovesPossible", "Encore");
-                removeFunction(poke(b,s), "EndTurn611", "Encore");
-                poke(b,s).remove("EncoresUntil");
+            if (b.counters(s).hasCounter(BC::Taunt)) {
+                removeFunction(poke(b,s), "MovesPossible", "Taunt");
+                removeFunction(poke(b,s), "MovePossible", "Taunt");
+                b.removeEndTurnEffect(BS::PokeEffect, s, "Taunt");
                 used = true;
             }
-            if (poke(b,s).contains("DisablesUntil")) {
+            if (b.counters(s).hasCounter(BC::Encore)) {
+                removeFunction(poke(b,s), "MovesPossible", "Encore");
+                b.removeEndTurnEffect(BS::PokeEffect, s, "Encore");
+                used = true;
+            }
+            if (b.counters(s).hasCounter(BC::Disable)) {
                 removeFunction(poke(b,s), "MovesPossible", "Disable");
                 removeFunction(poke(b,s), "MovePossible", "Disable");
-                removeFunction(poke(b,s), "EndTurn611", "Disable");
-                poke(b,s).remove("DisablesUntil");
+                b.removeEndTurnEffect(BS::PokeEffect, s, "Disable");
                 used = true;
             }
+            b.counters(s).clear();
         }
         if (used) {
             b.sendItemMessage(7,s);
@@ -518,21 +523,21 @@ struct IMWhiteHerb : public IM
 {
     IMWhiteHerb() {
         functions["UponSetup"] = &as;
-	functions["AfterStatChange"] = &as;
+        functions["AfterStatChange"] = &as;
     }
 
     static void as(int s, int, BS &b) {
-	bool act = false;
-	for (int i = 1; i <= 7; i++) {
+        bool act = false;
+        for (int i = 1; i <= 7; i++) {
             if (fpoke(b,s).boosts[i] < 0) {
-		act = true;
+                act = true;
                 fpoke(b,s).boosts[i] = 0;
-	    }
-	}
-	if (act) {
-	    b.sendItemMessage(3,s);
-	    b.disposeItem(s);
-	}
+            }
+        }
+        if (act) {
+            b.sendItemMessage(3,s);
+            b.disposeItem(s);
+        }
     }
 };
 

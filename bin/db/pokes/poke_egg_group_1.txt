@@ -431,7 +431,7 @@
 430 Flying
 431 Ground
 432 Ground
-433 
+433 Indeterminate
 434 Ground
 435 Ground
 436 Mineral

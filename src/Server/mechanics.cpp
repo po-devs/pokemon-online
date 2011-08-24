@@ -41,6 +41,11 @@ BattleSituation::BasicMoveInfo & Mechanics::tmove(BattleSituation &b, int source
     return b.tmove(source);
 }
 
+BattleSituation::priorityBracket Mechanics::makeBracket(int b, int p)
+{
+    return BattleSituation::priorityBracket(b, p);
+}
+
 void Mechanics::addFunction(BattleSituation::context &c, const QString &effect, const QString &name, Mechanics::function f)
 {
     if (!c.contains("Effect_" + effect)) {

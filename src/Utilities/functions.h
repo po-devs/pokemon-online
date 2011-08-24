@@ -73,6 +73,9 @@ inline QString tu(const QString &in) {
 
 inline QString toColor(const QString &mess, const QColor &col)
 {
+    if (!col.isValid()) {
+        return mess;
+    }
     return QString("<span style='color:%1'>%2</span>").arg(col.name(), mess);
 }
 
@@ -80,6 +83,8 @@ inline QString toBoldColor(const QString &mess, const QColor &col)
 {
     return QString("<b><span style='color:%1'>%2</span></b>").arg(col.name(), mess);
 }
+
+QString cleanStringForFiles(const QString &title);
 
 inline long int true_rand() {
     return (rand() + unsigned(clock()))%RAND_MAX;
@@ -110,4 +115,20 @@ void writeSettings(QWidget *w);
 void loadSettings(QWidget *w, const QSize &defaultSize = QSize());
 
 QString slug(const QString &s);
+
+template<class T>
+void setDefaultValue(const QString &key, T value)
+{
+    QSettings s;
+    if (s.value(key).isNull())
+        s.setValue(key, value);
+}
+
+template<class T>
+void setDefaultValue(QSettings &s, const QString &key, T value)
+{
+    if (s.value(key).isNull())
+        s.setValue(key, value);
+}
+
 #endif // FUNCTIONS_H

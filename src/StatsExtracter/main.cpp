@@ -1,6 +1,6 @@
+#include "../PokemonInfo/pokemoninfo.h"
 #include <QtCore>
 #include <ctime>
-#include "../PokemonInfo/pokemoninfo.h"
 
 /*
  * First we move to a tier.
@@ -413,7 +413,7 @@ struct Bcc {
     int leadUsage;
 
     Bcc(const QByteArray &a, int usage, int leadUsage):
-            buffer(a), usage(usage), leadUsage(leadUsage) {
+        buffer(a), usage(usage), leadUsage(leadUsage) {
 
     }
 };
@@ -516,6 +516,51 @@ void parseGlobals(Skeleton &s, QHash<int, int> &movesets, int totalUsage, const 
     }
 }
 
+void mergeFilesByAppending(QDir d1, QDir d2, const QStringList &filters)
+{
+    QStringList files = d1.entryList(filters,QDir::Files);
+
+    foreach(QString file, files) {
+        if (!d2.exists(file)) {
+            QFile::rename(d1.absoluteFilePath(file), d2.absoluteFilePath(file));
+        } else {
+            QFile in(d1.absoluteFilePath(file));
+            QFile out(d2.absoluteFilePath(file));
+
+            if (!in.open(QIODevice::ReadOnly)) {
+                fprintf(stderr, "Error %d when opening file %s: %s.\n", in.error(), d1.absoluteFilePath(file).toUtf8().data(), in.errorString().toUtf8().data());
+                continue;
+            }
+
+            if (!out.open(QIODevice::Append)) {
+                fprintf(stderr, "Error %d when opening file %s: %s.\n", out.error(), d2.absoluteFilePath(file).toUtf8().data(), out.errorString().toUtf8().data());
+                continue;
+            }
+
+            out.write(in.readAll());
+
+            in.close();
+            in.remove();
+        }
+    }
+}
+
+bool loadRanks(QList<QPair<Pokemon::uniqueId, qint32> > &ranks, QString filename)
+{
+    QFile f(filename);
+    if (!f.open(QIODevice::ReadOnly)) {
+        return false;
+    }
+    QByteArray content;
+
+    content = f.readAll();
+    QDataStream da(&content, QIODevice::ReadOnly);
+    da.setVersion(QDataStream::Qt_4_7);
+    da >> ranks;
+
+    return true;
+}
+
 int main(int argc, char *argv[])
 {
     (void) argc;
@@ -532,6 +577,134 @@ int main(int argc, char *argv[])
     srand(time(NULL));
     for (int i = 0; i < 100; i++)
         rand();
+
+    #define PRINTOPT(a, b) (fprintf(stdout, "  %-25s\t%s\n", a, b))
+
+    bool standardUsage = true;
+
+    QList<QPair<QString, QString> > merges;
+    QStringList tiers;
+
+    //parse commandline arguments
+    for(int i = 0; i < argc; i++){
+        if(strcmp( argv[i], "-m") == 0 || strcmp(argv[i], "--merge") == 0){
+            if (++i == argc || ++i == argc){
+                fprintf(stderr, "Not enough tiers for merge provided.\n");
+                return 1;
+            }
+            merges.push_back(QPair<QString, QString>(argv[i-1], argv[i]));
+            standardUsage = false;
+        } else if(strcmp( argv[i], "-h") == 0 || strcmp( argv[i], "--help") == 0){
+            fprintf(stdout, "Stats Extracter for Pokeymon-Online Help\n");
+            fprintf(stdout, "Please visit http://www.pokemon-online.eu/ for more information.\n");
+            fprintf(stdout, "\n");
+            fprintf(stdout, "Usage: ./StatsExtracter [[options]]\n");
+            fprintf(stdout, "Options:\n");
+            PRINTOPT("-m, --merge [TIER1] [TIER2]", "Merge the files of Tier1 into Tier2. It's advised to have the stats off during that time.");
+            PRINTOPT("-t, --tier [TIER]", "Process the given tier, instead of processing all tiers.");
+            PRINTOPT("-h, --help", "Displays this help.");
+            fprintf(stdout, "\n");
+            return 0;   //exit app
+        } else if(strcmp( argv[i], "-t") == 0 || strcmp( argv[i], "--tier") == 0){
+            if (++i == argc){
+                fprintf(stderr, "No tier provided.\n");
+                return 1;
+            }
+            tiers.push_back(argv[i]);
+        }
+    }
+
+    typedef QPair<QString, QString> spair;
+    foreach(spair merge, merges) {
+        QString t1 = merge.first;
+        QString t2 = merge.second;
+
+        fprintf(stdout, "\nMerging Tier %s into %s\n", t1.toUtf8().data(), t2.toUtf8().data());
+
+        QDir d;
+        d.cd("usage_stats/raw");
+
+        if (!d.exists(t1)) {
+            fprintf(stderr, "Tier %s doesn't have a usage stats folder.\n", t1.toUtf8().data());
+            continue;
+        }
+        if (!d.exists(t2)) {
+            fprintf(stderr, "Tier %s doesn't have a usage stats folder.\n", t2.toUtf8().data());
+            continue;
+        }
+
+        QDir d1 = d;
+        d1.cd(t1);
+
+        QDir d2 = d;
+        d2.cd(t2);
+
+        mergeFilesByAppending(d1, d2, QStringList() << "*.stat");
+
+        fprintf(stdout, "Merged raw stats\n");
+
+        if (d1.exists("ranks.rnk")) {
+            if (!d2.exists("ranks.rnk")) {
+                QFile::rename(d1.absoluteFilePath("ranks.rnk"), d2.absoluteFilePath("ranks.rnk"));
+            } else {
+                QList<QPair<Pokemon::uniqueId, qint32> > ranks, ranks2, finalranks;
+
+                if (!loadRanks(ranks, d1.absoluteFilePath("ranks.rnk")) ||
+                        !loadRanks(ranks2, d2.absoluteFilePath("ranks.rnk"))) {
+                    fprintf(stderr, "Error when opening loading rankes stats.\n");
+                    goto end;
+                }
+
+                QHash<Pokemon::uniqueId, qint32> results;
+                for (int i = 0; i < ranks.size(); i++) {
+                    results[ranks[i].first] += ranks[i].second;
+                }
+                for (int i = 0; i < ranks2.size(); i++) {
+                    results[ranks2[i].first] += ranks2[i].second;
+                }
+
+                QHashIterator<Pokemon::uniqueId, int> hit(results);
+                QMultiMap<int, Pokemon::uniqueId> reverseUsage;
+
+                while (hit.hasNext()) {
+                    hit.next();
+                    reverseUsage.insert(hit.value(), hit.key());
+                }
+
+                QMapIterator<int, Pokemon::uniqueId> it(reverseUsage);
+                it.toBack();
+                while (it.hasPrevious()) {
+                    it.previous();
+                    finalranks.push_back(QPair<Pokemon::uniqueId, int>(it.value(), it.key()));
+                }
+
+                QFile out(d2.absoluteFilePath("ranks.rnk"));
+                if (!out.open(QIODevice::WriteOnly)) {
+                    fprintf(stderr, "Error %d when opening file %s: %s.\n", out.error(), d2.absoluteFilePath("ranks.rnk").toUtf8().data(), out.errorString().toUtf8().data());
+                    goto end;
+                }
+
+                QByteArray data;
+                QDataStream d(&data, QIODevice::WriteOnly);
+                d.setVersion(QDataStream::Qt_4_7);
+                d << finalranks;
+
+                out.write(data);
+                out.close();
+
+                d1.remove("ranks.rnk");
+            }
+            fprintf(stdout, "Merged ranked stats\n");
+        }
+
+        end:
+
+        fprintf(stdout, "Merge done!\n");
+    }
+
+    if (!standardUsage && tiers.size() == 0) {
+        return 0;
+    }
 
     QByteArray data;
 
@@ -560,6 +733,10 @@ int main(int argc, char *argv[])
 
     QStringList dirs = d.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
+    if (tiers.size() > 0) {
+        dirs = tiers;
+    }
+
     QList<QPair<QString, int> > mostUsedPokemon;
 
     foreach(QString dir, dirs) {
@@ -579,16 +756,9 @@ int main(int argc, char *argv[])
         fprintf(stdout, "\nDoing Tier %s\n", dir.toUtf8().data());
 
         foreach(QString file, files) {
-            if (file.length() != 3 && !(file.contains('.') && file.indexOf('.') == 3)){
+            if (! (file.length() == 3 || file.indexOf(".stat") != -1)){
                 if (file == "ranks.rnk") {
-                    QFile f(d.absoluteFilePath(file));
-                    f.open(QIODevice::ReadOnly);
-                    QByteArray content;
-
-                    content = f.readAll();
-                    QDataStream da(&content, QIODevice::ReadOnly);
-                    da.setVersion(QDataStream::Qt_4_7);
-                    da >> ranks;
+                    loadRanks(ranks, d.absoluteFilePath(file));
                 }
                 continue;
             }
@@ -606,14 +776,17 @@ int main(int argc, char *argv[])
 
                 int pokenum = *((qint32*) buffer);
 
-                if (pokenum != 0) {
+                if (pokenum != 0 && PokemonInfo::Exists(pokenum)) {
                     usage[pokenum] += iusage;
                     if (ileadusage > 0) {
                         leadUsage[pokenum] += ileadusage;
                     }
                     buffers[pokenum].append(Bcc(QByteArray(buffer, 32), iusage, ileadusage));
                 }
-                totalusage += iusage;
+                /* Avoid corrupted data , partially */
+                if (PokemonInfo::Exists(pokenum)) {
+                    totalusage += iusage;
+                }
             }
 
             fclose(f);

@@ -167,7 +167,8 @@ private:
     void ban(int dest, int src);
 
     Analyzer *registry_connection;
-    QString serverName, serverDesc, serverAnnouncement;
+    QString serverName, serverDesc;
+    QString serverAnnouncement;
     quint16 serverPrivate, serverPlayerMax;
     QList<quint16>  serverPorts;
     QStringList proxyServers;

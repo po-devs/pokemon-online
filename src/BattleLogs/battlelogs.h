@@ -6,6 +6,10 @@
 #include "../Server/battleinterface.h"
 
 #include <QtCore>
+#include <QWidget>
+
+class QCheckBox;
+class QTextEdit;
 
 /*
  Saves logs in raw or plain text.
@@ -18,7 +22,7 @@
 
 extern "C" {
 BATTLELOGSSHARED_EXPORT ServerPlugin * createPluginClass(ServerInterface*);
-};
+}
 
 class PokeBattle;
 

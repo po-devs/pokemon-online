@@ -12,6 +12,9 @@ struct AMFlashFire : public AM {
     }
 
     static void op(int s, int t, BS &b) {
+        if (b.gen() <= 4 && b.poke(s).status() == Pokemon::Frozen) {
+            return;
+        }
         if (type(b,t) == Pokemon::Fire && (b.gen() >= 4 || tmove(b,t).power > 0) ) {
             turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             if (!poke(b,s).contains("FlashFired")) {

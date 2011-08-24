@@ -3,11 +3,12 @@ namespace Pokemon {
 }
 unsigned int qHash (const Pokemon::uniqueId &key);
 
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
+#include <QCompleter>
+#include <QMessageBox>
 
 void MoveGen::init(int gen, Pokemon::uniqueId pokenum)
 {

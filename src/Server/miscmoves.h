@@ -2,11 +2,13 @@
 #define MISCMOVES_H
 
 #include "moves.h"
+#include "battlecounterindex.h"
 
 /* There's gonna be tons of structures inheriting it,
     so let's do it fast */
 typedef MoveMechanics MM;
 typedef BattleSituation BS;
+typedef BattleCounterIndex BC;
 
 struct MMDisable : public MM
 {
@@ -22,7 +24,7 @@ struct MMDisable : public MM
     }
 
     static bool failOn(int t, BS &b) {
-        if (poke(b,t).contains("DisablesUntil") && poke(b,t).value("DisablesUntil").toInt() >= b.turn()) {
+        if (b.counters(t).hasCounter(BC::Disable)) {
             return true;
         }
         if (!poke(b,t).contains("LastMoveUsedTurn")) {
@@ -49,6 +51,10 @@ struct MMDisable : public MM
         return false;
     }
 
+    static BS::priorityBracket bracket(int gen) {
+        return gen <= 4 ? makeBracket(6, 12) : makeBracket(14, 0) ;
+    }
+
     static void uas (int s, int t, BS &b) {
         int mv = poke(b,t)["LastMoveUsed"].toInt();
         b.sendMoveMessage(28,0,s,0,t,mv);
@@ -56,23 +62,22 @@ struct MMDisable : public MM
             b.sendItemMessage(7,t);
             b.disposeItem(t);
         } else {
-            poke(b,t)["DisablesUntil"] = b.turn() + 3 + (b.true_rand()%4);
+            b.counters(t).addCounter(BC::Disable, 3 + (b.true_rand()%4));
             poke(b,t)["DisabledMove"] = mv;
             addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
             addFunction(poke(b,t), "MovePossible", "Disable", &mp);
-            addFunction(poke(b,t), "EndTurn611", "Disable", &et);
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Disable");
         }
     }
 
     static void et (int s, int, BS &b)
     {
-        int tt = poke(b,s)["DisablesUntil"].toInt();
-        if (tt <= b.turn()) {
+        if (b.counters(s).count(BC::Disable) < 0) {
             removeFunction(poke(b,s), "MovesPossible", "Disable");
             removeFunction(poke(b,s), "MovePossible", "Disable");
-            removeFunction(poke(b,s), "EndTurn611", "Disable");
-            poke(b,s).remove("DisablesUntil");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "Disable");
             b.sendMoveMessage(28,2,s);
+            b.counters(s).removeCounter(BC::Disable);
         }
     }
 

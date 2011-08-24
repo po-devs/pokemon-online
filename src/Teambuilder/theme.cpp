@@ -2,6 +2,8 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
 #include <QtCore>
+#include <QFontDatabase>
+#include <QPixmapCache>
 
 static void fill_container_with_file(QList<QColor> &container, const QString &filename)
 {
@@ -45,6 +47,7 @@ QList<QColor> Theme::m_ChatColors;
 QList<QPixmap> Theme::m_TPics;
 QHash<int, QPixmap> Theme::m_statusIcons;
 QHash<int, QPixmap> Theme::m_battleIcons;
+QHash<QString, QColor> Theme::m_Colors;
 
 QString Theme::path(const QString& file, bool def)
 {
@@ -62,6 +65,17 @@ void Theme::loadColors()
     fill_container_with_file(m_TColors, path("types/type_colors.txt"));
     fill_container_with_file(m_CColors, path("categories/category_colors.txt"));
     fill_container_with_file(m_ChatColors, path("client/chat_colors.txt"));
+
+    /* Loads first the default file, in case the custom file misses
+      some keys */
+    QSettings ini(path("colors.ini", true), QSettings::IniFormat);
+    foreach(QString key, ini.allKeys()) {
+        m_Colors[key] = ini.value(key).value<QColor>();
+    }
+    QSettings ini2(path("colors.ini"), QSettings::IniFormat);
+    foreach(QString key, ini2.allKeys()) {
+        m_Colors[key] = ini2.value(key).value<QColor>();
+    }
 }
 
 void Theme::init(const QString &dir)
@@ -94,6 +108,11 @@ void Theme::Reload(const QString &dir)
 QColor Theme::TypeColor(int typenum)
 {
     return m_TColors[typenum];
+}
+
+QColor Theme::Color(const QString &code)
+{
+    return m_Colors.value(code);
 }
 
 QColor Theme::CategoryColor(int typenum)

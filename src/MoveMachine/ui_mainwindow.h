@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 3. Feb 17:08:25 2011
-**      by: Qt User Interface Compiler version 4.6.3
+** Created: Sun 7. Aug 00:43:48 2011
+**      by: Qt User Interface Compiler version 4.7.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -14,6 +14,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
@@ -36,8 +37,10 @@ public:
     QAction *actionCtrl_S;
     QAction *save;
     QWidget *centralWidget;
-    QListWidget *pokemonList;
+    QGridLayout *gridLayout;
     QLineEdit *pokemonName;
+    QListWidget *moveList;
+    QListWidget *pokemonList;
     QGroupBox *groupBox;
     QHBoxLayout *horizontalLayout;
     QRadioButton *gen1;
@@ -60,7 +63,6 @@ public:
     QListWidget *preMoves;
     QWidget *tab_6;
     QListWidget *dwMoves;
-    QListWidget *moveList;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QToolBar *mainToolBar;
@@ -78,15 +80,27 @@ public:
         save->setMenuRole(QAction::TextHeuristicRole);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        pokemonList = new QListWidget(centralWidget);
-        pokemonList->setObjectName(QString::fromUtf8("pokemonList"));
-        pokemonList->setGeometry(QRect(10, 70, 251, 192));
+        gridLayout = new QGridLayout(centralWidget);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         pokemonName = new QLineEdit(centralWidget);
         pokemonName->setObjectName(QString::fromUtf8("pokemonName"));
-        pokemonName->setGeometry(QRect(10, 40, 251, 20));
+
+        gridLayout->addWidget(pokemonName, 0, 0, 1, 1);
+
+        moveList = new QListWidget(centralWidget);
+        moveList->setObjectName(QString::fromUtf8("moveList"));
+
+        gridLayout->addWidget(moveList, 0, 1, 4, 1);
+
+        pokemonList = new QListWidget(centralWidget);
+        pokemonList->setObjectName(QString::fromUtf8("pokemonList"));
+
+        gridLayout->addWidget(pokemonList, 1, 0, 1, 1);
+
         groupBox = new QGroupBox(centralWidget);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        groupBox->setGeometry(QRect(10, 270, 291, 50));
         horizontalLayout = new QHBoxLayout(groupBox);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
@@ -116,9 +130,11 @@ public:
 
         horizontalLayout->addWidget(gen5);
 
+
+        gridLayout->addWidget(groupBox, 2, 0, 1, 1);
+
         pokeMoves = new QTabWidget(centralWidget);
         pokeMoves->setObjectName(QString::fromUtf8("pokeMoves"));
-        pokeMoves->setGeometry(QRect(10, 330, 381, 351));
         tab = new QWidget();
         tab->setObjectName(QString::fromUtf8("tab"));
         levelMoves = new QListWidget(tab);
@@ -161,9 +177,9 @@ public:
         dwMoves->setObjectName(QString::fromUtf8("dwMoves"));
         dwMoves->setGeometry(QRect(0, 0, 371, 321));
         pokeMoves->addTab(tab_6, QString());
-        moveList = new QListWidget(centralWidget);
-        moveList->setObjectName(QString::fromUtf8("moveList"));
-        moveList->setGeometry(QRect(430, 20, 301, 651));
+
+        gridLayout->addWidget(pokeMoves, 3, 0, 1, 1);
+
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));

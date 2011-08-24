@@ -1,56 +1,66 @@
 #include "mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "menu.h"
-#include "teambuilder.h"
+#include "Teambuilder/teambuilder.h"
 #include "client.h"
 #include "serverchoice.h"
 #include "../PokemonInfo/movesetchecker.h"
 #include "pluginmanager.h"
 #include "plugininterface.h"
 #include "theme.h"
+#include "../Utilities/functions.h"
 
 MainEngine::MainEngine() : displayer(0)
 {
-    pluginManager = new PluginManager();
+    pluginManager = new PluginManager(this);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    QSettings settings;
+    QSettings s;
     /* initializing the default init values if not there */
-    setDefaultValue("application_style", "plastique");
-    setDefaultValue("theme_2", "Themes/Dratini Dreams/");
+    setDefaultValue(s, "application_style", "plastique");
+    setDefaultValue(s, "theme_2", "Themes/Dratini Dreams/");
 
 #ifdef Q_OS_MACX
-    setDefaultValue("team_location", QDir::homePath() + "/Documents/trainer.tp");
-    setDefaultValue("battle_logs_directory", QDir::homePath() + "/Documents/Pokemon-Online Logs/");
+    setDefaultValue(s, "team_location", QDir::homePath() + "/Documents/trainer.tp");
 #else
-    setDefaultValue("team_location", "Team/trainer.tp");
-    setDefaultValue("battle_logs_directory", "Logs/");
+    setDefaultValue(s, "team_location", "Team/trainer.tp");
 #endif
-    setDefaultValue("battle_music_directory", "Music/Battle/");
-    setDefaultValue("save_battle_logs", false);
-    setDefaultValue("play_battle_music", false);
-    setDefaultValue("play_battle_sounds", false);
-    setDefaultValue("show_team", true);
-    setDefaultValue("enable_ladder", true);
-    setDefaultValue("show_player_events_idle", false);
-    setDefaultValue("show_player_events_battle", false);
-    setDefaultValue("show_player_events_channel", false);
-    setDefaultValue("show_player_events_team", false);
-    setDefaultValue("show_timestamps", true);
-    setDefaultValue("show_timestamps2", true);
-    setDefaultValue("animate_hp_bar", true);
-    setDefaultValue("sort_players_by_tier", false);
-    setDefaultValue("show_all_items", false);
+    setDefaultValue(s, "battle_music_directory", "Music/Battle/");
+    setDefaultValue(s, "play_battle_music", false);
+    setDefaultValue(s, "play_battle_sounds", false);
+    setDefaultValue(s, "show_team", true);
+    setDefaultValue(s, "enable_ladder", true);
+    setDefaultValue(s, "show_player_events_idle", false);
+    setDefaultValue(s, "show_player_events_battle", false);
+    setDefaultValue(s, "show_player_events_channel", false);
+    setDefaultValue(s, "show_player_events_team", false);
+    setDefaultValue(s, "show_timestamps", true);
+    setDefaultValue(s, "show_timestamps2", true);
+    setDefaultValue(s, "animate_hp_bar", true);
+    setDefaultValue(s, "sort_players_by_tier", false);
+    setDefaultValue(s, "show_all_items", false);
 
-    setDefaultValue("find_battle_force_rated", false);
-    setDefaultValue("find_battle_same_tier", true);
-    setDefaultValue("find_battle_range_on", true);
-    setDefaultValue("find_battle_range", 200);
+    setDefaultValue(s, "find_battle_force_rated", false);
+    setDefaultValue(s, "find_battle_same_tier", true);
+    setDefaultValue(s, "find_battle_range_on", true);
+    setDefaultValue(s, "find_battle_range", 200);
+
+    if (s.value("use_socks5_proxy", false).toBool() == true) {
+        s.beginGroup("socks5_proxy");
+        QNetworkProxy proxy;
+        proxy.setType(QNetworkProxy::Socks5Proxy);
+        proxy.setPort(s.value("port", 27977).toInt());
+        proxy.setHostName(s.value("host").toString());
+        proxy.setUser(s.value("user").toString());
+        proxy.setPassword(s.value("pass").toString());
+        s.endGroup();
+        QNetworkProxy::setApplicationProxy(proxy);
+    }
 
     PokemonInfo::init("db/pokes/", FillMode::Client);
-    MoveSetChecker::init("db/pokes/");
+    MoveSetChecker::init("db/pokes/", s.value("enforce_min_levels").toBool());
     ItemInfo::init("db/items/");
     MoveInfo::init("db/moves/");
     TypeInfo::init("db/types/");
@@ -60,20 +70,13 @@ MainEngine::MainEngine() : displayer(0)
     GenderInfo::init("db/genders/");
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
-    Theme::init(settings.value("theme_2").toString());
-
-    QStringList moves;
-    for (int i = 0; i < MoveInfo::NumberOfMoves(); i++) {
-        if (MoveInfo::Flags(i, 5) & Move::MischievousFlag) {
-            moves.push_back(MoveInfo::Name(i));
-        }
-    }
+    Theme::init(s.value("theme_2").toString());
 
     /* Loading the values */
-    QApplication::setStyle(settings.value("application_style").toString());
+    QApplication::setStyle(s.value("application_style").toString());
     loadStyleSheet();
-    loadTeam(settings.value("team_location").toString());
-    
+    loadTeam(s.value("team_location").toString());
+
     launchMenu();
 }
 
@@ -84,12 +87,14 @@ MainEngine::~MainEngine()
 
 QMenuBar *MainEngine::transformMenuBar(QMenuBar *param)
 {
-    QMenu *m = param->addMenu(tr("Plugins"));
-    m->addAction(tr("Plugin Manager"), this, SLOT(openPluginManager()));
-    m->addSeparator();
+    if (param) {
+        QMenu *m = param->addMenu(tr("Plugins"));
+        m->addAction(tr("Plugin Manager"), this, SLOT(openPluginManager()));
+        m->addSeparator();
 
-    foreach(QString plugin, pluginManager->getVisiblePlugins()) {
-        m->addAction(plugin, this, SLOT(openPluginConfiguration()));
+        foreach(QString plugin, pluginManager->getVisiblePlugins()) {
+            m->addAction(plugin, this, SLOT(openPluginConfiguration()));
+        }
     }
 
     return param;
@@ -133,7 +138,7 @@ void MainEngine::loadStyleSheet()
     displayer->resize(widget->size()); \
     displayer->setWindowTitle(tr("Pokemon Online")); \
     displayer->setCentralWidget(widget);\
-    displayer->setMenuBar(widget->createMenuBar(this));\
+    displayer->setMenuBar(transformMenuBar(widget->createMenuBar(this)));\
     loadSettings(widget, widget->defaultSize());\
     displayer->show();
 
@@ -157,19 +162,28 @@ void MainEngine::launchCredits()
         return;
     }
     QDialog d_credit;
-    d_credit.setMaximumSize(800,600);
+    d_credit.setMaximumSize(800,700);
     QVBoxLayout * l = new QVBoxLayout();
+    QScrollArea *scroll = new QScrollArea();
     QLabel * credit = new QLabel();
-    //credit->setMaximumSize(800,600);
-    l->addWidget(credit);
-    credit->setAttribute(Qt::WA_DeleteOnClose,true);
+    credit->setMargin(5);
     QTextStream out(&fichier);
     credit->setText(out.readAll());
+    scroll->setWidget(credit);
+    //credit->setMaximumSize(800,600);
+    l->addWidget(scroll);
+    scroll->show();
+    credit->setAttribute(Qt::WA_DeleteOnClose,true);
+
+    scroll->adjustSize();
     //MainEngineRoutine(d_credit);
     d_credit.setLayout(l);
     d_credit.move(this->displayer->geometry().x(),this->displayer->geometry().y());
-    d_credit.setStyleSheet("background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
-                                                       "stop:0 white, stop:1 #0ca0dd);");
+    d_credit.setStyleSheet(
+                "QWidget {background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
+                                                       "stop:0 white, stop:1 #0ca0dd);}"
+                "QLabel {background:transparent}"
+                           );
     d_credit.exec();
 }
 
@@ -183,11 +197,6 @@ void MainEngine::launchTeamBuilder()
 
 void MainEngine::launchServerChoice()
 {
-    if (trainerTeam()->trainerNick().length() == 0) {
-        QMessageBox::information(displayer, tr("Impossible to go online"), tr("You haven't set your name yet. Do so in the teambuilder."));
-        return;
-    }
-
     ServerChoice *choice = new ServerChoice(trainerTeam()->trainerNick());
     MainEngineRoutine(choice);
 
@@ -254,6 +263,12 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
 {
     if (nick.size() > 0)
         trainerTeam()->setTrainerNick(nick);
+
+    if (trainerTeam()->trainerNick().length() == 0) {
+        QMessageBox::information(displayer, tr("Impossible to go online"), tr("You haven't set your name yet. Do so in the teambuilder."));
+        return;
+    }
+
     Client * client = new Client(trainerTeam(), url, port);
     MainEngineRoutine(client);
 
@@ -262,8 +277,8 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
 
 void MainEngine::updateMenuBar()
 {
-    displayer->setMenuBar((dynamic_cast<CentralWidgetInterface*>(displayer->centralWidget()))
-                            ->createMenuBar(this));
+    displayer->setMenuBar(transformMenuBar(dynamic_cast<CentralWidgetInterface*>(displayer->centralWidget())
+                            ->createMenuBar(this)));
 }
 
 void MainEngine::quit()

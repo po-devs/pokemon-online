@@ -1,7 +1,8 @@
 #include "client.h"
 #include "mainwindow.h"
 #include "challenge.h"
-#include "teambuilder.h"
+#include "logmanager.h"
+#include "Teambuilder/teambuilder.h"
 #include "battlewindow.h"
 #include "basebattlewindow.h"
 #include "pmwindow.h"
@@ -84,6 +85,11 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     buttonsLayout->addWidget(myregister = new QPushButton(tr("&Register")));
     buttonsLayout->addWidget(myexit = new QPushButton(tr("&Exit")));
     buttonsLayout->addWidget(mysender = new QPushButton(tr("&Send")));
+
+    findMatch->setObjectName("FindBattle");
+    myregister->setObjectName("Register");
+    myexit->setObjectName("Exit");
+    mysender->setObjectName("Send");
 
     QPalette pal = palette();
     pal.setColor(QPalette::AlternateBase, Qt::blue);
@@ -224,8 +230,10 @@ void Client::firstChannelChanged(int tabindex)
 {
     int chanid = channelByNames.value(mainChat->tabText(tabindex).toLower());
 
-    if (!hasChannel(chanid))
+    if (!hasChannel(chanid)) {
+        myline->setPlayers(0);
         return;
+    }
 
     Channel *c = channel(chanid);
 
@@ -234,6 +242,7 @@ void Client::firstChannelChanged(int tabindex)
 
     /* Restores the black color of a possibly activated channel */
     mainChat->tabBar()->setTabTextColor(tabindex, mainChat->tabBar()->palette().text().color());
+    myline->setPlayers(c->playersWidget()->model());
 }
 
 void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
@@ -282,6 +291,9 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
     playersW->addWidget(c->playersWidget());
     mainChat->addTab(c->mainChat(), c->name());
     battlesW->addWidget(c->battlesWidget());
+    if (mainChat->count() == 1)
+        // set tab complete for first chan
+        myline->setPlayers(c->playersWidget()->model());
 
     mychannels[chanid] = c;
 
@@ -298,7 +310,7 @@ void Client::channelActivated(Channel *c)
         return;
     for (int i = 0; i < mainChat->count(); i++) {
         if (mainChat->widget(i) == c->mainChat()) {
-            mainChat->tabBar()->setTabTextColor(i, Qt::darkGreen);
+            mainChat->tabBar()->setTabTextColor(i, Theme::Color("Client/channelTabActive"));
             break;
         }
     }
@@ -598,8 +610,6 @@ void Client::startPM(int id)
     if (id == this->id(ownName()) || !playerExist(id)) {
         return;
     }
-
-    activateWindow();
 
     if (mypms.contains(id)) {
         return;
@@ -1073,7 +1083,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QAction * saveLogs = battleMenu->addAction(tr("Save &Battle Logs"));
     saveLogs->setCheckable(true);
     connect(saveLogs, SIGNAL(triggered(bool)), SLOT(saveBattleLogs(bool)));
-    saveLogs->setChecked(s.value("save_battle_logs").toBool());
+    saveLogs->setChecked(LogManager::obj()->logsType(BattleLog));
 
     battleMenu->addAction(tr("Change &log folder ..."), this, SLOT(changeBattleLogFolder()));
 
@@ -1162,7 +1172,8 @@ void Client::changeMusicFolder()
 void Client::changeBattleLogFolder()
 {
     QSettings s;
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Battle Logs Directory"), s.value("battle_logs_directory").toString());
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Battle Logs Directory"),
+                                                    QDir::home().absoluteFilePath(LogManager::obj()->getDirectoryForType(BattleLog)));
 
     if (dir != "") {
         s.setValue("battle_logs_directory", dir + "/");
@@ -1183,8 +1194,7 @@ void Client::changeNicknames(bool old)
 
 void Client::saveBattleLogs(bool save)
 {
-    QSettings s;
-    s.setValue("save_battle_logs",save);
+    LogManager::obj()->changeLogSaving(BattleLog, save);
 }
 
 void Client::animateHpBar(bool save)
@@ -1284,6 +1294,7 @@ void Client::tierListReceived(const QByteArray &tl)
         foreach(Channel *c, mychannels)
             c->sortAllPlayersByTier();
     }
+    emit tierListFormed(tierList);
 }
 
 void Client::sortPlayersCountingTiers(bool byTier)
@@ -1325,9 +1336,9 @@ void Client::movePlayerList(bool right)
     QWidget *chatcontainer = mainChat->parentWidget();
     QSplitter *splitter = reinterpret_cast<QSplitter*>( mytab->parentWidget() );
     if (right) {
-        splitter->addWidget(mytab); 
+        splitter->addWidget(mytab);
     } else {
-        splitter->addWidget(chatcontainer); 
+        splitter->addWidget(chatcontainer);
     }
 }
 
@@ -1391,27 +1402,27 @@ void Client::seeChallenge(const ChallengeInfo &c)
 {
     if (playerExist(c))
     {
-	if (busy()) {
-	    /* Warns the server that we are too busy to accept the challenge */
+    if (busy()) {
+        /* Warns the server that we are too busy to accept the challenge */
             ChallengeInfo d = c;
             d.dsc = ChallengeInfo::Busy;
             relay().sendChallengeStuff(c);
         } else {
             BaseChallengeWindow *mychallenge = new ChallengedWindow(player(c),c);
-	    connect(mychallenge, SIGNAL(challenge(int)), SLOT(acceptChallenge(int)));
-	    connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
-	    connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
-	    connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
+        connect(mychallenge, SIGNAL(challenge(int)), SLOT(acceptChallenge(int)));
+        connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
+        connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
+        connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
             mychallenge->activateWindow();
             mychallenges.insert(mychallenge);
-	}
+    }
     }
 }
 
 void Client::battleStarted(int battleId, int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
     cancelFindBattle(false);
-    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf);
+    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf, this);
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
     mybattle->setWindowFlags(Qt::Window);
     mybattle->client() = this;
@@ -1458,7 +1469,7 @@ void Client::battleReceived(int battleid, int id1, int id2)
 
 void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 {
-    BaseBattleWindow *battle = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf);
+    BaseBattleWindow *battle = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf, ownId(), this);
     battle->setWindowFlags(Qt::Window);
     battle->show();
 
@@ -1592,7 +1603,7 @@ void Client::challengeStuff(const ChallengeInfo &c)
                     closeChallengeWindow(b);
                 }
             }
-	}
+    }
     }
 }
 
@@ -1655,7 +1666,7 @@ void Client::clearChallenge()
 
 void Client::errorFromNetwork(int errnum, const QString &errorDesc)
 {
-    printHtml("<i>"+tr("Error while connected to server -- Received error n°%1: %2").arg(errnum).arg(errorDesc) + "</i>");
+    printHtml("<i>"+tr("Error while connected to server -- Received error nÂ°%1: %2").arg(errnum).arg(errorDesc) + "</i>");
 }
 
 void Client::connected()
@@ -1852,9 +1863,9 @@ QColor Client::color(int id) const
 int Client::id(const QString &name) const
 {
     if (mynames.contains(name)) {
-	return mynames[name];
+    return mynames[name];
     } else {
-	return -1;
+    return -1;
     }
 }
 
@@ -1890,10 +1901,12 @@ void Client::openTeamBuilder()
     myteambuilder->show();
     myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder->setMenuBar(t->createMenuBar((MainEngine*)parent()));
+    t->setTierList(tierList);
 
     connect(this, SIGNAL(destroyed()), myteambuilder, SLOT(close()));
     connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
     connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));
+    connect(this, SIGNAL(tierListFormed(const QStringList &)), t, SLOT(setTierList(const QStringList&)));
 }
 
 void Client::changeTeam()

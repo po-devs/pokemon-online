@@ -41,6 +41,19 @@ QString slug(const QString &s)
     return ret;
 }
 
+QString cleanStringForFiles(const QString &title)
+{
+    QString ret = title;
+
+    /* Those characters are banned in file names on windows */
+    QList<QChar> bannedCh = QList<QChar> () << '"' << '/' << '\\' << ':' << '*' << '|' << '?' << '<' << '>';
+    foreach(QChar c, bannedCh) {
+        ret = ret.replace(c, ' ');
+    }
+
+    return ret;
+}
+
 void writeSettings(QWidget *w)
 {
     QSettings settings;
