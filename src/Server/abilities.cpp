@@ -1820,6 +1820,26 @@ struct AMRegeneration : public AM {
     }
 };
 
+struct AMPickUp : public AM {
+    AMPickUp() {
+        functions["EndTurn6.20"] = &et;
+    }
+
+    static void et(int s, int, BS &b) {
+        if (b.poke(s).item() == 0) {
+            return;
+        }
+        //Waits for more information on the behavior of pickup
+        /*if (b.poke(s).item() == 0 && b.contains("LastItemUsed")) {
+            if (b.areAdjacent(s, player) && s != player) {
+                sendAbMessage(93, 0, p, 0, 0, berry);
+                acqItem(player, berry);
+                return;
+            }
+        }*/
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -1940,7 +1960,7 @@ void AbilityEffect::init()
     REGISTER_AB(90, MiracleSkin);
     REGISTER_AB(91, Sturdy);
     REGISTER_AB(92, Illusion);
-    //pickup
+    REGISTER_AB(93, PickUp);
     REGISTER_AB(94, JusticeHeart);
     REGISTER_AB(95, Inconsistent);
     REGISTER_AB(96, CursedBody);
