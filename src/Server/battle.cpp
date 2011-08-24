@@ -679,6 +679,7 @@ void BattleSituation::initializeEndTurnFunctions()
     6.17 Embargo
     6.18 Yawn
     6.19 Sticky Barb
+    6.20 Pickup
 
     7.0 Doom Desire, Future Sight
 
@@ -705,6 +706,7 @@ void BattleSituation::initializeEndTurnFunctions()
 
         addEndTurnEffect(ItemEffect, 6, 7); /* Orbs */
         addEndTurnEffect(ItemEffect, 6, 19); /* Sticky Barb */
+        addEndTurnEffect(AbilityEffect, 6, 20); /* Pick-up */
 
         addEndTurnEffect(AbilityEffect, 12, 0); /* Slow Start */
     } else {
@@ -4254,16 +4256,6 @@ void BattleSituation::eatBerry(int player, bool show) {
     disposeItem(player);
 
     if (gen() >= 5) {
-        foreach(int p, sortedBySpeed()) {
-            if (hasWorkingAbility(p, Ability::Pickup) && poke(p).item() == 0 && p != player) {
-                if (pokeMemory(player).contains("PickupUsed") && pokeMemory(player).value("PickupUsed").toInt() == turn())
-                    continue;
-                pokeMemory(player)["PickupUsed"] = turn();
-                sendAbMessage(93, 0, p, 0, 0, berry);
-                acqItem(player, berry);
-                return;
-            }
-        }
         QString harvest_key = QString("BerryUsed_%1").arg(team(this->player(player)).internalId(poke(player)));
         teamMemory(this->player(player))[harvest_key] = berry;
     }
