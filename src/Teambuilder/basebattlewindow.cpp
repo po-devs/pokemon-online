@@ -752,6 +752,7 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
     }
     case Substitute:
         in >> info().sub[spot];
+        printLine(QString("%1 has a subtitute: %2").arg(nick(spot)).arg(info().sub[spot]), true);
         mydisplay->updatePoke(spot);
         break;
     case BattleEnd:
