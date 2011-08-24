@@ -654,6 +654,9 @@ struct AMIntimidate : public AM {
         QList<int> tars = b.revs(s);
 
         foreach(int t, tars) {
+            if (!b.areAdjacent(s, t)) {
+                continue;
+            }
             if (b.hasSubstitute(t)) {
                 b.sendAbMessage(34,1,s,t);
             } else {
