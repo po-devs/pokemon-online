@@ -126,7 +126,8 @@ struct AMArenaTrap : public AM {
 
 struct AMBadDreams : public AM {
     AMBadDreams() {
-        functions["EndTurn69"] = &et;
+        functions["EndTurn6.10"] = &et; /* Gen 4 */
+        functions["EndTurn26.1"] = &et; /* Gen 5 */
     }
 
     static void et (int s, int, BS &b) {
@@ -307,7 +308,7 @@ struct AMDrySkin : public AM {
     }
 
     static void ws (int s, int , BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Rain)) {
+        if (b.isWeatherWorking(BattleSituation::Rain) && !b.poke(s).isFull()) {
             b.sendAbMessage(15,0,s,s,Pokemon::Water);
             b.healLife(s, b.poke(s).totalLifePoints()/8);
         } else if (b.isWeatherWorking(BattleSituation::Sunny)) {
@@ -653,6 +654,9 @@ struct AMIntimidate : public AM {
         QList<int> tars = b.revs(s);
 
         foreach(int t, tars) {
+            if (!b.areAdjacent(s, t)) {
+                continue;
+            }
             if (b.hasSubstitute(t)) {
                 b.sendAbMessage(34,1,s,t);
             } else {
@@ -842,7 +846,8 @@ struct AMShadowTag : public AM {
 
 struct AMShedSkin : public AM {
     AMShedSkin() {
-        functions["EndTurn62"] = &et;
+        functions["EndTurn6.2"] = &et; /* Gen 4 */
+        functions["EndTurn5.1"] = &et; /* Gen 5 */
     }
 
     static void et(int s, int, BS &b) {
@@ -858,7 +863,8 @@ struct AMShedSkin : public AM {
 struct AMSlowStart : public AM {
     AMSlowStart() {
         functions["UponSetup"] = &us;
-        functions["EndTurn20."] = &et;
+        functions["EndTurn12.0"] = &et; /* gen 4 */
+        functions["EndTurn29.0"] = &et; /* gen 5 */
         functions["StatModifier"] = &sm;
     }
 
@@ -917,7 +923,8 @@ struct AMSoundProof : public AM {
 struct AMSpeedBoost : public AM {
     AMSpeedBoost() {
         functions["UponSetup"] = &os;
-        functions["EndTurn62"] = &et;
+        functions["EndTurn6.2"] = &et; /* Gen 4 */
+        functions["EndTurn26.1"] = &et; /* Gen 5 */
     }
 
     static void os(int s, int, BS &b) {
@@ -959,7 +966,8 @@ struct AMTechnician : public AM {
     }
 
     static void bpm(int s, int , BS &b) {
-        if (tmove(b,s).power <= 60) {
+        /* Pokemon::Curse is for confusion damaeg */
+        if (tmove(b,s).power <= 60 && type(b,s) != Pokemon::Curse) {
             turn(b,s)["BasePowerAbilityModifier"] = 10;
         }
     }
@@ -1533,6 +1541,9 @@ struct AMMagicMirror : public AM
         } else {
             /* Entry hazards */
             foreach(int t, b.revs(s)) {
+                if (b.koed(t)) {
+                    continue;
+                }
                 if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) {
                     target = t;
                     break;
@@ -1567,7 +1578,7 @@ struct AMMagicMirror : public AM
 struct AMHarvest : public AM
 {
     AMHarvest() {
-        functions["EndTurn62"] = &et;
+        functions["EndTurn26.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -1668,7 +1679,7 @@ struct AMJusticeHeart : public AM {
 
 struct AMInconsistent : public AM {
     AMInconsistent() {
-        functions["EndTurn62"] = &et;
+        functions["EndTurn26.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -1743,7 +1754,7 @@ struct AMAnalyze : public AM {
 
 struct AMHealingHeart : public AM {
     AMHealingHeart() {
-        functions["EndTurn20."] = &et;
+        functions["EndTurn5.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {

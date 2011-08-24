@@ -11,6 +11,7 @@
 class BaseBattleDisplay;
 class QScrollDownTextBrowser;
 class QClickPBar;
+class Log;
 
 struct BaseBattleInfo
 {
@@ -97,6 +98,7 @@ class BaseBattleWindow : public QWidget
     PROPERTY(int, battleId);
     PROPERTY(int, animatedHpSpot);
     PROPERTY(int, animatedHpGoal);
+    PROPERTY(int, ownid);
     PROPERTY(bool, started);
     PROPERTY(bool, usePokemonNames);
     PROPERTY(BattleConfiguration, conf);
@@ -109,7 +111,7 @@ public:
         return *myInfo;
     }
 
-    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf);
+    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf, int ownid, Client *client);
 
     int gen() const {
         return info().gen;
@@ -212,8 +214,8 @@ public:
 
     //void playCry(int pokenum);
 
-    void printLine(const QString &str);
-    void printHtml(const QString &str);
+    void printLine(const QString &str, bool silent = false);
+    void printHtml(const QString &str, bool silent = false);
     QString name(int spot) const;
     virtual QString nick(int spot) const;
     QString rnick(int spot) const;
@@ -241,7 +243,7 @@ public slots:
     void undelay();
 
     void animateHPBar();
-    void ignoreSpectators(bool);
+    void ignoreSpectators();
 
     void musicPlayStop();
     void enqueueMusic();
@@ -252,13 +254,19 @@ signals:
     void closedBW(int);
 protected:
     int delayed;
-    bool ignoreSpecs;
+    int ignoreSpecs;
+
+    enum IgnoreMode {
+        NoIgnore,
+        IgnoreSpecs,
+        IgnoreAll
+    };
 
     QGridLayout *mylayout;
     QScrollDownTextBrowser *mychat;
-	QIRCLineEdit *myline;
+    QIRCLineEdit *myline;
     BaseBattleDisplay *mydisplay;
-    QPushButton *myclose, *mysend;
+    QPushButton *myclose, *mysend, *myignore;
     Client *_mclient;
 
     QCheckBox *saveLogs;
@@ -284,6 +292,8 @@ protected:
 
     bool blankMessage;
     bool battleEnded;
+
+    Log *log;
 
     BaseBattleWindow();
     void init();

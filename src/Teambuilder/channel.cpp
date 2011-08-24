@@ -545,6 +545,17 @@ QString Channel::addChannelLinks(const QString &line2)
     return line;
 }
 
+void Channel::checkFlash(const QString &haystack, const QString &needle)
+{
+    /* Only activates if no window has focus */
+    if (!QApplication::activeWindow()) {
+        if (haystack.contains(QRegExp(needle, Qt::CaseInsensitive))) {
+            QApplication::alert(client, 10000);
+            client->raise();
+        }
+    }
+}
+
 void Channel::printLine(const QString &line)
 {
     QString timeStr = "";
@@ -554,15 +565,9 @@ void Channel::printLine(const QString &line)
         mainChat()->insertPlainText("\n");
         return;
     }
-    /* Only activates if no window has focus */
-    if (!QApplication::activeWindow()) {
-        if (line.contains(QRegExp(QString("\\b%1\\b").arg(name(ownId())),Qt::CaseInsensitive))) {
-            client->raise();
-            client->activateWindow();
-        }
-    }
 
     if (line.leftRef(3) == "***") {
+        checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
         mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + addChannelLinks(escapeHtml(line)) + "</span><br />");
         return;
     }
@@ -577,6 +582,10 @@ void Channel::printLine(const QString &line)
         /* Messages from players from auth 3 and less have their html escaped */
         if (id == -1 || client->auth(id) <= 3)
             end = escapeHtml(end);
+        else
+            checkFlash(end, "<ping */ *>");
+
+        checkFlash(end, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
 
         end = addChannelLinks(end);
 
@@ -602,6 +611,7 @@ void Channel::printLine(const QString &line)
         }
         emit activated(this);
     } else {
+        checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
         mainChat()->insertPlainText( timeStr + line + "\n");
     }
 }
@@ -612,12 +622,8 @@ void Channel::printHtml(const QString &str)
     if (str.contains(id) && client->isIgnored(id.cap(1).toInt())){
         return;
     }
-    if (!QApplication::activeWindow()) {
-        if (str.contains(QRegExp(QString("<ping */ *>"),Qt::CaseInsensitive))) {
-            client->raise();
-            client->activateWindow();
-        }
-    }
+    checkFlash(str, "<ping */ *>");
+
     QString timeStr = "";
     if(client->showTS)
         timeStr = "(" + QTime::currentTime().toString() + ") ";

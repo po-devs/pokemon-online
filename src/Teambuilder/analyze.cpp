@@ -42,15 +42,6 @@ void Analyzer::sendPM(int id, const QString &mess)
     notify(SendPM, qint32(id), mess);
 }
 
-enum ChallengeDesc
-{
-    Sent,
-    Accepted,
-    Canceled,
-    Busy,
-    Refused
-};
-
 void Analyzer::sendMessage(const QString &message)
 {
     notify(SendMessage, message);

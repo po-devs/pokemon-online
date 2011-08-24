@@ -72,8 +72,6 @@ int main(int, char**)
     }
     pokesOfGroup.remove("");
 
-    freopen("stdout.txt","w+",stdout);
-
     /* Now we have the groups made, just showing to make sure there's no typo */
     qDebug() << pokesOfGroup.size() << " keys: ";
 

@@ -5,16 +5,25 @@ bin/lib*.so
 bin/lib*.so.*
 *-desktop
 *-desktop/*
-*.pro.user
+*.pro.user*
 bin/*.exe
-bin/config
+bin/config*
 bin/logs.txt
 bin/pokemon
 bin/members.txt
-bin/pokemonlib.dll
-bin/utilities.dll
+bin/*.dll
 bin/stdout.txt
+bin/serverplugins
+bin/logs/
+bin/Boxes/
+bin/Pokemon-Online
+bin/myplugins/
+bin/Themes/
+bin/Teams/
+bin/usage_stats/formatted/
 *.a
+bin/*
+src/*/Makefile
 
 # Ignore emacs temporary files
 *~

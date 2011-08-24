@@ -269,7 +269,7 @@ public slots:
         void done();
 
 private:
-        QTimer *mytimer;       
+        QTimer *mytimer;
         QString myname;
         int mytime;
 };

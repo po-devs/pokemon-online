@@ -4,19 +4,19 @@
 #include <QtGui>
 #include "../PokemonInfo/pokemonstructs.h"
 
-class TeamBuilder;
 class TB_PokeChoice;
 class GridBox;
 class QImageButtonLR;
 class QCompactTable;
 class TypeChart;
 class AdvancedSearch;
+class PokeMovesModel;
 
 class Pokedex : public QWidget
 {
     Q_OBJECT
 public:
-    Pokedex(TeamBuilder *parent);
+    Pokedex(QWidget *parent, QAbstractItemModel *pokeModel);
 public slots:
     void showTypeChart();
 private:
@@ -59,7 +59,7 @@ class PokedexBody : public QFrame
         SortByAlph = 1
     };
 public:
-    PokedexBody();
+    PokedexBody(QAbstractItemModel *model);
 
     void changeToPokemon(Pokemon::uniqueId poke);
 public slots:
@@ -71,7 +71,7 @@ signals:
 private slots:
     void changeToPokemon(const QString &);
     void changePokemon();
-    void changePokemonFromRow(int);
+    void changePokemonFromRow(const QModelIndex &index);
 private:
     Pokemon::uniqueId currentPoke;
     TB_PokeChoice * pokeList;
@@ -99,16 +99,8 @@ public:
 public slots:
     void changePoke(Pokemon::uniqueId poke);
 private:
-    QCompactTable *moves;
-
-    enum {
-        TypeCol,
-        NameCol,
-        PPCol,
-        PowerCol,
-        AccCol,
-        CategoryCol
-    };
+    QTableView *moves;
+    PokeMovesModel *movesModel;
 };
 
 class StatTab: public QFrame

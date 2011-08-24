@@ -130,7 +130,7 @@ void BaseChallengeWindow::onChallenge()
 void BaseChallengeWindow::onCancel()
 {
     if (id() != -1) {
-	emit cancel(id());
+    emit cancel(id());
     }
     close();
 }

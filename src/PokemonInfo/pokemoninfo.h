@@ -106,6 +106,9 @@ public:
     // Will NOT return base form.
     static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static QList<Pokemon::uniqueId> VisibleFormes(const Pokemon::uniqueId &pokeid);
+    static int MinLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static int MinEggLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static int AbsoluteMinLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static QList<int> Evos(int pokenum);
     static QList<int> DirectEvos(int pokenum);
     static bool HasEvolutions(int pokenum);
@@ -117,8 +120,10 @@ public:
     static bool HasPreEvo(int pokenum);
     static bool IsInEvoChain(const Pokemon::uniqueId &pokeid);
     static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
-    static bool Exists(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static bool Exists(const Pokemon::uniqueId &pokeid, int gen);
+    static bool Exists(const Pokemon::uniqueId &pokeid);
     static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static int Ability(const Pokemon::uniqueId &pokeid, int slot, int gen=GEN_MAX);
     static int Stat(const Pokemon::uniqueId &pokeid, int gen, int stat, int level, quint8 dv, quint8 ev);
     static int FullStat(const Pokemon::uniqueId &pokeid, int gen, int nature, int stat, int level, quint8 dv, quint8 ev);
     static QString Desc(const Pokemon::uniqueId &pokeid, int cartridge);
@@ -145,6 +150,8 @@ private:
     static QHash<Pokemon::uniqueId, int> m_Abilities[NUMBER_GENS][3];
     static QHash<Pokemon::uniqueId, PokeBaseStats> m_BaseStats;
     static QHash<Pokemon::uniqueId, int> m_LevelBalance;
+    static QHash<Pokemon::uniqueId, int> m_MinLevels[NUMBER_GENS];
+    static QHash<Pokemon::uniqueId, int> m_MinEggLevels[NUMBER_GENS];
 
     static QHash<int, QList<int> > m_Evolutions;
     static QHash<int, int> m_OriginalEvos;
@@ -178,6 +185,7 @@ private:
     static void loadGenderRates();
     static void loadHeights();
     static void loadDescriptions();
+    static void loadMinLevels();
     // Call this after loading all data.
     static void makeDataConsistent();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
@@ -221,7 +229,7 @@ public:
     static bool Exists(int movenum, int gen);
     static bool isOHKO(int movenum, int gen);
     static bool isHM(int movenum, int gen);
-    static bool FlinchByKingRock(int movenum);
+    static bool FlinchByKingRock(int movenum, int gen);
     static int EffectRate(int movenum, int gen);
     static quint32 StatAffected(int movenum, int gen);
     static quint32 BoostOfStat(int movenum, int gen);

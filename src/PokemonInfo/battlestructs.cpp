@@ -42,6 +42,14 @@ QString ChallengeInfo::clauseDescription[] =
     QObject::tr("The one who causes a tie (Recoil, Explosion, Destinybond, ...) loses the battle.")
 };
 
+QString ChallengeInfo::modeText[] =
+{
+    QObject::tr("Singles", "Mode"),
+    QObject::tr("Doubles", "Mode"),
+    QObject::tr("Triples", "Mode"),
+    QObject::tr("Rotation", "Mode")
+};
+
 BattleMove::BattleMove()
 {
     num() = 0;
@@ -50,7 +58,7 @@ BattleMove::BattleMove()
 }
 
 void BattleMove::load(int gen) {
-    PP() = MoveInfo::PP(num(), gen)*8/5; /* 3 PP-ups */
+    PP() = MoveInfo::PP(num(), gen)*(num() == Move::TrumpCard ? 5 :8)/5; /* 3 PP-ups */
     totalPP() = PP();
 }
 

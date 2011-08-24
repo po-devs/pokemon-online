@@ -1,10 +1,13 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
+#include "pokemovesmodel.h"
 #include "pokedex.h"
-#include "teambuilder.h"
 #include "theme.h"
+#include "poketablemodel.h"
+#include "modelenum.h"
+#include "pokechoice.h"
 
-Pokedex::Pokedex(TeamBuilder *parent)
+Pokedex::Pokedex(QWidget *parent, QAbstractItemModel *model)
     : QWidget(parent)
 {
     QLabel *pokedexText = new QLabel(this);
@@ -38,7 +41,7 @@ Pokedex::Pokedex(TeamBuilder *parent)
 
     BigOpenPokeBall *bop = new BigOpenPokeBall();
     secondCol->addWidget(bop,0,Qt::AlignRight);
-    PokedexBody *body = new PokedexBody();
+    PokedexBody *body = new PokedexBody(model);
     secondCol->addWidget(body, 100);
 
     connect(body, SIGNAL(pokeChanged(Pokemon::uniqueId)), bop, SLOT(changeToPokemon(Pokemon::uniqueId)));
@@ -289,7 +292,7 @@ bool BigOpenPokeBall::shiny() const
 /****************************************************/
 /*********** POKEDEX BODY ***************************/
 /****************************************************/
-PokedexBody::PokedexBody()
+PokedexBody::PokedexBody(QAbstractItemModel *pokeModel)
 {
     //setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QHBoxLayout *hl = new QHBoxLayout(this);
@@ -301,11 +304,12 @@ PokedexBody::PokedexBody()
     QPushButton *advSearch;
     col1->addWidget(advSearch = new QPushButton(QIcon(Theme::Sprite("orangedisc")), tr("&Advanced Search")));
     col1->addWidget(pokeEdit = new QLineEdit());
-    pokeList = new TB_PokeChoice(GEN_MAX, false);
+    pokeList = new TB_PokeChoice(pokeModel, false);
     pokeList->verticalHeader()->setDefaultSectionSize(30);
     QCompleter *comp = new QCompleter(pokeEdit);
     comp->setModel(pokeList->model());
     comp->setCompletionColumn(1);
+    comp->setCompletionRole(Qt::DisplayRole);
     comp->setCaseSensitivity(Qt::CaseInsensitive);
     pokeEdit->setCompleter(comp);
     col1->addWidget(pokeList,100);
@@ -313,7 +317,7 @@ PokedexBody::PokedexBody()
 
     connect(comp, SIGNAL(activated(QString)), this, SLOT(changeToPokemon(QString)));
     connect(pokeEdit, SIGNAL(returnPressed()), SLOT(changePokemon()));
-    connect(pokeList, SIGNAL(cellActivated(int,int)), SLOT(changePokemonFromRow(int)));
+    connect(pokeList, SIGNAL(activated(QModelIndex)), SLOT(changePokemonFromRow(QModelIndex)));
     connect(advSearch, SIGNAL(clicked()), SLOT(openAdvancedSearch()));
 
     /* Buttons at the bottom */
@@ -395,9 +399,9 @@ void PokedexBody::changeToPokemon(Pokemon::uniqueId poke)
     pokeEdit->setText(PokemonInfo::Name(poke));
 }
 
-void PokedexBody::changePokemonFromRow(int row)
+void PokedexBody::changePokemonFromRow(const QModelIndex &index)
 {
-    changeToPokemon(pokeList->item(row, SortByAlph)->text());
+    changeToPokemon(index.data(CustomModel::PokenameRole).toString());
 }
 
 void PokedexBody::openAdvancedSearch()
@@ -690,65 +694,30 @@ void StatTab::decreaseBoost()
 MoveTab::MoveTab()
 {
     QVBoxLayout *v = new QVBoxLayout(this);
-    moves = new QCompactTable(0, 6);
+    moves = new QTableView();
+    QSortFilterProxyModel *filter=  new QSortFilterProxyModel(this);
+    filter->setSourceModel(movesModel = new PokeMovesModel(1, GEN_MAX, this));
+    moves->setModel(filter);
+    moves->hideColumn(PokeMovesModel::Learning);
 
     v->addWidget(moves);
-    moves->setIconSize(QSize(48,19));
+    moves->setIconSize(Theme::TypePicture(Type::Normal).size());
+    moves->verticalHeader()->hide();
+    moves->setShowGrid(false);
+    moves->setSelectionBehavior(QAbstractItemView::SelectRows);
+    moves->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    QStringList move_headers;
-    move_headers << tr("Type") << tr("Name", "AttackName") << tr("PP") << tr("Pow") << tr("Acc") << tr("Category");
-    moves->setHorizontalHeaderLabels(move_headers);
-    moves->resizeRowsToContents();
     moves->horizontalHeader()->setStretchLastSection(true);
-    moves->horizontalHeader()->setResizeMode(TypeCol, QHeaderView::Fixed);
-    moves->horizontalHeader()->resizeSection(TypeCol, 54);
-    moves->horizontalHeader()->setResizeMode(PPCol, QHeaderView::Fixed);
-    moves->horizontalHeader()->resizeSection(PPCol, 25);
-    moves->horizontalHeader()->setResizeMode(PowerCol, QHeaderView::Fixed);
-    moves->horizontalHeader()->resizeSection(PowerCol, 32);
-    moves->horizontalHeader()->setResizeMode(AccCol, QHeaderView::Fixed);
-    moves->horizontalHeader()->resizeSection(AccCol, 32);
-    moves->horizontalHeader()->setResizeMode(NameCol, QHeaderView::Fixed);
-    moves->horizontalHeader()->resizeSection(NameCol, 100);
-
-    changePoke(1);
+    moves->horizontalHeader()->resizeSection(PokeMovesModel::Type, Theme::TypePicture(Type::Normal).width()+5);
+    moves->horizontalHeader()->resizeSection(PokeMovesModel::PP, 25);
+    moves->horizontalHeader()->resizeSection(PokeMovesModel::Pow, 32);
+    moves->horizontalHeader()->resizeSection(PokeMovesModel::Acc, 32);
+    moves->horizontalHeader()->resizeSection(PokeMovesModel::Name, 100);
 }
 
 void MoveTab::changePoke(Pokemon::uniqueId poke)
 {
-    moves->setSortingEnabled(false);
-
-    QSet<int> moveList = PokemonInfo::Moves(poke);
-
-    moves->setRowCount(moveList.count());
-
-    QSet<int>::iterator it = moveList.begin();
-
-
-    QFont invisible("Verdana", 0);
-
-    for (int i = 0; it != moveList.end(); ++it, ++i)
-    {
-        int move = *it;
-
-        /* Invisible text used for sorting types */
-        int type = MoveInfo::Type(move, GEN_MAX);
-        QTableWidgetItem *w = new QTableWidgetItem(QIcon(Theme::TypePicture(type)), QString::number(type));
-        w->setFont(invisible);
-        moves->setItem(i, TypeCol, w);
-
-        moves->setItem(i, NameCol,new QTableWidgetItem(MoveInfo::Name(move)));
-        moves->setItem(i, PPCol,new QTableWidgetItem(QString::number(MoveInfo::PP(move, GEN_MAX))));
-        moves->setItem(i, PowerCol,new QTableWidgetItem(MoveInfo::PowerS(move, GEN_MAX)));
-        moves->setItem(i, AccCol,new QTableWidgetItem(MoveInfo::AccS(move, GEN_MAX)));
-
-        QTableWidgetItem *witem = new QTableWidgetItem(CategoryInfo::Name(MoveInfo::Category(move, GEN_MAX)));
-        witem->setForeground(Theme::CategoryColor(MoveInfo::Category(move, GEN_MAX)));
-        moves->setItem(i, CategoryCol, witem);
-    }
-
-    moves->sortByColumn(NameCol, Qt::AscendingOrder);
-    moves->setSortingEnabled(true);
+    movesModel->setPokemon(poke, GEN_MAX);
 }
 
 /****************************************************/
@@ -811,8 +780,6 @@ TypeText::TypeText(int type, const QString &text)
 /*********************************************************/
 /*************** TYPE CHART ******************************/
 /*********************************************************/
-
-
 
 TypeChart::TypeChart(QWidget *parent) : QWidget(parent)
 {

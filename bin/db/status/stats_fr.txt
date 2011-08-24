@@ -1,8 +1,8 @@
-PV
+ï»¿PV
 Attaque
-Défense
-Atk. Spé.
-Déf. Spé.
+DÃ©fense
+Atk. SpÃ©.
+DÃ©f. SpÃ©.
 Vitesse
-Précision
+PrÃ©cision
 Esquive

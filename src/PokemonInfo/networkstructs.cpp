@@ -1,7 +1,5 @@
 #include "networkstructs.h"
 
-
-
 PokePersonal & TeamInfo::pokemon(int num)
 {
     return m_pokes[num];
@@ -25,7 +23,7 @@ QDataStream &operator << (QDataStream &out, const TeamInfo& team)
     out << team.gen;
 
     for (int i = 0; i < 6; i++)
-	out << team.pokemon(i);
+    out << team.pokemon(i);
 
     return out;
 }

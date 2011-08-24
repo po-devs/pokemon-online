@@ -6,6 +6,8 @@
 #include <QDomDocument>
 #include <QDomNode>
 #include <QDomElement>
+#include <QMessageBox>
+#include <QFileDialog>
 
 PokeBaseStats::PokeBaseStats(quint8 base_hp, quint8 base_att, quint8 base_def, quint8 base_spAtt, quint8 base_spDef, quint8 base_spd)
 {
@@ -186,7 +188,7 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
     if (check) {
         QSet<int> invalid_moves;
         QString error;
-        if (!MoveSetChecker::isValid(num(), gen(), m_moves[0],m_moves[1],m_moves[2],m_moves[3],ability(),gender(),false,&invalid_moves, &error)) {
+        if (!MoveSetChecker::isValid(num(), gen(), m_moves[0],m_moves[1],m_moves[2],m_moves[3],ability(),gender(),level(),false,&invalid_moves, &error)) {
             m_moves[moveSlot] = Move::NoMove;
             throw error;
         }
@@ -240,9 +242,15 @@ void PokePersonal::runCheck()
         gender() = Pokemon::Male;
     }
 
+    int minLevel = PokemonInfo::AbsoluteMinLevel(num(), gen());
+
+    if (MoveSetChecker::enforceMinLevels && level() < minLevel) {
+        level() = minLevel;
+    }
+
     QSet<int> invalidMoves;
 
-    MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), gender(),false , &invalidMoves);
+    MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), gender(), level(), false, &invalidMoves);
 
     while (invalidMoves.size() > 0) {
         for (int i = 0; i < 4; i++) {
@@ -252,7 +260,7 @@ void PokePersonal::runCheck()
         }
         invalidMoves.clear();
 
-        MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), gender(), false, &invalidMoves);
+        MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), gender(), level(), false, &invalidMoves);
     }
 }
 
@@ -678,17 +686,8 @@ QDomElement & PokeTeam::toXml(QDomElement &el) const
     return el;
 }
 
-bool TrainerTeam::saveToFile(const QString &path) const
+void TrainerTeam::toXml(QDomDocument &document) const
 {
-    QFile file(path);
-    if(!file.open(QIODevice::WriteOnly))
-    {
-        QMessageBox::warning(0, QObject::tr("Error while saving the team"),QObject::tr("Can't create file ")+file.fileName());
-        return false;
-    }
-
-    QDomDocument document;
-
     QDomElement Team = document.createElement("Team");
     Team.setAttribute("gen", team().gen());
     Team.setAttribute("defaultTier", defaultTier());
@@ -708,6 +707,29 @@ bool TrainerTeam::saveToFile(const QString &path) const
         QDomElement pokemon = document.createElement("Pokemon");
         Team.appendChild(team().poke(i).toXml(pokemon));
     }
+}
+
+QString TrainerTeam::toXml() const
+{
+    QDomDocument document;
+
+    toXml(document);
+
+    return document.toString();
+}
+
+bool TrainerTeam::saveToFile(const QString &path) const
+{
+    QFile file(path);
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::warning(0, QObject::tr("Error while saving the team"),QObject::tr("Can't create file ")+file.fileName());
+        return false;
+    }
+
+    QDomDocument document;
+
+    toXml(document);
 
     QTextStream in(&file);
     document.save(in,4);

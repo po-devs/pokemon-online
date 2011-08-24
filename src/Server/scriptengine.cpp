@@ -624,7 +624,7 @@ void ScriptEngine::changePokeNum(int id, int slot, int num)
 {
     if (!testPlayer("changePokeNum(id, slot, item)", id) || !testRange("changePokeNum(id, slot, num)", slot, 0, 5))
         return;
-    if (!PokemonInfo::Exists(num, 4))
+    if (!PokemonInfo::Exists(num, myserver->player(id)->gen()))
         return;
     myserver->player(id)->team().poke(slot).num() = num;
 }
@@ -1209,7 +1209,7 @@ bool ScriptEngine::compatibleAsDreamWorldEvent(int id, int index)
     } else {
         PokeBattle &p = myserver->player(id)->team().poke(index);
 
-        return MoveSetChecker::isValid(p.num(),5,p.move(0).num(),p.move(1).num(),p.move(2).num(),p.move(3).num(),p.ability(),p.gender(),true);
+        return MoveSetChecker::isValid(p.num(),5,p.move(0).num(),p.move(1).num(),p.move(2).num(),p.move(3).num(),p.ability(),p.gender(), p.level(), true);
     }
 }
 
@@ -1439,6 +1439,8 @@ void ScriptEngine::setTeamPokeDV(int id, int slot, int stat, int newValue)
 
 int ScriptEngine::rand(int min, int max)
 {
+    if (min == max)
+        return min;
     return (::rand()%(max-min)) + min;
 }
 
@@ -1693,8 +1695,9 @@ void ScriptEngine::makeServerPublic(bool isPublic)
 }
 
 QScriptValue ScriptEngine::getAnnouncement() {
-        return myserver->serverAnnouncement;
-    }
+    return myserver->serverAnnouncement;
+}
+
 /* Causes crash...
 void ScriptEngine::setTimer(int milisec) {
     if (milisec <= 0)
@@ -1875,6 +1878,10 @@ void ScriptEngine::forceBattle(int player1, int player2, int clauses, int mode, 
 {
     if (!loggedIn(player1) || !loggedIn(player2)) {
         warn("forceBattle", "player is not online.");
+        return;
+    }
+    if (player1 == player2) {
+        warn("forceBattle", "player1 == player2");
         return;
     }
     if (!testRange("forceBattle", mode, ChallengeInfo::ModeFirst, ChallengeInfo::ModeLast)) {
