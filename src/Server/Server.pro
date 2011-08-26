@@ -36,7 +36,8 @@ SOURCES += main.cpp \
     sessiondatafactory.cpp \
     scriptdb.cpp \
     battlepluginstruct.cpp \
-    battlecounters.cpp
+    battlecounters.cpp \
+    moves/moves1.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
