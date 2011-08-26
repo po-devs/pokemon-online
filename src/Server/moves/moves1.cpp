@@ -1681,7 +1681,7 @@ struct MMBeatUp : public MM {
             turn(b,s)["HitCancelled"] = true;
         } else {
             tmove(b,s).power = 5 + (PokemonInfo::BaseStats(fpoke(b,s).id).baseAttack()/10);
-            turn(b,s)["UnboostedAttackStat"] = b.poke(s, b.repeatCount()).normalStat(Attack);
+            //turn(b,s)["UnboostedAttackStat"] = b.poke(s, b.repeatCount()).normalStat(Attack);
         }
     }
 };
