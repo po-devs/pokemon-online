@@ -513,11 +513,11 @@ void PokemonInfo::loadGenderRates()
     }
 }
 
-void PokemonInfo::loadMinLevels(FillMode::FillModeType mode)
+void PokemonInfo::loadMinLevels()
 {
     for (int i = 0; i < NUMBER_GENS; i++) {
         QStringList temp;
-        fill_container_with_file(temp, path(QString("minlevels_G%1.txt").arg(GEN_MIN+i)), mode);
+        fill_container_with_file(temp, path(QString("minlevels_G%1.txt").arg(GEN_MIN+i)), m_CurrentMode);
 
         for(int j = 0; j < temp.size(); j++) {
             QString current = temp[j].trimmed();

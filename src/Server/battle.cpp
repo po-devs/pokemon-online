@@ -2440,11 +2440,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 {
     int oldAttacker = attacker();
     int oldAttacked = attacked();
+
     heatOfAttack() = true;
 
     attacker() = player;
 
     int attack;
+
+    /* Special Occurence could be through the use of Magic Mirror for example,
+      that's why it's needed */
+    if (!specialOccurence && !pokeMemory(s).contains("HasMovedOnce")) {
+        pokeMemory(s)["HasMovedOnce"] = turn();
+    }
 
     if (specialOccurence) {
         attack = move;
@@ -2940,7 +2947,6 @@ end:
     /* In gen 4, choice items are there - they lock even if the move had no target possible.  */
     callieffects(player, player, "AfterTargetList");
 trueend:
-    pokeMemory(player)["HasMovedOnce"] = true;
 
     if (gen() <= 4 && koed(player) && tmove(player).power > 0) {
         notifyKO(player);
