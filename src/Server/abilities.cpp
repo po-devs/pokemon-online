@@ -1582,16 +1582,13 @@ struct AMHarvest : public AM
     }
 
     static void et(int s, int, BS &b) {
-        int p = b.player(s);
-        QString harvest_key = QString("BerryUsed_%1").arg(b.team(p).internalId(b.poke(s)));
-        if (team(b,p).contains(harvest_key) && b.poke(s).item() == 0) {
+        if (b.poke(s).item() == 0 && b.poke(s).itemUsed() != 0 && ItemInfo::isBerry(b.poke(s).itemUsed())) {
             if (!b.isWeatherWorking(BattleSituation::Sunny)) {
                 if (b.true_rand() % 2)
                      return; // 50 % change when not sunny
             }
-            int item = team(b,p)[harvest_key].toInt();
-
-            team(b,p).remove(harvest_key);
+            int item = b.poke(s).itemUsed();
+            b.poke(s).itemUsed() = 0;
             b.sendAbMessage(88, 0, s, 0, 0, item);
             b.acqItem(s, item);
         }
@@ -1826,17 +1823,26 @@ struct AMPickUp : public AM {
     }
 
     static void et(int s, int, BS &b) {
-        if (b.poke(s).item() == 0) {
+        if (b.poke(s).item() != 0) {
             return;
         }
-        //Waits for more information on the behavior of pickup
-        /*if (b.poke(s).item() == 0 && b.contains("LastItemUsed")) {
-            if (b.areAdjacent(s, player) && s != player) {
-                sendAbMessage(93, 0, p, 0, 0, berry);
-                acqItem(player, berry);
-                return;
+        std::vector<int> possibilities;
+        for (int i = 0; i < b.numberOfSlots(); i++) {
+            if (!b.koed(i) && b.areAdjacent(s, i) && s != i && b.poke(i).itemUsed() != 0
+                    && b.poke(i).itemUsedTurn() == b.turn()) {
+                possibilities.push_back(i);
             }
-        }*/
+        }
+
+        if (possibilities.size() == 0) {
+            return;
+        }
+
+        int i = possibilities[b.true_rand()%possibilities.size()];
+        int item = b.poke(i).itemUsed();
+        sendAbMessage(93, 0, p, 0, 0, item);
+        b.acqItem(s, item);
+        b.poke(i).itemUsed() = 0;
     }
 };
 

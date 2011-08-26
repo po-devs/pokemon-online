@@ -87,6 +87,8 @@ PokeBattle::PokeBattle()
     totalLifePoints() = 1;
     level() = 100;
     happiness() = 255;
+    itemUsed() = 0;
+    itemUsedTurn() = 0;
 
     for (int i = 0; i < 6; i++) {
         dvs() << 31;
