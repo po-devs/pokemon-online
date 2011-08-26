@@ -34,6 +34,7 @@ QHash<int, int> PokemonInfo::m_OriginalEvos;
 QHash<int, QList<int> > PokemonInfo::m_DirectEvos;
 QList<Pokemon::uniqueId> PokemonInfo::m_VisiblePokesPlainList;
 QHash<int, int> PokemonInfo::m_PreEvos;
+FillMode::FillModeType PokemonInfo::m_CurrentMode = FillMode::NoMod;
 
 QString MoveInfo::m_Directory;
 MoveInfo::Gen MoveInfo::gens[Version::NumberOfGens];
@@ -127,24 +128,9 @@ int fill_count_files(const QString &filename, FillMode::FillModeType m) {
     return ((m != FillMode::NoMod) && filename.startsWith("db/pokes/")) ? 2 : 1;
 }
 
-// OS specific paths.
-// Linux: XDG_CONFIG_HOME environment variable (see f.d.o. for details).
-// Windows: APPDATA environment variable.
-// Mac: somewhere in Library.
-// Other: "Mods" in current directory.
 void fill_check_mode_path(FillMode::FillModeType m, QString &filename) {
     if (m == FillMode::Client) {
-#if defined(Q_OS_MAC)
-        filename = QDir::homePath() + "/Library/Application Support/Pokemon Online/Mods/" + filename;
-#elif defined(Q_OS_LINUX)
-        filename = QProcessEnvironment::systemEnvironment().value("XDG_CONFIG_HOME", QDir::homePath() + "/.config")
-              + "/Dreambelievers/Pokemon Online/Mods/" + filename;
-#elif defined(Q_OS_WIN32)
-        filename = QProcessEnvironment::systemEnvironment().value("APPDATA", QDir::homePath())
-              + "/Pokemon Online/Mods/" + filename;
-#else
-        filename = "Mods/" + filename;
-#endif
+        filename = PoCurrentModPath + filename;
     }
 }
 
@@ -418,58 +404,93 @@ int PokemonInfo::FullStat(const Pokemon::uniqueId &pokeid, int gen, int nature, 
     }
 }
 
-void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode)
+void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode, const QString &modName)
 {
     /* makes sure it isn't already initialized */
-    if (NumberOfPokemons() != 0)
-        return;
+    if (NumberOfPokemons() != 0) return;
 
     m_Directory = dir;
+    m_CurrentMode = mode;
+    PoCurrentModPath = readModDirectory(modName);
+    if (PoCurrentModPath.isEmpty()) m_CurrentMode = FillMode::NoMod;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    loadNames(mode);
-    loadEvos(mode);
-    loadMoves(mode);
+    // Load db/pokes data.
+    reloadMod(mode);
+}
 
-    fill_uid_int(m_Genders, path("poke_gender.txt"), mode);
+void PokemonInfo::reloadMod(FillMode::FillModeType mode, const QString &modName)
+{
+    m_CurrentMode = mode;
+    PoCurrentModPath = readModDirectory(modName);
+    if (PoCurrentModPath.isEmpty()) m_CurrentMode = FillMode::NoMod;
+    clearData();
+
+    loadNames();
+    loadEvos();
+    loadMoves();
+
+    fill_uid_int(m_Genders, path("poke_gender.txt"), m_CurrentMode);
 
     for (int i = 0; i < NUMBER_GENS; i++) {
         int gen = i+GEN_MIN;
 
-        fill_uid_int(m_Type1[i], path(QString("poke_type1-%1G.txt").arg(gen)), mode);
-        fill_uid_int(m_Type2[i], path(QString("poke_type2-%1G.txt").arg(gen)), mode);
+        fill_uid_int(m_Type1[i], path(QString("poke_type1-%1G.txt").arg(gen)), m_CurrentMode);
+        fill_uid_int(m_Type2[i], path(QString("poke_type2-%1G.txt").arg(gen)), m_CurrentMode);
 
         if (gen >= 3) {
             for (int j = 0; j < 3; j++) {
-                fill_uid_int(m_Abilities[i][j], path(QString("poke_ability%1_%2G.txt").arg(j+1).arg(gen)), mode);
+                fill_uid_int(m_Abilities[i][j], path(QString("poke_ability%1_%2G.txt").arg(j+1).arg(gen)), m_CurrentMode);
             }
         }
     }
 
-    fill_uid_int(m_LevelBalance, path("level_balance.txt"));
+    fill_uid_int(m_LevelBalance, path("level_balance.txt"), m_CurrentMode);
     loadClassifications();
     loadGenderRates();
     loadHeights();
     loadDescriptions();
     loadBaseStats();
 
-    fill_uid_int(m_LevelBalance, path("level_balance.txt"), mode);
-    loadClassifications(mode);
-    loadGenderRates(mode);
-    loadHeights(mode);
-    loadDescriptions(mode);
-    loadBaseStats(mode);
-    loadMinLevels(mode);
-
     makeDataConsistent();
 }
 
-void PokemonInfo::loadClassifications(FillMode::FillModeType mode)
+void PokemonInfo::clearData()
+{
+    m_Names.clear();
+    m_Options.clear();
+    m_MaxForme.clear();
+    m_VisiblePokesPlainList.clear();
+    m_Weights.clear();
+    m_Genders.clear();
+    for (int i = 0; i < NUMBER_GENS; ++i) {
+        m_Type1[i].clear();
+        m_Type2[i].clear();
+        for (int j = 0; j < 3; ++j) {
+            m_Abilities[i][j].clear();
+        }
+    }
+    m_LevelBalance.clear();
+    m_Classification.clear();
+    m_GenderRates.clear();
+    m_Height.clear();
+    m_Desc.clear();
+    m_BaseStats.clear();
+    m_Evolutions.clear();
+    m_OriginalEvos.clear();
+    m_PreEvos.clear();
+    m_DirectEvos.clear();
+    m_AestheticFormes.clear();
+    m_Moves.clear();
+    m_VisiblePokesPlainList.clear();
+}
+
+void PokemonInfo::loadClassifications()
 {
     QStringList temp;
-    fill_container_with_file(temp, trFile(path("classification")), mode);
+    fill_container_with_file(temp, trFile(path("classification")), m_CurrentMode);
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString description;
@@ -479,10 +500,10 @@ void PokemonInfo::loadClassifications(FillMode::FillModeType mode)
     }
 }
 
-void PokemonInfo::loadGenderRates(FillMode::FillModeType mode)
+void PokemonInfo::loadGenderRates()
 {
     QStringList temp;
-    fill_container_with_file(temp, path("gender_rate.txt"), mode);
+    fill_container_with_file(temp, path("gender_rate.txt"), m_CurrentMode);
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString description;
@@ -513,10 +534,10 @@ void PokemonInfo::loadMinLevels(FillMode::FillModeType mode)
     }
 }
 
-void PokemonInfo::loadHeights(FillMode::FillModeType mode)
+void PokemonInfo::loadHeights()
 {
     QStringList temp;
-    fill_container_with_file(temp, path("height.txt"), mode);
+    fill_container_with_file(temp, path("height.txt"), m_CurrentMode);
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString height;
@@ -527,14 +548,14 @@ void PokemonInfo::loadHeights(FillMode::FillModeType mode)
     }
 }
 
-void PokemonInfo::loadDescriptions(FillMode::FillModeType mode)
+void PokemonInfo::loadDescriptions()
 {
     static const int CARTS_LEN = 3;
     int carts[] = { 14, 15, 16 };
     for(int i = 0; i < CARTS_LEN; i++)
     {
         QStringList temp;
-        fill_container_with_file(temp, trFile(path("description_%1").arg(carts[i])), mode);
+        fill_container_with_file(temp, trFile(path("description_%1").arg(carts[i])), m_CurrentMode);
         for(int j = 0; j < temp.size(); j++) {
             QString current = temp[j].trimmed();
             QString description;
@@ -636,7 +657,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gende
     else {
         // TODO: Read this number from somewhere else.
         if (pokeid.pokenum > 649) {
-            archive = "mod_" + path("mod_sprites.zip");
+            archive = PoCurrentModPath + "mod_" + path("mod_sprites.zip");
         } else {
             archive = path("black_white.zip");
         }
@@ -723,7 +744,7 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid)
     QString archive;
     // TODO: Read this number from somewhere else.
     if (pokeid.pokenum > 649) {
-        archive = "mod_" + path("mod_icons.zip");
+        archive = PoCurrentModPath + "mod_" + path("mod_icons.zip");
     } else {
         archive = path("icons.zip");
     }
@@ -756,7 +777,7 @@ QByteArray PokemonInfo::Cry(const Pokemon::uniqueId &pokeid)
     QString archive;
     // TODO: Read this number from somewhere else.
     if (pokeid.pokenum > 649) {
-        archive = "mod_" + path("mod_cries.zip");
+        archive = PoCurrentModPath + "mod_" + path("mod_cries.zip");
     } else {
         archive = path("cries.zip");
     }
@@ -838,10 +859,10 @@ int PokemonInfo::Ability(const Pokemon::uniqueId &pokeid, int slot, int gen)
     return m_Abilities[gen-GEN_MIN][slot].value(pokeid);
 }
 
-void PokemonInfo::loadBaseStats(FillMode::FillModeType mode)
+void PokemonInfo::loadBaseStats()
 {
     QStringList temp;
-    fill_container_with_file(temp, path("poke_stats.txt"), mode);
+    fill_container_with_file(temp, path("poke_stats.txt"), m_CurrentMode);
 
     for (int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
@@ -862,10 +883,10 @@ PokeBaseStats PokemonInfo::BaseStats(const Pokemon::uniqueId &pokeid)
     return m_BaseStats.value(pokeid);
 }
 
-void PokemonInfo::loadNames(FillMode::FillModeType mode)
+void PokemonInfo::loadNames()
 {
     QStringList temp;
-    fill_container_with_file(temp, trFile(path("pokemons")), mode);
+    fill_container_with_file(temp, trFile(path("pokemons")), m_CurrentMode);
 
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
@@ -892,7 +913,7 @@ void PokemonInfo::loadNames(FillMode::FillModeType mode)
 
     // Loading weights too for grass knot and low kick...
     temp.clear();
-    fill_container_with_file(temp, path("poke_weight.txt"), mode);
+    fill_container_with_file(temp, path("poke_weight.txt"), m_CurrentMode);
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
         QString weight;
@@ -1020,7 +1041,7 @@ bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
     return Evos(pokeid.pokenum).size() > 1;
 }
 
-void PokemonInfo::loadMoves(FillMode::FillModeType mode)
+void PokemonInfo::loadMoves()
 {
     static const int filesize = 29;
 
@@ -1044,7 +1065,7 @@ void PokemonInfo::loadMoves(FillMode::FillModeType mode)
 
     for (int i = 0; i < filesize; i++) {
         QStringList temp;
-        fill_container_with_file(temp, fileNames[i], mode);
+        fill_container_with_file(temp, fileNames[i], m_CurrentMode);
         for(int j = 0; j < temp.size(); j++) {
             QString current = temp[j].trimmed();
             QString text_moves;
@@ -1108,7 +1129,7 @@ QList<Pokemon::uniqueId> PokemonInfo::AllIds()
     return m_Names.keys();
 }
 
-void PokemonInfo::loadEvos(FillMode::FillModeType)
+void PokemonInfo::loadEvos()
 {
     QHash<int, QList<int> > &evos = m_Evolutions;
 
@@ -2431,5 +2452,21 @@ bool PokemonInfo::modifyBaseStat(const Pokemon::uniqueId &pokeid, int stat, quin
         return true;
     }else{
         return false;
+    }
+}
+
+QString PokemonInfo::readModDirectory(const QString &modName)
+{
+    QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
+    int mod_id = s_mod.value(modName + "/id", 0).toInt();
+    if (mod_id == 0) {
+        return "";
+    } else {
+        QString result = PoModLocalPath + mod_id + "/";
+        if (QDir(result).exists()) {
+            return result;
+        } else {
+            return "";
+        }
     }
 }

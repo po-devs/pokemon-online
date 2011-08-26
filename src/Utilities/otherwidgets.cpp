@@ -265,7 +265,6 @@ void QScrollDownTextBrowser::insertHtml(const QString &text)
     else
     {
         b->setValue(b->maximum());
-        moveCursor(QTextCursor::End);
     }
     linecount++;
 }

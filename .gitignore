@@ -23,6 +23,7 @@ bin/Teams/
 bin/usage_stats/formatted/
 *.a
 bin/*
+src/*/Makefile
 
 # Ignore emacs temporary files
 *~
