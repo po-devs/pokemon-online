@@ -345,7 +345,54 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     connect(items, SIGNAL(toggled(bool)), this, SLOT(changeItemDisplay(bool)));
     connect(forceMinLevels, SIGNAL(toggled(bool)), this, SLOT(enforceMinLevels(bool)));
 
+    /* Loading mod menu */
+    QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
+    QStringList mods = s_mod.childGroups();
+    if (mods.size() > 0) {
+        int general_pos = mods.indexOf("General");
+        if (general_pos != -1) {
+            mods.removeAt(general_pos);
+        }
+        if (mods.size() > 0) {
+            int mod_selected = s_mod.value("active", 0).toInt();
+            bool is_mod_selected = mod_selected > 0;
+            QMenu *menuMods = menuBar->addMenu(tr("&Mods"));
+            QActionGroup *ag = new QActionGroup(menuBar);
+
+            // No mod option.
+            QAction *action_no_mod = menuMods->addAction(tr("No mod"), this, SLOT(setNoMod()));
+            action_no_mod->setCheckable(true);
+            ag->addAction(action_no_mod);
+            if (!is_mod_selected) action_no_mod->setChecked(true);
+            menuMods->addSeparator();
+
+            // Add mods to menu.
+            QStringListIterator mods_it(mods);
+            while (mods_it.hasNext()) {
+                QString current = mods_it.next();
+                QAction *ac = menuMods->addAction(current, this, SLOT(changeMod()));
+                ac->setCheckable(true);
+                if (is_mod_selected && (mod_selected == s_mod.value(current + "/id", 0).toInt())) {
+                    ac->setChecked(true);
+                }
+                ag->addAction(ac);
+            }
+        }
+    }
+
     return menuBar;
+}
+
+void TeamBuilder::changeMod()
+{
+    // TODO: 2nd param - read from menu.
+    PokemonInfo::reloadMod(FillMode::Client);
+    // TODO: MoveSetChecker::init("db/pokes/"); ?
+}
+
+void TeamBuilder::setNoMod()
+{
+    PokemonInfo::reloadMod(FillMode::Client);
 }
 
 void TeamBuilder::changeItemDisplay(bool b)

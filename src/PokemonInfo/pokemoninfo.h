@@ -15,6 +15,25 @@ namespace FillMode {
     };
 }
 
+// OS specific paths.
+// Linux: XDG_CONFIG_HOME environment variable (see f.d.o. for details).
+// Windows: APPDATA environment variable.
+// Mac: somewhere in Library.
+// Other: "Mods" in current directory.
+#if defined(Q_OS_MAC)
+        static QString PoModLocalPath = QDir::homePath() + "/Library/Application Support/Pokemon Online/Mods/";
+#elif defined(Q_OS_LINUX)
+        static QString PoModLocalPath = QProcessEnvironment::systemEnvironment().value("XDG_CONFIG_HOME", QDir::homePath() + "/.config")
+              + "/Dreambelievers/Pokemon Online/Mods/";
+#elif defined(Q_OS_WIN32)
+        static QString PoModLocalPath = QProcessEnvironment::systemEnvironment().value("APPDATA", QDir::homePath())
+              + "/Pokemon Online/Mods/";
+#else
+        static QString PoModLocalPath = "Mods/";
+#endif
+
+        static QString PoCurrentModPath;
+
 // Mods are only for files in db/pokes directory.
 inline int fill_count_files(const QString &filename);
 // Will prepend filename with correct path in the system for client.
@@ -42,7 +61,8 @@ class PokemonInfo
 {
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="db/pokes/", FillMode::FillModeType mode = FillMode::NoMod);
+    static void init(const QString &dir="db/pokes/", FillMode::FillModeType mode = FillMode::NoMod, const QString &modName = "");
+    static void reloadMod(FillMode::FillModeType mode = FillMode::NoMod, const QString &modName = "");
 
     /* Self-explainable functions */
     static int TrueCount(int gen=GEN_MAX); // pokes without counting forms
@@ -157,21 +177,24 @@ private:
     // To get random pokemon faster.
     static QList<Pokemon::uniqueId> m_VisiblePokesPlainList;
 
-    static void loadNames(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadEvos(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadBaseStats(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadMoves(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadClassifications(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadGenderRates(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadHeights(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadDescriptions(FillMode::FillModeType mode = FillMode::NoMod);
-    static void loadMinLevels(FillMode::FillModeType mode = FillMode::NoMod);
-
+    static void loadNames();
+    static void loadEvos();
+    static void loadBaseStats();
+    static void loadMoves();
+    static void loadClassifications();
+    static void loadGenderRates();
+    static void loadHeights();
+    static void loadDescriptions();
+    static void loadMinLevels();
     // Call this after loading all data.
     static void makeDataConsistent();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
     static QString path(const QString &filename);
     static int calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint8 ev);
+    // Clears pokemon data. Call reloadMod() after that to refill data.
+    static void clearData();
+    static FillMode::FillModeType m_CurrentMode;
+    static QString readModDirectory(const QString &modName);
 };
 
 class MoveInfo
