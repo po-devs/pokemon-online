@@ -2344,10 +2344,12 @@ struct MMSleepTalk : public MM
         removeFunction(turn(b,s), "UponAttackSuccessful", "SleepTalk");
         int mv = turn(b,s)["SleepTalkedMove"].toInt();
         BS::BasicMoveInfo info = tmove(b,s);
+        MoveEffect::unsetup(Move::SleepTalk, s, b);
         MoveEffect::setup(mv,s,s,b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
         b.useAttack(s, mv, true);
         MoveEffect::unsetup(mv,s,b);
+        MoveEffect::setup(Move::SleepTalk, s, s, b);
         tmove(b,s) = info;
     }
 };
@@ -3057,19 +3059,15 @@ struct MMRecycle : public MM {
     }
 
     static void daf (int s, int, BS &b) {
-        int source = b.player(s);
-
-        if (!team(b,source).contains("RecyclableItem") || b.poke(s).item() != 0) {
+        if (b.poke(s).itemUsed() == 0 || b.poke(s).item() != 0) {
             turn(b,s)["Failed"] = true;
         }
     }
 
     static void uas (int s, int, BS &b) {
-        int source = b.player(s);
-
-        int item = team(b,source)["RecyclableItem"].toInt();
+        int item = b.poke(s).itemUsed();
         b.sendMoveMessage(105,0,s,0,s,item);
-        team(b,source).remove("RecyclableItem");
+        b.poke(s).itemUsed() = 0;
         b.acqItem(s, item);
     }
 };

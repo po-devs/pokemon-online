@@ -50,6 +50,8 @@ class PokeBattle
     PROPERTY(quint8, level);
     PROPERTY(quint8, nature);
     PROPERTY(quint8, happiness);
+    PROPERTY(quint16, itemUsed);
+    PROPERTY(quint16, itemUsedTurn);
     PROPERTY(bool, shiny);
 public:
     PokeBattle();

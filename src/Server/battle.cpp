@@ -4240,10 +4240,11 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
     }
 }
 
-void BattleSituation::disposeItem(int  player) {
+void BattleSituation::disposeItem(int player) {
     int item = poke(player).item();
     if (item != 0) {
-        teamMemory(this->player(player))["RecyclableItem"] = item;
+        poke(player).itemUsed() = item;
+        poke(player).itemUsedTurn() = turn();
     }
     loseItem(player);
 }
