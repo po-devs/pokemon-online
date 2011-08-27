@@ -1840,9 +1840,9 @@ struct AMPickUp : public AM {
 
         int i = possibilities[b.true_rand()%possibilities.size()];
         int item = b.poke(i).itemUsed();
-        sendAbMessage(93, 0, p, 0, 0, item);
-        b.acqItem(s, item);
+        b.sendAbMessage(93, 0, s, 0, 0, item);
         b.poke(i).itemUsed() = 0;
+        b.acqItem(s, item);
     }
 };
 
