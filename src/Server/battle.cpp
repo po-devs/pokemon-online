@@ -2449,8 +2449,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     /* Special Occurence could be through the use of Magic Mirror for example,
       that's why it's needed */
-    if (!specialOccurence && !pokeMemory(s).contains("HasMovedOnce")) {
-        pokeMemory(s)["HasMovedOnce"] = turn();
+    if (!specialOccurence && !pokeMemory(player).contains("HasMovedOnce")) {
+        pokeMemory(player)["HasMovedOnce"] = turn();
     }
 
     if (specialOccurence) {
