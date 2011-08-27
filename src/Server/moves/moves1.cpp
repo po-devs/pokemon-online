@@ -567,7 +567,7 @@ struct MMFakeOut : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (poke(b,s).value("HasMovedOnce").toBool()) {
+        if (poke(b,s).value("HasMovedOnce").toInt() < b.turn()) {
             turn(b,s)["Failed"] = true;
         }
     }
