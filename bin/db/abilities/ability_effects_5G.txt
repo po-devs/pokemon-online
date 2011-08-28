@@ -51,7 +51,7 @@
 
 30-6#Keen Eye
 30-1#Hyper Cutter
-
+93#pickup
 67#Truant
 28#Hustle
 11#CuteCharm

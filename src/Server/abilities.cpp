@@ -1819,7 +1819,7 @@ struct AMRegeneration : public AM {
 
 struct AMPickUp : public AM {
     AMPickUp() {
-        functions["EndTurn6.20"] = &et;
+        functions["EndTurn26.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {
