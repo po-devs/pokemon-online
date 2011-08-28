@@ -215,7 +215,7 @@ public:
     //void playCry(int pokenum);
 
     void printLine(const QString &str, bool silent = false);
-    void printHtml(const QString &str, bool silent = false);
+    void printHtml(const QString &str, bool silent = false, bool newline = true);
     QString name(int spot) const;
     virtual QString nick(int spot) const;
     QString rnick(int spot) const;
