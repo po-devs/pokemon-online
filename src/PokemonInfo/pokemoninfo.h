@@ -105,7 +105,7 @@ public:
     static bool HasFormes(const Pokemon::uniqueId &pokeid);
     // Will NOT return base form.
     static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
-    static QList<Pokemon::uniqueId> VisibleFormes(const Pokemon::uniqueId &pokeid);
+    static QList<Pokemon::uniqueId> VisibleFormes(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static int MinLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static int MinEggLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
     static int AbsoluteMinLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);

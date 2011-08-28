@@ -245,16 +245,16 @@ void PokeBattle::changeStatus(int status)
 QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 {
     in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.item() >> po.ability()
-            >> po.happiness();
+       >> po.happiness();
 
     for (int i = 0; i < 5; i++) {
-	quint16 st;
-	in >> st;
-	po.setNormalStat(i+1, st);
+        quint16 st;
+        in >> st;
+        po.setNormalStat(i+1, st);
     }
 
     for (int i = 0; i < 4; i++) {
-	in >> po.move(i);
+        in >> po.move(i);
     }
 
     for (int i = 0; i < 6; i++) {
@@ -271,14 +271,14 @@ QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 QDataStream & operator << (QDataStream &out, const PokeBattle &po)
 {
     out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.item() << po.ability()
-            << po.happiness();
+        << po.happiness();
 
     for (int i = 0; i < 5; i++) {
-	out << po.normalStat(i+1);
+        out << po.normalStat(i+1);
     }
 
     for (int i = 0; i < 4; i++) {
-	out << po.move(i);
+        out << po.move(i);
     }
 
     for (int i = 0; i < 6; i++) {
@@ -310,7 +310,7 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
     gender() = poke.gender();
     lifePercent() = (poke.lifePoints() * 100) / poke.totalLifePoints();
     if (lifePercent() == 0 && poke.lifePoints() > 0) {
-	lifePercent() = 1;
+        lifePercent() = 1;
     }
     level() = poke.level();
 }
@@ -473,8 +473,8 @@ void TeamBattle::generateRandom(int gen)
                     continue;
                 }
                 if (MoveInfo::Power(movenum, gen) > 0 && movenum != Move::NaturalGift && movenum != Move::Snore && movenum != Move::Fling
-                    && !MoveInfo::isOHKO(movenum, gen) && movenum != Move::DreamEater && movenum != Move::SynchroNoise && movenum != Move::FalseSwipe
-                    && movenum != Move::Feint)
+                        && !MoveInfo::isOHKO(movenum, gen) && movenum != Move::DreamEater && movenum != Move::SynchroNoise && movenum != Move::FalseSwipe
+                        && movenum != Move::Feint)
                     off = true;
                 if(i == 3 && !off) {
                     continue;
@@ -531,7 +531,7 @@ const PokeBattle &TeamBattle::getByInternalId(int i) const
 QDataStream & operator >> (QDataStream &in, TeamBattle &te)
 {
     for (int i = 0; i < 6; i++) {
-	in >> te.poke(i);
+        in >> te.poke(i);
     }
 
     return in;
@@ -540,7 +540,7 @@ QDataStream & operator >> (QDataStream &in, TeamBattle &te)
 QDataStream & operator << (QDataStream &out, const TeamBattle &te)
 {
     for (int i = 0; i < 6; i++) {
-	out << te.poke(i);
+        out << te.poke(i);
     }
 
     return out;
@@ -647,10 +647,10 @@ QDataStream & operator << (QDataStream &out, const BattleChoices &po)
 bool BattleChoice::match(const BattleChoices &avail) const
 {
     if (!avail.attacksAllowed && (attackingChoice() || moveToCenterChoice())) {
-	return false;
+        return false;
     }
     if (!avail.switchAllowed && switchChoice()) {
-	return false;
+        return false;
     }
     if (rearrangeChoice()) {
         return false;
@@ -658,23 +658,23 @@ bool BattleChoice::match(const BattleChoices &avail) const
 
     if (attackingChoice()) {
         if (avail.struggle() != (attackSlot() == -1))
-	    return false;
-	if (!avail.struggle()) {
+            return false;
+        if (!avail.struggle()) {
             if (attackSlot() < 0 || attackSlot() > 3) {
-		//Crash attempt!!
-		return false;
-	    }
+                //Crash attempt!!
+                return false;
+            }
             return avail.attackAllowed[attackSlot()];
-	}
-	return true;
+        }
+        return true;
     }
 
     if (switchChoice()) {
         if (pokeSlot() < 0 || pokeSlot() > 5) {
-	    //Crash attempt!!
-	    return false;
-	}
-	return true;
+            //Crash attempt!!
+            return false;
+        }
+        return true;
     }
 
     if (moveToCenterChoice()) {
