@@ -959,12 +959,12 @@ QList<Pokemon::uniqueId> PokemonInfo::Formes(const Pokemon::uniqueId &pokeid, in
     return result;
 }
 
-QList<Pokemon::uniqueId> PokemonInfo::VisibleFormes(const Pokemon::uniqueId &pokeid)
+QList<Pokemon::uniqueId> PokemonInfo::VisibleFormes(const Pokemon::uniqueId &pokeid, int gen)
 {
     QList<Pokemon::uniqueId> result;
     for(quint16 i = 0; i <= NumberOfAFormes(pokeid); i++) {
         Pokemon::uniqueId poke(pokeid.pokenum, i);
-        if(Exists(poke) && AFormesShown(poke)) result.append(poke);
+        if(Exists(poke, gen) && AFormesShown(poke)) result.append(poke);
     }
     return result;
 }
@@ -1259,7 +1259,7 @@ Pokemon::uniqueId PokemonInfo::getRandomPokemon(int gen)
     if((random == 0) && (total > 1)) random = 1;
     Pokemon::uniqueId poke(random, 0);
     if(HasFormes(poke)) {
-        QList<Pokemon::uniqueId> formesList = VisibleFormes(poke);
+        QList<Pokemon::uniqueId> formesList = VisibleFormes(poke, gen);
         /* The pokemon doesn't always have visible formes */
         if (formesList.count() > 0)
             poke = formesList.value(true_rand() %  formesList.count());
