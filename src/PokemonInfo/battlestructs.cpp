@@ -557,6 +557,11 @@ void ShallowShownPoke::init(const PokeBattle &b)
     num = b.num();
     level = b.level();
     gender = b.gender();
+
+    /* All arceus formes have the same icon */
+    if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
+        num = Pokemon::Arceus;
+    }
 }
 
 QDataStream & operator >> (QDataStream &in, ShallowShownPoke &po) {

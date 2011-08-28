@@ -4,7 +4,7 @@
 
 
 Channel::Channel(const QString &name, int id, Client *parent)
-    : QObject(parent), client(parent), myname(name), myid(id), readyToQuit(false)
+    : QObject(parent), state(Inactive), client(parent), myname(name), myid(id), readyToQuit(false)
 {
     /* Those will actually be gotten back by the client itself, when
        he adds the channel */

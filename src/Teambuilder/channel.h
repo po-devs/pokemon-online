@@ -78,6 +78,13 @@ public:
 
     /* removes if necessary (i.e. empty) a tier */
     void cleanTier(QTreeWidgetItem *tier);
+
+    enum State {
+        Inactive,
+        Active,
+        Flashed
+    };
+    int state;
 signals:
     void quitChannel(int chanid);
     void battleReceived2(int battleid, int id1, int id2);
