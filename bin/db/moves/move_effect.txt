@@ -72,7 +72,7 @@ Deals damage to opponent equal to user's level. Affected by type immunities.
 If this attack is successful, user gains half of HP lost by opponent due to this attack.
 If this attack is successful, user gains half of HP lost by opponent due to this attack.
 {During effect, at the end of every round, if there is a Pokémon at user's position, opponent loses 1/8 of total HP, and the Pokémon at user's position gains HP lost by opponent. Effect ends when opponent is switched or uses Rapid Spin. Fails if opponent's current type includes Grass.}
-[E13C]
+Increases user's Special Attack by 1 stage.
 Good chance for a critical hit.
 Two-turn attack. Effectiveness is halved during Rain Dance, Sandstorm, fog, and Hail. During Sunny Day, this attack takes one turn.
 Poisons opponent.
@@ -292,7 +292,7 @@ In tall grass, very tall grass, or puddles, may put opponent to sleep. In caves 
 Two-turn attack. While user is using this attack, user is unaffected by attacks other than Surf and Whirlpool, and user doesn't lose HP because of Sandstorm and Hail.
 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
 On and under water, user's type becomes Water. In caves and on rocky ground, user's type becomes Rock. On tall grass, very tall grass, and puddles, user's type becomes Grass. On sand, mud, and other outdoor ground, user's type becomes Ground. On snow and ice, user's type becomes Ice. Elsewhere, user's type becomes Normal. Fails if user has Multitype or if determined type is the same as one of the user's types.
-[E141]
+Increases user's Special Attack by 2 stages.
 May decrease opponent's Special Defense by 1 stage.
 May decrease opponent's Special Attack by 1 stage.
 Decreases opponent's Attack by 2 stages.
