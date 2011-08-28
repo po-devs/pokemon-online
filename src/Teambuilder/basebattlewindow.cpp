@@ -46,10 +46,14 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
 
     init();
     show();
+
+    log->pushHtml("<!DOCTYPE html>");
+    log->pushHtml("<!-- Pokemon Online battle spectator log (version 1.0) -->");
     if (client) {
-        printLine(tr("Log belonging to %1").arg(client->name(ownid())), true);
-        printLine("", true);
+        log->pushHtml(QString("<!-- Log belonging to %1-->").arg(client->name(ownid())));
     }
+    log->pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(info().name(0), info().name(1)));
+    log->pushHtml("<body>");
     printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(name(true), name(false)));
 }
 
@@ -292,6 +296,7 @@ void BaseBattleWindow::animateHPBar()
 
 void BaseBattleWindow::checkAndSaveLog()
 {
+    log->pushHtml("</body>");
     if (saveLogs->isChecked()) {
         log->override = Log::OverrideYes;
     }
@@ -416,6 +421,9 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         printLine(tr("%1's new place on the field: %2.").arg(nick(spot)).arg(info().slotNum(spot)), true);
         printLine(tr("%1's life: %2%.").arg(nick(spot)).arg(info().currentShallow(spot).lifePercent()), true);
         printLine(tr("%1's status: %2.").arg(nick(spot), StatInfo::Status(info().currentShallow(spot).status())), true);
+        printLine(tr("%1's level: %2.").arg(nick(spot)).arg(info().currentShallow(spot).level()), true);
+        printLine(tr("%1's shininess: %2.").arg(nick(spot)).arg(info().currentShallow(spot).shiny()), true);
+        printLine(tr("%1's gender: %2.").arg(nick(spot)).arg(GenderInfo::Name(info().currentShallow(spot).gender())), true);
 
         break;
     }
@@ -920,13 +928,13 @@ void BaseBattleWindow::printLine(const QString &str, bool silent)
     }
 }
 
-void BaseBattleWindow::printHtml(const QString &str, bool silent)
+void BaseBattleWindow::printHtml(const QString &str, bool silent, bool newline)
 {
     if (!silent) {
         blankMessage = false;
     }
 
-    QString html = str + "<br />";
+    QString html = str + (newline?"<br />":"");
     if (!silent) {
         mychat->insertHtml(html);
         log->pushHtml(html);

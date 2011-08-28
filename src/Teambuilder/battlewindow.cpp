@@ -126,8 +126,11 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
 
     show();
 
-    printLine(tr("Log belonging to %1").arg(info().name(info().myself)), true);
-    printLine("", true);
+    log->pushHtml("<!DOCTYPE html>");
+    log->pushHtml("<!-- Pokemon Online battle log (version 1.0) -->");
+    log->pushHtml(QString("<!-- Log belonging to %1-->").arg(info().name(info().myself)));
+    log->pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(info().name(info().myself), info().name(info().opponent)));
+    log->pushHtml("<body>");
 
     printHtml(toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(name(1), name(0)));
 
@@ -551,7 +554,9 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         printLine(tr("%1's previous position in the team: %2.").arg(nick(spot)).arg(prevIndex), true);
         printLine(tr("%1's life: %2/%3 HP.").arg(nick(spot)).arg(info().currentPoke(spot).lifePoints()).arg(info().currentPoke(spot).totalLifePoints()), true);
         printLine(tr("%1's status: %2.").arg(nick(spot), StatInfo::Status(info().currentPoke(spot).status())), true);
-
+        printLine(tr("%1's level: %2.").arg(nick(spot)).arg(info().currentShallow(spot).level()), true);
+        printLine(tr("%1's shininess: %2.").arg(nick(spot)).arg(info().currentShallow(spot).shiny()), true);
+        printLine(tr("%1's gender: %2.").arg(nick(spot)).arg(GenderInfo::Name(info().currentShallow(spot).gender())), true);
 	    break;
 	}
     case ChangeHp:
