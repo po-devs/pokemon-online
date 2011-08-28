@@ -679,7 +679,6 @@ void BattleSituation::initializeEndTurnFunctions()
     6.17 Embargo
     6.18 Yawn
     6.19 Sticky Barb
-    6.20 Pickup
 
     7.0 Doom Desire, Future Sight
 
@@ -706,7 +705,7 @@ void BattleSituation::initializeEndTurnFunctions()
 
         addEndTurnEffect(ItemEffect, 6, 7); /* Orbs */
         addEndTurnEffect(ItemEffect, 6, 19); /* Sticky Barb */
-        addEndTurnEffect(AbilityEffect, 6, 20); /* Pick-up */
+
 
         addEndTurnEffect(AbilityEffect, 12, 0); /* Slow Start */
     } else {
@@ -772,6 +771,7 @@ void BattleSituation::initializeEndTurnFunctions()
         26.0 Uproar message
         26.1 Speed Boost, Bad Dreams, Harvest, Moody
         26.2 Toxic Orb activation, Flame Orb activation, Sticky Barb
+        26.3 pickup
 
         27.0 Zen Mode
 
@@ -789,7 +789,7 @@ void BattleSituation::initializeEndTurnFunctions()
 
         addEndTurnEffect(OwnEffect, 9, 0, 0, "", NULL, &BattleSituation::endTurnStatus);
 
-        addEndTurnEffect(AbilityEffect, 26, 1); /* Speed Boost, Bad Dreams, Harvest, Moody */
+        addEndTurnEffect(AbilityEffect, 26, 1); /* Speed Boost, Bad Dreams, Harvest, Pickup Moody */
         addEndTurnEffect(AbilityEffect, 26, 2); /* Orbs, sticky barb */
 
         addEndTurnEffect(AbilityEffect, 27, 0); /* Daruma Mode */
