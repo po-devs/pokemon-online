@@ -227,21 +227,6 @@ void PokeBattle::updateStats(int gen)
     }
 }
 
-int PokeBattle::status() const
-{
-    if (fullStatus() & (1 << Pokemon::Koed))
-        return Pokemon::Koed;
-    return intlog2(fullStatus() & (0x3F));
-}
-
-void PokeBattle::changeStatus(int status)
-{
-    /* Clears past status */
-    fullStatus() = fullStatus() & ~( (1 << Pokemon::Koed) | 0x3F);
-    /* Adds new status */
-    fullStatus() = fullStatus() | (1 << status);
-}
-
 QDataStream & operator >> (QDataStream &in, PokeBattle &po)
 {
     in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.item() >> po.ability()
@@ -328,6 +313,21 @@ void ShallowBattlePoke::changeStatus(int status)
     fullStatus() = fullStatus() & ~( (1 << Pokemon::Koed) | 0x3F);
     /* Adds new status */
     fullStatus() = fullStatus() | (1 << status);
+}
+
+void ShallowBattlePoke::addStatus(int status)
+{
+    if (status <= Pokemon::Poisoned || status == Pokemon::Koed) {
+        changeStatus(status);
+        return;
+    }
+
+    fullStatus() = fullStatus() | (1 << status);
+}
+
+void ShallowBattlePoke::removeStatus(int status)
+{
+    fullStatus() = fullStatus() & ~(1 << status);
 }
 
 
