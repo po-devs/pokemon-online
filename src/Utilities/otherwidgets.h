@@ -11,6 +11,7 @@
 #include <QProgressBar>
 #include <QMenu>
 #include <QLineEdit>
+#include <QMimeData>
 #include <QLabel>
 
 class QVBoxLayout;
@@ -238,6 +239,19 @@ private:
     int completeIndex;
     QString beginning;
     //QString m_Currentline;//Stores a copy of the current text in the LineEdit.
+};
+
+class QMimeOnDesktop : public QMimeData
+{
+public:
+    void setExtension(const QString &ext);
+    void setData(const QByteArray &data);
+protected:
+    QVariant retrieveData ( const QString & mimeType, QVariant::Type type ) const;
+private:
+    QString ext;
+    QByteArray data;
+    QString path;
 };
 
 class QDraggableLabel : public QLabel
