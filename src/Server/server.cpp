@@ -125,7 +125,7 @@ void Server::start(){
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
 
-    printLine(tr("PokÃ©mon database loaded"));
+    printLine(tr("Pokemon database loaded"));
 
     MoveEffect::init();
     ItemEffect::init();
