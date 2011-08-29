@@ -9,6 +9,10 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QScrollBar>
+#include <QImage>
+#include <QBuffer>
+#include <QDir>
+#include <QTemporaryFile>
 
 QCompactTable::QCompactTable(int row, int column)
     : QTableWidget(row, column)
@@ -618,12 +622,47 @@ void QIRCLineEdit::clear()
     QLineEdit::clear();
 }
 
+QVariant QMimeOnDesktop::retrieveData(const QString &mimeType, QVariant::Type type) const
+{
+    if (mimeType != "text/uri-list" || path.isNull())
+        return QMimeData::retrieveData(mimeType, type);
+
+    QFile out(path);
+    out.open(QIODevice::WriteOnly);
+    out.write(data);
+    out.close();
+
+    return QMimeData::retrieveData(mimeType, type);
+}
+
+void QMimeOnDesktop::setExtension(const QString &ext)
+{
+    this->ext = ext;
+}
+
+void QMimeOnDesktop::setData(const QByteArray &data)
+{
+    QTemporaryFile temp(QDir::tempPath() + "/po_file_temp_XXXXXX"+(ext.isNull() ? "":"."+ext));
+    temp.open();
+    path = temp.fileName();
+    this->data = data;
+    setUrls(QList<QUrl>() << QUrl::fromLocalFile(path));
+}
+
 void QDraggableLabel::mousePressEvent(QMouseEvent *)
 {
     QPixmap pix = *this->pixmap();
 
-    QMimeData *data = new QMimeData();
-    data->setImageData(pix);
+    QMimeOnDesktop *data = new QMimeOnDesktop();
+    QByteArray array;
+    QBuffer b(&array);
+    b.open(QIODevice::WriteOnly);
+    QImage img = pix.toImage();
+    img.save(&b, "PNG");
+    b.close();
+
+    data->setExtension("png");
+    data->setData(array);
     QDrag *drag = new QDrag(this);
     drag->setPixmap(pix);
     drag->setMimeData(data);
