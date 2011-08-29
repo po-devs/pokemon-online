@@ -790,7 +790,7 @@ void BattleSituation::initializeEndTurnFunctions()
         addEndTurnEffect(OwnEffect, 9, 0, 0, "", NULL, &BattleSituation::endTurnStatus);
 
         addEndTurnEffect(AbilityEffect, 26, 1); /* Speed Boost, Bad Dreams, Harvest, Pickup Moody */
-        addEndTurnEffect(AbilityEffect, 26, 2); /* Orbs, sticky barb */
+        addEndTurnEffect(ItemEffect, 26, 2); /* Orbs, sticky barb */
 
         addEndTurnEffect(AbilityEffect, 27, 0); /* Daruma Mode */
 
