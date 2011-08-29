@@ -2027,7 +2027,7 @@ void Client::printLine(int playerid, const QString &line)
 {
     foreach(Channel *c, mychannels) {
         if (c->hasPlayer(playerid))
-            c->printLine(line);
+            c->printLine(line, false);
     }
 }
 
@@ -2035,7 +2035,7 @@ void Client::printLine(int event, int playerid, const QString &line)
 {
     foreach(Channel *c, mychannels) {
         if (c->hasPlayer(playerid) && c->eventEnabled(event))
-            c->printLine(line);
+            c->printLine(line, false);
     }
 }
 

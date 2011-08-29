@@ -70,7 +70,7 @@ public:
 
     QString addChannelLinks(const QString &line);
     void checkFlash(const QString &haystack, const QString &needle);
-    void printLine(const QString &str);
+    void printLine(const QString &str, bool flashing = true);
     void printHtml(const QString &str);
 
     void dealWithCommand(int command, QDataStream *stream);
