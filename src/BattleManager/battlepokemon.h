@@ -1,0 +1,4 @@
+#ifndef BATTLEPOKEMON_H
+#define BATTLEPOKEMON_H
+
+#endif // BATTLEPOKEMON_H
