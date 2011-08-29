@@ -617,3 +617,16 @@ void QIRCLineEdit::clear()
     listindex = m_Inputlist.size() - 1;
     QLineEdit::clear();
 }
+
+void QDraggableLabel::mousePressEvent(QMouseEvent *)
+{
+    QPixmap pix = *this->pixmap();
+
+    QMimeData *data = new QMimeData();
+    data->setImageData(pix);
+    QDrag *drag = new QDrag(this);
+    drag->setPixmap(pix);
+    drag->setMimeData(data);
+
+    drag->exec();
+}

@@ -11,9 +11,9 @@
 #include <QProgressBar>
 #include <QMenu>
 #include <QLineEdit>
+#include <QLabel>
 
 class QVBoxLayout;
-class QLabel;
 class QCompleter;
 /*
     Those are widgets that Qt lacks, and that are to use like Qt Widgets
@@ -238,6 +238,12 @@ private:
     int completeIndex;
     QString beginning;
     //QString m_Currentline;//Stores a copy of the current text in the LineEdit.
+};
+
+class QDraggableLabel : public QLabel
+{
+private:
+    void mousePressEvent(QMouseEvent *event);
 };
 
 #endif // OTHERWIDGETS_H

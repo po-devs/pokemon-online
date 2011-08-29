@@ -560,7 +560,7 @@ void Channel::checkFlash(const QString &haystack, const QString &needle)
     }
 }
 
-void Channel::printLine(const QString &line)
+void Channel::printLine(const QString &line, bool flashing)
 {
     QString timeStr = "";
     if(client->showTS)
