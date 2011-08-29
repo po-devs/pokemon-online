@@ -1198,6 +1198,10 @@ void Client::changeBattleLogFolder()
     QString dir = QFileDialog::getExistingDirectory(this, tr("Battle Logs Directory"),
                                                     QDir::home().absoluteFilePath(LogManager::obj()->getDirectoryForType(BattleLog)));
 
+    if (dir.isNull()) {
+        return;
+    }
+
     LogManager::obj()->changeDirectoryForType(BattleLog, dir);
 }
 
