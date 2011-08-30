@@ -19,7 +19,9 @@ HEADERS += battlemanager.h\
     battledata.h \
     command.h \
     commandmanager.h \
-    commandextracter.h
+    commandextracter.h \
+    commandflow.h \
+    commandinvoke.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 

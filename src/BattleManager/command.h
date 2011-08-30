@@ -6,18 +6,21 @@
 
 struct AbstractCommand {
     virtual void apply() = 0;
+    virtual ~AbstractCommand(){}
 };
 
-template<class T, typename...Params>
-struct Command {
+template<class T, class enumC, enumC val, typename...Params>
+struct Command : public AbstractCommand
+{
     typedef std::tuple<Params...> tupleType;
     typedef T boundType;
+    typedef enumC enumClass;
 
-    Command(boundType*cl, Params&&... params) : m_tuple(params...), m_assoc(cl){
+    Command(boundType*cl, Params... params) : m_tuple(params...), m_assoc(cl){
     }
 
     void apply() {
-        apply<(void(boundType::*)(Params...))T::receiveCommand>();
+        apply<(void(boundType::*)(Params...))T::template receiveCommand<val> >();
     }
     template<void(boundType::*func)(Params...)>
     void apply() {
