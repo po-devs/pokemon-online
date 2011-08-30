@@ -14,7 +14,14 @@ SOURCES += battlemanager.cpp
 HEADERS += battlemanager.h\
         BattleManager_global.h \
     battlepokemon.h \
-    abstractbattlepokemon.h
+    abstractbattlepokemon.h \
+    battleteam.h \
+    battledata.h \
+    command.h \
+    commandmanager.h \
+    commandextracter.h
+
+QMAKE_CXXFLAGS += "-std=c++0x"
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
