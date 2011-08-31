@@ -31,8 +31,8 @@ public:
     typedef Invoker invokeType;
 
     template <enumClass val, typename ...Params>
-    void receiveCommand(Params... params) {
-        flowType::template receiveCommand<val, Params...>(params...);
+    void receiveCommand(Params&&... params) {
+        flowType::template receiveCommand<val, Params...>(std::forward<Params>(params)...);
     }
 
     template <enumClass val, typename ...Params>
@@ -42,21 +42,21 @@ public:
     bool shouldSaveCommand(Params...) {return false;}
 
     template <enumClass val, typename ...Params>
-    void invoke(Params... params) {
-        invokeType::template invoke<val, Params...>(params...);
+    void invoke(Params&&... params) {
+        invokeType::template invoke<val, Params...>(std::forward<Params>(params)...);
     }
 
     template <enumClass val, typename ...Params>
     void output(Params...) {}
 
     template <enumClass val, typename ...Params>
-    AbstractCommand* createCommand(Params... params) {
-        return new Command<type, enumClass, val, Params...>(this, params...);
+    AbstractCommand* createCommand(Params&&... params) {
+        return new Command<type, enumClass, val, Params...>(this, std::forward<Params>(params)...);
     }
 
     template <enumClass val, typename ...Params>
-    void replayCommand(Params... params) {
-        receiveCommand<val, Params...>(params...);
+    AbstractCommand* replayCommand(Params&&... params) {
+        receiveCommand<val, Params...>(std::forward<Params>(params)...);
     }
 
     /* Not by default */
