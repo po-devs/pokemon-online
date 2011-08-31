@@ -20,8 +20,9 @@ struct Command : public AbstractCommand
     }
 
     void apply() {
-        apply<(void(boundType::*)(Params...))T::template receiveCommand<val> >();
+        apply<(void(boundType::*)(Params...))T::template replayCommand<val> >();
     }
+
     template<void(boundType::*func)(Params...)>
     void apply() {
         /* Easy way: use a function. TODO: do it directly (more efficient) */
