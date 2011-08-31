@@ -54,6 +54,11 @@ public:
         return new Command<type, enumClass, val, Params...>(this, params...);
     }
 
+    template <enumClass val, typename ...Params>
+    void replayCommand(Params... params) {
+        receiveCommand<val, Params...>(params...);
+    }
+
     /* Not by default */
     void store(AbstractCommand *c) {
         delete c;
