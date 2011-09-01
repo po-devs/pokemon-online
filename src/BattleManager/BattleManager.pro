@@ -9,19 +9,18 @@ TEMPLATE = lib
 
 DEFINES += BATTLEMANAGER_LIBRARY
 
-SOURCES += battlemanager.cpp
+SOURCES += \
+    battleextracter.cpp
 
-HEADERS += battlemanager.h\
-        BattleManager_global.h \
-    battlepokemon.h \
-    abstractbattlepokemon.h \
-    battleteam.h \
-    battledata.h \
+HEADERS +=\
     command.h \
     commandmanager.h \
     commandextracter.h \
     commandflow.h \
-    commandinvoke.h
+    commandinvoke.h \
+    battleenum.h \
+    battlecommandmanager.h \
+    battleextracter.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 

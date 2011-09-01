@@ -3,10 +3,11 @@
 
 #include <functional>
 
-#include "commandextracter.h"
 #include "command.h"
 #include "commandflow.h"
 #include "commandinvoke.h"
+
+#include "battleextracter.h"
 
 template <class T>
 class AbstractCommandManager
