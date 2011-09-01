@@ -9,8 +9,7 @@ TEMPLATE = lib
 
 DEFINES += BATTLEMANAGER_LIBRARY
 
-SOURCES += \
-    battleextracter.cpp
+SOURCES +=
 
 HEADERS +=\
     command.h \
