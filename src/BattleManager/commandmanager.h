@@ -2,7 +2,6 @@
 #define COMMANDMANAGER_H
 
 #include <functional>
-#include <utility>
 
 #include "commandextracter.h"
 #include "command.h"
