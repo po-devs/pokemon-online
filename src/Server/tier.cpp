@@ -681,6 +681,7 @@ void Tier::resetLadder()
 
     q.exec(QString("delete from %1").arg(sql_table));
     clearCache();
+    m_count = 0;
 }
 
 void Tier::clearCache()
