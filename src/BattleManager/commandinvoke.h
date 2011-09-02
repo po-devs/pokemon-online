@@ -9,7 +9,8 @@ public:
     typedef Underling workerClass;
 
     template <enumClass val, typename ...Params>
-    void invoke(Params... params) {
+    void invoke(Params&&... params) {
+        workerClass::template mInvoker<val, Params...>(std::forward<Params>(params)...);
     }
 };
 

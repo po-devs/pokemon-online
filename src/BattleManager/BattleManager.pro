@@ -9,7 +9,8 @@ TEMPLATE = lib
 
 DEFINES += BATTLEMANAGER_LIBRARY
 
-SOURCES +=
+SOURCES += \
+    test.cpp
 
 HEADERS +=\
     command.h \
@@ -19,7 +20,9 @@ HEADERS +=\
     commandinvoke.h \
     battleenum.h \
     battlecommandmanager.h \
-    battleextracter.h
+    battleextracter.h \
+    battlecommandinvoker.h \
+    test.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 

@@ -6,8 +6,7 @@
 #include "command.h"
 #include "commandflow.h"
 #include "commandinvoke.h"
-
-#include "battleextracter.h"
+#include "commandextracter.h"
 
 template <class T>
 class AbstractCommandManager
@@ -52,12 +51,17 @@ public:
         invokeType::template invoke<val, Params...>(std::forward<Params>(params)...);
     }
 
+    template <enumClass val, typename ...Params>
+    void mInvoke(Params&&...) {
+
+    }
+
     void entryPoint(enumClass commandId, va_list args) {
         extracterType::entryPoint(commandId, args);
     }
 
     template <enumClass val, typename ...Params>
-    void entryPoint(Params...) {
+    void entryPoint(Params&&...params) {
         receiveCommand<val, Params...>(std::forward<Params>(params)...);
     }
 
@@ -79,7 +83,7 @@ public:
     }
 
     template <enumClass val, typename ...Params>
-    AbstractCommand* replayCommand(Params&&... params) {
+    void replayCommand(Params&&... params) {
         receiveCommand<val, Params...>(std::forward<Params>(params)...);
     }
 
