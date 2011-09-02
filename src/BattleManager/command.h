@@ -20,15 +20,7 @@ struct Command : public AbstractCommand
     }
 
     void apply() {
-        apply<(void(boundType::*)(Params...))T::template replayCommand<val> >();
-    }
-
-    template<void(boundType::*func)(Params...)>
-    void apply() {
-        /* Easy way: use a function. TODO: do it directly (more efficient) */
-        std::function<void(boundType*, Params...)> f = func;
-        (void)f;
-        //::apply(func, tuple) /* TODO: execute f with the params, using the tuple */
+        /* Apply boundType::template replayCommand on tuple */
     }
 
     tupleType m_tuple;

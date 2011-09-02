@@ -13,18 +13,18 @@ public:
     typedef Current workerClass;
     typedef battle::BattleEnum enumClass;
 
-    typedef void (*extrac_func)(BattleExtracter<Current>*, va_list);
+    typedef void (BattleExtracter<Current>::*extrac_func)(va_list);
 
     BattleExtracter();
     void entryPoint(enumClass, va_list);
 
     template <enumClass val, typename ...Params>
     void forwardCommand(Params&&...params) {
-        workerClass::template receiveCommand<val, Params...>(std::forward<Params>(params)...);
+        wc()->template receiveCommand<val, Params...>(std::forward<Params>(params)...);
     }
 
     void forwardUnknownCommand(enumClass val, va_list args) {
-        workerClass::unknownEntryPoint(val, args);
+        wc()->unknownEntryPoint(val, args);
     }
 
 protected:
@@ -40,6 +40,10 @@ protected:
     };
 
     void extractKo(va_list);
+
+    inline workerClass* wc() {
+        return (workerClass*)this;
+    }
 };
 
 template <class C>
@@ -63,7 +67,7 @@ void BattleExtracter<C>::entryPoint(enumClass val, va_list args)
         forwardUnknownCommand(val, args);
         return;
     }
-    callbacks[val](args);
+    (this->*callbacks[val])(args);
 }
 
 

@@ -29,12 +29,16 @@ protected:
 
     template<class Y=int>
     typename test<decltype(sizeof(Y)+sizeof(decltype(&workerClass::onKo)))>::type invoke2(Param<battle::Ko>, uint8_t spot) {
-        workerClass::onKo(spot);
+        wc()->onKo(spot);
     }
 
     template<enumClass val,typename...Params>
     void invoke2(Param<val>, Params&&...params) {
-        workerClass::template mInvoke<val, Params...>(std::forward<Params>(params)...);
+        wc()->template mInvoke<val, Params...>(std::forward<Params>(params)...);
+    }
+
+    inline workerClass* wc() {
+        return (workerClass*)(this);
     }
 };
 
