@@ -2831,7 +2831,7 @@ struct MMOutrage : public MM
     }
 
     static void aas(int s, int, BS &b) {
-        if (poke(b,s).contains("OutrageUntil") && b.turn() == poke(b,s)["OutrageUntil"].toInt() && poke(b,s)["LastOutrage"] == b.turn()) {
+        if (poke(b,s).contains("OutrageUntil") && b.turn() == poke(b,s)["OutrageUntil"].toInt()) {
             removeFunction(poke(b,s), "TurnSettings", "Outrage");
             b.removeEndTurnEffect(BS::PokeEffect, s, "Outrage");
             poke(b,s).remove("OutrageUntil");
@@ -2849,6 +2849,7 @@ struct MMOutrage : public MM
 
             if (b.gen() >=5) {
                 addFunction(turn(b, s), "AfterAttackSuccessful", "Outrage", &aas);
+                addFunction(turn(b, s), "AttackSomehowFailed", "Outrage", &aas);
             }
         }
     }
