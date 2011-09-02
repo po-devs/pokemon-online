@@ -1,6 +1,7 @@
 #ifndef BATTLEEXTRACTER_H
 #define BATTLEEXTRACTER_H
 
+#include <QHash>
 #include <cstdarg>
 #include <stdint.h>
 #include <unordered_map>
@@ -16,7 +17,7 @@ public:
     typedef void (BattleExtracter<Current>::*extrac_func)(va_list);
 
     BattleExtracter();
-    void entryPoint(enumClass, va_list);
+    void entryPoint_v(enumClass, va_list);
 
     template <enumClass val, typename ...Params>
     void forwardCommand(Params&&...params) {
@@ -28,7 +29,7 @@ public:
     }
 
 protected:
-    std::unordered_map<enumClass, extrac_func> callbacks;
+    QHash<enumClass, extrac_func> callbacks;
 
     /* C++0x doesn't introduce function specialisation, so here goes with
       structures */
@@ -49,7 +50,7 @@ protected:
 template <class C>
 void BattleExtracter<C>::extractKo(va_list args)
 {
-    uint8_t spot = va_arg(args, uint8_t);
+    uint8_t spot = va_arg(args, int);
 
     forwardCommand<battle::Ko>(spot);
 }
@@ -61,7 +62,7 @@ BattleExtracter<C>::BattleExtracter()
 }
 
 template <class C>
-void BattleExtracter<C>::entryPoint(enumClass val, va_list args)
+void BattleExtracter<C>::entryPoint_v(enumClass val, va_list args)
 {
     if (callbacks.find(val) == callbacks.end()) {
         forwardUnknownCommand(val, args);

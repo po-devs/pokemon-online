@@ -11,7 +11,8 @@ enum BattleEnum
     Ko,
     SendOut,
     SendBack,
-    UseAttack
+    UseAttack,
+    Turn
 };
 
 };
