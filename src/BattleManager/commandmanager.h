@@ -96,7 +96,7 @@ public:
 private:
     enum {
         /* If triggered, means Current is incorrect type */
-        ErrorCurrentShouldBeCastableToBase = static_cast<AbstractCommandManager<enumClass> *>((Current*) (NULL))
+        ErrorCurrentShouldBeCastableToBase = sizeof(dynamic_cast<AbstractCommandManager<enumClass> *>((Current*) (NULL)))
     };
 };
 
