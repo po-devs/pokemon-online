@@ -44,7 +44,7 @@ public:
     bool shouldInvoke(Params...){return true;}
 
     template <enumClass val, typename ...Params>
-    bool shouldSaveCommand(Params...) {return false;}
+    bool shouldStore(Params...) {return false;}
 
     template <enumClass val, typename ...Params>
     void invoke(Params&&... params) {
@@ -79,7 +79,7 @@ public:
 
     template <enumClass val, typename ...Params>
     AbstractCommand* createCommand(Params&&... params) {
-        return new Command<type, enumClass, val, Params...>(this, std::forward<Params>(params)...);
+        return new Command<type, enumClass, val, Params...>(wc(), std::forward<Params>(params)...);
     }
 
     template <enumClass val, typename ...Params>
@@ -91,6 +91,10 @@ public:
     void store(AbstractCommand *c) {
         delete c;
         return;
+    }
+
+    inline type* wc() {
+        return (type*)(this);
     }
 
 private:

@@ -10,15 +10,19 @@ public:
 
     template <enumClass val, typename ...Params>
     void receiveCommand(Params... params) {
-        if (workerClass::template shouldInvoke<val, Params...>(params...)) {
-            workerClass::template invoke<val, Params...>(params...);
+        if (wc()->template shouldInvoke<val, Params...>(params...)) {
+            wc()->template invoke<val, Params...>(params...);
         }
 
-        workerClass::template output<val, Params...>(params...);
+        wc()->template output<val, Params...>(params...);
 
-        if (workerClass::template shouldStore<val, Params...>(params...)) {
-            workerClass::template store(workerClass::template createCommand<val, Params...>(params...));
+        if (wc()->template shouldStore<val, Params...>(params...)) {
+            wc()->template store(wc()->template createCommand<val, Params...>(params...));
         }
+    }
+
+    inline workerClass* wc() {
+        return (workerClass*)(this);
     }
 };
 
