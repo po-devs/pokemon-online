@@ -94,7 +94,7 @@ public:
     }
 
     inline type* wc() {
-        return (type*)(this);
+        return static_cast<type*>(this);
     }
 
 private:

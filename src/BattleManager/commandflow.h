@@ -22,7 +22,7 @@ public:
     }
 
     inline workerClass* wc() {
-        return (workerClass*)(this);
+        return static_cast<workerClass*>(this);
     }
 };
 
