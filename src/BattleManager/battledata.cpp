@@ -1,8 +1,7 @@
 #include "battledata.h"
 #include "shareddataptr.h"
 
-void BattleData::onKo(int spot)
+void BattleData::onKo(int)
 {
-    throw int(0);
-    (void) spot;
+    puts("onKo called");
 }

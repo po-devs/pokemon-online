@@ -14,11 +14,11 @@ class AbstractCommandManager
 public:
     typedef T enumClass;
 
-    virtual void entryPoint(enumClass commandId, va_list) = 0;
+    virtual void entryPoint_v(enumClass commandId, va_list) = 0;
     void entryPoint(enumClass commandId, ...) {
         va_list args;
         va_start(args, commandId);
-        entryPoint(commandId, args);
+        entryPoint_v(commandId, args);
         va_end(args);
     }
 };
@@ -56,12 +56,12 @@ public:
 
     }
 
-    void entryPoint(enumClass commandId, va_list args) {
-        extracterType::entryPoint(commandId, args);
+    void entryPoint_v(enumClass commandId, va_list args) {
+        extracterType::entryPoint_v(commandId, args);
     }
 
     template <enumClass val, typename ...Params>
-    void entryPoint(Params&&...params) {
+    void entryPoint_tpl(Params&&...params) {
         receiveCommand<val, Params...>(std::forward<Params>(params)...);
     }
 

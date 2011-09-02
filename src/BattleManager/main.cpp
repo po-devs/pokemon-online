@@ -5,7 +5,7 @@ extern void testing();
 
 int main()
 {
-    puts("beginning test program...");
+    printf("beginning test program...\n");
     testing();
     return 0;
 }
