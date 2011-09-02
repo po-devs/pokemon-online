@@ -1013,8 +1013,7 @@ void BattleSituation::endTurn()
                     if (flags == ZoneEffect) {
                         QString effect = bracketToEffect[b];
 
-                        int p = this->player(player);
-                        callzeffects(p, p, effect);
+                        callzeffects(i, i, effect);
                     }
                 }
             }
