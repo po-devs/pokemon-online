@@ -5,12 +5,14 @@
 #-------------------------------------------------
 
 TARGET = BattleManager
-TEMPLATE = lib
+TEMPLATE = app
 
 DEFINES += BATTLEMANAGER_LIBRARY
 
 SOURCES += \
-    battledata.cpp
+    battledata.cpp \
+    main.cpp \
+    testing.cpp
 
 HEADERS +=\
     command.h \

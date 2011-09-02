@@ -26,7 +26,9 @@ public:
     }
 
 protected:
-    typename test<decltype(&workerClass::onKo)>::type invoke2(Param<battle::Ko>, uint8_t spot) {
+
+    template<class Y=int>
+    typename test<decltype(sizeof(Y)+sizeof(decltype(&workerClass::onKo)))>::type invoke2(Param<battle::Ko>, uint8_t spot) {
         workerClass::onKo(spot);
     }
 

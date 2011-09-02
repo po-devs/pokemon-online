@@ -53,7 +53,7 @@ void BattleExtracter<C>::extractKo(va_list args)
 template<class C>
 BattleExtracter<C>::BattleExtracter()
 {
-    callbacks.insert(battle::Ko, &extractKo);
+    callbacks.insert(battle::Ko, &BattleExtracter<workerClass>::extractKo);
 }
 
 template <class C>

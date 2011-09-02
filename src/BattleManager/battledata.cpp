@@ -3,5 +3,6 @@
 
 void BattleData::onKo(int spot)
 {
+    throw int(0);
     (void) spot;
 }
