@@ -949,7 +949,8 @@ void BattleSituation::endTurn()
         }
         i -= 1;
 
-        bool side1(false), side2(false);
+        quint32 side1(0), side2(0);
+        bool fullLoop[2] = {false, false};
 
         for(int z = 0; z < speedsVector.size(); z++) {
             int player = speedsVector[z];
@@ -980,12 +981,13 @@ void BattleSituation::endTurn()
                     (this->*f)(player);
                 } else if (flags == ZoneEffect) {
                     int p = this->player(player);
+                    quint32 mask = 1 << b.priority;
 
-                    if (p == Player1 && !side1) {
-                        side1 = true;
+                    if (p == Player1 && !(side1&mask)) {
+                        side1 |= mask;
                         callzeffects(p, p, effect);
-                    } else if (p == Player2 && !side2) {
-                        side2 = true;
+                    } else if (p == Player2 && !(side2&mask)) {
+                        side2 |= mask;
                         callzeffects(p, p, effect);
                     }
                 }
@@ -996,9 +998,27 @@ void BattleSituation::endTurn()
                     break;
                 }
             }
+            int p = this->player(player);
+            if (p > 0 && p < sizeof(fullLoop)/sizeof(*fullLoop)) {
+                fullLoop[p] = true;
+            }
         }
 
-        continue;
+        for (int i = Player1; i <= Player2; i++) {
+            if (!fullLoop[i]) {
+                for (int j = beginning; j <= i; j++) {
+                    priorityBracket b = endTurnEffects[j];
+
+                    int flags = bracketType[b];
+                    if (flags == ZoneEffect) {
+                        QString effect = bracketToEffect[b];
+
+                        int p = this->player(player);
+                        callzeffects(p, p, effect);
+                    }
+                }
+            }
+        }
     }
     while (ownBracket < ownEndFunctions.size()) {
         VoidFunction f = ownEndFunctions[ownBracket].second;
