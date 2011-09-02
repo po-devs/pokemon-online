@@ -15,7 +15,13 @@ class AbstractCommandManager
 public:
     typedef T enumClass;
 
-    virtual void entryPoint(enumClass commandId, ...) = 0;
+    virtual void entryPoint(enumClass commandId, va_list) = 0;
+    void entryPoint(enumClass commandId, ...) {
+        va_list args;
+        va_start(args, commandId);
+        entryPoint(commandId, args);
+        va_end(args);
+    }
 };
 
 /* Example class inherited from AbstractCommandManager, with some cool functionalities */
@@ -44,6 +50,24 @@ public:
     template <enumClass val, typename ...Params>
     void invoke(Params&&... params) {
         invokeType::template invoke<val, Params...>(std::forward<Params>(params)...);
+    }
+
+    void entryPoint(enumClass commandId, va_list args) {
+        extracterType::entryPoint(commandId, args);
+    }
+
+    template <enumClass val, typename ...Params>
+    void entryPoint(Params...) {
+        receiveCommand<val, Params...>(std::forward<Params>(params)...);
+    }
+
+    void unknownEntryPoint(enumClass, va_list) {
+        /* If your class never introduces delays, i.e. always forward
+          and keeps nothing in storage, it's safe to use
+          va_copy to pass it to the outputs.
+
+          Same if all the Extracter<enumClass> never introduce non-POD
+          types, or pointer that may go dangling with delays */
     }
 
     template <enumClass val, typename ...Params>

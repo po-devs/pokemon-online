@@ -16,11 +16,15 @@ public:
     typedef void (*extrac_func)(BattleExtracter<Current>*, va_list);
 
     BattleExtracter();
-    void entryPoint(enumClass, ...);
+    void entryPoint(enumClass, va_list);
 
     template <enumClass val, typename ...Params>
     void forwardCommand(Params&&...params) {
         workerClass::template receiveCommand<val, Params...>(std::forward<Params>(params)...);
+    }
+
+    void forwardUnknownCommand(enumClass val, va_list args) {
+        workerClass::unknownEntryPoint(val, args);
     }
 
 protected:
@@ -53,15 +57,13 @@ BattleExtracter<C>::BattleExtracter()
 }
 
 template <class C>
-void BattleExtracter<C>::entryPoint(enumClass val, ...)
+void BattleExtracter<C>::entryPoint(enumClass val, va_list args)
 {
     if (callbacks.find(val) == callbacks.end()) {
-        return; //TODO: ideally, forward it with a va_args argument
+        forwardUnknownCommand(val, args);
+        return;
     }
-    va_list args;
-    va_begin(args, val);
     callbacks[val](args);
-    va_end(args);
 }
 
 
