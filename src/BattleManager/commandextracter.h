@@ -1,6 +1,8 @@
 #ifndef COMMANDEXTRACTER_H
 #define COMMANDEXTRACTER_H
 
+#include <cstdarg>
+
 template <class T, class Underling>
 class CommandExtracter
 {

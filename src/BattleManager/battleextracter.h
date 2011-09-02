@@ -35,7 +35,7 @@ protected:
     template <enumClass val>
     struct extracter {
         extracter (BattleExtracter<Current> *pointer) : pointer(pointer) {}
-        void operator (va_list);
+        void operator ()(va_list);
         BattleExtracter<Current> *pointer;
     };
 
@@ -47,13 +47,13 @@ void BattleExtracter<C>::extractKo(va_list args)
 {
     uint8_t spot = va_arg(args, uint8_t);
 
-    forwardCommand<Ko>(spot);
+    forwardCommand<battle::Ko>(spot);
 }
 
 template<class C>
 BattleExtracter<C>::BattleExtracter()
 {
-    callbacks.insert(Ko, &extractKo);
+    callbacks.insert(battle::Ko, &extractKo);
 }
 
 template <class C>
