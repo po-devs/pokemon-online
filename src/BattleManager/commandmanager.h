@@ -94,10 +94,11 @@ public:
     }
 
 private:
-    enum {
-        /* If triggered, means Current is incorrect type */
-        ErrorCurrentShouldBeCastableToBase = sizeof(dynamic_cast<AbstractCommandManager<enumClass> *>((Current*) (NULL)))
-    };
+    /* TODO: Fix this */
+//    enum {
+//        /* If triggered, means Current is incorrect type */
+//        ErrorCurrentShouldBeCastableToBase = sizeof(dynamic_cast<AbstractCommandManager<enumClass> *>((Current*) (NULL)))
+//    };
 };
 
 
