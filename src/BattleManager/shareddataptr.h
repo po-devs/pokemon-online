@@ -1,23 +1,48 @@
 #ifndef SHAREDDATAPTR_H
 #define SHAREDDATAPTR_H
 
+#include <QSharedDataPointer>
 #include <memory>
 
 template <class T>
-class data_ptr : public std::shared_ptr<T>
+class data_ptr : protected std::shared_ptr<T>
 {
 public:
-    const T & operator*() const {
-        return std::shared_ptr<T>::operator*();
+    inline void preprocess() const {
+        printf("preprocess called\n");
+        if (!std::shared_ptr<T>::get()) {
+            data_ptr<T> *base = const_cast<data_ptr<T>*>(this);
+            base->reset(new T());
+        }
     }
-    const T * operator->() const {
-        return std::shared_ptr<T>::operator->();
+
+    inline void preprocess2() {
+        printf("preprocess2 called\n");
+        if (!std::shared_ptr<T>::get()) {
+            data_ptr<T> *base = const_cast<data_ptr<T>*>(this);
+            base->reset(new T());
+        } else if (!std::shared_ptr<T>::unique()) {
+            data_ptr<T> *base = const_cast<data_ptr<T>*>(this);
+            base->reset(new T(*std::shared_ptr<T>::get()));
+        }
     }
 
     T & operator*() {
+        preprocess2();
         return std::shared_ptr<T>::operator*();
     }
+
     T * operator->() {
+        preprocess2();
+        return std::shared_ptr<T>::operator->();
+    }
+
+    const T & operator*() const {
+        preprocess();
+        return std::shared_ptr<T>::operator*();
+    }
+    const T * operator->() const {
+        preprocess();
         return std::shared_ptr<T>::operator->();
     }
 };
