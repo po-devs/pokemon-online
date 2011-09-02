@@ -40,7 +40,6 @@ class ShallowBattlePoke
     PROPERTY(Pokemon::uniqueId, num)
     PROPERTY(bool, shiny)
     PROPERTY(quint8, gender)
-    PROPERTY(quint8, lifePercent)
     PROPERTY(quint8, level)
     //In-Battle
     PROPERTY(bool, substitute)
@@ -58,6 +57,10 @@ public:
     bool ko() const {return lifePercent() == 0 || num() == Pokemon::NoPoke || status() == Pokemon::Koed;}
 
     void init(const PokeBattle &poke);
+    virtual int lifePercent() const { return m_prop_lifePercent; }
+    quint8 &lifePercent() { return m_prop_lifePercent; }
+private:
+    quint8 m_prop_lifePercent;
 };
 
 QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po);
