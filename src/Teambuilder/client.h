@@ -22,6 +22,7 @@ class BattleFinder;
 class FindBattleData;
 class Channel;
 class QExposedTabWidget;
+class SmallPokeTextEdit;
 
 /* The class for going online.
 
@@ -259,7 +260,7 @@ private:
     /* Line the user types in */
 //    QLineEdit *myline;
     QIRCLineEdit *myline;
-    QLabel *announcement;
+    SmallPokeTextEdit *announcement;
     /* Where players are displayed */
     QStackedWidget *playersW, *battlesW;
     QExposedTabWidget *mainChat;
