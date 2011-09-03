@@ -37,6 +37,11 @@ QVariant PokeTextEdit::loadResource(int type, const QUrl &name)
                         QString par = param.section('=', 0,0);
                         QString val = param.section('=', 1);
 
+                        if (par.length() > 0 && par[0].isDigit() && val.length() == 0) {
+                            val = par;
+                            par = "num";
+                        }
+
                         if (par == "gen") {
                             gen = val.toInt();
                         } else if (par == "num") {
