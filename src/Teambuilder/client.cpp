@@ -2109,3 +2109,4 @@ void BattleFinder::throwChallenge()
 
     emit findBattle(d);
 }
+
