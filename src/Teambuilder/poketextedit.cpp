@@ -64,3 +64,43 @@ QVariant PokeTextEdit::loadResource(int type, const QUrl &name)
 end:
     return QScrollDownTextBrowser::loadResource(type, name);
 }
+
+SmallPokeTextEdit::SmallPokeTextEdit()
+{
+    setMinimumSize(QSize(0, 0));
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+}
+
+void SmallPokeTextEdit::adaptSize()
+{
+    int height = document()->size().toSize().height();
+
+    if (height > 0) {
+        height = height + 4;
+    }
+    setFixedHeight(height);
+}
+
+QSize SmallPokeTextEdit::sizeHint() const
+{
+    return document()->size().toSize();
+}
+
+void SmallPokeTextEdit::setText(const QString &text)
+{
+    PokeTextEdit::setText(text);
+
+    adaptSize();
+}
+
+void SmallPokeTextEdit::resizeEvent(QResizeEvent *e)
+{
+    PokeTextEdit::resizeEvent(e);
+    adaptSize();
+}
+
+void SmallPokeTextEdit::showEvent(QShowEvent *e)
+{
+    PokeTextEdit::showEvent(e);
+    adaptSize();
+}
