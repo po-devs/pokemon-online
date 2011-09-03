@@ -38,7 +38,8 @@ SOURCES += main.cpp \
     Teambuilder/teamimporter.cpp \
     Teambuilder/dockinterface.cpp \
     Teambuilder/pokebodywidget.cpp \
-    logmanager.cpp
+    logmanager.cpp \
+    poketextedit.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -86,7 +87,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     Teambuilder/dockinterface.h \
     Teambuilder/pokebodywidget.h \
     engineinterface.h \
-    logmanager.h
+    logmanager.h \
+    poketextedit.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities
@@ -112,3 +114,5 @@ RESOURCES +=
 macx:LIBS += -framework \
     CoreFoundation
 macx:ICON = pokemononline.icns
+
+
