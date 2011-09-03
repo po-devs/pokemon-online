@@ -1,14 +1,13 @@
 #include "channel.h"
 #include "client.h"
-#include "../Utilities/otherwidgets.h"
-
+#include "poketextedit.h"
 
 Channel::Channel(const QString &name, int id, Client *parent)
     : QObject(parent), state(Inactive), client(parent), myname(name), myid(id), readyToQuit(false)
 {
     /* Those will actually be gotten back by the client itself, when
        he adds the channel */
-    mymainchat = new QScrollDownTextBrowser();
+    mymainchat = new PokeTextEdit();
     myplayers = new QTreeWidget();
     battleList = new QTreeWidget();
 

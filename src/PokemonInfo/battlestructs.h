@@ -40,7 +40,6 @@ class ShallowBattlePoke
     PROPERTY(Pokemon::uniqueId, num)
     PROPERTY(bool, shiny)
     PROPERTY(quint8, gender)
-    PROPERTY(quint8, lifePercent)
     PROPERTY(quint8, level)
 public:
     ShallowBattlePoke();
@@ -53,6 +52,10 @@ public:
     void removeStatus(int status);
 
     void init(const PokeBattle &poke);
+    virtual quint8 lifePercent() const { return m_prop_lifePercent; }
+    quint8 &lifePercent() { return m_prop_lifePercent; }
+private:
+    quint8 m_prop_lifePercent;
 };
 
 QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po);
@@ -89,7 +92,7 @@ public:
 
     bool ko() const {return lifePoints() == 0 || num() == Pokemon::NoPoke || status() == Pokemon::Koed;}
     bool isFull() const { return lifePoints() == totalLifePoints(); }
-    int lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
+    quint8 lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
 
     void setNormalStat(int, quint16);
 private:

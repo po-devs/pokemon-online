@@ -82,7 +82,7 @@ PokeBattle::PokeBattle()
     ability() = 0;
     item() = 0;
     gender() = 0;
-    fullStatus() = 0;
+    fullStatus() = 1;
     lifePoints() = 0;
     totalLifePoints() = 1;
     level() = 100;

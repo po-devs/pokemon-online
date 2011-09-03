@@ -8,7 +8,7 @@
 #include "pmwindow.h"
 #include "controlpanel.h"
 #include "ranking.h"
-#include "../Utilities/otherwidgets.h"
+#include "poketextedit.h"
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "channel.h"
@@ -66,12 +66,13 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     QVBoxLayout *layout = new QVBoxLayout(container);
     layout->setMargin(0);
 
-    layout->addWidget(announcement = new QLabel());
+    layout->addWidget(announcement = new SmallPokeTextEdit());
     announcement->setObjectName("Announcement");
     announcement->setOpenExternalLinks(true);
-    announcement->setWordWrap(true);
     announcement->hide();
-    layout->addWidget(mainChat = new QExposedTabWidget());
+    announcement->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    layout->addWidget(mainChat = new QExposedTabWidget(), 100);
     mainChat->setObjectName("MainChat");
     mainChat->setMovable(true);
     mainChat->setTabsClosable(true);

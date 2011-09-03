@@ -2,3 +2,9 @@ TeamPokeButton {
 	width: 127px;
 	height: 61px;
 }
+
+#PlayerInfo, #Announcement {
+	background: transparent;
+	border: 0;
+	padding: 0;
+}
