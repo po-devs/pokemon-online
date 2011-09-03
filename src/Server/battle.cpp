@@ -4165,18 +4165,6 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         if (hp <= 0) {
             koPoke(player, source, straightattack);
         } else {
-            if (straightattack) {
-                if (useBattleLog) {
-                    appendBattleLog("StraightDamage", tu(tr("%1 lost %2% of its health!").
-                                                         arg(nick(player)).
-                                                         arg(qint16(damage*100/poke(player).totalLifePoints()))));
-                }
-
-                notify(this->player(player), StraightDamage,player, qint16(damage));
-                notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
-            }
-
-            changeHp(player, hp);
 
             /* Endure & Focus Sash */
             if (survivalItem) {
@@ -4199,6 +4187,18 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
 end:
                 turnMemory(player).remove("SurviveReason");
+            }
+            changeHp(player, hp);
+
+            if (straightattack) {
+                if (useBattleLog) {
+                    appendBattleLog("StraightDamage", tu(tr("%1 lost %2% of its health!").
+                        arg(nick(player)).
+                        arg(qint16(damage*100/poke(player).totalLifePoints()))));
+                }
+
+                notify(this->player(player), StraightDamage,player, qint16(damage));
+                notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
             }
         }
     }
