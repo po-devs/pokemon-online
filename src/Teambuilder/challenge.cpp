@@ -1,6 +1,6 @@
 #include "challenge.h"
 #include "client.h"
-#include "../Utilities/otherwidgets.h"
+#include "poketextedit.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "theme.h"
@@ -43,14 +43,14 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
         }
     }
 
-    QFont treb("Trebuchet MS", 10);
-
-    QLabel *pinfo = new QLabel(toColor(p.team.info, grey), this);
-    pinfo->setGeometry(18,197,280,55);
-    pinfo->setWordWrap(true);
-    pinfo->setFont(treb);
+    PokeTextEdit *pinfo = new PokeTextEdit();
+    pinfo->setParent(this);
+    pinfo->setObjectName("PlayerInfo");
+    pinfo->setText(p.team.info);
+    pinfo->setGeometry(18,197,280,58);
     pinfo->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     pinfo->setOpenExternalLinks(true);
+    pinfo->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     battleMode = new QComboBox(this);
     battleMode->move(18,271);
@@ -58,13 +58,13 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     battleMode->addItem(tr("Doubles"));
     battleMode->addItem(tr("Triples"));
 
-    QLabel *ladder = new QLabel(toColor(p.rating == -1 ? "unknown" : QString::number(p.rating), grey),this);
-    ladder->setFont(treb);
+    QLabel *ladder = new QLabel(p.rating == -1 ? "unknown" : QString::number(p.rating),this);
+    ladder->setObjectName("PlayerRating");
     ladder->setGeometry(224,144,83,18);
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
-    QLabel *tier = new QLabel(QString("<b>%1</b>").arg(p.tier),this);
-    tier->setFont(QFont("Trebuchet MS", 10, QFont::Bold));
+    QLabel *tier = new QLabel(p.tier,this);
+    tier->setObjectName("PlayerTier");
     tier->setGeometry(116,144,94,18);
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
@@ -75,7 +75,6 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
 
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         clauses[i] = new QCheckBox(ChallengeInfo::clause(i));
-        clauses[i]->setFont(treb);
         clauses[i]->setStyleSheet("color: #414141");
         clauses[i]->setToolTip(ChallengeInfo::description(i));
         clausesL->addWidget(clauses[i]);
