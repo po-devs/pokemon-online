@@ -12,7 +12,8 @@ DEFINES += BATTLEMANAGER_LIBRARY
 SOURCES += \
     battledata.cpp \
     main.cpp \
-    testing.cpp
+    testing.cpp \
+    teamdata.cpp
 
 HEADERS +=\
     command.h \
@@ -26,8 +27,7 @@ HEADERS +=\
     battlecommandinvoker.h \
     test.h \
     battledata.h \
-    teamdata.h \
-    shareddataptr.h
+    teamdata.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
@@ -49,3 +49,5 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+

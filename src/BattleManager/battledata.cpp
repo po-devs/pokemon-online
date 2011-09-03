@@ -1,7 +1,10 @@
 #include "battledata.h"
-#include "shareddataptr.h"
 
 void BattleData::onKo(int)
 {
-    puts("onKo called");
+}
+
+TeamData &BattleData::team(int player)
+{
+    return teams[player];
 }
