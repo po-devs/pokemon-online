@@ -27,3 +27,5 @@ src/*/Makefile
 src/*__Debug
 # Ignore emacs temporary files
 *~
+
+build_mac.sh
