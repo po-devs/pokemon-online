@@ -553,7 +553,7 @@ void BattleSituation::run()
         array[i] = rand();
         array[i] |= (rand() << 16);
     }
-    true_rand2.seed(array, 10);
+    rand_generator.seed(array, 10);
 
     if (clauses() & ChallengeInfo::RearrangeTeams) {
         rearrangeTeams();
