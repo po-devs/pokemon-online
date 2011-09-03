@@ -24,6 +24,6 @@ bin/usage_stats/formatted/
 *.a
 bin/*
 src/*/Makefile
-
+src/*__Debug
 # Ignore emacs temporary files
 *~
