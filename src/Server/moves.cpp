@@ -4075,6 +4075,9 @@ struct MMTriAttack : public MM
         if (b.true_rand() % 5 > unsigned(0+boost))
             return;
 
+        if (b.poke(t).status() == Pokemon::Koed)
+            return;
+
         int status;
         switch (b.true_rand() %3) {
         case 0:
