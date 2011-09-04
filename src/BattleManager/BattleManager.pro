@@ -6,6 +6,10 @@
 
 TARGET = BattleManager
 TEMPLATE = app
+DESTDIR = ../../bin
+LIBS += -L../../bin \
+    -lutilities \
+    -lpokemonlib
 
 DEFINES += BATTLEMANAGER_LIBRARY
 
