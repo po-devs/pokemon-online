@@ -966,8 +966,8 @@ struct AMTechnician : public AM {
     }
 
     static void bpm(int s, int , BS &b) {
-        /* Pokemon::Curse is for confusion damaeg */
-        if (tmove(b,s).power <= 60 && type(b,s) != Pokemon::Curse) {
+        /* Move::NoMove is for confusion damage, Struggle is affected by technician */
+        if (tmove(b,s).power <= 60 && move(b,s) != Move::NoMove) {
             turn(b,s)["BasePowerAbilityModifier"] = 10;
         }
     }
