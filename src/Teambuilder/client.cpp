@@ -2014,7 +2014,7 @@ void Client::removeIgnore(int id)
 void Client::printHtml(const QString &html)
 {
     foreach(Channel *c, mychannels)
-        c->printHtml(html);
+        c->printHtml(html, false);
 }
 
 void Client::printLine(const QString &line)
@@ -2023,7 +2023,7 @@ void Client::printLine(const QString &line)
         return;
 
     foreach(Channel *c, mychannels)
-        c->printLine(line);
+        c->printLine(line,false, false);
 }
 
 /* Prints a line regarding a particular player */
