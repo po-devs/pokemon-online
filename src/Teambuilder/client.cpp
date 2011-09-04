@@ -1692,7 +1692,10 @@ void Client::clearChallenge()
 
 void Client::errorFromNetwork(int errnum, const QString &errorDesc)
 {
-    printHtml("<i>"+tr("Error while connected to server -- Received error n°%1: %2").arg(errnum).arg(errorDesc) + "</i>");
+    /* error 1 is simply 'remote host disconnected you */
+    if (errnum != 1) {
+        printHtml("<i>"+tr("Error while connected to server -- Received error nÂ°%1: %2").arg(errnum).arg(errorDesc) + "</i>");
+    }
 }
 
 void Client::connected()
