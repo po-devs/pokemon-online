@@ -8,7 +8,7 @@
 #include "pmwindow.h"
 #include "controlpanel.h"
 #include "ranking.h"
-#include "../Utilities/otherwidgets.h"
+#include "poketextedit.h"
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "channel.h"
@@ -66,12 +66,13 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     QVBoxLayout *layout = new QVBoxLayout(container);
     layout->setMargin(0);
 
-    layout->addWidget(announcement = new QLabel());
+    layout->addWidget(announcement = new SmallPokeTextEdit());
     announcement->setObjectName("Announcement");
     announcement->setOpenExternalLinks(true);
-    announcement->setWordWrap(true);
     announcement->hide();
-    layout->addWidget(mainChat = new QExposedTabWidget());
+    announcement->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    layout->addWidget(mainChat = new QExposedTabWidget(), 100);
     mainChat->setObjectName("MainChat");
     mainChat->setMovable(true);
     mainChat->setTabsClosable(true);
@@ -1427,20 +1428,20 @@ void Client::seeChallenge(const ChallengeInfo &c)
 {
     if (playerExist(c))
     {
-    if (busy()) {
-        /* Warns the server that we are too busy to accept the challenge */
+        if (busy()) {
+            /* Warns the server that we are too busy to accept the challenge */
             ChallengeInfo d = c;
             d.dsc = ChallengeInfo::Busy;
-            relay().sendChallengeStuff(c);
+            relay().sendChallengeStuff(d);
         } else {
             BaseChallengeWindow *mychallenge = new ChallengedWindow(player(c),c);
-        connect(mychallenge, SIGNAL(challenge(int)), SLOT(acceptChallenge(int)));
-        connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
-        connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
-        connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
+            connect(mychallenge, SIGNAL(challenge(int)), SLOT(acceptChallenge(int)));
+            connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
+            connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
+            connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
             mychallenge->activateWindow();
             mychallenges.insert(mychallenge);
-    }
+        }
     }
 }
 
@@ -1628,7 +1629,7 @@ void Client::challengeStuff(const ChallengeInfo &c)
                     closeChallengeWindow(b);
                 }
             }
-    }
+        }
     }
 }
 
@@ -1691,7 +1692,10 @@ void Client::clearChallenge()
 
 void Client::errorFromNetwork(int errnum, const QString &errorDesc)
 {
-    printHtml("<i>"+tr("Error while connected to server -- Received error n°%1: %2").arg(errnum).arg(errorDesc) + "</i>");
+    /* error 1 is simply 'remote host disconnected you */
+    if (errnum != 1) {
+        printHtml("<i>"+tr("Error while connected to server -- Received error nÂ°%1: %2").arg(errnum).arg(errorDesc) + "</i>");
+    }
 }
 
 void Client::connected()
@@ -1799,8 +1803,8 @@ void Client::fadeAway()
             removePlayer(player);
         }
         continue;
-        refresh:
-            refreshPlayer(player);
+refresh:
+        refreshPlayer(player);
     }
 }
 
@@ -1888,9 +1892,9 @@ QColor Client::color(int id) const
 int Client::id(const QString &name) const
 {
     if (mynames.contains(name)) {
-    return mynames[name];
+        return mynames[name];
     } else {
-    return -1;
+        return -1;
     }
 }
 
@@ -2108,3 +2112,4 @@ void BattleFinder::throwChallenge()
 
     emit findBattle(d);
 }
+

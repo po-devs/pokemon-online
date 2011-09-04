@@ -1,7 +1,7 @@
 #include "serverchoice.h"
-#include "../Utilities/otherwidgets.h"
 #include "../Utilities/functions.h"
 #include "analyze.h"
+#include "poketextedit.h"
 
 ServerChoice::ServerChoice(const QString &nick)
 {
@@ -31,7 +31,7 @@ ServerChoice::ServerChoice(const QString &nick)
 
     l->addWidget(mylist, 100);
 
-    myDesc = new QTextBrowser();
+    myDesc = new PokeTextEdit();
     myDesc->setOpenExternalLinks(true);
     myDesc->setFixedHeight(100);
     l->addWidget(new QEntitled("Server Description", myDesc));

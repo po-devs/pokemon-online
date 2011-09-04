@@ -1,14 +1,14 @@
 #include "channel.h"
 #include "client.h"
-#include "../Utilities/otherwidgets.h"
-
+#include "poketextedit.h"
+#include "remove_direction_override.h"
 
 Channel::Channel(const QString &name, int id, Client *parent)
     : QObject(parent), state(Inactive), client(parent), myname(name), myid(id), readyToQuit(false)
 {
     /* Those will actually be gotten back by the client itself, when
        he adds the channel */
-    mymainchat = new QScrollDownTextBrowser();
+    mymainchat = new PokeTextEdit();
     myplayers = new QTreeWidget();
     battleList = new QTreeWidget();
 
@@ -572,7 +572,7 @@ void Channel::printLine(const QString &line, bool flashing)
 
     if (line.leftRef(3) == "***") {
         checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
-        mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + addChannelLinks(escapeHtml(line)) + "</span><br />");
+        mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + removeDirectionOverride(addChannelLinks(escapeHtml(line))) + "</span><br />");
         return;
     }
 
@@ -580,7 +580,7 @@ void Channel::printLine(const QString &line, bool flashing)
     int pos = line.indexOf(':');
     if ( pos != -1 ) {
         QString beg = line.left(pos);
-        QString end = line.right(line.length()-pos-1);
+        QString end = removeDirectionOverride(line.right(line.length()-pos-1));
         int id = client->id(beg);
 
         /* Messages from players from auth 3 and less have their html escaped */
@@ -634,7 +634,7 @@ void Channel::printHtml(const QString &str)
     if(client->showTS)
         timeStr = "(" + QTime::currentTime().toString() + ") ";
     QRegExp rx("<timestamp */ *>",Qt::CaseInsensitive);
-    mainChat()->insertHtml(QString(str).replace( rx, timeStr ) + "<br />");
+    mainChat()->insertHtml(removeDirectionOverride(QString(str).replace( rx, timeStr )) + "<br />");
     emit activated(this);
 }
 
