@@ -123,7 +123,7 @@ QTextEdit#MainChat {
 	background-color: #E6F6FA;
 }
 
-QLabel#Announcement {
+#Announcement {
 	border-radius: 2px;
 	border: 2px solid #a6d9e9;
 	font-size: 11px;
@@ -590,6 +590,23 @@ QTabWidget#Modified > QTabBar::tab:top:last, QTabWidget#Modified > QTabBar::tab:
 BaseChallengeWindow QLabel#Title {
 	font-family: Trebuchet MS;
 	font-size: 20px;
+	font-weight: bold;
+}
+
+BaseChallengeWindow * {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+}
+
+#PlayerInfo {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+	background: transparent;
+	border: 0;
+	padding: 0;
+}
+
+#PlayerTier {
 	font-weight: bold;
 }
 

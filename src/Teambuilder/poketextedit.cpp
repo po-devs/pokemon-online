@@ -37,6 +37,11 @@ QVariant PokeTextEdit::loadResource(int type, const QUrl &name)
                         QString par = param.section('=', 0,0);
                         QString val = param.section('=', 1);
 
+                        if (par.length() > 0 && par[0].isDigit() && val.length() == 0) {
+                            val = par;
+                            par = "num";
+                        }
+
                         if (par == "gen") {
                             gen = val.toInt();
                         } else if (par == "num") {
@@ -63,4 +68,44 @@ QVariant PokeTextEdit::loadResource(int type, const QUrl &name)
 
 end:
     return QScrollDownTextBrowser::loadResource(type, name);
+}
+
+SmallPokeTextEdit::SmallPokeTextEdit()
+{
+    setMinimumSize(QSize(0, 0));
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+}
+
+void SmallPokeTextEdit::adaptSize()
+{
+    int height = document()->size().toSize().height();
+
+    if (height > 0) {
+        height = height + 4;
+    }
+    setFixedHeight(height);
+}
+
+QSize SmallPokeTextEdit::sizeHint() const
+{
+    return document()->size().toSize();
+}
+
+void SmallPokeTextEdit::setText(const QString &text)
+{
+    PokeTextEdit::setText(text);
+
+    adaptSize();
+}
+
+void SmallPokeTextEdit::resizeEvent(QResizeEvent *e)
+{
+    PokeTextEdit::resizeEvent(e);
+    adaptSize();
+}
+
+void SmallPokeTextEdit::showEvent(QShowEvent *e)
+{
+    PokeTextEdit::showEvent(e);
+    adaptSize();
 }

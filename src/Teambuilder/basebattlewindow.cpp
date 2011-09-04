@@ -3,6 +3,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "theme.h"
 #include "logmanager.h"
+#include "remove_direction_override.h"
 
 BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int mode, int myself, int opponent)
     : myself(myself), opponent(opponent)
@@ -921,7 +922,7 @@ void BaseBattleWindow::printLine(const QString &str, bool silent)
 
     QString html = str + "<br />";
     if (!silent) {
-        mychat->insertHtml(html);
+        mychat->insertHtml(removeDirectionOverride(html));
         log->pushHtml(html);
     } else {
         log->pushHtml("<!--"+html+"-->");
@@ -936,7 +937,7 @@ void BaseBattleWindow::printHtml(const QString &str, bool silent, bool newline)
 
     QString html = str + (newline?"<br />":"");
     if (!silent) {
-        mychat->insertHtml(html);
+        mychat->insertHtml(removeDirectionOverride(html));
         log->pushHtml(html);
     } else {
         log->pushHtml("<!--"+html+"-->");

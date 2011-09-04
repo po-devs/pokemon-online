@@ -115,7 +115,7 @@ QTextEdit#MainChat {
 	background-color: white;
 }
 
-QLabel#Announcement {
+#Announcement {
 	border-radius: 2px;
 	border: 1px solid grey;
 	font-size: 11px;
@@ -582,6 +582,13 @@ BaseChallengeWindow QLabel#Title {
 	font-size: 20px;
 	font-weight: bold;
 }
+
+#PlayerInfo {
+	background: transparent;
+	border: 0;
+	padding: 0;
+}
+
 
 BaseChallengeWindow QLabel {
 	color: black;
