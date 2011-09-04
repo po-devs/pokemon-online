@@ -966,8 +966,8 @@ struct AMTechnician : public AM {
     }
 
     static void bpm(int s, int , BS &b) {
-        /* Move::NoMove is for confusion damage, Struggle is affected by technician */
-        if (tmove(b,s).power <= 60 && move(b,s) != Move::NoMove) {
+        /* Move::NoMove is for confusion damage, Struggle is affected by technician in gen 5 but not gen 4 */
+        if (tmove(b,s).power <= 60 && ( (b.gen() >= 5 && move(b,s) != Move::NoMove) || (b.gen() <= 4 && type(b,s) != Type::Curse) ) ) {
             turn(b,s)["BasePowerAbilityModifier"] = 10;
         }
     }
