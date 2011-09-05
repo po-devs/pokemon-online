@@ -1,8 +1,6 @@
 #include <cstdio>
 #include "battledata.h"
 
-using namespace battle;
-
 class TestBattleData : public BattleCommandManager<TestBattleData>
 {
 public:
