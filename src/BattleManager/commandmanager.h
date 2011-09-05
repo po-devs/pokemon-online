@@ -2,6 +2,7 @@
 #define COMMANDMANAGER_H
 
 #include <functional>
+#include <vector>
 
 #include "command.h"
 #include "commandflow.h"
@@ -30,6 +31,7 @@ class CommandManager : public AbstractCommandManager<T>, public Extracter, publi
 {
 public:
     typedef T enumClass;
+    typedef AbstractCommandManager<T> baseClass;
     typedef Current type;
     typedef Extracter extracterType;
     typedef FlowWorker flowType;
@@ -75,7 +77,15 @@ public:
     }
 
     template <enumClass val, typename ...Params>
-    void output(Params...) {}
+    void output(Params...params) {
+        for (baseClass* manager : m_outputs) {
+            manager->entryPoint(val, params...);
+        }
+    }
+
+    void addOutput(baseClass* source) {
+        m_outputs.push_back(source);
+    }
 
     template <enumClass val, typename ...Params>
     AbstractCommand* createCommand(Params&&... params) {
@@ -97,7 +107,8 @@ public:
         return static_cast<type*>(this);
     }
 
-private:
+protected:
+    std::vector<baseClass*> m_outputs;
     /* TODO: Fix this */
 //    enum {
 //        /* If triggered, means Current is incorrect type */

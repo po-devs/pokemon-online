@@ -190,6 +190,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     {
         qint32 id;
         QString message;
+        in >> id >> message;
         output<BattleEnum::SpectatorMessage>(id, message.toUtf8().constData());
         break;
     }
@@ -347,12 +348,14 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     case ClockStart:
     {
         quint32 time;
+        in >> time;
         output<BattleEnum::ClockStart>(spot, time);
         break;
     }
     case ClockStop:
     {
         quint32 time;
+        in >> time;
         output<BattleEnum::ClockStop>(spot, time);
         break;
     }
