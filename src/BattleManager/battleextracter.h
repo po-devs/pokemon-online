@@ -12,7 +12,7 @@ class BattleExtracter
 {
 public:
     typedef Current workerClass;
-    typedef battle::BattleEnum enumClass;
+    typedef BattleEnum enumClass;
 
     typedef void (BattleExtracter<Current>::*extrac_func)(va_list);
 
@@ -52,13 +52,13 @@ void BattleExtracter<C>::extractKo(va_list args)
 {
     uint8_t spot = va_arg(args, int);
 
-    forwardCommand<battle::Ko>(spot);
+    forwardCommand<BattleEnum::Ko>(spot);
 }
 
 template<class C>
 BattleExtracter<C>::BattleExtracter()
 {
-    callbacks.insert(battle::Ko, &BattleExtracter<workerClass>::extractKo);
+    callbacks.insert(BattleEnum::Ko, &BattleExtracter<workerClass>::extractKo);
 }
 
 template <class C>
