@@ -116,5 +116,4 @@ protected:
 //    };
 };
 
-
 #endif // COMMANDMANAGER_H

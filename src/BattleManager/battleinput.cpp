@@ -36,7 +36,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         in >> silent;
         in >> prevIndex;
         in >> *poke;
-        output<BattleEnum::SendOut>(spot, silent, prevIndex, &poke);
+        output<BattleEnum::SendOut>(spot, prevIndex, &poke, silent);
         break;
     }
     case SendBack:

@@ -7,6 +7,12 @@
 #include <unordered_map>
 #include "battleenum.h"
 
+namespace std {
+    template<class T> class shared_ptr;
+}
+
+class ShallowBattlePoke;
+
 template <class Current>
 class BattleExtracter
 {
@@ -41,6 +47,7 @@ protected:
     };
 
     void extractKo(va_list);
+    void extractSendOut(va_list);
 
     inline workerClass* wc() {
         return static_cast<workerClass*>(this);
@@ -55,10 +62,22 @@ void BattleExtracter<C>::extractKo(va_list args)
     forwardCommand<BattleEnum::Ko>(spot);
 }
 
+template <class C>
+void BattleExtracter<C>::extractSendOut(va_list args)
+{
+    uint8_t spot = va_arg(args, int);
+    uint8_t prevIndex = va_arg(args, int);
+    std::shared_ptr<ShallowBattlePoke> *poke = va_arg(args, std::shared_ptr<ShallowBattlePoke> *);
+    bool silent = va_arg(args, int);
+
+    forwardCommand<BattleEnum::SendOut>(spot, prevIndex, poke, silent);
+}
+
 template<class C>
 BattleExtracter<C>::BattleExtracter()
 {
     callbacks.insert(BattleEnum::Ko, &BattleExtracter<workerClass>::extractKo);
+    callbacks.insert(BattleEnum::SendOut, &BattleExtracter<workerClass>::extractSendOut);
 }
 
 template <class C>
