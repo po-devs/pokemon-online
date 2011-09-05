@@ -1,7 +1,7 @@
 #ifndef TEST_H
 #define TEST_H
 
-template <class T, class U = void>
+template <int X=0, class U = void>
 struct test {
     typedef U type;
 };

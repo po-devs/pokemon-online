@@ -18,7 +18,8 @@ SOURCES += \
     main.cpp \
     testing.cpp \
     teamdata.cpp \
-    battleinput.cpp
+    battleinput.cpp \
+    battleclientlog.cpp
 
 HEADERS +=\
     command.h \
@@ -33,7 +34,8 @@ HEADERS +=\
     test.h \
     battledata.h \
     teamdata.h \
-    battleinput.h
+    battleinput.h \
+    battleclientlog.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
@@ -55,3 +57,7 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+
+
+
