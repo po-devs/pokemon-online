@@ -1,5 +1,6 @@
 #include "battleinput.h"
 #include <memory>
+#include <QPair>
 #include "../PokemonInfo/battlestructs.h"
 
 typedef std::shared_ptr<ShallowBattlePoke> shallowpoke;
@@ -134,7 +135,34 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     {
         qint8 status;
         in >> status;
-        output<BattleEnum::StatusMessage>(spot, status);
+        static const QPair<BattleEnum, int> corr[]= {
+            QPair<BattleEnum, int>(BattleEnum::StatusFeel, Pokemon::Confused),
+            QPair<BattleEnum, int>(BattleEnum::StatusHurt, Pokemon::Confused),
+            QPair<BattleEnum, int>(BattleEnum::StatusFree, Pokemon::Confused),
+            QPair<BattleEnum, int>(BattleEnum::StatusFeel, Pokemon::Paralysed),
+            QPair<BattleEnum, int>(BattleEnum::StatusFeel, Pokemon::Frozen),
+            QPair<BattleEnum, int>(BattleEnum::StatusFree, Pokemon::Frozen),
+            QPair<BattleEnum, int>(BattleEnum::StatusFeel, Pokemon::Asleep),
+            QPair<BattleEnum, int>(BattleEnum::StatusFree, Pokemon::Asleep),
+            QPair<BattleEnum, int>(BattleEnum::StatusHurt, Pokemon::Burnt),
+            QPair<BattleEnum, int>(BattleEnum::StatusHurt, Pokemon::Poisoned)
+        };
+        static const int num = sizeof(corr)/sizeof(*corr);
+
+        if (status >= 0 && status < num) {
+            switch (corr[status].first) {
+            case BattleEnum::StatusFeel:
+                output<BattleEnum::StatusFeel>(spot, corr[status].second);
+                break;
+            case BattleEnum::StatusFree:
+                output<BattleEnum::StatusFree>(spot, corr[status].second);
+                break;
+            case BattleEnum::StatusHurt:
+                output<BattleEnum::StatusHurt>(spot, corr[status].second);
+            default:
+                break;
+            }
+        }
         break;
     }
     case Failed:
