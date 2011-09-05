@@ -704,6 +704,7 @@ void BattleSituation::initializeEndTurnFunctions()
         addEndTurnEffect(OwnEffect, 6, 5, 0, "", NULL, &BattleSituation::endTurnStatus);
 
         addEndTurnEffect(ItemEffect, 6, 7); /* Orbs */
+        addEndTurnEffect(AbilityEffect, 6, 10); /* Bad Dreams */
         addEndTurnEffect(ItemEffect, 6, 19); /* Sticky Barb */
 
 
