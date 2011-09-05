@@ -663,19 +663,19 @@ void BattleSituation::initializeEndTurnFunctions()
     6.1 Aqua Ring
     6.2 Speed Boost, Shed Skin
     6.3 Black Sludge, Leftovers: "pokemon restored a little HP using its leftovers"
-    6.4 Leech Seed: "pokeon's health is sapped by leech seed"
-    6.5 Burn, Poison Heal, Poison: "pokeon is hurt by poison"
+    6.4 Leech Seed: "pokemon's health is sapped by leech seed"
+    6.5 Burn, Poison Heal, Poison: "pokemon is hurt by poison"
     6.6 Nightmare
     6.7 Flame Orb activation, Toxic Orb activation
     6.8 Curse (from a Ghost)
     6.9 Bind, Clamp, Fire Spin, Magma Storm, Sand Tomb, Whirlpool, Wrap
     6.10 Bad Dreams Damage
-    6.11 End of Outrage, Petal Dance, Thrash, Uproar: "pokeon caused an uproar" & "pokéen calmed down"
-    6.12 Disable ends: "pokeon is no longer disabled"
+    6.11 End of Outrage, Petal Dance, Thrash, Uproar: "pokemon caused an uproar" & "pokemon calmed down"
+    6.12 Disable ends: "pokemon is no longer disabled"
     6.13 Encore ends
     6.14 Taunt wears off
     6.15 Magnet Rise
-    6.16 Heal Block: "the foe pokeon's heal block wore off"
+    6.16 Heal Block: "the foe pokemon's heal block wore off"
     6.17 Embargo
     6.18 Yawn
     6.19 Sticky Barb
@@ -776,7 +776,7 @@ void BattleSituation::initializeEndTurnFunctions()
 
         27.0 Zen Mode
 
-        28.0 Pokeon is switched in (if previous Pokéen fainted)
+        28.0 pokemon is switched in (if previous Pokeen fainted)
         28.1 Healing Wish, Lunar Dance
         28.2 Spikes, Toxic Spikes, Stealth Rock (hurt in the order they are first used)
 
