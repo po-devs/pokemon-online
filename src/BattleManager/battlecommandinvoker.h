@@ -10,10 +10,10 @@ template <class Underling>
 class BattleCommandInvoker
 {
 public:
-    typedef battle::BattleEnum enumClass;
+    typedef BattleEnum enumClass;
     typedef Underling workerClass;
 
-    template <battle::BattleEnum val>
+    template <BattleEnum val>
     struct Param
     {
 
@@ -28,7 +28,7 @@ public:
 protected:
 
     template<class Y=int>
-    typename test<decltype(sizeof(Y)+sizeof(decltype(&workerClass::onKo)))>::type invoke2(Param<battle::Ko>, uint8_t spot) {
+    typename test<decltype(sizeof(Y)+sizeof(decltype(&workerClass::onKo)))>::type invoke2(Param<BattleEnum::Ko>, uint8_t spot) {
         wc()->onKo(spot);
     }
 

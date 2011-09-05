@@ -26,7 +26,7 @@ private:
 void testing() {
     TestBattleData *data = new TestBattleData();
 
-    data->entryPoint(battle::SendBack);
-    data->entryPoint(battle::Ko, 0);
-    data->entryPoint(battle::Turn);
+    data->entryPoint(BattleEnum::SendBack);
+    data->entryPoint(BattleEnum::Ko, 0);
+    data->entryPoint(BattleEnum::Turn);
 }
