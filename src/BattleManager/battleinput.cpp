@@ -3,7 +3,6 @@
 #include "../PokemonInfo/battlestructs.h"
 
 typedef std::shared_ptr<ShallowBattlePoke> shallowpoke;
-typedef battle::NetworkBattleCommands NB;
 
 void BattleInput::receiveData(QByteArray inf)
 {
