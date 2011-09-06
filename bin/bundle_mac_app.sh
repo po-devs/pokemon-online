@@ -10,7 +10,6 @@ myDir=$(dirname $myScript)
 
 function bundle_mac_app() {
    app=$1
-echo $app
    toDir=$app/Contents/Resources
    if [ "$1" == "--skip-resources" ] || [ "$1" == "-s" ]
    then
@@ -42,6 +41,8 @@ echo $app
    utilities_long=libutilities.1.0.0.dylib
    utilities=libutilities.1.dylib
 
+   mkdir -p $fworks
+
    echo macdeployqt $app
    macdeployqt $app -verbose=0
 
@@ -70,7 +71,7 @@ echo $app
        echo "Error! No pokemonlib found, please compile it first!"
        exit 1
    fi
-   cp $pokemonlib_long $fworks/
+   cp $pokemonlib_long $fworks/$pokemonlib_long
    ln -sf $pokemonlib_long $fworks/$pokemonlib
    install_name_tool -id @executable_path/../Frameworks/$pokemonlib $fworks/$pokemonlib
    install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore $fworks/$pokemonlib
@@ -89,7 +90,7 @@ echo $app
        echo "Error! No libutilities found, please compile it first!"
        exit 1
    fi
-   cp $utilities_long $fworks
+   cp $utilities_long $fworks/$utilities_long
    ln -sf $utilities_long $fworks/$utilities
    install_name_tool -id @executable_path/../Frameworks/$utilities $fworks/$utilities
    install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore $fworks/$utilities

@@ -453,6 +453,7 @@ void PokemonInfo::reloadMod(FillMode::FillModeType mode, const QString &modName)
     loadHeights();
     loadDescriptions();
     loadBaseStats();
+    loadMinLevels();
 
     makeDataConsistent();
 }
