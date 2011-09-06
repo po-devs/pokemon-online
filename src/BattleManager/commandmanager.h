@@ -78,8 +78,9 @@ public:
 
     template <enumClass val, typename ...Params>
     void output(Params...params) {
-        for (baseClass* manager : m_outputs) {
-            manager->entryPoint(val, params...);
+        /* Todo: convert this to new iterating function when gcc 4.6 is widely broadcast */
+        for (unsigned i = 0; i < m_outputs.size(); i++) {
+            m_outputs[i]->entryPoint(val, params...);
         }
     }
 
