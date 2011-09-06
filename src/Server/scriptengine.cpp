@@ -2203,6 +2203,11 @@ QScriptValue ScriptEngine::getFileContent(const QString &fileName)
 #if !defined(PO_SCRIPT_NO_SYSTEM) && !defined(PO_SCRIPT_SAFE_ONLY)
 int ScriptEngine::system(const QString &command)
 {
-    return ::system(command.toUtf8());
+    if (myserver->isSafeScripts()) {
+        warn("system", "Safe scripts option is on. Unable to invoke system command.");
+        return -1;
+    } else {
+        return ::system(command.toUtf8());
+    }
 }
 #endif // PO_SCRIPT_NO_SYSTEM
