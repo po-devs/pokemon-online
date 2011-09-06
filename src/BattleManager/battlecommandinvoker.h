@@ -97,7 +97,7 @@ protected:
     start(BattleEnd, onBattleEnd, int res, int winner) end(onBattleEnd, res, winner)
     start(ClauseMessage, onCauseActivated, int clause) end(onCauseActivated, clause)
     start(RatedInfo, onRatedNotification, bool rated) end(onRatedNotification, rated)
-    start(TierInfo, onTierNotification, QString tier) end(onTierNotification, tier)
+    start(TierInfo, onTierNotification, char* tier) end(onTierNotification, QString::fromUtf8(QByteArray(tier)))
     start(StatBoostsAndField, onDynamicInfo, int spot, BattleDynamicInfo *info) end(onDynamicInfo, spot, *info)
     start(PokemonVanish, onPokemonVanish, int spot) end(onPokemonVanish, spot)
     start(PokemonReappear, onPokemonReappear, int spot) end(onPokemonReappear, spot)

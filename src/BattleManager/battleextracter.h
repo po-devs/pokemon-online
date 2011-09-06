@@ -12,6 +12,7 @@ namespace std {
 }
 
 class ShallowBattlePoke;
+class BattleDynamicInfo;
 
 template <class Current>
 class BattleExtracter
@@ -37,17 +38,98 @@ public:
 protected:
     QHash<enumClass, extrac_func> callbacks;
 
-    /* C++0x doesn't introduce function specialisation, so here goes with
-      structures */
-    template <enumClass val>
-    struct extracter {
-        extracter (BattleExtracter<Current> *pointer) : pointer(pointer) {}
-        void operator ()(va_list);
-        BattleExtracter<Current> *pointer;
-    };
+    void extractArgument(va_list args, bool &arg) {
+        arg = va_arg(args, int);
+    }
+
+    template<class T>
+    void extractArgument(va_list args, T &arg) {
+        arg = va_arg(args, T);
+    }
+
+    void extractArguments(va_list args) {
+
+    }
+
+    template<class T>
+    void extractArguments(va_list args, T&arg)
+    {
+        extractArgument(args, arg);
+    }
+
+    template <typename T, typename ...Params>
+    void extractArguments(va_list args, T &head, Params&... params) {
+        extractArgument(args, head);
+        extractArguments(args, params...);
+    }
 
     void extractKo(va_list);
     void extractSendOut(va_list);
+    void extractBlankMessage(va_list args);
+
+#define start(en, ...) \
+    void extract##en(va_list args) {\
+        __VA_ARGS__; \
+        constexpr BattleEnum val = BattleEnum::en;
+
+#define end(...) \
+        extractArguments(args, ##__VA_ARGS__); \
+        forwardCommand<val>(__VA_ARGS__); \
+    }
+
+    /* Todo: expand following macros */
+    start(SendBack, int spot) end(spot)
+    start(UseAttack, int spot; int attack) end(spot, attack)
+    start(Turn, int turn) end(turn)
+    start(NewHp, int spot; int newHp) end(spot, newHp)
+    start(Hits, int spot; int count) end(spot, count)
+    start(Effectiveness, int spot; int effectiveness) end(spot, effectiveness)
+    start(CriticalHit, int spot) end(spot)
+    start(Miss, int spot) end(spot)
+    start(Avoid, int spot) end(spot)
+    start(StatChange, int spot; int stat; int boost) end(spot, stat, boost)
+    start(ClassicStatusChange, int spot; int status) end(spot, status)
+    start(AbsoluteStatusChange, int player; int poke; int status) end(player, poke, status)
+    start(AlreadyStatusMessage, int spot; int status) end(spot, status)
+    start(StatusFeel, int spot; int status) end(spot, status)
+    start(StatusHurt, int spot; int status) end(spot, status)
+    start(StatusFree, int spot; int status) end(spot, status)
+    start(Fail, int spot) end(spot)
+    start(PlayerMessage, int spot; char* message) end(spot, message)
+    start(SpectatorEnter, int id; char* name) end(id, name)
+    start(SpectatorLeave, int id) end(id)
+    start(SpectatorMessage, int id; char * message) end(id, message)
+    start(MoveMessage, int spot; int move; int part; int type; int foe; int other; char *data)
+        end(spot, move, part, type, foe, other, data)
+    start(NoTargetMessage, int spot) end(spot)
+    start(ItemMessage, int item; int part; int foe; int berry; int other) end(item, part, foe, berry, other)
+    start(Flinch, int spot) end(spot)
+    start(Recoil, int spot) end(spot)
+    start(Drained, int spot) end(spot)
+    start(WeatherMessage, int weather) end(weather)
+    start(EndWeather, int weather) end(weather)
+    start(StartWeather, int weather; bool ability) end(weather, ability)
+    start(WeatherDamage, int spot; int weather) end(spot, weather)
+    start(Damaged, int spot; int damage) end(spot, damage)
+    start(AbilityMessage, int spot; int ab; int part; int type; int foe; int other)
+        end(spot, ab, part, type, foe, other)
+    start(SubstituteStatus, int spot; bool substitute) end(spot, substitute)
+    start(BattleEnd, int res; int winner) end(res, winner)
+    start(ClauseMessage, int clause) end(clause)
+    start(RatedInfo, bool rated) end(rated)
+    start(TierInfo, char* tier) end(tier)
+    start(StatBoostsAndField, int spot; BattleDynamicInfo *info) end(spot, info)
+    start(PokemonVanish, int spot) end(spot)
+    start(PokemonReappear, int spot) end(spot)
+    start(SpriteChange, int spot; int newSprite) end(spot, newSprite)
+    start(DefiniteFormeChange, int spot; int poke; int newPoke) end(spot, poke, newPoke)
+    start(CosmeticFormeChange, int spot; int subforme) end(spot, subforme)
+    start(ClockStart, int player; int time) end(player, time)
+    start(ClockStop, int player; int time) end(player, time)
+    start(ShiftSpots, int spot1; int spot2; bool silent) end(spot1, spot2, silent)
+
+#undef start
+#undef end
 
     inline workerClass* wc() {
         return static_cast<workerClass*>(this);
@@ -60,6 +142,12 @@ void BattleExtracter<C>::extractKo(va_list args)
     uint8_t spot = va_arg(args, int);
 
     forwardCommand<BattleEnum::Ko>(spot);
+}
+
+template <class C>
+void BattleExtracter<C>::extractBlankMessage(va_list)
+{
+    forwardCommand<BattleEnum::BlankMessage>();
 }
 
 template <class C>
@@ -76,8 +164,60 @@ void BattleExtracter<C>::extractSendOut(va_list args)
 template<class C>
 BattleExtracter<C>::BattleExtracter()
 {
-    callbacks.insert(BattleEnum::Ko, &BattleExtracter<workerClass>::extractKo);
-    callbacks.insert(BattleEnum::SendOut, &BattleExtracter<workerClass>::extractSendOut);
+#define addCallback(en) \
+    callbacks.insert(BattleEnum::en, &BattleExtracter<workerClass>::extract##en);
+
+    addCallback(NewHp)
+    addCallback(Damaged);
+    addCallback(Ko);
+    addCallback(SendOut);
+    addCallback(SendBack);
+    addCallback(UseAttack);
+    addCallback(Turn);
+    addCallback(Hits);
+    addCallback(Effectiveness);
+    addCallback(CriticalHit);
+    addCallback(Miss);
+    addCallback(Avoid);
+    addCallback(StatChange);
+    addCallback(ClassicStatusChange);
+    addCallback(AbsoluteStatusChange);
+    addCallback(AlreadyStatusMessage);
+    addCallback(StatusFeel);
+    addCallback(StatusFree);
+    addCallback(StatusHurt);
+    addCallback(Fail);
+    addCallback(PlayerMessage);
+    addCallback(SpectatorEnter);
+    addCallback(SpectatorLeave);
+    addCallback(SpectatorMessage);
+    addCallback(MoveMessage);
+    addCallback(NoTargetMessage);
+    addCallback(ItemMessage);
+    addCallback(Flinch);
+    addCallback(Recoil);
+    addCallback(Drained);
+    addCallback(StartWeather);
+    addCallback(WeatherMessage);
+    addCallback(EndWeather);
+    addCallback(WeatherDamage);
+    addCallback(AbilityMessage);
+    addCallback(SubstituteStatus);
+    addCallback(BattleEnd);
+    addCallback(BlankMessage);
+    addCallback(ClauseMessage);
+    addCallback(RatedInfo);
+    addCallback(TierInfo);
+    addCallback(StatBoostsAndField);
+    addCallback(PokemonVanish);
+    addCallback(PokemonReappear);
+    addCallback(SpriteChange);
+    addCallback(DefiniteFormeChange);
+    addCallback(CosmeticFormeChange);
+    addCallback(ClockStart);
+    addCallback(ClockStop);
+    addCallback(ShiftSpots);
+#undef addCallback
 }
 
 template <class C>
