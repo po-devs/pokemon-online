@@ -165,9 +165,9 @@ template<class C>
 BattleExtracter<C>::BattleExtracter()
 {
 #define addCallback(en) \
-    callbacks.insert(BattleEnum::en, &BattleExtracter<workerClass>::extract##en);
+    callbacks.insert(BattleEnum::en, &BattleExtracter<workerClass>::extract##en)
 
-    addCallback(NewHp)
+    addCallback(NewHp);
     addCallback(Damaged);
     addCallback(Ko);
     addCallback(SendOut);
