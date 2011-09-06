@@ -18,7 +18,7 @@ void BattleClientLog::onKo(int spot)
     printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(spot)))) + "</b>");
 }
 
-void BattleClientLog::onSendOut(int spot, int prevIndex, shallowpoke poke, bool silent)
+void BattleClientLog::onSendOut(int spot, int prevIndex, shallowpoke, bool silent)
 {
     QString pokename = PokemonInfo::Name(data()->poke(spot).num());
     if (pokename != rnick(spot))

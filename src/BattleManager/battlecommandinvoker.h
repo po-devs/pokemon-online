@@ -16,12 +16,6 @@ public:
     typedef BattleEnum enumClass;
     typedef Underling workerClass;
 
-    template <BattleEnum val>
-    struct Param
-    {
-
-    };
-
     template <enumClass val, typename ...Params>
     void invoke(Params&&... params) {
         /* Since no function partial specialisation, using overload */
@@ -30,17 +24,23 @@ public:
 
 protected:
 
-    /* the template, as well as the sizeof, are artifacts to test if a function is there in the template class */
-//    template<class Y=int>
-//    typename test<sizeof(Y)+sizeof(decltype(&workerClass::onKo))>::type invoke2(Param<BattleEnum::Ko>, uint8_t spot) {
-//        wc()->onKo(spot);
-//    }
+    template <BattleEnum val>
+    struct Param
+    {
 
-//    template<class Y=int>
-//    typename test<sizeof(Y)+sizeof(decltype(&workerClass::onSendOut))>::type
-//    invoke2(Param<BattleEnum::SendOut>, uint8_t spot, uint8_t prevIndex, std::shared_ptr<ShallowBattlePoke> *ptr, bool silent) {
-//        wc()->onSendOut(spot, prevIndex, *ptr, silent);
-//    }
+    };
+
+    /* the template, as well as the sizeof, are artifacts to test if a function is there in the template class */
+    template<class Y=workerClass>
+    typename test<decltype(&Y::onKo)>::type invoke2(Param<BattleEnum::Ko>, uint8_t spot) {
+        wc()->onKo(spot);
+    }
+
+    template<class Y=workerClass>
+    typename test<decltype(&Y::onSendOut)>::type
+    invoke2(Param<BattleEnum::SendOut>, uint8_t spot, uint8_t prevIndex, std::shared_ptr<ShallowBattlePoke> *ptr, bool silent) {
+        wc()->onSendOut(spot, prevIndex, *ptr, silent);
+    }
 
     template<enumClass val,typename...Params>
     void invoke2(Param<val>, Params&&...params) {

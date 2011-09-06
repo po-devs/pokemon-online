@@ -24,7 +24,10 @@ private:
 void testing() {
     TestBattleData *data = new TestBattleData();
 
+    std::shared_ptr<ShallowBattlePoke> poke(new ShallowBattlePoke());
+
     data->entryPoint(BattleEnum::SendBack);
     data->entryPoint(BattleEnum::Ko, 0);
+    data->entryPoint(BattleEnum::SendOut,0,0,&poke, false);
     data->entryPoint(BattleEnum::Turn);
 }
