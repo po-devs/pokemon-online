@@ -80,11 +80,11 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         quint8 eff;
         in >> eff;
 
-        output<BattleEnum::EffectiveNess>(spot, eff);
+        output<BattleEnum::Effectiveness>(spot, eff);
         break;
     }
     case CriticalHit:
-        output<BattleEnum::CriticalHit>();
+        output<BattleEnum::CriticalHit>(spot);
         break;
     case Miss:
     {
@@ -183,7 +183,11 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         bool come;
         qint32 id;
         in >> come >> id;
-        output<BattleEnum::Spectator>(come, id);
+        if (come) {
+            output<BattleEnum::SpectatorEnter>(id, (QString*)NULL);
+        } else {
+            output<BattleEnum::SpectatorLeave>(id);
+        }
         break;
     }
     case SpectatorChat:
@@ -202,7 +206,11 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         qint16 other(0);
         QString q;
         in >> move >> part >> type >> foe >> other >> q;
-        output<BattleEnum::MoveMessage>(spot, move, part, type, foe, other, q.toUtf8().constData());
+        if (move == 57) {
+            output<BattleEnum::StartWeather>(spot, part+1, false); //False for non-ability weather
+        } else {
+            output<BattleEnum::MoveMessage>(spot, move, part, type, foe, other, q.toUtf8().constData());
+        }
         break;
     }
     case NoOpponent:
@@ -268,7 +276,13 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         qint8 type(0), foe(0);
         qint16 other(0);
         in >> ab >> part >> type >> foe >> other;
-        output<BattleEnum::AbilityMessage>(spot, ab, part, type, foe, other);
+
+        if (ab == 14) {
+            /* Weather message */
+            output<BattleEnum::StartWeather>(spot, part+1, true); //true is for ability-weather
+        } else {
+            output<BattleEnum::AbilityMessage>(spot, ab, part, type, foe, other);
+        }
         break;
     }
     case Substitute:
@@ -282,7 +296,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     {
         qint8 res;
         in >> res;
-        output<BattleEnum::BattleEnd>(spot, res);
+        output<BattleEnum::BattleEnd>(res, spot);
         break;
     }
     case BlankMessage: {
@@ -313,7 +327,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     {
         BattleDynamicInfo info;
         in >> info;
-        output<BattleEnum::StatBoostsAndField>(info);
+        output<BattleEnum::StatBoostsAndField>(&info);
         break;
     }
     case TempPokeChange:
