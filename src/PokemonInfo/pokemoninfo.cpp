@@ -136,7 +136,7 @@ void fill_check_mode_path(FillMode::FillModeType m, QString &filename) {
 
 static void fill_container_with_file(QStringList &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QString files[] = { filename, "mod_" + filename };
+    QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
     for (int i = 0; i < files_count; ++i) {
@@ -156,7 +156,7 @@ static void fill_container_with_file(QStringList &container, const QString & fil
 
 static void fill_container_with_file(QList<QString> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QString files[] = { filename, "mod_" + filename };
+    QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
     for (int i = 0; i < files_count; ++i) {
@@ -176,7 +176,7 @@ static void fill_container_with_file(QList<QString> &container, const QString & 
 
 static void fill_container_with_file(QVector<char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QString files[] = { filename, "mod_" + filename };
+    QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
     for (int i = 0; i < files_count; ++i) {
@@ -198,7 +198,7 @@ static void fill_container_with_file(QVector<char> &container, const QString & f
 
 static void fill_container_with_file(QVector<bool> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QString files[] = { filename, "mod_" + filename };
+    QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
     for (int i = 0; i < files_count; ++i) {
@@ -220,7 +220,7 @@ static void fill_container_with_file(QVector<bool> &container, const QString & f
 
 static void fill_container_with_file(QVector<unsigned char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QString files[] = { filename, "mod_" + filename };
+    QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
     for (int i = 0; i < files_count; ++i) {
@@ -242,7 +242,7 @@ static void fill_container_with_file(QVector<unsigned char> &container, const QS
 
 static void fill_container_with_file(QVector<signed char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QString files[] = { filename, "mod_" + filename };
+    QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
     for (int i = 0; i < files_count; ++i) {
@@ -264,7 +264,7 @@ static void fill_container_with_file(QVector<signed char> &container, const QStr
 
 static void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString &filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QString files[] = { filename, "mod_" + filename };
+    QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
     for (int i = 0; i < files_count; ++i) {
@@ -292,7 +292,7 @@ static void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString
 template <class T>
 static void fill_container_with_file(T &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
-    QString files[] = { filename, "mod_" + filename };
+    QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
     for (int i = 0; i < files_count; ++i) {
@@ -410,22 +410,19 @@ void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode, const QS
     if (NumberOfPokemons() != 0) return;
 
     m_Directory = dir;
-    m_CurrentMode = mode;
-    PoCurrentModPath = readModDirectory(modName);
-    if (PoCurrentModPath.isEmpty()) m_CurrentMode = FillMode::NoMod;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     // Load db/pokes data.
-    reloadMod(mode);
+    reloadMod(mode, modName);
 }
 
 void PokemonInfo::reloadMod(FillMode::FillModeType mode, const QString &modName)
 {
     m_CurrentMode = mode;
     PoCurrentModPath = readModDirectory(modName);
-    if (PoCurrentModPath.isEmpty()) m_CurrentMode = FillMode::NoMod;
+    if (PoCurrentModPath.isEmpty() && (m_CurrentMode != FillMode::Server)) m_CurrentMode = FillMode::NoMod;
     clearData();
 
     loadNames();
@@ -2457,6 +2454,7 @@ bool PokemonInfo::modifyBaseStat(const Pokemon::uniqueId &pokeid, int stat, quin
 
 QString PokemonInfo::readModDirectory(const QString &modName)
 {
+    if (m_CurrentMode == FillMode::Server) return ""; // from current directory, mod_db/*
     QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
     int mod_id = s_mod.value(modName + "/id", 0).toInt();
     if (mod_id == 0) {
