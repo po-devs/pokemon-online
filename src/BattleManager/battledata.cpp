@@ -29,6 +29,57 @@ void BattleData::onSendBack(int spot)
     fieldPoke(spot).onSendBack();
 }
 
+void BattleData::onHpChange(int spot, int newHp)
+{
+    poke(spot).lifePercent() = newHp;
+}
+
+void BattleData::onMajorStatusChange(int spot, int status)
+{
+    poke(spot).changeStatus(status);
+}
+
+void BattleData::onPokeballStatusChanged(int player, int poke, int status)
+{
+    team(player).poke(poke).changeStatus(status);
+}
+
+void BattleData::onSubstituteStatus(int spot, bool substitute)
+{
+    fieldPoke(spot).subsitute = substitute;
+}
+
+void BattleData::onPokemonVanish(int spot)
+{
+    fieldPoke(spot).showing = false;
+}
+
+void BattleData::onPokemonReappear(int spot)
+{
+    fieldPoke(spot).showing = true;
+}
+
+void BattleData::onSpriteChange(int spot, int newSprite)
+{
+    fieldPoke(spot).alternateSprite = newSprite;
+}
+
+void BattleData::onDefiniteFormeChange(int player, int poke, int newPoke)
+{
+    team(player).poke(poke).num() = newPoke;
+}
+
+void BattleData::onCosmeticFormeChange(int spot, int subforme)
+{
+    fieldPoke(spot).alternateSprite.subnum = subforme;
+}
+
+void BattleData::onShiftSpots(int spot1, int spot2, bool)
+{
+    std::swap(fieldPoke(spot1), fieldPoke(spot2));
+    team(player(spot1)).switchPokemons(slotNum(spot1), slotNum(spot2));
+}
+
 TeamData &BattleData::team(int player)
 {
     return teams[player];
