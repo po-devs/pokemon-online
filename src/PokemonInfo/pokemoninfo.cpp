@@ -2461,7 +2461,7 @@ QString PokemonInfo::readModDirectory(const QString &modName)
     if (mod_id == 0) {
         return "";
     } else {
-        QString result = PoModLocalPath + mod_id + "/";
+        QString result = PoModLocalPath + QString::number(mod_id) + "/";
         if (QDir(result).exists()) {
             return result;
         } else {
