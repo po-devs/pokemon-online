@@ -128,7 +128,7 @@ int fill_count_files(const QString &filename, FillMode::FillModeType m) {
     return ((m != FillMode::NoMod) && filename.startsWith("db/pokes/")) ? 2 : 1;
 }
 
-void fill_check_mode_path(FillMode::FillModeType m, QString &filename) {
+void fill_check_mode_path(FillMode::FillModeType, QString &) {
 }
 
 static void fill_container_with_file(QStringList &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
