@@ -4021,7 +4021,7 @@ int BattleSituation::calculateDamage(int p, int t)
                 if (gen() <= 4) {
                     foreach (int tar, targetList) {
                         if (tar != t && !koed(tar)) {
-                            damage = damage * 3/4;
+                            damage = damage * (gen() <= 3 ? 2 : 3)/4;
                             break;
                         }
                     }
